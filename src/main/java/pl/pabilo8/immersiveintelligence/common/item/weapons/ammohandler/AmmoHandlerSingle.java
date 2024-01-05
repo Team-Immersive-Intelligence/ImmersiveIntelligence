@@ -8,7 +8,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
-import pl.pabilo8.immersiveintelligence.api.bullets.IAmmo;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoItem;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIGunBase;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
@@ -22,10 +22,10 @@ import java.util.List;
  */
 public abstract class AmmoHandlerSingle extends AmmoHandler
 {
-	private final IAmmo validAmmo;
+	private final IAmmoItem validAmmo;
 	private final String tag;
 
-	public AmmoHandlerSingle(ItemIIGunBase item, String tag, IAmmo validAmmo)
+	public AmmoHandlerSingle(ItemIIGunBase item, String tag, IAmmoItem validAmmo)
 	{
 		super(item);
 		this.tag = tag;

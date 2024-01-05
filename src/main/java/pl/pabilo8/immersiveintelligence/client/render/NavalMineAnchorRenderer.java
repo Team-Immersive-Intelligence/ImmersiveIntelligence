@@ -9,7 +9,7 @@ import net.minecraft.util.ResourceLocation;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.model.misc.ModelNavalMineAnchor;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
-import pl.pabilo8.immersiveintelligence.common.entity.bullet.EntityNavalMineAnchor;
+import pl.pabilo8.immersiveintelligence.common.entity.ammo.naval_mine.EntityNavalMineAnchor;
 
 /**
  * @author Pabilo8

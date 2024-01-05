@@ -1182,6 +1182,7 @@ desc.immersiveintelligence.variable=Variable:
 desc.immersiveintelligence.bullet_type.general_purpose=General Purpose
 desc.immersiveintelligence.bullet_type.shrapnel=Shrapnel
 desc.immersiveintelligence.bullet_type.piercing=Armor Piercing
+desc.immersiveintelligence.bullet_type.shaped=Shaped Charge
 desc.immersiveintelligence.bullet_type.explosive=High Explosive
 desc.immersiveintelligence.bullet_type.incendiary=Incendiary
 desc.immersiveintelligence.bullet_type.tracer=Tracer

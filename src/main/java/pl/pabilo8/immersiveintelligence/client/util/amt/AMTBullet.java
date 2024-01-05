@@ -6,8 +6,8 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.Vec3d;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumCoreTypes;
-import pl.pabilo8.immersiveintelligence.api.bullets.IAmmo;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumCoreTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoItem;
 import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
 
 import javax.annotation.Nullable;
@@ -100,9 +100,9 @@ public class AMTBullet extends AMT
 	{
 		this.state = state;
 
-		if(stack.getItem() instanceof IAmmo)
+		if(stack.getItem() instanceof IAmmoItem)
 		{
-			IAmmo b = (IAmmo)stack.getItem();
+			IAmmoItem b = (IAmmoItem)stack.getItem();
 			return withProperties(b.getCore(stack).getColour(), b.getCoreType(stack), b.getPaintColor(stack));
 		}
 		if(stack.isEmpty())

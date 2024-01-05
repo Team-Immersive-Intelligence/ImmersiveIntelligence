@@ -3,11 +3,11 @@ package pl.pabilo8.immersiveintelligence.client.model.bullet;
 import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.renderer.GlStateManager;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumCoreTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
 import pl.pabilo8.immersiveintelligence.client.model.ModelIIBase;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 
 /**
  * @author Pabilo8
@@ -169,7 +169,7 @@ public class ModelBullet3bCal extends ModelIIBase implements IBulletModel
 		{
 			GlStateManager.pushMatrix();
 			ClientUtils.bindTexture("minecraft:textures/blocks/concrete_powder_black.png");
-			GlStateManager.translate(0, 0.0625f+0.2*gunpowderPercentage,0);
+			GlStateManager.translate(0, 0.0625f+0.2*gunpowderPercentage, 0);
 			GlStateManager.rotate(90, 1f, 0f, 0f);
 			ClientUtils.drawTexturedRect(-1/16f, -1/16f, 2/16f, 2/16f, 4/16f, 6/16f, 4/16f, 6/16f);
 			GlStateManager.popMatrix();

@@ -15,9 +15,9 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.bullets.IAmmo;
+import pl.pabilo8.immersiveintelligence.api.ammo.IIAmmoRegistry;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoItem;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.ModelChemicalPainter;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
@@ -161,12 +161,12 @@ public class ChemicalPainterRenderer extends TileEntitySpecialRenderer<TileEntit
 			GlStateManager.pushMatrix();
 			if(te.active)
 			{
-				GlStateManager.translate((0.25-3.5*conveyorProgress)*(te.mirrored?-1:1)+(te.mirrored?1:0), 0.385+lifterProgress*0.4375, 0.5);
+				GlStateManager.translate((0.25-3.5*conveyorProgress)*(te.mirrored?-1: 1)+(te.mirrored?1: 0), 0.385+lifterProgress*0.4375, 0.5);
 				GlStateManager.rotate(lifterRotate*360, 0, 1, 0);
-				if(te.effect.getItem() instanceof IAmmo)
+				if(te.effect.getItem() instanceof IAmmoItem)
 				{
-					IAmmo bullet = (IAmmo)te.effect.getItem();
-					IBulletModel bModel = AmmoRegistry.INSTANCE.registeredModels.get(bullet.getName());
+					IAmmoItem bullet = (IAmmoItem)te.effect.getItem();
+					IBulletModel bModel = IIAmmoRegistry.registeredModels.get(bullet.getName());
 					GlStateManager.translate(0, -0.25f, 0);
 					bModel.renderBulletUnused(itemProgress > 0.5f?te.effect: te.inventory.get(0));
 					ClientUtils.bindAtlas();

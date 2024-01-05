@@ -24,13 +24,13 @@ import net.minecraft.util.*;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.Mines;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoUtils;
-import pl.pabilo8.immersiveintelligence.api.bullets.IAmmo;
+import pl.pabilo8.immersiveintelligence.api.ammo.IIAmmoUtils;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoItem;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.radio.IRadioDevice;
 import pl.pabilo8.immersiveintelligence.api.data.radio.RadioNetwork;
-import pl.pabilo8.immersiveintelligence.common.entity.bullet.EntityBullet;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.Mines;
+import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityBullet;
 
 import javax.annotation.Nullable;
 
@@ -77,9 +77,9 @@ public class TileEntityRadioExplosives extends TileEntityImmersiveConnectable im
 
 		RadioNetwork.INSTANCE.removeDevice(this);
 
-		if(!world.isRemote&&mineStack.getItem() instanceof IAmmo)
+		if(!world.isRemote&&mineStack.getItem() instanceof IAmmoItem)
 		{
-			EntityBullet bullet = AmmoUtils.createBullet(world, mineStack, new Vec3d(pos).addVector(0.5, 0.5, 0.5), new Vec3d(0, 0, 0), 1f);
+			EntityBullet bullet = IIAmmoUtils.createBullet(world, mineStack, new Vec3d(pos).addVector(0.5, 0.5, 0.5), new Vec3d(0, 0, 0), 1f);
 			bullet.fuse = 1;
 			world.spawnEntity(bullet);
 		}
@@ -123,10 +123,10 @@ public class TileEntityRadioExplosives extends TileEntityImmersiveConnectable im
 	public void readOnPlacement(EntityLivingBase placer, ItemStack stack)
 	{
 		Item item = stack.getItem();
-		if(item instanceof IAmmo)
+		if(item instanceof IAmmoItem)
 		{
 			this.mineStack = stack;
-			this.coreColor = ((IAmmo)item).getCore(stack).getColour();
+			this.coreColor = ((IAmmoItem)item).getCore(stack).getColour();
 			this.programmedPacket = new DataPacket().fromNBT(ItemNBTHelper.getTagCompound(stack, "programmed_data"));
 		}
 	}

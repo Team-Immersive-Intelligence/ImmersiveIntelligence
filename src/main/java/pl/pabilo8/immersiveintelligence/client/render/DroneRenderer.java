@@ -8,8 +8,8 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumCoreTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.IIAmmoRegistry;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.client.util.amt.*;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMTBullet.BulletState;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
@@ -71,13 +71,13 @@ public class DroneRenderer extends IIEntityRenderer<EntityDrone>
 				new ResourceLocation(ImmersiveIntelligence.MODID, "models/entity/combat_drone.obj.amt"),
 				header -> new AMT[]{
 						new AMTLocator("Rotors", header),
-						new AMTBullet("WeaponMount1", header.getOffset("WeaponMount1"), AmmoRegistry.INSTANCE.getModel(IIContent.itemAmmoMortar))
+						new AMTBullet("WeaponMount1", header.getOffset("WeaponMount1"), IIAmmoRegistry.getModel(IIContent.itemAmmoMortar))
 								.withProperties(0xcfcfcf, EnumCoreTypes.CANISTER, 0x2fad64).withState(BulletState.BULLET_UNUSED),
-						new AMTBullet("WeaponMount2", header.getOffset("WeaponMount2"), AmmoRegistry.INSTANCE.getModel(IIContent.itemAmmoMortar))
+						new AMTBullet("WeaponMount2", header.getOffset("WeaponMount2"), IIAmmoRegistry.getModel(IIContent.itemAmmoMortar))
 								.withProperties(0xcfcfcf, EnumCoreTypes.CANISTER, 0x2fad64).withState(BulletState.BULLET_UNUSED),
-						new AMTBullet("WeaponMount3", header.getOffset("WeaponMount3"), AmmoRegistry.INSTANCE.getModel(IIContent.itemAmmoMortar))
+						new AMTBullet("WeaponMount3", header.getOffset("WeaponMount3"), IIAmmoRegistry.getModel(IIContent.itemAmmoMortar))
 								.withProperties(0xcfcfcf, EnumCoreTypes.CANISTER, 0x2fad64).withState(BulletState.BULLET_UNUSED),
-						new AMTBullet("WeaponMount4", header.getOffset("WeaponMount4"), AmmoRegistry.INSTANCE.getModel(IIContent.itemAmmoMortar))
+						new AMTBullet("WeaponMount4", header.getOffset("WeaponMount4"), IIAmmoRegistry.getModel(IIContent.itemAmmoMortar))
 								.withProperties(0xcfcfcf, EnumCoreTypes.CANISTER, 0x2fad64).withState(BulletState.BULLET_UNUSED)
 				}
 		);

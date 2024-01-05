@@ -2,12 +2,12 @@ package pl.pabilo8.immersiveintelligence.client.model.misc;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.renderer.GlStateManager;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumCoreTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
 import pl.pabilo8.immersiveintelligence.client.model.ModelIIBase;
 import pl.pabilo8.immersiveintelligence.client.render.NavalMineRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 
 /**
  * @author Pabilo8
@@ -406,11 +406,11 @@ public class ModelNavalMine extends ModelIIBase implements IBulletModel
 		coreModel[0].addShapeBox(0F, 0F, 0F, 8, 12, 8, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Box 0
 		coreModel[0].setRotationPoint(0F, -17F, 0F);
 
-		parts.put("base",baseModel);
-		parts.put("top",topModel);
-		parts.put("core",coreModel);
+		parts.put("base", baseModel);
+		parts.put("top", topModel);
+		parts.put("core", coreModel);
 
-		translateAll(-4,4,-4);
+		translateAll(-4, 4, -4);
 
 		flipAll();
 	}
@@ -452,8 +452,8 @@ public class ModelNavalMine extends ModelIIBase implements IBulletModel
 	public void reloadModels()
 	{
 		ModelNavalMine newModel = new ModelNavalMine();
-		this.baseModel=newModel.baseModel;
-		this.coreModel=newModel.coreModel;
-		this.topModel=newModel.topModel;
+		this.baseModel = newModel.baseModel;
+		this.coreModel = newModel.coreModel;
+		this.topModel = newModel.topModel;
 	}
 }

@@ -14,9 +14,9 @@ import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoUtils;
-import pl.pabilo8.immersiveintelligence.api.bullets.penhandlers.PenetrationHandlerConcretes.PenetrationHandlerConcreteBricks;
-import pl.pabilo8.immersiveintelligence.api.bullets.penhandlers.PenetrationHandlerMetals.PenetrationHandlerSteel;
+import pl.pabilo8.immersiveintelligence.api.ammo.IIAmmoUtils;
+import pl.pabilo8.immersiveintelligence.api.ammo.penetration_handlers.PenetrationHandlerConcretes.PenetrationHandlerConcreteBricks;
+import pl.pabilo8.immersiveintelligence.api.ammo.penetration_handlers.PenetrationHandlerMetals.PenetrationHandlerSteel;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.compat.IICompatModule;
 import pl.pabilo8.immersiveintelligence.common.item.ItemIIMinecart.Minecarts;
@@ -74,13 +74,13 @@ public class ImmersiveTechnologyHelper extends IICompatModule
 		addBlock(blocks, new ResourceLocation("immersivetech", "metal_barrel"));
 		addBlock(blocks, new ResourceLocation("immersivetech", "metal_device"));
 		addBlock(blocks, new ResourceLocation("immersivetech", "metal_trash"));
-		AmmoUtils.batchRegisterHandler(new PenetrationHandlerSteel(), blocks.toArray(new Block[0]));
+		IIAmmoUtils.batchRegisterHandler(new PenetrationHandlerSteel(), blocks.toArray(new Block[0]));
 
 		blocks.clear();
 		addBlock(blocks, new ResourceLocation("immersivetech", "stone_multiblock"));
 		addBlock(blocks, new ResourceLocation("immersivetech", "stone_decoration"));
 		addBlock(blocks, new ResourceLocation("immersivetech", "stone_decoration_slab"));
-		AmmoUtils.batchRegisterHandler(new PenetrationHandlerConcreteBricks(), blocks.toArray(new Block[0]));
+		IIAmmoUtils.batchRegisterHandler(new PenetrationHandlerConcreteBricks(), blocks.toArray(new Block[0]));
 	}
 
 	@Optional.Method(modid = "immersivetech")

@@ -2,13 +2,13 @@ package pl.pabilo8.immersiveintelligence.client.model.bullet;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.renderer.GlStateManager;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.Grenade;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumCoreTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
 import pl.pabilo8.immersiveintelligence.client.model.ModelIIBase;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.Grenade;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 
 /**
  * Created by Pabilo8 on 07-06-2019.
@@ -73,7 +73,7 @@ public class ModelGrenade extends ModelIIBase implements IBulletModel
 	public void renderBulletUsed(int coreColour, EnumCoreTypes coreType, int paintColour)
 	{
 		GlStateManager.pushMatrix();
-		GlStateManager.translate(0,-0.5,-0.125 );
+		GlStateManager.translate(0, -0.5, -0.125);
 		renderCasing(1f, paintColour);
 		renderCore(coreColour, coreType);
 		GlStateManager.popMatrix();

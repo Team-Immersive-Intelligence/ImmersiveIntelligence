@@ -8,9 +8,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.storage.WorldSavedData;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.bullets.DamageBlockPos;
-import pl.pabilo8.immersiveintelligence.api.bullets.PenetrationRegistry;
+import pl.pabilo8.immersiveintelligence.api.ammo.IIPenetrationRegistry;
+import pl.pabilo8.immersiveintelligence.api.ammo.utils.DamageBlockPos;
 
 import java.util.Iterator;
 
@@ -45,7 +44,7 @@ public class IISaveData extends WorldSavedData
 	{
 		NBTTagList list = nbt.getTagList("block_damage", 10);
 		Iterator<NBTBase> i = list.iterator();
-		PenetrationRegistry.blockDamage.clear();
+		IIPenetrationRegistry.blockDamage.clear();
 		while(i.hasNext())
 		{
 			try
@@ -55,7 +54,7 @@ public class IISaveData extends WorldSavedData
 				BlockPos pos = NBTUtil.getPosFromTag(posTag);
 				int dimension = posTag.getInteger("dim");
 				DamageBlockPos dpos = new DamageBlockPos(pos, dimension, compound.getFloat("damage"));
-				PenetrationRegistry.blockDamage.add(dpos);
+				IIPenetrationRegistry.blockDamage.add(dpos);
 			} catch(ClassCastException|NullPointerException e)
 			{
 				IILogger.info("Error in the block damage list!");
@@ -68,7 +67,7 @@ public class IISaveData extends WorldSavedData
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
 	{
 		NBTTagList blockDamage = new NBTTagList();
-		for(DamageBlockPos entry : PenetrationRegistry.blockDamage)
+		for(DamageBlockPos entry : IIPenetrationRegistry.blockDamage)
 		{
 			NBTTagCompound compound = new NBTTagCompound();
 			NBTTagCompound posTag = NBTUtil.createPosTag(entry);

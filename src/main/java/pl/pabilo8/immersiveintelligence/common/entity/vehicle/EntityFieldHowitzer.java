@@ -23,7 +23,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Mouse;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoUtils;
+import pl.pabilo8.immersiveintelligence.api.ammo.IIAmmoUtils;
 import pl.pabilo8.immersiveintelligence.api.utils.IEntitySpecialRepairable;
 import pl.pabilo8.immersiveintelligence.api.utils.camera.IEntityZoomProvider;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.IAdvancedZoomTool;
@@ -34,7 +34,7 @@ import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Vehicles
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
-import pl.pabilo8.immersiveintelligence.common.entity.bullet.EntityBullet;
+import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityBullet;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageEntityNBTSync;
 
@@ -353,7 +353,7 @@ public class EntityFieldHowitzer extends Entity implements IVehicleMultiPart, IE
 								IISounds.howitzerShot, SoundCategory.PLAYERS, 90, 0.75f,
 								1.25f+(float)(Utils.RAND.nextGaussian()*0.02)
 						);
-						EntityBullet a = AmmoUtils.createBullet(world, shell.copy(), getPositionVector().add(gun_end.scale(-1)).addVector(0, 1, 0), gun_end.scale(-1).normalize());
+						EntityBullet a = IIAmmoUtils.createBullet(world, shell.copy(), getPositionVector().add(gun_end.scale(-1)).addVector(0, 1, 0), gun_end.scale(-1).normalize());
 						a.setShooters(this, getParts());
 						world.spawnEntity(a);
 					}

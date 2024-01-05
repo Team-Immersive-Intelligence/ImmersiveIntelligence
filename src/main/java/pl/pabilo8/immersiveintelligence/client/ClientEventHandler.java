@@ -50,8 +50,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import org.lwjgl.opengl.GLContext;
-import pl.pabilo8.immersiveintelligence.api.bullets.DamageBlockPos;
-import pl.pabilo8.immersiveintelligence.api.bullets.IAmmo;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoItem;
+import pl.pabilo8.immersiveintelligence.api.ammo.utils.DamageBlockPos;
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler;
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler.IAdvancedTooltipItem;
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler.IItemScrollable;
@@ -91,7 +91,7 @@ import pl.pabilo8.immersiveintelligence.common.entity.EntityMachinegun;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityMortar;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityParachute;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityTripodPeriscope;
-import pl.pabilo8.immersiveintelligence.common.entity.bullet.EntityBullet;
+import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityBullet;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityFieldHowitzer;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityMotorbike;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityVehicleSeat;
@@ -113,7 +113,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
 
-import static pl.pabilo8.immersiveintelligence.api.bullets.PenetrationRegistry.blockDamageClient;
+import static pl.pabilo8.immersiveintelligence.api.ammo.IIPenetrationRegistry.blockDamageClient;
 
 /**
  * Handles events for client side.
@@ -526,8 +526,8 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 			}
 		}*/
 
-		if(stack.getItem() instanceof IAmmo)
-			IIClientUtils.createAmmoTooltip(((IAmmo)stack.getItem()), stack, event.getEntity().world, event.getToolTip());
+		if(stack.getItem() instanceof IAmmoItem)
+			IIClientUtils.createAmmoTooltip(((IAmmoItem)stack.getItem()), stack, event.getEntity().world, event.getToolTip());
 		else if(ItemNBTHelper.hasKey(stack, IIContent.NBT_AdvancedPowerpack))
 		{
 			ItemStack powerpack = ItemNBTHelper.getItemStack(stack, IIContent.NBT_AdvancedPowerpack);

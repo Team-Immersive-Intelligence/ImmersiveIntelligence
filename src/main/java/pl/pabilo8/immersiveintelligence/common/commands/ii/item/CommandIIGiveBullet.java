@@ -8,11 +8,11 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumCoreTypes;
-import pl.pabilo8.immersiveintelligence.api.bullets.IAmmo;
-import pl.pabilo8.immersiveintelligence.api.bullets.IAmmoComponent;
-import pl.pabilo8.immersiveintelligence.api.bullets.IAmmoCore;
+import pl.pabilo8.immersiveintelligence.api.ammo.IIAmmoRegistry;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumCoreTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoComponent;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoCore;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoItem;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -57,12 +57,12 @@ public class CommandIIGiveBullet extends CommandBase
 		if(args.length > 3)
 		{
 			EntityPlayerMP player = CommandBase.getPlayer(server, sender, args[0]);
-			IAmmo casing = AmmoRegistry.INSTANCE.getBulletItem(args[1]);
-			IAmmoCore core = AmmoRegistry.INSTANCE.getCore(args[2]);
+			IAmmoItem casing = IIAmmoRegistry.getBulletItem(args[1]);
+			IAmmoCore core = IIAmmoRegistry.getCore(args[2]);
 			EnumCoreTypes coreType = EnumCoreTypes.v(args[3]);
 			ArrayList<IAmmoComponent> components = new ArrayList<>();
 			for(int i = 4; i < args.length; i++)
-				components.add(AmmoRegistry.INSTANCE.getComponent(args[i]));
+				components.add(IIAmmoRegistry.getComponent(args[i]));
 
 			if(casing!=null&&core!=null)
 			{
@@ -98,20 +98,20 @@ public class CommandIIGiveBullet extends CommandBase
 		}
 		else if(args.length==2)
 		{
-			return getListOfStringsMatchingLastWord(args, AmmoRegistry.INSTANCE.registeredBulletItems.keySet());
+			return getListOfStringsMatchingLastWord(args, IIAmmoRegistry.registeredAmmoItems.keySet());
 		}
 		else if(args.length==3)
 		{
-			return getListOfStringsMatchingLastWord(args, AmmoRegistry.INSTANCE.registeredBulletCores.keySet());
+			return getListOfStringsMatchingLastWord(args, IIAmmoRegistry.registeredBulletCores.keySet());
 		}
 		else if(args.length==4)
 		{
-			IAmmo bullet = AmmoRegistry.INSTANCE.registeredBulletItems.get(args[1]);
+			IAmmoItem bullet = IIAmmoRegistry.registeredAmmoItems.get(args[1]);
 			return getListOfStringsMatchingLastWord(args, bullet==null?Collections.emptyList(): Arrays.stream(bullet.getAllowedCoreTypes()).map(EnumCoreTypes::getName).collect(Collectors.toList()));
 		}
 		else if(args.length > 4)
 		{
-			return getListOfStringsMatchingLastWord(args, AmmoRegistry.INSTANCE.registeredComponents.keySet());
+			return getListOfStringsMatchingLastWord(args, IIAmmoRegistry.registeredComponents.keySet());
 		}
 		else
 			return Collections.emptyList();

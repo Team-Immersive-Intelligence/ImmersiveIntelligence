@@ -1,12 +1,13 @@
 package pl.pabilo8.immersiveintelligence.common.ammo.explosives;
 
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
+import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumComponentRole;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumCoreTypes;
-import pl.pabilo8.immersiveintelligence.api.bullets.IAmmoComponent;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumComponentRole;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumCoreTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoComponent;
 import pl.pabilo8.immersiveintelligence.common.util.IIExplosion;
 
 /**
@@ -34,9 +35,9 @@ public class AmmoComponentRDX implements IAmmoComponent
 	}
 
 	@Override
-	public void onEffect(float amount, EnumCoreTypes coreType, NBTTagCompound tag, Vec3d pos, Vec3d dir, World world)
+	public void onEffect(World world, Vec3d pos, Vec3d dir, float multiplier, NBTTagCompound tag, EnumCoreTypes coreType, Entity owner)
 	{
-		new IIExplosion(world, null, pos.x, pos.y, pos.z, 9*amount, 8, false, true)
+		new IIExplosion(world, null, pos.x, pos.y, pos.z, 9*multiplier, 8, false, true)
 				.doExplosion();
 	}
 

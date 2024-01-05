@@ -11,17 +11,18 @@ import crafttweaker.api.item.IIngredient;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.world.IVector3d;
 import crafttweaker.api.world.IWorld;
+import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.ShrapnelHandler;
+import pl.pabilo8.immersiveintelligence.api.ammo.IIAmmoRegistry;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumComponentRole;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumCoreTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoComponent;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoCore;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumComponentRole;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumCoreTypes;
-import pl.pabilo8.immersiveintelligence.api.bullets.IAmmoComponent;
-import pl.pabilo8.immersiveintelligence.api.bullets.IAmmoCore;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
@@ -148,7 +149,7 @@ public class BulletTweaker
 			public void apply()
 			{
 				final IngredientStack s = ApiUtils.createIngredientStack(core.stack);
-				AmmoRegistry.INSTANCE.registerBulletCore(
+				IIAmmoRegistry.registerBulletCore(
 						new IAmmoCore()
 						{
 							@Override
@@ -277,7 +278,7 @@ public class BulletTweaker
 				final IngredientStack s = ApiUtils.createIngredientStack(component.stack);
 				final EnumComponentRole r = EnumComponentRole.v(component.role);
 
-				AmmoRegistry.INSTANCE.registerComponent(
+				IIAmmoRegistry.registerComponent(
 						new IAmmoComponent()
 						{
 							@Override
@@ -299,14 +300,14 @@ public class BulletTweaker
 							}
 
 							@Override
-							public void onEffect(float amount, EnumCoreTypes coreType, NBTTagCompound tag, Vec3d pos, Vec3d dir, World world)
+							public void onEffect(World world, Vec3d pos, Vec3d dir, float multiplier, NBTTagCompound tag, EnumCoreTypes coreType, Entity owner)
 							{
 								if(component.function!=null)
 									component.function.process(CraftTweakerMC.getIWorld(world),
 											CraftTweakerMC.getIVector3d(pos),
 											CraftTweakerMC.getIVector3d(dir),
 											coreType.getName(),
-											amount,
+											multiplier,
 											CraftTweakerMC.getIData(tag)
 									);
 							}
@@ -344,12 +345,12 @@ public class BulletTweaker
 	@ZenMethod
 	public static void removeCore(String name)
 	{
-		AmmoRegistry.INSTANCE.registeredBulletCores.remove(name);
+		IIAmmoRegistry.registeredBulletCores.remove(name);
 	}
 
 	@ZenMethod
 	public static void removeComponent(String name)
 	{
-		AmmoRegistry.INSTANCE.registeredComponents.remove(name);
+		IIAmmoRegistry.registeredComponents.remove(name);
 	}
 }

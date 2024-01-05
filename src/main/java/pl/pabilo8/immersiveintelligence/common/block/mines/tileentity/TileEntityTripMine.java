@@ -28,10 +28,10 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
+import pl.pabilo8.immersiveintelligence.api.ammo.IIAmmoUtils;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoItem;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.Mines;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoUtils;
-import pl.pabilo8.immersiveintelligence.api.bullets.IAmmo;
-import pl.pabilo8.immersiveintelligence.common.entity.bullet.EntityBullet;
+import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityBullet;
 import pl.pabilo8.immersiveintelligence.common.item.ItemIITripWireCoil;
 import pl.pabilo8.immersiveintelligence.common.item.tools.ItemIITrenchShovel;
 
@@ -73,7 +73,7 @@ public class TileEntityTripMine extends TileEntityImmersiveConnectable implement
 		armed = nbtTagCompound.getBoolean("armed");
 		grass = nbtTagCompound.getBoolean("grass");
 		digLevel = nbtTagCompound.getInteger("digLevel");
-		this.readOnPlacement(null,new ItemStack(nbtTagCompound.getCompoundTag("mineStack")));
+		this.readOnPlacement(null, new ItemStack(nbtTagCompound.getCompoundTag("mineStack")));
 	}
 
 	@Override
@@ -103,10 +103,10 @@ public class TileEntityTripMine extends TileEntityImmersiveConnectable implement
 		if(!armed)
 			return;
 
-		if(!world.isRemote&&mineStack.getItem() instanceof IAmmo)
+		if(!world.isRemote&&mineStack.getItem() instanceof IAmmoItem)
 		{
-			EntityBullet bullet = AmmoUtils.createBullet(world, mineStack, new Vec3d(pos).addVector(0.5, 0.5, 0.5), new Vec3d(0, 1, 0), 0.5f);
-			bullet.fuse=20;
+			EntityBullet bullet = IIAmmoUtils.createBullet(world, mineStack, new Vec3d(pos).addVector(0.5, 0.5, 0.5), new Vec3d(0, 1, 0), 0.5f);
+			bullet.fuse = 20;
 			world.spawnEntity(bullet);
 		}
 		world.setBlockToAir(this.getPos());
@@ -164,10 +164,10 @@ public class TileEntityTripMine extends TileEntityImmersiveConnectable implement
 		}
 		else if(armed&&heldItem.getItem().getToolClasses(heldItem).contains(Lib.TOOL_WIRECUTTER))
 		{
-			heldItem.damageItem(8,player);
+			heldItem.damageItem(8, player);
 			world.playSound(pos.getX(), pos.getY()+1, pos.getZ(), SoundEvents.ENTITY_SHEEP_SHEAR, SoundCategory.BLOCKS, 1f, 1f, false);
-			armed=false;
-			grass=false;
+			armed = false;
+			grass = false;
 		}
 
 		return false;
@@ -192,7 +192,7 @@ public class TileEntityTripMine extends TileEntityImmersiveConnectable implement
 	public void onEntityCollision(World world, Entity entity)
 	{
 		super.onEntityCollision(world, entity);
-		if(digLevel>6||entity.posY > this.getPos().getY())
+		if(digLevel > 6||entity.posY > this.getPos().getY())
 			this.explode();
 	}
 
@@ -200,10 +200,10 @@ public class TileEntityTripMine extends TileEntityImmersiveConnectable implement
 	public void readOnPlacement(EntityLivingBase placer, ItemStack stack)
 	{
 		Item item = stack.getItem();
-		if(item instanceof IAmmo)
+		if(item instanceof IAmmoItem)
 		{
 			this.mineStack = stack;
-			this.coreColor = ((IAmmo)item).getCore(stack).getColour();
+			this.coreColor = ((IAmmoItem)item).getCore(stack).getColour();
 		}
 	}
 
@@ -217,6 +217,6 @@ public class TileEntityTripMine extends TileEntityImmersiveConnectable implement
 	public NonNullList<ItemStack> getTileDrops(@Nullable EntityPlayer player, IBlockState state)
 	{
 		explode();
-		return NonNullList.from(armed?ItemStack.EMPTY:mineStack);
+		return NonNullList.from(armed?ItemStack.EMPTY: mineStack);
 	}
 }

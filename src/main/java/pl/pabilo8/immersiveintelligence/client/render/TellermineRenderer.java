@@ -7,11 +7,11 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import org.lwjgl.opengl.GL11;
-import pl.pabilo8.immersiveintelligence.api.bullets.IAmmo;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumCoreTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.IIAmmoRegistry;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumCoreTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoItem;
 import pl.pabilo8.immersiveintelligence.client.model.misc.ModelTellermine;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.mines.tileentity.TileEntityTellermine;
 
 /**
@@ -57,8 +57,8 @@ public class TellermineRenderer extends TileEntitySpecialRenderer<TileEntityTell
 	public void reloadModels()
 	{
 		model = new ModelTellermine();
-		AmmoRegistry.INSTANCE.registeredModels.remove("tellermine");
-		AmmoRegistry.INSTANCE.registeredModels.put("tellermine", model);
+		IIAmmoRegistry.registeredModels.remove("tellermine");
+		IIAmmoRegistry.registeredModels.put("tellermine", model);
 	}
 
 	public static class TellermineItemStackRenderer extends TileEntityItemStackRenderer
@@ -68,10 +68,10 @@ public class TellermineRenderer extends TileEntitySpecialRenderer<TileEntityTell
 		{
 			GlStateManager.pushMatrix();
 			GlStateManager.translate(0.5, 0.25, 0.5);
-			GlStateManager.scale(1.5,1.5,1.5f);
+			GlStateManager.scale(1.5, 1.5, 1.5f);
 
-			assert itemStackIn.getItem() instanceof IAmmo;
-			IAmmo bullet = (IAmmo)itemStackIn.getItem();
+			assert itemStackIn.getItem() instanceof IAmmoItem;
+			IAmmoItem bullet = (IAmmoItem)itemStackIn.getItem();
 
 			model.renderCasing(0, bullet.getPaintColor(itemStackIn));
 			model.renderCore(bullet.getCore(itemStackIn).getColour(), EnumCoreTypes.CANISTER);

@@ -8,12 +8,12 @@ import net.minecraft.block.material.Material;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoUtils;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.PenMaterialTypes;
-import pl.pabilo8.immersiveintelligence.api.bullets.PenetrationRegistry;
-import pl.pabilo8.immersiveintelligence.api.bullets.PenetrationRegistry.HitEffect;
-import pl.pabilo8.immersiveintelligence.api.bullets.PenetrationRegistry.IPenetrationHandler;
-import pl.pabilo8.immersiveintelligence.api.bullets.penhandlers.PenetrationHandlerMetals.PenetrationHandlerMetal;
+import pl.pabilo8.immersiveintelligence.api.ammo.IIAmmoUtils;
+import pl.pabilo8.immersiveintelligence.api.ammo.IIPenetrationRegistry;
+import pl.pabilo8.immersiveintelligence.api.ammo.IIPenetrationRegistry.IPenetrationHandler;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.HitEffect;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.PenMaterialTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.penetration_handlers.PenetrationHandlerMetals.PenetrationHandlerMetal;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
@@ -32,7 +32,7 @@ public class BlockPenetrationTweaker
 	{
 		final Material mat = CraftTweakerMC.getMaterial(material);
 		final CTPenetrationHandler pen = new CTPenetrationHandler(integrity, density, sound, penetrationType);
-		PenetrationRegistry.registeredMaterials.put(m -> m==mat, pen);
+		IIPenetrationRegistry.registeredMaterials.put(m -> m==mat, pen);
 	}
 
 	@ZenMethod
@@ -40,7 +40,7 @@ public class BlockPenetrationTweaker
 	{
 		final CTPenetrationHandler pen = new CTPenetrationHandler(integrity, density, sound, penetrationType);
 
-		PenetrationRegistry.registeredBlocks.put(b -> state.compare(CraftTweakerMC.getBlockState(b))==0, pen);
+		IIPenetrationRegistry.registeredBlocks.put(b -> state.compare(CraftTweakerMC.getBlockState(b))==0, pen);
 	}
 
 	@ZenMethod
@@ -55,12 +55,12 @@ public class BlockPenetrationTweaker
 			}
 
 			@Override
-			public float getDensity()
+			public float getReduction()
 			{
 				return density;
 			}
 		};
-		AmmoUtils.registerMetalMaterial(pen, name);
+		IIAmmoUtils.registerMetalMaterial(pen, name);
 	}
 
 	private static class CTPenetrationHandler implements IPenetrationHandler
@@ -84,7 +84,7 @@ public class BlockPenetrationTweaker
 		}
 
 		@Override
-		public float getDensity()
+		public float getReduction()
 		{
 			return density;
 		}

@@ -54,8 +54,8 @@ import org.lwjgl.input.Keyboard;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.ShrapnelHandler;
 import pl.pabilo8.immersiveintelligence.api.ShrapnelHandler.Shrapnel;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry;
-import pl.pabilo8.immersiveintelligence.api.bullets.IAmmo;
+import pl.pabilo8.immersiveintelligence.api.ammo.IIAmmoRegistry;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoItem;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IUpgradableMachine;
 import pl.pabilo8.immersiveintelligence.client.fx.nuke.ParticleAtomBase;
 import pl.pabilo8.immersiveintelligence.client.fx.particles.ParticleGasCloud;
@@ -119,7 +119,10 @@ import pl.pabilo8.immersiveintelligence.common.block.rotary_device.tileentity.Ti
 import pl.pabilo8.immersiveintelligence.common.block.rotary_device.tileentity.TileEntityMechanicalWheel;
 import pl.pabilo8.immersiveintelligence.common.compat.IICompatModule;
 import pl.pabilo8.immersiveintelligence.common.entity.*;
-import pl.pabilo8.immersiveintelligence.common.entity.bullet.*;
+import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityBullet;
+import pl.pabilo8.immersiveintelligence.common.entity.ammo.component.*;
+import pl.pabilo8.immersiveintelligence.common.entity.ammo.naval_mine.EntityNavalMine;
+import pl.pabilo8.immersiveintelligence.common.entity.ammo.naval_mine.EntityNavalMineAnchor;
 import pl.pabilo8.immersiveintelligence.common.entity.tactile.EntityAMTTactile;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityDrone;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityFieldHowitzer;
@@ -348,7 +351,7 @@ public class ClientProxy extends CommonProxy
 		IIContent.itemTachometer.setTileEntityItemStackRenderer(new TachometerRenderer().subscribeToList("tachometer"));
 		//IIContent.itemMineDetector.setTileEntityItemStackRenderer(new MineDetectorRenderer().subscribeToList("mine_detector"));
 
-		for(IAmmo bullet : AmmoRegistry.INSTANCE.registeredBulletItems.values())
+		for(IAmmoItem bullet : IIAmmoRegistry.registeredAmmoItems.values())
 		{
 			if(bullet instanceof ItemIINavalMine)
 				continue;
@@ -386,7 +389,7 @@ public class ClientProxy extends CommonProxy
 	public void textureStichPre(TextureStitchEvent.Pre event)
 	{
 		//Bullets
-		AmmoRegistry.INSTANCE.registeredBulletItems.forEach((key, value) -> value.registerSprites(event.getMap()));
+		IIAmmoRegistry.registeredAmmoItems.forEach((key, value) -> value.registerSprites(event.getMap()));
 
 		//Magazines
 		for(int i = 0; i < 4; i++)

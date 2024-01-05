@@ -13,9 +13,9 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
+import pl.pabilo8.immersiveintelligence.api.ammo.IIAmmoRegistry;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoItem;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry;
-import pl.pabilo8.immersiveintelligence.api.bullets.IAmmo;
 import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
 import pl.pabilo8.immersiveintelligence.client.model.metal_device.ModelAdvancedInserter;
 import pl.pabilo8.immersiveintelligence.client.model.metal_device.ModelInserter;
@@ -68,13 +68,13 @@ public class AmmunitionWorkshopRenderer extends TileEntitySpecialRenderer<TileEn
 			boolean conveyorAmmoRunning = progress < 0.15;
 			float i1Pitch = 35, i1Pitch2 = 135;
 			float i2Pitch = 35, i2Pitch2 = 135;
-			IAmmo bullet = null;
+			IAmmoItem bullet = null;
 			IBulletModel bulletModel = null;
 
-			if(te.effect.getItem() instanceof IAmmo)
+			if(te.effect.getItem() instanceof IAmmoItem)
 			{
-				bullet = (IAmmo)te.effect.getItem();
-				bulletModel = AmmoRegistry.INSTANCE.registeredModels.get(bullet.getName());
+				bullet = (IAmmoItem)te.effect.getItem();
+				bulletModel = IIAmmoRegistry.registeredModels.get(bullet.getName());
 			}
 
 			if(progress > 0.15&&progress < 0.65)
@@ -213,11 +213,11 @@ public class AmmunitionWorkshopRenderer extends TileEntitySpecialRenderer<TileEn
 
 
 			//Shell
-			final IAmmo finalBullet = bullet;
+			final IAmmoItem finalBullet = bullet;
 			final IBulletModel finalBulletModel = bulletModel;
 
 			ClientUtils.mc().getTextureManager().bindTexture(TEXTURE_INSERTER);
-			renderInserter(modelInserter,0, i1Pitch, i1Pitch2, 0,
+			renderInserter(modelInserter, 0, i1Pitch, i1Pitch2, 0,
 					model!=null?
 							() -> {
 								if(progress < 0.15||progress > 0.56)
@@ -239,7 +239,7 @@ public class AmmunitionWorkshopRenderer extends TileEntitySpecialRenderer<TileEn
 			GlStateManager.translate(1, 0, 0);
 			//Core
 			ClientUtils.mc().getTextureManager().bindTexture(TEXTURE_INSERTER2);
-			renderInserter(modelInserterAdvanced,0, i2Pitch, i2Pitch2, 0, () -> {
+			renderInserter(modelInserterAdvanced, 0, i2Pitch, i2Pitch2, 0, () -> {
 			});
 			GlStateManager.popMatrix();
 

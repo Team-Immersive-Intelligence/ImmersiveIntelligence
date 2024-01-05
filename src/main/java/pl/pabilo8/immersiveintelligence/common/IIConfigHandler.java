@@ -1527,7 +1527,7 @@ public class IIConfigHandler
 
 		public static class Ammunition
 		{
-			@Comment({"Default velocity of a light howitzer shell."})
+			@Comment({"Default velocity of a mortar shell."})
 			public static float mortarVelocity = 8f;
 
 			@Comment({"Default velocity of a light howitzer shell."})

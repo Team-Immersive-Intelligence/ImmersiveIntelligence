@@ -3,11 +3,11 @@ package pl.pabilo8.immersiveintelligence.client.model.bullet;
 import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.renderer.GlStateManager;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumCoreTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
 import pl.pabilo8.immersiveintelligence.client.model.ModelIIBase;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 
 /**
  * @author Pabilo8
@@ -142,11 +142,11 @@ public class ModelBullet1bCal extends ModelIIBase implements IBulletModel
 	public void reloadModels()
 	{
 		ModelBullet1bCal newModel = new ModelBullet1bCal();
-		this.baseModel=newModel.baseModel;
-		this.casingModel=newModel.casingModel;
-		this.coreCanisterModel=newModel.coreCanisterModel;
-		this.corePiercingModel=newModel.corePiercingModel;
-		this.coreSoftpointModel=newModel.coreSoftpointModel;
-		this.paintModel=newModel.paintModel;
+		this.baseModel = newModel.baseModel;
+		this.casingModel = newModel.casingModel;
+		this.coreCanisterModel = newModel.coreCanisterModel;
+		this.corePiercingModel = newModel.corePiercingModel;
+		this.coreSoftpointModel = newModel.coreSoftpointModel;
+		this.paintModel = newModel.paintModel;
 	}
 }

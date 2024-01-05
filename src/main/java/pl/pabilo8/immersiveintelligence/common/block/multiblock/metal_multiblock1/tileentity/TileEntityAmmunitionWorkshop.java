@@ -23,12 +23,12 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.AmmunitionWorkshop;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumFuseTypes;
-import pl.pabilo8.immersiveintelligence.api.bullets.IAmmo;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumFuseTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoItem;
 import pl.pabilo8.immersiveintelligence.api.crafting.AmmunitionWorkshopRecipe;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.AmmunitionWorkshop;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockAmmunitionWorkshop;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
@@ -115,10 +115,10 @@ public class TileEntityAmmunitionWorkshop extends TileEntityMultiblockMetal<Tile
 				processTime = 0;
 				processTimeMax = recipe.getTotalProcessTime();
 				effect = recipe.process.apply(inventory.get(0).copy(), inventory.get(1).copy());
-				if(effect.getItem() instanceof IAmmo)
+				if(effect.getItem() instanceof IAmmoItem)
 				{
-					((IAmmo)effect.getItem()).setFuseType(effect, fuse);
-					((IAmmo)effect.getItem()).setFuseParameter(effect, fuseConfig);
+					((IAmmoItem)effect.getItem()).setFuseType(effect, fuse);
+					((IAmmoItem)effect.getItem()).setFuseParameter(effect, fuseConfig);
 				}
 			}
 		}
@@ -374,7 +374,7 @@ public class TileEntityAmmunitionWorkshop extends TileEntityMultiblockMetal<Tile
 	public boolean isStackValid(int i, ItemStack stack)
 	{
 		if(i==0)
-			return stack.getItem() instanceof IAmmo&&((IAmmo)stack.getItem()).isBulletCore(stack);
+			return stack.getItem() instanceof IAmmoItem&&((IAmmoItem)stack.getItem()).isBulletCore(stack);
 		else if(i==1)
 			return AmmunitionWorkshopRecipe.recipeList.stream().anyMatch(a -> a.casingInput.matchesItemStackIgnoringSize(stack));
 		return false;

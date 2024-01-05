@@ -20,7 +20,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoUtils;
+import pl.pabilo8.immersiveintelligence.api.ammo.IIAmmoUtils;
 import pl.pabilo8.immersiveintelligence.api.utils.IEntitySpecialRepairable;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IVehicleMultiPart;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
@@ -195,7 +195,7 @@ public class EntityDrone extends EntityFlying implements IIIEntity<EntityDrone>,
 		{
 			AxisAlignedBB target = getEntityBoundingBox().offset(0, -height-1, 0).grow(1).expand(0, -40, 0);
 			if(!world.getEntitiesWithinAABB(EntityMob.class, target).isEmpty())
-				world.spawnEntity(AmmoUtils.createBullet(world,
+				world.spawnEntity(IIAmmoUtils.createBullet(world,
 						IIContent.itemAmmoMortar.getBulletWithParams("core_brass", "canister", "tnt"),
 						getPositionVector().subtract(0, 1.5, 0), new Vec3d(0, 1, 0), 0f));
 		}

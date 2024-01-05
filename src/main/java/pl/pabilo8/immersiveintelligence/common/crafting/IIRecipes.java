@@ -35,8 +35,8 @@ import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.registries.IForgeRegistry;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.PackerHandler;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry;
-import pl.pabilo8.immersiveintelligence.api.bullets.IAmmo;
+import pl.pabilo8.immersiveintelligence.api.ammo.IIAmmoRegistry;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoItem;
 import pl.pabilo8.immersiveintelligence.api.crafting.*;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Sawmill;
@@ -91,7 +91,7 @@ public class IIRecipes
 		TOOL_CUTTERS = new ItemStack(IEContent.itemTool, 1, 1);
 
 		//Used by ammo pouch
-		AMMO_CASINGS = new IngredientStack(AmmoRegistry.INSTANCE.registeredBulletItems.values()
+		AMMO_CASINGS = new IngredientStack(IIAmmoRegistry.registeredAmmoItems.values()
 				.stream()
 				.map(iAmmo -> iAmmo.getCasingStack(1))
 				.collect(Collectors.toList())
@@ -890,7 +890,7 @@ public class IIRecipes
 				new ItemStack(IIContent.itemLightEngineerBoots)
 		)), 8192, 340, 2000);
 
-		for(IAmmo bullet : AmmoRegistry.INSTANCE.registeredBulletItems.values())
+		for(IAmmoItem bullet : IIAmmoRegistry.registeredAmmoItems.values())
 		{
 			ItemStack bulletStack = bullet.getBulletWithParams("", "", "");
 			//clear nbt
@@ -1172,7 +1172,7 @@ public class IIRecipes
 		for(Item item : new Item[]{IIContent.blockTripmine.itemBlock, IIContent.blockTellermine.itemBlock, IIContent.blockRadioExplosives.itemBlock, IIContent.itemNavalMine})
 		{
 			assert item!=null;
-			IAmmo bullet = (IAmmo)item;
+			IAmmoItem bullet = (IAmmoItem)item;
 
 			AmmunitionWorkshopRecipe.addRecipe(
 					(core, casing) -> {
@@ -1373,7 +1373,7 @@ public class IIRecipes
 					{
 						Item item = stack.getItem();
 						return item==IIContent.itemBulletMagazine.stackToSub(ss).ammo
-								&&!((IAmmo)item).isBulletCore(stack);
+								&&!((IAmmoItem)item).isBulletCore(stack);
 					}
 
 					@Override

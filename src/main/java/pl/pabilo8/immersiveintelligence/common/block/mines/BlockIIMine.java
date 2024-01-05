@@ -17,12 +17,12 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumCoreTypes;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumFuseTypes;
-import pl.pabilo8.immersiveintelligence.api.bullets.IAmmo;
-import pl.pabilo8.immersiveintelligence.api.bullets.IAmmoComponent;
-import pl.pabilo8.immersiveintelligence.api.bullets.IAmmoCore;
+import pl.pabilo8.immersiveintelligence.api.ammo.IIAmmoRegistry;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumCoreTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumFuseTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoComponent;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoCore;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoItem;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.mines.BlockIIMine.IIBlockTypes_Mine;
 import pl.pabilo8.immersiveintelligence.common.block.mines.tileentity.TileEntityTripMine;
@@ -124,7 +124,7 @@ public abstract class BlockIIMine extends BlockIITileProvider<IIBlockTypes_Mine>
 		}
 	}
 
-	public static abstract class ItemBlockMineBase extends ItemBlockIIBase implements IAmmo
+	public static abstract class ItemBlockMineBase extends ItemBlockIIBase implements IAmmoItem
 	{
 		public ItemBlockMineBase(BlockIIMine b)
 		{
@@ -158,7 +158,7 @@ public abstract class BlockIIMine extends BlockIITileProvider<IIBlockTypes_Mine>
 		{
 			if(!ItemNBTHelper.hasKey(stack, "core"))
 				makeDefault(stack);
-			return AmmoRegistry.INSTANCE.getCore(ItemNBTHelper.getString(stack, "core"));
+			return IIAmmoRegistry.getCore(ItemNBTHelper.getString(stack, "core"));
 		}
 
 		@Override
@@ -254,7 +254,7 @@ public abstract class BlockIIMine extends BlockIITileProvider<IIBlockTypes_Mine>
 				ArrayList<IAmmoComponent> arrayList = new ArrayList<>();
 				NBTTagList components = (NBTTagList)ItemNBTHelper.getTag(stack).getTag("components");
 				for(int i = 0; i < components.tagCount(); i++)
-					arrayList.add(AmmoRegistry.INSTANCE.getComponent(components.getStringTagAt(i)));
+					arrayList.add(IIAmmoRegistry.getComponent(components.getStringTagAt(i)));
 				return arrayList.toArray(new IAmmoComponent[0]);
 			}
 			return new IAmmoComponent[0];

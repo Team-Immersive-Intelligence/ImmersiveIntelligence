@@ -2,6 +2,7 @@ package pl.pabilo8.immersiveintelligence.common.ammo.factory;
 
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import blusunrize.immersiveengineering.common.util.Utils;
+import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -11,11 +12,11 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumComponentRole;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumCoreTypes;
-import pl.pabilo8.immersiveintelligence.api.bullets.IAmmoComponent;
-import pl.pabilo8.immersiveintelligence.common.entity.EntityGasCloud;
-import pl.pabilo8.immersiveintelligence.common.entity.EntityIIChemthrowerShot;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumComponentRole;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumCoreTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoComponent;
+import pl.pabilo8.immersiveintelligence.common.entity.ammo.component.EntityGasCloud;
+import pl.pabilo8.immersiveintelligence.common.entity.ammo.component.EntityIIChemthrowerShot;
 
 /**
  * @author Pabilo8
@@ -58,7 +59,7 @@ public class AmmoComponentFluid implements IAmmoComponent
 	}
 
 	@Override
-	public void onEffect(float amount, EnumCoreTypes coreType, NBTTagCompound tag, Vec3d pos, Vec3d dir, World world)
+	public void onEffect(World world, Vec3d pos, Vec3d dir, float multiplier, NBTTagCompound tag, EnumCoreTypes coreType, Entity owner)
 	{
 		if(world.isRemote)
 			return;
@@ -69,28 +70,28 @@ public class AmmoComponentFluid implements IAmmoComponent
 		if(fluid.isGaseous())
 		{
 			EntityGasCloud gasCloud = new EntityGasCloud(world, throwerPos.x+v.x*2, throwerPos.y+v.y*2,
-					throwerPos.z+v.z*2, new FluidStack(fluid, (int)(amount*1000)));
+					throwerPos.z+v.z*2, new FluidStack(fluid, (int)(multiplier*1000)));
 			world.spawnEntity(gasCloud);
 		}
 		else
 		{
 			//greater/equal to howi shell
-			if(amount >= 0.5&&fluid.canBePlacedInWorld())
+			if(multiplier >= 0.5&&fluid.canBePlacedInWorld())
 				for(int i = 0; i < 5; i++)
 					if(world.isAirBlock(p.up(i)))
 						world.setBlockState(p.up(i), fluid.getBlock().getDefaultState());
-			for(int i = 0; i < 100*amount; i++)
+			for(int i = 0; i < 100*multiplier; i++)
 			{
 				Vec3d vecDir = v.addVector(Utils.RAND.nextGaussian()*.25f, Utils.RAND.nextGaussian()*.25f, Utils.RAND.nextGaussian()*.25f);
 
 				world.spawnEntity(
 						new EntityIIChemthrowerShot(world, throwerPos.x+v.x*2, throwerPos.y+v.y*2,
-								throwerPos.z+v.z*2, 0, 0, 0, new FluidStack(fluid, (int)(amount*1000)))
+								throwerPos.z+v.z*2, 0, 0, 0, new FluidStack(fluid, (int)(multiplier*1000)))
 								.withMotion(vecDir.x*2, vecDir.y*0.05f, vecDir.z*2)
 				);
 
 				EntityIIChemthrowerShot shot = new EntityIIChemthrowerShot(world, throwerPos.x+v.x*2, throwerPos.y+v.y*2,
-						throwerPos.z+v.z*2, 0, 0, 0, new FluidStack(fluid, (int)(amount*1000)));
+						throwerPos.z+v.z*2, 0, 0, 0, new FluidStack(fluid, (int)(multiplier*1000)));
 				shot.motionX = vecDir.x*2;
 				shot.motionY = vecDir.y*0.05f;
 				shot.motionZ = vecDir.z*2;

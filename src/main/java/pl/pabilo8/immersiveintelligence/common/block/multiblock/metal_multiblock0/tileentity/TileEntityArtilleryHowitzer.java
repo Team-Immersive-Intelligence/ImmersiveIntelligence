@@ -24,7 +24,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoUtils;
+import pl.pabilo8.immersiveintelligence.api.ammo.IIAmmoUtils;
 import pl.pabilo8.immersiveintelligence.api.data.DataHandlingUtils;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
@@ -39,7 +39,7 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.MultiblockArtilleryHowitzer;
-import pl.pabilo8.immersiveintelligence.common.entity.bullet.EntityBullet;
+import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityBullet;
 import pl.pabilo8.immersiveintelligence.common.entity.tactile.TactileHandler;
 import pl.pabilo8.immersiveintelligence.common.entity.tactile.TactileHandler.ITactileListener;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoArtillery;
@@ -469,7 +469,7 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 		if(!world.isRemote)
 		{
 			ItemStack bullet = loadedShells.get(i);
-			EntityBullet a = AmmoUtils.createBullet(world, bullet, getGunPosition().add(gunEnd), gunVec);
+			EntityBullet a = IIAmmoUtils.createBullet(world, bullet, getGunPosition().add(gunEnd), gunVec);
 			if(tactileHandler!=null)
 				a.setShooters(a.getShooter(), tactileHandler.getEntities().toArray(new Entity[0]));
 			a.setShootPos(getMultiblockBlocks());

@@ -4,6 +4,7 @@ import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import blusunrize.immersiveengineering.common.util.IEPotions;
 import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -16,23 +17,21 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumComponentRole;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumCoreTypes;
-import pl.pabilo8.immersiveintelligence.api.bullets.IAmmo;
-import pl.pabilo8.immersiveintelligence.api.bullets.IAmmoComponent;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumComponentRole;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumCoreTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoItem;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoComponent;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
-import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
-import pl.pabilo8.immersiveintelligence.common.util.IIDamageSources;
 import pl.pabilo8.immersiveintelligence.common.IIPotions;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
-import pl.pabilo8.immersiveintelligence.common.entity.bullet.EntityAtomicBoom;
+import pl.pabilo8.immersiveintelligence.common.entity.ammo.component.EntityAtomicBoom;
+import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
+import pl.pabilo8.immersiveintelligence.common.util.IIDamageSources;
 import pl.pabilo8.immersiveintelligence.common.util.IIExplosion;
 
 import java.util.ArrayList;
@@ -62,13 +61,13 @@ public class AmmoComponentNuke implements IAmmoComponent
 	}
 
 	@Override
-	public void onEffect(float amount, EnumCoreTypes coreType, NBTTagCompound tag, Vec3d pos, Vec3d dir, World world)
+	public void onEffect(World world, Vec3d pos, Vec3d dir, float multiplier, NBTTagCompound tag, EnumCoreTypes coreType, Entity owner)
 	{
 		BlockPos ppos = new BlockPos(pos);
-		new IIExplosion(world, null, pos, 56*amount, 60, false, true, false)
+		new IIExplosion(world, null, pos, 56*multiplier, 60, false, true, false)
 				.doExplosion();
 
-		EntityLivingBase[] entities = world.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(ppos).grow(75*amount)).toArray(new EntityLivingBase[0]);
+		EntityLivingBase[] entities = world.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(ppos).grow(75*multiplier)).toArray(new EntityLivingBase[0]);
 		for(EntityLivingBase e : entities)
 		{
 			e.addPotionEffect(new PotionEffect(IEPotions.flashed, 40, 1));
@@ -77,21 +76,21 @@ public class AmmoComponentNuke implements IAmmoComponent
 			e.getArmorInventoryList().forEach(stack -> stack.damageItem(stack.getMaxDamage(), e));
 			e.attackEntityFrom(IIDamageSources.NUCLEAR_HEAT_DAMAGE, 2000);
 		}
-		entities = world.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(ppos).grow(50*amount)).toArray(new EntityLivingBase[0]);
+		entities = world.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(ppos).grow(50*multiplier)).toArray(new EntityLivingBase[0]);
 		for(EntityLivingBase e : entities)
 			e.addPotionEffect(new PotionEffect(IIPotions.radiation, 4000, 0));
 
 		IIPacketHandler.playRangedSound(world, pos, IISounds.explosionNuke, SoundCategory.NEUTRAL, 72, 1f, 0f);
 
-		EntityAtomicBoom entityAtomicBoom = new EntityAtomicBoom(world, amount);
+		EntityAtomicBoom entityAtomicBoom = new EntityAtomicBoom(world, multiplier);
 		entityAtomicBoom.setPosition(pos.x, pos.y, pos.z);
 		world.spawnEntity(entityAtomicBoom);
 
 
-		final int endRad = (int)(24*amount);
+		final int endRad = (int)(24*multiplier);
 		final int biomeWasteland = Biome.getIdForBiome(IIContent.biomeWasteland);
 
-		int wastelandRadius = (int)(5*amount)*16; //16 blocks in chunk
+		int wastelandRadius = (int)(5*multiplier)*16; //16 blocks in chunk
 
 		/*
 		char[][] bloks = new char[wastelandRadius*2+1][wastelandRadius*2+1];
@@ -201,7 +200,7 @@ public class AmmoComponentNuke implements IAmmoComponent
 	}
 
 	@Override
-	public boolean matchesBullet(IAmmo bullet)
+	public boolean matchesBullet(IAmmoItem bullet)
 	{
 		return bullet.getCaliber() >= 6;
 	}

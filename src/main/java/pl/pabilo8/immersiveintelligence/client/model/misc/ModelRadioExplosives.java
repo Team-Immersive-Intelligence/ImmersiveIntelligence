@@ -3,11 +3,11 @@ package pl.pabilo8.immersiveintelligence.client.model.misc;
 import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.renderer.GlStateManager;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumCoreTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
 import pl.pabilo8.immersiveintelligence.client.model.ModelIIBase;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 
 /**
  * @author Pabilo8
@@ -135,11 +135,11 @@ public class ModelRadioExplosives extends ModelIIBase implements IBulletModel
 		explosivesModel[3].addShapeBox(0F, 0F, 0F, 3, 7, 3, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Box 1
 		explosivesModel[3].setRotationPoint(1.5F, -8F, 2F);
 
-		parts.put("satchelTop",satchelTopModel);
-		parts.put("base",baseModel);
+		parts.put("satchelTop", satchelTopModel);
+		parts.put("base", baseModel);
 		parts.put("explosives", explosivesModel);
 
-		translateAll(0f,0,0);
+		translateAll(0f, 0, 0);
 
 		flipAll();
 	}

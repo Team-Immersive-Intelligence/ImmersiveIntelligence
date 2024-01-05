@@ -4,9 +4,9 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemStack;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumCoreTypes;
-import pl.pabilo8.immersiveintelligence.api.bullets.IAmmo;
+import pl.pabilo8.immersiveintelligence.api.ammo.IIAmmoRegistry;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumCoreTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoItem;
 import pl.pabilo8.immersiveintelligence.client.model.misc.ModelRadioExplosives;
 import pl.pabilo8.immersiveintelligence.common.block.mines.tileentity.TileEntityRadioExplosives;
 
@@ -25,7 +25,7 @@ public class RadioExplosivesRenderer extends TileEntitySpecialRenderer<TileEntit
 		GlStateManager.translate(x+0.5, y+0.5, z+0.5);
 		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 
-		GlStateManager.rotate(-90,0,0,1);
+		GlStateManager.rotate(-90, 0, 0, 1);
 		switch(te.facing)
 		{
 			case UP:
@@ -63,7 +63,7 @@ public class RadioExplosivesRenderer extends TileEntitySpecialRenderer<TileEntit
 			break;
 		}
 
-		GlStateManager.translate(0.125,-0.25,0);
+		GlStateManager.translate(0.125, -0.25, 0);
 
 		model.renderCasing(0f, 0xffffff);
 		model.renderCore(te.coreColor, EnumCoreTypes.CANISTER);
@@ -75,8 +75,8 @@ public class RadioExplosivesRenderer extends TileEntitySpecialRenderer<TileEntit
 	public void reloadModels()
 	{
 		model = new ModelRadioExplosives();
-		AmmoRegistry.INSTANCE.registeredModels.remove("radio_explosives");
-		AmmoRegistry.INSTANCE.registeredModels.put("radio_explosives", model);
+		IIAmmoRegistry.registeredModels.remove("radio_explosives");
+		IIAmmoRegistry.registeredModels.put("radio_explosives", model);
 	}
 
 	public static class RadioExplosivesItemStackRenderer extends TileEntityItemStackRenderer
@@ -88,8 +88,8 @@ public class RadioExplosivesRenderer extends TileEntitySpecialRenderer<TileEntit
 			GlStateManager.translate(0.5, 0.25, 0.5);
 			GlStateManager.scale(1.5, 1.5, 1.5f);
 
-			assert itemStackIn.getItem() instanceof IAmmo;
-			IAmmo bullet = (IAmmo)itemStackIn.getItem();
+			assert itemStackIn.getItem() instanceof IAmmoItem;
+			IAmmoItem bullet = (IAmmoItem)itemStackIn.getItem();
 
 			model.renderCasing(0, bullet.getPaintColor(itemStackIn));
 			//model.renderCore(bullet.getCore(itemStackIn).getColour(), EnumCoreTypes.CANISTER);

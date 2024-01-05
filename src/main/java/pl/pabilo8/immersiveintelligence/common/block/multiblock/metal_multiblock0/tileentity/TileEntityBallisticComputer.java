@@ -14,8 +14,8 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.Vec3d;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry;
-import pl.pabilo8.immersiveintelligence.api.bullets.IAmmo;
+import pl.pabilo8.immersiveintelligence.api.ammo.IIAmmoRegistry;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoItem;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.types.*;
@@ -23,7 +23,7 @@ import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.MultiblockBallisticComputer;
-import pl.pabilo8.immersiveintelligence.common.entity.bullet.EntityBullet;
+import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityBullet;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultiblockIIGeneric;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
@@ -91,9 +91,9 @@ public class TileEntityBallisticComputer extends TileEntityMultiblockIIGeneric<T
 			{
 				DataTypeItemStack t = packet.getVarInType(DataTypeItemStack.class, new_packet.getPacketVariable('s'));
 				ItemStack stack = t.value;
-				if(stack.getItem() instanceof IAmmo)
+				if(stack.getItem() instanceof IAmmoItem)
 				{
-					IAmmo bullet = (IAmmo)stack.getItem();
+					IAmmoItem bullet = (IAmmoItem)stack.getItem();
 					force = bullet.getDefaultVelocity();
 					mass = bullet.getMass(stack);
 				}
@@ -108,7 +108,7 @@ public class TileEntityBallisticComputer extends TileEntityMultiblockIIGeneric<T
 				if(new_packet.hasVariable('t'))
 				{
 					String bname = new_packet.getPacketVariable('t').valueToString();
-					IAmmo bullet = AmmoRegistry.INSTANCE.getBulletItem(bname);
+					IAmmoItem bullet = IIAmmoRegistry.getBulletItem(bname);
 					if(bullet!=null)
 						force = bullet.getDefaultVelocity();
 				}

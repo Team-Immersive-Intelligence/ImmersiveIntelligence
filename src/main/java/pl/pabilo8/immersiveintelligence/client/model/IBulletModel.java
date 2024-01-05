@@ -1,15 +1,18 @@
 package pl.pabilo8.immersiveintelligence.client.model;
 
 import net.minecraft.item.ItemStack;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumCoreTypes;
-import pl.pabilo8.immersiveintelligence.api.bullets.IAmmo;
-import pl.pabilo8.immersiveintelligence.api.bullets.IAmmoCore;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumCoreTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoCore;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoItem;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 
 /**
  * @author Pabilo8
  * @since 04-10-2019
  */
+@SideOnly(Side.CLIENT)
 public interface IBulletModel extends IReloadableModelContainer<IBulletModel>
 {
 	/**
@@ -17,7 +20,7 @@ public interface IBulletModel extends IReloadableModelContainer<IBulletModel>
 	 * When your bullet has a gunpowder filling animation it is preferred to override this method and render a simpler casing model (less geometry -> more performance)
 	 *
 	 * @param coreColour  of the bullet, see {@link IAmmoCore#getColour()}
-	 * @param coreType    of the bullet, see {@link IAmmo#getAllowedCoreTypes()}
+	 * @param coreType    of the bullet, see {@link IAmmoItem#getAllowedCoreTypes()}
 	 * @param paintColour in rgbInt format
 	 */
 	default void renderBulletUnused(int coreColour, EnumCoreTypes coreType, int paintColour)
@@ -33,7 +36,7 @@ public interface IBulletModel extends IReloadableModelContainer<IBulletModel>
 	 */
 	default void renderBulletUnused(ItemStack stack)
 	{
-		IAmmo b = (IAmmo)stack.getItem();
+		IAmmoItem b = (IAmmoItem)stack.getItem();
 		renderBulletUnused(b.getCore(stack).getColour(), b.getCoreType(stack), b.getPaintColor(stack));
 	}
 
@@ -42,7 +45,7 @@ public interface IBulletModel extends IReloadableModelContainer<IBulletModel>
 	 * Override it when rendering grenades (so the stick/casing would be rendered too)
 	 *
 	 * @param coreColour  of the bullet, see {@link IAmmoCore#getColour()}
-	 * @param coreType    of the bullet, see {@link IAmmo#getAllowedCoreTypes()}
+	 * @param coreType    of the bullet, see {@link IAmmoItem#getAllowedCoreTypes()}
 	 * @param paintColour in rgbInt format
 	 */
 	default void renderBulletUsed(int coreColour, EnumCoreTypes coreType, int paintColour)

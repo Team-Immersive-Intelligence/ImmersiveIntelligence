@@ -11,7 +11,7 @@ import net.minecraft.util.Tuple;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry;
+import pl.pabilo8.immersiveintelligence.api.ammo.IIAmmoRegistry;
 import pl.pabilo8.immersiveintelligence.client.fx.particles.ParticleGunfire;
 import pl.pabilo8.immersiveintelligence.client.render.IIMultiblockRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer.RegisteredTileRenderer;
@@ -306,7 +306,7 @@ public class ArtilleryHowitzerRenderer extends IIMultiblockRenderer<TileEntityAr
 
 	private AMTBullet createDefaultShellAMT(IIModelHeader header, String name, String originName)
 	{
-		return new AMTBullet(name, header.getOffset(originName), AmmoRegistry.INSTANCE.getModel(IIContent.itemAmmoArtillery));
+		return new AMTBullet(name, header.getOffset(originName), IIAmmoRegistry.getModel(IIContent.itemAmmoArtillery));
 	}
 
 	private AMTBullet createShellQueueAMT(boolean in, int id, IIModelHeader header)

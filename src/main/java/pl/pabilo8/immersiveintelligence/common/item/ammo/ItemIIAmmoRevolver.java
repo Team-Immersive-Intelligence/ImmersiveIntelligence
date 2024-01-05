@@ -8,7 +8,6 @@ import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -25,33 +24,34 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Ammunition;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.bullets.*;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumComponentRole;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumCoreTypes;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumFuseTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.IIAmmoUtils;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumCoreTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumFuseTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoItem;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
 import pl.pabilo8.immersiveintelligence.client.model.bullet.ModelBullet1bCal;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Ammunition;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.entity.bullet.EntityBullet;
+import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityBullet;
+import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityProjectile;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoBase.AmmoParts;
-import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.modworks.annotations.item.GeneratedItemModels;
 import pl.pabilo8.modworks.annotations.item.ItemModelType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author Pabilo8
  * @since 30-08-2019
  */
 @GeneratedItemModels(itemName = "bullet_revolver_1bcal", type = ItemModelType.ITEM_SIMPLE_AUTOREPLACED, valueSet = AmmoParts.class)
-public class ItemIIAmmoRevolver extends ItemBullet implements IAmmo, BulletHandler.IBullet
+public class ItemIIAmmoRevolver extends ItemBullet implements IAmmoItem<EntityProjectile>, BulletHandler.IBullet
 {
 	//I hope Blu starts designing things that are extendable, unlike this bullet system
 	public static final int UNUSED = 0;
@@ -95,47 +95,6 @@ public class ItemIIAmmoRevolver extends ItemBullet implements IAmmo, BulletHandl
 
 	}
 
-	public void makeDefault(ItemStack stack)
-	{
-		if(stack.getMetadata()!=UNUSED)
-		{
-			if(!ItemNBTHelper.hasKey(stack, "core"))
-				ItemNBTHelper.setString(stack, "core", "core_brass");
-			if(!ItemNBTHelper.hasKey(stack, "core_type"))
-				ItemNBTHelper.setString(stack, "core_type", getAllowedCoreTypes()[0].getName());
-			if(stack.getMetadata()==BULLET&&!ItemNBTHelper.hasKey(stack, "fuse"))
-				ItemNBTHelper.setString(stack, "fuse", getAllowedFuseTypes()[0].getName());
-		}
-	}
-
-	@Override
-	public IAmmoCore getCore(ItemStack stack)
-	{
-		if(stack.getMetadata()==UNUSED)
-			return null;
-		if(!ItemNBTHelper.hasKey(stack, "core"))
-			makeDefault(stack);
-		return AmmoRegistry.INSTANCE.getCore(ItemNBTHelper.getString(stack, "core"));
-	}
-
-	@Override
-	public EnumCoreTypes getCoreType(ItemStack stack)
-	{
-		if(stack.getMetadata()==UNUSED)
-			return null;
-		if(!ItemNBTHelper.hasKey(stack, "core_type"))
-			makeDefault(stack);
-		return EnumCoreTypes.v(ItemNBTHelper.getString(stack, "core_type"));
-	}
-
-	@Override
-	public int getPaintColor(ItemStack stack)
-	{
-		if(ItemNBTHelper.hasKey(stack, "paint_color"))
-			return ItemNBTHelper.getInt(stack, "paint_color");
-		return -1;
-	}
-
 	@Override
 	public void registerSprites(TextureMap map)
 	{
@@ -144,73 +103,6 @@ public class ItemIIAmmoRevolver extends ItemBullet implements IAmmo, BulletHandl
 			ApiUtils.getRegisterSprite(map, ImmersiveIntelligence.MODID+":items/bullets/ammo/"+getName().toLowerCase()+"/"+coreType.getName());
 		ApiUtils.getRegisterSprite(map, ImmersiveIntelligence.MODID+":items/bullets/ammo/"+getName().toLowerCase()+"/paint");
 		ApiUtils.getRegisterSprite(map, ImmersiveIntelligence.MODID+":items/bullets/ammo/"+getName().toLowerCase()+"/core");
-	}
-
-	@Override
-	public IAmmoComponent[] getComponents(ItemStack stack)
-	{
-		if(ItemNBTHelper.hasKey(stack, "components"))
-		{
-			ArrayList<IAmmoComponent> arrayList = new ArrayList<>();
-			NBTTagList components = (NBTTagList)ItemNBTHelper.getTag(stack).getTag("components");
-			for(int i = 0; i < components.tagCount(); i++)
-				arrayList.add(AmmoRegistry.INSTANCE.getComponent(components.getStringTagAt(i)));
-			return arrayList.toArray(new IAmmoComponent[0]);
-		}
-		return new IAmmoComponent[0];
-	}
-
-	@Override
-	public void addComponents(ItemStack stack, IAmmoComponent component, NBTTagCompound componentNBT)
-	{
-		NBTTagList comps = ItemNBTHelper.getTag(stack).getTagList("components", 8);
-		NBTTagList nbts = ItemNBTHelper.getTag(stack).getTagList("component_nbt", 10);
-
-		comps.appendTag(new NBTTagString(component.getName()));
-		nbts.appendTag(componentNBT.copy());
-
-		ItemNBTHelper.getTag(stack).setTag("components", comps);
-		ItemNBTHelper.getTag(stack).setTag("component_nbt", nbts);
-	}
-
-	@Override
-	public NBTTagCompound[] getComponentsNBT(ItemStack stack)
-	{
-		if(ItemNBTHelper.hasKey(stack, "component_nbt"))
-		{
-			ArrayList<NBTTagCompound> arrayList = new ArrayList<>();
-			NBTTagList components = (NBTTagList)ItemNBTHelper.getTag(stack).getTag("component_nbt");
-			for(int i = 0; i < components.tagCount(); i++)
-				arrayList.add(components.getCompoundTagAt(i));
-			return arrayList.toArray(new NBTTagCompound[0]);
-		}
-		return new NBTTagCompound[0];
-	}
-
-	@Override
-	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn)
-	{
-		super.addInformation(stack, worldIn, tooltip, flagIn);
-	}
-
-	private String getFormattedBulletTypeName(ItemStack stack)
-	{
-		Set<EnumComponentRole> collect = new HashSet<>();
-		if(getCoreType(stack).getRole()!=null)
-			collect.add(getCoreType(stack).getRole());
-		collect.addAll(Arrays.stream(getComponents(stack)).map(IAmmoComponent::getRole).collect(Collectors.toSet()));
-		StringBuilder builder = new StringBuilder();
-		for(EnumComponentRole enumComponentRole : collect)
-		{
-			if(enumComponentRole==EnumComponentRole.GENERAL_PURPOSE)
-				continue;
-			builder.append(I18n.format(IIReference.DESCRIPTION_KEY+"bullet_type."+enumComponentRole.getName()));
-			builder.append(" - ");
-		}
-		if(builder.toString().isEmpty())
-			builder.append(I18n.format(IIReference.DESCRIPTION_KEY+"bullet_type."+EnumComponentRole.GENERAL_PURPOSE.getName()));
-		String s = builder.toString();
-		return I18n.format(s.substring(0, Math.max(s.length()-3, 0)));
 	}
 
 	@Override
@@ -427,6 +319,12 @@ public class ItemIIAmmoRevolver extends ItemBullet implements IAmmo, BulletHandl
 	}
 
 	@Override
+	public EntityProjectile getBulletEntity(World world)
+	{
+		return new EntityProjectile(world);
+	}
+
+	@Override
 	public float getDamage()
 	{
 		return 8;
@@ -454,9 +352,10 @@ public class ItemIIAmmoRevolver extends ItemBullet implements IAmmo, BulletHandl
 	@Override
 	public Entity getProjectile(@Nullable EntityPlayer shooter, ItemStack cartridge, Entity projectile, boolean charged)
 	{
+		//TODO: 02.01.2024 use new code
 		Vec3d vec = new Vec3d(projectile.motionX, projectile.motionY, projectile.motionZ).normalize();
 		Vec3d vv = projectile.getPositionVector();
-		EntityBullet e = AmmoUtils.createBullet(projectile.world, cartridge, vv, vec);
+		EntityBullet e = IIAmmoUtils.createBullet(projectile.world, cartridge, vv, vec);
 		if(shooter!=null)
 			e.setShooters(shooter);
 		return e;
