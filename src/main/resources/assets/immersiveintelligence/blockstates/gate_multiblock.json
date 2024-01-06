@@ -193,7 +193,7 @@
     "_0multiblockslave": {
       "false": {},
       "true": {
-        "model": "immersiveintelligence:empty.obj"
+        "model": "immersiveintelligence:smartmodel/conn_empty"
       }
     },
     "_1dynamicrender": {
@@ -208,11 +208,8 @@
       "true": {}
     },
     "boolean1": {
-      "false": {
-      },
-      "true": {
-        "model": "immersiveengineering:smartmodel/connector"
-      }
+      "false": {},
+      "true": {}
     }
   }
 }

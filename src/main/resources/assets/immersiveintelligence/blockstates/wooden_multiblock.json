@@ -63,7 +63,7 @@
     "_0multiblockslave": {
       "false": {},
       "true": {
-        "model": "immersiveengineering:ie_empty"
+        "model": "immersiveintelligence:smartmodel/conn_empty"
       }
     },
     "_1dynamicrender": {

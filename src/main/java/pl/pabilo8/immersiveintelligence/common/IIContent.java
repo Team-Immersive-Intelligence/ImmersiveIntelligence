@@ -24,7 +24,7 @@ import pl.pabilo8.immersiveintelligence.common.block.mines.BlockIIRadioExplosive
 import pl.pabilo8.immersiveintelligence.common.block.mines.BlockIITellermine;
 import pl.pabilo8.immersiveintelligence.common.block.mines.BlockIITripmine;
 import pl.pabilo8.immersiveintelligence.common.block.mines.BlockIITripwireConnector;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.gate_multiblock.BlockIIFenceGateMultiblock;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.gate_multiblock.BlockIIGateMultiblock;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.BlockIIMetalMultiblock0;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.BlockIIMetalMultiblock1;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityEmplacement.EmplacementWeapon;
@@ -274,7 +274,7 @@ public class IIContent
 	//multiblocks
 	public static BlockIIMetalMultiblock0 blockMetalMultiblock0 = new BlockIIMetalMultiblock0();
 	public static BlockIIMetalMultiblock1 blockMetalMultiblock1 = new BlockIIMetalMultiblock1();
-	public static BlockIIFenceGateMultiblock blockFenceGateMultiblock = new BlockIIFenceGateMultiblock();
+	public static BlockIIGateMultiblock blockFenceGateMultiblock = new BlockIIGateMultiblock();
 
 	//fluid blocks
 	public static BlockIIFluid blockFluidInkBlack, blockFluidInkCyan, blockFluidInkMagenta, blockFluidInkYellow;

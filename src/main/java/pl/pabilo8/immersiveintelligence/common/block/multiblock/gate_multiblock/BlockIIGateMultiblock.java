@@ -18,7 +18,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.common.property.Properties;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.gate_multiblock.BlockIIFenceGateMultiblock.IIBlockTypes_FenceGate;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.gate_multiblock.BlockIIGateMultiblock.IIBlockTypes_FenceGate;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.gate_multiblock.multiblock.*;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.gate_multiblock.multiblock.MultiblockAluminiumChainFenceGate.TileEntityAluminiumChainFenceGate;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.gate_multiblock.multiblock.MultiblockAluminiumFenceGate.TileEntityAluminiumFenceGate;
@@ -27,6 +27,7 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.gate_multiblock.
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.gate_multiblock.multiblock.MultiblockWoodenChainFenceGate.TileEntityWoodenChainFenceGate;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.gate_multiblock.multiblock.MultiblockWoodenFenceGate.TileEntityWoodenFenceGate;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.EnumMultiblockProvider;
+import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IIBlockProperties;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IITileMultiblockEnum;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock;
 
@@ -36,17 +37,18 @@ import java.util.ArrayList;
  * @author Pabilo8
  * @since 23.12.2021
  */
-public class BlockIIFenceGateMultiblock extends BlockIIMultiblock<IIBlockTypes_FenceGate>
+public class BlockIIGateMultiblock extends BlockIIMultiblock<IIBlockTypes_FenceGate>
 {
-	// TODO: 05.09.2022 higher hardness and resistance for metal gates
 	public enum IIBlockTypes_FenceGate implements IITileMultiblockEnum
 	{
 		@EnumMultiblockProvider(multiblock = MultiblockWoodenFenceGate.class, tile = TileEntityWoodenFenceGate.class)
 		WOODEN,
 		@EnumMultiblockProvider(multiblock = MultiblockWoodenChainFenceGate.class, tile = TileEntityWoodenChainFenceGate.class)
 		WOODEN_CHAIN,
+		@IIBlockProperties(hardness = 20, blastResistance = 10)
 		@EnumMultiblockProvider(multiblock = MultiblockSteelFenceGate.class, tile = TileEntitySteelFenceGate.class)
 		STEEL,
+		@IIBlockProperties(hardness = 20, blastResistance = 10)
 		@EnumMultiblockProvider(multiblock = MultiblockSteelChainFenceGate.class, tile = TileEntitySteelChainFenceGate.class)
 		STEEL_CHAIN,
 		@EnumMultiblockProvider(multiblock = MultiblockAluminiumFenceGate.class, tile = TileEntityAluminiumFenceGate.class)
@@ -55,7 +57,7 @@ public class BlockIIFenceGateMultiblock extends BlockIIMultiblock<IIBlockTypes_F
 		ALUMINIUM_CHAIN
 	}
 
-	public BlockIIFenceGateMultiblock()
+	public BlockIIGateMultiblock()
 	{
 		super("gate_multiblock", Material.IRON, PropertyEnum.create("type", IIBlockTypes_FenceGate.class),
 				IEProperties.FACING_HORIZONTAL,

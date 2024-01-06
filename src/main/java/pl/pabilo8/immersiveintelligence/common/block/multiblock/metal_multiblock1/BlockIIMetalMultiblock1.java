@@ -26,8 +26,8 @@ public class BlockIIMetalMultiblock1 extends BlockIIMultiblock<MetalMultiblocks1
 	{
 		super("metal_multiblock1", Material.IRON, PropertyEnum.create("type", MetalMultiblocks1.class),
 				IEProperties.FACING_HORIZONTAL,
-				IEProperties.BOOLEANS[0], IEProperties.BOOLEANS[1], IEProperties.MULTIBLOCKSLAVE, IEProperties.DYNAMICRENDER,
-				IOBJModelCallback.PROPERTY, Properties.AnimationProperty
+				IEProperties.BOOLEANS[0], IEProperties.BOOLEANS[1], IEProperties.CONNECTIONS, IEProperties.MULTIBLOCKSLAVE,
+				Properties.AnimationProperty, IEProperties.DYNAMICRENDER, IOBJModelCallback.PROPERTY
 		);
 		setHardness(3.0F);
 		setResistance(15.0F);

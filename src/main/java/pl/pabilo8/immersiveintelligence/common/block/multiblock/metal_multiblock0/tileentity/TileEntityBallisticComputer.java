@@ -8,11 +8,9 @@ import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.Vec3d;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.api.bullets.IAmmo;
@@ -24,6 +22,8 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.MultiblockBallisticComputer;
 import pl.pabilo8.immersiveintelligence.common.entity.bullet.EntityBullet;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultiblockIIGeneric;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
@@ -33,14 +33,13 @@ import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPO
  */
 public class TileEntityBallisticComputer extends TileEntityMultiblockIIGeneric<TileEntityBallisticComputer> implements IPlayerInteraction
 {
+	@SyncNBT(events = SyncEvents.RECIPE_CHANGED)
 	public int progress = 0;
 
 	public TileEntityBallisticComputer()
 	{
 		super(MultiblockBallisticComputer.INSTANCE);
-
 		this.energyStorage = new FluxStorageAdvanced(BallisticComputer.energyCapacity);
-		inventory = NonNullList.withSize(0, ItemStack.EMPTY);
 	}
 
 	@Override
@@ -53,20 +52,6 @@ public class TileEntityBallisticComputer extends TileEntityMultiblockIIGeneric<T
 	protected void onUpdate()
 	{
 
-	}
-
-	@Override
-	public void readCustomNBT(NBTTagCompound nbt, boolean descPacket)
-	{
-		super.readCustomNBT(nbt, descPacket);
-		progress = nbt.getInteger("progress");
-	}
-
-	@Override
-	public void writeCustomNBT(NBTTagCompound nbt, boolean descPacket)
-	{
-		super.writeCustomNBT(nbt, descPacket);
-		nbt.setInteger("progress", progress);
 	}
 
 	@Override
@@ -179,30 +164,20 @@ public class TileEntityBallisticComputer extends TileEntityMultiblockIIGeneric<T
 			if(master.progress < 2&&heldItem.getItem()==Items.MILK_BUCKET)
 			{
 				player.setItemStackToSlot(hand==EnumHand.MAIN_HAND?EntityEquipmentSlot.MAINHAND: EntityEquipmentSlot.OFFHAND, new ItemStack(Items.BUCKET));
-				master.progress += 1;
-				forceTileUpdate();
-				return true;
+				master.progress++;
 			}
 			else if(master.progress > 1&&master.progress < 6&&heldItem.getItem()==Items.DYE&&heldItem.getMetadata()==3)
 			{
 				heldItem.shrink(1);
-				master.progress += 1;
-				forceTileUpdate();
-				return true;
+				master.progress++;
 			}
 			else if(master.progress > 5&&master.progress < 10&&heldItem.getItem()==Items.SUGAR)
 			{
 				heldItem.shrink(1);
-				master.progress += 1;
-				forceTileUpdate();
-				return true;
+				master.progress++;
 			}
 			else if(master.progress > 9&&master.progress < 32&&Utils.compareToOreName(heldItem, "stickSteel"))
-			{
-				master.progress += 1;
-				forceTileUpdate();
-				return true;
-			}
+				master.progress++;
 			else if(master.progress >= 32&&heldItem.isEmpty())
 			{
 				player.addPotionEffect(new PotionEffect(MobEffects.HASTE, 360, 2));
@@ -212,9 +187,11 @@ public class TileEntityBallisticComputer extends TileEntityMultiblockIIGeneric<T
 				master.progress = 0;
 				if(!IIUtils.hasUnlockedIIAdvancement(player, "main/secret_cocoa"))
 					IIUtils.unlockIIAdvancement(player, "main/secret_cocoa");
-				forceTileUpdate();
-				return true;
 			}
+			else
+				return false;
+
+			updateTileForEvent(SyncEvents.RECIPE_CHANGED);
 		}
 		return false;
 	}
