@@ -1,8 +1,9 @@
 package pl.pabilo8.immersiveintelligence.common.item.tools;
 
-import blusunrize.immersiveengineering.common.items.IEItemInterfaces.ITextureOverride;
+import blusunrize.immersiveengineering.api.ApiUtils;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import blusunrize.immersiveengineering.common.util.Utils;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
@@ -17,6 +18,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler.IGuiItem;
 import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
@@ -25,6 +27,7 @@ import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.crafting.IIRecipes;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIIItemTextureOverride;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemStackHandler;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemStackHandler.IInventoryItem;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIBase;
@@ -41,7 +44,7 @@ import java.util.List;
  * @since 23.09.2023
  */
 @GeneratedItemModels(itemName = "casing_pouch", type = ItemModelType.ITEM_SIMPLE_AUTOREPLACED)
-public class ItemIICasingPouch extends ItemIIBase implements ITextureOverride, IInventoryItem, IGuiItem
+public class ItemIICasingPouch extends ItemIIBase implements IIIItemTextureOverride, IInventoryItem, IGuiItem
 {
 	public ItemIICasingPouch()
 	{
@@ -130,6 +133,15 @@ public class ItemIICasingPouch extends ItemIIBase implements ITextureOverride, I
 			default:
 				return Collections.singletonList(ResLoc.of(IIReference.RES_II, "items/casing_pouch/closed"));
 		}
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void registerSprites(TextureMap map)
+	{
+		ApiUtils.getRegisterSprite(map, ImmersiveIntelligence.MODID+":items/casing_pouch/empty");
+		ApiUtils.getRegisterSprite(map, ImmersiveIntelligence.MODID+":items/casing_pouch/filled");
+		ApiUtils.getRegisterSprite(map, ImmersiveIntelligence.MODID+":items/casing_pouch/closed");
 	}
 
 	//--- Inventory Handling ---//

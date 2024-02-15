@@ -5,7 +5,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -175,12 +174,6 @@ public abstract class BlockIIMine extends BlockIITileProvider<IIBlockTypes_Mine>
 			if(ItemNBTHelper.hasKey(stack, "paint_color"))
 				return ItemNBTHelper.getInt(stack, "paint_color");
 			return -1;
-		}
-
-		@Override
-		public void registerSprites(TextureMap map)
-		{
-
 		}
 
 		@Override

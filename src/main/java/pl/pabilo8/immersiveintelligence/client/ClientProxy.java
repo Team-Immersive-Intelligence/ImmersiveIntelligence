@@ -130,7 +130,6 @@ import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityMotorbike;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityVehicleSeat;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoBase;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoRevolver;
-import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine.Magazines;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIINavalMine;
 import pl.pabilo8.immersiveintelligence.common.item.tools.ItemIIDrillHead.DrillHeads;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIWeaponUpgrade;
@@ -389,33 +388,12 @@ public class ClientProxy extends CommonProxy
 	public void textureStichPre(TextureStitchEvent.Pre event)
 	{
 		//Bullets
-		IIAmmoRegistry.registeredAmmoItems.forEach((key, value) -> value.registerSprites(event.getMap()));
-
-		//Magazines
-		for(int i = 0; i < 4; i++)
-		{
-			ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":items/bullets/magazines/common/bullet"+i);
-			ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":items/bullets/magazines/common/paint"+i);
-		}
-		for(Magazines magazine : IIContent.itemBulletMagazine.getSubItems())
-		{
-			String name = magazine.getName();
-			ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":items/bullets/magazines/"+name);
-			if(magazine.hasDisplayTexture)
-				ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":items/bullets/magazines/"+name+"_disp");
-		}
-
-		ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":items/binoculars/binoculars");
-		ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":items/binoculars/infrared_binoculars_off");
-		ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":items/binoculars/infrared_binoculars_on");
-
-		ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":items/casing_pouch/empty");
-		ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":items/casing_pouch/filled");
-		ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":items/casing_pouch/closed");
+		for(Item item : IIContent.ITEMS)
+			if(item instanceof IIIItemTextureOverride)
+				((IIIItemTextureOverride)item).registerSprites(event.getMap());
 
 		for(Entry<String, Shrapnel> s : ShrapnelHandler.registry.entrySet())
 			ApiUtils.getRegisterSprite(event.getMap(), s.getValue().texture.replace("textures/", ""));
-
 		for(DrillHeads perm : DrillHeads.values())
 			perm.sprite = ApiUtils.getRegisterSprite(event.getMap(), perm.texture);
 

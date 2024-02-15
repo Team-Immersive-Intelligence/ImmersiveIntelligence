@@ -1,7 +1,6 @@
 package pl.pabilo8.immersiveintelligence.api.ammo.parts;
 
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -88,13 +87,6 @@ public interface IAmmoItem<T extends EntityAmmoBase> extends IAmmo<T>, IAdvanced
 	{
 		return (float)(getInitialMass()*(1f+core.getDensity()+Arrays.stream(components).mapToDouble(IAmmoComponent::getDensity).sum()));
 	}
-
-	/**
-	 * Used for registering sprites to be used for items
-	 *
-	 * @param map the TextureMap to register to
-	 */
-	void registerSprites(TextureMap map);
 
 	/**
 	 * @return Returns allowed fuse types, these affect the way a bullet entity will detect collision

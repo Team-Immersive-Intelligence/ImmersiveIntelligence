@@ -1,7 +1,8 @@
 package pl.pabilo8.immersiveintelligence.common.item.ammo;
 
-import blusunrize.immersiveengineering.common.items.IEItemInterfaces.ITextureOverride;
+import blusunrize.immersiveengineering.api.ApiUtils;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
@@ -25,6 +26,7 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine.Magazines;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIIItemTextureOverride;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
 import pl.pabilo8.modworks.annotations.item.GeneratedItemModels;
@@ -40,7 +42,7 @@ import java.util.Optional;
  * @author Pabilo8
  * @since 01-11-2019
  */
-public class ItemIIBulletMagazine extends ItemIISubItemsBase<Magazines> implements ITextureOverride, IAdvancedTooltipItem
+public class ItemIIBulletMagazine extends ItemIISubItemsBase<Magazines> implements IIIItemTextureOverride, IAdvancedTooltipItem
 {
 	//--- Textures ---//
 	private final ResLoc magazineTexture = ResLoc.of(IIReference.RES_II, "items/bullets/magazines/");
@@ -189,6 +191,25 @@ public class ItemIIBulletMagazine extends ItemIISubItemsBase<Magazines> implemen
 			}
 
 		return l;
+	}
+
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void registerSprites(TextureMap map)
+	{
+		for(int i = 0; i < 4; i++)
+		{
+			ApiUtils.getRegisterSprite(map, ImmersiveIntelligence.MODID+":items/bullets/magazines/common/bullet"+i);
+			ApiUtils.getRegisterSprite(map, ImmersiveIntelligence.MODID+":items/bullets/magazines/common/paint"+i);
+		}
+		for(Magazines magazine : IIContent.itemBulletMagazine.getSubItems())
+		{
+			String name = magazine.getName();
+			ApiUtils.getRegisterSprite(map, ImmersiveIntelligence.MODID+":items/bullets/magazines/"+name);
+			if(magazine.hasDisplayTexture)
+				ApiUtils.getRegisterSprite(map, ImmersiveIntelligence.MODID+":items/bullets/magazines/"+name+"_disp");
+		}
 	}
 
 	public int checkBullets(ItemStack stack)
