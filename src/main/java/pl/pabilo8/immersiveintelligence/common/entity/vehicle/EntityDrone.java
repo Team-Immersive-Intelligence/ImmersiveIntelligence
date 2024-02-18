@@ -27,6 +27,7 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityEmplacementWeapon;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.drone.AIDroneTarget;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.entity.IIIEntity;
 
 import javax.annotation.Nonnull;
@@ -46,10 +47,10 @@ public class EntityDrone extends EntityFlying implements IIIEntity<EntityDrone>,
 	private EntityVehiclePart partRotorFrontRight, partRotorFrontLeft, partRotorBackRight, partRotorBackLeft;
 	private EntityVehiclePart exhaust1, exhaust2;
 	//part durability (health)
-	@AutoSerialized
-	private static VehicleDurability durabilityMain, durabilityTankLeft, durabilityTankRight, durabilityEngine;
-	@AutoSerialized
-	private static VehicleDurability[] durabilityRotors = new VehicleDurability[4];
+	@SyncNBT
+	private VehicleDurability durabilityMain, durabilityTankLeft, durabilityTankRight, durabilityEngine;
+	@SyncNBT
+	private VehicleDurability[] durabilityRotors = new VehicleDurability[4];
 
 	public EntityDrone(World world)
 	{
