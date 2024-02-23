@@ -49,11 +49,13 @@ import pl.pabilo8.immersiveintelligence.common.item.mechanical.ItemIIMotorBelt;
 import pl.pabilo8.immersiveintelligence.common.item.mechanical.ItemIIMotorGear;
 import pl.pabilo8.immersiveintelligence.common.item.tools.*;
 import pl.pabilo8.immersiveintelligence.common.item.tools.backpack.ItemIIAdvancedPowerPack;
+import pl.pabilo8.immersiveintelligence.common.item.tools.backpack.ItemIIParachuteBackpack;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.*;
 import pl.pabilo8.immersiveintelligence.common.util.IBatchOredictRegister;
 import pl.pabilo8.immersiveintelligence.common.util.block.BlockIIFluid;
 import pl.pabilo8.immersiveintelligence.common.util.block.BlockIISlab;
 import pl.pabilo8.immersiveintelligence.common.util.block.BlockIIStairs;
+import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIBase;
 import pl.pabilo8.immersiveintelligence.common.world.BiomeWasteland;
 
 import java.util.ArrayList;
@@ -144,6 +146,7 @@ public class IIContent
 	public static ItemIIFunctionalCircuit itemCircuit = new ItemIIFunctionalCircuit();
 	public static ItemIIMotorBelt itemMotorBelt = new ItemIIMotorBelt();
 	public static ItemIIMotorGear itemMotorGear = new ItemIIMotorGear();
+	public static ItemIIBase itemParachute = new ItemIIBase("parachute", 4);
 
 	//ammo
 	public static ItemIIAmmoCasing itemAmmoCasing = new ItemIIAmmoCasing();
@@ -206,6 +209,8 @@ public class IIContent
 	//Backpacks
 	public static ItemIIAdvancedPowerPack itemAdvancedPowerPack = new ItemIIAdvancedPowerPack();
 	public static final String NBT_AdvancedPowerpack = "II:Powerpack";
+	public static ItemIIParachuteBackpack itemParachuteBackpack = new ItemIIParachuteBackpack();
+	public static final String NBT_ParachuteBackpack = "II:Parapack";
 
 
 	//data

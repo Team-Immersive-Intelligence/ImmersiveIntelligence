@@ -17,6 +17,7 @@ import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIGunBase;
 import pl.pabilo8.immersiveintelligence.common.item.armor.ItemIILightEngineerHelmet;
 import pl.pabilo8.immersiveintelligence.common.item.armor.ItemIILightEngineerLeggings;
+import pl.pabilo8.immersiveintelligence.common.item.tools.backpack.ItemIIParachuteBackpack;
 import pl.pabilo8.immersiveintelligence.common.network.IIMessage;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
@@ -30,6 +31,7 @@ public class MessageItemKeybind extends IIMessage
 	public static final int KEYBIND_GUN_RELOAD = 0;
 	public static final int KEYBIND_HEADGEAR = 1;
 	public static final int KEYBIND_EXOSKELETON = 2;
+	public static final int KEYBIND_DEPLOY_CHUTE = 3;
 
 	private int id;
 
@@ -79,6 +81,12 @@ public class MessageItemKeybind extends IIMessage
 					ItemNBTHelper.setInt(equipped, "exoskeletonMode", mode = IIUtils.cycleInt(!player.isSneaking(), mode, 0, 2));
 					IIPacketHandler.sendChatTranslation(player, IIReference.INFO_KEY+"exoskeleton."+mode);
 				}
+			}
+			break;
+			case KEYBIND_DEPLOY_CHUTE:
+			{
+				if((equipped = player.getItemStackFromSlot(EntityEquipmentSlot.CHEST)).getItem() instanceof ItemIIParachuteBackpack)
+					ItemNBTHelper.setBoolean(equipped, "chuteDeployed", true);
 			}
 			break;
 		}

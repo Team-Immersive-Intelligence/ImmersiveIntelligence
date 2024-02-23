@@ -1,0 +1,20 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+      "ccc",
+      "s s",
+      "s s"
+    ],
+    "key": {
+      "c": {
+        "item": "immersiveengineering:material",
+        "data": 5
+      },
+      "s": {
+        "item": "minecraft:string"
+      }
+    },
+    "result": {
+        "item": "immersiveintelligence:parachute"
+    }
+}

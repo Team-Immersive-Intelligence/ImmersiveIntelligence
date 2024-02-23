@@ -95,6 +95,7 @@ import pl.pabilo8.immersiveintelligence.common.entity.bullet.EntityBullet;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityFieldHowitzer;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityMotorbike;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityVehicleSeat;
+import pl.pabilo8.immersiveintelligence.common.item.tools.backpack.ItemIIParachuteBackpack;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIGunBase;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIRailgunOverride;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
@@ -156,6 +157,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 
 	public static LinkedHashMap<EntityLivingBase, Float> gunshotEntities = new LinkedHashMap<>();
 	public static boolean mgAiming = false;
+	public static boolean onParachuteDeployed = false;
 	public static ArrayList<EntityLivingBase> aimingPlayers = new ArrayList<>();
 	public static GuiScreen lastGui = null;
 	//Whether the Light Engineer Armor is worn
@@ -368,6 +370,29 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 		for(InWorldOverlayBase overlay : inWorldOverlays)
 			overlay.draw(player, player.world, mop, event.getPartialTicks());
 
+	}
+
+	@SubscribeEvent(priority = EventPriority.HIGH)
+	public void onParachuteDeploy(RenderGameOverlayEvent.Pre event)
+	{
+		if(ClientUtils.mc().player==null||event.getType()!=ElementType.CROSSHAIRS)
+			return;
+
+		EntityPlayer player = ClientUtils.mc().player;
+
+		if(player.getItemStackFromSlot(EntityEquipmentSlot.CHEST).getItem().isValidArmor(new ItemStack(IIContent.itemParachuteBackpack), EntityEquipmentSlot.CHEST, player))
+		{
+			boolean pressed = ClientProxy.keybind_deployChute.isKeyDown();
+			if(pressed)
+			{
+				NBTTagCompound tag = new NBTTagCompound();
+				tag.setBoolean("clientMessage", true);
+				tag.setBoolean("deployChute", pressed);
+				IIPacketHandler.sendToServer(new MessageEntityNBTSync(player, tag));
+			}
+			onParachuteDeployed = pressed;
+		}
+		else mgAiming = false;
 	}
 
 	@SubscribeEvent(priority = EventPriority.HIGH)

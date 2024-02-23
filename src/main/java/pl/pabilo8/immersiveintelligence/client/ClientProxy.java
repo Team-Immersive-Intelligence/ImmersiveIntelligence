@@ -149,7 +149,7 @@ import java.util.Map.Entry;
 @Mod.EventBusSubscriber(value = Side.CLIENT, modid = ImmersiveIntelligence.MODID)
 public class ClientProxy extends CommonProxy
 {
-	public static KeyBinding keybind_manualReload, keybind_armorHelmet, keybind_armorExosuit, keybind_zoom, keybind_motorbikeEngine, keybind_motorbikeTowing;
+	public static KeyBinding keybind_manualReload, keybind_armorHelmet, keybind_armorExosuit, keybind_zoom, keybind_motorbikeEngine, keybind_motorbikeTowing, keybind_deployChute;
 	public static MechanicalConnectorRenderer mech_con_renderer;
 	public NBTTagCompound storedGuiData = new NBTTagCompound();
 
@@ -489,6 +489,9 @@ public class ClientProxy extends CommonProxy
 		keybind_manualReload = new KeyBinding("key."+ImmersiveIntelligence.MODID+".manualReload", Keyboard.KEY_R, "key.categories.gameplay");
 		keybind_manualReload.setKeyConflictContext(passenger_action);
 
+		keybind_deployChute = new KeyBinding("key."+ImmersiveIntelligence.MODID+".deployChute", Keyboard.KEY_C, "key.categories.gameplay");
+		keybind_deployChute.setKeyConflictContext(passenger_action);
+
 		keybind_armorHelmet = new KeyBinding("key."+ImmersiveIntelligence.MODID+".armorHelmet", Keyboard.KEY_V, "key.categories.gameplay");
 		keybind_armorExosuit = new KeyBinding("key."+ImmersiveIntelligence.MODID+".armorExosuit", Keyboard.KEY_G, "key.categories.gameplay");
 		keybind_zoom = new KeyBinding("key."+ImmersiveIntelligence.MODID+".mgScope", Keyboard.KEY_Z, "key.categories.gameplay");
@@ -500,6 +503,7 @@ public class ClientProxy extends CommonProxy
 		keybind_motorbikeTowing.setKeyConflictContext(passenger_action);
 
 		ClientRegistry.registerKeyBinding(keybind_manualReload);
+		ClientRegistry.registerKeyBinding(keybind_deployChute);
 		ClientRegistry.registerKeyBinding(keybind_zoom);
 		ClientRegistry.registerKeyBinding(keybind_motorbikeEngine);
 		ClientRegistry.registerKeyBinding(keybind_motorbikeTowing);

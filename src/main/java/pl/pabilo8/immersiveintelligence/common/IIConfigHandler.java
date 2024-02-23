@@ -981,6 +981,9 @@ public class IIConfigHandler
 			@LangKey("Rifle")
 			public static Rifle rifle;
 			@SubConfig
+			@LangKey("Shotgun")
+			public static Shotgun shotgun;
+			@SubConfig
 			@LangKey("Assault Rifle")
 			public static AssaultRifle assaultRifle;
 			@SubConfig
@@ -1356,6 +1359,45 @@ public class IIConfigHandler
 				public static int enemyAttractRange = 32;
 			}
 
+			public static class Shotgun
+			{
+				@Comment({"Time required to reload a stick magazine in Shotgun. (in ticks)"})
+				public static int bulletReloadTime = 20;
+
+				@Comment({"Time required to aim the SMG. (in ticks)"})
+				public static int clipSize = 4;
+
+				@Comment({"Time required to aim the SMG. (in ticks)"})
+				public static int aimTime = 15;
+
+				@Comment({"Time required to fire a single bullet."})
+				public static int bulletFireTime = 50;
+
+				@Comment({"Time required to fire a single bullet."})
+				public static int bulletFireTimeSemiAuto = 35;
+
+				@Comment({"Maximum amount of horizontal recoil."})
+				public static float longBarrelVelocityMod = 2.5f;
+
+				@Comment({"Amount of horizontal recoil after taking a shot."})
+				public static float recoilHorizontal = 1.0f;
+
+				@Comment({"Amount of vertical recoil after taking a shot."})
+				public static float recoilVertical = 3.5f;
+
+				@Comment({"Maximum amount of horizontal recoil."})
+				public static float maxRecoilHorizontal = 5.0f;
+
+				@Comment({"Maximum amount of vertical recoil."})
+				public static float maxRecoilVertical = 20f;
+
+				@Comment({"Amount of vertical recoil after taking a shot."})
+				public static float recoilSemiAutoVertical = 3f;
+
+				@Comment({"Range in which enemies will be attracted to the gunshot."})
+				public static int enemyAttractRange = 50;
+			}
+
 			public static class Submachinegun
 			{
 				@Comment({"Time required to reload a stick magazine in SMG. (in ticks)"})
@@ -1547,6 +1589,9 @@ public class IIConfigHandler
 
 			@Comment({"Default velocity of a machinegun bullet."})
 			public static float mgVelocity = 6.5f;
+
+			@Comment({"Default velocity of a shotgun bullet."})
+			public static float sgVelocity = 4.5f;
 
 			@Comment({"Default velocity of a submachinegun bullet."})
 			public static float smgVelocity = 5f;
