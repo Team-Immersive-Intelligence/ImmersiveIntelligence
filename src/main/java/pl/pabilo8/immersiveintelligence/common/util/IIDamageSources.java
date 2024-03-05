@@ -8,8 +8,8 @@ import net.minecraft.entity.MultiPartEntityPart;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig;
-import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityBullet;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.component.EntityShrapnel;
+import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityMotorbike;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityVehicleSeat;
 
@@ -38,14 +38,19 @@ public class IIDamageSources
 		return new IEDamageSource_Indirect("iiMotorbikeSuicide", motorbike, null);
 	}
 
-	public static DamageSource causeBulletDamage(EntityBullet shot, Entity shooter, Entity attacked)
+	public static DamageSource causeBulletDamage(EntityAmmoProjectile shot, Entity attacked)
 	{
+		Entity shooter = shot.getOwner();
+
 		if(shooter==null)
 		{
+			//skip blacklisted entities
 			ResourceLocation key = EntityList.getKey(attacked instanceof MultiPartEntityPart?(Entity)((MultiPartEntityPart)attacked).parent: attacked);
 			if(key!=null&&Arrays.asList(IIConfig.bulletFakeplayerWhitelist).contains(key.toString()))
+				//owner is a FakePlayer
 				return new IEDamageSource_Indirect("iiBulletNoShooter", shot, FakePlayerUtil.getFakePlayer(shot.getEntityWorld())).setProjectile().setDamageBypassesArmor();
 		}
+		//owner (shooter) is a normal player or undefined
 		return new IEDamageSource_Indirect(shooter!=null?"iiBullet": "iiBulletNoShooter", shot, shooter).setProjectile().setDamageBypassesArmor();
 	}
 

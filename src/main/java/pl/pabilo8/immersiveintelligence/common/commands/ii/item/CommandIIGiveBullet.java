@@ -12,7 +12,7 @@ import pl.pabilo8.immersiveintelligence.api.ammo.IIAmmoRegistry;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoComponent;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoCore;
-import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoItem;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -57,7 +57,7 @@ public class CommandIIGiveBullet extends CommandBase
 		if(args.length > 3)
 		{
 			EntityPlayerMP player = CommandBase.getPlayer(server, sender, args[0]);
-			IAmmoItem casing = IIAmmoRegistry.getBulletItem(args[1]);
+			IAmmoTypeItem casing = IIAmmoRegistry.getAmmoItem(args[1]);
 			IAmmoCore core = IIAmmoRegistry.getCore(args[2]);
 			EnumCoreTypes coreType = EnumCoreTypes.v(args[3]);
 			ArrayList<IAmmoComponent> components = new ArrayList<>();
@@ -98,20 +98,20 @@ public class CommandIIGiveBullet extends CommandBase
 		}
 		else if(args.length==2)
 		{
-			return getListOfStringsMatchingLastWord(args, IIAmmoRegistry.registeredAmmoItems.keySet());
+			return getListOfStringsMatchingLastWord(args, IIAmmoRegistry.getAllAmmoItems().stream().map(IAmmoTypeItem::getName).collect(Collectors.toList()));
 		}
 		else if(args.length==3)
 		{
-			return getListOfStringsMatchingLastWord(args, IIAmmoRegistry.registeredBulletCores.keySet());
+			return getListOfStringsMatchingLastWord(args, IIAmmoRegistry.getAllCores().stream().map(IAmmoCore::getName).collect(Collectors.toList()));
 		}
 		else if(args.length==4)
 		{
-			IAmmoItem bullet = IIAmmoRegistry.registeredAmmoItems.get(args[1]);
+			IAmmoTypeItem<?, ?> bullet = IIAmmoRegistry.getAmmoItem(args[1]);
 			return getListOfStringsMatchingLastWord(args, bullet==null?Collections.emptyList(): Arrays.stream(bullet.getAllowedCoreTypes()).map(EnumCoreTypes::getName).collect(Collectors.toList()));
 		}
 		else if(args.length > 4)
 		{
-			return getListOfStringsMatchingLastWord(args, IIAmmoRegistry.registeredComponents.keySet());
+			return getListOfStringsMatchingLastWord(args, IIAmmoRegistry.getAllComponents().stream().map(IAmmoComponent::getName).collect(Collectors.toList()));
 		}
 		else
 			return Collections.emptyList();

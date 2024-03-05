@@ -36,7 +36,7 @@ import net.minecraftforge.registries.IForgeRegistry;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.PackerHandler;
 import pl.pabilo8.immersiveintelligence.api.ammo.IIAmmoRegistry;
-import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoItem;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.api.crafting.*;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Sawmill;
@@ -91,7 +91,7 @@ public class IIRecipes
 		TOOL_CUTTERS = new ItemStack(IEContent.itemTool, 1, 1);
 
 		//Used by ammo pouch
-		AMMO_CASINGS = new IngredientStack(IIAmmoRegistry.registeredAmmoItems.values()
+		AMMO_CASINGS = new IngredientStack(IIAmmoRegistry.getAllAmmoItems()
 				.stream()
 				.map(iAmmo -> iAmmo.getCasingStack(1))
 				.collect(Collectors.toList())
@@ -879,7 +879,7 @@ public class IIRecipes
 				new ItemStack(Items.LEATHER_BOOTS)
 		)), 8192, 340, 2000);
 
-		// TODO: 15.10.2021 dyable LE armor
+		//TODO: 15.10.2021 dyable LE armor
 		PaintingRecipe.addRecipe((rgb, stack) -> {
 			//IIContent.itemLightEngineerChestplate.setColor(stack,rgb);
 			return stack;
@@ -890,7 +890,7 @@ public class IIRecipes
 				new ItemStack(IIContent.itemLightEngineerBoots)
 		)), 8192, 340, 2000);
 
-		for(IAmmoItem bullet : IIAmmoRegistry.registeredAmmoItems.values())
+		for(IAmmoTypeItem<?, ?> bullet : IIAmmoRegistry.getAllAmmoItems())
 		{
 			ItemStack bulletStack = bullet.getBulletWithParams("", "", "");
 			//clear nbt
@@ -899,7 +899,7 @@ public class IIRecipes
 				ItemStack ret = bullet.setPaintColour(stack, rgb);
 				ret.setCount(1);
 				return ret;
-			}, new IngredientStack(bulletStack).setUseNBT(false), (int)(bullet.getCaliber()*1024), 100+(int)(bullet.getCaliber()*40), 50+(int)(bullet.getCaliber()*25));
+			}, new IngredientStack(bulletStack).setUseNBT(false), bullet.getCaliber()*1024, 100+(bullet.getCaliber()*40), 50+(bullet.getCaliber()*25));
 		}
 	}
 
@@ -1136,7 +1136,7 @@ public class IIRecipes
 
 	public static void addAmmunitionCasingRecipes()
 	{
-		FillerRecipe.addRecipe(IIContent.itemAmmoArtillery, 160, 8000);
+		FillerRecipe.addRecipe(IIContent.itemAmmoHeavyArtillery, 160, 8000);
 		FillerRecipe.addRecipe(IIContent.itemAmmoLightArtillery, 140, 6000);
 		FillerRecipe.addRecipe(IIContent.itemAmmoMortar, 140, 6000);
 		FillerRecipe.addRecipe(IIContent.itemAmmoAutocannon, 80, 1000);
@@ -1146,7 +1146,7 @@ public class IIRecipes
 		FillerRecipe.addRecipe(IIContent.itemAmmoRevolver, 40, 400);
 
 		//Projectiles
-		for(ItemIIAmmoBase item : new ItemIIAmmoBase[]{IIContent.itemAmmoArtillery, IIContent.itemAmmoLightArtillery, IIContent.itemAmmoMortar,
+		for(ItemIIAmmoBase item : new ItemIIAmmoBase[]{IIContent.itemAmmoHeavyArtillery, IIContent.itemAmmoLightArtillery, IIContent.itemAmmoMortar,
 				IIContent.itemAmmoAutocannon,
 				IIContent.itemAmmoMachinegun, IIContent.itemAmmoAssaultRifle, IIContent.itemAmmoSubmachinegun})
 		{
@@ -1163,8 +1163,8 @@ public class IIRecipes
 					},
 					new IngredientStack(item.getBulletCore("coreBrass", item.getAllowedCoreTypes()[0].getName())),
 					new IngredientStack(casingStack).setUseNBT(true),
-					(int)(128*item.getCaliber()),
-					(int)(140+(25*Math.max(0, item.getCaliber()-1)))
+					128*item.getCaliber(),
+					140+(25*Math.max(0, item.getCaliber()-1))
 			);
 		}
 
@@ -1172,7 +1172,7 @@ public class IIRecipes
 		for(Item item : new Item[]{IIContent.blockTripmine.itemBlock, IIContent.blockTellermine.itemBlock, IIContent.blockRadioExplosives.itemBlock, IIContent.itemNavalMine})
 		{
 			assert item!=null;
-			IAmmoItem bullet = (IAmmoItem)item;
+			IAmmoTypeItem bullet = (IAmmoTypeItem)item;
 
 			AmmunitionWorkshopRecipe.addRecipe(
 					(core, casing) -> {
@@ -1182,7 +1182,7 @@ public class IIRecipes
 					},
 					new IngredientStack(bullet.getBulletCore("coreBrass", bullet.getAllowedCoreTypes()[0].getName())),
 					new IngredientStack(bullet.getCasingStack(1)).setUseNBT(true),
-					(int)(256*bullet.getCaliber()),
+					256*bullet.getCaliber(),
 					480
 			);
 		}
@@ -1373,7 +1373,7 @@ public class IIRecipes
 					{
 						Item item = stack.getItem();
 						return item==IIContent.itemBulletMagazine.stackToSub(ss).ammo
-								&&!((IAmmoItem)item).isBulletCore(stack);
+								&&!((IAmmoTypeItem)item).isBulletCore(stack);
 					}
 
 					@Override

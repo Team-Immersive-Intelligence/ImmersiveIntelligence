@@ -24,7 +24,7 @@ import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumFuseTypes;
-import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoItem;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.api.crafting.AmmunitionWorkshopRecipe;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
@@ -115,10 +115,10 @@ public class TileEntityAmmunitionWorkshop extends TileEntityMultiblockMetal<Tile
 				processTime = 0;
 				processTimeMax = recipe.getTotalProcessTime();
 				effect = recipe.process.apply(inventory.get(0).copy(), inventory.get(1).copy());
-				if(effect.getItem() instanceof IAmmoItem)
+				if(effect.getItem() instanceof IAmmoTypeItem)
 				{
-					((IAmmoItem)effect.getItem()).setFuseType(effect, fuse);
-					((IAmmoItem)effect.getItem()).setFuseParameter(effect, fuseConfig);
+					((IAmmoTypeItem)effect.getItem()).setFuseType(effect, fuse);
+					((IAmmoTypeItem)effect.getItem()).setFuseParameter(effect, fuseConfig);
 				}
 			}
 		}
@@ -374,7 +374,7 @@ public class TileEntityAmmunitionWorkshop extends TileEntityMultiblockMetal<Tile
 	public boolean isStackValid(int i, ItemStack stack)
 	{
 		if(i==0)
-			return stack.getItem() instanceof IAmmoItem&&((IAmmoItem)stack.getItem()).isBulletCore(stack);
+			return stack.getItem() instanceof IAmmoTypeItem&&((IAmmoTypeItem)stack.getItem()).isBulletCore(stack);
 		else if(i==1)
 			return AmmunitionWorkshopRecipe.recipeList.stream().anyMatch(a -> a.casingInput.matchesItemStackIgnoringSize(stack));
 		return false;

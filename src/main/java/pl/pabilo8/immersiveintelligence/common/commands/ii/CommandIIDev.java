@@ -17,6 +17,7 @@ import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.scoreboard.ScorePlayerTeam;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumHand;
@@ -43,12 +44,12 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.server.command.CommandTreeBase;
 import net.minecraftforge.server.command.CommandTreeHelp;
 import org.apache.commons.lang3.time.StopWatch;
-import pl.pabilo8.immersiveintelligence.api.ammo.IIAmmoUtils;
+import pl.pabilo8.immersiveintelligence.api.ammo.utils.IIAmmoFactory;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IVehicleMultiPart;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityParachute;
-import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityBullet;
+import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityAmmoBase;
 import pl.pabilo8.immersiveintelligence.common.util.IIExplosion;
 import pl.pabilo8.immersiveintelligence.common.util.raytracer.BlacklistedRayTracer;
 import pl.pabilo8.immersiveintelligence.common.util.raytracer.MultipleRayTracer;
@@ -78,16 +79,16 @@ public class CommandIIDev extends CommandTreeHelp
 	static
 	{
 		OPTIONS.add("help");
-		OPTIONS.add("slowmo");
+		/*OPTIONS.add("slowmo");
 		OPTIONS.add("zawarudo");
-		OPTIONS.add("bulletspeed");
+		OPTIONS.add("bulletspeed");*/
 		OPTIONS.add("killbullets");
 		OPTIONS.add("killvehicles");
 		OPTIONS.add("killitems");
 		OPTIONS.add("killhanses");
 		OPTIONS.add("world_setup");
 		OPTIONS.add("tpd");
-		OPTIONS.add("decaybullets");
+		/*OPTIONS.add("decaybullets");*/
 		OPTIONS.add("test_enemies");
 		OPTIONS.add("explosion");
 		OPTIONS.add("nuke");
@@ -133,16 +134,16 @@ public class CommandIIDev extends CommandTreeHelp
 				case "help":
 				{
 					sender.sendMessage(new TextComponentString("Executes an Immersive Intelligence command, usage /ii dev <option>").setStyle(new Style().setColor(TextFormatting.GOLD)));
-					sender.sendMessage(getMessageForCommand("slowmo", "toggles bullets slowmo"));
+					/*sender.sendMessage(getMessageForCommand("slowmo", "toggles bullets slowmo"));
 					sender.sendMessage(getMessageForCommand("zawarudo", "toggles bullets slowmo, but it was me, D I O"));
-					sender.sendMessage(getMessageForCommand("bulletspeed", "sets bullets slowmo speed", "<0.0-1.0>"));
+					sender.sendMessage(getMessageForCommand("bulletspeed", "sets bullets slowmo speed", "<0.0-1.0>"));*/
 					sender.sendMessage(getMessageForCommand("killbullets", "removes all bullets in 20 block radius"));
 					sender.sendMessage(getMessageForCommand("killvehicles", "removes all vehicles (II multipart entities) in 20 block radius"));
 					sender.sendMessage(getMessageForCommand("killitems", "removes all items in 20 block radius"));
 					sender.sendMessage(getMessageForCommand("killhanses", "removes all ze Hanses in 20 block radius"));
 					sender.sendMessage(getMessageForCommand("world_setup", "disables day and night and weather cycles, disables mob spawning"));
 					sender.sendMessage(getMessageForCommand("tpd", "teleports the player to a dimension", "<dim>"));
-					sender.sendMessage(getMessageForCommand("decaybullets", "toggles bullets decay (despawning after x amount of ticks existing)"));
+					/*sender.sendMessage(getMessageForCommand("decaybullets", "toggles bullets decay (despawning after x amount of ticks existing)"));*/
 					sender.sendMessage(getMessageForCommand("test_enemies", "spawns enemies", "<amount>"));
 					sender.sendMessage(getMessageForCommand("explosion", "spawns an II explosion", "<size>"));
 					sender.sendMessage(getMessageForCommand("nuke", "plants a seed on ground zero"));
@@ -190,7 +191,7 @@ public class CommandIIDev extends CommandTreeHelp
 
 				}
 				break;
-				case "slowmo":
+				/*case "slowmo":
 					EntityBullet.DEV_SLOMO = 0.005f;
 					EntityBullet.DEV_DECAY = false;
 					sender.sendMessage(new TextComponentString("Slomo activated!"));
@@ -218,9 +219,9 @@ public class CommandIIDev extends CommandTreeHelp
 					else
 						sender.sendMessage(new TextComponentString(TextFormatting.RED+"Please enter a speed value, default 1, current "+(int)EntityBullet.DEV_SLOMO));
 
-					break;
+					break;*/
 				case "killbullets":
-					sender.getEntityWorld().getEntities(EntityBullet.class, input -> true).forEach(Entity::setDead);
+					sender.getEntityWorld().getEntities(EntityAmmoBase.class, input -> true).forEach(Entity::setDead);
 					sender.sendMessage(new TextComponentString("All bullets killed!"));
 					break;
 				case "killitems":
@@ -237,14 +238,21 @@ public class CommandIIDev extends CommandTreeHelp
 					sender.getEntityWorld().getEntities(EntityHans.class, input -> (input!=null?input.getPositionVector().distanceTo(sender.getPositionVector()): 25) < 25f).forEach(Entity::setDead);
 					sender.sendMessage(new TextComponentString("All Hanses killed :("));
 					break;
-				case "decaybullets":
+				/*case "decaybullets":
 					EntityBullet.DEV_DECAY = !EntityBullet.DEV_DECAY;
 					sender.sendMessage(new TextComponentString(String.valueOf(EntityBullet.DEV_DECAY)));
-					break;
+					break;*/
 				case "world_setup":
+					//Set weather rules
 					server.getEntityWorld().getGameRules().setOrCreateGameRule("doDaylightCycle", "false");
 					server.getEntityWorld().getGameRules().setOrCreateGameRule("doWeatherCycle", "false");
 					server.getEntityWorld().getGameRules().setOrCreateGameRule("doMobSpawning", "false");
+					//Add the hostile Hans team
+					ScorePlayerTeam globalEnemy = server.getEntityWorld().getScoreboard().createTeam("GlobalEnemy");
+					globalEnemy.setColor(TextFormatting.DARK_GRAY);
+					globalEnemy.setDisplayName("Hostile Forces");
+					globalEnemy.setPrefix("Enemy");
+
 					sender.sendMessage(new TextComponentString("World setup done!"));
 					break;
 				case "tpd":
@@ -349,9 +357,13 @@ public class CommandIIDev extends CommandTreeHelp
 
 					if(args[0].equals("nuke"))
 					{
-						ItemStack s2 = IIContent.itemAmmoArtillery.getBulletWithParams("core_brass", "canister", "nuke");
-						EntityBullet a = IIAmmoUtils.createBullet(senderEntity.getEntityWorld(), s2, new Vec3d(pos).addVector(0, 2, 0), new Vec3d(0, -1, 0));
-						senderEntity.getEntityWorld().spawnEntity(a);
+						ItemStack s2 = IIContent.itemAmmoHeavyArtillery.getBulletWithParams("core_brass", "canister", "nuke");
+						//TODO: 02.02.2024 nuke
+
+						new IIAmmoFactory<>(senderEntity.getEntityWorld())
+								.setStack(s2)
+								.setPositionAndVelocity(new Vec3d(pos).addVector(0, 2, 0), new Vec3d(0, -1, 0), 1)
+								.create();
 						return;
 					}
 					int num = 0;

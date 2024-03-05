@@ -52,6 +52,9 @@ public class ItemIIAmmoCasing extends ItemIISubItemsBase<Casings>
 		TRIPMINE,
 		TELLERMINE,
 		@IIItemProperties(stackSize = 1)
-		RADIO_EXPLOSIVES
+		RADIO_EXPLOSIVES,
+
+		@IIItemProperties(stackSize = 1)
+		MEDIUM_ARTILLERY_6BCAL
 	}
 }

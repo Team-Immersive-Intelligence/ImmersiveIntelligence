@@ -21,16 +21,18 @@ import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumFuseTypes;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoComponent;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoCore;
-import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoItem;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.mines.BlockIIMine.IIBlockTypes_Mine;
 import pl.pabilo8.immersiveintelligence.common.block.mines.tileentity.TileEntityTripMine;
+import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoMine;
 import pl.pabilo8.immersiveintelligence.common.util.block.BlockIITileProvider;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IIBlockProperties;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IITileProviderEnum;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.TernaryValue;
 import pl.pabilo8.immersiveintelligence.common.util.block.ItemBlockIIBase;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.function.Function;
@@ -123,7 +125,7 @@ public abstract class BlockIIMine extends BlockIITileProvider<IIBlockTypes_Mine>
 		}
 	}
 
-	public static abstract class ItemBlockMineBase extends ItemBlockIIBase implements IAmmoItem
+	public static abstract class ItemBlockMineBase extends ItemBlockIIBase implements IAmmoTypeItem<ItemBlockMineBase, EntityAmmoMine>
 	{
 		public ItemBlockMineBase(BlockIIMine b)
 		{
@@ -233,11 +235,6 @@ public abstract class BlockIIMine extends BlockIITileProvider<IIBlockTypes_Mine>
 			return EnumFuseTypes.v(ItemNBTHelper.getString(stack, "fuse"));
 		}
 
-		@Override
-		public boolean isProjectile()
-		{
-			return false;
-		}
 
 		@Override
 		public IAmmoComponent[] getComponents(ItemStack stack)
@@ -296,6 +293,13 @@ public abstract class BlockIIMine extends BlockIITileProvider<IIBlockTypes_Mine>
 			assert stack.getTagCompound()!=null;
 			stack.getTagCompound().setTag("component_nbt", component_nbt);
 			return stack;
+		}
+
+		@Nonnull
+		@Override
+		public EntityAmmoMine getAmmoEntity(World world)
+		{
+			return new EntityAmmoMine(world);
 		}
 	}
 }

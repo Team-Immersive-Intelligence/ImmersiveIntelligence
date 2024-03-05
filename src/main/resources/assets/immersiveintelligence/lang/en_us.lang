@@ -357,21 +357,25 @@ item.immersiveintelligence.sawblade.tungsten.name=Tungsten Saw Blade
 
 #bCal - Block-Caliber (1/16 Block = 1 bCal)
 #Casings
-item.immersiveintelligence.ammo_casing.artillery_8bcal.name=Artillery Shell Casing
-item.immersiveintelligence.artillery_8bCal.core.name=Artillery Shell Core
-item.immersiveintelligence.artillery_8bCal.bullet.name=Artillery Shell
+item.immersiveintelligence.ammo_casing.heavy_artillery_8bcal.name=Heavy Artillery Shell Casing
+item.immersiveintelligence.artillery_8bCal.core.name=Heavy Artillery Shell Core
+item.immersiveintelligence.artillery_8bCal.bullet.name=Heavy Artillery Shell
 
-item.immersiveintelligence.ammo_casing.mortar_6bcal.name=Mortar Shell Casing
-item.immersiveintelligence.mortar_6bCal.core.name=Mortar Shell Core
-item.immersiveintelligence.mortar_6bCal.bullet.name=Mortar Shell
+item.immersiveintelligence.ammo_casing.medium_artillery_6bcal.name=Medium Artillery Shell Casing
+item.immersiveintelligence.artillery_6bCal_long.core.name=Medium Artillery Shell Core
+item.immersiveintelligence.artillery_6bCal_long.bullet.name=Medium Artillery Shell
 
 item.immersiveintelligence.ammo_casing.light_artillery_6bcal.name=Light Artillery Shell Casing
 item.immersiveintelligence.artillery_6bCal.core.name=Light Artillery Shell Core
 item.immersiveintelligence.artillery_6bCal.bullet.name=Light Artillery Shell
 
-item.immersiveintelligence.ammo_casing.mg_2bcal.name=Machinegun Bullet Casing
-item.immersiveintelligence.mg_2bCal.core.name=Machinegun Bullet Core
-item.immersiveintelligence.mg_2bCal.bullet.name=Machinegun Bullet
+item.immersiveintelligence.ammo_casing.mortar_6bcal.name=Mortar Shell Casing
+item.immersiveintelligence.mortar_6bCal.core.name=Mortar Shell Core
+item.immersiveintelligence.mortar_6bCal.bullet.name=Mortar Shell
+
+item.immersiveintelligence.ammo_casing.mg_2bcal.name=Rifle Bullet Casing
+item.immersiveintelligence.mg_2bCal.core.name=Rifle Bullet Core
+item.immersiveintelligence.mg_2bCal.bullet.name=Rifle Bullet
 
 item.immersiveintelligence.ammo_casing.stg_1bcal.name=Assault Rifle Bullet Casing
 item.immersiveintelligence.stg_1bCal.core.name=Assault Rifle Bullet Core

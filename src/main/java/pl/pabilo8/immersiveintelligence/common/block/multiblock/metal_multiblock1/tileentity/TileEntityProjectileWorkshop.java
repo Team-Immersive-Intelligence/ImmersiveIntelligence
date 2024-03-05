@@ -36,7 +36,7 @@ import pl.pabilo8.immersiveintelligence.api.ammo.IIAmmoRegistry;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoComponent;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoCore;
-import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoItem;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
@@ -69,7 +69,7 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockMetal<Tile
 
 	//for core production
 	@Nonnull
-	public IAmmoItem producedBullet = IIContent.itemAmmoArtillery;
+	public IAmmoTypeItem producedBullet = IIContent.itemAmmoHeavyArtillery;
 	@Nonnull
 	public EnumCoreTypes coreType = producedBullet.getAllowedCoreTypes()[0];
 
@@ -127,7 +127,7 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockMetal<Tile
 						if(tanksFiller[0].getFluidAmount() >= 1000)
 						{
 							String name = Objects.requireNonNull(tanksFiller[0].getFluid()).getUnlocalizedName();
-							IIAmmoRegistry.registeredComponents.values().stream()
+							IIAmmoRegistry.getAllComponents().stream()
 									.filter(comp -> name.equals(comp.getName()))
 									.findFirst()
 									.ifPresent(iBulletComponent -> componentInside = new BulletComponentStack(iBulletComponent, tanksFiller[0].getFluid().tag));
@@ -135,7 +135,7 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockMetal<Tile
 						}
 						else
 						{
-							IIAmmoRegistry.registeredComponents.values().stream()
+							IIAmmoRegistry.getAllComponents().stream()
 									.filter(comp -> comp.getMaterial().matchesItemStackIgnoringSize(inventory.get(1)))
 									.findFirst()
 									.ifPresent(comp -> componentInside = new BulletComponentStack(comp, inventory.get(1).getTagCompound()));
@@ -171,7 +171,7 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockMetal<Tile
 						effect = inventory.get(0).copy();
 						effect.setCount(1);
 
-						IAmmoItem bullet = (IAmmoItem)effect.getItem();
+						IAmmoTypeItem bullet = (IAmmoTypeItem)effect.getItem();
 						if(componentInside.matches(bullet))
 						{
 							productionProgress = (int)(ProjectileWorkshop.fillingTime+ProjectileWorkshop.fillingTime*0.3*bullet.getCaliber());
@@ -217,14 +217,14 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockMetal<Tile
 			{
 				if(!inventory.get(0).isEmpty())
 				{
-					Optional<IAmmoCore> first = IIAmmoRegistry.registeredBulletCores.values()
+					Optional<IAmmoCore> first = IIAmmoRegistry.getAllCores()
 							.stream()
 							.filter(core -> core.getMaterial().matchesItemStackIgnoringSize(inventory.get(0)))
 							.findFirst();
 
 					if(first.isPresent()&&inventory.get(0).getCount() >= producedBullet.getCoreMaterialNeeded())
 					{
-						IAmmoItem bullet = producedBullet;
+						IAmmoTypeItem bullet = producedBullet;
 						EnumCoreTypes coreType = this.coreType;
 						effect = bullet.getBulletCore(first.get(), coreType);
 						productionProgress = (int)(ProjectileWorkshop.productionTime+ProjectileWorkshop.productionTime*0.3*bullet.getCaliber());
@@ -297,8 +297,8 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockMetal<Tile
 		componentInside = new BulletComponentStack(nbt.getCompoundTag("component_inside"));
 		if(nbt.hasKey("produced_bullet"))
 		{
-			IAmmoItem bb = IIAmmoRegistry.getBulletItem(nbt.getString("produced_bullet"));
-			producedBullet = bb==null?IIContent.itemAmmoArtillery: bb;
+			IAmmoTypeItem bb = IIAmmoRegistry.getAmmoItem(nbt.getString("produced_bullet"));
+			producedBullet = bb==null?IIContent.itemAmmoHeavyArtillery: bb;
 		}
 		if(nbt.hasKey("core_type"))
 			coreType = EnumCoreTypes.v(nbt.getString("core_type"));
@@ -356,8 +356,8 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockMetal<Tile
 			componentInside = new BulletComponentStack(message.getCompoundTag("component_inside"));
 		if(message.hasKey("produced_bullet"))
 		{
-			IAmmoItem bb = IIAmmoRegistry.getBulletItem(message.getString("produced_bullet"));
-			producedBullet = bb==null?IIContent.itemAmmoArtillery: bb;
+			IAmmoTypeItem bb = IIAmmoRegistry.getAmmoItem(message.getString("produced_bullet"));
+			producedBullet = bb==null?IIContent.itemAmmoHeavyArtillery: bb;
 		}
 		if(message.hasKey("core_type"))
 			coreType = EnumCoreTypes.v(message.getString("core_type"));
@@ -375,8 +375,8 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockMetal<Tile
 			coreType = EnumCoreTypes.v(message.getString("core_type"));
 		if(message.hasKey("produced_bullet"))
 		{
-			IAmmoItem bb = IIAmmoRegistry.getBulletItem(message.getString("produced_bullet"));
-			producedBullet = bb==null?IIContent.itemAmmoArtillery: bb;
+			IAmmoTypeItem bb = IIAmmoRegistry.getAmmoItem(message.getString("produced_bullet"));
+			producedBullet = bb==null?IIContent.itemAmmoHeavyArtillery: bb;
 		}
 		if(message.hasKey("fill_amount"))
 			fillAmount = MathHelper.clamp(message.getInteger("fill_amount"), 0, 4);
@@ -523,14 +523,14 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockMetal<Tile
 	{
 		if(i==1&&fillerUpgrade)
 		{
-			return IIAmmoRegistry.registeredComponents.values().stream().anyMatch(comp -> comp.getMaterial().matchesItemStackIgnoringSize(stack));
+			return IIAmmoRegistry.getAllComponents().stream().anyMatch(comp -> comp.getMaterial().matchesItemStackIgnoringSize(stack));
 		}
 		else if(i==0)
 		{
 			if(fillerUpgrade)
-				return stack.getItem() instanceof IAmmoItem&&((IAmmoItem)stack.getItem()).isBulletCore(stack);
+				return stack.getItem() instanceof IAmmoTypeItem&&((IAmmoTypeItem)stack.getItem()).isBulletCore(stack);
 			else
-				return IIAmmoRegistry.registeredBulletCores.values().stream().anyMatch(core -> core.getMaterial().matchesItemStackIgnoringSize(stack));
+				return IIAmmoRegistry.getAllCores().stream().anyMatch(core -> core.getMaterial().matchesItemStackIgnoringSize(stack));
 		}
 		return false;
 	}
@@ -774,7 +774,10 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockMetal<Tile
 			//b - bullet, t - type, a -amount
 
 			if(packet.hasVariable('b'))
-				master.producedBullet = IIAmmoRegistry.registeredAmmoItems.getOrDefault(packet.getPacketVariable('b').valueToString(), IIContent.itemAmmoArtillery);
+			{
+				IAmmoTypeItem<?, ?> ammoItem = IIAmmoRegistry.getAmmoItem(packet.getPacketVariable('b').valueToString());
+				master.producedBullet = ammoItem==null?IIContent.itemAmmoHeavyArtillery: ammoItem;
+			}
 			if(packet.hasVariable('t'))
 				master.coreType = EnumCoreTypes.v(packet.getPacketVariable('t').valueToString());
 
@@ -863,7 +866,7 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockMetal<Tile
 			this.amount = amount;
 			this.tagCompound = tag;
 
-			Optional<IAmmoComponent> first = IIAmmoRegistry.registeredComponents.values().stream()
+			Optional<IAmmoComponent> first = IIAmmoRegistry.getAllComponents().stream()
 					.filter(comp -> this.name.equals(comp.getName()))
 					.findFirst();
 
@@ -938,7 +941,7 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockMetal<Tile
 			}
 		}
 
-		public boolean matches(IAmmoItem bullet)
+		public boolean matches(IAmmoTypeItem bullet)
 		{
 			return component!=null&&component.matchesBullet(bullet);
 		}

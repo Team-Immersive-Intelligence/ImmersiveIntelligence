@@ -8,7 +8,6 @@ import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.client.fx.IIParticle;
 import pl.pabilo8.immersiveintelligence.client.fx.ParticleRenderer.DrawingStages;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
-import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityBullet;
 
 import javax.annotation.Nonnull;
 
@@ -24,10 +23,10 @@ public class ParticleTracer extends IIParticle
 	public ParticleTracer(World world, Vec3d pos, Vec3d motion, float size, int color)
 	{
 		super(world, pos, motion);
-		setMotion(motion.scale(1/EntityBullet.DEV_SLOMO));
+		setMotion(motion.scale(1)); // /EntityBullet.DEV_SLOMO
 		this.particleScale = size*16f;
 		this.actualParticleScale = size;
-		this.particleMaxAge = (int)(1/EntityBullet.DEV_SLOMO);
+		this.particleMaxAge = 1;
 		this.color = IIUtils.rgbIntToRGB(color);
 	}
 

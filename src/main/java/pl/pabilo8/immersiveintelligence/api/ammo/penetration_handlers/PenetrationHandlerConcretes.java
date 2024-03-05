@@ -53,7 +53,7 @@ public class PenetrationHandlerConcretes
 		@Override
 		public float getReduction()
 		{
-			return 1.55f;
+			return 1.5f;
 		}
 
 		@Override

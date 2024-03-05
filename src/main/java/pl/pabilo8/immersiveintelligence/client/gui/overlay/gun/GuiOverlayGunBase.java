@@ -3,7 +3,7 @@ package pl.pabilo8.immersiveintelligence.client.gui.overlay.gun;
 import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
-import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoItem;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.overlay.GuiOverlayBase;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
@@ -31,7 +31,7 @@ public abstract class GuiOverlayGunBase extends GuiOverlayBase
 		//Draw bullets
 		int bullets = 0;
 		boolean offset = false;
-		IAmmoItem ammoItem = null;
+		IAmmoTypeItem ammoItem = null;
 		if(!ammo.isEmpty())
 		{
 			draw.setOffset(width-38+3, height-17);
@@ -40,7 +40,7 @@ public abstract class GuiOverlayGunBase extends GuiOverlayBase
 				if(bullet.isEmpty())
 					break;
 				if(ammoItem==null)
-					ammoItem = (IAmmoItem)bullet.getItem();
+					ammoItem = (IAmmoTypeItem)bullet.getItem();
 
 				bullets++;
 				draw.drawTexColorRect(offset?1: 0, 0, 30, 6, IIDrawUtils.NO_COLOR, 51/256f, (51+30)/256f, 33/256f, (33+6)/256f);

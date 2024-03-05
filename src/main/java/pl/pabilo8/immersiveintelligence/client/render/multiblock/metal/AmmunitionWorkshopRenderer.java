@@ -14,9 +14,9 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import pl.pabilo8.immersiveintelligence.api.ammo.IIAmmoRegistry;
-import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoItem;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
-import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
+import pl.pabilo8.immersiveintelligence.client.model.builtin.IAmmoModel;
 import pl.pabilo8.immersiveintelligence.client.model.metal_device.ModelAdvancedInserter;
 import pl.pabilo8.immersiveintelligence.client.model.metal_device.ModelInserter;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.ModelAmmunitionWorkshop;
@@ -68,13 +68,13 @@ public class AmmunitionWorkshopRenderer extends TileEntitySpecialRenderer<TileEn
 			boolean conveyorAmmoRunning = progress < 0.15;
 			float i1Pitch = 35, i1Pitch2 = 135;
 			float i2Pitch = 35, i2Pitch2 = 135;
-			IAmmoItem bullet = null;
-			IBulletModel bulletModel = null;
+			IAmmoTypeItem bullet = null;
+			IAmmoModel bulletModel = null;
 
-			if(te.effect.getItem() instanceof IAmmoItem)
+			if(te.effect.getItem() instanceof IAmmoTypeItem)
 			{
-				bullet = (IAmmoItem)te.effect.getItem();
-				bulletModel = IIAmmoRegistry.registeredModels.get(bullet.getName());
+				bullet = (IAmmoTypeItem<?, ?>)te.effect.getItem();
+				bulletModel = IIAmmoRegistry.getModel(bullet);
 			}
 
 			if(progress > 0.15&&progress < 0.65)
@@ -213,8 +213,8 @@ public class AmmunitionWorkshopRenderer extends TileEntitySpecialRenderer<TileEn
 
 
 			//Shell
-			final IAmmoItem finalBullet = bullet;
-			final IBulletModel finalBulletModel = bulletModel;
+			final IAmmoTypeItem finalBullet = bullet;
+			final IAmmoModel finalBulletModel = bulletModel;
 
 			ClientUtils.mc().getTextureManager().bindTexture(TEXTURE_INSERTER);
 			renderInserter(modelInserter, 0, i1Pitch, i1Pitch2, 0,
@@ -226,12 +226,12 @@ public class AmmunitionWorkshopRenderer extends TileEntitySpecialRenderer<TileEn
 								GlStateManager.translate(0, 0, finalBullet.getCaliber()*0.0625*0.5);
 
 								if(progress > 0.15+(5/7f*0.5f))
-									finalBulletModel.renderBulletUnused(finalBullet.getCore(te.effect).getColour(), finalBullet.getCoreType(te.effect), -1);
+									finalBulletModel.renderAmmoComplete(false, -1, finalBullet.getCore(te.effect), finalBullet.getCoreType(te.effect));
 								else if(progress > 0.15+(3/7f*0.5f))
 								{
 								}
 								else if(progress > 0.15+(1/7f*0.5f))
-									finalBulletModel.renderCore(finalBullet.getCore(te.effect).getColour(), finalBullet.getCoreType(te.effect));
+									finalBulletModel.renderCore(finalBullet.getCore(te.effect), finalBullet.getCoreType(te.effect));
 							}:
 							() -> {
 							}
@@ -258,7 +258,7 @@ public class AmmunitionWorkshopRenderer extends TileEntitySpecialRenderer<TileEn
 					if(progress < 0.15+(3f/7f*0.5f))
 						bulletModel.renderCasing(1, -1);
 					else
-						bulletModel.renderBulletUnused(bullet.getCore(te.effect).getColour(), bullet.getCoreType(te.effect), -1);
+						bulletModel.renderAmmoComplete(false, -1, bullet.getCore(te.effect), bullet.getCoreType(te.effect));
 					GlStateManager.popMatrix();
 				}
 
@@ -279,9 +279,9 @@ public class AmmunitionWorkshopRenderer extends TileEntitySpecialRenderer<TileEn
 					GlStateManager.translate(2f, 0, 1f);
 
 				if(progress < 0.15+(1/7f*0.5f))
-					bulletModel.renderCore(bullet.getCore(te.effect).getColour(), bullet.getCoreType(te.effect));
+					bulletModel.renderCore(bullet.getCore(te.effect), bullet.getCoreType(te.effect));
 				else if(progress > 0.15+(6f/7f*0.5f))
-					bulletModel.renderBulletUnused(bullet.getCore(te.effect).getColour(), bullet.getCoreType(te.effect), -1);
+					bulletModel.renderAmmoComplete(false, -1, bullet.getCore(te.effect), bullet.getCoreType(te.effect));
 				GlStateManager.popMatrix();
 			}
 

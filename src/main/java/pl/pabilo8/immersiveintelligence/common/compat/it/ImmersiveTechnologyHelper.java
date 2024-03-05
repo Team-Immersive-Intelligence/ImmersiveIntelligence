@@ -14,7 +14,7 @@ import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.ammo.IIAmmoUtils;
+import pl.pabilo8.immersiveintelligence.api.ammo.IIPenetrationRegistry;
 import pl.pabilo8.immersiveintelligence.api.ammo.penetration_handlers.PenetrationHandlerConcretes.PenetrationHandlerConcreteBricks;
 import pl.pabilo8.immersiveintelligence.api.ammo.penetration_handlers.PenetrationHandlerMetals.PenetrationHandlerSteel;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
@@ -74,13 +74,13 @@ public class ImmersiveTechnologyHelper extends IICompatModule
 		addBlock(blocks, new ResourceLocation("immersivetech", "metal_barrel"));
 		addBlock(blocks, new ResourceLocation("immersivetech", "metal_device"));
 		addBlock(blocks, new ResourceLocation("immersivetech", "metal_trash"));
-		IIAmmoUtils.batchRegisterHandler(new PenetrationHandlerSteel(), blocks.toArray(new Block[0]));
+		IIPenetrationRegistry.batchRegisterHandler(new PenetrationHandlerSteel(), blocks.toArray(new Block[0]));
 
 		blocks.clear();
 		addBlock(blocks, new ResourceLocation("immersivetech", "stone_multiblock"));
 		addBlock(blocks, new ResourceLocation("immersivetech", "stone_decoration"));
 		addBlock(blocks, new ResourceLocation("immersivetech", "stone_decoration_slab"));
-		IIAmmoUtils.batchRegisterHandler(new PenetrationHandlerConcreteBricks(), blocks.toArray(new Block[0]));
+		IIPenetrationRegistry.batchRegisterHandler(new PenetrationHandlerConcreteBricks(), blocks.toArray(new Block[0]));
 	}
 
 	@Optional.Method(modid = "immersivetech")

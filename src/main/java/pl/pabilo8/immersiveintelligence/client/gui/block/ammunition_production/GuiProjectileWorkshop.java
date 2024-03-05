@@ -13,7 +13,7 @@ import net.minecraft.util.text.TextFormatting;
 import pl.pabilo8.immersiveintelligence.api.ammo.IIAmmoRegistry;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoComponent;
-import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoItem;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonDropdownList;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.ProjectileWorkshop;
@@ -63,14 +63,14 @@ public class GuiProjectileWorkshop extends GuiAmmunitionBase<TileEntityProjectil
 			typeList.selectedEntry = Arrays.asList(cores).indexOf(tile.coreType.getName());
 			addButton(typeList);
 
-			String[] names = IIAmmoRegistry.registeredAmmoItems.values().stream().map(IAmmoItem::getName).toArray(String[]::new);
+			String[] names = IIAmmoRegistry.getAllAmmoItems().stream().map(IAmmoTypeItem::getName).toArray(String[]::new);
 			bulletList = new GuiButtonDropdownList(buttonList.size(), guiLeft+122, guiTop+20-6, 72, 12, 6, names);
 			bulletList.setTranslationFunc(s -> I18n.format("item.immersiveintelligence."+s+".core.name"));
 
 			bulletList.selectedEntry = Arrays.asList(names).indexOf(tile.producedBullet.getName());
 			addButton(bulletList);
 
-			IAmmoItem bullet = IIAmmoRegistry.registeredAmmoItems.get(bulletList.getEntry(bulletList.selectedEntry));
+			IAmmoTypeItem<?, ?> bullet = IIAmmoRegistry.getAmmoItem(bulletList.getEntry(bulletList.selectedEntry));
 			exampleStack = bullet==null?ItemStack.EMPTY:
 					bullet.getBulletCore("core_brass", typeList.getEntry(typeList.selectedEntry));
 			coreIconID = tile.coreType.ordinal();
@@ -116,7 +116,7 @@ public class GuiProjectileWorkshop extends GuiAmmunitionBase<TileEntityProjectil
 			{
 				sendList("produced_bullet", bulletList.getEntry(bulletList.selectedEntry));
 
-				IAmmoItem bullet = IIAmmoRegistry.registeredAmmoItems.get(bulletList.getEntry(bulletList.selectedEntry));
+				IAmmoTypeItem<?, ?> bullet = IIAmmoRegistry.getAmmoItem(bulletList.getEntry(bulletList.selectedEntry));
 				String selectedType = typeList.getEntry(typeList.selectedEntry);
 
 				int id = typeList.id;
@@ -135,7 +135,7 @@ public class GuiProjectileWorkshop extends GuiAmmunitionBase<TileEntityProjectil
 
 			coreIconID = EnumCoreTypes.v(typeList.getEntry(typeList.selectedEntry)).ordinal();
 
-			IAmmoItem bullet = IIAmmoRegistry.registeredAmmoItems.get(bulletList.getEntry(bulletList.selectedEntry));
+			IAmmoTypeItem<?, ?> bullet = IIAmmoRegistry.getAmmoItem(bulletList.getEntry(bulletList.selectedEntry));
 			exampleStack = bullet==null?ItemStack.EMPTY:
 					bullet.getBulletCore("core_brass", typeList.getEntry(typeList.selectedEntry));
 		}

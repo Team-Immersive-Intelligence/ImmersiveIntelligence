@@ -4,7 +4,8 @@ import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
-import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoItem;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
+import pl.pabilo8.immersiveintelligence.api.ammo.utils.IIAmmoUtils;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIGunBase;
@@ -113,8 +114,8 @@ public abstract class AIHansAbstractGun extends AIHansHandWeapon
 	@Override
 	protected float calculateBallisticAngle(ItemStack ammo, EntityLivingBase attackTarget)
 	{
-		IAmmoItem ammoType = (IAmmoItem)ammo.getItem();
-		return IIUtils.getDirectFireAngle(ammoType.getDefaultVelocity(), ammoType.getMass(ammo),
+		IAmmoTypeItem ammoType = (IAmmoTypeItem)ammo.getItem();
+		return IIAmmoUtils.getDirectFireAngle(ammoType.getDefaultVelocity(), ammoType.getMass(ammo),
 				hans.getPositionVector().addVector(0, (double)hans.getEyeHeight()-0.10000000149011612D, 0).subtract(IIUtils.getEntityCenter(attackTarget))
 		);
 	}

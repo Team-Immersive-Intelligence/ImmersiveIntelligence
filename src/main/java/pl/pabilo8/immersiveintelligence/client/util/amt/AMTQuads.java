@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
 import org.lwjgl.opengl.GL11;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 
 /**
  * AMT type for drawing 3d models using quads
@@ -21,8 +22,7 @@ public class AMTQuads extends AMT
 	/**
 	 * Default normal of an unlit quad.
 	 */
-	private static final Vec3i NO_LIGHTING_NORMAL = new Vec3i(1, 1, 1);
-
+	protected static final Vec3i NO_LIGHTING_NORMAL = new Vec3i(1, 1, 1);
 	/**
 	 * Quads acquired from a {@link blusunrize.immersiveengineering.client.models.IESmartObjModel}
 	 */
@@ -30,14 +30,19 @@ public class AMTQuads extends AMT
 	/**
 	 * GL CallList ID
 	 */
-	private int listID = -1;
+	protected int listID = -1;
+	/**
+	 * Color baked onto this element's quads.<br>
+	 * Can be changed through {@link #setDefaultColor(int)}
+	 */
+	protected float[] bakedColor = new float[]{1, 1, 1};
 
 	/**
 	 * Whether this element has lighting (darkening the face when viewed from another angle) enabled<br>
 	 * Use on static half-transparent elements, such as dust, glass, straw, etc..<br>
 	 * When set to true, tint may be darker/lighter during rotation.
 	 */
-	private boolean hasLighting = true;
+	protected boolean hasLighting = true;
 
 	public AMTQuads(String name, Vec3d originPos, BakedQuad[] quads)
 	{
@@ -62,7 +67,7 @@ public class AMTQuads extends AMT
 				for(BakedQuad bakedquad : quads)
 				{
 					buf.addVertexData(bakedquad.getVertexData());
-					buf.putColorRGB_F4(1f, 1f, 1f);
+					buf.putColorRGB_F4(bakedColor[0], bakedColor[1], bakedColor[2]);
 					Vec3i vec3i = hasLighting?(bakedquad.getFace().getDirectionVec()): NO_LIGHTING_NORMAL;
 					buf.putNormal((float)vec3i.getX(), (float)vec3i.getY(), (float)vec3i.getZ());
 				}
@@ -79,6 +84,13 @@ public class AMTQuads extends AMT
 	{
 		if(listID!=-1)
 			GlStateManager.glDeleteLists(listID, 1);
+		listID = -1;
+	}
+
+	public void setDefaultColor(int color)
+	{
+		disposeOf();
+		bakedColor = IIUtils.rgbIntToRGB(color);
 	}
 
 	public void setLighting(boolean hasLighting)

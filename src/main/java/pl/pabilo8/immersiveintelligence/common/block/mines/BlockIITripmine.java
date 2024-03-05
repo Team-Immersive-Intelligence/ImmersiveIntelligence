@@ -6,13 +6,15 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
-import pl.pabilo8.immersiveintelligence.client.model.misc.ModelTripMine;
+import pl.pabilo8.immersiveintelligence.client.model.builtin.AmmoModel;
+import pl.pabilo8.immersiveintelligence.client.model.builtin.IAmmoModel;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.mines.tileentity.TileEntityTripMine;
+import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoMine;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoCasing.Casings;
 
 import javax.annotation.Nonnull;
+import java.util.function.Function;
 
 /**
  * @author Pabilo8
@@ -71,16 +73,16 @@ public class BlockIITripmine extends BlockIIMine
 		}
 
 		@Override
-		public float getCaliber()
+		public int getCaliber()
 		{
-			return 10f;
+			return 10;
 		}
 
+		@Nonnull
 		@SideOnly(Side.CLIENT)
-		@Override
-		public @Nonnull Class<? extends IBulletModel> getModel()
+		public Function<ItemBlockMineBase, IAmmoModel<ItemBlockMineBase, EntityAmmoMine>> get3DModel()
 		{
-			return ModelTripMine.class;
+			return AmmoModel::createExplosivesModel;
 		}
 
 		@Override

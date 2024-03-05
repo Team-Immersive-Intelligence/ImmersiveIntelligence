@@ -149,7 +149,7 @@ public class BulletTweaker
 			public void apply()
 			{
 				final IngredientStack s = ApiUtils.createIngredientStack(core.stack);
-				IIAmmoRegistry.registerBulletCore(
+				IIAmmoRegistry.registerCore(
 						new IAmmoCore()
 						{
 							@Override
@@ -345,12 +345,12 @@ public class BulletTweaker
 	@ZenMethod
 	public static void removeCore(String name)
 	{
-		IIAmmoRegistry.registeredBulletCores.remove(name);
+		IIAmmoRegistry.unregisterCore(name);
 	}
 
 	@ZenMethod
 	public static void removeComponent(String name)
 	{
-		IIAmmoRegistry.registeredComponents.remove(name);
+		IIAmmoRegistry.unregisterComponent(name);
 	}
 }

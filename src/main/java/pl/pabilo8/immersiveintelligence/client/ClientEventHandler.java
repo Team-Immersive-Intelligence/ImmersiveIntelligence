@@ -50,7 +50,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import org.lwjgl.opengl.GLContext;
-import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoItem;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.DamageBlockPos;
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler;
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler.IAdvancedTooltipItem;
@@ -91,10 +91,10 @@ import pl.pabilo8.immersiveintelligence.common.entity.EntityMachinegun;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityMortar;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityParachute;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityTripodPeriscope;
-import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityBullet;
-import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityFieldHowitzer;
+import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityMotorbike;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityVehicleSeat;
+import pl.pabilo8.immersiveintelligence.common.entity.vehicle.towable.gun.EntityFieldHowitzer;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIGunBase;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIRailgunOverride;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
@@ -526,8 +526,8 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 			}
 		}*/
 
-		if(stack.getItem() instanceof IAmmoItem)
-			IIClientUtils.createAmmoTooltip(((IAmmoItem)stack.getItem()), stack, event.getEntity().world, event.getToolTip());
+		if(stack.getItem() instanceof IAmmoTypeItem)
+			IIClientUtils.createAmmoTooltip(((IAmmoTypeItem)stack.getItem()), stack, event.getEntity().world, event.getToolTip());
 		else if(ItemNBTHelper.hasKey(stack, IIContent.NBT_AdvancedPowerpack))
 		{
 			ItemStack powerpack = ItemNBTHelper.getItemStack(stack, IIContent.NBT_AdvancedPowerpack);
@@ -1359,11 +1359,11 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 			Minecraft mc = ClientUtils.mc();
 			if(mc.world!=null&&mc.player!=null)
 			{
-				List<EntityBullet> bullets = mc.world.getEntitiesWithinAABB(EntityBullet.class, mc.player.getEntityBoundingBox().grow(3));
-				for(EntityBullet bullet : bullets)
-					if(bullet.getShooter()!=mc.player)
+				List<EntityAmmoProjectile> bullets = mc.world.getEntitiesWithinAABB(EntityAmmoProjectile.class, mc.player.getEntityBoundingBox().grow(3));
+				for(EntityAmmoProjectile bullet : bullets)
+					if(bullet.getOwner()!=mc.player)
 						//higher the velocity (howitzers), lower the tone
-						bullet.playSound(IISounds.bulletFlyby, 0.6f, 1.75f-MathHelper.clamp(bullet.force/6f, 0.5f, 1.75f));
+						bullet.playSound(IISounds.bulletFlyby, 0.6f, 1.75f-MathHelper.clamp(bullet.getVelocity()/6f, 0.5f, 1.75f));
 			}
 
 		}

@@ -15,6 +15,10 @@ import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler;
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler.IAdvancedTooltipItem;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityAmmoBase;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -25,7 +29,7 @@ import java.util.List;
  * @ii-approved 0.3.1
  * @since 30.12.2023
  */
-public interface IAmmoItem<T extends EntityAmmoBase> extends IAmmo<T>, IAdvancedTooltipItem
+public interface IAmmoTypeItem<T extends IAmmoType<T, E>, E extends EntityAmmoBase<? super E>> extends IAmmoType<T, E>, IAdvancedTooltipItem
 {
 	//--- NBT Keys ---//
 	String NBT_CORE = "core";
@@ -133,6 +137,17 @@ public interface IAmmoItem<T extends EntityAmmoBase> extends IAmmo<T>, IAdvanced
 	}
 
 	@Override
+	default ItemStack setComponentNBT(ItemStack stack, NBTTagCompound... tagCompounds)
+	{
+		NBTTagList component_nbt = new NBTTagList();
+		for(NBTTagCompound tagCompound : tagCompounds)
+			component_nbt.appendTag(tagCompound);
+		assert stack.getTagCompound()!=null;
+		stack.getTagCompound().setTag(NBT_COMPONENTS_NBT, component_nbt);
+		return stack;
+	}
+
+	@Override
 	default void addComponents(ItemStack stack, IAmmoComponent component, NBTTagCompound componentNBT)
 	{
 		NBTTagList comps = ItemNBTHelper.getTag(stack).getTagList(NBT_COMPONENTS, 8);
@@ -143,6 +158,13 @@ public interface IAmmoItem<T extends EntityAmmoBase> extends IAmmo<T>, IAdvanced
 
 		ItemNBTHelper.getTag(stack).setTag(NBT_COMPONENTS, comps);
 		ItemNBTHelper.getTag(stack).setTag(NBT_COMPONENTS_NBT, nbts);
+	}
+
+	@Override
+	default ItemStack setPaintColour(ItemStack stack, int color)
+	{
+		ItemNBTHelper.setInt(stack, NBT_PAINT, color);
+		return stack;
 	}
 
 	@Override
@@ -259,5 +281,15 @@ public interface IAmmoItem<T extends EntityAmmoBase> extends IAmmo<T>, IAdvanced
 							.map(c -> c.getMaterial().getExampleStack())
 							.toArray(ItemStack[]::new)
 			);
+	}
+
+	/**
+	 * Annotation for in II Ammo Types that are projectiles
+	 */
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target(ElementType.TYPE)
+	@interface IIAmmoProjectile
+	{
+
 	}
 }

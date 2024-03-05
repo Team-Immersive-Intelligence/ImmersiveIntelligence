@@ -18,6 +18,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 /**
@@ -147,6 +148,28 @@ public class EasyNBT extends Constants.NBT
 	public EasyNBT withList(String key, Object... value)
 	{
 		wrapped.setTag(key, listOf(value));
+		return this;
+	}
+
+	/**
+	 * Appends an integer
+	 *
+	 * @param key name of this tag
+	 */
+	public <T, E extends NBTBase> EasyNBT withList(String key, Function<T, E> conversion, T... objects)
+	{
+		wrapped.setTag(key, listOf((Object[])Arrays.stream(objects).map(conversion).toArray(NBTBase[]::new)));
+		return this;
+	}
+
+	/**
+	 * Appends an integer
+	 *
+	 * @param key name of this tag
+	 */
+	public <T, E extends NBTBase> EasyNBT withList(String key, Function<T, E> conversion, Collection<T> objects)
+	{
+		wrapped.setTag(key, listOf((Object[])objects.stream().map(conversion).toArray(NBTBase[]::new)));
 		return this;
 	}
 

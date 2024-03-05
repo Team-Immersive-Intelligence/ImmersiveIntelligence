@@ -21,6 +21,8 @@ import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
+import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.Entity;
@@ -55,7 +57,7 @@ import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.ShrapnelHandler;
 import pl.pabilo8.immersiveintelligence.api.ShrapnelHandler.Shrapnel;
 import pl.pabilo8.immersiveintelligence.api.ammo.IIAmmoRegistry;
-import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoItem;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IUpgradableMachine;
 import pl.pabilo8.immersiveintelligence.client.fx.nuke.ParticleAtomBase;
 import pl.pabilo8.immersiveintelligence.client.fx.particles.ParticleGasCloud;
@@ -64,14 +66,13 @@ import pl.pabilo8.immersiveintelligence.client.gui.block.GuiUpgrade;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualCategory;
 import pl.pabilo8.immersiveintelligence.client.manual.categories.*;
 import pl.pabilo8.immersiveintelligence.client.model.IIModelRegistry;
+import pl.pabilo8.immersiveintelligence.client.model.builtin.FluidStateMapper;
 import pl.pabilo8.immersiveintelligence.client.model.item.ModelMeasuringCup;
 import pl.pabilo8.immersiveintelligence.client.model.item.ModelMeasuringCup.MeasuringCupModelLoader;
-import pl.pabilo8.immersiveintelligence.client.model.misc.FluidStateMapper;
 import pl.pabilo8.immersiveintelligence.client.render.*;
 import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer.RegisteredTileRenderer;
-import pl.pabilo8.immersiveintelligence.client.render.RadioExplosivesRenderer.RadioExplosivesItemStackRenderer;
-import pl.pabilo8.immersiveintelligence.client.render.TellermineRenderer.TellermineItemStackRenderer;
-import pl.pabilo8.immersiveintelligence.client.render.TripmineRenderer.TripmineItemStackRenderer;
+import pl.pabilo8.immersiveintelligence.client.render.ammunition.*;
+import pl.pabilo8.immersiveintelligence.client.render.ammunition.NavalMineRenderer.NavalMineItemstackRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.hans.HansRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.inserter.AdvancedInserterRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.inserter.InserterRenderer;
@@ -81,6 +82,10 @@ import pl.pabilo8.immersiveintelligence.client.render.mechanical_device.WheelRen
 import pl.pabilo8.immersiveintelligence.client.render.metal_device.*;
 import pl.pabilo8.immersiveintelligence.client.render.multiblock.metal.*;
 import pl.pabilo8.immersiveintelligence.client.render.multiblock.wooden.*;
+import pl.pabilo8.immersiveintelligence.client.render.vehicle.DroneRenderer;
+import pl.pabilo8.immersiveintelligence.client.render.vehicle.FieldHowitzerRenderer;
+import pl.pabilo8.immersiveintelligence.client.render.vehicle.MortarRenderer;
+import pl.pabilo8.immersiveintelligence.client.render.vehicle.MotorbikeRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.ShaderUtil;
 import pl.pabilo8.immersiveintelligence.client.util.font.IIFontRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.font.IIFontRendererCustomGlyphs;
@@ -98,9 +103,6 @@ import pl.pabilo8.immersiveintelligence.common.block.metal_device.BlockIIMetalDe
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.TileEntityFluidInserter;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.TileEntityLatexCollector;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.conveyors.*;
-import pl.pabilo8.immersiveintelligence.common.block.mines.tileentity.TileEntityRadioExplosives;
-import pl.pabilo8.immersiveintelligence.common.block.mines.tileentity.TileEntityTellermine;
-import pl.pabilo8.immersiveintelligence.common.block.mines.tileentity.TileEntityTripMine;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.gate_multiblock.multiblock.MultiblockAluminiumChainFenceGate.TileEntityAluminiumChainFenceGate;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.gate_multiblock.multiblock.MultiblockAluminiumFenceGate.TileEntityAluminiumFenceGate;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.gate_multiblock.multiblock.MultiblockSteelChainFenceGate.TileEntitySteelChainFenceGate;
@@ -111,6 +113,7 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.*;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.BlockIIMetalMultiblock1.MetalMultiblocks1;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.*;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.tileentity.TileEntitySkyCartStation;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.tileentity.TileEntitySkyCratePost;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.tileentity.TileEntitySkyCrateStation;
@@ -119,26 +122,28 @@ import pl.pabilo8.immersiveintelligence.common.block.rotary_device.tileentity.Ti
 import pl.pabilo8.immersiveintelligence.common.block.rotary_device.tileentity.TileEntityMechanicalWheel;
 import pl.pabilo8.immersiveintelligence.common.compat.IICompatModule;
 import pl.pabilo8.immersiveintelligence.common.entity.*;
-import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityBullet;
+import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityAmmoBase;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.component.*;
-import pl.pabilo8.immersiveintelligence.common.entity.ammo.naval_mine.EntityNavalMine;
-import pl.pabilo8.immersiveintelligence.common.entity.ammo.naval_mine.EntityNavalMineAnchor;
+import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.naval_mine.EntityNavalMine;
+import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.naval_mine.EntityNavalMineAnchor;
 import pl.pabilo8.immersiveintelligence.common.entity.tactile.EntityAMTTactile;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityDrone;
-import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityFieldHowitzer;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityMotorbike;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityVehicleSeat;
+import pl.pabilo8.immersiveintelligence.common.entity.vehicle.towable.gun.EntityFieldHowitzer;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoBase;
-import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoRevolver;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIINavalMine;
+import pl.pabilo8.immersiveintelligence.common.item.ammo.gun.ItemIIAmmoRevolver;
 import pl.pabilo8.immersiveintelligence.common.item.tools.ItemIIDrillHead.DrillHeads;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIWeaponUpgrade;
 import pl.pabilo8.immersiveintelligence.common.util.block.BlockIIBase;
 import pl.pabilo8.immersiveintelligence.common.util.block.BlockIIFluid;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIIItemTextureOverride;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIBase;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
 
+import javax.annotation.Nullable;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -262,6 +267,8 @@ public class ClientProxy extends CommonProxy
 				ModelLoader.setCustomMeshDefinition(item, stack -> new ModelResourceLocation(loc, "inventory"));
 			}
 		}
+
+		IIAmmoRegistry.registerAmmoModels();
 	}
 
 	private static void mapFluidState(Block block, Fluid fluid)
@@ -315,7 +322,7 @@ public class ClientProxy extends CommonProxy
 
 		//Register entity renderers
 		registerEntityRenderer(EntitySkyCrate.class, SkyCrateRenderer::new);
-		registerEntityRenderer(EntityBullet.class, BulletRenderer::new);
+		registerEntityRenderer(EntityAmmoBase.class, AmmoRenderer::new);
 		registerEntityRenderer(EntityNavalMine.class, NavalMineRenderer::new);
 		registerEntityRenderer(EntityNavalMineAnchor.class, NavalMineAnchorRenderer::new);
 		registerEntityRenderer(EntityShrapnel.class, ShrapnelRenderer::new);
@@ -350,7 +357,7 @@ public class ClientProxy extends CommonProxy
 		IIContent.itemTachometer.setTileEntityItemStackRenderer(new TachometerRenderer().subscribeToList("tachometer"));
 		//IIContent.itemMineDetector.setTileEntityItemStackRenderer(new MineDetectorRenderer().subscribeToList("mine_detector"));
 
-		for(IAmmoItem bullet : IIAmmoRegistry.registeredAmmoItems.values())
+		for(IAmmoTypeItem bullet : IIAmmoRegistry.getAllAmmoItems())
 		{
 			if(bullet instanceof ItemIINavalMine)
 				continue;
@@ -400,6 +407,7 @@ public class ClientProxy extends CommonProxy
 		ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":blocks/data_connector_feedtrough");
 		ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":blocks/data_connector");
 
+		//Particles
 		ParticleGasCloud.TEXTURE = ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":particle/gas");
 		ParticleGunfire.TEXTURES = new TextureAtlasSprite[8];
 		for(int i = 0; i < 8; i++)
@@ -407,6 +415,8 @@ public class ClientProxy extends CommonProxy
 		ParticleAtomBase.TEXTURES = new TextureAtlasSprite[8];
 		for(int i = 0; i < 8; i++)
 			ParticleAtomBase.TEXTURES[i] = ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":particle/smoke"+i);
+
+		//Conveyors
 
 		ApiUtils.getRegisterSprite(event.getMap(), ConveyorRubber.texture_on);
 		ApiUtils.getRegisterSprite(event.getMap(), ConveyorRubber.texture_off);
@@ -571,13 +581,10 @@ public class ClientProxy extends CommonProxy
 		IIContent.itemMineDetector.setTileEntityItemStackRenderer(MineDetectorRenderer.instance);
 
 		//Mines and explosives
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityTripMine.class, new TripmineRenderer().subscribeToList("tripmine"));
-		Item.getItemFromBlock(IIContent.blockTripmine).setTileEntityItemStackRenderer(new TripmineItemStackRenderer());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityTellermine.class, new TellermineRenderer().subscribeToList("tellermine"));
-		Item.getItemFromBlock(IIContent.blockTellermine).setTileEntityItemStackRenderer(new TellermineItemStackRenderer());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRadioExplosives.class, new RadioExplosivesRenderer().subscribeToList("radio_explosives"));
-		Item.getItemFromBlock(IIContent.blockRadioExplosives).setTileEntityItemStackRenderer(new RadioExplosivesItemStackRenderer());
-		IIContent.itemNavalMine.setTileEntityItemStackRenderer(NavalMineRenderer.instance);
+		registerTileRenderer(TripmineRenderer.class, IIContent.blockTripmine);
+		registerTileRenderer(TellermineRenderer.class, IIContent.blockTellermine);
+		registerTileRenderer(RadioExplosivesRenderer.class, IIContent.blockRadioExplosives);
+		registerTEISR(NavalMineItemstackRenderer.class, IIContent.itemNavalMine);
 
 		//Skycrate multiblocks renderers
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySkyCrateStation.class, new SkyCrateStationRenderer().subscribeToList("skycrate_station"));
@@ -652,13 +659,36 @@ public class ClientProxy extends CommonProxy
 		IICompatModule.doModulesClientPostInit();
 	}
 
-	private <T extends TileEntity> void registerTileRenderer(Class<? extends IITileRenderer<T>> clazz)
+	private <T extends TileEntity> void registerTileRenderer(Class<? extends TileEntitySpecialRenderer<T>> clazz)
+	{
+		registerTileRenderer(clazz, null);
+	}
+
+	@SuppressWarnings("unchecked")
+	private <T extends TileEntity> void registerTileRenderer(Class<? extends TileEntitySpecialRenderer<T>> clazz, @Nullable Block teisrBlock)
 	{
 		RegisteredTileRenderer rt = clazz.getAnnotation(RegisteredTileRenderer.class);
 		try
 		{
-			IITileRenderer<T> tileRenderer = clazz.newInstance();
-			ClientRegistry.bindTileEntitySpecialRenderer(((Class<T>)rt.clazz()), tileRenderer.subscribeToList(rt.name()));
+			//Create a new instance of the tile renderer
+			TileEntitySpecialRenderer<T> tileRenderer = clazz.newInstance();
+
+			//Register the tile renderer for auto reloading
+			if(tileRenderer instanceof IITileRenderer)
+				ClientRegistry.bindTileEntitySpecialRenderer(((Class<T>)rt.clazz()), ((IITileRenderer<T>)tileRenderer).subscribeToList(rt.name()));
+
+			//Register the item renderer (if applicable)
+			if(teisrBlock!=null&&rt.teisrClazz()!=TileEntityItemStackRenderer.class)
+				registerTEISR(rt.teisrClazz(), Item.getItemFromBlock(teisrBlock));
+
+		} catch(InstantiationException|IllegalAccessException ignored) {}
+	}
+
+	private void registerTEISR(Class<? extends TileEntityItemStackRenderer> rendererClass, Item item)
+	{
+		try
+		{
+			item.setTileEntityItemStackRenderer(rendererClass.newInstance());
 		} catch(InstantiationException|IllegalAccessException ignored) {}
 	}
 

@@ -10,7 +10,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumComponentRole;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumCoreTypes;
-import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityBullet;
+import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityAmmoBase;
 
 import javax.annotation.Nullable;
 
@@ -82,17 +82,29 @@ public interface IAmmoComponent
 		return true;
 	}
 
+	/**
+	 * @implNote Override if your component has animated colour
+	 */
 	default int getNBTColour(NBTTagCompound nbt)
 	{
 		return getColour();
 	}
 
-	default boolean spawnParticleTrail(EntityBullet bullet, NBTTagCompound nbt)
+	/**
+	 * @param ammo ammo this component is in
+	 * @param nbt  nbt of this component
+	 * @return whether this component spawned a trail
+	 */
+	default boolean spawnParticleTrail(EntityAmmoBase ammo, NBTTagCompound nbt)
 	{
 		return false;
 	}
 
-	default boolean matchesBullet(IAmmoItem bullet)
+	/**
+	 * @param bullet bullet type to match
+	 * @return whether this component matches a bullet type
+	 */
+	default boolean matchesBullet(IAmmoTypeItem bullet)
 	{
 		return true;
 	}

@@ -11,10 +11,12 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityMachinegun;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityMortar;
-import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityBullet;
-import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityFieldHowitzer;
+import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityAmmoBase;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityMotorbike;
+import pl.pabilo8.immersiveintelligence.common.entity.vehicle.towable.gun.EntityFieldHowitzer;
 import pl.pabilo8.immersiveintelligence.common.network.IIMessage;
+
+//TODO: 08.02.2024 rework
 
 /**
  * II's version of {@link MessageIITileSync}
@@ -57,8 +59,8 @@ public class MessageEntityNBTSync extends IIMessage
 	protected void onClientReceive(WorldClient world, NetHandlerPlayClient handler)
 	{
 		Entity entity = world.getEntityByID(entityID);
-		if(entity instanceof EntityBullet)
-			((EntityBullet)entity).readEntityFromNBT(tag);
+		if(entity instanceof EntityAmmoBase)
+			((EntityAmmoBase)entity).readEntityFromNBT(tag);
 		else if(entity instanceof EntityMachinegun)
 			((EntityMachinegun)entity).readEntityFromNBT(tag);
 	}

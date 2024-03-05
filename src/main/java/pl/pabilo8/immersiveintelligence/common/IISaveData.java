@@ -1,17 +1,13 @@
 package pl.pabilo8.immersiveintelligence.common;
 
-import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.nbt.NBTUtil;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.nbt.NBTTagIntArray;
 import net.minecraft.world.storage.WorldSavedData;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import pl.pabilo8.immersiveintelligence.api.ammo.IIPenetrationRegistry;
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.DamageBlockPos;
-
-import java.util.Iterator;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 /**
  * @author Pabilo8
@@ -42,41 +38,37 @@ public class IISaveData extends WorldSavedData
 	@Override
 	public void readFromNBT(NBTTagCompound nbt)
 	{
-		NBTTagList list = nbt.getTagList("block_damage", 10);
-		Iterator<NBTBase> i = list.iterator();
-		IIPenetrationRegistry.blockDamage.clear();
-		while(i.hasNext())
-		{
-			try
-			{
-				NBTTagCompound compound = (NBTTagCompound)i.next();
-				NBTTagCompound posTag = (NBTTagCompound)compound.getTag("pos");
-				BlockPos pos = NBTUtil.getPosFromTag(posTag);
-				int dimension = posTag.getInteger("dim");
-				DamageBlockPos dpos = new DamageBlockPos(pos, dimension, compound.getFloat("damage"));
-				IIPenetrationRegistry.blockDamage.add(dpos);
-			} catch(ClassCastException|NullPointerException e)
-			{
-				IILogger.info("Error in the block damage list!");
-			}
+		EasyNBT enbt = EasyNBT.wrapNBT(nbt);
 
+		//Load block damage data
+		IIPenetrationRegistry.blockDamage.clear();
+		IIPenetrationRegistry.blockDamageClient.clear();
+		try
+		{
+			if(enbt.hasKey("block_dmg"))
+			{
+				enbt.streamList(NBTTagIntArray.class, "block_dmg", EasyNBT.TAG_INT_ARRAY)
+						.map(NBTTagIntArray::getIntArray)
+						.filter(t -> t.length==5)
+						.map(t -> new DamageBlockPos(t[0], t[1], t[2], t[3], (float)t[4]/16))
+						.forEach(IIPenetrationRegistry.blockDamage::add);
+				IIPenetrationRegistry.blockDamageClient.addAll(IIPenetrationRegistry.blockDamage);
+			}
+		} catch(Exception e)
+		{
+			IILogger.info("Error in the block damage list!");
 		}
 	}
 
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
 	{
-		NBTTagList blockDamage = new NBTTagList();
-		for(DamageBlockPos entry : IIPenetrationRegistry.blockDamage)
-		{
-			NBTTagCompound compound = new NBTTagCompound();
-			NBTTagCompound posTag = NBTUtil.createPosTag(entry);
-			posTag.setInteger("dim", entry.dimension);
-			compound.setTag("pos", posTag);
-			compound.setFloat("damage", entry.damage);
-			blockDamage.appendTag(compound);
-		}
-		nbt.setTag("block_damage", blockDamage);
+
+		//Save block damage data
+		EasyNBT.wrapNBT(nbt)
+				.withList("block_dmg", e -> new NBTTagIntArray(new int[]{
+						e.getX(), e.getY(), e.getZ(), e.dimension, (int)(e.damage*16)
+				}), IIPenetrationRegistry.blockDamage);
 		return nbt;
 	}
 

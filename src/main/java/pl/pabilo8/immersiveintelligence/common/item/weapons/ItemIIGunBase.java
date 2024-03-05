@@ -30,8 +30,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.ammo.IIAmmoUtils;
-import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoItem;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
+import pl.pabilo8.immersiveintelligence.api.ammo.utils.IIAmmoFactory;
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler;
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler.IAdvancedTooltipItem;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.ISkinnable;
@@ -40,7 +40,6 @@ import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.util.amt.IIUpgradableItemRendererAMT;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
-import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityBullet;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ammohandler.AmmoHandler;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageItemKeybind;
@@ -439,9 +438,11 @@ public abstract class ItemIIGunBase extends ItemIIUpgradableTool implements ISki
 
 	protected void createProjectile(EntityLivingBase user, World world, Vec3d dir, Vec3d pos, ItemStack weapon, EasyNBT nbt, ItemStack ammo)
 	{
-		EntityBullet a = IIAmmoUtils.createBullet(world, ammo, pos, dir, getVelocityModifier(weapon, nbt, ammo));
-		a.setShooters(user);
-		world.spawnEntity(a);
+		new IIAmmoFactory<>(world)
+				.setPositionAndVelocity(pos, dir, getVelocityModifier(weapon, nbt, ammo))
+				.setStack(ammo)
+				.setOwner(user)
+				.create();
 	}
 
 	//--- Gun Abstracts ---//
@@ -546,7 +547,7 @@ public abstract class ItemIIGunBase extends ItemIIUpgradableTool implements ISki
 	 */
 	protected ItemStack getCasingStack(ItemStack ammo)
 	{
-		return ((IAmmoItem)ammo.getItem()).getCasingStack(1);
+		return ((IAmmoTypeItem)ammo.getItem()).getCasingStack(1);
 	}
 
 	/**

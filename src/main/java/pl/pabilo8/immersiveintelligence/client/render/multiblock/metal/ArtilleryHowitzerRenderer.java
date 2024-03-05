@@ -90,7 +90,7 @@ public class ArtilleryHowitzerRenderer extends IIMultiblockRenderer<TileEntityAr
 		{
 			IIAnimationUtils.setModelVisibility(shellsStorage[i], true);
 			shellsStorage[i].withStack(te.loadedShells.get(i),
-					te.loadedShells.get(i).getItem()==IIContent.itemAmmoArtillery?BulletState.BULLET_UNUSED: BulletState.CASING);
+					te.loadedShells.get(i).getItem()==IIContent.itemAmmoHeavyArtillery?BulletState.BULLET_UNUSED: BulletState.CASING);
 		}
 		IIAnimationUtils.setModelVisibility(shellHeld, false);
 		IIAnimationUtils.setModelVisibility(shellEjected, false);
@@ -306,7 +306,7 @@ public class ArtilleryHowitzerRenderer extends IIMultiblockRenderer<TileEntityAr
 
 	private AMTBullet createDefaultShellAMT(IIModelHeader header, String name, String originName)
 	{
-		return new AMTBullet(name, header.getOffset(originName), IIAmmoRegistry.getModel(IIContent.itemAmmoArtillery));
+		return new AMTBullet(name, header.getOffset(originName), IIAmmoRegistry.getModel(IIContent.itemAmmoHeavyArtillery));
 	}
 
 	private AMTBullet createShellQueueAMT(boolean in, int id, IIModelHeader header)

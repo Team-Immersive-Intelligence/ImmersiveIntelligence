@@ -23,7 +23,7 @@ public class PenetrationHandlerBricks implements IPenetrationHandler
 	@Override
 	public float getReduction()
 	{
-		return 0.9f;
+		return 1f;
 	}
 
 	@Override

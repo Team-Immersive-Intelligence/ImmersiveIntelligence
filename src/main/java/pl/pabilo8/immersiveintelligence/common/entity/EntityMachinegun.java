@@ -35,8 +35,8 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.MachinegunCoolantHandler;
-import pl.pabilo8.immersiveintelligence.api.ammo.IIAmmoUtils;
-import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoItem;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
+import pl.pabilo8.immersiveintelligence.api.ammo.utils.IIAmmoFactory;
 import pl.pabilo8.immersiveintelligence.api.utils.IEntitySpecialRepairable;
 import pl.pabilo8.immersiveintelligence.api.utils.camera.IEntityZoomProvider;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.IAdvancedTextOverlay;
@@ -48,7 +48,7 @@ import pl.pabilo8.immersiveintelligence.common.IIPotions;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.effect_crate.TileEntityAmmunitionCrate;
-import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityBullet;
+import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageEntityNBTSync;
@@ -61,6 +61,7 @@ import javax.annotation.Nullable;
  * @author Pabilo8
  * @since 01-11-2019
  */
+//TODO: 15.02.2024 full rework needed
 public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnData, IAdvancedTextOverlay, IEntitySpecialRepairable, IEntityZoomProvider
 {
 	private static final ResourceLocation SIGHTS_TEXTURE = new ResourceLocation(ImmersiveIntelligence.MODID, "textures/gui/item/machinegun/scope.png");
@@ -76,6 +77,7 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 	public int bulletDelay = 0, bulletDelayMax = 0, clipReload = 0, setupTime = Machinegun.setupTime, maxSetupTime = Machinegun.setupTime, overheating = 0, tankCapacity = 0, bullets1 = 0, bullets2 = 0;
 	public float setYaw = 0, recoilYaw = 0, recoilPitch = 0, gunYaw = 0, gunPitch = 0, maxRecoilPitch = Machinegun.recoilHorizontal, maxRecoilYaw = Machinegun.recoilVertical, currentlyLoaded = -1, shieldStrength = 0f, maxShieldStrength = 0f;
 	public boolean shoot = false, aiming = false, hasSecondMag = false, mag1Empty = false, mag2Empty = false, hasInfrared = false, loadedFromCrate = false, overheated = false, tripod = false;
+	private final IIAmmoFactory<EntityAmmoProjectile> ammoFactory;
 	public FluidTank tank = new FluidTank(tankCapacity);
 
 	AxisAlignedBB aabb = new AxisAlignedBB(0.15d, 0d, 0.15d, 0.85d, 0.65d, 0.85d).offset(-0.5, 0, -0.5);
@@ -85,11 +87,14 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 	public EntityMachinegun(World worldIn)
 	{
 		super(worldIn);
+		this.ammoFactory = new IIAmmoFactory<>(this);
 	}
 
 	public EntityMachinegun(World world, BlockPos pos, float yaw, float pitch, ItemStack stack)
 	{
 		super(world);
+		this.ammoFactory = new IIAmmoFactory<>(this);
+
 		float height = 0;
 		this.gun = stack.copy();
 		getConfigFromItem(this.gun);
@@ -747,17 +752,21 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 				1f+(float)(Utils.RAND.nextGaussian()*0.02)
 		);
 
-		double true_angle = Math.toRadians(360f-rotationYaw);
-		double true_angle2 = Math.toRadians(-(rotationPitch));
-		Vec3d gun_end = IIUtils.offsetPosDirection(0.95f, true_angle, true_angle2);
-		Vec3d gun_height = IIUtils.offsetPosDirection(0.1875f, true_angle, true_angle2+90);
+		double yawAngle = Math.toRadians(360f-rotationYaw);
+		double pitchAngle = Math.toRadians(-(rotationPitch));
+		Vec3d gun_end = IIUtils.offsetPosDirection(0.95f, yawAngle, pitchAngle);
+		Vec3d gun_height = IIUtils.offsetPosDirection(0.1875f, yawAngle, pitchAngle+90);
 
 		Vec3d vpos = new Vec3d(posX+0.85*(gun_end.x+gun_height.x), posY+0.34375+0.85*(gun_end.y+gun_height.y), posZ+0.85*(gun_end.z+gun_height.z));
-		EntityBullet b = IIAmmoUtils.createBullet(world, stack, vpos, gun_end);
-		b.setShooters(getPassengers().get(0), this);
-		world.spawnEntity(b);
 
-		ItemStack stack2 = ((IAmmoItem)stack.getItem()).getCasingStack(1);
+		ammoFactory.setPosition(vpos)
+				.setPositionAndVelocity(vpos, gun_end, 1)
+				.setIgnoredEntities(getPassengers())
+				.setShooterAndGun(getPassengers().get(0), this)
+				.setStack(stack)
+				.create();
+
+		ItemStack stack2 = ((IAmmoTypeItem)stack.getItem()).getCasingStack(1);
 		blusunrize.immersiveengineering.common.util.Utils.dropStackAtPos(world, getPosition(), stack2);
 	}
 

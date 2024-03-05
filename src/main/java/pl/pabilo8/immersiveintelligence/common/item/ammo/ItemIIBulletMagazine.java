@@ -18,7 +18,8 @@ import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.ItemHandlerHelper;
-import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoItem;
+import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler;
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler.IAdvancedTooltipItem;
 import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
@@ -69,15 +70,15 @@ public class ItemIIBulletMagazine extends ItemIISubItemsBase<Magazines> implemen
 		AUTOMATIC_REVOLVER(16, IIContent.itemAmmoRevolver);
 
 		public final int capacity;
-		public final IAmmoItem ammo;
+		public final IAmmoTypeItem ammo;
 		public final boolean hasDisplayTexture;
 
-		Magazines(int capacity, IAmmoItem ammo)
+		Magazines(int capacity, IAmmoTypeItem ammo)
 		{
 			this(capacity, ammo, false);
 		}
 
-		Magazines(int capacity, IAmmoItem ammo, boolean hasDisplayTexture)
+		Magazines(int capacity, IAmmoTypeItem ammo, boolean hasDisplayTexture)
 		{
 			this.capacity = capacity;
 			this.ammo = ammo;
@@ -112,7 +113,7 @@ public class ItemIIBulletMagazine extends ItemIISubItemsBase<Magazines> implemen
 			if(!contains)
 			{
 				already.add(bullet);
-				ItemNBTHelper.setInt(stack, "colour"+i, ((IAmmoItem)bullet.getItem()).getPaintColor(bullet));
+				ItemNBTHelper.setInt(stack, "colour"+i, ((IAmmoTypeItem)bullet.getItem()).getPaintColor(bullet));
 				ItemNBTHelper.setBoolean(stack, "bullet"+i, true);
 				i += 1;
 			}

@@ -11,12 +11,12 @@ import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 public interface IAmmoCore
 {
 	/**
-	 * Gets the name of the component
+	 * Gets the name of the core material
 	 */
 	String getName();
 
 	/**
-	 * @return the material used to create this ammo core
+	 * @return the ingredient used to create this ammo core
 	 */
 	IngredientStack getMaterial();
 

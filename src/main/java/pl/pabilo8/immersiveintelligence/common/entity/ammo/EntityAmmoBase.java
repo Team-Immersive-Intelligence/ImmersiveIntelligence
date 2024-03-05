@@ -15,32 +15,36 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.pabilo8.immersiveintelligence.api.ammo.IIAmmoRegistry;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumFuseTypes;
-import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmo;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoComponent;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoCore;
-import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoItem;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoType;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
+import pl.pabilo8.immersiveintelligence.common.util.lambda.NBTTagCollector;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Pabilo8
- * @ii-approved
+ * @ii-approved 0.3.1
  * @since 30.01.2024
  */
 @Optional.Interface(iface = "com.elytradev.mirage.lighting.IEntityLightEventConsumer", modid = "mirage")
-public abstract class EntityAmmoBase extends Entity implements IEntityAdditionalSpawnData, IEntityLightEventConsumer
+public abstract class EntityAmmoBase<T extends EntityAmmoBase<? super T>> extends Entity implements IEntityAdditionalSpawnData, IEntityLightEventConsumer
 {
 	//--- Properties ---//
 	/**
 	 * The ammo type
 	 */
-	protected IAmmo bullet;
+	protected IAmmoType<?, T> ammoType;
 	/**
 	 * The ammo core
 	 */
@@ -59,6 +63,10 @@ public abstract class EntityAmmoBase extends Entity implements IEntityAdditional
 	 */
 	protected int fuseParameter = 0;
 	/**
+	 * The paint colour of the bullet, in rgbInt format
+	 */
+	protected int paintColour = -1;
+	/**
 	 * List of component tuples, containing the component and its NBT (can be empty but not null)
 	 */
 	protected List<Tuple<IAmmoComponent, NBTTagCompound>> components;
@@ -73,7 +81,7 @@ public abstract class EntityAmmoBase extends Entity implements IEntityAdditional
 	{
 
 		super(world);
-		bullet = null;
+		ammoType = null;
 	}
 
 	@Override
@@ -85,9 +93,9 @@ public abstract class EntityAmmoBase extends Entity implements IEntityAdditional
 	public void setFromStack(@Nonnull ItemStack stack)
 	{
 		//Only applies if the stack is an ammo item
-		if(!(stack.getItem() instanceof IAmmoItem))
+		if(!(stack.getItem() instanceof IAmmoTypeItem))
 			return;
-		IAmmoItem<?> bullet = (IAmmoItem<?>)stack.getItem();
+		IAmmoTypeItem<?, T> bullet = (IAmmoTypeItem<?, T>)stack.getItem();
 
 		//NBT can be null, but components can't
 		IAmmoComponent[] components = bullet.getComponents(stack);
@@ -110,10 +118,10 @@ public abstract class EntityAmmoBase extends Entity implements IEntityAdditional
 	}
 
 	@ParametersAreNonnullByDefault
-	public void setFromParameters(IAmmo bullet, IAmmoCore core, EnumCoreTypes coreType, EnumFuseTypes fuseType, int fuseParameter,
+	public void setFromParameters(IAmmoType<?, T> ammoType, IAmmoCore core, EnumCoreTypes coreType, EnumFuseTypes fuseType, int fuseParameter,
 								  List<Tuple<IAmmoComponent, NBTTagCompound>> components)
 	{
-		this.bullet = bullet;
+		this.ammoType = ammoType;
 		this.core = core;
 		this.coreType = coreType;
 		this.fuseType = fuseType;
@@ -134,12 +142,19 @@ public abstract class EntityAmmoBase extends Entity implements IEntityAdditional
 	@Override
 	public void onUpdate()
 	{
-		super.onUpdate();
+		this.prevDistanceWalkedModified = this.distanceWalkedModified;
+		this.prevPosX = this.posX;
+		this.prevPosY = this.posY;
+		this.prevPosZ = this.posZ;
+
+		this.prevRotationPitch = this.rotationPitch;
+		this.prevRotationYaw = this.rotationYaw;
+
 		if(shouldDecay())
 			setDead();
 	}
 
-	protected void detonate()
+	public void detonate()
 	{
 		if(!world.isRemote)
 		{
@@ -161,22 +176,48 @@ public abstract class EntityAmmoBase extends Entity implements IEntityAdditional
 
 	protected float getComponentMultiplier()
 	{
-		return 0;
+		return core.getExplosionModifier()*ammoType.getComponentMultiplier()*coreType.getComponentEffectivenessMod();
 	}
 
+	@Nonnull
 	protected abstract Vec3d getDirection();
 
 	//--- NBT ---//
 
 	@Override
-	protected void readEntityFromNBT(NBTTagCompound compound)
+	public void readEntityFromNBT(NBTTagCompound compound)
 	{
-
+		setFromParameters(
+				(IAmmoType<?, T>)IIAmmoRegistry.getAmmoItem(compound.getString("ammoType")),
+				IIAmmoRegistry.getCore(compound.getString("core")),
+				EnumCoreTypes.values()[compound.getInteger("coreType")],
+				EnumFuseTypes.values()[compound.getInteger("fuseType")],
+				compound.getInteger("fuseParameter"),
+				compound.getTagList("components", 10).tagList.stream().map(t ->
+				{
+					NBTTagCompound nbt = (NBTTagCompound)t;
+					return new Tuple<>(IIAmmoRegistry.getComponent(nbt.getString("component")), nbt.getCompoundTag("nbt"));
+				}).collect(Collectors.toList())
+		);
+		owner = world.getEntityByID(compound.getInteger("owner"));
 	}
 
 	@Override
-	protected void writeEntityToNBT(NBTTagCompound compound)
+	public void writeEntityToNBT(NBTTagCompound compound)
 	{
+		compound.setString("ammoType", ammoType.getName());
+		compound.setString("core", core.getName());
+		compound.setInteger("coreType", coreType.ordinal());
+		compound.setInteger("fuseType", fuseType.ordinal());
+		compound.setInteger("fuseParameter", fuseParameter);
+		compound.setInteger("paintColour", paintColour);
+		compound.setTag("components", components.stream().map(t ->
+				EasyNBT.newNBT()
+						.withString("component", t.getFirst().getName())
+						.withTag("nbt", t.getSecond())
+						.unwrap()
+		).collect(new NBTTagCollector()));
+		compound.setInteger("owner", owner==null?-1: owner.getEntityId());
 
 	}
 
@@ -193,7 +234,10 @@ public abstract class EntityAmmoBase extends Entity implements IEntityAdditional
 	{
 		NBTTagCompound compound = ByteBufUtils.readTag(additionalData);
 		if(compound!=null)
+		{
 			readEntityFromNBT(compound);
+
+		}
 	}
 
 	//--- Abstract ---//
@@ -219,6 +263,48 @@ public abstract class EntityAmmoBase extends Entity implements IEntityAdditional
 
 	}
 
+	//--- Getters ---//
+
+	public IAmmoType<?, T> getAmmoType()
+	{
+		return ammoType;
+	}
+
+	public IAmmoCore getCore()
+	{
+		return core;
+	}
+
+	public EnumCoreTypes getCoreType()
+	{
+		return coreType;
+	}
+
+	public EnumFuseTypes getFuseType()
+	{
+		return fuseType;
+	}
+
+	public int getFuseParameter()
+	{
+		return fuseParameter;
+	}
+
+	public List<Tuple<IAmmoComponent, NBTTagCompound>> getComponents()
+	{
+		return components;
+	}
+
+	public int getPaintColour()
+	{
+		return paintColour;
+	}
+
+	public Entity getOwner()
+	{
+		return owner;
+	}
+
 	//--- Mirage Compat ---//
 
 	@Override
@@ -231,7 +317,7 @@ public abstract class EntityAmmoBase extends Entity implements IEntityAdditional
 			int color = component.getFirst().getNBTColour(component.getSecond());
 
 			evt.add(Light.builder().pos(this)
-					.radius(bullet.getComponentMultiplier()*16f)
+					.radius(ammoType.getComponentMultiplier()*16f)
 					.color(color, false)
 					.build());
 		}

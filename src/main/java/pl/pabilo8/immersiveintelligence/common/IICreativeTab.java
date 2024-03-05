@@ -11,7 +11,7 @@ import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fluids.capability.wrappers.FluidBucketWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoItem;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.BlockIIMetalDecoration.IIBlockTypes_MetalDecoration;
 import pl.pabilo8.immersiveintelligence.common.block.mines.BlockIIMine.ItemBlockMineBase;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine.Magazines;
@@ -66,15 +66,15 @@ public class IICreativeTab extends CreativeTabs
 	public void addExampleBullets(NonNullList<ItemStack> list)
 	{
 		//add generic artillery ammo
-		for(IAmmoItem bullet : new IAmmoItem[]{IIContent.itemAmmoArtillery, IIContent.itemAmmoLightArtillery, IIContent.itemAmmoMortar})
+		for(IAmmoTypeItem bullet : new IAmmoTypeItem[]{IIContent.itemAmmoHeavyArtillery, IIContent.itemAmmoLightArtillery, IIContent.itemAmmoMortar})
 			for(String[] core : new String[][]{{"core_brass", "canister"}, {"core_tungsten", "piercing"}, {"core_steel", "shaped"}})
 				for(String explosive : new String[]{"tnt", "rdx", "hmx"})
 					list.add(bullet.getBulletWithParams(core[0], core[1], explosive, "tracer_powder"));
 
 		//add custom artillery ammo examples
-		list.add(IIContent.itemAmmoArtillery.getBulletWithParams("core_brass", "canister", "hmx", "white_phosphorus").setStackDisplayName("Phosphorgranate mk. 1"));
-		list.add(IIContent.itemAmmoArtillery.getBulletWithParams("core_brass", "canister", "fluid_napalm").setStackDisplayName("Napalmgranate mk. 1"));
-		list.add(IIContent.itemAmmoArtillery.getBulletWithParams("core_brass", "canister", "nuke").setStackDisplayName("Geburtstagsgranate mk.1"));
+		list.add(IIContent.itemAmmoHeavyArtillery.getBulletWithParams("core_brass", "canister", "hmx", "white_phosphorus").setStackDisplayName("Phosphorgranate mk. 1"));
+		list.add(IIContent.itemAmmoHeavyArtillery.getBulletWithParams("core_brass", "canister", "fluid_napalm").setStackDisplayName("Napalmgranate mk. 1"));
+		list.add(IIContent.itemAmmoHeavyArtillery.getBulletWithParams("core_brass", "canister", "nuke").setStackDisplayName("Geburtstagsgranate mk.1"));
 
 		//add grenades
 		list.add(IIContent.itemGrenade.getBulletWithParams("core_brass", "canister", "tnt").setStackDisplayName("Stielhandgranate mk.1"));

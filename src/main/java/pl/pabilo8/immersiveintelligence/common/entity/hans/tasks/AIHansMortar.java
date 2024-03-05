@@ -9,10 +9,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import pl.pabilo8.immersiveintelligence.api.ammo.utils.IIAmmoUtils;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityMortar;
-import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityBullet;
 
 import java.util.Optional;
 
@@ -20,6 +19,7 @@ import java.util.Optional;
  * @author Pabilo8
  * @since 05.04.2021
  */
+//TODO: 15.02.2024 create a superclass for AIHansHowitzer and AIHansMortar
 public class AIHansMortar extends EntityAIBase
 {
 	// TODO: 31.08.2021 yaw
@@ -97,19 +97,14 @@ public class AIHansMortar extends EntityAIBase
 		return pitch==mortar.rotationPitch;
 	}
 
+	//TODO: 15.02.2024 revisit
 	public float[] getAnglePrediction(Vec3d posTurret, Vec3d posTarget, Vec3d motion)
 	{
 		Vec3d dist = posTurret.subtract(posTarget.add(motion));
 		Vec3d norm = dist.normalize();
 
 		float yy = (float)((Math.atan2(norm.x, norm.z)*180D)/3.1415927410125732D);
-
-		float pp = Math.round(IIUtils.calculateBallisticAngle(
-				new Vec3d(dist.x, 0, dist.z).distanceTo(Vec3d.ZERO)
-				, dist.y,
-				IIContent.itemAmmoMortar.getDefaultVelocity(),
-				EntityBullet.GRAVITY*3.1875f,
-				1f-EntityBullet.DRAG, 0.01));
+		float pp = Math.round(IIAmmoUtils.calculateBallisticAngle(posTurret, posTarget.add(motion), hans.getHeldItemMainhand(), 0.01f));
 
 		return new float[]{MathHelper.wrapDegrees(180-yy), 90-pp};
 	}

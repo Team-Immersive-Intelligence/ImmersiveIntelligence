@@ -15,15 +15,20 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.Vec3d;
 import pl.pabilo8.immersiveintelligence.api.ammo.IIAmmoRegistry;
-import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoItem;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
+import pl.pabilo8.immersiveintelligence.api.ammo.utils.IIAmmoUtils;
+import pl.pabilo8.immersiveintelligence.api.data.DataHandlingUtils;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
-import pl.pabilo8.immersiveintelligence.api.data.types.*;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeBoolean;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeFloat;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeItemStack;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.BallisticComputer;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.MultiblockBallisticComputer;
-import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityBullet;
+import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultiblockIIGeneric;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
@@ -75,81 +80,85 @@ public class TileEntityBallisticComputer extends TileEntityMultiblockIIGeneric<T
 		if(energyStorage.getEnergyStored() < BallisticComputer.energyUsage)
 			return;
 		energyStorage.extractEnergy(BallisticComputer.energyUsage, false);
+		//TODO: 08.02.2024 is this necessary?
+		packet = packet.clone();
 
-		DataPacket new_packet = packet.clone();
-		if(new_packet.hasAnyVariables('x', 'y', 'z'))
+		//No target
+		if(!packet.hasAnyVariables('x', 'y', 'z'))
+			return;
+
+		float x = DataHandlingUtils.asFloat('x', packet);
+		float y = DataHandlingUtils.asFloat('y', packet);
+		float z = DataHandlingUtils.asFloat('z', packet);
+		packet.removeVariables('x', 'y', 'z');
+
+		float mass = 0;
+		double force = IIContent.itemAmmoHeavyArtillery.getDefaultVelocity();
+
+		//Get info from item
+		if(packet.hasVariable('s'))
 		{
-			float x = packet.getVarInType(IDataTypeNumeric.class, new_packet.getPacketVariable('x')).floatValue();
-			float y = packet.getVarInType(IDataTypeNumeric.class, new_packet.getPacketVariable('y')).floatValue();
-			float z = packet.getVarInType(IDataTypeNumeric.class, new_packet.getPacketVariable('z')).floatValue();
-			new_packet.removeVariables('x', 'y', 'z');
-
-			float mass = 0;
-			double force = IIContent.itemAmmoArtillery.getDefaultVelocity();
-
-			if(new_packet.hasVariable('s'))
+			DataTypeItemStack t = packet.getVarInType(DataTypeItemStack.class, packet.getPacketVariable('s'));
+			ItemStack stack = t.value;
+			if(stack.getItem() instanceof IAmmoTypeItem)
 			{
-				DataTypeItemStack t = packet.getVarInType(DataTypeItemStack.class, new_packet.getPacketVariable('s'));
-				ItemStack stack = t.value;
-				if(stack.getItem() instanceof IAmmoItem)
-				{
-					IAmmoItem bullet = (IAmmoItem)stack.getItem();
-					force = bullet.getDefaultVelocity();
-					mass = bullet.getMass(stack);
-				}
-				new_packet.removeVariable('s');
+				IAmmoTypeItem bullet = (IAmmoTypeItem)stack.getItem();
+				force = bullet.getDefaultVelocity();
+				mass = bullet.getMass(stack);
 			}
-			else
-			{
-				if(new_packet.hasVariable('m'))
-					mass = packet.getVarInType(DataTypeInteger.class, new_packet.getPacketVariable('m')).value;
-				if(new_packet.hasVariable('f'))
-					force = packet.getVarInType(DataTypeInteger.class, new_packet.getPacketVariable('f')).value;
-				if(new_packet.hasVariable('t'))
-				{
-					String bname = new_packet.getPacketVariable('t').valueToString();
-					IAmmoItem bullet = IIAmmoRegistry.getBulletItem(bname);
-					if(bullet!=null)
-						force = bullet.getDefaultVelocity();
-				}
-
-
-				new_packet.removeVariables('m', 'f', 't');
-			}
-
-			float distance = (float)new Vec3d(0, 0, 0).distanceTo(new Vec3d(x, 0, z));
-
-			double drag = 0.99f;
-			double gravity = EntityBullet.GRAVITY*mass;
-
-			float yaw;
-			if(x < 0&&z >= 0)
-				yaw = (float)(Math.atan(Math.abs((double)x/(double)z))/Math.PI*180D);
-			else if(x <= 0&&z <= 0)
-				yaw = (float)(Math.atan(Math.abs((double)z/(double)x))/Math.PI*180D)+90;
-			else if(z < 0)
-				yaw = (float)(Math.atan(Math.abs((double)x/(double)z))/Math.PI*180D)+180;
-			else
-				yaw = (float)(Math.atan(Math.abs((double)z/(double)x))/Math.PI*180D)+270;
-
-			float pitch;
-
-			//direct
-			if(packet.getVarInType(DataTypeBoolean.class, packet.getPacketVariable('d')).value)
-				pitch = 90-IIUtils.getDirectFireAngle((float)force, mass, new Vec3d(x, y, z));
-			else //ballistic
-				pitch = IIUtils.calculateBallisticAngle(distance, y, (float)force, gravity, drag, 0.002);
-
-			new_packet.setVariable('y', new DataTypeFloat(yaw));
-			new_packet.setVariable('p', new DataTypeFloat(pitch));
-
-
-			IDataConnector conn = IIUtils.findConnectorFacing(
-					getBlockPosForPos(multiblock.getPointOfInterest("data_output")),
-					world, mirrored?facing.rotateYCCW(): facing.rotateY());
-			if(conn!=null)
-				conn.sendPacket(new_packet);
+			packet.removeVariable('s');
 		}
+		//Get info from variables
+		else
+		{
+			if(packet.hasVariable('m'))
+				mass = packet.getVarInType(DataTypeInteger.class, packet.getPacketVariable('m')).value;
+			if(packet.hasVariable('f'))
+				force = packet.getVarInType(DataTypeInteger.class, packet.getPacketVariable('f')).value;
+			if(packet.hasVariable('t'))
+			{
+				String bname = packet.getPacketVariable('t').valueToString();
+				IAmmoTypeItem<?, ?> bullet = IIAmmoRegistry.getAmmoItem(bname);
+				if(bullet!=null)
+					force = bullet.getDefaultVelocity();
+			}
+
+
+			packet.removeVariables('m', 'f', 't');
+		}
+
+		float distance = (float)new Vec3d(0, 0, 0).distanceTo(new Vec3d(x, 0, z));
+
+		double drag = 0.99f;
+		double gravity = EntityAmmoProjectile.GRAVITY*mass;
+
+		float yaw;
+		if(x < 0&&z >= 0)
+			yaw = (float)(Math.atan(Math.abs((double)x/(double)z))/Math.PI*180D);
+		else if(x <= 0&&z <= 0)
+			yaw = (float)(Math.atan(Math.abs((double)z/(double)x))/Math.PI*180D)+90;
+		else if(z < 0)
+			yaw = (float)(Math.atan(Math.abs((double)x/(double)z))/Math.PI*180D)+180;
+		else
+			yaw = (float)(Math.atan(Math.abs((double)z/(double)x))/Math.PI*180D)+270;
+
+		float pitch;
+
+		//direct
+		if(packet.getVarInType(DataTypeBoolean.class, packet.getPacketVariable('d')).value)
+			pitch = 90-IIAmmoUtils.getDirectFireAngle((float)force, mass, new Vec3d(x, y, z));
+		else //ballistic
+			pitch = IIAmmoUtils.calculateBallisticAngle(distance, y, (float)force, gravity, drag, 0.002);
+
+		packet.setVariable('y', new DataTypeFloat(yaw));
+		packet.setVariable('p', new DataTypeFloat(pitch));
+
+
+		IDataConnector conn = IIUtils.findConnectorFacing(
+				getBlockPosForPos(multiblock.getPointOfInterest("data_output")),
+				world, mirrored?facing.rotateYCCW(): facing.rotateY());
+		if(conn!=null)
+			conn.sendPacket(packet);
 	}
 
 	@Override

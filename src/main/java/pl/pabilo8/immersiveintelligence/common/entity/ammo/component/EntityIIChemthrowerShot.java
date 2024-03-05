@@ -36,6 +36,7 @@ import pl.pabilo8.immersiveintelligence.common.util.raytracer.MultipleRayTracer.
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 
 /**
  * Expansion of the IE's Chemthrower.
@@ -79,10 +80,17 @@ public class EntityIIChemthrowerShot extends EntityIEProjectile implements IEnti
 		return this;
 	}
 
-	public EntityIIChemthrowerShot withShooters(BlockPos... entities)
+	public EntityIIChemthrowerShot withShooters(Collection<BlockPos> blockPos)
 	{
-		if(entities.length > 0)
-			this.hitPos.addAll(Arrays.asList(entities));
+		if(!blockPos.isEmpty())
+			this.hitPos.addAll(blockPos);
+		return this;
+	}
+
+	public EntityIIChemthrowerShot withShooters(BlockPos... blockPos)
+	{
+		if(blockPos.length > 0)
+			this.hitPos.addAll(Arrays.asList(blockPos));
 		return this;
 	}
 

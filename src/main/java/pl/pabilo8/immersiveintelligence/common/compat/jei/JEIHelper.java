@@ -17,7 +17,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.oredict.OreDictionary;
 import pl.pabilo8.immersiveintelligence.api.ammo.IIAmmoRegistry;
-import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoItem;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.api.crafting.*;
 import pl.pabilo8.immersiveintelligence.client.gui.block.*;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
@@ -25,7 +25,7 @@ import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.compat.jei.gui_handlers.*;
 import pl.pabilo8.immersiveintelligence.common.compat.jei.recipe_handlers.*;
 import pl.pabilo8.immersiveintelligence.common.crafting.RecipeMinecart;
-import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoRevolver;
+import pl.pabilo8.immersiveintelligence.common.item.ammo.gun.ItemIIAmmoRevolver;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock;
 
 import javax.annotation.Nonnull;
@@ -98,7 +98,7 @@ public class JEIHelper implements IModPlugin
 		jeiHelpers.getIngredientBlacklist().addIngredientToBlacklist(new ItemStack(IIContent.itemAmmoRevolver, 1, ItemIIAmmoRevolver.UNUSED));
 
 
-		for(IAmmoItem<?> bullet : IIAmmoRegistry.getAllBulletItems())
+		for(IAmmoTypeItem<?, ?> bullet : IIAmmoRegistry.getAllAmmoItems())
 		{
 			ItemStack stack = bullet.getBulletWithParams("", "", "");
 			stack.setTagCompound(new NBTTagCompound());

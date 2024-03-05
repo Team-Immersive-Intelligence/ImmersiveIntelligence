@@ -15,12 +15,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.ammo.IIAmmoRegistry;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumCoreTypes;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumFuseTypes;
-import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoComponent;
-import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoCore;
-import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoItem;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityAmmoBase;
@@ -43,7 +39,7 @@ import java.util.List;
  * @ii-approved 0.3.1
  * @since 2019-05-11
  */
-public abstract class ItemIIAmmoBase<T extends EntityAmmoBase> extends ItemIISubItemsBase<AmmoParts> implements IAmmoItem<T>, ITextureOverride
+public abstract class ItemIIAmmoBase<E extends EntityAmmoBase<? super E>> extends ItemIISubItemsBase<AmmoParts> implements IAmmoTypeItem<ItemIIAmmoBase<E>, E>, IIIItemTextureOverride
 {
 	public final String NAME;
 	@Nullable
@@ -183,24 +179,6 @@ public abstract class ItemIIAmmoBase<T extends EntityAmmoBase> extends ItemIISub
 	public boolean isBulletCore(ItemStack stack)
 	{
 		return stackToSub(stack)==AmmoParts.CORE;
-	}
-
-	@Override
-	public ItemStack setPaintColour(ItemStack stack, int color)
-	{
-		ItemNBTHelper.setInt(stack, NBT_PAINT, color);
-		return stack;
-	}
-
-	@Override
-	public ItemStack setComponentNBT(ItemStack stack, NBTTagCompound... tagCompounds)
-	{
-		NBTTagList component_nbt = new NBTTagList();
-		for(NBTTagCompound tagCompound : tagCompounds)
-			component_nbt.appendTag(tagCompound);
-		assert stack.getTagCompound()!=null;
-		stack.getTagCompound().setTag(NBT_COMPONENTS_NBT, component_nbt);
-		return stack;
 	}
 
 	@Override

@@ -25,6 +25,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.templates.FluidHandlerItemStack;
 import org.apache.commons.lang3.tuple.Pair;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.client.model.builtin.ModelAbstractItem;
 
 import javax.annotation.Nullable;
 import javax.vecmath.Matrix4f;

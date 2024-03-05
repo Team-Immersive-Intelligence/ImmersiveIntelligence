@@ -24,7 +24,7 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumComponentRole;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumCoreTypes;
-import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoItem;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoComponent;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIPotions;
@@ -200,7 +200,7 @@ public class AmmoComponentNuke implements IAmmoComponent
 	}
 
 	@Override
-	public boolean matchesBullet(IAmmoItem bullet)
+	public boolean matchesBullet(IAmmoTypeItem bullet)
 	{
 		return bullet.getCaliber() >= 6;
 	}

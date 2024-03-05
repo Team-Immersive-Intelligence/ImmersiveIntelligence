@@ -6,8 +6,6 @@ import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorage;
 import blusunrize.immersiveengineering.api.energy.wires.IImmersiveConnectable;
 import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler;
 import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler.Connection;
-import blusunrize.immersiveengineering.api.tool.RailgunHandler;
-import blusunrize.immersiveengineering.api.tool.RailgunHandler.RailgunProjectileProperties;
 import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IDirectionalTile;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
@@ -55,7 +53,6 @@ import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.IWrench;
 import pl.pabilo8.immersiveintelligence.common.compat.BaublesHelper;
 import pl.pabilo8.immersiveintelligence.common.compat.IICompatModule;
-import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityBullet;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ISerializableEnum;
 
@@ -469,14 +466,11 @@ public class IIUtils
 	public static char cycleDataPacketChars(char current, boolean forward, boolean hasEmpty)
 	{
 		if(hasEmpty)
-		{
 			if(current==' ')
-			{
 				if(forward)
 					current = DataPacket.varCharacters[0];
 				else
 					current = DataPacket.varCharacters[DataPacket.varCharacters.length-1];
-			}
 			else
 			{
 				int current_char;
@@ -489,7 +483,6 @@ public class IIUtils
 				else
 					current = DataPacket.varCharacters[current_char];
 			}
-		}
 		else
 		{
 			int current_char;
@@ -523,9 +516,7 @@ public class IIUtils
 			char c = (hasEmpty&&current_char==DataPacket.varCharacters.length)?' ': DataPacket.varCharacters[current_char];
 
 			if(!packet.hasVariable(c))
-			{
 				return c;
-			}
 		}
 		return current; //¯\_(ツ)_/¯
 	}
@@ -538,57 +529,9 @@ public class IIUtils
 		return (float)MathHelper.clampedLerp(MathHelper.clampedLerp(e1, e2, percent*2), e3, Math.max(percent-0.5f, 0)*2);
 	}
 
-	/**
-	 * Pitch calculation for artillery stolen from Pneumaticcraft. Huge thanks to desht and MineMaarten for this amazing code!
-	 * <a href="https://github.com/TeamPneumatic/pnc-repressurized/blob/master/src/main/java/me/desht/pneumaticcraft/common/tileentity/TileEntityAirCannon.java">https://github.com/TeamPneumatic/pnc-repressurized/blob/master/src/main/java/me/desht/pneumaticcraft/common/tileentity/TileEntityAirCannon.java</a>
-	 *
-	 * @param distance       distance to target
-	 * @param height         height difference between the gun and target
-	 * @param force          speed (blocks/s) of the bullet
-	 * @param gravity        gravity of the bullet
-	 * @param drag           drag factor of the bullet
-	 * @param anglePrecision precision with which the angle will be searched, the lower the number, the higher the precision
-	 * @return optimal ballistic shooting angle
-	 * @author desht
-	 * @author MineMaarten
-	 */
-	public static float calculateBallisticAngle(double distance, double height, float force, double gravity, double drag, double anglePrecision)
-	{
-		double bestAngle = 0;
-		double bestDistance = Float.MAX_VALUE;
-		if(gravity==0D)
-		{
-			return 90F-(float)(Math.atan(height/distance)*180F/Math.PI);
-		}
-		/*
-			simulate the trajectory for angles from 45 to 90 degrees,
-			returning the angle which lands the projectile closest to the target distance
-		*/
-		for(double i = Math.PI*anglePrecision; i < Math.PI*0.5D; i += anglePrecision)
-		{
-			double motionX = MathHelper.cos((float)i)*force;// calculate the x component of the vector
-			double motionY = MathHelper.sin((float)i)*force;// calculate the y component of the vector
-			double posX = 0;
-			double posY = 0;
-			while(posY > height||motionY > 0)
-			{
-				// simulate movement, until we reach the y-level required
-				motionX *= drag;
-				motionY *= drag;
-				motionY -= gravity;
-				posX += motionX;
-				posY += motionY;
-			}
-			double distanceToTarget = Math.abs(distance-posX);
-			if(distanceToTarget < bestDistance)
-			{
-				bestDistance = distanceToTarget;
-				bestAngle = i;
-			}
-		}
 
-		return 90F-(float)(bestAngle*180D/Math.PI);
-	}
+	//REFACTOR: 14.02.2024 remove need to pass drag and gravity multiplier
+
 
 	public static boolean isAdvancedHammer(ItemStack stack)
 	{
@@ -859,51 +802,6 @@ public class IIUtils
 		return value.replaceAll("([a-z])([A-Z]+)", "$1_$2").toLowerCase();
 	}
 
-	public static float getDirectFireAngle(float initialForce, float mass, Vec3d toTarget)
-	{
-		float force = initialForce;
-		double dist = toTarget.distanceTo(new Vec3d(0, toTarget.y, 0));
-		double gravityMotionY = 0, motionY = 0, baseMotionY = toTarget.normalize().y, baseMotionYC;
-
-		while(dist > 0)
-		{
-			force -= EntityBullet.DRAG*force*EntityBullet.DEV_SLOMO;
-			gravityMotionY -= EntityBullet.GRAVITY*mass*EntityBullet.DEV_SLOMO;
-			baseMotionYC = baseMotionY*(force/(initialForce));
-			motionY += (baseMotionYC+gravityMotionY)*EntityBullet.DEV_SLOMO;
-			dist -= EntityBullet.DEV_SLOMO*force;
-		}
-
-		toTarget = toTarget.addVector(0, motionY-baseMotionY, 0).normalize();
-
-		return (float)Math.toDegrees((Math.atan2(toTarget.y, toTarget.distanceTo(new Vec3d(0, toTarget.y, 0)))));
-	}
-
-	public static float getIEDirectRailgunAngle(ItemStack ammo, Vec3d toTarget)
-	{
-		RailgunProjectileProperties p = RailgunHandler.getProjectileProperties(ammo);
-		if(p!=null)
-		{
-			float force = 20;
-			float gravity = (float)p.gravity;
-
-			double gravityMotionY = 0, motionY = 0, baseMotionY = toTarget.normalize().y, baseMotionYC = baseMotionY;
-			double dist = toTarget.distanceTo(new Vec3d(0, toTarget.y, 0));
-			while(dist > 0)
-			{
-				dist -= force;
-				force *= 0.99;
-				baseMotionYC *= 0.99f;
-				gravityMotionY -= gravity/force;
-				motionY += (baseMotionYC+gravityMotionY);
-			}
-
-			toTarget = toTarget.addVector(0, motionY-baseMotionY, 0).normalize();
-		}
-
-		return (float)Math.toDegrees((Math.atan2(toTarget.y, toTarget.distanceTo(new Vec3d(0, toTarget.y, 0)))));
-	}
-
 	public static Vec3d getEntityCenter(Entity entity)
 	{
 		return entity.getPositionVector().addVector(-entity.width/2f, entity.height/2f, -entity.width/2f);
@@ -940,7 +838,6 @@ public class IIUtils
 		{
 			IItemHandler capability = entity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
 			if(capability!=null)
-			{
 				for(int i = 0; i < 10; i++)
 				{
 					if(stack.isEmpty())
@@ -965,7 +862,6 @@ public class IIUtils
 					if(entity instanceof EntityPlayer)
 						((EntityPlayer)entity).inventoryContainer.detectAndSendChanges();
 				}
-			}
 		}
 
 		if(!stack.isEmpty())

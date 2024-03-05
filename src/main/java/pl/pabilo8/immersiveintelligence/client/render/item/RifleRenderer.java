@@ -224,7 +224,7 @@ public class RifleRenderer extends IIUpgradableItemRendererAMT<ItemIIRifle> impl
 						(stack, combinedHeader) -> new AMT[]{
 								new AMTBullet("bullet", combinedHeader, IIAmmoRegistry.getModel(IIContent.itemAmmoMachinegun))
 										.withState(BulletState.BULLET_UNUSED)
-										.withProperties(0xcfcfcf, EnumCoreTypes.PIERCING, -1),
+										.withProperties(IIContent.ammoCoreSteel, EnumCoreTypes.PIERCING, -1),
 								new AMTBullet("casing_fired", combinedHeader, IIAmmoRegistry.getModel(IIContent.itemAmmoMachinegun))
 										.withState(BulletState.CASING),
 								new AMTParticle("muzzle_flash", combinedHeader)

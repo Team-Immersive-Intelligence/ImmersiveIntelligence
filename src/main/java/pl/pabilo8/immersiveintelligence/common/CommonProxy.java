@@ -59,7 +59,7 @@ import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.*;
 import pl.pabilo8.immersiveintelligence.api.ShrapnelHandler.Shrapnel;
 import pl.pabilo8.immersiveintelligence.api.ammo.IIAmmoRegistry;
-import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoItem;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.api.crafting.DustUtils;
 import pl.pabilo8.immersiveintelligence.api.rotary.CapabilityRotaryEnergy;
 import pl.pabilo8.immersiveintelligence.api.rotary.RotaryUtils;
@@ -85,9 +85,9 @@ import pl.pabilo8.immersiveintelligence.common.crafting.RecipePowerpackAdvanced;
 import pl.pabilo8.immersiveintelligence.common.crafting.RecipeSkinCraftingHandler;
 import pl.pabilo8.immersiveintelligence.common.entity.*;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.component.*;
-import pl.pabilo8.immersiveintelligence.common.entity.ammo.naval_mine.EntityNavalMine;
-import pl.pabilo8.immersiveintelligence.common.entity.ammo.naval_mine.EntityNavalMineAnchor;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.*;
+import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.naval_mine.EntityNavalMine;
+import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.naval_mine.EntityNavalMineAnchor;
 import pl.pabilo8.immersiveintelligence.common.entity.hans.HansUtils;
 import pl.pabilo8.immersiveintelligence.common.entity.minecart.barrel.EntityMinecartBarrelSteel;
 import pl.pabilo8.immersiveintelligence.common.entity.minecart.barrel.EntityMinecartBarrelWooden;
@@ -100,9 +100,9 @@ import pl.pabilo8.immersiveintelligence.common.entity.minecart.crate.EntityMinec
 import pl.pabilo8.immersiveintelligence.common.entity.minecart.crate.EntityMinecartCrateWooden;
 import pl.pabilo8.immersiveintelligence.common.entity.tactile.EntityAMTTactile;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityDrone;
-import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityFieldHowitzer;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityMotorbike;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityVehicleSeat;
+import pl.pabilo8.immersiveintelligence.common.entity.vehicle.towable.gun.EntityFieldHowitzer;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerUpgrade;
 import pl.pabilo8.immersiveintelligence.common.item.ItemIIMinecart.Minecarts;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.material.ItemIIMaterialDust.MaterialsDust;
@@ -365,7 +365,7 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		//ALWAYS REGISTER BULLETS IN PRE-INIT! (so they get their texture registered before TextureStitchEvent.Pre)
 		//Bullets
 
-		IIAmmoRegistry.registerAmmoType(IIContent.itemAmmoArtillery);
+		IIAmmoRegistry.registerAmmoType(IIContent.itemAmmoHeavyArtillery);
 		IIAmmoRegistry.registerAmmoType(IIContent.itemAmmoMortar);
 		IIAmmoRegistry.registerAmmoType(IIContent.itemAmmoLightArtillery);
 		IIAmmoRegistry.registerAmmoType(IIContent.itemAmmoAutocannon);
@@ -378,11 +378,11 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		IIAmmoRegistry.registerAmmoType(IIContent.itemAmmoRevolver);
 
 		if(IIContent.blockTripmine.itemBlock!=null)
-			IIAmmoRegistry.registerAmmoType((IAmmoItem)IIContent.blockTripmine.itemBlock);
+			IIAmmoRegistry.registerAmmoType((IAmmoTypeItem)IIContent.blockTripmine.itemBlock);
 		if(IIContent.blockTellermine.itemBlock!=null)
-			IIAmmoRegistry.registerAmmoType((IAmmoItem)IIContent.blockTellermine.itemBlock);
+			IIAmmoRegistry.registerAmmoType((IAmmoTypeItem)IIContent.blockTellermine.itemBlock);
 		if(IIContent.blockRadioExplosives.itemBlock!=null)
-			IIAmmoRegistry.registerAmmoType((IAmmoItem)IIContent.blockRadioExplosives.itemBlock);
+			IIAmmoRegistry.registerAmmoType((IAmmoTypeItem)IIContent.blockRadioExplosives.itemBlock);
 		IIAmmoRegistry.registerAmmoType(IIContent.itemNavalMine);
 
 		IIAmmoRegistry.registerComponent(new AmmoComponentTNT());
@@ -395,12 +395,14 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		IIAmmoRegistry.registerComponent(new AmmoComponentFlarePowder());
 		IIAmmoRegistry.registerComponent(new AmmoComponentPropaganda());
 		IIAmmoRegistry.registerComponent(new AmmoComponentTesla());
+		IIAmmoRegistry.registerComponent(new AmmoComponentFish());
 
-		IIAmmoRegistry.registerBulletCore(new AmmoCoreSteel());
-		IIAmmoRegistry.registerBulletCore(new AmmoCoreTungsten());
-		IIAmmoRegistry.registerBulletCore(new AmmoCoreBrass());
-		IIAmmoRegistry.registerBulletCore(new AmmoCoreLead());
-		IIAmmoRegistry.registerBulletCore(new AmmoCoreUranium());
+		IIAmmoRegistry.registerCore(new AmmoCoreSteel());
+		IIAmmoRegistry.registerCore(new AmmoCoreTungsten());
+		IIAmmoRegistry.registerCore(new AmmoCoreBrass());
+		IIAmmoRegistry.registerCore(new AmmoCoreLead());
+		IIAmmoRegistry.registerCore(new AmmoCoreUranium());
+		IIAmmoRegistry.registerCore(new AmmoCorePabilium());
 
 		//ShrapnelHandler.addShrapnel("wood","",1,0.25f,0f,true);
 
@@ -431,10 +433,6 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		ShrapnelHandler.addShrapnel("tungsten", 0x3b3e43, "immersiveintelligence:textures/blocks/metal/sheetmetal_tungsten", 7, 0.45f, 0f);
 		ShrapnelHandler.addShrapnel("HOPGraphite", 0x282828, "immersiveengineering:textures/blocks/stone_decoration_coke", 7, 0.45f, 0f);
 		ShrapnelHandler.addShrapnel("uranium", 0x659269, "immersiveengineering:textures/blocks/sheetmetal_uranium", 8, 0.45f, 8f);
-
-		//easter eggs
-		IIAmmoRegistry.registerComponent(new AmmoComponentFish());
-		IIAmmoRegistry.registerBulletCore(new AmmoCorePabilium());
 
 		for(Entry<String, Shrapnel> s : ShrapnelHandler.registry.entrySet())
 		{
@@ -534,11 +532,11 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		registerEntity(i++, EntitySkyCrate.class, "skycrate", 64, 1, true);
 
 		//Long live new Bullet System mk.5
-		registerEntity(i++, EntityProjectile.class, "bullet", 32, 1, true);
-		registerEntity(i++, EntityArtilleryProjectile.class, "artillery_bullet", 32, 1, true);
-		registerEntity(i++, EntityGrenade.class, "grenade", 32, 1, true);
-		registerEntity(i++, EntityMissile.class, "missile", 32, 1, true);
-		registerEntity(i++, EntityGuidedMissile.class, "guided_missile", 32, 1, true);
+		registerEntity(i++, EntityAmmoProjectile.class, "projectile", 32, 1, true);
+		registerEntity(i++, EntityAmmoArtilleryProjectile.class, "artillery_projectile", 32, 1, true);
+		registerEntity(i++, EntityAmmoGrenade.class, "grenade", 32, 1, true);
+		registerEntity(i++, EntityAmmoMissile.class, "missile", 32, 1, true);
+		registerEntity(i++, EntityAmmoGuidedMissile.class, "guided_missile", 32, 1, true);
 		registerEntity(i++, EntityNavalMine.class, "naval_mine", 64, 1, true);
 		registerEntity(i++, EntityNavalMineAnchor.class, "naval_mine_anchor", 64, 1, true);
 

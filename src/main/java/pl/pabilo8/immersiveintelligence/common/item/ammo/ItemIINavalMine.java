@@ -16,16 +16,17 @@ import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumFuseTypes;
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler.IItemScrollable;
-import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
-import pl.pabilo8.immersiveintelligence.client.model.misc.ModelNavalMine;
+import pl.pabilo8.immersiveintelligence.client.model.builtin.AmmoModel;
+import pl.pabilo8.immersiveintelligence.client.model.builtin.IAmmoModel;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.entity.ammo.naval_mine.EntityNavalMine;
+import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.naval_mine.EntityNavalMine;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoCasing.Casings;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * @author Pabilo8
@@ -64,23 +65,25 @@ public class ItemIINavalMine extends ItemIIAmmoBase<EntityNavalMine> implements 
 	}
 
 	@Override
-	public float getCaliber()
+	public int getCaliber()
 	{
-		return 16f;
+		return 16;
 	}
 
 	@SideOnly(Side.CLIENT)
+	@Nonnull
 	@Override
-	public @Nonnull
-	Class<? extends IBulletModel> getModel()
+	public Function<ItemIIAmmoBase<EntityNavalMine>, IAmmoModel<ItemIIAmmoBase<EntityNavalMine>, EntityNavalMine>> get3DModel()
 	{
-		return ModelNavalMine.class;
+		//TODO: 05.03.2024 custom naval mine model
+		return AmmoModel::createExplosivesModel;
 	}
 
+	@Nonnull
 	@Override
-	public EntityNavalMine getBulletEntity(World world)
+	public EntityNavalMine getAmmoEntity(World world)
 	{
-		return null;
+		return new EntityNavalMine(world);
 	}
 
 	@Override

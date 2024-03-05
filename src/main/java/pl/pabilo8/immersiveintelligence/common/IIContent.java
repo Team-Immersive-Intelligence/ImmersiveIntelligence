@@ -13,8 +13,9 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fluids.Fluid;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoCore;
 import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
-import pl.pabilo8.immersiveintelligence.common.ammo.emplacement_weapons.*;
+import pl.pabilo8.immersiveintelligence.common.ammo.cores.*;
 import pl.pabilo8.immersiveintelligence.common.block.data_device.BlockIIDataDevice;
 import pl.pabilo8.immersiveintelligence.common.block.fortification.*;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.BlockIIMetalDecoration;
@@ -27,7 +28,7 @@ import pl.pabilo8.immersiveintelligence.common.block.mines.BlockIITripwireConnec
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.gate_multiblock.BlockIIFenceGateMultiblock;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.BlockIIMetalMultiblock0;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.BlockIIMetalMultiblock1;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityEmplacement.EmplacementWeapon;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.weapon.*;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.BlockIIWoodenMultiblock;
 import pl.pabilo8.immersiveintelligence.common.block.rotary_device.BlockIIGearbox;
 import pl.pabilo8.immersiveintelligence.common.block.rotary_device.BlockIIMechanicalConnector;
@@ -37,7 +38,15 @@ import pl.pabilo8.immersiveintelligence.common.block.simple.*;
 import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIIConcreteDecoration.ConcreteDecorations;
 import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIIMetalBase.Metals;
 import pl.pabilo8.immersiveintelligence.common.item.*;
-import pl.pabilo8.immersiveintelligence.common.item.ammo.*;
+import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoCasing;
+import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoRailgunGrenade;
+import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine;
+import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIINavalMine;
+import pl.pabilo8.immersiveintelligence.common.item.ammo.artillery.ItemIIAmmoArtilleryHeavy;
+import pl.pabilo8.immersiveintelligence.common.item.ammo.artillery.ItemIIAmmoArtilleryLight;
+import pl.pabilo8.immersiveintelligence.common.item.ammo.artillery.ItemIIAmmoMortar;
+import pl.pabilo8.immersiveintelligence.common.item.ammo.grenade.ItemIIAmmoGrenade;
+import pl.pabilo8.immersiveintelligence.common.item.ammo.gun.*;
 import pl.pabilo8.immersiveintelligence.common.item.armor.*;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.*;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.material.*;
@@ -129,152 +138,153 @@ public class IIContent
 	//--- Items ---//
 
 	//materials
-	public static ItemIIMaterial itemMaterial = new ItemIIMaterial();
-	public static ItemIIMaterialIngot itemMaterialIngot = new ItemIIMaterialIngot();
-	public static ItemIIMaterialPlate itemMaterialPlate = new ItemIIMaterialPlate();
-	public static ItemIIMaterialRod itemMaterialRod = new ItemIIMaterialRod();
-	public static ItemIIMaterialDust itemMaterialDust = new ItemIIMaterialDust();
-	public static ItemIIMaterialNugget itemMaterialNugget = new ItemIIMaterialNugget();
-	public static ItemIIMaterialWire itemMaterialWire = new ItemIIMaterialWire();
-	public static ItemIIMaterialSpring itemMaterialSpring = new ItemIIMaterialSpring();
-	public static ItemIIMaterialGem itemMaterialGem = new ItemIIMaterialGem();
-	public static ItemIIMaterialBoule itemMaterialBoule = new ItemIIMaterialBoule();
-	public static ItemIIMetalPressMold itemPressMold = new ItemIIMetalPressMold();
-	public static ItemIIVulcanizerMold itemVulcanizerMold = new ItemIIVulcanizerMold();
-	public static ItemIIFunctionalCircuit itemCircuit = new ItemIIFunctionalCircuit();
-	public static ItemIIMotorBelt itemMotorBelt = new ItemIIMotorBelt();
-	public static ItemIIMotorGear itemMotorGear = new ItemIIMotorGear();
+	public static final ItemIIMaterial itemMaterial = new ItemIIMaterial();
+	public static final ItemIIMaterialIngot itemMaterialIngot = new ItemIIMaterialIngot();
+	public static final ItemIIMaterialPlate itemMaterialPlate = new ItemIIMaterialPlate();
+	public static final ItemIIMaterialRod itemMaterialRod = new ItemIIMaterialRod();
+	public static final ItemIIMaterialDust itemMaterialDust = new ItemIIMaterialDust();
+	public static final ItemIIMaterialNugget itemMaterialNugget = new ItemIIMaterialNugget();
+	public static final ItemIIMaterialWire itemMaterialWire = new ItemIIMaterialWire();
+	public static final ItemIIMaterialSpring itemMaterialSpring = new ItemIIMaterialSpring();
+	public static final ItemIIMaterialGem itemMaterialGem = new ItemIIMaterialGem();
+	public static final ItemIIMaterialBoule itemMaterialBoule = new ItemIIMaterialBoule();
+	public static final ItemIIMetalPressMold itemPressMold = new ItemIIMetalPressMold();
+	public static final ItemIIVulcanizerMold itemVulcanizerMold = new ItemIIVulcanizerMold();
+	public static final ItemIIFunctionalCircuit itemCircuit = new ItemIIFunctionalCircuit();
+	public static final ItemIIMotorBelt itemMotorBelt = new ItemIIMotorBelt();
+	public static final ItemIIMotorGear itemMotorGear = new ItemIIMotorGear();
 
 	//ammo
-	public static ItemIIAmmoCasing itemAmmoCasing = new ItemIIAmmoCasing();
-	public static ItemIIAmmoArtillery itemAmmoArtillery = new ItemIIAmmoArtillery();
-	public static ItemIIAmmoMortar itemAmmoMortar = new ItemIIAmmoMortar();
-	public static ItemIIAmmoLightArtillery itemAmmoLightArtillery = new ItemIIAmmoLightArtillery();
-	public static ItemIIAmmoAutocannon itemAmmoAutocannon = new ItemIIAmmoAutocannon();
-	public static ItemIIAmmoGrenade itemGrenade = new ItemIIAmmoGrenade();
-	public static ItemIIAmmoRailgunGrenade itemRailgunGrenade = new ItemIIAmmoRailgunGrenade();
-	public static ItemIIAmmoMachinegun itemAmmoMachinegun = new ItemIIAmmoMachinegun();
-	public static ItemIIAmmoAssaultRifle itemAmmoAssaultRifle = new ItemIIAmmoAssaultRifle();
-	public static ItemIIAmmoSubmachinegun itemAmmoSubmachinegun = new ItemIIAmmoSubmachinegun();
-	public static ItemIIAmmoRevolver itemAmmoRevolver = new ItemIIAmmoRevolver();
+	//TODO: 16.02.2024 new ammo types
+	public static final ItemIIAmmoCasing itemAmmoCasing = new ItemIIAmmoCasing();
+	public static final ItemIIAmmoArtilleryHeavy itemAmmoHeavyArtillery = new ItemIIAmmoArtilleryHeavy();
+	public static final ItemIIAmmoArtilleryLight itemAmmoLightArtillery = new ItemIIAmmoArtilleryLight();
+	public static final ItemIIAmmoMortar itemAmmoMortar = new ItemIIAmmoMortar();
+	public static final ItemIIAmmoAutocannon itemAmmoAutocannon = new ItemIIAmmoAutocannon();
+	public static final ItemIIAmmoGrenade itemGrenade = new ItemIIAmmoGrenade();
+	public static final ItemIIAmmoRailgunGrenade itemRailgunGrenade = new ItemIIAmmoRailgunGrenade();
+	public static final ItemIIAmmoMachinegun itemAmmoMachinegun = new ItemIIAmmoMachinegun();
+	public static final ItemIIAmmoAssaultRifle itemAmmoAssaultRifle = new ItemIIAmmoAssaultRifle();
+	public static final ItemIIAmmoSubmachinegun itemAmmoSubmachinegun = new ItemIIAmmoSubmachinegun();
+	public static final ItemIIAmmoRevolver itemAmmoRevolver = new ItemIIAmmoRevolver();
 
-	public static ItemIIBulletMagazine itemBulletMagazine = new ItemIIBulletMagazine();
-	public static ItemIICasingPouch itemCasingPouch = new ItemIICasingPouch();
+	public static final ItemIIBulletMagazine itemBulletMagazine = new ItemIIBulletMagazine();
+	public static final ItemIICasingPouch itemCasingPouch = new ItemIICasingPouch();
 
 	//tools
-	public static ItemIISkycrateMount itemSkycrateMount = new ItemIISkycrateMount();
-	public static ItemIILighter itemLighter = new ItemIILighter();
-	public static ItemIIElectricHammer itemHammer = new ItemIIElectricHammer();
-	public static ItemIITrenchShovel itemTrenchShovel = new ItemIITrenchShovel();
-	public static ItemIIElectricWirecutter itemWirecutter = new ItemIIElectricWirecutter();
-	public static ItemIIWrench itemWrench = new ItemIIWrench();
-	public static ItemIIElectricWrench itemElectricWrench = new ItemIIElectricWrench();
+	public static final ItemIISkycrateMount itemSkycrateMount = new ItemIISkycrateMount();
+	public static final ItemIILighter itemLighter = new ItemIILighter();
+	public static final ItemIIElectricHammer itemHammer = new ItemIIElectricHammer();
+	public static final ItemIITrenchShovel itemTrenchShovel = new ItemIITrenchShovel();
+	public static final ItemIIElectricWirecutter itemWirecutter = new ItemIIElectricWirecutter();
+	public static final ItemIIWrench itemWrench = new ItemIIWrench();
+	public static final ItemIIElectricWrench itemElectricWrench = new ItemIIElectricWrench();
 
-	public static ItemIITripodPeriscope itemTripodPeriscope = new ItemIITripodPeriscope();
-	public static ItemIIMineDetector itemMineDetector = new ItemIIMineDetector();
+	public static final ItemIITripodPeriscope itemTripodPeriscope = new ItemIITripodPeriscope();
+	public static final ItemIIMineDetector itemMineDetector = new ItemIIMineDetector();
 
-	public static ItemIIDrillHead itemDrillhead = new ItemIIDrillHead();
+	public static final ItemIIDrillHead itemDrillhead = new ItemIIDrillHead();
 	//Don't know if i should make a seperate item for a torque meter
-	public static ItemIITachometer itemTachometer = new ItemIITachometer();
-	public static ItemIIDataWireCoil itemDataWireCoil = new ItemIIDataWireCoil();
-	public static ItemIISmallWireCoil itemSmallWireCoil = new ItemIISmallWireCoil();
-	public static ItemIITripWireCoil itemTripWireCoil = new ItemIITripWireCoil();
-	public static ItemIIMinecart itemMinecart = new ItemIIMinecart();
-	public static ItemIIRadioTuner itemRadioTuner = new ItemIIRadioTuner();
-	public static ItemIIMeasuringCup itemMeasuringCup = new ItemIIMeasuringCup();
-	public static ItemIIPrecisionTool itemPrecisionTool = new ItemIIPrecisionTool();
-	public static ItemIIAssemblyScheme itemAssemblyScheme = new ItemIIAssemblyScheme();
-	public static ItemIISawBlade itemSawblade = new ItemIISawBlade();
-	public static ItemIIBinoculars itemBinoculars = new ItemIIBinoculars();
-	public static ItemIIMachinegun itemMachinegun = new ItemIIMachinegun();
-	public static ItemIISubmachinegun itemSubmachinegun = new ItemIISubmachinegun();
-	public static ItemIIAssaultRifle itemAssaultRifle = new ItemIIAssaultRifle();
-	public static ItemIIRifle itemRifle = new ItemIIRifle();
-	public static ItemIIMortar itemMortar = new ItemIIMortar();
-	public static ItemIIWeaponUpgrade itemWeaponUpgrade = new ItemIIWeaponUpgrade();
+	public static final ItemIITachometer itemTachometer = new ItemIITachometer();
+	public static final ItemIIDataWireCoil itemDataWireCoil = new ItemIIDataWireCoil();
+	public static final ItemIISmallWireCoil itemSmallWireCoil = new ItemIISmallWireCoil();
+	public static final ItemIITripWireCoil itemTripWireCoil = new ItemIITripWireCoil();
+	public static final ItemIIMinecart itemMinecart = new ItemIIMinecart();
+	public static final ItemIIRadioTuner itemRadioTuner = new ItemIIRadioTuner();
+	public static final ItemIIMeasuringCup itemMeasuringCup = new ItemIIMeasuringCup();
+	public static final ItemIIPrecisionTool itemPrecisionTool = new ItemIIPrecisionTool();
+	public static final ItemIIAssemblyScheme itemAssemblyScheme = new ItemIIAssemblyScheme();
+	public static final ItemIISawBlade itemSawblade = new ItemIISawBlade();
+	public static final ItemIIBinoculars itemBinoculars = new ItemIIBinoculars();
+	public static final ItemIIMachinegun itemMachinegun = new ItemIIMachinegun();
+	public static final ItemIISubmachinegun itemSubmachinegun = new ItemIISubmachinegun();
+	public static final ItemIIAssaultRifle itemAssaultRifle = new ItemIIAssaultRifle();
+	public static final ItemIIRifle itemRifle = new ItemIIRifle();
+	public static final ItemIIMortar itemMortar = new ItemIIMortar();
+	public static final ItemIIWeaponUpgrade itemWeaponUpgrade = new ItemIIWeaponUpgrade();
 
 	//armor
-	public static ArmorMaterial ARMOR_MATERIAL_LIGHT_ENGINEER = EnumHelper.addArmorMaterial("light_engineer_armor",
+	public static final ArmorMaterial ARMOR_MATERIAL_LIGHT_ENGINEER = EnumHelper.addArmorMaterial("light_engineer_armor",
 			ImmersiveIntelligence.MODID+":light_engineer_armor", 42,
 			new int[]{4, 7, 8, 4}, 0, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 2);
-	public static ItemIILightEngineerHelmet itemLightEngineerHelmet = new ItemIILightEngineerHelmet();
-	public static ItemIILightEngineerChestplate itemLightEngineerChestplate = new ItemIILightEngineerChestplate();
-	public static ItemIILightEngineerLeggings itemLightEngineerLeggings = new ItemIILightEngineerLeggings();
-	public static ItemIILightEngineerBoots itemLightEngineerBoots = new ItemIILightEngineerBoots();
-	public static ItemIIArmorUpgrade itemArmorUpgrade = new ItemIIArmorUpgrade();
+	public static final ItemIILightEngineerHelmet itemLightEngineerHelmet = new ItemIILightEngineerHelmet();
+	public static final ItemIILightEngineerChestplate itemLightEngineerChestplate = new ItemIILightEngineerChestplate();
+	public static final ItemIILightEngineerLeggings itemLightEngineerLeggings = new ItemIILightEngineerLeggings();
+	public static final ItemIILightEngineerBoots itemLightEngineerBoots = new ItemIILightEngineerBoots();
+	public static final ItemIIArmorUpgrade itemArmorUpgrade = new ItemIIArmorUpgrade();
 
 	//Backpacks
-	public static ItemIIAdvancedPowerPack itemAdvancedPowerPack = new ItemIIAdvancedPowerPack();
+	public static final ItemIIAdvancedPowerPack itemAdvancedPowerPack = new ItemIIAdvancedPowerPack();
 	public static final String NBT_AdvancedPowerpack = "II:Powerpack";
 
 
 	//data
 	@IBatchOredictRegister(oreDict = "punchtape")
-	public static ItemIIPunchtape itemPunchtape = new ItemIIPunchtape();
-	public static ItemIIPrintedPage itemPrintedPage = new ItemIIPrintedPage();
-	public static ItemIITracerPowder itemTracerPowder = new ItemIITracerPowder();
+	public static final ItemIIPunchtape itemPunchtape = new ItemIIPunchtape();
+	public static final ItemIIPrintedPage itemPrintedPage = new ItemIIPrintedPage();
+	public static final ItemIITracerPowder itemTracerPowder = new ItemIITracerPowder();
 
 	//--- Blocks ---//
 
 	//rubber
-	public static BlockIIRubberLog blockRubberLog = new BlockIIRubberLog();
-	public static BlockIIRubberLeaves blockRubberLeaves = new BlockIIRubberLeaves();
-	public static BlockIIRubberSapling blockRubberSapling = new BlockIIRubberSapling();
-	public static BlockIICharredLog blockCharredLog = new BlockIICharredLog();
+	public static final BlockIIRubberLog blockRubberLog = new BlockIIRubberLog();
+	public static final BlockIIRubberLeaves blockRubberLeaves = new BlockIIRubberLeaves();
+	public static final BlockIIRubberSapling blockRubberSapling = new BlockIIRubberSapling();
+	public static final BlockIICharredLog blockCharredLog = new BlockIICharredLog();
 
 	//metal
 	@IBatchOredictRegister(oreDict = "ore")
-	public static BlockIIOre blockOre = new BlockIIOre();
+	public static final BlockIIOre blockOre = new BlockIIOre();
 	@IBatchOredictRegister(oreDict = "sheetmetal")
-	public static BlockIIMetalBase blockSheetmetal = new BlockIIMetalBase("sheetmetal");
+	public static final BlockIIMetalBase blockSheetmetal = new BlockIIMetalBase("sheetmetal");
 	@IBatchOredictRegister(oreDict = "block")
-	public static BlockIIMetalBase blockMetalStorage = new BlockIIMetalBase("storage");
+	public static final BlockIIMetalBase blockMetalStorage = new BlockIIMetalBase("storage");
 	@IBatchOredictRegister(oreDict = "slab")
-	public static BlockIISlab<Metals> blockMetalSlabs = new BlockIISlab<>(blockSheetmetal);
+	public static final BlockIISlab<Metals> blockMetalSlabs = new BlockIISlab<>(blockSheetmetal);
 	@IBatchOredictRegister(oreDict = "slabSheetmetal")
-	public static BlockIISlab<Metals> blockSheetmetalSlabs = new BlockIISlab<>(blockMetalStorage);
+	public static final BlockIISlab<Metals> blockSheetmetalSlabs = new BlockIISlab<>(blockMetalStorage);
 
 	//regular blocks
-	public static BlockIISandbags blockSandbags = new BlockIISandbags();
-	public static BlockIIClothDecoration blockClothDecoration = new BlockIIClothDecoration();
-	public static BlockIIMetalDecoration blockMetalDecoration = new BlockIIMetalDecoration();
+	public static final BlockIISandbags blockSandbags = new BlockIISandbags();
+	public static final BlockIIClothDecoration blockClothDecoration = new BlockIIClothDecoration();
+	public static final BlockIIMetalDecoration blockMetalDecoration = new BlockIIMetalDecoration();
 
 	//b e t o n
-	public static BlockIIConcreteDecoration blockConcreteDecoration = new BlockIIConcreteDecoration();
-	public static BlockIISlab<ConcreteDecorations> blockConcreteSlabs = new BlockIISlab<>(blockConcreteDecoration);
-	public static BlockIIStairs[] blockIIConcreteStairs = BlockIIConcreteDecoration.getStairs();
+	public static final BlockIIConcreteDecoration blockConcreteDecoration = new BlockIIConcreteDecoration();
+	public static final BlockIISlab<ConcreteDecorations> blockConcreteSlabs = new BlockIISlab<>(blockConcreteDecoration);
+	public static final BlockIIStairs[] blockIIConcreteStairs = BlockIIConcreteDecoration.getStairs();
 
 	//mesh fences
-	public static BlockIIMetalChainFence blockMetalFortification = new BlockIIMetalChainFence();
-	public static BlockIIWoodenChainFence blockWoodenFortification = new BlockIIWoodenChainFence();
+	public static final BlockIIMetalChainFence blockMetalFortification = new BlockIIMetalChainFence();
+	public static final BlockIIWoodenChainFence blockWoodenFortification = new BlockIIWoodenChainFence();
 	//tank trap
-	public static BlockIIMetalFortification1 blockMetalFortification1 = new BlockIIMetalFortification1();
+	public static final BlockIIMetalFortification1 blockMetalFortification1 = new BlockIIMetalFortification1();
 
 	//devices
-	public static BlockIIMetalDevice blockMetalDevice = new BlockIIMetalDevice();
-	public static BlockIIMetalDevice1 blockMetalDevice1 = new BlockIIMetalDevice1();
-	public static BlockIIDataDevice blockDataConnector = new BlockIIDataDevice();
-	public static BlockIISmallCrate blockSmallCrate = new BlockIISmallCrate();
+	public static final BlockIIMetalDevice blockMetalDevice = new BlockIIMetalDevice();
+	public static final BlockIIMetalDevice1 blockMetalDevice1 = new BlockIIMetalDevice1();
+	public static final BlockIIDataDevice blockDataConnector = new BlockIIDataDevice();
+	public static final BlockIISmallCrate blockSmallCrate = new BlockIISmallCrate();
 
 	//ammunition
-	public static BlockIIMineSign blockMineSign = new BlockIIMineSign();
-	public static BlockIITripmine blockTripmine = new BlockIITripmine();
-	public static BlockIITellermine blockTellermine = new BlockIITellermine();
-	public static BlockIIRadioExplosives blockRadioExplosives = new BlockIIRadioExplosives();
-	public static ItemIINavalMine itemNavalMine = new ItemIINavalMine();
-	public static BlockIITripwireConnector blockTripwireConnector = new BlockIITripwireConnector();
+	public static final BlockIIMineSign blockMineSign = new BlockIIMineSign();
+	public static final BlockIITripmine blockTripmine = new BlockIITripmine();
+	public static final BlockIITellermine blockTellermine = new BlockIITellermine();
+	public static final BlockIIRadioExplosives blockRadioExplosives = new BlockIIRadioExplosives();
+	public static final ItemIINavalMine itemNavalMine = new ItemIINavalMine();
+	public static final BlockIITripwireConnector blockTripwireConnector = new BlockIITripwireConnector();
 
 	//rotary devices
-	public static BlockIIMechanicalDevice blockMechanicalDevice = new BlockIIMechanicalDevice();
-	public static BlockIIMechanicalDevice1 blockMechanicalDevice1 = new BlockIIMechanicalDevice1();
-	public static BlockIIGearbox blockGearbox = new BlockIIGearbox();
-	public static BlockIIMechanicalConnector blockMechanicalConnector = new BlockIIMechanicalConnector();
-	public static BlockIIWoodenMultiblock blockWoodenMultiblock = new BlockIIWoodenMultiblock();
+	public static final BlockIIMechanicalDevice blockMechanicalDevice = new BlockIIMechanicalDevice();
+	public static final BlockIIMechanicalDevice1 blockMechanicalDevice1 = new BlockIIMechanicalDevice1();
+	public static final BlockIIGearbox blockGearbox = new BlockIIGearbox();
+	public static final BlockIIMechanicalConnector blockMechanicalConnector = new BlockIIMechanicalConnector();
+	public static final BlockIIWoodenMultiblock blockWoodenMultiblock = new BlockIIWoodenMultiblock();
 
 	//multiblocks
-	public static BlockIIMetalMultiblock0 blockMetalMultiblock0 = new BlockIIMetalMultiblock0();
-	public static BlockIIMetalMultiblock1 blockMetalMultiblock1 = new BlockIIMetalMultiblock1();
-	public static BlockIIFenceGateMultiblock blockFenceGateMultiblock = new BlockIIFenceGateMultiblock();
+	public static final BlockIIMetalMultiblock0 blockMetalMultiblock0 = new BlockIIMetalMultiblock0();
+	public static final BlockIIMetalMultiblock1 blockMetalMultiblock1 = new BlockIIMetalMultiblock1();
+	public static final BlockIIFenceGateMultiblock blockFenceGateMultiblock = new BlockIIFenceGateMultiblock();
 
 	//fluid blocks
 	public static BlockIIFluid blockFluidInkBlack, blockFluidInkCyan, blockFluidInkMagenta, blockFluidInkYellow;
@@ -293,6 +303,15 @@ public class IIContent
 	public static Fluid gasHydrogen, gasOxygen, gasChlorine, gasCO2, gasCO;
 	public static Fluid gasMustardGas;
 	public static Fluid fluidLatex;
+
+	//--- Ammunition System ---//
+	//ammo cores
+	public static final IAmmoCore ammoCoreSteel = new AmmoCoreSteel();
+	public static final IAmmoCore ammoCoreTungsten = new AmmoCoreTungsten();
+	public static final IAmmoCore ammoCoreBrass = new AmmoCoreBrass();
+	public static final IAmmoCore ammoCoreLead = new AmmoCoreLead();
+	public static final IAmmoCore ammoCoreUranium = new AmmoCoreUranium();
+	public static final IAmmoCore ammoCorePabilium = new AmmoCorePabilium();
 
 	//biomes
 	public static BiomeWasteland biomeWasteland = new BiomeWasteland();

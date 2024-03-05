@@ -20,12 +20,13 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.api.ammo.IIAmmoUtils;
+import pl.pabilo8.immersiveintelligence.api.ammo.utils.IIAmmoFactory;
 import pl.pabilo8.immersiveintelligence.api.utils.IEntitySpecialRepairable;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IVehicleMultiPart;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityEmplacementWeapon;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
+import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoArtilleryProjectile;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.drone.AIDroneTarget;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.entity.IIIEntity;
@@ -40,6 +41,7 @@ import java.util.List;
  */
 public class EntityDrone extends EntityFlying implements IIIEntity<EntityDrone>, IVehicleMultiPart, IEntitySpecialRepairable
 {
+	private final IIAmmoFactory<EntityAmmoArtilleryProjectile> ammoFactory;
 	//--- Parts ---//
 	private final EntityVehiclePart[] partArray;
 	//sub-entities for colision and hitboxes
@@ -56,6 +58,12 @@ public class EntityDrone extends EntityFlying implements IIIEntity<EntityDrone>,
 	{
 		super(world);
 		setSize(4, 2.5f);
+
+		//set ammo factory (bomb dropping)
+		this.ammoFactory = new IIAmmoFactory<>(this);
+		ammoFactory.setStack(IIContent.itemAmmoMortar.getBulletWithParams("core_brass", "canister", "tnt"))
+				.setDirection(new Vec3d(0, 1, 0))
+				.setVelocityModifier(0);
 
 		//set durability and armor
 		durabilityMain = new VehicleDurability(100, 4);
@@ -196,9 +204,11 @@ public class EntityDrone extends EntityFlying implements IIIEntity<EntityDrone>,
 		{
 			AxisAlignedBB target = getEntityBoundingBox().offset(0, -height-1, 0).grow(1).expand(0, -40, 0);
 			if(!world.getEntitiesWithinAABB(EntityMob.class, target).isEmpty())
-				world.spawnEntity(IIAmmoUtils.createBullet(world,
-						IIContent.itemAmmoMortar.getBulletWithParams("core_brass", "canister", "tnt"),
-						getPositionVector().subtract(0, 1.5, 0), new Vec3d(0, 1, 0), 0f));
+			{
+				ammoFactory
+						.setPosition(getPositionVector().subtract(0, 1.5, 0))
+						.create();
+			}
 		}
 
 		if(world.isRemote)//&&world.getTotalWorldTime()%2==0

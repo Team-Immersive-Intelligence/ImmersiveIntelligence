@@ -42,7 +42,8 @@ import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumFuseTypes;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoComponent;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoCore;
-import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoItem;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem.IIAmmoProjectile;
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.DamageBlockPos;
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler;
 import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
@@ -53,7 +54,7 @@ import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIIMetalBase.Metals;
-import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityBullet;
+import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock;
 
@@ -302,7 +303,7 @@ public class IIClientUtils
 	}
 
 	@SideOnly(Side.CLIENT)
-	public static void createAmmoTooltip(IAmmoItem ammo, ItemStack stack, @Nullable World worldIn, List<String> tooltip)
+	public static void createAmmoTooltip(IAmmoTypeItem ammo, ItemStack stack, @Nullable World worldIn, List<String> tooltip)
 	{
 		tooltip.add(getFormattedBulletTypeName(ammo, stack));
 		if(ItemTooltipHandler.addExpandableTooltip(Keyboard.KEY_LSHIFT, "%s - Composition", tooltip))
@@ -317,7 +318,7 @@ public class IIClientUtils
 			tooltip.add(IIUtils.getHexCol(IIReference.COLORS_HIGHLIGHT_S[1], "Details:"));
 
 			//core + type
-			if(ammo.isProjectile())
+			if(ammo.getClass().isAnnotationPresent(IIAmmoProjectile.class))
 			{
 				tooltip.add("⦳ "+I18n.format(IIReference.DESCRIPTION_KEY+"bullets.core",
 						I18n.format(IIReference.DESCRIPTION_KEY+"bullet_core_type."+coreType.getName()),
@@ -348,7 +349,7 @@ public class IIClientUtils
 			}
 		}
 
-		if(ammo.isProjectile()&&!ammo.isBulletCore(stack)&&ItemTooltipHandler.addExpandableTooltip(Keyboard.KEY_LCONTROL, "%s - Ballistics", tooltip))
+		if((ammo.getClass().isAnnotationPresent(IIAmmoProjectile.class))&&!ammo.isBulletCore(stack)&&ItemTooltipHandler.addExpandableTooltip(Keyboard.KEY_LCONTROL, "%s - Ballistics", tooltip))
 		{
 			tooltip.add(IIUtils.getHexCol(IIReference.COLORS_HIGHLIGHT_S[0], "Performance:"));
 			tooltip.add(String.format("\u2295 "+"Damage Dealt: %s", ammo.getDamage()));
@@ -367,7 +368,8 @@ public class IIClientUtils
 		}
 	}
 
-	private static void listPenetratedAmount(List<String> tooltip, IAmmoItem ammo, float penetrationHardness, EnumCoreTypes coreType, Block block, int meta)
+	//TODO: 19.02.2024 proper penetration listing
+	private static void listPenetratedAmount(List<String> tooltip, IAmmoTypeItem ammo, float penetrationHardness, EnumCoreTypes coreType, Block block, int meta)
 	{
 		int penetratedAmount = getPenetratedAmount(ammo, penetrationHardness, coreType, block, meta);
 		String displayName = new ItemStack(block, 1, meta).getDisplayName();
@@ -379,10 +381,11 @@ public class IIClientUtils
 
 	}
 
-	private static int getPenetratedAmount(IAmmoItem ammo, float penetrationHardness, EnumCoreTypes coreType, Block block, int meta)
+	//TODO: 15.02.2024 rework
+	private static int getPenetratedAmount(IAmmoTypeItem ammo, float penetrationHardness, EnumCoreTypes coreType, Block block, int meta)
 	{
 		IPenetrationHandler penHandler = IIPenetrationRegistry.getPenetrationHandler(block.getStateFromMeta(meta));
-		double realDrag = 1d-(EntityBullet.DRAG*EntityBullet.DEV_SLOMO);
+		double realDrag = EntityAmmoProjectile.DRAG;
 		float density = penHandler.getReduction(), hardness = block.blockHardness, force = 1;
 		int count = 0, speed = (int)(ammo.getDefaultVelocity());
 
@@ -410,7 +413,7 @@ public class IIClientUtils
 		return count;
 	}
 
-	private static String getFormattedBulletTypeName(IAmmoItem ammo, ItemStack stack)
+	private static String getFormattedBulletTypeName(IAmmoTypeItem ammo, ItemStack stack)
 	{
 		Set<EnumComponentRole> collect = new HashSet<>();
 		if(ammo.getCoreType(stack).getRole()!=null)

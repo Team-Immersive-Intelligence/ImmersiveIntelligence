@@ -1,6 +1,7 @@
 package pl.pabilo8.immersiveintelligence.api.ammo;
 
 import blusunrize.immersiveengineering.common.IEContent;
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -33,6 +34,7 @@ import java.util.function.Predicate;
  */
 public class IIPenetrationRegistry
 {
+	//Entities don't have a material, so they are handled separately
 	public static HashMap<Predicate<Entity>, IPenetrationHandler> registeredEntities = new HashMap<>();
 	//Blocks first
 	public static HashMap<Predicate<IBlockState>, IPenetrationHandler> registeredBlocks = new HashMap<>();
@@ -55,31 +57,31 @@ public class IIPenetrationRegistry
 
 	static
 	{
-		IIAmmoUtils.batchRegisterHandler(new PenetrationHandlerSteel(), IEContent.blockMetalDecoration0,
+		batchRegisterHandler(new PenetrationHandlerSteel(), IEContent.blockMetalDecoration0,
 				IEContent.blockMetalDevice0, IEContent.blockMetalDevice1, IEContent.blockMetalMultiblock);
-		IIAmmoUtils.batchRegisterHandler(new PenetrationHandlerSteel(), IIContent.blockMetalDecoration,
+		batchRegisterHandler(new PenetrationHandlerSteel(), IIContent.blockMetalDecoration,
 				IIContent.blockMetalMultiblock0, IIContent.blockMetalMultiblock1);
 		registeredBlocks.put(iBlockState -> IIUtils.compareBlockstateOredict(iBlockState, "logWood"), new PenetrationHandlerLog());
-		IIAmmoUtils.batchRegisterHandler(new PenetrationHandlerDirt(), Blocks.GRASS, Blocks.DIRT);
+		batchRegisterHandler(new PenetrationHandlerDirt(), Blocks.GRASS, Blocks.DIRT);
 
-		IIAmmoUtils.registerMetalMaterial(new PenetrationHandlerIron(), "iron");
-		IIAmmoUtils.registerMetalMaterial(new PenetrationHandlerCopper(), "copper");
-		IIAmmoUtils.registerMetalMaterial(new PenetrationHandlerSteel(), "steel");
+		registerMetalMaterial(new PenetrationHandlerIron(), "iron");
+		registerMetalMaterial(new PenetrationHandlerCopper(), "copper");
+		registerMetalMaterial(new PenetrationHandlerSteel(), "steel");
 
-		IIAmmoUtils.registerMetalMaterial(new PenetrationHandlerGold(), "gold");
-		IIAmmoUtils.registerMetalMaterial(new PenetrationHandlerGold(), "electrum");
-		IIAmmoUtils.registerMetalMaterial(new PenetrationHandlerGold(), "silver");
-		IIAmmoUtils.registerMetalMaterial(new PenetrationHandlerGold(), "platinum");
+		registerMetalMaterial(new PenetrationHandlerGold(), "gold");
+		registerMetalMaterial(new PenetrationHandlerGold(), "electrum");
+		registerMetalMaterial(new PenetrationHandlerGold(), "silver");
+		registerMetalMaterial(new PenetrationHandlerGold(), "platinum");
 
-		IIAmmoUtils.registerMetalMaterial(new PenetrationHandlerBronze(), "bronze");
-		IIAmmoUtils.registerMetalMaterial(new PenetrationHandlerBronze(), "lead");
-		IIAmmoUtils.registerMetalMaterial(new PenetrationHandlerBronze(), "constantan");
+		registerMetalMaterial(new PenetrationHandlerBronze(), "bronze");
+		registerMetalMaterial(new PenetrationHandlerBronze(), "lead");
+		registerMetalMaterial(new PenetrationHandlerBronze(), "constantan");
 
-		IIAmmoUtils.registerMetalMaterial(new PenetrationHandlerTungsten(), "tungsten");
+		registerMetalMaterial(new PenetrationHandlerTungsten(), "tungsten");
 
-		IIAmmoUtils.registerMetalMaterial(new PenetrationHandlerAluminium(), "aluminum");
-		IIAmmoUtils.registerMetalMaterial(new PenetrationHandlerAluminium(), "tin");
-		IIAmmoUtils.registerMetalMaterial(new PenetrationHandlerAluminium(), "zinc");
+		registerMetalMaterial(new PenetrationHandlerAluminium(), "aluminum");
+		registerMetalMaterial(new PenetrationHandlerAluminium(), "tin");
+		registerMetalMaterial(new PenetrationHandlerAluminium(), "zinc");
 
 		registeredBlocks.put(iBlockState -> IIUtils.compareBlockstateOredict(iBlockState, "uberConcrete"), new PenetrationHandlerUberConcrete());
 		registeredBlocks.put(iBlockState -> IIUtils.compareBlockstateOredict(iBlockState, "sturdyBricksConcrete"), new PenetrationHandlerPanzerConcrete());
@@ -103,6 +105,31 @@ public class IIPenetrationRegistry
 		//registeredMaterials.put(material -> true, DEFAULT);
 	}
 
+	//--- Registration ---//
+
+	public static void registerMetalMaterial(IPenetrationHandler handler, String name)
+	{
+		registerMetalMaterial(handler, name, true, true, true);
+	}
+
+	public static void registerMetalMaterial(IPenetrationHandler handler, String name, boolean hasSlab, boolean hasSheetMetal, boolean hasSheetmetalSlab)
+	{
+		registeredBlocks.put(iBlockState -> IIUtils.compareBlockstateOredict(iBlockState, "block"+IIUtils.toCamelCase(name, false)), handler);
+		if(hasSlab)
+			registeredBlocks.put(iBlockState -> IIUtils.compareBlockstateOredict(iBlockState, "slab"+IIUtils.toCamelCase(name, false)), handler);
+		if(hasSheetMetal)
+			registeredBlocks.put(iBlockState -> IIUtils.compareBlockstateOredict(iBlockState, "blockSheetmetal"+IIUtils.toCamelCase(name, false)), handler);
+		if(hasSheetmetalSlab)
+			registeredBlocks.put(iBlockState -> IIUtils.compareBlockstateOredict(iBlockState, "slabSheetmetal"+IIUtils.toCamelCase(name, false)), handler);
+
+	}
+
+	public static void batchRegisterHandler(IPenetrationHandler handler, Block... blocks)
+	{
+		for(Block b : blocks)
+			registeredBlocks.put(iBlockState -> iBlockState.getBlock()==b, handler);
+	}
+
 	public interface IPenetrationHandler
 	{
 		/**
@@ -124,6 +151,8 @@ public class IIPenetrationRegistry
 		PenMaterialTypes getPenetrationType();
 	}
 
+	//--- Getters ---//
+
 	public static IPenetrationHandler getPenetrationHandler(IBlockState state)
 	{
 		for(Entry<Predicate<IBlockState>, IPenetrationHandler> e : IIPenetrationRegistry.registeredBlocks.entrySet())
@@ -134,6 +163,14 @@ public class IIPenetrationRegistry
 			if(e.getKey().test(state.getMaterial()))
 				return e.getValue();
 
+		return DEFAULT;
+	}
+
+	public static IPenetrationHandler getPenetrationHandler(Entity entity)
+	{
+		for(Entry<Predicate<Entity>, IPenetrationHandler> e : IIPenetrationRegistry.registeredEntities.entrySet())
+			if(e.getKey().test(entity))
+				return e.getValue();
 		return DEFAULT;
 	}
 

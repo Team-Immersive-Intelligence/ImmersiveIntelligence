@@ -1,13 +1,13 @@
 package pl.pabilo8.immersiveintelligence.api.ammo;
 
-import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmo;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoComponent;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoCore;
-import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoItem;
-import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoType;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
+import pl.pabilo8.immersiveintelligence.client.model.builtin.IAmmoModel;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.ammo.cores.AmmoCoreMissingNo;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityAmmoBase;
@@ -20,6 +20,8 @@ import java.util.LinkedHashMap;
 
 /**
  * @author Pabilo8
+ * @updated 16.02.2024
+ * @ii-approved 0.3.1
  * @since 30-08-2019
  */
 public class IIAmmoRegistry
@@ -32,15 +34,17 @@ public class IIAmmoRegistry
 	/**
 	 * Ammo registry
 	 */
-	private static final LinkedHashMap<String, IAmmo<?>> REGISTERED_AMMO_TYPES = new LinkedHashMap<>();
-	private static final LinkedHashMap<String, IAmmoItem<?>> REGISTERED_AMMO_TYPE_ITEMS = new LinkedHashMap<>();
+	private static final LinkedHashMap<String, IAmmoType<?, ?>> REGISTERED_AMMO_TYPES = new LinkedHashMap<>();
+	private static final LinkedHashMap<String, IAmmoTypeItem<?, ?>> REGISTERED_AMMO_TYPE_ITEMS = new LinkedHashMap<>();
 	/**
 	 * Ammo parts registry
 	 */
 	private static final LinkedHashMap<String, IAmmoComponent> REGISTERED_COMPONENTS = new LinkedHashMap<>();
-	private static final LinkedHashMap<String, IAmmoCore> REGISTERED_BULLET_CORES = new LinkedHashMap<>();
+	private static final LinkedHashMap<String, IAmmoCore> REGISTERED_CORES = new LinkedHashMap<>();
 	@SideOnly(Side.CLIENT)
-	private static final HashMap<String, IBulletModel> REGISTERED_MODELS = new HashMap<>();
+	private static final HashMap<IAmmoType<?, ?>, IAmmoModel<?, ?>> REGISTERED_MODELS = new HashMap<>();
+
+	//--- Registration ---//
 
 	/**
 	 * Registers a new ammo component
@@ -60,20 +64,40 @@ public class IIAmmoRegistry
 	}
 
 	/**
+	 * Removes a component from the registry
+	 *
+	 * @param name of the component
+	 */
+	public static void unregisterComponent(String name)
+	{
+		REGISTERED_COMPONENTS.remove(name);
+	}
+
+	/**
 	 * Registers a new ammo core
 	 *
 	 * @param core The ammo core to register
 	 * @return true if the registration was successful
 	 */
-	public static boolean registerBulletCore(IAmmoCore core)
+	public static boolean registerCore(IAmmoCore core)
 	{
 		String name = core.getName();
-		if(!REGISTERED_BULLET_CORES.containsKey(name))
+		if(!REGISTERED_CORES.containsKey(name))
 		{
-			REGISTERED_BULLET_CORES.put(name, core);
+			REGISTERED_CORES.put(name, core);
 			return true;
 		}
 		return false;
+	}
+
+	/**
+	 * Removes a core from the registry
+	 *
+	 * @param name of the the core material
+	 */
+	public static void unregisterCore(String name)
+	{
+		REGISTERED_CORES.remove(name);
 	}
 
 	/**
@@ -83,34 +107,42 @@ public class IIAmmoRegistry
 	 * @return true if the registration was successful
 	 */
 	@SuppressWarnings("all")
-	public static <T extends EntityAmmoBase> boolean registerAmmoType(IAmmo<T> ammo)
+	public static <T extends IAmmoType<T, E>, E extends EntityAmmoBase<? super E>> boolean registerAmmoType(IAmmoType<T, E> ammo)
 	{
 		String name = ammo.getName();
 		if(!REGISTERED_AMMO_TYPE_ITEMS.containsKey(name))
 		{
 			//Register ammo
 			REGISTERED_AMMO_TYPES.put(name, ammo);
-			if(ammo instanceof IAmmoItem)
-				REGISTERED_AMMO_TYPE_ITEMS.put(name, ((IAmmoItem<T>)ammo));
-
-			//Load model
-			if(FMLCommonHandler.instance().getSide().isClient())
-			{
-				try
-				{
-					IBulletModel iBulletModel = ammo.getModel().newInstance();
-					iBulletModel.subscribeToList(ammo.getName());
-					REGISTERED_MODELS.put(ammo.getName(), iBulletModel);
-				} catch(InstantiationException|IllegalAccessException e)
-				{
-					IILogger.error("Failed to load model for ammo type "+ammo.getName());
-					IILogger.error("Reason: "+e);
-				}
-			}
+			if(ammo instanceof IAmmoTypeItem)
+				REGISTERED_AMMO_TYPE_ITEMS.put(name, ((IAmmoTypeItem<T, E>)ammo));
 			return true;
 		}
 		return false;
 	}
+
+	/**
+	 * Registers 3D models of all ammo types, called only on client side
+	 */
+	@SideOnly(Side.CLIENT)
+	public static void registerAmmoModels()
+	{
+		REGISTERED_AMMO_TYPES.values().forEach(IIAmmoRegistry::registerSingleModel);
+	}
+
+	private static <T extends IAmmoType<T, E>, E extends EntityAmmoBase<? super E>> void registerSingleModel(IAmmoType<?, ?> ammo)
+	{
+		IAmmoType<T, E> generic = (IAmmoType<T, E>)ammo;
+		IAmmoModel<T, E> model = generic.get3DModel().apply((T)generic);
+		if(model==null)
+		{
+			IILogger.error("Failed to load model for ammo type "+ammo.getName());
+			return;
+		}
+		REGISTERED_MODELS.put(ammo, model);
+	}
+
+	//--- Getters ---//
 
 	/**
 	 * @param name of the ammo type
@@ -127,9 +159,21 @@ public class IIAmmoRegistry
 	 * @return ammo type item with the given name
 	 */
 	@Nullable
-	public static IAmmoItem<?> getBulletItem(String name)
+	public static IAmmoTypeItem<?, ?> getAmmoItem(String name)
 	{
 		return REGISTERED_AMMO_TYPE_ITEMS.get(name);
+	}
+
+	/**
+	 * @param ammo ammo item
+	 * @return ammo type of the given ammo item
+	 */
+	@Nullable
+	public static IAmmoTypeItem<?, ?> getAmmoItem(ItemStack ammo)
+	{
+		if(ammo.getItem() instanceof IAmmoTypeItem<?, ?>)
+			return ((IAmmoTypeItem<?, ?>)ammo.getItem());
+		return null;
 	}
 
 	/**
@@ -139,26 +183,26 @@ public class IIAmmoRegistry
 	@Nonnull
 	public static IAmmoCore getCore(String name)
 	{
-		return REGISTERED_BULLET_CORES.getOrDefault(name, MISSING_CORE);
+		return REGISTERED_CORES.getOrDefault(name, MISSING_CORE);
 	}
 
 	/**
-	 * @param bullet ammo type
+	 * @param ammo ammo type
 	 * @return 3D model of this ammo type
 	 */
 	@Nullable
 	@SideOnly(Side.CLIENT)
-	public static IBulletModel getModel(IAmmoItem<?> bullet)
+	public static <T extends IAmmoType<T, E>, E extends EntityAmmoBase<? super E>> IAmmoModel<T, E> getModel(IAmmoType<T, E> ammo)
 	{
-		return REGISTERED_MODELS.get(bullet.getName());
+		return (IAmmoModel<T, E>)REGISTERED_MODELS.get(ammo);
 	}
 
-	//--- Getters ---//
+	//--- Registry Getters ---//
 
 	/**
 	 * @return all registered ammo items
 	 */
-	public static Collection<IAmmoItem<?>> getAllBulletItems()
+	public static Collection<IAmmoTypeItem<?, ?>> getAllAmmoItems()
 	{
 		return REGISTERED_AMMO_TYPE_ITEMS.values();
 	}
@@ -166,7 +210,7 @@ public class IIAmmoRegistry
 	/**
 	 * @return all registered ammo types
 	 */
-	public static Collection<IAmmo<?>> getAllAmmoTypes()
+	public static Collection<IAmmoType<?, ?>> getAllAmmoTypes()
 	{
 		return REGISTERED_AMMO_TYPES.values();
 	}
@@ -176,7 +220,7 @@ public class IIAmmoRegistry
 	 */
 	public static Collection<IAmmoCore> getAllCores()
 	{
-		return REGISTERED_BULLET_CORES.values();
+		return REGISTERED_CORES.values();
 	}
 
 	/**
@@ -191,8 +235,20 @@ public class IIAmmoRegistry
 	 * @return all registered ammo models
 	 */
 	@SideOnly(Side.CLIENT)
-	public static Collection<IBulletModel> getAllModels()
+	public static Collection<IAmmoModel<?, ?>> getAllModels()
 	{
 		return REGISTERED_MODELS.values();
+	}
+
+	/**
+	 * Replaces the model of the given ammo type
+	 *
+	 * @param ammo  name of the model to replace
+	 * @param model new model
+	 */
+	public static void renewModel(IAmmoType<?, ?> ammo, IAmmoModel model)
+	{
+		REGISTERED_MODELS.remove(ammo);
+		REGISTERED_MODELS.put(ammo, model);
 	}
 }

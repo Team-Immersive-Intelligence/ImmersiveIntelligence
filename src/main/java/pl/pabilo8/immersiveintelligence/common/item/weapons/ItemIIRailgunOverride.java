@@ -21,9 +21,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import org.apache.commons.lang3.tuple.Triple;
-import pl.pabilo8.immersiveintelligence.api.ammo.IIAmmoUtils;
+import pl.pabilo8.immersiveintelligence.api.ammo.utils.IIAmmoFactory;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.Railgun;
-import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityBullet;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoRailgunGrenade;
 
 /**
@@ -92,11 +91,12 @@ public class ItemIIRailgunOverride extends ItemRailgun
 				{
 					if(ammo.getItem() instanceof ItemIIAmmoRailgunGrenade)
 					{
-						Vec3d vv = user.getPositionVector().addVector(0, (double)user.getEyeHeight()-0.10000000149011612D, 0);
-						EntityBullet a = IIAmmoUtils.createBullet(world, Utils.copyStackWithAmount(ammo, 1), vv, vec);
-						a.setShooters(user);
-						mass = a.mass;
-						world.spawnEntity(a);
+						new IIAmmoFactory<>(world)
+								.setStack(Utils.copyStackWithAmount(ammo, 1))
+								.setPosition(user.getPositionVector().addVector(0, (double)user.getEyeHeight()-0.10000000149011612D, 0))
+								.setDirection(vec)
+								.setOwner(user)
+								.create();
 					}
 					else
 					{
