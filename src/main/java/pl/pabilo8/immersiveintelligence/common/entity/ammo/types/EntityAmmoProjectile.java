@@ -5,13 +5,12 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagInt;
+import net.minecraft.nbt.NBTTagIntArray;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.Tuple;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.api.ammo.IIPenetrationRegistry;
 import pl.pabilo8.immersiveintelligence.api.ammo.IIPenetrationRegistry.IPenetrationHandler;
@@ -19,8 +18,8 @@ import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumFuseTypes;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.HitEffect;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.PenMaterialTypes;
-import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoComponent;
-import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoCore;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoCore;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoType;
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.IIAmmoUtils;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityAmmoBase;
@@ -36,6 +35,7 @@ import javax.annotation.ParametersAreNullableByDefault;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Pabilo8
@@ -48,15 +48,19 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 	/**
 	 * Tick limit for the projectile, used for decay
 	 */
-	public static final int MAX_TICKS = 600;
+	public static int MAX_TICKS = 600;
 	/**
 	 * The drag coefficient of the projectile, used for calculating the motion vector
 	 */
-	public static final float DRAG = 0.01f;
+	public static float DRAG = 0.01f;
 	/**
 	 * The gravity coefficient of the projectile, used for calculating the motion vector
 	 */
-	public static final float GRAVITY = 0.15f;
+	public static float GRAVITY = 0.15f;
+	/**
+	 * The slowmo multiplier for projectile motion
+	 */
+	public static float SLOWMO = 1;
 
 	/**
 	 * Modifier for enemy armor effectiveness, used for calculating damage
@@ -140,8 +144,8 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 		super.onUpdate();
 
 		//Yep, that's it, that's the entire motion code
-		velocity -= EntityAmmoProjectile.DRAG*velocity;
-		gravityMotionY -= GRAVITY*this.mass;//*DEV_SLOMO;
+		velocity -= DRAG*velocity;
+		gravityMotionY -= GRAVITY*this.mass*SLOWMO;//*DEV_SLOMO;
 		gravityMotionY *= 1d-DRAG;
 		setMotion();
 
@@ -150,13 +154,15 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 			if(fuseParameter-- <= 0)
 				detonate();
 
+		AxisAlignedBB aabb = this.getEntityBoundingBox()
+				.grow(fuseType==EnumFuseTypes.PROXIMITY?fuseParameter: 0);
+		if(world.isRemote)
+			aabb.offset(this.getPositionVector().scale(-1));
+
 		//Volumetric raytrace through the projectile's flight path
 		MultipleRayTracer tracer = MultipleTracerBuilder.setPos(world,
-						this.getPositionVector(),
-						this.getNextPositionVector())
-				.setAABB(this.getEntityBoundingBox()
-						.grow(fuseType==EnumFuseTypes.PROXIMITY?fuseParameter: 0)
-						.offset(this.getPositionVector().scale(-1)))
+						this.getPositionVector(), this.getNextPositionVector())
+				.setAABB(aabb)
 				.setFilters(this.ignoredEntities, this.ignoredPositions)
 				.volumetricTrace();
 
@@ -236,7 +242,7 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 			writeEntityToNBT(tag);
 
 			//Call the effect method on all components
-			for(Tuple<IAmmoComponent, NBTTagCompound> component : components)
+			for(Tuple<AmmoComponent, NBTTagCompound> component : components)
 				component.getFirst().onEffect(world, pos, dir, multiplier, component.getSecond(), coreType, owner);
 			setDead();
 		}
@@ -251,7 +257,7 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 
 	protected void spawnTrailParticles()
 	{
-		for(Tuple<IAmmoComponent, NBTTagCompound> component : components)
+		for(Tuple<AmmoComponent, NBTTagCompound> component : components)
 			component.getFirst().spawnParticleTrail(this, component.getSecond());
 	}
 
@@ -395,6 +401,13 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 	 */
 	protected void onHitRicochet(RayTraceResult hit, IPenetrationHandler handler)
 	{
+		//If ricochets are disabled, end the bullet's lifecycle
+		if(!IIAmmoUtils.ammoRicochets)
+		{
+			detonate();
+			return;
+		}
+
 		//Reduce velocity
 		velocity *= 0.6f;
 		penetrationAbility -= handler.getReduction()*2;
@@ -449,11 +462,11 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 
 	@ParametersAreNonnullByDefault
 	@Override
-	public void setFromParameters(IAmmoType<?, EntityAmmoProjectile> ammoType, IAmmoCore core, EnumCoreTypes coreType, EnumFuseTypes fuseType, int fuseParameter, List<Tuple<IAmmoComponent, NBTTagCompound>> components)
+	public void setFromParameters(IAmmoType<?, EntityAmmoProjectile> ammoType, AmmoCore core, EnumCoreTypes coreType, EnumFuseTypes fuseType, int fuseParameter, List<Tuple<AmmoComponent, NBTTagCompound>> components)
 	{
 		super.setFromParameters(ammoType, core, coreType, fuseType, fuseParameter, components);
-		this.velocity = ammoType.getDefaultVelocity();
-		this.mass = ammoType.getCoreMass(core, components.stream().map(Tuple::getFirst).toArray(IAmmoComponent[]::new));
+		this.velocity = ammoType.getDefaultVelocity()*SLOWMO;
+		this.mass = ammoType.getCoreMass(core, components.stream().map(Tuple::getFirst).toArray(AmmoComponent[]::new));
 		this.penetrationAbility = ammoType.getPenetrationDepth();
 		this.penetrationHardness = core.getPenetrationHardness();
 	}
@@ -462,14 +475,29 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 	public void readEntityFromNBT(NBTTagCompound compound)
 	{
 		super.readEntityFromNBT(compound);
-		this.baseMotion = EasyNBT.wrapNBT(compound).getVec3d("base_motion");
+		EasyNBT nbt = EasyNBT.wrapNBT(compound);
+
+		this.baseMotion = nbt.getVec3d("base_motion");
+		this.ignoredEntities = nbt.streamList(NBTTagInt.class, "ignored_entities", EasyNBT.TAG_INT)
+				.map(NBTTagInt::getInt)
+				.map(world::getEntityByID)
+				.collect(Collectors.toCollection(ArrayList::new));
+		this.ignoredPositions = nbt.streamList(NBTTagIntArray.class, "ignored_pos", EasyNBT.TAG_INT_ARRAY)
+				.map(NBTTagIntArray::getIntArray)
+				.filter(t -> t.length==3)
+				.map(t -> new BlockPos(t[0], t[1], t[2]))
+				.collect(Collectors.toCollection(ArrayList::new));
 	}
 
 	@Override
 	public void writeEntityToNBT(NBTTagCompound compound)
 	{
 		super.writeEntityToNBT(compound);
-		EasyNBT.wrapNBT(compound).withVec3d("base_motion", baseMotion);
+		EasyNBT nbt = EasyNBT.wrapNBT(compound);
+		nbt.withVec3d("base_motion", baseMotion);
+		nbt.withList("ignored_entities", e -> new NBTTagInt(e.getEntityId()), ignoredEntities);
+		nbt.withList("ignored_pos", e -> new NBTTagIntArray(new int[]{e.getX(), e.getY(), e.getZ()}), ignoredPositions);
+
 	}
 
 	/**
@@ -484,4 +512,20 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 		if(ignoredEntities!=null)
 			this.ignoredEntities.addAll(ignoredEntities);
 	}
+
+	//--- Static Methods ---//
+
+	/**
+	 * Sets the slowmo coefficient for all projectiles
+	 *
+	 * @param newSlowmo The new slowmo coefficient
+	 */
+	public static void setSlowmo(float newSlowmo)
+	{
+		//Apply new values
+		SLOWMO = newSlowmo;
+		GRAVITY = 0.15f*SLOWMO;
+		DRAG = 0.01f*SLOWMO;
+	}
+
 }

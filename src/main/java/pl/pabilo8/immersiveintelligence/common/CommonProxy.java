@@ -46,7 +46,6 @@ import net.minecraftforge.common.ForgeChunkManager.Ticket;
 import net.minecraftforge.common.ForgeChunkManager.Type;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.Mod;
@@ -67,12 +66,6 @@ import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
 import pl.pabilo8.immersiveintelligence.api.utils.MinecartBlockHelper;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IUpgradableMachine;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.MechanicalDevices;
-import pl.pabilo8.immersiveintelligence.common.ammo.*;
-import pl.pabilo8.immersiveintelligence.common.ammo.cores.*;
-import pl.pabilo8.immersiveintelligence.common.ammo.explosives.AmmoComponentHMX;
-import pl.pabilo8.immersiveintelligence.common.ammo.explosives.AmmoComponentNuke;
-import pl.pabilo8.immersiveintelligence.common.ammo.explosives.AmmoComponentRDX;
-import pl.pabilo8.immersiveintelligence.common.ammo.explosives.AmmoComponentTNT;
 import pl.pabilo8.immersiveintelligence.common.ammo.factory.AmmoComponentFluid;
 import pl.pabilo8.immersiveintelligence.common.ammo.factory.AmmoComponentShrapnel;
 import pl.pabilo8.immersiveintelligence.common.block.data_device.BlockIIDataDevice.IIBlockTypes_Connector;
@@ -295,18 +288,6 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 	}
 
 	@SubscribeEvent
-	public static void onSave(WorldEvent.Save event)
-	{
-		IISaveData.setDirty(event.getWorld().provider.getDimension());
-	}
-
-	@SubscribeEvent
-	public static void onUnload(WorldEvent.Unload event)
-	{
-		IISaveData.setDirty(event.getWorld().provider.getDimension());
-	}
-
-	@SubscribeEvent
 	public static void registerRecipes(RegistryEvent.Register<IRecipe> event)
 	{
 		IILogger.info("Registering Recipes");
@@ -366,8 +347,10 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		//Bullets
 
 		IIAmmoRegistry.registerAmmoType(IIContent.itemAmmoHeavyArtillery);
-		IIAmmoRegistry.registerAmmoType(IIContent.itemAmmoMortar);
+		IIAmmoRegistry.registerAmmoType(IIContent.itemAmmoMediumArtillery);
 		IIAmmoRegistry.registerAmmoType(IIContent.itemAmmoLightArtillery);
+		IIAmmoRegistry.registerAmmoType(IIContent.itemAmmoLightGun);
+		IIAmmoRegistry.registerAmmoType(IIContent.itemAmmoMortar);
 		IIAmmoRegistry.registerAmmoType(IIContent.itemAmmoAutocannon);
 		IIAmmoRegistry.registerAmmoType(IIContent.itemGrenade);
 		IIAmmoRegistry.registerAmmoType(IIContent.itemRailgunGrenade);
@@ -385,24 +368,24 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 			IIAmmoRegistry.registerAmmoType((IAmmoTypeItem)IIContent.blockRadioExplosives.itemBlock);
 		IIAmmoRegistry.registerAmmoType(IIContent.itemNavalMine);
 
-		IIAmmoRegistry.registerComponent(new AmmoComponentTNT());
-		IIAmmoRegistry.registerComponent(new AmmoComponentRDX());
-		IIAmmoRegistry.registerComponent(new AmmoComponentHMX());
-		IIAmmoRegistry.registerComponent(new AmmoComponentNuke());
-		IIAmmoRegistry.registerComponent(new AmmoComponentWhitePhosphorus());
-		IIAmmoRegistry.registerComponent(new AmmoComponentFirework());
-		IIAmmoRegistry.registerComponent(new AmmoComponentTracerPowder());
-		IIAmmoRegistry.registerComponent(new AmmoComponentFlarePowder());
-		IIAmmoRegistry.registerComponent(new AmmoComponentPropaganda());
-		IIAmmoRegistry.registerComponent(new AmmoComponentTesla());
-		IIAmmoRegistry.registerComponent(new AmmoComponentFish());
+		IIAmmoRegistry.registerComponent(IIContent.ammoComponentTNT);
+		IIAmmoRegistry.registerComponent(IIContent.ammoComponentRDX);
+		IIAmmoRegistry.registerComponent(IIContent.ammoComponentHMX);
+		IIAmmoRegistry.registerComponent(IIContent.ammoComponentNuke);
+		IIAmmoRegistry.registerComponent(IIContent.ammoComponentWhitePhosphorus);
+		IIAmmoRegistry.registerComponent(IIContent.ammoComponentFirework);
+		IIAmmoRegistry.registerComponent(IIContent.ammoComponentTracerPowder);
+		IIAmmoRegistry.registerComponent(IIContent.ammoComponentFlarePowder);
+		IIAmmoRegistry.registerComponent(IIContent.ammoComponentPropaganda);
+		IIAmmoRegistry.registerComponent(IIContent.ammoComponentTesla);
+		IIAmmoRegistry.registerComponent(IIContent.ammoComponentFish);
 
-		IIAmmoRegistry.registerCore(new AmmoCoreSteel());
-		IIAmmoRegistry.registerCore(new AmmoCoreTungsten());
-		IIAmmoRegistry.registerCore(new AmmoCoreBrass());
-		IIAmmoRegistry.registerCore(new AmmoCoreLead());
-		IIAmmoRegistry.registerCore(new AmmoCoreUranium());
-		IIAmmoRegistry.registerCore(new AmmoCorePabilium());
+		IIAmmoRegistry.registerCore(IIContent.ammoCoreSteel);
+		IIAmmoRegistry.registerCore(IIContent.ammoCoreTungsten);
+		IIAmmoRegistry.registerCore(IIContent.ammoCoreBrass);
+		IIAmmoRegistry.registerCore(IIContent.ammoCoreLead);
+		IIAmmoRegistry.registerCore(IIContent.ammoCoreUranium);
+		IIAmmoRegistry.registerCore(IIContent.ammoCorePabilium);
 
 		//ShrapnelHandler.addShrapnel("wood","",1,0.25f,0f,true);
 
@@ -581,11 +564,11 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		for(Minecarts value : Minecarts.values())
 			MinecartBlockHelper.blocks.put(stack -> OreDictionary.itemMatches(stack, value.stack.get(), false), world -> value.minecart.apply(world, Vec3d.ZERO));
 
-		RotaryUtils.ie_rotational_blocks_torque.put(tileEntity -> tileEntity instanceof TileEntityWindmill,
+		RotaryUtils.TORQUE_BLOCKS.put(tileEntity -> tileEntity instanceof TileEntityWindmill,
 				aFloat -> aFloat*MechanicalDevices.dynamoWindmillTorque
 		);
 
-		RotaryUtils.ie_rotational_blocks_torque.put(tileEntity -> tileEntity instanceof TileEntityWatermill,
+		RotaryUtils.TORQUE_BLOCKS.put(tileEntity -> tileEntity instanceof TileEntityWatermill,
 				aFloat -> aFloat*MechanicalDevices.dynamoWatermillTorque
 		);
 

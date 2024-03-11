@@ -163,7 +163,7 @@ public class EntityMortar extends Entity implements IEntityAdditionalSpawnData, 
 
 									//Create the ammo piece
 									ammoFactory.setPosition(getPositionVector().add(gunEnd))
-											.setDirection(gunEnd.normalize())
+											.setDirection(gunEnd.scale(-1).normalize())
 											.setStack(Utils.copyStackWithAmount(heldItem, 1))
 											.setShooterAndGun(getPassengers().get(0), this)
 											.create();

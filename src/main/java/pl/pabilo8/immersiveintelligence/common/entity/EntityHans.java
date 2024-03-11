@@ -59,6 +59,7 @@ import java.util.Arrays;
  */
 public class EntityHans extends EntityCreature implements INpc
 {
+	public static boolean INFINITE_AMMO = false;
 	private static final int[] EYE_COLOURS = new int[]{
 			0x597179,//cyan
 			0x536579,//toned blue

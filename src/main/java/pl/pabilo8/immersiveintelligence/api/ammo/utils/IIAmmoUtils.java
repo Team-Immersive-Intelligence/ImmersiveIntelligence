@@ -15,6 +15,7 @@ import pl.pabilo8.immersiveintelligence.api.ammo.IIAmmoRegistry;
 import pl.pabilo8.immersiveintelligence.api.ammo.IIPenetrationRegistry;
 import pl.pabilo8.immersiveintelligence.api.ammo.IIPenetrationRegistry.IPenetrationHandler;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Ammunition;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons;
 import pl.pabilo8.immersiveintelligence.common.IIPotions;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
@@ -30,11 +31,16 @@ import java.util.stream.Collectors;
  */
 public class IIAmmoUtils
 {
-	//--- Registry ---//
+	//--- Global Values ---//
+	public static boolean ammoBreaksBlocks = Weapons.blockDamage;
+	public static boolean ammoExplodesBlocks = Ammunition.blockDamage;
+	public static boolean ammoRicochets = true;
+
+	//--- Block Damage ---//
 
 	public static void dealBlockDamage(World world, Vec3d direction, float bulletDamage, BlockPos pos, IPenetrationHandler pen)
 	{
-		if(!Weapons.blockDamage)
+		if(!ammoBreaksBlocks)
 			return;
 
 		DamageBlockPos dimensionBlockPos = new DamageBlockPos(pos, world, pen.getIntegrity());

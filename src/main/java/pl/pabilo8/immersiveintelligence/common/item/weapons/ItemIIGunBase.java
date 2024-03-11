@@ -236,7 +236,10 @@ public abstract class ItemIIGunBase extends ItemIIUpgradableTool implements ISki
 
 		//Decrease time until next shot is possible
 		if(fireDelay > 0)
-			fireDelay--;
+		{
+			if(fireDelay!=1||(getFireMode(stack)!=FireModeType.SINGULAR||!((EntityLivingBase)user).isHandActive()))
+				fireDelay--;
+		}
 
 		//Decrease previous recoil
 		recoilH = Math.max(recoilH-recoilDecay, 0);
@@ -292,8 +295,10 @@ public abstract class ItemIIGunBase extends ItemIIUpgradableTool implements ISki
 					SoundEvent sound = getChargeFireSound(stack, nbt);
 					if(sound!=null)
 						user.world.playSound(null, user.posX, user.posY, user.posZ, sound, SoundCategory.PLAYERS, 0.5f, 0.9f);
+
 				}
 				shoot(stack, user, count);
+				user.stopActiveHand();
 			}
 			break;
 			default:

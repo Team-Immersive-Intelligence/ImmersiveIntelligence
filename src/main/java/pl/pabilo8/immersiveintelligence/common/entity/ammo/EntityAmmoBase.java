@@ -127,6 +127,7 @@ public abstract class EntityAmmoBase<T extends EntityAmmoBase<? super T>> extend
 		this.fuseType = fuseType;
 		this.fuseParameter = fuseParameter;
 		this.components = components;
+		this.setSize(ammoType.getCaliber()/2f, ammoType.getCaliber()/2f);
 	}
 
 	/**
@@ -234,10 +235,7 @@ public abstract class EntityAmmoBase<T extends EntityAmmoBase<? super T>> extend
 	{
 		NBTTagCompound compound = ByteBufUtils.readTag(additionalData);
 		if(compound!=null)
-		{
 			readEntityFromNBT(compound);
-
-		}
 	}
 
 	//--- Abstract ---//

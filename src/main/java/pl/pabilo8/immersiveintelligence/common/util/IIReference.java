@@ -55,6 +55,16 @@ public class IIReference
 	public static final ResLoc RES_TEXTURES_SKIN = ResLoc.of(RES_TEXTURES, "skins/");
 	public static final ResLoc RES_TEXTURES_ITEM = ResLoc.of(RES_TEXTURES, "items/");
 
+	//--- GameRules ---//
+	public static final String GAMERULE_AMMO_BREAKS_BLOCKS = "ammoBreaksBlocks";
+	public static final String GAMERULE_AMMO_EXPLODES_BLOCKS = "ammoExplodesBlocks";
+	public static final String GAMERULE_AMMO_RICOCHETS = "ammoRicochets";
+	public static final String GAMERULE_AMMO_DECAY = "ammoDecay";
+	public static final String GAMERULE_AMMO_SLOWMO = "ammoSlowmo";
+	//public static final String GAMERULE_AMMO_NUCLEAR_DEVICE = "ammoNuclearDevice";
+
+	public static final String GAMERULE_HANS_INFINITE_AMMO = "hansInfiniteAmmo";
+
 	//--- Paths ---//
 	public static final String SKIN_LOCATION = "immersiveintelligence:textures/skins/";
 

@@ -6,7 +6,6 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
-import pl.pabilo8.immersiveintelligence.api.ShrapnelHandler;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.component.EntityShrapnel;
 
 public class ShrapnelRenderer extends Render<EntityShrapnel>
@@ -35,7 +34,7 @@ public class ShrapnelRenderer extends Render<EntityShrapnel>
 
 		if(entity.shrapnel!=null)
 		{
-			ClientUtils.bindTexture(ShrapnelHandler.registry.get(entity.shrapnel).texture+".png");
+			ClientUtils.bindTexture(entity.shrapnel.texture+".png");
 			GlStateManager.translate(-0.125f, -0.25f, 0f);
 			ClientUtils.drawTexturedRect(0f, 0f, 0.25f, 0.25f, 0.25, 0.5, 0.25, 0.5);
 		}

@@ -369,6 +369,10 @@ item.immersiveintelligence.ammo_casing.light_artillery_6bcal.name=Light Artiller
 item.immersiveintelligence.artillery_6bCal.core.name=Light Artillery Shell Core
 item.immersiveintelligence.artillery_6bCal.bullet.name=Light Artillery Shell
 
+item.immersiveintelligence.ammo_casing.light_gun_4bCal.name=Light Gun Shell Casing
+item.immersiveintelligence.light_gun_4bCal.core.name=Light Gun Shell Core
+item.immersiveintelligence.light_gun_4bCal.bullet.name=Light Gun Shell
+
 item.immersiveintelligence.ammo_casing.mortar_6bcal.name=Mortar Shell Casing
 item.immersiveintelligence.mortar_6bCal.core.name=Mortar Shell Core
 item.immersiveintelligence.mortar_6bCal.bullet.name=Mortar Shell
@@ -1196,9 +1200,11 @@ desc.immersiveintelligence.bullet_type.special=Special Purpose
 
 desc.immersiveintelligence.bullet_core_type.softpoint=Soft Point
 desc.immersiveintelligence.bullet_core_type.shaped=Shaped
+desc.immersiveintelligence.bullet_core_type.shaped_sabot=Shaped Fin-Stabilized
 desc.immersiveintelligence.bullet_core_type.piercing=Armor-Piercing
 desc.immersiveintelligence.bullet_core_type.piercing_sabot=Sabot
 desc.immersiveintelligence.bullet_core_type.canister=Canister
+desc.immersiveintelligence.bullet_core_type.cluster=Cluster
 
 desc.immersiveintelligence.bullet_fuse.contact=Contact
 desc.immersiveintelligence.bullet_fuse.timed=Timed

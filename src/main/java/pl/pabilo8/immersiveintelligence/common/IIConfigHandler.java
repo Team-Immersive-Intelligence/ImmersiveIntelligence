@@ -1527,6 +1527,9 @@ public class IIConfigHandler
 
 		public static class Ammunition
 		{
+			@Comment({"Whether explosive ammo components can break blocks"})
+			public static boolean blockDamage = true;
+
 			@Comment({"Default velocity of a mortar shell."})
 			public static float mortarVelocity = 8f;
 
