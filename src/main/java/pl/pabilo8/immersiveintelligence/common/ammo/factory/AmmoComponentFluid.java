@@ -14,29 +14,28 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumComponentRole;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumCoreTypes;
-import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoComponent;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.component.EntityGasCloud;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.component.EntityIIChemthrowerShot;
 
 /**
  * @author Pabilo8
+ * @updated 06.03.2024
+ * @ii-approved 0.3.1
  * @since 30-08-2019
  */
-public class AmmoComponentFluid implements IAmmoComponent
+public class AmmoComponentFluid extends AmmoComponent
 {
 	Fluid fluid;
-	String name;
 
 	public AmmoComponentFluid(Fluid fluid)
 	{
+		super(fluid.isGaseous()?"gas_": "fluid_",
+				Math.max(fluid.getDensity(), 0)/1000f,
+				EnumComponentRole.CHEMICAL,
+				fluid.getColor()
+		);
 		this.fluid = fluid;
-		name = fluid.getName();
-	}
-
-	@Override
-	public String getName()
-	{
-		return (fluid.isGaseous()?"gas_": "fluid_")+name;
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -50,12 +49,6 @@ public class AmmoComponentFluid implements IAmmoComponent
 	public IngredientStack getMaterial()
 	{
 		return new IngredientStack(new FluidStack(fluid, 1000));
-	}
-
-	@Override
-	public float getDensity()
-	{
-		return Math.max(fluid.getDensity(), 0)/1000f;
 	}
 
 	@Override
@@ -98,23 +91,5 @@ public class AmmoComponentFluid implements IAmmoComponent
 				world.spawnEntity(shot);
 			}
 		}
-	}
-
-	@Override
-	public EnumComponentRole getRole()
-	{
-		return EnumComponentRole.CHEMICAL;
-	}
-
-	@Override
-	public int getColour()
-	{
-		return fluid.getColor();
-	}
-
-	@Override
-	public boolean showInManual()
-	{
-		return false;
 	}
 }

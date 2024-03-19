@@ -20,14 +20,16 @@ import pl.pabilo8.immersiveintelligence.api.ShrapnelHandler;
 import pl.pabilo8.immersiveintelligence.api.ammo.IIAmmoRegistry;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumComponentRole;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumCoreTypes;
-import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoComponent;
-import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoCore;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoCore;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
 /**
  * @author Pabilo8
+ * @updated 06.03.2024
+ * @ii-approved 0.3.1
  * @since 05.01.2022
  */
 @ZenClass("mods."+ImmersiveIntelligence.MODID+".bullet.Bullets")
@@ -148,50 +150,15 @@ public class BulletTweaker
 			@Override
 			public void apply()
 			{
-				final IngredientStack s = ApiUtils.createIngredientStack(core.stack);
 				IIAmmoRegistry.registerCore(
-						new IAmmoCore()
+						new AmmoCore(core.name, core.density, core.penHardness, core.explosionModifier, core.dmgModifier, core.color)
 						{
-							@Override
-							public String getName()
-							{
-								return core.name;
-							}
+							private final IngredientStack stack = ApiUtils.createIngredientStack(core.stack);
 
 							@Override
 							public IngredientStack getMaterial()
 							{
-								return s;
-							}
-
-							@Override
-							public float getDensity()
-							{
-								return core.density;
-							}
-
-							@Override
-							public float getDamageModifier()
-							{
-								return core.dmgModifier;
-							}
-
-							@Override
-							public float getExplosionModifier()
-							{
-								return core.explosionModifier;
-							}
-
-							@Override
-							public float getPenetrationHardness()
-							{
-								return core.penHardness;
-							}
-
-							@Override
-							public int getColour()
-							{
-								return core.color;
+								return stack;
 							}
 						}
 				);
@@ -275,30 +242,19 @@ public class BulletTweaker
 			@Override
 			public void apply()
 			{
-				final IngredientStack s = ApiUtils.createIngredientStack(component.stack);
-				final EnumComponentRole r = EnumComponentRole.v(component.role);
+				final EnumComponentRole componentRole = EnumComponentRole.v(component.role);
 
 				IIAmmoRegistry.registerComponent(
-						new IAmmoComponent()
+						new AmmoComponent(component.name, component.density, componentRole, component.color)
 						{
-							@Override
-							public String getName()
-							{
-								return component.name;
-							}
+							private final IngredientStack stack = ApiUtils.createIngredientStack(component.stack);
 
 							@Override
 							public IngredientStack getMaterial()
 							{
-								return s;
+								return stack;
 							}
-
-							@Override
-							public float getDensity()
-							{
-								return component.density;
-							}
-
+							
 							@Override
 							public void onEffect(World world, Vec3d pos, Vec3d dir, float multiplier, NBTTagCompound tag, EnumCoreTypes coreType, Entity owner)
 							{
@@ -310,18 +266,6 @@ public class BulletTweaker
 											multiplier,
 											CraftTweakerMC.getIData(tag)
 									);
-							}
-
-							@Override
-							public EnumComponentRole getRole()
-							{
-								return r;
-							}
-
-							@Override
-							public int getColour()
-							{
-								return component.color;
 							}
 						}
 				);

@@ -72,13 +72,13 @@ public class DroneRenderer extends IIEntityRenderer<EntityDrone>
 				new ResourceLocation(ImmersiveIntelligence.MODID, "models/entity/combat_drone.obj.amt"),
 				header -> new AMT[]{
 						new AMTLocator("Rotors", header),
-						new AMTBullet("WeaponMount1", header.getOffset("WeaponMount1"), IIAmmoRegistry.getModel(IIContent.itemAmmoMortar))
+						new AMTBullet("WeaponMount1", header.getOffset("WeaponMount1"), IIAmmoRegistry.getModel(IIContent.itemAmmoRocketLight))
 								.withProperties(IIContent.ammoCoreSteel, EnumCoreTypes.CANISTER, 0x2fad64).withState(BulletState.BULLET_UNUSED),
-						new AMTBullet("WeaponMount2", header.getOffset("WeaponMount2"), IIAmmoRegistry.getModel(IIContent.itemAmmoMortar))
+						new AMTBullet("WeaponMount2", header.getOffset("WeaponMount2"), IIAmmoRegistry.getModel(IIContent.itemAmmoRocketLight))
 								.withProperties(IIContent.ammoCoreSteel, EnumCoreTypes.CANISTER, 0x2fad64).withState(BulletState.BULLET_UNUSED),
-						new AMTBullet("WeaponMount3", header.getOffset("WeaponMount3"), IIAmmoRegistry.getModel(IIContent.itemAmmoMortar))
+						new AMTBullet("WeaponMount3", header.getOffset("WeaponMount3"), IIAmmoRegistry.getModel(IIContent.itemAmmoRocketLight))
 								.withProperties(IIContent.ammoCoreSteel, EnumCoreTypes.CANISTER, 0x2fad64).withState(BulletState.BULLET_UNUSED),
-						new AMTBullet("WeaponMount4", header.getOffset("WeaponMount4"), IIAmmoRegistry.getModel(IIContent.itemAmmoMortar))
+						new AMTBullet("WeaponMount4", header.getOffset("WeaponMount4"), IIAmmoRegistry.getModel(IIContent.itemAmmoRocketLight))
 								.withProperties(IIContent.ammoCoreSteel, EnumCoreTypes.CANISTER, 0x2fad64).withState(BulletState.BULLET_UNUSED)
 				}
 		);

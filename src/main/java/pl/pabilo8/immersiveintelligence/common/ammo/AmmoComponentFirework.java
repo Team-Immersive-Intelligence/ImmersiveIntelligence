@@ -7,23 +7,24 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import pl.pabilo8.immersiveintelligence.api.ammo.utils.IIAmmoUtils;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumComponentRole;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumCoreTypes;
-import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoComponent;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
+import pl.pabilo8.immersiveintelligence.api.ammo.utils.IIAmmoUtils;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageFireworks;
 
 /**
  * @author Pabilo8
- * @since 30-08-2019
+ * @updated 06.03.2024
+ * @ii-approved 0.3.1
+ * @since 10.07.2021
  */
-public class AmmoComponentFirework implements IAmmoComponent
+public class AmmoComponentFirework extends AmmoComponent
 {
-	@Override
-	public String getName()
+	public AmmoComponentFirework()
 	{
-		return "firework";
+		super("firework", 1f, EnumComponentRole.FLARE, 0xcab1b1);
 	}
 
 	@Override
@@ -33,27 +34,9 @@ public class AmmoComponentFirework implements IAmmoComponent
 	}
 
 	@Override
-	public float getDensity()
-	{
-		return 1f;
-	}
-
-	@Override
 	public void onEffect(World world, Vec3d pos, Vec3d dir, float multiplier, NBTTagCompound tag, EnumCoreTypes coreType, Entity owner)
 	{
 		IIPacketHandler.INSTANCE.sendToAllAround(new MessageFireworks(tag, pos), IIPacketHandler.targetPointFromPos(pos, world, 96));
 		IIAmmoUtils.suppress(world, pos.x, pos.y, pos.z, 10f*multiplier, (int)(255*multiplier));
-	}
-
-	@Override
-	public EnumComponentRole getRole()
-	{
-		return EnumComponentRole.FLARE;
-	}
-
-	@Override
-	public int getColour()
-	{
-		return 0xcab1b1;
 	}
 }

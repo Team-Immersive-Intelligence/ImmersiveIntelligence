@@ -4,12 +4,14 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.ammo.IIAmmoRegistry;
+import pl.pabilo8.immersiveintelligence.client.model.builtin.IAmmoModel;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityAmmoBase;
 
 /**
  * @author Pabilo8
+ * @updated 09.03.2024
+ * @ii-approved 0.3.1
  * @since 08-06-2019
  */
 public class AmmoRenderer extends Render<EntityAmmoBase>
@@ -20,38 +22,24 @@ public class AmmoRenderer extends Render<EntityAmmoBase>
 		this.shadowSize = 0.5F;
 	}
 
-	/**
-	 * Renders the desired {@code T} type Entity.
-	 */
+	@Override
 	public void doRender(EntityAmmoBase entity, double x, double y, double z, float entityYaw, float partialTicks)
 	{
-		super.doRender(entity, x, y, z, entityYaw, partialTicks);
+		IAmmoModel model = IIAmmoRegistry.getModel(entity.getAmmoType());
+		if(model==null)
+			return;
 		GlStateManager.pushMatrix();
-
-		double yy, pp;
-		yy = entity.prevRotationYaw+((entity.rotationYaw-entity.prevRotationYaw)*partialTicks);
-		pp = entity.prevRotationPitch+((entity.rotationPitch-entity.prevRotationPitch)*partialTicks);
-
 		GlStateManager.translate(x, y, z);
-		GlStateManager.rotate((float)yy, 0.0F, 1.0F, 0.0F);
-		GlStateManager.rotate((float)(90+pp), 1.0F, 0.0F, 0.0F);
-
 		if(entity.getAmmoType()!=null)
-			IIAmmoRegistry.getModel(entity.getAmmoType()).renderAmmoComplete(entity);
+			model.renderAmmoComplete(entity, partialTicks);
 
 		GlStateManager.popMatrix();
-	}
-
-	public boolean isMultipass()
-	{
-		return false;
 	}
 
 
 	@Override
 	protected ResourceLocation getEntityTexture(EntityAmmoBase entity)
 	{
-		String texture = ImmersiveIntelligence.MODID+":textures/entity/bullet.png";
-		return new ResourceLocation(texture);
+		return null;
 	}
 }

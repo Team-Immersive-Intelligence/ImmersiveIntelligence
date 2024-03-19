@@ -10,30 +10,26 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.ShrapnelHandler;
+import pl.pabilo8.immersiveintelligence.api.ShrapnelHandler.Shrapnel;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumComponentRole;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumCoreTypes;
-import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoComponent;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.component.EntityShrapnel;
 
 /**
  * @author Pabilo8
  * @since 30-08-2019
  */
-public class AmmoComponentShrapnel implements IAmmoComponent
+public class AmmoComponentShrapnel extends AmmoComponent
 {
+	Shrapnel shrapnel;
 	IngredientStack stack;
-	String name;
 
 	public AmmoComponentShrapnel(String material)
 	{
-		name = material;
-		stack = new IngredientStack("dust"+Character.toUpperCase(name.charAt(0))+name.substring(1));
-	}
-
-	@Override
-	public String getName()
-	{
-		return "shrapnel_"+name;
+		super("shrapnel_"+material, 1f, EnumComponentRole.SHRAPNEL, ShrapnelHandler.registry.get(material).color);
+		shrapnel = ShrapnelHandler.registry.get(material);
+		stack = new IngredientStack("dust"+Character.toUpperCase(material.charAt(0))+material.substring(1));
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -50,12 +46,6 @@ public class AmmoComponentShrapnel implements IAmmoComponent
 	}
 
 	@Override
-	public float getDensity()
-	{
-		return 1f;
-	}
-
-	@Override
 	public void onEffect(World world, Vec3d pos, Vec3d dir, float multiplier, NBTTagCompound tag, EnumCoreTypes coreType, Entity owner)
 	{
 		Vec3d v = new Vec3d(0, -1, 0);
@@ -65,24 +55,12 @@ public class AmmoComponentShrapnel implements IAmmoComponent
 			Vec3d vecDir = v.addVector(Utils.RAND.nextGaussian()*.25f, Utils.RAND.nextGaussian()*.25f, Utils.RAND.nextGaussian()*.25f);
 
 			EntityShrapnel shrap = new EntityShrapnel(world, throwerPos.x+v.x*2, throwerPos.y+v.y*2,
-					throwerPos.z+v.z*2, 0, 0, 0, name);
+					throwerPos.z+v.z*2, 0, 0, 0, shrapnel);
 			shrap.motionX = vecDir.x*2;
 			shrap.motionY = vecDir.y*0.05f;
 			shrap.motionZ = vecDir.z*2;
 			if(!world.isRemote)
 				world.spawnEntity(shrap);
 		}
-	}
-
-	@Override
-	public EnumComponentRole getRole()
-	{
-		return EnumComponentRole.SHRAPNEL;
-	}
-
-	@Override
-	public int getColour()
-	{
-		return ShrapnelHandler.registry.get(name).color;
 	}
 }

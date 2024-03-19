@@ -111,7 +111,7 @@ public interface IAmmoType<T extends IAmmoType<T, E>, E extends EntityAmmoBase<?
 	 * @param stack bullet stack
 	 * @return Bullet core from stack NBT
 	 */
-	IAmmoCore getCore(ItemStack stack);
+	AmmoCore getCore(ItemStack stack);
 
 	/**
 	 * Internal Item method
@@ -127,7 +127,7 @@ public interface IAmmoType<T extends IAmmoType<T, E>, E extends EntityAmmoBase<?
 	 * @param stack bullet stack
 	 * @return bullet components in appropriate order from stack NBT
 	 */
-	IAmmoComponent[] getComponents(ItemStack stack);
+	AmmoComponent[] getComponents(ItemStack stack);
 
 	/**
 	 * Internal Item method
@@ -137,7 +137,7 @@ public interface IAmmoType<T extends IAmmoType<T, E>, E extends EntityAmmoBase<?
 	 * @param componentNBT
 	 * @return bullet components in appropriate order from stack NBT
 	 */
-	void addComponents(ItemStack stack, IAmmoComponent component, NBTTagCompound componentNBT);
+	void addComponents(ItemStack stack, AmmoComponent component, NBTTagCompound componentNBT);
 
 	/**
 	 * Internal Item method
@@ -173,7 +173,7 @@ public interface IAmmoType<T extends IAmmoType<T, E>, E extends EntityAmmoBase<?
 
 	float getMass(ItemStack stack);
 
-	float getCoreMass(IAmmoCore core, IAmmoComponent[] components);
+	float getCoreMass(AmmoCore core, AmmoComponent[] components);
 
 	/**
 	 * @param stack

@@ -28,31 +28,26 @@ import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumComponentRole;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumCoreTypes;
-import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoComponent;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 
 /**
  * @author Pabilo8
- * @since 30-08-2019
+ * @updated 06.03.2024
+ * @ii-approved 0.3.1
+ * @since 10.07.2021
  */
-public class AmmoComponentTesla implements IAmmoComponent
+public class AmmoComponentTesla extends AmmoComponent
 {
-	@Override
-	public String getName()
+	public AmmoComponentTesla()
 	{
-		return "tesla";
+		super("tesla", 1f, EnumComponentRole.SPECIAL, 0x6b778a);
 	}
 
 	@Override
 	public IngredientStack getMaterial()
 	{
 		return new IngredientStack(new ItemStack(IEContent.blockMetalDevice0, 1, BlockTypes_MetalDevice0.CAPACITOR_LV.getMeta()));
-	}
-
-	@Override
-	public float getDensity()
-	{
-		return 1.15f;
 	}
 
 	@Override
@@ -137,17 +132,5 @@ public class AmmoComponentTesla implements IAmmoComponent
 			}
 
 		//BulletHelper.suppress(world, pos.x, pos.y, pos.z, 10f*amount, (int)(255*amount));
-	}
-
-	@Override
-	public EnumComponentRole getRole()
-	{
-		return EnumComponentRole.SPECIAL;
-	}
-
-	@Override
-	public int getColour()
-	{
-		return 0xcab1b1;
 	}
 }

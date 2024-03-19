@@ -49,7 +49,7 @@ public class NavalMineRenderer extends Render<EntityNavalMine>
 			//TODO: 05.03.2024 wire rendering
 
 			IIAmmoRegistry.getModel(IIContent.itemNavalMine)
-					.renderAmmoComplete(entity);
+					.renderAmmoComplete(entity, partialTicks);
 
 			GlStateManager.popMatrix();
 		}

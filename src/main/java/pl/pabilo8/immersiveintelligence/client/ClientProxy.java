@@ -124,6 +124,7 @@ import pl.pabilo8.immersiveintelligence.common.compat.IICompatModule;
 import pl.pabilo8.immersiveintelligence.common.entity.*;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityAmmoBase;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.component.*;
+import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.naval_mine.EntityNavalMine;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.naval_mine.EntityNavalMineAnchor;
 import pl.pabilo8.immersiveintelligence.common.entity.tactile.EntityAMTTactile;
@@ -314,7 +315,7 @@ public class ClientProxy extends CommonProxy
 	{
 		super.preInit();
 		MinecraftForge.EVENT_BUS.register(this);
-		MinecraftForge.EVENT_BUS.register(IIModelRegistry.instance);
+		MinecraftForge.EVENT_BUS.register(IIModelRegistry.INSTANCE);
 		OBJLoader.INSTANCE.addDomain(ImmersiveIntelligence.MODID);
 		IEOBJLoader.instance.addDomain(ImmersiveIntelligence.MODID);
 
@@ -323,6 +324,7 @@ public class ClientProxy extends CommonProxy
 		//Register entity renderers
 		registerEntityRenderer(EntitySkyCrate.class, SkyCrateRenderer::new);
 		registerEntityRenderer(EntityAmmoBase.class, AmmoRenderer::new);
+		registerEntityRenderer(EntityAmmoProjectile.class, ProjectileAmmoRenderer::new);
 		registerEntityRenderer(EntityNavalMine.class, NavalMineRenderer::new);
 		registerEntityRenderer(EntityNavalMineAnchor.class, NavalMineAnchorRenderer::new);
 		registerEntityRenderer(EntityShrapnel.class, ShrapnelRenderer::new);
@@ -362,14 +364,14 @@ public class ClientProxy extends CommonProxy
 			if(bullet instanceof ItemIINavalMine)
 				continue;
 			if(bullet instanceof ItemIIAmmoBase)
-				IIModelRegistry.instance.registerCustomItemModel(((ItemIIAmmoBase)bullet));
+				IIModelRegistry.INSTANCE.registerCustomItemModel(((ItemIIAmmoBase)bullet));
 			else if(bullet instanceof ItemIIAmmoRevolver)
-				IIModelRegistry.instance.registerCustomItemModel((ItemIIAmmoRevolver)bullet, ImmersiveIntelligence.MODID, ItemIIAmmoRevolver.BULLET, ItemIIAmmoRevolver.CORE);
+				IIModelRegistry.INSTANCE.registerCustomItemModel((ItemIIAmmoRevolver)bullet, ImmersiveIntelligence.MODID, ItemIIAmmoRevolver.BULLET, ItemIIAmmoRevolver.CORE);
 		}
 
-		IIModelRegistry.instance.registerCustomItemModel(IIContent.itemBulletMagazine);
-		IIModelRegistry.instance.registerCustomItemModel(IIContent.itemBinoculars);
-		IIModelRegistry.instance.registerCustomItemModel(IIContent.itemCasingPouch);
+		IIModelRegistry.INSTANCE.registerCustomItemModel(IIContent.itemBulletMagazine);
+		IIModelRegistry.INSTANCE.registerCustomItemModel(IIContent.itemBinoculars);
+		IIModelRegistry.INSTANCE.registerCustomItemModel(IIContent.itemCasingPouch);
 
 		IIContent.itemMotorBelt.setRenderModels();
 
@@ -388,7 +390,7 @@ public class ClientProxy extends CommonProxy
 		RenderingRegistry.registerEntityRenderingHandler(entityClass, renderFactory);
 		Render<? super T> temp = renderFactory.createRenderFor(null);
 		if(temp instanceof IReloadableModelContainer)
-			IIModelRegistry.instance.addTemporaryModel(((IReloadableModelContainer<?>)temp));
+			IIModelRegistry.INSTANCE.addTemporaryModel(((IReloadableModelContainer<?>)temp));
 	}
 
 	@SubscribeEvent
@@ -429,7 +431,7 @@ public class ClientProxy extends CommonProxy
 		ApiUtils.getRegisterSprite(event.getMap(), ConveyorRubberExtract.texture_casing);
 
 		// TODO: 20.03.2023 Update AMT models to use new mtl loading tech
-		IIModelRegistry.instance.registerSprites(event.getMap());
+		IIModelRegistry.INSTANCE.registerSprites(event.getMap());
 
 		ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":blocks/metal_device/inserter/inserter_gray");
 		ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":blocks/metal_device/inserter/inserter_dim");
@@ -695,7 +697,7 @@ public class ClientProxy extends CommonProxy
 	@Override
 	public void reloadModels()
 	{
-		IIModelRegistry.instance.reloadRegisteredModels();
+		IIModelRegistry.INSTANCE.reloadRegisteredModels();
 	}
 
 	@Override

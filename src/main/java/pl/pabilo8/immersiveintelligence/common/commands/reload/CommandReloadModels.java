@@ -49,7 +49,7 @@ public class CommandReloadModels extends CommandBase
 		if(args.length > 0)
 		{
 			for(String arg : args)
-				success = IIModelRegistry.instance.reloadModel(new ResourceLocation(arg))||success;
+				success = IIModelRegistry.INSTANCE.reloadModel(new ResourceLocation(arg))||success;
 		}
 		else
 		{
@@ -71,6 +71,6 @@ public class CommandReloadModels extends CommandBase
 	@Override
 	public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos)
 	{
-		return getListOfStringsMatchingLastWord(args, IIModelRegistry.instance.getReloadableModels());
+		return getListOfStringsMatchingLastWord(args, IIModelRegistry.INSTANCE.getReloadableModels());
 	}
 }

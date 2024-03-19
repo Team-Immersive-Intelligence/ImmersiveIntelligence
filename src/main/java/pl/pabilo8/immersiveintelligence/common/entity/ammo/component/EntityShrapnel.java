@@ -9,7 +9,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
@@ -24,6 +23,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.ShrapnelHandler;
 import pl.pabilo8.immersiveintelligence.api.ShrapnelHandler.Shrapnel;
 
+import javax.annotation.Nullable;
+
 import static pl.pabilo8.immersiveintelligence.common.util.IIDamageSources.causeShrapnelDamage;
 
 /**
@@ -33,22 +34,17 @@ import static pl.pabilo8.immersiveintelligence.common.util.IIDamageSources.cause
 @net.minecraftforge.fml.common.Optional.Interface(iface = "com.elytradev.mirage.lighting.IEntityLightEventConsumer", modid = "mirage")
 public class EntityShrapnel extends EntityIEProjectile implements IEntityLightEventConsumer, IEntityAdditionalSpawnData
 {
-	public String shrapnel;
+	@Nullable
+	public Shrapnel shrapnel;
 
 	public EntityShrapnel(World world)
 	{
 		super(world);
 	}
 
-	public EntityShrapnel(World world, double x, double y, double z, double ax, double ay, double az, String shrapnel)
+	public EntityShrapnel(World world, double x, double y, double z, double motionX, double motionY, double motionZ, @Nullable Shrapnel shrapnel)
 	{
-		super(world, x, y, z, ax, ay, az);
-		this.shrapnel = shrapnel;
-	}
-
-	public EntityShrapnel(World world, EntityLivingBase living, double ax, double ay, double az, String shrapnel)
-	{
-		super(world, living, ax, ay, az);
+		super(world, x, y, z, motionX, motionY, motionZ);
 		this.shrapnel = shrapnel;
 	}
 
@@ -61,17 +57,15 @@ public class EntityShrapnel extends EntityIEProjectile implements IEntityLightEv
 	@Override
 	public double getGravity()
 	{
-		if(ShrapnelHandler.registry.get(shrapnel)!=null)
-		{
-			return ShrapnelHandler.registry.get(shrapnel).mass*0.05d;
-		}
+		if(shrapnel!=null)
+			return shrapnel.mass*0.05d;
 		return super.getGravity();
 	}
 
 	@Override
 	public boolean canIgnite()
 	{
-		return (ShrapnelHandler.registry.get(shrapnel)!=null&&ShrapnelHandler.registry.get(shrapnel).flammable);
+		return (shrapnel!=null&&shrapnel.flammable);
 	}
 
 	/**
@@ -179,24 +173,25 @@ public class EntityShrapnel extends EntityIEProjectile implements IEntityLightEv
 	@Override
 	public void writeEntityToNBT(NBTTagCompound tag)
 	{
-		tag.setString("shrapnel", shrapnel);
+		if(shrapnel!=null)
+			tag.setString("shrapnel", shrapnel.name);
 	}
 
 	@Override
 	public void readEntityFromNBT(NBTTagCompound tag)
 	{
-		this.shrapnel = tag.getString("shrapnel");
+		this.shrapnel = ShrapnelHandler.registry.get(tag.getString("shrapnel"));
 	}
 
 	@Override
 	public void writeSpawnData(ByteBuf data)
 	{
-		ByteBufUtils.writeUTF8String(data, shrapnel);
+		ByteBufUtils.writeUTF8String(data, shrapnel==null?"": shrapnel.name);
 	}
 
 	@Override
 	public void readSpawnData(ByteBuf data)
 	{
-		shrapnel = ByteBufUtils.readUTF8String(data);
+		shrapnel = ShrapnelHandler.registry.get(ByteBufUtils.readUTF8String(data));
 	}
 }

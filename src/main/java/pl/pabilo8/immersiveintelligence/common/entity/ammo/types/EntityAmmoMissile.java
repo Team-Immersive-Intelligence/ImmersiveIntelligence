@@ -10,10 +10,25 @@ import net.minecraft.world.World;
 public class EntityAmmoMissile extends EntityAmmoProjectile
 {
 	//TODO: 15.02.2024 implement fuel system
-	int fuelRemaining;
+	int fuelRemaining = 1000;
 
 	public EntityAmmoMissile(World world)
 	{
 		super(world);
 	}
+
+	@Override
+	protected void updatePhysics()
+	{
+		//Gravity suppressed by missile jet
+		if(fuelRemaining > 0)
+		{
+			velocity -= DRAG*velocity;
+			fuelRemaining--;
+		}
+		else
+			super.updatePhysics();
+	}
+
+
 }

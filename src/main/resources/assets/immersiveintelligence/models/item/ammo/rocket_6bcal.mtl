@@ -1,0 +1,8 @@
+# Made by Pabilo8 with Blockbench
+
+newmtl 6bcal_rocket1
+map_Kd immersiveintelligence:entity/ammo/6bcal_rocket1
+newmtl 6bcal_rocket2
+map_Kd immersiveintelligence:entity/ammo/6bcal_rocket2
+newmtl rocket_trail_start
+map_Kd immersiveintelligence:particle/rocket/rocket_trail0

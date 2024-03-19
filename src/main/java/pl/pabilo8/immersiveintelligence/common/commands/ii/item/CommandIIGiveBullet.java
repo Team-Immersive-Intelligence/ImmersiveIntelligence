@@ -5,14 +5,17 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import pl.pabilo8.immersiveintelligence.api.ammo.IIAmmoRegistry;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumCoreTypes;
-import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoComponent;
-import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoCore;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumFuseTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoCore;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
+import pl.pabilo8.immersiveintelligence.api.ammo.utils.IIAmmoFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -56,22 +59,37 @@ public class CommandIIGiveBullet extends CommandBase
 	{
 		if(args.length > 3)
 		{
-			EntityPlayerMP player = CommandBase.getPlayer(server, sender, args[0]);
-			IAmmoTypeItem casing = IIAmmoRegistry.getAmmoItem(args[1]);
-			IAmmoCore core = IIAmmoRegistry.getCore(args[2]);
+			IAmmoTypeItem<?, ?> ammoType = IIAmmoRegistry.getAmmoItem(args[1]);
+			AmmoCore core = IIAmmoRegistry.getCore(args[2]);
 			EnumCoreTypes coreType = EnumCoreTypes.v(args[3]);
-			ArrayList<IAmmoComponent> components = new ArrayList<>();
-			for(int i = 4; i < args.length; i++)
+			EnumFuseTypes fuse = EnumFuseTypes.v(args[4]);
+
+			//Load components
+			ArrayList<AmmoComponent> components = new ArrayList<>();
+			for(int i = 5; i < args.length; i++)
 				components.add(IIAmmoRegistry.getComponent(args[i]));
 
-			if(casing!=null&&core!=null)
-			{
-
-				player.addItemStackToInventory(casing.getBulletWithParams(core, coreType, components.toArray(new IAmmoComponent[0])));
-				sender.sendMessage(new TextComponentString("Bullets given!"));
-			}
-			else
+			//check if the ammo type and core are valid
+			if(ammoType==null||core==IIAmmoRegistry.MISSING_CORE)
 				throw new WrongUsageException(getUsage(sender));
+			ItemStack ammoStack = ammoType.getBulletWithParams(core, coreType, components.toArray(new AmmoComponent[0]));
+
+			//fire the bullet directly
+			if(args[0].startsWith("fire@"))
+			{
+				EntityPlayerMP player = CommandBase.getPlayer(server, sender, args[0].substring(5));
+				new IIAmmoFactory<>(player)
+						.setStack(ammoStack)
+						.setPositionAndVelocity(player.getPositionEyes(0), player.getLookVec().normalize(), 1)
+						.create();
+				sender.sendMessage(new TextComponentString("Fire!"));
+			}
+			//give the bullet to the player
+			else
+				CommandBase.getPlayer(server, sender, args[0]).addItemStackToInventory(ammoStack);
+
+			sender.sendMessage(new TextComponentString("Bullets given!"));
+
 		}
 		else
 			throw new WrongUsageException(getUsage(sender));
@@ -102,16 +120,21 @@ public class CommandIIGiveBullet extends CommandBase
 		}
 		else if(args.length==3)
 		{
-			return getListOfStringsMatchingLastWord(args, IIAmmoRegistry.getAllCores().stream().map(IAmmoCore::getName).collect(Collectors.toList()));
+			return getListOfStringsMatchingLastWord(args, IIAmmoRegistry.getAllCores().stream().map(AmmoCore::getName).collect(Collectors.toList()));
 		}
 		else if(args.length==4)
 		{
 			IAmmoTypeItem<?, ?> bullet = IIAmmoRegistry.getAmmoItem(args[1]);
 			return getListOfStringsMatchingLastWord(args, bullet==null?Collections.emptyList(): Arrays.stream(bullet.getAllowedCoreTypes()).map(EnumCoreTypes::getName).collect(Collectors.toList()));
 		}
-		else if(args.length > 4)
+		else if(args.length==5)
 		{
-			return getListOfStringsMatchingLastWord(args, IIAmmoRegistry.getAllComponents().stream().map(IAmmoComponent::getName).collect(Collectors.toList()));
+			IAmmoTypeItem<?, ?> bullet = IIAmmoRegistry.getAmmoItem(args[1]);
+			return getListOfStringsMatchingLastWord(args, bullet==null?Collections.emptyList(): Arrays.stream(bullet.getAllowedFuseTypes()).map(EnumFuseTypes::getName).collect(Collectors.toList()));
+		}
+		else if(args.length > 5)
+		{
+			return getListOfStringsMatchingLastWord(args, IIAmmoRegistry.getAllComponents().stream().map(AmmoComponent::getName).collect(Collectors.toList()));
 		}
 		else
 			return Collections.emptyList();

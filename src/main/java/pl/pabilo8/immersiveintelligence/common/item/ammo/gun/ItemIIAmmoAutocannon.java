@@ -6,8 +6,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumFuseTypes;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem.IIAmmoProjectile;
-import pl.pabilo8.immersiveintelligence.client.model.builtin.AmmoModel;
 import pl.pabilo8.immersiveintelligence.client.model.builtin.IAmmoModel;
+import pl.pabilo8.immersiveintelligence.client.model.builtin.ModelAmmoProjectile;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Ammunition;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoBase;
@@ -23,6 +23,7 @@ import java.util.function.Function;
  * @author Pabilo8
  * @since 30-08-2019
  */
+//TODO: 08.03.2024 update values from notes
 @IIAmmoProjectile
 @GeneratedItemModels(itemName = "bullet_autocannon_3bcal", type = ItemModelType.ITEM_SIMPLE_AUTOREPLACED, valueSet = AmmoParts.class)
 public class ItemIIAmmoAutocannon extends ItemIIAmmoBase<EntityAmmoProjectile>
@@ -78,7 +79,7 @@ public class ItemIIAmmoAutocannon extends ItemIIAmmoBase<EntityAmmoProjectile>
 	@SideOnly(Side.CLIENT)
 	public Function<ItemIIAmmoBase<EntityAmmoProjectile>, IAmmoModel<ItemIIAmmoBase<EntityAmmoProjectile>, EntityAmmoProjectile>> get3DModel()
 	{
-		return AmmoModel::createProjectileModel;
+		return ModelAmmoProjectile::createProjectileModel;
 	}
 
 	@Override

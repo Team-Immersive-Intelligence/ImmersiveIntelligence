@@ -3,8 +3,8 @@ package pl.pabilo8.immersiveintelligence.api.ammo;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoComponent;
-import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoCore;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoCore;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoType;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.client.model.builtin.IAmmoModel;
@@ -39,8 +39,8 @@ public class IIAmmoRegistry
 	/**
 	 * Ammo parts registry
 	 */
-	private static final LinkedHashMap<String, IAmmoComponent> REGISTERED_COMPONENTS = new LinkedHashMap<>();
-	private static final LinkedHashMap<String, IAmmoCore> REGISTERED_CORES = new LinkedHashMap<>();
+	private static final LinkedHashMap<String, AmmoComponent> REGISTERED_COMPONENTS = new LinkedHashMap<>();
+	private static final LinkedHashMap<String, AmmoCore> REGISTERED_CORES = new LinkedHashMap<>();
 	@SideOnly(Side.CLIENT)
 	private static final HashMap<IAmmoType<?, ?>, IAmmoModel<?, ?>> REGISTERED_MODELS = new HashMap<>();
 
@@ -52,7 +52,7 @@ public class IIAmmoRegistry
 	 * @param component The ammo component to register
 	 * @return true if the registration was successful
 	 */
-	public static boolean registerComponent(IAmmoComponent component)
+	public static boolean registerComponent(AmmoComponent component)
 	{
 		String name = component.getName();
 		if(!REGISTERED_COMPONENTS.containsKey(name))
@@ -79,7 +79,7 @@ public class IIAmmoRegistry
 	 * @param core The ammo core to register
 	 * @return true if the registration was successful
 	 */
-	public static boolean registerCore(IAmmoCore core)
+	public static boolean registerCore(AmmoCore core)
 	{
 		String name = core.getName();
 		if(!REGISTERED_CORES.containsKey(name))
@@ -149,7 +149,7 @@ public class IIAmmoRegistry
 	 * @return ammo component with the given name
 	 */
 	@Nullable
-	public static IAmmoComponent getComponent(String name)
+	public static AmmoComponent getComponent(String name)
 	{
 		return REGISTERED_COMPONENTS.get(name);
 	}
@@ -181,7 +181,7 @@ public class IIAmmoRegistry
 	 * @return ammo type with the given name or {@link #MISSING_CORE} if not found
 	 */
 	@Nonnull
-	public static IAmmoCore getCore(String name)
+	public static AmmoCore getCore(String name)
 	{
 		return REGISTERED_CORES.getOrDefault(name, MISSING_CORE);
 	}
@@ -218,7 +218,7 @@ public class IIAmmoRegistry
 	/**
 	 * @return all registered ammo cores
 	 */
-	public static Collection<IAmmoCore> getAllCores()
+	public static Collection<AmmoCore> getAllCores()
 	{
 		return REGISTERED_CORES.values();
 	}
@@ -226,7 +226,7 @@ public class IIAmmoRegistry
 	/**
 	 * @return all registered ammo components
 	 */
-	public static Collection<IAmmoComponent> getAllComponents()
+	public static Collection<AmmoComponent> getAllComponents()
 	{
 		return REGISTERED_COMPONENTS.values();
 	}

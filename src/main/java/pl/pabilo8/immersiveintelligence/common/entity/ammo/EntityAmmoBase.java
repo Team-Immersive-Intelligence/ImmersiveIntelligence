@@ -18,8 +18,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.ammo.IIAmmoRegistry;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumFuseTypes;
-import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoComponent;
-import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoCore;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoCore;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoType;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
@@ -48,7 +48,7 @@ public abstract class EntityAmmoBase<T extends EntityAmmoBase<? super T>> extend
 	/**
 	 * The ammo core
 	 */
-	protected IAmmoCore core;
+	protected AmmoCore core;
 	/**
 	 * The ammo core type
 	 */
@@ -69,7 +69,7 @@ public abstract class EntityAmmoBase<T extends EntityAmmoBase<? super T>> extend
 	/**
 	 * List of component tuples, containing the component and its NBT (can be empty but not null)
 	 */
-	protected List<Tuple<IAmmoComponent, NBTTagCompound>> components;
+	protected List<Tuple<AmmoComponent, NBTTagCompound>> components;
 	/**
 	 * The owner of this bullet, used for statistics
 	 */
@@ -98,11 +98,11 @@ public abstract class EntityAmmoBase<T extends EntityAmmoBase<? super T>> extend
 		IAmmoTypeItem<?, T> bullet = (IAmmoTypeItem<?, T>)stack.getItem();
 
 		//NBT can be null, but components can't
-		IAmmoComponent[] components = bullet.getComponents(stack);
+		AmmoComponent[] components = bullet.getComponents(stack);
 		NBTTagCompound[] componentsNBT = bullet.getComponentsNBT(stack);
 
 		//Create a list of tuples for the components
-		List<Tuple<IAmmoComponent, NBTTagCompound>> list = new ArrayList<>();
+		List<Tuple<AmmoComponent, NBTTagCompound>> list = new ArrayList<>();
 		for(int i = 0; i < components.length; i++)
 			//Add the component and its NBT or an empty NBT if it's null
 			list.add(new Tuple<>(components[i], componentsNBT[i]==null?new NBTTagCompound(): componentsNBT[i]));
@@ -118,8 +118,8 @@ public abstract class EntityAmmoBase<T extends EntityAmmoBase<? super T>> extend
 	}
 
 	@ParametersAreNonnullByDefault
-	public void setFromParameters(IAmmoType<?, T> ammoType, IAmmoCore core, EnumCoreTypes coreType, EnumFuseTypes fuseType, int fuseParameter,
-								  List<Tuple<IAmmoComponent, NBTTagCompound>> components)
+	public void setFromParameters(IAmmoType<?, T> ammoType, AmmoCore core, EnumCoreTypes coreType, EnumFuseTypes fuseType, int fuseParameter,
+								  List<Tuple<AmmoComponent, NBTTagCompound>> components)
 	{
 		this.ammoType = ammoType;
 		this.core = core;
@@ -127,7 +127,7 @@ public abstract class EntityAmmoBase<T extends EntityAmmoBase<? super T>> extend
 		this.fuseType = fuseType;
 		this.fuseParameter = fuseParameter;
 		this.components = components;
-		this.setSize(ammoType.getCaliber()/2f, ammoType.getCaliber()/2f);
+		this.setSize(ammoType.getCaliber()/16f, ammoType.getCaliber()/16f);
 	}
 
 	/**
@@ -169,7 +169,7 @@ public abstract class EntityAmmoBase<T extends EntityAmmoBase<? super T>> extend
 			writeEntityToNBT(tag);
 
 			//Call the effect method on all components
-			for(Tuple<IAmmoComponent, NBTTagCompound> component : components)
+			for(Tuple<AmmoComponent, NBTTagCompound> component : components)
 				component.getFirst().onEffect(world, pos, dir, multiplier, tag, coreType, owner);
 			setDead();
 		}
@@ -268,7 +268,7 @@ public abstract class EntityAmmoBase<T extends EntityAmmoBase<? super T>> extend
 		return ammoType;
 	}
 
-	public IAmmoCore getCore()
+	public AmmoCore getCore()
 	{
 		return core;
 	}
@@ -288,7 +288,7 @@ public abstract class EntityAmmoBase<T extends EntityAmmoBase<? super T>> extend
 		return fuseParameter;
 	}
 
-	public List<Tuple<IAmmoComponent, NBTTagCompound>> getComponents()
+	public List<Tuple<AmmoComponent, NBTTagCompound>> getComponents()
 	{
 		return components;
 	}
@@ -310,9 +310,9 @@ public abstract class EntityAmmoBase<T extends EntityAmmoBase<? super T>> extend
 	@Optional.Method(modid = "mirage")
 	public void gatherLights(GatherLightsEvent evt, Entity entity)
 	{
-		for(Tuple<IAmmoComponent, NBTTagCompound> component : components)
+		for(Tuple<AmmoComponent, NBTTagCompound> component : components)
 		{
-			int color = component.getFirst().getNBTColour(component.getSecond());
+			int color = component.getFirst().getColour(component.getSecond());
 
 			evt.add(Light.builder().pos(this)
 					.radius(ammoType.getComponentMultiplier()*16f)

@@ -42,6 +42,8 @@ public interface IAmmoTypeItem<T extends IAmmoType<T, E>, E extends EntityAmmoBa
 
 	//--- Materials and Crafting ---//
 
+	//TODO: 18.03.2024 replace with "propellant"
+
 	/**
 	 * @return Gunpowder needed to make a bullet in mB
 	 * @see pl.pabilo8.immersiveintelligence.api.crafting.DustStack
@@ -52,7 +54,7 @@ public interface IAmmoTypeItem<T extends IAmmoType<T, E>, E extends EntityAmmoBa
 	}
 
 	/**
-	 * @return How many metal nuggets does it cost to produce a single {@link IAmmoCore} of this ammo type
+	 * @return How many metal nuggets does it cost to produce a single {@link AmmoCore} of this ammo type
 	 */
 	int getCoreMaterialNeeded();
 
@@ -87,9 +89,9 @@ public interface IAmmoTypeItem<T extends IAmmoType<T, E>, E extends EntityAmmoBa
 	 * @return combined mass of core, components and initial casing mass
 	 */
 	@Override
-	default float getCoreMass(IAmmoCore core, IAmmoComponent[] components)
+	default float getCoreMass(AmmoCore core, AmmoComponent[] components)
 	{
-		return (float)(getInitialMass()*(1f+core.getDensity()+Arrays.stream(components).mapToDouble(IAmmoComponent::getDensity).sum()));
+		return (float)(getInitialMass()*(1f+core.getDensity()+Arrays.stream(components).mapToDouble(AmmoComponent::getDensity).sum()));
 	}
 
 	/**
@@ -109,17 +111,17 @@ public interface IAmmoTypeItem<T extends IAmmoType<T, E>, E extends EntityAmmoBa
 	}
 
 	@Override
-	default IAmmoComponent[] getComponents(ItemStack stack)
+	default AmmoComponent[] getComponents(ItemStack stack)
 	{
 		if(ItemNBTHelper.hasKey(stack, NBT_COMPONENTS))
 		{
-			ArrayList<IAmmoComponent> arrayList = new ArrayList<>();
+			ArrayList<AmmoComponent> arrayList = new ArrayList<>();
 			NBTTagList components = (NBTTagList)ItemNBTHelper.getTag(stack).getTag(NBT_COMPONENTS);
 			for(int i = 0; i < components.tagCount(); i++)
 				arrayList.add(IIAmmoRegistry.getComponent(components.getStringTagAt(i)));
-			return arrayList.toArray(new IAmmoComponent[0]);
+			return arrayList.toArray(new AmmoComponent[0]);
 		}
-		return new IAmmoComponent[0];
+		return new AmmoComponent[0];
 	}
 
 	@Override
@@ -148,7 +150,7 @@ public interface IAmmoTypeItem<T extends IAmmoType<T, E>, E extends EntityAmmoBa
 	}
 
 	@Override
-	default void addComponents(ItemStack stack, IAmmoComponent component, NBTTagCompound componentNBT)
+	default void addComponents(ItemStack stack, AmmoComponent component, NBTTagCompound componentNBT)
 	{
 		NBTTagList comps = ItemNBTHelper.getTag(stack).getTagList(NBT_COMPONENTS, 8);
 		NBTTagList nbts = ItemNBTHelper.getTag(stack).getTagList(NBT_COMPONENTS_NBT, 10);
@@ -190,7 +192,7 @@ public interface IAmmoTypeItem<T extends IAmmoType<T, E>, E extends EntityAmmoBa
 	}
 
 	@Override
-	default IAmmoCore getCore(ItemStack stack)
+	default AmmoCore getCore(ItemStack stack)
 	{
 		if(!ItemNBTHelper.hasKey(stack, NBT_CORE))
 			makeDefault(stack);
@@ -234,9 +236,9 @@ public interface IAmmoTypeItem<T extends IAmmoType<T, E>, E extends EntityAmmoBa
 	 *
 	 * @return a bullet ItemStack for given parameters
 	 */
-	default ItemStack getBulletWithParams(IAmmoCore core, EnumCoreTypes coreType, IAmmoComponent... components)
+	default ItemStack getBulletWithParams(AmmoCore core, EnumCoreTypes coreType, AmmoComponent... components)
 	{
-		String[] compNames = Arrays.stream(components).map(IAmmoComponent::getName).toArray(String[]::new);
+		String[] compNames = Arrays.stream(components).map(AmmoComponent::getName).toArray(String[]::new);
 		return getBulletWithParams(core.getName(), coreType.getName(), compNames);
 	}
 
@@ -245,19 +247,19 @@ public interface IAmmoTypeItem<T extends IAmmoType<T, E>, E extends EntityAmmoBa
 	 *
 	 * @return a bullet core ItemStack for given parameters
 	 */
-	default ItemStack getBulletCore(IAmmoCore core, EnumCoreTypes coreType)
+	default ItemStack getBulletCore(AmmoCore core, EnumCoreTypes coreType)
 	{
 		return getBulletCore(core.getName(), coreType.getName());
 	}
 
 	/**
-	 * Same as {@link #getBulletWithParams(IAmmoCore, EnumCoreTypes, IAmmoComponent...)}, but uses String names
+	 * Same as {@link #getBulletWithParams(AmmoCore, EnumCoreTypes, AmmoComponent...)}, but uses String names
 	 * Can be used instead of the above method, <u><b>but things may broke after bullet part names are changed</b></u>
 	 */
 	ItemStack getBulletWithParams(String core, String coreType, String... components);
 
 	/**
-	 * Same as {@link #getBulletWithParams(IAmmoCore, EnumCoreTypes, IAmmoComponent...)}, but uses String names
+	 * Same as {@link #getBulletWithParams(AmmoCore, EnumCoreTypes, AmmoComponent...)}, but uses String names
 	 * Can be used instead of the above method, <u><b>but things may broke after bullet part names are changed</b></u>
 	 */
 	ItemStack getBulletCore(String core, String coreType);
@@ -274,7 +276,7 @@ public interface IAmmoTypeItem<T extends IAmmoType<T, E>, E extends EntityAmmoBa
 	@Override
 	default void addAdvancedInformation(ItemStack stack, int offsetX, List<Integer> offsetsY)
 	{
-		IAmmoComponent[] components = getComponents(stack);
+		AmmoComponent[] components = getComponents(stack);
 		if(components.length > 0&&ItemTooltipHandler.canExpandTooltip(Keyboard.KEY_LSHIFT))
 			ItemTooltipHandler.drawItemList(offsetX, offsetsY.get(0),
 					Arrays.stream(components)

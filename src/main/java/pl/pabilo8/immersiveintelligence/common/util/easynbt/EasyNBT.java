@@ -775,6 +775,8 @@ public class EasyNBT extends Constants.NBT
 
 		for(Object element : elements)
 		{
+			if(element==null)
+				continue;
 			if(element instanceof NBTBase)
 				list.appendTag(((NBTBase)element));
 

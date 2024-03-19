@@ -61,6 +61,12 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 	 * The slowmo multiplier for projectile motion
 	 */
 	public static float SLOWMO = 1;
+	/**
+	 * The threshold for minimal hardness difference proportion that makes a projectile ricochet.
+	 *
+	 * @implNote For example a projectile with hardness 3 and threshold 1.66 will need to hit a surface having hardness of at least 5 to ricochet
+	 */
+	private static final float RICOCHET_THRESHOLD = 1.66f;
 
 	/**
 	 * Modifier for enemy armor effectiveness, used for calculating damage
@@ -89,6 +95,7 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 	 * The mass of the bullet, used for calculating the motion vector
 	 */
 	protected float mass;
+
 	//--- Penetration System Properties ---//
 	/**
 	 * The penetration ability of the projectile, in blocks<br>
@@ -144,9 +151,7 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 		super.onUpdate();
 
 		//Yep, that's it, that's the entire motion code
-		velocity -= DRAG*velocity;
-		gravityMotionY -= GRAVITY*this.mass*SLOWMO;//*DEV_SLOMO;
-		gravityMotionY *= 1d-DRAG;
+		updatePhysics();
 		setMotion();
 
 		//handle timed fuse
@@ -159,6 +164,7 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 		if(world.isRemote)
 			aabb.offset(this.getPositionVector().scale(-1));
 
+		//TODO: 18.03.2024 make a new raytracer that parses entities dynamically at can be stopped at a point
 		//Volumetric raytrace through the projectile's flight path
 		MultipleRayTracer tracer = MultipleTracerBuilder.setPos(world,
 						this.getPositionVector(), this.getNextPositionVector())
@@ -206,7 +212,6 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 		posX += motionX;
 		posY += motionY;
 		posZ += motionZ;
-//		setPosition(posX, posY, posZ);
 
 		//set rotations based on motion
 		Vec3d normalized = new Vec3d(motionX, motionY, motionZ).normalize();
@@ -220,6 +225,16 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 		//detonate if marked
 		if(markedForDetonation)
 			finallyDetonate();
+	}
+
+	/**
+	 * Updates the velocity and gravity motion of the projectile
+	 */
+	protected void updatePhysics()
+	{
+		velocity -= DRAG*velocity;
+		gravityMotionY -= GRAVITY*this.mass*SLOWMO;
+		gravityMotionY *= 1d-DRAG;
 	}
 
 	@Override
@@ -284,7 +299,7 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 		float blockHardness = state.getBlockHardness(world, pos);
 
 		//ricochet if the block is unbreakable or the projectile can't penetrate it
-		if(blockHardness==-1||blockHardness > ammoHardness)
+		if(blockHardness==-1||blockHardness > ammoHardness*RICOCHET_THRESHOLD)
 		{
 			onHitRicochet(hit, penHandler);
 			return true;
@@ -495,8 +510,10 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 		super.writeEntityToNBT(compound);
 		EasyNBT nbt = EasyNBT.wrapNBT(compound);
 		nbt.withVec3d("base_motion", baseMotion);
-		nbt.withList("ignored_entities", e -> new NBTTagInt(e.getEntityId()), ignoredEntities);
-		nbt.withList("ignored_pos", e -> new NBTTagIntArray(new int[]{e.getX(), e.getY(), e.getZ()}), ignoredPositions);
+		if(ignoredEntities!=null)
+			nbt.withList("ignored_entities", e -> new NBTTagInt(e.getEntityId()), ignoredEntities);
+		if(ignoredPositions!=null)
+			nbt.withList("ignored_pos", e -> new NBTTagIntArray(new int[]{e.getX(), e.getY(), e.getZ()}), ignoredPositions);
 
 	}
 

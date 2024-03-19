@@ -7,34 +7,29 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import pl.pabilo8.immersiveintelligence.api.ammo.utils.IIAmmoUtils;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumComponentRole;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumCoreTypes;
-import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoComponent;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
+import pl.pabilo8.immersiveintelligence.api.ammo.utils.IIAmmoUtils;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 
 /**
  * @author Pabilo8
+ * @updated 06.03.2024
+ * @ii-approved 0.3.1
  * @since 10.07.2021
  */
-public class AmmoComponentPropaganda implements IAmmoComponent
+public class AmmoComponentPropaganda extends AmmoComponent
 {
-	@Override
-	public String getName()
+	public AmmoComponentPropaganda()
 	{
-		return "propaganda";
+		super("propaganda", 0.65f, EnumComponentRole.SPECIAL, 0xbaafa4);
 	}
 
 	@Override
 	public IngredientStack getMaterial()
 	{
 		return new IngredientStack(new ItemStack(IIContent.itemPrintedPage, 1, 1));
-	}
-
-	@Override
-	public float getDensity()
-	{
-		return 0.65f;
 	}
 
 	@Override
@@ -53,19 +48,5 @@ public class AmmoComponentPropaganda implements IAmmoComponent
 			world.spawnEntity(ei);
 		}
 		IIAmmoUtils.suppress(world, pos.x, pos.y, pos.z, 4f*multiplier, (int)(4*multiplier));
-
-		// TODO: 11.07.2021 add the advancement
-	}
-
-	@Override
-	public EnumComponentRole getRole()
-	{
-		return EnumComponentRole.SPECIAL;
-	}
-
-	@Override
-	public int getColour()
-	{
-		return 0xbaafa4;
 	}
 }

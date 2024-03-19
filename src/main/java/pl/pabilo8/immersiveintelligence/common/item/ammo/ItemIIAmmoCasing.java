@@ -55,6 +55,15 @@ public class ItemIIAmmoCasing extends ItemIISubItemsBase<Casings>
 		RADIO_EXPLOSIVES,
 
 		@IIItemProperties(stackSize = 1)
-		MEDIUM_ARTILLERY_6BCAL
+		MEDIUM_ARTILLERY_6BCAL,
+		@IIItemProperties(stackSize = 1)
+		LIGHT_GUN_4BCAL,
+
+		@IIItemProperties(stackSize = 1)
+		ROCKET_6BCAL,
+		@IIItemProperties(stackSize = 1)
+		HEAVY_ROCKET_10BCAL,
+		@IIItemProperties(stackSize = 1)
+		GUIDED_MISSILE_6BCAL
 	}
 }

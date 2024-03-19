@@ -4,8 +4,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.client.model.builtin.AmmoModel;
 import pl.pabilo8.immersiveintelligence.client.model.builtin.IAmmoModel;
+import pl.pabilo8.immersiveintelligence.client.model.builtin.ModelAmmo;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.mines.tileentity.TileEntityTellermine;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoMine;
@@ -72,7 +72,7 @@ public class BlockIITellermine extends BlockIIMine
 		@SideOnly(Side.CLIENT)
 		public Function<ItemBlockMineBase, IAmmoModel<ItemBlockMineBase, EntityAmmoMine>> get3DModel()
 		{
-			return AmmoModel::createExplosivesModel;
+			return ModelAmmo::createExplosivesModel;
 		}
 
 		@Override

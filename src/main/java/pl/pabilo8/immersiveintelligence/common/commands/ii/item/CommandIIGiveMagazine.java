@@ -12,8 +12,8 @@ import net.minecraft.util.text.TextComponentString;
 import org.apache.commons.lang3.ArrayUtils;
 import pl.pabilo8.immersiveintelligence.api.ammo.IIAmmoRegistry;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumCoreTypes;
-import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoComponent;
-import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoCore;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoCore;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine.Magazines;
@@ -102,7 +102,7 @@ public class CommandIIGiveMagazine extends CommandBase
 		}
 		else if(args.length==3)
 		{
-			return getListOfStringsMatchingLastWord(args, IIAmmoRegistry.getAllCores().stream().map(IAmmoCore::getName).collect(Collectors.toList()));
+			return getListOfStringsMatchingLastWord(args, IIAmmoRegistry.getAllCores().stream().map(AmmoCore::getName).collect(Collectors.toList()));
 		}
 		else if(args.length==4)
 		{
@@ -117,7 +117,7 @@ public class CommandIIGiveMagazine extends CommandBase
 		}
 		else if(args.length > 4)
 		{
-			return getListOfStringsMatchingLastWord(args, IIAmmoRegistry.getAllComponents().stream().map(IAmmoComponent::getName).collect(Collectors.toList()));
+			return getListOfStringsMatchingLastWord(args, IIAmmoRegistry.getAllComponents().stream().map(AmmoComponent::getName).collect(Collectors.toList()));
 		}
 		else
 			return Collections.emptyList();

@@ -13,7 +13,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumComponentRole;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumCoreTypes;
-import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoComponent;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
 import pl.pabilo8.immersiveintelligence.common.IIPotions;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.component.EntityWhitePhosphorus;
@@ -22,26 +22,21 @@ import pl.pabilo8.immersiveintelligence.common.network.messages.MessageParticleE
 
 /**
  * @author Pabilo8
- * @since 30-08-2019
+ * @updated 06.03.2024
+ * @ii-approved 0.3.1
+ * @since 10.07.2021
  */
-public class AmmoComponentWhitePhosphorus implements IAmmoComponent
+public class AmmoComponentWhitePhosphorus extends AmmoComponent
 {
-	@Override
-	public String getName()
+	public AmmoComponentWhitePhosphorus()
 	{
-		return "white_phosphorus";
+		super("white_phosphorus", 1f, EnumComponentRole.SPECIAL, 0x6b778a);
 	}
 
 	@Override
 	public IngredientStack getMaterial()
 	{
 		return new IngredientStack("dustWhitePhosphorus");
-	}
-
-	@Override
-	public float getDensity()
-	{
-		return 1f;
 	}
 
 	@Override
@@ -83,17 +78,5 @@ public class AmmoComponentWhitePhosphorus implements IAmmoComponent
 		cloud.setParticle(EnumParticleTypes.CLOUD);
 		world.spawnEntity(cloud);
 
-	}
-
-	@Override
-	public EnumComponentRole getRole()
-	{
-		return EnumComponentRole.INCENDIARY;
-	}
-
-	@Override
-	public int getColour()
-	{
-		return 0xd3dbac;
 	}
 }

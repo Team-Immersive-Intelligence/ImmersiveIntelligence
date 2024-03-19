@@ -407,7 +407,7 @@ public class IIAnimationUtils
 	{
 		return Arrays.stream(getChildrenRecursive(array))
 				.filter(amt -> amt.name.equals(name))
-				.findFirst().orElse(array.length > 0?array[0]: null);
+				.findFirst().orElse(null);
 	}
 
 	/**

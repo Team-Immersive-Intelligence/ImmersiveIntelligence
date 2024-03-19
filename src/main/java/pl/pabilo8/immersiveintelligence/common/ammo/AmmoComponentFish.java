@@ -13,32 +13,26 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumComponentRole;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumCoreTypes;
-import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoComponent;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.component.EntityIIChemthrowerShot;
 
 /**
  * @author Pabilo8
- * @since 19.03.2021
+ * @updated 06.03.2024
+ * @ii-approved 0.3.1
+ * @since 10.07.2021
  */
-public class AmmoComponentFish implements IAmmoComponent
+public class AmmoComponentFish extends AmmoComponent
 {
-	//cheers, Sheperd
-	@Override
-	public String getName()
+	public AmmoComponentFish()
 	{
-		return "fish";
+		super("fish", 0.125f, EnumComponentRole.SPECIAL, 0x6b778a);
 	}
 
 	@Override
 	public IngredientStack getMaterial()
 	{
 		return new IngredientStack(new ItemStack(Items.FISH, 1, 0));
-	}
-
-	@Override
-	public float getDensity()
-	{
-		return 0.125f;
 	}
 
 	@Override
@@ -58,23 +52,4 @@ public class AmmoComponentFish implements IAmmoComponent
 		}
 		Utils.dropStackAtPos(world, new BlockPos(pos).up(), new ItemStack(Items.FISH));
 	}
-
-	@Override
-	public EnumComponentRole getRole()
-	{
-		return EnumComponentRole.SPECIAL;
-	}
-
-	@Override
-	public int getColour()
-	{
-		return 0x6b778a;
-	}
-
-	@Override
-	public boolean showInManual()
-	{
-		return false;
-	}
-
 }

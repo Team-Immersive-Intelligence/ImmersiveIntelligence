@@ -40,8 +40,8 @@ import pl.pabilo8.immersiveintelligence.api.ammo.IIPenetrationRegistry.IPenetrat
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumComponentRole;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumFuseTypes;
-import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoComponent;
-import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoCore;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoCore;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem.IIAmmoProjectile;
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.DamageBlockPos;
@@ -310,9 +310,9 @@ public class IIClientUtils
 		{
 			//get parameters
 			EnumFuseTypes fuse = ammo.getFuseType(stack);
-			IAmmoCore core = ammo.getCore(stack);
+			AmmoCore core = ammo.getCore(stack);
 			EnumCoreTypes coreType = ammo.getCoreType(stack);
-			IAmmoComponent[] components = ammo.getComponents(stack);
+			AmmoComponent[] components = ammo.getComponents(stack);
 
 			//list general information
 			tooltip.add(IIUtils.getHexCol(IIReference.COLORS_HIGHLIGHT_S[1], "Details:"));
@@ -344,7 +344,7 @@ public class IIClientUtils
 			if(components.length > 0)
 			{
 				tooltip.add(IIUtils.getHexCol(IIReference.COLORS_HIGHLIGHT_S[1], "Components:"));
-				for(IAmmoComponent comp : components)
+				for(AmmoComponent comp : components)
 					tooltip.add("   "+comp.getTranslatedName());
 			}
 		}
@@ -418,7 +418,7 @@ public class IIClientUtils
 		Set<EnumComponentRole> collect = new HashSet<>();
 		if(ammo.getCoreType(stack).getRole()!=null)
 			collect.add(ammo.getCoreType(stack).getRole());
-		collect.addAll(Arrays.stream(ammo.getComponents(stack)).map(IAmmoComponent::getRole).collect(Collectors.toSet()));
+		collect.addAll(Arrays.stream(ammo.getComponents(stack)).map(AmmoComponent::getRole).collect(Collectors.toSet()));
 		StringBuilder builder = new StringBuilder();
 		for(EnumComponentRole enumComponentRole : collect)
 		{

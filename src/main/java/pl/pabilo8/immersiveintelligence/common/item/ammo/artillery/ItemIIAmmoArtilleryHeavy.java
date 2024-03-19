@@ -6,8 +6,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumFuseTypes;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem.IIAmmoProjectile;
-import pl.pabilo8.immersiveintelligence.client.model.builtin.AmmoModel;
 import pl.pabilo8.immersiveintelligence.client.model.builtin.IAmmoModel;
+import pl.pabilo8.immersiveintelligence.client.model.builtin.ModelAmmoProjectile;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Ammunition;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoArtilleryProjectile;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoBase;
@@ -23,6 +23,7 @@ import java.util.function.Function;
  * @author Pabilo8
  * @since 30-08-2019
  */
+//TODO: 08.03.2024 update values from notes
 @IIAmmoProjectile
 @GeneratedItemModels(itemName = "bullet_artillery_8bcal", type = ItemModelType.ITEM_SIMPLE_AUTOREPLACED, valueSet = AmmoParts.class)
 public class ItemIIAmmoArtilleryHeavy extends ItemIIAmmoBase<EntityAmmoArtilleryProjectile>
@@ -47,7 +48,7 @@ public class ItemIIAmmoArtilleryHeavy extends ItemIIAmmoBase<EntityAmmoArtillery
 	@Override
 	public int getGunpowderNeeded()
 	{
-		return 600;
+		return 800;
 	}
 
 	@Override
@@ -79,7 +80,7 @@ public class ItemIIAmmoArtilleryHeavy extends ItemIIAmmoBase<EntityAmmoArtillery
 	public Function<ItemIIAmmoBase<EntityAmmoArtilleryProjectile>,
 			IAmmoModel<ItemIIAmmoBase<EntityAmmoArtilleryProjectile>, EntityAmmoArtilleryProjectile>> get3DModel()
 	{
-		return AmmoModel::createProjectileModel;
+		return ModelAmmoProjectile::createProjectileModel;
 	}
 
 	@Override
@@ -91,7 +92,7 @@ public class ItemIIAmmoArtilleryHeavy extends ItemIIAmmoBase<EntityAmmoArtillery
 	@Override
 	public EnumCoreTypes[] getAllowedCoreTypes()
 	{
-		return new EnumCoreTypes[]{EnumCoreTypes.PIERCING, EnumCoreTypes.SHAPED, EnumCoreTypes.CANISTER};
+		return new EnumCoreTypes[]{EnumCoreTypes.PIERCING, EnumCoreTypes.PIERCING_SABOT, EnumCoreTypes.SHAPED, EnumCoreTypes.SHAPED_SABOT, EnumCoreTypes.CANISTER, EnumCoreTypes.CLUSTER};
 	}
 
 	@Override

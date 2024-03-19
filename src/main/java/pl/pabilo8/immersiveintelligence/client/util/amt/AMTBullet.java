@@ -1,13 +1,12 @@
 package pl.pabilo8.immersiveintelligence.client.util.amt;
 
-import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.Vec3d;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumCoreTypes;
-import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoCore;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoCore;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.client.model.builtin.IAmmoModel;
 
@@ -25,7 +24,7 @@ public class AMTBullet extends AMT
 	private IAmmoModel model;
 	private BulletState state = BulletState.BULLET_UNUSED;
 
-	IAmmoCore core = null;
+	AmmoCore core = null;
 	EnumCoreTypes coreType = null;
 	float gunpowderPercentage = 0;
 	int paintColour = -1;
@@ -78,10 +77,6 @@ public class AMTBullet extends AMT
 						model.renderAmmoComplete(state==BulletState.BULLET_USED, paintColour, core, coreType);
 					break;
 			}
-			GlStateManager.color(1f, 1f, 1f, 1f);
-			//TODO: 21.02.2024 remove, because AMT uses the main atlas
-			//TMT uses texture directly, not from main atlas
-			ClientUtils.bindAtlas();
 		}
 	}
 
@@ -111,7 +106,7 @@ public class AMTBullet extends AMT
 		return this;
 	}
 
-	public AMTBullet withProperties(IAmmoCore core, EnumCoreTypes coreType, int paintColour)
+	public AMTBullet withProperties(AmmoCore core, EnumCoreTypes coreType, int paintColour)
 	{
 		this.core = core;
 		this.coreType = coreType;

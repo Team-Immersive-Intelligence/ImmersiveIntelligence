@@ -1,5 +1,6 @@
 package pl.pabilo8.immersiveintelligence.client.util;
 
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.util.ResourceLocation;
 
 /**
@@ -103,5 +104,10 @@ public class ResLoc extends ResourceLocation
 	public ResLoc replace(String replace, String with)
 	{
 		return new ResLoc(resourceDomain, resourcePath.replace(replace, with));
+	}
+
+	public ModelResourceLocation getModelResLoc()
+	{
+		return new ModelResourceLocation(this.resourceDomain+":"+this.resourcePath);
 	}
 }

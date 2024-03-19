@@ -72,27 +72,38 @@ public class EventHandler
 			rules.addGameRule(IIReference.GAMERULE_AMMO_BREAKS_BLOCKS,
 					Boolean.toString(IIAmmoUtils.ammoBreaksBlocks = Weapons.blockDamage),
 					ValueType.BOOLEAN_VALUE);
+		else
+			IIAmmoUtils.ammoBreaksBlocks = rules.getBoolean(IIReference.GAMERULE_AMMO_BREAKS_BLOCKS);
 		//Whether ammo components can explode blocks
 		if(!rules.hasRule(IIReference.GAMERULE_AMMO_EXPLODES_BLOCKS))
 			rules.addGameRule(IIReference.GAMERULE_AMMO_EXPLODES_BLOCKS,
 					Boolean.toString(IIAmmoUtils.ammoBreaksBlocks = Ammunition.blockDamage),
 					ValueType.BOOLEAN_VALUE);
+		else
+			IIAmmoUtils.ammoExplodesBlocks = rules.getBoolean(IIReference.GAMERULE_AMMO_EXPLODES_BLOCKS);
 		//Whether ammo can ricochet
 		if(!rules.hasRule(IIReference.GAMERULE_AMMO_RICOCHETS))
 			rules.addGameRule(IIReference.GAMERULE_AMMO_RICOCHETS,
 					Boolean.toString(IIAmmoUtils.ammoRicochets = true),
 					ValueType.BOOLEAN_VALUE);
+		else
+			IIAmmoUtils.ammoRicochets = rules.getBoolean(IIReference.GAMERULE_AMMO_RICOCHETS);
 		//Ticks until ammo decay
 		if(!rules.hasRule(IIReference.GAMERULE_AMMO_DECAY))
 			rules.addGameRule(IIReference.GAMERULE_AMMO_DECAY, Integer.toString(EntityAmmoProjectile.MAX_TICKS), ValueType.NUMERICAL_VALUE);
+		else
+			EntityAmmoProjectile.MAX_TICKS = rules.getInt(IIReference.GAMERULE_AMMO_DECAY);
 		//Slowmo multiplier for projectile motion
 		if(!rules.hasRule(IIReference.GAMERULE_AMMO_SLOWMO))
 			rules.addGameRule(IIReference.GAMERULE_AMMO_SLOWMO, Float.toString(EntityAmmoProjectile.SLOWMO), ValueType.NUMERICAL_VALUE);
+		else
+			EntityAmmoProjectile.setSlowmo(rules.getInt(IIReference.GAMERULE_AMMO_SLOWMO)/100f);
 
-		//TODO: 11.03.2024 implement
 		//Hans infinite ammo
 		if(!rules.hasRule(IIReference.GAMERULE_HANS_INFINITE_AMMO))
 			rules.addGameRule(IIReference.GAMERULE_HANS_INFINITE_AMMO, Boolean.toString(EntityHans.INFINITE_AMMO = false), ValueType.BOOLEAN_VALUE);
+		else
+			EntityHans.INFINITE_AMMO = rules.getBoolean(IIReference.GAMERULE_HANS_INFINITE_AMMO);
 	}
 
 	@SubscribeEvent

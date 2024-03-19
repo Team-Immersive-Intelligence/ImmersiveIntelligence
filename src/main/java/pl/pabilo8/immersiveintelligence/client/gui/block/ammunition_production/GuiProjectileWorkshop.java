@@ -12,7 +12,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
 import pl.pabilo8.immersiveintelligence.api.ammo.IIAmmoRegistry;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumCoreTypes;
-import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoComponent;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonDropdownList;
@@ -168,7 +168,7 @@ public class GuiProjectileWorkshop extends GuiAmmunitionBase<TileEntityProjectil
 			ClientUtils.handleGuiTank(tile.tanksFiller[0], guiLeft+6+44+22-4, guiTop+15+3, 49, 20, 62, 210, 49, 20, mx, my, TEXTURE.toString(), null);
 			GlStateManager.disableBlend();
 
-			IAmmoComponent component = tile.componentInside.getComponent();
+			AmmoComponent component = tile.componentInside.getComponent();
 			if(component!=null)
 			{
 				int cc = 0xff000000+tile.componentInside.getColour();

@@ -1,53 +1,24 @@
 package pl.pabilo8.immersiveintelligence.common.ammo.cores;
 
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
-import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoCore;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoCore;
 
 /**
  * @author Pabilo8
+ * @updated 06.03.2024
+ * @ii-approved 0.3.1
  * @since 30-08-2019
  */
-public class AmmoCoreLead implements IAmmoCore
+public class AmmoCoreLead extends AmmoCore
 {
-	@Override
-	public String getName()
+	public AmmoCoreLead()
 	{
-		return "core_lead";
+		super("core_lead", 1.5f, 8, 1f, 1.1f, 0x3a3e44);
 	}
 
 	@Override
 	public IngredientStack getMaterial()
 	{
 		return new IngredientStack("nuggetLead");
-	}
-
-	@Override
-	public float getDensity()
-	{
-		return 1.5f;
-	}
-
-	@Override
-	public float getDamageModifier()
-	{
-		return 1.1f;
-	}
-
-	@Override
-	public float getExplosionModifier()
-	{
-		return 1f;
-	}
-
-	@Override
-	public float getPenetrationHardness()
-	{
-		return 8;
-	}
-
-	@Override
-	public int getColour()
-	{
-		return 0x3a3e44;
 	}
 }

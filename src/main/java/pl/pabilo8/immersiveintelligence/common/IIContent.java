@@ -13,9 +13,15 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fluids.Fluid;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoCore;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoCore;
 import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
+import pl.pabilo8.immersiveintelligence.common.ammo.*;
 import pl.pabilo8.immersiveintelligence.common.ammo.cores.*;
+import pl.pabilo8.immersiveintelligence.common.ammo.explosives.AmmoComponentHMX;
+import pl.pabilo8.immersiveintelligence.common.ammo.explosives.AmmoComponentNuke;
+import pl.pabilo8.immersiveintelligence.common.ammo.explosives.AmmoComponentRDX;
+import pl.pabilo8.immersiveintelligence.common.ammo.explosives.AmmoComponentTNT;
 import pl.pabilo8.immersiveintelligence.common.block.data_device.BlockIIDataDevice;
 import pl.pabilo8.immersiveintelligence.common.block.fortification.*;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.BlockIIMetalDecoration;
@@ -44,9 +50,13 @@ import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIINavalMine;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.artillery.ItemIIAmmoArtilleryHeavy;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.artillery.ItemIIAmmoArtilleryLight;
+import pl.pabilo8.immersiveintelligence.common.item.ammo.artillery.ItemIIAmmoArtilleryMedium;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.artillery.ItemIIAmmoMortar;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.grenade.ItemIIAmmoGrenade;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.gun.*;
+import pl.pabilo8.immersiveintelligence.common.item.ammo.missile.ItemIIAmmoGuidedMissile;
+import pl.pabilo8.immersiveintelligence.common.item.ammo.missile.ItemIIAmmoRocketHeavy;
+import pl.pabilo8.immersiveintelligence.common.item.ammo.missile.ItemIIAmmoRocketLight;
 import pl.pabilo8.immersiveintelligence.common.item.armor.*;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.*;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.material.*;
@@ -155,14 +165,23 @@ public class IIContent
 	public static final ItemIIMotorGear itemMotorGear = new ItemIIMotorGear();
 
 	//ammo
-	//TODO: 16.02.2024 new ammo types
 	public static final ItemIIAmmoCasing itemAmmoCasing = new ItemIIAmmoCasing();
+
 	public static final ItemIIAmmoArtilleryHeavy itemAmmoHeavyArtillery = new ItemIIAmmoArtilleryHeavy();
+	public static final ItemIIAmmoArtilleryMedium itemAmmoMediumArtillery = new ItemIIAmmoArtilleryMedium();
 	public static final ItemIIAmmoArtilleryLight itemAmmoLightArtillery = new ItemIIAmmoArtilleryLight();
 	public static final ItemIIAmmoMortar itemAmmoMortar = new ItemIIAmmoMortar();
+
+	public static final ItemIIAmmoGuidedMissile itemAmmoGuidedMissile = new ItemIIAmmoGuidedMissile();
+	public static final ItemIIAmmoRocketHeavy itemAmmoRocketHeavy = new ItemIIAmmoRocketHeavy();
+	public static final ItemIIAmmoRocketLight itemAmmoRocketLight = new ItemIIAmmoRocketLight();
+
+	public static final ItemIIAmmoLightGun itemAmmoLightGun = new ItemIIAmmoLightGun();
 	public static final ItemIIAmmoAutocannon itemAmmoAutocannon = new ItemIIAmmoAutocannon();
-	public static final ItemIIAmmoGrenade itemGrenade = new ItemIIAmmoGrenade();
 	public static final ItemIIAmmoRailgunGrenade itemRailgunGrenade = new ItemIIAmmoRailgunGrenade();
+
+	public static final ItemIIAmmoGrenade itemGrenade = new ItemIIAmmoGrenade();
+
 	public static final ItemIIAmmoMachinegun itemAmmoMachinegun = new ItemIIAmmoMachinegun();
 	public static final ItemIIAmmoAssaultRifle itemAmmoAssaultRifle = new ItemIIAmmoAssaultRifle();
 	public static final ItemIIAmmoSubmachinegun itemAmmoSubmachinegun = new ItemIIAmmoSubmachinegun();
@@ -306,12 +325,25 @@ public class IIContent
 
 	//--- Ammunition System ---//
 	//ammo cores
-	public static final IAmmoCore ammoCoreSteel = new AmmoCoreSteel();
-	public static final IAmmoCore ammoCoreTungsten = new AmmoCoreTungsten();
-	public static final IAmmoCore ammoCoreBrass = new AmmoCoreBrass();
-	public static final IAmmoCore ammoCoreLead = new AmmoCoreLead();
-	public static final IAmmoCore ammoCoreUranium = new AmmoCoreUranium();
-	public static final IAmmoCore ammoCorePabilium = new AmmoCorePabilium();
+	public static final AmmoCore ammoCoreSteel = new AmmoCoreSteel();
+	public static final AmmoCore ammoCoreTungsten = new AmmoCoreTungsten();
+	public static final AmmoCore ammoCoreBrass = new AmmoCoreBrass();
+	public static final AmmoCore ammoCoreLead = new AmmoCoreLead();
+	public static final AmmoCore ammoCoreUranium = new AmmoCoreUranium();
+	public static final AmmoCore ammoCorePabilium = new AmmoCorePabilium();
+
+	//ammo components
+	public static final AmmoComponent ammoComponentTNT = new AmmoComponentTNT();
+	public static final AmmoComponent ammoComponentRDX = new AmmoComponentRDX();
+	public static final AmmoComponent ammoComponentHMX = new AmmoComponentHMX();
+	public static final AmmoComponent ammoComponentNuke = new AmmoComponentNuke();
+	public static final AmmoComponent ammoComponentWhitePhosphorus = new AmmoComponentWhitePhosphorus();
+	public static final AmmoComponent ammoComponentFirework = new AmmoComponentFirework();
+	public static final AmmoComponent ammoComponentTracerPowder = new AmmoComponentTracerPowder();
+	public static final AmmoComponent ammoComponentFlarePowder = new AmmoComponentFlarePowder();
+	public static final AmmoComponent ammoComponentPropaganda = new AmmoComponentPropaganda();
+	public static final AmmoComponent ammoComponentTesla = new AmmoComponentTesla();
+	public static final AmmoComponent ammoComponentFish = new AmmoComponentFish();
 
 	//biomes
 	public static BiomeWasteland biomeWasteland = new BiomeWasteland();

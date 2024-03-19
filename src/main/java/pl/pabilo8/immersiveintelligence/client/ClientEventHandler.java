@@ -165,7 +165,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 	public void onResourceManagerReload(@Nonnull IResourceManager resourceManager, Predicate<IResourceType> resourcePredicate)
 	{
 		if(resourcePredicate.test(VanillaResourceType.MODELS))
-			IIModelRegistry.instance.reloadRegisteredModels();
+			IIModelRegistry.INSTANCE.reloadRegisteredModels();
 	}
 
 	@SubscribeEvent(priority = EventPriority.HIGH)

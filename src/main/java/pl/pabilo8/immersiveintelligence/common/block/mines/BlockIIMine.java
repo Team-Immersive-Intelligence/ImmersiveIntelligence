@@ -19,8 +19,8 @@ import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.api.ammo.IIAmmoRegistry;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumFuseTypes;
-import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoComponent;
-import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoCore;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoCore;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.mines.BlockIIMine.IIBlockTypes_Mine;
@@ -155,7 +155,7 @@ public abstract class BlockIIMine extends BlockIITileProvider<IIBlockTypes_Mine>
 		}
 
 		@Override
-		public IAmmoCore getCore(ItemStack stack)
+		public AmmoCore getCore(ItemStack stack)
 		{
 			if(!ItemNBTHelper.hasKey(stack, "core"))
 				makeDefault(stack);
@@ -237,17 +237,17 @@ public abstract class BlockIIMine extends BlockIITileProvider<IIBlockTypes_Mine>
 
 
 		@Override
-		public IAmmoComponent[] getComponents(ItemStack stack)
+		public AmmoComponent[] getComponents(ItemStack stack)
 		{
 			if(ItemNBTHelper.hasKey(stack, "components"))
 			{
-				ArrayList<IAmmoComponent> arrayList = new ArrayList<>();
+				ArrayList<AmmoComponent> arrayList = new ArrayList<>();
 				NBTTagList components = (NBTTagList)ItemNBTHelper.getTag(stack).getTag("components");
 				for(int i = 0; i < components.tagCount(); i++)
 					arrayList.add(IIAmmoRegistry.getComponent(components.getStringTagAt(i)));
-				return arrayList.toArray(new IAmmoComponent[0]);
+				return arrayList.toArray(new AmmoComponent[0]);
 			}
-			return new IAmmoComponent[0];
+			return new AmmoComponent[0];
 		}
 
 		@Override
@@ -265,7 +265,7 @@ public abstract class BlockIIMine extends BlockIITileProvider<IIBlockTypes_Mine>
 		}
 
 		@Override
-		public void addComponents(ItemStack stack, IAmmoComponent component, NBTTagCompound componentNBT)
+		public void addComponents(ItemStack stack, AmmoComponent component, NBTTagCompound componentNBT)
 		{
 			NBTTagList comps = ItemNBTHelper.getTag(stack).getTagList("components", 8);
 			NBTTagList nbts = ItemNBTHelper.getTag(stack).getTagList("component_nbt", 10);

@@ -10,7 +10,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumComponentRole;
-import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoComponent;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
@@ -31,7 +31,7 @@ public class IIManualPageBulletComponent extends IIManualPages
 	EnumComponentRole type;
 	float density;
 
-	public IIManualPageBulletComponent(ManualInstance manual, IAmmoComponent component)
+	public IIManualPageBulletComponent(ManualInstance manual, AmmoComponent component)
 	{
 		this(manual, component.getName(), component.getMaterial().getExampleStack(), component.getRole(), component.getDensity());
 	}

@@ -27,6 +27,7 @@ public interface IReloadableModelContainer<T>
 
 	/**
 	 * Adds the model container to the II Model Registry
+	 *
 	 * @param name name of the model in II namespace
 	 * @return this
 	 */
@@ -37,12 +38,13 @@ public interface IReloadableModelContainer<T>
 
 	/**
 	 * Adds the model container to the II Model Registry
+	 *
 	 * @param modelName full name of this model
 	 * @return this
 	 */
 	default T subscribeToList(ResourceLocation modelName)
 	{
-		IIModelRegistry.instance.addReloadableModel(this, modelName);
+		IIModelRegistry.INSTANCE.addReloadableModel(this, modelName);
 		return (T)this;
 	}
 
@@ -52,6 +54,6 @@ public interface IReloadableModelContainer<T>
 	 */
 	default void unsubscribeToList()
 	{
-		IIModelRegistry.instance.removeReloadableModel(this);
+		IIModelRegistry.INSTANCE.removeReloadableModel(this);
 	}
 }

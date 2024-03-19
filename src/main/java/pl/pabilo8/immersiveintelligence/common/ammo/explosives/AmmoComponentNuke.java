@@ -3,7 +3,6 @@ package pl.pabilo8.immersiveintelligence.common.ammo.explosives;
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import blusunrize.immersiveengineering.common.util.IEPotions;
 import blusunrize.immersiveengineering.common.util.Utils;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -20,12 +19,10 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.relauncher.Side;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumComponentRole;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumCoreTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
-import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoComponent;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIPotions;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
@@ -38,26 +35,21 @@ import java.util.ArrayList;
 
 /**
  * @author Pabilo8
- * @since 30-08-2019
+ * @updated 06.03.2024
+ * @ii-approved 0.3.1
+ * @since 10.07.2021
  */
-public class AmmoComponentNuke implements IAmmoComponent
+public class AmmoComponentNuke extends AmmoComponent
 {
-	@Override
-	public String getName()
+	public AmmoComponentNuke()
 	{
-		return "nuke";
+		super("nuke", 10f, EnumComponentRole.EXPLOSIVE, 0x6b778a);
 	}
 
 	@Override
 	public IngredientStack getMaterial()
 	{
 		return new IngredientStack("materialNuke");
-	}
-
-	@Override
-	public float getDensity()
-	{
-		return 2f;
 	}
 
 	@Override
@@ -177,26 +169,6 @@ public class AmmoComponentNuke implements IAmmoComponent
 				chunk.markDirty();
 			}
 		 */
-	}
-
-	@Override
-	public EnumComponentRole getRole()
-	{
-		return EnumComponentRole.SPECIAL;
-	}
-
-	@Override
-	public int getColour()
-	{
-		//Weird stuff here
-		if(FMLCommonHandler.instance().getEffectiveSide()==Side.CLIENT)
-		{
-			float add = (Minecraft.getMinecraft().world.getTotalWorldTime()%60f)/60f;
-			add = add > 0.5?1f-((add-0.5f)*2f): add*2f;
-			return MathHelper.hsvToRGB(110f/255f, 0.75f*add, (0.5f+((1f-add)*0.45f)));
-		}
-		else
-			return MathHelper.hsvToRGB(121f/255f, 0.75f, 0.88f);
 	}
 
 	@Override

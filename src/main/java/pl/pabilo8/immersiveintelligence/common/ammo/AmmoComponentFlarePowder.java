@@ -15,6 +15,8 @@ import pl.pabilo8.immersiveintelligence.common.entity.ammo.component.EntityFlare
 
 /**
  * @author Pabilo8
+ * @ii-approved 0.3.1
+ * @updated 06.03.2024
  * @since 30-08-2019
  */
 public class AmmoComponentFlarePowder extends AmmoComponentTracerPowder
@@ -43,7 +45,7 @@ public class AmmoComponentFlarePowder extends AmmoComponentTracerPowder
 		if(world.isRemote)
 			return;
 		world.playSound(null, pos.x, pos.y+1f, pos.z, IISounds.explosionFlare, SoundCategory.NEUTRAL, 4, 0.5f);
-		EntityFlare flare = new EntityFlare(world, getNBTColour(tag));
+		EntityFlare flare = new EntityFlare(world, getColour(tag));
 		flare.setPosition(pos.x, pos.y+1f, pos.z);
 		world.spawnEntity(flare);
 	}

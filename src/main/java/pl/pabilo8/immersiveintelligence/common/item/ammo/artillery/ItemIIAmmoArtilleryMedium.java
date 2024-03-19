@@ -6,8 +6,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumFuseTypes;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem.IIAmmoProjectile;
-import pl.pabilo8.immersiveintelligence.client.model.builtin.AmmoModel;
 import pl.pabilo8.immersiveintelligence.client.model.builtin.IAmmoModel;
+import pl.pabilo8.immersiveintelligence.client.model.builtin.ModelAmmoProjectile;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Ammunition;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoArtilleryProjectile;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoBase;
@@ -23,6 +23,7 @@ import java.util.function.Function;
  * @author Pabilo8
  * @since 30-08-2019
  */
+//TODO: 08.03.2024 update values from notes
 @IIAmmoProjectile
 @GeneratedItemModels(itemName = "bullet_artillery_6bcal", type = ItemModelType.ITEM_SIMPLE_AUTOREPLACED, valueSet = AmmoParts.class)
 public class ItemIIAmmoArtilleryMedium extends ItemIIAmmoBase<EntityAmmoArtilleryProjectile>
@@ -41,7 +42,7 @@ public class ItemIIAmmoArtilleryMedium extends ItemIIAmmoBase<EntityAmmoArtiller
 	@Override
 	public int getGunpowderNeeded()
 	{
-		return 450;
+		return 650;
 	}
 
 	@Override
@@ -71,7 +72,7 @@ public class ItemIIAmmoArtilleryMedium extends ItemIIAmmoBase<EntityAmmoArtiller
 	@Override
 	public float getPenetrationDepth()
 	{
-		return 4;
+		return 5;
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -80,7 +81,7 @@ public class ItemIIAmmoArtilleryMedium extends ItemIIAmmoBase<EntityAmmoArtiller
 	public Function<ItemIIAmmoBase<EntityAmmoArtilleryProjectile>,
 			IAmmoModel<ItemIIAmmoBase<EntityAmmoArtilleryProjectile>, EntityAmmoArtilleryProjectile>> get3DModel()
 	{
-		return AmmoModel::createProjectileModel;
+		return ModelAmmoProjectile::createProjectileModel;
 	}
 
 	@Override
@@ -104,7 +105,7 @@ public class ItemIIAmmoArtilleryMedium extends ItemIIAmmoBase<EntityAmmoArtiller
 	@Override
 	public float getSupressionRadius()
 	{
-		return 3;
+		return 6;
 	}
 
 	@Override

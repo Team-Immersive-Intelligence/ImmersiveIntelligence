@@ -34,8 +34,8 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import pl.pabilo8.immersiveintelligence.api.ammo.IIAmmoRegistry;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumCoreTypes;
-import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoComponent;
-import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoCore;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoCore;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
@@ -217,7 +217,7 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockMetal<Tile
 			{
 				if(!inventory.get(0).isEmpty())
 				{
-					Optional<IAmmoCore> first = IIAmmoRegistry.getAllCores()
+					Optional<AmmoCore> first = IIAmmoRegistry.getAllCores()
 							.stream()
 							.filter(core -> core.getMaterial().matchesItemStackIgnoringSize(inventory.get(0)))
 							.findFirst();
@@ -854,7 +854,7 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockMetal<Tile
 	public static class BulletComponentStack
 	{
 		@Nullable
-		private IAmmoComponent component;
+		private AmmoComponent component;
 		private String name;
 		private int amount;
 		@Nonnull
@@ -866,14 +866,14 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockMetal<Tile
 			this.amount = amount;
 			this.tagCompound = tag;
 
-			Optional<IAmmoComponent> first = IIAmmoRegistry.getAllComponents().stream()
+			Optional<AmmoComponent> first = IIAmmoRegistry.getAllComponents().stream()
 					.filter(comp -> this.name.equals(comp.getName()))
 					.findFirst();
 
 			component = first.orElse(null);
 		}
 
-		private BulletComponentStack(IAmmoComponent component, @Nullable NBTTagCompound tag)
+		private BulletComponentStack(AmmoComponent component, @Nullable NBTTagCompound tag)
 		{
 			this(component.getName(), 16, tag==null?new NBTTagCompound(): tag);
 		}
@@ -948,7 +948,7 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockMetal<Tile
 
 		public int getColour()
 		{
-			return component!=null?component.getColour(): 0xffffff;
+			return component!=null?component.getColour(tagCompound): 0xffffff;
 		}
 
 		public float getAmountPercentage()
@@ -962,7 +962,7 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockMetal<Tile
 			return I18n.format("ie.manual.entry.bullet_component."+name);
 		}
 
-		public IAmmoComponent getComponent()
+		public AmmoComponent getComponent()
 		{
 			return component;
 		}

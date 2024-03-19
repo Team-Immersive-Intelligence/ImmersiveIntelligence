@@ -345,15 +345,20 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 
 		//ALWAYS REGISTER BULLETS IN PRE-INIT! (so they get their texture registered before TextureStitchEvent.Pre)
 		//Bullets
-
 		IIAmmoRegistry.registerAmmoType(IIContent.itemAmmoHeavyArtillery);
 		IIAmmoRegistry.registerAmmoType(IIContent.itemAmmoMediumArtillery);
 		IIAmmoRegistry.registerAmmoType(IIContent.itemAmmoLightArtillery);
-		IIAmmoRegistry.registerAmmoType(IIContent.itemAmmoLightGun);
 		IIAmmoRegistry.registerAmmoType(IIContent.itemAmmoMortar);
-		IIAmmoRegistry.registerAmmoType(IIContent.itemAmmoAutocannon);
-		IIAmmoRegistry.registerAmmoType(IIContent.itemGrenade);
+
+		IIAmmoRegistry.registerAmmoType(IIContent.itemAmmoGuidedMissile);
+		IIAmmoRegistry.registerAmmoType(IIContent.itemAmmoRocketHeavy);
+		IIAmmoRegistry.registerAmmoType(IIContent.itemAmmoRocketLight);
+
+		IIAmmoRegistry.registerAmmoType(IIContent.itemAmmoLightGun);
 		IIAmmoRegistry.registerAmmoType(IIContent.itemRailgunGrenade);
+		IIAmmoRegistry.registerAmmoType(IIContent.itemAmmoAutocannon);
+
+		IIAmmoRegistry.registerAmmoType(IIContent.itemGrenade);
 
 		IIAmmoRegistry.registerAmmoType(IIContent.itemAmmoMachinegun);
 		IIAmmoRegistry.registerAmmoType(IIContent.itemAmmoSubmachinegun);
