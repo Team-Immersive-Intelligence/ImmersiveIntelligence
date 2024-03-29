@@ -34,8 +34,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.MechanicalDevices;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.MechanicalDevices;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.rotary_device.tileentity.TileEntityMechanicalConnectable;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
@@ -65,7 +65,7 @@ import java.util.function.Predicate;
 public class RotaryUtils
 {
 	public static final String BELT_CATEGORY = "MOTOR_BELT";
-	public static final Map<Predicate<TileEntity>, Function<Float, Float>> ie_rotational_blocks_torque = new HashMap<>();
+	public static final Map<Predicate<TileEntity>, Function<Float, Float>> TORQUE_BLOCKS = new HashMap<>();
 
 	public static boolean canConnect(TileEntity start, TileEntity end, WireType wire)
 	{
@@ -213,7 +213,8 @@ public class RotaryUtils
 											}
 											return false;
 										},
-										(p) -> {}, start, end);
+										(p) -> {
+										}, start, end);
 								if(canSee)
 								{
 									Connection conn = ImmersiveNetHandler.INSTANCE.addAndGetConnection(world,
@@ -500,7 +501,7 @@ public class RotaryUtils
 
 	public static float getGearEffectiveness(NonNullList<ItemStack> inventory, float modifier)
 	{
-		return getGearEffectiveness(inventory, modifier,inventory.size());
+		return getGearEffectiveness(inventory, modifier, inventory.size());
 	}
 
 	public static float getGearTorqueRatio(NonNullList<ItemStack> inventory)
@@ -514,7 +515,7 @@ public class RotaryUtils
 
 	public static float getTorqueForIEDevice(TileEntity t, double rotation)
 	{
-		for(Entry<Predicate<TileEntity>, Function<Float, Float>> e : ie_rotational_blocks_torque.entrySet())
+		for(Entry<Predicate<TileEntity>, Function<Float, Float>> e : TORQUE_BLOCKS.entrySet())
 			if(e.getKey().test(t))
 				return e.getValue().apply((float)rotation);
 		return MechanicalDevices.dynamoDefaultTorque;
