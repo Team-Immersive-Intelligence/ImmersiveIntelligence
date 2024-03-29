@@ -3,8 +3,8 @@ package pl.pabilo8.immersiveintelligence.common.item.ammo.artillery;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumCoreTypes;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumFuseTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseTypes;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem.IIAmmoProjectile;
 import pl.pabilo8.immersiveintelligence.client.model.builtin.IAmmoModel;
 import pl.pabilo8.immersiveintelligence.client.model.builtin.ModelAmmoProjectile;
@@ -91,15 +91,15 @@ public class ItemIIAmmoArtilleryMedium extends ItemIIAmmoBase<EntityAmmoArtiller
 	}
 
 	@Override
-	public EnumCoreTypes[] getAllowedCoreTypes()
+	public CoreTypes[] getAllowedCoreTypes()
 	{
-		return new EnumCoreTypes[]{EnumCoreTypes.PIERCING, EnumCoreTypes.SHAPED, EnumCoreTypes.CANISTER};
+		return new CoreTypes[]{CoreTypes.PIERCING, CoreTypes.PIERCING_SABOT, CoreTypes.SHAPED, CoreTypes.SHAPED_SABOT, CoreTypes.CANISTER};
 	}
 
 	@Override
-	public EnumFuseTypes[] getAllowedFuseTypes()
+	public FuseTypes[] getAllowedFuseTypes()
 	{
-		return new EnumFuseTypes[]{EnumFuseTypes.CONTACT, EnumFuseTypes.TIMED, EnumFuseTypes.PROXIMITY};
+		return new FuseTypes[]{FuseTypes.CONTACT, FuseTypes.TIMED, FuseTypes.PROXIMITY};
 	}
 
 	@Override

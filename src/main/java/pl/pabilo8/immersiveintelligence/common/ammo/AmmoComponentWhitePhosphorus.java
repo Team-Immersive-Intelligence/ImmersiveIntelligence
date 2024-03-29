@@ -11,8 +11,8 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumComponentRole;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumCoreTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.ComponentRole;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreTypes;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
 import pl.pabilo8.immersiveintelligence.common.IIPotions;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
@@ -30,7 +30,7 @@ public class AmmoComponentWhitePhosphorus extends AmmoComponent
 {
 	public AmmoComponentWhitePhosphorus()
 	{
-		super("white_phosphorus", 1f, EnumComponentRole.SPECIAL, 0x6b778a);
+		super("white_phosphorus", 1f, ComponentRole.SPECIAL, 0x6b778a);
 	}
 
 	@Override
@@ -40,13 +40,13 @@ public class AmmoComponentWhitePhosphorus extends AmmoComponent
 	}
 
 	@Override
-	public void onEffect(World world, Vec3d pos, Vec3d dir, float multiplier, NBTTagCompound tag, EnumCoreTypes coreType, Entity owner)
+	public void onEffect(World world, Vec3d pos, Vec3d dir, float multiplier, NBTTagCompound tag, CoreTypes coreType, Entity owner)
 	{
 		if(world.isRemote)
 			return;
 
 		//if using shaped core, make the effect face the bullet direction
-		Vec3d v = coreType==EnumCoreTypes.SHAPED?dir: dir.scale(-1);
+		Vec3d v = coreType==CoreTypes.SHAPED?dir: dir.scale(-1);
 		IIPacketHandler.playRangedSound(world, pos, IISounds.explosionIncendiary, SoundCategory.NEUTRAL, (int)(40*multiplier), 1f, 1f);
 
 		//fragments

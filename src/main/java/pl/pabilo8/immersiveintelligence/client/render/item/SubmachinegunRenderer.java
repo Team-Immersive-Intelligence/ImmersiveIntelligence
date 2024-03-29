@@ -15,7 +15,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.model.obj.OBJModel;
-import pl.pabilo8.immersiveintelligence.api.ammo.IIAmmoRegistry;
+import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.client.fx.particles.ParticleGunfire;
 import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.client.util.amt.*;
@@ -231,7 +231,7 @@ public class SubmachinegunRenderer extends IIUpgradableItemRendererAMT<ItemIISub
 								new AMTHand("hand_main", combinedHeader, EnumHand.OFF_HAND),
 								new AMTHand("hand_off", combinedHeader, EnumHand.OFF_HAND),
 
-								new AMTBullet("casing_fired", combinedHeader, IIAmmoRegistry.getModel(IIContent.itemAmmoSubmachinegun))
+								new AMTBullet("casing_fired", combinedHeader, AmmoRegistry.getModel(IIContent.itemAmmoSubmachinegun))
 										.withState(BulletState.CASING),
 						}
 				).withTextureProvider(

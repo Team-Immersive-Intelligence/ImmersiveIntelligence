@@ -12,8 +12,8 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumComponentRole;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumCoreTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.ComponentRole;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreTypes;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.component.EntityGasCloud;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.component.EntityIIChemthrowerShot;
@@ -32,7 +32,7 @@ public class AmmoComponentFluid extends AmmoComponent
 	{
 		super(fluid.isGaseous()?"gas_": "fluid_",
 				Math.max(fluid.getDensity(), 0)/1000f,
-				EnumComponentRole.CHEMICAL,
+				ComponentRole.CHEMICAL,
 				fluid.getColor()
 		);
 		this.fluid = fluid;
@@ -52,7 +52,7 @@ public class AmmoComponentFluid extends AmmoComponent
 	}
 
 	@Override
-	public void onEffect(World world, Vec3d pos, Vec3d dir, float multiplier, NBTTagCompound tag, EnumCoreTypes coreType, Entity owner)
+	public void onEffect(World world, Vec3d pos, Vec3d dir, float multiplier, NBTTagCompound tag, CoreTypes coreType, Entity owner)
 	{
 		if(world.isRemote)
 			return;

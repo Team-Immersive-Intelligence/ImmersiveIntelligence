@@ -4,7 +4,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
-import pl.pabilo8.immersiveintelligence.api.ammo.IIAmmoRegistry;
+import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.client.model.builtin.IAmmoModel;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityAmmoBase;
 
@@ -25,7 +25,7 @@ public class AmmoRenderer extends Render<EntityAmmoBase>
 	@Override
 	public void doRender(EntityAmmoBase entity, double x, double y, double z, float entityYaw, float partialTicks)
 	{
-		IAmmoModel model = IIAmmoRegistry.getModel(entity.getAmmoType());
+		IAmmoModel model = AmmoRegistry.getModel(entity.getAmmoType());
 		if(model==null)
 			return;
 		GlStateManager.pushMatrix();

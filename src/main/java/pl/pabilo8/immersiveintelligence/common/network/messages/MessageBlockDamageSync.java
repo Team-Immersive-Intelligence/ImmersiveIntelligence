@@ -10,8 +10,8 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.api.ammo.IIPenetrationRegistry;
-import pl.pabilo8.immersiveintelligence.api.ammo.utils.DamageBlockPos;
+import pl.pabilo8.immersiveintelligence.api.ammo.penetration.DamageBlockPos;
+import pl.pabilo8.immersiveintelligence.api.ammo.utils.PenetrationCache;
 import pl.pabilo8.immersiveintelligence.client.fx.ParticleUtils;
 import pl.pabilo8.immersiveintelligence.client.fx.nuke.ParticleShockwave;
 import pl.pabilo8.immersiveintelligence.common.network.IIMessage;
@@ -81,19 +81,19 @@ public class MessageBlockDamageSync extends IIMessage
 							0.5f, world.getBlockState(dPos));
 			}
 
-			IIPenetrationRegistry.blockDamageClient
+			PenetrationCache.blockDamageClient
 					.stream()
 					.filter(d -> d.equals(dmgPos))
 					.findFirst()
 					.orElseGet(
 							() -> {
-								IIPenetrationRegistry.blockDamageClient.add(dmgPos);
+								PenetrationCache.blockDamageClient.add(dmgPos);
 								return dmgPos;
 							}
 					).damage = dmgPos.damage;
 		}
 		else
-			IIPenetrationRegistry.blockDamageClient.removeIf(damageBlockPos -> damageBlockPos.equals(dmgPos));
+			PenetrationCache.blockDamageClient.removeIf(damageBlockPos -> damageBlockPos.equals(dmgPos));
 	}
 
 	@Override

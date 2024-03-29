@@ -4,20 +4,19 @@ import blusunrize.immersiveengineering.api.ApiUtils;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.client.model.obj.OBJModel;
 import net.minecraftforge.client.model.obj.OBJModel.MaterialLibrary;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.api.ammo.IIAmmoRegistry;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumCoreTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreTypes;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoCore;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoType;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
-import pl.pabilo8.immersiveintelligence.client.util.amt.AMT;
-import pl.pabilo8.immersiveintelligence.client.util.amt.AMTQuads;
-import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationUtils;
+import pl.pabilo8.immersiveintelligence.client.util.amt.*;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityAmmoBase;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoGrenade;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoMine;
@@ -48,8 +47,8 @@ public class ModelAmmo<T extends IAmmoType<T, E>, E extends EntityAmmoBase<? sup
 	/**
 	 * Core models, baked and assigned by material
 	 */
-	protected final EnumMap<EnumCoreTypes, HashMap<AmmoCore, AMT>> modelCore = new EnumMap<>(EnumCoreTypes.class);
-	protected final EnumMap<EnumCoreTypes, HashMap<AmmoCore, AMT>> modelCoreSimple = new EnumMap<>(EnumCoreTypes.class);
+	protected final EnumMap<CoreTypes, HashMap<AmmoCore, AMT>> modelCore = new EnumMap<>(CoreTypes.class);
+	protected final EnumMap<CoreTypes, HashMap<AmmoCore, AMT>> modelCoreSimple = new EnumMap<>(CoreTypes.class);
 	/**
 	 * Core models, baked and assigned by material
 	 */
@@ -103,7 +102,7 @@ public class ModelAmmo<T extends IAmmoType<T, E>, E extends EntityAmmoBase<? sup
 	 * @param coreMaterial of the ammo, see {@link AmmoCore}
 	 * @param coreType     of the ammo, see {@link IAmmoType#getAllowedCoreTypes()}
 	 */
-	public void renderCore(AmmoCore coreMaterial, EnumCoreTypes coreType)
+	public void renderCore(AmmoCore coreMaterial, CoreTypes coreType)
 	{
 		if(!loaded)
 			return;
@@ -119,7 +118,7 @@ public class ModelAmmo<T extends IAmmoType<T, E>, E extends EntityAmmoBase<? sup
 	 * @param coreMaterial of the ammo, see {@link AmmoCore}
 	 * @param coreType     of the ammo, see {@link IAmmoType#getAllowedCoreTypes()}
 	 */
-	public void renderAmmoComplete(boolean used, int paintColour, AmmoCore coreMaterial, EnumCoreTypes coreType)
+	public void renderAmmoComplete(boolean used, int paintColour, AmmoCore coreMaterial, CoreTypes coreType)
 	{
 		if(!loaded)
 			return;
@@ -142,12 +141,17 @@ public class ModelAmmo<T extends IAmmoType<T, E>, E extends EntityAmmoBase<? sup
 		IIAnimationUtils.disposeOf(new AMT[]{modelCasing, modelCasingSimple, modelPaintBase});
 
 		//Load new models
-		AMT[] amt = IIAnimationUtils.getAMTFromRes(modelLocation, modelLocation.withExtension(ResLoc.EXT_OBJAMT));
+		AMT[] amt = IIAnimationUtils.getAMTFromRes(modelLocation, modelLocation.withExtension(ResLoc.EXT_OBJAMT), this::getExtraModelParts);
 		//Either a proper model or no model at all
 		if(!(loaded = amt.length > 0))
 			return;
 
 		loadModels(amt);
+	}
+
+	protected AMT[] getExtraModelParts(IIModelHeader header)
+	{
+		return new AMT[0];
 	}
 
 	protected void loadModels(AMT[] amt)
@@ -158,20 +162,34 @@ public class ModelAmmo<T extends IAmmoType<T, E>, E extends EntityAmmoBase<? sup
 			modelCasingSimple = modelCasing;
 
 		//Preload all core models
-		for(EnumCoreTypes coreType : ammo.getAllowedCoreTypes())
+		for(CoreTypes coreType : ammo.getAllowedCoreTypes())
 		{
 			HashMap<AmmoCore, AMT> modelMap = new HashMap<>();
 			HashMap<AmmoCore, AMT> modelSimpleMap = new HashMap<>();
 
-			AMTQuads coreModel = (AMTQuads)IIAnimationUtils.getPart(amt, "core_"+coreType.getName());
+			AMT coreModel = IIAnimationUtils.getPart(amt, "core_"+coreType.getName());
 			if(coreModel==null)
 				continue;
 			//Simple model variant is optional
 			AMTQuads coreSimpleModel = (AMTQuads)IIAnimationUtils.getPart(amt, "core_"+coreType.getName()+"_simple");
 
-			for(AmmoCore core : IIAmmoRegistry.getAllCores())
+			for(AmmoCore core : AmmoRegistry.getAllCores())
 			{
-				AMTQuads quads = coreModel.recolor(core.getColour());
+				AMT quads;
+				if(coreModel instanceof AMTQuads)
+					quads = ((AMTQuads)coreModel).recolor(core.getColour());
+				else
+				{
+					quads = new AMTLocator(coreModel.name, Vec3d.ZERO);
+					quads.setChildren(
+							coreModel.getChildrenRecursive().stream()
+									.filter(amt1 -> amt1 instanceof AMTQuads)
+									.map(amt1 -> ((AMTQuads)amt1))
+									.map(amtQuads -> amtQuads.recolor(core.getColour()))
+									.toArray(AMTQuads[]::new)
+					);
+				}
+
 				modelMap.put(core, quads);
 				//If simple variant is not present, use the main model
 				modelSimpleMap.put(core, coreSimpleModel==null?quads: coreSimpleModel.recolor(core.getColour()));

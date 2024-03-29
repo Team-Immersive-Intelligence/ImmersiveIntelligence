@@ -8,9 +8,9 @@ import net.minecraft.nbt.NBTTagString;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
-import pl.pabilo8.immersiveintelligence.api.ammo.IIAmmoRegistry;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumCoreTypes;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumFuseTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseTypes;
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler;
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler.IAdvancedTooltipItem;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityAmmoBase;
@@ -64,7 +64,7 @@ public interface IAmmoTypeItem<T extends IAmmoType<T, E>, E extends EntityAmmoBa
 	default void makeDefault(ItemStack stack)
 	{
 		if(!ItemNBTHelper.hasKey(stack, NBT_CORE))
-			ItemNBTHelper.setString(stack, NBT_CORE, IIAmmoRegistry.MISSING_CORE.getName());
+			ItemNBTHelper.setString(stack, NBT_CORE, AmmoRegistry.MISSING_CORE.getName());
 		if(!ItemNBTHelper.hasKey(stack, NBT_CORE_TYPE))
 			ItemNBTHelper.setString(stack, NBT_CORE_TYPE, getAllowedCoreTypes()[0].getName());
 		if(!isBulletCore(stack)&&!ItemNBTHelper.hasKey(stack, NBT_FUSE))
@@ -96,9 +96,9 @@ public interface IAmmoTypeItem<T extends IAmmoType<T, E>, E extends EntityAmmoBa
 
 	/**
 	 * @return Returns allowed fuse types, these affect the way a bullet entity will detect collision
-	 * @see EnumFuseTypes
+	 * @see FuseTypes
 	 */
-	EnumFuseTypes[] getAllowedFuseTypes();
+	FuseTypes[] getAllowedFuseTypes();
 
 	/**
 	 * @param stack bullet core stack to be checked
@@ -118,7 +118,7 @@ public interface IAmmoTypeItem<T extends IAmmoType<T, E>, E extends EntityAmmoBa
 			ArrayList<AmmoComponent> arrayList = new ArrayList<>();
 			NBTTagList components = (NBTTagList)ItemNBTHelper.getTag(stack).getTag(NBT_COMPONENTS);
 			for(int i = 0; i < components.tagCount(); i++)
-				arrayList.add(IIAmmoRegistry.getComponent(components.getStringTagAt(i)));
+				arrayList.add(AmmoRegistry.getComponent(components.getStringTagAt(i)));
 			return arrayList.toArray(new AmmoComponent[0]);
 		}
 		return new AmmoComponent[0];
@@ -178,17 +178,17 @@ public interface IAmmoTypeItem<T extends IAmmoType<T, E>, E extends EntityAmmoBa
 	}
 
 	@Override
-	default void setFuseType(ItemStack stack, EnumFuseTypes type)
+	default void setFuseType(ItemStack stack, FuseTypes type)
 	{
 		ItemNBTHelper.setString(stack, NBT_FUSE, type.getName());
 	}
 
 	@Override
-	default EnumFuseTypes getFuseType(ItemStack stack)
+	default FuseTypes getFuseType(ItemStack stack)
 	{
 		if(!ItemNBTHelper.hasKey(stack, NBT_FUSE))
 			makeDefault(stack);
-		return EnumFuseTypes.v(ItemNBTHelper.getString(stack, NBT_FUSE));
+		return FuseTypes.v(ItemNBTHelper.getString(stack, NBT_FUSE));
 	}
 
 	@Override
@@ -196,15 +196,15 @@ public interface IAmmoTypeItem<T extends IAmmoType<T, E>, E extends EntityAmmoBa
 	{
 		if(!ItemNBTHelper.hasKey(stack, NBT_CORE))
 			makeDefault(stack);
-		return IIAmmoRegistry.getCore(ItemNBTHelper.getString(stack, NBT_CORE));
+		return AmmoRegistry.getCore(ItemNBTHelper.getString(stack, NBT_CORE));
 	}
 
 	@Override
-	default EnumCoreTypes getCoreType(ItemStack stack)
+	default CoreTypes getCoreType(ItemStack stack)
 	{
 		if(!ItemNBTHelper.hasKey(stack, NBT_CORE_TYPE))
 			makeDefault(stack);
-		return EnumCoreTypes.v(ItemNBTHelper.getString(stack, NBT_CORE_TYPE));
+		return CoreTypes.v(ItemNBTHelper.getString(stack, NBT_CORE_TYPE));
 	}
 
 	/**
@@ -236,7 +236,7 @@ public interface IAmmoTypeItem<T extends IAmmoType<T, E>, E extends EntityAmmoBa
 	 *
 	 * @return a bullet ItemStack for given parameters
 	 */
-	default ItemStack getBulletWithParams(AmmoCore core, EnumCoreTypes coreType, AmmoComponent... components)
+	default ItemStack getBulletWithParams(AmmoCore core, CoreTypes coreType, AmmoComponent... components)
 	{
 		String[] compNames = Arrays.stream(components).map(AmmoComponent::getName).toArray(String[]::new);
 		return getBulletWithParams(core.getName(), coreType.getName(), compNames);
@@ -247,19 +247,19 @@ public interface IAmmoTypeItem<T extends IAmmoType<T, E>, E extends EntityAmmoBa
 	 *
 	 * @return a bullet core ItemStack for given parameters
 	 */
-	default ItemStack getBulletCore(AmmoCore core, EnumCoreTypes coreType)
+	default ItemStack getBulletCore(AmmoCore core, CoreTypes coreType)
 	{
 		return getBulletCore(core.getName(), coreType.getName());
 	}
 
 	/**
-	 * Same as {@link #getBulletWithParams(AmmoCore, EnumCoreTypes, AmmoComponent...)}, but uses String names
+	 * Same as {@link #getBulletWithParams(AmmoCore, CoreTypes, AmmoComponent...)}, but uses String names
 	 * Can be used instead of the above method, <u><b>but things may broke after bullet part names are changed</b></u>
 	 */
 	ItemStack getBulletWithParams(String core, String coreType, String... components);
 
 	/**
-	 * Same as {@link #getBulletWithParams(AmmoCore, EnumCoreTypes, AmmoComponent...)}, but uses String names
+	 * Same as {@link #getBulletWithParams(AmmoCore, CoreTypes, AmmoComponent...)}, but uses String names
 	 * Can be used instead of the above method, <u><b>but things may broke after bullet part names are changed</b></u>
 	 */
 	ItemStack getBulletCore(String core, String coreType);

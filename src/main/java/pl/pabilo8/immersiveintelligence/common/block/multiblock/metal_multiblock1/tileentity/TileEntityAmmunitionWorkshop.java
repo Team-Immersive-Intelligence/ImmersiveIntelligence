@@ -23,7 +23,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumFuseTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseTypes;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.api.crafting.AmmunitionWorkshopRecipe;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
@@ -46,7 +46,7 @@ import java.util.List;
  */
 public class TileEntityAmmunitionWorkshop extends TileEntityMultiblockMetal<TileEntityAmmunitionWorkshop, AmmunitionWorkshopRecipe> implements ISoundTile, IGuiTile, IAdvancedSelectionBounds, IAdvancedCollisionBounds, IDataDevice
 {
-	public EnumFuseTypes fuse = EnumFuseTypes.CONTACT;
+	public FuseTypes fuse = FuseTypes.CONTACT;
 	public int fuseConfig = 0; //dependent on fuse type: time for timed fuse, distance for proximity fuse
 
 	public NonNullList<ItemStack> inventory = NonNullList.withSize(2, ItemStack.EMPTY); //core, casing
@@ -185,7 +185,7 @@ public class TileEntityAmmunitionWorkshop extends TileEntityMultiblockMetal<Tile
 		if(isDummy())
 			return;
 
-		this.fuse = EnumFuseTypes.v(nbt.getString("fuse"));
+		this.fuse = FuseTypes.v(nbt.getString("fuse"));
 		this.fuseConfig = nbt.getInteger("fuse_config");
 		this.inventory = Utils.readInventory(nbt.getTagList("inventory", 10), inventory.size());
 		this.processTime = nbt.getInteger("process_time");
@@ -222,7 +222,7 @@ public class TileEntityAmmunitionWorkshop extends TileEntityMultiblockMetal<Tile
 			return;
 
 		if(message.hasKey("fuse"))
-			this.fuse = EnumFuseTypes.v(message.getString("fuse"));
+			this.fuse = FuseTypes.v(message.getString("fuse"));
 		if(message.hasKey("fuse_config"))
 			this.fuseConfig = message.getInteger("fuse_config");
 	}
@@ -236,7 +236,7 @@ public class TileEntityAmmunitionWorkshop extends TileEntityMultiblockMetal<Tile
 			return;
 
 		if(message.hasKey("fuse"))
-			this.fuse = EnumFuseTypes.v(message.getString("fuse"));
+			this.fuse = FuseTypes.v(message.getString("fuse"));
 		if(message.hasKey("fuse_config"))
 			this.fuseConfig = message.getInteger("fuse_config");
 	}
@@ -530,7 +530,7 @@ public class TileEntityAmmunitionWorkshop extends TileEntityMultiblockMetal<Tile
 				return;
 
 			if(packet.hasVariable('f'))
-				master.fuse = EnumFuseTypes.v(packet.getPacketVariable('f').valueToString());
+				master.fuse = FuseTypes.v(packet.getPacketVariable('f').valueToString());
 		}
 	}
 

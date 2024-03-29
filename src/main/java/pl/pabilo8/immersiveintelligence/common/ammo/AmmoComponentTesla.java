@@ -26,8 +26,8 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumComponentRole;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumCoreTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.ComponentRole;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreTypes;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 
@@ -41,7 +41,7 @@ public class AmmoComponentTesla extends AmmoComponent
 {
 	public AmmoComponentTesla()
 	{
-		super("tesla", 1f, EnumComponentRole.SPECIAL, 0x6b778a);
+		super("tesla", 1f, ComponentRole.SPECIAL, 0x6b778a);
 	}
 
 	@Override
@@ -51,7 +51,7 @@ public class AmmoComponentTesla extends AmmoComponent
 	}
 
 	@Override
-	public void onEffect(World world, Vec3d pos, Vec3d dir, float multiplier, NBTTagCompound tag, EnumCoreTypes coreType, Entity owner)
+	public void onEffect(World world, Vec3d pos, Vec3d dir, float multiplier, NBTTagCompound tag, CoreTypes coreType, Entity owner)
 	{
 		float radius = multiplier*10;
 		int extracted = (int)(4000000*multiplier);

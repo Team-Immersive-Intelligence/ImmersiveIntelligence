@@ -13,7 +13,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import pl.pabilo8.immersiveintelligence.api.ammo.IIAmmoRegistry;
+import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.client.model.builtin.IAmmoModel;
 import pl.pabilo8.immersiveintelligence.client.model.weapon.ModelMachinegun;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
@@ -190,7 +190,7 @@ public class MachinegunRenderer extends Render<EntityMachinegun> implements IRel
 						}
 						case "belt_fed_loader":
 							nmod.render(0.0625f);
-							IAmmoModel mm = IIAmmoRegistry.getModel(IIContent.itemAmmoMachinegun);
+							IAmmoModel mm = AmmoRegistry.getModel(IIContent.itemAmmoMachinegun);
 							GlStateManager.pushMatrix();
 							GlStateManager.translate(0.69f, 0.65f, -0.0625f+(-0.0625f*1.5f));
 							GlStateManager.rotate(180, 0, 1, 0);

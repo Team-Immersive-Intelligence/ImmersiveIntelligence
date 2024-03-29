@@ -8,8 +8,8 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumComponentRole;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumCoreTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.ComponentRole;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreTypes;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityAmmoBase;
 
 import javax.annotation.Nullable;
@@ -24,10 +24,10 @@ public abstract class AmmoComponent
 {
 	private final String name;
 	private final float density;
-	private final EnumComponentRole role;
+	private final ComponentRole role;
 	private final int colour;
 
-	public AmmoComponent(String name, float density, EnumComponentRole role, int colour)
+	public AmmoComponent(String name, float density, ComponentRole role, int colour)
 	{
 		this.name = name;
 		this.density = density;
@@ -78,12 +78,12 @@ public abstract class AmmoComponent
 	 * @param coreType   the core type
 	 * @param owner      the owner of the bullet
 	 */
-	public abstract void onEffect(World world, Vec3d pos, Vec3d dir, float multiplier, NBTTagCompound tag, EnumCoreTypes coreType, @Nullable Entity owner);
+	public abstract void onEffect(World world, Vec3d pos, Vec3d dir, float multiplier, NBTTagCompound tag, CoreTypes coreType, @Nullable Entity owner);
 
 	/**
 	 * @return the component role
 	 */
-	public EnumComponentRole getRole()
+	public ComponentRole getRole()
 	{
 		return role;
 	}

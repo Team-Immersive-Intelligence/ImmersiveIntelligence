@@ -2,7 +2,7 @@ package pl.pabilo8.immersiveintelligence.common.entity.ammo.types;
 
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
-import pl.pabilo8.immersiveintelligence.api.ammo.IIPenetrationRegistry.IPenetrationHandler;
+import pl.pabilo8.immersiveintelligence.api.ammo.penetration.IPenetrationHandler;
 
 /**
  * @author Pabilo8

@@ -17,9 +17,10 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.ShrapnelHandler;
-import pl.pabilo8.immersiveintelligence.api.ammo.IIAmmoRegistry;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumComponentRole;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumCoreTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.ComponentRole;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.PenetrationHardness;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoCore;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
@@ -32,9 +33,9 @@ import stanhebben.zenscript.annotations.ZenMethod;
  * @ii-approved 0.3.1
  * @since 05.01.2022
  */
-@ZenClass("mods."+ImmersiveIntelligence.MODID+".bullet.Bullets")
+@ZenClass("mods."+ImmersiveIntelligence.MODID+".ammo.Ammo")
 @ZenRegister
-public class BulletTweaker
+public class AmmoTweaker
 {
 	@ZenMethod
 	public static void addShrapnel(String name, int color, String texture, int damage, float mass, float brightness)
@@ -76,13 +77,14 @@ public class BulletTweaker
 		});
 	}
 
-	@ZenClass("mods."+ImmersiveIntelligence.MODID+".bullet.CoreMaterialBuilder")
+	@ZenClass("mods."+ImmersiveIntelligence.MODID+".ammo.CoreMaterialBuilder")
 	@ZenRegister
 	public static class CoreMaterialBuilder
 	{
 		private final String name;
 		private int color;
-		private float density, dmgModifier, explosionModifier, penHardness;
+		private PenetrationHardness penHardness;
+		private float density, dmgModifier, explosionModifier;
 		private Object stack;
 
 		private CoreMaterialBuilder(String name)
@@ -121,9 +123,9 @@ public class BulletTweaker
 		}
 
 		@ZenMethod
-		public void setPenHardness(float penHardness)
+		public void setPenHardness(String penHardness)
 		{
-			this.penHardness = penHardness;
+			this.penHardness = IIUtils.enumValue(PenetrationHardness.class, penHardness);
 		}
 
 		@ZenMethod
@@ -150,7 +152,7 @@ public class BulletTweaker
 			@Override
 			public void apply()
 			{
-				IIAmmoRegistry.registerCore(
+				AmmoRegistry.registerCore(
 						new AmmoCore(core.name, core.density, core.penHardness, core.explosionModifier, core.dmgModifier, core.color)
 						{
 							private final IngredientStack stack = ApiUtils.createIngredientStack(core.stack);
@@ -172,7 +174,7 @@ public class BulletTweaker
 		}
 	}
 
-	@ZenClass("mods."+ImmersiveIntelligence.MODID+".bullet.ComponentMaterialBuilder")
+	@ZenClass("mods."+ImmersiveIntelligence.MODID+".ammo.ComponentMaterialBuilder")
 	@ZenRegister
 	public static class ComponentMaterialBuilder
 	{
@@ -242,9 +244,9 @@ public class BulletTweaker
 			@Override
 			public void apply()
 			{
-				final EnumComponentRole componentRole = EnumComponentRole.v(component.role);
+				final ComponentRole componentRole = ComponentRole.v(component.role);
 
-				IIAmmoRegistry.registerComponent(
+				AmmoRegistry.registerComponent(
 						new AmmoComponent(component.name, component.density, componentRole, component.color)
 						{
 							private final IngredientStack stack = ApiUtils.createIngredientStack(component.stack);
@@ -254,9 +256,9 @@ public class BulletTweaker
 							{
 								return stack;
 							}
-							
+
 							@Override
-							public void onEffect(World world, Vec3d pos, Vec3d dir, float multiplier, NBTTagCompound tag, EnumCoreTypes coreType, Entity owner)
+							public void onEffect(World world, Vec3d pos, Vec3d dir, float multiplier, NBTTagCompound tag, CoreTypes coreType, Entity owner)
 							{
 								if(component.function!=null)
 									component.function.process(CraftTweakerMC.getIWorld(world),
@@ -279,7 +281,7 @@ public class BulletTweaker
 		}
 	}
 
-	@ZenClass("mods."+ImmersiveIntelligence.MODID+".bullet.IComponentFunction")
+	@ZenClass("mods."+ImmersiveIntelligence.MODID+".ammo.IComponentFunction")
 	@ZenRegister
 	public interface IComponentFunction
 	{
@@ -289,12 +291,12 @@ public class BulletTweaker
 	@ZenMethod
 	public static void removeCore(String name)
 	{
-		IIAmmoRegistry.unregisterCore(name);
+		AmmoRegistry.unregisterCore(name);
 	}
 
 	@ZenMethod
 	public static void removeComponent(String name)
 	{
-		IIAmmoRegistry.unregisterComponent(name);
+		AmmoRegistry.unregisterComponent(name);
 	}
 }

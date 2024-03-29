@@ -15,9 +15,9 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.api.ammo.IIAmmoRegistry;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumCoreTypes;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumFuseTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseTypes;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoCore;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoType;
@@ -52,11 +52,11 @@ public abstract class EntityAmmoBase<T extends EntityAmmoBase<? super T>> extend
 	/**
 	 * The ammo core type
 	 */
-	protected EnumCoreTypes coreType;
+	protected CoreTypes coreType;
 	/**
 	 * The fuse type
 	 */
-	protected EnumFuseTypes fuseType;
+	protected FuseTypes fuseType;
 	/**
 	 * The fuse parameter, for a timer fuse it's the fuse time in ticks, for a proximity fuse it's the fuse range in blocks<br>
 	 * Not used by impact fuses
@@ -118,7 +118,7 @@ public abstract class EntityAmmoBase<T extends EntityAmmoBase<? super T>> extend
 	}
 
 	@ParametersAreNonnullByDefault
-	public void setFromParameters(IAmmoType<?, T> ammoType, AmmoCore core, EnumCoreTypes coreType, EnumFuseTypes fuseType, int fuseParameter,
+	public void setFromParameters(IAmmoType<?, T> ammoType, AmmoCore core, CoreTypes coreType, FuseTypes fuseType, int fuseParameter,
 								  List<Tuple<AmmoComponent, NBTTagCompound>> components)
 	{
 		this.ammoType = ammoType;
@@ -189,15 +189,15 @@ public abstract class EntityAmmoBase<T extends EntityAmmoBase<? super T>> extend
 	public void readEntityFromNBT(NBTTagCompound compound)
 	{
 		setFromParameters(
-				(IAmmoType<?, T>)IIAmmoRegistry.getAmmoItem(compound.getString("ammoType")),
-				IIAmmoRegistry.getCore(compound.getString("core")),
-				EnumCoreTypes.values()[compound.getInteger("coreType")],
-				EnumFuseTypes.values()[compound.getInteger("fuseType")],
+				(IAmmoType<?, T>)AmmoRegistry.getAmmoItem(compound.getString("ammoType")),
+				AmmoRegistry.getCore(compound.getString("core")),
+				CoreTypes.values()[compound.getInteger("coreType")],
+				FuseTypes.values()[compound.getInteger("fuseType")],
 				compound.getInteger("fuseParameter"),
 				compound.getTagList("components", 10).tagList.stream().map(t ->
 				{
 					NBTTagCompound nbt = (NBTTagCompound)t;
-					return new Tuple<>(IIAmmoRegistry.getComponent(nbt.getString("component")), nbt.getCompoundTag("nbt"));
+					return new Tuple<>(AmmoRegistry.getComponent(nbt.getString("component")), nbt.getCompoundTag("nbt"));
 				}).collect(Collectors.toList())
 		);
 		owner = world.getEntityByID(compound.getInteger("owner"));
@@ -273,12 +273,12 @@ public abstract class EntityAmmoBase<T extends EntityAmmoBase<? super T>> extend
 		return core;
 	}
 
-	public EnumCoreTypes getCoreType()
+	public CoreTypes getCoreType()
 	{
 		return coreType;
 	}
 
-	public EnumFuseTypes getFuseType()
+	public FuseTypes getFuseType()
 	{
 		return fuseType;
 	}

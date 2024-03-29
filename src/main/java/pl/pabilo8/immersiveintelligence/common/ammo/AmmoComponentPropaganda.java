@@ -7,8 +7,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumComponentRole;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumCoreTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.ComponentRole;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreTypes;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.IIAmmoUtils;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
@@ -23,7 +23,7 @@ public class AmmoComponentPropaganda extends AmmoComponent
 {
 	public AmmoComponentPropaganda()
 	{
-		super("propaganda", 0.65f, EnumComponentRole.SPECIAL, 0xbaafa4);
+		super("propaganda", 0.65f, ComponentRole.SPECIAL, 0xbaafa4);
 	}
 
 	@Override
@@ -33,7 +33,7 @@ public class AmmoComponentPropaganda extends AmmoComponent
 	}
 
 	@Override
-	public void onEffect(World world, Vec3d pos, Vec3d dir, float multiplier, NBTTagCompound tag, EnumCoreTypes coreType, Entity owner)
+	public void onEffect(World world, Vec3d pos, Vec3d dir, float multiplier, NBTTagCompound tag, CoreTypes coreType, Entity owner)
 	{
 		ItemStack stack = new ItemStack(IIContent.itemPrintedPage, 1, 1);
 		stack.setTagCompound(tag);

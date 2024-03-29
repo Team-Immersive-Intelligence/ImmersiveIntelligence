@@ -2,27 +2,53 @@ package pl.pabilo8.immersiveintelligence.api.ammo.utils;
 
 import blusunrize.immersiveengineering.api.tool.RailgunHandler;
 import blusunrize.immersiveengineering.api.tool.RailgunHandler.RailgunProjectileProperties;
+import blusunrize.immersiveengineering.common.IEContent;
+import blusunrize.immersiveengineering.common.blocks.stone.BlockTypes_StoneDecoration;
+import blusunrize.immersiveengineering.common.util.Utils;
+import net.minecraft.block.Block;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
-import pl.pabilo8.immersiveintelligence.api.ammo.IIAmmoRegistry;
-import pl.pabilo8.immersiveintelligence.api.ammo.IIPenetrationRegistry;
-import pl.pabilo8.immersiveintelligence.api.ammo.IIPenetrationRegistry.IPenetrationHandler;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.input.Keyboard;
+import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
+import pl.pabilo8.immersiveintelligence.api.ammo.PenetrationRegistry;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.ComponentRole;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.PenetrationHardness;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoCore;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoType;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem.IIAmmoProjectile;
+import pl.pabilo8.immersiveintelligence.api.ammo.penetration.IPenetrationHandler;
+import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Ammunition;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIPotions;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIIConcreteDecoration.ConcreteDecorations;
+import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIIMetalBase.Metals;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
-import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
-import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBlockDamageSync;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
+import javax.annotation.Nullable;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -35,37 +61,6 @@ public class IIAmmoUtils
 	public static boolean ammoBreaksBlocks = Weapons.blockDamage;
 	public static boolean ammoExplodesBlocks = Ammunition.blockDamage;
 	public static boolean ammoRicochets = true;
-
-	//--- Block Damage ---//
-
-	public static void dealBlockDamage(World world, Vec3d direction, float bulletDamage, BlockPos pos, IPenetrationHandler pen)
-	{
-		if(!ammoBreaksBlocks)
-			return;
-
-		DamageBlockPos dimensionBlockPos = new DamageBlockPos(pos, world, pen.getIntegrity());
-		float newHp = IIPenetrationRegistry.getBlockHitpoints(pen, pos, world)-(bulletDamage*pen.getReduction());
-		if(newHp > 0)
-		{
-			List<DamageBlockPos> list = IIPenetrationRegistry.blockDamage.stream().filter(damageBlockPos -> damageBlockPos.equals(dimensionBlockPos)).collect(Collectors.toList());
-			if(list.size() > 0)
-				list.forEach(damageBlockPos -> damageBlockPos.damage = newHp);
-			else
-				IIPenetrationRegistry.blockDamage.add(new DamageBlockPos(dimensionBlockPos, newHp));
-
-			IIPacketHandler.sendToClient(dimensionBlockPos, world,
-					new MessageBlockDamageSync(new DamageBlockPos(dimensionBlockPos, newHp/(pen.getIntegrity()/pen.getReduction())), direction));
-		}
-		else if(newHp <= 0)
-		{
-			IIPenetrationRegistry.blockDamage.removeIf(damageBlockPos -> damageBlockPos.equals(dimensionBlockPos));
-			world.getBlockState(pos).getBlock().breakBlock(world, pos, world.getBlockState(pos));
-			world.destroyBlock(dimensionBlockPos, false);
-
-			IIPacketHandler.sendToClient(dimensionBlockPos, world,
-					new MessageBlockDamageSync(new DamageBlockPos(dimensionBlockPos, newHp/(pen.getIntegrity()/pen.getReduction())), direction));
-		}
-	}
 
 	//--- Common Component Methods ---//
 
@@ -120,7 +115,7 @@ public class IIAmmoUtils
 	public static float calculateBallisticAngle(Vec3d posShooter, Vec3d posTarget, ItemStack ammoStack, float precision)
 	{
 		Vec3d dist = posShooter.subtract(posTarget);
-		IAmmoTypeItem<?, ?> ammoItem = IIAmmoRegistry.getAmmoItem(ammoStack);
+		IAmmoTypeItem<?, ?> ammoItem = AmmoRegistry.getAmmoItem(ammoStack);
 
 		if(ammoItem==null)
 			return 0;
@@ -334,4 +329,170 @@ public class IIAmmoUtils
 		return new float[]{yaw, pitch};
 	}
 
+	//--- Item Tooltips ---//
+
+	/**
+	 * Adds tooltip information to the ammunition item
+	 *
+	 * @param ammo    ammunition type
+	 * @param stack   ammunition ItemStack
+	 * @param world   world
+	 * @param tooltip tooltip list
+	 */
+	@SideOnly(Side.CLIENT)
+	public static void createAmmoTooltip(IAmmoTypeItem<?, ?> ammo, ItemStack stack, @Nullable World world, List<String> tooltip)
+	{
+		//add category tooltip
+		tooltip.add(getFormattedBulletTypeName(ammo, stack));
+		//get common parameters
+		AmmoCore core = ammo.getCore(stack);
+		CoreTypes coreType = ammo.getCoreType(stack);
+
+		//TODO: 29.03.2024 use values from lang file
+
+		//composition tab
+		if(ItemTooltipHandler.addExpandableTooltip(Keyboard.KEY_LSHIFT, "%s - Composition", tooltip))
+		{
+			//get parameters
+			FuseTypes fuse = ammo.getFuseType(stack);
+			AmmoComponent[] components = ammo.getComponents(stack);
+
+			//list general information
+			tooltip.add(IIUtils.getHexCol(IIReference.COLORS_HIGHLIGHT_S[1], "Details:"));
+
+			//core + type
+			if(ammo.getClass().isAnnotationPresent(IIAmmoProjectile.class))
+			{
+				tooltip.add("⦳ "+I18n.format(IIReference.DESCRIPTION_KEY+"bullets.core",
+						I18n.format(IIReference.DESCRIPTION_KEY+"bullet_core_type."+coreType.getName()),
+						IIUtils.getHexCol(core.getColour(), I18n.format("item."+ImmersiveIntelligence.MODID+".bullet.component."+core.getName()+".name"))
+				));
+
+				//fuse
+				tooltip.add(fuse.symbol+" "+I18n.format(IIReference.DESCRIPTION_KEY+"bullets.fuse",
+						I18n.format(IIReference.DESCRIPTION_KEY+"bullet_fuse."+fuse.getName())
+				));
+			}
+			else
+			{
+				tooltip.add("⦳ "+I18n.format(IIReference.DESCRIPTION_KEY+"bullets.core", "",
+						IIUtils.getHexCol(core.getColour(), I18n.format("item."+ImmersiveIntelligence.MODID+".bullet.component."+core.getName()+".name"))
+				));
+			}
+
+			//mass
+			tooltip.add("\u2696 "+I18n.format(IIReference.DESCRIPTION_KEY+"bullets.mass", Utils.formatDouble(ammo.getMass(stack), "0.##")));
+
+			//list components
+			if(components.length > 0)
+			{
+				tooltip.add(IIUtils.getHexCol(IIReference.COLORS_HIGHLIGHT_S[1], "Components:"));
+				for(AmmoComponent comp : components)
+					tooltip.add("   "+comp.getTranslatedName());
+			}
+		}
+
+		//performance tab
+		if((ammo.getClass().isAnnotationPresent(IIAmmoProjectile.class))&&!ammo.isBulletCore(stack)&&ItemTooltipHandler.addExpandableTooltip(Keyboard.KEY_LCONTROL, "%s - Ballistics", tooltip))
+		{
+			tooltip.add(IIUtils.getHexCol(IIReference.COLORS_HIGHLIGHT_S[0], "Performance:"));
+			tooltip.add(String.format("\u2295 "+"Damage Dealt: %s", ammo.getDamage()));
+			tooltip.add(String.format("\u29c1 "+"Standard Velocity: %s B/s", ammo.getDefaultVelocity()));
+
+			tooltip.add(IIUtils.getHexCol(IIReference.COLORS_HIGHLIGHT_S[0], "Armor Penetration:"));
+
+			//list of block penetration tests
+			listPenetratedAmount(tooltip, ammo, core, coreType, Blocks.GLASS, 0);
+			listPenetratedAmount(tooltip, ammo, core, coreType, Blocks.DIRT, 0);
+			listPenetratedAmount(tooltip, ammo, core, coreType, Blocks.LOG, 0);
+			listPenetratedAmount(tooltip, ammo, core, coreType, Blocks.BRICK_BLOCK, 0);
+			listPenetratedAmount(tooltip, ammo, core, coreType, IEContent.blockStoneDecoration, BlockTypes_StoneDecoration.CONCRETE_TILE.getMeta());
+			listPenetratedAmount(tooltip, ammo, core, coreType, IIContent.blockConcreteDecoration, ConcreteDecorations.STURDY_CONCRETE_BRICKS.getMeta());
+			listPenetratedAmount(tooltip, ammo, core, coreType, IIContent.blockMetalStorage, Metals.TUNGSTEN.getMeta());
+			listPenetratedAmount(tooltip, ammo, core, coreType, IIContent.blockConcreteDecoration, ConcreteDecorations.UBERCONCRETE.getMeta());
+		}
+	}
+
+	private static void listPenetratedAmount(List<String> tooltip, IAmmoTypeItem<?, ?> ammo, AmmoCore core, CoreTypes coreType, Block block, int meta)
+	{
+		IPenetrationHandler penHandler = PenetrationRegistry.getPenetrationHandler(block.getStateFromMeta(meta));
+		int penetratedAmount = getPenetratedAmount(ammo, core, coreType, penHandler, penHandler.getPenetrationHardness());
+
+		String displayName = new ItemStack(block, 1, meta).getDisplayName();
+		if(penetratedAmount < 1)
+			tooltip.add(TextFormatting.RED+"✕ "+displayName);
+		else
+			tooltip.add(TextFormatting.DARK_GREEN+String.format("⦴ %s: %d B", displayName, penetratedAmount));
+
+	}
+
+	private static String getFormattedBulletTypeName(IAmmoType<?, ?> ammo, ItemStack stack)
+	{
+		Set<ComponentRole> collect = new HashSet<>();
+		if(ammo.getCoreType(stack).getRole()!=null)
+			collect.add(ammo.getCoreType(stack).getRole());
+		collect.addAll(Arrays.stream(ammo.getComponents(stack)).map(AmmoComponent::getRole).collect(Collectors.toSet()));
+		StringBuilder builder = new StringBuilder();
+		for(ComponentRole componentRole : collect)
+		{
+			if(componentRole==ComponentRole.GENERAL_PURPOSE)
+				continue;
+			builder.append(IIUtils.getHexCol(componentRole.getColor(), I18n.format(IIReference.DESCRIPTION_KEY+"bullet_type."+componentRole.getName())));
+			builder.append(" - ");
+		}
+		if(builder.toString().isEmpty())
+		{
+			builder.append(I18n.format(IIReference.DESCRIPTION_KEY+"bullet_type."+ComponentRole.GENERAL_PURPOSE.getName()));
+			builder.append(" - ");
+		}
+		//trim last " - "
+		builder.delete(builder.length()-3, builder.length());
+		if(stack.hasDisplayName())
+			builder.append(" ").append(TextFormatting.GRAY).append(stack.getItem().getItemStackDisplayName(stack));
+		return builder.toString();
+	}
+
+	//--- Public Utility Methods ---//
+
+	/**
+	 * @param coreMaterial ammunition's core material
+	 * @param coreType     ammunition's core type
+	 * @return combined hardness of the core material and core type
+	 */
+	public static PenetrationHardness getCombinedHardness(AmmoCore coreMaterial, CoreTypes coreType)
+	{
+		//Bedrock level is the highest present, but it's not penetrable
+		int index = MathHelper.clamp(coreMaterial.getPenetrationHardness().ordinal()+coreType.getPenHardnessBonus(), 0, PenetrationHardness.values().length-2);
+		return PenetrationHardness.values()[index];
+	}
+
+	/**
+	 * @param ammoType ammunition type
+	 * @param coreType ammunition core type
+	 * @return combined penetration depth of the ammunition type and core type
+	 */
+	public static float getCombinedDepth(IAmmoType<?, ?> ammoType, CoreTypes coreType)
+	{
+		return ammoType.getPenetrationDepth()*coreType.getPenDepthMod();
+	}
+
+
+	/**
+	 * @param ammoType      ammunition type
+	 * @param coreMaterial  ammunition core material
+	 * @param coreType      ammunition core type
+	 * @param penHandler    block's penetration handler
+	 * @param blockHardness block's hardness
+	 * @return amount of blocks penetrated by the ammo
+	 */
+	public static int getPenetratedAmount(IAmmoType<?, ?> ammoType, AmmoCore coreMaterial, CoreTypes coreType,
+										  IPenetrationHandler penHandler, PenetrationHardness blockHardness)
+	{
+		float penetrationDepth = getCombinedDepth(ammoType, coreType);
+		PenetrationHardness ammoHardness = getCombinedHardness(coreMaterial, coreType);
+
+		if(ammoHardness.compareTo(blockHardness) >= 0)
+			return (int)Math.floor(penetrationDepth/penHandler.getThickness());
+		return 0;
+	}
 }

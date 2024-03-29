@@ -15,7 +15,7 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.ammo.IIAmmoRegistry;
+import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.model.builtin.IAmmoModel;
@@ -166,7 +166,7 @@ public class ChemicalPainterRenderer extends TileEntitySpecialRenderer<TileEntit
 				if(te.effect.getItem() instanceof IAmmoTypeItem)
 				{
 					IAmmoTypeItem bullet = (IAmmoTypeItem)te.effect.getItem();
-					IAmmoModel bModel = IIAmmoRegistry.getModel(bullet);
+					IAmmoModel bModel = AmmoRegistry.getModel(bullet);
 					GlStateManager.translate(0, -0.25f, 0);
 					bModel.renderAmmoComplete(false, itemProgress > 0.5f?te.effect: te.inventory.get(0));
 					ClientUtils.bindAtlas();

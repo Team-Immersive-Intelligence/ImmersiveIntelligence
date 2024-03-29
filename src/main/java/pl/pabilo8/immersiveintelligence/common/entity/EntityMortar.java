@@ -24,7 +24,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Mouse;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.ammo.utils.IIAmmoFactory;
+import pl.pabilo8.immersiveintelligence.api.ammo.utils.AmmoFactory;
 import pl.pabilo8.immersiveintelligence.api.utils.camera.IEntityZoomProvider;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.IAdvancedZoomTool;
 import pl.pabilo8.immersiveintelligence.client.util.CameraHandler;
@@ -48,7 +48,7 @@ public class EntityMortar extends Entity implements IEntityAdditionalSpawnData, 
 	private static final DataParameter<Boolean> dataMarkerGunPitchUp = EntityDataManager.createKey(EntityMortar.class, DataSerializers.BOOLEAN);
 	private static final DataParameter<Boolean> dataMarkerGunPitchDown = EntityDataManager.createKey(EntityMortar.class, DataSerializers.BOOLEAN);
 	private static final DataParameter<Float> dataMarkerShootingProgress = EntityDataManager.createKey(EntityMortar.class, DataSerializers.FLOAT);
-	private final IIAmmoFactory<EntityAmmoArtilleryProjectile> ammoFactory;
+	private final AmmoFactory<EntityAmmoArtilleryProjectile> ammoFactory;
 
 	public boolean fireKeyPress = false, gunPitchUp = false, gunPitchDown = false;
 	public int setupTime = 0;
@@ -57,7 +57,7 @@ public class EntityMortar extends Entity implements IEntityAdditionalSpawnData, 
 	public EntityMortar(World worldIn)
 	{
 		super(worldIn);
-		this.ammoFactory = new IIAmmoFactory<>(this);
+		this.ammoFactory = new AmmoFactory<>(this);
 	}
 
 	@Override

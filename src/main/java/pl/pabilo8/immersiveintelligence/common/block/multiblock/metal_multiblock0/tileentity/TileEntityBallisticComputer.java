@@ -14,7 +14,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.Vec3d;
-import pl.pabilo8.immersiveintelligence.api.ammo.IIAmmoRegistry;
+import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.IIAmmoUtils;
 import pl.pabilo8.immersiveintelligence.api.data.DataHandlingUtils;
@@ -118,7 +118,7 @@ public class TileEntityBallisticComputer extends TileEntityMultiblockIIGeneric<T
 			if(packet.hasVariable('t'))
 			{
 				String bname = packet.getPacketVariable('t').valueToString();
-				IAmmoTypeItem<?, ?> bullet = IIAmmoRegistry.getAmmoItem(bname);
+				IAmmoTypeItem<?, ?> bullet = AmmoRegistry.getAmmoItem(bname);
 				if(bullet!=null)
 					force = bullet.getDefaultVelocity();
 			}

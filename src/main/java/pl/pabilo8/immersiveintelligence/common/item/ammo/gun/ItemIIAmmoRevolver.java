@@ -24,11 +24,11 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumCoreTypes;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumFuseTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseTypes;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem.IIAmmoProjectile;
-import pl.pabilo8.immersiveintelligence.api.ammo.utils.IIAmmoFactory;
+import pl.pabilo8.immersiveintelligence.api.ammo.utils.AmmoFactory;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.model.builtin.IAmmoModel;
 import pl.pabilo8.immersiveintelligence.client.model.builtin.ModelAmmoProjectile;
@@ -102,7 +102,7 @@ public class ItemIIAmmoRevolver extends ItemBullet implements IAmmoTypeItem<Item
 	public void registerSprites(TextureMap map)
 	{
 		ApiUtils.getRegisterSprite(map, ImmersiveIntelligence.MODID+":items/bullets/ammo/"+getName().toLowerCase()+"/base");
-		for(EnumCoreTypes coreType : getAllowedCoreTypes())
+		for(CoreTypes coreType : getAllowedCoreTypes())
 			ApiUtils.getRegisterSprite(map, ImmersiveIntelligence.MODID+":items/bullets/ammo/"+getName().toLowerCase()+"/"+coreType.getName());
 		ApiUtils.getRegisterSprite(map, ImmersiveIntelligence.MODID+":items/bullets/ammo/"+getName().toLowerCase()+"/paint");
 		ApiUtils.getRegisterSprite(map, ImmersiveIntelligence.MODID+":items/bullets/ammo/"+getName().toLowerCase()+"/core");
@@ -162,9 +162,9 @@ public class ItemIIAmmoRevolver extends ItemBullet implements IAmmoTypeItem<Item
 	}
 
 	@Override
-	public EnumFuseTypes[] getAllowedFuseTypes()
+	public FuseTypes[] getAllowedFuseTypes()
 	{
-		return new EnumFuseTypes[]{EnumFuseTypes.CONTACT};
+		return new FuseTypes[]{FuseTypes.CONTACT};
 	}
 
 	@Override
@@ -305,9 +305,9 @@ public class ItemIIAmmoRevolver extends ItemBullet implements IAmmoTypeItem<Item
 	}
 
 	@Override
-	public EnumCoreTypes[] getAllowedCoreTypes()
+	public CoreTypes[] getAllowedCoreTypes()
 	{
-		return new EnumCoreTypes[]{EnumCoreTypes.SOFTPOINT, EnumCoreTypes.PIERCING, EnumCoreTypes.CANISTER};
+		return new CoreTypes[]{CoreTypes.SOFTPOINT, CoreTypes.PIERCING, CoreTypes.CANISTER};
 	}
 
 	//IE, a place where things both work and not at the same time
@@ -326,7 +326,7 @@ public class ItemIIAmmoRevolver extends ItemBullet implements IAmmoTypeItem<Item
 	@Override
 	public Entity getProjectile(@Nullable EntityPlayer shooter, ItemStack cartridge, Entity projectile, boolean charged)
 	{
-		return new IIAmmoFactory<>(projectile.world)
+		return new AmmoFactory<>(projectile.world)
 				.setPosition(projectile.getPositionVector())
 				.setDirection(IIUtils.getEntityMotion(projectile).normalize())
 				.setStack(cartridge)

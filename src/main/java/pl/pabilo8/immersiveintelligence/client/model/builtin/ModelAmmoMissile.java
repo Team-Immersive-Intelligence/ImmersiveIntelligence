@@ -5,7 +5,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.GlStateManager.DestFactor;
 import net.minecraft.client.renderer.Tessellator;
 import org.lwjgl.opengl.GL11;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumCoreTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreTypes;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoCore;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoType;
 import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
@@ -37,7 +37,7 @@ public class ModelAmmoMissile<T extends IAmmoType<T, E>, E extends EntityAmmoMis
 	}
 
 	@Override
-	public void renderAmmoComplete(boolean used, int paintColour, AmmoCore coreMaterial, EnumCoreTypes coreType)
+	public void renderAmmoComplete(boolean used, int paintColour, AmmoCore coreMaterial, CoreTypes coreType)
 	{
 		if(!loaded)
 			return;
@@ -48,12 +48,17 @@ public class ModelAmmoMissile<T extends IAmmoType<T, E>, E extends EntityAmmoMis
 		modelCoreSimple.get(coreType).get(coreMaterial).render(tes, buf);
 
 		//TODO: 19.03.2024 emmisive rendering
-		GlStateManager.enableBlend();
-		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_CONSTANT_ALPHA);
-		GlStateManager.alphaFunc(GL11.GL_GREATER, 0.003921569F);
+
 		if(used)
+		{
+			GlStateManager.enableBlend();
+			GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, DestFactor.ONE);
+			GlStateManager.alphaFunc(GL11.GL_GREATER, 0.003921569F);
 			modelJet.render(tes, buf);
-		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+			modelJet.render(tes, buf);
+			GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+		}
+
 	}
 
 	@Override

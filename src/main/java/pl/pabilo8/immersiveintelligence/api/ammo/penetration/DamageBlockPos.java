@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.api.ammo.utils;
+package pl.pabilo8.immersiveintelligence.api.ammo.penetration;
 
 import blusunrize.immersiveengineering.api.DimensionBlockPos;
 import net.minecraft.tileentity.TileEntity;

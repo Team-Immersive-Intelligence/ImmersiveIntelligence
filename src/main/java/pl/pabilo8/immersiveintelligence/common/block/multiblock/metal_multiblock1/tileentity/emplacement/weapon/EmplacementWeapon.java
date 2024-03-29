@@ -15,7 +15,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.IItemHandler;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.ammo.utils.IIAmmoFactory;
+import pl.pabilo8.immersiveintelligence.api.ammo.utils.AmmoFactory;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
 import pl.pabilo8.immersiveintelligence.client.fx.ParticleUtils;
@@ -46,7 +46,7 @@ public abstract class EmplacementWeapon<A extends EntityAmmoBase<A>>
 	/**
 	 * Used to fire ammo for the weapon
 	 */
-	protected IIAmmoFactory<A> ammoFactory;
+	protected AmmoFactory<A> ammoFactory;
 	/**
 	 * Acts as a hitbox container for the weapon
 	 */
@@ -158,7 +158,7 @@ public abstract class EmplacementWeapon<A extends EntityAmmoBase<A>>
 		//Exception is the IR Observer, which overrides this method
 		if(firstTime)
 		{
-			this.ammoFactory = new IIAmmoFactory<A>(te.getWorld())
+			this.ammoFactory = new AmmoFactory<A>(te.getWorld())
 					.setIgnoredBlocks(te.getAllBlocks())
 					.setOwner(entity);
 			this.health = getMaxHealth();

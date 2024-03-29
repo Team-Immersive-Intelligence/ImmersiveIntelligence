@@ -4,15 +4,15 @@ import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.block.IBlockState;
 import crafttweaker.api.block.IMaterial;
 import crafttweaker.api.minecraft.CraftTweakerMC;
-import net.minecraft.block.material.Material;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.ammo.IIPenetrationRegistry;
-import pl.pabilo8.immersiveintelligence.api.ammo.IIPenetrationRegistry.IPenetrationHandler;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.HitEffect;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.PenMaterialTypes;
-import pl.pabilo8.immersiveintelligence.api.ammo.penetration_handlers.PenetrationHandlerMetals.PenetrationHandlerMetal;
+import pl.pabilo8.immersiveintelligence.api.ammo.PenetrationRegistry;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.PenetrationHardness;
+import pl.pabilo8.immersiveintelligence.api.ammo.penetration.PenetrationHandler;
+import pl.pabilo8.immersiveintelligence.api.ammo.penetration.PenetrationHandlerMetal;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import stanhebben.zenscript.annotations.Optional;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
@@ -20,6 +20,8 @@ import javax.annotation.Nullable;
 
 /**
  * @author Pabilo8
+ * @updated 27.03.2024
+ * @ii-approved 0.3.1
  * @since 06.01.2022
  */
 @ZenClass("mods."+ImmersiveIntelligence.MODID+".BlockPenetration")
@@ -27,78 +29,37 @@ import javax.annotation.Nullable;
 public class BlockPenetrationTweaker
 {
 	@ZenMethod
-	public static void addMaterial(IMaterial material, float integrity, float density, String penetrationType, String sound)
+	public static void addMaterial(IMaterial material, String hardnessTier, float thickness, float integrity, @Optional String sound)
 	{
-		final Material mat = CraftTweakerMC.getMaterial(material);
-		final CTPenetrationHandler pen = new CTPenetrationHandler(integrity, density, sound, penetrationType);
-		IIPenetrationRegistry.registeredMaterials.put(m -> m==mat, pen);
+		PenetrationRegistry.registerMaterial(CraftTweakerMC.getMaterial(material),
+				new CTPenetrationHandler(hardnessTier, thickness, integrity, sound));
 	}
 
 	@ZenMethod
-	public static void addBlock(IBlockState state, float integrity, float density, String penetrationType, String sound)
+	public static void addBlock(IBlockState state, String hardnessTier, float thickness, float integrity, @Optional String sound)
 	{
-		final CTPenetrationHandler pen = new CTPenetrationHandler(integrity, density, sound, penetrationType);
-
-		IIPenetrationRegistry.registeredBlocks.put(b -> state.compare(CraftTweakerMC.getBlockState(b))==0, pen);
+		PenetrationRegistry.registerState(b -> state.compare(CraftTweakerMC.getBlockState(b))==0,
+				new CTPenetrationHandler(hardnessTier, thickness, integrity, sound));
 	}
 
 	@ZenMethod
-	public static void addMetal(String name, float integrity, float density)
+	public static void addMetal(String name, String hardnessTier, float thickness, float integrity)
 	{
-		final PenetrationHandlerMetal pen = new PenetrationHandlerMetal()
-		{
-			@Override
-			public float getIntegrity()
-			{
-				return integrity;
-			}
-
-			@Override
-			public float getReduction()
-			{
-				return density;
-			}
-		};
-		IIPenetrationRegistry.registerMetalMaterial(pen, name);
+		PenetrationRegistry.registerMetalMaterial(PenetrationHandlerMetal.create(
+				name,
+				IIUtils.enumValue(PenetrationHardness.class, hardnessTier),
+				thickness, integrity
+		));
 	}
 
-	private static class CTPenetrationHandler implements IPenetrationHandler
+	private static class CTPenetrationHandler extends PenetrationHandler
 	{
-		float integrity, density;
-		SoundEvent sound;
-		PenMaterialTypes penMat;
-
-		public CTPenetrationHandler(float integrity, float density, @Nullable String sound, String penMat)
+		public CTPenetrationHandler(String hardness, float integrity, float density, @Nullable String sound)
 		{
-			this.integrity = integrity;
-			this.density = density;
-			this.sound = sound==null?null: SoundEvent.REGISTRY.getObject(new ResourceLocation(sound));
-			this.penMat = PenMaterialTypes.v(penMat);
-		}
-
-		@Override
-		public float getIntegrity()
-		{
-			return integrity;
-		}
-
-		@Override
-		public float getReduction()
-		{
-			return density;
-		}
-
-		@Nullable
-		@Override
-		public SoundEvent getSpecialSound(HitEffect effect)
-		{
-			return sound;
-		}
-
-		@Override
-		public PenMaterialTypes getPenetrationType()
-		{
-			return penMat;
+			super(PenetrationHardness.valueOf(hardness.toUpperCase()), integrity, density,
+					sound==null?null: SoundEvent.REGISTRY.getObject(new ResourceLocation(sound)),
+					sound==null?null: SoundEvent.REGISTRY.getObject(new ResourceLocation(sound))
+			);
 		}
 	}
 }

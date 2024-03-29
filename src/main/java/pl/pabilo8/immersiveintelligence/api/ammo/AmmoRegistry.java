@@ -24,7 +24,7 @@ import java.util.LinkedHashMap;
  * @ii-approved 0.3.1
  * @since 30-08-2019
  */
-public class IIAmmoRegistry
+public class AmmoRegistry
 {
 	/**
 	 * Special case, used when the core is missing
@@ -127,7 +127,7 @@ public class IIAmmoRegistry
 	@SideOnly(Side.CLIENT)
 	public static void registerAmmoModels()
 	{
-		REGISTERED_AMMO_TYPES.values().forEach(IIAmmoRegistry::registerSingleModel);
+		REGISTERED_AMMO_TYPES.values().forEach(AmmoRegistry::registerSingleModel);
 	}
 
 	private static <T extends IAmmoType<T, E>, E extends EntityAmmoBase<? super E>> void registerSingleModel(IAmmoType<?, ?> ammo)

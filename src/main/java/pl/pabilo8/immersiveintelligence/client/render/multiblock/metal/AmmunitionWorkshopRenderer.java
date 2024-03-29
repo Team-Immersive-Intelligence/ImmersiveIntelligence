@@ -13,7 +13,7 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
-import pl.pabilo8.immersiveintelligence.api.ammo.IIAmmoRegistry;
+import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.model.builtin.IAmmoModel;
@@ -74,7 +74,7 @@ public class AmmunitionWorkshopRenderer extends TileEntitySpecialRenderer<TileEn
 			if(te.effect.getItem() instanceof IAmmoTypeItem)
 			{
 				bullet = (IAmmoTypeItem<?, ?>)te.effect.getItem();
-				bulletModel = IIAmmoRegistry.getModel(bullet);
+				bulletModel = AmmoRegistry.getModel(bullet);
 			}
 
 			if(progress > 0.15&&progress < 0.65)

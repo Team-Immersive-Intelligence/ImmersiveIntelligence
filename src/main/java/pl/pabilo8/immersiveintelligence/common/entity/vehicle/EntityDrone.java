@@ -20,7 +20,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.api.ammo.utils.IIAmmoFactory;
+import pl.pabilo8.immersiveintelligence.api.ammo.utils.AmmoFactory;
 import pl.pabilo8.immersiveintelligence.api.utils.IEntitySpecialRepairable;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IVehicleMultiPart;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
@@ -41,7 +41,7 @@ import java.util.List;
  */
 public class EntityDrone extends EntityFlying implements IIIEntity<EntityDrone>, IVehicleMultiPart, IEntitySpecialRepairable
 {
-	private final IIAmmoFactory<EntityAmmoArtilleryProjectile> ammoFactory;
+	private final AmmoFactory<EntityAmmoArtilleryProjectile> ammoFactory;
 	//--- Parts ---//
 	private final EntityVehiclePart[] partArray;
 	//sub-entities for colision and hitboxes
@@ -60,7 +60,7 @@ public class EntityDrone extends EntityFlying implements IIIEntity<EntityDrone>,
 		setSize(4, 2.5f);
 
 		//set ammo factory (bomb dropping)
-		this.ammoFactory = new IIAmmoFactory<>(this);
+		this.ammoFactory = new AmmoFactory<>(this);
 		ammoFactory.setStack(IIContent.itemAmmoMortar.getBulletWithParams("core_brass", "canister", "tnt"))
 				.setDirection(new Vec3d(0, 1, 0))
 				.setVelocityModifier(0);

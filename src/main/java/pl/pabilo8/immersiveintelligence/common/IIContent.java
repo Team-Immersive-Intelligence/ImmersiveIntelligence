@@ -325,10 +325,12 @@ public class IIContent
 
 	//--- Ammunition System ---//
 	//ammo cores
-	public static final AmmoCore ammoCoreSteel = new AmmoCoreSteel();
-	public static final AmmoCore ammoCoreTungsten = new AmmoCoreTungsten();
+	public static final AmmoCore ammoCoreCopper = new AmmoCoreCopper();
 	public static final AmmoCore ammoCoreBrass = new AmmoCoreBrass();
 	public static final AmmoCore ammoCoreLead = new AmmoCoreLead();
+	public static final AmmoCore ammoCoreIron = new AmmoCoreIron();
+	public static final AmmoCore ammoCoreSteel = new AmmoCoreSteel();
+	public static final AmmoCore ammoCoreTungsten = new AmmoCoreTungsten();
 	public static final AmmoCore ammoCoreUranium = new AmmoCoreUranium();
 	public static final AmmoCore ammoCorePabilium = new AmmoCorePabilium();
 

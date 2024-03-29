@@ -23,7 +23,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Mouse;
-import pl.pabilo8.immersiveintelligence.api.ammo.utils.IIAmmoFactory;
+import pl.pabilo8.immersiveintelligence.api.ammo.utils.AmmoFactory;
 import pl.pabilo8.immersiveintelligence.api.utils.IEntitySpecialRepairable;
 import pl.pabilo8.immersiveintelligence.api.utils.camera.IEntityZoomProvider;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.IAdvancedZoomTool;
@@ -81,7 +81,7 @@ public class EntityFieldHowitzer extends Entity implements IVehicleMultiPart, IE
 	private static final DataParameter<NBTTagCompound> dataMarkerShell = EntityDataManager.createKey(EntityFieldHowitzer.class, DataSerializers.COMPOUND_TAG);
 
 	//--- Entity Variables ---//
-	private final IIAmmoFactory<EntityAmmoArtilleryProjectile> ammoFactory;
+	private final AmmoFactory<EntityAmmoArtilleryProjectile> ammoFactory;
 	public int rightWheelDurability, leftWheelDurability, mainDurability, gunDurability, shieldDurability;
 	public int setupTime = 0;
 	public boolean alreadyShoot = false;
@@ -108,7 +108,7 @@ public class EntityFieldHowitzer extends Entity implements IVehicleMultiPart, IE
 	public EntityFieldHowitzer(World worldIn)
 	{
 		super(worldIn);
-		this.ammoFactory = new IIAmmoFactory<>(this);
+		this.ammoFactory = new AmmoFactory<>(this);
 		partArray = new EntityVehiclePart[]{partWheelRight, partWheelLeft, partMain, partMain2, partGun, partShieldRight, partShieldLeft};
 		rightWheelDurability = FieldHowitzer.wheelDurability;
 		leftWheelDurability = FieldHowitzer.wheelDurability;
@@ -457,7 +457,10 @@ public class EntityFieldHowitzer extends Entity implements IVehicleMultiPart, IE
 			partWheelRight.wheelTraverse += acceleration*2.5f;
 			partWheelLeft.wheelTraverse += acceleration*2.5f;
 			Vec3d currentPos = new Vec3d(partWheelLeft.posX+pos1_z.x, partWheelLeft.posY, partWheelLeft.posZ+pos1_z.z);
-			setPosition(currentPos.x, currentPos.y, currentPos.z);
+			posX = currentPos.x;
+			posY = currentPos.y;
+			posZ = currentPos.z;
+//			setPosition(currentPos.x, currentPos.y, currentPos.z);
 			updateParts(this);
 		}
 	}
@@ -684,10 +687,10 @@ public class EntityFieldHowitzer extends Entity implements IVehicleMultiPart, IE
 			{
 				gunDurability -= amount*0.85;
 				dataManager.set(dataMarkerGunDurability, gunDurability);
-				world.playSound(null, posX, posY, posZ, IISounds.hitMetal.getSoundImpact(), SoundCategory.BLOCKS, 1.5f, 1f);
+				world.playSound(null, posX, posY, posZ, IISounds.hitMetal.getImpactSound(), SoundCategory.BLOCKS, 1.5f, 1f);
 			}
 			else
-				world.playSound(null, posX, posY, posZ, IISounds.hitMetal.getSoundImpact(), SoundCategory.NEUTRAL, 1.5f, 8/amount);
+				world.playSound(null, posX, posY, posZ, IISounds.hitMetal.getImpactSound(), SoundCategory.NEUTRAL, 1.5f, 8/amount);
 			return true;
 		}
 		else if((part==partMain||part==partMain2))
@@ -696,10 +699,10 @@ public class EntityFieldHowitzer extends Entity implements IVehicleMultiPart, IE
 			{
 				mainDurability -= amount;
 				dataManager.set(dataMarkerMainDurability, mainDurability);
-				world.playSound(null, posX, posY, posZ, IISounds.hitMetal.getSoundImpact(), SoundCategory.BLOCKS, 1.5f, 1f);
+				world.playSound(null, posX, posY, posZ, IISounds.hitMetal.getImpactSound(), SoundCategory.BLOCKS, 1.5f, 1f);
 			}
 			else
-				world.playSound(null, posX, posY, posZ, IISounds.hitMetal.getSoundRicochet(), SoundCategory.NEUTRAL, 1.5f, 8/amount);
+				world.playSound(null, posX, posY, posZ, IISounds.hitMetal.getRicochetSound(), SoundCategory.NEUTRAL, 1.5f, 8/amount);
 
 		}
 		else if(part==partWheelRight)
@@ -726,10 +729,10 @@ public class EntityFieldHowitzer extends Entity implements IVehicleMultiPart, IE
 					shieldDurability -= amount*0.85;
 					dataManager.set(dataMarkerShieldDurability, shieldDurability);
 				}
-				world.playSound(null, posX, posY, posZ, IISounds.hitMetal.getSoundImpact(), SoundCategory.BLOCKS, 1.5f, 1f);
+				world.playSound(null, posX, posY, posZ, IISounds.hitMetal.getImpactSound(), SoundCategory.BLOCKS, 1.5f, 1f);
 			}
 			else
-				world.playSound(null, posX, posY, posZ, IISounds.hitMetal.getSoundRicochet(), SoundCategory.NEUTRAL, 1.5f, 8/amount);
+				world.playSound(null, posX, posY, posZ, IISounds.hitMetal.getRicochetSound(), SoundCategory.NEUTRAL, 1.5f, 8/amount);
 		}
 		else
 			return false;

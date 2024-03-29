@@ -36,7 +36,7 @@ import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.MachinegunCoolantHandler;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
-import pl.pabilo8.immersiveintelligence.api.ammo.utils.IIAmmoFactory;
+import pl.pabilo8.immersiveintelligence.api.ammo.utils.AmmoFactory;
 import pl.pabilo8.immersiveintelligence.api.utils.IEntitySpecialRepairable;
 import pl.pabilo8.immersiveintelligence.api.utils.camera.IEntityZoomProvider;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.IAdvancedTextOverlay;
@@ -77,7 +77,7 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 	public int bulletDelay = 0, bulletDelayMax = 0, clipReload = 0, setupTime = Machinegun.setupTime, maxSetupTime = Machinegun.setupTime, overheating = 0, tankCapacity = 0, bullets1 = 0, bullets2 = 0;
 	public float setYaw = 0, recoilYaw = 0, recoilPitch = 0, gunYaw = 0, gunPitch = 0, maxRecoilPitch = Machinegun.recoilHorizontal, maxRecoilYaw = Machinegun.recoilVertical, currentlyLoaded = -1, shieldStrength = 0f, maxShieldStrength = 0f;
 	public boolean shoot = false, aiming = false, hasSecondMag = false, mag1Empty = false, mag2Empty = false, hasInfrared = false, loadedFromCrate = false, overheated = false, tripod = false;
-	private final IIAmmoFactory<EntityAmmoProjectile> ammoFactory;
+	private final AmmoFactory<EntityAmmoProjectile> ammoFactory;
 	public FluidTank tank = new FluidTank(tankCapacity);
 
 	AxisAlignedBB aabb = new AxisAlignedBB(0.15d, 0d, 0.15d, 0.85d, 0.65d, 0.85d).offset(-0.5, 0, -0.5);
@@ -87,13 +87,13 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 	public EntityMachinegun(World worldIn)
 	{
 		super(worldIn);
-		this.ammoFactory = new IIAmmoFactory<>(this);
+		this.ammoFactory = new AmmoFactory<>(this);
 	}
 
 	public EntityMachinegun(World world, BlockPos pos, float yaw, float pitch, ItemStack stack)
 	{
 		super(world);
-		this.ammoFactory = new IIAmmoFactory<>(this);
+		this.ammoFactory = new AmmoFactory<>(this);
 
 		float height = 0;
 		this.gun = stack.copy();

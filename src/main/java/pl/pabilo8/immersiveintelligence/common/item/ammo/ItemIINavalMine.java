@@ -13,8 +13,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumCoreTypes;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumFuseTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseTypes;
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler.IItemScrollable;
 import pl.pabilo8.immersiveintelligence.client.model.builtin.IAmmoModel;
 import pl.pabilo8.immersiveintelligence.client.model.builtin.ModelAmmo;
@@ -99,9 +99,9 @@ public class ItemIINavalMine extends ItemIIAmmoBase<EntityNavalMine> implements 
 	}
 
 	@Override
-	public EnumCoreTypes[] getAllowedCoreTypes()
+	public CoreTypes[] getAllowedCoreTypes()
 	{
-		return new EnumCoreTypes[]{EnumCoreTypes.CANISTER};
+		return new CoreTypes[]{CoreTypes.CANISTER};
 	}
 
 	@Override
@@ -228,8 +228,8 @@ public class ItemIINavalMine extends ItemIIAmmoBase<EntityNavalMine> implements 
 	}
 
 	@Override
-	public EnumFuseTypes[] getAllowedFuseTypes()
+	public FuseTypes[] getAllowedFuseTypes()
 	{
-		return new EnumFuseTypes[]{EnumFuseTypes.CONTACT, EnumFuseTypes.PROXIMITY};
+		return new FuseTypes[]{FuseTypes.CONTACT, FuseTypes.PROXIMITY};
 	}
 }

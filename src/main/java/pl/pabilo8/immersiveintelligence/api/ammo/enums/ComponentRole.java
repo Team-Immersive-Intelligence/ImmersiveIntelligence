@@ -5,7 +5,7 @@ import pl.pabilo8.immersiveintelligence.common.util.ISerializableEnum;
 import javax.annotation.Nonnull;
 import java.util.Arrays;
 
-public enum EnumComponentRole implements ISerializableEnum
+public enum ComponentRole implements ISerializableEnum
 {
 	GENERAL_PURPOSE(0xaaaaaa),
 	SHRAPNEL(0x5592405),
@@ -23,7 +23,7 @@ public enum EnumComponentRole implements ISerializableEnum
 	 */
 	private final int color;
 
-	EnumComponentRole(int color)
+	ComponentRole(int color)
 	{
 		this.color = color;
 	}
@@ -34,7 +34,7 @@ public enum EnumComponentRole implements ISerializableEnum
 	}
 
 	@Nonnull
-	public static EnumComponentRole v(String s)
+	public static ComponentRole v(String s)
 	{
 		String ss = s.toUpperCase();
 		return Arrays.stream(values()).filter(e -> e.name().equals(ss)).findFirst().orElse(GENERAL_PURPOSE);

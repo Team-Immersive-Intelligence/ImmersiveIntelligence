@@ -74,12 +74,12 @@ public class AdvancedSounds
 			this.soundRicochet = ricochet;
 		}
 
-		public SoundEvent getSoundImpact()
+		public SoundEvent getImpactSound()
 		{
 			return soundImpact;
 		}
 
-		public SoundEvent getSoundRicochet()
+		public SoundEvent getRicochetSound()
 		{
 			return soundRicochet;
 		}

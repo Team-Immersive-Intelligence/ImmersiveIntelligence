@@ -31,9 +31,9 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
-import pl.pabilo8.immersiveintelligence.api.ammo.IIPenetrationRegistry;
-import pl.pabilo8.immersiveintelligence.api.ammo.utils.DamageBlockPos;
+import pl.pabilo8.immersiveintelligence.api.ammo.penetration.DamageBlockPos;
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.IIAmmoUtils;
+import pl.pabilo8.immersiveintelligence.api.ammo.utils.PenetrationCache;
 import pl.pabilo8.immersiveintelligence.api.utils.IAdvancedMultiblock;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Ammunition;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons;
@@ -194,7 +194,7 @@ public class EventHandler
 	public void onBreakBlock(BreakEvent event)
 	{
 		DamageBlockPos dpos = null;
-		for(DamageBlockPos g : IIPenetrationRegistry.blockDamage)
+		for(DamageBlockPos g : PenetrationCache.blockDamage)
 		{
 			if(g.dimension==event.getWorld().provider.getDimension()&&event.getPos().equals(g)) ;
 			{
@@ -204,7 +204,7 @@ public class EventHandler
 		}
 		if(dpos!=null)
 		{
-			IIPenetrationRegistry.blockDamage.remove(dpos);
+			PenetrationCache.blockDamage.remove(dpos);
 			dpos.damage = 0;
 			IIPacketHandler.INSTANCE.sendToAllAround(new MessageBlockDamageSync(dpos), IIPacketHandler.targetPointFromPos(dpos, event.getWorld(), 32));
 		}

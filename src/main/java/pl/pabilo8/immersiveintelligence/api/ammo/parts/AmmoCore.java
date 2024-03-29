@@ -1,6 +1,7 @@
 package pl.pabilo8.immersiveintelligence.api.ammo.parts;
 
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.PenetrationHardness;
 
 /**
  * @author Pabilo8
@@ -11,11 +12,12 @@ import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 public abstract class AmmoCore
 {
 	protected float density;
-	protected float damageModifier, explosionModifier, penetrationHardness;
+	protected float damageModifier, explosionModifier;
+	protected PenetrationHardness penetrationHardness;
 	protected final String name;
 	protected final int colour;
 
-	public AmmoCore(String name, float density, float penetrationHardness, float explosionModifier, float damageModifier, int colour)
+	public AmmoCore(String name, float density, PenetrationHardness penetrationHardness, float explosionModifier, float damageModifier, int colour)
 	{
 		this.density = density;
 		this.damageModifier = damageModifier;
@@ -65,7 +67,7 @@ public abstract class AmmoCore
 	/**
 	 * @return the hardness level this ammo core can penetrate (6-stone)
 	 */
-	public float getPenetrationHardness()
+	public PenetrationHardness getPenetrationHardness()
 	{
 		return penetrationHardness;
 	}

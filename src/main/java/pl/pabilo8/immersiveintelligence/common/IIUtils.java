@@ -926,4 +926,18 @@ public class IIUtils
 
 		return gcd;
 	}
+
+	//REFACTOR: 27.03.2024 replace lambda variant of this in project
+
+	/**
+	 * @param en   enum class
+	 * @param name name of the enum value
+	 * @param <T>  enum type
+	 * @return enum value with name, case insensitive
+	 */
+	@Nonnull
+	public static <T extends Enum<T> & ISerializableEnum> T enumValue(Class<T> en, String name)
+	{
+		return Enum.valueOf(en, name.toUpperCase());
+	}
 }

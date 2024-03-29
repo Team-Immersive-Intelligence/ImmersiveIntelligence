@@ -16,9 +16,9 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import pl.pabilo8.immersiveintelligence.api.ammo.IIAmmoRegistry;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumCoreTypes;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumFuseTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseTypes;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoCore;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
@@ -139,9 +139,9 @@ public abstract class BlockIIMine extends BlockIITileProvider<IIBlockTypes_Mine>
 		}
 
 		@Override
-		public EnumCoreTypes[] getAllowedCoreTypes()
+		public CoreTypes[] getAllowedCoreTypes()
 		{
-			return new EnumCoreTypes[]{EnumCoreTypes.CANISTER};
+			return new CoreTypes[]{CoreTypes.CANISTER};
 		}
 
 		public void makeDefault(ItemStack stack)
@@ -159,15 +159,15 @@ public abstract class BlockIIMine extends BlockIITileProvider<IIBlockTypes_Mine>
 		{
 			if(!ItemNBTHelper.hasKey(stack, "core"))
 				makeDefault(stack);
-			return IIAmmoRegistry.getCore(ItemNBTHelper.getString(stack, "core"));
+			return AmmoRegistry.getCore(ItemNBTHelper.getString(stack, "core"));
 		}
 
 		@Override
-		public EnumCoreTypes getCoreType(ItemStack stack)
+		public CoreTypes getCoreType(ItemStack stack)
 		{
 			if(!ItemNBTHelper.hasKey(stack, "core_type"))
 				makeDefault(stack);
-			return EnumCoreTypes.v(ItemNBTHelper.getString(stack, "core_type"));
+			return CoreTypes.v(ItemNBTHelper.getString(stack, "core_type"));
 		}
 
 		@Override
@@ -216,23 +216,23 @@ public abstract class BlockIIMine extends BlockIITileProvider<IIBlockTypes_Mine>
 		}
 
 		@Override
-		public EnumFuseTypes[] getAllowedFuseTypes()
+		public FuseTypes[] getAllowedFuseTypes()
 		{
-			return new EnumFuseTypes[]{EnumFuseTypes.CONTACT};
+			return new FuseTypes[]{FuseTypes.CONTACT};
 		}
 
 		@Override
-		public void setFuseType(ItemStack stack, EnumFuseTypes type)
+		public void setFuseType(ItemStack stack, FuseTypes type)
 		{
 			ItemNBTHelper.setString(stack, "fuse", type.getName());
 		}
 
 		@Override
-		public EnumFuseTypes getFuseType(ItemStack stack)
+		public FuseTypes getFuseType(ItemStack stack)
 		{
 			if(!ItemNBTHelper.hasKey(stack, "fuse"))
 				makeDefault(stack);
-			return EnumFuseTypes.v(ItemNBTHelper.getString(stack, "fuse"));
+			return FuseTypes.v(ItemNBTHelper.getString(stack, "fuse"));
 		}
 
 
@@ -244,7 +244,7 @@ public abstract class BlockIIMine extends BlockIITileProvider<IIBlockTypes_Mine>
 				ArrayList<AmmoComponent> arrayList = new ArrayList<>();
 				NBTTagList components = (NBTTagList)ItemNBTHelper.getTag(stack).getTag("components");
 				for(int i = 0; i < components.tagCount(); i++)
-					arrayList.add(IIAmmoRegistry.getComponent(components.getStringTagAt(i)));
+					arrayList.add(AmmoRegistry.getComponent(components.getStringTagAt(i)));
 				return arrayList.toArray(new AmmoComponent[0]);
 			}
 			return new AmmoComponent[0];

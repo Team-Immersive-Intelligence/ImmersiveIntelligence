@@ -3,7 +3,7 @@ package pl.pabilo8.immersiveintelligence.client.manual.categories;
 import blusunrize.immersiveengineering.api.ManualHelper;
 import blusunrize.lib.manual.ManualPages;
 import net.minecraft.item.ItemStack;
-import pl.pabilo8.immersiveintelligence.api.ammo.IIAmmoRegistry;
+import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoCore;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualCategory;
@@ -61,12 +61,12 @@ public class IIManualCategoryWarfare extends IIManualCategory
 
 
 		ArrayList<ManualPages> bullet_cores = new ArrayList<>();
-		for(AmmoCore entry : IIAmmoRegistry.getAllCores())
+		for(AmmoCore entry : AmmoRegistry.getAllCores())
 			if(!entry.getMaterial().getExampleStack().isEmpty())
 				bullet_cores.add(new IIManualPageBulletCore(ManualHelper.getManual(), entry));
 
 		ArrayList<ManualPages> bullet_components = new ArrayList<>();
-		for(AmmoComponent entry : IIAmmoRegistry.getAllComponents())
+		for(AmmoComponent entry : AmmoRegistry.getAllComponents())
 			if(entry.showInManual()&&!entry.getMaterial().getExampleStack().isEmpty())
 				bullet_components.add(new IIManualPageBulletComponent(ManualHelper.getManual(), entry));
 

@@ -31,7 +31,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
-import pl.pabilo8.immersiveintelligence.api.ammo.utils.IIAmmoFactory;
+import pl.pabilo8.immersiveintelligence.api.ammo.utils.AmmoFactory;
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler;
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler.IAdvancedTooltipItem;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.ISkinnable;
@@ -443,7 +443,7 @@ public abstract class ItemIIGunBase extends ItemIIUpgradableTool implements ISki
 
 	protected void createProjectile(EntityLivingBase user, World world, Vec3d dir, Vec3d pos, ItemStack weapon, EasyNBT nbt, ItemStack ammo)
 	{
-		new IIAmmoFactory<>(world)
+		new AmmoFactory<>(world)
 				.setPositionAndVelocity(pos, dir, getVelocityModifier(weapon, nbt, ammo))
 				.setStack(ammo)
 				.setOwner(user)

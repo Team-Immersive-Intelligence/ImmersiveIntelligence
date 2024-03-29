@@ -19,8 +19,8 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumComponentRole;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumCoreTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.ComponentRole;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreTypes;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
@@ -43,7 +43,7 @@ public class AmmoComponentNuke extends AmmoComponent
 {
 	public AmmoComponentNuke()
 	{
-		super("nuke", 10f, EnumComponentRole.EXPLOSIVE, 0x6b778a);
+		super("nuke", 10f, ComponentRole.EXPLOSIVE, 0x6b778a);
 	}
 
 	@Override
@@ -53,7 +53,7 @@ public class AmmoComponentNuke extends AmmoComponent
 	}
 
 	@Override
-	public void onEffect(World world, Vec3d pos, Vec3d dir, float multiplier, NBTTagCompound tag, EnumCoreTypes coreType, Entity owner)
+	public void onEffect(World world, Vec3d pos, Vec3d dir, float multiplier, NBTTagCompound tag, CoreTypes coreType, Entity owner)
 	{
 		BlockPos ppos = new BlockPos(pos);
 		new IIExplosion(world, null, pos, 56*multiplier, 60, false, true, false)

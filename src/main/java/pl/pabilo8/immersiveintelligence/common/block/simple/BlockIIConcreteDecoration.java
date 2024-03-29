@@ -2,7 +2,6 @@ package pl.pabilo8.immersiveintelligence.common.block.simple;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
-import net.minecraft.util.BlockRenderLayer;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIIConcreteDecoration.ConcreteDecorations;
 import pl.pabilo8.immersiveintelligence.common.util.block.BlockIIBase;
@@ -28,11 +27,11 @@ public class BlockIIConcreteDecoration extends BlockIIBase<ConcreteDecorations>
 
 	public enum ConcreteDecorations implements IIBlockEnum
 	{
-		@IIBlockProperties(hardness = 2, blastResistance = 360, harvestLevel = 1, oreDict = "bricksConcrete")
+		@IIBlockProperties(hardness = 10, blastResistance = 360, harvestLevel = 1, oreDict = "bricksConcrete")
 		CONCRETE_BRICKS,
-		@IIBlockProperties(hardness = 6, blastResistance = 1600, harvestLevel = 2, oreDict = "sturdyBricksConcrete")
+		@IIBlockProperties(hardness = 80, blastResistance = 1600, harvestLevel = 2, oreDict = "sturdyBricksConcrete")
 		STURDY_CONCRETE_BRICKS,
-		@IIBlockProperties(hardness = 10, blastResistance = 2400, harvestLevel = 3, oreDict = "uberConcrete")
+		@IIBlockProperties(hardness = 120, blastResistance = 2400, harvestLevel = 3, oreDict = "uberConcrete")
 		UBERCONCRETE
 	}
 

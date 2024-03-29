@@ -44,7 +44,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.server.command.CommandTreeBase;
 import net.minecraftforge.server.command.CommandTreeHelp;
 import org.apache.commons.lang3.time.StopWatch;
-import pl.pabilo8.immersiveintelligence.api.ammo.utils.IIAmmoFactory;
+import pl.pabilo8.immersiveintelligence.api.ammo.utils.AmmoFactory;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IVehicleMultiPart;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
@@ -350,7 +350,7 @@ public class CommandIIDev extends CommandTreeHelp
 					if(args[0].equals("nuke"))
 					{
 						ItemStack s2 = IIContent.itemAmmoHeavyArtillery.getBulletWithParams("core_brass", "canister", "nuke");
-						new IIAmmoFactory<>(senderEntity.getEntityWorld())
+						new AmmoFactory<>(senderEntity.getEntityWorld())
 								.setStack(s2)
 								.setPositionAndVelocity(new Vec3d(pos).addVector(0, 2, 0), new Vec3d(0, -1, 0), 1)
 								.create();

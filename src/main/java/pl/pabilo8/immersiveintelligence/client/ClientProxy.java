@@ -56,7 +56,7 @@ import org.lwjgl.input.Keyboard;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.ShrapnelHandler;
 import pl.pabilo8.immersiveintelligence.api.ShrapnelHandler.Shrapnel;
-import pl.pabilo8.immersiveintelligence.api.ammo.IIAmmoRegistry;
+import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IUpgradableMachine;
 import pl.pabilo8.immersiveintelligence.client.fx.nuke.ParticleAtomBase;
@@ -269,7 +269,7 @@ public class ClientProxy extends CommonProxy
 			}
 		}
 
-		IIAmmoRegistry.registerAmmoModels();
+		AmmoRegistry.registerAmmoModels();
 	}
 
 	private static void mapFluidState(Block block, Fluid fluid)
@@ -359,7 +359,7 @@ public class ClientProxy extends CommonProxy
 		IIContent.itemTachometer.setTileEntityItemStackRenderer(new TachometerRenderer().subscribeToList("tachometer"));
 		//IIContent.itemMineDetector.setTileEntityItemStackRenderer(new MineDetectorRenderer().subscribeToList("mine_detector"));
 
-		for(IAmmoTypeItem bullet : IIAmmoRegistry.getAllAmmoItems())
+		for(IAmmoTypeItem bullet : AmmoRegistry.getAllAmmoItems())
 		{
 			if(bullet instanceof ItemIINavalMine)
 				continue;

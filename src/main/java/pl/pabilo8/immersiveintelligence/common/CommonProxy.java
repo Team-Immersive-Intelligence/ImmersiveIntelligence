@@ -57,7 +57,8 @@ import net.minecraftforge.oredict.OreDictionary;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.*;
 import pl.pabilo8.immersiveintelligence.api.ShrapnelHandler.Shrapnel;
-import pl.pabilo8.immersiveintelligence.api.ammo.IIAmmoRegistry;
+import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
+import pl.pabilo8.immersiveintelligence.api.ammo.PenetrationRegistry;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.api.crafting.DustUtils;
 import pl.pabilo8.immersiveintelligence.api.rotary.CapabilityRotaryEnergy;
@@ -345,52 +346,54 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 
 		//ALWAYS REGISTER BULLETS IN PRE-INIT! (so they get their texture registered before TextureStitchEvent.Pre)
 		//Bullets
-		IIAmmoRegistry.registerAmmoType(IIContent.itemAmmoHeavyArtillery);
-		IIAmmoRegistry.registerAmmoType(IIContent.itemAmmoMediumArtillery);
-		IIAmmoRegistry.registerAmmoType(IIContent.itemAmmoLightArtillery);
-		IIAmmoRegistry.registerAmmoType(IIContent.itemAmmoMortar);
+		AmmoRegistry.registerAmmoType(IIContent.itemAmmoHeavyArtillery);
+		AmmoRegistry.registerAmmoType(IIContent.itemAmmoMediumArtillery);
+		AmmoRegistry.registerAmmoType(IIContent.itemAmmoLightArtillery);
+		AmmoRegistry.registerAmmoType(IIContent.itemAmmoMortar);
 
-		IIAmmoRegistry.registerAmmoType(IIContent.itemAmmoGuidedMissile);
-		IIAmmoRegistry.registerAmmoType(IIContent.itemAmmoRocketHeavy);
-		IIAmmoRegistry.registerAmmoType(IIContent.itemAmmoRocketLight);
+		AmmoRegistry.registerAmmoType(IIContent.itemAmmoGuidedMissile);
+		AmmoRegistry.registerAmmoType(IIContent.itemAmmoRocketHeavy);
+		AmmoRegistry.registerAmmoType(IIContent.itemAmmoRocketLight);
 
-		IIAmmoRegistry.registerAmmoType(IIContent.itemAmmoLightGun);
-		IIAmmoRegistry.registerAmmoType(IIContent.itemRailgunGrenade);
-		IIAmmoRegistry.registerAmmoType(IIContent.itemAmmoAutocannon);
+		AmmoRegistry.registerAmmoType(IIContent.itemAmmoLightGun);
+		AmmoRegistry.registerAmmoType(IIContent.itemRailgunGrenade);
+		AmmoRegistry.registerAmmoType(IIContent.itemAmmoAutocannon);
 
-		IIAmmoRegistry.registerAmmoType(IIContent.itemGrenade);
+		AmmoRegistry.registerAmmoType(IIContent.itemGrenade);
 
-		IIAmmoRegistry.registerAmmoType(IIContent.itemAmmoMachinegun);
-		IIAmmoRegistry.registerAmmoType(IIContent.itemAmmoSubmachinegun);
-		IIAmmoRegistry.registerAmmoType(IIContent.itemAmmoAssaultRifle);
-		IIAmmoRegistry.registerAmmoType(IIContent.itemAmmoRevolver);
+		AmmoRegistry.registerAmmoType(IIContent.itemAmmoMachinegun);
+		AmmoRegistry.registerAmmoType(IIContent.itemAmmoSubmachinegun);
+		AmmoRegistry.registerAmmoType(IIContent.itemAmmoAssaultRifle);
+		AmmoRegistry.registerAmmoType(IIContent.itemAmmoRevolver);
 
 		if(IIContent.blockTripmine.itemBlock!=null)
-			IIAmmoRegistry.registerAmmoType((IAmmoTypeItem)IIContent.blockTripmine.itemBlock);
+			AmmoRegistry.registerAmmoType((IAmmoTypeItem)IIContent.blockTripmine.itemBlock);
 		if(IIContent.blockTellermine.itemBlock!=null)
-			IIAmmoRegistry.registerAmmoType((IAmmoTypeItem)IIContent.blockTellermine.itemBlock);
+			AmmoRegistry.registerAmmoType((IAmmoTypeItem)IIContent.blockTellermine.itemBlock);
 		if(IIContent.blockRadioExplosives.itemBlock!=null)
-			IIAmmoRegistry.registerAmmoType((IAmmoTypeItem)IIContent.blockRadioExplosives.itemBlock);
-		IIAmmoRegistry.registerAmmoType(IIContent.itemNavalMine);
+			AmmoRegistry.registerAmmoType((IAmmoTypeItem)IIContent.blockRadioExplosives.itemBlock);
+		AmmoRegistry.registerAmmoType(IIContent.itemNavalMine);
 
-		IIAmmoRegistry.registerComponent(IIContent.ammoComponentTNT);
-		IIAmmoRegistry.registerComponent(IIContent.ammoComponentRDX);
-		IIAmmoRegistry.registerComponent(IIContent.ammoComponentHMX);
-		IIAmmoRegistry.registerComponent(IIContent.ammoComponentNuke);
-		IIAmmoRegistry.registerComponent(IIContent.ammoComponentWhitePhosphorus);
-		IIAmmoRegistry.registerComponent(IIContent.ammoComponentFirework);
-		IIAmmoRegistry.registerComponent(IIContent.ammoComponentTracerPowder);
-		IIAmmoRegistry.registerComponent(IIContent.ammoComponentFlarePowder);
-		IIAmmoRegistry.registerComponent(IIContent.ammoComponentPropaganda);
-		IIAmmoRegistry.registerComponent(IIContent.ammoComponentTesla);
-		IIAmmoRegistry.registerComponent(IIContent.ammoComponentFish);
+		AmmoRegistry.registerComponent(IIContent.ammoComponentTNT);
+		AmmoRegistry.registerComponent(IIContent.ammoComponentRDX);
+		AmmoRegistry.registerComponent(IIContent.ammoComponentHMX);
+		AmmoRegistry.registerComponent(IIContent.ammoComponentNuke);
+		AmmoRegistry.registerComponent(IIContent.ammoComponentWhitePhosphorus);
+		AmmoRegistry.registerComponent(IIContent.ammoComponentFirework);
+		AmmoRegistry.registerComponent(IIContent.ammoComponentTracerPowder);
+		AmmoRegistry.registerComponent(IIContent.ammoComponentFlarePowder);
+		AmmoRegistry.registerComponent(IIContent.ammoComponentPropaganda);
+		AmmoRegistry.registerComponent(IIContent.ammoComponentTesla);
+		AmmoRegistry.registerComponent(IIContent.ammoComponentFish);
 
-		IIAmmoRegistry.registerCore(IIContent.ammoCoreSteel);
-		IIAmmoRegistry.registerCore(IIContent.ammoCoreTungsten);
-		IIAmmoRegistry.registerCore(IIContent.ammoCoreBrass);
-		IIAmmoRegistry.registerCore(IIContent.ammoCoreLead);
-		IIAmmoRegistry.registerCore(IIContent.ammoCoreUranium);
-		IIAmmoRegistry.registerCore(IIContent.ammoCorePabilium);
+		AmmoRegistry.registerCore(IIContent.ammoCoreCopper);
+		AmmoRegistry.registerCore(IIContent.ammoCoreBrass);
+		AmmoRegistry.registerCore(IIContent.ammoCoreLead);
+		AmmoRegistry.registerCore(IIContent.ammoCoreIron);
+		AmmoRegistry.registerCore(IIContent.ammoCoreSteel);
+		AmmoRegistry.registerCore(IIContent.ammoCoreTungsten);
+		AmmoRegistry.registerCore(IIContent.ammoCoreUranium);
+		AmmoRegistry.registerCore(IIContent.ammoCorePabilium);
 
 		//ShrapnelHandler.addShrapnel("wood","",1,0.25f,0f,true);
 
@@ -425,7 +428,7 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		for(Entry<String, Shrapnel> s : ShrapnelHandler.registry.entrySet())
 		{
 			AmmoComponentShrapnel shrapnel = new AmmoComponentShrapnel(s.getKey());
-			IIAmmoRegistry.registerComponent(shrapnel);
+			AmmoRegistry.registerComponent(shrapnel);
 		}
 
 		BulletHandler.registerBullet("ii_bullet", IIContent.itemAmmoRevolver);
@@ -446,6 +449,7 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 
 	public void init()
 	{
+		PenetrationRegistry.init();
 		IICompatModule.doModulesInit();
 
 		//Event handler registration
@@ -456,7 +460,7 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		for(Fluid f : FluidRegistry.getRegisteredFluids().values())
 		{
 			AmmoComponentFluid comp = new AmmoComponentFluid(f);
-			IIAmmoRegistry.registerComponent(comp);
+			AmmoRegistry.registerComponent(comp);
 		}
 
 		IIContent.blockFluidInkBlack.setPotionEffects(new PotionEffect(IEPotions.sticky, 60, 0));

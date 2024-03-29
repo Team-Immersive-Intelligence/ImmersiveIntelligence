@@ -35,7 +35,7 @@ import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.registries.IForgeRegistry;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.PackerHandler;
-import pl.pabilo8.immersiveintelligence.api.ammo.IIAmmoRegistry;
+import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.api.crafting.*;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig;
@@ -91,7 +91,7 @@ public class IIRecipes
 		TOOL_CUTTERS = new ItemStack(IEContent.itemTool, 1, 1);
 
 		//Used by ammo pouch
-		AMMO_CASINGS = new IngredientStack(IIAmmoRegistry.getAllAmmoItems()
+		AMMO_CASINGS = new IngredientStack(AmmoRegistry.getAllAmmoItems()
 				.stream()
 				.map(iAmmo -> iAmmo.getCasingStack(1))
 				.collect(Collectors.toList())
@@ -890,7 +890,7 @@ public class IIRecipes
 				new ItemStack(IIContent.itemLightEngineerBoots)
 		)), 8192, 340, 2000);
 
-		for(IAmmoTypeItem<?, ?> bullet : IIAmmoRegistry.getAllAmmoItems())
+		for(IAmmoTypeItem<?, ?> bullet : AmmoRegistry.getAllAmmoItems())
 		{
 			ItemStack bulletStack = bullet.getBulletWithParams("", "", "");
 			//clear nbt

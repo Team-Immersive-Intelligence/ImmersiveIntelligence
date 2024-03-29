@@ -5,7 +5,7 @@ import blusunrize.lib.manual.ManualUtils;
 import blusunrize.lib.manual.gui.GuiManual;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextFormatting;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumComponentRole;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.ComponentRole;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoCore;
 
 /**
@@ -18,10 +18,10 @@ public class IIManualPageBulletCore extends IIManualPageBulletComponent
 
 	public IIManualPageBulletCore(ManualInstance manual, AmmoCore coreType)
 	{
-		super(manual, coreType.getName(), coreType.getMaterial().getExampleStack(), EnumComponentRole.GENERAL_PURPOSE, coreType.getDensity());
+		super(manual, coreType.getName(), coreType.getMaterial().getExampleStack(), ComponentRole.GENERAL_PURPOSE, coreType.getDensity());
 		this.text = "bullet_core."+name;
 		damageMod = coreType.getDamageModifier();
-		penMod = coreType.getPenetrationHardness();
+		penMod = coreType.getPenetrationHardness().ordinal();
 		blastMod = coreType.getExplosionModifier();
 	}
 

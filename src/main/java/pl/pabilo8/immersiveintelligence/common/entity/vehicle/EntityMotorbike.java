@@ -695,14 +695,14 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 			engineDurability -= amount*0.85;
 			dataManager.set(dataMarkerEngineDurability, engineDurability);
 			if(world.isRemote)
-				playSound(IISounds.hitMetal.getSoundImpact(), Math.min(amount/16f, 1f), 1f);
+				playSound(IISounds.hitMetal.getImpactSound(), Math.min(amount/16f, 1f), 1f);
 		}
 		else if((part==partFuelTank||part==partSeat)&&source.isProjectile()||source.isExplosion()||source.isFireDamage())
 		{
 			fuelTankDurability -= amount*0.85;
 			dataManager.set(dataMarkerFuelTankDurability, fuelTankDurability);
 			if(world.isRemote)
-				playSound(IISounds.hitMetal.getSoundImpact(), Math.min(amount/16f, 1f), 1f);
+				playSound(IISounds.hitMetal.getImpactSound(), Math.min(amount/16f, 1f), 1f);
 		}
 		else if(part==partWheelFront)
 		{

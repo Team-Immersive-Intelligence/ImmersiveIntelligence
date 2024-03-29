@@ -23,7 +23,7 @@ import java.util.function.Supplier;
  * @ii-approved 0.3.1
  * @since 02.01.2024
  */
-public class IIAmmoFactory<E extends EntityAmmoBase<? super E>>
+public class AmmoFactory<E extends EntityAmmoBase<? super E>>
 {
 //--- Parameters ---//
 
@@ -69,13 +69,13 @@ public class IIAmmoFactory<E extends EntityAmmoBase<? super E>>
 	 *
 	 * @param entity The entity to attach the factory to
 	 */
-	public IIAmmoFactory(Entity entity)
+	public AmmoFactory(Entity entity)
 	{
 		this(entity::getEntityWorld);
 		setOwner(entity);
 	}
 
-	public IIAmmoFactory(Supplier<World> worldSupplier)
+	public AmmoFactory(Supplier<World> worldSupplier)
 	{
 		this.world = worldSupplier;
 		this.pos = null;
@@ -88,7 +88,7 @@ public class IIAmmoFactory<E extends EntityAmmoBase<? super E>>
 		this.dir = Vec3d.ZERO;
 	}
 
-	public IIAmmoFactory(World world)
+	public AmmoFactory(World world)
 	{
 		this(() -> world);
 	}
@@ -101,7 +101,7 @@ public class IIAmmoFactory<E extends EntityAmmoBase<? super E>>
 	 * @param stack The stack to create the ammo from
 	 * @return The factory
 	 */
-	public IIAmmoFactory<E> setStack(ItemStack stack)
+	public AmmoFactory<E> setStack(ItemStack stack)
 	{
 		this.stack = stack;
 		this.ammo = ((IAmmoType<?, E>)stack.getItem());
@@ -114,7 +114,7 @@ public class IIAmmoFactory<E extends EntityAmmoBase<? super E>>
 	 * @param pos The position to spawn the ammo at
 	 * @return The factory
 	 */
-	public IIAmmoFactory<E> setPosition(Vec3d pos)
+	public AmmoFactory<E> setPosition(Vec3d pos)
 	{
 		this.pos = pos;
 		return this;
@@ -126,7 +126,7 @@ public class IIAmmoFactory<E extends EntityAmmoBase<? super E>>
 	 * @param pos The position to spawn the ammo at
 	 * @return The factory
 	 */
-	public IIAmmoFactory<E> setPosition(BlockPos pos)
+	public AmmoFactory<E> setPosition(BlockPos pos)
 	{
 		this.pos = new Vec3d(pos).addVector(0.5, 0.5, 0.5);
 		return this;
@@ -138,7 +138,7 @@ public class IIAmmoFactory<E extends EntityAmmoBase<? super E>>
 	 * @param dir The direction to spawn the ammo in
 	 * @return The factory
 	 */
-	public IIAmmoFactory<E> setDirection(Vec3d dir)
+	public AmmoFactory<E> setDirection(Vec3d dir)
 	{
 		this.dir = dir;
 		return this;
@@ -150,7 +150,7 @@ public class IIAmmoFactory<E extends EntityAmmoBase<? super E>>
 	 * @param facing The direction to spawn the ammo in
 	 * @return The factory
 	 */
-	public IIAmmoFactory<E> setDirection(EnumFacing facing)
+	public AmmoFactory<E> setDirection(EnumFacing facing)
 	{
 		this.dir = new Vec3d(facing.getDirectionVec());
 		return this;
@@ -162,7 +162,7 @@ public class IIAmmoFactory<E extends EntityAmmoBase<? super E>>
 	 * @param velocityModifier The velocity multiplier of the ammo
 	 * @return The factory
 	 */
-	public IIAmmoFactory<E> setVelocityModifier(float velocityModifier)
+	public AmmoFactory<E> setVelocityModifier(float velocityModifier)
 	{
 		this.velocityModifier = velocityModifier;
 		return this;
@@ -176,7 +176,7 @@ public class IIAmmoFactory<E extends EntityAmmoBase<? super E>>
 	 * @param velocityModifier The velocity multiplier of the ammo
 	 * @return The factory
 	 */
-	public IIAmmoFactory<E> setPositionAndVelocity(Vec3d pos, Vec3d dir, float velocityModifier)
+	public AmmoFactory<E> setPositionAndVelocity(Vec3d pos, Vec3d dir, float velocityModifier)
 	{
 		setPosition(pos);
 		setDirection(dir);
@@ -190,7 +190,7 @@ public class IIAmmoFactory<E extends EntityAmmoBase<? super E>>
 	 * @param owner The owner of the ammo
 	 * @return The factory
 	 */
-	public IIAmmoFactory<E> setOwner(Entity owner)
+	public AmmoFactory<E> setOwner(Entity owner)
 	{
 		this.owner = owner;
 		return this;
@@ -203,7 +203,7 @@ public class IIAmmoFactory<E extends EntityAmmoBase<? super E>>
 	 * @param gun     The gun entity
 	 * @return The factory
 	 */
-	public IIAmmoFactory<E> setShooterAndGun(Entity shooter, Entity gun)
+	public AmmoFactory<E> setShooterAndGun(Entity shooter, Entity gun)
 	{
 		this.owner = shooter;
 		this.ignoredEntities = new ArrayList<>(gun.getRecursivePassengers());
@@ -216,7 +216,7 @@ public class IIAmmoFactory<E extends EntityAmmoBase<? super E>>
 	 * @param ignoredBlocks The list of blocks a projectile should ignore
 	 * @return The factory
 	 */
-	public IIAmmoFactory<E> setIgnoredBlocks(Collection<BlockPos> ignoredBlocks)
+	public AmmoFactory<E> setIgnoredBlocks(Collection<BlockPos> ignoredBlocks)
 	{
 		this.ignoredBlocks = new ArrayList<>(ignoredBlocks);
 		return this;
@@ -229,7 +229,7 @@ public class IIAmmoFactory<E extends EntityAmmoBase<? super E>>
 	 * @param ignoredEntities The list of entities a projectile should ignore
 	 * @return The factory
 	 */
-	public <I extends Entity> IIAmmoFactory<E> setIgnoredEntities(Collection<I> ignoredEntities)
+	public <I extends Entity> AmmoFactory<E> setIgnoredEntities(Collection<I> ignoredEntities)
 	{
 		this.ignoredEntities = new ArrayList<>(ignoredEntities);
 		return this;

@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag.TooltipFlags;
 import net.minecraft.entity.player.EntityPlayer;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumFuseTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseTypes;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityAmmunitionWorkshop;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerAmmunitionWorkshop;
@@ -29,7 +29,7 @@ import java.util.HashMap;
 public class GuiAmmunitionWorkshop extends GuiAmmunitionBase<TileEntityAmmunitionWorkshop>
 {
 	private GuiTextField valueEdit;
-	HashMap<GuiButtonState, EnumFuseTypes> fuseButtons = new HashMap<>();
+	HashMap<GuiButtonState, FuseTypes> fuseButtons = new HashMap<>();
 
 	public GuiAmmunitionWorkshop(EntityPlayer player, TileEntityAmmunitionWorkshop tile)
 	{
@@ -47,7 +47,7 @@ public class GuiAmmunitionWorkshop extends GuiAmmunitionBase<TileEntityAmmunitio
 		addLabel(guiLeft+1, guiTop+8, 118, 0, IIReference.COLOR_H1, I18n.format("tile.immersiveintelligence.metal_multiblock1.ammunition_workshop.name")).setCentered();
 
 		int i = 0;
-		for(EnumFuseTypes fuse : EnumFuseTypes.values())
+		for(FuseTypes fuse : FuseTypes.values())
 		{
 			fuseButtons.put(
 					addButton(new GuiButtonState(buttonList.size(),
@@ -140,7 +140,7 @@ public class GuiAmmunitionWorkshop extends GuiAmmunitionBase<TileEntityAmmunitio
 
 		GlStateManager.color(1f, 1f, 1f, 1f);
 		RenderHelper.disableStandardItemLighting();
-		for(int i = 0; i < EnumFuseTypes.values().length; i++)
+		for(int i = 0; i < FuseTypes.values().length; i++)
 			drawTexturedModalRect(guiLeft+122+2+(i%3)*21, guiTop+5+5+4+2+(int)Math.floor(i/20f), 221+(i%2)*16, 86+(int)(Math.floor(i/2f)*16), 16, 16);
 
 		if(!tile.effect.isEmpty())

@@ -51,7 +51,8 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import org.lwjgl.opengl.GLContext;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
-import pl.pabilo8.immersiveintelligence.api.ammo.utils.DamageBlockPos;
+import pl.pabilo8.immersiveintelligence.api.ammo.penetration.DamageBlockPos;
+import pl.pabilo8.immersiveintelligence.api.ammo.utils.IIAmmoUtils;
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler;
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler.IAdvancedTooltipItem;
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler.IItemScrollable;
@@ -113,7 +114,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
 
-import static pl.pabilo8.immersiveintelligence.api.ammo.IIPenetrationRegistry.blockDamageClient;
+import static pl.pabilo8.immersiveintelligence.api.ammo.utils.PenetrationCache.blockDamageClient;
 
 /**
  * Handles events for client side.
@@ -527,7 +528,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 		}*/
 
 		if(stack.getItem() instanceof IAmmoTypeItem)
-			IIClientUtils.createAmmoTooltip(((IAmmoTypeItem)stack.getItem()), stack, event.getEntity().world, event.getToolTip());
+			IIAmmoUtils.createAmmoTooltip(((IAmmoTypeItem)stack.getItem()), stack, event.getEntity().world, event.getToolTip());
 		else if(ItemNBTHelper.hasKey(stack, IIContent.NBT_AdvancedPowerpack))
 		{
 			ItemStack powerpack = ItemNBTHelper.getItemStack(stack, IIContent.NBT_AdvancedPowerpack);

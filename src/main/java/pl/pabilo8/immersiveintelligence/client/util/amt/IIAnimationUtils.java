@@ -57,6 +57,15 @@ public class IIAnimationUtils
 		return (ClientUtils.mc().world.getTotalWorldTime()%max+partialTicks)/max;
 	}
 
+	public static float getAnimationOffsetProgress(float current, float begin, float end, float partialTicks)
+	{
+		if(current < begin)
+			return 0;
+		if(current > end)
+			return 1;
+		return (current-begin+partialTicks)/(end-begin);
+	}
+
 	public static float getAnimationProgress(float current, float max, boolean invert, float partialTicks)
 	{
 		return MathHelper.clamp(invert?(1f-((current-partialTicks)/max)): ((current+partialTicks)/max), 0, 1);

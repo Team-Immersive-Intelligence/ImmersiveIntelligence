@@ -24,7 +24,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import pl.pabilo8.immersiveintelligence.api.ammo.utils.IIAmmoFactory;
+import pl.pabilo8.immersiveintelligence.api.ammo.utils.AmmoFactory;
 import pl.pabilo8.immersiveintelligence.api.data.DataHandlingUtils;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
@@ -468,7 +468,7 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 
 		if(!world.isRemote)
 		{
-			new IIAmmoFactory<EntityAmmoArtilleryProjectile>(world)
+			new AmmoFactory<EntityAmmoArtilleryProjectile>(world)
 					.setIgnoredEntities(tactileHandler!=null?tactileHandler.getEntities(): null)
 					.setIgnoredBlocks(getMultiblockBlocks())
 					.setStack(loadedShells.get(i))

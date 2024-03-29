@@ -12,7 +12,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.ammo.IIAmmoRegistry;
+import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.model.weapon.ModelMortar;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
@@ -108,7 +108,7 @@ public class MortarRenderer extends Render<EntityMortar> implements IReloadableM
 					GlStateManager.pushMatrix();
 					GlStateManager.translate(0, 1.25*(1f-f), 0);
 					GlStateManager.scale(0.8f, 0.8f, 0.8f);
-					IIAmmoRegistry.getModel(IIContent.itemAmmoMortar)
+					AmmoRegistry.getModel(IIContent.itemAmmoMortar)
 							.renderAmmoComplete(false, ((EntityLivingBase)psg).getHeldItem(EnumHand.MAIN_HAND));
 					bindTexture(TEXTURE);
 					GlStateManager.popMatrix();

@@ -10,8 +10,8 @@ import net.minecraft.client.util.ITooltipFlag.TooltipFlags;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
-import pl.pabilo8.immersiveintelligence.api.ammo.IIAmmoRegistry;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumCoreTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreTypes;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
@@ -57,20 +57,20 @@ public class GuiProjectileWorkshop extends GuiAmmunitionBase<TileEntityProjectil
 			addLabel(guiLeft+122, guiTop+5+5, IIReference.COLOR_H1, "Core:");
 			addLabel(guiLeft+122, guiTop+5+32-10+5, IIReference.COLOR_H1, "Type:");
 
-			String[] cores = Arrays.stream(tile.producedBullet.getAllowedCoreTypes()).map(EnumCoreTypes::getName).toArray(String[]::new);
+			String[] cores = Arrays.stream(tile.producedBullet.getAllowedCoreTypes()).map(CoreTypes::getName).toArray(String[]::new);
 			typeList = new GuiButtonDropdownList(buttonList.size(), guiLeft+122, guiTop+20+32-8-7, 72, 12, 3, cores);
 			typeList.setTranslationFunc(s -> I18n.format(IIReference.DESCRIPTION_KEY+"bullet_core_type."+s));
 			typeList.selectedEntry = Arrays.asList(cores).indexOf(tile.coreType.getName());
 			addButton(typeList);
 
-			String[] names = IIAmmoRegistry.getAllAmmoItems().stream().map(IAmmoTypeItem::getName).toArray(String[]::new);
+			String[] names = AmmoRegistry.getAllAmmoItems().stream().map(IAmmoTypeItem::getName).toArray(String[]::new);
 			bulletList = new GuiButtonDropdownList(buttonList.size(), guiLeft+122, guiTop+20-6, 72, 12, 6, names);
 			bulletList.setTranslationFunc(s -> I18n.format("item.immersiveintelligence."+s+".core.name"));
 
 			bulletList.selectedEntry = Arrays.asList(names).indexOf(tile.producedBullet.getName());
 			addButton(bulletList);
 
-			IAmmoTypeItem<?, ?> bullet = IIAmmoRegistry.getAmmoItem(bulletList.getEntry(bulletList.selectedEntry));
+			IAmmoTypeItem<?, ?> bullet = AmmoRegistry.getAmmoItem(bulletList.getEntry(bulletList.selectedEntry));
 			exampleStack = bullet==null?ItemStack.EMPTY:
 					bullet.getBulletCore("core_brass", typeList.getEntry(typeList.selectedEntry));
 			coreIconID = tile.coreType.ordinal();
@@ -116,14 +116,14 @@ public class GuiProjectileWorkshop extends GuiAmmunitionBase<TileEntityProjectil
 			{
 				sendList("produced_bullet", bulletList.getEntry(bulletList.selectedEntry));
 
-				IAmmoTypeItem<?, ?> bullet = IIAmmoRegistry.getAmmoItem(bulletList.getEntry(bulletList.selectedEntry));
+				IAmmoTypeItem<?, ?> bullet = AmmoRegistry.getAmmoItem(bulletList.getEntry(bulletList.selectedEntry));
 				String selectedType = typeList.getEntry(typeList.selectedEntry);
 
 				int id = typeList.id;
 				buttonList.remove(typeList);
 
 				//reset
-				String[] cores = Arrays.stream(bullet.getAllowedCoreTypes()).map(EnumCoreTypes::getName).toArray(String[]::new);
+				String[] cores = Arrays.stream(bullet.getAllowedCoreTypes()).map(CoreTypes::getName).toArray(String[]::new);
 				typeList = new GuiButtonDropdownList(id, guiLeft+122, guiTop+20+32-8-7, 72, 12, 3, cores);
 				typeList.setTranslationFunc(s -> I18n.format(IIReference.DESCRIPTION_KEY+"bullet_core_type."+s));
 				typeList.selectedEntry = Math.max(Arrays.asList(cores).indexOf(selectedType), 0);
@@ -133,9 +133,9 @@ public class GuiProjectileWorkshop extends GuiAmmunitionBase<TileEntityProjectil
 
 			}
 
-			coreIconID = EnumCoreTypes.v(typeList.getEntry(typeList.selectedEntry)).ordinal();
+			coreIconID = CoreTypes.v(typeList.getEntry(typeList.selectedEntry)).ordinal();
 
-			IAmmoTypeItem<?, ?> bullet = IIAmmoRegistry.getAmmoItem(bulletList.getEntry(bulletList.selectedEntry));
+			IAmmoTypeItem<?, ?> bullet = AmmoRegistry.getAmmoItem(bulletList.getEntry(bulletList.selectedEntry));
 			exampleStack = bullet==null?ItemStack.EMPTY:
 					bullet.getBulletCore("core_brass", typeList.getEntry(typeList.selectedEntry));
 		}

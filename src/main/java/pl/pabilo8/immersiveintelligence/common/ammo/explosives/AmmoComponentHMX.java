@@ -5,8 +5,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumComponentRole;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumCoreTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.ComponentRole;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreTypes;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
 import pl.pabilo8.immersiveintelligence.common.util.IIExplosion;
 
@@ -20,7 +20,7 @@ public class AmmoComponentHMX extends AmmoComponent
 {
 	public AmmoComponentHMX()
 	{
-		super("hmx", 1.75f, EnumComponentRole.EXPLOSIVE, 0xfbfbfb);
+		super("hmx", 1.75f, ComponentRole.EXPLOSIVE, 0xfbfbfb);
 	}
 
 	@Override
@@ -30,7 +30,7 @@ public class AmmoComponentHMX extends AmmoComponent
 	}
 
 	@Override
-	public void onEffect(World world, Vec3d pos, Vec3d dir, float multiplier, NBTTagCompound tag, EnumCoreTypes coreType, Entity owner)
+	public void onEffect(World world, Vec3d pos, Vec3d dir, float multiplier, NBTTagCompound tag, CoreTypes coreType, Entity owner)
 	{
 		new IIExplosion(world, null, pos.x, pos.y, pos.z, 12*multiplier, 12, false, true)
 				.doExplosion();

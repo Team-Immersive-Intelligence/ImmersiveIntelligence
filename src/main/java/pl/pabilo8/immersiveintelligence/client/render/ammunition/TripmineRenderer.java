@@ -4,7 +4,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemStack;
-import pl.pabilo8.immersiveintelligence.api.ammo.IIAmmoRegistry;
+import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer.RegisteredTileRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.ammunition.TripmineRenderer.TripmineItemStackRenderer;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
@@ -75,9 +75,9 @@ public class TripmineRenderer extends TileEntitySpecialRenderer<TileEntityTripMi
 			ItemBlockMineBase ammo = (ItemBlockMineBase)IIContent.blockTripmine.itemBlock;
 			assert ammo!=null;
 			if(ammo.isBulletCore(stack))
-				IIAmmoRegistry.getModel(ammo).renderCore(stack);
+				AmmoRegistry.getModel(ammo).renderCore(stack);
 			else
-				IIAmmoRegistry.getModel(ammo).renderAmmoComplete(false, stack);
+				AmmoRegistry.getModel(ammo).renderAmmoComplete(false, stack);
 
 			GlStateManager.popMatrix();
 		}

@@ -5,8 +5,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumCoreTypes;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumFuseTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseTypes;
 import pl.pabilo8.immersiveintelligence.client.model.builtin.IAmmoModel;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityAmmoBase;
 
@@ -66,9 +66,9 @@ public interface IAmmoType<T extends IAmmoType<T, E>, E extends EntityAmmoBase<?
 
 	/**
 	 * @return Returns allowed core types, these affect the final damage, penetration and overall performance
-	 * @see EnumCoreTypes
+	 * @see CoreTypes
 	 */
-	EnumCoreTypes[] getAllowedCoreTypes();
+	CoreTypes[] getAllowedCoreTypes();
 
 	/**
 	 * @param amount of items to return
@@ -119,7 +119,7 @@ public interface IAmmoType<T extends IAmmoType<T, E>, E extends EntityAmmoBase<?
 	 * @param stack bullet stack
 	 * @return bullet core type from stack NBT
 	 */
-	EnumCoreTypes getCoreType(ItemStack stack);
+	CoreTypes getCoreType(ItemStack stack);
 
 	/**
 	 * Internal Item method
@@ -179,13 +179,13 @@ public interface IAmmoType<T extends IAmmoType<T, E>, E extends EntityAmmoBase<?
 	 * @param stack
 	 * @param type  type of the fuse
 	 */
-	void setFuseType(ItemStack stack, EnumFuseTypes type);
+	void setFuseType(ItemStack stack, FuseTypes type);
 
 	/**
 	 * @param stack
 	 * @return fuse type used in the bullet
 	 */
-	EnumFuseTypes getFuseType(ItemStack stack);
+	FuseTypes getFuseType(ItemStack stack);
 
 	boolean hasFreeComponentSlots(ItemStack stack);
 

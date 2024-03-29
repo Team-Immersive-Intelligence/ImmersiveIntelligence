@@ -12,16 +12,17 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.Tuple;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
-import pl.pabilo8.immersiveintelligence.api.ammo.IIPenetrationRegistry;
-import pl.pabilo8.immersiveintelligence.api.ammo.IIPenetrationRegistry.IPenetrationHandler;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumCoreTypes;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumFuseTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.PenetrationRegistry;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseTypes;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.HitEffect;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.PenMaterialTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.PenetrationHardness;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoCore;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoType;
+import pl.pabilo8.immersiveintelligence.api.ammo.penetration.IPenetrationHandler;
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.IIAmmoUtils;
+import pl.pabilo8.immersiveintelligence.api.ammo.utils.PenetrationCache;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityAmmoBase;
 import pl.pabilo8.immersiveintelligence.common.util.IIDamageSources;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
@@ -101,7 +102,8 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 	 * The penetration ability of the projectile, in blocks<br>
 	 * The penetration hardness of a projectile, uses block hardness values
 	 */
-	protected float penetrationAbility, penetrationHardness;
+	protected float penetrationDepth;
+	protected PenetrationHardness penetrationHardness;
 
 	/**
 	 * Blocks and Entities to ignore during hit detection
@@ -133,9 +135,9 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 		return baseMotion;
 	}
 
-	public float getDamage(PenMaterialTypes materialHit)
+	public float getDamage()
 	{
-		return ammoType.getDamage()*coreType.getDamageMod(materialHit)*core.getDamageModifier();
+		return ammoType.getDamage()*coreType.getDamageMod()*core.getDamageModifier();
 	}
 
 	public float getVelocity()
@@ -155,12 +157,12 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 		setMotion();
 
 		//handle timed fuse
-		if(fuseType==EnumFuseTypes.TIMED)
+		if(fuseType==FuseTypes.TIMED)
 			if(fuseParameter-- <= 0)
 				detonate();
 
 		AxisAlignedBB aabb = this.getEntityBoundingBox()
-				.grow(fuseType==EnumFuseTypes.PROXIMITY?fuseParameter: 0);
+				.grow(fuseType==FuseTypes.PROXIMITY?fuseParameter: 0);
 		if(world.isRemote)
 			aabb.offset(this.getPositionVector().scale(-1));
 
@@ -182,7 +184,7 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 			if(hit!=null)
 			{
 				//Proximity fuses don't use penetration logic
-				if(fuseType==EnumFuseTypes.PROXIMITY||penetrationAbility <= 0)
+				if(fuseType==FuseTypes.PROXIMITY||penetrationDepth <= 0)
 				{
 					detonate();
 					break;
@@ -288,18 +290,16 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 		ignoredPositions.add(pos);
 
 		//Only calculate on server side
-		if(penetrationAbility <= 0)
+		if(penetrationDepth <= 0)
 			return false;
 
 		IBlockState state = world.getBlockState(pos);
-		IPenetrationHandler penHandler = IIPenetrationRegistry.getPenetrationHandler(state);
-		PenMaterialTypes penType = penHandler.getPenetrationType();
-
-		float ammoHardness = penetrationHardness*coreType.getPenMod(penType);
-		float blockHardness = state.getBlockHardness(world, pos);
+		IPenetrationHandler penHandler = PenetrationRegistry.getPenetrationHandler(state);
+		PenetrationHardness blockHardness = penHandler.getPenetrationHardness();
 
 		//ricochet if the block is unbreakable or the projectile can't penetrate it
-		if(blockHardness==-1||blockHardness > ammoHardness*RICOCHET_THRESHOLD)
+		if(blockHardness!=PenetrationHardness.BEDROCK&&penHandler.canRicochet()
+				&&blockHardness.compareTo(penetrationHardness) > 0)
 		{
 			onHitRicochet(hit, penHandler);
 			return true;
@@ -312,7 +312,7 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 
 			//don't damage fluids
 			if(!state.getMaterial().isLiquid())
-				IIAmmoUtils.dealBlockDamage(world, getDirection(), getDamage(penType), pos, penHandler);
+				PenetrationCache.dealBlockDamage(world, getDirection(), getDamage(), pos, penHandler);
 
 		}
 		return false;
@@ -342,29 +342,22 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 		}
 
 		//Collide with any other entity
-		float armor = 0, toughness = 0;
-		IPenetrationHandler penHandler = IIPenetrationRegistry.getPenetrationHandler(other);
-		//Type of material penetrated
-		PenMaterialTypes penType = penHandler.getPenetrationType();
+		float armor = 0;
+		IPenetrationHandler penHandler = PenetrationRegistry.getPenetrationHandler(other);
 
 		//Damage entity armor
 		if(other instanceof EntityLivingBase)
 		{
 			armor = MathHelper.floor(((EntityLivingBase)other).getEntityAttribute(SharedMonsterAttributes.ARMOR).getAttributeValue())*ARMOR_FACTOR;
-			toughness += MathHelper.floor(((EntityLivingBase)other).getEntityAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS).getAttributeValue())*TOUGHNESS_FACTOR;
-
 			//Damage the hit other entity armour whether penetrated or not
-			if(toughness > 0||armor > 0)
-				IIAmmoUtils.breakArmour(other, (int)getDamage(penType));
+			if(armor > 0)
+				IIAmmoUtils.breakArmour(other, (int)getDamage());
 		}
 
 		//The damage actually dealt to the entity, uses only armor, as toughness is used for penetration hardness
-		float damageReceived = Math.max(0, getDamage(penType)-armor*
-				MathHelper.clamp(toughness-penetrationHardness, 0, 1)
-		);
-
+		float damageReceived = Math.max(0, getDamage()-armor);
 		//Ricochet off the entity
-		if(toughness > penetrationHardness)
+		if(penHandler.getPenetrationHardness().compareTo(penetrationHardness) > 0)
 			onHitRicochet(hit, penHandler);
 			//Can't damage the entity, but can penetrate it for some reason... which is weird, so just detonate the bullet and let's call it a day
 		else if(damageReceived==0)
@@ -401,7 +394,7 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 	{
 		//Reduce velocity
 		velocity *= 0.9f;
-		penetrationAbility -= handler.getReduction();
+		penetrationDepth -= handler.getThickness();
 
 		//Play ricochet sound
 		SoundEvent sound = handler.getSpecialSound(HitEffect.IMPACT);
@@ -425,7 +418,7 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 
 		//Reduce velocity
 		velocity *= 0.6f;
-		penetrationAbility -= handler.getReduction()*2;
+		penetrationDepth -= handler.getThickness()*2;
 
 		//If sideHit is missing, the hit surface should be a facing opposite to the bullet direction
 		if(hit.sideHit==null)
@@ -477,13 +470,13 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 
 	@ParametersAreNonnullByDefault
 	@Override
-	public void setFromParameters(IAmmoType<?, EntityAmmoProjectile> ammoType, AmmoCore core, EnumCoreTypes coreType, EnumFuseTypes fuseType, int fuseParameter, List<Tuple<AmmoComponent, NBTTagCompound>> components)
+	public void setFromParameters(IAmmoType<?, EntityAmmoProjectile> ammoType, AmmoCore core, CoreTypes coreType, FuseTypes fuseType, int fuseParameter, List<Tuple<AmmoComponent, NBTTagCompound>> components)
 	{
 		super.setFromParameters(ammoType, core, coreType, fuseType, fuseParameter, components);
 		this.velocity = ammoType.getDefaultVelocity()*SLOWMO;
 		this.mass = ammoType.getCoreMass(core, components.stream().map(Tuple::getFirst).toArray(AmmoComponent[]::new));
-		this.penetrationAbility = ammoType.getPenetrationDepth();
-		this.penetrationHardness = core.getPenetrationHardness();
+		this.penetrationDepth = IIAmmoUtils.getCombinedDepth(ammoType, coreType);
+		this.penetrationHardness = IIAmmoUtils.getCombinedHardness(core, coreType);
 	}
 
 	@Override
@@ -510,9 +503,9 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 		super.writeEntityToNBT(compound);
 		EasyNBT nbt = EasyNBT.wrapNBT(compound);
 		nbt.withVec3d("base_motion", baseMotion);
-		if(ignoredEntities!=null)
+		if(ignoredEntities!=null&&!ignoredEntities.isEmpty())
 			nbt.withList("ignored_entities", e -> new NBTTagInt(e.getEntityId()), ignoredEntities);
-		if(ignoredPositions!=null)
+		if(ignoredPositions!=null&&!ignoredPositions.isEmpty())
 			nbt.withList("ignored_pos", e -> new NBTTagIntArray(new int[]{e.getX(), e.getY(), e.getZ()}), ignoredPositions);
 
 	}

@@ -16,7 +16,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
-import pl.pabilo8.immersiveintelligence.api.ammo.utils.IIAmmoFactory;
+import pl.pabilo8.immersiveintelligence.api.ammo.utils.AmmoFactory;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityAmmoBase;
 
 import javax.annotation.Nullable;
@@ -37,7 +37,7 @@ public abstract class TileEntityMineBase extends TileEntityImmersiveConnectable 
 			return;
 		if(!world.isRemote&&!mineStack.isEmpty())
 		{
-			EntityAmmoBase<?> mine = new IIAmmoFactory<>(world)
+			EntityAmmoBase<?> mine = new AmmoFactory<>(world)
 					.setStack(mineStack)
 					.setPosition(pos)
 					.setDirection(EnumFacing.UP)

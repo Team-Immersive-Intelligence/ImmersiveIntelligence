@@ -1,6 +1,7 @@
 package pl.pabilo8.immersiveintelligence.common.ammo.cores;
 
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.PenetrationHardness;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoCore;
 
 /**
@@ -13,7 +14,7 @@ public class AmmoCoreUranium extends AmmoCore
 {
 	public AmmoCoreUranium()
 	{
-		super("core_uranium", 0.45f, 36, 0.75f, 1.35f, 0x659269);
+		super("core_uranium", 0.45f, PenetrationHardness.UBERCONCRETE, 0.75f, 1.35f, 0x659269);
 	}
 
 	@Override

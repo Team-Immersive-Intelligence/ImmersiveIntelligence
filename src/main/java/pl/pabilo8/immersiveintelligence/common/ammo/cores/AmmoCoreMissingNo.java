@@ -1,6 +1,7 @@
 package pl.pabilo8.immersiveintelligence.common.ammo.cores;
 
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.PenetrationHardness;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoCore;
 
 /**
@@ -13,7 +14,7 @@ public class AmmoCoreMissingNo extends AmmoCore
 {
 	public AmmoCoreMissingNo()
 	{
-		super("", 0, 0, 0, 0, 0xff00ff);
+		super("", 0, PenetrationHardness.FOLIAGE, 0, 0, 0xff00ff);
 	}
 
 	@Override

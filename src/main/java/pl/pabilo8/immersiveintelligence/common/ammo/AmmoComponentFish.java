@@ -11,8 +11,8 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumComponentRole;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.EnumCoreTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.ComponentRole;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreTypes;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.component.EntityIIChemthrowerShot;
 
@@ -26,7 +26,7 @@ public class AmmoComponentFish extends AmmoComponent
 {
 	public AmmoComponentFish()
 	{
-		super("fish", 0.125f, EnumComponentRole.SPECIAL, 0x6b778a);
+		super("fish", 0.125f, ComponentRole.SPECIAL, 0x6b778a);
 	}
 
 	@Override
@@ -36,7 +36,7 @@ public class AmmoComponentFish extends AmmoComponent
 	}
 
 	@Override
-	public void onEffect(World world, Vec3d pos, Vec3d dir, float multiplier, NBTTagCompound tag, EnumCoreTypes coreType, Entity owner)
+	public void onEffect(World world, Vec3d pos, Vec3d dir, float multiplier, NBTTagCompound tag, CoreTypes coreType, Entity owner)
 	{
 		Vec3d v = new Vec3d(0, -1, 0);
 		Vec3d throwerPos = pos.addVector(0, 3, 0);

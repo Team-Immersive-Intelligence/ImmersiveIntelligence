@@ -6,7 +6,7 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import pl.pabilo8.immersiveintelligence.api.ammo.IIAmmoRegistry;
+import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.naval_mine.EntityNavalMine;
 
@@ -48,7 +48,7 @@ public class NavalMineRenderer extends Render<EntityNavalMine>
 
 			//TODO: 05.03.2024 wire rendering
 
-			IIAmmoRegistry.getModel(IIContent.itemNavalMine)
+			AmmoRegistry.getModel(IIContent.itemNavalMine)
 					.renderAmmoComplete(entity, partialTicks);
 
 			GlStateManager.popMatrix();
@@ -77,11 +77,11 @@ public class NavalMineRenderer extends Render<EntityNavalMine>
 			switch(IIContent.itemNavalMine.stackToSub(stack))
 			{
 				case BULLET:
-					IIAmmoRegistry.getModel(IIContent.itemNavalMine)
+					AmmoRegistry.getModel(IIContent.itemNavalMine)
 							.renderAmmoComplete(true, stack);
 					break;
 				case CORE:
-					IIAmmoRegistry.getModel(IIContent.itemNavalMine)
+					AmmoRegistry.getModel(IIContent.itemNavalMine)
 							.renderCore(stack);
 					break;
 			}
