@@ -47,7 +47,7 @@ public class ItemIIAmmoGrenade extends ItemIIAmmoBase<EntityAmmoGrenade>
 	}
 
 	@Override
-	public float getComponentMultiplier()
+	public float getComponentAmount()
 	{
 		return 0.45f;
 	}

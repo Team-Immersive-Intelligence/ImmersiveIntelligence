@@ -44,6 +44,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.server.command.CommandTreeBase;
 import net.minecraftforge.server.command.CommandTreeHelp;
 import org.apache.commons.lang3.time.StopWatch;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.ComponentEffectShape;
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.AmmoFactory;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IVehicleMultiPart;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
@@ -337,6 +338,7 @@ public class CommandIIDev extends CommandTreeHelp
 				case "explosion":
 				case "nuke":
 				{
+					//TODO: 03.04.2024 command parameters
 					if(senderEntity==null||server.getEntityWorld().isRemote)
 						return;
 
@@ -364,7 +366,7 @@ public class CommandIIDev extends CommandTreeHelp
 					{
 
 					}
-					IIExplosion exp = new IIExplosion(server.getEntityWorld(), senderEntity, pos.getX(), pos.getY()+1, pos.getZ(), num, 1f, false, true);
+					IIExplosion exp = new IIExplosion(server.getEntityWorld(), senderEntity, new Vec3d(pos), null, num, 1f, ComponentEffectShape.STAR, false, true, false);
 					exp.doExplosionA();
 					exp.doExplosionB(true);
 				}

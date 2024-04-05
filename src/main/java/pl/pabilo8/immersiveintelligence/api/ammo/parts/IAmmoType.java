@@ -49,7 +49,7 @@ public interface IAmmoType<T extends IAmmoType<T, E>, E extends EntityAmmoBase<?
 	/**
 	 * @return Component amount multiplier, can influence explosion size, smoke cloud duration, etc.
 	 */
-	float getComponentMultiplier();
+	float getComponentAmount();
 
 	/**
 	 * @return How many blocks potentially can be penetrated by a projectile of this ammo type

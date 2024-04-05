@@ -260,7 +260,9 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 
 			//Call the effect method on all components
 			for(Tuple<AmmoComponent, NBTTagCompound> component : components)
-				component.getFirst().onEffect(world, pos, dir, multiplier, component.getSecond(), coreType, owner);
+				component.getFirst().onEffect(world, pos, dir,
+						coreType, component.getSecond(),
+						ammoType.getComponentAmount(), multiplier, owner);
 			setDead();
 		}
 	}
@@ -296,10 +298,10 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 		IBlockState state = world.getBlockState(pos);
 		IPenetrationHandler penHandler = PenetrationRegistry.getPenetrationHandler(state);
 		PenetrationHardness blockHardness = penHandler.getPenetrationHardness();
+		boolean canPenetrate = penetrationHardness.compareTo(blockHardness) > 0;
 
 		//ricochet if the block is unbreakable or the projectile can't penetrate it
-		if(blockHardness!=PenetrationHardness.BEDROCK&&penHandler.canRicochet()
-				&&blockHardness.compareTo(penetrationHardness) > 0)
+		if(blockHardness!=PenetrationHardness.BEDROCK&&penHandler.canRicochet()&&!canPenetrate)
 		{
 			onHitRicochet(hit, penHandler);
 			return true;
@@ -307,6 +309,12 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 		else //go through and damage the block
 		{
 			onHitPenetrate(hit, penHandler);
+			if(!canPenetrate)
+			{
+				detonate();
+				return true;
+			}
+
 			if(world.isRemote)
 				return false;
 

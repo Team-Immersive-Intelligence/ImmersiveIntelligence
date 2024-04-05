@@ -34,7 +34,7 @@ public class AmmoComponentFirework extends AmmoComponent
 	}
 
 	@Override
-	public void onEffect(World world, Vec3d pos, Vec3d dir, float multiplier, NBTTagCompound tag, CoreTypes coreType, Entity owner)
+	public void onEffect(World world, Vec3d pos, Vec3d dir, CoreTypes coreType, NBTTagCompound tag, float componentAmount, float multiplier, Entity owner)
 	{
 		IIPacketHandler.INSTANCE.sendToAllAround(new MessageFireworks(tag, pos), IIPacketHandler.targetPointFromPos(pos, world, 96));
 		IIAmmoUtils.suppress(world, pos.x, pos.y, pos.z, 10f*multiplier, (int)(255*multiplier));

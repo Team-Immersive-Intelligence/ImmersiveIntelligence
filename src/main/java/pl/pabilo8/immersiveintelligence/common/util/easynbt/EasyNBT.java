@@ -141,7 +141,7 @@ public class EasyNBT extends Constants.NBT
 	}
 
 	/**
-	 * Appends an integer
+	 * Appends a list
 	 *
 	 * @param key name of this tag
 	 */
@@ -152,7 +152,7 @@ public class EasyNBT extends Constants.NBT
 	}
 
 	/**
-	 * Appends an integer
+	 * Appends a list
 	 *
 	 * @param key name of this tag
 	 */
@@ -163,7 +163,7 @@ public class EasyNBT extends Constants.NBT
 	}
 
 	/**
-	 * Appends an integer
+	 * Appends a list
 	 *
 	 * @param key name of this tag
 	 */
@@ -171,6 +171,18 @@ public class EasyNBT extends Constants.NBT
 	{
 		wrapped.setTag(key, listOf((Object[])objects.stream().map(conversion).toArray(NBTBase[]::new)));
 		return this;
+	}
+
+	/**
+	 * Appends an element to a new or existing list
+	 *
+	 * @param key name of this tag
+	 */
+	public EasyNBT appendList(String key, int type, NBTBase object)
+	{
+		NBTTagList tagList = wrapped.getTagList(key, type);
+		tagList.appendTag(object);
+		return null;
 	}
 
 	/**
@@ -454,6 +466,8 @@ public class EasyNBT extends Constants.NBT
 	 */
 	public <T extends NBTBase> Stream<T> streamList(Class<T> clazz, String key, int type)
 	{
+		if(!wrapped.hasKey(key))
+			return Stream.empty();
 		return wrapped.getTagList(key, type).tagList.stream().map(n -> (T)n);
 	}
 

@@ -8,14 +8,14 @@ import java.util.Arrays;
 public enum ComponentRole implements ISerializableEnum
 {
 	GENERAL_PURPOSE(0xaaaaaa),
-	SHRAPNEL(0x5592405),
+	SHRAPNEL(0x3f4f57),
 	PIERCING(0xdc3939),
-	SHAPED(0xdc3939),
+	SHAPED(0xdc8a46),
 	EXPLOSIVE(0xdcb365),
-	INCENDIARY(0x762d2d),
-	TRACER(0x6390dc),
-	FLARE(0xb863dc),
-	CHEMICAL(0x81dc64),
+	INCENDIARY(0x6b4344),
+	TRACER(0x92b3db),
+	FLARE(0xc1a8db),
+	CHEMICAL(0x6a8258),
 	SPECIAL(0x63dcc1);
 
 	/**

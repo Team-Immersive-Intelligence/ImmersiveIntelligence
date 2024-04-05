@@ -70,15 +70,16 @@ public abstract class AmmoComponent
 	/**
 	 * Called when the ammo explodes
 	 *
-	 * @param world      the world
-	 * @param pos        the position of the bullet
-	 * @param dir        the direction of the explosion
-	 * @param multiplier the component effect multiplier
-	 * @param tag        the NBT tag of the bullet
-	 * @param coreType   the core type
-	 * @param owner      the owner of the bullet
+	 * @param world           the world
+	 * @param pos             the position of the bullet
+	 * @param dir             the direction of the explosion
+	 * @param coreType        the core type
+	 * @param tag             the NBT tag of the bullet
+	 * @param componentAmount
+	 * @param multiplier      the component effect multiplier
+	 * @param owner           the owner of the bullet
 	 */
-	public abstract void onEffect(World world, Vec3d pos, Vec3d dir, float multiplier, NBTTagCompound tag, CoreTypes coreType, @Nullable Entity owner);
+	public abstract void onEffect(World world, Vec3d pos, Vec3d dir, CoreTypes coreType, NBTTagCompound tag, float componentAmount, float multiplier, @Nullable Entity owner);
 
 	/**
 	 * @return the component role

@@ -34,7 +34,7 @@ public class ItemIIAmmoRailgunGrenade extends ItemIIAmmoBase<EntityAmmoProjectil
 	}
 
 	@Override
-	public float getComponentMultiplier()
+	public float getComponentAmount()
 	{
 		return 0.3f;
 	}

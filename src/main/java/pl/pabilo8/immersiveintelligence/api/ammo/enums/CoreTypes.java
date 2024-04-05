@@ -6,25 +6,30 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Arrays;
 
+/**
+ * Ammunition core types, each has its own characteristics, making it fulfill a different role.
+ */
 public enum CoreTypes implements ISerializableEnum
 {
-	SOFTPOINT(2, 1f, 0, 1f, 1f, ComponentRole.GENERAL_PURPOSE),
+	SOFTPOINT(2, 1f, ComponentEffectShape.STAR, 1f, 0, 1f, ComponentRole.GENERAL_PURPOSE),
 
-	SHAPED(1, 0.4f, 1, 1f, 1.25f, ComponentRole.SHAPED),
-	SHAPED_SABOT(1, 0.6f, 1, 1f, 1.25f, ComponentRole.SHAPED),
+	SHAPED(1, 1.25f, ComponentEffectShape.CONE, 0.4f, 1, 1f, ComponentRole.SHAPED),
+	SHAPED_SABOT(1, 1.25f, ComponentEffectShape.LINE, 0.6f, 1, 1f, ComponentRole.SHAPED),
 
-	PIERCING(1, 1.2f, 1, 1f, 0.75f, ComponentRole.PIERCING),
-	PIERCING_SABOT(0, 1.4f, 3, 0.85f, 0f, ComponentRole.PIERCING),
+	PIERCING(1, 0.75f, ComponentEffectShape.STAR, 1.2f, 1, 1f, ComponentRole.PIERCING),
+	PIERCING_SABOT(0, 0f, ComponentEffectShape.LINE, 1.4f, 3, 0.85f, ComponentRole.PIERCING),
 
-	CANISTER(4, 0.2f, -2, 0.125f, 1.25f, ComponentRole.GENERAL_PURPOSE),
-	CLUSTER(2, 0.2f, -4, 0.125f, 1.25f, ComponentRole.GENERAL_PURPOSE);
+	CANISTER(4, 1.25f, ComponentEffectShape.ORB, 0.2f, -2, 0.125f, ComponentRole.GENERAL_PURPOSE),
+	CLUSTER(2, 1.25f, ComponentEffectShape.CONE, 0.2f, -4, 0.125f, ComponentRole.GENERAL_PURPOSE);
 
 	private final int componentSlots, penHardnessBonus;
 	private final float componentEffectivenessMod, damageMod, penDepthMod;
-	@Nullable
+	@Nonnull
 	private final ComponentRole role;
+	@Nonnull
+	private final ComponentEffectShape effectShape;
 
-	CoreTypes(int componentSlots, float penDepthMod, int penHardnessBonus, float damageMod, float componentEffectivenessMod, @Nullable ComponentRole role)
+	CoreTypes(int componentSlots, float componentEffectivenessMod, @Nonnull ComponentEffectShape effectShape, float penDepthMod, int penHardnessBonus, float damageMod, @Nullable ComponentRole role)
 	{
 		this.componentSlots = componentSlots;
 		this.penDepthMod = penDepthMod;
@@ -32,6 +37,7 @@ public enum CoreTypes implements ISerializableEnum
 		this.damageMod = damageMod;
 		this.componentEffectivenessMod = componentEffectivenessMod;
 		this.role = role;
+		this.effectShape = effectShape;
 	}
 
 	public float getPenDepthMod()
@@ -59,10 +65,22 @@ public enum CoreTypes implements ISerializableEnum
 		return componentEffectivenessMod;
 	}
 
-	@Nullable
+	/**
+	 * @return Role of this core type in ammunition piece
+	 */
+	@Nonnull
 	public ComponentRole getRole()
 	{
 		return role;
+	}
+
+	/**
+	 * @return EffectShape for this core type
+	 */
+	@Nonnull
+	public ComponentEffectShape getEffectShape()
+	{
+		return effectShape;
 	}
 
 	@Nonnull

@@ -14,7 +14,7 @@ public class AmmoCorePabilium extends AmmoCore
 {
 	public AmmoCorePabilium()
 	{
-		super("core_pabilium", 1.5f, PenetrationHardness.PABILIUM, 1f, 1.1f, 0x2E4242);
+		super("core_pabilium", 1.5f, PenetrationHardness.PABILIUM, 3f, 8.0f, 0x2E4242);
 	}
 
 	@Override

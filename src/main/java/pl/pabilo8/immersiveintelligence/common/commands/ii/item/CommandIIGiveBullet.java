@@ -1,5 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common.commands.ii.item;
 
+import com.google.common.collect.Lists;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -112,16 +113,14 @@ public class CommandIIGiveBullet extends CommandBase
 	{
 		if(args.length==1)
 		{
-			return getListOfStringsMatchingLastWord(args, server.getOnlinePlayerNames());
+			ArrayList<String> strings = Lists.newArrayList(server.getOnlinePlayerNames());
+			strings.add("fire@@p");
+			return getListOfStringsMatchingLastWord(args, strings);
 		}
 		else if(args.length==2)
-		{
 			return getListOfStringsMatchingLastWord(args, AmmoRegistry.getAllAmmoItems().stream().map(IAmmoTypeItem::getName).collect(Collectors.toList()));
-		}
 		else if(args.length==3)
-		{
 			return getListOfStringsMatchingLastWord(args, AmmoRegistry.getAllCores().stream().map(AmmoCore::getName).collect(Collectors.toList()));
-		}
 		else if(args.length==4)
 		{
 			IAmmoTypeItem<?, ?> bullet = AmmoRegistry.getAmmoItem(args[1]);
@@ -133,9 +132,7 @@ public class CommandIIGiveBullet extends CommandBase
 			return getListOfStringsMatchingLastWord(args, bullet==null?Collections.emptyList(): Arrays.stream(bullet.getAllowedFuseTypes()).map(FuseTypes::getName).collect(Collectors.toList()));
 		}
 		else if(args.length > 5)
-		{
 			return getListOfStringsMatchingLastWord(args, AmmoRegistry.getAllComponents().stream().map(AmmoComponent::getName).collect(Collectors.toList()));
-		}
 		else
 			return Collections.emptyList();
 	}

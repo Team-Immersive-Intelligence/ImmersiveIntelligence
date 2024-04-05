@@ -15,6 +15,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.IItemHandler;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.ComponentEffectShape;
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.AmmoFactory;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
@@ -365,7 +366,7 @@ public abstract class EmplacementWeapon<A extends EntityAmmoBase<A>>
 		ResourceLocation texture = stuff.getFirst();
 
 		Vec3d weaponCenter = te.getWeaponCenter();
-		ParticleUtils.spawnExplosionBoomFX(entity.world, weaponCenter, 5, 4, true, true);
+		ParticleUtils.spawnExplosionBoomFX(entity.world, weaponCenter, null, ComponentEffectShape.ORB, 5, 4, true, true);
 
 		for(ModelRendererTurbo mod : models)
 		{

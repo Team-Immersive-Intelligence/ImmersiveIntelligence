@@ -41,7 +41,7 @@ public class ItemIINavalMine extends ItemIIAmmoBase<EntityNavalMine> implements 
 	}
 
 	@Override
-	public float getComponentMultiplier()
+	public float getComponentAmount()
 	{
 		return 0.55f;
 	}

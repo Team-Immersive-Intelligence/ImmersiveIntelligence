@@ -4,6 +4,7 @@ import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.common.Config;
 import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
+import blusunrize.immersiveengineering.common.util.Utils;
 import blusunrize.lib.manual.IManualPage;
 import blusunrize.lib.manual.ManualInstance;
 import blusunrize.lib.manual.ManualInstance.ManualEntry;
@@ -59,6 +60,7 @@ import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler.IItemScroll
 import pl.pabilo8.immersiveintelligence.api.utils.camera.IEntityZoomProvider;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IVehicleMultiPart;
 import pl.pabilo8.immersiveintelligence.client.fx.ParticleUtils;
+import pl.pabilo8.immersiveintelligence.client.fx.ScreenShake;
 import pl.pabilo8.immersiveintelligence.client.gui.inworld_overlay.InWorldOverlayBase;
 import pl.pabilo8.immersiveintelligence.client.gui.inworld_overlay.WrenchOverlay;
 import pl.pabilo8.immersiveintelligence.client.gui.overlay.GuiOverlayBase;
@@ -125,14 +127,15 @@ import static pl.pabilo8.immersiveintelligence.api.ammo.utils.PenetrationCache.b
 public class ClientEventHandler implements ISelectiveResourceReloadListener
 {
 	private static final ListMultimap<GuiOverlayLayer, GuiOverlayBase> HUDs = MultimapBuilder.enumKeys(GuiOverlayLayer.class).arrayListValues().build();
-	private static final ArrayList<GuiOverlayBase> HUDBackgrounds = new ArrayList<>();
-	private static final ArrayList<TextOverlayBase> textOverlays = new ArrayList<>();
-	private static final ArrayList<InWorldOverlayBase> inWorldOverlays = new ArrayList<>();
+	private static final ArrayList<GuiOverlayBase> HUD_BACKGROUNDS = new ArrayList<>();
+	private static final ArrayList<TextOverlayBase> TEXT_OVERLAYS = new ArrayList<>();
+	private static final ArrayList<InWorldOverlayBase> IN_WORLD_OVERLAYS = new ArrayList<>();
+	private static final ArrayList<ScreenShake> SCREEN_SHAKE_EFFECTS = new ArrayList<>();
 
 	static
 	{
 		//Systems
-		HUDBackgrounds.add(new GuiOverlayZoom());
+		HUD_BACKGROUNDS.add(new GuiOverlayZoom());
 
 		//Items
 		HUDs.put(GuiOverlayLayer.ITEM, new GuiOverlayMachinegun());
@@ -146,13 +149,13 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 
 	static
 	{
-		textOverlays.add(new TextOverlayHeadgear());
-		textOverlays.add(new TextOverlayMechanical());
-		textOverlays.add(new TextOverlayUpgrade());
-		textOverlays.add(new TextOverlayAdvanced());
-		textOverlays.add(new TextOverlayVoltmeterEntities());
+		TEXT_OVERLAYS.add(new TextOverlayHeadgear());
+		TEXT_OVERLAYS.add(new TextOverlayMechanical());
+		TEXT_OVERLAYS.add(new TextOverlayUpgrade());
+		TEXT_OVERLAYS.add(new TextOverlayAdvanced());
+		TEXT_OVERLAYS.add(new TextOverlayVoltmeterEntities());
 
-		inWorldOverlays.add(new WrenchOverlay());
+		IN_WORLD_OVERLAYS.add(new WrenchOverlay());
 	}
 
 	public static LinkedHashMap<EntityLivingBase, Float> gunshotEntities = new LinkedHashMap<>();
@@ -317,7 +320,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 			TileEntity te = mop.typeOfHit==Type.BLOCK?player.world.getTileEntity(mop.getBlockPos()): null;
 			Entity entityHit = mop.entityHit;
 
-			for(TextOverlayBase hud : textOverlays)
+			for(TextOverlayBase hud : TEXT_OVERLAYS)
 				if(hud.shouldDraw(player, mop, te, entityHit))
 				{
 					//get parameters
@@ -366,7 +369,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 		RayTraceResult mop = ClientUtils.mc().objectMouseOver;
 		EntityPlayer player = ClientUtils.mc().player;
 
-		for(InWorldOverlayBase overlay : inWorldOverlays)
+		for(InWorldOverlayBase overlay : IN_WORLD_OVERLAYS)
 			overlay.draw(player, player.world, mop, event.getPartialTicks());
 
 	}
@@ -393,7 +396,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 		//
 
 		//Iterate HUD backgrounds
-		for(GuiOverlayBase hud : HUDBackgrounds)
+		for(GuiOverlayBase hud : HUD_BACKGROUNDS)
 			if(hud.shouldDraw(player, mop))
 			{
 				hud.bindHUDTexture();
@@ -611,8 +614,28 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 	{
 		double partialTicks = event.getRenderPartialTicks();
 
+		//--- ScreenShake Handling ---//
+
+		//Display the strongest effect
+		SCREEN_SHAKE_EFFECTS.stream()
+				.max(ScreenShake::compareTo)
+				.ifPresent(
+						screenShake -> {
+							double shakex = (Utils.RAND.nextGaussian()-0.5)*screenShake.getStrength();
+							double shakey = (Utils.RAND.nextGaussian()-0.5)*screenShake.getStrength();
+							double shakez = (Utils.RAND.nextGaussian()-0.5)*screenShake.getStrength();
+							event.setRoll((float)shakez);
+							event.setYaw((float)(event.getYaw()+shakex));
+							event.setPitch((float)(event.getPitch()+shakey));
+						}
+				);
+		//Tick and remove past effects
+		SCREEN_SHAKE_EFFECTS.removeIf(screenShake -> screenShake.tick(partialTicks));
+
 		if(Minecraft.getMinecraft().gameSettings.thirdPersonView==0)
 		{
+			//--- Gun Recoil Handling ---//
+
 			ItemStack stack = ClientUtils.mc().player.getHeldItemMainhand();
 			if(stack.getItem() instanceof ItemIIGunBase&&Graphics.cameraRecoil)
 			{
@@ -637,6 +660,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 				event.setYaw((float)(event.getYaw()+recoilH));
 			}
 
+			//--- Camera Roll in Vehicles Handling ---//
 			if(Graphics.cameraRoll&&ClientUtils.mc().player.getRidingEntity() instanceof EntityMotorbike)
 			{
 				EntityMotorbike entity = (EntityMotorbike)ClientUtils.mc().player.getRidingEntity();
@@ -1368,5 +1392,15 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 			}
 
 		}
+	}
+
+
+	/**
+	 * @param pos      position of the explosion / screenshake source
+	 * @param strength strength of the shake
+	 */
+	public static void addScreenshakeSource(Vec3d pos, float strength, float duration)
+	{
+		SCREEN_SHAKE_EFFECTS.add(new ScreenShake(strength, duration, pos));
 	}
 }

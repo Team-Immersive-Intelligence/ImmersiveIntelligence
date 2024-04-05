@@ -33,7 +33,7 @@ public class ItemIIAmmoGuidedMissile extends ItemIIAmmoBase<EntityAmmoGuidedMiss
 	}
 
 	@Override
-	public float getComponentMultiplier()
+	public float getComponentAmount()
 	{
 		return 0.65f;
 	}

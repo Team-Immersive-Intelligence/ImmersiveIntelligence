@@ -33,7 +33,7 @@ public class ItemIIAmmoSubmachinegun extends ItemIIAmmoBase<EntityAmmoProjectile
 	}
 
 	@Override
-	public float getComponentMultiplier()
+	public float getComponentAmount()
 	{
 		return 0.0625f;
 	}

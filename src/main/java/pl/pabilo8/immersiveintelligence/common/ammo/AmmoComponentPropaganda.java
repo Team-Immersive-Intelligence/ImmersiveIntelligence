@@ -33,7 +33,7 @@ public class AmmoComponentPropaganda extends AmmoComponent
 	}
 
 	@Override
-	public void onEffect(World world, Vec3d pos, Vec3d dir, float multiplier, NBTTagCompound tag, CoreTypes coreType, Entity owner)
+	public void onEffect(World world, Vec3d pos, Vec3d dir, CoreTypes coreType, NBTTagCompound tag, float componentAmount, float multiplier, Entity owner)
 	{
 		ItemStack stack = new ItemStack(IIContent.itemPrintedPage, 1, 1);
 		stack.setTagCompound(tag);

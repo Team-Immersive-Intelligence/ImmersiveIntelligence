@@ -30,9 +30,12 @@ public class AmmoComponentRDX extends AmmoComponent
 	}
 
 	@Override
-	public void onEffect(World world, Vec3d pos, Vec3d dir, float multiplier, NBTTagCompound tag, CoreTypes coreType, Entity owner)
+	public void onEffect(World world, Vec3d pos, Vec3d dir, CoreTypes coreType, NBTTagCompound tag, float componentAmount, float multiplier, Entity owner)
 	{
-		new IIExplosion(world, null, pos.x, pos.y, pos.z, 9*multiplier, 8, false, true)
+		float size = (float)Math.floor(9*componentAmount*multiplier);
+		new IIExplosion(world, owner, pos, dir,
+				size, 9, coreType.getEffectShape(),
+				false, componentAmount > 0.125f, false)
 				.doExplosion();
 	}
 }

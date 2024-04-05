@@ -36,7 +36,7 @@ public class AmmoComponentFish extends AmmoComponent
 	}
 
 	@Override
-	public void onEffect(World world, Vec3d pos, Vec3d dir, float multiplier, NBTTagCompound tag, CoreTypes coreType, Entity owner)
+	public void onEffect(World world, Vec3d pos, Vec3d dir, CoreTypes coreType, NBTTagCompound tag, float componentAmount, float multiplier, Entity owner)
 	{
 		Vec3d v = new Vec3d(0, -1, 0);
 		Vec3d throwerPos = pos.addVector(0, 3, 0);

@@ -429,8 +429,7 @@ public class IIAmmoUtils
 	private static String getFormattedBulletTypeName(IAmmoType<?, ?> ammo, ItemStack stack)
 	{
 		Set<ComponentRole> collect = new HashSet<>();
-		if(ammo.getCoreType(stack).getRole()!=null)
-			collect.add(ammo.getCoreType(stack).getRole());
+		collect.add(ammo.getCoreType(stack).getRole());
 		collect.addAll(Arrays.stream(ammo.getComponents(stack)).map(AmmoComponent::getRole).collect(Collectors.toSet()));
 		StringBuilder builder = new StringBuilder();
 		for(ComponentRole componentRole : collect)

@@ -170,14 +170,16 @@ public abstract class EntityAmmoBase<T extends EntityAmmoBase<? super T>> extend
 
 			//Call the effect method on all components
 			for(Tuple<AmmoComponent, NBTTagCompound> component : components)
-				component.getFirst().onEffect(world, pos, dir, multiplier, tag, coreType, owner);
+				component.getFirst().onEffect(world, pos, dir,
+						coreType, tag,
+						ammoType.getComponentAmount(), multiplier, owner);
 			setDead();
 		}
 	}
 
 	protected float getComponentMultiplier()
 	{
-		return core.getExplosionModifier()*ammoType.getComponentMultiplier()*coreType.getComponentEffectivenessMod();
+		return core.getExplosionModifier()*coreType.getComponentEffectivenessMod();
 	}
 
 	@Nonnull
@@ -315,7 +317,7 @@ public abstract class EntityAmmoBase<T extends EntityAmmoBase<? super T>> extend
 			int color = component.getFirst().getColour(component.getSecond());
 
 			evt.add(Light.builder().pos(this)
-					.radius(ammoType.getComponentMultiplier()*16f)
+					.radius(ammoType.getComponentAmount()*16f)
 					.color(color, false)
 					.build());
 		}

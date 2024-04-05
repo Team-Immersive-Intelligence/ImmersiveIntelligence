@@ -136,6 +136,17 @@ public abstract class IIMessage implements IMessage
 		return ByteBufUtils.readTag(buf);
 	}
 
+	protected <T extends Enum<T>> ByteBuf writeEnum(ByteBuf buf, T value)
+	{
+		buf.writeInt(value.ordinal());
+		return buf;
+	}
+
+	protected <T extends Enum<T>> T readEnum(ByteBuf buf, Class<T> enumClass)
+	{
+		return enumClass.getEnumConstants()[buf.readInt()];
+	}
+
 	//--- Message Handler ---//
 
 	public static class IIMessageHandler<MSG extends IIMessage> implements IMessageHandler<MSG, IMessage>

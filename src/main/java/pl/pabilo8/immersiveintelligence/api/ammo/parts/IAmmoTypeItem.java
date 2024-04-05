@@ -3,7 +3,6 @@ package pl.pabilo8.immersiveintelligence.api.ammo.parts;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -14,14 +13,15 @@ import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseTypes;
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler;
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler.IAdvancedTooltipItem;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityAmmoBase;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @param <T> entity created by this ammo
@@ -113,53 +113,35 @@ public interface IAmmoTypeItem<T extends IAmmoType<T, E>, E extends EntityAmmoBa
 	@Override
 	default AmmoComponent[] getComponents(ItemStack stack)
 	{
-		if(ItemNBTHelper.hasKey(stack, NBT_COMPONENTS))
-		{
-			ArrayList<AmmoComponent> arrayList = new ArrayList<>();
-			NBTTagList components = (NBTTagList)ItemNBTHelper.getTag(stack).getTag(NBT_COMPONENTS);
-			for(int i = 0; i < components.tagCount(); i++)
-				arrayList.add(AmmoRegistry.getComponent(components.getStringTagAt(i)));
-			return arrayList.toArray(new AmmoComponent[0]);
-		}
-		return new AmmoComponent[0];
+		return EasyNBT.wrapNBT(stack)
+				.streamList(NBTTagString.class, NBT_COMPONENTS, EasyNBT.TAG_STRING)
+				.map(NBTTagString::getString)
+				.map(AmmoRegistry::getComponent)
+				.filter(Objects::nonNull)
+				.toArray(AmmoComponent[]::new);
 	}
 
 	@Override
 	default NBTTagCompound[] getComponentsNBT(ItemStack stack)
 	{
-		if(ItemNBTHelper.hasKey(stack, NBT_COMPONENTS_NBT))
-		{
-			ArrayList<NBTTagCompound> arrayList = new ArrayList<>();
-			NBTTagList components = (NBTTagList)ItemNBTHelper.getTag(stack).getTag(NBT_COMPONENTS_NBT);
-			for(int i = 0; i < components.tagCount(); i++)
-				arrayList.add(components.getCompoundTagAt(i));
-			return arrayList.toArray(new NBTTagCompound[0]);
-		}
-		return new NBTTagCompound[0];
+		return EasyNBT.wrapNBT(stack)
+				.streamList(NBTTagCompound.class, NBT_COMPONENTS_NBT, EasyNBT.TAG_COMPOUND)
+				.toArray(NBTTagCompound[]::new);
 	}
 
 	@Override
 	default ItemStack setComponentNBT(ItemStack stack, NBTTagCompound... tagCompounds)
 	{
-		NBTTagList component_nbt = new NBTTagList();
-		for(NBTTagCompound tagCompound : tagCompounds)
-			component_nbt.appendTag(tagCompound);
-		assert stack.getTagCompound()!=null;
-		stack.getTagCompound().setTag(NBT_COMPONENTS_NBT, component_nbt);
+		EasyNBT.wrapNBT(stack).withList(NBT_COMPONENTS, (Object[])tagCompounds);
 		return stack;
 	}
 
 	@Override
 	default void addComponents(ItemStack stack, AmmoComponent component, NBTTagCompound componentNBT)
 	{
-		NBTTagList comps = ItemNBTHelper.getTag(stack).getTagList(NBT_COMPONENTS, 8);
-		NBTTagList nbts = ItemNBTHelper.getTag(stack).getTagList(NBT_COMPONENTS_NBT, 10);
-
-		comps.appendTag(new NBTTagString(component.getName()));
-		nbts.appendTag(componentNBT.copy());
-
-		ItemNBTHelper.getTag(stack).setTag(NBT_COMPONENTS, comps);
-		ItemNBTHelper.getTag(stack).setTag(NBT_COMPONENTS_NBT, nbts);
+		EasyNBT.wrapNBT(stack)
+				.appendList(NBT_COMPONENTS, EasyNBT.TAG_STRING, new NBTTagString(component.getName()))
+				.appendList(NBT_COMPONENTS_NBT, EasyNBT.TAG_COMPOUND, componentNBT.copy());
 	}
 
 	@Override

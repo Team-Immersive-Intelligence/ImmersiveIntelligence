@@ -17,6 +17,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.ComponentEffectShape;
 import pl.pabilo8.immersiveintelligence.client.fx.nuke.ParticleAtomFog;
 import pl.pabilo8.immersiveintelligence.client.fx.nuke.ParticleAtomicBoomCore;
 import pl.pabilo8.immersiveintelligence.client.fx.nuke.ParticleAtomicBoomRing;
@@ -48,13 +49,14 @@ public class ParticleUtils
 	public static Supplier<Float> randFloat = Utils.RAND::nextFloat;
 	public static Supplier<Double> randDouble = Utils.RAND::nextDouble;
 
-	public static void spawnExplosionBoomFX(World world, Vec3d pos, float radius, float strength, boolean flaming, boolean damagesTerrain)
+	public static void spawnExplosionBoomFX(World world, Vec3d pos, Vec3d direction, ComponentEffectShape effectShape, float radius, float strength, boolean flaming, boolean damagesTerrain)
 	{
+		//TODO: 03.04.2024 rework
 		ParticleUtils.spawnShockwave(pos, radius, 0.75f*strength);
 		if(radius < 6)
 			ParticleUtils.spawnExplosionFX(pos, Vec3d.ZERO, radius*1.85f);
 
-		Set<BlockPos> positions = new HashSet<>(new IIExplosion(world, null, pos, radius, strength, flaming, true).generateAffectedBlockPositions());
+		Set<BlockPos> positions = new HashSet<>(new IIExplosion(world, null, pos, direction, radius, strength, effectShape, flaming, damagesTerrain, false).generateAffectedBlockPositions());
 
 		//Custom sounds
 		world.playSound(Minecraft.getMinecraft().player, pos.x, pos.y, pos.z, SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 4.0F, (1.0F+(world.rand.nextFloat()-world.rand.nextFloat())*0.2F)*0.7F);
