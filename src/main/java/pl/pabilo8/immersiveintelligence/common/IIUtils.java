@@ -42,6 +42,7 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraft.item.Item;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.oredict.OreDictionary;
@@ -1030,4 +1031,18 @@ public class IIUtils
 
 		return gcd;
 	}
+	public static void fixupItem(Item item, String itemName) {
+		// First, get the item out of IE's registries.
+		Item rItem = IEContent.registeredIEItems.remove(IEContent.registeredIEItems.size() - 1);
+		if (rItem != item)
+			throw new IllegalStateException("fixupItem was not called at the appropriate time");
+
+		// Now, reconfigure the block to match our mod.
+		item.setUnlocalizedName(ImmersiveIntelligence.MODID + "." + itemName);
+		item.setCreativeTab(IIContent.II_CREATIVE_TAB);
+
+		// And add it to our registries.
+		IIContent.ITEMS.add(item);
+	}
+
 }

@@ -42,22 +42,9 @@ public class ItemIITrenchShovel extends ItemIEShovel
 	public ItemIITrenchShovel()
 	{
 		super(Lib.MATERIAL_Steel, "trench_shovel", "shovel", "plateSteel");
-		fixupItem();
+		IIUtils.fixupItem(this, "trench_shovel");
 	}
 
-	public void fixupItem()
-	{
-		//First, get the item out of IE's registries.
-		Item rItem = IEContent.registeredIEItems.remove(IEContent.registeredIEItems.size()-1);
-		if(rItem!=this) throw new IllegalStateException("fixupItem was not called at the appropriate time");
-
-		//Now, reconfigure the block to match our mod.
-		this.setUnlocalizedName(ImmersiveIntelligence.MODID+".trench_shovel");
-		this.setCreativeTab(IIContent.II_CREATIVE_TAB);
-
-		//And add it to our registries.
-		IIContent.ITEMS.add(this);
-	}
 
 	@SideOnly(Side.CLIENT)
 	@Override
