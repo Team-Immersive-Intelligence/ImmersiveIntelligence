@@ -1,0 +1,22 @@
+name: ci
+
+on: [ push, pull_request ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Node.js v16
+      uses: actions/setup-node@v4
+      with:
+        node-version: 16
+
+    - name: Set up node modules
+      run: npm ci
+
+    - name: Build artifacts
+      run: npm run build
+
+    - name: Execute tests
+      run: npm run test
