@@ -70,7 +70,7 @@ public abstract class ItemIIGunBase extends ItemIIUpgradableTool implements ISki
 	{
 		super(name, 1, name.toUpperCase());
 		//Use interfaces pls Blu
-		fixupItem();
+		IIUtils.fixupItem(this, name );
 	}
 
 	//--- Base ---//
@@ -78,19 +78,7 @@ public abstract class ItemIIGunBase extends ItemIIUpgradableTool implements ISki
 	/**
 	 * Standard method for foreign item classes
 	 */
-	public void fixupItem()
-	{
-		//First, get the item out of IE's registries.
-		Item rItem = IEContent.registeredIEItems.remove(IEContent.registeredIEItems.size()-1);
-		if(rItem!=this) throw new IllegalStateException("fixupItem was not called at the appropriate time");
 
-		//Now, reconfigure the block to match our mod.
-		this.setUnlocalizedName(ImmersiveIntelligence.MODID+"."+this.itemName);
-		this.setCreativeTab(IIContent.II_CREATIVE_TAB);
-
-		//And add it to our registries.
-		IIContent.ITEMS.add(this);
-	}
 
 	//--- ItemUpgradeableTool ---//
 

@@ -35,6 +35,7 @@ import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
 import pl.pabilo8.immersiveintelligence.client.model.bullet.ModelBullet1bCal;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.entity.bullet.EntityBullet;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoBase.AmmoParts;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
@@ -66,7 +67,7 @@ public class ItemIIAmmoRevolver extends ItemBullet implements IAmmo, BulletHandl
 		this.subNames = new String[]{"casing", "core", "bullet"};
 		this.setHasSubtypes(true);
 		setMetaHidden(0, 1, 2);
-		fixupItem();
+		IIUtils.fixupItem(this, NAME);
 
 		//should be initialized before II
 		BulletHandler.emptyCasing = new ItemStack(IEContent.itemBullet, 1, 0);
@@ -74,19 +75,6 @@ public class ItemIIAmmoRevolver extends ItemBullet implements IAmmo, BulletHandl
 		BulletHandler.basicCartridge = new ItemStack(IEContent.itemBullet, 1, 2);
 	}
 
-	public void fixupItem()
-	{
-		//First, get the item out of IE's registries.
-		Item rItem = IEContent.registeredIEItems.remove(IEContent.registeredIEItems.size()-1);
-		if(rItem!=this) throw new IllegalStateException("fixupItem was not called at the appropriate time");
-
-		//Now, reconfigure the block to match our mod.
-		this.setUnlocalizedName(ImmersiveIntelligence.MODID+"."+this.itemName);
-		this.setCreativeTab(IIContent.II_CREATIVE_TAB);
-
-		//And add it to our registries.
-		IIContent.ITEMS.add(this);
-	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
