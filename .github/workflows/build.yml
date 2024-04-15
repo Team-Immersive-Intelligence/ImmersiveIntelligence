@@ -163,11 +163,9 @@ jobs:
             crafttweaker(optional)
             ctm(optional)
 
-          file: |
-            build/libs/*-core.jar
-            build/libs/*-deobf.jar
-            build/libs/*-sources.jar
-
+          files: |
+            build/libs/*.jar
+            !build/libs/*-core.jar
 
               retry-attempts: 2
               retry-delay: 10000
