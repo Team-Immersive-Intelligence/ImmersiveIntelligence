@@ -1,3 +1,0 @@
-export {
-    Stopwatch,
-} from "./stopwatch";
