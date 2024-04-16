@@ -143,13 +143,10 @@ jobs:
           token: ${{ secrets.REPO_ACCESS_TOKEN }}
 
 
-      - name: Publish
+      - name: Publish Curseforge
         uses: Kir-Antipov/mc-publish@v3.3                                   
         with:
   
-          modrinth-id: q19xbT91                                             
-          modrinth-token: "${{env.MODRINTH_TOKEN}}"
-          modrinth-featured: false
                             
           curseforge-id: 344344                                             
           curseforge-token: "${{env.CURSEFORGE_TOKEN}}"
@@ -172,6 +169,36 @@ jobs:
               retry-attempts: 2
               retry-delay: 10000
               fail-mode: fail
+
+
+
+      - name: Publish Modrith
+        uses: Kir-Antipov/mc-publish@v3.3                                   
+        with:
+
+          modrinth-id: q19xbT91                                             
+          modrinth-token: "${{env.MODRINTH_TOKEN}}"
+          modrinth-featured: false
+
+          loaders: forge
+          game-versions: "${{env.MINECRAFT_VERSION}}"
+          java: "${{env.JAVA_VERSION}}"
+          
+          dependencies: |
+            immersive-engineering(required)
+            immersive-energy(optional)
+            mct-immersive-technology(optional)
+            crafttweaker(optional)
+            ctm(optional)
+
+          files: |
+            build/libs/*.jar
+            !build/libs/*-core.jar
+
+              retry-attempts: 2
+              retry-delay: 10000
+              fail-mode: fail
+
 
              
       - name: Increment Version Variable
