@@ -146,12 +146,14 @@ jobs:
       - name: Publish
         uses: Kir-Antipov/mc-publish@v3.3                                   
         with:
-          curseforge-id: 344344                                             
-          curseforge-token: "${{env.CURSEFORGE_TOKEN}}"
-          
+  
           modrinth-id: q19xbT91                                             
           modrinth-token: "${{env.MODRINTH_TOKEN}}"
-                                          
+          modrinth-featured: false
+                            
+          curseforge-id: 344344                                             
+          curseforge-token: "${{env.CURSEFORGE_TOKEN}}"
+                                
           loaders: forge
           game-versions: "${{env.MINECRAFT_VERSION}}"
           java: "${{env.JAVA_VERSION}}"
