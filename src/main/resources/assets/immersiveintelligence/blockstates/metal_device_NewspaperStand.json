@@ -1,0 +1,81 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "transform": "forge:default-block",
+    "model": "immersiveengineering:ie_empty",
+    "textures": {
+      "texture": "immersiveengineering:blocks/storage_steel",
+      "particle": "immersiveengineering:blocks/storage_steel"
+    }
+  },
+  "variants": {
+    "inventory,type=co2_filter": [
+      {
+        "model": "immersiveintelligence:newspaper_stand/newspaper_stand",
+        "transform": {
+          "scale": [ 0.1875, 0.1875, 0.1875 ],
+          "firstperson_righthand": { "scale": [ 1, 1, 1 ], "rotation": [{ "y": 180 }] },
+          "firstperson_lefthand": { "scale": [ 1, 1, 1 ], "rotation": [{ "y": 180 }] },
+          "thirdperson_righthand": { "translation": [ 0, 0.09375, -0.171875 ], "rotation": [{ "x": 70 }, { "y": 70 }] },
+          "thirdperson_lefthand": { "translation": [ 0, 0.09375, -0.171875 ], "rotation": [{ "x": 70 }, { "y": 70 }] },
+          "fixed": {"scale": [ 2,2,2 ], "translation": [ 0, -0.25, 0 ], "rotation": [{ "y": 0 }]},
+          "gui": { "translation": [ 0, -0.25, 0 ], "rotation": [{ "x": 30 },{ "y": 135 }], "scale": [ 2, 2, 2 ] }
+        }
+      }
+    ],
+    "_0multiblockslave=false,boolean0=false,facing=up,type=co2_filter": [
+      {
+        "model": "immersiveintelligence:newspaper_stand/newspaper_stand"
+      }
+    ],
+    "type": {
+      "co2_filter": {
+      }
+    },
+    "facing": {
+      "down": {
+      },
+      "up": {
+      },
+      "north": {
+      },
+      "south": {
+        "transform": {
+          "rotation": {
+            "y": 180
+          }
+        }
+      },
+      "west": {
+        "transform": {
+          "rotation": {
+            "y": 90
+          }
+        }
+      },
+      "east": {
+        "transform": {
+          "rotation": {
+            "y": -90
+          }
+        }
+      }
+    },
+    "_0multiblockslave": {
+      "false": {
+        "model": "immersiveintelligence:newspaper_stand/newspaper_stand.obj",
+        "custom": {
+          "flip-v": true
+        }
+      },
+      "true": {
+      }
+    },
+    "boolean0": {
+      "false": {},
+      "true": {
+        "model": "immersiveintelligence:newspaper_stand/newspaper_stand"
+      }
+    }
+  }
+}

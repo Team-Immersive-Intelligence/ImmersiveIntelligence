@@ -1,8 +1,10 @@
-# Made in Blockbench 4.9.4
-newmtl m_3e928064-c035-a116-49bd-65da84d9fa2c
-map_Kd common_copper_cable.png
-newmtl m_d6d9a487-735d-f6c0-4cdf-f2b21ba890e3
-map_Kd newspaper_stand.png
-newmtl m_b02da789-c531-64d7-8823-4085b4b53f06
-map_Kd BUCHundNEWSundPAGE.png
-newmtl none
+# Made with Blockbench
+
+newmtl common_thingies
+map_Kd immersiveintelligence:block/common_thingies
+newmtl common_copper_cable
+map_Kd immersiveintelligence:block/common_copper_cable
+newmtl newspaper_stand
+map_Kd 
+newmtl buchundnewsundpage
+map_Kd 
