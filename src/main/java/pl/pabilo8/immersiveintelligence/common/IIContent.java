@@ -238,6 +238,7 @@ public class IIContent
 	public static BlockIISandbags blockSandbags = new BlockIISandbags();
 	public static BlockIIClothDecoration blockClothDecoration = new BlockIIClothDecoration();
 	public static BlockIIMetalDecoration blockMetalDecoration = new BlockIIMetalDecoration();
+	public static BlockIINewspaperStand blockNewspaperStand = new BlockIINewspaperStand();
 
 	//b e t o n
 	public static BlockIIConcreteDecoration blockConcreteDecoration = new BlockIIConcreteDecoration();
