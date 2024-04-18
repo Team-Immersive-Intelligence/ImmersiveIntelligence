@@ -10,6 +10,7 @@ import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.common.model.Models;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fluids.Fluid;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
@@ -238,7 +239,6 @@ public class IIContent
 	public static BlockIISandbags blockSandbags = new BlockIISandbags();
 	public static BlockIIClothDecoration blockClothDecoration = new BlockIIClothDecoration();
 	public static BlockIIMetalDecoration blockMetalDecoration = new BlockIIMetalDecoration();
-	public static BlockIINewspaperStand blockNewspaperStand = new BlockIINewspaperStand();
 
 	//b e t o n
 	public static BlockIIConcreteDecoration blockConcreteDecoration = new BlockIIConcreteDecoration();
@@ -297,6 +297,9 @@ public class IIContent
 
 	//biomes
 	public static BiomeWasteland biomeWasteland = new BiomeWasteland();
+
+
+
 
 	static
 	{
