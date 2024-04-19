@@ -10,14 +10,17 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.TileEntityNewspaperStand;
 
 public class BlockIINewspaperStand extends BlockContainer {
 
     public BlockIINewspaperStand() {
-        super(Material.WOOD); // Set the material of your block
-        this.setHardness(2.0f); // Set the hardness of the block
-        this.setResistance(5.0f); // Set the resistance of the block
+        super(Material.IRON); // Set the material of your block
+        this.setHardness(4.0f); // Set the hardness of the block
+        this.setResistance(10.0f); // Set the resistance of the block
+        this.setCreativeTab(IIContent.II_CREATIVE_TAB);
         // Set other properties as needed
     }
 

@@ -43,7 +43,7 @@ public class TileEntityNewspaperStand extends TileEntity
 }
 
 
-
+/*
 public class TileEntityNewspaperStand extends BlockContainer {
 
 
@@ -78,4 +78,4 @@ public class TileEntityNewspaperStand extends BlockContainer {
         return false;
     }
     }
-
+*/
