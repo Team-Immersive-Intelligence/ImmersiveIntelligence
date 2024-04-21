@@ -316,6 +316,7 @@ public class ClientProxy extends CommonProxy
 		super.preInit();
 		MinecraftForge.EVENT_BUS.register(this);
 		MinecraftForge.EVENT_BUS.register(IIModelRegistry.INSTANCE);
+		MinecraftForge.EVENT_BUS.register(new IICretiveTabHandler());
 		OBJLoader.INSTANCE.addDomain(ImmersiveIntelligence.MODID);
 		IEOBJLoader.instance.addDomain(ImmersiveIntelligence.MODID);
 

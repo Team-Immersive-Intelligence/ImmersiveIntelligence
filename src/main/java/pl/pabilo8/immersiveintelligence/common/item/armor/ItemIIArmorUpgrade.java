@@ -66,19 +66,23 @@ public class ItemIIArmorUpgrade extends ItemIISubItemsBase<ArmorUpgrades> implem
 		//--- Helmet ---//
 
 		//Protects from gasses
+		@IIItemProperties(category = IICategory.WARFARE)
 		GASMASK(ImmutableSet.of(ArmorTypes.LIGHT_ENGINEER_HELMET)),
 
+		@IIItemProperties(category = IICategory.WARFARE)
 		INFILTRATOR_GEAR(ImmutableSet.of(ArmorTypes.LIGHT_ENGINEER_HELMET),
 				"infiltrator_gear", "engineer_gear"),
+		@IIItemProperties(category = IICategory.WARFARE)
 		TECHNICIAN_GEAR(ImmutableSet.of(ArmorTypes.LIGHT_ENGINEER_HELMET),
 				"technician_gear", "engineer_gear"),
+		@IIItemProperties(category = IICategory.WARFARE)
 		ENGINEER_GEAR(ImmutableSet.of(ArmorTypes.LIGHT_ENGINEER_HELMET),
 				"technician_gear", "infiltrator_gear"),
 
 		//--- All Parts ---//
 
 		//Adds 1/3 armor thickness point, Deflects arrows, -5% speed per part
-		@IIItemProperties(stackSize = 3)
+		@IIItemProperties(stackSize = 3, category = IICategory.WARFARE)
 		STEEL_ARMOR_PLATES(
 				ImmutableSet.of(ArmorTypes.LIGHT_ENGINEER_HELMET, ArmorTypes.LIGHT_ENGINEER_CHESTPLATE, ArmorTypes.LIGHT_ENGINEER_LEGGINGS),
 				(upgrade, modifications) -> {
@@ -89,7 +93,7 @@ public class ItemIIArmorUpgrade extends ItemIISubItemsBase<ArmorUpgrades> implem
 				"composite_plates"),
 
 		//Adds 1 armor thickness point, Deflects arrows, blocks damage with base <8+((i-1)*(amount*0.75)), makes the weapon break, -2.5% speed per part
-		@IIItemProperties(stackSize = 3)
+		@IIItemProperties(stackSize = 3, category = IICategory.WARFARE)
 		COMPOSITE_ARMOR_PLATES(
 				ImmutableSet.of(ArmorTypes.LIGHT_ENGINEER_HELMET, ArmorTypes.LIGHT_ENGINEER_CHESTPLATE, ArmorTypes.LIGHT_ENGINEER_LEGGINGS),
 				(upgrade, modifications) -> {
@@ -100,52 +104,64 @@ public class ItemIIArmorUpgrade extends ItemIISubItemsBase<ArmorUpgrades> implem
 				"steel_plates"),
 
 		//Protects from radiation
+		@IIItemProperties(category = IICategory.WARFARE)
 		HAZMAT_COATING(
 				ImmutableSet.of(ArmorTypes.LIGHT_ENGINEER_HELMET, ArmorTypes.LIGHT_ENGINEER_CHESTPLATE, ArmorTypes.LIGHT_ENGINEER_LEGGINGS, ArmorTypes.LIGHT_ENGINEER_BOOTS),
 				(upgrade, modifications) -> modifications.setBoolean("hazmat", true)),
 
 		//--- Chestplate ---//
 
+		@IIItemProperties(category = IICategory.WARFARE)
 		HEAT_RESISTANT_COATING(
-				ImmutableSet.of(ArmorTypes.LIGHT_ENGINEER_CHESTPLATE)),
+				ImmutableSet.of(ArmorTypes.LIGHT_ENGINEER_CHESTPLATE),
+				(upgrade, modifications) -> modifications.setBoolean("heatcoat", true)),
 
+		@IIItemProperties(category = IICategory.WARFARE)
 		ANTI_STATIC_MESH(
 				ImmutableSet.of(ArmorTypes.LIGHT_ENGINEER_CHESTPLATE),
 				"camo_mesh", "ir_mesh"),
 
+		@IIItemProperties(category = IICategory.WARFARE)
 		CAMOUFLAGE_MESH(
 				ImmutableSet.of(ArmorTypes.LIGHT_ENGINEER_CHESTPLATE),
 				(upgrade, modifications) -> modifications.setBoolean("camo_mesh", true),
 				"anti_static_mesh", "ir_mesh"),
 
+		@IIItemProperties(category = IICategory.WARFARE)
 		INFRARED_ABSORBING_MESH(
 				ImmutableSet.of(ArmorTypes.LIGHT_ENGINEER_CHESTPLATE),
 				(upgrade, modifications) -> modifications.setBoolean("ir_mesh", true),
 				"anti_static_mesh", "camo_mesh"),
 
+		@IIItemProperties(category = IICategory.WARFARE)
 		SCUBA_TANK(ImmutableSet.of(ArmorTypes.LIGHT_ENGINEER_CHESTPLATE),
 				(upgrade, modifications) -> modifications.setBoolean("scuba", true)
 		),
 
-		@IIItemProperties(hidden = true)
+		@IIItemProperties(hidden = true, category = IICategory.WARFARE)
 		HELIPACK(ImmutableSet.of(ArmorTypes.LIGHT_ENGINEER_CHESTPLATE)),
 
 		//--- Leggings ---//
 
+		@IIItemProperties(category = IICategory.WARFARE)
 		EXOSKELETON(ImmutableSet.of(ArmorTypes.LIGHT_ENGINEER_LEGGINGS)),
 
 		//--- Boots ---//
 
+		@IIItemProperties(category = IICategory.WARFARE)
 		BOOT_REINFORCEMENT(ImmutableSet.of(ArmorTypes.LIGHT_ENGINEER_BOOTS),
 				(upgrade, modifications) -> {
 					modifications.setBoolean("reinforced", true);
 					modifications.setDouble("toughness_increase", 1);
 					modifications.setDouble("armor_increase", 1);
 				}),
+		@IIItemProperties(category = IICategory.WARFARE)
 		SNOW_RACKETS(
 				ImmutableSet.of(ArmorTypes.LIGHT_ENGINEER_BOOTS), "flippers"),
+		@IIItemProperties(category = IICategory.WARFARE)
 		FLIPPERS(
 				ImmutableSet.of(ArmorTypes.LIGHT_ENGINEER_BOOTS), "snow_rackets"),
+		@IIItemProperties(category = IICategory.WARFARE)
 		INTERNAL_SPRINGS(
 				ImmutableSet.of(ArmorTypes.LIGHT_ENGINEER_BOOTS));
 

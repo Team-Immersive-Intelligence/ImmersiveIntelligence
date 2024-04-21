@@ -40,7 +40,11 @@ public abstract class IICompatModule
 		moduleClasses.put("baubles", BaublesHelper.class);
 		moduleClasses.put("opencomputers", OpenComputersHelper.class);
 		moduleClasses.put("computercraft", ComputerCraftHelper.class);
+		moduleClasses.put("toughasnails", TANHelper.class);
+		moduleClasses.put("mysticalmechanics", MysticalMechanicsAPIHelper.class);
 	}
+
+	public abstract String getName();
 
 	public static void doModulesPreInit()
 	{

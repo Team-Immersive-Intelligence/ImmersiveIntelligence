@@ -33,6 +33,12 @@ import java.util.function.Supplier;
  */
 public class ImmersiveTechnologyHelper extends IICompatModule
 {
+
+	@Override
+	public String getName()
+	{
+		return "ImmersiveTechnology";
+	}
 	@Override
 	public void preInit()
 	{

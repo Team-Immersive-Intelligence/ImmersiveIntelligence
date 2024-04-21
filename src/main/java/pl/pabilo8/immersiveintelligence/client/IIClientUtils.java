@@ -6,6 +6,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -51,6 +52,11 @@ public class IIClientUtils
 	public static IIFontRendererCustomGlyphs fontEngineerTimes, fontNormung, fontKaiser, fontTinkerer;
 
 	@SideOnly(Side.CLIENT)
+	private static Minecraft mc() {
+		return Minecraft.getMinecraft();
+	}
+
+	@SideOnly(Side.CLIENT)
 	public static void drawStringCentered(FontRenderer fontRenderer, String string, int x, int y, int w, int h, int colour)
 	{
 		fontRenderer.drawString(string, x+(w/2)-(fontRenderer.getStringWidth(string)/2), y+h, colour);
@@ -72,8 +78,8 @@ public class IIClientUtils
 	{
 		Tessellator tes = Tessellator.getInstance();
 		BufferBuilder buf = tes.getBuffer();
-		BlockRendererDispatcher brd = Minecraft.getMinecraft().getBlockRendererDispatcher();
-		TextureManager tex = Minecraft.getMinecraft().renderEngine;
+		BlockRendererDispatcher brd = mc().getBlockRendererDispatcher();
+		TextureManager tex = mc().renderEngine;
 		EntityPlayer player = ClientUtils.mc().player;
 
 		//get rendering centre position
@@ -148,7 +154,13 @@ public class IIClientUtils
 	@SideOnly(Side.CLIENT)
 	public static void bindTexture(ResourceLocation path)
 	{
-		Minecraft.getMinecraft().getTextureManager().bindTexture(path);
+		mc().getTextureManager().bindTexture(path);
+	}
+
+	@SideOnly(Side.CLIENT)
+	public static void displayScreen(GuiScreen screen)
+	{
+		mc().displayGuiScreen(screen);
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -272,5 +284,11 @@ public class IIClientUtils
 		}
 
 		return output;
+	}
+
+	@SideOnly(Side.CLIENT)
+	public static EntityPlayer getPlayer()
+	{
+		return mc().player;
 	}
 }

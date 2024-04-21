@@ -16,6 +16,12 @@ public class ImmersiveEnergyHelper extends IICompatModule
 	}
 
 	@Override
+	public String getName()
+	{
+		return "ImmersiveEnergy";
+	}
+
+	@Override
 	public void registerRecipes()
 	{
 

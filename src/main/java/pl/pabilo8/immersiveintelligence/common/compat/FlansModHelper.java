@@ -14,6 +14,12 @@ public class FlansModHelper extends IICompatModule
 	}
 
 	@Override
+	public String getName()
+	{
+		return "FlansMod";
+	}
+
+	@Override
 	public void registerRecipes()
 	{
 

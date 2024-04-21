@@ -54,6 +54,8 @@ import java.util.List;
 
 public abstract class ItemIIGunBase extends ItemIIUpgradableTool implements ISkinnable, IAdvancedTooltipItem, IOBJModelCallback<ItemStack>
 {
+	public static final NonNullList<ItemIIGunBase> WEAPONS = NonNullList.create();
+
 	//--- NBT Values Reference ---//
 	public static final String RELOADING = "reloading";
 	public static final String AIMING = "aiming";
@@ -70,6 +72,7 @@ public abstract class ItemIIGunBase extends ItemIIUpgradableTool implements ISki
 		super(name, 1, name.toUpperCase());
 		//Use interfaces pls Blu
 		fixupItem();
+		WEAPONS.add(this);
 	}
 
 	//--- Base ---//

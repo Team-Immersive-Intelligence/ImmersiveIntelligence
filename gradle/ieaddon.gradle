@@ -16,9 +16,11 @@ dependencies {
     implementation "li.cil.oc:OpenComputers:MC1.12.2-1.7.5.221"
 
     //Download from curse maven
+    compileOnly "curse.maven:tough-as-nails-246391:2710969"
     compileOnly "curse.maven:immersive-petroleum-268250:3382321"
     compileOnly "curse.maven:immersive-posts-314645:2951672"
     compileOnly "curse.maven:immersive-technology-359407:3658279"
+    compileOnly "curse.maven:mysticalmechanics-300742:3006392"
 }
 
 repositories {

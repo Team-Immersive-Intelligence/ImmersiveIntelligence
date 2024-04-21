@@ -73,6 +73,8 @@ import pl.pabilo8.immersiveintelligence.common.util.IBatchOredictRegister;
 import pl.pabilo8.immersiveintelligence.common.util.block.BlockIIFluid;
 import pl.pabilo8.immersiveintelligence.common.util.block.BlockIISlab;
 import pl.pabilo8.immersiveintelligence.common.util.block.BlockIIStairs;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemStack;
 import pl.pabilo8.immersiveintelligence.common.world.BiomeWasteland;
 
 import java.util.ArrayList;
@@ -90,6 +92,7 @@ public class IIContent
 {
 	public static final List<Block> BLOCKS = new ArrayList<>();
 	public static final List<Item> ITEMS = new ArrayList<>();
+	public static final List<IIItemStack> CATEGORY_ITEM_MAP = new ArrayList<>();
 	public static final List<Class<? extends TileEntity>> TILE_ENTITIES = new ArrayList<>();
 	public static final List<IMultiblock> MULTIBLOCKS = new ArrayList<>();
 

@@ -777,6 +777,11 @@ public class IIUtils
 		return getHexCol(Integer.toHexString(color), text);
 	}
 
+	public static String getHexCol(IIColor color, String text)
+	{
+		return getHexCol(color.RGBHex(), text);
+	}
+
 	public static String getHexCol(String color, String text)
 	{
 		return String.format("<hexcol=%s:%s>", color, text);
@@ -911,6 +916,18 @@ public class IIUtils
 			if(field.isAnnotationPresent(annotationClass))
 				return field.getAnnotation(annotationClass);
 		} catch(NoSuchFieldException ignored) {}
+		return null;
+	}
+
+	/**
+	 * <i>Trust me, I'm an Engineer!</i><br>
+	 * Returns a value of an annotation<br>
+	 * Generally safe to use, but slow. Cache the results.
+	 */
+	@Nullable
+	public static <T extends Annotation> T getAnnotation(Class<T> annotationClass, Object o)
+	{
+		if (o.getClass().isAnnotationPresent(annotationClass)) return o.getClass().getAnnotation(annotationClass);
 		return null;
 	}
 
