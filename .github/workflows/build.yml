@@ -206,16 +206,6 @@ jobs:
               retry-attempts: 2
               retry-delay: 10000
               fail-mode: fail
-        
-
-      #Send update on commits to Discord Webhook
-      - name: Discord Commits
-        uses: Sniddl/discord-commits@v1.6
-        with:
-          webhook: ${{ secrets.DISCORD_WEBHOOK }}
-          template: "avatar-with-link"
-          include-extras: true
-
 
        
 
