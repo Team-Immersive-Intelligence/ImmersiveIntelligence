@@ -1,0 +1,29 @@
+name: Discord_Notifications
+
+on: 
+  push:
+      branches:
+          - 'dev'
+          - 'dev-Avalon'
+          - 'dev-ammo-rework'
+          - 'dev-bastian'
+          - 'dev-prism'
+
+
+jobs:
+  disord_test_message:
+    runs-on: ubuntu-latest
+    name: discord commits
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Send message to discord
+        uses: Sniddl/discord-commits@v1.6
+        with:
+          #webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          template: 'plain-author'
+          include-extras: true
+          message: "We hereby report that [**{{ github.context.payload.repository.name}}**](https://github.com/${{ github.repository }}) has received following new commits in branch **${{ github.ref }}**:"
+          embed: '{ "title": "{{ commit.title }}", "description": "{{ commit.description }}", "url": "{{ commit.url }}", "author": { "name": "{{ commit.author.name }} ({{ commit.author.username }})", "icon_url": "https://github.com/{{ commit.author.username }}.png"} }'
+          last-commit-only: false
