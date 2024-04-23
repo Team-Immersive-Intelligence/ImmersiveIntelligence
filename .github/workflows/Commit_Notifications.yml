@@ -21,7 +21,7 @@ jobs:
       - name: Send message to discord
         uses: Sniddl/discord-commits@v1.6
         with:
-          #webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          webhook: ${{ secrets.COMMITS_WEBHOOK }}
           template: 'plain-author'
           include-extras: true
           message: "We hereby report that [**{{ github.context.payload.repository.name}}**](https://github.com/${{ github.repository }}) has received following new commits in branch **${{ github.ref }}**:"
