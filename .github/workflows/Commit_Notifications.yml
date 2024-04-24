@@ -4,6 +4,12 @@ on:
   push:
       branches:
           - 'dev-Avalon'
+          - 'dev-ammo-rework'
+          - 'dev-bastian'
+          - 'dev-prism'
+          - 'dev'
+          
+          
 
 
 jobs:
