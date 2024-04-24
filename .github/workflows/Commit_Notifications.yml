@@ -2,13 +2,14 @@ name: Discord_Notifications
 
 on: 
   push:
+      branches:
+          - 'dev-Avalon'
+
 
 jobs:
   disord_test_message:
     runs-on: ubuntu-latest
     name: discord commits
-    env:
-      COMMITS_WEBHOOK: https://discord.com/api/webhooks/1231734104152870955/9eL1yg8taWpZP-xUd4uwcceQ9S3QeZkZhKgYmTPtvDbpj1nayy1GQTMzjd-E4jL5ecRR
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -16,7 +17,7 @@ jobs:
       - name: Send message to discord
         uses: Sniddl/discord-commits@v1.6
         with:
-          webhook: COMMITS_WEBHOOK
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
           template: 'plain-author'
           include-extras: true
           message: "We hereby report that [**{{ github.context.payload.repository.name}}**](https://github.com/${{ github.repository }}) has received following new commits in branch **${{ github.ref }}**:"
