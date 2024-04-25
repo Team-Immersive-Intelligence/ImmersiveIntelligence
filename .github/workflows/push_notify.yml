@@ -2,7 +2,14 @@ name: Notify Discord on Push
 
 on:
   push: #Trigger On Push
-    branches: [ "master" ]
+    branches: 
+            - 'dev'
+            - 'dev-Avalon'
+            - 'dev-ammo-rework'
+            - 'dev-bastian'
+            - 'dev-prism'
+            - 'dev-prism-shotgun'
+            - 'dev-translations'
 
 jobs:
   notify-discord:
@@ -25,7 +32,7 @@ jobs:
 
       - name: Notify Discord
         env:
-          WEBHOOK: ${{ secrets.DISCORD_COMMITS_WEBHOOK }}
+          WEBHOOK: ${{ secrets.DISCORD_INTERNAL_COMMITS_WEBHOOK }}
           MOD_NAME: ${{ steps.rp.outputs.mcmod_Name }}
           MOD_DEVOLOPER: ${{ steps.rp.outputs.mcmod_Developer }}
           MOD_URL: ${{ steps.rp.outputs.mcmod_URL }}
