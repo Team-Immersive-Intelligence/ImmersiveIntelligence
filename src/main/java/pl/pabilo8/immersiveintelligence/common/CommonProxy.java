@@ -236,7 +236,7 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 						OreDictionary.registerOre(IIUtils.toCamelCase(ore, true), new ItemStack(item));
 
 				IIItemProperties props = ((ItemIIBase)item).getItemProperties();
-				IIContent.CATEGORY_ITEM_MAP.add(new IIItemStack(new ItemStack(item, 1), (props==null)?IICategory.ELECTRONICS : props.category()));
+				IIContent.CATEGORY_ITEM_MAP.add(new IIItemStack(new ItemStack(item, 1), (props==null)?IICategory.ELECTRONICS: props.category()));
 			}
 
 		for(Block block : IIContent.BLOCKS)
@@ -570,6 +570,10 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 
 		registerEntity(i++, EntityIIChemthrowerShot.class, "chemthrower_shot", 64, 1, true);
 		registerEntity(i, EntityAMTTactile.class, "tactile", 64, 1, true);
+
+		for(IMultiblock mb : IIContent.MULTIBLOCKS)
+			if(mb instanceof MultiblockStuctureBase)
+				((MultiblockStuctureBase<?>)mb).updateStructure();
 	}
 
 	public void postInit()
@@ -594,10 +598,6 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		CorrosionHandler.addItemToBlacklist(new ItemStack(Items.DIAMOND_CHESTPLATE));
 		CorrosionHandler.addItemToBlacklist(new ItemStack(Items.DIAMOND_LEGGINGS));
 		CorrosionHandler.addItemToBlacklist(new ItemStack(Items.DIAMOND_BOOTS));
-
-		for(IMultiblock mb : MultiblockHandler.getMultiblocks())
-			if(mb instanceof MultiblockStuctureBase)
-				((MultiblockStuctureBase<?>)mb).updateStructure();
 	}
 
 	//--- GUI Handling ---//

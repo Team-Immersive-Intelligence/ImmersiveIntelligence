@@ -76,15 +76,15 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 	/**
 	 * Stacks for manual list
 	 */
-	private IngredientStack[] materials = null;
+	private IngredientStack[] materials = new IngredientStack[0];
 	/**
 	 * Stacks for manual block display
 	 */
-	private ItemStack[][][] structure = null;
+	private ItemStack[][][] structure = new ItemStack[0][0][0];
 	/**
 	 * Check array for blockstates
 	 */
-	private IngredientStack[][][] checkStructure = null;
+	private IngredientStack[][][] checkStructure = new IngredientStack[0][0][0];
 	/**
 	 * Offset for trigger block
 	 */

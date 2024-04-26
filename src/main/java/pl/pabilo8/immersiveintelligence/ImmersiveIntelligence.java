@@ -29,7 +29,7 @@ import static pl.pabilo8.immersiveintelligence.ImmersiveIntelligence.VERSION;
 @Mod(modid = MODID, version = VERSION,
 		//xaxaxa, trick! yuo can't steal mod if mod is steal-proof
 		certificateFingerprint = "770570c49a2652e64a9b29b9b9d9919ca68b7065",
-		dependencies = "required-after:forge@[14.23.5.2820,);required-after:immersiveengineering@[0.12,);after:immersiveengineering@[0.12,);after:immersiveposts@[0.2,);before:buildcraftlib")
+		dependencies = "required-after:forge@[14.23.5.2820,);required-after:immersiveengineering@[0.12,);after:immersiveengineering@[0.12,);after:immersiveposts@[0.2,)")
 public class ImmersiveIntelligence
 {
 	public static final String MODID = "immersiveintelligence";
