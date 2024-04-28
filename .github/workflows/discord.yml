@@ -1,0 +1,18 @@
+name: Notify Discord on New Issue
+
+on:
+  issues:
+    types: [ opened ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo 'ISSUE ID: ${{ github.event.issue.id }}'
+          echo 'PROJECT ITEM ID: ${{ github.event.issue.number }}'
+      - name: Notify Discord on New Issue
+        uses: sebastianpopp/discord-action@releases/v2
+        with:
+          webhook: ${{ secrets.CARVERBOT_WEBHOOK }}
+          message: "${{ github.event.issue.title }}\nhttps://github.com/Team-Immersive-Intelligence/ImmersiveIntelligence-Internal/issues/${{ github.event.issue.number }}"

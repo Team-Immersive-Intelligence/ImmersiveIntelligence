@@ -2,40 +2,26 @@ name: Notify Discord on Push
 
 on:
   push: #Trigger On Push
-    branches: 
-            - 'dev'
-            - 'dev-Avalon'
-            - 'dev-ammo-rework'
-            - 'dev-bastian'
-            - 'dev-prism'
-            - 'dev-prism-shotgun'
-            - 'dev-translations'
+    branches:
+      - 'dev'
+      - 'dev-Avalon'
+      - 'dev-ammo-rework'
+      - 'dev-bastian'
+      - 'dev-prism'
+      - 'dev-prism-shotgun'
+      - 'dev-translations'
 
 jobs:
   notify-discord:
     continue-on-error: true
-    name: Optimize Assets
+    name: Notify Discord
     runs-on: ubuntu-latest
-    env:
-      GITHUB_USERNAME: 'CarverBot'
-      GITHUB_TOKEN: ${{ secrets.OPTIMIZATION_TOKEN }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
-
-      - name: Read Properties File
-        id: rp
-        uses: christian-draeger/read-properties@1.1.1
-        with:
-          path: './gradle.properties'
-          properties: 'mcmod_Name mcmod_Developer mcmod_URL'
-
       - name: Notify Discord
         env:
-          WEBHOOK: ${{ secrets.DISCORD_INTERNAL_COMMITS_WEBHOOK }}
-          MOD_NAME: ${{ steps.rp.outputs.mcmod_Name }}
-          MOD_DEVOLOPER: ${{ steps.rp.outputs.mcmod_Developer }}
-          MOD_URL: ${{ steps.rp.outputs.mcmod_URL }}
-          COMMIT_FROM: ${{ steps.rp.outputs.mcmod_URL }}
-          COMMIT_TO: ${{ steps.rp.outputs.mcmod_URL }}
-        run: chmod -R a+rX ./gradle/tools/* ; bash ./gradle/tools/discord_commit.sh -i
+          COMMIT_FROM: ${{ github.event.push.before }}
+          COMMIT_TO: ${{ github.event.push.after }}
+          WEBHOOK: ${{ secrets.COMMITS_WEBHOOK }}
+        run: chmod -R a+rX .github/workflows/* ; bash ./.github/workflows/discord_commit.sh -i
