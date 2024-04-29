@@ -2,14 +2,6 @@ name: Notify Discord on Push
 
 on:
   push: #Trigger On Push
-    branches:
-      - 'dev'
-      - 'dev-Avalon'
-      - 'dev-ammo-rework'
-      - 'dev-bastian'
-      - 'dev-prism'
-      - 'dev-prism-shotgun'
-      - 'dev-translations'
 
 jobs:
   notify-discord:
