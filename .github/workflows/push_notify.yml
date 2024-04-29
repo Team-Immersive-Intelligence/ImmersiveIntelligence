@@ -15,5 +15,5 @@ jobs:
         env:
           COMMIT_FROM: ${{ github.event.push.before }}
           COMMIT_TO: ${{ github.event.push.after }}
-          WEBHOOK: ${{ secrets.COMMITS_WEBHOOK }}
+          WEBHOOK: ${{ secrets.DISCORD_INTERNAL_COMMITS_WEBHOOK }}
         run: chmod -R a+rX .github/workflows/* ; bash ./.github/workflows/discord_commit.sh -i
