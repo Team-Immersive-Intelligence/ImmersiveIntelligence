@@ -2,15 +2,22 @@
 f=$COMMIT_FROM
 t=$COMMIT_TO
 generate_post_data() {
-  cat <<EOF
+cat <<EOF
 {
   "content": "",
   "tts": false,
   "embeds": [
     {
+      "id": 652627557,
       "title": "Work Progress Report",
       "color": 3617648,
-      "description": "We hereby report that the [**ImmersiveIntelligence_External**](https://github.com/Team-Immersive-Intelligence/ImmersiveIntelligence) has received the following new commits\\n$(git log "$COMMIT_FROM...$COMMIT_TO" --format="[\`%h\`](https://github.com/Team-Immersive-Intelligence/ImmersiveIntelligence/commit/%h) **%an**: %s%n%n%b\\n" | tr -d '\n' )",
+      "description": "We hereby report that the [**Internal Repository**](https://github.com/Team-Immersive-Intelligence/ImmersiveIntelligence-Internal) has received following new commits",
+      "fields": [
+        {
+          "name": "Commit Details",
+          "value": "Author: $(git log --format='%an' | sed 's/"/\\"/g')\nBranch: $(git rev-parse --abbrev-ref HEAD)\nCommit name: $(git log --format='%s' | sed 's/"/\\"/g')\nCommit Description: $(git log --format='%b' | sed 's/"/\\"/g')"
+        }
+      ],
       "footer": {
         "text": "Glory to the Engineer Cause!"
       }
