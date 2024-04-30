@@ -11,7 +11,7 @@ cat <<EOF
       "id": 652627557,
       "title": "Work Progress Report",
       "color": 3617648,
-      "description": "We hereby report that the [**Internal Repository**](https://github.com/Team-Immersive-Intelligence/ImmersiveIntelligence-External) has received following new commits",
+      "description": "We hereby report that the [**External Repository**](https://github.com/Team-Immersive-Intelligence/ImmersiveIntelligence) has received following new commits",
       "fields": [
         {
           "name": "Commit Details",
