@@ -21,22 +21,20 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.*;
 import net.minecraft.util.math.RayTraceResult.Type;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.pabilo8.immersiveintelligence.common.ammo.emplacement_weapons.EmplacementWeaponHeavyChemthrower;
 import pl.pabilo8.immersiveintelligence.common.util.raytracer.MultipleRayTracer;
 import pl.pabilo8.immersiveintelligence.common.util.raytracer.MultipleRayTracer.MultipleTracerBuilder;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-
+import javax.annotation.Nullable;
 /**
  * Expansion of the IE's Chemthrower.
  * Originally created due to forced Albedo compat on IE's side.
@@ -141,64 +139,61 @@ public class EntityIIChemthrowerShot extends EntityIEProjectile implements IEnti
 	}
 
 	@Override
-	public void onUpdate()
-	{
-		if(this.getShooter()==null&&this.world.isRemote)
-			this.shootingEntity = getShooterSynced();
-		this.onEntityUpdate();
+	public void onUpdate() {
+		// Call the parent method
+		super.onUpdate();
 
-		if(!inGround)
-		{
+		// If the projectile is not in the ground, perform collision detection
+		if (!inGround) {
+
+			// Calculate the next position based on current motion
 			Vec3d nextPosition = getPositionVector().addVector(motionX, motionY, motionZ);
-			MultipleRayTracer tracer = MultipleTracerBuilder.setPos(world, this.getPositionVector(), nextPosition)
-					.setAABB(this.getEntityBoundingBox())
-					.setFilters(this.hitEntities, this.hitPos)
-					.volumetricTrace();
 
-			for(RayTraceResult hit : tracer)
-			{
-				onImpact(hit);
-				switch(hit.typeOfHit)
-				{
+			// Perform ray tracing to detect collisions with blocks and entities
+			RayTraceResult hitResult = world.rayTraceBlocks(getPositionVector(), nextPosition, true, true, false);
+
+			if (hitResult != null) {
+
+				// Handle collisions based on the type of hit
+				switch (hitResult.typeOfHit) {
 					case BLOCK:
-					{
-						if(hitPos.contains(hit.getBlockPos()))
-							continue;
-					}
-					break;
-					case ENTITY:
-					{
-						if(hitEntities.contains(hit.entityHit))
-							continue;
-						//TODO: 10.07.2023 armor check
-						if(fire > 0)
-							hit.entityHit.setFire(fire);
-
+						// Handle block collision
+						BlockPos hitBlockPos = hitResult.getBlockPos();
+						IBlockState hitBlockState = world.getBlockState(hitBlockPos);
+						Block hitBlock = hitBlockState.getBlock();
+						// Process block collision (e.g., break the block, bounce off)
 						break;
-					}
+
+					case ENTITY:
+						// Handle entity collision
+						Entity hitEntity = hitResult.entityHit;
+						// Check if the collided entity is an EmplacementWeaponHeavyChemthrower
+						if (hitEntity instanceof EntityEmplacementWeapon) {
+							return;
+						}
+						// Process entity collision (e.g., damage the entity, apply effects)
+						// Add additional logic as needed
+						break;
 					default:
-					case MISS:
+						// Handle other types of hits (e.g., MISS)
 						break;
 				}
 			}
-		}
-		else
-		{
+		} else {
+			// Handle grounding logic if the projectile is in the ground
 			IBlockState state = this.world.getBlockState(getPosition());
 			Block block = state.getBlock();
 
-			if(block==this.inBlock&&block.getMetaFromState(state)==this.inMeta)
-			{
+			if(block == this.inBlock && block.getMetaFromState(state) == this.inMeta) {
 				++this.ticksInGround;
 				if(this.ticksInGround >= getMaxTicksInGround())
 					this.setDead();
-			}
-			else
-			{
+			} else {
+
 				this.inGround = false;
-				this.motionX *= this.rand.nextFloat()*0.2F;
-				this.motionY *= this.rand.nextFloat()*0.2F;
-				this.motionZ *= this.rand.nextFloat()*0.2F;
+				this.motionX *= this.rand.nextFloat() * 0.2F;
+				this.motionY *= this.rand.nextFloat() * 0.2F;
+				this.motionZ *= this.rand.nextFloat() * 0.2F;
 				this.ticksInGround = 0;
 				this.ticksInAir = 0;
 			}
@@ -212,16 +207,14 @@ public class EntityIIChemthrowerShot extends EntityIEProjectile implements IEnti
 		this.prevRotationPitch = rotationPitch;
 
 		Vec3d normalized = new Vec3d(motionX, motionY, motionZ).normalize();
-		float motionXZ = MathHelper.sqrt(normalized.x*normalized.x+normalized.z*normalized.z);
-		this.rotationYaw = (float)((Math.atan2(normalized.x, normalized.z)*180D)/3.1415927410125732D);
-		this.rotationPitch = -(float)((Math.atan2(normalized.y, motionXZ)*180D)/3.1415927410125732D);
+		float motionXZ = MathHelper.sqrt(normalized.x * normalized.x + normalized.z * normalized.z);
+		this.rotationYaw = (float) ((Math.atan2(normalized.x, normalized.z) * 180D) / 3.1415927410125732D);
+		this.rotationPitch = -(float) ((Math.atan2(normalized.y, motionXZ) * 180D) / 3.1415927410125732D);
 
-		if(this.isInWater())
-		{
-			for(int j = 0; j < 4; ++j)
-			{
+		if(this.isInWater()) {
+			for(int j = 0; j < 4; ++j) {
 				float f3 = 0.25F;
-				this.world.spawnParticle(EnumParticleTypes.WATER_BUBBLE, this.posX-this.motionX*(double)f3, this.posY-this.motionY*(double)f3, this.posZ-this.motionZ*(double)f3, this.motionX, this.motionY, this.motionZ);
+				this.world.spawnParticle(EnumParticleTypes.WATER_BUBBLE, this.posX - this.motionX * (double) f3, this.posY - this.motionY * (double) f3, this.posZ - this.motionZ * (double) f3, this.motionX, this.motionY, this.motionZ);
 			}
 			this.motionX *= 0.2;
 			this.motionY *= 0.2;
@@ -232,6 +225,7 @@ public class EntityIIChemthrowerShot extends EntityIEProjectile implements IEnti
 		this.setPosition(this.posX, this.posY, this.posZ);
 		this.doBlockCollisions();
 	}
+
 
 	/**
 	 * Gets called every tick from main Entity class
@@ -262,6 +256,10 @@ public class EntityIIChemthrowerShot extends EntityIEProjectile implements IEnti
 	@Override
 	public void onImpact(RayTraceResult mop)
 	{
+		// Skip processing if the impacted entity is an EmplacementWeaponHeavyChemthrower
+		if (mop.entityHit instanceof EntityEmplacementWeapon) {
+			return;
+		}
 		//TODO: 10.07.2023 improve
 		if(!this.world.isRemote&&getFluid()!=null)
 		{
@@ -278,6 +276,7 @@ public class EntityIIChemthrowerShot extends EntityIEProjectile implements IEnti
 
 				if(mop.typeOfHit==Type.ENTITY&&mop.entityHit instanceof EntityLivingBase)
 					effect.applyToEntity((EntityLivingBase)mop.entityHit, shooter, thrower, fluidStack);
+
 				else if(mop.typeOfHit==Type.BLOCK)
 					effect.applyToBlock(world, mop, shooter, thrower, fluidStack);
 			}
@@ -312,7 +311,6 @@ public class EntityIIChemthrowerShot extends EntityIEProjectile implements IEnti
 		}
 		return false;
 	}
-
 
 	@Override
 	@SideOnly(Side.CLIENT)
