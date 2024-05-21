@@ -19,6 +19,7 @@ import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.component.EntityWhitePhosphorus;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageParticleEffect;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
 /**
  * @author Pabilo8
@@ -30,7 +31,7 @@ public class AmmoComponentWhitePhosphorus extends AmmoComponent
 {
 	public AmmoComponentWhitePhosphorus()
 	{
-		super("white_phosphorus", 1f, ComponentRole.SPECIAL, 0x6b778a);
+		super("white_phosphorus", 1f, ComponentRole.SPECIAL, IIColor.fromPackedRGBA(0x6b778a));
 	}
 
 	@Override
@@ -65,7 +66,7 @@ public class AmmoComponentWhitePhosphorus extends AmmoComponent
 			world.spawnEntity(shrap);
 		}
 
-		IIPacketHandler.INSTANCE.sendToAllAround(new MessageParticleEffect(pos.addVector(0, 1, 0), "white_phosphorus"), IIPacketHandler.targetPointFromPos(pos, world, (48)));
+		IIPacketHandler.sendToClient(new MessageParticleEffect("white_phosphorus", world, pos.addVector(0, 1, 0)));
 
 		//main
 		EntityAreaEffectCloud cloud = new EntityAreaEffectCloud(world, pos.x+v.x, pos.y+v.y+1f, pos.z+v.z);

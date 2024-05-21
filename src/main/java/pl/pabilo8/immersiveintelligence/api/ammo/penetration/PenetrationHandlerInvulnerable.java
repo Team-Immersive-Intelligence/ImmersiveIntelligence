@@ -13,7 +13,7 @@ public class PenetrationHandlerInvulnerable extends PenetrationHandler
 {
 	public PenetrationHandlerInvulnerable(PenetrationHardness hardness, float thickness)
 	{
-		super(hardness, thickness, 1f, null, null);
+		super(hardness, thickness, 1f, null, null, null);
 	}
 
 	@Override

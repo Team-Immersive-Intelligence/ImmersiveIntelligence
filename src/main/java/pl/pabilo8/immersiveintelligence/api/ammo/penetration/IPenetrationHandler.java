@@ -36,4 +36,6 @@ public interface IPenetrationHandler
 	boolean canRicochet();
 
 	boolean canBeDamaged();
+
+	String getDebrisParticle();
 }

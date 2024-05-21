@@ -15,6 +15,7 @@ import pl.pabilo8.immersiveintelligence.api.ammo.enums.ComponentRole;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreTypes;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.component.EntityIIChemthrowerShot;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
 /**
  * @author Pabilo8
@@ -26,7 +27,7 @@ public class AmmoComponentFish extends AmmoComponent
 {
 	public AmmoComponentFish()
 	{
-		super("fish", 0.125f, ComponentRole.SPECIAL, 0x6b778a);
+		super("fish", 0.125f, ComponentRole.SPECIAL, IIColor.fromPackedRGB(0x6b778a));
 	}
 
 	@Override

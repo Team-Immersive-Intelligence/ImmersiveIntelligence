@@ -11,6 +11,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.ComponentRole;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreTypes;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityAmmoBase;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
 import javax.annotation.Nullable;
 
@@ -25,9 +26,9 @@ public abstract class AmmoComponent
 	private final String name;
 	private final float density;
 	private final ComponentRole role;
-	private final int colour;
+	private final IIColor colour;
 
-	public AmmoComponent(String name, float density, ComponentRole role, int colour)
+	public AmmoComponent(String name, float density, ComponentRole role, IIColor colour)
 	{
 		this.name = name;
 		this.density = density;
@@ -103,7 +104,7 @@ public abstract class AmmoComponent
 	/**
 	 * @implNote Override if your component has animated colour
 	 */
-	public int getColour(@Nullable NBTTagCompound nbt)
+	public IIColor getColour(@Nullable NBTTagCompound nbt)
 	{
 		return colour;
 	}

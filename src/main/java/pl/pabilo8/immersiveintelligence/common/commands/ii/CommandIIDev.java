@@ -47,11 +47,14 @@ import org.apache.commons.lang3.time.StopWatch;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.ComponentEffectShape;
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.AmmoFactory;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IVehicleMultiPart;
+import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleRegistry;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityParachute;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityAmmoBase;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
+import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageParticleEffect;
 import pl.pabilo8.immersiveintelligence.common.util.IIExplosion;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.raytracer.BlacklistedRayTracer;
@@ -104,6 +107,9 @@ public class CommandIIDev extends CommandTreeHelp
 		OPTIONS.add("deth");
 		OPTIONS.add("get_mb");
 		OPTIONS.add("place_mb");
+
+		OPTIONS.add("particle");
+		OPTIONS.add("inyerface");
 	}
 
 	/**
@@ -157,6 +163,8 @@ public class CommandIIDev extends CommandTreeHelp
 					sender.sendMessage(getMessageForCommand("deth", "removes the entity player is looking at"));
 					sender.sendMessage(getMessageForCommand("get_mb", "gets the internal data of a multiblock player is looking at"));
 					sender.sendMessage(getMessageForCommand("place_mb", "places a multiblock", "<id>"));
+					sender.sendMessage(getMessageForCommand("particle", "spawns a particle", "<id> <x> <y> <z> [motionX] [motionY] [motionZ]"));
+					sender.sendMessage(getMessageForCommand("inyerface", "throw a stone, will 'ye?!"));
 
 				}
 				break;
@@ -338,7 +346,6 @@ public class CommandIIDev extends CommandTreeHelp
 				case "explosion":
 				case "nuke":
 				{
-					//TODO: 03.04.2024 command parameters
 					if(senderEntity==null||server.getEntityWorld().isRemote)
 						return;
 
@@ -366,7 +373,7 @@ public class CommandIIDev extends CommandTreeHelp
 					{
 
 					}
-					IIExplosion exp = new IIExplosion(server.getEntityWorld(), senderEntity, new Vec3d(pos), null, num, 1f, ComponentEffectShape.STAR, false, true, false);
+					IIExplosion exp = new IIExplosion(server.getEntityWorld(), senderEntity, new Vec3d(pos), null, num, 7f, ComponentEffectShape.STAR, false, true, false);
 					exp.doExplosionA();
 					exp.doExplosionB(true);
 				}
@@ -484,11 +491,37 @@ public class CommandIIDev extends CommandTreeHelp
 											senderEntity.world.setBlockState(placed.add(x, y, z), state);
 
 									}
-
 							break;
 						}
 					}
 
+				}
+				break;
+				case "inyerface":
+					execute(server, sender, new String[]{"particle", "debris_big_brick", "~", "~", "~", "1", "0", "0"});
+					break;
+				case "particle":
+				{
+					//No ID specified
+					if(args.length < 2)
+						throw new WrongUsageException(getUsage(sender));
+
+					//Set position, else use the sender's position
+					Vec3d pos = new Vec3d(args.length >= 5?parseBlockPos(sender, args, 2, true): sender.getPosition());
+					Vec3d motion = Vec3d.ZERO;
+
+					//Set motion
+					if(args.length >= 8)
+					{
+						double motionX = parseCoordinate(0, args[5], -1, 1, false).getResult();
+						double motionY = parseCoordinate(0, args[6], -1, 1, false).getResult();
+						double motionZ = parseCoordinate(0, args[7], -1, 1, false).getResult();
+						motion = new Vec3d(motionX, motionY, motionZ);
+					}
+
+					//Send the packet, so clients can spawn the particle on their side
+					IIPacketHandler.sendToClient(new MessageParticleEffect(args[1], sender.getEntityWorld(), pos, motion));
+					sender.sendMessage(new TextComponentString(String.format("Particle %s created!", args[1])));
 				}
 				break;
 			}
@@ -540,15 +573,21 @@ public class CommandIIDev extends CommandTreeHelp
 				switch(args[0])
 				{
 					case "place_mb":
-						return MultiblockHandler.getMultiblocks()
+						return getListOfStringsMatchingLastWord(args, MultiblockHandler.getMultiblocks()
 								.stream()
 								.map(IMultiblock::getUniqueName)
 								.map(s -> s.startsWith("II:")?(TextFormatting.GOLD+s+TextFormatting.RESET): s)
-								.collect(Collectors.toList());
+								.collect(Collectors.toList()));
+					case "particle":
+						return getListOfStringsMatchingLastWord(args, ParticleRegistry.getRegisteredNames());
 					default:
 						return Collections.emptyList();
 				}
 			}
+			case 3:
+			case 4:
+			case 5:
+				return getTabCompletionCoordinate(args, 3, sender.getPosition());
 		}
 
 		return super.getTabCompletions(server, sender, args, targetPos);

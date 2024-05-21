@@ -1,0 +1,6 @@
+# Made by Pabilo8 with Blockbench
+
+newmtl log_oak
+map_Kd minecraft:blocks/log_oak
+newmtl spruce_general
+map_Kd minecraft:blocks/leaves_spruce

@@ -19,7 +19,7 @@ import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.oredict.OreDictionary;
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.IIAmmoUtils;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
-import pl.pabilo8.immersiveintelligence.client.fx.ParticleUtils;
+import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleRegistry;
 import pl.pabilo8.immersiveintelligence.client.gui.block.emplacement.GuiEmplacementPageStorage;
 import pl.pabilo8.immersiveintelligence.client.render.multiblock.metal.EmplacementRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.ShaderUtil;
@@ -227,7 +227,7 @@ public class EmplacementWeaponAutocannon extends EmplacementWeapon<EntityAmmoPro
 			weaponCenter = weaponCenter.add(vv.rotatePitch(bulletsShot < 2?90: -90).scale(0.25));
 
 			Vec3d vg = vv.scale(3f);
-			ParticleUtils.spawnGunfireFX(weaponCenter, vg, 4f);
+			ParticleRegistry.spawnGunfireFX(weaponCenter, vg, 4f);
 
 			magazine.removeFirst();
 		}

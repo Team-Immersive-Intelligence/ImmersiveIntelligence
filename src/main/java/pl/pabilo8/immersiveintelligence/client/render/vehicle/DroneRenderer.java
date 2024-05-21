@@ -5,16 +5,16 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreTypes;
 import pl.pabilo8.immersiveintelligence.client.render.IIEntityRenderer;
+import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.client.util.amt.*;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMTBullet.BulletState;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityDrone;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 /**
  * @author Pabilo8
@@ -68,8 +68,8 @@ public class DroneRenderer extends IIEntityRenderer<EntityDrone>
 	public void compileModels()
 	{
 		models = IIAnimationUtils.getAMTFromRes(
-				new ResourceLocation(ImmersiveIntelligence.MODID, "models/entity/combat_drone.obj"),
-				new ResourceLocation(ImmersiveIntelligence.MODID, "models/entity/combat_drone.obj.amt"),
+				ResLoc.of(IIReference.RES_ENTITY_MODEL, "combat_drone").withExtension(ResLoc.EXT_OBJ),
+				ResLoc.of(IIReference.RES_ENTITY_MODEL, "combat_drone").withExtension(ResLoc.EXT_OBJAMT),
 				header -> new AMT[]{
 						new AMTLocator("Rotors", header),
 						new AMTBullet("WeaponMount1", header.getOffset("WeaponMount1"), AmmoRegistry.getModel(IIContent.itemAmmoRocketLight))
@@ -86,20 +86,15 @@ public class DroneRenderer extends IIEntityRenderer<EntityDrone>
 		modelIRMount = IIAnimationUtils.getPart(models, "IRMount");
 		modelIRBall = IIAnimationUtils.getPart(models, "IRBall");
 
-		animationFloat = IIAnimationCompiledMap.create(models, new ResourceLocation(ImmersiveIntelligence.MODID, "drone/propellers"));
-		animationEngine = IIAnimationCompiledMap.create(models, new ResourceLocation(ImmersiveIntelligence.MODID, "drone/engine"));
-		animationSetup = IIAnimationCompiledMap.create(models, new ResourceLocation(ImmersiveIntelligence.MODID, "drone/setup"));
+		animationFloat = IIAnimationCompiledMap.create(models, ResLoc.of(IIReference.RES_II, "drone/propellers"));
+		animationEngine = IIAnimationCompiledMap.create(models, ResLoc.of(IIReference.RES_II, "drone/engine"));
+		animationSetup = IIAnimationCompiledMap.create(models, ResLoc.of(IIReference.RES_II, "drone/setup"));
 	}
 
 	@Override
 	public void registerSprites(TextureMap map)
 	{
-		/*ResLoc.MODEL_MTL.of(ENTITY_MODEL,"combat_drone");
-		ResLoc.MODEL_OBJ.of(ENTITY_MODEL,"combat_drone");
-		ResLoc.MODEL_OBJIE.of(ENTITY_MODEL,"combat_drone");
-		ResLoc.ANIMATION.of("drone/propellers");*/
-
-		IIAnimationLoader.preloadTexturesFromMTL(new ResourceLocation(ImmersiveIntelligence.MODID, "models/entity/combat_drone.mtl"), map);
+		IIAnimationLoader.preloadTexturesFromMTL(ResLoc.of(IIReference.RES_ENTITY_MODEL, "combat_drone").withExtension(ResLoc.EXT_MTL), map);
 	}
 
 	@Override

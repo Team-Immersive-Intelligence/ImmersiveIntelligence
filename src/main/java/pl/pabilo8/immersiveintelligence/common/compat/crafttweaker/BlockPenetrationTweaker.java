@@ -56,10 +56,10 @@ public class BlockPenetrationTweaker
 	{
 		public CTPenetrationHandler(String hardness, float integrity, float density, @Nullable String sound)
 		{
-			super(PenetrationHardness.valueOf(hardness.toUpperCase()), integrity, density,
+			//TODO: 05.05.2024 add particles
+			super(PenetrationHardness.valueOf(hardness.toUpperCase()), integrity, density, null,
 					sound==null?null: SoundEvent.REGISTRY.getObject(new ResourceLocation(sound)),
-					sound==null?null: SoundEvent.REGISTRY.getObject(new ResourceLocation(sound))
-			);
+					sound==null?null: SoundEvent.REGISTRY.getObject(new ResourceLocation(sound)));
 		}
 	}
 }

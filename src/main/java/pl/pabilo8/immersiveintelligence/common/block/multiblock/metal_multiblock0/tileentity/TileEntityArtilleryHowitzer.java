@@ -30,7 +30,7 @@ import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.types.*;
 import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
-import pl.pabilo8.immersiveintelligence.client.fx.ParticleUtils;
+import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleRegistry;
 import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.client.util.carversound.ConditionCompoundSound;
 import pl.pabilo8.immersiveintelligence.client.util.carversound.TimedCompoundSound;
@@ -458,7 +458,7 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 		if(world.isRemote)
 		{
 			Vec3d gun_end_particle = gunVec.scale(4.5);
-			ParticleUtils.spawnGunfireFX(getGunPosition().add(gun_end_particle), gunVec, 8f);
+			ParticleRegistry.spawnGunfireFX(getGunPosition().add(gun_end_particle), gunVec, 8f);
 		}
 
 		IIPacketHandler.playRangedSound(world, gunEnd,

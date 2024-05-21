@@ -17,7 +17,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import pl.pabilo8.immersiveintelligence.api.utils.armor.IGasmask;
-import pl.pabilo8.immersiveintelligence.client.fx.ParticleUtils;
+import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleRegistry;
 
 import java.util.List;
 
@@ -103,7 +103,7 @@ public class EntityGasCloud extends Entity
 				setDead();
 		}
 		else if(ticksExisted%20==0)
-			ParticleUtils.spawnGasCloud(getPositionVector().addVector(0, 1, 0), radius, fluid.getFluid());
+			ParticleRegistry.spawnGasCloud(getPositionVector().addVector(0, 1, 0), radius, fluid.getFluid());
 	}
 
 	@Override

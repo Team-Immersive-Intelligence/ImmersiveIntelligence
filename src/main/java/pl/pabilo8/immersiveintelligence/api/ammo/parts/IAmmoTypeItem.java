@@ -139,6 +139,7 @@ public interface IAmmoTypeItem<T extends IAmmoType<T, E>, E extends EntityAmmoBa
 	@Override
 	default void addComponents(ItemStack stack, AmmoComponent component, NBTTagCompound componentNBT)
 	{
+		//BUG: 21.04.2024 crash
 		EasyNBT.wrapNBT(stack)
 				.appendList(NBT_COMPONENTS, EasyNBT.TAG_STRING, new NBTTagString(component.getName()))
 				.appendList(NBT_COMPONENTS_NBT, EasyNBT.TAG_COMPOUND, componentNBT.copy());

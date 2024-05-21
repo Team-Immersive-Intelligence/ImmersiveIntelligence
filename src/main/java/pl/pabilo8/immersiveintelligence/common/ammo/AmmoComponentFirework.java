@@ -13,6 +13,7 @@ import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.IIAmmoUtils;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageFireworks;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
 /**
  * @author Pabilo8
@@ -24,7 +25,7 @@ public class AmmoComponentFirework extends AmmoComponent
 {
 	public AmmoComponentFirework()
 	{
-		super("firework", 1f, ComponentRole.FLARE, 0xcab1b1);
+		super("firework", 1f, ComponentRole.FLARE, IIColor.fromPackedRGB(0xcab1b1));
 	}
 
 	@Override

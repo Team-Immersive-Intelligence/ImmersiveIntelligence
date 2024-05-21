@@ -62,7 +62,7 @@ public class EntityDrone extends EntityFlying implements IIIEntity<EntityDrone>,
 		//set ammo factory (bomb dropping)
 		this.ammoFactory = new AmmoFactory<>(this);
 		ammoFactory.setStack(IIContent.itemAmmoMortar.getBulletWithParams("core_brass", "canister", "tnt"))
-				.setDirection(new Vec3d(0, 1, 0))
+				.setDirection(new Vec3d(0, -1, 0))
 				.setVelocityModifier(0);
 
 		//set durability and armor

@@ -17,33 +17,40 @@ public class PenetrationHandler implements IPenetrationHandler
 	private final PenetrationHardness hardness;
 	private final float integrity, thickness;
 	@Nullable
+	private final String debrisParticle;
+	@Nullable
 	private final SoundEvent impactSound, ricochetSound;
 
 	/**
-	 * @param hardness      penetration hardness level
-	 * @param thickness     density (constant resistance multiplier)
-	 * @param integrity     hit-points of the block
-	 * @param impactSound   the sound played when the block is hit
-	 * @param ricochetSound the sound played when the bullet ricochets off the block
+	 * @param hardness       penetration hardness level
+	 * @param thickness      density (constant resistance multiplier)
+	 * @param integrity      hit-points of the block
+	 * @param debrisParticle
+	 * @param impactSound    the sound played when the block is hit
+	 * @param ricochetSound  the sound played when the bullet ricochets off the block
 	 */
 	public PenetrationHandler(PenetrationHardness hardness,
 							  float thickness, float integrity,
+							  @Nullable String debrisParticle,
 							  @Nullable SoundEvent impactSound, @Nullable SoundEvent ricochetSound)
 	{
 		this.hardness = hardness;
 		this.integrity = integrity;
 		this.thickness = thickness;
+		this.debrisParticle = debrisParticle;
 		this.impactSound = impactSound;
 		this.ricochetSound = ricochetSound;
 	}
 
 	public PenetrationHandler(PenetrationHardness hardness,
 							  float thickness, float integrity,
+							  @Nullable String debrisParticle,
 							  @Nonnull HitSound hitSound)
 	{
 		this.hardness = hardness;
 		this.integrity = integrity;
 		this.thickness = thickness;
+		this.debrisParticle = debrisParticle;
 		this.impactSound = hitSound.getImpactSound();
 		this.ricochetSound = hitSound.getRicochetSound();
 	}
@@ -81,5 +88,11 @@ public class PenetrationHandler implements IPenetrationHandler
 	public boolean canBeDamaged()
 	{
 		return true;
+	}
+
+	@Override
+	public String getDebrisParticle()
+	{
+		return debrisParticle;
 	}
 }

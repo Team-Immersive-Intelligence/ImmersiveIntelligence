@@ -59,8 +59,9 @@ import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler.IAdvancedTo
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler.IItemScrollable;
 import pl.pabilo8.immersiveintelligence.api.utils.camera.IEntityZoomProvider;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IVehicleMultiPart;
-import pl.pabilo8.immersiveintelligence.client.fx.ParticleUtils;
 import pl.pabilo8.immersiveintelligence.client.fx.ScreenShake;
+import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleRegistry;
+import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleSystem;
 import pl.pabilo8.immersiveintelligence.client.gui.inworld_overlay.InWorldOverlayBase;
 import pl.pabilo8.immersiveintelligence.client.gui.inworld_overlay.WrenchOverlay;
 import pl.pabilo8.immersiveintelligence.client.gui.overlay.GuiOverlayBase;
@@ -363,7 +364,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 	public void onRenderWorldLast(RenderWorldLastEvent event)
 	{
 		//--- Handle Particles ---//
-		ParticleUtils.particleRenderer.renderParticles(event.getPartialTicks());
+		ParticleSystem.INSTANCE.renderParticles(event.getPartialTicks());
 
 		//--- Handle in-world projections ---//
 		RayTraceResult mop = ClientUtils.mc().objectMouseOver;
@@ -615,22 +616,24 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 		double partialTicks = event.getRenderPartialTicks();
 
 		//--- ScreenShake Handling ---//
-
-		//Display the strongest effect
-		SCREEN_SHAKE_EFFECTS.stream()
-				.max(ScreenShake::compareTo)
-				.ifPresent(
-						screenShake -> {
-							double shakex = (Utils.RAND.nextGaussian()-0.5)*screenShake.getStrength();
-							double shakey = (Utils.RAND.nextGaussian()-0.5)*screenShake.getStrength();
-							double shakez = (Utils.RAND.nextGaussian()-0.5)*screenShake.getStrength();
-							event.setRoll((float)shakez);
-							event.setYaw((float)(event.getYaw()+shakex));
-							event.setPitch((float)(event.getPitch()+shakey));
-						}
-				);
-		//Tick and remove past effects
-		SCREEN_SHAKE_EFFECTS.removeIf(screenShake -> screenShake.tick(partialTicks));
+		if(Graphics.cameraScreenShake)
+		{
+			//Display the strongest effect
+			SCREEN_SHAKE_EFFECTS.stream()
+					.max(ScreenShake::compareTo)
+					.ifPresent(
+							screenShake -> {
+								double shakex = (Utils.RAND.nextGaussian()-0.5)*screenShake.getStrength();
+								double shakey = (Utils.RAND.nextGaussian()-0.5)*screenShake.getStrength();
+								double shakez = (Utils.RAND.nextGaussian()-0.5)*screenShake.getStrength();
+								event.setRoll((float)shakez);
+								event.setYaw((float)(event.getYaw()+shakex));
+								event.setPitch((float)(event.getPitch()+shakey));
+							}
+					);
+			//Tick and remove past effects
+			SCREEN_SHAKE_EFFECTS.removeIf(screenShake -> screenShake.tick(partialTicks));
+		}
 
 		if(Minecraft.getMinecraft().gameSettings.thirdPersonView==0)
 		{
@@ -661,7 +664,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 			}
 
 			//--- Camera Roll in Vehicles Handling ---//
-			if(Graphics.cameraRoll&&ClientUtils.mc().player.getRidingEntity() instanceof EntityMotorbike)
+			if(ClientUtils.mc().player.getRidingEntity() instanceof EntityMotorbike)
 			{
 				EntityMotorbike entity = (EntityMotorbike)ClientUtils.mc().player.getRidingEntity();
 				float tilt = entity.tilt;
@@ -682,7 +685,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 		if(CameraHandler.isEnabled()&&!ClientUtils.mc().player.isRiding())
 			CameraHandler.setEnabled(false);
 
-		if(CameraHandler.isEnabled())
+		if(Graphics.cameraRoll&&CameraHandler.isEnabled())
 			event.setRoll(CameraHandler.getRoll());
 	}
 
@@ -1276,7 +1279,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 								.add(vec.scale(-1.25f));
 						//.add(arm.rotatePitch(-90f).scale(0.5f));
 
-						ParticleUtils.spawnGunfireFX(vv, vec, v);
+						ParticleRegistry.spawnGunfireFX(vv, vec, v);
 					}
 				}
 			}
@@ -1368,7 +1371,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 		gunshotEntities.clear();
 		blockDamageClient.clear();
 
-		ParticleUtils.particleRenderer.reload();
+		ParticleSystem.INSTANCE.reload();
 	}
 
 	@SubscribeEvent
@@ -1376,7 +1379,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 	{
 		if(event.phase==Phase.END)
 		{
-			ParticleUtils.particleRenderer.updateParticles();
+			ParticleSystem.INSTANCE.updateParticles();
 
 			if(!Weapons.bulletsWhistleSound)
 				return;

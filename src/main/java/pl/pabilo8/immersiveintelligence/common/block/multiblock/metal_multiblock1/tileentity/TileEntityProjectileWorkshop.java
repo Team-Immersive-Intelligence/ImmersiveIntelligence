@@ -948,7 +948,7 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockMetal<Tile
 
 		public int getColour()
 		{
-			return component!=null?component.getColour(tagCompound): 0xffffff;
+			return component!=null?component.getColour(tagCompound).getPackedRGB(): 0xffffff;
 		}
 
 		public float getAmountPercentage()

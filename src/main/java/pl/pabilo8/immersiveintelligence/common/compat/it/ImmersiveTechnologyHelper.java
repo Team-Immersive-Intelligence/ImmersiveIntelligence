@@ -18,6 +18,7 @@ import pl.pabilo8.immersiveintelligence.api.ammo.PenetrationRegistry;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.PenetrationHardness;
 import pl.pabilo8.immersiveintelligence.api.ammo.penetration.PenetrationHandler;
 import pl.pabilo8.immersiveintelligence.api.ammo.penetration.PenetrationHandlerMetal;
+import pl.pabilo8.immersiveintelligence.client.fx.IIParticles;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.compat.IICompatModule;
@@ -39,6 +40,7 @@ public class ImmersiveTechnologyHelper extends IICompatModule
 	{
 		return "ImmersiveTechnology";
 	}
+
 	@Override
 	public void preInit()
 	{
@@ -88,7 +90,7 @@ public class ImmersiveTechnologyHelper extends IICompatModule
 		addBlock(blocks, new ResourceLocation("immersivetech", "stone_multiblock"));
 		addBlock(blocks, new ResourceLocation("immersivetech", "stone_decoration"));
 		addBlock(blocks, new ResourceLocation("immersivetech", "stone_decoration_slab"));
-		PenetrationRegistry.batchRegisterHandler(new PenetrationHandler(PenetrationHardness.CONCRETE, 1f, 150, IISounds.hitStone),
+		PenetrationRegistry.batchRegisterHandler(new PenetrationHandler(PenetrationHardness.CONCRETE, 1f, 150, IIParticles.PARTICLE_DEBRIS_BRICK, IISounds.hitStone),
 				blocks.toArray(new Block[0]));
 	}
 

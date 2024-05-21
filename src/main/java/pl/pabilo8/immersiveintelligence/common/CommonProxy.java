@@ -56,7 +56,6 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.*;
-import pl.pabilo8.immersiveintelligence.api.ShrapnelHandler.Shrapnel;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.api.ammo.PenetrationRegistry;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
@@ -66,9 +65,9 @@ import pl.pabilo8.immersiveintelligence.api.rotary.RotaryUtils;
 import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
 import pl.pabilo8.immersiveintelligence.api.utils.MinecartBlockHelper;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IUpgradableMachine;
+import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.MechanicalDevices;
 import pl.pabilo8.immersiveintelligence.common.ammo.factory.AmmoComponentFluid;
-import pl.pabilo8.immersiveintelligence.common.ammo.factory.AmmoComponentShrapnel;
 import pl.pabilo8.immersiveintelligence.common.block.data_device.BlockIIDataDevice.IIBlockTypes_Connector;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.conveyors.*;
 import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIIOre.Ores;
@@ -96,12 +95,15 @@ import pl.pabilo8.immersiveintelligence.common.entity.tactile.EntityAMTTactile;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityDrone;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityMotorbike;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityVehicleSeat;
+import pl.pabilo8.immersiveintelligence.common.entity.vehicle.towable.gun.EntityFieldGun;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.towable.gun.EntityFieldHowitzer;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerUpgrade;
 import pl.pabilo8.immersiveintelligence.common.item.ItemIIMinecart.Minecarts;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.material.ItemIIMaterialDust.MaterialsDust;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.util.IBatchOredictRegister;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.block.BlockIIBase;
 import pl.pabilo8.immersiveintelligence.common.util.block.BlockIIFluid;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IIBlockEnum;
@@ -122,7 +124,6 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map.Entry;
 
 import static blusunrize.immersiveengineering.api.energy.wires.WireApi.registerFeedthroughForWiretype;
 
@@ -403,8 +404,6 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		AmmoRegistry.registerCore(IIContent.ammoCoreUranium);
 		AmmoRegistry.registerCore(IIContent.ammoCorePabilium);
 
-		//ShrapnelHandler.addShrapnel("wood","",1,0.25f,0f,true);
-
 		//Tiny dusts (1 -> 9) from GregTech are a bit too much :P
 		DustUtils.registerDust(new IngredientStack("gunpowder", 100), "gunpowder", 0x242424);
 		DustUtils.registerDust(new IngredientStack("smallGunpowder", 25), "gunpowder");
@@ -416,28 +415,51 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		DustUtils.registerDust(new IngredientStack("sand", 100), "sand", 0xaca37b);
 		DustUtils.registerDust(new IngredientStack("gravel", 100), "gravel", 0x383937);
 
-		ShrapnelHandler.addShrapnel("aluminum", 0xd9ecea, "immersiveengineering:textures/blocks/sheetmetal_aluminum", 1, 0.05f, 0f);
-		ShrapnelHandler.addShrapnel("zinc", 0xdee3dc, "immersiveintelligence:textures/blocks/metal/sheetmetal_zinc", 1, 0.15f, 0f);
-		ShrapnelHandler.addShrapnel("copper", 0xe37c26, "immersiveengineering:textures/blocks/sheetmetal_copper", 2, 0.25f, 0f);
-		ShrapnelHandler.addShrapnel("platinum", 0xd8e1e1, "immersiveintelligence:textures/blocks/metal/sheetmetal_platinum", 2, 0.05f, 0f);
-		ShrapnelHandler.addShrapnel("gold", 0xd1b039, "minecraft:textures/blocks/gold_block", 2, 0.25f, 0f);
-		ShrapnelHandler.addShrapnel("nickel", 0x838877, "immersiveengineering:textures/blocks/sheetmetal_nickel", 2, 0.25f, 0f);
-		ShrapnelHandler.addShrapnel("silver", 0xa7cac8, "immersiveengineering:textures/blocks/sheetmetal_silver", 2, 0.25f, 0f);
-		ShrapnelHandler.addShrapnel("electrum", 0xf6ad59, "immersiveengineering:textures/blocks/sheetmetal_electrum", 2, 0.25f, 0f);
-		ShrapnelHandler.addShrapnel("constantan", 0xf97456, "immersiveengineering:textures/blocks/sheetmetal_constantan", 3, 0.25f, 0f);
-		ShrapnelHandler.addShrapnel("brass", 0x957743, "immersiveintelligence:textures/blocks/metal/sheetmetal_brass", 3, 0.35f, 0f);
-		ShrapnelHandler.addShrapnel("iron", 0xc7c7c7, "minecraft:textures/blocks/iron_block", 4, 0.25f, 0f);
-		ShrapnelHandler.addShrapnel("lead", 0x3a3e44, "immersiveengineering:textures/blocks/sheetmetal_lead", 4, 0.75f, 0f);
-		ShrapnelHandler.addShrapnel("steel", 0x4d4d4d, "immersiveengineering:textures/blocks/sheetmetal_steel", 6, 0.35f, 0f);
-		ShrapnelHandler.addShrapnel("tungsten", 0x3b3e43, "immersiveintelligence:textures/blocks/metal/sheetmetal_tungsten", 7, 0.45f, 0f);
-		ShrapnelHandler.addShrapnel("HOPGraphite", 0x282828, "immersiveengineering:textures/blocks/stone_decoration_coke", 7, 0.45f, 0f);
-		ShrapnelHandler.addShrapnel("uranium", 0x659269, "immersiveengineering:textures/blocks/sheetmetal_uranium", 8, 0.45f, 8f);
+		ResLoc IERes = ResLoc.of(IIReference.RES_IE, "textures/blocks/%s");
+		ResLoc MCRes = ResLoc.of(IIReference.RES_MC, "textures/blocks/%s");
+		ResLoc IIRes = ResLoc.of(IIReference.RES_II, "textures/blocks/metal/%s");
 
-		for(Entry<String, Shrapnel> s : ShrapnelHandler.registry.entrySet())
-		{
-			AmmoComponentShrapnel shrapnel = new AmmoComponentShrapnel(s.getKey());
-			AmmoRegistry.registerComponent(shrapnel);
-		}
+		ShrapnelHandler.addShrapnel("aluminum", IIColor.fromPackedRGB(0xd9ecea),
+						IERes.with("sheetmetal_aluminum"), 1, 0.05f, 0f)
+				.setDisruptsRadio(true);
+		ShrapnelHandler.addShrapnel("zinc", IIColor.fromPackedRGB(0xdee3dc),
+				IIRes.with("sheetmetal_zinc"), 1, 0.15f, 0f);
+		ShrapnelHandler.addShrapnel("copper", IIColor.fromPackedRGB(0xe37c26),
+				IERes.with("sheetmetal_copper"), 2, 0.25f, 0f);
+		ShrapnelHandler.addShrapnel("platinum", IIColor.fromPackedRGB(0xd8e1e1),
+				IIRes.with("sheetmetal_platinum"), 2, 0.05f, 0f);
+		ShrapnelHandler.addShrapnel("gold", IIColor.fromPackedRGB(0xd1b039),
+				MCRes.with("gold_block"), 2, 0.25f, 0f);
+		ShrapnelHandler.addShrapnel("nickel", IIColor.fromPackedRGB(0x838877),
+				IERes.with("sheetmetal_nickel"), 2, 0.25f, 0f);
+		ShrapnelHandler.addShrapnel("silver", IIColor.fromPackedRGB(0xa7cac8),
+						IERes.with("sheetmetal_silver"), 2, 0.25f, 0f)
+				.setGoodVsUndead(true);
+		ShrapnelHandler.addShrapnel("electrum", IIColor.fromPackedRGB(0xf6ad59),
+						IERes.with("sheetmetal_electrum"), 2, 0.25f, 0f)
+				.setGoodVsUndead(true)
+				.setDisruptsRadio(true);
+		ShrapnelHandler.addShrapnel("constantan", IIColor.fromPackedRGB(0xf97456),
+						IERes.with("sheetmetal_constantan"), 3, 0.25f, 0f)
+				.setFlammable(true);
+		ShrapnelHandler.addShrapnel("brass", IIColor.fromPackedRGB(0x957743),
+				IIRes.with("sheetmetal_brass"), 3, 0.35f, 0f);
+		ShrapnelHandler.addShrapnel("iron", IIColor.fromPackedRGB(0xc7c7c7),
+				MCRes.with("iron_block"), 4, 0.25f, 0f);
+		ShrapnelHandler.addShrapnel("lead", IIColor.fromPackedRGB(0x3a3e44),
+				IERes.with("sheetmetal_lead"), 4, 0.75f, 0f);
+		ShrapnelHandler.addShrapnel("steel", IIColor.fromPackedRGB(0x4d4d4d),
+				IERes.with("sheetmetal_steel"), 6, 0.35f, 0f);
+		ShrapnelHandler.addShrapnel("tungsten", IIColor.fromPackedRGB(0x3b3e43),
+				IIRes.with("sheetmetal_tungsten"), 7, 0.45f, 0f);
+		ShrapnelHandler.addShrapnel("HOPGraphite", IIColor.fromPackedRGB(0x282828),
+				IERes.with("stone_decoration_coke"), 7, 0.45f, 0f);
+		ShrapnelHandler.addShrapnel("uranium", IIColor.fromPackedRGB(0x659269),
+						IERes.with("sheetmetal_uranium"), 8, 0.45f, 8f)
+				.setGoodVsUndead(true);
+		ShrapnelHandler.addShrapnel("wood", IIColor.fromPackedRGB(0x514135),
+						MCRes.with(""), 1, 0.25f, 0f)
+				.setFlammable(true);
 
 		BulletHandler.registerBullet("ii_bullet", IIContent.itemAmmoRevolver);
 
@@ -548,6 +570,7 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 
 		registerEntity(i++, EntityMotorbike.class, "motorbike", 64, 20, true);
 		registerEntity(i++, EntityFieldHowitzer.class, "field_howitzer", 64, 20, true);
+		registerEntity(i++, EntityFieldGun.class, "field_gun", 64, 20, true);
 		registerEntity(i++, EntityVehicleSeat.class, "seat", 64, 1, true);
 
 		registerEntity(i++, EntityTripodPeriscope.class, "tripod_periscope", 64, 1, true);

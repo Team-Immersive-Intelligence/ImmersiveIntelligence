@@ -20,6 +20,8 @@ import java.util.stream.Collectors;
 import static pl.pabilo8.immersiveintelligence.client.util.ShaderUtil.Shaders.*;
 
 /**
+ * Utility class for handling ARB shaders.
+ *
  * @author Pabilo8
  * @author Flaxbeard
  */
@@ -33,6 +35,7 @@ public class ShaderUtil
 		createShader(ALPHA, null, "alpha");
 		createShader(BLUEPRINT, null, "blueprint");
 		createShader(COLOR, null, "color");
+		createShader(NOISE, null, "noise");
 	}
 
 	/**
@@ -45,30 +48,6 @@ public class ShaderUtil
 	public static boolean useBlueprint(float av, float ticks)
 	{
 		return useShader(BLUEPRINT, av, ticks);
-	}
-
-	/**
-	 * Alpha fragment shader
-	 *
-	 * @param av alpha value
-	 */
-	@Deprecated
-	public static boolean useAlpha(float av)
-	{
-		return useShader(ALPHA, av);
-	}
-
-	/**
-	 * Color fragment shader
-	 *
-	 * @param r red value (0-1)
-	 * @param g green value (0-1)
-	 * @param b blue value (0-1)
-	 */
-	@Deprecated
-	public static boolean useColor(float r, float g, float b)
-	{
-		return useShader(COLOR, r, g, b);
 	}
 
 	/**
@@ -85,7 +64,7 @@ public class ShaderUtil
 		{
 			case BLUEPRINT:
 				shader.setFloat("alpha", parameters[0]);
-				shader.setFloat("ticks", parameters[1]);
+				shader.setFloat("time", parameters[1]);
 				break;
 			case ALPHA:
 				shader.setFloat("alpha", parameters[0]);
@@ -93,25 +72,40 @@ public class ShaderUtil
 			case COLOR:
 				COLOR.setVec3("color", parameters[0], parameters[1], parameters[2]);
 				break;
+			case NOISE:
+				shader.setFloat("time", parameters[0]);
+				break;
 		}
 		return true;
 	}
 
-	public static boolean useShader(@Nullable Shaders shaders, @Nonnull Float[] parameters)
+	/**
+	 * @param shader     shader to be used
+	 * @param parameters floats passed to the shader
+	 * @return whether the elements should be rendered, or will shader make them effectively transparent (which will make it wasteful)
+	 */
+	public static boolean useShader(@Nullable Shaders shader, @Nonnull Float[] parameters)
 	{
-		return useShader(shaders, ArrayUtils.toPrimitive(parameters));
+		return useShader(shader, ArrayUtils.toPrimitive(parameters));
 	}
 
+	/**
+	 * Ends the shader usage
+	 */
 	public static void releaseShader()
 	{
 		ARBShaderObjects.glUseProgramObjectARB(0);
 	}
 
+	/**
+	 * Shaders are GLSL programs that can be used to modify the rendering of elements
+	 */
 	public enum Shaders implements ISerializableEnum
 	{
 		ALPHA,
 		BLUEPRINT,
-		COLOR;
+		COLOR,
+		NOISE;
 
 		private int programID, fragID, vertID;
 
@@ -150,6 +144,13 @@ public class ShaderUtil
 
 	//--- Shader loading methods ---//
 
+	/**
+	 * Creates a shader program
+	 *
+	 * @param shader shader to be created
+	 * @param vert   vertex shader path
+	 * @param frag   fragment shader path
+	 */
 	private static void createShader(Shaders shader, @Nullable String vert, @Nullable String frag)
 	{
 		//Attempt loading the shader
@@ -188,6 +189,13 @@ public class ShaderUtil
 		IILogger.info(String.format("Succesfully loaded shader '%s'", shader.getName()));
 	}
 
+	/**
+	 * Creates a vertex or fragment shader
+	 *
+	 * @param filename   shader filepath
+	 * @param shaderType shader type, either {@link #VERT} or {@link #FRAG}
+	 * @return shader ID
+	 */
 	private static int createShader(String filename, int shaderType)
 	{
 		int shader = 0;
@@ -213,6 +221,13 @@ public class ShaderUtil
 		}
 	}
 
+	/**
+	 * Reads a file as a string
+	 *
+	 * @param filename path to the file
+	 * @return file content as a string
+	 * @throws Exception if the file is not found
+	 */
 	private static String readFileAsString(String filename) throws Exception
 	{
 		InputStream in = ShaderUtil.class.getResourceAsStream(filename);
@@ -226,6 +241,12 @@ public class ShaderUtil
 		}
 	}
 
+	/**
+	 * Gets the log info of a shader
+	 *
+	 * @param obj shader object
+	 * @return log info
+	 */
 	private static String getLogInfo(int obj)
 	{
 		return ARBShaderObjects.glGetInfoLogARB(obj, ARBShaderObjects.glGetObjectParameteriARB(obj, ARBShaderObjects.GL_OBJECT_INFO_LOG_LENGTH_ARB));

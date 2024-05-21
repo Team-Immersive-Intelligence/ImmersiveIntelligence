@@ -9,10 +9,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Tuple;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
-import pl.pabilo8.immersiveintelligence.client.fx.particles.ParticleGunfire;
+import pl.pabilo8.immersiveintelligence.client.fx.IIParticles;
 import pl.pabilo8.immersiveintelligence.client.render.IIMultiblockRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer.RegisteredTileRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.amt.*;
@@ -254,14 +253,7 @@ public class ArtilleryHowitzerRenderer extends IIMultiblockRenderer<TileEntityAr
 						shellEjected = createDefaultShellAMT(header, "shell_hatch"),
 						shellHeld = createDefaultShellAMT(header, "shell_held"),
 
-						new AMTParticle("muzzle_flash", header)
-								.setParticle(new ParticleGunfire(
-										null,
-										Vec3d.ZERO,
-										new Vec3d(0, 1, 0),
-										48f
-								)
-						)
+						new AMTParticle("muzzle_flash", header).setParticle(IIParticles.PARTICLE_GUNFIRE)
 				}
 		);
 		allParts = IIAnimationUtils.getChildrenRecursive(model);

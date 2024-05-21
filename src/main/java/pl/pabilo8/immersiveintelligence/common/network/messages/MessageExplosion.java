@@ -11,8 +11,9 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.ComponentEffectShape;
 import pl.pabilo8.immersiveintelligence.client.ClientEventHandler;
-import pl.pabilo8.immersiveintelligence.client.fx.ParticleUtils;
+import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleRegistry;
 import pl.pabilo8.immersiveintelligence.common.network.IIMessage;
+import pl.pabilo8.immersiveintelligence.common.util.IIExplosion;
 
 public class MessageExplosion extends IIMessage
 {
@@ -46,7 +47,8 @@ public class MessageExplosion extends IIMessage
 	@Override
 	protected void onClientReceive(WorldClient world, NetHandlerPlayClient handler)
 	{
-		ParticleUtils.spawnExplosionBoomFX(world, pos, direction, shape, radius, strength, flaming, damagesTerrain);
+		ParticleRegistry.spawnExplosionBoomFX(world, pos, direction,
+				new IIExplosion(world, null, pos, direction, radius, strength, shape, flaming, damagesTerrain, false));
 		ClientEventHandler.addScreenshakeSource(pos, MathHelper.clamp(strength/4f, 0.25f, 3f), 4);
 	}
 

@@ -53,6 +53,7 @@ import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.IWrench;
 import pl.pabilo8.immersiveintelligence.common.compat.BaublesHelper;
 import pl.pabilo8.immersiveintelligence.common.compat.IICompatModule;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ISerializableEnum;
 
@@ -70,6 +71,8 @@ import java.util.function.Predicate;
 @SuppressWarnings("unused")
 public class IIUtils
 {
+	public static final Vec3d ONE = new Vec3d(1, 1, 1);
+
 	public static double getDistanceBetweenPos(BlockPos pos1, BlockPos pos2, boolean center)
 	{
 		double deltaX = (pos1.getX()+(center?0d: 0.5d))-(pos2.getX()+(center?0d: 0.5d));
@@ -157,6 +160,7 @@ public class IIUtils
 	 * Black is actually the limit of darkness (less value - darker) in RGB<br>
 	 * But because everything is reverse, we get the color with greater value.<br>
 	 */
+	@Deprecated
 	public static int[] rgbToCmyk(int red, int green, int blue)
 	{
 		return new int[]{255-red, 255-green, 255-blue, 255-Math.min(red, Math.max(green, blue))};
@@ -168,12 +172,14 @@ public class IIUtils
 	 * @param b blue amount (0-1)
 	 * @return float cmyk color array with values 0-1
 	 */
+	@Deprecated
 	public static float[] rgbToCmyk(float r, float g, float b)
 	{
 		int[] cmyk = rgbToCmyk((int)(r*255), (int)(g*255), (int)(b*255));
 		return new float[]{cmyk[0]/255f, cmyk[1]/255f, cmyk[2]/255f, cmyk[3]/255f};
 	}
 
+	@Deprecated
 	public static float[] rgbToCmyk(float[] rgb)
 	{
 		return rgbToCmyk(rgb[0], rgb[1], rgb[2]);
@@ -186,11 +192,13 @@ public class IIUtils
 	 * @param black   black amount (0-255)
 	 * @return float cmyk color array with values 0-1
 	 */
+	@Deprecated
 	public static int[] cmykToRgb(int cyan, int magenta, int yellow, int black)
 	{
 		return new int[]{Math.min(255-black, 255-cyan), Math.min(255-black, 255-magenta), Math.min(255-black, 255-yellow)};
 	}
 
+	@Deprecated
 	public static float[] cmykToRgb(float c, float m, float y, float b)
 	{
 		int[] dec = cmykToRgb((int)(c*255), (int)(m*255), (int)(y*255), (int)(b*255));
@@ -205,6 +213,7 @@ public class IIUtils
 	 * @param value      value in 0-1
 	 * @return float rgb color array with values 0-1
 	 */
+	@Deprecated
 	public static float[] hsvToRgb(float hue, float saturation, float value)
 	{
 		int i = (int)(hue*6.0F)%6;
@@ -264,6 +273,7 @@ public class IIUtils
 	 * @param b blue amount (0-1)
 	 * @return float hsv array with values 0-1
 	 */
+	@Deprecated
 	public static float[] rgbToHsv(float r, float g, float b)
 	{
 		float cMax = Math.max(Math.max(r, g), b);
@@ -726,6 +736,8 @@ public class IIUtils
 	{
 		int lvt_3_1_ = (rIn<<8)+gIn;
 		lvt_3_1_ = (lvt_3_1_<<8)+bIn;
+
+
 		return lvt_3_1_;
 	}
 
@@ -779,7 +791,7 @@ public class IIUtils
 
 	public static String getHexCol(IIColor color, String text)
 	{
-		return getHexCol(color.RGBHex(), text);
+		return getHexCol(color.getHexRGB(), text);
 	}
 
 	public static String getHexCol(String color, String text)
@@ -927,7 +939,7 @@ public class IIUtils
 	@Nullable
 	public static <T extends Annotation> T getAnnotation(Class<T> annotationClass, Object o)
 	{
-		if (o.getClass().isAnnotationPresent(annotationClass)) return o.getClass().getAnnotation(annotationClass);
+		if(o.getClass().isAnnotationPresent(annotationClass)) return o.getClass().getAnnotation(annotationClass);
 		return null;
 	}
 
@@ -957,4 +969,5 @@ public class IIUtils
 	{
 		return Enum.valueOf(en, name.toUpperCase());
 	}
+
 }

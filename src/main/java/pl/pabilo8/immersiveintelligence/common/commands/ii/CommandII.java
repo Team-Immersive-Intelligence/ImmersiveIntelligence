@@ -9,10 +9,7 @@ import net.minecraftforge.server.command.CommandTreeHelp;
 import pl.pabilo8.immersiveintelligence.common.commands.ii.item.CommandIIGiveBullet;
 import pl.pabilo8.immersiveintelligence.common.commands.ii.item.CommandIIGiveMagazine;
 import pl.pabilo8.immersiveintelligence.common.commands.ii.item.CommandIIGivePunchtape;
-import pl.pabilo8.immersiveintelligence.common.commands.reload.CommandReloadManual;
-import pl.pabilo8.immersiveintelligence.common.commands.reload.CommandReloadModels;
-import pl.pabilo8.immersiveintelligence.common.commands.reload.CommandReloadMultiblock;
-import pl.pabilo8.immersiveintelligence.common.commands.reload.CommandReloadSkins;
+import pl.pabilo8.immersiveintelligence.common.commands.reload.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -41,6 +38,7 @@ public class CommandII extends CommandTreeBase
 		addSubcommand(new CommandReloadModels());
 		addSubcommand(new CommandReloadManual());
 		addSubcommand(new CommandReloadMultiblock());
+		addSubcommand(new CommandReloadParticles());
 
 		addSubcommand(new CommandTreeHelp(this));
 	}

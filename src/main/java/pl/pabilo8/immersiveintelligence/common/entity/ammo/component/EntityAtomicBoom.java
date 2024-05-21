@@ -21,7 +21,6 @@ import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.client.fx.ParticleUtils;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIPotions;
 
@@ -56,46 +55,47 @@ public class EntityAtomicBoom extends Entity implements IEntityAdditionalSpawnDa
 		if(world.isRemote&&world.getTotalWorldTime()%4==0)
 		{
 			Vec3d pos = getPositionVector();
-			if(progress < 40)
+			//TODO: 04.05.2024 reimplement
+			/*if(progress < 40)
 			{
-				ParticleUtils.spawnShockwave(pos.addVector(0, 1.5*size, 0), 20f, 2.5f);
+				ParticleRegistry.spawnShockwave(pos.addVector(0, 1.5*size, 0), 20f, 2.5f);
 			}
 			if(progress > 10&&progress < 360)
 			{
 				//ParticleUtils.spawnFog(posX, posY+(0.5*size), posZ, 12f, 0.85f, -0.125f);
 
 				if(progress < 30)
-					ParticleUtils.spawnAtomicBoomCore(this, pos.addVector(0, 0.5*size, 0), 10f, 0, 0.5f);
+					ParticleRegistry.spawnAtomicBoomCore(this, pos.addVector(0, 0.5*size, 0), 10f, 0, 0.5f);
 			}
 			if(progress > 20&&progress < 340)
 			{
 
 				if(progress < 320)
-					ParticleUtils.spawnAtomicBoomCore(this, pos.addVector(0, 4+(3.5*size), 0), 20f, 0.05f, -0.25f);
-				ParticleUtils.spawnAtomicBoomCore(this, pos.addVector(0, 4+(1.5*size), 0), 10f, 0, 0.5f);
+					ParticleRegistry.spawnAtomicBoomCore(this, pos.addVector(0, 4+(3.5*size), 0), 20f, 0.05f, -0.25f);
+				ParticleRegistry.spawnAtomicBoomCore(this, pos.addVector(0, 4+(1.5*size), 0), 10f, 0, 0.5f);
 			}
 			if(progress > 20&&progress < 320)
 			{
 				//ParticleUtils.spawnFog(posX, posY+(0.5*size), posZ, 25f, 1, -0.25f);
-				ParticleUtils.spawnAtomicBoomCore(this, pos.addVector(0, 4+(1.5*size), 0), 20f, -0.01f, 0.25f);
+				ParticleRegistry.spawnAtomicBoomCore(this, pos.addVector(0, 4+(1.5*size), 0), 20f, -0.01f, 0.25f);
 				if(progress < 35)
-					ParticleUtils.spawnAtomicBoomCore(this, pos.addVector(0, 4+(3.5*size), 0), 10f, 0, 0.5f);
+					ParticleRegistry.spawnAtomicBoomCore(this, pos.addVector(0, 4+(3.5*size), 0), 10f, 0, 0.5f);
 			}
 			if(progress > 25&&progress < 300)
 			{
 				//ParticleUtils.spawnFog(posX, posY+(6.5*size), posZ, 20f, 0.1f, -0.25f);
-				ParticleUtils.spawnAtomicBoomCore(this, pos.addVector(0, 4+(6.5*size), 0), 20f, -0.01f, 0.25f);
+				ParticleRegistry.spawnAtomicBoomCore(this, pos.addVector(0, 4+(6.5*size), 0), 20f, -0.01f, 0.25f);
 				if(progress < 40)
-					ParticleUtils.spawnAtomicBoomCore(this, pos.addVector(0, 4+(6.5*size), 0), 10f, 0, 0.5f);
+					ParticleRegistry.spawnAtomicBoomCore(this, pos.addVector(0, 4+(6.5*size), 0), 10f, 0, 0.5f);
 			}
 			if(progress > 30&&progress < 280)
 			{
-				ParticleUtils.spawnAtomicBoomCore(this, pos.addVector(0, 4+(12.5*size), 0), 15f, -0.01f, 0.125f);
+				ParticleRegistry.spawnAtomicBoomCore(this, pos.addVector(0, 4+(12.5*size), 0), 15f, -0.01f, 0.125f);
 			}
 			if(progress > 40&&progress < 280)
 			{
-				ParticleUtils.spawnAtomicBoomRing(this, pos.addVector(0, 4+(18.5*size), 0), 25f, 0.25f, -0.05f);
-			}
+				ParticleRegistry.spawnAtomicBoomRing(this, pos.addVector(0, 4+(18.5*size), 0), 25f, 0.25f, -0.05f);
+			}*/
 			/*
 			if(progress > 20)
 				ParticleUtils.spawnFog(posX, posY+(0.5*size), posZ, 20f, 0.5f, -0.25f);

@@ -4,11 +4,15 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MoverType;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.client.fx.ParticleUtils;
+import pl.pabilo8.immersiveintelligence.client.fx.utils.IIParticleProperties;
+import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleRegistry;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 /**
  * @author Pabilo8
@@ -16,17 +20,17 @@ import pl.pabilo8.immersiveintelligence.client.fx.ParticleUtils;
  */
 public class EntityFlare extends Entity implements IEntityAdditionalSpawnData
 {
-	int colour = 0xffffff;
+	IIColor color = IIColor.WHITE;
 
 	public EntityFlare(World worldIn)
 	{
 		super(worldIn);
 	}
 
-	public EntityFlare(World worldIn, int color)
+	public EntityFlare(World worldIn, IIColor color)
 	{
 		super(worldIn);
-		this.colour = color;
+		this.color = color;
 	}
 
 	@Override
@@ -46,8 +50,8 @@ public class EntityFlare extends Entity implements IEntityAdditionalSpawnData
 	@SideOnly(Side.CLIENT)
 	private void spawnParticles()
 	{
-		ParticleUtils.spawnFlareTraceFX(getPositionVector(), colour, 2f);
-		ParticleUtils.spawnFlareFX(getPositionVector().subtract(0, 0.1f, 0), colour, 1f);
+		ParticleRegistry.spawnParticle("flare", getPositionVector().subtract(0, 0.1f, 0), Vec3d.ZERO, Vec3d.ZERO)
+				.setProperties(EasyNBT.newNBT().withColor(IIParticleProperties.COLOR, color));
 	}
 
 	@Override
@@ -59,24 +63,24 @@ public class EntityFlare extends Entity implements IEntityAdditionalSpawnData
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound compound)
 	{
-		colour = compound.getInteger("colour");
+		color = IIColor.fromPackedRGB(compound.getInteger("color"));
 	}
 
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound compound)
 	{
-		compound.setFloat("colour", colour);
+		compound.setInteger("color", color.getPackedRGB());
 	}
 
 	@Override
 	public void writeSpawnData(ByteBuf buffer)
 	{
-		buffer.writeInt(colour);
+		buffer.writeInt(color.getPackedRGB());
 	}
 
 	@Override
 	public void readSpawnData(ByteBuf additionalData)
 	{
-		colour = additionalData.readInt();
+		color = IIColor.fromPackedRGB(additionalData.readInt());
 	}
 }

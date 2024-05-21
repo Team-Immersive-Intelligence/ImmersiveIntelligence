@@ -8,6 +8,7 @@ import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.ComponentRole;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreTypes;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIExplosion;
 
 /**
@@ -20,7 +21,7 @@ public class AmmoComponentHMX extends AmmoComponent
 {
 	public AmmoComponentHMX()
 	{
-		super("hmx", 1.75f, ComponentRole.EXPLOSIVE, 0xfbfbfb);
+		super("hmx", 1.75f, ComponentRole.EXPLOSIVE, IIColor.fromPackedRGB(0xfbfbfb));
 	}
 
 	@Override

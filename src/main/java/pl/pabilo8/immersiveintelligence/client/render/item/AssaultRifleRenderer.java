@@ -16,10 +16,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.model.obj.OBJModel;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
-import pl.pabilo8.immersiveintelligence.client.fx.particles.ParticleGunfire;
+import pl.pabilo8.immersiveintelligence.client.fx.IIParticles;
 import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.client.util.amt.*;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMTBullet.BulletState;
@@ -280,14 +279,7 @@ public class AssaultRifleRenderer extends IIUpgradableItemRendererAMT<ItemIIAssa
 				.withModelProvider(
 						(stack, combinedHeader) -> new AMT[]{
 								//Main Model
-								new AMTParticle("muzzle_flash", combinedHeader)
-										.setParticle(new ParticleGunfire(
-												null,
-												Vec3d.ZERO,
-												new Vec3d(1, 0, 0),
-												16f
-										)
-								),
+								new AMTParticle("muzzle_flash", combinedHeader).setParticle(IIParticles.PARTICLE_GUNFIRE),
 								new AMTHand("hand", combinedHeader, EnumHand.OFF_HAND),
 
 								//Ammo

@@ -29,6 +29,7 @@ import pl.pabilo8.immersiveintelligence.common.IIPotions;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.component.EntityAtomicBoom;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIDamageSources;
 import pl.pabilo8.immersiveintelligence.common.util.IIExplosion;
 
@@ -44,7 +45,7 @@ public class AmmoComponentNuke extends AmmoComponent
 {
 	public AmmoComponentNuke()
 	{
-		super("nuke", 10f, ComponentRole.EXPLOSIVE, 0x6b778a);
+		super("nuke", 10f, ComponentRole.EXPLOSIVE, IIColor.fromPackedRGB(0x6b778a));
 	}
 
 	@Override

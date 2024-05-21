@@ -19,7 +19,7 @@ import pl.pabilo8.immersiveintelligence.api.ammo.enums.ComponentEffectShape;
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.AmmoFactory;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
-import pl.pabilo8.immersiveintelligence.client.fx.ParticleUtils;
+import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleRegistry;
 import pl.pabilo8.immersiveintelligence.client.gui.block.emplacement.GuiEmplacementPageStorage;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
@@ -29,6 +29,7 @@ import pl.pabilo8.immersiveintelligence.common.entity.EntityEmplacementWeapon.Em
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityAmmoBase;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
+import pl.pabilo8.immersiveintelligence.common.util.IIExplosion;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import javax.annotation.Nonnull;
@@ -366,7 +367,10 @@ public abstract class EmplacementWeapon<A extends EntityAmmoBase<A>>
 		ResourceLocation texture = stuff.getFirst();
 
 		Vec3d weaponCenter = te.getWeaponCenter();
-		ParticleUtils.spawnExplosionBoomFX(entity.world, weaponCenter, null, ComponentEffectShape.ORB, 5, 4, true, true);
+		ParticleRegistry.spawnExplosionBoomFX(entity.world, weaponCenter, null, new IIExplosion(
+				entity.world, null, weaponCenter, Vec3d.ZERO, 5, 4,
+				ComponentEffectShape.ORB, true, true, false
+		));
 
 		for(ModelRendererTurbo mod : models)
 		{
@@ -378,7 +382,7 @@ public abstract class EmplacementWeapon<A extends EntityAmmoBase<A>>
 					.add(vz);
 			Vec3d vecDir = new Vec3d(rand.nextGaussian()*0.075, rand.nextGaussian()*0.15, rand.nextGaussian()*0.075);
 
-			ParticleUtils.spawnTMTModelFX(vo, vx.add(vz).addVector(0, 0.25+vecDir.y, 0).scale(0.66), 0.0625f, mod, texture);
+			ParticleRegistry.spawnTMTModelFX(vo, vx.add(vz).addVector(0, 0.25+vecDir.y, 0).scale(0.66), 0.0625f, mod, texture);
 		}
 	}
 

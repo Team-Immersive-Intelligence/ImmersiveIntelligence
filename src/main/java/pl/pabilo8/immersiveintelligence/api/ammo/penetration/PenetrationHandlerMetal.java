@@ -2,6 +2,7 @@ package pl.pabilo8.immersiveintelligence.api.ammo.penetration;
 
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.HitEffect;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.PenetrationHardness;
+import pl.pabilo8.immersiveintelligence.client.fx.IIParticles;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 
@@ -20,10 +21,9 @@ public class PenetrationHandlerMetal extends PenetrationHandler
 
 	private PenetrationHandlerMetal(String name, PenetrationHardness hardness, float thickness, float integrity)
 	{
-		super(hardness, thickness, integrity,
+		super(hardness, thickness, integrity, IIParticles.PARTICLE_DEBRIS_METAL,
 				IISounds.hitMetal.getSpecialSound(HitEffect.IMPACT),
-				IISounds.hitMetal.getSpecialSound(HitEffect.RICOCHET)
-		);
+				IISounds.hitMetal.getSpecialSound(HitEffect.RICOCHET));
 		this.name = IIUtils.toCamelCase(name.toLowerCase(), false);
 	}
 
@@ -40,7 +40,6 @@ public class PenetrationHandlerMetal extends PenetrationHandler
 	 * @param hardness  The hardness of the material
 	 * @param thickness The thickness of the material
 	 * @param integrity The integrity of the material
-	 * @param type      The type of the material
 	 * @return The penetration handler
 	 */
 	@Nonnull

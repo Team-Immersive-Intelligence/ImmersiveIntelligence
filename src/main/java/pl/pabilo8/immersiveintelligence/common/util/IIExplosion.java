@@ -29,7 +29,8 @@ import javax.annotation.Nullable;
 import javax.vecmath.AxisAngle4f;
 import javax.vecmath.Matrix4f;
 import javax.vecmath.Vector4f;
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -69,7 +70,7 @@ public class IIExplosion extends Explosion
 	@Override
 	public void doExplosionA()
 	{
-		this.affectedBlockPositions.addAll(generateAffectedBlockPositions());
+		this.affectedBlockPositions.addAll(generateAffectedBlockPositions(false));
 		float diameter = this.size*2.0F;
 		int k1 = MathHelper.floor(this.x-(double)diameter-1.0D);
 		int l1 = MathHelper.floor(this.x+(double)diameter+1.0D);
@@ -125,27 +126,26 @@ public class IIExplosion extends Explosion
 	/**
 	 * @return set of positions to be affected by this explosion
 	 */
-	public Set<BlockPos> generateAffectedBlockPositions()
+	public Set<BlockPos> generateAffectedBlockPositions(boolean getLastOnly)
 	{
 		Set<BlockPos> set;
 		//Generate block positions based on shape
 		switch(shape)
 		{
 			case LINE:
-				set = generateLineBlockPos();
+				set = generateLineBlockPos(getLastOnly);
 				break;
 			case CONE:
-				set = generateConeBlockPos(1, 1f);
+				set = generateConeBlockPos(getLastOnly, 1, 1f);
 				break;
 			case ORB:
-				set = generateOrbBlockPos(1, 1f);
+				set = generateOrbBlockPos(getLastOnly, 1, 1f);
 				break;
 			default:
 			case STAR:
-				set = generateOrbBlockPos(0.35f, 0.9f);
+				set = generateOrbBlockPos(getLastOnly, 0.35f, 0.9f);
 				break;
 		}
-
 		return set;
 	}
 
@@ -157,9 +157,10 @@ public class IIExplosion extends Explosion
 	 *
 	 * @return blocks affected by an orb shaped explosion
 	 */
-	private Set<BlockPos> generateOrbBlockPos(float densityScale, float powerMultiplier)
+	private Set<BlockPos> generateOrbBlockPos(boolean getLastOnly, float densityScale, float powerMultiplier)
 	{
-		HashSet<BlockPos> set = Sets.newHashSet();
+		ArrayList<BlockPos> set = new ArrayList<>();
+		ArrayList<BlockPos> firsts = new ArrayList<>();
 		//Steps per rotation
 		final int steps = MathHelper.ceil(Math.PI*size*densityScale);
 		float power, pitch, yaw;
@@ -184,6 +185,7 @@ public class IIExplosion extends Explosion
 
 				//Revert position to explosion center
 				current = center;
+				boolean atLeastOne = false;
 
 				//Trace from start to end
 				while(center.distanceTo(current) <= size&&power > 0)
@@ -201,22 +203,29 @@ public class IIExplosion extends Explosion
 						if(!world.isBlockLoaded(pos))
 							continue;
 						if(canDestroyBlock(pos, power))
+						{
 							set.add(pos);
+							atLeastOne = true;
+						}
 					}
 
 					//Move forward
 					current = current.add(direction);
 				}
+
+				//Add last block if it was not added before
+				if(getLastOnly&&atLeastOne&&!firsts.contains(set.get(set.size()-1)))
+					firsts.add(new BlockPos(set.get(set.size()-1)));
 			}
-		return set;
+		return Sets.newHashSet(getLastOnly&&!firsts.isEmpty()?firsts: set);
 	}
 
 	/**
 	 * @return blocks affected by a line shaped explosion
 	 */
-	private Set<BlockPos> generateLineBlockPos()
+	private Set<BlockPos> generateLineBlockPos(boolean getLastOnly)
 	{
-		HashSet<BlockPos> set = Sets.newHashSet();
+		ArrayList<BlockPos> set = new ArrayList<>();
 		float power = this.power;
 		for(float i = 0; i < size*1.25f; i += 0.5f, power -= LOSS)
 		{
@@ -224,29 +233,24 @@ public class IIExplosion extends Explosion
 			if(!world.isBlockLoaded(pos))
 				continue;
 			if(canDestroyBlock(pos, power))
-				set.add(pos);
+			{
+				if(!set.contains(pos))
+					set.add(pos);
+			}
 			else
 				break;
 		}
-		return set;
-	}
-
-	/**
-	 * @return blocks affected by a vanilla star shaped explosion
-	 */
-	private Set<BlockPos> generateStarBlockPos()
-	{
-		HashSet<BlockPos> set = Sets.newHashSet();
-		//TODO: 03.04.2024 default vanilla explosion
-		return set;
+		return getLastOnly&&!set.isEmpty()?Collections.singleton(set.get(0)): Sets.newHashSet(set);
 	}
 
 	/**
 	 * @return blocks affected by a cone shaped explosion
 	 */
-	private Set<BlockPos> generateConeBlockPos(float densityScale, float powerMultiplier)
+	private Set<BlockPos> generateConeBlockPos(boolean getLastOnly, float densityScale, float powerMultiplier)
 	{
-		HashSet<BlockPos> set = Sets.newHashSet();
+		ArrayList<BlockPos> set = new ArrayList<>();
+		ArrayList<BlockPos> firsts = new ArrayList<>();
+
 		//Steps per rotation
 		final int steps = MathHelper.ceil(0.5f*size*densityScale);
 		final float step = 0.5f/steps;
@@ -280,9 +284,10 @@ public class IIExplosion extends Explosion
 					//Move forward
 					current = current.add(initial);
 				}
+				if(getLastOnly&&!current.equals(center)&&!firsts.contains(new BlockPos(current)))
+					firsts.add(new BlockPos(current));
 			}
-
-		return set;
+		return Sets.newHashSet(getLastOnly&&!firsts.isEmpty()?firsts: set);
 	}
 
 	public Vec3d rotateVector(Vec3d vec, float pitch, float yaw)
@@ -360,7 +365,7 @@ public class IIExplosion extends Explosion
 		IBlockState state = world.getBlockState(pos);
 
 		//Ignore air blocks && Only break block that can be broken
-		if(!state.getBlock().isAir(state, world, pos)&&state.getBlockHardness(world, pos) >= 0)
+		if(!state.getBlock().isAir(state, world, pos)&&power >= state.getBlock().getExplosionResistance(world, pos, exploder, this))
 			return power > 0.0F&&(this.exploder==null||this.exploder.canExplosionDestroyBlock(this, this.world, pos, state, power));
 		//Block cannot be destroyed
 		return false;
@@ -369,5 +374,15 @@ public class IIExplosion extends Explosion
 	private BlockPos getPos()
 	{
 		return new BlockPos(this.x, this.y, this.z);
+	}
+
+	public double getPower()
+	{
+		return power;
+	}
+
+	public double getSize()
+	{
+		return size;
 	}
 }

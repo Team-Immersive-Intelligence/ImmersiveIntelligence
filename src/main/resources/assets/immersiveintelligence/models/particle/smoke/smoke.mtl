@@ -1,0 +1,14 @@
+# Made by Pabilo8 with particle/smokebench
+
+newmtl smoke_small
+map_Kd immersiveintelligence:particle/smoke/smoke_small
+newmtl smoke_medium
+map_Kd immersiveintelligence:particle/smoke/smoke_medium
+newmtl smoke_big
+map_Kd immersiveintelligence:particle/smoke/smoke_big
+newmtl dust_small
+map_Kd immersiveintelligence:particle/dust/dust_small
+newmtl dust_medium
+map_Kd immersiveintelligence:particle/dust/dust_medium
+newmtl dust_big
+map_Kd immersiveintelligence:particle/dust/dust_big

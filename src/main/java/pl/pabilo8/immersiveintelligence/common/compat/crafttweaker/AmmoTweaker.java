@@ -13,6 +13,7 @@ import crafttweaker.api.world.IVector3d;
 import crafttweaker.api.world.IWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
@@ -23,7 +24,9 @@ import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreTypes;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.PenetrationHardness;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoCore;
+import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
@@ -40,7 +43,7 @@ public class AmmoTweaker
 	@ZenMethod
 	public static void addShrapnel(String name, int color, String texture, int damage, float mass, float brightness)
 	{
-		ShrapnelHandler.addShrapnel(name, color, texture, damage, mass, brightness);
+		ShrapnelHandler.addShrapnel(name, IIColor.fromPackedRGB(color), ResLoc.of(new ResourceLocation(texture)), damage, mass, brightness);
 		CraftTweakerAPI.apply(new IAction()
 		{
 			@Override
@@ -247,7 +250,7 @@ public class AmmoTweaker
 				final ComponentRole componentRole = ComponentRole.v(component.role);
 
 				AmmoRegistry.registerComponent(
-						new AmmoComponent(component.name, component.density, componentRole, component.color)
+						new AmmoComponent(component.name, component.density, componentRole, IIColor.fromPackedRGB(component.color))
 						{
 							private final IngredientStack stack = ApiUtils.createIngredientStack(component.stack);
 

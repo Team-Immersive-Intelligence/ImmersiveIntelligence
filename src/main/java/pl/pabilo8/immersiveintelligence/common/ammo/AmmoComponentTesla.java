@@ -30,6 +30,7 @@ import pl.pabilo8.immersiveintelligence.api.ammo.enums.ComponentRole;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreTypes;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
 /**
  * @author Pabilo8
@@ -41,7 +42,7 @@ public class AmmoComponentTesla extends AmmoComponent
 {
 	public AmmoComponentTesla()
 	{
-		super("tesla", 1f, ComponentRole.SPECIAL, 0x6b778a);
+		super("tesla", 1f, ComponentRole.SPECIAL, IIColor.fromPackedRGBA(0x6b778a));
 	}
 
 	@Override

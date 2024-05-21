@@ -20,7 +20,6 @@ import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderPlayer;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.resources.IReloadableResourceManager;
@@ -59,9 +58,7 @@ import pl.pabilo8.immersiveintelligence.api.ShrapnelHandler.Shrapnel;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IUpgradableMachine;
-import pl.pabilo8.immersiveintelligence.client.fx.nuke.ParticleAtomBase;
-import pl.pabilo8.immersiveintelligence.client.fx.particles.ParticleGasCloud;
-import pl.pabilo8.immersiveintelligence.client.fx.particles.ParticleGunfire;
+import pl.pabilo8.immersiveintelligence.client.fx.IIParticles;
 import pl.pabilo8.immersiveintelligence.client.gui.block.GuiUpgrade;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualCategory;
 import pl.pabilo8.immersiveintelligence.client.manual.categories.*;
@@ -82,10 +79,7 @@ import pl.pabilo8.immersiveintelligence.client.render.mechanical_device.WheelRen
 import pl.pabilo8.immersiveintelligence.client.render.metal_device.*;
 import pl.pabilo8.immersiveintelligence.client.render.multiblock.metal.*;
 import pl.pabilo8.immersiveintelligence.client.render.multiblock.wooden.*;
-import pl.pabilo8.immersiveintelligence.client.render.vehicle.DroneRenderer;
-import pl.pabilo8.immersiveintelligence.client.render.vehicle.FieldHowitzerRenderer;
-import pl.pabilo8.immersiveintelligence.client.render.vehicle.MortarRenderer;
-import pl.pabilo8.immersiveintelligence.client.render.vehicle.MotorbikeRenderer;
+import pl.pabilo8.immersiveintelligence.client.render.vehicle.*;
 import pl.pabilo8.immersiveintelligence.client.util.ShaderUtil;
 import pl.pabilo8.immersiveintelligence.client.util.font.IIFontRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.font.IIFontRendererCustomGlyphs;
@@ -131,6 +125,7 @@ import pl.pabilo8.immersiveintelligence.common.entity.tactile.EntityAMTTactile;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityDrone;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityMotorbike;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityVehicleSeat;
+import pl.pabilo8.immersiveintelligence.common.entity.vehicle.towable.gun.EntityFieldGun;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.towable.gun.EntityFieldHowitzer;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoBase;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIINavalMine;
@@ -313,6 +308,7 @@ public class ClientProxy extends CommonProxy
 	@Override
 	public void preInit()
 	{
+		//long live .obj models! ^^
 		super.preInit();
 		MinecraftForge.EVENT_BUS.register(this);
 		MinecraftForge.EVENT_BUS.register(IIModelRegistry.INSTANCE);
@@ -320,7 +316,9 @@ public class ClientProxy extends CommonProxy
 		OBJLoader.INSTANCE.addDomain(ImmersiveIntelligence.MODID);
 		IEOBJLoader.instance.addDomain(ImmersiveIntelligence.MODID);
 
-		//long live .obj models! ^^
+		//Load particle models
+		IIParticles.preInit();
+		IIParticles.init();
 
 		//Register entity renderers
 		registerEntityRenderer(EntitySkyCrate.class, SkyCrateRenderer::new);
@@ -334,6 +332,7 @@ public class ClientProxy extends CommonProxy
 		registerEntityRenderer(EntityMotorbike.class, MotorbikeRenderer::new);
 		registerEntityRenderer(EntityDrone.class, DroneRenderer::new);
 		registerEntityRenderer(EntityFieldHowitzer.class, FieldHowitzerRenderer::new);
+		registerEntityRenderer(EntityFieldGun.class, FieldGunRenderer::new);
 		registerEntityRenderer(EntityTripodPeriscope.class, TripodPeriscopeRenderer::new);
 		registerEntityRenderer(EntityMortar.class, MortarRenderer::new);
 		//Thanks Blu!
@@ -409,16 +408,6 @@ public class ClientProxy extends CommonProxy
 
 		ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":blocks/data_connector_feedtrough");
 		ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":blocks/data_connector");
-
-		//Particles
-		ParticleGasCloud.TEXTURE = ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":particle/gas");
-		ParticleGunfire.TEXTURES = new TextureAtlasSprite[8];
-		for(int i = 0; i < 8; i++)
-			ParticleGunfire.TEXTURES[i] = ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":particle/gunshot"+i);
-		ParticleAtomBase.TEXTURES = new TextureAtlasSprite[8];
-		for(int i = 0; i < 8; i++)
-			ParticleAtomBase.TEXTURES[i] = ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":particle/smoke"+i);
-
 		//Conveyors
 
 		ApiUtils.getRegisterSprite(event.getMap(), ConveyorRubber.texture_on);

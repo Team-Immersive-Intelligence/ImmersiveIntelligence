@@ -4,15 +4,13 @@ import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.GlStateManager.DestFactor;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.math.Vec3d;
 import org.lwjgl.opengl.GL11;
-import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
-import pl.pabilo8.immersiveintelligence.client.fx.IIParticle;
-import pl.pabilo8.immersiveintelligence.client.fx.particles.ParticleGunfire;
+import pl.pabilo8.immersiveintelligence.client.fx.builder.ParticleBuilder;
+import pl.pabilo8.immersiveintelligence.client.fx.particles.IIParticle;
+import pl.pabilo8.immersiveintelligence.client.fx.utils.DrawStages;
+import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleRegistry;
 
 import java.util.function.Consumer;
 
@@ -36,48 +34,68 @@ public class AMTParticle extends AMT
 		this(name, header.getOffset(name));
 	}
 
-	public AMTParticle setParticle(IIParticle particle)
+	/**
+	 * Sets the displayed particle
+	 *
+	 * @param particleBuilder Builder of type T Particles
+	 * @param <T>             Particle type
+	 * @return this
+	 */
+	public <T extends IIParticle> AMTParticle setParticle(ParticleBuilder<T> particleBuilder)
 	{
-		return setParticle(particle, part -> {
+		return setParticle(particleBuilder, tParticleBuilder -> {
 		});
 	}
 
-	public AMTParticle setParticle(IIParticle particle, Consumer<IIParticle> config)
+	/**
+	 * Sets the displayed particle
+	 *
+	 * @param particleBuilder   Builder of type T Particles
+	 * @param additionalOptions Use to apply additional settings
+	 * @param <T>               Particle type
+	 * @return this
+	 */
+	public <T extends IIParticle> AMTParticle setParticle(ParticleBuilder<T> particleBuilder, Consumer<ParticleBuilder<T>> additionalOptions)
 	{
-		this.particle = particle;
-		config.accept(particle);
+		additionalOptions.accept(particleBuilder);
+		this.particle = particleBuilder.buildParticle(Vec3d.ZERO, Vec3d.ZERO, rot);
+		this.particle.enableAMTDrawMode();
 		return this;
+	}
+
+	/**
+	 * Sets the displayed particle using a registered particle builder
+	 *
+	 * @param particleName Name of the particle
+	 * @return this
+	 */
+	public AMTParticle setParticle(String particleName)
+	{
+		return setParticle(ParticleRegistry.getParticleBuilder(particleName));
 	}
 
 	@Override
 	protected void draw(Tessellator tes, BufferBuilder buf)
 	{
-		if(particle==null||particle.getAge()==0)
+		if(particle==null)
 			return;
-
-		if(particle instanceof ParticleGunfire)
-		{
-			drawGunshot(buf);
-			return;
-		}
 
 		//Uses the custom property value for age
-		particle.setAge((int)(property*particle.getMaxAge()));
-		particle.setWorld(ClientUtils.mc().world);
+		particle.setProgress(property);
+		GlStateManager.translate(originPos.x, originPos.y, originPos.z);
 
-		GlStateManager.translate(originPos.x, originPos.y-0.5, originPos.z);
-		GlStateManager.rotate(90, 0, 1, 0);
-
-		//Set up BufferBuilder with the particle stage
-		particle.getDrawStage().prepareRender(buf);
-
+		//Set default particle drawing conditions
 		GlStateManager.enableAlpha();
 		GlStateManager.enableBlend();
 		GlStateManager.alphaFunc(GL11.GL_GREATER, 0.003921569F);
 		GlStateManager.disableCull();
 
+		//Set up BufferBuilder with the particle stage
+		DrawStages drawStage = particle.getDrawStage();
+		drawStage.prepareRender(buf, 0);
+
 		//Render
-		particle.renderParticle(buf, ClientUtils.mc().player,
+		particle.render(buf,
 				ClientUtils.mc().getRenderPartialTicks(),
 				ActiveRenderInfo.getRotationX(),
 				ActiveRenderInfo.getRotationXZ(),
@@ -86,60 +104,7 @@ public class AMTParticle extends AMT
 				ActiveRenderInfo.getRotationXY()
 		);
 		tes.draw();
-		particle.getDrawStage().clear();
-	}
-
-	/**
-	 * A very temporary solution, pls don't howitzize
-	 */
-	private void drawGunshot(BufferBuilder buf)
-	{
-		GlStateManager.translate(originPos.x, originPos.y-0.125, originPos.z);
-		GlStateManager.rotate(90, 0, 1, 0);
-		GlStateManager.disableCull();
-
-		TextureAtlasSprite tex = ParticleGunfire.TEXTURES[(int)(property*7)];
-		float u = tex.getMinU(), v = tex.getInterpolatedV(8), uu = tex.getInterpolatedU(8), vv = tex.getMaxV();
-		float scale = 1.5f;
-
-		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_CONSTANT_ALPHA);
-		GlStateManager.enableBlend();
-		GlStateManager.enableAlpha();
-		GlStateManager.disableLighting();
-
-		GlStateManager.scale(scale, scale, scale);
-
-		buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		IIClientUtils.drawFace(buf, 0.385, -0.5, -0.5+0.03125, 0.385, 0.5, 0.5+0.03125,
-				u, uu, v, vv);
-		u = tex.getInterpolatedU(8);
-		uu = tex.getMaxU();
-		IIClientUtils.drawFace(buf, 0.125, -0.5, -0.5, 0.125, 0.5, 0.5,
-				u, uu, v, vv);
-
-		Tessellator.getInstance().draw();
-
-		//set texture to the "beam" part
-		u = tex.getMinU();
-		uu = tex.getMaxU();
-		v = tex.getMinV();
-		vv = tex.getInterpolatedV(8);
-
-		GlStateManager.translate(0, 0, 0.03125);
-		for(int i = 0; i < 4; i++)
-		{
-			buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-			IIClientUtils.drawFace(buf, 0, -0.5, 0, 2, 0.5, 0,
-					u, uu, v, vv);
-			Tessellator.getInstance().draw();
-			GlStateManager.rotate(45, 1, 0, 0);
-		}
-
-		GlStateManager.enableCull();
-		GlStateManager.depthMask(true);
-		GlStateManager.enableLighting();
-		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-		GlStateManager.alphaFunc(GL11.GL_GREATER, 0.1F);
+		drawStage.clear();
 	}
 
 	@Override

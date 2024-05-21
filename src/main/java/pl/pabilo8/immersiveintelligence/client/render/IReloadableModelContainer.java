@@ -18,7 +18,7 @@ public interface IReloadableModelContainer<T>
 
 	/**
 	 * Called on {@link net.minecraftforge.client.event.TextureStitchEvent.Pre}<br>
-	 * Used for registering sprites for the texture sticher's atlas
+	 * Used for registering sprites for the texture stitcher's atlas
 	 */
 	default void registerSprites(TextureMap map)
 	{

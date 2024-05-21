@@ -22,6 +22,7 @@ import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoCore;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoType;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.lambda.NBTTagCollector;
 
@@ -314,11 +315,10 @@ public abstract class EntityAmmoBase<T extends EntityAmmoBase<? super T>> extend
 	{
 		for(Tuple<AmmoComponent, NBTTagCompound> component : components)
 		{
-			int color = component.getFirst().getColour(component.getSecond());
-
+			IIColor colour = component.getFirst().getColour(component.getSecond());
 			evt.add(Light.builder().pos(this)
 					.radius(ammoType.getComponentAmount()*16f)
-					.color(color, false)
+					.color(colour.red/255f, colour.green/255f, colour.red/255f, colour.alpha/255f)
 					.build());
 		}
 	}

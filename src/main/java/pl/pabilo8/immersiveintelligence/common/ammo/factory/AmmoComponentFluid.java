@@ -17,6 +17,7 @@ import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreTypes;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.component.EntityGasCloud;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.component.EntityIIChemthrowerShot;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
 /**
  * @author Pabilo8
@@ -33,7 +34,7 @@ public class AmmoComponentFluid extends AmmoComponent
 		super(fluid.isGaseous()?"gas_": "fluid_",
 				Math.max(fluid.getDensity(), 0)/1000f,
 				ComponentRole.CHEMICAL,
-				fluid.getColor()
+				IIColor.fromPackedRGBA(fluid.getColor())
 		);
 		this.fluid = fluid;
 	}

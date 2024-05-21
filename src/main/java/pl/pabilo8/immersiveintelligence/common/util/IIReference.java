@@ -1,5 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common.util;
 
+import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.api.Lib;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
@@ -40,15 +41,25 @@ public class IIReference
 
 	//--- Patterns ---//
 	public static final ResLoc RES_II = ResLoc.root(ImmersiveIntelligence.MODID);
+	public static final ResLoc RES_IE = ResLoc.root(ImmersiveEngineering.MODID);
+	public static final ResLoc RES_MC = ResLoc.root("minecraft");
 
 	//Models
 	public static final ResLoc RES_ITEM_MODEL = ResLoc.of(RES_II, "models/item/");
 	public static final ResLoc RES_BLOCK_MODEL = ResLoc.of(RES_II, "models/block/");
+	public static final ResLoc RES_ENTITY_MODEL = ResLoc.of(RES_II, "models/entity/");
+	public static final ResLoc RES_PARTICLE_MODEL = ResLoc.of(RES_II, "models/particle/");
+
+	//AABBs and Multiblock Config
 	public static final ResLoc RES_AABB = ResLoc.of(RES_II, "aabb/");
+
+	//Particles
+	public static final ResLoc RES_PARTICLES = ResLoc.of(RES_II, "particles/");
 
 	//Sounds
 	public static final ResLoc RES_SOUND = ResLoc.of(RES_II, "sounds/");
 
+	//Textures
 	public static final ResLoc RES_TEXTURES = ResLoc.of(RES_II, "textures/");
 	public static final ResLoc RES_TEXTURES_GUI = ResLoc.of(RES_TEXTURES, "gui");
 	public static final ResLoc RES_TEXTURES_CREATIVE = ResLoc.of(RES_TEXTURES_GUI, "/creative_gui/");

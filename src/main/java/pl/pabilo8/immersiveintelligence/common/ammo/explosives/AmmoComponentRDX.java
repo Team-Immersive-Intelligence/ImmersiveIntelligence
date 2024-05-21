@@ -8,6 +8,7 @@ import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.ComponentRole;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreTypes;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIExplosion;
 
 /**
@@ -20,7 +21,7 @@ public class AmmoComponentRDX extends AmmoComponent
 {
 	public AmmoComponentRDX()
 	{
-		super("rdx", 1.25f, ComponentRole.EXPLOSIVE, 0xd2c294);
+		super("rdx", 1.25f, ComponentRole.EXPLOSIVE, IIColor.fromPackedRGB(0xd2c294));
 	}
 
 	@Override

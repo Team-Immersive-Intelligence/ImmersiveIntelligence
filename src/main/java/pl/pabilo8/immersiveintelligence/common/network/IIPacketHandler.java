@@ -5,7 +5,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ITextComponent;
@@ -73,6 +72,11 @@ public class IIPacketHandler
 	public static void sendToServer(IIMessage message)
 	{
 		INSTANCE.sendToServer(message);
+	}
+
+	public static <T extends IIMessage & IPositionedMessage> void sendToClient(T message)
+	{
+		INSTANCE.sendToAllTracking(message, targetPointFromPos(message.getPosition(), message.geWorld(), DEFAULT_RANGE));
 	}
 
 	public static void sendToClient(BlockPos pos, World world, IIMessage message)

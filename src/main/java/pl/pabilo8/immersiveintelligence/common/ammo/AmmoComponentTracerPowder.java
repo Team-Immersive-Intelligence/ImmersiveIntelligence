@@ -9,10 +9,11 @@ import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.ComponentRole;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreTypes;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
-import pl.pabilo8.immersiveintelligence.client.fx.ParticleUtils;
+import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleRegistry;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityAmmoBase;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
 /**
  * @author Pabilo8
@@ -24,7 +25,7 @@ public class AmmoComponentTracerPowder extends AmmoComponent
 {
 	public AmmoComponentTracerPowder()
 	{
-		super("tracer_powder", 1f, ComponentRole.SPECIAL, 0x6b778a);
+		super("tracer_powder", 1f, ComponentRole.SPECIAL, IIColor.fromPackedRGB(0x6b778a));
 	}
 
 	@Override
@@ -43,13 +44,13 @@ public class AmmoComponentTracerPowder extends AmmoComponent
 	public boolean spawnParticleTrail(EntityAmmoBase ammo, NBTTagCompound nbt)
 	{
 		int color = nbt.hasKey("colour")?nbt.getInteger("colour"): 0xffffff;
-		ParticleUtils.spawnTracerFX(ammo.getPositionVector(), IIUtils.getEntityMotion(ammo), ammo.getAmmoType().getCaliber()/16f, color);
+		ParticleRegistry.spawnTracerFX(ammo.getPositionVector(), IIUtils.getEntityMotion(ammo), ammo.getAmmoType().getCaliber()/16f, color);
 		return true;
 	}
 
 	@Override
-	public int getColour(NBTTagCompound nbt)
+	public IIColor getColour(NBTTagCompound nbt)
 	{
-		return nbt.hasKey("colour")?nbt.getInteger("colour"): 0xffffff;
+		return nbt!=null&&nbt.hasKey("colour")?IIColor.fromPackedRGB(nbt.getInteger("colour")): IIColor.WHITE;
 	}
 }
