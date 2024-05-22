@@ -3,7 +3,9 @@ package pl.pabilo8.immersiveintelligence.common.item.crafting.material;
 import net.minecraftforge.fml.common.Loader;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.material.ItemIIMaterialRod.MaterialsRod;
 import pl.pabilo8.immersiveintelligence.common.util.IBatchOredictRegister;
+import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
 import pl.pabilo8.modworks.annotations.item.GeneratedItemModels;
 
@@ -12,6 +14,7 @@ import pl.pabilo8.modworks.annotations.item.GeneratedItemModels;
  * @since 2019-05-11
  */
 @IBatchOredictRegister(oreDict = "stick")
+@IIItemProperties(category = IICategory.RESOURCES)
 public class ItemIIMaterialRod extends ItemIISubItemsBase<MaterialsRod>
 {
 	public ItemIIMaterialRod()

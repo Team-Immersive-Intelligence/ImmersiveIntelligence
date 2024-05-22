@@ -24,6 +24,8 @@ import org.apache.commons.lang3.tuple.Triple;
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.AmmoFactory;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.Railgun;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoRailgunGrenade;
+import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
 
 /**
  * @author Pabilo8
@@ -32,6 +34,7 @@ import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoRailgunGrenad
  * The man that did the rest of the code
  * @since 27.11.2020
  */
+@IIItemProperties(category = IICategory.WARFARE)
 public class ItemIIRailgunOverride extends ItemRailgun
 {
 	public ItemIIRailgunOverride()

@@ -9,6 +9,7 @@ import pl.pabilo8.immersiveintelligence.common.util.block.BlockIIStairs;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IIBlockEnum;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IIBlockProperties;
 import pl.pabilo8.immersiveintelligence.common.util.block.ItemBlockIIBase;
+import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 
 /**
  * @author Pabilo8
@@ -23,6 +24,7 @@ public class BlockIIConcreteDecoration extends BlockIIBase<ConcreteDecorations>
 		setResistance(15.0F);
 		setLightOpacity(255);
 		setFullCube(true);
+		setCategory(IICategory.RESOURCES);
 	}
 
 	public enum ConcreteDecorations implements IIBlockEnum

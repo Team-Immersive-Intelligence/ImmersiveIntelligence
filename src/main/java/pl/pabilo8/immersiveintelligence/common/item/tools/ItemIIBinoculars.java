@@ -42,8 +42,10 @@ import pl.pabilo8.immersiveintelligence.common.entity.vehicle.towable.gun.Entity
 import pl.pabilo8.immersiveintelligence.common.item.tools.ItemIIBinoculars.Binoculars;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIIItemTextureOverride;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
 
 import javax.annotation.Nonnull;
@@ -56,6 +58,7 @@ import java.util.UUID;
  * @author Pabilo8
  * @since 15-09-2019
  */
+@IIItemProperties(category = IICategory.TOOLS)
 public class ItemIIBinoculars extends ItemIISubItemsBase<Binoculars> implements IAdvancedZoomTool, IIEEnergyItem, IIIItemTextureOverride
 {
 	private static final ResourceLocation OVERLAY_TEXTURE = new ResourceLocation(ImmersiveIntelligence.MODID, "textures/gui/item/binoculars.png");

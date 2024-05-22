@@ -6,12 +6,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.MechanicalDevices;
 import pl.pabilo8.immersiveintelligence.api.rotary.IMotorGear;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.MechanicalDevices;
 import pl.pabilo8.immersiveintelligence.common.item.mechanical.ItemIIMotorGear.MotorGear;
 import pl.pabilo8.immersiveintelligence.common.util.IBatchOredictRegister;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
 import pl.pabilo8.modworks.annotations.item.GeneratedItemModels;
 
@@ -23,8 +25,8 @@ import java.util.List;
  * @author Pabilo8
  * @since 27-12-2019
  */
-// TODO: 04.09.2022 move to capabilities
 @IBatchOredictRegister(oreDict = "gear")
+@IIItemProperties(category = IICategory.ROTARY)
 public class ItemIIMotorGear extends ItemIISubItemsBase<MotorGear> implements IMotorGear
 {
 	public ItemIIMotorGear()

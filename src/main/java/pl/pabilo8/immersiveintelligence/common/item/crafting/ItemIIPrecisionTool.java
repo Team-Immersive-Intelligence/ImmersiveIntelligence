@@ -15,7 +15,9 @@ import pl.pabilo8.immersiveintelligence.client.render.multiblock.metal.Precision
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.ItemIIPrecisionTool.PrecisionTools;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
 import pl.pabilo8.modworks.annotations.item.GeneratedItemModels;
 
@@ -28,6 +30,7 @@ import java.util.List;
  * @author Pabilo8
  * @since 19-08-2019
  */
+@IIItemProperties(category = IICategory.RESOURCES)
 public class ItemIIPrecisionTool extends ItemIISubItemsBase<PrecisionTools> implements IPrecisionTool
 {
 	public ItemIIPrecisionTool()

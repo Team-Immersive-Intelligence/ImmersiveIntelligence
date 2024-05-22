@@ -18,7 +18,6 @@ import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.commands.ii.CommandII;
 import pl.pabilo8.immersiveintelligence.common.compat.IICompatModule;
 import pl.pabilo8.immersiveintelligence.common.event.IEOverrideEventHandler;
-import pl.pabilo8.immersiveintelligence.common.event.IIItemCreatedEventHandler;
 import pl.pabilo8.immersiveintelligence.common.event.LightEngineerEventHandler;
 import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler;
 import pl.pabilo8.immersiveintelligence.common.util.Reflector;
@@ -60,10 +59,7 @@ public class ImmersiveIntelligence
 	public void init(FMLInitializationEvent event)
 	{
 		NetworkRegistry.INSTANCE.registerGuiHandler(INSTANCE, proxy);
-
-		new IIItemCreatedEventHandler().registerEventHandler();
 		new LightEngineerEventHandler().registerEventHandler();
-
 		proxy.init();
 
 		IISounds.init();

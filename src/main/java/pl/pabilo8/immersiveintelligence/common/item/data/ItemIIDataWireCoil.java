@@ -13,6 +13,8 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIBase;
 import pl.pabilo8.immersiveintelligence.common.wire.IIDataWireType;
 
@@ -24,6 +26,7 @@ import java.util.List;
  * @author Pabilo8
  * @since 2019-05-31
  */
+@IIItemProperties(category = IICategory.ELECTRONICS)
 public class ItemIIDataWireCoil extends ItemIIBase implements IWireCoil
 {
 	public ItemIIDataWireCoil()

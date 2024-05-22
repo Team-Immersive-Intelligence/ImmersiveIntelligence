@@ -14,7 +14,6 @@ import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
-import pl.pabilo8.immersiveintelligence.common.event.EventIIItemCreated;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -53,13 +52,6 @@ public class ItemIIBase extends Item implements IColouredItem
 	public IIItemProperties getItemProperties()
 	{
 		return IIUtils.getAnnotation(IIItemProperties.class, this);
-	}
-
-	@Override
-	public void onCreated(ItemStack stack, World worldIn, EntityPlayer playerIn)
-	{
-		super.onCreated(stack, worldIn, playerIn);
-		EventIIItemCreated.fireItemCreatedEvent(playerIn, stack);
 	}
 
 	//--- Crafting Utilities ---//

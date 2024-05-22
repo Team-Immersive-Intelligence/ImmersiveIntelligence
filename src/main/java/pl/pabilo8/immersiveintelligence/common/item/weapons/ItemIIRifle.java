@@ -22,6 +22,8 @@ import pl.pabilo8.immersiveintelligence.common.item.weapons.ammohandler.AmmoHand
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ammohandler.AmmoHandlerMagazine;
 import pl.pabilo8.immersiveintelligence.common.util.AdvancedSounds.RangedSound;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
+import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
 
 import javax.annotation.Nullable;
 
@@ -29,6 +31,7 @@ import javax.annotation.Nullable;
  * @author Pabilo8
  * @since 01-11-2019
  */
+@IIItemProperties(category = IICategory.WARFARE)
 public class ItemIIRifle extends ItemIIGunBase implements IAdvancedZoomTool
 {
 	//--- NBT Values Reference ---//

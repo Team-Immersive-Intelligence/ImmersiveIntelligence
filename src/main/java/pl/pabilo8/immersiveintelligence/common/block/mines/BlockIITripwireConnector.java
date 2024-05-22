@@ -10,6 +10,7 @@ import pl.pabilo8.immersiveintelligence.common.util.block.BlockIITileProvider;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.EnumTileProvider;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IITileProviderEnum;
 import pl.pabilo8.immersiveintelligence.common.util.block.ItemBlockIIBase;
+import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 
 /**
  * @author Pabilo8
@@ -28,5 +29,6 @@ public class BlockIITripwireConnector extends BlockIITileProvider<IIBlockTypes_D
 		super("tripwire_connector", Material.WOOD, PropertyEnum.create("dummy", IIBlockTypes_Dummy.class), ItemBlockIIBase::new,
 				IOBJModelCallback.PROPERTY, IEProperties.BOOLEANS[0], IEProperties.BOOLEANS[1], IEProperties.CONNECTIONS);
 		setLightOpacity(0);
+		setCategory(IICategory.WARFARE);
 	}
 }

@@ -32,6 +32,7 @@ import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IIBlockEnum;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IIBlockProperties;
+import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -79,6 +80,7 @@ public class BlockIIBase<E extends Enum<E> & IIBlockEnum> extends Block implemen
 	/**
 	 * Language key for tooltip description in ItemBlock
 	 */
+	protected final IICategory[] category;
 	protected final int[] stackAmounts, opaqueness;
 	protected final float[] hardness, blastResistance;
 	protected final String[] description;
@@ -146,6 +148,9 @@ public class BlockIIBase<E extends Enum<E> & IIBlockEnum> extends Block implemen
 		this.description = new String[sub];
 		Arrays.fill(this.description, "");
 
+		this.category = new IICategory[sub];
+		Arrays.fill(this.category, IICategory.NULL);
+
 		this.materials = new Material[sub];
 		Arrays.fill(this.materials, material);
 		this.soundTypes = new SoundType[sub];
@@ -179,7 +184,7 @@ public class BlockIIBase<E extends Enum<E> & IIBlockEnum> extends Block implemen
 			if(properties.hardness()!=-1) hardness[i] = properties.hardness();
 
 			if(!properties.descKey().isEmpty()) description[i] = properties.descKey();
-
+			if(properties.category()!=IICategory.NULL) category[i] = properties.category();
 		}
 	}
 
@@ -514,6 +519,23 @@ public class BlockIIBase<E extends Enum<E> & IIBlockEnum> extends Block implemen
 	{
 		int meta = getMetaFromState(world.getBlockState(pos));
 		return blastResistance[meta%enumValues.length];
+	}
+
+	public Block setCategory(IICategory category)
+	{
+		for(E subBlock : enumValues)
+			this.category[subBlock.getMeta()] = category;
+		return this;
+	}
+
+	public boolean isHidden(int meta)
+	{
+		return hidden[meta%enumValues.length];
+	}
+
+	public IICategory getCategory(int meta)
+	{
+		return category[meta%enumValues.length];
 	}
 
 	//--- Mobility Flags (Piston Pushing) ---//

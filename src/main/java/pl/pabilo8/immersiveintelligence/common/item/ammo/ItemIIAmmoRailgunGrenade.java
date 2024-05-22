@@ -13,6 +13,8 @@ import pl.pabilo8.immersiveintelligence.client.model.builtin.ModelAmmoProjectile
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Ammunition;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoBase.AmmoParts;
+import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
 import pl.pabilo8.modworks.annotations.item.GeneratedItemModels;
 import pl.pabilo8.modworks.annotations.item.ItemModelType;
 
@@ -25,6 +27,7 @@ import java.util.function.Function;
  */
 @GeneratedItemModels(itemName = "bullet_railgun_grenade_4bcal", type = ItemModelType.ITEM_SIMPLE_AUTOREPLACED, valueSet = AmmoParts.class)
 @IIAmmoProjectile
+@IIItemProperties(category = IICategory.WARFARE)
 public class ItemIIAmmoRailgunGrenade extends ItemIIAmmoBase<EntityAmmoProjectile>
 {
 	public ItemIIAmmoRailgunGrenade()

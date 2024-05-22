@@ -15,7 +15,9 @@ import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.item.ItemIIPrintedPage.SubItems;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
 import pl.pabilo8.modworks.annotations.item.GeneratedItemModels;
 
@@ -27,6 +29,7 @@ import java.util.List;
  * @author Pabilo8
  * @since 09-07-2019
  */
+@IIItemProperties(category = IICategory.ELECTRONICS)
 public class ItemIIPrintedPage extends ItemIISubItemsBase<SubItems> implements IGuiItem
 {
 	public ItemIIPrintedPage()

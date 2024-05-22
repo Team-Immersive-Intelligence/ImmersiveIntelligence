@@ -1,7 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common.util.item;
 
 import net.minecraft.item.ItemStack;
-import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IICategory;
 
 /**
  * @author GabrielV (gabriel@iiteam.net)

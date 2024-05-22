@@ -1,10 +1,10 @@
 package pl.pabilo8.immersiveintelligence.common;
 
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.Vec2f;
 import net.minecraftforge.common.ForgeModContainer;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
@@ -14,15 +14,19 @@ import net.minecraftforge.fluids.capability.wrappers.FluidBucketWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
-import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.BlockIIMetalDecoration.IIBlockTypes_MetalDecoration;
 import pl.pabilo8.immersiveintelligence.common.block.mines.BlockIIMine.ItemBlockMineBase;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine.Magazines;
-import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIGunBase;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.block.BlockIIBase;
+import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IIBlockEnum;
+import pl.pabilo8.immersiveintelligence.common.util.block.ItemBlockIIBase;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
-import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IICategory;
-import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIUpgradeableArmor;
+import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
+import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -30,15 +34,14 @@ import java.util.List;
 
 /**
  * @author Pabilo8
- * @since 2019-05-07
  * @author GabrielV (gabriel@iiteam.net) - Creative Sub Tabs
+ * @updated 21.05.2024
+ * @ii-approved 0.3.1
+ * @since 7.07.2019
  */
 public class IICreativeTab extends CreativeTabs
 {
-	public static final ResourceLocation TAB_TEXTURE = ResLoc.of(IIReference.RES_TEXTURES_CREATIVE, "tabs").withExtension(ResLoc.EXT_PNG);
-	public static final ResourceLocation CONTAINER_TEXTURE = ResLoc.of(IIReference.RES_TEXTURES_CREATIVE, "tab_items").withExtension(ResLoc.EXT_PNG);
-	public static IICreativeTab[] CRETIVE_TAB_ARRAY = new IICreativeTab[12];
-
+	public static IICategory selectedCategory = IICategory.RESOURCES;
 	public static List<Fluid> fluidBucketMap = new ArrayList<>();
 
 	public IICreativeTab(String name)
@@ -56,25 +59,107 @@ public class IICreativeTab extends CreativeTabs
 	@Override
 	public int getLabelColor()
 	{
-		return 10263708;
+		return IIReference.COLOR_H2;
 	}
 
 	@Override
 	public ResourceLocation getBackgroundImage()
 	{
-		return CONTAINER_TEXTURE;
+		return selectedCategory.getCreativeTabTexture();
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public String getBackgroundImageName()
+	{
+		return super.getBackgroundImageName();
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public String getTranslatedTabLabel()
+	{
+		return "itemGroup.immersiveintelligence";
 	}
 
 	@SideOnly(Side.CLIENT)
 	@Override
 	public void displayAllRelevantItems(@Nonnull NonNullList<ItemStack> list)
 	{
-		super.displayAllRelevantItems(list);
+		if(!IIConfig.australianCreativeTabs)
+		{
+			super.displayAllRelevantItems(list);
+			for(Fluid fluid : fluidBucketMap)
+				addFluidBucket(fluid, list);
+			addExampleBullets(list);
+			return;
+		}
 
-		addExampleBullets(list);
+		for(Item item : Item.REGISTRY)
+		{
+			if(item instanceof ItemBlockIIBase)
+			{
+				ItemBlockIIBase itemBlock = (ItemBlockIIBase)item;
+				BlockIIBase<?> block = itemBlock.getBlock();
 
-		for(Fluid fluid : fluidBucketMap)
-			addFluidBucket(fluid, list);
+				for(IIBlockEnum subItem : block.enumValues)
+				{
+					if(block.isHidden(subItem.getMeta())||block.getCategory(subItem.getMeta())!=selectedCategory)
+						continue;
+					list.add(new ItemStack(block, 1, subItem.getMeta()));
+				}
+			}
+			else if(item instanceof ItemIISubItemsBase)
+			{
+				//use parent category as fallback
+				IICategory parentCategory = IICategory.RESOURCES;
+				if(item.getClass().isAnnotationPresent(IIItemProperties.class))
+				{
+					IIItemProperties properties = item.getClass().getAnnotation(IIItemProperties.class);
+					if(properties.hidden())
+						continue;
+					parentCategory = properties.category();
+				}
+				//assign individual sub-items to their categories
+				for(IIItemEnum subItem : ((ItemIISubItemsBase<?>)item).getSubItems())
+				{
+					if(subItem.isHidden())
+						continue;
+					IICategory category = subItem.getCategory();
+					if(category==null)
+						category = parentCategory;
+
+					if(category==selectedCategory)
+						list.add(new ItemStack(item, 1, subItem.getMeta()));
+				}
+			}
+			else if(item.getClass().isAnnotationPresent(IIItemProperties.class))
+			{
+				IIItemProperties properties = item.getClass().getAnnotation(IIItemProperties.class);
+				if(properties.hidden())
+					continue;
+				if(properties.category()==selectedCategory)
+					item.getSubItems(this, list);
+			}
+			else if(selectedCategory==IICategory.RESOURCES)
+			{
+				item.getSubItems(this, list);
+			}
+		}
+
+		switch(selectedCategory)
+		{
+			case WARFARE:
+				addExampleBullets(list);
+				break;
+			case RESOURCES:
+				for(Fluid fluid : fluidBucketMap)
+					addFluidBucket(fluid, list);
+				break;
+			default:
+				break;
+		}
+
 	}
 
 	public static void addFluidBucket(Fluid fluid, NonNullList<ItemStack> list)
@@ -85,19 +170,6 @@ public class IICreativeTab extends CreativeTabs
 		IFluidHandlerItem fluidHandler = new FluidBucketWrapper(stack);
 		if(fluidHandler.fill(fs, true)==fs.amount)
 			list.add(fluidHandler.getContainer());
-	}
-
-	public static void addArmor(NonNullList<ItemStack> list)
-	{
-		for (ItemIIUpgradeableArmor armor : ItemIIUpgradeableArmor.ARMOR_REGISTRY)
-			armor.getSubItems(IIContent.II_CREATIVE_TAB, list);
-	}
-
-	public static void addGuns(NonNullList<ItemStack> list)
-	{
-		list.add(new ItemStack(IIContent.itemMachinegun, 1));
-		for (ItemIIGunBase weapon : ItemIIGunBase.WEAPONS)
-			weapon.getSubItems(IIContent.II_CREATIVE_TAB, list);
 	}
 
 	public static void addExampleBullets(NonNullList<ItemStack> list)
@@ -241,130 +313,6 @@ public class IICreativeTab extends CreativeTabs
 			default:
 			case BLACK:
 				return "Schwarz";
-		}
-	}
-
-	public static class IICreativeSubTab
-	{
-		public static final ResourceLocation SUB_TAB_TEXTURE = ResLoc.of(IIReference.RES_TEXTURES_CREATIVE, "sub_tabs").withExtension(ResLoc.EXT_PNG);
-		public static final ResLoc SUB_TEXTURE = ResLoc.of(IIReference.RES_TEXTURES_CREATIVE, "tab_");
-		public static IICreativeSubTab[] CREATIVE_SUB_TABS = new IICreativeSubTab[5];
-
-		public static final IICreativeSubTab ELECTRONICS = new IICreativeSubTab(0, "electronics")
-		{
-			@Override
-			public Vec2f getIconUV()
-			{
-				return new Vec2f(112, 0);
-			}
-
-			@Override
-			public IICategory getCategory()
-			{
-				return IICategory.ELECTRONICS;
-			}
-		};
-
-		public static final IICreativeSubTab LOGISTICS = new IICreativeSubTab(1, "logistics")
-		{
-			@Override
-			public Vec2f getIconUV()
-			{
-				return new Vec2f(140, 0);
-			}
-
-			@Override
-			public IICategory getCategory()
-			{
-				return IICategory.LOGISTICS;
-			}
-		};
-		public static final IICreativeSubTab WARFARE = new IICreativeSubTab(2, "warfare")
-		{
-			@Override
-			public Vec2f getIconUV()
-			{
-				return new Vec2f(112, 24);
-			}
-
-			@Override
-			public IICategory getCategory()
-			{
-				return IICategory.WARFARE;
-			}
-		};
-		public static final IICreativeSubTab INTELLIGENCE = new IICreativeSubTab(3, "intelligence")
-		{
-			@Override
-			public Vec2f getIconUV()
-			{
-				return new Vec2f(140, 24);
-			}
-
-			@Override
-			public ResourceLocation getBackgroundImage()
-			{
-				return ResLoc.of(SUB_TEXTURE, "intelligence").withExtension(ResLoc.EXT_PNG);
-			}
-
-			@Override
-			public ResourceLocation getTabImage()
-			{
-				return ResLoc.of(IIReference.RES_TEXTURES_CREATIVE, "tabs_wood").withExtension(ResLoc.EXT_PNG);
-			}
-
-			@Override
-			public IICategory getCategory()
-			{
-				return IICategory.INTELLIGENCE;
-			}
-		};
-
-		public static final IICreativeSubTab RESOURCES = new IICreativeSubTab(4, "resources")
-		{
-			@Override
-			public Vec2f getIconUV()
-			{
-				return new Vec2f(112, 0);
-			}
-
-			@Override
-			public IICategory getCategory()
-			{
-				return IICategory.RESOURCE;
-			}
-		};
-
-		public final int tabIndex;
-		public final String tabLabel;
-		private ResourceLocation backgroundImage;
-
-		public IICreativeSubTab(int index, String label)
-		{
-			this.backgroundImage = ResLoc.of(SUB_TEXTURE, "items").withExtension(ResLoc.EXT_PNG);
-			this.tabIndex = index;
-			this.tabLabel = label;
-			CREATIVE_SUB_TABS[index] = this;
-		}
-
-		public Vec2f getIconUV()
-		{
-			return Vec2f.ZERO;
-		}
-
-		public IICategory getCategory() {return IICategory.ELECTRONICS;};
-
-		public Vec2f getTabUV() {return  new Vec2f(84, 24);}
-
-		public Vec2f getSelectedTabUV() { return new Vec2f(0, 24);}
-
-		public ResourceLocation getBackgroundImage()
-		{
-			return this.backgroundImage;
-		}
-		public ResourceLocation getTabImage()
-		{
-			return ResLoc.of(IIReference.RES_TEXTURES_CREATIVE, "tabs").withExtension(ResLoc.EXT_PNG);
 		}
 	}
 }

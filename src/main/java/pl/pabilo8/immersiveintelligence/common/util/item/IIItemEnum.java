@@ -11,28 +11,11 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 01.09.2022
  */
 public interface IIItemEnum extends ISerializableEnum
 {
-	enum IICategory
-	{
-		ELECTRONICS("electronics"), LOGISTICS("logistics"), WARFARE("warfare"), INTELLIGENCE("intelligence"), RESOURCE("resources");
-
-		public final String name;
-		IICategory(String name)
-		{
-			this.name = name;
-		}
-
-		@Override
-		public String toString()
-		{
-			return name;
-		}
-	}
-
 	/**
 	 * @return this SubItem's ID - the metadata number
 	 */
@@ -58,10 +41,11 @@ public interface IIItemEnum extends ISerializableEnum
 	default IICategory getCategory()
 	{
 		IIItemProperties tp = getProperties();
-		if (tp==null) return IICategory.ELECTRONICS; // Default to electronics
+		if(tp==null)
+			return null;
 		return tp.category();
 	}
-	
+
 	@Nonnull
 	default String[] getOreDict()
 	{
@@ -74,11 +58,11 @@ public interface IIItemEnum extends ISerializableEnum
 	@Nullable
 	default IIItemProperties getProperties()
 	{
-		return IIUtils.getEnumAnnotation(IIItemProperties.class,this);
+		return IIUtils.getEnumAnnotation(IIItemProperties.class, this);
 	}
 
 	@Retention(RetentionPolicy.RUNTIME)
-	@Target({ElementType.FIELD})
+	@Target({ElementType.FIELD, ElementType.TYPE})
 	@interface IIItemProperties
 	{
 		boolean hidden() default false;
@@ -87,6 +71,6 @@ public interface IIItemEnum extends ISerializableEnum
 
 		int stackSize() default -1;
 
-		IICategory category() default IICategory.ELECTRONICS;
+		IICategory category() default IICategory.NULL;
 	}
 }

@@ -27,7 +27,9 @@ import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.crafting.IIRecipes;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIIItemTextureOverride;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemStackHandler;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemStackHandler.IInventoryItem;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIBase;
@@ -44,6 +46,7 @@ import java.util.List;
  * @since 23.09.2023
  */
 @GeneratedItemModels(itemName = "casing_pouch", type = ItemModelType.ITEM_SIMPLE_AUTOREPLACED)
+@IIItemProperties(category = IICategory.TOOLS)
 public class ItemIICasingPouch extends ItemIIBase implements IIIItemTextureOverride, IInventoryItem, IGuiItem
 {
 	public ItemIICasingPouch()

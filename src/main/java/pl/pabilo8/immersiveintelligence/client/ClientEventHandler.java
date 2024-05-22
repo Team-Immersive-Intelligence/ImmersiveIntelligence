@@ -15,6 +15,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.inventory.GuiContainerCreative;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelBiped.ArmPose;
 import net.minecraft.client.multiplayer.WorldClient;
@@ -40,6 +41,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.client.event.EntityViewRenderEvent.FOVModifier;
+import net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.client.resource.IResourceType;
 import net.minecraftforge.client.resource.ISelectiveResourceReloadListener;
@@ -50,6 +52,8 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GLContext;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.api.ammo.penetration.DamageBlockPos;
@@ -62,6 +66,7 @@ import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IVehicleMultiPart;
 import pl.pabilo8.immersiveintelligence.client.fx.ScreenShake;
 import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleRegistry;
 import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleSystem;
+import pl.pabilo8.immersiveintelligence.client.gui.GuiWidgetAustralianTabs;
 import pl.pabilo8.immersiveintelligence.client.gui.inworld_overlay.InWorldOverlayBase;
 import pl.pabilo8.immersiveintelligence.client.gui.inworld_overlay.WrenchOverlay;
 import pl.pabilo8.immersiveintelligence.client.gui.overlay.GuiOverlayBase;
@@ -81,15 +86,13 @@ import pl.pabilo8.immersiveintelligence.client.render.item.ISpecificHandRenderer
 import pl.pabilo8.immersiveintelligence.client.render.item.MineDetectorRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.item.PrintedPageRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.CameraHandler;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Graphics;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools.TripodPeriscope;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Vehicles.FieldHowitzer;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.Mortar;
-import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.IIPotions;
-import pl.pabilo8.immersiveintelligence.common.IISounds;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.common.*;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.BlockIIMetalDevice.IIBlockTypes_MetalDevice;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityMachinegun;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityMortar;
@@ -125,6 +128,7 @@ import static pl.pabilo8.immersiveintelligence.api.ammo.utils.PenetrationCache.b
  * @author Pabilo8
  * @since 27-09-2019
  */
+@SideOnly(Side.CLIENT)
 public class ClientEventHandler implements ISelectiveResourceReloadListener
 {
 	private static final ListMultimap<GuiOverlayLayer, GuiOverlayBase> HUDs = MultimapBuilder.enumKeys(GuiOverlayLayer.class).arrayListValues().build();
@@ -292,12 +296,10 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 	{
 		CameraHandler.handleZoom();
 		if(CameraHandler.isEnabled())
-		{
 			if(CameraHandler.zoom==null)
 				CameraHandler.fovZoom = event.getFOV();
 			else
 				event.setFOV(event.getFOV()*CameraHandler.fovZoom);
-		}
 	}
 
 	@SubscribeEvent
@@ -347,9 +349,8 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 		//--- Overlay GUIs ---//
 
 		//Iterate HUD Layers
+		//Iterate HUDs
 		for(GuiOverlayLayer key : HUDs.keys())
-		{
-			//Iterate HUDs
 			for(GuiOverlayBase hud : HUDs.get(key))
 				if(hud.shouldDraw(player, mop))
 				{
@@ -357,7 +358,6 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 					hud.draw(player, mop, event.getResolution().getScaledWidth(), event.getResolution().getScaledHeight());
 					break;
 				}
-		}
 	}
 
 	@SubscribeEvent
@@ -476,11 +476,9 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 			else if(lowestRidden instanceof EntityMortar)
 			{
 				EntityMortar mg = (EntityMortar)lowestRidden;
+				//					CameraHandler.isZooming = false;
 				if(mg.shootingProgress!=0)
-				{
-//					CameraHandler.isZooming = false;
 					CameraHandler.fovZoom = 0;
-				}
 
 				CameraHandler.setCameraPos(mg.posX, mg.posY+0.75, mg.posZ);
 				CameraHandler.setCameraAngle(mg.rotationYaw, 1+(1f-mg.rotationPitch/-90f)*-1.5f, 0);
@@ -578,7 +576,6 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 
 		//Rightclick
 		if(event.getButton()==1)
-		{
 			if(ClientUtils.mc().player.getRidingEntity() instanceof EntityMachinegun)
 			{
 				NBTTagCompound tag = new NBTTagCompound();
@@ -586,7 +583,6 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 				tag.setBoolean("shoot", event.isButtonstate());
 				IIPacketHandler.sendToServer(new MessageEntityNBTSync(ClientUtils.mc().player.getRidingEntity(), tag));
 			}
-		}
 	}
 
 	/**
@@ -1314,9 +1310,8 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 	}
 
 	@SubscribeEvent
-	public static void guiOpen(GuiOpenEvent event)
+	public void onGuiOpen(GuiOpenEvent event)
 	{
-		// TODO: 26.08.2021 investigate
 		if(event.getGui() instanceof GuiManual)
 			IISkinHandler.getManualPages();
 		else if(ClientEventHandler.lastGui instanceof GuiManual)
@@ -1332,9 +1327,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 				{
 					IManualPage page = entry.getPages()[gui.page];
 					if(page instanceof IIManualPageContributorSkin)
-					{
 						name = ((IIManualPageContributorSkin)page).skin.name;
-					}
 				}
 			}
 			EntityPlayer p = ClientUtils.mc().player;
@@ -1351,17 +1344,30 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 				IIPacketHandler.sendToServer(new MessageManualClose(name==null?"": name));
 
 				if(name==null&&ItemNBTHelper.hasKey(target, "lastSkin"))
-				{
 					ItemNBTHelper.remove(target, "lastSkin");
-				}
 				else if(name!=null)
-				{
 					ItemNBTHelper.setString(target, "lastSkin", name);
-				}
 			}
 		}
 
 		ClientEventHandler.lastGui = event.getGui();
+	}
+
+	@SubscribeEvent
+	public void onInitGuiPost(InitGuiEvent.Post event)
+	{
+		//Add creative menu subtabs
+		if(event.getGui() instanceof GuiContainerCreative&&IIConfig.australianCreativeTabs)
+		{
+			GuiContainerCreative gui = (GuiContainerCreative)event.getGui();
+			try
+			{
+				event.getButtonList().add(new GuiWidgetAustralianTabs(gui.guiLeft-28, gui.guiTop, gui));
+			} catch(Exception ignored)
+			{
+				IILogger.warn("Failed to add subtabs to creative inventory");
+			}
+		}
 	}
 
 	@SubscribeEvent

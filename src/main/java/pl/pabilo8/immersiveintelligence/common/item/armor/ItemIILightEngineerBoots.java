@@ -19,6 +19,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.client.model.armor.ModelLightEngineerArmor;
+import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -29,6 +31,7 @@ import java.util.Map;
  * @author Pabilo8
  * @since 13.09.2020
  */
+@IIItemProperties(category = IICategory.WARFARE)
 public class ItemIILightEngineerBoots extends ItemIILightEngineerArmorBase implements IElectricEquipment
 {
 	public ItemIILightEngineerBoots()

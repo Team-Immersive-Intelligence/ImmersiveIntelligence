@@ -1,6 +1,13 @@
 
 #Items
 itemGroup.immersiveintelligence=Immersive Intelligence
+itemGroup.ii.resources=Resources
+itemGroup.ii.tools=Tools and Production
+itemGroup.ii.electronics=Data and Electronics
+itemGroup.ii.logistics=Logistics
+itemGroup.ii.warfare=Warfare
+itemGroup.ii.intelligence=Intelligence
+itemGroup.ii.rotary=Rotary Power
 
 item.immersiveintelligence.material.basic_circuit_board_raw.name=Raw Basic Circuit Board
 item.immersiveintelligence.material.basic_circuit_board_etched.name=Etched Basic Circuit Board

@@ -19,7 +19,9 @@ import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIWeaponUpgrade.
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ISerializableEnum;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
+import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
 import pl.pabilo8.modworks.annotations.item.GeneratedItemModels;
 
@@ -37,6 +39,7 @@ import java.util.stream.Collectors;
  * @author Pabilo8
  * @since 01-11-2019
  */
+@IIItemProperties(category = IICategory.WARFARE)
 public class ItemIIWeaponUpgrade extends ItemIISubItemsBase<WeaponUpgrades> implements IUpgrade
 {
 	public ItemIIWeaponUpgrade()

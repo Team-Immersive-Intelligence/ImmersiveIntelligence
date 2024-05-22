@@ -27,8 +27,10 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine.Magazines;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIIItemTextureOverride;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
 import pl.pabilo8.modworks.annotations.item.GeneratedItemModels;
 import pl.pabilo8.modworks.annotations.item.ItemModelType;
@@ -43,6 +45,7 @@ import java.util.Optional;
  * @author Pabilo8
  * @since 01-11-2019
  */
+@IIItemProperties(category = IICategory.WARFARE)
 public class ItemIIBulletMagazine extends ItemIISubItemsBase<Magazines> implements IIIItemTextureOverride, IAdvancedTooltipItem
 {
 	//--- Textures ---//

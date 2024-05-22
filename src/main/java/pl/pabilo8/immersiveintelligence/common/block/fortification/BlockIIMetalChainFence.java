@@ -6,6 +6,7 @@ import pl.pabilo8.immersiveintelligence.common.block.fortification.BlockIIMetalC
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IIBlockProperties;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IITileProviderEnum;
 import pl.pabilo8.immersiveintelligence.common.util.block.ItemBlockIIBase;
+import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 
 /**
  * @author Pabilo8
@@ -18,6 +19,7 @@ public class BlockIIMetalChainFence extends BlockIIFenceBase<MetalFortifications
 		super("metal_fortification", Material.IRON, PropertyEnum.create("type", MetalFortifications.class), ItemBlockIIBase::new);
 		setHardness(3.0F);
 		setResistance(15.0F);
+		setCategory(IICategory.RESOURCES);
 	}
 
 	public enum MetalFortifications implements IITileProviderEnum

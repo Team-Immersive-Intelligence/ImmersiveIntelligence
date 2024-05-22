@@ -13,6 +13,8 @@ import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoArtil
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoBase;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoBase.AmmoParts;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoCasing.Casings;
+import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
 import pl.pabilo8.modworks.annotations.item.GeneratedItemModels;
 import pl.pabilo8.modworks.annotations.item.ItemModelType;
 
@@ -26,6 +28,7 @@ import java.util.function.Function;
 //TODO: 08.03.2024 update values from notes
 @IIAmmoProjectile
 @GeneratedItemModels(itemName = "bullet_artillery_6bcal", type = ItemModelType.ITEM_SIMPLE_AUTOREPLACED, valueSet = AmmoParts.class)
+@IIItemProperties(category = IICategory.WARFARE)
 public class ItemIIAmmoArtilleryLight extends ItemIIAmmoBase<EntityAmmoArtilleryProjectile>
 {
 	public ItemIIAmmoArtilleryLight()

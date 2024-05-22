@@ -12,6 +12,8 @@ import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoGuide
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoBase;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoBase.AmmoParts;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoCasing.Casings;
+import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
 import pl.pabilo8.modworks.annotations.item.GeneratedItemModels;
 import pl.pabilo8.modworks.annotations.item.ItemModelType;
 
@@ -25,6 +27,7 @@ import java.util.function.Function;
 //TODO: 08.03.2024 update values from notes
 @IIAmmoProjectile
 @GeneratedItemModels(itemName = "missile_guided_6bCal", type = ItemModelType.ITEM_SIMPLE_AUTOREPLACED, valueSet = AmmoParts.class)
+@IIItemProperties(category = IICategory.WARFARE)
 public class ItemIIAmmoGuidedMissile extends ItemIIAmmoBase<EntityAmmoGuidedMissile>
 {
 	public ItemIIAmmoGuidedMissile()

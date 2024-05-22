@@ -37,7 +37,9 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoBase.AmmoParts;
+import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIIItemTextureOverride;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
 import pl.pabilo8.modworks.annotations.item.GeneratedItemModels;
 import pl.pabilo8.modworks.annotations.item.ItemModelType;
 
@@ -54,6 +56,7 @@ import java.util.function.Function;
  */
 @IIAmmoProjectile
 @GeneratedItemModels(itemName = "bullet_revolver_1bcal", type = ItemModelType.ITEM_SIMPLE_AUTOREPLACED, valueSet = AmmoParts.class)
+@IIItemProperties(category = IICategory.WARFARE)
 public class ItemIIAmmoRevolver extends ItemBullet implements IAmmoTypeItem<ItemIIAmmoRevolver, EntityAmmoProjectile>, BulletHandler.IBullet, IIIItemTextureOverride
 {
 	//I hope Blu starts designing things that are extendable, unlike this excuse of a bullet system

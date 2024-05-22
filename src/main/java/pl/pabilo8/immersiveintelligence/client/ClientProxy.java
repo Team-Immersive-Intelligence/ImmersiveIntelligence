@@ -134,10 +134,7 @@ import pl.pabilo8.immersiveintelligence.common.item.tools.ItemIIDrillHead.DrillH
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIWeaponUpgrade;
 import pl.pabilo8.immersiveintelligence.common.util.block.BlockIIBase;
 import pl.pabilo8.immersiveintelligence.common.util.block.BlockIIFluid;
-import pl.pabilo8.immersiveintelligence.common.util.item.IIIItemTextureOverride;
-import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
-import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIBase;
-import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
+import pl.pabilo8.immersiveintelligence.common.util.item.*;
 
 import javax.annotation.Nullable;
 import java.util.Locale;
@@ -312,7 +309,6 @@ public class ClientProxy extends CommonProxy
 		super.preInit();
 		MinecraftForge.EVENT_BUS.register(this);
 		MinecraftForge.EVENT_BUS.register(IIModelRegistry.INSTANCE);
-		MinecraftForge.EVENT_BUS.register(new IICretiveTabHandler());
 		OBJLoader.INSTANCE.addDomain(ImmersiveIntelligence.MODID);
 		IEOBJLoader.instance.addDomain(ImmersiveIntelligence.MODID);
 
@@ -420,8 +416,16 @@ public class ClientProxy extends CommonProxy
 		ApiUtils.getRegisterSprite(event.getMap(), ConveyorRubberDropper.texture_off);
 		ApiUtils.getRegisterSprite(event.getMap(), ConveyorRubberExtract.texture_casing);
 
-		// TODO: 20.03.2023 Update AMT models to use new mtl loading tech
+		//Rest of models
 		IIModelRegistry.INSTANCE.registerSprites(event.getMap());
+
+		//Creative tabs
+		for(IICategory category : IICategory.values())
+		{
+			if(category==IICategory.NULL)
+				continue;
+			ApiUtils.getRegisterSprite(event.getMap(), category.getCreativeIconTexture());
+		}
 
 		ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":blocks/metal_device/inserter/inserter_gray");
 		ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":blocks/metal_device/inserter/inserter_dim");

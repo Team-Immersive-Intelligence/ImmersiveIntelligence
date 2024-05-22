@@ -25,6 +25,8 @@ import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -37,6 +39,7 @@ import java.util.List;
  * Also required for burying mines
  * Can 'field reinforce' selected blocks to make them stronger / upgrade them
  */
+@IIItemProperties(category = IICategory.TOOLS)
 public class ItemIITrenchShovel extends ItemIEShovel
 {
 	public ItemIITrenchShovel()

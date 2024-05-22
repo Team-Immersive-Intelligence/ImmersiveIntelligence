@@ -84,6 +84,10 @@ public class IIConfigHandler
 				"minecraft:ender_dragon"
 		};
 
+		@Comment({"Whether the II Creative Tab should be divided into sub-tabs (Australian Tabs(tm))."})
+		@RequiresMcRestart
+		public static boolean australianCreativeTabs = true;
+
 		public static class Graphics
 		{
 			@Comment({"Enable Tactile AMT - dynamic collision boxes for multiblocks that use animations for positioning them."})

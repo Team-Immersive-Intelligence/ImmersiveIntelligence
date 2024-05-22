@@ -22,6 +22,8 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.naval_mine.EntityNavalMine;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoCasing.Casings;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -32,6 +34,7 @@ import java.util.function.Function;
  * @author Pabilo8
  * @since 30-08-2019
  */
+@IIItemProperties(category = IICategory.WARFARE)
 public class ItemIINavalMine extends ItemIIAmmoBase<EntityNavalMine> implements IItemScrollable
 {
 	public ItemIINavalMine()

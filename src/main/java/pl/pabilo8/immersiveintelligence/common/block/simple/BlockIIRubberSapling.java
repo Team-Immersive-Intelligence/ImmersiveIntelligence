@@ -22,6 +22,7 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIIRubberLeaves.RubberStuff;
 import pl.pabilo8.immersiveintelligence.common.util.block.BlockIIBase;
 import pl.pabilo8.immersiveintelligence.common.util.block.ItemBlockIIBase;
+import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import pl.pabilo8.immersiveintelligence.common.world.IIWorldGen;
 
 import javax.annotation.Nullable;
@@ -42,6 +43,7 @@ public class BlockIIRubberSapling extends BlockIIBase<RubberStuff> implements IG
 		setBlockLayer(BlockRenderLayer.CUTOUT_MIPPED);
 		setLightOpacity(0);
 		setFullCube(false);
+		setCategory(IICategory.RESOURCES);
 	}
 
 	@Override

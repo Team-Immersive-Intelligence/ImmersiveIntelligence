@@ -109,9 +109,6 @@ import pl.pabilo8.immersiveintelligence.common.util.block.BlockIIFluid;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IIBlockEnum;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IIBlockProperties;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
-import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IICategory;
-import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
-import pl.pabilo8.immersiveintelligence.common.util.item.IIItemStack;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIBase;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
@@ -225,8 +222,6 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 					//chad subtype dependent OreDict
 					for(String ore : subItem.getOreDict())
 						OreDictionary.registerOre(ore, new ItemStack(item, 1, meta));
-
-					IIContent.CATEGORY_ITEM_MAP.add(new IIItemStack(new ItemStack(item, 1, meta), subItem.getCategory()));
 				}
 			}
 			else if(item instanceof ItemIIBase)
@@ -235,9 +230,6 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 				if(ores!=null)
 					for(String ore : ores)
 						OreDictionary.registerOre(IIUtils.toCamelCase(ore, true), new ItemStack(item));
-
-				IIItemProperties props = ((ItemIIBase)item).getItemProperties();
-				IIContent.CATEGORY_ITEM_MAP.add(new IIItemStack(new ItemStack(item, 1), (props==null)?IICategory.ELECTRONICS: props.category()));
 			}
 
 		for(Block block : IIContent.BLOCKS)

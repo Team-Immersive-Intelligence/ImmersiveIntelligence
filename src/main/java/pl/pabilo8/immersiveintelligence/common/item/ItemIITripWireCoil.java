@@ -20,6 +20,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Wires;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIBase;
 
 import javax.annotation.Nonnull;
@@ -30,6 +32,7 @@ import java.util.List;
  * @author Pabilo8
  * @since 2019-05-31
  */
+@IIItemProperties(category = IICategory.WARFARE)
 public class ItemIITripWireCoil extends ItemIIBase implements IWireCoil
 {
 	public ItemIITripWireCoil()
