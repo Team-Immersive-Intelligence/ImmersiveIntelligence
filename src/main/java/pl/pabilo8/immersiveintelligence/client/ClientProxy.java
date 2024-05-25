@@ -79,7 +79,10 @@ import pl.pabilo8.immersiveintelligence.client.render.mechanical_device.WheelRen
 import pl.pabilo8.immersiveintelligence.client.render.metal_device.*;
 import pl.pabilo8.immersiveintelligence.client.render.multiblock.metal.*;
 import pl.pabilo8.immersiveintelligence.client.render.multiblock.wooden.*;
-import pl.pabilo8.immersiveintelligence.client.render.vehicle.*;
+import pl.pabilo8.immersiveintelligence.client.render.vehicle.DroneRenderer;
+import pl.pabilo8.immersiveintelligence.client.render.vehicle.FieldHowitzerRenderer;
+import pl.pabilo8.immersiveintelligence.client.render.vehicle.MortarRenderer;
+import pl.pabilo8.immersiveintelligence.client.render.vehicle.MotorbikeRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.ShaderUtil;
 import pl.pabilo8.immersiveintelligence.client.util.font.IIFontRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.font.IIFontRendererCustomGlyphs;
@@ -125,7 +128,6 @@ import pl.pabilo8.immersiveintelligence.common.entity.tactile.EntityAMTTactile;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityDrone;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityMotorbike;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityVehicleSeat;
-import pl.pabilo8.immersiveintelligence.common.entity.vehicle.towable.gun.EntityFieldGun;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.towable.gun.EntityFieldHowitzer;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoBase;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIINavalMine;
@@ -331,7 +333,7 @@ public class ClientProxy extends CommonProxy
 		registerEntityRenderer(EntityMotorbike.class, MotorbikeRenderer::new);
 		registerEntityRenderer(EntityDrone.class, DroneRenderer::new);
 		registerEntityRenderer(EntityFieldHowitzer.class, FieldHowitzerRenderer::new);
-		registerEntityRenderer(EntityFieldGun.class, FieldGunRenderer::new);
+//		registerEntityRenderer(EntityFieldGun.class, FieldGunRenderer::new);
 		registerEntityRenderer(EntityTripodPeriscope.class, TripodPeriscopeRenderer::new);
 		registerEntityRenderer(EntityMortar.class, MortarRenderer::new);
 		//Thanks Blu!

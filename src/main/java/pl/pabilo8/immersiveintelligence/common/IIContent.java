@@ -31,7 +31,7 @@ import pl.pabilo8.immersiveintelligence.common.block.mines.BlockIIRadioExplosive
 import pl.pabilo8.immersiveintelligence.common.block.mines.BlockIITellermine;
 import pl.pabilo8.immersiveintelligence.common.block.mines.BlockIITripmine;
 import pl.pabilo8.immersiveintelligence.common.block.mines.BlockIITripwireConnector;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.gate_multiblock.BlockIIFenceGateMultiblock;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.gate_multiblock.BlockIIGateMultiblock;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.BlockIIMetalMultiblock0;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.BlockIIMetalMultiblock1;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.weapon.*;
@@ -73,8 +73,6 @@ import pl.pabilo8.immersiveintelligence.common.util.IBatchOredictRegister;
 import pl.pabilo8.immersiveintelligence.common.util.block.BlockIIFluid;
 import pl.pabilo8.immersiveintelligence.common.util.block.BlockIISlab;
 import pl.pabilo8.immersiveintelligence.common.util.block.BlockIIStairs;
-import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
-import pl.pabilo8.immersiveintelligence.common.util.item.IIItemStack;
 import pl.pabilo8.immersiveintelligence.common.world.BiomeWasteland;
 
 import java.util.ArrayList;
@@ -92,7 +90,6 @@ public class IIContent
 {
 	public static final List<Block> BLOCKS = new ArrayList<>();
 	public static final List<Item> ITEMS = new ArrayList<>();
-	public static final List<IIItemStack> CATEGORY_ITEM_MAP = new ArrayList<>();
 	public static final List<Class<? extends TileEntity>> TILE_ENTITIES = new ArrayList<>();
 	public static final List<IMultiblock> MULTIBLOCKS = new ArrayList<>();
 
@@ -306,7 +303,7 @@ public class IIContent
 	//multiblocks
 	public static final BlockIIMetalMultiblock0 blockMetalMultiblock0 = new BlockIIMetalMultiblock0();
 	public static final BlockIIMetalMultiblock1 blockMetalMultiblock1 = new BlockIIMetalMultiblock1();
-	public static final BlockIIFenceGateMultiblock blockFenceGateMultiblock = new BlockIIFenceGateMultiblock();
+	public static final BlockIIGateMultiblock blockFenceGateMultiblock = new BlockIIGateMultiblock();
 
 	//fluid blocks
 	public static BlockIIFluid blockFluidInkBlack, blockFluidInkCyan, blockFluidInkMagenta, blockFluidInkYellow;

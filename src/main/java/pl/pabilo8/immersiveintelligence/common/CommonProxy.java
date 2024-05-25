@@ -95,7 +95,6 @@ import pl.pabilo8.immersiveintelligence.common.entity.tactile.EntityAMTTactile;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityDrone;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityMotorbike;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityVehicleSeat;
-import pl.pabilo8.immersiveintelligence.common.entity.vehicle.towable.gun.EntityFieldGun;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.towable.gun.EntityFieldHowitzer;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerUpgrade;
 import pl.pabilo8.immersiveintelligence.common.item.ItemIIMinecart.Minecarts;
@@ -562,7 +561,7 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 
 		registerEntity(i++, EntityMotorbike.class, "motorbike", 64, 20, true);
 		registerEntity(i++, EntityFieldHowitzer.class, "field_howitzer", 64, 20, true);
-		registerEntity(i++, EntityFieldGun.class, "field_gun", 64, 20, true);
+//		registerEntity(i++, EntityFieldGun.class, "field_gun", 64, 20, true);
 		registerEntity(i++, EntityVehicleSeat.class, "seat", 64, 1, true);
 
 		registerEntity(i++, EntityTripodPeriscope.class, "tripod_periscope", 64, 1, true);
