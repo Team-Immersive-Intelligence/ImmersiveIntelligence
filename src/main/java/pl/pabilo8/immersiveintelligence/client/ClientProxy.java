@@ -95,7 +95,6 @@ import pl.pabilo8.immersiveintelligence.common.block.data_device.tileentity.Tile
 import pl.pabilo8.immersiveintelligence.common.block.data_device.tileentity.TileEntityTimedBuffer;
 import pl.pabilo8.immersiveintelligence.common.block.fortification.tileentity.TileEntityMineSign;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.BlockIIMetalDevice;
-import pl.pabilo8.immersiveintelligence.common.block.metal_device.BlockIINewspaperStand;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.TileEntityFluidInserter;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.TileEntityLatexCollector;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.conveyors.*;

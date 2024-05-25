@@ -10,7 +10,6 @@ import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.model.Models;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fluids.Fluid;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
@@ -21,7 +20,6 @@ import pl.pabilo8.immersiveintelligence.common.block.fortification.*;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.BlockIIMetalDecoration;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.BlockIIMetalDevice;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.BlockIIMetalDevice1;
-import pl.pabilo8.immersiveintelligence.common.block.metal_device.BlockIINewspaperStand;
 import pl.pabilo8.immersiveintelligence.common.block.mines.BlockIIRadioExplosives;
 import pl.pabilo8.immersiveintelligence.common.block.mines.BlockIITellermine;
 import pl.pabilo8.immersiveintelligence.common.block.mines.BlockIITripmine;
@@ -257,7 +255,6 @@ public class IIContent
 	public static BlockIIMetalDevice1 blockMetalDevice1 = new BlockIIMetalDevice1();
 	public static BlockIIDataDevice blockDataConnector = new BlockIIDataDevice();
 	public static BlockIISmallCrate blockSmallCrate = new BlockIISmallCrate();
-	public static BlockIINewspaperStand blocknewspaperstand = new BlockIINewspaperStand();
 
 	//ammunition
 	public static BlockIIMineSign blockMineSign = new BlockIIMineSign();
@@ -299,8 +296,6 @@ public class IIContent
 
 	//biomes
 	public static BiomeWasteland biomeWasteland = new BiomeWasteland();
-
-
 
 
 	static
