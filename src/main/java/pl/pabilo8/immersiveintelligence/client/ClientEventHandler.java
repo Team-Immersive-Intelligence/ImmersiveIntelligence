@@ -1362,7 +1362,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 			GuiContainerCreative gui = (GuiContainerCreative)event.getGui();
 			try
 			{
-				event.getButtonList().add(new GuiWidgetAustralianTabs(gui.guiLeft-28, gui.guiTop, gui));
+				event.getButtonList().add(new GuiWidgetAustralianTabs(gui.guiLeft-27, gui.guiTop+2, gui));
 			} catch(Exception ignored)
 			{
 				IILogger.warn("Failed to add subtabs to creative inventory");

@@ -14,11 +14,11 @@ import net.minecraftforge.fluids.capability.wrappers.FluidBucketWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
+import pl.pabilo8.immersiveintelligence.client.gui.GuiWidgetAustralianTabs;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.BlockIIMetalDecoration.IIBlockTypes_MetalDecoration;
 import pl.pabilo8.immersiveintelligence.common.block.mines.BlockIIMine.ItemBlockMineBase;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine.Magazines;
-import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.block.BlockIIBase;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IIBlockEnum;
 import pl.pabilo8.immersiveintelligence.common.util.block.ItemBlockIIBase;
@@ -43,6 +43,8 @@ public class IICreativeTab extends CreativeTabs
 {
 	public static IICategory selectedCategory = IICategory.RESOURCES;
 	public static List<Fluid> fluidBucketMap = new ArrayList<>();
+	@SideOnly(Side.CLIENT)
+	private GuiWidgetAustralianTabs hovered = null;
 
 	public IICreativeTab(String name)
 	{
@@ -57,12 +59,6 @@ public class IICreativeTab extends CreativeTabs
 	}
 
 	@Override
-	public int getLabelColor()
-	{
-		return IIReference.COLOR_H2;
-	}
-
-	@Override
 	public ResourceLocation getBackgroundImage()
 	{
 		return selectedCategory.getCreativeTabTexture();
@@ -70,16 +66,22 @@ public class IICreativeTab extends CreativeTabs
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public String getBackgroundImageName()
+	public String getTranslatedTabLabel()
 	{
-		return super.getBackgroundImageName();
+		return "itemGroup.immersiveintelligence";
 	}
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public String getTranslatedTabLabel()
+	public boolean isTabInFirstRow()
 	{
-		return "itemGroup.immersiveintelligence";
+		//The trick to outtrick them all
+		if(hovered!=null)
+		{
+			hovered.drawHovered();
+			hovered = null;
+		}
+		return super.isTabInFirstRow();
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -126,7 +128,7 @@ public class IICreativeTab extends CreativeTabs
 					if(subItem.isHidden())
 						continue;
 					IICategory category = subItem.getCategory();
-					if(category==null)
+					if(category==IICategory.NULL)
 						category = parentCategory;
 
 					if(category==selectedCategory)
@@ -314,5 +316,11 @@ public class IICreativeTab extends CreativeTabs
 			case BLACK:
 				return "Schwarz";
 		}
+	}
+
+	@SideOnly(Side.CLIENT)
+	public void setHoveringText(GuiWidgetAustralianTabs tabs)
+	{
+		this.hovered = tabs;
 	}
 }

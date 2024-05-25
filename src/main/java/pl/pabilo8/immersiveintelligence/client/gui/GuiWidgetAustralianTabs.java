@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.client.gui;
 
-import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainerCreative;
@@ -22,6 +21,8 @@ import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 public class GuiWidgetAustralianTabs extends GuiButton
 {
 	private final GuiContainerCreative gui;
+	private int lastMouseX, lastMouseY;
+	private IICategory hoveredTab;
 
 	public GuiWidgetAustralianTabs(int x, int y, GuiContainerCreative gui)
 	{
@@ -42,9 +43,9 @@ public class GuiWidgetAustralianTabs extends GuiButton
 		GlStateManager.enableBlend();
 
 		mc.getTextureManager().bindTexture(IICreativeTab.selectedCategory.getCreativeTabTexture());
-		this.drawTexturedModalRect(x+28, y, 0, 0, gui.xSize, 16);
+		this.drawTexturedModalRect(x+26, y-2, 0, 0, gui.xSize, 16);
 
-		IICategory hoveredTab = IICategory.NULL;
+		hoveredTab = IICategory.NULL;
 		int y = this.y;
 		for(IICategory subTab : IICategory.values())
 		{
@@ -59,19 +60,22 @@ public class GuiWidgetAustralianTabs extends GuiButton
 
 			//Draw tab
 			if(subTab==IICreativeTab.selectedCategory)
-				this.drawTexturedModalRect(x, y, hovered?0: 28, 136, 28, 24);
+				this.drawTexturedModalRect(x, y, 0, 136, 28, 24);
 			else
-				this.drawTexturedModalRect(x, y, hovered?84: 56, 136, 28, 24);
+				this.drawTexturedModalRect(x, y, hovered?28: 56, 136, 28, 24);
 
 			//Draw icon
-			ClientUtils.bindAtlas();
-			this.drawTexturedModalRect(x+7, y+3, ClientUtils.getSprite(subTab.getCreativeIconTexture()), 16, 16);
+			this.drawTexturedModalRect(x+3, y, 84, 136, 24, 24);
 			y += 22;
 		}
 
 		//Draw tooltip
 		if(hoveredTab!=IICategory.NULL)
-			gui.drawHoveringText(I18n.format("itemGroup.ii."+hoveredTab.getName()), mouseX, mouseY);
+		{
+			lastMouseX = mouseX;
+			lastMouseY = mouseY;
+			IIContent.II_CREATIVE_TAB.setHoveringText(this);
+		}
 	}
 
 	@Override
@@ -85,5 +89,10 @@ public class GuiWidgetAustralianTabs extends GuiButton
 			return false;
 		}
 		return false;
+	}
+
+	public void drawHovered()
+	{
+		gui.drawHoveringText(I18n.format("itemGroup.ii."+hoveredTab.getName()), lastMouseX, lastMouseY);
 	}
 }
