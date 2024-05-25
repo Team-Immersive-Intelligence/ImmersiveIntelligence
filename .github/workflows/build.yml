@@ -13,6 +13,13 @@ jobs:
     env:
       GITHUB_USERNAME: 'CarverBot'
       GITHUB_TOKEN: ${{ secrets.OPTIMIZATION_TOKEN }}
+      MINECRAFT_VERSION: 1.12.2                        
+      JAVA_VERSION: 8      
+      VERSION: 1.12.2
+      RELEASE_NAME: Immersive-Intelligence-0.3.1-dev$
+      MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+      CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
+      
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
@@ -134,4 +141,75 @@ jobs:
         with:
           name: 'MY_VARIABLE'
           token: ${{ secrets.REPO_ACCESS_TOKEN }}
+
+
+      #Updates build version number for publishing       
+      - name: Increment Version Variable
+        id: increment_version
+        uses: action-pack/increment@v2
+        with:
+          name: 'RELEASE_NAME'
+          value: 'dev'
+
+        #Action for Publishing to curseforge, MC-Publish
+      - name: Publish Curseforge
+        uses: Kir-Antipov/mc-publish@v3.3                                   
+        with:
+        
+          curseforge-id: 344344                                             
+          curseforge-token: "${{env.CURSEFORGE_TOKEN}}"
+                                
+          loaders: forge
+          game-versions: "${{env.MINECRAFT_VERSION}}"
+          java: "${{env.JAVA_VERSION}}"
+          
+          dependencies: |
+            immersive-engineering(required)
+            immersive-energy(optional)
+            mct-immersive-technology(optional)
+            crafttweaker(optional)
+            ctm(optional)
+
+          files: |
+            build/libs/*.jar
+            !build/libs/*-core.jar
+
+              retry-attempts: 2
+              retry-delay: 10000
+              fail-mode: fail
+
+
+        #Action for Publishing to Modrinth, MC-Publish
+      - name: Publish Modrith
+        uses: Kir-Antipov/mc-publish@v3.3                                   
+        with:
+
+          modrinth-id: q19xbT91                                             
+          modrinth-token: "${{env.MODRINTH_TOKEN}}"
+          modrinth-featured: false
+
+          loaders: forge
+          game-versions: "${{env.MINECRAFT_VERSION}}"
+          java: "${{env.JAVA_VERSION}}"
+          
+          dependencies: |
+            immersive-engineering(required)
+            immersive-energy(optional)
+            mct-immersive-technology(optional)
+            crafttweaker(optional)
+            ctm(optional)
+
+          files: |
+            build/libs/*.jar
+            !build/libs/*-core.jar
+
+              retry-attempts: 2
+              retry-delay: 10000
+              fail-mode: fail
+
+       
+
+
+
+
 

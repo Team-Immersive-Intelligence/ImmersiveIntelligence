@@ -28,7 +28,6 @@ import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IITi
 import pl.pabilo8.immersiveintelligence.common.util.block.ItemBlockIIBase;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IExplosionResistantMultiblock;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.ILadderMultiblock;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -42,7 +41,7 @@ public abstract class BlockIIMultiblock<E extends Enum<E> & IITileMultiblockEnum
 {
 	public BlockIIMultiblock(String name, Material material, PropertyEnum<E> mainProperty, Object... additionalProperties)
 	{
-		super(name, material, mainProperty, ItemBlockIIBase::new, combineProperties(additionalProperties, IEProperties.FACING_HORIZONTAL, IEProperties.MULTIBLOCKSLAVE));
+		super(name, material, mainProperty, ItemBlockIIBase::new, combineProperties(additionalProperties, IEProperties.MULTIBLOCKSLAVE));
 
 		//try getting multiblocks, if null, leave it alone
 		for(E v : enumValues)
@@ -59,23 +58,11 @@ public abstract class BlockIIMultiblock<E extends Enum<E> & IITileMultiblockEnum
 
 		setLightOpacity(0);
 		setFullCube(false);
-		setBlockLayer(BlockRenderLayer.CUTOUT_MIPPED);
+		setBlockLayer(BlockRenderLayer.CUTOUT_MIPPED, BlockRenderLayer.SOLID);
 		setToolTypes(IIReference.TOOL_HAMMER);
 	}
 
 	//--- Other Methods ---//
-
-	@Override
-	public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos)
-	{
-		state = super.getActualState(state, world, pos);
-		TileEntity tile = world.getTileEntity(pos);
-
-		if(tile instanceof TileEntityMultiblockIIConnectable)
-			state = applyProperty(state, IEProperties.BOOLEANS[1], ((TileEntityMultiblockIIConnectable<?>)tile).isPOI(MultiblockPOI.WIRE_MOUNT));
-
-		return state;
-	}
 
 	@Override
 	public void breakBlock(World world, BlockPos pos, IBlockState state)

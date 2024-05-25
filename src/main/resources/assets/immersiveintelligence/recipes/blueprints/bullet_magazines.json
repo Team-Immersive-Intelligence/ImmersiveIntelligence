@@ -1,0 +1,30 @@
+{"type": "forge:ore_shaped",
+"result": {
+  "item": "immersiveengineering:blueprint",
+  "nbt": {
+    "blueprint": "bullet_magazines"
+  }
+},
+"pattern": [
+  "SIS",
+  "DDD",
+  "PPP"
+],
+"key": {
+  "I": {
+    "item": "immersiveengineering:material",
+      "data": 9
+  },
+  "S": {
+    "type": "forge:ore_dict",
+    "ore": "plateSteel"
+  },
+  "D": {
+    "type": "forge:ore_dict",
+    "ore": "dyeBlue"
+  },
+  "P": {
+    "item": "minecraft:paper"
+  }
+}
+}

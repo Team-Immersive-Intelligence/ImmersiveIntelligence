@@ -64,7 +64,7 @@ public class ItemIIMachinegun extends ItemIIUpgradableTool implements IAdvancedF
 	{
 		super("machinegun", 1, "MACHINEGUN");
 		//Use interfaces pls Blu
-		fixupItem();
+		IIUtils.fixupItem(this, "machinegun");
 	}
 
 	@Override
@@ -212,19 +212,6 @@ public class ItemIIMachinegun extends ItemIIUpgradableTool implements IAdvancedF
 		}
 	}
 
-	public void fixupItem()
-	{
-		//First, get the item out of IE's registries.
-		Item rItem = IEContent.registeredIEItems.remove(IEContent.registeredIEItems.size()-1);
-		if(rItem!=this) throw new IllegalStateException("fixupItem was not called at the appropriate time");
-
-		//Now, reconfigure the block to match our mod.
-		this.setUnlocalizedName(ImmersiveIntelligence.MODID+"."+this.itemName);
-		this.setCreativeTab(IIContent.II_CREATIVE_TAB);
-
-		//And add it to our registries.
-		IIContent.ITEMS.add(this);
-	}
 
 	@Override
 	public void removeFromWorkbench(EntityPlayer player, ItemStack stack)

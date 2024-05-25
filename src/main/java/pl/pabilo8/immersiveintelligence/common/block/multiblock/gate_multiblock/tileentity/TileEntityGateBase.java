@@ -329,6 +329,6 @@ public abstract class TileEntityGateBase<T extends TileEntityGateBase<T>> extend
 	@Override
 	public Vec3d getConnectionOffset(Connection con)
 	{
-		return new Vec3d(0.5, 0.5, 0.5);
+		return new Vec3d(facing.getDirectionVec()).scale(0.25).addVector(0.5, 0.725, 0.5);
 	}
 }

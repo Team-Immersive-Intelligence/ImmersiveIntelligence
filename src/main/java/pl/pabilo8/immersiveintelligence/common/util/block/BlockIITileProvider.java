@@ -14,6 +14,7 @@ import blusunrize.immersiveengineering.common.blocks.TileEntityMultiblockPart;
 import blusunrize.immersiveengineering.common.util.Utils;
 import blusunrize.immersiveengineering.common.util.inventory.IEInventoryHandler;
 import blusunrize.immersiveengineering.common.util.inventory.IIEInventory;
+import com.google.common.collect.ImmutableSet;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
@@ -393,34 +394,38 @@ public abstract class BlockIITileProvider<E extends Enum<E> & IITileProviderEnum
 	public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos)
 	{
 		state = super.getExtendedState(state, world, pos);
-		if(state instanceof IExtendedBlockState)
-		{
-			IExtendedBlockState extended = (IExtendedBlockState)state;
-			TileEntity te = world.getTileEntity(pos);
-			if(te!=null)
-			{
-				if(te instanceof IConfigurableSides)
-					for(int i = 0; i < 6; i++)
-						if(extended.getUnlistedNames().contains(IEProperties.SIDECONFIG[i]))
-							extended = extended.withProperty(IEProperties.SIDECONFIG[i], ((IConfigurableSides)te).getSideConfig(i));
-				if(te instanceof IAdvancedHasObjProperty)
-					extended = extended.withProperty(Properties.AnimationProperty, ((IAdvancedHasObjProperty)te).getOBJState());
-				else if(te instanceof IHasObjProperty)
-					extended = extended.withProperty(Properties.AnimationProperty, new OBJState(((IHasObjProperty)te).compileDisplayList(), true));
-				if(te instanceof IDynamicTexture)
-					extended = extended.withProperty(IEProperties.OBJ_TEXTURE_REMAP, ((IDynamicTexture)te).getTextureReplacements());
-				if(te instanceof IOBJModelCallback)
-					extended = extended.withProperty(IOBJModelCallback.PROPERTY, (IOBJModelCallback<?>)te);
-				if(te.hasCapability(CapabilityShader.SHADER_CAPABILITY, null))
-					extended = extended.withProperty(CapabilityShader.BLOCKSTATE_PROPERTY, te.getCapability(CapabilityShader.SHADER_CAPABILITY, null));
-				if(te instanceof IPropertyPassthrough&&((IExtendedBlockState)state).getUnlistedNames().contains(IEProperties.TILEENTITY_PASSTHROUGH))
-					extended = extended.withProperty(IEProperties.TILEENTITY_PASSTHROUGH, te);
+		if(!(state instanceof IExtendedBlockState))
+			return state;
 
-				if(te instanceof IImmersiveConnectable&&((IExtendedBlockState)state).getUnlistedNames().contains(IEProperties.CONNECTIONS))
-					extended = extended.withProperty(IEProperties.CONNECTIONS, IIUtils.genConnectableBlockstate(((TileEntity & IImmersiveConnectable)te)));
-			}
-			state = extended;
+		IExtendedBlockState extended = (IExtendedBlockState)state;
+		TileEntity te = world.getTileEntity(pos);
+
+		if(te!=null)
+		{
+			if(te instanceof IConfigurableSides)
+				for(int i = 0; i < 6; i++)
+					if(extended.getUnlistedNames().contains(IEProperties.SIDECONFIG[i]))
+						extended = extended.withProperty(IEProperties.SIDECONFIG[i], ((IConfigurableSides)te).getSideConfig(i));
+			if(te instanceof IAdvancedHasObjProperty)
+				extended = extended.withProperty(Properties.AnimationProperty, ((IAdvancedHasObjProperty)te).getOBJState());
+			else if(te instanceof IHasObjProperty)
+				extended = extended.withProperty(Properties.AnimationProperty, new OBJState(((IHasObjProperty)te).compileDisplayList(), true));
+			if(te instanceof IDynamicTexture)
+				extended = extended.withProperty(IEProperties.OBJ_TEXTURE_REMAP, ((IDynamicTexture)te).getTextureReplacements());
+			if(te instanceof IOBJModelCallback)
+				extended = extended.withProperty(IOBJModelCallback.PROPERTY, (IOBJModelCallback<?>)te);
+			if(te.hasCapability(CapabilityShader.SHADER_CAPABILITY, null))
+				extended = extended.withProperty(CapabilityShader.BLOCKSTATE_PROPERTY, te.getCapability(CapabilityShader.SHADER_CAPABILITY, null));
+			if(te instanceof IPropertyPassthrough&&((IExtendedBlockState)state).getUnlistedNames().contains(IEProperties.TILEENTITY_PASSTHROUGH))
+				extended = extended.withProperty(IEProperties.TILEENTITY_PASSTHROUGH, te);
 		}
+
+		if(te instanceof IImmersiveConnectable&&((IExtendedBlockState)state).getUnlistedNames().contains(IEProperties.CONNECTIONS))
+			extended = extended.withProperty(IEProperties.CONNECTIONS, IIUtils.genConnectableBlockstate(((TileEntity & IImmersiveConnectable)te)));
+		else if(hasConnections)
+			extended = extended.withProperty(IEProperties.CONNECTIONS, ImmutableSet.of());
+
+		state = extended;
 
 		return state;
 	}
@@ -498,10 +503,10 @@ public abstract class BlockIITileProvider<E extends Enum<E> & IITileProviderEnum
 		}
 		if(tile instanceof IUpgradableMachine&&IIUtils.isWrench(heldItem))
 		{
-			IUpgradableMachine u = ((IUpgradableMachine)tile);
-			TileEntity master = u.getUpgradeMaster();
-			if(u.getInstallProgress()==0&&master!=null)
+			IUpgradableMachine u = ((IUpgradableMachine)tile).getUpgradeMaster();
+			if(u!=null&&u.getInstallProgress()==0)
 			{
+				TileEntity master = (TileEntity)u;
 				player.openGui(ImmersiveIntelligence.INSTANCE, IIGuiList.GUI_UPGRADE.ordinal(), master.getWorld(), master.getPos().getX(),
 						master.getPos().getY(), master.getPos().getZ());
 				return true;
