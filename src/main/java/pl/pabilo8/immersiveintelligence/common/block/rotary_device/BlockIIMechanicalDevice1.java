@@ -23,6 +23,7 @@ import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.Enum
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IIBlockProperties;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IITileProviderEnum;
 import pl.pabilo8.immersiveintelligence.common.util.block.ItemBlockIIBase;
+import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 
 import javax.annotation.Nonnull;
 
@@ -47,6 +48,7 @@ public class BlockIIMechanicalDevice1 extends BlockIITileProvider<IIBlockTypes_M
 				IEProperties.SIDECONFIG[3], IEProperties.SIDECONFIG[4], IEProperties.SIDECONFIG[5]);
 		setHardness(3.0F);
 		setResistance(15.0F);
+		setCategory(IICategory.ROTARY);
 		setBlockLayer(BlockRenderLayer.CUTOUT);
 		this.setMetaMobilityFlag(IIBlockTypes_MechanicalDevice1.MECHANICAL_PUMP, EnumPushReaction.BLOCK);
 		setToolTypes(IIReference.TOOL_HAMMER);

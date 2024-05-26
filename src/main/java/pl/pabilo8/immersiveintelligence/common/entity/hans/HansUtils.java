@@ -33,6 +33,7 @@ import java.util.function.Function;
  */
 public class HansUtils
 {
+
 	public static final HashMap<Item, Function<EntityHans, AIHansHandWeapon>> WEAPON_MAP = new HashMap<>();
 
 	public static void init()

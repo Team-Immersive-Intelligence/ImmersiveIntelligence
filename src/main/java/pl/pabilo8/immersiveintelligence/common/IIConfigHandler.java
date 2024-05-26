@@ -84,6 +84,10 @@ public class IIConfigHandler
 				"minecraft:ender_dragon"
 		};
 
+		@Comment({"Whether the II Creative Tab should be divided into sub-tabs (Australian Tabs(tm))."})
+		@RequiresMcRestart
+		public static boolean australianCreativeTabs = true;
+
 		public static class Graphics
 		{
 			@Comment({"Enable Tactile AMT - dynamic collision boxes for multiblocks that use animations for positioning them."})
@@ -92,7 +96,10 @@ public class IIConfigHandler
 			@Comment({"Whether gun recoil is visible in first-person view."})
 			public static boolean cameraRecoil = true;
 
-			@Comment({"Roll the camera when turning the motorbike."})
+			@Comment({"Whether screen shake effect should be displayed."})
+			public static boolean cameraScreenShake = true;
+
+			@Comment({"Enable camera roll motion."})
 			public static boolean cameraRoll = false;
 
 			@Comment({"Determines how hand animations should be displayed on II models",
@@ -106,6 +113,22 @@ public class IIConfigHandler
 			@Comment({"Max amount of block penetrations that will be rendered. 0 will disable rendering."})
 			public static int maxPenetratedBlocks = 64;
 
+			@RangeInt(min = 0)
+			@Comment({"Max amount of particles that will be simulated."})
+			public static int maxSimulatedParticles = 2000;
+
+			@RangeInt(min = 0)
+			@Comment({"Max amount of particles that will be drawn. Should be less or equal to maxSimulatedParticles."})
+			public static int maxDrawnParticles = 1000;
+
+			@Comment({"Determines how look of II explosion particles",
+					"0 - vanilla",
+					"1 - vanilla enhanced with block particles",
+					"2 - overhauled",
+					"3 - overhauled + debris"
+			})
+			@RangeInt(min = 0, max = 3)
+			public static int explosionParticlesStyle = 3;
 		}
 
 		public static class Ores
@@ -1527,7 +1550,10 @@ public class IIConfigHandler
 
 		public static class Ammunition
 		{
-			@Comment({"Default velocity of a light howitzer shell."})
+			@Comment({"Whether explosive ammo components can break blocks"})
+			public static boolean blockDamage = true;
+
+			@Comment({"Default velocity of a mortar shell."})
 			public static float mortarVelocity = 8f;
 
 			@Comment({"Default velocity of a light howitzer shell."})
@@ -1676,6 +1702,10 @@ public class IIConfigHandler
 			@Comment({"Torque multiplier for the windmill."})
 			@Mapped(mapClass = IIConfigHandler.class, mapName = "manual_floatA")
 			public static float dynamoWatermillTorque = 24f;
+
+			@Comment({"Torque multiplier for the axle from MysticalMechanics."})
+			@Mapped(mapClass = Config.class, mapName = "manual_floatA")
+			public static float dynamoAxleTorque = 18f;
 		}
 	}
 

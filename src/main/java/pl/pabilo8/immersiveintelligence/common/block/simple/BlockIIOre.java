@@ -10,11 +10,11 @@ import net.minecraft.world.IBlockAccess;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIIOre.Ores;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.material.ItemIIMaterialGem.MaterialsGem;
-import pl.pabilo8.immersiveintelligence.common.util.IBatchOredictRegister;
 import pl.pabilo8.immersiveintelligence.common.util.block.BlockIIBase;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IIBlockEnum;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IIBlockProperties;
 import pl.pabilo8.immersiveintelligence.common.util.block.ItemBlockIIBase;
+import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 
 import javax.annotation.Nonnull;
 
@@ -30,6 +30,7 @@ public class BlockIIOre extends BlockIIBase<Ores>
 		setFullCube(true);
 		setHardness(3.0F);
 		setResistance(10.0F);
+		setCategory(IICategory.RESOURCES);
 	}
 
 	public enum Ores implements IIBlockEnum

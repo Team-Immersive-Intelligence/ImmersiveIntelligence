@@ -9,7 +9,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.ITabbedGui;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.GuiElementProgressBar;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.GuiLabelNoShadow;
@@ -17,7 +16,8 @@ import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonSwi
 import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonTab;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiSliderII;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityEmplacement;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerEmplacement;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerEmplacement.ContainerEmplacementStorage;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
@@ -46,7 +46,7 @@ public abstract class GuiEmplacement extends GuiIEContainerBase implements ITabb
 
 	public GuiEmplacement(EntityPlayer player, TileEntityEmplacement tile, IIGuiList gui)
 	{
-		super(gui==IIGuiList.GUI_EMPLACEMENT_STORAGE?new ContainerEmplacementStorage(player, tile):new ContainerEmplacement(player, tile));
+		super(gui==IIGuiList.GUI_EMPLACEMENT_STORAGE?new ContainerEmplacementStorage(player, tile): new ContainerEmplacement(player, tile));
 		this.tile = tile;
 		thisGui = gui;
 		this.xSize = 240;
@@ -160,16 +160,17 @@ public abstract class GuiEmplacement extends GuiIEContainerBase implements ITabb
 
 	protected GuiButtonSwitch addSwitch(int x, int y, int textWidth, int textColor, int color1, int color2, boolean state, String name, boolean firstTime)
 	{
-		return addButton(new GuiButtonSwitch(buttonList.size(), guiLeft+x, guiTop+y, textWidth, 8, 18, 9, 18, 52, state, TEXTURE_ICONS, textColor, color1, color2, name,firstTime));
+		return addButton(new GuiButtonSwitch(buttonList.size(), guiLeft+x, guiTop+y, textWidth, 8, 18, 9, 18, 52, state, TEXTURE_ICONS, textColor, color1, color2, name, firstTime));
 	}
 
 	protected GuiButtonSwitch addSwitch(int x, int y, int textWidth, int textColor, int color1, int color2, boolean state, String name)
 	{
-		return addSwitch(x, y, textWidth, textColor, color1, color2, state, name,false);
+		return addSwitch(x, y, textWidth, textColor, color1, color2, state, name, false);
 	}
+
 	protected GuiSliderII addSlider(int x, int y, int width, int textColor, float value, String name)
 	{
-		return addButton(new GuiSliderII(buttonList.size(),guiLeft+x, guiTop+y, width, name, value, textColor));
+		return addButton(new GuiSliderII(buttonList.size(), guiLeft+x, guiTop+y, width, name, value, textColor));
 	}
 
 	protected GuiLabelNoShadow addLabel(int x, int y, int textColor, String... text)

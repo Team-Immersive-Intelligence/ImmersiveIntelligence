@@ -1,0 +1,12 @@
+# Made by Pabilo8 with Blockbench
+
+newmtl obsidian
+map_Kd immersiveintelligence:block/obsidian
+newmtl quartz_block_bottom
+map_Kd immersiveintelligence:block/quartz_block_bottom
+newmtl bottle_beer3
+map_Kd immersiveintelligence:block/bottle_beer3
+newmtl glass
+map_Kd immersiveintelligence:block/glass
+newmtl ice
+map_Kd immersiveintelligence:block/ice

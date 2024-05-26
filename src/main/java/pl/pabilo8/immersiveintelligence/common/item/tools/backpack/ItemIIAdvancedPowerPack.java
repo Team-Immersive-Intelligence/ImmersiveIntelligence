@@ -33,11 +33,13 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.model.armor.ModelAdvancedPowerpack;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -48,6 +50,7 @@ import java.util.Map;
  * @author Pabilo8
  * @since 23.01.2021
  */
+@IIItemProperties(category = IICategory.TOOLS)
 public class ItemIIAdvancedPowerPack extends ItemArmor implements ISpecialArmor, IIEEnergyItem, IElectricEquipment, IColouredItem
 {
 	public static final String NBT_Colour = "II:AdvancedPowerpackColour";

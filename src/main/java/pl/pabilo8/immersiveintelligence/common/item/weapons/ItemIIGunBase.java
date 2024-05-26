@@ -1,7 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common.item.weapons;
 
 import blusunrize.immersiveengineering.client.models.IOBJModelCallback;
-import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.gui.IESlot;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import blusunrize.immersiveengineering.common.util.Utils;
@@ -17,7 +16,6 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.EnumAction;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.*;
@@ -30,17 +28,15 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoUtils;
-import pl.pabilo8.immersiveintelligence.api.bullets.IAmmo;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
+import pl.pabilo8.immersiveintelligence.api.ammo.utils.AmmoFactory;
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler;
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler.IAdvancedTooltipItem;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.ISkinnable;
 import pl.pabilo8.immersiveintelligence.client.ClientProxy;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.util.amt.IIUpgradableItemRendererAMT;
-import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
-import pl.pabilo8.immersiveintelligence.common.entity.bullet.EntityBullet;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ammohandler.AmmoHandler;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageItemKeybind;
@@ -55,6 +51,8 @@ import java.util.List;
 
 public abstract class ItemIIGunBase extends ItemIIUpgradableTool implements ISkinnable, IAdvancedTooltipItem, IOBJModelCallback<ItemStack>
 {
+	public static final NonNullList<ItemIIGunBase> WEAPONS = NonNullList.create();
+
 	//--- NBT Values Reference ---//
 	public static final String RELOADING = "reloading";
 	public static final String AIMING = "aiming";
@@ -70,15 +68,9 @@ public abstract class ItemIIGunBase extends ItemIIUpgradableTool implements ISki
 	{
 		super(name, 1, name.toUpperCase());
 		//Use interfaces pls Blu
-		IIUtils.fixupItem(this, name );
+		IIUtils.fixupItem(this, name);
+		WEAPONS.add(this);
 	}
-
-	//--- Base ---//
-
-	/**
-	 * Standard method for foreign item classes
-	 */
-
 
 	//--- ItemUpgradeableTool ---//
 
@@ -225,7 +217,10 @@ public abstract class ItemIIGunBase extends ItemIIUpgradableTool implements ISki
 
 		//Decrease time until next shot is possible
 		if(fireDelay > 0)
-			fireDelay--;
+		{
+			if(fireDelay!=1||(getFireMode(stack)!=FireModeType.SINGULAR||!((EntityLivingBase)user).isHandActive()))
+				fireDelay--;
+		}
 
 		//Decrease previous recoil
 		recoilH = Math.max(recoilH-recoilDecay, 0);
@@ -281,8 +276,10 @@ public abstract class ItemIIGunBase extends ItemIIUpgradableTool implements ISki
 					SoundEvent sound = getChargeFireSound(stack, nbt);
 					if(sound!=null)
 						user.world.playSound(null, user.posX, user.posY, user.posZ, sound, SoundCategory.PLAYERS, 0.5f, 0.9f);
+
 				}
 				shoot(stack, user, count);
+				user.stopActiveHand();
 			}
 			break;
 			default:
@@ -427,9 +424,11 @@ public abstract class ItemIIGunBase extends ItemIIUpgradableTool implements ISki
 
 	protected void createProjectile(EntityLivingBase user, World world, Vec3d dir, Vec3d pos, ItemStack weapon, EasyNBT nbt, ItemStack ammo)
 	{
-		EntityBullet a = AmmoUtils.createBullet(world, ammo, pos, dir, getVelocityModifier(weapon, nbt, ammo));
-		a.setShooters(user);
-		world.spawnEntity(a);
+		new AmmoFactory<>(world)
+				.setPositionAndVelocity(pos, dir, getVelocityModifier(weapon, nbt, ammo))
+				.setStack(ammo)
+				.setOwner(user)
+				.create();
 	}
 
 	//--- Gun Abstracts ---//
@@ -534,7 +533,7 @@ public abstract class ItemIIGunBase extends ItemIIUpgradableTool implements ISki
 	 */
 	protected ItemStack getCasingStack(ItemStack ammo)
 	{
-		return ((IAmmo)ammo.getItem()).getCasingStack(1);
+		return ((IAmmoTypeItem)ammo.getItem()).getCasingStack(1);
 	}
 
 	/**

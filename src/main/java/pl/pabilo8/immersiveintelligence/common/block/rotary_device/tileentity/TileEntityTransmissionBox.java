@@ -105,12 +105,11 @@ public class TileEntityTransmissionBox extends TileEntityIEBase implements ITick
 			{
 				tick -= 1;
 				if(tick < 1)
-				{
 					energy.grow(0, 0, 0.98f);
-				}
 			}
 
 			tile = world.getTileEntity(pos.offset(facing.getOpposite()));
+
 			if(energy.getTorque() > 0&&tile instanceof IRotationAcceptor)
 				((IRotationAcceptor)tile).inputRotation(energy.getEnergy()/rofConversionRatio/IEConfig.Machines.dynamo_output, facing.getOpposite());
 		}

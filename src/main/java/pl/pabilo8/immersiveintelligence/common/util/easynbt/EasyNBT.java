@@ -2,6 +2,7 @@ package pl.pabilo8.immersiveintelligence.common.util.easynbt;
 
 import blusunrize.immersiveengineering.api.DimensionBlockPos;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
+import com.google.gson.JsonObject;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.*;
 import net.minecraft.util.IStringSerializable;
@@ -11,13 +12,17 @@ import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.ISerializableEnum;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 /**
@@ -29,6 +34,7 @@ import java.util.stream.Stream;
  * @since 03.09.2022
  */
 @SuppressWarnings("unused")
+//REFACTOR: 05.04.2024 rename checkSet to ifPresent
 public class EasyNBT extends Constants.NBT
 {
 	private final NBTTagCompound wrapped;
@@ -48,6 +54,11 @@ public class EasyNBT extends Constants.NBT
 	public static EasyNBT wrapNBT(NBTTagCompound nbt)
 	{
 		return new EasyNBT(nbt);
+	}
+
+	public static EasyNBT wrapNBT(JsonObject json)
+	{
+		return parseEasyNBT(json.toString());
 	}
 
 	public static EasyNBT wrapNBT(ItemStack nbt)
@@ -140,7 +151,7 @@ public class EasyNBT extends Constants.NBT
 	}
 
 	/**
-	 * Appends an integer
+	 * Appends a list
 	 *
 	 * @param key name of this tag
 	 */
@@ -148,6 +159,40 @@ public class EasyNBT extends Constants.NBT
 	{
 		wrapped.setTag(key, listOf(value));
 		return this;
+	}
+
+	/**
+	 * Appends a list
+	 *
+	 * @param key name of this tag
+	 */
+	public <T, E extends NBTBase> EasyNBT withList(String key, Function<T, E> conversion, T... objects)
+	{
+		wrapped.setTag(key, listOf((Object[])Arrays.stream(objects).map(conversion).toArray(NBTBase[]::new)));
+		return this;
+	}
+
+	/**
+	 * Appends a list
+	 *
+	 * @param key name of this tag
+	 */
+	public <T, E extends NBTBase> EasyNBT withList(String key, Function<T, E> conversion, Collection<T> objects)
+	{
+		wrapped.setTag(key, listOf((Object[])objects.stream().map(conversion).toArray(NBTBase[]::new)));
+		return this;
+	}
+
+	/**
+	 * Appends an element to a new or existing list
+	 *
+	 * @param key name of this tag
+	 */
+	public EasyNBT appendList(String key, int type, NBTBase object)
+	{
+		NBTTagList tagList = wrapped.getTagList(key, type);
+		tagList.appendTag(object);
+		return null;
 	}
 
 	/**
@@ -227,6 +272,16 @@ public class EasyNBT extends Constants.NBT
 	}
 
 	/**
+	 * Appends a Vec3d
+	 *
+	 * @param key name of this tag
+	 */
+	public EasyNBT withVec3d(String key, double x, double y, double z)
+	{
+		return withList(key, x, y, z);
+	}
+
+	/**
 	 * Appends an ItemStack
 	 *
 	 * @param key name of this tag
@@ -244,6 +299,65 @@ public class EasyNBT extends Constants.NBT
 	public EasyNBT withFluidStack(String key, FluidStack value)
 	{
 		return withTag(key, value.writeToNBT(new NBTTagCompound()));
+	}
+
+	//with color
+	public EasyNBT withColor(String key, IIColor color)
+	{
+		return withInt(key, color.getPackedARGB());
+	}
+
+
+	/**
+	 * Appends any value extending {@link NBTBase}, as well as common types such as int, double, String, etc.
+	 *
+	 * @param name  tag name
+	 * @param value tag value
+	 * @return this
+	 */
+	public EasyNBT withAny(String name, @Nullable Object value)
+	{
+		if(value==null)
+			return this;
+		if(value instanceof NBTBase)
+			return withTag(name, (NBTBase)value);
+
+		if(value instanceof Integer)
+			return withInt(name, (Integer)value);
+		if(value instanceof Float)
+			return withFloat(name, (Float)value);
+		if(value instanceof Double)
+			return withDouble(name, (Double)value);
+		if(value instanceof Boolean)
+			return withBoolean(name, (Boolean)value);
+		if(value instanceof String)
+			return withString(name, (String)value);
+
+		if(value instanceof EasyNBT)
+			return withTag(name, (EasyNBT)value);
+
+		if(value instanceof DimensionBlockPos)
+			return withDimPos(name, (DimensionBlockPos)value);
+		if(value instanceof BlockPos)
+			return withPos(name, (BlockPos)value);
+		if(value instanceof Vec3d)
+			return withVec3d(name, (Vec3d)value);
+		if(value instanceof IStringSerializable)
+			return withString(name, ((IStringSerializable)value).getName());
+		if(value instanceof IIColor)
+			return withColor(name, (IIColor)value);
+
+		if(value instanceof ItemStack)
+			return withItemStack(name, (ItemStack)value);
+		if(value instanceof FluidStack)
+			return withFluidStack(name, (FluidStack)value);
+
+		if(value instanceof Object[])
+			return withList(name, (Object[])value);
+		if(value instanceof Collection)
+			return withList(name, value);
+
+		return this;
 	}
 
 	//--- Remove ---//
@@ -287,6 +401,20 @@ public class EasyNBT extends Constants.NBT
 	public EasyNBT accept(Consumer<NBTTagCompound> accepted)
 	{
 		accepted.accept(wrapped);
+		return this;
+	}
+
+	/**
+	 * Filters tags of this Compound by removing those that are not present in the remaining array
+	 *
+	 * @param remaining array of tags to keep
+	 * @return this
+	 */
+	public EasyNBT filter(String[] remaining)
+	{
+		ArrayList<String> keySet = new ArrayList<>(wrapped.getKeySet());
+		Arrays.asList(remaining).forEach(keySet::remove);
+		keySet.forEach(wrapped::removeTag);
 		return this;
 	}
 
@@ -431,6 +559,8 @@ public class EasyNBT extends Constants.NBT
 	 */
 	public <T extends NBTBase> Stream<T> streamList(Class<T> clazz, String key, int type)
 	{
+		if(!wrapped.hasKey(key))
+			return Stream.empty();
 		return wrapped.getTagList(key, type).tagList.stream().map(n -> (T)n);
 	}
 
@@ -512,7 +642,7 @@ public class EasyNBT extends Constants.NBT
 	}
 
 	/**
-	 * Appends a Vec3d
+	 * Gets a Vec3d
 	 *
 	 * @param key name of this tag
 	 */
@@ -537,7 +667,7 @@ public class EasyNBT extends Constants.NBT
 	}
 
 	/**
-	 * Appends an ItemStack
+	 * Gets an ItemStack
 	 *
 	 * @param key name of this tag
 	 */
@@ -547,7 +677,7 @@ public class EasyNBT extends Constants.NBT
 	}
 
 	/**
-	 * Appends a FluidStack
+	 * Gets a FluidStack
 	 *
 	 * @param key name of this tag
 	 */
@@ -555,6 +685,23 @@ public class EasyNBT extends Constants.NBT
 	{
 		return FluidStack.loadFluidStackFromNBT(getCompound(key));
 	}
+
+	/**
+	 * Gets an enum value from a string
+	 *
+	 * @param key  name of this tag
+	 * @param type enum class
+	 */
+	public <E extends Enum<E> & ISerializableEnum> E getEnum(String key, Class<E> type)
+	{
+		return IIUtils.enumValue(type, getString(key));
+	}
+
+	public IIColor getColor(String key)
+	{
+		return IIColor.fromPackedRGBA(getInt(key));
+	}
+
 
 	//--- Check-Action ---//
 
@@ -666,6 +813,24 @@ public class EasyNBT extends Constants.NBT
 		}
 	}
 
+	public void checkSetVec3D(String key, Consumer<Vec3d> ifPresent)
+	{
+		if(wrapped.hasKey(key))
+			ifPresent.accept(getVec3d(key));
+	}
+
+	public void checkSetColor(String key, Consumer<IIColor> ifPresent)
+	{
+		if(wrapped.hasKey(key))
+			ifPresent.accept(getColor(key));
+	}
+
+	public <E extends Enum<E> & ISerializableEnum> void checkSetEnum(String key, Class<E> type, Consumer<E> ifPresent)
+	{
+		if(wrapped.hasKey(key))
+			ifPresent.accept(getEnum(key, type));
+	}
+
 	//--- Pseudo - Map ---//
 
 	public int size()
@@ -752,6 +917,8 @@ public class EasyNBT extends Constants.NBT
 
 		for(Object element : elements)
 		{
+			if(element==null)
+				continue;
 			if(element instanceof NBTBase)
 				list.appendTag(((NBTBase)element));
 
@@ -784,13 +951,9 @@ public class EasyNBT extends Constants.NBT
 			}
 
 			else if(element instanceof ItemStack)
-			{
 				list.appendTag(((ItemStack)element).serializeNBT());
-			}
 			else if(element instanceof FluidStack)
-			{
 				list.appendTag(((FluidStack)element).writeToNBT(new NBTTagCompound()));
-			}
 
 			else if(element instanceof Object[])
 				list.appendTag(listOf(element));

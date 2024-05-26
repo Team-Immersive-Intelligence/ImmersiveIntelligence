@@ -1,0 +1,9 @@
+{
+  "type": "ParticleModel",
+  "models": ["gunfire.obj"],
+  "life_time": 3,
+  "draw_stage": "custom_additive",
+  "programs": [
+    "lifetime_retexture"
+  ]
+}

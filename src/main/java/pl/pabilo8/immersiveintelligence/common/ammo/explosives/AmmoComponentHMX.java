@@ -1,24 +1,27 @@
 package pl.pabilo8.immersiveintelligence.common.ammo.explosives;
 
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
+import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumComponentRole;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumCoreTypes;
-import pl.pabilo8.immersiveintelligence.api.bullets.IAmmoComponent;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.ComponentRole;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIExplosion;
 
 /**
  * @author Pabilo8
- * @since 30-08-2019
+ * @updated 06.03.2024
+ * @ii-approved 0.3.1
+ * @since 10.07.2021
  */
-public class AmmoComponentHMX implements IAmmoComponent
+public class AmmoComponentHMX extends AmmoComponent
 {
-	@Override
-	public String getName()
+	public AmmoComponentHMX()
 	{
-		return "hmx";
+		super("hmx", 1.75f, ComponentRole.EXPLOSIVE, IIColor.fromPackedRGB(0xfbfbfb));
 	}
 
 	@Override
@@ -28,27 +31,12 @@ public class AmmoComponentHMX implements IAmmoComponent
 	}
 
 	@Override
-	public float getDensity()
+	public void onEffect(World world, Vec3d pos, Vec3d dir, CoreTypes coreType, NBTTagCompound tag, float componentAmount, float multiplier, Entity owner)
 	{
-		return 1.75f;
-	}
-
-	@Override
-	public void onEffect(float amount, EnumCoreTypes coreType, NBTTagCompound tag, Vec3d pos, Vec3d dir, World world)
-	{
-		new IIExplosion(world, null, pos.x, pos.y, pos.z, 12*amount, 12, false, true)
+		float size = (float)Math.floor(12*componentAmount*multiplier);
+		new IIExplosion(world, owner, pos, dir,
+				size, 12, coreType.getEffectShape(),
+				false, componentAmount > 0.125f, false)
 				.doExplosion();
-	}
-
-	@Override
-	public EnumComponentRole getRole()
-	{
-		return EnumComponentRole.EXPLOSIVE;
-	}
-
-	@Override
-	public int getColour()
-	{
-		return 0xfbfbfb;
 	}
 }

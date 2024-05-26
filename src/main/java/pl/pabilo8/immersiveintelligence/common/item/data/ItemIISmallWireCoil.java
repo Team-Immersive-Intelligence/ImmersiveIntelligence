@@ -16,7 +16,9 @@ import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Wires;
 import pl.pabilo8.immersiveintelligence.common.item.data.ItemIISmallWireCoil.SmallWires;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
 import pl.pabilo8.immersiveintelligence.common.wire.IISmallWireType;
 
@@ -29,6 +31,7 @@ import java.util.List;
  * @author Pabilo8
  * @since 2019-05-31
  */
+@IIItemProperties(category = IICategory.ELECTRONICS)
 public class ItemIISmallWireCoil extends ItemIISubItemsBase<SmallWires> implements IWireCoil
 {
 	public ItemIISmallWireCoil()

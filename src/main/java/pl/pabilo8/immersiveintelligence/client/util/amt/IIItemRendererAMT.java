@@ -45,7 +45,7 @@ public abstract class IIItemRendererAMT<I extends Item> extends TileEntityItemSt
 	{
 		this.item = item;
 		this.headerRes = modelRes.withExtension(ResLoc.EXT_OBJAMT);
-		IIModelRegistry.instance.registerCustomItemModel(item, modelRes.getResourceDomain(),
+		IIModelRegistry.INSTANCE.registerCustomItemModel(item, modelRes.getResourceDomain(),
 				setTransforms(this.replacementModel = new ImmersiveModelRegistry.ItemModelReplacement_OBJ(modelRes.withExtension(ResLoc.EXT_OBJ).toString(), true)));
 	}
 

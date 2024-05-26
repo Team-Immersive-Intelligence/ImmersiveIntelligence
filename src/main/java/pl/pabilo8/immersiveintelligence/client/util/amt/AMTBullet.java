@@ -1,14 +1,14 @@
 package pl.pabilo8.immersiveintelligence.client.util.amt;
 
-import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.Vec3d;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumCoreTypes;
-import pl.pabilo8.immersiveintelligence.api.bullets.IAmmo;
-import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoCore;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
+import pl.pabilo8.immersiveintelligence.client.model.builtin.IAmmoModel;
 
 import javax.annotation.Nullable;
 
@@ -21,20 +21,21 @@ import javax.annotation.Nullable;
 public class AMTBullet extends AMT
 {
 	@Nullable
-	private IBulletModel model;
+	private IAmmoModel model;
 	private BulletState state = BulletState.BULLET_UNUSED;
 
-	EnumCoreTypes coreType = null;
+	AmmoCore core = null;
+	CoreTypes coreType = null;
 	float gunpowderPercentage = 0;
-	int coreColour = 0xffffff, paintColour = -1;
+	int paintColour = -1;
 
-	public AMTBullet(String name, Vec3d originPos, @Nullable IBulletModel model)
+	public AMTBullet(String name, Vec3d originPos, @Nullable IAmmoModel model)
 	{
 		super(name, originPos);
 		this.model = model;
 	}
 
-	public AMTBullet(String name, IIModelHeader header, @Nullable IBulletModel model)
+	public AMTBullet(String name, IIModelHeader header, @Nullable IAmmoModel model)
 	{
 		super(name, header);
 		this.model = model;
@@ -68,20 +69,14 @@ public class AMTBullet extends AMT
 					break;
 				case CORE:
 					if(coreType!=null)
-						model.renderCore(coreColour, coreType);
+						model.renderCore(core, coreType);
 					break;
 				case BULLET_USED:
-					if(coreType!=null)
-						model.renderBulletUsed(coreColour, coreType, paintColour);
-					break;
 				case BULLET_UNUSED:
 					if(coreType!=null)
-						model.renderBulletUnused(coreColour, coreType, paintColour);
+						model.renderAmmoComplete(state==BulletState.BULLET_USED, paintColour, core, coreType);
 					break;
 			}
-			GlStateManager.color(1f, 1f, 1f, 1f);
-			//TMT uses texture directly, not from main atlas
-			ClientUtils.bindAtlas();
 		}
 	}
 
@@ -91,7 +86,7 @@ public class AMTBullet extends AMT
 
 	}
 
-	public void setModel(@Nullable IBulletModel model)
+	public void setModel(@Nullable IAmmoModel model)
 	{
 		this.model = model;
 	}
@@ -100,10 +95,10 @@ public class AMTBullet extends AMT
 	{
 		this.state = state;
 
-		if(stack.getItem() instanceof IAmmo)
+		if(stack.getItem() instanceof IAmmoTypeItem)
 		{
-			IAmmo b = (IAmmo)stack.getItem();
-			return withProperties(b.getCore(stack).getColour(), b.getCoreType(stack), b.getPaintColor(stack));
+			IAmmoTypeItem b = (IAmmoTypeItem)stack.getItem();
+			return withProperties(b.getCore(stack), b.getCoreType(stack), b.getPaintColor(stack));
 		}
 		if(stack.isEmpty())
 			this.visible = false;
@@ -111,9 +106,9 @@ public class AMTBullet extends AMT
 		return this;
 	}
 
-	public AMTBullet withProperties(int coreColour, EnumCoreTypes coreType, int paintColour)
+	public AMTBullet withProperties(AmmoCore core, CoreTypes coreType, int paintColour)
 	{
-		this.coreColour = coreColour;
+		this.core = core;
 		this.coreType = coreType;
 		this.paintColour = paintColour;
 
@@ -123,7 +118,6 @@ public class AMTBullet extends AMT
 	public AMTBullet withState(BulletState state)
 	{
 		this.state = state;
-
 		return this;
 	}
 

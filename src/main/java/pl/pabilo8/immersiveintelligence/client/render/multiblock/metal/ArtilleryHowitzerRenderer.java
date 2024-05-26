@@ -9,10 +9,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Tuple;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry;
-import pl.pabilo8.immersiveintelligence.client.fx.particles.ParticleGunfire;
+import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
+import pl.pabilo8.immersiveintelligence.client.fx.IIParticles;
 import pl.pabilo8.immersiveintelligence.client.render.IIMultiblockRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer.RegisteredTileRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.amt.*;
@@ -90,7 +89,7 @@ public class ArtilleryHowitzerRenderer extends IIMultiblockRenderer<TileEntityAr
 		{
 			IIAnimationUtils.setModelVisibility(shellsStorage[i], true);
 			shellsStorage[i].withStack(te.loadedShells.get(i),
-					te.loadedShells.get(i).getItem()==IIContent.itemAmmoArtillery?BulletState.BULLET_UNUSED: BulletState.CASING);
+					te.loadedShells.get(i).getItem()==IIContent.itemAmmoHeavyArtillery?BulletState.BULLET_UNUSED: BulletState.CASING);
 		}
 		IIAnimationUtils.setModelVisibility(shellHeld, false);
 		IIAnimationUtils.setModelVisibility(shellEjected, false);
@@ -254,14 +253,7 @@ public class ArtilleryHowitzerRenderer extends IIMultiblockRenderer<TileEntityAr
 						shellEjected = createDefaultShellAMT(header, "shell_hatch"),
 						shellHeld = createDefaultShellAMT(header, "shell_held"),
 
-						new AMTParticle("muzzle_flash", header)
-								.setParticle(new ParticleGunfire(
-										null,
-										Vec3d.ZERO,
-										new Vec3d(0, 1, 0),
-										48f
-								)
-						)
+						new AMTParticle("muzzle_flash", header).setParticle(IIParticles.PARTICLE_GUNFIRE)
 				}
 		);
 		allParts = IIAnimationUtils.getChildrenRecursive(model);
@@ -306,7 +298,7 @@ public class ArtilleryHowitzerRenderer extends IIMultiblockRenderer<TileEntityAr
 
 	private AMTBullet createDefaultShellAMT(IIModelHeader header, String name, String originName)
 	{
-		return new AMTBullet(name, header.getOffset(originName), AmmoRegistry.INSTANCE.getModel(IIContent.itemAmmoArtillery));
+		return new AMTBullet(name, header.getOffset(originName), AmmoRegistry.getModel(IIContent.itemAmmoHeavyArtillery));
 	}
 
 	private AMTBullet createShellQueueAMT(boolean in, int id, IIModelHeader header)

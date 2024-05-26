@@ -34,17 +34,17 @@ import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.entity.ammo.component.EntityGasCloud;
 import pl.pabilo8.immersiveintelligence.common.entity.hans.HansAnimations;
 import pl.pabilo8.immersiveintelligence.common.entity.hans.HansAnimations.*;
 import pl.pabilo8.immersiveintelligence.common.entity.hans.HansPathNavigate;
 import pl.pabilo8.immersiveintelligence.common.entity.hans.HansUtils;
 import pl.pabilo8.immersiveintelligence.common.entity.hans.tasks.*;
 import pl.pabilo8.immersiveintelligence.common.entity.hans.tasks.hand_weapon.AIHansHandWeapon;
-import pl.pabilo8.immersiveintelligence.common.entity.hans.tasks.idle.AIHansIdle;
 import pl.pabilo8.immersiveintelligence.common.entity.hans.tasks.idle.AIHansKazachok;
 import pl.pabilo8.immersiveintelligence.common.entity.hans.tasks.idle.AIHansSalute;
 import pl.pabilo8.immersiveintelligence.common.entity.hans.tasks.idle.AIHansTimedLookAtEntity;
-import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityFieldHowitzer;
+import pl.pabilo8.immersiveintelligence.common.entity.vehicle.towable.gun.EntityFieldHowitzer;
 import pl.pabilo8.immersiveintelligence.common.item.armor.ItemIILightEngineerHelmet;
 
 import javax.annotation.Nonnull;
@@ -58,6 +58,7 @@ import java.util.Arrays;
  */
 public class EntityHans extends EntityCreature implements INpc
 {
+	public static boolean INFINITE_AMMO = false;
 	private static final int[] EYE_COLOURS = new int[]{
 			0x597179,//cyan
 			0x536579,//toned blue
@@ -335,8 +336,8 @@ public class EntityHans extends EntityCreature implements INpc
 		updateWeaponTasks();
 
 		this.tasks.addTask(5, new EntityAIAvoidEntity<>(this, EntityGasCloud.class, 8.0F, 0.6f, 0.7f));
-		this.tasks.addTask(6, new AIHansIdle(this));
-		this.tasks.addTask(7, new EntityAIWatchClosest(this, EntityLiving.class, 6.0F));
+		//this.tasks.addTask(6, new AIHansIdle(this));
+		//this.tasks.addTask(7, new EntityAIWatchClosest(this, EntityLiving.class, 6.0F));
 
 		// TODO: 04.02.2022 swimming anim
 		this.tasks.addTask(0, new EntityAISwimming(this));

@@ -1,0 +1,36 @@
+{
+	"origins": {
+		"paint": [0, 24, 0],
+		"casing": [0, 24, 0],
+		"casing_simple": [0, 0, 0],
+		"casing_filling": [0, 0, 0],
+		"core_piercing": [0, 15, 0],
+		"core_piercing_sabot": [-7, 0, 0],
+		"core_piercing_sabot_dart": [0, 0, 0],
+		"core_piercing_sabot_part1": [0, 3, 0],
+		"core_piercing_sabot_part2": [0, 5, 2],
+		"core_piercing_sabot_part3": [2, 5, 0],
+		"core_piercing_sabot_part4": [0, 5, -2],
+		"core_piercing_sabot_part5": [-2, 5, 0],
+		"core_piercing_sabot_simple": [-7, 0, 0],
+		"core_shaped": [-7, 14, 0],
+		"core_shaped_sabot": [0, 23.75, 0],
+		"core_shaped_sabot_fin1": [-1, 2.75, 0],
+		"core_shaped_sabot_fin2": [1, 2.75, 0],
+		"core_shaped_sabot_fin3": [0, 2.75, 1],
+		"core_shaped_sabot_fin4": [0, 2.75, -1],
+		"core_canister": [0, 15, 0]
+	},
+	"hierarchy": {
+		"core_piercing_sabot_dart": "core_piercing_sabot",
+		"core_piercing_sabot_part1": "core_piercing_sabot",
+		"core_piercing_sabot_part2": "core_piercing_sabot",
+		"core_piercing_sabot_part3": "core_piercing_sabot",
+		"core_piercing_sabot_part4": "core_piercing_sabot",
+		"core_piercing_sabot_part5": "core_piercing_sabot",
+		"core_shaped_sabot_fin1": "core_shaped_sabot",
+		"core_shaped_sabot_fin2": "core_shaped_sabot",
+		"core_shaped_sabot_fin3": "core_shaped_sabot",
+		"core_shaped_sabot_fin4": "core_shaped_sabot"
+	}
+}

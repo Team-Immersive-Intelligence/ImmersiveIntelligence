@@ -11,7 +11,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Tuple;
 import org.lwjgl.opengl.GL11;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry;
+import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.api.crafting.FillerRecipe;
 import pl.pabilo8.immersiveintelligence.client.render.IIMultiblockRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer.RegisteredTileRenderer;
@@ -130,7 +130,7 @@ public class FillerRenderer extends IIMultiblockRenderer<TileEntityFiller>
 			//Special handling for ammo
 			if(isBullet = recipe.getBullet()!=null)
 			{
-				bullet.setModel(AmmoRegistry.INSTANCE.getModel(recipe.getBullet()));
+				bullet.setModel(AmmoRegistry.getModel(recipe.getBullet()));
 				bullet.withState(BulletState.CASING);
 				bullet.withGunpowderPercentage(transition);
 			}

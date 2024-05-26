@@ -1,53 +1,25 @@
 package pl.pabilo8.immersiveintelligence.common.ammo.cores;
 
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
-import pl.pabilo8.immersiveintelligence.api.bullets.IAmmoCore;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.PenetrationHardness;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoCore;
 
 /**
  * @author Pabilo8
+ * @updated 06.03.2024
+ * @ii-approved 0.3.1
  * @since 30-08-2019
  */
-public class AmmoCoreBrass implements IAmmoCore
+public class AmmoCoreBrass extends AmmoCore
 {
-	@Override
-	public String getName()
+	public AmmoCoreBrass()
 	{
-		return "core_brass";
+		super("core_brass", 0.75f, PenetrationHardness.WOOD, 1.25f, 0.65f, 0xdaa84a);
 	}
 
 	@Override
 	public IngredientStack getMaterial()
 	{
 		return new IngredientStack("nuggetBrass");
-	}
-
-	@Override
-	public float getDensity()
-	{
-		return 0.75f;
-	}
-
-	@Override
-	public float getDamageModifier()
-	{
-		return 0.65f;
-	}
-
-	@Override
-	public float getExplosionModifier()
-	{
-		return 1.25f;
-	}
-
-	@Override
-	public float getPenetrationHardness()
-	{
-		return 4;
-	}
-
-	@Override
-	public int getColour()
-	{
-		return 0xdaa84a;
 	}
 }

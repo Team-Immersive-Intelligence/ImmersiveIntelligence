@@ -1,13 +1,16 @@
 package pl.pabilo8.immersiveintelligence.common.item.crafting;
 
 import pl.pabilo8.immersiveintelligence.common.item.crafting.ItemIIVulcanizerMold.VulcanizerMolds;
+import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
 
 /**
  * @author Pabilo8
  * @since 01.05.2021
  */
+@IIItemProperties(category = IICategory.RESOURCES)
 public class ItemIIVulcanizerMold extends ItemIISubItemsBase<VulcanizerMolds>
 {
 	public ItemIIVulcanizerMold()

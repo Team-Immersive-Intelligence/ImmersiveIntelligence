@@ -1,13 +1,14 @@
 package pl.pabilo8.immersiveintelligence.common.item.tools;
 
+import blusunrize.immersiveengineering.api.ApiUtils;
 import blusunrize.immersiveengineering.api.Lib;
-import blusunrize.immersiveengineering.common.items.IEItemInterfaces.ITextureOverride;
 import blusunrize.immersiveengineering.common.util.EnergyHelper;
 import blusunrize.immersiveengineering.common.util.EnergyHelper.IIEEnergyItem;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import blusunrize.immersiveengineering.common.util.Utils;
 import blusunrize.immersiveengineering.common.util.inventory.IEItemStackHandler;
 import com.google.common.collect.Multimap;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
@@ -33,15 +34,18 @@ import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.IAdvancedZoomTool;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
-import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityFieldHowitzer;
+import pl.pabilo8.immersiveintelligence.common.entity.vehicle.towable.gun.EntityFieldHowitzer;
 import pl.pabilo8.immersiveintelligence.common.item.tools.ItemIIBinoculars.Binoculars;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIIItemTextureOverride;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
 
 import javax.annotation.Nonnull;
@@ -54,7 +58,8 @@ import java.util.UUID;
  * @author Pabilo8
  * @since 15-09-2019
  */
-public class ItemIIBinoculars extends ItemIISubItemsBase<Binoculars> implements IAdvancedZoomTool, IIEEnergyItem, ITextureOverride
+@IIItemProperties(category = IICategory.TOOLS)
+public class ItemIIBinoculars extends ItemIISubItemsBase<Binoculars> implements IAdvancedZoomTool, IIEEnergyItem, IIIItemTextureOverride
 {
 	private static final ResourceLocation OVERLAY_TEXTURE = new ResourceLocation(ImmersiveIntelligence.MODID, "textures/gui/item/binoculars.png");
 	public static UUID visionUUID = Utils.generateNewUUID();
@@ -183,6 +188,15 @@ public class ItemIIBinoculars extends ItemIISubItemsBase<Binoculars> implements 
 		return Collections.singletonList(
 				new ResourceLocation(ImmersiveIntelligence.MODID+":items/binoculars/"+key)
 		);
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void registerSprites(TextureMap map)
+	{
+		ApiUtils.getRegisterSprite(map, ImmersiveIntelligence.MODID+":items/binoculars/binoculars");
+		ApiUtils.getRegisterSprite(map, ImmersiveIntelligence.MODID+":items/binoculars/infrared_binoculars_off");
+		ApiUtils.getRegisterSprite(map, ImmersiveIntelligence.MODID+":items/binoculars/infrared_binoculars_on");
 	}
 
 	boolean isEnabled(ItemStack stack)

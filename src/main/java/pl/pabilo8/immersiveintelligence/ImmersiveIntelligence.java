@@ -17,7 +17,10 @@ import pl.pabilo8.immersiveintelligence.common.IISaveData;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.commands.ii.CommandII;
 import pl.pabilo8.immersiveintelligence.common.compat.IICompatModule;
+import pl.pabilo8.immersiveintelligence.common.event.IEOverrideEventHandler;
+import pl.pabilo8.immersiveintelligence.common.event.LightEngineerEventHandler;
 import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler;
+import pl.pabilo8.immersiveintelligence.common.util.Reflector;
 
 import static pl.pabilo8.immersiveintelligence.ImmersiveIntelligence.MODID;
 import static pl.pabilo8.immersiveintelligence.ImmersiveIntelligence.VERSION;
@@ -25,7 +28,7 @@ import static pl.pabilo8.immersiveintelligence.ImmersiveIntelligence.VERSION;
 @Mod(modid = MODID, version = VERSION,
 		//xaxaxa, trick! yuo can't steal mod if mod is steal-proof
 		certificateFingerprint = "770570c49a2652e64a9b29b9b9d9919ca68b7065",
-		dependencies = "required-after:forge@[14.23.5.2820,);required-after:immersiveengineering@[0.12,);after:immersiveengineering@[0.12,);after:immersiveposts@[0.2,);before:buildcraftlib")
+		dependencies = "required-after:forge@[14.23.5.2820,);required-after:immersiveengineering@[0.12,);after:immersiveengineering@[0.12,);after:immersiveposts@[0.2,)")
 public class ImmersiveIntelligence
 {
 	public static final String MODID = "immersiveintelligence";
@@ -56,7 +59,7 @@ public class ImmersiveIntelligence
 	public void init(FMLInitializationEvent event)
 	{
 		NetworkRegistry.INSTANCE.registerGuiHandler(INSTANCE, proxy);
-
+		new LightEngineerEventHandler().registerEventHandler();
 		proxy.init();
 
 		IISounds.init();
@@ -66,6 +69,10 @@ public class ImmersiveIntelligence
 	public void postInit(FMLPostInitializationEvent event)
 	{
 		proxy.postInit();
+
+		//Redirecting IE event to our own
+		Reflector.getForgeEventListeners();
+		Reflector.overrideEventHandler(blusunrize.immersiveengineering.common.EventHandler.class, new IEOverrideEventHandler());
 	}
 
 	@Mod.EventHandler

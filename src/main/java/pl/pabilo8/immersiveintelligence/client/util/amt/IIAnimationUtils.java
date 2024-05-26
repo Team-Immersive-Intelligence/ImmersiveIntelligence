@@ -37,10 +37,7 @@ import pl.pabilo8.immersiveintelligence.common.util.lambda.ArraylistJoinCollecto
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 
 /**
@@ -58,6 +55,15 @@ public class IIAnimationUtils
 	public static float getDebugProgress(World world, float max, float partialTicks)
 	{
 		return (ClientUtils.mc().world.getTotalWorldTime()%max+partialTicks)/max;
+	}
+
+	public static float getAnimationOffsetProgress(float current, float begin, float end, float partialTicks)
+	{
+		if(current < begin)
+			return 0;
+		if(current > end)
+			return 1;
+		return (current-begin+partialTicks)/(end-begin);
 	}
 
 	public static float getAnimationProgress(float current, float max, boolean invert, float partialTicks)
@@ -376,7 +382,7 @@ public class IIAnimationUtils
 	public static AMT[] disposeOf(@Nullable AMT[] array)
 	{
 		if(array!=null)
-			Arrays.stream(array).forEach(AMT::disposeOf);
+			Arrays.stream(array).filter(Objects::nonNull).forEach(AMT::disposeOf);
 		return array;
 	}
 
@@ -405,11 +411,12 @@ public class IIAnimationUtils
 				.collect(new ArraylistJoinCollector<>()).toArray(new AMT[0]);
 	}
 
+	@Nullable
 	public static AMT getPart(AMT[] array, String name)
 	{
 		return Arrays.stream(getChildrenRecursive(array))
 				.filter(amt -> amt.name.equals(name))
-				.findFirst().orElse(array[0]);
+				.findFirst().orElse(null);
 	}
 
 	/**

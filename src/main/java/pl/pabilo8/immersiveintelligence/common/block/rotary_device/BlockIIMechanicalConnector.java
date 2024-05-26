@@ -27,6 +27,7 @@ import pl.pabilo8.immersiveintelligence.common.util.block.BlockIITileProvider;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.EnumTileProvider;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IITileProviderEnum;
 import pl.pabilo8.immersiveintelligence.common.util.block.ItemBlockIIBase;
+import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -50,6 +51,7 @@ public class BlockIIMechanicalConnector extends BlockIITileProvider<IIBlockTypes
 				IEProperties.FACING_ALL, IOBJModelCallback.PROPERTY, IEProperties.CONNECTIONS);
 		setHardness(3.0F);
 		setResistance(15.0F);
+		setCategory(IICategory.ROTARY);
 
 		setToolTypes(IIReference.TOOL_HAMMER);
 

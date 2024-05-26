@@ -1,0 +1,10 @@
+{
+  "type": "ParticleModel",
+  "model": "block/block_impact.obj",
+  "life_time": 40,
+  "draw_stage": "custom",
+  "aabb": 0.0625,
+  "programs": [
+    "smoke_transition"
+  ]
+}

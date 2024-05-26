@@ -41,7 +41,7 @@ public class TileEntityFiller extends TileEntityMultiblockProductionMulti<TileEn
 {
 	public static int SLOT_DUST = 0, SLOT_INPUT = 1;
 
-	@SyncNBT(name = "dust_storage", time = 40, events = {SyncEvents.GUI_OPENED, SyncEvents.RECIPE_CHANGED})
+	@SyncNBT(name = "dust_storage", time = 40, events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_RECIPE_CHANGED})
 	public DustStack dustStorage;
 	private IItemHandler insertionHandlerDust, insertionHandlerStack;
 
@@ -230,7 +230,7 @@ public class TileEntityFiller extends TileEntityMultiblockProductionMulti<TileEn
 	@Override
 	protected IIMultiblockProcess<FillerRecipe> findNewProductionProcess()
 	{
-		updateTileForEvent(SyncEvents.RECIPE_CHANGED);
+		updateTileForEvent(SyncEvents.TILE_RECIPE_CHANGED);
 		FillerRecipe recipe = FillerRecipe.findRecipe(inventory.get(1), dustStorage);
 		if(recipe!=null)
 		{

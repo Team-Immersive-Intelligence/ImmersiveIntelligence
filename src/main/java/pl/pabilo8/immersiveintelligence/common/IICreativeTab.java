@@ -1,8 +1,10 @@
 package pl.pabilo8.immersiveintelligence.common;
 
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeModContainer;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
@@ -11,12 +13,20 @@ import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fluids.capability.wrappers.FluidBucketWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.api.bullets.IAmmo;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
+import pl.pabilo8.immersiveintelligence.client.gui.GuiWidgetAustralianTabs;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.BlockIIMetalDecoration.IIBlockTypes_MetalDecoration;
 import pl.pabilo8.immersiveintelligence.common.block.mines.BlockIIMine.ItemBlockMineBase;
-import pl.pabilo8.immersiveintelligence.common.block.mines.BlockIIRadioExplosives.ItemBlockRadioExplosives;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine.Magazines;
+import pl.pabilo8.immersiveintelligence.common.util.block.BlockIIBase;
+import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IIBlockEnum;
+import pl.pabilo8.immersiveintelligence.common.util.block.ItemBlockIIBase;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
+import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
+import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -24,11 +34,17 @@ import java.util.List;
 
 /**
  * @author Pabilo8
- * @since 2019-05-07
+ * @author GabrielV (gabriel@iiteam.net) - Creative Sub Tabs
+ * @updated 21.05.2024
+ * @ii-approved 0.3.1
+ * @since 7.07.2019
  */
 public class IICreativeTab extends CreativeTabs
 {
+	public static IICategory selectedCategory = IICategory.RESOURCES;
 	public static List<Fluid> fluidBucketMap = new ArrayList<>();
+	@SideOnly(Side.CLIENT)
+	private GuiWidgetAustralianTabs hovered = null;
 
 	public IICreativeTab(String name)
 	{
@@ -42,19 +58,113 @@ public class IICreativeTab extends CreativeTabs
 		return IIContent.blockMetalDecoration.getStack(IIBlockTypes_MetalDecoration.COIL_DATA, 1);
 	}
 
+	@Override
+	public ResourceLocation getBackgroundImage()
+	{
+		return selectedCategory.getCreativeTabTexture();
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public String getTranslatedTabLabel()
+	{
+		return "itemGroup.immersiveintelligence";
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public boolean isTabInFirstRow()
+	{
+		//The trick to outtrick them all
+		if(hovered!=null)
+		{
+			hovered.drawHovered();
+			hovered = null;
+		}
+		return super.isTabInFirstRow();
+	}
+
 	@SideOnly(Side.CLIENT)
 	@Override
 	public void displayAllRelevantItems(@Nonnull NonNullList<ItemStack> list)
 	{
-		super.displayAllRelevantItems(list);
+		if(!IIConfig.australianCreativeTabs)
+		{
+			super.displayAllRelevantItems(list);
+			for(Fluid fluid : fluidBucketMap)
+				addFluidBucket(fluid, list);
+			addExampleBullets(list);
+			return;
+		}
 
-		addExampleBullets(list);
+		for(Item item : Item.REGISTRY)
+		{
+			if(item instanceof ItemBlockIIBase)
+			{
+				ItemBlockIIBase itemBlock = (ItemBlockIIBase)item;
+				BlockIIBase<?> block = itemBlock.getBlock();
 
-		for(Fluid fluid : fluidBucketMap)
-			addFluidBucket(fluid, list);
+				for(IIBlockEnum subItem : block.enumValues)
+				{
+					if(block.isHidden(subItem.getMeta())||block.getCategory(subItem.getMeta())!=selectedCategory)
+						continue;
+					list.add(new ItemStack(block, 1, subItem.getMeta()));
+				}
+			}
+			else if(item instanceof ItemIISubItemsBase)
+			{
+				//use parent category as fallback
+				IICategory parentCategory = IICategory.RESOURCES;
+				if(item.getClass().isAnnotationPresent(IIItemProperties.class))
+				{
+					IIItemProperties properties = item.getClass().getAnnotation(IIItemProperties.class);
+					if(properties.hidden())
+						continue;
+					parentCategory = properties.category();
+				}
+				//assign individual sub-items to their categories
+				for(IIItemEnum subItem : ((ItemIISubItemsBase<?>)item).getSubItems())
+				{
+					if(subItem.isHidden())
+						continue;
+					IICategory category = subItem.getCategory();
+					if(category==IICategory.NULL)
+						category = parentCategory;
+
+					if(category==selectedCategory)
+						list.add(new ItemStack(item, 1, subItem.getMeta()));
+				}
+			}
+			else if(item.getClass().isAnnotationPresent(IIItemProperties.class))
+			{
+				IIItemProperties properties = item.getClass().getAnnotation(IIItemProperties.class);
+				if(properties.hidden())
+					continue;
+				if(properties.category()==selectedCategory)
+					item.getSubItems(this, list);
+			}
+			else if(selectedCategory==IICategory.RESOURCES)
+			{
+				item.getSubItems(this, list);
+			}
+		}
+
+		switch(selectedCategory)
+		{
+			case WARFARE:
+				addExampleBullets(list);
+				break;
+			case RESOURCES:
+				for(Fluid fluid : fluidBucketMap)
+					addFluidBucket(fluid, list);
+				break;
+			default:
+				break;
+		}
+
 	}
 
-	public void addFluidBucket(Fluid fluid, NonNullList<ItemStack> list)
+	public static void addFluidBucket(Fluid fluid, NonNullList<ItemStack> list)
 	{
 		UniversalBucket bucket = ForgeModContainer.getInstance().universalBucket;
 		ItemStack stack = new ItemStack(bucket);
@@ -64,18 +174,18 @@ public class IICreativeTab extends CreativeTabs
 			list.add(fluidHandler.getContainer());
 	}
 
-	public void addExampleBullets(NonNullList<ItemStack> list)
+	public static void addExampleBullets(NonNullList<ItemStack> list)
 	{
 		//add generic artillery ammo
-		for(IAmmo bullet : new IAmmo[]{IIContent.itemAmmoArtillery, IIContent.itemAmmoLightArtillery, IIContent.itemAmmoMortar})
+		for(IAmmoTypeItem bullet : new IAmmoTypeItem[]{IIContent.itemAmmoHeavyArtillery, IIContent.itemAmmoLightArtillery, IIContent.itemAmmoMortar})
 			for(String[] core : new String[][]{{"core_brass", "canister"}, {"core_tungsten", "piercing"}, {"core_steel", "shaped"}})
 				for(String explosive : new String[]{"tnt", "rdx", "hmx"})
 					list.add(bullet.getBulletWithParams(core[0], core[1], explosive, "tracer_powder"));
 
 		//add custom artillery ammo examples
-		list.add(IIContent.itemAmmoArtillery.getBulletWithParams("core_brass", "canister", "hmx", "white_phosphorus").setStackDisplayName("Phosphorgranate mk. 1"));
-		list.add(IIContent.itemAmmoArtillery.getBulletWithParams("core_brass", "canister", "fluid_napalm").setStackDisplayName("Napalmgranate mk. 1"));
-		list.add(IIContent.itemAmmoArtillery.getBulletWithParams("core_brass", "canister", "nuke").setStackDisplayName("Geburtstagsgranate mk.1"));
+		list.add(IIContent.itemAmmoHeavyArtillery.getBulletWithParams("core_brass", "canister", "hmx", "white_phosphorus").setStackDisplayName("Phosphorgranate mk. 1"));
+		list.add(IIContent.itemAmmoHeavyArtillery.getBulletWithParams("core_brass", "canister", "fluid_napalm").setStackDisplayName("Napalmgranate mk. 1"));
+		list.add(IIContent.itemAmmoHeavyArtillery.getBulletWithParams("core_brass", "canister", "nuke").setStackDisplayName("Geburtstagsgranate mk.1"));
 
 		//add grenades
 		list.add(IIContent.itemGrenade.getBulletWithParams("core_brass", "canister", "tnt").setStackDisplayName("Stielhandgranate mk.1"));
@@ -144,7 +254,7 @@ public class IICreativeTab extends CreativeTabs
 		list.add(IIContent.itemNavalMine.getBulletWithParams("core_brass", "softpoint", "rdx").setStackDisplayName("Seemine mk.1"));
 	}
 
-	ItemStack getColorMagazine(Magazines magazine, int... colors)
+	private static ItemStack getColorMagazine(Magazines magazine, int... colors)
 	{
 		ItemStack[] bullets = new ItemStack[colors.length];
 		for(int i = 0; i < colors.length; i++)
@@ -168,7 +278,7 @@ public class IICreativeTab extends CreativeTabs
 	/**
 	 * Deutsche Qualität
 	 */
-	private String getGermanColorName(int color)
+	private static String getGermanColorName(int color)
 	{
 		switch(IIUtils.getRGBTextFormatting(color))
 		{
@@ -206,5 +316,11 @@ public class IICreativeTab extends CreativeTabs
 			case BLACK:
 				return "Schwarz";
 		}
+	}
+
+	@SideOnly(Side.CLIENT)
+	public void setHoveringText(GuiWidgetAustralianTabs tabs)
+	{
+		this.hovered = tabs;
 	}
 }

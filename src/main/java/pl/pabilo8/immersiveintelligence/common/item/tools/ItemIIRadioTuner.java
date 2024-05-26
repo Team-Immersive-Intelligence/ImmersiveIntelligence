@@ -29,7 +29,9 @@ import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
+import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
 
 import javax.annotation.Nonnull;
@@ -40,6 +42,7 @@ import java.util.List;
  * @author Pabilo8
  * @since 24-06-2019
  */
+@IIItemProperties(category = IICategory.TOOLS)
 public class ItemIIRadioTuner extends ItemIISubItemsBase<RadioTuners> implements IItemScrollable
 {
 	public static final String TAG_PREV_FREQUENCY = "prev_frequency";

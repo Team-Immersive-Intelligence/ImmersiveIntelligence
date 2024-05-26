@@ -6,6 +6,7 @@ import pl.pabilo8.immersiveintelligence.common.block.fortification.BlockIIWooden
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IIBlockProperties;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IITileProviderEnum;
 import pl.pabilo8.immersiveintelligence.common.util.block.ItemBlockIIBase;
+import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 
 /**
  * @author Pabilo8
@@ -18,6 +19,7 @@ public class BlockIIWoodenChainFence extends BlockIIFenceBase<WoodenFortificatio
 		super("wooden_fortification", Material.WOOD, PropertyEnum.create("type", WoodenFortifications.class), ItemBlockIIBase::new);
 		setHardness(3.0F);
 		setResistance(15.0F);
+		setCategory(IICategory.RESOURCES);
 	}
 
 	public enum WoodenFortifications implements IITileProviderEnum

@@ -31,15 +31,15 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Vehicles.Motorbike;
 import pl.pabilo8.immersiveintelligence.api.utils.IEntitySpecialRepairable;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.ITowable;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IVehicleMultiPart;
 import pl.pabilo8.immersiveintelligence.client.ClientProxy;
-import pl.pabilo8.immersiveintelligence.client.fx.ParticleUtils;
-import pl.pabilo8.immersiveintelligence.client.render.MotorbikeRenderer;
+import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleRegistry;
+import pl.pabilo8.immersiveintelligence.client.render.vehicle.MotorbikeRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.carversound.MovingSoundMotorbikeEngine;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Vehicles.Motorbike;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
@@ -590,11 +590,8 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 		if(!world.isRemote)
 		{
 			if(hasFuel())
-			{
 				world.newExplosion(null, posX, posY, posZ, tank.getFluidAmount()/12000f*4, false, false);
-			}
-			// TODO: 30.08.2022 improve
-			IIPacketHandler.INSTANCE.sendToAllAround(new MessageParticleEffect(new Vec3d(this.getEntityId(), 0, 0), "motorbike_explosion"), IIPacketHandler.targetPointFromEntity(this, 48));
+			IIPacketHandler.sendToClient(new MessageParticleEffect("motorbike_explosion", world, new Vec3d(this.getEntityId(), 0, 0)));
 			setDead();
 		}
 		else
@@ -664,13 +661,13 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 		{
 
 			Vec3d fireVec = new Vec3d(0, 0.55, 0).add(IIUtils.offsetPosDirection(0.135f, angle2, 0));
-			ParticleUtils.spawnFlameFX(getPositionVector().add(fireVec), new Vec3d(worldRandom*modVec.x, 0.1, worldRandom*modVec.z), 2.5f, 16);
+			ParticleRegistry.spawnFlameFX(getPositionVector().add(fireVec), new Vec3d(worldRandom*modVec.x, 0.1, worldRandom*modVec.z), 2.5f, 16);
 
 			if(engineDurability < Motorbike.engineDurability*0.35)
 			{
 				modVec = IIUtils.offsetPosDirection(-0.2f, angle2, 0);
 				Vec3d fireVec2 = new Vec3d(0, 0.55, 0).add(IIUtils.offsetPosDirection(-0.2f, angle2, 0));
-				ParticleUtils.spawnFlameFX(getPositionVector().add(fireVec2), new Vec3d(worldRandom*modVec.x, 0.1, worldRandom*modVec.z), 2.5f, 16);
+				ParticleRegistry.spawnFlameFX(getPositionVector().add(fireVec2), new Vec3d(worldRandom*modVec.x, 0.1, worldRandom*modVec.z), 2.5f, 16);
 
 				if(engineDurability < Motorbike.engineDurability*0.2)
 				{
@@ -684,7 +681,7 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 
 	private void spawnExplosionParticles()
 	{
-		ParticleUtils.spawnFlameExplosion(getPositionVector(), 1f+(tank.getFluidAmount()/12000f), rand);
+		ParticleRegistry.spawnFlameExplosion(getPositionVector(), 1f+(tank.getFluidAmount()/12000f), rand);
 	}
 
 	@Override
@@ -695,14 +692,14 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 			engineDurability -= amount*0.85;
 			dataManager.set(dataMarkerEngineDurability, engineDurability);
 			if(world.isRemote)
-				playSound(IISounds.hitMetal.getSoundImpact(), Math.min(amount/16f, 1f), 1f);
+				playSound(IISounds.hitMetal.getImpactSound(), Math.min(amount/16f, 1f), 1f);
 		}
 		else if((part==partFuelTank||part==partSeat)&&source.isProjectile()||source.isExplosion()||source.isFireDamage())
 		{
 			fuelTankDurability -= amount*0.85;
 			dataManager.set(dataMarkerFuelTankDurability, fuelTankDurability);
 			if(world.isRemote)
-				playSound(IISounds.hitMetal.getSoundImpact(), Math.min(amount/16f, 1f), 1f);
+				playSound(IISounds.hitMetal.getImpactSound(), Math.min(amount/16f, 1f), 1f);
 		}
 		else if(part==partWheelFront)
 		{
@@ -1048,7 +1045,7 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 					.add(vz);
 			Vec3d vecDir = new Vec3d(rand.nextGaussian()*0.25, rand.nextGaussian()*0.25, rand.nextGaussian()*0.025);
 
-			ParticleUtils.spawnTMTModelFX(vo, vx.add(vz).add(vecDir).scale(0.66), 0.0625f, mod, MotorbikeRenderer.TEXTURE);
+			ParticleRegistry.spawnTMTModelFX(vo, vx.add(vz).add(vecDir).scale(0.66), 0.0625f, mod, MotorbikeRenderer.TEXTURE);
 		}
 	}
 

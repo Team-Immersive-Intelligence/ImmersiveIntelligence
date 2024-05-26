@@ -13,7 +13,9 @@ import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.item.armor.ItemIIArmorUpgrade.ArmorUpgrades;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ISerializableEnum;
+import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
 import pl.pabilo8.modworks.annotations.item.GeneratedItemModels;
 
@@ -30,6 +32,7 @@ import java.util.stream.Collectors;
  * @author Pabilo8
  * @since 21.04.2021
  */
+@IIItemProperties(category = IICategory.WARFARE)
 public class ItemIIArmorUpgrade extends ItemIISubItemsBase<ArmorUpgrades> implements IUpgrade
 {
 	public ItemIIArmorUpgrade()
@@ -67,7 +70,6 @@ public class ItemIIArmorUpgrade extends ItemIISubItemsBase<ArmorUpgrades> implem
 
 		//Protects from gasses
 		GASMASK(ImmutableSet.of(ArmorTypes.LIGHT_ENGINEER_HELMET)),
-
 		INFILTRATOR_GEAR(ImmutableSet.of(ArmorTypes.LIGHT_ENGINEER_HELMET),
 				"infiltrator_gear", "engineer_gear"),
 		TECHNICIAN_GEAR(ImmutableSet.of(ArmorTypes.LIGHT_ENGINEER_HELMET),
@@ -107,7 +109,8 @@ public class ItemIIArmorUpgrade extends ItemIISubItemsBase<ArmorUpgrades> implem
 		//--- Chestplate ---//
 
 		HEAT_RESISTANT_COATING(
-				ImmutableSet.of(ArmorTypes.LIGHT_ENGINEER_CHESTPLATE)),
+				ImmutableSet.of(ArmorTypes.LIGHT_ENGINEER_CHESTPLATE),
+				(upgrade, modifications) -> modifications.setBoolean("heatcoat", true)),
 
 		ANTI_STATIC_MESH(
 				ImmutableSet.of(ArmorTypes.LIGHT_ENGINEER_CHESTPLATE),
@@ -127,7 +130,7 @@ public class ItemIIArmorUpgrade extends ItemIISubItemsBase<ArmorUpgrades> implem
 				(upgrade, modifications) -> modifications.setBoolean("scuba", true)
 		),
 
-		@IIItemProperties(hidden = true)
+		@IIItemProperties(hidden = true, category = IICategory.WARFARE)
 		HELIPACK(ImmutableSet.of(ArmorTypes.LIGHT_ENGINEER_CHESTPLATE)),
 
 		//--- Leggings ---//
@@ -142,12 +145,9 @@ public class ItemIIArmorUpgrade extends ItemIISubItemsBase<ArmorUpgrades> implem
 					modifications.setDouble("toughness_increase", 1);
 					modifications.setDouble("armor_increase", 1);
 				}),
-		SNOW_RACKETS(
-				ImmutableSet.of(ArmorTypes.LIGHT_ENGINEER_BOOTS), "flippers"),
-		FLIPPERS(
-				ImmutableSet.of(ArmorTypes.LIGHT_ENGINEER_BOOTS), "snow_rackets"),
-		INTERNAL_SPRINGS(
-				ImmutableSet.of(ArmorTypes.LIGHT_ENGINEER_BOOTS));
+		SNOW_RACKETS(ImmutableSet.of(ArmorTypes.LIGHT_ENGINEER_BOOTS), "flippers"),
+		FLIPPERS(ImmutableSet.of(ArmorTypes.LIGHT_ENGINEER_BOOTS), "snow_rackets"),
+		INTERNAL_SPRINGS(ImmutableSet.of(ArmorTypes.LIGHT_ENGINEER_BOOTS));
 
 		private final ImmutableSet<ArmorTypes> toolset;
 		private final BiPredicate<ItemStack, ItemStack> check;

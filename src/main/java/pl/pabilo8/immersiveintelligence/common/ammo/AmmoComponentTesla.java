@@ -12,6 +12,7 @@ import blusunrize.immersiveengineering.common.util.IEDamageSources.ElectricDamag
 import blusunrize.immersiveengineering.common.util.IEPotions;
 import blusunrize.immersiveengineering.common.util.IESounds;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -25,21 +26,23 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumComponentRole;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumCoreTypes;
-import pl.pabilo8.immersiveintelligence.api.bullets.IAmmoComponent;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.ComponentRole;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
 /**
  * @author Pabilo8
- * @since 30-08-2019
+ * @updated 06.03.2024
+ * @ii-approved 0.3.1
+ * @since 10.07.2021
  */
-public class AmmoComponentTesla implements IAmmoComponent
+public class AmmoComponentTesla extends AmmoComponent
 {
-	@Override
-	public String getName()
+	public AmmoComponentTesla()
 	{
-		return "tesla";
+		super("tesla", 1f, ComponentRole.SPECIAL, IIColor.fromPackedRGBA(0x6b778a));
 	}
 
 	@Override
@@ -49,16 +52,10 @@ public class AmmoComponentTesla implements IAmmoComponent
 	}
 
 	@Override
-	public float getDensity()
+	public void onEffect(World world, Vec3d pos, Vec3d dir, CoreTypes coreType, NBTTagCompound tag, float componentAmount, float multiplier, Entity owner)
 	{
-		return 1.15f;
-	}
-
-	@Override
-	public void onEffect(float amount, EnumCoreTypes coreType, NBTTagCompound tag, Vec3d pos, Vec3d dir, World world)
-	{
-		float radius = amount*10;
-		int extracted = (int)(4000000*amount);
+		float radius = multiplier*10;
+		int extracted = (int)(4000000*multiplier);
 
 		world.playSound(null, new BlockPos(pos), IISounds.explosionFlare, SoundCategory.NEUTRAL, 1, 0.5f);
 		world.playSound(null, new BlockPos(pos), IESounds.tesla, SoundCategory.NEUTRAL, 1, 0.5f);
@@ -136,17 +133,5 @@ public class AmmoComponentTesla implements IAmmoComponent
 			}
 
 		//BulletHelper.suppress(world, pos.x, pos.y, pos.z, 10f*amount, (int)(255*amount));
-	}
-
-	@Override
-	public EnumComponentRole getRole()
-	{
-		return EnumComponentRole.SPECIAL;
-	}
-
-	@Override
-	public int getColour()
-	{
-		return 0xcab1b1;
 	}
 }

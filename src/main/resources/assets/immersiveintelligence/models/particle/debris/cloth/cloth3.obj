@@ -1,0 +1,17 @@
+# Made by Pabilo8 with Blockbench
+# Exported with IIToolkit Plugin
+mtllib cloth.mtl
+
+
+o CL3
+v 0.1875 0.125 0.125
+v 0 0.25 -0.125
+v -0.1875 0 0.0625
+v -0.1875 0.0625 -0.25
+vt 0.6875 0.375
+vt 0.6875 0.875
+vt 0.3125 0.875
+vt 0.3125 0.375
+vn -0.703679195413668 0.2638796982801255 0.6596992457003137
+usemtl cloth_device_cushion
+f 1/1/1 2/2/1 4/3/1 3/4/1

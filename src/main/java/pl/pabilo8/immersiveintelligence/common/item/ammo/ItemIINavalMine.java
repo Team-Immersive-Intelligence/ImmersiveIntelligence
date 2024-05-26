@@ -1,47 +1,41 @@
 package pl.pabilo8.immersiveintelligence.common.item.ammo;
 
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
-import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.server.SPacketTitle;
 import net.minecraft.network.play.server.SPacketTitle.Type;
-import net.minecraft.stats.StatList;
-import net.minecraft.util.*;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumCoreTypes;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumFuseTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseTypes;
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler.IItemScrollable;
-import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
-import pl.pabilo8.immersiveintelligence.client.model.misc.ModelNavalMine;
+import pl.pabilo8.immersiveintelligence.client.model.builtin.IAmmoModel;
+import pl.pabilo8.immersiveintelligence.client.model.builtin.ModelAmmo;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.entity.bullet.EntityNavalMine;
-import pl.pabilo8.immersiveintelligence.common.entity.bullet.EntityNavalMineAnchor;
+import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.naval_mine.EntityNavalMine;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoCasing.Casings;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * @author Pabilo8
  * @since 30-08-2019
  */
-public class ItemIINavalMine extends ItemIIAmmoBase implements IItemScrollable
+@IIItemProperties(category = IICategory.WARFARE)
+public class ItemIINavalMine extends ItemIIAmmoBase<EntityNavalMine> implements IItemScrollable
 {
 	public ItemIINavalMine()
 	{
@@ -50,7 +44,7 @@ public class ItemIINavalMine extends ItemIIAmmoBase implements IItemScrollable
 	}
 
 	@Override
-	public float getComponentMultiplier()
+	public float getComponentAmount()
 	{
 		return 0.55f;
 	}
@@ -74,17 +68,25 @@ public class ItemIINavalMine extends ItemIIAmmoBase implements IItemScrollable
 	}
 
 	@Override
-	public float getCaliber()
+	public int getCaliber()
 	{
-		return 16f;
+		return 16;
 	}
 
 	@SideOnly(Side.CLIENT)
+	@Nonnull
 	@Override
-	public @Nonnull
-	Class<? extends IBulletModel> getModel()
+	public Function<ItemIIAmmoBase<EntityNavalMine>, IAmmoModel<ItemIIAmmoBase<EntityNavalMine>, EntityNavalMine>> get3DModel()
 	{
-		return ModelNavalMine.class;
+		//TODO: 05.03.2024 custom naval mine model
+		return ModelAmmo::createExplosivesModel;
+	}
+
+	@Nonnull
+	@Override
+	public EntityNavalMine getAmmoEntity(World world)
+	{
+		return new EntityNavalMine(world);
 	}
 
 	@Override
@@ -100,9 +102,9 @@ public class ItemIINavalMine extends ItemIIAmmoBase implements IItemScrollable
 	}
 
 	@Override
-	public EnumCoreTypes[] getAllowedCoreTypes()
+	public CoreTypes[] getAllowedCoreTypes()
 	{
-		return new EnumCoreTypes[]{EnumCoreTypes.CANISTER};
+		return new CoreTypes[]{CoreTypes.CANISTER};
 	}
 
 	@Override
@@ -125,10 +127,13 @@ public class ItemIINavalMine extends ItemIIAmmoBase implements IItemScrollable
 	}
 
 
+	//TODO: 02.01.2024 reimplement
+	/*	*/
+
 	/**
 	 * Called when the equipped item is right clicked.
 	 * Boat code
-	 */
+	 *//*
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn)
 	{
 		ItemStack itemstack = playerIn.getHeldItem(handIn);
@@ -214,8 +219,7 @@ public class ItemIINavalMine extends ItemIIAmmoBase implements IItemScrollable
 				}
 			}
 		}
-	}
-
+	}*/
 	@Override
 	public void onScroll(ItemStack stack, boolean forward, EntityPlayerMP player)
 	{
@@ -227,14 +231,8 @@ public class ItemIINavalMine extends ItemIIAmmoBase implements IItemScrollable
 	}
 
 	@Override
-	public EnumFuseTypes[] getAllowedFuseTypes()
+	public FuseTypes[] getAllowedFuseTypes()
 	{
-		return new EnumFuseTypes[]{EnumFuseTypes.CONTACT, EnumFuseTypes.PROXIMITY};
-	}
-
-	@Override
-	public boolean isProjectile()
-	{
-		return false;
+		return new FuseTypes[]{FuseTypes.CONTACT, FuseTypes.PROXIMITY};
 	}
 }

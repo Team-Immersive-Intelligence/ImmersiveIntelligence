@@ -237,7 +237,7 @@ public abstract class TileEntityMultiblockIIBase<T extends TileEntityMultiblockI
 		return super.getRenderBoundingBox();
 	}
 
-	public BlockPos[] getMultiblockBlocks()
+	public List<BlockPos> getMultiblockBlocks()
 	{
 		ArrayList<BlockPos> blocks = new ArrayList<>();
 		BlockPos origin = getPos().subtract(new Vec3i(offset[0], offset[1], offset[2]));
@@ -247,7 +247,7 @@ public abstract class TileEntityMultiblockIIBase<T extends TileEntityMultiblockI
 				for(int z = 0; z < structureDimensions[2]; z++)
 					blocks.add(origin.offset(facing, x).offset(facing.rotateY(), z).add(0, y, 0));
 
-		return blocks.toArray(new BlockPos[0]);
+		return blocks;
 	}
 
 	/**

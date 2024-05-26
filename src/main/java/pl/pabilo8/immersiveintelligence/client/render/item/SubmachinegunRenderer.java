@@ -13,10 +13,9 @@ import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformT
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.model.obj.OBJModel;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry;
-import pl.pabilo8.immersiveintelligence.client.fx.particles.ParticleGunfire;
+import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
+import pl.pabilo8.immersiveintelligence.client.fx.IIParticles;
 import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.client.util.amt.*;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMTBullet.BulletState;
@@ -221,17 +220,11 @@ public class SubmachinegunRenderer extends IIUpgradableItemRendererAMT<ItemIISub
 						(stack, combinedHeader) -> new AMT[]{
 								//Main Model
 								new AMTParticle("muzzle_flash", combinedHeader)
-										.setParticle(new ParticleGunfire(
-												null,
-												Vec3d.ZERO,
-												new Vec3d(1, 0, 0),
-												16f
-										)
-								),
+										.setParticle(IIParticles.PARTICLE_GUNFIRE),
 								new AMTHand("hand_main", combinedHeader, EnumHand.OFF_HAND),
 								new AMTHand("hand_off", combinedHeader, EnumHand.OFF_HAND),
 
-								new AMTBullet("casing_fired", combinedHeader, AmmoRegistry.INSTANCE.getModel(IIContent.itemAmmoSubmachinegun))
+								new AMTBullet("casing_fired", combinedHeader, AmmoRegistry.getModel(IIContent.itemAmmoSubmachinegun))
 										.withState(BulletState.CASING),
 						}
 				).withTextureProvider(

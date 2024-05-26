@@ -1,7 +1,9 @@
 package pl.pabilo8.immersiveintelligence.common.item.ammo;
 
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoCasing.Casings;
+import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
 import pl.pabilo8.modworks.annotations.item.GeneratedItemModels;
 import pl.pabilo8.modworks.annotations.item.GeneratedSubItemModel;
@@ -18,6 +20,7 @@ import pl.pabilo8.modworks.annotations.item.GeneratedSubItemModel;
  * This item provides only the missing ones.
  * </p>
  */
+@IIItemProperties(category = IICategory.RESOURCES)
 public class ItemIIAmmoCasing extends ItemIISubItemsBase<Casings>
 {
 	public ItemIIAmmoCasing()
@@ -52,6 +55,18 @@ public class ItemIIAmmoCasing extends ItemIISubItemsBase<Casings>
 		TRIPMINE,
 		TELLERMINE,
 		@IIItemProperties(stackSize = 1)
-		RADIO_EXPLOSIVES
+		RADIO_EXPLOSIVES,
+
+		@IIItemProperties(stackSize = 1)
+		MEDIUM_ARTILLERY_6BCAL,
+		@IIItemProperties(stackSize = 1)
+		LIGHT_GUN_4BCAL,
+
+		@IIItemProperties(stackSize = 1)
+		ROCKET_6BCAL,
+		@IIItemProperties(stackSize = 1)
+		HEAVY_ROCKET_10BCAL,
+		@IIItemProperties(stackSize = 1)
+		GUIDED_MISSILE_6BCAL
 	}
 }

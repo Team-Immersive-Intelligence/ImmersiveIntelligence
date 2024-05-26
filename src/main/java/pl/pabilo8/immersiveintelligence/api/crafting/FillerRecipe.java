@@ -10,7 +10,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.oredict.OreDictionary;
-import pl.pabilo8.immersiveintelligence.api.bullets.IAmmo;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionBase.IIIMultiblockRecipe;
 
 import javax.annotation.Nullable;
@@ -32,7 +32,7 @@ public class FillerRecipe extends MultiblockRecipe implements IIIMultiblockRecip
 	int totalProcessTime;
 	int totalProcessEnergy;
 	//for bullets only
-	IAmmo bullet = null;
+	IAmmoTypeItem bullet = null;
 
 	public FillerRecipe(ItemStack itemOutput, Object itemInput, DustStack dust, int time, int energy)
 	{
@@ -42,8 +42,8 @@ public class FillerRecipe extends MultiblockRecipe implements IIIMultiblockRecip
 		this.inputList = Lists.newArrayList(this.itemInput);
 		this.outputList = ListUtils.fromItem(this.itemOutput);
 
-		if(itemOutput.getItem() instanceof IAmmo)
-			bullet = ((IAmmo)itemOutput.getItem());
+		if(itemOutput.getItem() instanceof IAmmoTypeItem)
+			bullet = ((IAmmoTypeItem)itemOutput.getItem());
 
 		this.dust = dust;
 		this.totalProcessTime = time;
@@ -57,7 +57,7 @@ public class FillerRecipe extends MultiblockRecipe implements IIIMultiblockRecip
 		return r;
 	}
 
-	public static <T extends Item & IAmmo> FillerRecipe addRecipe(T bulletItem, int time, int energy)
+	public static <T extends Item & IAmmoTypeItem> FillerRecipe addRecipe(T bulletItem, int time, int energy)
 	{
 		ItemStack casingStack = bulletItem.getCasingStack(1);
 		ItemNBTHelper.setBoolean(casingStack, "ii_FilledCasing", true);
@@ -135,7 +135,7 @@ public class FillerRecipe extends MultiblockRecipe implements IIIMultiblockRecip
 	}
 
 	@Nullable
-	public IAmmo getBullet()
+	public IAmmoTypeItem getBullet()
 	{
 		return this.bullet;
 	}

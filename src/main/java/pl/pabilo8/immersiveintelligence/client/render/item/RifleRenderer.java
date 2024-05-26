@@ -15,12 +15,11 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.model.obj.OBJModel;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumCoreTypes;
-import pl.pabilo8.immersiveintelligence.client.fx.particles.ParticleGunfire;
+import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreTypes;
+import pl.pabilo8.immersiveintelligence.client.fx.IIParticles;
 import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.client.util.amt.*;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMTBullet.BulletState;
@@ -222,19 +221,13 @@ public class RifleRenderer extends IIUpgradableItemRendererAMT<ItemIIRifle> impl
 				.withHeader(IIAnimationLoader.loadHeader(new ResourceLocation(ImmersiveIntelligence.MODID, "models/item/weapons/rifle/rifle_upgrades.obj.amt")))
 				.withModelProvider(
 						(stack, combinedHeader) -> new AMT[]{
-								new AMTBullet("bullet", combinedHeader, AmmoRegistry.INSTANCE.getModel(IIContent.itemAmmoMachinegun))
+								new AMTBullet("bullet", combinedHeader, AmmoRegistry.getModel(IIContent.itemAmmoMachinegun))
 										.withState(BulletState.BULLET_UNUSED)
-										.withProperties(0xcfcfcf, EnumCoreTypes.PIERCING, -1),
-								new AMTBullet("casing_fired", combinedHeader, AmmoRegistry.INSTANCE.getModel(IIContent.itemAmmoMachinegun))
+										.withProperties(IIContent.ammoCoreSteel, CoreTypes.PIERCING, -1),
+								new AMTBullet("casing_fired", combinedHeader, AmmoRegistry.getModel(IIContent.itemAmmoMachinegun))
 										.withState(BulletState.CASING),
 								new AMTParticle("muzzle_flash", combinedHeader)
-										.setParticle(new ParticleGunfire(
-												null,
-												Vec3d.ZERO,
-												new Vec3d(1, 0, 0),
-												16f
-										)
-								),
+										.setParticle(IIParticles.PARTICLE_GUNFIRE),
 								new AMTHand("hand", combinedHeader, EnumHand.OFF_HAND),
 								new AMTHand("hand_right", combinedHeader, EnumHand.MAIN_HAND)
 						}

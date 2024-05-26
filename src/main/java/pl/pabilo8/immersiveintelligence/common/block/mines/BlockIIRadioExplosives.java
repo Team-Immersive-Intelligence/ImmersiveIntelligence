@@ -10,16 +10,18 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
-import pl.pabilo8.immersiveintelligence.client.model.misc.ModelTellermine;
+import pl.pabilo8.immersiveintelligence.client.model.builtin.IAmmoModel;
+import pl.pabilo8.immersiveintelligence.client.model.builtin.ModelAmmo;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.mines.tileentity.TileEntityRadioExplosives;
+import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoMine;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoCasing.Casings;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * @author Pabilo8
@@ -61,7 +63,7 @@ public class BlockIIRadioExplosives extends BlockIIMine
 		}
 
 		@Override
-		public float getComponentMultiplier()
+		public float getComponentAmount()
 		{
 			return 0.45f;
 		}
@@ -79,17 +81,16 @@ public class BlockIIRadioExplosives extends BlockIIMine
 		}
 
 		@Override
-		public float getCaliber()
+		public int getCaliber()
 		{
-			return 10f;
+			return 10;
 		}
 
+		@Nonnull
 		@SideOnly(Side.CLIENT)
-		@Override
-		public @Nonnull
-		Class<? extends IBulletModel> getModel()
+		public Function<ItemBlockMineBase, IAmmoModel<ItemBlockMineBase, EntityAmmoMine>> get3DModel()
 		{
-			return ModelTellermine.class;
+			return ModelAmmo::createExplosivesModel;
 		}
 
 		@Override

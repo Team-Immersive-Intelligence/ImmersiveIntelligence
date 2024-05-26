@@ -3,6 +3,7 @@ package pl.pabilo8.immersiveintelligence.common.compat;
 /**
  * @author Pabilo8
  * @since 27.07.2021
+ * It be empti. Why
  */
 public class TerrafirmaHelper extends IICompatModule
 {
@@ -16,6 +17,12 @@ public class TerrafirmaHelper extends IICompatModule
 	public void registerRecipes()
 	{
 
+	}
+
+	@Override
+	public String getName()
+	{
+		return "Terrafirma";
 	}
 
 	@Override

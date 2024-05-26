@@ -14,10 +14,13 @@ import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoUtils;
-import pl.pabilo8.immersiveintelligence.api.bullets.penhandlers.PenetrationHandlerConcretes.PenetrationHandlerConcreteBricks;
-import pl.pabilo8.immersiveintelligence.api.bullets.penhandlers.PenetrationHandlerMetals.PenetrationHandlerSteel;
+import pl.pabilo8.immersiveintelligence.api.ammo.PenetrationRegistry;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.PenetrationHardness;
+import pl.pabilo8.immersiveintelligence.api.ammo.penetration.PenetrationHandler;
+import pl.pabilo8.immersiveintelligence.api.ammo.penetration.PenetrationHandlerMetal;
+import pl.pabilo8.immersiveintelligence.client.fx.IIParticles;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.compat.IICompatModule;
 import pl.pabilo8.immersiveintelligence.common.item.ItemIIMinecart.Minecarts;
 
@@ -31,6 +34,13 @@ import java.util.function.Supplier;
  */
 public class ImmersiveTechnologyHelper extends IICompatModule
 {
+
+	@Override
+	public String getName()
+	{
+		return "ImmersiveTechnology";
+	}
+
 	@Override
 	public void preInit()
 	{
@@ -74,13 +84,14 @@ public class ImmersiveTechnologyHelper extends IICompatModule
 		addBlock(blocks, new ResourceLocation("immersivetech", "metal_barrel"));
 		addBlock(blocks, new ResourceLocation("immersivetech", "metal_device"));
 		addBlock(blocks, new ResourceLocation("immersivetech", "metal_trash"));
-		AmmoUtils.batchRegisterHandler(new PenetrationHandlerSteel(), blocks.toArray(new Block[0]));
+		PenetrationRegistry.batchRegisterHandler(PenetrationHandlerMetal.get("steel"), blocks.toArray(new Block[0]));
 
 		blocks.clear();
 		addBlock(blocks, new ResourceLocation("immersivetech", "stone_multiblock"));
 		addBlock(blocks, new ResourceLocation("immersivetech", "stone_decoration"));
 		addBlock(blocks, new ResourceLocation("immersivetech", "stone_decoration_slab"));
-		AmmoUtils.batchRegisterHandler(new PenetrationHandlerConcreteBricks(), blocks.toArray(new Block[0]));
+		PenetrationRegistry.batchRegisterHandler(new PenetrationHandler(PenetrationHardness.CONCRETE, 1f, 150, IIParticles.PARTICLE_DEBRIS_BRICK, IISounds.hitStone),
+				blocks.toArray(new Block[0]));
 	}
 
 	@Optional.Method(modid = "immersivetech")

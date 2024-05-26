@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.GlStateManager.CullFace;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -164,6 +165,8 @@ public abstract class IITileRenderer<T extends TileEntity> extends TileEntitySpe
 		String name();
 
 		Class<? extends TileEntity> clazz();
+
+		Class<? extends TileEntityItemStackRenderer> teisrClazz() default TileEntityItemStackRenderer.class;
 
 	}
 }

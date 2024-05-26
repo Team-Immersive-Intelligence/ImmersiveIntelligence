@@ -17,13 +17,13 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.registries.GameData;
 import org.apache.commons.lang3.ArrayUtils;
 import org.lwjgl.input.Keyboard;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.GuiEmplacementTaskList;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonCheckboxII;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonDropdownList;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonSwitch;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityEmplacement;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
@@ -222,14 +222,14 @@ public class GuiEmplacementPageTasks extends GuiEmplacement
 		IIPacketHandler.sendToServer(new MessageIITileSync(tile, nbt
 				.withTag("defaultTaskNBT"+(currentTab+1), EasyNBT.newNBT()
 						.withList("filters",
-									taskFilters.stream()
-											.map(filter -> EasyNBT.newNBT()
-													.withString("type", filter.type.getName())
-													.withBoolean("negation", filter.negation)
-													.withString("filter", filter.filter)
-											)
-											.toArray()
-								)
+								taskFilters.stream()
+										.map(filter -> EasyNBT.newNBT()
+												.withString("type", filter.type.getName())
+												.withBoolean("negation", filter.negation)
+												.withString("filter", filter.filter)
+										)
+										.toArray()
+						)
 				)
 		));
 	}

@@ -9,6 +9,10 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
 import org.lwjgl.opengl.GL11;
+import pl.pabilo8.immersiveintelligence.client.model.IIModelRegistry;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
+
+import java.util.Arrays;
 
 /**
  * AMT type for drawing 3d models using quads
@@ -21,8 +25,7 @@ public class AMTQuads extends AMT
 	/**
 	 * Default normal of an unlit quad.
 	 */
-	private static final Vec3i NO_LIGHTING_NORMAL = new Vec3i(1, 1, 1);
-
+	protected static final Vec3i NO_LIGHTING_NORMAL = new Vec3i(1, 1, 1);
 	/**
 	 * Quads acquired from a {@link blusunrize.immersiveengineering.client.models.IESmartObjModel}
 	 */
@@ -30,14 +33,18 @@ public class AMTQuads extends AMT
 	/**
 	 * GL CallList ID
 	 */
-	private int listID = -1;
+	protected int listID = -1;
+	/**
+	 * Color baked onto this element's quads.
+	 */
+	protected int bakedColor = -1;
 
 	/**
 	 * Whether this element has lighting (darkening the face when viewed from another angle) enabled<br>
 	 * Use on static half-transparent elements, such as dust, glass, straw, etc..<br>
 	 * When set to true, tint may be darker/lighter during rotation.
 	 */
-	private boolean hasLighting = true;
+	protected boolean hasLighting = true;
 
 	public AMTQuads(String name, Vec3d originPos, BakedQuad[] quads)
 	{
@@ -59,13 +66,35 @@ public class AMTQuads extends AMT
 			{
 				buf.begin(7, DefaultVertexFormats.ITEM);
 
-				for(BakedQuad bakedquad : quads)
+				//Use forge's trick to put colored quads to the buffer
+				//Since it's inside a GLCallList, the speed will get boosted significantly
+				if(bakedColor!=-1)
 				{
-					buf.addVertexData(bakedquad.getVertexData());
-					buf.putColorRGB_F4(1f, 1f, 1f);
-					Vec3i vec3i = hasLighting?(bakedquad.getFace().getDirectionVec()): NO_LIGHTING_NORMAL;
-					buf.putNormal((float)vec3i.getX(), (float)vec3i.getY(), (float)vec3i.getZ());
+					float[] floats = IIUtils.rgbIntToRGB(bakedColor);
+					for(BakedQuad quad : quads)
+					{
+						buf.addVertexData(quad.getVertexData());
+						buf.putColorRGB_F4(floats[0], floats[1], floats[2]);
+						Vec3i vec3i = hasLighting?(quad.getFace().getDirectionVec()): NO_LIGHTING_NORMAL;
+						buf.putNormal((float)vec3i.getX(), (float)vec3i.getY(), (float)vec3i.getZ());
+					}
+					tes.draw();
+					buf.setTranslation(0, 0, 0);
+
+					buf.begin(7, DefaultVertexFormats.ITEM);
+					buf.addVertexData(IIModelRegistry.QUAD_EMPTY.getVertexData());
+					buf.putColorRGB_F4(1, 1, 1);
+					buf.putNormal((float)NO_LIGHTING_NORMAL.getX(), (float)NO_LIGHTING_NORMAL.getY(), (float)NO_LIGHTING_NORMAL.getZ());
 				}
+				else
+					//Else use the ancient method to place them as the scripture says
+					for(BakedQuad quad : quads)
+					{
+						buf.addVertexData(quad.getVertexData());
+						buf.putColorRGB_F4(1, 1, 1);
+						Vec3i vec3i = hasLighting?(quad.getFace().getDirectionVec()): NO_LIGHTING_NORMAL;
+						buf.putNormal((float)vec3i.getX(), (float)vec3i.getY(), (float)vec3i.getZ());
+					}
 				tes.draw();
 				buf.setTranslation(0, 0, 0);
 			}
@@ -79,6 +108,22 @@ public class AMTQuads extends AMT
 	{
 		if(listID!=-1)
 			GlStateManager.glDeleteLists(listID, 1);
+		listID = -1;
+	}
+
+	/**
+	 * @param color new color to be baked on quads
+	 * @return a recolored copy of this AMTQuads
+	 */
+	public AMTQuads recolor(int color)
+	{
+		AMTQuads copy = new AMTQuads(this.name, this.originPos,
+				Arrays.stream(quads)
+						.map(q -> new BakedQuad(Arrays.copyOf(q.getVertexData(), q.getVertexData().length), 1, q.getFace(), q.getSprite(), q.shouldApplyDiffuseLighting(), q.getFormat()))
+						.toArray(BakedQuad[]::new)
+		);
+		copy.bakedColor = color;
+		return copy;
 	}
 
 	public void setLighting(boolean hasLighting)

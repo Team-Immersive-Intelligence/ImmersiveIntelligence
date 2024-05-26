@@ -34,6 +34,7 @@ import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IIBl
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IITileProviderEnum;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.TernaryValue;
 import pl.pabilo8.immersiveintelligence.common.util.block.ItemBlockIIBase;
+import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 
 import java.util.ArrayList;
 
@@ -57,26 +58,36 @@ public class BlockIIDataDevice extends BlockIITileProvider<IIBlockTypes_Connecto
 
 	public enum IIBlockTypes_Connector implements IITileProviderEnum
 	{
+		@IIBlockProperties(category = IICategory.ELECTRONICS)
 		@EnumTileProvider(tile = TileEntityDataConnector.class)
 		DATA_CONNECTOR,
+		@IIBlockProperties(category = IICategory.ELECTRONICS)
 		@EnumTileProvider(tile = TileEntityDataRelay.class)
 		DATA_RELAY,
+		@IIBlockProperties(category = IICategory.ELECTRONICS)
 		@EnumTileProvider(tile = TileEntityAlarmSiren.class)
 		ALARM_SIREN,
+		@IIBlockProperties(category = IICategory.LOGISTICS)
 		@EnumTileProvider(tile = TileEntityInserter.class)
 		INSERTER,
+		@IIBlockProperties(category = IICategory.LOGISTICS)
 		@EnumTileProvider(tile = TileEntityFluidInserter.class)
 		FLUID_INSERTER,
+		@IIBlockProperties(category = IICategory.LOGISTICS)
 		@EnumTileProvider(tile = TileEntityAdvancedInserter.class)
 		ADVANCED_INSERTER,
-		@IIBlockProperties(hidden = TernaryValue.TRUE)
+		@IIBlockProperties(hidden = TernaryValue.TRUE, category = IICategory.LOGISTICS)
 		ADVANCED_FLUID_INSERTER,
+		@IIBlockProperties(category = IICategory.ELECTRONICS)
 		@EnumTileProvider(tile = TileEntityChemicalDispenser.class)
 		CHEMICAL_DISPENSER,
+		@IIBlockProperties(category = IICategory.ELECTRONICS)
 		@EnumTileProvider(tile = TileEntityProgrammableSpeaker.class)
 		PROGRAMMABLE_SPEAKER,
+		@IIBlockProperties(category = IICategory.ELECTRONICS)
 		@EnumTileProvider(tile = TileEntityDataDebugger.class)
 		DATA_DEBUGGER,
+		@IIBlockProperties(category = IICategory.ELECTRONICS)
 		@EnumTileProvider(tile = TileEntityDataCallbackConnector.class)
 		DATA_DUPLEX_CONNECTOR
 	}

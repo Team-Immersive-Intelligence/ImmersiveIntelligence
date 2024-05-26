@@ -14,6 +14,8 @@ import pl.pabilo8.immersiveintelligence.api.data.IDataStorageItem;
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIBase;
 
 import javax.annotation.Nullable;
@@ -23,6 +25,7 @@ import java.util.List;
  * @author Pabilo8
  * @since 25-06-2019
  */
+@IIItemProperties(category = IICategory.ELECTRONICS)
 public class ItemIIPunchtape extends ItemIIBase implements IDataStorageItem
 {
 	public ItemIIPunchtape()

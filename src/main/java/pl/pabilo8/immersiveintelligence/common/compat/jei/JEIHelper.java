@@ -16,8 +16,8 @@ import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.oredict.OreDictionary;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry;
-import pl.pabilo8.immersiveintelligence.api.bullets.IAmmo;
+import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.api.crafting.*;
 import pl.pabilo8.immersiveintelligence.client.gui.block.*;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
@@ -25,7 +25,7 @@ import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.compat.jei.gui_handlers.*;
 import pl.pabilo8.immersiveintelligence.common.compat.jei.recipe_handlers.*;
 import pl.pabilo8.immersiveintelligence.common.crafting.RecipeMinecart;
-import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoRevolver;
+import pl.pabilo8.immersiveintelligence.common.item.ammo.gun.ItemIIAmmoRevolver;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock;
 
 import javax.annotation.Nonnull;
@@ -98,7 +98,7 @@ public class JEIHelper implements IModPlugin
 		jeiHelpers.getIngredientBlacklist().addIngredientToBlacklist(new ItemStack(IIContent.itemAmmoRevolver, 1, ItemIIAmmoRevolver.UNUSED));
 
 
-		for(IAmmo bullet : AmmoRegistry.INSTANCE.registeredBulletItems.values())
+		for(IAmmoTypeItem<?, ?> bullet : AmmoRegistry.getAllAmmoItems())
 		{
 			ItemStack stack = bullet.getBulletWithParams("", "", "");
 			stack.setTagCompound(new NBTTagCompound());
@@ -110,8 +110,6 @@ public class JEIHelper implements IModPlugin
 				jeiHelpers.getIngredientBlacklist().addIngredientToBlacklist(new ItemStack(block, 1, OreDictionary.WILDCARD_VALUE));
 
 		IILogger.info("JEI has just requested our recipes, it seems that we even have a class for registering them!");
-
-		//modRegistry.addRecipeCatalyst(new ItemStack(IEContent.blockMetalMultiblock, 1, BlockTypes_MetalMultiblock.ASSEMBLER.getMeta()), VanillaRecipeCategoryUid.CRAFTING);
 
 		for(IIRecipeCategory<Object, IRecipeWrapper> cat : categories.values())
 		{

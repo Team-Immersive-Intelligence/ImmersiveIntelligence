@@ -6,8 +6,6 @@ import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorage;
 import blusunrize.immersiveengineering.api.energy.wires.IImmersiveConnectable;
 import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler;
 import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler.Connection;
-import blusunrize.immersiveengineering.api.tool.RailgunHandler;
-import blusunrize.immersiveengineering.api.tool.RailgunHandler.RailgunProjectileProperties;
 import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IDirectionalTile;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
@@ -22,6 +20,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.EnumDyeColor;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -42,7 +41,6 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraft.item.Item;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.oredict.OreDictionary;
@@ -56,7 +54,7 @@ import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.IWrench;
 import pl.pabilo8.immersiveintelligence.common.compat.BaublesHelper;
 import pl.pabilo8.immersiveintelligence.common.compat.IICompatModule;
-import pl.pabilo8.immersiveintelligence.common.entity.bullet.EntityBullet;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ISerializableEnum;
 
@@ -74,6 +72,8 @@ import java.util.function.Predicate;
 @SuppressWarnings("unused")
 public class IIUtils
 {
+	public static final Vec3d ONE = new Vec3d(1, 1, 1);
+
 	public static double getDistanceBetweenPos(BlockPos pos1, BlockPos pos2, boolean center)
 	{
 		double deltaX = (pos1.getX()+(center?0d: 0.5d))-(pos2.getX()+(center?0d: 0.5d));
@@ -161,6 +161,7 @@ public class IIUtils
 	 * Black is actually the limit of darkness (less value - darker) in RGB<br>
 	 * But because everything is reverse, we get the color with greater value.<br>
 	 */
+	@Deprecated
 	public static int[] rgbToCmyk(int red, int green, int blue)
 	{
 		return new int[]{255-red, 255-green, 255-blue, 255-Math.min(red, Math.max(green, blue))};
@@ -172,12 +173,14 @@ public class IIUtils
 	 * @param b blue amount (0-1)
 	 * @return float cmyk color array with values 0-1
 	 */
+	@Deprecated
 	public static float[] rgbToCmyk(float r, float g, float b)
 	{
 		int[] cmyk = rgbToCmyk((int)(r*255), (int)(g*255), (int)(b*255));
 		return new float[]{cmyk[0]/255f, cmyk[1]/255f, cmyk[2]/255f, cmyk[3]/255f};
 	}
 
+	@Deprecated
 	public static float[] rgbToCmyk(float[] rgb)
 	{
 		return rgbToCmyk(rgb[0], rgb[1], rgb[2]);
@@ -190,11 +193,13 @@ public class IIUtils
 	 * @param black   black amount (0-255)
 	 * @return float cmyk color array with values 0-1
 	 */
+	@Deprecated
 	public static int[] cmykToRgb(int cyan, int magenta, int yellow, int black)
 	{
 		return new int[]{Math.min(255-black, 255-cyan), Math.min(255-black, 255-magenta), Math.min(255-black, 255-yellow)};
 	}
 
+	@Deprecated
 	public static float[] cmykToRgb(float c, float m, float y, float b)
 	{
 		int[] dec = cmykToRgb((int)(c*255), (int)(m*255), (int)(y*255), (int)(b*255));
@@ -209,6 +214,7 @@ public class IIUtils
 	 * @param value      value in 0-1
 	 * @return float rgb color array with values 0-1
 	 */
+	@Deprecated
 	public static float[] hsvToRgb(float hue, float saturation, float value)
 	{
 		int i = (int)(hue*6.0F)%6;
@@ -268,6 +274,7 @@ public class IIUtils
 	 * @param b blue amount (0-1)
 	 * @return float hsv array with values 0-1
 	 */
+	@Deprecated
 	public static float[] rgbToHsv(float r, float g, float b)
 	{
 		float cMax = Math.max(Math.max(r, g), b);
@@ -470,14 +477,11 @@ public class IIUtils
 	public static char cycleDataPacketChars(char current, boolean forward, boolean hasEmpty)
 	{
 		if(hasEmpty)
-		{
 			if(current==' ')
-			{
 				if(forward)
 					current = DataPacket.varCharacters[0];
 				else
 					current = DataPacket.varCharacters[DataPacket.varCharacters.length-1];
-			}
 			else
 			{
 				int current_char;
@@ -490,7 +494,6 @@ public class IIUtils
 				else
 					current = DataPacket.varCharacters[current_char];
 			}
-		}
 		else
 		{
 			int current_char;
@@ -524,9 +527,7 @@ public class IIUtils
 			char c = (hasEmpty&&current_char==DataPacket.varCharacters.length)?' ': DataPacket.varCharacters[current_char];
 
 			if(!packet.hasVariable(c))
-			{
 				return c;
-			}
 		}
 		return current; //¯\_(ツ)_/¯
 	}
@@ -539,57 +540,9 @@ public class IIUtils
 		return (float)MathHelper.clampedLerp(MathHelper.clampedLerp(e1, e2, percent*2), e3, Math.max(percent-0.5f, 0)*2);
 	}
 
-	/**
-	 * Pitch calculation for artillery stolen from Pneumaticcraft. Huge thanks to desht and MineMaarten for this amazing code!
-	 * <a href="https://github.com/TeamPneumatic/pnc-repressurized/blob/master/src/main/java/me/desht/pneumaticcraft/common/tileentity/TileEntityAirCannon.java">https://github.com/TeamPneumatic/pnc-repressurized/blob/master/src/main/java/me/desht/pneumaticcraft/common/tileentity/TileEntityAirCannon.java</a>
-	 *
-	 * @param distance       distance to target
-	 * @param height         height difference between the gun and target
-	 * @param force          speed (blocks/s) of the bullet
-	 * @param gravity        gravity of the bullet
-	 * @param drag           drag factor of the bullet
-	 * @param anglePrecision precision with which the angle will be searched, the lower the number, the higher the precision
-	 * @return optimal ballistic shooting angle
-	 * @author desht
-	 * @author MineMaarten
-	 */
-	public static float calculateBallisticAngle(double distance, double height, float force, double gravity, double drag, double anglePrecision)
-	{
-		double bestAngle = 0;
-		double bestDistance = Float.MAX_VALUE;
-		if(gravity==0D)
-		{
-			return 90F-(float)(Math.atan(height/distance)*180F/Math.PI);
-		}
-		/*
-			simulate the trajectory for angles from 45 to 90 degrees,
-			returning the angle which lands the projectile closest to the target distance
-		*/
-		for(double i = Math.PI*anglePrecision; i < Math.PI*0.5D; i += anglePrecision)
-		{
-			double motionX = MathHelper.cos((float)i)*force;// calculate the x component of the vector
-			double motionY = MathHelper.sin((float)i)*force;// calculate the y component of the vector
-			double posX = 0;
-			double posY = 0;
-			while(posY > height||motionY > 0)
-			{
-				// simulate movement, until we reach the y-level required
-				motionX *= drag;
-				motionY *= drag;
-				motionY -= gravity;
-				posX += motionX;
-				posY += motionY;
-			}
-			double distanceToTarget = Math.abs(distance-posX);
-			if(distanceToTarget < bestDistance)
-			{
-				bestDistance = distanceToTarget;
-				bestAngle = i;
-			}
-		}
 
-		return 90F-(float)(bestAngle*180D/Math.PI);
-	}
+	//REFACTOR: 14.02.2024 remove need to pass drag and gravity multiplier
+
 
 	public static boolean isAdvancedHammer(ItemStack stack)
 	{
@@ -784,6 +737,8 @@ public class IIUtils
 	{
 		int lvt_3_1_ = (rIn<<8)+gIn;
 		lvt_3_1_ = (lvt_3_1_<<8)+bIn;
+
+
 		return lvt_3_1_;
 	}
 
@@ -835,6 +790,11 @@ public class IIUtils
 		return getHexCol(Integer.toHexString(color), text);
 	}
 
+	public static String getHexCol(IIColor color, String text)
+	{
+		return getHexCol(color.getHexRGB(), text);
+	}
+
 	public static String getHexCol(String color, String text)
 	{
 		return String.format("<hexcol=%s:%s>", color, text);
@@ -858,51 +818,6 @@ public class IIUtils
 	public static String toSnakeCase(String value)
 	{
 		return value.replaceAll("([a-z])([A-Z]+)", "$1_$2").toLowerCase();
-	}
-
-	public static float getDirectFireAngle(float initialForce, float mass, Vec3d toTarget)
-	{
-		float force = initialForce;
-		double dist = toTarget.distanceTo(new Vec3d(0, toTarget.y, 0));
-		double gravityMotionY = 0, motionY = 0, baseMotionY = toTarget.normalize().y, baseMotionYC;
-
-		while(dist > 0)
-		{
-			force -= EntityBullet.DRAG*force*EntityBullet.DEV_SLOMO;
-			gravityMotionY -= EntityBullet.GRAVITY*mass*EntityBullet.DEV_SLOMO;
-			baseMotionYC = baseMotionY*(force/(initialForce));
-			motionY += (baseMotionYC+gravityMotionY)*EntityBullet.DEV_SLOMO;
-			dist -= EntityBullet.DEV_SLOMO*force;
-		}
-
-		toTarget = toTarget.addVector(0, motionY-baseMotionY, 0).normalize();
-
-		return (float)Math.toDegrees((Math.atan2(toTarget.y, toTarget.distanceTo(new Vec3d(0, toTarget.y, 0)))));
-	}
-
-	public static float getIEDirectRailgunAngle(ItemStack ammo, Vec3d toTarget)
-	{
-		RailgunProjectileProperties p = RailgunHandler.getProjectileProperties(ammo);
-		if(p!=null)
-		{
-			float force = 20;
-			float gravity = (float)p.gravity;
-
-			double gravityMotionY = 0, motionY = 0, baseMotionY = toTarget.normalize().y, baseMotionYC = baseMotionY;
-			double dist = toTarget.distanceTo(new Vec3d(0, toTarget.y, 0));
-			while(dist > 0)
-			{
-				dist -= force;
-				force *= 0.99;
-				baseMotionYC *= 0.99f;
-				gravityMotionY -= gravity/force;
-				motionY += (baseMotionYC+gravityMotionY);
-			}
-
-			toTarget = toTarget.addVector(0, motionY-baseMotionY, 0).normalize();
-		}
-
-		return (float)Math.toDegrees((Math.atan2(toTarget.y, toTarget.distanceTo(new Vec3d(0, toTarget.y, 0)))));
 	}
 
 	public static Vec3d getEntityCenter(Entity entity)
@@ -941,7 +856,6 @@ public class IIUtils
 		{
 			IItemHandler capability = entity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
 			if(capability!=null)
-			{
 				for(int i = 0; i < 10; i++)
 				{
 					if(stack.isEmpty())
@@ -966,7 +880,6 @@ public class IIUtils
 					if(entity instanceof EntityPlayer)
 						((EntityPlayer)entity).inventoryContainer.detectAndSendChanges();
 				}
-			}
 		}
 
 		if(!stack.isEmpty())
@@ -1020,6 +933,18 @@ public class IIUtils
 	}
 
 	/**
+	 * <i>Trust me, I'm an Engineer!</i><br>
+	 * Returns a value of an annotation<br>
+	 * Generally safe to use, but slow. Cache the results.
+	 */
+	@Nullable
+	public static <T extends Annotation> T getAnnotation(Class<T> annotationClass, Object o)
+	{
+		if(o.getClass().isAnnotationPresent(annotationClass)) return o.getClass().getAnnotation(annotationClass);
+		return null;
+	}
+
+	/**
 	 * @param numbers array of numbers, must contain at least two
 	 * @return Greatest Common Divisor of multiple numbers
 	 */
@@ -1031,14 +956,30 @@ public class IIUtils
 
 		return gcd;
 	}
-	public static void fixupItem(Item item, String itemName) {
+
+	//REFACTOR: 27.03.2024 replace lambda variant of this in project
+
+	/**
+	 * @param en   enum class
+	 * @param name name of the enum value
+	 * @param <T>  enum type
+	 * @return enum value with name, case insensitive
+	 */
+	@Nonnull
+	public static <T extends Enum<T> & ISerializableEnum> T enumValue(Class<T> en, String name)
+	{
+		return Enum.valueOf(en, name.toUpperCase());
+	}
+
+	public static void fixupItem(Item item, String itemName)
+	{
 		// First, get the item out of IE's registries.
-		Item rItem = IEContent.registeredIEItems.remove(IEContent.registeredIEItems.size() - 1);
-		if (rItem != item)
+		Item rItem = IEContent.registeredIEItems.remove(IEContent.registeredIEItems.size()-1);
+		if(rItem!=item)
 			throw new IllegalStateException("fixupItem was not called at the appropriate time");
 
 		// Now, reconfigure the block to match our mod.
-		item.setUnlocalizedName(ImmersiveIntelligence.MODID + "." + itemName);
+		item.setUnlocalizedName(ImmersiveIntelligence.MODID+"."+itemName);
 		item.setCreativeTab(IIContent.II_CREATIVE_TAB);
 
 		// And add it to our registries.

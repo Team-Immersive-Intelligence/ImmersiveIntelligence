@@ -1,0 +1,17 @@
+{
+	"origins": {
+		"casing": [0, 0, 0],
+		"casing_simple": [0, 0, 0],
+		"paint": [-0.025, 0, -0.025],
+		"core_canister": [0, 0, 0],
+		"core_piercing": [0, 0, 0],
+		"core_shaped": [0, 0, 0],
+		"jet_flame": [0, 0, 0]
+	},
+	"hierarchy": {},
+	"properties": {
+		"jet_flame": {
+			"lighting": false
+		}
+	}
+}

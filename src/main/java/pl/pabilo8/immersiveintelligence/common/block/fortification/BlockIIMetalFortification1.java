@@ -12,6 +12,7 @@ import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.block.BlockIIBase;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IIBlockEnum;
 import pl.pabilo8.immersiveintelligence.common.util.block.ItemBlockIIBase;
+import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -29,6 +30,7 @@ public class BlockIIMetalFortification1 extends BlockIIBase<IIBlockTypes_MetalFo
 		super("metal_fortification1", PropertyEnum.create("type", IIBlockTypes_MetalFortification1.class), Material.IRON, ItemBlockIIBase::new);
 		setHardness(3.0F);
 		setResistance(15.0F);
+		setCategory(IICategory.WARFARE);
 
 		setToolTypes(IIReference.TOOL_HAMMER);
 

@@ -2,25 +2,33 @@ package pl.pabilo8.immersiveintelligence.common.item.ammo;
 
 import blusunrize.immersiveengineering.common.IEContent;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem.IIAmmoProjectile;
+import pl.pabilo8.immersiveintelligence.client.model.builtin.IAmmoModel;
+import pl.pabilo8.immersiveintelligence.client.model.builtin.ModelAmmoProjectile;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Ammunition;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumCoreTypes;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumFuseTypes;
-import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
-import pl.pabilo8.immersiveintelligence.client.model.bullet.ModelRailgunGrenade;
+import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoBase.AmmoParts;
+import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
 import pl.pabilo8.modworks.annotations.item.GeneratedItemModels;
 import pl.pabilo8.modworks.annotations.item.ItemModelType;
 
 import javax.annotation.Nonnull;
+import java.util.function.Function;
 
 /**
  * @author Pabilo8
  * @since 30-08-2019
  */
 @GeneratedItemModels(itemName = "bullet_railgun_grenade_4bcal", type = ItemModelType.ITEM_SIMPLE_AUTOREPLACED, valueSet = AmmoParts.class)
-public class ItemIIAmmoRailgunGrenade extends ItemIIAmmoBase
+@IIAmmoProjectile
+@IIItemProperties(category = IICategory.WARFARE)
+public class ItemIIAmmoRailgunGrenade extends ItemIIAmmoBase<EntityAmmoProjectile>
 {
 	public ItemIIAmmoRailgunGrenade()
 	{
@@ -29,7 +37,7 @@ public class ItemIIAmmoRailgunGrenade extends ItemIIAmmoBase
 	}
 
 	@Override
-	public float getComponentMultiplier()
+	public float getComponentAmount()
 	{
 		return 0.3f;
 	}
@@ -53,16 +61,16 @@ public class ItemIIAmmoRailgunGrenade extends ItemIIAmmoBase
 	}
 
 	@Override
-	public float getCaliber()
+	public int getCaliber()
 	{
-		return 4f;
+		return 4;
 	}
 
+	@Nonnull
 	@SideOnly(Side.CLIENT)
-	@Override
-	public @Nonnull Class<? extends IBulletModel> getModel()
+	public Function<ItemIIAmmoBase<EntityAmmoProjectile>, IAmmoModel<ItemIIAmmoBase<EntityAmmoProjectile>, EntityAmmoProjectile>> get3DModel()
 	{
-		return ModelRailgunGrenade.class;
+		return ModelAmmoProjectile::createProjectileModel;
 	}
 
 	@Override
@@ -78,14 +86,27 @@ public class ItemIIAmmoRailgunGrenade extends ItemIIAmmoBase
 	}
 
 	@Override
-	public EnumCoreTypes[] getAllowedCoreTypes()
+	public CoreTypes[] getAllowedCoreTypes()
 	{
-		return new EnumCoreTypes[]{EnumCoreTypes.PIERCING, EnumCoreTypes.PIERCING_SABOT, EnumCoreTypes.SHAPED, EnumCoreTypes.SOFTPOINT, EnumCoreTypes.CANISTER};
+		return new CoreTypes[]{CoreTypes.PIERCING, CoreTypes.PIERCING_SABOT, CoreTypes.SHAPED, CoreTypes.SOFTPOINT, CoreTypes.CANISTER};
 	}
 
 	@Override
-	public EnumFuseTypes[] getAllowedFuseTypes()
+	public FuseTypes[] getAllowedFuseTypes()
 	{
-		return new EnumFuseTypes[]{EnumFuseTypes.CONTACT, EnumFuseTypes.TIMED, EnumFuseTypes.PROXIMITY};
+		return new FuseTypes[]{FuseTypes.CONTACT, FuseTypes.TIMED, FuseTypes.PROXIMITY};
+	}
+
+	@Override
+	public float getPenetrationDepth()
+	{
+		return 3;
+	}
+
+	@Nonnull
+	@Override
+	public EntityAmmoProjectile getAmmoEntity(World world)
+	{
+		return new EntityAmmoProjectile(world);
 	}
 }

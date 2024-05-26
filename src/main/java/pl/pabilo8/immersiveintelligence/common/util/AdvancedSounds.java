@@ -3,14 +3,14 @@ package pl.pabilo8.immersiveintelligence.common.util;
 import com.google.common.collect.Sets;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.Tuple;
-import pl.pabilo8.immersiveintelligence.api.bullets.PenetrationRegistry.HitEffect;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.HitEffect;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Set;
 
-import static pl.pabilo8.immersiveintelligence.api.bullets.PenetrationRegistry.HitEffect.RICOCHET;
+import static pl.pabilo8.immersiveintelligence.api.ammo.enums.HitEffect.RICOCHET;
 
 /**
  * Despite being sounds, inner classes are NOT client side only
@@ -74,12 +74,12 @@ public class AdvancedSounds
 			this.soundRicochet = ricochet;
 		}
 
-		public SoundEvent getSoundImpact()
+		public SoundEvent getImpactSound()
 		{
 			return soundImpact;
 		}
 
-		public SoundEvent getSoundRicochet()
+		public SoundEvent getRicochetSound()
 		{
 			return soundRicochet;
 		}

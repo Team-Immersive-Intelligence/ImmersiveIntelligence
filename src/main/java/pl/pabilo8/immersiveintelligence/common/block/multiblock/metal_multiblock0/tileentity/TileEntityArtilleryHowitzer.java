@@ -24,13 +24,13 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoUtils;
+import pl.pabilo8.immersiveintelligence.api.ammo.utils.AmmoFactory;
 import pl.pabilo8.immersiveintelligence.api.data.DataHandlingUtils;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.types.*;
 import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
-import pl.pabilo8.immersiveintelligence.client.fx.ParticleUtils;
+import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleRegistry;
 import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.client.util.carversound.ConditionCompoundSound;
 import pl.pabilo8.immersiveintelligence.client.util.carversound.TimedCompoundSound;
@@ -39,10 +39,10 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.MultiblockArtilleryHowitzer;
-import pl.pabilo8.immersiveintelligence.common.entity.bullet.EntityBullet;
+import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoArtilleryProjectile;
 import pl.pabilo8.immersiveintelligence.common.entity.tactile.TactileHandler;
 import pl.pabilo8.immersiveintelligence.common.entity.tactile.TactileHandler.ITactileListener;
-import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoArtillery;
+import pl.pabilo8.immersiveintelligence.common.item.ammo.artillery.ItemIIAmmoArtilleryHeavy;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
 import pl.pabilo8.immersiveintelligence.common.util.AdvancedSounds.MultiSound;
@@ -458,7 +458,7 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 		if(world.isRemote)
 		{
 			Vec3d gun_end_particle = gunVec.scale(4.5);
-			ParticleUtils.spawnGunfireFX(getGunPosition().add(gun_end_particle), gunVec, 8f);
+			ParticleRegistry.spawnGunfireFX(getGunPosition().add(gun_end_particle), gunVec, 8f);
 		}
 
 		IIPacketHandler.playRangedSound(world, gunEnd,
@@ -468,15 +468,14 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 
 		if(!world.isRemote)
 		{
-			ItemStack bullet = loadedShells.get(i);
-			EntityBullet a = AmmoUtils.createBullet(world, bullet, getGunPosition().add(gunEnd), gunVec);
-			if(tactileHandler!=null)
-				a.setShooters(a.getShooter(), tactileHandler.getEntities().toArray(new Entity[0]));
-			a.setShootPos(getMultiblockBlocks());
-			a.world.spawnEntity(a);
+			new AmmoFactory<EntityAmmoArtilleryProjectile>(world)
+					.setIgnoredEntities(tactileHandler!=null?tactileHandler.getEntities(): null)
+					.setIgnoredBlocks(getMultiblockBlocks())
+					.setStack(loadedShells.get(i))
+					.create();
 		}
 
-		loadedShells.set(i, IIContent.itemAmmoArtillery.getCasingStack(1));
+		loadedShells.set(i, IIContent.itemAmmoHeavyArtillery.getCasingStack(1));
 	}
 
 	private boolean isAimed()
@@ -749,7 +748,7 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 	@Override
 	public boolean isStackValid(int slot, ItemStack stack)
 	{
-		return stack.getItem() instanceof ItemIIAmmoArtillery;
+		return stack.getItem() instanceof ItemIIAmmoArtilleryHeavy;
 	}
 
 	@Override
@@ -958,7 +957,7 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 
 			//check if artillery shell
 			EntityItem entityItem = (EntityItem)entity;
-			if(entityItem.getItem().getItem()!=IIContent.itemAmmoArtillery)
+			if(entityItem.getItem().getItem()!=IIContent.itemAmmoHeavyArtillery)
 				return;
 
 			//insert copied stack to inventory
@@ -1053,16 +1052,16 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 				t -> t.loadedShells.get(3).isEmpty(),
 				ArtilleryHowitzer.loadRackTime, "UNLOAD", 1f),
 
-		FIRE1(true, true, GunPosition.ON_TARGET, t -> t.loadedShells.get(0).getItem()==IIContent.itemAmmoArtillery,
+		FIRE1(true, true, GunPosition.ON_TARGET, t -> t.loadedShells.get(0).getItem()==IIContent.itemAmmoHeavyArtillery,
 				t -> t.loadedShells.get(0).isEmpty(),
 				ArtilleryHowitzer.gunFireTime, "FIRE", (float)ArtilleryHowitzer.gunFireMoment),
-		FIRE2(true, true, GunPosition.ON_TARGET, t -> t.loadedShells.get(1).getItem()==IIContent.itemAmmoArtillery,
+		FIRE2(true, true, GunPosition.ON_TARGET, t -> t.loadedShells.get(1).getItem()==IIContent.itemAmmoHeavyArtillery,
 				t -> t.loadedShells.get(1).isEmpty(),
 				ArtilleryHowitzer.gunFireTime, "FIRE", (float)ArtilleryHowitzer.gunFireMoment),
-		FIRE3(true, true, GunPosition.ON_TARGET, t -> t.loadedShells.get(2).getItem()==IIContent.itemAmmoArtillery,
+		FIRE3(true, true, GunPosition.ON_TARGET, t -> t.loadedShells.get(2).getItem()==IIContent.itemAmmoHeavyArtillery,
 				t -> t.loadedShells.get(2).isEmpty(),
 				ArtilleryHowitzer.gunFireTime, "FIRE", (float)ArtilleryHowitzer.gunFireMoment),
-		FIRE4(true, true, GunPosition.ON_TARGET, t -> t.loadedShells.get(3).getItem()==IIContent.itemAmmoArtillery,
+		FIRE4(true, true, GunPosition.ON_TARGET, t -> t.loadedShells.get(3).getItem()==IIContent.itemAmmoHeavyArtillery,
 				t -> t.loadedShells.get(3).isEmpty(),
 				ArtilleryHowitzer.gunFireTime, "FIRE", (float)ArtilleryHowitzer.gunFireMoment),
 

@@ -2,6 +2,7 @@ package pl.pabilo8.immersiveintelligence.common.ammo;
 
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import blusunrize.immersiveengineering.common.util.Utils;
+import net.minecraft.entity.Entity;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -10,22 +11,23 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumComponentRole;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumCoreTypes;
-import pl.pabilo8.immersiveintelligence.api.bullets.IAmmoComponent;
-import pl.pabilo8.immersiveintelligence.common.entity.EntityIIChemthrowerShot;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.ComponentRole;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
+import pl.pabilo8.immersiveintelligence.common.entity.ammo.component.EntityIIChemthrowerShot;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
 /**
  * @author Pabilo8
- * @since 19.03.2021
+ * @updated 06.03.2024
+ * @ii-approved 0.3.1
+ * @since 10.07.2021
  */
-public class AmmoComponentFish implements IAmmoComponent
+public class AmmoComponentFish extends AmmoComponent
 {
-	//cheers, Sheperd
-	@Override
-	public String getName()
+	public AmmoComponentFish()
 	{
-		return "fish";
+		super("fish", 0.125f, ComponentRole.SPECIAL, IIColor.fromPackedRGB(0x6b778a));
 	}
 
 	@Override
@@ -35,17 +37,11 @@ public class AmmoComponentFish implements IAmmoComponent
 	}
 
 	@Override
-	public float getDensity()
-	{
-		return 0.125f;
-	}
-
-	@Override
-	public void onEffect(float amount, EnumCoreTypes coreType, NBTTagCompound tag, Vec3d pos, Vec3d dir, World world)
+	public void onEffect(World world, Vec3d pos, Vec3d dir, CoreTypes coreType, NBTTagCompound tag, float componentAmount, float multiplier, Entity owner)
 	{
 		Vec3d v = new Vec3d(0, -1, 0);
 		Vec3d throwerPos = pos.addVector(0, 3, 0);
-		for(int i = 0; i < 100*amount; i++)
+		for(int i = 0; i < 100*multiplier; i++)
 		{
 			Vec3d vecDir = v.addVector(Utils.RAND.nextGaussian()*.25f, Utils.RAND.nextGaussian()*.25f, Utils.RAND.nextGaussian()*.25f);
 
@@ -57,23 +53,4 @@ public class AmmoComponentFish implements IAmmoComponent
 		}
 		Utils.dropStackAtPos(world, new BlockPos(pos).up(), new ItemStack(Items.FISH));
 	}
-
-	@Override
-	public EnumComponentRole getRole()
-	{
-		return EnumComponentRole.SPECIAL;
-	}
-
-	@Override
-	public int getColour()
-	{
-		return 0x6b778a;
-	}
-
-	@Override
-	public boolean showInManual()
-	{
-		return false;
-	}
-
 }

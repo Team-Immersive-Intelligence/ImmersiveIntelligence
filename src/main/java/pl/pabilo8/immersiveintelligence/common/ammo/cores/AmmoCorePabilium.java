@@ -1,65 +1,25 @@
 package pl.pabilo8.immersiveintelligence.common.ammo.cores;
 
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
-import net.minecraft.client.Minecraft;
-import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.relauncher.Side;
-import pl.pabilo8.immersiveintelligence.api.bullets.IAmmoCore;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.PenetrationHardness;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoCore;
 
 /**
  * @author Pabilo8
+ * @updated 06.03.2024
+ * @ii-approved 0.3.1
  * @since 30-08-2019
  */
-public class AmmoCorePabilium implements IAmmoCore
+public class AmmoCorePabilium extends AmmoCore
 {
-	@Override
-	public String getName()
+	public AmmoCorePabilium()
 	{
-		return "core_pabilium";
+		super("core_pabilium", 1.5f, PenetrationHardness.PABILIUM, 3f, 8.0f, 0x2E4242);
 	}
 
 	@Override
 	public IngredientStack getMaterial()
 	{
 		return new IngredientStack("nuggetPabilium");
-	}
-
-	@Override
-	public float getDensity()
-	{
-		return 0.15f;
-	}
-
-	@Override
-	public float getDamageModifier()
-	{
-		return 4f;
-	}
-
-	@Override
-	public float getExplosionModifier()
-	{
-		return 6.5f;
-	}
-
-	@Override
-	public float getPenetrationHardness()
-	{
-		return 999;
-	}
-
-	@Override
-	public int getColour()
-	{
-		//Weird stuff here
-		if(FMLCommonHandler.instance().getEffectiveSide()==Side.CLIENT)
-		{
-			float add = (Minecraft.getMinecraft().world.getTotalWorldTime()%60f)/60f;
-			add = add > 0.5?1f-((add-0.5f)*2f): add*2f;
-			return MathHelper.hsvToRGB(110f/255f, 0.75f*add, (0.5f+((1f-add)*0.45f)));
-		}
-		else
-			return MathHelper.hsvToRGB(121f/255f, 0.75f, 0.88f);
 	}
 }

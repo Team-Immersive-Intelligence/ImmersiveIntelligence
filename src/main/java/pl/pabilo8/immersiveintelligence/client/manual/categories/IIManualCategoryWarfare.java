@@ -1,12 +1,11 @@
 package pl.pabilo8.immersiveintelligence.client.manual.categories;
 
 import blusunrize.immersiveengineering.api.ManualHelper;
-import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.lib.manual.ManualPages;
 import net.minecraft.item.ItemStack;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry;
-import pl.pabilo8.immersiveintelligence.api.bullets.IAmmoComponent;
-import pl.pabilo8.immersiveintelligence.api.bullets.IAmmoCore;
+import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoCore;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualCategory;
 import pl.pabilo8.immersiveintelligence.client.manual.pages.IIManualPageBulletComponent;
 import pl.pabilo8.immersiveintelligence.client.manual.pages.IIManualPageBulletCore;
@@ -14,17 +13,14 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.fortification.BlockIIMetalFortification1.IIBlockTypes_MetalFortification1;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.BlockIIMetalDevice.IIBlockTypes_MetalDevice;
 import pl.pabilo8.immersiveintelligence.common.block.mines.BlockIIMine;
-import pl.pabilo8.immersiveintelligence.common.compat.jei.gui_handlers.RedstoneInterfaceGuiHandler;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoBase;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoCasing.Casings;
 import pl.pabilo8.immersiveintelligence.common.item.armor.ItemIIArmorUpgrade.ArmorUpgrades;
-import pl.pabilo8.immersiveintelligence.common.item.crafting.ItemIIMaterial;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIWeaponUpgrade.WeaponUpgrades;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Map.Entry;
 
 /**
  * @author Pabilo8
@@ -49,7 +45,7 @@ public class IIManualCategoryWarfare extends IIManualCategory
 		addEntry("bullet_production")
 				.addSource("casing", getSourceForItems(Arrays.stream(IIContent.itemAmmoCasing.getSubItems()).map(IIContent.itemAmmoCasing::getStack).toArray(ItemStack[]::new)))
 				.addSource("cores", getSourceForItems(
-						IIContent.itemAmmoArtillery.getBulletCore("core_lead", "piercing"),
+						IIContent.itemAmmoHeavyArtillery.getBulletCore("core_lead", "piercing"),
 						IIContent.itemAmmoMachinegun.getBulletCore("core_lead", "softpoint"),
 						IIContent.itemAmmoAutocannon.getBulletCore("core_lead", "softpoint"),
 						IIContent.itemAmmoMortar.getBulletCore("core_lead", "piercing"),
@@ -65,18 +61,14 @@ public class IIManualCategoryWarfare extends IIManualCategory
 
 
 		ArrayList<ManualPages> bullet_cores = new ArrayList<>();
-		for(Entry<String, IAmmoCore> entry : AmmoRegistry.INSTANCE.registeredBulletCores.entrySet())
-		{
-			if(!entry.getValue().getMaterial().getExampleStack().isEmpty())
-				bullet_cores.add(new IIManualPageBulletCore(ManualHelper.getManual(), entry.getValue()));
-		}
+		for(AmmoCore entry : AmmoRegistry.getAllCores())
+			if(!entry.getMaterial().getExampleStack().isEmpty())
+				bullet_cores.add(new IIManualPageBulletCore(ManualHelper.getManual(), entry));
 
 		ArrayList<ManualPages> bullet_components = new ArrayList<>();
-		for(Entry<String, IAmmoComponent> entry : AmmoRegistry.INSTANCE.registeredComponents.entrySet())
-		{
-			if(entry.getValue().showInManual()&&!entry.getValue().getMaterial().getExampleStack().isEmpty())
-				bullet_components.add(new IIManualPageBulletComponent(ManualHelper.getManual(), entry.getValue()));
-		}
+		for(AmmoComponent entry : AmmoRegistry.getAllComponents())
+			if(entry.showInManual()&&!entry.getMaterial().getExampleStack().isEmpty())
+				bullet_components.add(new IIManualPageBulletComponent(ManualHelper.getManual(), entry));
 
 		ManualHelper.addEntry("bullet_cores", getCategory(),
 				bullet_cores.toArray(new ManualPages[]{})

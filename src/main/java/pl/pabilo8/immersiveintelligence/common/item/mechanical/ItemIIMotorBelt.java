@@ -17,17 +17,19 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.MechanicalDevices;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.rotary.IModelMotorBelt;
 import pl.pabilo8.immersiveintelligence.api.rotary.IMotorBeltConnector;
 import pl.pabilo8.immersiveintelligence.api.rotary.RotaryUtils;
 import pl.pabilo8.immersiveintelligence.client.model.motor_belt.ModelClothMotorBelt;
 import pl.pabilo8.immersiveintelligence.client.model.motor_belt.ModelSteelMotorBelt;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.MechanicalDevices;
 import pl.pabilo8.immersiveintelligence.common.item.mechanical.ItemIIMotorBelt.MotorBelt;
 import pl.pabilo8.immersiveintelligence.common.util.IBatchOredictRegister;
+import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
 import pl.pabilo8.immersiveintelligence.common.wire.IIMotorBeltType;
 import pl.pabilo8.modworks.annotations.item.GeneratedItemModels;
@@ -41,6 +43,7 @@ import java.util.List;
  * @since 27-12-2019
  */
 @IBatchOredictRegister(oreDict = "motorBelt")
+@IIItemProperties(category = IICategory.ROTARY)
 public class ItemIIMotorBelt extends ItemIISubItemsBase<MotorBelt> implements IWireCoil
 {
 	public ItemIIMotorBelt()

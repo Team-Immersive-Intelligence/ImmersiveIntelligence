@@ -1,0 +1,9 @@
+{
+  "type": "ParticleModel",
+  "models": ["smoke/smoke_trace.obj"],
+  "life_time": 60,
+  "draw_stage": "custom_smoke_noise_shader",
+  "programs": [
+    "smoke_transition"
+  ]
+}

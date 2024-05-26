@@ -34,6 +34,12 @@ public class ImmersiveEngineeringHelper extends IICompatModule
 	}
 
 	@Override
+	public String getName()
+	{
+		return "ImmersiveEngineering";
+	}
+
+	@Override
 	public void registerRecipes()
 	{
 
