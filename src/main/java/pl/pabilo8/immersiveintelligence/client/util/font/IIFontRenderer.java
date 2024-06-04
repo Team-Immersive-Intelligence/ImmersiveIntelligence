@@ -12,6 +12,7 @@ import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -22,9 +23,9 @@ import java.util.regex.Pattern;
 public class IIFontRenderer extends FontRenderer
 {
 	static HashMap<Character, CharReplacement> unicodeReplacements = new HashMap<>();
-	private final Pattern hexColPattern = Pattern.compile("<hexcol=(......):(.*)>");
-	private final int hexColWidth = getStringWidth("<hexcol=012345:>");
+	private final Pattern hexColPattern = Pattern.compile("<hexcol=(......):([^>]*)>");
 	private final int hexColLength = "<hexcol=012345:>".length();
+	private int hexColWidth;
 
 	static
 	{
@@ -88,6 +89,14 @@ public class IIFontRenderer extends FontRenderer
 		createColourBackup();
 	}
 
+	@Override
+	protected void readGlyphSizes()
+	{
+		super.readGlyphSizes();
+		this.hexColWidth = super.getStringWidth("<hexcol=012345:>");
+
+	}
+
 	/**
 	 * This should be called again if the colour array was modified after instantiation
 	 */
@@ -103,7 +112,7 @@ public class IIFontRenderer extends FontRenderer
 			return 0;
 
 		//width - occurences of hexcol
-		int stringWidth = getDefaultStringWidth(text);
+		int stringWidth = super.getStringWidth(text);
 		Matcher matcher = hexColPattern.matcher(text);
 
 		while(matcher.find())
@@ -111,41 +120,53 @@ public class IIFontRenderer extends FontRenderer
 		return stringWidth;
 	}
 
-	private int getDefaultStringWidth(@Nullable String text)
+
+	/**
+	 * Inserts newline and formatting into a string to wrap it within the specified width.
+	 */
+	private String wrapFormattedStringToWidth(String str, int wrapWidth)
 	{
-		if(text==null)
-			return 0;
+		int i = this.sizeStringToWidth(str, wrapWidth);
+
+		if(str.length() <= i)
+			return str;
 		else
 		{
-			float i = 0;
-			boolean flag = false;
-			for(int j = 0; j < text.length(); ++j)
+			Matcher matcher = hexColPattern.matcher(str);
+			String current, remains;
+			while(matcher.find())
 			{
-				char c0 = text.charAt(j);
-				float k = this.getCharWidthIEFloat(c0);
-				if(k < 0&&j < text.length()-1)
+				int start = matcher.start();
+				int end = matcher.end();
+				//the hexcol pattern is always counted as being "0" width, so it will never be wrapped aside the text inside it
+				if(end >= i)
 				{
-					++j;
-					c0 = text.charAt(j);
-
-					if(c0!=108&&c0!=76)
-					{
-						if(c0==114||c0==82)
-							flag = false;
-					}
-					else
-						flag = true;
-					k = 0;
+					int charsRemaining = Math.min(i-start, matcher.group(2).length());
+					current = str.substring(0, start)+String.format("<hexcol=(%s):(%s)>",
+							matcher.group(1),
+							matcher.group(2).substring(0, charsRemaining)
+					);
+					remains = String.format("<hexcol=(%s):(%s)>",
+							matcher.group(1),
+							matcher.group(2).substring(charsRemaining)
+					)+str.substring(end);
+					return current+"\n"+this.wrapFormattedStringToWidth(remains, wrapWidth);
 				}
-
-				i += k;
-				if(flag&&k > 0)
-					++i;
 			}
-			return (int)i;
+
+			current = str.substring(0, i);
+			char c0 = str.charAt(i);
+			boolean flag = c0==' '||c0=='\n';
+			remains = getFormatFromString(current)+str.substring(i+(flag?1: 0));
+			return current+"\n"+this.wrapFormattedStringToWidth(remains, wrapWidth);
 		}
 	}
 
+	@Override
+	public List<String> listFormattedStringToWidth(String str, int wrapWidth)
+	{
+		return Arrays.asList(this.wrapFormattedStringToWidth(str, wrapWidth).split("\n"));
+	}
 
 	/**
 	 * Render a single line string at the current (posX,posY) and update posX
@@ -263,55 +284,8 @@ public class IIFontRenderer extends FontRenderer
 			builder.replace(matcher.start(), matcher.end(), matcher.group(2));
 			m++;
 		}
-
 		str = builder.toString();
-
-		int i = str.length();
-		float j = 0;
-		int k = 0;
-		int l = -1;
-
-		for(boolean flag = false; k < i; ++k)
-		{
-			char c0 = str.charAt(k);
-			switch(c0)
-			{
-				case '\n':
-					--k;
-					break;
-				case ' ':
-					l = k;
-				default:
-					j += this.getCharWidthIEFloat(c0);
-					if(flag)
-						++j;
-					break;
-				case '\u00a7':
-					if(k < i-1)
-					{
-						++k;
-						char c1 = str.charAt(k);
-
-						if(c1!=108&&c1!=76)
-						{
-							if(c1==114||c1==82||(c1 >= 48&&c1 <= 57||c1 >= 97&&c1 <= 102||c1 >= 65&&c1 <= 70))
-								flag = false;
-						}
-						else
-							flag = true;
-					}
-			}
-			if(c0==10)
-			{
-				++k;
-				l = k;
-				break;
-			}
-			if(j > wrapWidth)
-				break;
-		}
-
-		return (k!=i&&l!=-1&&l < k?l: k)+m*hexColLength;
+		return super.sizeStringToWidth(str, wrapWidth)+m*hexColLength;
 	}
 
 

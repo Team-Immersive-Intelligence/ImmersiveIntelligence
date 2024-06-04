@@ -39,6 +39,32 @@ public class IIReference
 	public static final String DESC_HOLD_ALT = DESCRIPTION_KEY+"info.holdAlt";
 	public static final String DESC_HOLD_TAB = DESCRIPTION_KEY+"info.holdTab";
 
+	//--- Font Icons ---//
+	public static final char CHARICON_SPEED = '\u29c1'; //speed
+	public static final char CHARICON_TORQUE = '\u2296'; //torque
+	public static final char CHARICON_ENERGY = '\u2607'; //energy
+	public static final char CHARICON_RADIATION = '\u2622'; //nuclear / radiation
+	public static final char CHARICON_BULLET = '\u2023'; //bullet
+	public static final char CHARICON_BULLET_CONTENTS = '\u29b3'; //bullet contents
+	public static final char CHARICON_PENETRATION = '\u29b4'; //penetration
+	public static final char CHARICON_SKULL = '\u2295'; //damage / skull
+	public static final char CHARICON_CONTACT = '\u29b0'; //contact
+	public static final char CHARICON_PROXIMITY = '\u29b1'; //proximity
+	public static final char CHARICON_TIMED = '\u29b2'; //timed
+	public static final char CHARICON_FOLDER = '\u2348'; //folder
+	public static final char CHARICON_MG = '\u24b6'; //mg
+	public static final char CHARICON_SMG = '\u24b7'; //smg
+	public static final char CHARICON_RAILGUN = '\u24b8'; //railgun
+	public static final char CHARICON_REVOLVER = '\u24b9'; //revolver
+	public static final char CHARICON_AUTOREVOLVER = '\u24ba'; //autorevolver
+	public static final char CHARICON_STG = '\u24bb'; //stg
+	public static final char CHARICON_SPIGOT_MORTAR = '\u24bc'; //spigot mortar
+	public static final char CHARICON_RIFLE = '\u24bd'; //rifle
+	public static final char CHARICON_HELMET = '\u24be'; //helmet
+	public static final char CHARICON_CHESTPLATE = '\u24bf'; //chestplate
+	public static final char CHARICON_LEGGINGS = '\u24c0'; //leggings
+	public static final char CHARICON_BOOTS = '\u24c1'; //boots
+
 	//--- Patterns ---//
 	public static final ResLoc RES_II = ResLoc.root(ImmersiveIntelligence.MODID);
 	public static final ResLoc RES_IE = ResLoc.root(ImmersiveEngineering.MODID);
