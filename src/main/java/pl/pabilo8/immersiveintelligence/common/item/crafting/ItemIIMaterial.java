@@ -117,5 +117,21 @@ public class ItemIIMaterial extends ItemIISubItemsBase<Materials>
 
 		@IIItemProperties(oreDict = "ingotSand")
 		SANDBAG,
+		@IIItemProperties(oreDict = "antennaBasic")
+		ANTENNA,
+		@IIItemProperties(oreDict = "antennaAdvanced")
+		HIGH_FREQUENCY_ANTENNA,
+		@IIItemProperties(oreDict = "cameraBasic")
+		CAMERA,
+		@IIItemProperties(oreDict = "cameraAdvanced")
+		IMPROVED_CAMERA,
+		@IIItemProperties(oreDict = "opticsBasic")
+		TARGETING_DEVICE,
+		@IIItemProperties(oreDict = "opticsAdvanced")
+		HIGH_PRECISION_TARGETING_DEVICE,
+		@IIItemProperties(oreDict = "lens")
+		LENS,
+		@IIItemProperties(oreDict = "lensInfrared")
+		INFRARED_LENS
 	}
 }
