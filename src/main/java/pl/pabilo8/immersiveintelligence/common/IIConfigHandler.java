@@ -71,6 +71,12 @@ public class IIConfigHandler
 		@Comment({"Whether the IE revolver should be a Early Engineering-tier weapon"})
 		public static boolean changeRevolverProduction = true;
 
+		@Comment({"Whether the the railgun should require a gun stock instead of a grip to be constructed"})
+		public static boolean changeRailgunProduction = true;
+
+		@Comment({"Whether the the chemthrower should require a gun stock instead of a grip to be constructed"})
+		public static boolean changeChemthrowerProduction = true;
+
 		@Comment({"Whether Tungsten should be smeltable in the vanilla furnace"})
 		@RequiresMcRestart
 		public static boolean smeltableTungsten = false;

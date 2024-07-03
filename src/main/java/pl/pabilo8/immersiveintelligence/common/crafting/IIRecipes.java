@@ -33,11 +33,13 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.registries.IForgeRegistry;
+import net.minecraftforge.registries.IForgeRegistryModifiable;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.PackerHandler;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.api.crafting.*;
+import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Sawmill;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
@@ -65,6 +67,7 @@ import pl.pabilo8.immersiveintelligence.common.item.crafting.material.ItemIIMate
 import pl.pabilo8.immersiveintelligence.common.item.data.ItemIIFunctionalCircuit.Circuits;
 import pl.pabilo8.immersiveintelligence.common.item.mechanical.ItemIIMotorGear.MotorGear;
 import pl.pabilo8.immersiveintelligence.common.item.tools.backpack.ItemIIAdvancedPowerPack;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIUpgradeableArmor;
 
 import javax.annotation.Nonnull;
@@ -83,7 +86,7 @@ public class IIRecipes
 	public static ItemStack BASIC_CIRCUIT, TOOL_HAMMER, TOOL_CUTTERS;
 	public static IngredientStack AMMO_CASINGS;
 
-	public static void doRecipes(IForgeRegistry<IRecipe> recipeRegistry)
+	public static void doRecipes(IForgeRegistryModifiable<IRecipe> recipeRegistry)
 	{
 		//--- Setup Items ---//
 		BASIC_CIRCUIT = new ItemStack(IEContent.itemMaterial, 1, 27);
@@ -96,6 +99,14 @@ public class IIRecipes
 				.map(iAmmo -> iAmmo.getCasingStack(1))
 				.collect(Collectors.toList())
 		);
+
+		//--- Replace Recipes ---//
+		replaceRecipe(recipeRegistry, IIConfig.changeRevolverProduction, "material/gunpart_drum");
+		replaceRecipe(recipeRegistry, IIConfig.changeRevolverProduction, "material/gunpart_hammer");
+		replaceRecipe(recipeRegistry, IIConfig.changeRevolverProduction, "toolupgrades/railgun_scope");
+		replaceRecipe(recipeRegistry, IIConfig.changeRevolverProduction, "tool/revolver");
+		replaceRecipe(recipeRegistry, IIConfig.changeRailgunProduction, "tool/railgun");
+		replaceRecipe(recipeRegistry, IIConfig.changeChemthrowerProduction, "tool/chemthrower");
 
 		//--- Add Recipes ---//
 		addMinecartRecipes(recipeRegistry);
@@ -154,6 +165,18 @@ public class IIRecipes
 				new FluidStack(FluidRegistry.WATER, 750), new Object[]{"dustSalt"}, 3200);
 
 
+	}
+
+	/**
+	 * Removes a recipe from IE or II, allowing the opposite to add one replacing it
+	 *
+	 * @param recipeRegistry The recipe registry to remove from
+	 * @param replace        Whether to remove the recipe from IE or II
+	 * @param path           The path of the recipe to remove
+	 */
+	private static void replaceRecipe(IForgeRegistryModifiable<IRecipe> recipeRegistry, boolean replace, String path)
+	{
+		recipeRegistry.remove(ResLoc.of(replace?IIReference.RES_IE: IIReference.RES_II, path));
 	}
 
 	private static void addElectrolyzerRecipes()

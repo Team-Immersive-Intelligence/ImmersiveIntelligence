@@ -54,6 +54,7 @@ import net.minecraftforge.fml.common.network.IGuiHandler;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
+import net.minecraftforge.registries.IForgeRegistryModifiable;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.*;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
@@ -312,7 +313,7 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		CrusherRecipe.addRecipe(IIContent.itemMaterialDust.getStack(MaterialsDust.SILICON, 1),
 				new IngredientStack("plateSilicon"), 12000);
 
-		IIRecipes.doRecipes(event.getRegistry());
+		IIRecipes.doRecipes((IForgeRegistryModifiable<IRecipe>)event.getRegistry());
 		IICompatModule.doModulesRecipes();
 
 

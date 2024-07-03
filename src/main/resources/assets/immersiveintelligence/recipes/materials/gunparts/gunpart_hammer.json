@@ -1,18 +1,18 @@
 {
   "type": "forge:ore_shaped",
   "result": {
-    "item": "immersiveintelligence:storage",
-    "data": 4
+    "item": "immersiveengineering:material",
+    "data": 16
   },
   "pattern": [
-    "III",
-    "III",
-    "III"
+    "I  ",
+    "II ",
+    " II"
   ],
   "key": {
     "I": {
       "type": "forge:ore_dict",
-      "ore": "ingotDuraluminium"
+      "ore": "ingotIron"
     }
   }
 }
