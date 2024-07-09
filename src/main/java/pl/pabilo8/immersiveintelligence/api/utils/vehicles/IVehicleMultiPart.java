@@ -9,6 +9,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityVehiclePart;
 
@@ -69,5 +70,11 @@ public interface IVehicleMultiPart extends IEntityMultiPart
 	default boolean attackEntityFromPart(@Nonnull MultiPartEntityPart part, @Nonnull DamageSource source, float amount)
 	{
 		return false;
+	}
+
+	@Override
+	default World getWorld()
+	{
+		return ((Entity)this).getEntityWorld();
 	}
 }

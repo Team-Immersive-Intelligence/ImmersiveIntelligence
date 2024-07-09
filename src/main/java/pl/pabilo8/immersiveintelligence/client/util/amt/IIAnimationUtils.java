@@ -37,6 +37,7 @@ import pl.pabilo8.immersiveintelligence.common.util.lambda.ArraylistJoinCollecto
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.meta.When;
 import java.util.*;
 import java.util.function.Function;
 
@@ -375,10 +376,19 @@ public class IIAnimationUtils
 		return organise(models.toArray(new AMT[0])); //remove children from array
 	}
 
+	@Nonnull(when = When.NEVER)
+	public static AMT disposeOf(@Nullable AMT model)
+	{
+		if(model!=null)
+			model.disposeOf();
+		return null;
+	}
+
 	/**
 	 * If passed a non-null value, disposes of the AMTs' GLCallLists to free up memory. <br>
 	 * Call upon destruction
 	 */
+	@Nonnull(when = When.NEVER)
 	public static AMT[] disposeOf(@Nullable AMT[] array)
 	{
 		if(array!=null)

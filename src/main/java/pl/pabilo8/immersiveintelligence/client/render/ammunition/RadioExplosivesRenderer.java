@@ -1,15 +1,24 @@
 package pl.pabilo8.immersiveintelligence.client.render.ammunition;
 
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Tuple;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
+import pl.pabilo8.immersiveintelligence.client.model.builtin.IAmmoModel;
+import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer.RegisteredTileRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.ammunition.RadioExplosivesRenderer.RadioExplosivesItemStackRenderer;
+import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationUtils;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.mines.BlockIIMine.ItemBlockMineBase;
 import pl.pabilo8.immersiveintelligence.common.block.mines.tileentity.TileEntityRadioExplosives;
+import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoMine;
 
 /**
  * Handles rendering of a radio explosives entity
@@ -20,56 +29,62 @@ import pl.pabilo8.immersiveintelligence.common.block.mines.tileentity.TileEntity
  * @since 02.02.2021
  */
 @RegisteredTileRenderer(name = "radio_explosives", clazz = TileEntityRadioExplosives.class, teisrClazz = RadioExplosivesItemStackRenderer.class)
-public class RadioExplosivesRenderer extends TileEntitySpecialRenderer<TileEntityRadioExplosives>
+public class RadioExplosivesRenderer extends IITileRenderer<TileEntityRadioExplosives>
 {
+	private IAmmoModel<ItemBlockMineBase, EntityAmmoMine> model;
+
 	@Override
-	public void render(TileEntityRadioExplosives te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
+	public void draw(TileEntityRadioExplosives te, BufferBuilder buf, float partialTicks, Tessellator tes)
 	{
-		GlStateManager.pushMatrix();
-		GlStateManager.translate(x+0.5, y+0.5, z+0.5);
-		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
+		applyStandardRotation(te.facing);
+		float debugProgress = IIAnimationUtils.getDebugProgress(te.getWorld(), 30, partialTicks);
+		GlStateManager.translate(0.5, 0, 0.5);
+//		GlStateManager.rotate(debugProgress*360f, 0, 1, 0);
 
-		GlStateManager.rotate(-90, 0, 0, 1);
-		switch(te.facing)
+		model.renderAmmoComplete(false, te.getMineStack());
+	}
+
+	@Override
+	protected void applyStandardRotation(EnumFacing facing)
+	{
+//		GlStateManager.translate(-0.5, 0, -0.5);
+		GlStateManager.translate(0.5, 0, 0.5);
+		GlStateManager.rotate(90-facing.getHorizontalAngle(), 0, 1, 0);
+		if(facing==EnumFacing.UP)
 		{
-			case UP:
-			{
-				GlStateManager.rotate(180, 0, 0, 1);
-			}
-			break;
-			case DOWN:
-				break;
-			case NORTH:
-			{
-				GlStateManager.rotate(-90, 1, 0, 0);
-				GlStateManager.rotate(90, 0, 0, 1);
-			}
-			break;
-			case SOUTH:
-			{
-				GlStateManager.rotate(90, 1, 0, 0);
-				GlStateManager.rotate(90, 0, 0, 1);
-			}
-			break;
-			case EAST:
-			{
-				GlStateManager.rotate(90, 0, 0, 1);
-			}
-			break;
-			case WEST:
-			{
-				GlStateManager.rotate(180, 0, 1, 0);
-				GlStateManager.rotate(-90, 0, 0, 1);
-			}
-			break;
+			GlStateManager.rotate(-90, 0, 0, 1);
+			GlStateManager.translate(-0.5, -0.5, 0);
 		}
+		else if(facing==EnumFacing.DOWN)
+		{
+			GlStateManager.rotate(90, 0, 0, 1);
+			GlStateManager.translate(0.5, -0.5, 0);
+		}
+		GlStateManager.translate(-0.625, 0.125, -0.5);
 
-		GlStateManager.translate(0.125, -0.25, 0);
+//		GlStateManager.rotate(-90, 0, 1, 0);
 
-		/*model.renderCasing(0f, 0xffffff);
-		model.renderCore(te.coreColor, EnumCoreTypes.CANISTER);*/
+		/*
 
-		GlStateManager.popMatrix();
+		GlStateManager.translate(0.5, 0, -0.5);*/
+	}
+
+	@Override
+	public void compileModels(Tuple<IBlockState, IBakedModel> sModel)
+	{
+		model = AmmoRegistry.getModel((ItemBlockMineBase)IIContent.blockRadioExplosives.itemBlock);
+	}
+
+	@Override
+	protected void nullifyModels()
+	{
+
+	}
+
+	@Override
+	protected Tuple<IBlockState, IBakedModel> getModelFromBlockState(TileEntityRadioExplosives te)
+	{
+		return ACCEPTABLE;
 	}
 
 	public static class RadioExplosivesItemStackRenderer extends TileEntityItemStackRenderer
@@ -78,7 +93,7 @@ public class RadioExplosivesRenderer extends TileEntitySpecialRenderer<TileEntit
 		public void renderByItem(ItemStack stack, float partialTicks)
 		{
 			GlStateManager.pushMatrix();
-			GlStateManager.translate(0.5, 0.25, 0.5);
+			GlStateManager.translate(0.25, 0.25, 0);
 			GlStateManager.scale(1.5, 1.5, 1.5f);
 
 			ItemBlockMineBase ammo = (ItemBlockMineBase)IIContent.blockRadioExplosives.itemBlock;
@@ -87,8 +102,6 @@ public class RadioExplosivesRenderer extends TileEntitySpecialRenderer<TileEntit
 				AmmoRegistry.getModel(ammo).renderCore(stack);
 			else
 				AmmoRegistry.getModel(ammo).renderAmmoComplete(false, stack);
-
-			//model.renderCore(bullet.getCore(stack).getColour(), EnumCoreTypes.CANISTER);
 			GlStateManager.popMatrix();
 		}
 	}

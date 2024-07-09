@@ -8,7 +8,7 @@ import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.overlay.GuiOverlayBase;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
 /**
  * @author Pabilo8
@@ -26,12 +26,12 @@ public abstract class GuiOverlayGunBase extends GuiOverlayBase
 	public void drawMagazine(int width, int height, NonNullList<ItemStack> ammo)
 	{
 		IIDrawUtils draw = IIDrawUtils.startTexturedColored();
-		draw.drawTexColorRect(width-38, height-27, 36, 25, IIDrawUtils.NO_COLOR, 15/256f, (15+36)/256f, 29/256f, (29+25)/256f);
+		draw.drawTexColorRect(width-38, height-27, 36, 25, IIColor.WHITE, 15/256f, (15+36)/256f, 29/256f, (29+25)/256f);
 
 		//Draw bullets
 		int bullets = 0;
 		boolean offset = false;
-		IAmmoTypeItem ammoItem = null;
+		IAmmoTypeItem<?, ?> ammoItem = null;
 		if(!ammo.isEmpty())
 		{
 			draw.setOffset(width-38+3, height-17);
@@ -40,14 +40,14 @@ public abstract class GuiOverlayGunBase extends GuiOverlayBase
 				if(bullet.isEmpty())
 					break;
 				if(ammoItem==null)
-					ammoItem = (IAmmoTypeItem)bullet.getItem();
+					ammoItem = (IAmmoTypeItem<?, ?>)bullet.getItem();
 
 				bullets++;
-				draw.drawTexColorRect(offset?1: 0, 0, 30, 6, IIDrawUtils.NO_COLOR, 51/256f, (51+30)/256f, 33/256f, (33+6)/256f);
+				draw.drawTexColorRect(offset?1: 0, 0, 30, 6, IIColor.WHITE, 51/256f, (51+30)/256f, 33/256f, (33+6)/256f);
 				int cc = ammoItem.getPaintColor(bullet);
 				if(cc!=-1)
-					draw.drawTexColorRect(offset?11: 10, 0, 4, 6, IIUtils.rgbIntToRGB(cc), 61/256f, (65)/256f, 27/256f, (27+6)/256f);
-				draw.drawTexColorRect(offset?25: 24, 0, 6, 6, IIUtils.rgbIntToRGB(ammoItem.getCore(bullet).getColour()),
+					draw.drawTexColorRect(offset?11: 10, 0, 4, 6, IIColor.fromPackedRGB(cc), 61/256f, (65)/256f, 27/256f, (27+6)/256f);
+				draw.drawTexColorRect(offset?25: 24, 0, 6, 6, ammoItem.getCore(bullet).getColor(),
 						75/256f, (81)/256f, 27/256f, (27+6)/256f);
 
 				draw.addOffset(0, -6);
@@ -57,7 +57,7 @@ public abstract class GuiOverlayGunBase extends GuiOverlayBase
 		draw.setOffset(0, 0);
 
 		//Draw ammo count
-		draw.drawTexColorRect(width-38+10, height-27+8, 16, 15, IIDrawUtils.NO_COLOR, 51/256f, (51+16)/256f, 39/256f, (44+10)/256f);
+		draw.drawTexColorRect(width-38+10, height-27+8, 16, 15, IIColor.WHITE, 51/256f, (51+16)/256f, 39/256f, (44+10)/256f);
 		draw.finish();
 
 		IIClientUtils.drawStringCentered(ClientUtils.font(),

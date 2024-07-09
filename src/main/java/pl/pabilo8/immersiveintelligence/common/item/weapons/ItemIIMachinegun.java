@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.common.item.weapons;
 
-import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.gui.IESlot;
 import blusunrize.immersiveengineering.common.items.IEItemInterfaces.IAdvancedFluidItem;
 import blusunrize.immersiveengineering.common.util.IEItemFluidHandler;
@@ -12,7 +11,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.stats.StatList;
@@ -44,7 +42,7 @@ import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityMachinegun;
-import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIWeaponUpgrade.WeaponUpgrades;
+import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIWeaponUpgrade.WeaponUpgrade;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
@@ -216,9 +214,9 @@ public class ItemIIMachinegun extends ItemIIUpgradableTool implements IAdvancedF
 	@Override
 	public void removeFromWorkbench(EntityPlayer player, ItemStack stack)
 	{
-		if(hasIIUpgrades(stack, WeaponUpgrades.HEAVY_BARREL, WeaponUpgrades.SECOND_MAGAZINE, WeaponUpgrades.INFRARED_SCOPE))
+		if(hasIIUpgrades(stack, WeaponUpgrade.HEAVY_BARREL, WeaponUpgrade.SECOND_MAGAZINE, WeaponUpgrade.INFRARED_SCOPE))
 			IIUtils.unlockIIAdvancement(player, "main/let_me_show_you_its_features");
-		if(hasIIUpgrades(stack, WeaponUpgrades.BELT_FED_LOADER, WeaponUpgrades.SHIELD, WeaponUpgrades.WATER_COOLING))
+		if(hasIIUpgrades(stack, WeaponUpgrade.BELT_FED_LOADER, WeaponUpgrade.SHIELD, WeaponUpgrade.WATER_COOLING))
 			IIUtils.unlockIIAdvancement(player, "main/hans_9000");
 	}
 

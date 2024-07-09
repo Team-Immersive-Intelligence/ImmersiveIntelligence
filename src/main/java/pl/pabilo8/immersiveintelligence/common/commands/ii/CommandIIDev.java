@@ -45,6 +45,8 @@ import net.minecraftforge.server.command.CommandTreeBase;
 import net.minecraftforge.server.command.CommandTreeHelp;
 import org.apache.commons.lang3.time.StopWatch;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.ComponentEffectShape;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseType;
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.AmmoFactory;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IVehicleMultiPart;
 import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleRegistry;
@@ -358,7 +360,7 @@ public class CommandIIDev extends CommandTreeHelp
 
 					if(args[0].equals("nuke"))
 					{
-						ItemStack s2 = IIContent.itemAmmoHeavyArtillery.getBulletWithParams("core_brass", "canister", "nuke");
+						ItemStack s2 = IIContent.itemAmmoHeavyArtillery.getAmmoStack(IIContent.ammoCoreBrass, CoreType.CANISTER, FuseType.CONTACT, IIContent.ammoComponentNuke);
 						new AmmoFactory<>(senderEntity.getEntityWorld())
 								.setStack(s2)
 								.setPositionAndVelocity(new Vec3d(pos).addVector(0, 2, 0), new Vec3d(0, -1, 0), 1)

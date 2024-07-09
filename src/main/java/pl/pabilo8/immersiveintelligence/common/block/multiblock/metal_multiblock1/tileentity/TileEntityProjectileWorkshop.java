@@ -33,7 +33,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoCore;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
@@ -71,7 +71,7 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockMetal<Tile
 	@Nonnull
 	public IAmmoTypeItem producedBullet = IIContent.itemAmmoHeavyArtillery;
 	@Nonnull
-	public CoreTypes coreType = producedBullet.getAllowedCoreTypes()[0];
+	public CoreType coreType = producedBullet.getAllowedCoreTypes()[0];
 
 	//for core filling
 	public boolean fillerUpgrade = false;
@@ -177,9 +177,8 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockMetal<Tile
 							productionProgress = (int)(ProjectileWorkshop.fillingTime+ProjectileWorkshop.fillingTime*0.3*bullet.getCaliber());
 
 							int i = 0;
-							while(i < fillAmount&&bullet.hasFreeComponentSlots(effect))
+							while(i < fillAmount&&bullet.addComponents(effect, AmmoRegistry.getComponent(componentInside.name), componentInside.tagCompound))
 							{
-								bullet.addComponents(effect, AmmoRegistry.getComponent(componentInside.name), componentInside.tagCompound);
 								componentInside.subtract(1);
 								i++;
 							}
@@ -225,8 +224,8 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockMetal<Tile
 					if(first.isPresent()&&inventory.get(0).getCount() >= producedBullet.getCoreMaterialNeeded())
 					{
 						IAmmoTypeItem bullet = producedBullet;
-						CoreTypes coreType = this.coreType;
-						effect = bullet.getBulletCore(first.get(), coreType);
+						CoreType coreType = this.coreType;
+						effect = bullet.getAmmoCoreStack(first.get(), coreType);
 						productionProgress = (int)(ProjectileWorkshop.productionTime+ProjectileWorkshop.productionTime*0.3*bullet.getCaliber());
 						inventory.get(0).shrink(producedBullet.getCoreMaterialNeeded());
 						update = true;
@@ -301,7 +300,7 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockMetal<Tile
 			producedBullet = bb==null?IIContent.itemAmmoHeavyArtillery: bb;
 		}
 		if(nbt.hasKey("core_type"))
-			coreType = CoreTypes.v(nbt.getString("core_type"));
+			coreType = CoreType.v(nbt.getString("core_type"));
 
 		productionProgress = nbt.getInteger("production_progress");
 		effect = new ItemStack(nbt.getCompoundTag("effect"));
@@ -360,7 +359,7 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockMetal<Tile
 			producedBullet = bb==null?IIContent.itemAmmoHeavyArtillery: bb;
 		}
 		if(message.hasKey("core_type"))
-			coreType = CoreTypes.v(message.getString("core_type"));
+			coreType = CoreType.v(message.getString("core_type"));
 		if(message.hasKey("production_progress"))
 			productionProgress = message.getInteger("production_progress");
 		if(message.hasKey("effect"))
@@ -372,7 +371,7 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockMetal<Tile
 	{
 		super.receiveMessageFromClient(message);
 		if(message.hasKey("core_type"))
-			coreType = CoreTypes.v(message.getString("core_type"));
+			coreType = CoreType.v(message.getString("core_type"));
 		if(message.hasKey("produced_bullet"))
 		{
 			IAmmoTypeItem bb = AmmoRegistry.getAmmoItem(message.getString("produced_bullet"));
@@ -779,7 +778,7 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockMetal<Tile
 				master.producedBullet = ammoItem==null?IIContent.itemAmmoHeavyArtillery: ammoItem;
 			}
 			if(packet.hasVariable('t'))
-				master.coreType = CoreTypes.v(packet.getPacketVariable('t').valueToString());
+				master.coreType = CoreType.v(packet.getPacketVariable('t').valueToString());
 
 			if(Arrays.stream(master.producedBullet.getAllowedCoreTypes()).noneMatch(ct -> ct==master.coreType))
 				master.coreType = master.producedBullet.getAllowedCoreTypes()[0];
@@ -948,7 +947,7 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockMetal<Tile
 
 		public int getColour()
 		{
-			return component!=null?component.getColour(tagCompound).getPackedRGB(): 0xffffff;
+			return component!=null?component.getColor(tagCompound).getPackedRGB(): 0xffffff;
 		}
 
 		public float getAmountPercentage()

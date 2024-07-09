@@ -115,7 +115,7 @@ public abstract class AIHansAbstractGun extends AIHansHandWeapon
 	protected float calculateBallisticAngle(ItemStack ammo, EntityLivingBase attackTarget)
 	{
 		IAmmoTypeItem ammoType = (IAmmoTypeItem)ammo.getItem();
-		return IIAmmoUtils.getDirectFireAngle(ammoType.getDefaultVelocity(), ammoType.getMass(ammo),
+		return IIAmmoUtils.getDirectFireAngle(ammoType.getVelocity(), ammoType.getMass(ammo),
 				hans.getPositionVector().addVector(0, (double)hans.getEyeHeight()-0.10000000149011612D, 0).subtract(IIUtils.getEntityCenter(attackTarget))
 		);
 	}

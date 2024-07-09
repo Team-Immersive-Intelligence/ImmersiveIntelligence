@@ -31,6 +31,7 @@ import java.lang.annotation.Target;
  */
 public abstract class IITileRenderer<T extends TileEntity> extends TileEntitySpecialRenderer<T> implements IReloadableModelContainer<IITileRenderer<T>>
 {
+	protected static final Tuple<IBlockState, IBakedModel> ACCEPTABLE = new Tuple<>(null, null);
 	private boolean unCompiled = true;
 
 	//--- rendering wrapper ---//
@@ -44,7 +45,7 @@ public abstract class IITileRenderer<T extends TileEntity> extends TileEntitySpe
 		if(te!=null&&unCompiled)
 		{
 			Tuple<IBlockState, IBakedModel> model = getModelFromBlockState(te);
-			if(model.getSecond() instanceof IESmartObjModel)
+			if(model==ACCEPTABLE||model.getSecond() instanceof IESmartObjModel)
 			{
 				nullifyModels();
 				compileModels(model);

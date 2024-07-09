@@ -33,6 +33,7 @@ public class IIReference
 
 	public static final String INFO_KEY_TOOL_DURABILITY = INFO_KEY+"tool_durability";
 	public static final String DESC_TOOLUPGRADE = DESCRIPTION_KEY+"toolupgrade.";
+	public static final String DESC_BULLETS = DESCRIPTION_KEY+"bullets.";
 
 	public static final String DESC_HOLD_CTRL = DESCRIPTION_KEY+"info.holdControl";
 	public static final String DESC_HOLD_SHIFT = DESCRIPTION_KEY+"info.holdShift";
@@ -92,6 +93,7 @@ public class IIReference
 	public static final ResLoc RES_TEXTURES_MANUAL = ResLoc.of(RES_TEXTURES_GUI, "/manual/");
 	public static final ResLoc RES_TEXTURES_SKIN = ResLoc.of(RES_TEXTURES, "skins/");
 	public static final ResLoc RES_TEXTURES_ITEM = ResLoc.of(RES_TEXTURES, "items/");
+	public static final ResLoc RES_TEXTURES_BLOCK = ResLoc.of(RES_TEXTURES, "blocks/");
 
 	//--- GameRules ---//
 	public static final String GAMERULE_AMMO_BREAKS_BLOCKS = "ammoBreaksBlocks";

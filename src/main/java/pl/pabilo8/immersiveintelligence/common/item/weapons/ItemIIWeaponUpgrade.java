@@ -15,7 +15,7 @@ import pl.pabilo8.immersiveintelligence.client.render.MachinegunRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.amt.IIUpgradableItemRendererAMT;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
-import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIWeaponUpgrade.WeaponUpgrades;
+import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIWeaponUpgrade.WeaponUpgrade;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ISerializableEnum;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
@@ -40,11 +40,11 @@ import java.util.stream.Collectors;
  * @since 01-11-2019
  */
 @IIItemProperties(category = IICategory.WARFARE)
-public class ItemIIWeaponUpgrade extends ItemIISubItemsBase<WeaponUpgrades> implements IUpgrade
+public class ItemIIWeaponUpgrade extends ItemIISubItemsBase<WeaponUpgrade> implements IUpgrade
 {
 	public ItemIIWeaponUpgrade()
 	{
-		super("weapon_upgrade", 1, WeaponUpgrades.values());
+		super("weapon_upgrade", 1, WeaponUpgrade.values());
 	}
 
 	public enum WeaponTypes implements ISerializableEnum
@@ -69,7 +69,7 @@ public class ItemIIWeaponUpgrade extends ItemIISubItemsBase<WeaponUpgrades> impl
 	}
 
 	@GeneratedItemModels(itemName = "weapon_upgrade")
-	public enum WeaponUpgrades implements IIItemEnum
+	public enum WeaponUpgrade implements IIItemEnum
 	{
 		//--- Machinegun ---//
 
@@ -150,23 +150,23 @@ public class ItemIIWeaponUpgrade extends ItemIISubItemsBase<WeaponUpgrades> impl
 		private final BiPredicate<ItemStack, ItemStack> applyCheck;
 		private final BiConsumer<ItemStack, NBTTagCompound> function;
 
-		WeaponUpgrades(final WeaponTypes type, String... incompatible)
+		WeaponUpgrade(final WeaponTypes type, String... incompatible)
 		{
 			this(new WeaponTypes[]{type}, incompatible);
 		}
 
-		WeaponUpgrades(final WeaponTypes[] types, final String... incompatible)
+		WeaponUpgrade(final WeaponTypes[] types, final String... incompatible)
 		{
 			this(types, (stack, nbt) -> {
 			}, incompatible);
 		}
 
-		WeaponUpgrades(final WeaponTypes type, @Nullable BiConsumer<ItemStack, NBTTagCompound> appliedTag, final String... incompatible)
+		WeaponUpgrade(final WeaponTypes type, @Nullable BiConsumer<ItemStack, NBTTagCompound> appliedTag, final String... incompatible)
 		{
 			this(new WeaponTypes[]{type}, appliedTag, incompatible);
 		}
 
-		WeaponUpgrades(final WeaponTypes[] types, @Nullable BiConsumer<ItemStack, NBTTagCompound> appliedTag, final String... incompatible)
+		WeaponUpgrade(final WeaponTypes[] types, @Nullable BiConsumer<ItemStack, NBTTagCompound> appliedTag, final String... incompatible)
 		{
 			this.toolset = ImmutableSet.copyOf(types);
 			this.applyCheck = (target, upgrade) -> {
@@ -196,7 +196,7 @@ public class ItemIIWeaponUpgrade extends ItemIISubItemsBase<WeaponUpgrades> impl
 	@Override
 	public void addInformation(@Nonnull ItemStack stack, @Nullable World world, @Nonnull List<String> list, @Nonnull ITooltipFlag flag)
 	{
-		WeaponUpgrades sub = stackToSub(stack);
+		WeaponUpgrade sub = stackToSub(stack);
 		//add valid weapon types
 		for(WeaponTypes type : sub.toolset)
 			list.add(IIUtils.getHexCol(type.color, type.symbol+" "+I18n.format(IIReference.DESC_TOOLUPGRADE+"item."+type.getName())));
@@ -230,7 +230,7 @@ public class ItemIIWeaponUpgrade extends ItemIISubItemsBase<WeaponUpgrades> impl
 		stackToSub(upgrade).function.accept(upgrade, modifications);
 	}
 
-	private static Predicate<EasyNBT> hasUpgrade(@Nonnull WeaponUpgrades upgrade)
+	private static Predicate<EasyNBT> hasUpgrade(@Nonnull WeaponUpgrade upgrade)
 	{
 		return easyNBT -> easyNBT.hasKey(upgrade.getName());
 	}
@@ -323,27 +323,27 @@ public class ItemIIWeaponUpgrade extends ItemIISubItemsBase<WeaponUpgrades> impl
 
 		//--- Submachinegun ---//
 		IIUpgradableItemRendererAMT<?> smg = IIContent.itemSubmachinegun.getItemRenderer();
-		smg.addUpgradePart(hasUpgrade(WeaponUpgrades.STURDY_BARREL), "sturdy_barrel");
-		smg.addUpgradePart(hasUpgrade(WeaponUpgrades.SUPPRESSOR), "suppressor");
-		smg.addUpgradePart(hasUpgrade(WeaponUpgrades.BOTTOM_LOADING), "bottom_loading");
-		smg.addUpgradePart(hasUpgrade(WeaponUpgrades.FOLDING_STOCK), "folding_stock");
+		smg.addUpgradePart(hasUpgrade(WeaponUpgrade.STURDY_BARREL), "sturdy_barrel");
+		smg.addUpgradePart(hasUpgrade(WeaponUpgrade.SUPPRESSOR), "suppressor");
+		smg.addUpgradePart(hasUpgrade(WeaponUpgrade.BOTTOM_LOADING), "bottom_loading");
+		smg.addUpgradePart(hasUpgrade(WeaponUpgrade.FOLDING_STOCK), "folding_stock");
 		smg.addUpgradePart(easyNBT -> easyNBT.hasKey("melee"), "bayonet");
 
 		//--- Assault Rifle ---//
 		IIUpgradableItemRendererAMT<?> stg = IIContent.itemAssaultRifle.getItemRenderer();
-		stg.addUpgradePart(hasUpgrade(WeaponUpgrades.SCOPE), "scope");
-		stg.addUpgradePart(hasUpgrade(WeaponUpgrades.INFRARED_SCOPE), "infrared_scope");
-		stg.addUpgradePart(hasUpgrade(WeaponUpgrades.STEREOSCOPIC_RANGEFINDER), "rangefinder");
-		stg.addUpgradePart(hasUpgrade(WeaponUpgrades.RAILGUN_ASSISTED_CHAMBER), "railgun");
-		stg.addUpgradePart(hasUpgrade(WeaponUpgrades.RIFLE_GRENADE_LAUNCHER), "grenade_launcher");
-		stg.addUpgradePart(hasUpgrade(WeaponUpgrades.ELECTRIC_FIRING_MOTOR), "electric_motor");
-		stg.addUpgradePart(hasUpgrade(WeaponUpgrades.GYROSCOPIC_STABILIZER), "stabilizer");
+		stg.addUpgradePart(hasUpgrade(WeaponUpgrade.SCOPE), "scope");
+		stg.addUpgradePart(hasUpgrade(WeaponUpgrade.INFRARED_SCOPE), "infrared_scope");
+		stg.addUpgradePart(hasUpgrade(WeaponUpgrade.STEREOSCOPIC_RANGEFINDER), "rangefinder");
+		stg.addUpgradePart(hasUpgrade(WeaponUpgrade.RAILGUN_ASSISTED_CHAMBER), "railgun");
+		stg.addUpgradePart(hasUpgrade(WeaponUpgrade.RIFLE_GRENADE_LAUNCHER), "grenade_launcher");
+		stg.addUpgradePart(hasUpgrade(WeaponUpgrade.ELECTRIC_FIRING_MOTOR), "electric_motor");
+		stg.addUpgradePart(hasUpgrade(WeaponUpgrade.GYROSCOPIC_STABILIZER), "stabilizer");
 
 		//--- Rifle ---//
 		IIUpgradableItemRendererAMT<?> rifle = IIContent.itemRifle.getItemRenderer();
-		rifle.addUpgradePart(hasUpgrade(WeaponUpgrades.SCOPE), "scope");
+		rifle.addUpgradePart(hasUpgrade(WeaponUpgrade.SCOPE), "scope");
 		rifle.addUpgradePart(easyNBT -> easyNBT.hasKey("melee"), "bayonet");
-		rifle.addUpgradePart(hasUpgrade(WeaponUpgrades.EXTENDED_BARREL), "extended_barrel");
-		rifle.addUpgradePart(hasUpgrade(WeaponUpgrades.SEMI_AUTOMATIC), "semi_automatic");
+		rifle.addUpgradePart(hasUpgrade(WeaponUpgrade.EXTENDED_BARREL), "extended_barrel");
+		rifle.addUpgradePart(hasUpgrade(WeaponUpgrade.SEMI_AUTOMATIC), "semi_automatic");
 	}
 }

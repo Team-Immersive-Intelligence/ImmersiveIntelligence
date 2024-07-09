@@ -11,12 +11,13 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonDropdownList;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.ProjectileWorkshop;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityProjectileWorkshop;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerProjectileWorkshop;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
@@ -57,7 +58,7 @@ public class GuiProjectileWorkshop extends GuiAmmunitionBase<TileEntityProjectil
 			addLabel(guiLeft+122, guiTop+5+5, IIReference.COLOR_H1, "Core:");
 			addLabel(guiLeft+122, guiTop+5+32-10+5, IIReference.COLOR_H1, "Type:");
 
-			String[] cores = Arrays.stream(tile.producedBullet.getAllowedCoreTypes()).map(CoreTypes::getName).toArray(String[]::new);
+			String[] cores = Arrays.stream(tile.producedBullet.getAllowedCoreTypes()).map(CoreType::getName).toArray(String[]::new);
 			typeList = new GuiButtonDropdownList(buttonList.size(), guiLeft+122, guiTop+20+32-8-7, 72, 12, 3, cores);
 			typeList.setTranslationFunc(s -> I18n.format(IIReference.DESCRIPTION_KEY+"bullet_core_type."+s));
 			typeList.selectedEntry = Arrays.asList(cores).indexOf(tile.coreType.getName());
@@ -72,7 +73,7 @@ public class GuiProjectileWorkshop extends GuiAmmunitionBase<TileEntityProjectil
 
 			IAmmoTypeItem<?, ?> bullet = AmmoRegistry.getAmmoItem(bulletList.getEntry(bulletList.selectedEntry));
 			exampleStack = bullet==null?ItemStack.EMPTY:
-					bullet.getBulletCore("core_brass", typeList.getEntry(typeList.selectedEntry));
+					bullet.getAmmoCoreStack(IIContent.ammoCoreBrass, CoreType.v(typeList.getEntry(typeList.selectedEntry)));
 			coreIconID = tile.coreType.ordinal();
 		}
 		else
@@ -123,7 +124,7 @@ public class GuiProjectileWorkshop extends GuiAmmunitionBase<TileEntityProjectil
 				buttonList.remove(typeList);
 
 				//reset
-				String[] cores = Arrays.stream(bullet.getAllowedCoreTypes()).map(CoreTypes::getName).toArray(String[]::new);
+				String[] cores = Arrays.stream(bullet.getAllowedCoreTypes()).map(CoreType::getName).toArray(String[]::new);
 				typeList = new GuiButtonDropdownList(id, guiLeft+122, guiTop+20+32-8-7, 72, 12, 3, cores);
 				typeList.setTranslationFunc(s -> I18n.format(IIReference.DESCRIPTION_KEY+"bullet_core_type."+s));
 				typeList.selectedEntry = Math.max(Arrays.asList(cores).indexOf(selectedType), 0);
@@ -133,11 +134,11 @@ public class GuiProjectileWorkshop extends GuiAmmunitionBase<TileEntityProjectil
 
 			}
 
-			coreIconID = CoreTypes.v(typeList.getEntry(typeList.selectedEntry)).ordinal();
+			coreIconID = CoreType.v(typeList.getEntry(typeList.selectedEntry)).ordinal();
 
 			IAmmoTypeItem<?, ?> bullet = AmmoRegistry.getAmmoItem(bulletList.getEntry(bulletList.selectedEntry));
 			exampleStack = bullet==null?ItemStack.EMPTY:
-					bullet.getBulletCore("core_brass", typeList.getEntry(typeList.selectedEntry));
+					bullet.getAmmoCoreStack(IIContent.ammoCoreBrass, CoreType.v(typeList.getEntry(typeList.selectedEntry)));
 		}
 	}
 

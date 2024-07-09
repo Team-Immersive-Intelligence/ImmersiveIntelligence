@@ -17,7 +17,6 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.AmmoFactory;
-import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityAmmoBase;
 
 import javax.annotation.Nullable;
 
@@ -36,14 +35,11 @@ public abstract class TileEntityMineBase extends TileEntityImmersiveConnectable 
 		if(!armed)
 			return;
 		if(!world.isRemote&&!mineStack.isEmpty())
-		{
-			EntityAmmoBase<?> mine = new AmmoFactory<>(world)
+			new AmmoFactory<>(world)
 					.setStack(mineStack)
 					.setPosition(pos)
 					.setDirection(EnumFacing.UP)
-					.create();
-			mine.detonate();
-		}
+					.detonate();
 		world.setBlockToAir(this.getPos());
 	}
 
@@ -89,5 +85,10 @@ public abstract class TileEntityMineBase extends TileEntityImmersiveConnectable 
 	{
 		explode();
 		return NonNullList.from(armed?ItemStack.EMPTY: mineStack);
+	}
+
+	public ItemStack getMineStack()
+	{
+		return mineStack;
 	}
 }

@@ -3,8 +3,8 @@ package pl.pabilo8.immersiveintelligence.common.util.easynbt;
 import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorage;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.*;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.fluids.FluidTank;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
@@ -24,8 +24,8 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 
 /**
- * This class is used to sync fields in a {@link TileEntity}<br>
- * To use it, create a new class extending {@link TileEntity} and add the {@link SyncNBT} annotation to the fields you want to sync<br>
+ * This class is used to sync fields in any class<br>
+ * To use it, create a new class and add the {@link SyncNBT} annotation to the fields you want to sync<br>
  * Any non-static field, declared or inherited with the annotation will be synced automatically<br>
  *
  * @author Pabilo8
@@ -42,7 +42,7 @@ public class NBTSerialisation
 	/**
 	 * Registry of all serializers for a tile entity class
 	 */
-	private static final HashMap<Class<? extends TileEntity>, NBTSerializer<?>> serializers = new HashMap<>();
+	private static final HashMap<Class<?>, NBTSerializer<?>> serializers = new HashMap<>();
 
 	static
 	{
@@ -56,6 +56,25 @@ public class NBTSerialisation
 		//Register serializers for all primitive array types
 		registerSerializer(int[].class, NBTTagIntArray.class, NBTTagIntArray::new, NBTTagIntArray::getIntArray);
 //		registerSerializer(boolean[].class, NBTTagByteArray.class, NBTTagByteArray::new, NBTTagByteArray::getByteArray);
+
+		//Register serializers for vanilla types
+		registerSerializer(Vec3d.class, NBTTagList.class,
+				vec -> new NBTTagList()
+				{
+					{
+						appendTag(new NBTTagDouble(vec.x));
+						appendTag(new NBTTagDouble(vec.y));
+						appendTag(new NBTTagDouble(vec.z));
+					}
+				},
+				nbt ->
+				{
+					double x = ((NBTTagDouble)nbt.get(0)).getDouble();
+					double y = ((NBTTagDouble)nbt.get(1)).getDouble();
+					double z = ((NBTTagDouble)nbt.get(2)).getDouble();
+					return new Vec3d(x, y, z);
+				}
+		);
 
 		//Register serializers for IE types
 		//FluxStorage
@@ -125,7 +144,7 @@ public class NBTSerialisation
 		serializerRegistry.put(dataClass, (field, annotation) -> new FieldSerializer<FIELD, NBT>(field, annotation)
 		{
 			@Override
-			protected FIELD fromNBT(TileEntity tile, NBT nbt)
+			protected FIELD fromNBT(Object tile, NBT nbt)
 			{
 				FIELD invoke = null;
 				try
@@ -153,7 +172,7 @@ public class NBTSerialisation
 		});
 	}
 
-	public static void synchroniseFor(TileEntity tile, BiConsumer<NBTSerializer, TileEntity> action)
+	public static void synchroniseFor(Object tile, BiConsumer<NBTSerializer, Object> action)
 	{
 		NBTSerializer<?> serializer = serializers.computeIfAbsent(tile.getClass(), NBTSerializer::new);
 		action.accept(serializer, tile);
@@ -162,7 +181,7 @@ public class NBTSerialisation
 	/**
 	 * Serializes the given TileEntity
 	 */
-	public static class NBTSerializer<T extends TileEntity>
+	public static class NBTSerializer<T>
 	{
 		private final List<FieldSerializer<?, ?>> fields;
 		private final HashMap<Integer, List<FieldSerializer<?, ?>>> timeFields;
@@ -313,7 +332,7 @@ public class NBTSerialisation
 		}
 
 		@SuppressWarnings("unchecked")
-		void serializeField(@Nonnull TileEntity tile, @Nonnull NBTTagCompound into)
+		void serializeField(@Nonnull Object tile, @Nonnull NBTTagCompound into)
 		{
 			try
 			{
@@ -326,7 +345,7 @@ public class NBTSerialisation
 		}
 
 		@SuppressWarnings("unchecked")
-		void deserializeField(@Nonnull TileEntity tile, @Nonnull NBTTagCompound from, boolean canSkip)
+		void deserializeField(@Nonnull Object tile, @Nonnull NBTTagCompound from, boolean canSkip)
 		{
 			try
 			{
@@ -346,7 +365,7 @@ public class NBTSerialisation
 		 * @param nbt  The nbt to deserialize from
 		 * @return The deserialized value
 		 */
-		protected FIELD fromNBT(@Nonnull TileEntity tile, NBT nbt)
+		protected FIELD fromNBT(@Nonnull Object tile, NBT nbt)
 		{
 			return fromNBT(nbt);
 		}

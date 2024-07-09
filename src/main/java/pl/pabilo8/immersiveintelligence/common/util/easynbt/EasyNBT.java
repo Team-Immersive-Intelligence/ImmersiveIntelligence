@@ -17,10 +17,7 @@ import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.ISerializableEnum;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -168,7 +165,7 @@ public class EasyNBT extends Constants.NBT
 	 */
 	public <T, E extends NBTBase> EasyNBT withList(String key, Function<T, E> conversion, T... objects)
 	{
-		wrapped.setTag(key, listOf((Object[])Arrays.stream(objects).map(conversion).toArray(NBTBase[]::new)));
+		wrapped.setTag(key, listOf((Object[])Arrays.stream(objects).filter(Objects::nonNull).map(conversion).toArray(NBTBase[]::new)));
 		return this;
 	}
 
@@ -179,7 +176,7 @@ public class EasyNBT extends Constants.NBT
 	 */
 	public <T, E extends NBTBase> EasyNBT withList(String key, Function<T, E> conversion, Collection<T> objects)
 	{
-		wrapped.setTag(key, listOf((Object[])objects.stream().map(conversion).toArray(NBTBase[]::new)));
+		wrapped.setTag(key, listOf((Object[])objects.stream().filter(Objects::nonNull).map(conversion).toArray(NBTBase[]::new)));
 		return this;
 	}
 
@@ -911,9 +908,6 @@ public class EasyNBT extends Constants.NBT
 	public static NBTTagList listOf(Object... elements)
 	{
 		NBTTagList list = new NBTTagList();
-
-		if(elements.length==0)
-			return list;
 
 		for(Object element : elements)
 		{

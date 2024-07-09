@@ -6,7 +6,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.client.ClientEventHandler;
 import pl.pabilo8.immersiveintelligence.client.fx.builder.ParticleBuilder;
-import pl.pabilo8.immersiveintelligence.client.fx.builder.ParticleModelBuilder;
 import pl.pabilo8.immersiveintelligence.client.fx.particles.IIParticle;
 import pl.pabilo8.immersiveintelligence.client.fx.particles.ParticleBasicGravity;
 import pl.pabilo8.immersiveintelligence.client.fx.particles.ParticleDebris;
@@ -509,9 +508,6 @@ public class IIParticles
 			if(chunkName!=null)
 			{
 				ParticleBuilder<? extends IIParticle> builder = ParticleRegistry.getParticleBuilder(chunkName);
-				assert builder instanceof ParticleModelBuilder;
-				ParticleModelBuilder<?> chunkBuilder = (ParticleModelBuilder<?>)builder;
-
 				for(int i = 0; i < amount; i++)
 				{
 					Vec3d direction = ParticleUtils.withY(ParticleUtils.getRandXZ().scale(range), 0.1f);
@@ -527,8 +523,9 @@ public class IIParticles
 						);
 					}
 					//spawn smaller fragments
-					chunkBuilder.spawnParticle(pos, direction, direction.normalize())
-							.retextureModel(deb);
+					IIParticle particle = builder.spawnParticle(pos, direction, direction.normalize());
+					if(particle instanceof ParticleModel)
+						((ParticleModel)particle).retextureModel(deb);
 				}
 			}
 		};

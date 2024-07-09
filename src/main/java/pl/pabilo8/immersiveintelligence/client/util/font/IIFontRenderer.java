@@ -8,6 +8,7 @@ import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.util.ResourceLocation;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
@@ -35,40 +36,40 @@ public class IIFontRenderer extends FontRenderer
 
 		//II
 		//Basic symbols
-		unicodeReplacements.put('\u29c1', new CharReplacement(0, 0)); //speed
-		unicodeReplacements.put('\u2296', new CharReplacement(1, 0)); //torque
-		unicodeReplacements.put('\u2607', new CharReplacement(2, 0)); //energy
-		unicodeReplacements.put('\u2622', new CharReplacement(3, 0)); //nuclear / radiation
+		unicodeReplacements.put(IIReference.CHARICON_SPEED, new CharReplacement(0, 0)); //speed
+		unicodeReplacements.put(IIReference.CHARICON_TORQUE, new CharReplacement(1, 0)); //torque
+		unicodeReplacements.put(IIReference.CHARICON_ENERGY, new CharReplacement(2, 0)); //energy
+		unicodeReplacements.put(IIReference.CHARICON_RADIATION, new CharReplacement(3, 0)); //nuclear / radiation
 
 		//Descriptions
-		unicodeReplacements.put('\u2023', new CharReplacement(0, 1)); //bullet
-		unicodeReplacements.put('\u29b3', new CharReplacement(1, 1)); //bullet contents
-		unicodeReplacements.put('\u29b4', new CharReplacement(2, 1)); //penetration
-		unicodeReplacements.put('\u2295', new CharReplacement(3, 1)); //damage / skull
+		unicodeReplacements.put(IIReference.CHARICON_BULLET, new CharReplacement(0, 1)); //bullet
+		unicodeReplacements.put(IIReference.CHARICON_BULLET_CONTENTS, new CharReplacement(1, 1)); //bullet contents
+		unicodeReplacements.put(IIReference.CHARICON_PENETRATION, new CharReplacement(2, 1)); //penetration
+		unicodeReplacements.put(IIReference.CHARICON_SKULL, new CharReplacement(3, 1)); //damage / skull
 
 		//Ammunition Fuse Types
-		unicodeReplacements.put('\u29b0', new CharReplacement(0, 2)); //contact
-		unicodeReplacements.put('\u29b1', new CharReplacement(1, 2)); //proximity
-		unicodeReplacements.put('\u29b2', new CharReplacement(2, 2)); //timed
+		unicodeReplacements.put(IIReference.CHARICON_CONTACT, new CharReplacement(0, 2)); //contact
+		unicodeReplacements.put(IIReference.CHARICON_TIMED, new CharReplacement(1, 2)); //timed
+		unicodeReplacements.put(IIReference.CHARICON_PROXIMITY, new CharReplacement(2, 2)); //proximity
 
 		//Manual Directory Symbol
-		unicodeReplacements.put('\u2348', new CharReplacement(2, 3)); //folder
+		unicodeReplacements.put(IIReference.CHARICON_FOLDER, new CharReplacement(2, 3)); //folder
 
 		//Weapon Classes
-		unicodeReplacements.put('\u24b6', new CharReplacement(0, 3)); //mg
-		unicodeReplacements.put('\u24b7', new CharReplacement(1, 3)); //smg
-		unicodeReplacements.put('\u24b8', new CharReplacement(2, 3)); //railgun
-		unicodeReplacements.put('\u24b9', new CharReplacement(3, 3)); //revolver
-		unicodeReplacements.put('\u24ba', new CharReplacement(0, 4)); //autorevolver
-		unicodeReplacements.put('\u24bb', new CharReplacement(1, 4)); //stg
-		unicodeReplacements.put('\u24bc', new CharReplacement(2, 4)); //spigot mortar
-		unicodeReplacements.put('\u24bd', new CharReplacement(3, 4)); //rifle
+		unicodeReplacements.put(IIReference.CHARICON_MG, new CharReplacement(0, 3)); //mg
+		unicodeReplacements.put(IIReference.CHARICON_SMG, new CharReplacement(1, 3)); //smg
+		unicodeReplacements.put(IIReference.CHARICON_RAILGUN, new CharReplacement(2, 3)); //railgun
+		unicodeReplacements.put(IIReference.CHARICON_REVOLVER, new CharReplacement(3, 3)); //revolver
+		unicodeReplacements.put(IIReference.CHARICON_AUTOREVOLVER, new CharReplacement(0, 4)); //autorevolver
+		unicodeReplacements.put(IIReference.CHARICON_STG, new CharReplacement(1, 4)); //stg
+		unicodeReplacements.put(IIReference.CHARICON_SPIGOT_MORTAR, new CharReplacement(2, 4)); //spigot mortar
+		unicodeReplacements.put(IIReference.CHARICON_RIFLE, new CharReplacement(3, 4)); //rifle
 
 		//Armor Classes
-		unicodeReplacements.put('\u24be', new CharReplacement(0, 5)); //helmet
-		unicodeReplacements.put('\u24bf', new CharReplacement(1, 5)); //chestplate
-		unicodeReplacements.put('\u24c0', new CharReplacement(2, 5)); //leggings
-		unicodeReplacements.put('\u24c1', new CharReplacement(3, 5)); //boots
+		unicodeReplacements.put(IIReference.CHARICON_HELMET, new CharReplacement(0, 5)); //helmet
+		unicodeReplacements.put(IIReference.CHARICON_CHESTPLATE, new CharReplacement(1, 5)); //chestplate
+		unicodeReplacements.put(IIReference.CHARICON_LEGGINGS, new CharReplacement(2, 5)); //leggings
+		unicodeReplacements.put(IIReference.CHARICON_BOOTS, new CharReplacement(3, 5)); //boots
 	}
 
 	int[] backupColours;

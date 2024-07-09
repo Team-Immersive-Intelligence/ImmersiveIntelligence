@@ -24,7 +24,7 @@ import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIGunBase;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIISubmachinegun;
-import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIWeaponUpgrade.WeaponUpgrades;
+import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIWeaponUpgrade.WeaponUpgrade;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
@@ -82,8 +82,8 @@ public class SubmachinegunRenderer extends IIUpgradableItemRendererAMT<ItemIISub
 
 		return model
 				.setTransformations(TransformType.GROUND, new Matrix4()
-						.scale(0.325, 0.325, 0.325)
-						.translate(0.5, -0.75, 0.5))
+						.scale(0.425, 0.425, 0.425)
+						.translate(0.5, -0.75, 1))
 				.setTransformations(TransformType.THIRD_PERSON_RIGHT_HAND, tpp)
 				.setTransformations(TransformType.THIRD_PERSON_LEFT_HAND, tppOffhand)
 				.setTransformations(TransformType.FIXED, new Matrix4()
@@ -159,7 +159,7 @@ public class SubmachinegunRenderer extends IIUpgradableItemRendererAMT<ItemIISub
 				if(recoil > 0)
 					GlStateManager.translate(0, -recoil*(0.155-0.1*preciseAim), recoil*0.25);
 
-				if(item.hasIIUpgrade(stack, WeaponUpgrades.FOLDING_STOCK))
+				if(item.hasIIUpgrade(stack, WeaponUpgrade.FOLDING_STOCK))
 					foldingStock.apply(preciseAim);
 			}
 			(transform==TransformType.FIRST_PERSON_RIGHT_HAND?handAngle: offHandAngle).apply(preciseAim);
@@ -179,7 +179,7 @@ public class SubmachinegunRenderer extends IIUpgradableItemRendererAMT<ItemIISub
 				reloading > 0?partialTicks: 0
 		);
 
-		if(item.hasIIUpgrade(stack, WeaponUpgrades.BOTTOM_LOADING))
+		if(item.hasIIUpgrade(stack, WeaponUpgrade.BOTTOM_LOADING))
 		{
 			if(nbt.hasKey("isDrum"))
 				(magazine.isEmpty()?loadBottomDrum: unloadBottomDrum).apply(v);

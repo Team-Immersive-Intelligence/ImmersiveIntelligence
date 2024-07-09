@@ -672,12 +672,6 @@ public class EntityFieldHowitzer extends Entity implements IVehicleMultiPart, IE
 	}
 
 	@Override
-	public World getWorld()
-	{
-		return this.getEntityWorld();
-	}
-
-	@Override
 	public boolean attackEntityFromPart(MultiPartEntityPart part, DamageSource source, float amount)
 	{
 		boolean isValidSource = source.isProjectile()||source.isExplosion()||source.isFireDamage();

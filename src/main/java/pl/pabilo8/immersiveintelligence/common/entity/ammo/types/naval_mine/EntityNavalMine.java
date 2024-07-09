@@ -105,15 +105,15 @@ public class EntityNavalMine extends EntityAmmoMine
 	}
 
 	@Override
-	public void applyEntityCollision(Entity entityIn)
+	public void applyEntityCollision(Entity other)
 	{
 		//for less annoyance
-		if(entityIn instanceof EntitySquid)
+		if(other instanceof EntitySquid||other.noClip)
 			return;
 
-		super.applyEntityCollision(entityIn);
+		super.applyEntityCollision(other);
 		if(ticksExisted > Mines.navalMineArmTime)
-			setDead();
+			detonate();
 	}
 
 	@Override

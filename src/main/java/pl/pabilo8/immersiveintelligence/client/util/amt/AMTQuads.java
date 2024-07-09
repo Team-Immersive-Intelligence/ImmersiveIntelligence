@@ -10,7 +10,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.client.model.IIModelRegistry;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
 import java.util.Arrays;
 
@@ -37,7 +37,7 @@ public class AMTQuads extends AMT
 	/**
 	 * Color baked onto this element's quads.
 	 */
-	protected int bakedColor = -1;
+	protected IIColor bakedColor = IIColor.WHITE;
 
 	/**
 	 * Whether this element has lighting (darkening the face when viewed from another angle) enabled<br>
@@ -68,9 +68,9 @@ public class AMTQuads extends AMT
 
 				//Use forge's trick to put colored quads to the buffer
 				//Since it's inside a GLCallList, the speed will get boosted significantly
-				if(bakedColor!=-1)
+				if(bakedColor!=IIColor.WHITE)
 				{
-					float[] floats = IIUtils.rgbIntToRGB(bakedColor);
+					float[] floats = bakedColor.getFloatRGB();
 					for(BakedQuad quad : quads)
 					{
 						buf.addVertexData(quad.getVertexData());
@@ -115,7 +115,7 @@ public class AMTQuads extends AMT
 	 * @param color new color to be baked on quads
 	 * @return a recolored copy of this AMTQuads
 	 */
-	public AMTQuads recolor(int color)
+	public AMTQuads recolor(IIColor color)
 	{
 		AMTQuads copy = new AMTQuads(this.name, this.originPos,
 				Arrays.stream(quads)

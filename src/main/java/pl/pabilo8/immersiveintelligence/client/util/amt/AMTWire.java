@@ -83,5 +83,6 @@ public class AMTWire extends AMT
 	{
 		if(listID!=-1)
 			GlStateManager.glDeleteLists(listID, 1);
+		listID = -1;
 	}
 }

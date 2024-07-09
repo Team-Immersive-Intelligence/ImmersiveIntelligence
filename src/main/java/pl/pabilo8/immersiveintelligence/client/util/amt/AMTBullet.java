@@ -5,7 +5,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.Vec3d;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoCore;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.client.model.builtin.IAmmoModel;
@@ -25,7 +25,7 @@ public class AMTBullet extends AMT
 	private BulletState state = BulletState.BULLET_UNUSED;
 
 	AmmoCore core = null;
-	CoreTypes coreType = null;
+	CoreType coreType = null;
 	float gunpowderPercentage = 0;
 	int paintColour = -1;
 
@@ -106,7 +106,7 @@ public class AMTBullet extends AMT
 		return this;
 	}
 
-	public AMTBullet withProperties(AmmoCore core, CoreTypes coreType, int paintColour)
+	public AMTBullet withProperties(AmmoCore core, CoreType coreType, int paintColour)
 	{
 		this.core = core;
 		this.coreType = coreType;

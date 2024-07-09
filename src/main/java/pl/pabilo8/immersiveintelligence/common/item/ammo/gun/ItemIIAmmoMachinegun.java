@@ -3,8 +3,9 @@ package pl.pabilo8.immersiveintelligence.common.item.ammo.gun;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreTypes;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseType;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.PropellantType;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem.IIAmmoProjectile;
 import pl.pabilo8.immersiveintelligence.client.model.builtin.IAmmoModel;
 import pl.pabilo8.immersiveintelligence.client.model.builtin.ModelAmmoProjectile;
@@ -12,7 +13,7 @@ import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Ammuniti
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoBase;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoBase.AmmoParts;
-import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoCasing.Casings;
+import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoCasing.Casing;
 import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
 import pl.pabilo8.modworks.annotations.item.GeneratedItemModels;
@@ -32,20 +33,27 @@ public class ItemIIAmmoMachinegun extends ItemIIAmmoBase<EntityAmmoProjectile>
 {
 	public ItemIIAmmoMachinegun()
 	{
-		super("mg_2bCal", Casings.MG_2BCAL);
+		super("mg_2bCal", Casing.MG_2BCAL);
 	}
 
 	@Override
-	public float getComponentAmount()
+	public float getComponentMultiplier()
 	{
 		return 0.125f;
 	}
 
 	@Override
-	public int getGunpowderNeeded()
+	public int getPropellantNeeded()
 	{
 		return 25;
 	}
+
+	@Override
+	public PropellantType getAllowedPropellants()
+	{
+		return PropellantType.SOLID;
+	}
+
 
 	@Override
 	public int getCoreMaterialNeeded()
@@ -54,13 +62,13 @@ public class ItemIIAmmoMachinegun extends ItemIIAmmoBase<EntityAmmoProjectile>
 	}
 
 	@Override
-	public float getInitialMass()
+	public float getCasingMass()
 	{
 		return 0.125f;
 	}
 
 	@Override
-	public float getDefaultVelocity()
+	public float getVelocity()
 	{
 		return Ammunition.mgVelocity;
 	}
@@ -85,9 +93,9 @@ public class ItemIIAmmoMachinegun extends ItemIIAmmoBase<EntityAmmoProjectile>
 	}
 
 	@Override
-	public CoreTypes[] getAllowedCoreTypes()
+	public CoreType[] getAllowedCoreTypes()
 	{
-		return new CoreTypes[]{CoreTypes.SOFTPOINT, CoreTypes.PIERCING};
+		return new CoreType[]{CoreType.SOFTPOINT, CoreType.PIERCING};
 	}
 
 	@Override
@@ -110,9 +118,9 @@ public class ItemIIAmmoMachinegun extends ItemIIAmmoBase<EntityAmmoProjectile>
 	}
 
 	@Override
-	public FuseTypes[] getAllowedFuseTypes()
+	public FuseType[] getAllowedFuseTypes()
 	{
-		return new FuseTypes[]{FuseTypes.CONTACT};
+		return new FuseType[]{FuseType.CONTACT};
 	}
 
 	@Override

@@ -17,6 +17,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.oredict.OreDictionary;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseType;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.api.crafting.*;
 import pl.pabilo8.immersiveintelligence.client.gui.block.*;
@@ -100,7 +102,7 @@ public class JEIHelper implements IModPlugin
 
 		for(IAmmoTypeItem<?, ?> bullet : AmmoRegistry.getAllAmmoItems())
 		{
-			ItemStack stack = bullet.getBulletWithParams("", "", "");
+			ItemStack stack = bullet.getAmmoStack(AmmoRegistry.MISSING_CORE, CoreType.SOFTPOINT, FuseType.CONTACT);
 			stack.setTagCompound(new NBTTagCompound());
 			jeiHelpers.getIngredientBlacklist().addIngredientToBlacklist(stack);
 		}

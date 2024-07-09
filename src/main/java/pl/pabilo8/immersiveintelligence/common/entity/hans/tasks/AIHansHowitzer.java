@@ -9,6 +9,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseType;
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.IIAmmoUtils;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
@@ -91,7 +93,7 @@ public class AIHansHowitzer extends EntityAIBase
 				if(positionVector.distanceTo(t.getPositionVector()) > 40)
 					pp = getAnglePrediction(positionVector, IIUtils.getEntityCenter(t), new Vec3d(t.motionX, t.motionY, t.motionZ))[1];
 				else
-					pp = IIAmmoUtils.getDirectFireAngle(IIContent.itemAmmoLightArtillery.getDefaultVelocity(), 3.4f, positionVector.subtract(t.getPositionVector()));
+					pp = IIAmmoUtils.getDirectFireAngle(IIContent.itemAmmoLightArtillery.getVelocity(), 3.4f, positionVector.subtract(t.getPositionVector()));
 
 				howitzer.gunPitchUp = howitzer.gunPitch-pp < 0;
 				howitzer.gunPitchDown = howitzer.gunPitch-pp > 0;
@@ -104,7 +106,7 @@ public class AIHansHowitzer extends EntityAIBase
 						//it should be
 						if(entity instanceof EntityHans&&((EntityHans)entity).getHeldItemMainhand().isEmpty())
 						{
-							ItemStack shell = IIContent.itemAmmoLightArtillery.getBulletWithParams("core_brass", "canister", "hmx", "tracer_powder");
+							ItemStack shell = IIContent.itemAmmoLightArtillery.getAmmoStack(IIContent.ammoCoreBrass, CoreType.CANISTER, FuseType.CONTACT, IIContent.ammoComponentHMX, IIContent.ammoComponentTracerPowder);
 							NBTTagCompound tag = new NBTTagCompound();
 							tag.setInteger("colour", 0xff0000);
 							//NBTTagCompound tag2 = new NBTTagCompound();

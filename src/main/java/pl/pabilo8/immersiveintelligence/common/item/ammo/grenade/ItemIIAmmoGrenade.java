@@ -13,11 +13,12 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreTypes;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseType;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.PropellantType;
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.AmmoFactory;
 import pl.pabilo8.immersiveintelligence.client.model.builtin.IAmmoModel;
-import pl.pabilo8.immersiveintelligence.client.model.builtin.ModelAmmo;
+import pl.pabilo8.immersiveintelligence.client.model.builtin.ModelAmmoProjectile;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Ammunition;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.Grenade;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
@@ -50,9 +51,15 @@ public class ItemIIAmmoGrenade extends ItemIIAmmoBase<EntityAmmoGrenade>
 	}
 
 	@Override
-	public float getComponentAmount()
+	public float getComponentMultiplier()
 	{
 		return 0.45f;
+	}
+
+	@Override
+	public PropellantType getAllowedPropellants()
+	{
+		return PropellantType.NONE;
 	}
 
 	@Override
@@ -62,13 +69,13 @@ public class ItemIIAmmoGrenade extends ItemIIAmmoBase<EntityAmmoGrenade>
 	}
 
 	@Override
-	public float getInitialMass()
+	public float getCasingMass()
 	{
-		return 0.25f;
+		return 0.2f;
 	}
 
 	@Override
-	public float getDefaultVelocity()
+	public float getVelocity()
 	{
 		return Ammunition.grenadeVelocity;
 	}
@@ -90,7 +97,7 @@ public class ItemIIAmmoGrenade extends ItemIIAmmoBase<EntityAmmoGrenade>
 	@Override
 	public Function<ItemIIAmmoBase<EntityAmmoGrenade>, IAmmoModel<ItemIIAmmoBase<EntityAmmoGrenade>, EntityAmmoGrenade>> get3DModel()
 	{
-		return ModelAmmo::createGrenadeModel;
+		return ModelAmmoProjectile::createGrenadeModel;
 	}
 
 	@Override
@@ -107,15 +114,15 @@ public class ItemIIAmmoGrenade extends ItemIIAmmoBase<EntityAmmoGrenade>
 	}
 
 	@Override
-	public CoreTypes[] getAllowedCoreTypes()
+	public CoreType[] getAllowedCoreTypes()
 	{
-		return new CoreTypes[]{CoreTypes.CANISTER};
+		return new CoreType[]{CoreType.CANISTER};
 	}
 
 	@Override
-	public FuseTypes[] getAllowedFuseTypes()
+	public FuseType[] getAllowedFuseTypes()
 	{
-		return new FuseTypes[]{FuseTypes.CONTACT, FuseTypes.TIMED};
+		return new FuseType[]{FuseType.CONTACT, FuseType.TIMED};
 	}
 
 	@Override

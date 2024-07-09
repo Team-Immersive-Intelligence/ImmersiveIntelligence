@@ -52,15 +52,18 @@ public class AMTHand extends AMT
 
 		//create a custom hand model based on the player's one
 		handModel = new ModelRenderer(model);
+		ModelRenderer armwearModel = new ModelRenderer(model);
 		if(handSide==EnumHandSide.RIGHT)
 		{
 			handModel.cubeList.addAll(model.bipedRightArm.cubeList);
-			handModel.cubeList.addAll(model.bipedRightArmwear.cubeList);
+			armwearModel.cubeList.addAll(model.bipedRightArmwear.cubeList);
+			handModel.addChild(armwearModel);
 		}
 		else
 		{
 			handModel.cubeList.addAll(model.bipedLeftArm.cubeList);
-			handModel.cubeList.addAll(model.bipedLeftArmwear.cubeList);
+			armwearModel.cubeList.addAll(model.bipedLeftArmwear.cubeList);
+			handModel.addChild(armwearModel);
 		}
 		handModel.rotationPointY = -10;
 		//remove the "new" hand from the player model

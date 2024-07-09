@@ -1560,34 +1560,34 @@ public class IIConfigHandler
 			public static boolean blockDamage = true;
 
 			@Comment({"Default velocity of a mortar shell."})
-			public static float mortarVelocity = 8f;
+			public static float mortarVelocity = 8f*0.7f;
 
 			@Comment({"Default velocity of a light howitzer shell."})
-			public static float lightHowiVelocity = 10f;
+			public static float lightHowiVelocity = 10f*0.7f;
 
 			@Comment({"Default velocity of an artillery howitzer shell."})
-			public static float artilleryHowiVelocity = 70f;
+			public static float artilleryHowiVelocity = 70f*0.7f;
 
 			@Comment({"Default velocity of a railgun grenade."})
-			public static float railgunGrenadeVelocity = 5f;
+			public static float railgunGrenadeVelocity = 5f*0.7f;
 
 			@Comment({"Default velocity of a thrown grenade."})
-			public static float grenadeVelocity = 2.5f;
+			public static float grenadeVelocity = 1f;
 
 			@Comment({"Default velocity of a machinegun bullet."})
-			public static float autocannonVelocity = 6f;
+			public static float autocannonVelocity = 6f*0.7f;
 
 			@Comment({"Default velocity of a machinegun bullet."})
-			public static float mgVelocity = 6.5f;
+			public static float mgVelocity = 6.5f*0.7f;
 
 			@Comment({"Default velocity of a submachinegun bullet."})
-			public static float smgVelocity = 5f;
+			public static float smgVelocity = 5f*0.7f;
 
 			@Comment({"Default velocity of an assault rifle bullet."})
-			public static float stgVelocity = 6.5f;
+			public static float stgVelocity = 6.5f*0.7f;
 
 			@Comment({"Default velocity of a revolver cartridge."})
-			public static float revolverVelocity = 6f;
+			public static float revolverVelocity = 6f*0.7f;
 		}
 
 		public static class Wires

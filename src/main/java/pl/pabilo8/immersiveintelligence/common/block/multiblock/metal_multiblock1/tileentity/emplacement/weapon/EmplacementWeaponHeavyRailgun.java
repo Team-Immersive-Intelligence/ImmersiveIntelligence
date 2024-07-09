@@ -151,10 +151,10 @@ public class EmplacementWeaponHeavyRailgun extends EmplacementWeapon<EntityAmmoP
 	@Override
 	public float[] getAnglePrediction(Vec3d posTurret, Vec3d posTarget, Vec3d motion)
 	{
-		float force = 20, mass = 5;
+		double force = 20, mass = 5;
 		if(s2.getItem()==IIContent.itemRailgunGrenade)
 		{
-			force = IIContent.itemRailgunGrenade.getDefaultVelocity()*3;
+			force = IIContent.itemRailgunGrenade.getVelocity()*3;
 			mass = s2.isEmpty()?0: IIContent.itemRailgunGrenade.getMass(s2);
 		}
 		else

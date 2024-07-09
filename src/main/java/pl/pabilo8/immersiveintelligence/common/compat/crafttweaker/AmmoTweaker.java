@@ -19,8 +19,8 @@ import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.ShrapnelHandler;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.ComponentEffectShape;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.ComponentRole;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreTypes;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.PenetrationHardness;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoCore;
@@ -85,7 +85,7 @@ public class AmmoTweaker
 	public static class CoreMaterialBuilder
 	{
 		private final String name;
-		private int color;
+		private IIColor color;
 		private PenetrationHardness penHardness;
 		private float density, dmgModifier, explosionModifier;
 		private Object stack;
@@ -104,7 +104,19 @@ public class AmmoTweaker
 		@ZenMethod
 		public void setColor(int color)
 		{
-			this.color = color;
+			this.color = IIColor.fromPackedRGB(color);
+		}
+
+		@ZenMethod
+		public void setColor(int red, int green, int blue)
+		{
+			this.color = IIColor.fromRGB(red, green, blue);
+		}
+
+		@ZenMethod
+		public void setColor(String hexColor)
+		{
+			this.color = IIColor.fromHex(hexColor);
 		}
 
 		@ZenMethod
@@ -247,7 +259,7 @@ public class AmmoTweaker
 			@Override
 			public void apply()
 			{
-				final ComponentRole componentRole = ComponentRole.v(component.role);
+				final ComponentRole componentRole = IIUtils.enumValue(ComponentRole.class, component.role);
 
 				AmmoRegistry.registerComponent(
 						new AmmoComponent(component.name, component.density, componentRole, IIColor.fromPackedRGB(component.color))
@@ -261,13 +273,13 @@ public class AmmoTweaker
 							}
 
 							@Override
-							public void onEffect(World world, Vec3d pos, Vec3d dir, CoreTypes coreType, NBTTagCompound tag, float componentAmount, float multiplier, Entity owner)
+							public void onEffect(World world, Vec3d pos, Vec3d dir, ComponentEffectShape shape, NBTTagCompound tag, float componentAmount, float multiplier, Entity owner)
 							{
 								if(component.function!=null)
 									component.function.process(CraftTweakerMC.getIWorld(world),
 											CraftTweakerMC.getIVector3d(pos),
 											CraftTweakerMC.getIVector3d(dir),
-											coreType.getName(),
+											shape.getName(),
 											multiplier,
 											CraftTweakerMC.getIData(tag)
 									);
@@ -288,7 +300,7 @@ public class AmmoTweaker
 	@ZenRegister
 	public interface IComponentFunction
 	{
-		void process(IWorld world, IVector3d pos, IVector3d dir, String coreType, float amount, IData nbt);
+		void process(IWorld world, IVector3d pos, IVector3d dir, String effectShape, float amount, IData nbt);
 	}
 
 	@ZenMethod

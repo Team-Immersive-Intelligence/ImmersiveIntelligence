@@ -5,8 +5,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreTypes;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseType;
 import pl.pabilo8.immersiveintelligence.client.model.builtin.IAmmoModel;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityAmmoBase;
 
@@ -33,13 +33,13 @@ public interface IAmmoType<T extends IAmmoType<T, E>, E extends EntityAmmoBase<?
 	/**
 	 * @return The mass of the casing (used to calculate gravity in combination with the components
 	 */
-	float getInitialMass();
+	float getCasingMass();
 
 	/**
 	 * @return Default speed modifier of the projectile (blocks/tick)
 	 * Guns can apply additional velocity by multiplying the result of this method.
 	 */
-	float getDefaultVelocity();
+	float getVelocity();
 
 	/**
 	 * @return How much damage this ammunition deals on contact (in half-hearts)
@@ -49,7 +49,7 @@ public interface IAmmoType<T extends IAmmoType<T, E>, E extends EntityAmmoBase<?
 	/**
 	 * @return Component amount multiplier, can influence explosion size, smoke cloud duration, etc.
 	 */
-	float getComponentAmount();
+	float getComponentMultiplier();
 
 	/**
 	 * @return How many blocks potentially can be penetrated by a projectile of this ammo type
@@ -66,9 +66,9 @@ public interface IAmmoType<T extends IAmmoType<T, E>, E extends EntityAmmoBase<?
 
 	/**
 	 * @return Returns allowed core types, these affect the final damage, penetration and overall performance
-	 * @see CoreTypes
+	 * @see CoreType
 	 */
-	CoreTypes[] getAllowedCoreTypes();
+	CoreType[] getAllowedCoreTypes();
 
 	/**
 	 * @param amount of items to return
@@ -119,7 +119,7 @@ public interface IAmmoType<T extends IAmmoType<T, E>, E extends EntityAmmoBase<?
 	 * @param stack bullet stack
 	 * @return bullet core type from stack NBT
 	 */
-	CoreTypes getCoreType(ItemStack stack);
+	CoreType getCoreType(ItemStack stack);
 
 	/**
 	 * Internal Item method
@@ -137,7 +137,7 @@ public interface IAmmoType<T extends IAmmoType<T, E>, E extends EntityAmmoBase<?
 	 * @param componentNBT
 	 * @return bullet components in appropriate order from stack NBT
 	 */
-	void addComponents(ItemStack stack, AmmoComponent component, NBTTagCompound componentNBT);
+	boolean addComponents(ItemStack stack, AmmoComponent component, NBTTagCompound componentNBT);
 
 	/**
 	 * Internal Item method
@@ -171,21 +171,21 @@ public interface IAmmoType<T extends IAmmoType<T, E>, E extends EntityAmmoBase<?
 	 */
 	ItemStack setPaintColour(ItemStack stack, int color);
 
-	float getMass(ItemStack stack);
+	double getMass(ItemStack stack);
 
-	float getCoreMass(AmmoCore core, AmmoComponent[] components);
+	double getCoreMass(AmmoCore core, AmmoComponent[] components);
 
 	/**
 	 * @param stack
 	 * @param type  type of the fuse
 	 */
-	void setFuseType(ItemStack stack, FuseTypes type);
+	void setFuseType(ItemStack stack, FuseType type);
 
 	/**
 	 * @param stack
 	 * @return fuse type used in the bullet
 	 */
-	FuseTypes getFuseType(ItemStack stack);
+	FuseType getFuseType(ItemStack stack);
 
 	boolean hasFreeComponentSlots(ItemStack stack);
 

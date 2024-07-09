@@ -17,6 +17,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -38,6 +39,7 @@ import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author Pabilo8
@@ -52,7 +54,8 @@ public class IIClientUtils
 	public static IIFontRendererCustomGlyphs fontEngineerTimes, fontNormung, fontKaiser, fontTinkerer;
 
 	@SideOnly(Side.CLIENT)
-	private static Minecraft mc() {
+	private static Minecraft mc()
+	{
 		return Minecraft.getMinecraft();
 	}
 
@@ -290,5 +293,18 @@ public class IIClientUtils
 	public static EntityPlayer getPlayer()
 	{
 		return mc().player;
+	}
+
+	public static void addTooltip(List<String> tooltip, char charIcon, String line, Object... arguments)
+	{
+		if(charIcon==' ')
+			tooltip.add(I18n.format(line, arguments));
+		else
+			tooltip.add(charIcon+" "+I18n.format(line, arguments));
+	}
+
+	public static void addTooltip(List<String> tooltip, String line, Object... arguments)
+	{
+		addTooltip(tooltip, ' ', line, arguments);
 	}
 }

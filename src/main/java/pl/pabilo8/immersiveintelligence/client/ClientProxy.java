@@ -665,10 +665,11 @@ public class ClientProxy extends CommonProxy
 		{
 			//Create a new instance of the tile renderer
 			TileEntitySpecialRenderer<T> tileRenderer = clazz.newInstance();
+			ClientRegistry.bindTileEntitySpecialRenderer(((Class<T>)rt.clazz()), tileRenderer);
 
 			//Register the tile renderer for auto reloading
-			if(tileRenderer instanceof IITileRenderer)
-				ClientRegistry.bindTileEntitySpecialRenderer(((Class<T>)rt.clazz()), ((IITileRenderer<T>)tileRenderer).subscribeToList(rt.name()));
+			if(tileRenderer instanceof IReloadableModelContainer<?>)
+				((IReloadableModelContainer<?>)tileRenderer).subscribeToList(rt.name());
 
 			//Register the item renderer (if applicable)
 			if(teisrBlock!=null&&rt.teisrClazz()!=TileEntityItemStackRenderer.class)

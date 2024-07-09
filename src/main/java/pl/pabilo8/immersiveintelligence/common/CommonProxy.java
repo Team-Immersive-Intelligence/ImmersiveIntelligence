@@ -68,7 +68,7 @@ import pl.pabilo8.immersiveintelligence.api.utils.MinecartBlockHelper;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IUpgradableMachine;
 import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.MechanicalDevices;
-import pl.pabilo8.immersiveintelligence.common.ammo.factory.AmmoComponentFluid;
+import pl.pabilo8.immersiveintelligence.common.ammo.components.factory.AmmoComponentFluid;
 import pl.pabilo8.immersiveintelligence.common.block.data_device.BlockIIDataDevice.IIBlockTypes_Connector;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.conveyors.*;
 import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIIOre.Ores;
@@ -375,6 +375,16 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 			AmmoRegistry.registerAmmoType((IAmmoTypeItem)IIContent.blockRadioExplosives.itemBlock);
 		AmmoRegistry.registerAmmoType(IIContent.itemNavalMine);
 
+		//Propellants
+		AmmoRegistry.registerPropellant(IIContent.ammoPropellantGunpowder);
+		AmmoRegistry.registerPropellant(IIContent.ammoPropellantCordite);
+		AmmoRegistry.registerPropellant(IIContent.ammoPropellantRDX);
+		AmmoRegistry.registerPropellant(IIContent.ammoPropellantHMX);
+		AmmoRegistry.registerPropellant(IIContent.ammoPropellantRocketFuel);
+		AmmoRegistry.registerPropellant(IIContent.ammoPropellantStableRocketFuel);
+		AmmoRegistry.registerPropellant(IIContent.ammoPropellantExperimentalRocketFuel);
+
+		//Components
 		AmmoRegistry.registerComponent(IIContent.ammoComponentTNT);
 		AmmoRegistry.registerComponent(IIContent.ammoComponentRDX);
 		AmmoRegistry.registerComponent(IIContent.ammoComponentHMX);

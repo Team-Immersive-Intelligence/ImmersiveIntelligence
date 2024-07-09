@@ -270,16 +270,20 @@ public class IISounds
 
 	@ModSound(sounds = {"weapons/mg_new/reload"}, subtitle = "machinegun_reload")
 	public static SoundEvent machinegunReload = registerSound("machinegun_reload");
+
 	@ModSound(sounds = {"weapons/mg_new/unload"}, subtitle = "machinegun_reload")
 	public static SoundEvent machinegunUnload = registerSound("machinegun_unload");
 
 	//Submachinegun
 	@ModSound(sounds = {"weapons/submachinegun/reload"}, subtitle = "*")
 	public static SoundEvent submachinegunReload = registerSound("submachinegun_reload");
+
 	@ModSound(sounds = {"weapons/submachinegun/unload"}, subtitle = "*")
 	public static SoundEvent submachinegunUnload = registerSound("submachinegun_unload");
+
 	@ModSound(sounds = {"weapons/dryfire{0..1}"}, subtitle = "dryfire")
 	public static SoundEvent submachinegunShotDry = registerSound("submachinegun_shot_dry");
+
 	@ModSound(name = "submachinegun_shot_close", sounds = {"weapons/submachinegun/smg{0..2}"}, subtitle = "submachinegun_shot")
 	@ModSound(name = "submachinegun_shot_muffled", sounds = {"weapons/submachinegun/smg_muffled{0..2}"}, subtitle = "submachinegun_shot_distant")
 	@ModSound(name = "submachinegun_shot_distant", sounds = {"weapons/submachinegun/smg_distant{0..2}"}, subtitle = "distant_gunshot")
@@ -292,10 +296,13 @@ public class IISounds
 	//Assault Rifle
 	@ModSound(sounds = {"weapons/assault_rifle/reload"}, subtitle = "*")
 	public static SoundEvent assaultRifleReload = registerSound("assault_rifle_reload");
+
 	@ModSound(sounds = {"weapons/assault_rifle/unload"}, subtitle = "*")
 	public static SoundEvent assaultRifleUnload = registerSound("assault_rifle_unload");
+
 	@ModSound(sounds = {"weapons/dryfire{0..1}"}, subtitle = "dryfire")
 	public static SoundEvent assaultRifleShotDry = registerSound("assault_rifle_shot_dry");
+
 	@ModSound(name = "assault_rifle_shot", sounds = {"weapons/assault_rifle/stg{0..1}"}, subtitle = "assault_rifle_shot")
 	@ModSound(name = "assault_rifle_shot_muffled", sounds = {"weapons/assault_rifle/stg_muffled{0..1}"}, subtitle = "assault_rifle_shot_muffled")
 	@ModSound(name = "assault_rifle_shot_distant", sounds = {"weapons/assault_rifle/stg_distant{0..1}"}, subtitle = "distant_gunshot")
@@ -306,6 +313,7 @@ public class IISounds
 	);
 	@ModSound(sounds = {"weapons/assault_rifle/load_grenade"}, subtitle = "*")
 	public static SoundEvent assaultRifleLoadGrenade = registerSound("assault_rifle_load_grenade");
+
 	@ModSound(sounds = {"weapons/assault_rifle/mode_change"}, subtitle = "*")
 	public static SoundEvent assaultRifleModeChange = registerSound("assault_rifle_mode_change");
 	public static RangedSound assaultRifleRailgunShot = new RangedSound(
@@ -316,16 +324,22 @@ public class IISounds
 	//Rifle
 	@ModSound(sounds = {"weapons/rifle/load_start"}, subtitle = "rifle_load")
 	public static SoundEvent rifleLoadStart = registerSound("rifle_load_start");
+
 	@ModSound(sounds = {"weapons/rifle/load{0..2}"}, subtitle = "*")
 	public static SoundEvent rifleLoad = registerSound("rifle_load");
+
 	@ModSound(sounds = {"weapons/rifle/load_end"}, subtitle = "rifle_load")
 	public static SoundEvent rifleLoadEnd = registerSound("rifle_load_end");
-	@ModSound(sounds = {"weapons/rifle/reload_magazine"}, subtitle = "rifle_load")
+
+	@ModSound(sounds = {"weapons/rifle/reload_magazine"}, subtitle = "*")
 	public static SoundEvent rifleReloadMagazine = registerSound("rifle_reload_magazine");
-	@ModSound(sounds = {"weapons/rifle/unload_magazine"}, subtitle = "rifle_load")
+
+	@ModSound(sounds = {"weapons/rifle/unload_magazine"}, subtitle = "*")
 	public static SoundEvent rifleUnloadMagazine = registerSound("rifle_unload_magazine");
+
 	@ModSound(sounds = {"weapons/dryfire{0..1}"}, subtitle = "dryfire")
 	public static SoundEvent rifleShotDry = registerSound("rifle_shot_dry");
+
 	@ModSound(name = "rifle_shot", sounds = {"weapons/rifle/rifle{0..0}"}, subtitle = "rifle_shot")
 	@ModSound(name = "rifle_shot_muffled", sounds = {"weapons/rifle/rifle_muffled{0..0}"}, subtitle = "rifle_shot_muffled")
 	@ModSound(name = "rifle_shot_distant", sounds = {"weapons/rifle/rifle_distant{0..0}"}, subtitle = "distant_gunshot")

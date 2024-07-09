@@ -717,12 +717,6 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 	}
 
 	@Override
-	public World getWorld()
-	{
-		return this.world;
-	}
-
-	@Override
 	public boolean canRenderOnFire()
 	{
 		//gets replaced by particle effects

@@ -37,6 +37,8 @@ import net.minecraftforge.registries.IForgeRegistryModifiable;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.PackerHandler;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseType;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.api.crafting.*;
 import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
@@ -52,7 +54,7 @@ import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIISmallCrate.II
 import pl.pabilo8.immersiveintelligence.common.item.ItemIIMinecart.Minecarts;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoBase;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoBase.AmmoParts;
-import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoCasing.Casings;
+import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoCasing.Casing;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine.Magazines;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.ItemIIMaterial.Materials;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.ItemIIMetalPressMold.PressMolds;
@@ -432,37 +434,37 @@ public class IIRecipes
 	public static void addBulletPressRecipes()
 	{
 
-		addMetalPressBullet(Casings.ARTILLERY_8BCAL,
+		addMetalPressBullet(Casing.ARTILLERY_8BCAL,
 				new IngredientStack("plateBrass", 4),
 				PressMolds.HOWITZER, 2800);
-		addMetalPressBullet(Casings.MORTAR_6BCAL,
+		addMetalPressBullet(Casing.MORTAR_6BCAL,
 				new IngredientStack("plateAluminum", 3),
 				PressMolds.MORTAR, 2500);
-		addMetalPressBullet(Casings.LIGHT_ARTILLERY_6BCAL,
+		addMetalPressBullet(Casing.LIGHT_ARTILLERY_6BCAL,
 				new IngredientStack("plateBrass", 3),
 				PressMolds.LIGHT_HOWITZER, 2200);
 
-		addMetalPressBullet(Casings.AUTOCANNON_3BCAL,
+		addMetalPressBullet(Casing.AUTOCANNON_3BCAL,
 				new IngredientStack("ingotBrass", 2),
 				PressMolds.AUTOCANNON, 1600);
 
-		addMetalPressBullet(Casings.MG_2BCAL,
+		addMetalPressBullet(Casing.MG_2BCAL,
 				new IngredientStack("ingotBrass"),
 				PressMolds.MACHINEGUN, 1600);
-		addMetalPressBullet(Casings.STG_1BCAL,
+		addMetalPressBullet(Casing.STG_1BCAL,
 				new IngredientStack("ingotBrass"),
 				PressMolds.ASSAULT_RIFLE, 1400);
-		addMetalPressBullet(Casings.SMG_1BCAL,
+		addMetalPressBullet(Casing.SMG_1BCAL,
 				new IngredientStack("ingotBrass"),
 				PressMolds.SUBMACHINEGUN, 1200);
 
-		addMetalPressBullet(Casings.NAVAL_MINE,
+		addMetalPressBullet(Casing.NAVAL_MINE,
 				new IngredientStack("plateSteel", 4),
 				PressMolds.NAVAL_MINE, 4800);
-		addMetalPressBullet(Casings.TRIPMINE,
+		addMetalPressBullet(Casing.TRIPMINE,
 				new IngredientStack("plateBrass", 2),
 				PressMolds.TRIPMINE, 3600);
-		addMetalPressBullet(Casings.TELLERMINE,
+		addMetalPressBullet(Casing.TELLERMINE,
 				new IngredientStack("plateBrass", 2),
 				PressMolds.TELLERMINE, 3600);
 
@@ -507,7 +509,7 @@ public class IIRecipes
 		);
 	}
 
-	private static void addMetalPressBullet(Casings casing, IngredientStack stack, PressMolds mold, int energy)
+	private static void addMetalPressBullet(Casing casing, IngredientStack stack, PressMolds mold, int energy)
 	{
 		MetalPressRecipe.addRecipe(IIContent.itemAmmoCasing.getStack(casing),
 				stack, IIContent.itemPressMold.getStack(mold), energy);
@@ -915,7 +917,7 @@ public class IIRecipes
 
 		for(IAmmoTypeItem<?, ?> bullet : AmmoRegistry.getAllAmmoItems())
 		{
-			ItemStack bulletStack = bullet.getBulletWithParams("", "", "");
+			ItemStack bulletStack = bullet.getAmmoStack(AmmoRegistry.MISSING_CORE, CoreType.SOFTPOINT, FuseType.CONTACT);
 			//clear nbt
 			bulletStack.setTagCompound(new NBTTagCompound());
 			PaintingRecipe.addRecipe((rgb, stack) -> {
@@ -1160,8 +1162,10 @@ public class IIRecipes
 	public static void addAmmunitionCasingRecipes()
 	{
 		FillerRecipe.addRecipe(IIContent.itemAmmoHeavyArtillery, 160, 8000);
+		FillerRecipe.addRecipe(IIContent.itemAmmoMediumArtillery, 150, 7000);
 		FillerRecipe.addRecipe(IIContent.itemAmmoLightArtillery, 140, 6000);
 		FillerRecipe.addRecipe(IIContent.itemAmmoMortar, 140, 6000);
+		FillerRecipe.addRecipe(IIContent.itemAmmoLightGun, 130, 4000);
 		FillerRecipe.addRecipe(IIContent.itemAmmoAutocannon, 80, 1000);
 		FillerRecipe.addRecipe(IIContent.itemAmmoMachinegun, 60, 800);
 		FillerRecipe.addRecipe(IIContent.itemAmmoAssaultRifle, 55, 700);
@@ -1184,7 +1188,7 @@ public class IIRecipes
 						stack.deserializeNBT(core.serializeNBT());
 						return stack;
 					},
-					new IngredientStack(item.getBulletCore("coreBrass", item.getAllowedCoreTypes()[0].getName())),
+					new IngredientStack(item.getAmmoCoreStack(IIContent.ammoCoreBrass, item.getAllowedCoreTypes()[0])),
 					new IngredientStack(casingStack).setUseNBT(true),
 					128*item.getCaliber(),
 					140+(25*Math.max(0, item.getCaliber()-1))
@@ -1203,7 +1207,7 @@ public class IIRecipes
 						stack.deserializeNBT(core.serializeNBT());
 						return stack;
 					},
-					new IngredientStack(bullet.getBulletCore("coreBrass", bullet.getAllowedCoreTypes()[0].getName())),
+					new IngredientStack(bullet.getAmmoCoreStack(IIContent.ammoCoreBrass, bullet.getAllowedCoreTypes()[0])),
 					new IngredientStack(bullet.getCasingStack(1)).setUseNBT(true),
 					256*bullet.getCaliber(),
 					480
@@ -1218,7 +1222,7 @@ public class IIRecipes
 					stack.deserializeNBT(core.serializeNBT());
 					return stack;
 				},
-				new IngredientStack(IIContent.itemGrenade.getBulletCore("coreBrass", IIContent.itemGrenade.getAllowedCoreTypes()[0].getName())),
+				new IngredientStack(IIContent.itemGrenade.getAmmoCoreStack(IIContent.ammoCoreBrass, IIContent.itemGrenade.getAllowedCoreTypes()[0])),
 				new IngredientStack("stickTreatedWood"), 600, 480
 		);
 
@@ -1228,7 +1232,7 @@ public class IIRecipes
 					stack.deserializeNBT(core.serializeNBT());
 					return stack;
 				},
-				new IngredientStack(IIContent.itemGrenade.getBulletCore("coreBrass", IIContent.itemGrenade.getAllowedCoreTypes()[0].getName())),
+				new IngredientStack(IIContent.itemGrenade.getAmmoCoreStack(IIContent.ammoCoreBrass, IIContent.itemGrenade.getAllowedCoreTypes()[0])),
 				new IngredientStack("stickSteel"), 1200, 540
 		);
 	}
@@ -1396,7 +1400,7 @@ public class IIRecipes
 					{
 						Item item = stack.getItem();
 						return item==IIContent.itemBulletMagazine.stackToSub(ss).ammo
-								&&!((IAmmoTypeItem)item).isBulletCore(stack);
+								&&!((IAmmoTypeItem<?, ?>)item).isBulletCore(stack);
 					}
 
 					@Override

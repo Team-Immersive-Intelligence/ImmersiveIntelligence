@@ -24,8 +24,8 @@ import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.api.ammo.PenetrationRegistry;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.ComponentRole;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreTypes;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseType;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.PenetrationHardness;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoCore;
@@ -33,7 +33,9 @@ import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoType;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem.IIAmmoProjectile;
 import pl.pabilo8.immersiveintelligence.api.ammo.penetration.IPenetrationHandler;
+import pl.pabilo8.immersiveintelligence.api.ammo.utils.AmmoBallisticsCache.CachedBallisticStats;
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler;
+import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Ammunition;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
@@ -46,10 +48,8 @@ import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author Pabilo8
@@ -122,7 +122,7 @@ public class IIAmmoUtils
 
 		return calculateBallisticAngle(new Vec3d(dist.x, 0, dist.z).distanceTo(Vec3d.ZERO),
 				dist.y,
-				ammoItem.getDefaultVelocity(),
+				ammoItem.getVelocity(),
 				EntityAmmoProjectile.GRAVITY*ammoItem.getMass(ammoStack),
 				1f-EntityAmmoProjectile.DRAG,
 				precision
@@ -152,9 +152,9 @@ public class IIAmmoUtils
 		if(gravity==0D)
 			return 90F-(float)(Math.atan(height/distance)*180F/Math.PI);
 		/*
-			simulate the trajectory for angles from 45 to 90 degrees,
-			returning the angle which lands the projectile closest to the target distance
-		*/
+		 * simulate the trajectory for angles from 45 to 90 degrees,
+		 * returning the angle which lands the projectile closest to the target distance
+		 */
 		for(double i = Math.PI*anglePrecision; i < Math.PI*0.5D; i += anglePrecision)
 		{
 			double motionX = MathHelper.cos((float)i)*force;// calculate the x component of the vector
@@ -222,7 +222,7 @@ public class IIAmmoUtils
 }
 	 */
 
-	public static float getDirectFireAngle(float initialVelocity, float mass, Vec3d toTarget)
+	public static float getDirectFireAngle(double initialVelocity, double mass, Vec3d toTarget)
 	{
 		/*float force = initialVelocity;
 		double dist = toTarget.distanceTo(new Vec3d(0, toTarget.y, 0));
@@ -293,7 +293,7 @@ public class IIAmmoUtils
 	}
 
 	//TODO: 15.02.2024 implement on emplacements
-	public static float[] getInterceptionAngles(Vec3d shooterPos, Vec3d shooterVel, Vec3d targetPos, Vec3d targetVel, float projectileSpeed, float mass)
+	public static float[] getInterceptionAngles(Vec3d shooterPos, Vec3d shooterVel, Vec3d targetPos, Vec3d targetVel, double projectileSpeed, double mass)
 	{
 		//Calculate relative position and velocity
 		Vec3d relPos = targetPos.subtract(shooterPos);
@@ -346,60 +346,73 @@ public class IIAmmoUtils
 		tooltip.add(getFormattedBulletTypeName(ammo, stack));
 		//get common parameters
 		AmmoCore core = ammo.getCore(stack);
-		CoreTypes coreType = ammo.getCoreType(stack);
-
-		//TODO: 29.03.2024 use values from lang file
+		CoreType coreType = ammo.getCoreType(stack);
 
 		//composition tab
-		if(ItemTooltipHandler.addExpandableTooltip(Keyboard.KEY_LSHIFT, "%s - Composition", tooltip))
+		if(ItemTooltipHandler.addExpandableTooltip(Keyboard.KEY_LSHIFT, IIReference.DESC_BULLETS+"composition", tooltip))
 		{
 			//get parameters
-			FuseTypes fuse = ammo.getFuseType(stack);
+			FuseType fuse = ammo.getFuseType(stack);
 			AmmoComponent[] components = ammo.getComponents(stack);
 
-			//list general information
-			tooltip.add(IIUtils.getHexCol(IIReference.COLORS_HIGHLIGHT_S[1], "Details:"));
+			//information section
+			tooltip.add(IIUtils.getHexCol(IIReference.COLORS_HIGHLIGHT_S[1], I18n.format(IIReference.DESC_BULLETS+"details")));
 
 			//core + type
-			if(ammo.getClass().isAnnotationPresent(IIAmmoProjectile.class))
-			{
-				tooltip.add("⦳ "+I18n.format(IIReference.DESCRIPTION_KEY+"bullets.core",
-						I18n.format(IIReference.DESCRIPTION_KEY+"bullet_core_type."+coreType.getName()),
-						IIUtils.getHexCol(core.getColour(), I18n.format("item."+ImmersiveIntelligence.MODID+".bullet.component."+core.getName()+".name"))
-				));
+			IIClientUtils.addTooltip(tooltip, IIReference.CHARICON_BULLET_CONTENTS, IIReference.DESC_BULLETS+"core",
+					IIUtils.getItalicString(I18n.format(IIReference.DESCRIPTION_KEY+"bullet_core_type."+coreType.getName())),
+					IIUtils.getHexCol(core.getColor(), I18n.format("item."+ImmersiveIntelligence.MODID+".bullet.component."+core.getName()+".name"))
+			);
 
-				//fuse
-				tooltip.add(fuse.symbol+" "+I18n.format(IIReference.DESCRIPTION_KEY+"bullets.fuse",
-						I18n.format(IIReference.DESCRIPTION_KEY+"bullet_fuse."+fuse.getName())
-				));
-			}
-			else
+			//fuse
+			if(ammo.getAllowedFuseTypes().length > 0)
 			{
-				tooltip.add("⦳ "+I18n.format(IIReference.DESCRIPTION_KEY+"bullets.core", "",
-						IIUtils.getHexCol(core.getColour(), I18n.format("item."+ImmersiveIntelligence.MODID+".bullet.component."+core.getName()+".name"))
-				));
+				if(fuse!=FuseType.CONTACT)
+					IIClientUtils.addTooltip(tooltip, fuse.symbol, "desc.immersiveintelligence.bullet_fuse.tooltip."+fuse.getName(), ammo.getFuseParameter(stack));
+				else
+					IIClientUtils.addTooltip(tooltip, fuse.symbol, IIReference.DESC_BULLETS+"fuse", I18n.format("desc.immersiveintelligence.bullet_fuse."+fuse.getName()));
 			}
 
 			//mass
-			tooltip.add("\u2696 "+I18n.format(IIReference.DESCRIPTION_KEY+"bullets.mass", Utils.formatDouble(ammo.getMass(stack), "0.##")));
+			tooltip.add(I18n.format(IIReference.DESC_BULLETS+"mass", Utils.formatDouble(ammo.getMass(stack), "0.##")));
 
-			//list components
+			//components section
 			if(components.length > 0)
 			{
-				tooltip.add(IIUtils.getHexCol(IIReference.COLORS_HIGHLIGHT_S[1], "Components:"));
+				tooltip.add(IIUtils.getHexCol(IIReference.COLORS_HIGHLIGHT_S[1], I18n.format(IIReference.DESC_BULLETS+"components")));
 				for(AmmoComponent comp : components)
 					tooltip.add("   "+comp.getTranslatedName());
 			}
 		}
 
-		//performance tab
-		if((ammo.getClass().isAnnotationPresent(IIAmmoProjectile.class))&&!ammo.isBulletCore(stack)&&ItemTooltipHandler.addExpandableTooltip(Keyboard.KEY_LCONTROL, "%s - Ballistics", tooltip))
+		//Performance tab
+		IIAmmoProjectile annotation = IIUtils.getAnnotation(IIAmmoProjectile.class, ammo);
+		if(annotation!=null&&!ammo.isBulletCore(stack)
+				&&ItemTooltipHandler.addExpandableTooltip(Keyboard.KEY_LCONTROL, IIReference.DESC_BULLETS+"ballistics", tooltip))
 		{
-			tooltip.add(IIUtils.getHexCol(IIReference.COLORS_HIGHLIGHT_S[0], "Performance:"));
-			tooltip.add(String.format("\u2295 "+"Damage Dealt: %s", ammo.getDamage()));
-			tooltip.add(String.format("\u29c1 "+"Standard Velocity: %s B/s", ammo.getDefaultVelocity()));
+			//Ballistics section
+			CachedBallisticStats stats = AmmoBallisticsCache.get(ammo, stack);
 
-			tooltip.add(IIUtils.getHexCol(IIReference.COLORS_HIGHLIGHT_S[0], "Armor Penetration:"));
+			tooltip.add(IIUtils.getHexCol(IIReference.COLORS_HIGHLIGHT_S[0], I18n.format(IIReference.DESC_BULLETS+"performance")));
+			tooltip.add(I18n.format(IIReference.DESC_BULLETS+"damage_dealt", ammo.getDamage()*core.getDamageModifier()*coreType.getDamageMod()));
+			tooltip.add(I18n.format(IIReference.DESC_BULLETS+"standard_velocity", Utils.formatDouble(ammo.getVelocity(), "0.###")));
+
+			//Max distance tooltip
+			if(annotation.artillery())
+			{
+				tooltip.add(I18n.format(IIReference.DESC_BULLETS+"max_artillery_range",
+						Utils.formatDouble(stats.getGetMaxArtilleryRange(), "0.##")));
+				tooltip.add(I18n.format(IIReference.DESC_BULLETS+"max_artillery_height",
+						Utils.formatDouble(stats.getMaxHeightReached(), "0.##")));
+				tooltip.add(I18n.format(IIReference.DESC_BULLETS+"max_direct_range",
+						Utils.formatDouble(stats.getMaxDirectRange(), "0.##")));
+			}
+			else
+				tooltip.add(I18n.format(IIReference.DESC_BULLETS+"max_range",
+						Utils.formatDouble(stats.getMaxDirectRange(), "0.##")));
+
+			//Penetration section
+			tooltip.add(IIUtils.getHexCol(IIReference.COLORS_HIGHLIGHT_S[0], I18n.format(IIReference.DESC_BULLETS+"armor_penetration")));
 
 			//list of block penetration tests
 			listPenetratedAmount(tooltip, ammo, core, coreType, Blocks.GLASS, 0);
@@ -413,11 +426,13 @@ public class IIAmmoUtils
 		}
 	}
 
-	private static void listPenetratedAmount(List<String> tooltip, IAmmoTypeItem<?, ?> ammo, AmmoCore core, CoreTypes coreType, Block block, int meta)
+	private static void listPenetratedAmount(List<String> tooltip, IAmmoTypeItem<?, ?> ammo, AmmoCore core, CoreType coreType, Block block, int meta)
 	{
+		//get penetration handler
 		IPenetrationHandler penHandler = PenetrationRegistry.getPenetrationHandler(block.getStateFromMeta(meta));
 		int penetratedAmount = getPenetratedAmount(ammo, core, coreType, penHandler, penHandler.getPenetrationHardness());
 
+		//add penetration information
 		String displayName = new ItemStack(block, 1, meta).getDisplayName();
 		if(penetratedAmount < 1)
 			tooltip.add(TextFormatting.RED+"✕ "+displayName);
@@ -428,24 +443,26 @@ public class IIAmmoUtils
 
 	private static String getFormattedBulletTypeName(IAmmoType<?, ?> ammo, ItemStack stack)
 	{
-		Set<ComponentRole> collect = new HashSet<>();
-		collect.add(ammo.getCoreType(stack).getRole());
-		collect.addAll(Arrays.stream(ammo.getComponents(stack)).map(AmmoComponent::getRole).collect(Collectors.toSet()));
 		StringBuilder builder = new StringBuilder();
-		for(ComponentRole componentRole : collect)
-		{
-			if(componentRole==ComponentRole.GENERAL_PURPOSE)
-				continue;
-			builder.append(IIUtils.getHexCol(componentRole.getColor(), I18n.format(IIReference.DESCRIPTION_KEY+"bullet_type."+componentRole.getName())));
-			builder.append(" - ");
-		}
+
+		//Add all components with role different from "general purpose"
+		Stream.concat(Stream.of(ammo.getCoreType(stack).getRole()),
+						Arrays.stream(ammo.getComponents(stack)).map(AmmoComponent::getRole))
+				.filter(c -> c==ComponentRole.GENERAL_PURPOSE)
+				.map(c -> IIUtils.getHexCol(c.getColor(), I18n.format(IIReference.DESCRIPTION_KEY+"bullet_type."+c.getName())))
+				.forEach(c -> builder.append(c).append(" - "));
+
+		//If no components with different role were found, add general purpose
 		if(builder.toString().isEmpty())
 		{
 			builder.append(I18n.format(IIReference.DESCRIPTION_KEY+"bullet_type."+ComponentRole.GENERAL_PURPOSE.getName()));
 			builder.append(" - ");
 		}
+
 		//trim last " - "
 		builder.delete(builder.length()-3, builder.length());
+
+		//Display the type if the item has a custom name
 		if(stack.hasDisplayName())
 			builder.append(" ").append(TextFormatting.GRAY).append(stack.getItem().getItemStackDisplayName(stack));
 		return builder.toString();
@@ -458,7 +475,7 @@ public class IIAmmoUtils
 	 * @param coreType     ammunition's core type
 	 * @return combined hardness of the core material and core type
 	 */
-	public static PenetrationHardness getCombinedHardness(AmmoCore coreMaterial, CoreTypes coreType)
+	public static PenetrationHardness getCombinedHardness(AmmoCore coreMaterial, CoreType coreType)
 	{
 		//Bedrock level is the highest present, but it's not penetrable
 		int index = MathHelper.clamp(coreMaterial.getPenetrationHardness().ordinal()+coreType.getPenHardnessBonus(), 0, PenetrationHardness.values().length-2);
@@ -470,7 +487,7 @@ public class IIAmmoUtils
 	 * @param coreType ammunition core type
 	 * @return combined penetration depth of the ammunition type and core type
 	 */
-	public static float getCombinedDepth(IAmmoType<?, ?> ammoType, CoreTypes coreType)
+	public static float getCombinedDepth(IAmmoType<?, ?> ammoType, CoreType coreType)
 	{
 		return ammoType.getPenetrationDepth()*coreType.getPenDepthMod();
 	}
@@ -484,7 +501,7 @@ public class IIAmmoUtils
 	 * @param blockHardness block's hardness
 	 * @return amount of blocks penetrated by the ammo
 	 */
-	public static int getPenetratedAmount(IAmmoType<?, ?> ammoType, AmmoCore coreMaterial, CoreTypes coreType,
+	public static int getPenetratedAmount(IAmmoType<?, ?> ammoType, AmmoCore coreMaterial, CoreType coreType,
 										  IPenetrationHandler penHandler, PenetrationHardness blockHardness)
 	{
 		float penetrationDepth = getCombinedDepth(ammoType, coreType);

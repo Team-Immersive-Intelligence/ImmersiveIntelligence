@@ -61,7 +61,7 @@ public class FillerRecipe extends MultiblockRecipe implements IIIMultiblockRecip
 	{
 		ItemStack casingStack = bulletItem.getCasingStack(1);
 		ItemNBTHelper.setBoolean(casingStack, "ii_FilledCasing", true);
-		FillerRecipe recipe = addRecipe(casingStack, new IngredientStack(bulletItem.getCasingStack(1)).setUseNBT(true), new DustStack("gunpowder", bulletItem.getGunpowderNeeded()), time, energy);
+		FillerRecipe recipe = addRecipe(casingStack, new IngredientStack(bulletItem.getCasingStack(1)).setUseNBT(true), new DustStack("gunpowder", bulletItem.getPropellantNeeded()), time, energy);
 		recipe.bullet = bulletItem;
 		return recipe;
 	}

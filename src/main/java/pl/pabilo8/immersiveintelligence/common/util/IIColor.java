@@ -24,12 +24,52 @@ public class IIColor implements Comparable<IIColor>, ToIntFunction<IIColor>
 	public static final IIColor BLACK = IIColor.fromRGBA(0, 0, 0, 255);
 	public static final IIColor ALPHA = IIColor.fromRGBA(255, 255, 255, 0);
 
+	//--- Minecraft Colors ---//
+	public static final IIColor MC_BLACK = IIColor.fromHex("000000");
+	public static final IIColor MC_DARK_BLUE = IIColor.fromHex("0000AA");
+	public static final IIColor MC_DARK_GREEN = IIColor.fromHex("00AA00");
+	public static final IIColor MC_DARK_AQUA = IIColor.fromHex("00AAAA");
+	public static final IIColor MC_DARK_RED = IIColor.fromHex("AA0000");
+	public static final IIColor MC_DARK_PURPLE = IIColor.fromHex("AA00AA");
+	public static final IIColor MC_GOLD = IIColor.fromHex("FFAA00");
+	public static final IIColor MC_GRAY = IIColor.fromHex("AAAAAA");
+	public static final IIColor MC_DARK_GRAY = IIColor.fromHex("555555");
+	public static final IIColor MC_BLUE = IIColor.fromHex("5555FF");
+	public static final IIColor MC_GREEN = IIColor.fromHex("55FF55");
+	public static final IIColor MC_AQUA = IIColor.fromHex("55FFFF");
+	public static final IIColor MC_RED = IIColor.fromHex("FF5555");
+	public static final IIColor MC_LIGHT_PURPLE = IIColor.fromHex("FF55FF");
+	public static final IIColor MC_YELLOW = IIColor.fromHex("FFFF55");
+	public static final IIColor MC_WHITE = IIColor.fromHex("FFFFFF");
+
+	/**
+	 * Array of all 16 Minecraft colors.
+	 */
+	public static final IIColor[] MC_COLORS = new IIColor[]{
+			MC_BLACK, MC_DARK_BLUE, MC_DARK_GREEN, MC_DARK_AQUA,
+			MC_DARK_RED, MC_DARK_PURPLE, MC_GOLD, MC_GRAY,
+			MC_DARK_GRAY, MC_BLUE, MC_GREEN, MC_AQUA,
+			MC_RED, MC_LIGHT_PURPLE, MC_YELLOW, MC_WHITE
+	};
+
 	//--- Fields ---//
 
 	/**
-	 * Alpha, Red, Green and Blue components of the color in 0-255 range.
+	 * Alpha, component of the color in 0-255 range.
 	 */
-	public final int alpha, red, green, blue;
+	public final int alpha;
+	/**
+	 * Red component of the color in 0-255 range.
+	 */
+	public final int red;
+	/**
+	 * Green component of the color in 0-255 range.
+	 */
+	public final int green;
+	/**
+	 * Blue component of the color in 0-255 range.
+	 */
+	public final int blue;
 
 	//--- Private Constructor ---//
 
@@ -327,7 +367,7 @@ public class IIColor implements Comparable<IIColor>, ToIntFunction<IIColor>
 	/**
 	 * @return Closest text formatting color to this color.
 	 */
-	TextFormatting getTextFormatting()
+	public TextFormatting getTextFormatting()
 	{
 		return getDyeColor().chatColor;
 	}
@@ -335,7 +375,7 @@ public class IIColor implements Comparable<IIColor>, ToIntFunction<IIColor>
 	/**
 	 * @return Closest dye color to this color.
 	 */
-	EnumDyeColor getDyeColor()
+	public EnumDyeColor getDyeColor()
 	{
 		Optional<EnumDyeColor> min = Arrays.stream(EnumDyeColor.values()).min(Comparator.comparingInt(value ->
 				IIColor.fromFloatRGB(value.getColorComponentValues()).compareTo(this)));

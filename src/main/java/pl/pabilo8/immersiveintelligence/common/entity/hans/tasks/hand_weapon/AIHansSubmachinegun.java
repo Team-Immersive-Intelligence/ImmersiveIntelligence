@@ -116,6 +116,6 @@ public class AIHansSubmachinegun extends AIHansHandWeapon
 	@Override
 	protected float calculateBallisticAngle(ItemStack ammo, EntityLivingBase attackTarget)
 	{
-		return IIAmmoUtils.getDirectFireAngle(IIContent.itemAmmoSubmachinegun.getDefaultVelocity(), IIContent.itemAmmoSubmachinegun.getMass(ammo), hans.getPositionVector().addVector(0, (double)hans.getEyeHeight()-0.10000000149011612D, 0).subtract(IIUtils.getEntityCenter(attackTarget)));
+		return IIAmmoUtils.getDirectFireAngle(IIContent.itemAmmoSubmachinegun.getVelocity(), IIContent.itemAmmoSubmachinegun.getMass(ammo), hans.getPositionVector().addVector(0, (double)hans.getEyeHeight()-0.10000000149011612D, 0).subtract(IIUtils.getEntityCenter(attackTarget)));
 	}
 }

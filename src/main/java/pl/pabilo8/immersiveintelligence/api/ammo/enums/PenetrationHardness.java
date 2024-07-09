@@ -4,6 +4,7 @@ import pl.pabilo8.immersiveintelligence.common.util.ISerializableEnum;
 
 /**
  * @author Pabilo8
+ * @ii-approved 0.3.1
  * @since 27.03.2024
  */
 public enum PenetrationHardness implements ISerializableEnum

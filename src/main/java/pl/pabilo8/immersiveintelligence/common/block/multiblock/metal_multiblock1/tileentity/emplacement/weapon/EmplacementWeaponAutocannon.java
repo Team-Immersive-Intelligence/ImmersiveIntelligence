@@ -130,7 +130,7 @@ public class EmplacementWeaponAutocannon extends EmplacementWeapon<EntityAmmoPro
 		return IIAmmoUtils.getInterceptionAngles(
 				posTurret, Vec3d.ZERO,
 				posTarget, motion,
-				IIContent.itemAmmoAutocannon.getDefaultVelocity(),
+				IIContent.itemAmmoAutocannon.getVelocity(),
 				s2.isEmpty()?1: IIContent.itemAmmoAutocannon.getMass(s2)
 		);
 	}

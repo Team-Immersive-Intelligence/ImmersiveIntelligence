@@ -8,6 +8,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.Tuple;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
@@ -16,14 +17,14 @@ import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreTypes;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseType;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoCore;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoType;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
-import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
+import pl.pabilo8.immersiveintelligence.common.util.entity.ISyncNBTEntity;
 import pl.pabilo8.immersiveintelligence.common.util.lambda.NBTTagCollector;
 
 import javax.annotation.Nonnull;
@@ -39,7 +40,8 @@ import java.util.stream.Collectors;
  * @since 30.01.2024
  */
 @Optional.Interface(iface = "com.elytradev.mirage.lighting.IEntityLightEventConsumer", modid = "mirage")
-public abstract class EntityAmmoBase<T extends EntityAmmoBase<? super T>> extends Entity implements IEntityAdditionalSpawnData, IEntityLightEventConsumer
+public abstract class EntityAmmoBase<T extends EntityAmmoBase<? super T>> extends Entity implements IEntityAdditionalSpawnData, IEntityLightEventConsumer,
+		ISyncNBTEntity<EntityAmmoBase<T>>
 {
 	//--- Properties ---//
 	/**
@@ -53,11 +55,11 @@ public abstract class EntityAmmoBase<T extends EntityAmmoBase<? super T>> extend
 	/**
 	 * The ammo core type
 	 */
-	protected CoreTypes coreType;
+	protected CoreType coreType;
 	/**
 	 * The fuse type
 	 */
-	protected FuseTypes fuseType;
+	protected FuseType fuseType;
 	/**
 	 * The fuse parameter, for a timer fuse it's the fuse time in ticks, for a proximity fuse it's the fuse range in blocks<br>
 	 * Not used by impact fuses
@@ -75,6 +77,10 @@ public abstract class EntityAmmoBase<T extends EntityAmmoBase<? super T>> extend
 	 * The owner of this bullet, used for statistics
 	 */
 	protected Entity owner;
+	/**
+	 * Axis alligned bounding box of the bullet, because fuck minecraft's bloody AABB (de)sync wankfest.
+	 */
+	protected AxisAlignedBB aabb;
 
 	//--- Initialization ---//
 
@@ -119,7 +125,7 @@ public abstract class EntityAmmoBase<T extends EntityAmmoBase<? super T>> extend
 	}
 
 	@ParametersAreNonnullByDefault
-	public void setFromParameters(IAmmoType<?, T> ammoType, AmmoCore core, CoreTypes coreType, FuseTypes fuseType, int fuseParameter,
+	public void setFromParameters(IAmmoType<?, T> ammoType, AmmoCore core, CoreType coreType, FuseType fuseType, int fuseParameter,
 								  List<Tuple<AmmoComponent, NBTTagCompound>> components)
 	{
 		this.ammoType = ammoType;
@@ -128,7 +134,9 @@ public abstract class EntityAmmoBase<T extends EntityAmmoBase<? super T>> extend
 		this.fuseType = fuseType;
 		this.fuseParameter = fuseParameter;
 		this.components = components;
-		this.setSize(ammoType.getCaliber()/16f, ammoType.getCaliber()/16f);
+		this.height = this.width = ammoType.getCaliber()/16f;
+		float fraction = height/2f;
+		this.setEntityBoundingBox(this.aabb = new AxisAlignedBB(-fraction, -fraction, -fraction, fraction, fraction, fraction));
 	}
 
 	/**
@@ -172,8 +180,7 @@ public abstract class EntityAmmoBase<T extends EntityAmmoBase<? super T>> extend
 			//Call the effect method on all components
 			for(Tuple<AmmoComponent, NBTTagCompound> component : components)
 				component.getFirst().onEffect(world, pos, dir,
-						coreType, tag,
-						ammoType.getComponentAmount(), multiplier, owner);
+						coreType.getEffectShape(), tag, ammoType.getComponentMultiplier(), multiplier, owner);
 			setDead();
 		}
 	}
@@ -194,8 +201,8 @@ public abstract class EntityAmmoBase<T extends EntityAmmoBase<? super T>> extend
 		setFromParameters(
 				(IAmmoType<?, T>)AmmoRegistry.getAmmoItem(compound.getString("ammoType")),
 				AmmoRegistry.getCore(compound.getString("core")),
-				CoreTypes.values()[compound.getInteger("coreType")],
-				FuseTypes.values()[compound.getInteger("fuseType")],
+				CoreType.values()[compound.getInteger("coreType")],
+				FuseType.values()[compound.getInteger("fuseType")],
 				compound.getInteger("fuseParameter"),
 				compound.getTagList("components", 10).tagList.stream().map(t ->
 				{
@@ -276,12 +283,12 @@ public abstract class EntityAmmoBase<T extends EntityAmmoBase<? super T>> extend
 		return core;
 	}
 
-	public CoreTypes getCoreType()
+	public CoreType getCoreType()
 	{
 		return coreType;
 	}
 
-	public FuseTypes getFuseType()
+	public FuseType getFuseType()
 	{
 		return fuseType;
 	}
@@ -313,13 +320,12 @@ public abstract class EntityAmmoBase<T extends EntityAmmoBase<? super T>> extend
 	@Optional.Method(modid = "mirage")
 	public void gatherLights(GatherLightsEvent evt, Entity entity)
 	{
-		for(Tuple<AmmoComponent, NBTTagCompound> component : components)
-		{
-			IIColor colour = component.getFirst().getColour(component.getSecond());
-			evt.add(Light.builder().pos(this)
-					.radius(ammoType.getComponentAmount()*16f)
-					.color(colour.red/255f, colour.green/255f, colour.red/255f, colour.alpha/255f)
-					.build());
-		}
+		components.stream().filter(component -> component.getFirst().isGlowing())
+				.map(component -> component.getFirst().getColor(component.getSecond()))
+				.map(colour -> Light.builder().pos(this)
+						.radius(ammoType.getComponentMultiplier()*16f)
+						.color(colour.red/255f, colour.green/255f, colour.red/255f, colour.alpha/255f)
+						.build()
+				).forEach(evt::add);
 	}
 }

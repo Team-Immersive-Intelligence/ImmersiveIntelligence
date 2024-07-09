@@ -99,7 +99,7 @@ public class AIHansRailgun extends AIHansHandWeapon
 	protected float calculateBallisticAngle(ItemStack ammo, EntityLivingBase attackTarget)
 	{
 		if(ammo.getItem()==IIContent.itemRailgunGrenade)
-			return IIAmmoUtils.getDirectFireAngle(IIContent.itemRailgunGrenade.getDefaultVelocity(), IIContent.itemRailgunGrenade.getMass(ammo),
+			return IIAmmoUtils.getDirectFireAngle(IIContent.itemRailgunGrenade.getVelocity(), IIContent.itemRailgunGrenade.getMass(ammo),
 					hans.getPositionVector().addVector(0, hans.getEyeHeight()-0.10000000149011612D, 0).subtract(IIUtils.getEntityCenter(attackTarget)));
 		else
 			return IIAmmoUtils.getIEDirectRailgunAngle(ammo, hans.getPositionVector().addVector(0, hans.getEyeHeight(), 0).subtract(IIUtils.getEntityCenter(attackTarget)));
