@@ -527,7 +527,7 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 		this.mass = ammoType.getCoreMass(core, components.stream().map(Tuple::getFirst).toArray(AmmoComponent[]::new));
 		this.penetrationDepth = IIAmmoUtils.getCombinedDepth(ammoType, coreType);
 		this.penetrationHardness = IIAmmoUtils.getCombinedHardness(core, coreType);
-		this.flightTracer = FactoryTracer.create(aabb).setFilters(ignoredEntities, ignoredPositions);
+		this.flightTracer = FactoryTracer.create(aabb.grow(0.125)).setFilters(ignoredEntities, ignoredPositions);
 	}
 
 	@Override

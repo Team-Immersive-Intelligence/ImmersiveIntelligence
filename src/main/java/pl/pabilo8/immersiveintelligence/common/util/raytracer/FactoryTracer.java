@@ -128,19 +128,22 @@ public class FactoryTracer
 			aabb = this.aabb.offset(pX, pY, pZ);
 
 			//Collide with entities
-			if(allowEntities)
+			if(allEntities!=null)
 			{
 				ListIterator<Entity> iterator = allEntities.listIterator();
 				while(iterator.hasNext())
 				{
 					Entity entity = iterator.next();
-					RayTraceResult trace = entity.getEntityBoundingBox().calculateIntercept(posStart, posEnd);
-					if(trace!=null&&trace.typeOfHit!=Type.MISS)
+					if(!entity.isEntityAlive())
+						iterator.remove();
+
+					if(entity.getEntityBoundingBox().intersects(aabb))
 					{
-						if(onHit.test(new RayTraceResult(entity, trace.hitVec)))
+						Vec3d hitVec = entity.getPositionVector().subtract(this.aabb.getCenter());
+						RayTraceResult trace = new RayTraceResult(entity, hitVec);
+						if(onHit.test(trace))
 							return trace;
-						while(iterator.hasPrevious())
-							iterator.remove();
+						iterator.remove();
 					}
 				}
 			}
