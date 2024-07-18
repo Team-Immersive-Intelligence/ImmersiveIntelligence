@@ -335,6 +335,17 @@ public class IISounds
 			new Tuple<>(0.75, registerSound("rifle_shot_distant"))
 	);
 
+
+
+	@ModSound(name = "rifleBoltShot", sounds = {"weapons/rifle/rifle_bolt"}, subtitle = "rifle_shot")
+
+	public static  RangedSound rifleBoltShot = new RangedSound(
+			new Tuple<>(0.0, registerSound("rifle_Bolt_Shot")),
+			new Tuple<>(0.5, registerSound("rifle_shot_muffled")),
+			new Tuple<>(0.75, registerSound("rifle_shot_distant"))
+
+	);
+
 	//Artillery Howitzer
 	@ModSound(name = "howitzer_shot", sounds = {"weapons/howitzer/howitzer{0..2}"}, subtitle = "howitzer_shot")
 	@ModSound(name = "howitzer_shot_muffled", sounds = {"weapons/howitzer/howitzer_muffled{0..2}"}, subtitle = "howitzer_shot_distant")
