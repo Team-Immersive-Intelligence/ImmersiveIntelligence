@@ -17,6 +17,7 @@ dependencies {
 
     //Download from curse maven
     compileOnly "curse.maven:immersive-petroleum-268250:3382321"
+    runtimeOnly "curse.maven:immersive-petroleum-268250:3382321"
     compileOnly "curse.maven:immersive-posts-314645:2951672"
     compileOnly "curse.maven:immersive-technology-359407:3658279"
 }
