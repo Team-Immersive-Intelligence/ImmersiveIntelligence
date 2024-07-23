@@ -6,6 +6,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.math.Vec3d;
 import pl.pabilo8.immersiveintelligence.client.util.ShaderUtil;
 import pl.pabilo8.immersiveintelligence.client.util.ShaderUtil.Shaders;
+import pl.pabilo8.immersiveintelligence.common.util.amt.IIModelHeader;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -206,7 +207,7 @@ public abstract class AMT
 		return list;
 	}
 
-	final AMT setChild()
+	public final AMT setChild()
 	{
 		this.isChild = true;
 		return this;

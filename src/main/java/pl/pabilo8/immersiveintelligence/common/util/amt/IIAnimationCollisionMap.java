@@ -1,10 +1,10 @@
-package pl.pabilo8.immersiveintelligence.client.util.amt;
+package pl.pabilo8.immersiveintelligence.common.util.amt;
 
 import blusunrize.immersiveengineering.common.util.chickenbones.Matrix4;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.Vec3d;
-import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimation.IIAnimationGroup;
 import pl.pabilo8.immersiveintelligence.common.entity.tactile.EntityAMTTactile;
+import pl.pabilo8.immersiveintelligence.common.util.amt.IIAnimation.IIAnimationGroup;
 
 import java.util.HashMap;
 import java.util.List;

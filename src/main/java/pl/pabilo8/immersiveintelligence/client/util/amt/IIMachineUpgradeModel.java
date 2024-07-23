@@ -10,11 +10,13 @@ import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IUpgradableMachine;
 import pl.pabilo8.immersiveintelligence.client.util.ShaderUtil;
 import pl.pabilo8.immersiveintelligence.client.util.ShaderUtil.Shaders;
-import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimation.IIAnimationGroup;
-import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimation.IIShaderLine;
-import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimation.IIVectorLine;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.common.util.amt.IIAnimation;
+import pl.pabilo8.immersiveintelligence.common.util.amt.IIAnimation.IIAnimationGroup;
+import pl.pabilo8.immersiveintelligence.common.util.amt.IIAnimation.IIShaderLine;
+import pl.pabilo8.immersiveintelligence.common.util.amt.IIAnimation.IIVectorLine;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

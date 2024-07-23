@@ -1,5 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common.entity.tactile;
 
+import blusunrize.immersiveengineering.common.blocks.TileEntityMultiblockPart;
 import blusunrize.immersiveengineering.common.util.chickenbones.Matrix4;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -12,11 +13,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
-import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimation;
-import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationCollisionMap;
 import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationLoader;
-import pl.pabilo8.immersiveintelligence.client.util.amt.IIModelHeader;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Graphics;
+import pl.pabilo8.immersiveintelligence.common.util.amt.IIAnimation;
+import pl.pabilo8.immersiveintelligence.common.util.amt.IIAnimationCollisionMap;
+import pl.pabilo8.immersiveintelligence.common.util.amt.IIModelHeader;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
 
 import javax.annotation.Nonnull;
@@ -71,7 +72,7 @@ public class TactileHandler
 	 *
 	 * @param multiblock multiblock with an AABB file
 	 */
-	public TactileHandler(MultiblockStuctureBase<?> multiblock, ITactileListener listener)
+	public <T extends TileEntityMultiblockPart<T> & ITactileListener> TactileHandler(MultiblockStuctureBase<T> multiblock, T listener)
 	{
 		this.aabbLoc = multiblock.getAABBFileLocation();
 		this.listener = listener;
@@ -464,13 +465,16 @@ public class TactileHandler
 		/**
 		 * @return world this tactile listener is in
 		 */
+		@Nonnull
 		World getTactileWorld();
 
 		/**
 		 * @return position in the world
 		 */
+		@Nonnull
 		BlockPos getTactilePos();
 
+		@Nonnull
 		EnumFacing getTactileFacing();
 
 		boolean getIsTactileMirrored();

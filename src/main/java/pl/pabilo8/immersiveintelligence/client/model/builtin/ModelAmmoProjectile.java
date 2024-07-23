@@ -13,6 +13,8 @@ import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoGrena
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.amt.IIAnimation;
+import pl.pabilo8.immersiveintelligence.common.util.amt.IIModelHeader;
 
 import java.util.ArrayList;
 import java.util.HashMap;

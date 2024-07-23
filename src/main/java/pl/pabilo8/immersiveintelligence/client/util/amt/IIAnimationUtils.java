@@ -30,9 +30,10 @@ import net.minecraftforge.common.property.Properties;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
-import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimation.IIAnimationGroup;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.amt.IIAnimation.IIAnimationGroup;
+import pl.pabilo8.immersiveintelligence.common.util.amt.IIModelHeader;
 import pl.pabilo8.immersiveintelligence.common.util.lambda.ArraylistJoinCollector;
 
 import javax.annotation.Nonnull;

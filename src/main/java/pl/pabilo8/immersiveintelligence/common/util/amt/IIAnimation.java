@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.client.util.amt;
+package pl.pabilo8.immersiveintelligence.common.util.amt;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -8,6 +8,7 @@ import net.minecraft.util.Tuple;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import pl.pabilo8.immersiveintelligence.client.util.ShaderUtil.Shaders;
+import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -58,17 +59,17 @@ public class IIAnimation
 
 	public static class IIAnimationGroup
 	{
-		final String groupName;
+		public final String groupName;
 		@Nullable
-		final IIVectorLine position, scale;
+		public final IIVectorLine position, scale;
 		@Nullable
-		final IIVectorLine rotation;
+		public final IIVectorLine rotation;
 		@Nullable
-		final IIBooleanLine visibility;
+		public final IIBooleanLine visibility;
 		@Nullable
-		final IIShaderLine shader;
+		public final IIShaderLine shader;
 		@Nullable
-		final IIFloatLine property;
+		public final IIFloatLine property;
 
 		/**
 		 * For manual usage only

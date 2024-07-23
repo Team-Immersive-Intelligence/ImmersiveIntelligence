@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.client.util.amt;
+package pl.pabilo8.immersiveintelligence.common.util.amt;
 
 import blusunrize.immersiveengineering.client.ImmersiveModelRegistry.ItemModelReplacement_OBJ;
 import blusunrize.immersiveengineering.common.util.chickenbones.Matrix4;
@@ -8,6 +8,9 @@ import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformT
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.pabilo8.immersiveintelligence.client.util.amt.AMT;
+import pl.pabilo8.immersiveintelligence.client.util.amt.AMTQuads;
+import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationUtils;
 import pl.pabilo8.immersiveintelligence.common.entity.tactile.EntityAMTTactile;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
