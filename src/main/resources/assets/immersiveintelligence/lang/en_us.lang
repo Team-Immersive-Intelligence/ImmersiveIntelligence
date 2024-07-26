@@ -1474,6 +1474,7 @@ desc.immersiveengineering.info.blueprint.cryptographic_functional_circuits=Crypt
 desc.immersiveengineering.info.blueprint.metal_springs=Springs
 desc.immersiveengineering.info.blueprint.ammo_molds=Ammunition Molds
 desc.immersiveengineering.info.blueprint.vulcanizer_molds=Vulcanizer Molds
+desc.immersiveengineering.info.blueprint.bullet_magazines=Bullet Magazines
 
 #Keybindings
 key.immersiveintelligence.manualReload=Manual Reload
