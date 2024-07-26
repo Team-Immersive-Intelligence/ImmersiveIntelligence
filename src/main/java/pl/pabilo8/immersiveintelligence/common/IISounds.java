@@ -396,11 +396,19 @@ public class IISounds
 
 	//Emplacement
 	//TODO: 23.04.2023 replace with universal sounds
+	@ModSound(sounds = {"device/emplacement/r_h"}, subtitle = "emplacement_rotation")
 	public static SoundEvent emplacementRotationH = registerSound("emplacement_rotation_h");
+	@ModSound(sounds = {"device/emplacement/r_v"}, subtitle = "emplacement_rotation")
 	public static SoundEvent emplacementRotationV = registerSound("emplacement_rotation_v");
+	@ModSound(sounds = {"device/emplacement/platform"}, subtitle = "emplacement_platform")
 	public static SoundEvent emplacementPlatform = registerSound("emplacement_platform");
+	@ModSound(sounds = {"device/emplacement/door_open"}, subtitle = "emplacement_door")
 	public static SoundEvent emplacementDoorOpen = registerSound("emplacement_door_open");
+	@ModSound(sounds = {"device/emplacement/door_close"}, subtitle = "emplacement_door")
 	public static SoundEvent emplacementDoorClose = registerSound("emplacement_door_close");
+
+
+
 	public static SoundEvent emplacementDoorPull = registerSound("emplacement_door_pull");
 	public static SoundEvent emplacementDoorPush = registerSound("emplacement_door_push");
 
