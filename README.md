@@ -78,5 +78,8 @@ OBJ based models use our proprietary **AMT** library, included in `client.util.a
 Some code and assets are automatically generated through [ModWorks](https://github.com/Team-Immersive-Intelligence/ModworksProcessor), our annotation processor.  
 If you wish to use these libraries in your project, message [@Pabilo8](https://github.com/Pabilo8/).
 
+#### Setup
+[Setup Instructions](code-setup.md)
+
 #### Please report any bugs you find in the ['Issues' tab](https://github.com/Team-Immersive-Intelligence/ImmersiveIntelligence/issues). Please don't do that on Curseforge / DM ^^.  
 #### Feel free to join the mod's [Discord Server](https://discord.gg/teMfm3R) to have a chat with the devs and community.
