@@ -8,9 +8,9 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.RayTraceResult;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIRifle;
-import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIWeaponUpgrade.WeaponUpgrades;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
+import pl.pabilo8.immersiveintelligence.common.weaponsystem.IIWeaponUpgrade.WeaponUpgrades;
+import pl.pabilo8.immersiveintelligence.common.weaponsystem.weapons.IIWeaponRifle;
 
 /**
  * @author Pabilo8
@@ -31,7 +31,7 @@ public class GuiOverlayRifle extends GuiOverlayGunBase
 		EasyNBT nbt = EasyNBT.wrapNBT(stack);
 
 		if(IIContent.itemRifle.hasIIUpgrade(stack, WeaponUpgrades.SEMI_AUTOMATIC))
-			drawMagazine(nbt.getItemStack(ItemIIRifle.MAGAZINE), width, height);
+			drawMagazine(nbt.getItemStack(IIWeaponRifle.MAGAZINE), width, height);
 		else
 		{
 			NonNullList<ItemStack> ammo = NonNullList.create();

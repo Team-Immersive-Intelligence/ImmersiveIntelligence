@@ -68,11 +68,12 @@ import pl.pabilo8.immersiveintelligence.common.item.mechanical.ItemIIMotorBelt;
 import pl.pabilo8.immersiveintelligence.common.item.mechanical.ItemIIMotorGear;
 import pl.pabilo8.immersiveintelligence.common.item.tools.*;
 import pl.pabilo8.immersiveintelligence.common.item.tools.backpack.ItemIIAdvancedPowerPack;
-import pl.pabilo8.immersiveintelligence.common.item.weapons.*;
 import pl.pabilo8.immersiveintelligence.common.util.IBatchOredictRegister;
 import pl.pabilo8.immersiveintelligence.common.util.block.BlockIIFluid;
 import pl.pabilo8.immersiveintelligence.common.util.block.BlockIISlab;
 import pl.pabilo8.immersiveintelligence.common.util.block.BlockIIStairs;
+import pl.pabilo8.immersiveintelligence.common.weaponsystem.IIWeaponUpgrade;
+import pl.pabilo8.immersiveintelligence.common.weaponsystem.weapons.*;
 import pl.pabilo8.immersiveintelligence.common.world.BiomeWasteland;
 
 import java.util.ArrayList;
@@ -215,12 +216,12 @@ public class IIContent
 	public static final ItemIIAssemblyScheme itemAssemblyScheme = new ItemIIAssemblyScheme();
 	public static final ItemIISawBlade itemSawblade = new ItemIISawBlade();
 	public static final ItemIIBinoculars itemBinoculars = new ItemIIBinoculars();
-	public static final ItemIIMachinegun itemMachinegun = new ItemIIMachinegun();
-	public static final ItemIISubmachinegun itemSubmachinegun = new ItemIISubmachinegun();
-	public static final ItemIIAssaultRifle itemAssaultRifle = new ItemIIAssaultRifle();
-	public static final ItemIIRifle itemRifle = new ItemIIRifle();
-	public static final ItemIIMortar itemMortar = new ItemIIMortar();
-	public static final ItemIIWeaponUpgrade itemWeaponUpgrade = new ItemIIWeaponUpgrade();
+	public static final IIWeaponMachinegun itemMachinegun = new IIWeaponMachinegun();
+	public static final IIWeaponSubmachineGun itemSubmachinegun = new IIWeaponSubmachineGun();
+	public static final IIWeaponAssaultRifle itemAssaultRifle = new IIWeaponAssaultRifle();
+	public static final IIWeaponRifle itemRifle = new IIWeaponRifle();
+	public static final IIWeaponMortar itemMortar = new IIWeaponMortar();
+	public static final IIWeaponUpgrade itemWeaponUpgrade = new IIWeaponUpgrade();
 
 	//armor
 	public static final ArmorMaterial ARMOR_MATERIAL_LIGHT_ENGINEER = EnumHelper.addArmorMaterial("light_engineer_armor",

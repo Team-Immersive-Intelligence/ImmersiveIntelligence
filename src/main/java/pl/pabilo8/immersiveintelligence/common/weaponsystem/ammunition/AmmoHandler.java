@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.common.item.weapons.ammohandler;
+package pl.pabilo8.immersiveintelligence.common.weaponsystem.ammunition;
 
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
@@ -7,40 +7,36 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
-import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIGunBase;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
+import pl.pabilo8.immersiveintelligence.common.weaponsystem.IIWeaponBase;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
-/**
- * Internal ammunition storage handler for {@link pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIGunBase}
- *
- * @author Pabilo8
- * @since 20.02.2023
- */
 public abstract class AmmoHandler
 {
-	protected final ItemIIGunBase item;
+	/**
+	 * Gun item
+	 */
+	protected final IIWeaponBase weapon;
 
-	public AmmoHandler(ItemIIGunBase item)
+	public AmmoHandler(IIWeaponBase weapon)
 	{
-		this.item = item;
+		this.weapon = weapon;
 	}
 
-	public abstract boolean canFire(ItemStack weapon, EasyNBT nbt);
+	public abstract boolean canFire(ItemStack gun, EasyNBT nbt);
 
 	/**
-	 * @param weapon weapon itemstack
-	 * @param ammo   ammo itemstack to be checked
+	 * @param gun Weapon's ItemStack
+	 * @param ammo - Ammo's ItemStack to be checked
 	 * @return true when it's a valid magazine or bullet
 	 */
-	public abstract boolean isValidAmmo(ItemStack weapon, ItemStack ammo);
+	public abstract boolean isValidAmmo(ItemStack gun, ItemStack ammo);
 
 	@Nonnull
-	public abstract ItemStack getNextAmmo(ItemStack weapon, EasyNBT nbt, boolean doTake);
-
+	public abstract ItemStack getNextAmmo(ItemStack gun, EasyNBT nbt, boolean doTake);
 
 	/**
 	 * Reloads the weapon with ammunition

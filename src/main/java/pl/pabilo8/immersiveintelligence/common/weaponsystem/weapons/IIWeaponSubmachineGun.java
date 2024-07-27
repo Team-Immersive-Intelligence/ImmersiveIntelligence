@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.common.item.weapons;
+package pl.pabilo8.immersiveintelligence.common.weaponsystem.weapons;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -8,35 +8,31 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine.Magazines;
-import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIWeaponUpgrade.WeaponUpgrades;
-import pl.pabilo8.immersiveintelligence.common.item.weapons.ammohandler.AmmoHandler;
-import pl.pabilo8.immersiveintelligence.common.item.weapons.ammohandler.AmmoHandlerMagazine;
 import pl.pabilo8.immersiveintelligence.common.util.AdvancedSounds.RangedSound;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
+import pl.pabilo8.immersiveintelligence.common.weaponsystem.IIWeaponBase;
+import pl.pabilo8.immersiveintelligence.common.weaponsystem.IIWeaponUpgrade.WeaponUpgrades;
+import pl.pabilo8.immersiveintelligence.common.weaponsystem.ammunition.AmmoHandler;
+import pl.pabilo8.immersiveintelligence.common.weaponsystem.ammunition.AmmoHandlerMagazine;
 
 import javax.annotation.Nullable;
 
-/**
- * @author Pabilo8
- * @since 01-11-2019
- */
 @IIItemProperties(category = IICategory.WARFARE)
-public class ItemIISubmachinegun extends ItemIIGunBase
+public class IIWeaponSubmachineGun extends IIWeaponBase
 {
-	//--- Ammunition Handler ---//
-	private final AmmoHandlerMagazine ammoHandler;
+	private final AmmoHandler ammoHandler;
 
-	public ItemIISubmachinegun()
+	public IIWeaponSubmachineGun()
 	{
 		super("submachinegun");
 		ammoHandler = new AmmoHandlerMagazine(this, MAGAZINE, IIContent.itemAmmoSubmachinegun)
 		{
 			@Override
-			protected boolean isValidType(ItemStack weapon, Magazines magazine)
+			protected boolean isValidType(ItemStack gun, Magazines magazine)
 			{
-				return magazine!=Magazines.SUBMACHINEGUN_DRUM||hasIIUpgrade(weapon, WeaponUpgrades.BOTTOM_LOADING);
+				return magazine!=Magazines.SUBMACHINEGUN_DRUM||hasIIUpgrade(gun, WeaponUpgrades.BOTTOM_LOADING);
 			}
 
 			@Override
@@ -50,14 +46,14 @@ public class ItemIISubmachinegun extends ItemIIGunBase
 
 			@Nullable
 			@Override
-			protected SoundEvent getUnloadSound(ItemStack weapon, EasyNBT nbt)
+			protected SoundEvent getUnloadSound(ItemStack gun, EasyNBT nbt)
 			{
 				return IISounds.submachinegunUnload;
 			}
 
 			@Nullable
 			@Override
-			protected SoundEvent getReloadSound(ItemStack weapon, EasyNBT nbt)
+			protected SoundEvent getReloadSound(ItemStack gun, EasyNBT nbt)
 			{
 				return IISounds.submachinegunReload;
 			}
@@ -80,7 +76,7 @@ public class ItemIISubmachinegun extends ItemIIGunBase
 	}
 
 	@Override
-	public AmmoHandler getAmmoHandler(ItemStack weapon)
+	public AmmoHandler getAmmoHandler(ItemStack gun)
 	{
 		return ammoHandler;
 	}
@@ -171,7 +167,7 @@ public class ItemIISubmachinegun extends ItemIIGunBase
 	}
 
 	@Override
-	protected float getVelocityModifier(ItemStack weapon, EasyNBT nbt, ItemStack ammo)
+	protected float getVelocityModifier(ItemStack gun, EasyNBT nbt, ItemStack ammo)
 	{
 		return nbt.hasKey(WeaponUpgrades.STURDY_BARREL)?Submachinegun.sturdyBarrelVelocityMod: 1f;
 	}

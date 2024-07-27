@@ -16,8 +16,8 @@ import pl.pabilo8.immersiveintelligence.common.block.mines.BlockIIMine;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoBase;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoCasing.Casings;
 import pl.pabilo8.immersiveintelligence.common.item.armor.ItemIIArmorUpgrade.ArmorUpgrades;
-import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIWeaponUpgrade.WeaponUpgrades;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.weaponsystem.IIWeaponUpgrade.WeaponUpgrades;
 
 import java.util.ArrayList;
 import java.util.Arrays;

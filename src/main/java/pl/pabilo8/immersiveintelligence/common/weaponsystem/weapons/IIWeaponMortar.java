@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.common.item.weapons;
+package pl.pabilo8.immersiveintelligence.common.weaponsystem.weapons;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -25,9 +25,9 @@ import java.util.List;
  * @since 23.01.2021
  */
 @IIItemProperties(category = IICategory.WARFARE)
-public class ItemIIMortar extends ItemIIBase
+public class IIWeaponMortar extends ItemIIBase
 {
-	public ItemIIMortar()
+	public IIWeaponMortar()
 	{
 		super("mortar", 1);
 	}

@@ -38,8 +38,8 @@ import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityVehicleSeat;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.towable.gun.EntityFieldHowitzer;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine.Magazines;
 import pl.pabilo8.immersiveintelligence.common.item.armor.ItemIIArmorUpgrade.ArmorUpgrades;
-import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIRailgunOverride;
-import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIWeaponUpgrade.WeaponUpgrades;
+import pl.pabilo8.immersiveintelligence.common.weaponsystem.IIWeaponUpgrade.WeaponUpgrades;
+import pl.pabilo8.immersiveintelligence.common.weaponsystem.weapons.IIWeaponRailgunOverride;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -203,7 +203,7 @@ public class CommandIIHans extends CommandBase
 					{
 						HansUtils.setHelmet(hans);
 						ItemStack stack = new ItemStack(IEContent.itemRailgun);
-						ItemIIRailgunOverride itemRailgun = ((ItemIIRailgunOverride)IEContent.itemRailgun);
+						IIWeaponRailgunOverride itemRailgun = ((IIWeaponRailgunOverride)IEContent.itemRailgun);
 
 						NonNullList<ItemStack> upgrades = NonNullList.withSize(itemRailgun.getSlotCount(stack), ItemStack.EMPTY);
 						upgrades.set(0, new ItemStack(IEContent.itemToolUpgrades, 1, ToolUpgrades.RAILGUN_SCOPE.ordinal()));

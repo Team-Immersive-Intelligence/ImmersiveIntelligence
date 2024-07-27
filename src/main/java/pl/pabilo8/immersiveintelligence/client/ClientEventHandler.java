@@ -102,8 +102,6 @@ import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProje
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityMotorbike;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityVehicleSeat;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.towable.gun.EntityFieldHowitzer;
-import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIGunBase;
-import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIRailgunOverride;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageEntityNBTSync;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageItemScrollableSwitch;
@@ -112,6 +110,8 @@ import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIUpgradeableArmor;
+import pl.pabilo8.immersiveintelligence.common.weaponsystem.IIWeaponBase;
+import pl.pabilo8.immersiveintelligence.common.weaponsystem.weapons.IIWeaponRailgunOverride;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -636,15 +636,15 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 			//--- Gun Recoil Handling ---//
 
 			ItemStack stack = ClientUtils.mc().player.getHeldItemMainhand();
-			if(stack.getItem() instanceof ItemIIGunBase&&Graphics.cameraRecoil)
+			if(stack.getItem() instanceof IIWeaponBase&&Graphics.cameraRecoil)
 			{
 				//Prepare variables
-				ItemIIGunBase item = ((ItemIIGunBase)stack.getItem());
+				IIWeaponBase item = ((IIWeaponBase)stack.getItem());
 				EasyNBT upgrades = EasyNBT.wrapNBT(item.getUpgrades(stack));
 
-				boolean isAimed = ItemNBTHelper.getInt(stack, ItemIIGunBase.AIMING) > item.getAimingTime(stack, upgrades);
-				double recoilH = ItemNBTHelper.getFloat(stack, ItemIIGunBase.RECOIL_H);
-				double recoilV = ItemNBTHelper.getFloat(stack, ItemIIGunBase.RECOIL_V);
+				boolean isAimed = ItemNBTHelper.getInt(stack, IIWeaponBase.AIMING) > item.getAimingTime(stack, upgrades);
+				double recoilH = ItemNBTHelper.getFloat(stack, IIWeaponBase.RECOIL_H);
+				double recoilV = ItemNBTHelper.getFloat(stack, IIWeaponBase.RECOIL_V);
 				float recoilDecay = item.getRecoilDecay(stack, upgrades, isAimed);
 
 				//Calculate recoil decrease
@@ -1121,13 +1121,13 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 								model.bipedLeftArm.rotateAngleX *= 0.25f;
 								model.bipedRightArm.rotateAngleX = model.bipedLeftArm.rotateAngleX;
 							}
-						else if((item instanceof ItemIIGunBase
-								||item instanceof ItemIIRailgunOverride)
+						else if((item instanceof IIWeaponBase
+								||item instanceof IIWeaponRailgunOverride)
 								&&hand!=EnumHand.OFF_HAND)
 							if(right)
 							{
 								player.setRenderYawOffset(player.rotationYawHead);
-								boolean rail = item instanceof ItemIIRailgunOverride;
+								boolean rail = item instanceof IIWeaponRailgunOverride;
 
 								model.bipedRightArm.rotateAngleX = -1.65f+model.bipedHead.rotateAngleX;
 								model.bipedLeftArm.rotateAngleX = -1.65f+model.bipedHead.rotateAngleX+0.0625f;
@@ -1252,7 +1252,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 				if(v!=null)
 				{
 					ItemStack heldItem = player.getHeldItem(EnumHand.MAIN_HAND);
-					if(heldItem.getItem() instanceof ItemIIGunBase)
+					if(heldItem.getItem() instanceof IIWeaponBase)
 					{
 						//float recoilH = ItemNBTHelper.getFloat(heldItem, "recoilH");
 						//float recoilV = ItemNBTHelper.getFloat(heldItem, "recoilV");

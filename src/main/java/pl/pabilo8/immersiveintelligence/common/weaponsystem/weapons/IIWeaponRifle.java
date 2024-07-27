@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.common.item.weapons;
+package pl.pabilo8.immersiveintelligence.common.weaponsystem.weapons;
 
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import net.minecraft.creativetab.CreativeTabs;
@@ -16,14 +16,16 @@ import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine.Magazines;
-import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIWeaponUpgrade.WeaponUpgrades;
-import pl.pabilo8.immersiveintelligence.common.item.weapons.ammohandler.AmmoHandler;
-import pl.pabilo8.immersiveintelligence.common.item.weapons.ammohandler.AmmoHandlerList;
-import pl.pabilo8.immersiveintelligence.common.item.weapons.ammohandler.AmmoHandlerMagazine;
 import pl.pabilo8.immersiveintelligence.common.util.AdvancedSounds.RangedSound;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
+import pl.pabilo8.immersiveintelligence.common.weaponsystem.IIWeaponBase;
+import pl.pabilo8.immersiveintelligence.common.weaponsystem.IIWeaponBase.FireModeType;
+import pl.pabilo8.immersiveintelligence.common.weaponsystem.IIWeaponUpgrade.WeaponUpgrades;
+import pl.pabilo8.immersiveintelligence.common.weaponsystem.ammunition.AmmoHandler;
+import pl.pabilo8.immersiveintelligence.common.weaponsystem.ammunition.AmmoHandlerList;
+import pl.pabilo8.immersiveintelligence.common.weaponsystem.ammunition.AmmoHandlerMagazine;
 
 import javax.annotation.Nullable;
 
@@ -32,7 +34,7 @@ import javax.annotation.Nullable;
  * @since 01-11-2019
  */
 @IIItemProperties(category = IICategory.WARFARE)
-public class ItemIIRifle extends ItemIIGunBase implements IAdvancedZoomTool
+public class IIWeaponRifle extends IIWeaponBase implements IAdvancedZoomTool
 {
 	//--- NBT Values Reference ---//
 	public static final String HANDMADE = "handmade";
@@ -46,7 +48,7 @@ public class ItemIIRifle extends ItemIIGunBase implements IAdvancedZoomTool
 	private final AmmoHandlerList ammoHandler;
 	private final AmmoHandlerMagazine ammoHandlerSemiAuto;
 
-	public ItemIIRifle()
+	public IIWeaponRifle()
 	{
 		super("rifle");
 		ammoHandler = new AmmoHandlerList(this, BULLETS, IIContent.itemAmmoMachinegun, MAG_SIZE)

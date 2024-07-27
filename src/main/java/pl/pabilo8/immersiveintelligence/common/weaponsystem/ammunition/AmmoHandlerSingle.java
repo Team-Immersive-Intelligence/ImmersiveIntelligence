@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.common.item.weapons.ammohandler;
+package pl.pabilo8.immersiveintelligence.common.weaponsystem.ammunition;
 
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import net.minecraft.client.util.ITooltipFlag;
@@ -9,8 +9,8 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
-import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIGunBase;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
+import pl.pabilo8.immersiveintelligence.common.weaponsystem.IIWeaponBase;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -25,28 +25,28 @@ public abstract class AmmoHandlerSingle extends AmmoHandler
 	private final IAmmoTypeItem validAmmo;
 	private final String tag;
 
-	public AmmoHandlerSingle(ItemIIGunBase item, String tag, IAmmoTypeItem validAmmo)
+	public AmmoHandlerSingle(IIWeaponBase weapon, String tag, IAmmoTypeItem validAmmo)
 	{
-		super(item);
+		super(weapon);
 		this.tag = tag;
 		this.validAmmo = validAmmo;
 	}
 
 	@Override
-	public boolean canFire(ItemStack weapon, EasyNBT nbt)
+	public boolean canFire(ItemStack gun, EasyNBT nbt)
 	{
 		return !nbt.getItemStack(tag).isEmpty();
 	}
 
 	@Override
-	public boolean isValidAmmo(ItemStack weapon, ItemStack ammo)
+	public boolean isValidAmmo(ItemStack gun, ItemStack ammo)
 	{
 		return ammo.getItem()==validAmmo;
 	}
 
 	@Override
 	@Nonnull
-	public ItemStack getNextAmmo(ItemStack weapon, EasyNBT nbt, boolean doTake)
+	public ItemStack getNextAmmo(ItemStack gun, EasyNBT nbt, boolean doTake)
 	{
 		ItemStack stack = nbt.getItemStack(tag);
 		if(doTake)
@@ -55,17 +55,17 @@ public abstract class AmmoHandlerSingle extends AmmoHandler
 	}
 
 	@Override
-	public int reloadWeapon(ItemStack weapon, World world, Entity user, EasyNBT nbt, EasyNBT upgrades, int reloading)
+	public int reloadWeapon(ItemStack gun, World world, Entity user, EasyNBT nbt, EasyNBT upgrades, int reloading)
 	{
 		ItemStack found;
 
 		//Return 0 if there is no ammunition to be loaded
-		if((found = item.findAmmo(user, weapon)).isEmpty())
+		if((found = weapon.findAmmo(user, gun)).isEmpty())
 			return 0;
 
-		final int reloadTime = item.getReloadTime(weapon, found, upgrades);
+		final int reloadTime = weapon.getReloadTime(gun, found, upgrades);
 		if(reloading==0) //Play loading sound
-			playSound(user, getReloadSound(weapon, upgrades), SoundCategory.PLAYERS, 1f, 1f);
+			playSound(user, getReloadSound(gun, upgrades), SoundCategory.PLAYERS, 1f, 1f);
 		reloading++;
 		nbt.withItemStack("found", found);
 

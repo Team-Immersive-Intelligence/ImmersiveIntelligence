@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.common.item.weapons;
+package pl.pabilo8.immersiveintelligence.common.weaponsystem;
 
 import blusunrize.immersiveengineering.client.models.IOBJModelCallback;
 import blusunrize.immersiveengineering.common.gui.IESlot;
@@ -27,33 +27,33 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.AmmoFactory;
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler;
-import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler.IAdvancedTooltipItem;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.ISkinnable;
 import pl.pabilo8.immersiveintelligence.client.ClientProxy;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
+import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.client.util.amt.IIUpgradableItemRendererAMT;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
-import pl.pabilo8.immersiveintelligence.common.item.weapons.ammohandler.AmmoHandler;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageItemKeybind;
 import pl.pabilo8.immersiveintelligence.common.util.AdvancedSounds.RangedSound;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIUpgradableTool;
+import pl.pabilo8.immersiveintelligence.common.weaponsystem.ammunition.AmmoHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class ItemIIGunBase extends ItemIIUpgradableTool implements ISkinnable, IAdvancedTooltipItem, IOBJModelCallback<ItemStack>
+public abstract class IIWeaponBase extends ItemIIUpgradableTool implements ISkinnable, ItemTooltipHandler.IAdvancedTooltipItem, IOBJModelCallback<ItemStack>
 {
-	public static final NonNullList<ItemIIGunBase> WEAPONS = NonNullList.create();
+	public static final NonNullList<IIWeaponBase> WEAPONS = NonNullList.create();
 
-	//--- NBT Values Reference ---//
+	/* NBT Values References */
 	public static final String RELOADING = "reloading";
 	public static final String AIMING = "aiming";
 	public static final String SHOULD_RELOAD = "shouldReload";
@@ -64,15 +64,12 @@ public abstract class ItemIIGunBase extends ItemIIUpgradableTool implements ISki
 	public static final String MAGAZINE = "magazine";
 	public static final String BULLETS = "bullets";
 
-	public ItemIIGunBase(String name)
+	public IIWeaponBase(String name)
 	{
 		super(name, 1, name.toUpperCase());
-		//Use interfaces pls Blu
 		IIUtils.fixupItem(this, name);
 		WEAPONS.add(this);
 	}
-
-	//--- ItemUpgradeableTool ---//
 
 	@Override
 	public boolean canModify(ItemStack stack)
@@ -84,51 +81,47 @@ public abstract class ItemIIGunBase extends ItemIIUpgradableTool implements ISki
 	public Slot[] getWorkbenchSlots(Container container, ItemStack stack)
 	{
 		IItemHandler inv = stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
-		final String upgradeType = itemName.toUpperCase();
+		final String upgradeType = itemName.toLowerCase();
 
 		ArrayList<Slot> list = new ArrayList<>();
 		for(int i = 0; i < getSlotCount(stack); i++)
+		{
 			list.add(new IESlot.Upgrades(container, inv, i,
-					80+((i%3)*20), 32+((i/3)*20), upgradeType,
-					stack, true
-			));
-
-		return list.toArray(new Slot[0]);
+                    80+((i%3)*20), 32+((i/3)*20),
+                    upgradeType, stack, true));
+		}
+        return list.toArray(new Slot[0]);
 	}
 
-	//--- ISkinnable ---//
-	@Nonnull
-	@Override
-	public IRarity getForgeRarity(@Nonnull ItemStack stack)
-	{
-		IRarity skin = getSkinRarity(stack);
-		return skin!=null?skin: super.getForgeRarity(stack);
-	}
+    @Nonnull
+    @Override
+    public IRarity getForgeRarity(@Nonnull ItemStack stack)
+    {
+        IRarity skin = getSkinRarity(stack);
+        return skin!=null ? skin : super.getForgeRarity(stack);
+    }
 
-	@Override
-	public String getSkinnableName()
-	{
-		return itemName;
-	}
+    @Override
+    public String getSkinnableName()
+    {
+        return itemName;
+    }
 
-	@Override
-	public String getSkinnableDefaultTextureLocation()
-	{
-		return ImmersiveIntelligence.MODID+":textures/items/weapons/";
-	}
-
-	//--- Vanilla ---//
+    @Override
+    public String getSkinnableDefaultTextureLocation()
+    {
+        return ResLoc.of(IIReference.RES_TEXTURES_ITEM, "weapons/").toString();
+    }
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public void addInformation(@Nonnull ItemStack stack, @Nullable World world, @Nonnull List<String> tooltip, @Nonnull ITooltipFlag flag)
+	public void addInformation(@Nonnull ItemStack stack, @Nullable World worldIn, @Nonnull List<String> tooltip, @Nonnull ITooltipFlag flagIn)
 	{
-		super.addInformation(stack, world, tooltip, flag);
+		super.addInformation(stack, worldIn, tooltip, flagIn);
 
-		//Add stored bullets info
-		getAmmoHandler(stack).addAmmoInformation(stack, world, tooltip, flag);
+		getAmmoHandler(stack).addAmmoInformation(stack, worldIn, tooltip, flagIn);
 
-		//Add II Contributor Skin tooltip
+		// Add II Skin tooltip
 		addSkinTooltip(stack, tooltip);
 	}
 
@@ -147,47 +140,36 @@ public abstract class ItemIIGunBase extends ItemIIUpgradableTool implements ISki
 		return IIClientUtils.fontRegular;
 	}
 
+
 	@Override
 	public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged)
 	{
 		return slotChanged;
 	}
 
-	@Nonnull
 	@Override
-	public Multimap<String, AttributeModifier> getAttributeModifiers(@Nonnull EntityEquipmentSlot slot, @Nonnull ItemStack stack)
+	public Multimap<String, AttributeModifier> getAttributeModifiers(EntityEquipmentSlot slot, ItemStack stack)
 	{
 		Multimap<String, AttributeModifier> multimap = super.getAttributeModifiers(slot, stack);
-		if(slot!=EntityEquipmentSlot.MAINHAND)
-			return multimap;
-
-		//slot switching / melee attack speed
-		multimap.put(SharedMonsterAttributes.ATTACK_SPEED.getName(), new AttributeModifier(ATTACK_SPEED_MODIFIER,
-				"Weapon modifier", getEquipSpeed(stack, getNBT(stack))*-3f, 0));
-
+		if (slot != EntityEquipmentSlot.MAINHAND) return multimap;
+		multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getName(),
+				new AttributeModifier(ATTACK_SPEED_MODIFIER, "Weapon modifier", getEquipSpeed(stack, getNBT(stack))*(-3f), 0));
 		double melee = getUpgrades(stack).getFloat("melee");
-		if(melee!=0)
-		{
-			multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getName(), new AttributeModifier(ATTACK_DAMAGE_MODIFIER,
-					"Weapon modifier", melee, 0));
-		}
+		if (melee!=0) multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getName(), new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Weapon modifier", melee, 0));
 		return multimap;
 	}
 
-	@Nonnull
 	@Override
-	public EnumAction getItemUseAction(@Nonnull ItemStack stack)
+	public EnumAction getItemUseAction(ItemStack stack)
 	{
 		return EnumAction.NONE;
 	}
 
 	@Override
-	public int getMaxItemUseDuration(@Nonnull ItemStack stack)
+	public int getMaxItemUseDuration(ItemStack stack)
 	{
 		return getFireDelay(stack, EasyNBT.wrapNBT(stack.getTagCompound()))+1;
 	}
-
-	//--- Gun Handling ---//
 
 	@Override
 	public void onUpdate(ItemStack stack, World world, Entity user, int itemSlot, boolean isSelected)

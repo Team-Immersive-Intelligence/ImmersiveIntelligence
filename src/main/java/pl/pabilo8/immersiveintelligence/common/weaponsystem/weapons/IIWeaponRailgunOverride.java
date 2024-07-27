@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.common.item.weapons;
+package pl.pabilo8.immersiveintelligence.common.weaponsystem.weapons;
 
 import blusunrize.immersiveengineering.api.shader.ShaderCase;
 import blusunrize.immersiveengineering.api.shader.ShaderRegistry;
@@ -35,9 +35,9 @@ import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProper
  * @since 27.11.2020
  */
 @IIItemProperties(category = IICategory.WARFARE)
-public class ItemIIRailgunOverride extends ItemRailgun
+public class IIWeaponRailgunOverride extends ItemRailgun
 {
-	public ItemIIRailgunOverride()
+	public IIWeaponRailgunOverride()
 	{
 		super();
 		IEContent.registeredIEItems.removeIf(item -> item instanceof ItemRailgun);

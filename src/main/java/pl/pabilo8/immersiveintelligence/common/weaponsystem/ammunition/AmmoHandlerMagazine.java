@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.common.item.weapons.ammohandler;
+package pl.pabilo8.immersiveintelligence.common.weaponsystem.ammunition;
 
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import net.minecraft.client.util.ITooltipFlag;
@@ -11,8 +11,8 @@ import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine.Magazines;
-import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIGunBase;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
+import pl.pabilo8.immersiveintelligence.common.weaponsystem.IIWeaponBase;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -27,39 +27,39 @@ public abstract class AmmoHandlerMagazine extends AmmoHandler
 	private final IAmmoTypeItem validAmmo;
 	private final String tag;
 
-	public AmmoHandlerMagazine(ItemIIGunBase item, String tag, IAmmoTypeItem validAmmo)
+	public AmmoHandlerMagazine(IIWeaponBase weapon, String tag, IAmmoTypeItem validAmmo)
 	{
-		super(item);
+		super(weapon);
 		this.tag = tag;
 		this.validAmmo = validAmmo;
 	}
 
 	@Override
-	public boolean canFire(ItemStack weapon, EasyNBT nbt)
+	public boolean canFire(ItemStack gun, EasyNBT nbt)
 	{
 		return !IIContent.itemBulletMagazine.hasNoBullets(nbt.getItemStack(tag));
 	}
 
 	@Override
-	public boolean isValidAmmo(ItemStack weapon, ItemStack ammo)
+	public boolean isValidAmmo(ItemStack gun, ItemStack ammo)
 	{
 		if(ammo.getItem()==IIContent.itemBulletMagazine)
 		{
 			Magazines magazine = IIContent.itemBulletMagazine.stackToSub(ammo);
 			//If magazine is of valid type and has bullets
-			return magazine.ammo==validAmmo&&isValidType(weapon, magazine)&&!IIContent.itemBulletMagazine.hasNoBullets(ammo);
+			return magazine.ammo==validAmmo&&isValidType(gun, magazine)&&!IIContent.itemBulletMagazine.hasNoBullets(ammo);
 		}
 		return false;
 	}
 
-	protected boolean isValidType(ItemStack weapon, Magazines magazine)
+	protected boolean isValidType(ItemStack gun, Magazines magazine)
 	{
 		return true;
 	}
 
 	@Override
 	@Nonnull
-	public ItemStack getNextAmmo(ItemStack weapon, EasyNBT nbt, boolean doTake)
+	public ItemStack getNextAmmo(ItemStack gun, EasyNBT nbt, boolean doTake)
 	{
 		ItemStack magazine = nbt.getItemStack(tag);
 		ItemStack ammo = IIContent.itemBulletMagazine.takeBullet(magazine, doTake);
@@ -73,16 +73,16 @@ public abstract class AmmoHandlerMagazine extends AmmoHandler
 	}
 
 	@Override
-	public int reloadWeapon(ItemStack weapon, World world, Entity user, EasyNBT nbt, EasyNBT upgrades, int reloading)
+	public int reloadWeapon(ItemStack gun, World world, Entity user, EasyNBT nbt, EasyNBT upgrades, int reloading)
 	{
 		ItemStack loaded = nbt.getItemStack(tag), found;
-		final int reloadTime = item.getReloadTime(weapon, loaded, upgrades);
+		final int reloadTime = weapon.getReloadTime(gun, loaded, upgrades);
 
 		if(!loaded.isEmpty())
 		{
 			//Play unloading sound
 			if(reloading==reloadTime/3)
-				playSound(user, getUnloadSound(weapon, upgrades), SoundCategory.PLAYERS, 1f, 1f);
+				playSound(user, getUnloadSound(gun, upgrades), SoundCategory.PLAYERS, 1f, 1f);
 
 			//Progress reloading
 			reloading += 1;
@@ -101,12 +101,12 @@ public abstract class AmmoHandlerMagazine extends AmmoHandler
 		}
 
 		//Return 0 if there is no ammunition to be loaded
-		if((found = item.findAmmo(user, weapon)).isEmpty())
+		if((found = weapon.findAmmo(user, gun)).isEmpty())
 			return 0;
 		markLoadedAmmo(nbt, found);
 
 		if(reloading==reloadTime/1.5) //Play loading sound
-			playSound(user, getReloadSound(weapon, upgrades), SoundCategory.PLAYERS, 1f, 1f);
+			playSound(user, getReloadSound(gun, upgrades), SoundCategory.PLAYERS, 1f, 1f);
 		reloading++;
 
 		//Reloading

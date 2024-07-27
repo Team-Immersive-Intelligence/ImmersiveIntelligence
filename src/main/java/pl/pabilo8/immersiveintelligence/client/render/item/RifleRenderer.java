@@ -25,19 +25,20 @@ import pl.pabilo8.immersiveintelligence.client.util.amt.*;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMTBullet.BulletState;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.AssaultRifle;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIGunBase;
-import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIRifle;
-import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIWeaponUpgrade.WeaponUpgrades;
-import pl.pabilo8.immersiveintelligence.common.item.weapons.ammohandler.AmmoHandler;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
+import pl.pabilo8.immersiveintelligence.common.weaponsystem.IIWeaponBase;
+import pl.pabilo8.immersiveintelligence.common.weaponsystem.IIWeaponUpgrade.WeaponUpgrades;
+import pl.pabilo8.immersiveintelligence.common.weaponsystem.ammunition.AmmoHandler;
+import pl.pabilo8.immersiveintelligence.common.weaponsystem.weapons.IIWeaponAssaultRifle;
+import pl.pabilo8.immersiveintelligence.common.weaponsystem.weapons.IIWeaponRifle;
 
 /**
  * @author Pabilo8
  * @since 18.09.2022
  */
-public class RifleRenderer extends IIUpgradableItemRendererAMT<ItemIIRifle> implements ISpecificHandRenderer
+public class RifleRenderer extends IIUpgradableItemRendererAMT<IIWeaponRifle> implements ISpecificHandRenderer
 {
 	private MTLTextureRemapper handmadeRemapper;
 	private MTLTextureRemapper skinRemapper;
@@ -113,8 +114,8 @@ public class RifleRenderer extends IIUpgradableItemRendererAMT<ItemIIRifle> impl
 		model.getVariant(nbt.hasKey("handmade")?"diy": nbt.getString("contributorSkin"), stack);
 		model.forEach(AMT::defaultize);
 
-		int firing = nbt.getInt(ItemIIRifle.FIRE_DELAY);
-		int reloading = nbt.getInt(ItemIIRifle.RELOADING);
+		int firing = nbt.getInt(IIWeaponRifle.FIRE_DELAY);
+		int reloading = nbt.getInt(IIWeaponRifle.RELOADING);
 		boolean handRender = is1stPerson(transform);
 		boolean semiAuto = item.hasIIUpgrade(stack, WeaponUpgrades.SEMI_AUTOMATIC);
 		boolean gui = transform==TransformType.GUI;
@@ -126,7 +127,7 @@ public class RifleRenderer extends IIUpgradableItemRendererAMT<ItemIIRifle> impl
 
 		if(handRender)
 		{
-			int aiming = nbt.getInt(ItemIIRifle.AIMING);
+			int aiming = nbt.getInt(IIWeaponRifle.AIMING);
 			float preciseAim = IIAnimationUtils.getAnimationProgress(aiming, item.getAimingTime(stack, nbt),
 					true, !Minecraft.getMinecraft().player.isSneaking(),
 					1, 3,
@@ -136,7 +137,7 @@ public class RifleRenderer extends IIUpgradableItemRendererAMT<ItemIIRifle> impl
 			{
 				//gun "push" towards player
 				float recoil = Math.min(
-						(nbt.getFloat(ItemIIRifle.RECOIL_V)+nbt.getFloat(ItemIIRifle.RECOIL_H))
+						(nbt.getFloat(IIWeaponRifle.RECOIL_V)+nbt.getFloat(IIWeaponRifle.RECOIL_H))
 								/(AssaultRifle.maxRecoilHorizontal+AssaultRifle.maxRecoilVertical),
 						1f);
 
@@ -179,7 +180,7 @@ public class RifleRenderer extends IIUpgradableItemRendererAMT<ItemIIRifle> impl
 
 		if(semiAuto)
 		{
-			ItemStack magazine = nbt.getItemStack(ItemIIRifle.MAGAZINE);
+			ItemStack magazine = nbt.getItemStack(IIWeaponRifle.MAGAZINE);
 			(magazine.isEmpty()?loadMag: unloadMag).apply(v);
 		}
 
@@ -242,7 +243,7 @@ public class RifleRenderer extends IIUpgradableItemRendererAMT<ItemIIRifle> impl
 								return ClientUtils.getSprite(this.skinRemapper.apply(res));
 							}
 
-							if(ItemNBTHelper.hasKey(stack, ItemIIRifle.HANDMADE))
+							if(ItemNBTHelper.hasKey(stack, IIWeaponRifle.HANDMADE))
 								return ClientUtils.getSprite(handmadeRemapper.apply(res));
 							return ClientUtils.getSprite(res);
 						}
@@ -286,7 +287,7 @@ public class RifleRenderer extends IIUpgradableItemRendererAMT<ItemIIRifle> impl
 	{
 		//Render bayonet attack
 		this.swingProgress = swingProgress;
-		return hand==EnumHand.OFF_HAND&&otherHand.getItem() instanceof ItemIIGunBase;
+		return hand==EnumHand.OFF_HAND&&otherHand.getItem() instanceof IIWeaponBase;
 	}
 
 	@Override
@@ -295,6 +296,6 @@ public class RifleRenderer extends IIUpgradableItemRendererAMT<ItemIIRifle> impl
 		if(item.hasIIUpgrade(stack, WeaponUpgrades.SCOPE))
 			return false;
 
-		return ItemNBTHelper.getInt(stack, ItemIIRifle.AIMING) > item.getAimingTime(stack, EasyNBT.wrapNBT(stack))*0.85;
+		return ItemNBTHelper.getInt(stack, IIWeaponRifle.AIMING) > item.getAimingTime(stack, EasyNBT.wrapNBT(stack))*0.85;
 	}
 }

@@ -8,7 +8,7 @@ import pl.pabilo8.immersiveintelligence.api.ammo.utils.IIAmmoUtils;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
-import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIAssaultRifle;
+import pl.pabilo8.immersiveintelligence.common.weaponsystem.weapons.IIWeaponAssaultRifle;
 
 /**
  * @author Pabilo8
@@ -44,7 +44,7 @@ public class AIHansAssaultRifle extends AIHansHandWeapon
 	@Override
 	protected boolean isValidWeapon()
 	{
-		return getWeapon().getItem() instanceof ItemIIAssaultRifle;
+		return getWeapon().getItem() instanceof IIWeaponAssaultRifle;
 	}
 
 	@Override

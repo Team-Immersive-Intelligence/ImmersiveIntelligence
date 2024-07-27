@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.common.item.weapons;
+package pl.pabilo8.immersiveintelligence.common.weaponsystem;
 
 import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.api.tool.IUpgrade;
@@ -15,14 +15,12 @@ import pl.pabilo8.immersiveintelligence.client.render.MachinegunRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.amt.IIUpgradableItemRendererAMT;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
-import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIWeaponUpgrade.WeaponUpgrades;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ISerializableEnum;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
-import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
-import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
+import pl.pabilo8.immersiveintelligence.common.weaponsystem.IIWeaponUpgrade.WeaponUpgrades;
 import pl.pabilo8.modworks.annotations.item.GeneratedItemModels;
 
 import javax.annotation.Nonnull;
@@ -35,14 +33,9 @@ import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-/**
- * @author Pabilo8
- * @since 01-11-2019
- */
-@IIItemProperties(category = IICategory.WARFARE)
-public class ItemIIWeaponUpgrade extends ItemIISubItemsBase<WeaponUpgrades> implements IUpgrade
+public class IIWeaponUpgrade extends ItemIISubItemsBase<WeaponUpgrades> implements IUpgrade
 {
-	public ItemIIWeaponUpgrade()
+	public IIWeaponUpgrade()
 	{
 		super("weapon_upgrade", 1, WeaponUpgrades.values());
 	}
@@ -92,7 +85,7 @@ public class ItemIIWeaponUpgrade extends ItemIISubItemsBase<WeaponUpgrades> impl
 		INFRARED_SCOPE(new WeaponTypes[]{WeaponTypes.MACHINEGUN, WeaponTypes.ASSAULT_RIFLE},
 				(stack, nbt) -> {
 					//Assault Rifle
-					if(stack.getItem() instanceof ItemIIGunBase)
+					if(stack.getItem() instanceof IIWeaponBase)
 						nbt.setBoolean("energy", true);
 				},
 				"scope"),

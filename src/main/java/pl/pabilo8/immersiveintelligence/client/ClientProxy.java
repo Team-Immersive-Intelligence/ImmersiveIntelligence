@@ -133,13 +133,13 @@ import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoBase;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIINavalMine;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.gun.ItemIIAmmoRevolver;
 import pl.pabilo8.immersiveintelligence.common.item.tools.ItemIIDrillHead.DrillHeads;
-import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIWeaponUpgrade;
 import pl.pabilo8.immersiveintelligence.common.util.block.BlockIIBase;
 import pl.pabilo8.immersiveintelligence.common.util.block.BlockIIFluid;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIIItemTextureOverride;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIBase;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
+import pl.pabilo8.immersiveintelligence.common.weaponsystem.IIWeaponUpgrade;
 
 import javax.annotation.Nullable;
 import java.util.Locale;
@@ -518,7 +518,7 @@ public class ClientProxy extends CommonProxy
 
 		//Weapons (Items)
 		IIContent.itemMachinegun.setTileEntityItemStackRenderer(MachinegunItemStackRenderer.instance);
-		ItemIIWeaponUpgrade.addUpgradesToRender();
+		IIWeaponUpgrade.addUpgradesToRender();
 
 		IIContent.itemLightEngineerHelmet.setTileEntityItemStackRenderer(LightEngineerArmorItemStackRenderer.instance);
 		IIContent.itemLightEngineerChestplate.setTileEntityItemStackRenderer(LightEngineerArmorItemStackRenderer.instance);

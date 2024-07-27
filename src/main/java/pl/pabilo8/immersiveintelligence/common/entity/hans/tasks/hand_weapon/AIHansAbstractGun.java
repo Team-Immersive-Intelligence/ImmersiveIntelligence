@@ -8,9 +8,9 @@ import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.IIAmmoUtils;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
-import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIGunBase;
-import pl.pabilo8.immersiveintelligence.common.item.weapons.ammohandler.AmmoHandler;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
+import pl.pabilo8.immersiveintelligence.common.weaponsystem.IIWeaponBase;
+import pl.pabilo8.immersiveintelligence.common.weaponsystem.ammunition.AmmoHandler;
 
 /**
  * @author Pabilo8
@@ -22,14 +22,14 @@ public abstract class AIHansAbstractGun extends AIHansHandWeapon
 	 * For how many ticks should the Hans shoot the stg in a burst.
 	 */
 	protected final int burstTime;
-	protected final ItemIIGunBase item;
+	protected final IIWeaponBase item;
 	/**
 	 * A decrementing tick that spawns a ranged attack once this value reaches 0. It is then set back to the
 	 * maxRangedAttackTime.
 	 */
 	protected int rangedAttackTime;
 
-	public AIHansAbstractGun(EntityHans hans, ItemIIGunBase item, float minAttackDistance, float maxAttackDistance, int burstTime)
+	public AIHansAbstractGun(EntityHans hans, IIWeaponBase item, float minAttackDistance, float maxAttackDistance, int burstTime)
 	{
 		super(hans, minAttackDistance, maxAttackDistance, 1f);
 		this.item = item;
@@ -66,12 +66,12 @@ public abstract class AIHansAbstractGun extends AIHansHandWeapon
 
 		//reload if magazine empty
 		if(!canFire)
-			nbt.withBoolean(ItemIIGunBase.SHOULD_RELOAD, true);
+			nbt.withBoolean(IIWeaponBase.SHOULD_RELOAD, true);
 
 		//hans can not shoot while running away
 		if(motionState==MotionState.FALLBACK)
 		{
-			if(!ItemNBTHelper.getBoolean(stg, ItemIIGunBase.SHOULD_RELOAD))
+			if(!ItemNBTHelper.getBoolean(stg, IIWeaponBase.SHOULD_RELOAD))
 				hans.resetActiveHand();
 			hans.setSneaking(false);
 			return;

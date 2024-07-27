@@ -33,7 +33,7 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
 import pl.pabilo8.immersiveintelligence.common.entity.EntityEmplacementWeapon;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityEmplacementWeapon.EmplacementHitboxEntity;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
-import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIRailgunOverride;
+import pl.pabilo8.immersiveintelligence.common.weaponsystem.weapons.IIWeaponRailgunOverride;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -66,7 +66,7 @@ public class EmplacementWeaponHeavyRailgun extends EmplacementWeapon<EntityAmmoP
 		@Override
 		public boolean isItemValid(int slot, @Nonnull ItemStack stack)
 		{
-			if(!ItemIIRailgunOverride.isAmmo(stack))
+			if(!IIWeaponRailgunOverride.isAmmo(stack))
 				return false;
 			return super.isItemValid(slot, stack);
 		}
@@ -197,7 +197,7 @@ public class EmplacementWeaponHeavyRailgun extends EmplacementWeapon<EntityAmmoP
 		{
 			if(reloadDelay==0)
 			{
-				if(inventoryPlatform.stream().anyMatch(ItemIIRailgunOverride::isAmmo))
+				if(inventoryPlatform.stream().anyMatch(IIWeaponRailgunOverride::isAmmo))
 					reloadDelay = 1;
 				else
 					requiresPlatformRefill = true;

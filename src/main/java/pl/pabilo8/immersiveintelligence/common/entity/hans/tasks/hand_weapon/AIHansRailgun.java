@@ -11,7 +11,7 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
 import pl.pabilo8.immersiveintelligence.common.entity.hans.HansAnimations.HansLegAnimation;
-import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIRailgunOverride;
+import pl.pabilo8.immersiveintelligence.common.weaponsystem.weapons.IIWeaponRailgunOverride;
 
 /**
  * @author Pabilo8
@@ -38,7 +38,7 @@ public class AIHansRailgun extends AIHansHandWeapon
 	@Override
 	protected boolean hasAnyAmmo()
 	{
-		return hans.hasAmmo = (!ItemIIRailgunOverride.findAmmo(hans).isEmpty());
+		return hans.hasAmmo = (!IIWeaponRailgunOverride.findAmmo(hans).isEmpty());
 	}
 
 	@Override
@@ -74,17 +74,17 @@ public class AIHansRailgun extends AIHansHandWeapon
 		if(this.rangedAttackTime < holdFireTime)
 		{
 			hans.setActiveHand(EnumHand.MAIN_HAND);
-			if(railgun.getItem() instanceof ItemIIRailgunOverride)
+			if(railgun.getItem() instanceof IIWeaponRailgunOverride)
 			{
-				ItemStack ammo = ItemIIRailgunOverride.findAmmo(hans);
-				if(ItemIIRailgunOverride.isAmmo(ammo))
+				ItemStack ammo = IIWeaponRailgunOverride.findAmmo(hans);
+				if(IIWeaponRailgunOverride.isAmmo(ammo))
 				{
 					hans.hasAmmo = true;
 					hans.faceEntity(attackTarget, 30, 0);
 					IEContent.itemRailgun.onUsingTick(railgun, this.hans, this.rangedAttackTime++);
 				}
 				hans.rotationPitch = calculateBallisticAngle(ammo, attackTarget);
-				sniper = ((ItemIIRailgunOverride)railgun.getItem()).getUpgrades(railgun).getBoolean("scope");
+				sniper = ((IIWeaponRailgunOverride)railgun.getItem()).getUpgrades(railgun).getBoolean("scope");
 
 				if(rangedAttackTime >= holdFireTime)
 				{

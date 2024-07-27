@@ -22,10 +22,10 @@ import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.effect_crate.TileEntityAmmunitionCrate;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityMachinegun;
-import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIMachinegun;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler;
 import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler.IISpecialSkin;
+import pl.pabilo8.immersiveintelligence.common.weaponsystem.weapons.IIWeaponMachinegun;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -64,7 +64,7 @@ public class MachinegunRenderer extends Render<EntityMachinegun> implements IRel
 			IISpecialSkin s = IISkinHandler.specialSkins.get(skin);
 			if(s!=null)
 			{
-				ItemIIMachinegun gun = (ItemIIMachinegun)stack.getItem();
+				IIWeaponMachinegun gun = (IIWeaponMachinegun)stack.getItem();
 				canApply = s.doesApply(gun.getSkinnableName());
 				textColor = s.textColor;
 				if(s.mods.contains("skin_mg_text"))

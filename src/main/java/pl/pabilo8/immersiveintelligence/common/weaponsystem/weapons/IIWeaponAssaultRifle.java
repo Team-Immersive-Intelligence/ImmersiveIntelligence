@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.common.item.weapons;
+package pl.pabilo8.immersiveintelligence.common.weaponsystem.weapons;
 
 import blusunrize.immersiveengineering.api.Lib;
 import blusunrize.immersiveengineering.common.util.EnergyHelper.IIEEnergyItem;
@@ -29,15 +29,16 @@ import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
-import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIWeaponUpgrade.WeaponUpgrades;
-import pl.pabilo8.immersiveintelligence.common.item.weapons.ammohandler.AmmoHandler;
-import pl.pabilo8.immersiveintelligence.common.item.weapons.ammohandler.AmmoHandlerMagazine;
-import pl.pabilo8.immersiveintelligence.common.item.weapons.ammohandler.AmmoHandlerSingle;
 import pl.pabilo8.immersiveintelligence.common.util.AdvancedSounds.RangedSound;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
+import pl.pabilo8.immersiveintelligence.common.weaponsystem.IIWeaponBase;
+import pl.pabilo8.immersiveintelligence.common.weaponsystem.IIWeaponUpgrade.WeaponUpgrades;
+import pl.pabilo8.immersiveintelligence.common.weaponsystem.ammunition.AmmoHandler;
+import pl.pabilo8.immersiveintelligence.common.weaponsystem.ammunition.AmmoHandlerMagazine;
+import pl.pabilo8.immersiveintelligence.common.weaponsystem.ammunition.AmmoHandlerSingle;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -48,7 +49,7 @@ import java.util.List;
  * @since 17-09-2022
  */
 @IIItemProperties(category = IICategory.WARFARE)
-public class ItemIIAssaultRifle extends ItemIIGunBase implements IItemScrollable, IAdvancedZoomTool, IIEEnergyItem
+public class IIWeaponAssaultRifle extends IIWeaponBase implements IItemScrollable, IAdvancedZoomTool, IIEEnergyItem
 {
 	//--- NBT Values Reference ---//
 	public static final String FIRE_MODE = "fire_mode";
@@ -67,7 +68,7 @@ public class ItemIIAssaultRifle extends ItemIIGunBase implements IItemScrollable
 	private final AmmoHandlerMagazine stgAmmoHandler;
 	private final AmmoHandlerSingle railgunAmmoHandler;
 
-	public ItemIIAssaultRifle()
+	public IIWeaponAssaultRifle()
 	{
 		super("assault_rifle");
 		stgAmmoHandler = new AmmoHandlerMagazine(this, MAGAZINE, IIContent.itemAmmoAssaultRifle)

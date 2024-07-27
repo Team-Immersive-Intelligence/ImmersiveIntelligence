@@ -22,19 +22,19 @@ import pl.pabilo8.immersiveintelligence.client.util.amt.AMTBullet.BulletState;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.AssaultRifle;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.Submachinegun;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIGunBase;
-import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIISubmachinegun;
-import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIWeaponUpgrade.WeaponUpgrades;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
+import pl.pabilo8.immersiveintelligence.common.weaponsystem.IIWeaponBase;
+import pl.pabilo8.immersiveintelligence.common.weaponsystem.IIWeaponUpgrade.WeaponUpgrades;
+import pl.pabilo8.immersiveintelligence.common.weaponsystem.weapons.IIWeaponSubmachineGun;
 
 /**
  * @author Pabilo8
  * @updated 23.12.2023
  * @since 13-10-2019
  */
-public class SubmachinegunRenderer extends IIUpgradableItemRendererAMT<ItemIISubmachinegun> implements ISpecificHandRenderer
+public class SubmachinegunRenderer extends IIUpgradableItemRendererAMT<IIWeaponSubmachineGun> implements ISpecificHandRenderer
 {
 	//Animations
 	IIAnimationCachedMap fire, load, unload, handAngle, offHandAngle, foldingStock;
@@ -121,11 +121,11 @@ public class SubmachinegunRenderer extends IIUpgradableItemRendererAMT<ItemIISub
 		showUpgrades(stack, nbt);
 
 		//magazine stack
-		ItemStack magazine = nbt.getItemStack(ItemIISubmachinegun.MAGAZINE);
+		ItemStack magazine = nbt.getItemStack(IIWeaponSubmachineGun.MAGAZINE);
 
-		int firing = nbt.getInt(ItemIISubmachinegun.FIRE_DELAY);
+		int firing = nbt.getInt(IIWeaponSubmachineGun.FIRE_DELAY);
 		int firingDelay = item.getFireDelay(stack, nbt);
-		int reloading = nbt.getInt(ItemIISubmachinegun.RELOADING);
+		int reloading = nbt.getInt(IIWeaponSubmachineGun.RELOADING);
 		fire.apply((1f-(Math.max(0, firing-partialTicks)/firingDelay)));
 
 		//Whether hand should be rendered
@@ -138,7 +138,7 @@ public class SubmachinegunRenderer extends IIUpgradableItemRendererAMT<ItemIISub
 
 		if(handRender)
 		{
-			int aiming = nbt.getInt(ItemIISubmachinegun.AIMING);
+			int aiming = nbt.getInt(IIWeaponSubmachineGun.AIMING);
 			EasyNBT upgradeNBT = EasyNBT.wrapNBT(item.getUpgrades(stack));
 			float preciseAim = IIAnimationUtils.getAnimationProgress(aiming, item.getAimingTime(stack, upgradeNBT),
 					true, !Minecraft.getMinecraft().player.isSneaking(),
@@ -148,7 +148,7 @@ public class SubmachinegunRenderer extends IIUpgradableItemRendererAMT<ItemIISub
 			if(preciseAim > 0)
 			{
 				//gun "push" towards player
-				float recoil = Math.min((nbt.getFloat(ItemIISubmachinegun.RECOIL_V)+nbt.getFloat(ItemIISubmachinegun.RECOIL_H))/(AssaultRifle.maxRecoilHorizontal+AssaultRifle.maxRecoilVertical), 1f);
+				float recoil = Math.min((nbt.getFloat(IIWeaponSubmachineGun.RECOIL_V)+nbt.getFloat(IIWeaponSubmachineGun.RECOIL_H))/(AssaultRifle.maxRecoilHorizontal+AssaultRifle.maxRecoilVertical), 1f);
 
 				GlStateManager.translate(-preciseAim*(1-0.125-0.0625/3), 0.15*preciseAim, 0);
 				GlStateManager.rotate(preciseAim*-7.75f, 0, 1, 0);
@@ -276,12 +276,12 @@ public class SubmachinegunRenderer extends IIUpgradableItemRendererAMT<ItemIISub
 	@Override
 	public boolean doHandRender(ItemStack stack, EnumHand hand, ItemStack otherHand, float swingProgress, float partialTicks)
 	{
-		return hand==EnumHand.OFF_HAND&&otherHand.getItem() instanceof ItemIIGunBase;
+		return hand==EnumHand.OFF_HAND&&otherHand.getItem() instanceof IIWeaponBase;
 	}
 
 	@Override
 	public boolean renderCrosshair(ItemStack stack, EnumHand hand)
 	{
-		return ItemNBTHelper.getInt(stack, ItemIISubmachinegun.AIMING) > Submachinegun.aimTime*0.85;
+		return ItemNBTHelper.getInt(stack, IIWeaponSubmachineGun.AIMING) > Submachinegun.aimTime*0.85;
 	}
 }

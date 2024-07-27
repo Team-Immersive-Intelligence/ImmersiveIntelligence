@@ -8,7 +8,7 @@ import pl.pabilo8.immersiveintelligence.api.ammo.utils.IIAmmoUtils;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
-import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIISubmachinegun;
+import pl.pabilo8.immersiveintelligence.common.weaponsystem.weapons.IIWeaponSubmachineGun;
 
 /**
  * @author Pabilo8
@@ -44,7 +44,7 @@ public class AIHansSubmachinegun extends AIHansHandWeapon
 	@Override
 	protected boolean isValidWeapon()
 	{
-		return getWeapon().getItem() instanceof ItemIISubmachinegun;
+		return getWeapon().getItem() instanceof IIWeaponSubmachineGun;
 	}
 
 	@Override
@@ -52,7 +52,7 @@ public class AIHansSubmachinegun extends AIHansHandWeapon
 	{
 		assert attackTarget!=null;
 		final ItemStack smg = getWeapon();
-		ItemStack magazine = ItemNBTHelper.getItemStack(smg, ItemIISubmachinegun.SHOULD_RELOAD);
+		ItemStack magazine = ItemNBTHelper.getItemStack(smg, IIWeaponSubmachineGun.SHOULD_RELOAD);
 		boolean isAmmoLoaded = IIContent.itemSubmachinegun.isAmmo(magazine, smg);
 
 		//use weapon
@@ -61,12 +61,12 @@ public class AIHansSubmachinegun extends AIHansHandWeapon
 		//reload if magazine empty
 		if(!isAmmoLoaded)
 		{
-			if(!ItemNBTHelper.getBoolean(smg, ItemIISubmachinegun.SHOULD_RELOAD))
+			if(!ItemNBTHelper.getBoolean(smg, IIWeaponSubmachineGun.SHOULD_RELOAD))
 			{
 				final ItemStack ammo = IIContent.itemSubmachinegun.findAmmo(hans, smg);
 				hans.hasAmmo = !ammo.isEmpty();
 				if(hans.hasAmmo)
-					ItemNBTHelper.setBoolean(smg, ItemIISubmachinegun.SHOULD_RELOAD, true);
+					ItemNBTHelper.setBoolean(smg, IIWeaponSubmachineGun.SHOULD_RELOAD, true);
 				hans.setSneaking(false);
 			}
 		}
@@ -74,7 +74,7 @@ public class AIHansSubmachinegun extends AIHansHandWeapon
 		//hans can not shoot while running away
 		if(motionState==MotionState.FALLBACK)
 		{
-			if(!ItemNBTHelper.getBoolean(smg, ItemIISubmachinegun.SHOULD_RELOAD))
+			if(!ItemNBTHelper.getBoolean(smg, IIWeaponSubmachineGun.SHOULD_RELOAD))
 				hans.resetActiveHand();
 			hans.setSneaking(false);
 			return;

@@ -15,7 +15,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.Railgun;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
-import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIRailgunOverride;
+import pl.pabilo8.immersiveintelligence.common.weaponsystem.weapons.IIWeaponRailgunOverride;
 
 /**
  * @author Pabilo8
@@ -27,7 +27,7 @@ public class ImmersiveEngineeringHelper extends IICompatModule
 	public void preInit()
 	{
 		if(Railgun.enableRailgunOverride)
-			IEContent.itemRailgun = new ItemIIRailgunOverride();
+			IEContent.itemRailgun = new IIWeaponRailgunOverride();
 
 		ReflectionHelper.setPrivateValue(ToolUpgrades.class, ToolUpgrades.REVOLVER_BAYONET, ImmutableSet.of("REVOLVER", "SUBMACHINEGUN", "RIFLE"), "toolset");
 

@@ -24,18 +24,18 @@ import pl.pabilo8.immersiveintelligence.client.util.amt.*;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMTBullet.BulletState;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.AssaultRifle;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIAssaultRifle;
-import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIGunBase;
-import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIWeaponUpgrade.WeaponUpgrades;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
+import pl.pabilo8.immersiveintelligence.common.weaponsystem.IIWeaponBase;
+import pl.pabilo8.immersiveintelligence.common.weaponsystem.IIWeaponUpgrade.WeaponUpgrades;
+import pl.pabilo8.immersiveintelligence.common.weaponsystem.weapons.IIWeaponAssaultRifle;
 
 /**
  * @author Pabilo8
  * @since 18.09.2022
  */
-public class AssaultRifleRenderer extends IIUpgradableItemRendererAMT<ItemIIAssaultRifle> implements ISpecificHandRenderer
+public class AssaultRifleRenderer extends IIUpgradableItemRendererAMT<IIWeaponAssaultRifle> implements ISpecificHandRenderer
 {
 	IIAnimationCachedMap load, unload, modeSwitch, fire, handAngle, offHandAngle;
 	IIAnimationCachedMap loadGrenade, fireGrenade, stabilizer;
@@ -122,17 +122,17 @@ public class AssaultRifleRenderer extends IIUpgradableItemRendererAMT<ItemIIAssa
 		showUpgrades(stack, nbt);
 
 		//magazine stack
-		ItemStack magazine = nbt.getItemStack(ItemIIAssaultRifle.MAGAZINE);
-		ItemStack grenade = nbt.getItemStack(ItemIIAssaultRifle.LOADED_GRENADE);
+		ItemStack magazine = nbt.getItemStack(IIWeaponAssaultRifle.MAGAZINE);
+		ItemStack grenade = nbt.getItemStack(IIWeaponAssaultRifle.LOADED_GRENADE);
 		IIAnimationUtils.setModelVisibility(this.magazine.get(), !magazine.isEmpty());
 
-		int firing = nbt.getInt(ItemIIAssaultRifle.FIRE_DELAY);
+		int firing = nbt.getInt(IIWeaponAssaultRifle.FIRE_DELAY);
 		int firingDelay = item.getFireDelay(stack, nbt);
-		int reloading = nbt.getInt(ItemIIAssaultRifle.RELOADING);
+		int reloading = nbt.getInt(IIWeaponAssaultRifle.RELOADING);
 
 		//switch between auto/manual/railgun fire modes
-		int lastMode = nbt.getInt(ItemIIAssaultRifle.LAST_FIRE_MODE), fireMode = nbt.getInt(ItemIIAssaultRifle.FIRE_MODE);
-		int modeTimer = nbt.getInt(ItemIIAssaultRifle.FIRE_MODE_TIMER);
+		int lastMode = nbt.getInt(IIWeaponAssaultRifle.LAST_FIRE_MODE), fireMode = nbt.getInt(IIWeaponAssaultRifle.FIRE_MODE);
+		int modeTimer = nbt.getInt(IIWeaponAssaultRifle.FIRE_MODE_TIMER);
 
 		//Whether hand should be rendered
 		boolean handRender = is1stPerson(transform);
@@ -141,7 +141,7 @@ public class AssaultRifleRenderer extends IIUpgradableItemRendererAMT<ItemIIAssa
 		IIAnimationUtils.setModelVisibility(hand.get(), handRender);
 		if(handRender)
 		{
-			int aiming = nbt.getInt(ItemIIAssaultRifle.AIMING);
+			int aiming = nbt.getInt(IIWeaponAssaultRifle.AIMING);
 			boolean scoped = item.isScoped(stack);
 			float preciseAim = IIAnimationUtils.getAnimationProgress(aiming, item.getAimingTime(stack, nbt),
 					true, !Minecraft.getMinecraft().player.isSneaking(),
@@ -151,7 +151,7 @@ public class AssaultRifleRenderer extends IIUpgradableItemRendererAMT<ItemIIAssa
 			if(preciseAim > 0)
 			{
 				//gun "push" towards player
-				float recoil = Math.min((nbt.getFloat(ItemIIAssaultRifle.RECOIL_V)+nbt.getFloat(ItemIIAssaultRifle.RECOIL_H))/(AssaultRifle.maxRecoilHorizontal+AssaultRifle.maxRecoilVertical), 1f);
+				float recoil = Math.min((nbt.getFloat(IIWeaponAssaultRifle.RECOIL_V)+nbt.getFloat(IIWeaponAssaultRifle.RECOIL_H))/(AssaultRifle.maxRecoilHorizontal+AssaultRifle.maxRecoilVertical), 1f);
 
 				GlStateManager.translate(-preciseAim*1.03125, 0.225*preciseAim, 0);
 				GlStateManager.rotate(preciseAim*-8f, 0, 1, 0);
@@ -233,7 +233,7 @@ public class AssaultRifleRenderer extends IIUpgradableItemRendererAMT<ItemIIAssa
 		this.modeSwitch.apply(fireMode*0.5f); //0 or 1
 		if(modeTimer > 0)
 		{
-			float modeProgress = 1f-MathHelper.clamp((nbt.getInt(ItemIIAssaultRifle.FIRE_MODE_TIMER)-partialTicks)/6f, 0f, 1f);
+			float modeProgress = 1f-MathHelper.clamp((nbt.getInt(IIWeaponAssaultRifle.FIRE_MODE_TIMER)-partialTicks)/6f, 0f, 1f);
 			this.modeSwitch.apply(
 					((float)MathHelper.clampedLerp(lastMode, fireMode, modeProgress))*0.5f
 			);
@@ -347,7 +347,7 @@ public class AssaultRifleRenderer extends IIUpgradableItemRendererAMT<ItemIIAssa
 	@Override
 	public boolean doHandRender(ItemStack stack, EnumHand hand, ItemStack otherHand, float swingProgress, float partialTicks)
 	{
-		return hand==EnumHand.OFF_HAND&&otherHand.getItem() instanceof ItemIIGunBase;
+		return hand==EnumHand.OFF_HAND&&otherHand.getItem() instanceof IIWeaponBase;
 	}
 
 	@Override
@@ -356,7 +356,7 @@ public class AssaultRifleRenderer extends IIUpgradableItemRendererAMT<ItemIIAssa
 		if(item.isScoped(stack))
 			return false;
 
-		return ItemNBTHelper.getInt(stack, ItemIIAssaultRifle.AIMING) > AssaultRifle.aimTime*0.85;
+		return ItemNBTHelper.getInt(stack, IIWeaponAssaultRifle.AIMING) > AssaultRifle.aimTime*0.85;
 	}
 
 }
