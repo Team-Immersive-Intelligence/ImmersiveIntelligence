@@ -224,7 +224,7 @@ public class IIAmmoUtils
 
 	public static float getDirectFireAngle(double initialVelocity, double mass, Vec3d toTarget)
 	{
-		/*float force = initialVelocity;
+		double force = initialVelocity;
 		double dist = toTarget.distanceTo(new Vec3d(0, toTarget.y, 0));
 		double gravityMotionY = 0, motionY = 0, baseMotionY = toTarget.normalize().y, baseMotionYC;
 
@@ -237,16 +237,16 @@ public class IIAmmoUtils
 			dist -= force;
 		}
 
-		toTarget = toTarget.addVector(0, motionY-baseMotionY, 0).normalize();*/
+		toTarget = toTarget.addVector(0, motionY-baseMotionY, 0).normalize();
 
-		return (float)Math.toDegrees(calculateFireAngle(initialVelocity,
+		/*return (float)Math.toDegrees(calculateFireAngle(initialVelocity,
 				mass*EntityAmmoProjectile.GRAVITY,
 				toTarget.distanceTo(new Vec3d(0, toTarget.y, 0)),
 				toTarget.y
-		));
+		));*/
 
 
-//		return (float)Math.toDegrees((Math.atan2(toTarget.y, toTarget.distanceTo(new Vec3d(0, toTarget.y, 0)))));
+		return (float)Math.toDegrees((Math.atan2(toTarget.y, toTarget.distanceTo(new Vec3d(0, toTarget.y, 0)))));
 	}
 
 	public static float calculateFireAngle(double initialVelocity, double gravity, double distance, double heightDifference)
@@ -295,38 +295,12 @@ public class IIAmmoUtils
 	//TODO: 15.02.2024 implement on emplacements
 	public static float[] getInterceptionAngles(Vec3d shooterPos, Vec3d shooterVel, Vec3d targetPos, Vec3d targetVel, double projectileSpeed, double mass)
 	{
-		//Calculate relative position and velocity
-		Vec3d relPos = targetPos.subtract(shooterPos);
-		Vec3d relVel = targetVel.subtract(shooterVel);
+		Vec3d vv = shooterPos.subtract(shooterVel).subtract(targetPos).add(targetVel).normalize();
+		float yy = (float)((Math.atan2(vv.x, vv.z)*180D)/3.1415927410125732D);
+		float pp = (float)Math.toDegrees((Math.atan2(vv.y, vv.distanceTo(new Vec3d(0, vv.y, 0)))))
+				+getDirectFireAngle(projectileSpeed, mass, shooterPos.subtract(targetPos));
 
-		//Calculate the time it would take for a projectile to reach the target
-		double a = relVel.lengthSquared()-projectileSpeed*projectileSpeed;
-		double b = 2*relPos.dotProduct(relVel);
-		double c = relPos.lengthSquared();
-		double discriminant = b*b-4*a*c;
-
-		//No real number roots for the equation
-		//TODO: 15.02.2024 return direct aim values without interception
-		if(discriminant < 0)
-			return new float[]{0, 0};
-
-		double t1 = (-b+Math.sqrt(discriminant))/(2*a);
-		double t2 = (-b-Math.sqrt(discriminant))/(2*a);
-		double t = Math.min(t1, t2);
-
-		//Predict the future position of the target
-		Vec3d futurePos = targetPos.add(targetVel.scale(t));
-
-		//Calculate the direction vector from the shooter to the predicted position of the target
-		Vec3d dir = futurePos.subtract(shooterPos).normalize();
-
-		//Convert this direction vector into pitch and yaw angles
-		float yaw = (float)((Math.atan2(dir.z, dir.x)*180D)/Math.PI);
-
-		//Calculate the correction for the pitch angle
-		float pitch = getDirectFireAngle(projectileSpeed, mass, shooterPos.subtract(futurePos));
-
-		return new float[]{yaw, pitch};
+		return new float[]{yy, pp};
 	}
 
 	//--- Item Tooltips ---//

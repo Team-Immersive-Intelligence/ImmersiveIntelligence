@@ -164,6 +164,7 @@ public class EmplacementWeaponHeavyRailgun extends EmplacementWeapon<EntityAmmoP
 				mass = (float)p.gravity;
 		}
 
+		vv = posTurret.subtract(posTarget).normalize();
 		return IIAmmoUtils.getInterceptionAngles(
 				posTurret, Vec3d.ZERO,
 				posTarget, motion,
