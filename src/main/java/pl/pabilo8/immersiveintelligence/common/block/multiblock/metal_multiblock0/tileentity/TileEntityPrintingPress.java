@@ -39,6 +39,7 @@ import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEn
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionMulti;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayDeque;
 import java.util.HashMap;
@@ -126,7 +127,7 @@ public class TileEntityPrintingPress extends TileEntityMultiblockProductionMulti
 		super.onUpdate();
 
 		if(tactileHandler==null)
-			tactileHandler = new TactileHandler(MultiblockPrintingPress.INSTANCE, this);
+			tactileHandler = new TactileHandler(multiblock, this);
 		tactileHandler.defaultize();
 
 		if(IIUtils.handleBucketTankInteraction(tank, inventory, SLOT_BUCKET_IN, SLOT_BUCKET_OUT, false,
@@ -171,7 +172,7 @@ public class TileEntityPrintingPress extends TileEntityMultiblockProductionMulti
 				printQueue.stream()
 						.map(tuple -> EasyNBT.newNBT()
 								.withInt("amount", tuple.amount)
-								.withTag("order", tuple.order.writeToNBT(new NBTTagCompound()))
+								.withTag("order", tuple.order.writeToNBT())
 						)
 						.map(EasyNBT::unwrap)
 						.collect(new NBTTagCollector())
@@ -411,18 +412,21 @@ public class TileEntityPrintingPress extends TileEntityMultiblockProductionMulti
 	}
 
 
+	@Nonnull
 	@Override
 	public World getTactileWorld()
 	{
 		return world;
 	}
 
+	@Nonnull
 	@Override
 	public BlockPos getTactilePos()
 	{
 		return this.getPos();
 	}
 
+	@Nonnull
 	@Override
 	public EnumFacing getTactileFacing()
 	{
@@ -510,14 +514,15 @@ public class TileEntityPrintingPress extends TileEntityMultiblockProductionMulti
 		}
 
 		@Override
-		public NBTTagCompound writeToNBT(NBTTagCompound nbt)
+		public NBTTagCompound writeToNBT()
 		{
-			nbt.setTag("result", result.serializeNBT());
-			nbt.setInteger("black", blackCost);
-			nbt.setInteger("cyan", cyanCost);
-			nbt.setInteger("magenta", magentaCost);
-			nbt.setInteger("yellow", yellowCost);
-			return nbt;
+			return EasyNBT.newNBT()
+					.withItemStack("result", result)
+					.withInt("black", blackCost)
+					.withInt("cyan", cyanCost)
+					.withInt("magenta", magentaCost)
+					.withInt("yellow", yellowCost)
+					.unwrap();
 		}
 	}
 }

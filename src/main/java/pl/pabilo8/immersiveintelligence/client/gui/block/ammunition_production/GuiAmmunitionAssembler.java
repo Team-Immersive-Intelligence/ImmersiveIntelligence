@@ -11,9 +11,10 @@ import net.minecraft.client.util.ITooltipFlag.TooltipFlags;
 import net.minecraft.entity.player.EntityPlayer;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseType;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityAmmunitionWorkshop;
-import pl.pabilo8.immersiveintelligence.common.gui.ContainerAmmunitionWorkshop;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityAmmunitionAssembler;
+import pl.pabilo8.immersiveintelligence.common.gui.ContainerAmmunitionAssembler;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
@@ -26,14 +27,17 @@ import java.util.HashMap;
  * @author Pabilo8
  * @since 10-07-2019
  */
-public class GuiAmmunitionWorkshop extends GuiAmmunitionBase<TileEntityAmmunitionWorkshop>
+public class GuiAmmunitionAssembler extends GuiAmmunitionBase<TileEntityAmmunitionAssembler>
 {
 	private GuiTextField valueEdit;
 	HashMap<GuiButtonState, FuseType> fuseButtons = new HashMap<>();
 
-	public GuiAmmunitionWorkshop(EntityPlayer player, TileEntityAmmunitionWorkshop tile)
+	public GuiAmmunitionAssembler(EntityPlayer player, TileEntityAmmunitionAssembler tile)
 	{
-		super(player, tile, ContainerAmmunitionWorkshop::new);
+		super(player, tile, ContainerAmmunitionAssembler::new);
+		IIPacketHandler.sendToServer(
+				new MessageBooleanAnimatedPartsSync(true, blusunrize.immersiveengineering.common.util.Utils.RAND.nextInt(2),
+						tile.getPos()));
 	}
 
 	@Override
@@ -44,7 +48,7 @@ public class GuiAmmunitionWorkshop extends GuiAmmunitionBase<TileEntityAmmunitio
 		buttonList.clear();
 		fuseButtons.clear();
 
-		addLabel(guiLeft+1, guiTop+8, 118, 0, IIReference.COLOR_H1, I18n.format("tile.immersiveintelligence.metal_multiblock1.ammunition_workshop.name")).setCentered();
+		addLabel(guiLeft+1, guiTop+8, 118, 0, IIReference.COLOR_H1, I18n.format("tile.immersiveintelligence.metal_multiblock1.ammunition_assembler.name")).setCentered();
 
 		int i = 0;
 		for(FuseType fuse : FuseType.values())
@@ -116,11 +120,12 @@ public class GuiAmmunitionWorkshop extends GuiAmmunitionBase<TileEntityAmmunitio
 
 		drawTexturedModalRect(guiLeft+6+22, guiTop+9+16+6, 185, 176, 61, 34); //progress back
 
-		if(tile.processTimeMax!=0)
-			drawTexturedModalRect(guiLeft+6+22, guiTop+9+16+6, 62, 176, (int)(61*(tile.processTime/(float)tile.processTimeMax)), 34); //progress top
+		if(tile.currentProcess!=null)
+			drawTexturedModalRect(guiLeft+6+22, guiTop+9+16+6, 62, 176,
+					(int)(61*tile.getProductionProgress(tile.currentProcess, f)), 34); //progress top
 
 		RenderHelper.enableGUIStandardItemLighting();
-		itemRender.renderItemIntoGUI(tile.effect, guiLeft+6+64+21+2, guiTop+29+6+4);
+		itemRender.renderItemIntoGUI(tile.getProductionResult(), guiLeft+6+64+21+2, guiTop+29+6+4);
 		RenderHelper.disableStandardItemLighting();
 
 		if(valueEdit!=null)
@@ -143,10 +148,10 @@ public class GuiAmmunitionWorkshop extends GuiAmmunitionBase<TileEntityAmmunitio
 		for(int i = 0; i < FuseType.values().length; i++)
 			drawTexturedModalRect(guiLeft+122+2+(i%3)*21, guiTop+5+5+4+2+(int)Math.floor(i/20f), 221+(i%2)*16, 86+(int)(Math.floor(i/2f)*16), 16, 16);
 
-		if(!tile.effect.isEmpty())
+		if(tile.currentProcess!=null)
 		{
 			if(isPointInRegion(6+64+21+2, 29+6+4, 16, 16, mx, my))
-				tooltip.addAll(tile.effect.getTooltip(ClientUtils.mc().player, mc.gameSettings.advancedItemTooltips?TooltipFlags.ADVANCED: TooltipFlags.NORMAL));
+				tooltip.addAll(tile.getProductionResult().getTooltip(ClientUtils.mc().player, mc.gameSettings.advancedItemTooltips?TooltipFlags.ADVANCED: TooltipFlags.NORMAL));
 		}
 		fuseButtons.forEach((button, enumFuseTypes) -> {
 			if(button.isMouseOver())

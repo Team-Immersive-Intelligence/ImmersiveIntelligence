@@ -42,8 +42,8 @@ public class DroneRenderer extends IIEntityRenderer<EntityDrone>
 		GlStateManager.rotate(((float)MathHelper.clamp(entity.motionY, -2f, 2f))*5f, 1, 0, 0);
 
 
-		animationFloat.apply(IIAnimationUtils.getDebugProgress(entity.getWorld(), 8, partialTicks));
-		animationEngine.apply(IIAnimationUtils.getDebugProgress(entity.getWorld(), 4, partialTicks));
+		animationFloat.apply(IIAnimationUtils.getDebugProgress(8, partialTicks));
+		animationEngine.apply(IIAnimationUtils.getDebugProgress(4, partialTicks));
 
 		animationSetup.apply(IIAnimationUtils.getAnimationProgress(entity.ticksExisted, 40, false, partialTicks));
 		if(entity.ticksExisted > 40)

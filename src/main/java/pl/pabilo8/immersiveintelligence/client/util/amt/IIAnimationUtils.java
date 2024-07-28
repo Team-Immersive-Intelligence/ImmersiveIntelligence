@@ -19,7 +19,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Tuple;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
 import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.client.model.obj.OBJModel;
 import net.minecraftforge.client.model.obj.OBJModel.Group;
@@ -54,7 +53,8 @@ public class IIAnimationUtils
 
 	//--- Time Calculation ---//
 
-	public static float getDebugProgress(World world, float max, float partialTicks)
+	@SideOnly(Side.CLIENT)
+	public static float getDebugProgress(float max, float partialTicks)
 	{
 		return (ClientUtils.mc().world.getTotalWorldTime()%max+partialTicks)/max;
 	}

@@ -1,0 +1,64 @@
+{
+  "bounds": {
+    "full": [
+      0, 0, 0,
+      16, 16, 16
+    ],
+    "conveyor": [
+      0, 0, 0,
+      16, 2, 16
+    ],
+    "energy_box_top": [
+      0, 0, 0,
+      16, 14, 16
+    ],
+    "energy_box_dot": [
+      3, 14, 3,
+      13, 16, 13
+    ],
+    "inserter_bottom": [
+      3, 0, 3,
+      13, 16, 13
+    ],
+    "inserter_top": [
+      3, 0, 3,
+      13, 8, 13
+    ],
+    "barrier": [
+      0, 0, 14,
+      16, 10, 16
+    ],
+    "misc_stamp": [
+      2, 0, 0,
+      14, 6, 12
+    ],
+    "misc_mug": [
+      5, 0, -3,
+      11, 8, 3
+    ],
+    "misc_blueprints": [
+      6, 0, 0,
+      13, 7, 12
+    ],
+    "boxes1": [
+      0, 0, 0,
+      16, 10, 12
+    ],
+    "boxes2": [
+      2, 0, 2,
+      14, 16, 14
+    ]
+  },
+  "positions": {
+    "34,31,28,25,22,23,20,21,18,24": "conveyor",
+    "50": ["energy_box_top", "energy_box_dot"],
+    "26,29": "inserter_bottom",
+    "44,47": "inserter_top",
+    "27": ["barrier", "misc_stamp", "misc_mug"],
+    "35": ["boxes1"],
+    "33": "boxes2",
+    "30": ["misc_blueprints", "misc_board"]
+  },
+  "poi": {
+  }
+}

@@ -11,6 +11,7 @@ import net.minecraftforge.oredict.OreDictionary;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.ISawblade;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IISoundAnimation;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionBase.IIIMultiblockRecipe;
 
 import java.util.ArrayList;
@@ -24,6 +25,7 @@ import java.util.List;
  */
 public class SawmillRecipe extends MultiblockRecipe implements IIIMultiblockRecipe
 {
+	public static ArrayList<SawmillRecipe> RECIPES = new ArrayList<>();
 	private static final int DEFAULT_COLOR = IIUtils.rgb(0.22392157f, 0.21372549019607842f, 0.15176470588235294f);
 
 	//The tier of the saw required, 1 for cutting wood (bronze), 2 iron, 3 steel, 4 tungsten
@@ -31,9 +33,7 @@ public class SawmillRecipe extends MultiblockRecipe implements IIIMultiblockReci
 	public final ItemStack itemOutput, itemSecondaryOutput;
 
 	public static HashMap<String, ISawblade> toolMap = new HashMap<>();
-	public static ArrayList<SawmillRecipe> recipeList = new ArrayList<>();
 	int totalProcessTime;
-
 	IISoundAnimation soundAnimation;
 
 	public int getTorque()
@@ -82,14 +82,14 @@ public class SawmillRecipe extends MultiblockRecipe implements IIIMultiblockReci
 	public static SawmillRecipe addRecipe(ItemStack itemOutput, IngredientStack itemInput, ItemStack itemSecondaryOutput, int torque, int time, int hardness, int dustColor)
 	{
 		SawmillRecipe r = new SawmillRecipe(itemOutput, itemInput, itemSecondaryOutput, torque, time, hardness, dustColor);
-		recipeList.add(r);
+		RECIPES.add(r);
 		return r;
 	}
 
 	public static List<SawmillRecipe> removeRecipesForOutput(ItemStack stack)
 	{
 		List<SawmillRecipe> list = new ArrayList<>();
-		Iterator<SawmillRecipe> it = recipeList.iterator();
+		Iterator<SawmillRecipe> it = RECIPES.iterator();
 		while(it.hasNext())
 		{
 			SawmillRecipe ir = it.next();
@@ -104,7 +104,7 @@ public class SawmillRecipe extends MultiblockRecipe implements IIIMultiblockReci
 
 	public static SawmillRecipe findRecipe(ItemStack item_input)
 	{
-		for(SawmillRecipe recipe : recipeList)
+		for(SawmillRecipe recipe : RECIPES)
 		{
 			if(recipe.itemInput.matchesItemStackIgnoringSize(item_input))
 			{
@@ -121,7 +121,7 @@ public class SawmillRecipe extends MultiblockRecipe implements IIIMultiblockReci
 
 	public static boolean isValidRecipeInput(ItemStack stack)
 	{
-		for(SawmillRecipe recipe : recipeList)
+		for(SawmillRecipe recipe : RECIPES)
 			if(recipe.itemInput.matchesItemStack(stack))
 				return true;
 		return false;
@@ -134,10 +134,17 @@ public class SawmillRecipe extends MultiblockRecipe implements IIIMultiblockReci
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
+	public NBTTagCompound writeToNBT(NBTTagCompound nbtTagCompound)
 	{
-		nbt.setTag("item_input", itemInput.writeToNBT(new NBTTagCompound()));
-		return nbt;
+		return writeToNBT();
+	}
+
+	@Override
+	public NBTTagCompound writeToNBT()
+	{
+		return EasyNBT.newNBT()
+				.withIngredientStack("item_input", itemInput)
+				.unwrap();
 	}
 
 	public static SawmillRecipe loadFromNBT(NBTTagCompound nbt)

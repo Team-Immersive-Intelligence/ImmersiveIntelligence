@@ -11,6 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.oredict.OreDictionary;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionBase.IIIMultiblockRecipe;
 
 import javax.annotation.Nullable;
@@ -104,17 +105,24 @@ public class FillerRecipe extends MultiblockRecipe implements IIIMultiblockRecip
 		return 0;
 	}
 
+	@Override
+	public NBTTagCompound writeToNBT(NBTTagCompound nbtTagCompound)
+	{
+		return writeToNBT();
+	}
+
 	public static FillerRecipe loadFromNBT(NBTTagCompound nbt)
 	{
 		return findRecipe(IngredientStack.readFromNBT(nbt.getCompoundTag("item_input")), new DustStack(nbt.getCompoundTag("dust")));
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
+	public NBTTagCompound writeToNBT()
 	{
-		nbt.setTag("item_input", itemInput.writeToNBT(new NBTTagCompound()));
-		nbt.setTag("dust", dust.serializeNBT());
-		return nbt;
+		return EasyNBT.newNBT()
+				.withIngredientStack("item_input", itemInput)
+				.withSerializable("dust", dust)
+				.unwrap();
 	}
 
 	@Override

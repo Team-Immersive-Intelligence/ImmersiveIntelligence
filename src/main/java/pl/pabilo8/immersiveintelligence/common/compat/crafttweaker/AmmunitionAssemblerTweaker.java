@@ -10,7 +10,7 @@ import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.crafting.AmmunitionWorkshopRecipe;
+import pl.pabilo8.immersiveintelligence.api.crafting.AmmunitionAssemblerRecipe;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
@@ -20,12 +20,12 @@ import java.util.List;
  * @author Pabilo8
  * @since 06.01.2022
  */
-@ZenClass("mods."+ImmersiveIntelligence.MODID+".AmmunitionWorkshop")
+@ZenClass("mods."+ImmersiveIntelligence.MODID+".AmmunitionAssembler")
 @ZenRegister
-public class AmmunitionWorkshopTweaker
+public class AmmunitionAssemblerTweaker
 {
 	@ZenMethod
-	public static void addRecipe(IIngredient coreInput, IIngredient casingInput, IAmmunitionWorkshopFunction function, int energy, int time)
+	public static void addRecipe(IIngredient coreInput, IIngredient casingInput, IAmmunitionAssemblerFunction function, int energy, int time)
 	{
 
 		IngredientStack iCoreInput = CraftTweakerHelper.toIEIngredientStack(coreInput);
@@ -34,11 +34,13 @@ public class AmmunitionWorkshopTweaker
 		Object oItemInput = CraftTweakerHelper.toObject(coreInput);
 		if(oItemInput==null)
 		{
-			CraftTweakerAPI.getLogger().logError("Could not add ammunition workshop recipe, input was null");
+			CraftTweakerAPI.getLogger().logError("Could not add ammunition assembler recipe, input was null");
 			return;
 		}
 
-		AmmunitionWorkshopRecipe r = new AmmunitionWorkshopRecipe((s1, s2) -> CraftTweakerMC.getItemStack(function.process(CraftTweakerMC.getIItemStack(s1), CraftTweakerMC.getIItemStack(s2))), iCoreInput, iCasingInput, energy, time);
+		AmmunitionAssemblerRecipe r = new AmmunitionAssemblerRecipe(
+				(s1, s2) -> CraftTweakerMC.getItemStack(function.process(CraftTweakerMC.getIItemStack(s1), CraftTweakerMC.getIItemStack(s2))),
+				iCoreInput, iCasingInput, energy, time, false);
 
 		CraftTweakerAPI.apply(new Add(r));
 	}
@@ -51,9 +53,9 @@ public class AmmunitionWorkshopTweaker
 
 	private static class Add implements IAction
 	{
-		private final AmmunitionWorkshopRecipe recipe;
+		private final AmmunitionAssemblerRecipe recipe;
 
-		public Add(AmmunitionWorkshopRecipe recipe)
+		public Add(AmmunitionAssemblerRecipe recipe)
 		{
 			this.recipe = recipe;
 		}
@@ -61,20 +63,20 @@ public class AmmunitionWorkshopTweaker
 		@Override
 		public void apply()
 		{
-			AmmunitionWorkshopRecipe.recipeList.add(recipe);
+			AmmunitionAssemblerRecipe.RECIPES.add(recipe);
 		}
 
 		@Override
 		public String describe()
 		{
-			return "Adding Ammunition Workshop Recipe for "+recipe.coreInput.getExampleStack().getDisplayName();
+			return "Adding Ammunition Assembler Recipe for "+recipe.coreInput.getExampleStack().getDisplayName();
 		}
 	}
 
 	private static class Remove implements IAction
 	{
 		private final ItemStack input;
-		List<AmmunitionWorkshopRecipe> removedRecipes;
+		List<AmmunitionAssemblerRecipe> removedRecipes;
 
 		public Remove(ItemStack input)
 		{
@@ -84,19 +86,19 @@ public class AmmunitionWorkshopTweaker
 		@Override
 		public void apply()
 		{
-			removedRecipes = AmmunitionWorkshopRecipe.removeRecipesForCore(input);
+			removedRecipes = AmmunitionAssemblerRecipe.removeRecipesForCore(input);
 		}
 
 		@Override
 		public String describe()
 		{
-			return "Removing Ammunition Workshop Recipe for "+input.getDisplayName();
+			return "Removing Ammunition Assembler Recipe for "+input.getDisplayName();
 		}
 	}
 
-	@ZenClass("mods."+ImmersiveIntelligence.MODID+".IAmmunitionWorkshopFunction")
+	@ZenClass("mods."+ImmersiveIntelligence.MODID+".IAmmunitionAssemblerFunction")
 	@ZenRegister
-	public interface IAmmunitionWorkshopFunction
+	public interface IAmmunitionAssemblerFunction
 	{
 		IItemStack process(IItemStack inputCore, IItemStack inputCasing);
 	}

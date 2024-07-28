@@ -231,6 +231,11 @@ public class AmmoRegistry
 		return (IAmmoModel<T, E>)REGISTERED_MODELS.get(ammo);
 	}
 
+	public static IAmmoModel<?, ?> getGenericModel(IAmmoType<?, ?> ammo)
+	{
+		return REGISTERED_MODELS.get(ammo);
+	}
+
 	//--- Registry Getters ---//
 
 	/**

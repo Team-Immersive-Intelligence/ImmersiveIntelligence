@@ -108,6 +108,9 @@ public class EmplacementWeaponMachinegun extends EmplacementWeapon<EntityAmmoPro
 	{
 		super.shoot(te);
 
+		if(vv==null)
+			return;
+
 		if(!te.getWorld().isRemote)
 		{
 			s2 = !magazine.isEmpty()?magazine.removeFirst(): ItemStack.EMPTY;

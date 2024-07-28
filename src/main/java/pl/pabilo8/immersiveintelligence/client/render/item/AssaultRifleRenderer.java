@@ -256,7 +256,7 @@ public class AssaultRifleRenderer extends IIUpgradableItemRendererAMT<ItemIIAssa
 					value = (int)MathHelper.clamp((1f-((firing-partialTicks)/(float)(firingDelay)))*99, 0, 99);
 			}
 			if(item.hasIIUpgrade(stack, WeaponUpgrade.GYROSCOPIC_STABILIZER))
-				stabilizer.apply(IIAnimationUtils.getDebugProgress(Minecraft.getMinecraft().world, 30, partialTicks));
+				stabilizer.apply(IIAnimationUtils.getDebugProgress(30, partialTicks));
 
 			nixie1.get().setText(String.valueOf(value/10));
 			nixie2.get().setText(String.valueOf(value%10));

@@ -12,6 +12,7 @@ import blusunrize.immersiveengineering.common.blocks.stone.BlockTypes_StoneDecor
 import blusunrize.immersiveengineering.common.blocks.wooden.BlockTypes_WoodenDevice0;
 import blusunrize.immersiveengineering.common.crafting.RecipeRGBColouration;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
+import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockShulkerBox;
 import net.minecraft.init.Blocks;
@@ -41,7 +42,6 @@ import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseType;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.api.crafting.*;
-import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Sawmill;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
@@ -105,7 +105,7 @@ public class IIRecipes
 		//--- Replace Recipes ---//
 		replaceRecipe(recipeRegistry, IIConfig.changeRevolverProduction, "material/gunpart_drum");
 		replaceRecipe(recipeRegistry, IIConfig.changeRevolverProduction, "material/gunpart_hammer");
-		replaceRecipe(recipeRegistry, IIConfig.changeRevolverProduction, "toolupgrades/railgun_scope");
+		replaceRecipe(recipeRegistry, IIConfig.changeRevolverProduction, "toolupgrades/railgun_scope", "materials/gunparts/precision_scope");
 		replaceRecipe(recipeRegistry, IIConfig.changeRevolverProduction, "tool/revolver");
 		replaceRecipe(recipeRegistry, IIConfig.changeRailgunProduction, "tool/railgun");
 		replaceRecipe(recipeRegistry, IIConfig.changeChemthrowerProduction, "tool/chemthrower");
@@ -174,11 +174,24 @@ public class IIRecipes
 	 *
 	 * @param recipeRegistry The recipe registry to remove from
 	 * @param replace        Whether to remove the recipe from IE or II
-	 * @param path           The path of the recipe to remove
+	 * @param path           The common path of the recipe
 	 */
 	private static void replaceRecipe(IForgeRegistryModifiable<IRecipe> recipeRegistry, boolean replace, String path)
 	{
-		recipeRegistry.remove(ResLoc.of(replace?IIReference.RES_IE: IIReference.RES_II, path));
+		replaceRecipe(recipeRegistry, replace, path, path);
+	}
+
+	/**
+	 * Removes a recipe from IE or II, allowing the opposite to add one replacing it
+	 *
+	 * @param recipeRegistry The recipe registry to remove from
+	 * @param replace        Whether to remove the recipe from IE or II
+	 * @param pathIE         The path of the IE recipe
+	 * @param pathII         The path of the II recipe
+	 */
+	private static void replaceRecipe(IForgeRegistryModifiable<IRecipe> recipeRegistry, boolean replace, String pathIE, String pathII)
+	{
+		recipeRegistry.remove(replace?IIReference.RES_IE.with(pathIE): IIReference.RES_II.with(pathII));
 	}
 
 	private static void addElectrolyzerRecipes()
@@ -437,12 +450,18 @@ public class IIRecipes
 		addMetalPressBullet(Casing.ARTILLERY_8BCAL,
 				new IngredientStack("plateBrass", 4),
 				PressMolds.HOWITZER, 2800);
+		addMetalPressBullet(Casing.MEDIUM_ARTILLERY_6BCAL,
+				new IngredientStack("plateBrass", 3),
+				PressMolds.HOWITZER, 2500);
 		addMetalPressBullet(Casing.MORTAR_6BCAL,
 				new IngredientStack("plateAluminum", 3),
 				PressMolds.MORTAR, 2500);
 		addMetalPressBullet(Casing.LIGHT_ARTILLERY_6BCAL,
 				new IngredientStack("plateBrass", 3),
 				PressMolds.LIGHT_HOWITZER, 2200);
+		addMetalPressBullet(Casing.LIGHT_GUN_4BCAL,
+				new IngredientStack("ingotBrass", 2),
+				PressMolds.AUTOCANNON, 1600);
 
 		addMetalPressBullet(Casing.AUTOCANNON_3BCAL,
 				new IngredientStack("ingotBrass", 2),
@@ -613,14 +632,14 @@ public class IIRecipes
 
 		CraftingManager.REGISTRY.forEach(iRecipe ->
 				{
-					if(blusunrize.immersiveengineering.common.util.Utils.compareToOreName(iRecipe.getRecipeOutput(), "plankWood"))
+					if(Utils.compareToOreName(iRecipe.getRecipeOutput(), "plankWood"))
 					{
 						ItemStack out = iRecipe.getRecipeOutput().copy();
 						out.setCount(Math.round(out.getCount()*1.5f));
 						List<ItemStack> stacks = new ArrayList<>();
 						for(Ingredient ingredient : iRecipe.getIngredients())
 							Arrays.stream(ingredient.getMatchingStacks())
-									.filter(stack -> blusunrize.immersiveengineering.common.util.Utils.compareToOreName(stack, "logWood"))
+									.filter(stack -> Utils.compareToOreName(stack, "logWood"))
 									.forEachOrdered(stacks::add);
 
 						if(!stacks.isEmpty())
@@ -1030,6 +1049,7 @@ public class IIRecipes
 
 		//Weapons - Advanced Tier
 
+		//TODO: 17.07.2024 change costs when reworking emplacements
 		IIContent.UPGRADE_EMPLACEMENT_WEAPON_AUTOCANNON
 				.addStack(new IngredientStack(new ItemStack(IEContent.itemMaterial, 4, 14)))
 				.addStack(new IngredientStack("blockSteel", 2))
@@ -1064,33 +1084,26 @@ public class IIRecipes
 		/*
 		IIContent.UPGRADE_EMPLACEMENT_SPOTLIGHT_TOWER
 				.addStack(new IngredientStack(new ItemStack(IEContent.blockMetalDevice0, 2, BlockTypes_MetalDevice0.CAPACITOR_MV.getMeta())))
-				.addStack(new IngredientStack(new ItemStack(IEContent.blockMetalDevice1, 4, BlockTypes_MetalDevice1.FLOODLIGHT.getMeta())))
-				.addStack(new IngredientStack(new ItemStack(IEContent.blockMetalDecoration1, 3, BlockTypes_MetalDecoration1.STEEL_SCAFFOLDING_0.getMeta())))
-				.addStack(new IngredientStack(new ItemStack(IEContent.itemMaterial, 4, 9)))
-				.addStack(new IngredientStack("circuitAdvanced",6))
 				.setRequiredProgress(80000);
 
 		IIContent.UPGRADE_EMPLACEMENT_WEAPON_MORTAR
 				.addStack(new IngredientStack((new ItemStack(IEContent.blockMetalDevice1, 2, BlockTypes_MetalDevice1.FLUID_PIPE.getMeta()))))
-				.addStack(new IngredientStack("blockSteel",2))
-				.addStack(new IngredientStack(new ItemStack(IEContent.itemMaterial, 3, 9)))
-				.addStack(new IngredientStack("circuitBasic",4))
-				.addStack(new IngredientStack(new ItemStack(IIContent.blockMetalDevice, 2, IIBlockTypes_MetalDevice.AMMUNITION_CRATE.getMeta())))
-				.addStack(new IngredientStack("circuitAdvanced",4))
 				.setRequiredProgress(160000);
 
 		IIContent.UPGRADE_EMPLACEMENT_WEAPON_LIGHT_HOWITZER
 				.addStack(new IngredientStack((new ItemStack(IEContent.blockMetalDevice1, 2, BlockTypes_MetalDevice1.FLUID_PIPE.getMeta()))))
-				.addStack(new IngredientStack("blockSteel",2))
-				.addStack(new IngredientStack(new ItemStack(IEContent.itemMaterial, 3, 9)))
-				.addStack(new IngredientStack("circuitBasic",4))
-				.addStack(new IngredientStack(new ItemStack(IIContent.blockMetalDevice, 1, IIBlockTypes_MetalDevice.AMMUNITION_CRATE.getMeta())))
-				.addStack(new IngredientStack("circuitAdvanced",4))
+				.setRequiredProgress(160000);
+
+		IIContent.UPGRADE_EMPLACEMENT_WEAPON_MLRS
+				.addStack(new IngredientStack((new ItemStack(IEContent.blockMetalDevice1, 2, BlockTypes_MetalDevice1.FLUID_PIPE.getMeta()))))
+				.setRequiredProgress(160000);
+
+		IIContent.UPGRADE_EMPLACEMENT_WEAPON_GUIDED_MISSILE
+				.addStack(new IngredientStack((new ItemStack(IEContent.blockMetalDevice1, 2, BlockTypes_MetalDevice1.FLUID_PIPE.getMeta()))))
 				.setRequiredProgress(160000);
 		 */
 
 		//Weapons - Processor Tier
-
 		IIContent.UPGRADE_EMPLACEMENT_WEAPON_CPDS
 				.addStack(new IngredientStack(new ItemStack(IEContent.itemMaterial, 8, 14)))
 				.addStack(new IngredientStack(new ItemStack(IEContent.itemMaterial, 2, 9)))
@@ -1173,7 +1186,8 @@ public class IIRecipes
 		FillerRecipe.addRecipe(IIContent.itemAmmoRevolver, 40, 400);
 
 		//Projectiles
-		for(ItemIIAmmoBase item : new ItemIIAmmoBase[]{IIContent.itemAmmoHeavyArtillery, IIContent.itemAmmoLightArtillery, IIContent.itemAmmoMortar,
+		for(ItemIIAmmoBase item : new ItemIIAmmoBase[]{IIContent.itemAmmoHeavyArtillery, IIContent.itemAmmoMediumArtillery, IIContent.itemAmmoLightArtillery,
+				IIContent.itemAmmoLightGun, IIContent.itemAmmoMortar,
 				IIContent.itemAmmoAutocannon,
 				IIContent.itemAmmoMachinegun, IIContent.itemAmmoAssaultRifle, IIContent.itemAmmoSubmachinegun})
 		{
@@ -1182,7 +1196,7 @@ public class IIRecipes
 			ItemStack casingStack = item.getCasingStack(1);
 			ItemNBTHelper.setBoolean(casingStack, "ii_FilledCasing", true);
 
-			AmmunitionWorkshopRecipe.addRecipe(
+			AmmunitionAssemblerRecipe.addRecipe(
 					(core, casing) -> {
 						ItemStack stack = item.getStack(AmmoParts.BULLET);
 						stack.deserializeNBT(core.serializeNBT());
@@ -1191,7 +1205,7 @@ public class IIRecipes
 					new IngredientStack(item.getAmmoCoreStack(IIContent.ammoCoreBrass, item.getAllowedCoreTypes()[0])),
 					new IngredientStack(casingStack).setUseNBT(true),
 					128*item.getCaliber(),
-					140+(25*Math.max(0, item.getCaliber()-1))
+					140+(25*Math.max(0, item.getCaliber()-1)), false
 			);
 		}
 
@@ -1201,7 +1215,7 @@ public class IIRecipes
 			assert item!=null;
 			IAmmoTypeItem bullet = (IAmmoTypeItem)item;
 
-			AmmunitionWorkshopRecipe.addRecipe(
+			AmmunitionAssemblerRecipe.addRecipe(
 					(core, casing) -> {
 						ItemStack stack = new ItemStack(item, 1, IIBlockTypes_Mine.MAIN.getMeta());
 						stack.deserializeNBT(core.serializeNBT());
@@ -1210,12 +1224,12 @@ public class IIRecipes
 					new IngredientStack(bullet.getAmmoCoreStack(IIContent.ammoCoreBrass, bullet.getAllowedCoreTypes()[0])),
 					new IngredientStack(bullet.getCasingStack(1)).setUseNBT(true),
 					256*bullet.getCaliber(),
-					480
+					480, false
 			);
 		}
 
 		//Grenades
-		AmmunitionWorkshopRecipe.addRecipe(
+		AmmunitionAssemblerRecipe.addRecipe(
 				(core, casing) -> {
 
 					ItemStack stack = IIContent.itemGrenade.getStack(AmmoParts.BULLET);
@@ -1223,18 +1237,21 @@ public class IIRecipes
 					return stack;
 				},
 				new IngredientStack(IIContent.itemGrenade.getAmmoCoreStack(IIContent.ammoCoreBrass, IIContent.itemGrenade.getAllowedCoreTypes()[0])),
-				new IngredientStack("stickTreatedWood"), 600, 480
+				new IngredientStack("stickTreatedWood"), 600, 480, false
 		);
 
-		AmmunitionWorkshopRecipe.addRecipe(
+		AmmunitionAssemblerRecipe.addRecipe(
 				(core, casing) -> {
 					ItemStack stack = IIContent.itemRailgunGrenade.getStack(AmmoParts.BULLET);
 					stack.deserializeNBT(core.serializeNBT());
 					return stack;
 				},
-				new IngredientStack(IIContent.itemGrenade.getAmmoCoreStack(IIContent.ammoCoreBrass, IIContent.itemGrenade.getAllowedCoreTypes()[0])),
-				new IngredientStack("stickSteel"), 1200, 540
+				new IngredientStack(IIContent.itemRailgunGrenade.getAmmoCoreStack(IIContent.ammoCoreBrass, IIContent.itemRailgunGrenade.getAllowedCoreTypes()[0])),
+				new IngredientStack("stickSteel"), 1200, 540, false
 		);
+
+		//Advanced Ammunition
+
 	}
 
 	public static void addRubberRecipes()
@@ -1329,7 +1346,7 @@ public class IIRecipes
 
 		PackerHandler.registerItem(
 				stack -> Arrays.stream(crates).anyMatch(s -> s.isItemEqual(stack)),
-				stack -> new ItemStackHandler(blusunrize.immersiveengineering.common.util.Utils.readInventory(ItemNBTHelper.getTag(stack).getTagList("inventory", 10), 27))
+				stack -> new ItemStackHandler(Utils.readInventory(ItemNBTHelper.getTag(stack).getTagList("inventory", 10), 27))
 				{
 					final ItemStack ss = stack;
 
@@ -1343,7 +1360,7 @@ public class IIRecipes
 					protected void onContentsChanged(int slot)
 					{
 						super.onContentsChanged(slot);
-						ItemNBTHelper.getTag(ss).setTag("inventory", blusunrize.immersiveengineering.common.util.Utils.writeInventory(this.stacks));
+						ItemNBTHelper.getTag(ss).setTag("inventory", Utils.writeInventory(this.stacks));
 					}
 				}
 		);
@@ -1368,7 +1385,7 @@ public class IIRecipes
 
 		PackerHandler.registerItem(
 				stack -> Arrays.stream(shulkerBoxes).anyMatch(s -> s.isItemEqual(stack)),
-				stack -> new ItemStackHandler(blusunrize.immersiveengineering.common.util.Utils.readInventory(ItemNBTHelper.getTag(stack).getCompoundTag("BlockEntityTag").getTagList("Items", 10), 27))
+				stack -> new ItemStackHandler(Utils.readInventory(ItemNBTHelper.getTag(stack).getCompoundTag("BlockEntityTag").getTagList("Items", 10), 27))
 				{
 					final ItemStack ss = stack;
 
@@ -1383,7 +1400,7 @@ public class IIRecipes
 					{
 						super.onContentsChanged(slot);
 						NBTTagCompound tag = ItemNBTHelper.getTagCompound(stack, "BlockEntityTag");
-						tag.setTag("Items", blusunrize.immersiveengineering.common.util.Utils.writeInventory(this.stacks));
+						tag.setTag("Items", Utils.writeInventory(this.stacks));
 						ItemNBTHelper.setTagCompound(ss, "BlockEntityTag", tag);
 					}
 				}

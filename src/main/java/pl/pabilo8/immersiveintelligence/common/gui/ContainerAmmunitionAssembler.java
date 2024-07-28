@@ -3,18 +3,17 @@ package pl.pabilo8.immersiveintelligence.common.gui;
 import blusunrize.immersiveengineering.common.gui.ContainerIEBase;
 import blusunrize.immersiveengineering.common.gui.IESlot;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityAmmunitionWorkshop;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityAmmunitionAssembler;
 
 /**
  * @author Pabilo8
  * @since 10-07-2019
  */
-public class ContainerAmmunitionWorkshop extends ContainerIEBase<TileEntityAmmunitionWorkshop>
+public class ContainerAmmunitionAssembler extends ContainerIEBase<TileEntityAmmunitionAssembler>
 {
-	public ContainerAmmunitionWorkshop(EntityPlayer player, TileEntityAmmunitionWorkshop tile)
+	public ContainerAmmunitionAssembler(EntityPlayer player, TileEntityAmmunitionAssembler tile)
 	{
 		super(player.inventory, tile);
 		//Input/Output Slots

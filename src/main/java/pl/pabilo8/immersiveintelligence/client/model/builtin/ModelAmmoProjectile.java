@@ -194,7 +194,7 @@ public class ModelAmmoProjectile<T extends IAmmoType<T, E>, E extends EntityAmmo
 		else
 		{
 			//rotation animation for rifled guns
-			float rotationProgress = IIAnimationUtils.getDebugProgress(entity.world, (float)(4*MathHelper.fastInvSqrt(EntityAmmoProjectile.SLOWMO)), partialTicks);
+			float rotationProgress = IIAnimationUtils.getDebugProgress((float)(4*MathHelper.fastInvSqrt(EntityAmmoProjectile.SLOWMO)), partialTicks);
 			GlStateManager.rotate(rotationProgress*360, 0, 1, 0);
 		}
 

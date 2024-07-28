@@ -958,7 +958,7 @@ public class IIConfigHandler
 				public static int craneGrabTime = 20;
 			}
 
-			public static class AmmunitionWorkshop
+			public static class AmmunitionAssembler
 			{
 				@Comment({"Energy capacity of the ammunition workshop (in IF)."})
 				public static int energyCapacity = 16000;
@@ -966,19 +966,25 @@ public class IIConfigHandler
 
 			public static class ProjectileWorkshop
 			{
-				@Comment({"Energy capacity of the ammunition workshop (in IF)."})
+				@Comment({"Energy capacity of the Projectile Workshop (in IF)."})
 				public static int energyCapacity = 16000;
 
-				@Comment({"Fluid capacity of a projectile workshop coolant (water) tank (in mB)."})
+				@Comment({"Energy usage of the Projectile Workshop during core production (in IF/t)"})
+				public static int productionEnergyUsage = 50;
+
+				@Comment({"Energy usage of the Projectile Workshop during core production (in IF/t)"})
+				public static int fillingEnergyUsage = 70;
+
+				@Comment({"Fluid capacity of a Projectile Workshop coolant (water) tank (in mB)."})
 				public static int coolantTankCapacity = 6000;
 
-				@Comment({"Fluid capacity of a projectile workshop fluid bullet component buffer tank (in mB)."})
+				@Comment({"Fluid capacity of a Projectile Workshop fluid bullet component buffer tank (in mB)."})
 				public static int componentTankCapacity = 1000;
 
-				@Comment({"Maximum amount of bullet component stored in a projectile workshop (16 is default amount per one item / 1000mB of a fluid)."})
+				@Comment({"Maximum amount of bullet component stored in a Projectile Workshop (16 is default amount per one item / 1000mB of a fluid)."})
 				public static int componentCapacity = 512;
 
-				@Comment({"How long does it take to produce a projectile from a plate (in ticks, multiplied by caliber)."})
+				@Comment({"How long does it take to produce a projectile (in ticks, multiplied by caliber)."})
 				public static int productionTime = 35;
 
 				@Comment({"How long does it take to fill a projectile with components (in ticks, multiplied by caliber)."})

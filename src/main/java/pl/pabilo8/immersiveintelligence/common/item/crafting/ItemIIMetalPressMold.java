@@ -31,6 +31,9 @@ public class ItemIIMetalPressMold extends ItemIISubItemsBase<PressMolds>
 		SUBMACHINEGUN,
 		NAVAL_MINE,
 		TRIPMINE,
-		TELLERMINE
+		TELLERMINE,
+		MEDIUM_HOWITZER,
+		LIGHT_GUN,
+		SHOTGUN
 	}
 }

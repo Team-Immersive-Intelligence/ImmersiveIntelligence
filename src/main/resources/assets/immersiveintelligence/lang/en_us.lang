@@ -63,13 +63,16 @@ item.immersiveintelligence.binoculars.infrared_binoculars.name=Infrared Binocula
 
 item.immersiveintelligence.assembly_scheme.name=Assembly Scheme
 
-item.immersiveintelligence.press_mold.howitzer.name=Metal Press Mold: Artillery Shell Casing
+item.immersiveintelligence.press_mold.howitzer.name=Metal Press Mold: Heavy Artillery Shell Casing
+item.immersiveintelligence.press_mold.medium_howitzer.name=Metal Press Mold: Medium Artillery Shell Casing
 item.immersiveintelligence.press_mold.light_howitzer.name=Metal Press Mold: Light Artillery Shell Casing
 item.immersiveintelligence.press_mold.mortar.name=Metal Press Mold: Mortar Shell Casing
+item.immersiveintelligence.press_mold.light_gun.name=Metal Press Mold: Light Gun Shell Casing
 item.immersiveintelligence.press_mold.autocannon.name=Metal Press Mold: Autocannon Shell Casing
-item.immersiveintelligence.press_mold.machinegun.name=Metal Press Mold: Machinegun Bullet Casing
-item.immersiveintelligence.press_mold.assault_rifle.name=Metal Press Mold: Assault Rifle Bullet Casing
-item.immersiveintelligence.press_mold.submachinegun.name=Metal Press Mold: Submachinegun Bullet Casing
+item.immersiveintelligence.press_mold.shotgun.name=Metal Press Mold: Shotgun Shell Casing
+item.immersiveintelligence.press_mold.machinegun.name=Metal Press Mold: Long Bullet Casing
+item.immersiveintelligence.press_mold.assault_rifle.name=Metal Press Mold: Intermediate Bullet Casing
+item.immersiveintelligence.press_mold.submachinegun.name=Metal Press Mold: Short Bullet Casing
 item.immersiveintelligence.press_mold.naval_mine.name=Metal Press Mold: Naval Mine Casing
 item.immersiveintelligence.press_mold.tripmine.name=Metal Press Mold: Tripmine Casing
 item.immersiveintelligence.press_mold.tellermine.name=Metal Press Mold: Landmine Casing
@@ -406,17 +409,17 @@ item.immersiveintelligence.ammo_casing.mortar_6bcal.name=Mortar Shell Casing
 item.immersiveintelligence.mortar_6bcal.core.name=Mortar Shell Core
 item.immersiveintelligence.mortar_6bcal.bullet.name=Mortar Shell
 
-item.immersiveintelligence.ammo_casing.mg_2bcal.name=Rifle Bullet Casing
-item.immersiveintelligence.mg_2bcal.core.name=Rifle Bullet Core
-item.immersiveintelligence.mg_2bcal.bullet.name=Rifle Bullet
+item.immersiveintelligence.ammo_casing.mg_2bcal.name=Long Bullet Casing
+item.immersiveintelligence.mg_2bcal.core.name=Long Bullet Core
+item.immersiveintelligence.mg_2bcal.bullet.name=Long Bullet
 
-item.immersiveintelligence.ammo_casing.stg_1bcal.name=Assault Rifle Bullet Casing
-item.immersiveintelligence.stg_1bcal.core.name=Assault Rifle Bullet Core
-item.immersiveintelligence.stg_1bcal.bullet.name=Assault Rifle Bullet
+item.immersiveintelligence.ammo_casing.stg_1bcal.name=Intermediate Bullet Casing
+item.immersiveintelligence.stg_1bcal.core.name=Intermediate Bullet Core
+item.immersiveintelligence.stg_1bcal.bullet.name=Intermediate Bullet
 
-item.immersiveintelligence.ammo_casing.smg_1bcal.name=Submachinegun Bullet Casing
-item.immersiveintelligence.smg_1bcal.core.name=Submachinegun Bullet Core
-item.immersiveintelligence.smg_1bcal.bullet.name=Submachinegun Bullet
+item.immersiveintelligence.ammo_casing.smg_1bcal.name=Short Bullet Casing
+item.immersiveintelligence.smg_1bcal.core.name=Short Bullet Core
+item.immersiveintelligence.smg_1bcal.bullet.name=Short Bullet
 
 item.immersiveintelligence.revolver_1bcal.core.name=Revolver Bullet Core
 item.immersiveintelligence.revolver_1bcal.bullet.name=Revolver Bullet
@@ -428,6 +431,8 @@ item.immersiveintelligence.autocannon_3bcal.bullet.name=Autocannon Shell
 item.immersiveintelligence.grenade_5bcal.core.name=Hand-Grenade Core
 item.immersiveintelligence.grenade_5bcal.bullet.name=Hand-Grenade
 
+item.immersiveengineering.bullet.empty_casing.name=Revolver Bullet Casing
+item.immersiveengineering.mold.bullet_casing.name=Metal Press Mold: Revolver Bullet Casing
 item.immersiveintelligence.railgun_grenade_4bcal.core.name=Railgun Grenade Core
 item.immersiveintelligence.railgun_grenade_4bcal.bullet.name=Railgun Grenade
 
@@ -752,6 +757,8 @@ desc.immersiveintelligence.metal_multiblock1.packer.mode.at_least_packer=At leas
 desc.immersiveintelligence.metal_multiblock1.packer.side_input=Items to be put in a container
 desc.immersiveintelligence.metal_multiblock1.packer.side_output=Items taken from a container
 desc.immersiveintelligence.metal_multiblock1.packer.switch_direction=Switch Task Direction
+desc.immersiveintelligence.metal_multiblock1.packer.mode_single=Single-Time Packing
+desc.immersiveintelligence.metal_multiblock1.packer.mode_iteration=Repeated Packing
 
 desc.immersiveintelligence.metal_multiblock1.emplacement.target.mobs=Mobs
 desc.immersiveintelligence.metal_multiblock1.emplacement.target.animals=Animals
@@ -772,7 +779,8 @@ tile.immersiveintelligence.gate_multiblock.aluminium_fence_gate.name=Aluminium F
 tile.immersiveintelligence.gate_multiblock.aluminium_chain_fence_gate.name=Aluminium Chain Fence Gate
 
 tile.immersiveintelligence.metal_multiblock1.filler.name=Filler
-tile.immersiveintelligence.metal_multiblock1.ammunition_workshop.name=Ammunition Workshop
+tile.immersiveintelligence.metal_multiblock1.ammunition_assembler.name=Ammunition Assembler
+tile.immersiveintelligence.metal_multiblock1.heavy_ammunition_assembler.name=Heavy Ammunition Assembler
 tile.immersiveintelligence.metal_multiblock1.projectile_workshop.name=Projectile Workshop
 
 tile.immersiveintelligence.metal_multiblock1.chemical_painter.name=Chemical Painter
@@ -824,7 +832,8 @@ desc.immersiveengineering.info.multiblock.II:Radar=Radar
 desc.immersiveengineering.info.multiblock.II:Flagpole=Flagpole
 
 desc.immersiveengineering.info.multiblock.II:Filler=Filler
-desc.immersiveengineering.info.multiblock.II:AmmunitionWorkshop=Ammunition Workshop
+desc.immersiveengineering.info.multiblock.II:AmmunitionAssembler=Ammunition Assembler
+desc.immersiveengineering.info.multiblock.II:HeavyAmmunitionAssembler=Heavy Ammunition Assembler
 desc.immersiveengineering.info.multiblock.II:ProjectileWorkshop=Projectile Workshop
 desc.immersiveengineering.info.multiblock.II:ChemicalPainter=Chemical Painter
 
@@ -2038,10 +2047,10 @@ ie.manual.entry.bullet_production1=Let’s start with the casing. Most casings c
 ie.manual.entry.bullet_production2=The core can be produced in the <link;projectile_workshop;§o§nProjectile§o§nWorkshop§r;> using metal nuggets, remember to use the <link;bullet_cores;§o§nappropriate §o§nmetal §o§nfor §o§nthe §o§njob§r;>: uranium has a better penetration value, but smaller component effect than brass. Another modifier you can pick is the <link;core_types;§o§ncore §o§ntype§r;>, which determines how many components the core can store.<br>After your core is produced, you can fill it with components using another projectile workshop with a filler upgrade installed. This step is optional and can be repeated multiple times with the same or different components.
 ie.manual.entry.bullet_production3=The final stage is the bullet assembly in the <link;ammunition_workshop;§o§nAmmunition§o§nWorkshop§r;>. Here you can select the <link;bullet_fuses;§o§nfuse§r;>. Keep in mind not all fuse types are supported by certain ammunition like grenades and explosives.<br>There is also a next, optional stage - the Chemical Painter. Ammunition can be painted for easier identification and higher uniformity.
 
-ie.manual.entry.ammunition_workshop.name=Ammunition Workshop
+ie.manual.entry.ammunition_workshop.name=Ammunition Assembler
 ie.manual.entry.ammunition_workshop.subtext=Heart of the War Machine
-ie.manual.entry.ammunition_workshop0=Ammunition workshop performs the final part of the <link;bullet_production;§o§nammunition §o§nproduction§r;> - the assembly. To form it use a hammer on the steel scaffolding block between two conveyors.
-ie.manual.entry.ammunition_workshop1=Ammunition workshop assembles ammunition from a core produced in the <link;projectile_workshop;§o§nProjectile §o§nWorkshop§r;> and a casing. It also sets the fuse determining under what conditions its components will detonate. Fuses can be set through the interface or a data packet. To operate, the machine requires electricity.
+ie.manual.entry.ammunition_workshop0=Ammunition assembler performs the final part of the <link;bullet_production;§o§nammunition §o§nproduction§r;> - the assembly. To form it use a hammer on the steel scaffolding block between two conveyors.
+ie.manual.entry.ammunition_workshop1=Ammunition Assembler puts together ammunition from a core produced in the <link;projectile_workshop;§o§nProjectile §o§nWorkshop§r;> and a casing. It also sets the fuse determining under what conditions its components will detonate. Fuses can be set through the interface or a data packet. To operate, the machine requires electricity.
 
 #Reference to its purpose-changing upgrade
 ie.manual.entry.projectile_workshop.name=Projectile Workshop

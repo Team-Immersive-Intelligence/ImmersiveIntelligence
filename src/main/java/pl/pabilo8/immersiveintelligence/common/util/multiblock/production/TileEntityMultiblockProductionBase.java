@@ -179,6 +179,11 @@ public abstract class TileEntityMultiblockProductionBase<T extends TileEntityMul
 
 		int getMultipleProcessTicks();
 
-		NBTTagCompound writeToNBT(NBTTagCompound nbtTagCompound);
+		NBTTagCompound writeToNBT();
+
+		default NBTTagCompound writeToNBT(NBTTagCompound nbt)
+		{
+			return writeToNBT();
+		}
 	}
 }

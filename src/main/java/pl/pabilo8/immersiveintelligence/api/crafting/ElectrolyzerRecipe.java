@@ -4,6 +4,7 @@ import blusunrize.immersiveengineering.api.crafting.MultiblockRecipe;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionBase.IIIMultiblockRecipe;
 
 import javax.annotation.Nullable;
@@ -81,10 +82,15 @@ public class ElectrolyzerRecipe extends MultiblockRecipe implements IIIMultibloc
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
+	public NBTTagCompound writeToNBT(NBTTagCompound nbtTagCompound)
 	{
-		nbt.setTag("fluid_input", fluidInput.writeToNBT(new NBTTagCompound()));
-		return nbt;
+		return writeToNBT();
+	}
+
+	@Override
+	public NBTTagCompound writeToNBT()
+	{
+		return EasyNBT.newNBT().withFluidStack("fluid_input", fluidInput).unwrap();
 	}
 
 	public static ElectrolyzerRecipe loadFromNBT(NBTTagCompound nbt)

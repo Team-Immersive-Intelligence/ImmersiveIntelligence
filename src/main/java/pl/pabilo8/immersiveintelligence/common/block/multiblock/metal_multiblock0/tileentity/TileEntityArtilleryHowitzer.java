@@ -997,18 +997,21 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 		return tactileHandler;
 	}
 
+	@Nonnull
 	@Override
 	public World getTactileWorld()
 	{
 		return world;
 	}
 
+	@Nonnull
 	@Override
 	public BlockPos getTactilePos()
 	{
 		return this.getPos();
 	}
 
+	@Nonnull
 	@Override
 	public EnumFacing getTactileFacing()
 	{

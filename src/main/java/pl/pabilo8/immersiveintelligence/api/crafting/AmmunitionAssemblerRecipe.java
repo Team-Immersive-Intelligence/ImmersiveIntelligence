@@ -8,11 +8,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.NonNullList;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityAmmunitionWorkshop;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityAmmunitionAssembler;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionBase.IIIMultiblockRecipe;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.function.BiFunction;
 
@@ -20,27 +22,31 @@ import java.util.function.BiFunction;
  * @author Pabilo8
  * @since 08-08-2019
  */
-public class AmmunitionWorkshopRecipe extends MultiblockRecipe
+public class AmmunitionAssemblerRecipe extends MultiblockRecipe implements IIIMultiblockRecipe
 {
+	public static final ArrayList<AmmunitionAssemblerRecipe> RECIPES = new ArrayList<>();
+
+	public final IAmmoTypeItem<?, ?> ammoItem;
 	public final BiFunction<ItemStack, ItemStack, ItemStack> process;
 	public final IngredientStack coreInput, casingInput;
-
-	public static final LinkedList<AmmunitionWorkshopRecipe> recipeList = new LinkedList<>();
+	public final boolean advanced;
 
 	final int totalProcessTime;
 	final int totalProcessEnergy;
 
-	public AmmunitionWorkshopRecipe(BiFunction<ItemStack, ItemStack, ItemStack> process, Object coreInput, Object casingInput, int energy, int time)
+	public AmmunitionAssemblerRecipe(BiFunction<ItemStack, ItemStack, ItemStack> process, Object coreInput, Object casingInput, int energy, int time, boolean advanced)
 	{
 		this.process = process;
 		this.coreInput = ApiUtils.createIngredientStack(coreInput);
 		this.casingInput = ApiUtils.createIngredientStack(casingInput);
+		this.ammoItem = ((IAmmoTypeItem<?, ?>)this.coreInput.getExampleStack().getItem());
 
 		this.totalProcessEnergy = (int)Math.floor((float)energy);
 		this.totalProcessTime = (int)Math.floor((float)time);
 
 		this.inputList = Lists.newArrayList(this.coreInput, this.casingInput);
 		this.outputList = getExampleItems();
+		this.advanced = advanced;
 	}
 
 	private NonNullList<ItemStack> getExampleItems()
@@ -50,20 +56,20 @@ public class AmmunitionWorkshopRecipe extends MultiblockRecipe
 		);
 	}
 
-	public static AmmunitionWorkshopRecipe addRecipe(BiFunction<ItemStack, ItemStack, ItemStack> process, IngredientStack coreInput, IngredientStack casingInput, int energy, int time)
+	public static AmmunitionAssemblerRecipe addRecipe(BiFunction<ItemStack, ItemStack, ItemStack> process, IngredientStack coreInput, IngredientStack casingInput, int energy, int time, boolean advanced)
 	{
-		AmmunitionWorkshopRecipe r = new AmmunitionWorkshopRecipe(process, coreInput, casingInput, energy, time);
-		recipeList.add(r);
+		AmmunitionAssemblerRecipe r = new AmmunitionAssemblerRecipe(process, coreInput, casingInput, energy, time, advanced);
+		RECIPES.add(r);
 		return r;
 	}
 
-	public static List<AmmunitionWorkshopRecipe> removeRecipesForCore(ItemStack stack)
+	public static List<AmmunitionAssemblerRecipe> removeRecipesForCore(ItemStack stack)
 	{
-		List<AmmunitionWorkshopRecipe> list = new ArrayList<>();
-		Iterator<AmmunitionWorkshopRecipe> it = recipeList.iterator();
+		List<AmmunitionAssemblerRecipe> list = new ArrayList<>();
+		Iterator<AmmunitionAssemblerRecipe> it = RECIPES.iterator();
 		while(it.hasNext())
 		{
-			AmmunitionWorkshopRecipe ir = it.next();
+			AmmunitionAssemblerRecipe ir = it.next();
 			if(ir.coreInput.matchesItemStack(stack))
 			{
 				list.add(ir);
@@ -73,9 +79,9 @@ public class AmmunitionWorkshopRecipe extends MultiblockRecipe
 		return list;
 	}
 
-	public static AmmunitionWorkshopRecipe findRecipe(ItemStack inputCore, ItemStack inputCasing)
+	public static AmmunitionAssemblerRecipe findRecipe(ItemStack inputCore, ItemStack inputCasing)
 	{
-		return recipeList.stream()
+		return RECIPES.stream()
 				.filter(recipe -> recipe.coreInput.matchesItemStackIgnoringSize(inputCore))
 				.filter(recipe -> recipe.casingInput.matchesItemStackIgnoringSize(inputCasing))
 				.findFirst().orElse(null);
@@ -84,8 +90,8 @@ public class AmmunitionWorkshopRecipe extends MultiblockRecipe
 	@Override
 	public NonNullList<ItemStack> getActualItemOutputs(TileEntity te)
 	{
-		if(te instanceof TileEntityAmmunitionWorkshop)
-			return NonNullList.from(ItemStack.EMPTY, process.apply(((TileEntityAmmunitionWorkshop)te).inventory.get(0), ((TileEntityAmmunitionWorkshop)te).inventory.get(1).copy()));
+		if(te instanceof TileEntityAmmunitionAssembler)
+			return NonNullList.from(ItemStack.EMPTY, process.apply(((TileEntityAmmunitionAssembler)te).inventory.get(0), ((TileEntityAmmunitionAssembler)te).inventory.get(1).copy()));
 		return NonNullList.from(ItemStack.EMPTY);
 	}
 
@@ -96,18 +102,25 @@ public class AmmunitionWorkshopRecipe extends MultiblockRecipe
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
+	public NBTTagCompound writeToNBT(NBTTagCompound nbtTagCompound)
 	{
-		nbt.setTag("core", coreInput.writeToNBT(new NBTTagCompound()));
-		nbt.setTag("casing", casingInput.writeToNBT(new NBTTagCompound()));
-		return nbt;
+		return writeToNBT();
 	}
 
-	public static AmmunitionWorkshopRecipe loadFromNBT(NBTTagCompound nbt)
+	@Override
+	public NBTTagCompound writeToNBT()
+	{
+		return EasyNBT.newNBT()
+				.withIngredientStack("core", coreInput)
+				.withIngredientStack("casing", casingInput)
+				.unwrap();
+	}
+
+	public static AmmunitionAssemblerRecipe loadFromNBT(NBTTagCompound nbt)
 	{
 		IngredientStack core = IngredientStack.readFromNBT(nbt.getCompoundTag("core"));
 		IngredientStack casing = IngredientStack.readFromNBT(nbt.getCompoundTag("casing"));
-		return findRecipe(core.stack,casing.stack);
+		return findRecipe(core.stack, casing.stack);
 	}
 
 	public int getTotalProcessTime()

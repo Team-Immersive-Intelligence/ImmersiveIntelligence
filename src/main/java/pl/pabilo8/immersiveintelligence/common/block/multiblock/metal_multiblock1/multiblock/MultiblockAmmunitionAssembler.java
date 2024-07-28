@@ -5,17 +5,17 @@ import net.minecraft.util.math.Vec3i;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.BlockIIMetalMultiblock1.MetalMultiblocks1;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityAmmunitionWorkshop;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityAmmunitionAssembler;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
 
-public class MultiblockAmmunitionWorkshop extends MultiblockStuctureBase<TileEntityAmmunitionWorkshop>
+public class MultiblockAmmunitionAssembler extends MultiblockStuctureBase<TileEntityAmmunitionAssembler>
 {
-	public static MultiblockAmmunitionWorkshop INSTANCE;
+	public static MultiblockAmmunitionAssembler INSTANCE;
 
-	public MultiblockAmmunitionWorkshop()
+	public MultiblockAmmunitionAssembler()
 	{
-		super(new ResourceLocation(ImmersiveIntelligence.MODID, "multiblocks/ammunition_workshop"));
+		super(new ResourceLocation(ImmersiveIntelligence.MODID, "multiblocks/ammunition_assembler"));
 		offset = new Vec3i(1, 0, 0);
 		INSTANCE = this;
 	}
@@ -29,12 +29,12 @@ public class MultiblockAmmunitionWorkshop extends MultiblockStuctureBase<TileEnt
 	@Override
 	protected int getMeta()
 	{
-		return MetalMultiblocks1.AMMUNITION_WORKSHOP.getMeta();
+		return MetalMultiblocks1.AMMUNITION_ASSEMBLER.getMeta();
 	}
 
 	@Override
-	protected TileEntityAmmunitionWorkshop getMBInstance()
+	protected TileEntityAmmunitionAssembler getMBInstance()
 	{
-		return new TileEntityAmmunitionWorkshop();
+		return new TileEntityAmmunitionAssembler();
 	}
 }

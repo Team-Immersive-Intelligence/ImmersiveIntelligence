@@ -135,7 +135,7 @@ public class JEIHelper implements IModPlugin
 		modRegistry.addRecipeClickArea(GuiPrecisionAssembler.class, 85, 49, 6, 8, "ii.precision_assembler");
 		modRegistry.addRecipeClickArea(GuiPrecisionAssembler.class, 103, 49, 6, 8, "ii.precision_assembler");
 
-		modRegistry.addRecipes(SawmillRecipe.recipeList, "ii.sawmill");
+		modRegistry.addRecipes(SawmillRecipe.RECIPES, "ii.sawmill");
 		modRegistry.addRecipeClickArea(GuiSawmill.class, 33, 42, 43, 4, "ii.sawmill");
 		modRegistry.addRecipeClickArea(GuiSawmill.class, 76, 38, 6, 12, "ii.sawmill");
 

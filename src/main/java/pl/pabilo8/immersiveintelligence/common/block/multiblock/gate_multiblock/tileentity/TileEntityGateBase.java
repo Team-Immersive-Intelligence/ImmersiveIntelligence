@@ -22,8 +22,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
+import pl.pabilo8.immersiveintelligence.api.utils.IUpgradableMachine;
 import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
-import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IUpgradableMachine;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
@@ -33,11 +33,11 @@ import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultibl
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockInteractablePart;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockRedstoneNetwork;
+import pl.pabilo8.immersiveintelligence.common.util.upgrade_system.IUpgradeStorageMachine;
 import pl.pabilo8.immersiveintelligence.common.util.upgrade_system.UpgradeStorage;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -47,7 +47,7 @@ import java.util.Objects;
  * @updated 06.12.2023
  * @since 28-06-2019
  */
-public abstract class TileEntityGateBase<T extends TileEntityGateBase<T>> extends TileEntityMultiblockIIConnectable<T> implements IBooleanAnimatedPartsBlock, IPlayerInteraction, IUpgradableMachine, IRedstoneConnector
+public abstract class TileEntityGateBase<T extends TileEntityGateBase<T>> extends TileEntityMultiblockIIConnectable<T> implements IBooleanAnimatedPartsBlock, IPlayerInteraction, IUpgradeStorageMachine<TileEntityGateBase<T>>, IRedstoneConnector
 {
 	public MultiblockInteractablePart gate = new MultiblockInteractablePart(40);
 	protected MultiblockRedstoneNetwork<T> redstoneNetwork = new MultiblockRedstoneNetwork<>(((T)this));
@@ -170,19 +170,13 @@ public abstract class TileEntityGateBase<T extends TileEntityGateBase<T>> extend
 
 	public abstract IBlockState getFenceState(@Nullable EnumFacing facingConnected);
 
-	//--- IUpgradableMachine ---//
+	//--- IUpgradeStorageMachine ---//
 
-	//TODO: 03.12.2023 rework the upgrade system
-	@Override
-	public boolean addUpgrade(MachineUpgrade upgrade, boolean test)
-	{
-		return upgradeStorage.addUpgrade(upgrade, test);
-	}
 
 	@Override
-	public boolean hasUpgrade(MachineUpgrade upgrade)
+	public UpgradeStorage<TileEntityGateBase<T>> getUpgradeStorage()
 	{
-		return upgradeStorage.hasUpgrade(upgrade);
+		return upgradeStorage;
 	}
 
 	@Override
@@ -195,66 +189,6 @@ public abstract class TileEntityGateBase<T extends TileEntityGateBase<T>> extend
 	public <T extends TileEntity & IUpgradableMachine> T getUpgradeMaster()
 	{
 		return (T)master();
-	}
-
-	@Override
-	public void saveUpgradesToNBT(NBTTagCompound tag)
-	{
-		upgradeStorage.saveUpgradesToNBT();
-	}
-
-	@Override
-	public void getUpgradesFromNBT(NBTTagCompound tag)
-	{
-		upgradeStorage.getUpgradesFromNBT(tag);
-	}
-
-	public ArrayList<MachineUpgrade> getUpgrades()
-	{
-		return upgradeStorage.getUpgrades();
-	}
-
-	@Nullable
-	@Override
-	public MachineUpgrade getCurrentlyInstalled()
-	{
-		return upgradeStorage.getCurrentlyInstalled();
-	}
-
-	@Override
-	public int getInstallProgress()
-	{
-		return upgradeStorage.getInstallProgress();
-	}
-
-	@Override
-	public int getClientInstallProgress()
-	{
-		return upgradeStorage.getClientInstallProgress();
-	}
-
-	@Override
-	public boolean addUpgradeInstallProgress(int toAdd)
-	{
-		return upgradeStorage.addUpgradeInstallProgress(toAdd);
-	}
-
-	@Override
-	public boolean resetInstallProgress()
-	{
-		return upgradeStorage.resetInstallProgress();
-	}
-
-	@Override
-	public void startUpgrade(@Nonnull MachineUpgrade upgrade)
-	{
-		upgradeStorage.startUpgrade(upgrade);
-	}
-
-	@Override
-	public void removeUpgrade(MachineUpgrade upgrade)
-	{
-		upgradeStorage.removeUpgrade(upgrade);
 	}
 
 	@SideOnly(Side.CLIENT)

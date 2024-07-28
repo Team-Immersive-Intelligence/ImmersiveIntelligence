@@ -37,7 +37,7 @@ public class RadioExplosivesRenderer extends IITileRenderer<TileEntityRadioExplo
 	public void draw(TileEntityRadioExplosives te, BufferBuilder buf, float partialTicks, Tessellator tes)
 	{
 		applyStandardRotation(te.facing);
-		float debugProgress = IIAnimationUtils.getDebugProgress(te.getWorld(), 30, partialTicks);
+		float debugProgress = IIAnimationUtils.getDebugProgress(30, partialTicks);
 		GlStateManager.translate(0.5, 0, 0.5);
 //		GlStateManager.rotate(debugProgress*360f, 0, 1, 0);
 

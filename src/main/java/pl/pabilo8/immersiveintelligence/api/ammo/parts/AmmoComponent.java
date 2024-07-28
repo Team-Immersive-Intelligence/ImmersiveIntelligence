@@ -29,7 +29,6 @@ public abstract class AmmoComponent extends AmmoPart
 	{
 		super(name, density, colour);
 		this.role = role;
-		//TODO: 04.06.2024 variable slots amount
 		this.slotsTaken = 1;
 	}
 
@@ -94,5 +93,10 @@ public abstract class AmmoComponent extends AmmoPart
 	public boolean matchesBullet(IAmmoTypeItem<?, ?> bullet)
 	{
 		return true;
+	}
+
+	public int getSlotsTaken()
+	{
+		return slotsTaken;
 	}
 }

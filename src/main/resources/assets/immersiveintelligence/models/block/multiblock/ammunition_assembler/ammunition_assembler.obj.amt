@@ -1,0 +1,32 @@
+{
+	"origins": {
+		"door": [-72, 37, 31.5],
+		"inserter1": [-40, 32, 39.99474],
+		"lower1": [-40, 32.94615, 40.34089],
+		"upper1": [-40, 46.5, 39.99474],
+		"pickerLeft": [-42, 57, 39.99474],
+		"pickerLeft2": [-42, 60, 39.99474],
+		"pickerRight": [-38, 57, 39.99474],
+		"pickerRight2": [-38, 60, 39.99474],
+		"camera": [8, 21.5, 7.5],
+		"inserter2": [-56, 32, 39.95385],
+		"lower2": [-56, 32.94615, 40.3],
+		"upper2": [-56, 46.375, 39.95385],
+		"total": [0, 26, 8],
+		"case": [0, 26, 8],
+		"core": [0, 26, 39]
+	},
+	"hierarchy": {
+		"lower1": "inserter1",
+		"upper1": "lower1",
+		"pickerLeft": "upper1",
+		"pickerLeft2": "pickerLeft",
+		"pickerRight": "upper1",
+		"pickerRight2": "pickerRight",
+		"camera": "upper1",
+		"lower2": "inserter2",
+		"upper2": "lower2",
+		"case": "total",
+		"core": "total"
+	}
+}
