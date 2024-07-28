@@ -52,7 +52,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IUpgradableMachine;
+import pl.pabilo8.immersiveintelligence.api.utils.IUpgradableMachine;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;

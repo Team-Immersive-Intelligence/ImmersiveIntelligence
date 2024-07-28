@@ -216,9 +216,9 @@ public class IIWeaponMachinegun extends ItemIIUpgradableTool implements IAdvance
 	@Override
 	public void removeFromWorkbench(EntityPlayer player, ItemStack stack)
 	{
-		if(hasIIUpgrades(stack, WeaponUpgrades.HEAVY_BARREL, WeaponUpgrades.SECOND_MAGAZINE, WeaponUpgrades.INFRARED_SCOPE))
+		if(hasIIUpgrades(stack, WeaponUpgrade.HEAVY_BARREL, WeaponUpgrade.SECOND_MAGAZINE, WeaponUpgrade.INFRARED_SCOPE))
 			IIUtils.unlockIIAdvancement(player, "main/let_me_show_you_its_features");
-		if(hasIIUpgrades(stack, WeaponUpgrades.BELT_FED_LOADER, WeaponUpgrades.SHIELD, WeaponUpgrades.WATER_COOLING))
+		if(hasIIUpgrades(stack, WeaponUpgrade.BELT_FED_LOADER, WeaponUpgrade.SHIELD, WeaponUpgrade.WATER_COOLING))
 			IIUtils.unlockIIAdvancement(player, "main/hans_9000");
 	}
 

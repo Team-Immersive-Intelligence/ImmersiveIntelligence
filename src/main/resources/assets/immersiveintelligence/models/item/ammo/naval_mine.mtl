@@ -1,0 +1,6 @@
+# Made by Pabilo8 with Blockbench
+
+newmtl naval_mine1
+map_Kd immersiveintelligence:entity/ammo/naval_mine1
+newmtl naval_mine2
+map_Kd immersiveintelligence:entity/ammo/naval_mine2

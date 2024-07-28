@@ -1,0 +1,23 @@
+{
+  "type": "forge:ore_shaped",
+  "pattern": [
+    " A ",
+    "AAA",
+    "BA "
+  ],
+  "key": {
+    "A": {
+      "type": "forge:ore_dict",
+      "ore": "paneGlassColorless"
+    },
+    "B": {
+      "item": "immersiveengineering:tool",
+      "data": 0
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:material",
+    "count": 1,
+    "data": 47
+  }
+}

@@ -1,0 +1,273 @@
+{
+	"comment": "Made by Pabilo8 with Blockbench",
+	"groups": {
+		"lower2": {
+			"rotation": [
+				{
+					"time": 0.68421,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.73684,
+					"transform": [-7.5, 0, 0]
+				},
+				{
+					"time": 0.89474,
+					"transform": [-7.5, 0, 0]
+				},
+				{
+					"time": 1,
+					"transform": [0, 0, 0]
+				}
+			]
+		},
+		"upper2": {
+			"rotation": [
+				{
+					"time": 0.68421,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.73684,
+					"transform": [14.5, 0, 0]
+				},
+				{
+					"time": 0.89474,
+					"transform": [14.5, 0, 0]
+				},
+				{
+					"time": 0.94737,
+					"transform": [0, 0, 0]
+				}
+			]
+		},
+		"inserter1": {
+			"rotation": [
+				{
+					"time": 0.23684,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.28069,
+					"transform": [0, 2.5, 0]
+				},
+				{
+					"time": 0.47368,
+					"transform": [0, 2.5, 0]
+				},
+				{
+					"time": 0.52632,
+					"transform": [0, 2, 0]
+				},
+				{
+					"time": 0.63158,
+					"transform": [0, 2, 0]
+				},
+				{
+					"time": 0.68421,
+					"transform": [0, 0, 0]
+				}
+			]
+		},
+		"lower1": {
+			"rotation": [
+				{
+					"time": 0.15789,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.21053,
+					"transform": [30, 0, 0]
+				},
+				{
+					"time": 0.31579,
+					"transform": [30, 0, 0]
+				},
+				{
+					"time": 0.42105,
+					"transform": [72.5, 0, 0]
+				},
+				{
+					"time": 0.52632,
+					"transform": [72.5, 0, 0]
+				},
+				{
+					"time": 0.57895,
+					"transform": [20, 0, 0]
+				},
+				{
+					"time": 0.63158,
+					"transform": [30, 0, 0]
+				},
+				{
+					"time": 0.68421,
+					"transform": [0, 0, 0]
+				}
+			]
+		},
+		"upper1": {
+			"rotation": [
+				{
+					"time": 0.15789,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.21053,
+					"transform": [-10, 0, 0]
+				},
+				{
+					"time": 0.31579,
+					"transform": [-10, 0, 0]
+				},
+				{
+					"time": 0.36842,
+					"transform": [-92.5, 0, 0]
+				},
+				{
+					"time": 0.42105,
+					"transform": [-105, 0, 0]
+				},
+				{
+					"time": 0.47368,
+					"transform": [-97.5, 0, 0]
+				},
+				{
+					"time": 0.52632,
+					"transform": [-92.5, 0, 0]
+				},
+				{
+					"time": 0.57895,
+					"transform": [-2.5, 0, 0]
+				},
+				{
+					"time": 0.68421,
+					"transform": [0, 0, 0]
+				}
+			]
+		},
+		"pickerLeft": {
+			"rotation": [
+				{
+					"time": 0.28069,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.31579,
+					"transform": [0, 0, -10]
+				},
+				{
+					"time": 0.63158,
+					"transform": [0, 0, -10]
+				},
+				{
+					"time": 0.68421,
+					"transform": [0, 0, 0]
+				}
+			]
+		},
+		"pickerRight": {
+			"rotation": [
+				{
+					"time": 0.28069,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.31579,
+					"transform": [0, 0, 12.5]
+				},
+				{
+					"time": 0.63158,
+					"transform": [0, 0, 12.5]
+				},
+				{
+					"time": 0.68421,
+					"transform": [0, 0, 0]
+				}
+			]
+		},
+		"1bcal_submachingegun": {
+			"position": [
+				{
+					"time": 0.52632,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.55263,
+					"transform": [0, 1.5, 4.5]
+				},
+				{
+					"time": 0.57895,
+					"transform": [0, 3, 13]
+				},
+				{
+					"time": 0.63158,
+					"transform": [0, 0, 13]
+				},
+				{
+					"time": 0.73684,
+					"transform": [15, 0, 13]
+				},
+				{
+					"time": 0.89474,
+					"transform": [15, 0, 13]
+				},
+				{
+					"time": 1,
+					"transform": [54, 0, 13]
+				}
+			]
+		},
+		"1bcal_submachingegun_core": {
+			"position": [
+				{
+					"time": 0,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.05263,
+					"transform": [22, 0, 0]
+				},
+				{
+					"time": 0.10526,
+					"transform": [22, 0, -17]
+				},
+				{
+					"time": 0.15789,
+					"transform": [40, 0, -17]
+				},
+				{
+					"time": 0.31579,
+					"transform": [40, 0, -17]
+				},
+				{
+					"time": 0.34211,
+					"transform": [40, 4.5, -24.5]
+				},
+				{
+					"time": 0.36842,
+					"transform": [40, 11, -28]
+				},
+				{
+					"time": 0.42105,
+					"transform": [40, 4, -29]
+				},
+				{
+					"time": 0.47368,
+					"transform": [40, 1, -29]
+				}
+			]
+		},
+		"1bcal_submachingegun_casing": {
+			"position": [
+				{
+					"time": 0,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.10526,
+					"transform": [40, 0, 0]
+				}
+			]
+		}
+	}
+}

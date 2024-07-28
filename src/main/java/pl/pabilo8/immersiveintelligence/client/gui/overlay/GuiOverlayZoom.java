@@ -8,6 +8,7 @@ import net.minecraft.util.math.RayTraceResult;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.util.CameraHandler;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
 /**
  * @author Pabilo8
@@ -92,19 +93,20 @@ public class GuiOverlayZoom extends GuiOverlayBase
 		GlStateManager.enableBlend();
 
 		//Draw background
+		IIColor prog = IIColor.BLACK.withAlpha(progress);
 		if(resMin==width)
 		{
-			draw.drawTexColorRect(0, 0, width, (int)centerY+1, 0, 0, 0, progress, 0, 0, 0, 0);
-			draw.drawTexColorRect(0, (int)centerY+resMin, width, (int)centerY+1, 0, 0, 0, progress, 0, 0, 0, 0);
+			draw.drawTexColorRect(0, 0, width, (int)centerY+1, prog, 0, 0, 0, 0);
+			draw.drawTexColorRect(0, (int)centerY+resMin, width, (int)centerY+1, prog, 0, 0, 0, 0);
 		}
 		else
 		{
-			draw.drawTexColorRect(0, 0, (int)centerX+1, height, 0, 0, 0, progress, 0, 0, 0, 0);
-			draw.drawTexColorRect((int)centerX+resMin, 0, (int)centerX+1, height, 0, 0, 0, progress, 0, 0, 0, 0);
+			draw.drawTexColorRect(0, 0, (int)centerX+1, height, prog, 0, 0, 0, 0);
+			draw.drawTexColorRect((int)centerX+resMin, 0, (int)centerX+1, height, prog, 0, 0, 0, 0);
 		}
 
 		//Draw central reticle
-		draw.drawTexColorRect(centerX, centerY, resMin, resMin, 1, 1, 1, progress, 0f, 1f, 0f, 1f);
+		draw.drawTexColorRect(centerX, centerY, resMin, resMin, IIColor.WHITE.withAlpha(progress), 0f, 1f, 0f, 1f);
 		draw.finish();
 
 	}

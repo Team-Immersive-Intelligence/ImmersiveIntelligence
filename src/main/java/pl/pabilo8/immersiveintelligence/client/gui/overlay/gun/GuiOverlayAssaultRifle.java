@@ -33,8 +33,8 @@ public class GuiOverlayAssaultRifle extends GuiOverlayGunBase
 		int lastMode = nbt.getInt(IIWeaponAssaultRifle.LAST_FIRE_MODE);
 		int mode = nbt.getInt(IIWeaponAssaultRifle.FIRE_MODE);
 
-		float modeProgress = 1f-MathHelper.clamp((nbt.getInt(IIWeaponAssaultRifle.FIRE_MODE_TIMER)-ClientUtils.mc().getRenderPartialTicks())/6f, 0f, 1f);
-		boolean grenades = IIContent.itemAssaultRifle.hasIIUpgrade(stack, WeaponUpgrades.RIFLE_GRENADE_LAUNCHER);
+		float modeProgress = 1f-MathHelper.clamp((nbt.getInt(ItemIIAssaultRifle.FIRE_MODE_TIMER)-ClientUtils.mc().getRenderPartialTicks())/6f, 0f, 1f);
+		boolean grenades = IIContent.itemAssaultRifle.hasIIUpgrade(stack, WeaponUpgrade.RIFLE_GRENADE_LAUNCHER);
 
 		//Draw fire mode toggle
 		IIDrawUtils draw = IIDrawUtils.startTextured();

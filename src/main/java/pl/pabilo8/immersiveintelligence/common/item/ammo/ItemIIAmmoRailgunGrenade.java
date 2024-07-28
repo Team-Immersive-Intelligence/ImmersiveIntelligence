@@ -5,8 +5,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreTypes;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseType;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.PropellantType;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem.IIAmmoProjectile;
 import pl.pabilo8.immersiveintelligence.client.model.builtin.IAmmoModel;
 import pl.pabilo8.immersiveintelligence.client.model.builtin.ModelAmmoProjectile;
@@ -26,7 +27,7 @@ import java.util.function.Function;
  * @since 30-08-2019
  */
 @GeneratedItemModels(itemName = "bullet_railgun_grenade_4bcal", type = ItemModelType.ITEM_SIMPLE_AUTOREPLACED, valueSet = AmmoParts.class)
-@IIAmmoProjectile
+@IIAmmoProjectile(artillery = true)
 @IIItemProperties(category = IICategory.WARFARE)
 public class ItemIIAmmoRailgunGrenade extends ItemIIAmmoBase<EntityAmmoProjectile>
 {
@@ -37,9 +38,15 @@ public class ItemIIAmmoRailgunGrenade extends ItemIIAmmoBase<EntityAmmoProjectil
 	}
 
 	@Override
-	public float getComponentAmount()
+	public float getComponentMultiplier()
 	{
 		return 0.3f;
+	}
+
+	@Override
+	public PropellantType getAllowedPropellants()
+	{
+		return PropellantType.NONE;
 	}
 
 	@Override
@@ -49,13 +56,13 @@ public class ItemIIAmmoRailgunGrenade extends ItemIIAmmoBase<EntityAmmoProjectil
 	}
 
 	@Override
-	public float getInitialMass()
+	public float getCasingMass()
 	{
 		return 0.35f;
 	}
 
 	@Override
-	public float getDefaultVelocity()
+	public float getVelocity()
 	{
 		return Ammunition.railgunGrenadeVelocity;
 	}
@@ -86,15 +93,15 @@ public class ItemIIAmmoRailgunGrenade extends ItemIIAmmoBase<EntityAmmoProjectil
 	}
 
 	@Override
-	public CoreTypes[] getAllowedCoreTypes()
+	public CoreType[] getAllowedCoreTypes()
 	{
-		return new CoreTypes[]{CoreTypes.PIERCING, CoreTypes.PIERCING_SABOT, CoreTypes.SHAPED, CoreTypes.SOFTPOINT, CoreTypes.CANISTER};
+		return new CoreType[]{CoreType.PIERCING, CoreType.PIERCING_SABOT, CoreType.SHAPED, CoreType.SOFTPOINT, CoreType.CANISTER};
 	}
 
 	@Override
-	public FuseTypes[] getAllowedFuseTypes()
+	public FuseType[] getAllowedFuseTypes()
 	{
-		return new FuseTypes[]{FuseTypes.CONTACT, FuseTypes.TIMED, FuseTypes.PROXIMITY};
+		return new FuseType[]{FuseType.CONTACT, FuseType.TIMED, FuseType.PROXIMITY};
 	}
 
 	@Override

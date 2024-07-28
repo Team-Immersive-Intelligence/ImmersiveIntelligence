@@ -187,6 +187,18 @@ public class EntityAMTTactile extends Entity
 	}
 
 	@Override
+	public boolean writeToNBTOptional(NBTTagCompound compound)
+	{
+		return false;
+	}
+
+	@Override
+	public boolean writeToNBTAtomically(NBTTagCompound compound)
+	{
+		return false;
+	}
+
+	@Override
 	protected void readEntityFromNBT(NBTTagCompound compound)
 	{
 

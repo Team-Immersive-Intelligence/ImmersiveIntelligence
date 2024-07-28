@@ -38,7 +38,6 @@ public class PenetrationCache
 		}
 	};
 
-	//TODO: 29.03.2024 rework how hitpoints work
 	public static float getBlockHitpoints(IPenetrationHandler pen, BlockPos pos, World world)
 	{
 		float hp = pen.getIntegrity()/pen.getThickness();

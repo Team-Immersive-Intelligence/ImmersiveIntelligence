@@ -1,0 +1,258 @@
+{
+  "bounds": {
+    "full": [
+      0, 0, 0,
+      16, 16, 16
+    ],
+    "empty": [
+      -32, -32, -32,
+      -32, -32, -32
+    ],
+    "conveyor1": [
+      0, 0, -8,
+      16, 2, 24
+    ],
+    "conveyor2": [
+      0, 0, 8,
+      16, 2, 40
+    ],
+    "energy_box_bottom": [
+      2, 0, 2,
+      18, 16, 18
+    ],
+    "energy_box_top": [
+      2, 0, 2,
+      18, 14, 18
+    ],
+    "energy_box_dot": [
+      3, 14, 3,
+      13, 16, 13
+    ],
+    "cable_upper": [
+      -2, -8, 13,
+      3, 12, 17
+    ],
+    "cable_lower": [
+      -2, 8, 13,
+      3, 28, 17
+    ],
+    "cable_lower_side": [
+      -2, 8, 6,
+      3, 12, 17
+    ],
+    "locker_top": [
+      -3, -16, 0,
+      13, 17, 16
+    ],
+    "locker_bottom": [
+      -3, 0, 0,
+      13, 33, 16
+    ],
+    "table_top1": [
+      -2, 13, 0,
+      14, 16, 16
+    ],
+    "table_top2": [
+      6, 13, 0,
+      22, 16, 16
+    ],
+    "table1_leg1": [
+      -1, 0, 1,
+      2, 13, 4
+    ],
+    "table1_leg2": [
+      -1, 0, 12,
+      2, 13, 15
+    ],
+    "table1_leg3": [
+      10, 0, 1,
+      13, 13, 4
+    ],
+    "table1_leg4": [
+      10, 0, 12,
+      13, 13, 15
+    ],
+    "table2_leg1": [
+      18, 0, 1,
+      21, 13, 4
+    ],
+    "table2_leg3": [
+      18, 0, 1,
+      21, 13, 4
+    ],
+    "table2_leg4": [
+      18, 0, 12,
+      21, 13, 15
+    ],
+    "blueprint_stack": [
+      10, 0, 0,
+      22, 6, 16
+    ],
+    "blueprint_stack_top": [
+      14, 6, 2,
+      22, 9, 14
+    ],
+    "frame1_top_middle": [
+      0, 0, 12,
+      16, 3, 15
+    ],
+    "frame1_top_left": [
+      7, 0, 12,
+      16, 3, 15
+    ],
+    "frame1_top_right": [
+      0, 0, 12,
+      13, 3, 15
+    ],
+    "frame1_side_left": [
+      7, 0, 12,
+      10, 16, 15
+    ],
+    "frame1_side_right": [
+      10, 0, 12,
+      13, 16, 15
+    ],
+    "frame1_glass_middle": [
+      0, 0, 12,
+      16, 16, 15
+    ],
+    "frame1_glass_left": [
+      10, 0, 12,
+      16, 16, 15
+    ],
+    "frame1_glass_right": [
+      0, 0, 12,
+      10, 16, 15
+    ],
+    "frame2_top_middle": [
+      0, 0, 1,
+      16, 3, 4
+    ],
+    "frame2_top_left": [
+      7, 0, 1,
+      16, 3, 4
+    ],
+    "frame2_top_right": [
+      0, 0, 1,
+      13, 3, 4
+    ],
+    "frame2_side_left": [
+      7, 0, 1,
+      10, 16, 4
+    ],
+    "frame2_side_right": [
+      10, 0, 1,
+      13, 16, 4
+    ],
+    "frame2_glass_middle": [
+      0, 0, 1,
+      16, 16, 4
+    ],
+    "frame2_glass_left": [
+      10, 0, 1,
+      16, 16, 4
+    ],
+    "frame2_glass_right": [
+      0, 0, 1,
+      10, 16, 4
+    ],
+    "rail1": [
+      0, 0, 13,
+      16, 2, 22
+    ],
+    "rail2": [
+      0, 0, 8,
+      16, 2, 17
+    ],
+    "control_box": [
+      1, 0, 13,
+      11, 7, 23
+    ],
+    "control_box_below": [
+      1, 16, -3,
+      11, 23, 7
+    ],
+    "drawing_board": [
+      7, 0, 3,
+      24, 4, 19
+    ],
+    "drawing_board_below": [
+      7, 16, 3,
+      24, 20, 19
+    ],
+    "crane_frame": [
+      -5, 0, -5,
+      5, 62, 5
+    ],
+    "crane_frame_horizontal": [
+      -5, -5, -26,
+      5, 5, 26
+    ]
+  },
+  "positions": {
+    "88": ["energy_box_bottom", "cable_lower", "cable_lower_side"],
+    "136": ["energy_box_top", "energy_box_dot", "cable_upper"],
+    "1": "locker_bottom",
+    "49": "locker_top",
+    "2,3": "table_top1",
+    "5,6": "table_top2",
+    "2": ["table1_leg1", "table1_leg2"],
+    "3": ["table1_leg3", "table1_leg4"],
+    "5": ["table2_leg1", "table2_leg2", "drawing_board_below"],
+    "6": ["table2_leg3", "table2_leg4"],
+    "72,73,74,75,76,77,78,79": "conveyor1",
+    "80,81,82,83,84,85,86,87": "conveyor2",
+    "54": ["blueprint_stack", "blueprint_stack_top"],
+    "202,203,204,205,206": "frame1_top_middle",
+    "201": "frame1_top_left",
+    "207": "frame1_top_right",
+    "57,105,153": ["frame1_side_left", "frame1_glass_left"],
+    "63,111,159": ["frame1_side_right", "frame1_glass_right"],
+    "158,157,156,155,154,110,109,108,107,106,62,61,60,59,58": "frame1_glass_middle",
+    "234,235,236,237,238": "frame2_top_middle",
+    "233": "frame2_top_left",
+    "239": "frame2_top_right",
+    "185,137,89": ["frame2_side_left", "frame2_glass_left"],
+    "191,143,95": ["frame2_side_right", "frame2_glass_right"],
+    "186,187,188,189,190,138,139,140,141,142,90,91,92,93,94": "frame2_glass_middle",
+    "66,67,68,69,70,71": "rail1",
+    "89,90,91,92,93,94,95": "rail2",
+    "135,183,231,223,215,167,119,175,127,129,177,225,217,209,161,113,169,121": "empty",
+    "64,65": "control_box",
+    "9,8": ["full", "control_box_below"],
+    "53": "drawing_board"
+  },
+  "poi": {
+  },
+  "tactile": {
+    "_schema": "immersiveintelligence:models/block/multiblock/heavy_ammunition_assembler/tactile.obj.amt",
+    "crane1": [
+      {
+        "offset": [-8, -36, 26],
+        "type": "crane_frame"
+      },
+      {
+        "offset": [-8, -36, -26],
+        "type": "crane_frame"
+      },
+      {
+        "offset": [-8, 21, 0],
+        "type": "crane_frame_horizontal"
+      }
+    ],
+    "crane2": [
+      {
+        "offset": [-8, -36, 26],
+        "type": "crane_frame"
+      },
+      {
+        "offset": [-8, -36, -26],
+        "type": "crane_frame"
+      },
+      {
+        "offset": [-8, 21, 0],
+        "type": "crane_frame_horizontal"
+      }
+    ]
+  }
+}

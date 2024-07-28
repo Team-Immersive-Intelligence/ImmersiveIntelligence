@@ -9,6 +9,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseType;
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.IIAmmoUtils;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityMortar;
@@ -77,7 +79,8 @@ public class AIHansMortar extends EntityAIBase
 			{
 				if(hans.getHeldItemMainhand().isEmpty())
 				{
-					ItemStack shell = IIContent.itemAmmoMortar.getBulletWithParams("core_brass", "canister", "white_phosphorus", "tracer_powder");
+					ItemStack shell = IIContent.itemAmmoMortar.getAmmoStack(IIContent.ammoCoreBrass, CoreType.CANISTER, FuseType.CONTACT,
+							IIContent.ammoComponentWhitePhosphorus, IIContent.ammoComponentTracerPowder);
 					NBTTagCompound tag = new NBTTagCompound();
 					tag.setInteger("colour", 0xff0000);
 					hans.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, shell);

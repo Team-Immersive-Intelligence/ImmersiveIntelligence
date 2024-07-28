@@ -1,6 +1,9 @@
 package pl.pabilo8.immersiveintelligence.client.render.ammunition;
 
+import blusunrize.immersiveengineering.client.ClientUtils;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.GlStateManager.CullFace;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
@@ -32,29 +35,26 @@ public class NavalMineRenderer extends Render<EntityNavalMine>
 	{
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(x, y, z);
-		GlStateManager.enableRescaleNormal();
-		GlStateManager.enableBlend();
-		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-		GlStateManager.enableLighting();
+		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 
+		GlStateManager.enableBlend();
+		GlStateManager.blendFunc(770, 771);
+		if(Minecraft.isAmbientOcclusionEnabled())
+			GlStateManager.shadeModel(7425);
+		else
+			GlStateManager.shadeModel(7424);
+
+		ClientUtils.bindAtlas();
 		if(entity.isRiding())
 		{
-			/*double mountedYOffset = Math.abs(entity.posY-entity.getRidingEntity().posY)*16f;
-			 */
 			GlStateManager.pushMatrix();
-
-			/*GlStateManager.scale(0.0625f, 0.0625f, 0.0625f);
-			GlStateManager.translate(0, -18, 0);*/
-
-			//TODO: 05.03.2024 wire rendering
-
-			AmmoRegistry.getModel(IIContent.itemNavalMine)
-					.renderAmmoComplete(entity, partialTicks);
 
 			GlStateManager.popMatrix();
 		}
+		AmmoRegistry.getModel(IIContent.itemNavalMine)
+				.renderAmmoComplete(entity, partialTicks);
 
-
+		GlStateManager.cullFace(CullFace.BACK);
 		GlStateManager.popMatrix();
 	}
 
@@ -73,12 +73,12 @@ public class NavalMineRenderer extends Render<EntityNavalMine>
 		public void renderByItem(@Nonnull ItemStack stack, float partialTicks)
 		{
 			GlStateManager.pushMatrix();
-			GlStateManager.translate(0.5f, 0f, 0.5f);
+			GlStateManager.translate(0.5f, -0.25f, 0.5f);
 			switch(IIContent.itemNavalMine.stackToSub(stack))
 			{
 				case BULLET:
 					AmmoRegistry.getModel(IIContent.itemNavalMine)
-							.renderAmmoComplete(true, stack);
+							.renderAmmoComplete(false, stack);
 					break;
 				case CORE:
 					AmmoRegistry.getModel(IIContent.itemNavalMine)

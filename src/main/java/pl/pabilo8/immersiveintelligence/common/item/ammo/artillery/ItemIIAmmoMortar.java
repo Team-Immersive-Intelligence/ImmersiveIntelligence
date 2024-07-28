@@ -8,8 +8,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreTypes;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseType;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.PropellantType;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem.IIAmmoProjectile;
 import pl.pabilo8.immersiveintelligence.client.model.builtin.IAmmoModel;
 import pl.pabilo8.immersiveintelligence.client.model.builtin.ModelAmmoProjectile;
@@ -17,7 +18,7 @@ import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Ammuniti
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoArtilleryProjectile;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoBase;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoBase.AmmoParts;
-import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoCasing.Casings;
+import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoCasing.Casing;
 import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
 import pl.pabilo8.modworks.annotations.item.GeneratedItemModels;
@@ -32,26 +33,32 @@ import java.util.function.Function;
  * @author Pabilo8
  * @since 30-08-2019
  */
-@IIAmmoProjectile
+@IIAmmoProjectile(artillery = true)
 @GeneratedItemModels(itemName = "bullet_mortar_6bcal", type = ItemModelType.ITEM_SIMPLE_AUTOREPLACED, valueSet = AmmoParts.class)
 @IIItemProperties(category = IICategory.WARFARE)
 public class ItemIIAmmoMortar extends ItemIIAmmoBase<EntityAmmoArtilleryProjectile>
 {
 	public ItemIIAmmoMortar()
 	{
-		super("mortar_6bCal", Casings.MORTAR_6BCAL);
+		super("mortar_6bCal", Casing.MORTAR_6BCAL);
 	}
 
 	@Override
-	public float getComponentAmount()
+	public float getComponentMultiplier()
 	{
 		return 0.65f;
 	}
 
 	@Override
-	public int getGunpowderNeeded()
+	public int getPropellantNeeded()
 	{
 		return 350;
+	}
+
+	@Override
+	public PropellantType getAllowedPropellants()
+	{
+		return PropellantType.SOLID;
 	}
 
 	@Override
@@ -61,13 +68,13 @@ public class ItemIIAmmoMortar extends ItemIIAmmoBase<EntityAmmoArtilleryProjecti
 	}
 
 	@Override
-	public float getInitialMass()
+	public float getCasingMass()
 	{
 		return 1.125f;
 	}
 
 	@Override
-	public float getDefaultVelocity()
+	public float getVelocity()
 	{
 		return Ammunition.mortarVelocity;
 	}
@@ -94,15 +101,15 @@ public class ItemIIAmmoMortar extends ItemIIAmmoBase<EntityAmmoArtilleryProjecti
 	}
 
 	@Override
-	public CoreTypes[] getAllowedCoreTypes()
+	public CoreType[] getAllowedCoreTypes()
 	{
-		return new CoreTypes[]{CoreTypes.PIERCING, CoreTypes.SHAPED, CoreTypes.CANISTER};
+		return new CoreType[]{CoreType.PIERCING, CoreType.SHAPED, CoreType.CANISTER};
 	}
 
 	@Override
-	public FuseTypes[] getAllowedFuseTypes()
+	public FuseType[] getAllowedFuseTypes()
 	{
-		return new FuseTypes[]{FuseTypes.CONTACT, FuseTypes.TIMED, FuseTypes.PROXIMITY};
+		return new FuseType[]{FuseType.CONTACT, FuseType.TIMED, FuseType.PROXIMITY};
 	}
 
 	@Override
@@ -130,7 +137,7 @@ public class ItemIIAmmoMortar extends ItemIIAmmoBase<EntityAmmoArtilleryProjecti
 		ApiUtils.getRegisterSprite(map, ImmersiveIntelligence.MODID+":items/bullets/ammo/"+NAME.toLowerCase()+"/core");
 		ApiUtils.getRegisterSprite(map, ImmersiveIntelligence.MODID+":items/bullets/ammo/"+NAME.toLowerCase()+"/paint");
 
-		for(CoreTypes coreType : getAllowedCoreTypes())
+		for(CoreType coreType : getAllowedCoreTypes())
 		{
 			ApiUtils.getRegisterSprite(map, ImmersiveIntelligence.MODID+":items/bullets/ammo/"+getName().toLowerCase()+"/"+coreType.getName());
 			ApiUtils.getRegisterSprite(map, ImmersiveIntelligence.MODID+":items/bullets/ammo/"+getName().toLowerCase()+"/base_"+coreType.getName());
@@ -149,7 +156,7 @@ public class ItemIIAmmoMortar extends ItemIIAmmoBase<EntityAmmoArtilleryProjecti
 				switch(pass)
 				{
 					case 0:
-						return getCore(stack).getColour();
+						return getCore(stack).getColor().getPackedARGB();
 					case 1:
 						return 0xffffffff;
 					case 2:
@@ -157,7 +164,7 @@ public class ItemIIAmmoMortar extends ItemIIAmmoBase<EntityAmmoArtilleryProjecti
 				}
 			}
 			case CORE:
-				return getCore(stack).getColour();
+				return getCore(stack).getColor().getPackedARGB();
 		}
 		return 0xffffffff;
 	}

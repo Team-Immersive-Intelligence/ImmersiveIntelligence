@@ -164,10 +164,11 @@ public class EmplacementWeaponCPDS extends EmplacementWeapon<EntityAmmoProjectil
 	@Override
 	public float[] getAnglePrediction(Vec3d posTurret, Vec3d posTarget, Vec3d motion)
 	{
+		vv = posTurret.subtract(posTarget).normalize();
 		return IIAmmoUtils.getInterceptionAngles(
 				posTurret, Vec3d.ZERO,
 				posTarget, motion,
-				IIContent.itemAmmoAutocannon.getDefaultVelocity(),
+				IIContent.itemAmmoAutocannon.getVelocity(),
 				s2.isEmpty()?0: IIContent.itemAmmoAutocannon.getMass(s2)
 		);
 	}

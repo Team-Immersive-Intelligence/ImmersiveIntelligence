@@ -6,6 +6,7 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.math.Vec3d;
+import pl.pabilo8.immersiveintelligence.common.util.amt.IIModelHeader;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -47,7 +48,7 @@ public class AMTText extends AMT
 			GlStateManager.disableCull();
 			GlStateManager.translate(originPos.x, originPos.y+0.125, originPos.z);
 
-			GlStateManager.scale(1,-1,-1);
+			GlStateManager.scale(1, -1, -1);
 			if(scale!=null)
 				GlStateManager.scale(scale.x, scale.y, scale.z);
 

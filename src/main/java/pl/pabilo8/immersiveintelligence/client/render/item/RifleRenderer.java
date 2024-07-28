@@ -18,15 +18,17 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.obj.OBJModel;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
 import pl.pabilo8.immersiveintelligence.client.fx.IIParticles;
 import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.client.util.amt.*;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMTBullet.BulletState;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.AssaultRifle;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.item.weapons.ammohandler.AmmoHandler;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler;
+import pl.pabilo8.immersiveintelligence.common.util.amt.IIModelHeader;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.weaponsystem.IIWeaponBase;
 import pl.pabilo8.immersiveintelligence.common.weaponsystem.IIWeaponUpgrade.WeaponUpgrades;
@@ -117,7 +119,7 @@ public class RifleRenderer extends IIUpgradableItemRendererAMT<IIWeaponRifle> im
 		int firing = nbt.getInt(IIWeaponRifle.FIRE_DELAY);
 		int reloading = nbt.getInt(IIWeaponRifle.RELOADING);
 		boolean handRender = is1stPerson(transform);
-		boolean semiAuto = item.hasIIUpgrade(stack, WeaponUpgrades.SEMI_AUTOMATIC);
+		boolean semiAuto = item.hasIIUpgrade(stack, WeaponUpgrade.SEMI_AUTOMATIC);
 		boolean gui = transform==TransformType.GUI;
 
 		//Make upgrade AMTs visible
@@ -145,7 +147,7 @@ public class RifleRenderer extends IIUpgradableItemRendererAMT<IIWeaponRifle> im
 				GlStateManager.rotate(preciseAim*-7.75f, 0, 1, 0);
 				GlStateManager.rotate(preciseAim*-5f, 1, 0, 0);
 
-				if(item.hasIIUpgrades(stack, WeaponUpgrades.SCOPE))
+				if(item.hasIIUpgrades(stack, WeaponUpgrade.SCOPE))
 				{
 					GlStateManager.translate(0, preciseAim*-0.1, preciseAim*1.5);
 					GlStateManager.rotate(5*preciseAim, 1, 0, 0);
@@ -224,7 +226,7 @@ public class RifleRenderer extends IIUpgradableItemRendererAMT<IIWeaponRifle> im
 						(stack, combinedHeader) -> new AMT[]{
 								new AMTBullet("bullet", combinedHeader, AmmoRegistry.getModel(IIContent.itemAmmoMachinegun))
 										.withState(BulletState.BULLET_UNUSED)
-										.withProperties(IIContent.ammoCoreSteel, CoreTypes.PIERCING, -1),
+										.withProperties(IIContent.ammoCoreSteel, CoreType.PIERCING, -1),
 								new AMTBullet("casing_fired", combinedHeader, AmmoRegistry.getModel(IIContent.itemAmmoMachinegun))
 										.withState(BulletState.CASING),
 								new AMTParticle("muzzle_flash", combinedHeader)
@@ -293,7 +295,7 @@ public class RifleRenderer extends IIUpgradableItemRendererAMT<IIWeaponRifle> im
 	@Override
 	public boolean renderCrosshair(ItemStack stack, EnumHand hand)
 	{
-		if(item.hasIIUpgrade(stack, WeaponUpgrades.SCOPE))
+		if(item.hasIIUpgrade(stack, WeaponUpgrade.SCOPE))
 			return false;
 
 		return ItemNBTHelper.getInt(stack, IIWeaponRifle.AIMING) > item.getAimingTime(stack, EasyNBT.wrapNBT(stack))*0.85;

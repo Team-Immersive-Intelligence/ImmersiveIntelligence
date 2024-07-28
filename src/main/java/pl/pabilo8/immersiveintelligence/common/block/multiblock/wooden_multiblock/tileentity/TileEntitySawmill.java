@@ -6,11 +6,11 @@ import net.minecraft.client.particle.ParticleRedstone;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -29,11 +29,13 @@ import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.ISawblade;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Sawmill;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
+import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.multiblock.MultiblockSawmill;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageRotaryPowerSync;
 import pl.pabilo8.immersiveintelligence.common.util.IIDamageSources;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionSingle;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockInteractablePart;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
@@ -47,18 +49,19 @@ import java.util.List;
  */
 public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<TileEntitySawmill, SawmillRecipe> implements IRotationalEnergyBlock, IBooleanAnimatedPartsBlock
 {
-	//Inventory Slots
+	// Inventory Slots
 	public static final int SLOT_INPUT = 0, SLOT_SAWBLADE = 1, SLOT_OUTPUT = 2, SLOT_SAWDUST = 3;
 
-	//Inventory Handlers
+	// Inventory Handlers
 	IItemHandler insertionHandler = getSingleInventoryHandler(SLOT_INPUT, true, false);
 	IItemHandler dustExtractionHandler = getSingleInventoryHandler(SLOT_SAWDUST, false, true);
-	//Recipe Output Handlers
+	// Recipe Output Handlers
 	IItemHandler outputHandler = getSingleInventoryHandler(SLOT_OUTPUT), sawdustOutputHandler = getSingleInventoryHandler(SLOT_SAWDUST);
 
 	public MultiblockInteractablePart vice;
 
-	//Rotary Power
+	// Rotary Power
+	@SyncNBT
 	public RotaryStorage rotation = new RotaryStorage(0, 0)
 	{
 		@Override
@@ -67,6 +70,11 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 			return facing==getFacing()?RotationSide.INPUT: RotationSide.NONE;
 		}
 	};
+
+	@SyncNBT
+	public boolean isProcessing = false;
+	@SyncNBT
+	public boolean isPowered = false;
 
 	public TileEntitySawmill()
 	{
@@ -77,39 +85,6 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 		vice = new MultiblockInteractablePart(20);
 	}
 
-	//--- NBT ---//
-
-	@Override
-	public void readCustomNBT(NBTTagCompound nbt, boolean descPacket)
-	{
-		super.readCustomNBT(nbt, descPacket);
-
-		if(isDummy())
-			return;
-
-		rotation.fromNBT(nbt.getCompoundTag("rotation"));
-	}
-
-	@Override
-	public void writeCustomNBT(NBTTagCompound nbt, boolean descPacket)
-	{
-		super.writeCustomNBT(nbt, descPacket);
-
-		if(isDummy())
-			return;
-
-		nbt.setTag("rotation", rotation.toNBT());
-	}
-
-	@Override
-	public void receiveMessageFromServer(NBTTagCompound message)
-	{
-		super.receiveMessageFromServer(message);
-
-		if(message.hasKey("rotation"))
-			rotation.fromNBT(message.getCompoundTag("rotation"));
-	}
-
 	@Override
 	protected int[] listAllPOI(MultiblockPOI poi)
 	{
@@ -118,11 +93,12 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 			case ROTARY_INPUT:
 				return getPOI("rotary");
 			case ITEM_INPUT:
-				return getPOI("all_item_input");
+				return getPOI("item_input");
 			case ITEM_OUTPUT:
-				return getPOI("item_output");
+				return getPOI("all_item_output");
+			default:
+				return new int[0];
 		}
-		return new int[0];
 	}
 
 	//--- Capabilities ---//
@@ -137,8 +113,6 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 			else if(isPOI("sawdust"))
 				return (T)master.dustExtractionHandler;
 		}
-
-
 		return super.getCapability(capability, facing);
 	}
 
@@ -153,43 +127,45 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 		{
 			boolean receivesPower = false;
 
-			//Self destruct
+			// Self destruct
 			if(rotation.getRotationSpeed() > Sawmill.rpmBreakingMax||rotation.getTorque() > Sawmill.torqueBreakingMax)
 			{
 				selfDestruct();
 				return;
 			}
 
-			//Wheel or mechanical device connected to multiblock
+			// Wheel or mechanical device connected to multiblock
 			TileEntity te = world.getTileEntity(getPOIPos(MultiblockPOI.ROTARY_INPUT).offset(facing));
 
-			if(te!=null)
-				if(te.hasCapability(CapabilityRotaryEnergy.ROTARY_ENERGY, facing.getOpposite()))
+			if(te!=null&&te.hasCapability(CapabilityRotaryEnergy.ROTARY_ENERGY, facing.getOpposite()))
+			{
+				// Increase internal rotation if powered
+				IRotaryEnergy cap = te.getCapability(CapabilityRotaryEnergy.ROTARY_ENERGY, facing.getOpposite());
+				assert cap!=null;
+				if(rotation.handleRotation(cap, facing.getOpposite()))
 				{
-					//Increase internal rotation if powered
-					IRotaryEnergy cap = te.getCapability(CapabilityRotaryEnergy.ROTARY_ENERGY, facing.getOpposite());
-					assert cap!=null;
-					if(rotation.handleRotation(cap, facing.getOpposite()))
-						IIPacketHandler.INSTANCE.sendToAllAround(new MessageRotaryPowerSync(rotation, 0, getPos()), IIPacketHandler.targetPointFromTile(this, 24));
+					IIPacketHandler.INSTANCE.sendToAllAround(new MessageRotaryPowerSync(rotation, 0, getPos()), IIPacketHandler.targetPointFromTile(this, 24));
 					receivesPower = true;
 				}
+			}
+
+			// Update power state
+			isPowered = receivesPower;
 
 			if(rotation.getTorque() > 0||rotation.getRotationSpeed() > 0)
 			{
-				//Decrease internal rotation if not powered
+				// Decrease internal rotation if not powered
 				if(!receivesPower)
 				{
 					rotation.grow(0, 0, 0.98f);
 					IIPacketHandler.INSTANCE.sendToAllAround(new MessageRotaryPowerSync(rotation, 0, getPos()), IIPacketHandler.targetPointFromTile(this, 24));
 				}
 
-				//Hurt entities stepping on sawblade
+				// Hurt entities stepping on sawblade
 				ItemStack sawStack = inventory.get(SLOT_SAWBLADE);
 
-				//REFACTOR: capabilities for saw blades, instead of interfaces
 				if(sawStack.getItem() instanceof ISawblade)
 				{
-					//TODO: 14.04.2023 simplify
 					if(world.getTotalWorldTime()%Math.ceil(4/MathHelper.clamp(rotation.getRotationSpeed()/360, 0, 1))==0)
 					{
 						int hardness = ((ISawblade)sawStack.getItem()).getHardness(sawStack);
@@ -199,14 +175,39 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 						for(EntityLivingBase l : entities)
 							l.attackEntityFrom(IIDamageSources.SAWMILL_DAMAGE, hardness);
 					}
-
 				}
-
 			}
+
+			// Update processing state
+			isProcessing = currentProcess!=null;
+
+			// Play idle sound if powered but not processing
+			if(isPowered&&!isProcessing)
+			{
+				world.playSound(null, getBlockPosForPos(70), IISounds.sawmillIdle, SoundCategory.BLOCKS, .65f, 1.5f);
+			}
+			else
+			{
+				return;
+			}
+
+
+			// Play active sounds if powered AND processing
+			if(isPowered&&isProcessing)
+			{
+				//mill startup
+				world.playSound(null, getBlockPosForPos(70), IISounds.sawmillStart, SoundCategory.BLOCKS, .65F, 1.5F);
+
+
+				//sawmill wind down
+				world.playSound(null, getBlockPosForPos(70), IISounds.sawmillEnd, SoundCategory.BLOCKS, .65F, 1.5F);
+			}
+			else
+				return;
+
 		}
 
 		super.onUpdate();
-
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -222,7 +223,6 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 		ParticleRedstone particle = (ParticleRedstone)ClientUtils.mc().effectRenderer.spawnEffectParticle(EnumParticleTypes.REDSTONE.getParticleID(), pos.x+facing.x, pos.y+facing.y, pos.z+facing.z, 0, -4, 0);
 		if(particle!=null)
 		{
-			//particle.setMaxAge(25);
 			particle.reddustParticleScale = 3.25f;
 			particle.setRBGColorF(rgb[0]*mod, rgb[1]*mod, rgb[2]*mod);
 		}
@@ -275,7 +275,6 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 		e2 = MathHelper.clamp(this.rotation.getTorque()/(float)Sawmill.torqueMin, 0, 1);
 		return (e1+e2)/2f;
 	}
-
 
 	@Override
 	public boolean isStackValid(int slot, ItemStack stack)
@@ -379,3 +378,6 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 				IIPacketHandler.targetPointFromTile(this, 32));
 	}
 }
+
+
+

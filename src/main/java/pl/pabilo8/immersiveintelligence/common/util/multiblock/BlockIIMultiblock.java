@@ -91,10 +91,7 @@ public abstract class BlockIIMultiblock<E extends Enum<E> & IITileMultiblockEnum
 	@Override
 	public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune)
 	{
-		int meta = this.getMetaFromState(state);
-
-		if(meta >= 0&&meta < this.enumValues.length)
-			super.getDrops(drops, world, pos, state, fortune);
+		//drops are handled above
 	}
 
 	@Override

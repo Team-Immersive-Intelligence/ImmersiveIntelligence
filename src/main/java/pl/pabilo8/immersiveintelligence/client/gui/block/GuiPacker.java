@@ -295,6 +295,10 @@ public class GuiPacker extends GuiIEContainerBase
 			tooltip.add(I18n.format("desc.immersiveintelligence.metal_multiblock1.packer.side_output"));
 		else if(switchDirection!=null&&switchDirection.isMouseOver())
 			tooltip.add(I18n.format("desc.immersiveintelligence.metal_multiblock1.packer.switch_direction"));
+		else if(buttonRepeat.isMouseOver())
+			tooltip.add(buttonRepeat.state?
+					I18n.format("desc.immersiveintelligence.metal_multiblock1.packer.mode_iteration"):
+					I18n.format("desc.immersiveintelligence.metal_multiblock1.packer.mode_single"));
 
 		if(!tooltip.isEmpty())
 		{

@@ -10,6 +10,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.ArrayUtils;
+import pl.pabilo8.immersiveintelligence.common.IILogger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -23,7 +24,7 @@ import java.util.Arrays;
  */
 public class ItemIISubItemsBase<E extends Enum<E> & IIItemEnum> extends ItemIIBase
 {
-	private E[] subItems;
+	private E[] subItems, sortedSubItems;
 	private String[] subNames;
 	private int[] subMaxAmounts;
 	private boolean[] isMetaHidden;
@@ -38,6 +39,7 @@ public class ItemIISubItemsBase<E extends Enum<E> & IIItemEnum> extends ItemIIBa
 	public final void updateValues(@Nonnull E[] subItems)
 	{
 		this.subItems = subItems;
+		this.sortedSubItems = null;
 
 		//get names or null
 		this.subNames = Arrays.stream(subItems)
@@ -94,14 +96,38 @@ public class ItemIISubItemsBase<E extends Enum<E> & IIItemEnum> extends ItemIIBa
 		{
 			if(subItems!=null)
 			{
-				for(int i = 0; i < subItems.length; i++)
-					if(!isMetaHidden(i))
-						list.add(new ItemStack(this, 1, i));
+				if(sortedSubItems!=null)
+				{
+					for(E subItem : subItems)
+						if(!isMetaHidden(subItem.getMeta()))
+							list.add(getStack(subItem));
+				}
+				else
+					for(int i = 0; i < subItems.length; i++)
+						if(!isMetaHidden(i))
+							list.add(new ItemStack(this, 1, i));
 			}
 			else
 				list.add(new ItemStack(this));
 		}
 	}
+
+	protected void setSortedSubItems(E... subItems)
+	{
+		if(subItems.length!=this.subItems.length)
+		{
+			IILogger.warn("Could not set sorted subItems for "+this.getRegistryName()+", amounts don't match.");
+			return;
+		}
+		this.sortedSubItems = subItems;
+	}
+
+	@Nonnull
+	public E[] getSortedSubItems()
+	{
+		return sortedSubItems==null?subItems: sortedSubItems;
+	}
+
 
 	/**
 	 * Returns the unlocalized name of this item. This version accepts an ItemStack so different stacks can have different

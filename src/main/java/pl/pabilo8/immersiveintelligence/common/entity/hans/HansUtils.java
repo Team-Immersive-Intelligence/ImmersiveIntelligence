@@ -88,28 +88,28 @@ public class HansUtils
 		setArmor(hans, EntityEquipmentSlot.HEAD, IIContent.itemLightEngineerHelmet, armorUpgrades);
 	}
 
-	public static void setSubmachinegun(EntityHans hans, ItemStack magazine, WeaponUpgrades... weaponUpgrades)
+	public static void setSubmachinegun(EntityHans hans, ItemStack magazine, WeaponUpgrade... weaponUpgrades)
 	{
 		setHandGun(hans, IIContent.itemSubmachinegun, magazine, weaponUpgrades);
 	}
 
-	public static void setAssaultRifle(EntityHans hans, ItemStack magazine, WeaponUpgrades... weaponUpgrades)
+	public static void setAssaultRifle(EntityHans hans, ItemStack magazine, WeaponUpgrade... weaponUpgrades)
 	{
 		setHandGun(hans, IIContent.itemAssaultRifle, magazine, weaponUpgrades);
 	}
 
-	public static void setRifle(EntityHans hans, ItemStack magazine, WeaponUpgrades... weaponUpgrades)
+	public static void setRifle(EntityHans hans, ItemStack magazine, WeaponUpgrade... weaponUpgrades)
 	{
 		setHandGun(hans, IIContent.itemRifle, magazine, weaponUpgrades);
 	}
 
-	public static void setHandGun(EntityHans hans, ItemUpgradeableTool item, ItemStack magazine, WeaponUpgrades... weaponUpgrades)
+	public static void setHandGun(EntityHans hans, ItemUpgradeableTool item, ItemStack magazine, WeaponUpgrade... weaponUpgrades)
 	{
 		ItemStack stack = new ItemStack(item);
 		ItemNBTHelper.setItemStack(stack, "magazine", magazine);
 		int i = item.getSlotCount(stack);
 		NonNullList<ItemStack> upgrades = NonNullList.withSize(i, ItemStack.EMPTY);
-		for(WeaponUpgrades upgrade : weaponUpgrades)
+		for(WeaponUpgrade upgrade : weaponUpgrades)
 		{
 			upgrades.set(--i, new ItemStack(IIContent.itemWeaponUpgrade, 1, upgrade.ordinal()));
 			if(i==0)

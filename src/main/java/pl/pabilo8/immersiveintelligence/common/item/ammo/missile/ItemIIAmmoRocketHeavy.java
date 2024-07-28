@@ -3,15 +3,16 @@ package pl.pabilo8.immersiveintelligence.common.item.ammo.missile;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreTypes;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseType;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.PropellantType;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem.IIAmmoProjectile;
 import pl.pabilo8.immersiveintelligence.client.model.builtin.IAmmoModel;
 import pl.pabilo8.immersiveintelligence.client.model.builtin.ModelAmmoMissile;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoMissile;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoBase;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoBase.AmmoParts;
-import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoCasing.Casings;
+import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoCasing.Casing;
 import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
 import pl.pabilo8.modworks.annotations.item.GeneratedItemModels;
@@ -24,27 +25,32 @@ import java.util.function.Function;
  * @author Pabilo8
  * @since 30-08-2019
  */
-//TODO: 08.03.2024 update values from notes
-@IIAmmoProjectile
-@GeneratedItemModels(itemName = "rocket_10bcal", type = ItemModelType.ITEM_SIMPLE_AUTOREPLACED, valueSet = AmmoParts.class)
+@IIAmmoProjectile(artillery = true)
+@GeneratedItemModels(itemName = "bullet_rocket_10bcal", type = ItemModelType.ITEM_SIMPLE_AUTOREPLACED, valueSet = AmmoParts.class)
 @IIItemProperties(category = IICategory.WARFARE)
 public class ItemIIAmmoRocketHeavy extends ItemIIAmmoBase<EntityAmmoMissile>
 {
 	public ItemIIAmmoRocketHeavy()
 	{
-		super("rocket_10bcal", Casings.HEAVY_ROCKET_10BCAL);
+		super("rocket_10bCal", Casing.HEAVY_ROCKET_10BCAL);
 	}
 
 	@Override
-	public float getComponentAmount()
+	public float getComponentMultiplier()
 	{
 		return 0.65f;
 	}
 
 	@Override
-	public int getGunpowderNeeded()
+	public int getPropellantNeeded()
 	{
 		return 2000;
+	}
+
+	@Override
+	public PropellantType getAllowedPropellants()
+	{
+		return PropellantType.FLUID;
 	}
 
 	@Override
@@ -54,13 +60,13 @@ public class ItemIIAmmoRocketHeavy extends ItemIIAmmoBase<EntityAmmoMissile>
 	}
 
 	@Override
-	public float getInitialMass()
+	public float getCasingMass()
 	{
 		return 0.85f;
 	}
 
 	@Override
-	public float getDefaultVelocity()
+	public float getVelocity()
 	{
 		return 5f;
 	}
@@ -92,15 +98,15 @@ public class ItemIIAmmoRocketHeavy extends ItemIIAmmoBase<EntityAmmoMissile>
 	}
 
 	@Override
-	public CoreTypes[] getAllowedCoreTypes()
+	public CoreType[] getAllowedCoreTypes()
 	{
-		return new CoreTypes[]{CoreTypes.PIERCING, CoreTypes.SHAPED, CoreTypes.CANISTER};
+		return new CoreType[]{CoreType.PIERCING, CoreType.SHAPED, CoreType.CANISTER};
 	}
 
 	@Override
-	public FuseTypes[] getAllowedFuseTypes()
+	public FuseType[] getAllowedFuseTypes()
 	{
-		return new FuseTypes[]{FuseTypes.CONTACT, FuseTypes.TIMED, FuseTypes.PROXIMITY};
+		return new FuseType[]{FuseType.CONTACT, FuseType.TIMED, FuseType.PROXIMITY};
 	}
 
 	@Override

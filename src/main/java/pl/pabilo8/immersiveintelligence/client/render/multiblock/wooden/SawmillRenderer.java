@@ -71,7 +71,7 @@ public class SawmillRenderer extends IITileRenderer<TileEntitySawmill>
 		IIAnimationUtils.setModelVisibility(partSawblade.get(), !te.getInventory().get(TileEntitySawmill.SLOT_SAWBLADE).isEmpty());
 
 		//Rotation
-		animationRotate.apply(IIAnimationUtils.getDebugProgress(getWorld(), 20, partialTicks));
+		animationRotate.apply(IIAnimationUtils.getDebugProgress(20, partialTicks));
 
 		//Production animation
 		if(progress > 0)

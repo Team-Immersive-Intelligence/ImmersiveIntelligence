@@ -15,7 +15,7 @@ import pl.pabilo8.immersiveintelligence.common.util.IIReference;
  */
 public class GuiCasingPouch extends GuiIEContainerBase
 {
-	private static final ResLoc texture = ResLoc.of(IIReference.RES_TEXTURES_GUI, "/casing_pouch").withExtension(ResLoc.EXT_PNG);
+	private static final ResLoc texture = IIReference.RES_TEXTURES_GUI.with("casing_pouch").withExtension(ResLoc.EXT_PNG);
 	private final ItemStack pouch;
 
 	public GuiCasingPouch(EntityPlayer player, ItemStack heldStack, EnumHand hand)

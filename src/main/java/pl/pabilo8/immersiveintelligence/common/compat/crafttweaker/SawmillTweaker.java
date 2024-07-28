@@ -57,7 +57,7 @@ public class SawmillTweaker
 		@Override
 		public void apply()
 		{
-			SawmillRecipe.recipeList.add(recipe);
+			SawmillRecipe.RECIPES.add(recipe);
 		}
 
 		@Override

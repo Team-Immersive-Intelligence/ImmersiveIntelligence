@@ -3,7 +3,6 @@ package pl.pabilo8.immersiveintelligence.api.utils;
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
-import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IUpgradableMachine;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -22,8 +21,8 @@ public class MachineUpgrade
 
 	protected String name;
 	protected ResourceLocation icon;
-	private int progress=0;
-	private int steps=1;
+	private int progress = 0;
+	private int steps = 1;
 	private final List<IngredientStack> requiredStacks = new ArrayList<>();
 
 	public MachineUpgrade(String name, ResourceLocation icon)
@@ -47,13 +46,13 @@ public class MachineUpgrade
 
 	public MachineUpgrade setRequiredProgress(int progress)
 	{
-		this.progress=progress;
+		this.progress = progress;
 		return this;
 	}
 
 	public MachineUpgrade setRequiredSteps(int steps)
 	{
-		this.steps=steps;
+		this.steps = steps;
 		return this;
 	}
 

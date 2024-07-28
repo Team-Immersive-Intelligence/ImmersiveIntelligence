@@ -9,7 +9,6 @@ import pl.pabilo8.immersiveintelligence.client.manual.IIManualCategory;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockCoagulator;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockFuelStation;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockVehicleWorkshop;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockVulcanizer;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.ItemIIMaterial.Materials;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
@@ -62,7 +61,7 @@ public class IIManualCategoryMotorworks extends IIManualCategory
 				new ManualPageMultiblock(ManualHelper.getManual(), "fuel_station0", MultiblockFuelStation.INSTANCE),
 				new ManualPages.Text(ManualHelper.getManual(), "fuel_station1")
 		);
-		ManualHelper.addEntry("vehicle_workshop", getCategory(),
+		/*ManualHelper.addEntry("vehicle_workshop", getCategory(),
 				new ManualPageMultiblock(ManualHelper.getManual(), "vehicle_workshop0", MultiblockVehicleWorkshop.INSTANCE),
 				new ManualPages.Text(ManualHelper.getManual(), "vehicle_workshop1"),
 				new ManualPages.Text(ManualHelper.getManual(), "vehicle_workshop2"),
@@ -74,7 +73,7 @@ public class IIManualCategoryMotorworks extends IIManualCategory
 		);
 		ManualHelper.addEntry("field_howitzer", getCategory(),
 				new ManualPages.Image(ManualHelper.getManual(), "field_howitzer0", "immersiveintelligence:textures/misc/rotary.png;64;192;64;64")
-		);
+		);*/
 		/*ManualHelper.addEntry("generator_trailer", getCategory(),
 				new ManualPages.Text(ManualHelper.getManual(), "generator_trailer0")
 		);*/

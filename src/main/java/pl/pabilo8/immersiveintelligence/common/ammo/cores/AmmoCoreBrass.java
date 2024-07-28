@@ -3,6 +3,7 @@ package pl.pabilo8.immersiveintelligence.common.ammo.cores;
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.PenetrationHardness;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoCore;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
 /**
  * @author Pabilo8
@@ -14,7 +15,7 @@ public class AmmoCoreBrass extends AmmoCore
 {
 	public AmmoCoreBrass()
 	{
-		super("core_brass", 0.75f, PenetrationHardness.WOOD, 1.25f, 0.65f, 0xdaa84a);
+		super("core_brass", 0.75f, PenetrationHardness.WOOD, 1.25f, 0.65f, IIColor.fromPackedRGB(0xdaa84a));
 	}
 
 	@Override

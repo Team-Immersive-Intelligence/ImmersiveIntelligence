@@ -1,14 +1,21 @@
 package pl.pabilo8.immersiveintelligence.client.render.ammunition;
 
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.Tuple;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
+import pl.pabilo8.immersiveintelligence.client.model.builtin.IAmmoModel;
+import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer.RegisteredTileRenderer;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.mines.BlockIIMine.ItemBlockMineBase;
 import pl.pabilo8.immersiveintelligence.common.block.mines.tileentity.TileEntityTellermine;
+import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoMine;
 
 /**
  * Handles rendering of a landmine entity
@@ -19,37 +26,33 @@ import pl.pabilo8.immersiveintelligence.common.block.mines.tileentity.TileEntity
  * @since 02.02.2021
  */
 @RegisteredTileRenderer(name = "tellermine", clazz = TileEntityTellermine.class, teisrClazz = TellermineRenderer.TellermineItemStackRenderer.class)
-public class TellermineRenderer extends TileEntitySpecialRenderer<TileEntityTellermine>
+public class TellermineRenderer extends IITileRenderer<TileEntityTellermine>
 {
+	private IAmmoModel<ItemBlockMineBase, EntityAmmoMine> model;
+
 	@Override
-	public void render(TileEntityTellermine te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
+	public void draw(TileEntityTellermine te, BufferBuilder buf, float partialTicks, Tessellator tes)
 	{
-		GlStateManager.pushMatrix();
-		GlStateManager.translate(x+0.5, y, z+0.5);
-		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
+		GlStateManager.translate(0.5, 0, 0.5);
+		model.renderAmmoComplete(false, te.getMineStack());
+	}
 
-		/*GlStateManager.translate(0, 0.0325f-(te.digLevel*0.0625f), 0);
-		model.renderCasing(0f, 0xffffff);
-		model.renderCore(te.coreColor, EnumCoreTypes.CANISTER);
+	@Override
+	public void compileModels(Tuple<IBlockState, IBakedModel> sModel)
+	{
+		model = AmmoRegistry.getModel((ItemBlockMineBase)IIContent.blockTellermine.itemBlock);
+	}
 
-		if(te.grass)
-		{
-			ClientUtils.bindAtlas();
+	@Override
+	protected void nullifyModels()
+	{
 
-			GlStateManager.translate(-0.5f, 0, -0.5f);
-			int color = getWorld().getBiome(te.getPos()).getGrassColorAtPos(te.getPos())&0x7FFFFFFF;
-			float[] colors = IIUtils.rgbIntToRGB(color);
-			GL11.glShadeModel(GL11.GL_SMOOTH);
-			GlStateManager.disableLighting();
-			GlStateManager.enableBlend();
+	}
 
-			ClientUtils.mc().getBlockRendererDispatcher().getBlockModelRenderer().renderModelBrightnessColor(
-					ClientUtils.mc().getBlockRendererDispatcher().getModelForState(Blocks.TALLGRASS.getStateFromMeta(1)), 1f,
-					colors[0], colors[1], colors[2]);
-			GlStateManager.enableLighting();
-		}*/
-
-		GlStateManager.popMatrix();
+	@Override
+	protected Tuple<IBlockState, IBakedModel> getModelFromBlockState(TileEntityTellermine te)
+	{
+		return ACCEPTABLE;
 	}
 
 	public static class TellermineItemStackRenderer extends TileEntityItemStackRenderer

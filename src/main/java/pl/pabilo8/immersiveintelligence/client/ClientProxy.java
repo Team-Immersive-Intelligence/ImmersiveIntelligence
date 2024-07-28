@@ -7,6 +7,7 @@ import blusunrize.immersiveengineering.client.IECustomStateMapper;
 import blusunrize.immersiveengineering.client.IEDefaultColourHandlers;
 import blusunrize.immersiveengineering.client.models.obj.IEOBJLoader;
 import blusunrize.immersiveengineering.client.render.EntityRenderNone;
+import blusunrize.immersiveengineering.common.Config;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IColouredBlock;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IGuiTile;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IIEMetaBlock;
@@ -57,7 +58,7 @@ import pl.pabilo8.immersiveintelligence.api.ShrapnelHandler;
 import pl.pabilo8.immersiveintelligence.api.ShrapnelHandler.Shrapnel;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
-import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IUpgradableMachine;
+import pl.pabilo8.immersiveintelligence.api.utils.IUpgradableMachine;
 import pl.pabilo8.immersiveintelligence.client.fx.IIParticles;
 import pl.pabilo8.immersiveintelligence.client.gui.block.GuiUpgrade;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualCategory;
@@ -87,6 +88,7 @@ import pl.pabilo8.immersiveintelligence.client.util.ShaderUtil;
 import pl.pabilo8.immersiveintelligence.client.util.font.IIFontRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.font.IIFontRendererCustomGlyphs;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.RadioStation;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
@@ -515,6 +517,7 @@ public class ClientProxy extends CommonProxy
 		IILogger.info("Registering II Manual Pages.");
 		reloadManual();
 
+		Config.manual_int.put("radio_station_range", RadioStation.radioRange);
 
 		//Weapons (Items)
 		IIContent.itemMachinegun.setTileEntityItemStackRenderer(MachinegunItemStackRenderer.instance);
@@ -602,11 +605,9 @@ public class ClientProxy extends CommonProxy
 		registerTileRenderer(FillerRenderer.class);
 
 		//Ammunition production multiblocks renderers
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityAmmunitionWorkshop.class, new AmmunitionWorkshopRenderer().subscribeToList("ammunition_workshop"));
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalMultiblock1), MetalMultiblocks1.AMMUNITION_WORKSHOP.getMeta(), TileEntityAmmunitionWorkshop.class);
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityProjectileWorkshop.class, new ProjectileWorkshopRenderer().subscribeToList("projectile_workshop"));
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalMultiblock1), MetalMultiblocks1.PROJECTILE_WORKSHOP.getMeta(), TileEntityProjectileWorkshop.class);
-
+		registerTileRenderer(HeavyAmmunitionAssemblerRenderer.class);
+		registerTileRenderer(AmmunitionAssemblerRenderer.class);
+		registerTileRenderer(ProjectileWorkshopRenderer.class);
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityChemicalPainter.class, new ChemicalPainterRenderer().subscribeToList("chemical_painter"));
 		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalMultiblock1), MetalMultiblocks1.CHEMICAL_PAINTER.getMeta(), TileEntityChemicalPainter.class);
@@ -665,10 +666,11 @@ public class ClientProxy extends CommonProxy
 		{
 			//Create a new instance of the tile renderer
 			TileEntitySpecialRenderer<T> tileRenderer = clazz.newInstance();
+			ClientRegistry.bindTileEntitySpecialRenderer(((Class<T>)rt.clazz()), tileRenderer);
 
 			//Register the tile renderer for auto reloading
-			if(tileRenderer instanceof IITileRenderer)
-				ClientRegistry.bindTileEntitySpecialRenderer(((Class<T>)rt.clazz()), ((IITileRenderer<T>)tileRenderer).subscribeToList(rt.name()));
+			if(tileRenderer instanceof IReloadableModelContainer<?>)
+				((IReloadableModelContainer<?>)tileRenderer).subscribeToList(rt.name());
 
 			//Register the item renderer (if applicable)
 			if(teisrBlock!=null&&rt.teisrClazz()!=TileEntityItemStackRenderer.class)

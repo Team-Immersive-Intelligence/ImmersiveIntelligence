@@ -16,11 +16,12 @@ import pl.pabilo8.immersiveintelligence.client.render.IIMultiblockRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer.RegisteredTileRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.amt.*;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMTBullet.BulletState;
-import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimation.IIAnimationGroup;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.ArtilleryHowitzer;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityArtilleryHowitzer;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityArtilleryHowitzer.ArtilleryHowitzerAnimation;
+import pl.pabilo8.immersiveintelligence.common.util.amt.IIAnimation.IIAnimationGroup;
+import pl.pabilo8.immersiveintelligence.common.util.amt.IIModelHeader;
 
 /**
  * @author Pabilo8

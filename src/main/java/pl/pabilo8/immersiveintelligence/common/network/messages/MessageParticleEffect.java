@@ -19,9 +19,8 @@ import static pl.pabilo8.immersiveintelligence.client.fx.utils.IIParticlePropert
  * @author Pabilo8
  * @since 20.01.2021
  */
-public class MessageParticleEffect extends IIMessage implements IPositionedMessage
+public class MessageParticleEffect extends IIMessage implements IPositionBoundMessage
 {
-	//TODO: 14.04.2024 add nbt
 	private String id;
 	private World world;
 	private Vec3d pos, motion, dir;
@@ -29,20 +28,22 @@ public class MessageParticleEffect extends IIMessage implements IPositionedMessa
 
 	public MessageParticleEffect(String id, World world, Vec3d pos)
 	{
-		this.id = id;
-		this.world = world;
-		this.pos = pos;
-		this.dir = this.motion = Vec3d.ZERO;
-		this.nbt = new NBTTagCompound();
+		this(id, world, pos, Vec3d.ZERO);
 	}
 
 	public MessageParticleEffect(String id, World world, Vec3d pos, Vec3d dir)
 	{
+		this(id, world, pos, Vec3d.ZERO, new NBTTagCompound());
+	}
+
+	public MessageParticleEffect(String id, World world, Vec3d pos, Vec3d dir, NBTTagCompound mbt)
+	{
 		this.id = id;
 		this.world = world;
 		this.pos = pos;
-		this.motion = this.dir = dir;
-		this.nbt = new NBTTagCompound();
+		this.motion = Vec3d.ZERO;
+		this.dir = dir;
+		this.nbt = mbt;
 	}
 
 	public MessageParticleEffect()
@@ -101,7 +102,7 @@ public class MessageParticleEffect extends IIMessage implements IPositionedMessa
 	}
 
 	@Override
-	public World geWorld()
+	public World getWorld()
 	{
 		return world;
 	}

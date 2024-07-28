@@ -92,8 +92,8 @@ public class TileEntityBallisticComputer extends TileEntityMultiblockIIGeneric<T
 		float z = DataHandlingUtils.asFloat('z', packet);
 		packet.removeVariables('x', 'y', 'z');
 
-		float mass = 0;
-		double force = IIContent.itemAmmoHeavyArtillery.getDefaultVelocity();
+		double mass = 0;
+		double force = IIContent.itemAmmoHeavyArtillery.getVelocity();
 
 		//Get info from item
 		if(packet.hasVariable('s'))
@@ -103,7 +103,7 @@ public class TileEntityBallisticComputer extends TileEntityMultiblockIIGeneric<T
 			if(stack.getItem() instanceof IAmmoTypeItem)
 			{
 				IAmmoTypeItem bullet = (IAmmoTypeItem)stack.getItem();
-				force = bullet.getDefaultVelocity();
+				force = bullet.getVelocity();
 				mass = bullet.getMass(stack);
 			}
 			packet.removeVariable('s');
@@ -120,7 +120,7 @@ public class TileEntityBallisticComputer extends TileEntityMultiblockIIGeneric<T
 				String bname = packet.getPacketVariable('t').valueToString();
 				IAmmoTypeItem<?, ?> bullet = AmmoRegistry.getAmmoItem(bname);
 				if(bullet!=null)
-					force = bullet.getDefaultVelocity();
+					force = bullet.getVelocity();
 			}
 
 

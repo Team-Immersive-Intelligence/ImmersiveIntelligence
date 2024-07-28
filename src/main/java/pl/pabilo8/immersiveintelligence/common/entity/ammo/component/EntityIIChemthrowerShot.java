@@ -21,22 +21,19 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.*;
 import net.minecraft.util.math.RayTraceResult.Type;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.common.util.raytracer.MultipleRayTracer;
-import pl.pabilo8.immersiveintelligence.common.util.raytracer.MultipleRayTracer.MultipleTracerBuilder;
+import pl.pabilo8.immersiveintelligence.common.util.raytracer.FactoryTracer;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Expansion of the IE's Chemthrower.
@@ -48,8 +45,17 @@ import java.util.Collection;
 @net.minecraftforge.fml.common.Optional.Interface(iface = "com.elytradev.mirage.lighting.IEntityLightEventConsumer", modid = "mirage")
 public class EntityIIChemthrowerShot extends EntityIEProjectile implements IEntityLightEventConsumer
 {
-	private final ArrayList<Entity> hitEntities = new ArrayList<>();
-	private final ArrayList<BlockPos> hitPos = new ArrayList<>();
+	private static final double SIZE = 0.5;
+	/**
+	 * Blocks and Entities to ignore during hit detection
+	 */
+	protected Set<Entity> hitEntities = new HashSet<>();
+	protected Set<BlockPos> hitPos = new HashSet<>();
+	/**
+	 * Raytracer used for the projectile
+	 */
+	protected final FactoryTracer flightTracer = FactoryTracer.create(new AxisAlignedBB(-SIZE, -SIZE, -SIZE, SIZE, SIZE, SIZE))
+			.setFilters(this.hitEntities, this.hitPos);
 
 	private FluidStack fluid;
 	private static final DataParameter<Optional<FluidStack>> dataMarker_fluid = EntityDataManager.createKey(EntityIIChemthrowerShot.class, IEFluid.OPTIONAL_FLUID_STACK);
@@ -57,6 +63,7 @@ public class EntityIIChemthrowerShot extends EntityIEProjectile implements IEnti
 	public EntityIIChemthrowerShot(World world)
 	{
 		super(world);
+		hitEntities.add(this);
 	}
 
 	public EntityIIChemthrowerShot(World world, double x, double y, double z, double ax, double ay, double az, FluidStack fluid)
@@ -157,38 +164,20 @@ public class EntityIIChemthrowerShot extends EntityIEProjectile implements IEnti
 
 		if(!inGround)
 		{
-			Vec3d nextPosition = getPositionVector().addVector(motionX, motionY, motionZ);
-			MultipleRayTracer tracer = MultipleTracerBuilder.setPos(world, this.getPositionVector(), nextPosition)
-					.setAABB(this.getEntityBoundingBox())
-					.setFilters(this.hitEntities, this.hitPos)
-					.volumetricTrace();
-
-			for(RayTraceResult hit : tracer)
-			{
-				onImpact(hit);
-				switch(hit.typeOfHit)
-				{
-					case BLOCK:
-					{
-						if(hitPos.contains(hit.getBlockPos()))
-							continue;
+			flightTracer.stepTrace(world, this.getPositionVector(),
+					this.getPositionVector().addVector(motionX, motionY, motionZ),
+					hit -> {
+						onImpact(hit);
+						switch(hit.typeOfHit)
+						{
+							case BLOCK:
+								return hitPos.add(hit.getBlockPos());
+							case ENTITY:
+								return onEntityHit(hit.entityHit);
+						}
+						return false;
 					}
-					break;
-					case ENTITY:
-					{
-						if(hitEntities.contains(hit.entityHit))
-							continue;
-						//TODO: 10.07.2023 armor check
-						if(fire > 0)
-							hit.entityHit.setFire(fire);
-
-						break;
-					}
-					default:
-					case MISS:
-						break;
-				}
-			}
+			);
 		}
 		else
 		{
@@ -239,6 +228,42 @@ public class EntityIIChemthrowerShot extends EntityIEProjectile implements IEnti
 		this.motionY -= getGravity();
 		this.setPosition(this.posX, this.posY, this.posZ);
 		this.doBlockCollisions();
+	}
+
+	/**
+	 * Called when the projectile hits an entity
+	 *
+	 * @param hit Entity that was hit
+	 * @return True if the entity hasn't been hit before
+	 */
+	private boolean onEntityHit(Entity hit)
+	{
+		if(!hitEntities.add(hit))
+			return false;
+
+		//TODO: 10.07.2023 armor check
+		if(fire > 0)
+			hit.setFire(fire);
+
+		//TODO: 21.06.2024 deal damage, apply chemthrower effects
+
+		return true;
+	}
+
+	/**
+	 * Called when the projectile hits a block
+	 *
+	 * @param hit BlockPos of the block that was hit
+	 * @return True if the block hasn't been hit before
+	 */
+	private boolean onBlockHit(BlockPos hit)
+	{
+		if(!hitPos.add(hit))
+			return false;
+
+		//TODO: 21.06.2024 affect blocks
+
+		return true;
 	}
 
 	/**

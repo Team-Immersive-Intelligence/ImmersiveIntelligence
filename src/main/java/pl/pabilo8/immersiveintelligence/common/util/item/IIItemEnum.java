@@ -42,7 +42,7 @@ public interface IIItemEnum extends ISerializableEnum
 	{
 		IIItemProperties tp = getProperties();
 		if(tp==null)
-			return null;
+			return IICategory.NULL;
 		return tp.category();
 	}
 

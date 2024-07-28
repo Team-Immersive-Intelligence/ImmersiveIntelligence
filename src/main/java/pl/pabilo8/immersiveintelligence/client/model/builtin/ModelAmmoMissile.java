@@ -5,7 +5,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.GlStateManager.DestFactor;
 import net.minecraft.client.renderer.Tessellator;
 import org.lwjgl.opengl.GL11;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoCore;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoType;
 import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
@@ -15,6 +15,7 @@ import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoMissi
 
 /**
  * @author Pabilo8
+ * @ii-approved 0.3.1
  * @since 15.03.2024
  */
 public class ModelAmmoMissile<T extends IAmmoType<T, E>, E extends EntityAmmoMissile> extends ModelAmmo<T, E>
@@ -32,12 +33,12 @@ public class ModelAmmoMissile<T extends IAmmoType<T, E>, E extends EntityAmmoMis
 		String name = ammo.getName().toLowerCase();
 		ModelAmmoMissile<T, E> model = new ModelAmmoMissile<>(ammo, ResLoc.of(RES_ITEM_MODEL, name).withExtension(ResLoc.EXT_OBJ));
 		model.reloadModels();
-		model.subscribeToList("ammo_"+name);
+		model.subscribeToList("ammo/missile/"+name);
 		return model;
 	}
 
 	@Override
-	public void renderAmmoComplete(boolean used, int paintColour, AmmoCore coreMaterial, CoreTypes coreType)
+	public void renderAmmoComplete(boolean used, int paintColour, AmmoCore coreMaterial, CoreType coreType)
 	{
 		if(!loaded)
 			return;
@@ -46,8 +47,6 @@ public class ModelAmmoMissile<T extends IAmmoType<T, E>, E extends EntityAmmoMis
 
 		modelCasingSimple.render(tes, buf);
 		modelCoreSimple.get(coreType).get(coreMaterial).render(tes, buf);
-
-		//TODO: 19.03.2024 emmisive rendering
 
 		if(used)
 		{
@@ -58,7 +57,23 @@ public class ModelAmmoMissile<T extends IAmmoType<T, E>, E extends EntityAmmoMis
 			modelJet.render(tes, buf);
 			GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 		}
+	}
 
+	@Override
+	public void renderAmmoComplete(E entity, float partialTicks)
+	{
+		//--- air drag animation ---//
+
+		//max drag depends on missile caliber
+		double maxDrag = ammo.getCaliber()*0.015625;
+
+		//max horizontal and vertical progress times differ to look more natural
+
+		double progressHorizontal = Math.sin((IIAnimationUtils.getAnimationProgress(entity.ticksExisted%7, 7, false, partialTicks)-0.5)*2*Math.PI);
+		double progressVertical = Math.cos((IIAnimationUtils.getAnimationProgress(entity.ticksExisted%7, 7, false, partialTicks)-0.5)*2*Math.PI);
+		GlStateManager.translate(progressHorizontal*maxDrag, 0f, progressVertical*maxDrag);
+
+		super.renderAmmoComplete(entity, partialTicks);
 	}
 
 	@Override

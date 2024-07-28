@@ -1,24 +1,21 @@
 package pl.pabilo8.immersiveintelligence.client.gui.block.ammunition_production;
 
-import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.client.gui.GuiIEContainerBase;
-import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
 import blusunrize.immersiveengineering.common.gui.ContainerIEBase;
-import blusunrize.immersiveengineering.common.util.network.MessageTileSync;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.GuiLabelNoShadow;
+import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionBase;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,10 +25,10 @@ import java.util.function.BiFunction;
  * @author Pabilo8
  * @since 10-07-2019
  */
-public abstract class GuiAmmunitionBase<T extends TileEntityMultiblockMetal<T,?>> extends GuiIEContainerBase
+public abstract class GuiAmmunitionBase<T extends TileEntityMultiblockProductionBase<T, ?>> extends GuiIEContainerBase
 {
-	protected static final ResourceLocation TEXTURE = new ResourceLocation(ImmersiveIntelligence.MODID+":textures/gui/ammunition_workshop.png");
-	protected static final ResourceLocation TEXTURE_ICONS = new ResourceLocation(ImmersiveIntelligence.MODID+":textures/gui/manual.png");
+	protected static final ResourceLocation TEXTURE = IIReference.RES_TEXTURES_GUI.with("ammunition_assembler").withExtension(ResLoc.EXT_PNG);
+	protected static final ResourceLocation TEXTURE_ICONS = IIReference.RES_TEXTURES_GUI.with("manual").withExtension(ResLoc.EXT_PNG);
 	T tile;
 
 	public GuiAmmunitionBase(EntityPlayer player, T tile, BiFunction<EntityPlayer, T, ContainerIEBase<T>> container)
@@ -66,7 +63,7 @@ public abstract class GuiAmmunitionBase<T extends TileEntityMultiblockMetal<T,?>
 
 		if(!tooltip.isEmpty())
 		{
-			ClientUtils.drawHoveringText(tooltip, mx, my, fontRenderer, guiLeft+xSize, -1);
+			ClientUtils.drawHoveringText(tooltip, mx, my, IIClientUtils.fontRegular, guiLeft+xSize, -1);
 			RenderHelper.enableGUIStandardItemLighting();
 		}
 	}
@@ -74,14 +71,14 @@ public abstract class GuiAmmunitionBase<T extends TileEntityMultiblockMetal<T,?>
 	ArrayList<String> drawTooltip(int mx, int my, ArrayList<String> tooltip)
 	{
 		if(isPointInRegion(161-4+48, 19, 7, 47, mx, my))
-			tooltip.add(IIUtils.getPowerLevelString(tile));
+			tooltip.add(IIUtils.getPowerLevelString(tile.energyStorage));
 		return tooltip;
 	}
 
 
 	void sendList(String name, String value)
 	{
-		IIPacketHandler.sendToServer(new MessageIITileSync(tile, EasyNBT.newNBT().withString(name,value)));
+		IIPacketHandler.sendToServer(new MessageIITileSync(tile, EasyNBT.newNBT().withString(name, value)));
 	}
 
 	protected GuiLabelNoShadow addLabel(int x, int y, int textColor, String... text)

@@ -1,0 +1,32 @@
+{
+  "type": "forge:ore_shaped",
+  "result": {
+    "item": "immersiveengineering:chemthrower"
+  },
+  "pattern": [
+    " O ",
+    " EP",
+    "GB "
+  ],
+  "key": {
+    "P": {
+      "item": "immersiveengineering:metal_device1",
+      "data": 6
+    },
+    "O": {
+      "item": "immersiveengineering:toolupgrade",
+      "data": 0
+    },
+    "B": {
+      "item": "minecraft:bucket"
+    },
+    "E": {
+      "item": "immersiveengineering:metal_decoration0",
+      "data": 5
+    },
+    "G": {
+      "type": "forge:ore_dict",
+      "ore": "gunstockWood"
+    }
+  }
+}

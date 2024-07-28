@@ -1,6 +1,7 @@
 package pl.pabilo8.immersiveintelligence.common.util.easynbt;
 
 import blusunrize.immersiveengineering.api.DimensionBlockPos;
+import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import com.google.gson.JsonObject;
 import net.minecraft.item.ItemStack;
@@ -9,6 +10,7 @@ import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
@@ -17,10 +19,7 @@ import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.ISerializableEnum;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -72,6 +71,21 @@ public class EasyNBT extends Constants.NBT
 	}
 
 	//--- With ---//
+	//TODO: 18.07.2024 use one "with" method
+
+	/**
+	 * Appends a serializable object
+	 *
+	 * @param key   name of this tag
+	 * @param value value to be appended
+	 * @param <T>   type of the value
+	 * @return this
+	 */
+	public <T extends NBTBase> EasyNBT withSerializable(String key, INBTSerializable<T> value)
+	{
+		wrapped.setTag(key, value.serializeNBT());
+		return this;
+	}
 
 	/**
 	 * Appends an integer
@@ -168,7 +182,7 @@ public class EasyNBT extends Constants.NBT
 	 */
 	public <T, E extends NBTBase> EasyNBT withList(String key, Function<T, E> conversion, T... objects)
 	{
-		wrapped.setTag(key, listOf((Object[])Arrays.stream(objects).map(conversion).toArray(NBTBase[]::new)));
+		wrapped.setTag(key, listOf((Object[])Arrays.stream(objects).filter(Objects::nonNull).map(conversion).toArray(NBTBase[]::new)));
 		return this;
 	}
 
@@ -179,7 +193,7 @@ public class EasyNBT extends Constants.NBT
 	 */
 	public <T, E extends NBTBase> EasyNBT withList(String key, Function<T, E> conversion, Collection<T> objects)
 	{
-		wrapped.setTag(key, listOf((Object[])objects.stream().map(conversion).toArray(NBTBase[]::new)));
+		wrapped.setTag(key, listOf((Object[])objects.stream().filter(Objects::nonNull).map(conversion).toArray(NBTBase[]::new)));
 		return this;
 	}
 
@@ -289,6 +303,16 @@ public class EasyNBT extends Constants.NBT
 	public EasyNBT withItemStack(String key, ItemStack value)
 	{
 		return withTag(key, value.serializeNBT());
+	}
+
+	/**
+	 * Appends an IngredientStack
+	 *
+	 * @param key name of this tag
+	 */
+	public EasyNBT withIngredientStack(String key, IngredientStack value)
+	{
+		return withTag(key, value.writeToNBT(new NBTTagCompound()));
 	}
 
 	/**
@@ -677,6 +701,16 @@ public class EasyNBT extends Constants.NBT
 	}
 
 	/**
+	 * Gets an IngredientStack
+	 *
+	 * @param key name of this tag
+	 */
+	public IngredientStack getIngredientStack(String key)
+	{
+		return IngredientStack.readFromNBT(getCompound(key));
+	}
+
+	/**
 	 * Gets a FluidStack
 	 *
 	 * @param key name of this tag
@@ -911,9 +945,6 @@ public class EasyNBT extends Constants.NBT
 	public static NBTTagList listOf(Object... elements)
 	{
 		NBTTagList list = new NBTTagList();
-
-		if(elements.length==0)
-			return list;
 
 		for(Object element : elements)
 		{

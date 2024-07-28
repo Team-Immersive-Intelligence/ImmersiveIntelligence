@@ -108,6 +108,9 @@ public class EmplacementWeaponMachinegun extends EmplacementWeapon<EntityAmmoPro
 	{
 		super.shoot(te);
 
+		if(vv==null)
+			return;
+
 		if(!te.getWorld().isRemote)
 		{
 			s2 = !magazine.isEmpty()?magazine.removeFirst(): ItemStack.EMPTY;
@@ -179,10 +182,11 @@ public class EmplacementWeaponMachinegun extends EmplacementWeapon<EntityAmmoPro
 	@Override
 	public float[] getAnglePrediction(Vec3d posTurret, Vec3d posTarget, Vec3d motion)
 	{
+		vv = posTurret.subtract(posTarget).normalize();
 		return IIAmmoUtils.getInterceptionAngles(
 				posTurret, Vec3d.ZERO,
 				posTarget, motion,
-				IIContent.itemAmmoAutocannon.getDefaultVelocity(),
+				IIContent.itemAmmoAutocannon.getVelocity(),
 				s2.isEmpty()?0: IIContent.itemAmmoAutocannon.getMass(s2)
 		);
 	}

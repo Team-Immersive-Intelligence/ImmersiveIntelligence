@@ -1,0 +1,29 @@
+{
+  "type": "forge:ore_shaped",
+  "pattern": [
+    "ACA",
+    "BDB"
+  ],
+  "key": {
+    "A": {
+      "item": "immersiveintelligence:data_wire"
+    },
+    "B": {
+      "type": "forge:ore_dict",
+      "ore": "circuitAdvanced"
+    },
+    "C": {
+      "type": "forge:ore_dict",
+      "ore": "cameraAdvanced"
+    },
+    "D": {
+      "type": "forge:ore_dict",
+      "ore": "scaffoldingSteel"
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:material",
+    "count": 1,
+    "data": 46
+  }
+}

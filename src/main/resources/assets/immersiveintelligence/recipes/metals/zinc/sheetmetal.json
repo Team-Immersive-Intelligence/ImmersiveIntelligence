@@ -13,8 +13,8 @@
   ],
   "key": {
     "P": {
-      "item": "immersiveintelligence:material_plate",
-      "data": 4
+      "type": "forge:ore_dict",
+      "ore": "plateZinc"
     }
   }
 }

@@ -17,6 +17,7 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.item.tools.ItemIIRadioTuner;
 import pl.pabilo8.immersiveintelligence.common.item.tools.ItemIIRadioTuner.RadioTuners;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.amt.IIModelHeader;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 /**

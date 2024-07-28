@@ -1,0 +1,32 @@
+# Made by Pabilo8 with Blockbench
+
+newmtl ammunition_workshop
+map_Kd immersiveintelligence:blocks/multiblock/ammunition_workshop
+newmtl common_bottom
+map_Kd immersiveintelligence:blocks/common/common_bottom
+newmtl common_copper_cable
+map_Kd immersiveintelligence:blocks/common/common_copper_cable
+newmtl common_machinebase
+map_Kd immersiveintelligence:blocks/common/common_machinebase
+newmtl common_rough_steel
+map_Kd immersiveintelligence:blocks/common/common_rough_steel
+newmtl common_steel
+map_Kd immersiveintelligence:blocks/common/common_steel
+newmtl reinforced
+map_Kd immersiveintelligence:blocks/small_crate/reinforced
+newmtl metal
+map_Kd immersiveintelligence:blocks/small_crate/metal
+newmtl metal_ammo
+map_Kd immersiveintelligence:blocks/small_crate/metal_ammo
+newmtl common_thingies
+map_Kd immersiveintelligence:blocks/common/common_thingies
+newmtl conveyor_off
+map_Kd immersiveengineering:blocks/conveyor_off
+newmtl conveyor
+map_Kd immersiveengineering:blocks/conveyor
+newmtl inserter_gray
+map_Kd immersiveintelligence:blocks/metal_device/inserter/inserter_gray
+newmtl tool_gray
+map_Kd immersiveintelligence:blocks/metal_device/inserter/tool_gray
+newmtl inserter_base2
+map_Kd immersiveintelligence:blocks/metal_device/inserter/inserter_base2

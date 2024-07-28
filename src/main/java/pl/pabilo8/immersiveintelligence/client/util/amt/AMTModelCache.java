@@ -11,6 +11,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.model.obj.OBJModel;
 import net.minecraftforge.client.model.obj.OBJModel.Group;
 import net.minecraftforge.client.model.obj.OBJModel.OBJState;
+import pl.pabilo8.immersiveintelligence.common.util.amt.IIModelHeader;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

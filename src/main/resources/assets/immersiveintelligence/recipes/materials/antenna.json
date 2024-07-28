@@ -1,0 +1,27 @@
+{
+  "type": "forge:ore_shaped",
+  "pattern": [
+    "  A",
+    "BA ",
+    "DB "
+  ],
+  "key": {
+    "A": {
+      "type": "forge:ore_dict",
+      "ore": "stickIron"
+    },
+    "B": {
+      "item": "immersiveengineering:wirecoil",
+      "data": 0
+    },
+    "D": {
+      "item": "immersiveengineering:material",
+      "data": 8
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:material",
+    "count": 1,
+    "data": 41
+  }
+}

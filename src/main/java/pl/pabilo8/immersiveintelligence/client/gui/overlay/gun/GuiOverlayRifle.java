@@ -30,8 +30,8 @@ public class GuiOverlayRifle extends GuiOverlayGunBase
 		ItemStack stack = player.getHeldItem(EnumHand.MAIN_HAND);
 		EasyNBT nbt = EasyNBT.wrapNBT(stack);
 
-		if(IIContent.itemRifle.hasIIUpgrade(stack, WeaponUpgrades.SEMI_AUTOMATIC))
-			drawMagazine(nbt.getItemStack(IIWeaponRifle.MAGAZINE), width, height);
+		if(IIContent.itemRifle.hasIIUpgrade(stack, WeaponUpgrade.SEMI_AUTOMATIC))
+			drawMagazine(nbt.getItemStack(ItemIIRifle.MAGAZINE), width, height);
 		else
 		{
 			NonNullList<ItemStack> ammo = NonNullList.create();

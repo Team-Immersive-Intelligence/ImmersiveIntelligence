@@ -11,8 +11,8 @@
   ],
   "key": {
     "I": {
-      "item": "immersiveintelligence:material_ingot",
-      "data": 3
+      "type": "forge:ore_dict",
+      "ore": "ingotTungsten"
     }
   }
 }

@@ -1,0 +1,30 @@
+{
+  "type": "forge:ore_shaped",
+  "pattern": [
+    "ACA",
+    "BDB"
+  ],
+  "key": {
+    "A": {
+      "item": "immersiveintelligence:small_wirecoil",
+      "data": 1
+    },
+    "B": {
+      "type": "forge:ore_dict",
+      "ore": "circuitBasic"
+    },
+    "C": {
+      "type": "forge:ore_dict",
+      "ore": "cameraBasic"
+    },
+    "D": {
+      "type": "forge:ore_dict",
+      "ore": "plateIron"
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:material",
+    "count": 1,
+    "data": 45
+  }
+}

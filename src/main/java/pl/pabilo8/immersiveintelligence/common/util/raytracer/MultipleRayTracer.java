@@ -198,9 +198,7 @@ public class MultipleRayTracer implements Iterable<RayTraceResult>
 		}
 
 		/**
-		 * @param ignoreBlockWithoutBoundingBox whether blocks with no bounding box (i.e. air) should be counted in
-		 * @param stopOnLiquid                  whether should stop tracing on liquids
-		 * @param allowEntities                 whether entities should be traced
+		 * @param allowEntities whether entities should be traced
 		 * @return the builder
 		 */
 		public MultipleTracerBuilder setRules(boolean allowEntities, Predicate<IBlockState> stopOn)

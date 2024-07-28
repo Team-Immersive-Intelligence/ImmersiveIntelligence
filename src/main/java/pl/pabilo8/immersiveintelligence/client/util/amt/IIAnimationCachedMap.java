@@ -3,8 +3,9 @@ package pl.pabilo8.immersiveintelligence.client.util.amt;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.obj.OBJModel;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimation.IIAnimationGroup;
-import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimation.IIBooleanLine;
+import pl.pabilo8.immersiveintelligence.common.util.amt.IIAnimation;
+import pl.pabilo8.immersiveintelligence.common.util.amt.IIAnimation.IIAnimationGroup;
+import pl.pabilo8.immersiveintelligence.common.util.amt.IIAnimation.IIBooleanLine;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;

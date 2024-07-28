@@ -1,0 +1,21 @@
+{
+  "type": "forge:ore_shaped",
+  "pattern": [
+    "AB"
+  ],
+  "key": {
+    "A": {
+      "item": "immersiveengineering:wirecoil",
+      "data": 5
+    },
+    "B": {
+      "item": "immersiveengineering:tool",
+      "data": 1
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:small_wirecoil",
+    "count": 3,
+    "data": 0
+  }
+}

@@ -3,8 +3,9 @@ package pl.pabilo8.immersiveintelligence.common.item.ammo.gun;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreTypes;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseType;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.PropellantType;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem.IIAmmoProjectile;
 import pl.pabilo8.immersiveintelligence.client.model.builtin.IAmmoModel;
 import pl.pabilo8.immersiveintelligence.client.model.builtin.ModelAmmoProjectile;
@@ -12,7 +13,7 @@ import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Ammuniti
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoBase;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoBase.AmmoParts;
-import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoCasing.Casings;
+import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoCasing.Casing;
 import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
 import pl.pabilo8.modworks.annotations.item.GeneratedItemModels;
@@ -23,9 +24,9 @@ import java.util.function.Function;
 
 /**
  * @author Pabilo8
- * @since 30-08-2019
+ * @ii-approved 0.3.1
+ * @since 19.03.2024
  */
-//TODO: 08.03.2024 update values from notes
 @IIAmmoProjectile
 @GeneratedItemModels(itemName = "bullet_gun_4bcal", type = ItemModelType.ITEM_SIMPLE_AUTOREPLACED, valueSet = AmmoParts.class)
 @IIItemProperties(category = IICategory.WARFARE)
@@ -33,19 +34,25 @@ public class ItemIIAmmoLightGun extends ItemIIAmmoBase<EntityAmmoProjectile>
 {
 	public ItemIIAmmoLightGun()
 	{
-		super("gun_4bCal", Casings.LIGHT_GUN_4BCAL);
+		super("gun_4bCal", Casing.LIGHT_GUN_4BCAL);
 	}
 
 	@Override
-	public float getComponentAmount()
+	public float getComponentMultiplier()
 	{
 		return 0.35f;
 	}
 
 	@Override
-	public int getGunpowderNeeded()
+	public int getPropellantNeeded()
 	{
 		return 450;
+	}
+
+	@Override
+	public PropellantType getAllowedPropellants()
+	{
+		return PropellantType.SOLID;
 	}
 
 	@Override
@@ -55,13 +62,13 @@ public class ItemIIAmmoLightGun extends ItemIIAmmoBase<EntityAmmoProjectile>
 	}
 
 	@Override
-	public float getInitialMass()
+	public float getCasingMass()
 	{
-		return 0.85f;
+		return 0.5f;
 	}
 
 	@Override
-	public float getDefaultVelocity()
+	public float getVelocity()
 	{
 		return Ammunition.lightHowiVelocity;
 	}
@@ -89,19 +96,19 @@ public class ItemIIAmmoLightGun extends ItemIIAmmoBase<EntityAmmoProjectile>
 	@Override
 	public float getDamage()
 	{
-		return 24;
+		return 80;
 	}
 
 	@Override
-	public CoreTypes[] getAllowedCoreTypes()
+	public CoreType[] getAllowedCoreTypes()
 	{
-		return new CoreTypes[]{CoreTypes.PIERCING, CoreTypes.PIERCING_SABOT, CoreTypes.SHAPED, CoreTypes.CANISTER};
+		return new CoreType[]{CoreType.PIERCING, CoreType.PIERCING_SABOT, CoreType.SHAPED, CoreType.CANISTER};
 	}
 
 	@Override
-	public FuseTypes[] getAllowedFuseTypes()
+	public FuseType[] getAllowedFuseTypes()
 	{
-		return new FuseTypes[]{FuseTypes.CONTACT, FuseTypes.TIMED, FuseTypes.PROXIMITY};
+		return new FuseType[]{FuseType.CONTACT, FuseType.TIMED, FuseType.PROXIMITY};
 	}
 
 	@Override

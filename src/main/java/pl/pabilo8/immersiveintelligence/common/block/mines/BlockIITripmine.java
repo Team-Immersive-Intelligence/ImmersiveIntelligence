@@ -6,12 +6,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.PropellantType;
 import pl.pabilo8.immersiveintelligence.client.model.builtin.IAmmoModel;
 import pl.pabilo8.immersiveintelligence.client.model.builtin.ModelAmmo;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.mines.tileentity.TileEntityTripMine;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoMine;
-import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoCasing.Casings;
+import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoCasing.Casing;
 
 import javax.annotation.Nonnull;
 import java.util.function.Function;
@@ -49,15 +50,21 @@ public class BlockIITripmine extends BlockIIMine
 		}
 
 		@Override
-		public float getComponentAmount()
+		public float getComponentMultiplier()
 		{
 			return 0.45f;
 		}
 
 		@Override
-		public int getGunpowderNeeded()
+		public int getPropellantNeeded()
 		{
 			return 200;
+		}
+
+		@Override
+		public PropellantType getAllowedPropellants()
+		{
+			return PropellantType.SOLID;
 		}
 
 		@Override
@@ -67,7 +74,7 @@ public class BlockIITripmine extends BlockIIMine
 		}
 
 		@Override
-		public float getInitialMass()
+		public float getCasingMass()
 		{
 			return 0.75f;
 		}
@@ -94,7 +101,7 @@ public class BlockIITripmine extends BlockIIMine
 		@Override
 		public ItemStack getCasingStack(int amount)
 		{
-			return IIContent.itemAmmoCasing.getStack(Casings.TRIPMINE, amount);
+			return IIContent.itemAmmoCasing.getStack(Casing.TRIPMINE, amount);
 		}
 	}
 }

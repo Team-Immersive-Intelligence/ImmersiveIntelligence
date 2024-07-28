@@ -2,10 +2,15 @@ package pl.pabilo8.immersiveintelligence.api.ammo.utils;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.ComponentEffectShape;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoCore;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoType;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityAmmoBase;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
@@ -277,5 +282,26 @@ public class AmmoFactory<E extends EntityAmmoBase<? super E>>
 		//Spawn the entity in the world
 		currentWorld.spawnEntity(entity);
 		return entity;
+	}
+
+	/**
+	 * Detonates the ammo in the world without creating an entity
+	 */
+	public void detonate()
+	{
+		World currentWorld = this.world.get();
+		AmmoComponent[] components = ammo.getComponents(stack);
+		NBTTagCompound[] componentsNBT = ammo.getComponentsNBT(stack);
+		AmmoCore core = ammo.getCore(stack);
+		CoreType coreType = ammo.getCoreType(stack);
+		ComponentEffectShape effectShape = coreType.getEffectShape();
+
+		float componentMultiplier = this.ammo.getComponentMultiplier();
+		float effectivenessMultiplier = core.getExplosionModifier()*coreType.getComponentEffectivenessMod();
+
+		for(int i = 0; i < components.length; i++)
+			components[i].onEffect(currentWorld, pos, dir,
+					effectShape, componentsNBT[i], componentMultiplier, effectivenessMultiplier,
+					owner);
 	}
 }

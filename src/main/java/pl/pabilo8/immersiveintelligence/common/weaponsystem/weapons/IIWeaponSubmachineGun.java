@@ -32,7 +32,7 @@ public class IIWeaponSubmachineGun extends IIWeaponBase
 			@Override
 			protected boolean isValidType(ItemStack gun, Magazines magazine)
 			{
-				return magazine!=Magazines.SUBMACHINEGUN_DRUM||hasIIUpgrade(gun, WeaponUpgrades.BOTTOM_LOADING);
+				return magazine!=Magazines.SUBMACHINEGUN_DRUM||hasIIUpgrade(weapon, WeaponUpgrade.BOTTOM_LOADING);
 			}
 
 			@Override
@@ -69,9 +69,9 @@ public class IIWeaponSubmachineGun extends IIWeaponBase
 	@Override
 	public void removeFromWorkbench(EntityPlayer player, ItemStack stack)
 	{
-		if(hasIIUpgrade(stack, WeaponUpgrades.STURDY_BARREL, WeaponUpgrades.BOTTOM_LOADING))
+		if(hasIIUpgrade(stack, WeaponUpgrade.STURDY_BARREL, WeaponUpgrade.BOTTOM_LOADING))
 			IIUtils.unlockIIAdvancement(player, "main/infinite_power");
-		if(hasIIUpgrades(stack, WeaponUpgrades.SUPPRESSOR, WeaponUpgrades.FOLDING_STOCK))
+		if(hasIIUpgrades(stack, WeaponUpgrade.SUPPRESSOR, WeaponUpgrade.FOLDING_STOCK))
 			IIUtils.unlockIIAdvancement(player, "main/the_silent_unseen");
 	}
 
@@ -90,7 +90,7 @@ public class IIWeaponSubmachineGun extends IIWeaponBase
 	@Override
 	protected double getEquipSpeed(ItemStack weapon, EasyNBT nbt)
 	{
-		return nbt.hasKey(WeaponUpgrades.FOLDING_STOCK)?
+		return nbt.hasKey(WeaponUpgrade.FOLDING_STOCK)?
 				0.35: 0.65;
 	}
 
@@ -117,14 +117,14 @@ public class IIWeaponSubmachineGun extends IIWeaponBase
 	@Override
 	protected int getEnemyAttractRange(ItemStack weapon, EasyNBT nbt)
 	{
-		return nbt.hasKey(WeaponUpgrades.SUPPRESSOR)?
+		return nbt.hasKey(WeaponUpgrade.SUPPRESSOR)?
 				Submachinegun.enemyAttractRangeSuppressor: Submachinegun.enemyAttractRange;
 	}
 
 	@Override
 	public int getAimingTime(ItemStack weapon, EasyNBT nbt)
 	{
-		return nbt.hasKey(WeaponUpgrades.FOLDING_STOCK)?
+		return nbt.hasKey(WeaponUpgrade.FOLDING_STOCK)?
 				Submachinegun.aimTimeFoldedStock: Submachinegun.aimTime;
 	}
 
@@ -163,12 +163,12 @@ public class IIWeaponSubmachineGun extends IIWeaponBase
 	@Override
 	protected float getGunfireParticleSize(ItemStack weapon, EasyNBT nbt)
 	{
-		return nbt.hasKey(WeaponUpgrades.SUPPRESSOR)?0.5f: 1.5f;
+		return nbt.hasKey(WeaponUpgrade.SUPPRESSOR)?0.5f: 1.5f;
 	}
 
 	@Override
 	protected float getVelocityModifier(ItemStack gun, EasyNBT nbt, ItemStack ammo)
 	{
-		return nbt.hasKey(WeaponUpgrades.STURDY_BARREL)?Submachinegun.sturdyBarrelVelocityMod: 1f;
+		return nbt.hasKey(WeaponUpgrade.STURDY_BARREL)?Submachinegun.sturdyBarrelVelocityMod: 1f;
 	}
 }

@@ -3,6 +3,7 @@ package pl.pabilo8.immersiveintelligence.common.ammo.cores;
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.PenetrationHardness;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoCore;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
 /**
  * @author Pabilo8
@@ -14,7 +15,7 @@ public class AmmoCoreLead extends AmmoCore
 {
 	public AmmoCoreLead()
 	{
-		super("core_lead", 1.5f, PenetrationHardness.ROCK, 1f, 1.1f, 0x3a3e44);
+		super("core_lead", 1.5f, PenetrationHardness.ROCK, 1f, 1.1f, IIColor.fromPackedRGB(0x3a3e44));
 	}
 
 	@Override

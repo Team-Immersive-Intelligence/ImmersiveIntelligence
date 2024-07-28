@@ -2,9 +2,6 @@ package pl.pabilo8.immersiveintelligence.api.ammo.enums;
 
 import pl.pabilo8.immersiveintelligence.common.util.ISerializableEnum;
 
-import javax.annotation.Nonnull;
-import java.util.Arrays;
-
 public enum ComponentRole implements ISerializableEnum
 {
 	GENERAL_PURPOSE(0xaaaaaa),
@@ -15,7 +12,9 @@ public enum ComponentRole implements ISerializableEnum
 	INCENDIARY(0x6b4344),
 	TRACER(0x92b3db),
 	FLARE(0xc1a8db),
+	TERRAIN_DENIAL(0x578060),
 	CHEMICAL(0x6a8258),
+	EMP(0x434b69),
 	SPECIAL(0x63dcc1);
 
 	/**
@@ -31,12 +30,5 @@ public enum ComponentRole implements ISerializableEnum
 	public int getColor()
 	{
 		return color;
-	}
-
-	@Nonnull
-	public static ComponentRole v(String s)
-	{
-		String ss = s.toUpperCase();
-		return Arrays.stream(values()).filter(e -> e.name().equals(ss)).findFirst().orElse(GENERAL_PURPOSE);
 	}
 }

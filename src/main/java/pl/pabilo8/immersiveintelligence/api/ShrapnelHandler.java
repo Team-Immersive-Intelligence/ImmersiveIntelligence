@@ -2,7 +2,7 @@ package pl.pabilo8.immersiveintelligence.api;
 
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
-import pl.pabilo8.immersiveintelligence.common.ammo.factory.AmmoComponentShrapnel;
+import pl.pabilo8.immersiveintelligence.common.ammo.components.factory.AmmoComponentShrapnel;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
 import java.util.HashMap;
