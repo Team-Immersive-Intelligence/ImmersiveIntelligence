@@ -103,6 +103,10 @@ item.immersiveintelligence.material_dust.quartz.name=Quartz Dust
 item.immersiveintelligence.material_dust.quartz_dirty.name=Dirty Quartz Dust
 item.immersiveintelligence.material_dust.phosphorus.name=Phosphorus Dust
 item.immersiveintelligence.material_dust.duraluminium.name=Duraluminium Grit
+item.immersiveintelligence.material_dust.sodium_hydroxide.name=Sodium Hydroxide
+item.immersiveintelligence.material_dust.sodium.name=Sodium Dust
+item.immersiveintelligence.material_dust.silicon_dioxide.name=Silicon Dioxide Dust
+item.immersiveintelligence.material_dust.synthetic_rubber_crumbs.name=Synthetic Rubber Crumbs
 
 item.immersiveintelligence.material_plate.platinum.name=Platinum Plate
 item.immersiveintelligence.material_plate.zinc.name=Zinc Plate
@@ -112,6 +116,7 @@ item.immersiveintelligence.material_plate.advanced_electronic_alloy.name=Advance
 item.immersiveintelligence.material_plate.silicon.name=Silicon Wafer
 item.immersiveintelligence.material_plate.rubber_raw.name=Natural Rubber Sheet
 item.immersiveintelligence.material_plate.duraluminium.name=Duraluminium Plate
+item.immersiveintelligence.material_plate.synthetic_rubber_raw.name=Synthetic Rubber Sheet
 
 item.immersiveintelligence.material_nugget.platinum.name=Platinum Nugget
 item.immersiveintelligence.material_nugget.zinc.name=Zinc Nugget

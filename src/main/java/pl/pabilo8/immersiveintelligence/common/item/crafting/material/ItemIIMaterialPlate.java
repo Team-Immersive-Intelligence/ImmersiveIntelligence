@@ -31,6 +31,7 @@ public class ItemIIMaterialPlate extends ItemIISubItemsBase<MaterialsPlate>
 		ZINC,
 		SILICON,
 		RUBBER_RAW,
-		DURALUMINIUM
+		DURALUMINIUM,
+		SYNTHETIC_RUBBER_RAW,
 	}
 }
