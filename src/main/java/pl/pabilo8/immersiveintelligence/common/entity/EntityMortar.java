@@ -35,6 +35,7 @@ import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoArtilleryProjectile;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageEntityNBTSync;
+import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 
 /**
  * @author Pabilo8
@@ -156,7 +157,7 @@ public class EntityMortar extends Entity implements IEntityAdditionalSpawnData, 
 									//Calculate angles
 									double yawAngle = Math.toRadians((MathHelper.wrapDegrees(-rotationYaw+180)));
 									double pitchAngle = Math.toRadians(rotationPitch);
-									Vec3d gunEnd = IIUtils.offsetPosDirection(2f, yawAngle, pitchAngle);
+									Vec3d gunEnd = IIMath.offsetPosDirection(2f, yawAngle, pitchAngle);
 
 									//Play firing sound
 									world.playSound(null, posX, posY, posZ, IISounds.mortarShot, SoundCategory.PLAYERS, 1.25f, 1f);
@@ -297,8 +298,8 @@ public class EntityMortar extends Entity implements IEntityAdditionalSpawnData, 
 		float headYaw = MathHelper.wrapDegrees(this.rotationYaw);
 		double true_angle = Math.toRadians((-headYaw) > 180?360f-(-headYaw): (-headYaw));
 		double true_angle2 = Math.toRadians((-headYaw-90) > 180?360f-(-headYaw-90): (-headYaw-90));
-		Vec3d pos2 = IIUtils.offsetPosDirection(0.125f, true_angle, 0);
-		Vec3d pos3 = IIUtils.offsetPosDirection(-0.75f, true_angle2, 0);
+		Vec3d pos2 = IIMath.offsetPosDirection(0.125f, true_angle, 0);
+		Vec3d pos3 = IIMath.offsetPosDirection(-0.75f, true_angle2, 0);
 		float ff = 1;
 		if(shootingProgress > 0)
 		{

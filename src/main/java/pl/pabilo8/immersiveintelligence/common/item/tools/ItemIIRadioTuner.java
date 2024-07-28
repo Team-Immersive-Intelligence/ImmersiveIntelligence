@@ -28,6 +28,7 @@ import pl.pabilo8.immersiveintelligence.common.item.tools.ItemIIRadioTuner.Radio
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
@@ -72,7 +73,7 @@ public class ItemIIRadioTuner extends ItemIISubItemsBase<RadioTuners> implements
 	{
 		RadioTuners tuner = stackToSub(stack);
 
-		list.add(IIUtils.getItalicString(I18n.format(IIReference.DESCRIPTION_KEY+"radio_configurator_"+tuner.getName())));
+		list.add(IIStringUtil.getItalicString(I18n.format(IIReference.DESCRIPTION_KEY+"radio_configurator_"+tuner.getName())));
 		list.add(I18n.format(IIReference.DESCRIPTION_KEY+"radio_configurator_max_frequency",
 				TextFormatting.GOLD.toString()+tuner.maxFrequency+TextFormatting.RESET));
 		list.add(I18n.format(IIReference.DESCRIPTION_KEY+"radio_configurator_frequency",

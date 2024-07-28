@@ -42,6 +42,7 @@ import pl.pabilo8.immersiveintelligence.common.entity.vehicle.towable.gun.Entity
 import pl.pabilo8.immersiveintelligence.common.item.tools.ItemIIBinoculars.Binoculars;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
 import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIIItemTextureOverride;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
@@ -84,7 +85,7 @@ public class ItemIIBinoculars extends ItemIISubItemsBase<Binoculars> implements 
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> list, ITooltipFlag flag)
 	{
-		list.add(IIUtils.getItalicString(I18n.format(IIReference.DESCRIPTION_KEY+"binoculars")));
+		list.add(IIStringUtil.getItalicString(I18n.format(IIReference.DESCRIPTION_KEY+"binoculars")));
 		if(isAdvanced(stack))
 		{
 			String stored = this.getEnergyStored(stack)+"/"+this.getMaxEnergyStored(stack);

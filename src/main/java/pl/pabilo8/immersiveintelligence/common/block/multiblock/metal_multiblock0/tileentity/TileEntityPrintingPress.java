@@ -32,6 +32,7 @@ import pl.pabilo8.immersiveintelligence.common.entity.tactile.EntityAMTTactile;
 import pl.pabilo8.immersiveintelligence.common.entity.tactile.TactileHandler;
 import pl.pabilo8.immersiveintelligence.common.entity.tactile.TactileHandler.ITactileListener;
 import pl.pabilo8.immersiveintelligence.common.item.ItemIIPrintedPage.SubItems;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIDamageSources;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.lambda.NBTTagCollector;
@@ -78,7 +79,7 @@ public class TileEntityPrintingPress extends TileEntityMultiblockProductionMulti
 				while(matcher.find())
 				{
 					// Call IIUtils.rgbToCMYK to get CMYK values
-					float[] cmykValues = IIUtils.rgbToCmyk(IIUtils.rgbIntToRGB(
+					float[] cmykValues = IIColor.rgbToCmyk(IIColor.rgbIntToRGB(
 							Integer.parseInt(matcher.group(1).substring(0, 6), 16))
 					);
 

@@ -20,6 +20,7 @@ import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeNull;
 import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
 import pl.pabilo8.immersiveintelligence.client.gui.IDataMachineGui;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.GuiWidgetManualWrapper;
+import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 import javax.annotation.Nonnull;
@@ -87,7 +88,7 @@ public class IIManualPageDataVariables extends ManualPages
 			ClientUtils.bindTexture(entry.dataType.textureLocation());
 			Gui.drawModalRectWithCustomSizedTexture(x-4, y+down-3, 0, 0, 16, 16, 16, 16);
 
-			if(IIUtils.isPointInRectangle(x-4, y+down-3, x+12, y+down+13, mx, my))
+			if(IIMath.isPointInRectangle(x-4, y+down-3, x+12, y+down+13, mx, my))
 				tooltip = entry;
 
 			char toDraw = entry.c[(int)Math.ceil((gui.mc.world.getTotalWorldTime()%entry.prezTimeTotal)/20)];

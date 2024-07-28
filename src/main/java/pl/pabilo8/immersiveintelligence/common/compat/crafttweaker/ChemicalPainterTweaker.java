@@ -13,6 +13,7 @@ import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.api.crafting.PaintingRecipe;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
@@ -38,7 +39,7 @@ public class ChemicalPainterTweaker
 		}
 
 		PaintingRecipe r = new PaintingRecipe((rgb, stack) -> {
-			EnumDyeColor dye = IIUtils.getRGBTextFormatting(rgb);
+			EnumDyeColor dye = IIColor.getRGBTextFormatting(rgb);
 			return CraftTweakerMC.getItemStack(function.process(CraftTweakerMC.getIItemStack(stack), rgb, dye.getColorValue()));
 		}, oItemInput, energy, time, paintAmount);
 

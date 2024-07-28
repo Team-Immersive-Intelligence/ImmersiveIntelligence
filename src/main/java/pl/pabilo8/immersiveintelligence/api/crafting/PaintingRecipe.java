@@ -12,6 +12,7 @@ import net.minecraft.util.NonNullList;
 import net.minecraftforge.fluids.FluidStack;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityChemicalPainter;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
 import java.util.*;
 import java.util.function.BiFunction;
@@ -53,7 +54,7 @@ public class PaintingRecipe extends MultiblockRecipe
 		Set<ItemStack> collect = Arrays.stream(EnumDyeColor.values()).map(
 						enumDyeColor -> {
 							float[] values = enumDyeColor.getColorComponentValues();
-							return IIUtils.rgb(values[0],values[1],values[2]);
+							return IIColor.rgb(values[0],values[1],values[2]);
 						})
 				.map(integer -> process.apply(integer, itemInput.getExampleStack().copy()))
 				.collect(Collectors.toSet());

@@ -32,6 +32,8 @@ import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageGuiNBT;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
+import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
@@ -160,7 +162,7 @@ public class GuiDataRedstoneInterfaceData extends GuiIEContainerBase implements 
 				GL11.glPushMatrix();
 				GlStateManager.disableLighting();
 
-				boolean isIn = IIUtils.isPointInRectangle(drawx, drawy, drawx+128, drawy+20, mx, my);
+				boolean isIn = IIMath.isPointInRectangle(drawx, drawy, drawx+128, drawy+20, mx, my);
 				boolean canDelete = isIn&&isShiftKeyDown();
 
 				if(canDelete)
@@ -186,7 +188,7 @@ public class GuiDataRedstoneInterfaceData extends GuiIEContainerBase implements 
 				ClientUtils.bindTexture(texture);
 
 				//Variable type based effects
-				float[] rgb = IIUtils.rgbIntToRGB(data.getTypeColour());
+				float[] rgb = IIColor.rgbIntToRGB(data.getTypeColour());
 				GL11.glColor4f(rgb[0], rgb[1], rgb[2], 1f);
 				this.drawTexturedModalRect(drawx, drawy, 173, 222, 8, 20);
 				this.drawTexturedModalRect(drawx+52, drawy, 184, 222, 22, 20);
@@ -196,35 +198,35 @@ public class GuiDataRedstoneInterfaceData extends GuiIEContainerBase implements 
 
 				byte changeButton = 0;
 
-				if(IIUtils.isPointInRectangle(drawx+52, drawy+4, drawx+60, drawy+9, mx, my))
+				if(IIMath.isPointInRectangle(drawx+52, drawy+4, drawx+60, drawy+9, mx, my))
 				{
 					this.drawTexturedModalRect(drawx+52, drawy+4, 72, 242, 8, 6);
 					changeButton = 1;
 				}
 				this.drawTexturedModalRect(drawx+52, drawy+4, 64, 242, 8, 6);
 
-				if(IIUtils.isPointInRectangle(drawx+52, drawy+10, drawx+60, drawy+15, mx, my))
+				if(IIMath.isPointInRectangle(drawx+52, drawy+10, drawx+60, drawy+15, mx, my))
 				{
 					this.drawTexturedModalRect(drawx+52, drawy+10, 72, 248, 8, 6);
 					changeButton = 2;
 				}
 				this.drawTexturedModalRect(drawx+52, drawy+10, 64, 248, 8, 6);
 
-				if(IIUtils.isPointInRectangle(drawx+22, drawy+4, drawx+30, drawy+9, mx, my))
+				if(IIMath.isPointInRectangle(drawx+22, drawy+4, drawx+30, drawy+9, mx, my))
 				{
 					this.drawTexturedModalRect(drawx+22, drawy+4, 72, 242, 8, 6);
 					changeButton = 3;
 				}
 				this.drawTexturedModalRect(drawx+22, drawy+4, 64, 242, 8, 6);
 
-				if(IIUtils.isPointInRectangle(drawx+22, drawy+10, drawx+30, drawy+15, mx, my))
+				if(IIMath.isPointInRectangle(drawx+22, drawy+10, drawx+30, drawy+15, mx, my))
 				{
 					this.drawTexturedModalRect(drawx+22, drawy+10, 72, 248, 8, 6);
 					changeButton = 4;
 				}
 				this.drawTexturedModalRect(drawx+22, drawy+10, 64, 248, 8, 6);
 
-				if(IIUtils.isPointInRectangle(drawx+62, drawy+4, drawx+125, drawy+17, mx, my))
+				if(IIMath.isPointInRectangle(drawx+62, drawy+4, drawx+125, drawy+17, mx, my))
 					changeButton = 5;
 
 				if(list.getPacketVariable(c) instanceof DataTypeArray)

@@ -11,6 +11,7 @@ import net.minecraft.util.math.Vec3i;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.client.model.IIModelRegistry;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
 import java.util.Arrays;
 
@@ -70,7 +71,7 @@ public class AMTQuads extends AMT
 				//Since it's inside a GLCallList, the speed will get boosted significantly
 				if(bakedColor!=-1)
 				{
-					float[] floats = IIUtils.rgbIntToRGB(bakedColor);
+					float[] floats = IIColor.rgbIntToRGB(bakedColor);
 					for(BakedQuad quad : quads)
 					{
 						buf.addVertexData(quad.getVertexData());

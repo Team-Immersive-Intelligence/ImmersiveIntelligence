@@ -11,6 +11,7 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
 import pl.pabilo8.immersiveintelligence.common.entity.hans.HansAnimations.HansLegAnimation;
+import pl.pabilo8.immersiveintelligence.common.util.entity.IIEntityUtils;
 import pl.pabilo8.immersiveintelligence.common.weaponsystem.weapons.IIWeaponRailgunOverride;
 
 /**
@@ -100,9 +101,9 @@ public class AIHansRailgun extends AIHansHandWeapon
 	{
 		if(ammo.getItem()==IIContent.itemRailgunGrenade)
 			return IIAmmoUtils.getDirectFireAngle(IIContent.itemRailgunGrenade.getDefaultVelocity(), IIContent.itemRailgunGrenade.getMass(ammo),
-					hans.getPositionVector().addVector(0, hans.getEyeHeight()-0.10000000149011612D, 0).subtract(IIUtils.getEntityCenter(attackTarget)));
+					hans.getPositionVector().addVector(0, hans.getEyeHeight()-0.10000000149011612D, 0).subtract(IIEntityUtils.getEntityCenter(attackTarget)));
 		else
-			return IIAmmoUtils.getIEDirectRailgunAngle(ammo, hans.getPositionVector().addVector(0, hans.getEyeHeight(), 0).subtract(IIUtils.getEntityCenter(attackTarget)));
+			return IIAmmoUtils.getIEDirectRailgunAngle(ammo, hans.getPositionVector().addVector(0, hans.getEyeHeight(), 0).subtract(IIEntityUtils.getEntityCenter(attackTarget)));
 	}
 
 	@Override

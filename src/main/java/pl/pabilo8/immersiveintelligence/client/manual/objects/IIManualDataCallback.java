@@ -14,7 +14,9 @@ import pl.pabilo8.immersiveintelligence.client.manual.IIManualObject;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualPage;
 import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import javax.annotation.Nonnull;
@@ -110,12 +112,12 @@ public class IIManualDataCallback extends IIManualObject
 			ArrayList<String> lines = new ArrayList<>();
 			lines.add(String.format(
 					"<%s> %s",
-					IIUtils.getHexCol(type.getTypeColour(), I18n.format(IIReference.DATA_KEY+"datatype."+type.getName())),
-					IIUtils.getItalicString(name)
+					IIColor.getHexCol(type.getTypeColour(), I18n.format(IIReference.DATA_KEY+"datatype."+type.getName())),
+					IIStringUtil.getItalicString(name)
 			));
 
 			lines.add(TextFormatting.GRAY+label);
-			lines.add(I18n.format("ie.manual.entry.callback_returns")+" "+TextFormatting.GRAY+IIUtils.getItalicString(returns));
+			lines.add(I18n.format("ie.manual.entry.callback_returns")+" "+TextFormatting.GRAY+IIStringUtil.getItalicString(returns));
 
 			return lines;
 		}

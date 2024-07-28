@@ -24,6 +24,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleRegistry;
 import pl.pabilo8.immersiveintelligence.common.IIPotions;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.common.util.entity.IIEntityUtils;
 
 /**
  * @author Pabilo8
@@ -74,7 +75,7 @@ public class EntityWhitePhosphorus extends EntityIEProjectile implements ILightE
 	@SideOnly(Side.CLIENT)
 	private void spawnTracerParticles()
 	{
-		ParticleRegistry.spawnTracerFX(getPositionVector(), IIUtils.getEntityMotion(this), 0.2f, 0xffffff);
+		ParticleRegistry.spawnTracerFX(getPositionVector(), IIEntityUtils.getEntityMotion(this), 0.2f, 0xffffff);
 	}
 
 	/**

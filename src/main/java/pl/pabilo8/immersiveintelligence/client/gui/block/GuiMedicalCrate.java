@@ -17,6 +17,7 @@ import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.eff
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerMedicalCrate;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
+import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 import java.util.ArrayList;
@@ -78,16 +79,16 @@ public class GuiMedicalCrate extends GuiIEContainerBase
 
 		if(upgraded)
 		{
-			if(IIUtils.isPointInRectangle(buttonHealing.x,buttonHealing.y,buttonHealing.x+buttonHealing.width,buttonHealing.y+buttonHealing.height,mouseX,mouseY))
+			if(IIMath.isPointInRectangle(buttonHealing.x,buttonHealing.y,buttonHealing.x+buttonHealing.width,buttonHealing.y+buttonHealing.height,mouseX,mouseY))
 				tooltip.add(I18n.format(IIReference.DESCRIPTION_KEY+"medical_crate.heal"));
-			else if(IIUtils.isPointInRectangle(buttonBoost.x,buttonBoost.y,buttonBoost.x+buttonBoost.width,buttonBoost.y+buttonBoost.height,mouseX,mouseY))
+			else if(IIMath.isPointInRectangle(buttonBoost.x,buttonBoost.y,buttonBoost.x+buttonBoost.width,buttonBoost.y+buttonBoost.height,mouseX,mouseY))
 				tooltip.add(I18n.format(IIReference.DESCRIPTION_KEY+"medical_crate.boost"));
 		}
 
 		ClientUtils.handleGuiTank(tile.tanks[0], guiLeft+ww+10, guiTop+21, 16, 47, 177, 0, 20, 51, mouseX, mouseY, TEXTURE, tooltip);
 		ClientUtils.handleGuiTank(tile.tanks[1], guiLeft+ww+54, guiTop+21, 16, 47, 177, 0, 20, 51, mouseX, mouseY, TEXTURE, tooltip);
 
-		if(upgraded&&IIUtils.isPointInRectangle(guiLeft+153, guiTop+24, guiLeft+153+7, guiTop+24+47, mouseX, mouseY))
+		if(upgraded&&IIMath.isPointInRectangle(guiLeft+153, guiTop+24, guiLeft+153+7, guiTop+24+47, mouseX, mouseY))
 			tooltip.add(tile.energyStorage+"/"+EffectCrates.maxEnergyStored+" IF");
 
 		if(!tooltip.isEmpty())

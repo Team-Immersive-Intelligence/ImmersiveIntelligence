@@ -33,6 +33,7 @@ import pl.pabilo8.immersiveintelligence.common.gui.ContainerArithmeticLogicMachi
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageGuiNBT;
+import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 import javax.annotation.Nonnull;
@@ -141,7 +142,7 @@ public class GuiArithmeticLogicMachineBase extends GuiIEContainerBase implements
 		{
 			int mouseX = Mouse.getX()*width/mc.displayWidth;
 			int mouseZ = height-Mouse.getY()*height/mc.displayHeight-1;
-			if(IIUtils.isPointInRectangle(guiLeft+xSize, sideManual.y, sideManual.x+146, sideManual.y+198, mouseX, mouseZ))
+			if(IIMath.isPointInRectangle(guiLeft+xSize, sideManual.y, sideManual.x+146, sideManual.y+198, mouseX, mouseZ))
 			{
 				sideManual.handleInput();
 				handled = true;

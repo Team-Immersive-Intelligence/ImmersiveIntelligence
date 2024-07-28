@@ -25,6 +25,7 @@ import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoGrenade;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoBase;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoBase.AmmoParts;
+import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
 import pl.pabilo8.modworks.annotations.item.GeneratedItemModels;
@@ -207,7 +208,7 @@ public class ItemIIAmmoGrenade extends ItemIIAmmoBase<EntityAmmoGrenade>
 		world.playSound(null, entity.posX, entity.posY, entity.posZ, IISounds.grenadeThrow, SoundCategory.PLAYERS, 1f, 1f);
 
 		//calculate the position and direction
-		Vec3d vec = IIUtils.getVectorForRotation(entity.rotationPitch, entity.getRotationYawHead());
+		Vec3d vec = IIMath.getVectorForRotation(entity.rotationPitch, entity.getRotationYawHead());
 		Vec3d vv = entity.getPositionVector().addVector(0, (double)entity.getEyeHeight()-0.10000000149011612D, 0);
 
 		//spawn the grenade

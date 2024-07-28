@@ -48,6 +48,8 @@ import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockChemicalPainter;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
+import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IAdvancedBounds;
 
@@ -226,7 +228,7 @@ public class TileEntityChemicalPainter extends TileEntityMultiblockMetal<TileEnt
 				PaintingRecipe recipe = PaintingRecipe.findRecipe(inventory.get(0));
 				if(recipe!=null)
 				{
-					float[] cmyk = IIUtils.rgbToCmyk(IIUtils.rgbIntToRGB(color));
+					float[] cmyk = IIColor.rgbToCmyk(IIColor.rgbIntToRGB(color));
 					for(int i = 0; i < cmyk.length; i++)
 						cmyk[i] *= recipe.getPaintAmount();
 
@@ -316,7 +318,7 @@ public class TileEntityChemicalPainter extends TileEntityMultiblockMetal<TileEnt
 		facing = facing.scale(0.65f);
 
 		float mod = (float)(Math.random()*2f);
-		float[] rgb = IIUtils.rgbIntToRGB(color);
+		float[] rgb = IIColor.rgbIntToRGB(color);
 		float ff = (getWorld().getTotalWorldTime()%200)/200f;
 		float ny = (-0.275f+((Math.abs(((ff%0.2f)/0.2f)-0.5f)*2f)*0.55f));
 		float nx = ((Math.abs(((ff%0.33f)/0.33f)-0.5f)*2f)*0.55f);
@@ -565,13 +567,13 @@ public class TileEntityChemicalPainter extends TileEntityMultiblockMetal<TileEnt
 			switch(sound)
 			{
 				case "immersiveintelligence:chemical_painter_lights":
-					return IIUtils.inRange(master.processTime, master.processTimeMax, 0.65f, 0.95f);
+					return IIMath.inRange(master.processTime, master.processTimeMax, 0.65f, 0.95f);
 				case "immersiveengineering:spray":
-					return IIUtils.inRange(master.processTime, master.processTimeMax, 0.25, 0.75);
+					return IIMath.inRange(master.processTime, master.processTimeMax, 0.25, 0.75);
 				case "immersiveintelligence:chemical_painter_lift_up":
-					return IIUtils.inRange(master.processTime, master.processTimeMax, 0.05, 0.2);
+					return IIMath.inRange(master.processTime, master.processTimeMax, 0.05, 0.2);
 				case "immersiveintelligence:chemical_painter_lift_down":
-					return IIUtils.inRange(master.processTime, master.processTimeMax, 0.7, 0.85);
+					return IIMath.inRange(master.processTime, master.processTimeMax, 0.7, 0.85);
 			}
 		}
 
@@ -727,7 +729,7 @@ public class TileEntityChemicalPainter extends TileEntityMultiblockMetal<TileEnt
 			TileEntityChemicalPainter master = master();
 			if(master!=null&&master.active)
 			{
-				if(IIUtils.inRange(master.processTime, master.processTimeMax, 0.65f, 0.95f))
+				if(IIMath.inRange(master.processTime, master.processTimeMax, 0.65f, 0.95f))
 					gatherLightsEvent.add(Light.builder().pos(getPos()).color(0.8235294f, 0.20392157f, 0.92156863f).radius(5f).build());
 			}
 		}

@@ -15,6 +15,7 @@ import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.item.ItemIIPrintedPage.SubItems;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
 import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
@@ -72,7 +73,7 @@ public class ItemIIPrintedPage extends ItemIISubItemsBase<SubItems> implements I
 	public void addInformation(@Nonnull ItemStack stack, @Nullable World worldIn, @Nonnull List<String> tooltip, @Nonnull ITooltipFlag flagIn)
 	{
 		super.addInformation(stack, worldIn, tooltip, flagIn);
-		tooltip.add(IIUtils.getItalicString(I18n.format(stackToSub(stack).tooltip)));
+		tooltip.add(IIStringUtil.getItalicString(I18n.format(stackToSub(stack).tooltip)));
 	}
 
 	public void setText(ItemStack stack, String text)

@@ -54,6 +54,7 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
+import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -909,7 +910,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 						if(d instanceof DataTypeInteger)
 							distance = ((DataTypeInteger)d).value;
 
-						master.task = new EmplacementTaskPosition(new BlockPos(IIUtils.offsetPosDirection(distance, true_angle, true_angle2)).add(this.getBlockPosForPos(49)), amount);
+						master.task = new EmplacementTaskPosition(new BlockPos(IIMath.offsetPosDirection(distance, true_angle, true_angle2)).add(this.getBlockPosForPos(49)), amount);
 						master.syncTask();
 
 					}

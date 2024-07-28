@@ -10,6 +10,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.oredict.OreDictionary;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.ISawblade;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IISoundAnimation;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionBase.IIIMultiblockRecipe;
 
@@ -24,7 +25,7 @@ import java.util.List;
  */
 public class SawmillRecipe extends MultiblockRecipe implements IIIMultiblockRecipe
 {
-	private static final int DEFAULT_COLOR = IIUtils.rgb(0.22392157f, 0.21372549019607842f, 0.15176470588235294f);
+	private static final int DEFAULT_COLOR = IIColor.rgb(0.22392157f, 0.21372549019607842f, 0.15176470588235294f);
 
 	//The tier of the saw required, 1 for cutting wood (bronze), 2 iron, 3 steel, 4 tungsten
 	public final IngredientStack itemInput;
@@ -61,7 +62,7 @@ public class SawmillRecipe extends MultiblockRecipe implements IIIMultiblockReci
 
 		this.inputList = Lists.newArrayList(this.itemInput);
 		this.outputList = ListUtils.fromItems(this.itemOutput, this.itemSecondaryOutput);
-		this.dustColor = IIUtils.rgbIntToRGB(dustColor);
+		this.dustColor = IIColor.rgbIntToRGB(dustColor);
 
 //		0 - 0.1 - grabbing sound
 //		0.1 - 1 - cutting,

@@ -25,6 +25,7 @@ import pl.pabilo8.immersiveintelligence.client.manual.IIManualObject.ManualObjec
 import pl.pabilo8.immersiveintelligence.client.manual.objects.*;
 import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ISerializableEnum;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
@@ -225,7 +226,7 @@ public class IIManualPage extends ManualPages
 			IIClientUtils.bindTexture(traits.get(i).textureLocation);
 			Gui.drawModalRectWithCustomSizedTexture(x+108, y+(i*18), 0, 0, 16, 16, 16, 16);
 
-			if(hoveredTrait==null&&IIUtils.isPointInRectangle(x+108, y+(i*18), x+108+16, y+(i*18)+16, mx, my))
+			if(hoveredTrait==null&&IIMath.isPointInRectangle(x+108, y+(i*18), x+108+16, y+(i*18)+16, mx, my))
 				hoveredTrait = traits.get(i);
 		}
 		GlStateManager.color(1, 1, 1, 1f);

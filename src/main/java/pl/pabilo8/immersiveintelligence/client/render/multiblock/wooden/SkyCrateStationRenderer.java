@@ -29,6 +29,7 @@ import pl.pabilo8.immersiveintelligence.client.model.multiblock.wooden.ModelSkyC
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.tileentity.TileEntitySkyCrateStation;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -301,7 +302,7 @@ public class SkyCrateStationRenderer extends TileEntitySpecialRenderer<TileEntit
 			if(conns!=null&&conns.size() > 0)
 			{
 				Connection conn = (Connection)conns.toArray()[0];
-				float[] col = IIUtils.rgbIntToRGB(conn.cableType.getColour(conn));
+				float[] col = IIColor.rgbIntToRGB(conn.cableType.getColour(conn));
 				double diam = conn.cableType.getRenderDiameter();
 				GlStateManager.pushMatrix();
 				ClientUtils.bindTexture("immersiveengineering:textures/blocks/wire.png");

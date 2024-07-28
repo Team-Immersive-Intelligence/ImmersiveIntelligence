@@ -32,6 +32,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.LighterFuelHandler;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIBase;
@@ -141,7 +142,7 @@ public class ItemIILighter extends ItemIIBase implements ITool
 	public int getRGBDurabilityForDisplay(ItemStack stack)
 	{
 		FluidStack fluidStack = FluidUtil.getFluidContained(stack);
-		return fluidStack!=null?IIUtils.RGBAToRGB(fluidStack.getFluid().getColor()): 0;
+		return fluidStack!=null?IIColor.RGBAToRGB(fluidStack.getFluid().getColor()): 0;
 	}
 
 	@Override

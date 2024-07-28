@@ -42,6 +42,7 @@ public abstract class IICompatModule
 		moduleClasses.put("computercraft", ComputerCraftHelper.class);
 		moduleClasses.put("toughasnails", TANHelper.class);
 		moduleClasses.put("mysticalmechanics", MysticalMechanicsAPIHelper.class);
+		moduleClasses.put("tfc", TerrafirmaHelper.class);
 	}
 
 	public abstract String getName();
@@ -82,7 +83,7 @@ public abstract class IICompatModule
 				action.accept(compat);
 			} catch(Exception exception)
 			{
-				IILogger.error("Compat module for %s %s. Report this and include the error message below!", compat, message);
+				IILogger.error(String.format("Compat module for {0} {1}. Report this and include the error message below!", compat, message));
 				IILogger.error(exception);
 			}
 	}

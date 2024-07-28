@@ -25,6 +25,7 @@ import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
 import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
 
@@ -54,7 +55,7 @@ public class ItemIITrenchShovel extends ItemIEShovel
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn)
 	{
 		super.addInformation(stack, worldIn, tooltip, flagIn);
-		tooltip.add(IIUtils.getItalicString(I18n.format(IIReference.DESCRIPTION_KEY+"electric_hammer")));
+		tooltip.add(IIStringUtil.getItalicString(I18n.format(IIReference.DESCRIPTION_KEY+"electric_hammer")));
 	}
 
 	@Override

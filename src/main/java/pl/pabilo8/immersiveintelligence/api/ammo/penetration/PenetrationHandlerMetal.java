@@ -5,6 +5,7 @@ import pl.pabilo8.immersiveintelligence.api.ammo.enums.PenetrationHardness;
 import pl.pabilo8.immersiveintelligence.client.fx.IIParticles;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -24,7 +25,7 @@ public class PenetrationHandlerMetal extends PenetrationHandler
 		super(hardness, thickness, integrity, IIParticles.PARTICLE_DEBRIS_METAL,
 				IISounds.hitMetal.getSpecialSound(HitEffect.IMPACT),
 				IISounds.hitMetal.getSpecialSound(HitEffect.RICOCHET));
-		this.name = IIUtils.toCamelCase(name.toLowerCase(), false);
+		this.name = IIStringUtil.toCamelCase(name.toLowerCase(), false);
 	}
 
 

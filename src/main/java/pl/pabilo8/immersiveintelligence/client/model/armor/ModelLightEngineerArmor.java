@@ -17,6 +17,7 @@ import pl.pabilo8.immersiveintelligence.client.util.tmt.Coord2D;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.Shape2D;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler;
 import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler.IISpecialSkin;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
@@ -1247,7 +1248,7 @@ public class ModelLightEngineerArmor extends TMTArmorModel implements IReloadabl
 	{
 		if(ItemNBTHelper.hasKey(stack, ItemIIUpgradeableArmor.NBT_Colour))
 		{
-			float[] rgb = IIUtils.rgbIntToRGB(ItemNBTHelper.getInt(stack, ItemIIUpgradeableArmor.NBT_Colour));
+			float[] rgb = IIColor.rgbIntToRGB(ItemNBTHelper.getInt(stack, ItemIIUpgradeableArmor.NBT_Colour));
 			GlStateManager.color(rgb[0], rgb[1], rgb[2]);
 		}
 		else if(upgrades.hasKey("composite_plates"))

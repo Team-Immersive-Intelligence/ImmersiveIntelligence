@@ -42,6 +42,8 @@ import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityMachinegun;
+import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIWeaponUpgrade.WeaponUpgrades;
+import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
@@ -191,7 +193,7 @@ public class IIWeaponMachinegun extends ItemIIUpgradableTool implements IAdvance
 				if(aabb==null)
 					return new ActionResult<>(EnumActionResult.FAIL, itemstack);
 
-				boolean intersects = IIUtils.isAABBContained(fence, aabb);
+				boolean intersects = IIMath.isAABBContained(fence, aabb);
 
 				if(!intersects)
 					return new ActionResult<>(EnumActionResult.PASS, itemstack);

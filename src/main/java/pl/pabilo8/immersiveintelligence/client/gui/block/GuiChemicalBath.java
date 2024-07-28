@@ -13,6 +13,7 @@ import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityChemicalBath;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerChemicalBath;
+import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 import java.util.ArrayList;
@@ -101,8 +102,8 @@ public class GuiChemicalBath extends GuiIEContainerBase
 			if(isPointInRegion(32,39+(int)(32*tfluid),102, (int)(32*(1f-tfluid)),mx,my))
 			{
 				if(!(
-						IIUtils.isPointInTriangle(30,57,30,70,43,70,mx-guiLeft,my-guiTop)||
-								IIUtils.isPointInTriangle(122,70,135,70,135,57,mx-guiLeft,my-guiTop)))
+						IIMath.isPointInTriangle(30,57,30,70,43,70,mx-guiLeft,my-guiTop)||
+								IIMath.isPointInTriangle(122,70,135,70,135,57,mx-guiLeft,my-guiTop)))
 					ClientUtils.addFluidTooltip(fluid,tooltip, ChemicalBath.fluidCapacity);
 			}
 		}

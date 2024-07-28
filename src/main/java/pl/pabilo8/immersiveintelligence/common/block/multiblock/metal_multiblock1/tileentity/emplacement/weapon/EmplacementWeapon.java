@@ -30,6 +30,7 @@ import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityAmmoBase;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
 import pl.pabilo8.immersiveintelligence.common.util.IIExplosion;
+import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import javax.annotation.Nonnull;
@@ -374,11 +375,11 @@ public abstract class EmplacementWeapon<A extends EntityAmmoBase<A>>
 
 		for(ModelRendererTurbo mod : models)
 		{
-			Vec3d vx = IIUtils.offsetPosDirection((float)(mod.rotationPointX*0.0625), true_angle, 0);
-			Vec3d vz = IIUtils.offsetPosDirection((float)(-mod.rotationPointZ*0.0625), true_angle+90, 0);
+			Vec3d vx = IIMath.offsetPosDirection((float)(mod.rotationPointX*0.0625), true_angle, 0);
+			Vec3d vz = IIMath.offsetPosDirection((float)(-mod.rotationPointZ*0.0625), true_angle+90, 0);
 			Vec3d vo = weaponCenter
 					.add(vx)
-					.add(IIUtils.offsetPosDirection((float)(mod.rotationPointY*0.0625), -true_angle2, 0))
+					.add(IIMath.offsetPosDirection((float)(mod.rotationPointY*0.0625), -true_angle2, 0))
 					.add(vz);
 			Vec3d vecDir = new Vec3d(rand.nextGaussian()*0.075, rand.nextGaussian()*0.15, rand.nextGaussian()*0.075);
 

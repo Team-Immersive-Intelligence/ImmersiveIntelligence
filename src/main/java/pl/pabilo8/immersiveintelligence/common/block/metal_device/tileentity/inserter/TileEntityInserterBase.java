@@ -42,6 +42,7 @@ import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.data_device.BlockIIDataDevice.IIBlockTypes_Connector;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
+import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.wire.IIDataWireType;
 
@@ -529,13 +530,13 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 
 		EnumFacing hitside = null;
 
-		if(IIUtils.isPointInRectangle(0.25, 0.75, 0.75, 1, hitX, hitZ))
+		if(IIMath.isPointInRectangle(0.25, 0.75, 0.75, 1, hitX, hitZ))
 			hitside = EnumFacing.SOUTH;
-		else if(IIUtils.isPointInRectangle(0.25, 0, 0.75, 0.25, hitX, hitZ))
+		else if(IIMath.isPointInRectangle(0.25, 0, 0.75, 0.25, hitX, hitZ))
 			hitside = EnumFacing.NORTH;
-		else if(IIUtils.isPointInRectangle(0.75, 0.25, 1, 0.75, hitX, hitZ))
+		else if(IIMath.isPointInRectangle(0.75, 0.25, 1, 0.75, hitX, hitZ))
 			hitside = EnumFacing.EAST;
-		else if(IIUtils.isPointInRectangle(0, 0.25, 0.25, 0.75, hitX, hitZ))
+		else if(IIMath.isPointInRectangle(0, 0.25, 0.25, 0.75, hitX, hitZ))
 			hitside = EnumFacing.WEST;
 
 

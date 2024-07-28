@@ -36,6 +36,7 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
 import pl.pabilo8.immersiveintelligence.common.entity.EntityEmplacementWeapon;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityEmplacementWeapon.EmplacementHitboxEntity;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.component.EntityIIChemthrowerShot;
+import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -425,7 +426,7 @@ public class EmplacementWeaponHeavyChemthrower extends EmplacementWeapon
 		else
 		{
 			ArrayList<String> tooltip = new ArrayList<>();
-			if(IIUtils.isPointInRectangle(gui.getGuiLeft()+6, gui.getGuiTop()+20, gui.getGuiLeft()+6+20, gui.getGuiTop()+20+50, mx, my))
+			if(IIMath.isPointInRectangle(gui.getGuiLeft()+6, gui.getGuiTop()+20, gui.getGuiLeft()+6+20, gui.getGuiTop()+20+50, mx, my))
 				ClientUtils.handleGuiTank(tank, gui.getGuiLeft()+6, gui.getGuiTop()+20,
 						16, 46, 20, 0, 20, 50,
 						mx, my, gui.TEXTURE_ICONS.toString(), tooltip);

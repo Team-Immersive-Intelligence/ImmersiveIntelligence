@@ -54,6 +54,7 @@ import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageEntityNBTSync;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessagePlayerAimAnimationSync;
 import pl.pabilo8.immersiveintelligence.common.util.AdvancedSounds.RangedSound;
+import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 
 import javax.annotation.Nullable;
 
@@ -356,8 +357,8 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 			BlockPos pos = getPosition();
 			double true_angle = Math.toRadians((-rotationYaw) > 180?360f-(-rotationYaw): (-rotationYaw));
 			double true_angle2 = Math.toRadians((-rotationYaw-90) > 180?360f-(-rotationYaw-90): (-rotationYaw-90));
-			Vec3d pos2 = IIUtils.offsetPosDirection(-1.65f, true_angle, 0);
-			Vec3d pos3 = IIUtils.offsetPosDirection(-0.25f, true_angle2, 0);
+			Vec3d pos2 = IIMath.offsetPosDirection(-1.65f, true_angle, 0);
+			Vec3d pos3 = IIMath.offsetPosDirection(-0.25f, true_angle2, 0);
 
 			passenger.setPosition(pos.getX()+0.5+pos2.x+pos3.x, pos.getY()-1.15, pos.getZ()+0.5+pos2.z+pos3.z);
 		}
@@ -754,8 +755,8 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 
 		double yawAngle = Math.toRadians(360f-rotationYaw);
 		double pitchAngle = Math.toRadians(-(rotationPitch));
-		Vec3d gun_end = IIUtils.offsetPosDirection(0.95f, yawAngle, pitchAngle);
-		Vec3d gun_height = IIUtils.offsetPosDirection(0.1875f, yawAngle, pitchAngle+90);
+		Vec3d gun_end = IIMath.offsetPosDirection(0.95f, yawAngle, pitchAngle);
+		Vec3d gun_height = IIMath.offsetPosDirection(0.1875f, yawAngle, pitchAngle+90);
 
 		Vec3d vpos = new Vec3d(posX+0.85*(gun_end.x+gun_height.x), posY+0.34375+0.85*(gun_end.y+gun_height.y), posZ+0.85*(gun_end.z+gun_height.z));
 

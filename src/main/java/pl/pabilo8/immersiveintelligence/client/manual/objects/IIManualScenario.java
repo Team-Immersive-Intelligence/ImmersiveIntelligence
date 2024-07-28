@@ -14,6 +14,7 @@ import pl.pabilo8.immersiveintelligence.client.manual.IIManualObject;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualPage;
 import pl.pabilo8.immersiveintelligence.client.util.amt.*;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import javax.annotation.Nonnull;
@@ -206,7 +207,7 @@ public class IIManualScenario extends IIManualObject
 
 		this.hoveredText = null;
 		for(HoverBox hover : hovers)
-			if(IIUtils.isPointInRectangle(hover.x, hover.y, hover.xx, hover.yy, mx, my))
+			if(IIMath.isPointInRectangle(hover.x, hover.y, hover.xx, hover.yy, mx, my))
 			{
 				this.hoveredText = hover.text;
 				break;

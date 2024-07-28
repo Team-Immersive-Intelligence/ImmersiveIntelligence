@@ -27,6 +27,7 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine.Magazines;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
 import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIIItemTextureOverride;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
@@ -140,7 +141,7 @@ public class ItemIIBulletMagazine extends ItemIISubItemsBase<Magazines> implemen
 		super.addInformation(stack, worldIn, tooltip, flagIn);
 		int bullets = getRemainingBulletCount(stack);
 
-		tooltip.add(IIUtils.getItalicString(I18n.format(IIReference.DESCRIPTION_KEY+(bullets==0?"bullet_magazine.empty": "bullet_magazine.remaining"), bullets)));
+		tooltip.add(IIStringUtil.getItalicString(I18n.format(IIReference.DESCRIPTION_KEY+(bullets==0?"bullet_magazine.empty": "bullet_magazine.remaining"), bullets)));
 		NBTTagList listDict = ItemNBTHelper.getTagCompound(stack, "bullets").getTagList("dictionary", NBT.TAG_COMPOUND);
 
 		if(ItemNBTHelper.getTag(stack).hasKey("bullet0"))

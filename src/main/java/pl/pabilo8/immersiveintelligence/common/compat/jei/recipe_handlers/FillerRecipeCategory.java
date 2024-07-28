@@ -23,6 +23,8 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
 import pl.pabilo8.immersiveintelligence.common.compat.jei.IIMultiblockRecipeWrapper;
 import pl.pabilo8.immersiveintelligence.common.compat.jei.IIRecipeCategory;
 import pl.pabilo8.immersiveintelligence.common.compat.jei.recipe_handlers.FillerRecipeCategory.FillerRecipeWrapper;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
+import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 import java.util.ArrayList;
@@ -84,7 +86,7 @@ public class FillerRecipeCategory extends IIRecipeCategory<FillerRecipe, FillerR
 			ClientUtils.bindTexture(GuiFiller.TEXTURE);
 			ClientUtils.drawTexturedRect(39, 0, 84, 64, 54/256f, (54+84)/256f, 0/256f, (64)/256f);
 			int stored = (int)(60*0.5); //
-			float[] rgb = IIUtils.rgbIntToRGB(DustUtils.getColor(dust));
+			float[] rgb = IIColor.rgbIntToRGB(DustUtils.getColor(dust));
 
 			GlStateManager.color(rgb[0], rgb[1], rgb[2]);
 			ClientUtils.drawTexturedRect(41, 2+stored, 80, stored, 176/256f, (256)/256f, stored/256f, 60/256f);
@@ -104,7 +106,7 @@ public class FillerRecipeCategory extends IIRecipeCategory<FillerRecipe, FillerR
 		@Override
 		public List<String> getTooltipStrings(int mouseX, int mouseY)
 		{
-			if(IIUtils.isPointInRectangle(41, 30, 101, 64, mouseX, mouseY))
+			if(IIMath.isPointInRectangle(41, 30, 101, 64, mouseX, mouseY))
 			{
 				List<String> tooltip = new ArrayList<>();
 				tooltip.add(DustUtils.getDustName(dust));
