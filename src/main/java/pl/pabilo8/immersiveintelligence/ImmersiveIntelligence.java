@@ -11,6 +11,7 @@ import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import pl.pabilo8.immersiveintelligence.api.data.radio.RadioNetwork;
+import pl.pabilo8.immersiveintelligence.client.render.gas.GasShader;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.IISaveData;
@@ -53,6 +54,7 @@ public class ImmersiveIntelligence
 		proxy.preInit();
 		ForgeChunkManager.setForcedChunkLoadingCallback(this, proxy);
 		new IISkinHandler.ThreadContributorSpecialsDownloader();
+		new GasShader();
 	}
 
 	@EventHandler
