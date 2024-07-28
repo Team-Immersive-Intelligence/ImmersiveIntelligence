@@ -13,6 +13,7 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IUpgradableMachine;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 import java.util.ArrayList;
@@ -68,7 +69,7 @@ public class WrenchOverlay extends InWorldOverlayBase
 		buf.begin(7, DefaultVertexFormats.POSITION_COLOR);
 		buf.setTranslation(-posX, -posY, -posZ);
 
-		float[] rgb = IIUtils.rgbIntToRGB(IIReference.COLORS_HIGHLIGHT_I[1]);
+		float[] rgb = IIColor.rgbIntToRGB(IIReference.COLORS_HIGHLIGHT_I[1]);
 		final float alpha = 0.25f;
 
 		//Draw

@@ -12,6 +12,7 @@ import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.overlay.GuiOverlayBase;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
 /**
  * @author Pabilo8
@@ -50,11 +51,11 @@ public class GuiOverlaySubmachinegun extends GuiOverlayBase
 					float[] rgb;
 					if(cc!=-1)
 					{
-						rgb = IIUtils.rgbIntToRGB(cc);
+						rgb = IIColor.rgbIntToRGB(cc);
 						GlStateManager.color(rgb[0], rgb[1], rgb[2]);
 						ClientUtils.drawTexturedRect(10, 0, 4, 6, 61/256f, (65)/256f, 27/256f, (27+6)/256f);
 					}
-					rgb = IIUtils.rgbIntToRGB(IIContent.itemAmmoMachinegun.getCore(cartridge.get(i)).getColour());
+					rgb = IIColor.rgbIntToRGB(IIContent.itemAmmoMachinegun.getCore(cartridge.get(i)).getColour());
 					GlStateManager.color(rgb[0], rgb[1], rgb[2]);
 					ClientUtils.drawTexturedRect(24, 0, 6, 6, 75/256f, (81)/256f, 27/256f, (27+6)/256f);
 					GlStateManager.color(1f, 1f, 1f);
@@ -115,11 +116,11 @@ public class GuiOverlaySubmachinegun extends GuiOverlayBase
 					float[] rgb;
 					if(cc!=-1)
 					{
-						rgb = IIUtils.rgbIntToRGB(cc);
+						rgb = IIColor.rgbIntToRGB(cc);
 						GlStateManager.color(rgb[0], rgb[1], rgb[2]);
 						ClientUtils.drawTexturedRect(x+10, height-17-(i*6), 4, 6, 61/256f, (65)/256f, 27/256f, (27+6)/256f);
 					}
-					rgb = IIUtils.rgbIntToRGB(IIContent.itemAmmoMachinegun.getCore(cartridge.get(i)).getColour());
+					rgb = IIColor.rgbIntToRGB(IIContent.itemAmmoMachinegun.getCore(cartridge.get(i)).getColour());
 					GlStateManager.color(rgb[0], rgb[1], rgb[2]);
 					ClientUtils.drawTexturedRect(x+24, height-17-(i*6), 6, 6, 75/256f, (81)/256f, 27/256f, (27+6)/256f);
 					GlStateManager.color(1f, 1f, 1f);

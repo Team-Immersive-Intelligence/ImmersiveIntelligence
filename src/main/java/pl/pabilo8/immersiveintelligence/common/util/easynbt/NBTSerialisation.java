@@ -9,6 +9,7 @@ import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.fluids.FluidTank;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 
 import javax.annotation.Nonnull;
@@ -294,7 +295,7 @@ public class NBTSerialisation
 		FieldSerializer(@Nonnull Field field, SyncNBT annotation)
 		{
 			this.field = field;
-			this.nbtName = !annotation.name().isEmpty()?annotation.name(): IIUtils.toSnakeCase(field.getName());
+			this.nbtName = !annotation.name().isEmpty()?annotation.name(): IIStringUtil.toSnakeCase(field.getName());
 			this.fieldName = field.getName();
 
 			field.setAccessible(true);

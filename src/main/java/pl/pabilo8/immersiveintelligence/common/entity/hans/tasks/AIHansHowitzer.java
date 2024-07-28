@@ -15,6 +15,7 @@ import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityVehicleSeat;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.towable.gun.EntityFieldHowitzer;
+import pl.pabilo8.immersiveintelligence.common.util.entity.IIEntityUtils;
 
 import java.util.List;
 import java.util.Optional;
@@ -89,7 +90,7 @@ public class AIHansHowitzer extends EntityAIBase
 				float pp;
 
 				if(positionVector.distanceTo(t.getPositionVector()) > 40)
-					pp = getAnglePrediction(positionVector, IIUtils.getEntityCenter(t), new Vec3d(t.motionX, t.motionY, t.motionZ))[1];
+					pp = getAnglePrediction(positionVector, IIEntityUtils.getEntityCenter(t), new Vec3d(t.motionX, t.motionY, t.motionZ))[1];
 				else
 					pp = IIAmmoUtils.getDirectFireAngle(IIContent.itemAmmoLightArtillery.getDefaultVelocity(), 3.4f, positionVector.subtract(t.getPositionVector()));
 
@@ -132,7 +133,7 @@ public class AIHansHowitzer extends EntityAIBase
 				Entity entity = target.get();
 				this.hans.faceEntity(entity, 10, 10);
 
-				float[] yp = getAnglePrediction(positionVector.addVector(0, 1, 0), IIUtils.getEntityCenter(entity), new Vec3d(entity.motionX, entity.motionY, entity.motionZ));
+				float[] yp = getAnglePrediction(positionVector.addVector(0, 1, 0), IIEntityUtils.getEntityCenter(entity), new Vec3d(entity.motionX, entity.motionY, entity.motionZ));
 				if(!isAimedAt(yp[0], yp[1]))
 				{
 					float y = MathHelper.wrapDegrees(360+yp[0]-this.howitzer.rotationYaw);

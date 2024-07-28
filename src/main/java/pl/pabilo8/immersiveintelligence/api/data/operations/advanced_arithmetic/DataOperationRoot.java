@@ -4,6 +4,7 @@ import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.operations.DataOperation;
 import pl.pabilo8.immersiveintelligence.api.data.types.*;
+import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 
 /**
  * @author Pabilo8
@@ -27,7 +28,7 @@ public class DataOperationRoot extends DataOperation
 		t2 = packet.getVarInType(IDataTypeNumeric.class, data.getArgument(1));
 
 		if(t1 instanceof DataTypeFloat||t2 instanceof DataTypeFloat)
-			return new DataTypeFloat((float)Math.round(IIUtils.root(t1.floatValue(), t2.floatValue())));
-		return new DataTypeInteger(((int)Math.round(IIUtils.root(t1.intValue(), t2.intValue()))));
+			return new DataTypeFloat((float)Math.round(IIMath.root(t1.floatValue(), t2.floatValue())));
+		return new DataTypeInteger(((int)Math.round(IIMath.root(t1.intValue(), t2.intValue()))));
 	}
 }

@@ -35,6 +35,7 @@ import pl.pabilo8.immersiveintelligence.common.item.weapons.ammohandler.AmmoHand
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ammohandler.AmmoHandlerSingle;
 import pl.pabilo8.immersiveintelligence.common.util.AdvancedSounds.RangedSound;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
@@ -136,7 +137,7 @@ public class ItemIIAssaultRifle extends ItemIIGunBase implements IItemScrollable
 	{
 		if(isEnergyUpgraded(stack))
 		{
-			list.add(IIUtils.getItalicString(I18n.format(IIReference.INFO_KEY+"charge_with_if")));
+			list.add(IIStringUtil.getItalicString(I18n.format(IIReference.INFO_KEY+"charge_with_if")));
 			list.add(I18n.format(Lib.DESC+"info.energyStored", TextFormatting.GOLD+String.valueOf(getEnergyStored(stack))+TextFormatting.RESET));
 			list.add("");
 		}

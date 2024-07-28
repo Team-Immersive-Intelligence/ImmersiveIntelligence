@@ -27,6 +27,7 @@ import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoCore;
 import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
+import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
@@ -98,7 +99,7 @@ public class AmmoTweaker
 		@ZenMethod
 		public static CoreMaterialBuilder create(String name)
 		{
-			return new CoreMaterialBuilder("core_"+IIUtils.toSnakeCase(name));
+			return new CoreMaterialBuilder("core_"+IIStringUtil.toSnakeCase(name));
 		}
 
 		@ZenMethod
@@ -196,7 +197,7 @@ public class AmmoTweaker
 		@ZenMethod
 		public static ComponentMaterialBuilder create(String name)
 		{
-			return new ComponentMaterialBuilder(IIUtils.toSnakeCase(name));
+			return new ComponentMaterialBuilder(IIStringUtil.toSnakeCase(name));
 		}
 
 		@ZenMethod

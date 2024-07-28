@@ -12,6 +12,7 @@ import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IUpgradableMachine;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -31,7 +32,7 @@ public class TextOverlayUpgrade extends TextOverlayBase
 			return false;
 
 		return te instanceof IUpgradableMachine&&
-				IIUtils.isWrench(player.getHeldItem(EnumHand.MAIN_HAND));
+				IIItemUtil.isWrench(player.getHeldItem(EnumHand.MAIN_HAND));
 	}
 
 	@ParametersAreNonnullByDefault

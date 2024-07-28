@@ -11,6 +11,7 @@ import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIGunBase;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ammohandler.AmmoHandler;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
+import pl.pabilo8.immersiveintelligence.common.util.entity.IIEntityUtils;
 
 /**
  * @author Pabilo8
@@ -116,7 +117,7 @@ public abstract class AIHansAbstractGun extends AIHansHandWeapon
 	{
 		IAmmoTypeItem ammoType = (IAmmoTypeItem)ammo.getItem();
 		return IIAmmoUtils.getDirectFireAngle(ammoType.getDefaultVelocity(), ammoType.getMass(ammo),
-				hans.getPositionVector().addVector(0, (double)hans.getEyeHeight()-0.10000000149011612D, 0).subtract(IIUtils.getEntityCenter(attackTarget))
+				hans.getPositionVector().addVector(0, (double)hans.getEyeHeight()-0.10000000149011612D, 0).subtract(IIEntityUtils.getEntityCenter(attackTarget))
 		);
 	}
 }
