@@ -167,7 +167,7 @@ public class ItemIIRifle extends ItemIIGunBase implements IAdvancedZoomTool
 	@Override
 	protected RangedSound getFireSound(ItemStack weapon, EasyNBT easyNBT)
 	{
-		return IISounds.rifleShot;
+		return hasIIUpgrade(weapon, WeaponUpgrade.SEMI_AUTOMATIC)?IISounds.rifleShot: IISounds.rifleBoltShot;
 	}
 
 	@Override
