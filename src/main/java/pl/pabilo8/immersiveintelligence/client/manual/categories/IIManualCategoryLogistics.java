@@ -1,29 +1,7 @@
 package pl.pabilo8.immersiveintelligence.client.manual.categories;
 
-import blusunrize.immersiveengineering.api.ManualHelper;
-import blusunrize.immersiveengineering.api.ManualPageMultiblock;
-import blusunrize.lib.manual.ManualPages;
-import net.minecraft.item.ItemStack;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeBoolean;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeItemStack;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualCategory;
-import pl.pabilo8.immersiveintelligence.client.manual.pages.IIManualPageDataVariables;
-import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.block.data_device.BlockIIDataDevice.IIBlockTypes_Connector;
-import pl.pabilo8.immersiveintelligence.common.block.fortification.BlockIIMetalChainFence.MetalFortifications;
-import pl.pabilo8.immersiveintelligence.common.block.fortification.BlockIIWoodenChainFence.WoodenFortifications;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.gate_multiblock.multiblock.*;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.MultiblockPacker;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.multiblock.MultiblockSkyCartStation;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.multiblock.MultiblockSkyCratePost;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.multiblock.MultiblockSkyCrateStation;
-import pl.pabilo8.immersiveintelligence.common.item.ItemIIMinecart.Minecarts;
-import pl.pabilo8.immersiveintelligence.common.item.ItemIISkycrateMount.SkycrateMounts;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
-
-import java.util.ArrayList;
 
 /**
  * @author Pabilo8
@@ -42,7 +20,7 @@ public class IIManualCategoryLogistics extends IIManualCategory
 	@Override
 	public void addPages()
 	{
-		ManualHelper.addEntry("logistics", getCategory(),
+		/*ManualHelper.addEntry("logistics", getCategory(),
 				new ManualPages.Text(ManualHelper.getManual(), "logistics0")
 		);
 
@@ -129,7 +107,7 @@ public class IIManualCategoryLogistics extends IIManualCategory
 				new ManualPageMultiblock(ManualHelper.getManual(), "chain_fences4", MultiblockSteelChainFenceGate.INSTANCE),
 				new ManualPageMultiblock(ManualHelper.getManual(), "chain_fences5", MultiblockAluminiumFenceGate.INSTANCE),
 				new ManualPageMultiblock(ManualHelper.getManual(), "chain_fences6", MultiblockAluminiumChainFenceGate.INSTANCE)
-		);
+		);*/
 
 	}
 }
