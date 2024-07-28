@@ -314,6 +314,11 @@ public class IIContent
 	public static BlockIIFluid blockGasMustardGas;
 	public static BlockIIFluid blockFluidLatex;
 
+	public static BlockIIFluid blockAtropine, blockButadiene, blockGlycerin, blockAcetaldol;
+	public static BlockIIFluid blockNitroglycerin;
+	public static BlockIIFluid blockSodiumHydroxide, blockNitratingAcid, blockFormaldehyde, blockSodiumHypochlorite;
+	public static BlockIIFluid blockGasNitrogen, blockGasTearGas, blockGasPhosgeneGas, blockGasSarinGas, blockGasTubanGas, blockGasVXGas;
+
 	//fluids
 	public static Fluid fluidInkBlack, fluidInkCyan, fluidInkMagenta, fluidInkYellow;
 	public static Fluid fluidEtchingAcid, fluidSulfuricAcid, fluidHydrofluoricAcid, fluidNitricAcid, fluidFormicAcid;
@@ -322,6 +327,11 @@ public class IIContent
 	public static Fluid gasHydrogen, gasOxygen, gasChlorine, gasCO2, gasCO;
 	public static Fluid gasMustardGas;
 	public static Fluid fluidLatex;
+
+	public static Fluid fluidAtropine, fluidButadiene, fluidGlycerin, fluidAcetaldol;
+	public static Fluid fluidNitroglycerin;
+	public static Fluid fluidSodiumHydroxide, fluidNitratingAcid, fluidFormaldehyde, fluidSodiumHypochlorite;
+	public static Fluid gasNitrogen, gasTearGas, gasPhosgeneGas, gasSarinGas, gasTubanGas, gasVXGas;
 
 	//--- Ammunition System ---//
 	//ammo cores
@@ -372,6 +382,25 @@ public class IIContent
 		IIContent.fluidLatex = makeFluid("latex", 4300, 3500);
 		IIContent.gasMustardGas = makeFluid("mustard_gas", 127, 340); //heavier than water
 
+		IIContent.fluidAtropine = makeFluid("atropine", 6000, 2250);
+		IIContent.fluidButadiene = makeFluid("butadiene", 6000, 2250);
+		IIContent.fluidGlycerin = makeFluid("glycerin", 6000, 2250);
+		IIContent.fluidNitroglycerin = makeFluid("nitroglycerin", 6000, 2250);
+		IIContent.fluidAcetaldol = makeFluid("Acetaldol", 6000, 2250);
+		IIContent.fluidSodiumHydroxide = makeFluid("sodium_hydroxide", 6000, 2250);
+		IIContent.fluidNitratingAcid = makeFluid("nitrating_acid", 6000, 2250);
+		IIContent.fluidSodiumHypochlorite= makeFluid("sodium_hypochlorite", 6000, 2250);
+		IIContent.fluidFormaldehyde = makeFluid("formaldehyde", 6000, 2250);
+
+		IIContent.gasTearGas = makeFluid("tear_gas", -1000+200, 147).setGaseous(true);
+		IIContent.gasNitrogen = makeFluid("nitrogen", -1000+200, 147).setGaseous(true);
+		IIContent.gasPhosgeneGas = makeFluid("phosgene_gas", -1000+200, 147).setGaseous(true);
+		IIContent.gasSarinGas = makeFluid("sarin_gas", -1000+200, 147).setGaseous(true);
+		IIContent.gasTubanGas = makeFluid("tuban_gas", -1000+200, 147).setGaseous(true);
+		IIContent.gasVXGas = makeFluid("vx_gas", -1000+200, 147).setGaseous(true);
+
+
+
 		IIContent.blockFluidInkBlack = new BlockIIFluid("ink", IIContent.fluidInkBlack, Material.WATER);
 		IIContent.blockFluidInkCyan = new BlockIIFluid("ink_cyan", IIContent.fluidInkCyan, Material.WATER);
 		IIContent.blockFluidInkMagenta = new BlockIIFluid("ink_magenta", IIContent.fluidInkMagenta, Material.WATER);
@@ -387,6 +416,17 @@ public class IIContent
 		IIContent.blockFluidAmmonia = new BlockIIFluid("ammonia", IIContent.fluidAmmonia, Material.WATER);
 		IIContent.blockFluidMethanol = new BlockIIFluid("methanol", IIContent.fluidMethanol, Material.WATER);
 
+		IIContent.blockAtropine = new BlockIIFluid("atropine", IIContent.fluidAtropine, Material.WATER);
+		IIContent.blockButadiene = new BlockIIFluid("butadiene", IIContent.fluidButadiene, Material.WATER);
+		IIContent.blockGlycerin = new BlockIIFluid("glycerin", IIContent.fluidGlycerin, Material.WATER);
+
+		IIContent.blockNitroglycerin = new BlockIIFluid("nitroglycerin", IIContent.fluidNitroglycerin, Material.WATER);
+		IIContent.blockAcetaldol = new BlockIIFluid("acetaldol", IIContent.fluidAcetaldol, Material.WATER);
+		IIContent.blockNitratingAcid = new BlockIIFluid("nitrating_acid", IIContent.fluidNitratingAcid, Material.WATER);
+		IIContent.blockSodiumHydroxide = new BlockIIFluid("sodium_hydroxide", IIContent.fluidSodiumHydroxide, Material.WATER);
+		IIContent.blockSodiumHypochlorite = new BlockIIFluid("sodium_hypochlorite", IIContent.fluidSodiumHypochlorite, Material.WATER);
+		IIContent.blockFormaldehyde = new BlockIIFluid("formaldehyde", IIContent.fluidFormaldehyde, Material.WATER);
+
 		IIContent.blockGasHydrogen = new BlockIIFluid("hydrogen", IIContent.gasHydrogen, Material.WATER);
 		IIContent.blockGasOxygen = new BlockIIFluid("oxygen", IIContent.gasOxygen, Material.WATER)
 				.setPotionEffects(new PotionEffect(MobEffects.WATER_BREATHING, 20, 0));
@@ -398,6 +438,14 @@ public class IIContent
 				.setPotionEffects(new PotionEffect(MobEffects.BLINDNESS, 60, 0));
 		IIContent.blockGasHydrogen = new BlockIIFluid("mustard_gas", IIContent.gasMustardGas, Material.WATER)
 				.setPotionEffects(new PotionEffect(MobEffects.POISON, 60, 0));
+
+		IIContent.blockGasNitrogen = new BlockIIFluid("nitrogen", IIContent.gasNitrogen, Material.WATER);
+		IIContent.blockGasTearGas = new BlockIIFluid("tear_gas", IIContent.gasTearGas, Material.WATER);
+		IIContent.blockGasPhosgeneGas = new BlockIIFluid("phosgene_gas", IIContent.gasPhosgeneGas, Material.WATER);
+		IIContent.blockGasSarinGas = new BlockIIFluid("sarin_gas", IIContent.gasSarinGas, Material.WATER);
+		IIContent.blockGasTubanGas = new BlockIIFluid("tuban_gas", IIContent.gasTubanGas, Material.WATER);
+		IIContent.blockGasVXGas = new BlockIIFluid("vx_gas", IIContent.gasVXGas, Material.WATER);
+
 	}
 
 	//dummy method, called so that static fields above get loaded

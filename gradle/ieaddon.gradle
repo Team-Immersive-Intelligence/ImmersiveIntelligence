@@ -23,6 +23,11 @@ dependencies {
     compileOnly "curse.maven:immersive-posts-314645:2951672"
     compileOnly "curse.maven:immersive-technology-359407:3658279"
     compileOnly "curse.maven:mysticalmechanics-300742:3006392"
+
+    runtimeOnly "curse.maven:immersive-petroleum-268250:3382321"
+    runtimeOnly "curse.maven:immersive-posts-314645:2951672"
+    runtimeOnly "curse.maven:immersive-technology-359407:3658279"
+    runtimeOnly "curse.maven:mysticalmechanics-300742:3006392"
 }
 
 repositories {

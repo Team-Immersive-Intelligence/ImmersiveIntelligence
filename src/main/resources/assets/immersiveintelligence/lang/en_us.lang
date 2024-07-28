@@ -103,11 +103,11 @@ item.immersiveintelligence.material_dust.quartz.name=Quartz Dust
 item.immersiveintelligence.material_dust.quartz_dirty.name=Dirty Quartz Dust
 item.immersiveintelligence.material_dust.phosphorus.name=Phosphorus Dust
 item.immersiveintelligence.material_dust.duraluminium.name=Duraluminium Grit
-item.immersiveintelligence.material_dust.sodium_hydroxide.name=Sodium Hydroxide
+item.immersiveintelligence.material_dust.sodium_hydroxide.name=Sodium Hydroxide Dust
 item.immersiveintelligence.material_dust.sodium.name=Sodium Dust
 item.immersiveintelligence.material_dust.silicon_dioxide.name=Silicon Dioxide Dust
 item.immersiveintelligence.material_dust.synthetic_rubber_crumbs.name=Synthetic Rubber Crumbs
-item.immersiveintelligence.material_dust.Ammonium_Nitrate.name=Ammonium Nitrate
+item.immersiveintelligence.material_dust.ammonium_nitrate.name=Ammonium Nitrate
 
 item.immersiveintelligence.material_plate.platinum.name=Platinum Plate
 item.immersiveintelligence.material_plate.zinc.name=Zinc Plate
@@ -851,6 +851,24 @@ fluid.hexamine=Hexamine
 fluid.methanol=Methanol
 
 fluid.latex=Latex
+
+fluid.atropine=Atropine
+fluid.butadiene=Butadiene
+fluid.glycerin=Glycerin
+fluid.nitroglycerin=Nitroglycerin
+fluid.sodium_hypochlorite=Sodium Hypochlorite
+fluid.Acetaldol=Acetaldol
+fluid.sodium_hydroxide=Sodium Hydroxide
+fluid.nitrating_acid=Nitrating Acid
+fluid.nitrogen=Nitrogen
+fluid.sodium_hydroxide=Sodium Hydroxide
+fluid.formaldehyde=Formaldehyde
+
+fluid.tear_gas=Tear Gas
+fluid.phosgene_gas=Phosgene Gas
+fluid.sarin_gas=Sarin Gas
+fluid.tuban_gas=Tuban Gas
+fluid.vx_gas=VX Gas
 
 #Dusts
 dust.gunpowder=Gunpowder
