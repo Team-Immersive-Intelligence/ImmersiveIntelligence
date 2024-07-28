@@ -27,7 +27,8 @@ idea {
 }
 
 tasks.register('additionalIntellijSettings', Copy) {
-    from 'gradle/docs/idea/*.xml'
+    from 'gradle/docs/idea/'
+    include "*"
     into '.idea'
 }
 tasks.idea.dependsOn additionalIntellijSettings
@@ -122,11 +123,17 @@ artifacts {
 //--- Resource Processing
 
 processResources {
-    // this will ensure that this task is redone when the versions change.
+    //this will ensure that this task is redone when the versions change.
     inputs.property "version", modVersion
     inputs.property "mcversion", project.minecraft.version
 
-    // replace stuff in mcmod.info
+    //copy everything else except the mcmod.info and excluded files
+    //setDuplicatesStrategy('exclude')
+
+    //replace stuff in mcmod.info
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+    }
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'
         // replace properties
@@ -145,13 +152,6 @@ processResources {
     exclude '**/desktop.ini'
     exclude '**/Thumbs.db'
     exclude '**/.DS_Store'
-
-    // copy everything else except the mcmod.info and excluded files
-    from(sourceSets.main.resources.srcDirs) {
-        exclude 'mcmod.info'
-    }
-
-    setDuplicatesStrategy('exclude')
 }
 
 tasks.build.doLast(){

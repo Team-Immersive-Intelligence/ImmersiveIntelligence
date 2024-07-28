@@ -60,10 +60,10 @@ repositories {
         url "https://maven.cil.li/"
     }
 
-    maven { // Baubles
+    /*maven { // Baubles
         name "MCModDev"
         url "https://maven.mcmoddev.com/"
-    }
+    }*/
 
     maven { //for Immersive Petroleum, Posts and Technology
         name "CurseMaven"

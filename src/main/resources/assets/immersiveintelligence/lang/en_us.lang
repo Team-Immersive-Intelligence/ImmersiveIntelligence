@@ -46,6 +46,15 @@ item.immersiveintelligence.material.advanced_firing_mechanism.name=Automatic Fir
 
 item.immersiveintelligence.material.advanced_electron_tube.name=Advanced Vacuum Tube
 
+item.immersiveintelligence.material.antenna.name=Antenna
+item.immersiveintelligence.material.high_frequency_antenna.name=High-Frequency Antenna
+item.immersiveintelligence.material.camera.name=Camera
+item.immersiveintelligence.material.improved_camera.name=Improved Camera
+item.immersiveintelligence.material.targeting_device.name=Targeting Device
+item.immersiveintelligence.material.high_precision_targeting_device.name=High-Precision Targeting Device
+item.immersiveintelligence.material.lens.name=Lens
+item.immersiveintelligence.material.infrared_lens.name=Infrared Lens
+
 item.immersiveintelligence.material.punchtape_empty.name=Empty Punchtape
 item.immersiveintelligence.punchtape.name=Punchtape
 
@@ -1465,6 +1474,7 @@ desc.immersiveengineering.info.blueprint.cryptographic_functional_circuits=Crypt
 desc.immersiveengineering.info.blueprint.metal_springs=Springs
 desc.immersiveengineering.info.blueprint.ammo_molds=Ammunition Molds
 desc.immersiveengineering.info.blueprint.vulcanizer_molds=Vulcanizer Molds
+desc.immersiveengineering.info.blueprint.bullet_magazines=Bullet Magazines
 
 #Keybindings
 key.immersiveintelligence.manualReload=Manual Reload

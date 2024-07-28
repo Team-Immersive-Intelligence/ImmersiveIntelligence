@@ -48,6 +48,8 @@
 - [@Krystiano0306](https://github.com/Krystiano0306) - Helped at various model-related jobs as a part of his practice, retired
 - [@Blacknight](#) - Texture artist, created some textures for the mod's items
 
+- [@DotPrism](https://github.com/DotPrism) - for ultimately having almost zero motivation to do any programming for their projects and this project. (Written by DotPrism the unmotivated and worst helper.) :D
+
 #### The Old Guard, long time enthusiasts of this mod:  
 - [@Morten](https://github.com/Morten1202)
 - [@KingSpios](https://github.com/KingSpios)

@@ -454,6 +454,11 @@ public class IIRecipes
 				IIContent.itemBulletMagazine.getStack(Magazines.MACHINEGUN),
 				new IngredientStack("plateSteel", 2),
 				new IngredientStack("springSteel"));
+		
+		BlueprintCraftingRecipe.addRecipe("bullet_magazines",
+				IIContent.itemBulletMagazine.getStack(Magazines.RIFLE),
+				new IngredientStack("plateSteel", 2),
+				new IngredientStack("springSteel"));
 
 		BlueprintCraftingRecipe.addRecipe("bullet_magazines",
 				IIContent.itemBulletMagazine.getStack(Magazines.SUBMACHINEGUN),
