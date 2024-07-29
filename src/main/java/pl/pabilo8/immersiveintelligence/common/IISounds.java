@@ -295,10 +295,10 @@ public class IISounds
 			new Tuple<>(0.9, machinegunShotDistant)
 	);
 
-	@ModSound(sounds = {"weapons/mg_new/reload"}, subtitle = "machinegun_reload")
+	@ModSound(sounds = {"weapons/machinegun/reload"}, subtitle = "machinegun_reload")
 	public static SoundEvent machinegunReload = registerSound("machinegun_reload");
 
-	@ModSound(sounds = {"weapons/mg_new/unload"}, subtitle = "machinegun_reload")
+	@ModSound(sounds = {"weapons/machinegun/unload"}, subtitle = "machinegun_reload")
 	public static SoundEvent machinegunUnload = registerSound("machinegun_unload");
 
 	//Submachinegun
@@ -440,7 +440,9 @@ public class IISounds
 	public static SoundEvent autocannonUnload = registerSound("autocannon_unload");
 
 	//Mortar
+	@ModSound(sounds = {"weapons/mortar/fire{0..1}"}, subtitle = "*")
 	public static SoundEvent mortarShot = registerSound("mortar_shot");
+	@ModSound(sounds = {"weapons/mortar/load"}, subtitle = "*")
 	public static SoundEvent mortarLoad = registerSound("mortar_load");
 
 	//Grenade throwing
