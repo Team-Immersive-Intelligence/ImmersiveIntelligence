@@ -35,6 +35,7 @@ import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProper
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -292,10 +293,10 @@ public class IICreativeTab extends CreativeTabs
 
 		//Magazine fed weapons
 		items.clear();
-		items.put("M1P", IIContent.itemAmmoSubmachinegun);
-		items.put("M1M", IIContent.itemAmmoAssaultRifle);
-		items.put("M2", IIContent.itemAmmoMachinegun);
-		items.put("M3", IIContent.itemAmmoAutocannon);
+		items.put("AM1P", IIContent.itemAmmoSubmachinegun);
+		items.put("AM1M", IIContent.itemAmmoAssaultRifle);
+		items.put("AM2", IIContent.itemAmmoMachinegun);
+		items.put("AM3", IIContent.itemAmmoAutocannon);
 
 		items.forEach((name, item) -> {
 			tabNewLine(list);
@@ -383,6 +384,7 @@ public class IICreativeTab extends CreativeTabs
 			list.add(ItemStack.EMPTY);
 	}
 
+	@Nullable
 	private AmmoComponent getFluidComponent(String fluidName)
 	{
 		AmmoComponent component = AmmoRegistry.getComponent("fluid_"+fluidName);
@@ -400,7 +402,7 @@ public class IICreativeTab extends CreativeTabs
 			return ItemStack.EMPTY;
 		if(Arrays.stream(ammo.getAllowedFuseTypes()).noneMatch(t -> t==fuse))
 			return ItemStack.EMPTY;
-		if(!Arrays.stream(components).allMatch(c -> c.matchesBullet(ammo)))
+		if(!Arrays.stream(components).allMatch(c -> c!=null&&c.matchesBullet(ammo)))
 			return ItemStack.EMPTY;
 
 		//Get ammo stack and add it to the menu
