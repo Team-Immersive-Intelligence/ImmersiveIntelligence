@@ -128,6 +128,7 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 	 * Once true, the bullet will detonate at the end of the tick
 	 */
 	protected boolean markedForDetonation = false;
+	private float velocityModifier;
 
 	public EntityAmmoProjectile(World world)
 	{
@@ -151,7 +152,7 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 
 	public float getDamage()
 	{
-		return ammoType.getDamage()*coreType.getDamageMod()*core.getDamageModifier();
+		return ammoType.getDamage()*coreType.getDamageMod()*core.getDamageModifier()*velocityModifier;
 	}
 
 	public float getVelocity()
@@ -378,39 +379,31 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 		}
 
 		//Collide with any other entity
-		float armor = 0;
 		IPenetrationHandler penHandler = PenetrationRegistry.getPenetrationHandler(other);
 
 		//Damage entity armor
 		if(other instanceof EntityLivingBase)
 		{
-			armor = MathHelper.floor(((EntityLivingBase)other).getEntityAttribute(SharedMonsterAttributes.ARMOR).getAttributeValue())*ARMOR_FACTOR;
-			//Damage the hit other entity armour whether penetrated or not
+			float armor = MathHelper.floor(((EntityLivingBase)other).getEntityAttribute(SharedMonsterAttributes.ARMOR).getAttributeValue())*ARMOR_FACTOR;
+			//Damage the other entity armour whether penetrated or not
 			if(armor > 0)
 				IIAmmoUtils.breakArmour(other, (int)getDamage());
 		}
-
-		//The damage actually dealt to the entity, uses only armor, as toughness is used for penetration hardness
-		float damageReceived = Math.max(0, getDamage()-armor);
 		//Ricochet off the entity
 		if(penHandler.getPenetrationHardness().compareTo(penetrationHardness) > 0)
 			onHitRicochet(hit, penHandler);
-			//Can't damage the entity, but can penetrate it for some reason... which is weird, so just detonate the bullet and let's call it a day
-		else if(damageReceived==0)
+
+		onHitPenetrate(hit, penHandler);
+		//If entity can't be damaged, detonate the projectile
+		if(!other.attackEntityFrom(IIDamageSources.causeBulletDamage(this, other), getDamage()))
 		{
 			detonate();
 			return true;
 		}
-		else //Penetrate and damage the entity
-		{
-			onHitPenetrate(hit, penHandler);
-			//If entity can't be damaged, detonate the projectile
-			if(!other.attackEntityFrom(IIDamageSources.causeBulletDamage(this, other), damageReceived))
-			{
-				detonate();
-				return true;
-			}
-		}
+		other.hurtResistantTime = 0;
+		if(other instanceof EntityLivingBase)
+			((EntityLivingBase)other).maxHurtTime = 0;
+
 		return false;
 	}
 
@@ -515,6 +508,7 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 		this.posZ = pos.z;
 		this.baseMotion = dir.normalize();
 		this.velocity *= velocityModifier;
+		this.velocityModifier = velocityModifier;
 		markVelocityChanged();
 	}
 

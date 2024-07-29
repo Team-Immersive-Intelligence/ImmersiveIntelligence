@@ -1370,7 +1370,7 @@ public class IIConfigHandler
 				public static int bulletFireTimeSemiAuto = 10;
 
 				@Comment({"Maximum amount of horizontal recoil."})
-				public static float longBarrelVelocityMod = 1.5f;
+				public static float longBarrelVelocityMod = 2.25f;
 
 				@Comment({"Amount of horizontal recoil after taking a shot."})
 				public static float recoilHorizontal = 0.5f;
