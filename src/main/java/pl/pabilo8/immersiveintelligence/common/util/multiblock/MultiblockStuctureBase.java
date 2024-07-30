@@ -107,6 +107,7 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 	 * Bounding boxes for collision and interaction detection at [pos] [facing (ordinal)]
 	 */
 	private ArrayList<ArrayList<AxisAlignedFacingBB>> AABBs = new ArrayList<>();
+	//TODO: 30.07.2024 second map for caching of MultiblockPOIs
 	/**
 	 * Map of named Points of Interest and their local positions in this multiblock
 	 */
