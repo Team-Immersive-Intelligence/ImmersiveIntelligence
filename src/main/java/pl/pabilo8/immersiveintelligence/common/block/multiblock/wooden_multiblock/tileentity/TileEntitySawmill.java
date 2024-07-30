@@ -27,6 +27,7 @@ import pl.pabilo8.immersiveintelligence.api.rotary.IRotationalEnergyBlock;
 import pl.pabilo8.immersiveintelligence.api.rotary.RotaryStorage;
 import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.ISawblade;
+import pl.pabilo8.immersiveintelligence.client.util.carversound.TimedCompoundSound;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Sawmill;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
@@ -41,6 +42,7 @@ import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockIn
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -57,8 +59,8 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 	IItemHandler dustExtractionHandler = getSingleInventoryHandler(SLOT_SAWDUST, false, true);
 	// Recipe Output Handlers
 	IItemHandler outputHandler = getSingleInventoryHandler(SLOT_OUTPUT), sawdustOutputHandler = getSingleInventoryHandler(SLOT_SAWDUST);
-
-	public MultiblockInteractablePart vice;
+	private List<TimedCompoundSound> soundsList = new ArrayList<>();
+	public MultiblockInteractablePart vise;
 
 	// Rotary Power
 	@SyncNBT
@@ -71,18 +73,25 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 		}
 	};
 
-	@SyncNBT
-	public boolean isProcessing = false;
-	@SyncNBT
-	public boolean isPowered = false;
-
 	public TileEntitySawmill()
 	{
 		super(MultiblockSawmill.INSTANCE);
 
 		energyStorage = new FluxStorageAdvanced(0);
 		inventory = NonNullList.withSize(4, ItemStack.EMPTY);
-		vice = new MultiblockInteractablePart(20);
+		vise = new MultiblockInteractablePart(22);
+	}
+
+	@Override
+	protected void dummyCleanup()
+	{
+		super.dummyCleanup();
+		outputHandler = null;
+		insertionHandler = null;
+		dustExtractionHandler = null;
+		soundsList = null;
+		vise = null;
+		rotation = null;
 	}
 
 	@Override
@@ -121,93 +130,71 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 	@Override
 	protected void onUpdate()
 	{
-		vice.update();
+		vise.update();
 
-		if(!world.isRemote)
+		boolean receivesPower = false;
+
+		// Self destruct
+		if(rotation.getRotationSpeed() > Sawmill.rpmBreakingMax||rotation.getTorque() > Sawmill.torqueBreakingMax)
 		{
-			boolean receivesPower = false;
-
-			// Self destruct
-			if(rotation.getRotationSpeed() > Sawmill.rpmBreakingMax||rotation.getTorque() > Sawmill.torqueBreakingMax)
-			{
-				selfDestruct();
-				return;
-			}
-
-			// Wheel or mechanical device connected to multiblock
-			TileEntity te = world.getTileEntity(getPOIPos(MultiblockPOI.ROTARY_INPUT).offset(facing));
-
-			if(te!=null&&te.hasCapability(CapabilityRotaryEnergy.ROTARY_ENERGY, facing.getOpposite()))
-			{
-				// Increase internal rotation if powered
-				IRotaryEnergy cap = te.getCapability(CapabilityRotaryEnergy.ROTARY_ENERGY, facing.getOpposite());
-				assert cap!=null;
-				if(rotation.handleRotation(cap, facing.getOpposite()))
-				{
-					IIPacketHandler.INSTANCE.sendToAllAround(new MessageRotaryPowerSync(rotation, 0, getPos()), IIPacketHandler.targetPointFromTile(this, 24));
-					receivesPower = true;
-				}
-			}
-
-			// Update power state
-			isPowered = receivesPower;
-
-			if(rotation.getTorque() > 0||rotation.getRotationSpeed() > 0)
-			{
-				// Decrease internal rotation if not powered
-				if(!receivesPower)
-				{
-					rotation.grow(0, 0, 0.98f);
-					IIPacketHandler.INSTANCE.sendToAllAround(new MessageRotaryPowerSync(rotation, 0, getPos()), IIPacketHandler.targetPointFromTile(this, 24));
-				}
-
-				// Hurt entities stepping on sawblade
-				ItemStack sawStack = inventory.get(SLOT_SAWBLADE);
-
-				if(sawStack.getItem() instanceof ISawblade)
-				{
-					if(world.getTotalWorldTime()%Math.ceil(4/MathHelper.clamp(rotation.getRotationSpeed()/360, 0, 1))==0)
-					{
-						int hardness = ((ISawblade)sawStack.getItem()).getHardness(sawStack);
-						Vec3i v = facing.getDirectionVec();
-						List<EntityLivingBase> entities = world.getEntitiesWithinAABB(EntityLivingBase.class,
-								new AxisAlignedBB(getBlockPosForPos(2).offset(EnumFacing.UP)).offset(v.getX()*0.5, v.getY()*0.5, v.getZ()*0.5));
-						for(EntityLivingBase l : entities)
-							l.attackEntityFrom(IIDamageSources.SAWMILL_DAMAGE, hardness);
-					}
-				}
-			}
-
-			// Update processing state
-			isProcessing = currentProcess!=null;
-
-			// Play idle sound if powered but not processing
-			if(isPowered&&!isProcessing)
-			{
-				world.playSound(null, getBlockPosForPos(70), IISounds.sawmillIdle, SoundCategory.BLOCKS, .65f, 1.5f);
-			}
-			else
-			{
-				return;
-			}
-
-
-			// Play active sounds if powered AND processing
-			if(isPowered&&isProcessing)
-			{
-				//mill startup
-				world.playSound(null, getBlockPosForPos(70), IISounds.sawmillStart, SoundCategory.BLOCKS, .65F, 1.5F);
-
-
-				//sawmill wind down
-				world.playSound(null, getBlockPosForPos(70), IISounds.sawmillEnd, SoundCategory.BLOCKS, .65F, 1.5F);
-			}
-			else
-				return;
-
+			selfDestruct();
+			return;
 		}
 
+		// Wheel or mechanical device connected to multiblock
+		TileEntity te = world.getTileEntity(getPOIPos(MultiblockPOI.ROTARY_INPUT).offset(facing));
+
+		if(te!=null&&te.hasCapability(CapabilityRotaryEnergy.ROTARY_ENERGY, facing.getOpposite()))
+		{
+			// Increase internal rotation if powered
+			IRotaryEnergy cap = te.getCapability(CapabilityRotaryEnergy.ROTARY_ENERGY, facing.getOpposite());
+			assert cap!=null;
+			if(rotation.handleRotation(cap, facing.getOpposite()))
+			{
+				IIPacketHandler.INSTANCE.sendToAllAround(new MessageRotaryPowerSync(rotation, 0, getPos()), IIPacketHandler.targetPointFromTile(this, 24));
+				receivesPower = true;
+			}
+		}
+
+		if(rotation.getTorque() > 0||rotation.getRotationSpeed() > 0)
+		{
+			// Decrease internal rotation if not powered
+			if(!receivesPower)
+			{
+				rotation.grow(0, 0, 0.98f);
+				IIPacketHandler.INSTANCE.sendToAllAround(new MessageRotaryPowerSync(rotation, 0, getPos()), IIPacketHandler.targetPointFromTile(this, 24));
+			}
+
+			// Hurt entities stepping on sawblade
+			ItemStack sawStack = inventory.get(SLOT_SAWBLADE);
+
+			if(sawStack.getItem() instanceof ISawblade)
+			{
+				if(world.getTotalWorldTime()%Math.ceil(4/MathHelper.clamp(rotation.getRotationSpeed()/360, 0, 1))==0)
+				{
+					int hardness = ((ISawblade)sawStack.getItem()).getHardness(sawStack);
+					Vec3i v = facing.getDirectionVec();
+					List<EntityLivingBase> entities = world.getEntitiesWithinAABB(EntityLivingBase.class,
+							new AxisAlignedBB(getBlockPosForPos(2).offset(EnumFacing.UP)).offset(v.getX()*0.5, v.getY()*0.5, v.getZ()*0.5));
+					for(EntityLivingBase l : entities)
+						l.attackEntityFrom(IIDamageSources.SAWMILL_DAMAGE, hardness);
+				}
+			}
+		}
 		super.onUpdate();
+
+
+		if(world.isRemote&&currentProcess!=null)
+		{
+			currentProcess.recipe.getSoundAnimation().handleSounds(soundsList, getPos(), (int)currentProcess.ticks, 1f);
+			//TODO: 30.07.2024 proper particle implementation
+			/*
+				if(currentProcess.ticks%10==0)
+					spawnDustParticle();
+				if(currentProcess.ticks%10==5)
+					spawnDustParticleLast();
+			*/
+		}
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -321,8 +308,8 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 	@Override
 	public float getProductionStep(IIMultiblockProcess<SawmillRecipe> process, boolean simulate)
 	{
-		if(inventory.get(1).getItem() instanceof ISawblade&&getCurrentEfficiency() > 0.95&&
-				inventory.get(2).getCount()+process.recipe.itemOutput.getCount() <= getSlotLimit(2))
+		if(inventory.get(SLOT_SAWBLADE).getItem() instanceof ISawblade&&getCurrentEfficiency() > 0.95&&
+				inventory.get(SLOT_OUTPUT).getCount()+process.recipe.itemOutput.getCount() <= getSlotLimit(SLOT_OUTPUT))
 			return 1;
 		return 0;
 	}
@@ -367,13 +354,14 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 	@Override
 	public void onAnimationChangeClient(boolean state, int part)
 	{
-		vice.setState(state);
+		vise.setState(state);
 	}
 
 	@Override
 	public void onAnimationChangeServer(boolean state, int part)
 	{
-		vice.setState(state);
+		if(vise.setState(state))
+			world.playSound(null, getPos(), state?IISounds.viseOpen: IISounds.viseClose, SoundCategory.BLOCKS, 1f, 1f);
 		IIPacketHandler.INSTANCE.sendToAllAround(new MessageBooleanAnimatedPartsSync(state, part, getPos()),
 				IIPacketHandler.targetPointFromTile(this, 32));
 	}

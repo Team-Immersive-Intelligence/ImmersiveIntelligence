@@ -9,6 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.oredict.OreDictionary;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.ISawblade;
+import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IISoundAnimation;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
@@ -68,10 +69,27 @@ public class SawmillRecipe extends MultiblockRecipe implements IIIMultiblockReci
 //		sections each through 0.4/3-1.5/3
 //		rolling each 1.5/3 - 2.5/3, landing 3/3
 
-		this.soundAnimation = new IISoundAnimation(totalProcessTime);
-		/*for(int i = 0; i < itemOutput.getCount(); i++)
-			this.soundAnimation.withSound();*/
+		double cuttingTimeStart = totalProcessTime*0.1;
+		double cuttingSection = (totalProcessTime*0.9)/itemOutput.getCount();
+
+		this.soundAnimation = new IISoundAnimation(totalProcessTime)
+				.withSound(0.05, IISounds.sawmillInserterStart);
+
+		for(int i = 0; i < itemOutput.getCount(); i++)
+			this.soundAnimation
+					.withSound(cuttingTimeStart+cuttingSection*i, IISounds.sawmillInserterStart)
+					.withRepeatedSound(cuttingTimeStart+cuttingSection*(i+0.13),
+							cuttingTimeStart+cuttingSection*(i+0.5), IISounds.sawmillRunning)
+					.withSound(cuttingTimeStart+cuttingSection*(i+0.76), IISounds.sawmillWoodTumble)
+					.withSound(cuttingTimeStart+cuttingSection*(i+0.83), IISounds.sawmillWoodTumble)
+					.withSound(cuttingTimeStart+cuttingSection*(i+0.85), IISounds.sawmillInserterEnd)
+					.withSound(cuttingTimeStart+cuttingSection*(i+0.9), IISounds.sawmillWoodTumble);
 		this.soundAnimation.compile(totalProcessTime);
+	}
+
+	public IISoundAnimation getSoundAnimation()
+	{
+		return soundAnimation;
 	}
 
 	public static SawmillRecipe addRecipe(ItemStack itemOutput, IngredientStack itemInput, ItemStack itemSecondaryOutput, int torque, int time, int hardness)

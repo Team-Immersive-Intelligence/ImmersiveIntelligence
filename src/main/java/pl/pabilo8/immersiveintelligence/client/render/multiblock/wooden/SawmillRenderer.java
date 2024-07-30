@@ -100,7 +100,7 @@ public class SawmillRenderer extends IITileRenderer<TileEntitySawmill>
 			animationProductionReach.apply(0f);
 
 		//GUI/Interaction animation
-		animationInteract.apply(te.vice.getProgress(partialTicks));
+		animationInteract.apply(te.vise.getProgress(partialTicks));
 
 		//Flip
 		if(!te.mirrored) mirrorRender();

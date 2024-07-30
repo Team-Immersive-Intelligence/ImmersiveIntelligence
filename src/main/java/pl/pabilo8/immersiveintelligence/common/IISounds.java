@@ -12,7 +12,6 @@ import pl.pabilo8.immersiveintelligence.common.util.AdvancedSounds.MultiSound;
 import pl.pabilo8.immersiveintelligence.common.util.AdvancedSounds.RangedSound;
 import pl.pabilo8.modworks.annotations.sound.ModSound;
 
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -41,6 +40,8 @@ import java.util.HashMap;
  * </p>
  *
  * @author Pabilo8
+ * @author Avalon
+ * @ii-approved 0.3.1
  * @since 15-06-2019
  * @since 30.03.2023
  */
@@ -152,14 +153,21 @@ public class IISounds
 	public static SoundEvent slidingDoorClose = registerSound("sliding_door_close");
 
 	//--- Sawmill ---//
-	@ModSound(sounds = {"device/sawmill/idle"}, subtitle = "sawmill_idle")
-	public static SoundEvent sawmillIdle = registerSound("sawmill_idle");
 	@ModSound(sounds = {"device/sawmill/start"}, subtitle = "sawmill")
 	public static SoundEvent sawmillStart = registerSound("sawmill_start");
 	@ModSound(sounds = {"device/sawmill/mid"}, subtitle = "sawmill")
 	public static SoundEvent sawmillMid = registerSound("sawmill_mid");
 	@ModSound(sounds = {"device/sawmill/end"}, subtitle = "sawmill")
 	public static SoundEvent sawmillEnd = registerSound("sawmill_end");
+	public static MultiSound sawmillRunning = new MultiSound(sawmillStart, sawmillMid, sawmillEnd);
+
+	@ModSound(sounds = {"device/sawmill/inserter_start"}, subtitle = "sawmill")
+	public static SoundEvent sawmillInserterStart = registerSound("sawmill_inserter_start");
+	@ModSound(sounds = {"device/sawmill/inserter_end"}, subtitle = "sawmill")
+	public static SoundEvent sawmillInserterEnd = registerSound("sawmill_inserter_end");
+
+	@ModSound(sounds = {"device/sawmill/wood_tumble{0..4}"}, subtitle = "sawmill")
+	public static SoundEvent sawmillWoodTumble = registerSound("sawmill_wood_tumble");
 
 	//--- Printing Press---//
 	@ModSound(sounds = {"device/printingpress/start"}, subtitle = "press_start")
@@ -168,6 +176,7 @@ public class IISounds
 	public static SoundEvent pressMid = registerSound("Printing Press");
 	@ModSound(sounds = {"device/printingpress/end"}, subtitle = "press_end")
 	public static SoundEvent pressEnd = registerSound("Printing Press");
+	public static MultiSound printingPressRunning = new MultiSound(pressStart, pressMid, pressEnd);
 
 	//--- Packer ---//
 	@ModSound(sounds = {"device/packer/start"}, subtitle = "packer_start")
@@ -177,20 +186,20 @@ public class IISounds
 	@ModSound(sounds = {"device/packer/end"}, subtitle = "packer_end")
 	public static SoundEvent packerEnd = registerSound("Packer");
 
-	//--- vulcanizer ---//
+	//--- Vulcanizer ---//
 	@ModSound(sounds = {"devices/vulcanizer/start"}, subtitle = "vulcanizer_pull_start")
 	public static SoundEvent vulcanizerPullStart = registerSound("vulcanizer");
 	@ModSound(sounds = {"devices/vulcanizer/mid"}, subtitle = "vulcanizer_pull_mid")
 	public static SoundEvent vulcanizerPullMid = registerSound("vulcanizer");
 	@ModSound(sounds = {"devices/vulcanizer/end"}, subtitle = "vulcanizer_pull_end")
 	public static SoundEvent vulcanizerPullEnd = registerSound("vulcanizer");
+	public static MultiSound vulcanizerRunning = new MultiSound(vulcanizerPullStart, vulcanizerPullMid, vulcanizerPullEnd);
+
+	//--- Packer ---//
+	public static MultiSound packerRunning = new MultiSound(packerStart, packerMid, packerEnd);
 
 	public static MultiSound slidingDoorOpenM = new MultiSound(slidingDoorStart, slidingDoorOpen, slidingDoorEnd);
 	public static MultiSound slidingDoorCloseM = new MultiSound(slidingDoorStart, slidingDoorClose, slidingDoorClose);
-	public static MultiSound sawmillRunning = new MultiSound(sawmillStart, sawmillMid, sawmillEnd);
-	public static MultiSound packerRunning = new MultiSound(packerStart, packerMid, packerEnd);
-	public static MultiSound vulcanizerRunning = new MultiSound(vulcanizerPullStart, vulcanizerPullMid, vulcanizerPullEnd);
-	public static MultiSound printingpressRunning = new MultiSound(pressStart, pressMid, pressEnd);
 
 	//--- Gate Sounds---//
 	@ModSound(sounds = {"device/hatch/gate_wooden/open"}, subtitle = "gate_open")
@@ -247,9 +256,9 @@ public class IISounds
 	@ModSound(sounds = {"device/hatch/breadbox/close{0..1}"}, subtitle = "metal_hatch_close")
 	public static SoundEvent metalBreadboxClose = registerSound("metal_breadbox_close");
 
-	@ModSound(sounds = {"device/hatch/vice/open{0..1}"}, subtitle = "vice_open")
+	@ModSound(sounds = {"device/hatch/vise/open0"}, subtitle = "*")
 	public static SoundEvent viseOpen = registerSound("vise_open");
-	@ModSound(sounds = {"device/hatch/vice/close{0..1}"}, subtitle = "vice_close")
+	@ModSound(sounds = {"device/hatch/vise/close0"}, subtitle = "*")
 	public static SoundEvent viseClose = registerSound("vise_close");
 
 	//--- Tools ---//
@@ -377,11 +386,9 @@ public class IISounds
 	);
 
 
-
-	@ModSound(name = "rifleBoltShot", sounds = {"weapons/rifle/rifle_bolt"}, subtitle = "rifle_shot")
-
-	public static  RangedSound rifleBoltShot = new RangedSound(
-			new Tuple<>(0.0, registerSound("rifle_Bolt_Shot")),
+	@ModSound(name = "rifle_bolt_shot", sounds = {"weapons/rifle/rifle_bolt"}, subtitle = "rifle_shot")
+	public static RangedSound rifleBoltShot = new RangedSound(
+			new Tuple<>(0.0, registerSound("rifle_bolt_shot")),
 			new Tuple<>(0.5, registerSound("rifle_shot_muffled")),
 			new Tuple<>(0.75, registerSound("rifle_shot_distant"))
 
@@ -420,7 +427,6 @@ public class IISounds
 	public static SoundEvent emplacementDoorOpen = registerSound("emplacement_door_open");
 	@ModSound(sounds = {"device/emplacement/door_close"}, subtitle = "emplacement_door")
 	public static SoundEvent emplacementDoorClose = registerSound("emplacement_door_close");
-
 
 
 	public static SoundEvent emplacementDoorPull = registerSound("emplacement_door_pull");

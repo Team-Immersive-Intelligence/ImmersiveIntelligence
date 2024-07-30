@@ -958,6 +958,7 @@ subtitle.immersiveintelligence.motorbike_horn=Motorbike Horn
 
 subtitle.immersiveintelligence.fuel_station=Fuel pumping
 subtitle.immersiveintelligence.welding=Welding
+subtitle.immersiveintelligence.sawmill=Sawmill Working
 
 subtitle.immersiveintelligence.drawer_open=Drawer Slides Out
 subtitle.immersiveintelligence.drawer_close=Drawer Slides In
@@ -965,11 +966,6 @@ subtitle.immersiveintelligence.metal_locker_open=Locker Door Opens
 subtitle.immersiveintelligence.metal_locker_close=Locker Door Shuts
 subtitle.immersiveintelligence.metal_hatch_open=Metal Hatch Opens
 subtitle.immersiveintelligence.metal_hatch_close=Metal Hatch Shuts
-subtitle.immersiveintelligence.vise_open=Vise Tightens its Clamps
-subtitle.immersiveintelligence.vise_close=Vise Loosens its Clamps
-
-subtitle.immersiveintelligence.vise_open=Vise Tightens its Clamps
-subtitle.immersiveintelligence.vise_close=Vise Loosens its Clamps
 subtitle.immersiveintelligence.vise_open=Vise Tightens its Clamps
 subtitle.immersiveintelligence.vise_close=Vise Loosens its Clamps
 
