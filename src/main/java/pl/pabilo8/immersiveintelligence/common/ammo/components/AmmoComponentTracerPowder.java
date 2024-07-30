@@ -15,6 +15,7 @@ import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityAmmoBase;
 import pl.pabilo8.immersiveintelligence.common.item.ItemIITracerPowder;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
+import pl.pabilo8.immersiveintelligence.common.util.entity.IIEntityUtils;
 
 /**
  * @author Pabilo8
@@ -45,7 +46,7 @@ public class AmmoComponentTracerPowder extends AmmoComponent
 	public boolean spawnParticleTrail(EntityAmmoBase ammo, NBTTagCompound nbt)
 	{
 		int color = nbt.hasKey(ItemIITracerPowder.NBT_TRACER_COLOUR)?nbt.getInteger(ItemIITracerPowder.NBT_TRACER_COLOUR): 0xffffff;
-		ParticleRegistry.spawnTracerFX(ammo.getPositionVector(), IIUtils.getEntityMotion(ammo), ammo.getAmmoType().getCaliber()/16f, color);
+		ParticleRegistry.spawnTracerFX(ammo.getPositionVector(), IIEntityUtils.getEntityMotion(ammo), ammo.getAmmoType().getCaliber()/16f, color);
 		return true;
 	}
 

@@ -12,6 +12,8 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityVehiclePart;
+import pl.pabilo8.immersiveintelligence.common.util.IIMath;
+import pl.pabilo8.immersiveintelligence.common.util.entity.IIEntityUtils;
 
 import javax.annotation.Nonnull;
 
@@ -45,8 +47,8 @@ public interface IVehicleMultiPart extends IEntityMultiPart
 		boolean client = vehicle.world.isRemote;
 
 		//create vectors
-		Vec3d vecX = IIUtils.offsetPosDirection(1f, Math.toRadians(MathHelper.wrapDegrees(-vehicle.rotationYaw)), 0);
-		Vec3d vecZ = IIUtils.offsetPosDirection(1f, Math.toRadians(MathHelper.wrapDegrees(-vehicle.rotationYaw-90)), 0);
+		Vec3d vecX = IIMath.offsetPosDirection(1f, Math.toRadians(MathHelper.wrapDegrees(-vehicle.rotationYaw)), 0);
+		Vec3d vecZ = IIMath.offsetPosDirection(1f, Math.toRadians(MathHelper.wrapDegrees(-vehicle.rotationYaw-90)), 0);
 
 		for(EntityVehiclePart part : getParts())
 		{
@@ -61,7 +63,7 @@ public interface IVehicleMultiPart extends IEntityMultiPart
 					0.0F, 0);
 
 			if(client)
-				IIUtils.setEntityVelocity(part, vehicle.motionX, vehicle.motionY, vehicle.motionZ);
+				IIEntityUtils.setEntityVelocity(part, vehicle.motionX, vehicle.motionY, vehicle.motionZ);
 			part.onUpdate();
 		}
 	}

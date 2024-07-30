@@ -44,6 +44,8 @@ import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIIConcreteDecoration.ConcreteDecorations;
 import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIIMetalBase.Metals;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 import javax.annotation.Nullable;
@@ -353,7 +355,7 @@ public class IIAmmoUtils
 			//components section
 			if(components.length > 0)
 			{
-				tooltip.add(IIUtils.getHexCol(IIReference.COLORS_HIGHLIGHT_S[1], I18n.format(IIReference.DESC_BULLETS+"components")));
+				tooltip.add(IIColor.getHexCol(IIReference.COLORS_HIGHLIGHT_S[1], I18n.format(IIReference.DESC_BULLETS+"components")));
 				for(AmmoComponent comp : components)
 					tooltip.add("   "+comp.getTranslatedName());
 			}
@@ -367,7 +369,7 @@ public class IIAmmoUtils
 			//Ballistics section
 			CachedBallisticStats stats = AmmoBallisticsCache.get(ammo, stack);
 
-			tooltip.add(IIUtils.getHexCol(IIReference.COLORS_HIGHLIGHT_S[0], I18n.format(IIReference.DESC_BULLETS+"performance")));
+			tooltip.add(IIColor.getHexCol(IIReference.COLORS_HIGHLIGHT_S[0], I18n.format(IIReference.DESC_BULLETS+"performance")));
 			tooltip.add(I18n.format(IIReference.DESC_BULLETS+"damage_dealt", ammo.getDamage()*core.getDamageModifier()*coreType.getDamageMod()));
 			tooltip.add(I18n.format(IIReference.DESC_BULLETS+"standard_velocity", Utils.formatDouble(ammo.getVelocity(), "0.###")));
 
@@ -423,7 +425,7 @@ public class IIAmmoUtils
 		Stream.concat(Stream.of(ammo.getCoreType(stack).getRole()),
 						Arrays.stream(ammo.getComponents(stack)).map(AmmoComponent::getRole))
 				.filter(c -> c==ComponentRole.GENERAL_PURPOSE)
-				.map(c -> IIUtils.getHexCol(c.getColor(), I18n.format(IIReference.DESCRIPTION_KEY+"bullet_type."+c.getName())))
+				.map(c -> IIColor.getHexCol(c.getColor(), I18n.format(IIReference.DESCRIPTION_KEY+"bullet_type."+c.getName())))
 				.forEach(c -> builder.append(c).append(" - "));
 
 		//If no components with different role were found, add general purpose

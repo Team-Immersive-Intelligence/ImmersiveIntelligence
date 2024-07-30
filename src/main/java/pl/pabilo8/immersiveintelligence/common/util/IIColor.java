@@ -1,6 +1,7 @@
 package pl.pabilo8.immersiveintelligence.common.util;
 
 import net.minecraft.item.EnumDyeColor;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
 
 import java.util.Arrays;
@@ -247,7 +248,237 @@ public class IIColor implements Comparable<IIColor>, ToIntFunction<IIColor>
 		return new IIColor(255, (int)((r+m)*255), (int)((g+m)*255), (int)((b+m)*255));
 	}
 
+	public static String getHexCol(int color, String text)
+	{
+		return getHexCol(Integer.toHexString(color), text);
+	}
+
+	public static String getHexCol(IIColor color, String text)
+	{
+		return getHexCol(color.getHexRGB(), text);
+	}
+
+	public static String getHexCol(String color, String text)
+	{
+		return String.format("<hexcol=%s:%s>", color, text);
+	}
+
+	public static int RGBAToRGB(int color)
+	{
+		return color-(color>>24&0xFF);
+	}
+
+	/**
+	 * based on <a href="https://stackoverflow.com/a/2262117/9876980">https://stackoverflow.com/a/2262117/9876980</a>
+	 *
+	 * @param rgb color in rgbInt
+	 * @return color in rgbFloats format
+	 */
+	public static float[] rgbIntToRGB(int rgb)
+	{
+		float r = ((rgb>>16)&0x0ff)*0.003921f;
+		float g = ((rgb>>8)&0x0ff)*0.003921f;
+		float b = (rgb&0x0ff)*0.003921f;
+		return new float[]{r, g, b};
+	}
+
+	static double colorDistance(int a, int b)
+	{
+		float[] f1 = rgbIntToRGB(a);
+		float[] f2 = rgbIntToRGB(b);
+		return colorDistance(f1, f2);
+	}
+
+	static double colorDistance(float[] f1, float[] f2)
+	{
+		int deltaR = (int)(f1[0]*255-f2[0]*255);
+		int deltaG = (int)(f1[1]*255-f2[1]*255);
+		int deltaB = (int)(f1[2]*255-f2[2]*255);
+		return Math.abs((deltaR*deltaR+deltaG*deltaG+deltaB*deltaB)/3.0);
+	}
+
+	public static int[] rgbToCmyk(int red, int green, int blue)
+	{
+		return new int[]{255-red, 255-green, 255-blue, 255-Math.min(red, Math.max(green, blue))};
+	}
+
+	/**
+	 * @param r red amount (0-1)
+	 * @param g green amount (0-1)
+	 * @param b blue amount (0-1)
+	 * @return float cmyk color array with values 0-1
+	 */
+	public static float[] rgbToCmyk(float r, float g, float b)
+	{
+		int[] cmyk = rgbToCmyk((int)(r*255), (int)(g*255), (int)(b*255));
+		return new float[]{cmyk[0]/255f, cmyk[1]/255f, cmyk[2]/255f, cmyk[3]/255f};
+	}
+
+	public static float[] rgbToCmyk(float[] rgb)
+	{
+		return rgbToCmyk(rgb[0], rgb[1], rgb[2]);
+	}
+
+	/**
+	 * @param cyan    cyan amount (0-255)
+	 * @param magenta magenta amount (0-255)
+	 * @param yellow  yellow amount (0-255)
+	 * @param black   black amount (0-255)
+	 * @return float cmyk color array with values 0-1
+	 */
+	public static int[] cmykToRgb(int cyan, int magenta, int yellow, int black)
+	{
+		return new int[]{Math.min(255-black, 255-cyan), Math.min(255-black, 255-magenta), Math.min(255-black, 255-yellow)};
+	}
+
+	public static float[] cmykToRgb(float c, float m, float y, float b)
+	{
+		int[] dec = cmykToRgb((int)(c*255), (int)(m*255), (int)(y*255), (int)(b*255));
+		return new float[]{dec[0]/255f, dec[1]/255f, dec[2]/255f};
+	}
+
+	/**
+	 * stolen from MathHelper class
+	 *
+	 * @param hue        hue amount (NOT DEGREES) in 0-1
+	 * @param saturation saturation amount in 0-1
+	 * @param value      value in 0-1
+	 * @return float rgb color array with values 0-1
+	 */
+	public static float[] hsvToRgb(float hue, float saturation, float value)
+	{
+		int i = (int)(hue*6.0F)%6;
+		float f = hue*6.0F-(float)i;
+		float f1 = value*(1.0F-saturation);
+		float f2 = value*(1.0F-f*saturation);
+		float f3 = value*(1.0F-(1.0F-f)*saturation);
+		float r, g, b;
+
+		switch(i)
+		{
+			case 0:
+				r = value;
+				g = f3;
+				b = f1;
+				break;
+			case 1:
+				r = f2;
+				g = value;
+				b = f1;
+				break;
+			case 2:
+				r = f1;
+				g = value;
+				b = f3;
+				break;
+			case 3:
+				r = f1;
+				g = f2;
+				b = value;
+				break;
+			case 4:
+				r = f3;
+				g = f1;
+				b = value;
+				break;
+			case 5:
+				r = value;
+				g = f1;
+				b = f2;
+				break;
+			default:
+				r = 0;
+				g = 0;
+				b = 0;
+				break;
+		}
+
+		return new float[]{r, g, b};
+	}
+
+	/**
+	 * based on formula from <a href="https://www.rapidtables.com/convert/color/rgb-to-hsv.html">https://www.rapidtables.com/convert/color/rgb-to-hsv.html</a>
+	 *
+	 * @param r red amount (0-1)
+	 * @param g green amount (0-1)
+	 * @param b blue amount (0-1)
+	 * @return float hsv array with values 0-1
+	 */
+	public static float[] rgbToHsv(float r, float g, float b)
+	{
+		float cMax = Math.max(Math.max(r, g), b);
+		float cMin = Math.min(Math.min(r, g), b);
+		float d = cMax-cMin;
+
+		float s = cMax!=0?d/cMax: 0;
+		float h;
+		if(d==0)
+			h = 0;
+		else if(cMax==r)
+			h = (((g-b)/d)%6f)/6f;
+		else if(cMax==g)
+			h = (((b-r)/d)+2)/6f;
+		else if(cMax==b)
+			h = (((r-g)/d)+4)/6f;
+		else
+			h = 0;
+
+		if(h < 0)
+			h = 1f+h;
+
+		return new float[]{h, s, cMax};
+	}
+
+	/**
+	 * @param color color in rgbInt
+	 * @return closest dye color
+	 */
+	public static EnumDyeColor getRGBTextFormatting(int color)
+	{
+		float[] cc = rgbIntToRGB(color);
+		Optional<EnumDyeColor> min = Arrays.stream(EnumDyeColor.values()).min(Comparator.comparingDouble(value -> colorDistance(value.getColorComponentValues(), cc)));
+		return min.orElse(EnumDyeColor.BLACK);
+	}
+
 	//--- RGB Int Methods ---//
+
+	/**
+	 * Makes an integer color from the given red, green, and blue float (0-1) values
+	 * Stolen from MathHelper because of Side=Client annotation
+	 */
+	public static int rgb(float rIn, float gIn, float bIn)
+	{
+		return rgb(MathHelper.floor(rIn*255.0F), MathHelper.floor(gIn*255.0F), MathHelper.floor(bIn*255.0F));
+	}
+
+	/**
+	 * Makes a single int color with the given red, green, and blue (0-255) values.
+	 * Stolen from MathHelper because of Side=Client annotation
+	 */
+	public static int rgb(int rIn, int gIn, int bIn)
+	{
+		int lvt_3_1_ = (rIn<<8)+gIn;
+		lvt_3_1_ = (lvt_3_1_<<8)+bIn;
+
+
+		return lvt_3_1_;
+	}
+
+	/**
+	 * @param colour1    in 3 float array format
+	 * @param colour2    in 3 float array format
+	 * @param proportion how much of second color is mixed to the first one
+	 * @return color in between
+	 */
+	public static float[] medColour(float[] colour1, float[] colour2, float proportion)
+	{
+		float rev = 1f-proportion;
+		return new float[]{
+				(colour1[0]*rev+colour2[0]*proportion),
+				(colour1[1]*rev+colour2[1]*proportion),
+				(colour1[2]*rev+colour2[2]*proportion)
+		};
+	}
 
 	/**
 	 * @return An integer with the color in ARGBInt format.

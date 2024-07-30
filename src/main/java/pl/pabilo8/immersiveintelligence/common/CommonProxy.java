@@ -104,6 +104,7 @@ import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.util.IBatchOredictRegister;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
 import pl.pabilo8.immersiveintelligence.common.util.block.BlockIIBase;
 import pl.pabilo8.immersiveintelligence.common.util.block.BlockIIFluid;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IIBlockEnum;
@@ -217,7 +218,7 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 					//virgin batch registered OreDict
 					if(ores!=null)
 						for(String ore : ores)
-							OreDictionary.registerOre(IIUtils.toCamelCase(ore+"_"+subItem.getName(), true), new ItemStack(item, 1, meta));
+							OreDictionary.registerOre(IIStringUtil.toCamelCase(ore+"_"+subItem.getName(), true), new ItemStack(item, 1, meta));
 
 					//chad subtype dependent OreDict
 					for(String ore : subItem.getOreDict())
@@ -229,7 +230,7 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 				String[] ores = getAnnotatedOreDict(item);
 				if(ores!=null)
 					for(String ore : ores)
-						OreDictionary.registerOre(IIUtils.toCamelCase(ore, true), new ItemStack(item));
+						OreDictionary.registerOre(IIStringUtil.toCamelCase(ore, true), new ItemStack(item));
 			}
 
 		for(Block block : IIContent.BLOCKS)
@@ -245,7 +246,7 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 					//batch registered OreDict
 					if(ores!=null)
 						for(String ore : ores)
-							OreDictionary.registerOre(IIUtils.toCamelCase(ore+"_"+enumValue.getName(), true), new ItemStack(block, 1, meta));
+							OreDictionary.registerOre(IIStringUtil.toCamelCase(ore+"_"+enumValue.getName(), true), new ItemStack(block, 1, meta));
 
 					//subtype dependent OreDict
 					IIBlockProperties properties = enumValue.getProperties();
@@ -273,7 +274,7 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 						BlockIIBase<?> block = (BlockIIBase<?>)field.get(null);
 						for(IIBlockEnum enumValue : block.enumValues)
 							for(String ore : ores)
-								OreDictionary.registerOre(IIUtils.toCamelCase(ore+"_"+enumValue.getName(), true),
+								OreDictionary.registerOre(IIStringUtil.toCamelCase(ore+"_"+enumValue.getName(), true),
 										new ItemStack(block, 1, enumValue.getMeta()));
 					}
 					else if(o instanceof ItemIIBase)
@@ -281,7 +282,7 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 						//meta insensitive
 						ItemIIBase item = (ItemIIBase)field.get(null);
 						for(String ore : ores)
-							OreDictionary.registerOre(IIUtils.toCamelCase(ore, true), new ItemStack(item, 1, OreDictionary.WILDCARD_VALUE));
+							OreDictionary.registerOre(IIStringUtil.toCamelCase(ore, true), new ItemStack(item, 1, OreDictionary.WILDCARD_VALUE));
 					}
 
 				} catch(IllegalAccessException ignored) {}

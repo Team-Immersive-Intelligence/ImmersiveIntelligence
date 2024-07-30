@@ -37,6 +37,7 @@ import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoBase.AmmoParts;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
+import pl.pabilo8.immersiveintelligence.common.util.entity.IIEntityUtils;
 import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIIItemTextureOverride;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
@@ -319,7 +320,7 @@ public class ItemIIAmmoRevolver extends ItemBullet implements IAmmoTypeItem<Item
 	{
 		return new AmmoFactory<>(projectile.world)
 				.setPosition(projectile.getPositionVector())
-				.setDirection(IIUtils.getEntityMotion(projectile).normalize())
+				.setDirection(IIEntityUtils.getEntityMotion(projectile).normalize())
 				.setStack(cartridge)
 				.setOwner(shooter)
 				.create();

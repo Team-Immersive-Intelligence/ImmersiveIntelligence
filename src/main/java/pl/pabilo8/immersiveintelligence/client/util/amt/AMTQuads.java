@@ -10,6 +10,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.client.model.IIModelRegistry;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
 import java.util.Arrays;

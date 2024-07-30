@@ -70,6 +70,7 @@ import pl.pabilo8.immersiveintelligence.common.item.data.ItemIIFunctionalCircuit
 import pl.pabilo8.immersiveintelligence.common.item.mechanical.ItemIIMotorGear.MotorGear;
 import pl.pabilo8.immersiveintelligence.common.item.tools.backpack.ItemIIAdvancedPowerPack;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIUpgradeableArmor;
 
 import javax.annotation.Nonnull;
@@ -878,37 +879,37 @@ public class IIRecipes
 
 		PaintingRecipe.addRecipe((rgb, stack) -> {
 			//get closest approximated dye
-			EnumDyeColor dye = IIUtils.getRGBTextFormatting(rgb);
+			EnumDyeColor dye = IIColor.getRGBTextFormatting(rgb);
 			return new ItemStack(Blocks.WOOL, 1, dye.getMetadata());
 		}, new IngredientStack(new ItemStack(Blocks.WOOL)), 512, 240, 125);
 
 		PaintingRecipe.addRecipe((rgb, stack) -> {
 			//get closest approximated dye
-			EnumDyeColor dye = IIUtils.getRGBTextFormatting(rgb);
+			EnumDyeColor dye = IIColor.getRGBTextFormatting(rgb);
 			return new ItemStack(Blocks.CARPET, 1, dye.getMetadata());
 		}, new IngredientStack(new ItemStack(Blocks.CARPET)), 512, 240, 50);
 
 		PaintingRecipe.addRecipe((rgb, stack) -> {
 			//get closest approximated dye
-			EnumDyeColor dye = IIUtils.getRGBTextFormatting(rgb);
+			EnumDyeColor dye = IIColor.getRGBTextFormatting(rgb);
 			return new ItemStack(Blocks.STAINED_GLASS, 1, dye.getMetadata());
 		}, new IngredientStack(new ItemStack(Blocks.GLASS)), 512, 240, 125);
 
 		PaintingRecipe.addRecipe((rgb, stack) -> {
 			//get closest approximated dye
-			EnumDyeColor dye = IIUtils.getRGBTextFormatting(rgb);
+			EnumDyeColor dye = IIColor.getRGBTextFormatting(rgb);
 			return new ItemStack(Blocks.STAINED_GLASS_PANE, 1, dye.getMetadata());
 		}, new IngredientStack(new ItemStack(Blocks.GLASS_PANE)), 512, 240, 125);
 
 		PaintingRecipe.addRecipe((rgb, stack) -> {
 			//get closest approximated dye
-			EnumDyeColor dye = IIUtils.getRGBTextFormatting(rgb);
+			EnumDyeColor dye = IIColor.getRGBTextFormatting(rgb);
 			return new ItemStack(Blocks.STAINED_HARDENED_CLAY, 1, dye.getMetadata());
 		}, new IngredientStack(new ItemStack(Blocks.HARDENED_CLAY)), 512, 240, 125);
 
 		PaintingRecipe.addRecipe((rgb, stack) -> {
 			//get closest approximated dye
-			EnumDyeColor dye = IIUtils.getRGBTextFormatting(rgb);
+			EnumDyeColor dye = IIColor.getRGBTextFormatting(rgb);
 			return new ItemStack(Items.BED, 1, dye.getMetadata());
 		}, new IngredientStack(new ItemStack(Items.BED)), 512, 240, 200);
 

@@ -8,6 +8,7 @@ import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler;
 import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler.IISpecialSkin;
+import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -58,7 +59,7 @@ public interface ISkinnable
 		{
 			IISpecialSkin s = IISkinHandler.specialSkins.get(skin);
 			tooltip.add(s.rarity.rarityColor+I18n.format(String.format("skin.%1$s.%2$s.name", ImmersiveIntelligence.MODID, skin)));
-			tooltip.add(IIUtils.getItalicString(I18n.format(String.format("skin.%1$s.%2$s.desc", ImmersiveIntelligence.MODID, skin))));
+			tooltip.add(IIStringUtil.getItalicString(I18n.format(String.format("skin.%1$s.%2$s.desc", ImmersiveIntelligence.MODID, skin))));
 		}
 	}
 

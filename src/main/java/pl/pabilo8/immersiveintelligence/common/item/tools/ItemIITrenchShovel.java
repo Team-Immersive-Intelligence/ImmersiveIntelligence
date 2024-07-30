@@ -21,6 +21,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
 import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
 
@@ -50,7 +51,7 @@ public class ItemIITrenchShovel extends ItemIEShovel
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn)
 	{
 		super.addInformation(stack, worldIn, tooltip, flagIn);
-		tooltip.add(IIUtils.getItalicString(I18n.format(IIReference.DESCRIPTION_KEY+"trench_shovel")));
+		tooltip.add(IIStringUtil.getItalicString(I18n.format(IIReference.DESCRIPTION_KEY+"trench_shovel")));
 	}
 
 	@Override

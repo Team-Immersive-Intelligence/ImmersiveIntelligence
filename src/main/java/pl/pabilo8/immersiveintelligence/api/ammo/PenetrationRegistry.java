@@ -18,6 +18,7 @@ import pl.pabilo8.immersiveintelligence.client.fx.IIParticles;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -215,13 +216,13 @@ public class PenetrationRegistry
 
 	public static void registerMetalMaterial(PenetrationHandlerMetal handler, boolean hasSlab, boolean hasSheetMetal, boolean hasSheetmetalSlab)
 	{
-		REGISTERED_BLOCKS.put(iBlockState -> IIUtils.compareBlockstateOredict(iBlockState, "block"+IIUtils.toCamelCase(handler.getName(), false)), handler);
+		REGISTERED_BLOCKS.put(iBlockState -> IIUtils.compareBlockstateOredict(iBlockState, "block"+IIStringUtil.toCamelCase(handler.getName(), false)), handler);
 		if(hasSlab)
-			REGISTERED_BLOCKS.put(iBlockState -> IIUtils.compareBlockstateOredict(iBlockState, "slab"+IIUtils.toCamelCase(handler.getName(), false)), handler);
+			REGISTERED_BLOCKS.put(iBlockState -> IIUtils.compareBlockstateOredict(iBlockState, "slab"+IIStringUtil.toCamelCase(handler.getName(), false)), handler);
 		if(hasSheetMetal)
-			REGISTERED_BLOCKS.put(iBlockState -> IIUtils.compareBlockstateOredict(iBlockState, "blockSheetmetal"+IIUtils.toCamelCase(handler.getName(), false)), handler);
+			REGISTERED_BLOCKS.put(iBlockState -> IIUtils.compareBlockstateOredict(iBlockState, "blockSheetmetal"+IIStringUtil.toCamelCase(handler.getName(), false)), handler);
 		if(hasSheetmetalSlab)
-			REGISTERED_BLOCKS.put(iBlockState -> IIUtils.compareBlockstateOredict(iBlockState, "slabSheetmetal"+IIUtils.toCamelCase(handler.getName(), false)), handler);
+			REGISTERED_BLOCKS.put(iBlockState -> IIUtils.compareBlockstateOredict(iBlockState, "slabSheetmetal"+IIStringUtil.toCamelCase(handler.getName(), false)), handler);
 
 	}
 

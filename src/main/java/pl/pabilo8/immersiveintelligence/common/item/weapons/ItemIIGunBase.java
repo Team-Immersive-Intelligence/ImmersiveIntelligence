@@ -41,6 +41,7 @@ import pl.pabilo8.immersiveintelligence.common.item.weapons.ammohandler.AmmoHand
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageItemKeybind;
 import pl.pabilo8.immersiveintelligence.common.util.AdvancedSounds.RangedSound;
+import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIUpgradableTool;
 
@@ -342,7 +343,7 @@ public abstract class ItemIIGunBase extends ItemIIUpgradableTool implements ISki
 				float recoilV = nbt.getFloat(RECOIL_V), recoilVAdded = getVerticalRecoil(weapon, upgrades, isAimed);
 
 				//Get the aim (look) vector
-				Vec3d vec = IIUtils.getVectorForRotation(
+				Vec3d vec = IIMath.getVectorForRotation(
 						user.rotationPitch+getActualRecoil(recoilV, recoilVAdded),
 						user.getRotationYawHead()+getActualRecoil(recoilH, recoilHAdded)
 				);

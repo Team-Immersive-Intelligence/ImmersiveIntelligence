@@ -46,7 +46,9 @@ import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageEntityNBTSync;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageParticleEffect;
 import pl.pabilo8.immersiveintelligence.common.util.IIDamageSources;
+import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.entity.IIEntityUtils;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -260,15 +262,15 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 			float tylt = -((tilt*0.5f)+(tilt*(speed/10f)*0.5f))*20;
 			double true_angle4 = Math.toRadians((tylt-90) > 180?360f-(tylt-90): (tylt-90));
 
-			Vec3d pos2 = IIUtils.offsetPosDirection(seatID==0?-0.4f: -1.35f, true_angle, 0);
-			Vec3d pos3 = IIUtils.offsetPosDirection(seatID==0?0.7f: 0.75f, true_angle2, -true_angle4);
+			Vec3d pos2 = IIMath.offsetPosDirection(seatID==0?-0.4f: -1.35f, true_angle, 0);
+			Vec3d pos3 = IIMath.offsetPosDirection(seatID==0?0.7f: 0.75f, true_angle2, -true_angle4);
 
 			passenger.setPosition(posX+pos2.x+pos3.x+motionX, posY+pos3.y, posZ+pos2.z+pos3.z+motionZ);
 		}
 		else if(seatID==2)
 		{
 			double true_angle = Math.toRadians((-rotationYaw) > 180?360f-(-rotationYaw): (-rotationYaw));
-			Vec3d pos_mtb = IIUtils.offsetPosDirection(-2.25f, true_angle, 0);
+			Vec3d pos_mtb = IIMath.offsetPosDirection(-2.25f, true_angle, 0);
 
 			passenger.setPositionAndUpdate(posX+pos_mtb.x+motionX, posY+motionY, posZ+pos_mtb.z+motionZ);
 			passenger.rotationYaw = this.rotationYaw+180;
@@ -488,7 +490,7 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 
 
 		if(world.isRemote)
-			IIUtils.setEntityVelocity(this, partWheelFront.motionX, partWheelFront.motionY, partWheelFront.motionZ);
+			IIEntityUtils.setEntityVelocity(this, partWheelFront.motionX, partWheelFront.motionY, partWheelFront.motionZ);
 
 
 		if(!world.isRemote&&speed > 1f)
@@ -643,8 +645,8 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 	private void spawnExhaustParticle(double angle1, double angle2)
 	{
 		float exhaustRandom = (world.getTotalWorldTime()%20/20f)*0.2f;
-		Vec3d exhaustVec = new Vec3d(0, 0.3+exhaustRandom, 0).add(IIUtils.offsetPosDirection(0.345f, angle2, 0)).add(IIUtils.offsetPosDirection(-1.5f, angle1, 0));
-		Vec3d exhaustSpeedVec = IIUtils.offsetPosDirection(-0.25f, angle1, 0);
+		Vec3d exhaustVec = new Vec3d(0, 0.3+exhaustRandom, 0).add(IIMath.offsetPosDirection(0.345f, angle2, 0)).add(IIMath.offsetPosDirection(-1.5f, angle1, 0));
+		Vec3d exhaustSpeedVec = IIMath.offsetPosDirection(-0.25f, angle1, 0);
 
 		world.spawnParticle(EnumParticleTypes.SMOKE_LARGE, posX+exhaustVec.x, posY+exhaustVec.y, posZ+exhaustVec.z, 0+exhaustSpeedVec.x, 0.015625, exhaustSpeedVec.z);
 	}
@@ -653,25 +655,25 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 	{
 		float worldRandom = Math.abs((world.getTotalWorldTime()%40/40f)-0.5f)/0.5f;
 
-		Vec3d smokeVec = new Vec3d(0, 0.5, 0).add(IIUtils.offsetPosDirection(-0.25f+(worldRandom*0.015625f*8), angle2, 0));
-		Vec3d modVec = IIUtils.offsetPosDirection(0.2f, angle2, 0);
+		Vec3d smokeVec = new Vec3d(0, 0.5, 0).add(IIMath.offsetPosDirection(-0.25f+(worldRandom*0.015625f*8), angle2, 0));
+		Vec3d modVec = IIMath.offsetPosDirection(0.2f, angle2, 0);
 		world.spawnParticle(EnumParticleTypes.SMOKE_LARGE, posX+smokeVec.x, posY+smokeVec.y, posZ+smokeVec.z, worldRandom*0.015625*modVec.x, 0.015625*modVec.y, worldRandom*0.015625*modVec.z);
 
 		if(engineDurability < Motorbike.engineDurability*0.65)
 		{
 
-			Vec3d fireVec = new Vec3d(0, 0.55, 0).add(IIUtils.offsetPosDirection(0.135f, angle2, 0));
+			Vec3d fireVec = new Vec3d(0, 0.55, 0).add(IIMath.offsetPosDirection(0.135f, angle2, 0));
 			ParticleRegistry.spawnFlameFX(getPositionVector().add(fireVec), new Vec3d(worldRandom*modVec.x, 0.1, worldRandom*modVec.z), 2.5f, 16);
 
 			if(engineDurability < Motorbike.engineDurability*0.35)
 			{
-				modVec = IIUtils.offsetPosDirection(-0.2f, angle2, 0);
-				Vec3d fireVec2 = new Vec3d(0, 0.55, 0).add(IIUtils.offsetPosDirection(-0.2f, angle2, 0));
+				modVec = IIMath.offsetPosDirection(-0.2f, angle2, 0);
+				Vec3d fireVec2 = new Vec3d(0, 0.55, 0).add(IIMath.offsetPosDirection(-0.2f, angle2, 0));
 				ParticleRegistry.spawnFlameFX(getPositionVector().add(fireVec2), new Vec3d(worldRandom*modVec.x, 0.1, worldRandom*modVec.z), 2.5f, 16);
 
 				if(engineDurability < Motorbike.engineDurability*0.2)
 				{
-					smokeVec = new Vec3d(0, 0.5, 0).add(IIUtils.offsetPosDirection(-0.25f+(worldRandom*0.015625f*8), angle2, 0));
+					smokeVec = new Vec3d(0, 0.5, 0).add(IIMath.offsetPosDirection(-0.25f+(worldRandom*0.015625f*8), angle2, 0));
 					world.spawnParticle(EnumParticleTypes.SMOKE_LARGE, posX+smokeVec.x, posY+smokeVec.y, posZ+smokeVec.z, worldRandom*0.015625*modVec.x, 0.015625*modVec.y, worldRandom*0.015625*modVec.z);
 				}
 			}
@@ -1031,11 +1033,11 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 
 		for(ModelRendererTurbo mod : models)
 		{
-			Vec3d vx = IIUtils.offsetPosDirection((float)(mod.rotationPointX*0.0625), -true_angle, 0);
-			Vec3d vz = IIUtils.offsetPosDirection((float)(-mod.rotationPointZ*0.0625), true_angle, 0);
+			Vec3d vx = IIMath.offsetPosDirection((float)(mod.rotationPointX*0.0625), -true_angle, 0);
+			Vec3d vz = IIMath.offsetPosDirection((float)(-mod.rotationPointZ*0.0625), true_angle, 0);
 			Vec3d vo = new Vec3d(posX, posY, posZ)
 					.add(vx)
-					.add(IIUtils.offsetPosDirection((float)(mod.rotationPointY*0.0625), -true_angle2, -true_angle4))
+					.add(IIMath.offsetPosDirection((float)(mod.rotationPointY*0.0625), -true_angle2, -true_angle4))
 					.add(vz);
 			Vec3d vecDir = new Vec3d(rand.nextGaussian()*0.25, rand.nextGaussian()*0.25, rand.nextGaussian()*0.025);
 

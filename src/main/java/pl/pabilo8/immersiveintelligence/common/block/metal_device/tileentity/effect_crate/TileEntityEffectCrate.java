@@ -40,6 +40,7 @@ import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
+import pl.pabilo8.immersiveintelligence.common.util.entity.IIEntityUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -304,7 +305,7 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 		if(focusedEntity!=null)
 		{
 			//Subtracts two vector and calculates angle (in degrees) using atan
-			Vec3d vec3d = IIUtils.getEntityCenter(focusedEntity)
+			Vec3d vec3d = IIEntityUtils.getEntityCenter(focusedEntity)
 					.add(new Vec3d(focusedEntity.motionX, 0, focusedEntity.motionZ).scale(partialTicks))
 					.subtract(new Vec3d(this.pos));
 			float yaw;
