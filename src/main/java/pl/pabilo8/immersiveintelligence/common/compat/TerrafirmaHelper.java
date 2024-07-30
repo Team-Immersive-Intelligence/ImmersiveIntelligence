@@ -1,20 +1,14 @@
 package pl.pabilo8.immersiveintelligence.common.compat;
 
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
-import blusunrize.immersiveengineering.common.IEContent;
-import buildcraft.lib.fluid.FluidManager;
-import com.google.common.collect.Multimap;
+import blusunrize.immersiveengineering.common.util.Utils;
 import net.dries007.tfc.TerraFirmaCraft;
-import net.dries007.tfc.api.registries.TFCRegistries;
-import net.dries007.tfc.api.types.Tree;
-import net.dries007.tfc.objects.blocks.BlocksTFC;
-import net.dries007.tfc.objects.blocks.wood.BlockLogTFC;
-import net.dries007.tfc.objects.blocks.wood.BlockPlanksTFC;
-import net.dries007.tfc.objects.items.itemblock.ItemBlockTFC;
-import net.dries007.tfc.objects.items.wood.ItemLumberTFC;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraft.item.crafting.CraftingManager;
+import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.item.crafting.Ingredient;
+import net.minecraftforge.fluids.FluidRegistry;
+import pl.pabilo8.immersiveintelligence.api.crafting.ElectrolyzerRecipe;
 import pl.pabilo8.immersiveintelligence.api.crafting.SawmillRecipe;
 import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Sawmill;
@@ -23,8 +17,8 @@ import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.ItemIIMaterial.Materials;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author Pabilo8
@@ -40,12 +34,10 @@ public class TerrafirmaHelper extends IICompatModule
 	public TerrafirmaHelper()
 	{
 		/*
-		* IDs:
-		* lumber: tfc:wood/lumber/x
-		* log: tfc:wood/log/x
+		 * IDs:
+		 * lumber: tfc:wood/lumber/x
+		 * log: tfc:wood/log/x
 		 */
-
-		// TODO: Finish TFC Compat adding new sawmill recipes
 		tfcRoot = ResLoc.root(TerraFirmaCraft.MOD_ID);
 		lumberRes = ResLoc.of(tfcRoot, "wood/lumber/");
 		logRes = ResLoc.of(tfcRoot, "wood/log/");
@@ -61,18 +53,19 @@ public class TerrafirmaHelper extends IICompatModule
 	@Override
 	public void registerRecipes()
 	{
-		IILogger.info("Registering TFC sawmill recipes");
-		for (Tree tree : TFCRegistries.TREES.getValuesCollection())
-		{
-			ResLoc logres = ResLoc.of(logRes, tree.getRegistryName().getResourcePath());
-			ResLoc lumber = ResLoc.of(lumberRes, tree.getRegistryName().getResourcePath());
-			ResLoc planks = ResLoc.of(planksRes, tree.getRegistryName().getResourcePath());
-			IILogger.info("Registering sawmill recipe: " + logres + " -> 8x " + lumber);
-			IILogger.info("Registering sawmill recipe: " + planks + " -> 4x " + lumber);
+		//Fresh Water -> Hydrogen + Oxygen
+		ElectrolyzerRecipe.addRecipe(FluidRegistry.getFluidStack("fresh_water", 750),
+				FluidRegistry.getFluidStack("oxygen", 250),
+				FluidRegistry.getFluidStack("hydrogen", 500),
+				160, 80);
+		//Salt Water -> Hydrogen + Chlorine (less efficient)
+		ElectrolyzerRecipe.addRecipe(FluidRegistry.getFluidStack("salt_water", 750),
+				FluidRegistry.getFluidStack("chlorine", 375),
+				FluidRegistry.getFluidStack("hydrogen", 375),
+				200, 180);
 
-			SawmillRecipe.addRecipe(new ItemStack(new ItemLumberTFC(tree), 8), new IngredientStack(new ItemStack(new ItemBlockTFC(new BlockLogTFC(tree)), 1)), IIContent.itemMaterial.getStack(Materials.DUST_WOOD), Sawmill.torqueMin, 100, 1);
-			SawmillRecipe.addRecipe(new ItemStack(new ItemLumberTFC(tree), 4), new IngredientStack(new ItemStack(new ItemBlockTFC(new BlockPlanksTFC(tree)), 1)), IIContent.itemMaterial.getStack(Materials.DUST_WOOD), Sawmill.torqueMin, 100, 1);
-		}
+		IILogger.info("Registering TFC sawmill recipes");
+		CraftingManager.REGISTRY.forEach(TerrafirmaHelper::woodRecipe);
 	}
 
 	@Override
@@ -91,5 +84,25 @@ public class TerrafirmaHelper extends IICompatModule
 	public void postInit()
 	{
 
+	}
+
+	private static void woodRecipe(IRecipe recipe)
+	{
+		ItemStack out = recipe.getRecipeOutput().copy();
+		if(!Utils.compareToOreName(out, "lumber"))
+			return;
+		out.setCount((int)(out.getCount()*1.5));
+
+		List<ItemStack> logStacks = new ArrayList<>();
+		for(Ingredient ingredient : recipe.getIngredients())
+			Arrays.stream(ingredient.getMatchingStacks())
+					.filter(stack -> Utils.compareToOreName(stack, "logWood"))
+					.forEachOrdered(logStacks::add);
+		if(logStacks.isEmpty())
+			return;
+
+		SawmillRecipe.addRecipe(out, new IngredientStack(logStacks).setUseNBT(false),
+				IIContent.itemMaterial.getStack(Materials.DUST_WOOD),
+				Sawmill.torqueMin+2, 200, 1);
 	}
 }

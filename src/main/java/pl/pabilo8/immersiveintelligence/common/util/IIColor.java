@@ -248,21 +248,25 @@ public class IIColor implements Comparable<IIColor>, ToIntFunction<IIColor>
 		return new IIColor(255, (int)((r+m)*255), (int)((g+m)*255), (int)((b+m)*255));
 	}
 
+	@Deprecated
 	public static String getHexCol(int color, String text)
 	{
 		return getHexCol(Integer.toHexString(color), text);
 	}
 
+	@Deprecated
 	public static String getHexCol(IIColor color, String text)
 	{
 		return getHexCol(color.getHexRGB(), text);
 	}
 
+	@Deprecated
 	public static String getHexCol(String color, String text)
 	{
 		return String.format("<hexcol=%s:%s>", color, text);
 	}
 
+	@Deprecated
 	public static int RGBAToRGB(int color)
 	{
 		return color-(color>>24&0xFF);
@@ -274,6 +278,7 @@ public class IIColor implements Comparable<IIColor>, ToIntFunction<IIColor>
 	 * @param rgb color in rgbInt
 	 * @return color in rgbFloats format
 	 */
+	@Deprecated
 	public static float[] rgbIntToRGB(int rgb)
 	{
 		float r = ((rgb>>16)&0x0ff)*0.003921f;
@@ -282,6 +287,7 @@ public class IIColor implements Comparable<IIColor>, ToIntFunction<IIColor>
 		return new float[]{r, g, b};
 	}
 
+	@Deprecated
 	static double colorDistance(int a, int b)
 	{
 		float[] f1 = rgbIntToRGB(a);
@@ -289,6 +295,7 @@ public class IIColor implements Comparable<IIColor>, ToIntFunction<IIColor>
 		return colorDistance(f1, f2);
 	}
 
+	@Deprecated
 	static double colorDistance(float[] f1, float[] f2)
 	{
 		int deltaR = (int)(f1[0]*255-f2[0]*255);
@@ -297,6 +304,7 @@ public class IIColor implements Comparable<IIColor>, ToIntFunction<IIColor>
 		return Math.abs((deltaR*deltaR+deltaG*deltaG+deltaB*deltaB)/3.0);
 	}
 
+	@Deprecated
 	public static int[] rgbToCmyk(int red, int green, int blue)
 	{
 		return new int[]{255-red, 255-green, 255-blue, 255-Math.min(red, Math.max(green, blue))};
@@ -308,12 +316,14 @@ public class IIColor implements Comparable<IIColor>, ToIntFunction<IIColor>
 	 * @param b blue amount (0-1)
 	 * @return float cmyk color array with values 0-1
 	 */
+	@Deprecated
 	public static float[] rgbToCmyk(float r, float g, float b)
 	{
 		int[] cmyk = rgbToCmyk((int)(r*255), (int)(g*255), (int)(b*255));
 		return new float[]{cmyk[0]/255f, cmyk[1]/255f, cmyk[2]/255f, cmyk[3]/255f};
 	}
 
+	@Deprecated
 	public static float[] rgbToCmyk(float[] rgb)
 	{
 		return rgbToCmyk(rgb[0], rgb[1], rgb[2]);
@@ -326,11 +336,13 @@ public class IIColor implements Comparable<IIColor>, ToIntFunction<IIColor>
 	 * @param black   black amount (0-255)
 	 * @return float cmyk color array with values 0-1
 	 */
+	@Deprecated
 	public static int[] cmykToRgb(int cyan, int magenta, int yellow, int black)
 	{
 		return new int[]{Math.min(255-black, 255-cyan), Math.min(255-black, 255-magenta), Math.min(255-black, 255-yellow)};
 	}
 
+	@Deprecated
 	public static float[] cmykToRgb(float c, float m, float y, float b)
 	{
 		int[] dec = cmykToRgb((int)(c*255), (int)(m*255), (int)(y*255), (int)(b*255));
@@ -345,6 +357,7 @@ public class IIColor implements Comparable<IIColor>, ToIntFunction<IIColor>
 	 * @param value      value in 0-1
 	 * @return float rgb color array with values 0-1
 	 */
+	@Deprecated
 	public static float[] hsvToRgb(float hue, float saturation, float value)
 	{
 		int i = (int)(hue*6.0F)%6;
@@ -404,6 +417,7 @@ public class IIColor implements Comparable<IIColor>, ToIntFunction<IIColor>
 	 * @param b blue amount (0-1)
 	 * @return float hsv array with values 0-1
 	 */
+	@Deprecated
 	public static float[] rgbToHsv(float r, float g, float b)
 	{
 		float cMax = Math.max(Math.max(r, g), b);
@@ -433,6 +447,7 @@ public class IIColor implements Comparable<IIColor>, ToIntFunction<IIColor>
 	 * @param color color in rgbInt
 	 * @return closest dye color
 	 */
+	@Deprecated
 	public static EnumDyeColor getRGBTextFormatting(int color)
 	{
 		float[] cc = rgbIntToRGB(color);
@@ -446,6 +461,7 @@ public class IIColor implements Comparable<IIColor>, ToIntFunction<IIColor>
 	 * Makes an integer color from the given red, green, and blue float (0-1) values
 	 * Stolen from MathHelper because of Side=Client annotation
 	 */
+	@Deprecated
 	public static int rgb(float rIn, float gIn, float bIn)
 	{
 		return rgb(MathHelper.floor(rIn*255.0F), MathHelper.floor(gIn*255.0F), MathHelper.floor(bIn*255.0F));
@@ -455,6 +471,7 @@ public class IIColor implements Comparable<IIColor>, ToIntFunction<IIColor>
 	 * Makes a single int color with the given red, green, and blue (0-255) values.
 	 * Stolen from MathHelper because of Side=Client annotation
 	 */
+	@Deprecated
 	public static int rgb(int rIn, int gIn, int bIn)
 	{
 		int lvt_3_1_ = (rIn<<8)+gIn;
@@ -470,6 +487,7 @@ public class IIColor implements Comparable<IIColor>, ToIntFunction<IIColor>
 	 * @param proportion how much of second color is mixed to the first one
 	 * @return color in between
 	 */
+	@Deprecated
 	public static float[] medColour(float[] colour1, float[] colour2, float proportion)
 	{
 		float rev = 1f-proportion;

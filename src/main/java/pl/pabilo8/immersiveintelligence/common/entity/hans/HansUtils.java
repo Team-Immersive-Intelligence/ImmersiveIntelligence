@@ -39,12 +39,8 @@ public class HansUtils
 	public static void init()
 	{
 		WEAPON_MAP.put(IEContent.itemRevolver, AIHansRevolver::new);
-		WEAPON_MAP.put(IIContent.itemSubmachinegun, hans -> new AIHansAbstractGun(hans, IIContent.itemSubmachinegun, 3, 12, 10)
-		{
-		});
-		WEAPON_MAP.put(IIContent.itemAssaultRifle, hans -> new AIHansAbstractGun(hans, IIContent.itemAssaultRifle, 5, 16, 5)
-		{
-		});
+		WEAPON_MAP.put(IIContent.itemSubmachinegun, AIHansSubmachinegun::new);
+		WEAPON_MAP.put(IIContent.itemAssaultRifle, AIHansAssaultRifle::new);
 		WEAPON_MAP.put(IIContent.itemRifle, hans -> new AIHansAbstractGun(hans, IIContent.itemRifle, 6, 24, 40)
 		{
 		});

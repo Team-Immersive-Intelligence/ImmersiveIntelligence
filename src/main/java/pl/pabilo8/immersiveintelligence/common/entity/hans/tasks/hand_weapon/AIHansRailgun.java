@@ -8,7 +8,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.IIAmmoUtils;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
 import pl.pabilo8.immersiveintelligence.common.entity.hans.HansAnimations.HansLegAnimation;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIRailgunOverride;
@@ -100,7 +99,7 @@ public class AIHansRailgun extends AIHansHandWeapon
 	protected float calculateBallisticAngle(ItemStack ammo, EntityLivingBase attackTarget)
 	{
 		if(ammo.getItem()==IIContent.itemRailgunGrenade)
-			return IIAmmoUtils.getDirectFireAngle(IIContent.itemRailgunGrenade.getDefaultVelocity(), IIContent.itemRailgunGrenade.getMass(ammo),
+			return IIAmmoUtils.getDirectFireAngle(IIContent.itemRailgunGrenade.getVelocity(), IIContent.itemRailgunGrenade.getMass(ammo),
 					hans.getPositionVector().addVector(0, hans.getEyeHeight()-0.10000000149011612D, 0).subtract(IIEntityUtils.getEntityCenter(attackTarget)));
 		else
 			return IIAmmoUtils.getIEDirectRailgunAngle(ammo, hans.getPositionVector().addVector(0, hans.getEyeHeight(), 0).subtract(IIEntityUtils.getEntityCenter(attackTarget)));

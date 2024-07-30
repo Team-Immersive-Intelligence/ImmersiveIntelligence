@@ -45,8 +45,8 @@ import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIIConcreteDecor
 import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIIMetalBase.Metals;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
-import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
@@ -332,12 +332,12 @@ public class IIAmmoUtils
 			AmmoComponent[] components = ammo.getComponents(stack);
 
 			//information section
-			tooltip.add(IIUtils.getHexCol(IIReference.COLORS_HIGHLIGHT_S[1], I18n.format(IIReference.DESC_BULLETS+"details")));
+			tooltip.add(IIColor.getHexCol(IIReference.COLORS_HIGHLIGHT_S[1], I18n.format(IIReference.DESC_BULLETS+"details")));
 
 			//core + type
 			IIClientUtils.addTooltip(tooltip, IIReference.CHARICON_BULLET_CONTENTS, IIReference.DESC_BULLETS+"core",
-					IIUtils.getItalicString(I18n.format(IIReference.DESCRIPTION_KEY+"bullet_core_type."+coreType.getName())),
-					IIUtils.getHexCol(core.getColor(), I18n.format("item."+ImmersiveIntelligence.MODID+".bullet.component."+core.getName()+".name"))
+					IIStringUtil.getItalicString(I18n.format(IIReference.DESCRIPTION_KEY+"bullet_core_type."+coreType.getName())),
+					IIColor.getHexCol(core.getColor(), I18n.format("item."+ImmersiveIntelligence.MODID+".bullet.component."+core.getName()+".name"))
 			);
 
 			//fuse
@@ -388,7 +388,7 @@ public class IIAmmoUtils
 						Utils.formatDouble(stats.getMaxDirectRange(), "0.##")));
 
 			//Penetration section
-			tooltip.add(IIUtils.getHexCol(IIReference.COLORS_HIGHLIGHT_S[0], I18n.format(IIReference.DESC_BULLETS+"armor_penetration")));
+			tooltip.add(IIColor.getHexCol(IIReference.COLORS_HIGHLIGHT_S[0], I18n.format(IIReference.DESC_BULLETS+"armor_penetration")));
 
 			//list of block penetration tests
 			listPenetratedAmount(tooltip, ammo, core, coreType, Blocks.GLASS, 0);

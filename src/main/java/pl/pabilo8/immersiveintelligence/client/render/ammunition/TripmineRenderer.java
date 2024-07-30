@@ -20,10 +20,10 @@ import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer.RegisteredT
 import pl.pabilo8.immersiveintelligence.client.render.ammunition.TripmineRenderer.TripmineItemStackRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationUtils;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.mines.BlockIIMine.ItemBlockMineBase;
 import pl.pabilo8.immersiveintelligence.common.block.mines.tileentity.TileEntityTripMine;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoMine;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
 /**
  * @author Pabilo8
@@ -45,7 +45,7 @@ public class TripmineRenderer extends IITileRenderer<TileEntityTripMine>
 
 			GlStateManager.translate(-0.5, 0, -0.5);
 			int color = getWorld().getBiome(te.getPos()).getGrassColorAtPos(te.getPos())&0x7FFFFFFF;
-			float[] colors = IIUtils.rgbIntToRGB(color);
+			float[] colors = IIColor.rgbIntToRGB(color);
 			GL11.glShadeModel(GL11.GL_SMOOTH);
 			GlStateManager.disableLighting();
 			GlStateManager.enableBlend();
