@@ -103,6 +103,6 @@ public class TerrafirmaHelper extends IICompatModule
 
 		SawmillRecipe.addRecipe(out, new IngredientStack(logStacks).setUseNBT(false),
 				IIContent.itemMaterial.getStack(Materials.DUST_WOOD),
-				Sawmill.torqueMin+2, 200, 1);
+				Sawmill.torqueMin+2, 400, 1);
 	}
 }

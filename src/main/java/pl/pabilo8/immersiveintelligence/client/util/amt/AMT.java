@@ -195,6 +195,15 @@ public abstract class AMT
 	}
 
 	/**
+	 * @return children of this AMT
+	 */
+	@Nullable
+	protected final AMT[] getChildren()
+	{
+		return children;
+	}
+
+	/**
 	 * Internal method for collection
 	 */
 	private ArrayList<AMT> getChildrenRecursive(@Nonnull ArrayList<AMT> list)

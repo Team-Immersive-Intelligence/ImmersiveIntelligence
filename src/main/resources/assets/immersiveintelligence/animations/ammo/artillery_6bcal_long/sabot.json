@@ -1,179 +1,231 @@
 {
-	"comment": "Made by Pabilo8 with Blockbench",
-	"groups": {
-		"core_piercing_sabot_dart": {
-			"rotation": [
-				{
-					"time": 0,
-					"transform": [0, 0, 0]
-				},
-				{
-					"time": 0.75,
-					"transform": [0, -360, 0]
-				}
-			],
-			"position": [
-				{
-					"time": 0,
-					"transform": [0, 0, 0]
-				},
-				{
-					"time": 0.75,
-					"transform": [0, 6, 0]
-				}
-			]
-		},
-		"core_piercing_sabot_part5": {
-			"rotation": [
-				{
-					"time": 0,
-					"transform": [0, 0, 0]
-				},
-				{
-					"time": 0.25,
-					"transform": [0, 0, 22.5]
-				},
-				{
-					"time": 0.5,
-					"transform": [0, 0, 65]
-				},
-				{
-					"time": 0.75,
-					"transform": [0, 0, 145]
-				}
-			],
-			"position": [
-				{
-					"time": 0,
-					"transform": [0, 0, 0]
-				},
-				{
-					"time": 0.25,
-					"transform": [1, 1, 0]
-				},
-				{
-					"time": 0.5,
-					"transform": [2, 2, 0]
-				},
-				{
-					"time": 0.75,
-					"transform": [4, 0, 0]
-				}
-			]
-		},
-		"core_piercing_sabot_part4": {
-			"rotation": [
-				{
-					"time": 0,
-					"transform": [0, 0, 0]
-				},
-				{
-					"time": 0.25,
-					"transform": [0, 0, 0]
-				},
-				{
-					"time": 0.5,
-					"transform": [65, 0, 0]
-				},
-				{
-					"time": 0.75,
-					"transform": [145, 0, 0]
-				}
-			],
-			"position": [
-				{
-					"time": 0,
-					"transform": [0, 0, 0]
-				},
-				{
-					"time": 0.25,
-					"transform": [0, 1, -1]
-				},
-				{
-					"time": 0.5,
-					"transform": [0, 2, -2]
-				},
-				{
-					"time": 0.75,
-					"transform": [0, 0, -4]
-				}
-			]
-		},
-		"core_piercing_sabot_part2": {
-			"rotation": [
-				{
-					"time": 0,
-					"transform": [0, 0, 0]
-				},
-				{
-					"time": 0.25,
-					"transform": [0, 0, 0]
-				},
-				{
-					"time": 0.5,
-					"transform": [-65, 0, 0]
-				},
-				{
-					"time": 0.75,
-					"transform": [-145, 0, 0]
-				}
-			],
-			"position": [
-				{
-					"time": 0,
-					"transform": [0, 0, 0]
-				},
-				{
-					"time": 0.25,
-					"transform": [0, 1, 1]
-				},
-				{
-					"time": 0.5,
-					"transform": [0, 2, 2]
-				},
-				{
-					"time": 0.75,
-					"transform": [0, 0, 4]
-				}
-			]
-		},
-		"core_piercing_sabot_part3": {
-			"rotation": [
-				{
-					"time": 0,
-					"transform": [0, 0, 0]
-				},
-				{
-					"time": 0.25,
-					"transform": [0, 0, -22.5]
-				},
-				{
-					"time": 0.5,
-					"transform": [0, 0, -65]
-				},
-				{
-					"time": 0.75,
-					"transform": [0, 0, -145]
-				}
-			],
-			"position": [
-				{
-					"time": 0,
-					"transform": [0, 0, 0]
-				},
-				{
-					"time": 0.25,
-					"transform": [-1, 1, 0]
-				},
-				{
-					"time": 0.5,
-					"transform": [-2, 2, 0]
-				},
-				{
-					"time": 0.75,
-					"transform": [-4, 0, 0]
-				}
-			]
-		}
-	}
+  "comment": "Made by Pabilo8 with Blockbench",
+  "groups": {
+    "core_piercing_sabot_dart": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.75,
+          "transform": [0, -360, 0]
+        }
+      ],
+      "position": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.75,
+          "transform": [0, 6, 0]
+        }
+      ]
+    },
+    "core_piercing_sabot_part5": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.25,
+          "transform": [0, 0, 22.5]
+        },
+        {
+          "time": 0.5,
+          "transform": [0, 0, 65]
+        },
+        {
+          "time": 0.75,
+          "transform": [0, 0, 145]
+        }
+      ],
+      "position": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.25,
+          "transform": [1, 1, 0]
+        },
+        {
+          "time": 0.5,
+          "transform": [2, 2, 0]
+        },
+        {
+          "time": 0.75,
+          "transform": [4, 0, 0]
+        }
+      ],
+      "scale": [
+        {
+          "time": 0.5,
+          "transform": [1, 1, 1]
+        },
+        {
+          "time": 0.75,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "core_piercing_sabot_part4": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.25,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.5,
+          "transform": [65, 0, 0]
+        },
+        {
+          "time": 0.75,
+          "transform": [145, 0, 0]
+        }
+      ],
+      "position": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.25,
+          "transform": [0, 1, -1]
+        },
+        {
+          "time": 0.5,
+          "transform": [0, 2, -2]
+        },
+        {
+          "time": 0.75,
+          "transform": [0, 0, -4]
+        }
+      ],
+      "scale": [
+        {
+          "time": 0.5,
+          "transform": [1, 1, 1]
+        },
+        {
+          "time": 0.75,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "core_piercing_sabot_part2": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.25,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.5,
+          "transform": [-65, 0, 0]
+        },
+        {
+          "time": 0.75,
+          "transform": [-145, 0, 0]
+        }
+      ],
+      "position": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.25,
+          "transform": [0, 1, 1]
+        },
+        {
+          "time": 0.5,
+          "transform": [0, 2, 2]
+        },
+        {
+          "time": 0.75,
+          "transform": [0, 0, 4]
+        }
+      ],
+      "scale": [
+        {
+          "time": 0.5,
+          "transform": [1, 1, 1]
+        },
+        {
+          "time": 0.75,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "core_piercing_sabot_part3": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.25,
+          "transform": [0, 0, -22.5]
+        },
+        {
+          "time": 0.5,
+          "transform": [0, 0, -65]
+        },
+        {
+          "time": 0.75,
+          "transform": [0, 0, -145]
+        }
+      ],
+      "position": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.25,
+          "transform": [-1, 1, 0]
+        },
+        {
+          "time": 0.5,
+          "transform": [-2, 2, 0]
+        },
+        {
+          "time": 0.75,
+          "transform": [-4, 0, 0]
+        }
+      ],
+      "scale": [
+        {
+          "time": 0.5,
+          "transform": [1, 1, 1]
+        },
+        {
+          "time": 0.75,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "core_piercing_sabot_part1": {
+      "scale": [
+        {
+          "time": 0.5,
+          "transform": [1, 1, 1]
+        },
+        {
+          "time": 0.75,
+          "transform": [0, 0, 0]
+        }
+      ]
+    }
+  }
 }

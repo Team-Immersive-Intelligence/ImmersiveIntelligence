@@ -25,7 +25,8 @@
 		"core_cluster_bomblet2": [0, 0, 0],
 		"core_cluster_bomblet3": [0, 0, 0],
 		"core_cluster_bomblet4": [0, 0, 0],
-		"core_cluster_simple": [0, 0, 0]
+		"core_cluster_simple": [0, 0, 0],
+		"airflow": [0, 0, 0]
 	},
 	"hierarchy": {
 		"core_shaped_sabot_fin1": "core_shaped_sabot",
