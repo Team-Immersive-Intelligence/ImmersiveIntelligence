@@ -39,6 +39,7 @@ public class ItemIIMaterialDust extends ItemIISubItemsBase<MaterialsDust>
 		SILICON_DIOXIDE,
 		SODIUM,
 		SYNTHETIC_RUBBER_CRUMBS,
-		AMMONIUM_NITRATE
+		AMMONIUM_NITRATE,
+		SODIUM_CARBONATE
 	}
 }
