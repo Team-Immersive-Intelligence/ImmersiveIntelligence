@@ -18,13 +18,14 @@ import java.util.function.BiConsumer;
  * </p>
  *
  * <pre> {@code
- * IIDrawUtils.startTextured(1,2,3,4,0,0,1,1)
- *  .drawRect(5,6,7,8,0,0,1,1)
- *  .drawRect()
+ * IIDrawUtils.startTextured(buf)
+ *  .drawRect(1,2,3,4,0,0,1,1)
+ *  .drawRect(5,6,7,8,0,0,0.5,1)
  *  .finish();
  * }</pre>
  *
  * @author Pabilo8
+ * @ii-approved 0.3.1
  * @since 16.02.2023
  */
 @SideOnly(Side.CLIENT)

@@ -142,8 +142,8 @@ public class TileEntityGearbox extends TileEntityIEBase implements ITickable, IA
 			}));
 			if(out.size() > 1)
 				rotation.setTorque(rotation.getTorque()/(float)out.size());
-			float eff = RotaryUtils.getGearEffectiveness(inventory, getEfficiencyMultiplier());
-			float tmod = RotaryUtils.getGearTorqueRatio(inventory);
+			float eff = IIRotaryUtils.getGearEffectiveness(inventory, getEfficiencyMultiplier());
+			float tmod = IIRotaryUtils.getGearTorqueRatio(inventory);
 			rotation.setRotationSpeed((rotation.getRotationSpeed()*eff)/tmod);
 			rotation.setTorque(rotation.getTorque()*eff*tmod);
 

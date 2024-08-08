@@ -624,7 +624,8 @@ tile.immersiveintelligence.mechanical_device.wooden_transmission_box.name=Wooden
 tile.immersiveintelligence.mechanical_device.creative_transmission_box.name=Creative Transmission Box
 tile.immersiveintelligence.mechanical_device1.mechanical_pump.name=Mechanical Pump
 
-tile.immersiveintelligence.mechanical_connector.wooden_wheel.name=Wheel
+tile.immersiveintelligence.mechanical_connector.iron_wheel.name=Iron Wheel
+tile.immersiveintelligence.mechanical_connector.steel_wheel.name=Steel Wheel
 
 tile.immersiveintelligence.small_crate.wooden_crate_box.name=Small Wooden Crate (Box)
 tile.immersiveintelligence.small_crate.wooden_crate_cube.name=Small Wooden Crate (Cube)
@@ -1376,6 +1377,7 @@ rotary.immersiveintelligence.belt_system.tooFar=You are too far away from the pr
 rotary.immersiveintelligence.belt_system.cantSee=The connection is obstructed
 rotary.immersiveintelligence.belt_system.connectionExists=The connection exists already
 rotary.immersiveintelligence.belt_system.invalidPoint=One of the connection points is invalid
+rotary.immersiveintelligence.belt_system.differentAxis=Belts cannot be connected diagonally.
 
 rotary.immersiveintelligence.mechanical.speed=Speed
 rotary.immersiveintelligence.mechanical.speed_unit=RPM

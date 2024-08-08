@@ -13,6 +13,7 @@ import net.minecraft.util.Tuple;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.crafting.SawmillRecipe;
+import pl.pabilo8.immersiveintelligence.api.rotary.IIRotaryUtils;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.ISawblade;
 import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer.RegisteredTileRenderer;
@@ -71,7 +72,7 @@ public class SawmillRenderer extends IITileRenderer<TileEntitySawmill>
 		IIAnimationUtils.setModelVisibility(partSawblade.get(), !te.getInventory().get(TileEntitySawmill.SLOT_SAWBLADE).isEmpty());
 
 		//Rotation
-		animationRotate.apply(IIAnimationUtils.getDebugProgress(20, partialTicks));
+		animationRotate.apply(IIRotaryUtils.getDisplayRotation(te, te.rotation, partialTicks));
 
 		//Production animation
 		if(progress > 0)

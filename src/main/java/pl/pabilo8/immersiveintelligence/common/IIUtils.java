@@ -11,7 +11,6 @@ import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IDirectio
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
 import blusunrize.immersiveengineering.common.util.Utils;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.math.IntMath;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementManager;
 import net.minecraft.advancements.PlayerAdvancements;
@@ -19,18 +18,15 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.fluids.FluidStack;
@@ -51,18 +47,16 @@ import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeItemStack;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
 import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
-import pl.pabilo8.immersiveintelligence.api.utils.tools.IWrench;
 import pl.pabilo8.immersiveintelligence.common.compat.BaublesHelper;
 import pl.pabilo8.immersiveintelligence.common.compat.IICompatModule;
-import pl.pabilo8.immersiveintelligence.common.util.IIColor;
-import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ISerializableEnum;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.function.Predicate;
 
 /**
@@ -302,7 +296,6 @@ public class IIUtils
 	}
 
 
-
 	public static void unlockIIAdvancement(EntityPlayer player, String name)
 	{
 		if(player instanceof EntityPlayerMP)
@@ -331,7 +324,6 @@ public class IIUtils
 		}
 		return false;
 	}
-
 
 
 	public static int cycleInt(boolean forward, int current, int min, int max)
@@ -365,12 +357,10 @@ public class IIUtils
 	}
 
 
-
 	public static float getMaxClientProgress(float current, float required, int parts)
 	{
 		return current-(current%(required/parts));
 	}
-
 
 
 	@Deprecated
@@ -512,6 +502,11 @@ public class IIUtils
 
 		// And add it to our registries.
 		IIContent.ITEMS.add(item);
+	}
+
+	public static void sendToolbarMessage(EntityPlayer player, String messageFormat, Object... args)
+	{
+		player.sendStatusMessage(new TextComponentTranslation(messageFormat, args), true);
 	}
 
 }

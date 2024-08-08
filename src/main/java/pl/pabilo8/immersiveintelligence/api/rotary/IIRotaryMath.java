@@ -10,25 +10,28 @@ import static pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.M
  * @author GabrielV (gabriel@iiteam.net)
  * @since 21/04/2024 - 7:53 PM
  */
-public class RotaryMath
+public class IIRotaryMath
 {
 	// Disable the constructor
-	private RotaryMath() {}
+	private IIRotaryMath()
+	{
+	}
 
 	/**
 	 * Calculate from IE dynamo output to II's rotary unit
+	 *
 	 * @param rotation
 	 * @param device
 	 * @return
 	 */
 	public static float[] IEToRoF(double rotation, TileEntity device)
 	{
-		float torque = RotaryUtils.getTorqueForIEDevice(device, 1);
+		float torque = IIRotaryUtils.getTorqueForIEDevice(device, 1);
 		int output = (int)(20*Machines.dynamo_output*rotation*rofConversionRatio);
 		float speed = output/torque;
 		torque = output/speed;
 
-		return new float[] {speed, torque};
+		return new float[]{speed, torque};
 	}
 
 	public static double RoFToIE(float energy)
@@ -38,12 +41,12 @@ public class RotaryMath
 
 	public static double IEToMM(double rotation)
 	{
-		return rotation * rofConversionRatio;
+		return rotation*rofConversionRatio;
 	}
 
 	public static double MMToIE(double power)
 	{
-		return power / rofConversionRatio;
+		return power/rofConversionRatio;
 	}
 
 	public static float[] MMToRoF(double power)

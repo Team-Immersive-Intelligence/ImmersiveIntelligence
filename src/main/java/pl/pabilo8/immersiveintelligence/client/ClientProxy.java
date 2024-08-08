@@ -75,15 +75,13 @@ import pl.pabilo8.immersiveintelligence.client.render.hans.HansRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.inserter.AdvancedInserterRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.inserter.InserterRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.item.*;
+import pl.pabilo8.immersiveintelligence.client.render.mechanical_device.BeltModelStorage;
 import pl.pabilo8.immersiveintelligence.client.render.mechanical_device.MechanicalPumpRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.mechanical_device.WheelRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.metal_device.*;
 import pl.pabilo8.immersiveintelligence.client.render.multiblock.metal.*;
 import pl.pabilo8.immersiveintelligence.client.render.multiblock.wooden.*;
-import pl.pabilo8.immersiveintelligence.client.render.vehicle.DroneRenderer;
-import pl.pabilo8.immersiveintelligence.client.render.vehicle.FieldHowitzerRenderer;
-import pl.pabilo8.immersiveintelligence.client.render.vehicle.MortarRenderer;
-import pl.pabilo8.immersiveintelligence.client.render.vehicle.MotorbikeRenderer;
+import pl.pabilo8.immersiveintelligence.client.render.vehicle.*;
 import pl.pabilo8.immersiveintelligence.client.util.ShaderUtil;
 import pl.pabilo8.immersiveintelligence.client.util.font.IIFontRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.font.IIFontRendererCustomGlyphs;
@@ -116,9 +114,6 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.tileentity.TileEntitySkyCartStation;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.tileentity.TileEntitySkyCratePost;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.tileentity.TileEntitySkyCrateStation;
-import pl.pabilo8.immersiveintelligence.common.block.rotary_device.BlockIIMechanicalConnector;
-import pl.pabilo8.immersiveintelligence.common.block.rotary_device.tileentity.TileEntityMechanicalConnectable;
-import pl.pabilo8.immersiveintelligence.common.block.rotary_device.tileentity.TileEntityMechanicalWheel;
 import pl.pabilo8.immersiveintelligence.common.compat.IICompatModule;
 import pl.pabilo8.immersiveintelligence.common.entity.*;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityAmmoBase;
@@ -130,6 +125,7 @@ import pl.pabilo8.immersiveintelligence.common.entity.tactile.EntityAMTTactile;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityDrone;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityMotorbike;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityVehicleSeat;
+import pl.pabilo8.immersiveintelligence.common.entity.vehicle.towable.gun.EntityFieldGun;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.towable.gun.EntityFieldHowitzer;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoBase;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIINavalMine;
@@ -157,7 +153,6 @@ import java.util.Map.Entry;
 public class ClientProxy extends CommonProxy
 {
 	public static KeyBinding keybind_manualReload, keybind_armorHelmet, keybind_armorExosuit, keybind_zoom, keybind_motorbikeEngine, keybind_motorbikeTowing;
-	public static MechanicalConnectorRenderer mech_con_renderer;
 	public NBTTagCompound storedGuiData = new NBTTagCompound();
 
 	public ClientProxy()
@@ -335,7 +330,7 @@ public class ClientProxy extends CommonProxy
 		registerEntityRenderer(EntityMotorbike.class, MotorbikeRenderer::new);
 		registerEntityRenderer(EntityDrone.class, DroneRenderer::new);
 		registerEntityRenderer(EntityFieldHowitzer.class, FieldHowitzerRenderer::new);
-//		registerEntityRenderer(EntityFieldGun.class, FieldGunRenderer::new);
+		registerEntityRenderer(EntityFieldGun.class, FieldGunRenderer::new);
 		registerEntityRenderer(EntityTripodPeriscope.class, TripodPeriscopeRenderer::new);
 		registerEntityRenderer(EntityMortar.class, MortarRenderer::new);
 		//Thanks Blu!
@@ -376,13 +371,16 @@ public class ClientProxy extends CommonProxy
 		IIModelRegistry.INSTANCE.registerCustomItemModel(IIContent.itemBinoculars);
 		IIModelRegistry.INSTANCE.registerCustomItemModel(IIContent.itemCasingPouch);
 
-		IIContent.itemMotorBelt.setRenderModels();
-
 		//TODO: 22.12.2023 move rest of models here
 		registerTileRenderer(SawmillRenderer.class);
 		registerTileRenderer(PackerRenderer.class);
 		registerTileRenderer(ScanningConveyorRenderer.class);
 		registerTileRenderer(ArtilleryHowitzerRenderer.class);
+
+		//Mechanical
+		registerTileRenderer(MechanicalPumpRenderer.class);
+		registerTileRenderer(WheelRenderer.class);
+		new BeltModelStorage().subscribeToList("mechanical/belt");
 
 		//Compat
 		IICompatModule.doModulesClientPreInit();
@@ -542,6 +540,7 @@ public class ClientProxy extends CommonProxy
 		registerTileRenderer(AmmunitionCrateRenderer.class);
 		registerTileRenderer(MedicalCrateRenderer.class);
 		registerTileRenderer(RepairCrateRenderer.class);
+		registerTileRenderer(ChemicalDispenserRenderer.class);
 
 		registerTileRenderer(InserterRenderer.class);
 		registerTileRenderer(AdvancedInserterRenderer.class);
@@ -564,10 +563,7 @@ public class ClientProxy extends CommonProxy
 		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalDevice), BlockIIMetalDevice.IIBlockTypes_MetalDevice.SMALL_DATA_BUFFER.getMeta(), TileEntitySmallDataBuffer.class);
 		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalDevice), BlockIIMetalDevice.IIBlockTypes_MetalDevice.DATA_MERGER.getMeta(), TileEntityDataMerger.class);
 
-
-		registerTileRenderer(MechanicalPumpRenderer.class);
-		registerTileRenderer(ChemicalDispenserRenderer.class);
-
+		//Decorations
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMineSign.class, new MineSignRenderer());
 
 
@@ -633,12 +629,6 @@ public class ClientProxy extends CommonProxy
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCoagulator.class, new CoagulatorRenderer().subscribeToList("coagulator"));
 		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalMultiblock1), MetalMultiblocks1.COAGULATOR.getMeta(), TileEntityCoagulator.class);
 
-		//Motor belt and wheel renderers
-		mech_con_renderer = new MechanicalConnectorRenderer().subscribeToList("motor_belts");
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMechanicalConnectable.class, mech_con_renderer);
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMechanicalWheel.class, new WheelRenderer().subscribeToList("wheel"));
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMechanicalConnector), BlockIIMechanicalConnector.IIBlockTypes_MechanicalConnector.WOODEN_WHEEL.getMeta(), TileEntityMechanicalWheel.class);
-
 		//Gate renderers
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityWoodenFenceGate.class, new FenceGateRenderer<>("wooden_gate"));
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityWoodenChainFenceGate.class, new FenceGateRenderer<>("wooden_chain_gate"));
@@ -648,8 +638,6 @@ public class ClientProxy extends CommonProxy
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityAluminiumChainFenceGate.class, new FenceGateRenderer<>("aluminium_chain_gate"));
 
 		reloadModels();
-
-		//Compat
 		IICompatModule.doModulesClientPostInit();
 	}
 
@@ -661,22 +649,28 @@ public class ClientProxy extends CommonProxy
 	@SuppressWarnings("unchecked")
 	private <T extends TileEntity> void registerTileRenderer(Class<? extends TileEntitySpecialRenderer<T>> clazz, @Nullable Block teisrBlock)
 	{
-		RegisteredTileRenderer rt = clazz.getAnnotation(RegisteredTileRenderer.class);
-		try
+		RegisteredTileRenderer[] annotations = clazz.getAnnotationsByType(RegisteredTileRenderer.class);
+		for(RegisteredTileRenderer rt : annotations)
 		{
-			//Create a new instance of the tile renderer
-			TileEntitySpecialRenderer<T> tileRenderer = clazz.newInstance();
-			ClientRegistry.bindTileEntitySpecialRenderer(((Class<T>)rt.clazz()), tileRenderer);
+			try
+			{
+				//Create a new instance of the tile renderer
+				TileEntitySpecialRenderer<T> tileRenderer = clazz.newInstance();
+				ClientRegistry.bindTileEntitySpecialRenderer(((Class<T>)rt.clazz()), tileRenderer);
 
-			//Register the tile renderer for auto reloading
-			if(tileRenderer instanceof IReloadableModelContainer<?>)
-				((IReloadableModelContainer<?>)tileRenderer).subscribeToList(rt.name());
+				//Register the tile renderer for auto reloading
+				if(tileRenderer instanceof IReloadableModelContainer<?>)
+					((IReloadableModelContainer<?>)tileRenderer).subscribeToList(rt.name());
 
-			//Register the item renderer (if applicable)
-			if(teisrBlock!=null&&rt.teisrClazz()!=TileEntityItemStackRenderer.class)
-				registerTEISR(rt.teisrClazz(), Item.getItemFromBlock(teisrBlock));
+				//Register the item renderer (if applicable)
+				if(teisrBlock!=null&&rt.teisrClazz()!=TileEntityItemStackRenderer.class)
+					registerTEISR(rt.teisrClazz(), Item.getItemFromBlock(teisrBlock));
 
-		} catch(InstantiationException|IllegalAccessException ignored) {}
+			} catch(InstantiationException|IllegalAccessException e)
+			{
+				IILogger.info("Failed to register TileEntitySpecialRenderer: "+clazz.getName());
+			}
+		}
 	}
 
 	private void registerTEISR(Class<? extends TileEntityItemStackRenderer> rendererClass, Item item)

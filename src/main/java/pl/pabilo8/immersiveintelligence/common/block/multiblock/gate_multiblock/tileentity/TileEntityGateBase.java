@@ -25,11 +25,10 @@ import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
 import pl.pabilo8.immersiveintelligence.api.utils.IUpgradableMachine;
 import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.gate_multiblock.multiblock.MultiblockFenceGateBase;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemUtil;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultiblockIIConnectable;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockInteractablePart;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
@@ -54,7 +53,7 @@ public abstract class TileEntityGateBase<T extends TileEntityGateBase<T>> extend
 	protected MultiblockRedstoneNetwork<T> redstoneNetwork = new MultiblockRedstoneNetwork<>(((T)this));
 	protected UpgradeStorage<TileEntityGateBase<T>> upgradeStorage = new UpgradeStorage<>(this);
 
-	public TileEntityGateBase(MultiblockStuctureBase<T> multiblock)
+	public TileEntityGateBase(MultiblockFenceGateBase<T> multiblock)
 	{
 		super(multiblock);
 	}

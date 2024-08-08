@@ -13,7 +13,7 @@ import java.lang.ref.WeakReference;
 import java.util.*;
 
 import static blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler.INSTANCE;
-import static pl.pabilo8.immersiveintelligence.api.rotary.RotaryUtils.BELT_CATEGORY;
+import static pl.pabilo8.immersiveintelligence.api.rotary.IIRotaryUtils.BELT_GENERAL_CATEGORY;
 
 /**
  * @author Pabilo8
@@ -47,7 +47,7 @@ public class MotorBeltNetwork
 				for(Connection c : connsAtBlock)
 				{
 					if(iic.allowEnergyToPass(c)&&
-							BELT_CATEGORY.equals(c.cableType.getCategory())&&
+							BELT_GENERAL_CATEGORY.equals(c.cableType.getCategory())&&
 							!closed.contains(c.end))
 					{
 						open.add(c.end);

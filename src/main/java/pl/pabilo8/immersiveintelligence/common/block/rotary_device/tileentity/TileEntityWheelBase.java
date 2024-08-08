@@ -1,6 +1,7 @@
 package pl.pabilo8.immersiveintelligence.common.block.rotary_device.tileentity;
 
 import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler.Connection;
+import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IBlockBounds;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -15,7 +16,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * @author Pabilo8
  * @since 29-12-2019
  */
-public class TileEntityMechanicalWheel extends TileEntityMechanicalConnectable
+public abstract class TileEntityWheelBase extends TileEntityMechanicalConnectable implements IBlockBounds
 {
 	public EnumFacing facing = EnumFacing.NORTH;
 
@@ -83,9 +84,6 @@ public class TileEntityMechanicalWheel extends TileEntityMechanicalConnectable
 	}
 
 	@SideOnly(Side.CLIENT)
-	private AxisAlignedBB renderAABB;
-
-	@SideOnly(Side.CLIENT)
 	@Override
 	public AxisAlignedBB getRenderBoundingBox()
 	{
@@ -93,17 +91,14 @@ public class TileEntityMechanicalWheel extends TileEntityMechanicalConnectable
 		return new AxisAlignedBB(this.pos.getX()-inc, this.pos.getY()-inc, this.pos.getZ()-inc, this.pos.getX()+inc+1, this.pos.getY()+inc+1, this.pos.getZ()+inc+1);
 	}
 
-	int getRenderRadiusIncrease()
-	{
-		return limitType!=null?limitType.getMaxLength(): 2;
-	}
+	protected abstract int getRenderRadiusIncrease();
 
 	@Override
 	public float[] getBlockBounds()
 	{
-		float length = .75f;
-		float wMin = .25f;
-		float wMax = .75f;
+		float length = .625f;
+		float wMin = 0.5f-getRadius()/16f;
+		float wMax = 0.5f+getRadius()/16f;
 		switch(facing.getOpposite())
 		{
 			case SOUTH:
@@ -139,16 +134,9 @@ public class TileEntityMechanicalWheel extends TileEntityMechanicalConnectable
 			case WEST:
 				return Axis.Z;
 		}
-		return Axis.Z;
+		return Axis.Y;
 	}
 
-	@Override
-	public float getRadius()
-	{
-		return 6;
-		//Try it if you want ^^
-		//return (int)(world.getTotalWorldTime()%40>20?(20-(world.getTotalWorldTime()%20)):(world.getTotalWorldTime()%20));
-	}
 
 	@Override
 	public BlockPos getConnectionPos()
