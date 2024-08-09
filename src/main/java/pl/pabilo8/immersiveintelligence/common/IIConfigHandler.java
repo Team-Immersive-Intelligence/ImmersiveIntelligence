@@ -1052,8 +1052,8 @@ public class IIConfigHandler
 				public static int engineerHeadgearEnergyUsage = 225;
 
 				@Comment({"The multiplier of electric damage taken when an anti-static mesh is worn under water (in half-hearts)."})
-				@RangeInt(min = 0)
-				public static float antiStaticMeshWaterDamageMod = 1.5f;
+				@RangeDouble(min = 0)
+				public static double antiStaticMeshWaterDamageMod = 1.5;
 
 				@Comment({"The energy usage of the exoskeleton when running (in IF)."})
 				@RangeInt(min = 0)
