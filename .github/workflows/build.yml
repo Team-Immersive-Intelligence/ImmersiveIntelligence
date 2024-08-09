@@ -10,6 +10,12 @@ jobs:
     env:
       GITHUB_USERNAME: ${{ github.actor }}
       GITHUB_TOKEN: ${{ secrets.OPTIMIZATION_TOKEN }}
+      MINECRAFT_VERSION: 1.12.2
+      JAVA_VERSION: 8
+      VERSION: 1.12.2
+      RELEASE_NAME: Immersive-Intelligence-0.3.1-dev$
+      MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+      CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4

@@ -9,7 +9,7 @@ import javax.annotation.Nonnull;
  * @author GabrielV
  * @since 28-07-2024
  */
-public final class IIMath extends MathHelper
+public class IIMath extends MathHelper
 {
 	public static final Vec3d ONE = new Vec3d(1, 1, 1);
 
