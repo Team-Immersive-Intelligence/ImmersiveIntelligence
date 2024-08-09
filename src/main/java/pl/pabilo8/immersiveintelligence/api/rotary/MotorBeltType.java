@@ -3,12 +3,12 @@ package pl.pabilo8.immersiveintelligence.api.rotary;
 import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler.Connection;
 import blusunrize.immersiveengineering.api.energy.wires.WireType;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import javax.annotation.Nullable;
+import pl.pabilo8.immersiveintelligence.common.util.AdvancedSounds.MultiSound;
 
 import static pl.pabilo8.immersiveintelligence.api.rotary.IIRotaryUtils.BELT_GENERAL_CATEGORY;
 
@@ -40,6 +40,12 @@ public abstract class MotorBeltType extends WireType
 	 */
 	public abstract String getName();
 
+	@Override
+	public String getUniqueName()
+	{
+		return getName();
+	}
+
 	/**
 	 * @return Maximum length in blocks
 	 */
@@ -64,14 +70,17 @@ public abstract class MotorBeltType extends WireType
 	/**
 	 * @return Sound played when the belt is broken due to overload
 	 */
-	@Nullable
 	public abstract SoundEvent getBreakSound();
 
 	/**
 	 * @return Sound played when the belt is broken due to overload
 	 */
-	@Nullable
-	public abstract SoundEvent getLoopSound();
+	public abstract MultiSound getLoopSound();
+
+	/**
+	 * @return Item dropped when the belt is broken
+	 */
+	public abstract ItemStack getBrokenDrop();
 
 	@Override
 	public double getLossRatio()
@@ -128,12 +137,6 @@ public abstract class MotorBeltType extends WireType
 	public boolean canCauseDamage()
 	{
 		return true;
-	}
-
-	@Override
-	public String getUniqueName()
-	{
-		return getName();
 	}
 
 	@Override

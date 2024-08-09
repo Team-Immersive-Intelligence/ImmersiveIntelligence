@@ -19,6 +19,6 @@ public class TileEntityWheelSteel extends TileEntityWheelBase
 	@Override
 	protected boolean canConnectBelt(MotorBeltType cableType)
 	{
-		return false;
+		return true;
 	}
 }

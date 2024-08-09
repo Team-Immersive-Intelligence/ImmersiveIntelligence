@@ -45,7 +45,6 @@ import pl.pabilo8.immersiveintelligence.api.crafting.*;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Sawmill;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.BlockIIMetalDevice.IIBlockTypes_MetalDevice;
 import pl.pabilo8.immersiveintelligence.common.block.mines.BlockIIMine.IIBlockTypes_Mine;
 import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIIConcreteDecoration.ConcreteDecorations;
@@ -69,8 +68,8 @@ import pl.pabilo8.immersiveintelligence.common.item.crafting.material.ItemIIMate
 import pl.pabilo8.immersiveintelligence.common.item.data.ItemIIFunctionalCircuit.Circuits;
 import pl.pabilo8.immersiveintelligence.common.item.mechanical.ItemIIMotorGear.MotorGear;
 import pl.pabilo8.immersiveintelligence.common.item.tools.backpack.ItemIIAdvancedPowerPack;
-import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIUpgradeableArmor;
 
 import javax.annotation.Nonnull;
@@ -499,7 +498,7 @@ public class IIRecipes
 				IIContent.itemBulletMagazine.getStack(Magazines.MACHINEGUN),
 				new IngredientStack("plateSteel", 2),
 				new IngredientStack("springSteel"));
-		
+
 		BlueprintCraftingRecipe.addRecipe("bullet_magazines",
 				IIContent.itemBulletMagazine.getStack(Magazines.RIFLE),
 				new IngredientStack("plateSteel", 2),
@@ -1274,6 +1273,7 @@ public class IIRecipes
 				2400
 		);
 
+		//Motor belts
 		VulcanizerRecipe.addRecipe(IIContent.itemMaterial.getStack(Materials.RUBBER_BELT, 4),
 				IIContent.itemVulcanizerMold.getComparableStack(VulcanizerMolds.BELT),
 				new IngredientStack("plateRubberRaw", 10),

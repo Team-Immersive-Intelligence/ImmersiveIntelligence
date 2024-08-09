@@ -276,7 +276,7 @@ item.immersiveintelligence.skycrate_mount.mechanical.name=Skycrate Mount
 item.immersiveintelligence.skycrate_mount.electric.name=Electric Skycrate Mount
 
 desc.immersiveintelligence.electric_hammer=Rotates blocks, toggles machine ports, forms multiblocks.
-desc.immersiveintelligence.electric_wirecutter=Cuts wires and motor belts, works as shears.
+desc.immersiveintelligence.electric_wirecutter=Cuts wires and belts, works as shears.
 desc.immersiveintelligence.trench_shovel=Buries Tripmines faster, fortifies blocks.
 desc.immersiveintelligence.wrench=Installs upgrades on compatible machines.
 desc.immersiveintelligence.tachometer=Measures speed and torque of rotary devices.
@@ -479,9 +479,9 @@ item.immersiveintelligence.motor_gear.iron.name=Iron Gear
 item.immersiveintelligence.motor_gear.steel.name=Steel Gear
 item.immersiveintelligence.motor_gear.tungsten.name=Tungsten Gear
 
-item.immersiveintelligence.motor_belt.cloth.name=Cloth Motor Belt
-item.immersiveintelligence.motor_belt.steel.name=Steel Motor Belt
-item.immersiveintelligence.motor_belt.rubber.name=Rubber Motor Belt
+item.immersiveintelligence.motor_belt.cloth.name=Cloth Belt
+item.immersiveintelligence.motor_belt.steel.name=Steel Track
+item.immersiveintelligence.motor_belt.rubber.name=Rubber Belt
 
 item.immersiveintelligence.wrench.name=Engineer's Wrench
 item.immersiveintelligence.electric_wrench.name=Engineer's Electric Wrench
@@ -556,11 +556,10 @@ tile.immersiveintelligence.metal_decoration.mechanical_engineering.name=Mechanic
 tile.immersiveintelligence.metal_decoration.heavy_mechanical_engineering.name=Heavy Mechanical Engineering Block
 
 tile.immersiveintelligence.metal_decoration.coil_data.name=Data Cable Coil
-tile.immersiveintelligence.metal_decoration.coil_steel_motor_belt.name=Steel Motor Belt Coil
-
 tile.immersiveintelligence.cloth_decoration.coil_rope.name=Rope Coil
-tile.immersiveintelligence.cloth_decoration.coil_cloth_motor_belt.name=Cloth Motor Belt Coil
-tile.immersiveintelligence.cloth_decoration.coil_rubber_motor_belt.name=Rubber Motor Belt Coil
+tile.immersiveintelligence.metal_decoration.coil_steel_motor_belt.name=Steel Track Coil
+tile.immersiveintelligence.cloth_decoration.coil_cloth_motor_belt.name=Cloth Belt Coil
+tile.immersiveintelligence.cloth_decoration.coil_rubber_motor_belt.name=Rubber Belt Coil
 
 tile.immersiveintelligence.mine_sign.mine_sign.name=Mine Caution Sign
 tile.immersiveintelligence.mine_sign.mine_sign.desc=Mines;Ahead!
@@ -970,6 +969,11 @@ subtitle.immersiveintelligence.metal_hatch_close=Metal Hatch Shuts
 subtitle.immersiveintelligence.vise_open=Vise Tightens its Clamps
 subtitle.immersiveintelligence.vise_close=Vise Loosens its Clamps
 
+subtitle.immersiveintelligence.motor_belt_break=Drive Belt Torn Off
+subtitle.immersiveintelligence.motor_belt=Drive Belt Turning
+subtitle.immersiveintelligence.track_break=Metal Track Breaks
+subtitle.immersiveintelligence.track=Metal Track Turning
+
 subtitle.immersiveintelligence.autocannon_shot=Autocannon Firing
 subtitle.immersiveintelligence.autocannon_shot_distant=Autocannon Firing in Distance
 subtitle.immersiveintelligence.autocannon_reload=Autocannon Reloading
@@ -1336,14 +1340,14 @@ info.immersiveintelligence.redstone_buffer_mode=Redstone Buffer Mode: %s
 info.immersiveintelligence.redstone_buffer_mode.passtrough=Passtrough
 info.immersiveintelligence.redstone_buffer_mode.signal=On Signal
 
-info.immersiveintelligence.tachometer_message.basic=Internal: speed %s RPM / torque %s Nm.
-info.immersiveintelligence.tachometer_message.advanced=Internal: speed %s RPM / torque %s Nm. External: speed %s RPM / torque %s Nm.
-info.immersiveintelligence.tachometer.internal_torque=Internal Torque: %s
-info.immersiveintelligence.tachometer.external_torque=External Torque: %s
-info.immersiveintelligence.tachometer.internal_speed=Internal Speed: %s
-info.immersiveintelligence.tachometer.external_speed=External Speed: %s
-info.immersiveintelligence.tachometer.torque=Torque: %s
-info.immersiveintelligence.tachometer.speed=Speed: %s
+info.immersiveintelligence.tachometer_message.basic=Internal: speed %s DPT / torque %s TU.
+info.immersiveintelligence.tachometer_message.advanced=Internal: speed %s DPT / torque %s TU. External: speed %s DPT / torque %s TU.
+info.immersiveintelligence.tachometer.internal_torque=Internal Torque: %s TU
+info.immersiveintelligence.tachometer.external_torque=External Torque: %s TU
+info.immersiveintelligence.tachometer.internal_speed=Internal Speed: %s DPT
+info.immersiveintelligence.tachometer.external_speed=External Speed: %s DPT
+info.immersiveintelligence.tachometer.torque=Torque: %s TU
+info.immersiveintelligence.tachometer.speed=Speed: %s D/t
 
 info.immersiveintelligence.machineupgrade.name=Installing: %s
 info.immersiveintelligence.machineupgrade.progress=Progress: %1$s / %2$s IF
@@ -1378,11 +1382,6 @@ rotary.immersiveintelligence.belt_system.cantSee=The connection is obstructed
 rotary.immersiveintelligence.belt_system.connectionExists=The connection exists already
 rotary.immersiveintelligence.belt_system.invalidPoint=One of the connection points is invalid
 rotary.immersiveintelligence.belt_system.differentAxis=Belts cannot be connected diagonally.
-
-rotary.immersiveintelligence.mechanical.speed=Speed
-rotary.immersiveintelligence.mechanical.speed_unit=RPM
-rotary.immersiveintelligence.mechanical.torque=Torque
-rotary.immersiveintelligence.mechanical.torque_unit=Nm
 
 #Data System Descriptions
 datasystem.immersiveintelligence.function.add=Addition
@@ -2432,11 +2431,11 @@ ie.manual.entry.sawmill2=The machine requires a constant supply of rotary power 
 
 ie.manual.entry.rotary_power.name=Rotary Power
 ie.manual.entry.rotary_power.subtext=Things start turning!
-ie.manual.entry.rotary_power0=Rotary power is an old-fashioned alternative to electric power. Instead of wires and connectors, wheels and motor belts are used. The power system utilizes 2 factors: torque - in Newton metres (Nm) and speed in RPM. Machines require different torque and speed to work effectively.
-ie.manual.entry.rotary_power1=If any of those values surpasses the limit, the machine explodes. Power can be merged and splitted using <link;rotary_power;§o§nGearboxes§r;4>.
+ie.manual.entry.rotary_power0=Rotary power is an old-fashioned alternative to electric power. Instead of wires and connectors, wheels and motor belts are used. The power system utilizes 2 factors: torque - in TU (Torque Unit) and speed in DPT (Degrees per Tick). Machines require different torque and speed to work effectively.
+ie.manual.entry.rotary_power1=If any of those values surpasses the limit, the machine explodes. Power can be merged and split using <link;rotary_power;§o§nGearboxes§r;4>.
 ie.manual.entry.rotary_power2=The wheel is used to transfer mechanical (rotary) power between devices. After placing it can be connected to another wheel using a motor belt, the same way connectors are linked with wires.
-ie.manual.entry.rotary_power3=The motor belts are the main transmission element of every rotary power network. They differ with the amount of torque and speed they can transfer. If the torque or the speed it too high for the belt, it detaches from the wheel and falls on the ground. Use different materials for different needs - steel might be more resistant to torque, but power losses are higher.
-ie.manual.entry.rotary_power4=The Gearboxes are used to link multiple wheels together, their sides can be changed to input, output or nothing. Inputted torque from all inputs is summed and then divided equally between all outputs. You can use the gearbox to merge torque to make it higher or divide it between 2 or more wheels. The gearbox requires gears of certain resistance to torque and speed to operate on full power.
+ie.manual.entry.rotary_power3=The motor belts are the main transmission element of every rotary power network. They differ with the amount of torque and speed they can transfer. If the torque is too high for the belt, it will detach from the wheel and fall onto the ground. Use different materials for different needs - steel might be more resistant to torque, but power losses are higher.
+ie.manual.entry.rotary_power4=The Gearboxes are used to link multiple wheels together, their sides can be changed to input, output or nothing. Input torque from all inputs is summed and then divided equally between all outputs. You can use the gearbox to merge torque to make it higher or divide it between 2 or more wheels. The gearbox requires gears of certain resistance to torque and speed to operate on full power.
 ie.manual.entry.rotary_power5=The Transmission Boxes are used to connect mechanical devices using a different standard of axles, they can be used to connect a windmill or a waterwheel to a motor belt network or output mechanical energy to a dynamo.
 
 #Reference to a certain polish eastern, well... house dweller

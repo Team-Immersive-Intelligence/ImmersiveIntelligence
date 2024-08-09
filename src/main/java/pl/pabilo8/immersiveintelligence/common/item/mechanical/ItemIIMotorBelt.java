@@ -1,6 +1,7 @@
 package pl.pabilo8.immersiveintelligence.common.item.mechanical;
 
 import blusunrize.immersiveengineering.api.Lib;
+import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import blusunrize.immersiveengineering.api.energy.wires.IWireCoil;
 import blusunrize.immersiveengineering.api.energy.wires.WireType;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
@@ -47,11 +48,11 @@ public class ItemIIMotorBelt extends ItemIISubItemsBase<MotorBelt> implements IW
 	@GeneratedItemModels(itemName = "motor_belt")
 	public enum MotorBelt implements IIItemEnum
 	{
-		CLOTH(IIRotaryUtils.BELT_CATEGORY, MechanicalDevices.beltLength[0], 6,
+		CLOTH(IIRotaryUtils.BELT_CATEGORY, new IngredientStack("leather"), MechanicalDevices.beltLength[0], 6,
 				MechanicalDevices.beltMaxTorque[0], MechanicalDevices.beltTorqueLoss[0]),
-		STEEL(IIRotaryUtils.TRACK_CATEGORY, MechanicalDevices.beltLength[1], 8,
+		STEEL(IIRotaryUtils.TRACK_CATEGORY, new IngredientStack("plateSteel"), MechanicalDevices.beltLength[1], 8,
 				MechanicalDevices.beltMaxTorque[1], MechanicalDevices.beltTorqueLoss[1]),
-		RUBBER(IIRotaryUtils.BELT_CATEGORY, MechanicalDevices.beltLength[2], 8,
+		RUBBER(IIRotaryUtils.BELT_CATEGORY, new IngredientStack("beltRubber"), MechanicalDevices.beltLength[2], 8,
 				MechanicalDevices.beltMaxTorque[2], MechanicalDevices.beltTorqueLoss[2]);
 
 		/**
@@ -76,10 +77,15 @@ public class ItemIIMotorBelt extends ItemIISubItemsBase<MotorBelt> implements IW
 		 */
 		public final int width;
 		public final IIMotorBeltType type;
+		/**
+		 * The Item dropped when the belt is broken
+		 */
+		public IngredientStack dropItem;
 
-		MotorBelt(String category, int length, int width, int maxTorque, float torqueLoss)
+		MotorBelt(String category, IngredientStack dropItem, int length, int width, int maxTorque, float torqueLoss)
 		{
 			this.category = category;
+			this.dropItem = dropItem;
 			this.length = length;
 			this.width = width;
 			this.maxTorque = maxTorque;

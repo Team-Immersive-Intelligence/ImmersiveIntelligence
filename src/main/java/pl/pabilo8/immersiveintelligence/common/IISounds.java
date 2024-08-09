@@ -261,6 +261,20 @@ public class IISounds
 	@ModSound(sounds = {"device/hatch/vise/close0"}, subtitle = "*")
 	public static SoundEvent viseClose = registerSound("vise_close");
 
+	//--- Motor Belts ---//
+	@ModSound(sounds = {"device/motor_belt/*"}, subtitle = "motor_belt_break")
+	public static SoundEvent motorBeltBreak = registerSound("motor_belt_break");
+	@ModSound(sounds = {"device/motor_belt/*"}, subtitle = "motor_belt")
+	public static SoundEvent motorBeltLoop = registerSound("motor_belt_loop");
+	public static MultiSound motorBeltRunning = new MultiSound(motorBeltLoop);
+
+	//--- Tracks ---//
+	@ModSound(sounds = {"device/motor_belt/*"}, subtitle = "track_break")
+	public static SoundEvent trackBreak = registerSound("track_break");
+	@ModSound(sounds = {"device/motor_belt/*"}, subtitle = "track")
+	public static SoundEvent trackLoop = registerSound("track_loop");
+	public static MultiSound trackRunning = new MultiSound(trackLoop);
+
 	//--- Tools ---//
 	@ModSound(sounds = {"device/*"}, subtitle = "mine_detector")
 	public static SoundEvent mineDetector = registerSound("mine_detector");

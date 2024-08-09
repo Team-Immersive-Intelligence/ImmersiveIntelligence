@@ -170,9 +170,9 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 
 			if(sawStack.getItem() instanceof ISawblade)
 			{
-				if(world.getTotalWorldTime()%Math.ceil(4/MathHelper.clamp(rotation.getRotationSpeed()/360, 0, 1))==0)
+				if(world.getTotalWorldTime()%Math.ceil(3-MathHelper.clamp(rotation.getRotationSpeed()/360f, 0, 2))==0)
 				{
-					int hardness = ((ISawblade)sawStack.getItem()).getHardness(sawStack);
+					int hardness = ((ISawblade)sawStack.getItem()).getHardness(sawStack)*2;
 					Vec3i v = facing.getDirectionVec();
 					List<EntityLivingBase> entities = world.getEntitiesWithinAABB(EntityLivingBase.class,
 							new AxisAlignedBB(getBlockPosForPos(2).offset(EnumFacing.UP)).offset(v.getX()*0.5, v.getY()*0.5, v.getZ()*0.5));

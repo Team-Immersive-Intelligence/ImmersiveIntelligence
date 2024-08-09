@@ -1,16 +1,25 @@
 package pl.pabilo8.immersiveintelligence.common.block.rotary_device.tileentity;
 
+import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler;
 import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler.Connection;
+import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IBlockBounds;
+import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Axis;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.pabilo8.immersiveintelligence.api.rotary.MotorBeltType;
+import pl.pabilo8.immersiveintelligence.client.util.carversound.ConditionCompoundSound;
+
+import java.util.Set;
 
 /**
  * @author Pabilo8
@@ -18,7 +27,78 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public abstract class TileEntityWheelBase extends TileEntityMechanicalConnectable implements IBlockBounds
 {
+	private ConditionCompoundSound loopSound = null;
 	public EnumFacing facing = EnumFacing.NORTH;
+
+	@Override
+	public void update()
+	{
+		super.update();
+
+		//Play belt's loop sound
+		if(world.isRemote)
+		{
+			updateSound();
+			return;
+		}
+
+		if(!(limitType instanceof MotorBeltType))
+			return;
+		MotorBeltType belt = (MotorBeltType)limitType;
+		//Throw off motor belts if max torque is exceeded
+		if(getNetwork().getNetworkTorque() > belt.getMaxTorque())
+		{
+			Set<Connection> connections = ImmersiveNetHandler.INSTANCE.getConnections(world, pos);
+			if(connections!=null)
+			{
+				BlockPos p = pos;
+				for(Connection c : connections)
+				{
+					ImmersiveNetHandler.INSTANCE.removeConnection(world, c);
+					p = new BlockPos(new Vec3d(c.start).add(new Vec3d(c.end.subtract(c.start)).scale(0.5)));
+				}
+				Utils.dropStackAtPos(world, p, belt.getBrokenDrop().copy());
+				world.playSound(null, p, belt.getBreakSound(), SoundCategory.BLOCKS, 2f, 1f);
+			}
+		}
+	}
+
+	private void updateSound()
+	{
+		//Stop playing sound if the wheel is not moving
+		if(limitType==null||getNetwork().getNetworkSpeed() <= 0)
+		{
+			if(loopSound!=null)
+				loopSound.forceStop();
+			loopSound = null;
+			return;
+		}
+
+		//Start playing sound if the wheel is moving
+		if(loopSound==null)
+		{
+			Set<Connection> connections = ImmersiveNetHandler.INSTANCE.getConnections(world, pos);
+			if(connections==null)
+				return;
+
+			for(Connection connection : connections)
+			{
+				if(!(connection.cableType instanceof MotorBeltType))
+					continue;
+				ClientUtils.mc().getSoundHandler().playSound(loopSound = new ConditionCompoundSound(((MotorBeltType)connection.cableType).getLoopSound(), SoundCategory.BLOCKS,
+						new Vec3d(pos).addVector(0.5, 0.5, 0.5), 1f, 1f, () -> !tileEntityInvalid));
+				break;
+			}
+
+		}
+
+		//Update sound
+		if(loopSound!=null)
+		{
+			loopSound.update();
+			loopSound.setPitch(((float)MathHelper.clamp(getNetwork().getNetworkSpeed()/80f, 0, 2)));
+		}
+	}
 
 	@Override
 	public EnumFacing getFacing()
@@ -119,7 +199,7 @@ public abstract class TileEntityWheelBase extends TileEntityMechanicalConnectabl
 	@Override
 	public double getOutputRPM()
 	{
-		return getNetwork().getNetworkRPM();
+		return getNetwork().getNetworkSpeed();
 	}
 
 	@Override

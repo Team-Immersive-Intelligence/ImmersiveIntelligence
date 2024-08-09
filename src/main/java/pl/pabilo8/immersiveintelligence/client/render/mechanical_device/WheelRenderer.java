@@ -31,16 +31,17 @@ import java.util.Set;
 public class WheelRenderer extends IITileRenderer<TileEntityWheelBase>
 {
 	private IIAnimationCompiledMap rotationClockwise, rotationCounterCw;
-	private HashMap<Connection, AMTChain> connections = new HashMap<>();
+	private final HashMap<TileEntityWheelBase, AMTChain> connections = new HashMap<>();
 	AMT[] models;
 
 	@Override
 	public void draw(TileEntityWheelBase te, BufferBuilder buf, float partialTicks, Tessellator tes)
 	{
 		applyStandardRotation(te.facing);
+		boolean clockwise = IIRotaryUtils.shouldRotateClockwise(te.facing);
 
 		//Apply rotation
-		(IIRotaryUtils.shouldRotateClockwise(te.facing)?rotationCounterCw: rotationClockwise).apply(
+		(clockwise?rotationClockwise: rotationCounterCw).apply(
 				IIRotaryUtils.getDisplayRotation(te, te.getNetwork().getEnergyStorage(), partialTicks));
 
 		for(AMT amt : models)
@@ -49,15 +50,25 @@ public class WheelRenderer extends IITileRenderer<TileEntityWheelBase>
 		Set<Connection> outputs = ImmersiveNetHandler.INSTANCE.getConnections(te.getWorld(), te.getPos());
 		//Make or get the connection model
 		if(outputs==null)
+		{
+			//Preventive method, for when a wheel is replaced
+			connections.remove(te);
 			return;
+		}
 		for(Connection connection : outputs)
 		{
 			if(!shouldRenderConnection(te, connection))
 				continue;
-			AMTChain chain = connections.computeIfAbsent(connection, k -> AMTChain.getChainForNetwork(te, k));
+			AMTChain chain = connections.computeIfAbsent(te, t -> AMTChain.getChainForNetwork(t, connection));
 			//Apply rotation
 			float rpm = (float)te.getOutputRPM();
-			chain.setProgress(rpm > 0?IIAnimationUtils.getDebugProgress(rpm, partialTicks): 0);
+			if(rpm==0)
+				chain.setProgress(0);
+			else
+			{
+				float progress = IIAnimationUtils.getDebugProgress(rpm, partialTicks);
+				chain.setProgress(clockwise?(1f-progress): progress);
+			}
 			chain.render(tes, buf);
 		}
 	}

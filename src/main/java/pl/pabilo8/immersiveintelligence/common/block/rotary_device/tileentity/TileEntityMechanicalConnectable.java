@@ -49,7 +49,7 @@ public abstract class TileEntityMechanicalConnectable extends TileEntityImmersiv
 		@Override
 		public float getOutputRotationSpeed()
 		{
-			return getNetwork()!=null?(float)getNetwork().getNetworkRPM(): this.getRotationSpeed();
+			return getNetwork()!=null?(float)getNetwork().getNetworkSpeed(): this.getRotationSpeed();
 		}
 
 		@Override

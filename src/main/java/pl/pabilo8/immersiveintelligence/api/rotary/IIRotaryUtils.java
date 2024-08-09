@@ -323,11 +323,9 @@ public class IIRotaryUtils
 		return BELT_GENERAL_CATEGORY.equals(wire.getCategory());
 	}
 
-	//TODO: 02.08.2024 change I18n
 	@SideOnly(Side.CLIENT)
-	public static void renderEnergyTooltip(ArrayList<String> tooltip, int mx, int my, int x, int y,
-										   RotaryStorage storage, int w, int h, int spacing, int iconSize,
-										   boolean iconsAbove, boolean tooltipIcons)
+	public static void renderEnergyTooltip(ArrayList<String> tooltip, int mx, int my, int x, int y, RotaryStorage storage,
+										   int w, int h, int spacing, int iconSize, boolean iconsAbove, boolean tooltipIcons)
 	{
 		if(tooltipIcons)
 		{
@@ -347,10 +345,11 @@ public class IIRotaryUtils
 				return;
 			}
 		}
+
 		if(mx >= x+spacing&&mx <= x+spacing+w&&my >= y+spacing&&my <= y+spacing+h)
-			tooltip.add(I18n.format(IIReference.ROTARY_KEY+"mechanical.speed")+": "+storage.getRotationSpeed()+" "+I18n.format(IIReference.ROTARY_KEY+"mechanical.speed_unit"));
+			tooltip.add(I18n.format(IIReference.INFO_KEY_SPEED, storage.getRotationSpeed()));
 		if(mx >= x+w+(2*spacing)&&mx <= x+(2*w)+(2*spacing)&&my >= y+spacing&&my <= y+spacing+h)
-			tooltip.add(I18n.format(IIReference.ROTARY_KEY+"mechanical.torque")+": "+storage.getTorque()+" "+I18n.format(IIReference.ROTARY_KEY+"mechanical.torque_unit"));
+			tooltip.add(I18n.format(IIReference.INFO_KEY_TORQUE, storage.getTorque()));
 	}
 
 	public static void renderEnergyTooltip(ArrayList<String> tooltip, int mx, int my, int x, int y,
