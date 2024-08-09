@@ -13,7 +13,7 @@
         "description": "Array of block bounds in format [X1,Y1,Z1,X2,Y2,Z2]",
         "items": {
           "type": "number",
-          "minimum": -16,
+          "minimum": -32,
           "maximum": 32
         },
         "minItems": 6,

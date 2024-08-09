@@ -7,7 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
-import pl.pabilo8.immersiveintelligence.api.bullets.IAmmo;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine.Magazines;
@@ -24,10 +24,10 @@ import java.util.List;
  */
 public abstract class AmmoHandlerMagazine extends AmmoHandler
 {
-	private final IAmmo validAmmo;
+	private final IAmmoTypeItem validAmmo;
 	private final String tag;
 
-	public AmmoHandlerMagazine(ItemIIGunBase item, String tag, IAmmo validAmmo)
+	public AmmoHandlerMagazine(ItemIIGunBase item, String tag, IAmmoTypeItem validAmmo)
 	{
 		super(item);
 		this.tag = tag;
@@ -103,6 +103,7 @@ public abstract class AmmoHandlerMagazine extends AmmoHandler
 		//Return 0 if there is no ammunition to be loaded
 		if((found = item.findAmmo(user, weapon)).isEmpty())
 			return 0;
+		markLoadedAmmo(nbt, found);
 
 		if(reloading==reloadTime/1.5) //Play loading sound
 			playSound(user, getReloadSound(weapon, upgrades), SoundCategory.PLAYERS, 1f, 1f);
@@ -122,6 +123,11 @@ public abstract class AmmoHandlerMagazine extends AmmoHandler
 		}
 
 		return reloading;
+	}
+
+	public void markLoadedAmmo(EasyNBT nbt, ItemStack ammo)
+	{
+
 	}
 
 	@Override

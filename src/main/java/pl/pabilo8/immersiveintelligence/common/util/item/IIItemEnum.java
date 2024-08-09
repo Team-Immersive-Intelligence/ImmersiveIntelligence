@@ -9,11 +9,9 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import java.lang.reflect.AnnotatedElement;
-import java.lang.reflect.Field;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 01.09.2022
  */
 public interface IIItemEnum extends ISerializableEnum
@@ -40,6 +38,14 @@ public interface IIItemEnum extends ISerializableEnum
 		return -1;
 	}
 
+	default IICategory getCategory()
+	{
+		IIItemProperties tp = getProperties();
+		if(tp==null)
+			return IICategory.NULL;
+		return tp.category();
+	}
+
 	@Nonnull
 	default String[] getOreDict()
 	{
@@ -52,11 +58,11 @@ public interface IIItemEnum extends ISerializableEnum
 	@Nullable
 	default IIItemProperties getProperties()
 	{
-		return IIUtils.getEnumAnnotation(IIItemProperties.class,this);
+		return IIUtils.getEnumAnnotation(IIItemProperties.class, this);
 	}
 
 	@Retention(RetentionPolicy.RUNTIME)
-	@Target({ElementType.FIELD})
+	@Target({ElementType.FIELD, ElementType.TYPE})
 	@interface IIItemProperties
 	{
 		boolean hidden() default false;
@@ -64,5 +70,7 @@ public interface IIItemEnum extends ISerializableEnum
 		String[] oreDict() default {};
 
 		int stackSize() default -1;
+
+		IICategory category() default IICategory.NULL;
 	}
 }

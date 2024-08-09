@@ -1,0 +1,53 @@
+{
+	"comment": "Made by Pabilo8 with Blockbench",
+	"groups": {
+		"magazine": {
+			"visibility": [
+				{
+					"time": 0,
+					"visibility": false
+				}
+			]
+		},
+		"magazine_port": {
+			"visibility": [
+				{
+					"time": 0,
+					"visibility": false
+				}
+			]
+		},
+		"magazine_bottom": {
+			"visibility": [
+				{
+					"time": 0,
+					"visibility": true
+				}
+			]
+		},
+		"magazine_bottom_drum": {
+			"visibility": [
+				{
+					"time": 0,
+					"visibility": true
+				}
+			]
+		},
+		"front_grip": {
+			"visibility": [
+				{
+					"time": 0,
+					"visibility": false
+				}
+			]
+		},
+		"bottom_loader": {
+			"visibility": [
+				{
+					"time": 0,
+					"visibility": true
+				}
+			]
+		}
+	}
+}

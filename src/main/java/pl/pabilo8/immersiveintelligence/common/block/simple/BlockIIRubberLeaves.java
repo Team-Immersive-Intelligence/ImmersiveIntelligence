@@ -28,6 +28,7 @@ import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIIRubberLeaves.
 import pl.pabilo8.immersiveintelligence.common.util.block.BlockIIBase;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IIBlockEnum;
 import pl.pabilo8.immersiveintelligence.common.util.block.ItemBlockIIBase;
+import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -56,6 +57,7 @@ public class BlockIIRubberLeaves extends BlockIIBase<RubberStuff> implements ISh
 		this.setHardness(0.2F);
 		this.setLightOpacity(1);
 		lightOpacity = 0;
+		setCategory(IICategory.RESOURCES);
 	}
 
 	@Override
@@ -63,6 +65,12 @@ public class BlockIIRubberLeaves extends BlockIIBase<RubberStuff> implements ISh
 	public IBlockState getStateFromMeta(int meta)
 	{
 		return this.getDefaultState().withProperty(property, RubberStuff.RUBBER).withProperty(BlockLeaves.CHECK_DECAY, meta==1).withProperty(BlockLeaves.DECAYABLE, meta==1);
+	}
+
+	@Override
+	public int damageDropped(IBlockState state)
+	{
+		return 0;
 	}
 
 	@Override

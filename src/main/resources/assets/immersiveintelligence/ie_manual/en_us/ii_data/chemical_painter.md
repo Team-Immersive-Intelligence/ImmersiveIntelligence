@@ -2,35 +2,41 @@
 Chemical Painter
 Worth a thousand brushes
 
-# 0
+# intro
+@hammer;level_advanced_industrial
 |[multiblock]{mb:"II:ChemicalPainter"}|
-The [Chemical Painter] is a machine used to paint items in a precisely set color using ink. 
-To form it, use a hammer on the middle light engineering block.
+The **Chemical Painter** is a machine used to paint items in a precisely set color using ink.
+|[text]{mb:"II:ChemicalPainter"}|
 
-
-# 1
-Painting items manually is tedious and not very precise, a lot of dye can be wasted on just trying to get the wanted color. 
-Chemical Painter eliminates this problem. 
+# details
+Painting items manually is tedious and not very precise, a lot of dye can be wasted on just trying to get the color of choice. 
+[Chemical Painter] eliminates this problem. 
 
 Cyan, Magenta, Yellow and Black Ink have to be provided to four fluid input slots on the back of the device. 
-Electricity has to be provided trough the top input port. Items can be inserted manually or trough the inward facing conveyor.
+Electricity has to be provided to the top input port. Items can be inserted manually or through the inward facing conveyor.
 
-# 2
-To set the color use the interface or data system. In the interface there are 3 buttons, which allow switching the color model: 
-R- RGB, C -CMYK and H - HSV.
+# interface
+To set the color use the interface or data system. In the interface there are 3 buttons, which allow switching the color model:  
+[R] - [RGB]  
+[C] - [CMYK]  
+[H] - [HSV]  
 
-The chemical painter can be used to paint bullets to mark their purpose. 
-Remember that most items can be cleaned using [Chemical Bath](link)
+The chemical painter can be used to paint markings on bullets to make them easier to identify visually. 
+Most of these items can be later cleaned using the [Chemical Bath](chemical_bath) to regain their original color.
 
 # data_output
-ie.manual.entry.chemical_painter.vars_in.p.main=Output mode
+Output Variables
+|[data_variable]{type:"integer", direction:"in", letter:"p", name:"Paint Color", description:"A number representing the RGB paint color. In its hexadecimal form its digits should be in RRGGBB form, where R is red, G is green and B is blue"}|
+|[data_variable]{type:"string", direction:"in", letter:"p", name:"Paint Color", description:"A string hex code for the color without any additional leading or trailing characters"}|
 
 # data_callback
-#Chemical Painter callback variables
-ie.manual.entry.chemical_painter.vars_callback.get_color=Returns currently used color as a RGB integer
-ie.manual.entry.chemical_painter.vars_callback.get_color_hex=Returns currently used color as a hex string
-ie.manual.entry.chemical_painter.vars_callback.get_ink=Returns black ink amount
-ie.manual.entry.chemical_painter.vars_callback.get_ink_cyan=Returns cyan ink amount
-ie.manual.entry.chemical_painter.vars_callback.get_ink_yellow=Returns yellow ink amount
-ie.manual.entry.chemical_painter.vars_callback.get_ink_magenta=Returns magenta ink amount
-ie.manual.entry.chemical_painter.vars_callback.get_energy=Returns stored energy amount
+Callback Variables
+|[data_callback]{type:"integer", name:"get_color", label:"Color", returns:"Currently used color as a RGB integer"}|
+|[data_callback]{type:"integer", name:"get_color_hex", label:"Color (hexadecimal)", returns:"Returns currently used color as a hex string"}|
+
+|[data_callback]{type:"integer", name:"get_ink", label:"Ink Level", returns:"Black ink amount (mB)"}|
+|[data_callback]{type:"integer", name:"get_ink_cyan", label:"Cyan Ink Level", returns:"Cyan ink amount (mB)"}|
+|[data_callback]{type:"integer", name:"get_ink_yellow", label:"Yellow Ink Level", returns:"Yellow ink amount (mB)"}|
+|[data_callback]{type:"integer", name:"get_ink_magenta", label:"Magenta Ink Level", returns:"Magenta ink amount (mB)"}|
+
+|[data_callback]{type:"integer", name:"get_energy", label:"Energy Stored", returns:"Stored energy amount (IF)"}|

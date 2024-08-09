@@ -12,13 +12,13 @@ import javax.annotation.Nonnull;
  */
 public interface IPrecisionTool
 {
-	String getPrecissionToolType(ItemStack stack);
+	String getPrecisionToolType(ItemStack stack);
 
-	void damagePrecissionTool(ItemStack stack, int amount);
+	void damagePrecisionTool(ItemStack stack, int amount);
 
-	int getPrecissionToolDamage(ItemStack stack);
+	int getPrecisionToolDamage(ItemStack stack);
 
-	int getPrecissionToolMaxDamage(ItemStack stack);
+	int getPrecisionToolMaxDamage(ItemStack stack);
 
 	int getWorkTime(String tool_name);
 

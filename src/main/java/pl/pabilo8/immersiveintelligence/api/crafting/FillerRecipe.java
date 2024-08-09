@@ -10,7 +10,9 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.oredict.OreDictionary;
-import pl.pabilo8.immersiveintelligence.api.bullets.IAmmo;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionBase.IIIMultiblockRecipe;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -21,7 +23,7 @@ import java.util.List;
  * @author Pabilo8
  * @since 14-04-2020
  */
-public class FillerRecipe extends MultiblockRecipe
+public class FillerRecipe extends MultiblockRecipe implements IIIMultiblockRecipe
 {
 	public final IngredientStack itemInput;
 	public final ItemStack itemOutput;
@@ -31,7 +33,7 @@ public class FillerRecipe extends MultiblockRecipe
 	int totalProcessTime;
 	int totalProcessEnergy;
 	//for bullets only
-	IAmmo bullet = null;
+	IAmmoTypeItem bullet = null;
 
 	public FillerRecipe(ItemStack itemOutput, Object itemInput, DustStack dust, int time, int energy)
 	{
@@ -41,8 +43,8 @@ public class FillerRecipe extends MultiblockRecipe
 		this.inputList = Lists.newArrayList(this.itemInput);
 		this.outputList = ListUtils.fromItem(this.itemOutput);
 
-		if(itemOutput.getItem() instanceof IAmmo)
-			bullet = ((IAmmo)itemOutput.getItem());
+		if(itemOutput.getItem() instanceof IAmmoTypeItem)
+			bullet = ((IAmmoTypeItem)itemOutput.getItem());
 
 		this.dust = dust;
 		this.totalProcessTime = time;
@@ -56,11 +58,11 @@ public class FillerRecipe extends MultiblockRecipe
 		return r;
 	}
 
-	public static <T extends Item & IAmmo> FillerRecipe addRecipe(T bulletItem, int time, int energy)
+	public static <T extends Item & IAmmoTypeItem> FillerRecipe addRecipe(T bulletItem, int time, int energy)
 	{
 		ItemStack casingStack = bulletItem.getCasingStack(1);
 		ItemNBTHelper.setBoolean(casingStack, "ii_FilledCasing", true);
-		FillerRecipe recipe = addRecipe(casingStack, new IngredientStack(bulletItem.getCasingStack(1)).setUseNBT(true), new DustStack("gunpowder", bulletItem.getGunpowderNeeded()), time, energy);
+		FillerRecipe recipe = addRecipe(casingStack, new IngredientStack(bulletItem.getCasingStack(1)).setUseNBT(true), new DustStack("gunpowder", bulletItem.getPropellantNeeded()), time, energy);
 		recipe.bullet = bulletItem;
 		return recipe;
 	}
@@ -84,24 +86,16 @@ public class FillerRecipe extends MultiblockRecipe
 	public static FillerRecipe findRecipe(IngredientStack item_input, DustStack stack)
 	{
 		for(FillerRecipe recipe : recipeList)
-		{
 			if(recipe.itemInput.matches(item_input)&&recipe.dust.canMergeWith(stack)&&recipe.dust.amount <= stack.amount)
-			{
 				return recipe;
-			}
-		}
 		return null;
 	}
 
 	public static FillerRecipe findRecipe(ItemStack item_input, DustStack stack)
 	{
 		for(FillerRecipe recipe : recipeList)
-		{
 			if(recipe.itemInput.matches(item_input)&&recipe.dust.canMergeWith(stack)&&recipe.dust.amount <= stack.amount)
-			{
 				return recipe;
-			}
-		}
 		return null;
 	}
 
@@ -111,17 +105,24 @@ public class FillerRecipe extends MultiblockRecipe
 		return 0;
 	}
 
+	@Override
+	public NBTTagCompound writeToNBT(NBTTagCompound nbtTagCompound)
+	{
+		return writeToNBT();
+	}
+
 	public static FillerRecipe loadFromNBT(NBTTagCompound nbt)
 	{
 		return findRecipe(IngredientStack.readFromNBT(nbt.getCompoundTag("item_input")), new DustStack(nbt.getCompoundTag("dust")));
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
+	public NBTTagCompound writeToNBT()
 	{
-		nbt.setTag("item_input", itemInput.writeToNBT(new NBTTagCompound()));
-		nbt.setTag("dust", dust.serializeNBT());
-		return nbt;
+		return EasyNBT.newNBT()
+				.withIngredientStack("item_input", itemInput)
+				.withSerializable("dust", dust)
+				.unwrap();
 	}
 
 	@Override
@@ -142,7 +143,7 @@ public class FillerRecipe extends MultiblockRecipe
 	}
 
 	@Nullable
-	public IAmmo getBullet()
+	public IAmmoTypeItem getBullet()
 	{
 		return this.bullet;
 	}

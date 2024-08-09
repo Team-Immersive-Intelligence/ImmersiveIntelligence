@@ -15,23 +15,23 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.model.obj.OBJModel;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.AssaultRifle;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumCoreTypes;
-import pl.pabilo8.immersiveintelligence.client.fx.particles.ParticleGunfire;
+import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
+import pl.pabilo8.immersiveintelligence.client.fx.IIParticles;
 import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.client.util.amt.*;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMTBullet.BulletState;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.AssaultRifle;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIGunBase;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIRifle;
-import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIWeaponUpgrade.WeaponUpgrades;
+import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIWeaponUpgrade.WeaponUpgrade;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ammohandler.AmmoHandler;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler;
+import pl.pabilo8.immersiveintelligence.common.util.amt.IIModelHeader;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 /**
@@ -53,7 +53,7 @@ public class RifleRenderer extends IIUpgradableItemRendererAMT<ItemIIRifle> impl
 	}
 
 	@Override
-	protected ItemModelReplacement setTransformations(ItemModelReplacement_OBJ model)
+	protected ItemModelReplacement setTransforms(ItemModelReplacement_OBJ model)
 	{
 		Matrix4 tpp = new Matrix4()
 				.scale(0.385, 0.385, 0.385)
@@ -117,7 +117,7 @@ public class RifleRenderer extends IIUpgradableItemRendererAMT<ItemIIRifle> impl
 		int firing = nbt.getInt(ItemIIRifle.FIRE_DELAY);
 		int reloading = nbt.getInt(ItemIIRifle.RELOADING);
 		boolean handRender = is1stPerson(transform);
-		boolean semiAuto = item.hasIIUpgrade(stack, WeaponUpgrades.SEMI_AUTOMATIC);
+		boolean semiAuto = item.hasIIUpgrade(stack, WeaponUpgrade.SEMI_AUTOMATIC);
 		boolean gui = transform==TransformType.GUI;
 
 		//Make upgrade AMTs visible
@@ -145,7 +145,7 @@ public class RifleRenderer extends IIUpgradableItemRendererAMT<ItemIIRifle> impl
 				GlStateManager.rotate(preciseAim*-7.75f, 0, 1, 0);
 				GlStateManager.rotate(preciseAim*-5f, 1, 0, 0);
 
-				if(item.hasIIUpgrades(stack, WeaponUpgrades.SCOPE))
+				if(item.hasIIUpgrades(stack, WeaponUpgrade.SCOPE))
 				{
 					GlStateManager.translate(0, preciseAim*-0.1, preciseAim*1.5);
 					GlStateManager.rotate(5*preciseAim, 1, 0, 0);
@@ -222,19 +222,13 @@ public class RifleRenderer extends IIUpgradableItemRendererAMT<ItemIIRifle> impl
 				.withHeader(IIAnimationLoader.loadHeader(new ResourceLocation(ImmersiveIntelligence.MODID, "models/item/weapons/rifle/rifle_upgrades.obj.amt")))
 				.withModelProvider(
 						(stack, combinedHeader) -> new AMT[]{
-								new AMTBullet("bullet", combinedHeader, AmmoRegistry.INSTANCE.getModel(IIContent.itemAmmoMachinegun))
+								new AMTBullet("bullet", combinedHeader, AmmoRegistry.getModel(IIContent.itemAmmoMachinegun))
 										.withState(BulletState.BULLET_UNUSED)
-										.withProperties(0xcfcfcf, EnumCoreTypes.PIERCING, -1),
-								new AMTBullet("casing_fired", combinedHeader, AmmoRegistry.INSTANCE.getModel(IIContent.itemAmmoMachinegun))
+										.withProperties(IIContent.ammoCoreSteel, CoreType.PIERCING, -1),
+								new AMTBullet("casing_fired", combinedHeader, AmmoRegistry.getModel(IIContent.itemAmmoMachinegun))
 										.withState(BulletState.CASING),
 								new AMTParticle("muzzle_flash", combinedHeader)
-										.setParticle(new ParticleGunfire(
-												null,
-												Vec3d.ZERO,
-												new Vec3d(1, 0, 0),
-												16f
-										)
-								),
+										.setParticle(IIParticles.PARTICLE_GUNFIRE),
 								new AMTHand("hand", combinedHeader, EnumHand.OFF_HAND),
 								new AMTHand("hand_right", combinedHeader, EnumHand.MAIN_HAND)
 						}
@@ -243,7 +237,7 @@ public class RifleRenderer extends IIUpgradableItemRendererAMT<ItemIIRifle> impl
 						(res, stack) ->
 						{
 							String skin = IIContent.itemRifle.getSkinnableCurrentSkin(stack);
-							if (IISkinHandler.isValidSkin(skin))
+							if(IISkinHandler.isValidSkin(skin))
 							{
 								this.skinRemapper = new MTLTextureRemapper(model, ResLoc.of(IIReference.RES_TEXTURES_SKIN, skin, "/rifle").withExtension(ResLoc.EXT_MTL));
 								return ClientUtils.getSprite(this.skinRemapper.apply(res));
@@ -299,7 +293,7 @@ public class RifleRenderer extends IIUpgradableItemRendererAMT<ItemIIRifle> impl
 	@Override
 	public boolean renderCrosshair(ItemStack stack, EnumHand hand)
 	{
-		if(item.hasIIUpgrade(stack, WeaponUpgrades.SCOPE))
+		if(item.hasIIUpgrade(stack, WeaponUpgrade.SCOPE))
 			return false;
 
 		return ItemNBTHelper.getInt(stack, ItemIIRifle.AIMING) > item.getAimingTime(stack, EasyNBT.wrapNBT(stack))*0.85;

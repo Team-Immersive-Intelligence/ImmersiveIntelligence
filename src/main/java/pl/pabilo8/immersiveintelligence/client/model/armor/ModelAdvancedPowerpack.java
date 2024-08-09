@@ -11,6 +11,7 @@ import pl.pabilo8.immersiveintelligence.client.model.TMTArmorModel;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
 /**
  * @author Pabilo8
@@ -312,7 +313,7 @@ public class ModelAdvancedPowerpack extends TMTArmorModel implements IReloadable
 
 				renderChild(bipedBody, bodyModel, scale, texture);
 
-				float[] color = IIUtils.rgbIntToRGB(renderColor);
+				float[] color = IIColor.rgbIntToRGB(renderColor);
 				GlStateManager.color(color[0], color[1], color[2]);
 				renderChild(bipedBody, bodyColoredModel, scale, textureLayer);
 				GlStateManager.color(1f, 1f, 1f);

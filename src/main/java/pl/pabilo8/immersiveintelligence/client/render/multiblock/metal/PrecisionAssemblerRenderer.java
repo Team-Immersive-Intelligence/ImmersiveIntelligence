@@ -10,13 +10,13 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 import org.apache.commons.lang3.ArrayUtils;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.PrecisionAssembler;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.IPrecisionTool;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.ModelPrecisionAssembler;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.precision_assembler.*;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.PrecisionAssembler;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityPrecisionAssembler;
 
@@ -40,7 +40,7 @@ public class PrecisionAssemblerRenderer extends TileEntitySpecialRenderer<TileEn
 	@Override
 	public void render(TileEntityPrecisionAssembler te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
 	{
-		String texture = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/precission_assembler.png";
+		String texture = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/precision_assembler.png";
 		if(te!=null&&!te.isDummy())
 		{
 			ClientUtils.bindTexture(texture);

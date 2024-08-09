@@ -32,7 +32,7 @@ import java.util.function.Predicate;
 public class MultipleRayTracer implements Iterable<RayTraceResult>
 {
 	private static final AxisAlignedBB EMPTY_AABB = new AxisAlignedBB(0, 0, 0, 0, 0, 0);
-	private ArrayList<RayTraceResult> hits = new ArrayList<>();
+	private final ArrayList<RayTraceResult> hits = new ArrayList<>();
 	private BlockPos lastBLockHit;
 
 	private MultipleRayTracer()
@@ -198,9 +198,7 @@ public class MultipleRayTracer implements Iterable<RayTraceResult>
 		}
 
 		/**
-		 * @param ignoreBlockWithoutBoundingBox whether blocks with no bounding box (i.e. air) should be counted in
-		 * @param stopOnLiquid                  whether should stop tracing on liquids
-		 * @param allowEntities                 whether entities should be traced
+		 * @param allowEntities whether entities should be traced
 		 * @return the builder
 		 */
 		public MultipleTracerBuilder setRules(boolean allowEntities, Predicate<IBlockState> stopOn)

@@ -3,7 +3,7 @@ Emplacement Weapons
 A Show of Force
 
 # mg0
-**Machinegun** Emplacement is the most basic and *cheapest* of all the Emplacements available. It is a reliable choice for dealing with soft ground targets, or light vehicles, when using armor-piercing ammunition.
+**Machinegun** Emplacement is the most basic and *cheapest* of all the Emplacements available. It is a reliable choice for dealing with soft ground targets or light vehicles, when using armor-piercing ammunition.
 # mg1
 **The Machinegun** Emplacement comes in 3 variants: Default, Heavy Barreled and Water-Cooled, which are identical in function to those present in the infantry version of the Machinegun.<br>Take note, this weapon does not use magazines, bullets have to be provided through the emplacement input port. Due to its limited pitch the MG Emplacement is a poor choice for firing at air targets.
 

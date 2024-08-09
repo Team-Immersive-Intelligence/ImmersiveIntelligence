@@ -5,7 +5,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ITextComponent;
@@ -16,6 +15,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
+import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.network.IIMessage.IIMessageHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.*;
 import pl.pabilo8.immersiveintelligence.common.util.AdvancedSounds.MultiSound;
@@ -73,6 +73,19 @@ public class IIPacketHandler
 	public static void sendToServer(IIMessage message)
 	{
 		INSTANCE.sendToServer(message);
+	}
+
+	public static void sendToClient(IIMessage message)
+	{
+		if(message instanceof IPositionBoundMessage)
+		{
+			IPositionBoundMessage posMessage = (IPositionBoundMessage)message;
+			INSTANCE.sendToAllAround(message, targetPointFromPos(posMessage.getPosition(), posMessage.getWorld(), DEFAULT_RANGE));
+		}
+		else if(message instanceof IEntityBoundMessage)
+			INSTANCE.sendToAllTracking(message, targetPointFromEntity(((IEntityBoundMessage)message).getEntity(), DEFAULT_RANGE));
+		else
+			IILogger.error("Attempt to send a message without a valid position or entity!");
 	}
 
 	public static void sendToClient(BlockPos pos, World world, IIMessage message)

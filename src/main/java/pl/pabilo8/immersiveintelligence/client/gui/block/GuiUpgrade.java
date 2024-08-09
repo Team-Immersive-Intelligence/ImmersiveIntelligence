@@ -17,13 +17,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.api.utils.IUpgradableMachine;
+import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
-import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
-import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IUpgradableMachine;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerUpgrade;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBeginMachineUpgrade;
+import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 import javax.annotation.Nullable;
@@ -140,7 +141,7 @@ public class GuiUpgrade extends GuiIEContainerBase
 	@Override
 	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException
 	{
-		if(mouseButton==0&&previewed==null&&IIUtils.isPointInRectangle(guiLeft+99, guiTop+8, guiLeft+99+66, guiTop+8+56, mouseX, mouseY))
+		if(mouseButton==0&&previewed==null&&IIMath.isPointInRectangle(guiLeft+99, guiTop+8, guiLeft+99+66, guiTop+8+56, mouseX, mouseY))
 		{
 			int xx = mouseX-(guiLeft+100);
 			int yy = mouseY-(guiTop+9);
@@ -189,7 +190,7 @@ public class GuiUpgrade extends GuiIEContainerBase
 				int xx = (i%3)*20, yy = (int)Math.floor(i/3f)*20;
 				ClientUtils.bindTexture(TEXTURE);
 				drawTexturedModalRect(guiLeft+100+xx, guiTop+9+yy, upgradableMachine.hasUpgrade(upgrade)?121: 101, 168, 20, 20);
-				if(IIUtils.isPointInRectangle(guiLeft+100+xx, guiTop+9+yy, guiLeft+100+xx+16, guiTop+9+yy+16, mx, my))
+				if(IIMath.isPointInRectangle(guiLeft+100+xx, guiTop+9+yy, guiLeft+100+xx+16, guiTop+9+yy+16, mx, my))
 					tooltip.add(getUpgradeNameTranslation(upgrade));
 				i++;
 			}
@@ -233,7 +234,7 @@ public class GuiUpgrade extends GuiIEContainerBase
 				//drawString(fontRenderer,stack.getDisplayName(),guiLeft+xSize+x, guiTop+4-yy+y,0xffffff);
 				mc.getRenderItem().renderItemAndEffectIntoGUI(stack, guiLeft+xSize+x+2, guiTop+112-yy+y);
 				mc.getRenderItem().renderItemOverlayIntoGUI(fontRenderer, stack, guiLeft+xSize+x+2, guiTop+112-yy+y, null);
-				if(IIUtils.isPointInRectangle(guiLeft+xSize+x+2, guiTop+112-yy+y, guiLeft+xSize+x+18, guiTop+128-yy+y, mx, my))
+				if(IIMath.isPointInRectangle(guiLeft+xSize+x+2, guiTop+112-yy+y, guiLeft+xSize+x+18, guiTop+128-yy+y, mx, my))
 					tooltip.addAll(stack.getTooltip(mc.player, mc.gameSettings.advancedItemTooltips?TooltipFlags.ADVANCED: TooltipFlags.NORMAL));
 			}
 
@@ -300,7 +301,7 @@ public class GuiUpgrade extends GuiIEContainerBase
 			{
 				int x = (i%4)*18;
 				int y = (int)(Math.floor(i/4f)*18);
-				if(IIUtils.isPointInRectangle(guiLeft+xSize+x+2, guiTop+112-yy+y, guiLeft+xSize+x+18, guiTop+128-yy+y, mouseX, mouseY))
+				if(IIMath.isPointInRectangle(guiLeft+xSize+x+2, guiTop+112-yy+y, guiLeft+xSize+x+18, guiTop+128-yy+y, mouseX, mouseY))
 					return previewed.getRequiredStacks().get(i).getExampleStack();
 			}
 		}

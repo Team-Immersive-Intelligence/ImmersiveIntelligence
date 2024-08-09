@@ -158,7 +158,7 @@ public class ModelPrecisionBuzzsaw extends ModelIIBase
 	{
 		GlStateManager.pushMatrix();
 
-		ClientUtils.bindTexture(ImmersiveIntelligence.MODID+":textures/blocks/multiblock/precission_assembler/buzzsaw.png");
+		ClientUtils.bindTexture(ImmersiveIntelligence.MODID+":textures/blocks/multiblock/precision_assembler/buzzsaw.png");
 
 		render();
 

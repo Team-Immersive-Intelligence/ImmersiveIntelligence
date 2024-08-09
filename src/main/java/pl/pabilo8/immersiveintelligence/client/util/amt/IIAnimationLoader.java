@@ -10,15 +10,22 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.resources.IResource;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
+import pl.pabilo8.immersiveintelligence.common.util.amt.IIAnimation;
+import pl.pabilo8.immersiveintelligence.common.util.amt.IIModelHeader;
 
 import javax.annotation.Nonnull;
-import java.io.*;
-import java.nio.file.Files;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -58,10 +65,11 @@ public class IIAnimationLoader
 	 */
 	public static JsonObject readServerFileToJson(@Nonnull ResourceLocation res)
 	{
-		File file = new File("./assets/"+res.getResourceDomain()+res.getResourcePath());
 		try
 		{
-			return new JsonStreamParser(new InputStreamReader(Files.newInputStream(file.toPath()))).next().getAsJsonObject();
+			InputStream stream = MinecraftServer.class.getResourceAsStream("/assets/"+res.getResourceDomain()+"/"+res.getResourcePath());
+			assert stream!=null;
+			return ((JsonObject)new JsonStreamParser(new InputStreamReader(stream)).next());
 		} catch(Exception exception)
 		{
 			IILogger.error("[AMT/Server] Couldn't load "+
@@ -153,6 +161,51 @@ public class IIAnimationLoader
 					", "+exception.getClass().getCanonicalName());
 		}
 		return map;
+	}
+
+	@SideOnly(Side.CLIENT)
+	public static void preloadTexturesFromOBJ(@Nonnull ResourceLocation obj, TextureMap map)
+	{
+		ArrayList<String> mtlNames = new ArrayList<>();
+		try
+		{
+			//try to register each texture, used by direct model loading
+			IResource resource = Minecraft.getMinecraft().getResourceManager().getResource(obj);
+			BufferedReader reader = new BufferedReader(new InputStreamReader(resource.getInputStream()));
+			String line;
+
+			search:
+			while((line = reader.readLine())!=null)
+			{
+				String[] split = line.split(" ");
+				if(split.length < 2)
+					continue;
+
+				switch(split[0])
+				{
+					case "mtllib":
+						mtlNames.add(split[1]);
+						break;
+					case "o":
+					case "v":
+					case "vt":
+						break search;
+					default:
+						break;
+				}
+			}
+			ResLoc directory = ResLoc.of(obj).asDirectory();
+			mtlNames.forEach(s -> preloadTexturesFromMTL(ResLoc.of(directory, s).withExtension(ResLoc.EXT_MTL), map));
+
+		} catch(IOException exception)
+		{
+			IILogger.error("[AMT] Couldn't load OBJ file in search of materials :"+
+					TextFormatting.GOLD+
+					obj.toString()
+							.replaceFirst("models/", "")+
+					TextFormatting.RESET+
+					", "+exception.getClass().getCanonicalName());
+		}
 	}
 
 	@SideOnly(Side.CLIENT)

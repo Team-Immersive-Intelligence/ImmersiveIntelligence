@@ -10,6 +10,7 @@ import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.RadioStation;
 import pl.pabilo8.immersiveintelligence.common.compat.IICompatModule;
 import pl.pabilo8.immersiveintelligence.common.world.IIWorldGen;
 
@@ -53,7 +54,7 @@ public class IIConfigHandler
 		@LangKey("Vehicles")
 		public static Vehicles vehicles;
 
-		@Comment({"A list of all mods that IEn has integrated compatability for", "Setting any of these to false disables the respective compat"})
+		@Comment({"A list of all mods that II has integrated compatability for", "Setting any of these to false disables the respective compat"})
 		public static Map<String, Boolean> compat = Maps.newHashMap(Maps.toMap(IICompatModule.moduleClasses.keySet(), (s) -> Boolean.TRUE));
 
 		@Comment({"The maximum frequency for basic radios."})
@@ -70,6 +71,12 @@ public class IIConfigHandler
 		@Comment({"Whether the IE revolver should be a Early Engineering-tier weapon"})
 		public static boolean changeRevolverProduction = true;
 
+		@Comment({"Whether the the railgun should require a gun stock instead of a grip to be constructed"})
+		public static boolean changeRailgunProduction = true;
+
+		@Comment({"Whether the the chemthrower should require a gun stock instead of a grip to be constructed"})
+		public static boolean changeChemthrowerProduction = true;
+
 		@Comment({"Whether Tungsten should be smeltable in the vanilla furnace"})
 		@RequiresMcRestart
 		public static boolean smeltableTungsten = false;
@@ -83,12 +90,22 @@ public class IIConfigHandler
 				"minecraft:ender_dragon"
 		};
 
+		@Comment({"Whether the II Creative Tab should be divided into sub-tabs (Australian Tabs(tm))."})
+		@RequiresMcRestart
+		public static boolean australianCreativeTabs = true;
+
 		public static class Graphics
 		{
+			@Comment({"Enable Tactile AMT - dynamic collision boxes for multiblocks that use animations for positioning them."})
+			public static boolean tactileAMT = true;
+
 			@Comment({"Whether gun recoil is visible in first-person view."})
 			public static boolean cameraRecoil = true;
 
-			@Comment({"Roll the camera when turning the motorbike."})
+			@Comment({"Whether screen shake effect should be displayed."})
+			public static boolean cameraScreenShake = true;
+
+			@Comment({"Enable camera roll motion."})
 			public static boolean cameraRoll = false;
 
 			@Comment({"Determines how hand animations should be displayed on II models",
@@ -102,6 +119,22 @@ public class IIConfigHandler
 			@Comment({"Max amount of block penetrations that will be rendered. 0 will disable rendering."})
 			public static int maxPenetratedBlocks = 64;
 
+			@RangeInt(min = 0)
+			@Comment({"Max amount of particles that will be simulated."})
+			public static int maxSimulatedParticles = 2000;
+
+			@RangeInt(min = 0)
+			@Comment({"Max amount of particles that will be drawn. Should be less or equal to maxSimulatedParticles."})
+			public static int maxDrawnParticles = 1000;
+
+			@Comment({"Determines how look of II explosion particles",
+					"0 - vanilla",
+					"1 - vanilla enhanced with block particles",
+					"2 - overhauled",
+					"3 - overhauled + debris"
+			})
+			@RangeInt(min = 0, max = 3)
+			public static int explosionParticlesStyle = 3;
 		}
 
 		public static class Ores
@@ -278,27 +311,27 @@ public class IIConfigHandler
 
 			@Comment({"The durability (max number of uses) of the Precision Buzzsaw."})
 			@RequiresMcRestart
-			public static int precissionToolBuzzsawDurability = 150;
+			public static int precisionToolBuzzsawDurability = 150;
 
 			@Comment({"The durability (max number of uses) of the Precision Drill."})
 			@RequiresMcRestart
-			public static int precissionToolDrillDurability = 250;
+			public static int precisionToolDrillDurability = 250;
 
 			@Comment({"The durability (max number of uses) of the Precision Inserter."})
 			@RequiresMcRestart
-			public static int precissionToolInserterDurability = 200;
+			public static int precisionToolInserterDurability = 200;
 
 			@Comment({"The durability (max number of uses) of the Precision Solderer."})
 			@RequiresMcRestart
-			public static int precissionToolSoldererDurability = 150;
+			public static int precisionToolSoldererDurability = 150;
 
 			@Comment({"The durability (max number of uses) of the Precision Welder."})
 			@RequiresMcRestart
-			public static int precissionToolWelderDurability = 250;
+			public static int precisionToolWelderDurability = 250;
 
 			@Comment({"The durability (max number of uses) of the Precision Hammer."})
 			@RequiresMcRestart
-			public static int precissionToolHammerDurability = 200;
+			public static int precisionToolHammerDurability = 200;
 
 			@Comment({"The durability (max number of uses) of the Iron Sawblade."})
 			@RequiresMcRestart
@@ -316,27 +349,27 @@ public class IIConfigHandler
 
 			@Comment({"The usage time of the Precision Buzzsaw."})
 			@RequiresMcRestart
-			public static int precissionToolBuzzsawUsageTime = 140;
+			public static int precisionToolBuzzsawUsageTime = 140;
 
 			@Comment({"The usage time of the Precision Drill."})
 			@RequiresMcRestart
-			public static int precissionToolDrillUsageTime = 140;
+			public static int precisionToolDrillUsageTime = 140;
 
 			@Comment({"The usage time of the Precision Inserter."})
 			@RequiresMcRestart
-			public static int precissionToolInserterUsageTime = 60;
+			public static int precisionToolInserterUsageTime = 60;
 
 			@Comment({"The usage time of the Precision Solderer."})
 			@RequiresMcRestart
-			public static int precissionToolSoldererUsageTime = 80;
+			public static int precisionToolSoldererUsageTime = 80;
 
 			@Comment({"The usage time of the Precision Welder."})
 			@RequiresMcRestart
-			public static int precissionToolWelderUsageTime = 160;
+			public static int precisionToolWelderUsageTime = 160;
 
 			@Comment({"The usage time of the Precision Hammer."})
 			@RequiresMcRestart
-			public static int precissionToolHammerUsageTime = 40;
+			public static int precisionToolHammerUsageTime = 40;
 
 			public static class SkycrateMounts
 			{
@@ -401,7 +434,7 @@ public class IIConfigHandler
 			@SubConfig
 			public static Electrolyzer electrolyzer;
 			@SubConfig
-			public static PrecisionAssembler precissionAssembler;
+			public static PrecisionAssembler precisionAssembler;
 			@SubConfig
 			public static Coagulator coagulator;
 			@SubConfig
@@ -615,6 +648,7 @@ public class IIConfigHandler
 				public static int energyUsageIdle = 512;
 
 				@Comment({"Range of the radio station (in which the signals can be received) in blocks from center (radius)."})
+				@Mapped(mapClass = IIConfigHandler.class, mapName = "manual_int")
 				public static int radioRange = 128;
 
 				@RangeDouble(min = 0, max = 1)
@@ -652,7 +686,7 @@ public class IIConfigHandler
 				public static int energyCapacity = 24000;
 
 				@Comment({"Energy usage of the printing press per page printed."})
-				public static int energyUsage = 512;
+				public static int energyUsage = 2048;
 
 				@Comment({"Page printing duration (in ticks)."})
 				public static int printTime = 90;
@@ -924,7 +958,7 @@ public class IIConfigHandler
 				public static int craneGrabTime = 20;
 			}
 
-			public static class AmmunitionWorkshop
+			public static class AmmunitionAssembler
 			{
 				@Comment({"Energy capacity of the ammunition workshop (in IF)."})
 				public static int energyCapacity = 16000;
@@ -932,19 +966,25 @@ public class IIConfigHandler
 
 			public static class ProjectileWorkshop
 			{
-				@Comment({"Energy capacity of the ammunition workshop (in IF)."})
+				@Comment({"Energy capacity of the Projectile Workshop (in IF)."})
 				public static int energyCapacity = 16000;
 
-				@Comment({"Fluid capacity of a projectile workshop coolant (water) tank (in mB)."})
+				@Comment({"Energy usage of the Projectile Workshop during core production (in IF/t)"})
+				public static int productionEnergyUsage = 50;
+
+				@Comment({"Energy usage of the Projectile Workshop during core production (in IF/t)"})
+				public static int fillingEnergyUsage = 70;
+
+				@Comment({"Fluid capacity of a Projectile Workshop coolant (water) tank (in mB)."})
 				public static int coolantTankCapacity = 6000;
 
-				@Comment({"Fluid capacity of a projectile workshop fluid bullet component buffer tank (in mB)."})
+				@Comment({"Fluid capacity of a Projectile Workshop fluid bullet component buffer tank (in mB)."})
 				public static int componentTankCapacity = 1000;
 
-				@Comment({"Maximum amount of bullet component stored in a projectile workshop (16 is default amount per one item / 1000mB of a fluid)."})
+				@Comment({"Maximum amount of bullet component stored in a Projectile Workshop (16 is default amount per one item / 1000mB of a fluid)."})
 				public static int componentCapacity = 512;
 
-				@Comment({"How long does it take to produce a projectile from a plate (in ticks, multiplied by caliber)."})
+				@Comment({"How long does it take to produce a projectile (in ticks, multiplied by caliber)."})
 				public static int productionTime = 35;
 
 				@Comment({"How long does it take to fill a projectile with components (in ticks, multiplied by caliber)."})
@@ -1012,8 +1052,8 @@ public class IIConfigHandler
 				public static int engineerHeadgearEnergyUsage = 225;
 
 				@Comment({"The multiplier of electric damage taken when an anti-static mesh is worn under water (in half-hearts)."})
-				@RangeInt(min = 0)
-				public static float antiStaticMeshWaterDamageMod = 1.5f;
+				@RangeDouble(min = 0)
+				public static double antiStaticMeshWaterDamageMod = 1.5;
 
 				@Comment({"The energy usage of the exoskeleton when running (in IF)."})
 				@RangeInt(min = 0)
@@ -1330,7 +1370,7 @@ public class IIConfigHandler
 				public static int bulletFireTimeSemiAuto = 10;
 
 				@Comment({"Maximum amount of horizontal recoil."})
-				public static float longBarrelVelocityMod = 1.5f;
+				public static float longBarrelVelocityMod = 2.25f;
 
 				@Comment({"Amount of horizontal recoil after taking a shot."})
 				public static float recoilHorizontal = 0.5f;
@@ -1371,17 +1411,18 @@ public class IIConfigHandler
 				@Comment({"Maximum amount of horizontal recoil."})
 				public static float sturdyBarrelVelocityMod = 1.25f;
 
+				//some people are able to report "bugs", yet unable to reset a config file when updating versions
 				@Comment({"Amount of horizontal recoil after taking a shot."})
-				public static float recoilHorizontal = 0.345f;
+				public static float newRecoilHorizontal = 0.345f;
 
 				@Comment({"Amount of vertical recoil after taking a shot."})
-				public static float recoilVertical = 0.625f;
+				public static float newRecoilVertical = 0.625f;
 
 				@Comment({"Maximum amount of horizontal recoil."})
-				public static float maxRecoilHorizontal = 14.5f;
+				public static float newMaxRecoilHorizontal = 14.5f;
 
 				@Comment({"Maximum amount of vertical recoil."})
-				public static float maxRecoilVertical = 9f;
+				public static float newMaxRecoilVertical = 9f;
 
 				@Comment({"Range in which enemies will be attracted to the gunshot."})
 				public static int enemyAttractRange = 36;
@@ -1521,35 +1562,38 @@ public class IIConfigHandler
 
 		public static class Ammunition
 		{
-			@Comment({"Default velocity of a light howitzer shell."})
-			public static float mortarVelocity = 8f;
+			@Comment({"Whether explosive ammo components can break blocks"})
+			public static boolean blockDamage = true;
+
+			@Comment({"Default velocity of a mortar shell."})
+			public static float mortarVelocity = 8f*0.7f;
 
 			@Comment({"Default velocity of a light howitzer shell."})
-			public static float lightHowiVelocity = 10f;
+			public static float lightHowiVelocity = 10f*0.7f;
 
 			@Comment({"Default velocity of an artillery howitzer shell."})
-			public static float artilleryHowiVelocity = 70f;
+			public static float artilleryHowiVelocity = 70f*0.7f;
 
 			@Comment({"Default velocity of a railgun grenade."})
-			public static float railgunGrenadeVelocity = 5f;
+			public static float railgunGrenadeVelocity = 5f*0.7f;
 
 			@Comment({"Default velocity of a thrown grenade."})
-			public static float grenadeVelocity = 2.5f;
+			public static float grenadeVelocity = 1f;
 
 			@Comment({"Default velocity of a machinegun bullet."})
-			public static float autocannonVelocity = 6f;
+			public static float autocannonVelocity = 6f*0.7f;
 
 			@Comment({"Default velocity of a machinegun bullet."})
-			public static float mgVelocity = 6.5f;
+			public static float mgVelocity = 6.5f*0.7f;
 
 			@Comment({"Default velocity of a submachinegun bullet."})
-			public static float smgVelocity = 5f;
+			public static float smgVelocity = 5f*0.7f;
 
 			@Comment({"Default velocity of an assault rifle bullet."})
-			public static float stgVelocity = 6.5f;
+			public static float stgVelocity = 6.5f*0.7f;
 
 			@Comment({"Default velocity of a revolver cartridge."})
-			public static float revolverVelocity = 6f;
+			public static float revolverVelocity = 6f*0.7f;
 		}
 
 		public static class Wires
@@ -1670,6 +1714,10 @@ public class IIConfigHandler
 			@Comment({"Torque multiplier for the windmill."})
 			@Mapped(mapClass = IIConfigHandler.class, mapName = "manual_floatA")
 			public static float dynamoWatermillTorque = 24f;
+
+			@Comment({"Torque multiplier for the axle from MysticalMechanics."})
+			@Mapped(mapClass = Config.class, mapName = "manual_floatA")
+			public static float dynamoAxleTorque = 18f;
 		}
 	}
 
@@ -1678,6 +1726,10 @@ public class IIConfigHandler
 	{
 		Config.manual_bool.put("petroleumHere", false);
 		Config.manual_bool.put("baublesHere", false);
+		Config.validateAndMapValues(IIConfig.class);
+
+		Config.manual_int.put("radio_station_range", RadioStation.radioRange);
+
 		if(ev.getModID().equals(ImmersiveIntelligence.MODID))
 			ConfigManager.sync(ImmersiveIntelligence.MODID, Type.INSTANCE);
 	}

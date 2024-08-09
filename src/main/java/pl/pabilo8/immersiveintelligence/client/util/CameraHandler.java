@@ -57,9 +57,13 @@ public class CameraHandler
 
 	public static void setEnabled(boolean enabled)
 	{
-		CameraHandler.enabled = enabled;
 		ensureExists();
-		ClientUtils.mc().setRenderViewEntity(enabled?camera: ClientUtils.mc().player);
+		if(enabled)
+			ClientUtils.mc().setRenderViewEntity(camera);
+		else if(CameraHandler.enabled)
+			ClientUtils.mc().setRenderViewEntity(null);
+
+		CameraHandler.enabled = enabled;
 	}
 
 	public static boolean isEnabled()

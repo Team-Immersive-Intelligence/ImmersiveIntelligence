@@ -16,16 +16,23 @@ public class DataTypeVector implements IDataType
 	public DataTypeVector(float x, float y, float z)
 	{
 		this.integerVector = false;
+		this.x = x;
+		this.y = y;
+		this.z = z;
 	}
 
 	public DataTypeVector(int x, int y, int z)
 	{
 		this.integerVector = true;
+		this.x = x;
+		this.y = y;
+		this.z = z;
 	}
 
 	public DataTypeVector()
 	{
-
+		this.integerVector = false;
+		setDefaultValue();
 	}
 
 	@Nonnull

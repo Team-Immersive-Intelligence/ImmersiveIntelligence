@@ -21,12 +21,13 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Emplacement;
 import pl.pabilo8.immersiveintelligence.api.utils.IEntitySpecialRepairable;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Emplacement;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityEmplacement;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityEmplacement.EmplacementWeapon;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.weapon.EmplacementWeapon;
+import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
@@ -220,11 +221,11 @@ public class EntityEmplacementWeapon extends EntityLivingBase implements IEntity
 
 		Vec3d thisPos = getPositionVector().addVector(0, 4.5f*turretHeight-3, 0);
 
-		Vec3d pos_main_x = IIUtils.offsetPosDirection(1f, Math.toRadians(rotationYaw), 0);
-		Vec3d pos_main_z = IIUtils.offsetPosDirection(1f, Math.toRadians(rotationYaw-90), 0);
+		Vec3d pos_main_x = IIMath.offsetPosDirection(1f, Math.toRadians(rotationYaw), 0);
+		Vec3d pos_main_z = IIMath.offsetPosDirection(1f, Math.toRadians(rotationYaw-90), 0);
 
-		Vec3d pos_gun_x = IIUtils.offsetPosDirection(1f, Math.toRadians(rotationYaw), Math.toRadians(rotationPitch));
-		Vec3d pos_gun_z = IIUtils.offsetPosDirection(1f, Math.toRadians(rotationYaw-90), Math.toRadians(rotationPitch-90));
+		Vec3d pos_gun_x = IIMath.offsetPosDirection(1f, Math.toRadians(rotationYaw), Math.toRadians(rotationPitch));
+		Vec3d pos_gun_z = IIMath.offsetPosDirection(1f, Math.toRadians(rotationYaw-90), Math.toRadians(rotationPitch-90));
 
 
 		for(EmplacementHitboxEntity part : partArray)
@@ -279,14 +280,14 @@ public class EntityEmplacementWeapon extends EntityLivingBase implements IEntity
 			int armor = ((EmplacementHitboxEntity)part).armor;
 			if(armor-damage > 0)
 			{
-				world.playSound(null, getPosition(), IISounds.hitMetal.getSoundImpact(), SoundCategory.BLOCKS, 1.5f, armor/damage*0.95f);
+				world.playSound(null, getPosition(), IISounds.hitMetal.getImpactSound(), SoundCategory.BLOCKS, 1.5f, armor/damage*0.95f);
 				return false;
 			}
 			parent.applyDamage(damage-armor);
-			world.playSound(null, getPosition(), IISounds.hitMetal.getSoundImpact(), SoundCategory.BLOCKS, 1.5f, 0.95f);
+			world.playSound(null, getPosition(), IISounds.hitMetal.getImpactSound(), SoundCategory.BLOCKS, 1.5f, 0.95f);
 			return true;
 		}
-		world.playSound(null, getPosition(), IISounds.hitMetal.getSoundRicochet(), SoundCategory.BLOCKS, 1.5f, 0.65f);
+		world.playSound(null, getPosition(), IISounds.hitMetal.getRicochetSound(), SoundCategory.BLOCKS, 1.5f, 0.65f);
 		return false;
 	}
 

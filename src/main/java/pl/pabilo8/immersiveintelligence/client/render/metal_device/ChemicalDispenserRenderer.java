@@ -7,16 +7,18 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.Tuple;
+import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer;
+import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer.RegisteredTileRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMT;
 import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationLoader;
 import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationUtils;
-import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.TileEntityChemicalDispenser;
 
 /**
  * @author Pabilo8
  * @since 2019-06-01
  */
+@RegisteredTileRenderer(name = "chemical_dispenser", clazz = TileEntityChemicalDispenser.class)
 public class ChemicalDispenserRenderer extends IITileRenderer<TileEntityChemicalDispenser>
 {
 	private static AMT[] models = null;
@@ -26,7 +28,7 @@ public class ChemicalDispenserRenderer extends IITileRenderer<TileEntityChemical
 	{
 		//apply animation
 		for(AMT model : models)
-			IIAnimationUtils.setModelRotation(model,te.pitch, 0, te.yaw);
+			IIAnimationUtils.setModelRotation(model, te.pitch, 0, te.yaw);
 
 		//apply rotation for block facing
 		applyStandardRotation(te.facing);

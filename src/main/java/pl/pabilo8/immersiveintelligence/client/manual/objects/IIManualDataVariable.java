@@ -17,7 +17,9 @@ import pl.pabilo8.immersiveintelligence.client.manual.IIManualObject;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualPage;
 import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import javax.annotation.Nonnull;
@@ -105,6 +107,13 @@ public class IIManualDataVariable extends IIManualObject
 		else
 			requirements = null;
 
+		boolean unicodeFlag = manual.fontRenderer.getUnicodeFlag();
+		manual.fontRenderer.setUnicodeFlag(true);
+		this.height += Math.max(0,
+				manual.fontRenderer.getWordWrappedHeight(description, width)+8-height
+		);
+		manual.fontRenderer.setUnicodeFlag(unicodeFlag);
+
 	}
 
 	@Override
@@ -166,11 +175,11 @@ public class IIManualDataVariable extends IIManualObject
 			ArrayList<String> lines = new ArrayList<>();
 			lines.add(String.format(
 					"<%s> %s",
-					IIUtils.getHexCol(type.getTypeColour(), I18n.format(IIReference.DATA_KEY+"datatype."+type.getName())),
+					IIColor.getHexCol(type.getTypeColour(), I18n.format(IIReference.DATA_KEY+"datatype."+type.getName())),
 					name
 			));
 
-			lines.add(TextFormatting.GRAY+IIUtils.getItalicString(description));
+			lines.addAll(manual.fontRenderer.listFormattedStringToWidth(TextFormatting.GRAY+IIStringUtil.getItalicString(description), 140));
 
 			if(values!=null)
 			{

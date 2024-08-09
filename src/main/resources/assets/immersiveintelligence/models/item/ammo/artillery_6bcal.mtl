@@ -1,0 +1,6 @@
+# Made by Pabilo8 with Blockbench
+
+newmtl 6bcal_light_artillery
+map_Kd immersiveintelligence:entity/ammo/6bcal_light_artillery
+newmtl gunpowder
+map_Kd immersiveintelligence:entity/ammo/gunpowder

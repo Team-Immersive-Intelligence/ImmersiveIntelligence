@@ -7,7 +7,9 @@ import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIIClothDecorati
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.block.BlockIIBase;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IIBlockEnum;
+import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IIBlockProperties;
 import pl.pabilo8.immersiveintelligence.common.util.block.ItemBlockIIBase;
+import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 
 /**
  * @author Pabilo8
@@ -20,6 +22,7 @@ public class BlockIIClothDecoration extends BlockIIBase<ClothDecorations>
 		super("cloth_decoration", PropertyEnum.create("type", ClothDecorations.class), Material.CLOTH, ItemBlockIIBase::new);
 		setHardness(3.0F);
 		setResistance(15.0F);
+		setCategory(IICategory.ROTARY);
 
 		setToolTypes(IIReference.TOOL_HAMMER, IIReference.TOOL_WIRECUTTER);
 
@@ -28,6 +31,7 @@ public class BlockIIClothDecoration extends BlockIIBase<ClothDecorations>
 
 	public enum ClothDecorations implements IIBlockEnum
 	{
+		@IIBlockProperties(category = IICategory.RESOURCES)
 		COIL_ROPE,
 		COIL_CLOTH_MOTOR_BELT,
 		COIL_RUBBER_MOTOR_BELT

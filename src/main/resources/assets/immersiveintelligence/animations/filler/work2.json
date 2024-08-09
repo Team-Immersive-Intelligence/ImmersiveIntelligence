@@ -1,0 +1,71 @@
+{
+	"comment": "Made with Blockbench",
+	"groups": {
+		"filling_part": {
+			"rotation": [
+				{
+					"time": 0,
+					"transform": [0, 0, -45]
+				},
+				{
+					"time": 0.15,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.25,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.40277,
+					"transform": [0, 0, 45]
+				},
+				{
+					"time": 0.44443,
+					"transform": [0, 0, 45]
+				},
+				{
+					"time": 0.52777,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.6111,
+					"transform": [0, 0, -45]
+				},
+				{
+					"time": 0.7,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.83333,
+					"transform": [0, 0, 0]
+				}
+			]
+		},
+		"item": {
+			"position": [
+				{
+					"time": 0,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.66667,
+					"transform": [32, 0, 0]
+				}
+			],
+			"visibility": [
+				{
+					"time": 0,
+					"visibility": true
+				},
+				{
+					"time": 0.66667,
+					"visibility": true
+				},
+				{
+					"time": 1,
+					"visibility": false
+				}
+			]
+		}
+	}
+}

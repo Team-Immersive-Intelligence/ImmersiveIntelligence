@@ -29,9 +29,12 @@ import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fluids.capability.templates.FluidHandlerItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.api.LighterFuelHandler;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
+import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIBase;
 
 import javax.annotation.Nullable;
@@ -41,6 +44,7 @@ import java.util.List;
  * @author Pabilo8
  * @since 2019-05-23
  */
+@IIItemProperties(category = IICategory.TOOLS)
 public class ItemIILighter extends ItemIIBase implements ITool
 {
 
@@ -138,14 +142,14 @@ public class ItemIILighter extends ItemIIBase implements ITool
 	public int getRGBDurabilityForDisplay(ItemStack stack)
 	{
 		FluidStack fluidStack = FluidUtil.getFluidContained(stack);
-		return fluidStack!=null?IIUtils.RGBAToRGB(fluidStack.getFluid().getColor()):0;
+		return fluidStack!=null?IIColor.RGBAToRGB(fluidStack.getFluid().getColor()): 0;
 	}
 
 	@Override
 	public double getDurabilityForDisplay(ItemStack stack)
 	{
 		FluidStack fluidStack = FluidUtil.getFluidContained(stack);
-		return fluidStack!=null?1f-(fluidStack.amount/(float)Tools.lighterCapacity):0;
+		return fluidStack!=null?1f-(fluidStack.amount/(float)Tools.lighterCapacity): 0;
 	}
 
 	@Override

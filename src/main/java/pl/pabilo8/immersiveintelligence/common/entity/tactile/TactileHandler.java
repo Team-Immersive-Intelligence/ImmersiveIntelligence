@@ -1,23 +1,23 @@
 package pl.pabilo8.immersiveintelligence.common.entity.tactile;
 
+import blusunrize.immersiveengineering.common.blocks.TileEntityMultiblockPart;
+import blusunrize.immersiveengineering.common.util.chickenbones.Matrix4;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Tuple;
+import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
-import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimation;
-import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationCollisionMap;
 import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationLoader;
-import pl.pabilo8.immersiveintelligence.client.util.amt.IIModelHeader;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Graphics;
+import pl.pabilo8.immersiveintelligence.common.util.amt.IIAnimation;
+import pl.pabilo8.immersiveintelligence.common.util.amt.IIAnimationCollisionMap;
+import pl.pabilo8.immersiveintelligence.common.util.amt.IIModelHeader;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
 
 import javax.annotation.Nonnull;
@@ -38,8 +38,6 @@ import java.util.stream.Collectors;
  */
 public class TactileHandler
 {
-	//TODO: 12.10.2023 reloading animation cache with relmod
-
 	//--- Animation Cache ---//
 	private static HashMap<ResLoc, IIModelHeader> HEADERS = new HashMap<>();
 	private static HashMap<ResLoc, IIAnimation> ANIMATIONS = new HashMap<>();
@@ -54,6 +52,7 @@ public class TactileHandler
 	private IIModelHeader header;
 	private final ArrayList<EntityAMTTactile> entities;
 	private final HashMap<ResLoc, IIAnimationCollisionMap> animations;
+	private Vec3d globalOffset = Vec3d.ZERO;
 
 	/**
 	 * Constructor from an AABB file
@@ -73,7 +72,7 @@ public class TactileHandler
 	 *
 	 * @param multiblock multiblock with an AABB file
 	 */
-	public TactileHandler(MultiblockStuctureBase<?> multiblock, ITactileListener listener)
+	public <T extends TileEntityMultiblockPart<T> & ITactileListener> TactileHandler(MultiblockStuctureBase<T> multiblock, T listener)
 	{
 		this.aabbLoc = multiblock.getAABBFileLocation();
 		this.listener = listener;
@@ -89,11 +88,16 @@ public class TactileHandler
 	 *
 	 * @return
 	 */
-	public boolean init()
+	private boolean init()
 	{
+		//:(
+		if(!Graphics.tactileAMT)
+			return false;
+
 		//Loading is not possible
 		if(aabbLoc==null)
 			return false;
+		BlockPos mainPos = getPos();
 
 		//Load the header json
 		JsonObject jsonObject = IIAnimationLoader.readServerFileToJson(aabbLoc);
@@ -112,6 +116,16 @@ public class TactileHandler
 
 		if(!jsonObject.has("tactile"))
 			return false;
+		if(jsonObject.has("tactile_offset"))
+		{
+			JsonArray array = jsonObject.get("tactile_offset").getAsJsonArray();
+			globalOffset = new Vec3d(
+					array.get(0).getAsDouble(),
+					array.get(1).getAsDouble(),
+					array.get(2).getAsDouble()
+			);
+		}
+
 		JsonObject tactile = jsonObject.get("tactile").getAsJsonObject();
 
 		//Read header
@@ -123,6 +137,22 @@ public class TactileHandler
 			return false;
 		header = HEADERS.computeIfAbsent(headerLoc, IIAnimationLoader::loadHeaderServer);
 
+		//Parse and process tactiles
+		ArrayList<EntityAMTTactile> tempEntities = parseTactiles(tactile, allBounds);
+		processTactiles(tempEntities, mainPos);
+
+		//Add post fixes
+		header.applyHierarchy(entities);
+		entities.forEach(e -> e.setPosition(mainPos.getX(), mainPos.getY(), mainPos.getZ()));
+		entities.forEach(getWorld()::spawnEntity);
+
+
+		return true;
+	}
+
+	@Nonnull
+	private ArrayList<EntityAMTTactile> parseTactiles(JsonObject tactile, Map<String, AxisAlignedBB> allBounds)
+	{
 		//Load entities
 		ArrayList<EntityAMTTactile> tempEntities = new ArrayList<>();
 		for(Entry<String, JsonElement> entries : tactile.entrySet())
@@ -151,31 +181,81 @@ public class TactileHandler
 								offsetArray.get(0).getAsDouble(),
 								offsetArray.get(1).getAsDouble(),
 								offsetArray.get(2).getAsDouble()
-						);
+						).scale(0.0625);
 					}
 
 					//Repeated objects may use templates
 					if(boxObject.has("type"))
-						aabb = allBounds.getOrDefault("type", aabb);
+						aabb = allBounds.getOrDefault(boxObject.get("type").getAsString(), aabb);
 					else if(boxObject.has("bounds"))
 						aabb = getAxisAlignedBB(boxObject.get("bounds").getAsJsonArray());
 
 					//Add entity to the list and create it in the world
 					tempEntities.add(new EntityAMTTactile(this, entries.getKey(),
-							header.getOffset(entries.getKey()).add(offset), aabb)
+							processOffset(header, entries.getKey(), offset), aabb)
 					);
 
 				}
 			}
 		}
+		return tempEntities;
+	}
 
-		/*
-		Detect if a there are multiple objects of the same name
-		If yes -> create a Main Object to optimize the structure/animation and add all objects of the same name as its children, then rename them to OBJ_child[number]
-		If no -> the object is a Main Object, it will be a part of animation
-		In both cases, the Main Object may have a parent, which it will base its position on
-		 */
+	private Vec3d processOffset(IIModelHeader header, String key, Vec3d offset)
+	{
+		//.add(new Vec3d(0, 0, -0.5))
+		Vec3d total = header.getOffset(key)
+				.add(offset)
+				.add(globalOffset)
+				.addVector(-1, 0, -1.5);
+		boolean mirrored = listener.getIsTactileMirrored();
+		total = new Vec3d(mirrored?(total.x-1): -total.x, total.y, -total.z);
+		//.add(new Vec3d(0.5, 0.5, 1));
+		//rotate the vector depending on facing
+		EnumFacing facing = listener.getTactileFacing();
 
+		Vec3d apply = new Matrix4(facing)
+				.apply(total);
+		//Add corrections based on block corner offset
+		switch(facing)
+		{
+			case SOUTH:
+				apply = apply.addVector(-1, 0, 0);
+				break;
+			case EAST:
+				apply = apply.addVector(-0.5, 0, 0.5);
+				break;
+			case WEST:
+				apply = apply.addVector(-0.5, 0, -0.5);
+				break;
+		}
+
+		/*switch(listener.getFacing())
+		{
+			case NORTH:
+				total = new Vec3d((listener.getIsMirrored()?total.x: -total.x+1), total.y, -total.z+2);
+				break;
+			case SOUTH:
+				break;
+			case EAST:
+				total = new Vec3d(total.z-1, total.y, (listener.getIsMirrored()?total.x+0.5: -total.x+1.5));
+				break;
+			case WEST:
+				total = new Vec3d(-total.z, total.y, -total.x);
+				break;
+		}*/
+
+		return apply;
+	}
+
+	/**
+	 * Detect if a there are multiple objects of the same name
+	 * If yes -> create a Main Object to optimize the structure/animation and add all objects of the same name as its children, then rename them to OBJ_child[number]
+	 * If no -> the object is a Main Object, it will be a part of animation
+	 * In both cases, the Main Object may have a parent, which it will base its position on
+	 **/
+	private void processTactiles(ArrayList<EntityAMTTactile> tempEntities, BlockPos mainPos)
+	{
 		while(!tempEntities.isEmpty())
 		{
 			EntityAMTTactile amt = tempEntities.remove(0);
@@ -186,7 +266,7 @@ public class TactileHandler
 			else
 			{
 				//Add parent entity with empty AABB
-				EntityAMTTactile parent = new EntityAMTTactile(this, amt.name, header.getOffset(amt.name), new AxisAlignedBB(0, 0, 0, 0, 0, 0));
+				EntityAMTTactile parent = new EntityAMTTactile(this, amt.name, processOffset(header, amt.name, Vec3d.ZERO), new AxisAlignedBB(0, 0, 0, 0, 0, 0));
 				entities.add(parent);
 
 				//Rename child objects to OBJ_child[n]
@@ -194,28 +274,41 @@ public class TactileHandler
 				for(int i = 0; i < matching.size(); i++)
 				{
 					matching.get(i).name += "_child"+i;
+					//matching.get(i).offset = matching.get(i).offset.subtract(parent.offset);
 					matching.get(i).setParent(parent);
+					matching.get(i).setPosition(mainPos.getX(), mainPos.getY(), mainPos.getZ());
+					getWorld().spawnEntity(matching.get(i));
 				}
 
 				//Continue iteration
 				tempEntities.removeAll(matching);
+				entities.addAll(matching);
 			}
 		}
-
-		return true;
 	}
 
 	@Nonnull
-	private static AxisAlignedBB getAxisAlignedBB(JsonArray array)
+	private AxisAlignedBB getAxisAlignedBB(JsonArray array)
 	{
-		return new AxisAlignedBB(
-				array.get(0).getAsDouble(),
-				array.get(1).getAsDouble(),
-				array.get(2).getAsDouble(),
-				array.get(3).getAsDouble(),
-				array.get(4).getAsDouble(),
-				array.get(5).getAsDouble()
+		AxisAlignedBB aabb = new AxisAlignedBB(
+				array.get(0).getAsDouble()*0.0625,
+				array.get(1).getAsDouble()*0.0625,
+				array.get(2).getAsDouble()*0.0625,
+				array.get(3).getAsDouble()*0.0625,
+				array.get(4).getAsDouble()*0.0625,
+				array.get(5).getAsDouble()*0.0625
 		);
+		if(listener.getIsTactileMirrored())
+		{
+			double xLength = Math.abs(aabb.maxX-aabb.minX);
+			aabb = new AxisAlignedBB(-aabb.minX+2, aabb.minY, aabb.minZ, -aabb.maxX+2, aabb.maxY, aabb.maxZ);
+		}
+
+		//aabb = new AxisAlignedBB(-0.25, -0.25, -0.25, 0.25, 0.25, 0.25);
+		Matrix4 mat = new Matrix4(listener.getTactileFacing());
+		Vec3d vMin = mat.apply(new Vec3d(aabb.minX, aabb.minY, aabb.minZ));
+		Vec3d vMax = mat.apply(new Vec3d(aabb.maxX, aabb.maxY, aabb.maxZ));
+		return new AxisAlignedBB(vMin.x, vMin.y, vMin.z, vMax.x, vMax.y, vMax.z);
 	}
 
 	//--- Called by Listener ---//
@@ -241,6 +334,9 @@ public class TactileHandler
 	{
 		//Must be initialized before applying animation
 		if(!initialized&&!(initialized = init()))
+			return;
+
+		if(animation==null)
 			return;
 
 		//Load a cached animation or from JSON
@@ -277,7 +373,7 @@ public class TactileHandler
 		IIAnimationCollisionMap mapped = null;
 		if(anim!=null)
 		{
-			mapped = IIAnimationCollisionMap.create(entities, anim);
+			mapped = IIAnimationCollisionMap.create(entities, anim, listener.getTactileFacing(), listener.getIsTactileMirrored());
 			animations.put(res, mapped);
 		}
 
@@ -304,7 +400,7 @@ public class TactileHandler
 	 */
 	public World getWorld()
 	{
-		return listener.getWorld();
+		return listener.getTactileWorld();
 	}
 
 	/**
@@ -314,18 +410,19 @@ public class TactileHandler
 	 */
 	public BlockPos getPos()
 	{
-		return listener.getPos();
+		return listener.getTactilePos();
 	}
 
 	/**
 	 * Called when a Tactile is attacked
 	 *
-	 * @param source damage source
-	 * @param amount amount of damage dealt
+	 * @param tactile attacked Tactile
+	 * @param source  damage source
+	 * @param amount  amount of damage dealt
 	 */
-	public void onAttacked(DamageSource source, float amount)
+	public boolean onAttacked(EntityAMTTactile tactile, DamageSource source, float amount)
 	{
-		listener.onTactileDamage(source, amount);
+		return listener.onTactileDamage(tactile, source, amount);
 	}
 
 	/**
@@ -341,6 +438,16 @@ public class TactileHandler
 		return listener.onTactileInteract(tactile, player, hand);
 	}
 
+	public boolean onCollide(EntityAMTTactile tactile, Entity entity)
+	{
+		return listener.onTactileCollide(tactile, entity);
+	}
+
+	public ArrayList<EntityAMTTactile> getEntities()
+	{
+		return entities;
+	}
+
 	/**
 	 * Listener class for Tactile events
 	 *
@@ -350,14 +457,27 @@ public class TactileHandler
 	public interface ITactileListener
 	{
 		/**
+		 * @return tactile handler instance this listener is using
+		 */
+		@Nullable
+		TactileHandler getTactileHandler();
+
+		/**
 		 * @return world this tactile listener is in
 		 */
-		World getWorld();
+		@Nonnull
+		World getTactileWorld();
 
 		/**
 		 * @return position in the world
 		 */
-		BlockPos getPos();
+		@Nonnull
+		BlockPos getTactilePos();
+
+		@Nonnull
+		EnumFacing getTactileFacing();
+
+		boolean getIsTactileMirrored();
 
 		/**
 		 * @return true if interaction happened
@@ -370,7 +490,15 @@ public class TactileHandler
 		/**
 		 * @return true if damage had effect
 		 */
-		default boolean onTactileDamage(DamageSource source, float amount)
+		default boolean onTactileDamage(EntityAMTTactile tactile, DamageSource source, float amount)
+		{
+			return false;
+		}
+
+		/**
+		 * @return true if interaction happened
+		 */
+		default boolean onTactileCollide(EntityAMTTactile tactile, Entity entity)
 		{
 			return false;
 		}

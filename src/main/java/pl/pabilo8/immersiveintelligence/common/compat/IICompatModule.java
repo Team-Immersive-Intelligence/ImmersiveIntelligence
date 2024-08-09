@@ -36,11 +36,15 @@ public abstract class IICompatModule
 		moduleMinModVersions.put("immersivetech", "1.7.50");
 		//it is the only IE addon which has a _ between words
 		moduleClasses.put("immersive_energy", ImmersiveEnergyHelper.class);
-		moduleClasses.put("tfc", TerrafirmaHelper.class);
 		moduleClasses.put("baubles", BaublesHelper.class);
 		moduleClasses.put("opencomputers", OpenComputersHelper.class);
 		moduleClasses.put("computercraft", ComputerCraftHelper.class);
+		moduleClasses.put("toughasnails", TANHelper.class);
+		moduleClasses.put("mysticalmechanics", MysticalMechanicsAPIHelper.class);
+		moduleClasses.put("tfc", TerrafirmaHelper.class);
 	}
+
+	public abstract String getName();
 
 	public static void doModulesPreInit()
 	{
@@ -78,7 +82,7 @@ public abstract class IICompatModule
 				action.accept(compat);
 			} catch(Exception exception)
 			{
-				IILogger.error("Compat module for %s %s. Report this and include the error message below!", compat, message);
+				IILogger.error(String.format("Compat module for {0} {1}. Report this and include the error message below!", compat, message));
 				IILogger.error(exception);
 			}
 	}

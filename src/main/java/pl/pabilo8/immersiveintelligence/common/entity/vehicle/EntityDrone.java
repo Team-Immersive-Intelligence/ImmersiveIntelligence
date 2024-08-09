@@ -20,16 +20,19 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoUtils;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseType;
+import pl.pabilo8.immersiveintelligence.api.ammo.utils.AmmoFactory;
 import pl.pabilo8.immersiveintelligence.api.utils.IEntitySpecialRepairable;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IVehicleMultiPart;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityEmplacementWeapon;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
+import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoArtilleryProjectile;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.drone.AIDroneTarget;
-import pl.pabilo8.immersiveintelligence.common.util.entity.IIIEntity;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
+import pl.pabilo8.immersiveintelligence.common.util.entity.ISyncNBTEntity;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
@@ -37,24 +40,34 @@ import java.util.List;
  * @author Pabilo8
  * @since 14.12.2022
  */
-public class EntityDrone extends EntityFlying implements IIIEntity<EntityDrone>, IVehicleMultiPart, IEntitySpecialRepairable
+public class EntityDrone extends EntityFlying implements ISyncNBTEntity<EntityDrone>, IVehicleMultiPart, IEntitySpecialRepairable
 {
+	private final AmmoFactory<EntityAmmoArtilleryProjectile> ammoFactory;
+
 	//--- Parts ---//
 	private final EntityVehiclePart[] partArray;
+
 	//sub-entities for colision and hitboxes
 	private EntityVehiclePart partMain, partTankRight1, partTankRight2, partTankLeft1, partTankLeft2, partEngine;
 	private EntityVehiclePart partRotorFrontRight, partRotorFrontLeft, partRotorBackRight, partRotorBackLeft;
 	private EntityVehiclePart exhaust1, exhaust2;
+
 	//part durability (health)
-	@AutoSerialized
-	private static VehicleDurability durabilityMain, durabilityTankLeft, durabilityTankRight, durabilityEngine;
-	@AutoSerialized
-	private static VehicleDurability[] durabilityRotors = new VehicleDurability[4];
+	@SyncNBT
+	private VehicleDurability durabilityMain, durabilityTankLeft, durabilityTankRight, durabilityEngine;
+	@SyncNBT
+	private VehicleDurability[] durabilityRotors = new VehicleDurability[4];
 
 	public EntityDrone(World world)
 	{
 		super(world);
 		setSize(4, 2.5f);
+
+		//set ammo factory (bomb dropping)
+		this.ammoFactory = new AmmoFactory<>(this);
+		ammoFactory.setStack(IIContent.itemAmmoMortar.getAmmoStack(IIContent.ammoCoreBrass, CoreType.SOFTPOINT, FuseType.CONTACT, IIContent.ammoComponentTNT))
+				.setDirection(new Vec3d(0, -1, 0))
+				.setVelocityModifier(0);
 
 		//set durability and armor
 		durabilityMain = new VehicleDurability(100, 4);
@@ -109,14 +122,6 @@ public class EntityDrone extends EntityFlying implements IIIEntity<EntityDrone>,
 	}
 
 	//--- Main ---//
-
-	@Override
-	public void entityInit()
-	{
-		super.entityInit();
-		IIIEntity.super.entityInit();
-	}
-
 	@Override
 	protected void initEntityAI()
 	{
@@ -195,9 +200,11 @@ public class EntityDrone extends EntityFlying implements IIIEntity<EntityDrone>,
 		{
 			AxisAlignedBB target = getEntityBoundingBox().offset(0, -height-1, 0).grow(1).expand(0, -40, 0);
 			if(!world.getEntitiesWithinAABB(EntityMob.class, target).isEmpty())
-				world.spawnEntity(AmmoUtils.createBullet(world,
-						IIContent.itemAmmoMortar.getBulletWithParams("core_brass", "canister", "tnt"),
-						getPositionVector().subtract(0, 1.5, 0), new Vec3d(0, 1, 0), 0f));
+			{
+				ammoFactory
+						.setPosition(getPositionVector().subtract(0, 1.5, 0))
+						.create();
+			}
 		}
 
 		if(world.isRemote)//&&world.getTotalWorldTime()%2==0
@@ -237,6 +244,19 @@ public class EntityDrone extends EntityFlying implements IIIEntity<EntityDrone>,
 	public void readEntityFromNBT(NBTTagCompound compound)
 	{
 		super.readEntityFromNBT(compound);
+
+	}
+
+	@Override
+	public void receiveNBTMessageServer(NBTTagCompound nbt)
+	{
+
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void receiveNBTMessageClient(NBTTagCompound nbt)
+	{
 
 	}
 
@@ -366,12 +386,5 @@ public class EntityDrone extends EntityFlying implements IIIEntity<EntityDrone>,
 	public void onSeatDismount(int seatID, Entity passenger)
 	{
 
-	}
-
-	@Nonnull
-	@Override
-	public World getWorld()
-	{
-		return getEntityWorld();
 	}
 }

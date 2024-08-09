@@ -1,0 +1,30 @@
+{
+  "type": "forge:ore_shaped",
+  "pattern": [
+    "  A",
+    "BC ",
+    "DB "
+  ],
+  "key": {
+    "A": {
+      "type": "forge:ore_dict",
+      "ore": "stickSteel"
+    },
+    "B": {
+      "item": "immersiveintelligence:data_wire"
+    },
+    "C": {
+      "type": "forge:ore_dict",
+      "ore": "antennaBasic"
+    },
+    "D": {
+      "item": "immersiveengineering:material",
+      "data": 9
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:material",
+    "count": 1,
+    "data": 42
+  }
+}

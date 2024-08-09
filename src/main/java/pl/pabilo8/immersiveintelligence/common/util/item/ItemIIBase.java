@@ -3,13 +3,17 @@ package pl.pabilo8.immersiveintelligence.common.util.item;
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import blusunrize.immersiveengineering.common.items.IEItemInterfaces.IColouredItem;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -43,6 +47,11 @@ public class ItemIIBase extends Item implements IColouredItem
 	public FontRenderer getFontRenderer(@Nonnull ItemStack stack)
 	{
 		return IIClientUtils.fontRegular;
+	}
+
+	public IIItemProperties getItemProperties()
+	{
+		return IIUtils.getAnnotation(IIItemProperties.class, this);
 	}
 
 	//--- Crafting Utilities ---//

@@ -39,6 +39,11 @@ public abstract class ItemIILightEngineerArmorBase extends ItemIIUpgradeableArmo
 		return hasUpgrade(stack, "hazmat");
 	}
 
+	public boolean protectsFromHeat(ItemStack stack)
+	{
+		return hasUpgrade(stack, "heatcoat");
+	}
+
 	@Override
 	public int getMaxEnergyStored(ItemStack stack)
 	{

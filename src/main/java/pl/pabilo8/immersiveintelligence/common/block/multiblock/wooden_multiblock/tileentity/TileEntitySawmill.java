@@ -6,11 +6,11 @@ import net.minecraft.client.particle.ParticleRedstone;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -27,18 +27,22 @@ import pl.pabilo8.immersiveintelligence.api.rotary.IRotationalEnergyBlock;
 import pl.pabilo8.immersiveintelligence.api.rotary.RotaryStorage;
 import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.ISawblade;
+import pl.pabilo8.immersiveintelligence.client.util.carversound.TimedCompoundSound;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Sawmill;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
+import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.multiblock.MultiblockSawmill;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageRotaryPowerSync;
 import pl.pabilo8.immersiveintelligence.common.util.IIDamageSources;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionSingle;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockInteractablePart;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -47,18 +51,19 @@ import java.util.List;
  */
 public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<TileEntitySawmill, SawmillRecipe> implements IRotationalEnergyBlock, IBooleanAnimatedPartsBlock
 {
-	//Inventory Slots
+	// Inventory Slots
 	public static final int SLOT_INPUT = 0, SLOT_SAWBLADE = 1, SLOT_OUTPUT = 2, SLOT_SAWDUST = 3;
 
-	//Inventory Handlers
+	// Inventory Handlers
 	IItemHandler insertionHandler = getSingleInventoryHandler(SLOT_INPUT, true, false);
 	IItemHandler dustExtractionHandler = getSingleInventoryHandler(SLOT_SAWDUST, false, true);
-	//Recipe Output Handlers
+	// Recipe Output Handlers
 	IItemHandler outputHandler = getSingleInventoryHandler(SLOT_OUTPUT), sawdustOutputHandler = getSingleInventoryHandler(SLOT_SAWDUST);
+	private List<TimedCompoundSound> soundsList = new ArrayList<>();
+	public MultiblockInteractablePart vise;
 
-	public MultiblockInteractablePart vice;
-
-	//Rotary Power
+	// Rotary Power
+	@SyncNBT
 	public RotaryStorage rotation = new RotaryStorage(0, 0)
 	{
 		@Override
@@ -74,40 +79,19 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 
 		energyStorage = new FluxStorageAdvanced(0);
 		inventory = NonNullList.withSize(4, ItemStack.EMPTY);
-		vice = new MultiblockInteractablePart(20);
-	}
-
-	//--- NBT ---//
-
-	@Override
-	public void readCustomNBT(NBTTagCompound nbt, boolean descPacket)
-	{
-		super.readCustomNBT(nbt, descPacket);
-
-		if(isDummy())
-			return;
-
-		rotation.fromNBT(nbt.getCompoundTag("rotation"));
+		vise = new MultiblockInteractablePart(22);
 	}
 
 	@Override
-	public void writeCustomNBT(NBTTagCompound nbt, boolean descPacket)
+	protected void dummyCleanup()
 	{
-		super.writeCustomNBT(nbt, descPacket);
-
-		if(isDummy())
-			return;
-
-		nbt.setTag("rotation", rotation.toNBT());
-	}
-
-	@Override
-	public void receiveMessageFromServer(NBTTagCompound message)
-	{
-		super.receiveMessageFromServer(message);
-
-		if(message.hasKey("rotation"))
-			rotation.fromNBT(message.getCompoundTag("rotation"));
+		super.dummyCleanup();
+		outputHandler = null;
+		insertionHandler = null;
+		dustExtractionHandler = null;
+		soundsList = null;
+		vise = null;
+		rotation = null;
 	}
 
 	@Override
@@ -118,24 +102,15 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 			case ROTARY_INPUT:
 				return getPOI("rotary");
 			case ITEM_INPUT:
-				return getPOI("all_item_input");
+				return getPOI("item_input");
 			case ITEM_OUTPUT:
-				return getPOI("item_output");
+				return getPOI("all_item_output");
+			default:
+				return new int[0];
 		}
-		return new int[0];
 	}
 
 	//--- Capabilities ---//
-
-	//7 out
-	@Override
-	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing)
-	{
-		if(isPOI(MultiblockPOI.ITEM_INPUT))
-			return true;
-		return super.hasCapability(capability, facing);
-	}
-
 	@Override
 	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing)
 	{
@@ -147,8 +122,6 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 			else if(isPOI("sawdust"))
 				return (T)master.dustExtractionHandler;
 		}
-
-
 		return super.getCapability(capability, facing);
 	}
 
@@ -157,66 +130,71 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 	@Override
 	protected void onUpdate()
 	{
-		vice.update();
+		vise.update();
 
-		if(!world.isRemote)
+		boolean receivesPower = false;
+
+		// Self destruct
+		if(rotation.getRotationSpeed() > Sawmill.rpmBreakingMax||rotation.getTorque() > Sawmill.torqueBreakingMax)
 		{
-			boolean receivesPower = false;
+			selfDestruct();
+			return;
+		}
 
-			//Self destruct
-			if(rotation.getRotationSpeed() > Sawmill.rpmBreakingMax||rotation.getTorque() > Sawmill.torqueBreakingMax)
+		// Wheel or mechanical device connected to multiblock
+		TileEntity te = world.getTileEntity(getPOIPos(MultiblockPOI.ROTARY_INPUT).offset(facing));
+
+		if(te!=null&&te.hasCapability(CapabilityRotaryEnergy.ROTARY_ENERGY, facing.getOpposite()))
+		{
+			// Increase internal rotation if powered
+			IRotaryEnergy cap = te.getCapability(CapabilityRotaryEnergy.ROTARY_ENERGY, facing.getOpposite());
+			assert cap!=null;
+			if(rotation.handleRotation(cap, facing.getOpposite()))
 			{
-				selfDestruct();
-				return;
-			}
-
-			//Wheel or mechanical device connected to multiblock
-			TileEntity te = world.getTileEntity(getPOIPos(MultiblockPOI.ROTARY_INPUT).offset(facing));
-
-			if(te!=null)
-				if(te.hasCapability(CapabilityRotaryEnergy.ROTARY_ENERGY, facing.getOpposite()))
-				{
-					//Increase internal rotation if powered
-					IRotaryEnergy cap = te.getCapability(CapabilityRotaryEnergy.ROTARY_ENERGY, facing.getOpposite());
-					assert cap!=null;
-					if(rotation.handleRotation(cap, facing.getOpposite()))
-						IIPacketHandler.INSTANCE.sendToAllAround(new MessageRotaryPowerSync(rotation, 0, getPos()), IIPacketHandler.targetPointFromTile(this, 24));
-					receivesPower = true;
-				}
-
-			if(rotation.getTorque() > 0||rotation.getRotationSpeed() > 0)
-			{
-				//Decrease internal rotation if not powered
-				if(!receivesPower)
-				{
-					rotation.grow(0, 0, 0.98f);
-					IIPacketHandler.INSTANCE.sendToAllAround(new MessageRotaryPowerSync(rotation, 0, getPos()), IIPacketHandler.targetPointFromTile(this, 24));
-				}
-
-				//Hurt entities stepping on sawblade
-				ItemStack sawStack = inventory.get(SLOT_SAWBLADE);
-
-				//REFACTOR: capabilities for saw blades, instead of interfaces
-				if(sawStack.getItem() instanceof ISawblade)
-				{
-					//TODO: 14.04.2023 simplify
-					if(world.getTotalWorldTime()%Math.ceil(4/MathHelper.clamp(rotation.getRotationSpeed()/360, 0, 1))==0)
-					{
-						int hardness = ((ISawblade)sawStack.getItem()).getHardness(sawStack);
-						Vec3i v = facing.getDirectionVec();
-						List<EntityLivingBase> entities = world.getEntitiesWithinAABB(EntityLivingBase.class,
-								new AxisAlignedBB(getBlockPosForPos(2).offset(EnumFacing.UP)).offset(v.getX()*0.5, v.getY()*0.5, v.getZ()*0.5));
-						for(EntityLivingBase l : entities)
-							l.attackEntityFrom(IIDamageSources.SAWMILL_DAMAGE, hardness);
-					}
-
-				}
-
+				IIPacketHandler.INSTANCE.sendToAllAround(new MessageRotaryPowerSync(rotation, 0, getPos()), IIPacketHandler.targetPointFromTile(this, 24));
+				receivesPower = true;
 			}
 		}
 
+		if(rotation.getTorque() > 0||rotation.getRotationSpeed() > 0)
+		{
+			// Decrease internal rotation if not powered
+			if(!receivesPower)
+			{
+				rotation.grow(0, 0, 0.98f);
+				IIPacketHandler.INSTANCE.sendToAllAround(new MessageRotaryPowerSync(rotation, 0, getPos()), IIPacketHandler.targetPointFromTile(this, 24));
+			}
+
+			// Hurt entities stepping on sawblade
+			ItemStack sawStack = inventory.get(SLOT_SAWBLADE);
+
+			if(sawStack.getItem() instanceof ISawblade)
+			{
+				if(world.getTotalWorldTime()%Math.ceil(3-MathHelper.clamp(rotation.getRotationSpeed()/360f, 0, 2))==0)
+				{
+					int hardness = ((ISawblade)sawStack.getItem()).getHardness(sawStack)*2;
+					Vec3i v = facing.getDirectionVec();
+					List<EntityLivingBase> entities = world.getEntitiesWithinAABB(EntityLivingBase.class,
+							new AxisAlignedBB(getBlockPosForPos(2).offset(EnumFacing.UP)).offset(v.getX()*0.5, v.getY()*0.5, v.getZ()*0.5));
+					for(EntityLivingBase l : entities)
+						l.attackEntityFrom(IIDamageSources.SAWMILL_DAMAGE, hardness);
+				}
+			}
+		}
 		super.onUpdate();
 
+
+		if(world.isRemote&&currentProcess!=null)
+		{
+			currentProcess.recipe.getSoundAnimation().handleSounds(soundsList, getPos(), (int)currentProcess.ticks, 1f);
+			//TODO: 30.07.2024 proper particle implementation
+			/*
+				if(currentProcess.ticks%10==0)
+					spawnDustParticle();
+				if(currentProcess.ticks%10==5)
+					spawnDustParticleLast();
+			*/
+		}
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -232,7 +210,6 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 		ParticleRedstone particle = (ParticleRedstone)ClientUtils.mc().effectRenderer.spawnEffectParticle(EnumParticleTypes.REDSTONE.getParticleID(), pos.x+facing.x, pos.y+facing.y, pos.z+facing.z, 0, -4, 0);
 		if(particle!=null)
 		{
-			//particle.setMaxAge(25);
 			particle.reddustParticleScale = 3.25f;
 			particle.setRBGColorF(rgb[0]*mod, rgb[1]*mod, rgb[2]*mod);
 		}
@@ -286,7 +263,6 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 		return (e1+e2)/2f;
 	}
 
-
 	@Override
 	public boolean isStackValid(int slot, ItemStack stack)
 	{
@@ -302,12 +278,6 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 	}
 
 	//--- TileEntityMultiblockProduction ---//
-
-	@Override
-	public SawmillRecipe loadRecipeFromNBT(NBTTagCompound nbt)
-	{
-		return SawmillRecipe.loadFromNBT(nbt);
-	}
 
 	@Override
 	protected IIMultiblockProcess<SawmillRecipe> findNewProductionProcess()
@@ -338,8 +308,8 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 	@Override
 	public float getProductionStep(IIMultiblockProcess<SawmillRecipe> process, boolean simulate)
 	{
-		if(inventory.get(1).getItem() instanceof ISawblade&&getCurrentEfficiency() > 0.95&&
-				inventory.get(2).getCount()+process.recipe.itemOutput.getCount() <= getSlotLimit(2))
+		if(inventory.get(SLOT_SAWBLADE).getItem() instanceof ISawblade&&getCurrentEfficiency() > 0.95&&
+				inventory.get(SLOT_OUTPUT).getCount()+process.recipe.itemOutput.getCount() <= getSlotLimit(SLOT_OUTPUT))
 			return 1;
 		return 0;
 	}
@@ -384,14 +354,18 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 	@Override
 	public void onAnimationChangeClient(boolean state, int part)
 	{
-		vice.setState(state);
+		vise.setState(state);
 	}
 
 	@Override
 	public void onAnimationChangeServer(boolean state, int part)
 	{
-		vice.setState(state);
+		if(vise.setState(state))
+			world.playSound(null, getPos(), state?IISounds.viseOpen: IISounds.viseClose, SoundCategory.BLOCKS, 1f, 1f);
 		IIPacketHandler.INSTANCE.sendToAllAround(new MessageBooleanAnimatedPartsSync(state, part, getPos()),
 				IIPacketHandler.targetPointFromTile(this, 32));
 	}
 }
+
+
+

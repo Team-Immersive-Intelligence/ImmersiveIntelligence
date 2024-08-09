@@ -16,12 +16,14 @@ import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine.Magazines;
-import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIWeaponUpgrade.WeaponUpgrades;
+import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIWeaponUpgrade.WeaponUpgrade;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ammohandler.AmmoHandler;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ammohandler.AmmoHandlerList;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ammohandler.AmmoHandlerMagazine;
 import pl.pabilo8.immersiveintelligence.common.util.AdvancedSounds.RangedSound;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
+import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
 
 import javax.annotation.Nullable;
 
@@ -29,6 +31,7 @@ import javax.annotation.Nullable;
  * @author Pabilo8
  * @since 01-11-2019
  */
+@IIItemProperties(category = IICategory.WARFARE)
 public class ItemIIRifle extends ItemIIGunBase implements IAdvancedZoomTool
 {
 	//--- NBT Values Reference ---//
@@ -109,26 +112,26 @@ public class ItemIIRifle extends ItemIIGunBase implements IAdvancedZoomTool
 	@Override
 	public AmmoHandler getAmmoHandler(ItemStack weapon)
 	{
-		return hasIIUpgrade(weapon, WeaponUpgrades.SEMI_AUTOMATIC)?ammoHandlerSemiAuto: ammoHandler;
+		return hasIIUpgrade(weapon, WeaponUpgrade.SEMI_AUTOMATIC)?ammoHandlerSemiAuto: ammoHandler;
 	}
 
 	@Override
 	protected FireModeType getFireMode(ItemStack weapon)
 	{
-		return hasIIUpgrade(weapon, WeaponUpgrades.SEMI_AUTOMATIC)?FireModeType.AUTOMATIC: FireModeType.SINGULAR;
+		return hasIIUpgrade(weapon, WeaponUpgrade.SEMI_AUTOMATIC)?FireModeType.AUTOMATIC: FireModeType.SINGULAR;
 	}
 
 	@Override
 	protected double getEquipSpeed(ItemStack weapon, EasyNBT nbt)
 	{
-		return hasIIUpgrade(weapon, WeaponUpgrades.EXTENDED_BARREL, WeaponUpgrades.SEMI_AUTOMATIC)?
+		return hasIIUpgrade(weapon, WeaponUpgrade.EXTENDED_BARREL, WeaponUpgrade.SEMI_AUTOMATIC)?
 				1.0625: 0.9;
 	}
 
 	@Override
 	public int getFireDelay(ItemStack weapon, EasyNBT nbt)
 	{
-		return hasIIUpgrade(weapon, WeaponUpgrades.SEMI_AUTOMATIC)?Rifle.bulletFireTimeSemiAuto: Rifle.bulletFireTime;
+		return hasIIUpgrade(weapon, WeaponUpgrade.SEMI_AUTOMATIC)?Rifle.bulletFireTimeSemiAuto: Rifle.bulletFireTime;
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -164,7 +167,7 @@ public class ItemIIRifle extends ItemIIGunBase implements IAdvancedZoomTool
 	@Override
 	protected RangedSound getFireSound(ItemStack weapon, EasyNBT easyNBT)
 	{
-		return IISounds.rifleShot;
+		return hasIIUpgrade(weapon, WeaponUpgrade.SEMI_AUTOMATIC)?IISounds.rifleShot: IISounds.rifleBoltShot;
 	}
 
 	@Override
@@ -182,7 +185,7 @@ public class ItemIIRifle extends ItemIIGunBase implements IAdvancedZoomTool
 	@Override
 	public int getReloadTime(ItemStack weapon, ItemStack loaded, EasyNBT nbt)
 	{
-		return hasIIUpgrades(weapon, WeaponUpgrades.SEMI_AUTOMATIC)?Rifle.magazineReloadTime: Rifle.bulletReloadTime;
+		return hasIIUpgrades(weapon, WeaponUpgrade.SEMI_AUTOMATIC)?Rifle.magazineReloadTime: Rifle.bulletReloadTime;
 	}
 
 	@Override
@@ -194,7 +197,7 @@ public class ItemIIRifle extends ItemIIGunBase implements IAdvancedZoomTool
 	@Override
 	public float getVerticalRecoil(ItemStack weapon, EasyNBT nbt, boolean isAimed)
 	{
-		if(nbt.hasKey(WeaponUpgrades.SEMI_AUTOMATIC))
+		if(nbt.hasKey(WeaponUpgrade.SEMI_AUTOMATIC))
 			return (isAimed?0.75f: 1f)*1.55f;
 		return (isAimed?0.5f: 1f)*Rifle.recoilVertical;
 	}
@@ -220,11 +223,11 @@ public class ItemIIRifle extends ItemIIGunBase implements IAdvancedZoomTool
 	@Override
 	protected float getVelocityModifier(ItemStack weapon, EasyNBT nbt, ItemStack ammo)
 	{
-		if(nbt.hasKey(WeaponUpgrades.EXTENDED_BARREL))
+		if(nbt.hasKey(WeaponUpgrade.EXTENDED_BARREL))
 			return Rifle.longBarrelVelocityMod;
-		else if(nbt.hasKey(WeaponUpgrades.SEMI_AUTOMATIC))
-			return 0.75f;
-		return 1f;
+		else if(nbt.hasKey(WeaponUpgrade.SEMI_AUTOMATIC))
+			return 1.5f;
+		return 1.75f;
 	}
 
 	//--- IAdvancedZoomTool ---//
@@ -233,7 +236,7 @@ public class ItemIIRifle extends ItemIIGunBase implements IAdvancedZoomTool
 	public boolean shouldZoom(ItemStack stack, EntityPlayer player)
 	{
 		boolean isAimed = ItemNBTHelper.getInt(stack, AIMING) > getAimingTime(stack, EasyNBT.wrapNBT(getUpgrades(stack)))*0.75;
-		return isAimed&&hasIIUpgrade(stack, WeaponUpgrades.SCOPE);
+		return isAimed&&hasIIUpgrade(stack, WeaponUpgrade.SCOPE);
 	}
 
 	@Override

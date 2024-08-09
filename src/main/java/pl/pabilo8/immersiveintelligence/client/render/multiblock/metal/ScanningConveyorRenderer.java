@@ -11,7 +11,6 @@ import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.client.util.amt.*;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityScanningConveyor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
 /**
  * @author Pabilo8
@@ -46,7 +45,9 @@ public class ScanningConveyorRenderer extends IIMultiblockRenderer<TileEntitySca
 	@Override
 	public void drawAnimated(TileEntityScanningConveyor te, BufferBuilder buf, float partialTicks, Tessellator tes)
 	{
-		active.apply(!te.getRedstoneAtPos(te.getPOI(MultiblockPOI.REDSTONE_INPUT)[0]));
+		applyStandardRotation(te.facing.getOpposite());
+
+		active.apply(!te.getRedstoneAtPos(0));
 		if(te.lastScanned.isEmpty())
 			photo.apply(0);
 		else
@@ -66,6 +67,9 @@ public class ScanningConveyorRenderer extends IIMultiblockRenderer<TileEntitySca
 	@Override
 	public void drawSimple(BufferBuilder buf, float partialTicks, Tessellator tes)
 	{
-
+		active.apply(false);
+		photo.apply(0);
+		for(AMT amt : model)
+			amt.render(tes, buf);
 	}
 }

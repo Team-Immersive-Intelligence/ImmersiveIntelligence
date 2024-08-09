@@ -86,6 +86,28 @@
 			]
 		},
 		"item_output": {
+			"rotation": [
+				{
+					"time": 0.45,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.5,
+					"transform": [0, 0, 35]
+				},
+				{
+					"time": 0.56667,
+					"transform": [0, 0, 97.5]
+				},
+				{
+					"time": 0.76667,
+					"transform": [0, 0, 97.5]
+				},
+				{
+					"time": 0.93333,
+					"transform": [0, 0, 180]
+				}
+			],
 			"position": [
 				{
 					"time": 0.45,

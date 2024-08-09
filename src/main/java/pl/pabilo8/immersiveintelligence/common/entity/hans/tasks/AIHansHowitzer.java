@@ -9,12 +9,15 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseType;
+import pl.pabilo8.immersiveintelligence.api.ammo.utils.IIAmmoUtils;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityFieldHowitzer;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityVehicleSeat;
-import pl.pabilo8.immersiveintelligence.common.entity.bullet.EntityBullet;
+import pl.pabilo8.immersiveintelligence.common.entity.vehicle.towable.gun.EntityFieldHowitzer;
+import pl.pabilo8.immersiveintelligence.common.util.entity.IIEntityUtils;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,6 +26,7 @@ import java.util.Optional;
  * @author Pabilo8
  * @since 05.04.2021
  */
+//TODO: 15.02.2024 create a superclass for AIHansHowitzer and AIHansMortar
 public class AIHansHowitzer extends EntityAIBase
 {
 	private final EntityLiving hans;
@@ -78,6 +82,7 @@ public class AIHansHowitzer extends EntityAIBase
 	 */
 	public void updateTask()
 	{
+		Vec3d positionVector = howitzer.getPositionVector().addVector(0, 1, 0);
 		if(seat==0)
 		{
 			if(!(howitzer.turnLeft||howitzer.turnRight||howitzer.forward||howitzer.backward)&&target.isPresent())
@@ -86,10 +91,10 @@ public class AIHansHowitzer extends EntityAIBase
 				this.hans.faceEntity(t, 10, 10);
 				float pp;
 
-				if(howitzer.getPositionVector().distanceTo(t.getPositionVector()) > 40)
-					pp = getAnglePrediction(howitzer.getPositionVector(), IIUtils.getEntityCenter(t), new Vec3d(t.motionX, t.motionY, t.motionZ))[1];
+				if(positionVector.distanceTo(t.getPositionVector()) > 40)
+					pp = getAnglePrediction(positionVector, IIEntityUtils.getEntityCenter(t), new Vec3d(t.motionX, t.motionY, t.motionZ))[1];
 				else
-					pp = IIUtils.getDirectFireAngle(IIContent.itemAmmoLightArtillery.getDefaultVelocity(), 3.4f, howitzer.getPositionVector().subtract(t.getPositionVector()));
+					pp = IIAmmoUtils.getDirectFireAngle(IIContent.itemAmmoLightArtillery.getVelocity(), 3.4f, positionVector.subtract(t.getPositionVector()));
 
 				howitzer.gunPitchUp = howitzer.gunPitch-pp < 0;
 				howitzer.gunPitchDown = howitzer.gunPitch-pp > 0;
@@ -102,7 +107,7 @@ public class AIHansHowitzer extends EntityAIBase
 						//it should be
 						if(entity instanceof EntityHans&&((EntityHans)entity).getHeldItemMainhand().isEmpty())
 						{
-							ItemStack shell = IIContent.itemAmmoLightArtillery.getBulletWithParams("core_brass", "canister", "hmx", "tracer_powder");
+							ItemStack shell = IIContent.itemAmmoLightArtillery.getAmmoStack(IIContent.ammoCoreBrass, CoreType.CANISTER, FuseType.CONTACT, IIContent.ammoComponentHMX, IIContent.ammoComponentTracerPowder);
 							NBTTagCompound tag = new NBTTagCompound();
 							tag.setInteger("colour", 0xff0000);
 							//NBTTagCompound tag2 = new NBTTagCompound();
@@ -130,7 +135,7 @@ public class AIHansHowitzer extends EntityAIBase
 				Entity entity = target.get();
 				this.hans.faceEntity(entity, 10, 10);
 
-				float[] yp = getAnglePrediction(howitzer.getPositionVector().addVector(0, 1, 0), IIUtils.getEntityCenter(entity), new Vec3d(entity.motionX, entity.motionY, entity.motionZ));
+				float[] yp = getAnglePrediction(positionVector.addVector(0, 1, 0), IIEntityUtils.getEntityCenter(entity), new Vec3d(entity.motionX, entity.motionY, entity.motionZ));
 				if(!isAimedAt(yp[0], yp[1]))
 				{
 					float y = MathHelper.wrapDegrees(360+yp[0]-this.howitzer.rotationYaw);
@@ -170,13 +175,7 @@ public class AIHansHowitzer extends EntityAIBase
 		Vec3d norm = dist.normalize();
 
 		float yy = (float)((Math.atan2(norm.x, norm.z)*180D)/3.1415927410125732D);
-
-		float pp = Math.round(IIUtils.calculateBallisticAngle(
-				new Vec3d(dist.x, 0, dist.z).distanceTo(Vec3d.ZERO)
-				, dist.y,
-				IIContent.itemAmmoLightArtillery.getDefaultVelocity(),
-				EntityBullet.GRAVITY*3.1875f,
-				1f-EntityBullet.DRAG, 0.01));
+		float pp = Math.round(IIAmmoUtils.calculateBallisticAngle(posTurret, posTarget.add(motion), hans.getHeldItemMainhand(), 0.01f));
 
 		return new float[]{MathHelper.wrapDegrees(180-yy), 90-pp};
 	}

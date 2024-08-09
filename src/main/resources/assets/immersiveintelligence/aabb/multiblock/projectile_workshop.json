@@ -1,0 +1,56 @@
+{
+  "bounds": {
+    "full": [
+      0, 0, 0,
+      16, 16, 16
+    ],
+    "conveyor": [
+      0, 0, 0,
+      16, 2, 16
+    ],
+    "tank_top": [
+      1, 0, 1,
+      16, 14, 17
+    ],
+    "tank_bottom": [
+      1, 0, 1,
+      16, 16, 17
+    ],
+    "breadbox_back": [
+      0, 0, -1,
+      16, 16, 11
+    ],
+    "breadbox_front": [
+      0, 0, 11,
+      16, 13, 16
+    ],
+    "item_hatch": [
+        0, 2, 0,
+        16, 12, 4
+    ],
+    "energy_box": [
+      2, 0, 1,
+      16, 8, 14
+    ],
+    "energy_top": [
+      5, 8, 2,
+      15, 16, 12
+    ]
+  },
+  "positions": {
+    "12,15,16": "conveyor",
+    "31,35": "tank_top",
+    "19,23": "tank_bottom",
+    "13,14": ["breadbox_back", "breadbox_front"],
+    "15,16": "item_hatch",
+    "46": ["energy_box","energy_top"]
+  },
+  "poi": {
+    "item_inputs": [15],
+    "item_in": 15,
+    "item_out": 12,
+    "energy": 46,
+    "redstone": 9,
+    "component_fluid_in": []
+  }
+}

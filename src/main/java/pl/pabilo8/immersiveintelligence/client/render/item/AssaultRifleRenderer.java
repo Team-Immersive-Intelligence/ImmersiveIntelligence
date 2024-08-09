@@ -16,20 +16,20 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.model.obj.OBJModel;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.AssaultRifle;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry;
-import pl.pabilo8.immersiveintelligence.client.fx.particles.ParticleGunfire;
+import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
+import pl.pabilo8.immersiveintelligence.client.fx.IIParticles;
 import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.client.util.amt.*;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMTBullet.BulletState;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.AssaultRifle;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIAssaultRifle;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIGunBase;
-import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIWeaponUpgrade.WeaponUpgrades;
+import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIWeaponUpgrade.WeaponUpgrade;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler;
+import pl.pabilo8.immersiveintelligence.common.util.amt.IIModelHeader;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 /**
@@ -52,8 +52,9 @@ public class AssaultRifleRenderer extends IIUpgradableItemRendererAMT<ItemIIAssa
 	}
 
 	@Override
-	protected ItemModelReplacement setTransformations(ItemModelReplacement_OBJ model)
+	protected ItemModelReplacement setTransforms(ItemModelReplacement_OBJ model)
 	{
+		//TODO: 22.12.2023 transforms from .amt
 		Matrix4 tpp = new Matrix4()
 				.scale(0.385, 0.385, 0.385)
 				.rotate(Math.toRadians(-20.5f), 0, 1, 0)
@@ -115,8 +116,7 @@ public class AssaultRifleRenderer extends IIUpgradableItemRendererAMT<ItemIIAssa
 		EasyNBT nbt = EasyNBT.wrapNBT(stack);
 
 		//TODO: 12.04.2023 skins and shaders
-
-		model.getVariant(nbt.hasKey("handmade")?"diy": nbt.getString("contributorSkin"), stack);
+		model.getVariant(nbt.getString("contributorSkin"), stack);
 		model.forEach(AMT::defaultize);
 
 		//Make upgrade AMTs visible
@@ -244,7 +244,7 @@ public class AssaultRifleRenderer extends IIUpgradableItemRendererAMT<ItemIIAssa
 		if(handRender)
 		{
 			int value = 0;
-			if(item.hasIIUpgrade(stack, WeaponUpgrades.STEREOSCOPIC_RANGEFINDER))
+			if(item.hasIIUpgrade(stack, WeaponUpgrade.STEREOSCOPIC_RANGEFINDER))
 			{
 				RayTraceResult mop = ClientUtils.mc().player.rayTrace(60, partialTicks);
 				if(mop!=null)
@@ -255,8 +255,8 @@ public class AssaultRifleRenderer extends IIUpgradableItemRendererAMT<ItemIIAssa
 				if(fireMode==2)
 					value = (int)MathHelper.clamp((1f-((firing-partialTicks)/(float)(firingDelay)))*99, 0, 99);
 			}
-			if(item.hasIIUpgrade(stack, WeaponUpgrades.GYROSCOPIC_STABILIZER))
-				stabilizer.apply(IIAnimationUtils.getDebugProgress(Minecraft.getMinecraft().world, 30, partialTicks));
+			if(item.hasIIUpgrade(stack, WeaponUpgrade.GYROSCOPIC_STABILIZER))
+				stabilizer.apply(IIAnimationUtils.getDebugProgress(30, partialTicks));
 
 			nixie1.get().setText(String.valueOf(value/10));
 			nixie2.get().setText(String.valueOf(value%10));
@@ -280,20 +280,13 @@ public class AssaultRifleRenderer extends IIUpgradableItemRendererAMT<ItemIIAssa
 				.withModelProvider(
 						(stack, combinedHeader) -> new AMT[]{
 								//Main Model
-								new AMTParticle("muzzle_flash", combinedHeader)
-										.setParticle(new ParticleGunfire(
-												null,
-												Vec3d.ZERO,
-												new Vec3d(1, 0, 0),
-												16f
-										)
-								),
+								new AMTParticle("muzzle_flash", combinedHeader).setParticle(IIParticles.PARTICLE_GUNFIRE),
 								new AMTHand("hand", combinedHeader, EnumHand.OFF_HAND),
 
 								//Ammo
-								new AMTBullet("casing_fired", combinedHeader, AmmoRegistry.INSTANCE.getModel(IIContent.itemAmmoAssaultRifle))
+								new AMTBullet("casing_fired", combinedHeader, AmmoRegistry.getModel(IIContent.itemAmmoAssaultRifle))
 										.withState(BulletState.CASING),
-								new AMTBullet("grenade", combinedHeader, AmmoRegistry.INSTANCE.getModel(IIContent.itemRailgunGrenade))
+								new AMTBullet("grenade", combinedHeader, AmmoRegistry.getModel(IIContent.itemRailgunGrenade))
 										.withState(BulletState.CASING),
 
 								//Upgrades
@@ -310,7 +303,7 @@ public class AssaultRifleRenderer extends IIUpgradableItemRendererAMT<ItemIIAssa
 						(res, stack) ->
 						{
 							String skin = IIContent.itemAssaultRifle.getSkinnableCurrentSkin(stack);
-							if (IISkinHandler.isValidSkin(skin))
+							if(IISkinHandler.isValidSkin(skin))
 							{
 								this.skinRemapper = new MTLTextureRemapper(model, ResLoc.of(IIReference.RES_TEXTURES_SKIN, skin, "/assault_rifle").withExtension(ResLoc.EXT_MTL));
 								return ClientUtils.getSprite(this.skinRemapper.apply(res));

@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.GlStateManager.CullFace;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -19,10 +20,7 @@ import pl.pabilo8.immersiveintelligence.client.util.amt.AMT;
 import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationCompiledMap;
 
 import javax.annotation.Nullable;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 
 /**
  * @author Pabilo8
@@ -30,6 +28,7 @@ import java.lang.annotation.Target;
  */
 public abstract class IITileRenderer<T extends TileEntity> extends TileEntitySpecialRenderer<T> implements IReloadableModelContainer<IITileRenderer<T>>
 {
+	protected static final Tuple<IBlockState, IBakedModel> ACCEPTABLE = new Tuple<>(null, null);
 	private boolean unCompiled = true;
 
 	//--- rendering wrapper ---//
@@ -43,7 +42,7 @@ public abstract class IITileRenderer<T extends TileEntity> extends TileEntitySpe
 		if(te!=null&&unCompiled)
 		{
 			Tuple<IBlockState, IBakedModel> model = getModelFromBlockState(te);
-			if(model.getSecond() instanceof IESmartObjModel)
+			if(model==ACCEPTABLE||model.getSecond() instanceof IESmartObjModel)
 			{
 				nullifyModels();
 				compileModels(model);
@@ -159,11 +158,22 @@ public abstract class IITileRenderer<T extends TileEntity> extends TileEntitySpe
 
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target({ElementType.TYPE})
+	@Repeatable(RegisteredTileRenderers.class)
 	public @interface RegisteredTileRenderer
 	{
 		String name();
 
 		Class<? extends TileEntity> clazz();
 
+		Class<? extends TileEntityItemStackRenderer> teisrClazz() default TileEntityItemStackRenderer.class;
+
 	}
+
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target({ElementType.TYPE})
+	public @interface RegisteredTileRenderers
+	{
+		RegisteredTileRenderer[] value();
+	}
+
 }

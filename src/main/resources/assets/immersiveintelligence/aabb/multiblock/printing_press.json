@@ -1,0 +1,173 @@
+{
+  "bounds": {
+    "table_top": [
+      0, 13, 0,
+      16, 16, 16
+    ],
+    "table_leg1": [
+      1, 0, 1,
+      4, 13, 4
+    ],
+    "table_leg2": [
+      1, 0, 12,
+      4, 13, 15
+    ],
+    "table_leg3": [
+      12, 0, 1,
+      15, 13, 4
+    ],
+    "table_leg4": [
+      12, 0, 12,
+      15, 13, 15
+    ],
+    "energy": [
+      0, 0, 0,
+      16, 8, 16
+    ],
+    "energy_top": [
+      2, 0, 2,
+      14, 16, 14
+    ],
+    "papers": [
+      2, 0, 4,
+      12, 3, 14
+    ],
+    "barrier1": [
+      14, 0, 2,
+      16, 16, 6
+    ],
+    "barrier2": [
+      14, 0, 8,
+      16, 16, 12
+    ],
+    "barrier3": [
+      14, 0, 0,
+      16, 16, 4
+    ],
+    "barrier4": [
+      14, 0, 6,
+      16, 16, 10
+    ],
+    "barrier5": [
+      14, 0, 12,
+      16, 16, 16
+    ],
+    "barrier6": [
+      14, 0, 10,
+      16, 16, 14
+    ],
+    "pedestal": [
+      0, 0, 2,
+      14, 6, 16
+    ],
+    "collector_slope1": [
+      2, 0, 0,
+      14, 13, 3
+    ],
+    "collector_slope2": [
+      2, 0, 3,
+      14, 2, 16
+    ],
+    "collector_wall_front": [
+      0, 0, 14,
+      16, 18, 16
+    ],
+    "collector_wall_right": [
+      14, 0, 0,
+      16, 18, 14
+    ],
+    "collector_wall_left": [
+      0, 0, 0,
+      2, 18, 14
+    ],
+    "tank1": [
+      5, 3, 2,
+      29, 14, 14
+    ],
+    "tank2": [
+      -11, 3, 2,
+      13, 14, 14
+    ],
+    "tank_leg1": [
+      6, 0, 3,
+      8, 3, 5
+    ],
+    "tank_leg2": [
+      6, 0, 11,
+      8, 3, 13
+    ],
+    "tank_leg3": [
+      10, 0, 3,
+      12, 3, 5
+    ],
+    "tank_leg4": [
+      10, 0, 11,
+      12, 3, 13
+    ],
+    "tank_input_top": [
+      4, 14, 4,
+      12, 16, 12
+    ],
+    "pipe1": [
+      1, 0, 14,
+      3, 10, 16
+    ],
+    "pipe2": [
+      1, 0, 0,
+      3, 2, 14
+    ],
+    "pipe3": [
+      3, 0, 0,
+      10, 2, 2
+    ],
+    "pipe4": [
+      8, 2, 0,
+      10, 8, 2
+    ],
+    "paper_holder": [
+      0, 10, 0,
+      16, 13, 10
+    ],
+    "paper_door": [
+      0, 13, 0,
+      1, 16, 10
+    ]
+  },
+  "positions": {
+    "0,1": "table_top",
+    "0": ["table_leg1", "table_leg2"],
+    "1": ["table_leg3", "table_leg4"],
+    "34": ["energy", "energy_top"],
+    "15": "papers",
+    "20": ["barrier1", "barrier2"],
+    "23": ["barrier3", "barrier4", "barrier5"],
+    "26": ["barrier6", "paper_holder", "paper_door"],
+    "16": "pedestal",
+    "2": [
+      "collector_slope1", "collector_slope2", "collector_wall_front", "collector_wall_right", "collector_wall_left"
+    ],
+    "28": ["tank1", "pipe1", "pipe2", "pipe3", "pipe4", "tank_leg1", "tank_leg2"],
+    "29": ["tank2", "tank_input_top", "tank_leg3", "tank_leg4"]
+  },
+  "poi": {
+    "energy": 34,
+    "data": 6,
+    "paper_input": 27,
+    "fluid_input": 29,
+    "output": 2
+  },
+  "tactile": {
+    "_schema": "immersiveintelligence:models/block/multiblock/printing_press/printing_press.obj.amt",
+    "roller1": [
+      {
+        "bounds": [
+          -6,-10,-32,
+          6,4,3
+        ]
+      }
+    ],
+    "nonexistent": [
+
+    ]
+  }
+}

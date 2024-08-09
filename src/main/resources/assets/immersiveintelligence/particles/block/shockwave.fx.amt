@@ -1,0 +1,9 @@
+{
+  "type": "ParticleModel",
+  "models": ["shockwave.obj"],
+  "life_time": 5,
+  "draw_stage": "custom_additive",
+  "programs": [
+    "shockwave_transition"
+  ]
+}

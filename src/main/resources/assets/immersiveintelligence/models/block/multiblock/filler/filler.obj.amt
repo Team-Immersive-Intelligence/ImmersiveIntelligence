@@ -1,0 +1,10 @@
+{
+	"origins": {
+		"fan": [27.525, 22, 10],
+		"filling_part": [8, 18.225, -8],
+		"conveyor_off": [-48, 0, -16],
+		"item": [32, 2, -8],
+		"item_out": [32, 2, -8]
+	},
+	"hierarchy": {}
+}

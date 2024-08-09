@@ -32,6 +32,12 @@ public class OpenComputersHelper extends IICompatModule
 	}
 
 	@Override
+	public String getName()
+	{
+		return "OpenComputers";
+	}
+
+	@Override
 	public void registerRecipes()
 	{
 

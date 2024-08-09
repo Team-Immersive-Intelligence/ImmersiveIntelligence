@@ -16,9 +16,9 @@
         "transform": {
           "scale": 0.25,
           "translation": [
-            0.125,
+            -0.0625,
             -0.125,
-            -0.125
+            0.0625
           ],
           "rotation": [
             {

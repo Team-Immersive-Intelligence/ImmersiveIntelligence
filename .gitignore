@@ -15,12 +15,17 @@ out
 *.iml
 .idea
 
+# vs code
+.vscode/
+
 # gradle
 *.class
 build
 bin/
 .gradle
 custom.gradle
+
+docs/
 
 # Forge
 run/

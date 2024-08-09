@@ -4,6 +4,7 @@ import blusunrize.immersiveengineering.common.blocks.TileEntityIEBase;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -19,15 +20,19 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig;
 import pl.pabilo8.immersiveintelligence.api.data.radio.IRadioDevice;
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler.IItemScrollable;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.item.tools.ItemIIRadioTuner.RadioTuners;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
+import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
 
 import javax.annotation.Nonnull;
@@ -38,8 +43,12 @@ import java.util.List;
  * @author Pabilo8
  * @since 24-06-2019
  */
+@IIItemProperties(category = IICategory.TOOLS)
 public class ItemIIRadioTuner extends ItemIISubItemsBase<RadioTuners> implements IItemScrollable
 {
+	public static final String TAG_PREV_FREQUENCY = "prev_frequency";
+	public static final String TAG_FREQUENCY = "frequency";
+
 	public ItemIIRadioTuner()
 	{
 		super("radio_configurator", 1, RadioTuners.values());
@@ -64,11 +73,30 @@ public class ItemIIRadioTuner extends ItemIISubItemsBase<RadioTuners> implements
 	{
 		RadioTuners tuner = stackToSub(stack);
 
-		list.add(IIUtils.getItalicString(I18n.format(IIReference.DESCRIPTION_KEY+"radio_configurator_"+tuner.getName())));
+		list.add(IIStringUtil.getItalicString(I18n.format(IIReference.DESCRIPTION_KEY+"radio_configurator_"+tuner.getName())));
 		list.add(I18n.format(IIReference.DESCRIPTION_KEY+"radio_configurator_max_frequency",
 				TextFormatting.GOLD.toString()+tuner.maxFrequency+TextFormatting.RESET));
 		list.add(I18n.format(IIReference.DESCRIPTION_KEY+"radio_configurator_frequency",
-				TextFormatting.GOLD.toString()+ItemNBTHelper.getInt(stack, "Frequency")+TextFormatting.RESET));
+				TextFormatting.GOLD.toString()+ItemNBTHelper.getInt(stack, TAG_FREQUENCY)+TextFormatting.RESET));
+	}
+
+	@Override
+	public void onUpdate(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected)
+	{
+		super.onUpdate(stack, worldIn, entityIn, itemSlot, isSelected);
+
+		//Frequency for smooth animations
+		EasyNBT nbt = EasyNBT.wrapNBT(stack);
+		int frequency = nbt.getInt(TAG_FREQUENCY);
+
+		if(nbt.getInt(TAG_PREV_FREQUENCY)!=frequency)
+			nbt.withInt(TAG_PREV_FREQUENCY, frequency);
+	}
+
+	@Override
+	public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged)
+	{
+		return slotChanged;
 	}
 
 	@Override
@@ -81,7 +109,9 @@ public class ItemIIRadioTuner extends ItemIISubItemsBase<RadioTuners> implements
 		TileEntity tile = worldIn.getTileEntity(pos);
 		if(tile instanceof IRadioDevice)
 		{
-			int frequency = ItemNBTHelper.getInt(player.getHeldItem(hand), "Frequency");
+			ItemStack stack = player.getHeldItem(hand);
+
+			int frequency = ItemNBTHelper.getInt(stack, TAG_FREQUENCY);
 			IRadioDevice device = (IRadioDevice)tile;
 			int maxFrequency = device.isBasicRadio()?IIConfig.radioBasicMaxFrequency: IIConfig.radioAdvancedMaxFrequency;
 
@@ -97,8 +127,8 @@ public class ItemIIRadioTuner extends ItemIISubItemsBase<RadioTuners> implements
 			}
 			else //get frequency
 			{
-				// TODO: 06.09.2022 make shift+click copy frequency to device ; add frequency display, like with goggles
-				IIPacketHandler.sendChatTranslation(player, IIReference.INFO_KEY+"current_frequency", device.getFrequency());
+				ItemNBTHelper.setInt(stack, TAG_FREQUENCY, frequency);
+				sendSetFrequencyPacket(((EntityPlayerMP)player), frequency);
 			}
 
 			//sync
@@ -116,14 +146,20 @@ public class ItemIIRadioTuner extends ItemIISubItemsBase<RadioTuners> implements
 	{
 		RadioTuners tuner = stackToSub(stack);
 		//cycle
-		int frequency = IIUtils.cycleInt(forward, ItemNBTHelper.getInt(stack, "Frequency"), 0, tuner.maxFrequency);
+		int frequency = IIUtils.cycleInt(forward, ItemNBTHelper.getInt(stack, TAG_FREQUENCY), 0, tuner.maxFrequency);
 
 		//set
-		ItemNBTHelper.setInt(stack, "Frequency", frequency);
+		ItemNBTHelper.setInt(stack, TAG_FREQUENCY, frequency);
 
 		//send current frequency message
-		SPacketTitle packet = new SPacketTitle(Type.ACTIONBAR,
-				new TextComponentTranslation(IIReference.DESCRIPTION_KEY+"radio_configurator_frequency", frequency), 0, 20, 0);
-		player.connection.sendPacket(packet);
+		sendSetFrequencyPacket(player, frequency);
+	}
+
+	private static void sendSetFrequencyPacket(EntityPlayerMP player, int frequency)
+	{
+		player.connection.sendPacket(
+				new SPacketTitle(Type.ACTIONBAR,
+						new TextComponentTranslation(IIReference.DESCRIPTION_KEY+"radio_configurator_frequency", frequency), 0, 20, 0)
+		);
 	}
 }

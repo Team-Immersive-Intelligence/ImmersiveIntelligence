@@ -24,13 +24,14 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoUtils;
+import pl.pabilo8.immersiveintelligence.api.ammo.utils.AmmoFactory;
 import pl.pabilo8.immersiveintelligence.api.data.DataHandlingUtils;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.types.*;
 import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
-import pl.pabilo8.immersiveintelligence.client.fx.ParticleUtils;
+import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleRegistry;
+import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.client.util.carversound.ConditionCompoundSound;
 import pl.pabilo8.immersiveintelligence.client.util.carversound.TimedCompoundSound;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.ArtilleryHowitzer;
@@ -38,13 +39,15 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.MultiblockArtilleryHowitzer;
-import pl.pabilo8.immersiveintelligence.common.entity.bullet.EntityBullet;
+import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoArtilleryProjectile;
 import pl.pabilo8.immersiveintelligence.common.entity.tactile.TactileHandler;
 import pl.pabilo8.immersiveintelligence.common.entity.tactile.TactileHandler.ITactileListener;
-import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoArtillery;
+import pl.pabilo8.immersiveintelligence.common.item.ammo.artillery.ItemIIAmmoArtilleryHeavy;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
 import pl.pabilo8.immersiveintelligence.common.util.AdvancedSounds.MultiSound;
+import pl.pabilo8.immersiveintelligence.common.util.IIMath;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.IISoundAnimation;
 import pl.pabilo8.immersiveintelligence.common.util.ISerializableEnum;
 import pl.pabilo8.immersiveintelligence.common.util.lambda.NBTTagCollector;
@@ -68,15 +71,28 @@ import java.util.function.Predicate;
 public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<TileEntityArtilleryHowitzer>
 		implements IBooleanAnimatedPartsBlock, IConveyorAttachable, ILadderMultiblock, IExplosionResistantMultiblock, ITactileListener
 {
+	//Sound Animations
 	private static final IISoundAnimation loadingSoundAnimation;
 	private static final IISoundAnimation unloadingSoundAnimation;
 	private static final IISoundAnimation firingSoundAnimation;
 
 	@SideOnly(Side.CLIENT)
 	private ConditionCompoundSound soundRotationV, soundRotationH, soundDoorOpen, soundDoorClose;
+	//Tactile Animations
+	private static final ResLoc animationPlatform, animationOpen, animationFire, animationLoading, animationUnloading, animationPitch, animationYaw;
 
 	static
 	{
+		//Load tactile animations
+		animationOpen = ResLoc.of(IIReference.RES_II, "artillery_howitzer/artillery_howitzer_door");
+		animationPlatform = ResLoc.of(IIReference.RES_II, "artillery_howitzer/artillery_howitzer_platform");
+		animationLoading = ResLoc.of(IIReference.RES_II, "artillery_howitzer/artillery_howitzer_loading1");
+		animationUnloading = ResLoc.of(IIReference.RES_II, "artillery_howitzer/artillery_howitzer_unloading1");
+		animationFire = ResLoc.of(IIReference.RES_II, "artillery_howitzer/artillery_howitzer_fire1");
+		animationPitch = ResLoc.of(IIReference.RES_II, "artillery_howitzer/artillery_howitzer_tactile_pitch");
+		animationYaw = ResLoc.of(IIReference.RES_II, "artillery_howitzer/artillery_howitzer_tactile_yaw");
+
+		//load sound animations
 		loadingSoundAnimation = new IISoundAnimation(18);
 		unloadingSoundAnimation = new IISoundAnimation(18);
 		firingSoundAnimation = new IISoundAnimation(15.96);
@@ -218,15 +234,14 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 		//handles looped sounds
 		if(world.isRemote)
 			handleSounds();
-		else
-		{
-			//Handle Tactile AMT on server side
-			/*if(tactileHandler==null)
-				tactileHandler = new TactileHandler(multiblock, this);
-			tactileHandler.defaultize();*/
-		}
 
-		boolean rs = world.isBlockPowered(getBlockPosForPos(listAllPOI(MultiblockPOI.REDSTONE_INPUT)[0]))^redstoneControlInverted;
+		//Handle Tactile AMT on server side
+		if(tactileHandler==null)
+			tactileHandler = new TactileHandler(multiblock, this);
+		tactileHandler.defaultize();
+
+
+		boolean rs = getRedstoneAtPos(0);
 		if(isDoorOpened^rs)
 		{
 			isDoorOpened = rs;
@@ -242,8 +257,11 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 
 		//howitzer door movement
 		doorTime = MathHelper.clamp(doorTime+(isDoorOpened?1: -2), 0, ArtilleryHowitzer.doorTime);
+		tactileHandler.update(animationOpen, (float)doorTime/ArtilleryHowitzer.doorTime);
+
 		//howitzer platform movement
 		platformTime = MathHelper.clamp(platformTime+(platformPosition?1: -1), 0, ArtilleryHowitzer.platformTime);
+		tactileHandler.update(animationPlatform, (float)platformTime/ArtilleryHowitzer.platformTime);
 
 		//hide howitzer if door is closed
 		if(!isDoorOpened)
@@ -291,6 +309,9 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 			animationTime = animationTimeMax = 0;
 		}*/
 
+		//animate gun tactiles
+		animateGunTactiles();
+
 		//S T O P
 		if(animation==ArtilleryHowitzerAnimation.STOP)
 		{
@@ -312,7 +333,6 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 				forceTileUpdate();
 				orderList.remove(0);
 			}
-
 			return;
 		}
 
@@ -358,6 +378,32 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 			if(world.isRemote)
 				handleAnimationSounds();
 
+			//update tactile animation
+			switch(animation)
+			{
+				case AIM:
+					break;
+				case FIRE1:
+				case FIRE2:
+				case FIRE3:
+				case FIRE4:
+					tactileHandler.update(animationFire, (float)animationTime/animationTimeMax);
+					break;
+				case LOAD1:
+				case LOAD2:
+				case LOAD3:
+				case LOAD4:
+					tactileHandler.update(animationLoading, (float)animationTime/animationTimeMax);
+					break;
+				case UNLOAD1:
+				case UNLOAD2:
+				case UNLOAD3:
+				case UNLOAD4:
+					tactileHandler.update(animationUnloading, (float)animationTime/animationTimeMax);
+					break;
+			}
+
+			//update animations
 			if(animationTime==(int)(animationTimeMax*animation.executeTime))
 			{
 				switch(animation)
@@ -392,6 +438,15 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 				}
 			}
 		}
+
+		//in case an animation overrides the gun yaw and pitch or of an early return
+		animateGunTactiles();
+	}
+
+	private void animateGunTactiles()
+	{
+		tactileHandler.update(animationPitch, turretPitch/105f);
+		tactileHandler.update(animationYaw, ((720-turretYaw-facing.getHorizontalAngle()-90)%360)/360f);
 	}
 
 	private void fireGun(int i)
@@ -399,12 +454,12 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 		double yawFireAngle = Math.toRadians(-turretYaw > 180?180f+turretYaw: 180f-turretYaw);
 		double yawPitchAngle = Math.toRadians(turretPitch+90);
 
-		Vec3d gunEnd = IIUtils.offsetPosDirection(3, yawFireAngle, yawPitchAngle);
+		Vec3d gunEnd = IIMath.offsetPosDirection(3, yawFireAngle, yawPitchAngle);
 		Vec3d gunVec = gunEnd.normalize();
 		if(world.isRemote)
 		{
 			Vec3d gun_end_particle = gunVec.scale(4.5);
-			ParticleUtils.spawnGunfireFX(getGunPosition().add(gun_end_particle), gunVec, 8f);
+			ParticleRegistry.spawnGunfireFX(getGunPosition().add(gun_end_particle), gunVec, 8f);
 		}
 
 		IIPacketHandler.playRangedSound(world, gunEnd,
@@ -414,13 +469,14 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 
 		if(!world.isRemote)
 		{
-			ItemStack bullet = loadedShells.get(i);
-			EntityBullet a = AmmoUtils.createBullet(world, bullet, getGunPosition().add(gunEnd), gunVec);
-			a.setShootPos(getMultiblockBlocks());
-			a.world.spawnEntity(a);
+			new AmmoFactory<EntityAmmoArtilleryProjectile>(world)
+					.setIgnoredEntities(tactileHandler!=null?tactileHandler.getEntities(): null)
+					.setIgnoredBlocks(getMultiblockBlocks())
+					.setStack(loadedShells.get(i))
+					.create();
 		}
 
-		loadedShells.set(i, IIContent.itemAmmoArtillery.getCasingStack(1));
+		loadedShells.set(i, IIContent.itemAmmoHeavyArtillery.getCasingStack(1));
 	}
 
 	private boolean isAimed()
@@ -693,7 +749,7 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 	@Override
 	public boolean isStackValid(int slot, ItemStack stack)
 	{
-		return stack.getItem() instanceof ItemIIAmmoArtillery;
+		return stack.getItem() instanceof ItemIIAmmoArtilleryHeavy;
 	}
 
 	@Override
@@ -715,7 +771,7 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 				return getPOI("item_output");
 			case REDSTONE_INPUT:
 				return getPOI("redstone");
-			case DATA:
+			case DATA_INPUT:
 				return getPOI("data");
 			case MISC_DOOR:
 				return getPOI("bunker_door");
@@ -902,7 +958,7 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 
 			//check if artillery shell
 			EntityItem entityItem = (EntityItem)entity;
-			if(entityItem.getItem().getItem()!=IIContent.itemAmmoArtillery)
+			if(entityItem.getItem().getItem()!=IIContent.itemAmmoHeavyArtillery)
 				return;
 
 			//insert copied stack to inventory
@@ -933,6 +989,40 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 			return master!=null&&master.doorTime > 1?2000.0F: -1;
 		}
 		return -1;
+	}
+
+	@Override
+	@Nullable
+	public TactileHandler getTactileHandler()
+	{
+		return tactileHandler;
+	}
+
+	@Nonnull
+	@Override
+	public World getTactileWorld()
+	{
+		return world;
+	}
+
+	@Nonnull
+	@Override
+	public BlockPos getTactilePos()
+	{
+		return this.getPos();
+	}
+
+	@Nonnull
+	@Override
+	public EnumFacing getTactileFacing()
+	{
+		return facing;
+	}
+
+	@Override
+	public boolean getIsTactileMirrored()
+	{
+		return mirrored;
 	}
 
 	public enum ArtilleryHowitzerAnimation implements ISerializableEnum
@@ -966,16 +1056,16 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 				t -> t.loadedShells.get(3).isEmpty(),
 				ArtilleryHowitzer.loadRackTime, "UNLOAD", 1f),
 
-		FIRE1(true, true, GunPosition.ON_TARGET, t -> t.loadedShells.get(0).getItem()==IIContent.itemAmmoArtillery,
+		FIRE1(true, true, GunPosition.ON_TARGET, t -> t.loadedShells.get(0).getItem()==IIContent.itemAmmoHeavyArtillery,
 				t -> t.loadedShells.get(0).isEmpty(),
 				ArtilleryHowitzer.gunFireTime, "FIRE", (float)ArtilleryHowitzer.gunFireMoment),
-		FIRE2(true, true, GunPosition.ON_TARGET, t -> t.loadedShells.get(1).getItem()==IIContent.itemAmmoArtillery,
+		FIRE2(true, true, GunPosition.ON_TARGET, t -> t.loadedShells.get(1).getItem()==IIContent.itemAmmoHeavyArtillery,
 				t -> t.loadedShells.get(1).isEmpty(),
 				ArtilleryHowitzer.gunFireTime, "FIRE", (float)ArtilleryHowitzer.gunFireMoment),
-		FIRE3(true, true, GunPosition.ON_TARGET, t -> t.loadedShells.get(2).getItem()==IIContent.itemAmmoArtillery,
+		FIRE3(true, true, GunPosition.ON_TARGET, t -> t.loadedShells.get(2).getItem()==IIContent.itemAmmoHeavyArtillery,
 				t -> t.loadedShells.get(2).isEmpty(),
 				ArtilleryHowitzer.gunFireTime, "FIRE", (float)ArtilleryHowitzer.gunFireMoment),
-		FIRE4(true, true, GunPosition.ON_TARGET, t -> t.loadedShells.get(3).getItem()==IIContent.itemAmmoArtillery,
+		FIRE4(true, true, GunPosition.ON_TARGET, t -> t.loadedShells.get(3).getItem()==IIContent.itemAmmoHeavyArtillery,
 				t -> t.loadedShells.get(3).isEmpty(),
 				ArtilleryHowitzer.gunFireTime, "FIRE", (float)ArtilleryHowitzer.gunFireMoment),
 

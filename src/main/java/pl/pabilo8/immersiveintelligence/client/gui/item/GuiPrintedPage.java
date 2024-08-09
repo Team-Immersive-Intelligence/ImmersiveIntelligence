@@ -75,22 +75,8 @@ public class GuiPrintedPage extends GuiScreen
 	public void drawScreen(int mouseX, int mouseY, float partialTicks)
 	{
 		super.drawScreen(mouseX, mouseY, partialTicks);
-
-		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-		ClientUtils.bindTexture(PAGE_TEXTURE);
-		this.drawTexturedModalRect(guiLeft, guiTop, 0, 0, 192, 192);
-
-		int y = 24;
-		for(FormattedTextLine line : lines)
-		{
-			GlStateManager.pushMatrix();
-			GlStateManager.translate(guiLeft+8, guiTop+y, 0);
-			GlStateManager.scale(line.size, line.size, line.size);
-			line.font.drawSplitString(line.text, 0, 0, (int)(141/line.size), IIReference.COLOR_H1);
-			y += (line.font.getWordWrappedHeight(line.text, (int)(141/line.size)))*line.size;
-			GlStateManager.popMatrix();
-		}
-
+		drawDefaultBackground();
+		drawPage();
 
 		/*GlStateManager.pushMatrix();
 		GlStateManager.translate(i+8, j+24, 0);
@@ -108,6 +94,24 @@ public class GuiPrintedPage extends GuiScreen
 		GlStateManager.translate(i+8, j+76, 0);
 		IIClientUtils.fontEngineerTimes.drawSplitString("Hanses unwarned attack at the "+TextFormatting.ITALIC+"Vanilla Compound"+TextFormatting.RESET+". Unknown armored vehicles broke through the main defence line. Vanilla High Command flees to allied Bedrock Republic.", 0, 0, pageImageWidth-18, IILib.COLOR_H1);
 		GlStateManager.popMatrix();*/
+	}
+
+	public void drawPage()
+	{
+		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+		ClientUtils.bindTexture(PAGE_TEXTURE);
+		this.drawTexturedModalRect(guiLeft, guiTop, 0, 0, 146, 196);
+
+		int y = 24;
+		for(FormattedTextLine line : lines)
+		{
+			GlStateManager.pushMatrix();
+			GlStateManager.translate(guiLeft+8, guiTop+y, 0);
+			GlStateManager.scale(line.size, line.size, line.size);
+			line.font.drawSplitString(line.text, 0, 0, (int)(141/line.size), IIReference.COLOR_H1);
+			y += (line.font.getWordWrappedHeight(line.text, (int)(141/line.size)))*line.size;
+			GlStateManager.popMatrix();
+		}
 	}
 
 	private String matchReplaceSimple(Pattern pattern, String text, TextFormatting... formats)

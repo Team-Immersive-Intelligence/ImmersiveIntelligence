@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.common.item.weapons;
 
-import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.gui.IESlot;
 import blusunrize.immersiveengineering.common.items.IEItemInterfaces.IAdvancedFluidItem;
 import blusunrize.immersiveengineering.common.util.IEItemFluidHandler;
@@ -12,7 +11,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.stats.StatList;
@@ -44,8 +42,11 @@ import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityMachinegun;
-import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIWeaponUpgrade.WeaponUpgrades;
+import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIWeaponUpgrade.WeaponUpgrade;
+import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIUpgradableTool;
 
 import javax.annotation.Nullable;
@@ -55,13 +56,14 @@ import java.util.List;
  * @author Pabilo8
  * @since 01-11-2019
  */
+@IIItemProperties(category = IICategory.WARFARE)
 public class ItemIIMachinegun extends ItemIIUpgradableTool implements IAdvancedFluidItem, ISkinnable
 {
 	public ItemIIMachinegun()
 	{
 		super("machinegun", 1, "MACHINEGUN");
 		//Use interfaces pls Blu
-		fixupItem();
+		IIUtils.fixupItem(this, "machinegun");
 	}
 
 	@Override
@@ -190,7 +192,7 @@ public class ItemIIMachinegun extends ItemIIUpgradableTool implements IAdvancedF
 				if(aabb==null)
 					return new ActionResult<>(EnumActionResult.FAIL, itemstack);
 
-				boolean intersects = IIUtils.isAABBContained(fence, aabb);
+				boolean intersects = IIMath.isAABBContained(fence, aabb);
 
 				if(!intersects)
 					return new ActionResult<>(EnumActionResult.PASS, itemstack);
@@ -209,26 +211,13 @@ public class ItemIIMachinegun extends ItemIIUpgradableTool implements IAdvancedF
 		}
 	}
 
-	public void fixupItem()
-	{
-		//First, get the item out of IE's registries.
-		Item rItem = IEContent.registeredIEItems.remove(IEContent.registeredIEItems.size()-1);
-		if(rItem!=this) throw new IllegalStateException("fixupItem was not called at the appropriate time");
-
-		//Now, reconfigure the block to match our mod.
-		this.setUnlocalizedName(ImmersiveIntelligence.MODID+"."+this.itemName);
-		this.setCreativeTab(IIContent.II_CREATIVE_TAB);
-
-		//And add it to our registries.
-		IIContent.ITEMS.add(this);
-	}
 
 	@Override
 	public void removeFromWorkbench(EntityPlayer player, ItemStack stack)
 	{
-		if(hasIIUpgrades(stack, WeaponUpgrades.HEAVY_BARREL, WeaponUpgrades.SECOND_MAGAZINE, WeaponUpgrades.INFRARED_SCOPE))
+		if(hasIIUpgrades(stack, WeaponUpgrade.HEAVY_BARREL, WeaponUpgrade.SECOND_MAGAZINE, WeaponUpgrade.INFRARED_SCOPE))
 			IIUtils.unlockIIAdvancement(player, "main/let_me_show_you_its_features");
-		if(hasIIUpgrades(stack, WeaponUpgrades.BELT_FED_LOADER, WeaponUpgrades.SHIELD, WeaponUpgrades.WATER_COOLING))
+		if(hasIIUpgrades(stack, WeaponUpgrade.BELT_FED_LOADER, WeaponUpgrade.SHIELD, WeaponUpgrade.WATER_COOLING))
 			IIUtils.unlockIIAdvancement(player, "main/hans_9000");
 	}
 

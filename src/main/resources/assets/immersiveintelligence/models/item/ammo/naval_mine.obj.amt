@@ -1,0 +1,9 @@
+{
+	"origins": {
+		"casing_lid": [4, 6, -4],
+		"casing": [0, 0, 0],
+		"casing_simple": [0, 0, 0],
+		"core_canister": [0, 8, 0]
+	},
+	"hierarchy": {}
+}

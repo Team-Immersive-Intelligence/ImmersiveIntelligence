@@ -1,0 +1,142 @@
+{
+  "bounds": {
+    "full": [
+      0, 0, 0,
+      16, 16, 16
+    ],
+    "conveyor": [
+      0, 0, 0,
+      16, 2, 16
+    ],
+    "tank_upper": [
+      0, 8, 0,
+      16, 16, 16
+    ],
+    "tank_leg_back_left": [
+      1, 0, 1,
+      3, 8, 3
+    ],
+    "tank_leg_back_right": [
+      13, 0, 1,
+      15, 8, 3
+    ],
+    "tank_leg_front_left": [
+      1, 0, 13,
+      3, 8, 15
+    ],
+    "tank_leg_front_right": [
+      13, 0, 13,
+      15, 8, 15
+    ],
+    "tank_lower_back_left": [
+      2, 4, 2,
+      16, 8, 16
+    ],
+    "tank_lower_back_right": [
+      0, 4, 2,
+      14, 8, 16
+    ],
+    "tank_lower_front_left": [
+      2, 4, 0,
+      16, 8, 14
+    ],
+    "tank_lower_front_right": [
+      0, 4, 0,
+      14, 8, 14
+    ],
+    "energy_box": [
+      3, 2, 2,
+      16, 10, 14
+    ],
+    "energy_box_top": [
+      4, 10, 4,
+      12, 16, 12
+    ],
+    "dust_input_right": [
+      2, 5, 0,
+      15, 16, 1
+    ],
+    "dust_input_left": [
+      2, 5, 15,
+      15, 16, 16
+    ],
+    "dust_input_back": [
+      15, 1, 0,
+      16, 16, 16
+    ],
+    "dust_input_front": [
+      1, 5, 0,
+      2, 16, 16
+    ],
+    "dust_input_bottom": [
+      6, 0, 0,
+      16, 1, 16
+    ],
+    "dust_input_slope": [
+      2, 1, 0,
+      6, 5, 16
+    ],
+    "dust_input_left_bottom": [
+      6, 1, 15,
+      15, 5, 16
+    ],
+    "dust_input_right_bottom": [
+      6, 1, 0,
+      15, 5, 1
+    ],
+    "pipe_left": [
+      12, 0, 3,
+      16, 16, 7
+    ],
+    "pipe_right": [
+      12, 0, 9,
+      16, 16, 13
+    ],
+    "pipe_left_top_corner": [
+      6, 12, 3,
+      12, 16, 7
+    ],
+    "pipe_right_top_corner": [
+      7, 12, 9,
+      12, 16, 13
+    ],
+    "pipe_left_bottom": [
+      16, 0, 3,
+      28, 4, 7
+    ],
+    "pipe_right_bottom": [
+      16, 0, 9,
+      28, 4, 13
+    ],
+    "big_pipe_bottom": [
+      -4, 16, 12,
+      4, 20, 20
+    ]
+  },
+  "positions": {
+    "9,10,11": "conveyor",
+    "14,13,16,17": "tank_upper",
+    "14": ["tank_leg_front_right", "tank_lower_front_right"],
+    "13": ["tank_leg_front_left", "tank_lower_front_left"],
+    "17": ["tank_leg_back_right", "tank_lower_back_right"],
+    "16": ["tank_leg_back_left", "tank_lower_back_left"],
+    "21": ["energy_box", "energy_box_top"],
+    "24": [
+      "dust_input_back", "dust_input_front", "dust_input_left", "dust_input_right", "dust_input_bottom",
+      "dust_input_slope", "dust_input_slope", "dust_input_slope", "dust_input_left_bottom", "dust_input_right_bottom"
+    ],
+    "12": [
+      "pipe_left", "pipe_right", "pipe_left_top_corner", "pipe_right_top_corner", "pipe_left_bottom",
+      "pipe_right_bottom"
+    ],
+    "8": ["full", "big_pipe_bottom"]
+  },
+  "poi": {
+    "inputs": [24, 9],
+    "dust_input": 24,
+    "conveyor_in": 9,
+    "conveyor_out": 11,
+    "energy": 21,
+    "redstone": 7
+  }
+}

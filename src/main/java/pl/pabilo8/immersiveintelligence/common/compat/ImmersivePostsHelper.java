@@ -31,6 +31,12 @@ public class ImmersivePostsHelper extends IICompatModule
 	private BlockFence platinumFence;
 	private BlockFence duraluminiumFence;
 
+	@Override
+	public String getName()
+	{
+		return "ImmersivePosts";
+	}
+
 	/**
 	 * <b>Potentially</b> Dangerous alternative prefix `immersiveposts` for name `*insert metal name*`, expected `immersiveintelligence`.
 	 * This could be a intended override, but in <s>most cases</s> <b>no cases at all</b> indicates a broken mod.

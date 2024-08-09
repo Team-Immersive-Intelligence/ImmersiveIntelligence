@@ -10,6 +10,7 @@ import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -36,7 +37,6 @@ public class IIManualDataPacket extends IIManualObject
 	{
 		super.postInit(page);
 
-		y += 2;
 		packet = new DataPacket().fromNBT(dataSource.getCompound("data"));
 		text = compilePacketString();
 		obstructed = false;
@@ -70,6 +70,7 @@ public class IIManualDataPacket extends IIManualObject
 		ArrayList<String> joined = new ArrayList<>();
 		for(String[] strings : array)
 			joined.addAll(Arrays.asList(strings));
+		joined.sort(Collections.reverseOrder());
 		return joined;
 	}
 

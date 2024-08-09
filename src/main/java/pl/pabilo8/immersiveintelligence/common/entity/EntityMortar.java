@@ -2,6 +2,7 @@ package pl.pabilo8.immersiveintelligence.common.entity;
 
 import blusunrize.immersiveengineering.api.tool.ZoomHandler;
 import blusunrize.immersiveengineering.client.ClientUtils;
+import blusunrize.immersiveengineering.common.util.Utils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
@@ -22,23 +23,25 @@ import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Mouse;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.Mortar;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoUtils;
+import pl.pabilo8.immersiveintelligence.api.ammo.utils.AmmoFactory;
 import pl.pabilo8.immersiveintelligence.api.utils.camera.IEntityZoomProvider;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.IAdvancedZoomTool;
 import pl.pabilo8.immersiveintelligence.client.util.CameraHandler;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.Mortar;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
-import pl.pabilo8.immersiveintelligence.common.entity.bullet.EntityBullet;
+import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoArtilleryProjectile;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageEntityNBTSync;
+import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 
 /**
  * @author Pabilo8
  * @since 21.01.2021
  */
+//TODO: 15.02.2024 mandatory cleanup
 public class EntityMortar extends Entity implements IEntityAdditionalSpawnData, IEntityZoomProvider
 {
 	private static final MortarSights SIGHTS = new MortarSights();
@@ -46,6 +49,7 @@ public class EntityMortar extends Entity implements IEntityAdditionalSpawnData, 
 	private static final DataParameter<Boolean> dataMarkerGunPitchUp = EntityDataManager.createKey(EntityMortar.class, DataSerializers.BOOLEAN);
 	private static final DataParameter<Boolean> dataMarkerGunPitchDown = EntityDataManager.createKey(EntityMortar.class, DataSerializers.BOOLEAN);
 	private static final DataParameter<Float> dataMarkerShootingProgress = EntityDataManager.createKey(EntityMortar.class, DataSerializers.FLOAT);
+	private final AmmoFactory<EntityAmmoArtilleryProjectile> ammoFactory;
 
 	public boolean fireKeyPress = false, gunPitchUp = false, gunPitchDown = false;
 	public int setupTime = 0;
@@ -54,6 +58,7 @@ public class EntityMortar extends Entity implements IEntityAdditionalSpawnData, 
 	public EntityMortar(World worldIn)
 	{
 		super(worldIn);
+		this.ammoFactory = new AmmoFactory<>(this);
 	}
 
 	@Override
@@ -149,14 +154,20 @@ public class EntityMortar extends Entity implements IEntityAdditionalSpawnData, 
 							{
 								if(!world.isRemote)
 								{
-									double true_angle = Math.toRadians((MathHelper.wrapDegrees(-rotationYaw+180)));
-									double true_angle2 = Math.toRadians(rotationPitch);
-									Vec3d gun_end = IIUtils.offsetPosDirection(2f, true_angle, true_angle2);
+									//Calculate angles
+									double yawAngle = Math.toRadians((MathHelper.wrapDegrees(-rotationYaw+180)));
+									double pitchAngle = Math.toRadians(rotationPitch);
+									Vec3d gunEnd = IIMath.offsetPosDirection(2f, yawAngle, pitchAngle);
 
+									//Play firing sound
 									world.playSound(null, posX, posY, posZ, IISounds.mortarShot, SoundCategory.PLAYERS, 1.25f, 1f);
-									EntityBullet a = AmmoUtils.createBullet(world, heldItem.copy(), getPositionVector().add(gun_end.scale(-1)).addVector(0, 1, 0), gun_end.scale(-1).normalize());
-									a.setShooters(this);
-									world.spawnEntity(a);
+
+									//Create the ammo piece
+									ammoFactory.setPosition(getPositionVector().add(gunEnd))
+											.setDirection(gunEnd.scale(-1).normalize())
+											.setStack(Utils.copyStackWithAmount(heldItem, 1))
+											.setShooterAndGun(getPassengers().get(0), this)
+											.create();
 									heldItem.shrink(1);
 								}
 							}
@@ -287,8 +298,8 @@ public class EntityMortar extends Entity implements IEntityAdditionalSpawnData, 
 		float headYaw = MathHelper.wrapDegrees(this.rotationYaw);
 		double true_angle = Math.toRadians((-headYaw) > 180?360f-(-headYaw): (-headYaw));
 		double true_angle2 = Math.toRadians((-headYaw-90) > 180?360f-(-headYaw-90): (-headYaw-90));
-		Vec3d pos2 = IIUtils.offsetPosDirection(0.125f, true_angle, 0);
-		Vec3d pos3 = IIUtils.offsetPosDirection(-0.75f, true_angle2, 0);
+		Vec3d pos2 = IIMath.offsetPosDirection(0.125f, true_angle, 0);
+		Vec3d pos3 = IIMath.offsetPosDirection(-0.75f, true_angle2, 0);
 		float ff = 1;
 		if(shootingProgress > 0)
 		{

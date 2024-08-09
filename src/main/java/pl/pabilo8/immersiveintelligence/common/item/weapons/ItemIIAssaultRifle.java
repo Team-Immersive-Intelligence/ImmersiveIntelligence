@@ -29,13 +29,16 @@ import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
-import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIWeaponUpgrade.WeaponUpgrades;
+import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIWeaponUpgrade.WeaponUpgrade;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ammohandler.AmmoHandler;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ammohandler.AmmoHandlerMagazine;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ammohandler.AmmoHandlerSingle;
 import pl.pabilo8.immersiveintelligence.common.util.AdvancedSounds.RangedSound;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
+import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -45,6 +48,8 @@ import java.util.List;
  * @author Pabilo8
  * @since 17-09-2022
  */
+@IIItemProperties(category = IICategory.WARFARE)
+
 public class ItemIIAssaultRifle extends ItemIIGunBase implements IItemScrollable, IAdvancedZoomTool, IIEEnergyItem
 {
 	//--- NBT Values Reference ---//
@@ -113,13 +118,13 @@ public class ItemIIAssaultRifle extends ItemIIGunBase implements IItemScrollable
 			EasyNBT nbt = EasyNBT.wrapNBT(ItemNBTHelper.getTag(stack));
 			nbt.checkSetInt(FIRE_MODE_TIMER, i -> nbt.withInt(FIRE_MODE_TIMER, Math.max(i-1, 0)));
 
-			if(hasIIUpgrade(stack, WeaponUpgrades.GYROSCOPIC_STABILIZER)&&getEnergyStored(stack) >= AssaultRifle.upgradeStabilizerEnergy)
+			if(hasIIUpgrade(stack, WeaponUpgrade.GYROSCOPIC_STABILIZER)&&getEnergyStored(stack) >= AssaultRifle.upgradeStabilizerEnergy)
 			{
 				if(ItemNBTHelper.getFloat(stack, RECOIL_H) > 0||ItemNBTHelper.getFloat(stack, RECOIL_V) > 0)
 					extractEnergy(stack, AssaultRifle.upgradeStabilizerEnergy, false);
 			}
 
-			if(entity instanceof EntityLivingBase&&isAimed(stack)&&hasIIUpgrade(stack, WeaponUpgrades.INFRARED_SCOPE))
+			if(entity instanceof EntityLivingBase&&isAimed(stack)&&hasIIUpgrade(stack, WeaponUpgrade.INFRARED_SCOPE))
 			{
 				if(extractEnergy(stack, AssaultRifle.upgradeIRScopeEnergy, false) > 0)
 					((EntityLivingBase)entity).addPotionEffect(new PotionEffect(MobEffects.NIGHT_VISION, 4, 1, true, false));
@@ -133,7 +138,7 @@ public class ItemIIAssaultRifle extends ItemIIGunBase implements IItemScrollable
 	{
 		if(isEnergyUpgraded(stack))
 		{
-			list.add(IIUtils.getItalicString(I18n.format(IIReference.INFO_KEY+"charge_with_if")));
+			list.add(IIStringUtil.getItalicString(I18n.format(IIReference.INFO_KEY+"charge_with_if")));
 			list.add(I18n.format(Lib.DESC+"info.energyStored", TextFormatting.GOLD+String.valueOf(getEnergyStored(stack))+TextFormatting.RESET));
 			list.add("");
 		}
@@ -180,12 +185,12 @@ public class ItemIIAssaultRifle extends ItemIIGunBase implements IItemScrollable
 	{
 		int stored = getEnergyStored(weapon);
 
-		if(hasIIUpgrade(weapon, WeaponUpgrades.ELECTRIC_FIRING_MOTOR)&&stored >= AssaultRifle.upgradeFiringMotorEnergy)
+		if(hasIIUpgrade(weapon, WeaponUpgrade.ELECTRIC_FIRING_MOTOR)&&stored >= AssaultRifle.upgradeFiringMotorEnergy)
 		{
 			world.playSound(null, pos.x, pos.y, pos.z, IESounds.spark, SoundCategory.PLAYERS, 0.5f, 1.5f);
 			extractEnergy(weapon, AssaultRifle.upgradeFiringMotorEnergy, false);
 		}
-		if(hasIIUpgrade(weapon, WeaponUpgrades.RAILGUN_ASSISTED_CHAMBER)&&stored >= AssaultRifle.upgradeRailgunChamberEnergy)
+		if(hasIIUpgrade(weapon, WeaponUpgrade.RAILGUN_ASSISTED_CHAMBER)&&stored >= AssaultRifle.upgradeRailgunChamberEnergy)
 		{
 			world.playSound(null, pos.x, pos.y, pos.z, IESounds.railgunFire, SoundCategory.PLAYERS, 0.5f, 1f);
 			extractEnergy(weapon, AssaultRifle.upgradeRailgunChamberEnergy, false);
@@ -200,10 +205,10 @@ public class ItemIIAssaultRifle extends ItemIIGunBase implements IItemScrollable
 		switch(ItemNBTHelper.getInt(weapon, FIRE_MODE))
 		{
 			case 0:
-				return hasIIUpgrade(weapon, WeaponUpgrades.ELECTRIC_FIRING_MOTOR)
+				return hasIIUpgrade(weapon, WeaponUpgrade.ELECTRIC_FIRING_MOTOR)
 						&&getEnergyStored(weapon) >= AssaultRifle.upgradeFiringMotorEnergy?0.75f: 1f;
 			case 1:
-				return hasIIUpgrade(weapon, WeaponUpgrades.RAILGUN_ASSISTED_CHAMBER)
+				return hasIIUpgrade(weapon, WeaponUpgrade.RAILGUN_ASSISTED_CHAMBER)
 						&&getEnergyStored(weapon) >= AssaultRifle.upgradeRailgunChamberEnergy?1.5f: 1.25f;
 			case 2:
 				return 0.55f;
@@ -218,13 +223,13 @@ public class ItemIIAssaultRifle extends ItemIIGunBase implements IItemScrollable
 		{
 			case 0:
 			{
-				if(hasIIUpgrade(weapon, WeaponUpgrades.ELECTRIC_FIRING_MOTOR)&&getEnergyStored(weapon) >= AssaultRifle.upgradeFiringMotorEnergy)
+				if(hasIIUpgrade(weapon, WeaponUpgrade.ELECTRIC_FIRING_MOTOR)&&getEnergyStored(weapon) >= AssaultRifle.upgradeFiringMotorEnergy)
 					return 1;
 				return AssaultRifle.bulletFireTimeAuto;
 			}
 			case 1:
 			{
-				if(hasIIUpgrade(weapon, WeaponUpgrades.RAILGUN_ASSISTED_CHAMBER)) //penalty still applied
+				if(hasIIUpgrade(weapon, WeaponUpgrade.RAILGUN_ASSISTED_CHAMBER)) //penalty still applied
 					return 10;
 				return AssaultRifle.bulletFireTimeSemiAuto;
 			}
@@ -237,7 +242,7 @@ public class ItemIIAssaultRifle extends ItemIIGunBase implements IItemScrollable
 	@Override
 	public float getRecoilDecay(ItemStack weapon, EasyNBT nbt, boolean isAimed)
 	{
-		if(hasIIUpgrade(weapon, WeaponUpgrades.GYROSCOPIC_STABILIZER)&&getEnergyStored(weapon) >= AssaultRifle.upgradeStabilizerEnergy)
+		if(hasIIUpgrade(weapon, WeaponUpgrade.GYROSCOPIC_STABILIZER)&&getEnergyStored(weapon) >= AssaultRifle.upgradeStabilizerEnergy)
 			return isAimed?0.65f: 0.2f;
 		return super.getRecoilDecay(weapon, nbt, isAimed);
 	}
@@ -319,12 +324,12 @@ public class ItemIIAssaultRifle extends ItemIIGunBase implements IItemScrollable
 	@Override
 	public void removeFromWorkbench(EntityPlayer player, ItemStack stack)
 	{
-		if(hasIIUpgrade(stack, WeaponUpgrades.ELECTRIC_FIRING_MOTOR)&&
-				hasIIUpgrade(stack, WeaponUpgrades.SCOPE, WeaponUpgrades.INFRARED_SCOPE))
+		if(hasIIUpgrade(stack, WeaponUpgrade.ELECTRIC_FIRING_MOTOR)&&
+				hasIIUpgrade(stack, WeaponUpgrade.SCOPE, WeaponUpgrade.INFRARED_SCOPE))
 			IIUtils.unlockIIAdvancement(player, "main/weapon_of_war");
-		if(hasIIUpgrades(stack, WeaponUpgrades.RAILGUN_ASSISTED_CHAMBER, WeaponUpgrades.RIFLE_GRENADE_LAUNCHER))
+		if(hasIIUpgrades(stack, WeaponUpgrade.RAILGUN_ASSISTED_CHAMBER, WeaponUpgrade.RIFLE_GRENADE_LAUNCHER))
 			IIUtils.unlockIIAdvancement(player, "main/the_accelerator");
-		if(hasIIUpgrade(stack, WeaponUpgrades.STEREOSCOPIC_RANGEFINDER))
+		if(hasIIUpgrade(stack, WeaponUpgrade.STEREOSCOPIC_RANGEFINDER))
 			IIUtils.unlockIIAdvancement(player, "main/special_operations_initiative");
 	}
 
@@ -337,7 +342,7 @@ public class ItemIIAssaultRifle extends ItemIIGunBase implements IItemScrollable
 		{
 			int mode = ItemNBTHelper.getInt(stack, FIRE_MODE);
 			int switched = MathHelper.clamp(mode+(forward?1: -1), 0,
-					(getUpgrades(stack).hasKey(WeaponUpgrades.RIFLE_GRENADE_LAUNCHER.getName())?2: 1)
+					(getUpgrades(stack).hasKey(WeaponUpgrade.RIFLE_GRENADE_LAUNCHER.getName())?2: 1)
 			);
 
 			if(switched!=mode)
@@ -378,14 +383,14 @@ public class ItemIIAssaultRifle extends ItemIIGunBase implements IItemScrollable
 	@Override
 	public ResourceLocation getZoomOverlayTexture(ItemStack stack, EntityPlayer player)
 	{
-		return hasIIUpgrade(stack, WeaponUpgrades.SCOPE)?OVERLAY_SCOPE: OVERLAY_SCOPE_IR;
+		return hasIIUpgrade(stack, WeaponUpgrade.SCOPE)?OVERLAY_SCOPE: OVERLAY_SCOPE_IR;
 	}
 
 	//--- Utility Methods ---//
 
 	public boolean isScoped(ItemStack stack)
 	{
-		return hasIIUpgrade(stack, WeaponUpgrades.SCOPE, WeaponUpgrades.INFRARED_SCOPE);
+		return hasIIUpgrade(stack, WeaponUpgrade.SCOPE, WeaponUpgrade.INFRARED_SCOPE);
 	}
 
 	private boolean isEnergyUpgraded(ItemStack stack)

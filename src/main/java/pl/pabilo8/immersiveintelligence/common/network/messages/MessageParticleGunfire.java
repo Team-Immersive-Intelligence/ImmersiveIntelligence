@@ -9,7 +9,7 @@ import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.WorldServer;
 import pl.pabilo8.immersiveintelligence.client.ClientEventHandler;
-import pl.pabilo8.immersiveintelligence.client.fx.ParticleUtils;
+import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleRegistry;
 import pl.pabilo8.immersiveintelligence.common.network.IIMessage;
 
 /**
@@ -70,7 +70,7 @@ public class MessageParticleGunfire extends IIMessage
 				ClientEventHandler.gunshotEntities.put(((EntityLivingBase)entity), size);
 		}
 		else
-			ParticleUtils.spawnGunfireFX(pos,dir, size);
+			ParticleRegistry.spawnGunfireFX(pos, dir, size);
 	}
 
 	@Override

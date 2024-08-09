@@ -1,0 +1,39 @@
+{
+  "type": "forge:ore_shaped",
+  "pattern": [
+    "AA ",
+    "GLC",
+    "SPS"
+  ],
+  "key": {
+    "A": {
+      "type": "forge:ore_dict",
+      "ore": "plateSteel"
+    },
+    "G": {
+      "type": "forge:ore_dict",
+      "ore": "lens"
+    },
+    "L": {
+      "type": "forge:ore_dict",
+      "ore": "cameraBasic"
+    },
+    "C": {
+      "item": "immersiveengineering:material",
+      "data": 8
+    },
+    "P": {
+      "type": "forge:ore_dict",
+      "ore": "plateDuraluminium"
+    },
+    "S": {
+      "type": "forge:ore_dict",
+      "ore": "stickDuraluminium"
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:material",
+    "count": 1,
+    "data": 44
+  }
+}

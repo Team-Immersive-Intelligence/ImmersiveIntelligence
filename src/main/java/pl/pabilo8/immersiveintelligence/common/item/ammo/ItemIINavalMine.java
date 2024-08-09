@@ -2,11 +2,13 @@ package pl.pabilo8.immersiveintelligence.common.item.ammo;
 
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.server.SPacketTitle;
@@ -18,34 +20,42 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumCoreTypes;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumFuseTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseType;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.PropellantType;
+import pl.pabilo8.immersiveintelligence.api.ammo.utils.AmmoFactory;
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler.IItemScrollable;
-import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
-import pl.pabilo8.immersiveintelligence.client.model.misc.ModelNavalMine;
+import pl.pabilo8.immersiveintelligence.client.model.builtin.IAmmoModel;
+import pl.pabilo8.immersiveintelligence.client.model.builtin.ModelAmmoNavalMine;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.entity.bullet.EntityNavalMine;
-import pl.pabilo8.immersiveintelligence.common.entity.bullet.EntityNavalMineAnchor;
-import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoCasing.Casings;
+import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.naval_mine.EntityNavalMine;
+import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.naval_mine.EntityNavalMineAnchor;
+import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoCasing.Casing;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * @author Pabilo8
  * @since 30-08-2019
  */
-public class ItemIINavalMine extends ItemIIAmmoBase implements IItemScrollable
+@IIItemProperties(category = IICategory.WARFARE)
+public class ItemIINavalMine extends ItemIIAmmoBase<EntityNavalMine> implements IItemScrollable
 {
 	public ItemIINavalMine()
 	{
-		super("naval_mine", "naval_mine", Casings.NAVAL_MINE);
+		super("naval_mine", "naval_mine", Casing.NAVAL_MINE);
 		this.setUnlocalizedName(ImmersiveIntelligence.MODID+"."+this.itemName);
 	}
 
@@ -56,35 +66,48 @@ public class ItemIINavalMine extends ItemIIAmmoBase implements IItemScrollable
 	}
 
 	@Override
+	public PropellantType getAllowedPropellants()
+	{
+		return PropellantType.NONE;
+	}
+
+	@Override
 	public int getCoreMaterialNeeded()
 	{
 		return 6;
 	}
 
 	@Override
-	public float getInitialMass()
+	public float getCasingMass()
 	{
 		return 1f;
 	}
 
 	@Override
-	public float getDefaultVelocity()
+	public float getVelocity()
 	{
 		return 0f;
 	}
 
 	@Override
-	public float getCaliber()
+	public int getCaliber()
 	{
-		return 16f;
+		return 16;
 	}
 
 	@SideOnly(Side.CLIENT)
+	@Nonnull
 	@Override
-	public @Nonnull
-	Class<? extends IBulletModel> getModel()
+	public Function<ItemIIAmmoBase<EntityNavalMine>, IAmmoModel<ItemIIAmmoBase<EntityNavalMine>, EntityNavalMine>> get3DModel()
 	{
-		return ModelNavalMine.class;
+		return ModelAmmoNavalMine::createNavalMineModel;
+	}
+
+	@Nonnull
+	@Override
+	public EntityNavalMine getAmmoEntity(World world)
+	{
+		return new EntityNavalMine(world);
 	}
 
 	@Override
@@ -96,13 +119,13 @@ public class ItemIINavalMine extends ItemIIAmmoBase implements IItemScrollable
 	@Override
 	public ItemStack getCasingStack(int amount)
 	{
-		return IIContent.itemAmmoCasing.getStack(Casings.NAVAL_MINE, amount);
+		return IIContent.itemAmmoCasing.getStack(Casing.NAVAL_MINE, amount);
 	}
 
 	@Override
-	public EnumCoreTypes[] getAllowedCoreTypes()
+	public CoreType[] getAllowedCoreTypes()
 	{
-		return new EnumCoreTypes[]{EnumCoreTypes.CANISTER};
+		return new CoreType[]{CoreType.CANISTER};
 	}
 
 	@Override
@@ -124,93 +147,105 @@ public class ItemIINavalMine extends ItemIIAmmoBase implements IItemScrollable
 		return new ArrayList<>();
 	}
 
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn)
+	{
+		super.addInformation(stack, worldIn, tooltip, flagIn);
+		int length = ItemNBTHelper.hasKey(stack, "length")?ItemNBTHelper.getInt(stack, "length"): 5;
+		tooltip.add(I18n.format(IIReference.DESCRIPTION_KEY+"naval_mine_chain_length",
+				TextFormatting.GOLD+Integer.toString(length)));
+	}
 
 	/**
 	 * Called when the equipped item is right clicked.
 	 * Boat code
+	 *
+	 * @param world  The world the item is in
+	 * @param player The player using the item
+	 * @param hand   The hand the item is in
+	 * @return A new ItemStack to be put in the player's hand
 	 */
-	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn)
+	@Override
+	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand)
 	{
-		ItemStack itemstack = playerIn.getHeldItem(handIn);
-		float f = 1.0F;
-		float f1 = playerIn.prevRotationPitch+(playerIn.rotationPitch-playerIn.prevRotationPitch);
-		float f2 = playerIn.prevRotationYaw+(playerIn.rotationYaw-playerIn.prevRotationYaw);
-		double d0 = playerIn.prevPosX+(playerIn.posX-playerIn.prevPosX);
-		double d1 = playerIn.prevPosY+(playerIn.posY-playerIn.prevPosY)+(double)playerIn.getEyeHeight();
-		double d2 = playerIn.prevPosZ+(playerIn.posZ-playerIn.prevPosZ);
-		Vec3d vec3d = new Vec3d(d0, d1, d2);
-		float f3 = MathHelper.cos(-f2*0.017453292F-(float)Math.PI);
-		float f4 = MathHelper.sin(-f2*0.017453292F-(float)Math.PI);
-		float f5 = -MathHelper.cos(-f1*0.017453292F);
-		float f6 = MathHelper.sin(-f1*0.017453292F);
-		float f7 = f4*f5;
-		float f8 = f3*f5;
-		Vec3d vec3d1 = vec3d.addVector((double)f7*5.0D, (double)f6*5.0D, (double)f8*5.0D);
-		RayTraceResult raytraceresult = worldIn.rayTraceBlocks(vec3d, vec3d1, true);
+		ItemStack stack = player.getHeldItem(hand);
 
+		//Get player's position vector
+		float dirLookPitch = player.prevRotationPitch+(player.rotationPitch-player.prevRotationPitch);
+		float dirLookYaw = player.prevRotationYaw+(player.rotationYaw-player.prevRotationYaw);
+		Vec3d playerVec = new Vec3d(
+				player.prevPosX+(player.posX-player.prevPosX),
+				player.prevPosY+(player.posY-player.prevPosY)+(double)player.getEyeHeight(),
+				player.prevPosZ+(player.posZ-player.prevPosZ)
+		);
+
+		//Get player's look vector
+		float dX = MathHelper.cos(-dirLookYaw*0.017453292F-(float)Math.PI);
+		float dZ = MathHelper.sin(-dirLookYaw*0.017453292F-(float)Math.PI);
+		float dY = -MathHelper.cos(-dirLookPitch*0.017453292F);
+		Vec3d lookVec = playerVec.addVector(
+				dZ*dY*5.0D,
+				MathHelper.sin(-dirLookPitch*0.017453292F)*5.0D,
+				dX*dY*5.0D
+		);
+		RayTraceResult raytraceresult = world.rayTraceBlocks(playerVec, lookVec, true);
+
+		//Try to place the mine on look position
 		if(raytraceresult==null)
-		{
-			return new ActionResult<>(EnumActionResult.PASS, itemstack);
-		}
+			return new ActionResult<>(EnumActionResult.PASS, stack);
 		else
 		{
-			Vec3d vec3d2 = playerIn.getLook(1.0F);
-			boolean flag = false;
-			List<Entity> list = worldIn.getEntitiesWithinAABBExcludingEntity(playerIn, playerIn.getEntityBoundingBox().expand(vec3d2.x*5.0D, vec3d2.y*5.0D, vec3d2.z*5.0D).grow(1.0D));
+			List<Entity> list = world.getEntitiesWithinAABBExcludingEntity(player, player.getEntityBoundingBox()
+					.expand(lookVec.x, lookVec.y, lookVec.z)
+					.grow(1.0D));
 
+			boolean flag = false;
 			for(Entity entity : list)
-			{
 				if(entity.canBeCollidedWith())
 				{
 					AxisAlignedBB axisalignedbb = entity.getEntityBoundingBox().grow(entity.getCollisionBorderSize());
-
-					if(axisalignedbb.contains(vec3d))
-					{
+					if(axisalignedbb.contains(playerVec))
 						flag = true;
-					}
 				}
-			}
 
 			if(flag)
-			{
-				return new ActionResult<>(EnumActionResult.PASS, itemstack);
-			}
+				return new ActionResult<>(EnumActionResult.PASS, stack);
 			else if(raytraceresult.typeOfHit!=RayTraceResult.Type.BLOCK)
-			{
-				return new ActionResult<>(EnumActionResult.PASS, itemstack);
-			}
+				return new ActionResult<>(EnumActionResult.PASS, stack);
 			else
 			{
-				Block block = worldIn.getBlockState(raytraceresult.getBlockPos()).getBlock();
-				boolean flag1 = block==Blocks.WATER||block==Blocks.FLOWING_WATER;
-				EntityNavalMine mine = new EntityNavalMine(worldIn, itemstack, raytraceresult.hitVec.x, flag1?raytraceresult.hitVec.y-0.12D: raytraceresult.hitVec.y, raytraceresult.hitVec.z);
+				//Whether the mine is inside a fluid block
+				IBlockState state = world.getBlockState(raytraceresult.getBlockPos());
+				Block block = state.getBlock();
+				float liquidHeight = block.getBlockLiquidHeight(world, raytraceresult.getBlockPos(), state, null);
 
-				if(!worldIn.getCollisionBoxes(mine, mine.getEntityBoundingBox().grow(-0.1D)).isEmpty())
+				if(!world.isRemote)
 				{
-					return new ActionResult<>(EnumActionResult.FAIL, itemstack);
-				}
-				else
-				{
-					if(!worldIn.isRemote)
-					{
-						EntityNavalMineAnchor anchor = new EntityNavalMineAnchor(worldIn);
-						anchor.setPosition(raytraceresult.hitVec.x, flag1?raytraceresult.hitVec.y-0.12D: raytraceresult.hitVec.y-1.5, raytraceresult.hitVec.z);
-						mine.setMaxLength(ItemNBTHelper.hasKey(itemstack, "length")?ItemNBTHelper.getInt(itemstack, "length"): 5);
-						worldIn.spawnEntity(anchor);
-						mine.setPosition(anchor.posX, anchor.posY-0.5, anchor.posZ);
-						worldIn.spawnEntity(mine);
-						mine.startRiding(anchor);
-						worldIn.playSound(null, mine.posX, mine.posY, mine.posZ, SoundEvents.ENTITY_GENERIC_SPLASH, SoundCategory.BLOCKS, 0.75F, 0.8F);
-					}
+					EntityNavalMine mine = new AmmoFactory<EntityNavalMine>(world)
+							.setStack(stack)
+							.setPosition(raytraceresult.hitVec)
+							.setOwner(player)
+							.create();
 
-					if(!playerIn.capabilities.isCreativeMode)
-					{
-						itemstack.shrink(1);
-					}
+					EntityNavalMineAnchor anchor = new EntityNavalMineAnchor(world);
+					anchor.setPosition(raytraceresult.hitVec.x, raytraceresult.hitVec.y-liquidHeight, raytraceresult.hitVec.z);
+					mine.setMaxLength(ItemNBTHelper.hasKey(stack, "length")?ItemNBTHelper.getInt(stack, "length"): 5);
+					world.spawnEntity(anchor);
+					mine.setPosition(anchor.posX, anchor.posY+0.5-liquidHeight, anchor.posZ);
+					world.spawnEntity(mine);
+					mine.startRiding(anchor);
 
-					playerIn.addStat(StatList.getObjectUseStats(this));
-					return new ActionResult<>(EnumActionResult.SUCCESS, itemstack);
+					world.playSound(null, mine.posX, mine.posY, mine.posZ,
+							liquidHeight > 0?SoundEvents.ENTITY_GENERIC_SPLASH: block.getSoundType(state, world, raytraceresult.getBlockPos(), mine).getPlaceSound(),
+							SoundCategory.BLOCKS, 0.75F, 0.8F);
 				}
+
+				if(!player.capabilities.isCreativeMode)
+					stack.shrink(1);
+
+				player.addStat(StatList.getObjectUseStats(this));
+				return new ActionResult<>(EnumActionResult.SUCCESS, stack);
 			}
 		}
 	}
@@ -226,14 +261,8 @@ public class ItemIINavalMine extends ItemIIAmmoBase implements IItemScrollable
 	}
 
 	@Override
-	public EnumFuseTypes[] getAllowedFuseTypes()
+	public FuseType[] getAllowedFuseTypes()
 	{
-		return new EnumFuseTypes[]{EnumFuseTypes.CONTACT, EnumFuseTypes.PROXIMITY};
-	}
-
-	@Override
-	public boolean isProjectile()
-	{
-		return false;
+		return new FuseType[]{FuseType.CONTACT, FuseType.PROXIMITY};
 	}
 }

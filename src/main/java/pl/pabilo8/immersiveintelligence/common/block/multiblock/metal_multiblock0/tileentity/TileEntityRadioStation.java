@@ -17,20 +17,20 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.IFluidTank;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.RadioStation;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
 import pl.pabilo8.immersiveintelligence.api.data.radio.IRadioDevice;
 import pl.pabilo8.immersiveintelligence.api.data.radio.RadioNetwork;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.RadioStation;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools;
+import pl.pabilo8.immersiveintelligence.common.IISounds;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.MultiblockRadioStation;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IAdvancedMultiblockTileEntity;
-import pl.pabilo8.immersiveintelligence.common.IISounds;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,7 +77,7 @@ public class TileEntityRadioStation extends TileEntityMultiblockMetal<TileEntity
 			if(getTileForPos(9)!=null)
 				ImmersiveEngineering.proxy.handleTileSound(IISounds.radio_noise, getTileForPos(9), this.soundDelay > 0, 0.125f/4f, 1);
 			if(getTileForPos(0)!=null)
-				ImmersiveEngineering.proxy.handleTileSound(IISounds.radio_beep, getTileForPos(0), this.soundDelay > 0, 0.5f/4f, sountIn?1f:0.5f);
+				ImmersiveEngineering.proxy.handleTileSound(IISounds.radio_beep, getTileForPos(0), this.soundDelay > 0, 0.5f/4f, sountIn?1f: 0.5f);
 
 			if(soundDelay > 0)
 				soundDelay--;
@@ -128,8 +128,8 @@ public class TileEntityRadioStation extends TileEntityMultiblockMetal<TileEntity
 		}
 		else if(message.hasKey("beep"))
 		{
-			this.sountIn=message.getBoolean("beep");
-			this.soundDelay = sountIn?20:25;
+			this.sountIn = message.getBoolean("beep");
+			this.soundDelay = sountIn?20: 25;
 		}
 	}
 
@@ -274,7 +274,7 @@ public class TileEntityRadioStation extends TileEntityMultiblockMetal<TileEntity
 	@Override
 	public void onRadioSend(DataPacket packet)
 	{
-		IIPacketHandler.sendToClient(this, new MessageIITileSync(this, EasyNBT.newNBT().withBoolean("beep",false)));
+		IIPacketHandler.sendToClient(this, new MessageIITileSync(this, EasyNBT.newNBT().withBoolean("beep", false)));
 	}
 
 	@Override
@@ -287,7 +287,7 @@ public class TileEntityRadioStation extends TileEntityMultiblockMetal<TileEntity
 			if(conn!=null)
 			{
 				conn.sendPacket(packet);
-				IIPacketHandler.sendToClient(this, new MessageIITileSync(this, EasyNBT.newNBT().withBoolean("beep",true)));
+				IIPacketHandler.sendToClient(this, new MessageIITileSync(this, EasyNBT.newNBT().withBoolean("beep", true)));
 			}
 			return true;
 		}
@@ -307,7 +307,7 @@ public class TileEntityRadioStation extends TileEntityMultiblockMetal<TileEntity
 	@Override
 	public boolean isBasicRadio()
 	{
-		return true;
+		return false;
 	}
 
 	@Override
@@ -365,28 +365,28 @@ public class TileEntityRadioStation extends TileEntityMultiblockMetal<TileEntity
 			list.add(new AxisAlignedBB(0, 0, 0, 1, 1, 1).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
 		else
 		{
-			EnumFacing ff = mirrored?facing.rotateY():facing;
-			double off =pos<20?-0.125:(pos<35?0.125:(pos<45?0.375:0.5));
+			EnumFacing ff = mirrored?facing.rotateY(): facing;
+			double off = pos < 20?-0.125: (pos < 35?0.125: (pos < 45?0.375: 0.5));
 			if(offset[1]==-1)
 			{
 				list.add(new AxisAlignedBB(0, 0, 0, 1, 0.5, 1).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
 				if(pos==2)
 					list.add(new AxisAlignedBB(0.3125, 0.5, 0.3125, 0.6875, 1, 0.6875)
-							.offset(ff.rotateY().getFrontOffsetX()*0.1875f,0,ff.rotateY().getFrontOffsetZ()*0.1875f)
-							.offset(ff.getOpposite().getFrontOffsetX()*0.1875f,0,ff.getOpposite().getFrontOffsetZ()*0.1875f)
+							.offset(ff.rotateY().getFrontOffsetX()*0.1875f, 0, ff.rotateY().getFrontOffsetZ()*0.1875f)
+							.offset(ff.getOpposite().getFrontOffsetX()*0.1875f, 0, ff.getOpposite().getFrontOffsetZ()*0.1875f)
 							.offset(getPos().getX(), getPos().getY(), getPos().getZ()));
 				else if(pos==6)
 					list.add(new AxisAlignedBB(0.3125, 0.5, 0.3125, 0.6875, 1, 0.6875)
-							.offset(ff.getOpposite().rotateY().getFrontOffsetX()*0.1875f,0,ff.getOpposite().rotateY().getFrontOffsetZ()*0.1875f)
-							.offset(ff.getFrontOffsetX()*0.1875f,0,ff.getFrontOffsetZ()*0.1875f)
+							.offset(ff.getOpposite().rotateY().getFrontOffsetX()*0.1875f, 0, ff.getOpposite().rotateY().getFrontOffsetZ()*0.1875f)
+							.offset(ff.getFrontOffsetX()*0.1875f, 0, ff.getFrontOffsetZ()*0.1875f)
 							.offset(getPos().getX(), getPos().getY(), getPos().getZ()));
 				else if(pos==8)
 					list.add(new AxisAlignedBB(0.3125, 0.5, 0.3125, 0.6875, 1, 0.6875)
-							.offset(ff.rotateY().getFrontOffsetX()*0.1875f,0,ff.rotateY().getFrontOffsetZ()*0.1875f)
-							.offset(ff.getFrontOffsetX()*0.1875f,0,ff.getFrontOffsetZ()*0.1875f)
+							.offset(ff.rotateY().getFrontOffsetX()*0.1875f, 0, ff.rotateY().getFrontOffsetZ()*0.1875f)
+							.offset(ff.getFrontOffsetX()*0.1875f, 0, ff.getFrontOffsetZ()*0.1875f)
 							.offset(getPos().getX(), getPos().getY(), getPos().getZ()));
 			}
-			else if (pos==67)
+			else if(pos==67)
 			{
 				list.add(new AxisAlignedBB(0.25, 0.5+0.0625, 0.25, 0.75, 1.0625, 0.75).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
 				list.add(new AxisAlignedBB(0.125, 0, 0.125, 0.875, 0.5+0.0625, 0.875).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
@@ -398,7 +398,7 @@ public class TileEntityRadioStation extends TileEntityMultiblockMetal<TileEntity
 				list.add(new AxisAlignedBB(0, 0, 0.575, 0.425, 1, 1).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
 				list.add(new AxisAlignedBB(0.575, 0, 0.575, 1, 1, 1).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
 			}
-			else if (pos==26||pos==24||pos==18||pos==20)
+			else if(pos==26||pos==24||pos==18||pos==20)
 			{
 				list.add(new AxisAlignedBB(0.3125, 0, 0.3125, 0.6875, 1, 0.6875).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
 				if(pos==18)
@@ -407,47 +407,47 @@ public class TileEntityRadioStation extends TileEntityMultiblockMetal<TileEntity
 			else if(pos==45||pos==36||pos==27)
 			{
 				list.add(new AxisAlignedBB(0.5-0.2125, 0, 0.5-0.2125, 0.5+0.2125, 1, 0.5+0.2125)
-						.offset(ff.rotateY().getFrontOffsetX()*off,0,ff.rotateY().getFrontOffsetZ()*off)
-						.offset(ff.getFrontOffsetX()*off,0,ff.getFrontOffsetZ()*off)
+						.offset(ff.rotateY().getFrontOffsetX()*off, 0, ff.rotateY().getFrontOffsetZ()*off)
+						.offset(ff.getFrontOffsetX()*off, 0, ff.getFrontOffsetZ()*off)
 						.offset(getPos().getX(), getPos().getY(), getPos().getZ()));
 			}
 			else if(pos==47||pos==38||pos==29||pos==11)
 			{
 				list.add(new AxisAlignedBB(0.5-0.2125, 0, 0.5-0.2125, 0.5+0.2125, 1, 0.5+0.2125)
-						.offset(ff.rotateYCCW().getFrontOffsetX()*off,0,ff.rotateYCCW().getFrontOffsetZ()*off)
-						.offset(ff.getFrontOffsetX()*off,0,ff.getFrontOffsetZ()*off)
+						.offset(ff.rotateYCCW().getFrontOffsetX()*off, 0, ff.rotateYCCW().getFrontOffsetZ()*off)
+						.offset(ff.getFrontOffsetX()*off, 0, ff.getFrontOffsetZ()*off)
 						.offset(getPos().getX(), getPos().getY(), getPos().getZ()));
 			}
 			else if(pos==51||pos==42||pos==33||pos==15)
 			{
 				list.add(new AxisAlignedBB(0.5-0.2125, 0, 0.5-0.2125, 0.5+0.2125, 1, 0.5+0.2125)
-						.offset(ff.rotateY().getFrontOffsetX()*off,0,ff.rotateY().getFrontOffsetZ()*off)
-						.offset(ff.getOpposite().getFrontOffsetX()*off,0,ff.getOpposite().getFrontOffsetZ()*off)
+						.offset(ff.rotateY().getFrontOffsetX()*off, 0, ff.rotateY().getFrontOffsetZ()*off)
+						.offset(ff.getOpposite().getFrontOffsetX()*off, 0, ff.getOpposite().getFrontOffsetZ()*off)
 						.offset(getPos().getX(), getPos().getY(), getPos().getZ()));
 			}
 			else if(pos==53||pos==44||pos==35||pos==17)
 			{
 				list.add(new AxisAlignedBB(0.5-0.2125, 0, 0.5-0.2125, 0.5+0.2125, 1, 0.5+0.2125)
-						.offset(ff.rotateYCCW().getFrontOffsetX()*off,0,ff.rotateYCCW().getFrontOffsetZ()*off)
-						.offset(ff.getOpposite().getFrontOffsetX()*off,0,ff.getOpposite().getFrontOffsetZ()*off)
+						.offset(ff.rotateYCCW().getFrontOffsetX()*off, 0, ff.rotateYCCW().getFrontOffsetZ()*off)
+						.offset(ff.getOpposite().getFrontOffsetX()*off, 0, ff.getOpposite().getFrontOffsetZ()*off)
 						.offset(getPos().getX(), getPos().getY(), getPos().getZ()));
 			}
 			else if(pos==28||pos==34)
 			{
-				EnumFacing g = pos==34?facing.getOpposite():facing;
+				EnumFacing g = pos==34?facing.getOpposite(): facing;
 				list.add(new AxisAlignedBB(0, -0.1875, 0, 0, 0, 0)
-						.grow(facing.rotateY().getFrontOffsetX(),0,facing.rotateY().getFrontOffsetZ())
-						.grow(facing.getFrontOffsetX()*0.125,0,facing.getFrontOffsetZ()*0.125)
-						.offset(g.getFrontOffsetX()*0.1875,0,g.getFrontOffsetZ()*0.1875)
+						.grow(facing.rotateY().getFrontOffsetX(), 0, facing.rotateY().getFrontOffsetZ())
+						.grow(facing.getFrontOffsetX()*0.125, 0, facing.getFrontOffsetZ()*0.125)
+						.offset(g.getFrontOffsetX()*0.1875, 0, g.getFrontOffsetZ()*0.1875)
 						.offset(getPos().getX()+0.5, getPos().getY(), getPos().getZ()+0.5));
 			}
 			else if(pos==30||pos==32)
 			{
-				EnumFacing g = (pos==32?facing.getOpposite():facing).rotateY();
+				EnumFacing g = (pos==32?facing.getOpposite(): facing).rotateY();
 				list.add(new AxisAlignedBB(0, -0.1875, 0, 0, 0, 0)
-						.grow(facing.getFrontOffsetX(),0,facing.getFrontOffsetZ())
-						.grow(facing.rotateY().getFrontOffsetX()*0.125,0,facing.rotateY().getFrontOffsetZ()*0.125)
-						.offset(g.getFrontOffsetX()*0.1875,0,g.getFrontOffsetZ()*0.1875)
+						.grow(facing.getFrontOffsetX(), 0, facing.getFrontOffsetZ())
+						.grow(facing.rotateY().getFrontOffsetX()*0.125, 0, facing.rotateY().getFrontOffsetZ()*0.125)
+						.offset(g.getFrontOffsetX()*0.1875, 0, g.getFrontOffsetZ()*0.1875)
 						.offset(getPos().getX()+0.5, getPos().getY(), getPos().getZ()+0.5));
 			}
 			else

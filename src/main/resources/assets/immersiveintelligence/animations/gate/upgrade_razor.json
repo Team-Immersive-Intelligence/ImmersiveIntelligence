@@ -1,0 +1,161 @@
+{
+	"comment": "Made by Pabilo8 with Blockbench",
+	"groups": {
+		"razor_wire_left1": {
+			"rotation": [
+				{
+					"time": 0.125,
+					"transform": [220.144, 22.32924, 24.25045]
+				},
+				{
+					"time": 0.25,
+					"transform": [0, 0, 0]
+				}
+			],
+			"position": [
+				{
+					"time": 0.125,
+					"transform": [0, 12, -6]
+				},
+				{
+					"time": 0.25,
+					"transform": [0, 0, 0]
+				}
+			]
+		},
+		"razor_wire_left2": {
+			"rotation": [
+				{
+					"time": 0.25,
+					"transform": [360, 0, 0]
+				},
+				{
+					"time": 0.375,
+					"transform": [0, 0, 0]
+				}
+			],
+			"position": [
+				{
+					"time": 0.25,
+					"transform": [0, 0, -12]
+				},
+				{
+					"time": 0.375,
+					"transform": [0, 0, 0]
+				}
+			]
+		},
+		"razor_wire_left3": {
+			"rotation": [
+				{
+					"time": 0.375,
+					"transform": [360, 0, 0]
+				},
+				{
+					"time": 0.5,
+					"transform": [0, 0, 0]
+				}
+			],
+			"position": [
+				{
+					"time": 0.375,
+					"transform": [0, 0, -12]
+				},
+				{
+					"time": 0.5,
+					"transform": [0, 0, 0]
+				}
+			]
+		},
+		"razor_post_left": {
+			"position": [
+				{
+					"time": 0,
+					"transform": [0, 10, -10]
+				},
+				{
+					"time": 0.125,
+					"transform": [0, 0, 0]
+				}
+			]
+		},
+		"razor_post_right": {
+			"position": [
+				{
+					"time": 0.5,
+					"transform": [0, 5, 3]
+				},
+				{
+					"time": 0.625,
+					"transform": [0, 0, 0]
+				}
+			]
+		},
+		"razor_wire_right1": {
+			"rotation": [
+				{
+					"time": 0.625,
+					"transform": [-364.33287, 2.49762, -29.9055]
+				},
+				{
+					"time": 0.75,
+					"transform": [0, 0, 0]
+				}
+			],
+			"position": [
+				{
+					"time": 0.625,
+					"transform": [0, 10, -10]
+				},
+				{
+					"time": 0.75,
+					"transform": [0, 0, 0]
+				}
+			]
+		},
+		"razor_wire_right2": {
+			"rotation": [
+				{
+					"time": 0.75,
+					"transform": [-360, 0, 0]
+				},
+				{
+					"time": 0.875,
+					"transform": [0, 0, 0]
+				}
+			],
+			"position": [
+				{
+					"time": 0.75,
+					"transform": [0, 0, -20]
+				},
+				{
+					"time": 0.875,
+					"transform": [0, 0, 0]
+				}
+			]
+		},
+		"razor_wire_right3": {
+			"rotation": [
+				{
+					"time": 0.875,
+					"transform": [-360, 0, 0]
+				},
+				{
+					"time": 1,
+					"transform": [0, 0, 0]
+				}
+			],
+			"position": [
+				{
+					"time": 0.875,
+					"transform": [0, 0, -24]
+				},
+				{
+					"time": 1,
+					"transform": [0, 0, 0]
+				}
+			]
+		}
+	}
+}

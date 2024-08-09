@@ -13,6 +13,7 @@ import net.minecraft.client.util.ITooltipFlag.TooltipFlags;
 import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeItemStack;
+import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 import java.io.IOException;
@@ -117,7 +118,7 @@ public class GuiDataEditorItemStack extends GuiDataEditor<DataTypeItemStack>
 	@Override
 	public boolean mousePressed(Minecraft mc, int mouseX, int mouseY)
 	{
-		if(IIUtils.isPointInRectangle(x+(width/2)-8, y+10, x+(width/2)-8+16, y+10+16, mouseX, mouseY))
+		if(IIMath.isPointInRectangle(x+(width/2)-8, y+10, x+(width/2)-8+16, y+10+16, mouseX, mouseY))
 		{
 			ItemStack underMouse = mc.player.inventory.getItemStack();
 			this.scanned = underMouse.copy();
@@ -161,7 +162,7 @@ public class GuiDataEditorItemStack extends GuiDataEditor<DataTypeItemStack>
 	@Override
 	public void getTooltip(ArrayList<String> tooltip, int mx, int my)
 	{
-		if(!scanned.isEmpty()&&IIUtils.isPointInRectangle(x+(width/2)-8, y+10, x+(width/2)-8+16, y+10+16, mx, my))
+		if(!scanned.isEmpty()&&IIMath.isPointInRectangle(x+(width/2)-8, y+10, x+(width/2)-8+16, y+10+16, mx, my))
 			tooltip.addAll(scanned.getTooltip(ClientUtils.mc().player, ClientUtils.mc().gameSettings.advancedItemTooltips?TooltipFlags.ADVANCED: TooltipFlags.NORMAL));
 
 	}

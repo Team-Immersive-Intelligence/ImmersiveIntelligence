@@ -11,7 +11,6 @@
   "variants": {
     "type": {
       "redstone_data_interface": {
-        "model": "immersiveintelligence:smartmodel/conn_empty"
       }
     },
     "facing": {
@@ -50,9 +49,22 @@
     },
     "boolean1": {
       "false": {},
-      "true": {}
+      "true": {
+      }
     },
     "_0multiblockslave": {
+      "false": {},
+      "true": {
+        "model": "immersiveengineering:smartmodel/connector",
+        "custom": {
+          "base": "immersiveintelligence:block/empty.obj",
+          "layers": [
+            "CUTOUT"
+          ]
+        }
+      }
+    },
+    "_1dynamicrender": {
       "false": {},
       "true": {
         "model": "immersiveengineering:ie_empty"

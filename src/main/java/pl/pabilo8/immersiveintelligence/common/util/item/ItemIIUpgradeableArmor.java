@@ -58,6 +58,7 @@ import java.util.UUID;
 public abstract class ItemIIUpgradeableArmor extends ItemArmor implements IUpgradeableTool, ISkinnable
 {
 	protected static final UUID[] ARMOR_MODIFIERS = new UUID[]{UUID.fromString("845DB27C-C624-495F-8C9F-6020A9A58B6B"), UUID.fromString("D8499B04-0E66-4726-AB29-64469D734E0D"), UUID.fromString("9F3D476D-C118-4544-8365-64846904B48E"), UUID.fromString("2AD3F246-FEE1-4E67-B886-69FD380BB150")};
+	public static final NonNullList<ItemIIUpgradeableArmor> ARMOR_REGISTRY = NonNullList.create();
 	String upgradeType;
 	public static final String NBT_Colour = "colour";
 
@@ -71,7 +72,7 @@ public abstract class ItemIIUpgradeableArmor extends ItemArmor implements IUpgra
 		this.setCreativeTab(IIContent.II_CREATIVE_TAB);
 		this.setMaxStackSize(1);
 		IIContent.ITEMS.add(this);
-		//MinecraftForge.EVENT_BUS.register(this);
+		ARMOR_REGISTRY.add(this);
 	}
 
 	protected abstract String getMaterialName(ArmorMaterial material);

@@ -115,7 +115,8 @@
   {
     "name": "vanguard",
     "uuid": [
-      "22153f9b-4950-4028-911a-7d39a2c80101"
+      "22153f9b-4950-4028-911a-7d39a2c80101",
+      "7c187546-19eb-4e37-be4d-8d6ec040e071"
     ],
     "appliesTo": [
       "machinegun",
@@ -126,7 +127,8 @@
   {
     "name": "magnate",
     "uuid": [
-      "22153f9b-4950-4028-911a-7d39a2c80101"
+      "22153f9b-4950-4028-911a-7d39a2c80101",
+      "7c187546-19eb-4e37-be4d-8d6ec040e071"
     ],
     "appliesTo": [
       "machinegun",
@@ -139,7 +141,8 @@
   {
     "name": "investor",
     "uuid": [
-      "22153f9b-4950-4028-911a-7d39a2c80101"
+      "22153f9b-4950-4028-911a-7d39a2c80101",
+      "7c187546-19eb-4e37-be4d-8d6ec040e071"
     ],
     "appliesTo": [
       "howitzer",

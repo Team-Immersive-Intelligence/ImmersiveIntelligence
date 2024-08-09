@@ -29,17 +29,19 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseType;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityMachinegun;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityMortar;
 import pl.pabilo8.immersiveintelligence.common.entity.hans.HansUtils;
-import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityFieldHowitzer;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityVehicleSeat;
+import pl.pabilo8.immersiveintelligence.common.entity.vehicle.towable.gun.EntityFieldHowitzer;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine.Magazines;
 import pl.pabilo8.immersiveintelligence.common.item.armor.ItemIIArmorUpgrade.ArmorUpgrades;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIRailgunOverride;
-import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIWeaponUpgrade.WeaponUpgrades;
+import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIWeaponUpgrade.WeaponUpgrade;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -71,7 +73,7 @@ public class CommandIIHans extends CommandBase
 						HansUtils.setHelmet(hans);
 						HansUtils.setRifle(hans, ItemStack.EMPTY);
 
-						ItemStack bullet = IIContent.itemAmmoMachinegun.getBulletWithParams("core_steel", "piercing");
+						ItemStack bullet = IIContent.itemAmmoMachinegun.getAmmoStack(IIContent.ammoCoreSteel, CoreType.PIERCING, FuseType.CONTACT);
 						bullet.setCount(bullet.getMaxStackSize());
 						for(int i = 0; i < 6; i++)
 							hans.mainInventory.set(i, bullet.copy());
@@ -88,7 +90,7 @@ public class CommandIIHans extends CommandBase
 						HansUtils.setHelmet(hans);
 
 						ItemStack magazine = IIContent.itemBulletMagazine.getMagazine(Magazines.SUBMACHINEGUN,
-								IIContent.itemAmmoSubmachinegun.getBulletWithParams("core_brass", "piercing"));
+								IIContent.itemAmmoSubmachinegun.getAmmoStack(IIContent.ammoCoreIron, CoreType.PIERCING, FuseType.CONTACT));
 						HansUtils.setSubmachinegun(hans, magazine);
 						for(int i = 0; i < 6; i++)
 							hans.mainInventory.set(i, magazine.copy());
@@ -103,7 +105,7 @@ public class CommandIIHans extends CommandBase
 					public void setItems(EntityHans hans, int id)
 					{
 						HansUtils.setHelmet(hans);
-						ItemStack stack = IIContent.itemGrenade.getBulletWithParams("core_brass", "canister", "hmx")
+						ItemStack stack = IIContent.itemGrenade.getAmmoStack(IIContent.ammoCoreBrass, CoreType.CANISTER, FuseType.CONTACT, IIContent.ammoComponentHMX)
 								.setStackDisplayName("Sprenghandgranate mk.2");
 						stack.setCount(16);
 						hans.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, stack);
@@ -120,8 +122,8 @@ public class CommandIIHans extends CommandBase
 						HansUtils.setHelmet(hans);
 
 						ItemStack magazine = IIContent.itemBulletMagazine.getMagazine(Magazines.SUBMACHINEGUN_DRUM,
-								IIContent.itemAmmoSubmachinegun.getBulletWithParams("core_brass", "piercing"));
-						HansUtils.setSubmachinegun(hans, magazine, WeaponUpgrades.BOTTOM_LOADING);
+								IIContent.itemAmmoSubmachinegun.getAmmoStack(IIContent.ammoCoreIron, CoreType.PIERCING, FuseType.CONTACT));
+						HansUtils.setSubmachinegun(hans, magazine, WeaponUpgrade.BOTTOM_LOADING);
 						for(int i = 0; i < 4; i++)
 							hans.mainInventory.set(i, magazine.copy());
 					}
@@ -137,8 +139,8 @@ public class CommandIIHans extends CommandBase
 						HansUtils.setHelmet(hans, ArmorUpgrades.INFILTRATOR_GEAR, ArmorUpgrades.COMPOSITE_ARMOR_PLATES);
 
 						ItemStack magazine = IIContent.itemBulletMagazine.getMagazine(Magazines.SUBMACHINEGUN_DRUM,
-								IIContent.itemAmmoSubmachinegun.getBulletWithParams("core_tungsten", "piercing"));
-						HansUtils.setSubmachinegun(hans, magazine, WeaponUpgrades.BOTTOM_LOADING, WeaponUpgrades.FOLDING_STOCK, WeaponUpgrades.SUPPRESSOR);
+								IIContent.itemAmmoSubmachinegun.getAmmoStack(IIContent.ammoCoreTungsten, CoreType.PIERCING, FuseType.CONTACT));
+						HansUtils.setSubmachinegun(hans, magazine, WeaponUpgrade.BOTTOM_LOADING, WeaponUpgrade.FOLDING_STOCK, WeaponUpgrade.SUPPRESSOR);
 						for(int i = 0; i < 6; i++)
 							hans.mainInventory.set(i, magazine.copy());
 					}
@@ -154,7 +156,7 @@ public class CommandIIHans extends CommandBase
 						HansUtils.setHelmet(hans);
 
 						ItemStack magazine = IIContent.itemBulletMagazine.getMagazine(Magazines.ASSAULT_RIFLE,
-								IIContent.itemAmmoAssaultRifle.getBulletWithParams("core_steel", "piercing"));
+								IIContent.itemAmmoAssaultRifle.getAmmoStack(IIContent.ammoCoreSteel, CoreType.PIERCING, FuseType.CONTACT));
 						HansUtils.setAssaultRifle(hans, magazine);
 						for(int i = 0; i < 6; i++)
 							hans.mainInventory.set(i, magazine.copy());
@@ -184,7 +186,7 @@ public class CommandIIHans extends CommandBase
 						HansUtils.setHelmet(hans);
 						ItemStack stack = new ItemStack(IEContent.itemRailgun);
 						hans.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, stack);
-						ItemStack ammo = IIContent.itemRailgunGrenade.getBulletWithParams("core_brass", "canister", "tnt");
+						ItemStack ammo = IIContent.itemRailgunGrenade.getAmmoStack(IIContent.ammoCoreBrass, CoreType.PIERCING, FuseType.CONTACT, IIContent.ammoComponentTNT);
 						ammo.setCount(8);
 						hans.mainInventory.set(0, ammo.copy());
 						hans.mainInventory.set(1, ammo.copy());
@@ -274,8 +276,8 @@ public class CommandIIHans extends CommandBase
 						ItemStack mgstack = new ItemStack(IIContent.itemMachinegun);
 
 						NonNullList<ItemStack> upgrades = NonNullList.withSize(3, ItemStack.EMPTY);
-						upgrades.set(0, new ItemStack(IIContent.itemWeaponUpgrade, 1, WeaponUpgrades.TRIPOD.ordinal()));
-						upgrades.set(1, new ItemStack(IIContent.itemWeaponUpgrade, 1, WeaponUpgrades.HEAVY_BARREL.ordinal()));
+						upgrades.set(0, new ItemStack(IIContent.itemWeaponUpgrade, 1, WeaponUpgrade.TRIPOD.ordinal()));
+						upgrades.set(1, new ItemStack(IIContent.itemWeaponUpgrade, 1, WeaponUpgrade.HEAVY_BARREL.ordinal()));
 						IIContent.itemMachinegun.setContainedItems(mgstack, upgrades);
 						IIContent.itemMachinegun.recalculateUpgrades(mgstack);
 						IIContent.itemMachinegun.finishUpgradeRecalculation(mgstack);
@@ -572,8 +574,8 @@ public class CommandIIHans extends CommandBase
 			ItemStack mgstack = new ItemStack(IIContent.itemMachinegun);
 
 			NonNullList<ItemStack> upgrades = NonNullList.withSize(3, ItemStack.EMPTY);
-			upgrades.set(0, new ItemStack(IIContent.itemWeaponUpgrade, 1, WeaponUpgrades.TRIPOD.ordinal()));
-			upgrades.set(1, new ItemStack(IIContent.itemWeaponUpgrade, 1, WeaponUpgrades.HEAVY_BARREL.ordinal()));
+			upgrades.set(0, new ItemStack(IIContent.itemWeaponUpgrade, 1, WeaponUpgrade.TRIPOD.ordinal()));
+			upgrades.set(1, new ItemStack(IIContent.itemWeaponUpgrade, 1, WeaponUpgrade.HEAVY_BARREL.ordinal()));
 			IIContent.itemMachinegun.setContainedItems(mgstack, upgrades);
 			IIContent.itemMachinegun.recalculateUpgrades(mgstack);
 			IIContent.itemMachinegun.finishUpgradeRecalculation(mgstack);

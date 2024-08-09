@@ -8,9 +8,9 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumHand;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IUpgradableMachine;
+import pl.pabilo8.immersiveintelligence.api.utils.IUpgradableMachine;
 import pl.pabilo8.immersiveintelligence.client.gui.block.*;
-import pl.pabilo8.immersiveintelligence.client.gui.block.ammunition_production.GuiAmmunitionWorkshop;
+import pl.pabilo8.immersiveintelligence.client.gui.block.ammunition_production.GuiAmmunitionAssembler;
 import pl.pabilo8.immersiveintelligence.client.gui.block.ammunition_production.GuiProjectileWorkshop;
 import pl.pabilo8.immersiveintelligence.client.gui.block.arithmetic_logic_machine.GuiArithmeticLogicMachineEdit;
 import pl.pabilo8.immersiveintelligence.client.gui.block.arithmetic_logic_machine.GuiArithmeticLogicMachineStorage;
@@ -30,6 +30,7 @@ import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.eff
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.effect_crate.TileEntityRepairCrate;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.*;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.*;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.tileentity.TileEntitySawmill;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.tileentity.TileEntitySkyCartStation;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.tileentity.TileEntitySkyCrateStation;
@@ -127,8 +128,8 @@ public enum IIGuiList
 			ContainerElectrolyzer::new
 	),
 
-	GUI_PRECISSION_ASSEMBLER(TileEntityPrecisionAssembler.class,
-			ContainerPrecissionAssembler::new
+	GUI_PRECISION_ASSEMBLER(TileEntityPrecisionAssembler.class,
+			ContainerPrecisionAssembler::new
 	),
 
 	GUI_FUEL_STATION(TileEntityFuelStation.class,
@@ -184,8 +185,8 @@ public enum IIGuiList
 	GUI_PROJECTILE_WORKSHOP(TileEntityProjectileWorkshop.class,
 			ContainerProjectileWorkshop::new
 	),
-	GUI_AMMUNITION_WORKSHOP(TileEntityAmmunitionWorkshop.class,
-			ContainerAmmunitionWorkshop::new
+	GUI_AMMUNITION_ASSEMBLER(TileEntityAmmunitionAssembler.class,
+			ContainerAmmunitionAssembler::new
 	),
 
 	RADAR(TileEntityRadar.class,
@@ -248,7 +249,7 @@ public enum IIGuiList
 		IIGuiList.GUI_PRINTING_PRESS.setClientGui(GuiPrintingPress::new);
 		IIGuiList.GUI_CHEMICAL_BATH.setClientGui(GuiChemicalBath::new);
 		IIGuiList.GUI_ELECTROLYZER.setClientGui(GuiElectrolyzer::new);
-		IIGuiList.GUI_PRECISSION_ASSEMBLER.setClientGui(GuiPrecissionAssembler::new);
+		IIGuiList.GUI_PRECISION_ASSEMBLER.setClientGui(GuiPrecisionAssembler::new);
 		IIGuiList.GUI_FUEL_STATION.setClientGui(GuiFuelStation::new);
 		IIGuiList.GUI_DATA_MERGER.setClientGui(GuiDataMerger::new);
 
@@ -286,7 +287,7 @@ public enum IIGuiList
 		IIGuiList.GUI_FILLER.setClientGui(GuiFiller::new);
 		IIGuiList.GUI_CHEMICAL_PAINTER.setClientGui(GuiChemicalPainter::new);
 
-		IIGuiList.GUI_AMMUNITION_WORKSHOP.setClientGui(GuiAmmunitionWorkshop::new);
+		IIGuiList.GUI_AMMUNITION_ASSEMBLER.setClientGui(GuiAmmunitionAssembler::new);
 		IIGuiList.GUI_PROJECTILE_WORKSHOP.setClientGui(GuiProjectileWorkshop::new);
 
 		IIGuiList.RADAR.setClientGui(GuiRadar::new);

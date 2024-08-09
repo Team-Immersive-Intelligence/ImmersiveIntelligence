@@ -9,9 +9,10 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.ComponentRole;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumComponentRole;
-import pl.pabilo8.immersiveintelligence.api.bullets.IAmmoComponent;
+import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 import java.util.List;
@@ -28,15 +29,15 @@ public class IIManualPageBulletComponent extends IIManualPages
 	protected String localizedLore;
 	protected String localizedType;
 	ItemStack stack;
-	EnumComponentRole type;
+	ComponentRole type;
 	float density;
 
-	public IIManualPageBulletComponent(ManualInstance manual, IAmmoComponent component)
+	public IIManualPageBulletComponent(ManualInstance manual, AmmoComponent component)
 	{
 		this(manual, component.getName(), component.getMaterial().getExampleStack(), component.getRole(), component.getDensity());
 	}
 
-	public IIManualPageBulletComponent(ManualInstance manual, String name, ItemStack stack, EnumComponentRole type, float density)
+	public IIManualPageBulletComponent(ManualInstance manual, String name, ItemStack stack, ComponentRole type, float density)
 	{
 		super(manual, name);
 		this.name = name;
@@ -92,7 +93,7 @@ public class IIManualPageBulletComponent extends IIManualPages
 		ManualUtils.renderItem().renderItemAndEffectIntoGUI(stack, x/2, (y+4)/2);
 		GlStateManager.popMatrix();
 
-		if(IIUtils.isPointInRectangle(x+4, y, x+36, y+32, mx, my))
+		if(IIMath.isPointInRectangle(x+4, y, x+36, y+32, mx, my))
 			gui.renderToolTip(stack, mx, my);
 		//				manual.fontRenderer.drawSplitString(localizedText, x,y, 120, manual.getTextColour());
 	}

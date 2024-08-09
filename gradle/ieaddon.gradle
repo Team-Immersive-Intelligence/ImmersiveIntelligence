@@ -5,7 +5,8 @@ dependencies {
     deobfCompile "team.chisel.ctm:CTM:MC1.12.2-1.0.2.31"
     deobfCompile "blusunrize:ImmersiveEngineering:0.12-92-+"
 
-    deobfCompile "CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-4.1.8.468"
+    deobfCompile "CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-4.1.11.505"
+    deobfCompile "com.mod-buildcraft:buildcraft:7.99.12"
 
     //Lighting mod formerly called Albedo
     implementation "com.elytradev:mirage:2.0.3-rc3-SNAPSHOT"
@@ -16,9 +17,12 @@ dependencies {
     implementation "li.cil.oc:OpenComputers:MC1.12.2-1.7.5.221"
 
     //Download from curse maven
-    compileOnly "curse.maven:immersive-petroleum-268250:3382321"
+    implementation "curse.maven:tough-as-nails-246391:2710969"
+    implementation "curse.maven:terrafirmacraft-302973:3645502"
+    implementation "curse.maven:immersive-petroleum-268250:3382321"
     compileOnly "curse.maven:immersive-posts-314645:2951672"
     compileOnly "curse.maven:immersive-technology-359407:3658279"
+    implementation "curse.maven:mysticalmechanics-300742:3006392"
 }
 
 repositories {
@@ -56,20 +60,23 @@ repositories {
         url "https://maven.cil.li/"
     }
 
-    maven { // Baubles
+    /*maven { // Baubles
         name "MCModDev"
         url "https://maven.mcmoddev.com/"
-    }
+    }*/
 
     maven { //for Immersive Petroleum, Posts and Technology
         name "CurseMaven"
         url "https://www.cursemaven.com"
     }
 
-    repositories { //Curseforge maven, in case some other maven goes offline
-        maven {
-            name = "CurseForge"
-            url = "https://minecraft.curseforge.com/api/maven/"
-        }
+    maven {
+        name "BuildCraft"
+        url "https://mod-buildcraft.com/maven"
+    }
+
+    maven {
+        name "CurseForge"
+        url "https://minecraft.curseforge.com/api/maven/"
     }
 }

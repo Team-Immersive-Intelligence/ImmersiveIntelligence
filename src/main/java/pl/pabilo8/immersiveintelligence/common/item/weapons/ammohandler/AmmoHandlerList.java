@@ -13,7 +13,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.api.bullets.IAmmo;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIGunBase;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
@@ -27,11 +27,11 @@ import java.util.List;
  */
 public abstract class AmmoHandlerList extends AmmoHandler
 {
-	private final IAmmo validAmmo;
+	private final IAmmoTypeItem validAmmo;
 	private final String tag;
 	private final int size;
 
-	public AmmoHandlerList(ItemIIGunBase item, String tag, IAmmo validAmmo, int size)
+	public AmmoHandlerList(ItemIIGunBase item, String tag, IAmmoTypeItem validAmmo, int size)
 	{
 		super(item);
 		this.tag = tag;
@@ -75,7 +75,6 @@ public abstract class AmmoHandlerList extends AmmoHandler
 			return 0;
 
 		final int reloadTime = item.getReloadTime(weapon, found, upgrades);
-		// TODO: 21.02.2023
 		nbt.withItemStack("found", found);
 
 		//Play loading sound

@@ -3,7 +3,7 @@ package pl.pabilo8.immersiveintelligence.common.compat.crafttweaker;
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.annotations.ZenRegister;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.rotary.RotaryUtils;
+import pl.pabilo8.immersiveintelligence.api.rotary.IIRotaryUtils;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
@@ -21,7 +21,7 @@ public class RotaryInputTweaker
 		try
 		{
 			Class<?> c = Class.forName(classPath);
-			RotaryUtils.ie_rotational_blocks_torque.put(
+			IIRotaryUtils.TORQUE_BLOCKS.put(
 					(tileEntity -> tileEntity.getClass().equals(c)),
 					(aFloat -> aFloat*torque)
 			);

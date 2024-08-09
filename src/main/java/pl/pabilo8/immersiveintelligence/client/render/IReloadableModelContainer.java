@@ -18,7 +18,7 @@ public interface IReloadableModelContainer<T>
 
 	/**
 	 * Called on {@link net.minecraftforge.client.event.TextureStitchEvent.Pre}<br>
-	 * Used for registering sprites for the texture sticher's atlas
+	 * Used for registering sprites for the texture stitcher's atlas
 	 */
 	default void registerSprites(TextureMap map)
 	{
@@ -27,6 +27,7 @@ public interface IReloadableModelContainer<T>
 
 	/**
 	 * Adds the model container to the II Model Registry
+	 *
 	 * @param name name of the model in II namespace
 	 * @return this
 	 */
@@ -37,12 +38,13 @@ public interface IReloadableModelContainer<T>
 
 	/**
 	 * Adds the model container to the II Model Registry
+	 *
 	 * @param modelName full name of this model
 	 * @return this
 	 */
 	default T subscribeToList(ResourceLocation modelName)
 	{
-		IIModelRegistry.instance.addReloadableModel(this, modelName);
+		IIModelRegistry.INSTANCE.addReloadableModel(this, modelName);
 		return (T)this;
 	}
 
@@ -52,6 +54,6 @@ public interface IReloadableModelContainer<T>
 	 */
 	default void unsubscribeToList()
 	{
-		IIModelRegistry.instance.removeReloadableModel(this);
+		IIModelRegistry.INSTANCE.removeReloadableModel(this);
 	}
 }

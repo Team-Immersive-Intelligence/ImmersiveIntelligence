@@ -1,0 +1,9 @@
+{
+	"origins": {
+		"core_canister": [2, 6, -2.1],
+		"casing": [2, 6, -2.1],
+		"casing_simple": [0, 0, 0],
+		"casing_fuse": [-1.29252, 3.88118, -1.28598]
+	},
+	"hierarchy": {}
+}

@@ -1,5 +1,6 @@
 package pl.pabilo8.immersiveintelligence.client.util;
 
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.util.ResourceLocation;
 
 /**
@@ -16,6 +17,8 @@ public class ResLoc extends ResourceLocation
 	public static final String EXT_OBJAMT = ".obj.amt";
 	public static final String EXT_JSON = ".json";
 	public static final String EXT_PNG = ".png";
+	public static final String EXT_FX_AMT = ".fx.amt";
+	public static final String EXT_AMT = ".amt";
 
 	//--- Instance Variables ---//
 	private final String extension;
@@ -100,8 +103,18 @@ public class ResLoc extends ResourceLocation
 		return new ResLoc(res.getResourceDomain(), res.getResourcePath());
 	}
 
+	public ResLoc with(Object... elements)
+	{
+		return of(this, elements);
+	}
+
 	public ResLoc replace(String replace, String with)
 	{
 		return new ResLoc(resourceDomain, resourcePath.replace(replace, with));
+	}
+
+	public ModelResourceLocation getModelResLoc()
+	{
+		return new ModelResourceLocation(this.resourceDomain+":"+this.resourcePath);
 	}
 }

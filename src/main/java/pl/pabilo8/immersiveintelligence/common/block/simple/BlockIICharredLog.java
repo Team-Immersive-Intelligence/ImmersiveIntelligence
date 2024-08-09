@@ -19,6 +19,7 @@ import pl.pabilo8.immersiveintelligence.common.util.block.BlockIIBase;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IIBlockEnum;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IIBlockProperties;
 import pl.pabilo8.immersiveintelligence.common.util.block.ItemBlockIIBase;
+import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -34,6 +35,8 @@ public class BlockIICharredLog extends BlockIIBase<CharredLogs>
 	{
 		super("charred_log", PropertyEnum.create("type", CharredLogs.class), Material.WOOD, ItemBlockIIBase::new, BlockLog.LOG_AXIS);
 		this.setHardness(2.0F);
+		this.setResistance(1F);
+		setCategory(IICategory.RESOURCES);
 	}
 
 	public enum CharredLogs implements IIBlockEnum
@@ -93,7 +96,7 @@ public class BlockIICharredLog extends BlockIIBase<CharredLogs>
 	@ParametersAreNonnullByDefault
 	public boolean canSustainLeaves(IBlockState state, IBlockAccess world, BlockPos pos)
 	{
-		return true;
+		return false;
 	}
 
 	@Override

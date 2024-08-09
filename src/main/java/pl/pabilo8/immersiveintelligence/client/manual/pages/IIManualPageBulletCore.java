@@ -5,8 +5,8 @@ import blusunrize.lib.manual.ManualUtils;
 import blusunrize.lib.manual.gui.GuiManual;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextFormatting;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumComponentRole;
-import pl.pabilo8.immersiveintelligence.api.bullets.IAmmoCore;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.ComponentRole;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoCore;
 
 /**
  * @author Pabilo8
@@ -14,23 +14,22 @@ import pl.pabilo8.immersiveintelligence.api.bullets.IAmmoCore;
  */
 public class IIManualPageBulletCore extends IIManualPageBulletComponent
 {
-	float damageMod, penMod, blastMod;
+	private final AmmoCore core;
 
-	public IIManualPageBulletCore(ManualInstance manual, IAmmoCore coreType)
+	public IIManualPageBulletCore(ManualInstance manual, AmmoCore ammoCore)
 	{
-		super(manual, coreType.getName(), coreType.getMaterial().getExampleStack(), EnumComponentRole.GENERAL_PURPOSE, coreType.getDensity());
+		super(manual, ammoCore.getName(), ammoCore.getMaterial().getExampleStack(), ComponentRole.GENERAL_PURPOSE, ammoCore.getDensity());
+		core = ammoCore;
 		this.text = "bullet_core."+name;
-		damageMod = coreType.getDamageModifier();
-		penMod = coreType.getPenetrationHardness();
-		blastMod = coreType.getExplosionModifier();
 	}
 
 	@Override
 	int renderInfo(GuiManual gui, int x, int y)
 	{
-		ManualUtils.drawSplitString(manual.fontRenderer, TextFormatting.BOLD+I18n.format("ie.manual.entry.bullet_components.dmg_mod", damageMod), x, y+20, 120, manual.getTextColour());
-		ManualUtils.drawSplitString(manual.fontRenderer, TextFormatting.BOLD+I18n.format("ie.manual.entry.bullet_components.pen_mod", penMod), x, y+30, 120, manual.getTextColour());
-		ManualUtils.drawSplitString(manual.fontRenderer, TextFormatting.BOLD+I18n.format("ie.manual.entry.bullet_components.blast_mod", blastMod), x, y+40, 120, manual.getTextColour());
+		//TODO: 27.05.2024 reimplement
+//		ManualUtils.drawSplitString(manual.fontRenderer, TextFormatting.BOLD+I18n.format("ie.manual.entry.bullet_components.dmg_mod", damageMod), x-12, y+20, 140, manual.getTextColour());
+//		ManualUtils.drawSplitString(manual.fontRenderer, TextFormatting.BOLD+I18n.format("ie.manual.entry.bullet_components.pen_mod", penMod), x-12, y+30, 140, manual.getTextColour());
+//		ManualUtils.drawSplitString(manual.fontRenderer, TextFormatting.BOLD+I18n.format("ie.manual.entry.bullet_components.blast_mod", blastMod), x-12, y+40, 140, manual.getTextColour());
 
 		ManualUtils.drawSplitString(manual.fontRenderer, TextFormatting.BOLD+I18n.format("ie.manual.entry.bullet_components.density", density), x, y, 120, manual.getTextColour());
 

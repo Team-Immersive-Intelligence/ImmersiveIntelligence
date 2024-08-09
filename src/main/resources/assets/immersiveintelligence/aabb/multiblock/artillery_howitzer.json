@@ -1,8 +1,8 @@
 {
   "bounds": {
     "empty": [
-      0, 0, 0,
-      0, 0, 0
+      -32, -32, -32,
+      -32, -32, -32
     ],
     "door": [
       0, 0, 0,
@@ -223,6 +223,26 @@
     "platform_elevator3": [
       3, -12, 3,
       13, 20, 13
+    ],
+    "tactile_door": [
+      -4, -4, -16,
+      4, 4, 32
+    ],
+    "tactile_door2": [
+      -4, -4, -32,
+      4, 4, 48
+    ],
+    "tactile_door3": [
+      -4, -4, -40,
+      4, 4, 56
+    ],
+    "tactile_chamber_door": [
+      -10, -19, -3,
+      10, 19, 3
+    ],
+    "tactile_gun": [
+      -4, -4, -4,
+      4, 4, 4
     ]
   },
   "positions": {
@@ -287,7 +307,8 @@
     ],
     "40": ["platform_base", "platform_elevator1"],
     "121": ["platform_elevator2a", "platform_elevator2b"],
-    "202": ["platform_elevator3"]
+    "202": ["platform_elevator3"],
+    "93,94,95,174,175,176,166,85": "empty"
   },
   "poi": {
     "energy": 449,
@@ -307,24 +328,189 @@
       66, 228, 147, 309, 390, 471
     ]
   },
+  "tactile_offset": [0, 0, -0.5],
   "tactile": {
-    "_schema": "immersiveintelligence:block/multiblock/artillery_howitzer.obj.amt",
+    "_schema": "immersiveintelligence:models/block/multiblock/artillery_howitzer.obj.amt",
+    "_unoriented": [
+      "roller1",
+      "roller2",
+      "roller3"
+    ],
     "turret": [
       {
-        "offset": [-8, 0, 0],
-        "type": "door"
+        "type": "tactile_gun"
+      }
+    ],
+    "shell_hatch": [
+      {
+        "type": "tactile_gun"
       }
     ],
     "gun": [
       {
-        "offset": [-8, 0, 0],
-        "bounds": [
-          0, 0, 0,
-          8, 8, 8
-        ]
+        "offset": [-13, 0, 1],
+        "type": "tactile_gun"
       }
     ],
     "barrel": [
+      {
+        "offset": [0, 0, 1],
+        "type": "tactile_gun"
+      },
+      {
+        "offset": [0, 8, 1],
+        "type": "tactile_gun"
+      },
+      {
+        "offset": [0, 16, 1],
+        "type": "tactile_gun"
+      },
+      {
+        "offset": [0, 24, 1],
+        "type": "tactile_gun"
+      },
+      {
+        "offset": [0, 32, 1],
+        "type": "tactile_gun"
+      },
+      {
+        "offset": [0, 40, 1],
+        "type": "tactile_gun"
+      },
+      {
+        "offset": [0, 48, 1],
+        "type": "tactile_gun"
+      },
+      {
+        "offset": [0, 56, 1],
+        "type": "tactile_gun"
+      }
+    ],
+    "platform": [
+      {
+        "bounds": [
+          -6, -8, -6,
+          6, 8, 6
+        ]
+      }
+    ],
+    "platform2": [
+      {
+        "bounds": [
+          -5, -8, -5,
+          5, 8, 5
+        ]
+      }
+    ],
+    "platform3": [
+      {
+        "bounds": [
+          -5, -8, -5,
+          5, 8, 5
+        ]
+      }
+    ],
+    "platform4": [
+      {
+        "bounds": [
+          -4, -8, -4,
+          4, 8, 4
+        ]
+      }
+    ],
+    "platform5": [
+      {
+        "bounds": [
+          -4, -8, -4,
+          4, 8, 4
+        ]
+      }
+    ],
+    "platform6": [
+      {
+        "bounds": [
+          -4, -6, -4,
+          4, 12, 4
+        ]
+      },
+      {
+        "bounds": [
+          -28, 12, -28,
+          28, 14, 28
+        ]
+      }
+    ],
+    "chamber_door_left": [
+      {
+        "offset": [3, 0, 0],
+        "type": "tactile_chamber_door"
+      }
+    ],
+    "chamber_door_right": [
+      {
+        "offset": [-1, 0, 0],
+        "type": "tactile_chamber_door"
+      }
+    ],
+    "chamber_cart": [
+      {
+        "bounds": [
+          -8, -8, -8,
+          8, 2, 8
+        ]
+      }
+    ],
+    "door_left": [
+      {
+        "offset": [-8, 0, 0],
+        "type": "tactile_door"
+      },
+      {
+        "offset": [-16, 0, 0],
+        "type": "tactile_door2"
+      },
+      {
+        "offset": [-24, 0, 0],
+        "type": "tactile_door3"
+      },
+      {
+        "offset": [-32, 0, 0],
+        "type": "tactile_door3"
+      },
+      {
+        "offset": [-40, 0, 0],
+        "type": "tactile_door3"
+      },
+      {
+        "offset": [-48, 0, 0],
+        "type": "tactile_door3"
+      }
+    ],
+    "door_right": [
+      {
+        "offset": [8, 0, 0],
+        "type": "tactile_door"
+      },
+      {
+        "offset": [16, 0, 0],
+        "type": "tactile_door2"
+      },
+      {
+        "offset": [24, 0, 0],
+        "type": "tactile_door3"
+      },
+      {
+        "offset": [32, 0, 0],
+        "type": "tactile_door3"
+      },
+      {
+        "offset": [40, 0, 0],
+        "type": "tactile_door3"
+      },
+      {
+        "offset": [48, 0, 0],
+        "type": "tactile_door3"
+      }
     ]
   }
 }

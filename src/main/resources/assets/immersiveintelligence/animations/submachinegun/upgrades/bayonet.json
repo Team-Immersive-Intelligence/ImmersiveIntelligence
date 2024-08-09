@@ -1,0 +1,13 @@
+{
+	"comment": "Made by Pabilo8 with Blockbench",
+	"groups": {
+		"bayonet": {
+			"visibility": [
+				{
+					"time": 0,
+					"visibility": true
+				}
+			]
+		}
+	}
+}

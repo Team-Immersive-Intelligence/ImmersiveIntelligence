@@ -28,7 +28,9 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.common.item.tools.ItemIIDrillHead.DrillHeads;
+import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
 import pl.pabilo8.modworks.annotations.item.GeneratedItemModels;
 
@@ -40,6 +42,7 @@ import java.util.List;
  * @author Pabilo8
  * @since 24-04-2020
  */
+@IIItemProperties(category = IICategory.TOOLS)
 public class ItemIIDrillHead extends ItemIISubItemsBase<DrillHeads> implements IDrillHead
 {
 	public ItemIIDrillHead()

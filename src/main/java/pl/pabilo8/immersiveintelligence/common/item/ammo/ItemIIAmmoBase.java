@@ -1,7 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common.item.ammo;
 
 import blusunrize.immersiveengineering.api.ApiUtils;
-import blusunrize.immersiveengineering.common.items.IEItemInterfaces.ITextureOverride;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -9,23 +8,24 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumCoreTypes;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumFuseTypes;
-import pl.pabilo8.immersiveintelligence.api.bullets.IAmmo;
-import pl.pabilo8.immersiveintelligence.api.bullets.IAmmoComponent;
-import pl.pabilo8.immersiveintelligence.api.bullets.IAmmoCore;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseType;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoCore;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityAmmoBase;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoBase.AmmoParts;
-import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoCasing.Casings;
+import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoCasing.Casing;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIIItemTextureOverride;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
 
@@ -38,20 +38,22 @@ import java.util.List;
 
 /**
  * @author Pabilo8
+ * @updated 02.01.2024, 26.05.2024
+ * @ii-approved 0.3.1
  * @since 2019-05-11
  */
-public abstract class ItemIIAmmoBase extends ItemIISubItemsBase<AmmoParts> implements IAmmo, ITextureOverride
+public abstract class ItemIIAmmoBase<E extends EntityAmmoBase<? super E>> extends ItemIISubItemsBase<AmmoParts> implements IAmmoTypeItem<ItemIIAmmoBase<E>, E>, IIIItemTextureOverride
 {
 	public final String NAME;
 	@Nullable
-	private final Casings casing;
+	private final Casing casing;
 
-	public ItemIIAmmoBase(String name, @Nullable Casings casing)
+	public ItemIIAmmoBase(String name, @Nullable Casing casing)
 	{
 		this("bullet_"+name.toLowerCase(), name, casing);
 	}
 
-	public ItemIIAmmoBase(String fullName, String name, @Nullable Casings casing)
+	public ItemIIAmmoBase(String fullName, String name, @Nullable Casing casing)
 	{
 		super(fullName, casing==null?64: casing.getStackSize(), AmmoParts.values());
 		this.NAME = name;
@@ -68,28 +70,12 @@ public abstract class ItemIIAmmoBase extends ItemIISubItemsBase<AmmoParts> imple
 
 	public void makeDefault(ItemStack stack)
 	{
-		if(!ItemNBTHelper.hasKey(stack, "core"))
-			ItemNBTHelper.setString(stack, "core", "core_brass");
-		if(!ItemNBTHelper.hasKey(stack, "core_type"))
-			ItemNBTHelper.setString(stack, "core_type", getAllowedCoreTypes()[0].getName());
-		if(stackToSub(stack)==AmmoParts.BULLET&&!ItemNBTHelper.hasKey(stack, "fuse"))
-			ItemNBTHelper.setString(stack, "fuse", getAllowedFuseTypes()[0].getName());
-	}
-
-	@Override
-	public IAmmoCore getCore(ItemStack stack)
-	{
-		if(!ItemNBTHelper.hasKey(stack, "core"))
-			makeDefault(stack);
-		return AmmoRegistry.INSTANCE.getCore(ItemNBTHelper.getString(stack, "core"));
-	}
-
-	@Override
-	public EnumCoreTypes getCoreType(ItemStack stack)
-	{
-		if(!ItemNBTHelper.hasKey(stack, "core_type"))
-			makeDefault(stack);
-		return EnumCoreTypes.v(ItemNBTHelper.getString(stack, "core_type"));
+		if(!ItemNBTHelper.hasKey(stack, NBT_CORE))
+			ItemNBTHelper.setString(stack, NBT_CORE, "core_brass");
+		if(!ItemNBTHelper.hasKey(stack, NBT_CORE_TYPE))
+			ItemNBTHelper.setString(stack, NBT_CORE_TYPE, getAllowedCoreTypes()[0].getName());
+		if(stackToSub(stack)==AmmoParts.BULLET&&!ItemNBTHelper.hasKey(stack, NBT_FUSE))
+			ItemNBTHelper.setString(stack, NBT_FUSE, getAllowedFuseTypes()[0].getName());
 	}
 
 	@Override
@@ -98,63 +84,14 @@ public abstract class ItemIIAmmoBase extends ItemIISubItemsBase<AmmoParts> imple
 		return casing!=null?IIContent.itemAmmoCasing.getStack(casing, amount): ItemStack.EMPTY;
 	}
 
-	@Override
-	public int getPaintColor(ItemStack stack)
-	{
-		if(ItemNBTHelper.hasKey(stack, "paint_color"))
-			return ItemNBTHelper.getInt(stack, "paint_color");
-		return -1;
-	}
 
-	@Override
 	public void registerSprites(TextureMap map)
 	{
 		ApiUtils.getRegisterSprite(map, ImmersiveIntelligence.MODID+":items/bullets/ammo/"+getName().toLowerCase()+"/base");
-		for(EnumCoreTypes coreType : getAllowedCoreTypes())
+		for(CoreType coreType : getAllowedCoreTypes())
 			ApiUtils.getRegisterSprite(map, ImmersiveIntelligence.MODID+":items/bullets/ammo/"+getName().toLowerCase()+"/"+coreType.getName());
 		ApiUtils.getRegisterSprite(map, ImmersiveIntelligence.MODID+":items/bullets/ammo/"+getName().toLowerCase()+"/paint");
 		ApiUtils.getRegisterSprite(map, ImmersiveIntelligence.MODID+":items/bullets/ammo/"+getName().toLowerCase()+"/core");
-	}
-
-	@Override
-	public IAmmoComponent[] getComponents(ItemStack stack)
-	{
-		if(ItemNBTHelper.hasKey(stack, "components"))
-		{
-			ArrayList<IAmmoComponent> arrayList = new ArrayList<>();
-			NBTTagList components = (NBTTagList)ItemNBTHelper.getTag(stack).getTag("components");
-			for(int i = 0; i < components.tagCount(); i++)
-				arrayList.add(AmmoRegistry.INSTANCE.getComponent(components.getStringTagAt(i)));
-			return arrayList.toArray(new IAmmoComponent[0]);
-		}
-		return new IAmmoComponent[0];
-	}
-
-	@Override
-	public NBTTagCompound[] getComponentsNBT(ItemStack stack)
-	{
-		if(ItemNBTHelper.hasKey(stack, "component_nbt"))
-		{
-			ArrayList<NBTTagCompound> arrayList = new ArrayList<>();
-			NBTTagList components = (NBTTagList)ItemNBTHelper.getTag(stack).getTag("component_nbt");
-			for(int i = 0; i < components.tagCount(); i++)
-				arrayList.add(components.getCompoundTagAt(i));
-			return arrayList.toArray(new NBTTagCompound[0]);
-		}
-		return new NBTTagCompound[0];
-	}
-
-	@Override
-	public void addComponents(ItemStack stack, IAmmoComponent component, NBTTagCompound componentNBT)
-	{
-		NBTTagList comps = ItemNBTHelper.getTag(stack).getTagList("components", 8);
-		NBTTagList nbts = ItemNBTHelper.getTag(stack).getTagList("component_nbt", 10);
-
-		comps.appendTag(new NBTTagString(component.getName()));
-		nbts.appendTag(componentNBT.copy());
-
-		ItemNBTHelper.getTag(stack).setTag("components", comps);
-		ItemNBTHelper.getTag(stack).setTag("component_nbt", nbts);
 	}
 
 	@Override
@@ -173,9 +110,9 @@ public abstract class ItemIIAmmoBase extends ItemIISubItemsBase<AmmoParts> imple
 		switch(stackToSub(stack))
 		{
 			case BULLET:
-				return I18n.format("item.immersiveintelligence."+NAME+".bullet.name");
+				return I18n.format("item.immersiveintelligence."+NAME.toLowerCase()+".bullet.name");
 			case CORE:
-				return I18n.format("item.immersiveintelligence."+NAME+".core.name");
+				return I18n.format("item.immersiveintelligence."+NAME.toLowerCase()+".core.name");
 		}
 		return "DO NOT USE, MAY CRASH";
 	}
@@ -200,44 +137,41 @@ public abstract class ItemIIAmmoBase extends ItemIISubItemsBase<AmmoParts> imple
 					case 0:
 						return 0xffffffff;
 					case 1:
-						return getCore(stack).getColour();
+						return getCore(stack).getColor().getPackedARGB();
 					case 2:
 						return getPaintColor(stack);
 				}
 			}
 			case CORE:
-				return getCore(stack).getColour();
+				return getCore(stack).getColor().getPackedARGB();
 		}
 		return 0xffffffff;
 	}
 
-	public ItemStack getBulletWithParams(String core, String coreType, String... components)
+	@Override
+	public ItemStack getAmmoStack(AmmoCore core, CoreType coreType, FuseType fuse, AmmoComponent... components)
 	{
+		//don't allow more components than the core type allows
+		if(components.length > coreType.getComponentSlots())
+			components = Arrays.copyOf(components, coreType.getComponentSlots());
+		//create the stack
 		ItemStack stack = getStack(AmmoParts.BULLET);
-		ItemNBTHelper.setString(stack, "core", core);
-		ItemNBTHelper.setString(stack, "core_type", coreType);
-		NBTTagList tagList = new NBTTagList();
-		Arrays.stream(components).map(NBTTagString::new).forEachOrdered(tagList::appendTag);
-
-		if(tagList.tagCount() > 0)
-		{
-			ItemNBTHelper.getTag(stack).setTag("components", tagList);
-			NBTTagList nbt = new NBTTagList();
-			for(int i = 0; i < tagList.tagCount(); i += 1)
-				nbt.appendTag(new NBTTagCompound());
-
-			ItemNBTHelper.getTag(stack).setTag("component_nbt", nbt);
-		}
-
+		EasyNBT.wrapNBT(stack)
+				.withString(NBT_CORE, core.getName())
+				.withString(NBT_CORE_TYPE, coreType.getName())
+				.withString(NBT_FUSE, fuse.getName())
+				.withList(NBT_COMPONENTS, c -> new NBTTagString(c.getName()), components)
+				.withList(NBT_COMPONENTS_DATA, c -> new NBTTagCompound(), components);
 		return stack;
 	}
 
 	@Override
-	public ItemStack getBulletCore(String core, String coreType)
+	public ItemStack getAmmoCoreStack(AmmoCore core, CoreType coreType)
 	{
 		ItemStack stack = getStack(AmmoParts.CORE);
-		ItemNBTHelper.setString(stack, "core", core);
-		ItemNBTHelper.setString(stack, "core_type", coreType);
+		EasyNBT.wrapNBT(stack)
+				.withString(NBT_CORE, core.getName())
+				.withString(NBT_CORE_TYPE, coreType.getName());
 		return stack;
 	}
 
@@ -248,42 +182,11 @@ public abstract class ItemIIAmmoBase extends ItemIISubItemsBase<AmmoParts> imple
 	}
 
 	@Override
-	public ItemStack setPaintColour(ItemStack stack, int color)
-	{
-		ItemNBTHelper.setInt(stack, "paint_color", color);
-		return stack;
-	}
-
-	@Override
-	public ItemStack setComponentNBT(ItemStack stack, NBTTagCompound... tagCompounds)
-	{
-		NBTTagList component_nbt = new NBTTagList();
-		for(NBTTagCompound tagCompound : tagCompounds)
-			component_nbt.appendTag(tagCompound);
-		assert stack.getTagCompound()!=null;
-		stack.getTagCompound().setTag("component_nbt", component_nbt);
-		return stack;
-	}
-
-	@Override
 	public String getName()
 	{
 		return NAME;
 	}
 
-	@Override
-	public void setFuseType(ItemStack stack, EnumFuseTypes type)
-	{
-		ItemNBTHelper.setString(stack, "fuse", type.getName());
-	}
-
-	@Override
-	public EnumFuseTypes getFuseType(ItemStack stack)
-	{
-		if(!ItemNBTHelper.hasKey(stack, "fuse"))
-			makeDefault(stack);
-		return EnumFuseTypes.v(ItemNBTHelper.getString(stack, "fuse"));
-	}
 
 	@SideOnly(Side.CLIENT)
 	@Nullable

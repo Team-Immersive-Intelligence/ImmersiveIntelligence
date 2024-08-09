@@ -5,14 +5,13 @@ import blusunrize.immersiveengineering.common.gui.ContainerIEBase;
 import blusunrize.immersiveengineering.common.gui.IESlot;
 import blusunrize.immersiveengineering.common.items.ItemBullet;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.effect_crate.TileEntityAmmunitionCrate;
-import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoMachinegun;
+import pl.pabilo8.immersiveintelligence.common.item.ammo.gun.ItemIIAmmoMachinegun;
 
 /**
  * @author Pabilo8
@@ -78,7 +77,7 @@ public class ContainerAmmunitionCrate extends ContainerIEBase<TileEntityAmmuniti
 				});
 		}
 
-		this.slotCount = mg?50:38;
+		this.slotCount = mg?50: 38;
 		this.tile = tile;
 
 		for(int i = 0; i < 3; i++)

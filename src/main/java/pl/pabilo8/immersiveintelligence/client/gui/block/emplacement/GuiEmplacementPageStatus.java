@@ -11,8 +11,8 @@ import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonSwitch;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiSliderII;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityEmplacement;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityEmplacement.EmplacementWeapon.MachineUpgradeEmplacementWeapon;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.weapon.EmplacementWeapon.MachineUpgradeEmplacementWeapon;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
@@ -68,7 +68,7 @@ public class GuiEmplacementPageStatus extends GuiEmplacement
 
 		sliderRepair = addSlider(116,
 				28+switchRSControl.getTextHeight(fontRenderer)+switchDataControl.getTextHeight(fontRenderer)+switchSendTarget.getTextHeight(fontRenderer)
-						+fontRenderer.getWordWrappedHeight(I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.emplacement.auto_repair_threshold"),70),
+						+fontRenderer.getWordWrappedHeight(I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.emplacement.auto_repair_threshold"), 70),
 				80, IIReference.COLOR_H1, tile.autoRepairAmount,
 				I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.emplacement.auto_repair_threshold"));
 

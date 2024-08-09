@@ -12,7 +12,9 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.common.item.ItemIITracerPowder.Powders;
+import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
 
 import javax.annotation.Nonnull;
@@ -23,8 +25,14 @@ import java.util.List;
  * @author Pabilo8
  * @since 10-11-2019
  */
+@IIItemProperties(category = IICategory.RESOURCES)
 public class ItemIITracerPowder extends ItemIISubItemsBase<Powders>
 {
+	/**
+	 * NBT key for tracer powder colour
+	 */
+	public static final String NBT_TRACER_COLOUR = "colour";
+
 	public ItemIITracerPowder()
 	{
 		super("tracer_powder", 64, Powders.values());
@@ -57,7 +65,7 @@ public class ItemIITracerPowder extends ItemIISubItemsBase<Powders>
 
 	public static void setColour(ItemStack stack, int rgb)
 	{
-		ItemNBTHelper.setInt(stack, "colour", rgb);
+		ItemNBTHelper.setInt(stack, NBT_TRACER_COLOUR, rgb);
 	}
 
 	public static void setColour(ItemStack stack, int r, int g, int b)
@@ -73,9 +81,9 @@ public class ItemIITracerPowder extends ItemIISubItemsBase<Powders>
 
 	public static int getColour(ItemStack stack)
 	{
-		if(!ItemNBTHelper.hasKey(stack, "colour"))
+		if(!ItemNBTHelper.hasKey(stack, NBT_TRACER_COLOUR))
 			setColour(stack, 0xffffff);
-		return ItemNBTHelper.getInt(stack, "colour");
+		return ItemNBTHelper.getInt(stack, NBT_TRACER_COLOUR);
 	}
 
 	@Override

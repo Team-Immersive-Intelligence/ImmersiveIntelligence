@@ -42,7 +42,7 @@ public class PrintedPageRenderer
 		GlStateManager.scale(0.0078125F, 0.0078125F, 0.0078125F);
 
 		GlStateManager.disableDepth();
-		cachedGui.drawScreen(0, 0, 0f);
+		cachedGui.drawPage();
 
 		GlStateManager.popMatrix();
 	}

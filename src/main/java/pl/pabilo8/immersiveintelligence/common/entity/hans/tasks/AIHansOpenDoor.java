@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.common.entity.hans.tasks;
 
-import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
 import net.minecraft.block.BlockDoor;
 import net.minecraft.block.BlockFenceGate;
 import net.minecraft.block.material.Material;
@@ -122,15 +121,12 @@ public class AIHansOpenDoor extends AIHansBase
 				TileEntity te = world.getTileEntity(pos);
 				if(te instanceof TileEntityGateBase<?>)
 				{
-					TileEntityMultiblockMetal<?, ?> master = ((TileEntityGateBase<?>)te).master();
-
-					if(master instanceof TileEntityGateBase<?>)
-					{
+					TileEntityGateBase<?> master = ((TileEntityGateBase<?>)te).master();
+					if(master!=null)
 						if(!world.isRemote)
-							((TileEntityGateBase<?>)master).onAnimationChangeServer(open, 0);
+							master.onAnimationChangeServer(open, 0);
 						else
-							((TileEntityGateBase<?>)master).onAnimationChangeClient(open, 0);
-					}
+							master.onAnimationChangeClient(open, 0);
 
 				}
 			}
@@ -141,9 +137,9 @@ public class AIHansOpenDoor extends AIHansBase
 				TileEntity te = world.getTileEntity(pos);
 				if(te instanceof TileEntityGateBase<?>)
 				{
-					TileEntityMultiblockMetal<?, ?> master = ((TileEntityGateBase<?>)te).master();
-					if(master instanceof TileEntityGateBase)
-						return ((TileEntityGateBase<?>)master).open;
+					TileEntityGateBase<?> master = ((TileEntityGateBase<?>)te).master();
+					if(master!=null)
+						return master.gate.getState();
 				}
 				return false;
 			}

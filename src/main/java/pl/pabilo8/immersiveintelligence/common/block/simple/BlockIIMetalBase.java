@@ -7,6 +7,7 @@ import pl.pabilo8.immersiveintelligence.common.util.block.BlockIIBase;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IIBlockEnum;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IIBlockProperties;
 import pl.pabilo8.immersiveintelligence.common.util.block.ItemBlockIIBase;
+import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 
 /**
  * @author Pabilo8
@@ -21,6 +22,7 @@ public class BlockIIMetalBase extends BlockIIBase<Metals>
 
 		setHardness(5.0F);
 		setResistance(10.0F);
+		setCategory(IICategory.RESOURCES);
 	}
 
 	public enum Metals implements IIBlockEnum

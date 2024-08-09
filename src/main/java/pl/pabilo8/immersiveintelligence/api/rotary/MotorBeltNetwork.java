@@ -9,22 +9,42 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler.INSTANCE;
-import static pl.pabilo8.immersiveintelligence.api.rotary.RotaryUtils.BELT_CATEGORY;
+import static pl.pabilo8.immersiveintelligence.api.rotary.IIRotaryUtils.BELT_GENERAL_CATEGORY;
 
 /**
  * @author Pabilo8
+ * @updated 09.08.2024
+ * @ii-approved 0.3.1
  * @since 2019-05-31
  */
 public class MotorBeltNetwork
 {
+	/**
+	 * All connectors in this rotary network
+	 */
 	public List<WeakReference<IMotorBeltConnector>> connectors = new ArrayList<>();
+	/**
+	 * ALl links between {@link #connectors} in this rotary network
+	 */
 	public List<Connection> connections = new ArrayList<>();
+	/**
+	 * Loss of speed in this network (in DPT)
+	 */
 	public float loss = 0f;
-	private float rpm = 0f, torque = 0f;
+	/**
+	 * Speed with which {@link #connectors} rotate in DPT (Degrees Per Tick)
+	 */
+	private float speed = 0f;
+	/**
+	 * Torque with which {@link #connectors} rotate, in Torque Units (TU)
+	 */
+	private float torque = 0f;
 
 	public static void updateConnectors(BlockPos start, World world, MotorBeltNetwork network)
 	{
@@ -47,7 +67,7 @@ public class MotorBeltNetwork
 				for(Connection c : connsAtBlock)
 				{
 					if(iic.allowEnergyToPass(c)&&
-							BELT_CATEGORY.equals(c.cableType.getCategory())&&
+							BELT_GENERAL_CATEGORY.equals(c.cableType.getCategory())&&
 							!closed.contains(c.end))
 					{
 						open.add(c.end);
@@ -115,55 +135,36 @@ public class MotorBeltNetwork
 
 	public void updateValues()
 	{
-		double oldRPM = rpm;
-		rpm = 0;
-		torque = 0;
-		List<Float> rpm_values = new ArrayList<>();
-		List<Float> torque_values = new ArrayList<>();
-		for(WeakReference<IMotorBeltConnector> connectorRef : connectors)
-		{
-			IMotorBeltConnector connector = connectorRef.get();
-			if(connector!=null)
-			{
-				rpm_values.add(connector.getRotaryStorage().getRotationSpeed());
-				torque_values.add(connector.getRotaryStorage().getTorque());
-
-			}
-		}
+		speed = torque = 0;
+		Set<IMotorBeltConnector> validReferences = connectors.stream().map(Reference::get)
+				.filter(Objects::nonNull)
+				.collect(Collectors.toSet());
 
 		//rpm is the average (not counting 0)
 		//torque is the sum
-		rpm_values.forEach(value ->
-		{
-			if(value > rpm)
-				rpm = value;
-		});
-		torque_values.forEach(value -> torque += value);
+		validReferences.stream()
+				.map(IMotorBeltConnector::getRotaryStorage)
+				.forEach(storage -> {
+					torque += storage.getTorque();
+					if(storage.speed > speed)
+						speed = storage.speed;
+				});
 
-		loss = 0;
+		loss = (float)connections.stream().mapToDouble(Connection::getBaseLoss).sum();
+		speed = Math.max(0, speed-(speed*loss));
 
-		for(Connection conn : connections)
-			loss += conn.getBaseLoss();
-
-		rpm = Math.max(0, rpm-(rpm*loss));
-
-		for(WeakReference<IMotorBeltConnector> connectorRef : connectors)
-		{
-			IMotorBeltConnector connector = connectorRef.get();
-			if(connector!=null)
-				connector.onChange();
-		}
+		validReferences.forEach(IMotorBeltConnector::onChange);
 	}
 
 	//Use this when outputting energy with a connector
 	public RotaryStorage getEnergyStorage()
 	{
-		return new RotaryStorage(torque, rpm);
+		return new RotaryStorage(torque, speed);
 	}
 
-	public double getNetworkRPM()
+	public double getNetworkSpeed()
 	{
-		return rpm;
+		return speed;
 	}
 
 	public double getNetworkTorque()
@@ -172,9 +173,9 @@ public class MotorBeltNetwork
 	}
 
 	@SideOnly(Side.CLIENT)
-	public void setClient(float rpm, float torque)
+	public void setClient(float speed, float torque)
 	{
-		this.rpm = rpm;
+		this.speed = speed;
 		this.torque = torque;
 	}
 }

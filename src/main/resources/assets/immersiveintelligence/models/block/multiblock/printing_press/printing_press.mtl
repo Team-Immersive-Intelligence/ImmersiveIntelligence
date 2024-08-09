@@ -1,0 +1,19 @@
+# Made by Pabilo8 with Blockbench
+
+newmtl common_bottom
+map_Kd immersiveintelligence:blocks/common/common_bottom
+newmtl common_steel_norivets
+map_Kd immersiveintelligence:blocks/common/common_steel_norivets
+newmtl common_rough_steel
+map_Kd immersiveintelligence:blocks/common/common_rough_steel
+newmtl common_steel
+map_Kd immersiveintelligence:blocks/common/common_steel
+newmtl common_table
+map_Kd immersiveintelligence:blocks/common/common_table
+newmtl common_machinebase
+map_Kd immersiveintelligence:blocks/common/common_machinebase
+newmtl common_thingies
+map_Kd immersiveintelligence:blocks/common/common_thingies
+newmtl printing_press_new
+map_Kd immersiveintelligence:blocks/multiblock/printing_press
+newmtl none

@@ -19,7 +19,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Tuple;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
 import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.client.model.obj.OBJModel;
 import net.minecraftforge.client.model.obj.OBJModel.Group;
@@ -30,17 +29,16 @@ import net.minecraftforge.common.property.Properties;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
-import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimation.IIAnimationGroup;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.amt.IIAnimation.IIAnimationGroup;
+import pl.pabilo8.immersiveintelligence.common.util.amt.IIModelHeader;
 import pl.pabilo8.immersiveintelligence.common.util.lambda.ArraylistJoinCollector;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import javax.annotation.meta.When;
+import java.util.*;
 import java.util.function.Function;
 
 /**
@@ -55,9 +53,19 @@ public class IIAnimationUtils
 
 	//--- Time Calculation ---//
 
-	public static float getDebugProgress(World world, float max, float partialTicks)
+	@SideOnly(Side.CLIENT)
+	public static float getDebugProgress(float max, float partialTicks)
 	{
 		return (ClientUtils.mc().world.getTotalWorldTime()%max+partialTicks)/max;
+	}
+
+	public static float getAnimationOffsetProgress(float current, float begin, float end, float partialTicks)
+	{
+		if(current < begin)
+			return 0;
+		if(current > end)
+			return 1;
+		return (current-begin+partialTicks)/(end-begin);
 	}
 
 	public static float getAnimationProgress(float current, float max, boolean invert, float partialTicks)
@@ -369,14 +377,23 @@ public class IIAnimationUtils
 		return organise(models.toArray(new AMT[0])); //remove children from array
 	}
 
+	@Nonnull(when = When.NEVER)
+	public static AMT disposeOf(@Nullable AMT model)
+	{
+		if(model!=null)
+			model.disposeOf();
+		return null;
+	}
+
 	/**
 	 * If passed a non-null value, disposes of the AMTs' GLCallLists to free up memory. <br>
 	 * Call upon destruction
 	 */
+	@Nonnull(when = When.NEVER)
 	public static AMT[] disposeOf(@Nullable AMT[] array)
 	{
 		if(array!=null)
-			Arrays.stream(array).forEach(AMT::disposeOf);
+			Arrays.stream(array).filter(Objects::nonNull).forEach(AMT::disposeOf);
 		return array;
 	}
 
@@ -405,11 +422,12 @@ public class IIAnimationUtils
 				.collect(new ArraylistJoinCollector<>()).toArray(new AMT[0]);
 	}
 
+	@Nullable
 	public static AMT getPart(AMT[] array, String name)
 	{
 		return Arrays.stream(getChildrenRecursive(array))
 				.filter(amt -> amt.name.equals(name))
-				.findFirst().orElse(array[0]);
+				.findFirst().orElse(null);
 	}
 
 	/**

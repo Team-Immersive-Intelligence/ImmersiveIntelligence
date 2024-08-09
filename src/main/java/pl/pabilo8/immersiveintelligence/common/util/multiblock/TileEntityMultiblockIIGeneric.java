@@ -19,25 +19,23 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraftforge.common.util.Constants.NBT;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
+import net.minecraftforge.items.CapabilityItemHandler;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.ScanningConveyor;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IAdvancedBounds;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.NBTSerialisation;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IIIInventory;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * A standard II "medium-high tier" multiblock.<br>
@@ -50,21 +48,16 @@ import java.util.List;
  */
 @SuppressWarnings("unused")
 public abstract class TileEntityMultiblockIIGeneric<T extends TileEntityMultiblockIIGeneric<T>> extends TileEntityMultiblockIIBase<T>
-		implements IIIInventory, IIEInternalFluxHandler, IHammerInteraction, IRedstoneOutput, IDataDevice, IComparatorOverride, IAdvancedBounds
+		implements IIIInventory, IIEInternalFluxHandler, IHammerInteraction, IRedstoneOutput, IDataDevice, IComparatorOverride
 {
-	private List<AxisAlignedBB> aabb = null;
-
+	@SyncNBT(name = "redstone_control")
 	protected boolean redstoneControlInverted = false;
+	@SyncNBT(name = "inventory", events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_RECIPE_CHANGED})
 	public NonNullList<ItemStack> inventory;
-	IEForgeEnergyWrapper wrapper = new IEForgeEnergyWrapper(this, null);
+	@SyncNBT(name = "ifluxEnergy")
 	public FluxStorageAdvanced energyStorage;
+	private IEForgeEnergyWrapper wrapper = new IEForgeEnergyWrapper(this, null);
 
-	//--- Reference Variables ---//
-
-	public static final String KEY_SYNC_AABB = "_sync_aabb";
-	public static final String KEY_INVENTORY = "inventory";
-	public static final String KEY_ENERGY = "ifluxEnergy";
-	public static final String KEY_REDSTONE_CONTROL = "redstone_control";
 
 	//--- Constructor, Initialization ---//
 
@@ -72,7 +65,15 @@ public abstract class TileEntityMultiblockIIGeneric<T extends TileEntityMultiblo
 	{
 		super(multiblock);
 		inventory = NonNullList.create();
-		energyStorage = new FluxStorageAdvanced(ScanningConveyor.energyCapacity);
+		energyStorage = new FluxStorageAdvanced(1);
+	}
+
+	@Override
+	protected void dummyCleanup()
+	{
+		inventory = null;
+		energyStorage = null;
+		wrapper = null;
 	}
 
 	//--- NBT ---//
@@ -81,37 +82,20 @@ public abstract class TileEntityMultiblockIIGeneric<T extends TileEntityMultiblo
 	public void readCustomNBT(@Nonnull NBTTagCompound nbt, boolean descPacket)
 	{
 		super.readCustomNBT(nbt, descPacket);
-
 		if(isDummy())
 			return;
 
-//		if(!descPacket)
-		{
-			if(energyStorage.getMaxEnergyStored()!=0)
-				energyStorage.readFromNBT(nbt);
-			if(inventory.size()!=0)
-				inventory = Utils.readInventory(nbt.getTagList(KEY_INVENTORY, NBT.TAG_COMPOUND), inventory.size());
-			redstoneControlInverted = nbt.getBoolean(KEY_REDSTONE_CONTROL);
-		}
-
+		NBTSerialisation.synchroniseFor(this, (tag, tile) -> tag.deserializeAll(tile, nbt, false));
 	}
 
 	@Override
 	public void writeCustomNBT(@Nonnull NBTTagCompound nbt, boolean descPacket)
 	{
 		super.writeCustomNBT(nbt, descPacket);
-
 		if(isDummy())
 			return;
 
-//		if(!descPacket)
-		{
-			if(energyStorage.getMaxEnergyStored()!=0)
-				energyStorage.writeToNBT(nbt);
-			if(inventory.size()!=0)
-				nbt.setTag(KEY_INVENTORY, Utils.writeInventory(inventory));
-			nbt.setBoolean(KEY_REDSTONE_CONTROL, redstoneControlInverted);
-		}
+		NBTSerialisation.synchroniseFor(this, (tag, tile) -> tag.serializeAll(tile, nbt));
 	}
 
 	@Override
@@ -122,16 +106,21 @@ public abstract class TileEntityMultiblockIIGeneric<T extends TileEntityMultiblo
 		if(isDummy()||isFullSyncMessage(message))
 			return;
 
-		if(message.hasKey(KEY_SYNC_AABB))
-			forMultiblockBlocks(TileEntityMultiblockIIGeneric::forceReCacheAABB);
+		NBTSerialisation.synchroniseFor(this, (tag, tile) -> tag.deserializeAll(tile, message, true));
+	}
 
-		if(message.hasKey(KEY_INVENTORY))
-			inventory = Utils.readInventory(message.getTagList(KEY_INVENTORY, 10), inventory.size());
-		if(message.hasKey(KEY_ENERGY))
-			energyStorage.readFromNBT(message);
-		if(message.hasKey(KEY_REDSTONE_CONTROL))
-			redstoneControlInverted = message.getBoolean(KEY_REDSTONE_CONTROL);
+	protected void updateTileForTime()
+	{
+		NBTTagCompound nbt = new NBTTagCompound();
+		NBTSerialisation.synchroniseFor(this, (tag, tile) -> tag.serializeForTime(tile, nbt, (int)(world.getTotalWorldTime()%1000)));
+		sendNBTMessageClient(nbt);
+	}
 
+	protected void updateTileForEvent(SyncNBT.SyncEvents event)
+	{
+		NBTTagCompound nbt = new NBTTagCompound();
+		NBTSerialisation.synchroniseFor(this, (tag, tile) -> tag.serializeForEvent(tile, nbt, event));
+		sendNBTMessageClient(nbt);
 	}
 
 	//--- Redstone ---//
@@ -216,6 +205,14 @@ public abstract class TileEntityMultiblockIIGeneric<T extends TileEntityMultiblo
 	}
 
 	@Override
+	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing)
+	{
+		if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY&&isPOI(MultiblockPOI.ITEM_INPUT))
+			return true;
+		return super.hasCapability(capability, facing);
+	}
+
+	@Override
 	public int getComparatorInputOverride()
 	{
 		if(!this.isPOI(MultiblockPOI.REDSTONE_OUTPUT))
@@ -266,10 +263,10 @@ public abstract class TileEntityMultiblockIIGeneric<T extends TileEntityMultiblo
 	@Override
 	public void postEnergyTransferUpdate(int energy, boolean simulate)
 	{
-		if(!simulate&&!world.isRemote)
+		if(!simulate&&!world.isRemote&&energy!=0)
 		{
 			T master = master();
-			if(master!=null)
+			if(master!=null&&world.getTotalWorldTime()%8==0)
 				master.sendNBTMessageClient(master.energyStorage.writeToNBT(new NBTTagCompound()));
 		}
 	}
@@ -319,67 +316,5 @@ public abstract class TileEntityMultiblockIIGeneric<T extends TileEntityMultiblo
 	protected boolean isTankAvailable(int pos, int tank)
 	{
 		return false;
-	}
-
-
-	//--- IAdvancedBounds ---//
-
-	public final void forceReCacheAABB()
-	{
-		this.aabb = null;
-	}
-
-	@Override
-	public List<AxisAlignedBB> getBounds(boolean collision)
-	{
-		//Use or create AABB cache
-		if(pos!=-1&&aabb==null)
-			aabb = multiblock.getAABB(pos, getPos(), facing, mirrored);
-		return aabb;
-	}
-
-	//--- Points of Interest ---//
-
-	protected abstract int[] listAllPOI(MultiblockPOI poi);
-
-	public final int[] getPOI(MultiblockPOI poi)
-	{
-		if(poi.hasChildren())
-			return getAllPOI(poi.getChildren());
-		return listAllPOI(poi);
-	}
-
-	private int[] getAllPOI(List<MultiblockPOI> pois)
-	{
-		return pois.stream()
-				.map(this::getPOI)
-				.flatMapToInt(Arrays::stream)
-				.distinct()
-				.toArray();
-	}
-
-	protected final int[] getPOI(String name)
-	{
-		return multiblock.getPointsOfInterest(name);
-	}
-
-	public final boolean isPOI(MultiblockPOI poi)
-	{
-		return Arrays.binarySearch(getPOI(poi), pos) >= 0;
-	}
-
-	public final boolean isPOI(String poi)
-	{
-		return Arrays.binarySearch(getPOI(poi), pos) >= 0;
-	}
-
-	public final BlockPos getPOIPos(String name)
-	{
-		return getBlockPosForPos(multiblock.getPointOfInterest(name));
-	}
-
-	public final BlockPos getPOIPos(MultiblockPOI poi)
-	{
-		return getBlockPosForPos(getPOI(poi)[0]);
 	}
 }

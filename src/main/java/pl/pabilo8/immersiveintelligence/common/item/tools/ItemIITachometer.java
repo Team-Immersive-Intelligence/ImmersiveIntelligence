@@ -17,8 +17,11 @@ import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.api.rotary.CapabilityRotaryEnergy;
 import pl.pabilo8.immersiveintelligence.api.rotary.IRotaryEnergy;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
-import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIBase;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
+import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
+import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIBase;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -29,6 +32,7 @@ import java.util.Set;
  * @author Pabilo8
  * @since 2019-05-30
  */
+@IIItemProperties(category = IICategory.TOOLS)
 public class ItemIITachometer extends ItemIIBase implements ITool
 {
 	public ItemIITachometer()
@@ -43,7 +47,7 @@ public class ItemIITachometer extends ItemIIBase implements ITool
 	@Override
 	public void addInformation(@Nonnull ItemStack stack, @Nullable World world, List<String> list, ITooltipFlag flag)
 	{
-		list.add(IIUtils.getItalicString(I18n.format(IIReference.DESCRIPTION_KEY+"tachometer")));
+		list.add(IIStringUtil.getItalicString(I18n.format(IIReference.DESCRIPTION_KEY+"tachometer")));
 	}
 
 	@Override

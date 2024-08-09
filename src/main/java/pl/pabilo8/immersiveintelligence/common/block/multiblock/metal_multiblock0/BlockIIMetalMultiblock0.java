@@ -33,7 +33,8 @@ public class BlockIIMetalMultiblock0 extends BlockIIMultiblock<MetalMultiblocks0
 		super("metal_multiblock", Material.IRON, PropertyEnum.create("type", MetalMultiblocks0.class),
 				IEProperties.FACING_HORIZONTAL,
 				IEProperties.BOOLEANS[0], IEProperties.BOOLEANS[1], IEProperties.MULTIBLOCKSLAVE, IEProperties.DYNAMICRENDER,
-				IOBJModelCallback.PROPERTY, Properties.AnimationProperty);
+				IOBJModelCallback.PROPERTY, Properties.AnimationProperty
+		);
 		setHardness(3.0F);
 		setResistance(15.0F);
 		setLightOpacity(0);
@@ -42,9 +43,8 @@ public class BlockIIMetalMultiblock0 extends BlockIIMultiblock<MetalMultiblocks0
 		setToolTypes(IIReference.TOOL_HAMMER);
 
 		addToTESRMap(
-				MetalMultiblocks0.PRINTING_PRESS, MetalMultiblocks0.RADIO_STATION,
-				MetalMultiblocks0.CHEMICAL_BATH, MetalMultiblocks0.PRECISION_ASSEMBLER,
-				MetalMultiblocks0.PACKER
+				MetalMultiblocks0.RADIO_STATION,
+				MetalMultiblocks0.CHEMICAL_BATH, MetalMultiblocks0.PRECISION_ASSEMBLER
 		);
 	}
 
@@ -53,7 +53,7 @@ public class BlockIIMetalMultiblock0 extends BlockIIMultiblock<MetalMultiblocks0
 		@EnumMultiblockProvider(tile = TileEntityRadioStation.class, multiblock = MultiblockRadioStation.class)
 		RADIO_STATION,
 		@EnumMultiblockProvider(tile = TileEntityPrintingPress.class, multiblock = MultiblockPrintingPress.class)
-		//@IIBlockProperties(needsCustomState = true)
+		@IIBlockProperties(needsCustomState = true)
 		PRINTING_PRESS,
 		@EnumMultiblockProvider(tile = TileEntityDataInputMachine.class, multiblock = MultiblockDataInputMachine.class)
 		//@IIBlockProperties(needsCustomState = true)
@@ -95,7 +95,8 @@ public class BlockIIMetalMultiblock0 extends BlockIIMultiblock<MetalMultiblocks0
 		@IIBlockProperties(needsCustomState = true)
 		PACKER,
 
-		RAILWAY_PACKER //not implemented
+		@IIBlockProperties(hidden = TernaryValue.TRUE)
+		MISSILE_SILO //not implemented
 	}
 
 	@Nonnull
@@ -104,9 +105,10 @@ public class BlockIIMetalMultiblock0 extends BlockIIMultiblock<MetalMultiblocks0
 	{
 		switch(state.getValue(property))
 		{
+			case PRINTING_PRESS:
 			case BALLISTIC_COMPUTER:
 			case ARTILLERY_HOWITZER:
-			case RAILWAY_PACKER:
+			case MISSILE_SILO:
 			case PACKER:
 			case ELECTROLYZER:
 			case SCANNING_CONVEYOR:

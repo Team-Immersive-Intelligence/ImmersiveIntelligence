@@ -7,14 +7,15 @@ import blusunrize.lib.manual.ManualInstance.ManualEntry;
 import blusunrize.lib.manual.ManualPages;
 import blusunrize.lib.manual.ManualUtils;
 import blusunrize.lib.manual.gui.GuiButtonManual;
+import blusunrize.lib.manual.gui.GuiButtonManualLink;
 import blusunrize.lib.manual.gui.GuiManual;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
@@ -23,15 +24,14 @@ import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualObject.ManualObjectInfo;
 import pl.pabilo8.immersiveintelligence.client.manual.objects.*;
 import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ISerializableEnum;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.regex.Matcher;
@@ -121,33 +121,15 @@ public class IIManualPage extends ManualPages
 			//load traits from the first line
 			file = addTraits(file);
 
-			//turn markdown into IE tags
-
-			//object
+			//parse the text into objects
 			manualObjects.clear();
-			file = addObjects(file, x, y, pageButtons, gui);
+			addObjects(file, x, y, pageButtons, gui);
 			pageButtons.add(this.tooltipWrapper = new HoverTooltipWrapper(gui));
 
-			//link
-			file = addLinks(file);
+			//fool the IE manual into thinking that it's an actual device, while 'tis not
+			this.localizedText = "";
 
-			//text types
-			file = matchReplaceSimple(patternHighlight, file, TextFormatting.BOLD, TextFormatting.GOLD); //highlight
-			file = matchReplaceSimple(patternBold, file, TextFormatting.BOLD); //bold
-			file = matchReplaceSimple(patternItalic, file, TextFormatting.ITALIC); //italic
-			file = matchReplaceSimple(patternUnderline, file, TextFormatting.UNDERLINE); //underline
-			file = matchReplaceSimple(patternStrikethrough, file, TextFormatting.STRIKETHROUGH); //strikethrough
-
-			//process the text IE way
-			boolean uni = manual.fontRenderer.getUnicodeFlag();
-			manual.fontRenderer.setUnicodeFlag(true);
-			this.localizedText = manual.formatText(file);
-			this.localizedText = addLinks(manual, gui, this.localizedText, x, y, WIDTH, pageButtons);
-
-			if(this.localizedText==null)
-				this.localizedText = "";
-
-			manual.fontRenderer.setUnicodeFlag(uni);
+			manual.fontRenderer.setUnicodeFlag(manual.fontRenderer.getUnicodeFlag());
 		}
 	}
 
@@ -164,6 +146,7 @@ public class IIManualPage extends ManualPages
 			if(found!=null)
 				traits.add(found);
 		}
+		traits.sort(Comparator.comparingInt(PageTraits::ordinal));
 
 		return file.substring(endIndex);
 	}
@@ -172,7 +155,8 @@ public class IIManualPage extends ManualPages
 	{
 		return matchReplace(patternLink, file, (stringBuilder, matcher) ->
 				{
-					String link = matcher.group(2), sub = "";
+					String link = matcher.group(2).replace(".md", ""), sub = "";
+
 					if(link.startsWith("#")) //link to page from this entry
 					{
 						sub = ";"+entry.getSubPageID(link.substring(1));
@@ -236,10 +220,14 @@ public class IIManualPage extends ManualPages
 
 		GlStateManager.pushMatrix();
 		GlStateManager.color(1, 1, 1, 0.25f);
+		PageTraits hoveredTrait = null;
 		for(int i = 0, traitsSize = traits.size(); i < traitsSize; i++)
 		{
 			IIClientUtils.bindTexture(traits.get(i).textureLocation);
-			Gui.drawModalRectWithCustomSizedTexture(x+100, y+(i*18), 0, 0, 16, 16, 16, 16);
+			Gui.drawModalRectWithCustomSizedTexture(x+108, y+(i*18), 0, 0, 16, 16, 16, 16);
+
+			if(hoveredTrait==null&&IIMath.isPointInRectangle(x+108, y+(i*18), x+108+16, y+(i*18)+16, mx, my))
+				hoveredTrait = traits.get(i);
 		}
 		GlStateManager.color(1, 1, 1, 1f);
 		GlStateManager.popMatrix();
@@ -251,6 +239,10 @@ public class IIManualPage extends ManualPages
 			if(this.tooltipWrapper.tooltip!=null)
 				break;
 		}
+
+		if(this.tooltipWrapper.tooltip==null&&hoveredTrait!=null)
+			this.tooltipWrapper.tooltip = Collections.singletonList(I18n.format("ie.manual.entry.traits."+hoveredTrait.getName()));
+
 		GlStateManager.popMatrix();
 
 	}
@@ -295,16 +287,6 @@ public class IIManualPage extends ManualPages
 		return builder.toString();
 	}
 
-	private String stripLine(String text)
-	{
-		text = matchReplaceSimple(patternLink, text);
-		text = matchReplaceSimple(patternHighlight, text);
-		text = matchReplaceSimple(patternBold, text);
-		text = matchReplaceSimple(patternItalic, text);
-		text = matchReplaceSimple(patternUnderline, text);
-		return matchReplaceSimple(patternStrikethrough, text).replace("§r", "").trim();
-	}
-
 	private String matchReplaceSimple(Pattern pattern, String text, TextFormatting... formats)
 	{
 		return matchReplace(pattern, text, (stringBuilder, matcher) ->
@@ -322,35 +304,79 @@ public class IIManualPage extends ManualPages
 	{
 		StringBuilder builder = new StringBuilder();
 		String[] split = file.split("\n");
-		final int[] lines = {0}; //wiurd intellij fix... but it works
+		final int[] yOffset = {0};
+		int traitsOffset = traits.size()*16;
 
 		boolean flag = manual.fontRenderer.getUnicodeFlag();
 		manual.fontRenderer.setUnicodeFlag(true);
-		for(String line : split)
+		for(int i = 0, splitLength = split.length; i < splitLength; i++)
 		{
-			line = matchReplace(IIManualPage.patternObject, line, (stringBuilder, matcher) ->
-					{
-						String text = matcher.group(1);
-						IIManualObject object = parseObject(gui, pageButtons, text, x, y+lines[0]);
+			String line = split[i];
+			if(line.isEmpty())
+				continue;
 
-						if(object!=null)
+			if(line.startsWith("|")||i==splitLength-1||yOffset[0] < traitsOffset)
+			{
+				if(!line.startsWith("|"))
+					builder.append(line).append("\n");
+
+				if(builder.length() > 0)
+				{
+					String textParsed = builder.toString();
+					textParsed = addLinks(textParsed);
+
+					//text types
+					textParsed = matchReplaceSimple(patternHighlight, textParsed, TextFormatting.BOLD, TextFormatting.GOLD); //highlight
+					textParsed = matchReplaceSimple(patternBold, textParsed, TextFormatting.BOLD); //bold
+					textParsed = matchReplaceSimple(patternItalic, textParsed, TextFormatting.ITALIC); //italic
+					textParsed = matchReplaceSimple(patternUnderline, textParsed, TextFormatting.UNDERLINE); //underline
+					textParsed = matchReplaceSimple(patternStrikethrough, textParsed, TextFormatting.STRIKETHROUGH); //strikethrough
+
+					IIManuaRegularText textObject = new IIManuaRegularText(getInfoForNext(gui, pageButtons, x, y+yOffset[0]), textParsed, pageButtons);
+					if(yOffset[0] < traitsOffset)
+						textObject.width -= 14;
+
+					textObject.postInit(this);
+					yOffset[0] += textObject.height;
+					pageButtons.add(textObject);
+					builder.delete(0, builder.length());
+
+					//Hack for not allowing links to pass in the onclick even
+					textObject.height = 0;
+				}
+
+				matchReplace(IIManualPage.patternObject, line, (stringBuilder, matcher) ->
 						{
-							object.postInit(this);
-							manualObjects.add(object);
-							pageButtons.add(object);
-							for(int i = 0; i < MathHelper.ceil(object.height/11f); i++)
+							String text = matcher.group(1);
+							IIManualObject object = parseObject(gui, pageButtons, text, x, y+yOffset[0]);
+
+							if(object!=null)
 							{
-								lines[0] += 11;
-								stringBuilder.append("\n");
+								object.postInit(this);
+								yOffset[0] += object.height;
+								manualObjects.add(object);
+								pageButtons.add(object);
 							}
 						}
-					}
-			);
-			if(!line.isEmpty())
-				lines[0] += manual.fontRenderer.getWordWrappedHeight(stripLine(line), WIDTH);
-			builder.append(line).append("\n");
+				);
+			}
+			else
+				builder.append(line).append("\n");
 		}
 		manual.fontRenderer.setUnicodeFlag(flag);
+		pageButtons.sort((o1, o2) -> o1 instanceof GuiButtonManualLink?1: -1);
+
+/*
+		//link
+		file = addLinks(file);
+
+		//text types
+		file = matchReplaceSimple(patternHighlight, file, TextFormatting.BOLD, TextFormatting.GOLD); //highlight
+		file = matchReplaceSimple(patternBold, file, TextFormatting.BOLD); //bold
+		file = matchReplaceSimple(patternItalic, file, TextFormatting.ITALIC); //italic
+		file = matchReplaceSimple(patternUnderline, file, TextFormatting.UNDERLINE); //underline
+		file = matchReplaceSimple(patternStrikethrough, file, TextFormatting.STRIKETHROUGH); //strikethrough
+		*/
 
 		return builder.toString();
 	}

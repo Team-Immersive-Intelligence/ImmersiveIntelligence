@@ -8,7 +8,7 @@ import crafttweaker.api.item.IIngredient;
 import crafttweaker.api.item.IItemStack;
 import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.crafting.PrecissionAssemblerRecipe;
+import pl.pabilo8.immersiveintelligence.api.crafting.PrecisionAssemblerRecipe;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
@@ -49,7 +49,7 @@ public class PrecisionAssemblerRecipeTweaker
 			return;
 		}
 
-		PrecissionAssemblerRecipe r = new PrecissionAssemblerRecipe(CraftTweakerHelper.toStack(itemOutput), CraftTweakerHelper.toStack(trash), adds, tools, animations, energy, timeMultiplier);
+		PrecisionAssemblerRecipe r = new PrecisionAssemblerRecipe(CraftTweakerHelper.toStack(itemOutput), CraftTweakerHelper.toStack(trash), adds, tools, animations, energy, timeMultiplier);
 		CraftTweakerAPI.apply(new Add(r));
 	}
 
@@ -61,9 +61,9 @@ public class PrecisionAssemblerRecipeTweaker
 
 	private static class Add implements IAction
 	{
-		private final PrecissionAssemblerRecipe recipe;
+		private final PrecisionAssemblerRecipe recipe;
 
-		public Add(PrecissionAssemblerRecipe recipe)
+		public Add(PrecisionAssemblerRecipe recipe)
 		{
 			this.recipe = recipe;
 		}
@@ -71,7 +71,7 @@ public class PrecisionAssemblerRecipeTweaker
 		@Override
 		public void apply()
 		{
-			PrecissionAssemblerRecipe.recipeList.add(recipe);
+			PrecisionAssemblerRecipe.recipeList.add(recipe);
 		}
 
 		@Override
@@ -83,7 +83,7 @@ public class PrecisionAssemblerRecipeTweaker
 
 	private static class Remove implements IAction
 	{
-		List<PrecissionAssemblerRecipe> removedRecipes;
+		List<PrecisionAssemblerRecipe> removedRecipes;
 		ItemStack f1;
 
 		public Remove(ItemStack stack)
@@ -94,7 +94,7 @@ public class PrecisionAssemblerRecipeTweaker
 		@Override
 		public void apply()
 		{
-			removedRecipes = PrecissionAssemblerRecipe.removeRecipesForOutput(f1);
+			removedRecipes = PrecisionAssemblerRecipe.removeRecipesForOutput(f1);
 		}
 
 		@Override

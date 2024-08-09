@@ -1,18 +1,54 @@
 {
-	"origins": {
-		"main": [0, 0, 0],
-		"barrel": [0, 0, 0],
-		"magazine": [0, 0, 0.5],
-		"trigger": [0, 22.5, 7.45],
-		"grip": [0, 21.77367, 7.81446],
-		"knob": [-3.25, 27.5, -3],
-		"stock": [0, 0, 0],
-		"iron_sights": [0, 0, 0],
-		"slider": [-2.75, 30.5, -7.5],
-		"casing_ejector": [3.25, 29.75, -2],
-		"muzzle_flash": [0, 30.25, -37],
-		"hand": [-2, 24, -16],
-		"casing_fired": [2.75, 28.5, 0.5]
-	},
-	"hierarchy": {}
+  "origins": {
+    "main": [0, 0, 0],
+    "barrel": [0, 0, 0],
+    "magazine": [0, 0, 0.5],
+    "trigger": [0, 22.5, 7.45],
+    "grip": [0, 21.77367, 7.81446],
+    "knob": [-3.25, 27.5, -3],
+    "stock": [0, 0, 0],
+    "iron_sights": [0, 0, 0],
+    "slider": [-2.75, 30.5, -7.5],
+    "casing_ejector": [3.25, 29.75, -2],
+    "muzzle_flash": [0, 30.25, -37],
+    "hand": [-2, 24, -16],
+    "casing_fired": [2.75, 28.5, 0.5]
+  },
+  "hierarchy": {},
+  "transforms": {
+    "ground": {
+      "scale": [0.325, 0.325, 0.325],
+      "translate": [0.5, -0.75, 0.5]
+    },
+    "third_person_right_hand": {
+      "scale": [0.385, 0.385, 0.385],
+      "rotation": [0, -20.5, 0],
+      "translate": [0.625, -1.25, -0.25]
+    },
+    "third_person_left_hand": {
+      "scale": [0.385, 0.385, 0.385],
+      "rotate": [75, 90, 20.5],
+      "translate": [-0.5, -0.25, 0.125]
+    },
+    "first_person_right_hand": {
+      "scale": [0.625, 0.625, 0.625],
+      "translate": [0.75, -1, 0],
+      "rotate": [5, 7.5, 0]
+    },
+    "first_person_left_hand": {
+      "scale": [0.55, 0.55, 0.55],
+      "translate": [0.75, -1, 0],
+      "rotate": [2.5, 82.5, 0]
+    },
+    "gui": {
+      "translate": [0, -0.25, 0],
+      "rotate": [35, 135, 0],
+      "scale": [0.325, 0.325, 0.325]
+    },
+    "fixed": {
+      "translate": [0.125, -0.25, -0.125],
+      "rotate": [-3.5, -75, 0],
+      "scale": [0.425, 0.425, 0.425]
+    }
+  }
 }

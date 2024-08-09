@@ -7,11 +7,10 @@ import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseType;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityMachinegun;
-import pl.pabilo8.immersiveintelligence.common.entity.bullet.EntityBullet;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine.Magazines;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageEntityNBTSync;
@@ -42,9 +41,7 @@ public class AIHansMachinegun extends EntityAIBase
 	public boolean shouldExecute()
 	{
 		if(hans.getRidingEntity() instanceof EntityMachinegun)
-		{
 			mg = ((EntityMachinegun)hans.getRidingEntity());
-		}
 		else
 		{
 			hans.tasks.removeTask(this);
@@ -80,7 +77,7 @@ public class AIHansMachinegun extends EntityAIBase
 				{
 
 					ItemStack magazine = IIContent.itemBulletMagazine.getMagazine(Magazines.MACHINEGUN,
-							IIContent.itemAmmoSubmachinegun.getBulletWithParams("core_brass", "piercing", "tracer_powder"));
+							IIContent.itemAmmoSubmachinegun.getAmmoStack(IIContent.ammoCoreBrass, CoreType.PIERCING, FuseType.CONTACT, IIContent.ammoComponentTracerPowder));
 					NBTTagCompound tag = new NBTTagCompound();
 					tag.setInteger("colour", 0xff0000);
 					IIContent.itemAmmoMachinegun.setComponentNBT(magazine, tag);
@@ -91,9 +88,7 @@ public class AIHansMachinegun extends EntityAIBase
 			{
 				hans.getLookHelper().setLookPositionWithEntity(target, hans.getHorizontalFaceSpeed(), hans.getVerticalFaceSpeed());
 				if(isAimedAt())
-				{
 					mg.shoot = true;
-				}
 			}
 
 		}
@@ -101,23 +96,7 @@ public class AIHansMachinegun extends EntityAIBase
 
 	public boolean isAimedAt()
 	{
+		//TODO: 15.02.2024 use new calculation method
 		return MathHelper.wrapDegrees(hans.rotationPitch)-mg.gunPitch < 5&&MathHelper.wrapDegrees(hans.rotationYawHead)-MathHelper.wrapDegrees(mg.rotationYaw) < 5;
-	}
-
-	public float[] getAnglePrediction(Vec3d posTurret, Vec3d posTarget, Vec3d motion)
-	{
-		Vec3d vv = posTurret.subtract(posTarget);
-		float motionXZ = MathHelper.sqrt(vv.x*vv.x+vv.z*vv.z);
-		Vec3d motionVec = new Vec3d(motion.x, motion.y, motion.z).scale(2f).addVector(0, 0, 0f);
-		vv = vv.add(motionVec).normalize();
-		float yy = (float)((Math.atan2(vv.x, vv.z)*180D)/3.1415927410125732D);
-		float pp = Math.round(IIUtils.calculateBallisticAngle(
-				posTurret.distanceTo(posTarget.add(motion))+10
-				, (posTarget.y+motion.y)-posTurret.y,
-				IIContent.itemAmmoMachinegun.getDefaultVelocity(),
-				EntityBullet.GRAVITY*0.2f,
-				1f-EntityBullet.DRAG, 0.01));
-
-		return new float[]{MathHelper.wrapDegrees(180-yy), 90-pp};
 	}
 }

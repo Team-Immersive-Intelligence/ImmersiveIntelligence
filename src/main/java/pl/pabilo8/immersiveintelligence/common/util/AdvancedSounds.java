@@ -3,14 +3,14 @@ package pl.pabilo8.immersiveintelligence.common.util;
 import com.google.common.collect.Sets;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.Tuple;
-import pl.pabilo8.immersiveintelligence.api.bullets.PenetrationRegistry.HitEffect;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.HitEffect;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Set;
 
-import static pl.pabilo8.immersiveintelligence.api.bullets.PenetrationRegistry.HitEffect.RICOCHET;
+import static pl.pabilo8.immersiveintelligence.api.ammo.enums.HitEffect.RICOCHET;
 
 /**
  * Despite being sounds, inner classes are NOT client side only
@@ -31,7 +31,11 @@ public class AdvancedSounds
 		@Nonnull
 		private final SoundEvent soundMid;
 
-
+		/**
+		 * @param soundBegin start sound
+		 * @param soundMid   middle/looped sound
+		 * @param soundEnd   end sound
+		 */
 		public MultiSound(SoundEvent soundBegin, SoundEvent soundMid, SoundEvent soundEnd)
 		{
 			this.id = IISounds.rangedSounds.size();
@@ -40,6 +44,16 @@ public class AdvancedSounds
 			this.soundBegin = soundBegin;
 			this.soundMid = soundMid;
 			this.soundEnd = soundEnd;
+		}
+
+		/**
+		 * It may make no sense, but it is here for convenience
+		 *
+		 * @param sound middle/looped sound
+		 */
+		public MultiSound(SoundEvent sound)
+		{
+			this(null, sound, null);
 		}
 
 		@Nullable
@@ -74,12 +88,12 @@ public class AdvancedSounds
 			this.soundRicochet = ricochet;
 		}
 
-		public SoundEvent getSoundImpact()
+		public SoundEvent getImpactSound()
 		{
 			return soundImpact;
 		}
 
-		public SoundEvent getSoundRicochet()
+		public SoundEvent getRicochetSound()
 		{
 			return soundRicochet;
 		}

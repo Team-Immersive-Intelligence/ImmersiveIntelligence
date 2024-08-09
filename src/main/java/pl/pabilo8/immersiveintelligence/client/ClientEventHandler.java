@@ -4,6 +4,7 @@ import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.common.Config;
 import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
+import blusunrize.immersiveengineering.common.util.Utils;
 import blusunrize.lib.manual.IManualPage;
 import blusunrize.lib.manual.ManualInstance;
 import blusunrize.lib.manual.ManualInstance.ManualEntry;
@@ -14,6 +15,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.inventory.GuiContainerCreative;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelBiped.ArmPose;
 import net.minecraft.client.multiplayer.WorldClient;
@@ -39,6 +41,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.client.event.EntityViewRenderEvent.FOVModifier;
+import net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.client.resource.IResourceType;
 import net.minecraftforge.client.resource.ISelectiveResourceReloadListener;
@@ -49,20 +52,21 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GLContext;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Graphics;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools.TripodPeriscope;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Vehicles.FieldHowitzer;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.Mortar;
-import pl.pabilo8.immersiveintelligence.api.bullets.DamageBlockPos;
-import pl.pabilo8.immersiveintelligence.api.bullets.IAmmo;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
+import pl.pabilo8.immersiveintelligence.api.ammo.penetration.DamageBlockPos;
+import pl.pabilo8.immersiveintelligence.api.ammo.utils.IIAmmoUtils;
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler;
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler.IAdvancedTooltipItem;
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler.IItemScrollable;
 import pl.pabilo8.immersiveintelligence.api.utils.camera.IEntityZoomProvider;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IVehicleMultiPart;
-import pl.pabilo8.immersiveintelligence.client.fx.ParticleUtils;
+import pl.pabilo8.immersiveintelligence.client.fx.ScreenShake;
+import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleRegistry;
+import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleSystem;
+import pl.pabilo8.immersiveintelligence.client.gui.GuiWidgetAustralianTabs;
 import pl.pabilo8.immersiveintelligence.client.gui.inworld_overlay.InWorldOverlayBase;
 import pl.pabilo8.immersiveintelligence.client.gui.inworld_overlay.WrenchOverlay;
 import pl.pabilo8.immersiveintelligence.client.gui.overlay.GuiOverlayBase;
@@ -82,25 +86,29 @@ import pl.pabilo8.immersiveintelligence.client.render.item.ISpecificHandRenderer
 import pl.pabilo8.immersiveintelligence.client.render.item.MineDetectorRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.item.PrintedPageRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.CameraHandler;
-import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.IIPotions;
-import pl.pabilo8.immersiveintelligence.common.IISounds;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Graphics;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools.TripodPeriscope;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Vehicles.FieldHowitzer;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.Mortar;
+import pl.pabilo8.immersiveintelligence.common.*;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.BlockIIMetalDevice.IIBlockTypes_MetalDevice;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityMachinegun;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityMortar;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityParachute;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityTripodPeriscope;
-import pl.pabilo8.immersiveintelligence.common.entity.bullet.EntityBullet;
-import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityFieldHowitzer;
+import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityMotorbike;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityVehicleSeat;
+import pl.pabilo8.immersiveintelligence.common.entity.vehicle.towable.gun.EntityFieldHowitzer;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIGunBase;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIRailgunOverride;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageEntityNBTSync;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageItemScrollableSwitch;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageManualClose;
+import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
@@ -113,7 +121,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
 
-import static pl.pabilo8.immersiveintelligence.api.bullets.PenetrationRegistry.blockDamageClient;
+import static pl.pabilo8.immersiveintelligence.api.ammo.utils.PenetrationCache.blockDamageClient;
 
 /**
  * Handles events for client side.
@@ -121,17 +129,19 @@ import static pl.pabilo8.immersiveintelligence.api.bullets.PenetrationRegistry.b
  * @author Pabilo8
  * @since 27-09-2019
  */
+@SideOnly(Side.CLIENT)
 public class ClientEventHandler implements ISelectiveResourceReloadListener
 {
 	private static final ListMultimap<GuiOverlayLayer, GuiOverlayBase> HUDs = MultimapBuilder.enumKeys(GuiOverlayLayer.class).arrayListValues().build();
-	private static final ArrayList<GuiOverlayBase> HUDBackgrounds = new ArrayList<>();
-	private static final ArrayList<TextOverlayBase> textOverlays = new ArrayList<>();
-	private static final ArrayList<InWorldOverlayBase> inWorldOverlays = new ArrayList<>();
+	private static final ArrayList<GuiOverlayBase> HUD_BACKGROUNDS = new ArrayList<>();
+	private static final ArrayList<TextOverlayBase> TEXT_OVERLAYS = new ArrayList<>();
+	private static final ArrayList<InWorldOverlayBase> IN_WORLD_OVERLAYS = new ArrayList<>();
+	private static final ArrayList<ScreenShake> SCREEN_SHAKE_EFFECTS = new ArrayList<>();
 
 	static
 	{
 		//Systems
-		HUDBackgrounds.add(new GuiOverlayZoom());
+		HUD_BACKGROUNDS.add(new GuiOverlayZoom());
 
 		//Items
 		HUDs.put(GuiOverlayLayer.ITEM, new GuiOverlayMachinegun());
@@ -145,13 +155,13 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 
 	static
 	{
-		textOverlays.add(new TextOverlayHeadgear());
-		textOverlays.add(new TextOverlayMechanical());
-		textOverlays.add(new TextOverlayUpgrade());
-		textOverlays.add(new TextOverlayAdvanced());
-		textOverlays.add(new TextOverlayVoltmeterEntities());
+		TEXT_OVERLAYS.add(new TextOverlayHeadgear());
+		TEXT_OVERLAYS.add(new TextOverlayMechanical());
+		TEXT_OVERLAYS.add(new TextOverlayUpgrade());
+		TEXT_OVERLAYS.add(new TextOverlayAdvanced());
+		TEXT_OVERLAYS.add(new TextOverlayVoltmeterEntities());
 
-		inWorldOverlays.add(new WrenchOverlay());
+		IN_WORLD_OVERLAYS.add(new WrenchOverlay());
 	}
 
 	public static LinkedHashMap<EntityLivingBase, Float> gunshotEntities = new LinkedHashMap<>();
@@ -165,7 +175,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 	public void onResourceManagerReload(@Nonnull IResourceManager resourceManager, Predicate<IResourceType> resourcePredicate)
 	{
 		if(resourcePredicate.test(VanillaResourceType.MODELS))
-			IIModelRegistry.instance.reloadRegisteredModels();
+			IIModelRegistry.INSTANCE.reloadRegisteredModels();
 	}
 
 	@SubscribeEvent(priority = EventPriority.HIGH)
@@ -287,12 +297,10 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 	{
 		CameraHandler.handleZoom();
 		if(CameraHandler.isEnabled())
-		{
 			if(CameraHandler.zoom==null)
 				CameraHandler.fovZoom = event.getFOV();
 			else
 				event.setFOV(event.getFOV()*CameraHandler.fovZoom);
-		}
 	}
 
 	@SubscribeEvent
@@ -316,7 +324,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 			TileEntity te = mop.typeOfHit==Type.BLOCK?player.world.getTileEntity(mop.getBlockPos()): null;
 			Entity entityHit = mop.entityHit;
 
-			for(TextOverlayBase hud : textOverlays)
+			for(TextOverlayBase hud : TEXT_OVERLAYS)
 				if(hud.shouldDraw(player, mop, te, entityHit))
 				{
 					//get parameters
@@ -342,9 +350,8 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 		//--- Overlay GUIs ---//
 
 		//Iterate HUD Layers
+		//Iterate HUDs
 		for(GuiOverlayLayer key : HUDs.keys())
-		{
-			//Iterate HUDs
 			for(GuiOverlayBase hud : HUDs.get(key))
 				if(hud.shouldDraw(player, mop))
 				{
@@ -352,20 +359,19 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 					hud.draw(player, mop, event.getResolution().getScaledWidth(), event.getResolution().getScaledHeight());
 					break;
 				}
-		}
 	}
 
 	@SubscribeEvent
 	public void onRenderWorldLast(RenderWorldLastEvent event)
 	{
 		//--- Handle Particles ---//
-		ParticleUtils.particleRenderer.renderParticles(event.getPartialTicks());
+		ParticleSystem.INSTANCE.renderParticles(event.getPartialTicks());
 
 		//--- Handle in-world projections ---//
 		RayTraceResult mop = ClientUtils.mc().objectMouseOver;
 		EntityPlayer player = ClientUtils.mc().player;
 
-		for(InWorldOverlayBase overlay : inWorldOverlays)
+		for(InWorldOverlayBase overlay : IN_WORLD_OVERLAYS)
 			overlay.draw(player, player.world, mop, event.getPartialTicks());
 
 	}
@@ -392,7 +398,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 		//
 
 		//Iterate HUD backgrounds
-		for(GuiOverlayBase hud : HUDBackgrounds)
+		for(GuiOverlayBase hud : HUD_BACKGROUNDS)
 			if(hud.shouldDraw(player, mop))
 			{
 				hud.bindHUDTexture();
@@ -412,15 +418,16 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 			{
 				NBTTagCompound tag = new NBTTagCompound();
 				tag.setBoolean("clientMessage", true);
-				tag.setBoolean("aiming", mgAiming);
+				tag.setBoolean("aiming", pressed);
 				IIPacketHandler.sendToServer(new MessageEntityNBTSync(ridden, tag));
+				((EntityMachinegun)ridden).aiming = pressed;
 			}
 			mgAiming = pressed;
 		}
 		else mgAiming = false;
 
 		//--- Camera Handling ---//
-		if(CameraHandler.zoom!=null)
+		if(mgAiming)
 		{
 			ClientUtils.mc().gameSettings.thirdPersonView = 0;
 
@@ -460,8 +467,8 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 
 				boolean hasScope = mg.getZoom().shouldZoom(mg.gun, null);
 
-				Vec3d gun_end = IIUtils.offsetPosDirection(2.25f-(hasScope?1.25f: 0), true_angle, true_angle2);
-				Vec3d gun_height = IIUtils.offsetPosDirection(0.25f+(hasScope?0.125f: 0f), true_angle, true_angle2+90);
+				Vec3d gun_end = IIMath.offsetPosDirection(2.25f-(hasScope?1.25f: 0), true_angle, true_angle2);
+				Vec3d gun_height = IIMath.offsetPosDirection(0.25f+(hasScope?0.125f: 0f), true_angle, true_angle2+90);
 
 				CameraHandler.setCameraPos(px+0.85*(gun_end.x+gun_height.x), py-1.5f+0.4025+0.85*(gun_end.y+gun_height.y), pz+0.85*(gun_end.z+gun_height.z));
 				CameraHandler.setCameraAngle(mg.setYaw+yaw, pitch, 0);
@@ -470,11 +477,9 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 			else if(lowestRidden instanceof EntityMortar)
 			{
 				EntityMortar mg = (EntityMortar)lowestRidden;
+				//					CameraHandler.isZooming = false;
 				if(mg.shootingProgress!=0)
-				{
-//					CameraHandler.isZooming = false;
 					CameraHandler.fovZoom = 0;
-				}
 
 				CameraHandler.setCameraPos(mg.posX, mg.posY+0.75, mg.posZ);
 				CameraHandler.setCameraAngle(mg.rotationYaw, 1+(1f-mg.rotationPitch/-90f)*-1.5f, 0);
@@ -525,8 +530,8 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 			}
 		}*/
 
-		if(stack.getItem() instanceof IAmmo)
-			IIClientUtils.createAmmoTooltip(((IAmmo)stack.getItem()), stack, event.getEntity().world, event.getToolTip());
+		if(stack.getItem() instanceof IAmmoTypeItem)
+			IIAmmoUtils.createAmmoTooltip(((IAmmoTypeItem)stack.getItem()), stack, event.getEntity().world, event.getToolTip());
 		else if(ItemNBTHelper.hasKey(stack, IIContent.NBT_AdvancedPowerpack))
 		{
 			ItemStack powerpack = ItemNBTHelper.getItemStack(stack, IIContent.NBT_AdvancedPowerpack);
@@ -572,7 +577,6 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 
 		//Rightclick
 		if(event.getButton()==1)
-		{
 			if(ClientUtils.mc().player.getRidingEntity() instanceof EntityMachinegun)
 			{
 				NBTTagCompound tag = new NBTTagCompound();
@@ -580,7 +584,6 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 				tag.setBoolean("shoot", event.isButtonstate());
 				IIPacketHandler.sendToServer(new MessageEntityNBTSync(ClientUtils.mc().player.getRidingEntity(), tag));
 			}
-		}
 	}
 
 	/**
@@ -609,10 +612,32 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 	{
 		double partialTicks = event.getRenderPartialTicks();
 
+		//--- ScreenShake Handling ---//
+		if(Graphics.cameraScreenShake)
+		{
+			//Display the strongest effect
+			SCREEN_SHAKE_EFFECTS.stream()
+					.max(ScreenShake::compareTo)
+					.ifPresent(
+							screenShake -> {
+								double shakex = (Utils.RAND.nextGaussian()-0.5)*screenShake.getStrength();
+								double shakey = (Utils.RAND.nextGaussian()-0.5)*screenShake.getStrength();
+								double shakez = (Utils.RAND.nextGaussian()-0.5)*screenShake.getStrength();
+								event.setRoll((float)shakez);
+								event.setYaw((float)(event.getYaw()+shakex));
+								event.setPitch((float)(event.getPitch()+shakey));
+							}
+					);
+			//Tick and remove past effects
+			SCREEN_SHAKE_EFFECTS.removeIf(screenShake -> screenShake.tick(partialTicks));
+		}
+
 		if(Minecraft.getMinecraft().gameSettings.thirdPersonView==0)
 		{
+			//--- Gun Recoil Handling ---//
+
 			ItemStack stack = ClientUtils.mc().player.getHeldItemMainhand();
-			if(stack.getItem() instanceof ItemIIGunBase)
+			if(stack.getItem() instanceof ItemIIGunBase&&Graphics.cameraRecoil)
 			{
 				//Prepare variables
 				ItemIIGunBase item = ((ItemIIGunBase)stack.getItem());
@@ -635,7 +660,8 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 				event.setYaw((float)(event.getYaw()+recoilH));
 			}
 
-			if(Graphics.cameraRoll&&ClientUtils.mc().player.getRidingEntity() instanceof EntityMotorbike)
+			//--- Camera Roll in Vehicles Handling ---//
+			if(ClientUtils.mc().player.getRidingEntity() instanceof EntityMotorbike)
 			{
 				EntityMotorbike entity = (EntityMotorbike)ClientUtils.mc().player.getRidingEntity();
 				float tilt = entity.tilt;
@@ -656,7 +682,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 		if(CameraHandler.isEnabled()&&!ClientUtils.mc().player.isRiding())
 			CameraHandler.setEnabled(false);
 
-		if(CameraHandler.isEnabled())
+		if(Graphics.cameraRoll&&CameraHandler.isEnabled())
 			event.setRoll(CameraHandler.getRoll());
 	}
 
@@ -1112,15 +1138,15 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 								//1.5707964 down
 								float v = (model.bipedHead.rotateAngleX+1.5707964f)/3.1415927f;
 
-								model.bipedRightArm.rotateAngleY += IIUtils.clampedLerp3Par(0, -0.45f, 0f, v);
-								model.bipedRightArm.rotateAngleZ += IIUtils.clampedLerp3Par(0.25f, 0, -0.45f, v);
-								model.bipedLeftArm.rotateAngleZ += IIUtils.clampedLerp3Par(rail?-0.25f: -0.65f, 0, rail?0.25f: 0.65f, v);
-								model.bipedLeftArm.rotateAngleY += IIUtils.clampedLerp3Par(0f, rail?0.25f: 0.7f, 0f, v);
+								model.bipedRightArm.rotateAngleY += IIMath.clampedLerp3Par(0, -0.45f, 0f, v);
+								model.bipedRightArm.rotateAngleZ += IIMath.clampedLerp3Par(0.25f, 0, -0.45f, v);
+								model.bipedLeftArm.rotateAngleZ += IIMath.clampedLerp3Par(rail?-0.25f: -0.65f, 0, rail?0.25f: 0.65f, v);
+								model.bipedLeftArm.rotateAngleY += IIMath.clampedLerp3Par(0f, rail?0.25f: 0.7f, 0f, v);
 
-								model.bipedLeftArm.rotationPointX += IIUtils.clampedLerp3Par(-2f, -1f, -2f, v);
-								model.bipedLeftArm.rotationPointZ += IIUtils.clampedLerp3Par(0, -2f, 0, v);
+								model.bipedLeftArm.rotationPointX += IIMath.clampedLerp3Par(-2f, -1f, -2f, v);
+								model.bipedLeftArm.rotationPointZ += IIMath.clampedLerp3Par(0, -2f, 0, v);
 
-								model.bipedRightArm.rotationPointZ += IIUtils.clampedLerp3Par(0, 2f, 0, v);
+								model.bipedRightArm.rotationPointZ += IIMath.clampedLerp3Par(0, 2f, 0, v);
 
 
 								//up
@@ -1233,15 +1259,15 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 						//float recoilV = ItemNBTHelper.getFloat(heldItem, "recoilV");
 
 						Vec3d vec =
-								IIUtils.getVectorForRotation(player.rotationPitch, player.getRotationYawHead())
+								IIMath.getVectorForRotation(player.rotationPitch, player.getRotationYawHead())
 										.scale(-1);
 
 						double true_angle = Math.toRadians(-player.getRotationYawHead() > 180?360f- -player.getRotationYawHead(): -player.getRotationYawHead());
 						double true_angle2 = Math.toRadians(-player.getRotationYawHead()-90 > 180?360f-(-player.getRotationYawHead()-90): -player.getRotationYawHead()-90);
 
-						Vec3d pos1_x = IIUtils.offsetPosDirection(-model.bipedRightArm.rotationPointZ/16f+0.185f, true_angle, 0);
-						Vec3d pos1_z = IIUtils.offsetPosDirection(-model.bipedRightArm.rotationPointX/16f-0.125f-0.0625f, true_angle2, 0);
-						Vec3d pos1_y = IIUtils.offsetPosDirection(3/16f, true_angle, 90);
+						Vec3d pos1_x = IIMath.offsetPosDirection(-model.bipedRightArm.rotationPointZ/16f+0.185f, true_angle, 0);
+						Vec3d pos1_z = IIMath.offsetPosDirection(-model.bipedRightArm.rotationPointX/16f-0.125f-0.0625f, true_angle2, 0);
+						Vec3d pos1_y = IIMath.offsetPosDirection(3/16f, true_angle, 90);
 
 						Vec3d vv = player.getPositionVector()
 								.addVector(0, entity.isSneaking()?-0.275: 0, 0)
@@ -1250,7 +1276,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 								.add(vec.scale(-1.25f));
 						//.add(arm.rotatePitch(-90f).scale(0.5f));
 
-						ParticleUtils.spawnGunfireFX(vv, vec, v);
+						ParticleRegistry.spawnGunfireFX(vv, vec, v);
 					}
 				}
 			}
@@ -1285,9 +1311,8 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 	}
 
 	@SubscribeEvent
-	public static void guiOpen(GuiOpenEvent event)
+	public void onGuiOpen(GuiOpenEvent event)
 	{
-		// TODO: 26.08.2021 investigate
 		if(event.getGui() instanceof GuiManual)
 			IISkinHandler.getManualPages();
 		else if(ClientEventHandler.lastGui instanceof GuiManual)
@@ -1303,9 +1328,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 				{
 					IManualPage page = entry.getPages()[gui.page];
 					if(page instanceof IIManualPageContributorSkin)
-					{
 						name = ((IIManualPageContributorSkin)page).skin.name;
-					}
 				}
 			}
 			EntityPlayer p = ClientUtils.mc().player;
@@ -1322,17 +1345,30 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 				IIPacketHandler.sendToServer(new MessageManualClose(name==null?"": name));
 
 				if(name==null&&ItemNBTHelper.hasKey(target, "lastSkin"))
-				{
 					ItemNBTHelper.remove(target, "lastSkin");
-				}
 				else if(name!=null)
-				{
 					ItemNBTHelper.setString(target, "lastSkin", name);
-				}
 			}
 		}
 
 		ClientEventHandler.lastGui = event.getGui();
+	}
+
+	@SubscribeEvent
+	public void onInitGuiPost(InitGuiEvent.Post event)
+	{
+		//Add creative menu subtabs
+		if(event.getGui() instanceof GuiContainerCreative&&IIConfig.australianCreativeTabs)
+		{
+			GuiContainerCreative gui = (GuiContainerCreative)event.getGui();
+			try
+			{
+				event.getButtonList().add(new GuiWidgetAustralianTabs(gui.guiLeft-27, gui.guiTop+2, gui));
+			} catch(Exception ignored)
+			{
+				IILogger.warn("Failed to add subtabs to creative inventory");
+			}
+		}
 	}
 
 	@SubscribeEvent
@@ -1342,7 +1378,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 		gunshotEntities.clear();
 		blockDamageClient.clear();
 
-		ParticleUtils.particleRenderer.reload();
+		ParticleSystem.INSTANCE.reload();
 	}
 
 	@SubscribeEvent
@@ -1350,7 +1386,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 	{
 		if(event.phase==Phase.END)
 		{
-			ParticleUtils.particleRenderer.updateParticles();
+			ParticleSystem.INSTANCE.updateParticles();
 
 			if(!Weapons.bulletsWhistleSound)
 				return;
@@ -1358,13 +1394,23 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 			Minecraft mc = ClientUtils.mc();
 			if(mc.world!=null&&mc.player!=null)
 			{
-				List<EntityBullet> bullets = mc.world.getEntitiesWithinAABB(EntityBullet.class, mc.player.getEntityBoundingBox().grow(3));
-				for(EntityBullet bullet : bullets)
-					if(bullet.getShooter()!=mc.player)
+				List<EntityAmmoProjectile> bullets = mc.world.getEntitiesWithinAABB(EntityAmmoProjectile.class, mc.player.getEntityBoundingBox().grow(3));
+				for(EntityAmmoProjectile bullet : bullets)
+					if(bullet.getOwner()!=mc.player)
 						//higher the velocity (howitzers), lower the tone
-						bullet.playSound(IISounds.bulletFlyby, 0.6f, 1.75f-MathHelper.clamp(bullet.force/6f, 0.5f, 1.75f));
+						bullet.playSound(IISounds.bulletFlyby, 0.6f, 1.75f-MathHelper.clamp(bullet.getVelocity()/6f, 0.5f, 1.75f));
 			}
 
 		}
+	}
+
+
+	/**
+	 * @param pos      position of the explosion / screenshake source
+	 * @param strength strength of the shake
+	 */
+	public static void addScreenshakeSource(Vec3d pos, float strength, float duration)
+	{
+		SCREEN_SHAKE_EFFECTS.add(new ScreenShake(strength, duration, pos));
 	}
 }

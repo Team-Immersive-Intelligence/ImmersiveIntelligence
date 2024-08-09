@@ -266,5 +266,6 @@ public class ModelRedstoneInterface extends ModelIIBase
 			}
 			break;
 		}
+		GlStateManager.translate(0f, 0, mirrored?-1f: 1f);
 	}
 }

@@ -15,18 +15,22 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
+import net.minecraftforge.common.property.Properties;
 import pl.pabilo8.immersiveintelligence.common.block.rotary_device.BlockIIMechanicalConnector.IIBlockTypes_MechanicalConnector;
-import pl.pabilo8.immersiveintelligence.common.block.rotary_device.tileentity.TileEntityMechanicalWheel;
+import pl.pabilo8.immersiveintelligence.common.block.rotary_device.tileentity.TileEntityMechanicalConnectable;
+import pl.pabilo8.immersiveintelligence.common.block.rotary_device.tileentity.TileEntityWheelIron;
+import pl.pabilo8.immersiveintelligence.common.block.rotary_device.tileentity.TileEntityWheelSteel;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.block.BlockIITileProvider;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.EnumTileProvider;
+import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IIBlockProperties;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IITileProviderEnum;
 import pl.pabilo8.immersiveintelligence.common.util.block.ItemBlockIIBase;
+import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -40,22 +44,23 @@ public class BlockIIMechanicalConnector extends BlockIITileProvider<IIBlockTypes
 {
 	public enum IIBlockTypes_MechanicalConnector implements IITileProviderEnum
 	{
-		@EnumTileProvider(tile = TileEntityMechanicalWheel.class)
-		WOODEN_WHEEL
+		@IIBlockProperties(oreDict = "wheelIron", needsCustomState = true)
+		@EnumTileProvider(tile = TileEntityWheelIron.class)
+		IRON_WHEEL,
+		@IIBlockProperties(oreDict = "wheelSteel", needsCustomState = true)
+		@EnumTileProvider(tile = TileEntityWheelSteel.class)
+		STEEL_WHEEL
 	}
 
 	public BlockIIMechanicalConnector()
 	{
 		super("mechanical_connector", Material.IRON, PropertyEnum.create("type", IIBlockTypes_MechanicalConnector.class), ItemBlockIIBase::new,
-				IEProperties.FACING_ALL, IOBJModelCallback.PROPERTY, IEProperties.CONNECTIONS);
+				IEProperties.FACING_ALL, IOBJModelCallback.PROPERTY, IEProperties.CONNECTIONS, IEProperties.DYNAMICRENDER, Properties.AnimationProperty);
 		setHardness(3.0F);
 		setResistance(15.0F);
-
+		setCategory(IICategory.ROTARY);
 		setToolTypes(IIReference.TOOL_HAMMER);
-
 		setBlockLayer(BlockRenderLayer.CUTOUT_MIPPED);
-		addToTESRMap(IIBlockTypes_MechanicalConnector.WOODEN_WHEEL);
-
 	}
 
 	@Override
@@ -63,22 +68,15 @@ public class BlockIIMechanicalConnector extends BlockIITileProvider<IIBlockTypes
 	{
 		super.neighborChanged(state, world, pos, blockIn, fromPos);
 		TileEntity te = world.getTileEntity(pos);
-		if(te instanceof TileEntityMechanicalWheel)
+		if(te instanceof TileEntityMechanicalConnectable)
 		{
-			TileEntityMechanicalWheel connector = (TileEntityMechanicalWheel)te;
-			if(world.isAirBlock(pos.offset(connector.facing)))
+			TileEntityMechanicalConnectable connector = (TileEntityMechanicalConnectable)te;
+			if(world.isAirBlock(pos.offset(connector.getFacing())))
 			{
 				this.dropBlockAsItem(connector.getWorld(), pos, world.getBlockState(pos), 0);
 				connector.getWorld().setBlockToAir(pos);
 			}
 		}
-	}
-
-	@SuppressWarnings("deprecation")
-	@Nonnull
-	public EnumBlockRenderType getRenderType(IBlockState state)
-	{
-		return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
 	}
 
 	@Override

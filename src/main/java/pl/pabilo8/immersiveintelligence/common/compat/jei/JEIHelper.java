@@ -16,9 +16,10 @@ import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.oredict.OreDictionary;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry;
-import pl.pabilo8.immersiveintelligence.api.bullets.IAmmo;
+import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseType;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.api.crafting.*;
 import pl.pabilo8.immersiveintelligence.client.gui.block.*;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
@@ -26,7 +27,7 @@ import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.compat.jei.gui_handlers.*;
 import pl.pabilo8.immersiveintelligence.common.compat.jei.recipe_handlers.*;
 import pl.pabilo8.immersiveintelligence.common.crafting.RecipeMinecart;
-import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoRevolver;
+import pl.pabilo8.immersiveintelligence.common.item.ammo.gun.ItemIIAmmoRevolver;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock;
 
 import javax.annotation.Nonnull;
@@ -40,6 +41,11 @@ public class JEIHelper implements IModPlugin
 	public static IModRegistry modRegistry;
 	public static IDrawable slotDrawable;
 	public static IEFluidTooltipCallback fluidTooltipCallback = new IEFluidTooltipCallback();
+
+	public JEIHelper()
+	{
+
+	}
 
 	@Override
 	public void registerItemSubtypes(ISubtypeRegistry subtypeRegistry)
@@ -66,12 +72,14 @@ public class JEIHelper implements IModPlugin
 		//Recipes
 		IGuiHelper guiHelper = jeiHelpers.getGuiHelper();
 		slotDrawable = guiHelper.getSlotDrawable();
+		categories.clear();
 		categories.put(BathingRecipe.class, new BathingRecipeCategory(guiHelper, false));
 		categories.put(BathingRecipe.class, new BathingRecipeCategory(guiHelper, true));
 		categories.put(ElectrolyzerRecipe.class, new ElectrolyzerRecipeCategory(guiHelper));
-		categories.put(PrecissionAssemblerRecipe.class, new PrecissionAssemblerRecipeCategory(guiHelper));
+		categories.put(PrecisionAssemblerRecipe.class, new PrecisionAssemblerRecipeCategory(guiHelper));
 		categories.put(SawmillRecipe.class, new SawmillRecipeCategory(guiHelper));
 		categories.put(VulcanizerRecipe.class, new VulcanizerRecipeCategory(guiHelper));
+		categories.put(FillerRecipe.class, new FillerRecipeCategory(guiHelper));
 
 		registry.addRecipeCategories(categories.values().toArray(new IRecipeCategory[0]));
 	}
@@ -92,9 +100,9 @@ public class JEIHelper implements IModPlugin
 		jeiHelpers.getIngredientBlacklist().addIngredientToBlacklist(new ItemStack(IIContent.itemAmmoRevolver, 1, ItemIIAmmoRevolver.UNUSED));
 
 
-		for(IAmmo bullet : AmmoRegistry.INSTANCE.registeredBulletItems.values())
+		for(IAmmoTypeItem<?, ?> bullet : AmmoRegistry.getAllAmmoItems())
 		{
-			ItemStack stack = bullet.getBulletWithParams("", "", "");
+			ItemStack stack = bullet.getAmmoStack(AmmoRegistry.MISSING_CORE, CoreType.SOFTPOINT, FuseType.CONTACT);
 			stack.setTagCompound(new NBTTagCompound());
 			jeiHelpers.getIngredientBlacklist().addIngredientToBlacklist(stack);
 		}
@@ -104,8 +112,6 @@ public class JEIHelper implements IModPlugin
 				jeiHelpers.getIngredientBlacklist().addIngredientToBlacklist(new ItemStack(block, 1, OreDictionary.WILDCARD_VALUE));
 
 		IILogger.info("JEI has just requested our recipes, it seems that we even have a class for registering them!");
-
-		//modRegistry.addRecipeCatalyst(new ItemStack(IEContent.blockMetalMultiblock, 1, BlockTypes_MetalMultiblock.ASSEMBLER.getMeta()), VanillaRecipeCategoryUid.CRAFTING);
 
 		for(IIRecipeCategory<Object, IRecipeWrapper> cat : categories.values())
 		{
@@ -122,20 +128,23 @@ public class JEIHelper implements IModPlugin
 		modRegistry.addRecipeClickArea(GuiElectrolyzer.class, 66, 45, 47, 4, "ii.electrolyzer");
 		modRegistry.addRecipeClickArea(GuiElectrolyzer.class, 113, 42, 6, 10, "ii.electrolyzer");
 
-		modRegistry.addRecipes(PrecissionAssemblerRecipe.recipeList, "ii.precissionassembler");
-		modRegistry.addRecipeClickArea(GuiPrecissionAssembler.class, 49, 45, 78, 4, "ii.precissionassembler");
-		modRegistry.addRecipeClickArea(GuiPrecissionAssembler.class, 127, 40, 7, 14, "ii.precissionassembler");
-		modRegistry.addRecipeClickArea(GuiPrecissionAssembler.class, 67, 49, 6, 8, "ii.precissionassembler");
-		modRegistry.addRecipeClickArea(GuiPrecissionAssembler.class, 85, 49, 6, 8, "ii.precissionassembler");
-		modRegistry.addRecipeClickArea(GuiPrecissionAssembler.class, 103, 49, 6, 8, "ii.precissionassembler");
+		modRegistry.addRecipes(PrecisionAssemblerRecipe.recipeList, "ii.precision_assembler");
+		modRegistry.addRecipeClickArea(GuiPrecisionAssembler.class, 49, 45, 78, 4, "ii.precision_assembler");
+		modRegistry.addRecipeClickArea(GuiPrecisionAssembler.class, 127, 40, 7, 14, "ii.precision_assembler");
+		modRegistry.addRecipeClickArea(GuiPrecisionAssembler.class, 67, 49, 6, 8, "ii.precision_assembler");
+		modRegistry.addRecipeClickArea(GuiPrecisionAssembler.class, 85, 49, 6, 8, "ii.precision_assembler");
+		modRegistry.addRecipeClickArea(GuiPrecisionAssembler.class, 103, 49, 6, 8, "ii.precision_assembler");
 
-		modRegistry.addRecipes(SawmillRecipe.recipeList, "ii.sawmill");
+		modRegistry.addRecipes(SawmillRecipe.RECIPES, "ii.sawmill");
 		modRegistry.addRecipeClickArea(GuiSawmill.class, 33, 42, 43, 4, "ii.sawmill");
 		modRegistry.addRecipeClickArea(GuiSawmill.class, 76, 38, 6, 12, "ii.sawmill");
 
 		modRegistry.addRecipes(VulcanizerRecipe.recipeList.values(), "ii.vulcanizer");
 		modRegistry.addRecipeClickArea(GuiVulcanizer.class, 71, 24, 30, 30, "ii.vulcanizer");
 		modRegistry.addAdvancedGuiHandlers(new VulcanizerGuiHandler());
+
+		modRegistry.addRecipes(FillerRecipe.recipeList, "ii.filler");
+		modRegistry.addRecipeClickArea(GuiFiller.class, 41, 2, 60, 60, "ii.filler");
 
 		modRegistry.addAdvancedGuiHandlers(new UpgradeGuiHandler());
 		modRegistry.addAdvancedGuiHandlers(new AmmoCrateGuiHandler(),

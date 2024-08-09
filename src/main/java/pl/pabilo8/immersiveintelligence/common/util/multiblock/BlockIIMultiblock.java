@@ -41,7 +41,7 @@ public abstract class BlockIIMultiblock<E extends Enum<E> & IITileMultiblockEnum
 {
 	public BlockIIMultiblock(String name, Material material, PropertyEnum<E> mainProperty, Object... additionalProperties)
 	{
-		super(name, material, mainProperty, ItemBlockIIBase::new, combineProperties(additionalProperties, IEProperties.FACING_HORIZONTAL, IEProperties.MULTIBLOCKSLAVE));
+		super(name, material, mainProperty, ItemBlockIIBase::new, combineProperties(additionalProperties, IEProperties.MULTIBLOCKSLAVE));
 
 		//try getting multiblocks, if null, leave it alone
 		for(E v : enumValues)
@@ -58,18 +58,11 @@ public abstract class BlockIIMultiblock<E extends Enum<E> & IITileMultiblockEnum
 
 		setLightOpacity(0);
 		setFullCube(false);
-		setBlockLayer(BlockRenderLayer.CUTOUT);
+		setBlockLayer(BlockRenderLayer.CUTOUT_MIPPED, BlockRenderLayer.SOLID);
 		setToolTypes(IIReference.TOOL_HAMMER);
 	}
 
 	//--- Other Methods ---//
-
-	@Override
-	public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos)
-	{
-		state = super.getActualState(state, world, pos);
-		return state;
-	}
 
 	@Override
 	public void breakBlock(World world, BlockPos pos, IBlockState state)
@@ -98,10 +91,7 @@ public abstract class BlockIIMultiblock<E extends Enum<E> & IITileMultiblockEnum
 	@Override
 	public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune)
 	{
-		int meta = this.getMetaFromState(state);
-
-		if(meta >= 0&&meta < this.enumValues.length)
-			super.getDrops(drops, world, pos, state, fortune);
+		//drops are handled above
 	}
 
 	@Override

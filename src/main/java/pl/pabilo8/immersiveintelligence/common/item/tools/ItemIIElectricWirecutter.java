@@ -38,8 +38,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
-import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIBase;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
+import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
+import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIBase;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -52,6 +55,7 @@ import static blusunrize.immersiveengineering.api.Lib.TOOL_WIRECUTTER;
  * @author Pabilo8
  * @since 07-06-2019
  */
+@IIItemProperties(category = IICategory.TOOLS)
 public class ItemIIElectricWirecutter extends ItemIIBase implements ITool, IIEEnergyItem
 {
 	public ItemIIElectricWirecutter()
@@ -64,8 +68,8 @@ public class ItemIIElectricWirecutter extends ItemIIBase implements ITool, IIEEn
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> list, ITooltipFlag flag)
 	{
 		String stored = this.getEnergyStored(stack)+"/"+this.getMaxEnergyStored(stack);
-		list.add(IIUtils.getItalicString(I18n.format(IIReference.DESCRIPTION_KEY+"electric_wirecutter")));
-		list.add(IIUtils.getItalicString(I18n.format(IIReference.INFO_KEY+"charge_with_if")));
+		list.add(IIStringUtil.getItalicString(I18n.format(IIReference.DESCRIPTION_KEY+"electric_wirecutter")));
+		list.add(IIStringUtil.getItalicString(I18n.format(IIReference.INFO_KEY+"charge_with_if")));
 		list.add(I18n.format(Lib.DESC+"info.energyStored", TextFormatting.GOLD+stored+TextFormatting.RESET));
 	}
 

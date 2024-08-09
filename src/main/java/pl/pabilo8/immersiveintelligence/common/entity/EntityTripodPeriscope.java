@@ -22,6 +22,7 @@ import pl.pabilo8.immersiveintelligence.api.utils.tools.IAdvancedZoomTool;
 import pl.pabilo8.immersiveintelligence.client.util.CameraHandler;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 
 import static pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools.TripodPeriscope.tripodZoomSteps;
 
@@ -121,8 +122,8 @@ public class EntityTripodPeriscope extends Entity implements IEntityZoomProvider
 			float headYaw = MathHelper.wrapDegrees(this.periscopeYaw);
 			double true_angle = Math.toRadians((-headYaw) > 180?360f-(-headYaw): (-headYaw));
 			double true_angle2 = Math.toRadians((-headYaw-90) > 180?360f-(-headYaw-90): (-headYaw-90));
-			Vec3d pos2 = IIUtils.offsetPosDirection(-0.5f, true_angle, 0);
-			Vec3d pos3 = IIUtils.offsetPosDirection(-0.0625f/2f, true_angle2, 0);
+			Vec3d pos2 = IIMath.offsetPosDirection(-0.5f, true_angle, 0);
+			Vec3d pos3 = IIMath.offsetPosDirection(-0.0625f/2f, true_angle2, 0);
 
 			passenger.setPosition(pos.getX()+0.5+pos2.x+pos3.x, pos.getY(), pos.getZ()+0.5+pos2.z+pos3.z);
 		}

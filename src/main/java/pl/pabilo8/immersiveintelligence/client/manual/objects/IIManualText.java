@@ -62,8 +62,11 @@ public class IIManualText extends IIManualObject
 				fontRenderer = IIClientUtils.fontTinkerer;
 				break;
 			default:
+			{
 				fontRenderer = manual.fontRenderer;
-				break;
+				this.unicode = manual.fontRenderer.getUnicodeFlag();
+			}
+			break;
 		}
 		if(dataSource.getBoolean("unicode"))
 			this.unicode = true;

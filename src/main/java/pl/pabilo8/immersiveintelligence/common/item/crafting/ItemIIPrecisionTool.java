@@ -9,13 +9,15 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.api.crafting.PrecissionAssemblerRecipe;
+import pl.pabilo8.immersiveintelligence.api.crafting.PrecisionAssemblerRecipe;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.IPrecisionTool;
 import pl.pabilo8.immersiveintelligence.client.render.multiblock.metal.PrecisionAssemblerRenderer;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.ItemIIPrecisionTool.PrecisionTools;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
 import pl.pabilo8.modworks.annotations.item.GeneratedItemModels;
 
@@ -28,6 +30,7 @@ import java.util.List;
  * @author Pabilo8
  * @since 19-08-2019
  */
+@IIItemProperties(category = IICategory.RESOURCES)
 public class ItemIIPrecisionTool extends ItemIISubItemsBase<PrecisionTools> implements IPrecisionTool
 {
 	public ItemIIPrecisionTool()
@@ -36,18 +39,18 @@ public class ItemIIPrecisionTool extends ItemIISubItemsBase<PrecisionTools> impl
 
 		// TODO: 01.09.2022 convert to capabilities
 		for(PrecisionTools e : getSubItems())
-			PrecissionAssemblerRecipe.registerToolType(e.getName(), this);
+			PrecisionAssemblerRecipe.registerToolType(e.getName(), this);
 	}
 
 	@GeneratedItemModels(itemName = "precission_tool", texturePath = "precision_tool")
 	public enum PrecisionTools implements IIItemEnum
 	{
-		BUZZSAW(Tools.precissionToolBuzzsawDurability, Tools.precissionToolBuzzsawUsageTime),
-		DRILL(Tools.precissionToolDrillDurability, Tools.precissionToolDrillUsageTime),
-		INSERTER(Tools.precissionToolInserterDurability, Tools.precissionToolInserterUsageTime),
-		SOLDERER(Tools.precissionToolSoldererDurability, Tools.precissionToolSoldererUsageTime),
-		WELDER(Tools.precissionToolWelderDurability, Tools.precissionToolWelderUsageTime),
-		HAMMER(Tools.precissionToolHammerDurability, Tools.precissionToolHammerUsageTime);
+		BUZZSAW(Tools.precisionToolBuzzsawDurability, Tools.precisionToolBuzzsawUsageTime),
+		DRILL(Tools.precisionToolDrillDurability, Tools.precisionToolDrillUsageTime),
+		INSERTER(Tools.precisionToolInserterDurability, Tools.precisionToolInserterUsageTime),
+		SOLDERER(Tools.precisionToolSoldererDurability, Tools.precisionToolSoldererUsageTime),
+		WELDER(Tools.precisionToolWelderDurability, Tools.precisionToolWelderUsageTime),
+		HAMMER(Tools.precisionToolHammerDurability, Tools.precisionToolHammerUsageTime);
 
 		private final int durability;
 		private final int usageTime;
@@ -64,35 +67,35 @@ public class ItemIIPrecisionTool extends ItemIISubItemsBase<PrecisionTools> impl
 	public void onCreated(ItemStack stack, World worldIn, EntityPlayer playerIn)
 	{
 		super.onCreated(stack, worldIn, playerIn);
-		ItemNBTHelper.setInt(stack, "damage", getPrecissionToolMaxDamage(stack));
+		ItemNBTHelper.setInt(stack, "damage", getPrecisionToolMaxDamage(stack));
 	}
 
 	@Override
-	public String getPrecissionToolType(ItemStack stack)
+	public String getPrecisionToolType(ItemStack stack)
 	{
 		return getSubNames()[stackToSub(stack).ordinal()];
 	}
 
 	@Override
-	public void damagePrecissionTool(ItemStack stack, int amount)
+	public void damagePrecisionTool(ItemStack stack, int amount)
 	{
 		if(!ItemNBTHelper.hasKey(stack, "damage"))
-			ItemNBTHelper.setInt(stack, "damage", getPrecissionToolMaxDamage(stack));
+			ItemNBTHelper.setInt(stack, "damage", getPrecisionToolMaxDamage(stack));
 
-		ItemNBTHelper.setInt(stack, "damage", getPrecissionToolDamage(stack)-amount);
+		ItemNBTHelper.setInt(stack, "damage", getPrecisionToolDamage(stack)-amount);
 
-		if(getPrecissionToolDamage(stack) < 0)
+		if(getPrecisionToolDamage(stack) < 0)
 			stack.setCount(0);
 	}
 
 	@Override
-	public int getPrecissionToolDamage(ItemStack stack)
+	public int getPrecisionToolDamage(ItemStack stack)
 	{
-		return ItemNBTHelper.hasKey(stack, "damage")?ItemNBTHelper.getInt(stack, "damage"): getPrecissionToolMaxDamage(stack);
+		return ItemNBTHelper.hasKey(stack, "damage")?ItemNBTHelper.getInt(stack, "damage"): getPrecisionToolMaxDamage(stack);
 	}
 
 	@Override
-	public int getPrecissionToolMaxDamage(ItemStack stack)
+	public int getPrecisionToolMaxDamage(ItemStack stack)
 	{
 		return stackToSub(stack).durability;
 	}
@@ -102,19 +105,19 @@ public class ItemIIPrecisionTool extends ItemIISubItemsBase<PrecisionTools> impl
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn)
 	{
 		super.addInformation(stack, worldIn, tooltip, flagIn);
-		tooltip.add(I18n.format(IIReference.INFO_KEY_TOOL_DURABILITY, TextFormatting.GOLD.toString()+getPrecissionToolDamage(stack)+TextFormatting.GRAY, TextFormatting.GOLD.toString()+getPrecissionToolMaxDamage(stack)+TextFormatting.GRAY));
+		tooltip.add(I18n.format(IIReference.INFO_KEY_TOOL_DURABILITY, TextFormatting.GOLD.toString()+getPrecisionToolDamage(stack)+TextFormatting.GRAY, TextFormatting.GOLD.toString()+getPrecisionToolMaxDamage(stack)+TextFormatting.GRAY));
 	}
 
 	@Override
 	public boolean showDurabilityBar(@Nonnull ItemStack stack)
 	{
-		return ItemNBTHelper.hasKey(stack, "damage")&&((double)getPrecissionToolDamage(stack)/(double)getPrecissionToolMaxDamage(stack))!=1f;
+		return ItemNBTHelper.hasKey(stack, "damage")&&((double)getPrecisionToolDamage(stack)/(double)getPrecisionToolMaxDamage(stack))!=1f;
 	}
 
 	@Override
 	public double getDurabilityForDisplay(@Nonnull ItemStack stack)
 	{
-		return 1d-((double)getPrecissionToolDamage(stack)/(double)getPrecissionToolMaxDamage(stack));
+		return 1d-((double)getPrecisionToolDamage(stack)/(double)getPrecisionToolMaxDamage(stack));
 	}
 
 	@Override

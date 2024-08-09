@@ -20,6 +20,7 @@ import pl.pabilo8.immersiveintelligence.common.util.block.BlockIITileProvider;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.EnumTileProvider;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IITileProviderEnum;
 import pl.pabilo8.immersiveintelligence.common.util.block.ItemBlockIIBase;
+import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -41,6 +42,7 @@ public class BlockIISandbags extends BlockIITileProvider<IIBlockTypes_Sandbags>
 				LEFT, RIGHT, CORNER);
 		setHardness(4.0F);
 		setResistance(55.0F);
+		setCategory(IICategory.RESOURCES);
 
 		setBlockLayer(BlockRenderLayer.CUTOUT_MIPPED);
 		setLightOpacity(0);

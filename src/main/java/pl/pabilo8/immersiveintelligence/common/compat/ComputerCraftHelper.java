@@ -29,6 +29,12 @@ public class ComputerCraftHelper extends IICompatModule
 	}
 
 	@Override
+	public String getName()
+	{
+		return "ComputerCraft";
+	}
+
+	@Override
 	public void registerRecipes()
 	{
 

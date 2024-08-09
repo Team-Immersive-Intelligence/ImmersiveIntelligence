@@ -7,6 +7,7 @@ import net.minecraft.util.BlockRenderLayer;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IBatchOredictRegister;
 import pl.pabilo8.immersiveintelligence.common.util.ISerializableEnum;
+import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 
 import javax.annotation.Nullable;
 import java.lang.annotation.ElementType;
@@ -55,6 +56,11 @@ public class IIBlockInterfaces
 	@Target({ElementType.FIELD})
 	public @interface IIBlockProperties
 	{
+		/**
+		 * @return the category of this SubBlock
+		 */
+		IICategory category() default IICategory.NULL;
+
 		/**
 		 * @return whether this SubBlock requires a separate BlockState file
 		 */
@@ -127,7 +133,7 @@ public class IIBlockInterfaces
 		/**
 		 * Always check if it's set first
 		 */
-		boolean isTrue()
+		public boolean isTrue()
 		{
 			return this!=FALSE;
 		}

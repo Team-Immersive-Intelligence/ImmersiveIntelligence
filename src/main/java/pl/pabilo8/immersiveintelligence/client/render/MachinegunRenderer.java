@@ -13,19 +13,19 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.Machinegun;
-import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIMachinegun;
-import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler;
-import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler.IISpecialSkin;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry;
-import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
+import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
+import pl.pabilo8.immersiveintelligence.client.model.builtin.IAmmoModel;
 import pl.pabilo8.immersiveintelligence.client.model.weapon.ModelMachinegun;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.TmtNamedBoxGroup;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.Machinegun;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.effect_crate.TileEntityAmmunitionCrate;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityMachinegun;
+import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIMachinegun;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler;
+import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler.IISpecialSkin;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -190,7 +190,7 @@ public class MachinegunRenderer extends Render<EntityMachinegun> implements IRel
 						}
 						case "belt_fed_loader":
 							nmod.render(0.0625f);
-							IBulletModel mm = AmmoRegistry.INSTANCE.registeredModels.get("mg_2bCal");
+							IAmmoModel mm = AmmoRegistry.getModel(IIContent.itemAmmoMachinegun);
 							GlStateManager.pushMatrix();
 							GlStateManager.translate(0.69f, 0.65f, -0.0625f+(-0.0625f*1.5f));
 							GlStateManager.rotate(180, 0, 1, 0);
@@ -225,7 +225,7 @@ public class MachinegunRenderer extends Render<EntityMachinegun> implements IRel
 									GlStateManager.pushMatrix();
 									for(int i = 0; i < 4&&ammoStacks.size() > 0; i++)
 									{
-										mm.renderBulletUnused(ammoStacks.get(0));
+										mm.renderAmmoComplete(false, ammoStacks.get(0));
 										GlStateManager.rotate(180f/4f, 0, 1, 0);
 										GlStateManager.translate(0, 0, -0.1225f);
 
@@ -239,7 +239,7 @@ public class MachinegunRenderer extends Render<EntityMachinegun> implements IRel
 									GlStateManager.pushMatrix();
 									for(int i = 0; i < beltLength&&ammoStacks.size() > 0; i++)
 									{
-										mm.renderBulletUnused(ammoStacks.get(0));
+										mm.renderAmmoComplete(false, ammoStacks.get(0));
 										GlStateManager.translate(0f, 0, 0.125f);
 
 										GlStateManager.rotate(ammoDir*-5f, 0, 1, 0);

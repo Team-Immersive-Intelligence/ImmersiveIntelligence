@@ -78,6 +78,7 @@ public class TileEntitySkyCartStation extends TileEntityMultiblockConnectable<Ti
 			return facing==getFacing().rotateYCCW()?RotationSide.INPUT: RotationSide.NONE;
 		}
 	};
+
 	public EntitySkycrateInternal internalEntity = null;
 
 	NonNullList<ItemStack> inventory = NonNullList.withSize(3, ItemStack.EMPTY);
@@ -164,34 +165,10 @@ public class TileEntitySkyCartStation extends TileEntityMultiblockConnectable<Ti
 	{
 		super.update();
 
+		handleRotation();
+
 		if(!isDummy()&&!world.isRemote)
 		{
-			boolean b = false;
-			if(rotation.getRotationSpeed() > SkyCrateStation.rpmBreakingMax||rotation.getTorque() > SkyCrateStation.torqueBreakingMax)
-				selfDestruct();
-
-			if(world.getTileEntity(getBlockPosForPos(6).offset(facing.rotateYCCW()))!=null)
-			{
-				TileEntity te = world.getTileEntity(getBlockPosForPos(6).offset(facing.rotateYCCW()));
-				if(te.hasCapability(CapabilityRotaryEnergy.ROTARY_ENERGY, (mirrored?this.facing.rotateYCCW(): this.facing.rotateY())))
-				{
-					IRotaryEnergy cap = te.getCapability(CapabilityRotaryEnergy.ROTARY_ENERGY, (mirrored?this.facing.rotateYCCW(): this.facing.rotateY()));
-					if(rotation.handleRotation(cap, (mirrored?this.facing.rotateYCCW(): this.facing.rotateY())))
-						IIPacketHandler.INSTANCE.sendToAllAround(new MessageRotaryPowerSync(rotation, 0, master().getPos()), IIPacketHandler.targetPointFromTile(master(), 24));
-				}
-				else
-					b = true;
-
-			}
-			else
-				b = true;
-			if((rotation.getTorque() > 0||rotation.getRotationSpeed() > 0))
-			{
-				// TODO: 26.12.2021 investigate
-				if(b)
-					rotation.grow(0, 0, 0.98f);
-				IIPacketHandler.INSTANCE.sendToAllAround(new MessageRotaryPowerSync(rotation, 0, master().getPos()), IIPacketHandler.targetPointFromTile(master(), 24));
-			}
 
 			if(internalEntity==null)
 				getInternalEntity();
@@ -312,7 +289,7 @@ public class TileEntitySkyCartStation extends TileEntityMultiblockConnectable<Ti
 		if(!isDummy())
 			if(animation > 1)
 				if(progress < getAnimationLength())
-					progress += getEffectiveEnergy()*RotaryUtils.getGearEffectiveness(getInventory(), getEfficiencyMultiplier(), 3);
+					progress += getEffectiveEnergy()*IIRotaryUtils.getGearEffectiveness(getInventory(), getEfficiencyMultiplier(), 3);
 				else
 					switch(animation)
 					{
@@ -390,6 +367,43 @@ public class TileEntitySkyCartStation extends TileEntityMultiblockConnectable<Ti
 					}
 	}
 
+	private void handleRotation()
+	{
+		boolean b = false;
+		if(rotation.getRotationSpeed() > SkyCrateStation.rpmBreakingMax||rotation.getTorque() > SkyCrateStation.torqueBreakingMax)
+		{
+			selfDestruct();
+		}
+
+		if(world.getTileEntity(getBlockPosForPos(6).offset((mirrored?this.facing.rotateY(): this.facing.rotateYCCW())))!=null)
+		{
+			TileEntity te = world.getTileEntity(getBlockPosForPos(6).offset((mirrored?this.facing.rotateY(): this.facing.rotateYCCW())));
+			if(te.hasCapability(CapabilityRotaryEnergy.ROTARY_ENERGY, mirrored?this.facing.rotateYCCW(): this.facing.rotateY()))
+			{
+				IRotaryEnergy cap = te.getCapability(CapabilityRotaryEnergy.ROTARY_ENERGY, mirrored?this.facing.rotateYCCW(): this.facing.rotateY());
+				if(rotation.handleRotation(cap, mirrored?this.facing.rotateYCCW(): this.facing.rotateY()))
+				{
+					IIPacketHandler.INSTANCE.sendToAllAround(new MessageRotaryPowerSync(rotation, 0, master().getPos()), IIPacketHandler.targetPointFromTile(master(), 24));
+				}
+			}
+			else
+				b = true;
+
+		}
+		else
+			b = true;
+
+		if((rotation.getTorque() > 0||rotation.getRotationSpeed() > 0))
+		{
+			if(b)
+			{
+				rotation.grow(0, 0, 0.98f);
+			}
+			IIPacketHandler.INSTANCE.sendToAllAround(new MessageRotaryPowerSync(rotation, 0, master().getPos()), IIPacketHandler.targetPointFromTile(master(), 24));
+		}
+	}
+
+
 	public float getEffectiveEnergy()
 	{
 		float eff_rpm = (rotation.getRotationSpeed() > SkyCrateStation.rpmMin?Math.min(rotation.getRotationSpeed(), SkyCrateStation.rpmEffectiveMax): 0)/SkyCrateStation.rpmEffectiveMax;
@@ -429,7 +443,6 @@ public class TileEntitySkyCartStation extends TileEntityMultiblockConnectable<Ti
 
 	@Override
 	public int[] getConnectionPos()
-
 	{
 		return new int[]{19};
 	}
@@ -805,10 +818,13 @@ public class TileEntitySkyCartStation extends TileEntityMultiblockConnectable<Ti
 	public void updateRotationStorage(float rpm, float torque, int part)
 	{
 		if(world.isRemote)
+		{
 			if(part==0)
 			{
 				rotation.setRotationSpeed(rpm);
 				rotation.setTorque(torque);
 			}
+		}
 	}
 }
+

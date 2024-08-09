@@ -60,6 +60,6 @@ public class CommandReloadManual extends CommandBase
 	@Override
 	public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos)
 	{
-		return getListOfStringsMatchingLastWord(args, IIModelRegistry.instance.getReloadableModels());
+		return getListOfStringsMatchingLastWord(args, IIModelRegistry.INSTANCE.getReloadableModels());
 	}
 }

@@ -1,7 +1,9 @@
 package pl.pabilo8.immersiveintelligence.common.item.crafting;
 
 import pl.pabilo8.immersiveintelligence.common.item.crafting.ItemIIMaterial.Materials;
+import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
 import pl.pabilo8.modworks.annotations.item.GeneratedItemModels;
 
@@ -9,6 +11,7 @@ import pl.pabilo8.modworks.annotations.item.GeneratedItemModels;
  * @author Pabilo8
  * @since 2019-05-11
  */
+@IIItemProperties(category = IICategory.RESOURCES)
 public class ItemIIMaterial extends ItemIISubItemsBase<Materials>
 {
 	public ItemIIMaterial()
@@ -114,5 +117,21 @@ public class ItemIIMaterial extends ItemIISubItemsBase<Materials>
 
 		@IIItemProperties(oreDict = "ingotSand")
 		SANDBAG,
+		@IIItemProperties(oreDict = "antennaBasic")
+		ANTENNA,
+		@IIItemProperties(oreDict = "antennaAdvanced")
+		HIGH_FREQUENCY_ANTENNA,
+		@IIItemProperties(oreDict = "cameraBasic")
+		CAMERA,
+		@IIItemProperties(oreDict = "cameraAdvanced")
+		IMPROVED_CAMERA,
+		@IIItemProperties(oreDict = "opticsBasic")
+		TARGETING_DEVICE,
+		@IIItemProperties(oreDict = "opticsAdvanced")
+		HIGH_PRECISION_TARGETING_DEVICE,
+		@IIItemProperties(oreDict = "lens")
+		LENS,
+		@IIItemProperties(oreDict = "lensInfrared")
+		INFRARED_LENS
 	}
 }

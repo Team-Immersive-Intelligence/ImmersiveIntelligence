@@ -14,6 +14,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.math.Vec3d;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
+import pl.pabilo8.immersiveintelligence.common.util.amt.IIModelHeader;
 
 /**
  * AMT type for drawing the player's hand in first person mode
@@ -52,15 +53,18 @@ public class AMTHand extends AMT
 
 		//create a custom hand model based on the player's one
 		handModel = new ModelRenderer(model);
+		ModelRenderer armwearModel = new ModelRenderer(model);
 		if(handSide==EnumHandSide.RIGHT)
 		{
 			handModel.cubeList.addAll(model.bipedRightArm.cubeList);
-			handModel.cubeList.addAll(model.bipedRightArmwear.cubeList);
+			armwearModel.cubeList.addAll(model.bipedRightArmwear.cubeList);
+			handModel.addChild(armwearModel);
 		}
 		else
 		{
 			handModel.cubeList.addAll(model.bipedLeftArm.cubeList);
-			handModel.cubeList.addAll(model.bipedLeftArmwear.cubeList);
+			armwearModel.cubeList.addAll(model.bipedLeftArmwear.cubeList);
+			handModel.addChild(armwearModel);
 		}
 		handModel.rotationPointY = -10;
 		//remove the "new" hand from the player model
@@ -87,6 +91,9 @@ public class AMTHand extends AMT
 			GlStateManager.rotate((float)rot.z, 0, 0, 1);
 			GlStateManager.rotate((float)-rot.x, 1, 0, 0);
 		}
+
+		if(scale!=null)
+			GlStateManager.scale(scale.x, scale.y, scale.z);
 	}
 
 	@Override

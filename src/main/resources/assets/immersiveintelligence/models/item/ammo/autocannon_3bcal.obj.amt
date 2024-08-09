@@ -1,0 +1,10 @@
+{
+	"origins": {
+		"paint": [0, 24, 0],
+		"casing": [0, 24, 0],
+		"core_softpoint": [8, 28.83667, 0],
+		"core_piercing": [8, 28.505, 0],
+		"core_canister": [8, 28, 0]
+	},
+	"hierarchy": {}
+}

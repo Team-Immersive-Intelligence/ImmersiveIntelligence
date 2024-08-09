@@ -26,6 +26,7 @@ import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualObject;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualPage;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import javax.annotation.Nonnull;
@@ -269,7 +270,7 @@ public class IIManualMultiblock extends IIManualObject
 	{
 		if(componentTooltip!=null)
 		{
-			if(IIUtils.isPointInRectangle(x+116, y+half-4, x+122, y+half+4, mx, my))
+			if(IIMath.isPointInRectangle(x+116, y+half-4, x+122, y+half+4, mx, my))
 				return componentTooltip;
 		}
 		return null;
@@ -287,9 +288,9 @@ public class IIManualMultiblock extends IIManualObject
 				canTick = !canTick;
 				buttonPause.type = buttonPause.type==4?5: 4;
 			}
-			else if(buttonUp.mousePressed(mc, mouseX, mouseY))
+			else if(buttonUp!=null&&buttonUp.mousePressed(mc, mouseX, mouseY))
 				this.renderInfo.setShowLayer(Math.min(renderInfo.showLayer+1, renderInfo.structureHeight-1));
-			else if(buttonDown.mousePressed(mc, mouseX, mouseY))
+			else if(buttonDown!=null&&buttonDown.mousePressed(mc, mouseX, mouseY))
 				this.renderInfo.setShowLayer(Math.max(renderInfo.showLayer-1, -1));
 			else
 				return false;

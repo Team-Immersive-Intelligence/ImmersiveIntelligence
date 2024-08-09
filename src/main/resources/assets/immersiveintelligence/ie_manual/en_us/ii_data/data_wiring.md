@@ -14,7 +14,7 @@ The **Wired** data system relies on **Connectors** - the end points of it, **Rel
 # data_cable
 |[crafting]{source:"%SECTION%"}|  
 The **Data Cable** is a transmission medium created from multiple twisted-pair copper wires coated in a white-colored insulating material.  
-It allows fast, reliable and relatively long-distance transmission of [Data Packets](data_main) without any loss in the information they store.
+It allows fast, reliable and relatively long-distance transmission of [Data Packets](data_main.md) without any loss in the information they store.
 
 # connector
 |[crafting]{source:"%SECTION%"}|  
@@ -34,7 +34,7 @@ It does not interact with **Data Devices**.
 
 # duplex_connector
 |[crafting]{source:"%SECTION%"}|  
-The **Duplex Connector** (sometimes called a **Callback Connector**) is a Data Connector with separate colors for [input] and [output].
+The **Duplex Connector** is a Data Connector with separate colors for [input] and [output].
 It is very useful in situations where a **Device** serves as both input and output and has only a single port.
 Using the [Engineer's Hammer](introduction#introductionHammer) on it will change the **Connector's** [output color] when sneaking and [input color] when not.
 

@@ -1,7 +1,8 @@
 package pl.pabilo8.immersiveintelligence.common.item.ammo;
 
-import blusunrize.immersiveengineering.common.items.IEItemInterfaces.ITextureOverride;
+import blusunrize.immersiveengineering.api.ApiUtils;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
@@ -17,7 +18,8 @@ import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.ItemHandlerHelper;
-import pl.pabilo8.immersiveintelligence.api.bullets.IAmmo;
+import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler;
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler.IAdvancedTooltipItem;
 import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
@@ -25,7 +27,11 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine.Magazines;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
+import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIIItemTextureOverride;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
 import pl.pabilo8.modworks.annotations.item.GeneratedItemModels;
 import pl.pabilo8.modworks.annotations.item.ItemModelType;
@@ -40,7 +46,8 @@ import java.util.Optional;
  * @author Pabilo8
  * @since 01-11-2019
  */
-public class ItemIIBulletMagazine extends ItemIISubItemsBase<Magazines> implements ITextureOverride, IAdvancedTooltipItem
+@IIItemProperties(category = IICategory.WARFARE)
+public class ItemIIBulletMagazine extends ItemIISubItemsBase<Magazines> implements IIIItemTextureOverride, IAdvancedTooltipItem
 {
 	//--- Textures ---//
 	private final ResLoc magazineTexture = ResLoc.of(IIReference.RES_II, "items/bullets/magazines/");
@@ -67,15 +74,15 @@ public class ItemIIBulletMagazine extends ItemIISubItemsBase<Magazines> implemen
 		AUTOMATIC_REVOLVER(16, IIContent.itemAmmoRevolver);
 
 		public final int capacity;
-		public final IAmmo ammo;
+		public final IAmmoTypeItem ammo;
 		public final boolean hasDisplayTexture;
 
-		Magazines(int capacity, IAmmo ammo)
+		Magazines(int capacity, IAmmoTypeItem ammo)
 		{
 			this(capacity, ammo, false);
 		}
 
-		Magazines(int capacity, IAmmo ammo, boolean hasDisplayTexture)
+		Magazines(int capacity, IAmmoTypeItem ammo, boolean hasDisplayTexture)
 		{
 			this.capacity = capacity;
 			this.ammo = ammo;
@@ -110,7 +117,7 @@ public class ItemIIBulletMagazine extends ItemIISubItemsBase<Magazines> implemen
 			if(!contains)
 			{
 				already.add(bullet);
-				ItemNBTHelper.setInt(stack, "colour"+i, ((IAmmo)bullet.getItem()).getPaintColor(bullet));
+				ItemNBTHelper.setInt(stack, "colour"+i, ((IAmmoTypeItem)bullet.getItem()).getPaintColor(bullet));
 				ItemNBTHelper.setBoolean(stack, "bullet"+i, true);
 				i += 1;
 			}
@@ -134,7 +141,7 @@ public class ItemIIBulletMagazine extends ItemIISubItemsBase<Magazines> implemen
 		super.addInformation(stack, worldIn, tooltip, flagIn);
 		int bullets = getRemainingBulletCount(stack);
 
-		tooltip.add(IIUtils.getItalicString(I18n.format(IIReference.DESCRIPTION_KEY+(bullets==0?"bullet_magazine.empty": "bullet_magazine.remaining"), bullets)));
+		tooltip.add(IIStringUtil.getItalicString(I18n.format(IIReference.DESCRIPTION_KEY+(bullets==0?"bullet_magazine.empty": "bullet_magazine.remaining"), bullets)));
 		NBTTagList listDict = ItemNBTHelper.getTagCompound(stack, "bullets").getTagList("dictionary", NBT.TAG_COMPOUND);
 
 		if(ItemNBTHelper.getTag(stack).hasKey("bullet0"))
@@ -189,6 +196,25 @@ public class ItemIIBulletMagazine extends ItemIISubItemsBase<Magazines> implemen
 			}
 
 		return l;
+	}
+
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void registerSprites(TextureMap map)
+	{
+		for(int i = 0; i < 4; i++)
+		{
+			ApiUtils.getRegisterSprite(map, ImmersiveIntelligence.MODID+":items/bullets/magazines/common/bullet"+i);
+			ApiUtils.getRegisterSprite(map, ImmersiveIntelligence.MODID+":items/bullets/magazines/common/paint"+i);
+		}
+		for(Magazines magazine : IIContent.itemBulletMagazine.getSubItems())
+		{
+			String name = magazine.getName();
+			ApiUtils.getRegisterSprite(map, ImmersiveIntelligence.MODID+":items/bullets/magazines/"+name);
+			if(magazine.hasDisplayTexture)
+				ApiUtils.getRegisterSprite(map, ImmersiveIntelligence.MODID+":items/bullets/magazines/"+name+"_disp");
+		}
 	}
 
 	public int checkBullets(ItemStack stack)

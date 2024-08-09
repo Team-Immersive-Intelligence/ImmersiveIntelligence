@@ -29,8 +29,10 @@ public class BlockIIWoodenMultiblock extends BlockIIMultiblock<WoodenMultiblocks
 	public BlockIIWoodenMultiblock()
 	{
 		super("wooden_multiblock", Material.WOOD, PropertyEnum.create("type", WoodenMultiblocks.class),
-				IEProperties.FACING_HORIZONTAL, IEProperties.BOOLEANS[0], IEProperties.BOOLEANS[1], IEProperties.CONNECTIONS,
-				IEProperties.MULTIBLOCKSLAVE, IEProperties.DYNAMICRENDER, IOBJModelCallback.PROPERTY, Properties.AnimationProperty);
+				IEProperties.FACING_HORIZONTAL,
+				IEProperties.BOOLEANS[0], IEProperties.BOOLEANS[1], IEProperties.CONNECTIONS, IEProperties.MULTIBLOCKSLAVE,
+				Properties.AnimationProperty, IEProperties.DYNAMICRENDER, IOBJModelCallback.PROPERTY
+		);
 		setHardness(3.0F);
 		setResistance(15.0F);
 

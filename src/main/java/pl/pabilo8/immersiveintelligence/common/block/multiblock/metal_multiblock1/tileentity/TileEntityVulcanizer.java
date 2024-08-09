@@ -1,7 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity;
 
 import blusunrize.immersiveengineering.api.ApiUtils;
-import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IGuiTile;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IPlayerInteraction;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.ISoundTile;
@@ -24,10 +23,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Vulcanizer;
 import pl.pabilo8.immersiveintelligence.api.crafting.VulcanizerRecipe;
-import pl.pabilo8.immersiveintelligence.client.fx.ParticleUtils;
-import pl.pabilo8.immersiveintelligence.client.fx.nuke.ParticleShockwave;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Vulcanizer;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockVulcanizer;
 
@@ -510,11 +507,11 @@ public class TileEntityVulcanizer extends TileEntityMultiblockMetal<TileEntityVu
 				Vec3d bpos = new Vec3d(getBlockPosForPos(p)).addVector(0.5, -0.5, 0.5).add(facing);
 				float mod = Utils.RAND.nextFloat();
 
-				ParticleShockwave particle = new ParticleShockwave(ClientUtils.mc().world,
+				/*ParticleShockwave particle = new ParticleShockwave(ClientUtils.mc().world,
 						bpos.addVector(0, 0.125*i, 0),
 						facing.scale(mod).addVector(0, -mod*0.1, 0),
 						i+mod);
-				ParticleUtils.particleRenderer.addEffect(particle);
+				ParticleRegistry.IIParticleSystem.addEffect(particle);*/
 			}
 	}
 

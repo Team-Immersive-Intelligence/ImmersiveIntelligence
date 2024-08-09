@@ -20,7 +20,9 @@ import pl.pabilo8.immersiveintelligence.common.util.block.BlockIITileProvider;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.EnumTileProvider;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IIBlockProperties;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IITileProviderEnum;
+import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.TernaryValue;
 import pl.pabilo8.immersiveintelligence.common.util.block.ItemBlockIIBase;
+import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 
 /**
  * @author Pabilo8
@@ -31,8 +33,21 @@ public class BlockIIMetalDevice1 extends BlockIITileProvider<IIBlockTypes_MetalD
 	public enum IIBlockTypes_MetalDevice1 implements IITileProviderEnum
 	{
 		@EnumTileProvider(tile = TileEntityCO2Filter.class)
-		@IIBlockProperties(needsCustomState = true, renderLayer = BlockRenderLayer.CUTOUT)
-		CO2_FILTER
+		@IIBlockProperties(needsCustomState = true, renderLayer = BlockRenderLayer.CUTOUT, category = IICategory.TOOLS)
+		CO2_FILTER,
+		@IIBlockProperties(hidden = TernaryValue.TRUE, category = IICategory.ELECTRONICS)
+		NEWSPAPER_STAND,
+		//Scheduled for 0.4.0
+		@IIBlockProperties(hidden = TernaryValue.TRUE, category = IICategory.LOGISTICS)
+		VENDING_MACHINE,
+		@IIBlockProperties(hidden = TernaryValue.TRUE, category = IICategory.ELECTRONICS)
+		TYPEWRITER_TABLE,
+		@IIBlockProperties(hidden = TernaryValue.TRUE, category = IICategory.LOGISTICS)
+		CASHIER_TABLE,
+		@IIBlockProperties(hidden = TernaryValue.TRUE, category = IICategory.ELECTRONICS)
+		PLANNING_TABLE,
+		@IIBlockProperties(hidden = TernaryValue.TRUE, category = IICategory.ELECTRONICS)
+		REMOTE_CONTROL_TABLE,
 	}
 
 	public BlockIIMetalDevice1()

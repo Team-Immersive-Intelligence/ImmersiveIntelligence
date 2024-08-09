@@ -52,6 +52,12 @@ public class ItemBlockIIBase extends ItemBlock
 		return damageValue;
 	}
 
+	@Override
+	public BlockIIBase<?> getBlock()
+	{
+		return block;
+	}
+
 	/**
 	 * returns a list of items with the same ID, but different meta (eg: dye returns 16 items)
 	 */

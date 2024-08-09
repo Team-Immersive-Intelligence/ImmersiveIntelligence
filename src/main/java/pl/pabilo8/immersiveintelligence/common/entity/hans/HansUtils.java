@@ -19,8 +19,8 @@ import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityParachute;
 import pl.pabilo8.immersiveintelligence.common.entity.hans.tasks.hand_weapon.*;
 import pl.pabilo8.immersiveintelligence.common.item.armor.ItemIIArmorUpgrade.ArmorUpgrades;
+import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIWeaponUpgrade.WeaponUpgrade;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIUpgradeableArmor;
-import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIWeaponUpgrade.WeaponUpgrades;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
@@ -33,14 +33,17 @@ import java.util.function.Function;
  */
 public class HansUtils
 {
+
 	public static final HashMap<Item, Function<EntityHans, AIHansHandWeapon>> WEAPON_MAP = new HashMap<>();
 
 	public static void init()
 	{
 		WEAPON_MAP.put(IEContent.itemRevolver, AIHansRevolver::new);
-		WEAPON_MAP.put(IIContent.itemSubmachinegun, hans -> new AIHansAbstractGun(hans,IIContent.itemSubmachinegun,3,12,10){});
-		WEAPON_MAP.put(IIContent.itemAssaultRifle, hans -> new AIHansAbstractGun(hans,IIContent.itemAssaultRifle,5,16,5){});
-		WEAPON_MAP.put(IIContent.itemRifle, hans -> new AIHansAbstractGun(hans,IIContent.itemRifle,6,24,40){});
+		WEAPON_MAP.put(IIContent.itemSubmachinegun, AIHansSubmachinegun::new);
+		WEAPON_MAP.put(IIContent.itemAssaultRifle, AIHansAssaultRifle::new);
+		WEAPON_MAP.put(IIContent.itemRifle, hans -> new AIHansAbstractGun(hans, IIContent.itemRifle, 6, 24, 40)
+		{
+		});
 		WEAPON_MAP.put(IEContent.itemRailgun, AIHansRailgun::new);
 		WEAPON_MAP.put(IEContent.itemChemthrower, AIHansChemthrower::new);
 		WEAPON_MAP.put(IIContent.itemBinoculars, AIHansBinoculars::new);
@@ -81,28 +84,28 @@ public class HansUtils
 		setArmor(hans, EntityEquipmentSlot.HEAD, IIContent.itemLightEngineerHelmet, armorUpgrades);
 	}
 
-	public static void setSubmachinegun(EntityHans hans, ItemStack magazine, WeaponUpgrades... weaponUpgrades)
+	public static void setSubmachinegun(EntityHans hans, ItemStack magazine, WeaponUpgrade... weaponUpgrades)
 	{
 		setHandGun(hans, IIContent.itemSubmachinegun, magazine, weaponUpgrades);
 	}
 
-	public static void setAssaultRifle(EntityHans hans, ItemStack magazine, WeaponUpgrades... weaponUpgrades)
+	public static void setAssaultRifle(EntityHans hans, ItemStack magazine, WeaponUpgrade... weaponUpgrades)
 	{
 		setHandGun(hans, IIContent.itemAssaultRifle, magazine, weaponUpgrades);
 	}
 
-	public static void setRifle(EntityHans hans, ItemStack magazine, WeaponUpgrades... weaponUpgrades)
+	public static void setRifle(EntityHans hans, ItemStack magazine, WeaponUpgrade... weaponUpgrades)
 	{
 		setHandGun(hans, IIContent.itemRifle, magazine, weaponUpgrades);
 	}
 
-	public static void setHandGun(EntityHans hans, ItemUpgradeableTool item, ItemStack magazine, WeaponUpgrades... weaponUpgrades)
+	public static void setHandGun(EntityHans hans, ItemUpgradeableTool item, ItemStack magazine, WeaponUpgrade... weaponUpgrades)
 	{
 		ItemStack stack = new ItemStack(item);
 		ItemNBTHelper.setItemStack(stack, "magazine", magazine);
 		int i = item.getSlotCount(stack);
 		NonNullList<ItemStack> upgrades = NonNullList.withSize(i, ItemStack.EMPTY);
-		for(WeaponUpgrades upgrade : weaponUpgrades)
+		for(WeaponUpgrade upgrade : weaponUpgrades)
 		{
 			upgrades.set(--i, new ItemStack(IIContent.itemWeaponUpgrade, 1, upgrade.ordinal()));
 			if(i==0)
@@ -142,7 +145,7 @@ public class HansUtils
 
 	static PathNodeType getGateNode(TileEntityGateBase<?> te)
 	{
-		return te.isDoorPart()?(te.open?PathNodeType.DOOR_OPEN: PathNodeType.DOOR_WOOD_CLOSED): PathNodeType.BLOCKED;
+		return te.isDoorPart()?(te.gate.getState()?PathNodeType.DOOR_OPEN: PathNodeType.DOOR_WOOD_CLOSED): PathNodeType.BLOCKED;
 	}
 
 	static PathNodeType getFenceGateNode(IBlockState state)

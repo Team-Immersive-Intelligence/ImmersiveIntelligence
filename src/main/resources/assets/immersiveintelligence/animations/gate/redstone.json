@@ -1,0 +1,41 @@
+{
+	"comment": "Made by Pabilo8 with Blockbench",
+	"groups": {
+		"redstone_main": {
+			"visibility": [
+				{
+					"time": 0.0,
+					"visibility": false
+				},
+				{
+					"time": 1.0,
+					"visibility": true
+				}
+			]
+		},
+		"redstone_right": {
+			"visibility": [
+				{
+					"time": 0.0,
+					"visibility": false
+				},
+				{
+					"time": 1.0,
+					"visibility": true
+				}
+			]
+		},
+		"redstone_left": {
+			"visibility": [
+				{
+					"time": 0.0,
+					"visibility": false
+				},
+				{
+					"time": 1.0,
+					"visibility": true
+				}
+			]
+		}
+	}
+}

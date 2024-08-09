@@ -4,6 +4,9 @@ import blusunrize.immersiveengineering.api.crafting.MultiblockRecipe;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
+import pl.pabilo8.immersiveintelligence.common.util.IIMath;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionBase.IIIMultiblockRecipe;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -16,7 +19,7 @@ import java.util.stream.Collectors;
  * @author Pabilo8
  * @since 08-08-2019
  */
-public class ElectrolyzerRecipe extends MultiblockRecipe
+public class ElectrolyzerRecipe extends MultiblockRecipe implements IIIMultiblockRecipe
 {
 	public final FluidStack fluidInput;
 	public final FluidStack[] fluidOutputs;
@@ -43,7 +46,7 @@ public class ElectrolyzerRecipe extends MultiblockRecipe
 	public static ElectrolyzerRecipe addRecipe(FluidStack fluidInput, FluidStack fluidOutput1, FluidStack fluidOutput2, int energy, int time)
 	{
 		//nwd(f1,f2)
-		int gcd = IIUtils.gcd(fluidInput.amount, fluidOutput1.amount, fluidOutput2.amount, energy, time);
+		int gcd = IIMath.gcd(fluidInput.amount, fluidOutput1.amount, fluidOutput2.amount, energy, time);
 		fluidInput.amount /= gcd;
 		fluidOutput1.amount /= gcd;
 		fluidOutput2.amount /= gcd;
@@ -60,11 +63,9 @@ public class ElectrolyzerRecipe extends MultiblockRecipe
 		List<ElectrolyzerRecipe> recipes = recipeList.stream()
 				.filter(r -> r.fluidInput.isFluidEqual(fluidInput))
 				.collect(Collectors.toList());
+		recipeList.removeAll(recipes);
 
-		for(ElectrolyzerRecipe recipe : recipes)
-			recipeList.remove(recipe);
-
-		return recipeList;
+		return recipes;
 	}
 
 	public static ElectrolyzerRecipe findRecipe(FluidStack fluidInput)
@@ -82,10 +83,15 @@ public class ElectrolyzerRecipe extends MultiblockRecipe
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
+	public NBTTagCompound writeToNBT(NBTTagCompound nbtTagCompound)
 	{
-		nbt.setTag("fluid_input", fluidInput.writeToNBT(new NBTTagCompound()));
-		return nbt;
+		return writeToNBT();
+	}
+
+	@Override
+	public NBTTagCompound writeToNBT()
+	{
+		return EasyNBT.newNBT().withFluidStack("fluid_input", fluidInput).unwrap();
 	}
 
 	public static ElectrolyzerRecipe loadFromNBT(NBTTagCompound nbt)

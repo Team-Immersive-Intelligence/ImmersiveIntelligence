@@ -24,6 +24,8 @@ public class ElectrolyzerRenderer extends IIMultiblockRenderer<TileEntityElectro
 	@Override
 	public void drawAnimated(TileEntityElectrolyzer te, BufferBuilder buf, float partialTicks, Tessellator tes)
 	{
+		applyStandardMirroring(te, true);
+
 		fluid.setFluid(te.tanks[0].getFluid());
 		float tankAmount = te.tanks[0].getFluidAmount();
 		if(te.currentProcess!=null)
@@ -32,6 +34,8 @@ public class ElectrolyzerRenderer extends IIMultiblockRenderer<TileEntityElectro
 
 		fluid.setFlowing(false);
 		fluid.render(tes, buf);
+
+		applyStandardMirroring(te, false);
 	}
 
 	@Override
@@ -43,7 +47,7 @@ public class ElectrolyzerRenderer extends IIMultiblockRenderer<TileEntityElectro
 	@Override
 	public void compileModels(Tuple<IBlockState, IBakedModel> sModel)
 	{
-		fluid = new AMTFluid("fluid", new Vec3d(28.9, -6, 3), new Vec3d(25/16f, 14/16f, 10/16f));
+		fluid = new AMTFluid("fluid", new Vec3d(-3, -6, 19.9), new Vec3d(10/16f, 14/16f, 25/16f));
 	}
 
 	@Override

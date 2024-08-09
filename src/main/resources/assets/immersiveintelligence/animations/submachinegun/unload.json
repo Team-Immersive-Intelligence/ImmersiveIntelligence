@@ -1,0 +1,91 @@
+{
+	"comment": "Made by Pabilo8 with Blockbench",
+	"groups": {
+		"magazine": {
+			"rotation": [
+				{
+					"time": 0.30553,
+					"transform": [0, 5, 0]
+				}
+			],
+			"position": [
+				{
+					"time": 0.30553,
+					"transform": [0.5, 0, 0]
+				},
+				{
+					"time": 0.61113,
+					"transform": [-6, 0, 0]
+				}
+			],
+			"alpha": [
+				{
+					"time": 0.30553,
+					"alpha": 1
+				},
+				{
+					"time": 0.61113,
+					"alpha": 0
+				},
+				{
+					"time": 1,
+					"alpha": 0
+				}
+			]
+		},
+		"hand_off": {
+			"rotation": [
+				{
+					"time": 0,
+					"transform": [35, 0, 77.5]
+				},
+				{
+					"time": 0.05553,
+					"transform": [107.5, 0, 77.5]
+				},
+				{
+					"time": 0.30553,
+					"transform": [107.5, 0, 77.5]
+				},
+				{
+					"time": 0.7222,
+					"transform": [70, 0, 25]
+				},
+				{
+					"time": 0.91667,
+					"transform": [107.5, 0, 77.5]
+				},
+				{
+					"time": 1,
+					"transform": [35, 0, 77.5]
+				}
+			],
+			"position": [
+				{
+					"time": 0,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.05553,
+					"transform": [-6, 4, 0]
+				},
+				{
+					"time": 0.30553,
+					"transform": [-8, 6, -5]
+				},
+				{
+					"time": 0.7222,
+					"transform": [-14, 6, -7]
+				},
+				{
+					"time": 0.91667,
+					"transform": [-6, 4, 0]
+				},
+				{
+					"time": 1,
+					"transform": [0, 0, 0]
+				}
+			]
+		}
+	}
+}

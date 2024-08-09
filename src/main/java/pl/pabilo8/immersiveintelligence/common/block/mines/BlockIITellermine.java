@@ -4,13 +4,16 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
-import pl.pabilo8.immersiveintelligence.client.model.misc.ModelTellermine;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.PropellantType;
+import pl.pabilo8.immersiveintelligence.client.model.builtin.IAmmoModel;
+import pl.pabilo8.immersiveintelligence.client.model.builtin.ModelAmmo;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.mines.tileentity.TileEntityTellermine;
-import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoCasing.Casings;
+import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoMine;
+import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoCasing.Casing;
 
 import javax.annotation.Nonnull;
+import java.util.function.Function;
 
 /**
  * @author Pabilo8
@@ -49,29 +52,34 @@ public class BlockIITellermine extends BlockIIMine
 		}
 
 		@Override
+		public PropellantType getAllowedPropellants()
+		{
+			return PropellantType.NONE;
+		}
+
+		@Override
 		public int getCoreMaterialNeeded()
 		{
 			return 1;
 		}
 
 		@Override
-		public float getInitialMass()
+		public float getCasingMass()
 		{
 			return 0.75f;
 		}
 
 		@Override
-		public float getCaliber()
+		public int getCaliber()
 		{
-			return 10f;
+			return 10;
 		}
 
+		@Nonnull
 		@SideOnly(Side.CLIENT)
-		@Override
-		public @Nonnull
-		Class<? extends IBulletModel> getModel()
+		public Function<ItemBlockMineBase, IAmmoModel<ItemBlockMineBase, EntityAmmoMine>> get3DModel()
 		{
-			return ModelTellermine.class;
+			return ModelAmmo::createExplosivesModel;
 		}
 
 		@Override
@@ -83,7 +91,7 @@ public class BlockIITellermine extends BlockIIMine
 		@Override
 		public ItemStack getCasingStack(int amount)
 		{
-			return IIContent.itemAmmoCasing.getStack(Casings.TELLERMINE, amount);
+			return IIContent.itemAmmoCasing.getStack(Casing.TELLERMINE, amount);
 		}
 	}
 }

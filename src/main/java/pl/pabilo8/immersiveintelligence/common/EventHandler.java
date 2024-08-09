@@ -13,30 +13,42 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSourceIndirect;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.world.GameRules;
+import net.minecraft.world.GameRules.ValueType;
+import net.minecraftforge.event.GameRuleChangeEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
+import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
+import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
-import pl.pabilo8.immersiveintelligence.api.bullets.DamageBlockPos;
-import pl.pabilo8.immersiveintelligence.api.bullets.PenetrationRegistry;
+import pl.pabilo8.immersiveintelligence.api.ammo.penetration.DamageBlockPos;
+import pl.pabilo8.immersiveintelligence.api.ammo.utils.IIAmmoUtils;
+import pl.pabilo8.immersiveintelligence.api.ammo.utils.PenetrationCache;
 import pl.pabilo8.immersiveintelligence.api.utils.IAdvancedMultiblock;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Ammunition;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons;
 import pl.pabilo8.immersiveintelligence.common.compat.BaublesHelper;
 import pl.pabilo8.immersiveintelligence.common.compat.IICompatModule;
 import pl.pabilo8.immersiveintelligence.common.crafting.IIRecipes;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityMachinegun;
+import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine;
+import pl.pabilo8.immersiveintelligence.common.item.armor.ItemIILightEngineerBoots;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBlockDamageSync;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemUtil;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIUpgradeableArmor;
 
 /**
@@ -47,13 +59,99 @@ import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIUpgradeableArmor;
  */
 public class EventHandler
 {
+	//--- World Load Handling ---//
+	@SubscribeEvent
+	public void onWorldLoad(WorldEvent.Load event)
+	{
+		//Apply default config
+		IIAmmoUtils.ammoBreaksBlocks = Weapons.blockDamage;
+		IIAmmoUtils.ammoExplodesBlocks = Ammunition.blockDamage;
+		IIAmmoUtils.ammoRicochets = true;
+		EntityAmmoProjectile.setSlowmo(1);
+		EntityAmmoProjectile.MAX_TICKS = 600;
+		EntityHans.INFINITE_AMMO = false;
+
+		GameRules rules = event.getWorld().getGameRules();
+		//Whether ammo can break blocks
+		if(!rules.hasRule(IIReference.GAMERULE_AMMO_BREAKS_BLOCKS))
+			rules.addGameRule(IIReference.GAMERULE_AMMO_BREAKS_BLOCKS,
+					Boolean.toString(IIAmmoUtils.ammoBreaksBlocks),
+					ValueType.BOOLEAN_VALUE);
+		else
+			IIAmmoUtils.ammoBreaksBlocks = rules.getBoolean(IIReference.GAMERULE_AMMO_BREAKS_BLOCKS);
+		//Whether ammo components can explode blocks
+		if(!rules.hasRule(IIReference.GAMERULE_AMMO_EXPLODES_BLOCKS))
+			rules.addGameRule(IIReference.GAMERULE_AMMO_EXPLODES_BLOCKS,
+					Boolean.toString(IIAmmoUtils.ammoBreaksBlocks),
+					ValueType.BOOLEAN_VALUE);
+		else
+			IIAmmoUtils.ammoExplodesBlocks = rules.getBoolean(IIReference.GAMERULE_AMMO_EXPLODES_BLOCKS);
+		//Whether ammo can ricochet
+		if(!rules.hasRule(IIReference.GAMERULE_AMMO_RICOCHETS))
+			rules.addGameRule(IIReference.GAMERULE_AMMO_RICOCHETS,
+					Boolean.toString(IIAmmoUtils.ammoRicochets),
+					ValueType.BOOLEAN_VALUE);
+		else
+			IIAmmoUtils.ammoRicochets = rules.getBoolean(IIReference.GAMERULE_AMMO_RICOCHETS);
+		//Ticks until ammo decay
+		if(!rules.hasRule(IIReference.GAMERULE_AMMO_DECAY))
+			rules.addGameRule(IIReference.GAMERULE_AMMO_DECAY, Integer.toString(EntityAmmoProjectile.MAX_TICKS), ValueType.NUMERICAL_VALUE);
+		else
+			EntityAmmoProjectile.MAX_TICKS = rules.getInt(IIReference.GAMERULE_AMMO_DECAY);
+		//Slowmo multiplier for projectile motion
+		if(!rules.hasRule(IIReference.GAMERULE_AMMO_SLOWMO))
+			rules.addGameRule(IIReference.GAMERULE_AMMO_SLOWMO, Float.toString(EntityAmmoProjectile.SLOWMO*100), ValueType.NUMERICAL_VALUE);
+		else
+			EntityAmmoProjectile.setSlowmo(rules.getInt(IIReference.GAMERULE_AMMO_SLOWMO)/100f);
+
+		//Hans infinite ammo
+		if(!rules.hasRule(IIReference.GAMERULE_HANS_INFINITE_AMMO))
+			rules.addGameRule(IIReference.GAMERULE_HANS_INFINITE_AMMO, Boolean.toString(EntityHans.INFINITE_AMMO), ValueType.BOOLEAN_VALUE);
+		else
+			EntityHans.INFINITE_AMMO = rules.getBoolean(IIReference.GAMERULE_HANS_INFINITE_AMMO);
+	}
+
+	@SubscribeEvent
+	public static void onSave(WorldEvent.Save event)
+	{
+		IISaveData.setDirty(event.getWorld().provider.getDimension());
+	}
+
+	@SubscribeEvent
+	public static void onUnload(WorldEvent.Unload event)
+	{
+		IISaveData.setDirty(event.getWorld().provider.getDimension());
+	}
+
+	@SubscribeEvent
+	public void onGameRuleChange(GameRuleChangeEvent event)
+	{
+		switch(event.getRuleName())
+		{
+			case IIReference.GAMERULE_AMMO_BREAKS_BLOCKS:
+				IIAmmoUtils.ammoBreaksBlocks = event.getRules().getBoolean(IIReference.GAMERULE_AMMO_BREAKS_BLOCKS);
+				break;
+			case IIReference.GAMERULE_AMMO_EXPLODES_BLOCKS:
+				IIAmmoUtils.ammoExplodesBlocks = event.getRules().getBoolean(IIReference.GAMERULE_AMMO_EXPLODES_BLOCKS);
+				break;
+			case IIReference.GAMERULE_AMMO_DECAY:
+				EntityAmmoProjectile.MAX_TICKS = event.getRules().getInt(IIReference.GAMERULE_AMMO_DECAY);
+				break;
+			case IIReference.GAMERULE_AMMO_SLOWMO:
+				EntityAmmoProjectile.setSlowmo(event.getRules().getInt(IIReference.GAMERULE_AMMO_SLOWMO)/100f);
+				break;
+		}
+	}
+
+	//--- Multiblocks ---//
+
 	@SubscribeEvent
 	public void onMultiblockForm(MultiblockFormEvent.Post event)
 	{
 		if(event.isCancelable()&&!event.isCanceled()&&event.getMultiblock().getClass().isAnnotationPresent(IAdvancedMultiblock.class))
 		{
 			//Required by Advanced Structures!
-			if(!IIUtils.isAdvancedHammer(event.getHammer()))
+			if(!IIItemUtil.isAdvancedHammer(event.getHammer()))
 			{
 				if(!event.getEntityPlayer().getEntityWorld().isRemote)
 					IIPacketHandler.sendChatTranslation(event.getEntityPlayer(), "info.immersiveintelligence.requires_advanced_hammer");
@@ -62,7 +160,9 @@ public class EventHandler
 		}
 	}
 
+	//--- Vehicle or Gun Mounts ---//
 
+	//TODO: 11.03.2024 include vehicles and crewed weapons
 	//Cancel when using a machinegun
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public void onItemUse(PlayerInteractEvent.RightClickBlock event)
@@ -99,7 +199,7 @@ public class EventHandler
 	public void onBreakBlock(BreakEvent event)
 	{
 		DamageBlockPos dpos = null;
-		for(DamageBlockPos g : PenetrationRegistry.blockDamage)
+		for(DamageBlockPos g : PenetrationCache.blockDamage)
 		{
 			if(g.dimension==event.getWorld().provider.getDimension()&&event.getPos().equals(g)) ;
 			{
@@ -109,7 +209,7 @@ public class EventHandler
 		}
 		if(dpos!=null)
 		{
-			PenetrationRegistry.blockDamage.remove(dpos);
+			PenetrationCache.blockDamage.remove(dpos);
 			dpos.damage = 0;
 			IIPacketHandler.INSTANCE.sendToAllAround(new MessageBlockDamageSync(dpos), IIPacketHandler.targetPointFromPos(dpos, event.getWorld(), 32));
 		}
@@ -128,6 +228,8 @@ public class EventHandler
 		}
 	}
 
+	//--- Hanses ---//
+
 	@SubscribeEvent
 	public void spawnEvent(EntityJoinWorldEvent event)
 	{
@@ -137,6 +239,8 @@ public class EventHandler
 			e.targetTasks.addTask(4, new EntityAINearestAttackableTarget<>(e, EntityHans.class, true));
 		}
 	}
+
+	//--- Armor ---//
 
 	@SubscribeEvent
 	public void onLivingAttack(LivingAttackEvent event)
@@ -197,6 +301,32 @@ public class EventHandler
 				event.setCanceled(true);
 		}
 	}
+
+	/**
+	 * @author GabrielV (gabriel@iiteam.net)
+	 * @created 27/10/2023 - 6:05 PM
+	 */
+	@SubscribeEvent
+	public void onLivingFallEvent(LivingFallEvent event)
+	{
+		if(event.getEntityLiving() instanceof EntityPlayer)
+		{
+			EntityPlayer player = (EntityPlayer)event.getEntityLiving();
+			Iterable<ItemStack> armor = player.getArmorInventoryList();
+
+			for(ItemStack piece : armor)
+			{
+				if(!(piece.getItem() instanceof ItemIILightEngineerBoots)) continue;
+				ItemIILightEngineerBoots boots = (ItemIILightEngineerBoots)piece.getItem();
+				if(boots.hasUpgrade(piece, "internal_springs"))
+				{
+					event.setDistance(0);
+				}
+			}
+		}
+	}
+
+	//--- Casing Pouch ---//
 
 	@SubscribeEvent
 	public void onItemPickup(EntityItemPickupEvent event)

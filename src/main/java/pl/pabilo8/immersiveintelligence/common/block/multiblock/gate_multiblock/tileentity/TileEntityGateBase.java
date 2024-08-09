@@ -1,184 +1,133 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.gate_multiblock.tileentity;
 
-import blusunrize.immersiveengineering.api.crafting.IMultiblockRecipe;
-import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IBlockBounds;
-import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IFaceShape;
+import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler.Connection;
+import blusunrize.immersiveengineering.api.energy.wires.WireType;
+import blusunrize.immersiveengineering.api.energy.wires.redstone.IRedstoneConnector;
+import blusunrize.immersiveengineering.api.energy.wires.redstone.RedstoneWireNetwork;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IPlayerInteraction;
-import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
-import net.minecraft.block.state.BlockFaceShape;
+import blusunrize.immersiveengineering.common.util.IEDamageSources;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.IFluidTank;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
+import pl.pabilo8.immersiveintelligence.api.utils.IUpgradableMachine;
+import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.gate_multiblock.multiblock.MultiblockFenceGateBase;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemUtil;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultiblockIIConnectable;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockInteractablePart;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockRedstoneNetwork;
+import pl.pabilo8.immersiveintelligence.common.util.upgrade_system.IUpgradeStorageMachine;
+import pl.pabilo8.immersiveintelligence.common.util.upgrade_system.UpgradeStorage;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * @author Pabilo8
+ * @updated 06.12.2023
  * @since 28-06-2019
  */
-public abstract class TileEntityGateBase<T extends TileEntityMultiblockMetal<T, IMultiblockRecipe>> extends TileEntityMultiblockMetal<T, IMultiblockRecipe> implements IBlockBounds, IPlayerInteraction, IBooleanAnimatedPartsBlock, IFaceShape
+public abstract class TileEntityGateBase<T extends TileEntityGateBase<T>> extends TileEntityMultiblockIIConnectable<T> implements IBooleanAnimatedPartsBlock, IPlayerInteraction, IUpgradeStorageMachine<TileEntityGateBase<T>>, IRedstoneConnector
 {
-	public boolean open = false;
-	public float gateAngle = 0;
+	public MultiblockInteractablePart gate = new MultiblockInteractablePart(40);
+	protected MultiblockRedstoneNetwork<T> redstoneNetwork = new MultiblockRedstoneNetwork<>(((T)this));
+	protected UpgradeStorage<TileEntityGateBase<T>> upgradeStorage = new UpgradeStorage<>(this);
 
-	public TileEntityGateBase(MultiblockStuctureBase<? extends TileEntityGateBase> multiblock)
+	public TileEntityGateBase(MultiblockFenceGateBase<T> multiblock)
 	{
-		super(multiblock, multiblock.getSize(), 0, false);
+		super(multiblock);
+	}
+
+	@Override
+	protected void dummyCleanup()
+	{
+		gate = null;
+		redstoneNetwork = null;
+		upgradeStorage = null;
 	}
 
 	@Override
 	public void readCustomNBT(@Nonnull NBTTagCompound nbt, boolean descPacket)
 	{
 		super.readCustomNBT(nbt, descPacket);
-		open = nbt.getBoolean("open");
-	}
 
-	@Override
-	public void onChunkUnload()
-	{
-		super.onChunkUnload();
+		if(isDummy())
+			return;
+		this.gate.readFromNBT(nbt.getCompoundTag("gate"));
+		this.upgradeStorage.getUpgradesFromNBT(nbt.getCompoundTag("upgrades"));
 	}
 
 	@Override
 	public void writeCustomNBT(@Nonnull NBTTagCompound nbt, boolean descPacket)
 	{
 		super.writeCustomNBT(nbt, descPacket);
-		nbt.setBoolean("open", this.open);
-		nbt.setFloat("gateAngle", gateAngle);
+
+		if(isDummy())
+			return;
+		nbt.setTag("gate", this.gate.writeToNBT());
+		nbt.setTag("upgrades", this.upgradeStorage.saveUpgradesToNBT());
 	}
 
 	@Override
 	public void receiveMessageFromServer(@Nonnull NBTTagCompound message)
 	{
 		super.receiveMessageFromServer(message);
-		this.open = message.getBoolean("open");
-		this.gateAngle = message.getFloat("gateAngle");
+
+		if(!isDummy())
+			this.gate.readFromNBT(message.getCompoundTag("gate"));
 	}
 
 	@Override
-	public void update()
+	protected void onUpdate()
 	{
-		super.update();
+		gate.update();
+		upgradeStorage.update();
+	}
 
-		if(isDummy())
-			return;
+	@Override
+	public List<AxisAlignedBB> getBounds(boolean collision)
+	{
+		if(isPOI("gate")&&master().gate.getProgress(0) > 0)
+			return Collections.singletonList(new AxisAlignedBB(0, 0, 0, 0, 0, 0));
+		return super.getBounds(collision);
+	}
 
-		gateAngle = MathHelper.clamp(gateAngle+(open?3.5f: -6f), 0f, 115f);
+	@Override
+	protected int[] listAllPOI(MultiblockPOI poi)
+	{
+		switch(poi)
+		{
+			case MISC_DOOR:
+				return getPOI("gate");
+			case REDSTONE_CABLE_MOUNT:
+				return getPOI("redstone");
+		}
+		return new int[0];
 	}
 
 	public boolean isDoorPart()
 	{
-		return (pos > 9&&pos < 15)||(pos > 33&&pos < 38)||(pos > 57&&pos < 62)||(pos > 81&&pos < 86);
-	}
-
-	@Nonnull
-	@Override
-	public float[] getBlockBounds()
-	{
-		T master = master();
-		if(!(master instanceof TileEntityGateBase))
-			return new float[]{0, 0, 0, 1, 1, 1};
-
-		switch(pos)
-		{
-			case 80:
-			case 8:
-			case 56:
-			case 32:
-			case 87:
-			case 63:
-			case 39:
-			case 15:
-				return new float[]{0.3125f, 0, 0.3125f, 0.625f, 1f, 0.625f};
-			case 48:
-			case 24:
-			case 55:
-			case 31:
-			case 71:
-			case 47:
-			case 40:
-			case 64:
-				return new float[]{-5, -5, -5, -5, -5, -5};
-			default:
-				if(!((TileEntityGateBase<?>)master).open)
-					return new float[]{0, 0, 0, 1, 1, 1};
-		}
-
-		return new float[]{-5, -5, -5, -5, -5, -5};
-	}
-
-	@Nonnull
-	@Override
-	public int[] getEnergyPos()
-	{
-		return new int[]{2};
-	}
-
-	@Nonnull
-	@Override
-	public int[] getRedstonePos()
-	{
-		return new int[]{};
-	}
-
-	@Override
-	public boolean isInWorldProcessingMachine()
-	{
-		return false;
-	}
-
-	@Override
-	public void doProcessOutput(@Nonnull ItemStack output)
-	{
-
-	}
-
-	@Override
-	public void doProcessFluidOutput(@Nonnull FluidStack output)
-	{
-	}
-
-	@Override
-	public void onProcessFinish(@Nonnull MultiblockProcess<IMultiblockRecipe> process)
-	{
-
-	}
-
-	@Override
-	public int getMaxProcessPerTick()
-	{
-		return 1;
-	}
-
-	@Override
-	public int getProcessQueueMaxLength()
-	{
-		return 1;
-	}
-
-	@Override
-	public float getMinProcessDistance(@Nonnull MultiblockProcess<IMultiblockRecipe> process)
-	{
-		return 0;
-	}
-
-	@Override
-	public NonNullList<ItemStack> getInventory()
-	{
-		return NonNullList.create();
+		return isPOI("gate");
 	}
 
 	@Override
@@ -193,119 +142,127 @@ public abstract class TileEntityGateBase<T extends TileEntityMultiblockMetal<T, 
 		return 0;
 	}
 
-	@Nonnull
-	@Override
-	public int[] getOutputSlots()
-	{
-		return new int[0];
-	}
-
-	@Nonnull
-	@Override
-	public int[] getOutputTanks()
-	{
-		return new int[0];
-	}
-
-	@Override
-	public boolean additionalCanProcessCheck(@Nonnull MultiblockProcess<IMultiblockRecipe> process)
-	{
-		return false;
-	}
-
-	@Nonnull
-	@Override
-	public IFluidTank[] getInternalTanks()
-	{
-		return new IFluidTank[]{};
-	}
-
-	@Nonnull
-	@Override
-	protected IFluidTank[] getAccessibleFluidTanks(@Nonnull EnumFacing side)
-	{
-		return new FluidTank[0];
-	}
-
-	@Override
-	protected boolean canFillTankFrom(int iTank, @Nonnull EnumFacing side, @Nonnull FluidStack resource)
-	{
-		return false;
-	}
-
-	@Override
-	protected boolean canDrainTankFrom(int iTank, @Nonnull EnumFacing side)
-	{
-		return false;
-	}
-
 	@Override
 	public void doGraphicalUpdates(int slot)
 	{
-		this.markDirty();
-	}
 
-	@Override
-	public IMultiblockRecipe findRecipeForInsertion(@Nonnull ItemStack inserting)
-	{
-		return null;
-	}
-
-	@Override
-	protected IMultiblockRecipe readRecipeFromNBT(@Nonnull NBTTagCompound tag)
-	{
-		return null;
-	}
-
-	@Override
-	public boolean interact(@Nonnull EnumFacing side, @Nonnull EntityPlayer player, @Nonnull EnumHand hand, @Nonnull ItemStack heldItem, float hitX, float hitY, float hitZ)
-	{
-		T master = master();
-		if(master instanceof TileEntityGateBase&&!player.isSneaking())
-		{
-			TileEntityGateBase<?> m = (TileEntityGateBase<?>)master;
-			m.onAnimationChangeServer(!m.open, 0);
-			return true;
-		}
-
-		return false;
 	}
 
 	@Override
 	public void onAnimationChangeClient(boolean state, int part)
 	{
-		open = state;
+		gate.setState(state);
 	}
 
 	@Override
 	public void onAnimationChangeServer(boolean state, int part)
 	{
-		if(state!=open)
+		if(gate.setState(state))
 		{
-			open = state;
-			IIPacketHandler.INSTANCE.sendToAllAround(new MessageBooleanAnimatedPartsSync(open, 0, getPos()), IIPacketHandler.targetPointFromPos(this.getPos(), this.world, 32));
+			world.playSound(null, getPos(), state?getOpeningSound(): getClosingSound(), SoundCategory.BLOCKS, 1, 1);
+			IIPacketHandler.INSTANCE.sendToAllAround(new MessageBooleanAnimatedPartsSync(state, 0, getPos()), IIPacketHandler.targetPointFromPos(this.getPos(), this.world, 32));
 		}
 	}
 
+	protected abstract SoundEvent getOpeningSound();
+
+	protected abstract SoundEvent getClosingSound();
+
 	public abstract IBlockState getFenceState(@Nullable EnumFacing facingConnected);
 
-	@Nonnull
+	//--- IUpgradeStorageMachine ---//
+
+
 	@Override
-	public BlockFaceShape getFaceShape(@Nonnull EnumFacing side)
+	public UpgradeStorage<TileEntityGateBase<T>> getUpgradeStorage()
 	{
-		switch(pos)
+		return upgradeStorage;
+	}
+
+	@Override
+	public boolean upgradeMatches(MachineUpgrade upgrade)
+	{
+		return upgrade==IIContent.UPGRADE_REDSTONE_ACTIVATION||upgrade==IIContent.UPGRADE_RAZOR_WIRE;
+	}
+
+	@Override
+	public <T extends TileEntity & IUpgradableMachine> T getUpgradeMaster()
+	{
+		return (T)master();
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void renderWithUpgrades(MachineUpgrade... upgrades)
+	{
+
+	}
+
+	//--- IPlayerInteraction ---//
+
+	@Override
+	public boolean interact(EnumFacing side, EntityPlayer player, EnumHand hand, ItemStack heldItem, float hitX, float hitY, float hitZ)
+	{
+		T master = master();
+		if(!IIItemUtil.isWrench(player.getHeldItem(hand))&&master!=null&&!master.hasUpgrade(IIContent.UPGRADE_REDSTONE_ACTIVATION))
 		{
-			case 80:
-			case 8:
-			case 56:
-			case 32:
-			case 87:
-			case 63:
-			case 39:
-			case 15:
-				return BlockFaceShape.MIDDLE_POLE;
-			default:
-				return BlockFaceShape.UNDEFINED;
+			if(!world.isRemote)
+				master.onAnimationChangeServer(!master.gate.getState(), 0);
+			return true;
 		}
+		return false;
+	}
+
+	@Override
+	public void onEntityCollision(World world, Entity entity)
+	{
+		if(isPOI("razor")&&master().hasUpgrade(IIContent.UPGRADE_RAZOR_WIRE)&&!entity.isDead)
+			entity.attackEntityFrom(IEDamageSources.razorWire, 3f);
+		super.onEntityCollision(world, entity);
+	}
+
+	//--- IRedstoneConnector ---//
+
+
+	@Override
+	protected boolean isMatchingCable(WireType cableType)
+	{
+		return Objects.equals(cableType.getCategory(), WireType.REDSTONE_CATEGORY);
+	}
+
+	@Override
+	public RedstoneWireNetwork getNetwork()
+	{
+		return master().redstoneNetwork.getNetwork();
+	}
+
+	@Override
+	public void setNetwork(RedstoneWireNetwork net)
+	{
+		master().redstoneNetwork.setNetwork(net);
+	}
+
+	@Override
+	public void onChange()
+	{
+		master().onAnimationChangeServer(master().redstoneNetwork.getNetwork().channelValues[0] > 0, 0);
+	}
+
+	@Override
+	public World getConnectorWorld()
+	{
+		return world;
+	}
+
+	@Override
+	public void updateInput(byte[] signals)
+	{
+
+	}
+
+	@Override
+	public Vec3d getConnectionOffset(Connection con)
+	{
+		return new Vec3d(facing.getDirectionVec()).scale(0.25).addVector(0.5, 0.725, 0.5);
 	}
 }

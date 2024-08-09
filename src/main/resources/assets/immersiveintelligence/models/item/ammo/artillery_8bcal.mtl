@@ -1,0 +1,8 @@
+# Made by Pabilo8 with Blockbench
+
+newmtl 8bcal_heavy_artillery1
+map_Kd immersiveintelligence:entity/ammo/8bcal_heavy_artillery1
+newmtl 8bcal_heavy_artillery2
+map_Kd immersiveintelligence:entity/ammo/8bcal_heavy_artillery2
+newmtl gunpowder
+map_Kd immersiveintelligence:entity/ammo/gunpowder

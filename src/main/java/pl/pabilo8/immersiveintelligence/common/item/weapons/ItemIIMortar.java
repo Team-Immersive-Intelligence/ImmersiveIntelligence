@@ -14,6 +14,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityMortar;
+import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIBase;
 
 import java.util.List;
@@ -22,6 +24,7 @@ import java.util.List;
  * @author Pabilo8
  * @since 23.01.2021
  */
+@IIItemProperties(category = IICategory.WARFARE)
 public class ItemIIMortar extends ItemIIBase
 {
 	public ItemIIMortar()

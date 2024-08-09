@@ -1,59 +1,9 @@
 name: Build Project
 
 on:
-  push: #Trigger On Push
-    branches: [ "master" ]
   workflow_dispatch: #Manual Trigger
 
 jobs:
-  optimize-assets:
-    continue-on-error: true
-    name: Optimize Assets
-    runs-on: ubuntu-latest
-    env:
-      GITHUB_USERNAME: 'CarverBot'
-      GITHUB_TOKEN: ${{ secrets.OPTIMIZATION_TOKEN }}
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
-
-      - uses: FedericoCarboni/setup-ffmpeg@v2
-        id: setup-ffmpeg
-
-      - name: Optimize PNGs
-        continue-on-error: true
-        run: chmod -R a+rX ./gradle/tools/* ; bash ./gradle/tools/opti.sh -i
-
-      - name: Optimize Audio
-        continue-on-error: true
-        run: chmod -R a+rX ./gradle/tools/* ; bash ./gradle/tools/opti.sh -a
-        env:
-          LOC_FFMPEG: ${{ steps.setup-ffmpeg.outputs.ffmpeg-path }}
-          LOC_FFPROBE: ${{ steps.setup-ffmpeg.outputs.ffprobe-path }}
-
-      - name: Setup Git User
-        uses: fregante/setup-git-user@v2
-
-      - name: Setup Git User
-        run: git config --global user.name "Automated Carver Device(tm)"
-
-      - name: Verify Changed files
-        uses: tj-actions/verify-changed-files@v16
-        continue-on-error: true
-        id: verify-changed-files
-        with:
-          files: |
-            **/*.png
-            **/*.ogg
-
-      - name: Create Pull Request
-        if: steps.verify-changed-files.outputs.files_changed == 'true'
-        uses: peter-evans/create-pull-request@v5.0.2
-        with:
-          title: Optimized Assets
-          commit-message: optimized assets
-          body: Assets were automatically optimized.
-          token: ${{ secrets.OPTIMIZATION_TOKEN }}
   build:
     runs-on: ubuntu-latest
     name: Create a Dev Build
@@ -62,16 +12,16 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.OPTIMIZATION_TOKEN }}
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Java
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           distribution: corretto
           java-version: 8
 
       - name: Setup Gradle
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/gradle-build-action@v3
 
       - name: Decode Keystore
         id: decode_keystore
@@ -84,7 +34,7 @@ jobs:
         run: chmod +x gradlew ; ./gradlew build --scan
 
       - name: Upload test build
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: test-build
           path: |
@@ -94,7 +44,7 @@ jobs:
             !build/libs/*-sources.jar
 
       - name: Upload sources
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: sources
           path: |
@@ -110,14 +60,82 @@ jobs:
           properties: 'mcmod_Name mcmod_Developer mcmod_URL'
 
       - name: Notify Discord
-        uses: rguillaume/discord-action-embed@v1.0.4
-        continue-on-error: true
         env:
+          WEBHOOK: ${{ secrets.DISCORD_COMMITS_WEBHOOK }}
           MOD_NAME: ${{ steps.rp.outputs.mcmod_Name }}
           MOD_DEVOLOPER: ${{ steps.rp.outputs.mcmod_Developer }}
           MOD_URL: ${{ steps.rp.outputs.mcmod_URL }}
-        with:
-          webhook: ${{ secrets.DISCORD_WEBHOOK }}
-          message: ""
-          embed: '{"title": "Dev Build assembly completed!","color": 3617648,"description": "You are granted access to a new, automatically compiled Dev Build of ${{ env.MOD_NAME }}:tm:. \n\nThis build can be downloaded by clicking on the link above, then on `current-build` in `Artifacts` section.\n\nHappy testing and please report any bugs you encounter. ^^","url": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}","author": {"name": " ${{ env.MOD_NAME }}","url": "https://github.com/${{ github.repository }}","icon_url": "${{ vars.PROJECT_LOGO }}"}}'
+        run: chmod -R a+rX ./gradle/tools/* ; bash ./gradle/tools/discord_build.sh -i
 
+      #Updates build version number for publishing       
+      - name: Increment Version Variable
+        id: increment_version
+        uses: action-pack/increment@v2
+        with:
+          name: 'RELEASE_NAME'
+          token: ${{ secrets.REPO_ACCESS_TOKEN }}
+          value: 'dev1'
+
+      - name: Release on Github
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            build/libs/*-core.jar
+            build/libs/*-deobf.jar
+            build/libs/*-sources.jar
+
+        #Action for Publishing to curseforge, MC-Publish
+      - name: Publish on Curseforge
+        uses: Kir-Antipov/mc-publish@v3.3
+        with:
+
+          curseforge-id: 344344
+          curseforge-token: "${{env.CURSEFORGE_TOKEN}}"
+
+          loaders: forge
+          game-versions: "${{env.MINECRAFT_VERSION}}"
+          java: "${{env.JAVA_VERSION}}"
+          
+          dependencies: |
+            immersive-engineering(required)
+            immersive-energy(optional)
+            mct-immersive-technology(optional)
+            crafttweaker(optional)
+            ctm(optional)
+
+          files: |
+            build/libs/*.jar
+            !build/libs/*-core.jar
+
+              retry-attempts: 2
+              retry-delay: 10000
+              fail-mode: fail
+
+
+        #Action for Publishing to Modrinth, MC-Publish
+      - name: Publish on Modrith
+        uses: Kir-Antipov/mc-publish@v3.3
+        with:
+
+          modrinth-id: q19xbT91
+          modrinth-token: "${{env.MODRINTH_TOKEN}}"
+          modrinth-featured: false
+
+          loaders: forge
+          game-versions: "${{env.MINECRAFT_VERSION}}"
+          java: "${{env.JAVA_VERSION}}"
+          
+          dependencies: |
+            immersive-engineering(required)
+            immersive-energy(optional)
+            mct-immersive-technology(optional)
+            crafttweaker(optional)
+            ctm(optional)
+
+          files: |
+            build/libs/*.jar
+            !build/libs/*-core.jar
+
+              retry-attempts: 2
+              retry-delay: 10000
+              fail-mode: fail

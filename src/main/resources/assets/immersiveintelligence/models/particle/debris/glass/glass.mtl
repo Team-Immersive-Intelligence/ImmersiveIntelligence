@@ -1,0 +1,6 @@
+# Made by Pabilo8 with Blockbench
+
+newmtl glass
+map_Kd minecraft:blocks/glass
+newmtl ice
+map_Kd minecraft:blocks/ice

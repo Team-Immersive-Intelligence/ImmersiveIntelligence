@@ -22,8 +22,10 @@ import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.eff
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.block.BlockIITileProvider;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.EnumTileProvider;
+import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IIBlockProperties;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IITileProviderEnum;
 import pl.pabilo8.immersiveintelligence.common.util.block.ItemBlockIIBase;
+import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 
 import javax.annotation.Nonnull;
 
@@ -35,26 +37,37 @@ public class BlockIIMetalDevice extends BlockIITileProvider<IIBlockTypes_MetalDe
 {
 	public enum IIBlockTypes_MetalDevice implements IITileProviderEnum
 	{
+		@IIBlockProperties(category = IICategory.ELECTRONICS)
 		@EnumTileProvider(tile = TileEntityMetalCrate.class)
 		METAL_CRATE,
+		@IIBlockProperties(category = IICategory.LOGISTICS)
 		@EnumTileProvider(tile = TileEntityAmmunitionCrate.class)
 		AMMUNITION_CRATE,
+		@IIBlockProperties(category = IICategory.ELECTRONICS)
 		@EnumTileProvider(tile = TileEntitySmallDataBuffer.class)
 		SMALL_DATA_BUFFER,
+		@IIBlockProperties(category = IICategory.ELECTRONICS)
 		@EnumTileProvider(tile = TileEntityTimedBuffer.class)
 		TIMED_BUFFER,
+		@IIBlockProperties(category = IICategory.ELECTRONICS)
 		@EnumTileProvider(tile = TileEntityRedstoneBuffer.class)
 		REDSTONE_BUFFER,
+		@IIBlockProperties(category = IICategory.ELECTRONICS)
 		@EnumTileProvider(tile = TileEntityPunchtapeReader.class)
 		PUNCHTAPE_READER,
+		@IIBlockProperties(category = IICategory.ELECTRONICS)
 		@EnumTileProvider(tile = TileEntityDataRouter.class)
 		DATA_ROUTER,
+		@IIBlockProperties(category = IICategory.ELECTRONICS)
 		@EnumTileProvider(tile = TileEntityDataMerger.class)
 		DATA_MERGER,
+		@IIBlockProperties(category = IICategory.LOGISTICS)
 		@EnumTileProvider(tile = TileEntityMedicalCrate.class)
 		MEDIC_CRATE,
+		@IIBlockProperties(category = IICategory.LOGISTICS)
 		@EnumTileProvider(tile = TileEntityRepairCrate.class)
 		REPAIR_CRATE,
+		@IIBlockProperties(category = IICategory.TOOLS)
 		@EnumTileProvider(tile = TileEntityLatexCollector.class)
 		LATEX_COLLECTOR
 	}
@@ -72,7 +85,7 @@ public class BlockIIMetalDevice extends BlockIITileProvider<IIBlockTypes_MetalDe
 		setToolTypes(IIReference.TOOL_HAMMER);
 
 		setBlockLayer(BlockRenderLayer.CUTOUT_MIPPED);
-		setSubBlockLayer(IIBlockTypes_MetalDevice.METAL_CRATE,BlockRenderLayer.CUTOUT);
+		setSubBlockLayer(IIBlockTypes_MetalDevice.METAL_CRATE, BlockRenderLayer.CUTOUT);
 
 		addToTESRMap(IIBlockTypes_MetalDevice.TIMED_BUFFER, IIBlockTypes_MetalDevice.REDSTONE_BUFFER,
 				IIBlockTypes_MetalDevice.SMALL_DATA_BUFFER, IIBlockTypes_MetalDevice.DATA_MERGER);

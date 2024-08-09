@@ -10,7 +10,6 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
-import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
 import pl.pabilo8.immersiveintelligence.common.entity.hans.tasks.AIHansBase;
 
@@ -182,8 +181,17 @@ public abstract class AIHansHandWeapon extends AIHansBase
 
 		double targetDist = this.hans.getPositionVector().distanceTo(new Vec3d(enemy.posX, enemy.posY, enemy.posZ));
 		canFire = this.attackTarget!=null&&
-				(!hasToSeeEnemy()||this.hans.getEntitySenses().canSee(this.attackTarget))&&
-				canShootEntity(this.attackTarget);
+				(!hasToSeeEnemy()||this.hans.getEntitySenses().canSee(this.attackTarget));
+
+		//friendlies obstruct Hans's vision, try to find a position around
+		if(canFire&&!canShootEntity(this.attackTarget))
+		{
+			//scatter
+			Vec3d away = RandomPositionGenerator.findRandomTarget(hans, 3, 0);
+			if(away!=null)
+				this.hans.getNavigator().tryMoveToXYZ(away.x, away.y, away.z, 1);
+			return MotionState.COME_TOWARDS;
+		}
 
 		this.seeTime = canFire?(seeTime+1): 0;
 
