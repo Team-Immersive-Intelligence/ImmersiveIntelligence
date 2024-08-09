@@ -15,4 +15,4 @@ jobs:
         uses: sebastianpopp/discord-action@releases/v2
         with:
           webhook: ${{ secrets.CARVERBOT_WEBHOOK }}
-          message: "${{ github.event.issue.title }}\nhttps://github.com/Team-Immersive-Intelligence/ImmersiveIntelligence-Internal/issues/${{ github.event.issue.number }}"
+          message: "${{ github.event.issue.title }}\nhttps://github.com/Team-Immersive-Intelligence/ImmersiveIntelligence/issues/${{ github.event.issue.number }}"

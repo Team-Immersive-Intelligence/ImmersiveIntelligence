@@ -2,7 +2,7 @@ name: Optimize Assets
 
 on:
   push: #Trigger On Push
-    branches: [ "dev" ]
+    branches: [ "dev/main" ]
   workflow_dispatch: #Manual Trigger
 
 jobs:
