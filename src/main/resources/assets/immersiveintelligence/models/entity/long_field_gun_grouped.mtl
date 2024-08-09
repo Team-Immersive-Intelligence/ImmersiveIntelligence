@@ -1,0 +1,18 @@
+# Made by Pabilo8 with Blockbench
+
+newmtl common_steel
+map_Kd immersiveintelligence:blocks/common/common_steel
+newmtl common_steel_norivets
+map_Kd immersiveintelligence:blocks/common/common_steel_norivets
+newmtl wheel_20_terrain
+map_Kd immersiveintelligence:entity/vehicle/suspension/wheel_20_terrain
+newmtl hans
+map_Kd immersiveintelligence:entity/hans
+newmtl 6bcal_light_howitzer
+map_Kd immersiveintelligence:entity/vehicle/6bcal_light_howitzer
+newmtl vehicle_interior
+map_Kd immersiveintelligence:entity/vehicle/vehicle_interior
+newmtl long_field_gun
+map_Kd immersiveintelligence:entity/vehicle/long_field_gun
+newmtl common_copper_cable
+map_Kd immersiveintelligence:blocks/common/common_copper_cable
