@@ -1,0 +1,5 @@
+// Here you can put yout uuid and username so you can play minecraft as yourself which can be userful
+// when testing skins or other player specific mechanics/features
+runClient {
+    args = ["--uuid", "your uuid", "--username", "your username"]
+}
