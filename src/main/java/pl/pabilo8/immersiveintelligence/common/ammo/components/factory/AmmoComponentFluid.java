@@ -19,6 +19,7 @@ import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.component.EntityGasCloud;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.component.EntityIIChemthrowerShot;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
+import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
 
 /**
  * @author Pabilo8
@@ -32,7 +33,7 @@ public class AmmoComponentFluid extends AmmoComponent
 
 	public AmmoComponentFluid(Fluid fluid)
 	{
-		super((fluid.isGaseous()?"gas_": "fluid_")+IIUtils.toSnakeCase(fluid.getName()),
+		super((fluid.isGaseous()?"gas_": "fluid_")+IIStringUtil.toSnakeCase(fluid.getName()),
 				Math.max(fluid.getDensity(), 0)/1000f,
 				ComponentRole.CHEMICAL,
 				IIColor.fromPackedRGBA(fluid.getColor())

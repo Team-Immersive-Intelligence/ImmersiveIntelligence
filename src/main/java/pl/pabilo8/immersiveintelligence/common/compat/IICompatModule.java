@@ -83,7 +83,7 @@ public abstract class IICompatModule
 				action.accept(compat);
 			} catch(Exception exception)
 			{
-				IILogger.error(String.format("Compat module for {0} {1}. Report this and include the error message below!", compat, message));
+				IILogger.error(String.format("Compat module for %0 %1. Report this and include the error message below!", compat, message));
 				IILogger.error(exception);
 			}
 	}

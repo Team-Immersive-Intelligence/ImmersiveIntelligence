@@ -13,7 +13,7 @@ import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
 import pl.pabilo8.immersiveintelligence.common.weaponsystem.IIWeaponBase;
-import pl.pabilo8.immersiveintelligence.common.weaponsystem.IIWeaponUpgrade.WeaponUpgrades;
+import pl.pabilo8.immersiveintelligence.common.weaponsystem.IIWeaponUpgrade.WeaponUpgrade;
 import pl.pabilo8.immersiveintelligence.common.weaponsystem.ammunition.AmmoHandler;
 import pl.pabilo8.immersiveintelligence.common.weaponsystem.ammunition.AmmoHandlerMagazine;
 
@@ -32,7 +32,7 @@ public class IIWeaponSubmachineGun extends IIWeaponBase
 			@Override
 			protected boolean isValidType(ItemStack gun, Magazines magazine)
 			{
-				return magazine!=Magazines.SUBMACHINEGUN_DRUM||hasIIUpgrade(weapon, WeaponUpgrade.BOTTOM_LOADING);
+				return magazine!=Magazines.SUBMACHINEGUN_DRUM||hasIIUpgrade(gun, WeaponUpgrade.BOTTOM_LOADING);
 			}
 
 			@Override

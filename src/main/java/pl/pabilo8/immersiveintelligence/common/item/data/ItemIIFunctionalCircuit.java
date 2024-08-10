@@ -266,6 +266,7 @@ public class ItemIIFunctionalCircuit extends ItemIISubItemsBase<Circuits> implem
 						.toArray(IDataType[]::new);
 
 			GlStateManager.color(1f, 1f, 1f, 1f);
+			// TODO: Crashes on both keys pressed
 			int off = offsetsY.get(b?1: 0)-offsetsY.get(0);
 			for(int i = 0; i < types.length; i++)
 			{

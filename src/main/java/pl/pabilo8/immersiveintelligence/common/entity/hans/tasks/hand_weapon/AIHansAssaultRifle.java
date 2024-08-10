@@ -8,8 +8,8 @@ import pl.pabilo8.immersiveintelligence.api.ammo.utils.IIAmmoUtils;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
-import pl.pabilo8.immersiveintelligence.common.weaponsystem.weapons.IIWeaponAssaultRifle;
 import pl.pabilo8.immersiveintelligence.common.util.entity.IIEntityUtils;
+import pl.pabilo8.immersiveintelligence.common.weaponsystem.weapons.IIWeaponAssaultRifle;
 
 /**
  * @author Pabilo8
@@ -118,7 +118,7 @@ public class AIHansAssaultRifle extends AIHansHandWeapon
 	protected float calculateBallisticAngle(ItemStack ammo, EntityLivingBase attackTarget)
 	{
 		return IIAmmoUtils.getDirectFireAngle(IIContent.itemAmmoAssaultRifle.getVelocity(), IIContent.itemAmmoAssaultRifle.getMass(ammo),
-				hans.getPositionVector().addVector(0, (double)hans.getEyeHeight()-0.10000000149011612D, 0).subtract(IIUtils.getEntityCenter(attackTarget))
+				hans.getPositionVector().addVector(0, (double)hans.getEyeHeight()-0.10000000149011612D, 0).subtract(IIEntityUtils.getEntityCenter(attackTarget))
 		);
 	}
 }

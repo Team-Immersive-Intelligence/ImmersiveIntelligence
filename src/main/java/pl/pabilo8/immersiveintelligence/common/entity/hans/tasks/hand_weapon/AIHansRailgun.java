@@ -101,7 +101,7 @@ public class AIHansRailgun extends AIHansHandWeapon
 	{
 		if(ammo.getItem()==IIContent.itemRailgunGrenade)
 			return IIAmmoUtils.getDirectFireAngle(IIContent.itemRailgunGrenade.getVelocity(), IIContent.itemRailgunGrenade.getMass(ammo),
-					hans.getPositionVector().addVector(0, hans.getEyeHeight()-0.10000000149011612D, 0).subtract(IIUtils.getEntityCenter(attackTarget)));
+					hans.getPositionVector().addVector(0, hans.getEyeHeight()-0.10000000149011612D, 0).subtract(IIEntityUtils.getEntityCenter(attackTarget)));
 		else
 			return IIAmmoUtils.getIEDirectRailgunAngle(ammo, hans.getPositionVector().addVector(0, hans.getEyeHeight(), 0).subtract(IIEntityUtils.getEntityCenter(attackTarget)));
 	}

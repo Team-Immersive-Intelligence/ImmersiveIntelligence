@@ -9,7 +9,7 @@ import net.minecraft.util.math.RayTraceResult;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
-import pl.pabilo8.immersiveintelligence.common.weaponsystem.IIWeaponUpgrade.WeaponUpgrades;
+import pl.pabilo8.immersiveintelligence.common.weaponsystem.IIWeaponUpgrade.WeaponUpgrade;
 import pl.pabilo8.immersiveintelligence.common.weaponsystem.weapons.IIWeaponAssaultRifle;
 
 /**
@@ -33,7 +33,7 @@ public class GuiOverlayAssaultRifle extends GuiOverlayGunBase
 		int lastMode = nbt.getInt(IIWeaponAssaultRifle.LAST_FIRE_MODE);
 		int mode = nbt.getInt(IIWeaponAssaultRifle.FIRE_MODE);
 
-		float modeProgress = 1f-MathHelper.clamp((nbt.getInt(ItemIIAssaultRifle.FIRE_MODE_TIMER)-ClientUtils.mc().getRenderPartialTicks())/6f, 0f, 1f);
+		float modeProgress = 1f-MathHelper.clamp((nbt.getInt(IIWeaponAssaultRifle.FIRE_MODE_TIMER)-ClientUtils.mc().getRenderPartialTicks())/6f, 0f, 1f);
 		boolean grenades = IIContent.itemAssaultRifle.hasIIUpgrade(stack, WeaponUpgrade.RIFLE_GRENADE_LAUNCHER);
 
 		//Draw fire mode toggle

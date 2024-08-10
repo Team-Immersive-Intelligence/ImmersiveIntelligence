@@ -117,7 +117,7 @@ public abstract class AIHansAbstractGun extends AIHansHandWeapon
 	{
 		IAmmoTypeItem ammoType = (IAmmoTypeItem)ammo.getItem();
 		return IIAmmoUtils.getDirectFireAngle(ammoType.getVelocity(), ammoType.getMass(ammo),
-				hans.getPositionVector().addVector(0, (double)hans.getEyeHeight()-0.10000000149011612D, 0).subtract(IIUtils.getEntityCenter(attackTarget))
+				hans.getPositionVector().addVector(0, (double)hans.getEyeHeight()-0.10000000149011612D, 0).subtract(IIEntityUtils.getEntityCenter(attackTarget))
 		);
 	}
 }

@@ -12,6 +12,7 @@ import net.dries007.tfc.objects.blocks.wood.BlockLogTFC;
 import net.dries007.tfc.objects.blocks.wood.BlockPlanksTFC;
 import net.dries007.tfc.objects.items.itemblock.ItemBlockTFC;
 import net.dries007.tfc.objects.items.wood.ItemLumberTFC;
+import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -22,6 +23,7 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.ItemIIMaterial.Materials;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -32,30 +34,9 @@ import java.util.Map;
  */
 public class TerrafirmaHelper extends IICompatModule
 {
-	private final ResLoc tfcRoot;
-	private final ResLoc lumberRes;
-	private final ResLoc logRes;
-	private final ResLoc planksRes;
-
-	public TerrafirmaHelper()
-	{
-		/*
-		* IDs:
-		* lumber: tfc:wood/lumber/x
-		* log: tfc:wood/log/x
-		 */
-
-		// TODO: Finish TFC Compat adding new sawmill recipes
-		tfcRoot = ResLoc.root(TerraFirmaCraft.MOD_ID);
-		lumberRes = ResLoc.of(tfcRoot, "wood/lumber/");
-		logRes = ResLoc.of(tfcRoot, "wood/log/");
-		planksRes = ResLoc.of(tfcRoot, "wood/planks/");
-	}
-
 	@Override
 	public void preInit()
 	{
-
 	}
 
 	@Override
@@ -64,14 +45,15 @@ public class TerrafirmaHelper extends IICompatModule
 		IILogger.info("Registering TFC sawmill recipes");
 		for (Tree tree : TFCRegistries.TREES.getValuesCollection())
 		{
-			ResLoc logres = ResLoc.of(logRes, tree.getRegistryName().getResourcePath());
-			ResLoc lumber = ResLoc.of(lumberRes, tree.getRegistryName().getResourcePath());
-			ResLoc planks = ResLoc.of(planksRes, tree.getRegistryName().getResourcePath());
-			IILogger.info("Registering sawmill recipe: " + logres + " -> 8x " + lumber);
-			IILogger.info("Registering sawmill recipe: " + planks + " -> 4x " + lumber);
+			ItemLumberTFC lumberItem = ItemLumberTFC.get(tree);
+			ItemBlockTFC logItem = new ItemBlockTFC(BlockLogTFC.get(tree));
+			ItemBlockTFC plankItem = new ItemBlockTFC(BlockPlanksTFC.get(tree));
 
-			SawmillRecipe.addRecipe(new ItemStack(new ItemLumberTFC(tree), 8), new IngredientStack(new ItemStack(new ItemBlockTFC(new BlockLogTFC(tree)), 1)), IIContent.itemMaterial.getStack(Materials.DUST_WOOD), Sawmill.torqueMin, 100, 1);
-			SawmillRecipe.addRecipe(new ItemStack(new ItemLumberTFC(tree), 4), new IngredientStack(new ItemStack(new ItemBlockTFC(new BlockPlanksTFC(tree)), 1)), IIContent.itemMaterial.getStack(Materials.DUST_WOOD), Sawmill.torqueMin, 100, 1);
+			IILogger.info("Registering sawmill recipe: " + logItem.getBlock().getRegistryName() + " -> 8x " + lumberItem.getRegistryName());
+			IILogger.info("Registering sawmill recipe: " + plankItem.getBlock().getRegistryName() + " -> 4x " + lumberItem.getRegistryName());
+
+			SawmillRecipe.addRecipe(new ItemStack(lumberItem, 8), new IngredientStack(new ItemStack(logItem)), IIContent.itemMaterial.getStack(Materials.DUST_WOOD), Sawmill.torqueMin, 100, 1);
+			SawmillRecipe.addRecipe(new ItemStack(lumberItem, 4), new IngredientStack(new ItemStack(plankItem)), IIContent.itemMaterial.getStack(Materials.DUST_WOOD), Sawmill.torqueMin, 100, 1);
 		}
 	}
 
