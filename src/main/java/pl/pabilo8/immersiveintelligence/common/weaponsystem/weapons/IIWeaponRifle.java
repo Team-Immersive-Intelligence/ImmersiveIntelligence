@@ -227,8 +227,8 @@ public class IIWeaponRifle extends IIWeaponBase implements IAdvancedZoomTool
 		if(nbt.hasKey(WeaponUpgrade.EXTENDED_BARREL))
 			return Rifle.longBarrelVelocityMod;
 		else if(nbt.hasKey(WeaponUpgrade.SEMI_AUTOMATIC))
-			return 0.75f;
-		return 1f;
+			return 1.5f;
+		return 1.75f;
 	}
 
 	//--- IAdvancedZoomTool ---//

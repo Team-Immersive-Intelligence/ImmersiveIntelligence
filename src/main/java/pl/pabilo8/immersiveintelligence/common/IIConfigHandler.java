@@ -1052,8 +1052,8 @@ public class IIConfigHandler
 				public static int engineerHeadgearEnergyUsage = 225;
 
 				@Comment({"The multiplier of electric damage taken when an anti-static mesh is worn under water (in half-hearts)."})
-				@RangeInt(min = 0)
-				public static float antiStaticMeshWaterDamageMod = 1.5f;
+				@RangeDouble(min = 0)
+				public static double antiStaticMeshWaterDamageMod = 1.5;
 
 				@Comment({"The energy usage of the exoskeleton when running (in IF)."})
 				@RangeInt(min = 0)
@@ -1370,7 +1370,7 @@ public class IIConfigHandler
 				public static int bulletFireTimeSemiAuto = 10;
 
 				@Comment({"Maximum amount of horizontal recoil."})
-				public static float longBarrelVelocityMod = 1.5f;
+				public static float longBarrelVelocityMod = 2.25f;
 
 				@Comment({"Amount of horizontal recoil after taking a shot."})
 				public static float recoilHorizontal = 0.5f;

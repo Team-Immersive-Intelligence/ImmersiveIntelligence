@@ -125,8 +125,9 @@ body:
       label: Immersive Intelligence Version
       description: Select Immersive Intelligence version.
       options:
-        - 0.3.0 (Recent Dev Build)
-        - 0.3.0 (dev or other experimental branch)
+        - 0.3.1-dev2
+        - 0.3.1-dev1
+        - 0.3.0
         - 0.2.2 and older
       default: 0
     validations:

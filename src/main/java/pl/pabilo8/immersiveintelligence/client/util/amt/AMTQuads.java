@@ -118,13 +118,26 @@ public class AMTQuads extends AMT
 	 */
 	public AMTQuads recolor(IIColor color)
 	{
+		//Copy and recolor this quad
 		AMTQuads copy = new AMTQuads(this.name, this.originPos,
 				Arrays.stream(quads)
 						.map(q -> new BakedQuad(Arrays.copyOf(q.getVertexData(), q.getVertexData().length), 1, q.getFace(), q.getSprite(), q.shouldApplyDiffuseLighting(), q.getFormat()))
 						.toArray(BakedQuad[]::new)
 		);
 		copy.bakedColor = color;
+
+		//Copy and recolor children as well
+		AMT[] children = getChildren();
+		if(children!=null)
+			copy.setChildren(Arrays.stream(children).map(child -> recolorChild(child, color)).toArray(AMT[]::new));
 		return copy;
+	}
+
+	private static AMT recolorChild(AMT child, IIColor color)
+	{
+		if(child instanceof AMTQuads)
+			return ((AMTQuads)child).recolor(color);
+		return child;
 	}
 
 	public void setLighting(boolean hasLighting)

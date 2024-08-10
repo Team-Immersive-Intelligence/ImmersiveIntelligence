@@ -1,0 +1,60 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "transform": "forge:default-block",
+    "textures": {
+      "texture": "minecraft:blocks/iron_block",
+      "particle": "minecraft:blocks/iron_block"
+    },
+    "custom": {
+      "flip-v": true
+    }
+  },
+  "variants": {
+    "inventory,type=iron_wheel": [
+      {
+        "model": "immersiveintelligence:metal_device/wheel/iron_wheel_inv.obj"
+      }
+    ],
+    "type": {
+      "iron_wheel": {
+        "model": "immersiveintelligence:metal_device/wheel/iron_wheel_base.obj"
+      }
+    },
+    "facing": {
+      "down": {
+      },
+      "up": {
+      },
+      "north": {
+        "transform": {
+          "rotation": {
+            "y": 180
+          }
+        }
+      },
+      "south": {
+      },
+      "west": {
+        "transform": {
+          "rotation": {
+            "y": -90
+          }
+        }
+      },
+      "east": {
+        "transform": {
+          "rotation": {
+            "y": 90
+          }
+        }
+      }
+    },
+    "_1dynamicrender": {
+      "false": {},
+      "true": {
+        "model": "immersiveintelligence:metal_device/wheel/iron_wheel.obj.ie"
+      }
+    }
+  }
+}

@@ -88,20 +88,8 @@ public class ModelAmmoProjectile<T extends IAmmoType<T, E>, E extends EntityAmmo
 	{
 		ArrayList<AMT> extraParts = new ArrayList<>();
 		for(CoreType coreType : ammo.getAllowedCoreTypes())
-			switch(coreType)
-			{
-				case PIERCING_SABOT:
-					extraParts.add(new AMTLocator("core_piercing_sabot", header));
-					break;
-				case SHAPED_SABOT:
-					extraParts.add(new AMTLocator("core_shaped_sabot", header));
-					break;
-				case CLUSTER:
-					extraParts.add(new AMTLocator("core_cluster", header));
-					break;
-				default:
-					break;
-			}
+			if(coreType==CoreType.PIERCING_SABOT)
+				extraParts.add(new AMTLocator("core_piercing_sabot", header));
 
 		return extraParts.toArray(new AMT[0]);
 	}

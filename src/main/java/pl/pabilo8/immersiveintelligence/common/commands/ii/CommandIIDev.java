@@ -251,11 +251,13 @@ public class CommandIIDev extends CommandTreeHelp
 					server.getEntityWorld().getGameRules().setOrCreateGameRule("doWeatherCycle", "false");
 					server.getEntityWorld().getGameRules().setOrCreateGameRule("doMobSpawning", "false");
 					//Add the hostile Hans team
-					ScorePlayerTeam globalEnemy = server.getEntityWorld().getScoreboard().createTeam("GlobalEnemy");
-					globalEnemy.setColor(TextFormatting.DARK_GRAY);
-					globalEnemy.setDisplayName("Hostile Forces");
-					globalEnemy.setPrefix("Enemy");
-
+					if(server.getEntityWorld().getScoreboard().getTeam("GlobalEnemy")==null)
+					{
+						ScorePlayerTeam globalEnemy = server.getEntityWorld().getScoreboard().createTeam("GlobalEnemy");
+						globalEnemy.setColor(TextFormatting.DARK_GRAY);
+						globalEnemy.setDisplayName("Hostile Forces");
+						globalEnemy.setPrefix("Enemy");
+					}
 					sender.sendMessage(new TextComponentString("World setup done!"));
 					break;
 				case "tpd":

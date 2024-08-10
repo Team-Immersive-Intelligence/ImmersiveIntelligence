@@ -12,8 +12,14 @@ processAudio () {
     touch $1.tmp
     $LOC_FFMPEG -y -i $1 -f ogg -c:a libvorbis -b:a 120k $1.tmp &
     wait
-    rm $1
-    mv $1.tmp $1
+    if [ -s $1.tmp ]
+    then
+      rm $1
+      mv $1.tmp $1
+    else
+      echo "Cannot convert file, output is empty."
+      return;
+    fi
 }
 
 while getopts "ia" arg; do

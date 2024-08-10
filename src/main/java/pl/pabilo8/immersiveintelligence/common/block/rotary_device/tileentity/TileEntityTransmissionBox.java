@@ -122,7 +122,7 @@ public class TileEntityTransmissionBox extends TileEntityIEBase implements ITick
 		{
 			tick = 10;
 			TileEntity t = world.getTileEntity(pos.offset(facing));
-			float torque = RotaryUtils.getTorqueForIEDevice(t, 1);
+			float torque = IIRotaryUtils.getTorqueForIEDevice(t, 1);
 			int output = (int)(20*IEConfig.Machines.dynamo_output*rotation*rofConversionRatio);
 			float speed = output/torque;
 			torque = output/speed;

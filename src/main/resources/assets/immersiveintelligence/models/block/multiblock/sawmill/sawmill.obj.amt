@@ -14,7 +14,7 @@
 		"cardan3_motor": [26, 23.5, 17.25],
 		"grabber_clamp_left": [21.5, 20, 19.75],
 		"grabber_clamp_right": [30.5, 20, 19.75],
-		"sawdust": [7, 0, 16],
+		"sawdust": [4, 0, 16],
 		"sawblade_axis": [8, 12, 15],
 		"sawblade": [0,0,0],
 		"item_input": [24, 20, 21],

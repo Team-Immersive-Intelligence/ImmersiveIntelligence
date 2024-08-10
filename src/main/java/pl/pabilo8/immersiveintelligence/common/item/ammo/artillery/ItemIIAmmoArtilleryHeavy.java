@@ -74,7 +74,7 @@ public class ItemIIAmmoArtilleryHeavy extends ItemIIAmmoBase<EntityAmmoArtillery
 	@Override
 	public float getVelocity()
 	{
-		return 96;
+		return 6;
 //		return Ammunition.artilleryHowiVelocity;
 	}
 

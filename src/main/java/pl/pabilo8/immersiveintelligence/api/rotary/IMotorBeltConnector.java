@@ -3,6 +3,8 @@ package pl.pabilo8.immersiveintelligence.api.rotary;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
+
 /**
  * @author Pabilo8
  * @since 26-12-2019
@@ -14,11 +16,12 @@ public interface IMotorBeltConnector
 	 *
 	 * @param net the new network for this connector.
 	 */
-	void setNetwork(MotorBeltNetwork net);
+	void setNetwork(@Nonnull MotorBeltNetwork net);
 
 	/**
 	 * @return the MotorBeltNetwork this connector is connected to.
 	 */
+	@Nonnull
 	MotorBeltNetwork getNetwork();
 
 	/**

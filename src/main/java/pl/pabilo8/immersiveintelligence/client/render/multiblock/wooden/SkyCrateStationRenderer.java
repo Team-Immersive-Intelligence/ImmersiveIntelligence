@@ -22,8 +22,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.SkyCrateStation;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
-import pl.pabilo8.immersiveintelligence.api.rotary.RotaryUtils;
+import pl.pabilo8.immersiveintelligence.api.rotary.IIRotaryUtils;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.ISkycrateMount;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.wooden.ModelSkyCrateStation;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
@@ -77,8 +76,8 @@ public class SkyCrateStationRenderer extends TileEntitySpecialRenderer<TileEntit
 
 			if(te.hasWorld())
 			{
-				motorTick = (te.getWorld().getTotalWorldTime()%RotaryUtils.getRPMMax()+partialTicks)/RotaryUtils.getRPMMax();
-				progress = te.progress+(partialTicks*te.getEffectiveEnergy()*RotaryUtils.getGearEffectiveness(te.getInventory(), te.getEfficiencyMultiplier()));
+				motorTick = (te.getWorld().getTotalWorldTime()%IIRotaryUtils.getRPMMax()+partialTicks)/IIRotaryUtils.getRPMMax();
+				progress = te.progress+(partialTicks*te.getEffectiveEnergy()*IIRotaryUtils.getGearEffectiveness(te.getInventory(), te.getEfficiencyMultiplier()));
 				crateItem = te.getInventory().get(3);
 				mountItem = te.getInventory().get(4);
 

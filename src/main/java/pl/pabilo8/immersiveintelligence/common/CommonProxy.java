@@ -62,7 +62,7 @@ import pl.pabilo8.immersiveintelligence.api.ammo.PenetrationRegistry;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.api.crafting.DustUtils;
 import pl.pabilo8.immersiveintelligence.api.rotary.CapabilityRotaryEnergy;
-import pl.pabilo8.immersiveintelligence.api.rotary.RotaryUtils;
+import pl.pabilo8.immersiveintelligence.api.rotary.IIRotaryUtils;
 import pl.pabilo8.immersiveintelligence.api.utils.IUpgradableMachine;
 import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
 import pl.pabilo8.immersiveintelligence.api.utils.MinecartBlockHelper;
@@ -611,11 +611,11 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		for(Minecarts value : Minecarts.values())
 			MinecartBlockHelper.blocks.put(stack -> OreDictionary.itemMatches(stack, value.stack.get(), false), world -> value.minecart.apply(world, Vec3d.ZERO));
 
-		RotaryUtils.TORQUE_BLOCKS.put(tileEntity -> tileEntity instanceof TileEntityWindmill,
+		IIRotaryUtils.TORQUE_BLOCKS.put(tileEntity -> tileEntity instanceof TileEntityWindmill,
 				aFloat -> aFloat*MechanicalDevices.dynamoWindmillTorque
 		);
 
-		RotaryUtils.TORQUE_BLOCKS.put(tileEntity -> tileEntity instanceof TileEntityWatermill,
+		IIRotaryUtils.TORQUE_BLOCKS.put(tileEntity -> tileEntity instanceof TileEntityWatermill,
 				aFloat -> aFloat*MechanicalDevices.dynamoWatermillTorque
 		);
 

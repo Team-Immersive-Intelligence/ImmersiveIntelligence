@@ -397,6 +397,18 @@ public class EasyNBT extends Constants.NBT
 		return this;
 	}
 
+	/**
+	 * Removes multiple Tags from the Compound
+	 *
+	 * @param keys keys to be removed
+	 */
+	public EasyNBT without(String... keys)
+	{
+		for(String key : keys)
+			wrapped.removeTag(key);
+		return this;
+	}
+
 	//--- Lambda Expessions ---//
 
 	/**

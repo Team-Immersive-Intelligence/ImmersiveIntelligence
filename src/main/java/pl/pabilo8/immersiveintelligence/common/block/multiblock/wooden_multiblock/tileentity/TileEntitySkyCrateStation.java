@@ -194,7 +194,7 @@ public class TileEntitySkyCrateStation extends TileEntityMultiblockConnectable<T
 			if(animation > 1)
 			{
 				if(progress < getAnimationLength())
-					progress += getEffectiveEnergy()*RotaryUtils.getGearEffectiveness(getInventory(), getEfficiencyMultiplier(), 3);
+					progress += getEffectiveEnergy()*IIRotaryUtils.getGearEffectiveness(getInventory(), getEfficiencyMultiplier(), 3);
 				else
 				{
 					switch(animation)

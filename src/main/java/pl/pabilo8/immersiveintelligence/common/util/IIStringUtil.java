@@ -6,7 +6,7 @@ import net.minecraft.util.text.TextFormatting;
  * @author gabrielv
  * @since 28-07-2024
  */
-public final class IIStringUtil
+public class IIStringUtil
 {
 	public static String getItalicString(String string)
 	{

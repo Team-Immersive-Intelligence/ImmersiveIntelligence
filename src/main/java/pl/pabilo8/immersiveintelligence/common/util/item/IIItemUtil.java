@@ -6,7 +6,7 @@ import net.minecraftforge.oredict.OreDictionary;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.IWrench;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
-public final class IIItemUtil
+public class IIItemUtil
 {
 	public static boolean isWrench(ItemStack stack)
 	{

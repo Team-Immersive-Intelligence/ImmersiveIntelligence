@@ -1,0 +1,27 @@
+{
+  "type": "forge:ore_shaped",
+  "result": {
+    "item": "immersiveintelligence:mechanical_connector",
+    "data": 1,
+    "count": 2
+  },
+  "pattern": [
+    "  s",
+    "crs",
+    "  s"
+  ],
+  "key": {
+    "c": {
+      "item": "immersiveengineering:material",
+      "data": 9
+    },
+    "r": {
+      "type": "forge:ore_dict",
+      "ore": "stickSteel"
+    },
+    "s": {
+      "type": "forge:ore_dict",
+      "ore": "blockSheetmetalSteel"
+    }
+  }
+}

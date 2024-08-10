@@ -12,17 +12,21 @@ import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.client.renderer.vertex.VertexFormat;
+import net.minecraft.client.renderer.vertex.VertexFormatElement;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -57,6 +61,45 @@ public class IIClientUtils
 	private static Minecraft mc()
 	{
 		return Minecraft.getMinecraft();
+	}
+
+	@SideOnly(Side.CLIENT)
+	public static Vec3d[] extractVertexPositions(BakedQuad quad)
+	{
+		int[] vertexData = quad.getVertexData();
+		VertexFormat format = quad.getFormat();
+		int positionIndex = -1;
+
+		//Find the position element index in the VertexFormat
+		for(int i = 0; i < format.getElementCount(); i++)
+		{
+			VertexFormatElement element = format.getElement(i);
+			if(element.getUsage()==VertexFormatElement.EnumUsage.POSITION)
+			{
+				positionIndex = i;
+				break;
+			}
+		}
+
+		if(positionIndex==-1)
+			throw new IllegalStateException("Vertex format does not contain position data");
+
+		//Size of one vertex in the vertexData array
+		int vertexSize = format.getIntegerSize();
+		//4 vertices
+		Vec3d[] positions = new Vec3d[4];
+
+		for(int i = 0; i < 4; i++)
+		{
+			//Base index for the position data of the i-th vertex
+			int baseIndex = i*vertexSize+positionIndex*4;
+			float x = Float.intBitsToFloat(vertexData[baseIndex]);
+			float y = Float.intBitsToFloat(vertexData[baseIndex+1]);
+			float z = Float.intBitsToFloat(vertexData[baseIndex+2]);
+			positions[i] = new Vec3d(x, y, z);
+		}
+
+		return positions;
 	}
 
 	@SideOnly(Side.CLIENT)

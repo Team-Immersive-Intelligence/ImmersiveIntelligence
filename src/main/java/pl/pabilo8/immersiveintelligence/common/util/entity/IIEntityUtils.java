@@ -11,7 +11,7 @@ import javax.annotation.Nonnull;
  * @author Pabilo8
  * @since 23.12.2022
  */
-public final class IIEntityUtils
+public class IIEntityUtils
 {
 	public static Vec3d getEntityCenter(Entity entity)
 	{

@@ -371,6 +371,7 @@ public abstract class TileEntityMultiblockIIBase<T extends TileEntityMultiblockI
 				.map(this::getPOI)
 				.flatMapToInt(Arrays::stream)
 				.distinct()
+				.sorted()
 				.toArray();
 	}
 
