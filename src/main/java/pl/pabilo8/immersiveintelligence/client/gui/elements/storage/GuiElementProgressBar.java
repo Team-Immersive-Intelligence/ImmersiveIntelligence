@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.client.gui.elements;
+package pl.pabilo8.immersiveintelligence.client.gui.elements.storage;
 
 import net.minecraft.client.gui.Gui;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
