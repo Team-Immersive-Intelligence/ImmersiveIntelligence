@@ -67,7 +67,7 @@ public class ModelAmmoProjectile<T extends IAmmoType<T, E>, E extends EntityAmmo
 	public void renderCasing(float progress, int paintColour)
 	{
 		super.renderCasing(progress, paintColour);
-		if(grenade||progress==0||casingFilling==null)
+		if(grenade||progress==0||casingFilling==null||modelCasingFilling==null)
 			return;
 
 		Tessellator tes = Tessellator.getInstance();

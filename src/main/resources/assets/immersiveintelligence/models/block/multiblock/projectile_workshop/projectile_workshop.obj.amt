@@ -1,7 +1,40 @@
 {
 	"origins": {
 		"lid1": [25, 7, -17],
-		"lid2": [8, 5.525, -17]
+		"lid2": [8, 5.525, -17],
+		"conveyor": [16.39372, 7.01754, 6.91545],
+		"interior": [8.5, 30, 10],
+		"core_workshop": [8.5, 30, 10],
+		"press": [14.99999, 17, 21.99999],
+		"piston": [15, 23, 22],
+		"inserter_cw": [12, -2, 6],
+		"lower_cw": [12, 2, 6],
+		"upper_cw": [12, 15.5, 6],
+		"core_filler": [8.5, 30, 9],
+		"inserter_cf": [12, -2, 6],
+		"lower_cf": [12, 2, 6],
+		"upper_cf": [12, 15.5, 6],
+		"pickerLeft_cf": [14, 26, 6],
+		"pickerLeft2_cf": [14, 29, 6],
+		"pickerRight_cf": [10, 26, 6],
+		"pickerRight2_cf": [10, 29, 6],
+		"nozzle": [15, 20.66667, 22],
+		"item": [1, 0, 20.5],
+		"item_out": [1, 0, 20.5]
 	},
-	"hierarchy": {}
+	"hierarchy": {
+		"press": "core_workshop",
+		"piston": "press",
+		"inserter_cw": "core_workshop",
+		"lower_cw": "inserter_cw",
+		"upper_cw": "lower_cw",
+		"inserter_cf": "core_filler",
+		"lower_cf": "inserter_cf",
+		"upper_cf": "lower_cf",
+		"pickerLeft_cf": "upper_cf",
+		"pickerLeft2_cf": "pickerLeft_cf",
+		"pickerRight_cf": "upper_cf",
+		"pickerRight2_cf": "pickerRight_cf",
+		"nozzle": "core_filler"
+	}
 }

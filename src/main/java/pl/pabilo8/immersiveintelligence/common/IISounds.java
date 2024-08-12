@@ -255,6 +255,10 @@ public class IISounds
 	public static SoundEvent metalBreadboxOpen = registerSound("metal_breadbox_open");
 	@ModSound(sounds = {"device/hatch/breadbox/close{0..1}"}, subtitle = "metal_hatch_close")
 	public static SoundEvent metalBreadboxClose = registerSound("metal_breadbox_close");
+	@ModSound(sounds = {"device/hatch/slide/open{0..0}"}, subtitle = "metal_hatch_open")
+	public static SoundEvent metalSlideOpen = registerSound("metal_slide_open");
+	@ModSound(sounds = {"device/hatch/slide/close{0..0}"}, subtitle = "metal_hatch_close")
+	public static SoundEvent metalSlideClose = registerSound("metal_slide_close");
 
 	@ModSound(sounds = {"device/hatch/vise/open0"}, subtitle = "*")
 	public static SoundEvent viseOpen = registerSound("vise_open");

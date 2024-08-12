@@ -1,9 +1,16 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity;
 
 import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorageAdvanced;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.world.World;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseType;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
@@ -12,15 +19,18 @@ import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.AmmunitionAssembler;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
+import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockAmmunitionAssembler;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionSingle;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionMulti;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockInteractablePart;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author Pabilo8
@@ -28,8 +38,10 @@ import javax.annotation.Nonnull;
  * @ii-approved 0.3.1
  * @since 04.03.2021
  */
-public class TileEntityAmmunitionAssembler extends TileEntityMultiblockProductionSingle<TileEntityAmmunitionAssembler, AmmunitionAssemblerRecipe> implements IBooleanAnimatedPartsBlock
+public class TileEntityAmmunitionAssembler extends TileEntityMultiblockProductionMulti<TileEntityAmmunitionAssembler, AmmunitionAssemblerRecipe> implements IBooleanAnimatedPartsBlock
 {
+	public String NBT_KEY_EFFECT = "effect";
+
 	public static final int SLOT_CORE = 0, SLOT_CASING = 1, SLOT_OUTPUT = 2;
 	public FuseType fuse = FuseType.CONTACT;
 	@SyncNBT
@@ -51,32 +63,51 @@ public class TileEntityAmmunitionAssembler extends TileEntityMultiblockProductio
 	}
 
 	@Override
+	protected void onUpdate()
+	{
+		super.onUpdate();
+		hatch.update();
+	}
+
+	@Override
 	protected int[] listAllPOI(MultiblockPOI poi)
 	{
 		switch(poi)
 		{
 			case ITEM_INPUT:
-				return new int[]{18, 20};
+				return getPOI("item_input");
 			case ITEM_OUTPUT:
-				return new int[]{34};
+				return getPOI("item_output");
 			case REDSTONE_INPUT:
-				return new int[]{15};
+				return getPOI("redstone_input");
 			case DATA_INPUT:
-				return new int[]{8};
+				return getPOI("data_input");
 			case ENERGY_INPUT:
-				return new int[]{50};
+				return getPOI("energy_input");
 		}
 		return new int[0];
 	}
 
 	@Override
+	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing)
+	{
+		if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+			return (T)(isPOI("input_core")?master().coreInputHandler: master().casingInputHandler);
+		return super.getCapability(capability, facing);
+	}
+
+	@Override
 	public boolean isStackValid(int i, ItemStack stack)
 	{
-		if(i==0)
-			return stack.getItem() instanceof IAmmoTypeItem&&((IAmmoTypeItem<?, ?>)stack.getItem()).isBulletCore(stack);
-		else if(i==1)
-			return AmmunitionAssemblerRecipe.RECIPES.stream().anyMatch(a -> a.casingInput.matchesItemStackIgnoringSize(stack));
-		return false;
+		switch(i)
+		{
+			case SLOT_CORE:
+				return stack.getItem() instanceof IAmmoTypeItem&&((IAmmoTypeItem<?, ?>)stack.getItem()).isBulletCore(stack);
+			case SLOT_CASING:
+				return AmmunitionAssemblerRecipe.RECIPES.stream().anyMatch(a -> a.casingInput.matchesItemStackIgnoringSize(stack));
+			default:
+				return false;
+		}
 	}
 
 	@Override
@@ -90,13 +121,13 @@ public class TileEntityAmmunitionAssembler extends TileEntityMultiblockProductio
 	@Override
 	public float getMinProductionOffset()
 	{
-		return 0;
+		return 0.8f;
 	}
 
 	@Override
 	public int getMaxProductionQueue()
 	{
-		return 0;
+		return 2;
 	}
 
 	@Override
@@ -104,8 +135,29 @@ public class TileEntityAmmunitionAssembler extends TileEntityMultiblockProductio
 	{
 		if(!inventory.get(SLOT_CORE).isEmpty()&&!inventory.get(SLOT_CASING).isEmpty())
 			for(AmmunitionAssemblerRecipe recipe : AmmunitionAssemblerRecipe.RECIPES)
-				if(recipe.casingInput.matchesItemStack(inventory.get(SLOT_CASING))&&recipe.coreInput.matches(inventory.get(SLOT_CORE)))
-					return new IIMultiblockProcess<>(recipe);
+				if(!recipe.advanced&&recipe.casingInput.matchesItemStack(inventory.get(SLOT_CASING))&&recipe.coreInput.matches(inventory.get(SLOT_CORE)))
+				{
+					IIMultiblockProcess<AmmunitionAssemblerRecipe> process = new IIMultiblockProcess<>(recipe)
+							.withNBT(nbt -> nbt.withItemStack(NBT_KEY_EFFECT, recipe.process.apply(inventory.get(SLOT_CORE), inventory.get(SLOT_CASING)))
+									.withItemStack("core", inventory.get(SLOT_CORE))
+									.withString("ammo", recipe.ammoItem.getName())
+							);
+					inventory.get(SLOT_CORE).shrink(1);
+					inventory.get(SLOT_CASING).shrink(1);
+					return process;
+				}
+		return null;
+	}
+
+	@Override
+	protected IIMultiblockProcess<AmmunitionAssemblerRecipe> getProcessFromNBT(EasyNBT nbt)
+	{
+		AmmunitionAssemblerRecipe recipe = AmmunitionAssemblerRecipe.RECIPES.stream()
+				.filter(r -> !r.advanced)
+				.filter(r -> r.ammoItem.getName().equals(nbt.getString("ammo")))
+				.findFirst().orElse(null);
+		if(recipe!=null)
+			return new IIMultiblockProcess<>(recipe);
 		return null;
 	}
 
@@ -127,9 +179,7 @@ public class TileEntityAmmunitionAssembler extends TileEntityMultiblockProductio
 	@Override
 	protected void onProductionFinish(IIMultiblockProcess<AmmunitionAssemblerRecipe> process)
 	{
-		inventory.get(SLOT_CORE).shrink(1);
-		inventory.get(SLOT_CASING).shrink(1);
-		outputOrDrop(process.recipe.process.apply(inventory.get(SLOT_CORE), inventory.get(SLOT_CASING)), null, facing.getOpposite(), 34);
+		outputOrDrop(process.processData.getItemStack(NBT_KEY_EFFECT), null, facing.getOpposite(), 34);
 	}
 
 	//--- Data Handling ---//
@@ -169,15 +219,27 @@ public class TileEntityAmmunitionAssembler extends TileEntityMultiblockProductio
 			this.fuseConfig = message.getInteger("fuse_config");
 	}
 
-	public ItemStack getProductionResult()
+	public ItemStack getProductionResult(int processID)
 	{
-		if(this.currentProcess==null)
+		if(processQueue.size() <= processID)
 			return ItemStack.EMPTY;
-		return this.currentProcess.recipe.process.apply(
-				this.inventory.get(TileEntityAmmunitionAssembler.SLOT_CORE),
-				this.inventory.get(TileEntityAmmunitionAssembler.SLOT_CASING)
-		);
+		return this.processQueue.get(processID).processData.getItemStack(NBT_KEY_EFFECT);
 
+	}
+
+	@Override
+	public void onEntityCollision(World world, Entity entity)
+	{
+		if(!world.isRemote&&entity instanceof EntityItem)
+		{
+			ItemStack stack = ((EntityItem)entity).getItem();
+			if(stack.isEmpty()) return;
+
+			if(isPOI("input_core"))
+				((EntityItem)entity).setItem(master().coreInputHandler.insertItem(0, stack, false));
+			else if(isPOI("input_casing"))
+				((EntityItem)entity).setItem(master().casingInputHandler.insertItem(0, stack, false));
+		}
 	}
 
 	@Override
@@ -189,7 +251,10 @@ public class TileEntityAmmunitionAssembler extends TileEntityMultiblockProductio
 	@Override
 	public void onAnimationChangeServer(boolean state, int part)
 	{
-		hatch.setState(state);
-		IIPacketHandler.sendToClient(getPos(), getWorld(), new MessageBooleanAnimatedPartsSync(state, part, getPos()));
+		if(hatch.setState(state))
+		{
+			world.playSound(null, getPOIPos("lid"), state?IISounds.metalSlideOpen: IISounds.metalSlideClose, SoundCategory.BLOCKS, 1f, 1f);
+			IIPacketHandler.sendToClient(getPos(), getWorld(), new MessageBooleanAnimatedPartsSync(state, part, getPos()));
+		}
 	}
 }

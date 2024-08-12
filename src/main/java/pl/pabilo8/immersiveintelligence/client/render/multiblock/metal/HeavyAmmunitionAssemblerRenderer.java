@@ -7,13 +7,11 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.util.Tuple;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
-import pl.pabilo8.immersiveintelligence.api.crafting.AmmunitionAssemblerRecipe;
 import pl.pabilo8.immersiveintelligence.client.render.IIMultiblockRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer.RegisteredTileRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.client.util.amt.*;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMTBullet.BulletState;
-import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityHeavyAmmunitionAssembler;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
@@ -23,7 +21,7 @@ import java.util.HashMap;
  * @author Pabilo8
  * @since 21-06-2019
  */
-@RegisteredTileRenderer(name = "heavy_ammunition_assembler", clazz = TileEntityHeavyAmmunitionAssembler.class)
+@RegisteredTileRenderer(name = "multiblock/heavy_ammunition_assembler", clazz = TileEntityHeavyAmmunitionAssembler.class)
 public class HeavyAmmunitionAssemblerRenderer extends IIMultiblockRenderer<TileEntityHeavyAmmunitionAssembler>
 {
 	AMT[] model;
@@ -38,35 +36,10 @@ public class HeavyAmmunitionAssemblerRenderer extends IIMultiblockRenderer<TileE
 		for(AMT amt : model)
 			amt.defaultize();
 
-		IIAnimationCompiledMap animation = productionAnimations.get(IIContent.itemAmmoRocketLight);
-		float progress = IIAnimationUtils.getDebugProgress(320, partialTicks);
-		animation.apply(progress);
-
 		drawer1.apply(te.drawer1.getProgress(partialTicks));
 		drawer2.apply(te.drawer2.getProgress(partialTicks));
 		drawer3.apply(te.drawer3.getProgress(partialTicks));
 		drawer4.apply(te.drawer4.getProgress(partialTicks));
-
-		/*ItemStack stack = te.getProductionResult();
-		if(!stack.isEmpty())
-		{
-			IAmmoTypeItem<?, ?> item = (IAmmoTypeItem<?, ?>)stack.getItem();
-			IIAnimationCompiledMap anim = productionAnimations.get(item);
-			IAmmoModel<?, ?> model = AmmoRegistry.getGenericModel(item);
-
-			anim.apply(te.getProductionProgress(te.currentProcess, partialTicks));
-			casing.setModel(model);
-			casing.withGunpowderPercentage(1f);
-			casing.withStack(stack, BulletState.CASING);
-			core.setModel(model);
-			core.withStack(stack, BulletState.CORE);
-		}
-		else
-		{
-			casing.setModel(null);
-			core.setModel(null);
-		}*/
-
 
 		applyStandardRotation(te.facing);
 		if(!te.getIsMirrored())
@@ -103,8 +76,8 @@ public class HeavyAmmunitionAssemblerRenderer extends IIMultiblockRenderer<TileE
 
 
 		productionAnimations.clear();
-		productionAnimations.put(IIContent.itemAmmoRocketLight, IIAnimationCompiledMap.create(model, ResLoc.of(IIReference.RES_II, "heavy_ammunition_assembler/rocket_6bcal")));
+		/*productionAnimations.put(IIContent.itemAmmoRocketLight, IIAnimationCompiledMap.create(model, ResLoc.of(IIReference.RES_II, "heavy_ammunition_assembler/rocket_6bcal")));
 		for(AmmunitionAssemblerRecipe recipe : AmmunitionAssemblerRecipe.RECIPES)
-			productionAnimations.put(recipe.ammoItem, IIAnimationCompiledMap.create(model, ResLoc.of(IIReference.RES_II, "heavy_ammunition_assembler/"+recipe.ammoItem.getName())));
+			productionAnimations.put(recipe.ammoItem, IIAnimationCompiledMap.create(model, ResLoc.of(IIReference.RES_II, "heavy_ammunition_assembler/"+recipe.ammoItem.getName())));*/
 	}
 }

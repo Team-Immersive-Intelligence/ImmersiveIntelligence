@@ -39,7 +39,7 @@ public class AmmoRegistry
 	private static final LinkedHashMap<String, AmmoCore> REGISTERED_CORES = new LinkedHashMap<>();
 	private static final LinkedHashMap<String, AmmoPropellant> REGISTERED_PROPELLANTS = new LinkedHashMap<>();
 	@SideOnly(Side.CLIENT)
-	private static final HashMap<IAmmoType<?, ?>, IAmmoModel<?, ?>> REGISTERED_MODELS = new HashMap<>();
+	private static HashMap<IAmmoType<?, ?>, IAmmoModel<?, ?>> REGISTERED_MODELS;
 
 	//--- Registration ---//
 
@@ -151,9 +151,12 @@ public class AmmoRegistry
 	@SideOnly(Side.CLIENT)
 	public static void registerAmmoModels()
 	{
+		if(REGISTERED_MODELS==null)
+			REGISTERED_MODELS = new HashMap<>();
 		REGISTERED_AMMO_TYPES.values().forEach(AmmoRegistry::registerSingleModel);
 	}
 
+	@SideOnly(Side.CLIENT)
 	private static <T extends IAmmoType<T, E>, E extends EntityAmmoBase<? super E>> void registerSingleModel(IAmmoType<?, ?> ammo)
 	{
 		IAmmoType<T, E> generic = (IAmmoType<T, E>)ammo;

@@ -1210,12 +1210,29 @@ public class IIRecipes
 					new IngredientStack(item.getAmmoCoreStack(IIContent.ammoCoreBrass, item.getAllowedCoreTypes()[0])),
 					new IngredientStack(casingStack).setUseNBT(true),
 					128*item.getCaliber(),
+					(item.getCaliber() > 3?140: 70)+(25*Math.max(0, item.getCaliber()-1)), false
+			);
+		}
+
+		for(ItemIIAmmoBase item : new ItemIIAmmoBase[]{IIContent.itemAmmoRocketLight, IIContent.itemAmmoRocketHeavy, IIContent.itemAmmoGuidedMissile, IIContent.itemNavalMine})
+		{
+			assert item!=null;
+			ItemStack casingStack = item.getCasingStack(1);
+			AmmunitionAssemblerRecipe.addRecipe(
+					(core, casing) -> {
+						ItemStack stack = item.getStack(AmmoParts.BULLET);
+						stack.deserializeNBT(core.serializeNBT());
+						return stack;
+					},
+					new IngredientStack(item.getAmmoCoreStack(IIContent.ammoCoreBrass, item.getAllowedCoreTypes()[0])),
+					new IngredientStack(casingStack).setUseNBT(true),
+					128*item.getCaliber(),
 					140+(25*Math.max(0, item.getCaliber()-1)), false
 			);
 		}
 
 		//Explosives and Mines
-		for(Item item : new Item[]{IIContent.blockTripmine.itemBlock, IIContent.blockTellermine.itemBlock, IIContent.blockRadioExplosives.itemBlock, IIContent.itemNavalMine})
+		for(Item item : new Item[]{IIContent.blockTripmine.itemBlock, IIContent.blockTellermine.itemBlock, IIContent.blockRadioExplosives.itemBlock})
 		{
 			assert item!=null;
 			IAmmoTypeItem bullet = (IAmmoTypeItem)item;

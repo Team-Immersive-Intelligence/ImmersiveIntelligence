@@ -631,6 +631,12 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 	@Override
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
 	{
+		if(ID < 0)
+		{
+			IILogger.warn("Trying to access a null GUI on server. Most likely it's work-in-progress or not bound to source yet.");
+			return null;
+		}
+
 		EnumHand hand;
 		TileEntity te = world.getTileEntity(new BlockPos(x, y, z));
 		ItemStack stack = player.getHeldItem(hand = (player.getHeldItem(EnumHand.MAIN_HAND).getItem() instanceof IGuiItem?EnumHand.MAIN_HAND: EnumHand.OFF_HAND));
@@ -662,6 +668,7 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 			}
 		}
 
+		IILogger.warn("Trying to access a GUI on server, but no GUI is registered for ID "+ID);
 		return null;
 	}
 

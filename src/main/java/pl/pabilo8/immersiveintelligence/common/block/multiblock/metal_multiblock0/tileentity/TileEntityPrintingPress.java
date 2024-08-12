@@ -327,6 +327,12 @@ public class TileEntityPrintingPress extends TileEntityMultiblockProductionMulti
 	}
 
 	@Override
+	protected IIMultiblockProcess<PrintOrder> getProcessFromNBT(EasyNBT nbt)
+	{
+		return null;
+	}
+
+	@Override
 	public float getProductionStep(IIMultiblockProcess<PrintOrder> process, boolean simulate)
 	{
 		int perTick = process.recipe.getTotalProcessEnergy()/process.maxTicks;
@@ -515,15 +521,14 @@ public class TileEntityPrintingPress extends TileEntityMultiblockProductionMulti
 		}
 
 		@Override
-		public NBTTagCompound writeToNBT()
+		public EasyNBT writeToNBT()
 		{
 			return EasyNBT.newNBT()
 					.withItemStack("result", result)
 					.withInt("black", blackCost)
 					.withInt("cyan", cyanCost)
 					.withInt("magenta", magentaCost)
-					.withInt("yellow", yellowCost)
-					.unwrap();
+					.withInt("yellow", yellowCost);
 		}
 	}
 }

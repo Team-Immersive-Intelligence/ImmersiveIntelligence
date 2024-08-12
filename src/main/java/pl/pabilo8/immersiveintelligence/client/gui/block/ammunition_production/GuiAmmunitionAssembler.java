@@ -35,9 +35,7 @@ public class GuiAmmunitionAssembler extends GuiAmmunitionBase<TileEntityAmmuniti
 	public GuiAmmunitionAssembler(EntityPlayer player, TileEntityAmmunitionAssembler tile)
 	{
 		super(player, tile, ContainerAmmunitionAssembler::new);
-		IIPacketHandler.sendToServer(
-				new MessageBooleanAnimatedPartsSync(true, blusunrize.immersiveengineering.common.util.Utils.RAND.nextInt(2),
-						tile.getPos()));
+		IIPacketHandler.sendToServer(new MessageBooleanAnimatedPartsSync(true, 0, tile.getPos()));
 	}
 
 	@Override
@@ -120,12 +118,12 @@ public class GuiAmmunitionAssembler extends GuiAmmunitionBase<TileEntityAmmuniti
 
 		drawTexturedModalRect(guiLeft+6+22, guiTop+9+16+6, 185, 176, 61, 34); //progress back
 
-		if(tile.currentProcess!=null)
+		if(!tile.processQueue.isEmpty())
 			drawTexturedModalRect(guiLeft+6+22, guiTop+9+16+6, 62, 176,
-					(int)(61*tile.getProductionProgress(tile.currentProcess, f)), 34); //progress top
+					(int)(61*tile.getProductionProgress(tile.processQueue.get(0), f)), 34); //progress top
 
 		RenderHelper.enableGUIStandardItemLighting();
-		itemRender.renderItemIntoGUI(tile.getProductionResult(), guiLeft+6+64+21+2, guiTop+29+6+4);
+		itemRender.renderItemIntoGUI(tile.getProductionResult(0), guiLeft+6+64+21+2, guiTop+29+6+4);
 		RenderHelper.disableStandardItemLighting();
 
 		if(valueEdit!=null)
@@ -148,10 +146,10 @@ public class GuiAmmunitionAssembler extends GuiAmmunitionBase<TileEntityAmmuniti
 		for(int i = 0; i < FuseType.values().length; i++)
 			drawTexturedModalRect(guiLeft+122+2+(i%3)*21, guiTop+5+5+4+2+(int)Math.floor(i/20f), 221+(i%2)*16, 86+(int)(Math.floor(i/2f)*16), 16, 16);
 
-		if(tile.currentProcess!=null)
+		if(!tile.processQueue.isEmpty())
 		{
 			if(isPointInRegion(6+64+21+2, 29+6+4, 16, 16, mx, my))
-				tooltip.addAll(tile.getProductionResult().getTooltip(ClientUtils.mc().player, mc.gameSettings.advancedItemTooltips?TooltipFlags.ADVANCED: TooltipFlags.NORMAL));
+				tooltip.addAll(tile.getProductionResult(0).getTooltip(ClientUtils.mc().player, mc.gameSettings.advancedItemTooltips?TooltipFlags.ADVANCED: TooltipFlags.NORMAL));
 		}
 		fuseButtons.forEach((button, enumFuseTypes) -> {
 			if(button.isMouseOver())
@@ -173,5 +171,6 @@ public class GuiAmmunitionAssembler extends GuiAmmunitionBase<TileEntityAmmuniti
 				.withString("fuse", tile.fuse.getName())
 				.conditionally(valueEdit!=null, e -> e.withInt("fuse_config", Integer.parseInt(valueEdit.getText())))
 		));
+		IIPacketHandler.sendToServer(new MessageBooleanAnimatedPartsSync(false, 0, tile.getPos()));
 	}
 }

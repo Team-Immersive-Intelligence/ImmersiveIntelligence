@@ -9,7 +9,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fml.relauncher.Side;
@@ -36,7 +35,7 @@ import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionBase;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.IIMultiblockRecipe;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionSingle;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockInteractablePart;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
@@ -104,6 +103,28 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockProduction
 		lid1.update();
 		lid2.update();
 
+		//fill component tank
+		if(hasUpgrade(IIContent.UPGRADE_CORE_FILLER)&&!world.isRemote)
+		{
+			if(!componentInputHandler.getStackInSlot(0).isEmpty())
+			{
+				ItemStack stack = componentInputHandler.getStackInSlot(0);
+				if(componentInside.isEmpty())
+				{
+					Optional<AmmoComponent> matching = AmmoRegistry.getAllComponents().stream().filter(comp -> comp.getMaterial().matchesItemStackIgnoringSize(stack)).findFirst();
+					matching.ifPresent(component -> componentInside = new BulletComponentStack(component, componentInputHandler.extractItem(0, 1, false).getTagCompound()));
+				}
+				else
+				{
+					if(componentInside.matches(stack)&&componentInside.amount+16 <= ProjectileWorkshop.componentCapacity)
+					{
+						componentInside.amount += 16;
+						componentInputHandler.extractItem(0, 1, false);
+					}
+				}
+			}
+		}
+
 		//Stop working when the machine is disabled
 		if(getRedstoneAtPos(0)^redstoneControlInverted)
 			return;
@@ -119,7 +140,6 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockProduction
 		if(isDummy())
 			return;
 
-		fillAmount = nbt.getInteger("fill_amount");
 		componentInside.deserializeNBT(nbt.getCompoundTag("component_inside"));
 		coreType = CoreType.v(nbt.getString("core_type"));
 		upgradeStorage.getUpgradesFromNBT(nbt.getCompoundTag("upgrades"));
@@ -133,12 +153,10 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockProduction
 		if(isDummy())
 			return;
 
-		nbt.setInteger("fill_amount", fillAmount);
 		nbt.setTag("component_inside", componentInside.serializeNBT());
 		nbt.setString("produced_bullet", producedAmmo.getName());
 		nbt.setString("core_type", coreType.getName());
 		nbt.setTag("upgrades", upgradeStorage.saveUpgradesToNBT());
-
 
 	}
 
@@ -150,8 +168,6 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockProduction
 		if(isDummy())
 			return;
 
-		if(message.hasKey("fill_amount"))
-			fillAmount = message.getInteger("fill_amount");
 		if(message.hasKey("component_inside"))
 			componentInside.deserializeNBT(message.getCompoundTag("component_inside"));
 		if(message.hasKey("produced_bullet"))
@@ -174,8 +190,6 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockProduction
 			IAmmoTypeItem bb = AmmoRegistry.getAmmoItem(message.getString("produced_bullet"));
 			producedAmmo = bb==null?IIContent.itemAmmoHeavyArtillery: bb;
 		}
-		if(message.hasKey("fill_amount"))
-			fillAmount = MathHelper.clamp(message.getInteger("fill_amount"), 0, 4);
 	}
 
 	@Override
@@ -240,7 +254,10 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockProduction
 			if(!componentInside.component.matchesBullet(ammo)||remainingSlots-componentSlotsTaken < 0)
 				return null;
 
-			return new IIMultiblockProcess<>(new ProjectileWorkshopRecipe(stack, componentInside));
+			IIMultiblockProcess<ProjectileWorkshopRecipe> out = new IIMultiblockProcess<>(new ProjectileWorkshopRecipe(stack, componentInside));
+			stack.shrink(1);
+			componentInside.subtract(ammo.getCoreMaterialNeeded());
+			return out;
 
 		}
 		else //production
@@ -257,9 +274,16 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockProduction
 			if(!first.isPresent()||stack.getCount() < producedAmmo.getCoreMaterialNeeded())
 				return null;
 
+			IIMultiblockProcess<ProjectileWorkshopRecipe> out = new IIMultiblockProcess<>(new ProjectileWorkshopRecipe(producedAmmo, first.get(), coreType));
 			stack.shrink(producedAmmo.getCoreMaterialNeeded());
-			return new IIMultiblockProcess<>(new ProjectileWorkshopRecipe(producedAmmo, first.get(), coreType));
+			return out;
 		}
+	}
+
+	@Override
+	protected IIMultiblockProcess<ProjectileWorkshopRecipe> getProcessFromNBT(EasyNBT nbt)
+	{
+		return null;
 	}
 
 	@Override
@@ -271,7 +295,7 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockProduction
 	@Override
 	protected boolean attemptProductionOutput(IIMultiblockProcess<ProjectileWorkshopRecipe> process)
 	{
-		outputOrDrop(process.recipe.effect, null, mirrored?facing.rotateY(): facing.rotateYCCW(),
+		outputOrDrop(process.recipe.getEffect(), null, mirrored?facing.rotateYCCW(): facing.rotateY(),
 				getPOI(MultiblockPOI.ITEM_OUTPUT)
 		);
 		return true;
@@ -383,14 +407,13 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockProduction
 
 	}
 
-	public static class ProjectileWorkshopRecipe implements TileEntityMultiblockProductionBase.IIIMultiblockRecipe
+	public static class ProjectileWorkshopRecipe extends IIMultiblockRecipe
 	{
-		private int totalTime;
 		private int energyPerTick;
 
-		IAmmoTypeItem<?, ?> ammo;
-		boolean isFilling;
-		ItemStack effect;
+		public IAmmoTypeItem<?, ?> ammo;
+		public boolean isFilling;
+		public ItemStack effect, ingredient;
 
 		/**
 		 * Production recipe
@@ -403,9 +426,10 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockProduction
 			this.ammo = ammo;
 			this.isFilling = false;
 
-			this.totalTime = ProjectileWorkshop.productionTime*ammo.getCaliber();
+			this.totalProcessTime = ProjectileWorkshop.productionTime*ammo.getCaliber();
 			this.energyPerTick = ProjectileWorkshop.productionEnergyUsage*ammo.getCaliber();
 
+			this.ingredient = core.getMaterial().getExampleStack();
 			this.effect = ammo.getAmmoCoreStack(core, coreType);
 		}
 
@@ -421,7 +445,7 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockProduction
 			this.ammo = (IAmmoTypeItem<?, ?>)inputStack.getItem();
 			this.isFilling = true;
 
-			this.totalTime = ProjectileWorkshop.fillingTime;
+			this.totalProcessTime = ProjectileWorkshop.fillingTime;
 			this.energyPerTick = ProjectileWorkshop.fillingEnergyUsage;
 
 			this.effect = inputStack.copy();
@@ -432,13 +456,13 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockProduction
 		@Override
 		public int getTotalProcessTime()
 		{
-			return totalTime;
+			return totalProcessTime;
 		}
 
 		@Override
 		public int getTotalProcessEnergy()
 		{
-			return energyPerTick*totalTime;
+			return energyPerTick*totalProcessTime;
 		}
 
 		public int getEnergyPerTick()
@@ -458,12 +482,11 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockProduction
 		}
 
 		@Override
-		public NBTTagCompound writeToNBT()
+		public EasyNBT writeToNBT()
 		{
 			return EasyNBT.newNBT()
 					.withBoolean("filling", isFilling)
-					.withItemStack("effect", effect)
-					.unwrap();
+					.withItemStack("effect", effect);
 		}
 	}
 }

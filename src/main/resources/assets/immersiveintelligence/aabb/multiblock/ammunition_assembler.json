@@ -60,5 +60,13 @@
     "30": ["misc_blueprints", "misc_board"]
   },
   "poi": {
+    "lid": [49,1],
+    "input_core": 87,
+    "input_casing": 79,
+    "item_input": [79, 87],
+    "item_output": [32,72],
+    "redstone_input": 45,
+    "data_input": 43,
+    "energy_input": 136
   }
 }

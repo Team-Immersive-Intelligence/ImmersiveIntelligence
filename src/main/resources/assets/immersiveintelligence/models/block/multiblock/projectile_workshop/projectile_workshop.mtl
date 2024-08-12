@@ -14,6 +14,10 @@ newmtl common_thingies
 map_Kd immersiveintelligence:blocks/common/common_thingies
 newmtl common_copper_cable
 map_Kd immersiveintelligence:blocks/common/common_copper_cable
+newmtl advanced_inserter
+map_Kd immersiveintelligence:blocks/metal_device/inserter/inserter_dim
+newmtl tool_red
+map_Kd immersiveintelligence:blocks/metal_device/inserter/tool_dim
 newmtl conveyor_off
 map_Kd immersiveengineering:blocks/conveyor_off
 newmtl conveyor
