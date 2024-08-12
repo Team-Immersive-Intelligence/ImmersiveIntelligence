@@ -37,3 +37,6 @@ src/main/generated/*
 # System
 *Thumbs.db
 *.ini
+
+# Certs
+cert/*
