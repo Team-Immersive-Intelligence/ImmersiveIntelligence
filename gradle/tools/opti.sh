@@ -18,6 +18,7 @@ processAudio () {
       mv $1.tmp $1
     else
       echo "Cannot convert file, output is empty."
+      rm $1.tmp
       return;
     fi
 }
