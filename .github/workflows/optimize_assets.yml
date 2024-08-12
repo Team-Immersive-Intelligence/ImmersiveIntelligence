@@ -36,7 +36,7 @@ jobs:
         uses: fregante/setup-git-user@v2
 
       - name: Setup Git User
-        run: git config --global user.name "Automated Carver Device(tm)"
+        run: git config --global user.name "Automated Carver Device(tm)" ; git config --global user.email "carverbot@iiteam.net"
 
       - name: Verify Changed files
         uses: tj-actions/verify-changed-files@v20
