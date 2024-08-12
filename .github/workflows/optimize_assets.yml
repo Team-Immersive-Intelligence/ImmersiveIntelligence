@@ -49,9 +49,11 @@ jobs:
 
       - name: Create Pull Request
         if: steps.verify-changed-files.outputs.files_changed == 'true'
-        uses: peter-evans/create-pull-request@v5.0.2
+        uses: peter-evans/create-pull-request@v6
         with:
           title: Optimized Assets
           commit-message: optimized assets
           body: Assets were automatically optimized.
+          author: CarverBot <carverbot@iiteam.net>
+          committer: CarverBot <carverbot@iiteam.net>
           token: ${{ secrets.OPTIMIZATION_TOKEN }}
