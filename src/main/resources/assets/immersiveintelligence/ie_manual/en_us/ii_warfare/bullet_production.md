@@ -39,9 +39,11 @@ It is also possible to do so using the data system.
 # core_component
 @upgradable
 
-The Projectile Workshop can be upgraded to become a Projectile Filler. This changes the role to filling [cores] produced by other Projectile Workshops using <link;bullet_components;§o§nComponents§r;>.
+The Projectile Workshop can be upgraded to become a Projectile Filler. This changes the role to filling 
 
-Tha amount of components can be specified using the interface or through the data system. The max amount is determined by the core type.
+[cores] produced by other Projectile Workshops using <link;bullet_components;§o§nComponents§r;>.
+
+An amount of components can be specified using the interface or through the data system. The max amount is determined by the core type.
 
 # ProWor 3
 The core is produced in the **Projectile Forge** using various metal nuggets, such as lead. Keep in mind to use [the appropriate metal for the job](bullet_cores)
