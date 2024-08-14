@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "hhh",
+    "sts",
+    "hhh"
+  ],
+  "key": {
+    "h": {
+      "type": "forge:ore_dict",
+      "ore": "materialHMX"
+    },
+    "s": {
+      "type": "forge:ore_dict",
+      "ore": "plateSteel"
+    },
+    "t": {
+      "item": "minecraft:tnt"
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:hmx_dynamite",
+    "data": 0,
+    "count": 1
+  }
+}

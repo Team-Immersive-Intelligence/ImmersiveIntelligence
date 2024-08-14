@@ -516,6 +516,8 @@ tile.immersiveintelligence.rubber_leaves.rubber.name=Rubber Tree Leaves
 tile.immersiveintelligence.rubber_sapling.rubber.name=Rubber Tree Sapling
 tile.immersiveintelligence.charred_log.main.name=Charred Log
 
+tile.immersiveintelligence.hmx_dynamite.name=HMX Dynamite
+
 tile.immersiveintelligence.concrete_decoration.concrete_bricks.name=Concrete Bricks
 tile.immersiveintelligence.concrete_decoration_slab.concrete_bricks.name=Concrete Bricks Slab
 tile.immersiveintelligence.concrete_decoration_stairs_concrete_bricks.name=Concrete Bricks Slab
