@@ -18,8 +18,8 @@ repositories {
 }
 
 dependencies {
-    annotationProcessor 'com.github.Team-Immersive-Intelligence:ModworksProcessor:1.1.2'
-    compileOnly 'com.github.Team-Immersive-Intelligence:ModworksProcessor:1.1.2'
+    annotationProcessor 'pl.pabilo8:modworks-processor:1.1.2'
+    compileOnly 'pl.pabilo8:modworks-processor:1.1.2'
 }
 
 compileJava {
