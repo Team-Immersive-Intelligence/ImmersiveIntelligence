@@ -1,0 +1,71 @@
+apply plugin: 'signing'
+
+if(ii_generateCoreJar=='true')
+{
+    tasks.register('signCoreJar') {
+        group 'signing'
+
+        onlyIf {
+            hasKeyStore()
+        }
+
+        outputs.upToDateWhen {false}
+
+        dependsOn reobfCoreJar
+
+        doLast {
+            ant.signjar(
+                    destDir: "${signdir.absolutePath}",
+                    jar: 'build/jars/*.jar',
+                    alias:getOr("SIGNING_KEY_ALIAS", project.keyStoreAlias),
+                    storetype:"jks",
+                    keystore:"${getOr("SIGNING_KEY_STORE_PATH", project.keyStore).absolutePath}",
+                    storepass:getOr("SIGNING_STORE_PASSWORD", project.keyStorePass),
+                    keypass:getOr("SIGNING_KEY_PASSWORD", project.keyStoreKeyPass),
+                    verbose:true,
+                    preservelastmodified:"true",
+                    tsaurl:getOr("SIGNING_TIMESTAMP_URL", project.timestampUrl)
+            )
+        }
+    }
+}
+
+tasks.register('signMainJar') {
+    group 'signing'
+    onlyIf {
+        hasKeyStore()
+    }
+
+    outputs.upToDateWhen {false}
+
+    dependsOn reobfJar
+
+    doLast {
+        def signdir  = new File("$buildDir/libs")
+        signdir.mkdirs()
+
+        ant.signjar(
+                destDir: "${signdir.absolutePath}",
+                jar: 'build/libs/*.jar',
+                alias:getOr("SIGNING_KEY_ALIAS", project.keyStoreAlias),
+                storetype:"jks",
+                keystore:"${getOr("SIGNING_KEY_STORE_PATH", project.keyStore)}",
+                storepass:getOr("SIGNING_STORE_PASSWORD", project.keyStorePass),
+                keypass:getOr("SIGNING_KEY_PASSWORD", project.keyStoreKeyPass),
+                verbose:true,
+                preservelastmodified:"true",
+                tsaurl:getOr("SIGNING_TIMESTAMP_URL", project.timestampUrl)
+        )
+    }
+}
+
+boolean hasKeyStore()
+{
+    if (!ii_enableSigning.asBoolean()) return false
+    def keystore = getOr("SIGNING_KEY_STORE_PATH", project.keyStore)
+    if (keystore instanceof File) {
+        return ((File)keystore).exists()
+    } else {
+        return !((String)keystore).isEmpty()
+    }
+}

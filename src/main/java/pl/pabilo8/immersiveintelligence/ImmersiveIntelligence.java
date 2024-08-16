@@ -22,12 +22,14 @@ import pl.pabilo8.immersiveintelligence.common.event.LightEngineerEventHandler;
 import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler;
 import pl.pabilo8.immersiveintelligence.common.util.Reflector;
 
+import java.util.HashMap;
+
 import static pl.pabilo8.immersiveintelligence.ImmersiveIntelligence.MODID;
 import static pl.pabilo8.immersiveintelligence.ImmersiveIntelligence.VERSION;
 
 @Mod(modid = MODID, version = VERSION,
 		//xaxaxa, trick! yuo can't steal mod if mod is steal-proof
-		certificateFingerprint = "770570c49a2652e64a9b29b9b9d9919ca68b7065",
+		certificateFingerprint = "6f1fb405b6cbde5d171b6b19cd772a2868684534",
 		dependencies = "required-after:forge@[14.23.5.2820,);required-after:immersiveengineering@[0.12,);after:immersiveengineering@[0.12,);after:immersiveposts@[0.2,)")
 public class ImmersiveIntelligence
 {
@@ -111,8 +113,10 @@ public class ImmersiveIntelligence
 
 	//If anyone wants to acquire a righteously certified loicense:tm:, ask @Pabilo8, it is probable he can grant you one
 	private static final String[] alternativeCerts = {
-			"4e1045a33d925770c5393a384c1a60f63f8f50e5", //Gabriel
-			"0f6c85efeabec62835f1fb26ff0ad1ae6f1af9cb" //Automated Carver Device(tm)
+			"76e5eda99c40fab9866109081368c155ff13d8c5", // Gabriel
+			"0f6c85efeabec62835f1fb26ff0ad1ae6f1af9cb", // Automated Carver Device(tm)
+			"af8602998f035edd3841decaf8b2f11128fb04a8", // Avalon
+			"c154528873fd332e6245470ebd20019fd0a9515e", // Prism
 	};
 
 	@Mod.EventHandler

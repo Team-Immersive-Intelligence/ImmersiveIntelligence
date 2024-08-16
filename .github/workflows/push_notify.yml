@@ -2,7 +2,7 @@ name: Notify Discord on Push
 
 on:
   push: #Trigger On Push
-    branches: [ "dev/main" ]
+    branches: [ "dev/**" ]
 
 jobs:
   notify-discord:
