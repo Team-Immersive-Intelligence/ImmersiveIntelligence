@@ -20,35 +20,6 @@ tasks.register('coreJar', Jar) {
     group = 'build'
 }
 
-tasks.register('signCoreJar', SignJar) {
-    onlyIf { // Skip the task if our secret data isn't available
-        hasKeyStore()
-    }
-    dependsOn reobfCoreJar
-
-    keyStore = getOr("SIGNING_KEY_STORE_PATH", project.keyStore)
-    alias = getOr("SIGNING_KEY_ALIAS", project.keyStoreAlias)
-    storePass = getOr("SIGNING_STORE_PASSWORD", project.keyStorePass)
-    keyPass = getOr("SIGNING_KEY_PASSWORD", project.keyStoreKeyPass)
-    inputFile = coreJar.archivePath
-    outputFile = coreJar.archivePath
-}
-
-tasks.register('signMainJar', SignJar) {
-    onlyIf { // Skip the task if our secret data isn't available
-        hasKeyStore()
-    }
-    dependsOn reobfJar
-
-    keyStore = getOr("SIGNING_KEY_STORE_PATH",project.keyStore)
-    alias = getOr("SIGNING_KEY_ALIAS",project.keyStoreAlias)
-    storePass = getOr("SIGNING_STORE_PASSWORD",project.keyStorePass)
-    keyPass = getOr("SIGNING_KEY_PASSWORD",project.keyStoreKeyPass)
-    inputFile = jar.archivePath
-    outputFile = jar.archivePath
-}
-build.dependsOn signMainJar
-jar.dependsOn signCoreJar
 def libPrefix = 'META-INF/libraries'
 
 jar {
@@ -64,9 +35,4 @@ jar {
         include '*' // Due to the way Gradle's copy tasks work, we need this line for the JAR to get added
         into libPrefix
     }
-}
-
-boolean hasKeyStore()
-{
-    return !(getOr("SIGNING_KEY_STORE_PATH", project.keyStore).isEmpty())
 }
