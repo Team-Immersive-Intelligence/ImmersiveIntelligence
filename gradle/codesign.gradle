@@ -23,8 +23,7 @@ if(ii_generateCoreJar=='true')
                     storepass:getOr("SIGNING_STORE_PASSWORD", project.keyStorePass),
                     keypass:getOr("SIGNING_KEY_PASSWORD", project.keyStoreKeyPass),
                     verbose:true,
-                    preservelastmodified:"true",
-                    tsaurl:getOr("SIGNING_TIMESTAMP_URL", project.timestampUrl)
+                    preservelastmodified:"true"
             )
         }
     }
