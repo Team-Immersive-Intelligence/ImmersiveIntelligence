@@ -1,0 +1,102 @@
+--------------------------------------------------------------------------------------
+
+Mk.4/5 Mod Setup Script
+Made by Team Immersive Intelligence
+Powered by ForgeGradle 2.3 fork by anatawa12
+
+--------------------------------------------------------------------------------------
+
+1) ABOUT
+This project uses a custom setup script structure.
+The setup script is meant to be modular (to a degree) and consists of multiple scripts (modules) contained in the [gradle/] folder.
+These are:
+ - Boilerplate [boilerplate.gradle] - the core module linking others together and storing the common mod construction code
+ - Modworks [modworks.gradle] - handling the ModWorks annotation processor and resource/code generator
+ - CoreJar [corejar.gradle] - handling the generation of a core jar, stored inside the main mod jar and code signing required to build it
+ - IE Addon [ieaddon.gradle] - handles mod dependencies required to build an Immersive Engineering addon mod
+
+The script offers compatibility with Intellij, which is the IDE preferred by Team II.
+For other IDEs refrain to the standard gradle setup, with additions.
+
+--------------------------------------------------------------------------------------
+
+2) INTELLIJ SETUP
+Import the project folder using [File>New...>Project from Existing Sources]
+The project should automatically be recognised as a gradle project and load the scripts, if it didn't load them, do it manually by using [Gradle>Reload All Gradle Projects].
+
+Navigate to [File>Settings>Build, Execution, Deployment>Build Tools>Gradle] and select 'Build and Run using' to [IntelliJ].
+Navigate to [File>Project Structure] and set SDK to a Java 8 (1.8) SDK. In Team II we use Amazon Corretto 8 both locally and on the GitHub Build Action.
+
+Run the [setupDecompWorkspace] Gradle task located in [forgegradle] category and proceed with the setup.
+The task may error - in such case reload the gradle project and run the task again.
+
+Run the [genIntellijRuns] task to create Run Configurations.
+When selecting a run configuration, set the Classpath (-cp) to [path].[ModName].Main
+
+--------------------------------------------------------------------------------------
+
+3) GRADLE.PROPERTIES
+Below is a list of all properties, what are they used for and their possible values (if applicable)
+Some properties can also be applied from
+
+General Properties
+    [modForge] - Forge Version
+    [modMappings] - MCP Mappings, used to give programmer-friendly names to the decompiled functions
+
+    [modVersion] - Version of the mod, usually in format major-minor-patch, f.e. 1.2.3
+    [modGroup] -
+    [modName] -
+
+Used in MCMOD.INFO file, which provides information about the mod to the in-game mod browser
+    [mcmod_Name], [mcmod_URL], [mcmod_Description], [mcmod_Developer], [mcmod_Contributors]
+
+Script settings
+    [ii_useModworksPreprocessor : true/false] - Whether the project should use the ModWorks Preprocessor (it's a compilation time only dependency (annotation processor) and not a lib required to run the jar)
+    [ii_printSourceSets : true/false] - Whether all source sets locations should be printed
+    [ii_printOutputDir : true/false] - Whether a link to the output directory [build/libs/] should be printed on finishing build, useful a for manually built jar
+
+CoreJar Script Settings
+    [ii_generateCoreJar : true/false] - whether a core jar should be
+    [modATPath] - Access Transformer name
+    [modASMPath] -
+    [modASMClass] -
+
+Jar Signing-Related properties. If keyStore is empty, the code will not be signed
+    [keyStore] - Relative or full path to the keystore file
+    [keyStoreAlias] - Keystore Username
+    [keyStorePass] - Keystore Password
+    [keyStoreKeyPass] - Keystore Key Password
+    [signSHA1] - SHA1 signature of the fingerprint
+
+Gradlephant Banner properties (the gradle elephant icon can be changed in [gradle/docs/gradlephant.txt])
+    [ii_gradlephantTitle] - A mod brought to you by II Team
+    [ii_gradlephantLink] - A link to a project repository or homepage
+
+--------------------------------------------------------------------------------------
+
+4) CUSTOM.GRADLE
+[custom.gradle] is a file ignored by the git repository, which can be used to apply special user configuration for the project.
+An example could be:
+    project.setProperty("someSpecialProperty","value")
+
+    Keep in mind that the property has to exist in [gradle.properties] as well.
+
+Or
+    sourceSets {
+        newly_added {
+            resources {
+                srcDir 'src/specific/folder'
+            }
+        }
+    }
+    To add a new source set (Check gradle documentation)
+
+Or, a more commonly used
+    runClient {
+        args("--username=Pabilo8 --uuid=22153f9b49504028911a7d39a2c80101")
+    }
+    So that running on client will start on a specific account (no password is needed for playing on offline mode)
+
+Settings such as Program Arguments or Environment Variables can also be applied in IntelliJ in Run Configurations
+
+--------------------------------------------------------------------------------------
