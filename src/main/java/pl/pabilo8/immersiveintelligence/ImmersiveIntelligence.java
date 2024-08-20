@@ -22,14 +22,12 @@ import pl.pabilo8.immersiveintelligence.common.event.LightEngineerEventHandler;
 import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler;
 import pl.pabilo8.immersiveintelligence.common.util.Reflector;
 
-import java.util.HashMap;
-
 import static pl.pabilo8.immersiveintelligence.ImmersiveIntelligence.MODID;
 import static pl.pabilo8.immersiveintelligence.ImmersiveIntelligence.VERSION;
 
 @Mod(modid = MODID, version = VERSION,
 		//xaxaxa, trick! yuo can't steal mod if mod is steal-proof
-		certificateFingerprint = "70f1d0d443f1999d4df711bb6f990862cf68a0bc",
+		certificateFingerprint = "770570c49a2652e64a9b29b9b9d9919ca68b7065",
 		dependencies = "required-after:forge@[14.23.5.2820,);required-after:immersiveengineering@[0.12,);after:immersiveengineering@[0.12,);after:immersiveposts@[0.2,)")
 public class ImmersiveIntelligence
 {

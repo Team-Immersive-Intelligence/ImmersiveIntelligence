@@ -14,18 +14,24 @@ if(ii_generateCoreJar=='true')
         dependsOn reobfCoreJar
 
         doLast {
+            def signdir  = new File("$buildDir/libs")
+            signdir.mkdirs()
             ant.signjar(
                     destDir: "${signdir.absolutePath}",
-                    jar: 'build/jars/*.jar',
+                    jar: 'build/libs/*-core.jar',
                     alias:getOr("SIGNING_KEY_ALIAS", project.keyStoreAlias),
                     storetype:"jks",
-                    keystore:"${getOr("SIGNING_KEY_STORE_PATH", project.keyStore).absolutePath}",
+                    keystore:"${getOr("SIGNING_KEY_STORE_PATH", project.keyStore)}",
                     storepass:getOr("SIGNING_STORE_PASSWORD", project.keyStorePass),
                     keypass:getOr("SIGNING_KEY_PASSWORD", project.keyStoreKeyPass),
-                    verbose:true,
                     preservelastmodified:"true"
+                    //verbose:true
             )
         }
+    }
+
+    tasks.coreJar.finalizedBy() {
+        signCoreJar
     }
 }
 
@@ -42,7 +48,6 @@ tasks.register('signMainJar') {
     doLast {
         def signdir  = new File("$buildDir/libs")
         signdir.mkdirs()
-
         ant.signjar(
                 destDir: "${signdir.absolutePath}",
                 jar: 'build/libs/*.jar',
@@ -51,9 +56,8 @@ tasks.register('signMainJar') {
                 keystore:"${getOr("SIGNING_KEY_STORE_PATH", project.keyStore)}",
                 storepass:getOr("SIGNING_STORE_PASSWORD", project.keyStorePass),
                 keypass:getOr("SIGNING_KEY_PASSWORD", project.keyStoreKeyPass),
-                verbose:true,
-                preservelastmodified:"true",
-                tsaurl:getOr("SIGNING_TIMESTAMP_URL", project.timestampUrl)
+                preservelastmodified:"true"
+                //tsaurl:getOr("SIGNING_TIMESTAMP_URL", project.timestampUrl)
         )
     }
 }
