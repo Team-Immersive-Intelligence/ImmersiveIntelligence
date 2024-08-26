@@ -38,3 +38,6 @@ src/main/generated/*
 
 # Certs
 cert/*
+
+# Act
+.secret

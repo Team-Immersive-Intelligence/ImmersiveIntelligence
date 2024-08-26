@@ -1,4 +1,4 @@
-name: Build Project
+name: Release a Dev Build
 
 on:
   workflow_dispatch: #Manual Trigger
@@ -8,14 +8,14 @@ jobs:
     runs-on: ubuntu-latest
     name: Create a Dev Build
     env:
-      GITHUB_USERNAME: ${{ github.actor }}
-      GITHUB_TOKEN: ${{ secrets.OPTIMIZATION_TOKEN }}
+      GITHUB_USERNAME: CarverBot
+      GITHUB_TOKEN: ${{ secrets.CARVERBOT_TOKEN }}
       MINECRAFT_VERSION: 1.12.2
       JAVA_VERSION: 8
       VERSION: 1.12.2
       RELEASE_NAME: Immersive-Intelligence-0.3.1-dev$
-      MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
-      CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
+      CURSEFORGE_TOKEN: ${{ secrets.DEPT_CURSEFORGE }}
+      MODRINTH_TOKEN: ${{ secrets.DEPT_MODRINTH }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -67,20 +67,20 @@ jobs:
 
       - name: Notify Discord
         env:
-          WEBHOOK: ${{ secrets.DISCORD_COMMITS_WEBHOOK }}
+          WEBHOOK: ${{ secrets.WH_RELEASE_DEV }}
           MOD_NAME: ${{ steps.rp.outputs.mcmod_Name }}
           MOD_DEVOLOPER: ${{ steps.rp.outputs.mcmod_Developer }}
           MOD_URL: ${{ steps.rp.outputs.mcmod_URL }}
         run: chmod -R a+rX ./gradle/tools/* ; bash ./gradle/tools/discord_build.sh -i
 
-      #Updates build version number for publishing       
+      #Updates build version number for publishing
       - name: Increment Version Variable
         id: increment_version
         uses: action-pack/increment@v2
         with:
-          name: 'RELEASE_NAME'
-          token: ${{ secrets.REPO_ACCESS_TOKEN }}
-          value: 'dev1'
+          name: 'RELEASE_NUMBER'
+          token: ${{ secrets.CARVERBOT_TOKEN }}
+          org: true
 
       - name: Release on Github
         uses: softprops/action-gh-release@v2
