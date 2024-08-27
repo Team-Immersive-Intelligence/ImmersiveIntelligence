@@ -360,6 +360,7 @@ public class ClientProxy extends CommonProxy
 		IIContent.itemAssaultRifle.setTileEntityItemStackRenderer(new AssaultRifleRenderer().subscribeToList("assault_rifle"));
 		IIContent.itemRifle.setTileEntityItemStackRenderer(new RifleRenderer().subscribeToList("rifle"));
 		IIContent.itemSubmachinegun.setTileEntityItemStackRenderer(new SubmachinegunRenderer().subscribeToList("submachinegun"));
+		IIContent.itemShotgun.setTileEntityItemStackRenderer(new ShotgunRenderer().subscribeToList("shotgun"));
 
 		//IIContent.itemBinoculars.setTileEntityItemStackRenderer(new BinocularsRenderer().subscribeToList("binoculars"));
 		IIContent.itemRadioTuner.setTileEntityItemStackRenderer(new RadioTunerRenderer().subscribeToList("radio_tuner"));

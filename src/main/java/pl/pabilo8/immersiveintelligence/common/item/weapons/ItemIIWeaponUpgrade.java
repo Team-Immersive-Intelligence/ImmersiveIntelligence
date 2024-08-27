@@ -60,7 +60,8 @@ public class ItemIIWeaponUpgrade extends ItemIISubItemsBase<WeaponUpgrade> imple
 		AUTOREVOLVER(0x2c305b, '\u24ba'),
 		ASSAULT_RIFLE(0xff6440, '\u24bb'),
 		SPIGOT_MORTAR(0x7a538d, '\u24bc'),
-		RIFLE(0x84820e, '\u24bd');
+		RIFLE(0x84820e, '\u24bd'),
+		SHOTGUN(0x3af0ed, '\u24bd');
 
 		public final int color;
 		public final char symbol;
@@ -142,6 +143,9 @@ public class ItemIIWeaponUpgrade extends ItemIISubItemsBase<WeaponUpgrade> imple
 		RAILGUN_ASSISTED_CHAMBER(WeaponType.ASSAULT_RIFLE,
 				(stack, nbt) -> nbt.setBoolean("energy", true),
 				"gyroscopic_stabilizer", "electric_firing_motor"),
+
+		//--- Shotgun ---//
+		SHOTGUN_REVOLVER_DRUM_MAGAZINE(WeaponType.SHOTGUN),
 
 		//--- Autorevolver ---//
 //
@@ -352,5 +356,9 @@ public class ItemIIWeaponUpgrade extends ItemIISubItemsBase<WeaponUpgrade> imple
 		rifle.addUpgradePart(easyNBT -> easyNBT.hasKey("melee"), "bayonet");
 		rifle.addUpgradePart(hasUpgrade(WeaponUpgrade.EXTENDED_BARREL), "extended_barrel");
 		rifle.addUpgradePart(hasUpgrade(WeaponUpgrade.SEMI_AUTOMATIC), "semi_automatic");
+
+		//--- Shotgun ---//
+		IIUpgradableItemRendererAMT<?> shotgun = IIContent.itemShotgun.getItemRenderer();
+		shotgun.addUpgradePart(hasUpgrade(WeaponUpgrade.SHOTGUN_REVOLVER_DRUM_MAGAZINE), "shotgun_revolver_drum_magazine");
 	}
 }

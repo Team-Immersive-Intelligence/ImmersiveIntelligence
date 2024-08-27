@@ -47,6 +47,9 @@ public class ItemIIAmmoCasing extends ItemIISubItemsBase<Casing>
 		LIGHT_ARTILLERY_6BCAL,
 
 		@IIItemProperties(stackSize = 24)
+		SHOTGUN_3BCAL,
+
+		@IIItemProperties(stackSize = 24)
 		AUTOCANNON_3BCAL,
 		@GeneratedSubItemModel(customTexturePath = "bullets/casings/machinegun_2bcal")
 		@IIItemProperties(stackSize = 24)

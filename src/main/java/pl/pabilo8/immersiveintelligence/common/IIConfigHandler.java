@@ -1391,6 +1391,51 @@ public class IIConfigHandler
 				public static int enemyAttractRange = 32;
 			}
 
+			public static class Shotgun
+			{
+				@Comment({"Time required to reload a stick magazine in SMG. (in ticks)"})
+				public static int bulletReloadTime = 20;
+
+				@Comment({"Time required to reload a drum magazine in SMG. (in ticks)"})
+				public static int magazineReloadTime = 65;
+
+				@Comment({"Time required to aim the SMG. (in ticks)"})
+				public static int clipSize = 8;
+
+				@Comment({"Base Clip Size plus exnteded clip (8+4)"})
+				public static int extendedClipSize = 4;
+
+				@Comment({"Time required to aim the SMG. (in ticks)"})
+				public static int aimTime = 15;
+
+				@Comment({"Time required to fire a single bullet."})
+				public static int bulletFireTime = 20;
+
+				@Comment({"Time required to fire a single bullet."})
+				public static int bulletFireTimeSemiAuto = 10;
+
+				@Comment({"Maximum amount of horizontal recoil."})
+				public static float longBarrelVelocityMod = 2.25f;
+
+				@Comment({"Amount of horizontal recoil after taking a shot."})
+				public static float recoilHorizontal = 0.5f;
+
+				@Comment({"Amount of vertical recoil after taking a shot."})
+				public static float recoilVertical = 2.75f;
+
+				@Comment({"Maximum amount of horizontal recoil."})
+				public static float maxRecoilHorizontal = 3.5f;
+
+				@Comment({"Maximum amount of vertical recoil."})
+				public static float maxRecoilVertical = 12f;
+
+				@Comment({"Amount of vertical recoil after taking a shot."})
+				public static float recoilSemiAutoVertical = 1f;
+
+				@Comment({"Range in which enemies will be attracted to the gunshot."})
+				public static int enemyAttractRange = 32;
+			}
+
 			public static class Submachinegun
 			{
 				@Comment({"Time required to reload a stick magazine in SMG. (in ticks)"})
