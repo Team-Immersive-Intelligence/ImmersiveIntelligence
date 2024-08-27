@@ -16,7 +16,7 @@ cat <<EOF
       "title": "Work Progress Report",
       "color": 3617648,
       "description": "We hereby report that [**$REPO_NAME**](https://github.com/$REPO) has received following new commits\\n \
-      $( git log $COMMIT_FROM...$COMMIT_TO --format="[\`%h\`](https://github.com/$REPO/commit/%h) %s\\n" | tr -d '\n' )",
+      $( git log $COMMIT_FROM...$COMMIT_TO --format="[\`%h\`](https://github.com/$REPO/commit/%h) %s\\n" | jq @json | tr -d '\n' )",
       "color": 2631733,
       "fields": [],
       "footer": {

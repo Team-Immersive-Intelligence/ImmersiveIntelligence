@@ -7,7 +7,7 @@ on:
 jobs:
   check:
     runs-on: ubuntu-latest
-    name: Check Pull Request's Quality
+    name: Compile and Run Checks
     env:
       GITHUB_USERNAME: ${{ github.actor }}
       GITHUB_TOKEN: ${{ secrets.OPTIMIZATION_TOKEN }}
@@ -41,6 +41,7 @@ jobs:
           name: Tests            # Name of the check run which will be created
           path: build/test-results/test/TEST-*.xml    # Path to test results
           reporter: java-junit        # Format of test results
+          token: ${{ secrets.CARVERBOT_TOKEN }}
 
   notify-public-discord:
     continue-on-error: true
@@ -53,6 +54,8 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+      - name: Install JQ
+        run: sudo apt install jq
       - name: Notify Discord
         if: ${{ github.ref == 'refs/heads/dev/main' }}
         env:
@@ -74,6 +77,8 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+      - name: Install JQ
+        run: sudo apt install jq
       - name: Notify Discord
         env:
           COMMIT_FROM: ${{ github.event.before }}
