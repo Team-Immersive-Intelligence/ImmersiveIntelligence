@@ -350,6 +350,8 @@ public class EasyNBT extends Constants.NBT
 
 		if(value instanceof Integer)
 			return withInt(name, (Integer)value);
+		if(value instanceof Byte)
+			return withInt(name, (Byte)value);
 		if(value instanceof Float)
 			return withFloat(name, (Float)value);
 		if(value instanceof Double)
@@ -987,6 +989,12 @@ public class EasyNBT extends Constants.NBT
 
 			else if(element instanceof Integer)
 				list.appendTag(new NBTTagInt(((Integer)element)));
+			else if(element instanceof Long)
+				list.appendTag(new NBTTagLong(((Long)element)));
+			else if(element instanceof Short)
+				list.appendTag(new NBTTagShort(((Short)element)));
+			else if(element instanceof Byte)
+				list.appendTag(new NBTTagByte(((Byte)element)));
 			else if(element instanceof Float)
 				list.appendTag(new NBTTagFloat(((Float)element)));
 			else if(element instanceof Double)
@@ -1018,6 +1026,8 @@ public class EasyNBT extends Constants.NBT
 			else if(element instanceof FluidStack)
 				list.appendTag(((FluidStack)element).writeToNBT(new NBTTagCompound()));
 
+			else if(element instanceof int[])
+				list.appendTag(new NBTTagIntArray(((int[])element)));
 			else if(element instanceof Object[])
 				list.appendTag(listOf(element));
 			else if(element instanceof Collection)
