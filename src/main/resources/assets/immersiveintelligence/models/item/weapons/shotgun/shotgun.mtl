@@ -1,0 +1,6 @@
+# Made with Blockbench
+
+newmtl shotgun
+map_Kd immersiveintelligence:block/shotgun
+newmtl 3bcal_shotgunshell
+map_Kd immersiveintelligence:block/3bcal_shotgunshell
