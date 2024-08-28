@@ -73,7 +73,7 @@ public class ItemIIAmmoShotgun extends ItemIIAmmoBase<EntityAmmoProjectile>
 	@Override
 	public float getDamage()
 	{
-		return 60;
+		return 8;
 	}
 
 	@Override

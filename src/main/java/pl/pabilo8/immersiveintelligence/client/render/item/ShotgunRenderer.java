@@ -217,7 +217,7 @@ public class ShotgunRenderer extends IIUpgradableItemRendererAMT<ItemIIShotgun> 
 				.withModel(model)
 				.withModels(listUpgradeModels())
 				.withHeader(header)
-				//.withHeader(IIAnimationLoader.loadHeader(new ResourceLocation(ImmersiveIntelligence.MODID, "models/item/weapons/shotgun/shotgun_upgrades.obj.amt")))
+				.withHeader(IIAnimationLoader.loadHeader(new ResourceLocation(ImmersiveIntelligence.MODID, "models/item/weapons/shotgun/shotgun_upgrades.obj.amt")))
 				.withModelProvider(
 						(stack, combinedHeader) -> new AMT[]{
 								new AMTBullet("bullet", combinedHeader, AmmoRegistry.getModel(IIContent.itemAmmoShotgun))
@@ -255,14 +255,14 @@ public class ShotgunRenderer extends IIUpgradableItemRendererAMT<ItemIIShotgun> 
 		loadUpgrades(model, ResLoc.of(animationRes, "upgrades/"));
 
 		loadShell = IIAnimationCachedMap.create(this.model, ResLoc.of(animationRes, "shell_load_single_cock"));
-		loadMag = IIAnimationCachedMap.create(this.model, ResLoc.of(animationRes, "load_magazine"));
-		unloadMag = IIAnimationCachedMap.create(this.model, ResLoc.of(animationRes, "unload_magazine"));
+		//loadMag = IIAnimationCachedMap.create(this.model, ResLoc.of(animationRes, "load_magazine"));
+		//unloadMag = IIAnimationCachedMap.create(this.model, ResLoc.of(animationRes, "unload_magazine"));
 
 		fireStandard = IIAnimationCachedMap.create(this.model, ResLoc.of(animationRes, "standard_fire"));
 		fireSemiAutomatic = IIAnimationCachedMap.create(this.model, ResLoc.of(animationRes, "fire_semiauto"));
-		handAngle = IIAnimationCachedMap.create(this.model, ResLoc.of(animationRes, "main_hand_single"));
+		handAngle = IIAnimationCachedMap.create(this.model, ResLoc.of(animationRes, "hand"));
 		handVisibility = IIAnimationCachedMap.create(this.model, new ResourceLocation(ImmersiveIntelligence.MODID, "gun_hand_visibility"));
-		offhandVisibility = IIAnimationCachedMap.create(this.model, ResLoc.of(animationRes, "off_hand_single"));
+		offhandVisibility = IIAnimationCachedMap.create(this.model, ResLoc.of(animationRes, "offhand"));
 	}
 
 	@Override
@@ -272,12 +272,6 @@ public class ShotgunRenderer extends IIUpgradableItemRendererAMT<ItemIIShotgun> 
 		ApiUtils.getRegisterSprite(map, new ResourceLocation(ImmersiveIntelligence.MODID, "items/weapons/shotgun_handmade"));
 		// Register skins
 		IISkinHandler.registerSprites(map, IIContent.itemShotgun.getSkinnableName());
-	}
-
-	@Override
-	protected void nullifyModels()
-	{
-		IIAnimationUtils.disposeOf(model);
 	}
 
 	@Override
