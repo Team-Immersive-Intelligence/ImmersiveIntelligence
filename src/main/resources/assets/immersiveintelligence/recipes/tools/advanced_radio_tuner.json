@@ -8,7 +8,7 @@
   "key": {
     "r": {
       "type": "forge:ore_dict",
-      "ore": "stickSteel"
+      "ore": "antennaAdvanced"
     },
     "c": {
       "type": "forge:ore_dict",
@@ -29,3 +29,4 @@
     "count": 1
   }
 }
+

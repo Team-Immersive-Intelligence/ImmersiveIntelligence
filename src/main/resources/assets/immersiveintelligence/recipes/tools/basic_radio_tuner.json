@@ -8,7 +8,7 @@
   "key": {
     "r": {
       "type": "forge:ore_dict",
-      "ore": "stickIron"
+      "ore": "antennaBasic"
     },
     "c": {
       "type": "forge:ore_dict",

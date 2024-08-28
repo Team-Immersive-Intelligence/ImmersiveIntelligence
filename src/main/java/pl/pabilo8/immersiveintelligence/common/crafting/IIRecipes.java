@@ -997,33 +997,36 @@ public class IIRecipes
 				.addStack(new IngredientStack(new ItemStack(IIContent.blockSandbags, 4))) //Sandbags
 				.addStack(new IngredientStack(new ItemStack(IIContent.itemMachinegun, 2)))
 				.addStack(new IngredientStack(new ItemStack(IIContent.blockMetalDevice, 2, IIBlockTypes_MetalDevice.AMMUNITION_CRATE.getMeta())))
-				.addStack(new IngredientStack("circuitBasic", 4))
+				.addStack(new IngredientStack(new ItemStack(IIContent.itemMaterial,1 ,45)))
+				.addStack(new IngredientStack("plateSteel", 4))
 				.setRequiredProgress(40000);
 
 		IIContent.UPGRADE_EMPLACEMENT_WEAPON_IROBSERVER
-				.addStack(new IngredientStack("blockGlassRed", 1))
-				.addStack(new IngredientStack("blockGlass", 1))
+				.addStack(new IngredientStack(new ItemStack(IIContent.itemMaterial, 1, 48)))
+				.addStack(new IngredientStack(new ItemStack(IIContent.itemMaterial, 1, 46)))
 				.addStack(new IngredientStack("blockSteel", 2))
 				.addStack(new IngredientStack(new ItemStack(IEContent.blockMetalDecoration0, 2, BlockTypes_MetalDecoration0.LIGHT_ENGINEERING.getMeta())))
-				.addStack(new IngredientStack("circuitBasic", 6))
+				.addStack(new IngredientStack("plateSteel", 6))
 				.setRequiredProgress(40000);
 
 		//Weapons - Advanced Tier
 
 		IIContent.UPGRADE_EMPLACEMENT_WEAPON_AUTOCANNON
-				.addStack(new IngredientStack(new ItemStack(IEContent.itemMaterial, 4, 14)))
+				.addStack(new IngredientStack(new ItemStack(IIContent.itemMaterial, 4, 35)))
 				.addStack(new IngredientStack("blockSteel", 2))
 				.addStack(new IngredientStack(new ItemStack(IEContent.itemMaterial, 3, 9)))
 				.addStack(new IngredientStack(new ItemStack(IIContent.blockMetalDevice, 1, IIBlockTypes_MetalDevice.AMMUNITION_CRATE.getMeta())))
-				.addStack(new IngredientStack("circuitAdvanced", 6))
+				.addStack(new IngredientStack(new ItemStack(IIContent.itemMaterial, 1, 46)))
+				.addStack(new IngredientStack(new ItemStack(IIContent.itemMaterial, 3, 7)))
 				.setRequiredProgress(80000);
 
 		IIContent.UPGRADE_EMPLACEMENT_WEAPON_HEAVY_CHEMTHROWER
 				.addStack(new IngredientStack(new ItemStack(IEContent.blockMetalDevice0, 2, BlockTypes_MetalDevice0.FLUID_PLACER.getMeta())))
 				.addStack(new IngredientStack(new ItemStack(IEContent.blockMetalDevice1, 4, BlockTypes_MetalDevice1.FLUID_PIPE.getMeta())))
-				.addStack(new IngredientStack(new ItemStack(IEContent.itemMaterial, 2, 14)))
+				.addStack(new IngredientStack(new ItemStack(IIContent.itemMaterial, 2, 35)))
 				.addStack(new IngredientStack("blockSteel", 1))
-				.addStack(new IngredientStack("circuitAdvanced", 6))
+				.addStack(new IngredientStack(new ItemStack(IIContent.itemMaterial, 1, 7)))
+				.addStack(new IngredientStack(new ItemStack(IIContent.itemMaterial, 1, 46)))
 				.setRequiredProgress(80000);
 
 		IIContent.UPGRADE_EMPLACEMENT_WEAPON_HEAVY_RAILGUN
@@ -1032,7 +1035,9 @@ public class IIRecipes
 				.addStack(new IngredientStack("blockSteel", 1))
 				.addStack(new IngredientStack(new ItemStack(IEContent.itemMaterial, 2, 9)))
 				.addStack(new IngredientStack(new ItemStack(IIContent.blockMetalDevice, 1, IIBlockTypes_MetalDevice.AMMUNITION_CRATE.getMeta())))
-				.addStack(new IngredientStack("circuitAdvanced", 6))
+				.addStack(new IngredientStack(new ItemStack(IIContent.itemMaterial, 3, 7)))
+				.addStack(new IngredientStack(new ItemStack(IIContent.itemMaterial, 1, 46)))
+				.addStack(new IngredientStack(new ItemStack(IIContent.itemMaterial, 2, 47)))
 				.setRequiredProgress(80000);
 
 		IIContent.UPGRADE_EMPLACEMENT_WEAPON_TESLA
@@ -1041,33 +1046,55 @@ public class IIRecipes
 				.addStack(new IngredientStack("circuitAdvanced", 6))
 				.setRequiredProgress(120000);
 
-		/*
+/*
 		IIContent.UPGRADE_EMPLACEMENT_SPOTLIGHT_TOWER
-				.addStack(new IngredientStack(new ItemStack(IEContent.blockMetalDevice0, 2, BlockTypes_MetalDevice0.CAPACITOR_MV.getMeta())))
-				.addStack(new IngredientStack(new ItemStack(IEContent.blockMetalDevice1, 4, BlockTypes_MetalDevice1.FLOODLIGHT.getMeta())))
-				.addStack(new IngredientStack(new ItemStack(IEContent.blockMetalDecoration1, 3, BlockTypes_MetalDecoration1.STEEL_SCAFFOLDING_0.getMeta())))
-				.addStack(new IngredientStack(new ItemStack(IEContent.itemMaterial, 4, 9)))
-				.addStack(new IngredientStack("circuitAdvanced",6))
+				.addStack(new IngredientStack(new ItemStack(IEContent.blockMetalDecoration0, 2, BlockTypes_MetalDecoration0.LIGHT_ENGINEERING.getMeta())))
+				.addStack(new IngredientStack(new ItemStack(IIContent.itemMaterial,9,26))) //electron tube
+				.addStack(new IngredientStack(new IngredientStack("blockSteel", 2))) //steel blocks
+				.addStack(new IngredientStack(new IngredientStack("plateSteel", 6))) //steel plates
+				.addStack(new IngredientStack(new ItemStack(IIContent.itemMaterial, 1, 45))) //targeting device
+				.addStack(new IngredientStack(new ItemStack(IIContent.itemMaterial, 9, 47))) //lenses
 				.setRequiredProgress(80000);
 
 		IIContent.UPGRADE_EMPLACEMENT_WEAPON_MORTAR
-				.addStack(new IngredientStack((new ItemStack(IEContent.blockMetalDevice1, 2, BlockTypes_MetalDevice1.FLUID_PIPE.getMeta()))))
-				.addStack(new IngredientStack("blockSteel",2))
-				.addStack(new IngredientStack(new ItemStack(IEContent.itemMaterial, 3, 9)))
-				.addStack(new IngredientStack("circuitBasic",4))
+				.addStack(new IngredientStack(new ItemStack(IIContent.itemMortar, 1)))
+				.addStack(new IngredientStack(new ItemStack(IEContent.blockMetalDecoration0, 2, BlockTypes_MetalDecoration0.LIGHT_ENGINEERING.getMeta())))
+				.addStack(new IngredientStack(new IngredientStack("blockSteel", 2))) //steel blocks
+				.addStack(new IngredientStack(new ItemStack(IIContent.itemMaterial, 1, 46))) //high precision targeting
 				.addStack(new IngredientStack(new ItemStack(IIContent.blockMetalDevice, 2, IIBlockTypes_MetalDevice.AMMUNITION_CRATE.getMeta())))
-				.addStack(new IngredientStack("circuitAdvanced",4))
+				.addStack(new IngredientStack(new ItemStack(IIContent.itemMaterial, 2, 7))) //advanced circuits
 				.setRequiredProgress(160000);
 
 		IIContent.UPGRADE_EMPLACEMENT_WEAPON_LIGHT_HOWITZER
-				.addStack(new IngredientStack((new ItemStack(IEContent.blockMetalDevice1, 2, BlockTypes_MetalDevice1.FLUID_PIPE.getMeta()))))
-				.addStack(new IngredientStack("blockSteel",2))
-				.addStack(new IngredientStack(new ItemStack(IEContent.itemMaterial, 3, 9)))
-				.addStack(new IngredientStack("circuitBasic",4))
+				.addStack(new IngredientStack(new ItemStack(IIContent.itemMortar, 1)))
+				.addStack(new IngredientStack("blockSteel",3))
+				.addStack(new IngredientStack(new ItemStack(IEContent.blockMetalDecoration0, 2, BlockTypes_MetalDecoration0.LIGHT_ENGINEERING.getMeta())))
 				.addStack(new IngredientStack(new ItemStack(IIContent.blockMetalDevice, 1, IIBlockTypes_MetalDevice.AMMUNITION_CRATE.getMeta())))
-				.addStack(new IngredientStack("circuitAdvanced",4))
+				.addStack(new IngredientStack(new ItemStack(IIContent.itemMaterial,1, 46))) //advanced targeting
+				.addStack(new IngredientStack(new ItemStack(IIContent.itemMaterial, 7, 2))) //advanced circuits
+				.addStack(new IngredientStack(new ItemStack(IIContent.itemMaterial, 2,47))) //lenses
 				.setRequiredProgress(160000);
-		 */
+
+		IIContent.UPGRADE_EMPLACEMENT_WEAPON_LIGHT_ROCKET_LAUNCHER
+			.addStack(new IngredientStack(new ItemStack(IIContent.itemMaterial, 1, 47))) //lens
+			.addStack(new IngredientStack(new ItemStack(IIContent.itemMaterial, 1, 46))) //high precision targeting
+			.addStack(new IngredientStack(new ItemStack(IEContent.blockMetalDevice1, 6, BlockTypes_MetalDevice1.FLUID_PIPE.getMeta())))
+			.addStack(new IngredientStack(new ItemStack(IEContent.blockMetalDevice0, 1, BlockTypes_MetalDevice0.CAPACITOR_HV.getMeta())))
+			.addStack(new IngredientStack(new ItemStack(IEContent.blockMetalDecoration0, 1, BlockTypes_MetalDecoration0.COIL_HV.getMeta())))
+			.addStack(new IngredientStack(new ItemStack(IEContent.blockMetalDecoration0, 3, BlockTypes_MetalDecoration0.LIGHT_ENGINEERING.getMeta())))
+			.addStack(new IngredientStack("blockSteel", 1))
+			.addStack(new IngredientStack(new ItemStack(IIContent.itemMaterial, 2, 9))) //Steel mech component
+		    .setRequiredProgress(160000);
+
+		 IIContent.UPGRADE_EMPLACEMENT_WEAPON_GUIDED_MISSILE_LAUNCHER
+		 	.addStack(new IngredientStack(new ItemStack(IIContent.itemMaterial, 1, 46))) //high precision targeting
+		 	.addStack(new IngredientStack(new ItemStack(IIContent.blockMetalDecoration, 1, BlockTypes_MetalDecoration0.COIL_DATA.getMeta())))
+		 	.addStack(new IngredientStack(new ItemStack(IEContent.blockMetalDecoration0, 3, BlockTypes_MetalDecoration0.LIGHT_ENGINEERING.getMeta())))
+		 	.addStack(new IngredientStack("blockSteel", 2))
+		 	.addStack(new IngredientStack(new ItemStack(IIContent.itemMaterial, 2, 9))) //Steel mech component
+		 	.addStack(new IngredientStack(new ItemStack(IIContent.blockDataConnector, 1, 0)))
+		 	.setRequiredProgress(160000);
+*/
 
 		//Weapons - Processor Tier
 

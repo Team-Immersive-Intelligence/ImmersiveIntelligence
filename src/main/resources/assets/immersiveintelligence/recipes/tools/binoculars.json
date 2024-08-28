@@ -10,8 +10,8 @@
       "ore": "plateIron"
     },
     "s": {
-      "item": "immersiveengineering:toolupgrade",
-      "data": 8
+      "type": "forge:ore_dict",
+      "ore": "lens"
     },
     "r": {
       "type": "forge:ore_dict",
