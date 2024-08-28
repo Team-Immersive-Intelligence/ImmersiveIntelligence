@@ -1400,7 +1400,7 @@ public class IIConfigHandler
 				public static int magazineReloadTime = 65;
 
 				@Comment({"Time required to aim the SMG. (in ticks)"})
-				public static int clipSize = 8;
+				public static int clipSize = 4;
 
 				@Comment({"Base Clip Size plus exnteded clip (8+4)"})
 				public static int extendedClipSize = 4;

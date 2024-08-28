@@ -1,5 +1,7 @@
 {
-  "parent": "builtin/entity",
+  "parent":"immersiveengineering:item/ie_item_base",
+  "textures": {
+  },
   "display": {
     "gui": {
       "rotation": [
