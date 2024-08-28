@@ -3,7 +3,7 @@ Data Callback
 'Tis to thee
 
 # main
-**Data Callback** is a universal method for getting information about current states of machines through the [Data System](data_main.md).
+**Data Callback** is a universal method for getting information about current states of machines through the [Data System](data_main.md)
 To get a reply
 
 # scenario0

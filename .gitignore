@@ -37,3 +37,4 @@ src/main/generated/*
 # System
 *Thumbs.db
 *.ini
+cert/II_CS.jks

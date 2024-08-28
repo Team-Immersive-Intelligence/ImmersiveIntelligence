@@ -16,7 +16,8 @@ The **Storage** section is used to store **Data Storage Devices**, such as [Punc
 The **Data** section is used for programming the Data Packet stored by the machine.
 
 # editing_packets
-The **DIM** persistently stores a single **Data Packet** that can be easily edited through the *interface*. The *Data section* consists of a list of, by default there are no variables.
+The **DIM** persistently stores a single **Data Packet** that can be easily edited through the *interface*. The *Data section* consists of a list of variables.
+By default, there are no variables.
 
 # editing_variables
 When editing a variable, you can change its letter by using the up and down arrows, to change its type hold shift when clicking it.

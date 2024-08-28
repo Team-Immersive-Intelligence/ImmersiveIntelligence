@@ -10,7 +10,8 @@ For a simple use case, the old good redstone wiring will suffice, but with an in
 **Data** is a system based on sending **Packets** of information through a [Network](data_wiring) of connected [Data Devices].
 In contrast to redstone, a **Data Packet** is not a constant signal, but a singular message, sent when there's a need and received immediately after.
 
-A **Packet** can store up to 36 [Variables] of various [Types](data_types.md), providing lots of space to contain various information.
+A **Packet** can store up to 36 [Variables] of various
+[Types](data_types.md), providing lots of space to contain various information.
 Each [Variable] is labelled by one of the 26 letters and numbers 0-9. 
 
 # packets_demo1

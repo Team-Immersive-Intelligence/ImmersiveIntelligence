@@ -44,7 +44,7 @@ The **Data Debugger** is a special type of [Data Relay](#relay), that captures, 
 It operates in 3 modes, that can be switched between by using a [Hammer](tools), with default one being the [Transceiver Mode]. 
 
 # debugger2
-In the [Transmitter] mode, the **Debugger** will transmit a test package when provided a redstone signal. In the [Receiver] mode, the The [Transceiver] combines functions of both.
+In the [Transmitter] mode, the **Debugger** will transmit a test package when provided a redstone signal. In the [Receiver] mode, the  [Transceiver] combines functions of both.
 
 # wireless1
 **Wireless** data transfer is an extension over the **Wired** one. 
@@ -54,4 +54,4 @@ For a **Packet** to be transmitted **wireless**, the [transmitter] and [receiver
 # wireless2
 Any radio device of the same frequency will also act as [relays], extending your wireless network.  
 When designing radio networks, keep in mind that every device has a [limited maximum transmission range], which changes depending on [weather].  
-|[scenario]{source:"wireless_connection"}|
+

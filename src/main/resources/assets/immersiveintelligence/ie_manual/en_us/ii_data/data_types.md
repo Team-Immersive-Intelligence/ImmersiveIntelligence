@@ -18,7 +18,7 @@ For example, if in a packet:
 # default_value2
 The same would happen in a packet like:  
 |[data_packet]{data:{a:{Type:"string",Value:"123"}}}|
-Despite that for a human the *text* "123" seems identical to the *number* 123, a data machine sees it very different. A text type [can't be converted] to a number type, thus it too returns a [defaultized Integer], or simply put it: 0.
+Despite that for a human the *text* "123" seems identical to the *number* 123, a data machine sees it very different. A text type [can't be converted] to a number type, thus it too returns a [defaultized Integer], or simply put: 0.
 
 # default_value3
 The only case where such conversion would occur properly, is between two **Compatible Types** - two types storing a similar kind of information: f.e. when converting [Float](#float) to [Integer](#integer)  
