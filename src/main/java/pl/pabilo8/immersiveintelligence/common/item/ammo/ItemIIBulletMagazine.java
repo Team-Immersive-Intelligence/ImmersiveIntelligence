@@ -66,7 +66,7 @@ public class ItemIIBulletMagazine extends ItemIISubItemsBase<Magazines> implemen
 		MACHINEGUN(48, IIContent.itemAmmoMachinegun),
 		SUBMACHINEGUN(24, IIContent.itemAmmoSubmachinegun, true),
 		RIFLE(12, IIContent.itemAmmoMachinegun),
-		SHOTGUN(12, IIContent.itemAmmoShotgun),
+		//SHOTGUN(12, IIContent.itemAmmoShotgun),
 		SUBMACHINEGUN_DRUM(64, IIContent.itemAmmoSubmachinegun),
 		ASSAULT_RIFLE(32, IIContent.itemAmmoAssaultRifle, true),
 		AUTOCANNON(16, IIContent.itemAmmoAutocannon),

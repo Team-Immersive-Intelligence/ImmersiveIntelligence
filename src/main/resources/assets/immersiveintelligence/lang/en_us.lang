@@ -1559,6 +1559,12 @@ advancement.immersiveintelligence.craft_diy.desc=Craft the Handmade Rifle
 advancement.immersiveintelligence.craft_rifle=The People's Gun
 advancement.immersiveintelligence.craft_rifle.desc=Create the mass production Rifle
 
+advancement.immersiveintelligence.craft_shotgun=Put a hole in a Man
+advancement.immersiveintelligence.craft_shotgun.desc=Craft the mass production Shotgun
+
+advancement.immersiveintelligence.craft_diy_shotgun=Pepper 'em up!
+advancement.immersiveintelligence.craft_diy_shotgun.desc=Craft the Handmade Shotgun
+
 advancement.immersiveintelligence.for_the_emperor=For The Emperor!
 advancement.immersiveintelligence.for_the_emperor.desc=Attach a bayonet to the Rifle
 

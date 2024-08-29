@@ -1,0 +1,28 @@
+{
+  "display": {
+    "icon": {
+      "item": "immersiveintelligence:shotgun",
+      "nbt": "{handmade:1b}"
+    },
+    "title": {
+      "translate": "advancement.immersiveintelligence.craft_diy_shotgun"
+    },
+    "description": {
+      "translate": "advancement.immersiveintelligence.craft_diy_shotgun.desc"
+    }
+  },
+  "parent": "immersiveintelligence:main/craft_gun_barrel_iron",
+  "criteria": {
+    "craft": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "immersiveintelligence:shotgun",
+            "nbt": "{handmade:1b}"
+          }
+        ]
+      }
+    }
+  }
+}

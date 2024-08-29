@@ -220,10 +220,10 @@ public class ShotgunRenderer extends IIUpgradableItemRendererAMT<ItemIIShotgun> 
 				.withHeader(IIAnimationLoader.loadHeader(new ResourceLocation(ImmersiveIntelligence.MODID, "models/item/weapons/shotgun/shotgun_upgrades.obj.amt")))
 				.withModelProvider(
 						(stack, combinedHeader) -> new AMT[]{
-								new AMTBullet("bullet", combinedHeader, AmmoRegistry.getModel(IIContent.itemAmmoShotgun))
+								new AMTBullet("SHELL_FULL", combinedHeader, AmmoRegistry.getModel(IIContent.itemAmmoShotgun))
 										.withState(BulletState.BULLET_UNUSED)
 										.withProperties(IIContent.ammoCoreSteel, CoreType.PIERCING, -1),
-								new AMTBullet("casing_fired", combinedHeader, AmmoRegistry.getModel(IIContent.itemAmmoShotgun))
+								new AMTBullet("SHELL_EJECT", combinedHeader, AmmoRegistry.getModel(IIContent.itemAmmoShotgun))
 										.withState(BulletState.CASING),
 								new AMTParticle("muzzle_flash", combinedHeader)
 										.setParticle(IIParticles.PARTICLE_GUNFIRE),
@@ -248,15 +248,15 @@ public class ShotgunRenderer extends IIUpgradableItemRendererAMT<ItemIIShotgun> 
 				)
 				.build();
 
-		this.bullet = new AMTCrossVariantReference<>("bullet", this.model);
-		this.casing = new AMTCrossVariantReference<>("casing_fired", this.model);
+		this.bullet = new AMTCrossVariantReference<>("SHELL_FULL", this.model);
+		this.casing = new AMTCrossVariantReference<>("SHELL_EJECT", this.model);
 
 		//add upgrade visibility animations
 		loadUpgrades(model, ResLoc.of(animationRes, "upgrades/"));
-
-		loadShell = IIAnimationCachedMap.create(this.model, ResLoc.of(animationRes, "shell_load_single_cock"));
-		//loadMag = IIAnimationCachedMap.create(this.model, ResLoc.of(animationRes, "load_magazine"));
-		//unloadMag = IIAnimationCachedMap.create(this.model, ResLoc.of(animationRes, "unload_magazine"));
+		//shell_load_single_cock
+		loadShell = IIAnimationCachedMap.create(this.model, ResLoc.of(animationRes, "SHELL_FULL"));
+		loadMag = IIAnimationCachedMap.create(this.model, ResLoc.of(animationRes, "load_magazine"));
+		unloadMag = IIAnimationCachedMap.create(this.model, ResLoc.of(animationRes, "unload_magazine"));
 
 		fireStandard = IIAnimationCachedMap.create(this.model, ResLoc.of(animationRes, "standard_fire"));
 		fireSemiAutomatic = IIAnimationCachedMap.create(this.model, ResLoc.of(animationRes, "fire_semiauto"));

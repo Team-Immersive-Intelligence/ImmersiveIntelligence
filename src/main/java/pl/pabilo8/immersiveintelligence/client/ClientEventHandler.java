@@ -74,10 +74,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.overlay.GuiOverlayBase.GuiOve
 import pl.pabilo8.immersiveintelligence.client.gui.overlay.GuiOverlayMotorbike;
 import pl.pabilo8.immersiveintelligence.client.gui.overlay.GuiOverlayTripodPeriscope;
 import pl.pabilo8.immersiveintelligence.client.gui.overlay.GuiOverlayZoom;
-import pl.pabilo8.immersiveintelligence.client.gui.overlay.gun.GuiOverlayAssaultRifle;
-import pl.pabilo8.immersiveintelligence.client.gui.overlay.gun.GuiOverlayMachinegun;
-import pl.pabilo8.immersiveintelligence.client.gui.overlay.gun.GuiOverlayRifle;
-import pl.pabilo8.immersiveintelligence.client.gui.overlay.gun.GuiOverlaySubmachinegun;
+import pl.pabilo8.immersiveintelligence.client.gui.overlay.gun.*;
 import pl.pabilo8.immersiveintelligence.client.gui.tooltip.*;
 import pl.pabilo8.immersiveintelligence.client.manual.pages.IIManualPageContributorSkin;
 import pl.pabilo8.immersiveintelligence.client.model.IIModelRegistry;
@@ -148,6 +145,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 		HUDs.put(GuiOverlayLayer.ITEM, new GuiOverlaySubmachinegun());
 		HUDs.put(GuiOverlayLayer.ITEM, new GuiOverlayAssaultRifle());
 		HUDs.put(GuiOverlayLayer.ITEM, new GuiOverlayRifle());
+		HUDs.put(GuiOverlayLayer.ITEM, new GuiOverlayShotgun());
 		//Entities
 		HUDs.put(GuiOverlayLayer.VEHICLE, new GuiOverlayTripodPeriscope());
 		HUDs.put(GuiOverlayLayer.VEHICLE, new GuiOverlayMotorbike());

@@ -1,1 +1,32 @@
-{"origins":{"Entirething":[0,0,0],"shotgun":[5,-2,1],"main2_PUMP":[5,-2,-9],"Pump_handle":[1.5,15.95,-11],"trigger2":[-5,15.4027,15.31172],"HATCH_LOADING":[1.5,14.09167,9.5],"hammer2":[2.3,19.5,18],"muzzle_flash1":[1.5,20.75,-42],"muzzle_flash2":[1.5,17.75,-42],"muzzle_flash3_pump":[1.5,19.75,-43],"bullet":[1.5,19.25,4],"hand_off":[1,15,-14],"hand_main":[4,14,14],"SHELL_FULL":[1,15.6,15],"SHELL_EJECT":[1,17.2,16.2]},"hierarchy":{"shotgun":"Entirething","main2_PUMP":"shotgun","Pump_handle":"main2_PUMP","trigger2":"main2_PUMP","HATCH_LOADING":"main2_PUMP","hammer2":"main2_PUMP","muzzle_flash1":"shotgun","muzzle_flash2":"shotgun","muzzle_flash3_pump":"shotgun","bullet":"shotgun","hand_off":"Entirething","hand_main":"Entirething","SHELL_FULL":"Entirething","SHELL_EJECT":"Entirething"}}
+{
+"origins": {
+"Entirething":[0,0,0],
+"shotgun":[5,-2,1],
+"main2_PUMP":[5,-2,-9],
+"Pump_handle":[1.5,15.95,-11],
+"trigger2":[-5,15.4027,15.31172],
+"HATCH_LOADING":[1.5,14.09167,9.5],
+"hammer2":[2.3,19.5,18],
+"muzzle_flash":[1.5,20.75,-42],
+"muzzle_flash2":[1.5,17.75,-42],
+"muzzle_flash3_pump":[1.5,19.75,-43],
+"hand_off":[1,15,-14],
+"hand_main":[4,14,14],
+"SHELL_FULL":[1,15.6,15],
+"SHELL_EJECT":[1,17.2,16.2]},
+"hierarchy": {
+"shotgun":"Entirething",
+"main2_PUMP":"shotgun",
+"Pump_handle":"main2_PUMP",
+"trigger2":"main2_PUMP",
+"HATCH_LOADING":"main2_PUMP",
+"hammer2":"main2_PUMP",
+"muzzle_flash":"shotgun",
+"muzzle_flash2":"shotgun",
+"muzzle_flash3_pump":"shotgun",
+"hand_off":"Entirething",
+"hand_main":"Entirething",
+"SHELL_FULL":"shotgun",
+"SHELL_EJECT":"shotgun"
+  }
+}
