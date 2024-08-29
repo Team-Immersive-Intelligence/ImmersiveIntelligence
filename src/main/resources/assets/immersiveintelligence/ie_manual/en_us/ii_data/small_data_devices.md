@@ -36,5 +36,5 @@ The duration is set by the variable '0' (a number of ticks to wait).
 # small_buffer
 @hammer;level_circuits
 |[crafting]{source:"small_data_buffer"}|
-The [Small Data Buffer] is a device which can hold up to 4 packets and can release them using the 
-First-In-First-Out method when given a redstone signal.
+The [Small Data Buffer] is a device which can hold up to 4 packets and can release them using the First-In-First-Out
+method when given a redstone signal.
