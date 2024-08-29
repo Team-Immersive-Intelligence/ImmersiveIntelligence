@@ -3,6 +3,10 @@ name: Commits Pushed
 on:
   push: #Trigger On Push
     branches: [ "dev/**" ]
+permissions:
+  contents: read
+  actions: read
+  checks: write
 
 jobs:
   check:
@@ -54,8 +58,6 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Install JQ
-        run: sudo apt install jq
       - name: Notify Discord
         if: ${{ github.ref == 'refs/heads/dev/main' }}
         env:
@@ -77,8 +79,6 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Install JQ
-        run: sudo apt install jq
       - name: Notify Discord
         env:
           COMMIT_FROM: ${{ github.event.before }}

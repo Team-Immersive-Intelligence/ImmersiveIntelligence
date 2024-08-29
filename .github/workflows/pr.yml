@@ -3,6 +3,10 @@ name: Check Pull Request
 on:
   pull_request:
     branches: [ "master", "dev/**" ]
+permissions:
+  contents: read
+  actions: read
+  checks: write
 
 jobs:
   assign-reviewer:
