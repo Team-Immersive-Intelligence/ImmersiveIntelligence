@@ -115,7 +115,7 @@ public class ShotgunRenderer extends IIUpgradableItemRendererAMT<ItemIIShotgun> 
 		int firing = nbt.getInt(ItemIIShotgun.FIRE_DELAY);
 		int reloading = nbt.getInt(ItemIIShotgun.RELOADING);
 		boolean handRender = is1stPerson(transform);
-		boolean semiAuto = item.hasIIUpgrade(stack, WeaponUpgrade.SHOTGUN_REVOLVER_DRUM_MAGAZINE);
+		//boolean semiAuto = item.hasIIUpgrade(stack, WeaponUpgrade.SHOTGUN_REVOLVER_DRUM_MAGAZINE);
 		boolean gui = transform==TransformType.GUI;
 
 		//Make upgrade AMTs visible
@@ -164,7 +164,7 @@ public class ShotgunRenderer extends IIUpgradableItemRendererAMT<ItemIIShotgun> 
 			handAngle.apply(preciseAim);
 		}
 
-		(semiAuto?fireSemiAutomatic: fireStandard).apply(gui?0: (1f-((firing-partialTicks)/(item.getFireDelay(stack, nbt)))));
+		(fireStandard).apply(gui?0: (1f-((firing-partialTicks)/(item.getFireDelay(stack, nbt)))));
 
 		float v = IIAnimationUtils.getAnimationProgress(
 				reloading,
@@ -176,19 +176,19 @@ public class ShotgunRenderer extends IIUpgradableItemRendererAMT<ItemIIShotgun> 
 				partialTicks
 		);
 
-		if(semiAuto)
-		{
-			ItemStack magazine = nbt.getItemStack(ItemIIShotgun.MAGAZINE);
-			(magazine.isEmpty()?loadMag: unloadMag).apply(v);
-		}
+		//if(semiAuto)
+		//{
+		//	ItemStack magazine = nbt.getItemStack(ItemIIShotgun.MAGAZINE);
+		//	(magazine.isEmpty()?loadMag: unloadMag).apply(v);
+		//}
 
 		if(reloading > 0)
 		{
-			if(!semiAuto)
-			{
+			//if(!semiAuto)
+			//{
 				this.bullet.get().withStack(nbt.getItemStack("found"), BulletState.BULLET_UNUSED);
 				loadShell.apply(v);
-			}
+			//}
 		}
 		else if(handRender)
 		{
@@ -217,10 +217,10 @@ public class ShotgunRenderer extends IIUpgradableItemRendererAMT<ItemIIShotgun> 
 				.withModel(model)
 				.withModels(listUpgradeModels())
 				.withHeader(header)
-				.withHeader(IIAnimationLoader.loadHeader(new ResourceLocation(ImmersiveIntelligence.MODID, "models/item/weapons/shotgun/shotgun_upgrades.obj.amt")))
+				//.withHeader(IIAnimationLoader.loadHeader(new ResourceLocation(ImmersiveIntelligence.MODID, "models/item/weapons/shotgun/shotgun_upgrades.obj.amt")))
 				.withModelProvider(
 						(stack, combinedHeader) -> new AMT[]{
-								new AMTBullet("SHELL_FULL", combinedHeader, AmmoRegistry.getModel(IIContent.itemAmmoShotgun))
+								new AMTBullet("shell_full", combinedHeader, AmmoRegistry.getModel(IIContent.itemAmmoShotgun))
 										.withState(BulletState.BULLET_UNUSED)
 										.withProperties(IIContent.ammoCoreSteel, CoreType.PIERCING, -1),
 								new AMTBullet("SHELL_EJECT", combinedHeader, AmmoRegistry.getModel(IIContent.itemAmmoShotgun))
@@ -248,18 +248,18 @@ public class ShotgunRenderer extends IIUpgradableItemRendererAMT<ItemIIShotgun> 
 				)
 				.build();
 
-		this.bullet = new AMTCrossVariantReference<>("SHELL_FULL", this.model);
+		this.bullet = new AMTCrossVariantReference<>("shell_full", this.model);
 		this.casing = new AMTCrossVariantReference<>("SHELL_EJECT", this.model);
 
 		//add upgrade visibility animations
 		loadUpgrades(model, ResLoc.of(animationRes, "upgrades/"));
 		//shell_load_single_cock
-		loadShell = IIAnimationCachedMap.create(this.model, ResLoc.of(animationRes, "SHELL_FULL"));
-		loadMag = IIAnimationCachedMap.create(this.model, ResLoc.of(animationRes, "load_magazine"));
+		loadShell = IIAnimationCachedMap.create(this.model, ResLoc.of(animationRes, "shell_full"));
+		//loadMag = IIAnimationCachedMap.create(this.model, ResLoc.of(animationRes, "load_magazine"));
 		unloadMag = IIAnimationCachedMap.create(this.model, ResLoc.of(animationRes, "unload_magazine"));
 
 		fireStandard = IIAnimationCachedMap.create(this.model, ResLoc.of(animationRes, "standard_fire"));
-		fireSemiAutomatic = IIAnimationCachedMap.create(this.model, ResLoc.of(animationRes, "fire_semiauto"));
+		//fireSemiAutomatic = IIAnimationCachedMap.create(this.model, ResLoc.of(animationRes, "fire_semiauto"));
 		handAngle = IIAnimationCachedMap.create(this.model, ResLoc.of(animationRes, "hand"));
 		handVisibility = IIAnimationCachedMap.create(this.model, new ResourceLocation(ImmersiveIntelligence.MODID, "gun_hand_visibility"));
 		offhandVisibility = IIAnimationCachedMap.create(this.model, ResLoc.of(animationRes, "offhand"));

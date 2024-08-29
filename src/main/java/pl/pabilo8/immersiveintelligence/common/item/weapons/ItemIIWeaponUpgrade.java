@@ -145,7 +145,7 @@ public class ItemIIWeaponUpgrade extends ItemIISubItemsBase<WeaponUpgrade> imple
 				"gyroscopic_stabilizer", "electric_firing_motor"),
 
 		//--- Shotgun ---//
-		SHOTGUN_REVOLVER_DRUM_MAGAZINE(WeaponType.SHOTGUN),
+		//SHOTGUN_REVOLVER_DRUM_MAGAZINE(WeaponType.SHOTGUN),
 
 		//--- Autorevolver ---//
 //
@@ -359,6 +359,6 @@ public class ItemIIWeaponUpgrade extends ItemIISubItemsBase<WeaponUpgrade> imple
 
 		//--- Shotgun ---//
 		IIUpgradableItemRendererAMT<?> shotgun = IIContent.itemShotgun.getItemRenderer();
-		shotgun.addUpgradePart(hasUpgrade(WeaponUpgrade.SHOTGUN_REVOLVER_DRUM_MAGAZINE), "shotgun_revolver_drum_magazine");
+		//shotgun.addUpgradePart(hasUpgrade(WeaponUpgrade.SHOTGUN_REVOLVER_DRUM_MAGAZINE), "shotgun_revolver_drum_magazine");
 	}
 }
