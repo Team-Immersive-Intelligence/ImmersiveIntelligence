@@ -41,7 +41,6 @@ import pl.pabilo8.immersiveintelligence.client.util.carversound.MovingSoundMotor
 import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Vehicles.Motorbike;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageEntityNBTSync;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageParticleEffect;
@@ -490,7 +489,7 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 
 
 		if(world.isRemote)
-			IIEntityUtils.setEntityVelocity(this, partWheelFront.motionX, partWheelFront.motionY, partWheelFront.motionZ);
+			IIEntityUtils.setEntityMotion(this, partWheelFront.motionX, partWheelFront.motionY, partWheelFront.motionZ);
 
 
 		if(!world.isRemote&&speed > 1f)

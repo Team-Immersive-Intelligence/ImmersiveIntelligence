@@ -13,7 +13,8 @@ import java.util.function.Function;
 
 /**
  * @author Pabilo8
- * @since 06.10.2023
+ * @ii-approved 0.3.1
+ * @since 28.08.2024
  */
 public class DataHandlingUtils
 {
