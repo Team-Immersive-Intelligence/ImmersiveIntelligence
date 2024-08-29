@@ -1,25 +1,17 @@
-package pl.pabilo8.immersiveintelligence.easynbt;
+package pl.pabilo8.immersiveintelligence.common.util.easynbt;
 
 import com.google.gson.JsonObject;
-import net.minecraft.init.Bootstrap;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagString;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
+import pl.pabilo8.immersiveintelligence.test.GameTestBasic;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class EasyNBTWrappingTest
+public class EasyNBTWrappingTest extends GameTestBasic
 {
-	@BeforeAll
-	static void beforeAll()
-	{
-		Bootstrap.register();
-	}
-
 	@Test
 	public void testNewNBT()
 	{

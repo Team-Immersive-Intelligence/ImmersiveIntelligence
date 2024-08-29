@@ -1,7 +1,6 @@
-package pl.pabilo8.immersiveintelligence.easynbt;
+package pl.pabilo8.immersiveintelligence.common.util.easynbt;
 
 import blusunrize.immersiveengineering.api.DimensionBlockPos;
-import net.minecraft.init.Bootstrap;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagString;
@@ -9,21 +8,14 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
+import pl.pabilo8.immersiveintelligence.test.GameTestBasic;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class EasyNBTWithAndGetTest
+public class EasyNBTWithAndGetTest extends GameTestBasic
 {
-	@BeforeAll
-	static void beforeAll()
-	{
-		Bootstrap.register();
-	}
-
 	@Test
 	public void testWithInt()
 	{

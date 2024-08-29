@@ -13,7 +13,6 @@ import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityFiller;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerFiller;
-import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
 import java.util.ArrayList;
 
@@ -46,7 +45,7 @@ public class GuiFiller extends GuiIEContainerBase
 		if(!tile.dustStorage.isEmpty())
 		{
 			int stored = (int)(60*(tile.dustStorage.amount/(float)Filler.dustCapacity));
-			float[] rgb = IIColor.rgbIntToRGB(DustUtils.getColor(tile.dustStorage));
+			float[] rgb = DustUtils.getColor(tile.dustStorage).getFloatRGB();
 
 			GlStateManager.color(rgb[0], rgb[1], rgb[2]);
 			this.drawTexturedModalRect(guiLeft+56, guiTop+2+(60-stored), 176, 60-stored, 64, stored);

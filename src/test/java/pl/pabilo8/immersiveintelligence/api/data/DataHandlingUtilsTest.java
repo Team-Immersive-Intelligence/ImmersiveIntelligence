@@ -1,10 +1,8 @@
-package pl.pabilo8.immersiveintelligence.data;
+package pl.pabilo8.immersiveintelligence.api.data;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
-import pl.pabilo8.immersiveintelligence.api.data.DataHandlingUtils;
-import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.types.*;
 
 import java.util.function.Consumer;

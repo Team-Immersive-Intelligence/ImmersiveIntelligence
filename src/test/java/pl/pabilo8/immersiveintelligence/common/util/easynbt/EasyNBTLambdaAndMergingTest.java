@@ -1,9 +1,8 @@
-package pl.pabilo8.immersiveintelligence.easynbt;
+package pl.pabilo8.immersiveintelligence.common.util.easynbt;
 
 import net.minecraft.nbt.NBTTagCompound;
 import org.junit.jupiter.api.Test;
 import pl.pabilo8.immersiveintelligence.common.util.ISerializableEnum;
-import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;

@@ -11,7 +11,7 @@ import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.client.fx.builder.ParticleModelBuilder;
 import pl.pabilo8.immersiveintelligence.client.fx.prefab.IProgrammableParticle;
 import pl.pabilo8.immersiveintelligence.client.fx.prefab.ParticleAbstractModel;
-import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
+import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;

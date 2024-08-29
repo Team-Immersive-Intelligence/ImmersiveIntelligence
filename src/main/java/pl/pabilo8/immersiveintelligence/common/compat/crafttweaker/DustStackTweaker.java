@@ -5,6 +5,7 @@ import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.item.IIngredient;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.crafting.DustUtils;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
@@ -19,7 +20,7 @@ public class DustStackTweaker
 	@ZenMethod
 	public static void registerDust(IIngredient stack, String name, int color)
 	{
-		DustUtils.registerDust(CraftTweakerHelper.toIEIngredientStack(stack), name, color);
+		DustUtils.registerDust(CraftTweakerHelper.toIEIngredientStack(stack), name, IIColor.fromPackedRGB(color));
 	}
 
 	@ZenMethod

@@ -3,7 +3,6 @@ package pl.pabilo8.immersiveintelligence.common.util;
 import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.api.Lib;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
 
 import java.util.Arrays;
 

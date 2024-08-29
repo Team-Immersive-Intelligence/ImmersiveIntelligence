@@ -1,8 +1,8 @@
 package pl.pabilo8.immersiveintelligence.common.util.item;
 
-import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ISerializableEnum;
+import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 
 /**
  * @author GabrielV (gabriel@iiteam.net)

@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.utils;
+package pl.pabilo8.immersiveintelligence.test;
 
 import com.builtbroken.mc.testing.junit.TestManager;
 import org.junit.jupiter.api.AfterEach;
@@ -10,7 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
  * @ii-approved 0.3.1
  * @since 28.08.2024
  **/
-public class GameTestBase
+public class GameTestWorld
 {
 	protected final TestManager testManager = new TestManager(getClass().getSimpleName(), Assertions::fail);
 

@@ -11,8 +11,8 @@ import pl.pabilo8.immersiveintelligence.client.fx.prefab.IProgrammableParticle;
 import pl.pabilo8.immersiveintelligence.client.fx.prefab.IScalableParticle;
 import pl.pabilo8.immersiveintelligence.client.fx.prefab.ITexturedParticle;
 import pl.pabilo8.immersiveintelligence.client.fx.utils.IIParticleProperties;
-import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
+import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import java.util.function.BiConsumer;

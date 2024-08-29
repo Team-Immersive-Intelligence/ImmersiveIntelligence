@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence;
+package pl.pabilo8.immersiveintelligence.common.util;
 
 import com.builtbroken.mc.testing.junit.world.FakeWorldServer;
 import net.minecraft.entity.passive.EntitySheep;
@@ -8,13 +8,13 @@ import net.minecraft.util.math.Vec3d;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import pl.pabilo8.immersiveintelligence.common.util.entity.IIEntityUtils;
-import pl.pabilo8.immersiveintelligence.utils.GameTestBase;
+import pl.pabilo8.immersiveintelligence.test.GameTestWorld;
 
 import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class EntityUtilsTest extends GameTestBase
+public class EntityUtilsTest extends GameTestWorld
 {
 	EntitySheep entity;
 

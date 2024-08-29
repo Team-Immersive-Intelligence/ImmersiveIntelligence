@@ -5,9 +5,9 @@ import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.client.fx.builder.ParticleModelBuilder.ParticleModel;
 import pl.pabilo8.immersiveintelligence.client.fx.particles.IIParticle;
 import pl.pabilo8.immersiveintelligence.client.fx.utils.IIParticleProperties;
-import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
+import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 /**

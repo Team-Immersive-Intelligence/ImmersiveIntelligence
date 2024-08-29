@@ -1,9 +1,8 @@
-package pl.pabilo8.immersiveintelligence;
+package pl.pabilo8.immersiveintelligence.common.util;
 
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
