@@ -9,8 +9,7 @@ The **Redstone Interface** is a device bridging the old but still used [redstone
 |[text]{mb:"II:RedstoneDataInterface"}|
 
 # details
-The machine consists of several parts, some wirecoils, a bunch of steel plates and few electron tubes, 
-but key parts are the [data input port], on which a [data connector](data_wiring.md#connector) has to be placed 
+The machine consists of several parts, but key parts are the [data input port], on which a [data connector](data_wiring.md#connector) has to be placed 
 and a [redstone output connector](redstoneWires#1) to which you can attach a [wire](wiring#redstoneWires). 
 
 # interface

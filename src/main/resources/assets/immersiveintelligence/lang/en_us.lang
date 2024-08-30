@@ -2145,7 +2145,7 @@ ie.manual.entry.bullet_core.core_lead.lore=Good, bad and ugly
 ie.manual.entry.bullet_core.core_lead.desc=Lead is a good material for cheap bullets with high damage and mediocre penetrating power, however due to its high density limits the maximum range of projectiles made of it.
 
 ie.manual.entry.bullet_core.core_iron=Iron Core
-ie.manual.entry.bullet_core.core_iron.lore=
+ie.manual.entry.bullet_core.core_iron.lore=The Middle Class
 ie.manual.entry.bullet_core.core_iron.desc=Iron is a good early material for bullets, it offers above-average penetrating power and range, but has weak component effect and damage.
 
 ie.manual.entry.bullet_core.core_steel=Steel Core
@@ -2201,7 +2201,7 @@ ie.manual.entry.bullet_component.tnt.desc=TNT is an explosive material with medi
 #CoH2 Reference
 ie.manual.entry.bullet_component.rdx=RDX
 ie.manual.entry.bullet_component.rdx.lore=Things go up, things go down!
-ie.manual.entry.bullet_component.rdx.desc=RDX, also known as the §shexogen§r is a powerful high-explosive material. Being twice as powerful as TNT, it's able to destroy even the heaviest emplacements.
+ie.manual.entry.bullet_component.rdx.desc=RDX, also known as the §shexogen§r is a powerful high-explosive material. Being twice as powerful as TNT and it's able to destroy even the heaviest emplacements.
 
 #There are many variants of HMX's full name, one of them is Her Majesty's Explosive
 ie.manual.entry.bullet_component.hmx=HMX
@@ -2225,7 +2225,7 @@ ie.manual.entry.bullet_component.shrapnel_aluminum.lore=Amelinium, one does not 
 ie.manual.entry.bullet_component.shrapnel_aluminum.desc=Aluminum is not the best material for shrapnel, but it's cheap enough to be mass used in combat.
 
 ie.manual.entry.bullet_component.shrapnel_zinc=Zinc Shrapnel
-ie.manual.entry.bullet_component.shrapnel_zinc.lore=
+ie.manual.entry.bullet_component.shrapnel_zinc.lore=Better than tin!
 ie.manual.entry.bullet_component.shrapnel_zinc.desc=Zinc is not a good shrapnel material, but when there are shortages, anything will do.
 
 #Reference to Terraria's coin gun
@@ -2244,7 +2244,7 @@ ie.manual.entry.bullet_component.shrapnel_gold.lore=And who cares about Taxpayer
 ie.manual.entry.bullet_component.shrapnel_gold.desc=Ah yes, the good old way of wasting money - war. While the bullets are somewhat expensive, they don't seem to have much effect on the opponent.
 
 ie.manual.entry.bullet_component.shrapnel_nickel=Nickel Shrapnel
-ie.manual.entry.bullet_component.shrapnel_nickel.lore=
+ie.manual.entry.bullet_component.shrapnel_nickel.lore=Nickels and dimes
 ie.manual.entry.bullet_component.shrapnel_nickel.desc=Nickel is a bad choice for shrapnel, it doesn't deal much damage, but in hard times it can save the day.
 
 #Reference to the Netflix's Witcher series
@@ -2290,7 +2290,7 @@ ie.manual.entry.bullet_component.shrapnel_thorium.lore=Make grenades, not rods!
 ie.manual.entry.bullet_component.shrapnel_thorium.desc=Thorium is a good, but costly shrapnel material with high damage and penetration values.
 
 ie.manual.entry.bullet_component.shrapnel_HOPGraphite=HOP Graphite Shrapnel
-ie.manual.entry.bullet_component.shrapnel_HOPGraphite.lore=
+ie.manual.entry.bullet_component.shrapnel_HOPGraphite.lore=HOP to it!
 ie.manual.entry.bullet_component.shrapnel_HOPGraphite.desc=Graphite is a very good shrapnel material, its low weight and high piercing capabilities make it useful in combat.
 
 ie.manual.entry.bullet_component.shrapnel_uranium=Uranium Shrapnel
@@ -2367,7 +2367,7 @@ ie.manual.entry.repair_crate2=An inserter can be installed on top of the crate. 
 
 ie.manual.entry.motorworks.name=Motorworks
 ie.manual.entry.motorworks.subtext=Full throttle!
-ie.manual.entry.motorworks=Motorworks is a branch of engineering focused on construction of vehicles, enhancing the performance of other tasks. Vehicles increase speed of transportation of personnel and goods, and by that improve the overall efficiency of your factory. Vehicles can also be utilised to gain advantage in combat.
+ie.manual.entry.motorworks=Motorworks is a branch of engineering focused on construction of vehicles and enhancing the performance of other tasks. Vehicles increase speed of transportation of personnel and goods, and by that improve the overall efficiency of your factory. Vehicles can also be utilised to gain advantage in combat.
 
 #Bob Ross reference
 ie.manual.entry.rubber_production.name=Rubber Production
@@ -2403,7 +2403,8 @@ ie.manual.entry.vulcanizer4=The Vulcanization compound consists of additives whi
 ie.manual.entry.coagulator.name=Coagulator
 ie.manual.entry.coagulator.subtext=Intensified Mixing Co.
 ie.manual.entry.coagulator0=The coagulator is a machine used to coagulate latex and form raw rubber balls for further processing. To form it use a hammer on the middle sheetmetal block on machine's back.
-ie.manual.entry.coagulator1=The coagulator requires a supply of electricity to its heavy connector port and a steady supply of latex (right tank) and formic acid (left tank), §ltake note the sides swap if the machine is flipped§r. After latex is mixed with the acid and the upper "quark" layer forms, the crane will pick one of the buckets, submerge it and put it back while a timer is automatically set. After some time, the latex will solidify into raw rubber, which will be outputted by a mechanism holding the bucket. The rubber will be dropped onto the ground next to the bucket.
+ie.manual.entry.coagulator1=The coagulator requires a supply of electricity to its heavy connector port and a steady supply of latex (right tank) and formic acid (left tank), §ltake note the sides swap if the machine is flipped§r. After latex is mixed with the acid and the upper "quark" layer forms, the crane will pick one of the buckets, submerge it and put it back while a timer is automatically set. After some time, the latex will solidify into raw rubber, which will be outputted by a mechanism holding the bucket. The rubber will be dropped onto the ground.
+ie.manual.entry.coagulator3=
 
 #Other
 

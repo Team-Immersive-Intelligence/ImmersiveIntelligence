@@ -6,20 +6,19 @@ Not broken? Not enough features
 Versatility and adaptability is most crucial in an ever-changing conflict. With this information kept in mind, the clever engineers who have designed and perfected the modern arsenal has left room for personalizing and modifying the weapons with arguments.
 
 # 1
-|[crafting]{source:"heavy_barrle"}|
-*add the symbol that shows it's an attachment to (insert weapon) to all pages*
-The heavy barrel allows the weapon to shoot at a faster fire rate at
+|[crafting]{source:"heavy_barrel"}|
+The heavy barrel allows the weapon to shoot at a faster fire rate at the cost of lower accuracy.
 
 # 2
 |[crafting]{source:"water_cooling"}|
 With new technology comes new challenges, the machine guns fast firing causes friction in the barrel. The heat can cause the material of the weapon to be damaged.
-To tackle this problem, a **water cooling system** can be installed. Inside the water jacket runs a tube where water runs to cool the barrel. A [bottling machine](bottling_machine) can refill the water.
+To tackle this problem, a **water cooling system** can be installed. Inside the water jacket runs a tube where water runs to cool the barrel. A **Bottling Machine** can refill the water.
 
 # 3 
 |[crafting]{source:"belt_fed_loader"}|
 The **Belt fed loader**, is a way to minimize the proportional weight of the ammunition apparatus to the entire weapon system, and allow high rates of continuous fire without needing frequent magazine changes.
 
-The ammunition needs to be provided through an [ammunition create](ammocrate.md).
+The ammunition needs to be provided through an [ammunition crate](ammocrate.md#main).
 
 # 4
 |[crafting]{source:"second_magazine"}|
@@ -72,3 +71,4 @@ The **Folding stock** makes the submachinegun more compact and decreases the tim
 
 # 15
 |[crafting]{source:"rifle_grenade_launcher"}|
+The **Rifle Grenade Launcher** allows your Assault rifle to shoot Railgun Grenades, albeit at a significantly lower range compared to the Railgun,

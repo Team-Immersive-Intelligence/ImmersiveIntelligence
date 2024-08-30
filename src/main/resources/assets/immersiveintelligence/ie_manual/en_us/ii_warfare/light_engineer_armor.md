@@ -95,7 +95,7 @@ However, due to its construction, getting hit by electromagnetic weapons will ca
 
 |[crafting]{source:"scuba_tank"}|
 The Scuba Tank gives the ability to remain longer underwater with no need to resurface for new air reserves. 
-It can be filled with oxygen using the [bottling machine](bottling_machine).Comes especially handy during underwater construction works. Requires a Gas Mask to work.
+It can be filled with oxygen using the **Bottling Machine** comes especially handy during underwater construction works. Requires a Gas Mask to work.
 
 # 14
 **Exoskeleton**

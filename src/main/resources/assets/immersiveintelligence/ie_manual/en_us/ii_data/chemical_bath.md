@@ -15,7 +15,7 @@ When supplied with materials, the machine will automatically start production.
 **Caution** is advised when close to a bath filled with acids, as there are no barriers protecting from falling into it. 
 
 # etching
-The primary use of the [Chemical Bath] is etching [raw circuit boards](electronic_components.md#basicboard) in acid.
+The primary use of the [Chemical Bath] is etching [raw circuit boards](electronic_components.md#basic_board) in acid.
 [Recipe Here]
 
 # wood_treating
