@@ -33,7 +33,7 @@ import java.util.stream.Stream;
  * @since 03.09.2022
  */
 @SuppressWarnings("unused")
-//REFACTOR: 05.04.2024 rename checkSet to ifPresent
+//REFACTOR: 05.04.2024 EasyNBT checkSet to ifPresent
 public class EasyNBT extends Constants.NBT
 {
 	private final NBTTagCompound wrapped;
@@ -205,8 +205,10 @@ public class EasyNBT extends Constants.NBT
 	public EasyNBT appendList(String key, int type, NBTBase object)
 	{
 		NBTTagList tagList = wrapped.getTagList(key, type);
+		if(!wrapped.hasKey(key))
+			wrapped.setTag(key, tagList);
 		tagList.appendTag(object);
-		return null;
+		return this;
 	}
 
 	/**
@@ -751,105 +753,119 @@ public class EasyNBT extends Constants.NBT
 
 	//--- Check-Action ---//
 
-	public void checkSetInt(String key, Consumer<Integer> ifPresent, int ifNot)
+	public EasyNBT checkSetInt(String key, Consumer<Integer> ifPresent, int ifNot)
 	{
 		if(wrapped.hasKey(key))
 			ifPresent.accept(wrapped.getInteger(key));
 		else
 			ifPresent.accept(ifNot);
+		return this;
 	}
 
-	public void checkSetInt(String key, Consumer<Integer> ifPresent)
+	public EasyNBT checkSetInt(String key, Consumer<Integer> ifPresent)
 	{
 		if(wrapped.hasKey(key))
 			ifPresent.accept(wrapped.getInteger(key));
+		return this;
 	}
 
-	public void checkSetByte(String key, Consumer<Byte> ifPresent, byte ifNot)
+	public EasyNBT checkSetByte(String key, Consumer<Byte> ifPresent, byte ifNot)
 	{
 		if(wrapped.hasKey(key))
 			ifPresent.accept(wrapped.getByte(key));
 		else
 			ifPresent.accept(ifNot);
+		return this;
 	}
 
-	public void checkSetByte(String key, Consumer<Byte> ifPresent)
+	public EasyNBT checkSetByte(String key, Consumer<Byte> ifPresent)
 	{
 		if(wrapped.hasKey(key))
 			ifPresent.accept(wrapped.getByte(key));
+		return this;
 	}
 
-	public void checkSetFloat(String key, Consumer<Float> ifPresent, float ifNot)
+	public EasyNBT checkSetFloat(String key, Consumer<Float> ifPresent, float ifNot)
 	{
 		if(wrapped.hasKey(key))
 			ifPresent.accept(wrapped.getFloat(key));
 		else
 			ifPresent.accept(ifNot);
+		return this;
 	}
 
-	public void checkSetFloat(String key, Consumer<Float> ifPresent)
+	public EasyNBT checkSetFloat(String key, Consumer<Float> ifPresent)
 	{
 		if(wrapped.hasKey(key))
 			ifPresent.accept(wrapped.getFloat(key));
+		return this;
 	}
 
-	public void checkSetDouble(String key, Consumer<Double> ifPresent, double ifNot)
+	public EasyNBT checkSetDouble(String key, Consumer<Double> ifPresent, double ifNot)
 	{
 		if(wrapped.hasKey(key))
 			ifPresent.accept(wrapped.getDouble(key));
 		else
 			ifPresent.accept(ifNot);
+		return this;
 	}
 
-	public void checkSetDouble(String key, Consumer<Double> ifPresent)
+	public EasyNBT checkSetDouble(String key, Consumer<Double> ifPresent)
 	{
 		if(wrapped.hasKey(key))
 			ifPresent.accept(wrapped.getDouble(key));
+		return this;
 	}
 
-	public void checkSetBoolean(String key, Consumer<Boolean> ifPresent, boolean ifNot)
+	public EasyNBT checkSetBoolean(String key, Consumer<Boolean> ifPresent, boolean ifNot)
 	{
 		if(wrapped.hasKey(key))
 			ifPresent.accept(wrapped.getBoolean(key));
 		else
 			ifPresent.accept(ifNot);
+		return this;
 	}
 
-	public void checkSetBoolean(String key, Consumer<Boolean> ifPresent)
+	public EasyNBT checkSetBoolean(String key, Consumer<Boolean> ifPresent)
 	{
 		if(wrapped.hasKey(key))
 			ifPresent.accept(wrapped.getBoolean(key));
+		return this;
 	}
 
-	public void checkSetString(String key, Consumer<String> ifPresent, String ifNot)
+	public EasyNBT checkSetString(String key, Consumer<String> ifPresent, String ifNot)
 	{
 		if(wrapped.hasKey(key))
 			ifPresent.accept(wrapped.getString(key));
 		else
 			ifPresent.accept(ifNot);
+		return this;
 	}
 
-	public void checkSetString(String key, Consumer<String> ifPresent)
+	public EasyNBT checkSetString(String key, Consumer<String> ifPresent)
 	{
 		if(wrapped.hasKey(key))
 			ifPresent.accept(wrapped.getString(key));
+		return this;
 	}
 
-	public void checkSetCompound(String key, Consumer<NBTTagCompound> ifPresent, NBTTagCompound ifNot)
+	public EasyNBT checkSetCompound(String key, Consumer<NBTTagCompound> ifPresent, NBTTagCompound ifNot)
 	{
 		if(wrapped.hasKey(key))
 			ifPresent.accept(wrapped.getCompoundTag(key));
 		else
 			ifPresent.accept(ifNot);
+		return this;
 	}
 
-	public void checkSetCompound(String key, Consumer<NBTTagCompound> ifPresent)
+	public EasyNBT checkSetCompound(String key, Consumer<NBTTagCompound> ifPresent)
 	{
 		if(wrapped.hasKey(key))
 			ifPresent.accept(wrapped.getCompoundTag(key));
+		return this;
 	}
 
-	public <T extends NBTBase> void checkSetTag(String key, Class<T> clazz, Consumer<T> ifPresent)
+	public <T extends NBTBase> EasyNBT checkSetTag(String key, Class<T> clazz, Consumer<T> ifPresent)
 	{
 		if(wrapped.hasKey(key))
 		{
@@ -857,24 +873,28 @@ public class EasyNBT extends Constants.NBT
 			if(clazz.isInstance(tag))
 				ifPresent.accept(clazz.cast(tag));
 		}
+		return this;
 	}
 
-	public void checkSetVec3D(String key, Consumer<Vec3d> ifPresent)
+	public EasyNBT checkSetVec3D(String key, Consumer<Vec3d> ifPresent)
 	{
 		if(wrapped.hasKey(key))
 			ifPresent.accept(getVec3d(key));
+		return this;
 	}
 
-	public void checkSetColor(String key, Consumer<IIColor> ifPresent)
+	public EasyNBT checkSetColor(String key, Consumer<IIColor> ifPresent)
 	{
 		if(wrapped.hasKey(key))
 			ifPresent.accept(getColor(key));
+		return this;
 	}
 
-	public <E extends Enum<E> & ISerializableEnum> void checkSetEnum(String key, Class<E> type, Consumer<E> ifPresent)
+	public <E extends Enum<E> & ISerializableEnum> EasyNBT checkSetEnum(String key, Class<E> type, Consumer<E> ifPresent)
 	{
 		if(wrapped.hasKey(key))
 			ifPresent.accept(getEnum(key, type));
+		return this;
 	}
 
 	//--- Pseudo - Map ---//

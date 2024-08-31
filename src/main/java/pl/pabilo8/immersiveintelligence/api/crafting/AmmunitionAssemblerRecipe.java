@@ -2,16 +2,14 @@ package pl.pabilo8.immersiveintelligence.api.crafting;
 
 import blusunrize.immersiveengineering.api.ApiUtils;
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
-import blusunrize.immersiveengineering.api.crafting.MultiblockRecipe;
 import com.google.common.collect.Lists;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.NonNullList;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityAmmunitionAssembler;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionBase.IIIMultiblockRecipe;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.IIMultiblockRecipe;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -22,7 +20,7 @@ import java.util.function.BiFunction;
  * @author Pabilo8
  * @since 08-08-2019
  */
-public class AmmunitionAssemblerRecipe extends MultiblockRecipe implements IIIMultiblockRecipe
+public class AmmunitionAssemblerRecipe extends IIMultiblockRecipe
 {
 	public static final ArrayList<AmmunitionAssemblerRecipe> RECIPES = new ArrayList<>();
 
@@ -30,9 +28,6 @@ public class AmmunitionAssemblerRecipe extends MultiblockRecipe implements IIIMu
 	public final BiFunction<ItemStack, ItemStack, ItemStack> process;
 	public final IngredientStack coreInput, casingInput;
 	public final boolean advanced;
-
-	final int totalProcessTime;
-	final int totalProcessEnergy;
 
 	public AmmunitionAssemblerRecipe(BiFunction<ItemStack, ItemStack, ItemStack> process, Object coreInput, Object casingInput, int energy, int time, boolean advanced)
 	{
@@ -79,14 +74,6 @@ public class AmmunitionAssemblerRecipe extends MultiblockRecipe implements IIIMu
 		return list;
 	}
 
-	public static AmmunitionAssemblerRecipe findRecipe(ItemStack inputCore, ItemStack inputCasing)
-	{
-		return RECIPES.stream()
-				.filter(recipe -> recipe.coreInput.matchesItemStackIgnoringSize(inputCore))
-				.filter(recipe -> recipe.casingInput.matchesItemStackIgnoringSize(inputCasing))
-				.findFirst().orElse(null);
-	}
-
 	@Override
 	public NonNullList<ItemStack> getActualItemOutputs(TileEntity te)
 	{
@@ -102,34 +89,10 @@ public class AmmunitionAssemblerRecipe extends MultiblockRecipe implements IIIMu
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbtTagCompound)
-	{
-		return writeToNBT();
-	}
-
-	@Override
-	public NBTTagCompound writeToNBT()
+	public EasyNBT writeToNBT()
 	{
 		return EasyNBT.newNBT()
 				.withIngredientStack("core", coreInput)
-				.withIngredientStack("casing", casingInput)
-				.unwrap();
-	}
-
-	public static AmmunitionAssemblerRecipe loadFromNBT(NBTTagCompound nbt)
-	{
-		IngredientStack core = IngredientStack.readFromNBT(nbt.getCompoundTag("core"));
-		IngredientStack casing = IngredientStack.readFromNBT(nbt.getCompoundTag("casing"));
-		return findRecipe(core.stack, casing.stack);
-	}
-
-	public int getTotalProcessTime()
-	{
-		return this.totalProcessTime;
-	}
-
-	public int getTotalProcessEnergy()
-	{
-		return this.totalProcessEnergy;
+				.withIngredientStack("casing", casingInput);
 	}
 }

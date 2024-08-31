@@ -1,0 +1,195 @@
+{
+	"comment": "Made by Pabilo8 with Blockbench",
+	"groups": {
+		"piston": {
+			"position": [
+				{
+					"time": 0.2,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.25,
+					"transform": [0, 5, 0]
+				},
+				{
+					"time": 0.31667,
+					"transform": [0, 5, 0]
+				},
+				{
+					"time": 0.38333,
+					"transform": [0, 0, 0]
+				}
+			],
+			"scale": [
+				{
+					"time": 0.2,
+					"transform": [1, 1, 1]
+				},
+				{
+					"time": 0.25,
+					"transform": [1, 2.2, 1]
+				},
+				{
+					"time": 0.31667,
+					"transform": [1, 2.2, 1]
+				},
+				{
+					"time": 0.38333,
+					"transform": [1, 1, 1]
+				}
+			]
+		},
+		"item": {
+			"position": [
+				{
+					"time": 0,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.16667,
+					"transform": [-14, 0, 0]
+				}
+			]
+		},
+		"item_out": {
+			"position": [
+				{
+					"time": 0.16667,
+					"transform": [-14, 0, 0]
+				},
+				{
+					"time": 0.38333,
+					"transform": [-14, 0, 0]
+				},
+				{
+					"time": 0.8,
+					"transform": [-14, 0, 0]
+				},
+				{
+					"time": 1,
+					"transform": [-28, 0, 0]
+				}
+			]
+		},
+		"inserter_cw": {
+			"rotation": [
+				{
+					"time": 0.93333,
+					"transform": [0, 90, 0]
+				}
+			]
+		},
+		"lower_cw": {
+			"rotation": [
+				{
+					"time": 0.93333,
+					"transform": [-20, 0, 0]
+				}
+			]
+		},
+		"upper_cw": {
+			"rotation": [
+				{
+					"time": 0.93333,
+					"transform": [-145, 0, 0]
+				}
+			]
+		},
+		"inserter_cf": {
+			"rotation": [
+				{
+					"time": 0,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.38333,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.8,
+					"transform": [0, 0, 0]
+				}
+			]
+		},
+		"lower_cf": {
+			"rotation": [
+				{
+					"time": 0,
+					"transform": [-12.5, 0, 0]
+				},
+				{
+					"time": 0.38333,
+					"transform": [-12.5, 0, 0]
+				},
+				{
+					"time": 0.48333,
+					"transform": [-27.5, 0, 0]
+				},
+				{
+					"time": 0.56667,
+					"transform": [-12.5, 0, 0]
+				},
+				{
+					"time": 0.7,
+					"transform": [-27.5, 0, 0]
+				},
+				{
+					"time": 0.8,
+					"transform": [-12.5, 0, 0]
+				}
+			]
+		},
+		"upper_cf": {
+			"rotation": [
+				{
+					"time": 0,
+					"transform": [-150, 0, 0]
+				},
+				{
+					"time": 0.38333,
+					"transform": [-150, 0, 0]
+				},
+				{
+					"time": 0.48333,
+					"transform": [-92.5, 0, 0]
+				},
+				{
+					"time": 0.56667,
+					"transform": [-105, 0, 0]
+				},
+				{
+					"time": 0.7,
+					"transform": [-92.5, 0, 0]
+				},
+				{
+					"time": 0.8,
+					"transform": [-150, 0, 0]
+				}
+			]
+		},
+		"nozzle": {
+			"rotation": [
+				{
+					"time": 0,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.16667,
+					"transform": [0, 0, -17.5]
+				},
+				{
+					"time": 0.25,
+					"transform": [-7.5, 0, 2.5]
+				},
+				{
+					"time": 0.33333,
+					"transform": [7.5, 0, -5]
+				},
+				{
+					"time": 0.4,
+					"transform": [0, 0, 0]
+				}
+			]
+		}
+	}
+}

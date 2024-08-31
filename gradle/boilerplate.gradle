@@ -2,6 +2,7 @@
 
 apply plugin: "net.minecraftforge.gradle.forge"
 apply plugin: 'idea'
+apply plugin: 'gradleutils'
 
 //--- Script Utilties
 project.getOr = {String envProp, projectProp -> System.getenv(envProp) ?: projectProp}
@@ -154,11 +155,6 @@ processResources {
     exclude '**/.DS_Store'
 }
 
-tasks.build.doLast(){
-    if(ii_printSourceSets.toBoolean())
-        logger.log(LogLevel.WARN, 'Build Location: '+file("./build/libs/").getPath())
-}
-
 //--- Core Jar Generation
 // Create a core jar, sign it and place it inside the main jar
 if(ii_generateCoreJar=='true')
@@ -166,6 +162,20 @@ if(ii_generateCoreJar=='true')
 
 //--- IE Addon
 apply from: rootProject.file('gradle/ieaddon.gradle')
+
+if(ii_enableSigning.asBoolean())
+    apply from: rootProject.file('gradle/codesign.gradle')
+
+tasks.build.doLast(){
+    if(ii_printSourceSets.toBoolean())
+        logger.log(LogLevel.WARN, 'Build Location: '+file("./build/libs/").getPath())
+}
+
+if(ii_enableSigning.asBoolean()) {
+    tasks.build.finalizedBy() {
+        signMainJar
+    }
+}
 
 //--- Help Function
 tasks.register('modSetupDocs') {

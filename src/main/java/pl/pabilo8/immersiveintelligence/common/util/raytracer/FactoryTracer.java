@@ -139,7 +139,7 @@ public class FactoryTracer
 
 					if(entity.getEntityBoundingBox().intersects(aabb))
 					{
-						Vec3d hitVec = entity.getPositionVector().subtract(this.aabb.getCenter());
+						Vec3d hitVec = entity.getPositionVector().subtract(getAABBCenter(this.aabb));
 						RayTraceResult trace = new RayTraceResult(entity, hitVec);
 						if(onHit.test(trace))
 							return trace;
@@ -189,6 +189,11 @@ public class FactoryTracer
 		);
 		entities.removeAll(entityFilter);
 		return entities;
+	}
+
+	private Vec3d getAABBCenter(AxisAlignedBB aabb)
+	{
+		return new Vec3d(aabb.minX+(aabb.maxX-aabb.minX)*0.5D, aabb.minY+(aabb.maxY-aabb.minY)*0.5D, aabb.minZ+(aabb.maxZ-aabb.minZ)*0.5D);
 	}
 
 }

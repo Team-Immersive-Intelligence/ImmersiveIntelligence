@@ -36,6 +36,7 @@ import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageRotaryPowerSync;
 import pl.pabilo8.immersiveintelligence.common.util.IIDamageSources;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionSingle;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockInteractablePart;
@@ -302,6 +303,12 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 			return new IIMultiblockProcess<>(recipe);
 		}
 
+		return null;
+	}
+
+	@Override
+	protected IIMultiblockProcess<SawmillRecipe> getProcessFromNBT(EasyNBT nbt)
+	{
 		return null;
 	}
 

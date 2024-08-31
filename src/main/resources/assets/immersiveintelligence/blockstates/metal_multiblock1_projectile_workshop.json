@@ -16,8 +16,8 @@
         "transform": {
           "scale": 0.2,
           "translation": [
-            0,
-            0,
+            -0.5,
+            -0.25,
             0
           ],
           "rotation": [

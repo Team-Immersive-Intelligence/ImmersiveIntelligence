@@ -25,8 +25,6 @@ import pl.pabilo8.immersiveintelligence.common.block.metal_device.BlockIIMetalDe
 import pl.pabilo8.immersiveintelligence.common.block.mines.BlockIIMine.ItemBlockMineBase;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine.Magazines;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
-import pl.pabilo8.immersiveintelligence.common.util.IIColor;
-import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
 import pl.pabilo8.immersiveintelligence.common.util.block.BlockIIBase;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IIBlockEnum;
 import pl.pabilo8.immersiveintelligence.common.util.block.ItemBlockIIBase;
@@ -55,7 +53,7 @@ public class IICreativeTab extends CreativeTabs
 	public static IICategory selectedCategory = IICategory.RESOURCES;
 	public static List<Fluid> fluidBucketMap = new ArrayList<>();
 	@SideOnly(Side.CLIENT)
-	private GuiWidgetAustralianTabs hovered = null;
+	private GuiWidgetAustralianTabs hovered;
 
 	public IICreativeTab(String name)
 	{

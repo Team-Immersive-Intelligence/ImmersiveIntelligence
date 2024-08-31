@@ -10,7 +10,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.oredict.OreDictionary;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.ISawblade;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IISoundAnimation;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
@@ -155,21 +154,19 @@ public class SawmillRecipe extends MultiblockRecipe implements IIIMultiblockReci
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbtTagCompound)
 	{
-		return writeToNBT();
+		return writeToNBT().unwrap();
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT()
+	public EasyNBT writeToNBT()
 	{
 		return EasyNBT.newNBT()
-				.withIngredientStack("item_input", itemInput)
-				.unwrap();
+				.withIngredientStack("item_input", itemInput);
 	}
 
 	public static SawmillRecipe loadFromNBT(NBTTagCompound nbt)
 	{
 		IngredientStack item_input = IngredientStack.readFromNBT(nbt.getCompoundTag("item_input"));
-
 		return findRecipe(item_input.stack);
 	}
 

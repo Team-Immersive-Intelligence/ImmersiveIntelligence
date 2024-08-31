@@ -4,9 +4,9 @@
 		"casing": [0, 24, 0],
 		"casing_simple": [0, 0, 0],
 		"casing_filling": [0, 0, 0],
-		"core_shaped": [0, 23, 0],
-		"core_piercing": [0, 24, 0],
-		"core_canister": [0, 24, 0]
+		"core_shaped": [0, 1, 0],
+		"core_piercing": [0, 1, 0],
+		"core_canister": [0, 1, 0]
 	},
 	"hierarchy": {}
 }

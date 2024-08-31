@@ -14,10 +14,10 @@
       {
         "model": "immersiveintelligence:multiblock/ammunition_assembler/ammunition_assembler_inv.obj",
         "transform": {
-          "scale": 0.2,
+          "scale": 0.185,
           "translation": [
-            0,
-            0,
+            -0.3,
+            -0.5,
             0
           ],
           "rotation": [
@@ -25,7 +25,7 @@
               "x": 20
             },
             {
-              "y": -225
+              "y": -135
             }
           ]
         }

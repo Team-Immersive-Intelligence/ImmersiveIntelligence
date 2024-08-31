@@ -161,7 +161,7 @@ public class EmplacementWeaponHeavyChemthrower extends EmplacementWeapon
 	{
 		super.shoot(te);
 
-		Vec3d gun = te.getWeaponCenter().add(vv.scale(-3));
+		Vec3d gun = te.getWeaponCenter().add(vv.scale(-3.5));
 		super.shoot(te);
 		float range = 4;
 

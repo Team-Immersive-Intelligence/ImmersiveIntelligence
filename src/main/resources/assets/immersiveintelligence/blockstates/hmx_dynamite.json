@@ -1,0 +1,46 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "transform": "forge:default-block",
+    "textures": {
+      "top": "immersiveintelligence:blocks/hmx/top",
+      "bottom": "immersiveintelligence:blocks/hmx/bottom",
+      "side": "immersiveintelligence:blocks/hmx/side"
+    },
+    "model": "immersiveengineering:ie_pillar"
+  },
+  "variants": {
+    "inventory,type=main": [
+      {
+        "textures": {
+          "top": "immersiveintelligence:blocks/hmx/top",
+          "bottom": "immersiveintelligence:blocks/hmx/bottom",
+          "side": "immersiveintelligence:blocks/hmx/side"
+        }
+      }
+    ],
+    "type": {
+      "main": {
+        "textures": {
+          "top": "immersiveintelligence:blocks/hmx/top",
+          "bottom": "immersiveintelligence:blocks/hmx/bottom",
+          "side": "immersiveintelligence:blocks/hmx/side"
+        }
+      }
+    },
+    "axis": {
+      "x": {
+        "x": 90, "y": 90
+      },
+      "y": {
+
+      },
+      "z": {
+        "x": 90
+      },
+      "none": {
+
+      }
+    }
+  }
+}

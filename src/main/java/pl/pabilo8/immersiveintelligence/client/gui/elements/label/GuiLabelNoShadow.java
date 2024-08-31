@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.client.gui.elements;
+package pl.pabilo8.immersiveintelligence.client.gui.elements.label;
 
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiLabel;

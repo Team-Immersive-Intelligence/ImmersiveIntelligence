@@ -1,6 +1,9 @@
 dependencies {
     // compile against the JEI API but do not include it at runtime
-    compileOnly "mezz.jei:jei_1.12.2:4.16.1.301:api"
+    provided "mezz.jei:jei_1.12.2:4.16.1.301:api"
+
+    // use jei at runtime
+    runtimeOnly "mezz.jei:jei_1.12.2:4.16.1.301"
 
     deobfCompile "team.chisel.ctm:CTM:MC1.12.2-1.0.2.31"
     deobfCompile "blusunrize:ImmersiveEngineering:0.12-92-+"
@@ -9,23 +12,37 @@ dependencies {
     deobfCompile "com.mod-buildcraft:buildcraft:7.99.12"
 
     //Lighting mod formerly called Albedo
-    implementation "com.elytradev:mirage:2.0.3-rc3-SNAPSHOT"
+    provided "com.elytradev:mirage:2.0.3-rc3-SNAPSHOT"
 //    compileOnly 'com.azanor:Baubles:1.12-1.5.2'
-    compileOnly "curse.maven:baubles-227083:2518667"
+    provided "curse.maven:baubles-227083:2518667"
 
-    implementation "org.squiddev:cc-tweaked-1.12.2:1.89.2"
-    implementation "li.cil.oc:OpenComputers:MC1.12.2-1.7.5.221"
+    provided "org.squiddev:cc-tweaked-1.12.2:1.89.2"
+    provided "li.cil.oc:OpenComputers:MC1.12.2-1.7.5.221"
 
     //Download from curse maven
-    implementation "curse.maven:tough-as-nails-246391:2710969"
-    implementation "curse.maven:terrafirmacraft-302973:3645502"
-    implementation "curse.maven:immersive-petroleum-268250:3382321"
-    compileOnly "curse.maven:immersive-posts-314645:2951672"
-    compileOnly "curse.maven:immersive-technology-359407:3658279"
-    implementation "curse.maven:mysticalmechanics-300742:3006392"
+    provided "curse.maven:tough-as-nails-246391:2710969"
+    provided "curse.maven:terrafirmacraft-302973:3645502"
+    deobfCompile "curse.maven:immersive-petroleum-268250:3382321"
+    deobfCompile "curse.maven:immersive-posts-314645:2951672"
+    deobfCompile "curse.maven:immersive-technology-359407:3658279"
+    provided "curse.maven:mysticalmechanics-300742:3006392"
 }
 
 repositories {
+    maven {
+        name = "iiMavenReleases"
+        url = uri("https://maven.iiteam.net/releases")
+        if (ii_authToIIMaven.asBoolean()) {
+            credentials {
+                username project.iiMavenReleasesUsername
+                password project.iiMavenReleasesPassword
+            }
+            authentication {
+                basic(BasicAuthentication)
+            }
+        }
+    }
+
     maven { // JEI & Tinkers
         name 'DVS1 Maven FS'
         url 'https://dvs1.progwml6.com/files/maven'

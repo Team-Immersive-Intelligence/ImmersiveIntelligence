@@ -2,7 +2,6 @@ package pl.pabilo8.immersiveintelligence.api.crafting;
 
 import blusunrize.immersiveengineering.api.ApiUtils;
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
-import blusunrize.immersiveengineering.api.crafting.MultiblockRecipe;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import blusunrize.immersiveengineering.common.util.ListUtils;
 import com.google.common.collect.Lists;
@@ -12,7 +11,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.oredict.OreDictionary;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionBase.IIIMultiblockRecipe;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.IIMultiblockRecipe;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -23,15 +22,13 @@ import java.util.List;
  * @author Pabilo8
  * @since 14-04-2020
  */
-public class FillerRecipe extends MultiblockRecipe implements IIIMultiblockRecipe
+public class FillerRecipe extends IIMultiblockRecipe
 {
 	public final IngredientStack itemInput;
 	public final ItemStack itemOutput;
 
 	public static ArrayList<FillerRecipe> recipeList = new ArrayList<>();
 	public DustStack dust;
-	int totalProcessTime;
-	int totalProcessEnergy;
 	//for bullets only
 	IAmmoTypeItem bullet = null;
 
@@ -105,11 +102,6 @@ public class FillerRecipe extends MultiblockRecipe implements IIIMultiblockRecip
 		return 0;
 	}
 
-	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbtTagCompound)
-	{
-		return writeToNBT();
-	}
 
 	public static FillerRecipe loadFromNBT(NBTTagCompound nbt)
 	{
@@ -117,24 +109,11 @@ public class FillerRecipe extends MultiblockRecipe implements IIIMultiblockRecip
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT()
+	public EasyNBT writeToNBT()
 	{
 		return EasyNBT.newNBT()
 				.withIngredientStack("item_input", itemInput)
-				.withSerializable("dust", dust)
-				.unwrap();
-	}
-
-	@Override
-	public int getTotalProcessTime()
-	{
-		return this.totalProcessTime;
-	}
-
-	@Override
-	public int getTotalProcessEnergy()
-	{
-		return this.totalProcessEnergy;
+				.withSerializable("dust", dust);
 	}
 
 	public DustStack getDust()

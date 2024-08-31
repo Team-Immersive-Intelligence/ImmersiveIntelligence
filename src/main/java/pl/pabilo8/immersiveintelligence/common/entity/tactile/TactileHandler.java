@@ -94,6 +94,10 @@ public class TactileHandler
 		if(!Graphics.tactileAMT)
 			return false;
 
+		//BUG: 12.08.2024 fix AMTTactile
+		if(true)
+			return false;
+
 		//Loading is not possible
 		if(aabbLoc==null)
 			return false;

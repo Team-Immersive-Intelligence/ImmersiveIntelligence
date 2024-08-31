@@ -22,8 +22,7 @@ public interface IAmmoModel<T extends IAmmoType<T, E>, E extends EntityAmmoBase<
 	 * Renders core and casing (depends on ammo type).
 	 * When your bullet has a gunpowder filling animation it is preferred to override this method and render a simpler casing model (less geometry -> more performance)
 	 *
-	 * @param tes
-	 * @param buf
+	 * @param used         true for flying projectiles
 	 * @param paintColour  in rgbInt format
 	 * @param coreMaterial of the ammo, see {@link AmmoCore}
 	 * @param coreType     of the ammo, see {@link IAmmoType#getAllowedCoreTypes()}

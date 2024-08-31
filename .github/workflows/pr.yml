@@ -1,0 +1,59 @@
+name: Check Pull Request
+
+on:
+  pull_request:
+    branches: [ "master", "dev/**" ]
+
+jobs:
+  assign-reviewer:
+    runs-on: ubuntu-latest
+    name: Assign a reviewer
+    steps:
+      - name: Assign task to a Reviewer
+        uses: hkusu/review-assign-action@v1
+        with:
+          assignees: Pabilo8
+
+  check:
+    runs-on: ubuntu-latest
+    name: Check Pull Request's Quality
+    env:
+      GITHUB_USERNAME: ${{ github.actor }}
+      GITHUB_TOKEN: ${{ secrets.OPTIMIZATION_TOKEN }}
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: corretto
+          java-version: 8
+
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v3
+
+      - name: Prepare Workspace
+        run: chmod +x gradlew ; ./gradlew setupDecompWorkspace
+
+      - name: Check for Compilation
+        run: ./gradlew compileJava
+
+      - name: Run Unit Tests
+        run: ./gradlew test
+
+  notify-discord:
+    runs-on: ubuntu-latest
+    name: Notify Discord
+    steps:
+      - name: Notify Internal Discord
+        uses: sebastianpopp/discord-action@releases/v2
+        with:
+          webhook: ${{ secrets.WH_PR_PRIVATE }}
+          message: "[@${{ github.event.pull_request.user.login }}](https://github.com/${{ github.event.pull_request.user.login }}) has contributed to Engineers' Cause with [${{ github.event.issue.title }}](https://github.com/${{ github.repository }}/issues/${{ github.event.issue.number }})."
+
+      - name: Notify Public Discord
+        uses: sebastianpopp/discord-action@releases/v2
+        with:
+          webhook: ${{ secrets.WH_PR_PUBLIC }}
+          message: "[@${{ github.event.pull_request.user.login }}](https://github.com/${{ github.event.pull_request.user.login }}) has contributed to Engineers' Cause with [${{ github.event.issue.title }}](https://github.com/${{ github.repository }}/issues/${{ github.event.issue.number }})."

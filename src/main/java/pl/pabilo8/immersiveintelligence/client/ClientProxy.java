@@ -280,6 +280,12 @@ public class ClientProxy extends CommonProxy
 	@Override
 	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
 	{
+		if(ID < 0)
+		{
+			IILogger.warn("Trying to access a null GUI on client. Most likely it's work-in-progress or not bound to source yet.");
+			return null;
+		}
+
 		EnumHand hand;
 		TileEntity te = world.getTileEntity(new BlockPos(x, y, z));
 		ItemStack stack = player.getHeldItem(hand = (player.getHeldItem(EnumHand.MAIN_HAND).getItem() instanceof IGuiItem?EnumHand.MAIN_HAND: EnumHand.OFF_HAND));
@@ -303,6 +309,8 @@ public class ClientProxy extends CommonProxy
 					((IGuiTile)te).onGuiOpened(player, true);
 		}
 
+		if(gui==null)
+			IILogger.warn("Trying to access a GUI on client, but no GUI is registered for ID "+ID);
 		return gui;
 	}
 
@@ -338,6 +346,7 @@ public class ClientProxy extends CommonProxy
 		registerEntityRenderer(EntityCamera.class, EntityRenderNone::new);
 		registerEntityRenderer(EntitySkycrateInternal.class, EntityRenderNone::new);
 		registerEntityRenderer(EntityVehicleSeat.class, EntityRenderNone::new);
+
 
 		registerEntityRenderer(EntityAtomicBoom.class, AtomicBoomRenderer::new);
 		registerEntityRenderer(EntityGasCloud.class, EntityRenderNone::new);

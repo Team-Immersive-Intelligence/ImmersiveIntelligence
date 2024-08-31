@@ -223,6 +223,14 @@
     "53": "drawing_board"
   },
   "poi": {
+    "drawer": 32,
+    "input_core": 20,
+    "input_casing": 18,
+    "item_input": [18, 20],
+    "item_output": 34,
+    "redstone_input": 15,
+    "data_input": 8,
+    "energy_input": 50
   },
   "tactile": {
     "_schema": "immersiveintelligence:models/block/multiblock/heavy_ammunition_assembler/tactile.obj.amt",
