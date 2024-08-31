@@ -2,7 +2,7 @@ name: Optimize Assets
 
 on:
   push: #Trigger On Push
-    branches: [ "dev" ]
+    branches: [ "dev/main" ]
   workflow_dispatch: #Manual Trigger
 
 jobs:
@@ -12,19 +12,14 @@ jobs:
     runs-on: ubuntu-latest
     env:
       GITHUB_USERNAME: 'CarverBot'
-      GITHUB_TOKEN: ${{ secrets.OPTIMIZATION_TOKEN }}
-      MINECRAFT_VERSION: 1.12.2
-      JAVA_VERSION: 8
-      VERSION: 1.12.2
-      RELEASE_NAME: Immersive-Intelligence-0.3.1-dev$
-      MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
-      CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
+      GITHUB_TOKEN: ${{ secrets.CARVERBOT_TOKEN }}
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - uses: FedericoCarboni/setup-ffmpeg@v2
+      - name: Setup FFMPEG Codec
+        uses: FedericoCarboni/setup-ffmpeg@v3
         id: setup-ffmpeg
 
       - name: Optimize PNGs
@@ -35,17 +30,17 @@ jobs:
         continue-on-error: true
         run: chmod -R a+rX ./gradle/tools/* ; bash ./gradle/tools/opti.sh -a
         env:
-          LOC_FFMPEG: ${{ steps.setup-ffmpeg.outputs.ffmpeg-path }}
-          LOC_FFPROBE: ${{ steps.setup-ffmpeg.outputs.ffprobe-path }}
+          LOC_FFMPEG: ${{ steps.setup-ffmpeg.outputs.ffmpeg-path }}/ffmpeg
+          LOC_FFPROBE: ${{ steps.setup-ffmpeg.outputs.ffmpeg-path }}/ffprobe
 
       - name: Setup Git User
         uses: fregante/setup-git-user@v2
 
       - name: Setup Git User
-        run: git config --global user.name "Automated Carver Device(tm)"
+        run: git config --global user.name "Automated Carver Device(tm)" ; git config --global user.email "carverbot@iiteam.net"
 
       - name: Verify Changed files
-        uses: tj-actions/verify-changed-files@v16
+        uses: tj-actions/verify-changed-files@v20
         continue-on-error: true
         id: verify-changed-files
         with:
@@ -55,9 +50,11 @@ jobs:
 
       - name: Create Pull Request
         if: steps.verify-changed-files.outputs.files_changed == 'true'
-        uses: peter-evans/create-pull-request@v5.0.2
+        uses: peter-evans/create-pull-request@v6
         with:
           title: Optimized Assets
           commit-message: optimized assets
           body: Assets were automatically optimized.
-          token: ${{ secrets.OPTIMIZATION_TOKEN }}
+          author: CarverBot <carverbot@iiteam.net>
+          committer: CarverBot <carverbot@iiteam.net>
+          token: ${{ secrets.CARVERBOT_TOKEN }}

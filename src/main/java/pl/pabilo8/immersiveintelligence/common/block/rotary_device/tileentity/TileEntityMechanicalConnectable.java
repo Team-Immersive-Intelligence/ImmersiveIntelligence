@@ -36,6 +36,7 @@ import static blusunrize.immersiveengineering.api.energy.wires.WireApi.canMix;
  */
 public abstract class TileEntityMechanicalConnectable extends TileEntityImmersiveConnectable implements IMotorBeltConnector, ITickable, IDirectionalTile, IHammerInteraction, IBlockBounds, IOBJModelCallback<IBlockState>, IRotationalEnergyBlock
 {
+	@Nonnull
 	protected MotorBeltNetwork beltNetwork = new MotorBeltNetwork().add(this);
 	public RotaryStorage energy = new RotaryStorage()
 	{
@@ -48,7 +49,7 @@ public abstract class TileEntityMechanicalConnectable extends TileEntityImmersiv
 		@Override
 		public float getOutputRotationSpeed()
 		{
-			return getNetwork()!=null?(float)getNetwork().getNetworkRPM(): this.getRotationSpeed();
+			return getNetwork()!=null?(float)getNetwork().getNetworkSpeed(): this.getRotationSpeed();
 		}
 
 		@Override
@@ -101,10 +102,12 @@ public abstract class TileEntityMechanicalConnectable extends TileEntityImmersiv
 	@Override
 	public boolean canConnectCable(WireType cableType, TargetingInfo target, Vec3i offset)
 	{
-		if(!RotaryUtils.isMechanicalBelt(cableType))
+		if(!IIRotaryUtils.isMotorBelt(cableType)||!canConnectBelt(((MotorBeltType)cableType)))
 			return false;
 		return limitType==null||(this.isRelay()&&canMix(limitType, cableType));
 	}
+
+	protected abstract boolean canConnectBelt(MotorBeltType cableType);
 
 	@Override
 	public void readCustomNBT(@Nonnull NBTTagCompound nbt, boolean descPacket)
@@ -153,6 +156,7 @@ public abstract class TileEntityMechanicalConnectable extends TileEntityImmersiv
 		}
 	}
 
+	@Nonnull
 	@Override
 	public MotorBeltNetwork getNetwork()
 	{
@@ -160,7 +164,7 @@ public abstract class TileEntityMechanicalConnectable extends TileEntityImmersiv
 	}
 
 	@Override
-	public void setNetwork(MotorBeltNetwork net)
+	public void setNetwork(@Nonnull MotorBeltNetwork net)
 	{
 		beltNetwork = net;
 	}

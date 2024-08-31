@@ -2,7 +2,6 @@ package pl.pabilo8.immersiveintelligence.api.crafting;
 
 import blusunrize.immersiveengineering.api.ApiUtils;
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
-import blusunrize.immersiveengineering.api.crafting.MultiblockRecipe;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import blusunrize.immersiveengineering.common.util.ListUtils;
 import com.google.common.collect.Lists;
@@ -11,7 +10,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.oredict.OreDictionary;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionBase.IIIMultiblockRecipe;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.IIMultiblockRecipe;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -22,15 +22,13 @@ import java.util.List;
  * @author Pabilo8
  * @since 14-04-2020
  */
-public class FillerRecipe extends MultiblockRecipe implements IIIMultiblockRecipe
+public class FillerRecipe extends IIMultiblockRecipe
 {
 	public final IngredientStack itemInput;
 	public final ItemStack itemOutput;
 
 	public static ArrayList<FillerRecipe> recipeList = new ArrayList<>();
 	public DustStack dust;
-	int totalProcessTime;
-	int totalProcessEnergy;
 	//for bullets only
 	IAmmoTypeItem bullet = null;
 
@@ -61,7 +59,7 @@ public class FillerRecipe extends MultiblockRecipe implements IIIMultiblockRecip
 	{
 		ItemStack casingStack = bulletItem.getCasingStack(1);
 		ItemNBTHelper.setBoolean(casingStack, "ii_FilledCasing", true);
-		FillerRecipe recipe = addRecipe(casingStack, new IngredientStack(bulletItem.getCasingStack(1)).setUseNBT(true), new DustStack("gunpowder", bulletItem.getGunpowderNeeded()), time, energy);
+		FillerRecipe recipe = addRecipe(casingStack, new IngredientStack(bulletItem.getCasingStack(1)).setUseNBT(true), new DustStack("gunpowder", bulletItem.getPropellantNeeded()), time, energy);
 		recipe.bullet = bulletItem;
 		return recipe;
 	}
@@ -104,29 +102,18 @@ public class FillerRecipe extends MultiblockRecipe implements IIIMultiblockRecip
 		return 0;
 	}
 
+
 	public static FillerRecipe loadFromNBT(NBTTagCompound nbt)
 	{
 		return findRecipe(IngredientStack.readFromNBT(nbt.getCompoundTag("item_input")), new DustStack(nbt.getCompoundTag("dust")));
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
+	public EasyNBT writeToNBT()
 	{
-		nbt.setTag("item_input", itemInput.writeToNBT(new NBTTagCompound()));
-		nbt.setTag("dust", dust.serializeNBT());
-		return nbt;
-	}
-
-	@Override
-	public int getTotalProcessTime()
-	{
-		return this.totalProcessTime;
-	}
-
-	@Override
-	public int getTotalProcessEnergy()
-	{
-		return this.totalProcessEnergy;
+		return EasyNBT.newNBT()
+				.withIngredientStack("item_input", itemInput)
+				.withSerializable("dust", dust);
 	}
 
 	public DustStack getDust()

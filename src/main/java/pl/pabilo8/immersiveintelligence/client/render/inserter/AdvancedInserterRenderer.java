@@ -7,8 +7,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer.RegisteredTileRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMT;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMTItem;
-import pl.pabilo8.immersiveintelligence.client.util.amt.IIModelHeader;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.inserter.TileEntityAdvancedInserter;
+import pl.pabilo8.immersiveintelligence.common.util.amt.IIModelHeader;
 
 import java.util.function.Function;
 

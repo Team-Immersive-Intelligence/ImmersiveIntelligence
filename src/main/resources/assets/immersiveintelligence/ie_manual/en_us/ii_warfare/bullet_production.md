@@ -24,13 +24,13 @@ Let’s start with the **casing**. Most casings can be produced using an appropr
 # filler_1
 To form the filler use the hammer on the center conveyor. It requires energy to operate. When dust is placed into the input slot it is moved to the main tank, the total amount of dust stored there is shown in mB.
 
-# PorForge
+# projectile_workshop
 @upgradable
 |[multiblock]{mb:"II:ProjectileWorkshop"}|
-**Projectile Forge** is a machine used to manufacture or fill [cores]. To form it use a hammer on the left metal crate.
+**Projectile Workshop** is a machine used to manufacture or fill [cores]. To form it use a hammer on the left metal crate.
 In default configuration, the projectile workshop produces [cores from metal nuggets](bullet_cores). 
 
-# ProWo 2
+# projectile_workshop1
 |[item_display]{source:"cores"}|
 
 To operate, the machine requires energy. Through its interface the produced ammunition and core type can be set. 
@@ -39,24 +39,26 @@ It is also possible to do so using the data system.
 # core_component
 @upgradable
 
-The Projectile Workshop can be upgraded to become a Projectile Filler. This changes the role to filling [cores] produced by other Projectile Workshops using <link;bullet_components;§o§nComponents§r;>.
+The Projectile Workshop can be upgraded to become a Projectile Filler. This changes the role to filling 
 
-Tha amount of components can be specified using the interface or through the data system. The max amount is determined by the core type.
+[cores] produced by other Projectile Workshops using <link;bullet_components;§o§nComponents§r;>.
 
-# ProWor 3
-The core is produced in the **Projectile Forge** using various metal nuggets, such as lead. Keep in mind to use [the appropriate metal for the job](bullet_cores)
+An amount of components can be specified using the interface or through the data system. The max amount is determined by the core type.
+
+# projectile_workshop2
+The core is produced in the **Projectile Workshop** using various metal nuggets, such as lead. Keep in mind to use [the appropriate metal for the job](bullet_cores)
 
 Different rounds calls for different cores. A submachine gun can't fire Artillery shells, the different cores can hold different amounts of components.
 
 Filling with [components] is optional and may be repeated multiple times with the same or different components.
 
 
-# AmmoWorkshop
-|[multiblock]{mb:"II:AmmunitionWorkshop"}|
-The final stage is the bullet assembly in the **Ammunition Workshop**. 
+# ammunition_assembler
+|[multiblock]{mb:"II:AmmunitionAssembler"}|
+The final stage is the bullet assembly in the **Ammunition Assembler**. 
 In this device, the core is inserted into the casing, remember to match the core type to the casing type.
 
-# AmmoWorkshop2
-To form the **Ammunition Workshop** use the hammer on the center steel scaffolding that is exposed.
+# ammunition_assembler2
+To form the **Ammunition Assembler** use the hammer on the center steel scaffolding that is exposed.
 
 It also sets the fuse determining under what conditions its components will detonate. Fuses can be set through the interface or a data packet. To operate, the machine requires electricity.

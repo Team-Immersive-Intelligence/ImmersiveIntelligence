@@ -31,7 +31,11 @@ public class AdvancedSounds
 		@Nonnull
 		private final SoundEvent soundMid;
 
-
+		/**
+		 * @param soundBegin start sound
+		 * @param soundMid   middle/looped sound
+		 * @param soundEnd   end sound
+		 */
 		public MultiSound(SoundEvent soundBegin, SoundEvent soundMid, SoundEvent soundEnd)
 		{
 			this.id = IISounds.rangedSounds.size();
@@ -40,6 +44,16 @@ public class AdvancedSounds
 			this.soundBegin = soundBegin;
 			this.soundMid = soundMid;
 			this.soundEnd = soundEnd;
+		}
+
+		/**
+		 * It may make no sense, but it is here for convenience
+		 *
+		 * @param sound middle/looped sound
+		 */
+		public MultiSound(SoundEvent sound)
+		{
+			this(null, sound, null);
 		}
 
 		@Nullable

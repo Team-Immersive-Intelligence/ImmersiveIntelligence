@@ -27,6 +27,7 @@ import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.crafting.IIRecipes;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
 import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIIItemTextureOverride;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
@@ -60,7 +61,7 @@ public class ItemIICasingPouch extends ItemIIBase implements IIIItemTextureOverr
 	{
 		super.addInformation(stack, world, info, flag);
 
-		info.add(IIUtils.getItalicString(I18n.format(IIReference.DESCRIPTION_KEY+"casing_pouch")));
+		info.add(IIStringUtil.getItalicString(I18n.format(IIReference.DESCRIPTION_KEY+"casing_pouch")));
 	}
 
 	//--- GUI Opening ---//

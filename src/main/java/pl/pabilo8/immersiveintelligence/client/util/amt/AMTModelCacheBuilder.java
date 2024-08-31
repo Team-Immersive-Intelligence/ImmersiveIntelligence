@@ -7,6 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.obj.OBJModel;
+import pl.pabilo8.immersiveintelligence.common.util.amt.IIModelHeader;
 
 import java.util.ArrayList;
 import java.util.Arrays;

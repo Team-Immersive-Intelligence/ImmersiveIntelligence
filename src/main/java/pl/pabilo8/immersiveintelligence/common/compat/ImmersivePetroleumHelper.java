@@ -148,7 +148,7 @@ public class ImmersivePetroleumHelper extends IICompatModule
 						GlStateManager.pushMatrix();
 
 						Tuple<ResourceLocation, EnumFacing> entry = ((MultiblockStuctureBase<?>)mb).getConveyorKey(event.getH(), event.getL(), event.getW(), EnumFacing.SOUTH);
-						EnumFacing facing = entry.getSecond();
+						EnumFacing facing = entry.getSecond().getOpposite();
 						IConveyorBelt conv = ConveyorHandler.functionRegistry.get(entry.getFirst()).apply(null);
 
 						Tessellator tessellator = Tessellator.getInstance();
@@ -210,7 +210,7 @@ public class ImmersivePetroleumHelper extends IICompatModule
 
 				IConveyorBelt subType = ConveyorHandler.getConveyor(rl, conveyor);
 				conveyor.setConveyorSubtype(subType);
-				conveyor.setFacing(facing);
+				conveyor.setFacing(facing.getOpposite());
 
 			}
 		}

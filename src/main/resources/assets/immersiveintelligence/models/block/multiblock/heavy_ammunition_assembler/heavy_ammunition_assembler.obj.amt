@@ -1,0 +1,43 @@
+{
+	"origins": {
+		"drawer4": [-50, 1, -24],
+		"drawer3": [-50, 9, -24],
+		"drawer2": [-50, 17, -24],
+		"drawer1": [-50, 25, -24],
+		"crane1": [-31.1, 53.53333, 25.01667],
+		"insertersgroup1": [26, 21.5, 28.5],
+		"inserter": [-31, 43, 7.04615],
+		"lower2": [-31, 43.94615, 6.7],
+		"upper2": [-31, 57.375, 7.04615],
+		"turntable": [-31, 43, 42.99474],
+		"lower": [-31, 43.94615, 43.34089],
+		"upper": [-31, 57.5, 42.99474],
+		"pickerLeft": [-33, 68, 42.99474],
+		"pickerLeft2": [-33, 71, 42.99474],
+		"pickerRight": [-29, 68, 42.99474],
+		"pickerRight2": [-29, 71, 42.99474],
+		"camera": [17, 32.5, 10.5],
+		"crane2": [54.9, 53.53333, 25.01667],
+		"grabber": [54.9, 67.8, 25.1],
+		"picker": [54.9, 59.04658, 25.1],
+		"conveyor_on": [57, 17.5, 16.5],
+		"conveyor_off": [57, 17.5, 16.5],
+		"glass": [-67, 71.1, 21]
+	},
+	"hierarchy": {
+		"insertersgroup1": "crane1",
+		"inserter": "insertersgroup1",
+		"lower2": "inserter",
+		"upper2": "lower2",
+		"turntable": "insertersgroup1",
+		"lower": "turntable",
+		"upper": "lower",
+		"pickerLeft": "upper",
+		"pickerLeft2": "pickerLeft",
+		"pickerRight": "upper",
+		"pickerRight2": "pickerRight",
+		"camera": "upper",
+		"grabber": "crane2",
+		"picker": "grabber"
+	}
+}

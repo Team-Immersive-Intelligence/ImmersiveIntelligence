@@ -48,6 +48,7 @@ import pl.pabilo8.immersiveintelligence.common.item.armor.ItemIILightEngineerBoo
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBlockDamageSync;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemUtil;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIUpgradeableArmor;
 
 /**
@@ -65,26 +66,30 @@ public class EventHandler
 		//Apply default config
 		IIAmmoUtils.ammoBreaksBlocks = Weapons.blockDamage;
 		IIAmmoUtils.ammoExplodesBlocks = Ammunition.blockDamage;
+		IIAmmoUtils.ammoRicochets = true;
+		EntityAmmoProjectile.setSlowmo(1);
+		EntityAmmoProjectile.MAX_TICKS = 600;
+		EntityHans.INFINITE_AMMO = false;
 
 		GameRules rules = event.getWorld().getGameRules();
 		//Whether ammo can break blocks
 		if(!rules.hasRule(IIReference.GAMERULE_AMMO_BREAKS_BLOCKS))
 			rules.addGameRule(IIReference.GAMERULE_AMMO_BREAKS_BLOCKS,
-					Boolean.toString(IIAmmoUtils.ammoBreaksBlocks = Weapons.blockDamage),
+					Boolean.toString(IIAmmoUtils.ammoBreaksBlocks),
 					ValueType.BOOLEAN_VALUE);
 		else
 			IIAmmoUtils.ammoBreaksBlocks = rules.getBoolean(IIReference.GAMERULE_AMMO_BREAKS_BLOCKS);
 		//Whether ammo components can explode blocks
 		if(!rules.hasRule(IIReference.GAMERULE_AMMO_EXPLODES_BLOCKS))
 			rules.addGameRule(IIReference.GAMERULE_AMMO_EXPLODES_BLOCKS,
-					Boolean.toString(IIAmmoUtils.ammoBreaksBlocks = Ammunition.blockDamage),
+					Boolean.toString(IIAmmoUtils.ammoBreaksBlocks),
 					ValueType.BOOLEAN_VALUE);
 		else
 			IIAmmoUtils.ammoExplodesBlocks = rules.getBoolean(IIReference.GAMERULE_AMMO_EXPLODES_BLOCKS);
 		//Whether ammo can ricochet
 		if(!rules.hasRule(IIReference.GAMERULE_AMMO_RICOCHETS))
 			rules.addGameRule(IIReference.GAMERULE_AMMO_RICOCHETS,
-					Boolean.toString(IIAmmoUtils.ammoRicochets = true),
+					Boolean.toString(IIAmmoUtils.ammoRicochets),
 					ValueType.BOOLEAN_VALUE);
 		else
 			IIAmmoUtils.ammoRicochets = rules.getBoolean(IIReference.GAMERULE_AMMO_RICOCHETS);
@@ -95,13 +100,13 @@ public class EventHandler
 			EntityAmmoProjectile.MAX_TICKS = rules.getInt(IIReference.GAMERULE_AMMO_DECAY);
 		//Slowmo multiplier for projectile motion
 		if(!rules.hasRule(IIReference.GAMERULE_AMMO_SLOWMO))
-			rules.addGameRule(IIReference.GAMERULE_AMMO_SLOWMO, Float.toString(EntityAmmoProjectile.SLOWMO), ValueType.NUMERICAL_VALUE);
+			rules.addGameRule(IIReference.GAMERULE_AMMO_SLOWMO, Float.toString(EntityAmmoProjectile.SLOWMO*100), ValueType.NUMERICAL_VALUE);
 		else
 			EntityAmmoProjectile.setSlowmo(rules.getInt(IIReference.GAMERULE_AMMO_SLOWMO)/100f);
 
 		//Hans infinite ammo
 		if(!rules.hasRule(IIReference.GAMERULE_HANS_INFINITE_AMMO))
-			rules.addGameRule(IIReference.GAMERULE_HANS_INFINITE_AMMO, Boolean.toString(EntityHans.INFINITE_AMMO = false), ValueType.BOOLEAN_VALUE);
+			rules.addGameRule(IIReference.GAMERULE_HANS_INFINITE_AMMO, Boolean.toString(EntityHans.INFINITE_AMMO), ValueType.BOOLEAN_VALUE);
 		else
 			EntityHans.INFINITE_AMMO = rules.getBoolean(IIReference.GAMERULE_HANS_INFINITE_AMMO);
 	}
@@ -146,7 +151,7 @@ public class EventHandler
 		if(event.isCancelable()&&!event.isCanceled()&&event.getMultiblock().getClass().isAnnotationPresent(IAdvancedMultiblock.class))
 		{
 			//Required by Advanced Structures!
-			if(!IIUtils.isAdvancedHammer(event.getHammer()))
+			if(!IIItemUtil.isAdvancedHammer(event.getHammer()))
 			{
 				if(!event.getEntityPlayer().getEntityWorld().isRemote)
 					IIPacketHandler.sendChatTranslation(event.getEntityPlayer(), "info.immersiveintelligence.requires_advanced_hammer");

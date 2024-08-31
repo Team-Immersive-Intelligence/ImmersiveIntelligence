@@ -52,7 +52,7 @@ public abstract class TileEntityMultiblockIIGeneric<T extends TileEntityMultiblo
 {
 	@SyncNBT(name = "redstone_control")
 	protected boolean redstoneControlInverted = false;
-	@SyncNBT(name = "inventory", events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_RECIPE_CHANGED})
+	@SyncNBT(name = "inventory", events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_GUI_CLOSED, SyncEvents.TILE_RECIPE_CHANGED})
 	public NonNullList<ItemStack> inventory;
 	@SyncNBT(name = "ifluxEnergy")
 	public FluxStorageAdvanced energyStorage;

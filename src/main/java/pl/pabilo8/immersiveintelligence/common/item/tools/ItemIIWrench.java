@@ -26,11 +26,12 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import pl.pabilo8.immersiveintelligence.api.utils.IUpgradableMachine;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.IWrench;
-import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IUpgradableMachine;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
 import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIBase;
@@ -60,7 +61,7 @@ public class ItemIIWrench extends ItemIIBase implements ITool, IItemDamageableIE
 	@Override
 	public void addInformation(@Nonnull ItemStack stack, @Nullable World world, List<String> list, ITooltipFlag flag)
 	{
-		list.add(IIUtils.getItalicString(I18n.format(IIReference.DESCRIPTION_KEY+"wrench")));
+		list.add(IIStringUtil.getItalicString(I18n.format(IIReference.DESCRIPTION_KEY+"wrench")));
 	}
 
 	@Override

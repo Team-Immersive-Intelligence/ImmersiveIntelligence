@@ -19,6 +19,7 @@ import pl.pabilo8.immersiveintelligence.client.model.misc.ModelHansBiped;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
 import pl.pabilo8.immersiveintelligence.common.entity.hans.HansAnimations.HansLegAnimation;
+import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 
 /**
  * @author Pabilo8
@@ -175,7 +176,7 @@ public class HansRenderer extends RenderLivingBase<EntityHans> implements IReloa
 				float v1 = v < 0.5f?v*2f: 1f;
 				float v2 = v > 0.5f?(v-0.5f)/0.5f: 0;
 
-				return -0.325f+IIUtils.clampedLerp3Par(0, 0.0725f, 0, v1)+IIUtils.clampedLerp3Par(0, 0.0725f, 0, v2);
+				return -0.325f+IIMath.clampedLerp3Par(0, 0.0725f, 0, v1)+IIMath.clampedLerp3Par(0, 0.0725f, 0, v2);
 			}
 			case SWIMMING:
 				return 1;

@@ -3,7 +3,7 @@ package pl.pabilo8.immersiveintelligence.client.model.builtin;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoCore;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoType;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
@@ -22,13 +22,12 @@ public interface IAmmoModel<T extends IAmmoType<T, E>, E extends EntityAmmoBase<
 	 * Renders core and casing (depends on ammo type).
 	 * When your bullet has a gunpowder filling animation it is preferred to override this method and render a simpler casing model (less geometry -> more performance)
 	 *
-	 * @param tes
-	 * @param buf
+	 * @param used         true for flying projectiles
 	 * @param paintColour  in rgbInt format
 	 * @param coreMaterial of the ammo, see {@link AmmoCore}
 	 * @param coreType     of the ammo, see {@link IAmmoType#getAllowedCoreTypes()}
 	 */
-	void renderAmmoComplete(boolean used, int paintColour, AmmoCore coreMaterial, CoreTypes coreType);
+	void renderAmmoComplete(boolean used, int paintColour, AmmoCore coreMaterial, CoreType coreType);
 
 	@SuppressWarnings("unchecked")
 	default void renderAmmoComplete(boolean used, ItemStack stack)
@@ -57,7 +56,7 @@ public interface IAmmoModel<T extends IAmmoType<T, E>, E extends EntityAmmoBase<
 	 * @param coreMaterial of the ammo, see {@link AmmoCore}
 	 * @param coreType     of the ammo, see {@link IAmmoType#getAllowedCoreTypes()}
 	 */
-	void renderCore(AmmoCore coreMaterial, CoreTypes coreType);
+	void renderCore(AmmoCore coreMaterial, CoreType coreType);
 
 	@SuppressWarnings("unchecked")
 	default void renderCore(ItemStack stack)

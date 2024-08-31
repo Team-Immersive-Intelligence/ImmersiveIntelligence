@@ -11,16 +11,20 @@ import net.minecraftforge.client.model.obj.OBJModel.MaterialLibrary;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoCore;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoType;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
-import pl.pabilo8.immersiveintelligence.client.util.amt.*;
+import pl.pabilo8.immersiveintelligence.client.util.amt.AMT;
+import pl.pabilo8.immersiveintelligence.client.util.amt.AMTLocator;
+import pl.pabilo8.immersiveintelligence.client.util.amt.AMTQuads;
+import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationUtils;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityAmmoBase;
-import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoGrenade;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoMine;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.amt.IIModelHeader;
 
 import java.util.EnumMap;
 import java.util.HashMap;
@@ -47,8 +51,8 @@ public class ModelAmmo<T extends IAmmoType<T, E>, E extends EntityAmmoBase<? sup
 	/**
 	 * Core models, baked and assigned by material
 	 */
-	protected final EnumMap<CoreTypes, HashMap<AmmoCore, AMT>> modelCore = new EnumMap<>(CoreTypes.class);
-	protected final EnumMap<CoreTypes, HashMap<AmmoCore, AMT>> modelCoreSimple = new EnumMap<>(CoreTypes.class);
+	protected final EnumMap<CoreType, HashMap<AmmoCore, AMT>> modelCore = new EnumMap<>(CoreType.class);
+	protected final EnumMap<CoreType, HashMap<AmmoCore, AMT>> modelCoreSimple = new EnumMap<>(CoreType.class);
 	/**
 	 * Core models, baked and assigned by material
 	 */
@@ -63,22 +67,13 @@ public class ModelAmmo<T extends IAmmoType<T, E>, E extends EntityAmmoBase<? sup
 
 	//--- Model Creation Methods ---//
 
-	public static <T extends IAmmoType<T, E>, E extends EntityAmmoGrenade> ModelAmmo<T, E> createGrenadeModel(T ammo)
-	{
-		//Create model
-		String name = ammo.getName().toLowerCase();
-		ModelAmmo<T, E> model = new ModelAmmo<>(ammo, ResLoc.of(RES_ITEM_MODEL, name).withExtension(ResLoc.EXT_OBJ));
-		model.reloadModels();
-		return model.subscribeToList("ammo_"+name);
-	}
-
 	public static <T extends IAmmoType<T, E>, E extends EntityAmmoMine> ModelAmmo<T, E> createExplosivesModel(T ammo)
 	{
 		//Create model
 		String name = ammo.getName().toLowerCase();
 		ModelAmmo<T, E> model = new ModelAmmo<>(ammo, ResLoc.of(RES_ITEM_MODEL, name).withExtension(ResLoc.EXT_OBJ));
 		model.reloadModels();
-		return model.subscribeToList("ammo_"+name);
+		return model.subscribeToList("ammo/explosives/"+name);
 	}
 
 	//--- Rendering Methods ---//
@@ -102,7 +97,7 @@ public class ModelAmmo<T extends IAmmoType<T, E>, E extends EntityAmmoBase<? sup
 	 * @param coreMaterial of the ammo, see {@link AmmoCore}
 	 * @param coreType     of the ammo, see {@link IAmmoType#getAllowedCoreTypes()}
 	 */
-	public void renderCore(AmmoCore coreMaterial, CoreTypes coreType)
+	public void renderCore(AmmoCore coreMaterial, CoreType coreType)
 	{
 		if(!loaded)
 			return;
@@ -118,7 +113,7 @@ public class ModelAmmo<T extends IAmmoType<T, E>, E extends EntityAmmoBase<? sup
 	 * @param coreMaterial of the ammo, see {@link AmmoCore}
 	 * @param coreType     of the ammo, see {@link IAmmoType#getAllowedCoreTypes()}
 	 */
-	public void renderAmmoComplete(boolean used, int paintColour, AmmoCore coreMaterial, CoreTypes coreType)
+	public void renderAmmoComplete(boolean used, int paintColour, AmmoCore coreMaterial, CoreType coreType)
 	{
 		if(!loaded)
 			return;
@@ -126,7 +121,11 @@ public class ModelAmmo<T extends IAmmoType<T, E>, E extends EntityAmmoBase<? sup
 		BufferBuilder buf = tes.getBuffer();
 
 		if(!used)
+		{
 			modelCasingSimple.render(tes, buf);
+			if(paintColour!=-1)
+				modelPaint.computeIfAbsent(paintColour, integer -> ((AMTQuads)modelPaintBase).recolor(IIColor.fromPackedRGB(integer))).render(tes, buf);
+		}
 		modelCoreSimple.get(coreType).get(coreMaterial).render(tes, buf);
 	}
 
@@ -162,7 +161,7 @@ public class ModelAmmo<T extends IAmmoType<T, E>, E extends EntityAmmoBase<? sup
 			modelCasingSimple = modelCasing;
 
 		//Preload all core models
-		for(CoreTypes coreType : ammo.getAllowedCoreTypes())
+		for(CoreType coreType : ammo.getAllowedCoreTypes())
 		{
 			HashMap<AmmoCore, AMT> modelMap = new HashMap<>();
 			HashMap<AmmoCore, AMT> modelSimpleMap = new HashMap<>();
@@ -177,7 +176,7 @@ public class ModelAmmo<T extends IAmmoType<T, E>, E extends EntityAmmoBase<? sup
 			{
 				AMT quads;
 				if(coreModel instanceof AMTQuads)
-					quads = ((AMTQuads)coreModel).recolor(core.getColour());
+					quads = ((AMTQuads)coreModel).recolor(core.getColor());
 				else
 				{
 					quads = new AMTLocator(coreModel.name, Vec3d.ZERO);
@@ -185,14 +184,14 @@ public class ModelAmmo<T extends IAmmoType<T, E>, E extends EntityAmmoBase<? sup
 							coreModel.getChildrenRecursive().stream()
 									.filter(amt1 -> amt1 instanceof AMTQuads)
 									.map(amt1 -> ((AMTQuads)amt1))
-									.map(amtQuads -> amtQuads.recolor(core.getColour()))
+									.map(amtQuads -> amtQuads.recolor(core.getColor()))
 									.toArray(AMTQuads[]::new)
 					);
 				}
 
 				modelMap.put(core, quads);
 				//If simple variant is not present, use the main model
-				modelSimpleMap.put(core, coreSimpleModel==null?quads: coreSimpleModel.recolor(core.getColour()));
+				modelSimpleMap.put(core, coreSimpleModel==null?quads: coreSimpleModel.recolor(core.getColor()));
 			}
 			modelCore.put(coreType, modelMap);
 			modelCoreSimple.put(coreType, modelSimpleMap);

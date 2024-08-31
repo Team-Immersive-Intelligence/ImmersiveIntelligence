@@ -11,8 +11,9 @@ import net.minecraft.util.math.RayTraceResult.Type;
 import pl.pabilo8.immersiveintelligence.api.rotary.CapabilityRotaryEnergy;
 import pl.pabilo8.immersiveintelligence.api.rotary.IRotaryEnergy;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -32,16 +33,17 @@ public class TextOverlayMechanical extends TextOverlayBase
 			return false;
 
 		return te!=null&&te.hasCapability(CapabilityRotaryEnergy.ROTARY_ENERGY, mouseOver.sideHit.getOpposite())&&
-				IIUtils.isTachometer(player.getHeldItem(EnumHand.MAIN_HAND));
+				IIItemUtil.isTachometer(player.getHeldItem(EnumHand.MAIN_HAND));
 	}
 
 	@ParametersAreNonnullByDefault
 	@Nullable
 	@Override
-	public String [] getText(EntityPlayer player, RayTraceResult mouseOver, @Nullable TileEntity te, @Nullable Entity entityHit)
+	public String[] getText(EntityPlayer player, RayTraceResult mouseOver, @Nullable TileEntity te, @Nullable Entity entityHit)
 	{
 		assert te!=null;
 
+		//TODO: 03.08.2024 expose capability on all sides
 		IRotaryEnergy energy = te.getCapability(CapabilityRotaryEnergy.ROTARY_ENERGY, mouseOver.sideHit.getOpposite());
 		assert energy!=null;
 
@@ -52,15 +54,15 @@ public class TextOverlayMechanical extends TextOverlayBase
 
 		if(intTorque!=extTorque&&intSpeed!=extSpeed)
 			return new String[]{
-					IIUtils.getHexCol(IIReference.COLORS_HIGHLIGHT_S[0],"\u2296 "+I18n.format(IIReference.INFO_KEY+"tachometer.internal_torque", intTorque)),
-					IIUtils.getHexCol(IIReference.COLORS_HIGHLIGHT_S[0],"\u29c1 "+I18n.format(IIReference.INFO_KEY+"tachometer.internal_speed", intSpeed)),
-					"\u2296 "+I18n.format(IIReference.INFO_KEY+"tachometer.external_torque", extTorque),
-					"\u29c1 "+I18n.format(IIReference.INFO_KEY+"tachometer.external_speed", extSpeed)
+					IIColor.getHexCol(IIReference.COLORS_HIGHLIGHT_S[0], "\u2296 "+I18n.format(IIReference.INFO_KEY+"tachometer.internal_torque", intTorque)),
+					IIColor.getHexCol(IIReference.COLORS_HIGHLIGHT_S[0], "\u29c1 "+I18n.format(IIReference.INFO_KEY+"tachometer.internal_speed", intSpeed)),
+					IIReference.CHARICON_TORQUE+I18n.format(IIReference.INFO_KEY+"tachometer.external_torque", extTorque),
+					IIReference.CHARICON_SPEED+I18n.format(IIReference.INFO_KEY+"tachometer.external_speed", extSpeed)
 			};
 		else
 			return new String[]{
-					"\u2296 "+I18n.format(IIReference.INFO_KEY+"tachometer.torque", intTorque),
-					"\u29c1 "+I18n.format(IIReference.INFO_KEY+"tachometer.speed", intSpeed)
+					IIReference.CHARICON_TORQUE+I18n.format(IIReference.INFO_KEY+"tachometer.torque", intTorque),
+					IIReference.CHARICON_SPEED+I18n.format(IIReference.INFO_KEY+"tachometer.speed", intSpeed)
 			};
 	}
 

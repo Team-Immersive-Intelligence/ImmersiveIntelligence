@@ -43,6 +43,7 @@ import pl.pabilo8.immersiveintelligence.client.render.IIMultiblockRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
 import pl.pabilo8.immersiveintelligence.common.util.raytracer.AxisAlignedFacingBB;
 
 import javax.annotation.Nonnull;
@@ -107,6 +108,7 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 	 * Bounding boxes for collision and interaction detection at [pos] [facing (ordinal)]
 	 */
 	private ArrayList<ArrayList<AxisAlignedFacingBB>> AABBs = new ArrayList<>();
+	//TODO: 30.07.2024 second map for caching of MultiblockPOIs
 	/**
 	 * Map of named Points of Interest and their local positions in this multiblock
 	 */
@@ -120,7 +122,7 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 	{
 		this.loc = loc;
 		String[] split = loc.getResourcePath().split("/");
-		this.name = "II:"+IIUtils.toCamelCase(split[split.length-1], false);
+		this.name = "II:"+IIStringUtil.toCamelCase(split[split.length-1], false);
 	}
 
 	public void updateStructure()

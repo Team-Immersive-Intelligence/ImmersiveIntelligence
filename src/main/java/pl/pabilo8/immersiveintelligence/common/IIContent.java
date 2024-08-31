@@ -15,13 +15,16 @@ import net.minecraftforge.fluids.Fluid;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoCore;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoPropellant;
 import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
-import pl.pabilo8.immersiveintelligence.common.ammo.*;
+import pl.pabilo8.immersiveintelligence.common.ammo.components.*;
+import pl.pabilo8.immersiveintelligence.common.ammo.components.explosives.AmmoComponentHMX;
+import pl.pabilo8.immersiveintelligence.common.ammo.components.explosives.AmmoComponentRDX;
+import pl.pabilo8.immersiveintelligence.common.ammo.components.explosives.AmmoComponentTNT;
+import pl.pabilo8.immersiveintelligence.common.ammo.components.incendiary.AmmoComponentWhitePhosphorus;
+import pl.pabilo8.immersiveintelligence.common.ammo.components.nuke.AmmoComponentNuke;
 import pl.pabilo8.immersiveintelligence.common.ammo.cores.*;
-import pl.pabilo8.immersiveintelligence.common.ammo.explosives.AmmoComponentHMX;
-import pl.pabilo8.immersiveintelligence.common.ammo.explosives.AmmoComponentNuke;
-import pl.pabilo8.immersiveintelligence.common.ammo.explosives.AmmoComponentRDX;
-import pl.pabilo8.immersiveintelligence.common.ammo.explosives.AmmoComponentTNT;
+import pl.pabilo8.immersiveintelligence.common.ammo.propellants.*;
 import pl.pabilo8.immersiveintelligence.common.block.data_device.BlockIIDataDevice;
 import pl.pabilo8.immersiveintelligence.common.block.fortification.*;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.BlockIIMetalDecoration;
@@ -194,10 +197,10 @@ public class IIContent
 	public static final ItemIISkycrateMount itemSkycrateMount = new ItemIISkycrateMount();
 	public static final ItemIILighter itemLighter = new ItemIILighter();
 	public static final ItemIIElectricHammer itemHammer = new ItemIIElectricHammer();
-	public static final ItemIITrenchShovel itemTrenchShovel = new ItemIITrenchShovel();
+	public static final ItemIIElectricWrench itemElectricWrench = new ItemIIElectricWrench();
 	public static final ItemIIElectricWirecutter itemWirecutter = new ItemIIElectricWirecutter();
 	public static final ItemIIWrench itemWrench = new ItemIIWrench();
-	public static final ItemIIElectricWrench itemElectricWrench = new ItemIIElectricWrench();
+	public static final ItemIITrenchShovel itemTrenchShovel = new ItemIITrenchShovel();
 
 	public static final ItemIITripodPeriscope itemTripodPeriscope = new ItemIITripodPeriscope();
 	public static final ItemIIMineDetector itemMineDetector = new ItemIIMineDetector();
@@ -285,6 +288,9 @@ public class IIContent
 	public static final BlockIIDataDevice blockDataConnector = new BlockIIDataDevice();
 	public static final BlockIISmallCrate blockSmallCrate = new BlockIISmallCrate();
 
+	//explosives
+	public static final BlockIIHMXDynamite blockHMXDynamite = new BlockIIHMXDynamite();
+
 	//ammunition
 	public static final BlockIIMineSign blockMineSign = new BlockIIMineSign();
 	public static final BlockIITripmine blockTripmine = new BlockIITripmine();
@@ -356,6 +362,15 @@ public class IIContent
 	public static final AmmoComponent ammoComponentPropaganda = new AmmoComponentPropaganda();
 	public static final AmmoComponent ammoComponentTesla = new AmmoComponentTesla();
 	public static final AmmoComponent ammoComponentFish = new AmmoComponentFish();
+
+	//ammo propellants
+	public static final AmmoPropellant ammoPropellantGunpowder = new AmmoPropellantGunpowder();
+	public static final AmmoPropellant ammoPropellantCordite = new AmmoPropellantCordite();
+	public static final AmmoPropellant ammoPropellantHMX = new AmmoPropellantHMX();
+	public static final AmmoPropellant ammoPropellantRDX = new AmmoPropellantRDX();
+	public static final AmmoPropellant ammoPropellantRocketFuel = new AmmoPropellantRocketFuel();
+	public static final AmmoPropellant ammoPropellantExperimentalRocketFuel = new AmmoPropellantRocketFuelExperimental();
+	public static final AmmoPropellant ammoPropellantStableRocketFuel = new AmmoPropellantRocketFuelStable();
 
 	//biomes
 	public static BiomeWasteland biomeWasteland = new BiomeWasteland();
@@ -436,7 +451,7 @@ public class IIContent
 				.setPotionEffects(new PotionEffect(MobEffects.BLINDNESS, 60, 0));
 		IIContent.blockGasCO = new BlockIIFluid("carbon_oxide", IIContent.gasCO, Material.WATER)
 				.setPotionEffects(new PotionEffect(MobEffects.BLINDNESS, 60, 0));
-		IIContent.blockGasHydrogen = new BlockIIFluid("mustard_gas", IIContent.gasMustardGas, Material.WATER)
+		IIContent.blockGasMustardGas = new BlockIIFluid("mustard_gas", IIContent.gasMustardGas, Material.WATER)
 				.setPotionEffects(new PotionEffect(MobEffects.POISON, 60, 0));
 
 		IIContent.blockGasNitrogen = new BlockIIFluid("nitrogen", IIContent.gasNitrogen, Material.WATER);
@@ -448,7 +463,7 @@ public class IIContent
 
 	}
 
-	//dummy method, called so that static fields above get loaded
+	//dummy method, called so that the static fields above get loaded
 	static void init()
 	{
 		new ItemStack(IIContent.itemLightEngineerHelmet);

@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.common.block.mines;
 
-import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
@@ -8,7 +7,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
@@ -16,9 +14,8 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreTypes;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseType;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoCore;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
@@ -31,10 +28,9 @@ import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IIBl
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IITileProviderEnum;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.TernaryValue;
 import pl.pabilo8.immersiveintelligence.common.util.block.ItemBlockIIBase;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.function.Function;
 
 /**
@@ -133,79 +129,37 @@ public abstract class BlockIIMine extends BlockIITileProvider<IIBlockTypes_Mine>
 		}
 
 		@Override
-		public float getDefaultVelocity()
+		public float getVelocity()
 		{
 			return 1f;
 		}
 
 		@Override
-		public CoreTypes[] getAllowedCoreTypes()
+		public CoreType[] getAllowedCoreTypes()
 		{
-			return new CoreTypes[]{CoreTypes.CANISTER};
-		}
-
-		public void makeDefault(ItemStack stack)
-		{
-			if(!ItemNBTHelper.hasKey(stack, "core"))
-				ItemNBTHelper.setString(stack, "core", "core_brass");
-			if(!ItemNBTHelper.hasKey(stack, "core_type"))
-				ItemNBTHelper.setString(stack, "core_type", getAllowedCoreTypes()[0].getName());
-			if(stack.getMetadata()==IIBlockTypes_Mine.MAIN.getMeta()&&!ItemNBTHelper.hasKey(stack, "fuse"))
-				ItemNBTHelper.setString(stack, "fuse", getAllowedFuseTypes()[0].getName());
+			return new CoreType[]{CoreType.CANISTER};
 		}
 
 		@Override
-		public AmmoCore getCore(ItemStack stack)
-		{
-			if(!ItemNBTHelper.hasKey(stack, "core"))
-				makeDefault(stack);
-			return AmmoRegistry.getCore(ItemNBTHelper.getString(stack, "core"));
-		}
-
-		@Override
-		public CoreTypes getCoreType(ItemStack stack)
-		{
-			if(!ItemNBTHelper.hasKey(stack, "core_type"))
-				makeDefault(stack);
-			return CoreTypes.v(ItemNBTHelper.getString(stack, "core_type"));
-		}
-
-		@Override
-		public int getPaintColor(ItemStack stack)
-		{
-			if(ItemNBTHelper.hasKey(stack, "paint_color"))
-				return ItemNBTHelper.getInt(stack, "paint_color");
-			return -1;
-		}
-
-		@Override
-		public ItemStack getBulletWithParams(String core, String coreType, String... components)
+		public ItemStack getAmmoStack(AmmoCore core, CoreType coreType, FuseType fuse, AmmoComponent... components)
 		{
 			ItemStack stack = new ItemStack(this, 1, IIBlockTypes_Mine.MAIN.getMeta());
-			ItemNBTHelper.setString(stack, "core", core);
-			ItemNBTHelper.setString(stack, "core_type", coreType);
-			NBTTagList tagList = new NBTTagList();
-			Arrays.stream(components).map(NBTTagString::new).forEachOrdered(tagList::appendTag);
-
-			if(tagList.tagCount() > 0)
-			{
-				ItemNBTHelper.getTag(stack).setTag("components", tagList);
-				NBTTagList nbt = new NBTTagList();
-				for(int i = 0; i < tagList.tagCount(); i += 1)
-					nbt.appendTag(new NBTTagCompound());
-
-				ItemNBTHelper.getTag(stack).setTag("component_nbt", nbt);
-			}
-
+			EasyNBT.wrapNBT(stack)
+					.withString(NBT_CORE, core.getName())
+					.withString(NBT_CORE_TYPE, coreType.getName())
+					.withString(NBT_FUSE, fuse.getName())
+					.withList(NBT_COMPONENTS, c -> new NBTTagString(c.getName()), components)
+					.withList(NBT_COMPONENTS_DATA, c -> new NBTTagCompound(), components);
 			return stack;
 		}
 
 		@Override
-		public ItemStack getBulletCore(String core, String coreType)
+		public ItemStack getAmmoCoreStack(AmmoCore core, CoreType coreType)
 		{
 			ItemStack stack = new ItemStack(this, 1, IIBlockTypes_Mine.CORE.getMeta());
-			ItemNBTHelper.setString(stack, "core", core);
-			ItemNBTHelper.setString(stack, "core_type", coreType);
+			EasyNBT.wrapNBT(stack)
+					.withString(NBT_CORE, core.getName())
+					.withString(NBT_CORE_TYPE, coreType.getName());
 			return stack;
 		}
 
@@ -216,83 +170,9 @@ public abstract class BlockIIMine extends BlockIITileProvider<IIBlockTypes_Mine>
 		}
 
 		@Override
-		public FuseTypes[] getAllowedFuseTypes()
+		public FuseType[] getAllowedFuseTypes()
 		{
-			return new FuseTypes[]{FuseTypes.CONTACT};
-		}
-
-		@Override
-		public void setFuseType(ItemStack stack, FuseTypes type)
-		{
-			ItemNBTHelper.setString(stack, "fuse", type.getName());
-		}
-
-		@Override
-		public FuseTypes getFuseType(ItemStack stack)
-		{
-			if(!ItemNBTHelper.hasKey(stack, "fuse"))
-				makeDefault(stack);
-			return FuseTypes.v(ItemNBTHelper.getString(stack, "fuse"));
-		}
-
-
-		@Override
-		public AmmoComponent[] getComponents(ItemStack stack)
-		{
-			if(ItemNBTHelper.hasKey(stack, "components"))
-			{
-				ArrayList<AmmoComponent> arrayList = new ArrayList<>();
-				NBTTagList components = (NBTTagList)ItemNBTHelper.getTag(stack).getTag("components");
-				for(int i = 0; i < components.tagCount(); i++)
-					arrayList.add(AmmoRegistry.getComponent(components.getStringTagAt(i)));
-				return arrayList.toArray(new AmmoComponent[0]);
-			}
-			return new AmmoComponent[0];
-		}
-
-		@Override
-		public NBTTagCompound[] getComponentsNBT(ItemStack stack)
-		{
-			if(ItemNBTHelper.hasKey(stack, "component_nbt"))
-			{
-				ArrayList<NBTTagCompound> arrayList = new ArrayList<>();
-				NBTTagList components = (NBTTagList)ItemNBTHelper.getTag(stack).getTag("component_nbt");
-				for(int i = 0; i < components.tagCount(); i++)
-					arrayList.add(components.getCompoundTagAt(i));
-				return arrayList.toArray(new NBTTagCompound[0]);
-			}
-			return new NBTTagCompound[0];
-		}
-
-		@Override
-		public void addComponents(ItemStack stack, AmmoComponent component, NBTTagCompound componentNBT)
-		{
-			NBTTagList comps = ItemNBTHelper.getTag(stack).getTagList("components", 8);
-			NBTTagList nbts = ItemNBTHelper.getTag(stack).getTagList("component_nbt", 10);
-
-			comps.appendTag(new NBTTagString(component.getName()));
-			nbts.appendTag(componentNBT.copy());
-
-			ItemNBTHelper.getTag(stack).setTag("components", comps);
-			ItemNBTHelper.getTag(stack).setTag("component_nbt", nbts);
-		}
-
-		@Override
-		public ItemStack setPaintColour(ItemStack stack, int color)
-		{
-			ItemNBTHelper.setInt(stack, "paint_color", color);
-			return stack;
-		}
-
-		@Override
-		public ItemStack setComponentNBT(ItemStack stack, NBTTagCompound... tagCompounds)
-		{
-			NBTTagList component_nbt = new NBTTagList();
-			for(NBTTagCompound tagCompound : tagCompounds)
-				component_nbt.appendTag(tagCompound);
-			assert stack.getTagCompound()!=null;
-			stack.getTagCompound().setTag("component_nbt", component_nbt);
-			return stack;
+			return new FuseType[]{FuseType.CONTACT};
 		}
 
 		@Nonnull

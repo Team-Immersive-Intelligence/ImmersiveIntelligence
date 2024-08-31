@@ -59,6 +59,16 @@
 					"time": 0.75,
 					"transform": [-4, 0, 0]
 				}
+			],
+			"scale": [
+				{
+					"time": 0.5,
+					"transform": [1, 1, 1]
+				},
+				{
+					"time": 0.75,
+					"transform": [0, 0, 0]
+				}
 			]
 		},
 		"core_piercing_sabot_part4": {
@@ -96,6 +106,16 @@
 				{
 					"time": 0.75,
 					"transform": [0, 0, -4]
+				}
+			],
+			"scale": [
+				{
+					"time": 0.5,
+					"transform": [1, 1, 1]
+				},
+				{
+					"time": 0.75,
+					"transform": [0, 0, 0]
 				}
 			]
 		},
@@ -135,6 +155,16 @@
 					"time": 0.75,
 					"transform": [4, 0, 0]
 				}
+			],
+			"scale": [
+				{
+					"time": 0.5,
+					"transform": [1, 1, 1]
+				},
+				{
+					"time": 0.75,
+					"transform": [0, 0, 0]
+				}
 			]
 		},
 		"core_piercing_sabot_part2": {
@@ -172,6 +202,28 @@
 				{
 					"time": 0.75,
 					"transform": [0, 0, 4]
+				}
+			],
+			"scale": [
+				{
+					"time": 0.5,
+					"transform": [1, 1, 1]
+				},
+				{
+					"time": 0.75,
+					"transform": [0, 0, 0]
+				}
+			]
+		},
+		"core_piercing_sabot_part1": {
+			"scale": [
+				{
+					"time": 0.5,
+					"transform": [1, 1, 1]
+				},
+				{
+					"time": 0.75,
+					"transform": [0, 0, 0]
 				}
 			]
 		}

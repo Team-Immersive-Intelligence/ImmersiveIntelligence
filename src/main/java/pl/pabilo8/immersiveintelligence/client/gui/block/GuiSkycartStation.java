@@ -9,13 +9,13 @@ import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.SkyCrateStation;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
-import pl.pabilo8.immersiveintelligence.api.rotary.RotaryUtils;
+import pl.pabilo8.immersiveintelligence.api.rotary.IIRotaryUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.tileentity.TileEntitySkyCartStation;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerSkycartStation;
 
 import java.util.ArrayList;
 
-import static pl.pabilo8.immersiveintelligence.api.rotary.RotaryUtils.renderEnergyBars;
+import static pl.pabilo8.immersiveintelligence.api.rotary.IIRotaryUtils.renderEnergyBars;
 
 /**
  * @author Pabilo8
@@ -40,7 +40,7 @@ public class GuiSkycartStation extends GuiIEContainerBase
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
 		IIClientUtils.drawStringCentered(fontRenderer, I18n.format("tile."+ImmersiveIntelligence.MODID+".wooden_multiblock.skycart_station.name"), 0, 0, getXSize(), 6, 0xd99747);
-		fontRenderer.drawString((RotaryUtils.getGearEffectiveness(tile.getInventory(), tile.getEfficiencyMultiplier(),3)*100)+"%", 76, 47, 0xd99747);
+		fontRenderer.drawString((IIRotaryUtils.getGearEffectiveness(tile.getInventory(), tile.getEfficiencyMultiplier(), 3)*100)+"%", 76, 47, 0xd99747);
 	}
 
 	/**
@@ -52,7 +52,7 @@ public class GuiSkycartStation extends GuiIEContainerBase
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		ClientUtils.bindTexture(texture_skycrate_station);
 		this.drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
-		renderEnergyBars(guiLeft+148, guiTop+20, 7, 48, 2, tile.rotation, SkyCrateStation.rpmMin , SkyCrateStation.torqueMin);
+		renderEnergyBars(guiLeft+148, guiTop+20, 7, 48, 2, tile.rotation, SkyCrateStation.rpmMin, SkyCrateStation.torqueMin);
 	}
 
 	@Override
@@ -64,7 +64,7 @@ public class GuiSkycartStation extends GuiIEContainerBase
 		//Thanks Flaxbeard!
 		ArrayList<String> tooltip = new ArrayList<>();
 
-		RotaryUtils.renderEnergyTooltip(tooltip, mx, my, guiLeft+148, guiTop+20, tile.rotation);
+		IIRotaryUtils.renderEnergyTooltip(tooltip, mx, my, guiLeft+148, guiTop+20, tile.rotation);
 
 		if(!tooltip.isEmpty())
 		{

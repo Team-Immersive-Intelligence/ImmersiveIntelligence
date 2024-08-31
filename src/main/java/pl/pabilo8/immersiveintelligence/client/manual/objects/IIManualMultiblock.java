@@ -26,6 +26,7 @@ import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualObject;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualPage;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import javax.annotation.Nonnull;
@@ -269,7 +270,7 @@ public class IIManualMultiblock extends IIManualObject
 	{
 		if(componentTooltip!=null)
 		{
-			if(IIUtils.isPointInRectangle(x+116, y+half-4, x+122, y+half+4, mx, my))
+			if(IIMath.isPointInRectangle(x+116, y+half-4, x+122, y+half+4, mx, my))
 				return componentTooltip;
 		}
 		return null;

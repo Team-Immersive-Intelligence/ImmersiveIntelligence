@@ -10,11 +10,14 @@ import net.minecraft.nbt.NBTTagIntArray;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.Tuple;
-import net.minecraft.util.math.*;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.api.ammo.PenetrationRegistry;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreTypes;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseType;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.HitEffect;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.PenetrationHardness;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
@@ -26,16 +29,18 @@ import pl.pabilo8.immersiveintelligence.api.ammo.utils.PenetrationCache;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityAmmoBase;
 import pl.pabilo8.immersiveintelligence.common.util.IIDamageSources;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
-import pl.pabilo8.immersiveintelligence.common.util.raytracer.MultipleRayTracer;
-import pl.pabilo8.immersiveintelligence.common.util.raytracer.MultipleRayTracer.MultipleTracerBuilder;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
+import pl.pabilo8.immersiveintelligence.common.util.raytracer.FactoryTracer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.annotation.ParametersAreNullableByDefault;
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -53,21 +58,20 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 	/**
 	 * The drag coefficient of the projectile, used for calculating the motion vector
 	 */
-	public static float DRAG = 0.01f;
+	public static float DRAG;
 	/**
 	 * The gravity coefficient of the projectile, used for calculating the motion vector
 	 */
-	public static float GRAVITY = 0.15f;
+	public static float GRAVITY;
 	/**
 	 * The slowmo multiplier for projectile motion
 	 */
-	public static float SLOWMO = 1;
-	/**
-	 * The threshold for minimal hardness difference proportion that makes a projectile ricochet.
-	 *
-	 * @implNote For example a projectile with hardness 3 and threshold 1.66 will need to hit a surface having hardness of at least 5 to ricochet
-	 */
-	private static final float RICOCHET_THRESHOLD = 1.66f;
+	public static float SLOWMO;
+
+	static
+	{
+		setSlowmo(1);
+	}
 
 	/**
 	 * Modifier for enemy armor effectiveness, used for calculating damage
@@ -82,38 +86,49 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 	/**
 	 * The base motion of the bullet, used for calculating the motion vector
 	 */
-	protected Vec3d baseMotion = Vec3d.ZERO;
+	@SyncNBT(events = SyncEvents.ENTITY_COLLISION)
+	public Vec3d baseMotion = Vec3d.ZERO;
 	/**
 	 * Gravity motion of the bullet, used for calculating the motion vector
 	 */
-	protected double gravityMotionY = 0;
-
+	@SyncNBT(events = SyncEvents.ENTITY_COLLISION)
+	public double gravityMotionY = 0;
 	/**
 	 * The velocity of the bullet, in blocks per tick
 	 */
-	protected float velocity;
+	@SyncNBT(events = SyncEvents.ENTITY_COLLISION)
+	public float velocity;
 	/**
 	 * The mass of the bullet, used for calculating the motion vector
 	 */
-	protected float mass;
+	protected double mass;
 
 	//--- Penetration System Properties ---//
 	/**
 	 * The penetration ability of the projectile, in blocks<br>
 	 * The penetration hardness of a projectile, uses block hardness values
 	 */
-	protected float penetrationDepth;
-	protected PenetrationHardness penetrationHardness;
+	@SyncNBT(events = SyncEvents.ENTITY_COLLISION)
+	public float penetrationDepth;
+	@SyncNBT(events = SyncEvents.ENTITY_COLLISION)
+	public PenetrationHardness penetrationHardness;
 
 	/**
 	 * Blocks and Entities to ignore during hit detection
 	 */
-	protected ArrayList<Entity> ignoredEntities = new ArrayList<>();
-	protected ArrayList<BlockPos> ignoredPositions = new ArrayList<>();
+	protected Set<Entity> ignoredEntities = new HashSet<>();
+	protected Set<BlockPos> ignoredPositions = new HashSet<>();
+	/**
+	 * Raytracer used for the projectile
+	 */
+	@Nonnull
+	protected FactoryTracer flightTracer;
+
 	/**
 	 * Once true, the bullet will detonate at the end of the tick
 	 */
 	protected boolean markedForDetonation = false;
+	private float velocityModifier;
 
 	public EntityAmmoProjectile(World world)
 	{
@@ -137,7 +152,7 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 
 	public float getDamage()
 	{
-		return ammoType.getDamage()*coreType.getDamageMod()*core.getDamageModifier();
+		return ammoType.getDamage()*coreType.getDamageMod()*core.getDamageModifier()*velocityModifier;
 	}
 
 	public float getVelocity()
@@ -154,72 +169,18 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 
 		//Yep, that's it, that's the entire motion code
 		updatePhysics();
-		setMotion();
+		updateVisibleMotion();
 
 		//handle timed fuse
-		if(fuseType==FuseTypes.TIMED)
+		if(fuseType==FuseType.TIMED)
 			if(fuseParameter-- <= 0)
 				detonate();
 
-		AxisAlignedBB aabb = this.getEntityBoundingBox()
-				.grow(fuseType==FuseTypes.PROXIMITY?fuseParameter: 0);
-		if(world.isRemote)
-			aabb.offset(this.getPositionVector().scale(-1));
-
-		//TODO: 18.03.2024 make a new raytracer that parses entities dynamically at can be stopped at a point
-		//Volumetric raytrace through the projectile's flight path
-		MultipleRayTracer tracer = MultipleTracerBuilder.setPos(world,
-						this.getPositionVector(), this.getNextPositionVector())
-				.setAABB(aabb)
-				.setFilters(this.ignoredEntities, this.ignoredPositions)
-				.volumetricTrace();
-
-		//When a bullet hits something, iteration stops and the motionInterrupt becomes its final motion vector
-		Vec3d motionInterrupt = null;
-		for(RayTraceResult hit : tracer)
-		{
-			if(markedForDetonation||motionInterrupt!=null)
-				break;
-
-			if(hit!=null)
-			{
-				//Proximity fuses don't use penetration logic
-				if(fuseType==FuseTypes.PROXIMITY||penetrationDepth <= 0)
-				{
-					detonate();
-					break;
-				}
-
-				switch(hit.typeOfHit)
-				{
-					case BLOCK:
-						if(handleBlockDamage(hit))
-							motionInterrupt = hit.hitVec.subtract(posX, posY, posZ);
-						break;
-					case ENTITY:
-						if(handleEntityDamage(hit))
-							motionInterrupt = hit.hitVec.subtract(posX, posY, posZ);
-						break;
-				}
-			}
-		}
-
-		if(motionInterrupt!=null)
-		{
-			motionX = motionInterrupt.x;
-			motionY = motionInterrupt.y;
-			motionZ = motionInterrupt.z;
-		}
-
-		posX += motionX;
-		posY += motionY;
-		posZ += motionZ;
+		//do movement specific to the projectile type
+		doProjectileMotion();
 
 		//set rotations based on motion
-		Vec3d normalized = new Vec3d(motionX, motionY, motionZ).normalize();
-		float motionXZ = MathHelper.sqrt(normalized.x*normalized.x+normalized.z*normalized.z);
-		this.rotationYaw = (float)((Math.atan2(normalized.x, normalized.z)*180D)/Math.PI);
-		this.rotationPitch = -(float)((Math.atan2(normalized.y, motionXZ)*180D)/Math.PI);
+		doRotations();
 
 		//spawn trail
 		if(world.isRemote&&!isDead)
@@ -230,11 +191,79 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 	}
 
 	/**
+	 * Sets the rotation of the projectile based on its motion vector
+	 */
+	protected void doRotations()
+	{
+		Vec3d normalized = new Vec3d(motionX, motionY, motionZ).normalize();
+		float motionXZ = MathHelper.sqrt(normalized.x*normalized.x+normalized.z*normalized.z);
+		this.rotationYaw = (float)((Math.atan2(normalized.x, normalized.z)*180D)/Math.PI);
+		this.rotationPitch = -(float)((Math.atan2(normalized.y, motionXZ)*180D)/Math.PI);
+	}
+
+	/**
+	 * Updates the motion of the projectile
+	 */
+	protected void doProjectileMotion()
+	{
+		//if velocity is fully lost, perform a raytracer based motion or a simple gravity motion with collision check
+		if(velocity > 0)
+		{
+			//Volumetric raytrace through the projectile's flight path
+			RayTraceResult traceResult = flightTracer.stepTrace(world, getPositionVector(), getNextPositionVector(), hit -> {
+				if(hit!=null)
+				{
+					//Proximity fuses don't use penetration logic
+					if(shouldDetonateAfterContact())
+					{
+						detonate();
+						return true;
+					}
+
+					//But other fuses do
+					switch(hit.typeOfHit)
+					{
+						case BLOCK:
+							return handleBlockDamage(hit);
+						case ENTITY:
+							return handleEntityDamage(hit);
+					}
+				}
+				return false;
+			});
+
+			//When a bullet hits something, iteration stops and the motionInterrupt becomes its final motion vector
+			if(traceResult!=null)
+			{
+				Vec3d motionInterrupt = traceResult.hitVec.subtract(posX, posY, posZ);
+				motionX = motionInterrupt.x-Math.signum(motionInterrupt.x)*width;
+				motionY = motionInterrupt.y-Math.signum(motionInterrupt.y)*height;
+				motionZ = motionInterrupt.z-Math.signum(motionInterrupt.z)*width;
+			}
+		}
+
+		//Finalize the motion
+		posX += motionX;
+		posY += motionY;
+		posZ += motionZ;
+	}
+
+	/**
+	 * @return Whether the projectile should detonate after hitting a target
+	 */
+	protected boolean shouldDetonateAfterContact()
+	{
+		return fuseType==FuseType.PROXIMITY||penetrationDepth <= 0;
+	}
+
+	/**
 	 * Updates the velocity and gravity motion of the projectile
 	 */
 	protected void updatePhysics()
 	{
 		velocity -= DRAG*velocity;
+		if(velocity < 0.00001)
+			velocity = 0;
 		gravityMotionY -= GRAVITY*this.mass*SLOWMO;
 		gravityMotionY *= 1d-DRAG;
 	}
@@ -261,17 +290,17 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 			//Call the effect method on all components
 			for(Tuple<AmmoComponent, NBTTagCompound> component : components)
 				component.getFirst().onEffect(world, pos, dir,
-						coreType, component.getSecond(),
-						ammoType.getComponentAmount(), multiplier, owner);
+						coreType.getEffectShape(), component.getSecond(), ammoType.getComponentMultiplier(), multiplier, owner);
 			setDead();
 		}
 	}
 
-	private void setMotion()
+	protected final void updateVisibleMotion()
 	{
 		this.motionX = baseMotion.x*velocity;
 		this.motionY = baseMotion.y*velocity+gravityMotionY;
 		this.motionZ = baseMotion.z*velocity;
+//		markVelocityChanged();
 	}
 
 	protected void spawnTrailParticles()
@@ -350,43 +379,38 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 		}
 
 		//Collide with any other entity
-		float armor = 0;
 		IPenetrationHandler penHandler = PenetrationRegistry.getPenetrationHandler(other);
 
 		//Damage entity armor
 		if(other instanceof EntityLivingBase)
 		{
-			armor = MathHelper.floor(((EntityLivingBase)other).getEntityAttribute(SharedMonsterAttributes.ARMOR).getAttributeValue())*ARMOR_FACTOR;
-			//Damage the hit other entity armour whether penetrated or not
+			float armor = MathHelper.floor(((EntityLivingBase)other).getEntityAttribute(SharedMonsterAttributes.ARMOR).getAttributeValue())*ARMOR_FACTOR;
+			//Damage the other entity armour whether penetrated or not
 			if(armor > 0)
 				IIAmmoUtils.breakArmour(other, (int)getDamage());
 		}
-
-		//The damage actually dealt to the entity, uses only armor, as toughness is used for penetration hardness
-		float damageReceived = Math.max(0, getDamage()-armor);
 		//Ricochet off the entity
 		if(penHandler.getPenetrationHardness().compareTo(penetrationHardness) > 0)
 			onHitRicochet(hit, penHandler);
-			//Can't damage the entity, but can penetrate it for some reason... which is weird, so just detonate the bullet and let's call it a day
-		else if(damageReceived==0)
+
+		onHitPenetrate(hit, penHandler);
+		//If entity can't be damaged, detonate the projectile
+		if(!other.attackEntityFrom(IIDamageSources.causeBulletDamage(this, other), getDamage()))
 		{
 			detonate();
 			return true;
 		}
-		else //Penetrate and damage the entity
-		{
-			onHitPenetrate(hit, penHandler);
-			//If entity can't be damaged, detonate the projectile
-			if(!other.attackEntityFrom(IIDamageSources.causeBulletDamage(this, other), damageReceived))
-			{
-				detonate();
-				return true;
-			}
-		}
+		other.hurtResistantTime = 0;
+		if(other instanceof EntityLivingBase)
+			((EntityLivingBase)other).maxHurtTime = 0;
+
 		return false;
 	}
 
-	public Vec3d getNextPositionVector()
+	/**
+	 * @return the position the projectile will be at in the next tick
+	 */
+	public final Vec3d getNextPositionVector()
 	{
 		return getPositionVector().addVector(motionX, motionY, motionZ);
 	}
@@ -424,19 +448,29 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 			return;
 		}
 
+		//Set the position to the hit position
+		this.posX = hit.hitVec.x;
+		this.posY = hit.hitVec.y;
+		this.posZ = hit.hitVec.z;
+
 		//Reduce velocity
 		velocity *= 0.6f;
 		penetrationDepth -= handler.getThickness()*2;
+		gravityMotionY = 0;
+
+		if(velocity <= 0)
+			return;
 
 		//If sideHit is missing, the hit surface should be a facing opposite to the bullet direction
-		if(hit.sideHit==null)
-			hit.sideHit = EnumFacing.getFacingFromVector((float)baseMotion.x, (float)baseMotion.y, (float)baseMotion.z).getOpposite();
+//		if(hit.sideHit==null)
+		hit.sideHit = EnumFacing.getFacingFromVector((float)baseMotion.x, (float)baseMotion.y, (float)baseMotion.z).getOpposite();
 
 		//Compute the ricochet direction based on the surface normal
 		Vec3d surfaceNormal = new Vec3d(hit.sideHit.getDirectionVec());
 		baseMotion = baseMotion.subtract(
 				surfaceNormal.scale(2*baseMotion.dotProduct(surfaceNormal))
 		).normalize();
+		updateEntityForEvent(SyncEvents.ENTITY_COLLISION);
 
 		//Clear the lists
 		ignoredEntities.clear();
@@ -474,17 +508,20 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 		this.posZ = pos.z;
 		this.baseMotion = dir.normalize();
 		this.velocity *= velocityModifier;
+		this.velocityModifier = velocityModifier;
+		markVelocityChanged();
 	}
 
 	@ParametersAreNonnullByDefault
 	@Override
-	public void setFromParameters(IAmmoType<?, EntityAmmoProjectile> ammoType, AmmoCore core, CoreTypes coreType, FuseTypes fuseType, int fuseParameter, List<Tuple<AmmoComponent, NBTTagCompound>> components)
+	public void setFromParameters(IAmmoType<?, EntityAmmoProjectile> ammoType, AmmoCore core, CoreType coreType, FuseType fuseType, int fuseParameter, List<Tuple<AmmoComponent, NBTTagCompound>> components)
 	{
 		super.setFromParameters(ammoType, core, coreType, fuseType, fuseParameter, components);
-		this.velocity = ammoType.getDefaultVelocity()*SLOWMO;
+		this.velocity = ammoType.getVelocity()*SLOWMO;
 		this.mass = ammoType.getCoreMass(core, components.stream().map(Tuple::getFirst).toArray(AmmoComponent[]::new));
 		this.penetrationDepth = IIAmmoUtils.getCombinedDepth(ammoType, coreType);
 		this.penetrationHardness = IIAmmoUtils.getCombinedHardness(core, coreType);
+		this.flightTracer = FactoryTracer.create(aabb.grow(0.125)).setFilters(ignoredEntities, ignoredPositions);
 	}
 
 	@Override
@@ -497,12 +534,13 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 		this.ignoredEntities = nbt.streamList(NBTTagInt.class, "ignored_entities", EasyNBT.TAG_INT)
 				.map(NBTTagInt::getInt)
 				.map(world::getEntityByID)
-				.collect(Collectors.toCollection(ArrayList::new));
+				.collect(Collectors.toSet());
 		this.ignoredPositions = nbt.streamList(NBTTagIntArray.class, "ignored_pos", EasyNBT.TAG_INT_ARRAY)
 				.map(NBTTagIntArray::getIntArray)
 				.filter(t -> t.length==3)
 				.map(t -> new BlockPos(t[0], t[1], t[2]))
-				.collect(Collectors.toCollection(ArrayList::new));
+				.collect(Collectors.toSet());
+		this.flightTracer.setFilters(ignoredEntities, ignoredPositions);
 	}
 
 	@Override
@@ -515,7 +553,6 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 			nbt.withList("ignored_entities", e -> new NBTTagInt(e.getEntityId()), ignoredEntities);
 		if(ignoredPositions!=null&&!ignoredPositions.isEmpty())
 			nbt.withList("ignored_pos", e -> new NBTTagIntArray(new int[]{e.getX(), e.getY(), e.getZ()}), ignoredPositions);
-
 	}
 
 	/**
@@ -542,7 +579,7 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 	{
 		//Apply new values
 		SLOWMO = newSlowmo;
-		GRAVITY = 0.15f*SLOWMO;
+		GRAVITY = 0.1f*SLOWMO;
 		DRAG = 0.01f*SLOWMO;
 	}
 

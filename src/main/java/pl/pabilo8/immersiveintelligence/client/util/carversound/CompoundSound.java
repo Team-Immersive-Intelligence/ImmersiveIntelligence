@@ -53,4 +53,13 @@ public abstract class CompoundSound extends PositionedSound implements ITickable
 			ClientUtils.mc().getSoundHandler().playSound(new PositionedSoundRecord(soundEnd, category, volume*1.1f, pitch, xPosF, yPosF, zPosF));
 	}
 
+	public void setPitch(float pitch)
+	{
+		this.pitch = pitch;
+	}
+
+	public void setVolume(float volume)
+	{
+		this.volume = volume;
+	}
 }

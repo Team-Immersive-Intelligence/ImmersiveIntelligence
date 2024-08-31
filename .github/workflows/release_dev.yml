@@ -1,0 +1,147 @@
+name: Release a Dev Build
+
+on:
+  workflow_dispatch: #Manual Trigger
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Create a Dev Build
+    env:
+      GITHUB_USERNAME: CarverBot
+      GITHUB_TOKEN: ${{ secrets.CARVERBOT_TOKEN }}
+      MINECRAFT_VERSION: 1.12.2
+      JAVA_VERSION: 8
+      VERSION: 1.12.2
+      RELEASE_NAME: Immersive-Intelligence-0.3.1-dev$
+      CURSEFORGE_TOKEN: ${{ secrets.DEPT_CURSEFORGE }}
+      MODRINTH_TOKEN: ${{ secrets.DEPT_MODRINTH }}
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: corretto
+          java-version: 8
+
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v3
+
+      - name: Decode Keystore
+        id: decode_keystore
+        uses: timheuer/base64-to-file@v1
+        with:
+          fileName: '~/keystore.jks'
+          encodedString: ${{ secrets.KEYSTORE }}
+
+      - name: Execute Gradle build
+        run: chmod +x gradlew ; ./gradlew build --scan
+
+      - name: Upload test build
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-build
+          path: |
+            build/libs/
+            !build/libs/*-core.jar
+            !build/libs/*-deobf.jar
+            !build/libs/*-sources.jar
+
+      - name: Upload sources
+        uses: actions/upload-artifact@v4
+        with:
+          name: sources
+          path: |
+            build/libs/*-core.jar
+            build/libs/*-deobf.jar
+            build/libs/*-sources.jar
+
+      - name: Read Properties File
+        id: rp
+        uses: christian-draeger/read-properties@1.1.1
+        with:
+          path: './gradle.properties'
+          properties: 'mcmod_Name mcmod_Developer mcmod_URL'
+
+      - name: Notify Discord
+        env:
+          WEBHOOK: ${{ secrets.WH_RELEASE_DEV }}
+          MOD_NAME: ${{ steps.rp.outputs.mcmod_Name }}
+          MOD_DEVOLOPER: ${{ steps.rp.outputs.mcmod_Developer }}
+          MOD_URL: ${{ steps.rp.outputs.mcmod_URL }}
+        run: chmod -R a+rX ./gradle/tools/* ; bash ./gradle/tools/discord_build.sh -i
+
+      #Updates build version number for publishing
+      - name: Increment Version Variable
+        id: increment_version
+        uses: action-pack/increment@v2
+        with:
+          name: 'RELEASE_NUMBER'
+          token: ${{ secrets.CARVERBOT_TOKEN }}
+          org: true
+
+      - name: Release on Github
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            build/libs/*-core.jar
+            build/libs/*-deobf.jar
+            build/libs/*-sources.jar
+
+        #Action for Publishing to curseforge, MC-Publish
+      - name: Publish on Curseforge
+        uses: Kir-Antipov/mc-publish@v3.3
+        with:
+
+          curseforge-id: 344344
+          curseforge-token: "${{env.CURSEFORGE_TOKEN}}"
+
+          loaders: forge
+          game-versions: "${{env.MINECRAFT_VERSION}}"
+          java: "${{env.JAVA_VERSION}}"
+          
+          dependencies: |
+            immersive-engineering(required)
+            immersive-energy(optional)
+            mct-immersive-technology(optional)
+            crafttweaker(optional)
+            ctm(optional)
+
+          files: |
+            build/libs/*.jar
+            !build/libs/*-core.jar
+
+              retry-attempts: 2
+              retry-delay: 10000
+              fail-mode: fail
+
+
+        #Action for Publishing to Modrinth, MC-Publish
+      - name: Publish on Modrith
+        uses: Kir-Antipov/mc-publish@v3.3
+        with:
+
+          modrinth-id: q19xbT91
+          modrinth-token: "${{env.MODRINTH_TOKEN}}"
+          modrinth-featured: false
+
+          loaders: forge
+          game-versions: "${{env.MINECRAFT_VERSION}}"
+          java: "${{env.JAVA_VERSION}}"
+          
+          dependencies: |
+            immersive-engineering(required)
+            immersive-energy(optional)
+            mct-immersive-technology(optional)
+            crafttweaker(optional)
+            ctm(optional)
+
+          files: |
+            build/libs/*.jar
+            !build/libs/*-core.jar
+
+              retry-attempts: 2
+              retry-delay: 10000
+              fail-mode: fail

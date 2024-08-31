@@ -17,6 +17,7 @@ import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.api.crafting.VulcanizerRecipe;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityVulcanizer;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerVulcanizer;
+import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -152,14 +153,14 @@ public class GuiVulcanizer extends GuiIEContainerBase
 
 			{
 				float xx = (float)(guiLeft+86+Math.cos(Math.toRadians(angle))*-36), yy = (float)(guiTop+39+Math.sin(Math.toRadians(angle))*-36);
-				if(IIUtils.isPointInRectangle(xx-8, yy-8, xx+8, yy+8, mouseX, mouseY))
+				if(IIMath.isPointInRectangle(xx-8, yy-8, xx+8, yy+8, mouseX, mouseY))
 					return tile.processQueue.get(0).recipe.output;
 			}
 			if(tile.processQueue.size()>1)
 			{
 				angle = MathHelper.wrapDegrees(180+angle);
 				float xx = (float)(guiLeft+86+Math.cos(Math.toRadians(angle))*-36), yy = (float)(guiTop+39+Math.sin(Math.toRadians(angle))*-36);
-				if(IIUtils.isPointInRectangle(xx-8, yy-8, xx+8, yy+8, mouseX, mouseY))
+				if(IIMath.isPointInRectangle(xx-8, yy-8, xx+8, yy+8, mouseX, mouseY))
 					return tile.processQueue.get(1).recipe.output;
 			}
 		}

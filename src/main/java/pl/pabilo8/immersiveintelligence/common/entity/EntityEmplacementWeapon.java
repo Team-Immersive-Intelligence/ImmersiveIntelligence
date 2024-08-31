@@ -27,6 +27,7 @@ import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.weapon.EmplacementWeapon;
+import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
@@ -220,11 +221,11 @@ public class EntityEmplacementWeapon extends EntityLivingBase implements IEntity
 
 		Vec3d thisPos = getPositionVector().addVector(0, 4.5f*turretHeight-3, 0);
 
-		Vec3d pos_main_x = IIUtils.offsetPosDirection(1f, Math.toRadians(rotationYaw), 0);
-		Vec3d pos_main_z = IIUtils.offsetPosDirection(1f, Math.toRadians(rotationYaw-90), 0);
+		Vec3d pos_main_x = IIMath.offsetPosDirection(1f, Math.toRadians(rotationYaw), 0);
+		Vec3d pos_main_z = IIMath.offsetPosDirection(1f, Math.toRadians(rotationYaw-90), 0);
 
-		Vec3d pos_gun_x = IIUtils.offsetPosDirection(1f, Math.toRadians(rotationYaw), Math.toRadians(rotationPitch));
-		Vec3d pos_gun_z = IIUtils.offsetPosDirection(1f, Math.toRadians(rotationYaw-90), Math.toRadians(rotationPitch-90));
+		Vec3d pos_gun_x = IIMath.offsetPosDirection(1f, Math.toRadians(rotationYaw), Math.toRadians(rotationPitch));
+		Vec3d pos_gun_z = IIMath.offsetPosDirection(1f, Math.toRadians(rotationYaw-90), Math.toRadians(rotationPitch-90));
 
 
 		for(EmplacementHitboxEntity part : partArray)

@@ -1,0 +1,19 @@
+name: Issue Added
+
+on:
+  issues:
+    types: [ opened ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo 'ISSUE ID: ${{ github.event.issue.id }}'
+          echo 'PROJECT ITEM ID: ${{ github.event.issue.number }}'
+
+      - name: Notify Internal Discord
+        uses: sebastianpopp/discord-action@releases/v2
+        with:
+          webhook: ${{ secrets.WH_TASK_ADDED }}
+          message: "Task [${{ github.event.issue.title }}](https://github.com/${{ github.repository }}/issues/${{ github.event.issue.number }}) has been added to the project."

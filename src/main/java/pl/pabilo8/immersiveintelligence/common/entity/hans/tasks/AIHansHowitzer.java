@@ -9,12 +9,15 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseType;
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.IIAmmoUtils;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityVehicleSeat;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.towable.gun.EntityFieldHowitzer;
+import pl.pabilo8.immersiveintelligence.common.util.entity.IIEntityUtils;
 
 import java.util.List;
 import java.util.Optional;
@@ -89,9 +92,9 @@ public class AIHansHowitzer extends EntityAIBase
 				float pp;
 
 				if(positionVector.distanceTo(t.getPositionVector()) > 40)
-					pp = getAnglePrediction(positionVector, IIUtils.getEntityCenter(t), new Vec3d(t.motionX, t.motionY, t.motionZ))[1];
+					pp = getAnglePrediction(positionVector, IIEntityUtils.getEntityCenter(t), new Vec3d(t.motionX, t.motionY, t.motionZ))[1];
 				else
-					pp = IIAmmoUtils.getDirectFireAngle(IIContent.itemAmmoLightArtillery.getDefaultVelocity(), 3.4f, positionVector.subtract(t.getPositionVector()));
+					pp = IIAmmoUtils.getDirectFireAngle(IIContent.itemAmmoLightArtillery.getVelocity(), 3.4f, positionVector.subtract(t.getPositionVector()));
 
 				howitzer.gunPitchUp = howitzer.gunPitch-pp < 0;
 				howitzer.gunPitchDown = howitzer.gunPitch-pp > 0;
@@ -104,7 +107,7 @@ public class AIHansHowitzer extends EntityAIBase
 						//it should be
 						if(entity instanceof EntityHans&&((EntityHans)entity).getHeldItemMainhand().isEmpty())
 						{
-							ItemStack shell = IIContent.itemAmmoLightArtillery.getBulletWithParams("core_brass", "canister", "hmx", "tracer_powder");
+							ItemStack shell = IIContent.itemAmmoLightArtillery.getAmmoStack(IIContent.ammoCoreBrass, CoreType.CANISTER, FuseType.CONTACT, IIContent.ammoComponentHMX, IIContent.ammoComponentTracerPowder);
 							NBTTagCompound tag = new NBTTagCompound();
 							tag.setInteger("colour", 0xff0000);
 							//NBTTagCompound tag2 = new NBTTagCompound();
@@ -132,7 +135,7 @@ public class AIHansHowitzer extends EntityAIBase
 				Entity entity = target.get();
 				this.hans.faceEntity(entity, 10, 10);
 
-				float[] yp = getAnglePrediction(positionVector.addVector(0, 1, 0), IIUtils.getEntityCenter(entity), new Vec3d(entity.motionX, entity.motionY, entity.motionZ));
+				float[] yp = getAnglePrediction(positionVector.addVector(0, 1, 0), IIEntityUtils.getEntityCenter(entity), new Vec3d(entity.motionX, entity.motionY, entity.motionZ));
 				if(!isAimedAt(yp[0], yp[1]))
 				{
 					float y = MathHelper.wrapDegrees(360+yp[0]-this.howitzer.rotationYaw);
