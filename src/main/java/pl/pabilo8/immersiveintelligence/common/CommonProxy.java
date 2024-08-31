@@ -54,6 +54,7 @@ import net.minecraftforge.fml.common.network.IGuiHandler;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
+import net.minecraftforge.registries.IForgeRegistryModifiable;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.*;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
@@ -61,13 +62,13 @@ import pl.pabilo8.immersiveintelligence.api.ammo.PenetrationRegistry;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.api.crafting.DustUtils;
 import pl.pabilo8.immersiveintelligence.api.rotary.CapabilityRotaryEnergy;
-import pl.pabilo8.immersiveintelligence.api.rotary.RotaryUtils;
+import pl.pabilo8.immersiveintelligence.api.rotary.IIRotaryUtils;
+import pl.pabilo8.immersiveintelligence.api.utils.IUpgradableMachine;
 import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
 import pl.pabilo8.immersiveintelligence.api.utils.MinecartBlockHelper;
-import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IUpgradableMachine;
 import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.MechanicalDevices;
-import pl.pabilo8.immersiveintelligence.common.ammo.factory.AmmoComponentFluid;
+import pl.pabilo8.immersiveintelligence.common.ammo.components.factory.AmmoComponentFluid;
 import pl.pabilo8.immersiveintelligence.common.block.data_device.BlockIIDataDevice.IIBlockTypes_Connector;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.conveyors.*;
 import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIIOre.Ores;
@@ -103,6 +104,7 @@ import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.util.IBatchOredictRegister;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
 import pl.pabilo8.immersiveintelligence.common.util.block.BlockIIBase;
 import pl.pabilo8.immersiveintelligence.common.util.block.BlockIIFluid;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IIBlockEnum;
@@ -216,7 +218,7 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 					//virgin batch registered OreDict
 					if(ores!=null)
 						for(String ore : ores)
-							OreDictionary.registerOre(IIUtils.toCamelCase(ore+"_"+subItem.getName(), true), new ItemStack(item, 1, meta));
+							OreDictionary.registerOre(IIStringUtil.toCamelCase(ore+"_"+subItem.getName(), true), new ItemStack(item, 1, meta));
 
 					//chad subtype dependent OreDict
 					for(String ore : subItem.getOreDict())
@@ -228,7 +230,7 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 				String[] ores = getAnnotatedOreDict(item);
 				if(ores!=null)
 					for(String ore : ores)
-						OreDictionary.registerOre(IIUtils.toCamelCase(ore, true), new ItemStack(item));
+						OreDictionary.registerOre(IIStringUtil.toCamelCase(ore, true), new ItemStack(item));
 			}
 
 		for(Block block : IIContent.BLOCKS)
@@ -244,7 +246,7 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 					//batch registered OreDict
 					if(ores!=null)
 						for(String ore : ores)
-							OreDictionary.registerOre(IIUtils.toCamelCase(ore+"_"+enumValue.getName(), true), new ItemStack(block, 1, meta));
+							OreDictionary.registerOre(IIStringUtil.toCamelCase(ore+"_"+enumValue.getName(), true), new ItemStack(block, 1, meta));
 
 					//subtype dependent OreDict
 					IIBlockProperties properties = enumValue.getProperties();
@@ -272,7 +274,7 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 						BlockIIBase<?> block = (BlockIIBase<?>)field.get(null);
 						for(IIBlockEnum enumValue : block.enumValues)
 							for(String ore : ores)
-								OreDictionary.registerOre(IIUtils.toCamelCase(ore+"_"+enumValue.getName(), true),
+								OreDictionary.registerOre(IIStringUtil.toCamelCase(ore+"_"+enumValue.getName(), true),
 										new ItemStack(block, 1, enumValue.getMeta()));
 					}
 					else if(o instanceof ItemIIBase)
@@ -280,7 +282,7 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 						//meta insensitive
 						ItemIIBase item = (ItemIIBase)field.get(null);
 						for(String ore : ores)
-							OreDictionary.registerOre(IIUtils.toCamelCase(ore, true), new ItemStack(item, 1, OreDictionary.WILDCARD_VALUE));
+							OreDictionary.registerOre(IIStringUtil.toCamelCase(ore, true), new ItemStack(item, 1, OreDictionary.WILDCARD_VALUE));
 					}
 
 				} catch(IllegalAccessException ignored) {}
@@ -312,7 +314,7 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		CrusherRecipe.addRecipe(IIContent.itemMaterialDust.getStack(MaterialsDust.SILICON, 1),
 				new IngredientStack("plateSilicon"), 12000);
 
-		IIRecipes.doRecipes(event.getRegistry());
+		IIRecipes.doRecipes((IForgeRegistryModifiable<IRecipe>)event.getRegistry());
 		IICompatModule.doModulesRecipes();
 
 
@@ -374,6 +376,16 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 			AmmoRegistry.registerAmmoType((IAmmoTypeItem)IIContent.blockRadioExplosives.itemBlock);
 		AmmoRegistry.registerAmmoType(IIContent.itemNavalMine);
 
+		//Propellants
+		AmmoRegistry.registerPropellant(IIContent.ammoPropellantGunpowder);
+		AmmoRegistry.registerPropellant(IIContent.ammoPropellantCordite);
+		AmmoRegistry.registerPropellant(IIContent.ammoPropellantRDX);
+		AmmoRegistry.registerPropellant(IIContent.ammoPropellantHMX);
+		AmmoRegistry.registerPropellant(IIContent.ammoPropellantRocketFuel);
+		AmmoRegistry.registerPropellant(IIContent.ammoPropellantStableRocketFuel);
+		AmmoRegistry.registerPropellant(IIContent.ammoPropellantExperimentalRocketFuel);
+
+		//Components
 		AmmoRegistry.registerComponent(IIContent.ammoComponentTNT);
 		AmmoRegistry.registerComponent(IIContent.ammoComponentRDX);
 		AmmoRegistry.registerComponent(IIContent.ammoComponentHMX);
@@ -599,11 +611,11 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		for(Minecarts value : Minecarts.values())
 			MinecartBlockHelper.blocks.put(stack -> OreDictionary.itemMatches(stack, value.stack.get(), false), world -> value.minecart.apply(world, Vec3d.ZERO));
 
-		RotaryUtils.TORQUE_BLOCKS.put(tileEntity -> tileEntity instanceof TileEntityWindmill,
+		IIRotaryUtils.TORQUE_BLOCKS.put(tileEntity -> tileEntity instanceof TileEntityWindmill,
 				aFloat -> aFloat*MechanicalDevices.dynamoWindmillTorque
 		);
 
-		RotaryUtils.TORQUE_BLOCKS.put(tileEntity -> tileEntity instanceof TileEntityWatermill,
+		IIRotaryUtils.TORQUE_BLOCKS.put(tileEntity -> tileEntity instanceof TileEntityWatermill,
 				aFloat -> aFloat*MechanicalDevices.dynamoWatermillTorque
 		);
 
@@ -619,6 +631,12 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 	@Override
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
 	{
+		if(ID < 0)
+		{
+			IILogger.warn("Trying to access a null GUI on server. Most likely it's work-in-progress or not bound to source yet.");
+			return null;
+		}
+
 		EnumHand hand;
 		TileEntity te = world.getTileEntity(new BlockPos(x, y, z));
 		ItemStack stack = player.getHeldItem(hand = (player.getHeldItem(EnumHand.MAIN_HAND).getItem() instanceof IGuiItem?EnumHand.MAIN_HAND: EnumHand.OFF_HAND));
@@ -650,6 +668,7 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 			}
 		}
 
+		IILogger.warn("Trying to access a GUI on server, but no GUI is registered for ID "+ID);
 		return null;
 	}
 

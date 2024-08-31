@@ -11,6 +11,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
+import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 
 import javax.annotation.Nullable;
 import java.util.function.Supplier;
@@ -105,7 +106,7 @@ public class GuiButtonDataLetterList extends GuiButton
 			this.drawTexturedModalRect(xx, y+height, 56, 115, 96, 32);
 			this.drawTexturedModalRect(xx, y+height+32, 56, 195-4, 96, 20);
 
-			if(IIUtils.isPointInRectangle(xx+4, y+height+4, xx+4+10*fr.FONT_HEIGHT, y+height+52+4, mouseX, mouseY))
+			if(IIMath.isPointInRectangle(xx+4, y+height+4, xx+4+10*fr.FONT_HEIGHT, y+height+52+4, mouseX, mouseY))
 			{
 				int hlX = ((int)Math.floor((mouseX-(xx+4))/(float)fr.FONT_HEIGHT));
 				int hlY = ((int)Math.floor((mouseY-(y+height+4))/(float)12));
@@ -201,7 +202,7 @@ public class GuiButtonDataLetterList extends GuiButton
 		{
 			FontRenderer fr = ClientUtils.mc().fontRenderer;
 			int xx = arrows==ArrowsAlignment.LEFT?x+10: x;
-			if(IIUtils.isPointInRectangle(xx+4, y+height+4, xx+4+10*fr.FONT_HEIGHT, y+height+52, mx, my))
+			if(IIMath.isPointInRectangle(xx+4, y+height+4, xx+4+10*fr.FONT_HEIGHT, y+height+52, mx, my))
 			{
 				if(hoveredEntry!='/')
 				{
@@ -233,7 +234,7 @@ public class GuiButtonDataLetterList extends GuiButton
 		}
 		else
 		{
-			return this.dropped = IIUtils.isPointInRectangle(x, y, x+width, y+height, mx, my);
+			return this.dropped = IIMath.isPointInRectangle(x, y, x+width, y+height, mx, my);
 		}
 	}
 

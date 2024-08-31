@@ -8,7 +8,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Sawmill;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.rotary.RotaryUtils;
+import pl.pabilo8.immersiveintelligence.api.rotary.IIRotaryUtils;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.tileentity.TileEntitySawmill;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerSawmill;
@@ -17,7 +17,7 @@ import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAn
 
 import java.util.ArrayList;
 
-import static pl.pabilo8.immersiveintelligence.api.rotary.RotaryUtils.renderEnergyBars;
+import static pl.pabilo8.immersiveintelligence.api.rotary.IIRotaryUtils.renderEnergyBars;
 
 /**
  * @author Pabilo8
@@ -84,7 +84,7 @@ public class GuiSawmill extends GuiIEContainerBase
 		//Thanks Flaxbeard!
 		ArrayList<String> tooltip = new ArrayList<>();
 
-		RotaryUtils.renderEnergyTooltip(tooltip, mx, my, guiLeft+148, guiTop+20, tile.rotation);
+		IIRotaryUtils.renderEnergyTooltip(tooltip, mx, my, guiLeft+148, guiTop+20, tile.rotation);
 
 		if(!tooltip.isEmpty())
 		{

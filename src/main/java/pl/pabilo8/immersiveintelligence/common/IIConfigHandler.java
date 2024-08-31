@@ -71,6 +71,12 @@ public class IIConfigHandler
 		@Comment({"Whether the IE revolver should be a Early Engineering-tier weapon"})
 		public static boolean changeRevolverProduction = true;
 
+		@Comment({"Whether the the railgun should require a gun stock instead of a grip to be constructed"})
+		public static boolean changeRailgunProduction = true;
+
+		@Comment({"Whether the the chemthrower should require a gun stock instead of a grip to be constructed"})
+		public static boolean changeChemthrowerProduction = true;
+
 		@Comment({"Whether Tungsten should be smeltable in the vanilla furnace"})
 		@RequiresMcRestart
 		public static boolean smeltableTungsten = false;
@@ -952,7 +958,7 @@ public class IIConfigHandler
 				public static int craneGrabTime = 20;
 			}
 
-			public static class AmmunitionWorkshop
+			public static class AmmunitionAssembler
 			{
 				@Comment({"Energy capacity of the ammunition workshop (in IF)."})
 				public static int energyCapacity = 16000;
@@ -960,19 +966,25 @@ public class IIConfigHandler
 
 			public static class ProjectileWorkshop
 			{
-				@Comment({"Energy capacity of the ammunition workshop (in IF)."})
+				@Comment({"Energy capacity of the Projectile Workshop (in IF)."})
 				public static int energyCapacity = 16000;
 
-				@Comment({"Fluid capacity of a projectile workshop coolant (water) tank (in mB)."})
+				@Comment({"Energy usage of the Projectile Workshop during core production (in IF/t)"})
+				public static int productionEnergyUsage = 50;
+
+				@Comment({"Energy usage of the Projectile Workshop during core production (in IF/t)"})
+				public static int fillingEnergyUsage = 70;
+
+				@Comment({"Fluid capacity of a Projectile Workshop coolant (water) tank (in mB)."})
 				public static int coolantTankCapacity = 6000;
 
-				@Comment({"Fluid capacity of a projectile workshop fluid bullet component buffer tank (in mB)."})
+				@Comment({"Fluid capacity of a Projectile Workshop fluid bullet component buffer tank (in mB)."})
 				public static int componentTankCapacity = 1000;
 
-				@Comment({"Maximum amount of bullet component stored in a projectile workshop (16 is default amount per one item / 1000mB of a fluid)."})
+				@Comment({"Maximum amount of bullet component stored in a Projectile Workshop (16 is default amount per one item / 1000mB of a fluid)."})
 				public static int componentCapacity = 512;
 
-				@Comment({"How long does it take to produce a projectile from a plate (in ticks, multiplied by caliber)."})
+				@Comment({"How long does it take to produce a projectile (in ticks, multiplied by caliber)."})
 				public static int productionTime = 35;
 
 				@Comment({"How long does it take to fill a projectile with components (in ticks, multiplied by caliber)."})
@@ -1040,8 +1052,8 @@ public class IIConfigHandler
 				public static int engineerHeadgearEnergyUsage = 225;
 
 				@Comment({"The multiplier of electric damage taken when an anti-static mesh is worn under water (in half-hearts)."})
-				@RangeInt(min = 0)
-				public static float antiStaticMeshWaterDamageMod = 1.5f;
+				@RangeDouble(min = 0)
+				public static double antiStaticMeshWaterDamageMod = 1.5;
 
 				@Comment({"The energy usage of the exoskeleton when running (in IF)."})
 				@RangeInt(min = 0)
@@ -1358,7 +1370,7 @@ public class IIConfigHandler
 				public static int bulletFireTimeSemiAuto = 10;
 
 				@Comment({"Maximum amount of horizontal recoil."})
-				public static float longBarrelVelocityMod = 1.5f;
+				public static float longBarrelVelocityMod = 2.25f;
 
 				@Comment({"Amount of horizontal recoil after taking a shot."})
 				public static float recoilHorizontal = 0.5f;
@@ -1554,34 +1566,34 @@ public class IIConfigHandler
 			public static boolean blockDamage = true;
 
 			@Comment({"Default velocity of a mortar shell."})
-			public static float mortarVelocity = 8f;
+			public static float mortarVelocity = 8f*0.7f;
 
 			@Comment({"Default velocity of a light howitzer shell."})
-			public static float lightHowiVelocity = 10f;
+			public static float lightHowiVelocity = 10f*0.7f;
 
 			@Comment({"Default velocity of an artillery howitzer shell."})
-			public static float artilleryHowiVelocity = 70f;
+			public static float artilleryHowiVelocity = 70f*0.7f;
 
 			@Comment({"Default velocity of a railgun grenade."})
-			public static float railgunGrenadeVelocity = 5f;
+			public static float railgunGrenadeVelocity = 5f*0.7f;
 
 			@Comment({"Default velocity of a thrown grenade."})
-			public static float grenadeVelocity = 2.5f;
+			public static float grenadeVelocity = 1f;
 
 			@Comment({"Default velocity of a machinegun bullet."})
-			public static float autocannonVelocity = 6f;
+			public static float autocannonVelocity = 6f*0.7f;
 
 			@Comment({"Default velocity of a machinegun bullet."})
-			public static float mgVelocity = 6.5f;
+			public static float mgVelocity = 6.5f*0.7f;
 
 			@Comment({"Default velocity of a submachinegun bullet."})
-			public static float smgVelocity = 5f;
+			public static float smgVelocity = 5f*0.7f;
 
 			@Comment({"Default velocity of an assault rifle bullet."})
-			public static float stgVelocity = 6.5f;
+			public static float stgVelocity = 6.5f*0.7f;
 
 			@Comment({"Default velocity of a revolver cartridge."})
-			public static float revolverVelocity = 6f;
+			public static float revolverVelocity = 6f*0.7f;
 		}
 
 		public static class Wires

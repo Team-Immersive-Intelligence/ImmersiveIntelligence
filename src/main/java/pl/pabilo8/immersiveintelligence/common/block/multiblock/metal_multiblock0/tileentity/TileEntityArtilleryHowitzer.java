@@ -46,6 +46,7 @@ import pl.pabilo8.immersiveintelligence.common.item.ammo.artillery.ItemIIAmmoArt
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
 import pl.pabilo8.immersiveintelligence.common.util.AdvancedSounds.MultiSound;
+import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.IISoundAnimation;
 import pl.pabilo8.immersiveintelligence.common.util.ISerializableEnum;
@@ -453,7 +454,7 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 		double yawFireAngle = Math.toRadians(-turretYaw > 180?180f+turretYaw: 180f-turretYaw);
 		double yawPitchAngle = Math.toRadians(turretPitch+90);
 
-		Vec3d gunEnd = IIUtils.offsetPosDirection(3, yawFireAngle, yawPitchAngle);
+		Vec3d gunEnd = IIMath.offsetPosDirection(3, yawFireAngle, yawPitchAngle);
 		Vec3d gunVec = gunEnd.normalize();
 		if(world.isRemote)
 		{
@@ -997,18 +998,21 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 		return tactileHandler;
 	}
 
+	@Nonnull
 	@Override
 	public World getTactileWorld()
 	{
 		return world;
 	}
 
+	@Nonnull
 	@Override
 	public BlockPos getTactilePos()
 	{
 		return this.getPos();
 	}
 
+	@Nonnull
 	@Override
 	public EnumFacing getTactileFacing()
 	{

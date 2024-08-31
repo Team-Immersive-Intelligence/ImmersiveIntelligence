@@ -14,11 +14,11 @@
       {
         "model": "immersiveintelligence:multiblock/electrolyzer.obj",
         "transform": {
-          "scale": 0.365,
+          "scale": 0.275,
           "translation": [
-            -0.25,
             -0.125,
-            0
+            0,
+            0.125
           ],
           "rotation": [
             {

@@ -3,6 +3,7 @@ package pl.pabilo8.immersiveintelligence.client.util.amt;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.math.Vec3d;
+import pl.pabilo8.immersiveintelligence.common.util.amt.IIModelHeader;
 
 /**
  * An empty AMT type, used to group models

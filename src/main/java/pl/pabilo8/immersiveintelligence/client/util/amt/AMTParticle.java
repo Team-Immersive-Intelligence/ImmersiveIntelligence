@@ -11,6 +11,7 @@ import pl.pabilo8.immersiveintelligence.client.fx.builder.ParticleBuilder;
 import pl.pabilo8.immersiveintelligence.client.fx.particles.IIParticle;
 import pl.pabilo8.immersiveintelligence.client.fx.utils.DrawStages;
 import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleRegistry;
+import pl.pabilo8.immersiveintelligence.common.util.amt.IIModelHeader;
 
 import java.util.function.Consumer;
 

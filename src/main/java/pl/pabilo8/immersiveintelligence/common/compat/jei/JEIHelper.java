@@ -17,6 +17,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.oredict.OreDictionary;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseType;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.api.crafting.*;
 import pl.pabilo8.immersiveintelligence.client.gui.block.*;
@@ -100,7 +102,7 @@ public class JEIHelper implements IModPlugin
 
 		for(IAmmoTypeItem<?, ?> bullet : AmmoRegistry.getAllAmmoItems())
 		{
-			ItemStack stack = bullet.getBulletWithParams("", "", "");
+			ItemStack stack = bullet.getAmmoStack(AmmoRegistry.MISSING_CORE, CoreType.SOFTPOINT, FuseType.CONTACT);
 			stack.setTagCompound(new NBTTagCompound());
 			jeiHelpers.getIngredientBlacklist().addIngredientToBlacklist(stack);
 		}
@@ -133,7 +135,7 @@ public class JEIHelper implements IModPlugin
 		modRegistry.addRecipeClickArea(GuiPrecisionAssembler.class, 85, 49, 6, 8, "ii.precision_assembler");
 		modRegistry.addRecipeClickArea(GuiPrecisionAssembler.class, 103, 49, 6, 8, "ii.precision_assembler");
 
-		modRegistry.addRecipes(SawmillRecipe.recipeList, "ii.sawmill");
+		modRegistry.addRecipes(SawmillRecipe.RECIPES, "ii.sawmill");
 		modRegistry.addRecipeClickArea(GuiSawmill.class, 33, 42, 43, 4, "ii.sawmill");
 		modRegistry.addRecipeClickArea(GuiSawmill.class, 76, 38, 6, 12, "ii.sawmill");
 

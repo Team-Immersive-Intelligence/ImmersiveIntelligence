@@ -1,0 +1,37 @@
+{
+  "type": "immersiveengineering:revolver_assembly",
+  "copy_nbt": [3,4,5],
+  "copy_nbt_predicate" : "perks",
+  "copy_nbt_multiply_decimals": true,
+  "result": {
+    "item": "immersiveengineering:revolver",
+    "data": 0
+  },
+  "pattern": [
+    " I ",
+    "HDB",
+    "GI "
+  ],
+  "key": {
+    "I": {
+      "type": "forge:ore_dict",
+      "ore": "ingotIron"
+    },
+    "B": {
+      "type": "forge:ore_dict",
+      "ore": "gunbarrelIron"
+    },
+    "D": {
+      "type": "forge:ore_dict",
+      "ore": "gunpartRevolver"
+    },
+    "G": {
+      "type": "forge:ore_dict",
+      "ore": "gungripWood"
+    },
+    "H": {
+      "type": "forge:ore_dict",
+      "ore": "gunpartHammer"
+    }
+  }
+}

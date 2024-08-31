@@ -31,8 +31,13 @@ public class IIReference
 	public static final String ROTARY_KEY = "rotary.immersiveintelligence.";
 	public static final String BLOCK_KEY = "tile.immersiveintelligence.";
 
+	//TODO: 09.08.2024 add energy and fluid I18n
+	public static final String INFO_KEY_SPEED = INFO_KEY+"tachometer.torque";
+	public static final String INFO_KEY_TORQUE = INFO_KEY+"tachometer.speed";
+
 	public static final String INFO_KEY_TOOL_DURABILITY = INFO_KEY+"tool_durability";
 	public static final String DESC_TOOLUPGRADE = DESCRIPTION_KEY+"toolupgrade.";
+	public static final String DESC_BULLETS = DESCRIPTION_KEY+"bullets.";
 
 	public static final String DESC_HOLD_CTRL = DESCRIPTION_KEY+"info.holdControl";
 	public static final String DESC_HOLD_SHIFT = DESCRIPTION_KEY+"info.holdShift";
@@ -89,9 +94,10 @@ public class IIReference
 	public static final ResLoc RES_TEXTURES = ResLoc.of(RES_II, "textures/");
 	public static final ResLoc RES_TEXTURES_GUI = ResLoc.of(RES_TEXTURES, "gui/");
 	public static final ResLoc RES_TEXTURES_CREATIVE = ResLoc.of(RES_TEXTURES_GUI, "creative_gui/");
-	public static final ResLoc RES_TEXTURES_MANUAL = ResLoc.of(RES_TEXTURES_GUI, "/manual/");
+	public static final ResLoc RES_TEXTURES_MANUAL = ResLoc.of(RES_TEXTURES_GUI, "manual/");
 	public static final ResLoc RES_TEXTURES_SKIN = ResLoc.of(RES_TEXTURES, "skins/");
 	public static final ResLoc RES_TEXTURES_ITEM = ResLoc.of(RES_TEXTURES, "items/");
+	public static final ResLoc RES_TEXTURES_BLOCK = ResLoc.of(RES_TEXTURES, "blocks/");
 
 	//--- GameRules ---//
 	public static final String GAMERULE_AMMO_BREAKS_BLOCKS = "ammoBreaksBlocks";
@@ -117,6 +123,7 @@ public class IIReference
 
 	//--- GUI ---//
 
+	//TODO: 09.08.2024 change to IIColor
 	public static final int COLOR_POWERBAR_1 = 0xffb51500;
 	public static final int COLOR_POWERBAR_2 = 0xff600b00;
 	public static final int COLOR_ARMORBAR_1 = 0xcfcfcfcf;

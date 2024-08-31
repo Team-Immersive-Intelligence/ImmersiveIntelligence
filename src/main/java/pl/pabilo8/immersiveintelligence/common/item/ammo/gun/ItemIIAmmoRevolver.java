@@ -4,7 +4,6 @@ import blusunrize.immersiveengineering.api.ApiUtils;
 import blusunrize.immersiveengineering.api.tool.BulletHandler;
 import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.items.ItemBullet;
-import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.resources.I18n;
@@ -14,7 +13,6 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
@@ -23,8 +21,11 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreTypes;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseType;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.PropellantType;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoCore;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem.IIAmmoProjectile;
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.AmmoFactory;
@@ -35,6 +36,8 @@ import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Ammuniti
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoBase.AmmoParts;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
+import pl.pabilo8.immersiveintelligence.common.util.entity.IIEntityUtils;
 import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIIItemTextureOverride;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
@@ -44,7 +47,6 @@ import pl.pabilo8.modworks.annotations.item.ItemModelType;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 
@@ -89,7 +91,7 @@ public class ItemIIAmmoRevolver extends ItemBullet implements IAmmoTypeItem<Item
 	public void registerSprites(TextureMap map)
 	{
 		ApiUtils.getRegisterSprite(map, ImmersiveIntelligence.MODID+":items/bullets/ammo/"+getName().toLowerCase()+"/base");
-		for(CoreTypes coreType : getAllowedCoreTypes())
+		for(CoreType coreType : getAllowedCoreTypes())
 			ApiUtils.getRegisterSprite(map, ImmersiveIntelligence.MODID+":items/bullets/ammo/"+getName().toLowerCase()+"/"+coreType.getName());
 		ApiUtils.getRegisterSprite(map, ImmersiveIntelligence.MODID+":items/bullets/ammo/"+getName().toLowerCase()+"/paint");
 		ApiUtils.getRegisterSprite(map, ImmersiveIntelligence.MODID+":items/bullets/ammo/"+getName().toLowerCase()+"/core");
@@ -131,13 +133,13 @@ public class ItemIIAmmoRevolver extends ItemBullet implements IAmmoTypeItem<Item
 					case 0:
 						return 0xffffffff;
 					case 1:
-						return getCore(stack).getColour();
+						return getCore(stack).getColor().getPackedARGB();
 					case 2:
 						return getPaintColor(stack);
 				}
 			}
 			case CORE:
-				return getCore(stack).getColour();
+				return getCore(stack).getColor().getPackedARGB();
 		}
 		return 0xffffffff;
 	}
@@ -149,37 +151,33 @@ public class ItemIIAmmoRevolver extends ItemBullet implements IAmmoTypeItem<Item
 	}
 
 	@Override
-	public FuseTypes[] getAllowedFuseTypes()
+	public FuseType[] getAllowedFuseTypes()
 	{
-		return new FuseTypes[]{FuseTypes.CONTACT};
+		return new FuseType[]{FuseType.CONTACT};
 	}
 
 	@Override
-	public ItemStack getBulletWithParams(String core, String coreType, String... components)
+	public ItemStack getAmmoStack(AmmoCore core, CoreType coreType, FuseType fuse, AmmoComponent... components)
 	{
-		ItemStack stack = new ItemStack(this);
-		ItemNBTHelper.setString(stack, NBT_CORE, core);
-		ItemNBTHelper.setString(stack, NBT_CORE_TYPE, coreType);
-		NBTTagList tagList = new NBTTagList();
-		Arrays.stream(components).map(NBTTagString::new).forEachOrdered(tagList::appendTag);
-
-		if(tagList.tagCount() > 0)
-		{
-			ItemNBTHelper.getTag(stack).setTag(NBT_COMPONENTS, tagList);
-			NBTTagList nbt = new NBTTagList();
-			for(int i = 0; i < tagList.tagCount(); i += 1)
-				nbt.appendTag(new NBTTagCompound());
-
-			ItemNBTHelper.getTag(stack).setTag(NBT_COMPONENTS_NBT, nbt);
-		}
+		ItemStack stack = new ItemStack(this, 1, BULLET);
+		EasyNBT.wrapNBT(stack)
+				.withString(NBT_CORE, core.getName())
+				.withString(NBT_CORE_TYPE, coreType.getName())
+				.withString(NBT_FUSE, fuse.getName())
+				.withList(NBT_COMPONENTS, c -> new NBTTagString(c.getName()), components)
+				.withList(NBT_COMPONENTS_DATA, c -> new NBTTagCompound(), components);
 
 		return stack;
 	}
 
 	@Override
-	public ItemStack getBulletCore(String core, String coreType)
+	public ItemStack getAmmoCoreStack(AmmoCore core, CoreType coreType)
 	{
-		return null;
+		ItemStack stack = new ItemStack(this, 1, CORE);
+		EasyNBT.wrapNBT(stack)
+				.withString(NBT_CORE, core.getName())
+				.withString(NBT_CORE_TYPE, coreType.getName());
+		return stack;
 	}
 
 	@Override
@@ -230,16 +228,23 @@ public class ItemIIAmmoRevolver extends ItemBullet implements IAmmoTypeItem<Item
 	}
 
 	@Override
-	public float getComponentAmount()
+	public float getComponentMultiplier()
 	{
 		return 0.125f;
 	}
 
 	@Override
-	public int getGunpowderNeeded()
+	public int getPropellantNeeded()
 	{
 		return 25;
 	}
+
+	@Override
+	public PropellantType getAllowedPropellants()
+	{
+		return PropellantType.SOLID;
+	}
+
 
 	@Override
 	public int getCoreMaterialNeeded()
@@ -248,13 +253,13 @@ public class ItemIIAmmoRevolver extends ItemBullet implements IAmmoTypeItem<Item
 	}
 
 	@Override
-	public float getInitialMass()
+	public float getCasingMass()
 	{
 		return 0.0625f;
 	}
 
 	@Override
-	public float getDefaultVelocity()
+	public float getVelocity()
 	{
 		return Ammunition.revolverVelocity;
 	}
@@ -292,9 +297,9 @@ public class ItemIIAmmoRevolver extends ItemBullet implements IAmmoTypeItem<Item
 	}
 
 	@Override
-	public CoreTypes[] getAllowedCoreTypes()
+	public CoreType[] getAllowedCoreTypes()
 	{
-		return new CoreTypes[]{CoreTypes.SOFTPOINT, CoreTypes.PIERCING, CoreTypes.CANISTER};
+		return new CoreType[]{CoreType.SOFTPOINT, CoreType.PIERCING, CoreType.CANISTER};
 	}
 
 	//IE, a place where things both work and not at the same time
@@ -315,7 +320,7 @@ public class ItemIIAmmoRevolver extends ItemBullet implements IAmmoTypeItem<Item
 	{
 		return new AmmoFactory<>(projectile.world)
 				.setPosition(projectile.getPositionVector())
-				.setDirection(IIUtils.getEntityMotion(projectile).normalize())
+				.setDirection(IIEntityUtils.getEntityMotion(projectile).normalize())
 				.setStack(cartridge)
 				.setOwner(shooter)
 				.create();

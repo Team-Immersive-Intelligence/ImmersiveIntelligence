@@ -1,7 +1,7 @@
 package pl.pabilo8.immersiveintelligence.api.ammo.parts;
 
-import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.PenetrationHardness;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
 /**
  * @author Pabilo8
@@ -9,43 +9,17 @@ import pl.pabilo8.immersiveintelligence.api.ammo.enums.PenetrationHardness;
  * @ii-approved 0.3.1
  * @since 13-09-2019
  */
-public abstract class AmmoCore
+public abstract class AmmoCore extends AmmoPart
 {
-	protected float density;
 	protected float damageModifier, explosionModifier;
 	protected PenetrationHardness penetrationHardness;
-	protected final String name;
-	protected final int colour;
 
-	public AmmoCore(String name, float density, PenetrationHardness penetrationHardness, float explosionModifier, float damageModifier, int colour)
+	public AmmoCore(String name, float density, PenetrationHardness penetrationHardness, float explosionModifier, float damageModifier, IIColor color)
 	{
-		this.density = density;
+		super(name, density, color);
 		this.damageModifier = damageModifier;
 		this.explosionModifier = explosionModifier;
 		this.penetrationHardness = penetrationHardness;
-		this.name = name;
-		this.colour = colour;
-	}
-
-	/**
-	 * Gets the name of the core material
-	 */
-	public String getName()
-	{
-		return name;
-	}
-
-	/**
-	 * @return the ingredient used to create this ammo core
-	 */
-	public abstract IngredientStack getMaterial();
-
-	/**
-	 * @return the density of core material (density * amount = mass)
-	 */
-	public float getDensity()
-	{
-		return density;
 	}
 
 	/**
@@ -70,13 +44,5 @@ public abstract class AmmoCore
 	public PenetrationHardness getPenetrationHardness()
 	{
 		return penetrationHardness;
-	}
-
-	/**
-	 * @return the colour of this ammo core in RGB int format
-	 */
-	public int getColour()
-	{
-		return colour;
 	}
 }

@@ -1,6 +1,10 @@
-# Usage: discord_commit <URL> <tail commit hash> <head commit hash>
-f=$2
-t=$3
+# Usage:
+# COMMIT_FROM - Tail Commit hash
+# COMMIT_TO - Head Commit hash
+# WEBHOOK - Discord Webhook URL
+# REPO - GH Repository name
+# REPO_NAME - Human-readable Repository name
+
 generate_post_data() {
 cat <<EOF
 {
@@ -11,8 +15,8 @@ cat <<EOF
       "id": 652627557,
       "title": "Work Progress Report",
       "color": 3617648,
-      "description": "We hereby report that [**Immersive Intelligence**](https://github.com/Team-Immersive-Intelligence/ImmersiveIntelligence) has received following new commits\\n \
-      $( git log $f...$t --format="[\`%h\`](https://github.com/Team-Immersive-Intelligence/ImmersiveIntelligence/commit/%h) %s\\n" | tr -d '\n' )",
+      "description": "We hereby report that [**$REPO_NAME**](https://github.com/$REPO) has received following new commits\\n \
+      $( git log $COMMIT_FROM...$COMMIT_TO --format="[\`%h\`](https://github.com/$REPO/commit/%h) %s\\n" | tr -d '\n' )",
       "color": 2631733,
       "fields": [],
       "footer": {
@@ -28,4 +32,4 @@ curl \
   -H "Content-Type: application/json" \
   -X POST \
   -d "$(generate_post_data)" \
-  "$1"
+  "$WEBHOOK"

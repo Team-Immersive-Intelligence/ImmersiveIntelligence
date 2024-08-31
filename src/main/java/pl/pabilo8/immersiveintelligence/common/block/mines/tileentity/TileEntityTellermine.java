@@ -4,7 +4,6 @@ import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler.Conn
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IAdvancedCollisionBounds;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IBlockBounds;
 import net.minecraft.entity.Entity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -18,7 +17,6 @@ import java.util.List;
  */
 public class TileEntityTellermine extends TileEntityMineBase implements IBlockBounds, IAdvancedCollisionBounds
 {
-	public ItemStack mineStack = ItemStack.EMPTY;
 	private static final ArrayList<AxisAlignedBB> AABB = new ArrayList<>();
 
 	static

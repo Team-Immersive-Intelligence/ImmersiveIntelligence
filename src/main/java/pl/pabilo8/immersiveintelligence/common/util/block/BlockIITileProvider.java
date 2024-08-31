@@ -52,11 +52,12 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IUpgradableMachine;
+import pl.pabilo8.immersiveintelligence.api.utils.IUpgradableMachine;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IITileProviderEnum;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemUtil;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.ILadderMultiblock;
 
 import javax.annotation.Nullable;
@@ -501,7 +502,7 @@ public abstract class BlockIITileProvider<E extends Enum<E> & IITileProviderEnum
 			if(b)
 				return b;
 		}
-		if(tile instanceof IUpgradableMachine&&IIUtils.isWrench(heldItem))
+		if(tile instanceof IUpgradableMachine&&IIItemUtil.isWrench(heldItem))
 		{
 			IUpgradableMachine u = ((IUpgradableMachine)tile).getUpgradeMaster();
 			if(u!=null&&u.getInstallProgress()==0)

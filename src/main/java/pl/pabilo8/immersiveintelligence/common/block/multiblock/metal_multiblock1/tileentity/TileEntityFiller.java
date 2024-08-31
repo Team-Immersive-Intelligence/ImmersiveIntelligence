@@ -22,8 +22,9 @@ import pl.pabilo8.immersiveintelligence.api.crafting.DustUtils;
 import pl.pabilo8.immersiveintelligence.api.crafting.FillerRecipe;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Filler;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockFiller;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionMulti;
@@ -183,7 +184,7 @@ public class TileEntityFiller extends TileEntityMultiblockProductionMulti<TileEn
 
 	private float[] getCurrentProcessColor(FillerRecipe recipe)
 	{
-		return IIUtils.rgbIntToRGB(DustUtils.getColor(recipe.dust));
+		return IIColor.rgbIntToRGB(DustUtils.getColor(recipe.dust));
 	}
 
 	@Override
@@ -240,6 +241,13 @@ public class TileEntityFiller extends TileEntityMultiblockProductionMulti<TileEn
 		}
 
 		return null;
+	}
+
+	@Override
+	protected IIMultiblockProcess<FillerRecipe> getProcessFromNBT(EasyNBT nbt)
+	{
+		FillerRecipe recipe = FillerRecipe.findRecipe(nbt.getIngredientStack("item_input"), new DustStack(nbt.getCompound("dust")));
+		return recipe==null?null: new IIMultiblockProcess<>(recipe);
 	}
 
 	@Override

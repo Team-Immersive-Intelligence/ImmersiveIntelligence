@@ -13,11 +13,12 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreTypes;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseType;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.PropellantType;
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.AmmoFactory;
 import pl.pabilo8.immersiveintelligence.client.model.builtin.IAmmoModel;
-import pl.pabilo8.immersiveintelligence.client.model.builtin.ModelAmmo;
+import pl.pabilo8.immersiveintelligence.client.model.builtin.ModelAmmoProjectile;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Ammunition;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.Grenade;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
@@ -25,6 +26,7 @@ import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoGrenade;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoBase;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoBase.AmmoParts;
+import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
 import pl.pabilo8.modworks.annotations.item.GeneratedItemModels;
@@ -50,9 +52,15 @@ public class ItemIIAmmoGrenade extends ItemIIAmmoBase<EntityAmmoGrenade>
 	}
 
 	@Override
-	public float getComponentAmount()
+	public float getComponentMultiplier()
 	{
 		return 0.45f;
+	}
+
+	@Override
+	public PropellantType getAllowedPropellants()
+	{
+		return PropellantType.NONE;
 	}
 
 	@Override
@@ -62,13 +70,13 @@ public class ItemIIAmmoGrenade extends ItemIIAmmoBase<EntityAmmoGrenade>
 	}
 
 	@Override
-	public float getInitialMass()
+	public float getCasingMass()
 	{
-		return 0.25f;
+		return 0.2f;
 	}
 
 	@Override
-	public float getDefaultVelocity()
+	public float getVelocity()
 	{
 		return Ammunition.grenadeVelocity;
 	}
@@ -90,7 +98,7 @@ public class ItemIIAmmoGrenade extends ItemIIAmmoBase<EntityAmmoGrenade>
 	@Override
 	public Function<ItemIIAmmoBase<EntityAmmoGrenade>, IAmmoModel<ItemIIAmmoBase<EntityAmmoGrenade>, EntityAmmoGrenade>> get3DModel()
 	{
-		return ModelAmmo::createGrenadeModel;
+		return ModelAmmoProjectile::createGrenadeModel;
 	}
 
 	@Override
@@ -107,15 +115,15 @@ public class ItemIIAmmoGrenade extends ItemIIAmmoBase<EntityAmmoGrenade>
 	}
 
 	@Override
-	public CoreTypes[] getAllowedCoreTypes()
+	public CoreType[] getAllowedCoreTypes()
 	{
-		return new CoreTypes[]{CoreTypes.CANISTER};
+		return new CoreType[]{CoreType.CANISTER};
 	}
 
 	@Override
-	public FuseTypes[] getAllowedFuseTypes()
+	public FuseType[] getAllowedFuseTypes()
 	{
-		return new FuseTypes[]{FuseTypes.CONTACT, FuseTypes.TIMED};
+		return new FuseType[]{FuseType.CONTACT, FuseType.TIMED};
 	}
 
 	@Override
@@ -207,7 +215,7 @@ public class ItemIIAmmoGrenade extends ItemIIAmmoBase<EntityAmmoGrenade>
 		world.playSound(null, entity.posX, entity.posY, entity.posZ, IISounds.grenadeThrow, SoundCategory.PLAYERS, 1f, 1f);
 
 		//calculate the position and direction
-		Vec3d vec = IIUtils.getVectorForRotation(entity.rotationPitch, entity.getRotationYawHead());
+		Vec3d vec = IIMath.getVectorForRotation(entity.rotationPitch, entity.getRotationYawHead());
 		Vec3d vv = entity.getPositionVector().addVector(0, (double)entity.getEyeHeight()-0.10000000149011612D, 0);
 
 		//spawn the grenade

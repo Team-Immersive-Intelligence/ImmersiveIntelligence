@@ -3,10 +3,7 @@ package pl.pabilo8.immersiveintelligence.api.ammo;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
-import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoCore;
-import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoType;
-import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.*;
 import pl.pabilo8.immersiveintelligence.client.model.builtin.IAmmoModel;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.ammo.cores.AmmoCoreMissingNo;
@@ -30,7 +27,6 @@ public class AmmoRegistry
 	 * Special case, used when the core is missing
 	 */
 	public static final AmmoCoreMissingNo MISSING_CORE = new AmmoCoreMissingNo();
-
 	/**
 	 * Ammo registry
 	 */
@@ -41,8 +37,9 @@ public class AmmoRegistry
 	 */
 	private static final LinkedHashMap<String, AmmoComponent> REGISTERED_COMPONENTS = new LinkedHashMap<>();
 	private static final LinkedHashMap<String, AmmoCore> REGISTERED_CORES = new LinkedHashMap<>();
+	private static final LinkedHashMap<String, AmmoPropellant> REGISTERED_PROPELLANTS = new LinkedHashMap<>();
 	@SideOnly(Side.CLIENT)
-	private static final HashMap<IAmmoType<?, ?>, IAmmoModel<?, ?>> REGISTERED_MODELS = new HashMap<>();
+	private static HashMap<IAmmoType<?, ?>, IAmmoModel<?, ?>> REGISTERED_MODELS;
 
 	//--- Registration ---//
 
@@ -101,6 +98,33 @@ public class AmmoRegistry
 	}
 
 	/**
+	 * Registers a new ammo propellant
+	 *
+	 * @param propellant The ammo propellant to register
+	 * @return true if the registration was successful
+	 */
+	public static boolean registerPropellant(AmmoPropellant propellant)
+	{
+		String name = propellant.getName();
+		if(!REGISTERED_PROPELLANTS.containsKey(name))
+		{
+			REGISTERED_PROPELLANTS.put(name, propellant);
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Removes a propellant from the registry
+	 *
+	 * @param name of the propellant
+	 */
+	public static void unregisterPropellant(String name)
+	{
+		REGISTERED_PROPELLANTS.remove(name);
+	}
+
+	/**
 	 * Registers a new ammo type
 	 *
 	 * @param ammo The ammo type to register
@@ -127,9 +151,12 @@ public class AmmoRegistry
 	@SideOnly(Side.CLIENT)
 	public static void registerAmmoModels()
 	{
+		if(REGISTERED_MODELS==null)
+			REGISTERED_MODELS = new HashMap<>();
 		REGISTERED_AMMO_TYPES.values().forEach(AmmoRegistry::registerSingleModel);
 	}
 
+	@SideOnly(Side.CLIENT)
 	private static <T extends IAmmoType<T, E>, E extends EntityAmmoBase<? super E>> void registerSingleModel(IAmmoType<?, ?> ammo)
 	{
 		IAmmoType<T, E> generic = (IAmmoType<T, E>)ammo;
@@ -143,16 +170,6 @@ public class AmmoRegistry
 	}
 
 	//--- Getters ---//
-
-	/**
-	 * @param name of the ammo type
-	 * @return ammo component with the given name
-	 */
-	@Nullable
-	public static AmmoComponent getComponent(String name)
-	{
-		return REGISTERED_COMPONENTS.get(name);
-	}
 
 	/**
 	 * @param name of the ammo type
@@ -187,6 +204,26 @@ public class AmmoRegistry
 	}
 
 	/**
+	 * @param name of the ammo type
+	 * @return ammo component with the given name
+	 */
+	@Nullable
+	public static AmmoComponent getComponent(String name)
+	{
+		return REGISTERED_COMPONENTS.get(name);
+	}
+
+	/**
+	 * @param name of the ammo type
+	 * @return ammo propellant with the given name
+	 */
+	@Nullable
+	public static AmmoPropellant getPropellant(String name)
+	{
+		return REGISTERED_PROPELLANTS.get(name);
+	}
+
+	/**
 	 * @param ammo ammo type
 	 * @return 3D model of this ammo type
 	 */
@@ -195,6 +232,11 @@ public class AmmoRegistry
 	public static <T extends IAmmoType<T, E>, E extends EntityAmmoBase<? super E>> IAmmoModel<T, E> getModel(IAmmoType<T, E> ammo)
 	{
 		return (IAmmoModel<T, E>)REGISTERED_MODELS.get(ammo);
+	}
+
+	public static IAmmoModel<?, ?> getGenericModel(IAmmoType<?, ?> ammo)
+	{
+		return REGISTERED_MODELS.get(ammo);
 	}
 
 	//--- Registry Getters ---//
@@ -229,6 +271,14 @@ public class AmmoRegistry
 	public static Collection<AmmoComponent> getAllComponents()
 	{
 		return REGISTERED_COMPONENTS.values();
+	}
+
+	/**
+	 * @return all registered ammo propellants
+	 */
+	public static Collection<AmmoPropellant> getAllPropellants()
+	{
+		return REGISTERED_PROPELLANTS.values();
 	}
 
 	/**

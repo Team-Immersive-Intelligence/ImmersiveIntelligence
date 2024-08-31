@@ -11,6 +11,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
+import pl.pabilo8.immersiveintelligence.common.util.amt.IIModelHeader;
 
 /**
  * AMT type for drawing IE wiring
@@ -83,5 +84,6 @@ public class AMTWire extends AMT
 	{
 		if(listID!=-1)
 			GlStateManager.glDeleteLists(listID, 1);
+		listID = -1;
 	}
 }

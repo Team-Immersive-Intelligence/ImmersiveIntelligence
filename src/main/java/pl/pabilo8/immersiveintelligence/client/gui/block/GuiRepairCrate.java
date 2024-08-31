@@ -17,6 +17,7 @@ import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.eff
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerRepairCrate;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
+import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 import java.util.ArrayList;
@@ -78,12 +79,12 @@ public class GuiRepairCrate extends GuiIEContainerBase
 		{
 			ArrayList<String> tooltip = new ArrayList<>();
 
-			if(IIUtils.isPointInRectangle(buttonHealing.x,buttonHealing.y,buttonHealing.x+buttonHealing.width,buttonHealing.y+buttonHealing.height,mouseX,mouseY))
+			if(IIMath.isPointInRectangle(buttonHealing.x,buttonHealing.y,buttonHealing.x+buttonHealing.width,buttonHealing.y+buttonHealing.height,mouseX,mouseY))
 				tooltip.add(I18n.format(IIReference.DESCRIPTION_KEY+"repair_crate.repair_armor"));
-			else if(IIUtils.isPointInRectangle(buttonBoost.x,buttonBoost.y,buttonBoost.x+buttonBoost.width,buttonBoost.y+buttonBoost.height,mouseX,mouseY))
+			else if(IIMath.isPointInRectangle(buttonBoost.x,buttonBoost.y,buttonBoost.x+buttonBoost.width,buttonBoost.y+buttonBoost.height,mouseX,mouseY))
 				tooltip.add(I18n.format(IIReference.DESCRIPTION_KEY+"repair_crate.repair_vehicles"));
 
-			if(IIUtils.isPointInRectangle(guiLeft+153, guiTop+24, guiLeft+153+7, guiTop+24+47, mouseX, mouseY))
+			if(IIMath.isPointInRectangle(guiLeft+153, guiTop+24, guiLeft+153+7, guiTop+24+47, mouseX, mouseY))
 				tooltip.add(tile.energyStorage+"/"+EffectCrates.maxEnergyStored+" IF");
 
 			if(!tooltip.isEmpty())

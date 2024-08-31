@@ -12,8 +12,8 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.rotary.RotaryMath;
-import pl.pabilo8.immersiveintelligence.api.rotary.RotaryUtils;
+import pl.pabilo8.immersiveintelligence.api.rotary.IIRotaryMath;
+import pl.pabilo8.immersiveintelligence.api.rotary.IIRotaryUtils;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.MechanicalDevices;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.block.rotary_device.tileentity.TileEntityTransmissionBox;
@@ -34,10 +34,14 @@ public class MysticalMechanicsAPIHelper extends IICompatModule
 	public static final ResourceLocation CAPABILITY_RES = new ResourceLocation(ImmersiveIntelligence.MODID, "nuclear_device");
 
 	@Override
-	public void preInit() {}
+	public void preInit()
+	{
+	}
 
 	@Override
-	public void registerRecipes() {}
+	public void registerRecipes()
+	{
+	}
 
 	@Override
 	public void init()
@@ -52,17 +56,18 @@ public class MysticalMechanicsAPIHelper extends IICompatModule
 	}
 
 	@Override
-	public void postInit() {
-		RotaryUtils.TORQUE_BLOCKS.put(tileEntity -> tileEntity instanceof TileEntityAxle,
+	public void postInit()
+	{
+		IIRotaryUtils.TORQUE_BLOCKS.put(tileEntity -> tileEntity instanceof TileEntityAxle,
 				aFloat -> aFloat*MechanicalDevices.dynamoAxleTorque);
 	}
 
 	@SubscribeEvent
 	public void onAttachCapabilities(AttachCapabilitiesEvent<TileEntity> event)
 	{
-		if (event.getObject() instanceof TileEntityTransmissionBox)
+		if(event.getObject() instanceof TileEntityTransmissionBox)
 		{
-			if (!event.getCapabilities().containsKey(CAPABILITY_RES))
+			if(!event.getCapabilities().containsKey(CAPABILITY_RES))
 				event.addCapability(CAPABILITY_RES, new NuclearDeviceHandler((TileEntityTransmissionBox)event.getObject()));
 		}
 	}
@@ -111,7 +116,7 @@ public class MysticalMechanicsAPIHelper extends IICompatModule
 		@Override
 		public void setPower(double v, EnumFacing enumFacing)
 		{
-			if (enumFacing==box.getFacing().getOpposite()) return;
+			if(enumFacing==box.getFacing().getOpposite()) return;
 			IILogger.info("Setting power to: "+v);
 			this.power = v;
 			calculatePower(enumFacing);
@@ -120,7 +125,7 @@ public class MysticalMechanicsAPIHelper extends IICompatModule
 
 		private void calculatePower(@Nonnull EnumFacing facing)
 		{
-			float[] st = RotaryMath.MMToRoF(this.power);
+			float[] st = IIRotaryMath.MMToRoF(this.power);
 			box.energy.grow(Math.round(st[0]), Math.round(st[1]), 0.98f);
 			if(box.getWorld().getTotalWorldTime()%20==0)
 			{
@@ -128,11 +133,13 @@ public class MysticalMechanicsAPIHelper extends IICompatModule
 			}
 		}
 
-		public void readFromNBT(NBTTagCompound tag) {
+		public void readFromNBT(NBTTagCompound tag)
+		{
 			this.power = tag.getDouble("mech_power");
 		}
 
-		public void writeToNBT(NBTTagCompound tag) {
+		public void writeToNBT(NBTTagCompound tag)
+		{
 			tag.setDouble("mech_power", this.power);
 		}
 

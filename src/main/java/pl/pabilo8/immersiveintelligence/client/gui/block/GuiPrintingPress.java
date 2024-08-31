@@ -13,6 +13,7 @@ import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityPrintingPress;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityPrintingPress.PrintOrder;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerPrintingPress;
+import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionBase.IIMultiblockProcess;
 
@@ -90,7 +91,7 @@ public class GuiPrintingPress extends GuiIEContainerBase
 		//Thanks Flaxbeard!
 		ArrayList<String> tooltip = new ArrayList<>();
 
-		if(IIUtils.isPointInRectangle(125, 21, 125+16, 21+47, mx-guiLeft, my-guiTop))
+		if(IIMath.isPointInRectangle(125, 21, 125+16, 21+47, mx-guiLeft, my-guiTop))
 		{
 			float capacity = tile.tank.getCapacity();
 			int yy = guiTop+21+47;
@@ -110,7 +111,7 @@ public class GuiPrintingPress extends GuiIEContainerBase
 				}
 		}
 
-		if(IIUtils.isPointInRectangle(112, 23, 119, 70, mx-guiLeft, my-guiTop))
+		if(IIMath.isPointInRectangle(112, 23, 119, 70, mx-guiLeft, my-guiTop))
 			tooltip.add(IIUtils.getPowerLevelString(tile.energyStorage));
 
 		if(!tooltip.isEmpty())

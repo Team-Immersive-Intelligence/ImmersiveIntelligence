@@ -108,6 +108,7 @@ import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageEntityNBTSync;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageItemScrollableSwitch;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageManualClose;
+import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
@@ -466,8 +467,8 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 
 				boolean hasScope = mg.getZoom().shouldZoom(mg.gun, null);
 
-				Vec3d gun_end = IIUtils.offsetPosDirection(2.25f-(hasScope?1.25f: 0), true_angle, true_angle2);
-				Vec3d gun_height = IIUtils.offsetPosDirection(0.25f+(hasScope?0.125f: 0f), true_angle, true_angle2+90);
+				Vec3d gun_end = IIMath.offsetPosDirection(2.25f-(hasScope?1.25f: 0), true_angle, true_angle2);
+				Vec3d gun_height = IIMath.offsetPosDirection(0.25f+(hasScope?0.125f: 0f), true_angle, true_angle2+90);
 
 				CameraHandler.setCameraPos(px+0.85*(gun_end.x+gun_height.x), py-1.5f+0.4025+0.85*(gun_end.y+gun_height.y), pz+0.85*(gun_end.z+gun_height.z));
 				CameraHandler.setCameraAngle(mg.setYaw+yaw, pitch, 0);
@@ -1137,15 +1138,15 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 								//1.5707964 down
 								float v = (model.bipedHead.rotateAngleX+1.5707964f)/3.1415927f;
 
-								model.bipedRightArm.rotateAngleY += IIUtils.clampedLerp3Par(0, -0.45f, 0f, v);
-								model.bipedRightArm.rotateAngleZ += IIUtils.clampedLerp3Par(0.25f, 0, -0.45f, v);
-								model.bipedLeftArm.rotateAngleZ += IIUtils.clampedLerp3Par(rail?-0.25f: -0.65f, 0, rail?0.25f: 0.65f, v);
-								model.bipedLeftArm.rotateAngleY += IIUtils.clampedLerp3Par(0f, rail?0.25f: 0.7f, 0f, v);
+								model.bipedRightArm.rotateAngleY += IIMath.clampedLerp3Par(0, -0.45f, 0f, v);
+								model.bipedRightArm.rotateAngleZ += IIMath.clampedLerp3Par(0.25f, 0, -0.45f, v);
+								model.bipedLeftArm.rotateAngleZ += IIMath.clampedLerp3Par(rail?-0.25f: -0.65f, 0, rail?0.25f: 0.65f, v);
+								model.bipedLeftArm.rotateAngleY += IIMath.clampedLerp3Par(0f, rail?0.25f: 0.7f, 0f, v);
 
-								model.bipedLeftArm.rotationPointX += IIUtils.clampedLerp3Par(-2f, -1f, -2f, v);
-								model.bipedLeftArm.rotationPointZ += IIUtils.clampedLerp3Par(0, -2f, 0, v);
+								model.bipedLeftArm.rotationPointX += IIMath.clampedLerp3Par(-2f, -1f, -2f, v);
+								model.bipedLeftArm.rotationPointZ += IIMath.clampedLerp3Par(0, -2f, 0, v);
 
-								model.bipedRightArm.rotationPointZ += IIUtils.clampedLerp3Par(0, 2f, 0, v);
+								model.bipedRightArm.rotationPointZ += IIMath.clampedLerp3Par(0, 2f, 0, v);
 
 
 								//up
@@ -1258,15 +1259,15 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 						//float recoilV = ItemNBTHelper.getFloat(heldItem, "recoilV");
 
 						Vec3d vec =
-								IIUtils.getVectorForRotation(player.rotationPitch, player.getRotationYawHead())
+								IIMath.getVectorForRotation(player.rotationPitch, player.getRotationYawHead())
 										.scale(-1);
 
 						double true_angle = Math.toRadians(-player.getRotationYawHead() > 180?360f- -player.getRotationYawHead(): -player.getRotationYawHead());
 						double true_angle2 = Math.toRadians(-player.getRotationYawHead()-90 > 180?360f-(-player.getRotationYawHead()-90): -player.getRotationYawHead()-90);
 
-						Vec3d pos1_x = IIUtils.offsetPosDirection(-model.bipedRightArm.rotationPointZ/16f+0.185f, true_angle, 0);
-						Vec3d pos1_z = IIUtils.offsetPosDirection(-model.bipedRightArm.rotationPointX/16f-0.125f-0.0625f, true_angle2, 0);
-						Vec3d pos1_y = IIUtils.offsetPosDirection(3/16f, true_angle, 90);
+						Vec3d pos1_x = IIMath.offsetPosDirection(-model.bipedRightArm.rotationPointZ/16f+0.185f, true_angle, 0);
+						Vec3d pos1_z = IIMath.offsetPosDirection(-model.bipedRightArm.rotationPointX/16f-0.125f-0.0625f, true_angle2, 0);
+						Vec3d pos1_y = IIMath.offsetPosDirection(3/16f, true_angle, 90);
 
 						Vec3d vv = player.getPositionVector()
 								.addVector(0, entity.isSneaking()?-0.275: 0, 0)

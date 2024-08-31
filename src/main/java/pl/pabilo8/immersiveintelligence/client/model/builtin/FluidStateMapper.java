@@ -12,6 +12,7 @@ import javax.annotation.Nonnull;
 
 /**
  * @author Pabilo8
+ * @ii-approved 0.2.0
  * @since 08.11.2022
  */
 public class FluidStateMapper extends StateMapperBase implements ItemMeshDefinition

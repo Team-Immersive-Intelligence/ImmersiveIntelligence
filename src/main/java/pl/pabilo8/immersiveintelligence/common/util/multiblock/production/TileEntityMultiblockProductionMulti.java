@@ -2,12 +2,12 @@ package pl.pabilo8.immersiveintelligence.common.util.multiblock.production;
 
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IGuiTile;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionBase.IIIMultiblockRecipe;
 
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
 
 /**
@@ -25,11 +25,19 @@ public abstract class TileEntityMultiblockProductionMulti<T extends TileEntityMu
 	/**
 	 * List of all current processes
 	 */
-	public List<IIMultiblockProcess<R>> processQueue = new ArrayList<>();
+	@SyncNBT(events = {SyncEvents.TILE_RECIPE_CHANGED, SyncEvents.TILE_GUI_OPENED})
+	public ProcessQueue<T, R> processQueue = new ProcessQueue<>(this);
 
 	public TileEntityMultiblockProductionMulti(MultiblockStuctureBase<T> multiblock)
 	{
 		super(multiblock);
+	}
+
+	@Override
+	protected void dummyCleanup()
+	{
+		super.dummyCleanup();
+		this.processQueue = null;
 	}
 
 	//--- Update Method ---//
@@ -80,7 +88,10 @@ public abstract class TileEntityMultiblockProductionMulti<T extends TileEntityMu
 			{
 				IIMultiblockProcess<R> process = findNewProductionProcess();
 				if(process!=null)
+				{
 					processQueue.add(process);
+					updateTileForEvent(SyncEvents.TILE_RECIPE_CHANGED);
+				}
 			}
 		}
 	}

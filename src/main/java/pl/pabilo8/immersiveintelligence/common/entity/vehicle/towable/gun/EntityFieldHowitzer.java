@@ -40,6 +40,8 @@ import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityVehicleSeat;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityVehicleWheel;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageEntityNBTSync;
+import pl.pabilo8.immersiveintelligence.common.util.IIMath;
+import pl.pabilo8.immersiveintelligence.common.util.entity.IIEntityUtils;
 
 import javax.annotation.Nullable;
 
@@ -348,7 +350,7 @@ public class EntityFieldHowitzer extends Entity implements IVehicleMultiPart, IE
 				{
 					double true_angle = Math.toRadians((-rotationYaw));
 					double true_angle2 = Math.toRadians(180+gunPitch);
-					Vec3d gun_end = IIUtils.offsetPosDirection(2f, true_angle, true_angle2);
+					Vec3d gun_end = IIMath.offsetPosDirection(2f, true_angle, true_angle2);
 					if(world.isRemote)
 					{
 
@@ -439,7 +441,7 @@ public class EntityFieldHowitzer extends Entity implements IVehicleMultiPart, IE
 		partWheelRight.travel(0, 0, 0, -0.25f, 0.015);
 
 		double true_angle2 = Math.toRadians((-rotationYaw-90) > 180?360f-(-rotationYaw-90): (-rotationYaw-90));
-		Vec3d pos1_z = IIUtils.offsetPosDirection(-0.75f, true_angle2, 0);
+		Vec3d pos1_z = IIMath.offsetPosDirection(-0.75f, true_angle2, 0);
 
 		if(acceleration > 0)
 		{
@@ -576,8 +578,8 @@ public class EntityFieldHowitzer extends Entity implements IVehicleMultiPart, IE
 		double true_angle = Math.toRadians((-rotationYaw) > 180?360f-(-rotationYaw): (-rotationYaw));
 		double true_angle2 = Math.toRadians((-rotationYaw-90) > 180?360f-(-rotationYaw-90): (-rotationYaw-90));
 
-		Vec3d pos2 = IIUtils.offsetPosDirection(-0.65f, true_angle, 0);
-		Vec3d pos3 = IIUtils.offsetPosDirection(seatID==0?-0.75f: 0.75f, true_angle2, 0);
+		Vec3d pos2 = IIMath.offsetPosDirection(-0.65f, true_angle, 0);
+		Vec3d pos3 = IIMath.offsetPosDirection(seatID==0?-0.75f: 0.75f, true_angle2, 0);
 		if(setupTime > 0)
 		{
 			double ticks = MathHelper.clamp((setupTime/(FieldHowitzer.setupTime*0.2)), 0, 1);
@@ -672,12 +674,6 @@ public class EntityFieldHowitzer extends Entity implements IVehicleMultiPart, IE
 	}
 
 	@Override
-	public World getWorld()
-	{
-		return this.getEntityWorld();
-	}
-
-	@Override
 	public boolean attackEntityFromPart(MultiPartEntityPart part, DamageSource source, float amount)
 	{
 		boolean isValidSource = source.isProjectile()||source.isExplosion()||source.isFireDamage();
@@ -756,11 +752,11 @@ public class EntityFieldHowitzer extends Entity implements IVehicleMultiPart, IE
 		double true_angle = Math.toRadians((-rotationYaw) > 180?360f-(-rotationYaw): (-rotationYaw));
 		double true_angle2 = Math.toRadians((-rotationYaw-90) > 180?360f-(-rotationYaw-90): (-rotationYaw-90));
 
-		Vec3d pos1_x = IIUtils.offsetPosDirection(0.5f, true_angle, 0);
+		Vec3d pos1_x = IIMath.offsetPosDirection(0.5f, true_angle, 0);
 		Vec3d pos2_x = pos1_x.scale(1);
 		Vec3d pos3 = pos1_x.scale(-1.5);
-		Vec3d pos1_z = IIUtils.offsetPosDirection(0.75f, true_angle2, 0);
-		Vec3d pos2_z = IIUtils.offsetPosDirection(-0.75f, true_angle2, 0);
+		Vec3d pos1_z = IIMath.offsetPosDirection(0.75f, true_angle2, 0);
+		Vec3d pos2_z = IIMath.offsetPosDirection(-0.75f, true_angle2, 0);
 
 		this.partWheelLeft.setLocationAndAngles(posX+pos1_z.x, posY, posZ+pos1_z.z, 0.0F, 0);
 		this.partWheelRight.setLocationAndAngles(posX+pos2_z.x, posY, posZ+pos2_z.z, 0.0F, 0);
@@ -772,7 +768,7 @@ public class EntityFieldHowitzer extends Entity implements IVehicleMultiPart, IE
 
 		for(Entity part : partArray)
 		{
-			IIUtils.setEntityVelocity(part, this.motionX, this.motionY, this.motionZ);
+			IIEntityUtils.setEntityVelocity(part, this.motionX, this.motionY, this.motionZ);
 			part.onUpdate();
 		}
 

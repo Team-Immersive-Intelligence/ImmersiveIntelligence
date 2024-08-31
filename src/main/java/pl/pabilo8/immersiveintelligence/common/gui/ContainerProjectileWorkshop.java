@@ -3,9 +3,9 @@ package pl.pabilo8.immersiveintelligence.common.gui;
 import blusunrize.immersiveengineering.common.gui.ContainerIEBase;
 import blusunrize.immersiveengineering.common.gui.IESlot;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityProjectileWorkshop;
 
 /**
@@ -19,7 +19,7 @@ public class ContainerProjectileWorkshop extends ContainerIEBase<TileEntityProje
 		super(player.inventory, tile);
 		//Input/Output Slots
 
-		if(tile.fillerUpgrade)
+		if(tile.hasUpgrade(IIContent.UPGRADE_CORE_FILLER))
 		{
 			this.addSlotToContainer(new IESlot(this, this.inv, 0, 8, 14+32)
 			{

@@ -10,6 +10,7 @@ import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
 import pl.pabilo8.immersiveintelligence.common.entity.hans.HansAnimations.HansArmAnimation;
 import pl.pabilo8.immersiveintelligence.common.entity.hans.HansAnimations.HansLegAnimation;
+import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 
 import java.util.Arrays;
 
@@ -267,7 +268,7 @@ public class ModelHansBiped extends ModelPlayer
 				final float kickLeg = 0.25f;
 				final float landLeg = -0.55f;
 
-				bipedLeftHand.rotateAngleX = IIUtils.clampedLerp3Par(kickLeg, landLeg-v2*0.125f, kickLeg, v1);
+				bipedLeftHand.rotateAngleX = IIMath.clampedLerp3Par(kickLeg, landLeg-v2*0.125f, kickLeg, v1);
 
 			}
 			break;
@@ -369,11 +370,11 @@ public class ModelHansBiped extends ModelPlayer
 				final float landLeg = -1.57f-0.25f;
 				final float kickFoot = 1.57f+0.35f;
 
-				bipedLeftLeg.rotateAngleX = IIUtils.clampedLerp3Par(kickLeg, landLeg-v2*0.125f, kickLeg, v1);
-				bipedRightLeg.rotateAngleX = IIUtils.clampedLerp3Par(kickLeg, landLeg-v1*0.125f, kickLeg, v2);
+				bipedLeftLeg.rotateAngleX = IIMath.clampedLerp3Par(kickLeg, landLeg-v2*0.125f, kickLeg, v1);
+				bipedRightLeg.rotateAngleX = IIMath.clampedLerp3Par(kickLeg, landLeg-v1*0.125f, kickLeg, v2);
 
-				bipedLeftFoot.rotateAngleX = IIUtils.clampedLerp3Par(kickFoot, -0.25f, kickFoot, v1);
-				bipedRightFoot.rotateAngleX = IIUtils.clampedLerp3Par(kickFoot, -0.25f, kickFoot, v2);
+				bipedLeftFoot.rotateAngleX = IIMath.clampedLerp3Par(kickFoot, -0.25f, kickFoot, v1);
+				bipedRightFoot.rotateAngleX = IIMath.clampedLerp3Par(kickFoot, -0.25f, kickFoot, v2);
 
 				bipedBody.rotateAngleX = -0.1f;
 

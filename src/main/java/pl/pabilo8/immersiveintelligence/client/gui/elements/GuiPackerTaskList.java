@@ -19,6 +19,7 @@ import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.PackerHandler.PackerTask;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 import javax.annotation.Nonnull;
@@ -81,7 +82,7 @@ public class GuiPackerTaskList extends GuiButton
 	@Override
 	public void drawButton(@Nonnull Minecraft mc, int mx, int my, float partialTicks)
 	{
-		if(entries.size() > 0&&IIUtils.isPointInRectangle(x, y, x+width, y+height, mx, my))
+		if(entries.size() > 0&&IIMath.isPointInRectangle(x, y, x+width, y+height, mx, my))
 		{
 
 			//Handle DWheel
@@ -91,7 +92,7 @@ public class GuiPackerTaskList extends GuiButton
 				prevWheelNano = Mouse.getEventNanoseconds();
 				scroll -= Integer.signum(mouseWheel)*10;
 			}
-			if(Mouse.isButtonDown(0)&&IIUtils.isPointInRectangle(x+width-11, y, x+width, y+(height-11), mx, my))
+			if(Mouse.isButtonDown(0)&&IIMath.isPointInRectangle(x+width-11, y, x+width, y+(height-11), mx, my))
 			{
 				float v = (my-y)/(float)height;
 				setScrollPercent((my-y+(v > 0.5f?v/20f: -v/20f))/(height-11));
@@ -214,7 +215,7 @@ public class GuiPackerTaskList extends GuiButton
 	public boolean mousePressed(Minecraft mc, int mx, int my)
 	{
 		int s = selectedOption;
-		if(IIUtils.isPointInRectangle(x, y, x+width-11, y+height, mx, my))
+		if(IIMath.isPointInRectangle(x, y, x+width-11, y+height, mx, my))
 		{
 			selectedOption = (selectedOption!=hoveredOption)?hoveredOption: -1;
 			taskChange.accept(s);

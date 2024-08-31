@@ -26,9 +26,10 @@ import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIAssaultRifle;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIGunBase;
-import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIWeaponUpgrade.WeaponUpgrades;
+import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIWeaponUpgrade.WeaponUpgrade;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler;
+import pl.pabilo8.immersiveintelligence.common.util.amt.IIModelHeader;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 /**
@@ -243,7 +244,7 @@ public class AssaultRifleRenderer extends IIUpgradableItemRendererAMT<ItemIIAssa
 		if(handRender)
 		{
 			int value = 0;
-			if(item.hasIIUpgrade(stack, WeaponUpgrades.STEREOSCOPIC_RANGEFINDER))
+			if(item.hasIIUpgrade(stack, WeaponUpgrade.STEREOSCOPIC_RANGEFINDER))
 			{
 				RayTraceResult mop = ClientUtils.mc().player.rayTrace(60, partialTicks);
 				if(mop!=null)
@@ -254,8 +255,8 @@ public class AssaultRifleRenderer extends IIUpgradableItemRendererAMT<ItemIIAssa
 				if(fireMode==2)
 					value = (int)MathHelper.clamp((1f-((firing-partialTicks)/(float)(firingDelay)))*99, 0, 99);
 			}
-			if(item.hasIIUpgrade(stack, WeaponUpgrades.GYROSCOPIC_STABILIZER))
-				stabilizer.apply(IIAnimationUtils.getDebugProgress(Minecraft.getMinecraft().world, 30, partialTicks));
+			if(item.hasIIUpgrade(stack, WeaponUpgrade.GYROSCOPIC_STABILIZER))
+				stabilizer.apply(IIAnimationUtils.getDebugProgress(30, partialTicks));
 
 			nixie1.get().setText(String.valueOf(value/10));
 			nixie2.get().setText(String.valueOf(value%10));

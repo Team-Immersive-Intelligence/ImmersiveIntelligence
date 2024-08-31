@@ -12,6 +12,7 @@ import pl.pabilo8.immersiveintelligence.api.crafting.ElectrolyzerRecipe;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Electrolyzer;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.MultiblockElectrolyzer;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionSingle;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
@@ -148,6 +149,12 @@ public class TileEntityElectrolyzer extends TileEntityMultiblockProductionSingle
 			if(recipe!=null)
 				return new IIMultiblockProcess<>(recipe);
 		}
+		return null;
+	}
+
+	@Override
+	protected IIMultiblockProcess<ElectrolyzerRecipe> getProcessFromNBT(EasyNBT nbt)
+	{
 		return null;
 	}
 

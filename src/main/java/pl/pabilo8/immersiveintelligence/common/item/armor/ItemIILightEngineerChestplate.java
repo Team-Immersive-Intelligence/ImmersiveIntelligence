@@ -174,7 +174,7 @@ public class ItemIILightEngineerChestplate extends ItemIILightEngineerArmorBase 
 			return;
 
 		ElectricDamageSource dmg = (ElectricDamageSource)dSource;
-		dmg.dmg = (hasUpgrade(s, "anti_static_mesh")&&p.isInWater())?dmg.dmg*LightEngineerArmor.antiStaticMeshWaterDamageMod: 0;
+		dmg.dmg = (hasUpgrade(s, "anti_static_mesh")&&p.isInWater())?(float)(dmg.dmg*LightEngineerArmor.antiStaticMeshWaterDamageMod): 0;
 	}
 
 	@Override

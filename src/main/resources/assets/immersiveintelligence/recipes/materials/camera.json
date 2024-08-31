@@ -1,0 +1,39 @@
+{
+  "type": "forge:ore_shaped",
+  "pattern": [
+    "AA ",
+    "GLC",
+    "SPS"
+  ],
+  "key": {
+    "A": {
+      "type": "forge:ore_dict",
+      "ore": "plankTreatedWood"
+    },
+    "G": {
+      "type": "forge:ore_dict",
+      "ore": "lens"
+    },
+    "L": {
+      "type": "forge:ore_dict",
+      "ore": "leather"
+    },
+    "C": {
+      "item": "immersiveengineering:material",
+      "data": 8
+    },
+    "P": {
+      "type": "forge:ore_dict",
+      "ore": "plateIron"
+    },
+    "S": {
+      "type": "forge:ore_dict",
+      "ore": "stickTreatedWood"
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:material",
+    "count": 1,
+    "data": 43
+  }
+}

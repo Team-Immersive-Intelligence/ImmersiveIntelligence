@@ -6,6 +6,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraftforge.common.IPlantable;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.PenetrationHardness;
@@ -17,6 +18,7 @@ import pl.pabilo8.immersiveintelligence.client.fx.IIParticles;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -59,35 +61,35 @@ public class PenetrationRegistry
 
 		//Fragile metals
 		registerMetalMaterial(PenetrationHandlerMetal.create("aluminum", PenetrationHardness.FRAGILE, 1.0f, 150f));
-		registerMetalMaterial(PenetrationHandlerMetal.create("tin", PenetrationHardness.FRAGILE, 1.0f, 150f));
-		registerMetalMaterial(PenetrationHandlerMetal.create("zinc", PenetrationHardness.FRAGILE, 1.0f, 150f));
+		registerMetalMaterial(PenetrationHandlerMetal.create("tin", PenetrationHardness.FRAGILE, 0.75f, 150f));
+		registerMetalMaterial(PenetrationHandlerMetal.create("zinc", PenetrationHardness.FRAGILE, 0.75f, 150f));
 		registerMetalMaterial(PenetrationHandlerMetal.create("copper", PenetrationHardness.FRAGILE, 1.0f, 150f));
 		registerMetalMaterial(PenetrationHandlerMetal.create("gold", PenetrationHardness.FRAGILE, 1.0f, 150f));
 		registerMetalMaterial(PenetrationHandlerMetal.create("silver", PenetrationHardness.FRAGILE, 1.0f, 150f));
 		registerMetalMaterial(PenetrationHandlerMetal.create("platinum", PenetrationHardness.FRAGILE, 1.0f, 150f));
 
 		//More durable metals
-		registerMetalMaterial(PenetrationHandlerMetal.create("brass", PenetrationHardness.WEAK_METAL, 1.0f, 150f));
-		registerMetalMaterial(PenetrationHandlerMetal.create("bronze", PenetrationHardness.WEAK_METAL, 1.0f, 150f));
-		registerMetalMaterial(PenetrationHandlerMetal.create("invar", PenetrationHardness.WEAK_METAL, 1.0f, 150f));
-		registerMetalMaterial(PenetrationHandlerMetal.create("constantan", PenetrationHardness.WEAK_METAL, 1.0f, 150f));
-		registerMetalMaterial(PenetrationHandlerMetal.create("electrum", PenetrationHardness.WEAK_METAL, 1.0f, 150f));
+		registerMetalMaterial(PenetrationHandlerMetal.create("brass", PenetrationHardness.WEAK_METAL, 1.25f, 150f));
+		registerMetalMaterial(PenetrationHandlerMetal.create("bronze", PenetrationHardness.WEAK_METAL, 1.25f, 150f));
+		registerMetalMaterial(PenetrationHandlerMetal.create("invar", PenetrationHardness.WEAK_METAL, 1.25f, 150f));
+		registerMetalMaterial(PenetrationHandlerMetal.create("constantan", PenetrationHardness.WEAK_METAL, 1.33f, 150f));
+		registerMetalMaterial(PenetrationHandlerMetal.create("electrum", PenetrationHardness.WEAK_METAL, 1.33f, 150f));
 
 		//Steel and tougher
-		registerMetalMaterial(PenetrationHandlerMetal.create("lead", PenetrationHardness.IRON, 1.0f, 200f));
-		registerMetalMaterial(PenetrationHandlerMetal.create("iron", PenetrationHardness.IRON, 1.0f, 150f));
-		registerMetalMaterial(PenetrationHandlerMetal.create("steel", PenetrationHardness.STEEL, 1.0f, 150f));
-		registerMetalMaterial(PenetrationHandlerMetal.create("tungsten", PenetrationHardness.TUNGSTEN, 1.0f, 150f));
+		registerMetalMaterial(PenetrationHandlerMetal.create("lead", PenetrationHardness.IRON, 1.33f, 200f));
+		registerMetalMaterial(PenetrationHandlerMetal.create("iron", PenetrationHardness.IRON, 1.33f, 250f));
+		registerMetalMaterial(PenetrationHandlerMetal.create("steel", PenetrationHardness.STEEL, 1.5f, 300f));
+		registerMetalMaterial(PenetrationHandlerMetal.create("tungsten", PenetrationHardness.TUNGSTEN, 1.5f, 350f));
 		REGISTERED_MATERIALS.put(material -> material==Material.ANVIL, PenetrationHandlerMetal.get("iron"));
 		REGISTERED_MATERIALS.put(material -> material==Material.IRON, PenetrationHandlerMetal.get("iron"));
 
 		//Multiblocks and machines
-		PenetrationHandler penHandlerMechanical = new PenetrationHandler(PenetrationHardness.STEEL,
-				1f, 200, IIParticles.PARTICLE_DEBRIS_MECHANICAL, IISounds.hitMetal);
+		PenetrationHandler penHandlerMechanical = new PenetrationHandler(PenetrationHardness.IRON,
+				1f, 250, IIParticles.PARTICLE_DEBRIS_MECHANICAL, IISounds.hitMetal);
 		PenetrationHandler penHandlerHeavyMachine = new PenetrationHandler(PenetrationHardness.STEEL,
 				1.3f, 350, IIParticles.PARTICLE_DEBRIS_HEAVY_MACHINE, IISounds.hitMetal);
 		PenetrationHandler penHandlerLightMachine = new PenetrationHandler(PenetrationHardness.STEEL,
-				1.1f, 150, IIParticles.PARTICLE_DEBRIS_LIGHT_MACHINE, IISounds.hitMetal);
+				1.1f, 200, IIParticles.PARTICLE_DEBRIS_LIGHT_MACHINE, IISounds.hitMetal);
 
 		batchRegisterHandler(penHandlerMechanical, IEContent.blockMetalMultiblock,
 				IIContent.blockWoodenMultiblock,
@@ -102,15 +104,24 @@ public class PenetrationRegistry
 
 		//Concrete
 		registerState(iBlockState -> IIUtils.compareBlockstateOredict(iBlockState, "uberConcrete"),
-				new PenetrationHandler(PenetrationHardness.UBERCONCRETE, 1f, 150, IIParticles.PARTICLE_DEBRIS_BRICK_BIG, IISounds.hitStone));
+				new PenetrationHandler(PenetrationHardness.UBERCONCRETE, 3f, 350, IIParticles.PARTICLE_DEBRIS_BRICK_BIG, IISounds.hitStone));
 		registerState(iBlockState -> IIUtils.compareBlockstateOredict(iBlockState, "sturdyBricksConcrete"),
-				new PenetrationHandler(PenetrationHardness.PANZERCONCRETE, 1f, 150, IIParticles.PARTICLE_DEBRIS_BRICK_BIG, IISounds.hitStone));
+				new PenetrationHandler(PenetrationHardness.PANZERCONCRETE, 2f, 250, IIParticles.PARTICLE_DEBRIS_BRICK_BIG, IISounds.hitStone));
 		registerState(iBlockState -> IIUtils.compareBlockstateOredict(iBlockState, "bricksConcrete"),
-				new PenetrationHandler(PenetrationHardness.CONCRETE, 1f, 150, IIParticles.PARTICLE_DEBRIS_BRICK, IISounds.hitStone));
+				new PenetrationHandler(PenetrationHardness.CONCRETE, 1.33f, 200, IIParticles.PARTICLE_DEBRIS_BRICK, IISounds.hitStone));
 		registerState(iBlockState -> IIUtils.compareBlockstateOredict(iBlockState, "leadedConcrete"),
-				new PenetrationHandler(PenetrationHardness.CONCRETE, 1f, 150, IIParticles.PARTICLE_DEBRIS_BRICK, IISounds.hitStone));
+				new PenetrationHandler(PenetrationHardness.CONCRETE, 1.66f, 200, IIParticles.PARTICLE_DEBRIS_BRICK, IISounds.hitStone));
 		registerState(iBlockState -> IIUtils.compareBlockstateOredict(iBlockState, "concrete"),
 				new PenetrationHandler(PenetrationHardness.CONCRETE, 1f, 150, IIParticles.PARTICLE_DEBRIS_PEBBLE, IISounds.hitStone));
+
+		//Bricks, Stone, Rocks
+		registerState(state -> state.getBlock()==Blocks.BRICK_BLOCK||state.getBlock()==Blocks.BRICK_STAIRS,
+				new PenetrationHandler(PenetrationHardness.BRICKS, 1f, 250, IIParticles.PARTICLE_DEBRIS_BRICK, IISounds.hitStone));
+		registerState(state -> state.getBlock()==Blocks.STONEBRICK||state.getBlock()==Blocks.STONE_BRICK_STAIRS,
+				new PenetrationHandler(PenetrationHardness.BRICKS, 1f, 250, IIParticles.PARTICLE_DEBRIS_BRICK, IISounds.hitStone));
+		registerOre("stone", new PenetrationHandler(PenetrationHardness.ROCK, 1f, 200, IIParticles.PARTICLE_DEBRIS_PEBBLE, IISounds.hitStone));
+		registerOre("cobblestone", new PenetrationHandler(PenetrationHardness.ROCK, 1f, 200, IIParticles.PARTICLE_DEBRIS_PEBBLE, IISounds.hitStone));
+		registerOre("sandstone", new PenetrationHandler(PenetrationHardness.ROCK, 1f, 200, IIParticles.PARTICLE_DEBRIS_PEBBLE, IISounds.hitStone));
 
 		//ground
 		registerMaterial(Material.ROCK, new PenetrationHandler(PenetrationHardness.ROCK, 1f, 150, IIParticles.PARTICLE_DEBRIS_PEBBLE, IISounds.hitStone));
@@ -120,12 +131,13 @@ public class PenetrationRegistry
 
 		//wood
 		registerOre("planksWood",
-				new PenetrationHandler(PenetrationHardness.WOOD, 1f, 150, IIParticles.PARTICLE_DEBRIS_PLANK, IISounds.hitWood));
+				new PenetrationHandler(PenetrationHardness.WOOD, 0.8f, 100, IIParticles.PARTICLE_DEBRIS_PLANK, IISounds.hitWood));
 		registerOre("logWood",
-				new PenetrationHandler(PenetrationHardness.WOOD, 1f, 150, IIParticles.PARTICLE_DEBRIS_PLANK, IISounds.hitWood));
+				new PenetrationHandler(PenetrationHardness.WOOD, 1f, 250, IIParticles.PARTICLE_DEBRIS_PLANK, IISounds.hitWood));
 
 		//Glass
-		registerMaterial(Material.GLASS, new PenetrationHandler(PenetrationHardness.FRAGILE, 1f, 150, IIParticles.PARTICLE_DEBRIS_GLASS, SoundEvents.BLOCK_GLASS_BREAK, null));
+		registerOre("paneGlass", new PenetrationHandler(PenetrationHardness.FRAGILE, 0.125f, 20, IIParticles.PARTICLE_DEBRIS_GLASS, SoundEvents.BLOCK_GLASS_BREAK, null));
+		registerMaterial(Material.GLASS, new PenetrationHandler(PenetrationHardness.FRAGILE, 0.75f, 80, IIParticles.PARTICLE_DEBRIS_GLASS, SoundEvents.BLOCK_GLASS_BREAK, null));
 
 		//Wool
 		registerMaterial(new Material[]{Material.CARPET, Material.CLOTH},
@@ -133,14 +145,14 @@ public class PenetrationRegistry
 
 		//leaves
 		registerMaterial(new Material[]{Material.LEAVES, Material.VINE},
-				new PenetrationHandler(PenetrationHardness.FRAGILE, 1f, 150, IIParticles.PARTICLE_DEBRIS_BRANCH_LEAF, IISounds.impactFoliage, null));
+				new PenetrationHandler(PenetrationHardness.FRAGILE, 0.5f, 300, IIParticles.PARTICLE_DEBRIS_BRANCH_LEAF, IISounds.impactFoliage, null));
 		registerMaterial(new Material[]{Material.CACTUS},
-				new PenetrationHandler(PenetrationHardness.FRAGILE, 1f, 150, IIParticles.PARTICLE_DEBRIS_BRANCH_LEAF, IISounds.impactFoliage, null));
+				new PenetrationHandler(PenetrationHardness.FRAGILE, 0.8f, 100, IIParticles.PARTICLE_DEBRIS_BRANCH_LEAF, IISounds.impactFoliage, null));
 
 
 		//grass, crops, etc.
 		registerState(state -> state.getMaterial()==Material.GRASS&&state.getBlock() instanceof IPlantable,
-				new PenetrationHandler(PenetrationHardness.GROUND, 1f, 150, IIParticles.PARTICLE_DEBRIS_STRAW, IISounds.hitGrass));
+				new PenetrationHandler(PenetrationHardness.GROUND, 1f, 300, IIParticles.PARTICLE_DEBRIS_STRAW, IISounds.hitGrass));
 		registerMaterial(Material.GOURD, new PenetrationHandler(PenetrationHardness.FRAGILE, 1f, 150, IIParticles.PARTICLE_DEBRIS_STRAW, IISounds.impactFoliage, null));
 
 		//EntityLivingBase
@@ -204,13 +216,13 @@ public class PenetrationRegistry
 
 	public static void registerMetalMaterial(PenetrationHandlerMetal handler, boolean hasSlab, boolean hasSheetMetal, boolean hasSheetmetalSlab)
 	{
-		REGISTERED_BLOCKS.put(iBlockState -> IIUtils.compareBlockstateOredict(iBlockState, "block"+IIUtils.toCamelCase(handler.getName(), false)), handler);
+		REGISTERED_BLOCKS.put(iBlockState -> IIUtils.compareBlockstateOredict(iBlockState, "block"+IIStringUtil.toCamelCase(handler.getName(), false)), handler);
 		if(hasSlab)
-			REGISTERED_BLOCKS.put(iBlockState -> IIUtils.compareBlockstateOredict(iBlockState, "slab"+IIUtils.toCamelCase(handler.getName(), false)), handler);
+			REGISTERED_BLOCKS.put(iBlockState -> IIUtils.compareBlockstateOredict(iBlockState, "slab"+IIStringUtil.toCamelCase(handler.getName(), false)), handler);
 		if(hasSheetMetal)
-			REGISTERED_BLOCKS.put(iBlockState -> IIUtils.compareBlockstateOredict(iBlockState, "blockSheetmetal"+IIUtils.toCamelCase(handler.getName(), false)), handler);
+			REGISTERED_BLOCKS.put(iBlockState -> IIUtils.compareBlockstateOredict(iBlockState, "blockSheetmetal"+IIStringUtil.toCamelCase(handler.getName(), false)), handler);
 		if(hasSheetmetalSlab)
-			REGISTERED_BLOCKS.put(iBlockState -> IIUtils.compareBlockstateOredict(iBlockState, "slabSheetmetal"+IIUtils.toCamelCase(handler.getName(), false)), handler);
+			REGISTERED_BLOCKS.put(iBlockState -> IIUtils.compareBlockstateOredict(iBlockState, "slabSheetmetal"+IIStringUtil.toCamelCase(handler.getName(), false)), handler);
 
 	}
 
