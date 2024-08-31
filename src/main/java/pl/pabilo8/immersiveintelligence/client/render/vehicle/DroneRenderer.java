@@ -7,7 +7,7 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.math.MathHelper;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreTypes;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
 import pl.pabilo8.immersiveintelligence.client.render.IIEntityRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.client.util.amt.*;
@@ -42,8 +42,8 @@ public class DroneRenderer extends IIEntityRenderer<EntityDrone>
 		GlStateManager.rotate(((float)MathHelper.clamp(entity.motionY, -2f, 2f))*5f, 1, 0, 0);
 
 
-		animationFloat.apply(IIAnimationUtils.getDebugProgress(entity.getWorld(), 8, partialTicks));
-		animationEngine.apply(IIAnimationUtils.getDebugProgress(entity.getWorld(), 4, partialTicks));
+		animationFloat.apply(IIAnimationUtils.getDebugProgress(8, partialTicks));
+		animationEngine.apply(IIAnimationUtils.getDebugProgress(4, partialTicks));
 
 		animationSetup.apply(IIAnimationUtils.getAnimationProgress(entity.ticksExisted, 40, false, partialTicks));
 		if(entity.ticksExisted > 40)
@@ -73,13 +73,13 @@ public class DroneRenderer extends IIEntityRenderer<EntityDrone>
 				header -> new AMT[]{
 						new AMTLocator("Rotors", header),
 						new AMTBullet("WeaponMount1", header.getOffset("WeaponMount1"), AmmoRegistry.getModel(IIContent.itemAmmoRocketLight))
-								.withProperties(IIContent.ammoCoreSteel, CoreTypes.CANISTER, 0x2fad64).withState(BulletState.BULLET_UNUSED),
+								.withProperties(IIContent.ammoCoreSteel, CoreType.CANISTER, 0x2fad64).withState(BulletState.BULLET_UNUSED),
 						new AMTBullet("WeaponMount2", header.getOffset("WeaponMount2"), AmmoRegistry.getModel(IIContent.itemAmmoRocketLight))
-								.withProperties(IIContent.ammoCoreSteel, CoreTypes.CANISTER, 0x2fad64).withState(BulletState.BULLET_UNUSED),
+								.withProperties(IIContent.ammoCoreSteel, CoreType.CANISTER, 0x2fad64).withState(BulletState.BULLET_UNUSED),
 						new AMTBullet("WeaponMount3", header.getOffset("WeaponMount3"), AmmoRegistry.getModel(IIContent.itemAmmoRocketLight))
-								.withProperties(IIContent.ammoCoreSteel, CoreTypes.CANISTER, 0x2fad64).withState(BulletState.BULLET_UNUSED),
+								.withProperties(IIContent.ammoCoreSteel, CoreType.CANISTER, 0x2fad64).withState(BulletState.BULLET_UNUSED),
 						new AMTBullet("WeaponMount4", header.getOffset("WeaponMount4"), AmmoRegistry.getModel(IIContent.itemAmmoRocketLight))
-								.withProperties(IIContent.ammoCoreSteel, CoreTypes.CANISTER, 0x2fad64).withState(BulletState.BULLET_UNUSED)
+								.withProperties(IIContent.ammoCoreSteel, CoreType.CANISTER, 0x2fad64).withState(BulletState.BULLET_UNUSED)
 				}
 		);
 

@@ -2,6 +2,7 @@ package pl.pabilo8.immersiveintelligence.common.util.upgrade_system;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import pl.pabilo8.immersiveintelligence.api.utils.IUpgradableMachine;
 import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
@@ -14,7 +15,7 @@ import java.util.ArrayList;
  * @author Pabilo8
  * @since 03.12.2023
  */
-public class UpgradeStorage<T extends TileEntity>
+public class UpgradeStorage<T extends TileEntity & IUpgradableMachine>
 {
 	//REFACTOR: 12.12.2023 move to capabilities
 	private T tile;

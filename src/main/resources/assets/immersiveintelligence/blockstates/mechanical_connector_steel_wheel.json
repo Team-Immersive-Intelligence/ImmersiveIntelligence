@@ -1,0 +1,60 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "transform": "forge:default-block",
+    "textures": {
+      "texture": "immersiveengineering:blocks/storage_steel",
+      "particle": "immersiveengineering:blocks/storage_steel"
+    },
+    "custom": {
+      "flip-v": true
+    }
+  },
+  "variants": {
+    "inventory,type=steel_wheel": [
+      {
+        "model": "immersiveintelligence:metal_device/wheel/steel_wheel_inv.obj"
+      }
+    ],
+    "type": {
+      "steel_wheel": {
+        "model": "immersiveintelligence:metal_device/wheel/steel_wheel_base.obj"
+      }
+    },
+    "facing": {
+      "down": {
+      },
+      "up": {
+      },
+      "north": {
+        "transform": {
+          "rotation": {
+            "y": 180
+          }
+        }
+      },
+      "south": {
+      },
+      "west": {
+        "transform": {
+          "rotation": {
+            "y": -90
+          }
+        }
+      },
+      "east": {
+        "transform": {
+          "rotation": {
+            "y": 90
+          }
+        }
+      }
+    },
+    "_1dynamicrender": {
+      "false": {},
+      "true": {
+        "model": "immersiveintelligence:metal_device/wheel/steel_wheel.obj.ie"
+      }
+    }
+  }
+}

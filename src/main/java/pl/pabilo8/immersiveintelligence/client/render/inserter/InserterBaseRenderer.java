@@ -9,8 +9,12 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Tuple;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer;
-import pl.pabilo8.immersiveintelligence.client.util.amt.*;
+import pl.pabilo8.immersiveintelligence.client.util.amt.AMT;
+import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationCompiledMap;
+import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationLoader;
+import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationUtils;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.inserter.TileEntityInserterBase;
+import pl.pabilo8.immersiveintelligence.common.util.amt.IIModelHeader;
 
 import java.util.function.Function;
 

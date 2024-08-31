@@ -8,6 +8,7 @@ import pl.pabilo8.immersiveintelligence.client.model.item.ModelMeasuringCup.Meas
 
 /**
  * @author Pabilo8
+ * @ii-approved 0.1.0
  * @since 13-07-2019
  */
 public abstract class ModelAbstractItem implements IModel

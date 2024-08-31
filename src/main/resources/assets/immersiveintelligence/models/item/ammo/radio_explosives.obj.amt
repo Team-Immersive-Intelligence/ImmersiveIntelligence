@@ -1,0 +1,13 @@
+{
+	"origins": {
+		"casing_simple": [0, 0, 0],
+		"core_canister": [0, -23, 0],
+		"casing": [0, -23, 0],
+		"casing_lid": [-5.5625, 10.125, 0],
+		"core_canister1": [0, -23, 0],
+		"core_canister2": [0, -23, 0],
+		"core_canister3": [0, -23, 0],
+		"core_canister4": [0, -23, 0]
+	},
+	"hierarchy": {}
+}

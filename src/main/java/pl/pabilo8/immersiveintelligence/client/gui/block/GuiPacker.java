@@ -26,10 +26,10 @@ import pl.pabilo8.immersiveintelligence.api.PackerHandler;
 import pl.pabilo8.immersiveintelligence.api.PackerHandler.PackerActionType;
 import pl.pabilo8.immersiveintelligence.api.PackerHandler.PackerTask;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
-import pl.pabilo8.immersiveintelligence.client.gui.elements.GuiLabelNoShadow;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.GuiPackerTaskList;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonDropdownList;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonSwitch;
+import pl.pabilo8.immersiveintelligence.client.gui.elements.label.GuiLabelNoShadow;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityPacker;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerPacker;
@@ -295,6 +295,10 @@ public class GuiPacker extends GuiIEContainerBase
 			tooltip.add(I18n.format("desc.immersiveintelligence.metal_multiblock1.packer.side_output"));
 		else if(switchDirection!=null&&switchDirection.isMouseOver())
 			tooltip.add(I18n.format("desc.immersiveintelligence.metal_multiblock1.packer.switch_direction"));
+		else if(buttonRepeat.isMouseOver())
+			tooltip.add(buttonRepeat.state?
+					I18n.format("desc.immersiveintelligence.metal_multiblock1.packer.mode_iteration"):
+					I18n.format("desc.immersiveintelligence.metal_multiblock1.packer.mode_single"));
 
 		if(!tooltip.isEmpty())
 		{

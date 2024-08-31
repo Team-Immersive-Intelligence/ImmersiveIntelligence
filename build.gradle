@@ -12,11 +12,18 @@ buildscript {
             name = "sonatype"
             url = "https://oss.sonatype.org/content/repositories/snapshots/"
         }
+        maven {
+            name = "iiMavenReleases"
+            url = uri("https://maven.iiteam.net/releases")
+        }
+
     }
     dependencies {
         classpath("com.anatawa12.forge:ForgeGradle:2.3-1.0.+") {
             changing = true
         }
+
+        classpath('xyz.vdeltagabriel:GradleUtils:2.1.0')
     }
 }
 
@@ -26,15 +33,6 @@ apply from: rootProject.file('gradle/boilerplate.gradle')
 //--- Dependencies
 
 repositories {
-    maven { // JEI & Tinkers
-        name 'DVS1 Maven FS'
-        url 'https://dvs1.progwml6.com/files/maven'
-    }
-}
-
-dependencies {
-    // at runtime, use the full JEI jar
-    runtimeOnly "mezz.jei:jei_1.12.2:4.16.1.301"
 }
 
 

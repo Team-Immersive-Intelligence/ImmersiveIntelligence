@@ -63,13 +63,16 @@ item.immersiveintelligence.binoculars.infrared_binoculars.name=Infrared Binocula
 
 item.immersiveintelligence.assembly_scheme.name=Assembly Scheme
 
-item.immersiveintelligence.press_mold.howitzer.name=Metal Press Mold: Artillery Shell Casing
+item.immersiveintelligence.press_mold.howitzer.name=Metal Press Mold: Heavy Artillery Shell Casing
+item.immersiveintelligence.press_mold.medium_howitzer.name=Metal Press Mold: Medium Artillery Shell Casing
 item.immersiveintelligence.press_mold.light_howitzer.name=Metal Press Mold: Light Artillery Shell Casing
 item.immersiveintelligence.press_mold.mortar.name=Metal Press Mold: Mortar Shell Casing
+item.immersiveintelligence.press_mold.light_gun.name=Metal Press Mold: Light Gun Shell Casing
 item.immersiveintelligence.press_mold.autocannon.name=Metal Press Mold: Autocannon Shell Casing
-item.immersiveintelligence.press_mold.machinegun.name=Metal Press Mold: Machinegun Bullet Casing
-item.immersiveintelligence.press_mold.assault_rifle.name=Metal Press Mold: Assault Rifle Bullet Casing
-item.immersiveintelligence.press_mold.submachinegun.name=Metal Press Mold: Submachinegun Bullet Casing
+item.immersiveintelligence.press_mold.shotgun.name=Metal Press Mold: Shotgun Shell Casing
+item.immersiveintelligence.press_mold.machinegun.name=Metal Press Mold: Long Bullet Casing
+item.immersiveintelligence.press_mold.assault_rifle.name=Metal Press Mold: Intermediate Bullet Casing
+item.immersiveintelligence.press_mold.submachinegun.name=Metal Press Mold: Short Bullet Casing
 item.immersiveintelligence.press_mold.naval_mine.name=Metal Press Mold: Naval Mine Casing
 item.immersiveintelligence.press_mold.tripmine.name=Metal Press Mold: Tripmine Casing
 item.immersiveintelligence.press_mold.tellermine.name=Metal Press Mold: Landmine Casing
@@ -273,7 +276,8 @@ item.immersiveintelligence.skycrate_mount.mechanical.name=Skycrate Mount
 item.immersiveintelligence.skycrate_mount.electric.name=Electric Skycrate Mount
 
 desc.immersiveintelligence.electric_hammer=Rotates blocks, toggles machine ports, forms multiblocks.
-desc.immersiveintelligence.electric_wirecutter=Cuts wires and motor belts, works as shears.
+desc.immersiveintelligence.electric_wirecutter=Cuts wires and belts, works as shears.
+desc.immersiveintelligence.trench_shovel=Buries Tripmines faster, fortifies blocks.
 desc.immersiveintelligence.wrench=Installs upgrades on compatible machines.
 desc.immersiveintelligence.tachometer=Measures speed and torque of rotary devices.
 desc.immersiveintelligence.binoculars=Allows to see distant things.
@@ -373,50 +377,64 @@ item.immersiveintelligence.sawblade.tungsten.name=Tungsten Saw Blade
 
 #bCal - Block-Caliber (1/16 Block = 1 bCal)
 #Casings
-item.immersiveintelligence.ammo_casing.heavy_artillery_8bcal.name=Heavy Artillery Shell Casing
-item.immersiveintelligence.artillery_8bCal.core.name=Heavy Artillery Shell Core
-item.immersiveintelligence.artillery_8bCal.bullet.name=Heavy Artillery Shell
+item.immersiveintelligence.ammo_casing.artillery_8bcal.name=Heavy Artillery Shell Casing
+item.immersiveintelligence.artillery_8bcal.core.name=Heavy Artillery Shell Core
+item.immersiveintelligence.artillery_8bcal.bullet.name=Heavy Artillery Shell
 
 item.immersiveintelligence.ammo_casing.medium_artillery_6bcal.name=Medium Artillery Shell Casing
-item.immersiveintelligence.artillery_6bCal_long.core.name=Medium Artillery Shell Core
-item.immersiveintelligence.artillery_6bCal_long.bullet.name=Medium Artillery Shell
+item.immersiveintelligence.artillery_6bcal_long.core.name=Medium Artillery Shell Core
+item.immersiveintelligence.artillery_6bcal_long.bullet.name=Medium Artillery Shell
 
 item.immersiveintelligence.ammo_casing.light_artillery_6bcal.name=Light Artillery Shell Casing
-item.immersiveintelligence.artillery_6bCal.core.name=Light Artillery Shell Core
-item.immersiveintelligence.artillery_6bCal.bullet.name=Light Artillery Shell
+item.immersiveintelligence.artillery_6bcal.core.name=Light Artillery Shell Core
+item.immersiveintelligence.artillery_6bcal.bullet.name=Light Artillery Shell
 
-item.immersiveintelligence.ammo_casing.light_gun_4bCal.name=Light Gun Shell Casing
-item.immersiveintelligence.light_gun_4bCal.core.name=Light Gun Shell Core
-item.immersiveintelligence.light_gun_4bCal.bullet.name=Light Gun Shell
+item.immersiveintelligence.ammo_casing.light_gun_4bcal.name=Light Gun Shell Casing
+item.immersiveintelligence.gun_4bcal.core.name=Light Gun Shell Core
+item.immersiveintelligence.gun_4bcal.bullet.name=Light Gun Shell
+
+item.immersiveintelligence.ammo_casing.rocket_6bcal.name=Rocket Casing
+item.immersiveintelligence.rocket_6bcal.core.name=Rocket Core
+item.immersiveintelligence.rocket_6bcal.bullet.name=Rocket
+
+item.immersiveintelligence.ammo_casing.heavy_rocket_10bcal.name=Heavy Rocket Casing
+item.immersiveintelligence.rocket_10bcal.core.name=Heavy Rocket Core
+item.immersiveintelligence.rocket_10bcal.bullet.name=Heavy Rocket
+
+item.immersiveintelligence.ammo_casing.guided_missile_6bcal.name=Wire Guided Missile Casing
+item.immersiveintelligence.missile_guided_6bcal.core.name=Wire Guided Missile Core
+item.immersiveintelligence.missile_guided_6bcal.bullet.name=Wire Guided Missile
 
 item.immersiveintelligence.ammo_casing.mortar_6bcal.name=Mortar Shell Casing
-item.immersiveintelligence.mortar_6bCal.core.name=Mortar Shell Core
-item.immersiveintelligence.mortar_6bCal.bullet.name=Mortar Shell
+item.immersiveintelligence.mortar_6bcal.core.name=Mortar Shell Core
+item.immersiveintelligence.mortar_6bcal.bullet.name=Mortar Shell
 
-item.immersiveintelligence.ammo_casing.mg_2bcal.name=Rifle Bullet Casing
-item.immersiveintelligence.mg_2bCal.core.name=Rifle Bullet Core
-item.immersiveintelligence.mg_2bCal.bullet.name=Rifle Bullet
+item.immersiveintelligence.ammo_casing.mg_2bcal.name=Long Bullet Casing
+item.immersiveintelligence.mg_2bcal.core.name=Long Bullet Core
+item.immersiveintelligence.mg_2bcal.bullet.name=Long Bullet
 
-item.immersiveintelligence.ammo_casing.stg_1bcal.name=Assault Rifle Bullet Casing
-item.immersiveintelligence.stg_1bCal.core.name=Assault Rifle Bullet Core
-item.immersiveintelligence.stg_1bCal.bullet.name=Assault Rifle Bullet
+item.immersiveintelligence.ammo_casing.stg_1bcal.name=Intermediate Bullet Casing
+item.immersiveintelligence.stg_1bcal.core.name=Intermediate Bullet Core
+item.immersiveintelligence.stg_1bcal.bullet.name=Intermediate Bullet
 
-item.immersiveintelligence.ammo_casing.smg_1bcal.name=Submachinegun Bullet Casing
-item.immersiveintelligence.smg_1bCal.core.name=Submachinegun Bullet Core
-item.immersiveintelligence.smg_1bCal.bullet.name=Submachinegun Bullet
+item.immersiveintelligence.ammo_casing.smg_1bcal.name=Short Bullet Casing
+item.immersiveintelligence.smg_1bcal.core.name=Short Bullet Core
+item.immersiveintelligence.smg_1bcal.bullet.name=Short Bullet
 
-item.immersiveintelligence.revolver_1bCal.core.name=Revolver Bullet Core
-item.immersiveintelligence.revolver_1bCal.bullet.name=Revolver Bullet
+item.immersiveintelligence.revolver_1bcal.core.name=Revolver Bullet Core
+item.immersiveintelligence.revolver_1bcal.bullet.name=Revolver Bullet
 
 item.immersiveintelligence.ammo_casing.autocannon_3bcal.name=Autocannon Shell Casing
-item.immersiveintelligence.autocannon_3bCal.core.name=Autocannon Shell Core
-item.immersiveintelligence.autocannon_3bCal.bullet.name=Autocannon Shell
+item.immersiveintelligence.autocannon_3bcal.core.name=Autocannon Shell Core
+item.immersiveintelligence.autocannon_3bcal.bullet.name=Autocannon Shell
 
-item.immersiveintelligence.grenade_5bCal.core.name=Hand-Grenade Core
-item.immersiveintelligence.grenade_5bCal.bullet.name=Hand-Grenade
+item.immersiveintelligence.grenade_5bcal.core.name=Hand-Grenade Core
+item.immersiveintelligence.grenade_5bcal.bullet.name=Hand-Grenade
 
-item.immersiveintelligence.railgun_grenade_4bCal.core.name=Railgun Grenade Core
-item.immersiveintelligence.railgun_grenade_4bCal.bullet.name=Railgun Grenade
+item.immersiveengineering.bullet.empty_casing.name=Revolver Bullet Casing
+item.immersiveengineering.mold.bullet_casing.name=Metal Press Mold: Revolver Bullet Casing
+item.immersiveintelligence.railgun_grenade_4bcal.core.name=Railgun Grenade Core
+item.immersiveintelligence.railgun_grenade_4bcal.bullet.name=Railgun Grenade
 
 #Components
 
@@ -437,9 +455,12 @@ item.immersiveintelligence.bullet.component.nuke.name=Nuclear Warhead
 
 item.immersiveintelligence.bullet.component.core_steel.name=Steel Core
 item.immersiveintelligence.bullet.component.core_brass.name=Brass Core
+item.immersiveintelligence.bullet.component.core_copper.name=Copper Core
+item.immersiveintelligence.bullet.component.core_iron.name=Iron Core
 item.immersiveintelligence.bullet.component.core_tungsten.name=Tungsten Core
 item.immersiveintelligence.bullet.component.core_lead.name=Lead Core
 item.immersiveintelligence.bullet.component.core_uranium.name=Uranium Core
+item.immersiveintelligence.bullet.component.core_pabilium.name=Pabilium Core
 
 item.immersiveintelligence.bullet_magazine.machinegun.name=Machinegun Magazine
 item.immersiveintelligence.bullet_magazine.submachinegun.name=Submachinegun Magazine
@@ -458,9 +479,9 @@ item.immersiveintelligence.motor_gear.iron.name=Iron Gear
 item.immersiveintelligence.motor_gear.steel.name=Steel Gear
 item.immersiveintelligence.motor_gear.tungsten.name=Tungsten Gear
 
-item.immersiveintelligence.motor_belt.cloth.name=Cloth Motor Belt
-item.immersiveintelligence.motor_belt.steel.name=Steel Motor Belt
-item.immersiveintelligence.motor_belt.rubber.name=Rubber Motor Belt
+item.immersiveintelligence.motor_belt.cloth.name=Cloth Belt
+item.immersiveintelligence.motor_belt.steel.name=Steel Track
+item.immersiveintelligence.motor_belt.rubber.name=Rubber Belt
 
 item.immersiveintelligence.wrench.name=Engineer's Wrench
 item.immersiveintelligence.electric_wrench.name=Engineer's Electric Wrench
@@ -537,11 +558,10 @@ tile.immersiveintelligence.metal_decoration.mechanical_engineering.name=Mechanic
 tile.immersiveintelligence.metal_decoration.heavy_mechanical_engineering.name=Heavy Mechanical Engineering Block
 
 tile.immersiveintelligence.metal_decoration.coil_data.name=Data Cable Coil
-tile.immersiveintelligence.metal_decoration.coil_steel_motor_belt.name=Steel Motor Belt Coil
-
 tile.immersiveintelligence.cloth_decoration.coil_rope.name=Rope Coil
-tile.immersiveintelligence.cloth_decoration.coil_cloth_motor_belt.name=Cloth Motor Belt Coil
-tile.immersiveintelligence.cloth_decoration.coil_rubber_motor_belt.name=Rubber Motor Belt Coil
+tile.immersiveintelligence.metal_decoration.coil_steel_motor_belt.name=Steel Track Coil
+tile.immersiveintelligence.cloth_decoration.coil_cloth_motor_belt.name=Cloth Belt Coil
+tile.immersiveintelligence.cloth_decoration.coil_rubber_motor_belt.name=Rubber Belt Coil
 
 tile.immersiveintelligence.mine_sign.mine_sign.name=Mine Caution Sign
 tile.immersiveintelligence.mine_sign.mine_sign.desc=Mines;Ahead!
@@ -605,7 +625,8 @@ tile.immersiveintelligence.mechanical_device.wooden_transmission_box.name=Wooden
 tile.immersiveintelligence.mechanical_device.creative_transmission_box.name=Creative Transmission Box
 tile.immersiveintelligence.mechanical_device1.mechanical_pump.name=Mechanical Pump
 
-tile.immersiveintelligence.mechanical_connector.wooden_wheel.name=Wheel
+tile.immersiveintelligence.mechanical_connector.iron_wheel.name=Iron Wheel
+tile.immersiveintelligence.mechanical_connector.steel_wheel.name=Steel Wheel
 
 tile.immersiveintelligence.small_crate.wooden_crate_box.name=Small Wooden Crate (Box)
 tile.immersiveintelligence.small_crate.wooden_crate_cube.name=Small Wooden Crate (Cube)
@@ -738,6 +759,8 @@ desc.immersiveintelligence.metal_multiblock1.packer.mode.at_least_packer=At leas
 desc.immersiveintelligence.metal_multiblock1.packer.side_input=Items to be put in a container
 desc.immersiveintelligence.metal_multiblock1.packer.side_output=Items taken from a container
 desc.immersiveintelligence.metal_multiblock1.packer.switch_direction=Switch Task Direction
+desc.immersiveintelligence.metal_multiblock1.packer.mode_single=Single-Time Packing
+desc.immersiveintelligence.metal_multiblock1.packer.mode_iteration=Repeated Packing
 
 desc.immersiveintelligence.metal_multiblock1.emplacement.target.mobs=Mobs
 desc.immersiveintelligence.metal_multiblock1.emplacement.target.animals=Animals
@@ -758,7 +781,8 @@ tile.immersiveintelligence.gate_multiblock.aluminium_fence_gate.name=Aluminium F
 tile.immersiveintelligence.gate_multiblock.aluminium_chain_fence_gate.name=Aluminium Chain Fence Gate
 
 tile.immersiveintelligence.metal_multiblock1.filler.name=Filler
-tile.immersiveintelligence.metal_multiblock1.ammunition_workshop.name=Ammunition Workshop
+tile.immersiveintelligence.metal_multiblock1.ammunition_assembler.name=Ammunition Assembler
+tile.immersiveintelligence.metal_multiblock1.heavy_ammunition_assembler.name=Heavy Ammunition Assembler
 tile.immersiveintelligence.metal_multiblock1.projectile_workshop.name=Projectile Workshop
 
 tile.immersiveintelligence.metal_multiblock1.chemical_painter.name=Chemical Painter
@@ -810,7 +834,8 @@ desc.immersiveengineering.info.multiblock.II:Radar=Radar
 desc.immersiveengineering.info.multiblock.II:Flagpole=Flagpole
 
 desc.immersiveengineering.info.multiblock.II:Filler=Filler
-desc.immersiveengineering.info.multiblock.II:AmmunitionWorkshop=Ammunition Workshop
+desc.immersiveengineering.info.multiblock.II:AmmunitionAssembler=Ammunition Assembler
+desc.immersiveengineering.info.multiblock.II:HeavyAmmunitionAssembler=Heavy Ammunition Assembler
 desc.immersiveengineering.info.multiblock.II:ProjectileWorkshop=Projectile Workshop
 desc.immersiveengineering.info.multiblock.II:ChemicalPainter=Chemical Painter
 
@@ -894,19 +919,24 @@ subtitle.immersiveintelligence.casing_pickup=Casings Drop Into a Pouch
 subtitle.immersiveintelligence.machinegun_shot=Machinegun Firing
 subtitle.immersiveintelligence.machinegun_shot_distant=Machinegun Firing in Distance
 subtitle.immersiveintelligence.machinegun_reload=Machinegun Reloading
+subtitle.immersiveintelligence.machinegun_unload=Machinegun Magazine Discarded
 
 subtitle.immersiveintelligence.submachinegun_shot=Submachinegun Firing
 subtitle.immersiveintelligence.submachinegun_shot_distant=Submachinegun Firing in Distance
 subtitle.immersiveintelligence.submachinegun_reload=Submachinegun Reloading
+subtitle.immersiveintelligence.submachinegun_unload=Submachinegun Magazine Discarded
 
 subtitle.immersiveintelligence.assault_rifle_shot=Assault Rifle Firing
 subtitle.immersiveintelligence.assault_rifle_shot_distant=Assault Rifle Firing in Distance
 subtitle.immersiveintelligence.assault_rifle_reload=Assault Rifle Reloading
+subtitle.immersiveintelligence.assault_rifle_unload=Assault Rifle Magazine Discarded
 subtitle.immersiveintelligence.assault_rifle_mode_change=Fire Selector Flipping
 
 subtitle.immersiveintelligence.rifle_shot=Rifle Firing
 subtitle.immersiveintelligence.rifle_shot_distant=Rifle Firing in Distance
-subtitle.immersiveintelligence.rifle_reload=Rifle Reloading
+subtitle.immersiveintelligence.rifle_load=Rifle Reloading
+subtitle.immersiveintelligence.rifle_load_magazine=Rifle Magazine Reloading
+subtitle.immersiveintelligence.rifle_unload_magazine=Rifle Magazine Discarded
 
 subtitle.immersiveintelligence.howitzer_shot=Howitzer Firing
 subtitle.immersiveintelligence.howitzer_shot_distant=Howitzer Firing in Distance
@@ -930,6 +960,7 @@ subtitle.immersiveintelligence.motorbike_horn=Motorbike Horn
 
 subtitle.immersiveintelligence.fuel_station=Fuel pumping
 subtitle.immersiveintelligence.welding=Welding
+subtitle.immersiveintelligence.sawmill=Sawmill Working
 
 subtitle.immersiveintelligence.drawer_open=Drawer Slides Out
 subtitle.immersiveintelligence.drawer_close=Drawer Slides In
@@ -940,10 +971,10 @@ subtitle.immersiveintelligence.metal_hatch_close=Metal Hatch Shuts
 subtitle.immersiveintelligence.vise_open=Vise Tightens its Clamps
 subtitle.immersiveintelligence.vise_close=Vise Loosens its Clamps
 
-subtitle.immersiveintelligence.vise_open=Vise Tightens its Clamps
-subtitle.immersiveintelligence.vise_close=Vise Loosens its Clamps
-subtitle.immersiveintelligence.vise_open=Vise Tightens its Clamps
-subtitle.immersiveintelligence.vise_close=Vise Loosens its Clamps
+subtitle.immersiveintelligence.motor_belt_break=Drive Belt Torn Off
+subtitle.immersiveintelligence.motor_belt=Drive Belt Turning
+subtitle.immersiveintelligence.track_break=Metal Track Breaks
+subtitle.immersiveintelligence.track=Metal Track Turning
 
 subtitle.immersiveintelligence.autocannon_shot=Autocannon Firing
 subtitle.immersiveintelligence.autocannon_shot_distant=Autocannon Firing in Distance
@@ -1214,6 +1245,8 @@ desc.immersiveintelligence.bullet_type.incendiary=Incendiary
 desc.immersiveintelligence.bullet_type.tracer=Tracer
 desc.immersiveintelligence.bullet_type.flare=Flare
 desc.immersiveintelligence.bullet_type.chemical=Chemical
+desc.immersiveintelligence.bullet_type.emp=EMP
+desc.immersiveintelligence.bullet_type.terrain_denial=Terrain Denial
 desc.immersiveintelligence.bullet_type.special=Special Purpose
 
 desc.immersiveintelligence.bullet_core_type.softpoint=Soft Point
@@ -1226,12 +1259,27 @@ desc.immersiveintelligence.bullet_core_type.cluster=Cluster
 
 desc.immersiveintelligence.bullet_fuse.contact=Contact
 desc.immersiveintelligence.bullet_fuse.timed=Timed
+desc.immersiveintelligence.bullet_fuse.tooltip.timed=Timed Fuse, delay set to %s ticks
 desc.immersiveintelligence.bullet_fuse.proximity=Proximity
+desc.immersiveintelligence.bullet_fuse.tooltip.proximity=Proximity Fuse, distance set to %s blocks
 
-desc.immersiveintelligence.bullets.core=Fitted with %1$s %2$s
+desc.immersiveintelligence.bullets.composition=%s - Composition
+desc.immersiveintelligence.bullets.details=Details:
+desc.immersiveintelligence.bullets.core=Fitted with %1$s %2$s Core
 desc.immersiveintelligence.bullets.fuse=%s Fuse
 desc.immersiveintelligence.bullets.mass=Mass: %s
 desc.immersiveintelligence.bullets.caliber=Caliber: %s bCal
+
+desc.immersiveintelligence.bullets.components=Components:
+desc.immersiveintelligence.bullets.ballistics=%s - Ballistics
+desc.immersiveintelligence.bullets.performance=Performance:
+desc.immersiveintelligence.bullets.damage_dealt=Damage Dealt: %s
+desc.immersiveintelligence.bullets.standard_velocity=Standard Velocity: %s b/t
+desc.immersiveintelligence.bullets.max_artillery_range=Max Artillery Range: %s blocks
+desc.immersiveintelligence.bullets.max_artillery_height=Max Height Reached: %s blocks
+desc.immersiveintelligence.bullets.max_direct_range=Max Direct Range: %s blocks
+desc.immersiveintelligence.bullets.max_range=Max Range: %s blocks
+desc.immersiveintelligence.bullets.armor_penetration=Armor Penetration:
 
 desc.immersiveintelligence.bullet_magazine.remaining=Remaining Bullets: %s
 desc.immersiveintelligence.bullet_magazine.empty=Empty
@@ -1294,14 +1342,14 @@ info.immersiveintelligence.redstone_buffer_mode=Redstone Buffer Mode: %s
 info.immersiveintelligence.redstone_buffer_mode.passtrough=Passtrough
 info.immersiveintelligence.redstone_buffer_mode.signal=On Signal
 
-info.immersiveintelligence.tachometer_message.basic=Internal: speed %s RPM / torque %s Nm.
-info.immersiveintelligence.tachometer_message.advanced=Internal: speed %s RPM / torque %s Nm. External: speed %s RPM / torque %s Nm.
-info.immersiveintelligence.tachometer.internal_torque=Internal Torque: %s
-info.immersiveintelligence.tachometer.external_torque=External Torque: %s
-info.immersiveintelligence.tachometer.internal_speed=Internal Speed: %s
-info.immersiveintelligence.tachometer.external_speed=External Speed: %s
-info.immersiveintelligence.tachometer.torque=Torque: %s
-info.immersiveintelligence.tachometer.speed=Speed: %s
+info.immersiveintelligence.tachometer_message.basic=Internal: speed %s DPT / torque %s TU.
+info.immersiveintelligence.tachometer_message.advanced=Internal: speed %s DPT / torque %s TU. External: speed %s DPT / torque %s TU.
+info.immersiveintelligence.tachometer.internal_torque=Internal Torque: %s TU
+info.immersiveintelligence.tachometer.external_torque=External Torque: %s TU
+info.immersiveintelligence.tachometer.internal_speed=Internal Speed: %s DPT
+info.immersiveintelligence.tachometer.external_speed=External Speed: %s DPT
+info.immersiveintelligence.tachometer.torque=Torque: %s TU
+info.immersiveintelligence.tachometer.speed=Speed: %s D/t
 
 info.immersiveintelligence.machineupgrade.name=Installing: %s
 info.immersiveintelligence.machineupgrade.progress=Progress: %1$s / %2$s IF
@@ -1335,11 +1383,7 @@ rotary.immersiveintelligence.belt_system.tooFar=You are too far away from the pr
 rotary.immersiveintelligence.belt_system.cantSee=The connection is obstructed
 rotary.immersiveintelligence.belt_system.connectionExists=The connection exists already
 rotary.immersiveintelligence.belt_system.invalidPoint=One of the connection points is invalid
-
-rotary.immersiveintelligence.mechanical.speed=Speed
-rotary.immersiveintelligence.mechanical.speed_unit=RPM
-rotary.immersiveintelligence.mechanical.torque=Torque
-rotary.immersiveintelligence.mechanical.torque_unit=Nm
+rotary.immersiveintelligence.belt_system.differentAxis=Belts cannot be connected diagonally.
 
 #Data System Descriptions
 datasystem.immersiveintelligence.function.add=Addition
@@ -2003,10 +2047,10 @@ ie.manual.entry.bullet_production1=Let’s start with the casing. Most casings c
 ie.manual.entry.bullet_production2=The core can be produced in the <link;projectile_workshop;§o§nProjectile§o§nWorkshop§r;> using metal nuggets, remember to use the <link;bullet_cores;§o§nappropriate §o§nmetal §o§nfor §o§nthe §o§njob§r;>: uranium has a better penetration value, but smaller component effect than brass. Another modifier you can pick is the <link;core_types;§o§ncore §o§ntype§r;>, which determines how many components the core can store.<br>After your core is produced, you can fill it with components using another projectile workshop with a filler upgrade installed. This step is optional and can be repeated multiple times with the same or different components.
 ie.manual.entry.bullet_production3=The final stage is the bullet assembly in the <link;ammunition_workshop;§o§nAmmunition§o§nWorkshop§r;>. Here you can select the <link;bullet_fuses;§o§nfuse§r;>. Keep in mind not all fuse types are supported by certain ammunition like grenades and explosives.<br>There is also a next, optional stage - the Chemical Painter. Ammunition can be painted for easier identification and higher uniformity.
 
-ie.manual.entry.ammunition_workshop.name=Ammunition Workshop
+ie.manual.entry.ammunition_workshop.name=Ammunition Assembler
 ie.manual.entry.ammunition_workshop.subtext=Heart of the War Machine
-ie.manual.entry.ammunition_workshop0=Ammunition workshop performs the final part of the <link;bullet_production;§o§nammunition §o§nproduction§r;> - the assembly. To form it use a hammer on the steel scaffolding block between two conveyors.
-ie.manual.entry.ammunition_workshop1=Ammunition workshop assembles ammunition from a core produced in the <link;projectile_workshop;§o§nProjectile §o§nWorkshop§r;> and a casing. It also sets the fuse determining under what conditions its components will detonate. Fuses can be set through the interface or a data packet. To operate, the machine requires electricity.
+ie.manual.entry.ammunition_workshop0=Ammunition assembler performs the final part of the <link;bullet_production;§o§nammunition §o§nproduction§r;> - the assembly. To form it use a hammer on the steel scaffolding block between two conveyors.
+ie.manual.entry.ammunition_workshop1=Ammunition Assembler puts together ammunition from a core produced in the <link;projectile_workshop;§o§nProjectile §o§nWorkshop§r;> and a casing. It also sets the fuse determining under what conditions its components will detonate. Fuses can be set through the interface or a data packet. To operate, the machine requires electricity.
 
 #Reference to its purpose-changing upgrade
 ie.manual.entry.projectile_workshop.name=Projectile Workshop
@@ -2094,9 +2138,17 @@ ie.manual.entry.bullet_core.core_brass=Brass Core
 ie.manual.entry.bullet_core.core_brass.lore=Make it Steampunk
 ie.manual.entry.bullet_core.core_brass.desc=Brass is a heavy metal with bad penetration capabilities, but it greatly increases the effect of other components.
 
+ie.manual.entry.bullet_core.core_copper=Copper Core
+ie.manual.entry.bullet_core.core_copper.lore=Every Penny Counts
+ie.manual.entry.bullet_core.core_copper.desc=Copper is a cheap material for bullets, its penetration ability is worse than one of brass, but its component effect.
+
 ie.manual.entry.bullet_core.core_lead=Lead Core
 ie.manual.entry.bullet_core.core_lead.lore=Good, bad and ugly
-ie.manual.entry.bullet_core.core_lead.desc=Lead is a good material for cheap bullets with high damage and mediocre penetrating power.
+ie.manual.entry.bullet_core.core_lead.desc=Lead is a good material for cheap bullets with high damage and mediocre penetrating power, however due to its high density limits the maximum range of projectiles made of it.
+
+ie.manual.entry.bullet_core.core_iron=Iron Core
+ie.manual.entry.bullet_core.core_iron.lore=
+ie.manual.entry.bullet_core.core_iron.desc=Iron is a good early material for bullets, it offers above-average penetrating power and range, but has weak component effect and damage.
 
 ie.manual.entry.bullet_core.core_steel=Steel Core
 ie.manual.entry.bullet_core.core_steel.lore=Full Metal Jacket
@@ -2381,11 +2433,11 @@ ie.manual.entry.sawmill2=The machine requires a constant supply of rotary power 
 
 ie.manual.entry.rotary_power.name=Rotary Power
 ie.manual.entry.rotary_power.subtext=Things start turning!
-ie.manual.entry.rotary_power0=Rotary power is an old-fashioned alternative to electric power. Instead of wires and connectors, wheels and motor belts are used. The power system utilizes 2 factors: torque - in Newton metres (Nm) and speed in RPM. Machines require different torque and speed to work effectively.
-ie.manual.entry.rotary_power1=If any of those values surpasses the limit, the machine explodes. Power can be merged and splitted using <link;rotary_power;§o§nGearboxes§r;4>.
+ie.manual.entry.rotary_power0=Rotary power is an old-fashioned alternative to electric power. Instead of wires and connectors, wheels and motor belts are used. The power system utilizes 2 factors: torque - in TU (Torque Unit) and speed in DPT (Degrees per Tick). Machines require different torque and speed to work effectively.
+ie.manual.entry.rotary_power1=If any of those values surpasses the limit, the machine explodes. Power can be merged and split using <link;rotary_power;§o§nGearboxes§r;4>.
 ie.manual.entry.rotary_power2=The wheel is used to transfer mechanical (rotary) power between devices. After placing it can be connected to another wheel using a motor belt, the same way connectors are linked with wires.
-ie.manual.entry.rotary_power3=The motor belts are the main transmission element of every rotary power network. They differ with the amount of torque and speed they can transfer. If the torque or the speed it too high for the belt, it detaches from the wheel and falls on the ground. Use different materials for different needs - steel might be more resistant to torque, but power losses are higher.
-ie.manual.entry.rotary_power4=The Gearboxes are used to link multiple wheels together, their sides can be changed to input, output or nothing. Inputted torque from all inputs is summed and then divided equally between all outputs. You can use the gearbox to merge torque to make it higher or divide it between 2 or more wheels. The gearbox requires gears of certain resistance to torque and speed to operate on full power.
+ie.manual.entry.rotary_power3=The motor belts are the main transmission element of every rotary power network. They differ with the amount of torque and speed they can transfer. If the torque is too high for the belt, it will detach from the wheel and fall onto the ground. Use different materials for different needs - steel might be more resistant to torque, but power losses are higher.
+ie.manual.entry.rotary_power4=The Gearboxes are used to link multiple wheels together, their sides can be changed to input, output or nothing. Input torque from all inputs is summed and then divided equally between all outputs. You can use the gearbox to merge torque to make it higher or divide it between 2 or more wheels. The gearbox requires gears of certain resistance to torque and speed to operate on full power.
 ie.manual.entry.rotary_power5=The Transmission Boxes are used to connect mechanical devices using a different standard of axles, they can be used to connect a windmill or a waterwheel to a motor belt network or output mechanical energy to a dynamo.
 
 #Reference to a certain polish eastern, well... house dweller

@@ -1,0 +1,8 @@
+# Made by Pabilo8 with Blockbench
+
+newmtl common_thingies
+map_Kd immersiveintelligence:blocks/common/common_thingies
+newmtl wheel_steel0
+map_Kd immersiveintelligence:blocks/mechanical_device/wheel_steel0
+newmtl wheel_steel1
+map_Kd immersiveintelligence:blocks/mechanical_device/wheel_steel1

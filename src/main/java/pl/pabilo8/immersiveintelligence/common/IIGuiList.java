@@ -8,9 +8,9 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumHand;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IUpgradableMachine;
+import pl.pabilo8.immersiveintelligence.api.utils.IUpgradableMachine;
 import pl.pabilo8.immersiveintelligence.client.gui.block.*;
-import pl.pabilo8.immersiveintelligence.client.gui.block.ammunition_production.GuiAmmunitionWorkshop;
+import pl.pabilo8.immersiveintelligence.client.gui.block.ammunition_production.GuiAmmunitionAssembler;
 import pl.pabilo8.immersiveintelligence.client.gui.block.ammunition_production.GuiProjectileWorkshop;
 import pl.pabilo8.immersiveintelligence.client.gui.block.arithmetic_logic_machine.GuiArithmeticLogicMachineEdit;
 import pl.pabilo8.immersiveintelligence.client.gui.block.arithmetic_logic_machine.GuiArithmeticLogicMachineStorage;
@@ -185,8 +185,8 @@ public enum IIGuiList
 	GUI_PROJECTILE_WORKSHOP(TileEntityProjectileWorkshop.class,
 			ContainerProjectileWorkshop::new
 	),
-	GUI_AMMUNITION_WORKSHOP(TileEntityAmmunitionWorkshop.class,
-			ContainerAmmunitionWorkshop::new
+	GUI_AMMUNITION_ASSEMBLER(TileEntityAmmunitionAssembler.class,
+			ContainerAmmunitionAssembler::new
 	),
 
 	RADAR(TileEntityRadar.class,
@@ -287,7 +287,7 @@ public enum IIGuiList
 		IIGuiList.GUI_FILLER.setClientGui(GuiFiller::new);
 		IIGuiList.GUI_CHEMICAL_PAINTER.setClientGui(GuiChemicalPainter::new);
 
-		IIGuiList.GUI_AMMUNITION_WORKSHOP.setClientGui(GuiAmmunitionWorkshop::new);
+		IIGuiList.GUI_AMMUNITION_ASSEMBLER.setClientGui(GuiAmmunitionAssembler::new);
 		IIGuiList.GUI_PROJECTILE_WORKSHOP.setClientGui(GuiProjectileWorkshop::new);
 
 		IIGuiList.RADAR.setClientGui(GuiRadar::new);

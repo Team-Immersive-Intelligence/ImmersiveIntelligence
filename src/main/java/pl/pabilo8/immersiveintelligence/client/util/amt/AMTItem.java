@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformT
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.Vec3d;
 import org.lwjgl.opengl.GL11;
+import pl.pabilo8.immersiveintelligence.common.util.amt.IIModelHeader;
 
 /**
  * AMT type for drawing items ({@link ItemStack}s)

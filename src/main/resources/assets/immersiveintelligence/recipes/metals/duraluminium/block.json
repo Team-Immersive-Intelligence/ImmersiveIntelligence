@@ -11,8 +11,8 @@
   ],
   "key": {
     "I": {
-      "item": "immersiveintelligence:material_ingot",
-      "data": 7
+      "type": "forge:ore_dict",
+      "ore": "ingotDuraluminium"
     }
   }
 }

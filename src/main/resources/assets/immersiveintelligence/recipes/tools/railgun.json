@@ -1,0 +1,29 @@
+{
+  "type": "forge:ore_shaped",
+  "result": {
+    "item": "immersiveengineering:railgun"
+  },
+  "pattern": [
+    " CB",
+    "HBC",
+    "GH "
+  ],
+  "key": {
+    "C": {
+      "item": "immersiveengineering:metal_decoration0",
+      "data": 1
+    },
+    "H": {
+      "item": "immersiveengineering:metal_device0",
+      "data": 2
+    },
+    "B": {
+      "item": "immersiveengineering:material",
+      "data": 14
+    },
+    "G": {
+      "type": "forge:ore_dict",
+      "ore": "gunstockWood"
+    }
+  }
+}

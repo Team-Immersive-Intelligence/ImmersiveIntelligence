@@ -7,6 +7,8 @@ import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.MathHelper;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseType;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityMachinegun;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine.Magazines;
@@ -75,7 +77,7 @@ public class AIHansMachinegun extends EntityAIBase
 				{
 
 					ItemStack magazine = IIContent.itemBulletMagazine.getMagazine(Magazines.MACHINEGUN,
-							IIContent.itemAmmoSubmachinegun.getBulletWithParams("core_brass", "piercing", "tracer_powder"));
+							IIContent.itemAmmoSubmachinegun.getAmmoStack(IIContent.ammoCoreBrass, CoreType.PIERCING, FuseType.CONTACT, IIContent.ammoComponentTracerPowder));
 					NBTTagCompound tag = new NBTTagCompound();
 					tag.setInteger("colour", 0xff0000);
 					IIContent.itemAmmoMachinegun.setComponentNBT(magazine, tag);

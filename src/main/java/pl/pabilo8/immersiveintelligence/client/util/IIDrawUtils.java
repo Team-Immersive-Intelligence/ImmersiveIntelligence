@@ -7,6 +7,7 @@ import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
 import java.util.function.BiConsumer;
 
@@ -16,23 +17,20 @@ import java.util.function.BiConsumer;
  * When rendering a single rect, use methods from {@link pl.pabilo8.immersiveintelligence.client.IIClientUtils}, {@link net.minecraft.client.gui.Gui} or similar classes.<br>
  * </p>
  *
- * <p>
- * <code>
- * IIDrawUtils.startTextured(1,2,3,4,0,0,1,1)<br>
- * .drawRect(5,6,7,8,0,0,1,1)<br>
- * .drawRect()<br>
- * .finish();<br>
- * </code>
- * </p>
+ * <pre> {@code
+ * IIDrawUtils.startTextured(buf)
+ *  .drawRect(1,2,3,4,0,0,1,1)
+ *  .drawRect(5,6,7,8,0,0,0.5,1)
+ *  .finish();
+ * }</pre>
  *
  * @author Pabilo8
+ * @ii-approved 0.3.1
  * @since 16.02.2023
  */
 @SideOnly(Side.CLIENT)
 public class IIDrawUtils
 {
-	public static final float[] NO_COLOR = {1f, 1f, 1f};
-
 	/**
 	 * Class is used in a builder-like fashion
 	 */
@@ -130,69 +128,61 @@ public class IIDrawUtils
 		return this;
 	}
 
-	public IIDrawUtils drawColorRect(float x, float y, float w, float h, float r, float g, float b, float a)
+	public IIDrawUtils drawColorRect(float x, float y, float w, float h, IIColor color)
 	{
 		buf.pos(offX+x, offY+y+h, 0)
-				.color(r, g, b, a)
+				.color(color.red, color.green, color.blue, color.alpha)
 				.endVertex();
 		buf.pos(offX+x+w, offY+y+h, 0)
-				.color(r, g, b, a)
+				.color(color.red, color.green, color.blue, color.alpha)
 				.endVertex();
 		buf.pos(offX+x+w, offY+y, 0)
-				.color(r, g, b, a)
+				.color(color.red, color.green, color.blue, color.alpha)
 				.endVertex();
 		buf.pos(offX+x, offY+y, 0)
-				.color(r, g, b, a)
+				.color(color.red, color.green, color.blue, color.alpha)
 				.endVertex();
 		return this;
 	}
 
-	public IIDrawUtils drawColorGradient(int x, float y, int w, int h, int colorBottom, int colorTop)
+	public IIDrawUtils drawColorGradient(int x, float y, int w, int h, IIColor colorBottom, IIColor colorTop)
 	{
-		int r = (colorBottom>>16)&0x0ff, g = (colorBottom>>8)&0x0ff, b = colorBottom&0x0ff, a = colorBottom<<8;
-		int r2 = (colorTop>>16)&0x0ff, g2 = (colorTop>>8)&0x0ff, b2 = colorTop&0x0ff, a2 = colorTop<<8;
-
 		buf.pos(offX+x, offY+y+h, 0)
 				.tex(0, 0)
-				.color(r, g, b, a)
+				.color(colorBottom.red, colorBottom.green, colorBottom.blue, colorBottom.alpha)
 				.endVertex();
 		buf.pos(offX+x+w, offY+y+h, 0)
 				.tex(0, 0)
-				.color(r, g, b, a)
+				.color(colorBottom.red, colorBottom.green, colorBottom.blue, colorBottom.alpha)
 				.endVertex();
 		buf.pos(offX+x+w, offY+y, 0)
 				.tex(0, 0)
-				.color(r2, g2, b2, a2)
+				.color(colorTop.red, colorTop.green, colorTop.blue, colorTop.alpha)
 				.endVertex();
 		buf.pos(offX+x, offY+y, 0)
 				.tex(0, 0)
-				.color(r2, g2, b2, a2)
+				.color(colorTop.red, colorTop.green, colorTop.blue, colorTop.alpha)
 				.endVertex();
 		return this;
 	}
 
-	public IIDrawUtils drawTexColorRect(int x, float y, int w, int h, float[] argb, float... uv)
-	{
-		return drawTexColorRect(x, y, w, h, argb[0], argb[1], argb[2], 1f, uv);
-	}
-
-	public IIDrawUtils drawTexColorRect(float x, float y, float w, float h, float r, float g, float b, float a, float... uv)
+	public IIDrawUtils drawTexColorRect(float x, float y, float w, float h, IIColor color, float... uv)
 	{
 		buf.pos(offX+x, offY+y+h, 0)
 				.tex(uv[0], uv[3])
-				.color(r, g, b, a)
+				.color(color.red, color.green, color.blue, color.alpha)
 				.endVertex();
 		buf.pos(offX+x+w, offY+y+h, 0)
 				.tex(uv[1], uv[3])
-				.color(r, g, b, a)
+				.color(color.red, color.green, color.blue, color.alpha)
 				.endVertex();
 		buf.pos(offX+x+w, offY+y, 0)
 				.tex(uv[1], uv[2])
-				.color(r, g, b, a)
+				.color(color.red, color.green, color.blue, color.alpha)
 				.endVertex();
 		buf.pos(offX+x, offY+y, 0)
 				.tex(uv[0], uv[2])
-				.color(r, g, b, a)
+				.color(color.red, color.green, color.blue, color.alpha)
 				.endVertex();
 		return this;
 	}

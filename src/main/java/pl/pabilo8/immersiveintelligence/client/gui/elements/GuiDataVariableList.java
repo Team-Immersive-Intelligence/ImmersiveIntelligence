@@ -19,6 +19,8 @@ import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeExpression;
 import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
+import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 import javax.annotation.Nonnull;
@@ -83,12 +85,12 @@ public class GuiDataVariableList extends GuiButton
 
 		if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)||Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))
 			delete = true;
-		else if(packet.variables.size() > 0&&IIUtils.isPointInRectangle(x, y, x+width, y+height, mx, my))
+		else if(packet.variables.size() > 0&&IIMath.isPointInRectangle(x, y, x+width, y+height, mx, my))
 		{
 			//scrolling
 			int mouseChange = Mouse.getDWheel();
 			scroll -= Integer.signum(mouseChange)*15;
-			if(Mouse.isButtonDown(0)&&IIUtils.isPointInRectangle(x+width-11, y, x+width, y+114, mx, my))
+			if(Mouse.isButtonDown(0)&&IIMath.isPointInRectangle(x+width-11, y, x+width, y+114, mx, my))
 			{
 				float v = (my-y)/(float)height;
 				setScrollPercent((my-y+(v > 0.5f?v/20f: -v/20f))/114f);
@@ -150,7 +152,7 @@ public class GuiDataVariableList extends GuiButton
 		int length = (this.packet.variables.size()*20)-scroll;
 
 		this.drawTexturedModalRect(x+56, y+length, 137, 222, 18, 18);
-		add = IIUtils.isPointInRectangle(x+56, y+length, x+56+18, y+length+18, mx, my);
+		add = IIMath.isPointInRectangle(x+56, y+length, x+56+18, y+length+18, mx, my);
 		fr.drawString("+", x+62, y+5+length, add?Lib.COLOUR_I_ImmersiveOrange: 0xffffff, true);
 		GL11.glPopMatrix();
 
@@ -175,7 +177,7 @@ public class GuiDataVariableList extends GuiButton
 		this.drawTexturedModalRect(x+93+14+5, y+4, hovered&&delete?36: 24, 242, 12, 12);
 
 		//Variable type based effects
-		float[] rgb = IIUtils.rgbIntToRGB(data.getTypeColour());
+		float[] rgb = IIColor.rgbIntToRGB(data.getTypeColour());
 		GL11.glColor4f(rgb[0], rgb[1], rgb[2], 1f);
 		this.drawTexturedModalRect(x+1, y, 155, 222, 12, 20);
 		this.drawTexturedModalRect(x+52+2, y, 166, 222, 22, 20);

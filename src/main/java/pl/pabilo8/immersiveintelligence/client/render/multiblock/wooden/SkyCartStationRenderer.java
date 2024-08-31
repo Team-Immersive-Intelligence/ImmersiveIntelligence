@@ -17,13 +17,13 @@ import net.minecraft.util.math.MathHelper;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.SkyCartStation;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.SkyCrateStation;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
-import pl.pabilo8.immersiveintelligence.api.rotary.RotaryUtils;
+import pl.pabilo8.immersiveintelligence.api.rotary.IIRotaryUtils;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.ISkycrateMount;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.wooden.ModelSkyCartStation;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.tileentity.TileEntitySkyCartStation;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
 import java.util.Set;
 
@@ -64,8 +64,8 @@ public class SkyCartStationRenderer extends TileEntitySpecialRenderer<TileEntity
 
 			if(te.hasWorld())
 			{
-				motorTick = (te.getWorld().getTotalWorldTime()%RotaryUtils.getRPMMax()+partialTicks)/RotaryUtils.getRPMMax();
-				progress = te.progress+(partialTicks*te.getEffectiveEnergy()*RotaryUtils.getGearEffectiveness(te.getInventory(), te.getEfficiencyMultiplier()));
+				motorTick = (te.getWorld().getTotalWorldTime()%IIRotaryUtils.getRPMMax()+partialTicks)/IIRotaryUtils.getRPMMax();
+				progress = te.progress+(partialTicks*te.getEffectiveEnergy()*IIRotaryUtils.getGearEffectiveness(te.getInventory(), te.getEfficiencyMultiplier()));
 			}
 			double railBlock = 0, pistonDoor = 0, pistonOnly = 0, cratePusher = 0, inserterAngle = 0, inserterLength = 0;
 			//Math.abs(Math.min(Math.max(((Math.abs(ticks-0.5f)*2f)-0.5)/0.5, 0)/0.25, 1))
@@ -283,7 +283,7 @@ public class SkyCartStationRenderer extends TileEntitySpecialRenderer<TileEntity
 			if(conns!=null&&conns.size() > 0)
 			{
 				Connection conn = (Connection)conns.toArray()[0];
-				float[] col = IIUtils.rgbIntToRGB(conn.cableType.getColour(conn));
+				float[] col = IIColor.rgbIntToRGB(conn.cableType.getColour(conn));
 				double diam = conn.cableType.getRenderDiameter();
 				GlStateManager.pushMatrix();
 				ClientUtils.bindTexture("immersiveengineering:textures/blocks/wire.png");
