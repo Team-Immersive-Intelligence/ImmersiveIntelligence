@@ -3,4 +3,4 @@
 newmtl shotgun
 map_Kd immersiveintelligence:items/weapons/shotgun
 newmtl 3bcal_shotgunshell
-map_Kd immersiveintelligence:blocks/common/3bcal_shotgunshell
+map_Kd immersiveintelligence:items/weapons/3bcal_shotgunshell

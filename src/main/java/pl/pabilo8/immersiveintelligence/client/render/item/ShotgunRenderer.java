@@ -220,15 +220,15 @@ public class ShotgunRenderer extends IIUpgradableItemRendererAMT<ItemIIShotgun> 
 				//.withHeader(IIAnimationLoader.loadHeader(new ResourceLocation(ImmersiveIntelligence.MODID, "models/item/weapons/shotgun/shotgun_upgrades.obj.amt")))
 				.withModelProvider(
 						(stack, combinedHeader) -> new AMT[]{
-								new AMTBullet("SHELL_FULL", combinedHeader, AmmoRegistry.getModel(IIContent.itemAmmoShotgun))
+								new AMTBullet("bullet", combinedHeader, AmmoRegistry.getModel(IIContent.itemAmmoShotgun))
 										.withState(BulletState.BULLET_UNUSED)
-										.withProperties(IIContent.ammoCoreSteel, CoreType.SHAPED, -1),
-								new AMTBullet("SHELL_EJECT", combinedHeader, AmmoRegistry.getModel(IIContent.itemAmmoShotgun))
+										.withProperties(IIContent.ammoCoreSteel, CoreType.PIERCING, -1),
+								new AMTBullet("casing_fired", combinedHeader, AmmoRegistry.getModel(IIContent.itemAmmoShotgun))
 										.withState(BulletState.CASING),
 								new AMTParticle("muzzle_flash", combinedHeader)
 										.setParticle(IIParticles.PARTICLE_GUNFIRE),
-								new AMTHand("hand", combinedHeader, EnumHand.OFF_HAND),
-								new AMTHand("hand_right", combinedHeader, EnumHand.MAIN_HAND)
+								new AMTHand("hand_off", combinedHeader, EnumHand.OFF_HAND),
+								new AMTHand("hand_main", combinedHeader, EnumHand.MAIN_HAND)
 						}
 				)
 				.withTextureProvider(
@@ -248,8 +248,8 @@ public class ShotgunRenderer extends IIUpgradableItemRendererAMT<ItemIIShotgun> 
 				)
 				.build();
 
-		this.bullet = new AMTCrossVariantReference<>("SHELL_FULL", this.model);
-		this.casing = new AMTCrossVariantReference<>("SHELL_EJECT", this.model);
+		this.bullet = new AMTCrossVariantReference<>("bullet", this.model);
+		this.casing = new AMTCrossVariantReference<>("casing_fired", this.model);
 
 		//add upgrade visibility animations
 		loadUpgrades(model, ResLoc.of(animationRes, "upgrades/"));
@@ -258,7 +258,7 @@ public class ShotgunRenderer extends IIUpgradableItemRendererAMT<ItemIIShotgun> 
 		//loadMag = IIAnimationCachedMap.create(this.model, ResLoc.of(animationRes, "load_magazine"));
 		//unloadMag = IIAnimationCachedMap.create(this.model, ResLoc.of(animationRes, "unload_magazine"));
 
-		fireStandard = IIAnimationCachedMap.create(this.model, ResLoc.of(animationRes, "fire_cock"));
+		fireStandard = IIAnimationCachedMap.create(this.model, ResLoc.of(animationRes, "fire"));
 		//fireSemiAutomatic = IIAnimationCachedMap.create(this.model, ResLoc.of(animationRes, "fire_semiauto"));
 		handAngle = IIAnimationCachedMap.create(this.model, ResLoc.of(animationRes, "hand"));
 		handVisibility = IIAnimationCachedMap.create(this.model, new ResourceLocation(ImmersiveIntelligence.MODID, "gun_hand_visibility"));
