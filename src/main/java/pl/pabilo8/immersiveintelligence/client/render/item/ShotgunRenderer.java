@@ -220,9 +220,9 @@ public class ShotgunRenderer extends IIUpgradableItemRendererAMT<ItemIIShotgun> 
 				//.withHeader(IIAnimationLoader.loadHeader(new ResourceLocation(ImmersiveIntelligence.MODID, "models/item/weapons/shotgun/shotgun_upgrades.obj.amt")))
 				.withModelProvider(
 						(stack, combinedHeader) -> new AMT[]{
-								new AMTBullet("shell_full", combinedHeader, AmmoRegistry.getModel(IIContent.itemAmmoShotgun))
+								new AMTBullet("SHELL_FULL", combinedHeader, AmmoRegistry.getModel(IIContent.itemAmmoShotgun))
 										.withState(BulletState.BULLET_UNUSED)
-										.withProperties(IIContent.ammoCoreSteel, CoreType.PIERCING, -1),
+										.withProperties(IIContent.ammoCoreSteel, CoreType.SHAPED, -1),
 								new AMTBullet("SHELL_EJECT", combinedHeader, AmmoRegistry.getModel(IIContent.itemAmmoShotgun))
 										.withState(BulletState.CASING),
 								new AMTParticle("muzzle_flash", combinedHeader)
@@ -248,17 +248,17 @@ public class ShotgunRenderer extends IIUpgradableItemRendererAMT<ItemIIShotgun> 
 				)
 				.build();
 
-		this.bullet = new AMTCrossVariantReference<>("shell_full", this.model);
+		this.bullet = new AMTCrossVariantReference<>("SHELL_FULL", this.model);
 		this.casing = new AMTCrossVariantReference<>("SHELL_EJECT", this.model);
 
 		//add upgrade visibility animations
 		loadUpgrades(model, ResLoc.of(animationRes, "upgrades/"));
 		//shell_load_single_cock
-		loadShell = IIAnimationCachedMap.create(this.model, ResLoc.of(animationRes, "shell_full"));
+		loadShell = IIAnimationCachedMap.create(this.model, ResLoc.of(animationRes, "shell_load"));
 		//loadMag = IIAnimationCachedMap.create(this.model, ResLoc.of(animationRes, "load_magazine"));
-		unloadMag = IIAnimationCachedMap.create(this.model, ResLoc.of(animationRes, "unload_magazine"));
+		//unloadMag = IIAnimationCachedMap.create(this.model, ResLoc.of(animationRes, "unload_magazine"));
 
-		fireStandard = IIAnimationCachedMap.create(this.model, ResLoc.of(animationRes, "standard_fire"));
+		fireStandard = IIAnimationCachedMap.create(this.model, ResLoc.of(animationRes, "fire_cock"));
 		//fireSemiAutomatic = IIAnimationCachedMap.create(this.model, ResLoc.of(animationRes, "fire_semiauto"));
 		handAngle = IIAnimationCachedMap.create(this.model, ResLoc.of(animationRes, "hand"));
 		handVisibility = IIAnimationCachedMap.create(this.model, new ResourceLocation(ImmersiveIntelligence.MODID, "gun_hand_visibility"));
