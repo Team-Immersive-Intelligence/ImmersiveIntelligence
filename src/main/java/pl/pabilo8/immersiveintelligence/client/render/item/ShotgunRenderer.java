@@ -220,10 +220,10 @@ public class ShotgunRenderer extends IIUpgradableItemRendererAMT<ItemIIShotgun> 
 				//.withHeader(IIAnimationLoader.loadHeader(new ResourceLocation(ImmersiveIntelligence.MODID, "models/item/weapons/shotgun/shotgun_upgrades.obj.amt")))
 				.withModelProvider(
 						(stack, combinedHeader) -> new AMT[]{
-								new AMTBullet("bullet", combinedHeader, AmmoRegistry.getModel(IIContent.itemAmmoShotgun))
+								new AMTBullet("shell_full", combinedHeader, AmmoRegistry.getModel(IIContent.itemAmmoShotgun))
 										.withState(BulletState.BULLET_UNUSED)
-										.withProperties(IIContent.ammoCoreSteel, CoreType.PIERCING, -1),
-								new AMTBullet("casing_fired", combinedHeader, AmmoRegistry.getModel(IIContent.itemAmmoShotgun))
+										.withProperties(IIContent.ammoCoreSteel, CoreType.SHAPED, -1),
+								new AMTBullet("SHELL_EJECT", combinedHeader, AmmoRegistry.getModel(IIContent.itemAmmoShotgun))
 										.withState(BulletState.CASING),
 								new AMTParticle("muzzle_flash", combinedHeader)
 										.setParticle(IIParticles.PARTICLE_GUNFIRE),
@@ -248,8 +248,8 @@ public class ShotgunRenderer extends IIUpgradableItemRendererAMT<ItemIIShotgun> 
 				)
 				.build();
 
-		this.bullet = new AMTCrossVariantReference<>("bullet", this.model);
-		this.casing = new AMTCrossVariantReference<>("casing_fired", this.model);
+		this.bullet = new AMTCrossVariantReference<>("shell_full", this.model);
+		this.casing = new AMTCrossVariantReference<>("SHELL_EJECT", this.model);
 
 		//add upgrade visibility animations
 		loadUpgrades(model, ResLoc.of(animationRes, "upgrades/"));

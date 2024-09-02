@@ -357,10 +357,11 @@ public class ClientProxy extends CommonProxy
 		registerEntityRenderer(EntityAMTTactile.class, EntityRenderNone::new);
 
 
-		IIContent.itemAssaultRifle.setTileEntityItemStackRenderer(new AssaultRifleRenderer().subscribeToList("assault_rifle"));
+		IIContent.itemAssaultRifle.setTileEntityItemStackRenderer(new PistolRenderer().subscribeToList("assault_rifle"));
 		IIContent.itemRifle.setTileEntityItemStackRenderer(new RifleRenderer().subscribeToList("rifle"));
 		IIContent.itemSubmachinegun.setTileEntityItemStackRenderer(new SubmachinegunRenderer().subscribeToList("submachinegun"));
 		IIContent.itemShotgun.setTileEntityItemStackRenderer(new ShotgunRenderer().subscribeToList("shotgun"));
+		IIContent.itemShotgun.setTileEntityItemStackRenderer(new PistolRenderer().subscribeToList("pistol"));
 
 		//IIContent.itemBinoculars.setTileEntityItemStackRenderer(new BinocularsRenderer().subscribeToList("binoculars"));
 		IIContent.itemRadioTuner.setTileEntityItemStackRenderer(new RadioTunerRenderer().subscribeToList("radio_tuner"));

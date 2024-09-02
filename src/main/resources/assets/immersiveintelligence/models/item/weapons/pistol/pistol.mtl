@@ -1,0 +1,8 @@
+# Made with Blockbench
+
+newmtl pistol
+map_Kd immersiveintelligence:items/weapons/pistol
+newmtl 1bcal
+map_Kd immersiveintelligence:items/weapons/1bcal
+newmtl attachments
+map_Kd immersiveintelligence:items/weapons/attachments

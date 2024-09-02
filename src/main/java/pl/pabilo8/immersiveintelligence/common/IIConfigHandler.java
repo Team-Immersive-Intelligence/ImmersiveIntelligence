@@ -1436,6 +1436,38 @@ public class IIConfigHandler
 				public static int enemyAttractRange = 32;
 			}
 
+			public static class Pistol
+			{
+				//--- Stock ---//
+
+				@Comment({"Time required to reload a magazine in AR. (in ticks)"})
+				public static int clipReloadTime = 45;
+
+				@Comment({"Time required to aim the AR. (in ticks)"})
+				public static int aimTime = 15;
+
+				@Comment({"Time required to fire a single bullet in Auto mode."})
+				public static int bulletFireTimeAuto = 2;
+
+				@Comment({"Time required to fire a single bullet in Semi-Auto mode."})
+				public static int bulletFireTimeSemiAuto = 5;
+
+				@Comment({"Amount of horizontal recoil after taking a shot."})
+				public static float recoilHorizontal = 0.345f;
+
+				@Comment({"Amount of vertical recoil after taking a shot."})
+				public static float recoilVertical = 0.425f;
+
+				@Comment({"Maximum amount of horizontal recoil."})
+				public static float maxRecoilHorizontal = 8.5f;
+
+				@Comment({"Maximum amount of vertical recoil."})
+				public static float maxRecoilVertical = 8.5f;
+
+				@Comment({"Range in which enemies will be attracted to the gunshot."})
+				public static int enemyAttractRange = 36;
+			}
+
 			public static class Submachinegun
 			{
 				@Comment({"Time required to reload a stick magazine in SMG. (in ticks)"})

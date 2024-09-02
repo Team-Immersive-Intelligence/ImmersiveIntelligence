@@ -72,7 +72,8 @@ public class ItemIIBulletMagazine extends ItemIISubItemsBase<Magazines> implemen
 		AUTOCANNON(16, IIContent.itemAmmoAutocannon),
 		CPDS_DRUM(128, IIContent.itemAmmoMachinegun),
 		@IIItemProperties(hidden = true)
-		AUTOMATIC_REVOLVER(16, IIContent.itemAmmoRevolver);
+		AUTOMATIC_REVOLVER(16, IIContent.itemAmmoRevolver),
+		PISTOL(16, IIContent.itemAmmoPistol);
 
 		public final int capacity;
 		public final IAmmoTypeItem ammo;

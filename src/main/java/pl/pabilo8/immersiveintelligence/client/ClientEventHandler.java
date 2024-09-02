@@ -146,6 +146,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 		HUDs.put(GuiOverlayLayer.ITEM, new GuiOverlayAssaultRifle());
 		HUDs.put(GuiOverlayLayer.ITEM, new GuiOverlayRifle());
 		HUDs.put(GuiOverlayLayer.ITEM, new GuiOverlayShotgun());
+		HUDs.put(GuiOverlayLayer.ITEM, new GuiOverlayPistol());
 		//Entities
 		HUDs.put(GuiOverlayLayer.VEHICLE, new GuiOverlayTripodPeriscope());
 		HUDs.put(GuiOverlayLayer.VEHICLE, new GuiOverlayMotorbike());
