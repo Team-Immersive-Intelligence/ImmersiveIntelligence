@@ -6,3 +6,17 @@ newmtl 1bcal
 map_Kd immersiveintelligence:items/weapons/1bcal
 newmtl attachments
 map_Kd immersiveintelligence:items/weapons/attachments
+newmtl attachments
+map_Kd immersiveintelligence:block/attachments
+newmtl radio_backpack
+map_Kd immersiveintelligence:block/radio_backpack
+newmtl technician_gear
+map_Kd immersiveintelligence:block/technician_gear
+newmtl infiltrator_gear
+map_Kd immersiveintelligence:block/infiltrator_gear
+newmtl mount_infrared
+map_Kd immersiveintelligence:block/mount_infrared
+newmtl common_copper_cable
+map_Kd immersiveintelligence:block/common_copper_cable
+newmtl assault_rifle
+map_Kd immersiveintelligence:block/assault_rifle
