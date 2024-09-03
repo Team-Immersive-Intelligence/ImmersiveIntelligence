@@ -186,7 +186,7 @@ public class IIContent
 	public static final ItemIIAmmoGrenade itemGrenade = new ItemIIAmmoGrenade();
 
 	public static final ItemIIAmmoMachinegun itemAmmoMachinegun = new ItemIIAmmoMachinegun();
-	public static final ItemIIAmmoPistol itemAmmoAssaultRifle = new ItemIIAmmoPistol();
+	public static final ItemIIAmmoAssaultRifle itemAmmoAssaultRifle = new ItemIIAmmoAssaultRifle();
 	public static final ItemIIAmmoSubmachinegun itemAmmoSubmachinegun = new ItemIIAmmoSubmachinegun();
 	public static final ItemIIAmmoRevolver itemAmmoRevolver = new ItemIIAmmoRevolver();
 	public static final ItemIIAmmoShotgun itemAmmoShotgun = new ItemIIAmmoShotgun();
@@ -208,7 +208,7 @@ public class IIContent
 	public static final ItemIIMineDetector itemMineDetector = new ItemIIMineDetector();
 
 	public static final ItemIIDrillHead itemDrillhead = new ItemIIDrillHead();
-	//Don't know if i should make a seperate item for a torque meter
+	//Don't know if I should make a separate item for a torque meter
 	public static final ItemIITachometer itemTachometer = new ItemIITachometer();
 	public static final ItemIIDataWireCoil itemDataWireCoil = new ItemIIDataWireCoil();
 	public static final ItemIISmallWireCoil itemSmallWireCoil = new ItemIISmallWireCoil();

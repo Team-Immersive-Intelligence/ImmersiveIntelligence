@@ -361,7 +361,7 @@ public class ClientProxy extends CommonProxy
 		IIContent.itemRifle.setTileEntityItemStackRenderer(new RifleRenderer().subscribeToList("rifle"));
 		IIContent.itemSubmachinegun.setTileEntityItemStackRenderer(new SubmachinegunRenderer().subscribeToList("submachinegun"));
 		IIContent.itemShotgun.setTileEntityItemStackRenderer(new ShotgunRenderer().subscribeToList("shotgun"));
-		IIContent.itemShotgun.setTileEntityItemStackRenderer(new PistolRenderer().subscribeToList("pistol"));
+		IIContent.itemPistol.setTileEntityItemStackRenderer(new PistolRenderer().subscribeToList("pistol"));
 
 		//IIContent.itemBinoculars.setTileEntityItemStackRenderer(new BinocularsRenderer().subscribeToList("binoculars"));
 		IIContent.itemRadioTuner.setTileEntityItemStackRenderer(new RadioTunerRenderer().subscribeToList("radio_tuner"));

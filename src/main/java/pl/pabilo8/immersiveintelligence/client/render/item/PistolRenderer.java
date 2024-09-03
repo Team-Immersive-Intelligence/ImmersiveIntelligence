@@ -157,7 +157,7 @@ public class PistolRenderer extends IIUpgradableItemRendererAMT<ItemIIPistol> im
 				if(recoil > 0)
 					GlStateManager.translate(0, -recoil*(0.155-0.1*preciseAim), recoil*0.25);
 			}
-			(transform==TransformType.FIRST_PERSON_RIGHT_HAND?handAngle: offHandAngle).apply(preciseAim);
+			//(transform==TransformType.FIRST_PERSON_RIGHT_HAND?handAngle: offHandAngle).apply(preciseAim);
 		}
 
 		//Don't show muzzle flash GUI
@@ -248,7 +248,8 @@ public class PistolRenderer extends IIUpgradableItemRendererAMT<ItemIIPistol> im
 						(stack, combinedHeader) -> new AMT[]{
 								//Main Model
 								new AMTParticle("muzzle_flash", combinedHeader).setParticle(IIParticles.PARTICLE_GUNFIRE),
-								new AMTHand("hand", combinedHeader, EnumHand.OFF_HAND),
+								new AMTHand("hand_off", combinedHeader, EnumHand.OFF_HAND),
+								new AMTHand("hand_main", combinedHeader, EnumHand.MAIN_HAND),
 
 						}
 				).withTextureProvider(
@@ -264,10 +265,11 @@ public class PistolRenderer extends IIUpgradableItemRendererAMT<ItemIIPistol> im
 							return ClientUtils.getSprite(res);
 						}
 				)
+
 				.build();
 
 		this.magazine = new AMTCrossVariantReference<>("magazine", this.model);
-		this.hand = new AMTCrossVariantReference<>("hand", this.model);
+		this.hand = new AMTCrossVariantReference<>("gun_hand_visibility", this.model);
 		this.muzzleFlash = new AMTCrossVariantReference<>("muzzle_flash", this.model);
 		this.casingFired = new AMTCrossVariantReference<>("casing_fired", this.model);
 
@@ -281,12 +283,6 @@ public class PistolRenderer extends IIUpgradableItemRendererAMT<ItemIIPistol> im
 		handAngle = IIAnimationCachedMap.create(this.model, ResLoc.of(animationRes, "hand"));
 		offHandAngle = IIAnimationCachedMap.create(this.model, ResLoc.of(animationRes, "offhand"));
 
-	}
-
-	@Override
-	protected void nullifyModels()
-	{
-		IIAnimationUtils.disposeOf(model);
 	}
 
 	@Override

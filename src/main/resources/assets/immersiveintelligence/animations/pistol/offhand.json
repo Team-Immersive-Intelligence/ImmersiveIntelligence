@@ -10,7 +10,7 @@
       ],
       "position":[
         {
-          "time":1,
+          "time":0,
           "transform":[0,0,-1]
         }
       ]
@@ -24,7 +24,7 @@
       ],
       "position":[
         {
-          "time":1,
+          "time":0,
           "transform":[-19,0,0]
         }
       ]
