@@ -12,6 +12,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.elements.label.GuiLabelNoShad
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
@@ -81,12 +82,12 @@ public abstract class GuiAmmunitionBase<T extends TileEntityMultiblockProduction
 		IIPacketHandler.sendToServer(new MessageIITileSync(tile, EasyNBT.newNBT().withString(name, value)));
 	}
 
-	protected GuiLabelNoShadow addLabel(int x, int y, int textColor, String... text)
+	protected GuiLabelNoShadow addLabel(int x, int y, IIColor textColor, String... text)
 	{
 		return addLabel(x, y, 0, 0, textColor, text);
 	}
 
-	protected GuiLabelNoShadow addLabel(int x, int y, int w, int h, int textColor, String... text)
+	protected GuiLabelNoShadow addLabel(int x, int y, int w, int h, IIColor textColor, String... text)
 	{
 		GuiLabelNoShadow guiLabel = new GuiLabelNoShadow(this.fontRenderer, labelList.size(), x, y, w, h, textColor);
 		Arrays.stream(text).forEachOrdered(guiLabel::addLine);

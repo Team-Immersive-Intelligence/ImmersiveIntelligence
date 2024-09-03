@@ -40,7 +40,7 @@ public class GuiButtonCheckboxII extends GuiButtonState
 			this.mouseDragged(mc, mouseX, mouseY);
 			if(displayString!=null&&!displayString.isEmpty())
 			{
-				this.drawString(fontrenderer, displayString, x+textOffset[0]+2, y+textOffset[1], IIReference.COLOR_H1);
+				this.drawString(fontrenderer, displayString, x+textOffset[0]+2, y+textOffset[1], IIReference.COLOR_H1.getPackedRGB());
 			}
 		}
 		if(this.visible&&state)

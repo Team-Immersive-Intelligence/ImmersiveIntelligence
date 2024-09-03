@@ -18,6 +18,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 import javax.annotation.Nullable;
@@ -61,32 +62,32 @@ public class ItemTooltipHandler
 	public static boolean addExpandableTooltip(int key, String message, @Nullable List<String> tooltip)
 	{
 		String keyName;
-		String keyColor;
+		IIColor keyColor;
 		switch(key)
 		{
 			case Keyboard.KEY_LCONTROL:
 				if(Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)||Keyboard.isKeyDown(Keyboard.KEY_RCONTROL))
 					return true;
 				keyName = IIReference.DESC_HOLD_CTRL;
-				keyColor = IIReference.COLORS_HIGHLIGHT_S[0];
+				keyColor = IIReference.COLORS_STANDARD[0];
 				break;
 			case Keyboard.KEY_LSHIFT:
 				if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)||Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))
 					return true;
 				keyName = IIReference.DESC_HOLD_SHIFT;
-				keyColor = IIReference.COLORS_HIGHLIGHT_S[1];
+				keyColor = IIReference.COLORS_STANDARD[1];
 				break;
 			case Keyboard.KEY_LMENU:
 				if(Keyboard.isKeyDown(Keyboard.KEY_LMENU)||Keyboard.isKeyDown(Keyboard.KEY_RMENU))
 					return true;
 				keyName = IIReference.DESC_HOLD_ALT;
-				keyColor = IIReference.COLORS_HIGHLIGHT_S[2];
+				keyColor = IIReference.COLORS_STANDARD[2];
 				break;
 			case Keyboard.KEY_TAB:
 				if(Keyboard.isKeyDown(key))
 					return true;
 				keyName = IIReference.DESC_HOLD_TAB;
-				keyColor = IIReference.COLORS_HIGHLIGHT_S[3];
+				keyColor = IIReference.COLORS_STANDARD[3];
 				break;
 			default:
 				return true;
@@ -94,7 +95,7 @@ public class ItemTooltipHandler
 
 		//format the "button icon"
 		String buttonIcon = I18n.format(keyName)
-				.replace("[", "<hexcol="+keyColor+":[")
+				.replace("[", "<hexcol="+keyColor.getHexRGB()+":[")
 				.replace("]", "]>")+TextFormatting.GRAY;
 		//add the tooltip
 		if(tooltip!=null)

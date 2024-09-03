@@ -14,12 +14,10 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeExpression;
 import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
-import pl.pabilo8.immersiveintelligence.common.util.IIColor;
+import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
@@ -177,7 +175,7 @@ public class GuiDataVariableList extends GuiButton
 		this.drawTexturedModalRect(x+93+14+5, y+4, hovered&&delete?36: 24, 242, 12, 12);
 
 		//Variable type based effects
-		float[] rgb = IIColor.rgbIntToRGB(data.getTypeColour());
+		float[] rgb = data.getTypeColour().getFloatRGB();
 		GL11.glColor4f(rgb[0], rgb[1], rgb[2], 1f);
 		this.drawTexturedModalRect(x+1, y, 155, 222, 12, 20);
 		this.drawTexturedModalRect(x+52+2, y, 166, 222, 22, 20);
@@ -190,9 +188,11 @@ public class GuiDataVariableList extends GuiButton
 
 		FontRenderer f = mc.fontRenderer;
 		if(data instanceof DataTypeExpression)
-			f.drawString(I18n.format(IIReference.DATA_KEY+"function."+((DataTypeExpression)data).getOperation().name), x+38, y+7, MathHelper.multiplyColor(data.getTypeColour(), 0xcacaca), false);
+			f.drawString(I18n.format(IIReference.DATA_KEY+"function."+((DataTypeExpression)data).getOperation().name), x+38, y+7,
+					data.getTypeColour().withBrightness(0.4f).getPackedRGB(), false);
 		else
-			f.drawString(I18n.format(IIReference.DATA_KEY+"datatype."+data.getName()), x+38, y+7, MathHelper.multiplyColor(data.getTypeColour(), 0xcacaca), false);
+			f.drawString(I18n.format(IIReference.DATA_KEY+"datatype."+data.getName()), x+38, y+7,
+					data.getTypeColour().withBrightness(0.4f).getPackedRGB(), false);
 		//Draw variable name (single character)
 		f.drawString(String.valueOf(c), x+11, y+5, Lib.COLOUR_I_ImmersiveOrange, true);
 

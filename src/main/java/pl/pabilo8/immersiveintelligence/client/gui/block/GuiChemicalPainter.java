@@ -21,7 +21,6 @@ import pl.pabilo8.immersiveintelligence.common.gui.ContainerChemicalPainter;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
-import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
@@ -144,7 +143,7 @@ public class GuiChemicalPainter extends GuiIEContainerBase implements ISlider
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
 		IIClientUtils.drawStringCentered(this.fontRenderer, I18n.format("tile.immersiveintelligence.metal_multiblock1.chemical_painter.name"),
-				8, 6, xSize-12, 0, IIReference.COLOR_H1);
+				8, 6, xSize-12, 0, IIReference.COLOR_H1.getPackedRGB());
 
 		float[] rgb = IIColor.rgbIntToRGB(color);
 		GlStateManager.color(rgb[0], rgb[1], rgb[2]);

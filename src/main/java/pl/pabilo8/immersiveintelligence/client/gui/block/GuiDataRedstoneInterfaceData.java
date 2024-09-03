@@ -16,23 +16,22 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.DataInputMachine;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.client.gui.ITabbedGui;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeArray;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
 import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
 import pl.pabilo8.immersiveintelligence.client.ClientProxy;
+import pl.pabilo8.immersiveintelligence.client.gui.ITabbedGui;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.DataInputMachine;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityRedstoneInterface;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerRedstoneDataInterface;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageGuiNBT;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
-import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
@@ -110,7 +109,7 @@ public class GuiDataRedstoneInterfaceData extends GuiIEContainerBase implements 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
-		this.fontRenderer.drawString(I18n.format("tile."+ImmersiveIntelligence.MODID+".metal_multiblock.redstone_interface.data"), 4, 2, IIReference.COLOR_H1);
+		this.fontRenderer.drawString(I18n.format("tile."+ImmersiveIntelligence.MODID+".metal_multiblock.redstone_interface.data"), 4, 2, IIReference.COLOR_H1.getPackedRGB());
 	}
 
 	@Override
@@ -188,7 +187,7 @@ public class GuiDataRedstoneInterfaceData extends GuiIEContainerBase implements 
 				ClientUtils.bindTexture(texture);
 
 				//Variable type based effects
-				float[] rgb = IIColor.rgbIntToRGB(data.getTypeColour());
+				float[] rgb = data.getTypeColour().getFloatRGB();
 				GL11.glColor4f(rgb[0], rgb[1], rgb[2], 1f);
 				this.drawTexturedModalRect(drawx, drawy, 173, 222, 8, 20);
 				this.drawTexturedModalRect(drawx+52, drawy, 184, 222, 22, 20);
@@ -241,7 +240,7 @@ public class GuiDataRedstoneInterfaceData extends GuiIEContainerBase implements 
 					//this.drawTexturedModalRect(drawx+3, drawy+3, 155, 222, 16, 14);
 
 					this.drawTexturedModalRect(drawx+33, drawy+3, 155, 222, 16, 14);
-					this.fontRenderer.drawString(I18n.format("tile."+ImmersiveIntelligence.MODID+".metal_multiblock.redstone_interface.modes."+((DataTypeInteger)array.value[1]).value), drawx+64, drawy+6, data.getTypeColour(), true);
+					this.fontRenderer.drawString(I18n.format("tile."+ImmersiveIntelligence.MODID+".metal_multiblock.redstone_interface.modes."+((DataTypeInteger)array.value[1]).value), drawx+64, drawy+6, data.getTypeColour().getPackedRGB(), true);
 
 					GlStateManager.popMatrix();
 

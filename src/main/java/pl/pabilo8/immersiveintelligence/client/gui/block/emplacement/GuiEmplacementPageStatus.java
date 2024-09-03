@@ -15,6 +15,7 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.weapon.EmplacementWeapon.MachineUpgradeEmplacementWeapon;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
@@ -40,7 +41,7 @@ public class GuiEmplacementPageStatus extends GuiEmplacement
 	{
 		super.initGui();
 
-		addLabel(8, 24, 96, 0, 0xffffff, tile.currentWeapon!=null?(
+		addLabel(8, 24, 96, 0, IIColor.WHITE, tile.currentWeapon!=null?(
 				I18n.format("machineupgrade.immersiveintelligence."+tile.currentWeapon.getName())):
 				I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.emplacement.weapon_none")).setCentered();
 		addLabel(8, 86, IIReference.COLOR_H1, I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.emplacement.upgrades"));
@@ -55,15 +56,15 @@ public class GuiEmplacementPageStatus extends GuiEmplacement
 		addLabel(112, 22, 93, 0, IIReference.COLOR_H1,
 				I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.emplacement.settings")).setCentered();
 
-		switchRSControl = addSwitch(112, 28, 80, IIReference.COLOR_H1, 0x4c7bb1, 0xffb515, tile.redstoneControl,
+		switchRSControl = addSwitch(112, 28, 80, IIReference.COLOR_H1, COLOR_IN, COLOR_OUT, tile.redstoneControl,
 				I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.emplacement.redstone_control"));
 		switchDataControl = addSwitch(112,
 				28+switchRSControl.getTextHeight(fontRenderer),
-				80, IIReference.COLOR_H1, 0x4c7bb1, 0xffb515, tile.dataControl,
+				80, IIReference.COLOR_H1, COLOR_IN, COLOR_OUT, tile.dataControl,
 				I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.emplacement.data_control"));
 		switchSendTarget = addSwitch(112,
 				28+switchRSControl.getTextHeight(fontRenderer)+switchDataControl.getTextHeight(fontRenderer),
-				80, IIReference.COLOR_H1, 0x4c7bb1, 0xffb515, tile.sendAttackSignal,
+				80, IIReference.COLOR_H1, COLOR_IN, COLOR_OUT, tile.sendAttackSignal,
 				I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.emplacement.send_attack_signal"));
 
 		sliderRepair = addSlider(116,

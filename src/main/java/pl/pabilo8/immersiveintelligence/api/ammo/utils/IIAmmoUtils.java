@@ -332,7 +332,8 @@ public class IIAmmoUtils
 			AmmoComponent[] components = ammo.getComponents(stack);
 
 			//information section
-			tooltip.add(IIColor.getHexCol(IIReference.COLORS_HIGHLIGHT_S[1], I18n.format(IIReference.DESC_BULLETS+"details")));
+
+			tooltip.add(IIColor.getHexCol(IIReference.COLOR_IMMERSIVE_ORANGE, I18n.format(IIReference.DESC_BULLETS+"details")));
 
 			//core + type
 			IIClientUtils.addTooltip(tooltip, IIReference.CHARICON_BULLET_CONTENTS, IIReference.DESC_BULLETS+"core",
@@ -355,7 +356,7 @@ public class IIAmmoUtils
 			//components section
 			if(components.length > 0)
 			{
-				tooltip.add(IIColor.getHexCol(IIReference.COLORS_HIGHLIGHT_S[1], I18n.format(IIReference.DESC_BULLETS+"components")));
+				tooltip.add(IIColor.getHexCol(IIReference.COLOR_IMMERSIVE_ORANGE, I18n.format(IIReference.DESC_BULLETS+"components")));
 				for(AmmoComponent comp : components)
 					tooltip.add("   "+comp.getTranslatedName());
 			}
@@ -369,7 +370,7 @@ public class IIAmmoUtils
 			//Ballistics section
 			CachedBallisticStats stats = AmmoBallisticsCache.get(ammo, stack);
 
-			tooltip.add(IIColor.getHexCol(IIReference.COLORS_HIGHLIGHT_S[0], I18n.format(IIReference.DESC_BULLETS+"performance")));
+			tooltip.add(IIReference.COLOR_PRUSSIAN_BLUE.getHexCol(I18n.format(IIReference.DESC_BULLETS+"performance")));
 			tooltip.add(I18n.format(IIReference.DESC_BULLETS+"damage_dealt", ammo.getDamage()*core.getDamageModifier()*coreType.getDamageMod()));
 			tooltip.add(I18n.format(IIReference.DESC_BULLETS+"standard_velocity", Utils.formatDouble(ammo.getVelocity(), "0.###")));
 
@@ -388,7 +389,7 @@ public class IIAmmoUtils
 						Utils.formatDouble(stats.getMaxDirectRange(), "0.##")));
 
 			//Penetration section
-			tooltip.add(IIColor.getHexCol(IIReference.COLORS_HIGHLIGHT_S[0], I18n.format(IIReference.DESC_BULLETS+"armor_penetration")));
+			tooltip.add(IIReference.COLOR_PRUSSIAN_BLUE.getHexCol(I18n.format(IIReference.DESC_BULLETS+"armor_penetration")));
 
 			//list of block penetration tests
 			listPenetratedAmount(tooltip, ammo, core, coreType, Blocks.GLASS, 0);

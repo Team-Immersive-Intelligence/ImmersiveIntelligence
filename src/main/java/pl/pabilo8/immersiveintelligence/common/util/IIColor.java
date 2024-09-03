@@ -1,8 +1,11 @@
 package pl.pabilo8.immersiveintelligence.common.util;
 
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -245,7 +248,7 @@ public class IIColor implements Comparable<IIColor>, ToIntFunction<IIColor>
 			b = x;
 		}
 
-		return new IIColor(255, (int)((r+m)*255), (int)((g+m)*255), (int)((b+m)*255));
+		return new IIColor(255, (int)((r+m)*255)+1, (int)((g+m)*255)+1, (int)((b+m)*255)+1);
 	}
 
 	@Deprecated
@@ -482,23 +485,6 @@ public class IIColor implements Comparable<IIColor>, ToIntFunction<IIColor>
 	}
 
 	/**
-	 * @param colour1    in 3 float array format
-	 * @param colour2    in 3 float array format
-	 * @param proportion how much of second color is mixed to the first one
-	 * @return color in between
-	 */
-	@Deprecated
-	public static float[] medColour(float[] colour1, float[] colour2, float proportion)
-	{
-		float rev = 1f-proportion;
-		return new float[]{
-				(colour1[0]*rev+colour2[0]*proportion),
-				(colour1[1]*rev+colour2[1]*proportion),
-				(colour1[2]*rev+colour2[2]*proportion)
-		};
-	}
-
-	/**
 	 * @return An integer with the color in ARGBInt format.
 	 */
 	public int getPackedARGB()
@@ -621,6 +607,11 @@ public class IIColor implements Comparable<IIColor>, ToIntFunction<IIColor>
 		return getDyeColor().chatColor;
 	}
 
+	public String getHexCol(String text)
+	{
+		return String.format("<hexcol=%s:%s>", getHexRGB(), text);
+	}
+
 	/**
 	 * @return Closest dye color to this color.
 	 */
@@ -705,6 +696,23 @@ public class IIColor implements Comparable<IIColor>, ToIntFunction<IIColor>
 		return new IIColor(alpha, red, green, blue);
 	}
 
+	/**
+	 * @param factor Brightness of the color in range 0.0-1.0.
+	 * @return A new IIColor object with the specified values.
+	 */
+	public IIColor withBrightness(float factor)
+	{
+		int maxComponent = Math.max(red, Math.max(green, blue));
+		if(maxComponent==0)
+			return new IIColor(alpha, 0, 0, 0);
+
+		float scale = factor*255/maxComponent;
+		int newRed = MathHelper.clamp((int)(red*scale), 0, 255);
+		int newGreen = MathHelper.clamp((int)(green*scale), 0, 255);
+		int newBlue = MathHelper.clamp((int)(blue*scale), 0, 255);
+		return new IIColor(alpha, newRed, newGreen, newBlue);
+	}
+
 	//--- Color Mixing Utilities ---//
 
 	/**
@@ -722,6 +730,14 @@ public class IIColor implements Comparable<IIColor>, ToIntFunction<IIColor>
 				(int)(green*(1-ratio)+(color.green*ratio)),
 				(int)(blue*(1-ratio)+(color.blue*ratio))
 		);
+	}
+
+	//--- OpenGL Utilities ---//
+
+	@SideOnly(Side.CLIENT)
+	public void glColor()
+	{
+		GlStateManager.color(red/255f, green/255f, blue/255f, alpha/255f);
 	}
 
 	//--- Internal Utils ---//

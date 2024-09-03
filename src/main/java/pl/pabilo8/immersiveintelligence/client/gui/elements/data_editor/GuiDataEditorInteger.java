@@ -70,7 +70,7 @@ public class GuiDataEditorInteger extends GuiDataEditor<DataTypeInteger>
 	public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks)
 	{
 		super.drawButton(mc, mouseX, mouseY, partialTicks);
-		renderer.drawString(valueLabel, x+2, y+2, IIReference.COLOR_H1, false);
+		renderer.drawString(valueLabel, x+2, y+2, IIReference.COLOR_H1.getPackedRGB(), false);
 
 		this.valueEdit.drawTextBox();
 	}
@@ -130,8 +130,7 @@ public class GuiDataEditorInteger extends GuiDataEditor<DataTypeInteger>
 		try
 		{
 			return Integer.parseInt(valueEdit.getText(), mode);
-		}
-		catch(NumberFormatException ignored)
+		} catch(NumberFormatException ignored)
 		{
 			return 0;
 		}

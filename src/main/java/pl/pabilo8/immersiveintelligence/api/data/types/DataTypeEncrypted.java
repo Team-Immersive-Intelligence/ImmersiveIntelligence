@@ -1,7 +1,7 @@
 package pl.pabilo8.immersiveintelligence.api.data.types;
 
-import net.minecraft.nbt.NBTTagByteArray;
 import net.minecraft.nbt.NBTTagCompound;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
 import javax.annotation.Nonnull;
 
@@ -19,7 +19,9 @@ public class DataTypeEncrypted implements IDataTypeIterable
 		System.arraycopy(data, 0, value, 0, data.length);
 	}
 
-	public DataTypeEncrypted() {}
+	public DataTypeEncrypted()
+	{
+	}
 
 	@Override
 	public String getName()
@@ -37,9 +39,9 @@ public class DataTypeEncrypted implements IDataTypeIterable
 	@Override
 	public String valueToString()
 	{
-		if (value==null||value.length==0) return "00";
+		if(value==null||value.length==0) return "00";
 		StringBuilder s = new StringBuilder();
-		for (byte b : value)
+		for(byte b : value)
 			s.append(String.format("%02X", b));
 		return s.delete(s.length()-2, s.length()-1).toString();
 	}
@@ -65,8 +67,8 @@ public class DataTypeEncrypted implements IDataTypeIterable
 	}
 
 	@Override
-	public int getTypeColour()
+	public IIColor getTypeColour()
 	{
-		return 0x5a0d75;
+		return IIColor.fromPackedRGB(0x5a0d75);
 	}
 }

@@ -2,6 +2,7 @@ package pl.pabilo8.immersiveintelligence.client.gui.elements.storage;
 
 import net.minecraft.client.gui.Gui;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 /**
@@ -12,9 +13,10 @@ public class GuiElementProgressBar extends Gui
 {
 	public int x;
 	public int y;
-	private final int color1, color2, w, h;
+	private final IIColor color1, color2;
+	private final int w, h;
 
-	public GuiElementProgressBar(int x, int y, int w, int h, int color1, int color2)
+	public GuiElementProgressBar(int x, int y, int w, int h, IIColor color1, IIColor color2)
 	{
 		this.x = x;
 		this.y = y;
@@ -26,12 +28,12 @@ public class GuiElementProgressBar extends Gui
 
 	public static GuiElementProgressBar createEnergyBar(int x, int y, int w, int h)
 	{
-		return new GuiElementProgressBar(x, y, w, h, IIReference.COLOR_POWERBAR_1, IIReference.COLOR_POWERBAR_2);
+		return new GuiElementProgressBar(x, y, w, h, IIReference.COLOR_POWERBAR1, IIReference.COLOR_POWERBAR2);
 	}
 
 	public static GuiElementProgressBar createArmorBar(int x, int y, int w, int h)
 	{
-		return new GuiElementProgressBar(x, y, w, h, IIReference.COLOR_ARMORBAR_1, IIReference.COLOR_ARMORBAR_2);
+		return new GuiElementProgressBar(x, y, w, h, IIReference.COLOR_ARMORBAR1, IIReference.COLOR_ARMORBAR2);
 	}
 
 	public void draw(float progress)

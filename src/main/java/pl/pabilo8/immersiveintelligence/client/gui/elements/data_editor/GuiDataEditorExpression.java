@@ -9,8 +9,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.common.IILogger;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.api.data.DataOperations;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.operations.DataOperation;
@@ -23,6 +21,9 @@ import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonDat
 import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonDropdownList;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonII;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.IILogger;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 import javax.annotation.Nonnull;
@@ -53,7 +54,7 @@ public class GuiDataEditorExpression extends GuiDataEditor<DataTypeExpression>
 	private GuiButtonIE buttonTypePrev, buttonTypeNext;
 	private boolean hasTypeSwitch;
 
-	private int paramColor = 0;
+	private IIColor paramColor = IIColor.WHITE;
 	private String paramName;
 
 	public GuiDataEditorExpression(int buttonId, DataTypeExpression dataType, ItemStack circuit)
@@ -180,8 +181,8 @@ public class GuiDataEditorExpression extends GuiDataEditor<DataTypeExpression>
 	{
 		if(page==0)
 		{
-			mc.fontRenderer.drawString(I18n.format(IIReference.DESCRIPTION_KEY+"operation"), x+2, y+2, IIReference.COLOR_H2, false);
-			mc.fontRenderer.drawString(I18n.format(IIReference.DESCRIPTION_KEY+"conditional_variable"), x+2, y+2+24, IIReference.COLOR_H2, false);
+			mc.fontRenderer.drawString(I18n.format(IIReference.DESCRIPTION_KEY+"operation"), x+2, y+2, IIReference.COLOR_H2.getPackedRGB(), false);
+			mc.fontRenderer.drawString(I18n.format(IIReference.DESCRIPTION_KEY+"conditional_variable"), x+2, y+2+24, IIReference.COLOR_H2.getPackedRGB(), false);
 		}
 		else
 		{
@@ -191,9 +192,9 @@ public class GuiDataEditorExpression extends GuiDataEditor<DataTypeExpression>
 			for(int i = 0; i < Math.max(width-24, 0); i += 12)
 				drawTexturedModalRect(x+12+i, y, 192, 142, MathHelper.clamp(width-24-i, 0, 12), 12);
 
-			mc.fontRenderer.drawString("Parameter: ", x+2+12, y+2, IIReference.COLOR_H2, false);
+			mc.fontRenderer.drawString("Parameter: ", x+2+12, y+2, IIReference.COLOR_H2.getPackedRGB(), false);
 			mc.fontRenderer.drawString(TextFormatting.ITALIC+paramName,
-					x+width-12-(hasTypeSwitch?7: 0)-mc.fontRenderer.getStringWidth(paramName), y+2, paramColor, false);
+					x+width-12-(hasTypeSwitch?7: 0)-mc.fontRenderer.getStringWidth(paramName), y+2, paramColor.withBrightness(0.4f).getPackedRGB(), false);
 
 		}
 		super.drawButton(mc, mouseX, mouseY, partialTicks);

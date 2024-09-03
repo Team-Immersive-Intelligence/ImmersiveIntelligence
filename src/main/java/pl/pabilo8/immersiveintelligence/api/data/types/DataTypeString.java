@@ -1,6 +1,7 @@
 package pl.pabilo8.immersiveintelligence.api.data.types;
 
 import net.minecraft.nbt.NBTTagCompound;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
 /**
  * @author Pabilo8
@@ -59,9 +60,9 @@ public class DataTypeString implements IDataType
 	}
 
 	@Override
-	public int getTypeColour()
+	public IIColor getTypeColour()
 	{
-		return 0xb86300;
+		return IIColor.fromPackedRGB(0xb86300);
 	}
 
 	@Override

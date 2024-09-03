@@ -1,6 +1,7 @@
 package pl.pabilo8.immersiveintelligence.api.data.types;
 
 import net.minecraft.nbt.NBTTagCompound;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
 import javax.annotation.Nonnull;
 
@@ -69,9 +70,9 @@ public class DataTypeFloat implements IDataTypeNumeric
 	}
 
 	@Override
-	public int getTypeColour()
+	public IIColor getTypeColour()
 	{
-		return 0x0d6b68;
+		return IIColor.fromPackedRGB(0x0d6b68);
 	}
 
 	public DataTypeInteger asInt()
