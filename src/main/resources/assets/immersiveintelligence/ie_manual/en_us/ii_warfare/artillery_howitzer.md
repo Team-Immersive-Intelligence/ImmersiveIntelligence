@@ -33,9 +33,6 @@ To issue a [fire] or [aim] command, the [packet passed](data_main#packetsbasics)
 |[data_variable]{type:"integer", direction:"in", letter:"p", name:"Gun pitch", description:"Gun vertical angle, up or down", value:"0:-105"}|
 <br>Instead of passing the angle directly, a [Ballistic Computer](ballistic_computer) can be used to interpret a [3D position] and a [scan](scanning_conveyor) of the [ammunition]. 
 
-# firing in batch
-Hello
-
 # callback0
 Data Callback
 |[data_callback]{type:"integer", name:"get_energy", label:"Energy Stored", returns:"Stored energy amount (IF)"}|

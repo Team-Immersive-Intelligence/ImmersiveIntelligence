@@ -25,7 +25,8 @@ the [Printing Press](printing_press), the [Arithmetic Logic Machine](arithmetic_
 
 # basic_components
 |[item_display]{source:"basic_electronic_element"}|
-**Basic Electronic Components** are created using a [Nickel Plate](metalPress), [Redstone] and a [Vacuum Tubes](components#2) in the [Precision Assembler](precision_assembler).
+**Basic Electronic Components** are created using a [Nickel Plate](metalPress), [Redstone] and a [Vacuum Tubes](components#2.md) in the
+[Precision Assembler](precision_assembler.md).
 
 # basic_board
 |[crafting]{source:"basic_circuit_blueprints"}|
@@ -40,13 +41,13 @@ They have a broad use in [Wireless Data Transfer](radio_station) and **Advanced 
 # advanced_components
 |[item_display]{source:"advanced_electronic_element"}|
 **Advanced Electric Components** are manufactured with the help of a
-[**precision assembler**](precision_assembler.md), give it the right scheme and provide a **basic electronic component** together with an advanced vacuum tube.
+[Precision Assembler](precision_assembler.md), give it the right scheme and provide a **basic electronic component** together with an advanced vacuum tube.
 
 # advanced_board
 |[crafting]{source:"advanced_circuit_blueprints"}|
 The **advanced board** is a more sophisticated version of the basic one, this one has room for more connections and more advanced parts.
 To make the advanced board two **basic boards** are required to be welded together with a sheet of 
-[**advanced electronic alloy**](AEL).
+[Advanced Electronic Alloy](AEL).
 
 # processor_general  
 |[item_display]{source:"%SECTION%"}|
@@ -58,7 +59,7 @@ They work as the electronic brains of [Mainframe Computers], [Drones] and many [
 |[item_display]{source:"processor_electronic_element"}|
 The most state-of-the-art electronic component of our time, the processor is able to preform operations on an external data source.
 The manufacturing process is advanced and requires the right scheme, 32 **transistors** and two **advanced vacuum tubes**. In a 
-[**precision assembler**](precision_assembler.md).
+[Precision Assembler](precision_assembler.md).
 
 # processor_board
 |[crafting]{source:"processors_blueprints"}|
