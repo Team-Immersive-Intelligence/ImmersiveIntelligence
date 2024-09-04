@@ -320,9 +320,13 @@ public class IIContent
 	public static BlockIIFluid blockGasMustardGas;
 	public static BlockIIFluid blockFluidLatex;
 
-	public static BlockIIFluid blockAtropine, blockButadiene, blockGlycerin, blockAcetaldol;
+	public static BlockIIFluid blockAtropine, blockButadiene, blockGlycerin;
+	public static BlockIIFluid blockAcetaldol;
 	public static BlockIIFluid blockNitroglycerin;
-	public static BlockIIFluid blockSodiumHydroxide, blockNitratingAcid, blockFormaldehyde, blockSodiumHypochlorite;
+	public static BlockIIFluid blockSodiumHydroxide;
+	public static BlockIIFluid blockNitratingAcid;
+	public static BlockIIFluid blockFormaldehyde;
+	public static BlockIIFluid blockSodiumHypochlorite;
 	public static BlockIIFluid blockGasNitrogen, blockGasTearGas, blockGasPhosgeneGas, blockGasSarinGas, blockGasTubanGas, blockGasVXGas;
 
 	//fluids
@@ -436,7 +440,7 @@ public class IIContent
 		IIContent.blockGlycerin = new BlockIIFluid("glycerin", IIContent.fluidGlycerin, Material.WATER);
 
 		IIContent.blockNitroglycerin = new BlockIIFluid("nitroglycerin", IIContent.fluidNitroglycerin, Material.WATER);
-		IIContent.blockAcetaldol = new BlockIIFluid("acetaldol", IIContent.fluidAcetaldol, Material.WATER);
+		IIContent.blockAcetaldol = new BlockIIFluid("Acetaldol", IIContent.fluidAcetaldol, Material.WATER);
 		IIContent.blockNitratingAcid = new BlockIIFluid("nitrating_acid", IIContent.fluidNitratingAcid, Material.WATER);
 		IIContent.blockSodiumHydroxide = new BlockIIFluid("sodium_hydroxide", IIContent.fluidSodiumHydroxide, Material.WATER);
 		IIContent.blockSodiumHypochlorite = new BlockIIFluid("sodium_hypochlorite", IIContent.fluidSodiumHypochlorite, Material.WATER);
