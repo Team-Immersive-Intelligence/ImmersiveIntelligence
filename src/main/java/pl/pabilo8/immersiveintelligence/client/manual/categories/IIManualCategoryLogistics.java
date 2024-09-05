@@ -20,6 +20,26 @@ public class IIManualCategoryLogistics extends IIManualCategory
 	@Override
 	public void addPages()
 	{
+		addEntry("logistics_main");
+
+
+		addEntry("advanced_inserter");
+		addEntry("fluid_inserter");
+		addEntry("item_inserter");
+		addEntry("rotary_power");
+		addEntry("engineers_crates");
+		addEntry("skycrate_system");
+		addEntry("task_system");
+		addEntry("Fences");
+
+
+
+
+
+
+
+
+
 		/*ManualHelper.addEntry("logistics", getCategory(),
 				new ManualPages.Text(ManualHelper.getManual(), "logistics0")
 		);
