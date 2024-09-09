@@ -55,7 +55,7 @@ public class ItemIIAmmoShotgun extends ItemIIAmmoBase<EntityAmmoProjectile>
 	@Override
 	public FuseType[] getAllowedFuseTypes()
 	{
-		return new FuseType[] {FuseType.PROXIMITY};
+		return new FuseType[] {FuseType.CONTACT};
 	}
 
 	@Override
@@ -97,7 +97,7 @@ public class ItemIIAmmoShotgun extends ItemIIAmmoBase<EntityAmmoProjectile>
 	@Override
 	public CoreType[] getAllowedCoreTypes()
 	{
-		return new CoreType[] {CoreType.SHAPED, CoreType.PIERCING, CoreType.SOFTPOINT};
+		return new CoreType[] {CoreType.BIRDSHOT, CoreType.BUCKSHOT};
 	}
 
 	@Nonnull

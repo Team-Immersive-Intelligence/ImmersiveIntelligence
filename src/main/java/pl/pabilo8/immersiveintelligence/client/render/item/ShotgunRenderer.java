@@ -222,7 +222,10 @@ public class ShotgunRenderer extends IIUpgradableItemRendererAMT<ItemIIShotgun> 
 						(stack, combinedHeader) -> new AMT[]{
 								new AMTBullet("shell_full", combinedHeader, AmmoRegistry.getModel(IIContent.itemAmmoShotgun))
 										.withState(BulletState.BULLET_UNUSED)
-										.withProperties(IIContent.ammoCoreSteel, CoreType.SHAPED, -1),
+										.withProperties(IIContent.ammoCoreSteel, CoreType.BIRDSHOT, -1),
+								new AMTBullet("shell_full", combinedHeader, AmmoRegistry.getModel(IIContent.itemAmmoShotgun))
+										.withState(BulletState.BULLET_UNUSED)
+										.withProperties(IIContent.ammoCoreSteel, CoreType.BUCKSHOT, -2),
 								new AMTBullet("SHELL_EJECT", combinedHeader, AmmoRegistry.getModel(IIContent.itemAmmoShotgun))
 										.withState(BulletState.CASING),
 								new AMTParticle("muzzle_flash", combinedHeader)
