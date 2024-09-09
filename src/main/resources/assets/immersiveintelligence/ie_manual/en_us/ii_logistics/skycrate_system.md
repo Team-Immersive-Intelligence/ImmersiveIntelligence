@@ -3,11 +3,11 @@ Skycrate System
 Same Day Delivery
 
 # intro
-The Skycrate system is a different approach on delivering items. Its speed surpasses any conveyor, and the usage of rope makes it cheaper and more space-efficient. There are also drawbacks however; it requires stations on both sides and a number of posts depending on the length of the system. Skycrates are a better option than conveyors on longer distances, and is not encourage to use them for short (0-30m) distances.
+The Skycrate system is a different approach on delivering items. Its speed surpasses any conveyor, and the usage of rope makes it cheaper and more space-efficient. There are also drawbacks however; it requires stations on both sides and a number of posts depending on the length of the system. Skycrates are a better option than conveyors on longer distances, and is not encouraged to use them for short (0-30m) distances.
 
 # skycrate
 |[multiblock]{mb:"II:SkycrateStation"}|
-The Skycrate station is the start and stopping point of the delivery system. To form it, use a hammer on the scaffolding in the middle.
+The Skycrate station is both the starting and stopping point of the delivery system. To form it, use a hammer on the scaffolding in the middle.
 To function, it requires rotary power to be inputted to its side
 
 # details_crate
@@ -16,17 +16,17 @@ The station uses mounts to put crates into the delivery system. The mounts are t
 
 # skycart
 |[multiblock]{mb:"II:SkycrateStation"}|
-he Skycart station is the start and stopping point of the delivery system. To form it, use a hammer on the scaffolding in the middle.
+The Skycart station is both the starting and stopping point of the delivery system. To form it, use a hammer on the scaffolding in the middle.
 To function, it requires rotary power to be inputted to its side
 
 
 # details_cart
-Like Skycrates, the station uses mounts to put the contents of the carts into the delivery system. minecrafts can only enter the station when the railway barrier is up. A minecraft can be forced out of the station by applying a redstone signal. The station will automatically expel minecarts after a loading/unloading operation.
+Like its Skycrate counterpart, the station uses mounts to put the contents of the carts into the delivery system. minecrafts can only enter the station when the railway barrier is up. A minecraft can be forced out of the station by applying a redstone signal. The station will automatically expel minecarts after a loading/unloading operation.
 
 
 # skycrate_post
 |[multiblock]{mb:"II:SkycratePost"}|
-The Skycrate Post is the relay between two points in the skycrate network. Only two wires can be attached to the pylon at a time. To form it, use a hammer on the fence
+The Skycrate Post is the relay between two points in the skycrate network. Only two wires can be attached to the pylon at the same time. To form it, use a hammer on the fence
 
 
 # minecarts
