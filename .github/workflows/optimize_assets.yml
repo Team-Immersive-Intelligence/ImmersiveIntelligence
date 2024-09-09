@@ -12,13 +12,14 @@ jobs:
     runs-on: ubuntu-latest
     env:
       GITHUB_USERNAME: 'CarverBot'
-      GITHUB_TOKEN: ${{ secrets.OPTIMIZATION_TOKEN }}
+      GITHUB_TOKEN: ${{ secrets.CARVERBOT_TOKEN }}
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - uses: FedericoCarboni/setup-ffmpeg@v3
+      - name: Setup FFMPEG Codec
+        uses: FedericoCarboni/setup-ffmpeg@v3
         id: setup-ffmpeg
 
       - name: Optimize PNGs
@@ -29,8 +30,8 @@ jobs:
         continue-on-error: true
         run: chmod -R a+rX ./gradle/tools/* ; bash ./gradle/tools/opti.sh -a
         env:
-          LOC_FFMPEG: ${{ steps.setup-ffmpeg.outputs.ffmpeg-path }}
-          LOC_FFPROBE: ${{ steps.setup-ffmpeg.outputs.ffprobe-path }}
+          LOC_FFMPEG: ${{ steps.setup-ffmpeg.outputs.ffmpeg-path }}/ffmpeg
+          LOC_FFPROBE: ${{ steps.setup-ffmpeg.outputs.ffmpeg-path }}/ffprobe
 
       - name: Setup Git User
         uses: fregante/setup-git-user@v2
@@ -56,4 +57,4 @@ jobs:
           body: Assets were automatically optimized.
           author: CarverBot <carverbot@iiteam.net>
           committer: CarverBot <carverbot@iiteam.net>
-          token: ${{ secrets.OPTIMIZATION_TOKEN }}
+          token: ${{ secrets.CARVERBOT_TOKEN }}
