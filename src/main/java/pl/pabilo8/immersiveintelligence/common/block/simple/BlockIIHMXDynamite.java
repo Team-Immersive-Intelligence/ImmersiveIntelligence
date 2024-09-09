@@ -33,7 +33,7 @@ public class BlockIIHMXDynamite extends BlockIIBase<HMX_Explosives>
 {
 	public BlockIIHMXDynamite()
 	{
-		super("HMX Dynamite", PropertyEnum.create("type", HMX_Explosives.class), Material.WOOD, ItemBlockIIBase::new, BlockLog.LOG_AXIS);
+		super("hmx_dynamite", PropertyEnum.create("type", HMX_Explosives.class), Material.WOOD, ItemBlockIIBase::new, BlockLog.LOG_AXIS);
 		this.setHardness(2.0F);
 		this.setResistance(1F);
 		setCategory(IICategory.RESOURCES);
