@@ -1,9 +1,8 @@
 # meta
-Logistics
-Supply chains!
+Task System
+The spice must flow
 
 # intro
-@hammer;level_advanced_industrial
 This section is currently a Work In Progress, please excuse our dust!
 
 # details

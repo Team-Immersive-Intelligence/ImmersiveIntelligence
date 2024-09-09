@@ -1720,9 +1720,11 @@ advancement.immersiveintelligence.flagpole.desc=Construct the Flagpole, a decora
 
 ie.manual.category.ii_data.name=Data and Electronics
 ie.manual.category.ii_warfare.name=Warfare
-ie.manual.category.ii_logi.name=Logistics
+ie.manual.category.ii_logistics.name=Logistics
 ie.manual.category.ii_intel.name=Intelligence
 ie.manual.category.ii_motorworks.name=Motorworks
+ie.manual.category.ii_other.name=Other
+
 
 ie.manual.folder.functions=Function Reference
 ie.manual.folder.folder=Folder
@@ -1855,35 +1857,6 @@ ie.manual.entry.programmable_speaker.vars_in.v.main=Volume
 ie.manual.entry.programmable_speaker.vars_in.v.sub=Value must be between 0 and 100
 ie.manual.entry.programmable_speaker.vars_in.t.main=Tone/Pitch
 ie.manual.entry.programmable_speaker.vars_in.t.sub=Value must be between -100 and 100
-
-#Intelligence
-
-#Reference to Dr. Stone
-ie.manual.entry.intel_main.name=Intelligence
-ie.manual.entry.intel_main.subtext=Science's most powerful weapon
-ie.manual.entry.intel_main0=Intelligence is a branch of engineering focused on espionage, infiltration, sabotage and reconnaissance.<br>Intelligence offers multiple tools and machines to observe and predicate enemy movements. These include simple ones like the Binoculars and advanced like the Infrared Observer or Strategic Command Table.
-
-#Reference to Dr. Stone
-ie.manual.entry.binoculars.name=Binoculars
-ie.manual.entry.binoculars.subtext=The Eyes of the Science
-ie.manual.entry.binoculars0=The Binoculars are a tool, that allows further vision. They are based on the same magnification principle the scope of the <link;railgun;§o§nRailgun§r;>.
-ie.manual.entry.binoculars1=The Infrared Binoculars are an upgraded version of the regular ones. When provided energy i.e. from a <link;powerpack;§o§nCapacitor §o§nBackpack§r;> it allows night vision, don't use them in lighted areas, it could severely blind you.
-
-ie.manual.entry.tripod_periscope.name=Tripod Periscope
-ie.manual.entry.tripod_periscope.subtext=Spectacles on Sticks
-ie.manual.entry.tripod_periscope0=Tripod periscope is an observation device consisting of a pair of binoculars, magnifying tubes, a rotation mechanism and a tripod. The Tripod Periscope allows peeking out of a trench, or a wall without the risk of getting shot.
-ie.manual.entry.tripod_periscope1=Compared to the standard Binoculars, Tripod Periscope has superior zoom capabilities, allowing one to scout further and see objects at extremely far distances.<br>Deployment of the Tripod is similar to that of a Machinegun, requiring you to place the item down on the ground and then interact with it while having an empty hand. To pick it up, sneak and interact with it.
-
-#Reference to the Battle of Britain in WW2
-ie.manual.entry.radar.name=Radar
-ie.manual.entry.radar.subtext=A relic from Dover
-ie.manual.entry.radar0=Radar is the large detection device, capable of detecting entities in a direct line over incredibly long distances, including (and especially) all metal objects and artillery shells. To form it use a hammer on the left wooden scaffolding block.
-ie.manual.entry.radar1=Radar has multiple uses. It can be linked with emplacement weapons, such as the CPDS and used to intercept projectiles at long ranges. It can also be linked with the Strategic Command Table [WIP].<br>If upgraded with §6Triangulators§r, the radar can also detect radio signals within its range and determine their location, this allows ambushing unsuspecting enemies with precise artillery strikes. In order to operate the Radar requires a constant supply of electricity.
-
-#Reference to a book by Sun Tzu
-ie.manual.entry.strategic_command_table.name=Strategic Command Table
-ie.manual.entry.strategic_command_table.subtext=The Art of War
-ie.manual.entry.strategic_command_table0=
 
 #Warfare
 
@@ -2299,115 +2272,6 @@ ie.manual.entry.bullet_component.shrapnel_uranium=Uranium Shrapnel
 ie.manual.entry.bullet_component.shrapnel_uranium.lore=Ra-di-o-active
 ie.manual.entry.bullet_component.shrapnel_uranium.desc=Uranium is one of the best materials for shrapnel, the scattering fragments have no problem piercing trough armor and can deal high damage to any target.
 
-
-#Logistics
-
-#Reference to Foxhole - a MMO game with a big persitent war in which logistics play a key role
-ie.manual.entry.logistics.name=Logistics
-ie.manual.entry.logistics.subtext=Logi, bmats ASAP!
-ie.manual.entry.logistics0=Logistics is a unique branch of engineering focused on storing, delivering and managing the way of transfer of goods. A good logistic system consists of a warehouse for storage and nearby production plants and factories for quick manufacturing of needed things. With the newest electronic and electric technology and some old rotary powered machines, creating a good delivery system is easier than ever.
-
-#KISS is a rule used in programming, logistics and engineering
-ie.manual.entry.task_system.name=Task System
-ie.manual.entry.task_system.subtext=Keep It Simple, Stupid
-ie.manual.entry.task_system0=Task System is a concept of organising a machine’s work schedule through single, iterable tasks. Tasks are used by many data devices, such as the inserters, the packer and the data router.<br>Tasks are divided into:<br>Jobs - tasks which will execute infinitely, unless manually removed<br>Requests - tasks, which are temporary and will remove after they are finished (i.e. after an inserter picks a certain amount of items)
-ie.manual.entry.task_system1=By default, tasks are executed from the oldest to the newest. If a task cannot be executed, it will be skipped. After finishing a Request (successfully or not), it’s checked whether it should be removed.
-
-#Reference to Choroman's laziness, but also some hard work on the Packer model
-ie.manual.entry.packer.name=Packer
-ie.manual.entry.packer.subtext=Even more Pipes and Tunnels!
-ie.manual.entry.packer0=Packer is a machine used to batch load items into containers such as crates or bullet magazines. For operation it requires power and a single data signal defining how much items should be put each time. To form it, use a hammer on the pipe above the conveyor belt.
-ie.manual.entry.packer1=By default, the packer offers 54 storage slots for items, they can be inputted trough a single conveyor the on machine's back. To operate it requires electricity and a container to be provided to the 3 block long conveyor. For packing orders, the machine uses a task system: tasks can be added, removed and tweaked trough its interface or trough data system.
-ie.manual.entry.packer2=The "Pack" task is used to load items into the container. By default the packer can take any item (the * symbol) and the maximum possible amount of it. This can be changed: by selecting a different mode you can choose between taking in amount of slots or items. This amount can be specified in the interface, through the input field below.
-ie.manual.entry.packer3=The "Uses OreDict" switch determines whether items with the same Ore Dictionary key will be matched. This allows, i.e. to take different types of stone or wooden planks. The "NBT Sensitive" switch determines whether the item has to have the same NBT tag as the one inputted. It is disabled by default.
-ie.manual.entry.packer4=The "Unpack", "Fill", "Unfill", "Charge" and "Discharge" tasks work in similar way as the "Pack" task. For fluids, "slots" are tanks and amount is the fluid amount in mB. For energy, only the amount is taken into consideration.
-
-ie.manual.entry.packer.vars_in.c.main=Command
-ie.manual.entry.packer.vars_in.c.sub=Possible values: "add", "remove", "clear"
-ie.manual.entry.packer.vars_in.a.main=Action (Used by "add")
-ie.manual.entry.packer.vars_in.a.sub=Possible values: "item", "fluid", "energy"
-ie.manual.entry.packer.vars_in.s.main=Stack
-ie.manual.entry.packer.vars_in.s.sub=Optional. The ItemStack or OreDict String the items have to match.
-ie.manual.entry.packer.vars_in.m.main=Mode (Used by "add")
-ie.manual.entry.packer.vars_in.m.sub=Possible values: "amount", "slot", "all_possible". Optional, by default "all_possible".
-ie.manual.entry.packer.vars_in.e.main=Expire after (Used by "add")
-ie.manual.entry.packer.vars_in.e.sub=Optional. After what amount should the task end.
-
-#Star Wars reference
-ie.manual.entry.advanced_powerpack.name=Improved Capacitor Backpack
-ie.manual.entry.advanced_powerpack.subtext=(Almost) Infinite Power
-ie.manual.entry.advanced_powerpack0=Improved Capacitor Backpack is a direct upgrade to the <link;powerpack0;§o§nCapacitor §o§nBackpack§r;>, with the main difference being more energy capacity and ability to be charged by <link;teslaCoil;§o§nTesla §o§nCoils§r;>.
-ie.manual.entry.advanced_powerpack1=Its wireless charging ability also makes the wearer immune to electric damage and removes the need of wearing the Faraday Suit. The Backpack's side sacks can be painted the same way as leather armor.
-
-#Ziplines
-ie.manual.entry.skycrates.name=Skycrates
-ie.manual.entry.skycrates.subtext=The actual logistic lines!
-ie.manual.entry.skycrates0=The skycrate system is a different approach on delivering items. It's speed is superior to any conveyor and lines made of rope are much cheaper and more space-efficient. There are also some drawbacks to it: it requires stations on both sides and the crates need to be inserted to a minecart. Skycrates are a better option than conveyors on longer distances, it is not encouraged to use them on short (0-30m) distances.
-ie.manual.entry.skycrates1=The Skycrate Station is a begin and end point of a skycrate line. To form it use a hammer on the scaffolding in the middle. To function, it requires rotary power inputted to its side. The amount of gears increase its efficiency similar to how it works with the <link;rotary_power;§o§nGearboxes§r;4>.
-ie.manual.entry.skycrates2=The station uses mounts to attach the skycrates, the mounts are taken from the back, behind the inserter. The crates are inserted and outputted onto the conveyor. A crate can be forced be forced out of the station, by applying a redstone signal.
-ie.manual.entry.skycrates3=The Skycart Station is a begin and end point of a skycrate line. To form it use a hammer on the scaffolding in the middle. To function, it requires rotary power inputted to its side. The amount of gears increase its efficiency similar to how it works with the <link;rotary_power;§o§nGearboxes§r;4>.
-ie.manual.entry.skycrates4=The station uses mounts to attach the skycrates, the mounts are taken from the back, behind the inserter. Minecarts can only enter the station when the railway barrier is up, a minecart can be forced out of the station, by applying a redstone signal. The station will automatically expell minecarts after loading/unloading.
-ie.manual.entry.skycrates5=The Skycrate Post is what a relay between two points in the skycrate network. Only two wires can be attached. To form it use a hammer on the fence.
-ie.manual.entry.skycrates6=Crate minecarts are a safe way to transport items via rail. They can be crafted by putting a crate into a minecart, items inside won't be lost. When disassembled, the minecart splits into the actual cart and the crate.
-ie.manual.entry.skycrates7=The skycrate mounts are used to transport crates via the zipline, there are two models: the basic one and the electric one, which uses energy provided on the go by <link;tesla_coil;§o§nTesla §o§nCoils§r;> nearby.
-
-#TF2 Reference
-ie.manual.entry.medicrate.name=Medical Crate
-ie.manual.entry.medicrate.subtext=Right, Archimedes?
-ie.manual.entry.medicrate0=The Medical Crate is a device used for healing wounded entities. After being placed it has to be filled with §lbasic§r Regeneration Potions to work.
-ie.manual.entry.medicrate1=Sneaking and right clicking will open or close the crate: when it's closed - its inventory can be accessed, when it's open - right click to receive the effects. The Medical Crate can also apply an "Iron Will" boost effect, increasing mobility and focus while firing weapons on the move called. To gain it, the second slot has to be filled with Golden Apples.
-ie.manual.entry.medicrate2=An inserter can be installed on top of the crate. To do it, use the wrench on a closed crate and select the appropriate upgrade. After being installed, the crate requires a MV or LV power wire connected directly to it. The installed syringe inserter will automatically heal and give boost to entities around.
-
-#A "ministry of nuts and bolts" is a term for a government institution trying to regulate amounts of produced of a good, that's in high demand and cannot (and shouldn't) be measured, like nuts and bolts for construction
-ie.manual.entry.repair_crate.name=Repair Crate
-ie.manual.entry.repair_crate.subtext=Approved by Ministry of Nuts and Bolts
-ie.manual.entry.repair_crate0=The Repair Crate is a device used for repairing equipped items and if upgraded - nearby vehicles. After being placed it has to be supplied with steel plates to work.
-ie.manual.entry.repair_crate1=Sneaking and right clicking will open or close the crate: when it's closed - its inventory can be accessed, when it's open - right click to receive the effects. The Repair Crate will repair all items held and worn by the user.
-ie.manual.entry.repair_crate2=An inserter can be installed on top of the crate. To do it, use the wrench on a closed crate and select the appropriate upgrade. After being installed, the crate requires a MV or LV power wire connected directly to it. The installed welder inserter will automatically repair equipped items, vehicles and blocks around.
-
-#Motorworks
-
-ie.manual.entry.motorworks.name=Motorworks
-ie.manual.entry.motorworks.subtext=Full throttle!
-ie.manual.entry.motorworks=Motorworks is a branch of engineering focused on construction of vehicles and enhancing the performance of other tasks. Vehicles increase speed of transportation of personnel and goods, and by that improve the overall efficiency of your factory. Vehicles can also be utilised to gain advantage in combat.
-
-#Bob Ross reference
-ie.manual.entry.rubber_production.name=Rubber Production
-ie.manual.entry.rubber_production.subtext=Happy Little Trees
-ie.manual.entry.rubber_production0=The first step in rubber production is finding and gathering saplings of the §6Rubber Trees§r found in the jungle biome. These trees are a valuable source of latex - a white fluid, which is the main component of industrial rubber.
-ie.manual.entry.rubber_production1=The second step is creating a rubber plantation, when the tree saplings are grown, carve the extraction hole log using an axe. Then place a latex collector next to the tree and use a bucket on a collector to make it gather latex.
-ie.manual.entry.rubber_production2=If more than one collector is next to the tree, the latex will be split between all of them. When the bucket is full, interact with the collector to regain it.<br>To start coagulating latex into raw rubber two things are needed: §6formic acid§r and <link;coagulator;§o§nthe §o§ncoagulator§r;>. To produce formic acid a <link;refinery;§o§nrefinery§r;> is required. Combine Carbon Monoxide with Methanol to gain Formic Acid.
-ie.manual.entry.rubber_production3=Carbon monoxide can be produced through electrolysis of carbon dioxide, a pollutant and byproduct collected by the §6Carbon Dioxide Filter§r.
-ie.manual.entry.rubber_production4=Methanol can be produced by mixing nickel or platinum with hydrogen, created through electrolysis of water. The last step is to combine both using the <link;refinery;§o§nrefinery§r;>.
-ie.manual.entry.rubber_production5=When latex and formic acid are acquired, it's time for some coagulation. Use the machine to create §6raw rubber§r balls and then press them into sheets using a plate mold in the <link;metalPress;§o§nmetal §o§npress§r;>.
-ie.manual.entry.rubber_production6=The last step is vulcanization of raw rubber sheets. Use the <link;vulcanizer;§o§nVulcanizer§r;> to produce rubber tires or belts.
-
-ie.manual.entry.vehicle_workshop.name=Vehicle Workshop
-ie.manual.entry.vehicle_workshop.subtext=Beginning of the Joyride
-ie.manual.entry.vehicle_workshop0=Industrial progress brings new means of transportation, replacing traditional ones, like horses. The Vehicle Workshop enables you to create these new means, most notably - <link;motorbike;§o§nThe §o§nMotorbike§r;>. To form it, use a hammer on the left aluminium scaffolding.
-ie.manual.entry.vehicle_workshop1=The machine requires <config;b;petroleumHere;§6Diesel§r or ;>§6Biodiesel§r along with electricity to run, these can be provided using the appropriate ports on machine's side and top. To create a vehicle - select an appropriate option through the interface, provide shown materials and make sure no vehicle is parked on the platform. If all the conditions are met, press the striped button in the interface and the workshop will start assembling your vehicle.
-ie.manual.entry.vehicle_workshop2=If the vehicle uses fuel, it will be refueled half-way using the workshop's internal tank. The fuel will not last for long, so consider building a <link;§o§nFuel §o§nStation§r;fuel_station;>.
-ie.manual.entry.vehicle_workshop3=Existing vehicles can also be upgraded. To apply an upgrade, drive your vehicle onto the platform and select valid upgrades through the interface. Upgrading and removing upgrades requires power and diesel to be supplied.
-
-ie.manual.entry.fuel_station.name=Fuel Station
-ie.manual.entry.fuel_station.subtext=Does NOT sell hot-dogs
-ie.manual.entry.fuel_station0=The Fuel Station is a device used for automatic refuel of vehicles nearby. To form it use a hammer on the left light engineering block.
-ie.manual.entry.fuel_station1=The Fuel Station requires a supply of power to operate. The fuel needed depends on the vehicle, many vehicles, like motorbikes use diesel<config;b;petroleumHere;, but motorboats use gasoline;>.
-
-ie.manual.entry.vulcanizer.name=Vulcanizer
-ie.manual.entry.vulcanizer.subtext=The Overengineered Smoke Dispenser
-ie.manual.entry.vulcanizer0=The Vulcanizer is the final machine in the <link;rubber_production;§o§nrubber §o§nproduction§r;> process. To form it use a hammer on the steel block nearest to the tank.
-ie.manual.entry.vulcanizer1=Using heat, pressure, molds and set of additional compounds the Vulcanizer transforms raw rubber sheets into a familiar industrial rubber, which is used to construct many new machines, most notably faster conveyors, more efficient motor belts and is vital to wheeled vehicle production. To process rubber 3 ingredients are required: raw rubber sheets, provided to the upper port on the iron container, vulcanization compound - provided to the port below and sulfur - inputted into the steel tank.
-ie.manual.entry.vulcanizer2=To operate the machine requires a vulcanizer mold - determining the final output and electricity.
-ie.manual.entry.vulcanizer3=Vulcanizer molds can be created in the <link;workbench;§o§nEngineer's §o§nWorkbench§r;> using the blueprint above.
-ie.manual.entry.vulcanizer4=The Vulcanization compound consists of additives which improve rubber's properties. It can be crafted using 2 ways.
-
-ie.manual.entry.coagulator.name=Coagulator
-ie.manual.entry.coagulator.subtext=Intensified Mixing Co.
-ie.manual.entry.coagulator0=The coagulator is a machine used to coagulate latex and form raw rubber balls for further processing. To form it use a hammer on the middle sheetmetal block on machine's back.
-ie.manual.entry.coagulator1=The coagulator requires a supply of electricity to its heavy connector port and a steady supply of latex (right tank) and formic acid (left tank), §ltake note the sides swap if the machine is flipped§r. After latex is mixed with the acid and the upper "quark" layer forms, the crane will pick one of the buckets, submerge it and put it back while a timer is automatically set. After some time, the latex will solidify into raw rubber, which will be outputted by a mechanism holding the bucket. The rubber will be dropped onto the ground.
-ie.manual.entry.coagulator3=
-
 #Other
 
 #Reference to a certain picture i've seen on reddit few years ago
@@ -2425,32 +2289,6 @@ ie.manual.entry.lighter_fuels=Lighter Fuels
 ie.manual.entry.field_fuel=Fluid
 ie.manual.entry.field_amount=Amount
 
-#Reference to a certain picture i've seen on reddit few years ago
-ie.manual.entry.sawmill.name=Sawmill
-ie.manual.entry.sawmill.subtext=The better fidget spinner!
-ie.manual.entry.sawmill0=The Sawmill is an automatic carpentry machine powered by rotary energy. It consists of a table, a mechanical inserter and saw mount. To form the multiblock, use a hammer on the middle wooden scaffolding.
-ie.manual.entry.sawmill1=Saws made of different materials can be mounted. While every saw is effective at cutting wood, saws made of hard materials like steel and tunsten can even cut trough metals.
-ie.manual.entry.sawmill2=The machine requires a constant supply of rotary power to it's side. Resources can be inserted to table's right side and processed items are outputted to the wooden storage box on the ground
-
-ie.manual.entry.rotary_power.name=Rotary Power
-ie.manual.entry.rotary_power.subtext=Things start turning!
-ie.manual.entry.rotary_power0=Rotary power is an old-fashioned alternative to electric power. Instead of wires and connectors, wheels and motor belts are used. The power system utilizes 2 factors: torque - in TU (Torque Unit) and speed in DPT (Degrees per Tick). Machines require different torque and speed to work effectively.
-ie.manual.entry.rotary_power1=If any of those values surpasses the limit, the machine explodes. Power can be merged and split using <link;rotary_power;§o§nGearboxes§r;4>.
-ie.manual.entry.rotary_power2=The wheel is used to transfer mechanical (rotary) power between devices. After placing it can be connected to another wheel using a motor belt, the same way connectors are linked with wires.
-ie.manual.entry.rotary_power3=The motor belts are the main transmission element of every rotary power network. They differ with the amount of torque and speed they can transfer. If the torque is too high for the belt, it will detach from the wheel and fall onto the ground. Use different materials for different needs - steel might be more resistant to torque, but power losses are higher.
-ie.manual.entry.rotary_power4=The Gearboxes are used to link multiple wheels together, their sides can be changed to input, output or nothing. Input torque from all inputs is summed and then divided equally between all outputs. You can use the gearbox to merge torque to make it higher or divide it between 2 or more wheels. The gearbox requires gears of certain resistance to torque and speed to operate on full power.
-ie.manual.entry.rotary_power5=The Transmission Boxes are used to connect mechanical devices using a different standard of axles, they can be used to connect a windmill or a waterwheel to a motor belt network or output mechanical energy to a dynamo.
-
-#Reference to a certain polish eastern, well... house dweller
-ie.manual.entry.chain_fences.name=Chain Fences and Gates
-ie.manual.entry.chain_fences.subtext=Three Metres and Growing!
-ie.manual.entry.chain_fences0=The chain fences can serve as a stylish industrial-looking barrier between factory zones. They offer low amounts of protection against a full scale invasion, but are enough to deter unwanted guests from your base. Available in many flavours.
-ie.manual.entry.chain_fences1=The Wooden Fence Gate makes for a stylish, monumental entry point to your factory complex. They can be activated using redstone on the inward side. Like fences, many flavours are available.
-ie.manual.entry.chain_fences2=The Wooden Chain Fence Gate makes for a stylish, monumental entry point to your factory complex. They can be activated using redstone on the inward side. Like fences, many flavours are available.
-ie.manual.entry.chain_fences3=The Steel Fence Gate makes for a stylish, monumental entry point to your factory complex. They can be activated using redstone on the inward side. Like fences, many flavours are available.
-ie.manual.entry.chain_fences4=The Steel Chain Fence Gate makes for a stylish, monumental entry point to your factory complex. They can be activated using redstone on the inward side. Like fences, many flavours are available.
-ie.manual.entry.chain_fences5=The Aluminium Fence Gate makes for a stylish, monumental entry point to your factory complex. They can be activated using redstone on the inward side. Like fences, many flavours are available.
-ie.manual.entry.chain_fences6=The Aluminium Chain Fence Gate makes for a stylish, monumental entry point to your factory complex. They can be activated using redstone on the inward side. Like fences, many flavours are available.
 
 death.attack.iiBullet=%1$s was shot by %2$s
 death.attack.iiBulletNoShooter=%1$s was shot

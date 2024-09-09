@@ -1,6 +1,17 @@
 package pl.pabilo8.immersiveintelligence.client.manual.categories;
 
+import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualCategory;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.block.data_device.BlockIIDataDevice.IIBlockTypes_Connector;
+import pl.pabilo8.immersiveintelligence.common.block.fortification.BlockIIMetalChainFence.MetalFortifications;
+import pl.pabilo8.immersiveintelligence.common.block.fortification.BlockIIWoodenChainFence.WoodenFortifications;
+import pl.pabilo8.immersiveintelligence.common.block.metal_device.BlockIIMetalDevice.IIBlockTypes_MetalDevice;
+import pl.pabilo8.immersiveintelligence.common.block.rotary_device.BlockIIGearbox.IIBlockTypes_Gearbox;
+import pl.pabilo8.immersiveintelligence.common.block.rotary_device.BlockIIMechanicalConnector.IIBlockTypes_MechanicalConnector;
+import pl.pabilo8.immersiveintelligence.common.block.rotary_device.BlockIIMechanicalDevice.IIBlockTypes_MechanicalDevice;
+import pl.pabilo8.immersiveintelligence.common.item.ItemIIMinecart.Minecarts;
+import pl.pabilo8.immersiveintelligence.common.item.mechanical.ItemIIMotorGear.MotorGear;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 /**
@@ -20,114 +31,79 @@ public class IIManualCategoryLogistics extends IIManualCategory
 	@Override
 	public void addPages()
 	{
-		addEntry("logistics_main");
+		super .addPages();
 
-
-		addEntry("advanced_inserter");
-		addEntry("fluid_inserter");
-		addEntry("item_inserter");
-		addEntry("rotary_power");
-		addEntry("engineers_crates");
-		addEntry("skycrate_system");
+		addEntry("logistics");
+		addEntry("packer");
 		addEntry("task_system");
-		addEntry("Fences");
 
+		addEntry("inserters")
+				.addSource("inserter_basic", getSourceForItem(IIContent.blockDataConnector.getStack(IIBlockTypes_Connector.INSERTER)))
+				.addSource("inserter_advanced", getSourceForItem(IIContent.blockDataConnector.getStack(IIBlockTypes_Connector.ADVANCED_INSERTER)))
+				.addSource("inserter_fluid", getSourceForItem(IIContent.blockDataConnector.getStack(IIBlockTypes_Connector.FLUID_INSERTER)))
+				.addSource("inserters_full", getSourceForItems(
+						IIContent.blockDataConnector.getStack(IIBlockTypes_Connector.INSERTER),
+						IIContent.blockDataConnector.getStack(IIBlockTypes_Connector.ADVANCED_INSERTER),
+						IIContent.blockDataConnector.getStack(IIBlockTypes_Connector.FLUID_INSERTER)
 
+				));
 
+		addEntry("skycrate_system")
+				.addSource("minecart_general", getSourceForItems(
+					IIContent.itemMinecart.getStack(Minecarts.CAPACITOR_HV),
+					IIContent.itemMinecart.getStack(Minecarts.METAL_BARREL),
+					IIContent.itemMinecart.getStack(Minecarts.WOODEN_CRATE),
+					IIContent.itemMinecart.getStack(Minecarts.REINFORCED_CRATE),
+					IIContent.itemMinecart.getStack(Minecarts.STEEL_CRATE)
+				))
+				.addSource("mount", getSourceForItem(IIContent.itemSkycrateMount.getStack(1)));
 
+		addEntry("chain_fences_and_gates")
+				.addSource("fence_blocks", getSourceForItems(
+						IIContent.blockMetalFortification.getStack(MetalFortifications.STEEL_CHAIN_FENCE),
+						IIContent.blockMetalFortification.getStack(MetalFortifications.BRASS_CHAIN_FENCE),
+						IIContent.blockMetalFortification.getStack(MetalFortifications.ALUMINIUM_CHAIN_FENCE),
+						IIContent.blockWoodenFortification.getStack(WoodenFortifications.WOODEN_STEEL_CHAIN_FENCE),
+						IIContent.blockWoodenFortification.getStack(WoodenFortifications.WOODEN_BRASS_CHAIN_FENCE)
+				));
 
+		addEntry("rotary_power")
+			.addSource("gearbox", getSourceForItem(
+					IIContent.blockGearbox.getStack(IIBlockTypes_Gearbox.WOODEN_GEARBOX)
+			))
 
+			.addSource("transmission", getSourceForItem(
+					IIContent.blockMechanicalDevice.getStack(IIBlockTypes_MechanicalDevice.WOODEN_TRANSMISSION_BOX)
+			))
 
+			.addSource("wheels", getSourceForItems(
+					IIContent.blockMechanicalConnector.getStack(IIBlockTypes_MechanicalConnector.IRON_WHEEL),
+					IIContent.blockMechanicalConnector.getStack(IIBlockTypes_MechanicalConnector.STEEL_WHEEL)
+			))
 
+			.addSource("belt", getSourceForItem(
+					new ItemStack(IIContent.itemMotorBelt)))
+			.addSource("gears", getSourceForItems(
+					IIContent.itemMotorGear.getStack(MotorGear.COPPER),
+					IIContent.itemMotorGear.getStack(MotorGear.BRASS),
+					IIContent.itemMotorGear.getStack(MotorGear.IRON),
+					IIContent.itemMotorGear.getStack(MotorGear.STEEL),
+					IIContent.itemMotorGear.getStack(MotorGear.TUNGSTEN)
+			));
 
-		/*ManualHelper.addEntry("logistics", getCategory(),
-				new ManualPages.Text(ManualHelper.getManual(), "logistics0")
-		);
+		addEntry("medical_crate")
+			.addSource("medical", getSourceForItem(
+					IIContent.blockMetalDevice.getStack(IIBlockTypes_MetalDevice.MEDIC_CRATE))
+			);
 
-		ItemStack inserter0, inserter1, inserter2;
-		inserter0 = new ItemStack(IIContent.blockDataConnector, 1, IIBlockTypes_Connector.INSERTER.getMeta());
-		inserter1 = new ItemStack(IIContent.blockDataConnector, 1, IIBlockTypes_Connector.ADVANCED_INSERTER.getMeta());
-		inserter2 = new ItemStack(IIContent.blockDataConnector, 1, IIBlockTypes_Connector.FLUID_INSERTER.getMeta());
+		addEntry("repair_crate")
+			.addSource("repair", getSourceForItem(
+					IIContent.blockMetalDevice.getStack(IIBlockTypes_MetalDevice.REPAIR_CRATE))
+			);
 
-		ManualHelper.addEntry("inserters", getCategory(),
-				new ManualPages.ItemDisplay(ManualHelper.getManual(), "inserters0", inserter0, inserter1, inserter2),
-				new ManualPages.Crafting(ManualHelper.getManual(), "inserters_basic", inserter0),
-				new IIManualPageDataVariables(ManualHelper.getManual(), "inserters_basic", true)
-						.addEntry(new DataTypeString(), 'c')
-						.addEntry(new DataTypeString(), 'a')
-						.addEntry(new DataTypeItemStack(), 's'),
-				new IIManualPageDataVariables(ManualHelper.getManual(), "inserters_basic", true)
-						.addEntry(new DataTypeInteger(), 'e')
-						.addEntry(new DataTypeInteger(), 't'),
-				new IIManualPageDataVariables(ManualHelper.getManual(), "inserters_basic", true)
-						.addEntry(new DataTypeString(), 'i')
-						.addEntry(new DataTypeString(), 'o')
-						.addEntry(new DataTypeInteger(), '1')
-						.addEntry(new DataTypeInteger(), '0'),
-				new IIManualPageDataVariables(ManualHelper.getManual(), "inserter_obsolete", true)
-						.addEntry(new DataTypeString(), 'm')
-						.addEntry(new DataTypeInteger(), 'c'),
-				new ManualPages.Crafting(ManualHelper.getManual(), "inserters_advanced", inserter1),
-				new ManualPages.Crafting(ManualHelper.getManual(), "inserters_fluid", inserter2),
-				new IIManualPageDataVariables(ManualHelper.getManual(), "inserters_fluid", true)
-						.addEntry(new DataTypeString(), 'm')
-						.addEntry(new DataTypeInteger(), 'c')
-		);
-		ManualHelper.addEntry("task_system", getCategory(),
-				new ManualPages.Text(ManualHelper.getManual(), "task_system0"),
-				new ManualPages.Text(ManualHelper.getManual(), "task_system1")
-		);
-
-		ManualHelper.addEntry("packer", getCategory(),
-				new ManualPageMultiblock(ManualHelper.getManual(), "packer0", MultiblockPacker.INSTANCE),
-				new ManualPages.Text(ManualHelper.getManual(), "packer1"),
-				new ManualPages.Text(ManualHelper.getManual(), "packer2"),
-				new ManualPages.Text(ManualHelper.getManual(), "packer3"),
-				new ManualPages.Text(ManualHelper.getManual(), "packer4"),
-				new IIManualPageDataVariables(ManualHelper.getManual(), "packer", true)
-						.addEntry(new DataTypeString(), 'c')
-						.addEntry(new DataTypeInteger(), 'a')
-						.addEntry(new DataTypeInteger(), 's')
-						.addEntry(new DataTypeBoolean(), 'm'),
-				new IIManualPageDataVariables(ManualHelper.getManual(), "packer", true)
-						.addEntry(new DataTypeBoolean(), 'e')
-		);
-
-		ManualHelper.addEntry("skycrates", getCategory(),
-				new ManualPages.Text(ManualHelper.getManual(), "skycrates0"),
-				new ManualPageMultiblock(ManualHelper.getManual(), "skycrates1", MultiblockSkyCrateStation.INSTANCE),
-				new ManualPages.Text(ManualHelper.getManual(), "skycrates2"),
-				new ManualPageMultiblock(ManualHelper.getManual(), "skycrates3", MultiblockSkyCartStation.INSTANCE),
-				new ManualPages.Text(ManualHelper.getManual(), "skycrates4"),
-				new ManualPageMultiblock(ManualHelper.getManual(), "skycrates5", MultiblockSkyCratePost.INSTANCE),
-				new ManualPages.ItemDisplay(ManualHelper.getManual(), "skycrates6",
-						IIContent.itemMinecart.getStack(Minecarts.WOODEN_CRATE),
-						IIContent.itemMinecart.getStack(Minecarts.REINFORCED_CRATE),
-						IIContent.itemMinecart.getStack(Minecarts.STEEL_CRATE),
-						IIContent.itemMinecart.getStack(Minecarts.WOODEN_BARREL),
-						IIContent.itemMinecart.getStack(Minecarts.METAL_BARREL)
-				),
-				new ManualPages.CraftingMulti(ManualHelper.getManual(), "skycrates7",
-						IIContent.itemSkycrateMount.getStack(SkycrateMounts.MECHANICAL),
-						IIContent.itemSkycrateMount.getStack(SkycrateMounts.ELECTRIC))
-		);
-
-		ArrayList<ItemStack> fences = new ArrayList<>();
-		for(WoodenFortifications v : WoodenFortifications.values())
-			fences.add(new ItemStack(IIContent.blockWoodenFortification, 1, v.getMeta()));
-		for(MetalFortifications v : MetalFortifications.values())
-			fences.add(new ItemStack(IIContent.blockMetalFortification, 1, v.getMeta()));
-
-
-		ManualHelper.addEntry("chain_fences", getCategory(),
-				new ManualPages.CraftingMulti(ManualHelper.getManual(), "chain_fences0", fences.toArray()),
-				new ManualPageMultiblock(ManualHelper.getManual(), "chain_fences1", MultiblockWoodenFenceGate.INSTANCE),
-				new ManualPageMultiblock(ManualHelper.getManual(), "chain_fences2", MultiblockWoodenChainFenceGate.INSTANCE),
-				new ManualPageMultiblock(ManualHelper.getManual(), "chain_fences3", MultiblockSteelFenceGate.INSTANCE),
-				new ManualPageMultiblock(ManualHelper.getManual(), "chain_fences4", MultiblockSteelChainFenceGate.INSTANCE),
-				new ManualPageMultiblock(ManualHelper.getManual(), "chain_fences5", MultiblockAluminiumFenceGate.INSTANCE),
-				new ManualPageMultiblock(ManualHelper.getManual(), "chain_fences6", MultiblockAluminiumChainFenceGate.INSTANCE)
-		);*/
-
+		addEntry("improved_capacitor_backpack")
+				.addSource("improved_capacitor", getSourceForItem(
+					new ItemStack(IIContent.itemAdvancedPowerPack))
+			);
 	}
 }

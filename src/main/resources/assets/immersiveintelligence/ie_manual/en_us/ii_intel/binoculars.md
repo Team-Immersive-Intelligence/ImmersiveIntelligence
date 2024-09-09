@@ -9,7 +9,7 @@ This can be done in a variety of ways, one being infiltration and espionage on a
 But the safest option of them all is observation from afar.
 
 # 1
-|[crafting]{source:"crafting_binoculars"}|
+|[crafting]{source:"binoculars"}|
 Utilizing the optical phenomenon of refraction and lenses observation from a far can be done by ease.
 By using the same method as the precision scope and a metal binding, a **Binoculars** can be constructed.
 
