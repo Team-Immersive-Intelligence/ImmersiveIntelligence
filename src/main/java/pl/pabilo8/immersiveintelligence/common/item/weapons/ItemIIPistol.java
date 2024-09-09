@@ -233,5 +233,10 @@ public class ItemIIPistol extends ItemIIGunBase implements IItemScrollable
 			}
 		}
 	}
+
+	public boolean isScoped(ItemStack stack)
+	{
+		return hasIIUpgrade(stack, WeaponUpgrade.SCOPE);
+	}
 }
 

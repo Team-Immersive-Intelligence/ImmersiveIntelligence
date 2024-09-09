@@ -34,15 +34,17 @@ import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler;
 import pl.pabilo8.immersiveintelligence.common.util.amt.IIModelHeader;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
+/**
+ * @author Pabilo8
+ * @since 18.09.2022
+ */
 public class ShotgunRenderer extends IIUpgradableItemRendererAMT<ItemIIShotgun> implements ISpecificHandRenderer
 {
 	private MTLTextureRemapper handmadeRemapper;
 	private MTLTextureRemapper skinRemapper;
 	private AMTCrossVariantReference<AMTBullet> bullet, casing;
 
-	private IIAnimationCachedMap loadShell;
-
-	private IIAnimationCachedMap loadMag, unloadMag, fireStandard, fireSemiAutomatic, handAngle, handVisibility, offhandVisibility;
+	private IIAnimationCachedMap loadBullet, handAngle, handVisibility, offhandVisibility;
 	private float swingProgress = 0;
 
 	public ShotgunRenderer()
@@ -56,12 +58,12 @@ public class ShotgunRenderer extends IIUpgradableItemRendererAMT<ItemIIShotgun> 
 		Matrix4 tpp = new Matrix4()
 				.scale(0.385, 0.385, 0.385)
 				.translate(-0.25, 0, -0.5)
-				.rotate(Math.toRadians(20.5f), 0, 1, 0)
+				.rotate(Math.toRadians(-20.5f), 0, 1, 0)
 				.translate(0.825f, -0.525, -.225);
 		Matrix4 tppOffhand = new Matrix4()
 				.scale(0.385, 0.385, 0.385)
 				.rotate(Math.toRadians(75f), 1, 0, 0)
-				.rotate(Math.toRadians(20.5f), 0, 0, 1)
+				.rotate(Math.toRadians(-20.5f), 0, 0, 1)
 				.rotate(Math.toRadians(90f), 0, 1, 0)
 				.translate(-0.125f, 0, -.425);
 
@@ -115,7 +117,7 @@ public class ShotgunRenderer extends IIUpgradableItemRendererAMT<ItemIIShotgun> 
 		int firing = nbt.getInt(ItemIIShotgun.FIRE_DELAY);
 		int reloading = nbt.getInt(ItemIIShotgun.RELOADING);
 		boolean handRender = is1stPerson(transform);
-		//boolean semiAuto = item.hasIIUpgrade(stack, WeaponUpgrade.SHOTGUN_REVOLVER_DRUM_MAGAZINE);
+		boolean semiAuto = item.hasIIUpgrade(stack, WeaponUpgrade.SEMI_AUTOMATIC);
 		boolean gui = transform==TransformType.GUI;
 
 		//Make upgrade AMTs visible
@@ -164,8 +166,6 @@ public class ShotgunRenderer extends IIUpgradableItemRendererAMT<ItemIIShotgun> 
 			handAngle.apply(preciseAim);
 		}
 
-		(fireStandard).apply(gui?0: (1f-((firing-partialTicks)/(item.getFireDelay(stack, nbt)))));
-
 		float v = IIAnimationUtils.getAnimationProgress(
 				reloading,
 				(float)item.getReloadTime(stack, ItemStack.EMPTY, EasyNBT.wrapNBT(item.getUpgrades(stack))),
@@ -176,19 +176,18 @@ public class ShotgunRenderer extends IIUpgradableItemRendererAMT<ItemIIShotgun> 
 				partialTicks
 		);
 
-		//if(semiAuto)
-		//{
-		//	ItemStack magazine = nbt.getItemStack(ItemIIShotgun.MAGAZINE);
-		//	(magazine.isEmpty()?loadMag: unloadMag).apply(v);
-		//}
+		if(semiAuto)
+		{
+
+		}
 
 		if(reloading > 0)
 		{
-			//if(!semiAuto)
-			//{
+			if(!semiAuto)
+			{
 				this.bullet.get().withStack(nbt.getItemStack("found"), BulletState.BULLET_UNUSED);
-				loadShell.apply(v);
-			//}
+				loadBullet.apply(v);
+			}
 		}
 		else if(handRender)
 		{
@@ -220,18 +219,15 @@ public class ShotgunRenderer extends IIUpgradableItemRendererAMT<ItemIIShotgun> 
 				//.withHeader(IIAnimationLoader.loadHeader(new ResourceLocation(ImmersiveIntelligence.MODID, "models/item/weapons/shotgun/shotgun_upgrades.obj.amt")))
 				.withModelProvider(
 						(stack, combinedHeader) -> new AMT[]{
-								new AMTBullet("shell_full", combinedHeader, AmmoRegistry.getModel(IIContent.itemAmmoShotgun))
+								new AMTBullet("bullet", combinedHeader, AmmoRegistry.getModel(IIContent.itemAmmoShotgun))
 										.withState(BulletState.BULLET_UNUSED)
-										.withProperties(IIContent.ammoCoreSteel, CoreType.BIRDSHOT, -1),
-								new AMTBullet("shell_full", combinedHeader, AmmoRegistry.getModel(IIContent.itemAmmoShotgun))
-										.withState(BulletState.BULLET_UNUSED)
-										.withProperties(IIContent.ammoCoreSteel, CoreType.BUCKSHOT, -2),
-								new AMTBullet("SHELL_EJECT", combinedHeader, AmmoRegistry.getModel(IIContent.itemAmmoShotgun))
+										.withProperties(IIContent.ammoCoreSteel, CoreType.PIERCING, -1),
+								new AMTBullet("casing_fired", combinedHeader, AmmoRegistry.getModel(IIContent.itemAmmoShotgun))
 										.withState(BulletState.CASING),
 								new AMTParticle("muzzle_flash", combinedHeader)
 										.setParticle(IIParticles.PARTICLE_GUNFIRE),
-								new AMTHand("hand_off", combinedHeader, EnumHand.OFF_HAND),
-								new AMTHand("hand_main", combinedHeader, EnumHand.MAIN_HAND)
+								new AMTHand("hand", combinedHeader, EnumHand.OFF_HAND),
+								new AMTHand("hand_right", combinedHeader, EnumHand.MAIN_HAND)
 						}
 				)
 				.withTextureProvider(
@@ -251,18 +247,13 @@ public class ShotgunRenderer extends IIUpgradableItemRendererAMT<ItemIIShotgun> 
 				)
 				.build();
 
-		this.bullet = new AMTCrossVariantReference<>("shell_full", this.model);
-		this.casing = new AMTCrossVariantReference<>("SHELL_EJECT", this.model);
+		this.bullet = new AMTCrossVariantReference<>("bullet", this.model);
+		this.casing = new AMTCrossVariantReference<>("casing_fired", this.model);
 
 		//add upgrade visibility animations
 		loadUpgrades(model, ResLoc.of(animationRes, "upgrades/"));
-		//shell_load_single_cock
-		loadShell = IIAnimationCachedMap.create(this.model, ResLoc.of(animationRes, "shell_load"));
-		//loadMag = IIAnimationCachedMap.create(this.model, ResLoc.of(animationRes, "load_magazine"));
-		//unloadMag = IIAnimationCachedMap.create(this.model, ResLoc.of(animationRes, "unload_magazine"));
 
-		fireStandard = IIAnimationCachedMap.create(this.model, ResLoc.of(animationRes, "fire"));
-		//fireSemiAutomatic = IIAnimationCachedMap.create(this.model, ResLoc.of(animationRes, "fire_semiauto"));
+		loadBullet = IIAnimationCachedMap.create(this.model, ResLoc.of(animationRes, "load_bullet"));
 		handAngle = IIAnimationCachedMap.create(this.model, ResLoc.of(animationRes, "hand"));
 		handVisibility = IIAnimationCachedMap.create(this.model, new ResourceLocation(ImmersiveIntelligence.MODID, "gun_hand_visibility"));
 		offhandVisibility = IIAnimationCachedMap.create(this.model, ResLoc.of(animationRes, "offhand"));
@@ -275,6 +266,12 @@ public class ShotgunRenderer extends IIUpgradableItemRendererAMT<ItemIIShotgun> 
 		ApiUtils.getRegisterSprite(map, new ResourceLocation(ImmersiveIntelligence.MODID, "items/weapons/shotgun_handmade"));
 		// Register skins
 		IISkinHandler.registerSprites(map, IIContent.itemShotgun.getSkinnableName());
+	}
+
+	@Override
+	protected void nullifyModels()
+	{
+		IIAnimationUtils.disposeOf(model);
 	}
 
 	@Override
