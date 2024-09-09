@@ -28,4 +28,4 @@ The "Unpack", "Fill", "Unfill", "Charge" and "Discharge" tasks work in a similar
 
 # data_2
 |[data_variable]{type:"boolean", direction:"in", letter:"m", name:"Mode", description:"Possible values: amount, slot, all_possible. Optional, by default all_possible."}|
-|[data_variable]{type:"boolean", direction:"in", letter:"e", name:"Expire After", description:"Optional. After how many cycles should tke task end."}|
+|[data_variable]{type:"boolean", direction:"in", letter:"e", name:"Expire After", description:"Optional. After how many cycles should the task end."}|
