@@ -1,8 +1,8 @@
 # meta
-Task System
-The spice must flow
+Engineer's Lighter
+No Rainbow-Vision
 
 # intro
-This section is currently a Work In Progress, please excuse our dust!
+The Engineer's Lighter is a device used to set blocks on fire. It has infinite durability, but requires fuel to operate.
 
-# details
+
