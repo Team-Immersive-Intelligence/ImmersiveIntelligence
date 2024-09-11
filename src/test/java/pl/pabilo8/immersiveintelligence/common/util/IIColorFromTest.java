@@ -55,18 +55,17 @@ class IIColorFromTest
 		assertEquals(150, color6.green);
 		assertEquals(200, color6.blue);
 
-		//BUG: 03.09.2024 integer overflow
-		/*IIColor color8 = IIColor.fromHex("FF6496C8");
+		IIColor color8 = IIColor.fromHex("FF6496C8");
 		assertEquals(255, color8.alpha);
 		assertEquals(100, color8.red);
 		assertEquals(150, color8.green);
-		assertEquals(200, color8.blue);*/
+		assertEquals(200, color8.blue);
 	}
 
 	@Test
-	void testFromPackedRGBA()
+	void testFromPackedARGB()
 	{
-		IIColor color = IIColor.fromPackedRGBA(0xFF6496C8);
+		IIColor color = IIColor.fromPackedARGB(0xFF6496C8);
 		assertEquals(255, color.alpha);
 		assertEquals(100, color.red);
 		assertEquals(150, color.green);

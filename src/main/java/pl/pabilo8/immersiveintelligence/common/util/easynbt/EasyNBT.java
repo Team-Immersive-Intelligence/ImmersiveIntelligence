@@ -749,7 +749,7 @@ public class EasyNBT extends Constants.NBT
 
 	public IIColor getColor(String key)
 	{
-		return IIColor.fromPackedRGBA(getInt(key));
+		return IIColor.fromPackedARGB(getInt(key));
 	}
 
 

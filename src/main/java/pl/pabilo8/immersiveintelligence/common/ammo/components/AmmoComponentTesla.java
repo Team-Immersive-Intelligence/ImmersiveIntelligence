@@ -42,7 +42,7 @@ public class AmmoComponentTesla extends AmmoComponent
 {
 	public AmmoComponentTesla()
 	{
-		super("tesla", 1f, ComponentRole.EMP, IIColor.fromPackedRGBA(0x6b778a));
+		super("tesla", 1f, ComponentRole.EMP, IIColor.fromPackedARGB(0x6b778a));
 	}
 
 	@Override

@@ -150,7 +150,7 @@ public class IIColor implements Comparable<IIColor>, ToIntFunction<IIColor>
 		if(hex.length()==6)
 			return IIColor.fromPackedRGB(Integer.parseInt(hex, 16));
 		else if(hex.length()==8)
-			return IIColor.fromPackedRGBA(Integer.parseInt(hex, 16));
+			return IIColor.fromPackedARGB(Long.parseLong(hex, 16));
 
 		return new IIColor(0, 0, 0, 0);
 	}
@@ -161,9 +161,9 @@ public class IIColor implements Comparable<IIColor>, ToIntFunction<IIColor>
 	 * @param hex Packed RGB integer.
 	 * @return A new IIColor object with the specified values.
 	 */
-	public static IIColor fromPackedRGBA(int hex)
+	public static IIColor fromPackedARGB(long hex)
 	{
-		return new IIColor((hex>>24)&0xFF, (hex>>16)&0xFF, (hex>>8)&0xFF, hex&0xFF);
+		return new IIColor((int)(hex>>24)&0xFF, (int)(hex>>16)&0xFF, (int)(hex>>8)&0xFF, (int)hex&0xFF);
 	}
 
 	/**
@@ -267,12 +267,6 @@ public class IIColor implements Comparable<IIColor>, ToIntFunction<IIColor>
 	public static String getHexCol(String color, String text)
 	{
 		return String.format("<hexcol=%s:%s>", color, text);
-	}
-
-	@Deprecated
-	public static int RGBAToRGB(int color)
-	{
-		return color-(color>>24&0xFF);
 	}
 
 	/**

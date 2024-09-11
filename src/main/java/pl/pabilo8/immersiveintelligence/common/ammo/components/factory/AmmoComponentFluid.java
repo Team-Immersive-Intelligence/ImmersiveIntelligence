@@ -35,7 +35,7 @@ public class AmmoComponentFluid extends AmmoComponent
 		super((fluid.isGaseous()?"gas_": "fluid_")+IIStringUtil.toSnakeCase(fluid.getName()),
 				Math.max(fluid.getDensity(), 0)/1000f,
 				ComponentRole.CHEMICAL,
-				IIColor.fromPackedRGBA(fluid.getColor())
+				IIColor.fromPackedARGB(fluid.getColor())
 		);
 		this.fluid = fluid;
 	}
