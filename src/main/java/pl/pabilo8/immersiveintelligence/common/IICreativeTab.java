@@ -297,6 +297,7 @@ public class IICreativeTab extends CreativeTabs
 		items.put("AM1M", IIContent.itemAmmoAssaultRifle);
 		items.put("AM2", IIContent.itemAmmoMachinegun);
 		items.put("AM3", IIContent.itemAmmoAutocannon);
+		items.put("E2", IIContent.itemAmmoMortar);
 
 		items.forEach((name, item) -> {
 			tabNewLine(list);
