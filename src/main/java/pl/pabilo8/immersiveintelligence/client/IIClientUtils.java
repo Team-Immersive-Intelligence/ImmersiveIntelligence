@@ -37,6 +37,7 @@ import pl.pabilo8.immersiveintelligence.client.model.ModelIIBase;
 import pl.pabilo8.immersiveintelligence.client.util.font.IIFontRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.font.IIFontRendererCustomGlyphs;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock;
 
@@ -183,18 +184,18 @@ public class IIClientUtils
 	//Thanks Blu, these stencil buffers look really capable
 	public static void drawArmorBar(int x, int y, int w, int h, float progress)
 	{
-		drawGradientBar(x, y, w, h, IIReference.COLOR_ARMORBAR_1, IIReference.COLOR_ARMORBAR_2, progress);
+		drawGradientBar(x, y, w, h, IIReference.COLOR_ARMORBAR1, IIReference.COLOR_ARMORBAR2, progress);
 	}
 
 	public static void drawPowerBar(int x, int y, int w, int h, float progress)
 	{
-		drawGradientBar(x, y, w, h, IIReference.COLOR_POWERBAR_1, IIReference.COLOR_POWERBAR_2, progress);
+		drawGradientBar(x, y, w, h, IIReference.COLOR_POWERBAR1, IIReference.COLOR_POWERBAR2, progress);
 	}
 
-	public static void drawGradientBar(int x, int y, int w, int h, int color1, int color2, float progress)
+	public static void drawGradientBar(int x, int y, int w, int h, IIColor colorFrom, IIColor colorTo, float progress)
 	{
 		int stored = (int)(h*progress);
-		ClientUtils.drawGradientRect(x, y+(h-stored), x+w, y+h, color1, color2);
+		ClientUtils.drawGradientRect(x, y+(h-stored), x+w, y+h, colorFrom.getPackedARGB(), colorTo.getPackedARGB());
 	}
 
 	@SideOnly(Side.CLIENT)

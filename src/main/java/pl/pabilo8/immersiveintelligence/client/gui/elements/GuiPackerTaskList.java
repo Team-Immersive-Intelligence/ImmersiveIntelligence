@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.client.gui.elements;
 
-import blusunrize.immersiveengineering.api.Lib;
 import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -18,7 +17,6 @@ import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.PackerHandler.PackerTask;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
@@ -144,7 +142,7 @@ public class GuiPackerTaskList extends GuiButton
 		this.drawTexturedModalRect(x, y, 96, 211, 65, 20);
 
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		mc.fontRenderer.drawString(I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.packer.task."+task.actionType.getActionName(task.unpack)), x+2, y+7, IIReference.COLOR_H1, false);
+		mc.fontRenderer.drawString(I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.packer.task."+task.actionType.getActionName(task.unpack)), x+2, y+7, IIReference.COLOR_H1.getPackedRGB(), false);
 
 		if(Objects.equals(task.stack.oreName, "*"))
 		{
@@ -153,7 +151,7 @@ public class GuiPackerTaskList extends GuiButton
 			GlStateManager.pushMatrix();
 			GlStateManager.translate(x+47+5, y+1, 0);
 			GlStateManager.scale(2, 2, 1);
-			mc.fontRenderer.drawString("*", 0, 0, Lib.COLOUR_I_ImmersiveOrange);
+			mc.fontRenderer.drawString("*", 0, 0, IIReference.COLOR_IMMERSIVE_ORANGE.getPackedRGB());
 
 			GlStateManager.popMatrix();
 			mc.fontRenderer.setUnicodeFlag(u);

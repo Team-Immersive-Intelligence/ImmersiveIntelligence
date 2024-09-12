@@ -7,9 +7,9 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fluids.FluidStack;
 import org.lwjgl.opengl.GL11;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.ChemicalBath;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.ChemicalBath;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityChemicalBath;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerChemicalBath;
@@ -40,7 +40,7 @@ public class GuiChemicalBath extends GuiIEContainerBase
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
-		this.fontRenderer.drawString(I18n.format("tile."+ImmersiveIntelligence.MODID+".metal_multiblock.chemical_bath.name"), 8, 8, IIReference.COLOR_H1);
+		this.fontRenderer.drawString(I18n.format("tile."+ImmersiveIntelligence.MODID+".metal_multiblock.chemical_bath.name"), 8, 8, IIReference.COLOR_H1.getPackedRGB());
 	}
 
 	/**
@@ -99,12 +99,12 @@ public class GuiChemicalBath extends GuiIEContainerBase
 		if(fluid!=null&&fluid.amount > 0)
 		{
 			float tfluid = 1f-(fluid.amount/(float)tile.tanks[0].getCapacity());
-			if(isPointInRegion(32,39+(int)(32*tfluid),102, (int)(32*(1f-tfluid)),mx,my))
+			if(isPointInRegion(32, 39+(int)(32*tfluid), 102, (int)(32*(1f-tfluid)), mx, my))
 			{
 				if(!(
-						IIMath.isPointInTriangle(30,57,30,70,43,70,mx-guiLeft,my-guiTop)||
-								IIMath.isPointInTriangle(122,70,135,70,135,57,mx-guiLeft,my-guiTop)))
-					ClientUtils.addFluidTooltip(fluid,tooltip, ChemicalBath.fluidCapacity);
+						IIMath.isPointInTriangle(30, 57, 30, 70, 43, 70, mx-guiLeft, my-guiTop)||
+								IIMath.isPointInTriangle(122, 70, 135, 70, 135, 57, mx-guiLeft, my-guiTop)))
+					ClientUtils.addFluidTooltip(fluid, tooltip, ChemicalBath.fluidCapacity);
 			}
 		}
 

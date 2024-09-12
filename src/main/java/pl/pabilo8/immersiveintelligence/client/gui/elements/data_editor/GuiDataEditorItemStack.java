@@ -11,7 +11,6 @@ import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag.TooltipFlags;
 import net.minecraft.item.ItemStack;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeItemStack;
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
@@ -82,11 +81,11 @@ public class GuiDataEditorItemStack extends GuiDataEditor<DataTypeItemStack>
 		ClientUtils.bindTexture("immersiveintelligence:textures/gui/emplacement_icons.png");
 		drawTexturedModalRect(x+(width/2)-9, y+7, 0, 50, 18, 18);
 
-		renderer.drawString(valueLabel, x+2, y+2, IIReference.COLOR_H1, false);
+		renderer.drawString(valueLabel, x+2, y+2, IIReference.COLOR_H1.getPackedRGB(), false);
 
 		renderer.drawString(scanned.getDisplayName(), x+2, y+2+10+16, Lib.COLOUR_I_ImmersiveOrange, false);
-		renderer.drawString("Meta:", x+2, y+2+20+18, IIReference.COLOR_H1, false);
-		renderer.drawString("Count:", x+2, y+32+16+8, IIReference.COLOR_H1, false);
+		renderer.drawString("Meta:", x+2, y+2+20+18, IIReference.COLOR_H1.getPackedRGB(), false);
+		renderer.drawString("Count:", x+2, y+32+16+8, IIReference.COLOR_H1.getPackedRGB(), false);
 
 		this.countEdit.drawTextBox();
 		this.metaEdit.drawTextBox();
@@ -152,8 +151,7 @@ public class GuiDataEditorItemStack extends GuiDataEditor<DataTypeItemStack>
 		try
 		{
 			return Integer.parseInt(field.getText());
-		}
-		catch(NumberFormatException ignored)
+		} catch(NumberFormatException ignored)
 		{
 			return defaultValue;
 		}

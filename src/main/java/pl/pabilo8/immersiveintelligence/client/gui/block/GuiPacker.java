@@ -33,6 +33,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.elements.label.GuiLabelNoShad
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityPacker;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerPacker;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 import javax.annotation.Nonnull;
@@ -59,6 +60,8 @@ public class GuiPacker extends GuiIEContainerBase
 	private GuiButtonDropdownList putModeList;
 	private GuiButtonSwitch switchOreDict, switchNBT, switchDirection;
 	private GuiTextField textFieldAmount;
+
+	private final static IIColor COLOR_IN = IIColor.fromPackedRGB(0x4c7bb1), COLOR_OUT = IIColor.fromPackedRGB(0xffb515);
 
 	public GuiPacker(EntityPlayer player, TileEntityPacker tile)
 	{
@@ -307,17 +310,17 @@ public class GuiPacker extends GuiIEContainerBase
 		}
 	}
 
-	protected GuiButtonSwitch addSwitch(int x, int y, int textWidth, int textColor, int color1, int color2, boolean state, String name, boolean firstTime)
+	protected GuiButtonSwitch addSwitch(int x, int y, int textWidth, IIColor textColor, IIColor color1, IIColor color2, boolean state, String name, boolean firstTime)
 	{
 		return addButton(new GuiButtonSwitch(buttonList.size(), guiLeft+x, guiTop+y, textWidth, 8, 18, 9, 18, 52, state, TEXTURE_ICONS, textColor, color1, color2, name, firstTime));
 	}
 
-	protected GuiLabelNoShadow addLabel(int x, int y, int textColor, String... text)
+	protected GuiLabelNoShadow addLabel(int x, int y, IIColor textColor, String... text)
 	{
 		return addLabel(x, y, 0, 0, textColor, text);
 	}
 
-	protected GuiLabelNoShadow addLabel(int x, int y, int w, int h, int textColor, String... text)
+	protected GuiLabelNoShadow addLabel(int x, int y, int w, int h, IIColor textColor, String... text)
 	{
 		GuiLabelNoShadow guiLabel = new GuiLabelNoShadow(this.fontRenderer, labelList.size(), guiLeft+x, guiTop+y, w, h, textColor);
 		Arrays.stream(text).forEachOrdered(guiLabel::addLine);
@@ -404,7 +407,7 @@ public class GuiPacker extends GuiIEContainerBase
 			gui.textFieldAmount.setText(task.mode==PackerHandler.PackerPutMode.ALL_POSSIBLE?"*": String.valueOf(task.stack.inputSize));
 			gui.textFieldAmount.setEnabled(task.mode!=PackerHandler.PackerPutMode.ALL_POSSIBLE);
 
-			gui.switchDirection = gui.switchDirection==null?gui.addSwitch(232, 4, 85, IIReference.COLOR_H2, 0xffb515, 0x4c7bb1, task.unpack, "", false): gui.addButton(gui.switchDirection);
+			gui.switchDirection = gui.switchDirection==null?gui.addSwitch(232, 4, 85, IIReference.COLOR_H2, COLOR_IN, COLOR_OUT, task.unpack, "", false): gui.addButton(gui.switchDirection);
 		}
 
 		public abstract void drawPage(int mx, int my);
@@ -501,8 +504,8 @@ public class GuiPacker extends GuiIEContainerBase
 			super.initPage(task);
 
 			gui.addLabel(88, 26, IIReference.COLOR_H1, "Item:");
-			gui.switchOreDict = gui.switchOreDict==null?gui.addSwitch(88, 78, 85, IIReference.COLOR_H2, 0xb51500, 0x95ed00, task.stack.oreName!=null, "Uses OreDict", false): gui.addButton(gui.switchOreDict);
-			gui.switchNBT = gui.switchNBT==null?gui.addSwitch(88, 90, 85, IIReference.COLOR_H2, 0xb51500, 0x95ed00, task.stack.useNBT, "NBT Sensitive:", false): gui.addButton(gui.switchNBT);
+			gui.switchOreDict = gui.switchOreDict==null?gui.addSwitch(88, 78, 85, IIReference.COLOR_H2, IIColor.fromPackedRGB(0xb51500), IIColor.fromPackedRGB(0x95ed00), task.stack.oreName!=null, "Uses OreDict", false): gui.addButton(gui.switchOreDict);
+			gui.switchNBT = gui.switchNBT==null?gui.addSwitch(88, 90, 85, IIReference.COLOR_H2, IIColor.fromPackedRGB(0xb51500), IIColor.fromPackedRGB(0x95ed00), task.stack.useNBT, "NBT Sensitive:", false): gui.addButton(gui.switchNBT);
 			//switchExpire = switchExpire==null?addSwitch(88, 90, 85, Utils.COLOR_H2, 0xb51500, 0x95ed00, false, "Expire After:", false): addButton(switchExpire);//task.stack.expires
 
 			//textFieldExpire = new GuiTextField(buttonList.size(), mc.fontRenderer, guiLeft+84+4, guiTop+10+6+10+32+1+42, 80, 14);

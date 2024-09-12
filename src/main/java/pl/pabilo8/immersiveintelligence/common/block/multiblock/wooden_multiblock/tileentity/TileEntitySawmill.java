@@ -1,23 +1,17 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.tileentity;
 
 import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorageAdvanced;
-import blusunrize.immersiveengineering.client.ClientUtils;
-import net.minecraft.client.particle.ParticleRedstone;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import pl.pabilo8.immersiveintelligence.api.crafting.SawmillRecipe;
@@ -184,76 +178,9 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 		}
 		super.onUpdate();
 
-
+		//TODO: 30.07.2024 proper particle implementation
 		if(world.isRemote&&currentProcess!=null)
-		{
 			currentProcess.recipe.getSoundAnimation().handleSounds(soundsList, getPos(), (int)currentProcess.ticks, 1f);
-			//TODO: 30.07.2024 proper particle implementation
-			/*
-				if(currentProcess.ticks%10==0)
-					spawnDustParticle();
-				if(currentProcess.ticks%10==5)
-					spawnDustParticleLast();
-			*/
-		}
-	}
-
-	@SideOnly(Side.CLIENT)
-	private void spawnDustParticleLast()
-	{
-		Vec3d pos = new Vec3d(getBlockPosForPos(2)).addVector(0.5, 0.75, 0.5);
-		Vec3d facing = new Vec3d(getFacing().getDirectionVec());
-		facing = facing.scale(0.65f);
-
-		float mod = (float)(Math.random()*2f);
-		float[] rgb = getCurrentProcessColor();
-
-		ParticleRedstone particle = (ParticleRedstone)ClientUtils.mc().effectRenderer.spawnEffectParticle(EnumParticleTypes.REDSTONE.getParticleID(), pos.x+facing.x, pos.y+facing.y, pos.z+facing.z, 0, -4, 0);
-		if(particle!=null)
-		{
-			particle.reddustParticleScale = 3.25f;
-			particle.setRBGColorF(rgb[0]*mod, rgb[1]*mod, rgb[2]*mod);
-		}
-	}
-
-	@SideOnly(Side.CLIENT)
-	private void spawnDustParticle()
-	{
-		Vec3d pos = new Vec3d(getBlockPosForPos(2)).addVector(0.5, 0, 0.5);
-		Vec3d facing = new Vec3d(getFacing().getDirectionVec());
-		facing = facing.scale(0.65f);
-
-		float mod = (float)(Math.random()*2f);
-
-		ParticleRedstone particle = (ParticleRedstone)ClientUtils.mc().effectRenderer.spawnEffectParticle(EnumParticleTypes.REDSTONE.getParticleID(), pos.x+facing.x, pos.y+1.125+facing.y, pos.z+facing.z, 0, -4, 0);
-		ParticleRedstone particle2 = (ParticleRedstone)ClientUtils.mc().effectRenderer.spawnEffectParticle(EnumParticleTypes.REDSTONE.getParticleID(), pos.x+facing.x, pos.y+0.65+facing.y, pos.z+facing.z, 0, -4, 0);
-		ParticleRedstone particle3 = (ParticleRedstone)ClientUtils.mc().effectRenderer.spawnEffectParticle(EnumParticleTypes.REDSTONE.getParticleID(), pos.x+facing.x, pos.y+facing.y, pos.z+facing.z, 0, -4, 0);
-
-		float[] rgb = getCurrentProcessColor();
-		final float dmod = 1.3043479f;
-
-		if(particle!=null)
-		{
-			particle.reddustParticleScale = 3;
-			particle.setRBGColorF(rgb[0]*mod, rgb[1]*mod, rgb[2]*mod);
-		}
-		if(particle2!=null)
-		{
-			particle2.reddustParticleScale = 4;
-			particle2.setRBGColorF(rgb[0]*dmod*mod, rgb[1]*dmod*mod, rgb[2]*dmod*mod);
-		}
-		if(particle3!=null)
-		{
-			particle3.reddustParticleScale = 3;
-			particle3.setRBGColorF(rgb[0]*mod, rgb[1]*mod, rgb[2]*mod);
-		}
-	}
-
-	private float[] getCurrentProcessColor()
-	{
-		if(currentProcess!=null)
-			return currentProcess.recipe.getDustColor();
-		return new float[]{1, 1, 1};
 	}
 
 	public float getCurrentEfficiency()

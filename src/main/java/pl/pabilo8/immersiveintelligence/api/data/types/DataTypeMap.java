@@ -4,6 +4,7 @@ import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
 import javax.annotation.Nonnull;
 import java.util.HashMap;
@@ -118,8 +119,8 @@ public class DataTypeMap implements IDataTypeIterable
 	}
 
 	@Override
-	public int getTypeColour()
+	public IIColor getTypeColour()
 	{
-		return 0x4d5914;
+		return IIColor.fromPackedRGB(0x4d5914);
 	}
 }

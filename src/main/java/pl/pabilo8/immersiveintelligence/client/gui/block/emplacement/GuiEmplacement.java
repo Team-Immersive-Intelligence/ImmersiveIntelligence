@@ -22,6 +22,7 @@ import pl.pabilo8.immersiveintelligence.common.gui.ContainerEmplacement;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerEmplacement.ContainerEmplacementStorage;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageGuiNBT;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 import java.io.IOException;
@@ -43,6 +44,8 @@ public abstract class GuiEmplacement extends GuiIEContainerBase implements ITabb
 	private final LinkedHashMap<GuiButtonTab, IIGuiList> TABS = new LinkedHashMap<>();
 	private final IIGuiList thisGui;
 	private GuiElementProgressBar barEnergy, barArmor;
+
+	protected final static IIColor COLOR_IN = IIColor.fromPackedRGB(0x4c7bb1), COLOR_OUT = IIColor.fromPackedRGB(0xffb515);
 
 	public GuiEmplacement(EntityPlayer player, TileEntityEmplacement tile, IIGuiList gui)
 	{
@@ -158,27 +161,27 @@ public abstract class GuiEmplacement extends GuiIEContainerBase implements ITabb
 		addButton(button);
 	}
 
-	protected GuiButtonSwitch addSwitch(int x, int y, int textWidth, int textColor, int color1, int color2, boolean state, String name, boolean firstTime)
+	protected GuiButtonSwitch addSwitch(int x, int y, int textWidth, IIColor textColor, IIColor color1, IIColor color2, boolean state, String name, boolean firstTime)
 	{
 		return addButton(new GuiButtonSwitch(buttonList.size(), guiLeft+x, guiTop+y, textWidth, 8, 18, 9, 18, 52, state, TEXTURE_ICONS, textColor, color1, color2, name, firstTime));
 	}
 
-	protected GuiButtonSwitch addSwitch(int x, int y, int textWidth, int textColor, int color1, int color2, boolean state, String name)
+	protected GuiButtonSwitch addSwitch(int x, int y, int textWidth, IIColor textColor, IIColor color1, IIColor color2, boolean state, String name)
 	{
 		return addSwitch(x, y, textWidth, textColor, color1, color2, state, name, false);
 	}
 
-	protected GuiSliderII addSlider(int x, int y, int width, int textColor, float value, String name)
+	protected GuiSliderII addSlider(int x, int y, int width, IIColor textColor, float value, String name)
 	{
 		return addButton(new GuiSliderII(buttonList.size(), guiLeft+x, guiTop+y, width, name, value, textColor));
 	}
 
-	protected GuiLabelNoShadow addLabel(int x, int y, int textColor, String... text)
+	protected GuiLabelNoShadow addLabel(int x, int y, IIColor textColor, String... text)
 	{
 		return addLabel(x, y, 0, 0, textColor, text);
 	}
 
-	protected GuiLabelNoShadow addLabel(int x, int y, int w, int h, int textColor, String... text)
+	protected GuiLabelNoShadow addLabel(int x, int y, int w, int h, IIColor textColor, String... text)
 	{
 		GuiLabelNoShadow guiLabel = new GuiLabelNoShadow(this.fontRenderer, labelList.size(), guiLeft+x, guiTop+y, w, h, textColor);
 		Arrays.stream(text).forEachOrdered(guiLabel::addLine);

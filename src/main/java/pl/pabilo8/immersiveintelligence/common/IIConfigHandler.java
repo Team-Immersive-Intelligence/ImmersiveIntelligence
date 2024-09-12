@@ -692,7 +692,7 @@ public class IIConfigHandler
 				public static int printTime = 90;
 
 				@Comment({"Ink used per character printed (mB)."})
-				public static int printInkUsage = 8;
+				public static int printInkUsage = 2;
 			}
 
 			public static class ChemicalBath

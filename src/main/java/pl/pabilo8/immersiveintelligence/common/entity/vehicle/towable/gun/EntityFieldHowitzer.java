@@ -33,7 +33,6 @@ import pl.pabilo8.immersiveintelligence.client.ClientProxy;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Vehicles.FieldHowitzer;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoArtilleryProjectile;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityVehiclePart;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityVehicleSeat;
@@ -768,7 +767,7 @@ public class EntityFieldHowitzer extends Entity implements IVehicleMultiPart, IE
 
 		for(Entity part : partArray)
 		{
-			IIEntityUtils.setEntityVelocity(part, this.motionX, this.motionY, this.motionZ);
+			IIEntityUtils.setEntityMotion(part, this.motionX, this.motionY, this.motionZ);
 			part.onUpdate();
 		}
 

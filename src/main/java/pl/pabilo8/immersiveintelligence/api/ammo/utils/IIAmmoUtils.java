@@ -44,7 +44,6 @@ import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIIConcreteDecoration.ConcreteDecorations;
 import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIIMetalBase.Metals;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
-import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
 
@@ -332,12 +331,13 @@ public class IIAmmoUtils
 			AmmoComponent[] components = ammo.getComponents(stack);
 
 			//information section
-			tooltip.add(IIColor.getHexCol(IIReference.COLORS_HIGHLIGHT_S[1], I18n.format(IIReference.DESC_BULLETS+"details")));
+
+			tooltip.add(IIReference.COLOR_IMMERSIVE_ORANGE.getHexCol(I18n.format(IIReference.DESC_BULLETS+"details")));
 
 			//core + type
 			IIClientUtils.addTooltip(tooltip, IIReference.CHARICON_BULLET_CONTENTS, IIReference.DESC_BULLETS+"core",
 					IIStringUtil.getItalicString(I18n.format(IIReference.DESCRIPTION_KEY+"bullet_core_type."+coreType.getName())),
-					IIColor.getHexCol(core.getColor(), I18n.format("item."+ImmersiveIntelligence.MODID+".bullet.component."+core.getName()+".name"))
+					core.getColor().getHexCol(I18n.format("item."+ImmersiveIntelligence.MODID+".bullet.component."+core.getName()+".name"))
 			);
 
 			//fuse
@@ -355,7 +355,7 @@ public class IIAmmoUtils
 			//components section
 			if(components.length > 0)
 			{
-				tooltip.add(IIColor.getHexCol(IIReference.COLORS_HIGHLIGHT_S[1], I18n.format(IIReference.DESC_BULLETS+"components")));
+				tooltip.add(IIReference.COLOR_IMMERSIVE_ORANGE.getHexCol(I18n.format(IIReference.DESC_BULLETS+"components")));
 				for(AmmoComponent comp : components)
 					tooltip.add("   "+comp.getTranslatedName());
 			}
@@ -369,7 +369,7 @@ public class IIAmmoUtils
 			//Ballistics section
 			CachedBallisticStats stats = AmmoBallisticsCache.get(ammo, stack);
 
-			tooltip.add(IIColor.getHexCol(IIReference.COLORS_HIGHLIGHT_S[0], I18n.format(IIReference.DESC_BULLETS+"performance")));
+			tooltip.add(IIReference.COLOR_PRUSSIAN_BLUE.getHexCol(I18n.format(IIReference.DESC_BULLETS+"performance")));
 			tooltip.add(I18n.format(IIReference.DESC_BULLETS+"damage_dealt", ammo.getDamage()*core.getDamageModifier()*coreType.getDamageMod()));
 			tooltip.add(I18n.format(IIReference.DESC_BULLETS+"standard_velocity", Utils.formatDouble(ammo.getVelocity(), "0.###")));
 
@@ -388,7 +388,7 @@ public class IIAmmoUtils
 						Utils.formatDouble(stats.getMaxDirectRange(), "0.##")));
 
 			//Penetration section
-			tooltip.add(IIColor.getHexCol(IIReference.COLORS_HIGHLIGHT_S[0], I18n.format(IIReference.DESC_BULLETS+"armor_penetration")));
+			tooltip.add(IIReference.COLOR_PRUSSIAN_BLUE.getHexCol(I18n.format(IIReference.DESC_BULLETS+"armor_penetration")));
 
 			//list of block penetration tests
 			listPenetratedAmount(tooltip, ammo, core, coreType, Blocks.GLASS, 0);
@@ -425,7 +425,7 @@ public class IIAmmoUtils
 		Stream.concat(Stream.of(ammo.getCoreType(stack).getRole()),
 						Arrays.stream(ammo.getComponents(stack)).map(AmmoComponent::getRole))
 				.filter(c -> c==ComponentRole.GENERAL_PURPOSE)
-				.map(c -> IIColor.getHexCol(c.getColor(), I18n.format(IIReference.DESCRIPTION_KEY+"bullet_type."+c.getName())))
+				.map(c -> c.getColor().getHexCol(I18n.format(IIReference.DESCRIPTION_KEY+"bullet_type."+c.getName())))
 				.forEach(c -> builder.append(c).append(" - "));
 
 		//If no components with different role were found, add general purpose

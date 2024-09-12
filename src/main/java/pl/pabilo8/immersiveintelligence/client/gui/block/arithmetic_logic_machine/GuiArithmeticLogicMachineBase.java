@@ -32,6 +32,7 @@ import pl.pabilo8.immersiveintelligence.common.gui.ContainerArithmeticLogicMachi
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageGuiNBT;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
@@ -247,15 +248,15 @@ public class GuiArithmeticLogicMachineBase extends GuiIEContainerBase implements
 		}
 	}
 
-	protected GuiLabel addLabel(int x, int y, int textColor, String... text)
+	protected GuiLabel addLabel(int x, int y, IIColor textColor, String... text)
 	{
 		return addLabel(x, y, 0, 0, false, textColor, text);
 	}
 
-	protected GuiLabel addLabel(int x, int y, int w, int h, boolean shadow, int textColor, String... text)
+	protected GuiLabel addLabel(int x, int y, int w, int h, boolean shadow, IIColor textColor, String... text)
 	{
 		GuiLabel guiLabel =
-				shadow?new GuiLabel(this.fontRenderer, labelList.size(), guiLeft+x, guiTop+y, w, h, textColor):
+				shadow?new GuiLabel(this.fontRenderer, labelList.size(), guiLeft+x, guiTop+y, w, h, textColor.getPackedRGB()):
 						new GuiLabelNoShadow(this.fontRenderer, labelList.size(), guiLeft+x, guiTop+y, w, h, textColor);
 		Arrays.stream(text).forEachOrdered(guiLabel::addLine);
 		labelList.add(guiLabel);

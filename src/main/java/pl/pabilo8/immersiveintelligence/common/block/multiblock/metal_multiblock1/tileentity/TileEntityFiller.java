@@ -23,7 +23,6 @@ import pl.pabilo8.immersiveintelligence.api.crafting.FillerRecipe;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Filler;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockFiller;
-import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
@@ -184,7 +183,7 @@ public class TileEntityFiller extends TileEntityMultiblockProductionMulti<TileEn
 
 	private float[] getCurrentProcessColor(FillerRecipe recipe)
 	{
-		return IIColor.rgbIntToRGB(DustUtils.getColor(recipe.dust));
+		return DustUtils.getColor(recipe.getDust()).getFloatRGB();
 	}
 
 	@Override

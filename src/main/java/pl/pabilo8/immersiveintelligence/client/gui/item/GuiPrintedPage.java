@@ -108,7 +108,7 @@ public class GuiPrintedPage extends GuiScreen
 			GlStateManager.pushMatrix();
 			GlStateManager.translate(guiLeft+8, guiTop+y, 0);
 			GlStateManager.scale(line.size, line.size, line.size);
-			line.font.drawSplitString(line.text, 0, 0, (int)(141/line.size), IIReference.COLOR_H1);
+			line.font.drawSplitString(line.text, 0, 0, (int)(141/line.size), IIReference.COLOR_H1.getPackedRGB());
 			y += (line.font.getWordWrappedHeight(line.text, (int)(141/line.size)))*line.size;
 			GlStateManager.popMatrix();
 		}

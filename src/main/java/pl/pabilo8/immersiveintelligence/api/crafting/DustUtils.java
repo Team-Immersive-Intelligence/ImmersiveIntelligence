@@ -1,12 +1,13 @@
 package pl.pabilo8.immersiveintelligence.api.crafting;
 
-import blusunrize.immersiveengineering.api.ApiUtils;
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.HashMultimap;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
 import java.util.*;
 import java.util.Map.Entry;
@@ -15,6 +16,8 @@ import java.util.stream.Collectors;
 
 /**
  * @author Pabilo8
+ * @updated 29.08.2024
+ * @ii-approved 0.3.1
  * @since 29.07.2021
  */
 public class DustUtils
@@ -23,14 +26,21 @@ public class DustUtils
 	 * {@link IngredientStack} is amount sensitive, default amount of dust from an item is 100mB
 	 */
 	private static final HashMultimap<String, IngredientStack> dustIngredients = HashMultimap.create();
-	private static final HashMap<String, Integer> dustColors = new HashMap<>();
+	private static final HashMap<String, IIColor> dustColors = new HashMap<>();
+
+	@VisibleForTesting
+	public static void cleanRegistry()
+	{
+		dustIngredients.clear();
+		dustColors.clear();
+	}
 
 	public static void registerDust(IngredientStack stack, String name)
 	{
-		registerDust(stack, name, 0);
+		registerDust(stack, name, IIColor.BLACK);
 	}
 
-	public static void registerDust(IngredientStack stack, String name, int color)
+	public static void registerDust(IngredientStack stack, String name, IIColor color)
 	{
 		dustIngredients.put(name, stack);
 		if(!dustColors.containsKey(name))
@@ -65,23 +75,7 @@ public class DustUtils
 				stack.getCount()*stringIngredientStackEntry.getValue().inputSize)).orElse(DustStack.getEmptyStack());
 	}
 
-	/**
-	 * @param stack of which amount will be counted as ITEM amount (not in mB)
-	 * @return a DustStack created from the ingredient, it's amount is ITEM amount multiplied by dust amount per item taken from {@link #dustIngredients}
-	 * <p>TL;DR: converts item amount to mB</p>
-	 */
-	public static DustStack fromIngredient(IngredientStack stack)
-	{
-		Optional<Entry<String, IngredientStack>> first = dustIngredients.entries().stream()
-				.filter(s -> ApiUtils.stackMatchesObject(stack.getExampleStack(), s.getValue()))
-				.findFirst();
-
-		return first.map(stringIngredientStackEntry -> new DustStack(stringIngredientStackEntry.getKey(),
-				stack.inputSize*stringIngredientStackEntry.getValue().inputSize)).orElse(DustStack.getEmptyStack());
-
-	}
-
-	public static int getColor(DustStack stack)
+	public static IIColor getColor(DustStack stack)
 	{
 		return dustColors.get(stack.name);
 	}

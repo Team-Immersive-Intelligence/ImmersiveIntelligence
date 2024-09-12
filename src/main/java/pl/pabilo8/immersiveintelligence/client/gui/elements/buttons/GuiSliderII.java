@@ -5,6 +5,7 @@ import blusunrize.immersiveengineering.client.gui.elements.GuiSliderIE;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
 /**
  * @author Pabilo8
@@ -14,10 +15,10 @@ public class GuiSliderII extends GuiSliderIE
 {
 	private final int textColor;
 
-	public GuiSliderII(int buttonId, int x, int y, int width, String name, float value, int textColor)
+	public GuiSliderII(int buttonId, int x, int y, int width, String name, float value, IIColor textColor)
 	{
 		super(buttonId, x, y, width, name, value);
-		this.textColor = textColor;
+		this.textColor = textColor.getPackedRGB();
 	}
 
 	/**
@@ -40,7 +41,7 @@ public class GuiSliderII extends GuiSliderIE
 			for(int i = 0; i < width-8; i += 2)
 				this.drawTexturedModalRect(x+4+i, y, 13, 128, 2, height);
 			this.mouseDragged(mc, mouseX, mouseY);
-			fontrenderer.drawSplitString(displayString, x, y+1-fontrenderer.getWordWrappedHeight(displayString,width+10), width+10, textColor);
+			fontrenderer.drawSplitString(displayString, x, y+1-fontrenderer.getWordWrappedHeight(displayString, width+10), width+10, textColor);
 		}
 	}
 

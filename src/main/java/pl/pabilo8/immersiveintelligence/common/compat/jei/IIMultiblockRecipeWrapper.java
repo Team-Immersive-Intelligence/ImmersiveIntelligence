@@ -52,11 +52,11 @@ public class IIMultiblockRecipeWrapper extends MultiblockRecipeWrapper
 		String time = GuiScreen.isShiftKeyDown()?
 				this.time+" t":
 				Utils.formatDouble(this.time*0.05, "0.##")+" s";
-		minecraft.fontRenderer.drawString(time, x+16, y, IIReference.COLOR_H2);
+		minecraft.fontRenderer.drawString(time, x+16, y, IIReference.COLOR_H2.getPackedRGB());
 
 		String energy = GuiScreen.isShiftKeyDown()?
 				this.energy+" IF":
 				Utils.formatDouble(this.energy/(double)this.time, "0")+" IF/t";
-		minecraft.fontRenderer.drawString(energy, x+64+16, y, IIReference.COLOR_H2);
+		minecraft.fontRenderer.drawString(energy, x+64+16, y, IIReference.COLOR_H2.getPackedRGB());
 	}
 }

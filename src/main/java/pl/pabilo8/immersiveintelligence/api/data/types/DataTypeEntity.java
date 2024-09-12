@@ -7,6 +7,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.common.registry.EntityEntry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
 import javax.annotation.Nonnull;
 import java.util.Optional;
@@ -98,9 +99,9 @@ public class DataTypeEntity implements IDataType
 	}
 
 	@Override
-	public int getTypeColour()
+	public IIColor getTypeColour()
 	{
-		return 0x435e46;
+		return IIColor.fromPackedRGB(0x435e46);
 	}
 
 	public NBTTagCompound actualValueToNBT(NBTTagCompound nbt)

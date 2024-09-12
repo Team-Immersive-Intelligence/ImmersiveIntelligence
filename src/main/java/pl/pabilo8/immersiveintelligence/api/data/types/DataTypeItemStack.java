@@ -2,6 +2,7 @@ package pl.pabilo8.immersiveintelligence.api.data.types;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
 import javax.annotation.Nonnull;
 
@@ -72,9 +73,9 @@ public class DataTypeItemStack implements IDataType
 	}
 
 	@Override
-	public int getTypeColour()
+	public IIColor getTypeColour()
 	{
-		return 0x121031;
+		return IIColor.fromPackedRGB(0x121031);
 	}
 
 	@Override

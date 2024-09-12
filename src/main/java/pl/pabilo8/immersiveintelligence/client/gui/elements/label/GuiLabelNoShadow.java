@@ -2,6 +2,7 @@ package pl.pabilo8.immersiveintelligence.client.gui.elements.label;
 
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiLabel;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
 /**
  * @author Pabilo8
@@ -9,9 +10,9 @@ import net.minecraft.client.gui.GuiLabel;
  */
 public class GuiLabelNoShadow extends GuiLabel
 {
-	public GuiLabelNoShadow(FontRenderer fontRendererObj, int id, int x, int y, int w, int h, int textColor)
+	public GuiLabelNoShadow(FontRenderer fontRendererObj, int id, int x, int y, int w, int h, IIColor textColor)
 	{
-		super(fontRendererObj, id, x, y, w, h, textColor);
+		super(fontRendererObj, id, x, y, w, h, textColor.getPackedRGB());
 	}
 
 	/**

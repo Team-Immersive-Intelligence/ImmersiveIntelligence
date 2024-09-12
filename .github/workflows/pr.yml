@@ -3,6 +3,10 @@ name: Check Pull Request
 on:
   pull_request:
     branches: [ "master", "dev/**" ]
+permissions:
+  contents: read
+  actions: read
+  checks: write
 
 jobs:
   assign-reviewer:
@@ -16,7 +20,7 @@ jobs:
 
   check:
     runs-on: ubuntu-latest
-    name: Check Pull Request's Quality
+    name: Compile and Run Checks
     env:
       GITHUB_USERNAME: ${{ github.actor }}
       GITHUB_TOKEN: ${{ secrets.OPTIMIZATION_TOKEN }}
@@ -42,6 +46,16 @@ jobs:
       - name: Run Unit Tests
         run: ./gradlew test
 
+      - name: Test Report
+        uses: phoenix-actions/test-reporting@v15
+        id: test-report               # Set ID reference for step
+        if: success() || failure()    # run this step even if previous step failed
+        with:
+          name: Tests            # Name of the check run which will be created
+          path: build/test-results/test/TEST-*.xml    # Path to test results
+          reporter: java-junit        # Format of test results
+          token: ${{ secrets.CARVERBOT_TOKEN }}
+
   notify-discord:
     runs-on: ubuntu-latest
     name: Notify Discord
@@ -53,6 +67,7 @@ jobs:
           message: "[@${{ github.event.pull_request.user.login }}](https://github.com/${{ github.event.pull_request.user.login }}) has contributed to Engineers' Cause with [${{ github.event.issue.title }}](https://github.com/${{ github.repository }}/issues/${{ github.event.issue.number }})."
 
       - name: Notify Public Discord
+        if: ${{ github.event.pull_request.user.login != 'CarverBot' }}
         uses: sebastianpopp/discord-action@releases/v2
         with:
           webhook: ${{ secrets.WH_PR_PUBLIC }}

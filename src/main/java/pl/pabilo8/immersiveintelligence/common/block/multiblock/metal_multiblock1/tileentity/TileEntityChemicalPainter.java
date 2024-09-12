@@ -34,7 +34,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.ChemicalPainter;
 import pl.pabilo8.immersiveintelligence.api.crafting.PaintingRecipe;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
@@ -42,6 +41,7 @@ import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
 import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.ChemicalPainter;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
@@ -83,7 +83,7 @@ public class TileEntityChemicalPainter extends TileEntityMultiblockMetal<TileEnt
 	public int processTime, processTimeMax;
 	public ItemStack effect = ItemStack.EMPTY;
 	public boolean active = false;
-	public int color = 0xff00ff;
+	public IIColor color = IIColor.fromPackedRGB(0xff00ff);
 
 	IItemHandler insertionHandler = new IEInventoryHandler(1, this, 0, true, false);
 	IItemHandler outputHandler = new IEInventoryHandler(1, this, 1, true, false);
@@ -109,7 +109,7 @@ public class TileEntityChemicalPainter extends TileEntityMultiblockMetal<TileEnt
 		processTime = nbt.getInteger("processTime");
 		processTimeMax = nbt.getInteger("processTimeMax");
 		effect = new ItemStack(nbt.getCompoundTag("effect"));
-		color = nbt.getInteger("color");
+		color = IIColor.fromPackedRGB(nbt.getInteger("color"));
 
 		if(!descPacket)
 			inventory = Utils.readInventory(nbt.getTagList("inventory", 10), 4);
@@ -128,7 +128,7 @@ public class TileEntityChemicalPainter extends TileEntityMultiblockMetal<TileEnt
 		nbt.setTag("tank3", tanks[2].writeToNBT(new NBTTagCompound()));
 		nbt.setTag("tank4", tanks[3].writeToNBT(new NBTTagCompound()));
 
-		nbt.setInteger("color", color);
+		nbt.setInteger("color", color.getPackedRGB());
 		nbt.setInteger("processTime", processTime);
 		nbt.setInteger("processTimeMax", processTimeMax);
 		nbt.setTag("effect", effect.serializeNBT());
@@ -168,7 +168,7 @@ public class TileEntityChemicalPainter extends TileEntityMultiblockMetal<TileEnt
 			effect = new ItemStack(message.getCompoundTag("output"));
 
 		if(message.hasKey("color"))
-			color = message.getInteger("color");
+			color = IIColor.fromPackedRGB(message.getInteger("color"));
 	}
 
 	@Override
@@ -176,7 +176,7 @@ public class TileEntityChemicalPainter extends TileEntityMultiblockMetal<TileEnt
 	{
 		super.receiveMessageFromClient(message);
 		if(message.hasKey("color"))
-			color = message.getInteger("color");
+			color = IIColor.fromPackedRGB(message.getInteger("color"));
 	}
 
 	/**
@@ -228,7 +228,7 @@ public class TileEntityChemicalPainter extends TileEntityMultiblockMetal<TileEnt
 				PaintingRecipe recipe = PaintingRecipe.findRecipe(inventory.get(0));
 				if(recipe!=null)
 				{
-					float[] cmyk = IIColor.rgbToCmyk(IIColor.rgbIntToRGB(color));
+					float[] cmyk = color.getCMYK();
 					for(int i = 0; i < cmyk.length; i++)
 						cmyk[i] *= recipe.getPaintAmount();
 
@@ -297,7 +297,7 @@ public class TileEntityChemicalPainter extends TileEntityMultiblockMetal<TileEnt
 
 		if(update||wasActive!=active)
 			IIPacketHandler.sendToClient(this, new MessageIITileSync(this, EasyNBT.newNBT()
-					.withInt("color", color)
+					.withInt("color", color.getPackedRGB())
 					.withInt("processTime", processTime)
 					.withInt("processTimeMax", processTimeMax)
 					.withBoolean("active", this.active)
@@ -318,7 +318,7 @@ public class TileEntityChemicalPainter extends TileEntityMultiblockMetal<TileEnt
 		facing = facing.scale(0.65f);
 
 		float mod = (float)(Math.random()*2f);
-		float[] rgb = IIColor.rgbIntToRGB(color);
+		float[] rgb = color.getFloatRGB();
 		float ff = (getWorld().getTotalWorldTime()%200)/200f;
 		float ny = (-0.275f+((Math.abs(((ff%0.2f)/0.2f)-0.5f)*2f)*0.55f));
 		float nx = ((Math.abs(((ff%0.33f)/0.33f)-0.5f)*2f)*0.55f);
@@ -533,7 +533,7 @@ public class TileEntityChemicalPainter extends TileEntityMultiblockMetal<TileEnt
 		if(!clientside)
 		{
 			IIPacketHandler.sendToClient(this, new MessageIITileSync(this, EasyNBT.newNBT()
-					.withInt("color", color)
+					.withInt("color", color.getPackedRGB())
 					.withInt("processTime", processTime)
 					.withInt("processTimeMax", processTimeMax)
 			));
@@ -690,7 +690,7 @@ public class TileEntityChemicalPainter extends TileEntityMultiblockMetal<TileEnt
 						break;
 					case "get_color":
 						reply.setVariable('c', new DataTypeString("color"));
-						reply.setVariable('g', new DataTypeInteger(master.color));
+						reply.setVariable('g', new DataTypeInteger(master.color.getPackedARGB()));
 						conn.sendPacket(reply);
 						break;
 					case "get_color_hex":
@@ -703,14 +703,14 @@ public class TileEntityChemicalPainter extends TileEntityMultiblockMetal<TileEnt
 
 			if(p instanceof DataTypeInteger)
 			{
-				master.color = MathHelper.clamp(((DataTypeInteger)p).value, 0, 0xffffff);
+				master.color = IIColor.fromPackedRGB(MathHelper.clamp(((DataTypeInteger)p).value, 0, 0xffffff));
 			}
 			else if(p instanceof DataTypeString)
 			{
 				try
 				{
 					int color = Integer.parseInt(p.valueToString(), 16);
-					master.color = MathHelper.clamp(color, 0, 0xffffff);
+					master.color = IIColor.fromPackedRGB(MathHelper.clamp(color, 0, 0xffffff));
 				} catch(NumberFormatException ignored)
 				{
 

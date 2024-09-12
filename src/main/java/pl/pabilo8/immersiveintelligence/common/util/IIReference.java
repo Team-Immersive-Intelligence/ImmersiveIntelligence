@@ -3,9 +3,6 @@ package pl.pabilo8.immersiveintelligence.common.util;
 import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.api.Lib;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
-
-import java.util.Arrays;
 
 /**
  * @author Pabilo8
@@ -123,22 +120,19 @@ public class IIReference
 
 	//--- GUI ---//
 
-	//TODO: 09.08.2024 change to IIColor
-	public static final int COLOR_POWERBAR_1 = 0xffb51500;
-	public static final int COLOR_POWERBAR_2 = 0xff600b00;
-	public static final int COLOR_ARMORBAR_1 = 0xcfcfcfcf;
-	public static final int COLOR_ARMORBAR_2 = 0x0cfcfcfc;
-	public static final int COLOR_H1 = 0x0a0a0a;
-	public static final int COLOR_H2 = 0x1a1a1a;
+	public static final IIColor COLOR_POWERBAR1 = IIColor.fromPackedRGB(0xb51500);
+	public static final IIColor COLOR_POWERBAR2 = IIColor.fromPackedRGB(0x600b00);
+	public static final IIColor COLOR_ARMORBAR1 = IIColor.fromPackedRGB(0xcfcfcf);
+	public static final IIColor COLOR_ARMORBAR2 = IIColor.fromPackedRGB(0xfcfcfc);
+	public static final IIColor COLOR_H1 = IIColor.fromPackedRGB(0x0a0a0a);
+	public static final IIColor COLOR_H2 = IIColor.fromPackedRGB(0x1a1a1a);
 
-	public static final int[] COLORS_HIGHLIGHT_I = new int[]{
-			0x486c94, //prussian blue
-			0xf78034, //immersive orange
-			0xFFAA00, //gold
-			0x5555FF //light blue
-	};
-
-	//why copy if you can *process*
-	public static final String[] COLORS_HIGHLIGHT_S = Arrays.stream(COLORS_HIGHLIGHT_I)
-			.mapToObj(Integer::toHexString).toArray(String[]::new);
+	public static final IIColor COLOR_PRUSSIAN_BLUE = IIColor.fromPackedRGB(0x486c94);
+	public static final IIColor COLOR_IMMERSIVE_ORANGE = IIColor.fromPackedRGB(0xf78034);
+	public static final IIColor COLOR_GOLD = IIColor.fromPackedRGB(0xFFAA00);
+	public static final IIColor COLOR_LIGHT_BLUE = IIColor.fromPackedRGB(0x5555FF);
+	/**
+	 * Standard color palette for use in GUI tooltips
+	 */
+	public static final IIColor[] COLORS_STANDARD = new IIColor[]{COLOR_PRUSSIAN_BLUE, COLOR_IMMERSIVE_ORANGE, COLOR_GOLD, COLOR_LIGHT_BLUE};
 }

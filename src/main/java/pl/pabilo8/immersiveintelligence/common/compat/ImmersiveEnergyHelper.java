@@ -2,8 +2,8 @@ package pl.pabilo8.immersiveintelligence.common.compat;
 
 import net.minecraft.util.ResourceLocation;
 import pl.pabilo8.immersiveintelligence.api.ShrapnelHandler;
-import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
+import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 
 /**
  * @author Pabilo8

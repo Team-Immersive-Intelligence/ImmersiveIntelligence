@@ -2,6 +2,7 @@ package pl.pabilo8.immersiveintelligence.api.data.types;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -79,9 +80,9 @@ public class DataTypeFluidStack implements IDataType
 	}
 
 	@Override
-	public int getTypeColour()
+	public IIColor getTypeColour()
 	{
-		return 0x082730;
+		return IIColor.fromPackedRGB(0x082730);
 	}
 
 	@Override

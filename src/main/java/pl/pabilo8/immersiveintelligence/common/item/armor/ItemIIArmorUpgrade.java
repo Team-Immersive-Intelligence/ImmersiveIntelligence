@@ -9,7 +9,6 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.item.armor.ItemIIArmorUpgrade.ArmorUpgrades;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
@@ -52,12 +51,12 @@ public class ItemIIArmorUpgrade extends ItemIISubItemsBase<ArmorUpgrades> implem
 		LIGHT_ENGINEER_LEGGINGS(0xff6440, '\u24c0'),
 		LIGHT_ENGINEER_BOOTS(0xcc5033, '\u24c1');
 
-		private final int color;
+		private final IIColor color;
 		private final char symbol;
 
 		ArmorTypes(int color, char symbol)
 		{
-			this.color = color;
+			this.color = IIColor.fromPackedRGB(color);
 			this.symbol = symbol;
 		}
 	}
@@ -198,7 +197,7 @@ public class ItemIIArmorUpgrade extends ItemIISubItemsBase<ArmorUpgrades> implem
 		ArmorUpgrades sub = stackToSub(stack);
 		//add valid weapon types
 		for(ArmorTypes type : sub.toolset)
-			list.add(IIColor.getHexCol(type.color, type.symbol+" "+I18n.format(IIReference.DESC_TOOLUPGRADE+"item."+type.getName())));
+			list.add(type.color.getHexCol(type.symbol+" "+I18n.format(IIReference.DESC_TOOLUPGRADE+"item."+type.getName())));
 
 		//add description
 		String[] flavour = ImmersiveEngineering.proxy.splitStringOnWidth(

@@ -5,10 +5,10 @@ import pl.pabilo8.immersiveintelligence.api.data.DataOperations;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.operations.DataOperation;
 import pl.pabilo8.immersiveintelligence.api.data.operations.arithmetic.DataOperationAdd;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
-import java.util.Map;
 
 /**
  * @author Pabilo8
@@ -132,8 +132,8 @@ public class DataTypeExpression implements IDataType
 	}
 
 	@Override
-	public int getTypeColour()
+	public IIColor getTypeColour()
 	{
-		return 0x2a4db4;
+		return IIColor.fromPackedRGB(0x2a4db4);
 	}
 }

@@ -26,6 +26,7 @@ import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
@@ -80,7 +81,7 @@ public class GuiEmplacementPageTasks extends GuiEmplacement
 				addTaskTabButton(3),
 		};
 
-		buttonEnabled = addSwitch(122+11, 17, 60, IIReference.COLOR_H1, 0xb51500, 0x95ed00, currentTab==tile.defaultTargetMode,
+		buttonEnabled = addSwitch(122+11, 17, 60, IIReference.COLOR_H1, IIColor.fromPackedRGB(0xb51500), IIColor.fromPackedRGB(0x95ed00), currentTab==tile.defaultTargetMode,
 				I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.emplacement.task_enabled"), tasksModified);
 
 		addLabel(122, 32+16-12, 83, 0, IIReference.COLOR_H1, I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.emplacement.selector_preset")).setCentered();

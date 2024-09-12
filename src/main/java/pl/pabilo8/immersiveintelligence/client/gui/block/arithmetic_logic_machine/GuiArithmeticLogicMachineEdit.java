@@ -4,7 +4,6 @@ import blusunrize.immersiveengineering.client.gui.elements.GuiButtonIE;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.math.MathHelper;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeExpression;
 import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
@@ -58,7 +57,7 @@ public class GuiArithmeticLogicMachineEdit extends GuiArithmeticLogicMachineBase
 		addLabel(61, 24, IIReference.COLOR_H1, I18n.format("desc.immersiveintelligence.variable_type"));
 		//Variable Type
 		addLabel(152-fontRenderer.getStringWidth(I18n.format(IIReference.DATA_KEY+"datatype."+dataType.getName())),
-				24, MathHelper.multiplyColor(dataType.getTypeColour(), 0xcacaca),
+				24, dataType.getTypeColour().withBrightness(0.4f),
 				I18n.format(IIReference.DATA_KEY+"datatype."+dataType.getName())
 		);
 

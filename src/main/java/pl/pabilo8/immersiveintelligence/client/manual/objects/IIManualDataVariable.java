@@ -15,11 +15,9 @@ import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.IDataMachineGui;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualObject;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualPage;
-import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
-import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
+import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import javax.annotation.Nonnull;
@@ -142,7 +140,7 @@ public class IIManualDataVariable extends IIManualObject
 		boolean unicodeFlag = manual.fontRenderer.getUnicodeFlag();
 		manual.fontRenderer.setUnicodeFlag(true);
 		if(letter!=null)
-			manual.fontRenderer.drawString(TextFormatting.BOLD+letter, x+18, y+4, type.getTypeColour());
+			manual.fontRenderer.drawString(TextFormatting.BOLD+letter, x+18, y+4, type.getTypeColour().getPackedRGB());
 		manual.fontRenderer.drawString(TextFormatting.BOLD+name, x+(letter==null?18: 24), y-4, manual.getTextColour());
 		manual.fontRenderer.drawSplitString(description, x+(letter==null?18: 24), y+4, (letter==null?110: 104), manual.getTextColour());
 		manual.fontRenderer.setUnicodeFlag(unicodeFlag);
@@ -175,7 +173,7 @@ public class IIManualDataVariable extends IIManualObject
 			ArrayList<String> lines = new ArrayList<>();
 			lines.add(String.format(
 					"<%s> %s",
-					IIColor.getHexCol(type.getTypeColour(), I18n.format(IIReference.DATA_KEY+"datatype."+type.getName())),
+					type.getTypeColour().getHexCol(I18n.format(IIReference.DATA_KEY+"datatype."+type.getName())),
 					name
 			));
 

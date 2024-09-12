@@ -1,8 +1,8 @@
 package pl.pabilo8.immersiveintelligence.client.fx.prefab;
 
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
+import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 
 /**
  * @author Pabilo8

@@ -19,10 +19,11 @@ import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 public class GuiAmmunitionCrate extends GuiIEContainerBase
 {
 	public boolean upgraded;
+
 	public GuiAmmunitionCrate(EntityPlayer player, TileEntityAmmunitionCrate tile)
 	{
 		super(new ContainerAmmunitionCrate(player, tile));
-		upgraded=tile.hasUpgrade(IIContent.UPGRADE_MG_LOADER);
+		upgraded = tile.hasUpgrade(IIContent.UPGRADE_MG_LOADER);
 		this.ySize = 222;
 	}
 
@@ -32,7 +33,7 @@ public class GuiAmmunitionCrate extends GuiIEContainerBase
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
-		this.fontRenderer.drawString(I18n.format("tile."+ImmersiveIntelligence.MODID+".metal_device.ammunition_crate.name"), 8, 6, IIReference.COLOR_H1);
+		this.fontRenderer.drawString(I18n.format("tile."+ImmersiveIntelligence.MODID+".metal_device.ammunition_crate.name"), 8, 6, IIReference.COLOR_H1.getPackedRGB());
 	}
 
 	/**
@@ -48,7 +49,7 @@ public class GuiAmmunitionCrate extends GuiIEContainerBase
 		if(upgraded)
 		{
 			this.drawTexturedModalRect(guiLeft+176, guiTop, 176, 0, 49, 133);
-			IIClientUtils.drawStringCentered(fontRenderer, I18n.format(IIReference.INFO_KEY+"machineupgrade.mg_loader.gui_tooltip"), guiLeft+176,guiTop+6,49,0, IIReference.COLOR_H1);
+			IIClientUtils.drawStringCentered(fontRenderer, I18n.format(IIReference.INFO_KEY+"machineupgrade.mg_loader.gui_tooltip"), guiLeft+176, guiTop+6, 49, 0, IIReference.COLOR_H1.getPackedRGB());
 		}
 	}
 }

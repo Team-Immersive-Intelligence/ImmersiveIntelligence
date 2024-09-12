@@ -2,6 +2,7 @@ package pl.pabilo8.immersiveintelligence.api.data.types;
 
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.nbt.NBTTagCompound;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -49,7 +50,7 @@ public interface IDataType
 	/**
 	 * @return type color used by GUIs in rgbInt format, like in {@link net.minecraft.util.math.MathHelper#rgb(int, int, int)} or {@link net.minecraft.util.math.MathHelper#rgb(float, float, float)}
 	 */
-	int getTypeColour();
+	IIColor getTypeColour();
 
 	/**
 	 * @return texture location for GUI frames, *must* contain the file extension, II default is immersiveintelligence:textures/gui/data_types.png
@@ -73,6 +74,7 @@ public interface IDataType
 
 	/**
 	 * Used by interfaces extending IDataType to provide a generic "bridge" between data types
+	 *
 	 * @see IDataTypeNumeric
 	 */
 	@Retention(RetentionPolicy.RUNTIME)

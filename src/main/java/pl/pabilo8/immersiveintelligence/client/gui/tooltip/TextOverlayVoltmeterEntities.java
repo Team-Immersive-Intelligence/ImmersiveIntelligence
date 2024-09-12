@@ -32,7 +32,7 @@ public class TextOverlayVoltmeterEntities extends TextOverlayBase
 	@ParametersAreNonnullByDefault
 	@Nullable
 	@Override
-	public String [] getText(EntityPlayer player, RayTraceResult mouseOver, @Nullable TileEntity te, @Nullable Entity entityHit)
+	public String[] getText(EntityPlayer player, RayTraceResult mouseOver, @Nullable TileEntity te, @Nullable Entity entityHit)
 	{
 		IFluxReceiver energy = (IFluxReceiver)mouseOver.entityHit;
 
@@ -49,7 +49,7 @@ public class TextOverlayVoltmeterEntities extends TextOverlayBase
 	@Override
 	public int getDefaultFontColour()
 	{
-		return IIReference.COLORS_HIGHLIGHT_I[2];
+		return IIReference.COLOR_IMMERSIVE_ORANGE.getPackedARGB();
 	}
 
 	@Nonnull

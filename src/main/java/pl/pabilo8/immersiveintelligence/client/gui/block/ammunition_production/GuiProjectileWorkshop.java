@@ -22,6 +22,7 @@ import pl.pabilo8.immersiveintelligence.common.gui.ContainerProjectileWorkshop;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
@@ -172,12 +173,12 @@ public class GuiProjectileWorkshop extends GuiAmmunitionBase<TileEntityProjectil
 			AmmoComponent component = tile.componentInside.getComponent();
 			if(component!=null)
 			{
-				int cc = 0xff000000+tile.componentInside.getColour();
-				IIClientUtils.drawGradientBar(guiLeft+6+44-6, guiTop+20, 2, 16, cc, cc, tile.componentInside.getAmountPercentage());
+				IIColor colour = tile.componentInside.getColour();
+				IIClientUtils.drawGradientBar(guiLeft+6+44-6, guiTop+20, 2, 16, colour, colour, tile.componentInside.getAmountPercentage());
 
-				IIClientUtils.drawStringCentered(fontRenderer, tile.componentInside.getTranslatedName(), guiLeft+122, guiTop+5, 71, 0, IIReference.COLOR_H1);
+				IIClientUtils.drawStringCentered(fontRenderer, tile.componentInside.getTranslatedName(), guiLeft+122, guiTop+5, 71, 0, IIReference.COLOR_H1.getPackedRGB());
 				fontRenderer.drawString(TextFormatting.ITALIC+I18n.format(IIReference.DESCRIPTION_KEY+"bullet_type."+component.getRole().getName())+TextFormatting.RESET,
-						guiLeft+122, guiTop+5+11, IIReference.COLOR_H2);
+						guiLeft+122, guiTop+5+11, IIReference.COLOR_H2.getPackedRGB());
 			}
 
 			RenderHelper.enableGUIStandardItemLighting();

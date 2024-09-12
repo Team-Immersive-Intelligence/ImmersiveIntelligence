@@ -30,7 +30,7 @@ public class GuiSmallCrate extends GuiIEContainerBase
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
-		this.fontRenderer.drawString(net.minecraft.client.resources.I18n.format(((ContainerSmallCrate)this.inventorySlots).tile.getDisplayName().getUnformattedText()), 8, 6, IIReference.COLOR_H1);
+		this.fontRenderer.drawString(net.minecraft.client.resources.I18n.format(((ContainerSmallCrate)this.inventorySlots).tile.getDisplayName().getUnformattedText()), 8, 6, IIReference.COLOR_H1.getPackedRGB());
 	}
 
 	/**

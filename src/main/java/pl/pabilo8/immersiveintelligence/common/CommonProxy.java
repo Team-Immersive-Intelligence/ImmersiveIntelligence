@@ -66,7 +66,6 @@ import pl.pabilo8.immersiveintelligence.api.rotary.IIRotaryUtils;
 import pl.pabilo8.immersiveintelligence.api.utils.IUpgradableMachine;
 import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
 import pl.pabilo8.immersiveintelligence.api.utils.MinecartBlockHelper;
-import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.MechanicalDevices;
 import pl.pabilo8.immersiveintelligence.common.ammo.components.factory.AmmoComponentFluid;
 import pl.pabilo8.immersiveintelligence.common.block.data_device.BlockIIDataDevice.IIBlockTypes_Connector;
@@ -101,10 +100,7 @@ import pl.pabilo8.immersiveintelligence.common.gui.ContainerUpgrade;
 import pl.pabilo8.immersiveintelligence.common.item.ItemIIMinecart.Minecarts;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.material.ItemIIMaterialDust.MaterialsDust;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
-import pl.pabilo8.immersiveintelligence.common.util.IBatchOredictRegister;
-import pl.pabilo8.immersiveintelligence.common.util.IIColor;
-import pl.pabilo8.immersiveintelligence.common.util.IIReference;
-import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
+import pl.pabilo8.immersiveintelligence.common.util.*;
 import pl.pabilo8.immersiveintelligence.common.util.block.BlockIIBase;
 import pl.pabilo8.immersiveintelligence.common.util.block.BlockIIFluid;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IIBlockEnum;
@@ -408,15 +404,15 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		AmmoRegistry.registerCore(IIContent.ammoCorePabilium);
 
 		//Tiny dusts (1 -> 9) from GregTech are a bit too much :P
-		DustUtils.registerDust(new IngredientStack("gunpowder", 100), "gunpowder", 0x242424);
+		DustUtils.registerDust(new IngredientStack("gunpowder", 100), "gunpowder", IIColor.fromPackedRGB(0x242424));
 		DustUtils.registerDust(new IngredientStack("smallGunpowder", 25), "gunpowder");
-		DustUtils.registerDust(new IngredientStack("dustSulfur", 100), "sulfur", 0xbba31d);
+		DustUtils.registerDust(new IngredientStack("dustSulfur", 100), "sulfur", IIColor.fromPackedRGB(0xbba31d));
 		DustUtils.registerDust(new IngredientStack("dustSmallSulfur", 25), "sulfur");
 
-		DustUtils.registerDust(new IngredientStack("dustWood", 100), "sawdust", 0x8c8269);
-		DustUtils.registerDust(new IngredientStack("dustSmallWood", 25), "sawdust", 0x8c8269);
-		DustUtils.registerDust(new IngredientStack("sand", 100), "sand", 0xaca37b);
-		DustUtils.registerDust(new IngredientStack("gravel", 100), "gravel", 0x383937);
+		DustUtils.registerDust(new IngredientStack("dustWood", 100), "sawdust", IIColor.fromPackedRGB(0x8c8269));
+		DustUtils.registerDust(new IngredientStack("dustSmallWood", 25), "sawdust", IIColor.fromPackedRGB(0x8c8269));
+		DustUtils.registerDust(new IngredientStack("sand", 100), "sand", IIColor.fromPackedRGB(0xaca37b));
+		DustUtils.registerDust(new IngredientStack("gravel", 100), "gravel", IIColor.fromPackedRGB(0x383937));
 
 		ResLoc IERes = ResLoc.of(IIReference.RES_IE, "textures/blocks/%s");
 		ResLoc MCRes = ResLoc.of(IIReference.RES_MC, "textures/blocks/%s");

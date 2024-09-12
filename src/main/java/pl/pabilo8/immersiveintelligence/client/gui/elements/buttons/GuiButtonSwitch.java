@@ -6,7 +6,6 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
 /**
@@ -16,13 +15,13 @@ import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 public class GuiButtonSwitch extends GuiButtonState
 {
 	private final ResourceLocation TEXTURE;
-	private final int sliderWidth, backWidth, texSliderU, textColor;
+	private final int sliderWidth, backWidth, texSliderU;
 
-	final float[] color1, color2;
+	final IIColor textColor, color1, color2;
 	int timer;
 	final int MAX_SWITCH_TICKS = 20;
 
-	public GuiButtonSwitch(int buttonId, int x, int y, int textWidth, int sliderWidth, int backWidth, int h, int u, int v, boolean state, ResourceLocation texture, int textColor, int color1, int color2, String name, boolean firstTime)
+	public GuiButtonSwitch(int buttonId, int x, int y, int textWidth, int sliderWidth, int backWidth, int h, int u, int v, boolean state, ResourceLocation texture, IIColor textColor, IIColor color1, IIColor color2, String name, boolean firstTime)
 	{
 		super(buttonId, x, y, textWidth, h, name, state, "", u, v, 0);
 		this.TEXTURE = texture;
@@ -31,8 +30,8 @@ public class GuiButtonSwitch extends GuiButtonState
 		this.textColor = textColor;
 		this.texSliderU = u+backWidth;
 
-		this.color1 = IIColor.rgbIntToRGB(color1);
-		this.color2 = IIColor.rgbIntToRGB(color2);
+		this.color1 = color1;
+		this.color2 = color2;
 
 		//Should animate when false
 		timer = firstTime^state?MAX_SWITCH_TICKS: 0;
@@ -51,9 +50,9 @@ public class GuiButtonSwitch extends GuiButtonState
 			timer = MathHelper.clamp(timer+(state?-1: 1), 0, MAX_SWITCH_TICKS);
 
 			float progress = 1f-(MathHelper.clamp((timer+(this.state?partialTicks: -partialTicks)), 0, MAX_SWITCH_TICKS)/MAX_SWITCH_TICKS);
-			float[] c = IIColor.medColour(color1, color2, progress);
+
 			int offset = (int)(progress*(backWidth-sliderWidth+1));
-			GlStateManager.color(c[0], c[1], c[2], 1f);
+			color1.mixedWith(color2, progress).glColor();
 			this.drawTexturedModalRect(x+offset, y, texSliderU, texV, sliderWidth, height);//176, 98, 8, 9
 			GlStateManager.color(1f, 1f, 1f, 1f);
 
@@ -61,7 +60,7 @@ public class GuiButtonSwitch extends GuiButtonState
 			if(displayString!=null&&!displayString.isEmpty())
 			{
 				//textColor
-				mc.fontRenderer.drawSplitString(displayString, x+backWidth+2, y+1, width, textColor);
+				mc.fontRenderer.drawSplitString(displayString, x+backWidth+2, y+1, width, textColor.getPackedRGB());
 			}
 		}
 	}

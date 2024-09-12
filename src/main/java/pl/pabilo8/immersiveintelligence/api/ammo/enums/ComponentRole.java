@@ -1,5 +1,6 @@
 package pl.pabilo8.immersiveintelligence.api.ammo.enums;
 
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.ISerializableEnum;
 
 public enum ComponentRole implements ISerializableEnum
@@ -20,14 +21,14 @@ public enum ComponentRole implements ISerializableEnum
 	/**
 	 * Used for item tooltips (if II font is enabled)
 	 */
-	private final int color;
+	private final IIColor color;
 
 	ComponentRole(int color)
 	{
-		this.color = color;
+		this.color = IIColor.fromPackedRGB(color);
 	}
 
-	public int getColor()
+	public IIColor getColor()
 	{
 		return color;
 	}

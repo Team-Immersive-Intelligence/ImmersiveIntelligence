@@ -16,10 +16,10 @@ import pl.pabilo8.immersiveintelligence.client.fx.utils.DrawStages;
 import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleRegistry;
 import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleUtils;
 import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleUtils.PositionGenerator;
-import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import javax.annotation.Nonnull;
@@ -447,8 +447,8 @@ public class IIParticles
 									IIParticle par2 = ParticleRegistry.spawnParticle(PARTICLE_SMOKE_BIG, pos.add(direction).addVector(0, 1, 0), direction,
 											direction.scale(0.03125f*ParticleUtils.randFloat.get()).addVector(0, 0.15*ParticleUtils.randFloat.get(), 0));
 									par2.setProperties(EasyNBT.newNBT()
-											.withColor(COLOR, IIColor.fromPackedRGBA(0x603e3c3c)
-													.mixedWith(IIColor.fromPackedRGBA(0x20494747), ParticleUtils.randFloat.get()))
+											.withColor(COLOR, IIColor.fromPackedARGB(0x603e3c3c)
+													.mixedWith(IIColor.fromPackedARGB(0x20494747), ParticleUtils.randFloat.get()))
 											.withDouble(GRAVITY, 0.005f)
 									);
 									par2.setLifeTime(0, 20);
@@ -500,7 +500,7 @@ public class IIParticles
 			//Spawn smoke cloud
 			Vec3d pos = deb.getPosition();
 			ParticleRegistry.spawnParticle(smokeName, pos, Vec3d.ZERO, Vec3d.ZERO)
-					.setProperties(EasyNBT.newNBT().withColor(COLOR, IIColor.fromPackedRGBA(0x603e3c3c)));
+					.setProperties(EasyNBT.newNBT().withColor(COLOR, IIColor.fromPackedARGB(0x603e3c3c)));
 			ClientEventHandler.addScreenshakeSource(pos, 0.3f, 1f);
 			ParticleBuilder<?> smokeTrace = ParticleRegistry.getParticleBuilder(traceName);
 
@@ -518,8 +518,8 @@ public class IIParticles
 						((ParticleModel)spawnedTrace).setScale(new Vec3d(direction.lengthVector(), 1, 1));
 						//TODO: 28.04.2024 use hit block color
 						((ParticleModel)spawnedTrace).setColor(
-								IIColor.fromPackedRGBA(0x603e3c3c)
-										.mixedWith(IIColor.fromPackedRGBA(0x20494747), ParticleUtils.randFloat.get())
+								IIColor.fromPackedARGB(0x603e3c3c)
+										.mixedWith(IIColor.fromPackedARGB(0x20494747), ParticleUtils.randFloat.get())
 						);
 					}
 					//spawn smaller fragments

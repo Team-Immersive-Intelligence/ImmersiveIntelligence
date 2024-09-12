@@ -16,6 +16,8 @@ import pl.pabilo8.immersiveintelligence.common.util.IIColor;
  */
 public class GuiOverlayMachinegun extends GuiOverlayGunBase
 {
+	private IIColor colorFrom = IIColor.fromPackedRGB(0xdf9916), colorTo = IIColor.fromPackedRGB(0xba0f0f);
+
 	@Override
 	public boolean shouldDraw(EntityPlayer player, RayTraceResult mouseOver)
 	{
@@ -40,7 +42,7 @@ public class GuiOverlayMachinegun extends GuiOverlayGunBase
 				.setOffset(width-38-24, height)
 				.drawTexColorRect(0, -20, 22, 18, IIColor.WHITE, 0/256f, 22/256f, 62/256f, 80/256f)
 				.inBetween((x, y) -> {
-					IIClientUtils.drawGradientBar(x+1, y-19, 3, 16, 0xffdf9916, 0x0fba0f0f, mg.overheating/(float)Machinegun.maxOverheat);
+					IIClientUtils.drawGradientBar(x+1, y-19, 3, 16, colorFrom, colorTo, mg.overheating/(float)Machinegun.maxOverheat);
 					bindHUDTexture();
 				})
 				.drawTexColorRect(5, -19, 16, 16, IIColor.WHITE, 16/256f, 32/256f, 0, 16/256f);

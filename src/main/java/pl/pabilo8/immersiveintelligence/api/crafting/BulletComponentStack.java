@@ -11,6 +11,7 @@ import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.ProjectileWorkshop;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -121,9 +122,9 @@ public class BulletComponentStack implements INBTSerializable<NBTTagCompound>
 		return component!=null&&component.matchesBullet(bullet);
 	}
 
-	public int getColour()
+	public IIColor getColour()
 	{
-		return component!=null?component.getColor(tagCompound).getPackedRGB(): 0xffffff;
+		return component!=null?component.getColor(tagCompound): IIColor.WHITE;
 	}
 
 	public float getAmountPercentage()

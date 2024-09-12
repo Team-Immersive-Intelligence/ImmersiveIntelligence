@@ -7,7 +7,6 @@ import com.google.gson.JsonStreamParser;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IResource;
-import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.io.IOException;

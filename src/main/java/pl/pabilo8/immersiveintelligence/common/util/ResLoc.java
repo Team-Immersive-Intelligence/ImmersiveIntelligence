@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.client.util;
+package pl.pabilo8.immersiveintelligence.common.util;
 
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.util.ResourceLocation;

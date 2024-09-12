@@ -27,7 +27,8 @@ import java.util.List;
 public class SawmillRecipe extends MultiblockRecipe implements IIIMultiblockRecipe
 {
 	public static ArrayList<SawmillRecipe> RECIPES = new ArrayList<>();
-	private static final int DEFAULT_COLOR = IIColor.rgb(0.22392157f, 0.21372549019607842f, 0.15176470588235294f);
+	//REFACTOR: 12.09.2024 convert to hex
+	private static final IIColor DEFAULT_COLOR = IIColor.fromFloatRGB(0.22392157f, 0.21372549019607842f, 0.15176470588235294f);
 
 	//The tier of the saw required, 1 for cutting wood (bronze), 2 iron, 3 steel, 4 tungsten
 	public final IngredientStack itemInput;
@@ -49,9 +50,9 @@ public class SawmillRecipe extends MultiblockRecipe implements IIIMultiblockReci
 
 	final int torque;
 	final int hardness;
-	final float[] dustColor;
+	final IIColor dustColor;
 
-	public SawmillRecipe(ItemStack itemOutput, Object itemInput, ItemStack itemSecondaryOutput, int torque, int time, int hardness, int dustColor)
+	public SawmillRecipe(ItemStack itemOutput, Object itemInput, ItemStack itemSecondaryOutput, int torque, int time, int hardness, IIColor dustColor)
 	{
 		this.itemOutput = itemOutput;
 		this.itemSecondaryOutput = itemSecondaryOutput;
@@ -62,7 +63,7 @@ public class SawmillRecipe extends MultiblockRecipe implements IIIMultiblockReci
 
 		this.inputList = Lists.newArrayList(this.itemInput);
 		this.outputList = ListUtils.fromItems(this.itemOutput, this.itemSecondaryOutput);
-		this.dustColor = IIColor.rgbIntToRGB(dustColor);
+		this.dustColor = dustColor;
 
 //		0 - 0.1 - grabbing sound
 //		0.1 - 1 - cutting,
@@ -97,7 +98,7 @@ public class SawmillRecipe extends MultiblockRecipe implements IIIMultiblockReci
 		return addRecipe(itemOutput, itemInput, itemSecondaryOutput, torque, time, hardness, DEFAULT_COLOR);
 	}
 
-	public static SawmillRecipe addRecipe(ItemStack itemOutput, IngredientStack itemInput, ItemStack itemSecondaryOutput, int torque, int time, int hardness, int dustColor)
+	public static SawmillRecipe addRecipe(ItemStack itemOutput, IngredientStack itemInput, ItemStack itemSecondaryOutput, int torque, int time, int hardness, IIColor dustColor)
 	{
 		SawmillRecipe r = new SawmillRecipe(itemOutput, itemInput, itemSecondaryOutput, torque, time, hardness, dustColor);
 		RECIPES.add(r);
@@ -181,7 +182,7 @@ public class SawmillRecipe extends MultiblockRecipe implements IIIMultiblockReci
 		return this.torque;
 	}
 
-	public float[] getDustColor()
+	public IIColor getDustColor()
 	{
 		return dustColor;
 	}
