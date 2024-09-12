@@ -43,7 +43,7 @@ public class GuiChemicalPainter extends GuiIEContainerBase implements ISlider
 	private GuiSliderII sliderHue, sliderSaturation, sliderValue;
 
 	private ColorMode colorMode = ColorMode.RGB;
-	private int color;
+	private IIColor color;
 
 	GuiButtonIE buttonModeRGB, buttonModeCMYK, buttonModeHSV;
 
@@ -68,7 +68,7 @@ public class GuiChemicalPainter extends GuiIEContainerBase implements ISlider
 		{
 			case RGB:
 			{
-				float[] rgb = IIColor.rgbIntToRGB(color);
+				float[] rgb = color.getFloatRGB();
 				sliderRed = getSlider(0, "Red", rgb[0]);
 				sliderGreen = getSlider(1, "Green", rgb[1]);
 				sliderBlue = getSlider(2, "Blue", rgb[2]);
@@ -76,8 +76,7 @@ public class GuiChemicalPainter extends GuiIEContainerBase implements ISlider
 			break;
 			case CMYK:
 			{
-				float[] rgb = IIColor.rgbIntToRGB(color);
-				float[] cmyk = IIColor.rgbToCmyk(rgb[0], rgb[1], rgb[2]);
+				float[] cmyk = color.getCMYK();
 				sliderCyan = getSlider(0, "Cyan", cmyk[0]);
 				sliderMagenta = getSlider(1, "Magenta", cmyk[1]);
 				sliderYellow = getSlider(2, "Yellow", cmyk[2]);
@@ -86,8 +85,7 @@ public class GuiChemicalPainter extends GuiIEContainerBase implements ISlider
 			break;
 			case HSV:
 			{
-				float[] rgb = IIColor.rgbIntToRGB(color);
-				float[] hsv = IIColor.rgbToHsv(rgb[0], rgb[1], rgb[2]);
+				float[] hsv = color.getHSV();
 				sliderHue = getSlider(0, "Hue", hsv[0]);
 				sliderSaturation = getSlider(1, "Saturation", hsv[1]);
 				sliderValue = getSlider(2, "Value", hsv[2]);
@@ -131,7 +129,7 @@ public class GuiChemicalPainter extends GuiIEContainerBase implements ISlider
 		else if(button==buttonActiveColor)
 		{
 			colorDelay = 20;
-			setClipboardString(Integer.toHexString(tile.color));
+			setClipboardString(tile.color.getHexRGB());
 		}
 		super.actionPerformed(button);
 	}
@@ -145,7 +143,7 @@ public class GuiChemicalPainter extends GuiIEContainerBase implements ISlider
 		IIClientUtils.drawStringCentered(this.fontRenderer, I18n.format("tile.immersiveintelligence.metal_multiblock1.chemical_painter.name"),
 				8, 6, xSize-12, 0, IIReference.COLOR_H1.getPackedRGB());
 
-		float[] rgb = IIColor.rgbIntToRGB(color);
+		float[] rgb = color.getFloatRGB();
 		GlStateManager.color(rgb[0], rgb[1], rgb[2]);
 		IIClientUtils.bindTexture(TEXTURE_ICONS);
 		drawTexturedModalRect(7, 91, 163, 160, 12, 12);
@@ -195,9 +193,7 @@ public class GuiChemicalPainter extends GuiIEContainerBase implements ISlider
 			tooltip.add(
 					colorDelay > 0?
 							TextFormatting.GREEN+TextFormatting.ITALIC.toString()+I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.chemical_painter.color_copied")+TextFormatting.RESET:
-							String.format("<hexcol=%1$s:#%1$s (%2$s)>",
-									String.format("%06x", color),
-									I18n.format("item.fireworksCharge."+IIColor.getRGBTextFormatting(color).getName()))
+							color.getHexCol(I18n.format("item.fireworksCharge."+color.getDyeColor().getName()))
 			);
 		else
 		{
@@ -228,7 +224,7 @@ public class GuiChemicalPainter extends GuiIEContainerBase implements ISlider
 
 	public void saveBasicData()
 	{
-		IIPacketHandler.sendToServer(new MessageIITileSync(tile, EasyNBT.newNBT().withInt("color", color)));
+		IIPacketHandler.sendToServer(new MessageIITileSync(tile, EasyNBT.newNBT().withInt("color", color.getPackedRGB())));
 	}
 
 	@Override
@@ -237,20 +233,14 @@ public class GuiChemicalPainter extends GuiIEContainerBase implements ISlider
 		switch(colorMode)
 		{
 			case RGB:
-				color = IIColor.rgb((float)sliderRed.sliderValue, (float)sliderGreen.sliderValue, (float)sliderBlue.sliderValue);
+				color = IIColor.fromFloatRGB((float)sliderRed.sliderValue, (float)sliderGreen.sliderValue, (float)sliderBlue.sliderValue);
 				break;
 			case CMYK:
-			{
-				float[] rgb = IIColor.cmykToRgb((float)sliderCyan.sliderValue, (float)sliderMagenta.sliderValue, (float)sliderYellow.sliderValue, (float)sliderBlack.sliderValue);
-				color = IIColor.rgb(rgb[0], rgb[1], rgb[2]);
-			}
-			break;
+				color = IIColor.fromCMYK((float)sliderCyan.sliderValue, (float)sliderMagenta.sliderValue, (float)sliderYellow.sliderValue, (float)sliderBlack.sliderValue);
+				break;
 			case HSV:
-			{
-				float[] rgb = IIColor.hsvToRgb((float)sliderHue.sliderValue, (float)sliderSaturation.sliderValue, (float)sliderValue.sliderValue);
-				color = IIColor.rgb(rgb[0], rgb[1], rgb[2]);
-			}
-			break;
+				color = IIColor.fromHSV((float)sliderHue.sliderValue, (float)sliderSaturation.sliderValue, (float)sliderValue.sliderValue);
+				break;
 		}
 	}
 

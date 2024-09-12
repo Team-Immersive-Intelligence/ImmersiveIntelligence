@@ -17,7 +17,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockShulkerBox;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
-import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
@@ -68,7 +67,6 @@ import pl.pabilo8.immersiveintelligence.common.item.crafting.material.ItemIIMate
 import pl.pabilo8.immersiveintelligence.common.item.data.ItemIIFunctionalCircuit.Circuits;
 import pl.pabilo8.immersiveintelligence.common.item.mechanical.ItemIIMotorGear.MotorGear;
 import pl.pabilo8.immersiveintelligence.common.item.tools.backpack.ItemIIAdvancedPowerPack;
-import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIUpgradeableArmor;
 
@@ -870,56 +868,49 @@ public class IIRecipes
 
 	public static void addChemicalPainterRecipes()
 	{
-		// TODO: 14.10.2021 colored crates 
-		// TODO: 14.10.2021 shulker boxes, beds
+		// TODO: 14.10.2021 colored crates
 		// TODO: 14.10.2021 banners
 
 		//Vanilla Blocks
 
 		PaintingRecipe.addRecipe((rgb, stack) -> {
 			//get closest approximated dye
-			EnumDyeColor dye = IIColor.getRGBTextFormatting(rgb);
-			return new ItemStack(Blocks.WOOL, 1, dye.getMetadata());
+			return new ItemStack(Blocks.WOOL, 1, rgb.getDyeColor().getMetadata());
 		}, new IngredientStack(new ItemStack(Blocks.WOOL)), 512, 240, 125);
 
 		PaintingRecipe.addRecipe((rgb, stack) -> {
 			//get closest approximated dye
-			EnumDyeColor dye = IIColor.getRGBTextFormatting(rgb);
-			return new ItemStack(Blocks.CARPET, 1, dye.getMetadata());
+			return new ItemStack(Blocks.CARPET, 1, rgb.getDyeColor().getMetadata());
 		}, new IngredientStack(new ItemStack(Blocks.CARPET)), 512, 240, 50);
 
 		PaintingRecipe.addRecipe((rgb, stack) -> {
 			//get closest approximated dye
-			EnumDyeColor dye = IIColor.getRGBTextFormatting(rgb);
-			return new ItemStack(Blocks.STAINED_GLASS, 1, dye.getMetadata());
+			return new ItemStack(Blocks.STAINED_GLASS, 1, rgb.getDyeColor().getMetadata());
 		}, new IngredientStack(new ItemStack(Blocks.GLASS)), 512, 240, 125);
 
 		PaintingRecipe.addRecipe((rgb, stack) -> {
 			//get closest approximated dye
-			EnumDyeColor dye = IIColor.getRGBTextFormatting(rgb);
-			return new ItemStack(Blocks.STAINED_GLASS_PANE, 1, dye.getMetadata());
+			return new ItemStack(Blocks.STAINED_GLASS_PANE, 1, rgb.getDyeColor().getMetadata());
 		}, new IngredientStack(new ItemStack(Blocks.GLASS_PANE)), 512, 240, 125);
 
 		PaintingRecipe.addRecipe((rgb, stack) -> {
 			//get closest approximated dye
-			EnumDyeColor dye = IIColor.getRGBTextFormatting(rgb);
-			return new ItemStack(Blocks.STAINED_HARDENED_CLAY, 1, dye.getMetadata());
+			return new ItemStack(Blocks.STAINED_HARDENED_CLAY, 1, rgb.getDyeColor().getMetadata());
 		}, new IngredientStack(new ItemStack(Blocks.HARDENED_CLAY)), 512, 240, 125);
 
 		PaintingRecipe.addRecipe((rgb, stack) -> {
 			//get closest approximated dye
-			EnumDyeColor dye = IIColor.getRGBTextFormatting(rgb);
-			return new ItemStack(Items.BED, 1, dye.getMetadata());
+			return new ItemStack(Items.BED, 1, rgb.getDyeColor().getMetadata());
 		}, new IngredientStack(new ItemStack(Items.BED)), 512, 240, 200);
 
 		//II / IE items
 		PaintingRecipe.addRecipe((rgb, stack) -> {
-			IIContent.itemAdvancedPowerPack.setColor(stack, rgb);
+			IIContent.itemAdvancedPowerPack.setColor(stack, rgb.getPackedRGB());
 			return stack;
 		}, new IngredientStack(new ItemStack(IIContent.itemAdvancedPowerPack)), 8192, 340, 2000);
 
 		PaintingRecipe.addRecipe((rgb, stack) -> {
-			Items.LEATHER_HELMET.setColor(stack, rgb);
+			Items.LEATHER_HELMET.setColor(stack, rgb.getPackedRGB());
 			return stack;
 		}, new IngredientStack(NonNullList.from(ItemStack.EMPTY,
 				new ItemStack(Items.LEATHER_HELMET),
@@ -945,7 +936,7 @@ public class IIRecipes
 			//clear nbt
 			bulletStack.setTagCompound(new NBTTagCompound());
 			PaintingRecipe.addRecipe((rgb, stack) -> {
-				ItemStack ret = bullet.setPaintColour(stack, rgb);
+				ItemStack ret = bullet.setPaintColour(stack, rgb.getPackedRGB());
 				ret.setCount(1);
 				return ret;
 			}, new IngredientStack(bulletStack).setUseNBT(false), bullet.getCaliber()*1024, 100+(bullet.getCaliber()*40), 50+(bullet.getCaliber()*25));

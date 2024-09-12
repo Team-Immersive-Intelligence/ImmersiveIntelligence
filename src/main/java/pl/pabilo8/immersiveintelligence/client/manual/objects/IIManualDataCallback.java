@@ -12,7 +12,6 @@ import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualObject;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualPage;
-import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
@@ -111,7 +110,7 @@ public class IIManualDataCallback extends IIManualObject
 			ArrayList<String> lines = new ArrayList<>();
 			lines.add(String.format(
 					"<%s> %s",
-					IIColor.getHexCol(type.getTypeColour(), I18n.format(IIReference.DATA_KEY+"datatype."+type.getName())),
+					type.getTypeColour().getHexCol(I18n.format(IIReference.DATA_KEY+"datatype."+type.getName())),
 					IIStringUtil.getItalicString(name)
 			));
 

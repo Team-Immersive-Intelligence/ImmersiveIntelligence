@@ -70,7 +70,7 @@ public class TileEntityPrintingPress extends TileEntityMultiblockProductionMulti
 	{
 		PRINT_ORDER_PARSERS.put("text", ORDER_PARSER_TEXT = (packet -> {
 			String text = packet.getPacketVariable('t').valueToString();
-			int c = 0, m = 0, y = 0, k = 0;
+			float c = 0, m = 0, y = 0, k = 0;
 
 			if(!text.isEmpty())
 			{
@@ -79,28 +79,27 @@ public class TileEntityPrintingPress extends TileEntityMultiblockProductionMulti
 
 				while(matcher.find())
 				{
-					// Call IIUtils.rgbToCMYK to get CMYK values
-					float[] cmykValues = IIColor.rgbToCmyk(IIColor.rgbIntToRGB(
-							Integer.parseInt(matcher.group(1).substring(0, 6), 16))
-					);
+					// Get CMYK proportions
+					float[] cmykValues = IIColor.fromHex(matcher.group(1)).getCMYK();
 
 					// Calculate ink usage based on CMYK percentages
-					c += 2*cmykValues[0]; // Fraction of 2 units for cyan
-					m += 2*cmykValues[1]; // Fraction of 2 units for magenta
-					y += 2*cmykValues[2]; // Fraction of 2 units for yellow
-					k += 2*cmykValues[3]; // Fraction of 2 units for black
+					c += PrintingPress.printInkUsage*cmykValues[0]; // Fraction of 2 units for cyan
+					m += PrintingPress.printInkUsage*cmykValues[1]; // Fraction of 2 units for magenta
+					y += PrintingPress.printInkUsage*cmykValues[2]; // Fraction of 2 units for yellow
+					k += PrintingPress.printInkUsage*cmykValues[3]; // Fraction of 2 units for black
 				}
 
+				//For all other text calculate the black ink cost
 				k += pattern.matcher(text)
 						.replaceAll("")
 						.replaceAll(" ", "")
-						.length()*2;
+						.length()*PrintingPress.printInkUsage;
 			}
 
 			ItemStack stack = IIContent.itemPrintedPage.getStack(SubItems.TEXT);
 			EasyNBT.wrapNBT(stack).withString("text", text);
 
-			return new PrintOrder(stack, k, c, m, y);
+			return new PrintOrder(stack, (int)k, (int)c, (int)m, (int)y);
 		}));
 	}
 

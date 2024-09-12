@@ -10,7 +10,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.fluids.FluidStack;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityChemicalPainter;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
@@ -24,10 +23,7 @@ import java.util.stream.Collectors;
  */
 public class PaintingRecipe extends MultiblockRecipe
 {
-	public static float energyModifier = 1.0F;
-	public static float timeModifier = 1.0F;
-	public static float paintModifier = 1.0F;
-	public final BiFunction<Integer, ItemStack, ItemStack> process;
+	public final BiFunction<IIColor, ItemStack, ItemStack> process;
 	public final IngredientStack itemInput;
 
 	public static LinkedList<PaintingRecipe> recipeList = new LinkedList<>();
@@ -36,13 +32,13 @@ public class PaintingRecipe extends MultiblockRecipe
 	int totalProcessTime;
 	int totalProcessEnergy;
 
-	public PaintingRecipe(BiFunction<Integer, ItemStack, ItemStack> process, Object itemInput, int energy, int time, int paintAmount)
+	public PaintingRecipe(BiFunction<IIColor, ItemStack, ItemStack> process, Object itemInput, int energy, int time, int paintAmount)
 	{
 		this.process = process;
 		this.itemInput = ApiUtils.createIngredientStack(itemInput);
-		this.totalProcessEnergy = (int)Math.floor((float)energy*energyModifier);
-		this.totalProcessTime = (int)Math.floor((float)time*timeModifier);
-		this.paintAmount = (int)Math.floor((float)paintAmount*paintModifier);
+		this.totalProcessEnergy = (int)Math.floor((float)energy);
+		this.totalProcessTime = (int)Math.floor((float)time);
+		this.paintAmount = (int)Math.floor((float)paintAmount);
 
 		this.inputList = Lists.newArrayList(this.itemInput);
 		this.outputList = getExampleColoredItems();
@@ -51,18 +47,15 @@ public class PaintingRecipe extends MultiblockRecipe
 	private NonNullList<ItemStack> getExampleColoredItems()
 	{
 		NonNullList<ItemStack> list = NonNullList.create();
-		Set<ItemStack> collect = Arrays.stream(EnumDyeColor.values()).map(
-						enumDyeColor -> {
-							float[] values = enumDyeColor.getColorComponentValues();
-							return IIColor.rgb(values[0],values[1],values[2]);
-						})
+		Set<ItemStack> collect = Arrays.stream(EnumDyeColor.values())
+				.map(IIColor::fromDye)
 				.map(integer -> process.apply(integer, itemInput.getExampleStack().copy()))
 				.collect(Collectors.toSet());
 		list.addAll(collect);
 		return list;
 	}
 
-	public static PaintingRecipe addRecipe(BiFunction<Integer, ItemStack, ItemStack> process, IngredientStack itemInput, int energy, int time, int paintAmount)
+	public static PaintingRecipe addRecipe(BiFunction<IIColor, ItemStack, ItemStack> process, IngredientStack itemInput, int energy, int time, int paintAmount)
 	{
 		PaintingRecipe r = new PaintingRecipe(process, itemInput, energy, time, paintAmount);
 		recipeList.add(r);

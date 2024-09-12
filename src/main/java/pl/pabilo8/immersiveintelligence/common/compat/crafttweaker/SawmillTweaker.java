@@ -9,6 +9,7 @@ import crafttweaker.api.item.IItemStack;
 import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.crafting.SawmillRecipe;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
@@ -34,7 +35,7 @@ public class SawmillTweaker
 		}
 
 
-		SawmillRecipe r = new SawmillRecipe(CraftTweakerHelper.toStack(itemOutput), oItemInput, CraftTweakerHelper.toStack(secondaryItemOutput), torque, time, hardness, dustColor);
+		SawmillRecipe r = new SawmillRecipe(CraftTweakerHelper.toStack(itemOutput), oItemInput, CraftTweakerHelper.toStack(secondaryItemOutput), torque, time, hardness, IIColor.fromPackedRGB(dustColor));
 
 		CraftTweakerAPI.apply(new Add(r));
 	}
