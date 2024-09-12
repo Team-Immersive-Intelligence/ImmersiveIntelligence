@@ -11,9 +11,12 @@ import pl.pabilo8.immersiveintelligence.client.manual.IIManualCategory;
 import pl.pabilo8.immersiveintelligence.client.manual.pages.IIManualPageBulletComponent;
 import pl.pabilo8.immersiveintelligence.client.manual.pages.IIManualPageBulletCore;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.block.data_device.BlockIIDataDevice;
+import pl.pabilo8.immersiveintelligence.common.block.data_device.BlockIIDataDevice.IIBlockTypes_Connector;
 import pl.pabilo8.immersiveintelligence.common.block.fortification.BlockIIMetalFortification1.IIBlockTypes_MetalFortification1;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.BlockIIMetalDevice.IIBlockTypes_MetalDevice;
 import pl.pabilo8.immersiveintelligence.common.block.mines.BlockIIMine;
+import pl.pabilo8.immersiveintelligence.common.block.data_device.BlockIIDataDevice;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoBase;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoCasing.Casing;
 import pl.pabilo8.immersiveintelligence.common.item.armor.ItemIIArmorUpgrade.ArmorUpgrades;
@@ -88,11 +91,11 @@ public class IIManualCategoryWarfare extends IIManualCategory
 
 		addEntry("emplacement");
 		addEntry("emplacement_weapons");
-		addEntry("chemdispenser");
+		addEntry("chemdispenser")
+			.addSource("chemical_dispenser", getSourceForItem(IIContent.blockDataConnector.getStack(IIBlockTypes_Connector.CHEMICAL_DISPENSER)));
 		addEntry("flagpole");
 		addEntry("explosives_mines")
-				.addSource("crafting_radio_equipped_satchel", getSourceForItems(
-						IIContent.itemAmmoCasing.getStack(Casing.RADIO_EXPLOSIVES)))
+				.addSource("crafting_radio_equipped_satchel", getSourceForItems(IIContent.itemAmmoCasing.getStack(Casing.RADIO_EXPLOSIVES)))
 				.addSource("landmines", getSourceForItem((IIContent.blockTellermine.getStack(BlockIIMine.IIBlockTypes_Mine.MAIN))))
 				.addSource("tripmine", getSourceForItem((IIContent.blockTripmine.getStack(BlockIIMine.IIBlockTypes_Mine.MAIN))))
 				.addSource("navalmine", getSourceForItem((IIContent.itemNavalMine.getStack(ItemIIAmmoBase.AmmoParts.BULLET))));
@@ -121,9 +124,8 @@ public class IIManualCategoryWarfare extends IIManualCategory
 				.addSource("internal_springs", getSourceForItems(IIContent.itemArmorUpgrade.getStack(ArmorUpgrades.INTERNAL_SPRINGS)));
 		addEntry("machinegun")
 				.addSource("machinegun", getSourceForItem(new ItemStack(IIContent.itemMachinegun)));
-		addEntry("weapon_parts");
 		addEntry("weapon_upgrades")
-				.addSource("heavy_barrle", getSourceForItem(IIContent.itemWeaponUpgrade.getStack(WeaponUpgrade.HEAVY_BARREL)))
+				.addSource("heavy_barrel", getSourceForItem(IIContent.itemWeaponUpgrade.getStack(WeaponUpgrade.HEAVY_BARREL)))
 				.addSource("water_cooling", getSourceForItem(IIContent.itemWeaponUpgrade.getStack(WeaponUpgrade.WATER_COOLING)))
 				.addSource("belt_fed_loader", getSourceForItem(IIContent.itemWeaponUpgrade.getStack(WeaponUpgrade.BELT_FED_LOADER)))
 				.addSource("second_magazine", getSourceForItem(IIContent.itemWeaponUpgrade.getStack(WeaponUpgrade.SECOND_MAGAZINE)))
@@ -154,6 +156,7 @@ public class IIManualCategoryWarfare extends IIManualCategory
 				.addSource("trench_shovel", getSourceForItem(new ItemStack(IIContent.itemTrenchShovel)));
 		addEntry("artillery_howitzer");
 		addEntry("ballistic_computer");
+
 
 
 

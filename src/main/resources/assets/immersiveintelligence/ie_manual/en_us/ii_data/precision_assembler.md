@@ -24,4 +24,3 @@ The [scheme] can be installed through the user interface by placing it in the mi
 Depending on the scheme the manufacturing process requires different tools, these tools ware down over time and will need replacement.
 |[crafting]{source:"precision_tools"}|
 <br>
-New tools can be inserted through 3 ports located on the back.

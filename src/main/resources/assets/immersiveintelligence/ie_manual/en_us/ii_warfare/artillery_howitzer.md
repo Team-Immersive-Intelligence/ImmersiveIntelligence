@@ -25,7 +25,7 @@ Before the gun can be fired, it has to be loaded with some [ammunition](bullet_p
 
 # unloading
 After the gun fires, it leaves an [empty casing] in the [platform storage]. To remove a casing or an ammunition piece from the storage use one of the [unload] commands. <br>
-|[data_variable]{type:"string", direction:"in", letter:"c", name:"Command", description:"What action the howitzer will preform", values:[["load","Loads a single shell"],["load_all","Fully empties the platform storage"],["load1","Unloads the shell from 1st slot"],["load2","Unloads the shell from 2nd slot"],["load3","Unloads the shell from 3rd slot"],["load4","Unloads the shell from 4th slot"]]}|
+|[data_variable]{type:"string", direction:"in", letter:"c", name:"Command", description:"What action the howitzer will preform", values:[["unload","Unloads a single shell"],["unload_all","Fully empties the platform storage"],["unload1","Unloads the shell from 1st slot"],["unload2","Unloads the shell from 2nd slot"],["unload3","Unloads the shell from 3rd slot"],["unload4","Unloads the shell from 4th slot"]]}|
 
 # firing
 To issue a [fire] or [aim] command, the [packet passed](data_main#packetsbasics) has to contain variables for [vertical] and [horizontal angle] the gun will be oriented at.<br>

@@ -12,7 +12,7 @@ When interacting with a wrench, you have a selection of modules to install, each
 # 2
 The **Emplacement** requires electricity, ammunition and by default a redstone signal in order to operate. If the redstone signal is cut off, the weapon will retract back into the emplacement.
 
-The different weapons requires different types of ammunition, such as the [Autocannon]() requires a heavier caliber than the [Machinegun Nest]()
+The different weapons requires different types of ammunition, such as the [Autocannon](emplacement_weapons.md#flak0) requires a heavier caliber than the [Machinegun Nest](emplacement_weapons.md#mg0)
 # 3
 **Emplacement** weapons can be damaged and automatically repaired. You can set up the minimal threshold of the emplacement weapon’s health before it goes into repair state.<br>During repair, it will hide inside the Emplacement and will not react to commands. Note that Emplacements can be destroyed if enough damage is inflicted to the gun itself, which also means that you will lose resources used to construct it.
 # 4

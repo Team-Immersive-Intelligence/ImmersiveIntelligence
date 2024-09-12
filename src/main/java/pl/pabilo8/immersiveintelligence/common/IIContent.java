@@ -288,6 +288,9 @@ public class IIContent
 	public static final BlockIIDataDevice blockDataConnector = new BlockIIDataDevice();
 	public static final BlockIISmallCrate blockSmallCrate = new BlockIISmallCrate();
 
+	//explosives
+	public static final BlockIIHMXDynamite blockHMXDynamite = new BlockIIHMXDynamite();
+
 	//ammunition
 	public static final BlockIIMineSign blockMineSign = new BlockIIMineSign();
 	public static final BlockIITripmine blockTripmine = new BlockIITripmine();

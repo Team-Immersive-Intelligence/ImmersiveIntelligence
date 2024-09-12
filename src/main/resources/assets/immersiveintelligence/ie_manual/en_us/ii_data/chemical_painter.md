@@ -26,7 +26,9 @@ Most of these items can be later cleaned using the [Chemical Bath](chemical_bath
 
 # data_output
 Output Variables
+<br>  
 |[data_variable]{type:"integer", direction:"in", letter:"p", name:"Paint Color", description:"A number representing the RGB paint color. In its hexadecimal form its digits should be in RRGGBB form, where R is red, G is green and B is blue"}|
+<br>  
 |[data_variable]{type:"string", direction:"in", letter:"p", name:"Paint Color", description:"A string hex code for the color without any additional leading or trailing characters"}|
 
 # data_callback

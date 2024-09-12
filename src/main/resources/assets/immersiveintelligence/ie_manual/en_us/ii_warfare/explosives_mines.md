@@ -29,7 +29,6 @@ Keep in mind landmines do not differentiate between their targets, it is very im
 
 # landmine0
 **Landmines**
-|[item_display]{source:"landmines"}|
 Classic, reliable and cheap to produce: this type of landmines is the most widely used one. The way it works is very straightforward: 
 it explodes after an enemy steps onto it, causing serious damage. However, dropped items and lightweight critters like chickens will not cause a detonation.
 

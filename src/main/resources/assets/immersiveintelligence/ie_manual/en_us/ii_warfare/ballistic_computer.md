@@ -12,7 +12,7 @@ The Ballistic Computer is a complex calculation device that translates a positio
 |[data_variable]{type:"integer", direction:"in", letter:"z", name:"Z-coordinates", description:"The z-coordinate"}|
 |[data_variable]{type:"integer", direction:"in", letter:"m", name:"Shell mass", description:"The ballistic mass"}|
 
-Inputting these value the Ballistic Compute will output a "p" (pitch) and "y" (yaw) value. See next page
+Inputting these value to the Ballistic Computer will output a "p" (pitch) and "y" (yaw) value.
 
 # 2
 |[data_variable]{type:"float", direction:"out", letter:"p", name:"Pitch value", description:"Pitch value to hit your location. From 0-(-105)"}|
