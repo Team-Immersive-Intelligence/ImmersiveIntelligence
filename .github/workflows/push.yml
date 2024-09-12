@@ -45,7 +45,6 @@ jobs:
           name: Tests            # Name of the check run which will be created
           path: build/test-results/test/TEST-*.xml    # Path to test results
           reporter: java-junit        # Format of test results
-          token: ${{ secrets.CARVERBOT_TOKEN }}
 
   notify-public-discord:
     continue-on-error: true

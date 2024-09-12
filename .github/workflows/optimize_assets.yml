@@ -50,7 +50,7 @@ jobs:
 
       - name: Create Pull Request
         if: steps.verify-changed-files.outputs.files_changed == 'true'
-        uses: peter-evans/create-pull-request@v6
+        uses: peter-evans/create-pull-request@v7
         with:
           title: Optimized Assets
           commit-message: optimized assets
