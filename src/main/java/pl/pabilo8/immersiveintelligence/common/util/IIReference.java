@@ -114,7 +114,7 @@ public class IIReference
 
 	public static final String CAT_DATA = "ii_data";
 	public static final String CAT_WARFARE = "ii_warfare";
-	public static final String CAT_LOGISTICS = "ii_logi";
+	public static final String CAT_LOGISTICS = "ii_logistics";
 	public static final String CAT_INTELLIGENCE = "ii_intel";
 	public static final String CAT_MOTORWORKS = "ii_motorworks";
 

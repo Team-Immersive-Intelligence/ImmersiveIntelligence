@@ -63,6 +63,7 @@ import pl.pabilo8.immersiveintelligence.common.item.ammo.missile.ItemIIAmmoRocke
 import pl.pabilo8.immersiveintelligence.common.item.armor.*;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.*;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.material.*;
+import pl.pabilo8.immersiveintelligence.common.item.crafting.ItemIIMaterial;
 import pl.pabilo8.immersiveintelligence.common.item.data.ItemIIDataWireCoil;
 import pl.pabilo8.immersiveintelligence.common.item.data.ItemIIFunctionalCircuit;
 import pl.pabilo8.immersiveintelligence.common.item.data.ItemIIPunchtape;

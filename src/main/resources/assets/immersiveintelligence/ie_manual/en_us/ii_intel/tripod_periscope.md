@@ -3,7 +3,7 @@ Tripod Periscope
 Spectacles on Sticks
 
 # craft and intro
-|[crafting]{source:"crafting_tripod_periscope"}|
+|[crafting]{source:"tripod_periscope"}|
 Tripod periscope is an observation device consisting of a pair of binoculars, magnifying tubes, a rotation mechanism and a tripod.
 The Tripod Periscope allows peeking out of a trench, or a wall without the risk of getting shot.
 

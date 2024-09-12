@@ -15,13 +15,23 @@ When supplied with materials, the machine will automatically start production.
 **Caution** is advised when close to a bath filled with acids, as there are no barriers protecting from falling into it. 
 
 # etching
-The primary use of the [Chemical Bath] is etching [raw circuit boards](electronic_components.md#basic_board) in acid.
-[Recipe Here]
+The primary use of the [Chemical Bath] is etching [raw circuit boards](electronic_components.md) in acid.
+|[recipe]{source:etched_basic_circuit_board}|
+|[recipe]{source:etched_advanced_circuit_board}|
+|[recipe]{source:etched_processor_circuit_board}|
+
 
 # wood_treating
 The machine can also be used for a more efficient production of [Treated Wood Planks].
-[Recipe Here]
+|[recipe]{source:Treated_wood}|
+
 
 # chemical_washing
 While it is not it's main purpose, Chemical Bath can also be used to chemically wash colorable items.
-[Recipes Here]
+|[recipe]{source:quartz_dust}|
+|[recipe]{source:concrete_bricks}|
+|[recipe]{source:glass}|
+|[recipe]{source:glass_pane}|
+|[recipe]{source:wool}|
+|[recipe]{source:carpet}|
+|[recipe]{source:terracotta}|

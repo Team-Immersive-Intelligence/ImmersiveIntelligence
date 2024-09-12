@@ -159,6 +159,7 @@ public class IIManualCategoryData extends IIManualCategory
 		addEntry("radio_station");
 		addEntry("printing_press");
 		addEntry("scanning_conveyor");
+		addEntry("programmable_speaker");
 
 		addEntry("chemical_bath");
 		addEntry("chemical_painter");
@@ -174,55 +175,5 @@ public class IIManualCategoryData extends IIManualCategory
 		addEntry("functions/arithmetic");
 		addEntry("folder/device/sekritdokuments/data_pol");
 
-		/*
-		ManualHelper.addEntry("redstone_interface", getCategory(),
-				new ManualPageMultiblock(ManualHelper.getManual(), "redstone_interface0", MultiblockRedstoneInterface.INSTANCE),
-				new ManualPages.Text(ManualHelper.getManual(), "redstone_interface1")
-		);
-
-		ManualHelper.addEntry("printing_press", getCategory(),
-				new ManualPageMultiblock(ManualHelper.getManual(), "printing_press0", MultiblockPrintingPress.INSTANCE),
-				new ManualPages.Text(ManualHelper.getManual(), "printing_press1"),
-				new ManualPages.Text(ManualHelper.getManual(), "printing_press2"),
-				new IIManualPageDataVariables(ManualHelper.getManual(), "printing_press", true)
-						.addEntry(new DataTypeInteger(), 'a')
-						.addEntry(new DataTypeString(), 'm')
-						.addEntry(new DataTypeString(), 't'),
-				new IIManualPageDataVariablesCallback(ManualHelper.getManual(), "printing_press")
-						.addEntry(new DataTypeInteger(), "get_ink", "get_ink_black")
-						.addEntry(new DataTypeInteger(), "get_ink_cyan")
-						.addEntry(new DataTypeInteger(), "get_ink_magenta")
-						.addEntry(new DataTypeInteger(), "get_ink_yellow")
-						.addEntry(new DataTypeInteger(), "get_energy")
-						.addEntry(new DataTypeInteger(), "get_paper")
-
-		);
-
-		ManualHelper.addEntry("radio_station", getCategory(),
-				new ManualPageMultiblock(ManualHelper.getManual(), "radio_station0", MultiblockRadioStation.INSTANCE),
-				new ManualPages.Text(ManualHelper.getManual(), "radio_station1"),
-				new ManualPages.ItemDisplay(ManualHelper.getManual(), "radio_station2",
-						new ItemStack(IIContent.itemRadioTuner, 1, 0),
-						new ItemStack(IIContent.itemRadioTuner, 1, 1)
-				)
-		);
-
-		ManualHelper.addEntry("small_data_devices", getCategory(),
-				new ManualPages.Crafting(ManualHelper.getManual(), "data_merger", new ItemStack(IIContent.blockMetalDevice, 1, IIBlockTypes_MetalDevice.DATA_MERGER.getMeta())),
-				new ManualPages.Crafting(ManualHelper.getManual(), "data_router", new ItemStack(IIContent.blockMetalDevice, 1, IIBlockTypes_MetalDevice.DATA_ROUTER.getMeta())),
-				new ManualPages.Crafting(ManualHelper.getManual(), "redstone_buffer", new ItemStack(IIContent.blockMetalDevice, 1, IIBlockTypes_MetalDevice.REDSTONE_BUFFER.getMeta())),
-				new ManualPages.Crafting(ManualHelper.getManual(), "timed_buffer", new ItemStack(IIContent.blockMetalDevice, 1, IIBlockTypes_MetalDevice.TIMED_BUFFER.getMeta())),
-				new ManualPages.Crafting(ManualHelper.getManual(), "small_data_buffer", new ItemStack(IIContent.blockMetalDevice, 1, IIBlockTypes_MetalDevice.SMALL_DATA_BUFFER.getMeta()))
-
-		);
-
-		ManualHelper.addEntry("programmable_speaker", getCategory(),
-				new ManualPages.Crafting(ManualHelper.getManual(), "programmable_speaker0", new ItemStack(IIContent.blockDataConnector, 1, IIBlockTypes_Connector.PROGRAMMABLE_SPEAKER.getMeta())),
-				new IIManualPageDataVariables(ManualHelper.getManual(), "programmable_speaker", true)
-						.addEntry(new DataTypeBoolean(), 'o')
-						.addEntry(new DataTypeString(), 's')
-						.addEntry(new DataTypeInteger(), 'v')
-						.addEntry(new DataTypeInteger(), 't')
-		);*/
 	}
 }
