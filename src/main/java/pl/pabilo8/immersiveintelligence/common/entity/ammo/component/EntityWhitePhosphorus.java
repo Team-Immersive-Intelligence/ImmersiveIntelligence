@@ -103,7 +103,7 @@ public class EntityWhitePhosphorus extends EntityIEProjectile implements ILightE
 			cloud.addEffect(new PotionEffect(IEPotions.flammable, Math.round(180), 2));
 			cloud.addEffect(new PotionEffect(IEPotions.stunned, Math.round(80), 1));
 			cloud.addEffect(new PotionEffect(IEPotions.flashed, Math.round(120), 1));
-			cloud.setRadius(4f);
+			cloud.setRadius(6f);
 			cloud.setDuration(Math.round(30f+(10f*Utils.RAND.nextFloat())));
 			cloud.setParticle(EnumParticleTypes.CLOUD);
 			world.spawnEntity(cloud);
