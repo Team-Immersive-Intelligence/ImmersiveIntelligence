@@ -102,7 +102,7 @@ It can be filled with oxygen using the **Bottling Machine** comes especially han
 
 |[crafting]{source:"exoskeleton"}|
 The Exoskeleton upgrade grants it’s user ability to run faster thanks to it’s complex set of motors and hydraulics. 
-As a safety precaution, it is only activated when running. The exoskeleton requires energy to operate.
+As a safety precaution, it is only activated when running. The exoskeleton requires energy to operate. Its modes can be toggled by pressing "G"
 
 # 15
 **Boot Reinforcement**
