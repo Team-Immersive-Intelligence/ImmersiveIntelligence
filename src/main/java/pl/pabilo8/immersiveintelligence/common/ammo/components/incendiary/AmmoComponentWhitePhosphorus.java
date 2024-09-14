@@ -2,41 +2,39 @@ package pl.pabilo8.immersiveintelligence.common.ammo.components.incendiary;
 
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import blusunrize.immersiveengineering.common.util.IEPotions;
+import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.EntityAreaEffectCloud;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import pl.pabilo8.immersiveintelligence.api.ShrapnelHandler;
-import pl.pabilo8.immersiveintelligence.api.ShrapnelHandler.Shrapnel;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.ComponentEffectShape;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.ComponentRole;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
 import pl.pabilo8.immersiveintelligence.common.IIPotions;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
-import pl.pabilo8.immersiveintelligence.common.entity.ammo.component.EntityShrapnel;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.component.EntityWhitePhosphorus;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageParticleEffect;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
-import pl.pabilo8.immersiveintelligence.common.util.IIExplosion;
+
+import javax.annotation.Nullable;
 
 /**
  * @author Pabilo8
  * @updated 06.03.2024
- * @ii-approved 0.3.1
  * @since 10.07.2021
- * @author Avalon
- * @since 9.13.2024
+ * @authir Avalon
+ * @updated 14.9.2024
  */
 public class AmmoComponentWhitePhosphorus extends AmmoComponent
 {
 	public AmmoComponentWhitePhosphorus()
 	{
-		super("white_phosphorus", 1f, ComponentRole.INCENDIARY, IIColor.fromPackedRGBA(0x6b778a));
+		super("white_phosphorus", 1f, ComponentRole.SPECIAL, IIColor.fromPackedRGBA(0x6b778a));
 	}
 
 	@Override
@@ -46,57 +44,82 @@ public class AmmoComponentWhitePhosphorus extends AmmoComponent
 	}
 
 	@Override
-	public void onEffect(World world, Vec3d pos, Vec3d dir, ComponentEffectShape shape, NBTTagCompound tag, float componentAmount, float multiplier, Entity owner)
+	public void onEffect(World world, Vec3d pos, Vec3d dir, ComponentEffectShape shape, NBTTagCompound tag, float componentAmount, float multiplier, @Nullable Entity owner)
 	{
-
-		BlockPos ppos = new BlockPos(pos);
-		new IIExplosion(world, owner, pos, null, 3*multiplier, 6, ComponentEffectShape.STAR, true, false, false)
-				.doExplosion();
-
-
-
-		EntityLivingBase[] entities = world.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(ppos).grow(3*multiplier)).toArray(new EntityLivingBase[0]);
-		for(EntityLivingBase e : entities)
+		// CLOUD shape: similar to what you implemented earlier
+		if (shape == ComponentEffectShape.ORB)
 		{
-			e.addPotionEffect(new PotionEffect(IEPotions.flashed, 40, 1));
-			e.addPotionEffect(new PotionEffect(IEPotions.stunned, 40, 1));
-			e.addPotionEffect(new PotionEffect(IEPotions.flammable, 40, 1));
-			e.addPotionEffect(new PotionEffect(IIPotions.brokenArmor, 40, 0));
-		}
+			// Effect logic for cloud shape (similar to your original implementation)
+			if (world.isRemote)
+				return;
 
-		IIPacketHandler.playRangedSound(world, pos, IISounds.explosionIncendiary, SoundCategory.NEUTRAL, 16, 1f, 0f);
+			Vec3d v = dir.scale(-1); // Reverse direction for effect shaping
+			IIPacketHandler.playRangedSound(world, pos, IISounds.explosionIncendiary, SoundCategory.NEUTRAL, (int)(40 * multiplier), 1f, 1f);
 
-		// Get the shrapnel component from ShrapnelHandler
-		Shrapnel shrapnel = ShrapnelHandler.registry.get("white_phosphorus");
+			// Spawn phosphorus fragments
+			for (int i = 0; i < 30 * multiplier; i++)
+			{
+				Vec3d vecDir = new Vec3d(1, 0, 0).rotateYaw(i / (30f * multiplier) * 360f).add(v);
+				EntityWhitePhosphorus shrap = new EntityWhitePhosphorus(world, pos.x + vecDir.x, pos.y + v.y + 1f, pos.z + vecDir.z, 0, 0, 0);
 
-		if (shrapnel != null) {
-			int shrapnelCount = 10 + world.rand.nextInt(10); // Randomly spawn between 10-20 shrapnel pieces
+				shrap.motionX = vecDir.x * 0.35f;
+				shrap.motionY = 0.1f + (Utils.RAND.nextDouble() * 0.2f);
+				shrap.motionZ = vecDir.z * 0.35f;
 
-			for (int i = 0; i < shrapnelCount; i++) {
-				// Generate a random angle for the direction within a half-sphere
-				double theta = world.rand.nextDouble() * Math.PI; // Angle from the vertical axis (0 to π)
-				double phi = world.rand.nextDouble() * 2 * Math.PI; // Angle in the x-z plane (0 to 2π)
-
-				// Convert spherical coordinates to Cartesian coordinates
-				double x = Math.sin(theta) * Math.cos(phi);
-				double y = Math.cos(theta); // Adjust this if shrapnel appears to go too high
-				double z = Math.sin(theta) * Math.sin(phi);
-
-				// Create a vector with some upward motion
-				Vec3d randomizedDir = new Vec3d(x, y, z).normalize().scale(1.0); // Adjust speed scaling as necessary
-
-				// Create and spawn the shrapnel
-				EntityShrapnel entityShrapnel = new EntityShrapnel(world, pos.x, pos.y, pos.z, randomizedDir.x, randomizedDir.y, randomizedDir.z, shrapnel);
-				entityShrapnel.setNoGravity(false); // Ensure gravity is applied
-				entityShrapnel.canIgnite();
-				entityShrapnel.setFire(10); // Set the shrapnel on fire for 10 seconds
-				world.spawnEntity(entityShrapnel);
+				world.spawnEntity(shrap);
 			}
-		}
 
-		EntityWhitePhosphorus entityWhitePhosphorus = new EntityWhitePhosphorus(world);
-		entityWhitePhosphorus.setPosition(pos.x, pos.y, pos.z);
-		world.spawnEntity(entityWhitePhosphorus);
-		
+			// Send particle effect message to nearby clients
+			IIPacketHandler.INSTANCE.sendToAllAround(new MessageParticleEffect("white_phosphorus", world, pos.addVector(0, 1, 0)), IIPacketHandler.targetPointFromPos(pos, world, 48));
+
+			// Area of effect cloud (applies potion effects)
+			EntityAreaEffectCloud cloud = new EntityAreaEffectCloud(world, pos.x + v.x, pos.y + v.y + 1f, pos.z + v.z);
+			cloud.addEffect(new PotionEffect(IIPotions.brokenArmor, Math.round(240), 2));
+			cloud.addEffect(new PotionEffect(IEPotions.flammable, Math.round(240), 4));
+			cloud.addEffect(new PotionEffect(IEPotions.stunned, Math.round(160), 2));
+			cloud.addEffect(new PotionEffect(IEPotions.flashed, Math.round(270), 1));
+			cloud.setRadius(3f * multiplier);
+			cloud.setDuration(Math.round(20f + (10f * Utils.RAND.nextFloat())));
+			cloud.setParticle(EnumParticleTypes.CLOUD);
+			world.spawnEntity(cloud);
+		}
+		// BURST shape: a more explosive spread of shrapnel and effects
+		else if (shape == ComponentEffectShape.STAR)
+		{
+			if (world.isRemote)
+				return;
+
+			// Play a more intense sound for burst explosion
+			IIPacketHandler.playRangedSound(world, pos, IISounds.explosionIncendiary, SoundCategory.NEUTRAL, (int)(60 * multiplier), 1.2f, 1.2f);
+
+			// Spawn shrapnel in a wider, explosive pattern
+			for (int i = 0; i < 50 * multiplier; i++)
+			{
+				// Adjust angles to spread more widely for burst effect
+				Vec3d vecDir = new Vec3d(1, 0, 0).rotateYaw(i / (50f * multiplier) * 360f).add(dir);
+				EntityWhitePhosphorus shrap = new EntityWhitePhosphorus(world, pos.x + vecDir.x, pos.y + dir.y + 1f, pos.z + vecDir.z, 0, 0, 0);
+
+				// Burst fragments have higher speed and randomness
+				shrap.motionX = vecDir.x * 0.6f;
+				shrap.motionY = 0.2f + (Utils.RAND.nextDouble() * 0.3f);
+				shrap.motionZ = vecDir.z * 0.6f;
+
+				world.spawnEntity(shrap);
+			}
+
+			// Send particle effect with burst ID
+			IIPacketHandler.INSTANCE.sendToAllAround(new MessageParticleEffect("white_phosphorus_burst", world, pos.addVector(0, 1, 0)), IIPacketHandler.targetPointFromPos(pos, world, 64));
+
+			// A larger, faster dissipating cloud
+			EntityAreaEffectCloud cloud = new EntityAreaEffectCloud(world, pos.x + dir.x, pos.y + dir.y + 1f, pos.z + dir.z);
+			cloud.addEffect(new PotionEffect(IIPotions.brokenArmor, Math.round(180), 3));
+			cloud.addEffect(new PotionEffect(IEPotions.flammable, Math.round(180), 5));
+			cloud.addEffect(new PotionEffect(IEPotions.stunned, Math.round(120), 3));
+			cloud.addEffect(new PotionEffect(IEPotions.flashed, Math.round(220), 2));
+			cloud.setRadius(4.5f * multiplier); // Burst shape has a larger radius
+			cloud.setDuration(Math.round(15f + (8f * Utils.RAND.nextFloat()))); // Burst effect lasts a bit shorter
+			cloud.setParticle(EnumParticleTypes.EXPLOSION_LARGE);
+			world.spawnEntity(cloud);
+		}
 	}
 }
