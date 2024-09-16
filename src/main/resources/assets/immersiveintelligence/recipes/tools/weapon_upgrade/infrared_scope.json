@@ -8,7 +8,7 @@
   "key": {
     "g": {
       "type": "forge:ore_dict",
-      "ore": "blockGlassBlack"
+      "ore": "lensInfrared"
     },
     "p": {
       "type": "forge:ore_dict",
