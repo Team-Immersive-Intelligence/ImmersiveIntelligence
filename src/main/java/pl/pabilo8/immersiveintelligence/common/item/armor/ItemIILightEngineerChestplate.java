@@ -110,10 +110,25 @@ public class ItemIILightEngineerChestplate extends ItemIILightEngineerArmorBase 
 		}
 		if(getUpgrades(stack).hasKey("camo_mesh")&&world.getTotalWorldTime()%10==0)
 		{
-			Material material = world.getBlockState(player.getPosition()).getMaterial();
-			if(player.isSneaking()&&(material==Material.GRASS||material==Material.LEAVES||material==Material.VINE))
+			// Get the player's current position, below it, and the surrounding blocks
+			Material materialCurrent = world.getBlockState(player.getPosition()).getMaterial();
+			Material materialBelow = world.getBlockState(player.getPosition().down()).getMaterial();
+			Material materialNorth = world.getBlockState(player.getPosition().north()).getMaterial();
+			Material materialSouth = world.getBlockState(player.getPosition().south()).getMaterial();
+			Material materialEast = world.getBlockState(player.getPosition().east()).getMaterial();
+			Material materialWest = world.getBlockState(player.getPosition().west()).getMaterial();
+
+			// Check if any of the blocks around the player or at their position match grass, leaves, or vine
+			if (player.isSneaking() && (
+					materialCurrent == Material.GRASS || materialCurrent == Material.LEAVES || materialCurrent == Material.VINE ||
+							materialBelow == Material.GRASS || materialBelow == Material.LEAVES || materialBelow == Material.VINE ||
+							materialNorth == Material.GRASS || materialNorth == Material.LEAVES || materialNorth == Material.VINE ||
+							materialSouth == Material.GRASS || materialSouth == Material.LEAVES || materialSouth == Material.VINE ||
+							materialEast == Material.GRASS || materialEast == Material.LEAVES || materialEast == Material.VINE ||
+							materialWest == Material.GRASS || materialWest == Material.LEAVES || materialWest == Material.VINE
+			))
 			{
-				player.addPotionEffect(new PotionEffect(IIPotions.concealed, 15, 0, false, false));
+				player.addPotionEffect(new PotionEffect(IIPotions.concealed, 15, 0, true, false));
 				player.addPotionEffect(new PotionEffect(MobEffects.INVISIBILITY, 15, 0, true, false));
 			}
 		}
