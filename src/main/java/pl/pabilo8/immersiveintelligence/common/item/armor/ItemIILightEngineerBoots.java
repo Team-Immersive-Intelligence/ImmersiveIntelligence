@@ -90,12 +90,9 @@ public class ItemIILightEngineerBoots extends ItemIILightEngineerArmorBase imple
 	@Override
 	public void onArmorTick(World world, EntityPlayer player, ItemStack stack)
 	{
-		// Check if the boots have "flippers" upgrade and the player is in water
 		if(getUpgrades(stack).hasKey("flippers") && player.isInWater())
 		{
 			ItemNBTHelper.setBoolean(stack, "flippin", true);
-
-			// Give the player a speed boost in water
 			player.addPotionEffect(new PotionEffect(MobEffects.SPEED, 15, 1, true, false)); // Speed level 1 for 15 ticks
 		}
 		else if(ItemNBTHelper.hasKey(stack, "flippin"))
@@ -117,6 +114,11 @@ public class ItemIILightEngineerBoots extends ItemIILightEngineerArmorBase imple
 			ItemNBTHelper.remove(stack, "rackets");
 
 
+		boolean springs = getUpgrades(stack).hasKey("internal_springs");
+		if(!world.isRemote)
+		{
+			player.stepHeight = 0;  // Ensures no sound is made during stepping
+		}
 	}
 
 	@Override
