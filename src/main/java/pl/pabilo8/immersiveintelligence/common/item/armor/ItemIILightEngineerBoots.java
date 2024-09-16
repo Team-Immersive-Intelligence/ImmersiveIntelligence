@@ -115,9 +115,18 @@ public class ItemIILightEngineerBoots extends ItemIILightEngineerArmorBase imple
 
 
 		boolean springs = getUpgrades(stack).hasKey("internal_springs");
-		if(!world.isRemote)
+		if(!world.isRemote && springs)
 		{
+			ItemNBTHelper.setBoolean(stack, "internal_springs", true);
 			player.stepHeight = 0;  // Ensures no sound is made during stepping
+		}
+
+
+		boolean reinforcement = getUpgrades(stack).hasKey("boot_reinforcement");
+		if(reinforcement && player.isBurning())
+		{
+			ItemNBTHelper.setBoolean(stack, "boot_reinforcement", true);
+			player.extinguish();
 		}
 	}
 

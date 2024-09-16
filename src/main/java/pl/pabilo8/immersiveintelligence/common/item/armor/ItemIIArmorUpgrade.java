@@ -140,15 +140,10 @@ public class ItemIIArmorUpgrade extends ItemIISubItemsBase<ArmorUpgrades> implem
 
 		//--- Boots ---//
 
-		BOOT_REINFORCEMENT(ImmutableSet.of(ArmorTypes.LIGHT_ENGINEER_BOOTS),
-				(upgrade, modifications) -> {
-					modifications.setBoolean("reinforced", true);
-					modifications.setDouble("toughness_increase", 1);
-					modifications.setDouble("armor_increase", 1);
-				}),
-		SNOW_RACKETS(ImmutableSet.of(ArmorTypes.LIGHT_ENGINEER_BOOTS), "flippers"),
-		FLIPPERS(ImmutableSet.of(ArmorTypes.LIGHT_ENGINEER_BOOTS), "snow_rackets"),
-		INTERNAL_SPRINGS(ImmutableSet.of(ArmorTypes.LIGHT_ENGINEER_BOOTS));
+		BOOT_REINFORCEMENT(ImmutableSet.of(ArmorTypes.LIGHT_ENGINEER_BOOTS), "boot_reinforcement"),
+		SNOW_RACKETS(ImmutableSet.of(ArmorTypes.LIGHT_ENGINEER_BOOTS), "snow_rackets"),
+		FLIPPERS(ImmutableSet.of(ArmorTypes.LIGHT_ENGINEER_BOOTS), "flippers"),
+		INTERNAL_SPRINGS(ImmutableSet.of(ArmorTypes.LIGHT_ENGINEER_BOOTS), "internal_springs");
 
 		private final ImmutableSet<ArmorTypes> toolset;
 		private final BiPredicate<ItemStack, ItemStack> check;

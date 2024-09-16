@@ -94,9 +94,37 @@ public class ItemIILightEngineerChestplate extends ItemIILightEngineerArmorBase 
 		}
 	}
 
+	private boolean hasReinforcement(EntityPlayer player)
+	{
+		// Get the boots specifically
+		ItemStack boots = player.getItemStackFromSlot(EntityEquipmentSlot.FEET);
+
+		// Check if the boots are not empty and if the "reinforcement" upgrade is present
+		if (!boots.isEmpty())
+		{
+			NBTTagCompound upgrades = getUpgrades(boots);
+			if (upgrades != null && upgrades.hasKey("boot_reinforcement"))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
 	@Override
 	public void onArmorTick(World world, EntityPlayer player, ItemStack stack)
 	{
+
+		boolean hasHeatCoat = getUpgrades(stack).hasKey("heatcoat");
+		boolean hasReinforcement = hasReinforcement(player);
+
+
+		if(hasHeatCoat && hasReinforcement)
+		{
+			player.addPotionEffect(new PotionEffect(MobEffects.FIRE_RESISTANCE, 20, 0, true, false)); // Give fire resistance for 1 second
+			return;
+		}
+
 		super.onArmorTick(world, player, stack);
 		if(player.getAir()!=300&&hasUpgrade(stack, "scuba")&&hasUpgrade(player.getItemStackFromSlot(EntityEquipmentSlot.HEAD), "gasmask"))
 		{
@@ -130,6 +158,14 @@ public class ItemIILightEngineerChestplate extends ItemIILightEngineerArmorBase 
 			{
 				player.addPotionEffect(new PotionEffect(IIPotions.concealed, 15, 0, true, false));
 				player.addPotionEffect(new PotionEffect(MobEffects.INVISIBILITY, 15, 0, true, false));
+			}
+		}
+		if(getUpgrades(stack).hasKey("heatcoat"))
+		{
+			if(player.isBurning())
+			{
+				player.attackEntityFrom(DamageSource.IN_FIRE, 0.75F);
+				player.attackEntityFrom(DamageSource.ON_FIRE, 0.5F);
 			}
 		}
 	}

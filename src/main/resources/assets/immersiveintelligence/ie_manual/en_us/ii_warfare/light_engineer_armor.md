@@ -69,7 +69,7 @@ The Hazmat Coating is an additional internal armor layer protecting from radiati
 
 |[crafting]{source:"heat_resistant_coating"}|
 The Heat Resistance Coating layer allows to swim in hot liquids which would otherwise incinerate the wearer. 
-Only works when worn with reinforced boots due to overlapping protective layers and heat distribution.
+Only works when worn with reinforced boots, otherwise, it will only provide fire damage negation.
 
 # 10
 **Anti static Mesh**
