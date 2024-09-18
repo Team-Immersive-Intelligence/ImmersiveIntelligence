@@ -24,7 +24,8 @@ The Gas Mask is an upgrade which protects the user from hazardous gasses. When c
 
 |[crafting]{source:"ir_headgear"}|
 The Infiltrator's Headgear is an advanced tool made for espionage. 
-The headgear allows magnifying the image and emits infrared light, allowing night vision. 
+The headgear allows magnifying the image and emits infrared light, allowing night vision.
+By Default, It can be toggled by pressing "V"
 
 
 # 4
@@ -32,8 +33,8 @@ The headgear allows magnifying the image and emits infrared light, allowing nigh
 
 |[crafting]{source:"tech_headgear"}|
 The Technician's Headgear is a useful tool for managing factories. 
-It displays information such as energy contained in machines, rotary power statistics, stored fluids and data. 
-
+It displays information such as energy contained in machines, rotary power statistics, stored fluids and data.
+By Default, It can be toggled by pressing "V"
 
 # 5 
 **The Engineer Headgear**
@@ -41,6 +42,7 @@ It displays information such as energy contained in machines, rotary power stati
 |[crafting]{source:"engineer_headgear"}|
 The Engineer's Headgear combines the effects of Infiltrator's- and Technician's headgear into one device. 
 As a result, the power consumption is increased, but so is the amount of features. Only thing it lacks now is a mug holder.
+By Default, It can be toggled by pressing "V"
 
 # 6
 **Steel Armor Plates**
@@ -67,7 +69,7 @@ The Hazmat Coating is an additional internal armor layer protecting from radiati
 
 |[crafting]{source:"heat_resistant_coating"}|
 The Heat Resistance Coating layer allows to swim in hot liquids which would otherwise incinerate the wearer. 
-Only works when worn with reinforced boots due to overlapping protective layers and heat distribution.
+Only works when worn with reinforced boots, otherwise, it will only provide fire damage negation.
 
 # 10
 **Anti static Mesh**
@@ -102,7 +104,8 @@ It can be filled with oxygen using the **Bottling Machine** comes especially han
 
 |[crafting]{source:"exoskeleton"}|
 The Exoskeleton upgrade grants it’s user ability to run faster thanks to it’s complex set of motors and hydraulics. 
-As a safety precaution, it is only activated when running. The exoskeleton requires energy to operate.
+As a safety precaution, it is only activated when running. It is not advised to be used while swimming. The exoskeleton requires energy to operate. By Default Its modes can be toggled by pressing "G"
+
 
 # 15
 **Boot Reinforcement**
