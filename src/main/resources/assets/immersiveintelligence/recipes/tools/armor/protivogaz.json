@@ -16,7 +16,7 @@
     },
     "g": {
       "type": "forge:ore_dict",
-      "ore": "paneGlass"
+      "ore": "lens"
     },
     "b": {
       "item": "immersiveengineering:toolupgrade",
