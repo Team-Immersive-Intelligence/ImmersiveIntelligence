@@ -34,7 +34,7 @@ public class AmmoComponentWhitePhosphorus extends AmmoComponent
 {
 	public AmmoComponentWhitePhosphorus()
 	{
-		super("white_phosphorus", 1f, ComponentRole.SPECIAL, IIColor.fromPackedRGBA(0x6b778a));
+		super("white_phosphorus", 1f, ComponentRole.SPECIAL, IIColor.fromPackedRGB(0x6b778a));
 	}
 
 	@Override
