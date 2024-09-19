@@ -186,7 +186,7 @@ public class IIContent
 	public static final ItemIIAmmoGrenade itemGrenade = new ItemIIAmmoGrenade();
 
 	public static final ItemIIAmmoMachinegun itemAmmoMachinegun = new ItemIIAmmoMachinegun();
-	public static final ItemIIAmmoPistol itemAmmoAssaultRifle = new ItemIIAmmoPistol();
+	public static final ItemIIAmmoAssaultRifle itemAmmoAssaultRifle = new ItemIIAmmoAssaultRifle();
 	public static final ItemIIAmmoSubmachinegun itemAmmoSubmachinegun = new ItemIIAmmoSubmachinegun();
 	public static final ItemIIAmmoRevolver itemAmmoRevolver = new ItemIIAmmoRevolver();
 	public static final ItemIIAmmoShotgun itemAmmoShotgun = new ItemIIAmmoShotgun();
