@@ -1,4 +1,4 @@
-name: Notify Discord on New Issue
+name: Issue Added
 
 on:
   issues:
@@ -11,8 +11,9 @@ jobs:
       - run: |
           echo 'ISSUE ID: ${{ github.event.issue.id }}'
           echo 'PROJECT ITEM ID: ${{ github.event.issue.number }}'
-      - name: Notify Discord on New Issue
+
+      - name: Notify Internal Discord
         uses: sebastianpopp/discord-action@releases/v2
         with:
-          webhook: ${{ secrets.CARVERBOT_WEBHOOK }}
-          message: "${{ github.event.issue.title }}\nhttps://github.com/Team-Immersive-Intelligence/ImmersiveIntelligence/issues/${{ github.event.issue.number }}"
+          webhook: ${{ secrets.WH_TASK_ADDED }}
+          message: "Task [${{ github.event.issue.title }}](https://github.com/${{ github.repository }}/issues/${{ github.event.issue.number }}) has been added to the project."

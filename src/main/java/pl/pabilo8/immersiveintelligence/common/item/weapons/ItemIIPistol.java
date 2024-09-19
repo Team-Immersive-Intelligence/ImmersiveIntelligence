@@ -39,12 +39,29 @@ public class ItemIIPistol extends ItemIIGunBase implements IItemScrollable
 	public static final String FIRE_MODE_TIMER = "mode_switch";
 
 	//--- Ammunition Handlers ---//
-	private final AmmoHandlerMagazine ammoHandler;
+	private final AmmoHandlerMagazine ammoHandler, ammoHandler2;
 
 	public ItemIIPistol()
 	{
 		super("pistol");
-		ammoHandler = new AmmoHandlerMagazine(this, MAGAZINE, IIContent.itemAmmoPistol)
+		ammoHandler = new AmmoHandlerMagazine(this, MAGAZINE, IIContent.itemAmmoSubmachinegun)
+		{
+			@Nullable
+			@Override
+			protected SoundEvent getUnloadSound(ItemStack weapon, EasyNBT nbt)
+			{
+				return IISounds.assaultRifleUnload;
+			}
+
+			@Nullable
+			@Override
+			protected SoundEvent getReloadSound(ItemStack weapon, EasyNBT nbt)
+			{
+				return IISounds.assaultRifleReload;
+			}
+		};
+
+		ammoHandler2 = new AmmoHandlerMagazine(this, MAGAZINE, IIContent.itemAmmoPistol)
 		{
 			@Nullable
 			@Override
@@ -78,7 +95,7 @@ public class ItemIIPistol extends ItemIIGunBase implements IItemScrollable
 	@Override
 	public AmmoHandler getAmmoHandler(ItemStack weapon)
 	{
-		return ammoHandler;
+		return hasIIUpgrade(weapon, WeaponUpgrade.SMG_MAG_CONVERTER_KIT) ? ammoHandler : ammoHandler2;
 	}
 
 	@Override
@@ -232,6 +249,11 @@ public class ItemIIPistol extends ItemIIGunBase implements IItemScrollable
 				player.world.playSound(null, player.posX, player.posY, player.posZ, IISounds.assaultRifleModeChange, SoundCategory.PLAYERS, 0.25f, 1f);
 			}
 		}
+	}
+
+	public boolean isScoped(ItemStack stack)
+	{
+		return hasIIUpgrade(stack, WeaponUpgrade.SCOPE);
 	}
 }
 

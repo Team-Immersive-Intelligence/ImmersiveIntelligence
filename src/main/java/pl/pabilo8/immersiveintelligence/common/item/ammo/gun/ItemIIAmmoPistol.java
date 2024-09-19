@@ -35,7 +35,7 @@ public class ItemIIAmmoPistol extends ItemIIAmmoBase<EntityAmmoProjectile>
 {
 	public ItemIIAmmoPistol()
 	{
-		super("pistol_1bCal", Casing.STG_1BCAL);
+		super("pistol_1bCal", Casing.SMG_1BCAL);
 	}
 
 	@Override
@@ -45,10 +45,7 @@ public class ItemIIAmmoPistol extends ItemIIAmmoBase<EntityAmmoProjectile>
 	}
 
 	@Override
-	public float getPenetrationDepth()
-	{
-		return super.getPenetrationDepth();
-	}
+	public float getPenetrationDepth() { return super.getPenetrationDepth(); }
 
 	@Override
 	public int getPropellantNeeded()

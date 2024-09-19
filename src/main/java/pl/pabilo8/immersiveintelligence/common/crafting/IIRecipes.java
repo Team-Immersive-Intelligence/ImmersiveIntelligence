@@ -515,6 +515,11 @@ public class IIRecipes
 				new IngredientStack("springSteel"));
 
 		BlueprintCraftingRecipe.addRecipe("bullet_magazines",
+				IIContent.itemBulletMagazine.getStack(Magazines.PISTOL),
+				new IngredientStack("plateSteel", 2),
+				new IngredientStack("springSteel"));
+
+		BlueprintCraftingRecipe.addRecipe("bullet_magazines",
 				IIContent.itemBulletMagazine.getStack(Magazines.SUBMACHINEGUN_DRUM),
 				new IngredientStack("plateSteel", 5),
 				new IngredientStack("springSteel"));
@@ -1190,12 +1195,13 @@ public class IIRecipes
 		FillerRecipe.addRecipe(IIContent.itemAmmoSubmachinegun, 50, 600);
 		FillerRecipe.addRecipe(IIContent.itemAmmoRevolver, 40, 400);
 		FillerRecipe.addRecipe(IIContent.itemAmmoShotgun, 40, 300);
+		FillerRecipe.addRecipe(IIContent.itemAmmoPistol, 40, 300);
 
 		//Projectiles
 		for(ItemIIAmmoBase item : new ItemIIAmmoBase[]{IIContent.itemAmmoHeavyArtillery, IIContent.itemAmmoMediumArtillery, IIContent.itemAmmoLightArtillery,
 				IIContent.itemAmmoLightGun, IIContent.itemAmmoMortar,
 				IIContent.itemAmmoAutocannon,
-				IIContent.itemAmmoMachinegun, IIContent.itemAmmoAssaultRifle, IIContent.itemAmmoSubmachinegun, IIContent.itemAmmoShotgun})
+				IIContent.itemAmmoMachinegun, IIContent.itemAmmoAssaultRifle, IIContent.itemAmmoSubmachinegun, IIContent.itemAmmoShotgun, IIContent.itemAmmoPistol})
 		{
 			assert item!=null;
 

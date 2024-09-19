@@ -20,6 +20,8 @@ public enum CoreType implements ISerializableEnum
 	PIERCING_SABOT(0, 0f, ComponentEffectShape.LINE, 1.4f, 2, 0.85f, ComponentRole.PIERCING),
 
 	CANISTER(4, 1.25f, ComponentEffectShape.ORB, 0.2f, 0, 0.35f, ComponentRole.GENERAL_PURPOSE),
+	BUCKSHOT(4, 1.25f, ComponentEffectShape.ORB, 0.3f, 0, 0.6f, ComponentRole.SHRAPNEL),
+	BIRDSHOT(8, 0.75f, ComponentEffectShape.ORB, 0.1f, 0, 0.2f, ComponentRole.SHRAPNEL),
 	CLUSTER(2, 1.25f, ComponentEffectShape.CONE, 0.2f, -4, 0.35f, ComponentRole.GENERAL_PURPOSE);
 
 	private final int componentSlots, penHardnessBonus;

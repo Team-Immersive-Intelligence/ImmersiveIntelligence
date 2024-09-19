@@ -61,7 +61,8 @@ public class ItemIIWeaponUpgrade extends ItemIISubItemsBase<WeaponUpgrade> imple
 		ASSAULT_RIFLE(0xff6440, '\u24bb'),
 		SPIGOT_MORTAR(0x7a538d, '\u24bc'),
 		RIFLE(0x84820e, '\u24bd'),
-		SHOTGUN(0x3af0ed, '\u24bd');
+		SHOTGUN(0x3af0ed, '\u24bd'),
+		PISTOL(0x91f7e1, '\u24bd');
 
 		public final int color;
 		public final char symbol;
@@ -95,7 +96,7 @@ public class ItemIIWeaponUpgrade extends ItemIISubItemsBase<WeaponUpgrade> imple
 		//Slows down mg setting up time, but decreases recoil
 		PRECISE_BIPOD(WeaponType.MACHINEGUN, "hasty_bipod", "tripod"),
 		//3 x Magnification
-		SCOPE(new WeaponType[]{WeaponType.MACHINEGUN, WeaponType.AUTOREVOLVER, WeaponType.ASSAULT_RIFLE, WeaponType.RIFLE}, "infrared_scope"),
+		SCOPE(new WeaponType[]{WeaponType.MACHINEGUN, WeaponType.AUTOREVOLVER, WeaponType.ASSAULT_RIFLE, WeaponType.RIFLE, WeaponType.PISTOL}, "infrared_scope"),
 		//Allows nightvision + 2 x magnification, uses energy from player's backpack
 		INFRARED_SCOPE(new WeaponType[]{WeaponType.MACHINEGUN, WeaponType.ASSAULT_RIFLE},
 				(stack, nbt) -> {
@@ -114,7 +115,7 @@ public class ItemIIWeaponUpgrade extends ItemIISubItemsBase<WeaponUpgrade> imple
 		//Adds a velocity, penetration and suppression boost, lowers the firerate
 		STURDY_BARREL(WeaponType.SUBMACHINEGUN),
 		//Makes gunshots (almost) silent
-		SUPPRESSOR(WeaponType.SUBMACHINEGUN),
+		SUPPRESSOR(new WeaponType[]{WeaponType.SUBMACHINEGUN, WeaponType.PISTOL}),
 		//Allows using drum magazines
 		BOTTOM_LOADING(WeaponType.SUBMACHINEGUN),
 		//Reduces aiming time
@@ -155,7 +156,11 @@ public class ItemIIWeaponUpgrade extends ItemIISubItemsBase<WeaponUpgrade> imple
 		//--- Rifle ---//
 
 		SEMI_AUTOMATIC(WeaponType.RIFLE, "extended_barrel"),
-		EXTENDED_BARREL(WeaponType.RIFLE, "semi_automatic");
+		EXTENDED_BARREL(WeaponType.RIFLE, "semi_automatic"),
+
+		//--- Pistol ---//
+
+		SMG_MAG_CONVERTER_KIT(WeaponType.PISTOL, "smg_conversion_kit");
 
 		public final ImmutableSet<WeaponType> toolset;
 		private final BiPredicate<ItemStack, ItemStack> applyCheck;

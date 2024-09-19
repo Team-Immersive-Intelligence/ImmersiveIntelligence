@@ -18,14 +18,15 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.client.model.obj.OBJModel;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
 import pl.pabilo8.immersiveintelligence.client.fx.IIParticles;
 import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.client.util.amt.*;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMTBullet.BulletState;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.Pistol;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIPistol;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIGunBase;
+import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIPistol;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIWeaponUpgrade.WeaponUpgrade;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler;
@@ -140,6 +141,7 @@ public class PistolRenderer extends IIUpgradableItemRendererAMT<ItemIIPistol> im
 		if(handRender)
 		{
 			int aiming = nbt.getInt(ItemIIPistol.AIMING);
+			boolean scoped = item.isScoped(stack);
 			float preciseAim = IIAnimationUtils.getAnimationProgress(aiming, item.getAimingTime(stack, nbt),
 					true, !Minecraft.getMinecraft().player.isSneaking(),
 					1, 3,
@@ -153,7 +155,13 @@ public class PistolRenderer extends IIUpgradableItemRendererAMT<ItemIIPistol> im
 				GlStateManager.translate(-preciseAim*1.03125, 0.225*preciseAim, 0);
 				GlStateManager.rotate(preciseAim*-8f, 0, 1, 0);
 				GlStateManager.rotate(preciseAim*-5f, 1, 0, 0);
-				GlStateManager.translate(0, 0, preciseAim*0.25);
+				if(scoped)
+				{
+					GlStateManager.translate(0, preciseAim*-0.1, preciseAim*0.85);
+					GlStateManager.rotate(5*preciseAim, 1, 0, 0);
+				}
+				else
+					GlStateManager.translate(0, 0, preciseAim*0.25);
 				if(recoil > 0)
 					GlStateManager.translate(0, -recoil*(0.155-0.1*preciseAim), recoil*0.25);
 			}
@@ -193,7 +201,18 @@ public class PistolRenderer extends IIUpgradableItemRendererAMT<ItemIIPistol> im
 					}
 				}
 				break;
+				//Grenade Launcher
+				case 2:
+				{
+					//Rotate the gun held 35 degrees during reload
+					if(handRender)
+					{
+						GlStateManager.rotate(rpart*35f, 1, 0, 0);
+						GlStateManager.translate(0, -rpart*0.35, 0);
+					}
 
+				}
+				break;
 				default:
 					break;
 			}
@@ -209,26 +228,13 @@ public class PistolRenderer extends IIUpgradableItemRendererAMT<ItemIIPistol> im
 					((float)MathHelper.clampedLerp(lastMode, fireMode, modeProgress))*0.5f
 			);
 		}
-
-		//Animate Stereoscopic Rangefinder's nixie tube distance meter
 		if(handRender)
 		{
 			int value = 0;
-			//if(item.hasIIUpgrade(stack, WeaponUpgrade.STEREOSCOPIC_RANGEFINDER))
-			//{
-				//RayTraceResult mop = ClientUtils.mc().player.rayTrace(60, partialTicks);
-				//if(mop!=null)
-					//value = (int)ClientUtils.mc().player.getPositionVector().distanceTo(mop.hitVec);
-			//}
-			//else
-			//{
-				if(fireMode==2)
-					value = (int)MathHelper.clamp((1f-((firing-partialTicks)/(float)(firingDelay)))*99, 0, 99);
-			//}
 
-
+			if(fireMode==2)
+				value = (int)MathHelper.clamp((1f-((firing-partialTicks)/(float)(firingDelay)))*99, 0, 99);
 		}
-
 		//Finally, render
 		for(AMT amt : model)
 			amt.render(tes, buf);
@@ -243,13 +249,18 @@ public class PistolRenderer extends IIUpgradableItemRendererAMT<ItemIIPistol> im
 				//.withModel(ResLoc.of(this.directoryRes, "upgrades/common.obj"))
 				.withModels(listUpgradeModels())
 				.withHeader(header)
-				//.withHeader(ResLoc.of(this.directoryRes, "assault_rifle_upgrades.obj.amt"))
+				//.withHeader(ResLoc.of(this.directoryRes, "pistol_upgrades.obj.amt"))
 				.withModelProvider(
 						(stack, combinedHeader) -> new AMT[]{
 								//Main Model
 								new AMTParticle("muzzle_flash", combinedHeader).setParticle(IIParticles.PARTICLE_GUNFIRE),
 								new AMTHand("hand", combinedHeader, EnumHand.OFF_HAND),
-
+								//Ammo
+								new AMTBullet("bullet", combinedHeader, AmmoRegistry.getModel(IIContent.itemAmmoSubmachinegun))
+										.withState(BulletState.BULLET_UNUSED).withState(BulletState.BULLET_UNUSED)
+										.withProperties(IIContent.ammoCoreBrass, CoreType.PIERCING, -1),
+								new AMTBullet("casing_fired", combinedHeader, AmmoRegistry.getModel(IIContent.itemAmmoSubmachinegun))
+										.withState(BulletState.CASING)
 						}
 				).withTextureProvider(
 						(res, stack) ->
@@ -269,10 +280,11 @@ public class PistolRenderer extends IIUpgradableItemRendererAMT<ItemIIPistol> im
 		this.magazine = new AMTCrossVariantReference<>("magazine", this.model);
 		this.hand = new AMTCrossVariantReference<>("hand", this.model);
 		this.muzzleFlash = new AMTCrossVariantReference<>("muzzle_flash", this.model);
+
 		this.casingFired = new AMTCrossVariantReference<>("casing_fired", this.model);
 
 		//Add upgrade visibility animations
-		//loadUpgrades(model, ResLoc.of(animationRes, "upgrades/"));
+		loadUpgrades(model, ResLoc.of(animationRes, "upgrades/"));
 
 		load = IIAnimationCachedMap.create(this.model, ResLoc.of(animationRes, "load"));
 		unload = IIAnimationCachedMap.create(this.model, ResLoc.of(animationRes, "unload"));
@@ -280,7 +292,6 @@ public class PistolRenderer extends IIUpgradableItemRendererAMT<ItemIIPistol> im
 		fire = IIAnimationCachedMap.create(this.model, ResLoc.of(animationRes, "fire"));
 		handAngle = IIAnimationCachedMap.create(this.model, ResLoc.of(animationRes, "hand"));
 		offHandAngle = IIAnimationCachedMap.create(this.model, ResLoc.of(animationRes, "offhand"));
-
 	}
 
 	@Override
@@ -298,6 +309,9 @@ public class PistolRenderer extends IIUpgradableItemRendererAMT<ItemIIPistol> im
 	@Override
 	public boolean renderCrosshair(ItemStack stack, EnumHand hand)
 	{
+		if(item.isScoped(stack))
+			return false;
+
 		return ItemNBTHelper.getInt(stack, ItemIIPistol.AIMING) > Pistol.aimTime*0.85;
 	}
 

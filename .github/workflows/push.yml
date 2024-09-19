@@ -1,0 +1,47 @@
+name: Commits Pushed
+
+on:
+  push: #Trigger On Push
+    branches: [ "dev/**" ]
+
+jobs:
+  notify-public-discord:
+    continue-on-error: true
+    name: Notify Public Discord
+    runs-on: ubuntu-latest
+    concurrency:
+      group: discord
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Notify Discord
+        if: ${{ github.ref == 'refs/heads/dev/main' }}
+        env:
+          COMMIT_FROM: ${{ github.event.before }}
+          COMMIT_TO: ${{ github.event.after }}
+          WEBHOOK: ${{ secrets.WH_PUSH_PUBLIC }}
+          REPO: ${{ github.repository }}
+          REPO_NAME: ${{ github.event.repository.custom_properties.project_pretty_name }}
+        run: chmod +rx ./gradle/tools/discord_commit.sh ; bash ./gradle/tools/discord_commit.sh -i
+
+  notify-internal-discord:
+    continue-on-error: true
+    name: Notify Internal Discord
+    runs-on: ubuntu-latest
+    concurrency:
+      group: discord
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Notify Discord
+        env:
+          COMMIT_FROM: ${{ github.event.before }}
+          COMMIT_TO: ${{ github.event.after }}
+          WEBHOOK: ${{ secrets.WH_PUSH_PRIVATE }}
+          REPO: ${{ github.repository }}
+          REPO_NAME: ${{ github.event.repository.custom_properties.project_pretty_name }}
+        run: chmod +rx ./gradle/tools/discord_commit.sh ; bash ./gradle/tools/discord_commit.sh -i

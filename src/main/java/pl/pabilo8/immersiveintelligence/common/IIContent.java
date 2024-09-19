@@ -208,7 +208,7 @@ public class IIContent
 	public static final ItemIIMineDetector itemMineDetector = new ItemIIMineDetector();
 
 	public static final ItemIIDrillHead itemDrillhead = new ItemIIDrillHead();
-	//Don't know if i should make a seperate item for a torque meter
+	//Don't know if I should make a separate item for a torque meter
 	public static final ItemIITachometer itemTachometer = new ItemIITachometer();
 	public static final ItemIIDataWireCoil itemDataWireCoil = new ItemIIDataWireCoil();
 	public static final ItemIISmallWireCoil itemSmallWireCoil = new ItemIISmallWireCoil();
