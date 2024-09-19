@@ -47,3 +47,4 @@ run_tests/
 gradle/ieaddon.gradle
 gradle/docs/setup.txt
 custom.gradle.template
+gradle/ieaddon.gradle
