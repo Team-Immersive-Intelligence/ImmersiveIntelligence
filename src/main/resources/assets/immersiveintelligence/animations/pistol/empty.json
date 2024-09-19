@@ -1,1 +1,1 @@
-{"comment":"Made with Blockbench","groups":{"firing_pin":{"rotation":[{"time":0,"transform":[0,0,0]},{"time":0.25,"transform":[-87.5,0,0]},{"time":0.4166,"transform":[0,0,0]}]},"hand_off":{"rotation":[{"time":0,"transform":[0,-25,0]}],"position":[{"time":0,"transform":[-19,0,0]}]}}}
+{"comment":"Made with Blockbench","groups":{"firing_pin":{"rotation":[{"time":0,"transform":[0,0,0]},{"time":0.25,"transform":[-87.5,0,0]},{"time":0.4166,"transform":[0,0,0]}]}}}

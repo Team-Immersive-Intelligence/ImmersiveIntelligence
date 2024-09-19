@@ -97,7 +97,7 @@ public class ItemIIAmmoShotgun extends ItemIIAmmoBase<EntityAmmoProjectile>
 	@Override
 	public CoreType[] getAllowedCoreTypes()
 	{
-		return new CoreType[] {CoreType.BIRDSHOT, CoreType.BUCKSHOT};
+		return new CoreType[] {CoreType.BIRDSHOT, CoreType.BUCKSHOT, CoreType.PIERCING_SABOT, CoreType.SHAPED};
 	}
 
 	@Nonnull

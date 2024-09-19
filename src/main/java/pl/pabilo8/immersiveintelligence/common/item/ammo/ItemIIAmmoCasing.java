@@ -46,6 +46,7 @@ public class ItemIIAmmoCasing extends ItemIISubItemsBase<Casing>
 		@IIItemProperties(stackSize = 1)
 		LIGHT_ARTILLERY_6BCAL,
 
+		@GeneratedSubItemModel(customTexturePath = "bullets/casings/shell_gun_3bcal")
 		@IIItemProperties(stackSize = 24)
 		SHOTGUN_3BCAL,
 
@@ -57,9 +58,6 @@ public class ItemIIAmmoCasing extends ItemIISubItemsBase<Casing>
 		@GeneratedSubItemModel(customTexturePath = "bullets/casings/assault_rifle_1bcal")
 		@IIItemProperties(stackSize = 32)
 		STG_1BCAL,
-		//@GeneratedSubItemModel(customTexturePath = "bullets/casings/pistol_1bcal")
-		@IIItemProperties(stackSize = 32)
-		PISTOL_1BCAL,
 		@GeneratedSubItemModel(customTexturePath = "bullets/casings/submachinegun_1bcal")
 		@IIItemProperties(stackSize = 48)
 		SMG_1BCAL,

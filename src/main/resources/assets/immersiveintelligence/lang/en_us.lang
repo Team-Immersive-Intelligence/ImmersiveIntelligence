@@ -217,6 +217,7 @@ item.immersiveintelligence.rifle.name=Rifle
 item.immersiveintelligence.rifle_handmade.name=Handmade Rifle
 item.immersiveintelligence.shotgun.name=Shotgun
 item.immersiveintelligence.shotgun_handmade.name=Handmade Shotgun
+item.immersiveintelligence.pistol.name=Pistol
 
 #Drillheads
 item.immersiveintelligence.drillhead.tungsten.name=Tungsten Drill Head
@@ -426,9 +427,13 @@ item.immersiveintelligence.smg_1bcal.bullet.name=Short Bullet
 item.immersiveintelligence.revolver_1bcal.core.name=Revolver Bullet Core
 item.immersiveintelligence.revolver_1bcal.bullet.name=Revolver Bullet
 
-item.immersiveintelligence.ammo_casing.shotgun_3bcal.name=Shotgun Shell Casing
-item.immersiveintelligence.shotgun_3bcal.core.name=Shotgun Bullet Core
-item.immersiveintelligence.shotgun_3bcal.bullet.name=Shotgun Shell
+item.immersiveintelligence.ammo_casing.gun_3bcal.name=Shotgun Shell Casing
+item.immersiveintelligence.gun_3bcal.core.name=Shotgun Bullet Core
+item.immersiveintelligence.gun_3bcal.bullet.name=Shotgun Shell
+
+item.immersiveintelligence.ammo_casing.pistol_1bcal.name=Pistol Shell Casing
+item.immersiveintelligence.gun_3bcal.pistol_1bcal.name=Pistol Bullet Core
+item.immersiveintelligence.pistol_1bcal.bullet.name=Pistol Bullet
 
 item.immersiveintelligence.ammo_casing.autocannon_3bcal.name=Autocannon Shell Casing
 item.immersiveintelligence.autocannon_3bcal.core.name=Autocannon Shell Core
@@ -476,7 +481,6 @@ item.immersiveintelligence.bullet_magazine.assault_rifle.name=Assault Rifle Maga
 item.immersiveintelligence.bullet_magazine.autocannon.name=Autocannon Magazine
 item.immersiveintelligence.bullet_magazine.cpds_drum.name=CPDS Drum Magazine
 item.immersiveintelligence.bullet_magazine.rifle.name=Rifle Magazine
-item.immersiveintelligence.bullet_magazine.shotgun.name=Shotgun Revolver Drum Magazine
 
 item.immersiveintelligence.casing_pouch.name=Spent Casings Pouch
 
@@ -1261,6 +1265,8 @@ desc.immersiveintelligence.bullet_core_type.piercing=Armor-Piercing
 desc.immersiveintelligence.bullet_core_type.piercing_sabot=Sabot
 desc.immersiveintelligence.bullet_core_type.canister=Canister
 desc.immersiveintelligence.bullet_core_type.cluster=Cluster
+desc.immersiveintelligence.bullet_core_type.birdshot=Birtshot
+desc.immersiveintelligence.bullet_core_type.buckshot=Buckshot
 
 desc.immersiveintelligence.bullet_fuse.contact=Contact
 desc.immersiveintelligence.bullet_fuse.timed=Timed

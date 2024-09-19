@@ -42,7 +42,7 @@ public class ShotgunRenderer extends IIUpgradableItemRendererAMT<ItemIIShotgun> 
 {
 	private MTLTextureRemapper handmadeRemapper;
 	private MTLTextureRemapper skinRemapper;
-	private AMTCrossVariantReference<AMTBullet> bullet, casing;
+	//private AMTCrossVariantReference<AMTBullet> bullet, casing;
 
 	private IIAnimationCachedMap loadBullet, handAngle, handVisibility, offhandVisibility;
 	private float swingProgress = 0;
@@ -185,19 +185,19 @@ public class ShotgunRenderer extends IIUpgradableItemRendererAMT<ItemIIShotgun> 
 		{
 			if(!semiAuto)
 			{
-				this.bullet.get().withStack(nbt.getItemStack("found"), BulletState.BULLET_UNUSED);
+				//this.bullet.get().withStack(nbt.getItemStack("found"), BulletState.BULLET_UNUSED);
 				loadBullet.apply(v);
 			}
 		}
 		else if(handRender)
 		{
 			ItemStack b = ammoHandler.getNextAmmo(stack, nbt, false);
-			this.bullet.get().withStack(b, BulletState.BULLET_UNUSED);
-			this.casing.get().withStack(b, BulletState.CASING);
+			//this.bullet.get().withStack(b, BulletState.BULLET_UNUSED);
+			//this.casing.get().withStack(b, BulletState.CASING);
 		}
 
 		if(gui)
-			IIAnimationUtils.setModelVisibility(this.casing.get(), false);
+			//IIAnimationUtils.setModelVisibility(this.casing.get(), false);
 
 		if(transform==TransformType.FIRST_PERSON_LEFT_HAND)
 			offhandVisibility.apply(0);
@@ -216,12 +216,12 @@ public class ShotgunRenderer extends IIUpgradableItemRendererAMT<ItemIIShotgun> 
 				.withModel(model)
 				.withModels(listUpgradeModels())
 				.withHeader(header)
-				//.withHeader(IIAnimationLoader.loadHeader(new ResourceLocation(ImmersiveIntelligence.MODID, "models/item/weapons/shotgun/shotgun_upgrades.obj.amt")))
+				.withHeader(IIAnimationLoader.loadHeader(new ResourceLocation(ImmersiveIntelligence.MODID, "models/item/weapons/shotgun/shotgun_upgrades.obj.amt")))
 				.withModelProvider(
 						(stack, combinedHeader) -> new AMT[]{
 								new AMTBullet("bullet", combinedHeader, AmmoRegistry.getModel(IIContent.itemAmmoShotgun))
 										.withState(BulletState.BULLET_UNUSED)
-										.withProperties(IIContent.ammoCoreSteel, CoreType.PIERCING, -1),
+										.withProperties(IIContent.ammoCoreSteel, CoreType.BIRDSHOT, -1),
 								new AMTBullet("casing_fired", combinedHeader, AmmoRegistry.getModel(IIContent.itemAmmoShotgun))
 										.withState(BulletState.CASING),
 								new AMTParticle("muzzle_flash", combinedHeader)
@@ -247,8 +247,8 @@ public class ShotgunRenderer extends IIUpgradableItemRendererAMT<ItemIIShotgun> 
 				)
 				.build();
 
-		this.bullet = new AMTCrossVariantReference<>("bullet", this.model);
-		this.casing = new AMTCrossVariantReference<>("casing_fired", this.model);
+		//this.bullet = new AMTCrossVariantReference<>("bullet", this.model);
+		//this.casing = new AMTCrossVariantReference<>("casing_fired", this.model);
 
 		//add upgrade visibility animations
 		loadUpgrades(model, ResLoc.of(animationRes, "upgrades/"));

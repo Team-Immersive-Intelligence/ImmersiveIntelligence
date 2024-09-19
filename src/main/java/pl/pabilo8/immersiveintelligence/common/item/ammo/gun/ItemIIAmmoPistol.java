@@ -35,7 +35,7 @@ public class ItemIIAmmoPistol extends ItemIIAmmoBase<EntityAmmoProjectile>
 {
 	public ItemIIAmmoPistol()
 	{
-		super("pistol_1bCal", Casing.PISTOL_1BCAL);
+		super("pistol_1bCal", Casing.SMG_1BCAL);
 	}
 
 	@Override

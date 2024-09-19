@@ -18,6 +18,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.client.model.obj.OBJModel;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
 import pl.pabilo8.immersiveintelligence.client.fx.IIParticles;
 import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.client.util.amt.*;
@@ -227,22 +228,12 @@ public class PistolRenderer extends IIUpgradableItemRendererAMT<ItemIIPistol> im
 					((float)MathHelper.clampedLerp(lastMode, fireMode, modeProgress))*0.5f
 			);
 		}
-
-		//Animate Stereoscopic Rangefinder's nixie tube distance meter
 		if(handRender)
 		{
 			int value = 0;
-			if(item.hasIIUpgrade(stack, WeaponUpgrade.STEREOSCOPIC_RANGEFINDER))
-			{
-				RayTraceResult mop = ClientUtils.mc().player.rayTrace(60, partialTicks);
-				if(mop!=null)
-					value = (int)ClientUtils.mc().player.getPositionVector().distanceTo(mop.hitVec);
-			}
-			else
-			{
-				if(fireMode==2)
-					value = (int)MathHelper.clamp((1f-((firing-partialTicks)/(float)(firingDelay)))*99, 0, 99);
-			}
+
+			if(fireMode==2)
+				value = (int)MathHelper.clamp((1f-((firing-partialTicks)/(float)(firingDelay)))*99, 0, 99);
 		}
 		//Finally, render
 		for(AMT amt : model)
@@ -265,8 +256,11 @@ public class PistolRenderer extends IIUpgradableItemRendererAMT<ItemIIPistol> im
 								new AMTParticle("muzzle_flash", combinedHeader).setParticle(IIParticles.PARTICLE_GUNFIRE),
 								new AMTHand("hand", combinedHeader, EnumHand.OFF_HAND),
 								//Ammo
-								new AMTBullet("casing_fired", combinedHeader, AmmoRegistry.getModel(IIContent.itemAmmoPistol))
-										.withState(BulletState.CASING),
+								new AMTBullet("bullet", combinedHeader, AmmoRegistry.getModel(IIContent.itemAmmoSubmachinegun))
+										.withState(BulletState.BULLET_UNUSED).withState(BulletState.BULLET_UNUSED)
+										.withProperties(IIContent.ammoCoreBrass, CoreType.PIERCING, -1),
+								new AMTBullet("casing_fired", combinedHeader, AmmoRegistry.getModel(IIContent.itemAmmoSubmachinegun))
+										.withState(BulletState.CASING)
 						}
 				).withTextureProvider(
 						(res, stack) ->
