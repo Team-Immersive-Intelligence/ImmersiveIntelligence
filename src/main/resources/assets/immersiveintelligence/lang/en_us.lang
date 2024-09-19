@@ -1071,6 +1071,29 @@ skin.immersiveintelligence.investor.name=Investor
 skin.immersiveintelligence.investor.desc=A little reward for big generosity
 skin.immersiveintelligence.investor.text=A skin rewarded for donating $15 on Patreon.
 
+skin.immersiveintelligence.golden.name=Golden
+skin.immersiveintelligence.golden.desc=A big reward for an extraordinary exterminators.
+skin.immersiveintelligence.golden.text=A skin rewarded to those who exterminate 50 bugs.
+
+skin.immersiveintelligence.parasite_event.name=Parasite
+skin.immersiveintelligence.parasite_event.desc=A reward for those who are well on their way of bug fixing
+skin.immersiveintelligence.parasite_event.text=A skin rewarded to those who exterminated 30 bugs.
+
+skin.immersiveintelligence.pershing.name=Pershing
+skin.immersiveintelligence.pershing.desc=Welcome to the world of Bug Extermination!
+skin.immersiveintelligence.pershing.text=A skin rewarded to those who exterminate 15 bugs.
+
+skin.immersiveintelligence.vanterland.name=Vanterland
+skin.immersiveintelligence.vanterland.desc=Winter Wonder Land
+skin.immersiveintelligence.vanterland.text=Placeholder
+
+skin.immersiveintelligence.wyrms.name=Wyrms
+skin.immersiveintelligence.wyrms.desc=Worms?
+skin.immersiveintelligence.wyrms.text=Placeholder
+
+skin.immersiveintelligence.zvezda.name=Zvezda
+skin.immersiveintelligence.zvezda.desc=Blastoff!
+skin.immersiveintelligence.zvezda.text=Placeholder
 #Machine Upgrades
 machineupgrade.immersiveintelligence.inserter=Inserter
 machineupgrade.immersiveintelligence.inserter.desc=Adding an inserter to a crate allows it to operate automatically in a 3 blocks radius if supplied with power.
