@@ -1189,13 +1189,12 @@ public class IIRecipes
 		FillerRecipe.addRecipe(IIContent.itemAmmoAssaultRifle, 55, 700);
 		FillerRecipe.addRecipe(IIContent.itemAmmoSubmachinegun, 50, 600);
 		FillerRecipe.addRecipe(IIContent.itemAmmoRevolver, 40, 400);
-		FillerRecipe.addRecipe(IIContent.itemAmmoShotgun, 40, 300);
 
 		//Projectiles
 		for(ItemIIAmmoBase item : new ItemIIAmmoBase[]{IIContent.itemAmmoHeavyArtillery, IIContent.itemAmmoMediumArtillery, IIContent.itemAmmoLightArtillery,
 				IIContent.itemAmmoLightGun, IIContent.itemAmmoMortar,
 				IIContent.itemAmmoAutocannon,
-				IIContent.itemAmmoMachinegun, IIContent.itemAmmoAssaultRifle, IIContent.itemAmmoSubmachinegun, IIContent.itemAmmoShotgun})
+				IIContent.itemAmmoMachinegun, IIContent.itemAmmoAssaultRifle, IIContent.itemAmmoSubmachinegun})
 		{
 			assert item!=null;
 

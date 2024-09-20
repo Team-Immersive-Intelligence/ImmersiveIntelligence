@@ -356,9 +356,5 @@ public class ItemIIWeaponUpgrade extends ItemIISubItemsBase<WeaponUpgrade> imple
 		rifle.addUpgradePart(easyNBT -> easyNBT.hasKey("melee"), "bayonet");
 		rifle.addUpgradePart(hasUpgrade(WeaponUpgrade.EXTENDED_BARREL), "extended_barrel");
 		rifle.addUpgradePart(hasUpgrade(WeaponUpgrade.SEMI_AUTOMATIC), "semi_automatic");
-
-		//--- Shotgun ---//
-		IIUpgradableItemRendererAMT<?> shotgun = IIContent.itemShotgun.getItemRenderer();
-		//shotgun.addUpgradePart(hasUpgrade(WeaponUpgrade.SHOTGUN_REVOLVER_DRUM_MAGAZINE), "shotgun_revolver_drum_magazine");
 	}
 }

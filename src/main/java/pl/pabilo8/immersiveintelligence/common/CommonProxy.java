@@ -367,7 +367,6 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		AmmoRegistry.registerAmmoType(IIContent.itemAmmoSubmachinegun);
 		AmmoRegistry.registerAmmoType(IIContent.itemAmmoAssaultRifle);
 		AmmoRegistry.registerAmmoType(IIContent.itemAmmoRevolver);
-		AmmoRegistry.registerAmmoType(IIContent.itemAmmoShotgun);
 
 		if(IIContent.blockTripmine.itemBlock!=null)
 			AmmoRegistry.registerAmmoType((IAmmoTypeItem)IIContent.blockTripmine.itemBlock);
