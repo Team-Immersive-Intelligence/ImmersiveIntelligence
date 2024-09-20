@@ -46,6 +46,7 @@ import pl.pabilo8.immersiveintelligence.common.entity.hans.tasks.idle.AIHansSalu
 import pl.pabilo8.immersiveintelligence.common.entity.hans.tasks.idle.AIHansTimedLookAtEntity;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.towable.gun.EntityFieldHowitzer;
 import pl.pabilo8.immersiveintelligence.common.item.armor.ItemIILightEngineerHelmet;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -59,23 +60,23 @@ import java.util.Arrays;
 public class EntityHans extends EntityCreature implements INpc
 {
 	public static boolean INFINITE_AMMO = false;
-	private static final int[] EYE_COLOURS = new int[]{
-			0x597179,//cyan
-			0x536579,//toned blue
-			0x486479,//blue 2
-			0x3F795B,//green
-			0x3B7959,//green/blue
-			0x54795B,//toned green
-			0x414832,//khaki
-			0x3D4827,//olive
-			0x9D7956,//amber
-			0x434139,//brown
-			0x484739,//light brown
-			0x2F2E28,//dark brown
+	private static final IIColor[] EYE_COLORS = new IIColor[]{
+			IIColor.fromPackedRGB(0x597179),//cyan
+			IIColor.fromPackedRGB(0x536579),//toned blue
+			IIColor.fromPackedRGB(0x486479),//blue 2
+			IIColor.fromPackedRGB(0x3F795B),//green
+			IIColor.fromPackedRGB(0x3B7959),//green/blue
+			IIColor.fromPackedRGB(0x54795B),//toned green
+			IIColor.fromPackedRGB(0x414832),//khaki
+			IIColor.fromPackedRGB(0x3D4827),//olive
+			IIColor.fromPackedRGB(0x9D7956),//amber
+			IIColor.fromPackedRGB(0x434139),//brown
+			IIColor.fromPackedRGB(0x484739),//light brown
+			IIColor.fromPackedRGB(0x2F2E28),//dark brown
 	};
 	private static final DataParameter<String> DATA_MARKER_LEG_ANIMATION = EntityDataManager.createKey(EntityHans.class, DataSerializers.STRING);
 	private static final DataParameter<String> DATA_MARKER_ARM_ANIMATION = EntityDataManager.createKey(EntityHans.class, DataSerializers.STRING);
-	private static final DataParameter<Integer> DATA_MARKER_EYE_COLOUR = EntityDataManager.createKey(EntityHans.class, DataSerializers.VARINT);
+	private static final DataParameter<Integer> DATA_MARKER_EYE_COLOR = EntityDataManager.createKey(EntityHans.class, DataSerializers.VARINT);
 	private static final DataParameter<NBTTagCompound> DATA_MARKER_SPEECH = EntityDataManager.createKey(EntityHans.class, DataSerializers.COMPOUND_TAG);
 
 	public HansLegAnimation prevLegAnimation = HansLegAnimation.STANDING;
@@ -91,7 +92,7 @@ public class EntityHans extends EntityCreature implements INpc
 	public MouthShapes mouthShape = HansAnimations.MouthShapes.CLOSED;
 	public ArrayList<Tuple<Integer, MouthShapes>> mouthShapeQueue = new ArrayList<>();
 	public int speechProgress = 0;
-	public int eyeColour;
+	public IIColor eyeColor;
 
 	/**
 	 * A dangerously close distance, most {@link AIHansHandWeapon} tasks will resort to {@link EntityAIAttackMelee}
@@ -124,7 +125,7 @@ public class EntityHans extends EntityCreature implements INpc
 		setSneaking(false);
 		this.dataManager.register(DATA_MARKER_LEG_ANIMATION, legAnimation.name().toLowerCase());
 		this.dataManager.register(DATA_MARKER_ARM_ANIMATION, armAnimation.name().toLowerCase());
-		this.dataManager.register(DATA_MARKER_EYE_COLOUR, eyeColour = EYE_COLOURS[rand.nextInt(EYE_COLOURS.length)]);
+		this.dataManager.register(DATA_MARKER_EYE_COLOR, (eyeColor = EYE_COLORS[rand.nextInt(EYE_COLORS.length)]).getPackedRGB());
 		this.dataManager.register(DATA_MARKER_SPEECH, new NBTTagCompound());
 		setHealth(20);
 	}
@@ -152,7 +153,7 @@ public class EntityHans extends EntityCreature implements INpc
 		{
 			if(dataManager.isDirty())
 			{
-				eyeColour = dataManager.get(DATA_MARKER_EYE_COLOUR);
+				eyeColor = IIColor.fromPackedRGB(dataManager.get(DATA_MARKER_EYE_COLOR));
 				legAnimation = getLegAnimationFromString(dataManager.get(DATA_MARKER_LEG_ANIMATION));
 				armAnimation = getArmAnimationFromString(dataManager.get(DATA_MARKER_ARM_ANIMATION));
 
@@ -198,7 +199,7 @@ public class EntityHans extends EntityCreature implements INpc
 		}
 		else
 		{
-			dataManager.set(DATA_MARKER_EYE_COLOUR, eyeColour);
+			dataManager.set(DATA_MARKER_EYE_COLOR, eyeColor.getPackedRGB());
 			//check if enemies are around
 			if(ticksExisted%25==0)
 				enemyContact = world.getEntitiesWithinAABB(Entity.class,
@@ -433,7 +434,7 @@ public class EntityHans extends EntityCreature implements INpc
 
 		this.legAnimation = getLegAnimationFromString(compound.getString("leg_animation"));
 		this.armAnimation = getArmAnimationFromString(compound.getString("arm_animation"));
-		this.eyeColour = compound.getInteger("eye_colour");
+		this.eyeColor = IIColor.fromPackedRGB(compound.getInteger("eye_color"));
 		this.commander = compound.getBoolean("commander");
 		updateWeaponTasks();
 	}
@@ -445,7 +446,7 @@ public class EntityHans extends EntityCreature implements INpc
 		compound.setTag("npc_inventory", Utils.writeInventory(mainInventory));
 		compound.setString("leg_animation", legAnimation.name().toLowerCase());
 		compound.setString("arm_animation", armAnimation.name().toLowerCase());
-		compound.setInteger("eye_colour", eyeColour);
+		compound.setInteger("eye_color", eyeColor.getPackedRGB());
 		compound.setBoolean("commander", commander);
 	}
 

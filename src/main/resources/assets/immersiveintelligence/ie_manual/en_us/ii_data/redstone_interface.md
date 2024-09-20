@@ -14,4 +14,4 @@ and a [redstone output connector](redstoneWires#1) to which you can attach a [wi
 
 # interface
 In the user interface there are two sections: data to redstone and the opposite.
-After you add an entry, you have to specify the variable letter and the corresponding redstone colour.
+After you add an entry, you have to specify the variable letter and the corresponding redstone color.

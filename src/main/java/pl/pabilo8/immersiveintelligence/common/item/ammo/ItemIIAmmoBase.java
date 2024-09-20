@@ -139,7 +139,7 @@ public abstract class ItemIIAmmoBase<E extends EntityAmmoBase<? super E>> extend
 					case 1:
 						return getCore(stack).getColor().getPackedARGB();
 					case 2:
-						return getPaintColor(stack);
+						return getPaintColor(stack).getPackedARGB();
 				}
 			}
 			case CORE:
@@ -199,7 +199,7 @@ public abstract class ItemIIAmmoBase<E extends EntityAmmoBase<? super E>> extend
 	@Override
 	public String getModelCacheKey(ItemStack stack)
 	{
-		return String.format("%s%s_%s%s", stackToSub(stack).name(), NAME, getPaintColor(stack)==-1?"no_": "paint_", getCoreType(stack).getName());
+		return String.format("%s%s_%s%s", stackToSub(stack).name(), NAME, getPaintColor(stack)==null?"no_": "paint_", getCoreType(stack).getName());
 	}
 
 	@Override
@@ -214,7 +214,7 @@ public abstract class ItemIIAmmoBase<E extends EntityAmmoBase<? super E>> extend
 			{
 				a.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/ammo/"+NAME.toLowerCase()+"/base"));
 				a.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/ammo/"+NAME.toLowerCase()+"/"+getCoreType(stack).getName()));
-				if(getPaintColor(stack)!=-1)
+				if(getPaintColor(stack)!=null)
 					a.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/ammo/"+NAME.toLowerCase()+"/paint"));
 
 			}

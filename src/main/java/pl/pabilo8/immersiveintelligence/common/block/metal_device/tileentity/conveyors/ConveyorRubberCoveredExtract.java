@@ -202,7 +202,7 @@ public class ConveyorRubberCoveredExtract extends ConveyorRubberExtract
 			Function<EnumFacing, TextureAtlasSprite> getSprite = f -> sprites.getOrDefault(f, sprite);
 			Function<EnumFacing, TextureAtlasSprite> getSpriteHorizontal = f -> f.getAxis()==Axis.Y?null: sprites.getOrDefault(f, sprite);
 
-			float[] colour = {1, 1, 1, 1};
+			float[] color = {1, 1, 1, 1};
 			Matrix4 matrix = new Matrix4(facing);
 
 			Function<Vector3f[], Vector3f[]> vertexTransformer = conDir==ConveyorDirection.HORIZONTAL?vertices -> vertices: vertices -> {
@@ -212,20 +212,20 @@ public class ConveyorRubberCoveredExtract extends ConveyorRubberExtract
 				return ret;
 			};
 
-			baseModel.addAll(ClientUtils.createBakedBox(new Vector3f(0, .75f, 0), new Vector3f(1, 1, 1), matrix, facing, vertexTransformer, getSprite, colour));
+			baseModel.addAll(ClientUtils.createBakedBox(new Vector3f(0, .75f, 0), new Vector3f(1, 1, 1), matrix, facing, vertexTransformer, getSprite, color));
 			if(walls[0])
-				baseModel.addAll(ClientUtils.createBakedBox(new Vector3f(0, .1875f, 0), new Vector3f(.0625f, .75f, 1), matrix, facing, vertexTransformer, getSpriteHorizontal, colour));
+				baseModel.addAll(ClientUtils.createBakedBox(new Vector3f(0, .1875f, 0), new Vector3f(.0625f, .75f, 1), matrix, facing, vertexTransformer, getSpriteHorizontal, color));
 			else
 			{
-				baseModel.addAll(ClientUtils.createBakedBox(new Vector3f(0, .1875f, 0), new Vector3f(.0625f, .75f, .0625f), matrix, facing, getSpriteHorizontal, colour));
-				baseModel.addAll(ClientUtils.createBakedBox(new Vector3f(0, .1875f, .9375f), new Vector3f(.0625f, .75f, 1), matrix, facing, getSpriteHorizontal, colour));
+				baseModel.addAll(ClientUtils.createBakedBox(new Vector3f(0, .1875f, 0), new Vector3f(.0625f, .75f, .0625f), matrix, facing, getSpriteHorizontal, color));
+				baseModel.addAll(ClientUtils.createBakedBox(new Vector3f(0, .1875f, .9375f), new Vector3f(.0625f, .75f, 1), matrix, facing, getSpriteHorizontal, color));
 			}
 			if(walls[1])
-				baseModel.addAll(ClientUtils.createBakedBox(new Vector3f(.9375f, .1875f, 0), new Vector3f(1, .75f, 1), matrix, facing, vertexTransformer, getSpriteHorizontal, colour));
+				baseModel.addAll(ClientUtils.createBakedBox(new Vector3f(.9375f, .1875f, 0), new Vector3f(1, .75f, 1), matrix, facing, vertexTransformer, getSpriteHorizontal, color));
 			else
 			{
-				baseModel.addAll(ClientUtils.createBakedBox(new Vector3f(.9375f, .1875f, 0), new Vector3f(1, .75f, .0625f), matrix, facing, getSpriteHorizontal, colour));
-				baseModel.addAll(ClientUtils.createBakedBox(new Vector3f(.9375f, .1875f, .9375f), new Vector3f(1, .75f, 1), matrix, facing, getSpriteHorizontal, colour));
+				baseModel.addAll(ClientUtils.createBakedBox(new Vector3f(.9375f, .1875f, 0), new Vector3f(1, .75f, .0625f), matrix, facing, getSpriteHorizontal, color));
+				baseModel.addAll(ClientUtils.createBakedBox(new Vector3f(.9375f, .1875f, .9375f), new Vector3f(1, .75f, 1), matrix, facing, getSpriteHorizontal, color));
 			}
 		}
 	}

@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.client.render.item;
 
-import blusunrize.immersiveengineering.api.Lib;
 import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.client.ImmersiveModelRegistry.ItemModelReplacement;
 import blusunrize.immersiveengineering.client.ImmersiveModelRegistry.ItemModelReplacement_OBJ;
@@ -293,11 +292,11 @@ public class AssaultRifleRenderer extends IIUpgradableItemRendererAMT<ItemIIAssa
 								new AMTText("nixie_text1", combinedHeader)
 										.setText("0")
 										.setFontSize(0.015625f)
-										.setColor(Lib.colour_nixieTubeText),
+										.setColor(IIReference.COLOR_NIXIE_ORANGE),
 								new AMTText("nixie_text2", combinedHeader)
 										.setText("0")
 										.setFontSize(0.015625f)
-										.setColor(Lib.colour_nixieTubeText)
+										.setColor(IIReference.COLOR_NIXIE_ORANGE)
 						}
 				).withTextureProvider(
 						(res, stack) ->

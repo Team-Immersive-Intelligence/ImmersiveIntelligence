@@ -133,7 +133,7 @@ public class GuiDataEditorExpression extends GuiDataEditor<DataTypeExpression>
 				{
 					this.pageEditor.setBounds(x, y+12, width, height-12);
 					IDataType display = new DataPacket().getVarInType(currentType, dataType.data[page-1]);
-					paramColor = display.getTypeColour();
+					paramColor = display.getTypeColor();
 					ResourceLocation paramIcon = new ResourceLocation(ImmersiveIntelligence.MODID, String.format("textures/gui/data_types/%s.png", display.getName()));
 
 					hasTypeSwitch = currentType==IDataType.class||currentType.isAnnotationPresent(IGenericDataType.class);

@@ -44,8 +44,8 @@ public class TripmineRenderer extends IITileRenderer<TileEntityTripMine>
 			ClientUtils.bindAtlas();
 
 			GlStateManager.translate(-0.5, 0, -0.5);
-			int color = getWorld().getBiome(te.getPos()).getGrassColorAtPos(te.getPos())&0x7FFFFFFF;
-			float[] colors = IIColor.rgbIntToRGB(color);
+			float[] colors = IIColor.fromPackedRGB(getWorld().getBiome(te.getPos()).getGrassColorAtPos(te.getPos())&0x7FFFFFFF).getFloatRGB();
+
 			GL11.glShadeModel(GL11.GL_SMOOTH);
 			GlStateManager.disableLighting();
 			GlStateManager.enableBlend();

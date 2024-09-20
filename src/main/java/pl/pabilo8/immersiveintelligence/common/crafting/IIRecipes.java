@@ -50,6 +50,7 @@ import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIIConcreteDecor
 import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIIOre.Ores;
 import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIISmallCrate.IIBlockTypes_SmallCrate;
 import pl.pabilo8.immersiveintelligence.common.item.ItemIIMinecart.Minecarts;
+import pl.pabilo8.immersiveintelligence.common.item.ItemIITracerPowder;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoBase;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoBase.AmmoParts;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoCasing.Casing;
@@ -134,7 +135,7 @@ public class IIRecipes
 		addConcreteRecipes();
 		addChemicalBathCleaningRecipes();
 
-		addColouringRecipes(recipeRegistry);
+		addColoringRecipes(recipeRegistry);
 		addChemicalPainterRecipes();
 
 		addPackerHandling();
@@ -212,22 +213,22 @@ public class IIRecipes
 
 	}
 
-	private static void addColouringRecipes(IForgeRegistry<IRecipe> registry)
+	private static void addColoringRecipes(IForgeRegistry<IRecipe> registry)
 	{
-		addColoringRecipe(registry, IIContent.itemTracerPowder, 0, "colour", "tracer_powder_colour");
-		addColoringRecipe(registry, IIContent.itemTracerPowder, 1, "colour", "flare_powder_colour");
+		addColoringRecipe(registry, IIContent.itemTracerPowder, 0, ItemIITracerPowder.NBT_TRACER_COLOUR, "tracer_powder_colour");
+		addColoringRecipe(registry, IIContent.itemTracerPowder, 1, ItemIITracerPowder.NBT_TRACER_COLOUR, "flare_powder_colour");
 
 		addColoringRecipe(registry, IIContent.itemAdvancedPowerPack, -1,
-				ItemIIAdvancedPowerPack.NBT_Colour, "advanced_powerpack_coloring");
+				ItemIIAdvancedPowerPack.NBT_COLOR, "advanced_powerpack_coloring");
 
 		addColoringRecipe(registry, IIContent.itemLightEngineerHelmet, -1,
-				ItemIIUpgradeableArmor.NBT_Colour, "light_engineer_armor_helmet_coloring");
+				ItemIIUpgradeableArmor.NBT_COLOR, "light_engineer_armor_helmet_coloring");
 		addColoringRecipe(registry, IIContent.itemLightEngineerChestplate, -1,
-				ItemIIUpgradeableArmor.NBT_Colour, "light_engineer_armor_chestplate_coloring");
+				ItemIIUpgradeableArmor.NBT_COLOR, "light_engineer_armor_chestplate_coloring");
 		addColoringRecipe(registry, IIContent.itemLightEngineerLeggings, -1,
-				ItemIIUpgradeableArmor.NBT_Colour, "light_engineer_armor_leggings_coloring");
+				ItemIIUpgradeableArmor.NBT_COLOR, "light_engineer_armor_leggings_coloring");
 		addColoringRecipe(registry, IIContent.itemLightEngineerBoots, -1,
-				ItemIIUpgradeableArmor.NBT_Colour, "light_engineer_armor_boots_coloring");
+				ItemIIUpgradeableArmor.NBT_COLOR, "light_engineer_armor_boots_coloring");
 	}
 
 	private static void addColoringRecipe(IForgeRegistry<IRecipe> registry, Item item, int meta, String colorTag, String recipeName)
@@ -936,7 +937,7 @@ public class IIRecipes
 			//clear nbt
 			bulletStack.setTagCompound(new NBTTagCompound());
 			PaintingRecipe.addRecipe((rgb, stack) -> {
-				ItemStack ret = bullet.setPaintColour(stack, rgb.getPackedRGB());
+				ItemStack ret = bullet.setPaintColor(stack, rgb);
 				ret.setCount(1);
 				return ret;
 			}, new IngredientStack(bulletStack).setUseNBT(false), bullet.getCaliber()*1024, 100+(bullet.getCaliber()*40), 50+(bullet.getCaliber()*25));

@@ -50,7 +50,7 @@ public interface IDataType
 	/**
 	 * @return type color used by GUIs in rgbInt format, like in {@link net.minecraft.util.math.MathHelper#rgb(int, int, int)} or {@link net.minecraft.util.math.MathHelper#rgb(float, float, float)}
 	 */
-	IIColor getTypeColour();
+	IIColor getTypeColor();
 
 	/**
 	 * @return texture location for GUI frames, *must* contain the file extension, II default is immersiveintelligence:textures/gui/data_types.png

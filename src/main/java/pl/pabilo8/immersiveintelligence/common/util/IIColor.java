@@ -19,6 +19,7 @@ import java.util.function.ToIntFunction;
  * @author Pabilo8 (pabilo@iiteam.net)
  * @updated 23.04.2024
  * @ii-approved 0.3.1
+ * @implNote 0.003921f is an approximation of 1/255 used for ease of calculation
  * @since 20.04.2024
  */
 public class IIColor implements Comparable<IIColor>, ToIntFunction<IIColor>
@@ -210,39 +211,36 @@ public class IIColor implements Comparable<IIColor>, ToIntFunction<IIColor>
 	 */
 	public static IIColor fromHSV(float... hsv)
 	{
-		float h = hsv[0];
-		float s = hsv[1];
-		float v = hsv[2];
+		//
+		float c = hsv[2]*hsv[1];
+		//
+		float x = c*(1-Math.abs((hsv[0]*6)%2-1));
+		//
+		float m = hsv[2]-c;
+		float r = 0, g = 0, b = 0;
 
-		float c = v*s;
-		float x = c*(1-Math.abs((h/0.166f)%2-1));
-		float m = v-c;
-
-		float r = 0;
-		float g = 0;
-		float b = 0;
-
-		if(h < 0.16666667f)
+		//use colors based on hue range
+		if(hsv[0] < 0.16666667f)
 		{
 			r = c;
 			g = x;
 		}
-		else if(h < 0.33333334f)
+		else if(hsv[0] < 0.33333334f)
 		{
 			r = x;
 			g = c;
 		}
-		else if(h < 0.5f)
+		else if(hsv[0] < 0.5f)
 		{
 			g = c;
 			b = x;
 		}
-		else if(h < 0.6666667f)
+		else if(hsv[0] < 0.6666667f)
 		{
 			g = x;
 			b = c;
 		}
-		else if(h < 0.8333333f)
+		else if(hsv[0] < 0.8333333f)
 		{
 			r = x;
 			b = c;
@@ -263,6 +261,17 @@ public class IIColor implements Comparable<IIColor>, ToIntFunction<IIColor>
 	public static IIColor fromDye(EnumDyeColor dyeColor)
 	{
 		return fromFloatRGB(dyeColor.getColorComponentValues());
+	}
+
+	/**
+	 * @param formatting text formatting enum
+	 * @return A new IIColor object with the text formatting's color values
+	 */
+	public static IIColor fromTextFormatting(TextFormatting formatting)
+	{
+		if(!formatting.isColor())
+			return MC_WHITE;
+		return fromRGB(formatting.getColorIndex());
 	}
 
 	/**
@@ -321,7 +330,7 @@ public class IIColor implements Comparable<IIColor>, ToIntFunction<IIColor>
 	 */
 	public float[] getFloatARGB()
 	{
-		return new float[]{alpha/255f, red/255f, green/255f, blue/255f};
+		return new float[]{alpha*0.003921f, red*0.003921f, green*0.003921f};
 	}
 
 	/**
@@ -329,7 +338,7 @@ public class IIColor implements Comparable<IIColor>, ToIntFunction<IIColor>
 	 */
 	public float[] getFloatRGB()
 	{
-		return new float[]{red/255f, green/255f, blue/255f};
+		return new float[]{red*0.003921f, green*0.003921f, blue*0.003921f};
 	}
 
 	//--- RGB Hex String Methods ---//
@@ -357,9 +366,9 @@ public class IIColor implements Comparable<IIColor>, ToIntFunction<IIColor>
 	 */
 	public float[] getCMYK()
 	{
-		float r = red/255f;
-		float g = green/255f;
-		float b = blue/255f;
+		float r = red*0.003921f;
+		float g = green*0.003921f;
+		float b = blue*0.003921f;
 
 		float k = 1-Math.max(r, Math.max(g, b));
 		float c = (1-r-k)/(1-k);
@@ -374,7 +383,7 @@ public class IIColor implements Comparable<IIColor>, ToIntFunction<IIColor>
 	 */
 	public float[] getHSV()
 	{
-		float r = red/255f, g = green/255f, b = blue/255f;
+		float r = red*0.003921f, g = green*0.003921f, b = blue*0.003921f;
 
 		float v = Math.max(r, Math.max(g, b));
 		float min = Math.min(r, Math.min(g, b));
@@ -544,7 +553,7 @@ public class IIColor implements Comparable<IIColor>, ToIntFunction<IIColor>
 	@SideOnly(Side.CLIENT)
 	public void glColor()
 	{
-		GlStateManager.color(red/255f, green/255f, blue/255f, alpha/255f);
+		GlStateManager.color(red*0.003921f, green*0.003921f, blue*0.003921f, alpha*0.003921f);
 	}
 
 	//--- Internal Utils ---//

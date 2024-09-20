@@ -321,22 +321,22 @@ public class IICreativeTab extends CreativeTabs
 			ItemStack stackM1 = addAmmo(list, item, name+"/P14 Blaumarkierungpatrone",
 					IIContent.ammoCoreIron, CoreType.PIERCING, FuseType.CONTACT, IIContent.ammoComponentTracerPowder);
 			item.setComponentNBT(stackM1, EasyNBT.parseNBT("{colour: %s}", IIColor.MC_DARK_BLUE));
-			item.setPaintColour(stackM1, IIColor.MC_DARK_BLUE.getPackedRGB());
+			item.setPaintColor(stackM1, IIColor.MC_DARK_BLUE);
 
 			ItemStack stackM2 = addAmmo(list, item, name+"/P15 Grünmarkierungpatrone",
 					IIContent.ammoCoreIron, CoreType.PIERCING, FuseType.CONTACT, IIContent.ammoComponentTracerPowder);
 			item.setComponentNBT(stackM2, EasyNBT.parseNBT("{colour: %s}", IIColor.MC_DARK_GREEN));
-			item.setPaintColour(stackM2, IIColor.MC_DARK_GREEN.getPackedRGB());
+			item.setPaintColor(stackM2, IIColor.MC_DARK_GREEN);
 
 			ItemStack stackM3 = addAmmo(list, item, name+"/P16 Rotmarkierungpatrone",
 					IIContent.ammoCoreIron, CoreType.PIERCING, FuseType.CONTACT, IIContent.ammoComponentTracerPowder);
 			item.setComponentNBT(stackM3, EasyNBT.parseNBT("{colour: %s}", IIColor.MC_DARK_RED));
-			item.setPaintColour(stackM3, IIColor.MC_DARK_RED.getPackedRGB());
+			item.setPaintColor(stackM3, IIColor.MC_DARK_RED);
 
 			ItemStack stackM4 = addAmmo(list, item, name+"/P17 Gelbmarkierungpatrone",
 					IIContent.ammoCoreIron, CoreType.PIERCING, FuseType.CONTACT, IIContent.ammoComponentTracerPowder);
 			item.setComponentNBT(stackM4, EasyNBT.parseNBT("{colour: %s}", IIColor.MC_GOLD));
-			item.setPaintColour(stackM4, IIColor.MC_GOLD.getPackedRGB());
+			item.setPaintColor(stackM4, IIColor.MC_GOLD);
 
 			//Magazines
 			tabNewLine(list);
@@ -436,7 +436,7 @@ public class IICreativeTab extends CreativeTabs
 			//set tracer color
 			magazine.ammo.setComponentNBT(stack, EasyNBT.parseNBT("{colour: %s}", colors[i]));
 			//set paint color
-			magazine.ammo.setPaintColour(stack, colors[i].getPackedRGB());
+			magazine.ammo.setPaintColor(stack, colors[i]);
 			bullets[i] = stack;
 		}
 		return getMagazine(magazine, name, bullets);

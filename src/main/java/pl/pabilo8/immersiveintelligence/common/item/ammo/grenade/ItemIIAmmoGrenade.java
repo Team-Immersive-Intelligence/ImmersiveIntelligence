@@ -22,7 +22,6 @@ import pl.pabilo8.immersiveintelligence.client.model.builtin.ModelAmmoProjectile
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Ammunition;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.Grenade;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoGrenade;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoBase;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoBase.AmmoParts;
@@ -150,7 +149,7 @@ public class ItemIIAmmoGrenade extends ItemIIAmmoBase<EntityAmmoGrenade>
 	@Override
 	public String getModelCacheKey(ItemStack stack)
 	{
-		return String.format("%s%s_%s%s", stackToSub(stack).getMeta(), NAME, getPaintColor(stack)==-1?"no_": "paint_", Grenade.classicGrenades);
+		return String.format("%s%s_%s%s", stackToSub(stack).getMeta(), NAME, getPaintColor(stack)==null?"no_": "paint_", Grenade.classicGrenades);
 	}
 
 	@Override
@@ -175,7 +174,7 @@ public class ItemIIAmmoGrenade extends ItemIIAmmoBase<EntityAmmoGrenade>
 					a.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/ammo/"+NAME.toLowerCase()+"/core_disp"));
 				else
 					a.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/ammo/"+NAME.toLowerCase()+"/core_disp_classic"));
-				if(getPaintColor(stack)!=-1)
+				if(getPaintColor(stack)!=null)
 					a.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/ammo/"+NAME.toLowerCase()+"/paint"));
 			}
 			break;

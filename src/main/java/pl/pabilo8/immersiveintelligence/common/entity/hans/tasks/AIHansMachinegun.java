@@ -14,6 +14,8 @@ import pl.pabilo8.immersiveintelligence.common.entity.EntityMachinegun;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine.Magazines;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageEntityNBTSync;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import javax.annotation.Nullable;
 
@@ -76,11 +78,11 @@ public class AIHansMachinegun extends EntityAIBase
 				if(hans.getHeldItemMainhand().isEmpty())
 				{
 
-					ItemStack magazine = IIContent.itemBulletMagazine.getMagazine(Magazines.MACHINEGUN,
-							IIContent.itemAmmoSubmachinegun.getAmmoStack(IIContent.ammoCoreBrass, CoreType.PIERCING, FuseType.CONTACT, IIContent.ammoComponentTracerPowder));
-					NBTTagCompound tag = new NBTTagCompound();
-					tag.setInteger("colour", 0xff0000);
-					IIContent.itemAmmoMachinegun.setComponentNBT(magazine, tag);
+					ItemStack ammoStack = IIContent.itemAmmoMachinegun.getAmmoStack(IIContent.ammoCoreBrass, CoreType.PIERCING, FuseType.CONTACT, IIContent.ammoComponentTracerPowder);
+					IIContent.itemAmmoMachinegun.setComponentNBT(ammoStack, EasyNBT.parseNBT("{colour: %s}", IIColor.MC_DARK_RED));
+					ItemStack magazine = IIContent.itemBulletMagazine.getMagazine(Magazines.MACHINEGUN, ammoStack);
+
+
 					hans.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, magazine);
 				}
 			}

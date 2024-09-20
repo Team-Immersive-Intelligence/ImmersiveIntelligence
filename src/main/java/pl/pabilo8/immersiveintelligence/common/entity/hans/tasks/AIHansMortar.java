@@ -6,7 +6,6 @@ import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
@@ -14,6 +13,8 @@ import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseType;
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.IIAmmoUtils;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityMortar;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import java.util.Optional;
 
@@ -79,10 +80,9 @@ public class AIHansMortar extends EntityAIBase
 			{
 				if(hans.getHeldItemMainhand().isEmpty())
 				{
-					ItemStack shell = IIContent.itemAmmoMortar.getAmmoStack(IIContent.ammoCoreBrass, CoreType.CANISTER, FuseType.CONTACT,
-							IIContent.ammoComponentWhitePhosphorus, IIContent.ammoComponentTracerPowder);
-					NBTTagCompound tag = new NBTTagCompound();
-					tag.setInteger("colour", 0xff0000);
+					ItemStack shell = IIContent.itemAmmoMortar.getAmmoStack(IIContent.ammoCoreBrass, CoreType.CANISTER, FuseType.CONTACT, IIContent.ammoComponentTracerPowder, IIContent.ammoComponentWhitePhosphorus);
+					IIContent.itemAmmoMortar.setComponentNBT(shell, EasyNBT.parseNBT("{colour: %s}", IIColor.MC_DARK_RED));
+
 					hans.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, shell);
 				}
 

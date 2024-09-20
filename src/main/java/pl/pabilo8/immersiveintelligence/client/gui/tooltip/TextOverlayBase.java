@@ -5,6 +5,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.RayTraceResult;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -26,8 +27,8 @@ public abstract class TextOverlayBase
 	@Nonnull
 	public abstract FontRenderer getFontRenderer();
 
-	public int getDefaultFontColour()
+	public IIColor getDefaultFontColor()
 	{
-		return 0xffffff;
+		return IIColor.WHITE;
 	}
 }

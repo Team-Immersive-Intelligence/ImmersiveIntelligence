@@ -9,6 +9,7 @@ import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoCore;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.client.model.builtin.IAmmoModel;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.amt.IIModelHeader;
 
 import javax.annotation.Nullable;
@@ -22,21 +23,22 @@ import javax.annotation.Nullable;
 public class AMTBullet extends AMT
 {
 	@Nullable
-	private IAmmoModel model;
+	private IAmmoModel<?, ?> model;
 	private BulletState state = BulletState.BULLET_UNUSED;
 
 	AmmoCore core = null;
 	CoreType coreType = null;
 	float gunpowderPercentage = 0;
-	int paintColour = -1;
+	@Nullable
+	IIColor paintColor = null;
 
-	public AMTBullet(String name, Vec3d originPos, @Nullable IAmmoModel model)
+	public AMTBullet(String name, Vec3d originPos, @Nullable IAmmoModel<?, ?> model)
 	{
 		super(name, originPos);
 		this.model = model;
 	}
 
-	public AMTBullet(String name, IIModelHeader header, @Nullable IAmmoModel model)
+	public AMTBullet(String name, IIModelHeader header, @Nullable IAmmoModel<?, ?> model)
 	{
 		super(name, header);
 		this.model = model;
@@ -66,7 +68,7 @@ public class AMTBullet extends AMT
 			switch(state)
 			{
 				case CASING:
-					model.renderCasing(gunpowderPercentage, paintColour);
+					model.renderCasing(gunpowderPercentage, paintColor);
 					break;
 				case CORE:
 					if(coreType!=null)
@@ -75,7 +77,7 @@ public class AMTBullet extends AMT
 				case BULLET_USED:
 				case BULLET_UNUSED:
 					if(coreType!=null)
-						model.renderAmmoComplete(state==BulletState.BULLET_USED, paintColour, core, coreType);
+						model.renderAmmoComplete(state==BulletState.BULLET_USED, paintColor, core, coreType);
 					break;
 			}
 		}
@@ -87,7 +89,7 @@ public class AMTBullet extends AMT
 
 	}
 
-	public void setModel(@Nullable IAmmoModel model)
+	public void setModel(@Nullable IAmmoModel<?, ?> model)
 	{
 		this.model = model;
 	}
@@ -98,7 +100,7 @@ public class AMTBullet extends AMT
 
 		if(stack.getItem() instanceof IAmmoTypeItem)
 		{
-			IAmmoTypeItem b = (IAmmoTypeItem)stack.getItem();
+			IAmmoTypeItem<?, ?> b = (IAmmoTypeItem<?, ?>)stack.getItem();
 			return withProperties(b.getCore(stack), b.getCoreType(stack), b.getPaintColor(stack));
 		}
 		if(stack.isEmpty())
@@ -107,11 +109,11 @@ public class AMTBullet extends AMT
 		return this;
 	}
 
-	public AMTBullet withProperties(AmmoCore core, CoreType coreType, int paintColour)
+	public AMTBullet withProperties(AmmoCore core, CoreType coreType, @Nullable IIColor paintColor)
 	{
 		this.core = core;
 		this.coreType = coreType;
-		this.paintColour = paintColour;
+		this.paintColor = paintColor;
 
 		return this;
 	}

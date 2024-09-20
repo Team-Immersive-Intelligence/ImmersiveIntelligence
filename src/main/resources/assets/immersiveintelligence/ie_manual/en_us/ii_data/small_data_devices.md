@@ -8,7 +8,7 @@ The [Data Combiner] is a machine which can combine two data inputs from the side
 The machine has a toggle for the preferred side to take variable from. 
 
 # combiner2
-Each variable also has a side override mode, green is the left and red is the right, darker colours remove the variable if the latest packet from that side doesn't contain the variable.
+Each variable also has a side override mode, green is the left and red is the right, darker colors remove the variable if the latest packet from that side doesn't contain the variable.
 
 # router
 |[crafting]{source:"data_router"}|  

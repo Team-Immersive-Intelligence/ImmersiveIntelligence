@@ -80,7 +80,7 @@ public class DataTypeFluidStack implements IDataType
 	}
 
 	@Override
-	public IIColor getTypeColour()
+	public IIColor getTypeColor()
 	{
 		return IIColor.fromPackedRGB(0x082730);
 	}

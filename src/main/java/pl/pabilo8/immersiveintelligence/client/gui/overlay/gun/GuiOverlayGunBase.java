@@ -9,7 +9,6 @@ import pl.pabilo8.immersiveintelligence.client.gui.overlay.GuiOverlayBase;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 
 /**
  * @author Pabilo8
@@ -45,9 +44,10 @@ public abstract class GuiOverlayGunBase extends GuiOverlayBase
 
 				bullets++;
 				draw.drawTexColorRect(offset?1: 0, 0, 30, 6, IIColor.WHITE, 51/256f, (51+30)/256f, 33/256f, (33+6)/256f);
-				int cc = ammoItem.getPaintColor(bullet);
-				if(cc!=-1)
-					draw.drawTexColorRect(offset?11: 10, 0, 4, 6, IIColor.fromPackedRGB(cc), 61/256f, (65)/256f, 27/256f, (27+6)/256f);
+				IIColor paintColor = ammoItem.getPaintColor(bullet);
+
+				if(paintColor!=null)
+					draw.drawTexColorRect(offset?11: 10, 0, 4, 6, paintColor, 61/256f, (65)/256f, 27/256f, (27+6)/256f);
 				draw.drawTexColorRect(offset?25: 24, 0, 6, 6, ammoItem.getCore(bullet).getColor(),
 						75/256f, (81)/256f, 27/256f, (27+6)/256f);
 

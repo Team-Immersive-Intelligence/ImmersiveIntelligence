@@ -92,7 +92,10 @@ import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools.Tr
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Vehicles.FieldHowitzer;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.Mortar;
-import pl.pabilo8.immersiveintelligence.common.*;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.IILogger;
+import pl.pabilo8.immersiveintelligence.common.IIPotions;
+import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.BlockIIMetalDevice.IIBlockTypes_MetalDevice;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityMachinegun;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityMortar;
@@ -239,7 +242,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 	}
 
 	@SubscribeEvent()
-	public void onFogColourUpdate(EntityViewRenderEvent.FogColors event)
+	public void onFogColorUpdate(EntityViewRenderEvent.FogColors event)
 	{
 		Entity entity = event.getEntity();
 		if(entity instanceof EntityLivingBase&&((EntityLivingBase)entity).isPotionActive(IIPotions.infraredVision))
@@ -330,7 +333,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 					//get parameters
 					final String[] text = hud.getText(player, mop, te, entityHit);
 					final FontRenderer font = hud.getFontRenderer();
-					final int defaultColor = hud.getDefaultFontColour();
+					final int defaultColor = hud.getDefaultFontColor().getPackedARGB();
 
 					//slightly below and right to the crosshair
 					final int x = event.getResolution().getScaledWidth()/2+8;

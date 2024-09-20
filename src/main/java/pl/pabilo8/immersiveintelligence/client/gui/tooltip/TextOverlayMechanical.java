@@ -11,6 +11,7 @@ import net.minecraft.util.math.RayTraceResult.Type;
 import pl.pabilo8.immersiveintelligence.api.rotary.CapabilityRotaryEnergy;
 import pl.pabilo8.immersiveintelligence.api.rotary.IRotaryEnergy;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemUtil;
 
@@ -66,9 +67,9 @@ public class TextOverlayMechanical extends TextOverlayBase
 	}
 
 	@Override
-	public int getDefaultFontColour()
+	public IIColor getDefaultFontColor()
 	{
-		return IIReference.COLOR_IMMERSIVE_ORANGE.getPackedARGB();
+		return IIReference.COLOR_IMMERSIVE_ORANGE;
 	}
 
 	@Nonnull

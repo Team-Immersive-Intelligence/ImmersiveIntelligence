@@ -25,9 +25,9 @@ public abstract class AmmoComponent extends AmmoPart
 	private final ComponentRole role;
 	private final int slotsTaken;
 
-	public AmmoComponent(String name, float density, ComponentRole role, IIColor colour)
+	public AmmoComponent(String name, float density, ComponentRole role, IIColor color)
 	{
-		super(name, density, colour);
+		super(name, density, color);
 		this.role = role;
 		this.slotsTaken = 1;
 	}
@@ -69,7 +69,7 @@ public abstract class AmmoComponent extends AmmoPart
 	//--- Defaults ---//
 
 	/**
-	 * @implNote Override if your component has animated colour
+	 * @implNote Override if your component has animated color
 	 */
 	public IIColor getColor(@Nullable NBTTagCompound nbt)
 	{

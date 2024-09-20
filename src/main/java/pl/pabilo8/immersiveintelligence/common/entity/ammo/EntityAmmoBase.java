@@ -23,6 +23,7 @@ import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoCore;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoType;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.entity.ISyncNBTEntity;
 import pl.pabilo8.immersiveintelligence.common.util.lambda.NBTTagCollector;
@@ -66,9 +67,9 @@ public abstract class EntityAmmoBase<T extends EntityAmmoBase<? super T>> extend
 	 */
 	protected int fuseParameter = 0;
 	/**
-	 * The paint colour of the bullet, in rgbInt format
+	 * The paint color of the bullet, in rgbInt format
 	 */
-	protected int paintColour = -1;
+	protected IIColor paintColor = null;
 	/**
 	 * List of component tuples, containing the component and its NBT (can be empty but not null)
 	 */
@@ -221,7 +222,7 @@ public abstract class EntityAmmoBase<T extends EntityAmmoBase<? super T>> extend
 		compound.setInteger("coreType", coreType.ordinal());
 		compound.setInteger("fuseType", fuseType.ordinal());
 		compound.setInteger("fuseParameter", fuseParameter);
-		compound.setInteger("paintColour", paintColour);
+		compound.setInteger("paintColor", paintColor==null?-1: paintColor.getPackedRGB());
 		compound.setTag("components", components.stream().map(t ->
 				EasyNBT.newNBT()
 						.withString("component", t.getFirst().getName())
@@ -303,9 +304,9 @@ public abstract class EntityAmmoBase<T extends EntityAmmoBase<? super T>> extend
 		return components;
 	}
 
-	public int getPaintColour()
+	public IIColor getPaintColor()
 	{
-		return paintColour;
+		return paintColor;
 	}
 
 	public Entity getOwner()
@@ -322,9 +323,9 @@ public abstract class EntityAmmoBase<T extends EntityAmmoBase<? super T>> extend
 	{
 		components.stream().filter(component -> component.getFirst().isGlowing())
 				.map(component -> component.getFirst().getColor(component.getSecond()))
-				.map(colour -> Light.builder().pos(this)
+				.map(color -> Light.builder().pos(this)
 						.radius(ammoType.getComponentMultiplier()*16f)
-						.color(colour.red/255f, colour.green/255f, colour.red/255f, colour.alpha/255f)
+						.color(color.red/255f, color.green/255f, color.red/255f, color.alpha/255f)
 						.build()
 				).forEach(evt::add);
 	}

@@ -6,6 +6,7 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.math.Vec3d;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.amt.IIModelHeader;
 
 import javax.annotation.Nonnull;
@@ -22,7 +23,7 @@ public class AMTText extends AMT
 	@Nullable
 	private String text;
 
-	private int color = 0xffffff;
+	private IIColor color = IIColor.WHITE;
 	private float fontSize = 1;
 	@Nonnull
 	private FontRenderer fontRenderer;
@@ -55,7 +56,7 @@ public class AMTText extends AMT
 			GlStateManager.scale(fontSize, fontSize, fontSize);
 
 
-			fontRenderer.drawString(text, 0, 0, color, false);
+			fontRenderer.drawString(text, 0, 0, color.getPackedRGB(), false);
 			GlStateManager.popMatrix();
 			GlStateManager.enableCull();
 
@@ -84,7 +85,7 @@ public class AMTText extends AMT
 		return this;
 	}
 
-	public AMTText setColor(int color)
+	public AMTText setColor(IIColor color)
 	{
 		this.color = color;
 		return this;

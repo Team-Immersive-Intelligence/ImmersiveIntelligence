@@ -140,7 +140,7 @@ public class IIManualDataVariable extends IIManualObject
 		boolean unicodeFlag = manual.fontRenderer.getUnicodeFlag();
 		manual.fontRenderer.setUnicodeFlag(true);
 		if(letter!=null)
-			manual.fontRenderer.drawString(TextFormatting.BOLD+letter, x+18, y+4, type.getTypeColour().getPackedRGB());
+			manual.fontRenderer.drawString(TextFormatting.BOLD+letter, x+18, y+4, type.getTypeColor().getPackedRGB());
 		manual.fontRenderer.drawString(TextFormatting.BOLD+name, x+(letter==null?18: 24), y-4, manual.getTextColour());
 		manual.fontRenderer.drawSplitString(description, x+(letter==null?18: 24), y+4, (letter==null?110: 104), manual.getTextColour());
 		manual.fontRenderer.setUnicodeFlag(unicodeFlag);
@@ -173,7 +173,7 @@ public class IIManualDataVariable extends IIManualObject
 			ArrayList<String> lines = new ArrayList<>();
 			lines.add(String.format(
 					"<%s> %s",
-					type.getTypeColour().getHexCol(I18n.format(IIReference.DATA_KEY+"datatype."+type.getName())),
+					type.getTypeColor().getHexCol(I18n.format(IIReference.DATA_KEY+"datatype."+type.getName())),
 					name
 			));
 

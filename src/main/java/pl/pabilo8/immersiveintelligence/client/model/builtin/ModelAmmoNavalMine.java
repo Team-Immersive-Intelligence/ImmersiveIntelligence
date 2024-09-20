@@ -9,6 +9,7 @@ import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoType;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMT;
 import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationUtils;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.naval_mine.EntityNavalMine;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 
 import javax.annotation.Nullable;
@@ -47,7 +48,7 @@ public class ModelAmmoNavalMine<T extends IAmmoType<T, E>, E extends EntityNaval
 	}
 
 	@Override
-	public void renderAmmoComplete(boolean used, int paintColour, @Nullable AmmoCore coreMaterial, @Nullable CoreType coreType)
+	public void renderAmmoComplete(boolean used, IIColor paintColor, @Nullable AmmoCore coreMaterial, @Nullable CoreType coreType)
 	{
 		if(!loaded)
 			return;

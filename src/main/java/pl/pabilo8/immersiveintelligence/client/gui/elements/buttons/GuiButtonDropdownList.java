@@ -8,7 +8,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.math.MathHelper;
 import org.lwjgl.input.Mouse;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 
 import java.util.function.Function;
@@ -64,7 +64,7 @@ public class GuiButtonDropdownList extends GuiButton
 	@Override
 	public void drawButton(Minecraft mc, int mx, int my, float partialTicks)
 	{
-		FontRenderer fr = ClientUtils.mc().fontRenderer;
+		FontRenderer fr = IIClientUtils.fontRegular;
 		if(!this.visible)
 			return;
 
@@ -82,7 +82,7 @@ public class GuiButtonDropdownList extends GuiButton
 
 		GlStateManager.pushMatrix();
 		GlStateManager.enableDepth();
-		GlStateManager.translate(0,0,1);
+		GlStateManager.translate(0, 0, 1);
 
 		if(dropped)
 		{
@@ -180,7 +180,10 @@ public class GuiButtonDropdownList extends GuiButton
 
 			fr.drawString(fr.trimStringToWidth(text, maxW), x+1, y+1, dropped?Lib.COLOUR_I_ImmersiveOrange: (enabled?0xE0E0E0: 0x202020), false);
 		}
+		boolean flag = fr.getUnicodeFlag();
+		fr.setUnicodeFlag(true);
 		fr.drawString(dropped?"▼": "▶", x+0.5f+width-7, y+1, dropped?Lib.COLOUR_I_ImmersiveOrange: (enabled?0xE0E0E0: 0x202020), false);
+		fr.setUnicodeFlag(flag);
 		GlStateManager.popMatrix();
 
 	}

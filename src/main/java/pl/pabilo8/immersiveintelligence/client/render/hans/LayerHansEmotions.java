@@ -9,7 +9,6 @@ import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
 import pl.pabilo8.immersiveintelligence.common.entity.hans.HansAnimations;
 import pl.pabilo8.immersiveintelligence.common.entity.hans.HansAnimations.EyeEmotions;
@@ -28,14 +27,14 @@ public class LayerHansEmotions implements LayerRenderer<EntityHans>
 	private final ModelBiped modelHans;
 
 	//eyes
-	private final float[] EYEBROW_COLOUR = IIColor.rgbIntToRGB(0x2e2623);
-	private final float[] EYE_BACK_COLOUR = IIColor.rgbIntToRGB(0xf1f1f1);
-	private final float[] EYELID_COLOUR = IIColor.rgbIntToRGB(0xdea893);
+	private final IIColor EYEBROW_COLOUR = IIColor.fromPackedRGB(0x2e2623);
+	private final IIColor EYE_BACK_COLOUR = IIColor.fromPackedRGB(0xf1f1f1);
+	private final IIColor EYELID_COLOUR = IIColor.fromPackedRGB(0xdea893);
 	//mouth
-	private final float[] LIP_COLOUR = IIColor.rgbIntToRGB(0xc59986);
-	private final float[] MOUTH_COLOUR = IIColor.rgbIntToRGB(0x473e3a);
-	private final float[] TEETH_COLOUR = IIColor.rgbIntToRGB(0xc1c1c1);
-	private final float[] TONGUE_COLOUR = IIColor.rgbIntToRGB(0xc58686);
+	private final IIColor LIP_COLOUR = IIColor.fromPackedRGB(0xc59986);
+	private final IIColor MOUTH_COLOUR = IIColor.fromPackedRGB(0x473e3a);
+	private final IIColor TEETH_COLOUR = IIColor.fromPackedRGB(0xc1c1c1);
+	private final IIColor TONGUE_COLOUR = IIColor.fromPackedRGB(0xc58686);
 
 	public LayerHansEmotions(HansRenderer renderer)
 	{
@@ -118,7 +117,7 @@ public class LayerHansEmotions implements LayerRenderer<EntityHans>
 		this.hansRenderer.bindTexture(TEXTURE);
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
 
-		drawHansEyes(buffer, lookOffset, eyebrowThickness, eyebrowHeightDiffRight, eyebrowHeightDiffLeft, eyeBlinkHalf, IIColor.rgbIntToRGB(hans.eyeColour));
+		drawHansEyes(buffer, lookOffset, eyebrowThickness, eyebrowHeightDiffRight, eyebrowHeightDiffLeft, eyeBlinkHalf, hans.eyeColor);
 		drawHansMouth(buffer, lipBottomOffset, lipBottomWidth, lipTopOffset, lipTopWidth, tongueHeight, upperTeethVisible);
 
 		tessellator.draw();
@@ -134,8 +133,9 @@ public class LayerHansEmotions implements LayerRenderer<EntityHans>
 		return true;
 	}
 
-	public static void drawTexturedModalRect(BufferBuilder buff, double x, double y, double z, double width, double height, double depth, double hdiff, float[] rgb)
+	public static void drawTexturedModalRect(BufferBuilder buff, double x, double y, double z, double width, double height, double depth, double hdiff, IIColor color)
 	{
+		float[] rgb = color.getFloatRGB();
 		float us = 0f, vs = 0f, ue = 1f, ve = 1f;
 
 		buff.pos(x, y, z).tex(us, vs).color(rgb[0], rgb[1], rgb[2], 1f).endVertex();
@@ -144,7 +144,7 @@ public class LayerHansEmotions implements LayerRenderer<EntityHans>
 		buff.pos(x+width, y+hdiff, z).tex(ue, ve).color(rgb[0], rgb[1], rgb[2], 1f).endVertex();
 	}
 
-	private void drawHansEyes(BufferBuilder buffer, double lookOffset, double eyebrowThickness, double eyebrowHeightDiffRight, double eyebrowHeightDiffLeft, double eyeBlinkProgress, float[] eyeColour)
+	private void drawHansEyes(BufferBuilder buffer, double lookOffset, double eyebrowThickness, double eyebrowHeightDiffRight, double eyebrowHeightDiffLeft, double eyeBlinkProgress, IIColor eyeColour)
 	{
 		//
 		drawTexturedModalRect(buffer, 1, -5-eyebrowThickness+(0.125f*eyeBlinkProgress), -4.014f, 2, eyebrowThickness, 0, eyebrowHeightDiffRight, EYEBROW_COLOUR);

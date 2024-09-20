@@ -10,7 +10,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.client.model.TMTArmorModel;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.Coord2D;
@@ -18,9 +17,9 @@ import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.Shape2D;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler;
 import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler.IISpecialSkin;
-import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIUpgradeableArmor;
 
 /**
@@ -1118,7 +1117,7 @@ public class ModelLightEngineerArmor extends TMTArmorModel implements IReloadabl
 
 	private void setSkin(String skin)
 	{
-		String baseName = skin.isEmpty() ? ImmersiveIntelligence.MODID+":textures/armor/engineer_light" : IIReference.SKIN_LOCATION+skin+"/engineer_light";
+		String baseName = skin.isEmpty()?ImmersiveIntelligence.MODID+":textures/armor/engineer_light": IIReference.SKIN_LOCATION+skin+"/engineer_light";
 
 		TEXTURE = baseName+".png";
 		setTexture(TEXTURE);
@@ -1133,10 +1132,10 @@ public class ModelLightEngineerArmor extends TMTArmorModel implements IReloadabl
 	protected TMTArmorModel prepareForRender(EntityEquipmentSlot part, ItemStack stack)
 	{
 		String s = IISkinHandler.getCurrentSkin(stack);
-		if (IISkinHandler.isValidSkin(s))
+		if(IISkinHandler.isValidSkin(s))
 		{
 			IISpecialSkin skin = IISkinHandler.getSkin(s);
-			if (skin.doesApply(IIContent.itemLightEngineerChestplate.getSkinnableName()))
+			if(skin.doesApply(IIContent.itemLightEngineerChestplate.getSkinnableName()))
 				setSkin(s);
 		}
 		else
@@ -1246,11 +1245,8 @@ public class ModelLightEngineerArmor extends TMTArmorModel implements IReloadabl
 
 	private void setColorForPlates(ItemStack stack, NBTTagCompound upgrades)
 	{
-		if(ItemNBTHelper.hasKey(stack, ItemIIUpgradeableArmor.NBT_Colour))
-		{
-			float[] rgb = IIColor.rgbIntToRGB(ItemNBTHelper.getInt(stack, ItemIIUpgradeableArmor.NBT_Colour));
-			GlStateManager.color(rgb[0], rgb[1], rgb[2]);
-		}
+		if(ItemNBTHelper.hasKey(stack, ItemIIUpgradeableArmor.NBT_COLOR))
+			IIColor.fromPackedRGB(ItemNBTHelper.getInt(stack, ItemIIUpgradeableArmor.NBT_COLOR)).glColor();
 		else if(upgrades.hasKey("composite_plates"))
 			GlStateManager.color(0.9f, 0.9f, 1f);
 		else

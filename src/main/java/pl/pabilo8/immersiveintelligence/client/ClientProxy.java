@@ -505,7 +505,7 @@ public class ClientProxy extends CommonProxy
 		//Register shaders
 		ShaderUtil.init();
 
-		//Register coloured blocks
+		//Register colored blocks
 		for(Block block : IIContent.BLOCKS)
 			if(block instanceof IColouredBlock&&((IColouredBlock)block).hasCustomBlockColours())
 				ClientUtils.mc().getBlockColors().registerBlockColorHandler(IEDefaultColourHandlers.INSTANCE, block);

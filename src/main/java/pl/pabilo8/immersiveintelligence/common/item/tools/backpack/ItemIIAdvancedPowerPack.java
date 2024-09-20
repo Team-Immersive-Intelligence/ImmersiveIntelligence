@@ -53,7 +53,7 @@ import java.util.Map;
 @IIItemProperties(category = IICategory.TOOLS)
 public class ItemIIAdvancedPowerPack extends ItemArmor implements ISpecialArmor, IIEEnergyItem, IElectricEquipment, IColouredItem
 {
-	public static final String NBT_Colour = "II:AdvancedPowerpackColour";
+	public static final String NBT_COLOR = "II:AdvancedPowerpackColour";
 
 	public ItemIIAdvancedPowerPack()
 	{
@@ -198,9 +198,9 @@ public class ItemIIAdvancedPowerPack extends ItemArmor implements ISpecialArmor,
 	{
 		if(renderPass==0)
 			return 0xffffff;
-		if(!ItemNBTHelper.hasKey(stack, NBT_Colour))
+		if(!ItemNBTHelper.hasKey(stack, NBT_COLOR))
 			return 0x486c94;
-		return ItemNBTHelper.getInt(stack, NBT_Colour);
+		return ItemNBTHelper.getInt(stack, NBT_COLOR);
 	}
 
 	/**
@@ -218,9 +218,9 @@ public class ItemIIAdvancedPowerPack extends ItemArmor implements ISpecialArmor,
 	@Override
 	public int getColor(ItemStack stack)
 	{
-		if(!ItemNBTHelper.hasKey(stack, NBT_Colour))
+		if(!ItemNBTHelper.hasKey(stack, NBT_COLOR))
 			return 0x486c94;
-		return ItemNBTHelper.getInt(stack, NBT_Colour);
+		return ItemNBTHelper.getInt(stack, NBT_COLOR);
 	}
 
 	/**
@@ -229,8 +229,8 @@ public class ItemIIAdvancedPowerPack extends ItemArmor implements ISpecialArmor,
 	@Override
 	public void removeColor(ItemStack stack)
 	{
-		if(ItemNBTHelper.hasKey(stack, NBT_Colour))
-			ItemNBTHelper.remove(stack, NBT_Colour);
+		if(ItemNBTHelper.hasKey(stack, NBT_COLOR))
+			ItemNBTHelper.remove(stack, NBT_COLOR);
 	}
 
 	/**
@@ -239,6 +239,6 @@ public class ItemIIAdvancedPowerPack extends ItemArmor implements ISpecialArmor,
 	@Override
 	public void setColor(ItemStack stack, int color)
 	{
-		ItemNBTHelper.setInt(stack, NBT_Colour, color);
+		ItemNBTHelper.setInt(stack, NBT_COLOR, color);
 	}
 }

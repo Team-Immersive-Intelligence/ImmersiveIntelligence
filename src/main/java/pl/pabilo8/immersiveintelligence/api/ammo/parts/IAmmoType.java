@@ -9,8 +9,10 @@ import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseType;
 import pl.pabilo8.immersiveintelligence.client.model.builtin.IAmmoModel;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityAmmoBase;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.function.Function;
 
 /**
@@ -160,7 +162,8 @@ public interface IAmmoType<T extends IAmmoType<T, E>, E extends EntityAmmoBase<?
 	 * @param stack bullet stack
 	 * @return paint color in RGBint format from stack NBT
 	 */
-	int getPaintColor(ItemStack stack);
+	@Nullable
+	IIColor getPaintColor(ItemStack stack);
 
 	/**
 	 * Internal Item method
@@ -169,7 +172,7 @@ public interface IAmmoType<T extends IAmmoType<T, E>, E extends EntityAmmoBase<?
 	 * @param color to be applied on the bullet stack
 	 * @return painted bullet stack
 	 */
-	ItemStack setPaintColour(ItemStack stack, int color);
+	ItemStack setPaintColor(ItemStack stack, @Nullable IIColor color);
 
 	double getMass(ItemStack stack);
 

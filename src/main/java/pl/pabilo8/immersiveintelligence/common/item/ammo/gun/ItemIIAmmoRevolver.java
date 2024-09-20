@@ -135,7 +135,7 @@ public class ItemIIAmmoRevolver extends ItemBullet implements IAmmoTypeItem<Item
 					case 1:
 						return getCore(stack).getColor().getPackedARGB();
 					case 2:
-						return getPaintColor(stack);
+						return getPaintColor(stack).getPackedARGB();
 				}
 			}
 			case CORE:
@@ -203,7 +203,8 @@ public class ItemIIAmmoRevolver extends ItemBullet implements IAmmoTypeItem<Item
 	@Override
 	public String getModelCacheKey(ItemStack stack)
 	{
-		return String.format("%s%s_%s%s", stack.getMetadata()==CORE?"core": "bullet", NAME, getPaintColor(stack)==-1?"no_": "paint_", getCoreType(stack).getName());
+		return String.format("%s%s_%s%s", stack.getMetadata()==CORE?"core": "bullet", NAME,
+				getPaintColor(stack)==null?"no_": "paint_", getCoreType(stack).getName());
 	}
 
 	@Override
@@ -215,7 +216,7 @@ public class ItemIIAmmoRevolver extends ItemBullet implements IAmmoTypeItem<Item
 		{
 			a.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/ammo/"+NAME.toLowerCase()+"/base"));
 			a.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/ammo/"+NAME.toLowerCase()+"/"+getCoreType(stack).getName()));
-			if(getPaintColor(stack)!=-1)
+			if(getPaintColor(stack)!=null)
 				a.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/ammo/"+NAME.toLowerCase()+"/paint"));
 
 		}

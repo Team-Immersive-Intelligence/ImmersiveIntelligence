@@ -16,6 +16,7 @@ import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.util.amt.IIAnimation;
 import pl.pabilo8.immersiveintelligence.common.util.amt.IIModelHeader;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
@@ -64,9 +65,9 @@ public class ModelAmmoProjectile<T extends IAmmoType<T, E>, E extends EntityAmmo
 	}
 
 	@Override
-	public void renderCasing(float progress, int paintColour)
+	public void renderCasing(float progress, @Nullable IIColor paintColor)
 	{
-		super.renderCasing(progress, paintColour);
+		super.renderCasing(progress, paintColor);
 		if(grenade||progress==0||casingFilling==null||modelCasingFilling==null)
 			return;
 
@@ -145,7 +146,7 @@ public class ModelAmmoProjectile<T extends IAmmoType<T, E>, E extends EntityAmmo
 	}
 
 	@Override
-	public void renderAmmoComplete(boolean used, int paintColour, AmmoCore coreMaterial, CoreType coreType)
+	public void renderAmmoComplete(boolean used, IIColor paintColor, AmmoCore coreMaterial, CoreType coreType)
 	{
 		//always render casing (handle) in grenade models
 		if(grenade&&used)
@@ -154,10 +155,10 @@ public class ModelAmmoProjectile<T extends IAmmoType<T, E>, E extends EntityAmmo
 			BufferBuilder buf = tes.getBuffer();
 
 			modelCasingSimple.render(tes, buf);
-			if(paintColour!=-1)
-				modelPaint.computeIfAbsent(paintColour, integer -> ((AMTQuads)modelPaintBase).recolor(IIColor.fromPackedRGB(integer))).render(tes, buf);
+			if(paintColor!=null)
+				modelPaint.computeIfAbsent(paintColor, color -> ((AMTQuads)modelPaintBase).recolor(color)).render(tes, buf);
 		}
-		super.renderAmmoComplete(used, paintColour, coreMaterial, coreType);
+		super.renderAmmoComplete(used, paintColor, coreMaterial, coreType);
 	}
 
 	@Override

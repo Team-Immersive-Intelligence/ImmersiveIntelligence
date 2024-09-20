@@ -6,7 +6,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.client.model.TMTArmorModel;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
@@ -23,7 +22,7 @@ public class ModelAdvancedPowerpack extends TMTArmorModel implements IReloadable
 	static int textureY = 32;
 	private static final String texture = ImmersiveIntelligence.MODID+":textures/armor/advanced_powerpack.png";
 	private static final String textureLayer = ImmersiveIntelligence.MODID+":textures/armor/advanced_powerpack_paint.png";
-	private int renderColor;
+	private IIColor renderColor;
 
 	private final ModelRendererTurbo[] bodyColoredModel;
 
@@ -312,9 +311,7 @@ public class ModelAdvancedPowerpack extends TMTArmorModel implements IReloadable
 				ClientUtils.bindTexture(texture);
 
 				renderChild(bipedBody, bodyModel, scale, texture);
-
-				float[] color = IIColor.rgbIntToRGB(renderColor);
-				GlStateManager.color(color[0], color[1], color[2]);
+				renderColor.glColor();
 				renderChild(bipedBody, bodyColoredModel, scale, textureLayer);
 				GlStateManager.color(1f, 1f, 1f);
 
@@ -329,7 +326,7 @@ public class ModelAdvancedPowerpack extends TMTArmorModel implements IReloadable
 	@Override
 	protected TMTArmorModel prepareForRender(EntityEquipmentSlot part, ItemStack stack)
 	{
-		this.renderColor = IIContent.itemAdvancedPowerPack.getColor(stack);
+		this.renderColor = IIColor.fromPackedRGB(IIContent.itemAdvancedPowerPack.getColor(stack));
 		return super.prepareForRender(part, stack);
 	}
 

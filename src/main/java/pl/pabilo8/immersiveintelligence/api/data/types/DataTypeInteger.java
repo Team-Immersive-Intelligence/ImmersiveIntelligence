@@ -70,7 +70,7 @@ public class DataTypeInteger implements IDataTypeNumeric
 	}
 
 	@Override
-	public IIColor getTypeColour()
+	public IIColor getTypeColor()
 	{
 		return IIColor.fromPackedRGB(0x26732e);
 	}

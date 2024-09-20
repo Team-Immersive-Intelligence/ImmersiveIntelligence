@@ -44,7 +44,7 @@ public class ItemIIPunchtape extends ItemIIBase implements IDataStorageItem
 			{
 				tooltip.add(I18n.format(IIReference.DESCRIPTION_KEY+"data_storage"));
 				packet.variables.forEach(
-						(c, t) -> tooltip.add("   "+t.getTypeColour().getHexCol(I18n.format(IIReference.DATA_KEY+"datatype."+t.getName()))+" "+TextFormatting.GRAY+c)
+						(c, t) -> tooltip.add("   "+t.getTypeColor().getHexCol(I18n.format(IIReference.DATA_KEY+"datatype."+t.getName()))+" "+TextFormatting.GRAY+c)
 				);
 			}
 		}

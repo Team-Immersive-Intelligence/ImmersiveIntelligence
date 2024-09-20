@@ -188,7 +188,7 @@ public class GuiDataRedstoneInterfaceRedstone extends GuiIEContainerBase impleme
 				ClientUtils.bindTexture(texture);
 
 				//Variable type based effects
-				float[] rgb = data.getTypeColour().getFloatRGB();
+				float[] rgb = data.getTypeColor().getFloatRGB();
 				GL11.glColor4f(rgb[0], rgb[1], rgb[2], 1f);
 				this.drawTexturedModalRect(drawx, drawy, 173, 222, 8, 20);
 				this.drawTexturedModalRect(drawx+52, drawy, 184, 222, 22, 20);
@@ -240,7 +240,7 @@ public class GuiDataRedstoneInterfaceRedstone extends GuiIEContainerBase impleme
 					//this.drawTexturedModalRect(drawx+3, drawy+3, 155, 222, 16, 14);
 
 					this.drawTexturedModalRect(drawx+3, drawy+3, 155, 222, 16, 14);
-					this.fontRenderer.drawString(I18n.format("tile."+ImmersiveIntelligence.MODID+".metal_multiblock.redstone_interface.modes."+((DataTypeInteger)array.value[1]).value), drawx+64, drawy+6, data.getTypeColour().getPackedRGB(), true);
+					this.fontRenderer.drawString(I18n.format("tile."+ImmersiveIntelligence.MODID+".metal_multiblock.redstone_interface.modes."+((DataTypeInteger)array.value[1]).value), drawx+64, drawy+6, data.getTypeColor().getPackedRGB(), true);
 
 					GlStateManager.popMatrix();
 

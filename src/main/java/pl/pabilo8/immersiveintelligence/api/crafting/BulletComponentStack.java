@@ -122,7 +122,7 @@ public class BulletComponentStack implements INBTSerializable<NBTTagCompound>
 		return component!=null&&component.matchesBullet(bullet);
 	}
 
-	public IIColor getColour()
+	public IIColor getColor()
 	{
 		return component!=null?component.getColor(tagCompound): IIColor.WHITE;
 	}

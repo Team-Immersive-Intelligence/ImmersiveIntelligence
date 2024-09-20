@@ -99,7 +99,7 @@ public class DataTypeEntity implements IDataType
 	}
 
 	@Override
-	public IIColor getTypeColour()
+	public IIColor getTypeColor()
 	{
 		return IIColor.fromPackedRGB(0x435e46);
 	}

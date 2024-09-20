@@ -160,7 +160,7 @@ public class ItemIIAmmoMortar extends ItemIIAmmoBase<EntityAmmoArtilleryProjecti
 					case 1:
 						return 0xffffffff;
 					case 2:
-						return getPaintColor(stack);
+						return getPaintColor(stack).getPackedARGB();
 				}
 			}
 			case CORE:
@@ -180,7 +180,7 @@ public class ItemIIAmmoMortar extends ItemIIAmmoBase<EntityAmmoArtilleryProjecti
 			{
 				a.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/ammo/"+NAME.toLowerCase()+"/"+getCoreType(stack).getName()));
 				a.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/ammo/"+NAME.toLowerCase()+"/base_"+getCoreType(stack).getName()));
-				if(getPaintColor(stack)!=-1)
+				if(getPaintColor(stack)!=null)
 					a.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/ammo/"+NAME.toLowerCase()+"/paint"));
 			}
 			break;

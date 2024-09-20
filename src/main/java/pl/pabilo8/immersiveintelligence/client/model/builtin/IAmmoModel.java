@@ -8,6 +8,9 @@ import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoCore;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoType;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityAmmoBase;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
+
+import javax.annotation.Nullable;
 
 /**
  * @author Pabilo8
@@ -23,11 +26,11 @@ public interface IAmmoModel<T extends IAmmoType<T, E>, E extends EntityAmmoBase<
 	 * When your bullet has a gunpowder filling animation it is preferred to override this method and render a simpler casing model (less geometry -> more performance)
 	 *
 	 * @param used         true for flying projectiles
-	 * @param paintColour  in rgbInt format
+	 * @param paintColor   in rgbInt format
 	 * @param coreMaterial of the ammo, see {@link AmmoCore}
 	 * @param coreType     of the ammo, see {@link IAmmoType#getAllowedCoreTypes()}
 	 */
-	void renderAmmoComplete(boolean used, int paintColour, AmmoCore coreMaterial, CoreType coreType);
+	void renderAmmoComplete(boolean used, IIColor paintColor, AmmoCore coreMaterial, CoreType coreType);
 
 	@SuppressWarnings("unchecked")
 	default void renderAmmoComplete(boolean used, ItemStack stack)
@@ -40,17 +43,17 @@ public interface IAmmoModel<T extends IAmmoType<T, E>, E extends EntityAmmoBase<
 
 	default void renderAmmoComplete(E entity, float partialTicks)
 	{
-		renderAmmoComplete(true, entity.getPaintColour(), entity.getCore(), entity.getCoreType());
+		renderAmmoComplete(true, entity.getPaintColor(), entity.getCore(), entity.getCoreType());
 	}
 
 	/**
 	 * Renders the casing.
-	 * If your bullet has a gunpowder filling animation it's preferred you add a simpler casing model
+	 * If your bullet has a gunpowder-filling animation, it is preferred you add a simpler casing model
 	 *
-	 * @param gunpowderPercentage how much is the casing filled with gunpowder
-	 * @param paintColour         in rgbInt format, -1 if unpainted
+	 * @param gunpowderPercentage how much of the casing is filled with gunpowder (0.0-1.0)
+	 * @param paintColor          color of markings on the casing
 	 */
-	void renderCasing(float gunpowderPercentage, int paintColour);
+	void renderCasing(float gunpowderPercentage, @Nullable IIColor paintColor);
 
 	/**
 	 * @param coreMaterial of the ammo, see {@link AmmoCore}

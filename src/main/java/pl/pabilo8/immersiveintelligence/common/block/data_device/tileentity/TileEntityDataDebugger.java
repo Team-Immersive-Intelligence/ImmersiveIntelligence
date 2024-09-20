@@ -132,7 +132,7 @@ public class TileEntityDataDebugger extends TileEntityImmersiveConnectable imple
 						/*map(entry -> String.format("",
 								,*/
 						.map(entry -> String.format("<hexcol=%s:%s> %s = %s",
-								String.format("%06X", entry.getValue().getTypeColour()),
+								String.format("%06X", entry.getValue().getTypeColor()),
 								entry.getValue().getName(),
 								entry.getKey(),
 								entry.getValue().valueToString().replace(

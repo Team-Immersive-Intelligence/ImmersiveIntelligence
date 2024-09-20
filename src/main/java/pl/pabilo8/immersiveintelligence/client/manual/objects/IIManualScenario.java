@@ -13,7 +13,6 @@ import net.minecraft.util.math.Vec3d;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualObject;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualPage;
 import pl.pabilo8.immersiveintelligence.client.util.amt.*;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
@@ -97,7 +96,7 @@ public class IIManualScenario extends IIManualObject
 				((AMTText)amt).setText(getText(nbt));
 				((AMTText)amt).setFontSize(0.0625f);
 				nbt.checkSetString("font_size", ((AMTText)amt)::setText);
-				nbt.checkSetInt("color", ((AMTText)amt)::setColor);
+				nbt.checkSetColor("color", ((AMTText)amt)::setColor);
 				nbt.checkSetFloat("font_size", ((AMTText)amt)::setFontSize);
 				break;
 			case "wire":

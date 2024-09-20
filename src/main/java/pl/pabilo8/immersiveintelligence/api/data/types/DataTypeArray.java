@@ -91,7 +91,7 @@ public class DataTypeArray implements IDataTypeIterable
 	}
 
 	@Override
-	public IIColor getTypeColour()
+	public IIColor getTypeColor()
 	{
 		return IIColor.fromPackedRGB(0x520c2b);
 	}

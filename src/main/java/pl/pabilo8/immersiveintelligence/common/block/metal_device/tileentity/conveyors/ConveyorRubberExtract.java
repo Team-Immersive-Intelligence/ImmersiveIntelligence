@@ -81,7 +81,7 @@ public class ConveyorRubberExtract extends ConveyorBasic
 		final TextureAtlasSprite texture_curtain = ClientUtils.getSprite(new ResourceLocation("immersiveengineering:blocks/cloth_device_stripcurtain"));
 		final TextureAtlasSprite texture_assembler = ClientUtils.getSprite(new ResourceLocation("immersiveengineering:blocks/metal_multiblock_assembler"));
 
-		float[] colour = {1, 1, 1, 1};
+		float[] color = {1, 1, 1, 1};
 		Matrix4 matrix = new Matrix4(this.extractDirection);
 		final float extend = getExtensionIntoBlock(tile);
 		this.extension = extend;
@@ -103,9 +103,9 @@ public class ConveyorRubberExtract extends ConveyorBasic
 			return ret;
 		};
 
-		baseModel.addAll(ClientUtils.createBakedBox(new Vector3f(.0625f, .375f, .625f), new Vector3f(.1875f, 1f, 1f), matrix, facing, casingTransformer, getCasingSprite, colour));
-		baseModel.addAll(ClientUtils.createBakedBox(new Vector3f(.8125f, .375f, .625f), new Vector3f(.9375f, 1f, 1f), matrix, facing, casingTransformer, getCasingSprite, colour));
-		baseModel.addAll(ClientUtils.createBakedBox(new Vector3f(.1875f, .875f, .625f), new Vector3f(.8125f, 1f, 1f), matrix, facing, casingTransformer, getCasingSprite, colour));
+		baseModel.addAll(ClientUtils.createBakedBox(new Vector3f(.0625f, .375f, .625f), new Vector3f(.1875f, 1f, 1f), matrix, facing, casingTransformer, getCasingSprite, color));
+		baseModel.addAll(ClientUtils.createBakedBox(new Vector3f(.8125f, .375f, .625f), new Vector3f(.9375f, 1f, 1f), matrix, facing, casingTransformer, getCasingSprite, color));
+		baseModel.addAll(ClientUtils.createBakedBox(new Vector3f(.1875f, .875f, .625f), new Vector3f(.8125f, 1f, 1f), matrix, facing, casingTransformer, getCasingSprite, color));
 
 		if(tile!=null&&extend > 0)
 		{
@@ -113,24 +113,24 @@ public class ConveyorRubberExtract extends ConveyorBasic
 			Function<EnumFacing, TextureAtlasSprite> getExtensionSprite = enumFacing -> enumFacing.getAxis()==Axis.Y?null: enumFacing.getAxis()==Axis.Z?texture_steel: texture_casing;
 
 			Vector3f[] vertices = {new Vector3f(.0625f, 0, -extend), new Vector3f(.0625f, 0, 0), new Vector3f(.9375f, 0, 0), new Vector3f(.9375f, 0, -extend)};
-			baseModel.add(ClientUtils.createBakedQuad(DefaultVertexFormats.ITEM, ClientUtils.applyMatrixToVertices(matrix, vertices), Utils.rotateFacingTowardsDir(EnumFacing.DOWN, facing), tex_conveyor, new double[]{15, extend*16, 1, 0}, colour, true));
+			baseModel.add(ClientUtils.createBakedQuad(DefaultVertexFormats.ITEM, ClientUtils.applyMatrixToVertices(matrix, vertices), Utils.rotateFacingTowardsDir(EnumFacing.DOWN, facing), tex_conveyor, new double[]{15, extend*16, 1, 0}, color, true));
 			for(Vector3f vec : vertices)
 				vec.setY(.125f);
-			baseModel.add(ClientUtils.createBakedQuad(DefaultVertexFormats.ITEM, ClientUtils.applyMatrixToVertices(matrix, vertices), Utils.rotateFacingTowardsDir(EnumFacing.UP, facing), tex_conveyor, new double[]{15, (1-extend)*16, 1, 16}, colour, false));
-			baseModel.addAll(ClientUtils.createBakedBox(new Vector3f(.0625f, .25f, .625f), new Vector3f(.9375f, .375f, .625f+extend), matrix, facing, casingTransformer, getExtensionSprite, colour));
+			baseModel.add(ClientUtils.createBakedQuad(DefaultVertexFormats.ITEM, ClientUtils.applyMatrixToVertices(matrix, vertices), Utils.rotateFacingTowardsDir(EnumFacing.UP, facing), tex_conveyor, new double[]{15, (1-extend)*16, 1, 16}, color, false));
+			baseModel.addAll(ClientUtils.createBakedBox(new Vector3f(.0625f, .25f, .625f), new Vector3f(.9375f, .375f, .625f+extend), matrix, facing, casingTransformer, getExtensionSprite, color));
 		}
 
 
 		Vector3f[] vertices = new Vector3f[]{new Vector3f(.8125f, .625f, .03125f), new Vector3f(.8125f, .125f, .03125f), new Vector3f(.1875f, .125f, .03125f), new Vector3f(.1875f, .625f, .03125f)};
-		baseModel.add(ClientUtils.createBakedQuad(DefaultVertexFormats.ITEM, ClientUtils.applyMatrixToVertices(matrix, vertexTransformer.apply(vertices)), Utils.rotateFacingTowardsDir(EnumFacing.NORTH, facing), texture_assembler, new double[]{15.25, 13.25, 12.75, 15.25}, colour, false));
+		baseModel.add(ClientUtils.createBakedQuad(DefaultVertexFormats.ITEM, ClientUtils.applyMatrixToVertices(matrix, vertexTransformer.apply(vertices)), Utils.rotateFacingTowardsDir(EnumFacing.NORTH, facing), texture_assembler, new double[]{15.25, 13.25, 12.75, 15.25}, color, false));
 		for(Vector3f vec : vertices)
 			vec.setZ(.0625f);
-		baseModel.add(ClientUtils.createBakedQuad(DefaultVertexFormats.ITEM, ClientUtils.applyMatrixToVertices(matrix, vertexTransformer.apply(vertices)), Utils.rotateFacingTowardsDir(EnumFacing.SOUTH, facing), texture_assembler, new double[]{12.75, 13.25, 15.25, 15.25}, colour, true));
+		baseModel.add(ClientUtils.createBakedQuad(DefaultVertexFormats.ITEM, ClientUtils.applyMatrixToVertices(matrix, vertexTransformer.apply(vertices)), Utils.rotateFacingTowardsDir(EnumFacing.SOUTH, facing), texture_assembler, new double[]{12.75, 13.25, 15.25, 15.25}, color, true));
 
 		for(int i = 0; i < 5; i++)
 		{
 			float off = i*.125f;
-			baseModel.addAll(ClientUtils.createBakedBox(new Vector3f(.203125f+off, .1875f, .09375f), new Vector3f(.296875f+off, .625f, .125f), matrix, facing, vertexTransformer, (facing1) -> texture_curtain, colour));
+			baseModel.addAll(ClientUtils.createBakedBox(new Vector3f(.203125f+off, .1875f, .09375f), new Vector3f(.296875f+off, .625f, .125f), matrix, facing, vertexTransformer, (facing1) -> texture_curtain, color));
 		}
 		return baseModel;
 	}
@@ -254,7 +254,7 @@ public class ConveyorRubberExtract extends ConveyorBasic
 			{
 				this.transferCooldown--;
 			}
-			if(!isPowered(tile) && this.transferCooldown <= 0)
+			if(!isPowered(tile)&&this.transferCooldown <= 0)
 			{
 				World world = tile.getWorld();
 				BlockPos neighbour = tile.getPos().offset(this.extractDirection);

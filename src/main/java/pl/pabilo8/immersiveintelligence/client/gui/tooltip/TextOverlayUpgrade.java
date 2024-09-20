@@ -10,6 +10,7 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.RayTraceResult.Type;
 import pl.pabilo8.immersiveintelligence.api.utils.IUpgradableMachine;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemUtil;
 
@@ -52,9 +53,9 @@ public class TextOverlayUpgrade extends TextOverlayBase
 	}
 
 	@Override
-	public int getDefaultFontColour()
+	public IIColor getDefaultFontColor()
 	{
-		return IIReference.COLOR_GOLD.getPackedARGB();
+		return IIReference.COLOR_GOLD;
 	}
 
 	@Nonnull

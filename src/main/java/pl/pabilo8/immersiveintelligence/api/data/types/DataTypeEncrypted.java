@@ -67,7 +67,7 @@ public class DataTypeEncrypted implements IDataTypeIterable
 	}
 
 	@Override
-	public IIColor getTypeColour()
+	public IIColor getTypeColor()
 	{
 		return IIColor.fromPackedRGB(0x5a0d75);
 	}

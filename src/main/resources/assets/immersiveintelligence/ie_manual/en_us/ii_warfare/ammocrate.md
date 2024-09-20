@@ -1,6 +1,6 @@
 # meta
 Ammunition Crate
-Coloured green, not Blu
+Colored green, not Blu
 # main
 @upgradable
 |[crafting]{source:"crafting"}|

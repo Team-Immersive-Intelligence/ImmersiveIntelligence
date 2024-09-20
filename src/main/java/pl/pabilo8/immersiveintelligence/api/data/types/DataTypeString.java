@@ -60,7 +60,7 @@ public class DataTypeString implements IDataType
 	}
 
 	@Override
-	public IIColor getTypeColour()
+	public IIColor getTypeColor()
 	{
 		return IIColor.fromPackedRGB(0xb86300);
 	}

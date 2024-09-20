@@ -44,7 +44,7 @@ public class DataTypeNull implements IDataType
 	}
 
 	@Override
-	public IIColor getTypeColour()
+	public IIColor getTypeColor()
 	{
 		return IIColor.fromPackedRGB(0x8f2fb3);
 	}

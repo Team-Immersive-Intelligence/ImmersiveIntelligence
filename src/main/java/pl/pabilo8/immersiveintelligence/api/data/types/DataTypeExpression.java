@@ -132,7 +132,7 @@ public class DataTypeExpression implements IDataType
 	}
 
 	@Override
-	public IIColor getTypeColour()
+	public IIColor getTypeColor()
 	{
 		return IIColor.fromPackedRGB(0x2a4db4);
 	}

@@ -124,13 +124,15 @@ public class IIReference
 	public static final IIColor COLOR_POWERBAR2 = IIColor.fromPackedRGB(0x600b00);
 	public static final IIColor COLOR_ARMORBAR1 = IIColor.fromPackedRGB(0xcfcfcf);
 	public static final IIColor COLOR_ARMORBAR2 = IIColor.fromPackedRGB(0xfcfcfc);
+
 	public static final IIColor COLOR_H1 = IIColor.fromPackedRGB(0x0a0a0a);
 	public static final IIColor COLOR_H2 = IIColor.fromPackedRGB(0x1a1a1a);
-
 	public static final IIColor COLOR_PRUSSIAN_BLUE = IIColor.fromPackedRGB(0x486c94);
 	public static final IIColor COLOR_IMMERSIVE_ORANGE = IIColor.fromPackedRGB(0xf78034);
 	public static final IIColor COLOR_GOLD = IIColor.fromPackedRGB(0xFFAA00);
 	public static final IIColor COLOR_LIGHT_BLUE = IIColor.fromPackedRGB(0x5555FF);
+
+	public static final IIColor COLOR_NIXIE_ORANGE = IIColor.fromPackedRGB(Lib.colour_nixieTubeText);
 	/**
 	 * Standard color palette for use in GUI tooltips
 	 */

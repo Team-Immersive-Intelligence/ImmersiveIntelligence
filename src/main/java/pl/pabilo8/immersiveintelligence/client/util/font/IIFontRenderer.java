@@ -72,8 +72,8 @@ public class IIFontRenderer extends FontRenderer
 		unicodeReplacements.put(IIReference.CHARICON_BOOTS, new CharReplacement(3, 5)); //boots
 	}
 
-	int[] backupColours;
-	String colourFormattingKeys = "0123456789abcdef";
+	int[] backupColors;
+	String colorFormattingKeys = "0123456789abcdef";
 	public float customSpaceWidth = 4f;
 	public float spacingModifier = 0f;
 	public boolean verticalBoldness = false;
@@ -87,7 +87,7 @@ public class IIFontRenderer extends FontRenderer
 			this.setBidiFlag(ClientUtils.mc().getLanguageManager().isCurrentLanguageBidirectional());
 		}
 		((IReloadableResourceManager)ClientUtils.mc().getResourceManager()).registerReloadListener(this);
-		createColourBackup();
+		createColorBackup();
 	}
 
 	@Override
@@ -99,11 +99,11 @@ public class IIFontRenderer extends FontRenderer
 	}
 
 	/**
-	 * This should be called again if the colour array was modified after instantiation
+	 * This should be called again if the color array was modified after instantiation
 	 */
-	public void createColourBackup()
+	public void createColorBackup()
 	{
-		this.backupColours = Arrays.copyOf(this.colorCode, 32);
+		this.backupColors = Arrays.copyOf(this.colorCode, 32);
 	}
 
 	@Override
@@ -193,20 +193,20 @@ public class IIFontRenderer extends FontRenderer
 					String hex = s.substring("<hexcol=".length(), formatEnd);
 					try
 					{
-						int hexColour = Integer.parseInt(hex, 16);
+						int hexColor = Integer.parseInt(hex, 16);
 						int formatting = 0;
-						if(formattingReplacements.containsKey(hexColour))
-							formatting = formattingReplacements.get(hexColour);
+						if(formattingReplacements.containsKey(hexColor))
+							formatting = formattingReplacements.get(hexColor);
 						else
-							while(formatting < 16&&text.contains("\u00A7"+colourFormattingKeys.charAt(formatting)))
+							while(formatting < 16&&text.contains("\u00A7"+colorFormattingKeys.charAt(formatting)))
 								formatting++;
 						if(formatting < 16)
 						{
-							rep = "\u00A7"+colourFormattingKeys.charAt(formatting)+rep+"\u00A7r";
-							this.colorCode[formatting] = hexColour;
-							this.colorCode[16+formatting] = ClientUtils.getDarkenedTextColour(hexColour);
+							rep = "\u00A7"+colorFormattingKeys.charAt(formatting)+rep+"\u00A7r";
+							this.colorCode[formatting] = hexColor;
+							this.colorCode[16+formatting] = ClientUtils.getDarkenedTextColour(hexColor);
 						}
-						formattingReplacements.put(hexColour, formatting);
+						formattingReplacements.put(hexColor, formatting);
 					} catch(Exception ignored)
 					{
 					}
@@ -229,7 +229,7 @@ public class IIFontRenderer extends FontRenderer
 		else
 			super.renderStringAtPos(text, shadow);
 
-		this.colorCode = Arrays.copyOf(backupColours, 32);
+		this.colorCode = Arrays.copyOf(backupColors, 32);
 	}
 
 	/**

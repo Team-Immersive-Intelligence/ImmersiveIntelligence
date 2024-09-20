@@ -119,7 +119,7 @@ public class DataTypeMap implements IDataTypeIterable
 	}
 
 	@Override
-	public IIColor getTypeColour()
+	public IIColor getTypeColor()
 	{
 		return IIColor.fromPackedRGB(0x4d5914);
 	}

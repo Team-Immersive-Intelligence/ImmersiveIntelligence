@@ -66,7 +66,7 @@ public class GuiDataInputMachineEdit extends GuiDataInputMachineBase
 		addLabel(61, 24, IIReference.COLOR_H1, I18n.format("desc.immersiveintelligence.variable_type"));
 		//Variable Type
 		addLabel(152-10-fontRenderer.getStringWidth(I18n.format(IIReference.DATA_KEY+"datatype."+dataType.getName())),
-				24, dataType.getTypeColour().withBrightness(0.4f),
+				24, dataType.getTypeColor().withBrightness(0.4f),
 				I18n.format(IIReference.DATA_KEY+"datatype."+dataType.getName())
 		);
 

@@ -60,7 +60,7 @@ public abstract class ItemIIUpgradeableArmor extends ItemArmor implements IUpgra
 	protected static final UUID[] ARMOR_MODIFIERS = new UUID[]{UUID.fromString("845DB27C-C624-495F-8C9F-6020A9A58B6B"), UUID.fromString("D8499B04-0E66-4726-AB29-64469D734E0D"), UUID.fromString("9F3D476D-C118-4544-8365-64846904B48E"), UUID.fromString("2AD3F246-FEE1-4E67-B886-69FD380BB150")};
 	public static final NonNullList<ItemIIUpgradeableArmor> ARMOR_REGISTRY = NonNullList.create();
 	String upgradeType;
-	public static final String NBT_Colour = "colour";
+	public static final String NBT_COLOR = "colour";
 
 	public ItemIIUpgradeableArmor(ArmorMaterial armorMaterial, EntityEquipmentSlot slot, String upgradeType)
 	{
@@ -102,7 +102,7 @@ public abstract class ItemIIUpgradeableArmor extends ItemArmor implements IUpgra
 		float durability = 100-(float)getDurabilityForDisplay(stack)*100f;
 		tooltip.add(I18n.format(Lib.DESC_INFO+"durability", durability+"%"));
 
-		if(ItemNBTHelper.hasKey(stack, NBT_Colour))
+		if(ItemNBTHelper.hasKey(stack, NBT_COLOR))
 		{
 			String hexCol = Integer.toHexString(getColor(stack));
 			tooltip.add(I18n.format(Lib.DESC_INFO+"colour", "<hexcol="+hexCol+":#"+hexCol+">"));
@@ -122,8 +122,8 @@ public abstract class ItemIIUpgradeableArmor extends ItemArmor implements IUpgra
 	@Override
 	public int getColor(@Nonnull ItemStack stack)
 	{
-		if(ItemNBTHelper.hasKey(stack, NBT_Colour))
-			return ItemNBTHelper.getInt(stack, NBT_Colour);
+		if(ItemNBTHelper.hasKey(stack, NBT_COLOR))
+			return ItemNBTHelper.getInt(stack, NBT_COLOR);
 		return 0xffffff;
 	}
 

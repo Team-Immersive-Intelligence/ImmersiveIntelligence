@@ -14,8 +14,10 @@ import pl.pabilo8.immersiveintelligence.api.ammo.enums.PropellantType;
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler;
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler.IAdvancedTooltipItem;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityAmmoBase;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
+import javax.annotation.Nullable;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -152,18 +154,22 @@ public interface IAmmoTypeItem<T extends IAmmoType<T, E>, E extends EntityAmmoBa
 	}
 
 	@Override
-	default ItemStack setPaintColour(ItemStack stack, int color)
+	default ItemStack setPaintColor(ItemStack stack, @Nullable IIColor color)
 	{
-		ItemNBTHelper.setInt(stack, NBT_PAINT, color);
+		ItemNBTHelper.setInt(stack, NBT_PAINT, color==null?-1: color.getPackedRGB());
 		return stack;
 	}
 
 	@Override
-	default int getPaintColor(ItemStack stack)
+	@Nullable
+	default IIColor getPaintColor(ItemStack stack)
 	{
 		if(ItemNBTHelper.hasKey(stack, NBT_PAINT))
-			return ItemNBTHelper.getInt(stack, NBT_PAINT);
-		return -1;
+		{
+			int color = ItemNBTHelper.getInt(stack, NBT_PAINT);
+			return color==-1?null: IIColor.fromPackedRGB(color);
+		}
+		return null;
 	}
 
 	@Override

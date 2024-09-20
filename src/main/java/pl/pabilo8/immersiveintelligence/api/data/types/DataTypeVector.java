@@ -91,7 +91,7 @@ public class DataTypeVector implements IDataType
 	}
 
 	@Override
-	public IIColor getTypeColour()
+	public IIColor getTypeColor()
 	{
 		return IIColor.fromPackedRGB(0x9d8900);
 	}

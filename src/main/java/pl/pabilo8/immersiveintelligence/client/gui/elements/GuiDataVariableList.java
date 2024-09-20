@@ -175,7 +175,7 @@ public class GuiDataVariableList extends GuiButton
 		this.drawTexturedModalRect(x+93+14+5, y+4, hovered&&delete?36: 24, 242, 12, 12);
 
 		//Variable type based effects
-		float[] rgb = data.getTypeColour().getFloatRGB();
+		float[] rgb = data.getTypeColor().getFloatRGB();
 		GL11.glColor4f(rgb[0], rgb[1], rgb[2], 1f);
 		this.drawTexturedModalRect(x+1, y, 155, 222, 12, 20);
 		this.drawTexturedModalRect(x+52+2, y, 166, 222, 22, 20);
@@ -189,10 +189,10 @@ public class GuiDataVariableList extends GuiButton
 		FontRenderer f = mc.fontRenderer;
 		if(data instanceof DataTypeExpression)
 			f.drawString(I18n.format(IIReference.DATA_KEY+"function."+((DataTypeExpression)data).getOperation().name), x+38, y+7,
-					data.getTypeColour().withBrightness(0.4f).getPackedRGB(), false);
+					data.getTypeColor().withBrightness(0.4f).getPackedRGB(), false);
 		else
 			f.drawString(I18n.format(IIReference.DATA_KEY+"datatype."+data.getName()), x+38, y+7,
-					data.getTypeColour().withBrightness(0.4f).getPackedRGB(), false);
+					data.getTypeColor().withBrightness(0.4f).getPackedRGB(), false);
 		//Draw variable name (single character)
 		f.drawString(String.valueOf(c), x+11, y+5, Lib.COLOUR_I_ImmersiveOrange, true);
 

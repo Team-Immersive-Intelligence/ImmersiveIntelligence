@@ -10,6 +10,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.RayTraceResult;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 import javax.annotation.Nonnull;
@@ -47,9 +48,9 @@ public class TextOverlayVoltmeterEntities extends TextOverlayBase
 	}
 
 	@Override
-	public int getDefaultFontColour()
+	public IIColor getDefaultFontColor()
 	{
-		return IIReference.COLOR_IMMERSIVE_ORANGE.getPackedARGB();
+		return IIReference.COLOR_IMMERSIVE_ORANGE;
 	}
 
 	@Nonnull

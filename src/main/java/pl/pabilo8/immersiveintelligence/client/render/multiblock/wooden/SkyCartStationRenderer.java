@@ -14,14 +14,14 @@ import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntityBanner;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.SkyCartStation;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.SkyCrateStation;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.rotary.IIRotaryUtils;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.ISkycrateMount;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.wooden.ModelSkyCartStation;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.SkyCartStation;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.SkyCrateStation;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.tileentity.TileEntitySkyCartStation;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
@@ -283,11 +283,10 @@ public class SkyCartStationRenderer extends TileEntitySpecialRenderer<TileEntity
 			if(conns!=null&&conns.size() > 0)
 			{
 				Connection conn = (Connection)conns.toArray()[0];
-				float[] col = IIColor.rgbIntToRGB(conn.cableType.getColour(conn));
 				double diam = conn.cableType.getRenderDiameter();
 				GlStateManager.pushMatrix();
 				ClientUtils.bindTexture("immersiveengineering:textures/blocks/wire.png");
-				GlStateManager.color(col[0], col[1], col[2]);
+				IIColor.fromPackedRGB(conn.cableType.getColour(conn)).glColor();
 				GlStateManager.disableCull();
 				GlStateManager.rotate(te.mirrored?270: 90, 0, 1, 0);
 				GlStateManager.translate(-1.5, 2.5625, 0.5*flipMod);

@@ -13,6 +13,7 @@ import pl.pabilo8.immersiveintelligence.client.util.amt.*;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMTBullet.BulletState;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityDrone;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 
@@ -67,19 +68,20 @@ public class DroneRenderer extends IIEntityRenderer<EntityDrone>
 	@Override
 	public void compileModels()
 	{
+		IIColor missilePaint = IIColor.fromPackedRGB(0x2fad64);
 		models = IIAnimationUtils.getAMTFromRes(
 				ResLoc.of(IIReference.RES_ENTITY_MODEL, "combat_drone").withExtension(ResLoc.EXT_OBJ),
 				ResLoc.of(IIReference.RES_ENTITY_MODEL, "combat_drone").withExtension(ResLoc.EXT_OBJAMT),
 				header -> new AMT[]{
 						new AMTLocator("Rotors", header),
 						new AMTBullet("WeaponMount1", header.getOffset("WeaponMount1"), AmmoRegistry.getModel(IIContent.itemAmmoRocketLight))
-								.withProperties(IIContent.ammoCoreSteel, CoreType.CANISTER, 0x2fad64).withState(BulletState.BULLET_UNUSED),
+								.withProperties(IIContent.ammoCoreSteel, CoreType.CANISTER, missilePaint).withState(BulletState.BULLET_UNUSED),
 						new AMTBullet("WeaponMount2", header.getOffset("WeaponMount2"), AmmoRegistry.getModel(IIContent.itemAmmoRocketLight))
-								.withProperties(IIContent.ammoCoreSteel, CoreType.CANISTER, 0x2fad64).withState(BulletState.BULLET_UNUSED),
+								.withProperties(IIContent.ammoCoreSteel, CoreType.CANISTER, missilePaint).withState(BulletState.BULLET_UNUSED),
 						new AMTBullet("WeaponMount3", header.getOffset("WeaponMount3"), AmmoRegistry.getModel(IIContent.itemAmmoRocketLight))
-								.withProperties(IIContent.ammoCoreSteel, CoreType.CANISTER, 0x2fad64).withState(BulletState.BULLET_UNUSED),
+								.withProperties(IIContent.ammoCoreSteel, CoreType.CANISTER, missilePaint).withState(BulletState.BULLET_UNUSED),
 						new AMTBullet("WeaponMount4", header.getOffset("WeaponMount4"), AmmoRegistry.getModel(IIContent.itemAmmoRocketLight))
-								.withProperties(IIContent.ammoCoreSteel, CoreType.CANISTER, 0x2fad64).withState(BulletState.BULLET_UNUSED)
+								.withProperties(IIContent.ammoCoreSteel, CoreType.CANISTER, missilePaint).withState(BulletState.BULLET_UNUSED)
 				}
 		);
 

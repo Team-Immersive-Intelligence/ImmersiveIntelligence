@@ -24,6 +24,7 @@ import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler;
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler.IAdvancedTooltipItem;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine.Magazines;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
@@ -116,7 +117,8 @@ public class ItemIIBulletMagazine extends ItemIISubItemsBase<Magazines> implemen
 			if(!contains)
 			{
 				already.add(bullet);
-				ItemNBTHelper.setInt(stack, "colour"+i, ((IAmmoTypeItem)bullet.getItem()).getPaintColor(bullet));
+				IIColor color = ((IAmmoTypeItem<?, ?>)bullet.getItem()).getPaintColor(bullet);
+				ItemNBTHelper.setInt(stack, "colour"+i, color!=null?color.getPackedRGB(): -1);
 				ItemNBTHelper.setBoolean(stack, "bullet"+i, true);
 				i += 1;
 			}
@@ -188,7 +190,6 @@ public class ItemIIBulletMagazine extends ItemIISubItemsBase<Magazines> implemen
 		for(int i = 0; i < 3; i++)
 			if(ItemNBTHelper.hasKey(stack, "bullet"+i))
 			{
-
 				l.add(ResLoc.of(bulletTexture, i));
 				if(ItemNBTHelper.hasKey(stack, "colour"+i)&&ItemNBTHelper.getInt(stack, "colour"+i)!=-1)
 					l.add(ResLoc.of(paintTexture, i));
