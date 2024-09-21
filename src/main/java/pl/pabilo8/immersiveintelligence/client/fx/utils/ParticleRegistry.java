@@ -378,25 +378,35 @@ public class ParticleRegistry
 
 		}
 
-		/*for(int i = 0; i < 100*size; i += 1)
-		{
-			Vec3d v = new Vec3d(1, 0, 0).rotateYaw(i/25f*360f);
-			float level = (float)Math.floor(i/25f);
 
-			ParticleRegistry.spawnExplosionFX(
-					pos.addVector(0, 0.025+(level*0.65f), 0),
-					ParticleUtils.withY(v.scale(0.25*(4/level*0.175)), 0.0125),
-					8*size);
-
-		}*/
 	}
 
-	public static void spawnGasCloud(Vec3d pos, float size, Fluid fluid)
-	{
-		/*Vec3d v = pos.add(getPositiveXZRand(ParticleBuilder.randFloat).scale(size));
-		ParticleGasCloud particle = new ParticleGasCloud(getWorld(), v, size*16, fluid);
-		particle.setMaxAge((int)(80*size));
-		ParticleSystem.addEffect(particle);*/
+	public static void spawnGasCloud(Vec3d pos, float size, Fluid fluid) {
+		// Check if fluid is not null
+		if (fluid == null) return;
+
+		// Get the color of the fluid
+		int color = fluid.getColor(); // Assuming the Fluid class has this method
+		float red = ((color >> 16) & 255) / 255.0F;
+		float green = ((color >> 8) & 255) / 255.0F;
+		float blue = (color & 255) / 255.0F;
+
+		// Spawn multiple particles for the gas cloud effect
+		for (int i = 0; i < 40 * size; i++) {
+			// Randomly distribute particles in a larger spherical area
+			double offsetX = (Math.random() - 0.5) * size * 3.5; // Increased spread
+			double offsetY = (Math.random() - 0.5) * size * 2; // Increased vertical spread
+			double offsetZ = (Math.random() - 0.5) * size * 3.5; // Increased spread
+
+			Vec3d particlePos = pos.add(new Vec3d(offsetX, offsetY - 1.0, offsetZ)); // Lower spawn point by 1 block
+
+			ParticleCloud particle = (ParticleCloud) spawnVanillaParticle(EnumParticleTypes.CLOUD, particlePos, Vec3d.ZERO);
+			if (particle != null) {
+				particle.setRBGColorF(red, green, blue); // Set the color of the particle
+				particle.setMaxAge(160); // Adjust lifespan as needed
+				particle.multipleParticleScaleBy(5f); // Adjust scale if necessary
+			}
+		}
 	}
 
 	//--- Utils ---//
