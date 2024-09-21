@@ -1,0 +1,18 @@
+# Made with Blockbench
+
+newmtl submachinegun_golden
+map_Kd immersiveintelligence:block/submachinegun
+newmtl submachinegun_vezda
+map_Kd immersiveintelligence:block/submachinegun
+newmtl submachinegun_wyrms
+map_Kd immersiveintelligence:block/submachinegun
+newmtl submachinegun_vinterland
+map_Kd immersiveintelligence:block/submachinegun
+newmtl submachinegun_parasite
+map_Kd immersiveintelligence:block/submachinegun
+newmtl submachinegun_royal
+map_Kd immersiveintelligence:block/submachinegun
+newmtl submachinegun_pershing
+map_Kd immersiveintelligence:block/submachinegun
+newmtl submachinegun_eisenheim
+map_Kd immersiveintelligence:block/submachinegun_eisenheim

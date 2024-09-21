@@ -93,7 +93,7 @@ Or
 
 Or, a more commonly used
     runClient {
-        args("--username=Pabilo8 --uuid=22153f9b49504028911a7d39a2c80101")
+        args("--username=Achroma11 --uuid=bebe01174cfb4d7d844d31823575368b")
     }
     So that running on client will start on a specific account (no password is needed for playing on offline mode)
 

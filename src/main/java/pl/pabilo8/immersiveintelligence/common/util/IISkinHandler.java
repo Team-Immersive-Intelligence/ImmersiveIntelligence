@@ -197,8 +197,8 @@ public class IISkinHandler
 			try
 			{
 				IILogger.info("Attempting to download II special skin list from GitHub");
-				//URL url = new URL("https://raw.githubusercontent.com/Pabilo8/ImmersiveIntelligence/master/contributor_skins.json");
-				URL url = new URL("https://raw.githubusercontent.com/VDeltaGabriel/ImmersiveIntelligenceDEV/master/contributor_skins.json"); // TESTING PURPOSES ONLY
+				URL url = new URL("https://raw.githubusercontent.com/Pabilo8/ImmersiveIntelligence/dev/main/contributor_skins.json");
+				// URL url = new URL("https://raw.githubusercontent.com/VDeltaGabriel/ImmersiveIntelligenceDEV/master/contributor_skins.json"); // TESTING PURPOSES ONLY
 				specialSkins.clear();
 				specialSkinsByUUID.clear();
 				JsonStreamParser parser = new JsonStreamParser(new InputStreamReader(url.openStream()));

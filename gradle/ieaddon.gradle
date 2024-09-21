@@ -26,6 +26,8 @@ dependencies {
     deobfCompile "curse.maven:immersive-posts-314645:2951672"
     deobfCompile "curse.maven:immersive-technology-359407:3658279"
     provided "curse.maven:mysticalmechanics-300742:3006392"
+
+    runtimeOnly "curse.maven:reauth-237701:4408001"
 }
 
 repositories {

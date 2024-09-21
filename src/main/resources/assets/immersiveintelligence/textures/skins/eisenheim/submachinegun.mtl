@@ -1,0 +1,6 @@
+# Made with Blockbench
+
+newmtl submachinegun
+map_Kd immersiveintelligence:block/submachinegun
+newmtl submachinegun_eisenheim
+map_Kd immersiveintelligence:block/submachinegun_eisenheim
