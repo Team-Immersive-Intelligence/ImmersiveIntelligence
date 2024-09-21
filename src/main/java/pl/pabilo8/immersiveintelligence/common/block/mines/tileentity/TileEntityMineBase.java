@@ -4,6 +4,7 @@ import blusunrize.immersiveengineering.api.Lib;
 import blusunrize.immersiveengineering.api.energy.wires.TileEntityImmersiveConnectable;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IPlayerInteraction;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.ITileDrop;
+import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -71,7 +72,7 @@ public abstract class TileEntityMineBase extends TileEntityImmersiveConnectable 
 	{
 		Item item = stack.getItem();
 		if(item instanceof IAmmoTypeItem)
-			this.mineStack = stack;
+			this.mineStack = Utils.copyStackWithAmount(stack, 1);
 	}
 
 	@Override
