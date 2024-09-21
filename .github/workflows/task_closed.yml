@@ -16,10 +16,10 @@ jobs:
         uses: sebastianpopp/discord-action@releases/v2
         with:
           webhook: ${{ secrets.WH_TASK_COMPLETE_PRIVATE }}
-          message: "Task [${{ github.event.issue.title }}](https://github.com/${{ github.repository }}/issues/${{ github.event.issue.number }}) has been marked as completed."
+          message: "Task [${{ github.event.issue.title }}](<https://github.com/${{ github.repository }}/issues/${{ github.event.issue.number }}>) has been marked as completed."
 
       - name: Notify Public Discord
         uses: sebastianpopp/discord-action@releases/v2
         with:
           webhook: ${{ secrets.WH_TASK_COMPLETE_PUBLIC }}
-          message: "Task [${{ github.event.issue.title }}](https://github.com/${{ github.repository }}/issues/${{ github.event.issue.number }}) has been marked as completed."
+          message: "Task [${{ github.event.issue.title }}](<https://github.com/${{ github.repository }}/issues/${{ github.event.issue.number }}>) has been marked as completed."

@@ -13,4 +13,4 @@ jobs:
         uses: sebastianpopp/discord-action@releases/v2
         with:
           webhook: ${{ secrets.WH_TASK_REASSIGN }}
-          message: "Issue [${{ github.event.issue.title }}](https://github.com/${{ github.repository }}/issues/${{ github.event.issue.number }}) has been reassigned to [@${{ github.event.issue.assignee.login }}](https://github.com/${{ github.event.issue.assignee.login }})."
+          message: "Issue [${{ github.event.issue.title }}](<https://github.com/${{ github.repository }}/issues/${{ github.event.issue.number }}>) has been reassigned to [@${{ github.event.issue.assignee.login }}](<https://github.com/${{ github.event.issue.assignee.login }}>)."

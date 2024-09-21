@@ -16,4 +16,4 @@ jobs:
         uses: sebastianpopp/discord-action@releases/v2
         with:
           webhook: ${{ secrets.WH_TASK_ADDED }}
-          message: "Task [${{ github.event.issue.title }}](https://github.com/${{ github.repository }}/issues/${{ github.event.issue.number }}) has been added to the project."
+          message: "Task [${{ github.event.issue.title }}](<https://github.com/${{ github.repository }}/issues/${{ github.event.issue.number }}>) has been added to the project."
