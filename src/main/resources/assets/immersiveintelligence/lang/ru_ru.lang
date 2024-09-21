@@ -1,6 +1,6 @@
-﻿//Переводил на русский "Королевский кот". Передаю привет вискасу и такпкам. МЯУ!
+﻿#Переводил на русский "Королевский кот". Передаю привет вискасу и такпкам. МЯУ!
 # До версии 0.3.1 переводил Magistr Djo  (почти)
-//Предметы
+#Предметы
 itemGroup.immersiveintelligence=Иммерсивный Интеллект
 itemGroup.ii.resources=Ресурсы
 itemGroup.ii.tools=Инструменты и производство
@@ -219,7 +219,7 @@ item.immersiveintelligence.rifle.name=Винтовка
 item.immersiveintelligence.rifle_handmade.name=Самодельная винтовка
 
 
-//Сверлильные Головки
+#Сверлильные Головки
 item.immersiveintelligence.drillhead.tungsten.name=Вольфрамовая сверлильная головка
 item.immersiveintelligence.drillhead.iron_diamond_tip.name=Покрытая алмазной крошкой железная сверлильная головка
 item.immersiveintelligence.drillhead.steel_diamond_tip.name=Покрытая алмазной крошкой стальная сверлильная соловка
@@ -381,9 +381,9 @@ item.immersiveintelligence.precission_tool.precission_hammer.name=Точный �
 item.immersiveintelligence.sawblade.iron.name=Железное лезвие пилы
 item.immersiveintelligence.sawblade.steel.name=Стальное лезвие пилы
 item.immersiveintelligence.sawblade.tungsten.name=Вольфрамовое лезвие пилы
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//bCal - Блок-Калибр (1/16 Блока = 1 bCal)
-// По совету Tokareva, Русская величина -б\Кал заменина на международную bCal
+#############################################################
+#bCal - Блок-Калибр (1/16 Блока = 1 bCal)
+# По совету Tokareva, Русская величина -б\Кал заменина на международную bCal
 
 item.immersiveintelligence.ammo_casing.artillery_8bcal.name=Гильза артиллерийского снаряда 8 bCal
 item.immersiveintelligence.artillery_8bCal.core.name=Заряд артиллерийского снаряда 8 bCal
@@ -443,7 +443,7 @@ item.immersiveintelligence.railgun_grenade_4bCal.core.name=Заряд подст
 item.immersiveintelligence.railgun_grenade_4bCal.bullet.name=Подствольная рельсотронная граната 4 bCal
 
 
-///////////////////////////////////////////////////////////////////////////////
+#######################################
 item.immersiveintelligence.bullet.component.TNT.name=Динамит
 item.immersiveintelligence.bullet.component.RDX.name=Гексоген (RDX)
 item.immersiveintelligence.bullet.component.HMX.name=Октоген (HMX)
@@ -494,7 +494,7 @@ item.immersiveintelligence.tachometer.name=Тахометр
 item.immersiveintelligence.torque_meter.name=Торсиометр 
 
 
-//Блоки
+#Блоки
 
 tile.immersiveintelligence.ore.platinum.name=Платиновая руда
 tile.immersiveintelligence.sheetmetal.platinum.name=Платиновый листовой металл
@@ -692,7 +692,7 @@ tile.immersiveintelligence.circuit_socket.basic.name=Разъем базовой
 tile.immersiveintelligence.circuit_socket.advanced.name=Разъем продвинутой схемы
 tile.immersiveintelligence.circuit_socket.processor.name=Разъем процессорной схемы
 
-//Названия Мультиблоковых Струтур
+#Названия Мультиблоковых Струтур
 
 tile.immersiveintelligence.wooden_multiblock.skycrate_station.name=Фуникулёрная станция
 tile.immersiveintelligence.wooden_multiblock.skycart_station.name=Фуникулёрная станция
@@ -857,7 +857,7 @@ desc.immersiveengineering.info.multiblock.II:SteelChainFenceGate=Стальны�
 desc.immersiveengineering.info.multiblock.II:AluminiumFenceGate=Алюминиевые ворота
 desc.immersiveengineering.info.multiblock.II:AluminiumChainFenceGate=Алюминиевые сеточные ворота
 
-//Жидкости
+#Жидкости
 fluid.ink=Чернила
 fluid.ink_cyan=Бирюзовые чернила
 fluid.ink_magenta=Пурпурные чернила
@@ -891,7 +891,7 @@ dust.sawdust=Опилки
 dust.sand=Песок
 dust.gravel=Гравий
 
-//Звуки
+#Звуки
 
 subtitle.immersiveintelligence.siren=Сирена ревёт
 subtitle.immersiveintelligence.printing_press=Печатный пресс работает
@@ -996,7 +996,7 @@ subtitle.immersiveintelligence.mortar_load=Миномёт заряжается
 subtitle.immersiveintelligence.mine_detector=Миноискатель пищит
 subtitle.immersiveintelligence.construction=Конструируется с использованием молотка
 
-//Сущности
+#Сущности
 
 entity.minecart_wooden_crate.name=Вагонетка с деревянным ящиком
 entity.minecart_reinforced_crate.name=Вагонетка с защищённым ящиком
@@ -1163,7 +1163,7 @@ machineupgrade.immersiveintelligence.razor_wire.desc=Прикрепляет ко
 
 
 
-//Описания
+#Описания
 desc.immersiveintelligence.radio_configurator_basic=Позволяет установить частоту для основных радиоустройств.
 desc.immersiveintelligence.radio_configurator_advanced=Модернизированная модель для установки более высоких частот.
 desc.immersiveintelligence.radio_configurator_frequency=Частота: %s
@@ -1247,7 +1247,7 @@ desc.immersiveintelligence.conditional_variable=Условная перемен�
 desc.immersiveintelligence.no_variable=Пусто
 desc.immersiveintelligence.variable=Переменная:
 
-//Патроны
+#Патроны
 
 desc.immersiveintelligence.bullet_type.general_purpose=Общего назначения
 desc.immersiveintelligence.bullet_type.shrapnel=Шрапнель
@@ -1312,7 +1312,7 @@ desc.immersiveintelligence.repair_crate.repair_vehicles=Восстанавлив
 
 desc.immersiveintelligence.jei.washing_recipe=Химическая мойка
 
-//Эфекты зелий
+#Эфекты зелий
 
 potion.immersiveintelligence.suppression=Подавлен
 potion.immersiveintelligence.broken_armor=Броня пробита
@@ -1328,7 +1328,7 @@ potion.immersiveintelligence.radiation=Радиация
 potion.immersiveintelligence.nuclear_heat=Ядерное тепло
 potion.immersiveintelligence.movement_assist=Помощь в движении
 
-//Информация в чате / отладка
+#Информация в чате / отладка
 info.immersiveintelligence.frequency_set=Радиочастота была установлена на %s
 info.immersiveintelligence.frequency_invalid=Неверная частота, базовые устройства могут использовать частоты до %s!
 info.immersiveintelligence.current_frequency=Текущая частота: %s
@@ -1382,7 +1382,7 @@ info.immersiveintelligence.towing.untowed=Успешно откреплен!
 #Do not translate, it's a Factorio reference ^^    Что ты такое ?   (похоронен)
 info.immersiveintelligence.towing.no_easter_egg="Нельзя разъединять подвижной состав, не находясь в транспортном средстве!" (factorio)
 
-//Энергия вращения
+#Энергия вращения
 
 rotary.immersiveintelligence.belt_system.wrongCable=Не удается прикрепить ремни к разъему проводов
 rotary.immersiveintelligence.belt_system.wrongCable1=Ремни не просто прикрепить к проволочной системе.
@@ -1405,8 +1405,8 @@ rotary.immersiveintelligence.mechanical.speed=Скорость
 rotary.immersiveintelligence.mechanical.speed_unit=об/мин
 rotary.immersiveintelligence.mechanical.torque=Крутящий момент
 rotary.immersiveintelligence.mechanical.torque_unit=Нм
-///////////////////////////////////////////////////////////////////////////////////////
-//Описание системы данных
+###########################################
+#Описание системы данных
 datasystem.immersiveintelligence.function.add=Сложение
 datasystem.immersiveintelligence.function.subtract=Вычитание
 datasystem.immersiveintelligence.function.multiply=Умножение
@@ -1536,8 +1536,8 @@ datasystem.immersiveintelligence.datatype.encrypted=Зашифрованный
 
 datasystem.immersiveintelligence.datatype.boolean.true=Истина
 datasystem.immersiveintelligence.datatype.boolean.false=Ложь
-/////////////////////////////////////////////////////////////////////////////////////////////
-//Чертежи
+##############################################
+#Чертежи
 
 desc.immersiveengineering.info.blueprint.basic_circuits=Базовые платы
 desc.immersiveengineering.info.blueprint.advanced_circuits=Продвинутые платы
@@ -1563,8 +1563,8 @@ key.immersiveintelligence.mgScope=Увеличение / прицел для п�
 
 key.immersiveintelligence.engineWorking=Двигатель вкл/выкл
 key.immersiveintelligence.motorbikeTowing=Прикрепить/Открепить
-///////////////////////////////////////////////////////////////////////////////
-//Достижения
+#######################################
+#Достижения
 advancement.immersiveintelligence.root=Иммерсивный Интеллект (ПВЛИМ)
 advancement.immersiveintelligence.root.desc=ПРпЭ?
 
@@ -1742,8 +1742,8 @@ advancement.immersiveintelligence.flagpole.desc=Соорудите флагшт�
 
 # Я репрессировал все описания                                                                                                                                              почти
 
-///////////////////////////////////////////////////////////////////////////////////
-//Категории руководства
+#########################################
+#Категории руководства
 
 ie.manual.category.ii_data.name=Передача данных
 ie.manual.category.ii_warfare.name=Военное дело
@@ -1790,7 +1790,7 @@ ie.manual.entry.immersiveposts.posts_zinc=Цинк<br><br><br><br><br>Хрупк
 ie.manual.entry.immersiveposts.posts_platinum=Платина<br><br><br><br><br><br>Бесценный
 ie.manual.entry.immersiveposts.posts_duraluminium=Дюралюминий<br><br><br><br><br>Лёгкий
 
-//Дата и электроника
+#Дата и электроника
 
 #Data and Electronics
 
@@ -1890,8 +1890,8 @@ ie.manual.entry.programmable_speaker.vars_in.t.sub=Value must be between -100 an
 |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 
 
-////////////////////////////////////////////////////////////////////////////////
-//Интеллект
+########################################
+#Интеллект
 
 ie.manual.entry.intel_main.name=Интеллект
 ie.manual.entry.intel_main.subtext=Самое мощное оружие науки
@@ -1917,7 +1917,7 @@ ie.manual.entry.strategic_command_table.name=Стратегический ком
 ie.manual.entry.strategic_command_table.subtext=Искусство войны
 ie.manual.entry.strategic_command_table0= "Запись Утрачена"
 
-//Военное дело
+#Военное дело
 
 #Отсылка на игру RTS
 ie.manual.entry.warfare_main.name=Военное дело
@@ -2332,7 +2332,7 @@ ie.manual.entry.bullet_component.shrapnel_uranium.desc=Уран - один из 
 
 
 
-//Логистика
+#Логистика
 
 #Отсылка на Foxhole - это MMO игра с большой упорной войной, в которой логистика играет ключевую роль
 ie.manual.entry.logistics.name=Логистика
@@ -2399,7 +2399,7 @@ ie.manual.entry.repair_crate0=The Repair Crate is a device used for repairing eq
 ie.manual.entry.repair_crate1=Sneaking and right clicking will open or close the crate: when it's closed - its inventory can be accessed, when it's open - right click to receive the effects. The Repair Crate will repair all items held and worn by the user.
 ie.manual.entry.repair_crate2=An inserter can be installed on top of the crate. To do it, use the wrench on a closed crate and select the appropriate upgrade. After being installed, the crate requires a MV or LV power wire connected directly to it. The installed welder inserter will automatically repair equipped items, vehicles and blocks around.
 
-//////////////////////////////////////////////////////////////////////////////////////////
+#############################################
 #Motorworks
 
 ie.manual.entry.motorworks.name=Мототехника
@@ -2443,7 +2443,7 @@ ie.manual.entry.coagulator0=Свёртыватель - это машина, ис
 ie.manual.entry.coagulator1=The coagulator requires a supply of electricity to its heavy connector port and a steady supply of latex (right tank) and formic acid (left tank), §ltake note the sides swap if the machine is flipped§r. After latex is mixed with the acid and the upper "quark" layer forms, the crane will pick one of the buckets, submerge it and put it back while a timer is automatically set. After some time, the latex will solidify into raw rubber, which will be outputted by a mechanism holding the bucket. The rubber will be dropped onto the ground next to the bucket.
 
 
-//Остальные
+#Остальные
 
 
 
@@ -2461,7 +2461,7 @@ ie.manual.entry.lighter_fuels=Топливо зажигалки
 ie.manual.entry.field_fuel=Жидкость
 ie.manual.entry.field_amount=Кол-во
 
-//Ссылка на некую картинку, которую я видел на Reddit несколько лет назад
+#Ссылка на некую картинку, которую я видел на Reddit несколько лет назад
 ie.manual.entry.sawmill.name=Лесопилка
 ie.manual.entry.sawmill.subtext=Лучший фиджет спиннер!
 ie.manual.entry.sawmill0=Лесопилка - это автоматический плотницкий станок, работающий от энергии вращения. Он состоит из стола, механического устройства для вставки и крепления для пилы. Чтобы сформировать мультиблок, используйте молоток по средним деревянным подмосткам.
@@ -2665,7 +2665,7 @@ ie.manual.entry.programmable_speaker.vars_in.t.sub=Value must be between -100 an
 
 |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 
-//ie.manual.entry.artillery_howitzer3=Переменные<br>Строка 'm' - режим действия (load(заряжание)/unload(разгрузка)/fire(огонь)/stop(остановка)) <br> Integer 'p' - угол поворота пушки по тангажу <br> Целое число 'y' - поворот пушки по рысканью <br> Целое число 'f '- время срабатывания пули (в тиках), по истечении времени пуля срабатывает.
+#ie.manual.entry.artillery_howitzer3=Переменные<br>Строка 'm' - режим действия (load(заряжание)/unload(разгрузка)/fire(огонь)/stop(остановка)) <br> Integer 'p' - угол поворота пушки по тангажу <br> Целое число 'y' - поворот пушки по рысканью <br> Целое число 'f '- время срабатывания пули (в тиках), по истечении времени пуля срабатывает.
 
 
 
