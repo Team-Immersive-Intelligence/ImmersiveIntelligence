@@ -125,6 +125,12 @@
           "time": 1,
           "visibility": false
         }
+      ],
+      "rotation": [
+        {
+          "time": 0.0,
+          "transform": [-180, 0, 0]
+        }
       ]
     },
     "casing_fired": {

@@ -165,15 +165,15 @@
 			"visibility": [
 				{
 					"time": 0,
+					"visibility": true
+				},
+				{
+					"time": 0.86842,
 					"visibility": false
 				},
 				{
-					"time": 0.36842,
-					"visibility": true
-				},
-				{
 					"time": 1.0,
-					"visibility": true
+					"visibility": false
 				}
 			]
 		},
@@ -217,7 +217,14 @@
 					"time": 1.0,
 					"property": 0.0
 				}
-			]
+			],
+      "rotation": [
+        {
+          "time": 0.0,
+          "transform": [-180, 0, 0]
+        }
+      ]
+
 		},
 		"hand_right": {
 			"rotation": [

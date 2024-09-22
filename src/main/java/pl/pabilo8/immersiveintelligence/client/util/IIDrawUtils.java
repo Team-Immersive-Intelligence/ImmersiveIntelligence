@@ -1,6 +1,7 @@
 package pl.pabilo8.immersiveintelligence.client.util;
 
 import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.vertex.VertexFormat;
@@ -38,7 +39,7 @@ public class IIDrawUtils
 	private VertexFormat format;
 	private BufferBuilder buf;
 	private Tessellator tes;
-	private float offX, offY;
+	private float offX, offY, rotation;
 
 	//--- Begin Methods ---//
 	private static IIDrawUtils start(BufferBuilder buf, VertexFormat format)
@@ -46,6 +47,7 @@ public class IIDrawUtils
 		INSTANCE.format = format;
 		INSTANCE.offX = 0;
 		INSTANCE.offY = 0;
+		INSTANCE.rotation = 0;
 		INSTANCE.buf = buf;
 		INSTANCE.tes = Tessellator.getInstance();
 		INSTANCE.buf.begin(GL11.GL_QUADS, format);
@@ -187,7 +189,7 @@ public class IIDrawUtils
 		return this;
 	}
 
-	//--- Offset ---//
+	//--- Offset and Rotation ---//
 
 	public IIDrawUtils setOffset(float x, float y)
 	{
@@ -200,6 +202,17 @@ public class IIDrawUtils
 	{
 		this.offX += x;
 		this.offY += y;
+		return this;
+	}
+
+	public IIDrawUtils addRotation(float angle)
+	{
+		finish();
+		GlStateManager.translate(offX, offY, 0);
+		rotation += angle;
+		GlStateManager.rotate(angle, 0, 0, 1);
+		offX = offY = 0;
+		buf.begin(GL11.GL_QUADS, format);
 		return this;
 	}
 

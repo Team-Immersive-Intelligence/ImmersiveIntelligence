@@ -1,27 +1,27 @@
 {
-	"origins": {
-		"rifle": [5, -2, 1],
-		"bolt_action": [5, -2, -5],
-		"bolt": [1.5, 20.5, 9.5],
-		"bullet": [1.5, 19.25, 8],
-		"casing_fired": [1.5, 20.5, 1],
-		"trigger": [1.5, 15.4027, 14.31172],
-		"magazine": [1.49885, 15.62399, 4.84254],
-		"sights_mount": [5, 1, -18],
-		"sights": [1.5, 22, -37.5],
-		"muzzle_flash": [1, 22.5, -41],
-        "hand": [-2, 18, -8],
-        "hand_right": [4, 14, 14]
-	},
-	"hierarchy": {
-		"bolt_action": "rifle",
-		"bolt": "bolt_action",
-		"bullet": "rifle",
-		"casing_fired": "rifle",
-		"trigger": "rifle",
-		"magazine": "rifle",
-		"sights_mount": "rifle",
-		"sights": "rifle",
-		"muzzle_flash": "rifle"
-	}
+  "origins": {
+    "rifle": [5, -2, 1],
+    "bolt_action": [5, -2, -5],
+    "bolt": [1.5, 20.5, 9.5],
+    "bullet": [1.5, 19.25, 8],
+    "casing_fired": [1.5, 20.5, 1],
+    "trigger": [1.5, 15.4027, 14.31172],
+    "magazine": [1.49885, 15.62399, 4.84254],
+    "sights_mount": [5, 1, -18],
+    "sights": [1.5, 22, -37.5],
+    "muzzle_flash": [1, 21, -48],
+    "hand": [-2, 18, -8],
+    "hand_right": [4, 14, 14]
+  },
+  "hierarchy": {
+    "bolt_action": "rifle",
+    "bolt": "bolt_action",
+    "bullet": "rifle",
+    "casing_fired": "rifle",
+    "trigger": "rifle",
+    "magazine": "rifle",
+    "sights_mount": "rifle",
+    "sights": "rifle",
+    "muzzle_flash": "rifle"
+  }
 }

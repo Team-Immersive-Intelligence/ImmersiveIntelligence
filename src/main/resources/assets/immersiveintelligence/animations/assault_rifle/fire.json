@@ -99,7 +99,13 @@
 					"time": 1.0,
 					"property": 0.0
 				}
-			]
+			],
+      "rotation": [
+        {
+          "time": 0.0,
+          "transform": [-180, 0, 0]
+        }
+      ]
 		},
 		"casing_fired": {
 			"rotation": [

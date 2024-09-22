@@ -102,6 +102,24 @@
 					"transform": [0, 3, 0]
 				}
 			]
-		}
-	}
+		},
+    "hand_off": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [35, 0, 77.5]
+        },
+        {
+          "time": 0.25,
+          "transform": [77.5, 0, 35]
+        }
+      ],
+      "position": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        }
+      ]
+    }
+  }
 }

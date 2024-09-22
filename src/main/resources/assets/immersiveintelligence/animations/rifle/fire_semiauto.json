@@ -100,7 +100,7 @@
 					"transform": [-464.1135, 6.28586, 0.81198]
 				},
 				{
-					"time": 1.04348,
+					"time": 1.0,
 					"transform": [-488.00473, -18.12087, 29.66608]
 				}
 			],
@@ -137,7 +137,21 @@
 					"time": 1,
 					"transform": [-15, -18, 8]
 				}
-			]
+			],
+      "visibility": [
+        {
+          "time": 0,
+          "visibility": true
+        },
+        {
+          "time": 0.95652,
+          "visibility": false
+        },
+        {
+          "time": 1.0,
+          "visibility": false
+        }
+      ]
 		},
 		"trigger": {
 			"rotation": [
@@ -233,7 +247,13 @@
 					"time": 1.0,
 					"property": 0.0
 				}
-			]
+			],
+      "rotation": [
+        {
+          "time": 0.0,
+          "transform": [-180, 0, 0]
+        }
+      ]
 		}
 	}
 }

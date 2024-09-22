@@ -23,6 +23,12 @@ public class ModelAmmoNavalMine<T extends IAmmoType<T, E>, E extends EntityNaval
 		super(ammo, modelLocation);
 	}
 
+	/**
+	 * @param ammo Ammo Type
+	 * @param <T>  Ammo Type
+	 * @param <E>  Ammo Entity
+	 * @return Reloadable AMT model container for a naval mine
+	 */
 	public static <T extends IAmmoType<T, E>, E extends EntityNavalMine> ModelAmmoNavalMine<T, E> createNavalMineModel(T ammo)
 	{
 		//Create model

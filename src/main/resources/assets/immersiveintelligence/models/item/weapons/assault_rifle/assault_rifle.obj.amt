@@ -10,7 +10,7 @@
     "iron_sights": [0, 0, 0],
     "slider": [-2.75, 30.5, -7.5],
     "casing_ejector": [3.25, 29.75, -2],
-    "muzzle_flash": [0, 30.25, -37],
+    "muzzle_flash": [0, 30.25, -44],
     "hand": [-2, 24, -16],
     "casing_fired": [2.75, 28.5, 0.5]
   },

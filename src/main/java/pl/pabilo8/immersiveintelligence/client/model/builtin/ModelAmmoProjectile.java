@@ -28,7 +28,7 @@ import java.util.Map.Entry;
  */
 public class ModelAmmoProjectile<T extends IAmmoType<T, E>, E extends EntityAmmoProjectile> extends ModelAmmo<T, E>
 {
-	protected boolean grenade = false;
+	protected boolean alwaysWithCasing = false;
 	protected AMT modelCasingFilling;
 	/**
 	 * Propellant filling animation
@@ -44,6 +44,12 @@ public class ModelAmmoProjectile<T extends IAmmoType<T, E>, E extends EntityAmmo
 		super(ammo, modelLocation);
 	}
 
+	/**
+	 * @param ammo Ammo Type
+	 * @param <T>  Ammo Type
+	 * @param <E>  Ammo Entity
+	 * @return Reloadable AMT model container for a given projectile
+	 */
 	public static <T extends IAmmoType<T, E>, E extends EntityAmmoProjectile> ModelAmmoProjectile<T, E> createProjectileModel(T ammo)
 	{
 		//Create model
@@ -54,12 +60,31 @@ public class ModelAmmoProjectile<T extends IAmmoType<T, E>, E extends EntityAmmo
 		return model;
 	}
 
+	/**
+	 * @param ammo Ammo Type
+	 * @param <T>  Ammo Type
+	 * @param <E>  Ammo Entity
+	 * @return Reloadable AMT model container for a given projectile, will display its casing mid-flight
+	 */
+	public static <T extends IAmmoType<T, E>, E extends EntityAmmoProjectile> ModelAmmoProjectile<T, E> createEncasedProjectileModel(T ammo)
+	{
+		ModelAmmoProjectile<T, E> model = createProjectileModel(ammo);
+		model.alwaysWithCasing = true;
+		return model;
+	}
+
+	/**
+	 * @param ammo Ammo Type
+	 * @param <T>  Ammo Type
+	 * @param <E>  Ammo Entity
+	 * @return Reloadable AMT model container for a given grenade
+	 */
 	public static <T extends IAmmoType<T, E>, E extends EntityAmmoGrenade> ModelAmmo<T, E> createGrenadeModel(T ammo)
 	{
 		//Create model
 		String name = ammo.getName().toLowerCase();
 		ModelAmmoProjectile<T, E> model = new ModelAmmoProjectile<>(ammo, ResLoc.of(RES_ITEM_MODEL, name).withExtension(ResLoc.EXT_OBJ));
-		model.grenade = true;
+		model.alwaysWithCasing = true;
 		model.reloadModels();
 		return model.subscribeToList("ammo/grenade/"+name);
 	}
@@ -68,7 +93,7 @@ public class ModelAmmoProjectile<T extends IAmmoType<T, E>, E extends EntityAmmo
 	public void renderCasing(float progress, @Nullable IIColor paintColor)
 	{
 		super.renderCasing(progress, paintColor);
-		if(grenade||progress==0||casingFilling==null||modelCasingFilling==null)
+		if(alwaysWithCasing||progress==0||casingFilling==null||modelCasingFilling==null)
 			return;
 
 		Tessellator tes = Tessellator.getInstance();
@@ -149,7 +174,7 @@ public class ModelAmmoProjectile<T extends IAmmoType<T, E>, E extends EntityAmmo
 	public void renderAmmoComplete(boolean used, IIColor paintColor, AmmoCore coreMaterial, CoreType coreType)
 	{
 		//always render casing (handle) in grenade models
-		if(grenade&&used)
+		if(alwaysWithCasing&&used)
 		{
 			Tessellator tes = Tessellator.getInstance();
 			BufferBuilder buf = tes.getBuffer();
@@ -167,7 +192,7 @@ public class ModelAmmoProjectile<T extends IAmmoType<T, E>, E extends EntityAmmo
 		if(!loaded)
 			return;
 
-		if(grenade)
+		if(entity instanceof EntityAmmoGrenade)
 		{
 			//rotation animation for grenades
 			EntityAmmoGrenade grenade = (EntityAmmoGrenade)entity;

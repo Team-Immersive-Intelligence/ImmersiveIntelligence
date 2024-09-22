@@ -426,7 +426,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 		{
 			ItemStack stack = ClientUtils.mc().player.getHeldItem(hand);
 			if(stack.getItem().getTileEntityItemStackRenderer() instanceof ISpecificHandRenderer)
-				if(((ISpecificHandRenderer)stack.getItem().getTileEntityItemStackRenderer()).renderCrosshair(stack, hand))
+				if(((ISpecificHandRenderer)stack.getItem().getTileEntityItemStackRenderer()).shouldCancelCrosshair(stack, hand))
 				{
 					event.setCanceled(true);
 					return;

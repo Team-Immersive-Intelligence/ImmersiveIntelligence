@@ -13,12 +13,12 @@ public interface ISpecificHandRenderer
 	boolean doHandRender(ItemStack stack, EnumHand hand, ItemStack otherHand, float swingProgress, float partialTicks);
 
 	/**
-	 * Used to render crosshair for held item
+	 * Used to cancel rendering of a crosshair for held item
 	 *
-	 * @return true if regular crosshair should be rendered
+	 * @return false if regular crosshair should be rendered
 	 */
-	default boolean renderCrosshair(ItemStack stack, EnumHand hand)
+	default boolean shouldCancelCrosshair(ItemStack stack, EnumHand hand)
 	{
-		return true;
+		return false;
 	}
 }

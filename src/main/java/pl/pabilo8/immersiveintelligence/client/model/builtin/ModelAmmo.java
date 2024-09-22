@@ -68,6 +68,12 @@ public class ModelAmmo<T extends IAmmoType<T, E>, E extends EntityAmmoBase<? sup
 
 	//--- Model Creation Methods ---//
 
+	/**
+	 * @param ammo Ammo Type
+	 * @param <T>  Ammo Type
+	 * @param <E>  Ammo Entity
+	 * @return Reloadable AMT model container for mine or explosive
+	 */
 	public static <T extends IAmmoType<T, E>, E extends EntityAmmoMine> ModelAmmo<T, E> createExplosivesModel(T ammo)
 	{
 		//Create model

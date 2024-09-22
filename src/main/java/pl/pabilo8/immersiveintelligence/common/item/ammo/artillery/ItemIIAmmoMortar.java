@@ -91,7 +91,7 @@ public class ItemIIAmmoMortar extends ItemIIAmmoBase<EntityAmmoArtilleryProjecti
 	public Function<ItemIIAmmoBase<EntityAmmoArtilleryProjectile>,
 			IAmmoModel<ItemIIAmmoBase<EntityAmmoArtilleryProjectile>, EntityAmmoArtilleryProjectile>> get3DModel()
 	{
-		return ModelAmmoProjectile::createProjectileModel;
+		return ModelAmmoProjectile::createEncasedProjectileModel;
 	}
 
 	@Override

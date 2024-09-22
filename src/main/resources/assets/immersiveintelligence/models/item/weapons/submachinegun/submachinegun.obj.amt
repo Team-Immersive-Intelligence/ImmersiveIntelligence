@@ -12,7 +12,7 @@
     "casing_fired": [1.25, 28.5, -11.25],
     "hand_main": [0, 19.5, -11],
     "hand_off": [1.25, 19.5, -1.5],
-    "muzzle_flash": [0, 30.5, -29]
+    "muzzle_flash": [0, 29, -36]
   },
   "hierarchy": {
   }

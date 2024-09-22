@@ -28,6 +28,12 @@ public class ModelAmmoMissile<T extends IAmmoType<T, E>, E extends EntityAmmoMis
 		super(ammo, modelLocation);
 	}
 
+	/**
+	 * @param ammo Ammo Type
+	 * @param <T>  Ammo Type
+	 * @param <E>  Ammo Entity
+	 * @return Reloadable AMT model container for a missile
+	 */
 	public static <T extends IAmmoType<T, E>, E extends EntityAmmoMissile> ModelAmmoMissile<T, E> createMissileModel(T ammo)
 	{
 		//Create model

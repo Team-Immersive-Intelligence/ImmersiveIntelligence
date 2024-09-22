@@ -169,7 +169,7 @@ public class AssaultRifleRenderer extends IIUpgradableItemRendererAMT<ItemIIAssa
 			(transform==TransformType.FIRST_PERSON_RIGHT_HAND?handAngle: offHandAngle).apply(preciseAim);
 		}
 
-		fireGrenade.apply(0);
+		//fireGrenade.apply(0);
 		//Choose and apply firing animation
 
 		(fireMode==2?fireGrenade: fire).apply((1f-((firing-partialTicks)/firingDelay)));
@@ -351,7 +351,7 @@ public class AssaultRifleRenderer extends IIUpgradableItemRendererAMT<ItemIIAssa
 	}
 
 	@Override
-	public boolean renderCrosshair(ItemStack stack, EnumHand hand)
+	public boolean shouldCancelCrosshair(ItemStack stack, EnumHand hand)
 	{
 		if(item.isScoped(stack))
 			return false;

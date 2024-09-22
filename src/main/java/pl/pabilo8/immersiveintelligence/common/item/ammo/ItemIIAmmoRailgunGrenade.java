@@ -77,7 +77,7 @@ public class ItemIIAmmoRailgunGrenade extends ItemIIAmmoBase<EntityAmmoProjectil
 	@SideOnly(Side.CLIENT)
 	public Function<ItemIIAmmoBase<EntityAmmoProjectile>, IAmmoModel<ItemIIAmmoBase<EntityAmmoProjectile>, EntityAmmoProjectile>> get3DModel()
 	{
-		return ModelAmmoProjectile::createProjectileModel;
+		return ModelAmmoProjectile::createEncasedProjectileModel;
 	}
 
 	@Override
