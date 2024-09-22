@@ -39,6 +39,7 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.World;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.client.event.EntityViewRenderEvent.FOVModifier;
 import net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent;
@@ -111,6 +112,7 @@ import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageEntityNBTSync;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageItemScrollableSwitch;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageManualClose;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler;
@@ -205,21 +207,34 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 	@SubscribeEvent()
 	public void onFogUpdate(EntityViewRenderEvent.RenderFogEvent event)
 	{
-		if(event.getEntity() instanceof EntityLivingBase)
+		Entity entity = event.getEntity();
+		World world = entity.getEntityWorld();
+
+		if(entity instanceof EntityLivingBase)
 		{
-			if(((EntityLivingBase)event.getEntity()).getActivePotionEffect(IIPotions.nuclearHeat)!=null)
+			EntityLivingBase living = (EntityLivingBase)entity;
+			//Nuke/Wasteland
+			if(living.getActivePotionEffect(IIPotions.nuclearHeat)!=null)
 			{
-				PotionEffect effect = ((EntityLivingBase)event.getEntity()).getActivePotionEffect(IIPotions.nuclearHeat);
+				PotionEffect effect = living.getActivePotionEffect(IIPotions.nuclearHeat);
 				assert effect!=null;
 
 				GlStateManager.setFog(FogMode.EXP2);
-				GlStateManager.setFogStart(20); //(
-				GlStateManager.setFogEnd(24);
+				GlStateManager.setFogStart(0); //(
+				GlStateManager.setFogEnd(0.5f);
 				GlStateManager.setFogDensity(.015f);
 			}
-			if(((EntityLivingBase)event.getEntity()).getActivePotionEffect(IIPotions.suppression)!=null)
+			else if(world.getBiome(living.getPosition())==IIContent.biomeWasteland)
 			{
-				PotionEffect effect = ((EntityLivingBase)event.getEntity()).getActivePotionEffect(IIPotions.suppression);
+				GlStateManager.setFog(FogMode.EXP2);
+				GlStateManager.setFogStart(0); //(
+				GlStateManager.setFogEnd(1.25f);
+				GlStateManager.setFogDensity(.015f);
+			}
+			//Suppression
+			if(living.getActivePotionEffect(IIPotions.suppression)!=null)
+			{
+				PotionEffect effect = living.getActivePotionEffect(IIPotions.suppression);
 				assert effect!=null;
 				int amplifier = effect.getAmplifier();
 				if(amplifier < 0)
@@ -245,39 +260,61 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 	public void onFogColorUpdate(EntityViewRenderEvent.FogColors event)
 	{
 		Entity entity = event.getEntity();
-		if(entity instanceof EntityLivingBase&&((EntityLivingBase)entity).isPotionActive(IIPotions.infraredVision))
+		World world = entity.getEntityWorld();
+
+		if(entity instanceof EntityLivingBase)
 		{
-			float r = event.getRed(), g = event.getGreen(), b = event.getBlue();
-			float f15 = Math.min(Objects.requireNonNull(((EntityLivingBase)entity).getActivePotionEffect(IIPotions.infraredVision)).getAmplifier(), 4)/4f;
-			float f6 = 1.0F/event.getRed();
+			EntityLivingBase living = (EntityLivingBase)entity;
 
-			if(f6 > 1.0F/event.getGreen())
-				f6 = 1.0F/event.getGreen();
+			//Nuke/Wasteland
+			if((living).getActivePotionEffect(IIPotions.nuclearHeat)!=null)
+			{
+				float v = event.getEntity().getEntityWorld().provider.getSunBrightnessFactor(0);
+				//float min = Math.min(Math.min(event.getRed(), event.getGreen()), event.getBlue());
+				event.setRed(v);
+				event.setGreen(v);
+				event.setBlue(v);
+			}
+			else if(world.getBiome(living.getPosition())==IIContent.biomeWasteland)
+			{
+				float[] rgb = IIColor.fromPackedRGB(0x64604e)
+						.withBrightness(0.2f*event.getEntity().getEntityWorld().provider.getSunBrightnessFactor(0.25f))
+						.getFloatRGB();
+				event.setRed(rgb[0]);
+				event.setGreen(rgb[1]);
+				event.setBlue(rgb[2]);
+			}
 
-			if(f6 > 1.0F/event.getBlue())
-				f6 = 1.0F/event.getBlue();
+			//Suppression
+			if((living).getActivePotionEffect(IIPotions.suppression)!=null)
+			{
+				event.setRed(0);
+				event.setGreen(0);
+				event.setBlue(0);
+			}
 
-			// Forge: fix MC-4647 and MC-10480
-			if(Float.isInfinite(f6)) f6 = Math.nextAfter(f6, 0.0);
+			//Infrared Vision Potion Effect
+			if((living).isPotionActive(IIPotions.infraredVision))
+			{
+				float r = event.getRed(), g = event.getGreen(), b = event.getBlue();
+				float f15 = Math.min(Objects.requireNonNull((living).getActivePotionEffect(IIPotions.infraredVision)).getAmplifier(), 4)/4f;
+				float f6 = 1.0F/event.getRed();
 
-			event.setRed(r*(1.0F-f15)+r*f6*f15);
-			event.setGreen(g*(1.0F-f15)+g*f6*f15);
-			event.setBlue(b*(1.0F-f15)+b*f6*f15);
+				if(f6 > 1.0F/event.getGreen())
+					f6 = 1.0F/event.getGreen();
+
+				if(f6 > 1.0F/event.getBlue())
+					f6 = 1.0F/event.getBlue();
+
+				// Forge: fix MC-4647 and MC-10480
+				if(Float.isInfinite(f6)) f6 = Math.nextAfter(f6, 0.0);
+
+				event.setRed(r*(1.0F-f15)+r*f6*f15);
+				event.setGreen(g*(1.0F-f15)+g*f6*f15);
+				event.setBlue(b*(1.0F-f15)+b*f6*f15);
+			}
 		}
-		if(entity instanceof EntityLivingBase&&((EntityLivingBase)entity).getActivePotionEffect(IIPotions.suppression)!=null)
-		{
-			event.setRed(0);
-			event.setGreen(0);
-			event.setBlue(0);
-		}
-		if(entity instanceof EntityLivingBase&&((EntityLivingBase)entity).getActivePotionEffect(IIPotions.nuclearHeat)!=null)
-		{
-			float v = event.getEntity().getEntityWorld().provider.getSunBrightnessFactor(0);
-			//float min = Math.min(Math.min(event.getRed(), event.getGreen()), event.getBlue());
-			event.setRed(v);
-			event.setGreen(v);
-			event.setBlue(v);
-		}
+
 	}
 
 	/**
