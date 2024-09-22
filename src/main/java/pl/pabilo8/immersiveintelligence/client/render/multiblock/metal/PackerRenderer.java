@@ -19,7 +19,7 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
  * @author Pabilo8
  * @since 20.08.2022
  */
-@RegisteredTileRenderer(name = "packer", clazz = TileEntityPacker.class)
+@RegisteredTileRenderer(name = "multiblock/packer", clazz = TileEntityPacker.class)
 public class PackerRenderer extends IIMultiblockRenderer<TileEntityPacker>
 {
 	AMT[] model, upgradeParts;

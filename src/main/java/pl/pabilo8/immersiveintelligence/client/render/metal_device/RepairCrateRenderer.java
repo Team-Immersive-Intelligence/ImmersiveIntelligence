@@ -22,7 +22,7 @@ import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.eff
  * @since 2019-05-26
  */
 @SideOnly(Side.CLIENT)
-@RegisteredTileRenderer(name = "repair_crate", clazz = TileEntityRepairCrate.class)
+@RegisteredTileRenderer(name = "block/crate/repair_crate", clazz = TileEntityRepairCrate.class)
 public class RepairCrateRenderer extends EffectCrateRenderer<TileEntityRepairCrate>
 {
 	private ItemStack STACK;

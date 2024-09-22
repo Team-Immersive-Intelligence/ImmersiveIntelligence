@@ -18,7 +18,7 @@ import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
  * @updated 13.12.2023
  * @since 10.07.2019
  */
-@RegisteredTileRenderer(clazz = TileEntityPrintingPress.class, name = "printing_press")
+@RegisteredTileRenderer(name = "multiblock/printing_press", clazz = TileEntityPrintingPress.class)
 public class PrintingPressRenderer extends IIMultiblockRenderer<TileEntityPrintingPress>
 {
 	private AMT[] model;

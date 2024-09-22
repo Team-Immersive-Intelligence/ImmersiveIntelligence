@@ -16,7 +16,7 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
  * @updated 23.10.2023
  * @since 28-06-2019
  */
-@RegisteredTileRenderer(name = "electrolyzer", clazz = TileEntityElectrolyzer.class)
+@RegisteredTileRenderer(name = "multiblock/electrolyzer", clazz = TileEntityElectrolyzer.class)
 public class ElectrolyzerRenderer extends IIMultiblockRenderer<TileEntityElectrolyzer>
 {
 	AMTFluid fluid;

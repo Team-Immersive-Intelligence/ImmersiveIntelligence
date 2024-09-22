@@ -12,7 +12,7 @@ import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.eff
  * @since 2019-05-26
  */
 @SideOnly(Side.CLIENT)
-@RegisteredTileRenderer(name = "ammunition_crate", clazz = TileEntityAmmunitionCrate.class)
+@RegisteredTileRenderer(name = "block/crate/ammunition", clazz = TileEntityAmmunitionCrate.class)
 public class AmmunitionCrateRenderer extends EffectCrateRenderer<TileEntityAmmunitionCrate>
 {
 	private final ResourceLocation openAnimation = new ResourceLocation(ImmersiveIntelligence.MODID, "repair_crate_open");

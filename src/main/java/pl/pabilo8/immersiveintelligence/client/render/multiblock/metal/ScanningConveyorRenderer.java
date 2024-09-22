@@ -17,7 +17,7 @@ import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
  * @updated 28.10.2023
  * @since 21-06-2019
  */
-@RegisteredTileRenderer(name = "scanning_conveyor", clazz = TileEntityScanningConveyor.class)
+@RegisteredTileRenderer(name = "multiblock/scanning_conveyor", clazz = TileEntityScanningConveyor.class)
 public class ScanningConveyorRenderer extends IIMultiblockRenderer<TileEntityScanningConveyor>
 {
 	AMT[] model;

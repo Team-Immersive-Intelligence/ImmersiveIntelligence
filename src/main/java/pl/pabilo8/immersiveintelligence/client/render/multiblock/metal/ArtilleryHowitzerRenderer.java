@@ -27,7 +27,7 @@ import pl.pabilo8.immersiveintelligence.common.util.amt.IIModelHeader;
  * @author Pabilo8
  * @since 29.07.2022
  */
-@RegisteredTileRenderer(name = "artillery_howitzer", clazz = TileEntityArtilleryHowitzer.class)
+@RegisteredTileRenderer(name = "multiblock/artillery_howitzer", clazz = TileEntityArtilleryHowitzer.class)
 public class ArtilleryHowitzerRenderer extends IIMultiblockRenderer<TileEntityArtilleryHowitzer>
 {
 	private AMT[] model = null, allParts = null;

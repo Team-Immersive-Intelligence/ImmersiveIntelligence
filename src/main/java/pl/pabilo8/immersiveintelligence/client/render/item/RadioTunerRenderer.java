@@ -11,6 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraftforge.client.model.obj.OBJModel;
 import pl.pabilo8.immersiveintelligence.client.util.amt.*;
+import pl.pabilo8.immersiveintelligence.client.util.amt.IIItemRendererAMT.RegisteredItemRenderer;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.item.tools.ItemIIRadioTuner;
@@ -25,6 +26,7 @@ import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
  * @updated 22.12.2023
  * @since 13-10-2019
  */
+@RegisteredItemRenderer(name = "items/tools/radio_tuner")
 public class RadioTunerRenderer extends IIItemRendererAMT<ItemIIRadioTuner>
 {
 	private static final ResLoc RES_ADVANCED_TUNER = ResLoc.of(IIReference.RES_ITEM_MODEL, "tools/advanced_radio_tuner").withExtension(ResLoc.EXT_OBJ);

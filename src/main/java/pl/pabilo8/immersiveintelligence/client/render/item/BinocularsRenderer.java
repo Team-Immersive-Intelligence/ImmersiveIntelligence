@@ -9,6 +9,7 @@ import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.model.item.ModelBinoculars;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
+import pl.pabilo8.immersiveintelligence.client.util.amt.IIItemRendererAMT.RegisteredItemRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.TmtUtil;
 
@@ -17,6 +18,7 @@ import pl.pabilo8.immersiveintelligence.client.util.tmt.TmtUtil;
  * @since 20.01.2021
  */
 @SideOnly(Side.CLIENT)
+@RegisteredItemRenderer(name = "items/tools/binoculars")
 public class BinocularsRenderer implements IReloadableModelContainer<BinocularsRenderer>
 {
 	public static ModelBinoculars model = new ModelBinoculars();

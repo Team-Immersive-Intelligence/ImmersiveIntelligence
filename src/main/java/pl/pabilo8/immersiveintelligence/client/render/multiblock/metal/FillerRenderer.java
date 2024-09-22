@@ -29,7 +29,7 @@ import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEn
  * @ii-approved 0.3.1
  * @since 1.05.2021
  */
-@RegisteredTileRenderer(name = "filler", clazz = TileEntityFiller.class)
+@RegisteredTileRenderer(name = "multiblock/filler", clazz = TileEntityFiller.class)
 public class FillerRenderer extends IIMultiblockRenderer<TileEntityFiller>
 {
 	AMT[] model;

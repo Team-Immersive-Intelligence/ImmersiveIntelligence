@@ -23,7 +23,7 @@ import pl.pabilo8.immersiveintelligence.common.util.amt.IIAnimation;
  * @since 30.08.2020
  */
 @SideOnly(Side.CLIENT)
-@RegisteredTileRenderer(name = "data_debugger", clazz = TileEntityDataDebugger.class)
+@RegisteredTileRenderer(name = "block/device/data_debugger", clazz = TileEntityDataDebugger.class)
 public class DataDebuggerRenderer extends IITileRenderer<TileEntityDataDebugger>
 {
 	private static IIAnimation construction;

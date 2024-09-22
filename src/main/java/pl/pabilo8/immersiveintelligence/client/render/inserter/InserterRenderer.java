@@ -17,7 +17,7 @@ import java.util.function.Function;
  * @since 2019-05-26
  */
 @SideOnly(Side.CLIENT)
-@RegisteredTileRenderer(name = "inserter", clazz = TileEntityInserter.class)
+@RegisteredTileRenderer(name = "device/inserter/inserter", clazz = TileEntityInserter.class)
 public class InserterRenderer extends InserterBaseRenderer<TileEntityInserter>
 {
 	//reference to model parts

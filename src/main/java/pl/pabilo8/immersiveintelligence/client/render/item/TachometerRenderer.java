@@ -10,6 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraftforge.client.model.obj.OBJModel;
 import pl.pabilo8.immersiveintelligence.client.util.amt.*;
+import pl.pabilo8.immersiveintelligence.client.util.amt.IIItemRendererAMT.RegisteredItemRenderer;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.item.tools.ItemIITachometer;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
@@ -21,6 +22,7 @@ import pl.pabilo8.immersiveintelligence.common.util.amt.IIModelHeader;
  * @updated 22.12.2023
  * @since 13-10-2019
  */
+@RegisteredItemRenderer(name = "items/tools/tachometer")
 public class TachometerRenderer extends IIItemRendererAMT<ItemIITachometer>
 {
 	AMT[] amt;

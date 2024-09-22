@@ -18,7 +18,7 @@ import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.Til
  * @author Pabilo8
  * @since 2019-06-01
  */
-@RegisteredTileRenderer(name = "chemical_dispenser", clazz = TileEntityChemicalDispenser.class)
+@RegisteredTileRenderer(name = "block/device/chemical_dispenser", clazz = TileEntityChemicalDispenser.class)
 public class ChemicalDispenserRenderer extends IITileRenderer<TileEntityChemicalDispenser>
 {
 	private static AMT[] models = null;
