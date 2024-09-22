@@ -162,11 +162,11 @@
     "nitroglycerin": [
       {
         "custom": {
-          "fluid:": "nitroglycerin"
+          "fluid": "nitroglycerin"
         }
       }
     ],
-    "sodium_hypoclorite": [
+    "sodium_hypochlorite": [
       {
         "custom": {
           "fluid": "sodium_hypochlorite"
@@ -176,7 +176,7 @@
     "acetaldol": [
       {
         "custom": {
-          "fluid": "acetadol"
+          "fluid": "acetaldol"
         }
       }
     ],
@@ -189,7 +189,7 @@
     ],
     "nitrating_acid": [
       {
-        "custom:": {
+        "custom": {
           "fluid": "nitrating_acid"
         }
       }

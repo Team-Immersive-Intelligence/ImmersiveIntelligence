@@ -88,6 +88,8 @@ import static pl.pabilo8.immersiveintelligence.common.CommonProxy.makeFluid;
 /**
  * @author Pabilo8
  * @since 08.12.2020
+ * @author Avalon
+ * @since 06.12.2024
  */
 public class IIContent
 {
