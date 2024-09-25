@@ -276,5 +276,20 @@
       "rarity=Masterwork",
       "text_color=401111"
     ]
+  },
+  {
+    "name": "singularity",
+    "uuid": [
+      "bebe0117-4cfb-4d7d-844d-31823575368b"
+    ],
+    "appliesTo": [
+      "submachinegun"
+    ],
+    "mods": [
+      "skin_bauble",
+      "skin_mg_text",
+      "rarity=Masterwork",
+      "text_color=401111"
+    ]
   }
 ]

@@ -1056,8 +1056,8 @@ skin.immersiveintelligence.blackdragon.desc=For contribution, effort and content
 skin.immersiveintelligence.blackdragon.text=A skin granted to Blackdragon, who made great II tutorial videos on YouTube.
 
 skin.immersiveintelligence.eisenheim.name=Eisenheim
-skin.immersiveintelligence.eisenheim.desc=The warpaint of heroes from the mountain fortress
-skin.immersiveintelligence.eisenheim.text=A skin themed with Engineer faction of the upcoming Engineered Adventures: Tales from the Front modpack.
+skin.immersiveintelligence.eisenheim.desc=Welcome to the world of Extermination!
+skin.immersiveintelligence.eisenheim.text=A skin rewarded for fixing 12 bugs.
 
 skin.immersiveintelligence.vanguard.name=Vanguard
 skin.immersiveintelligence.vanguard.desc=For the elite of engineering supporters
@@ -1073,27 +1073,32 @@ skin.immersiveintelligence.investor.text=A skin rewarded for donating $15 on Pat
 
 skin.immersiveintelligence.golden.name=Golden
 skin.immersiveintelligence.golden.desc=A big reward for an extraordinary exterminators.
-skin.immersiveintelligence.golden.text=A skin rewarded to those who exterminate 50 bugs.
+skin.immersiveintelligence.golden.text=A skin rewarded to those who exterminate 25 bugs.
 
 skin.immersiveintelligence.parasite_event.name=Parasite
-skin.immersiveintelligence.parasite_event.desc=A reward for those who are well on their way of bug fixing
-skin.immersiveintelligence.parasite_event.text=A skin rewarded to those who exterminated 30 bugs.
+skin.immersiveintelligence.parasite_event.desc=The whispers, do you hear them?
+skin.immersiveintelligence.parasite_event.text=Rewarded to those who participated in the Scrape And Run Parasite event.
 
 skin.immersiveintelligence.pershing.name=Pershing
-skin.immersiveintelligence.pershing.desc=Welcome to the world of Bug Extermination!
-skin.immersiveintelligence.pershing.text=A skin rewarded to those who exterminate 15 bugs.
+skin.immersiveintelligence.pershing.desc=Big Game Hunter
+skin.immersiveintelligence.pershing.text=A skin rewarded to those who exterminate 6 bugs.
 
 skin.immersiveintelligence.vanterland.name=Vanterland
-skin.immersiveintelligence.vanterland.desc=Winter Wonder Land
+skin.immersiveintelligence.vanterland.desc=Placeholder
 skin.immersiveintelligence.vanterland.text=Placeholder
 
 skin.immersiveintelligence.wyrms.name=Wyrms
 skin.immersiveintelligence.wyrms.desc=Worms?
-skin.immersiveintelligence.wyrms.text=Placeholder
+skin.immersiveintelligence.wyrms.text=Here be Dragons.
 
 skin.immersiveintelligence.zvezda.name=Zvezda
-skin.immersiveintelligence.zvezda.desc=Blastoff!
-skin.immersiveintelligence.zvezda.text=Placeholder
+skin.immersiveintelligence.zvezda.desc=Audaciam ad astra.
+skin.immersiveintelligence.zvezda.text=Aim for the moon, and if you miss, you will end up among the stars.
+
+skin.immersiveintelligence.signularity.name=Singularity
+skin.immersiveintelligence.singularity.desc=Everything converges in the end.
+skin.immersiveintelligence.singularity.text=A force so absolute, even the light cannot escape its reach.
+
 #Machine Upgrades
 machineupgrade.immersiveintelligence.inserter=Inserter
 machineupgrade.immersiveintelligence.inserter.desc=Adding an inserter to a crate allows it to operate automatically in a 3 blocks radius if supplied with power.
