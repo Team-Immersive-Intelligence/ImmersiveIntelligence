@@ -300,6 +300,7 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 
 		ExcavatorHandler.addMineral("Wolframite", 15, .15f, new String[]{"oreTungsten", "oreIron"}, new float[]{.25f, .75f});
 		ExcavatorHandler.addMineral("Ferberite", 10, .2f, new String[]{"oreTungsten", "oreIron", "oreTin"}, new float[]{.2f, .4f, .3f});
+		ExcavatorHandler.addMineral("Smithsonite", 10, .15f, new String[]{"oreZinc"}, new float[]{1.0f});
 
 		LighterFuelHandler.addFuel(FluidRegistry.getFluid("creosote"), 100);
 		LighterFuelHandler.addFuel(FluidRegistry.getFluid("ethanol"), 20);
