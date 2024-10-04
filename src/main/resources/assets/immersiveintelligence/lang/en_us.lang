@@ -1039,10 +1039,6 @@ skin.immersiveintelligence.royal.name=Royal
 skin.immersiveintelligence.royal.desc=A relic from an old empire
 skin.immersiveintelligence.royal.text=An retrofuturistic imperial skin. Originally meant to be a skin for the Patreons, now granted as a reward for contribution.
 
-skin.immersiveintelligence.old_glory.name=Old Glory
-skin.immersiveintelligence.old_glory.desc=Glory to Heroes
-skin.immersiveintelligence.old_glory.text=A Poland themed skin, granted as a reward for contribution.
-
 skin.immersiveintelligence.stormwind.name=Stormwind
 skin.immersiveintelligence.stormwind.desc=A tribute to defenders of the sea fortress
 skin.immersiveintelligence.stormwind.text=A skin inspired by the old awesome flash game "Storm Winds"
@@ -1057,7 +1053,7 @@ skin.immersiveintelligence.blackdragon.text=A skin granted to Blackdragon, who m
 
 skin.immersiveintelligence.eisenheim.name=Eisenheim
 skin.immersiveintelligence.eisenheim.desc=The warpaint of heroes from the mountain fortress
-skin.immersiveintelligence.eisenheim.text=A skin themed with Engineer faction of the upcoming Engineered Adventures: Tales from the Front modpack.
+skin.immersiveintelligence.eisenheim.text=A skin themed with the Engineer faction of the upcoming modpack, rewarded to contributors who fix 12 or more bugs.
 
 skin.immersiveintelligence.vanguard.name=Vanguard
 skin.immersiveintelligence.vanguard.desc=For the elite of engineering supporters
@@ -1073,27 +1069,31 @@ skin.immersiveintelligence.investor.text=A skin rewarded for donating $15 on Pat
 
 skin.immersiveintelligence.golden.name=Golden
 skin.immersiveintelligence.golden.desc=A big reward for an extraordinary exterminators.
-skin.immersiveintelligence.golden.text=A skin rewarded to those who exterminate 50 bugs.
+skin.immersiveintelligence.golden.text=A skin rewarded to those who exterminate 25 bugs.
 
 skin.immersiveintelligence.parasite_event.name=Parasite
-skin.immersiveintelligence.parasite_event.desc=A reward for those who are well on their way of bug fixing
-skin.immersiveintelligence.parasite_event.text=A skin rewarded to those who exterminated 30 bugs.
-
-skin.immersiveintelligence.pershing.name=Pershing
-skin.immersiveintelligence.pershing.desc=Welcome to the world of Bug Extermination!
-skin.immersiveintelligence.pershing.text=A skin rewarded to those who exterminate 15 bugs.
-
-skin.immersiveintelligence.vanterland.name=Vanterland
-skin.immersiveintelligence.vanterland.desc=Winter Wonder Land
-skin.immersiveintelligence.vanterland.text=Placeholder
+skin.immersiveintelligence.parasite_event.desc=Humanity Prevails
+skin.immersiveintelligence.parasite_event.text=A S&R themed skin, rewarded to participants of Sbeev's 100 Players vs Parasites video.
 
 skin.immersiveintelligence.wyrms.name=Wyrms
-skin.immersiveintelligence.wyrms.desc=Worms?
-skin.immersiveintelligence.wyrms.text=Placeholder
+skin.immersiveintelligence.wyrms.desc=Foreign Force from the Stars
+skin.immersiveintelligence.wyrms.text=A skin rewarded to Modrome, the author of the awesome mod Wyrms of Nyrus, one of our foreign allies.
+
+skin.immersiveintelligence.old_glory.name=Old Glory
+skin.immersiveintelligence.old_glory.desc=Glory to Heroes
+skin.immersiveintelligence.old_glory.text=A Poland themed skin, granted as a personal reward for contribution.
+
+skin.immersiveintelligence.pershing.name=Pershing
+skin.immersiveintelligence.pershing.desc=Liberators Arrived
+skin.immersiveintelligence.pershing.text=An America themed skin granted for helping to fix 6 or more bugs.
 
 skin.immersiveintelligence.zvezda.name=Zvezda
-skin.immersiveintelligence.zvezda.desc=Blastoff!
-skin.immersiveintelligence.zvezda.text=Placeholder
+skin.immersiveintelligence.zvezda.desc=Nu... Poehali!
+skin.immersiveintelligence.zvezda.text=A Soviet themed skin granted for contributors to translation and international promotion of the mod.
+
+skin.immersiveintelligence.vaterland.name=Vaterland
+skin.immersiveintelligence.vaterland.desc=An Iron Cross
+skin.immersiveintelligence.vaterland.text=A Germany themed skin.
 #Machine Upgrades
 machineupgrade.immersiveintelligence.inserter=Inserter
 machineupgrade.immersiveintelligence.inserter.desc=Adding an inserter to a crate allows it to operate automatically in a 3 blocks radius if supplied with power.

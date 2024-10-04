@@ -44,7 +44,4 @@ run_tests/
 
 # Act
 .secret
-gradle/ieaddon.gradle
-gradle/docs/setup.txt
 custom.gradle.template
-gradle/ieaddon.gradle
