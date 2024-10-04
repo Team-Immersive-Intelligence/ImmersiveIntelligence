@@ -113,7 +113,7 @@ public class RifleRenderer extends IIUpgradableItemRendererAMT<ItemIIRifle> impl
 		AmmoHandler ammoHandler = item.getAmmoHandler(stack);
 
 		//Set model variant
-		model.getVariant(nbt.hasKey("handmade")?"diy": nbt.getString("contributorSkin"), stack);
+		model.getVariant(nbt.hasKey("handmade")?"diy": nbt.getString(IISkinHandler.NBT_ENTRY), stack);
 		model.forEach(AMT::defaultize);
 
 		int firing = nbt.getInt(ItemIIRifle.FIRE_DELAY);

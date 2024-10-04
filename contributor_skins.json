@@ -5,7 +5,7 @@
       "f34afdfb-996b-4020-b8a2-b740e2937b29",
       "07c11943-628b-4671-a331-84899d08e538",
       "22153f9b-4950-4028-911a-7d39a2c80101",
-      "bebe0117-4cfb-4d7d-844d-31823575368b"
+      "d3aea467-2839-4d2b-8837-4fc68162d4b5"
     ],
     "appliesTo": [
       "machinegun",
@@ -20,8 +20,7 @@
   {
     "name": "archangel",
     "uuid": [
-      "28ad95e0-0c2e-4468-a02b-67ba3820080b",
-      "bebe0117-4cfb-4d7d-844d-31823575368b"
+      "28ad95e0-0c2e-4468-a02b-67ba3820080b"
     ],
     "appliesTo": [
       "machinegun",
@@ -40,8 +39,7 @@
   {
     "name": "royal",
     "uuid": [
-      "22153f9b-4950-4028-911a-7d39a2c80101",
-      "bebe0117-4cfb-4d7d-844d-31823575368b"
+      "22153f9b-4950-4028-911a-7d39a2c80101"
     ],
     "appliesTo": [
       "machinegun",
@@ -56,6 +54,7 @@
     "name": "old_glory",
     "uuid": [
       "22153f9b-4950-4028-911a-7d39a2c80101",
+      "fa45bba4-6684-49ee-8e9b-689f1f39ca7f",
       "bebe0117-4cfb-4d7d-844d-31823575368b"
     ],
     "appliesTo": [
@@ -71,7 +70,7 @@
     "name": "stormwind",
     "uuid": [
       "22153f9b-4950-4028-911a-7d39a2c80101",
-      "bebe0117-4cfb-4d7d-844d-31823575368b"
+      "fa45bba4-6684-49ee-8e9b-689f1f39ca7f"
     ],
     "appliesTo": [
       "howitzer",
@@ -87,7 +86,7 @@
     "name": "flakmeister",
     "uuid": [
       "22153f9b-4950-4028-911a-7d39a2c80101",
-      "bebe0117-4cfb-4d7d-844d-31823575368b"
+      "fa45bba4-6684-49ee-8e9b-689f1f39ca7f"
     ],
     "appliesTo": [
       "howitzer",
@@ -123,8 +122,7 @@
     "name": "vanguard",
     "uuid": [
       "22153f9b-4950-4028-911a-7d39a2c80101",
-      "7c187546-19eb-4e37-be4d-8d6ec040e071",
-      "bebe0117-4cfb-4d7d-844d-31823575368b"
+      "7c187546-19eb-4e37-be4d-8d6ec040e071"
     ],
     "appliesTo": [
       "machinegun",
@@ -136,8 +134,7 @@
     "name": "magnate",
     "uuid": [
       "22153f9b-4950-4028-911a-7d39a2c80101",
-      "7c187546-19eb-4e37-be4d-8d6ec040e071",
-      "bebe0117-4cfb-4d7d-844d-31823575368b"
+      "7c187546-19eb-4e37-be4d-8d6ec040e071"
     ],
     "appliesTo": [
       "machinegun",
@@ -151,8 +148,7 @@
     "name": "investor",
     "uuid": [
       "22153f9b-4950-4028-911a-7d39a2c80101",
-      "7c187546-19eb-4e37-be4d-8d6ec040e071",
-      "bebe0117-4cfb-4d7d-844d-31823575368b"
+      "7c187546-19eb-4e37-be4d-8d6ec040e071"
     ],
     "appliesTo": [
       "howitzer",
@@ -167,8 +163,7 @@
   {
     "name": "blackdragon",
     "uuid": [
-      "80b55a74-33b4-4e03-bcb7-3d6599f7fab3",
-      "bebe0117-4cfb-4d7d-844d-31823575368b"
+      "80b55a74-33b4-4e03-bcb7-3d6599f7fab3"
     ],
     "appliesTo": [
       "machinegun",
@@ -184,54 +179,44 @@
   {
     "name": "zvezda",
     "uuid": [
-      "80b55a74-33b4-4e03-bcb7-3d6599f7fab3",
-      "bebe0117-4cfb-4d7d-844d-31823575368b"
+      "22153f9b-4950-4028-911a-7d39a2c80101"
     ],
     "appliesTo": [
       "submachinegun"
     ],
     "mods": [
-      "skin_bauble",
-      "skin_mg_text",
-      "rarity=Masterwork",
-      "text_color=401111"
+      "rarity=Epic"
     ]
   },
   {
     "name": "wyrms",
     "uuid": [
-      "80b55a74-33b4-4e03-bcb7-3d6599f7fab3",
-      "bebe0117-4cfb-4d7d-844d-31823575368b"
+      "14d335a6-df18-4803-9c83-26cdba659a85",
+      "fa45bba4-6684-49ee-8e9b-689f1f39ca7f"
     ],
     "appliesTo": [
       "submachinegun"
     ],
     "mods": [
-      "skin_bauble",
-      "skin_mg_text",
-      "rarity=Masterwork",
-      "text_color=401111"
+      "rarity=Epic"
     ]
   },
   {
-    "name": "vanterland",
+    "name": "vaterland",
     "uuid": [
-      "80b55a74-33b4-4e03-bcb7-3d6599f7fab3",
-      "bebe0117-4cfb-4d7d-844d-31823575368b"
+      "22153f9b-4950-4028-911a-7d39a2c80101"
     ],
     "appliesTo": [
       "submachinegun"
     ],
     "mods": [
-      "skin_bauble",
-      "skin_mg_text",
-      "rarity=Masterwork",
-      "text_color=401111"
+      "rarity=Masterwork"
     ]
   },
   {
     "name": "pershing",
     "uuid": [
+      "22153f9b-4950-4028-911a-7d39a2c80101",
       "80b55a74-33b4-4e03-bcb7-3d6599f7fab3",
       "bebe0117-4cfb-4d7d-844d-31823575368b"
     ],
@@ -239,31 +224,156 @@
       "submachinegun"
     ],
     "mods": [
-      "skin_bauble",
-      "skin_mg_text",
-      "rarity=Masterwork",
-      "text_color=401111"
+      "rarity=Masterwork"
     ]
   },
   {
     "name": "parasite_event",
     "uuid": [
       "80b55a74-33b4-4e03-bcb7-3d6599f7fab3",
-      "bebe0117-4cfb-4d7d-844d-31823575368b"
+      "8494500e-787b-45d7-a68d-2203d788ea9d",
+      "8e62ec34-8a96-4431-8d7a-377542bd6e72",
+      "1679be16-f7a4-468f-8532-77966dbabb91",
+      "68aa2d0a-0ee7-44b2-b001-d193dda27349",
+      "d68e3153-0534-4764-b51c-0aaea3c99871",
+      "6b92acac-3dd3-43c7-8043-8d4f761f1e06",
+      "628f25e9-7aaa-4dbe-a27e-f10f4961b3fd",
+      "de5121c3-4cf5-4cd5-909d-6ff8b2523365",
+      "6eb387d7-ad97-4b0e-be3b-13b4c42cad92",
+      "df88a913-78c0-4d54-b68b-18fe5d721ed7",
+      "f2986dff-413c-4096-9177-988533e165fc",
+      "364a816a-13e4-4f39-80f8-105e6e3e0699",
+      "bcdb98a2-feff-4830-bc22-6a3148f010f9",
+      "403ab3f3-49d2-4d53-a7a3-f7a8374d91f6",
+      "10aa26c4-cbd0-4a44-9d89-a812cb0aa696",
+      "bf177559-325d-48b4-8844-2dbd960bbf8b",
+      "6cccd726-2ca0-41be-a959-e6f6ddf7e1ef",
+      "0c85e575-b264-439f-b096-a1da6c2fba70",
+      "42c1e7f8-6340-405b-b21c-7fb603440f6d",
+      "888822e9-46c2-48fe-9522-e3bb514abd99",
+      "2c53650a-e58b-4662-8e93-57694d93a534",
+      "8e2e3f10-36a7-4ed2-a369-45a6c31d73b5",
+      "79aacc8a-1671-4398-8c31-95832ff12cd0",
+      "5df44c93-4596-4117-a12c-6f82461c0029",
+      "01544190-5717-4556-aa7c-8cc2fb13a12f",
+      "9e1a796a-0438-4201-84e8-0e7c076c325c",
+      "0ea5b46e-b490-48b9-89f0-606ddf0e7a6b",
+      "cc432832-6415-4e1f-8088-9aecbb064882",
+      "3ea74719-3756-4a67-945f-7a07375a5cc2",
+      "8aa4f269-91c0-4756-9831-179fc0b6d1c0",
+      "ed32c649-fafd-4eef-9554-1cd2e1f5f2e1",
+      "3a533dd9-7ce8-494a-bec1-3a62a629dde1",
+      "61b24f7b-4f80-4114-9f20-df91a4d839d3",
+      "62671944-a4a2-4c50-bb33-f97bd49a95d9",
+      "0e3196ca-d8e9-46ca-80b2-0f313765b69e",
+      "8fe8b197-4bfe-4b0b-af80-36f934b82aa3",
+      "d2af9366-51df-47bd-9f16-ebb96b4bf4c5",
+      "d54331ba-4f52-45c0-87c1-cb21ab5f5124",
+      "9c26543b-ccd5-4a79-94e3-c4812bea38c2",
+      "33b0661b-c7f5-43d4-b514-339324392aa1",
+      "1a2d9979-3193-4df0-a5d3-047b1ab9a9df",
+      "0c73082b-ff0f-46a0-86ab-21eaf196ebfc",
+      "facb3b2b-b105-4c39-b472-9cf56f29e527",
+      "e792ed4f-174b-4e91-acbf-77887e709b92",
+      "a54f4587-d81b-4eaa-8eb9-33e41b13ca7f",
+      "456d1a9d-e7c0-4aaa-88fc-232a7cffef14",
+      "43cddeae-3d40-4feb-860b-c906a03667cf",
+      "ac322a3c-7291-4013-ae21-f8405d73c273",
+      "db6e2ba8-d0e4-436d-9ae7-ea2dac710dda",
+      "57bb5af4-95b0-4a19-9b82-a28cc6a13f18",
+      "4b1667da-3668-4c94-bc6e-a00455915d7f",
+      "2f2ced88-f67e-49fe-8704-f9550a355602",
+      "021ac07a-f33f-4a6c-a41c-f2162e6eac8f",
+      "03514d5d-dbdb-4a1c-89c2-6ca19f865a99",
+      "3a1a0470-b85e-43c9-ba81-e345bc664515",
+      "57ac0406-d854-4b8d-8ba8-bacc12f83f29",
+      "0958aaad-34d2-4b43-b055-b6fb2df33247",
+      "bbf2d8d4-2d2c-4eff-94b5-a01f06557396",
+      "6bc4092d-1855-4bda-afce-b5acd4cb4fd4",
+      "e1dc88f7-26e8-47d4-a37a-8dc8fd48d32a",
+      "8e4aca00-0330-4ab8-abb1-a7ef60a35aed",
+      "ac4c35e8-d013-43a9-b14a-f7c791f14d0a",
+      "3b28a559-a085-42b6-9de9-e013a1773b88",
+      "f630063c-55f7-4e12-8eba-325a15408d3a",
+      "c0e5edf5-c2d8-4cec-8f72-60eaa0f4228c",
+      "3532d98c-86ef-4d3b-8cb6-716c9aaae0fd",
+      "ad5db5cf-8fa3-4684-aa73-c493476e803f",
+      "05b7b0b7-2eff-4fe7-811a-2c7e60fca0ad",
+      "efe781c9-750b-45af-9423-47260bd832a0",
+      "9407ea06-3af6-42c1-bfa6-776d2fafe93c",
+      "4b4dc5a8-8834-4eea-b3a2-518960a7143e",
+      "dbb3cc08-5b75-44a1-8ae3-6347703451c0",
+      "27dca03e-01ea-40b8-a8a2-b290be7cf3d0",
+      "85916786-b7ab-4418-9787-7992641b525f",
+      "eab018c9-fe26-4c72-88c3-ca603abc8b0a",
+      "bff0518f-c4d6-432d-9ee9-832ae2f39c7f",
+      "6f46893a-fb17-45b3-959a-6dfbab091e90",
+      "3d388825-00dd-499f-aac6-2ac095272b6c",
+      "60350e89-774f-4f17-9e6f-561644648c44",
+      "3dec09cb-453f-4ecf-9a35-9890cab083ef",
+      "5f3f07fa-6f60-4236-8a7a-ca1ac91e18c4",
+      "362088ca-a714-4853-a03b-da8fb2a160cf",
+      "6b87f7d5-6fec-4486-953c-a75d98918f4b",
+      "1581e978-132c-4752-92e6-40ba709bec34",
+      "b1d5bf3a-1e9e-49f3-a45c-7203284691f5",
+      "d3329dc9-ca8e-4fd0-b678-f58af2faa18a",
+      "faafb9cb-0810-4278-bd0b-79c5057c04ab",
+      "65a92b0d-22db-4b7f-b97f-71041c9a7993",
+      "7b6efa02-cf65-4de8-9bde-7f03bd264ef9",
+      "9e08a478-c402-4f4d-a99a-049fe3340e84",
+      "d61f83a0-1300-4d48-b48e-01c5be2dfc70",
+      "dd7b9032-d674-4092-bc96-ea2e9b0f2c11",
+      "a65a5e15-521f-4ac8-93a6-f8eb09dbc39b",
+      "31273f79-290f-4125-8b61-00ed6c52c8af",
+      "697a9f9c-bd7b-45a6-9402-52a9c1e4281b",
+      "854cd55a-78fe-4ea3-acb5-bec49871158e",
+      "f8649388-c5b8-448d-b1fe-e0b2671c676a",
+      "9f62ad28-2fba-4d54-a5f7-f25894573c1e",
+      "769a8d2e-d0c2-4cdd-9a74-adb55e0193b5",
+      "a47e1aa6-0e4f-44e6-915d-2c9a016ab58a",
+      "7d47c81d-d25c-4da7-b36e-b840ee38bde1",
+      "2de3e70f-b780-44d4-bcf6-7da322c90bda",
+      "5cc0fc55-ea44-4112-8306-26b5c8d77ba4",
+      "3fa15b93-bcb8-480a-86c0-8d1f75a549aa",
+      "f2d06355-da7b-4feb-aedf-b4ffe04776f0",
+      "4a42cc78-edd2-496d-ac3f-dd772fdd0278",
+      "d001b823-94ee-4b2f-8365-aa7b7ec56698",
+      "66afe680-c051-4ac5-bd43-d8e6a1486872",
+      "6bd841eb-0dd8-4b1a-85a8-7feb20a20a52",
+      "a83eb331-3a68-4d71-90e0-5a576b6bb06d",
+      "a8c9230e-229d-45ec-af2d-5093158e8c37",
+      "06a46797-e44b-4fc2-8f7a-d7a1bf31af19",
+      "94705371-ff27-43dc-af20-b5425061c09e",
+      "594fdc6e-5a12-4038-8210-808f7e81a0ec",
+      "e43851c4-43f8-4989-bee4-ea58dc36baf9",
+      "269b36dc-1593-40a8-be71-556de3a5637a",
+      "2928893b-e55e-413c-b686-597e2de343cc",
+      "a930af5c-2443-4547-9f82-c6072d78a9fc",
+      "5e9c09ba-ba66-4aa8-b21c-c27eeeea79e8",
+      "647f632d-ee8b-4373-a305-4f853712abe4",
+      "04287dfe-fdcf-4c5e-92e1-d4e452b372c0",
+      "45a43042-dc58-490e-b369-3026d1ec0673",
+      "df85ef11-70cb-4671-95ee-abb1cb0856a6",
+      "5e65f6a3-c269-4e38-b6ac-15bf85697879",
+      "9fa6b554-e087-46f3-bd94-7c8c7dae68a8",
+      "d3bb22ca-7249-4bd6-9e60-f13040e9d46a",
+      "3dd0ee7e-15ad-4d03-af1d-4994a8853655",
+      "ad64fa36-e39d-4cc3-9da4-7bfc002a1692",
+      "26c4caf6-ea28-4631-a108-94dcc635fed6",
+      "9dd4c816-65b6-46f4-85f2-1e35ca5a4ac4",
+      "31ac78f5-359d-48a2-9055-9843ce34dc4f"
     ],
     "appliesTo": [
       "submachinegun"
     ],
     "mods": [
-      "skin_bauble",
-      "skin_mg_text",
-      "rarity=Masterwork",
-      "text_color=401111"
+      "rarity=Epic"
     ]
   },
   {
     "name": "golden",
     "uuid": [
+      "22153f9b-4950-4028-911a-7d39a2c80101",
       "80b55a74-33b4-4e03-bcb7-3d6599f7fab3",
       "bebe0117-4cfb-4d7d-844d-31823575368b"
     ],
@@ -271,10 +381,7 @@
       "submachinegun"
     ],
     "mods": [
-      "skin_bauble",
-      "skin_mg_text",
-      "rarity=Masterwork",
-      "text_color=401111"
+      "rarity=Masterwork"
     ]
   }
 ]

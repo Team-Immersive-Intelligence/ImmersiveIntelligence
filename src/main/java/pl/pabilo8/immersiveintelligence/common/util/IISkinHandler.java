@@ -12,6 +12,7 @@ import pl.pabilo8.immersiveintelligence.client.manual.pages.IIManualPageContribu
 import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationLoader;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 
+import javax.annotation.Nullable;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.*;
@@ -63,15 +64,11 @@ public class IISkinHandler
 	 * @param skin Skin name
 	 * @return {@link IISpecialSkin} if skin exists otherwise <code>null</code>
 	 */
+	@Nullable
 	public static IISpecialSkin getSkin(String skin)
 	{
 		if(!isValidSkin(skin)) return null;
 		return specialSkins.get(skin);
-	}
-
-	public static String getItemSkin(ItemStack item)
-	{
-		return ItemNBTHelper.getString(item, NBT_ENTRY);
 	}
 
 	/**

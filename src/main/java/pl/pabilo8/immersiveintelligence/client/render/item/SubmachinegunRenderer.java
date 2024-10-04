@@ -116,7 +116,7 @@ public class SubmachinegunRenderer extends IIUpgradableItemRendererAMT<ItemIISub
 	{
 		EasyNBT nbt = EasyNBT.wrapNBT(stack);
 
-		model.getVariant(nbt.getString("contributorSkin"), stack);
+		model.getVariant(nbt.getString(IISkinHandler.NBT_ENTRY), stack);
 		model.forEach(AMT::defaultize);
 
 		//Make upgrade AMTs visible
