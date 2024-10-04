@@ -1,26 +1,23 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "p p",
-    "srs"
+    "   ",
+    "   ",
+    "ici"
   ],
   "key": {
-    "p": {
+    "c": {
       "type": "forge:ore_dict",
-      "ore": "plateIron"
+      "ore": "plateSteel"
     },
-    "s": {
-      "type": "forge:ore_dict",
-      "ore": "lens"
-    },
-    "r": {
+    "i": {
       "type": "forge:ore_dict",
       "ore": "stickIron"
     }
   },
   "result": {
-    "item": "immersiveintelligence:binoculars",
-    "data": 0,
+    "item": "immersiveintelligence:small_crate",
+    "data": 8,
     "count": 1
   }
 }

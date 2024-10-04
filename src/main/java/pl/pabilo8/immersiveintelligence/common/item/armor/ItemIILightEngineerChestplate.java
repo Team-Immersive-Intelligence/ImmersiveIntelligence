@@ -94,9 +94,37 @@ public class ItemIILightEngineerChestplate extends ItemIILightEngineerArmorBase 
 		}
 	}
 
+	private boolean hasReinforcement(EntityPlayer player)
+	{
+		// Get the boots specifically
+		ItemStack boots = player.getItemStackFromSlot(EntityEquipmentSlot.FEET);
+
+		// Check if the boots are not empty and if the "reinforcement" upgrade is present
+		if (!boots.isEmpty())
+		{
+			NBTTagCompound upgrades = getUpgrades(boots);
+			if (upgrades != null && upgrades.hasKey("boot_reinforcement"))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
 	@Override
 	public void onArmorTick(World world, EntityPlayer player, ItemStack stack)
 	{
+
+		boolean hasHeatCoat = getUpgrades(stack).hasKey("heatcoat");
+		boolean hasReinforcement = hasReinforcement(player);
+
+
+		if(hasHeatCoat && hasReinforcement)
+		{
+			player.addPotionEffect(new PotionEffect(MobEffects.FIRE_RESISTANCE, 20, 0, true, false)); // Give fire resistance for 1 second
+			return;
+		}
+
 		super.onArmorTick(world, player, stack);
 		if(player.getAir()!=300&&hasUpgrade(stack, "scuba")&&hasUpgrade(player.getItemStackFromSlot(EntityEquipmentSlot.HEAD), "gasmask"))
 		{
@@ -110,11 +138,34 @@ public class ItemIILightEngineerChestplate extends ItemIILightEngineerArmorBase 
 		}
 		if(getUpgrades(stack).hasKey("camo_mesh")&&world.getTotalWorldTime()%10==0)
 		{
-			Material material = world.getBlockState(player.getPosition()).getMaterial();
-			if(player.isSneaking()&&(material==Material.GRASS||material==Material.LEAVES||material==Material.VINE))
+			// Get the player's current position, below it, and the surrounding blocks
+			Material materialCurrent = world.getBlockState(player.getPosition()).getMaterial();
+			Material materialBelow = world.getBlockState(player.getPosition().down()).getMaterial();
+			Material materialNorth = world.getBlockState(player.getPosition().north()).getMaterial();
+			Material materialSouth = world.getBlockState(player.getPosition().south()).getMaterial();
+			Material materialEast = world.getBlockState(player.getPosition().east()).getMaterial();
+			Material materialWest = world.getBlockState(player.getPosition().west()).getMaterial();
+
+			// Check if any of the blocks around the player or at their position match grass, leaves, or vine
+			if (player.isSneaking() && (
+					materialCurrent == Material.GRASS || materialCurrent == Material.LEAVES || materialCurrent == Material.VINE ||
+							materialBelow == Material.GRASS || materialBelow == Material.LEAVES || materialBelow == Material.VINE ||
+							materialNorth == Material.GRASS || materialNorth == Material.LEAVES || materialNorth == Material.VINE ||
+							materialSouth == Material.GRASS || materialSouth == Material.LEAVES || materialSouth == Material.VINE ||
+							materialEast == Material.GRASS || materialEast == Material.LEAVES || materialEast == Material.VINE ||
+							materialWest == Material.GRASS || materialWest == Material.LEAVES || materialWest == Material.VINE
+			))
 			{
-				player.addPotionEffect(new PotionEffect(IIPotions.concealed, 15, 0, false, false));
+				player.addPotionEffect(new PotionEffect(IIPotions.concealed, 15, 0, true, false));
 				player.addPotionEffect(new PotionEffect(MobEffects.INVISIBILITY, 15, 0, true, false));
+			}
+		}
+		if(getUpgrades(stack).hasKey("heatcoat"))
+		{
+			if(player.isBurning())
+			{
+				player.attackEntityFrom(DamageSource.IN_FIRE, 0.75F);
+				player.attackEntityFrom(DamageSource.ON_FIRE, 0.5F);
 			}
 		}
 	}

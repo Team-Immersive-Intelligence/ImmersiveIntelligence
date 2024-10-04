@@ -418,6 +418,10 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		ResLoc MCRes = ResLoc.of(IIReference.RES_MC, "textures/blocks/%s");
 		ResLoc IIRes = ResLoc.of(IIReference.RES_II, "textures/blocks/metal/%s");
 
+
+		ShrapnelHandler.addShrapnel("white_phosphorus", IIColor.fromPackedRGB(0x6b778a),
+						IERes.with("sheetmetal_aluminum"), 5, 0.3f, 0f)
+				.setFlammable(true);
 		ShrapnelHandler.addShrapnel("aluminum", IIColor.fromPackedRGB(0xd9ecea),
 						IERes.with("sheetmetal_aluminum"), 1, 0.05f, 0f)
 				.setDisruptsRadio(true);

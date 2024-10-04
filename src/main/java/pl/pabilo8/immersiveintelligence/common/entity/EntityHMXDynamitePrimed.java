@@ -23,7 +23,7 @@ public class EntityHMXDynamitePrimed extends Entity
 
 	public EntityHMXDynamitePrimed(World worldIn) {
 		super(worldIn);
-		this.fuse = 80; // Match TNT fuse time (80 ticks or 4 seconds)
+		this.fuse = 0; // Match TNT fuse time (80 ticks or 4 seconds)
 		this.preventEntitySpawning = true;
 		this.setSize(0.98F, 0.98F);
 	}

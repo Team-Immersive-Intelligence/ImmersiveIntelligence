@@ -12,8 +12,10 @@ import net.minecraft.entity.MoverType;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.MobEffects;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -88,11 +90,15 @@ public class ItemIILightEngineerBoots extends ItemIILightEngineerArmorBase imple
 	@Override
 	public void onArmorTick(World world, EntityPlayer player, ItemStack stack)
 	{
-		super.onArmorTick(world, player, stack);
-		if(getUpgrades(stack).hasKey("flippers")&&(player.isInWater())&&player.isSprinting())
+		if(getUpgrades(stack).hasKey("flippers") && player.isInWater())
+		{
 			ItemNBTHelper.setBoolean(stack, "flippin", true);
+			player.addPotionEffect(new PotionEffect(MobEffects.SPEED, 15, 1, true, false)); // Speed level 1 for 15 ticks
+		}
 		else if(ItemNBTHelper.hasKey(stack, "flippin"))
+		{
 			ItemNBTHelper.remove(stack, "flippin");
+		}
 
 		Material mat = world.getBlockState(player.getPosition()).getMaterial();
 		Material matDown = world.getBlockState(player.getPosition().down()).getMaterial();
@@ -102,14 +108,26 @@ public class ItemIILightEngineerBoots extends ItemIILightEngineerArmorBase imple
 			ItemNBTHelper.setBoolean(stack, "rackets", true);
 		else if(rackets&&(matDown==Material.ICE||matDown==Material.PACKED_ICE))
 		{
-			player.move(MoverType.SELF, player.motionX*5, player.motionY, player.motionZ*5);
-			player.motionX *= 0.5;
-			player.motionZ *= 0.5;
+			player.addPotionEffect(new PotionEffect(MobEffects.SPEED, 15, 0, true, false));
 		}
 		else if(ItemNBTHelper.hasKey(stack, "rackets"))
 			ItemNBTHelper.remove(stack, "rackets");
 
 
+		boolean springs = getUpgrades(stack).hasKey("internal_springs");
+		if(!world.isRemote && springs)
+		{
+			ItemNBTHelper.setBoolean(stack, "internal_springs", true);
+			player.stepHeight = 0;  // Ensures no sound is made during stepping
+		}
+
+
+		boolean reinforcement = getUpgrades(stack).hasKey("boot_reinforcement");
+		if(reinforcement && player.isBurning())
+		{
+			ItemNBTHelper.setBoolean(stack, "boot_reinforcement", true);
+			player.extinguish();
+		}
 	}
 
 	@Override
