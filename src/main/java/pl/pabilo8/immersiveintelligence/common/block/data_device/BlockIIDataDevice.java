@@ -93,7 +93,7 @@ public class BlockIIDataDevice extends BlockIITileProvider<IIBlockTypes_Connecto
 	}
 
 	@Override
-	public String getCustomStateMapping(int meta, boolean itemBlock)
+	public String getMappingsExtension(int meta, boolean itemBlock)
 	{
 		switch(enumValues[meta])
 		{

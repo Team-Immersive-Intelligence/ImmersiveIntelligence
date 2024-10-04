@@ -11,6 +11,8 @@ import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IIBl
 import pl.pabilo8.immersiveintelligence.common.util.block.ItemBlockIIBase;
 import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 
+import java.util.Arrays;
+
 /**
  * @author Pabilo8
  * @since 29.08.2020
@@ -39,12 +41,9 @@ public class BlockIIConcreteDecoration extends BlockIIBase<ConcreteDecorations>
 
 	public static BlockIIStairs[] getStairs()
 	{
-		BlockIIStairs[] stairs = new BlockIIStairs[ConcreteDecorations.values().length];
-		for(int i = 0; i < ConcreteDecorations.values().length; i++)
-		{
-			final ConcreteDecorations value = ConcreteDecorations.values()[i];
-			stairs[i] = new BlockIIStairs("concrete_decoration_stairs_"+value.getName(), IIContent.blockConcreteDecoration.getStateFromMeta(i));
-		}
-		return stairs;
+		return Arrays.stream(ConcreteDecorations.values())
+				.map(s -> new BlockIIStairs("concrete_decoration_stairs", s.getName(),
+						IIContent.blockConcreteDecoration.getStateFromMeta(s.ordinal())))
+				.toArray(BlockIIStairs[]::new);
 	}
 }

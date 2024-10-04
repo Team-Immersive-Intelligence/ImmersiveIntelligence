@@ -20,6 +20,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.util.block.IIIStateMappings.IIISingleMetaStateMappings;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -28,19 +29,20 @@ import java.util.List;
  * @author Pabilo8
  * @since 28.04.2021
  */
-public class BlockIIStairs extends BlockStairs
+public class BlockIIStairs extends BlockStairs implements IIISingleMetaStateMappings
 {
 	public boolean hasFlavour = false;
 	public boolean isFlammable = false;
-	public String name;
+	public String name, blockstateName;
 	float explosionResistance;
 	BlockRenderLayer renderLayer = BlockRenderLayer.SOLID;
 
-	public BlockIIStairs(String name, IBlockState state)
+	public BlockIIStairs(String name, @Nullable String subName, IBlockState state)
 	{
 		super(state);
-		this.name = name;
-		this.setUnlocalizedName(ImmersiveIntelligence.MODID+"."+name);
+		this.name = name+(subName!=null?("_"+subName): "");
+		this.blockstateName = name+(subName!=null?("/"+subName): "");
+		this.setUnlocalizedName(ImmersiveIntelligence.MODID+"."+this.name);
 		this.setCreativeTab(IIContent.II_CREATIVE_TAB);
 		this.useNeighborBrightness = true;
 		this.explosionResistance = this.blockResistance/5f;
@@ -94,6 +96,12 @@ public class BlockIIStairs extends BlockStairs
 	public BlockRenderLayer getBlockLayer()
 	{
 		return renderLayer;
+	}
+
+	@Override
+	public String getMappingsName()
+	{
+		return blockstateName;
 	}
 
 	public static class ItemBlockIIStairs extends ItemBlock

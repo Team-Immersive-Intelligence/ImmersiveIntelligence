@@ -54,7 +54,7 @@ public class BlockIIHMXDynamite extends BlockIIBase<HMX_Explosives>
 
 	@Nullable
 	@Override
-	public String getCustomStateMapping(int meta, boolean itemBlock)
+	public String getMappingsExtension(int meta, boolean itemBlock)
 	{
 		return null;
 	}
@@ -117,11 +117,14 @@ public class BlockIIHMXDynamite extends BlockIIBase<HMX_Explosives>
 	// Make the block explode when right-clicked with a flint and steel or powered by redstone
 
 	@Override
-	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
+	{
 		// If player has a flint and steel or fire charge, ignite the dynamite
-		if (!world.isRemote) {
+		if(!world.isRemote)
+		{
 			ItemStack heldItem = player.getHeldItem(hand);
-			if (heldItem.getItem() == Items.FLINT_AND_STEEL || heldItem.getItem() == Items.FIRE_CHARGE) {
+			if(heldItem.getItem()==Items.FLINT_AND_STEEL||heldItem.getItem()==Items.FIRE_CHARGE)
+			{
 				world.setBlockToAir(pos); // Remove the block
 				ignite(world, pos, player); // Trigger the explosion
 				return true;
@@ -131,18 +134,22 @@ public class BlockIIHMXDynamite extends BlockIIBase<HMX_Explosives>
 	}
 
 	@Override
-	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos) {
+	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos)
+	{
 		// If powered by redstone, ignite the dynamite
-		if (world.isBlockPowered(pos)) {
+		if(world.isBlockPowered(pos))
+		{
 			ignite(world, pos, null); // Trigger the explosion if powered by redstone
 			world.setBlockToAir(pos); // Remove the block
 		}
 	}
 
 	// Method to ignite the block and spawn an exploding entity
-	private void ignite(World world, BlockPos pos, @Nullable EntityLivingBase igniter) {
-		if (!world.isRemote) {
-			EntityHMXDynamitePrimed dynamite = new EntityHMXDynamitePrimed(world, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, igniter);
+	private void ignite(World world, BlockPos pos, @Nullable EntityLivingBase igniter)
+	{
+		if(!world.isRemote)
+		{
+			EntityHMXDynamitePrimed dynamite = new EntityHMXDynamitePrimed(world, pos.getX()+0.5, pos.getY(), pos.getZ()+0.5, igniter);
 			world.spawnEntity(dynamite);
 			world.playSound(null, dynamite.posX, dynamite.posY, dynamite.posZ, SoundEvents.ENTITY_TNT_PRIMED, SoundCategory.BLOCKS, 1.0F, 1.0F);
 		}

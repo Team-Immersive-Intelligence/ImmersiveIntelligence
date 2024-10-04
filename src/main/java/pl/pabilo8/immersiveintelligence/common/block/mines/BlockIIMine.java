@@ -60,15 +60,9 @@ public abstract class BlockIIMine extends BlockIITileProvider<IIBlockTypes_Mine>
 	}
 
 	@Override
-	public boolean useCustomStateMapper()
+	public String getMappingsExtension(int meta, boolean itemBlock)
 	{
-		return false;
-	}
-
-	@Override
-	public String getCustomStateMapping(int meta, boolean itemBlock)
-	{
-		return name;
+		return null;
 	}
 
 	@Override

@@ -52,7 +52,7 @@ public class BlockIIOre extends BlockIIBase<Ores>
 	@Override
 	public void getDrops(@Nonnull NonNullList<ItemStack> drops, @Nonnull IBlockAccess world, @Nonnull BlockPos pos, @Nonnull IBlockState state, int fortune)
 	{
-		switch(state.getValue(getMetaProperty()))
+		switch(state.getValue(property))
 		{
 			case FLUORITE:
 				drops.add(IIContent.itemMaterialGem.getStack(MaterialsGem.FLUORITE,

@@ -2,8 +2,6 @@ package pl.pabilo8.immersiveintelligence.client.util.tmt;
 
 import net.minecraft.util.math.Vec3d;
 
-import java.util.ArrayList;
-
 public class PositionTransformVertex extends PositionTextureVertex
 {
 	public PositionTransformVertex(float x, float y, float z, float u, float v)
@@ -33,38 +31,9 @@ public class PositionTransformVertex extends PositionTextureVertex
 
 	public void setTransformation()
 	{
-		if(transformGroups.size()==0)
-		{
-			vector3D = new Vec3d(neutralVector.x, neutralVector.y, neutralVector.z);
-			return;
-		}
-		double weight = 0D;
-		for(TransformGroup transformGroup : transformGroups)
-		{
-			weight += transformGroup.getWeight();
-		}
-		vector3D = new Vec3d(0, 0, 0);
-
-		for(TransformGroup group : transformGroups)
-		{
-			double cWeight = group.getWeight()/weight;
-			Vec3d vector = group.doTransformation(this);
-
-			vector3D = new Vec3d(vector3D.x+cWeight*vector.x, vector3D.y+cWeight*vector.y, vector3D.z+cWeight*vector.z);
-		}
-	}
-
-	public void addGroup(TransformGroup group)
-	{
-		transformGroups.add(group);
-	}
-
-	public void removeGroup(TransformGroup group)
-	{
-		transformGroups.remove(group);
+		vector3D = new Vec3d(neutralVector.x, neutralVector.y, neutralVector.z);
 	}
 
 	public Vec3d neutralVector;
-	public ArrayList<TransformGroup> transformGroups = new ArrayList<>();
 
 }

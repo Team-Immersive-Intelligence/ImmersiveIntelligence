@@ -5,7 +5,7 @@
     "model": "immersiveintelligence:smartmodel/conn_tripwire"
   },
   "variants": {
-    "inventory,dummy=main": [
+    "inventory,type=main": [
       {
         "model": "immersiveintelligence:tripwire_connector.obj",
         "transform": {
@@ -19,7 +19,7 @@
         }
       }
     ],
-    "dummy": {
+    "type": {
       "main": {
         "model": "immersiveintelligence:smartmodel/conn_tripwire"
       }

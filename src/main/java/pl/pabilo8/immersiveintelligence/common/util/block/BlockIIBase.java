@@ -1,7 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common.util.block;
 
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
-import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IIEMetaBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.EnumPushReaction;
@@ -10,7 +9,6 @@ import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.block.statemap.StateMapperBase;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -43,7 +41,7 @@ import java.util.function.Function;
  * Created by Pabilo8 on 2019-05-07 with help of Alternating Flux by AntiBlueQuirk.<br>
  * Reworked on 04.09.2022
  */
-public class BlockIIBase<E extends Enum<E> & IIBlockEnum> extends Block implements IIEMetaBlock
+public class BlockIIBase<E extends Enum<E> & IIBlockEnum> extends Block implements IIIStateMappings<E>
 {
 	//--- BlockIIBase ---//
 
@@ -96,7 +94,11 @@ public class BlockIIBase<E extends Enum<E> & IIBlockEnum> extends Block implemen
 	@Nullable
 	public final ItemBlockIIBase itemBlock;
 
-	public Map<Integer, String> tesrMap = new HashMap<>();
+	/**
+	 * List of SubBlocks using {@link net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer} for legacy TMT based models.
+	 */
+	@Deprecated
+	public List<E> tesrList = new ArrayList<>();
 
 	public BlockIIBase(String name, PropertyEnum<E> mainProperty, Material material, Function<BlockIIBase<E>, ItemBlockIIBase> itemBlock, Object... additionalProperties)
 	{
@@ -241,44 +243,29 @@ public class BlockIIBase<E extends Enum<E> & IIBlockEnum> extends Block implemen
 
 	public void addToTESRMap(E... id)
 	{
-		for(E subBlock : id)
-			tesrMap.put(subBlock.getMeta(), subBlock.name());
+		Collections.addAll(tesrList, id);
 	}
 
-	//--- IIEMetaBlock ---//
+	//--- IAdvancedStateMappings ---//
 
 	@Override
-	@Nonnull
-	public String getIEBlockName()
+	public String getMappingsName()
 	{
 		return this.name;
 	}
 
+	@Nullable
 	@Override
-	@Nonnull
-	public Enum<E>[] getMetaEnums()
+	public E[] getMappingsEnum()
 	{
 		return enumValues;
 	}
 
+	@Nullable
 	@Override
-	@Nonnull
-	public IBlockState getInventoryState(int meta)
+	public List<E> getLegacyTESR()
 	{
-		return getStateFromMeta(meta);
-	}
-
-	@Override
-	@Nonnull
-	public PropertyEnum<E> getMetaProperty()
-	{
-		return this.property;
-	}
-
-	@Override
-	public boolean useCustomStateMapper()
-	{
-		return true;
+		return tesrList;
 	}
 
 	/**
@@ -286,7 +273,7 @@ public class BlockIIBase<E extends Enum<E> & IIBlockEnum> extends Block implemen
 	 */
 	@Override
 	@Nullable
-	public String getCustomStateMapping(int meta, boolean itemBlock)
+	public String getMappingsExtension(int meta, boolean itemBlock)
 	{
 		if(meta > enumValues.length-1)
 			return null;
@@ -294,20 +281,6 @@ public class BlockIIBase<E extends Enum<E> & IIBlockEnum> extends Block implemen
 		IIBlockProperties properties = enumValues[meta%enumValues.length].getProperties();
 		if(properties!=null&&properties.needsCustomState()) return enumValues[meta%enumValues.length].getName();
 		return null;
-	}
-
-	@Override
-	@Nullable
-	@SideOnly(Side.CLIENT)
-	public StateMapperBase getCustomMapper()
-	{
-		return null;
-	}
-
-	@Override
-	public boolean appendPropertiesToState()
-	{
-		return true;
 	}
 
 	//--- Utilities ---//

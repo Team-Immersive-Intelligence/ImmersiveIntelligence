@@ -47,7 +47,7 @@ public class BlockIICharredLog extends BlockIIBase<CharredLogs>
 
 	@Nullable
 	@Override
-	public String getCustomStateMapping(int meta, boolean itemBlock)
+	public String getMappingsExtension(int meta, boolean itemBlock)
 	{
 		return null;
 	}

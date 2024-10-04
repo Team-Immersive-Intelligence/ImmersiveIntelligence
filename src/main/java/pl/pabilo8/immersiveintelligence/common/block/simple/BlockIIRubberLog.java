@@ -57,7 +57,7 @@ public class BlockIIRubberLog extends BlockIIBase<RubberLogs>
 
 	@Nullable
 	@Override
-	public String getCustomStateMapping(int meta, boolean itemBlock)
+	public String getMappingsExtension(int meta, boolean itemBlock)
 	{
 		return null;
 	}

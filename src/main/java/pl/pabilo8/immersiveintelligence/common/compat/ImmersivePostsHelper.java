@@ -12,6 +12,7 @@ import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.material.ItemIIMaterialRod.MaterialsRod;
+import pl.pabilo8.immersiveintelligence.common.util.block.IIIStateMappings.IIISingleMetaStateMappings;
 import twistedgate.immersiveposts.ImmersivePosts;
 import twistedgate.immersiveposts.common.blocks.BlockPost;
 import twistedgate.immersiveposts.enums.EnumPostMaterial;
@@ -54,7 +55,7 @@ public class ImmersivePostsHelper extends IICompatModule
 		try
 		{
 			IIContent.itemMaterialRod.setMetaUnhidden(MaterialsRod.ZINC, MaterialsRod.PLATINUM);
-			
+
 			Constructor<EnumPostMaterial> constructor = EnumPostMaterial.class.getDeclaredConstructor(String.class, int.class, String.class, Block.class, boolean.class, boolean.class);
 			constructor.setAccessible(true);
 
@@ -86,8 +87,7 @@ public class ImmersivePostsHelper extends IICompatModule
 			);
 			 */
 
-		}
-		catch(NoSuchMethodException e) // |IOException
+		} catch(NoSuchMethodException e) // |IOException
 		{
 			IILogger.info("Couldn't add Immersive Posts Compat :<");
 		}
@@ -126,7 +126,7 @@ public class ImmersivePostsHelper extends IICompatModule
 		return new BlockMetalFence(name);
 	}
 
-	public static class BlockMetalFence extends BlockFence
+	public static class BlockMetalFence extends BlockFence implements IIISingleMetaStateMappings
 	{
 		public final String rawName;
 		public ItemBlock itemBlock;
@@ -149,6 +149,12 @@ public class ImmersivePostsHelper extends IICompatModule
 			IIContent.BLOCKS.add(this);
 			itemBlock = (ItemBlock)new ItemBlock(this).setUnlocalizedName(ImmersiveIntelligence.MODID+".fence_"+name);
 			IIContent.ITEMS.add(itemBlock);
+		}
+
+		@Override
+		public String getMappingsName()
+		{
+			return "fence/"+rawName;
 		}
 	}
 

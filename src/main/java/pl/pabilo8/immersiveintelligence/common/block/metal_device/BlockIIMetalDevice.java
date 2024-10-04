@@ -92,7 +92,7 @@ public class BlockIIMetalDevice extends BlockIITileProvider<IIBlockTypes_MetalDe
 	}
 
 	@Override
-	public String getCustomStateMapping(int meta, boolean itemBlock)
+	public String getMappingsExtension(int meta, boolean itemBlock)
 	{
 		switch(IIBlockTypes_MetalDevice.values()[meta])
 		{

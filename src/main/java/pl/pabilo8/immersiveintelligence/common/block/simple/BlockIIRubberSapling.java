@@ -46,16 +46,11 @@ public class BlockIIRubberSapling extends BlockIIBase<RubberStuff> implements IG
 		setCategory(IICategory.RESOURCES);
 	}
 
+	@Nullable
 	@Override
-	public boolean useCustomStateMapper()
+	public String getMappingsExtension(int meta, boolean itemBlock)
 	{
-		return true;
-	}
-
-	@Override
-	public String getCustomStateMapping(int meta, boolean itemBlock)
-	{
-		return itemBlock?"item": null;
+		return super.getMappingsExtension(meta, itemBlock);
 	}
 
 	@Override
