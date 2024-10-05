@@ -709,20 +709,29 @@ public class IIRecipes
 
 	public static void addSmallCrateRecipes(IForgeRegistry<IRecipe> registry)
 	{
-		registry.register(new RecipeCrateConversion(
-				new ItemStack(IEContent.blockWoodenDevice0, 1, 0),
+		RecipeCrateConversion.createCrateConversionRecipes(
+				registry, "small_crate_wooden",
+				new ItemStack(IEContent.blockWoodenDevice0, 1, BlockTypes_WoodenDevice0.CRATE.getMeta()),
 				IIContent.blockSmallCrate.getStack(IIBlockTypes_SmallCrate.WOODEN_CRATE_BOX),
 				IIContent.blockSmallCrate.getStack(IIBlockTypes_SmallCrate.WOODEN_CRATE_CUBE),
 				IIContent.blockSmallCrate.getStack(IIBlockTypes_SmallCrate.WOODEN_CRATE_WIDE)
-		).setRegistryName(ImmersiveIntelligence.MODID, "small_crate_wooden"));
+		);
 
-		registry.register(new RecipeCrateConversion(
+		RecipeCrateConversion.createCrateConversionRecipes(
+				registry, "small_crate_reinforced",
+				new ItemStack(IEContent.blockWoodenDevice0, 1, BlockTypes_WoodenDevice0.REINFORCED_CRATE.getMeta()),
+				IIContent.blockSmallCrate.getStack(IIBlockTypes_SmallCrate.REINFORCED_CRATE_BOX),
+				IIContent.blockSmallCrate.getStack(IIBlockTypes_SmallCrate.REINFORCED_CRATE_CUBE),
+				IIContent.blockSmallCrate.getStack(IIBlockTypes_SmallCrate.REINFORCED_CRATE_WIDE)
+		);
+
+		RecipeCrateConversion.createCrateConversionRecipes(
+				registry, "small_crate_metal",
 				IIContent.blockMetalDevice.getStack(IIBlockTypes_MetalDevice.METAL_CRATE),
 				IIContent.blockSmallCrate.getStack(IIBlockTypes_SmallCrate.METAL_CRATE_BOX),
 				IIContent.blockSmallCrate.getStack(IIBlockTypes_SmallCrate.METAL_CRATE_CUBE),
 				IIContent.blockSmallCrate.getStack(IIBlockTypes_SmallCrate.METAL_CRATE_WIDE)
-		).setRegistryName(ImmersiveIntelligence.MODID, "small_crate_metal"));
-
+		);
 	}
 
 	public static void addRDXProductionRecipes()

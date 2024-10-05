@@ -11,7 +11,6 @@ import mezz.jei.api.ingredients.IModIngredientRegistration;
 import mezz.jei.api.recipe.IRecipeCategory;
 import mezz.jei.api.recipe.IRecipeCategoryRegistration;
 import mezz.jei.api.recipe.IRecipeWrapper;
-import mezz.jei.api.recipe.VanillaRecipeCategoryUid;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -26,7 +25,6 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.compat.jei.gui_handlers.*;
 import pl.pabilo8.immersiveintelligence.common.compat.jei.recipe_handlers.*;
-import pl.pabilo8.immersiveintelligence.common.crafting.RecipeMinecart;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.gun.ItemIIAmmoRevolver;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock;
 
@@ -155,7 +153,8 @@ public class JEIHelper implements IModPlugin
 				new EmplacementGuiHandler()
 		);
 
-		modRegistry.addRecipes(RecipeMinecart.listAllRecipes, VanillaRecipeCategoryUid.CRAFTING);
+		//modRegistry.addRecipes(RecipeMinecart.listAllRecipes, VanillaRecipeCategoryUid.CRAFTING);
+		//modRegistry.addRecipes(RecipeCrateConversion.listAllRecipes, VanillaRecipeCategoryUid.CRAFTING);
 	}
 
 	@Override
