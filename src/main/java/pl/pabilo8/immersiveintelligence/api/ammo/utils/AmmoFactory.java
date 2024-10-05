@@ -12,6 +12,7 @@ import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoCore;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoType;
+import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityAmmoBase;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
 
@@ -262,6 +263,13 @@ public class AmmoFactory<E extends EntityAmmoBase<? super E>>
 		//Invalid ammo type
 		if(ammo==null)
 			return null;
+
+		//No position or direction passed
+		if(pos==null||dir==null)
+		{
+			IILogger.error("Couldn't create ammo entity, missing position or direction");
+			return null;
+		}
 
 		//Create the entity
 		World currentWorld = this.world.get();

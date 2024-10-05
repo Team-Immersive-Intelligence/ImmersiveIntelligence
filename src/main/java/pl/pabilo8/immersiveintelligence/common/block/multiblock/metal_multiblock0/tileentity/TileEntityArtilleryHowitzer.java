@@ -466,6 +466,8 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 		if(!world.isRemote)
 		{
 			new AmmoFactory<EntityAmmoArtilleryProjectile>(world)
+					.setPosition(getGunPosition().add(gunEnd))
+					.setDirection(gunVec.scale(1.5))
 					.setIgnoredEntities(tactileHandler!=null?tactileHandler.getEntities(): null)
 					.setIgnoredBlocks(getMultiblockBlocks())
 					.setStack(loadedShells.get(i))
