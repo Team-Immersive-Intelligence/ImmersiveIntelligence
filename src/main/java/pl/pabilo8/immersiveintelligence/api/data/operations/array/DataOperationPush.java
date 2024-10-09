@@ -2,10 +2,7 @@ package pl.pabilo8.immersiveintelligence.api.data.operations.array;
 
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.operations.DataOperation;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeAccessor;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeArray;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeExpression;
-import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
+import pl.pabilo8.immersiveintelligence.api.data.types.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,8 +17,8 @@ public class DataOperationPush extends DataOperation
 	{
 		name = "array_push";
 		allowedTypes = new Class[]{DataTypeArray.class, IDataType.class};
-		params = new String[]{"array","inserted"};
-		expectedResult = DataTypeArray.class;
+		params = new String[]{"array", "inserted"};
+		expectedResult = DataTypeNull.class;
 	}
 
 	@Override
@@ -45,6 +42,6 @@ public class DataOperationPush extends DataOperation
 		iDataTypes.add(pushed);
 		array.value = iDataTypes.toArray(new IDataType[0]);
 
-		return array;
+		return new DataTypeNull();
 	}
 }

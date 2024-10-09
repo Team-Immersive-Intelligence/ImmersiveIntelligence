@@ -293,4 +293,9 @@ public class DataPacket implements Iterable<IDataType>
 	{
 		return variables.size();
 	}
+
+	public void trimNulls()
+	{
+		variables.entrySet().removeIf(entry -> entry.getValue() instanceof DataTypeNull);
+	}
 }

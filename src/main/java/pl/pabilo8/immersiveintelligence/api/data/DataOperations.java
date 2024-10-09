@@ -113,6 +113,7 @@ public class DataOperations
 		operations.put("entity_get_y", DataOperationGetEntityPosY.class);
 		operations.put("entity_get_z", DataOperationGetEntityPosZ.class);
 
+		operations.put("array_start", DataOperationStart.class);
 		operations.put("array_get", DataOperationGet.class);
 		operations.put("array_set", DataOperationSet.class);
 		operations.put("array_pop", DataOperationPop.class);
@@ -149,8 +150,7 @@ public class DataOperations
 			try
 			{
 				return c.newInstance();
-			}
-			catch(InstantiationException|IllegalAccessException ignored)
+			} catch(InstantiationException|IllegalAccessException ignored)
 			{
 			}
 		}

@@ -39,8 +39,8 @@ import java.util.List;
 
 /**
  * @author Pabilo8
- * @since 25-06-2019
  * @author Avalon
+ * @since 25-06-2019
  * @since 20-09-2024
  */
 @IIItemProperties(category = IICategory.ELECTRONICS)
@@ -112,6 +112,7 @@ public class ItemIIFunctionalCircuit extends ItemIISubItemsBase<Circuits> implem
 				"matches_oredict"
 		),
 		ARRAY(CircuitTypes.BASIC,
+				"array_start",
 				"array_get", "array_set",
 				"array_length",
 				"array_push", "array_pop",
@@ -230,21 +231,26 @@ public class ItemIIFunctionalCircuit extends ItemIISubItemsBase<Circuits> implem
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public void addAdvancedInformation(ItemStack stack, int offsetX, List<Integer> offsetsY) {
+	public void addAdvancedInformation(ItemStack stack, int offsetX, List<Integer> offsetsY)
+	{
 		// Ensure that offsetsY contains at least one element
-		if (offsetsY.size() > 0) {
+		if(offsetsY.size() > 0)
+		{
 			GlStateManager.translate(offsetX, offsetsY.get(0), 700);
 			GlStateManager.scale(.5f, .5f, 1);
-		} else {
+		}
+		else
+		{
 			// Handle case where offsetsY is empty
 			GlStateManager.translate(offsetX, 0, 700);
 			GlStateManager.scale(.5f, .5f, 1);
 		}
 
 		boolean b = ItemTooltipHandler.canExpandTooltip(Keyboard.KEY_LSHIFT);
-		if (b) {
+		if(b)
+		{
 			IDataType[] types;
-			if (last == IIContent.itemCircuit.stackToSub(stack))
+			if(last==IIContent.itemCircuit.stackToSub(stack))
 				types = lastTooltip;
 			else
 				lastTooltip = types = IIContent.itemCircuit.getOperationsList(stack).stream()
@@ -252,34 +258,38 @@ public class ItemIIFunctionalCircuit extends ItemIISubItemsBase<Circuits> implem
 						.toArray(IDataType[]::new);
 
 			GlStateManager.color(1f, 1f, 1f, 1f);
-			for (int i = 0; i < types.length; i++) {
+			for(int i = 0; i < types.length; i++)
+			{
 				ClientUtils.bindTexture(types[i].textureLocation());
-				Gui.drawModalRectWithCustomSizedTexture(0, i * 20, 0, 0, 16, 16, 16, 16);
+				Gui.drawModalRectWithCustomSizedTexture(0, i*20, 0, 0, 16, 16, 16, 16);
 			}
 		}
 
-		if (ItemTooltipHandler.canExpandTooltip(Keyboard.KEY_LCONTROL)) {
+		if(ItemTooltipHandler.canExpandTooltip(Keyboard.KEY_LCONTROL))
+		{
 			DataPacket storedData = getStoredData(stack);
 			IDataType[] types;
-			if (storedData.equals(lastStored))
+			if(storedData.equals(lastStored))
 				types = lastStoredTooltip;
 			else
 				lastStoredTooltip = types = storedData.variables.values().stream()
 						.filter(o -> o instanceof DataTypeExpression)
-						.map(o -> DataPacket.getVarInstance(((DataTypeExpression) o).getOperation().expectedResult))
+						.map(o -> DataPacket.getVarInstance(((DataTypeExpression)o).getOperation().expectedResult))
 						.toArray(IDataType[]::new);
 
 			GlStateManager.color(1f, 1f, 1f, 1f);
 
 			// Check if offsetsY has enough elements for the secondary offset (b ? 1 : 0)
 			int off = 0;
-			if (offsetsY.size() > (b ? 1 : 0)) {
-				off = offsetsY.get(b ? 1 : 0) - offsetsY.get(0);
+			if(offsetsY.size() > (b?1: 0))
+			{
+				off = offsetsY.get(b?1: 0)-offsetsY.get(0);
 			}
 
-			for (int i = 0; i < types.length; i++) {
+			for(int i = 0; i < types.length; i++)
+			{
 				ClientUtils.bindTexture(types[i].textureLocation());
-				Gui.drawModalRectWithCustomSizedTexture(0, off + i * 20, 0, 0, 16, 16, 16, 16);
+				Gui.drawModalRectWithCustomSizedTexture(0, off+i*20, 0, 0, 16, 16, 16, 16);
 			}
 		}
 	}

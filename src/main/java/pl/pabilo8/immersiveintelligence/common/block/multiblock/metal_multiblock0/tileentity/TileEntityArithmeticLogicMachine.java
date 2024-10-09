@@ -308,6 +308,7 @@ public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockMetal<
 						}
 					}
 				}
+			newPacket.trimNulls();
 
 			TileEntityArithmeticLogicMachine tile1 = getTileForPos(3);
 			TileEntityArithmeticLogicMachine tile2 = getTileForPos(2);

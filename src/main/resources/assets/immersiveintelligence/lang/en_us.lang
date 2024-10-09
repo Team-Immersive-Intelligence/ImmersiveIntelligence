@@ -1474,6 +1474,7 @@ datasystem.immersiveintelligence.function.get_item_id=Get ID
 datasystem.immersiveintelligence.function.can_stack_with=Can Stack With
 datasystem.immersiveintelligence.function.matches_oredict=Matches OreDictionary
 
+datasystem.immersiveintelligence.function.array_start=Start
 datasystem.immersiveintelligence.function.array_get=Get
 datasystem.immersiveintelligence.function.array_set=Set
 datasystem.immersiveintelligence.function.array_push=Push

@@ -27,6 +27,13 @@ public class DataOperationPop extends DataOperation
 		DataTypeArray array;
 		array = packet.getVarInType(DataTypeArray.class, data.getArgument(0));
 		IDataType[] arr = array.value;
-		return arr.length > 0?arr[arr.length-1]: new DataTypeNull();
+		if(arr.length==0)
+			return new DataTypeNull();
+
+		IDataType[] arrNew = new IDataType[arr.length-1];
+		System.arraycopy(arr, 0, arrNew, 0, arrNew.length);
+		array.value = arrNew;
+
+		return arr[arr.length-1];
 	}
 }
