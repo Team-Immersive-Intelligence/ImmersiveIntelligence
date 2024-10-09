@@ -25,9 +25,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.AmmoFactory;
-import pl.pabilo8.immersiveintelligence.api.data.DataHandlingUtils;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
-import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
+import pl.pabilo8.immersiveintelligence.api.data.IIDataHandlingUtils;
 import pl.pabilo8.immersiveintelligence.api.data.types.*;
 import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
 import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleRegistry;
@@ -36,7 +35,6 @@ import pl.pabilo8.immersiveintelligence.client.util.carversound.TimedCompoundSou
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.ArtilleryHowitzer;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.MultiblockArtilleryHowitzer;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoArtilleryProjectile;
 import pl.pabilo8.immersiveintelligence.common.entity.tactile.TactileHandler;
@@ -782,21 +780,21 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 	@Override
 	public void receiveData(DataPacket packet, int pos)
 	{
-		DataHandlingUtils.expectingNumericParam('y', packet, f -> plannedYaw = f);
-		DataHandlingUtils.expectingNumericParam('p', packet,
+		IIDataHandlingUtils.expectingNumericParam('y', packet, f -> plannedYaw = f);
+		IIDataHandlingUtils.expectingNumericParam('p', packet,
 				f -> plannedPitch = Math.abs(Math.min(Math.max(-Math.abs(f%360), -105), 0)));
 
 		//Control
 		if(animationTime==0)
 		{
-			DataHandlingUtils.expectingStringParam('c', packet, command -> {
+			IIDataHandlingUtils.expectingStringParam('c', packet, command -> {
 				switch(command)
 				{
 					//Batched Commands
 					case "fire_all":
 					{
-						float vOffset = DataHandlingUtils.asFloat('v', packet);
-						float hOffset = DataHandlingUtils.asFloat('h', packet);
+						float vOffset = IIDataHandlingUtils.asFloat('v', packet);
+						float hOffset = IIDataHandlingUtils.asFloat('h', packet);
 
 						orderList.add(new HowitzerOrder(ArtilleryHowitzerAnimation.FIRE1, plannedPitch-vOffset, plannedYaw-hOffset));
 						orderList.add(new HowitzerOrder(ArtilleryHowitzerAnimation.FIRE2, plannedPitch+vOffset, plannedYaw+hOffset));
@@ -822,11 +820,7 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 					break;
 					case "callback":
 					{
-						IDataConnector conn = IIUtils.findConnectorFacing(getBlockPosForPos(441), world, EnumFacing.UP);
-						if(conn==null)
-							break;
-
-						DataPacket callback = DataHandlingUtils.handleCallback(packet, var -> {
+						DataPacket callback = IIDataHandlingUtils.handleCallback(packet, var -> {
 							switch(var)
 							{
 								case "get_energy":
@@ -842,7 +836,7 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 								case "get_planned_pitch":
 									return new DataTypeFloat(plannedPitch);
 								case "get_platform_height":
-									return new DataTypeInteger(platformTime);
+									return new DataTypeFloat(platformTime/(float)ArtilleryHowitzer.platformTime);
 
 								case "get_door_opened":
 									return new DataTypeBoolean(isDoorOpened&&doorTime==ArtilleryHowitzer.doorTime);
@@ -854,13 +848,13 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 								case "get_loaded_shell":
 								{
 									return new DataTypeItemStack(loadedShells.get(
-											DataHandlingUtils.asInt('i', packet)
+											IIDataHandlingUtils.asInt('i', packet)
 									));
 								}
 								case "get_stored_shell":
 								{
 									return new DataTypeItemStack(inventory.get(
-											MathHelper.clamp(DataHandlingUtils.asInt('i', packet), 0, 5)
+											MathHelper.clamp(IIDataHandlingUtils.asInt('i', packet), 0, 5)
 									));
 								}
 								case "get_state":
@@ -870,8 +864,7 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 							}
 							return null;
 						});
-						if(callback!=null)
-							conn.sendPacket(callback);
+						sendData(callback, EnumFacing.UP, 441);
 					}
 					break;
 					//Single Commands

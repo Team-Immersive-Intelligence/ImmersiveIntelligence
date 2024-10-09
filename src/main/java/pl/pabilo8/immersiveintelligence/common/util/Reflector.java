@@ -16,14 +16,17 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class Reflector
 {
-	private Reflector(){}
+	private Reflector()
+	{
+	}
 
 	private static ConcurrentHashMap<Object, ArrayList<IEventListener>> listeners = null;
 
 	public static Field getField(Class cls, String name, boolean priv)
 	{
-		try{
-			return priv ? cls.getDeclaredField(name) : cls.getField(name);
+		try
+		{
+			return priv?cls.getDeclaredField(name): cls.getField(name);
 		} catch(Exception e)
 		{
 			IILogger.error("[Reflector/Error] Uh Oh! An reflection error! ("+e.getMessage()+")");
@@ -34,16 +37,19 @@ public class Reflector
 	public static void getForgeEventListeners()
 	{
 		Field listenersFld = getField(MinecraftForge.EVENT_BUS.getClass(), "listeners", true);
-		if (listenersFld == null) {
+		if(listenersFld==null)
+		{
 			IILogger.error("[Reflector/Error] Could not get event bus listeners");
 			return;
 		}
 		listenersFld.setAccessible(true);
-		if (ConcurrentHashMap.class.isAssignableFrom(listenersFld.getType()))
+		if(ConcurrentHashMap.class.isAssignableFrom(listenersFld.getType()))
 		{
-			try {
+			try
+			{
 				listeners = (ConcurrentHashMap<Object, ArrayList<IEventListener>>)listenersFld.get(MinecraftForge.EVENT_BUS);
-			} catch(Exception e) {
+			} catch(Exception e)
+			{
 				IILogger.error("[Reflector/Error] AAAAAA! Why? "+e.getMessage());
 			}
 		}
@@ -51,20 +57,22 @@ public class Reflector
 
 	/**
 	 * Hijack the original event handler to replace it with our own
+	 *
 	 * @param origEvent
 	 * @param overrideEvent
 	 */
 	public static void overrideEventHandler(Class origEvent, Object overrideEvent)
 	{
-		if (listeners == null) {
+		if(listeners==null)
+		{
 			IILogger.error("[Reflector/Error] Listeners list is null");
 			return;
 		}
 
-		for (Map.Entry<Object, ArrayList<IEventListener>> o : listeners.entrySet())
+		for(Map.Entry<Object, ArrayList<IEventListener>> o : listeners.entrySet())
 		{
 			Object c1 = o.getKey();
-			if (!c1.getClass().getName().equals(origEvent.getName())) continue;
+			if(!c1.getClass().getName().equals(origEvent.getName())) continue;
 			MinecraftForge.EVENT_BUS.unregister(c1);
 			MinecraftForge.EVENT_BUS.register(overrideEvent);
 		}

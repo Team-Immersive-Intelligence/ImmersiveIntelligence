@@ -108,7 +108,7 @@ public class IIManualDataVariable extends IIManualObject
 		boolean unicodeFlag = manual.fontRenderer.getUnicodeFlag();
 		manual.fontRenderer.setUnicodeFlag(true);
 		this.height += Math.max(0,
-				manual.fontRenderer.getWordWrappedHeight(description, width)+8-height
+				manual.fontRenderer.getWordWrappedHeight(description, width)-4
 		);
 		manual.fontRenderer.setUnicodeFlag(unicodeFlag);
 

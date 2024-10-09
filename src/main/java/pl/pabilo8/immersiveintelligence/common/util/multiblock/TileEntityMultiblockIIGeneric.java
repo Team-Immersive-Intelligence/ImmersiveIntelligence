@@ -25,9 +25,8 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.items.CapabilityItemHandler;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
-import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.api.data.IIDataHandlingUtils;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.NBTSerialisation;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
@@ -191,9 +190,7 @@ public abstract class TileEntityMultiblockIIGeneric<T extends TileEntityMultiblo
 	 */
 	public void sendData(DataPacket packet, EnumFacing facing, int pos)
 	{
-		IDataConnector conn = IIUtils.findConnectorFacing(getBlockPosForPos(pos), world, facing);
-		if(conn!=null)
-			conn.sendPacket(packet);
+		IIDataHandlingUtils.sendPacketAdjacently(packet, world, getBlockPosForPos(pos), facing);
 	}
 
 	//--- Inventory ---//

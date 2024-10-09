@@ -1,6 +1,7 @@
 package pl.pabilo8.immersiveintelligence.common.util.easynbt;
 
 import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorage;
+import blusunrize.immersiveengineering.common.util.inventory.MultiFluidTank;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.*;
 import net.minecraft.util.NonNullList;
@@ -8,7 +9,6 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.fluids.FluidTank;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 
@@ -87,6 +87,10 @@ public class NBTSerialisation
 
 		//FluidTank
 		registerSerializer(FluidTank.class, NBTTagCompound.class,
+				tank -> tank.writeToNBT(new NBTTagCompound()),
+				(nbt, tank) -> tank.readFromNBT(nbt)
+		);
+		registerSerializer(MultiFluidTank.class, NBTTagCompound.class,
 				tank -> tank.writeToNBT(new NBTTagCompound()),
 				(nbt, tank) -> tank.readFromNBT(nbt)
 		);

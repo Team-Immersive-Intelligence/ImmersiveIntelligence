@@ -1,5 +1,9 @@
 package pl.pabilo8.immersiveintelligence.api.data;
 
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeBoolean;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
 import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
@@ -16,7 +20,7 @@ import java.util.function.Function;
  * @ii-approved 0.3.1
  * @since 28.08.2024
  */
-public class DataHandlingUtils
+public class IIDataHandlingUtils
 {
 	//--- Simply Getting Parameters ---//
 
@@ -147,5 +151,38 @@ public class DataHandlingUtils
 
 		//If there are no callback variables, return null
 		return sent.hasAnyVariables()?sent: null;
+	}
+
+	//--- Sending ---//
+
+	/**
+	 * Sends a {@link DataPacket} to an adjacent device or connector
+	 *
+	 * @param packet the packet to send
+	 * @param world  the world the sending device is in
+	 * @param pos    the position of the sending device
+	 * @param facing the direction for receiver position offset
+	 */
+	public static boolean sendPacketAdjacently(DataPacket packet, World world, BlockPos pos, EnumFacing facing)
+	{
+		BlockPos off = pos.offset(facing);
+		//Checking if the position is loaded
+		if(!world.isBlockLoaded(off))
+			return false;
+		TileEntity te = world.getTileEntity(off);
+
+		//Sending directly to a device
+		if(te instanceof IDataDevice)
+		{
+			((IDataDevice)te).onReceive(packet.clone(), facing.getOpposite());
+			return true;
+		}
+		//Sending to a wire network
+		else if(te instanceof IDataConnector)
+		{
+			((IDataConnector)te).sendPacket(packet.clone());
+			return true;
+		}
+		return false;
 	}
 }

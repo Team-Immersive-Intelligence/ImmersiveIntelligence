@@ -45,6 +45,9 @@ public interface IDataConnector extends IImmersiveConnectable
 	 */
 	void sendPacket(DataPacket packet);
 
+	/**
+	 * @return whether this connector is capable of query-reply type communications
+	 */
 	default boolean isCallbackCapable()
 	{
 		return false;

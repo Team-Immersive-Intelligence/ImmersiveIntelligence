@@ -1802,6 +1802,8 @@ ie.manual.entry.tf=True/False
 ie.manual.entry.false=False
 ie.manual.entry.true=True
 
+ie.manual.entry.callback_returns=Returns:
+
 #Bullet cores & components
 ie.manual.entry.bullet_cores.name=Bullet Cores
 ie.manual.entry.bullet_cores.subtext=That one bounced!

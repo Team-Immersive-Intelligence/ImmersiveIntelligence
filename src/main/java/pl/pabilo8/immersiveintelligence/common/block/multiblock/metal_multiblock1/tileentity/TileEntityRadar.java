@@ -17,7 +17,7 @@ import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
-import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
+import pl.pabilo8.immersiveintelligence.api.data.IIDataHandlingUtils;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeArray;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeEntity;
 import pl.pabilo8.immersiveintelligence.api.utils.IUpgradableMachine;
@@ -89,9 +89,7 @@ public class TileEntityRadar extends TileEntityMultiblockMetal<TileEntityRadar, 
 
 		packet.setVariable('e', arr);
 
-		IDataConnector conn = IIUtils.findConnectorFacing(getBlockPosForPos(77), world, facing.rotateYCCW());
-		if(conn!=null)
-			conn.sendPacket(packet);
+		IIDataHandlingUtils.sendPacketAdjacently(packet, world, getBlockPosForPos(77), facing.rotateYCCW());
 
 	}
 

@@ -10,16 +10,15 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.text.TextComponentTranslation;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
-import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
 import pl.pabilo8.immersiveintelligence.api.data.IDataStorageItem;
+import pl.pabilo8.immersiveintelligence.api.data.IIDataHandlingUtils;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
@@ -35,38 +34,29 @@ public class TileEntityPunchtapeReader extends TileEntityIEBase implements ITick
 	//no redstone
 	//send signal on redstone
 	//redstone when signal is sent
-	public int mode = 0, rsTime = 0;
+	public PunchtapeReaderMode mode;
+	public int rsTime = 0;
 	EnumFacing facing = EnumFacing.NORTH;
 	DataPacket received = null;
 
 	@Override
 	public void update()
 	{
-		if(mode==1)
+		if(mode==PunchtapeReaderMode.PACKET_ON_REDSTONE)
 		{
 			if(hadRedstone^world.isBlockPowered(pos))
 			{
 				if(received!=null&&!hadRedstone)
 				{
 					world.playSound(null, this.pos, IISounds.punchtapeReader, SoundCategory.BLOCKS, 1f, 1f);
-					IDataConnector conn = IIUtils.findConnectorFacing(pos, world, facing.getOpposite());
-					if(conn!=null)
-						conn.sendPacket(received.clone());
-					else
-					{
-						final TileEntity te = world.getTileEntity(pos.offset(facing.getOpposite()));
-						if(te instanceof IDataDevice)
-							((IDataDevice)te).onReceive(received.clone(), facing);
-					}
+					IIDataHandlingUtils.sendPacketAdjacently(received.clone(), world, pos, facing.getOpposite());
 				}
 				hadRedstone = world.isBlockPowered(pos);
 			}
 		}
-		else if(mode==2)
-		{
+		else if(mode==PunchtapeReaderMode.REDSTONE_ON_PACKET)
 			if(rsTime > 0)
 				rsTime--;
-		}
 	}
 
 	@Override
@@ -78,19 +68,19 @@ public class TileEntityPunchtapeReader extends TileEntityIEBase implements ITick
 	@Override
 	public int getStrongRSOutput(IBlockState state, EnumFacing side)
 	{
-		return mode==2?(side!=facing&&rsTime > 0?15: 0): 0;
+		return mode==PunchtapeReaderMode.REDSTONE_ON_PACKET?(side!=facing&&rsTime > 0?15: 0): 0;
 	}
 
 	@Override
 	public boolean canConnectRedstone(IBlockState state, EnumFacing side)
 	{
-		return mode > 0;
+		return mode!=PunchtapeReaderMode.REDSTONE_INDIFFERENT;
 	}
 
 	@Override
 	public void readCustomNBT(NBTTagCompound nbt, boolean descPacket)
 	{
-		mode = nbt.getInteger("mode");
+		mode = PunchtapeReaderMode.values()[nbt.getInteger("mode")];
 		setFacing(EnumFacing.getFront(nbt.getInteger("facing")));
 		if(nbt.hasKey("received"))
 			received = new DataPacket().fromNBT(nbt.getCompoundTag("received"));
@@ -99,7 +89,7 @@ public class TileEntityPunchtapeReader extends TileEntityIEBase implements ITick
 	@Override
 	public void writeCustomNBT(NBTTagCompound nbt, boolean descPacket)
 	{
-		nbt.setInteger("mode", mode);
+		nbt.setInteger("mode", mode.ordinal());
 		nbt.setInteger("facing", facing.ordinal());
 		if(received!=null)
 			nbt.setTag("received", received.toNBT());
@@ -116,9 +106,7 @@ public class TileEntityPunchtapeReader extends TileEntityIEBase implements ITick
 	{
 		if(player.isSneaking())
 		{
-			mode += 1;
-			if(mode > 2)
-				mode = 0;
+			IIUtils.cycleEnum(true, PunchtapeReaderMode.class, mode);
 			IIPacketHandler.sendChatTranslation(player, IIReference.INFO_KEY+"punchtape_reader_mode",
 					new TextComponentTranslation(IIReference.INFO_KEY+"punchtape_reader_mode."+mode));
 			markDirty();
@@ -169,24 +157,22 @@ public class TileEntityPunchtapeReader extends TileEntityIEBase implements ITick
 	@Override
 	public boolean interact(EnumFacing side, EntityPlayer player, EnumHand hand, ItemStack heldItem, float hitX, float hitY, float hitZ)
 	{
-		if(heldItem.getItem() instanceof IDataStorageItem)
-		{
-			IDataStorageItem storage = (IDataStorageItem)heldItem.getItem();
-			DataPacket packet = storage.getStoredData(heldItem);
-			received = packet.clone();
-			IDataConnector conn = IIUtils.findConnectorFacing(pos, world, facing.getOpposite());
-			if(conn!=null)
-				conn.sendPacket(packet);
-			else
-			{
-				final TileEntity te = world.getTileEntity(pos.offset(facing.getOpposite()));
-				if(te instanceof IDataDevice)
-					((IDataDevice)te).onReceive(packet, facing);
-				if(mode==2)
-					rsTime = 20;
-			}
-			world.playSound(null, this.pos, IISounds.punchtapeReader, SoundCategory.BLOCKS, 1f, 1f);
-		}
-		return false;
+		if(!(heldItem.getItem() instanceof IDataStorageItem))
+			return false;
+
+		received = ((IDataStorageItem)heldItem.getItem()).getStoredData(heldItem).clone();
+		IIDataHandlingUtils.sendPacketAdjacently(received, world, pos, facing.getOpposite());
+		if(mode==PunchtapeReaderMode.REDSTONE_ON_PACKET)
+			rsTime = 20;
+
+		world.playSound(null, this.pos, IISounds.punchtapeReader, SoundCategory.BLOCKS, 1f, 1f);
+		return true;
+	}
+
+	private enum PunchtapeReaderMode
+	{
+		REDSTONE_INDIFFERENT,
+		PACKET_ON_REDSTONE,
+		REDSTONE_ON_PACKET,
 	}
 }

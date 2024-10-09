@@ -601,6 +601,8 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		for(IMultiblock mb : IIContent.MULTIBLOCKS)
 			if(mb instanceof MultiblockStuctureBase)
 				((MultiblockStuctureBase<?>)mb).updateStructure();
+
+		IISounds.init();
 	}
 
 	public void postInit()

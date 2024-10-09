@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity;
 
-import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.api.TargetingInfo;
 import blusunrize.immersiveengineering.api.crafting.IMultiblockRecipe;
 import blusunrize.immersiveengineering.api.energy.wires.IImmersiveConnectable;
@@ -13,7 +12,6 @@ import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IAdvanced
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IGuiTile;
 import blusunrize.immersiveengineering.common.util.Utils;
 import blusunrize.immersiveengineering.common.util.inventory.IEInventoryHandler;
-import blusunrize.immersiveengineering.common.util.network.MessageTileSync;
 import com.google.common.collect.ImmutableSet;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -28,14 +26,12 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.items.IItemHandler;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
-import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
 import pl.pabilo8.immersiveintelligence.api.data.IDataStorageItem;
+import pl.pabilo8.immersiveintelligence.api.data.IIDataHandlingUtils;
 import pl.pabilo8.immersiveintelligence.api.data.types.*;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockRedstoneInterface;
-import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultiblockConnectable;
 
 import javax.annotation.Nullable;
@@ -597,10 +593,7 @@ public class TileEntityRedstoneInterface extends TileEntityMultiblockConnectable
 	private void dataToRedstone()
 	{
 		TileEntityRedstoneInterface m = master();
-		if(m==null)
-			return;
-
-		if(m.storedRedstone.variables.size() < 1)
+		if(m==null||!m.storedRedstone.hasAnyVariables())
 			return;
 
 		DataPacket out = new DataPacket();
@@ -618,13 +611,9 @@ public class TileEntityRedstoneInterface extends TileEntityMultiblockConnectable
 			}
 		}
 
-		if(out.variables.size() < 1)
+		if(!out.hasAnyVariables())
 			return;
-
-		IDataConnector conn = IIUtils.findConnectorFacing(m.getPos(), world, facing.getOpposite());
-
-		if(conn!=null)
-			conn.sendPacket(out);
+		IIDataHandlingUtils.sendPacketAdjacently(out, world, m.getPos(), facing.getOpposite());
 	}
 
 }

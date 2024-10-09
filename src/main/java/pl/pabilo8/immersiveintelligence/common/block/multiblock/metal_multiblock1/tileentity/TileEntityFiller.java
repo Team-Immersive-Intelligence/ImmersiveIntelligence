@@ -41,7 +41,7 @@ public class TileEntityFiller extends TileEntityMultiblockProductionMulti<TileEn
 {
 	public static int SLOT_DUST = 0, SLOT_INPUT = 1;
 
-	@SyncNBT(name = "dust_storage", time = 40, events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_RECIPE_CHANGED})
+	@SyncNBT(time = 40, events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_RECIPE_CHANGED})
 	public DustStack dustStorage;
 	private IItemHandler insertionHandlerDust, insertionHandlerStack;
 

@@ -7,7 +7,6 @@ import blusunrize.immersiveengineering.api.energy.wires.IImmersiveConnectable;
 import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler;
 import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler.Connection;
 import blusunrize.immersiveengineering.common.IEContent;
-import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IDirectionalTile;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
 import blusunrize.immersiveengineering.common.util.Utils;
 import com.google.common.collect.ImmutableSet;
@@ -43,7 +42,6 @@ import net.minecraftforge.oredict.OreDictionary;
 import org.apache.commons.lang3.ArrayUtils;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
-import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeItemStack;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
 import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
@@ -100,35 +98,6 @@ public class IIUtils
 			ret.add(c);
 		}
 		return ret;
-	}
-
-	@Nullable
-	public static IDataConnector findConnectorFacing(BlockPos pos, World world, EnumFacing facing)
-	{
-		BlockPos newpos = pos.offset(facing);
-		if(!world.isBlockLoaded(newpos))
-			return null;
-		TileEntity te = world.getTileEntity(newpos);
-
-		if(te instanceof IDataConnector&&te instanceof IDirectionalTile)
-		{
-			IDirectionalTile t = (IDirectionalTile)te;
-			if(t.getFacing()==facing.getOpposite())
-				return (IDataConnector)te;
-		}
-		return null;
-	}
-
-	@Nullable
-	public static IDataConnector findConnectorAround(BlockPos pos, World world)
-	{
-		for(EnumFacing facing : EnumFacing.HORIZONTALS)
-		{
-			IDataConnector conn = findConnectorFacing(pos, world, facing);
-			if(conn!=null)
-				return conn;
-		}
-		return null;
 	}
 
 	public static <T extends IFluidTank & IFluidHandler> boolean handleBucketTankInteraction(T tank, NonNullList<ItemStack> inventory, int bucketInputSlot, int bucketOutputSlot, boolean fillBucket, Predicate<FluidStack> filter)

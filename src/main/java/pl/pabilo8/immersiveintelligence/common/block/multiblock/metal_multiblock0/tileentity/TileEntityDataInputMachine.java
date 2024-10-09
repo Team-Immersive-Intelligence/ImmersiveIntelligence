@@ -23,14 +23,13 @@ import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
-import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
+import pl.pabilo8.immersiveintelligence.api.data.IIDataHandlingUtils;
 import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.DataInputMachine;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.mines.BlockIIRadioExplosives.ItemBlockRadioExplosives;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.MultiblockDataInputMachine;
 import pl.pabilo8.immersiveintelligence.common.item.data.ItemIIPunchtape;
@@ -209,9 +208,9 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockMetal<TileEn
 		if(energyStorage.getEnergyStored() >= DataInputMachine.energyUsage)
 		{
 			energyStorage.extractEnergy(DataInputMachine.energyUsage, false);
-			IDataConnector conn = IIUtils.findConnectorAround(getBlockPosForPos(3), this.world);
-			if(conn!=null)
-				conn.sendPacket(storedData.clone());
+			IIDataHandlingUtils.sendPacketAdjacently(storedData, world, getBlockPosForPos(3),
+					this.mirrored?this.facing.rotateYCCW(): this.facing.rotateY()
+			);
 		}
 	}
 

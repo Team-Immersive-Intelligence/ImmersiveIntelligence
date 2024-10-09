@@ -14,9 +14,8 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.text.TextComponentTranslation;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
-import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.api.data.IIDataHandlingUtils;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
@@ -64,23 +63,12 @@ public class TileEntityRedstoneBuffer extends TileEntityIEBase implements IPlaye
 			if(packet.hasAnyVariables())
 			{
 				if(passtroughMode&&world.isBlockPowered(this.getPos()))
-				{
-					IDataConnector conn = IIUtils.findConnectorFacing(pos, world, facing);
-					if(conn!=null)
-					{
-						conn.sendPacket(packet.clone());
-						packet = new DataPacket();
-					}
-				}
+					IIDataHandlingUtils.sendPacketAdjacently(packet, world, pos, facing);
 				else if(toggle^world.isBlockPowered(this.getPos()))
 				{
 					toggle = !toggle;
 					if(toggle)
-					{
-						IDataConnector conn = IIUtils.findConnectorFacing(pos, world, facing);
-						if(conn!=null)
-							conn.sendPacket(packet.clone());
-					}
+						IIDataHandlingUtils.sendPacketAdjacently(packet, world, pos, facing);
 				}
 			}
 		}

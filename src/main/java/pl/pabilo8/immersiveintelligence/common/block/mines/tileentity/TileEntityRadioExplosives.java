@@ -164,13 +164,8 @@ public class TileEntityRadioExplosives extends TileEntityMineBase implements ITi
 	@Override
 	public float getRange()
 	{
-		return Mines.radioRange;
-	}
-
-	@Override
-	public float getWeatherRangeDecrease()
-	{
-		return (float)Mines.weatherHarshness;
+		float factor = world.isRainingAt(pos)?(float)Mines.weatherHarshness: 1f;
+		return Mines.radioRange*factor;
 	}
 
 	@Override

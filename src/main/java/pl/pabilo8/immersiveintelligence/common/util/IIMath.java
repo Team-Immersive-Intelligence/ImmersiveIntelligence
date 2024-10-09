@@ -1,7 +1,9 @@
 package pl.pabilo8.immersiveintelligence.common.util;
 
 import com.google.common.math.IntMath;
-import net.minecraft.util.math.*;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 
 import javax.annotation.Nonnull;
 
@@ -12,18 +14,6 @@ import javax.annotation.Nonnull;
 public class IIMath extends MathHelper
 {
 	public static final Vec3d ONE = new Vec3d(1, 1, 1);
-
-	/**
-	 * @deprecated use {@link BlockPos#distanceSq(Vec3i)} instead
-	 */
-	public static double distanceBetweenPos(BlockPos pos1, BlockPos pos2, boolean center)
-	{
-		double deltaX = (pos1.getX()+(center?0d: 0.5d))-(pos2.getX()+(center?0d: 0.5d));
-		double deltaY = (pos1.getY()+(center?0d: 0.5d))-(pos2.getY()+(center?0d: 0.5d));
-		double deltaZ = (pos1.getZ()+(center?0d: 0.5d))-(pos2.getZ()+(center?0d: 0.5d));
-
-		return Math.sqrt((deltaX*deltaX)+(deltaY*deltaY)+(deltaZ*deltaZ));
-	}
 
 	/**
 	 * @param value to be squared

@@ -58,7 +58,7 @@ public class IIManualDataCallback extends IIManualObject
 	@Override
 	protected int getDefaultHeight()
 	{
-		return 16;
+		return 18;
 	}
 
 	//--- Rendering, Reaction ---//

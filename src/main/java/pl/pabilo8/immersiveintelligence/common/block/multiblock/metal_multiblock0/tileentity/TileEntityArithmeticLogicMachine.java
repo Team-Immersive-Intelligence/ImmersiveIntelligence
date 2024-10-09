@@ -21,8 +21,8 @@ import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
-import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
+import pl.pabilo8.immersiveintelligence.api.data.IIDataHandlingUtils;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeBoolean;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeExpression;
 import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
@@ -30,7 +30,6 @@ import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.ArithmeticLogicMachine;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.MultiblockArithmeticLogicMachine;
 import pl.pabilo8.immersiveintelligence.common.item.data.ItemIIFunctionalCircuit;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
@@ -276,7 +275,7 @@ public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockMetal<
 
 		if(!isDummy()&&energyStorage.getEnergyStored() >= ArithmeticLogicMachine.energyUsage)
 		{
-			DataPacket new_packet = packet.clone();
+			DataPacket newPacket = packet.clone();
 			energyStorage.extractEnergy(ArithmeticLogicMachine.energyUsage, false);
 
 			boolean[] circuit = new boolean[4];
@@ -303,23 +302,21 @@ public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockMetal<
 							DataTypeExpression exp = ((DataTypeExpression)var);
 							char condition = exp.getRequiredVariable();
 
-							if(condition==' '||(new_packet.getPacketVariable(condition) instanceof DataTypeBoolean
-									&&((DataTypeBoolean)new_packet.getPacketVariable(condition)).value))
-								new_packet.setVariable(c, exp.getValue(new_packet));
+							if(condition==' '||(newPacket.getPacketVariable(condition) instanceof DataTypeBoolean
+									&&((DataTypeBoolean)newPacket.getPacketVariable(condition)).value))
+								newPacket.setVariable(c, exp.getValue(newPacket));
 						}
 					}
 				}
 
-			IDataConnector conn = null;
 			TileEntityArithmeticLogicMachine tile1 = getTileForPos(3);
 			TileEntityArithmeticLogicMachine tile2 = getTileForPos(2);
-			if(side==EnumFacing.DOWN&&tile1!=null)
-				conn = IIUtils.findConnectorFacing(tile1.getPos(), world, mirrored?facing.rotateYCCW(): facing.rotateY());
-			else if(tile2!=null)
-				conn = IIUtils.findConnectorFacing(tile2.getPos(), world, mirrored?facing.rotateY(): facing.rotateYCCW());
 
-			if(conn!=null)
-				conn.sendPacket(new_packet);
+			//TODO: 09.10.2024 use sendData after conversion
+			if(side==EnumFacing.DOWN&&tile1!=null)
+				IIDataHandlingUtils.sendPacketAdjacently(newPacket, world, tile1.getPos(), mirrored?facing.rotateYCCW(): facing.rotateY());
+			else if(tile2!=null)
+				IIDataHandlingUtils.sendPacketAdjacently(newPacket, world, tile2.getPos(), mirrored?facing.rotateY(): facing.rotateYCCW());
 
 		}
 	}

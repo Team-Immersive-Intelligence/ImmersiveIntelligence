@@ -21,7 +21,5 @@ public interface IRadioDevice
 
 	float getRange();
 
-	float getWeatherRangeDecrease();
-
 	DimensionBlockPos getDevicePosition();
 }
