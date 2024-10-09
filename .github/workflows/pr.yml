@@ -64,14 +64,12 @@ jobs:
       - name: Notify Internal Discord
         uses: sebastianpopp/discord-action@releases/v2
         with:
-          token: ${{ secrets.OPTIMIZATION_TOKEN }}
           webhook: ${{ secrets.WH_PR_PRIVATE }}
-          message: "[@${{ github.event.pull_request.user.login }}](<https://github.com/${{ github.event.pull_request.user.login }}>) has contributed to Engineers' Cause with [${{ github.event.issue.title }}](<https://github.com/${{ github.repository }}/issues/${{ github.event.issue.number }}>)."
+          message: "[@${{ github.event.pull_request.user.login }}](<https://github.com/${{ github.event.pull_request.user.login }}>) has contributed to Engineers' Cause with [${{ github.event.pull_request.title }}](<https://github.com/${{ github.repository }}/issues/${{ github.event.pull_request.number }}>)."
 
       - name: Notify Public Discord
         if: ${{ github.event.pull_request.user.login != 'CarverBot' }}
         uses: sebastianpopp/discord-action@releases/v2
         with:
-          token: ${{ secrets.OPTIMIZATION_TOKEN }}
           webhook: ${{ secrets.WH_PR_PUBLIC }}
-          message: "[@${{ github.event.pull_request.user.login }}](<https://github.com/${{ github.event.pull_request.user.login }}>) has contributed to Engineers' Cause with [${{ github.event.issue.title }}](<https://github.com/${{ github.repository }}/issues/${{ github.event.issue.number }}>)."
+          message: "[@${{ github.event.pull_request.user.login }}](<https://github.com/${{ github.event.pull_request.user.login }}>) has contributed to Engineers' Cause with [${{ github.event.pull_request.title }}](<https://github.com/${{ github.repository }}/pull/${{ github.event.pull_request.number }}>)."
