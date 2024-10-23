@@ -340,8 +340,8 @@ tile.immersiveintelligence.metal_multiblock.minecart_packer.name=Рельсов�
 tile.immersiveintelligence.metal_multiblock1.redstone_data_interface.name=Интерфейс красный камень-данные
 
 
-desc.immersiveengineering.info.multiblock.II:SkyCrateStation=Фуникулёрная станция
-desc.immersiveengineering.info.multiblock.II:SkyCratePost=Фуникулёрный пост
+desc.immersiveengineering.info.multiblock.II:SkycrateStation=Фуникулёрная станция
+desc.immersiveengineering.info.multiblock.II:SkycratePost=Фуникулёрный пост
 desc.immersiveengineering.info.multiblock.II:Sawmill=Лесопилка
 desc.immersiveengineering.info.multiblock.II:DataInputMachine=Машина ввода данных
 desc.immersiveengineering.info.multiblock.II:ArithmeticLogicMachine=Арифметико-логическая машина

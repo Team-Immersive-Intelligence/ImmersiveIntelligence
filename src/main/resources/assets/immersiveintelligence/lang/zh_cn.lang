@@ -753,9 +753,9 @@ desc.immersiveintelligence.metal_multiblock1.chemical_painter.color.hsv.s=Satura
 desc.immersiveintelligence.metal_multiblock1.chemical_painter.color.hsv.v=Value
 desc.immersiveintelligence.metal_multiblock1.chemical_painter.color_copied=色彩已复制!
 
-desc.immersiveengineering.info.multiblock.II:SkyCrateStation=飞箱索道站
-desc.immersiveengineering.info.multiblock.II:SkyCartStation=天车索道站
-desc.immersiveengineering.info.multiblock.II:SkyCratePost=索道中继点
+desc.immersiveengineering.info.multiblock.II:SkycrateStation=飞箱索道站
+desc.immersiveengineering.info.multiblock.II:SkycartStation=天车索道站
+desc.immersiveengineering.info.multiblock.II:SkycratePost=索道中继点
 desc.immersiveengineering.info.multiblock.II:Sawmill=锯木厂
 desc.immersiveengineering.info.multiblock.II:DataInputMachine=数据输入机
 desc.immersiveengineering.info.multiblock.II:ArithmeticLogicMachine=算术逻辑机
