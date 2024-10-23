@@ -106,20 +106,21 @@ public class EntitySkyCrate extends Entity implements ITeslaEntity
 				}
 				if(!success)
 				{
-					if(crate.getItem() instanceof ItemBlock)
+					/* if(crate.getItem() instanceof ItemBlock)
 					{
 						ItemBlock b = (ItemBlock)crate.getItem();
-						EntityFallingBlock e = new EntityFallingBlock(world, (int)posX, (int)posY, (int)posX, b.getBlock().getDefaultState());
+						EntityFallingBlock e = new EntityFallingBlock(world, (int)posX, (int)posY-2, (int)posZ, b.getBlock().getDefaultState());
 						world.spawnEntity(e);
-						e.fallTime = -1;
 					}
 					else
 					{
 						Utils.dropStackAtPos(world, getPosition(), crate.copy());
-					}
-					Utils.dropStackAtPos(world, getPosition(), mount.copy());
+					} */
+					BlockPos ePos = getPosition();
+					BlockPos dropPos = new BlockPos(ePos.getX(), ePos.getY() - 2, ePos.getZ());
+					Utils.dropStackAtPos(world, dropPos, mount.copy());
+					Utils.dropStackAtPos(world, dropPos, crate.copy());
 					this.setDead();
-
 				}
 			}
 			else if(world.getTileEntity(getPosition()) instanceof ISkyCrateConnector)
