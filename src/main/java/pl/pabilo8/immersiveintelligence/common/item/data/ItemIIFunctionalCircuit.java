@@ -141,7 +141,7 @@ public class ItemIIFunctionalCircuit extends ItemIISubItemsBase<Circuits> implem
 				"to_boolean",
 				"to_null"
 		),
-		FLUIDSTACK(CircuitTypes.BASIC,
+		FLUIDSTACK(CircuitTypes.ADVANCED,
 				"is_null",
 				"to_integer",
 				"to_float",
@@ -149,7 +149,7 @@ public class ItemIIFunctionalCircuit extends ItemIISubItemsBase<Circuits> implem
 				"to_boolean",
 				"to_null"
 		),
-		MAP(CircuitTypes.BASIC,
+		MAP(CircuitTypes.ADVANCED,
 				"is_null",
 				"to_integer",
 				"to_float",
