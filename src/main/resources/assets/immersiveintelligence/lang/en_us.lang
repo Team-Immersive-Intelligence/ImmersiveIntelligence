@@ -990,6 +990,9 @@ subtitle.immersiveintelligence.mortar_load=Mortar Loading
 subtitle.immersiveintelligence.mine_detector=Mine Detector Beeps
 subtitle.immersiveintelligence.construction=Hammer-Assisted Construction
 
+subtitle.immersiveintelligence.gate_open=Gate Opening
+subtitle.immersiveintelligence.gate_close=Gate Closing
+
 #Entities
 
 entity.minecart_wooden_crate.name=Minecart with Wooden Crate
