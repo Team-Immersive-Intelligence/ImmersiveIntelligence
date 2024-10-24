@@ -56,7 +56,7 @@ public class GuiFuelStation extends GuiIEContainerBase
 		for(int i = this.tile.tanks[0].getFluidTypes() - 1; i >= 0; --i) {
 			FluidStack fs = this.tile.tanks[0].fluids.get(i);
 			if (fs != null && fs.getFluid() != null) {
-				int fluidHeight = (int)(63f * ((float)fs.amount /FuelStation.fluidCapacity));
+				int fluidHeight = (int)(60f * ((float)fs.amount /FuelStation.fluidCapacity));
 				yy -= fluidHeight;
 				ClientUtils.drawRepeatedFluidSprite(fs, (float)(guiLeft + 63), (float)yy, 52f, (float)fluidHeight);
 			}
@@ -88,7 +88,7 @@ public class GuiFuelStation extends GuiIEContainerBase
 					if(fs!=null&&fs.getFluid()!=null)
 					{
 						fluidUpToNow += fs.amount;
-						int newY = (int)(63*(fluidUpToNow/capacity));
+						int newY = (int)(60*(fluidUpToNow/capacity));
 						if(myRelative >= lastY&&myRelative < newY)
 						{
 							ClientUtils.addFluidTooltip(fs, tooltip, (int)capacity);
