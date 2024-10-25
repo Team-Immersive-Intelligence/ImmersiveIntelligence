@@ -19,6 +19,7 @@ import pl.pabilo8.immersiveintelligence.common.commands.ii.CommandII;
 import pl.pabilo8.immersiveintelligence.common.compat.IICompatModule;
 import pl.pabilo8.immersiveintelligence.common.event.IEOverrideEventHandler;
 import pl.pabilo8.immersiveintelligence.common.event.LightEngineerEventHandler;
+import pl.pabilo8.immersiveintelligence.common.util.IEVillagerHandlerCustom;
 import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler;
 import pl.pabilo8.immersiveintelligence.common.util.Reflector;
 
@@ -63,6 +64,8 @@ public class ImmersiveIntelligence
 		proxy.init();
 
 		IISounds.init();
+
+		IEVillagerHandlerCustom.initIEVillagerTrades();
 	}
 
 	@EventHandler
