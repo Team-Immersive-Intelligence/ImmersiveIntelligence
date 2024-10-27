@@ -42,10 +42,10 @@ import pl.pabilo8.immersiveintelligence.api.PackerHandler.PackerActionType;
 import pl.pabilo8.immersiveintelligence.api.PackerHandler.PackerPutMode;
 import pl.pabilo8.immersiveintelligence.api.PackerHandler.PackerTask;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataType;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeItemStack;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
-import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
 import pl.pabilo8.immersiveintelligence.api.utils.IUpgradableMachine;
 import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Packer;
@@ -509,11 +509,11 @@ public class TileEntityPacker extends TileEntityMultiblockIIGeneric<TileEntityPa
 			e: (optional) expires after @e items/MBs
 			s: (optional) {stack} or string
 			*/
-		IDataType a = packet.getPacketVariable('a');
-		IDataType m = packet.getPacketVariable('m');
-		IDataType e = packet.getPacketVariable('e');
-		IDataType s = packet.getPacketVariable('s');
-		IDataType c = packet.getPacketVariable('c');
+		DataType a = packet.getPacketVariable('a');
+		DataType m = packet.getPacketVariable('m');
+		DataType e = packet.getPacketVariable('e');
+		DataType s = packet.getPacketVariable('s');
+		DataType c = packet.getPacketVariable('c');
 
 		switch(c.valueToString())
 		{

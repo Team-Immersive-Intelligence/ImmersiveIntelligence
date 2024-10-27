@@ -2,27 +2,23 @@ package pl.pabilo8.immersiveintelligence.api.data.operations.entity;
 
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.operations.DataOperation;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataType;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeEntity;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeExpression;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
-import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author Pabilo8
  * @since 05-07-2019
  */
+@DataOperation.DataOperationMeta(name = "entity_get_id", allowedTypes = {DataTypeEntity.class}, params = {"entity"}, expectedResult = DataTypeInteger.class)
 public class DataOperationGetEntityID extends DataOperation
 {
-	public DataOperationGetEntityID()
-	{
-		name = "entity_get_id";
-		allowedTypes = new Class[]{DataTypeEntity.class};
-		params = new String[]{"entity"};
-		expectedResult = DataTypeInteger.class;
-	}
-
+	@Nonnull
 	@Override
-	public IDataType execute(DataPacket packet, DataTypeExpression data)
+	public DataType execute(DataPacket packet, DataTypeExpression data)
 	{
 		return new DataTypeInteger(packet.getVarInType(DataTypeEntity.class, data.getArgument(0)).entityID);
 	}

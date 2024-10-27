@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.api.data;
+package pl.pabilo8.immersiveintelligence.api.data.device;
 
 import blusunrize.immersiveengineering.api.ApiUtils;
 import blusunrize.immersiveengineering.api.energy.wires.IImmersiveConnectable;
@@ -6,6 +6,7 @@ import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler.Conn
 import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.common.wire.IIDataWireType;
 
 import java.lang.ref.WeakReference;

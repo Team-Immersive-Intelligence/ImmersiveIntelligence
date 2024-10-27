@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.common.item.data;
 
-import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
@@ -15,9 +14,12 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.lwjgl.input.Keyboard;
 import pl.pabilo8.immersiveintelligence.api.data.DataOperations;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
-import pl.pabilo8.immersiveintelligence.api.data.IDataStorageItem;
+import pl.pabilo8.immersiveintelligence.api.data.IIDataHandlingUtils;
+import pl.pabilo8.immersiveintelligence.api.data.device.IDataStorageItem;
+import pl.pabilo8.immersiveintelligence.api.data.operations.DataOperation.DataOperationMeta;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataType;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataType.TypeMetaInfo;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeExpression;
-import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler;
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler.IAdvancedTooltipItem;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
@@ -46,10 +48,6 @@ import java.util.List;
 @IIItemProperties(category = IICategory.ELECTRONICS)
 public class ItemIIFunctionalCircuit extends ItemIISubItemsBase<Circuits> implements IDataStorageItem, IAdvancedTooltipItem
 {
-	private static DataPacket lastStored = null;
-	private static Circuits last = null;
-	private static IDataType[] lastTooltip = null, lastStoredTooltip = null;
-
 	public ItemIIFunctionalCircuit()
 	{
 		super("circuit_functional", 1, Circuits.values());
@@ -223,9 +221,9 @@ public class ItemIIFunctionalCircuit extends ItemIISubItemsBase<Circuits> implem
 		if(ItemTooltipHandler.addExpandableTooltip(Keyboard.KEY_LCONTROL, IIReference.DESCRIPTION_KEY+"functional_circuit_ctrl", tooltip))
 		{
 			tooltip.add(I18n.format(IIReference.DESCRIPTION_KEY+"functional_circuit_data"));
-			for(IDataType type : getStoredData(stack))
+			for(DataType type : getStoredData(stack))
 				if(type instanceof DataTypeExpression)
-					tooltip.add("   "+I18n.format(IIReference.DATA_KEY+"function."+((DataTypeExpression)type).getOperation().name));
+					tooltip.add("   "+I18n.format(IIReference.DATA_KEY+"function."+((DataTypeExpression)type).getMeta().name()));
 		}
 	}
 
@@ -234,7 +232,7 @@ public class ItemIIFunctionalCircuit extends ItemIISubItemsBase<Circuits> implem
 	public void addAdvancedInformation(ItemStack stack, int offsetX, List<Integer> offsetsY)
 	{
 		// Ensure that offsetsY contains at least one element
-		if(offsetsY.size() > 0)
+		if(!offsetsY.isEmpty())
 		{
 			GlStateManager.translate(offsetX, offsetsY.get(0), 700);
 			GlStateManager.scale(.5f, .5f, 1);
@@ -249,18 +247,16 @@ public class ItemIIFunctionalCircuit extends ItemIISubItemsBase<Circuits> implem
 		boolean b = ItemTooltipHandler.canExpandTooltip(Keyboard.KEY_LSHIFT);
 		if(b)
 		{
-			IDataType[] types;
-			if(last==IIContent.itemCircuit.stackToSub(stack))
-				types = lastTooltip;
-			else
-				lastTooltip = types = IIContent.itemCircuit.getOperationsList(stack).stream()
-						.map(o -> DataPacket.getVarInstance(DataOperations.getOperationInstance(o).expectedResult))
-						.toArray(IDataType[]::new);
+			TypeMetaInfo<?>[] types = IIContent.itemCircuit.getOperationsList(stack).stream()
+					.map(DataOperations::getOperationMeta)
+					.map(DataOperationMeta::expectedResult)
+					.map(IIDataHandlingUtils::getTypeMeta)
+					.toArray(TypeMetaInfo[]::new);
 
 			GlStateManager.color(1f, 1f, 1f, 1f);
 			for(int i = 0; i < types.length; i++)
 			{
-				ClientUtils.bindTexture(types[i].textureLocation());
+				IIClientUtils.bindTexture(types[i].getTextureLocation());
 				Gui.drawModalRectWithCustomSizedTexture(0, i*20, 0, 0, 16, 16, 16, 16);
 			}
 		}
@@ -268,27 +264,24 @@ public class ItemIIFunctionalCircuit extends ItemIISubItemsBase<Circuits> implem
 		if(ItemTooltipHandler.canExpandTooltip(Keyboard.KEY_LCONTROL))
 		{
 			DataPacket storedData = getStoredData(stack);
-			IDataType[] types;
-			if(storedData.equals(lastStored))
-				types = lastStoredTooltip;
-			else
-				lastStoredTooltip = types = storedData.variables.values().stream()
-						.filter(o -> o instanceof DataTypeExpression)
-						.map(o -> DataPacket.getVarInstance(((DataTypeExpression)o).getOperation().expectedResult))
-						.toArray(IDataType[]::new);
+			TypeMetaInfo<?>[] types = storedData.variables.values().stream()
+					.filter(o -> o instanceof DataTypeExpression)
+					.map(o -> (DataTypeExpression)o)
+					.map(DataTypeExpression::getMeta)
+					.map(DataOperationMeta::expectedResult)
+					.map(IIDataHandlingUtils::getTypeMeta)
+					.toArray(TypeMetaInfo[]::new);
 
 			GlStateManager.color(1f, 1f, 1f, 1f);
 
 			// Check if offsetsY has enough elements for the secondary offset (b ? 1 : 0)
 			int off = 0;
 			if(offsetsY.size() > (b?1: 0))
-			{
 				off = offsetsY.get(b?1: 0)-offsetsY.get(0);
-			}
 
 			for(int i = 0; i < types.length; i++)
 			{
-				ClientUtils.bindTexture(types[i].textureLocation());
+				IIClientUtils.bindTexture(types[i].getTextureLocation());
 				Gui.drawModalRectWithCustomSizedTexture(0, off+i*20, 0, 0, 16, 16, 16, 16);
 			}
 		}

@@ -13,8 +13,8 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
-import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
-import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
+import pl.pabilo8.immersiveintelligence.api.data.device.IDataConnector;
+import pl.pabilo8.immersiveintelligence.api.data.device.IDataDevice;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
@@ -75,7 +75,7 @@ public class TileEntityTimedBuffer extends TileEntityIEBase implements IPlayerIn
 			timer += 1;
 			if(timer%5==0||timer==1)
 				IIPacketHandler.sendToClient(this, new MessageIITileSync(this,
-								EasyNBT.newNBT().withInt("timer", timer))
+						EasyNBT.newNBT().withInt("timer", timer))
 				);
 		}
 		else if(timer >= maxtimer)
@@ -146,7 +146,7 @@ public class TileEntityTimedBuffer extends TileEntityIEBase implements IPlayerIn
 			maxtimer = ((DataTypeInteger)packet.getPacketVariable('0')).value;
 
 			IIPacketHandler.sendToClient(this, new MessageIITileSync(this,
-							EasyNBT.newNBT().withInt("maxtimer", maxtimer).withInt("timer", timer))
+					EasyNBT.newNBT().withInt("maxtimer", maxtimer).withInt("timer", timer))
 			);
 		}
 	}

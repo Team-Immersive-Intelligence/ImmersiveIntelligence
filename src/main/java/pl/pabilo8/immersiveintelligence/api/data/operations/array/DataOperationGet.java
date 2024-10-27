@@ -5,22 +5,18 @@ import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.operations.DataOperation;
 import pl.pabilo8.immersiveintelligence.api.data.types.*;
 
+import javax.annotation.Nonnull;
+
 /**
  * @author Pabilo8
  * @since 05-07-2019
  */
+@DataOperation.DataOperationMeta(name = "array_get", allowedTypes = {DataTypeArray.class, DataTypeInteger.class}, params = {"array", "index"}, expectedResult = DataType.class)
 public class DataOperationGet extends DataOperation
 {
-	public DataOperationGet()
-	{
-		name = "array_get";
-		allowedTypes = new Class[]{DataTypeArray.class, DataTypeInteger.class};
-		params = new String[]{"array","index"};
-		expectedResult = IDataType.class;
-	}
-
+	@Nonnull
 	@Override
-	public IDataType execute(DataPacket packet, DataTypeExpression data)
+	public DataType execute(DataPacket packet, DataTypeExpression data)
 	{
 		DataTypeArray array;
 		DataTypeInteger index;
@@ -28,7 +24,7 @@ public class DataOperationGet extends DataOperation
 		array = packet.getVarInType(DataTypeArray.class, data.getArgument(0));
 		index = packet.getVarInType(DataTypeInteger.class, data.getArgument(1));
 
-		IDataType[] arr = array.value;
+		DataType[] arr = array.value;
 		return arr.length > 0?arr[MathHelper.clamp(index.value, 0, arr.length-1)]: new DataTypeNull();
 	}
 }

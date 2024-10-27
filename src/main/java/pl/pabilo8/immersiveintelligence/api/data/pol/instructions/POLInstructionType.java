@@ -6,7 +6,7 @@ import pl.pabilo8.immersiveintelligence.api.data.pol.POLProcess;
 import pl.pabilo8.immersiveintelligence.api.data.pol.POLScript.DataTypeWrapper;
 import pl.pabilo8.immersiveintelligence.api.data.pol.POLScript.POLInstruction;
 import pl.pabilo8.immersiveintelligence.api.data.pol.POLTerminal;
-import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataType;
 
 /**
  * @author Pabilo8
@@ -16,7 +16,7 @@ public class POLInstructionType extends POLInstruction
 {
 	private final DataTypeWrapper text;
 
-	public POLInstructionType(IDataType rest)
+	public POLInstructionType(DataType rest)
 	{
 		super(1);
 		this.text = new DataTypeWrapper(rest);

@@ -4,12 +4,16 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import pl.pabilo8.immersiveintelligence.api.data.device.IDataConnector;
+import pl.pabilo8.immersiveintelligence.api.data.device.IDataDevice;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataType;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataType.TypeMetaInfo;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeBoolean;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
-import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
-import pl.pabilo8.immersiveintelligence.api.data.types.IDataTypeNumeric;
+import pl.pabilo8.immersiveintelligence.api.data.types.NumericDataType;
 import pl.pabilo8.immersiveintelligence.common.util.ISerializableEnum;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Map.Entry;
 import java.util.function.Consumer;
@@ -22,6 +26,14 @@ import java.util.function.Function;
  */
 public class IIDataHandlingUtils
 {
+	//--- Meta Information ---//
+
+	@SuppressWarnings("unchecked")
+	public static <T extends DataType> TypeMetaInfo<T> getTypeMeta(@Nonnull Class<T> klass)
+	{
+		return (TypeMetaInfo<T>)DataPacket.metaTypesByClass.get(klass);
+	}
+
 	//--- Simply Getting Parameters ---//
 
 	public static boolean asBoolean(char variable, DataPacket packet)
@@ -31,12 +43,12 @@ public class IIDataHandlingUtils
 
 	public static int asInt(char variable, DataPacket packet)
 	{
-		return packet.getVarInType(IDataTypeNumeric.class, packet.getPacketVariable(variable)).intValue();
+		return packet.getVarInType(NumericDataType.class, packet.getPacketVariable(variable)).intValue();
 	}
 
 	public static float asFloat(char variable, DataPacket packet)
 	{
-		return packet.getVarInType(IDataTypeNumeric.class, packet.getPacketVariable(variable)).floatValue();
+		return packet.getVarInType(NumericDataType.class, packet.getPacketVariable(variable)).floatValue();
 	}
 
 	public static String asString(char variable, DataPacket packet)
@@ -54,9 +66,9 @@ public class IIDataHandlingUtils
 	 */
 	public static boolean expectingNumericParam(char variable, DataPacket packet, Consumer<Float> ifPresent)
 	{
-		boolean present = packet.getPacketVariable(variable) instanceof IDataTypeNumeric;
+		boolean present = packet.getPacketVariable(variable) instanceof NumericDataType;
 		if(present)
-			ifPresent.accept(((IDataTypeNumeric)packet.getPacketVariable(variable)).floatValue());
+			ifPresent.accept(((NumericDataType)packet.getPacketVariable(variable)).floatValue());
 		return present;
 	}
 
@@ -137,14 +149,14 @@ public class IIDataHandlingUtils
 	//--- Callback ---//
 
 	@Nullable
-	public static DataPacket handleCallback(DataPacket packet, Function<String, IDataType> mapper)
+	public static DataPacket handleCallback(DataPacket packet, Function<String, DataType> mapper)
 	{
 		//Detect any callback strings and give responses to them in a new packet
 		DataPacket sent = new DataPacket();
-		for(Entry<Character, IDataType> entry : packet.variables.entrySet())
+		for(Entry<Character, DataType> entry : packet.variables.entrySet())
 			if(entry.getKey()!='c'&&entry.getValue() instanceof DataTypeString)
 			{
-				IDataType reply = mapper.apply(entry.getValue().valueToString());
+				DataType reply = mapper.apply(entry.getValue().valueToString());
 				if(reply!=null)
 					sent.setVariable(entry.getKey(), reply);
 			}

@@ -78,7 +78,6 @@ public class GuiDataEditorFloat extends GuiDataEditor<DataTypeFloat>
 	@Override
 	public DataTypeFloat outputType()
 	{
-		dataType.setDefaultValue();
 		dataType.value = getFieldValue();
 		return dataType;
 	}

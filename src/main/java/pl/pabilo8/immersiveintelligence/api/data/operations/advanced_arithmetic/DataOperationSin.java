@@ -2,28 +2,26 @@ package pl.pabilo8.immersiveintelligence.api.data.operations.advanced_arithmetic
 
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.operations.DataOperation;
+import pl.pabilo8.immersiveintelligence.api.data.operations.DataOperation.DataOperationMeta;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataType;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeExpression;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeFloat;
-import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
-import pl.pabilo8.immersiveintelligence.api.data.types.IDataTypeNumeric;
+import pl.pabilo8.immersiveintelligence.api.data.types.NumericDataType;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author Pabilo8
  * @since 05-07-2019
  */
+@DataOperationMeta(name = "sin", allowedTypes = {NumericDataType.class}, params = {"number"}, expectedResult = NumericDataType.class)
 public class DataOperationSin extends DataOperation
 {
-	public DataOperationSin()
-	{
-		name = "sin";
-		allowedTypes = new Class[]{IDataTypeNumeric.class};
-		expectedResult = IDataTypeNumeric.class;
-	}
-
+	@Nonnull
 	@Override
-	public IDataType execute(DataPacket packet, DataTypeExpression data)
+	public DataType execute(DataPacket packet, DataTypeExpression data)
 	{
-		IDataTypeNumeric t1 = packet.getVarInType(IDataTypeNumeric.class, data.getArgument(0));
+		NumericDataType t1 = packet.getVarInType(NumericDataType.class, data.getArgument(0));
 		return new DataTypeFloat((float)Math.sin(Math.toRadians(t1.floatValue())));
 	}
 }

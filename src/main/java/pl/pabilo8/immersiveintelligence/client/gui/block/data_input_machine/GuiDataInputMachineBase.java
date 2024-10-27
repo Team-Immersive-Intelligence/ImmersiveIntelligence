@@ -18,7 +18,7 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
-import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataType;
 import pl.pabilo8.immersiveintelligence.client.ClientProxy;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.IDataMachineGui;
@@ -297,7 +297,7 @@ public class GuiDataInputMachineBase extends GuiIEContainerBase implements ITabb
 	}
 
 	@Override
-	public void editVariable(char c, IDataType type)
+	public void editVariable(char c, DataType type)
 	{
 		if(!list.variables.containsKey(c)||list.getPacketVariable(c).getClass()!=type.getClass())
 			list.setVariable(c, type);

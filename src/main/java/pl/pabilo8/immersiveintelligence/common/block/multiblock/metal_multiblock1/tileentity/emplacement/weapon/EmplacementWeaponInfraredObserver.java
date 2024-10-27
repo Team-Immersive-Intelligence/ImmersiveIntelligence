@@ -16,9 +16,9 @@ import net.minecraft.util.math.Vec3i;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataType;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
-import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
 import pl.pabilo8.immersiveintelligence.api.utils.armor.IInfraredProtectionEquipment;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.block.emplacement.GuiEmplacementPageStorage;
@@ -169,7 +169,7 @@ public class EmplacementWeaponInfraredObserver extends EmplacementWeapon
 		String c = packet.getPacketVariable('c').valueToString();
 		if(c.equals("facing"))
 		{
-			IDataType f = packet.getPacketVariable('f');
+			DataType f = packet.getPacketVariable('f');
 			if(f instanceof DataTypeInteger)
 				nextYaw = EnumFacing.getHorizontal(((DataTypeInteger)f).value).getHorizontalAngle();
 			else if(f instanceof DataTypeString)

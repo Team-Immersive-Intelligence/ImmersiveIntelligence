@@ -135,8 +135,6 @@ public class GuiDataEditorItemStack extends GuiDataEditor<DataTypeItemStack>
 	@Override
 	public DataTypeItemStack outputType()
 	{
-		dataType.setDefaultValue();
-
 		scanned.setCount(getFieldValue(this.countEdit, scanned.getCount()));
 		scanned.setItemDamage(getFieldValue(this.metaEdit, scanned.getMetadata()));
 

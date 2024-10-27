@@ -103,7 +103,7 @@ public class ComputerCraftHelper extends IICompatModule
 							if(map.containsKey(String.valueOf(c))) //parse into IDataType
 							{
 								Object o = map.get(String.valueOf(c));
-								IDataType type;
+								DataType type;
 								switch(ArgumentHelper.getType(o))
 								{
 									default:
@@ -140,7 +140,7 @@ public class ComputerCraftHelper extends IICompatModule
 					if(!te.compatReceived)
 					{
 						Map<String, Object> map = new HashMap<>();
-						for(Entry<Character, IDataType> entry : te.lastReceived.variables.entrySet())
+						for(Entry<Character, DataType> entry : te.lastReceived.variables.entrySet())
 							map.put(entry.getKey().toString(), entry.getValue().valueToString());
 
 						te.compatReceived = true;

@@ -1,7 +1,6 @@
 package pl.pabilo8.immersiveintelligence.api.data.types;
 
 import net.minecraft.nbt.NBTTagCompound;
-import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
 import javax.annotation.Nonnull;
 
@@ -9,9 +8,9 @@ import javax.annotation.Nonnull;
  * @author Pabilo8
  * @since 2019-06-01
  */
-public class DataTypeInteger implements IDataTypeNumeric
+public class DataTypeInteger extends NumericDataType
 {
-	public int value;
+	public int value = 0;
 
 	public DataTypeInteger(int i)
 	{
@@ -25,33 +24,9 @@ public class DataTypeInteger implements IDataTypeNumeric
 
 	@Nonnull
 	@Override
-	public String getName()
-	{
-		return "integer";
-	}
-
-	@Nonnull
-	@Override
-	public String[][] getTypeInfoTable()
-	{
-		return new String[][]{
-				{"ie.manual.entry.def_value", "0"},
-				{"ie.manual.entry.min_value", String.valueOf(Integer.MIN_VALUE)},
-				{"ie.manual.entry.max_value", String.valueOf(Integer.MAX_VALUE)}
-		};
-	}
-
-	@Nonnull
-	@Override
 	public String valueToString()
 	{
 		return String.valueOf(value);
-	}
-
-	@Override
-	public void setDefaultValue()
-	{
-		value = 0;
 	}
 
 	@Override
@@ -70,12 +45,6 @@ public class DataTypeInteger implements IDataTypeNumeric
 	}
 
 	@Override
-	public IIColor getTypeColor()
-	{
-		return IIColor.fromPackedRGB(0x26732e);
-	}
-
-	@Override
 	public DataTypeInteger asInt()
 	{
 		return this;
@@ -89,6 +58,6 @@ public class DataTypeInteger implements IDataTypeNumeric
 	@Override
 	public boolean equals(Object obj)
 	{
-		return obj instanceof IDataTypeNumeric&&((IDataTypeNumeric)obj).intValue()==value;
+		return super.equals(obj)&&((NumericDataType)obj).intValue()==value;
 	}
 }

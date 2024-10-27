@@ -1,6 +1,7 @@
-package pl.pabilo8.immersiveintelligence.api.data;
+package pl.pabilo8.immersiveintelligence.api.data.device;
 
 import net.minecraft.util.EnumFacing;
+import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 
 import javax.annotation.Nullable;
 

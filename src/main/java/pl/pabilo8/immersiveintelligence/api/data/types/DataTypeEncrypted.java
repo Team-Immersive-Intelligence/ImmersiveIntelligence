@@ -1,17 +1,14 @@
 package pl.pabilo8.immersiveintelligence.api.data.types;
 
 import net.minecraft.nbt.NBTTagCompound;
-import pl.pabilo8.immersiveintelligence.common.util.IIColor;
-
-import javax.annotation.Nonnull;
 
 /**
  * @author GabrielV
  * Data type used for transferring encrypted data from Cryptographer
  */
-public class DataTypeEncrypted implements IDataTypeIterable
+public class DataTypeEncrypted extends IterableDataType
 {
-	public byte[] value;
+	public byte[] value = new byte[0];
 
 	public DataTypeEncrypted(byte[] data)
 	{
@@ -21,19 +18,7 @@ public class DataTypeEncrypted implements IDataTypeIterable
 
 	public DataTypeEncrypted()
 	{
-	}
 
-	@Override
-	public String getName()
-	{
-		return "encrypted";
-	}
-
-	@Nonnull
-	@Override
-	public String[][] getTypeInfoTable()
-	{
-		return new String[][]{{"ie.manual.entry.def_value", "ie.manual.entry.empty"}};
 	}
 
 	@Override
@@ -44,12 +29,6 @@ public class DataTypeEncrypted implements IDataTypeIterable
 		for(byte b : value)
 			s.append(String.format("%02X", b));
 		return s.delete(s.length()-2, s.length()-1).toString();
-	}
-
-	@Override
-	public void setDefaultValue()
-	{
-		this.value = new byte[0];
 	}
 
 	@Override
@@ -64,11 +43,5 @@ public class DataTypeEncrypted implements IDataTypeIterable
 		NBTTagCompound nbt = getHeaderTag();
 		nbt.setByteArray("Values", value);
 		return nbt;
-	}
-
-	@Override
-	public IIColor getTypeColor()
-	{
-		return IIColor.fromPackedRGB(0x5a0d75);
 	}
 }

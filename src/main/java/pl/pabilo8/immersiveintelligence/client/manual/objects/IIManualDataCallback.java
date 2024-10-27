@@ -7,8 +7,8 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextFormatting;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataType;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeNull;
-import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualObject;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualPage;
@@ -31,7 +31,7 @@ public class IIManualDataCallback extends IIManualObject
 	private final static ResLoc TEXTURE_CALLBACK = ResLoc.of(IIReference.RES_TEXTURES_MANUAL, "data/callback").withExtension(ResLoc.EXT_PNG);
 
 	@Nonnull
-	IDataType type = new DataTypeNull();
+	DataType type = new DataTypeNull();
 	String name, label, returns;
 
 	//--- Setup ---//
@@ -46,7 +46,7 @@ public class IIManualDataCallback extends IIManualObject
 	{
 		super.postInit(page);
 
-		Class<? extends IDataType> clazz = DataPacket.varTypes.getOrDefault(dataSource.getString("type"), DataTypeNull.class);
+		Class<? extends DataType> clazz = DataPacket.varTypes.getOrDefault(dataSource.getString("type"), DataTypeNull.class);
 		this.type = DataPacket.getVarInstance(clazz);
 
 		dataSource.checkSetString("name", s -> name = s, "missingno");
@@ -69,7 +69,7 @@ public class IIManualDataCallback extends IIManualObject
 		super.drawButton(mc, mx, my, partialTicks);
 
 		GlStateManager.pushMatrix();
-		ClientUtils.bindTexture(type.textureLocation());
+		ClientUtils.bindTexture(type.getTextureLocation());
 		GlStateManager.color(1f, 1f, 1f, 1f);
 		GlStateManager.enableBlend();
 		Gui.drawModalRectWithCustomSizedTexture(x, y, 0, 0, 16, 16, 16, 16);

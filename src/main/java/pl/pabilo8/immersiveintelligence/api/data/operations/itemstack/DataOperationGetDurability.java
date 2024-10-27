@@ -3,28 +3,25 @@ package pl.pabilo8.immersiveintelligence.api.data.operations.itemstack;
 import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.operations.DataOperation;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataType;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeExpression;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeItemStack;
-import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author Pabilo8
  * @since 05-07-2019
  */
+@DataOperation.DataOperationMeta(name = "get_durability",
+		allowedTypes = {DataTypeItemStack.class}, params = {"stack"},
+		expectedResult = DataTypeInteger.class)
 public class DataOperationGetDurability extends DataOperation
 {
-	public DataOperationGetDurability()
-	{
-		//Gets an itemstack's durability
-		name = "get_durability";
-		allowedTypes = new Class[]{DataTypeItemStack.class};
-		params = new String[]{"stack"};
-		expectedResult = DataTypeInteger.class;
-	}
-
+	@Nonnull
 	@Override
-	public IDataType execute(DataPacket packet, DataTypeExpression data)
+	public DataType execute(DataPacket packet, DataTypeExpression data)
 	{
 		DataTypeItemStack t1;
 		int i1;

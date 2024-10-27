@@ -4,6 +4,7 @@ import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.operations.DataOperation;
 import pl.pabilo8.immersiveintelligence.api.data.types.*;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -11,21 +12,15 @@ import java.util.Arrays;
  * @author Pabilo8
  * @since 05-07-2019
  */
+@DataOperation.DataOperationMeta(name = "array_push", allowedTypes = {DataTypeArray.class, DataType.class}, params = {"array", "inserted"}, expectedResult = DataTypeNull.class)
 public class DataOperationPush extends DataOperation
 {
-	public DataOperationPush()
-	{
-		name = "array_push";
-		allowedTypes = new Class[]{DataTypeArray.class, IDataType.class};
-		params = new String[]{"array", "inserted"};
-		expectedResult = DataTypeNull.class;
-	}
-
+	@Nonnull
 	@Override
-	public IDataType execute(DataPacket packet, DataTypeExpression data)
+	public DataType execute(DataPacket packet, DataTypeExpression data)
 	{
 		DataTypeArray array;
-		IDataType pushed;
+		DataType pushed;
 
 		array = packet.getVarInType(DataTypeArray.class, data.getArgument(0));
 		pushed = data.getArgument(1);
@@ -37,10 +32,10 @@ public class DataOperationPush extends DataOperation
 			tries++;
 		}
 
-		IDataType[] arr = array.value;
-		ArrayList<IDataType> iDataTypes = new ArrayList<>(Arrays.asList(arr));
-		iDataTypes.add(pushed);
-		array.value = iDataTypes.toArray(new IDataType[0]);
+		DataType[] arr = array.value;
+		ArrayList<DataType> dataTypes = new ArrayList<>(Arrays.asList(arr));
+		dataTypes.add(pushed);
+		array.value = dataTypes.toArray(new DataType[0]);
 
 		return new DataTypeNull();
 	}

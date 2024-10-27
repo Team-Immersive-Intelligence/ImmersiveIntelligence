@@ -18,9 +18,9 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataType;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeArray;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
-import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
 import pl.pabilo8.immersiveintelligence.client.ClientProxy;
 import pl.pabilo8.immersiveintelligence.client.gui.ITabbedGui;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.DataInputMachine;
@@ -154,7 +154,7 @@ public class GuiDataRedstoneInterfaceRedstone extends GuiIEContainerBase impleme
 		for(char c : DataPacket.varCharacters)
 			if(list.variables.containsKey(c))
 			{
-				IDataType data = list.getPacketVariable(c);
+				DataType data = list.getPacketVariable(c);
 				//Base
 				int drawx = guiLeft+32;
 				int drawy = guiTop+12+(i*24)-scroll;
@@ -184,7 +184,7 @@ public class GuiDataRedstoneInterfaceRedstone extends GuiIEContainerBase impleme
 
 				this.drawTexturedModalRect(drawx, drawy, 0, 222, 128, 20);
 
-				ClientUtils.bindTexture(data.textureLocation());
+				ClientUtils.bindTexture(data.getTextureLocation());
 				ClientUtils.bindTexture(texture);
 
 				//Variable type based effects

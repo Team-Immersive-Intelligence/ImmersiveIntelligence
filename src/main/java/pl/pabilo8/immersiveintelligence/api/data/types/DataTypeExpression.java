@@ -4,8 +4,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import pl.pabilo8.immersiveintelligence.api.data.DataOperations;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.operations.DataOperation;
-import pl.pabilo8.immersiveintelligence.api.data.operations.arithmetic.DataOperationAdd;
-import pl.pabilo8.immersiveintelligence.common.util.IIColor;
+import pl.pabilo8.immersiveintelligence.api.data.operations.DataOperation.DataOperationMeta;
+import pl.pabilo8.immersiveintelligence.api.data.operations.DataOperation.DataOperationNull;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
@@ -14,20 +14,27 @@ import java.util.Arrays;
  * @author Pabilo8
  * @since 05-07-2019
  */
-public class DataTypeExpression implements IDataType
+public class DataTypeExpression extends DataType
 {
-	public IDataType[] data;
-	DataOperation operation;
+	public DataType[] data = DataOperationNull.INSTANCE_TYPES;
+	DataOperation operation = DataOperationNull.INSTANCE;
+	DataOperationMeta meta = DataOperationNull.INSTANCE_META;
 	char requiredVariable = ' ';
 
-	public DataTypeExpression(IDataType[] data, DataOperation operation, char requiredVariable)
+	public DataTypeExpression(DataType[] data, DataOperation operation, char requiredVariable)
 	{
 		this.data = data;
 		this.operation = operation;
+		this.meta = operation.getMeta();
 		this.requiredVariable = requiredVariable;
 	}
 
-	public IDataType getArgument(int index)
+	public DataTypeExpression()
+	{
+
+	}
+
+	public DataType getArgument(int index)
 	{
 		return data[index%data.length];
 	}
@@ -35,6 +42,11 @@ public class DataTypeExpression implements IDataType
 	public DataOperation getOperation()
 	{
 		return operation;
+	}
+
+	public DataOperationMeta getMeta()
+	{
+		return meta;
 	}
 
 	public char getRequiredVariable()
@@ -45,20 +57,22 @@ public class DataTypeExpression implements IDataType
 	public void setOperation(@Nonnull DataOperation operation)
 	{
 		this.operation = operation;
+		this.meta = operation.getMeta();
+		Class<? extends DataType>[] allowedTypes = meta.allowedTypes();
 
-		IDataType[] newData = new IDataType[operation.allowedTypes.length];
+		DataType[] newData = new DataType[allowedTypes.length];
 
 		if(data!=null)
-			for(int i = 0; i < Math.min(operation.allowedTypes.length, data.length); i++)
+			for(int i = 0; i < Math.min(allowedTypes.length, data.length); i++)
 			{
-				IDataType t1 = getArgument(i);
-				if(t1.getClass()==DataTypeAccessor.class||operation.allowedTypes[i].isAssignableFrom(t1.getClass()))
+				DataType t1 = getArgument(i);
+				if(t1.getClass()==DataTypeAccessor.class||allowedTypes[i].isAssignableFrom(t1.getClass()))
 					newData[i] = t1;
 			}
 
-		for(int i = 0; i < operation.allowedTypes.length; i++)
+		for(int i = 0; i < allowedTypes.length; i++)
 			if(newData[i]==null)
-				newData[i] = DataPacket.getVarInstance(operation.allowedTypes[i]);
+				newData[i] = DataPacket.getVarInstance(allowedTypes[i]);
 
 		this.data = newData;
 	}
@@ -68,52 +82,31 @@ public class DataTypeExpression implements IDataType
 		this.requiredVariable = requiredVariable;
 	}
 
-	public DataTypeExpression()
-	{
-	}
-
-	public IDataType getValue(DataPacket packet)
+	public DataType getValue(DataPacket packet)
 	{
 		return operation.execute(packet, this);
 	}
 
 	@Nonnull
 	@Override
-	public String getName()
-	{
-		return "expression";
-	}
-
-	@Nonnull
-	@Override
 	public String valueToString()
 	{
-		if(operation.expression!=null)
-			return String.format(operation.expression, Arrays.stream(data).map(IDataType::valueToString).toArray());
-		return operation.name;
-	}
-
-	@Override
-	public void setDefaultValue()
-	{
-		this.operation = new DataOperationAdd();
-		this.requiredVariable = ' ';
-		data = new IDataType[operation.allowedTypes.length];
-		for(int i = 0; i < operation.allowedTypes.length; i++)
-			data[i] = DataPacket.getVarInstance(operation.allowedTypes[i]);
+		String symbol = operation.getMeta().expression();
+		if(!symbol.isEmpty())
+			return String.format(symbol, Arrays.stream(data).map(DataType::valueToString).toArray());
+		return operation.getMeta().name();
 	}
 
 	@Override
 	public void valueFromNBT(NBTTagCompound nbt)
 	{
-		setDefaultValue();
+		this.operation = DataOperations.getOperationInstance(nbt.getString("Operation"));
+		this.meta = this.operation.getMeta();
+		this.requiredVariable = nbt.getString("requiredVariable").charAt(0);
 
-		operation = DataOperations.getOperationInstance(nbt.getString("Operation"));
-		requiredVariable = nbt.getString("requiredVariable").charAt(0);
-
-		data = new IDataType[operation.allowedTypes.length];
-		for(int i = 0; i < operation.allowedTypes.length; i++)
-			data[i] = DataPacket.getVarFromNBT(nbt.getCompoundTag("Value"+(i+1)));
+		this.data = new DataType[meta.allowedTypes().length];
+		for(int i = 0; i < meta.allowedTypes().length; i++)
+			this.data[i] = DataPacket.getVarFromNBT(nbt.getCompoundTag("Value"+(i+1)));
 	}
 
 	@Nonnull
@@ -122,18 +115,12 @@ public class DataTypeExpression implements IDataType
 	{
 		NBTTagCompound nbt = getHeaderTag();
 
-		nbt.setString("Operation", operation.name);
+		nbt.setString("Operation", meta.name());
 		nbt.setString("requiredVariable", String.valueOf(requiredVariable));
 
-		for(int i = 0; i < operation.allowedTypes.length; i++)
+		for(int i = 0; i < meta.allowedTypes().length; i++)
 			nbt.setTag("Value"+(i+1), data[i].valueToNBT());
 
 		return nbt;
-	}
-
-	@Override
-	public IIColor getTypeColor()
-	{
-		return IIColor.fromPackedRGB(0x2a4db4);
 	}
 }

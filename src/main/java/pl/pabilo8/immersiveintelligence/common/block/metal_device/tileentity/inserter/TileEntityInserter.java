@@ -24,15 +24,15 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Inserter;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataType;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeItemStack;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
-import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
-import pl.pabilo8.immersiveintelligence.api.utils.minecart.IMinecartBlockPickable;
 import pl.pabilo8.immersiveintelligence.api.utils.MinecartBlockHelper;
+import pl.pabilo8.immersiveintelligence.api.utils.minecart.IMinecartBlockPickable;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Inserter;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -123,13 +123,13 @@ public class TileEntityInserter extends TileEntityInserterBase
 	{
 		super.onPacketReceive(packet);
 
-		IDataType c = packet.getPacketVariable('c');
-		IDataType m = packet.getPacketVariable('m');
-		IDataType s = packet.getPacketVariable('s');
-		IDataType a = packet.getPacketVariable('a');
+		DataType c = packet.getPacketVariable('c');
+		DataType m = packet.getPacketVariable('m');
+		DataType s = packet.getPacketVariable('s');
+		DataType a = packet.getPacketVariable('a');
 
-		IDataType i = packet.getPacketVariable('i');
-		IDataType o = packet.getPacketVariable('o');
+		DataType i = packet.getPacketVariable('i');
+		DataType o = packet.getPacketVariable('o');
 
 		//old inserter compat
 		if(m.valueToString().equals("set")||m.valueToString().equals("add"))

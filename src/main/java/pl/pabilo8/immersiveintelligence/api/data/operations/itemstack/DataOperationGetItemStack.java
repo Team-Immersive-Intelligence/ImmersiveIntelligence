@@ -7,24 +7,21 @@ import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.operations.DataOperation;
 import pl.pabilo8.immersiveintelligence.api.data.types.*;
 
+import javax.annotation.Nonnull;
 import java.util.Optional;
 
 /**
  * @author Pabilo8
  * @since 05-07-2019
  */
+@DataOperation.DataOperationMeta(name = "get_itemstack",
+		allowedTypes = {DataTypeString.class, DataTypeInteger.class, DataTypeInteger.class}, params = {"item_id", "amount", "meta"},
+		expectedResult = DataTypeItemStack.class)
 public class DataOperationGetItemStack extends DataOperation
 {
-	public DataOperationGetItemStack()
-	{
-		name = "get_itemstack";
-		allowedTypes = new Class[]{DataTypeString.class, DataTypeInteger.class, DataTypeInteger.class};
-		params = new String[]{"item_id", "amount", "meta"};
-		expectedResult = DataTypeItemStack.class;
-	}
-
+	@Nonnull
 	@Override
-	public IDataType execute(DataPacket packet, DataTypeExpression data)
+	public DataType execute(DataPacket packet, DataTypeExpression data)
 	{
 		DataTypeString t1 = packet.getVarInType(DataTypeString.class, data.getArgument(0));
 

@@ -5,8 +5,8 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataType;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeExpression;
-import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonDataLetterList;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonDataLetterList.ArrowsAlignment;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonII;
@@ -33,7 +33,7 @@ public class GuiArithmeticLogicMachineEdit extends GuiArithmeticLogicMachineBase
 {
 	private int page;
 	public char variableToEdit = 'a';
-	public IDataType dataType;
+	public DataType dataType;
 	public GuiButtonDataLetterList buttonLetter;
 	public GuiButtonIE buttonApply;
 	public GuiButtonIE buttonVariableHelp;

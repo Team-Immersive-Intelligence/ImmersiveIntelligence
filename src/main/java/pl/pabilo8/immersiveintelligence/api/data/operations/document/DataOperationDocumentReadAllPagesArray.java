@@ -10,24 +10,21 @@ import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.operations.DataOperation;
 import pl.pabilo8.immersiveintelligence.api.data.types.*;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 
 /**
  * @author Pabilo8
  * @since 05-07-2019
  */
+@DataOperation.DataOperationMeta(name = "document_read_all_pages_array",
+		allowedTypes = {DataTypeItemStack.class}, params = {"document"},
+		expectedResult = DataTypeArray.class)
 public class DataOperationDocumentReadAllPagesArray extends DataOperation
 {
-	public DataOperationDocumentReadAllPagesArray()
-	{
-		name = "document_read_all_pages_array";
-		allowedTypes = new Class[]{DataTypeItemStack.class};
-		params = new String[]{"document"};
-		expectedResult = DataTypeArray.class;
-	}
-
+	@Nonnull
 	@Override
-	public IDataType execute(DataPacket packet, DataTypeExpression data)
+	public DataType execute(DataPacket packet, DataTypeExpression data)
 	{
 		ItemStack stack = packet.getVarInType(DataTypeItemStack.class, data.getArgument(0)).value;
 		if(ItemNBTHelper.hasKey(stack, "pages"))
@@ -42,7 +39,7 @@ public class DataOperationDocumentReadAllPagesArray extends DataOperation
 						list.add(json.getUnformattedText());
 				}
 			}
-			return new DataTypeArray(list.stream().map(DataTypeString::new).toArray(IDataType[]::new));
+			return new DataTypeArray(list.stream().map(DataTypeString::new).toArray(DataType[]::new));
 		}
 		return new DataTypeArray();
 	}

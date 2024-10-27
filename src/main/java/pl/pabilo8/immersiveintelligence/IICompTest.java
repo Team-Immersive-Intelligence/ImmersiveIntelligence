@@ -1,6 +1,6 @@
 package pl.pabilo8.immersiveintelligence;
 
-import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
+import pl.pabilo8.immersiveintelligence.api.data.device.IDataDevice;
 import pl.pabilo8.immersiveintelligence.api.data.pol.POLComputerMemory;
 import pl.pabilo8.immersiveintelligence.api.data.pol.POLProcess;
 import pl.pabilo8.immersiveintelligence.api.data.pol.POLScript;

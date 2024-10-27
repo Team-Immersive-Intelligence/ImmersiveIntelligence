@@ -11,8 +11,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataType;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeNull;
-import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonDataLetterList;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonDataLetterList.ArrowsAlignment;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonII;
@@ -40,13 +40,13 @@ import java.util.function.BiFunction;
 public class GuiDataInputMachineEdit extends GuiDataInputMachineBase
 {
 	public char variableToEdit = 'a';
-	public IDataType dataType;
+	public DataType dataType;
 	public GuiButtonDataLetterList buttonLetter;
 	public GuiButtonIE buttonApply;
 	public GuiButtonIE buttonTypeNext, buttonTypePrev;
 	private GuiButtonII buttonVariableHelp;
 	@Nullable
-	private GuiDataEditor<? extends IDataType> editor = null;
+	private GuiDataEditor<? extends DataType> editor = null;
 
 	public GuiDataInputMachineEdit(EntityPlayer player, TileEntityDataInputMachine tile)
 	{
@@ -85,7 +85,7 @@ public class GuiDataInputMachineEdit extends GuiDataInputMachineBase
 				.setHoverOffset(8, 0));
 
 		editor = null;
-		for(Entry<Class<? extends IDataType>, BiFunction<Integer, IDataType, GuiDataEditor<? extends IDataType>>> entry : GuiDataEditor.editors.entrySet())
+		for(Entry<Class<? extends DataType>, BiFunction<Integer, DataType, GuiDataEditor<? extends DataType>>> entry : GuiDataEditor.editors.entrySet())
 		{
 			if(entry.getKey()==dataType.getClass())
 			{
@@ -205,11 +205,10 @@ public class GuiDataInputMachineEdit extends GuiDataInputMachineBase
 	{
 		try
 		{
-			ArrayList<Class<? extends IDataType>> types = new ArrayList<>(GuiDataEditor.editors.keySet());
+			ArrayList<Class<? extends DataType>> types = new ArrayList<>(GuiDataEditor.editors.keySet());
 			int i = IIUtils.cycleInt(forward, types.indexOf(this.dataType.getClass()), 0, types.size()-1);
 			list.setVariable(variableToEdit, new DataPacket().getVarInType(types.get(i), new DataTypeNull()));
 			this.dataType = list.getPacketVariable(variableToEdit);
-			this.dataType.setDefaultValue();
 		} catch(Exception ignored)
 		{
 

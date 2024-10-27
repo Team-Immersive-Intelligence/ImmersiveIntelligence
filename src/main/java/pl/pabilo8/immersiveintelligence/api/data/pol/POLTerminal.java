@@ -1,6 +1,6 @@
 package pl.pabilo8.immersiveintelligence.api.data.pol;
 
-import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
+import pl.pabilo8.immersiveintelligence.api.data.device.IDataDevice;
 
 import javax.annotation.Nullable;
 

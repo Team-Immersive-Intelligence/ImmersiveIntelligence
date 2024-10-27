@@ -26,9 +26,9 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.items.IItemHandler;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
-import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
-import pl.pabilo8.immersiveintelligence.api.data.IDataStorageItem;
 import pl.pabilo8.immersiveintelligence.api.data.IIDataHandlingUtils;
+import pl.pabilo8.immersiveintelligence.api.data.device.IDataDevice;
+import pl.pabilo8.immersiveintelligence.api.data.device.IDataStorageItem;
 import pl.pabilo8.immersiveintelligence.api.data.types.*;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockRedstoneInterface;
@@ -503,7 +503,7 @@ public class TileEntityRedstoneInterface extends TileEntityMultiblockConnectable
 		return 0;
 	}
 
-	private IDataType getTypeFromRedstone(byte value, int type)
+	private DataType getTypeFromRedstone(byte value, int type)
 	{
 		switch(type)
 		{

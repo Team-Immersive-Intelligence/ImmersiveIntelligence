@@ -80,7 +80,6 @@ public class GuiDataEditorString extends GuiDataEditor<DataTypeString>
 	@Override
 	public DataTypeString outputType()
 	{
-		dataType.setDefaultValue();
 		dataType.value = this.valueEdit.getText();
 		return dataType;
 	}

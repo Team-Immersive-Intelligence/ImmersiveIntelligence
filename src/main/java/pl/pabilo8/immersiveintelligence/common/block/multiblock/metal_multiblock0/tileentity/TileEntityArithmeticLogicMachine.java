@@ -21,11 +21,11 @@ import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
-import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
 import pl.pabilo8.immersiveintelligence.api.data.IIDataHandlingUtils;
+import pl.pabilo8.immersiveintelligence.api.data.device.IDataDevice;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataType;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeBoolean;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeExpression;
-import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
 import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.ArithmeticLogicMachine;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
@@ -296,7 +296,7 @@ public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockMetal<
 						break;
 					for(char c : DataPacket.varCharacters)
 					{
-						IDataType var = cPacket[i].getPacketVariable(c);
+						DataType var = cPacket[i].getPacketVariable(c);
 						if(var instanceof DataTypeExpression)
 						{
 							DataTypeExpression exp = ((DataTypeExpression)var);

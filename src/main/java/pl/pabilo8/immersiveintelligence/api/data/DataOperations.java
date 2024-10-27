@@ -1,6 +1,8 @@
 package pl.pabilo8.immersiveintelligence.api.data;
 
 import pl.pabilo8.immersiveintelligence.api.data.operations.DataOperation;
+import pl.pabilo8.immersiveintelligence.api.data.operations.DataOperation.DataOperationMeta;
+import pl.pabilo8.immersiveintelligence.api.data.operations.DataOperation.DataOperationNull;
 import pl.pabilo8.immersiveintelligence.api.data.operations.advanced_arithmetic.*;
 import pl.pabilo8.immersiveintelligence.api.data.operations.advanced_logic.DataOperationNAND;
 import pl.pabilo8.immersiveintelligence.api.data.operations.advanced_logic.DataOperationNOR;
@@ -32,113 +34,125 @@ import java.util.Map;
  */
 public class DataOperations
 {
-	public static final Map<String, Class<? extends DataOperation>> operations = new HashMap<>();
+	private static final Map<String, Class<? extends DataOperation>> operations = new HashMap<>();
+	private static final Map<String, DataOperationMeta> operationsMeta = new HashMap<>();
 
 	static
 	{
-		operations.put("add", DataOperationAdd.class);
-		operations.put("subtract", DataOperationSubtract.class);
-		operations.put("multiply", DataOperationMultiply.class);
-		operations.put("divide", DataOperationDivide.class);
-		operations.put("modulo", DataOperationModulo.class);
-		operations.put("abs", DataOperationAbs.class);
+		//Placeholder for empty expression
+		registerOperation(DataOperationNull.class);
 
-		operations.put("power", DataOperationPower.class);
-		operations.put("root", DataOperationRoot.class);
-		operations.put("max", DataOperationMax.class);
-		operations.put("min", DataOperationMin.class);
+		//Actual operations
+		registerOperation(DataOperationAdd.class);
+		registerOperation(DataOperationSubtract.class);
+		registerOperation(DataOperationMultiply.class);
+		registerOperation(DataOperationDivide.class);
+		registerOperation(DataOperationModulo.class);
+		registerOperation(DataOperationAbs.class);
 
-		operations.put("sign", DataOperationSign.class);
-		operations.put("ceil", DataOperationCeil.class);
-		operations.put("round", DataOperationRound.class);
-		operations.put("floor", DataOperationFloor.class);
+		registerOperation(DataOperationPower.class);
+		registerOperation(DataOperationRoot.class);
+		registerOperation(DataOperationMax.class);
+		registerOperation(DataOperationMin.class);
 
-		operations.put("sin", DataOperationSin.class);
-		operations.put("cos", DataOperationCos.class);
-		operations.put("tan", DataOperationTan.class);
+		registerOperation(DataOperationSign.class);
+		registerOperation(DataOperationCeil.class);
+		registerOperation(DataOperationRound.class);
+		registerOperation(DataOperationFloor.class);
 
-		operations.put("greater", DataOperationGreater.class);
-		operations.put("less", DataOperationLess.class);
-		operations.put("greater_or_equal", DataOperationGreaterOrEqual.class);
-		operations.put("less_or_equal", DataOperationLessOrEqual.class);
-		operations.put("equal", DataOperationEqual.class);
+		registerOperation(DataOperationSin.class);
+		registerOperation(DataOperationCos.class);
+		registerOperation(DataOperationTan.class);
 
-		operations.put("and", DataOperationAND.class);
-		operations.put("or", DataOperationOR.class);
-		operations.put("not", DataOperationNOT.class);
+		registerOperation(DataOperationGreater.class);
+		registerOperation(DataOperationLess.class);
+		registerOperation(DataOperationGreaterOrEqual.class);
+		registerOperation(DataOperationLessOrEqual.class);
+		registerOperation(DataOperationEqual.class);
 
-		operations.put("nand", DataOperationNAND.class);
-		operations.put("nor", DataOperationNOR.class);
-		operations.put("xor", DataOperationXOR.class);
-		operations.put("xnor", DataOperationXNOR.class);
+		registerOperation(DataOperationAND.class);
+		registerOperation(DataOperationOR.class);
+		registerOperation(DataOperationNOT.class);
 
-		operations.put("string_join", DataOperationStringJoin.class);
-		operations.put("string_split", DataOperationStringSplit.class);
-		operations.put("string_length", DataOperationStringLength.class);
-		operations.put("string_char_at", DataOperationStringCharAt.class);
-		operations.put("string_substring", DataOperationStringSubstring.class);
-		operations.put("string_trim", DataOperationStringTrim.class);
+		registerOperation(DataOperationNAND.class);
+		registerOperation(DataOperationNOR.class);
+		registerOperation(DataOperationXOR.class);
+		registerOperation(DataOperationXNOR.class);
 
-		operations.put("string_hexcol", DataOperationStringHexcol.class);
-		operations.put("string_format", DataOperationStringFormat.class);
+		registerOperation(DataOperationStringJoin.class);
+		registerOperation(DataOperationStringSplit.class);
+		registerOperation(DataOperationStringLength.class);
+		registerOperation(DataOperationStringCharAt.class);
+		registerOperation(DataOperationStringSubstring.class);
+		registerOperation(DataOperationStringTrim.class);
 
-		operations.put("string_contains", DataOperationStringContains.class);
-		operations.put("string_contains_count", DataOperationStringContainsCount.class);
-		operations.put("string_replace_first", DataOperationStringReplaceFirst.class);
-		operations.put("string_replace_all", DataOperationStringReplaceAll.class);
+		registerOperation(DataOperationStringHexcol.class);
+		registerOperation(DataOperationStringFormat.class);
 
-		operations.put("string_lowercase", DataOperationStringLowerCase.class);
-		operations.put("string_uppercase", DataOperationStringUpperCase.class);
-		operations.put("string_snake_case", DataOperationStringSnakeCase.class);
-		operations.put("string_camel_case", DataOperationStringCamelCase.class);
-		operations.put("string_reverse", DataOperationStringReverse.class);
+		registerOperation(DataOperationStringContains.class);
+		registerOperation(DataOperationStringContainsCount.class);
+		registerOperation(DataOperationStringReplaceFirst.class);
+		registerOperation(DataOperationStringReplaceAll.class);
 
-		operations.put("get_quantity", DataOperationGetQuantity.class);
-		operations.put("set_quantity", DataOperationSetQuantity.class);
-		operations.put("get_durability", DataOperationGetDurability.class);
-		operations.put("set_durability", DataOperationSetDurability.class);
-		operations.put("get_nbt", DataOperationGetNBT.class);
-		operations.put("set_nbt", DataOperationSetNBT.class);
-		operations.put("get_item_id", DataOperationGetItemID.class);
-		operations.put("get_itemstack", DataOperationGetItemStack.class);
-		operations.put("is_stack_empty", DataOperationIsStackEmpty.class);
-		operations.put("can_stack_with", DataOperationCanStackWith.class);
-		operations.put("matches_oredict", DataOperationMatchesOreDictionary.class);
+		registerOperation(DataOperationStringLowerCase.class);
+		registerOperation(DataOperationStringUpperCase.class);
+		registerOperation(DataOperationStringSnakeCase.class);
+		registerOperation(DataOperationStringCamelCase.class);
+		registerOperation(DataOperationStringReverse.class);
 
-		operations.put("entity_get_id", DataOperationGetEntityID.class);
-		operations.put("entity_get_type", DataOperationGetEntityType.class);
-		operations.put("entity_get_name", DataOperationGetEntityName.class);
-		operations.put("entity_get_dimension_id", DataOperationGetEntityDimensionID.class);
-		operations.put("entity_get_x", DataOperationGetEntityPosX.class);
-		operations.put("entity_get_y", DataOperationGetEntityPosY.class);
-		operations.put("entity_get_z", DataOperationGetEntityPosZ.class);
+		registerOperation(DataOperationGetQuantity.class);
+		registerOperation(DataOperationSetQuantity.class);
+		registerOperation(DataOperationGetDurability.class);
+		registerOperation(DataOperationSetDurability.class);
+		registerOperation(DataOperationGetNBT.class);
+		registerOperation(DataOperationSetNBT.class);
+		registerOperation(DataOperationGetItemID.class);
+		registerOperation(DataOperationGetItemStack.class);
+		registerOperation(DataOperationIsStackEmpty.class);
+		registerOperation(DataOperationCanStackWith.class);
+		registerOperation(DataOperationMatchesOreDictionary.class);
 
-		operations.put("array_start", DataOperationStart.class);
-		operations.put("array_get", DataOperationGet.class);
-		operations.put("array_set", DataOperationSet.class);
-		operations.put("array_pop", DataOperationPop.class);
-		operations.put("array_push", DataOperationPush.class);
-		operations.put("array_swap", DataOperationSwap.class);
-		operations.put("array_length", DataOperationArrayLength.class);
+		registerOperation(DataOperationGetEntityID.class);
+		registerOperation(DataOperationGetEntityType.class);
+		registerOperation(DataOperationGetEntityName.class);
+		registerOperation(DataOperationGetEntityDimensionID.class);
+		registerOperation(DataOperationGetEntityPosX.class);
+		registerOperation(DataOperationGetEntityPosY.class);
+		registerOperation(DataOperationGetEntityPosZ.class);
 
-		operations.put("document_read_page", DataOperationDocumentReadPage.class);
-		operations.put("document_read_all_pages_array", DataOperationDocumentReadAllPagesArray.class);
-		operations.put("document_read_all_pages_string", DataOperationDocumentReadAllPagesString.class);
-		operations.put("document_get_author", DataOperationDocumentGetAuthor.class);
-		operations.put("document_get_title", DataOperationDocumentGetTitle.class);
+		registerOperation(DataOperationStart.class);
+		registerOperation(DataOperationGet.class);
+		registerOperation(DataOperationSet.class);
+		registerOperation(DataOperationPop.class);
+		registerOperation(DataOperationPush.class);
+		registerOperation(DataOperationSwap.class);
+		registerOperation(DataOperationArrayLength.class);
 
-		operations.put("is_null", DataOperationIsNull.class);
-		operations.put("is_same_type", DataOperationIsSameType.class);
-		operations.put("to_integer", DataOperationToInteger.class);
-		operations.put("to_float", DataOperationToFloat.class);
-		operations.put("to_string", DataOperationToString.class);
-		operations.put("to_boolean", DataOperationToBoolean.class);
-		operations.put("to_null", DataOperationToNull.class);
+		registerOperation(DataOperationDocumentReadPage.class);
+		registerOperation(DataOperationDocumentReadAllPagesArray.class);
+		registerOperation(DataOperationDocumentReadAllPagesString.class);
+		registerOperation(DataOperationDocumentGetAuthor.class);
+		registerOperation(DataOperationDocumentGetTitle.class);
 
-		operations.put("encrypt_text", DataOperationEncryptText.class);
-		operations.put("encrypt_number", DataOperationEncryptNumber.class);
-		operations.put("decrypt_text", DataOperationDecryptText.class);
-		operations.put("decrypt_number", DataOperationDecryptNumber.class);
+		registerOperation(DataOperationIsNull.class);
+		registerOperation(DataOperationIsSameType.class);
+		registerOperation(DataOperationToInteger.class);
+		registerOperation(DataOperationToFloat.class);
+		registerOperation(DataOperationToString.class);
+		registerOperation(DataOperationToBoolean.class);
+		registerOperation(DataOperationToNull.class);
+
+		registerOperation(DataOperationEncryptText.class);
+		registerOperation(DataOperationEncryptNumber.class);
+		registerOperation(DataOperationDecryptText.class);
+		registerOperation(DataOperationDecryptNumber.class);
+	}
+
+	public static void registerOperation(Class<? extends DataOperation> clazz)
+	{
+		DataOperation.DataOperationMeta meta = clazz.getAnnotation(DataOperation.DataOperationMeta.class);
+		operations.put(meta.name(), clazz);
+		operationsMeta.put(meta.name(), meta);
 	}
 
 	@Nonnull
@@ -154,7 +168,11 @@ public class DataOperations
 			{
 			}
 		}
-		return new DataOperationAdd();
+		return DataOperationNull.INSTANCE;
 	}
 
+	public static DataOperationMeta getOperationMeta(String name)
+	{
+		return operationsMeta.get(name);
+	}
 }

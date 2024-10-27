@@ -1,7 +1,8 @@
-package pl.pabilo8.immersiveintelligence.api.data;
+package pl.pabilo8.immersiveintelligence.api.data.device;
 
 import blusunrize.immersiveengineering.api.energy.wires.IImmersiveConnectable;
 import net.minecraft.world.World;
+import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 
 /**
  * @author Pabilo8

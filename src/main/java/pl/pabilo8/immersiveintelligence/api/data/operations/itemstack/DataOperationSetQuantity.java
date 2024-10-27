@@ -3,29 +3,23 @@ package pl.pabilo8.immersiveintelligence.api.data.operations.itemstack;
 import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.operations.DataOperation;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataType;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeExpression;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeItemStack;
-import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author Pabilo8
  * @since 05-07-2019
  */
+@DataOperation.DataOperationMeta(name = "set_quantity", allowedTypes = {DataTypeItemStack.class, DataTypeInteger.class}, params = {"stack", "count"}, expectedResult = DataTypeItemStack.class)
 public class DataOperationSetQuantity extends DataOperation
 {
-	public DataOperationSetQuantity()
-	{
-		//Sets the quantity (count) of an itemstack
-		name = "set_quantity";
-
-		allowedTypes = new Class[]{DataTypeItemStack.class, DataTypeInteger.class};
-		params = new String[]{"stack","count"};
-		expectedResult = DataTypeItemStack.class;
-	}
-
+	@Nonnull
 	@Override
-	public IDataType execute(DataPacket packet, DataTypeExpression data)
+	public DataType execute(DataPacket packet, DataTypeExpression data)
 	{
 		DataTypeItemStack t1;
 		DataTypeInteger t2;

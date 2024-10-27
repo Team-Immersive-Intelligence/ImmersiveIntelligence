@@ -2,27 +2,22 @@ package pl.pabilo8.immersiveintelligence.api.data.operations.type_conversion;
 
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.operations.DataOperation;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataType;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeExpression;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeNull;
-import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author Pabilo8
  * @since 05-07-2019
  */
+@DataOperation.DataOperationMeta(name = "to_null", allowedTypes = {DataType.class}, expression = "<null>", params = {"nullified"}, expectedResult = DataTypeNull.class)
 public class DataOperationToNull extends DataOperation
 {
-	public DataOperationToNull()
-	{
-		name = "to_null";
-		expression = "<null>";
-		allowedTypes = new Class[]{DataTypeNull.class};
-		params = new String[]{"nullified"};
-		expectedResult = DataTypeNull.class;
-	}
-
+	@Nonnull
 	@Override
-	public IDataType execute(DataPacket packet, DataTypeExpression data)
+	public DataType execute(DataPacket packet, DataTypeExpression data)
 	{
 		//plain and simple, used to nullify values
 		return new DataTypeNull();

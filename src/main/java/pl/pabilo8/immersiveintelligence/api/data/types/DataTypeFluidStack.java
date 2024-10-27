@@ -2,7 +2,6 @@ package pl.pabilo8.immersiveintelligence.api.data.types;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
-import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -11,10 +10,10 @@ import javax.annotation.Nullable;
  * @author Pabilo8
  * @since 2019-06-01
  */
-public class DataTypeFluidStack implements IDataType
+public class DataTypeFluidStack extends DataType
 {
 	@Nullable
-	public FluidStack value;
+	public FluidStack value = null;
 
 	public DataTypeFluidStack(FluidStack i)
 	{
@@ -28,20 +27,6 @@ public class DataTypeFluidStack implements IDataType
 
 	@Nonnull
 	@Override
-	public String getName()
-	{
-		return "fluidstack";
-	}
-
-	@Nonnull
-	@Override
-	public String[][] getTypeInfoTable()
-	{
-		return new String[][]{{"ie.manual.entry.def_value", "ie.manual.entry.empty"}};
-	}
-
-	@Nonnull
-	@Override
 	public String valueToString()
 	{
 		if(value==null||value.getFluid()==null)
@@ -51,12 +36,6 @@ public class DataTypeFluidStack implements IDataType
 				value.amount,
 				value.getLocalizedName(),
 				value.tag!=null?value.tag.toString(): "");
-	}
-
-	@Override
-	public void setDefaultValue()
-	{
-		value = null;
 	}
 
 	@Override
@@ -77,12 +56,6 @@ public class DataTypeFluidStack implements IDataType
 			nbt.setTag("Value", fluid_nbt);
 		}
 		return nbt;
-	}
-
-	@Override
-	public IIColor getTypeColor()
-	{
-		return IIColor.fromPackedRGB(0x082730);
 	}
 
 	@Override

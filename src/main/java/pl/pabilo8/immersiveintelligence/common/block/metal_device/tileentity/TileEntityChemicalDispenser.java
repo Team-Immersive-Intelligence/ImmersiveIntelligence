@@ -32,11 +32,11 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
-import pl.pabilo8.immersiveintelligence.api.data.DataWireNetwork;
-import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
+import pl.pabilo8.immersiveintelligence.api.data.device.DataWireNetwork;
+import pl.pabilo8.immersiveintelligence.api.data.device.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeBoolean;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
-import pl.pabilo8.immersiveintelligence.api.data.types.IDataTypeNumeric;
+import pl.pabilo8.immersiveintelligence.api.data.types.NumericDataType;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.ChemicalDispenser;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.component.EntityIIChemthrowerShot;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
@@ -528,14 +528,14 @@ public class TileEntityChemicalDispenser extends TileEntityImmersiveConnectable 
 	@Override
 	public void onPacketReceive(DataPacket packet)
 	{
-		if(packet.getPacketVariable('p') instanceof IDataTypeNumeric)
+		if(packet.getPacketVariable('p') instanceof NumericDataType)
 			this.plannedPitch = MathHelper.clamp(
-					packet.getVarInType(IDataTypeNumeric.class, packet.getPacketVariable('p')).floatValue(),
+					packet.getVarInType(NumericDataType.class, packet.getPacketVariable('p')).floatValue(),
 					-45, 45);
 
-		if(packet.getPacketVariable('y') instanceof IDataTypeNumeric)
+		if(packet.getPacketVariable('y') instanceof NumericDataType)
 			this.plannedYaw = MathHelper.clamp(
-					packet.getVarInType(IDataTypeNumeric.class, packet.getPacketVariable('y')).floatValue(),
+					packet.getVarInType(NumericDataType.class, packet.getPacketVariable('y')).floatValue(),
 					-45, 45);
 
 		if(packet.getPacketVariable('a') instanceof DataTypeInteger)

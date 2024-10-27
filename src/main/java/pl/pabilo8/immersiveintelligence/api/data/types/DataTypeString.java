@@ -1,15 +1,14 @@
 package pl.pabilo8.immersiveintelligence.api.data.types;
 
 import net.minecraft.nbt.NBTTagCompound;
-import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
 /**
  * @author Pabilo8
  * @since 2019-06-01
  */
-public class DataTypeString implements IDataType
+public class DataTypeString extends DataType
 {
-	public String value;
+	public String value = "";
 
 	public DataTypeString(String i)
 	{
@@ -22,27 +21,9 @@ public class DataTypeString implements IDataType
 	}
 
 	@Override
-	public String getName()
-	{
-		return "string";
-	}
-
-	@Override
-	public String[][] getTypeInfoTable()
-	{
-		return new String[][]{{"ie.manual.entry.def_value", "''"}, {"ie.manual.entry.max_length", "512"}};
-	}
-
-	@Override
 	public String valueToString()
 	{
 		return value;
-	}
-
-	@Override
-	public void setDefaultValue()
-	{
-		this.value = "";
 	}
 
 	@Override
@@ -57,12 +38,6 @@ public class DataTypeString implements IDataType
 		NBTTagCompound nbt = getHeaderTag();
 		nbt.setString("Value", value);
 		return nbt;
-	}
-
-	@Override
-	public IIColor getTypeColor()
-	{
-		return IIColor.fromPackedRGB(0xb86300);
 	}
 
 	@Override

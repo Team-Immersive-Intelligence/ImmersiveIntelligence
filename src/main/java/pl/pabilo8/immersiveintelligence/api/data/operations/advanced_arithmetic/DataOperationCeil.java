@@ -2,28 +2,26 @@ package pl.pabilo8.immersiveintelligence.api.data.operations.advanced_arithmetic
 
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.operations.DataOperation;
+import pl.pabilo8.immersiveintelligence.api.data.operations.DataOperation.DataOperationMeta;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataType;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeExpression;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
-import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
-import pl.pabilo8.immersiveintelligence.api.data.types.IDataTypeNumeric;
+import pl.pabilo8.immersiveintelligence.api.data.types.NumericDataType;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author Pabilo8
  * @since 05-07-2019
  */
+@DataOperationMeta(name = "ceil", allowedTypes = {NumericDataType.class}, params = {"number"}, expectedResult = DataTypeInteger.class)
 public class DataOperationCeil extends DataOperation
 {
-	public DataOperationCeil()
-	{
-		name = "ceil";
-		allowedTypes = new Class[]{IDataTypeNumeric.class};
-		expectedResult = DataTypeInteger.class;
-	}
-
+	@Nonnull
 	@Override
-	public IDataType execute(DataPacket packet, DataTypeExpression data)
+	public DataType execute(DataPacket packet, DataTypeExpression data)
 	{
-		IDataTypeNumeric t1 = packet.getVarInType(IDataTypeNumeric.class, data.getArgument(0));
+		NumericDataType t1 = packet.getVarInType(NumericDataType.class, data.getArgument(0));
 		return new DataTypeInteger((int)Math.ceil(t1.floatValue()));
 	}
 }

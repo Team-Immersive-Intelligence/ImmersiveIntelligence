@@ -4,26 +4,25 @@ import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.operations.DataOperation;
 import pl.pabilo8.immersiveintelligence.api.data.types.*;
 
+import javax.annotation.Nonnull;
+
 /**
  * @author Pabilo8
  * @since 05-07-2019
  */
+@DataOperation.DataOperationMeta(name = "min",
+		allowedTypes = {NumericDataType.class, NumericDataType.class}, params = {"number", "number"},
+		expectedResult = NumericDataType.class)
 public class DataOperationMin extends DataOperation
 {
-	public DataOperationMin()
-	{
-		name = "min";
-		allowedTypes = new Class[]{IDataTypeNumeric.class, IDataTypeNumeric.class};
-		expectedResult = IDataTypeNumeric.class;
-	}
-
+	@Nonnull
 	@Override
-	public IDataType execute(DataPacket packet, DataTypeExpression data)
+	public DataType execute(DataPacket packet, DataTypeExpression data)
 	{
-		IDataTypeNumeric t1, t2;
+		NumericDataType t1, t2;
 
-		t1 = packet.getVarInType(IDataTypeNumeric.class, data.getArgument(0));
-		t2 = packet.getVarInType(IDataTypeNumeric.class, data.getArgument(1));
+		t1 = packet.getVarInType(NumericDataType.class, data.getArgument(0));
+		t2 = packet.getVarInType(NumericDataType.class, data.getArgument(1));
 
 		if(t1 instanceof DataTypeFloat||t2 instanceof DataTypeFloat)
 			return new DataTypeFloat(Math.min(t1.floatValue(), t2.floatValue()));

@@ -6,8 +6,8 @@ import pl.pabilo8.immersiveintelligence.api.data.pol.POLProcess;
 import pl.pabilo8.immersiveintelligence.api.data.pol.POLScript.DataTypeWrapper;
 import pl.pabilo8.immersiveintelligence.api.data.pol.POLScript.POLInstruction;
 import pl.pabilo8.immersiveintelligence.api.data.pol.POLTerminal;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataType;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
-import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
 
 import javax.annotation.Nullable;
 
@@ -21,7 +21,7 @@ public class POLInstructionMove extends POLInstruction
 	@Nullable
 	private final DataTypeWrapper page;
 
-	public POLInstructionMove(char from, char to, @Nullable IDataType page)
+	public POLInstructionMove(char from, char to, @Nullable DataType page)
 	{
 		super(1);
 		this.from = from;
@@ -33,7 +33,7 @@ public class POLInstructionMove extends POLInstruction
 	public void execute(POLComputerMemory memory, POLTerminal terminal, POLProcess polProcess, int executionTime)
 	{
 		int pageID = (page!=null&&page.get(memory.packet) instanceof DataTypeInteger)?((DataTypeInteger)page.get(memory.packet)).value: memory.page;
-		IDataType f = memory.packet.getPacketVariable(from);
+		DataType f = memory.packet.getPacketVariable(from);
 		memory.pages[pageID].setVariable(to, f);
 		memory.packet.removeVariable(from);
 

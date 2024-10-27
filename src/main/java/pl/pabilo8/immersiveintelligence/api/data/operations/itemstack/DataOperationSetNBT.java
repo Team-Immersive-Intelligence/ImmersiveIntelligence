@@ -5,28 +5,23 @@ import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.nbt.NBTException;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.operations.DataOperation;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataType;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeExpression;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeItemStack;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
-import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author Pabilo8
  * @since 05-07-2019
  */
+@DataOperation.DataOperationMeta(name = "set_nbt", allowedTypes = {DataTypeItemStack.class, DataTypeString.class}, params = {"stack", "nbt"}, expectedResult = DataTypeItemStack.class)
 public class DataOperationSetNBT extends DataOperation
 {
-	public DataOperationSetNBT()
-	{
-		//Sets the NBT of an itemstack
-		name = "set_nbt";
-		allowedTypes = new Class[]{DataTypeItemStack.class, DataTypeString.class};
-		params = new String[]{"stack","nbt"};
-		expectedResult = DataTypeItemStack.class;
-	}
-
+	@Nonnull
 	@Override
-	public IDataType execute(DataPacket packet, DataTypeExpression data)
+	public DataType execute(DataPacket packet, DataTypeExpression data)
 	{
 		DataTypeItemStack t1;
 		DataTypeString t2;

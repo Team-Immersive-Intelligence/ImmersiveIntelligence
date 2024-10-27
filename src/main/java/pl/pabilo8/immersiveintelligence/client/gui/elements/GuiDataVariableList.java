@@ -15,8 +15,8 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataType;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeExpression;
-import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
@@ -129,7 +129,7 @@ public class GuiDataVariableList extends GuiButton
 		{
 			if(packet.variables.containsKey(c))
 			{
-				IDataType data = packet.getPacketVariable(c);
+				DataType data = packet.getPacketVariable(c);
 				drawEntry(mc, this.x, this.y+(i*20)-scroll, i==selectedOption, data, c);
 				i += 1;
 			}
@@ -156,7 +156,7 @@ public class GuiDataVariableList extends GuiButton
 
 	}
 
-	void drawEntry(Minecraft mc, int x, int y, boolean hovered, IDataType data, char c)
+	void drawEntry(Minecraft mc, int x, int y, boolean hovered, DataType data, char c)
 	{
 		//Base
 		GL11.glPushMatrix();
@@ -188,7 +188,7 @@ public class GuiDataVariableList extends GuiButton
 
 		FontRenderer f = mc.fontRenderer;
 		if(data instanceof DataTypeExpression)
-			f.drawString(I18n.format(IIReference.DATA_KEY+"function."+((DataTypeExpression)data).getOperation().name), x+38, y+7,
+			f.drawString(I18n.format(IIReference.DATA_KEY+"function."+((DataTypeExpression)data).getOperation().getMeta().name()), x+38, y+7,
 					data.getTypeColor().withBrightness(0.4f).getPackedRGB(), false);
 		else
 			f.drawString(I18n.format(IIReference.DATA_KEY+"datatype."+data.getName()), x+38, y+7,

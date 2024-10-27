@@ -4,26 +4,25 @@ import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.operations.DataOperation;
 import pl.pabilo8.immersiveintelligence.api.data.types.*;
 
+import javax.annotation.Nonnull;
+
 /**
  * @author Pabilo8
  * @since 05-07-2019
  */
+@DataOperation.DataOperationMeta(name = "power",
+		allowedTypes = {NumericDataType.class, NumericDataType.class}, params = {"number", "power"},
+		expectedResult = NumericDataType.class)
 public class DataOperationPower extends DataOperation
 {
-	public DataOperationPower()
-	{
-		name = "power";
-		allowedTypes = new Class[]{IDataTypeNumeric.class, IDataTypeNumeric.class};
-		expectedResult = IDataTypeNumeric.class;
-	}
-
+	@Nonnull
 	@Override
-	public IDataType execute(DataPacket packet, DataTypeExpression data)
+	public DataType execute(DataPacket packet, DataTypeExpression data)
 	{
-		IDataTypeNumeric t1, t2;
+		NumericDataType t1, t2;
 
-		t1 = packet.getVarInType(IDataTypeNumeric.class, data.getArgument(0));
-		t2 = packet.getVarInType(IDataTypeNumeric.class, data.getArgument(1));
+		t1 = packet.getVarInType(NumericDataType.class, data.getArgument(0));
+		t2 = packet.getVarInType(NumericDataType.class, data.getArgument(1));
 
 		if(t1 instanceof DataTypeFloat||t2 instanceof DataTypeFloat)
 			return new DataTypeFloat((float)Math.round(Math.pow(t1.floatValue(), t2.floatValue())));

@@ -16,8 +16,8 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.NonNullList;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
-import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
-import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
+import pl.pabilo8.immersiveintelligence.api.data.device.IDataConnector;
+import pl.pabilo8.immersiveintelligence.api.data.device.IDataDevice;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 
@@ -214,10 +214,10 @@ public class TileEntityDataMerger extends TileEntityIEBase implements IPlayerInt
 					break;
 				}
 		if(send&&world.isBlockLoaded(this.pos.offset(facing))&&world.getTileEntity(this.pos.offset(facing)) instanceof IDataConnector)
-			{
-				IDataConnector d = (IDataConnector)world.getTileEntity(this.pos.offset(facing));
-				d.sendPacket(newpacket);
-			}
+		{
+			IDataConnector d = (IDataConnector)world.getTileEntity(this.pos.offset(facing));
+			d.sendPacket(newpacket);
+		}
 
 	}
 

@@ -1,6 +1,6 @@
 package pl.pabilo8.immersiveintelligence.client.gui;
 
-import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataType;
 
 /**
  * @author Pabilo8
@@ -8,5 +8,5 @@ import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
  */
 public interface IDataMachineGui
 {
-	void editVariable(char c, IDataType type);
+	void editVariable(char c, DataType type);
 }

@@ -213,7 +213,7 @@ public class POLScript
 				case SET: //set variable value
 				{
 					String[] words = rest.split(" ", 4);
-					Class<? extends IDataType> type = DataPacket.varTypes.getOrDefault(words[0], IDataType.class);
+					Class<? extends DataType> type = DataPacket.varTypes.getOrDefault(words[0], DataType.class);
 					char letter = words[1].charAt(0);
 
 					in = new POLInstructionSet(letter, beginParseExpression(operations, words[3]), type);
@@ -268,7 +268,7 @@ public class POLScript
 			mainSet.add(instruction);
 	}
 
-	private static IDataType beginParseExpression(ArrayList<DataOperation> operations, String text)
+	private static DataType beginParseExpression(ArrayList<DataOperation> operations, String text)
 	{
 		if(countChars(text, '(')!=countChars(text, ')'))
 			return new DataTypeNull(); //unbalanced brackets
@@ -285,7 +285,7 @@ public class POLScript
 	 * Polish Notation for the win!
 	 * (what else would you expect in a language named POL) :D
 	 */
-	private static IDataType parseExpression(ArrayList<DataOperation> operations, String text)
+	private static DataType parseExpression(ArrayList<DataOperation> operations, String text)
 	{
 		if(text.length()==0)
 			return new DataTypeNull();
@@ -296,30 +296,33 @@ public class POLScript
 		}
 
 		DataOperation op = null;
-		ArrayList<IDataType> arguments = new ArrayList<>();
+		ArrayList<DataType> arguments = new ArrayList<>();
 		String keyword = text.split(" ")[0];
 
 		for(DataOperation operation : operations)
-			if(operation.name.equals(keyword))
+			if(operation.getMeta().name().equals(keyword))
 			{
 				op = operation;
 				break;
 			}
 		if(op==null)
 			for(DataOperation operation : operations)
-				if(operation.expression!=null&&operation.expression.equals(keyword))
+			{
+				String expression = operation.getMeta().expression();
+				if(!expression.isEmpty()&&expression.equals(keyword))
 				{
 					op = operation;
 					keyword = SPECIAL_REGEX_CHARS.matcher(keyword).replaceAll("\\\\$0"); //replace special chars, like +, -, etc.
 					break;
 				}
+			}
 
 		if(op!=null)
 		{
 			String remaining = text.replaceFirst(keyword, "").trim();
 			while(remaining.length() > 0)
 			{
-				Tuple<IDataType, String> tuple;
+				Tuple<DataType, String> tuple;
 				if(remaining.startsWith("("))
 				{
 					String exp = findFullBracket(remaining);
@@ -338,7 +341,7 @@ public class POLScript
 				remaining = tuple.getSecond().trim();
 			}
 
-			return new DataTypeExpression(arguments.toArray(new IDataType[0]), op, ' ');
+			return new DataTypeExpression(arguments.toArray(new DataType[0]), op, ' ');
 		}
 		else
 		{
@@ -379,9 +382,9 @@ public class POLScript
 		return remaining.substring(1, c-1);
 	}
 
-	private static Tuple<IDataType, String> parseValue(String text)
+	private static Tuple<DataType, String> parseValue(String text)
 	{
-		IDataType data;
+		DataType data;
 
 		if(text.charAt(0)=='\"')
 		{
@@ -455,21 +458,21 @@ public class POLScript
 
 	public static class DataTypeWrapper
 	{
-		final IDataType wrapped;
+		final DataType wrapped;
 
-		public DataTypeWrapper(IDataType wrapped)
+		public DataTypeWrapper(DataType wrapped)
 		{
 			this.wrapped = wrapped;
 		}
 
-		public IDataType get(DataPacket packet)
+		public DataType get(DataPacket packet)
 		{
 			if(wrapped instanceof DataTypeExpression)
 				return ((DataTypeExpression)wrapped).getValue(packet);
 			if(wrapped instanceof DataTypeAccessor)
 				return ((DataTypeAccessor)wrapped).getRealValue(packet);
 
-			return packet.getVarInType(IDataType.class, wrapped);
+			return packet.getVarInType(DataType.class, wrapped);
 		}
 
 		public String getString(DataPacket packet)

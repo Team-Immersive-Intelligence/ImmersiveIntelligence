@@ -114,7 +114,6 @@ public class GuiDataEditorInteger extends GuiDataEditor<DataTypeInteger>
 	@Override
 	public DataTypeInteger outputType()
 	{
-		dataType.setDefaultValue();
 		dataType.value = getFieldValue();
 		return dataType;
 	}

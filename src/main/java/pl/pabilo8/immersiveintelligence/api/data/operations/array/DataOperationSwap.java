@@ -4,22 +4,18 @@ import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.operations.DataOperation;
 import pl.pabilo8.immersiveintelligence.api.data.types.*;
 
+import javax.annotation.Nonnull;
+
 /**
  * @author Pabilo8
  * @since 05-07-2019
  */
+@DataOperation.DataOperationMeta(name = "array_swap", allowedTypes = {DataTypeArray.class, DataTypeInteger.class, DataTypeInteger.class}, params = {"array", "first", "second"}, expectedResult = DataTypeNull.class)
 public class DataOperationSwap extends DataOperation
 {
-	public DataOperationSwap()
-	{
-		name = "array_swap";
-		allowedTypes = new Class[]{DataTypeArray.class, DataTypeInteger.class, DataTypeInteger.class};
-		params = new String[]{"array", "first", "second"};
-		expectedResult = DataTypeNull.class;
-	}
-
+	@Nonnull
 	@Override
-	public IDataType execute(DataPacket packet, DataTypeExpression data)
+	public DataType execute(DataPacket packet, DataTypeExpression data)
 	{
 		DataTypeArray array = packet.getVarInType(DataTypeArray.class, data.getArgument(0));
 		int i1 = packet.getVarInType(DataTypeInteger.class, data.getArgument(1)).value;
@@ -27,7 +23,7 @@ public class DataOperationSwap extends DataOperation
 
 		if(i1 >= 0&&i2 >= 0&&i1 < array.value.length&&i2 < array.value.length)
 		{
-			IDataType helper = array.value[i1];
+			DataType helper = array.value[i1];
 			array.value[i1] = array.value[i2];
 			array.value[i2] = helper;
 		}

@@ -12,8 +12,8 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataType;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
-import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
 import pl.pabilo8.immersiveintelligence.client.gui.ITabbedGui;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.data_device.tileentity.TileEntityDataMerger;
@@ -157,7 +157,7 @@ public class GuiDataMerger extends GuiIEContainerBase implements ITabbedGui
 
 	void switchMode(char c, boolean forward)
 	{
-		IDataType p = packet.getPacketVariable(c);
+		DataType p = packet.getPacketVariable(c);
 		//increment or decrement the number, clamp it between -2 and 2
 		if(p instanceof DataTypeInteger)
 			packet.setVariable(c, new DataTypeInteger(

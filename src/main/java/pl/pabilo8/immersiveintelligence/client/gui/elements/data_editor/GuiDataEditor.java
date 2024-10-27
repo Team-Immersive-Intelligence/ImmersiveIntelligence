@@ -15,9 +15,9 @@ import java.util.function.BiFunction;
  * @author Pabilo8
  * @since 07.09.2021
  */
-public abstract class GuiDataEditor<T extends IDataType> extends GuiButton
+public abstract class GuiDataEditor<T extends DataType> extends GuiButton
 {
-	public static LinkedHashMap<Class<? extends IDataType>, BiFunction<Integer, IDataType, GuiDataEditor<? extends IDataType>>> editors = new LinkedHashMap<>();
+	public static LinkedHashMap<Class<? extends DataType>, BiFunction<Integer, DataType, GuiDataEditor<? extends DataType>>> editors = new LinkedHashMap<>();
 
 	static
 	{

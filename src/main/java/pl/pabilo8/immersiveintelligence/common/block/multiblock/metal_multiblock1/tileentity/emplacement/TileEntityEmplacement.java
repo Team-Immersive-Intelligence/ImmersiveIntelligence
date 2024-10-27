@@ -33,8 +33,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
-import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
 import pl.pabilo8.immersiveintelligence.api.data.IIDataHandlingUtils;
+import pl.pabilo8.immersiveintelligence.api.data.device.IDataDevice;
 import pl.pabilo8.immersiveintelligence.api.data.types.*;
 import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
 import pl.pabilo8.immersiveintelligence.api.utils.IUpgradableMachine;
@@ -764,16 +764,16 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 		if(pos!=0)
 			return;
 
-		IDataType i = packet.variables.get('i');
-		IDataType b = packet.variables.get('b');
-		IDataType c = packet.variables.get('c');
-		IDataType w = packet.variables.get('w');
-		IDataType e = packet.variables.get('e');
-		IDataType a = packet.variables.get('a');
-		IDataType x = packet.variables.get('x');
-		IDataType y = packet.variables.get('y');
-		IDataType p = packet.variables.get('p');
-		IDataType z = packet.variables.get('z');
+		DataType i = packet.variables.get('i');
+		DataType b = packet.variables.get('b');
+		DataType c = packet.variables.get('c');
+		DataType w = packet.variables.get('w');
+		DataType e = packet.variables.get('e');
+		DataType a = packet.variables.get('a');
+		DataType x = packet.variables.get('x');
+		DataType y = packet.variables.get('y');
+		DataType p = packet.variables.get('p');
+		DataType z = packet.variables.get('z');
 
 		TileEntityEmplacement master = master();
 		if(master==null||!master.dataControl)
@@ -904,7 +904,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 
 						int amount = a instanceof DataTypeInteger?((DataTypeInteger)a).value: 1;
 
-						IDataType d = packet.getPacketVariable('d');
+						DataType d = packet.getPacketVariable('d');
 						int distance = 40;
 						if(d instanceof DataTypeInteger)
 							distance = ((DataTypeInteger)d).value;

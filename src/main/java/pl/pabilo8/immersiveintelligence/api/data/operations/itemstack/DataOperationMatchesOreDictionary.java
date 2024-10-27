@@ -5,23 +5,18 @@ import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.operations.DataOperation;
 import pl.pabilo8.immersiveintelligence.api.data.types.*;
 
+import javax.annotation.Nonnull;
+
 /**
  * @author Pabilo8
  * @since 05-07-2019
  */
+@DataOperation.DataOperationMeta(name = "matches_oredict", allowedTypes = {DataTypeItemStack.class, DataTypeString.class}, params = {"stack", "ore_dictionary"}, expectedResult = DataTypeBoolean.class)
 public class DataOperationMatchesOreDictionary extends DataOperation
 {
-	public DataOperationMatchesOreDictionary()
-	{
-		//Checks whether the Itemstack matches a given oreDict value
-		name = "matches_oredict";
-		allowedTypes = new Class[]{DataTypeItemStack.class, DataTypeString.class};
-		params = new String[]{"stack","ore_dictionary"};
-		expectedResult = DataTypeBoolean.class;
-	}
-
+	@Nonnull
 	@Override
-	public IDataType execute(DataPacket packet, DataTypeExpression data)
+	public DataType execute(DataPacket packet, DataTypeExpression data)
 	{
 		DataTypeItemStack t1;
 		DataTypeString t2;

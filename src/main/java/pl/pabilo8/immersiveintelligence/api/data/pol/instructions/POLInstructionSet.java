@@ -6,7 +6,7 @@ import pl.pabilo8.immersiveintelligence.api.data.pol.POLProcess;
 import pl.pabilo8.immersiveintelligence.api.data.pol.POLScript.DataTypeWrapper;
 import pl.pabilo8.immersiveintelligence.api.data.pol.POLScript.POLInstruction;
 import pl.pabilo8.immersiveintelligence.api.data.pol.POLTerminal;
-import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataType;
 
 /**
  * @author Pabilo8
@@ -15,10 +15,10 @@ import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
 public class POLInstructionSet extends POLInstruction
 {
 	private final char letter;
-	private final Class<? extends IDataType> type;
+	private final Class<? extends DataType> type;
 	private final DataTypeWrapper text;
 
-	public POLInstructionSet(char letter, IDataType rest, Class<? extends IDataType> type)
+	public POLInstructionSet(char letter, DataType rest, Class<? extends DataType> type)
 	{
 		super(1);
 		this.letter = letter;

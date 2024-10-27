@@ -4,25 +4,20 @@ import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.operations.DataOperation;
 import pl.pabilo8.immersiveintelligence.api.data.types.*;
 
+import javax.annotation.Nonnull;
+
 /**
  * @author Pabilo8
  * @since 05-07-2019
  */
+@DataOperation.DataOperationMeta(name = "to_boolean", allowedTypes = {DataType.class}, params = {"casted"}, expression = "<boolean>", expectedResult = DataTypeBoolean.class)
 public class DataOperationToBoolean extends DataOperation
 {
-	public DataOperationToBoolean()
-	{
-		name = "to_boolean";
-		expression = "<boolean>";
-		allowedTypes = new Class[]{IDataType.class};
-		params = new String[]{"casted"};
-		expectedResult = DataTypeBoolean.class;
-	}
-
+	@Nonnull
 	@Override
-	public IDataType execute(DataPacket packet, DataTypeExpression data)
+	public DataType execute(DataPacket packet, DataTypeExpression data)
 	{
-		IDataType type;
+		DataType type;
 		if(data.getArgument(0) instanceof DataTypeAccessor)
 			type = ((DataTypeAccessor)data.getArgument(0)).getRealValue(packet);
 		else

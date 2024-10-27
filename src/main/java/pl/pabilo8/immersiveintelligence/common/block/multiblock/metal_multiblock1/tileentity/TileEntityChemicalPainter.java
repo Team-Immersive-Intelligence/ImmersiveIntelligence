@@ -36,12 +36,12 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import pl.pabilo8.immersiveintelligence.api.crafting.PaintingRecipe;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
-import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
 import pl.pabilo8.immersiveintelligence.api.data.IIDataHandlingUtils;
+import pl.pabilo8.immersiveintelligence.api.data.device.IDataDevice;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataType;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeFloat;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
-import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.ChemicalPainter;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
@@ -636,8 +636,8 @@ public class TileEntityChemicalPainter extends TileEntityMultiblockMetal<TileEnt
 		TileEntityChemicalPainter master = master();
 		if(pos==10&&master!=null)
 		{
-			IDataType c = packet.getPacketVariable('c');
-			IDataType p = packet.getPacketVariable('p');
+			DataType c = packet.getPacketVariable('c');
+			DataType p = packet.getPacketVariable('p');
 
 			if(c.valueToString().equals("callback"))
 			{

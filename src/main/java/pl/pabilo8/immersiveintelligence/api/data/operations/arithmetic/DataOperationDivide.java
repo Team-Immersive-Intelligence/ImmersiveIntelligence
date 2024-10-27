@@ -4,27 +4,25 @@ import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.operations.DataOperation;
 import pl.pabilo8.immersiveintelligence.api.data.types.*;
 
+import javax.annotation.Nonnull;
+
 /**
  * @author Pabilo8
  * @since 05-07-2019
  */
+@DataOperation.DataOperationMeta(name = "divide", expression = "/",
+		allowedTypes = {NumericDataType.class, NumericDataType.class}, params = {"dividend", "divisor"},
+		expectedResult = NumericDataType.class)
 public class DataOperationDivide extends DataOperation
 {
-	public DataOperationDivide()
-	{
-		name = "divide";
-		expression = "/";
-		allowedTypes = new Class[]{IDataTypeNumeric.class, IDataTypeNumeric.class};
-		expectedResult = IDataTypeNumeric.class;
-	}
-
+	@Nonnull
 	@Override
-	public IDataType execute(DataPacket packet, DataTypeExpression data)
+	public DataType execute(DataPacket packet, DataTypeExpression data)
 	{
-		IDataTypeNumeric t1, t2;
+		NumericDataType t1, t2;
 
-		t1 = packet.getVarInType(IDataTypeNumeric.class, data.getArgument(0));
-		t2 = packet.getVarInType(IDataTypeNumeric.class, data.getArgument(1));
+		t1 = packet.getVarInType(NumericDataType.class, data.getArgument(0));
+		t2 = packet.getVarInType(NumericDataType.class, data.getArgument(1));
 
 		if(t2.floatValue()==0)
 			return t1 instanceof DataTypeInteger?new DataTypeInteger(Integer.MAX_VALUE): new DataTypeFloat(Float.MAX_VALUE);

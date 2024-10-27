@@ -42,9 +42,9 @@ import net.minecraftforge.oredict.OreDictionary;
 import org.apache.commons.lang3.ArrayUtils;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataType;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeItemStack;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
-import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
 import pl.pabilo8.immersiveintelligence.common.compat.BaublesHelper;
 import pl.pabilo8.immersiveintelligence.common.compat.IICompatModule;
 import pl.pabilo8.immersiveintelligence.common.util.ISerializableEnum;
@@ -348,7 +348,7 @@ public class IIUtils
 		return String.format("%s/%s IF", min, max);
 	}
 
-	public static IngredientStack ingredientFromData(IDataType dataType)
+	public static IngredientStack ingredientFromData(DataType dataType)
 	{
 		if(dataType instanceof DataTypeItemStack)
 			return new IngredientStack((((DataTypeItemStack)dataType).value.copy()));
@@ -358,7 +358,7 @@ public class IIUtils
 			return new IngredientStack("*");
 	}
 
-	public static DataPacket getSimpleCallbackMessage(DataPacket packet, String parameter, IDataType value)
+	public static DataPacket getSimpleCallbackMessage(DataPacket packet, String parameter, DataType value)
 	{
 		packet.setVariable('c', new DataTypeString(parameter));
 		packet.setVariable('g', value);
@@ -440,7 +440,8 @@ public class IIUtils
 	@Nullable
 	public static <T extends Annotation> T getAnnotation(Class<T> annotationClass, Object o)
 	{
-		if(o.getClass().isAnnotationPresent(annotationClass)) return o.getClass().getAnnotation(annotationClass);
+		if(o.getClass().isAnnotationPresent(annotationClass))
+			return o.getClass().getAnnotation(annotationClass);
 		return null;
 	}
 

@@ -9,22 +9,20 @@ import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.operations.DataOperation;
 import pl.pabilo8.immersiveintelligence.api.data.types.*;
 
+import javax.annotation.Nonnull;
+
 /**
  * @author Pabilo8
  * @since 05-07-2019
  */
+@DataOperation.DataOperationMeta(name = "document_read_page",
+		allowedTypes = {DataTypeItemStack.class, DataTypeInteger.class}, params = {"document", "page"},
+		expectedResult = DataTypeString.class)
 public class DataOperationDocumentReadPage extends DataOperation
 {
-	public DataOperationDocumentReadPage()
-	{
-		name = "document_read_page";
-		allowedTypes = new Class[]{DataTypeItemStack.class, DataTypeInteger.class};
-		params = new String[]{"document", "page"};
-		expectedResult = DataTypeString.class;
-	}
-
+	@Nonnull
 	@Override
-	public IDataType execute(DataPacket packet, DataTypeExpression data)
+	public DataType execute(DataPacket packet, DataTypeExpression data)
 	{
 		ItemStack stack = packet.getVarInType(DataTypeItemStack.class, data.getArgument(0)).value;
 		int p = packet.getVarInType(DataTypeInteger.class, data.getArgument(1)).value;

@@ -2,26 +2,24 @@ package pl.pabilo8.immersiveintelligence.api.data.operations.logic;
 
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.operations.DataOperation;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataType;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeBoolean;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeExpression;
-import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author Pabilo8
  * @since 05-07-2019
  */
+@DataOperation.DataOperationMeta(name = "and", expression = "&",
+		allowedTypes = {DataTypeBoolean.class, DataTypeBoolean.class}, params = {"boolean", "boolean"},
+		expectedResult = DataTypeBoolean.class)
 public class DataOperationAND extends DataOperation
 {
-	public DataOperationAND()
-	{
-		name = "and";
-		expression = "&";
-		allowedTypes = new Class[]{DataTypeBoolean.class,DataTypeBoolean.class};
-		expectedResult = DataTypeBoolean.class;
-	}
-
+	@Nonnull
 	@Override
-	public IDataType execute(DataPacket packet, DataTypeExpression data)
+	public DataType execute(DataPacket packet, DataTypeExpression data)
 	{
 		DataTypeBoolean t1, t2;
 		boolean i1, i2;

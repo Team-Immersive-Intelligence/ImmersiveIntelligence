@@ -2,7 +2,6 @@ package pl.pabilo8.immersiveintelligence.api.data.types;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
 import javax.annotation.Nonnull;
 
@@ -10,9 +9,9 @@ import javax.annotation.Nonnull;
  * @author Pabilo8
  * @since 2019-06-01
  */
-public class DataTypeItemStack implements IDataType
+public class DataTypeItemStack extends DataType
 {
-	public ItemStack value;
+	public ItemStack value = ItemStack.EMPTY;
 
 	public DataTypeItemStack(ItemStack i)
 	{
@@ -26,20 +25,6 @@ public class DataTypeItemStack implements IDataType
 
 	@Nonnull
 	@Override
-	public String getName()
-	{
-		return "itemstack";
-	}
-
-	@Nonnull
-	@Override
-	public String[][] getTypeInfoTable()
-	{
-		return new String[][]{{"ie.manual.entry.def_value", "ie.manual.entry.empty"}};
-	}
-
-	@Nonnull
-	@Override
 	public String valueToString()
 	{
 		return String.format("%d*%s@%d%s",
@@ -47,12 +32,6 @@ public class DataTypeItemStack implements IDataType
 				value.getItem().getRegistryName(),
 				value.getMetadata(),
 				value.hasTagCompound()?value.getTagCompound().toString(): "");
-	}
-
-	@Override
-	public void setDefaultValue()
-	{
-		value = ItemStack.EMPTY;
 	}
 
 	@Override
@@ -70,12 +49,6 @@ public class DataTypeItemStack implements IDataType
 		value.writeToNBT(item_nbt);
 		nbt.setTag("Value", item_nbt);
 		return nbt;
-	}
-
-	@Override
-	public IIColor getTypeColor()
-	{
-		return IIColor.fromPackedRGB(0x121031);
 	}
 
 	@Override

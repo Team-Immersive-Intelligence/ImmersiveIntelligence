@@ -4,31 +4,26 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.operations.DataOperation;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataType;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeExpression;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeItemStack;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
-import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author Pabilo8
  * @since 05-07-2019
  */
+@DataOperation.DataOperationMeta(name = "get_nbt", allowedTypes = {DataTypeItemStack.class}, params = {"stack"},
+		expectedResult = DataTypeString.class)
 public class DataOperationGetNBT extends DataOperation
 {
-	public DataOperationGetNBT()
-	{
-		//Gets itemstack NBT in a string form
-		name = "get_nbt";
-		allowedTypes = new Class[]{DataTypeItemStack.class};
-		params = new String[]{"stack"};
-		expectedResult = DataTypeString.class;
-	}
-
+	@Nonnull
 	@Override
-	public IDataType execute(DataPacket packet, DataTypeExpression data)
+	public DataType execute(DataPacket packet, DataTypeExpression data)
 	{
 		DataTypeItemStack t1;
-		int i1;
 
 		t1 = packet.getVarInType(DataTypeItemStack.class, data.getArgument(0));
 		ItemStack stack = t1.value;
