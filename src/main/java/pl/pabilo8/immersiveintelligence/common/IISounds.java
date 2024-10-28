@@ -203,13 +203,13 @@ public class IISounds
 
 	//--- Gate Sounds---//
 	@ModSound(sounds = {"device/hatch/gate_wooden/open"}, subtitle = "gate_open")
-	public static SoundEvent gateWoodenOpen = registerSound("wooden_gate_open");
+	public static SoundEvent gateWoodenOpen = registerSound("gate_wooden_open");
 	@ModSound(sounds = {"device/hatch/gate_wooden/close"}, subtitle = "gate_close")
-	public static SoundEvent gateWoodenClose = registerSound("wooden_gate_close");
+	public static SoundEvent gateWoodenClose = registerSound("gate_wooden_close");
 	@ModSound(sounds = {"device/hatch/gate_metal/open"}, subtitle = "gate_open")
-	public static SoundEvent gateMetalOpen = registerSound("wooden_gate_open");
+	public static SoundEvent gateMetalOpen = registerSound("gate_metal_open");
 	@ModSound(sounds = {"device/hatch/gate_metal/close"}, subtitle = "gate_close")
-	public static SoundEvent gateMetalClose = registerSound("wooden_gate_close");
+	public static SoundEvent gateMetalClose = registerSound("gate_metal_close");
 
 	//--- Machines ---//
 	@ModSound(sounds = {"device/*"}, subtitle = "device_*")
