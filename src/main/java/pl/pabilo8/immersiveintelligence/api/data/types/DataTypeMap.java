@@ -3,7 +3,9 @@ package pl.pabilo8.immersiveintelligence.api.data.types;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
+import pl.pabilo8.immersiveintelligence.api.data.IIDataTypeUtils;
+import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
+import pl.pabilo8.immersiveintelligence.api.data.types.generic.IterableDataType;
 
 import javax.annotation.Nonnull;
 import java.util.HashMap;
@@ -53,13 +55,6 @@ public class DataTypeMap extends IterableDataType
 				.orElse(new DataTypeNull());
 	}
 
-	@Nonnull
-	@Override
-	public String valueToString()
-	{
-		return values.toString();
-	}
-
 	@Override
 	public void valueFromNBT(NBTTagCompound n)
 	{
@@ -72,7 +67,7 @@ public class DataTypeMap extends IterableDataType
 			{
 				NBTTagCompound c = (NBTTagCompound)b;
 				if(c.hasKey("Key")&&c.hasKey("Value"))
-					values.put(DataPacket.getVarFromNBT(c.getCompoundTag("Key")), DataPacket.getVarFromNBT(c.getCompoundTag("Value")));
+					values.put(IIDataTypeUtils.getVarFromNBT(c.getCompoundTag("Key")), IIDataTypeUtils.getVarFromNBT(c.getCompoundTag("Value")));
 			}
 		}
 	}
@@ -94,5 +89,11 @@ public class DataTypeMap extends IterableDataType
 
 		nbt.setTag("Entries", list);
 		return nbt;
+	}
+
+	@Override
+	public String toString()
+	{
+		return values.toString();
 	}
 }

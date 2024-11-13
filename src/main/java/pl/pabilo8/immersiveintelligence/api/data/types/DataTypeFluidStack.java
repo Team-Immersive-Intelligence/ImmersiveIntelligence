@@ -2,6 +2,7 @@ package pl.pabilo8.immersiveintelligence.api.data.types;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
+import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -23,19 +24,6 @@ public class DataTypeFluidStack extends DataType
 	public DataTypeFluidStack()
 	{
 
-	}
-
-	@Nonnull
-	@Override
-	public String valueToString()
-	{
-		if(value==null||value.getFluid()==null)
-			return "Empty";
-
-		return String.format("%d*%s%s",
-				value.amount,
-				value.getLocalizedName(),
-				value.tag!=null?value.tag.toString(): "");
 	}
 
 	@Override
@@ -66,5 +54,17 @@ public class DataTypeFluidStack extends DataType
 						((DataTypeFluidStack)obj).value==null:
 						value.isFluidStackIdentical(((DataTypeFluidStack)obj).value)
 		);
+	}
+
+	@Override
+	public String toString()
+	{
+		if(value==null||value.getFluid()==null)
+			return "Empty";
+
+		return String.format("%d*%s%s",
+				value.amount,
+				value.getLocalizedName(),
+				value.tag!=null?value.tag.toString(): "");
 	}
 }

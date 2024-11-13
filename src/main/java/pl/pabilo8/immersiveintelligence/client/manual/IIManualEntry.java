@@ -12,6 +12,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.io.IOUtils;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.client.manual.pages.IIManualPageFolder;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
@@ -32,6 +33,7 @@ public class IIManualEntry extends ManualEntry
 	private final LinkedHashMap<String, String> texts = new LinkedHashMap<>();
 	private final LinkedHashMap<String, EasyNBT> dataSources = new LinkedHashMap<>();
 	private final String fullFilePath;
+	private IIManualPageFolder folder;
 
 	public IIManualEntry(String name, String category)
 	{
@@ -163,5 +165,15 @@ public class IIManualEntry extends ManualEntry
 			i++;
 		}
 		return -1;
+	}
+
+	public void setFolder(IIManualPageFolder folder)
+	{
+		this.folder = folder;
+	}
+
+	public IIManualPageFolder getFolder()
+	{
+		return folder;
 	}
 }

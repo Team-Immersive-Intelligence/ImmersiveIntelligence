@@ -42,10 +42,10 @@ import pl.pabilo8.immersiveintelligence.api.PackerHandler.PackerActionType;
 import pl.pabilo8.immersiveintelligence.api.PackerHandler.PackerPutMode;
 import pl.pabilo8.immersiveintelligence.api.PackerHandler.PackerTask;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataType;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeItemStack;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
+import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 import pl.pabilo8.immersiveintelligence.api.utils.IUpgradableMachine;
 import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Packer;
@@ -515,12 +515,12 @@ public class TileEntityPacker extends TileEntityMultiblockIIGeneric<TileEntityPa
 		DataType s = packet.getPacketVariable('s');
 		DataType c = packet.getPacketVariable('c');
 
-		switch(c.valueToString())
+		switch(c.toString())
 		{
 			case "add":
 			{
-				PackerPutMode mode = PackerHandler.PackerPutMode.fromName(m.valueToString());
-				PackerActionType action = PackerHandler.PackerActionType.fromName(a.valueToString());
+				PackerPutMode mode = PackerHandler.PackerPutMode.fromName(m.toString());
+				PackerActionType action = PackerHandler.PackerActionType.fromName(a.toString());
 				IngredientStack stack = IIUtils.ingredientFromData(s);
 				PackerTask packerTask = new PackerTask(mode, action, stack);
 				if(packet.hasVariable('e'))
@@ -544,16 +544,16 @@ public class TileEntityPacker extends TileEntityMultiblockIIGeneric<TileEntityPa
 				{
 					Predicate<PackerTask> p;
 					if(s instanceof DataTypeString)
-						p = packerTask -> packerTask.stack.oreName.equals(s.valueToString());
+						p = packerTask -> packerTask.stack.oreName.equals(s.toString());
 					else if(s instanceof DataTypeItemStack)
 						p = packerTask -> packerTask.stack.equals(IIUtils.ingredientFromData(s));
 					else
 						p = packerTask -> true;
 
 					if(packet.hasVariable('m'))
-						p = p.and(packerTask -> packerTask.mode==PackerHandler.PackerPutMode.fromName(m.valueToString()));
+						p = p.and(packerTask -> packerTask.mode==PackerHandler.PackerPutMode.fromName(m.toString()));
 					if(packet.hasVariable('a'))
-						p = p.and(packerTask -> packerTask.actionType==PackerHandler.PackerActionType.fromName(a.valueToString()));
+						p = p.and(packerTask -> packerTask.actionType==PackerHandler.PackerActionType.fromName(a.toString()));
 					tasks.removeIf(p);
 				}
 			}

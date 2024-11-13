@@ -6,8 +6,8 @@ import pl.pabilo8.immersiveintelligence.api.data.pol.POLProcess;
 import pl.pabilo8.immersiveintelligence.api.data.pol.POLScript.DataTypeWrapper;
 import pl.pabilo8.immersiveintelligence.api.data.pol.POLScript.POLInstruction;
 import pl.pabilo8.immersiveintelligence.api.data.pol.POLTerminal;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataType;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
+import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 
 /**
  * @author Pabilo8

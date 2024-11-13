@@ -6,11 +6,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.api.data.device.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.device.IDataDevice;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataType;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataType.TypeMetaInfo;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeBoolean;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
-import pl.pabilo8.immersiveintelligence.api.data.types.NumericDataType;
+import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
+import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType.TypeMetaInfo;
+import pl.pabilo8.immersiveintelligence.api.data.types.generic.NumericDataType;
 import pl.pabilo8.immersiveintelligence.common.util.ISerializableEnum;
 
 import javax.annotation.Nonnull;
@@ -31,7 +31,7 @@ public class IIDataHandlingUtils
 	@SuppressWarnings("unchecked")
 	public static <T extends DataType> TypeMetaInfo<T> getTypeMeta(@Nonnull Class<T> klass)
 	{
-		return (TypeMetaInfo<T>)DataPacket.metaTypesByClass.get(klass);
+		return (TypeMetaInfo<T>)IIDataTypeUtils.metaTypesByClass.get(klass);
 	}
 
 	//--- Simply Getting Parameters ---//
@@ -53,7 +53,7 @@ public class IIDataHandlingUtils
 
 	public static String asString(char variable, DataPacket packet)
 	{
-		return packet.getPacketVariable(variable).valueToString();
+		return packet.getPacketVariable(variable).toString();
 	}
 
 	//--- IfPresent Parameters ---//
@@ -156,7 +156,7 @@ public class IIDataHandlingUtils
 		for(Entry<Character, DataType> entry : packet.variables.entrySet())
 			if(entry.getKey()!='c'&&entry.getValue() instanceof DataTypeString)
 			{
-				DataType reply = mapper.apply(entry.getValue().valueToString());
+				DataType reply = mapper.apply(entry.getValue().toString());
 				if(reply!=null)
 					sent.setVariable(entry.getKey(), reply);
 			}

@@ -2,10 +2,10 @@ package pl.pabilo8.immersiveintelligence.api.data.operations.type_conversion;
 
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.operations.DataOperation;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataType;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeAccessor;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeExpression;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeFloat;
+import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 
 import javax.annotation.Nonnull;
 
@@ -29,7 +29,7 @@ public class DataOperationToFloat extends DataOperation
 		float e = 0;
 		try
 		{
-			e = Float.parseFloat(packet.getVarInType(DataType.class, f).valueToString());
+			e = Float.parseFloat(packet.getVarInType(DataType.class, f).toString());
 		} catch(NumberFormatException ignored)
 		{
 

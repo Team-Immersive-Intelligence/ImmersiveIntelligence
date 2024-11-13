@@ -1409,107 +1409,719 @@ rotary.immersiveintelligence.belt_system.invalidPoint=One of the connection poin
 rotary.immersiveintelligence.belt_system.differentAxis=Belts cannot be connected diagonally.
 
 #Data System Descriptions
+datasystem.immersiveintelligence.function.null=Missing Function
+datasystem.immersiveintelligence.function.null.desc=Please report the bug with details to the mod developers on II's GitHub.
+
+#Arithmetic
 datasystem.immersiveintelligence.function.add=Addition
+datasystem.immersiveintelligence.function.add.desc=Adds all inputs together
+datasystem.immersiveintelligence.function.add.param.summand=Summand
+datasystem.immersiveintelligence.function.add.param.summand.desc=Part of the sum
+datasystem.immersiveintelligence.function.add.result=Sum
+datasystem.immersiveintelligence.function.add.result.desc=Sum of all inputs. For example 2+2=4
+
 datasystem.immersiveintelligence.function.subtract=Subtraction
+datasystem.immersiveintelligence.function.subtract.desc=Subtracts the subtrahend from the minuend.
+datasystem.immersiveintelligence.function.subtract.param.minuend=Minuend
+datasystem.immersiveintelligence.function.subtract.param.minuend.desc=The number from which the subtrahend is subtracted
+datasystem.immersiveintelligence.function.subtract.param.subtrahend=Subtrahend
+datasystem.immersiveintelligence.function.subtract.param.subtrahend.desc=The number that is subtracted from the minuend
+datasystem.immersiveintelligence.function.subtract.result=Difference
+datasystem.immersiveintelligence.function.subtract.result.desc=Result of the subtraction. For example 5-3=2
+
 datasystem.immersiveintelligence.function.multiply=Multiplication
+datasystem.immersiveintelligence.function.multiply.desc=Multiplies the factors.
+datasystem.immersiveintelligence.function.multiply.param.factor=Factor
+datasystem.immersiveintelligence.function.multiply.param.factor.desc=The number by which the multiplicand is multiplied
+datasystem.immersiveintelligence.function.multiply.result=Product
+datasystem.immersiveintelligence.function.multiply.result.desc=Result of the multiplication. For example 2*3=6
+
 datasystem.immersiveintelligence.function.divide=Division
+datasystem.immersiveintelligence.function.divide.desc=Divides the dividend by the divisor.
+datasystem.immersiveintelligence.function.divide.param.dividend=Dividend
+datasystem.immersiveintelligence.function.divide.param.dividend.desc=The number that is divided by the divisor
+datasystem.immersiveintelligence.function.divide.param.divisor=Divisor
+datasystem.immersiveintelligence.function.divide.param.divisor.desc=The number by which the dividend is divided
+datasystem.immersiveintelligence.function.divide.result=Fraction
+datasystem.immersiveintelligence.function.divide.result.desc=Result of the division. For example 10/2=5
+
 datasystem.immersiveintelligence.function.modulo=Mod
+datasystem.immersiveintelligence.function.modulo.desc=Calculates the remainder of the division of the dividend by the divisor.
+datasystem.immersiveintelligence.function.modulo.param.dividend=Dividend
+datasystem.immersiveintelligence.function.modulo.param.dividend.desc=The number that is divided by the divisor
+datasystem.immersiveintelligence.function.modulo.param.divisor=Divisor
+datasystem.immersiveintelligence.function.modulo.param.divisor.desc=The number by which the dividend is divided
+datasystem.immersiveintelligence.function.modulo.result=Remainder
+datasystem.immersiveintelligence.function.modulo.result.desc=Result of the modulo operation. For example 10 mod 3=1
+
 datasystem.immersiveintelligence.function.abs=Abs
+datasystem.immersiveintelligence.function.abs.desc=Returns the absolute value of the input.
+datasystem.immersiveintelligence.function.abs.param.value=Value
+datasystem.immersiveintelligence.function.abs.param.value.desc=The number to get the absolute value of
+datasystem.immersiveintelligence.function.abs.result=Absolute Value
+datasystem.immersiveintelligence.function.abs.result.desc=The absolute value of the input. For example abs(-5)=5
 
+# Advanced Arithmetic
 datasystem.immersiveintelligence.function.power=Power
+datasystem.immersiveintelligence.function.power.desc=Raises the base to the power of the exponent.
+datasystem.immersiveintelligence.function.power.param.base=Base
+datasystem.immersiveintelligence.function.power.param.base.desc=The number to be raised to the power of the exponent
+datasystem.immersiveintelligence.function.power.param.exponent=Exponent
+datasystem.immersiveintelligence.function.power.param.exponent.desc=The power to which the base is raised
+datasystem.immersiveintelligence.function.power.result=Result
+datasystem.immersiveintelligence.function.power.result.desc=Result of raising the base to the power of the exponent. For example 2^3=8
+
 datasystem.immersiveintelligence.function.root=Root
+datasystem.immersiveintelligence.function.root.desc=Calculates the root of the base.
+datasystem.immersiveintelligence.function.root.param.base=Base
+datasystem.immersiveintelligence.function.root.param.base.desc=The number to find the root of
+datasystem.immersiveintelligence.function.root.param.degree=Degree
+datasystem.immersiveintelligence.function.root.param.degree.desc=The degree of the root
+datasystem.immersiveintelligence.function.root.result=Result
+datasystem.immersiveintelligence.function.root.result.desc=Result of finding the root of the base. For example square root of 9=3
+
 datasystem.immersiveintelligence.function.max=Max
+datasystem.immersiveintelligence.function.max.desc=Finds the maximum value among the inputs.
+datasystem.immersiveintelligence.function.max.param.number=Number
+datasystem.immersiveintelligence.function.max.param.number.desc=The number to compare
+datasystem.immersiveintelligence.function.max.result=Maximum
+datasystem.immersiveintelligence.function.max.result.desc=The maximum value among the inputs
+
 datasystem.immersiveintelligence.function.min=Min
+datasystem.immersiveintelligence.function.min.desc=Finds the minimum value among the inputs.
+datasystem.immersiveintelligence.function.min.param.number=Number
+datasystem.immersiveintelligence.function.min.param.number.desc=The number to compare
+datasystem.immersiveintelligence.function.min.result=Minimum
+datasystem.immersiveintelligence.function.min.result.desc=The minimum value among the inputs
+
 datasystem.immersiveintelligence.function.sign=Sign
+datasystem.immersiveintelligence.function.sign.desc=Returns the sign of the input.
+datasystem.immersiveintelligence.function.sign.param.number=Number
+datasystem.immersiveintelligence.function.sign.param.number.desc=The number to get the sign of
+datasystem.immersiveintelligence.function.sign.result=Sign
+datasystem.immersiveintelligence.function.sign.result.desc=The sign of the input. For example, -1 for negative numbers, 1 for positive numbers, and 0 for zero
+
 datasystem.immersiveintelligence.function.ceil=Ceiling
+datasystem.immersiveintelligence.function.ceil.desc=Returns the smallest integer greater than or equal to the input.
+datasystem.immersiveintelligence.function.ceil.param.number=Number
+datasystem.immersiveintelligence.function.ceil.param.number.desc=The number to get the ceiling of
+datasystem.immersiveintelligence.function.ceil.result=Ceiling
+datasystem.immersiveintelligence.function.ceil.result.desc=The smallest integer greater than or equal to the input
+
 datasystem.immersiveintelligence.function.round=Round
+datasystem.immersiveintelligence.function.round.desc=Rounds the input to the nearest integer.
+datasystem.immersiveintelligence.function.round.param.number=Number
+datasystem.immersiveintelligence.function.round.param.number.desc=The number to round
+datasystem.immersiveintelligence.function.round.result=Rounded Value
+datasystem.immersiveintelligence.function.round.result.desc=The input rounded to the nearest integer
+
 datasystem.immersiveintelligence.function.floor=Floor
+datasystem.immersiveintelligence.function.floor.desc=Returns the largest integer less than or equal to the input.
+datasystem.immersiveintelligence.function.floor.param.number=Number
+datasystem.immersiveintelligence.function.floor.param.number.desc=The number to get the floor of
+datasystem.immersiveintelligence.function.floor.result=Floor
+datasystem.immersiveintelligence.function.floor.result.desc=The largest integer less than or equal to the input
+
 datasystem.immersiveintelligence.function.sin=Sin
+datasystem.immersiveintelligence.function.sin.desc=Calculates the sine of the input.
+datasystem.immersiveintelligence.function.sin.param.angle=Angle
+datasystem.immersiveintelligence.function.sin.param.angle.desc=The angle in degrees
+datasystem.immersiveintelligence.function.sin.result=Sine
+datasystem.immersiveintelligence.function.sin.result.desc=The sine of the input angle
+
 datasystem.immersiveintelligence.function.cos=Cos
+datasystem.immersiveintelligence.function.cos.desc=Calculates the cosine of the input.
+datasystem.immersiveintelligence.function.cos.param.angle=Angle
+datasystem.immersiveintelligence.function.cos.param.angle.desc=The angle in degrees
+datasystem.immersiveintelligence.function.cos.result=Cosine
+datasystem.immersiveintelligence.function.cos.result.desc=The cosine of the input angle
+
 datasystem.immersiveintelligence.function.tan=Tan
+datasystem.immersiveintelligence.function.tan.desc=Calculates the tangent of the input.
+datasystem.immersiveintelligence.function.tan.param.angle=Angle
+datasystem.immersiveintelligence.function.tan.param.angle.desc=The angle in degrees
+datasystem.immersiveintelligence.function.tan.result=Tangent
+datasystem.immersiveintelligence.function.tan.result.desc=The tangent of the input angle
 
+# Logic
 datasystem.immersiveintelligence.function.and=AND
+datasystem.immersiveintelligence.function.and.desc=Returns true if all inputs are true
+datasystem.immersiveintelligence.function.and.param.input=Input
+datasystem.immersiveintelligence.function.and.param.input.desc=The input to check
+datasystem.immersiveintelligence.function.and.result=Result
+datasystem.immersiveintelligence.function.and.result.desc=Result of the AND operation.
+
 datasystem.immersiveintelligence.function.or=OR
+datasystem.immersiveintelligence.function.or.desc=Returns true if any of the inputs are true
+datasystem.immersiveintelligence.function.or.param.input=Input
+datasystem.immersiveintelligence.function.or.param.input.desc=The input to check
+datasystem.immersiveintelligence.function.or.result=Result
+datasystem.immersiveintelligence.function.or.result.desc=Result of the OR operation.
+
 datasystem.immersiveintelligence.function.not=NOT
+datasystem.immersiveintelligence.function.not.desc=Returns the opposite of the input
+datasystem.immersiveintelligence.function.not.param.input=Input
+datasystem.immersiveintelligence.function.not.param.input.desc=The input to negate
+datasystem.immersiveintelligence.function.not.result=Result
+datasystem.immersiveintelligence.function.not.result.desc=Result of the NOT operation.
+
 datasystem.immersiveintelligence.function.nand=NAND
+datasystem.immersiveintelligence.function.nand.desc=Returns false if all inputs are true
+datasystem.immersiveintelligence.function.nand.param.input=Input
+datasystem.immersiveintelligence.function.nand.param.input.desc=The input to check
+datasystem.immersiveintelligence.function.nand.result=Result
+datasystem.immersiveintelligence.function.nand.result.desc=Result of the NAND operation.
+
 datasystem.immersiveintelligence.function.nor=NOR
+datasystem.immersiveintelligence.function.nor.desc=Returns false if any of the inputs are true
+datasystem.immersiveintelligence.function.nor.param.input=Input
+datasystem.immersiveintelligence.function.nor.param.input.desc=The input to check
+datasystem.immersiveintelligence.function.nor.result=Result
+datasystem.immersiveintelligence.function.nor.result.desc=Result of the NOR operation.
+
 datasystem.immersiveintelligence.function.xor=XOR
+datasystem.immersiveintelligence.function.xor.desc=Returns true if exactly one of the inputs is true
+datasystem.immersiveintelligence.function.xor.param.input=Input
+datasystem.immersiveintelligence.function.xor.param.input.desc=The input to check
+datasystem.immersiveintelligence.function.xor.result=Result
+datasystem.immersiveintelligence.function.xor.result.desc=Result of the XOR operation.
+
 datasystem.immersiveintelligence.function.xnor=XNOR
+datasystem.immersiveintelligence.function.xnor.desc=Returns true if an even number of the inputs are true
+datasystem.immersiveintelligence.function.xnor.param.input=Input
+datasystem.immersiveintelligence.function.xnor.param.input.desc=The input to check
+datasystem.immersiveintelligence.function.xnor.result=Result
+datasystem.immersiveintelligence.function.xnor.result.desc=Result of the XNOR operation.
 
+# Comparator
 datasystem.immersiveintelligence.function.greater=Greater
-datasystem.immersiveintelligence.function.less=Less
-datasystem.immersiveintelligence.function.greater_or_equal=Greater or Equal
-datasystem.immersiveintelligence.function.less_or_equal=Less or Equal
-datasystem.immersiveintelligence.function.equal=Equal
+datasystem.immersiveintelligence.function.greater.desc=Returns true if the first input is greater than the second
+datasystem.immersiveintelligence.function.greater.param.compared=Compared
+datasystem.immersiveintelligence.function.greater.param.compared.desc=The value to compare
+datasystem.immersiveintelligence.function.greater.result=Result
+datasystem.immersiveintelligence.function.greater.result.desc=Result of the comparison
 
+datasystem.immersiveintelligence.function.less=Less
+datasystem.immersiveintelligence.function.less.desc=Returns true if the first input is less than the second
+datasystem.immersiveintelligence.function.less.param.compared=Compared
+datasystem.immersiveintelligence.function.less.param.compared.desc=The value to compare
+datasystem.immersiveintelligence.function.less.result=Result
+datasystem.immersiveintelligence.function.less.result.desc=Result of the comparison
+
+datasystem.immersiveintelligence.function.greater_or_equal=Greater or Equal
+datasystem.immersiveintelligence.function.greater_or_equal.desc=Returns true if the first input is greater than or equal to the second
+datasystem.immersiveintelligence.function.greater_or_equal.param.compared=Compared
+datasystem.immersiveintelligence.function.greater_or_equal.param.compared.desc=The value to compare
+datasystem.immersiveintelligence.function.greater_or_equal.result=Result
+datasystem.immersiveintelligence.function.greater_or_equal.result.desc=Result of the comparison
+
+datasystem.immersiveintelligence.function.less_or_equal=Less or Equal
+datasystem.immersiveintelligence.function.less_or_equal.desc=Returns true if the first input is less than or equal to the second
+datasystem.immersiveintelligence.function.less_or_equal.param.compared=Compared
+datasystem.immersiveintelligence.function.less_or_equal.param.compared.desc=The value to compare
+datasystem.immersiveintelligence.function.less_or_equal.result=Result
+datasystem.immersiveintelligence.function.less_or_equal.result.desc=Result of the comparison
+
+datasystem.immersiveintelligence.function.equal=Equal
+datasystem.immersiveintelligence.function.equal.desc=Returns true if the inputs are equal
+datasystem.immersiveintelligence.function.equal.param.compared=Compared
+datasystem.immersiveintelligence.function.equal.param.compared.desc=The value to compare
+datasystem.immersiveintelligence.function.equal.result=Result
+datasystem.immersiveintelligence.function.equal.result.desc=Result of the comparison
+
+# Text
 datasystem.immersiveintelligence.function.string_join=Join
+datasystem.immersiveintelligence.function.string_join.desc=Joins two inputs into a single string, for example, joining strings "Engineers" and "Cause" results in "EngineersCause"
+datasystem.immersiveintelligence.function.string_join.param.first=First
+datasystem.immersiveintelligence.function.string_join.param.first.desc=The first string to join
+datasystem.immersiveintelligence.function.string_join.param.second=Second
+datasystem.immersiveintelligence.function.string_join.param.second.desc=The second string to join
+datasystem.immersiveintelligence.function.string_join.result=Result
+datasystem.immersiveintelligence.function.string_join.result.desc=The combined string
+
 datasystem.immersiveintelligence.function.string_split=Split
+datasystem.immersiveintelligence.function.string_split.desc=Splits the input string into an array of strings
+datasystem.immersiveintelligence.function.string_split.param.text=String
+datasystem.immersiveintelligence.function.string_split.param.text.desc=The string to split
+datasystem.immersiveintelligence.function.string_split.param.delimiter=Delimiter
+datasystem.immersiveintelligence.function.string_split.param.delimiter.desc=The string used to separate the input
+datasystem.immersiveintelligence.function.string_split.result=Result
+datasystem.immersiveintelligence.function.string_split.result.desc=Array of strings
+
 datasystem.immersiveintelligence.function.string_length=Length
+datasystem.immersiveintelligence.function.string_length.desc=Returns the length of the input string
+datasystem.immersiveintelligence.function.string_length.param.text=String
+datasystem.immersiveintelligence.function.string_length.param.text.desc=The string to get the length of
+datasystem.immersiveintelligence.function.string_length.result=Length
+datasystem.immersiveintelligence.function.string_length.result.desc=The length of the input string
+
 datasystem.immersiveintelligence.function.string_char_at=Character At
+datasystem.immersiveintelligence.function.string_char_at.desc=Returns the character at the specified index, starting from 0. For example, the character at index 2 of "Engineers" is "g"
+datasystem.immersiveintelligence.function.string_char_at.param.text=String
+datasystem.immersiveintelligence.function.string_char_at.param.text.desc=The string to get the character from
+datasystem.immersiveintelligence.function.string_char_at.param.index=Index
+datasystem.immersiveintelligence.function.string_char_at.param.index.desc=The index of the character to get, starting from 0
+datasystem.immersiveintelligence.function.string_char_at.result=Character
+datasystem.immersiveintelligence.function.string_char_at.result.desc=The character at the specified index
+
 datasystem.immersiveintelligence.function.string_substring=Substring
+datasystem.immersiveintelligence.function.string_substring.desc=Returns a substring of the input string, for example, the substring of "Engineers' Cause" from index 1 "Cause"
+datasystem.immersiveintelligence.function.string_substring.param.text=String
+datasystem.immersiveintelligence.function.string_substring.param.text.desc=The string to get the substring from
+datasystem.immersiveintelligence.function.string_substring.param.index=Start
+datasystem.immersiveintelligence.function.string_substring.param.index.desc=The starting index of the substring, starting from 0
+datasystem.immersiveintelligence.function.string_substring.result=Substring
+datasystem.immersiveintelligence.function.string_substring.result.desc=The substring of the input string
+
+#todo: change to match the actual workings
 datasystem.immersiveintelligence.function.string_trim=Trim
+datasystem.immersiveintelligence.function.string_trim.desc=Returns a string trimmed to a given length, string "Engineers' Cause" trimmed to 7 characters is "Engineer"
+datasystem.immersiveintelligence.function.string_trim.param.text=String
+datasystem.immersiveintelligence.function.string_trim.param.text.desc=The string to trim
+datasystem.immersiveintelligence.function.string_trim.param.to_index=End
+datasystem.immersiveintelligence.function.string_trim.param.to_index.desc=The ending index of the substring, starting from 0
+datasystem.immersiveintelligence.function.string_trim.result=Trimmed String
+datasystem.immersiveintelligence.function.string_trim.result.desc=The input string trimmed to the specified length
 
 datasystem.immersiveintelligence.function.string_hexcol=Format using Hexcol
+datasystem.immersiveintelligence.function.string_hexcol.desc=Formats the input string using hexadecimal color codes. Used to color text for printing on paper.
+datasystem.immersiveintelligence.function.string_hexcol.param.text=String
+datasystem.immersiveintelligence.function.string_hexcol.param.text.desc=The string to format
+datasystem.immersiveintelligence.function.string_hexcol.param.color=Color
+datasystem.immersiveintelligence.function.string_hexcol.param.color.desc=The hexadecimal color code to use
+datasystem.immersiveintelligence.function.string_hexcol.result=Formatted String
+datasystem.immersiveintelligence.function.string_hexcol.result.desc=The input string formatted using the hexadecimal color code
+
 datasystem.immersiveintelligence.function.string_format=Format using TextFormatting
+datasystem.immersiveintelligence.function.string_format.desc=Formats the input string using Text Formatting. Used to color text for signs or chat messages.
+datasystem.immersiveintelligence.function.string_format.param.text=String
+datasystem.immersiveintelligence.function.string_format.param.text.desc=The string to format
+datasystem.immersiveintelligence.function.string_format.param.formatting=Formatting
+datasystem.immersiveintelligence.function.string_format.param.formatting.desc=The Formatting color to use
+datasystem.immersiveintelligence.function.string_format.result=Formatted String
+datasystem.immersiveintelligence.function.string_format.result.desc=The input string formatted using the TextFormatting color
 
 datasystem.immersiveintelligence.function.string_contains=Contains
+datasystem.immersiveintelligence.function.string_contains.desc=Returns true if the input string contains the specified substring
+datasystem.immersiveintelligence.function.string_contains.param.text=String
+datasystem.immersiveintelligence.function.string_contains.param.text.desc=The string to check
+datasystem.immersiveintelligence.function.string_contains.param.fragment=Fragment
+datasystem.immersiveintelligence.function.string_contains.param.fragment.desc=The substring to check for
+datasystem.immersiveintelligence.function.string_contains.result=Result
+datasystem.immersiveintelligence.function.string_contains.result.desc=Result of the contains operation
+
 datasystem.immersiveintelligence.function.string_contains_count=Contained Amount
+datasystem.immersiveintelligence.function.string_contains_count.desc=Returns the number of times the specified substring appears in the input string
+datasystem.immersiveintelligence.function.string_contains_count.param.text=String
+datasystem.immersiveintelligence.function.string_contains_count.param.text.desc=The string to check
+datasystem.immersiveintelligence.function.string_contains_count.param.fragment=Fragment
+datasystem.immersiveintelligence.function.string_contains_count.param.fragment.desc=The substring to check for
+datasystem.immersiveintelligence.function.string_contains_count.result=Count
+datasystem.immersiveintelligence.function.string_contains_count.result.desc=The number of times the substring appears in the input string
+
 datasystem.immersiveintelligence.function.string_replace_first=Replace First
+datasystem.immersiveintelligence.function.string_replace_first.desc=Replaces the first occurrence of the specified substring in the input string with the replacement
+datasystem.immersiveintelligence.function.string_replace_first.param.text=String
+datasystem.immersiveintelligence.function.string_replace_first.param.text.desc=The string to modify
+datasystem.immersiveintelligence.function.string_replace_first.param.fragment=Fragment
+datasystem.immersiveintelligence.function.string_replace_first.param.fragment.desc=The substring to replace
+datasystem.immersiveintelligence.function.string_replace_first.param.with=Replacement
+datasystem.immersiveintelligence.function.string_replace_first.param.with.desc=The string to replace the substring with
+datasystem.immersiveintelligence.function.string_replace_first.result=Result
+datasystem.immersiveintelligence.function.string_replace_first.result.desc=The input string with the first occurrence of the substring replaced
+
 datasystem.immersiveintelligence.function.string_replace_all=Replace All
+datasystem.immersiveintelligence.function.string_replace_all.desc=Replaces all occurrences of the specified substring in the input string with the replacement
+datasystem.immersiveintelligence.function.string_replace_all.param.text=String
+datasystem.immersiveintelligence.function.string_replace_all.param.text.desc=The string to modify
+datasystem.immersiveintelligence.function.string_replace_all.param.fragment=Fragment
+datasystem.immersiveintelligence.function.string_replace_all.param.fragment.desc=The substring to replace
+datasystem.immersiveintelligence.function.string_replace_all.param.with=Replacement
+datasystem.immersiveintelligence.function.string_replace_all.param.with.desc=The string to replace the substring with
+datasystem.immersiveintelligence.function.string_replace_all.result=Result
+datasystem.immersiveintelligence.function.string_replace_all.result.desc=The input string with all occurrences of the substring replaced
 
 datasystem.immersiveintelligence.function.string_lowercase=To Lowercase
+datasystem.immersiveintelligence.function.string_lowercase.desc=Converts the input string to lowercase
+datasystem.immersiveintelligence.function.string_lowercase.param.text=String
+datasystem.immersiveintelligence.function.string_lowercase.param.text.desc=The string to convert
+datasystem.immersiveintelligence.function.string_lowercase.result=lowercase
+datasystem.immersiveintelligence.function.string_lowercase.result.desc=The input string converted to lowercase
+
 datasystem.immersiveintelligence.function.string_uppercase=To Uppercase
+datasystem.immersiveintelligence.function.string_uppercase.desc=Converts the input string to uppercase
+datasystem.immersiveintelligence.function.string_uppercase.param.text=String
+datasystem.immersiveintelligence.function.string_uppercase.param.text.desc=The string to convert
+datasystem.immersiveintelligence.function.string_uppercase.result=UPPERCASE
+datasystem.immersiveintelligence.function.string_uppercase.result.desc=The input string converted to uppercase
+
 datasystem.immersiveintelligence.function.string_snake_case=To snake_case
+datasystem.immersiveintelligence.function.string_snake_case.desc=Converts the input string to snake_case
+datasystem.immersiveintelligence.function.string_snake_case.param.text=String
+datasystem.immersiveintelligence.function.string_snake_case.param.text.desc=The string to convert
+datasystem.immersiveintelligence.function.string_snake_case.result=snake_case
+datasystem.immersiveintelligence.function.string_snake_case.result.desc=The input string converted to snake_case
+
 datasystem.immersiveintelligence.function.string_camel_case=To camelCase
+datasystem.immersiveintelligence.function.string_camel_case.desc=Converts the input string to camelCase
+datasystem.immersiveintelligence.function.string_camel_case.param.text=String
+datasystem.immersiveintelligence.function.string_camel_case.param.text.desc=The string to convert
+datasystem.immersiveintelligence.function.string_camel_case.param.start_small=Start Small
+datasystem.immersiveintelligence.function.string_camel_case.param.start_small.desc=Whether the first letter should be lowercase
+datasystem.immersiveintelligence.function.string_camel_case.result=camelCase
+datasystem.immersiveintelligence.function.string_camel_case.result.desc=The input string converted to camelCase
+
 datasystem.immersiveintelligence.function.string_reverse=Reverse
+datasystem.immersiveintelligence.function.string_reverse.desc=Reverses the input string
+datasystem.immersiveintelligence.function.string_reverse.param.text=String
+datasystem.immersiveintelligence.function.string_reverse.param.text.desc=The string to reverse
+datasystem.immersiveintelligence.function.string_reverse.result=Reversed
+datasystem.immersiveintelligence.function.string_reverse.result.desc=The input string reversed
 
+# ItemStack
 datasystem.immersiveintelligence.function.get_quantity=Get Quantity
+datasystem.immersiveintelligence.function.get_quantity.desc=Returns the quantity of the input ItemStack
+datasystem.immersiveintelligence.function.get_quantity.param.stack=ItemStack
+datasystem.immersiveintelligence.function.get_quantity.param.stack.desc=The ItemStack
+datasystem.immersiveintelligence.function.get_quantity.result=Quantity
+datasystem.immersiveintelligence.function.get_quantity.result.desc=The quantity of the input ItemStack
+
 datasystem.immersiveintelligence.function.set_quantity=Set Quantity
+datasystem.immersiveintelligence.function.set_quantity.desc=Sets the quantity of the input ItemStack
+datasystem.immersiveintelligence.function.set_quantity.param.stack=ItemStack
+datasystem.immersiveintelligence.function.set_quantity.param.stack.desc=The ItemStack
+datasystem.immersiveintelligence.function.set_quantity.param.count=Quantity
+datasystem.immersiveintelligence.function.set_quantity.param.count.desc=The quantity to set
+datasystem.immersiveintelligence.function.set_quantity.result=ItemStack
+datasystem.immersiveintelligence.function.set_quantity.result.desc=The ItemStack with the new quantity
+
+#todo: clarify that it's not remaining durability, but amount of damage
 datasystem.immersiveintelligence.function.get_durability=Get Durability
+datasystem.immersiveintelligence.function.get_durability.desc=Returns the durability of the input ItemStack
+datasystem.immersiveintelligence.function.get_durability.param.stack=ItemStack
+datasystem.immersiveintelligence.function.get_durability.param.stack.desc=The ItemStack
+datasystem.immersiveintelligence.function.get_durability.result=Durability
+datasystem.immersiveintelligence.function.get_durability.result.desc=The durability of the input ItemStack
+
 datasystem.immersiveintelligence.function.set_durability=Set Durability
+datasystem.immersiveintelligence.function.set_durability.desc=Sets the durability of the input ItemStack
+datasystem.immersiveintelligence.function.set_durability.param.stack=ItemStack
+datasystem.immersiveintelligence.function.set_durability.param.stack.desc=The ItemStack
+datasystem.immersiveintelligence.function.set_durability.param.damage=Damage
+datasystem.immersiveintelligence.function.set_durability.param.damage.desc=The damage amount to set
+datasystem.immersiveintelligence.function.set_durability.result=ItemStack
+datasystem.immersiveintelligence.function.set_durability.result.desc=The ItemStack with the new durability
+
 datasystem.immersiveintelligence.function.get_nbt=Get NBT
+datasystem.immersiveintelligence.function.get_nbt.desc=Returns the NBT tag of the input ItemStack
+datasystem.immersiveintelligence.function.get_nbt.param.stack=ItemStack
+datasystem.immersiveintelligence.function.get_nbt.param.stack.desc=The ItemStack
+datasystem.immersiveintelligence.function.get_nbt.result=NBT
+datasystem.immersiveintelligence.function.get_nbt.result.desc=The NBT tag of the input ItemStack
+
 datasystem.immersiveintelligence.function.set_nbt=Set NBT
+datasystem.immersiveintelligence.function.set_nbt.desc=Sets the NBT tag of the input ItemStack
+datasystem.immersiveintelligence.function.set_nbt.param.stack=ItemStack
+datasystem.immersiveintelligence.function.set_nbt.param.stack.desc=The ItemStack
+datasystem.immersiveintelligence.function.set_nbt.param.nbt=NBT
+datasystem.immersiveintelligence.function.set_nbt.param.nbt.desc=The NBT tag to set
+datasystem.immersiveintelligence.function.set_nbt.result=ItemStack
+datasystem.immersiveintelligence.function.set_nbt.result.desc=The ItemStack with the new NBT tag
+
 datasystem.immersiveintelligence.function.get_itemstack=Create From ID
+datasystem.immersiveintelligence.function.get_itemstack.desc=Creates an ItemStack from the input item ID, amount and metadata value
+datasystem.immersiveintelligence.function.get_itemstack.param.item_id=ID
+datasystem.immersiveintelligence.function.get_itemstack.param.item_id.desc=The ID of the item
+datasystem.immersiveintelligence.function.get_itemstack.param.amount=Amount
+datasystem.immersiveintelligence.function.get_itemstack.param.amount.desc=The amount of the item
+datasystem.immersiveintelligence.function.get_itemstack.param.meta=Meta
+datasystem.immersiveintelligence.function.get_itemstack.param.meta.desc=The metadata value of the item
+datasystem.immersiveintelligence.function.get_itemstack.result=ItemStack
+datasystem.immersiveintelligence.function.get_itemstack.result.desc=The ItemStack created from the ID
+
 datasystem.immersiveintelligence.function.get_item_id=Get ID
+datasystem.immersiveintelligence.function.get_item_id.desc=Returns the ID of the input ItemStack
+datasystem.immersiveintelligence.function.get_item_id.param.stack=ItemStack
+datasystem.immersiveintelligence.function.get_item_id.param.stack.desc=The ItemStack
+datasystem.immersiveintelligence.function.get_item_id.result=ID
+datasystem.immersiveintelligence.function.get_item_id.result.desc=The ID of the input ItemStack
+
+datasystem.immersiveintelligence.function.is_stack_empty=Is Empty
+datasystem.immersiveintelligence.function.is_stack_empty.desc=Returns true if the input ItemStack is empty
+datasystem.immersiveintelligence.function.is_stack_empty.param.stack=ItemStack
+datasystem.immersiveintelligence.function.is_stack_empty.param.stack.desc=The ItemStack to check
+datasystem.immersiveintelligence.function.is_stack_empty.result=Result
+datasystem.immersiveintelligence.function.is_stack_empty.result.desc=True, if the ItemStack is empty
+
 datasystem.immersiveintelligence.function.can_stack_with=Can Stack With
+datasystem.immersiveintelligence.function.can_stack_with.desc=Returns true if the input ItemStack can stack with the specified ItemStack
+datasystem.immersiveintelligence.function.can_stack_with.param.stack=ItemStack
+datasystem.immersiveintelligence.function.can_stack_with.param.stack.desc=The ItemStack to check
+datasystem.immersiveintelligence.function.can_stack_with.param.with=With
+datasystem.immersiveintelligence.function.can_stack_with.param.with.desc=The ItemStack to check against
+datasystem.immersiveintelligence.function.can_stack_with.result=Result
+datasystem.immersiveintelligence.function.can_stack_with.result.desc=Result of the stacking check
+
 datasystem.immersiveintelligence.function.matches_oredict=Matches OreDictionary
+datasystem.immersiveintelligence.function.matches_oredict.desc=Returns true if the input ItemStack matches the specified Ore Dictionary entry
+datasystem.immersiveintelligence.function.matches_oredict.param.stack=ItemStack
+datasystem.immersiveintelligence.function.matches_oredict.param.stack.desc=The ItemStack to check
+datasystem.immersiveintelligence.function.matches_oredict.param.ore_dictionary=Ore Dictionary
+datasystem.immersiveintelligence.function.matches_oredict.param.ore_dictionary.desc=The Ore Dictionary entry to check against
+datasystem.immersiveintelligence.function.matches_oredict.result=Result
+datasystem.immersiveintelligence.function.matches_oredict.result.desc=Result of the Ore Dictionary check
 
+# Array
 datasystem.immersiveintelligence.function.array_start=Start
+datasystem.immersiveintelligence.function.array_start.desc=Creates a new array
+datasystem.immersiveintelligence.function.array_start.param.first=First Element
+datasystem.immersiveintelligence.function.array_start.param.first.desc=
+datasystem.immersiveintelligence.function.array_start.result=Array
+datasystem.immersiveintelligence.function.array_start.result.desc=The new array
+
 datasystem.immersiveintelligence.function.array_get=Get
+datasystem.immersiveintelligence.function.array_get.desc=Returns the value at the specified index in the input array
+datasystem.immersiveintelligence.function.array_get.param.array=Array
+datasystem.immersiveintelligence.function.array_get.param.array.desc=The array to get the value from
+datasystem.immersiveintelligence.function.array_get.param.index=Index
+datasystem.immersiveintelligence.function.array_get.param.index.desc=The index of the value to get
+datasystem.immersiveintelligence.function.array_get.result=Value
+datasystem.immersiveintelligence.function.array_get.result.desc=The value at the specified index
+
 datasystem.immersiveintelligence.function.array_set=Set
+datasystem.immersiveintelligence.function.array_set.desc=Sets the value at the specified index in the input array
+datasystem.immersiveintelligence.function.array_set.param.array=Array
+datasystem.immersiveintelligence.function.array_set.param.array.desc=The array to modify
+datasystem.immersiveintelligence.function.array_set.param.index=Index
+datasystem.immersiveintelligence.function.array_set.param.index.desc=The index of the value to set
+datasystem.immersiveintelligence.function.array_set.param.value=Value
+datasystem.immersiveintelligence.function.array_set.param.value.desc=The value to set
+
 datasystem.immersiveintelligence.function.array_push=Push
+datasystem.immersiveintelligence.function.array_push.desc=Adds the value to the end of the input array
+datasystem.immersiveintelligence.function.array_push.param.array=Array
+datasystem.immersiveintelligence.function.array_push.param.array.desc=The array to modify
+datasystem.immersiveintelligence.function.array_push.param.inserted=Inserted
+datasystem.immersiveintelligence.function.array_push.param.inserted.desc=The element to add
+datasystem.immersiveintelligence.function.array_push.param.value=Value
+datasystem.immersiveintelligence.function.array_push.param.value.desc=The value to add
+
 datasystem.immersiveintelligence.function.array_pop=Pop
+datasystem.immersiveintelligence.function.array_pop.desc=Removes and returns the last value from the input array
+datasystem.immersiveintelligence.function.array_pop.param.array=Array
+datasystem.immersiveintelligence.function.array_pop.param.array.desc=The array to modify
+datasystem.immersiveintelligence.function.array_pop.result=Removed
+datasystem.immersiveintelligence.function.array_pop.result.desc=The removed value
+
 datasystem.immersiveintelligence.function.array_swap=Swap
+datasystem.immersiveintelligence.function.array_swap.desc=Swaps the values at the specified indices in the input array
+datasystem.immersiveintelligence.function.array_swap.param.array=Array
+datasystem.immersiveintelligence.function.array_swap.param.array.desc=The array to modify
+datasystem.immersiveintelligence.function.array_swap.param.first=First Index
+datasystem.immersiveintelligence.function.array_swap.param.first.desc=The first index to swap
+datasystem.immersiveintelligence.function.array_swap.param.second=Second Index
+datasystem.immersiveintelligence.function.array_swap.param.second.desc=The second index to swap
+
+
 datasystem.immersiveintelligence.function.array_length=Get Length
+datasystem.immersiveintelligence.function.array_length.desc=Returns the length of the input array
+datasystem.immersiveintelligence.function.array_length.param.array=Array
+datasystem.immersiveintelligence.function.array_length.param.array.desc=The array to get the length of
+datasystem.immersiveintelligence.function.array_length.result=Length
+datasystem.immersiveintelligence.function.array_length.result.desc=The length of the input array
 
+# Entity
 datasystem.immersiveintelligence.function.entity_get_id=Get ID
+datasystem.immersiveintelligence.function.entity_get_id.desc=Returns the ID of the input entity
+datasystem.immersiveintelligence.function.entity_get_id.param.entity=Entity
+datasystem.immersiveintelligence.function.entity_get_id.param.entity.desc=The entity to get the ID of
+datasystem.immersiveintelligence.function.entity_get_id.result=ID
+datasystem.immersiveintelligence.function.entity_get_id.result.desc=The ID of the input entity
+
 datasystem.immersiveintelligence.function.entity_get_type=Get Type
+datasystem.immersiveintelligence.function.entity_get_type.desc=Returns the type of the input entity
+datasystem.immersiveintelligence.function.entity_get_type.param.entity=Entity
+datasystem.immersiveintelligence.function.entity_get_type.param.entity.desc=The entity to get the type of
+datasystem.immersiveintelligence.function.entity_get_type.result=Type
+datasystem.immersiveintelligence.function.entity_get_type.result.desc=The type of the input entity
+
 datasystem.immersiveintelligence.function.entity_get_name=Get Name
+datasystem.immersiveintelligence.function.entity_get_name.desc=Returns the name of the input entity
+datasystem.immersiveintelligence.function.entity_get_name.param.entity=Entity
+datasystem.immersiveintelligence.function.entity_get_name.param.entity.desc=The entity to get the name of
+datasystem.immersiveintelligence.function.entity_get_name.result=Name
+datasystem.immersiveintelligence.function.entity_get_name.result.desc=The name of the input entity
+
 datasystem.immersiveintelligence.function.entity_get_dimension_id=Get Dimension
+datasystem.immersiveintelligence.function.entity_get_dimension_id.desc=Returns the dimension ID of the input entity
+datasystem.immersiveintelligence.function.entity_get_dimension_id.param.entity=Entity
+datasystem.immersiveintelligence.function.entity_get_dimension_id.param.entity.desc=The entity to get the dimension ID of
+datasystem.immersiveintelligence.function.entity_get_dimension_id.result=Dimension ID
+datasystem.immersiveintelligence.function.entity_get_dimension_id.result.desc=The dimension ID of the input entity
+
 datasystem.immersiveintelligence.function.entity_get_x=Get X
+datasystem.immersiveintelligence.function.entity_get_x.desc=Returns the X coordinate of the input entity
+datasystem.immersiveintelligence.function.entity_get_x.param.entity=Entity
+datasystem.immersiveintelligence.function.entity_get_x.param.entity.desc=The entity to get the X coordinate of
+datasystem.immersiveintelligence.function.entity_get_x.result=X
+datasystem.immersiveintelligence.function.entity_get_x.result.desc=The X coordinate of the input entity
+
 datasystem.immersiveintelligence.function.entity_get_y=Get Y
+datasystem.immersiveintelligence.function.entity_get_y.desc=Returns the Y coordinate of the input entity
+datasystem.immersiveintelligence.function.entity_get_y.param.entity=Entity
+datasystem.immersiveintelligence.function.entity_get_y.param.entity.desc=The entity to get the Y coordinate of
+datasystem.immersiveintelligence.function.entity_get_y.result=Y
+datasystem.immersiveintelligence.function.entity_get_y.result.desc=The Y coordinate of the input entity
+
 datasystem.immersiveintelligence.function.entity_get_z=Get Z
+datasystem.immersiveintelligence.function.entity_get_z.desc=Returns the Z coordinate of the input entity
+datasystem.immersiveintelligence.function.entity_get_z.param.entity=Entity
+datasystem.immersiveintelligence.function.entity_get_z.param.entity.desc=The entity to get the Z coordinate of
+datasystem.immersiveintelligence.function.entity_get_z.result=Z
+datasystem.immersiveintelligence.function.entity_get_z.result.desc=The Z coordinate of the input entity
 
+# Document
 datasystem.immersiveintelligence.function.document_read_page=Read Page
+datasystem.immersiveintelligence.function.document_read_page.desc=Returns the content of the specified page in the input document
+datasystem.immersiveintelligence.function.document_read_page.param.document=Document
+datasystem.immersiveintelligence.function.document_read_page.param.document.desc=The document to read from
+datasystem.immersiveintelligence.function.document_read_page.param.page=Page
+datasystem.immersiveintelligence.function.document_read_page.param.page.desc=The page to read
+datasystem.immersiveintelligence.function.document_read_page.result=Content
+datasystem.immersiveintelligence.function.document_read_page.result.desc=The content of the specified page
+
 datasystem.immersiveintelligence.function.document_read_all_pages_array=Read All Pages (Array)
+datasystem.immersiveintelligence.function.document_read_all_pages_array.desc=Returns an array of all pages in the input document
+datasystem.immersiveintelligence.function.document_read_all_pages_array.param.document=Document
+datasystem.immersiveintelligence.function.document_read_all_pages_array.param.document.desc=The document to read from
+datasystem.immersiveintelligence.function.document_read_all_pages_array.result=Pages
+datasystem.immersiveintelligence.function.document_read_all_pages_array.result.desc=Array of all pages in the input document
+
 datasystem.immersiveintelligence.function.document_read_all_pages_string=Read All Pages (String)
+datasystem.immersiveintelligence.function.document_read_all_pages_string.desc=Returns a string of all pages in the input document with pages separated by a newline character
+datasystem.immersiveintelligence.function.document_read_all_pages_string.param.document=Document
+datasystem.immersiveintelligence.function.document_read_all_pages_string.param.document.desc=The document to read from
+datasystem.immersiveintelligence.function.document_read_all_pages_string.result=Pages
+datasystem.immersiveintelligence.function.document_read_all_pages_string.result.desc=String of all pages in the input document
+
 datasystem.immersiveintelligence.function.document_get_author=Get Author
+datasystem.immersiveintelligence.function.document_get_author.desc=Returns the author of the input document
+datasystem.immersiveintelligence.function.document_get_author.param.document=Document
+datasystem.immersiveintelligence.function.document_get_author.param.document.desc=The document to get the author of
+datasystem.immersiveintelligence.function.document_get_author.result=Author
+datasystem.immersiveintelligence.function.document_get_author.result.desc=The author of the input document
+
 datasystem.immersiveintelligence.function.document_get_title=Get Title
+datasystem.immersiveintelligence.function.document_get_title.desc=Returns the title of the input document
+datasystem.immersiveintelligence.function.document_get_title.param.document=Document
+datasystem.immersiveintelligence.function.document_get_title.param.document.desc=The document to get the title of
+datasystem.immersiveintelligence.function.document_get_title.result=Title
+datasystem.immersiveintelligence.function.document_get_title.result.desc=The title of the input document
 
+# Type Conversion
 datasystem.immersiveintelligence.function.is_null=Is Null
-datasystem.immersiveintelligence.function.is_same_type=Is Same Type
-datasystem.immersiveintelligence.function.to_integer=To Integer
-datasystem.immersiveintelligence.function.to_float=To Float
-datasystem.immersiveintelligence.function.to_string=To String
-datasystem.immersiveintelligence.function.to_boolean=To Boolean
-datasystem.immersiveintelligence.function.to_null=To Null
+datasystem.immersiveintelligence.function.is_null.desc=Returns true if the input is null
+datasystem.immersiveintelligence.function.is_null.param.checked=Checked
+datasystem.immersiveintelligence.function.is_null.param.checked.desc=The value to check
+datasystem.immersiveintelligence.function.is_null.result=Result
+datasystem.immersiveintelligence.function.is_null.result.desc=Result of the null check
 
+datasystem.immersiveintelligence.function.is_same_type=Is Same Type
+datasystem.immersiveintelligence.function.is_same_type.desc=Returns true if the inputs are of the same type
+datasystem.immersiveintelligence.function.is_same_type.param.first=First
+datasystem.immersiveintelligence.function.is_same_type.param.first.desc=The first value to compare
+datasystem.immersiveintelligence.function.is_same_type.param.second=Second
+datasystem.immersiveintelligence.function.is_same_type.param.second.desc=The second value to compare
+datasystem.immersiveintelligence.function.is_same_type.result=Result
+datasystem.immersiveintelligence.function.is_same_type.result.desc=Result of the type check
+
+datasystem.immersiveintelligence.function.to_integer=To Integer
+datasystem.immersiveintelligence.function.to_integer.desc=Casts the input to an integer
+datasystem.immersiveintelligence.function.to_integer.param.casted=Casted
+datasystem.immersiveintelligence.function.to_integer.param.casted.desc=The value to cast
+datasystem.immersiveintelligence.function.to_integer.result=Integer
+datasystem.immersiveintelligence.function.to_integer.result.desc=The input casted to an integer
+
+datasystem.immersiveintelligence.function.to_float=To Float
+datasystem.immersiveintelligence.function.to_float.desc=Casts the input to a float
+datasystem.immersiveintelligence.function.to_float.param.casted=Casted
+datasystem.immersiveintelligence.function.to_float.param.casted.desc=The value to cast
+datasystem.immersiveintelligence.function.to_float.result=Float
+datasystem.immersiveintelligence.function.to_float.result.desc=The input casted to a float
+
+datasystem.immersiveintelligence.function.to_string=To String
+datasystem.immersiveintelligence.function.to_string.desc=Casts the input to a string
+datasystem.immersiveintelligence.function.to_string.param.casted=Casted
+datasystem.immersiveintelligence.function.to_string.param.casted.desc=The value to cast
+datasystem.immersiveintelligence.function.to_string.result=String
+datasystem.immersiveintelligence.function.to_string.result.desc=The input casted to a string
+
+datasystem.immersiveintelligence.function.to_boolean=To Boolean
+datasystem.immersiveintelligence.function.to_boolean.desc=Casts the input to a boolean
+datasystem.immersiveintelligence.function.to_boolean.param.casted=Casted
+datasystem.immersiveintelligence.function.to_boolean.param.casted.desc=The value to cast
+datasystem.immersiveintelligence.function.to_boolean.result=Boolean
+datasystem.immersiveintelligence.function.to_boolean.result.desc=The input casted to a boolean
+
+datasystem.immersiveintelligence.function.to_null=To Null
+datasystem.immersiveintelligence.function.to_null.desc=Returns a null value
+datasystem.immersiveintelligence.function.to_null.result=Null
+datasystem.immersiveintelligence.function.to_null.result.desc=Type replaced with null
+
+# Cryptographer
 datasystem.immersiveintelligence.function.encrypt_text=Encrypt Text
+datasystem.immersiveintelligence.function.encrypt_text.desc=Encrypts the input text
+datasystem.immersiveintelligence.function.encrypt_text.param.text=Text
+datasystem.immersiveintelligence.function.encrypt_text.param.text.desc=The text to encrypt
+datasystem.immersiveintelligence.function.encrypt_text.param.password=Password
+datasystem.immersiveintelligence.function.encrypt_text.param.password.desc=The password to use for encryption
+datasystem.immersiveintelligence.function.encrypt_text.result=Encrypted Text
+datasystem.immersiveintelligence.function.encrypt_text.result.desc=The input text encrypted with the password
+
 datasystem.immersiveintelligence.function.encrypt_number=Encrypt Number
+datasystem.immersiveintelligence.function.encrypt_number.desc=Encrypts the input number
+datasystem.immersiveintelligence.function.encrypt_number.param.number=Number
+datasystem.immersiveintelligence.function.encrypt_number.param.number.desc=The number to encrypt
+datasystem.immersiveintelligence.function.encrypt_number.param.password=Password
+datasystem.immersiveintelligence.function.encrypt_number.param.password.desc=The password to use for encryption
+datasystem.immersiveintelligence.function.encrypt_number.result=Encrypted Number
+datasystem.immersiveintelligence.function.encrypt_number.result.desc=The input number encrypted with the password
+
 datasystem.immersiveintelligence.function.encrypt_array=Encrypt Array
+datasystem.immersiveintelligence.function.encrypt_array.desc=Encrypts the input array
+datasystem.immersiveintelligence.function.encrypt_array.param.array=Array
+datasystem.immersiveintelligence.function.encrypt_array.param.array.desc=The array to encrypt
+datasystem.immersiveintelligence.function.encrypt_array.param.password=Password
+datasystem.immersiveintelligence.function.encrypt_array.param.password.desc=The password to use for encryption
+datasystem.immersiveintelligence.function.encrypt_array.result=Encrypted Array
+datasystem.immersiveintelligence.function.encrypt_array.result.desc=The input array encrypted with the password
+
 datasystem.immersiveintelligence.function.decrypt_text=Decrypt Text
+datasystem.immersiveintelligence.function.decrypt_text.desc=Decrypts the input text
+datasystem.immersiveintelligence.function.decrypt_text.param.encrypted=Encrypted Text
+datasystem.immersiveintelligence.function.decrypt_text.param.encrypted.desc=The text to decrypt
+datasystem.immersiveintelligence.function.decrypt_text.param.password=Password
+datasystem.immersiveintelligence.function.decrypt_text.param.password.desc=The password to use for decryption
+datasystem.immersiveintelligence.function.decrypt_text.result=Decrypted Text
+datasystem.immersiveintelligence.function.decrypt_text.result.desc=The input text decrypted with the password
+
 datasystem.immersiveintelligence.function.decrypt_number=Decrypt Number
+datasystem.immersiveintelligence.function.decrypt_number.desc=Decrypts the input number
+datasystem.immersiveintelligence.function.decrypt_number.param.encrypted=Encrypted Number
+datasystem.immersiveintelligence.function.decrypt_number.param.encrypted.desc=The number to decrypt
+datasystem.immersiveintelligence.function.decrypt_number.param.password=Password
+datasystem.immersiveintelligence.function.decrypt_number.param.password.desc=The password to use for decryption
+datasystem.immersiveintelligence.function.decrypt_number.result=Decrypted Number
+datasystem.immersiveintelligence.function.decrypt_number.result.desc=The input number decrypted with the password
+
 datasystem.immersiveintelligence.function.decrypt_array=Decrypt Array
+datasystem.immersiveintelligence.function.decrypt_array.desc=Decrypts the input array
+datasystem.immersiveintelligence.function.decrypt_array.param.encrypted=Encrypted Array
+datasystem.immersiveintelligence.function.decrypt_array.param.encrypted.desc=The array to decrypt
+datasystem.immersiveintelligence.function.decrypt_array.param.password=Password
+datasystem.immersiveintelligence.function.decrypt_array.param.password.desc=The password to use for decryption
+datasystem.immersiveintelligence.function.decrypt_array.result=Decrypted Array
+datasystem.immersiveintelligence.function.decrypt_array.result.desc=The input array decrypted with the password
 
 datasystem.immersiveintelligence.datatype.null=Null
 datasystem.immersiveintelligence.datatype.boolean=Boolean
@@ -1767,6 +2379,15 @@ ie.manual.entry.traits.upgradable=Upgradable
 ie.manual.entry.traits.repairable=Repairable
 ie.manual.entry.traits.decorations=Can be Decorated
 ie.manual.entry.traits.paintable=Paintable
+
+ie.manual.entry.data_operation.inputs=Inputs
+ie.manual.entry.data_operation.output=Output
+ie.manual.entry.data_operation.pol=POL Code Example
+ie.manual.entry.data_operation.tooltip_data=Switch to Data View
+ie.manual.entry.data_operation.tooltip_pol=Switch to POL Implementation
+ie.manual.entry.data_operation.comment.import=importing data operation
+ie.manual.entry.data_operation.comment.import_more=alternatively
+ie.manual.entry.data_operation.comment.example=example use
 
 #manual multiblock forming block position text
 ie.manual.entry.multiblock_forming=The %1$s can be formed by using %2$s on the %3$s %4$s

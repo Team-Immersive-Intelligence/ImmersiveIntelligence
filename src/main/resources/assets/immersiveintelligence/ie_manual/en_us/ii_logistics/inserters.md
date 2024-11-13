@@ -38,5 +38,7 @@ The Advanced Inserter is an upgraded version of the Inserter, which allows filte
 The fluid Inserter is a precise limiter of fluid transfer. In some situations, you want to insert only a specific amount of fluid. This device does exactly that
 
 # fluid_inserter_commands
-|[data_variable]{type:"String", direction:"in", letter:"m", name:"Fluid take Mode", description:"possible values: set, add"}|
+
+|[data_variable]{type:"string", direction:"in", letter:"m", name:"Fluid take Mode", description:"possible values: set,
+add"}|
 |[data_variable]{type:"integer", direction:"in", letter:"c", name:"Amount of fluid to take", description:"in Milibuckets"}|

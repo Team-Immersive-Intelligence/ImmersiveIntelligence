@@ -25,7 +25,8 @@ import java.util.stream.Collectors;
  */
 public class IIManualPageFolder extends ManualPages
 {
-	private final String fullPath, name;
+	private final String fullPath;
+	private final String name;
 	private ManualEntry entry = null;
 	private final ArrayList<IIManualEntry> entries = new ArrayList<>();
 	private final ArrayList<IIManualPageFolder> subFolders = new ArrayList<>();
@@ -44,7 +45,6 @@ public class IIManualPageFolder extends ManualPages
 		{
 			//Put to manual silently
 			ManualHelper.getManual().manualContents.put(ManualHelper.CAT_UPDATE, entry = new ManualEntry("folder:"+fullPath, ManualHelper.CAT_UPDATE, this));
-//			((IEManualInstance)ManualHelper.getManual()).hideEntry("folder:"+this.fullPath);
 			((IEManualInstance)ManualHelper.getManual()).hideEntry(name);
 		}
 
@@ -95,6 +95,7 @@ public class IIManualPageFolder extends ManualPages
 	public void addEntry(IIManualEntry entry)
 	{
 		entries.add(entry);
+		entry.setFolder(this);
 		ManualHelper.getManual().manualContents.put(ManualHelper.CAT_UPDATE, entry);
 	}
 
@@ -109,6 +110,11 @@ public class IIManualPageFolder extends ManualPages
 	{
 		//TODO: 07.08.2023 add search keywords from subfolders
 		return false;
+	}
+
+	public String getName()
+	{
+		return name;
 	}
 
 	@Nonnull

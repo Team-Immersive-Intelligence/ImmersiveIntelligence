@@ -11,11 +11,12 @@ import net.minecraft.util.text.TextFormatting;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.data.DataOperations;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
+import pl.pabilo8.immersiveintelligence.api.data.IIDataTypeUtils;
 import pl.pabilo8.immersiveintelligence.api.data.operations.DataOperation;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataType;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataType.IGenericDataType;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeAccessor;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeExpression;
+import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
+import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType.IGenericDataType;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonDataLetterList;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonDataLetterList.ArrowsAlignment;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonDropdownList;
@@ -264,7 +265,7 @@ public class GuiDataEditorExpression extends GuiDataEditor<DataTypeExpression>
 					{
 						int i = IIUtils.cycleInt(forward, collect.indexOf(dClass), 0, collect.size()-1);
 
-						dataType.data[page-1] = DataPacket.getVarInstance(collect.get(i));
+						dataType.data[page-1] = IIDataTypeUtils.getVarInstance(collect.get(i));
 //						dataType.data[page-1].setDefaultValue();
 
 						pageEditor = null;

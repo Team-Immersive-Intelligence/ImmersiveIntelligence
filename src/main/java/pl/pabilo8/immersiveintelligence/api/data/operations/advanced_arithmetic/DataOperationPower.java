@@ -2,7 +2,11 @@ package pl.pabilo8.immersiveintelligence.api.data.operations.advanced_arithmetic
 
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.operations.DataOperation;
-import pl.pabilo8.immersiveintelligence.api.data.types.*;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeExpression;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeFloat;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
+import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
+import pl.pabilo8.immersiveintelligence.api.data.types.generic.NumericDataType;
 
 import javax.annotation.Nonnull;
 
@@ -11,7 +15,7 @@ import javax.annotation.Nonnull;
  * @since 05-07-2019
  */
 @DataOperation.DataOperationMeta(name = "power",
-		allowedTypes = {NumericDataType.class, NumericDataType.class}, params = {"number", "power"},
+		allowedTypes = {NumericDataType.class, NumericDataType.class}, params = {"base", "exponent"},
 		expectedResult = NumericDataType.class)
 public class DataOperationPower extends DataOperation
 {

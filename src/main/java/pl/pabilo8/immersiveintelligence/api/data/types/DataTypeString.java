@@ -1,12 +1,14 @@
 package pl.pabilo8.immersiveintelligence.api.data.types;
 
 import net.minecraft.nbt.NBTTagCompound;
+import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
+import pl.pabilo8.immersiveintelligence.api.data.types.generic.IComparableDataType;
 
 /**
  * @author Pabilo8
  * @since 2019-06-01
  */
-public class DataTypeString extends DataType
+public class DataTypeString extends DataType implements IComparableDataType<DataTypeString>
 {
 	public String value = "";
 
@@ -18,12 +20,6 @@ public class DataTypeString extends DataType
 	public DataTypeString()
 	{
 
-	}
-
-	@Override
-	public String valueToString()
-	{
-		return value;
 	}
 
 	@Override
@@ -44,5 +40,23 @@ public class DataTypeString extends DataType
 	public boolean equals(Object obj)
 	{
 		return obj instanceof DataTypeString&&((DataTypeString)obj).value.equals(value);
+	}
+
+	@Override
+	public String toString()
+	{
+		return value;
+	}
+
+	@Override
+	public boolean canCompareWith(DataType other)
+	{
+		return other instanceof DataTypeString;
+	}
+
+	@Override
+	public int compareTo(DataTypeString other)
+	{
+		return Integer.compare(value.length(), other.value.length());
 	}
 }

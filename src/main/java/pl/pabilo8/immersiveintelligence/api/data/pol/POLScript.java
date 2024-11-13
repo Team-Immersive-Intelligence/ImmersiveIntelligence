@@ -3,9 +3,11 @@ package pl.pabilo8.immersiveintelligence.api.data.pol;
 import net.minecraft.util.Tuple;
 import pl.pabilo8.immersiveintelligence.api.data.DataOperations;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
+import pl.pabilo8.immersiveintelligence.api.data.IIDataTypeUtils;
 import pl.pabilo8.immersiveintelligence.api.data.operations.DataOperation;
 import pl.pabilo8.immersiveintelligence.api.data.pol.instructions.*;
 import pl.pabilo8.immersiveintelligence.api.data.types.*;
+import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 import pl.pabilo8.immersiveintelligence.common.item.data.ItemIIFunctionalCircuit.Circuits;
 
 import java.util.ArrayList;
@@ -78,7 +80,7 @@ public class POLScript
 
 			if(element.length()==0) //letter
 				output.add(new Tuple<>(POLKeywords.SET, "generic "+next));
-			else if(DataPacket.varTypes.containsKey(element)) //type name
+			else if(IIDataTypeUtils.metaTypesByName.containsKey(element)) //type name
 				output.add(new Tuple<>(POLKeywords.SET, next));
 			else if(keyword!=null)
 			{
@@ -213,10 +215,9 @@ public class POLScript
 				case SET: //set variable value
 				{
 					String[] words = rest.split(" ", 4);
-					Class<? extends DataType> type = DataPacket.varTypes.getOrDefault(words[0], DataType.class);
 					char letter = words[1].charAt(0);
 
-					in = new POLInstructionSet(letter, beginParseExpression(operations, words[3]), type);
+					in = new POLInstructionSet(letter, beginParseExpression(operations, words[3]), IIDataTypeUtils.getVarInstance(words[0]).getClass());
 				}
 				break;
 				case PAGE: //change memory page
@@ -477,7 +478,7 @@ public class POLScript
 
 		public String getString(DataPacket packet)
 		{
-			return get(packet).valueToString();
+			return get(packet).toString();
 		}
 	}
 

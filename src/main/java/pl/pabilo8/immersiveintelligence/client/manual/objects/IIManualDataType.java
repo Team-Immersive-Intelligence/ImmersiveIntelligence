@@ -1,13 +1,13 @@
 package pl.pabilo8.immersiveintelligence.client.manual.objects;
 
-import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
-import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataType;
+import pl.pabilo8.immersiveintelligence.api.data.IIDataTypeUtils;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeNull;
+import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
+import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualObject;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualPage;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
@@ -37,9 +37,7 @@ public class IIManualDataType extends IIManualObject
 	public void postInit(IIManualPage page)
 	{
 		super.postInit(page);
-
-		Class<? extends DataType> clazz = DataPacket.varTypes.getOrDefault(dataSource.getString("type"), DataTypeNull.class);
-		this.type = DataPacket.getVarInstance(clazz);
+		this.type = IIDataTypeUtils.getVarInstance(dataSource.getString("type"));
 	}
 
 	@Override
@@ -62,7 +60,7 @@ public class IIManualDataType extends IIManualObject
 		super.drawButton(mc, mx, my, partialTicks);
 
 		GlStateManager.pushMatrix();
-		ClientUtils.bindTexture(type.getTextureLocation());
+		IIClientUtils.bindTexture(type.getTextureLocation());
 		GlStateManager.color(1f, 1f, 1f, 1f);
 		GlStateManager.enableBlend();
 		Gui.drawModalRectWithCustomSizedTexture(x, y, 0, 0, width, height, 16, 16);

@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.client.manual.objects;
 
-import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
@@ -9,8 +8,9 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.text.TextFormatting;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataType;
+import pl.pabilo8.immersiveintelligence.api.data.IIDataTypeUtils;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeNull;
+import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.IDataMachineGui;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualObject;
@@ -35,6 +35,7 @@ public class IIManualDataVariable extends IIManualObject
 {
 	private final static ResLoc TEXTURE_IN = ResLoc.of(IIReference.RES_TEXTURES_MANUAL, "data/input").withExtension(ResLoc.EXT_PNG);
 	private final static ResLoc TEXTURE_OUT = ResLoc.of(IIReference.RES_TEXTURES_MANUAL, "data/output").withExtension(ResLoc.EXT_PNG);
+	private final static ResLoc TEXTURE_EVENT = ResLoc.of(IIReference.RES_TEXTURES_MANUAL, "data/event").withExtension(ResLoc.EXT_PNG);
 
 	@Nonnull
 	DataType type = new DataTypeNull();
@@ -68,14 +69,12 @@ public class IIManualDataVariable extends IIManualObject
 	public void postInit(IIManualPage page)
 	{
 		super.postInit(page);
-
-		Class<? extends DataType> clazz = DataPacket.varTypes.getOrDefault(dataSource.getString("type"), DataTypeNull.class);
-		this.type = DataPacket.getVarInstance(clazz);
+		this.type = IIDataTypeUtils.getVarInstance(dataSource.getString("type"));
 
 		dataSource.checkSetString("letter", s -> letter = s, "");
 		dataSource.checkSetString("name", s -> name = s, "");
 		dataSource.checkSetString("description", s -> description = s, "");
-		dataSource.checkSetString("direction", b -> inputVariable = b.equals("out"), "in");
+		dataSource.checkSetString("direction", b -> inputVariable = b.equals("in"), "out");
 
 		value = null;
 		values = null;
@@ -128,7 +127,7 @@ public class IIManualDataVariable extends IIManualObject
 		super.drawButton(mc, mx, my, partialTicks);
 
 		GlStateManager.pushMatrix();
-		ClientUtils.bindTexture(type.getTextureLocation());
+		IIClientUtils.bindTexture(type.getTextureLocation());
 		GlStateManager.color(1f, 1f, 1f, 1f);
 		GlStateManager.enableBlend();
 		Gui.drawModalRectWithCustomSizedTexture(x, y, 0, 0, 16, 16, 16, 16);

@@ -42,9 +42,9 @@ import net.minecraftforge.oredict.OreDictionary;
 import org.apache.commons.lang3.ArrayUtils;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataType;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeItemStack;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
+import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 import pl.pabilo8.immersiveintelligence.common.compat.BaublesHelper;
 import pl.pabilo8.immersiveintelligence.common.compat.IICompatModule;
 import pl.pabilo8.immersiveintelligence.common.util.ISerializableEnum;
@@ -353,7 +353,7 @@ public class IIUtils
 		if(dataType instanceof DataTypeItemStack)
 			return new IngredientStack((((DataTypeItemStack)dataType).value.copy()));
 		else if(dataType instanceof DataTypeString)
-			return new IngredientStack(dataType.valueToString());
+			return new IngredientStack(dataType.toString());
 		else
 			return new IngredientStack("*");
 	}

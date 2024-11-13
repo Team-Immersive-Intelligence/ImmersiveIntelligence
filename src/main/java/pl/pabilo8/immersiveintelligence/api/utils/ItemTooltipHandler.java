@@ -17,7 +17,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
-import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
@@ -31,8 +30,6 @@ import java.util.List;
  */
 public class ItemTooltipHandler
 {
-	public static final String tooltipPattern = "";
-
 	public interface IAdvancedTooltipItem
 	{
 		@SideOnly(Side.CLIENT)
@@ -133,9 +130,6 @@ public class ItemTooltipHandler
 			}
 			else if(lastLine)
 				lastLine = false;
-
-		if(list.size() > 1)
-			IILogger.info("o");
 
 		return list;
 	}

@@ -135,15 +135,17 @@ public class IIManualCategoryData extends IIManualCategory
 				.addSource("reader", getSourceForItem(IIContent.blockMetalDevice.getStack(IIBlockTypes_MetalDevice.PUNCHTAPE_READER)))
 				.addSource("writer", getSourceForItem(IIContent.blockMetalDevice.getStack(IIBlockTypes_MetalDevice.PUNCHTAPE_READER)));
 		addEntry("arithmetic_logic_machine");
-		IIManualEntry functionalCircuits = addEntry("functional_circuits")
+		IIManualEntry functionalCircuits = addEntry("functions/_functional_circuits")
 				.addSource("circuit_blueprints", getSourceForItems(
 						BlueprintCraftingRecipe.getTypedBlueprint("basic_functional_circuits"),
 						BlueprintCraftingRecipe.getTypedBlueprint("advanced_functional_circuits"),
 						BlueprintCraftingRecipe.getTypedBlueprint("processor_functional_circuits")
 				));
 		for(Circuits circuit : Circuits.values())
+		{
 			functionalCircuits.addSource(circuit.getName(), getSourceForItem(IIContent.itemCircuit.getStack(circuit)));
-
+			addEntry("functions/"+circuit.getName());
+		}
 
 		addEntry("redstone_interface");
 
@@ -172,7 +174,7 @@ public class IIManualCategoryData extends IIManualCategory
 								.toArray(ItemStack[]::new)
 				));
 
-		addEntry("functions/arithmetic");
+
 		addEntry("folder/device/sekritdokuments/data_pol");
 
 	}

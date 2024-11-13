@@ -1,6 +1,7 @@
 package pl.pabilo8.immersiveintelligence.api.data.types;
 
 import net.minecraft.nbt.NBTTagCompound;
+import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 
 /**
  * @author Pabilo8
@@ -10,12 +11,6 @@ public class DataTypeNull extends DataType
 {
 	public DataTypeNull()
 	{
-	}
-
-	@Override
-	public String valueToString()
-	{
-		return "null";
 	}
 
 	@Override
@@ -34,5 +29,11 @@ public class DataTypeNull extends DataType
 	public boolean equals(Object obj)
 	{
 		return obj instanceof DataTypeNull;
+	}
+
+	@Override
+	public String toString()
+	{
+		return "null";
 	}
 }

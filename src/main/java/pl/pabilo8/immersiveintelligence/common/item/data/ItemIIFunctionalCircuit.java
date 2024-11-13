@@ -17,9 +17,9 @@ import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IIDataHandlingUtils;
 import pl.pabilo8.immersiveintelligence.api.data.device.IDataStorageItem;
 import pl.pabilo8.immersiveintelligence.api.data.operations.DataOperation.DataOperationMeta;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataType;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataType.TypeMetaInfo;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeExpression;
+import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
+import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType.TypeMetaInfo;
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler;
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler.IAdvancedTooltipItem;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
@@ -141,28 +141,16 @@ public class ItemIIFunctionalCircuit extends ItemIISubItemsBase<Circuits> implem
 				"to_null"
 		),
 		FLUIDSTACK(CircuitTypes.BASIC,
-				"is_null",
-				"to_integer",
-				"to_float",
-				"to_string",
-				"to_boolean",
-				"to_null"
+				"is_null"
+				//TODO: 31.10.2024 add properly
 		),
 		MAP(CircuitTypes.BASIC,
-				"is_null",
-				"to_integer",
-				"to_float",
-				"to_string",
-				"to_boolean",
-				"to_null"
+				"is_null"
+				//TODO: 31.10.2024 add properly
 		),
 		VECTOR_ARITHMETIC(CircuitTypes.PROCESSOR,
-				"is_null",
-				"to_integer",
-				"to_float",
-				"to_string",
-				"to_boolean",
-				"to_null"
+				"is_null"
+				//TODO: 31.10.2024 add properly
 		),
 		CRYPTOGRAPHER(CircuitTypes.CRYPTOGRAPHIC,
 				"encrypt_text",

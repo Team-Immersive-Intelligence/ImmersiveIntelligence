@@ -1,6 +1,7 @@
 package pl.pabilo8.immersiveintelligence.api.data.types;
 
 import net.minecraft.nbt.NBTTagCompound;
+import pl.pabilo8.immersiveintelligence.api.data.types.generic.IterableDataType;
 
 /**
  * @author GabrielV
@@ -22,16 +23,6 @@ public class DataTypeEncrypted extends IterableDataType
 	}
 
 	@Override
-	public String valueToString()
-	{
-		if(value==null||value.length==0) return "00";
-		StringBuilder s = new StringBuilder();
-		for(byte b : value)
-			s.append(String.format("%02X", b));
-		return s.delete(s.length()-2, s.length()-1).toString();
-	}
-
-	@Override
 	public void valueFromNBT(NBTTagCompound nbt)
 	{
 		this.value = nbt.getByteArray("Values");
@@ -43,5 +34,15 @@ public class DataTypeEncrypted extends IterableDataType
 		NBTTagCompound nbt = getHeaderTag();
 		nbt.setByteArray("Values", value);
 		return nbt;
+	}
+
+	@Override
+	public String toString()
+	{
+		if(value==null||value.length==0) return "00";
+		StringBuilder s = new StringBuilder();
+		for(byte b : value)
+			s.append(String.format("%02X", b));
+		return s.delete(s.length()-2, s.length()-1).toString();
 	}
 }

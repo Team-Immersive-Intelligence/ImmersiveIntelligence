@@ -2,7 +2,11 @@ package pl.pabilo8.immersiveintelligence.api.data.operations.arithmetic;
 
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.operations.DataOperation;
-import pl.pabilo8.immersiveintelligence.api.data.types.*;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeExpression;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeFloat;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
+import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
+import pl.pabilo8.immersiveintelligence.api.data.types.generic.NumericDataType;
 
 import javax.annotation.Nonnull;
 
@@ -10,7 +14,7 @@ import javax.annotation.Nonnull;
  * @author Pabilo8
  * @since 05-07-2019
  */
-@DataOperation.DataOperationMeta(name = "abs", allowedTypes = {NumericDataType.class}, params = {"number"}, expectedResult = NumericDataType.class)
+@DataOperation.DataOperationMeta(name = "abs", allowedTypes = {NumericDataType.class}, params = {"value"}, expectedResult = NumericDataType.class)
 public class DataOperationAbs extends DataOperation
 {
 	@Nonnull

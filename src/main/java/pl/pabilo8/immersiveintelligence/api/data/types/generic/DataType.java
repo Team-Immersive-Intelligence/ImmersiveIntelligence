@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.api.data.types;
+package pl.pabilo8.immersiveintelligence.api.data.types.generic;
 
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.nbt.NBTTagCompound;
@@ -19,11 +19,6 @@ import java.util.function.Supplier;
 @MethodsReturnNonnullByDefault
 public abstract class DataType
 {
-	/**
-	 * @return value to string, if compound make it JSON styled, look at {@link NBTTagCompound#toString()}
-	 */
-	public abstract String valueToString();
-
 	/**
 	 * @param nbt to load values from
 	 */
@@ -73,9 +68,9 @@ public abstract class DataType
 	/**
 	 * @return icon texture location for this data type
 	 */
-	public String getTextureLocation()
+	public ResourceLocation getTextureLocation()
 	{
-		return getTypeMeta().name;
+		return getTypeMeta().getTextureLocation();
 	}
 
 	/**

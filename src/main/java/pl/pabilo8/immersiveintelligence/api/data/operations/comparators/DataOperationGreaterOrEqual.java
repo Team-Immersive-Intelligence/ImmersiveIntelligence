@@ -2,10 +2,10 @@ package pl.pabilo8.immersiveintelligence.api.data.operations.comparators;
 
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.operations.DataOperation;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataType;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeBoolean;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeExpression;
-import pl.pabilo8.immersiveintelligence.api.data.types.NumericDataType;
+import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
+import pl.pabilo8.immersiveintelligence.api.data.types.generic.IComparableDataType;
 
 import javax.annotation.Nonnull;
 
@@ -14,17 +14,21 @@ import javax.annotation.Nonnull;
  * @since 05-07-2019
  */
 @DataOperation.DataOperationMeta(name = "greater_or_equal", expression = ">=",
-		allowedTypes = {NumericDataType.class, NumericDataType.class}, params = {"number", "number"},
+		allowedTypes = {DataType.class, DataType.class}, params = {"compared", "compared"},
 		expectedResult = DataTypeBoolean.class)
 public class DataOperationGreaterOrEqual extends DataOperation
 {
 	@Nonnull
 	@Override
+	@SuppressWarnings({"raw", "unchecked"})
 	public DataType execute(DataPacket packet, DataTypeExpression data)
 	{
-		NumericDataType t1 = packet.getVarInType(NumericDataType.class, data.getArgument(0));
-		NumericDataType t2 = packet.getVarInType(NumericDataType.class, data.getArgument(1));
+		DataType t1 = packet.evaluateVariable(data.getArgument(0), false);
+		DataType t2 = packet.evaluateVariable(data.getArgument(1), false);
 
-		return new DataTypeBoolean(t1.floatValue() >= t2.floatValue());
+		if(t1 instanceof IComparableDataType&&t2 instanceof IComparableDataType&&((IComparableDataType<?>)t1).canCompareWith(t2))
+			return new DataTypeBoolean(((IComparableDataType)t1).greaterOrEqual(t2));
+		else
+			return new DataTypeBoolean(false);
 	}
 }

@@ -25,10 +25,10 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataType;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeItemStack;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
+import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 import pl.pabilo8.immersiveintelligence.api.utils.MinecartBlockHelper;
 import pl.pabilo8.immersiveintelligence.api.utils.minecart.IMinecartBlockPickable;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Inserter;
@@ -132,7 +132,7 @@ public class TileEntityInserter extends TileEntityInserterBase
 		DataType o = packet.getPacketVariable('o');
 
 		//old inserter compat
-		if(m.valueToString().equals("set")||m.valueToString().equals("add"))
+		if(m.toString().equals("set")||m.toString().equals("add"))
 		{
 			DataTypeInteger count = packet.getVarInType(DataTypeInteger.class, c);
 			IngredientStack ss;
@@ -167,13 +167,13 @@ public class TileEntityInserter extends TileEntityInserterBase
 			0: (optional) output distance - int
 
 			*/
-			switch(c.valueToString())
+			switch(c.toString())
 			{
 				case "add":
 				{
-					if(packet.hasVariable('a')&&TASKS.containsKey(a.valueToString()))
+					if(packet.hasVariable('a')&&TASKS.containsKey(a.toString()))
 					{
-						Function<NBTTagCompound, InserterTask> fun = TASKS.get(a.valueToString());
+						Function<NBTTagCompound, InserterTask> fun = TASKS.get(a.toString());
 						InserterTask task = fun.apply(new NBTTagCompound());
 
 						//input facing, default null
@@ -184,7 +184,7 @@ public class TileEntityInserter extends TileEntityInserterBase
 								f = EnumFacing.getHorizontal(EnumFacing.getFront(((DataTypeInteger)i).value).getHorizontalIndex());
 							else if(i instanceof DataTypeString)
 							{
-								String ss = i.valueToString().toUpperCase();
+								String ss = i.toString().toUpperCase();
 								f = Arrays.stream(EnumFacing.values()).filter(e -> e.name().equals(ss)).findFirst().orElse(null);
 							}
 							if(f!=null)
@@ -199,7 +199,7 @@ public class TileEntityInserter extends TileEntityInserterBase
 								f = EnumFacing.getHorizontal(EnumFacing.getFront(((DataTypeInteger)o).value).getHorizontalIndex());
 							else if(o instanceof DataTypeString)
 							{
-								String ss = o.valueToString().toUpperCase();
+								String ss = o.toString().toUpperCase();
 								f = Arrays.stream(EnumFacing.values()).filter(e -> e.name().equals(ss)).findFirst().orElse(null);
 							}
 							if(f!=null)
@@ -255,14 +255,14 @@ public class TileEntityInserter extends TileEntityInserterBase
 					{
 						Predicate<InserterTask> p;
 						if(s instanceof DataTypeString)
-							p = packerTask -> packerTask.stack.oreName.equals(s.valueToString());
+							p = packerTask -> packerTask.stack.oreName.equals(s.toString());
 						else if(s instanceof DataTypeItemStack)
 							p = packerTask -> packerTask.stack.equals(IIUtils.ingredientFromData(s));
 						else
 							p = packerTask -> true;
 
 						if(packet.hasVariable('a'))
-							p = p.and(task -> task.getName().equals(a.valueToString()));
+							p = p.and(task -> task.getName().equals(a.toString()));
 						tasks.removeIf(p);
 					}
 				}

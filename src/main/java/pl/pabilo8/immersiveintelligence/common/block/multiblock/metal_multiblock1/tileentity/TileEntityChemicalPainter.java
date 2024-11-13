@@ -38,10 +38,10 @@ import pl.pabilo8.immersiveintelligence.api.crafting.PaintingRecipe;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IIDataHandlingUtils;
 import pl.pabilo8.immersiveintelligence.api.data.device.IDataDevice;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataType;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeFloat;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
+import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.ChemicalPainter;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
@@ -639,7 +639,7 @@ public class TileEntityChemicalPainter extends TileEntityMultiblockMetal<TileEnt
 			DataType c = packet.getPacketVariable('c');
 			DataType p = packet.getPacketVariable('p');
 
-			if(c.valueToString().equals("callback"))
+			if(c.toString().equals("callback"))
 			{
 				DataPacket callback = IIDataHandlingUtils.handleCallback(packet, var -> {
 					switch(var)

@@ -1,14 +1,14 @@
 package pl.pabilo8.immersiveintelligence.api.data.device;
 
-import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataType;
+import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler.IAdvancedTooltipItem;
+import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 
 import java.util.List;
 
@@ -38,7 +38,7 @@ public interface IDataStorageItem extends IAdvancedTooltipItem
 		for(DataType type : packet)
 		{
 			GlStateManager.color(1f, 1f, 1f, 1f);
-			ClientUtils.bindTexture(type.getTextureLocation());
+			IIClientUtils.bindTexture(type.getTextureLocation());
 			Gui.drawModalRectWithCustomSizedTexture(0, i*20, 0, 0, 16, 16, 16, 16);
 			i++;
 		}

@@ -70,7 +70,7 @@ public class TileEntityPrintingPress extends TileEntityMultiblockProductionMulti
 	static
 	{
 		PRINT_ORDER_PARSERS.put("text", ORDER_PARSER_TEXT = (packet -> {
-			String text = packet.getPacketVariable('t').valueToString();
+			String text = packet.getPacketVariable('t').toString();
 			float c = 0, m = 0, y = 0, k = 0;
 
 			if(!text.isEmpty())
@@ -202,7 +202,7 @@ public class TileEntityPrintingPress extends TileEntityMultiblockProductionMulti
 	@Override
 	public void receiveData(DataPacket packet, int pos)
 	{
-		if(packet.getPacketVariable('c').valueToString().equals("callback"))
+		if(packet.getPacketVariable('c').toString().equals("callback"))
 		{
 			DataPacket response = IIDataHandlingUtils.handleCallback(packet,
 					var -> {

@@ -149,13 +149,13 @@ public class TileEntityProgrammableSpeaker extends TileEntityImmersiveConnectabl
 		{
 			if(once)
 			{
-				SoundEvent s = SoundEvent.REGISTRY.getObject(new ResourceLocation(packet.getPacketVariable('s').valueToString()));
+				SoundEvent s = SoundEvent.REGISTRY.getObject(new ResourceLocation(packet.getPacketVariable('s').toString()));
 				if(s!=null)
 					world.playSound(null, getPos(), s, SoundCategory.BLOCKS, ((ProgrammableSpeaker.soundRange+4)/20f), tone);
 			}
 			else
 			{
-				soundID = packet.getPacketVariable('s').valueToString();
+				soundID = packet.getPacketVariable('s').toString();
 				sendSoundUpdate();
 			}
 		}

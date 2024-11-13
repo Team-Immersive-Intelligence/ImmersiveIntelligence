@@ -1,6 +1,7 @@
 package pl.pabilo8.immersiveintelligence.api.data.types;
 
 import net.minecraft.nbt.NBTTagCompound;
+import pl.pabilo8.immersiveintelligence.api.data.types.generic.NumericDataType;
 
 import javax.annotation.Nonnull;
 
@@ -20,13 +21,6 @@ public class DataTypeInteger extends NumericDataType
 	public DataTypeInteger()
 	{
 
-	}
-
-	@Nonnull
-	@Override
-	public String valueToString()
-	{
-		return String.valueOf(value);
 	}
 
 	@Override
@@ -59,5 +53,11 @@ public class DataTypeInteger extends NumericDataType
 	public boolean equals(Object obj)
 	{
 		return super.equals(obj)&&((NumericDataType)obj).intValue()==value;
+	}
+
+	@Override
+	public String toString()
+	{
+		return String.valueOf(value);
 	}
 }

@@ -342,11 +342,11 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockProduction
 	{
 		if(packet.hasVariable('b'))
 		{
-			IAmmoTypeItem<?, ?> ammoItem = AmmoRegistry.getAmmoItem(packet.getPacketVariable('b').valueToString());
+			IAmmoTypeItem<?, ?> ammoItem = AmmoRegistry.getAmmoItem(packet.getPacketVariable('b').toString());
 			this.producedAmmo = ammoItem==null?IIContent.itemAmmoHeavyArtillery: ammoItem;
 		}
 		if(packet.hasVariable('t'))
-			this.coreType = CoreType.v(packet.getPacketVariable('t').valueToString());
+			this.coreType = CoreType.v(packet.getPacketVariable('t').toString());
 
 		if(Arrays.stream(producedAmmo.getAllowedCoreTypes()).noneMatch(ct -> ct==coreType))
 			this.coreType = this.producedAmmo.getAllowedCoreTypes()[0];

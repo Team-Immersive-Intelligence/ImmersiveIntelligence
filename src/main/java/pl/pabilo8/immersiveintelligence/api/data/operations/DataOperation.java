@@ -1,9 +1,9 @@
 package pl.pabilo8.immersiveintelligence.api.data.operations;
 
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataType;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeExpression;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeNull;
+import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 
 import javax.annotation.Nonnull;
 import java.lang.annotation.ElementType;
@@ -66,6 +66,11 @@ public abstract class DataOperation
 		 * @return how many processor ticks the operation takes to execute
 		 */
 		int processorTime() default 1;
+
+		/**
+		 * @return whether the operation returns a result or is to be treated as a "void" operation
+		 */
+		boolean resultMatters() default true;
 	}
 
 	/**
@@ -75,7 +80,7 @@ public abstract class DataOperation
 	 * @ii-approved 0.3.1
 	 * @since 27.10.2024
 	 */
-	@DataOperationMeta(name = "null", allowedTypes = {}, params = {}, expectedResult = DataTypeNull.class)
+	@DataOperationMeta(name = "null", allowedTypes = {}, params = {}, expectedResult = DataTypeNull.class, resultMatters = false)
 	public static class DataOperationNull extends DataOperation
 	{
 		public static final DataOperationNull INSTANCE = new DataOperationNull();

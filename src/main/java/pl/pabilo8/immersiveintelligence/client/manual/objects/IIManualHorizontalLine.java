@@ -1,7 +1,6 @@
 package pl.pabilo8.immersiveintelligence.client.manual.objects;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualObject;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
@@ -27,14 +26,14 @@ public class IIManualHorizontalLine extends IIManualObject
 	public void drawButton(Minecraft mc, int mx, int my, float partialTicks)
 	{
 		GlStateManager.disableTexture2D();
-		Gui.drawRect(x, y, x+width, y+2, manual.getTextColour());
+		drawTexturedModalRect(x, y-2, 0, 0, width, 1);
 		GlStateManager.enableTexture2D();
 	}
 
 	@Override
 	protected int getDefaultHeight()
 	{
-		return 0;
+		return 4;
 	}
 
 	@Override

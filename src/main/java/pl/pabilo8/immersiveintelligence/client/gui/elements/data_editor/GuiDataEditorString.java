@@ -35,7 +35,7 @@ public class GuiDataEditorString extends GuiDataEditor<DataTypeString>
 		this.valueEdit = new GuiMultiLineTextField(0, renderer,
 				x+2, y+12, width-4, height-20);
 		this.valueEdit.setFocused(true);
-		this.valueEdit.setText(dataType.valueToString());
+		this.valueEdit.setText(dataType.toString());
 		this.valueEdit.updateCursorCounter();
 		this.valueEdit.setMaxStringLength(512);
 	}

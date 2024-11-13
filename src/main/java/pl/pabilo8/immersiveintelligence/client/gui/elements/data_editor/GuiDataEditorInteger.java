@@ -39,7 +39,7 @@ public class GuiDataEditorInteger extends GuiDataEditor<DataTypeInteger>
 		this.valueEdit = new GuiTextField(0, renderer,
 				x+2, y+12, width-4, 20);
 		this.valueEdit.setFocused(true);
-		this.valueEdit.setText(dataType.valueToString());
+		this.valueEdit.setText(dataType.toString());
 		this.valueEdit.updateCursorCounter();
 
 		this.buttonInt = addButton(new GuiButtonIE(1, x+2, y+32+2, 12, 12, "D",

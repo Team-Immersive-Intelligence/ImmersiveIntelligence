@@ -3,7 +3,11 @@ package pl.pabilo8.immersiveintelligence.api.data.operations.array;
 import net.minecraft.util.math.MathHelper;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.operations.DataOperation;
-import pl.pabilo8.immersiveintelligence.api.data.types.*;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeArray;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeExpression;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeNull;
+import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 
 import javax.annotation.Nonnull;
 
@@ -18,11 +22,8 @@ public class DataOperationGet extends DataOperation
 	@Override
 	public DataType execute(DataPacket packet, DataTypeExpression data)
 	{
-		DataTypeArray array;
-		DataTypeInteger index;
-
-		array = packet.getVarInType(DataTypeArray.class, data.getArgument(0));
-		index = packet.getVarInType(DataTypeInteger.class, data.getArgument(1));
+		DataTypeArray array = packet.getVarInType(DataTypeArray.class, data.getArgument(0));
+		DataTypeInteger index = packet.getVarInType(DataTypeInteger.class, data.getArgument(1));
 
 		DataType[] arr = array.value;
 		return arr.length > 0?arr[MathHelper.clamp(index.value, 0, arr.length-1)]: new DataTypeNull();

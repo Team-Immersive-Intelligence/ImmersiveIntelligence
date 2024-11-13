@@ -1,6 +1,7 @@
 package pl.pabilo8.immersiveintelligence.api.data.types;
 
 import net.minecraft.nbt.NBTTagCompound;
+import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 
 import javax.annotation.Nonnull;
 
@@ -34,13 +35,6 @@ public class DataTypeVector extends DataType
 		this.integerVector = false;
 	}
 
-	@Nonnull
-	@Override
-	public String valueToString()
-	{
-		return String.format("[%s,%s,%s]", x, y, z);
-	}
-
 	@Override
 	public void valueFromNBT(NBTTagCompound n)
 	{
@@ -72,5 +66,11 @@ public class DataTypeVector extends DataType
 
 		DataTypeVector other = (DataTypeVector)obj;
 		return other.x==x&&other.y==y&&other.z==z;
+	}
+
+	@Override
+	public String toString()
+	{
+		return String.format("[%s,%s,%s]", x, y, z);
 	}
 }

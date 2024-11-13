@@ -2,6 +2,7 @@ package pl.pabilo8.immersiveintelligence.api.data.types;
 
 import net.minecraft.nbt.NBTTagCompound;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
+import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 
 import javax.annotation.Nonnull;
 
@@ -20,13 +21,6 @@ public class DataTypeAccessor extends DataType
 
 	public DataTypeAccessor()
 	{
-	}
-
-	@Nonnull
-	@Override
-	public String valueToString()
-	{
-		return "@"+variable;
 	}
 
 	public DataType getRealValue(DataPacket data)
@@ -54,5 +48,11 @@ public class DataTypeAccessor extends DataType
 	public boolean equals(Object obj)
 	{
 		return obj instanceof DataTypeAccessor&&((DataTypeAccessor)obj).variable==variable;
+	}
+
+	@Override
+	public String toString()
+	{
+		return "@"+variable;
 	}
 }

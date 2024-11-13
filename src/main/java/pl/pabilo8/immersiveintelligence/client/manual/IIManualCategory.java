@@ -2,7 +2,6 @@ package pl.pabilo8.immersiveintelligence.client.manual;
 
 import blusunrize.immersiveengineering.api.ManualHelper;
 import blusunrize.immersiveengineering.client.manual.IEManualInstance;
-import blusunrize.lib.manual.IManualPage;
 import blusunrize.lib.manual.ManualInstance.ManualEntry;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
@@ -72,21 +71,22 @@ public abstract class IIManualCategory
 		//Checking in root directory
 		if(folder==null)
 		{
-			List<ManualEntry> entries = ManualHelper.getManual().manualContents.get(folderName);
-			if(!entries.isEmpty())
-			{
-				IManualPage[] pages = entries.get(0).getPages();
-				if(pages.length > 0&&pages[0] instanceof IIManualPageFolder)
-					folder = ((IIManualPageFolder)pages[0]);
-			}
-			else
-				folder = new IIManualPageFolder(ManualHelper.getManual(), folderName, getCategory());
+			List<ManualEntry> manualEntries = ManualHelper.getManual().manualContents.get(getCategory());
+			folder = manualEntries.stream()
+					.filter(manualEntry -> manualEntry.getName().equals(folderName))
+					.limit(1)
+					.map(ManualEntry::getPages)
+					.filter(pages -> pages.length > 0&&pages[0] instanceof IIManualPageFolder)
+					.map(pages -> (IIManualPageFolder)pages[0])
+					.findFirst().orElseGet(
+							() -> new IIManualPageFolder(ManualHelper.getManual(), folderName, getCategory())
+					);
 
 			return createSubFolder(remaining, folder);
 		}
 
 		//Add the folder to root
-		return createSubFolder(remaining, folder.getOrCreateSubFolder(folderName));
+		return folder.getOrCreateSubFolder(folderName);
 	}
 
 	protected final EasyNBT getSourceForItem(ItemStack stack)

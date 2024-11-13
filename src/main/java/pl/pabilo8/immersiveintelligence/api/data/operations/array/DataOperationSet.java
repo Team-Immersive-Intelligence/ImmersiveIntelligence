@@ -3,6 +3,7 @@ package pl.pabilo8.immersiveintelligence.api.data.operations.array;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.operations.DataOperation;
 import pl.pabilo8.immersiveintelligence.api.data.types.*;
+import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -12,7 +13,8 @@ import java.util.Arrays;
  * @author Pabilo8
  * @since 05-07-2019
  */
-@DataOperation.DataOperationMeta(name = "array_set", allowedTypes = {DataTypeArray.class, DataTypeInteger.class, DataType.class}, params = {"array", "index", "value"}, expectedResult = DataTypeNull.class)
+@DataOperation.DataOperationMeta(name = "array_set", allowedTypes = {DataTypeArray.class, DataTypeInteger.class, DataType.class},
+		params = {"array", "index", "value"}, expectedResult = DataTypeNull.class, resultMatters = false)
 public class DataOperationSet extends DataOperation
 {
 	@Nonnull

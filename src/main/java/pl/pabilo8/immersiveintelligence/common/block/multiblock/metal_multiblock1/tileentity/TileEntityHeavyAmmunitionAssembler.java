@@ -194,7 +194,7 @@ public class TileEntityHeavyAmmunitionAssembler extends TileEntityMultiblockProd
 	public void receiveData(DataPacket packet, int pos)
 	{
 		if(packet.hasVariable('f'))
-			fuse = FuseType.v(packet.getPacketVariable('f').valueToString());
+			fuse = FuseType.v(packet.getPacketVariable('f').toString());
 	}
 
 	@Override

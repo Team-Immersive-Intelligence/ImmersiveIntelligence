@@ -29,7 +29,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * A class that handles registration and instantiation of {@link DataOperation Data Operations} and their {@link DataOperationMeta metadata}.
+ *
  * @author Pabilo8
+ * @updated 28.10.2024
+ * @ii-approved 0.3.1
  * @since 05-07-2019
  */
 public class DataOperations

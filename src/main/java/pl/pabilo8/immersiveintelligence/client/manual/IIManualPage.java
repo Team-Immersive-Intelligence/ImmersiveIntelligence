@@ -84,6 +84,8 @@ public class IIManualPage extends ManualPages
 
 		registeredObjects.put("datatype", IIManualDataType::new);
 		registeredObjects.put("data_packet", IIManualDataPacket::new);
+		registeredObjects.put("data_operation", IIManualDataOperation::new);
+		registeredObjects.put("data_circuit", IIManualCircuit::new);
 		registeredObjects.put("data_variable", IIManualDataVariable::new);
 		registeredObjects.put("data_callback", IIManualDataCallback::new);
 	}
@@ -112,6 +114,9 @@ public class IIManualPage extends ManualPages
 	@Override
 	public void initPage(GuiManual gui, int x, int y, List<GuiButton> pageButtons)
 	{
+		if(gui.previousSelectedEntry.isEmpty()&&entry.getFolder()!=null)
+			gui.previousSelectedEntry.push(entry.getFolder().getName());
+
 		highlighted = ItemStack.EMPTY;
 		String file = entry.fetchPage(text); //get text for this page
 
@@ -424,7 +429,7 @@ public class IIManualPage extends ManualPages
 		{
 			if(tooltip!=null&&!tooltip.isEmpty())
 			{
-				ClientUtils.drawHoveringText(tooltip, mx, my, gui.getManual().fontRenderer, gui.width, -1);
+				ClientUtils.drawHoveringText(tooltip, mx, my, IIClientUtils.fontRegular, gui.width, -1);
 				RenderHelper.enableGUIStandardItemLighting();
 			}
 		}

@@ -13,6 +13,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.types.*;
+import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 import pl.pabilo8.immersiveintelligence.common.block.data_device.tileentity.TileEntityDataConnector;
 
 import java.util.HashMap;
@@ -132,7 +133,7 @@ public class OpenComputersHelper extends IICompatModule
 			{
 				Map<String, Object> map = new HashMap<>();
 				for(Entry<Character, DataType> entry : te.lastReceived.variables.entrySet())
-					map.put(entry.getKey().toString(), entry.getValue().valueToString());
+					map.put(entry.getKey().toString(), entry.getValue().toString());
 
 				te.compatReceived = true;
 				return new Object[]{map};

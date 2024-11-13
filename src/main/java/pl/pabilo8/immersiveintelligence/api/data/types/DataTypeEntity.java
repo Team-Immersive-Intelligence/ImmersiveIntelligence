@@ -7,6 +7,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.common.registry.EntityEntry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
+import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 
 import javax.annotation.Nonnull;
 import java.util.Optional;
@@ -52,13 +53,6 @@ public class DataTypeEntity extends DataType
 	public String getName()
 	{
 		return "entity";
-	}
-
-	@Nonnull
-	@Override
-	public String valueToString()
-	{
-		return actualValueToNBT(new NBTTagCompound()).toString();
 	}
 
 	@Override
@@ -109,5 +103,11 @@ public class DataTypeEntity extends DataType
 		DataTypeEntity casted = (DataTypeEntity)obj;
 
 		return casted.entityID==entityID&&casted.dimensionID==dimensionID;
+	}
+
+	@Override
+	public String toString()
+	{
+		return actualValueToNBT(new NBTTagCompound()).toString();
 	}
 }

@@ -116,7 +116,7 @@ public class TileEntityBallisticComputer extends TileEntityMultiblockIIGeneric<T
 				force = packet.getVarInType(DataTypeInteger.class, packet.getPacketVariable('f')).value;
 			if(packet.hasVariable('t'))
 			{
-				String bname = packet.getPacketVariable('t').valueToString();
+				String bname = packet.getPacketVariable('t').toString();
 				IAmmoTypeItem<?, ?> bullet = AmmoRegistry.getAmmoItem(bname);
 				if(bullet!=null)
 					force = bullet.getVelocity();

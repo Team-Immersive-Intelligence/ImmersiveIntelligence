@@ -3,9 +3,11 @@ package pl.pabilo8.immersiveintelligence.api.data.types;
 import net.minecraft.nbt.NBTTagCompound;
 import pl.pabilo8.immersiveintelligence.api.data.DataOperations;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
+import pl.pabilo8.immersiveintelligence.api.data.IIDataTypeUtils;
 import pl.pabilo8.immersiveintelligence.api.data.operations.DataOperation;
 import pl.pabilo8.immersiveintelligence.api.data.operations.DataOperation.DataOperationMeta;
 import pl.pabilo8.immersiveintelligence.api.data.operations.DataOperation.DataOperationNull;
+import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
@@ -72,7 +74,7 @@ public class DataTypeExpression extends DataType
 
 		for(int i = 0; i < allowedTypes.length; i++)
 			if(newData[i]==null)
-				newData[i] = DataPacket.getVarInstance(allowedTypes[i]);
+				newData[i] = IIDataTypeUtils.getVarInstance(allowedTypes[i]);
 
 		this.data = newData;
 	}
@@ -87,16 +89,6 @@ public class DataTypeExpression extends DataType
 		return operation.execute(packet, this);
 	}
 
-	@Nonnull
-	@Override
-	public String valueToString()
-	{
-		String symbol = operation.getMeta().expression();
-		if(!symbol.isEmpty())
-			return String.format(symbol, Arrays.stream(data).map(DataType::valueToString).toArray());
-		return operation.getMeta().name();
-	}
-
 	@Override
 	public void valueFromNBT(NBTTagCompound nbt)
 	{
@@ -106,7 +98,7 @@ public class DataTypeExpression extends DataType
 
 		this.data = new DataType[meta.allowedTypes().length];
 		for(int i = 0; i < meta.allowedTypes().length; i++)
-			this.data[i] = DataPacket.getVarFromNBT(nbt.getCompoundTag("Value"+(i+1)));
+			this.data[i] = IIDataTypeUtils.getVarFromNBT(nbt.getCompoundTag("Value"+(i+1)));
 	}
 
 	@Nonnull
@@ -122,5 +114,14 @@ public class DataTypeExpression extends DataType
 			nbt.setTag("Value"+(i+1), data[i].valueToNBT());
 
 		return nbt;
+	}
+
+	@Override
+	public String toString()
+	{
+		String symbol = operation.getMeta().expression();
+		if(!symbol.isEmpty())
+			return String.format(symbol, Arrays.stream(data).map(DataType::toString).toArray());
+		return operation.getMeta().name();
 	}
 }
