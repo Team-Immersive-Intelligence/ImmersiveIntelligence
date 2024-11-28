@@ -633,6 +633,7 @@ public class IIRecipes
 	public static void addWoodTableSawRecipes()
 	{
 
+		//Sawmill plank recipe
 		CraftingManager.REGISTRY.forEach(iRecipe ->
 				{
 					if(Utils.compareToOreName(iRecipe.getRecipeOutput(), "plankWood"))
