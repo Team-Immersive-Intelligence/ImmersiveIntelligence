@@ -59,6 +59,8 @@ import static blusunrize.immersiveengineering.api.energy.wires.WireType.STRUCTUR
 /**
  * @author Pabilo8
  * @since 28-06-2019
+ * @author Avalon
+ * @since 22-10-2024
  */
 public class TileEntitySkyCartStation extends TileEntityMultiblockConnectable<TileEntitySkyCartStation, IMultiblockRecipe> implements IAdvancedCollisionBounds, IAdvancedSelectionBounds, ISkyCrateConnector, IPlayerInteraction, IGuiTile, IRotationalEnergyBlock
 {
@@ -367,38 +369,45 @@ public class TileEntitySkyCartStation extends TileEntityMultiblockConnectable<Ti
 					}
 	}
 
-	private void handleRotation()
-	{
-		boolean b = false;
-		if(rotation.getRotationSpeed() > SkyCrateStation.rpmBreakingMax||rotation.getTorque() > SkyCrateStation.torqueBreakingMax)
-		{
+	private void handleRotation() {
+		boolean hasIssues = false;
+
+		// If rotation speed or torque exceeds the maximum allowed values, trigger self-destruction.
+		if (rotation.getRotationSpeed() > SkyCrateStation.rpmBreakingMax || rotation.getTorque() > SkyCrateStation.torqueBreakingMax) {
 			selfDestruct();
+			return; // Exit early after self-destruct.
 		}
 
-		if(world.getTileEntity(getBlockPosForPos(6).offset((mirrored?this.facing.rotateY(): this.facing.rotateYCCW())))!=null)
-		{
-			TileEntity te = world.getTileEntity(getBlockPosForPos(6).offset((mirrored?this.facing.rotateY(): this.facing.rotateYCCW())));
-			if(te.hasCapability(CapabilityRotaryEnergy.ROTARY_ENERGY, mirrored?this.facing.rotateYCCW(): this.facing.rotateY()))
-			{
-				IRotaryEnergy cap = te.getCapability(CapabilityRotaryEnergy.ROTARY_ENERGY, mirrored?this.facing.rotateYCCW(): this.facing.rotateY());
-				if(rotation.handleRotation(cap, mirrored?this.facing.rotateYCCW(): this.facing.rotateY()))
-				{
+		// Get the position of the tile entity based on the machine's orientation.
+		BlockPos rotationPos = getBlockPosForPos(6).offset((mirrored ? this.facing.rotateY() : this.facing.rotateYCCW()));
+		TileEntity te = world.getTileEntity(rotationPos);
+
+		// Check if there is a valid TileEntity at the specified position.
+		if (te != null) {
+			// Check if the TileEntity has the rotary energy capability.
+			if (te.hasCapability(CapabilityRotaryEnergy.ROTARY_ENERGY, mirrored ? this.facing.rotateYCCW() : this.facing.rotateY())) {
+				IRotaryEnergy cap = te.getCapability(CapabilityRotaryEnergy.ROTARY_ENERGY, mirrored ? this.facing.rotateYCCW() : this.facing.rotateY());
+
+				// Ensure the capability is valid before processing.
+				if (cap != null && rotation.handleRotation(cap, mirrored ? this.facing.rotateYCCW() : this.facing.rotateY())) {
+					// Synchronize the rotary power state with the clients.
 					IIPacketHandler.INSTANCE.sendToAllAround(new MessageRotaryPowerSync(rotation, 0, master().getPos()), IIPacketHandler.targetPointFromTile(master(), 24));
 				}
+			} else {
+				// No rotary energy capability found on the tile entity.
+				hasIssues = true;
 			}
-			else
-				b = true;
-
+		} else {
+			// No valid tile entity found at the specified position.
+			hasIssues = true;
 		}
-		else
-			b = true;
 
-		if((rotation.getTorque() > 0||rotation.getRotationSpeed() > 0))
-		{
-			if(b)
-			{
-				rotation.grow(0, 0, 0.98f);
+		// If there are issues (missing capability or tile entity), grow rotation values more slowly.
+		if (rotation.getTorque() > 0 || rotation.getRotationSpeed() > 0) {
+			if (hasIssues) {
+				rotation.grow(0, 0, 0.98f); // Reduce growth due to issues.
 			}
+			// Always sync rotary power state, even with reduced growth.
 			IIPacketHandler.INSTANCE.sendToAllAround(new MessageRotaryPowerSync(rotation, 0, master().getPos()), IIPacketHandler.targetPointFromTile(master(), 24));
 		}
 	}
