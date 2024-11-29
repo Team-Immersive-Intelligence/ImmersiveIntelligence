@@ -10,13 +10,18 @@ import pl.pabilo8.immersiveintelligence.common.block.metal_device.BlockIIMetalDe
 import pl.pabilo8.immersiveintelligence.common.block.rotary_device.BlockIIGearbox.IIBlockTypes_Gearbox;
 import pl.pabilo8.immersiveintelligence.common.block.rotary_device.BlockIIMechanicalConnector.IIBlockTypes_MechanicalConnector;
 import pl.pabilo8.immersiveintelligence.common.block.rotary_device.BlockIIMechanicalDevice.IIBlockTypes_MechanicalDevice;
+import pl.pabilo8.immersiveintelligence.common.block.rotary_device.BlockIIMechanicalDevice1;
+import pl.pabilo8.immersiveintelligence.common.block.rotary_device.BlockIIMechanicalDevice1.IIBlockTypes_MechanicalDevice1;
 import pl.pabilo8.immersiveintelligence.common.item.ItemIIMinecart.Minecarts;
+import pl.pabilo8.immersiveintelligence.common.item.crafting.ItemIISawBlade.SawBlades;
 import pl.pabilo8.immersiveintelligence.common.item.mechanical.ItemIIMotorGear.MotorGear;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 /**
  * @author Pabilo8
  * @since 18-01-2020
+ * @author Avalon
+ * @since 8-8-2024
  */
 public class IIManualCategoryLogistics extends IIManualCategory
 {
@@ -105,5 +110,16 @@ public class IIManualCategoryLogistics extends IIManualCategory
 				.addSource("improved_capacitor", getSourceForItem(
 					new ItemStack(IIContent.itemAdvancedPowerPack))
 			);
+		addEntry("mechanical_pump")
+				.addSource("pump", getSourceForItem(
+						IIContent.blockMechanicalDevice1.getStack(IIBlockTypes_MechanicalDevice1.MECHANICAL_PUMP))
+				);
+
+		addEntry("sawmill")
+				.addSource("blades", getSourceForItems(
+						IIContent.itemSawblade.getStack(SawBlades.IRON),
+						IIContent.itemSawblade.getStack(SawBlades.STEEL),
+						IIContent.itemSawblade.getStack(SawBlades.TUNGSTEN)
+				));
 	}
 }
