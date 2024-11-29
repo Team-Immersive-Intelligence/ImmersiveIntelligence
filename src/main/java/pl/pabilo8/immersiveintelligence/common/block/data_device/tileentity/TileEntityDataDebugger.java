@@ -36,6 +36,7 @@ import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.IAdvancedTextOverlay;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.wire.IIDataWireType;
 
@@ -47,6 +48,8 @@ import java.util.Optional;
 /**
  * @author Pabilo8
  * @since 11-06-2019
+ * @author Avalon
+ * @since 10-10-2024
  */
 public class TileEntityDataDebugger extends TileEntityImmersiveConnectable implements ITickable, IDataConnector, IHammerInteraction, IDirectionalTile, IOBJModelCallback<IBlockState>, IAdvancedTextOverlay, IActiveState
 {
@@ -124,21 +127,26 @@ public class TileEntityDataDebugger extends TileEntityImmersiveConnectable imple
 		}
 	}
 
-	private String[] compilePacketString()
-	{
-		//gets variables in format l:{Value:0}
+	private String[] compilePacketString() {
+		// Convert the packet's variables into a human-readable string format
 		return minimizeArrays(
 				lastPacket.variables.entrySet().stream()
-						/*map(entry -> String.format("",
-								,*/
-						.map(entry -> String.format("<hexcol=%s:%s> %s = %s",
-								String.format("%06X", entry.getValue().getTypeColour()),
-								entry.getValue().getName(),
-								entry.getKey(),
-								entry.getValue().valueToString().replace(
-												"\n", "\n"+StringUtils.repeat(' ', (entry.getValue().getName().length()+7)))
-										.trim()
-						))
+						.map(entry -> {
+							//Convert IIColor to a hex string or ARGB integer properly
+							IIColor color = entry.getValue().getTypeColour();
+
+							int colorValue = color.getPackedRGB();  // Extract RGB integer
+
+							String colorHex = String.format("%06X", colorValue);  // Convert to hexadecimal
+
+							return String.format("<hexcol=%s:%s> %s = %s",
+									colorHex,                     // Hexadecimal color
+									entry.getValue().getName(),    // Variable name
+									entry.getKey(),                // Variable key
+									entry.getValue().valueToString().replace("\n",
+											"\n" + StringUtils.repeat(' ', entry.getValue().getName().length() + 7))
+							);
+						})
 						.map(s -> s.split("\n"))
 						.toArray(String[][]::new)
 		);
