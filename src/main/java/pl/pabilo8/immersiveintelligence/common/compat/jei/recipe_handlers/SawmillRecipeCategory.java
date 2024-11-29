@@ -14,6 +14,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Tuple;
+import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.crafting.SawmillRecipe;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Sawmill;
@@ -27,6 +28,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+
+/**
+ * @author Pabilo8
+ * @since 29.09.2021
+ * @author Avalon
+ * @since 29-11-2024
+ */
 
 public class SawmillRecipeCategory extends IIRecipeCategory<SawmillRecipe, SawmillRecipeCategory.SawmillRecipeWrapper>
 {
@@ -104,22 +112,32 @@ public class SawmillRecipeCategory extends IIRecipeCategory<SawmillRecipe, Sawmi
 		}
 
 		@Override
-		public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY)
-		{
-			ClientUtils.drawSlot(0, 21-8, 16, 16);
-			ClientUtils.drawSlot(115, 21-8, 16, 16);
-			ClientUtils.drawSlot(135, 21-8, 16, 16);
+		public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
 
-			GlStateManager.pushMatrix();
-			GlStateManager.translate(85F, 13f, 150.5F);
-			GlStateManager.rotate(50, 0, 1, 0);
-			GlStateManager.rotate(8.5f, 1, 0, 0);
-			GlStateManager.rotate(-12.5f, 0, 0, 1);
-			GlStateManager.scale(65, -65, 65);
-			minecraft.getRenderItem().renderItem(machineStack, TransformType.GUI);
-			GlStateManager.popMatrix();
+				// Render the multiblock model
+				GlStateManager.pushMatrix();
+				GlStateManager.enableDepth();
+				GlStateManager.translate(85F, 13f, 150.5F);
+				GlStateManager.rotate(50, 0, 1, 0);
+				GlStateManager.rotate(8.5f, 1, 0, 0);
+				GlStateManager.rotate(-12.5f, 0, 0, 1);
+				GlStateManager.scale(65, -65, 65);
+				minecraft.getRenderItem().renderItem(machineStack, TransformType.GUI);
+				GlStateManager.popMatrix();
 
-			drawEnergyTimeInfo(minecraft, 0, recipeHeight-26);
+				// Render slots for inputs and outputs
+				ClientUtils.drawSlot(0, 12, 16, 16);    // Input
+				ClientUtils.drawSlot(115, 12, 16, 16); // Main output
+				ClientUtils.drawSlot(135, 12, 16, 16); // Secondary output
+
+				// Render energy and time
+				drawEnergyTimeInfo(minecraft, 0, recipeHeight - 26);
+
+				// Clear depth buffer and render sawblade on top
+				GlStateManager.pushMatrix();
+				GlStateManager.clear(GL11.GL_DEPTH_BUFFER_BIT); // Clear the depth buffer
+				ClientUtils.drawSlot(64, 8, 16, 16); // Render sawblade slot
+				GlStateManager.popMatrix();
 		}
 
 		@Override
