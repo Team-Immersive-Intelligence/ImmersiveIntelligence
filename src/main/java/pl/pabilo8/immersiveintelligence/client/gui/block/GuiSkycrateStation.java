@@ -52,7 +52,7 @@ public class GuiSkycrateStation extends GuiIEContainerBase
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		ClientUtils.bindTexture(texture_skycrate_station);
 		this.drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
-		renderEnergyBars(guiLeft+148, guiTop+20, 7, 48, 2, tile.rotation, SkyCrateStation.rpmMin, SkyCrateStation.rpmEffectiveMax);
+		renderEnergyBars(guiLeft+148, guiTop+20, 7, 48, 2, tile.rotation, SkyCrateStation.rpmMin, SkyCrateStation.torqueMin);
 	}
 
 	@Override
