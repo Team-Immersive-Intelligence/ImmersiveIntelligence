@@ -12,19 +12,22 @@ Each variable also has a side override mode, green is the left and red is the ri
 
 # router
 |[crafting]{source:"data_router"}|  
-The [Data Router] allows to direct a packet into a specific side, which is defined by one of the packet's variables. The variable has to be an integer.
+The [Data Router] allows a packet to be directed to a specific side, defined by the integer variable '0'.
+Variable 0 accepts the following integers:
 
-Top - 0, Bottom - 1
+Bottom - 0, Top - 1
 North - 2, South - 3
-East - 4, West - 5
+West - 4, East - 5
 
 # redstone_buffer
 |[crafting]{source:"redstone_buffer"}|  
 The [Redstone Buffer] is a device which can hold an incoming data packet, until it doesn't receive a redstone signal.
+**Caution:** a held data packet will be overwritten by the arrival of a new one.
 
 # timed_buffer
 |[crafting]{source:"timed_buffer"}|  
-The [Timed Buffer] is a device which can hold an incoming data packet for a given amount of time. The duration is set by the variable '0' (a number of ticks to wait).
+The [Timed Buffer] is a device which can hold an incoming data packet for a given amount of time. The duration is set by the integer variable '0': the number of ticks to wait.
+**Note:** If the buffer recieves a new variable 0 while counting down, the buffer timer will reset.
 
 # small_buffer
 |[crafting]{source:"small_data_buffer"}|
