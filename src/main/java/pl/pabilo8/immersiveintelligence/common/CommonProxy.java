@@ -561,6 +561,7 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		//Long live new Bullet System mk.5
 		registerEntity(i++, EntityAmmoProjectile.class, "projectile", 32, 1, true);
 		registerEntity(i++, EntityAmmoArtilleryProjectile.class, "artillery_projectile", 32, 1, true);
+		registerEntity(i++, EntityAmmoShotgunProjectile.class, "shotgun_projectile", 32, 1, true);
 		registerEntity(i++, EntityAmmoGrenade.class, "grenade", 32, 1, true);
 		registerEntity(i++, EntityAmmoMissile.class, "missile", 32, 1, true);
 		registerEntity(i++, EntityAmmoGuidedMissile.class, "guided_missile", 32, 1, true);

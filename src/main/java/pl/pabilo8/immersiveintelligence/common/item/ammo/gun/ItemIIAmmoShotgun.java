@@ -24,6 +24,11 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.function.Function;
 
+/**
+ * @author Prism
+ * @ii-approved 0.3.1
+ * @since 12.10.2024
+ */
 @IIAmmoProjectile
 @GeneratedItemModels(itemName = "bullet_gun_3bcal", type = ItemModelType.ITEM_SIMPLE_AUTOREPLACED, valueSet = AmmoParts.class)
 @IIItemProperties(category = IICategory.WARFARE)

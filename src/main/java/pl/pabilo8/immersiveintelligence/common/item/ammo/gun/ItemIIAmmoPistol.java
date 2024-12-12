@@ -23,7 +23,7 @@ import javax.annotation.Nonnull;
 import java.util.function.Function;
 
 /**
- * @author Pabilo8
+ * @author Prism
  * @updated 07.02.2024
  * @ii-approved 0.3.1
  * @since 30.11.2020
