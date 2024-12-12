@@ -360,12 +360,11 @@ public class TileEntityPrecisionAssembler extends TileEntityMultiblockMetal<Tile
 	@Override
 	public void onProcessFinish(MultiblockProcess<PrecisionAssemblerRecipe> process)
 	{
-
-		if(!toolOrder[0].equals(""))
+		if(((IPrecisionTool)inventory.get(0).getItem()).getPrecisionToolType(inventory.get(0)).equals(toolOrder[0]))
 			((IPrecisionTool)inventory.get(0).getItem()).damagePrecisionTool(inventory.get(0), 1);
-		if(!toolOrder[1].equals(""))
+		if(((IPrecisionTool)inventory.get(0).getItem()).getPrecisionToolType(inventory.get(0)).equals(toolOrder[1]))
 			((IPrecisionTool)inventory.get(1).getItem()).damagePrecisionTool(inventory.get(1), 1);
-		if(!toolOrder[2].equals(""))
+		if(((IPrecisionTool)inventory.get(0).getItem()).getPrecisionToolType(inventory.get(0)).equals(toolOrder[2]))
 			((IPrecisionTool)inventory.get(2).getItem()).damagePrecisionTool(inventory.get(2), 1);
 
 		((ItemIIAssemblyScheme)inventory.get(3).getItem()).increaseCreatedItems(inventory.get(3), process.recipe.output.getCount());
