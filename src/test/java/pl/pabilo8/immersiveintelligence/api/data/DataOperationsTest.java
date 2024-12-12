@@ -3,10 +3,10 @@ package pl.pabilo8.immersiveintelligence.api.data;
 import org.junit.jupiter.api.Test;
 import pl.pabilo8.immersiveintelligence.api.data.operations.DataOperation.DataOperationMeta;
 
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -46,8 +46,10 @@ public class DataOperationsTest
 	{
 		// Load the en_us.lang file
 		ClassLoader classLoader = DataOperationsTest.class.getClassLoader();
-		Path path = Paths.get(classLoader.getResource("./assets/immersiveintelligence/lang/en_us.lang").getPath().substring(1));
-		List<String> langFileLines = Files.readAllLines(path);
+		InputStream inputStream = classLoader.getResourceAsStream("assets/immersiveintelligence/lang/en_us.lang");
+		assert inputStream!=null;
+		BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+		List<String> langFileLines = reader.lines().collect(Collectors.toList());
 
 		// Extract all keys from the lang file
 		Set<String> langKeys = langFileLines.stream()
