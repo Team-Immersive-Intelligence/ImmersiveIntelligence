@@ -23,10 +23,8 @@ public class DataOperationAdd extends DataOperation
 	@Override
 	public DataType execute(DataPacket packet, DataTypeExpression data)
 	{
-		NumericDataType t1, t2;
-
-		t1 = packet.getVarInType(NumericDataType.class, data.getArgument(0));
-		t2 = packet.getVarInType(NumericDataType.class, data.getArgument(1));
+		NumericDataType t1 = packet.getVarInType(NumericDataType.class, data.getArgument(0));
+		NumericDataType t2 = packet.getVarInType(NumericDataType.class, data.getArgument(1));
 
 		if(t1 instanceof DataTypeFloat||t2 instanceof DataTypeFloat)
 			return new DataTypeFloat(t1.floatValue()+t2.floatValue());

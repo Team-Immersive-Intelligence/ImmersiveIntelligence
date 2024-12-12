@@ -42,17 +42,17 @@ These include [ItemStack](#itemstack), [Array](#array), [FluidStack](#fluidstack
 
 # null
 |[datatype]{type:"%SECTION%",x:52}|
-[Null] is a special data type, which has [no value]. 
+[Null] is a [special] data type, which has [no value].
 It is the default type of an [undefined] variable.
 
 # integer
 |[datatype]{type:"%SECTION%",x:52}|
-[Integer] is a number data type. It can store a [number] without its fractional component. 
+[Integer] is a [number] data type. It can store a [number] without its fractional component.
 It is mainly used in calculations and number comparisons.
 
 # float
 |[datatype]{type:"%SECTION%",x:52}|
-[Float] is a number data type. It can store a [number] along with its [fractional component].
+[Float] is a [number] data type. It can store a [number] along with its [fractional component].
 It is used in high-precision calculations, i.e. computing angles of a long-distance ballistic trajectory.
 
 # string

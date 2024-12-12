@@ -7,8 +7,8 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextFormatting;
-import pl.pabilo8.immersiveintelligence.api.data.DataOperations;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
+import pl.pabilo8.immersiveintelligence.api.data.IIDataOperationUtils;
 import pl.pabilo8.immersiveintelligence.api.data.IIDataTypeUtils;
 import pl.pabilo8.immersiveintelligence.api.data.operations.DataOperation.DataOperationMeta;
 import pl.pabilo8.immersiveintelligence.api.data.operations.DataOperation.DataOperationNull;
@@ -66,7 +66,7 @@ public class IIManualDataOperation extends IIManualObject
 	{
 		super.postInit(page);
 
-		dataOperation = DataOperations.getOperationMeta(dataSource.getString("id"));
+		dataOperation = IIDataOperationUtils.getOperationMeta(dataSource.getString("id"));
 		if(dataOperation==null)
 			dataOperation = DataOperationNull.INSTANCE_META;
 

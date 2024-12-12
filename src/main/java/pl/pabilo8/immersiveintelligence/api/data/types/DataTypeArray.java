@@ -9,6 +9,7 @@ import pl.pabilo8.immersiveintelligence.api.data.types.generic.IterableDataType;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * @author Pabilo8
@@ -22,6 +23,11 @@ public class DataTypeArray extends IterableDataType
 	{
 		this.value = new DataType[Math.min(i.length, 255)];
 		System.arraycopy(i, 0, this.value, 0, this.value.length);
+	}
+
+	public DataTypeArray(Collection<DataType> collection)
+	{
+		this(collection.toArray(new DataType[0]));
 	}
 
 	public DataTypeArray()

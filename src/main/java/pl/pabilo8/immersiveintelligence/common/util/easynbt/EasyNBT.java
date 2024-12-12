@@ -38,9 +38,9 @@ public class EasyNBT extends Constants.NBT
 {
 	private final NBTTagCompound wrapped;
 
-	private EasyNBT(NBTTagCompound wrapped)
+	private EasyNBT(@Nullable NBTTagCompound wrapped)
 	{
-		this.wrapped = wrapped;
+		this.wrapped = wrapped==null?new NBTTagCompound(): wrapped;
 	}
 
 	//--- Wrapping ---//

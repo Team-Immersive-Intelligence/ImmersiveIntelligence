@@ -9,8 +9,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.data.DataOperations;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
+import pl.pabilo8.immersiveintelligence.api.data.IIDataOperationUtils;
 import pl.pabilo8.immersiveintelligence.api.data.IIDataTypeUtils;
 import pl.pabilo8.immersiveintelligence.api.data.operations.DataOperation;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeAccessor;
@@ -164,7 +164,7 @@ public class GuiDataEditorExpression extends GuiDataEditor<DataTypeExpression>
 
 		DataOperation op;
 		if(dataType.getOperation()==null||!operations.contains(dataType.getMeta().name()))
-			op = DataOperations.getOperationInstance(operations.get(0));
+			op = IIDataOperationUtils.getOperationInstance(operations.get(0));
 		else
 			op = dataType.getOperation();
 		dataType.setOperation(op);
@@ -307,7 +307,7 @@ public class GuiDataEditorExpression extends GuiDataEditor<DataTypeExpression>
 		if(page==0)
 		{
 			if(dropdownOperationPicker.selectedEntry!=-1)
-				dataType.setOperation(DataOperations.getOperationInstance(operations.get(dropdownOperationPicker.selectedEntry)));
+				dataType.setOperation(IIDataOperationUtils.getOperationInstance(operations.get(dropdownOperationPicker.selectedEntry)));
 			dataType.setRequiredVariable(dropdownLetterPicker.selectedEntry);
 		}
 		else if(pageEditor!=null)

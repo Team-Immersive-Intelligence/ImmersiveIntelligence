@@ -12,17 +12,19 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.ArrayUtils;
 import org.lwjgl.input.Keyboard;
-import pl.pabilo8.immersiveintelligence.api.data.DataOperations;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
-import pl.pabilo8.immersiveintelligence.api.data.IIDataHandlingUtils;
+import pl.pabilo8.immersiveintelligence.api.data.IIDataOperationUtils;
+import pl.pabilo8.immersiveintelligence.api.data.IIDataTypeUtils;
 import pl.pabilo8.immersiveintelligence.api.data.device.IDataStorageItem;
 import pl.pabilo8.immersiveintelligence.api.data.operations.DataOperation.DataOperationMeta;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeExpression;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
+import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType.IGenericDataType;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType.TypeMetaInfo;
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler;
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler.IAdvancedTooltipItem;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
+import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationUtils;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.item.data.ItemIIFunctionalCircuit.Circuits;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
@@ -98,19 +100,19 @@ public class ItemIIFunctionalCircuit extends ItemIISubItemsBase<Circuits> implem
 				"string_reverse"
 		),
 		ITEMSTACK(CircuitTypes.ADVANCED,
-				"get_quantity",
-				"set_quantity",
-				"get_durability",
-				"set_durability",
-				"get_nbt",
-				"set_nbt",
-				"get_itemstack",
-				"get_item_id",
-				"can_stack_with",
-				"matches_oredict"
+				"itemstack_create",
+				"item_get_count",
+				"item_set_count",
+				"item_get_meta",
+				"item_set_meta",
+				"item_get_nbt",
+				"item_set_nbt",
+				"item_get_id",
+				"item_is_empty",
+				"item_stacks_with"
 		),
 		ARRAY(CircuitTypes.BASIC,
-				"array_start",
+				"array_create",
 				"array_get", "array_set",
 				"array_length",
 				"array_push", "array_pop",
@@ -121,6 +123,7 @@ public class ItemIIFunctionalCircuit extends ItemIISubItemsBase<Circuits> implem
 				"entity_get_type",
 				"entity_get_name",
 				"entity_get_dimension_id",
+				"entity_get_pos",
 				"entity_get_x",
 				"entity_get_y",
 				"entity_get_z"
@@ -141,16 +144,28 @@ public class ItemIIFunctionalCircuit extends ItemIISubItemsBase<Circuits> implem
 				"to_null"
 		),
 		FLUIDSTACK(CircuitTypes.BASIC,
-				"is_null"
-				//TODO: 31.10.2024 add properly
+				"fluidstack_create",
+				"fluid_get_id",
+				"fluid_get_amount",
+				"fluid_set_amount",
+				"fluid_get_nbt",
+				"fluid_set_nbt",
+				"fluid_is_empty",
+				"fluid_stacks_with"
 		),
 		MAP(CircuitTypes.BASIC,
-				"is_null"
-				//TODO: 31.10.2024 add properly
+				"map_create",
+				"map_set", "map_get", "map_remove", "map_clear",
+				"map_contains",
+				"map_keys", "map_values"
 		),
 		VECTOR_ARITHMETIC(CircuitTypes.PROCESSOR,
-				"is_null"
-				//TODO: 31.10.2024 add properly
+				"vector_create", "vector_create_angle",
+				"vector_add", "vector_sub", "vector_mul", "vector_scale",
+				"vector_length", "vector_dot", "vector_cross", "vector_normalize", "vector_distance",
+				"vector_get_x", "vector_get_y", "vector_get_z",
+				"vector_set_x", "vector_set_y", "vector_set_z",
+				"vector_get_yaw", "vector_get_pitch"
 		),
 		CRYPTOGRAPHER(CircuitTypes.CRYPTOGRAPHIC,
 				"encrypt_text",
@@ -236,9 +251,9 @@ public class ItemIIFunctionalCircuit extends ItemIISubItemsBase<Circuits> implem
 		if(b)
 		{
 			TypeMetaInfo<?>[] types = IIContent.itemCircuit.getOperationsList(stack).stream()
-					.map(DataOperations::getOperationMeta)
+					.map(IIDataOperationUtils::getOperationMeta)
 					.map(DataOperationMeta::expectedResult)
-					.map(IIDataHandlingUtils::getTypeMeta)
+					.map(this::getDisplayedType)
 					.toArray(TypeMetaInfo[]::new);
 
 			GlStateManager.color(1f, 1f, 1f, 1f);
@@ -257,7 +272,7 @@ public class ItemIIFunctionalCircuit extends ItemIISubItemsBase<Circuits> implem
 					.map(o -> (DataTypeExpression)o)
 					.map(DataTypeExpression::getMeta)
 					.map(DataOperationMeta::expectedResult)
-					.map(IIDataHandlingUtils::getTypeMeta)
+					.map(this::getDisplayedType)
 					.toArray(TypeMetaInfo[]::new);
 
 			GlStateManager.color(1f, 1f, 1f, 1f);
@@ -273,6 +288,36 @@ public class ItemIIFunctionalCircuit extends ItemIISubItemsBase<Circuits> implem
 				Gui.drawModalRectWithCustomSizedTexture(0, off+i*20, 0, 0, 16, 16, 16, 16);
 			}
 		}
+	}
+
+	@SideOnly(Side.CLIENT)
+	private TypeMetaInfo<?> getDisplayedType(Class<? extends DataType> type)
+	{
+		//Allowing all types
+		if(type==DataType.class)
+			return getArrayElementForTime(IIDataTypeUtils.metaTypesByClass.values().toArray(new TypeMetaInfo[0]));
+		else //Allowing only specific types
+		{
+			if(type.isAnnotationPresent(IGenericDataType.class))
+				return getArrayElementForTime(IIDataTypeUtils.metaTypesByClass.keySet().stream()
+						.filter(type::isAssignableFrom)
+						.filter(t -> t!=type)
+						.map(IIDataTypeUtils.metaTypesByClass::get)
+						.toArray(TypeMetaInfo[]::new));
+			else
+				return IIDataTypeUtils.metaTypesByClass.get(type);
+
+		}
+	}
+
+	@SideOnly(Side.CLIENT)
+	private <T> T getArrayElementForTime(T[] parameters)
+	{
+		float progress = IIAnimationUtils.getDebugProgress(parameters.length*20, 0);
+		if(parameters.length==1)
+			return parameters[0];
+		else
+			return parameters[(int)(progress*parameters.length)];
 	}
 
 	@SideOnly(Side.CLIENT)

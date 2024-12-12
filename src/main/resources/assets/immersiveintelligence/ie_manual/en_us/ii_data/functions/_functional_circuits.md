@@ -89,3 +89,8 @@ The universal design of the [Circuit Boards](electronic_components) allows them 
 |[text]{source:"%SECTION%",bold:1b}|
 *Performs mathematical operations and functions on [Vectors](data_types.md#vector).*
 |[data_circuit]{circuit:"%SECTION%"}|
+# cryptographer
+|[item_display]{source:"%SECTION%"}|
+|[text]{source:"%SECTION%",bold:1b}|
+*Encrypts and decrypts [Data](data_types.md) using a [password-based](data_types.md#string) cipher.*
+|[data_circuit]{circuit:"%SECTION%"}|

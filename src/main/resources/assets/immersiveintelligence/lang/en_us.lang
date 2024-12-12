@@ -1779,105 +1779,171 @@ datasystem.immersiveintelligence.function.string_reverse.result=Reversed
 datasystem.immersiveintelligence.function.string_reverse.result.desc=The input string reversed
 
 # ItemStack
-datasystem.immersiveintelligence.function.get_quantity=Get Quantity
-datasystem.immersiveintelligence.function.get_quantity.desc=Returns the quantity of the input ItemStack
-datasystem.immersiveintelligence.function.get_quantity.param.stack=ItemStack
-datasystem.immersiveintelligence.function.get_quantity.param.stack.desc=The ItemStack
-datasystem.immersiveintelligence.function.get_quantity.result=Quantity
-datasystem.immersiveintelligence.function.get_quantity.result.desc=The quantity of the input ItemStack
+datasystem.immersiveintelligence.function.itemstack_create=Create From ID
+datasystem.immersiveintelligence.function.itemstack_create.desc=Creates an ItemStack from the input item ID, amount and metadata value
+datasystem.immersiveintelligence.function.itemstack_create.param.item_id=ID
+datasystem.immersiveintelligence.function.itemstack_create.param.item_id.desc=The ID of the item
+datasystem.immersiveintelligence.function.itemstack_create.param.amount=Amount
+datasystem.immersiveintelligence.function.itemstack_create.param.amount.desc=The amount of the item
+datasystem.immersiveintelligence.function.itemstack_create.param.meta=Meta
+datasystem.immersiveintelligence.function.itemstack_create.param.meta.desc=The metadata value of the item
+datasystem.immersiveintelligence.function.itemstack_create.result=ItemStack
+datasystem.immersiveintelligence.function.itemstack_create.result.desc=The ItemStack created from the ID
 
-datasystem.immersiveintelligence.function.set_quantity=Set Quantity
-datasystem.immersiveintelligence.function.set_quantity.desc=Sets the quantity of the input ItemStack
-datasystem.immersiveintelligence.function.set_quantity.param.stack=ItemStack
-datasystem.immersiveintelligence.function.set_quantity.param.stack.desc=The ItemStack
-datasystem.immersiveintelligence.function.set_quantity.param.count=Quantity
-datasystem.immersiveintelligence.function.set_quantity.param.count.desc=The quantity to set
-datasystem.immersiveintelligence.function.set_quantity.result=ItemStack
-datasystem.immersiveintelligence.function.set_quantity.result.desc=The ItemStack with the new quantity
+datasystem.immersiveintelligence.function.item_get_count=Get Count
+datasystem.immersiveintelligence.function.item_get_count.desc=Returns the count of the input ItemStack
+datasystem.immersiveintelligence.function.item_get_count.param.stack=ItemStack
+datasystem.immersiveintelligence.function.item_get_count.param.stack.desc=The ItemStack
+datasystem.immersiveintelligence.function.item_get_count.result=Count
+datasystem.immersiveintelligence.function.item_get_count.result.desc=The count of the input ItemStack
 
-#todo: clarify that it's not remaining durability, but amount of damage
-datasystem.immersiveintelligence.function.get_durability=Get Durability
-datasystem.immersiveintelligence.function.get_durability.desc=Returns the durability of the input ItemStack
-datasystem.immersiveintelligence.function.get_durability.param.stack=ItemStack
-datasystem.immersiveintelligence.function.get_durability.param.stack.desc=The ItemStack
-datasystem.immersiveintelligence.function.get_durability.result=Durability
-datasystem.immersiveintelligence.function.get_durability.result.desc=The durability of the input ItemStack
+datasystem.immersiveintelligence.function.item_set_count=Set Count
+datasystem.immersiveintelligence.function.item_set_count.desc=Sets the count of the input ItemStack
+datasystem.immersiveintelligence.function.item_set_count.param.stack=ItemStack
+datasystem.immersiveintelligence.function.item_set_count.param.stack.desc=The ItemStack
+datasystem.immersiveintelligence.function.item_set_count.param.count=Count
+datasystem.immersiveintelligence.function.item_set_count.param.count.desc=The count to set
+datasystem.immersiveintelligence.function.item_set_count.result=ItemStack
+datasystem.immersiveintelligence.function.item_set_count.result.desc=The ItemStack with the new count
 
-datasystem.immersiveintelligence.function.set_durability=Set Durability
-datasystem.immersiveintelligence.function.set_durability.desc=Sets the durability of the input ItemStack
-datasystem.immersiveintelligence.function.set_durability.param.stack=ItemStack
-datasystem.immersiveintelligence.function.set_durability.param.stack.desc=The ItemStack
-datasystem.immersiveintelligence.function.set_durability.param.damage=Damage
-datasystem.immersiveintelligence.function.set_durability.param.damage.desc=The damage amount to set
-datasystem.immersiveintelligence.function.set_durability.result=ItemStack
-datasystem.immersiveintelligence.function.set_durability.result.desc=The ItemStack with the new durability
+datasystem.immersiveintelligence.function.item_get_meta=Get Meta Value
+datasystem.immersiveintelligence.function.item_get_meta.desc=Returns the meta value (often being the damage taken by a tool) of the input ItemStack
+datasystem.immersiveintelligence.function.item_get_meta.param.stack=ItemStack
+datasystem.immersiveintelligence.function.item_get_meta.param.stack.desc=The ItemStack
+datasystem.immersiveintelligence.function.item_get_meta.result=Meta
+datasystem.immersiveintelligence.function.item_get_meta.result.desc=The meta value of the input ItemStack
 
-datasystem.immersiveintelligence.function.get_nbt=Get NBT
-datasystem.immersiveintelligence.function.get_nbt.desc=Returns the NBT tag of the input ItemStack
-datasystem.immersiveintelligence.function.get_nbt.param.stack=ItemStack
-datasystem.immersiveintelligence.function.get_nbt.param.stack.desc=The ItemStack
-datasystem.immersiveintelligence.function.get_nbt.result=NBT
-datasystem.immersiveintelligence.function.get_nbt.result.desc=The NBT tag of the input ItemStack
+datasystem.immersiveintelligence.function.item_set_meta=Set Meta Value
+datasystem.immersiveintelligence.function.item_set_meta.desc=Sets the meta value (f.e. the taken damage by a tool) of the input ItemStack
+datasystem.immersiveintelligence.function.item_set_meta.param.stack=ItemStack
+datasystem.immersiveintelligence.function.item_set_meta.param.stack.desc=The ItemStack
+datasystem.immersiveintelligence.function.item_set_meta.param.damage=Meta
+datasystem.immersiveintelligence.function.item_set_meta.param.damage.desc=The meta value to set
+datasystem.immersiveintelligence.function.item_set_meta.result=ItemStack
+datasystem.immersiveintelligence.function.item_set_meta.result.desc=The ItemStack with the new meta value
 
-datasystem.immersiveintelligence.function.set_nbt=Set NBT
-datasystem.immersiveintelligence.function.set_nbt.desc=Sets the NBT tag of the input ItemStack
-datasystem.immersiveintelligence.function.set_nbt.param.stack=ItemStack
-datasystem.immersiveintelligence.function.set_nbt.param.stack.desc=The ItemStack
-datasystem.immersiveintelligence.function.set_nbt.param.nbt=NBT
-datasystem.immersiveintelligence.function.set_nbt.param.nbt.desc=The NBT tag to set
-datasystem.immersiveintelligence.function.set_nbt.result=ItemStack
-datasystem.immersiveintelligence.function.set_nbt.result.desc=The ItemStack with the new NBT tag
+datasystem.immersiveintelligence.function.item_get_nbt=Get NBT
+datasystem.immersiveintelligence.function.item_get_nbt.desc=Returns the NBT tag of the input ItemStack
+datasystem.immersiveintelligence.function.item_get_nbt.param.stack=ItemStack
+datasystem.immersiveintelligence.function.item_get_nbt.param.stack.desc=The ItemStack
+datasystem.immersiveintelligence.function.item_get_nbt.result=NBT
+datasystem.immersiveintelligence.function.item_get_nbt.result.desc=The NBT tag of the input ItemStack
 
-datasystem.immersiveintelligence.function.get_itemstack=Create From ID
-datasystem.immersiveintelligence.function.get_itemstack.desc=Creates an ItemStack from the input item ID, amount and metadata value
-datasystem.immersiveintelligence.function.get_itemstack.param.item_id=ID
-datasystem.immersiveintelligence.function.get_itemstack.param.item_id.desc=The ID of the item
-datasystem.immersiveintelligence.function.get_itemstack.param.amount=Amount
-datasystem.immersiveintelligence.function.get_itemstack.param.amount.desc=The amount of the item
-datasystem.immersiveintelligence.function.get_itemstack.param.meta=Meta
-datasystem.immersiveintelligence.function.get_itemstack.param.meta.desc=The metadata value of the item
-datasystem.immersiveintelligence.function.get_itemstack.result=ItemStack
-datasystem.immersiveintelligence.function.get_itemstack.result.desc=The ItemStack created from the ID
+datasystem.immersiveintelligence.function.item_set_nbt=Set NBT
+datasystem.immersiveintelligence.function.item_set_nbt.desc=Sets the NBT tag of the input ItemStack
+datasystem.immersiveintelligence.function.item_set_nbt.param.stack=ItemStack
+datasystem.immersiveintelligence.function.item_set_nbt.param.stack.desc=The ItemStack
+datasystem.immersiveintelligence.function.item_set_nbt.param.nbt=NBT
+datasystem.immersiveintelligence.function.item_set_nbt.param.nbt.desc=The NBT tag to set
+datasystem.immersiveintelligence.function.item_set_nbt.result=ItemStack
+datasystem.immersiveintelligence.function.item_set_nbt.result.desc=The ItemStack with the new NBT tag
 
-datasystem.immersiveintelligence.function.get_item_id=Get ID
-datasystem.immersiveintelligence.function.get_item_id.desc=Returns the ID of the input ItemStack
-datasystem.immersiveintelligence.function.get_item_id.param.stack=ItemStack
-datasystem.immersiveintelligence.function.get_item_id.param.stack.desc=The ItemStack
-datasystem.immersiveintelligence.function.get_item_id.result=ID
-datasystem.immersiveintelligence.function.get_item_id.result.desc=The ID of the input ItemStack
+datasystem.immersiveintelligence.function.item_get_id=Get ID
+datasystem.immersiveintelligence.function.item_get_id.desc=Returns the ID of the input ItemStack
+datasystem.immersiveintelligence.function.item_get_id.param.stack=ItemStack
+datasystem.immersiveintelligence.function.item_get_id.param.stack.desc=The ItemStack
+datasystem.immersiveintelligence.function.item_get_id.result=ID
+datasystem.immersiveintelligence.function.item_get_id.result.desc=The ID of the input ItemStack
 
-datasystem.immersiveintelligence.function.is_stack_empty=Is Empty
-datasystem.immersiveintelligence.function.is_stack_empty.desc=Returns true if the input ItemStack is empty
-datasystem.immersiveintelligence.function.is_stack_empty.param.stack=ItemStack
-datasystem.immersiveintelligence.function.is_stack_empty.param.stack.desc=The ItemStack to check
-datasystem.immersiveintelligence.function.is_stack_empty.result=Result
-datasystem.immersiveintelligence.function.is_stack_empty.result.desc=True, if the ItemStack is empty
+datasystem.immersiveintelligence.function.item_is_empty=Is Empty
+datasystem.immersiveintelligence.function.item_is_empty.desc=Returns true if the input ItemStack is empty
+datasystem.immersiveintelligence.function.item_is_empty.param.stack=ItemStack
+datasystem.immersiveintelligence.function.item_is_empty.param.stack.desc=The ItemStack to check
+datasystem.immersiveintelligence.function.item_is_empty.result=Result
+datasystem.immersiveintelligence.function.item_is_empty.result.desc=True, if the ItemStack is empty
 
-datasystem.immersiveintelligence.function.can_stack_with=Can Stack With
-datasystem.immersiveintelligence.function.can_stack_with.desc=Returns true if the input ItemStack can stack with the specified ItemStack
-datasystem.immersiveintelligence.function.can_stack_with.param.stack=ItemStack
-datasystem.immersiveintelligence.function.can_stack_with.param.stack.desc=The ItemStack to check
-datasystem.immersiveintelligence.function.can_stack_with.param.with=With
-datasystem.immersiveintelligence.function.can_stack_with.param.with.desc=The ItemStack to check against
-datasystem.immersiveintelligence.function.can_stack_with.result=Result
-datasystem.immersiveintelligence.function.can_stack_with.result.desc=Result of the stacking check
+datasystem.immersiveintelligence.function.item_stacks_with=Stacks With
+datasystem.immersiveintelligence.function.item_stacks_with.desc=Returns true if the input ItemStack can stack with the specified ItemStack
+datasystem.immersiveintelligence.function.item_stacks_with.param.stack=ItemStack
+datasystem.immersiveintelligence.function.item_stacks_with.param.stack.desc=The ItemStack to check
+datasystem.immersiveintelligence.function.item_stacks_with.param.with=With
+datasystem.immersiveintelligence.function.item_stacks_with.param.with.desc=The ItemStack to check against
+datasystem.immersiveintelligence.function.item_stacks_with.result=Result
+datasystem.immersiveintelligence.function.item_stacks_with.result.desc=Result of the stacking check
 
-datasystem.immersiveintelligence.function.matches_oredict=Matches OreDictionary
-datasystem.immersiveintelligence.function.matches_oredict.desc=Returns true if the input ItemStack matches the specified Ore Dictionary entry
-datasystem.immersiveintelligence.function.matches_oredict.param.stack=ItemStack
-datasystem.immersiveintelligence.function.matches_oredict.param.stack.desc=The ItemStack to check
-datasystem.immersiveintelligence.function.matches_oredict.param.ore_dictionary=Ore Dictionary
-datasystem.immersiveintelligence.function.matches_oredict.param.ore_dictionary.desc=The Ore Dictionary entry to check against
-datasystem.immersiveintelligence.function.matches_oredict.result=Result
-datasystem.immersiveintelligence.function.matches_oredict.result.desc=Result of the Ore Dictionary check
+datasystem.immersiveintelligence.function.item_matches_oredict=Matches OreDictionary
+datasystem.immersiveintelligence.function.item_matches_oredict.desc=Returns true if the input ItemStack matches the specified Ore Dictionary entry
+datasystem.immersiveintelligence.function.item_matches_oredict.param.stack=ItemStack
+datasystem.immersiveintelligence.function.item_matches_oredict.param.stack.desc=The ItemStack to check
+datasystem.immersiveintelligence.function.item_matches_oredict.param.ore_dictionary=Ore Dictionary
+datasystem.immersiveintelligence.function.item_matches_oredict.param.ore_dictionary.desc=The Ore Dictionary entry to check against
+datasystem.immersiveintelligence.function.item_matches_oredict.result=Result
+datasystem.immersiveintelligence.function.item_matches_oredict.result.desc=Result of the Ore Dictionary check
+
+# FluidStack
+datasystem.immersiveintelligence.function.fluidstack_create=Create FluidStack
+datasystem.immersiveintelligence.function.fluidstack_create.desc=Creates a FluidStack from the input fluid ID, amount and NBT tag
+datasystem.immersiveintelligence.function.fluidstack_create.param.fluid_id=ID
+datasystem.immersiveintelligence.function.fluidstack_create.param.fluid_id.desc=The ID of the fluid
+datasystem.immersiveintelligence.function.fluidstack_create.param.amount=Amount
+datasystem.immersiveintelligence.function.fluidstack_create.param.amount.desc=The amount of the fluid
+datasystem.immersiveintelligence.function.fluidstack_create.param.nbt=NBT
+datasystem.immersiveintelligence.function.fluidstack_create.param.nbt.desc=The NBT tag of the fluid
+datasystem.immersiveintelligence.function.fluidstack_create.result=FluidStack
+datasystem.immersiveintelligence.function.fluidstack_create.result.desc=The FluidStack created from the ID
+
+datasystem.immersiveintelligence.function.fluid_get_id=Get ID
+datasystem.immersiveintelligence.function.fluid_get_id.desc=Returns the ID of the input FluidStack
+datasystem.immersiveintelligence.function.fluid_get_id.param.stack=FluidStack
+datasystem.immersiveintelligence.function.fluid_get_id.param.stack.desc=The FluidStack
+datasystem.immersiveintelligence.function.fluid_get_id.result=ID
+datasystem.immersiveintelligence.function.fluid_get_id.result.desc=The ID of the input FluidStack
+
+datasystem.immersiveintelligence.function.fluid_get_amount=Get Amount
+datasystem.immersiveintelligence.function.fluid_get_amount.desc=Returns the amount of the input FluidStack
+datasystem.immersiveintelligence.function.fluid_get_amount.param.stack=FluidStack
+datasystem.immersiveintelligence.function.fluid_get_amount.param.stack.desc=The FluidStack
+datasystem.immersiveintelligence.function.fluid_get_amount.result=Amount
+datasystem.immersiveintelligence.function.fluid_get_amount.result.desc=The amount of the input FluidStack
+
+datasystem.immersiveintelligence.function.fluid_set_amount=Set Amount
+datasystem.immersiveintelligence.function.fluid_set_amount.desc=Sets the amount of the input FluidStack
+datasystem.immersiveintelligence.function.fluid_set_amount.param.stack=FluidStack
+datasystem.immersiveintelligence.function.fluid_set_amount.param.stack.desc=The FluidStack
+datasystem.immersiveintelligence.function.fluid_set_amount.param.amount=Amount
+datasystem.immersiveintelligence.function.fluid_set_amount.param.amount.desc=The amount to set
+datasystem.immersiveintelligence.function.fluid_set_amount.result=FluidStack
+datasystem.immersiveintelligence.function.fluid_set_amount.result.desc=The FluidStack with the new amount
+
+datasystem.immersiveintelligence.function.fluid_get_nbt=Get NBT
+datasystem.immersiveintelligence.function.fluid_get_nbt.desc=Returns the NBT tag of the input FluidStack
+datasystem.immersiveintelligence.function.fluid_get_nbt.param.stack=FluidStack
+datasystem.immersiveintelligence.function.fluid_get_nbt.param.stack.desc=The FluidStack
+datasystem.immersiveintelligence.function.fluid_get_nbt.result=NBT
+datasystem.immersiveintelligence.function.fluid_get_nbt.result.desc=The NBT tag of the input FluidStack
+
+datasystem.immersiveintelligence.function.fluid_set_nbt=Set NBT
+datasystem.immersiveintelligence.function.fluid_set_nbt.desc=Sets the NBT tag of the input FluidStack
+datasystem.immersiveintelligence.function.fluid_set_nbt.param.stack=FluidStack
+datasystem.immersiveintelligence.function.fluid_set_nbt.param.stack.desc=The FluidStack
+datasystem.immersiveintelligence.function.fluid_set_nbt.param.nbt=NBT
+datasystem.immersiveintelligence.function.fluid_set_nbt.param.nbt.desc=The NBT tag to set
+datasystem.immersiveintelligence.function.fluid_set_nbt.result=FluidStack
+datasystem.immersiveintelligence.function.fluid_set_nbt.result.desc=The FluidStack with the new NBT tag
+
+datasystem.immersiveintelligence.function.fluid_is_empty=Is Empty
+datasystem.immersiveintelligence.function.fluid_is_empty.desc=Returns true if the input FluidStack is empty
+datasystem.immersiveintelligence.function.fluid_is_empty.param.stack=FluidStack
+datasystem.immersiveintelligence.function.fluid_is_empty.param.stack.desc=The FluidStack to check
+datasystem.immersiveintelligence.function.fluid_is_empty.result=Result
+datasystem.immersiveintelligence.function.fluid_is_empty.result.desc=True, if the FluidStack is empty
+
+datasystem.immersiveintelligence.function.fluid_stacks_with=Stacks With
+datasystem.immersiveintelligence.function.fluid_stacks_with.desc=Returns true if the input FluidStack can stack with the specified FluidStack
+datasystem.immersiveintelligence.function.fluid_stacks_with.param.stack=FluidStack
+datasystem.immersiveintelligence.function.fluid_stacks_with.param.stack.desc=The FluidStack to check
+datasystem.immersiveintelligence.function.fluid_stacks_with.param.with=With
+datasystem.immersiveintelligence.function.fluid_stacks_with.param.with.desc=The FluidStack to check against
+datasystem.immersiveintelligence.function.fluid_stacks_with.result=Result
+datasystem.immersiveintelligence.function.fluid_stacks_with.result.desc=Result of the stacking check
 
 # Array
-datasystem.immersiveintelligence.function.array_start=Start
-datasystem.immersiveintelligence.function.array_start.desc=Creates a new array
-datasystem.immersiveintelligence.function.array_start.param.first=First Element
-datasystem.immersiveintelligence.function.array_start.param.first.desc=
-datasystem.immersiveintelligence.function.array_start.result=Array
-datasystem.immersiveintelligence.function.array_start.result.desc=The new array
+datasystem.immersiveintelligence.function.array_create=Create Array
+datasystem.immersiveintelligence.function.array_create.desc=Creates a new array
+datasystem.immersiveintelligence.function.array_create.param.first=First Element
+datasystem.immersiveintelligence.function.array_create.param.first.desc=
+datasystem.immersiveintelligence.function.array_create.result=Array
+datasystem.immersiveintelligence.function.array_create.result.desc=The new array
 
 datasystem.immersiveintelligence.function.array_get=Get
 datasystem.immersiveintelligence.function.array_get.desc=Returns the value at the specified index in the input array
@@ -2122,6 +2188,242 @@ datasystem.immersiveintelligence.function.decrypt_array.param.password=Password
 datasystem.immersiveintelligence.function.decrypt_array.param.password.desc=The password to use for decryption
 datasystem.immersiveintelligence.function.decrypt_array.result=Decrypted Array
 datasystem.immersiveintelligence.function.decrypt_array.result.desc=The input array decrypted with the password
+
+# Vector
+datasystem.immersiveintelligence.function.vector_create=Create Vector
+datasystem.immersiveintelligence.function.vector_create.desc=Creates a new vector
+datasystem.immersiveintelligence.function.vector_create.param.x=X
+datasystem.immersiveintelligence.function.vector_create.param.x.desc=The X coordinate of the vector
+datasystem.immersiveintelligence.function.vector_create.param.y=Y
+datasystem.immersiveintelligence.function.vector_create.param.y.desc=The Y coordinate of the vector
+datasystem.immersiveintelligence.function.vector_create.param.z=Z
+datasystem.immersiveintelligence.function.vector_create.param.z.desc=The Z coordinate of the vector
+datasystem.immersiveintelligence.function.vector_create.result=Vector
+datasystem.immersiveintelligence.function.vector_create.result.desc=A vector with the specified coordinates
+
+datasystem.immersiveintelligence.function.vector_create_angle=Create Vector from Angles
+datasystem.immersiveintelligence.function.vector_create_angle.desc=Creates a new vector from the input angles
+datasystem.immersiveintelligence.function.vector_create_angle.param.offset=Offset
+datasystem.immersiveintelligence.function.vector_create_angle.param.offset.desc=The offset of the vector
+datasystem.immersiveintelligence.function.vector_create_angle.param.yaw=Yaw
+datasystem.immersiveintelligence.function.vector_create_angle.param.yaw.desc=The yaw angle of the vector, in degrees from -180 to 180
+datasystem.immersiveintelligence.function.vector_create_angle.param.pitch=Pitch
+datasystem.immersiveintelligence.function.vector_create_angle.param.pitch.desc=The pitch angle of the vector, in degrees from -90 to 90
+datasystem.immersiveintelligence.function.vector_create_angle.result=Vector
+datasystem.immersiveintelligence.function.vector_create_angle.result.desc=A vector of given length angled in the specified direction
+
+datasystem.immersiveintelligence.function.vector_get_x=Get X
+datasystem.immersiveintelligence.function.vector_get_x.desc=Returns the X coordinate of the input vector
+datasystem.immersiveintelligence.function.vector_get_x.param.vector=Vector
+datasystem.immersiveintelligence.function.vector_get_x.param.vector.desc=The vector to get the X coordinate of
+datasystem.immersiveintelligence.function.vector_get_x.result=X
+datasystem.immersiveintelligence.function.vector_get_x.result.desc=The X coordinate of the input vector
+
+datasystem.immersiveintelligence.function.vector_get_y=Get Y
+datasystem.immersiveintelligence.function.vector_get_y.desc=Returns the Y coordinate of the input vector
+datasystem.immersiveintelligence.function.vector_get_y.param.vector=Vector
+datasystem.immersiveintelligence.function.vector_get_y.param.vector.desc=The vector to get the Y coordinate of
+datasystem.immersiveintelligence.function.vector_get_y.result=Y
+datasystem.immersiveintelligence.function.vector_get_y.result.desc=The Y coordinate of the input vector
+
+datasystem.immersiveintelligence.function.vector_get_z=Get Z
+datasystem.immersiveintelligence.function.vector_get_z.desc=Returns the Z coordinate of the input vector
+datasystem.immersiveintelligence.function.vector_get_z.param.vector=Vector
+datasystem.immersiveintelligence.function.vector_get_z.param.vector.desc=The vector to get the Z coordinate of
+datasystem.immersiveintelligence.function.vector_get_z.result=Z
+datasystem.immersiveintelligence.function.vector_get_z.result.desc=The Z coordinate of the input vector
+
+datasystem.immersiveintelligence.function.vector_get_pitch=Get Pitch
+datasystem.immersiveintelligence.function.vector_get_pitch.desc=Returns the pitch angle of the input vector
+datasystem.immersiveintelligence.function.vector_get_pitch.param.vector=Vector
+datasystem.immersiveintelligence.function.vector_get_pitch.param.vector.desc=The vector to get the pitch angle of
+datasystem.immersiveintelligence.function.vector_get_pitch.result=Pitch
+datasystem.immersiveintelligence.function.vector_get_pitch.result.desc=The pitch angle of the input vector in degrees from -90 to 90
+
+datasystem.immersiveintelligence.function.vector_get_yaw=Get Yaw
+datasystem.immersiveintelligence.function.vector_get_yaw.desc=Returns the yaw angle of the input vector
+datasystem.immersiveintelligence.function.vector_get_yaw.param.vector=Vector
+datasystem.immersiveintelligence.function.vector_get_yaw.param.vector.desc=The vector to get the yaw angle of
+datasystem.immersiveintelligence.function.vector_get_yaw.result=Yaw
+datasystem.immersiveintelligence.function.vector_get_yaw.result.desc=The yaw angle of the input vector in degrees from -180 to 180
+
+datasystem.immersiveintelligence.function.vector_set_x=Set X
+datasystem.immersiveintelligence.function.vector_set_x.desc=Sets the X coordinate of the input vector
+datasystem.immersiveintelligence.function.vector_set_x.param.vector=Vector
+datasystem.immersiveintelligence.function.vector_set_x.param.vector.desc=The vector to modify
+datasystem.immersiveintelligence.function.vector_set_x.param.x=X
+datasystem.immersiveintelligence.function.vector_set_x.param.x.desc=The X coordinate to set
+datasystem.immersiveintelligence.function.vector_set_x.result=Vector
+datasystem.immersiveintelligence.function.vector_set_x.result.desc=The vector with the new X coordinate
+
+datasystem.immersiveintelligence.function.vector_set_y=Set Y
+datasystem.immersiveintelligence.function.vector_set_y.desc=Sets the Y coordinate of the input vector
+datasystem.immersiveintelligence.function.vector_set_y.param.vector=Vector
+datasystem.immersiveintelligence.function.vector_set_y.param.vector.desc=The vector to modify
+datasystem.immersiveintelligence.function.vector_set_y.param.y=Y
+datasystem.immersiveintelligence.function.vector_set_y.param.y.desc=The Y coordinate to set
+datasystem.immersiveintelligence.function.vector_set_y.result=Vector
+datasystem.immersiveintelligence.function.vector_set_y.result.desc=The vector with the new Y coordinate
+
+datasystem.immersiveintelligence.function.vector_set_z=Set Z
+datasystem.immersiveintelligence.function.vector_set_z.desc=Sets the Z coordinate of the input vector
+datasystem.immersiveintelligence.function.vector_set_z.param.vector=Vector
+datasystem.immersiveintelligence.function.vector_set_z.param.vector.desc=The vector to modify
+datasystem.immersiveintelligence.function.vector_set_z.param.z=Z
+datasystem.immersiveintelligence.function.vector_set_z.param.z.desc=The Z coordinate to set
+datasystem.immersiveintelligence.function.vector_set_z.result=Vector
+datasystem.immersiveintelligence.function.vector_set_z.result.desc=The vector with the new Z coordinate
+
+datasystem.immersiveintelligence.function.vector_add=Add
+datasystem.immersiveintelligence.function.vector_add.desc=Adds the input vectors together, for example (1,2,3) + (4,5,6) = (5,7,9)
+datasystem.immersiveintelligence.function.vector_add.param.vector=Vector
+datasystem.immersiveintelligence.function.vector_add.param.vector.desc=The vector to add
+datasystem.immersiveintelligence.function.vector_add.result=Result
+datasystem.immersiveintelligence.function.vector_add.result.desc=The sum of the input vectors
+
+datasystem.immersiveintelligence.function.vector_sub=Subtract
+datasystem.immersiveintelligence.function.vector_sub.desc=Subtracts the second vector from the first vector, for example (1,2,3) - (4,5,6) = (-3,-3,-3)
+datasystem.immersiveintelligence.function.vector_sub.param.first=First Vector
+datasystem.immersiveintelligence.function.vector_sub.param.first.desc=The vector to subtract from
+datasystem.immersiveintelligence.function.vector_sub.param.second=Second Vector
+datasystem.immersiveintelligence.function.vector_sub.param.second.desc=The vector to subtract
+datasystem.immersiveintelligence.function.vector_sub.result=Result
+datasystem.immersiveintelligence.function.vector_sub.result.desc=The difference of the input vectors
+
+datasystem.immersiveintelligence.function.vector_scale=Scale
+datasystem.immersiveintelligence.function.vector_scale.desc=Scales the input vector by the specified scalar, for example (1,2,3) * 2 = (2,4,6)
+datasystem.immersiveintelligence.function.vector_scale.param.vector=Vector
+datasystem.immersiveintelligence.function.vector_scale.param.vector.desc=The vector to multiply
+datasystem.immersiveintelligence.function.vector_scale.param.scalar=Scalar
+datasystem.immersiveintelligence.function.vector_scale.param.scalar.desc=The scalar to multiply by
+datasystem.immersiveintelligence.function.vector_scale.result=Result
+datasystem.immersiveintelligence.function.vector_scale.result.desc=The input vector multiplied by the scalar
+
+datasystem.immersiveintelligence.function.vector_mul=Multiply
+datasystem.immersiveintelligence.function.vector_mul.desc=Multiplies the input vectors together, for example (1,2,3) * (4,5,6) = (4,10,18)
+datasystem.immersiveintelligence.function.vector_mul.param.vector=Vector
+datasystem.immersiveintelligence.function.vector_mul.param.vector.desc=The vector to multiply
+datasystem.immersiveintelligence.function.vector_mul.result=Result
+datasystem.immersiveintelligence.function.vector_mul.result.desc=The product of the input vectors
+
+datasystem.immersiveintelligence.function.vector_dot=Dot Product
+datasystem.immersiveintelligence.function.vector_dot.desc=Calculates the dot product of the input vectors.
+datasystem.immersiveintelligence.function.vector_dot.param.first=First Vector
+datasystem.immersiveintelligence.function.vector_dot.param.first.desc=The first vector
+datasystem.immersiveintelligence.function.vector_dot.param.second=Second Vector
+datasystem.immersiveintelligence.function.vector_dot.param.second.desc=The second vector
+datasystem.immersiveintelligence.function.vector_dot.result=Dot Product
+datasystem.immersiveintelligence.function.vector_dot.result.desc=A value measuring how much one vector goes in the direction of another.
+
+datasystem.immersiveintelligence.function.vector_cross=Cross Product
+datasystem.immersiveintelligence.function.vector_cross.desc=Calculates the cross product of the input vectors.
+datasystem.immersiveintelligence.function.vector_cross.param.first=First Vector
+datasystem.immersiveintelligence.function.vector_cross.param.first.desc=The first vector
+datasystem.immersiveintelligence.function.vector_cross.param.second=Second Vector
+datasystem.immersiveintelligence.function.vector_cross.param.second.desc=The second vector
+datasystem.immersiveintelligence.function.vector_cross.result=Cross Product
+datasystem.immersiveintelligence.function.vector_cross.result.desc=A new vector that is perpendicular to both of the original vectors, meaning a point where they cross (meet or intersect) at a right (90 degrees) angle.
+
+datasystem.immersiveintelligence.function.vector_length=Length
+datasystem.immersiveintelligence.function.vector_length.desc=Returns the length of the input vector
+datasystem.immersiveintelligence.function.vector_length.param.vector=Vector
+datasystem.immersiveintelligence.function.vector_length.param.vector.desc=The vector to get the length of
+datasystem.immersiveintelligence.function.vector_length.result=Length
+datasystem.immersiveintelligence.function.vector_length.result.desc=The distance from the origin (0,0,0) to the end of the vector
+
+datasystem.immersiveintelligence.function.vector_normalize=Normalize
+datasystem.immersiveintelligence.function.vector_normalize.desc=Normalizes the input vector
+datasystem.immersiveintelligence.function.vector_normalize.param.vector=Vector
+datasystem.immersiveintelligence.function.vector_normalize.param.vector.desc=The vector to normalize
+datasystem.immersiveintelligence.function.vector_normalize.result=Normalized Vector
+datasystem.immersiveintelligence.function.vector_normalize.result.desc=A vector with the same direction as the input vector, but with a length of 1
+
+datasystem.immersiveintelligence.function.vector_distance=Distance
+datasystem.immersiveintelligence.function.vector_distance.desc=Returns the distance between the two input vectors
+datasystem.immersiveintelligence.function.vector_distance.param.first=First Vector
+datasystem.immersiveintelligence.function.vector_distance.param.first.desc=The first vector
+datasystem.immersiveintelligence.function.vector_distance.param.second=Second Vector
+datasystem.immersiveintelligence.function.vector_distance.param.second.desc=The second vector
+datasystem.immersiveintelligence.function.vector_distance.result=Distance
+datasystem.immersiveintelligence.function.vector_distance.result.desc=The distance between the input vectors
+
+# Map
+
+datasystem.immersiveintelligence.function.map_create=Create Map
+datasystem.immersiveintelligence.function.map_create.desc=Creates a new map containing the specified key-value pair
+datasystem.immersiveintelligence.function.map_create.param.key=Key
+datasystem.immersiveintelligence.function.map_create.param.key.desc=The key of the initial pair
+datasystem.immersiveintelligence.function.map_create.param.value=Value
+datasystem.immersiveintelligence.function.map_create.param.value.desc=The value of the initial pair
+datasystem.immersiveintelligence.function.map_create.result=Map
+datasystem.immersiveintelligence.function.map_create.result.desc=The new map
+
+datasystem.immersiveintelligence.function.map_get=Get
+datasystem.immersiveintelligence.function.map_get.desc=Returns the value associated with the specified key in the input map
+datasystem.immersiveintelligence.function.map_get.param.map=Map
+datasystem.immersiveintelligence.function.map_get.param.map.desc=The map to get the value from
+datasystem.immersiveintelligence.function.map_get.param.key=Key
+datasystem.immersiveintelligence.function.map_get.param.key.desc=The key to get the value for
+datasystem.immersiveintelligence.function.map_get.result=Value
+datasystem.immersiveintelligence.function.map_get.result.desc=The value associated with the specified key
+
+datasystem.immersiveintelligence.function.map_set=Set
+datasystem.immersiveintelligence.function.map_set.desc=Sets the value associated with the specified key in the input map
+datasystem.immersiveintelligence.function.map_set.param.map=Map
+datasystem.immersiveintelligence.function.map_set.param.map.desc=The map to modify
+datasystem.immersiveintelligence.function.map_set.param.key=Key
+datasystem.immersiveintelligence.function.map_set.param.key.desc=The key to set the value for
+datasystem.immersiveintelligence.function.map_set.param.value=Value
+datasystem.immersiveintelligence.function.map_set.param.value.desc=The value to set
+datasystem.immersiveintelligence.function.map_set.result=Map
+datasystem.immersiveintelligence.function.map_set.result.desc=The map with the new key-value pair
+
+datasystem.immersiveintelligence.function.map_remove=Remove
+datasystem.immersiveintelligence.function.map_remove.desc=Removes the value associated with the specified key in the input map
+datasystem.immersiveintelligence.function.map_remove.param.map=Map
+datasystem.immersiveintelligence.function.map_remove.param.map.desc=The map to modify
+datasystem.immersiveintelligence.function.map_remove.param.key=Key
+datasystem.immersiveintelligence.function.map_remove.param.key.desc=The key to remove
+datasystem.immersiveintelligence.function.map_remove.result=Removed
+datasystem.immersiveintelligence.function.map_remove.result.desc=The value removed from the map
+
+datasystem.immersiveintelligence.function.map_clear=Clear
+datasystem.immersiveintelligence.function.map_clear.desc=Removes all key-value pairs from the input map
+datasystem.immersiveintelligence.function.map_clear.param.map=Map
+datasystem.immersiveintelligence.function.map_clear.param.map.desc=The map to clear
+datasystem.immersiveintelligence.function.map_clear.result=Map
+datasystem.immersiveintelligence.function.map_clear.result.desc=The map with all key-value pairs removed
+
+datasystem.immersiveintelligence.function.map_contains=Contains Key
+datasystem.immersiveintelligence.function.map_contains.desc=Returns true if the input map contains the specified key
+datasystem.immersiveintelligence.function.map_contains.param.map=Map
+datasystem.immersiveintelligence.function.map_contains.param.map.desc=The map to check
+datasystem.immersiveintelligence.function.map_contains.param.key=Key
+datasystem.immersiveintelligence.function.map_contains.param.key.desc=The key to check for
+datasystem.immersiveintelligence.function.map_contains.result=Contains
+datasystem.immersiveintelligence.function.map_contains.result.desc=Result of the key check
+
+datasystem.immersiveintelligence.function.map_keys=Get Keys
+datasystem.immersiveintelligence.function.map_keys.desc=Returns an array of all keys in the input map
+datasystem.immersiveintelligence.function.map_keys.param.map=Map
+datasystem.immersiveintelligence.function.map_keys.param.map.desc=The map to get the keys from
+datasystem.immersiveintelligence.function.map_keys.result=Keys
+datasystem.immersiveintelligence.function.map_keys.result.desc=Array of all keys in the input map
+
+datasystem.immersiveintelligence.function.map_values=Get Values
+datasystem.immersiveintelligence.function.map_values.desc=Returns an array of all values in the input map
+datasystem.immersiveintelligence.function.map_values.param.map=Map
+datasystem.immersiveintelligence.function.map_values.param.map.desc=The map to get the values from
+datasystem.immersiveintelligence.function.map_values.result=Values
+datasystem.immersiveintelligence.function.map_values.result.desc=Array of all values in the input map
+
+datasystem.immersiveintelligence.function.map_size=Get Size
+datasystem.immersiveintelligence.function.map_size.desc=Returns the number of pairs in the input map
+datasystem.immersiveintelligence.function.map_size.param.map=Map
+datasystem.immersiveintelligence.function.map_size.param.map.desc=The map to get the size of
+datasystem.immersiveintelligence.function.map_size.result=Size
+datasystem.immersiveintelligence.function.map_size.result.desc=The number of pairs in the input map
+
 
 datasystem.immersiveintelligence.datatype.null=Null
 datasystem.immersiveintelligence.datatype.boolean=Boolean

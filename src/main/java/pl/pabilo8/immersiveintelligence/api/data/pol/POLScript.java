@@ -1,8 +1,8 @@
 package pl.pabilo8.immersiveintelligence.api.data.pol;
 
 import net.minecraft.util.Tuple;
-import pl.pabilo8.immersiveintelligence.api.data.DataOperations;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
+import pl.pabilo8.immersiveintelligence.api.data.IIDataOperationUtils;
 import pl.pabilo8.immersiveintelligence.api.data.IIDataTypeUtils;
 import pl.pabilo8.immersiveintelligence.api.data.operations.DataOperation;
 import pl.pabilo8.immersiveintelligence.api.data.pol.instructions.*;
@@ -136,7 +136,7 @@ public class POLScript
 							.filter(e -> e.getName().equals(rest.toLowerCase()))
 							.findFirst().orElse(Circuits.ARITHMETIC);
 					for(String function : circuit.getFunctions())
-						operations.add(DataOperations.getOperationInstance(function));
+						operations.add(IIDataOperationUtils.getOperationInstance(function));
 				}
 				break;
 				case MARK: //add a marker

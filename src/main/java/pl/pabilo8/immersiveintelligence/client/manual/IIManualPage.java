@@ -159,7 +159,7 @@ public class IIManualPage extends ManualPages
 	{
 		return matchReplace(patternLink, file, (stringBuilder, matcher) ->
 				{
-					String link = matcher.group(2).replace(".md", ""), sub = "";
+					String link = matcher.group(2).replace(".md", "").replaceAll("^(?:\\.\\./)+[^/]+/", ""), sub = "";
 
 					if(link.startsWith("#")) //link to page from this entry
 					{

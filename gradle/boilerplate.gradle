@@ -155,6 +155,13 @@ processResources {
     exclude '**/.DS_Store'
 }
 
+processTestResources {
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+    } into sourceSets.test.output.resourcesDir
+    println(sourceSets.test.output.resourcesDir)
+}
+
 //--- Core Jar Generation
 // Create a core jar, sign it and place it inside the main jar
 if(ii_generateCoreJar=='true')

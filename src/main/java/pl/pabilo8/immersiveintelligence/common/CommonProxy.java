@@ -61,6 +61,7 @@ import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.api.ammo.PenetrationRegistry;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.api.crafting.DustUtils;
+import pl.pabilo8.immersiveintelligence.api.data.IIDataOperationUtils;
 import pl.pabilo8.immersiveintelligence.api.rotary.CapabilityRotaryEnergy;
 import pl.pabilo8.immersiveintelligence.api.rotary.IIRotaryUtils;
 import pl.pabilo8.immersiveintelligence.api.utils.IUpgradableMachine;
@@ -484,6 +485,7 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 
 	public void init()
 	{
+		IIDataOperationUtils.registerDataOperations();
 		PenetrationRegistry.init();
 		IICompatModule.doModulesInit();
 

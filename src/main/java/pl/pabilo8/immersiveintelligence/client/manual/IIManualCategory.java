@@ -98,4 +98,9 @@ public abstract class IIManualCategory
 	{
 		return EasyNBT.newNBT().withList("items", stacks);
 	}
+
+	protected final EasyNBT getSourceForBlueprint(String name)
+	{
+		return EasyNBT.newNBT().withString("blueprint", name);
+	}
 }

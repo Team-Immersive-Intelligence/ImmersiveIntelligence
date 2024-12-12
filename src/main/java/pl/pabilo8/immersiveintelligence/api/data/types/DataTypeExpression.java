@@ -1,8 +1,8 @@
 package pl.pabilo8.immersiveintelligence.api.data.types;
 
 import net.minecraft.nbt.NBTTagCompound;
-import pl.pabilo8.immersiveintelligence.api.data.DataOperations;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
+import pl.pabilo8.immersiveintelligence.api.data.IIDataOperationUtils;
 import pl.pabilo8.immersiveintelligence.api.data.IIDataTypeUtils;
 import pl.pabilo8.immersiveintelligence.api.data.operations.DataOperation;
 import pl.pabilo8.immersiveintelligence.api.data.operations.DataOperation.DataOperationMeta;
@@ -92,7 +92,7 @@ public class DataTypeExpression extends DataType
 	@Override
 	public void valueFromNBT(NBTTagCompound nbt)
 	{
-		this.operation = DataOperations.getOperationInstance(nbt.getString("Operation"));
+		this.operation = IIDataOperationUtils.getOperationInstance(nbt.getString("Operation"));
 		this.meta = this.operation.getMeta();
 		this.requiredVariable = nbt.getString("requiredVariable").charAt(0);
 

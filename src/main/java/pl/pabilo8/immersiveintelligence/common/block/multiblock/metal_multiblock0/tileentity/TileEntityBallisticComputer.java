@@ -101,7 +101,7 @@ public class TileEntityBallisticComputer extends TileEntityMultiblockIIGeneric<T
 			ItemStack stack = t.value;
 			if(stack.getItem() instanceof IAmmoTypeItem)
 			{
-				IAmmoTypeItem bullet = (IAmmoTypeItem)stack.getItem();
+				IAmmoTypeItem<?, ?> bullet = (IAmmoTypeItem<?, ?>)stack.getItem();
 				force = bullet.getVelocity();
 				mass = bullet.getMass(stack);
 			}

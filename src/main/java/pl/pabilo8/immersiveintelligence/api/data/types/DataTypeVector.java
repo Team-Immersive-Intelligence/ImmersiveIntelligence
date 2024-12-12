@@ -1,6 +1,7 @@
 package pl.pabilo8.immersiveintelligence.api.data.types;
 
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.Vec3d;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 
 import javax.annotation.Nonnull;
@@ -20,6 +21,11 @@ public class DataTypeVector extends DataType
 		this.x = x;
 		this.y = y;
 		this.z = z;
+	}
+
+	public DataTypeVector(Vec3d vector)
+	{
+		this((float)vector.x, (float)vector.y, (float)vector.z);
 	}
 
 	public DataTypeVector(int x, int y, int z)

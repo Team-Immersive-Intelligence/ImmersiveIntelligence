@@ -1,8 +1,11 @@
 package pl.pabilo8.immersiveintelligence.api.data.types;
 
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -16,9 +19,15 @@ public class DataTypeFluidStack extends DataType
 	@Nullable
 	public FluidStack value = null;
 
-	public DataTypeFluidStack(FluidStack i)
+	public DataTypeFluidStack(FluidStack fluidStack)
 	{
-		this.value = i.copy();
+		this.value = fluidStack.copy();
+	}
+
+	public DataTypeFluidStack(String fluidName, int amount, String nbt)
+	{
+		Fluid fluid = FluidRegistry.getFluid(fluidName);
+		this.value = fluid==null?null: new FluidStack(fluid, amount, EasyNBT.parseNBT(nbt));
 	}
 
 	public DataTypeFluidStack()
