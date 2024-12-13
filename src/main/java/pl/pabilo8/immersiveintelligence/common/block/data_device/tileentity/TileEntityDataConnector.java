@@ -11,6 +11,7 @@ import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IBlockBou
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IDirectionalTile;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IHammerInteraction;
 import blusunrize.immersiveengineering.common.util.Utils;
+import com.google.common.annotations.VisibleForTesting;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.api.peripheral.IPeripheralTile;
 import net.minecraft.block.state.IBlockState;
@@ -303,5 +304,11 @@ public class TileEntityDataConnector extends TileEntityImmersiveConnectable impl
 	public IPeripheral getPeripheral(@Nonnull EnumFacing facing)
 	{
 		return facing==this.facing?ComputerCraftHelper.createConnectorPeripheral(this): null;
+	}
+
+	@VisibleForTesting
+	public void setColor(EnumDyeColor color)
+	{
+		this.color = color.getMetadata();
 	}
 }

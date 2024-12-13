@@ -28,6 +28,12 @@ dependencies {
     provided "curse.maven:mysticalmechanics-300742:3006392"
 
     runtimeOnly "curse.maven:reauth-237701:4408001"
+
+    if (ii_useJUnit) {
+        testImplementation "blusunrize:ImmersiveEngineering:0.12-92-+"
+        testImplementation "org.squiddev:cc-tweaked-1.12.2:1.89.2"
+        testImplementation "li.cil.oc:OpenComputers:MC1.12.2-1.7.5.221"
+    }
 }
 
 repositories {

@@ -1,5 +1,6 @@
 package pl.pabilo8.immersiveintelligence.api.data.radio;
 
+import blusunrize.immersiveengineering.api.DimensionBlockPos;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 
 import java.util.ArrayList;
@@ -103,8 +104,12 @@ public class RadioNetwork
 	 */
 	public boolean distanceCheck(IRadioDevice device1, IRadioDevice device2)
 	{
+		DimensionBlockPos pos1 = device1.getDevicePosition();
+		DimensionBlockPos pos2 = device2.getDevicePosition();
+		if(pos1.dimension!=pos2.dimension)
+			return false;
 		float range = device1.getRange();
-		return device1.getDevicePosition().distanceSq(device2.getDevicePosition()) <= range*range;
+		return pos1.distanceSq(device2.getDevicePosition()) <= range*range;
 	}
 
 }
