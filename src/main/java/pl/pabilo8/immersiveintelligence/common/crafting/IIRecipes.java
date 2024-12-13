@@ -81,6 +81,8 @@ import java.util.stream.Collectors;
 /**
  * @author Pabilo8
  * @since 22-03-2020
+ * @author Avalon
+ * @since 28-11-2024
  */
 public class IIRecipes
 {
@@ -634,6 +636,7 @@ public class IIRecipes
 	public static void addWoodTableSawRecipes()
 	{
 
+		//Sawmill plank recipe
 		CraftingManager.REGISTRY.forEach(iRecipe ->
 				{
 					if(Utils.compareToOreName(iRecipe.getRecipeOutput(), "plankWood"))
@@ -661,13 +664,24 @@ public class IIRecipes
 		CrusherRecipe.addRecipe(IIContent.itemMaterial.getStack(Materials.DUST_WOOD),
 				new IngredientStack("plankWood", 2), 3192);
 
-		//Planks to sticks
-		SawmillRecipe.addRecipe(new ItemStack(Items.STICK, 3),
-				new IngredientStack("plankWood"),
+		// Add recipes for all planks dynamically
+		for (int i = 0; i < 6; i++) { // Vanilla planks (Oak, Spruce, Birch, etc.)
+			SawmillRecipe.addRecipe(new ItemStack(Items.STICK, 3),
+					new IngredientStack(new ItemStack(Blocks.PLANKS, 1, i)), // Specific plank type
+					IIContent.itemMaterial.getStack(Materials.DUST_WOOD),
+					Sawmill.torqueMin, 100, 1);
+		}
+
+// Treated wood planks
+		SawmillRecipe.addRecipe(new ItemStack(IEContent.itemMaterial, 3, 0), // Treated sticks
+				new IngredientStack(new ItemStack(IEContent.blockTreatedWood)), // Treated planks
 				IIContent.itemMaterial.getStack(Materials.DUST_WOOD),
 				Sawmill.torqueMin, 100, 1);
-		SawmillRecipe.addRecipe(new ItemStack(IEContent.itemMaterial, 3, 0),
-				new IngredientStack("plankTreatedWood"),
+
+// Support modded planks or dynamically registered planks
+		IngredientStack allPlanks = new IngredientStack("plankWood"); // Handles OreDict entries for any planks
+		SawmillRecipe.addRecipe(new ItemStack(Items.STICK, 3),
+				allPlanks,
 				IIContent.itemMaterial.getStack(Materials.DUST_WOOD),
 				Sawmill.torqueMin, 100, 1);
 

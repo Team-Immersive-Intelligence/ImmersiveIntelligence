@@ -333,8 +333,8 @@ tile.immersiveintelligence.metal_multiblock.minecart_packer.name=Kolejowa Maszyn
 
 tile.immersiveintelligence.metal_multiblock1.redstone_data_interface.name=Interfejs Redstone-Dane
 
-desc.immersiveengineering.info.multiblock.II:SkyCrateStation=Stacja SkyCrate
-desc.immersiveengineering.info.multiblock.II:SkyCratePost=Węzeł SkyCrate
+desc.immersiveengineering.info.multiblock.II:SkycrateStation=Stacja SkyCrate
+desc.immersiveengineering.info.multiblock.II:SkycratePost=Węzeł SkyCrate
 desc.immersiveengineering.info.multiblock.II:Sawmill=Krajzega
 desc.immersiveengineering.info.multiblock.II:DataInputMachine=Maszyna Wprowadzania Danych
 desc.immersiveengineering.info.multiblock.II:ArithmeticLogicMachine=Maszyna Arytmetyczno-Logiczna
@@ -995,7 +995,7 @@ tile.immersiveintelligence.metal_multiblock1.ammunition_filler.name=Ammunition F
 tile.immersiveintelligence.metal_multiblock1.ammunition_assembly.name=Ammunition Assembly
 tile.immersiveintelligence.metal_multiblock1.ammunition_workshop.name=Ammunition Workshop
 tile.immersiveintelligence.metal_multiblock1.chemical_painter.name=Chemical Painter
-desc.immersiveengineering.info.multiblock.II:SkyCartStation=SkyCart Station
+desc.immersiveengineering.info.multiblock.II:SkycartStation=SkyCart Station
 desc.immersiveengineering.info.multiblock.II:VehicleWorkshop=Vehicle Workshop
 desc.immersiveengineering.info.multiblock.II:FuelStation=Fuel Station
 desc.immersiveengineering.info.multiblock.II:AmmunitionFiller=Ammunition Filler

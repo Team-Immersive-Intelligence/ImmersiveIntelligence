@@ -3,11 +3,11 @@ Sawmill
 The better fidget spinner!
 
 # intro
-|[multiblock]{mb:"Sawmill"}|
+|[multiblock]{mb:"II:Sawmill"}|
 The Sawmill is an automatic carpentry machine powered by [rotary](rotary_power.md) energy. It consists of a table, a mechanical inserter and saw mount. To form the multiblock, use a hammer on the middle wooden scaffolding.
 
 # saw_blades
-|[recipe]{source:"sawblades"}|
+|[recipe]{source:"blades"}|
 Saws made of different materials can be mounted. While every saw is effective at cutting wood, saws made of hard materials like steel and tungsten can even cut through metals.
 
 # slots

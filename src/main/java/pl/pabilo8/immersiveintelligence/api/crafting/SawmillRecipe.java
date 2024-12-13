@@ -24,6 +24,8 @@ import java.util.List;
  * @author Pabilo8
  * @since 14-04-2020
  */
+
+//Recipe for Sawmill planks is handled in IIRecipes
 public class SawmillRecipe extends MultiblockRecipe implements IIIMultiblockRecipe
 {
 	public static ArrayList<SawmillRecipe> RECIPES = new ArrayList<>();

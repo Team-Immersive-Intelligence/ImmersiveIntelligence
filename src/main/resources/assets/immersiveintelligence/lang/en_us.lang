@@ -803,9 +803,9 @@ desc.immersiveintelligence.metal_multiblock1.chemical_painter.color.hsv.s=Satura
 desc.immersiveintelligence.metal_multiblock1.chemical_painter.color.hsv.v=Value
 desc.immersiveintelligence.metal_multiblock1.chemical_painter.color_copied=Color Copied!
 
-desc.immersiveengineering.info.multiblock.II:SkyCrateStation=SkyCrate Station
-desc.immersiveengineering.info.multiblock.II:SkyCartStation=SkyCart Station
-desc.immersiveengineering.info.multiblock.II:SkyCratePost=SkyCrate Post
+desc.immersiveengineering.info.multiblock.II:SkycrateStation=SkyCrate Station
+desc.immersiveengineering.info.multiblock.II:SkycartStation=SkyCart Station
+desc.immersiveengineering.info.multiblock.II:SkycratePost=SkyCrate Post
 desc.immersiveengineering.info.multiblock.II:Sawmill=Sawmill
 desc.immersiveengineering.info.multiblock.II:DataInputMachine=Data Input Machine
 desc.immersiveengineering.info.multiblock.II:ArithmeticLogicMachine=Arithmetic-Logic Machine
@@ -989,6 +989,9 @@ subtitle.immersiveintelligence.mortar_load=Mortar Loading
 
 subtitle.immersiveintelligence.mine_detector=Mine Detector Beeps
 subtitle.immersiveintelligence.construction=Hammer-Assisted Construction
+
+subtitle.immersiveintelligence.gate_open=Gate Opening
+subtitle.immersiveintelligence.gate_close=Gate Closing
 
 #Entities
 

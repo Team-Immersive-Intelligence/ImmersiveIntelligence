@@ -43,8 +43,8 @@ import java.util.List;
 
 /**
  * @author Pabilo8
- * @author Avalon
  * @since 25-06-2019
+ * @author Avalon
  * @since 20-09-2024
  */
 @IIItemProperties(category = IICategory.ELECTRONICS)
@@ -143,7 +143,7 @@ public class ItemIIFunctionalCircuit extends ItemIISubItemsBase<Circuits> implem
 				"to_boolean",
 				"to_null"
 		),
-		FLUIDSTACK(CircuitTypes.BASIC,
+		FLUIDSTACK(CircuitTypes.ADVANCED,
 				"fluidstack_create",
 				"fluid_get_id",
 				"fluid_get_amount",
@@ -153,7 +153,7 @@ public class ItemIIFunctionalCircuit extends ItemIISubItemsBase<Circuits> implem
 				"fluid_is_empty",
 				"fluid_stacks_with"
 		),
-		MAP(CircuitTypes.BASIC,
+		MAP(CircuitTypes.ADVANCED,
 				"map_create",
 				"map_set", "map_get", "map_remove", "map_clear",
 				"map_contains",

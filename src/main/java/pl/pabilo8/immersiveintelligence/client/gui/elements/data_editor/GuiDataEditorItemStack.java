@@ -47,13 +47,13 @@ public class GuiDataEditorItemStack extends GuiDataEditor<DataTypeItemStack>
 		this.valueLabel = I18n.format(IIReference.DESCRIPTION_KEY+"variable_value");
 
 		this.metaEdit = new GuiTextField(0, renderer,
-				x+40, y+2+20+16, width-42, 12);
+				x+40, y+2+20+10, width-42, 12);
 		this.metaEdit.setFocused(false);
 		this.metaEdit.setText(String.valueOf(scanned.getMetadata()));
 		this.metaEdit.updateCursorCounter();
 
 		this.countEdit = new GuiTextField(0, renderer,
-				x+40, y+32+16+6, width-42, 12);
+				x+40, y+32+16, width-42, 12);
 		this.countEdit.setFocused(false);
 		this.countEdit.setText(String.valueOf(scanned.getCount()));
 		this.countEdit.updateCursorCounter();
@@ -81,11 +81,12 @@ public class GuiDataEditorItemStack extends GuiDataEditor<DataTypeItemStack>
 		ClientUtils.bindTexture("immersiveintelligence:textures/gui/emplacement_icons.png");
 		drawTexturedModalRect(x+(width/2)-9, y+7, 0, 50, 18, 18);
 
-		renderer.drawString(valueLabel, x+2, y+2, IIReference.COLOR_H1.getPackedRGB(), false);
+		//renderer.drawString(valueLabel, x+2, y+2, IIReference.COLOR_H1.getPackedRGB(), false);
 
-		renderer.drawString(scanned.getDisplayName(), x+2, y+2+10+16, Lib.COLOUR_I_ImmersiveOrange, false);
-		renderer.drawString("Meta:", x+2, y+2+20+18, IIReference.COLOR_H1.getPackedRGB(), false);
-		renderer.drawString("Count:", x+2, y+32+16+8, IIReference.COLOR_H1.getPackedRGB(), false);
+		//renderer.drawString(scanned.getDisplayName(), x+2, y+2+10+10, Lib.COLOUR_I_ImmersiveOrange, false);
+		renderer.drawString("Item:", x+2, y+12, IIReference.COLOR_H1.getPackedRGB(), false);
+		renderer.drawString("Meta:", x+2, y+2+20+12, IIReference.COLOR_H1.getPackedRGB(), false);
+		renderer.drawString("Count:", x+2, y+32+16+2, IIReference.COLOR_H1.getPackedRGB(), false);
 
 		this.countEdit.drawTextBox();
 		this.metaEdit.drawTextBox();
