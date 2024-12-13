@@ -147,6 +147,7 @@ public class IIManualCategoryData extends IIManualCategory
 			functionalCircuits.addSource(circuit.getName(), getSourceForItem(IIContent.itemCircuit.getStack(circuit)));
 			addEntry("functions/"+circuit.getName());
 		}
+		addEntry("computers/data_pol");
 
 		addEntry("redstone_interface");
 
@@ -174,9 +175,6 @@ public class IIManualCategoryData extends IIManualCategory
 								.map(IIContent.itemPrecisionTool::getStack)
 								.toArray(ItemStack[]::new)
 				));
-
-
-		addEntry("folder/device/sekritdokuments/data_pol");
 
 	}
 }

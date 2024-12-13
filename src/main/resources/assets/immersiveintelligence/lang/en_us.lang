@@ -2668,9 +2668,7 @@ ie.manual.category.ii_other.name=Other
 
 
 ie.manual.folder.functions=Function Reference
-ie.manual.folder.folder=Folder
-ie.manual.folder.device=Device
-ie.manual.folder.sekritdokuments=Sekrit Dokuments
+ie.manual.folder.computers=Computers
 
 ie.manual.entry.traits.level_beginner=Complexity: Pre-Industrial
 ie.manual.entry.traits.level_early_industrial=Complexity: Early Industrial

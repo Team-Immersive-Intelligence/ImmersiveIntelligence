@@ -23,6 +23,8 @@ public class DataPacketTest
 	{
 		dataPacket = new DataPacket();
 		assertFalse(dataPacket.hasAnyVariables());
+		IIDataTypeUtils.registerDataTypes();
+		IIDataOperationUtils.registerDataOperations();
 	}
 
 	@Test

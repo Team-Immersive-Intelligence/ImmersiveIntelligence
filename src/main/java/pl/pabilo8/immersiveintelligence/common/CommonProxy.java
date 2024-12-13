@@ -62,6 +62,7 @@ import pl.pabilo8.immersiveintelligence.api.ammo.PenetrationRegistry;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.api.crafting.DustUtils;
 import pl.pabilo8.immersiveintelligence.api.data.IIDataOperationUtils;
+import pl.pabilo8.immersiveintelligence.api.data.IIDataTypeUtils;
 import pl.pabilo8.immersiveintelligence.api.rotary.CapabilityRotaryEnergy;
 import pl.pabilo8.immersiveintelligence.api.rotary.IIRotaryUtils;
 import pl.pabilo8.immersiveintelligence.api.utils.IUpgradableMachine;
@@ -345,6 +346,9 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 
 		IIContent.init();
 
+		IIDataTypeUtils.registerDataTypes();
+		IIDataOperationUtils.registerDataOperations();
+
 		//ALWAYS REGISTER BULLETS IN PRE-INIT! (so they get their texture registered before TextureStitchEvent.Pre)
 		//Bullets
 		AmmoRegistry.registerAmmoType(IIContent.itemAmmoHeavyArtillery);
@@ -485,7 +489,6 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 
 	public void init()
 	{
-		IIDataOperationUtils.registerDataOperations();
 		PenetrationRegistry.init();
 		IICompatModule.doModulesInit();
 

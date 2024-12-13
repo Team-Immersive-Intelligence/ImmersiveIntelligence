@@ -24,6 +24,9 @@ public class DataOperationEqual extends DataOperation
 	@Override
 	public DataType execute(DataPacket packet, DataTypeExpression data)
 	{
-		return new DataTypeBoolean(data.getArgument(0).equals(data.getArgument(1)));
+		DataType t1 = packet.evaluateVariable(data.getArgument(0), false);
+		DataType t2 = packet.evaluateVariable(data.getArgument(1), false);
+
+		return new DataTypeBoolean(t1.equals(t2));
 	}
 }

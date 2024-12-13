@@ -28,6 +28,9 @@ public class DataOperationModulo extends DataOperation
 		t1 = packet.getVarInType(NumericDataType.class, data.getArgument(0));
 		t2 = packet.getVarInType(NumericDataType.class, data.getArgument(1));
 
+		if(t2.floatValue()==0)
+			return new DataTypeFloat(0);
+
 		if(t1 instanceof DataTypeFloat||t2 instanceof DataTypeFloat)
 			return new DataTypeFloat(t1.floatValue()%t2.floatValue());
 		return new DataTypeInteger(t1.intValue()%t2.intValue());

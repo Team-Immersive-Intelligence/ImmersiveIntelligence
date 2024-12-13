@@ -27,7 +27,7 @@ public class IIDataTypeUtils
 	public static final Map<Class<? extends DataType>, TypeMetaInfo<?>> metaTypesByClass = new LinkedHashMap<>();
 	public static final Map<String, TypeMetaInfo<?>> metaTypesByName = new LinkedHashMap<>();
 
-	static
+	public static void registerDataTypes()
 	{
 		//null
 		registerType("null", DataTypeNull.class, DataTypeNull::new, IIColor.fromPackedRGB(0x8f2fb3));
