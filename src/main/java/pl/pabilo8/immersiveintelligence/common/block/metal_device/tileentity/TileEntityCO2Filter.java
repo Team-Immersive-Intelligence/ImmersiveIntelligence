@@ -35,6 +35,8 @@ import java.util.HashMap;
 /**
  * @author Pabilo8
  * @since 19.05.2021
+ * @author Avalon
+ * @since 15.12.2024
  */
 public class TileEntityCO2Filter extends TileEntityIEBase implements ITickable, IBlockBounds, IDirectionalTile, IHasDummyBlocks
 {
@@ -291,51 +293,45 @@ public class TileEntityCO2Filter extends TileEntityIEBase implements ITickable, 
 		}
 
 		@Override
-		public int getSlots()
-		{
-			return 1;
-		}
-
-		@Override
-		public ItemStack getStackInSlot(int slot)
-		{
-			return ItemStack.EMPTY;
-		}
-
-		@Override
-		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate)
-		{
+		public int getSlots() {
 			IItemHandler handlerBelow = getHandlerBelow();
-			if(handlerBelow!=null)
+			return handlerBelow != null ? handlerBelow.getSlots() : 1;
+		}
+
+		@Override
+		public ItemStack getStackInSlot(int slot) {
+			IItemHandler handlerBelow = getHandlerBelow();
+			return handlerBelow != null ? handlerBelow.getStackInSlot(slot) : ItemStack.EMPTY;
+		}
+
+		@Override
+		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+			IItemHandler handlerBelow = getHandlerBelow();
+			if (handlerBelow != null) {
 				return handlerBelow.insertItem(slot, stack, simulate);
-			return stack;
+			}
+			return stack;  // Return full stack if no valid handler
 		}
 
 		@Override
-		public ItemStack extractItem(int slot, int amount, boolean simulate)
-		{
-			return ItemStack.EMPTY;
-		}
-
-		@Override
-		public int getSlotLimit(int slot)
-		{
+		public ItemStack extractItem(int slot, int amount, boolean simulate) {
 			IItemHandler handlerBelow = getHandlerBelow();
-			if(handlerBelow!=null)
-				return handlerBelow.getSlotLimit(slot);
-			return 64;
+			return handlerBelow != null ? handlerBelow.extractItem(slot, amount, simulate) : ItemStack.EMPTY;
 		}
 
 		@Override
-		public void setStackInSlot(int slot, ItemStack stack)
-		{
+		public int getSlotLimit(int slot) {
+			IItemHandler handlerBelow = getHandlerBelow();
+			return handlerBelow != null ? handlerBelow.getSlotLimit(slot) : 64;
 		}
 
 		@Nullable
-		public IItemHandler getHandlerBelow()
-		{
+		private IItemHandler getHandlerBelow() {
 			TileEntity te = tile.getWorld().getTileEntity(tile.pos.down());
-			return (te!=null&&te.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP))?te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP): null;
+			if (te != null && te.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP)) {
+				return te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP);
+			}
+			return null;
 		}
 	}
 
