@@ -78,9 +78,8 @@ public class EntityAmmoShotgunProjectile extends EntityAmmoProjectile
 
 		if (other instanceof EntityLivingBase)
 		{
-			if(other.activeItemStack.getItem().isShield(other.activeItemStack, other)) {
-				other.activeItemStack.damageItem(1000, this);
-			}
+			EntityLivingBase mob = (EntityLivingBase) other;
+			if(mob.getActiveItemStack().getItem().isShield(mob.getActiveItemStack(), mob)) mob.getActiveItemStack().damageItem(1000, mob);
 		}
 
 		return false;
