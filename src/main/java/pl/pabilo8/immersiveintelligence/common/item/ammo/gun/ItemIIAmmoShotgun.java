@@ -11,6 +11,7 @@ import pl.pabilo8.immersiveintelligence.client.model.builtin.IAmmoModel;
 import pl.pabilo8.immersiveintelligence.client.model.builtin.ModelAmmoProjectile;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Ammunition;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
+import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoShotgunProjectile;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoBase;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoBase.AmmoParts;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoCasing;
@@ -102,7 +103,7 @@ public class ItemIIAmmoShotgun extends ItemIIAmmoBase<EntityAmmoProjectile>
 	@Override
 	public CoreType[] getAllowedCoreTypes()
 	{
-		return new CoreType[] {CoreType.BIRDSHOT, CoreType.BUCKSHOT, CoreType.PIERCING_SABOT, CoreType.SHAPED};
+		return new CoreType[] {CoreType.PIERCING, CoreType.CLUSTER, CoreType.CANISTER, CoreType.PIERCING_SABOT, CoreType.SHAPED};
 	}
 
 	@Nonnull
@@ -115,8 +116,8 @@ public class ItemIIAmmoShotgun extends ItemIIAmmoBase<EntityAmmoProjectile>
 
 	@Nonnull
 	@Override
-	public EntityAmmoProjectile getAmmoEntity(World world)
+	public EntityAmmoShotgunProjectile getAmmoEntity(World world)
 	{
-		return new EntityAmmoProjectile(world);
+		return new EntityAmmoShotgunProjectile(world);
 	}
 }

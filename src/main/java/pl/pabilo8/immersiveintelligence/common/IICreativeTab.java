@@ -291,6 +291,50 @@ public class IICreativeTab extends CreativeTabs
 
 		//Revolver
 
+		//Shotgun
+		items.clear();
+		items.put("SG3", IIContent.itemAmmoShotgun);
+
+		items.forEach((name, item) -> {
+			tabNewLine(list);
+
+			//Regular Ammo
+			ItemStack stackP1 = addAmmo(list, item, name+"/P1 Rundkopfgeschoss",
+					IIContent.ammoCoreLead, CoreType.SOFTPOINT, FuseType.CONTACT);
+			ItemStack stackP2 = addAmmo(list, item, name+"/P2 Spitzkopfgeschoss",
+					IIContent.ammoCoreSteel, CoreType.PIERCING, FuseType.CONTACT);
+			ItemStack stackP5 = addAmmo(list, item, name+"/P5 Phosphorpatrone",
+					IIContent.ammoCoreBrass, CoreType.PIERCING, FuseType.CONTACT, IIContent.ammoComponentHMX);
+			ItemStack stackW1 = addAmmo(list, item, name+"/W1 Flakpatrone",
+					IIContent.ammoCoreBrass, CoreType.CANISTER, FuseType.PROXIMITY,
+					IIContent.ammoComponentWhitePhosphorus, AmmoRegistry.getComponent("shrapnel_steel"), IIContent.ammoComponentTracerPowder);
+			ItemStack stackW6 = addAmmo(list, item, name+"/W6 Elektrobrandpatrone",
+					IIContent.ammoCoreBrass, CoreType.CANISTER, FuseType.PROXIMITY, IIContent.ammoComponentTesla, IIContent.ammoComponentWhitePhosphorus);
+			ItemStack stackA1 = addAmmo(list, item, name+"/A1 Sprengpatrone",
+					IIContent.ammoCoreBrass, CoreType.SOFTPOINT, FuseType.CONTACT, IIContent.ammoComponentHMX);
+
+			//Color tracer bullets
+			ItemStack stackM1 = addAmmo(list, item, name+"/P14 Blaumarkierungpatrone",
+					IIContent.ammoCoreIron, CoreType.PIERCING, FuseType.CONTACT, IIContent.ammoComponentTracerPowder);
+			item.setComponentNBT(stackM1, EasyNBT.parseNBT("{colour: %s}", IIColor.MC_DARK_BLUE));
+			item.setPaintColour(stackM1, IIColor.MC_DARK_BLUE.getPackedRGB());
+
+			ItemStack stackM2 = addAmmo(list, item, name+"/P15 Grünmarkierungpatrone",
+					IIContent.ammoCoreIron, CoreType.PIERCING, FuseType.CONTACT, IIContent.ammoComponentTracerPowder);
+			item.setComponentNBT(stackM2, EasyNBT.parseNBT("{colour: %s}", IIColor.MC_DARK_GREEN));
+			item.setPaintColour(stackM2, IIColor.MC_DARK_GREEN.getPackedRGB());
+
+			ItemStack stackM3 = addAmmo(list, item, name+"/P16 Rotmarkierungpatrone",
+					IIContent.ammoCoreIron, CoreType.PIERCING, FuseType.CONTACT, IIContent.ammoComponentTracerPowder);
+			item.setComponentNBT(stackM3, EasyNBT.parseNBT("{colour: %s}", IIColor.MC_DARK_RED));
+			item.setPaintColour(stackM3, IIColor.MC_DARK_RED.getPackedRGB());
+
+			ItemStack stackM4 = addAmmo(list, item, name+"/P17 Gelbmarkierungpatrone",
+					IIContent.ammoCoreIron, CoreType.PIERCING, FuseType.CONTACT, IIContent.ammoComponentTracerPowder);
+			item.setComponentNBT(stackM4, EasyNBT.parseNBT("{colour: %s}", IIColor.MC_GOLD));
+			item.setPaintColour(stackM4, IIColor.MC_GOLD.getPackedRGB());
+		});
+
 		//Magazine fed weapons
 		items.clear();
 		items.put("AM1P", IIContent.itemAmmoSubmachinegun);

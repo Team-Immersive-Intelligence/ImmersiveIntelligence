@@ -5,13 +5,9 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.Shotgun;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
@@ -30,6 +26,7 @@ public class ItemIIShotgun extends ItemIIGunBase
 {
 	//--- NBT Values Reference ---//
 	public static final String HANDMADE = "handmade";
+	public static final String SAWED_OFF = "sawed_off";
 
 	//--- Ammunition Handler ---//
 	public static final int MAG_SIZE = Shotgun.clipSize;
@@ -45,21 +42,21 @@ public class ItemIIShotgun extends ItemIIGunBase
 			@Override
 			protected SoundEvent getStartLoadingSound(ItemStack weapon, EasyNBT nbt)
 			{
-				return IISounds.rifleLoadStart;
+				return IISounds.shotgunLoadStart;
 			}
 
 			@Nullable
 			@Override
 			protected SoundEvent getReloadSound(ItemStack weapon, EasyNBT nbt)
 			{
-				return IISounds.rifleLoad;
+				return IISounds.shotgunLoad;
 			}
 
 			@Nullable
 			@Override
 			protected SoundEvent getFinishLoadingSound(ItemStack weapon, EasyNBT nbt)
 			{
-				return IISounds.rifleLoadEnd;
+				return IISounds.shotgunLoadEnd;
 			}
 		};
 		/*
@@ -156,7 +153,7 @@ public class ItemIIShotgun extends ItemIIGunBase
 	@Override
 	protected SoundEvent getDryfireSound(ItemStack weapon, EasyNBT easyNBT)
 	{
-		return IISounds.rifleShotDry;
+		return IISounds.shotgunShotDry;
 	}
 
 	@Nullable
@@ -164,7 +161,7 @@ public class ItemIIShotgun extends ItemIIGunBase
 	protected RangedSound getFireSound(ItemStack weapon, EasyNBT easyNBT)
 	{
 		//return hasIIUpgrade(weapon, WeaponUpgrade.SEMI_AUTOMATIC)?IISounds.rifleShot: IISounds.rifleBoltShot;
-		return IISounds.rifleShot;
+		return IISounds.shotgunShot;
 	}
 
 	@Override

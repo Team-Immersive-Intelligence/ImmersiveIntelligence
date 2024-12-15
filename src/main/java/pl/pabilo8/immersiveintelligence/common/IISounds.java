@@ -409,7 +409,28 @@ public class IISounds
 			new Tuple<>(0.0, registerSound("rifle_bolt_shot")),
 			new Tuple<>(0.5, registerSound("rifle_shot_muffled")),
 			new Tuple<>(0.75, registerSound("rifle_shot_distant"))
+	);
 
+	//Shotgun
+	@ModSound(sounds = {"weapons/shotgun/load_start"}, subtitle = "shotgun_load")
+	public static SoundEvent shotgunLoadStart = registerSound("shotgun_load_start");
+
+	@ModSound(sounds = {"weapons/shotgun/shotgun_shell_insert{0..4}"}, subtitle = "*")
+	public static SoundEvent shotgunLoad = registerSound("shotgun_load");
+
+	@ModSound(sounds = {"weapons/shotgun/load_end"}, subtitle = "shotgun_load")
+	public static SoundEvent shotgunLoadEnd = registerSound("shotgun_load_end");
+
+	@ModSound(sounds = {"weapons/dryfire{0..1}"}, subtitle = "dryfire")
+	public static SoundEvent shotgunShotDry = registerSound("shotgun_shot_dry");
+
+	@ModSound(name = "shotgun_shot", sounds = {"weapons/shotgun/shotgun_fire_{0..4}"}, subtitle = "shotgun_shot")
+	//@ModSound(name = "shotgun_shot_muffled", sounds = {"weapons/shotgun/shotgun_fire_muffled_{0..0}"}, subtitle = "shotgun_shot_muffled")
+	@ModSound(name = "shotgun_shot_distant", sounds = {"weapons/shotgun/shotgun_distant_{0..0}"}, subtitle = "distant_gunshot")
+	public static RangedSound shotgunShot = new RangedSound(
+			new Tuple<>(0.0, registerSound("shotgun_shot")),
+			//new Tuple<>(0.5, registerSound("shotgun_shot_muffled")),
+			new Tuple<>(0.75, registerSound("shotgun_shot_distant"))
 	);
 
 	//Artillery Howitzer
