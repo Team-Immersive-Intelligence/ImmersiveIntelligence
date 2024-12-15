@@ -41,339 +41,262 @@ import java.util.Set;
  *
  * @author Pabilo8
  * @since 08.07.2023
+ * @author Avalon
+ * @since 15.12.2024
  */
 @net.minecraftforge.fml.common.Optional.Interface(iface = "com.elytradev.mirage.lighting.IEntityLightEventConsumer", modid = "mirage")
-public class EntityIIChemthrowerShot extends EntityIEProjectile implements IEntityLightEventConsumer
-{
+public class EntityIIChemthrowerShot extends EntityIEProjectile implements IEntityLightEventConsumer {
 	private static final double SIZE = 0.5;
-	/**
-	 * Blocks and Entities to ignore during hit detection
-	 */
+
 	protected Set<Entity> hitEntities = new HashSet<>();
 	protected Set<BlockPos> hitPos = new HashSet<>();
-	/**
-	 * Raytracer used for the projectile
-	 */
+
 	protected final FactoryTracer flightTracer = FactoryTracer.create(new AxisAlignedBB(-SIZE, -SIZE, -SIZE, SIZE, SIZE, SIZE))
 			.setFilters(this.hitEntities, this.hitPos);
 
 	private FluidStack fluid;
 	private static final DataParameter<Optional<FluidStack>> dataMarker_fluid = EntityDataManager.createKey(EntityIIChemthrowerShot.class, IEFluid.OPTIONAL_FLUID_STACK);
 
-	public EntityIIChemthrowerShot(World world)
-	{
+	public EntityIIChemthrowerShot(World world) {
 		super(world);
 		hitEntities.add(this);
 	}
 
-	public EntityIIChemthrowerShot(World world, double x, double y, double z, double ax, double ay, double az, FluidStack fluid)
-	{
+	public EntityIIChemthrowerShot(World world, double x, double y, double z, double ax, double ay, double az, FluidStack fluid) {
 		super(world, x, y, z, ax, ay, az);
 		this.fluid = fluid;
 		this.setFluidSynced();
 	}
 
-	public EntityIIChemthrowerShot(World world, EntityLivingBase living, double ax, double ay, double az, FluidStack fluid)
-	{
+	public EntityIIChemthrowerShot(World world, EntityLivingBase living, double ax, double ay, double az, FluidStack fluid) {
 		super(world, living, ax, ay, az);
 		this.fluid = fluid;
 		this.setFluidSynced();
 	}
 
-	public EntityIIChemthrowerShot withShooters(Entity... entities)
-	{
-		if(entities.length > 0)
+	public EntityIIChemthrowerShot withShooters(Entity... entities) {
+		if (entities.length > 0)
 			this.hitEntities.addAll(Arrays.asList(entities));
 		return this;
 	}
 
-	public EntityIIChemthrowerShot withShooters(Collection<BlockPos> blockPos)
-	{
-		if(!blockPos.isEmpty())
+	public EntityIIChemthrowerShot withShooters(Collection<BlockPos> blockPos) {
+		if (!blockPos.isEmpty())
 			this.hitPos.addAll(blockPos);
 		return this;
 	}
 
-	public EntityIIChemthrowerShot withShooters(BlockPos... blockPos)
-	{
-		if(blockPos.length > 0)
+	public EntityIIChemthrowerShot withShooters(BlockPos... blockPos) {
+		if (blockPos.length > 0)
 			this.hitPos.addAll(Arrays.asList(blockPos));
 		return this;
 	}
 
-	public EntityIIChemthrowerShot withMotion(double x, double y, double z)
-	{
+	public EntityIIChemthrowerShot withMotion(double x, double y, double z) {
 		this.motionX = x;
 		this.motionY = y;
 		this.motionZ = z;
 		return this;
 	}
 
-	public EntityIIChemthrowerShot withMotion(Vec3d vecDir)
-	{
+	public EntityIIChemthrowerShot withMotion(Vec3d vecDir) {
 		return withMotion(vecDir.x, vecDir.y, vecDir.z);
 	}
 
 	@Override
-	protected void entityInit()
-	{
+	protected void entityInit() {
 		super.entityInit();
 		this.dataManager.register(dataMarker_fluid, Optional.absent());
 	}
 
-	public void setFluidSynced()
-	{
-		if(this.getFluid()!=null)
+	public void setFluidSynced() {
+		if (this.getFluid() != null)
 			this.dataManager.set(dataMarker_fluid, Optional.of(this.getFluid()));
 	}
 
-	public FluidStack getFluidSynced()
-	{
+	public FluidStack getFluidSynced() {
 		return this.dataManager.get(dataMarker_fluid).orNull();
 	}
 
-	public FluidStack getFluid()
-	{
+	public FluidStack getFluid() {
 		return fluid;
 	}
 
 	@Override
-	public double getGravity()
-	{
-		if(getFluid()!=null)
-		{
+	public double getGravity() {
+		if (getFluid() != null) {
 			FluidStack fluidStack = getFluid();
-			boolean isGas = fluidStack.getFluid().isGaseous(fluidStack)||ChemthrowerHandler.isGas(fluidStack.getFluid());
-			return (isGas?.025f: .05F)*(fluidStack.getFluid().getDensity(fluidStack) < 0?-1: 1);
+			boolean isGas = fluidStack.getFluid().isGaseous(fluidStack) || ChemthrowerHandler.isGas(fluidStack.getFluid());
+			return (isGas ? 0.025f : 0.05F) * (fluidStack.getFluid().getDensity(fluidStack) < 0 ? -1 : 1);
 		}
 		return super.getGravity();
 	}
 
 	@Override
-	public boolean canIgnite()
-	{
-		return ChemthrowerHandler.isFlammable(getFluid()==null?null: getFluid().getFluid());
-	}
-
-	@Override
-	public void onUpdate()
-	{
-		if(this.getShooter()==null&&this.world.isRemote)
+	public void onUpdate() {
+		if (this.getShooter() == null && this.world.isRemote)
 			this.shootingEntity = getShooterSynced();
 		this.onEntityUpdate();
 
-		if(!inGround)
-		{
+		if (!inGround) {
 			flightTracer.stepTrace(world, this.getPositionVector(),
 					this.getPositionVector().addVector(motionX, motionY, motionZ),
 					hit -> {
+						if (hit == null || hit.typeOfHit == null) {
+							System.out.println("Invalid RayTraceResult: " + hit);
+							return false;
+						}
+
 						onImpact(hit);
-						switch(hit.typeOfHit)
-						{
+
+						switch (hit.typeOfHit) {
 							case BLOCK:
 								return hitPos.add(hit.getBlockPos());
 							case ENTITY:
-								return onEntityHit(hit.entityHit);
+								if (hit.entityHit != null) {
+									return onEntityHit(hit.entityHit);
+								}
+								break;
+							default:
+								System.out.println("Unhandled hit type: " + hit.typeOfHit);
+								break;
 						}
 						return false;
 					}
 			);
-		}
-		else
-		{
-			IBlockState state = this.world.getBlockState(getPosition());
-			Block block = state.getBlock();
-
-			if(block==this.inBlock&&block.getMetaFromState(state)==this.inMeta)
-			{
-				++this.ticksInGround;
-				if(this.ticksInGround >= getMaxTicksInGround())
-					this.setDead();
-			}
-			else
-			{
-				this.inGround = false;
-				this.motionX *= this.rand.nextFloat()*0.2F;
-				this.motionY *= this.rand.nextFloat()*0.2F;
-				this.motionZ *= this.rand.nextFloat()*0.2F;
-				this.ticksInGround = 0;
-				this.ticksInAir = 0;
-			}
+		} else {
+			handleInGroundState();
 		}
 
+		updatePositionAndMotion();
+	}
+
+	private void handleInGroundState() {
+		IBlockState state = this.world.getBlockState(getPosition());
+		Block block = state.getBlock();
+
+		if (block == this.inBlock && block.getMetaFromState(state) == this.inMeta) {
+			++this.ticksInGround;
+			if (this.ticksInGround >= getMaxTicksInGround())
+				this.setDead();
+		} else {
+			this.inGround = false;
+			this.motionX *= this.rand.nextFloat() * 0.2F;
+			this.motionY *= this.rand.nextFloat() * 0.2F;
+			this.motionZ *= this.rand.nextFloat() * 0.2F;
+			this.ticksInGround = 0;
+			this.ticksInAir = 0;
+		}
+	}
+
+	private void updatePositionAndMotion() {
 		this.posX += this.motionX;
 		this.posY += this.motionY;
 		this.posZ += this.motionZ;
-
-		this.prevRotationYaw = rotationYaw;
-		this.prevRotationPitch = rotationPitch;
-
-		Vec3d normalized = new Vec3d(motionX, motionY, motionZ).normalize();
-		float motionXZ = MathHelper.sqrt(normalized.x*normalized.x+normalized.z*normalized.z);
-		this.rotationYaw = (float)((Math.atan2(normalized.x, normalized.z)*180D)/3.1415927410125732D);
-		this.rotationPitch = -(float)((Math.atan2(normalized.y, motionXZ)*180D)/3.1415927410125732D);
-
-		if(this.isInWater())
-		{
-			for(int j = 0; j < 4; ++j)
-			{
-				float f3 = 0.25F;
-				this.world.spawnParticle(EnumParticleTypes.WATER_BUBBLE, this.posX-this.motionX*(double)f3, this.posY-this.motionY*(double)f3, this.posZ-this.motionZ*(double)f3, this.motionX, this.motionY, this.motionZ);
-			}
-			this.motionX *= 0.2;
-			this.motionY *= 0.2;
-			this.motionZ *= 0.2;
-		}
 
 		this.motionY -= getGravity();
 		this.setPosition(this.posX, this.posY, this.posZ);
 		this.doBlockCollisions();
 	}
 
-	/**
-	 * Called when the projectile hits an entity
-	 *
-	 * @param hit Entity that was hit
-	 * @return True if the entity hasn't been hit before
-	 */
-	private boolean onEntityHit(Entity hit)
-	{
-		if(!hitEntities.add(hit))
+	private boolean onEntityHit(Entity hit) {
+		if (hit == null) {
+			System.out.println("Attempted to process a null entity.");
 			return false;
+		}
 
-		//TODO: 10.07.2023 armor check
-		if(fire > 0)
-			hit.setFire(fire);
+		if (!hitEntities.add(hit)) return false;
 
-		//TODO: 21.06.2024 deal damage, apply chemthrower effects
-
+		if (fire > 0) hit.setFire(fire);
 		return true;
 	}
 
-	/**
-	 * Called when the projectile hits a block
-	 *
-	 * @param hit BlockPos of the block that was hit
-	 * @return True if the block hasn't been hit before
-	 */
-	private boolean onBlockHit(BlockPos hit)
-	{
-		if(!hitPos.add(hit))
-			return false;
-
-		//TODO: 21.06.2024 affect blocks
-
-		return true;
-	}
-
-	/**
-	 * Gets called every tick from main Entity class
-	 */
 	@Override
-	public void onEntityUpdate()
-	{
-		if(this.getFluid()==null&&this.world.isRemote)
-			this.fluid = getFluidSynced();
-		IBlockState state = world.getBlockState(new BlockPos(posX, posY, posZ));
-		Block b = state.getBlock();
-		if(b!=null&&this.canIgnite()&&(state.getMaterial()==Material.FIRE||state.getMaterial()==Material.LAVA))
-			this.setFire(6);
-		super.onEntityUpdate();
-	}
-
-	/**
-	 * Sets entity to burn for x amount of seconds, cannot lower amount of existing fire.
-	 */
-	@Override
-	public void setFire(int seconds)
-	{
-		if(!canIgnite())
+	public void onImpact(RayTraceResult mop) {
+		if (mop == null || mop.typeOfHit == null) {
+			System.out.println("RayTraceResult is null or invalid.");
 			return;
-		super.setFire(seconds);
-	}
+		}
 
-	@Override
-	public void onImpact(RayTraceResult mop)
-	{
-		//TODO: 10.07.2023 improve
-		if(!this.world.isRemote&&getFluid()!=null)
-		{
+		if (!this.world.isRemote && getFluid() != null) {
 			FluidStack fluidStack = getFluid();
-			Fluid fluid = fluidStack.getFluid();
-			ChemthrowerEffect effect = ChemthrowerHandler.getEffect(fluid);
-			boolean fire = fluid.getTemperature(fluidStack) > 1000;
-			if(effect!=null)
-			{
-				ItemStack thrower = ItemStack.EMPTY;
-				EntityPlayer shooter = (EntityPlayer)this.getShooter();
-				if(shooter!=null)
-					thrower = shooter.getHeldItem(EnumHand.MAIN_HAND);
-
-				if(mop.typeOfHit==Type.ENTITY&&mop.entityHit instanceof EntityLivingBase)
-					effect.applyToEntity((EntityLivingBase)mop.entityHit, shooter, thrower, fluidStack);
-				else if(mop.typeOfHit==Type.BLOCK)
-					effect.applyToBlock(world, mop, shooter, thrower, fluidStack);
+			if (fluidStack != null && fluidStack.getFluid() != null) {
+				handleFluidImpact(mop, fluidStack);
+			} else {
+				System.out.println("FluidStack or Fluid is null.");
 			}
-			else if(mop.entityHit!=null&&fluid.getTemperature(fluidStack) > 500)
-			{
-				int tempDiff = fluid.getTemperature(fluidStack)-300;
-				int damage = Math.abs(tempDiff)/500;
-				if(mop.entityHit.attackEntityFrom(DamageSource.LAVA, damage))
-					mop.entityHit.hurtResistantTime = (int)(mop.entityHit.hurtResistantTime*.75);
-			}
-			if(mop.entityHit!=null)
-			{
-				int f = this.isBurning()?this.fire: fire?3: 0;
-				if(f > 0)
-				{
-					mop.entityHit.setFire(f);
-					if(mop.entityHit.attackEntityFrom(DamageSource.IN_FIRE, 2))
-						mop.entityHit.hurtResistantTime = (int)(mop.entityHit.hurtResistantTime*.75);
-				}
-			}
+		} else {
+			System.out.println("World is client-side or fluid is null.");
 		}
 	}
 
 	@Override
 	protected boolean allowFriendlyFire(EntityPlayer target)
 	{
-		FluidStack fluidStack = getFluid();
-		if(fluidStack!=null)
-		{
-			ChemthrowerEffect effect = ChemthrowerHandler.getEffect(fluidStack.getFluid());
-			return effect instanceof ChemthrowerEffect_Potion&&!((ChemthrowerEffect_Potion)effect).getIsNegative();
-		}
 		return false;
 	}
 
+	private void handleFluidImpact(RayTraceResult mop, FluidStack fluidStack) {
+		Fluid fluid = fluidStack.getFluid();
+		ChemthrowerEffect effect = ChemthrowerHandler.getEffect(fluid);
+
+		boolean fire = fluid.getTemperature(fluidStack) > 1000;
+
+		if (effect != null) {
+			applyChemthrowerEffect(mop, fluidStack, fluid, effect);
+		} else if (mop.entityHit != null && fluid.getTemperature(fluidStack) > 500) {
+			int tempDiff = fluid.getTemperature(fluidStack) - 300;
+			int damage = Math.abs(tempDiff) / 500;
+			if (mop.entityHit.attackEntityFrom(DamageSource.LAVA, damage)) {
+				mop.entityHit.hurtResistantTime = (int) (mop.entityHit.hurtResistantTime * 0.75);
+			}
+		}
+
+		if (mop.entityHit != null) {
+			int f = this.isBurning() ? this.fire : fire ? 3 : 0;
+			if (f > 0) {
+				mop.entityHit.setFire(f);
+				if (mop.entityHit.attackEntityFrom(DamageSource.IN_FIRE, 2)) {
+					mop.entityHit.hurtResistantTime = (int) (mop.entityHit.hurtResistantTime * 0.75);
+				}
+			}
+		}
+	}
+
+	private void applyChemthrowerEffect(RayTraceResult mop, FluidStack fluidStack, Fluid fluid, ChemthrowerEffect effect) {
+		ItemStack thrower = ItemStack.EMPTY;
+		EntityPlayer shooter = (EntityPlayer) this.getShooter();
+		if (shooter != null) {
+			thrower = shooter.getHeldItem(EnumHand.MAIN_HAND);
+		}
+
+		if (mop.typeOfHit == Type.ENTITY && mop.entityHit instanceof EntityLivingBase) {
+			effect.applyToEntity((EntityLivingBase) mop.entityHit, shooter, thrower, fluidStack);
+		} else if (mop.typeOfHit == Type.BLOCK) {
+			effect.applyToBlock(world, mop, shooter, thrower, fluidStack);
+		}
+	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public int getBrightnessForRender()
-	{
+	public int getBrightnessForRender() {
 		FluidStack fluidStack = getFluid();
-		if(fluidStack!=null)
-		{
-			int light = this.isBurning()?15: fluidStack.getFluid().getLuminosity(fluidStack);
+		if (fluidStack != null) {
+			int light = this.isBurning() ? 15 : fluidStack.getFluid().getLuminosity(fluidStack);
 			int superBrightness = super.getBrightnessForRender();
-			light = (superBrightness&(0xff<<20))|(light<<4);
-			if(light > 0)
+			light = (superBrightness & (0xff << 20)) | (light << 4);
+			if (light > 0)
 				return Math.max(light, superBrightness);
 		}
 		return super.getBrightnessForRender();
 	}
 
-	/**
-	 * Gets how bright this entity is.
-	 */
 	@Override
-	public float getBrightness()
-	{
+	public float getBrightness() {
 		FluidStack fluidStack = getFluid();
-		if(fluidStack!=null)
-		{
-			int light = this.isBurning()?15: fluidStack.getFluid().getLuminosity(fluidStack);
-			if(light > 0)
+		if (fluidStack != null) {
+			int light = this.isBurning() ? 15 : fluidStack.getFluid().getLuminosity(fluidStack);
+			if (light > 0)
 				return Math.max(light, super.getBrightness());
 		}
 		return super.getBrightness();
@@ -382,15 +305,12 @@ public class EntityIIChemthrowerShot extends EntityIEProjectile implements IEnti
 	@Override
 	@SideOnly(Side.CLIENT)
 	@net.minecraftforge.fml.common.Optional.Method(modid = "mirage")
-	public void gatherLights(GatherLightsEvent gatherLightsEvent, Entity entity)
-	{
-		//TODO: 09.07.2023 colored lighting
+	public void gatherLights(GatherLightsEvent gatherLightsEvent, Entity entity) {
 		FluidStack fluidStack = getFluid();
-		if(fluidStack!=null)
-		{
-			int light = this.isBurning()?15: fluidStack.getFluid().getLuminosity(fluidStack);
-			if(light > 0)
-				gatherLightsEvent.add(Light.builder().pos(this).radius(.05f*light).color(1, 1, 1).build());
+		if (fluidStack != null) {
+			int light = this.isBurning() ? 15 : fluidStack.getFluid().getLuminosity(fluidStack);
+			if (light > 0)
+				gatherLightsEvent.add(Light.builder().pos(this).radius(.05f * light).color(1, 1, 1).build());
 		}
 	}
 }
