@@ -8,8 +8,11 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerArithmeticLogicMachine.CircuitSlot;
 
 /**
- * Created by Pabilo8 on 30-06-2019.
- * Some code you write, some you steal, but in most cases you adapt the existing solutions...
+ * @author Pabilo9
+ * @since 30-06-2019
+ * * Some code you write, some you steal, but in most cases you adapt the existing solutions...
+ * @author Avalon
+ * @since 18-12-2024
  */
 public class GuiArithmeticLogicMachineStorage extends GuiArithmeticLogicMachineBase
 {
