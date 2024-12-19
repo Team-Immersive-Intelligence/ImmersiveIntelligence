@@ -16,8 +16,8 @@ import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeAccessor;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeExpression;
 import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
 import pl.pabilo8.immersiveintelligence.api.data.types.IDataType.IGenericDataType;
-import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonDataLetterList;
-import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonDataLetterList.ArrowsAlignment;
+import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonDataLetterListSide;
+import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonDataLetterListSide.ArrowsAlignment;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonDropdownList;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonII;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
@@ -48,7 +48,7 @@ public class GuiDataEditorExpression extends GuiDataEditor<DataTypeExpression>
 	private final List<String> operations;
 
 	private GuiButtonDropdownList dropdownOperationPicker;
-	private GuiButtonDataLetterList dropdownLetterPicker;
+	private GuiButtonDataLetterListSide dropdownLetterPicker;
 
 	private GuiButtonIE buttonPagePrev, buttonPageNext, buttonPageNumber, buttonUseAccessor, buttonSwitchType;
 	private GuiButtonIE buttonTypePrev, buttonTypeNext;
@@ -87,7 +87,7 @@ public class GuiDataEditorExpression extends GuiDataEditor<DataTypeExpression>
 		if(page==0)
 		{
 			//add the lower-placed buttons first, so rendering (lack of) order is happy
-			dropdownLetterPicker = addButton(new GuiButtonDataLetterList(buttonList.size(), x+2, y+2+24+14, true, dataType.getRequiredVariable(), ArrowsAlignment.RIGHT));
+			dropdownLetterPicker = addButton(new GuiButtonDataLetterListSide(buttonList.size(), x+2, y+2+24+14, true, dataType.getRequiredVariable(), ArrowsAlignment.RIGHT));
 
 			dropdownOperationPicker = addButton(new GuiButtonDropdownList(buttonList.size(), x+2, y+14, width-4, 20, 4, operations.toArray(new String[0])))
 					.setTranslationFunc(s -> I18n.format(IIReference.DATA_KEY+"function."+s));

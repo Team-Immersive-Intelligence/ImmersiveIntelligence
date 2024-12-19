@@ -13,8 +13,8 @@ import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeNull;
 import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
-import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonDataLetterList;
-import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonDataLetterList.ArrowsAlignment;
+import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonDataLetterListLow;
+import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonDataLetterListLow.ArrowsAlignment;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonII;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.data_editor.GuiDataEditor;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
@@ -41,7 +41,7 @@ public class GuiDataInputMachineEdit extends GuiDataInputMachineBase
 {
 	public char variableToEdit = 'a';
 	public IDataType dataType;
-	public GuiButtonDataLetterList buttonLetter;
+	public GuiButtonDataLetterListLow buttonLetter;
 	public GuiButtonIE buttonApply;
 	public GuiButtonIE buttonTypeNext, buttonTypePrev;
 	private GuiButtonII buttonVariableHelp;
@@ -96,7 +96,7 @@ public class GuiDataInputMachineEdit extends GuiDataInputMachineBase
 		}
 
 		//Letter Change Buttons
-		buttonLetter = addButton(new GuiButtonDataLetterList(buttonList.size(), guiLeft+42-10, guiTop+14, false, variableToEdit, ArrowsAlignment.LEFT));
+		buttonLetter = addButton(new GuiButtonDataLetterListLow(buttonList.size(), guiLeft+42-10, guiTop+14, false, variableToEdit, ArrowsAlignment.LEFT));
 		buttonLetter.setAvoidGetter(() -> list);
 
 	}

@@ -7,8 +7,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeExpression;
 import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
-import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonDataLetterList;
-import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonDataLetterList.ArrowsAlignment;
+import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonDataLetterListLow;
+import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonDataLetterListLow.ArrowsAlignment;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonII;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.data_editor.GuiDataEditorExpression;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
@@ -34,7 +34,7 @@ public class GuiArithmeticLogicMachineEdit extends GuiArithmeticLogicMachineBase
 	private int page;
 	public char variableToEdit = 'a';
 	public IDataType dataType;
-	public GuiButtonDataLetterList buttonLetter;
+	public GuiButtonDataLetterListLow buttonLetter;
 	public GuiButtonIE buttonApply;
 	public GuiButtonIE buttonVariableHelp;
 
@@ -72,7 +72,7 @@ public class GuiArithmeticLogicMachineEdit extends GuiArithmeticLogicMachineBase
 		this.editor.setBounds(guiLeft+35, guiTop+46, 131, 80);
 
 		//Letter Change Buttons
-		buttonLetter = addButton(new GuiButtonDataLetterList(buttonList.size(), guiLeft+42-10, guiTop+14, false, variableToEdit, ArrowsAlignment.LEFT));
+		buttonLetter = addButton(new GuiButtonDataLetterListLow(buttonList.size(), guiLeft+42-10, guiTop+14, false, variableToEdit, ArrowsAlignment.LEFT));
 		buttonLetter.setAvoidGetter(this::getPacketFromPage);
 
 	}

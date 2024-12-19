@@ -3,17 +3,20 @@ package pl.pabilo8.immersiveintelligence.client.gui.elements.data_editor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeAccessor;
-import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonDataLetterList;
-import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonDataLetterList.ArrowsAlignment;
+
+import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonDataLetterListSide.ArrowsAlignment;
+import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonDataLetterListSide;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 /**
  * @author Pabilo8
  * @since 07.09.2021
+ * @author Avalon
+ * @since 19.12.2024
  */
 public class GuiDataEditorAccessor extends GuiDataEditor<DataTypeAccessor>
 {
-	private GuiButtonDataLetterList buttonVariable;
+	private GuiButtonDataLetterListSide buttonVariable;
 	private char c;
 
 	public GuiDataEditorAccessor(int buttonId, DataTypeAccessor dataType)
@@ -27,7 +30,7 @@ public class GuiDataEditorAccessor extends GuiDataEditor<DataTypeAccessor>
 	{
 		super.init();
 
-		this.buttonVariable = addButton(new GuiButtonDataLetterList(buttonList.size(), x+width-130, y+20, false, c, ArrowsAlignment.LEFT));
+		this.buttonVariable = addButton(new GuiButtonDataLetterListSide(buttonList.size(), x+width-130, y+20, false, c, ArrowsAlignment.LEFT));
 	}
 
 	@Override
