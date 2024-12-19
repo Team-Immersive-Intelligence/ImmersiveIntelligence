@@ -27,7 +27,7 @@ public class GuiDataEditorAccessor extends GuiDataEditor<DataTypeAccessor>
 	{
 		super.init();
 
-		this.buttonVariable = addButton(new GuiButtonDataLetterList(buttonList.size(), x+width-12-18-2, y+10+1-6, false, c, ArrowsAlignment.RIGHT));
+		this.buttonVariable = addButton(new GuiButtonDataLetterList(buttonList.size(), x+width-130, y+20, false, c, ArrowsAlignment.LEFT));
 	}
 
 	@Override
