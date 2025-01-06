@@ -90,6 +90,12 @@ public class IIConfigHandler
 				"minecraft:ender_dragon"
 		};
 
+		@Comment({"A list of biomes that cannot be turned into a wasteland"})
+		public static String[] wastelandBiomeBlacklist = new String[]{
+				"minecraft:sky",
+				"minecraft:hell"
+		};
+
 		@Comment({"Whether the II Creative Tab should be divided into sub-tabs (Australian Tabs(tm))."})
 		@RequiresMcRestart
 		public static boolean australianCreativeTabs = true;

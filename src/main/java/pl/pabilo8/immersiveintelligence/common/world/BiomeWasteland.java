@@ -1,8 +1,12 @@
 package pl.pabilo8.immersiveintelligence.common.world;
 
+import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author Pabilo8
@@ -13,7 +17,7 @@ public class BiomeWasteland extends Biome
 	public BiomeWasteland()
 	{
 		super((new Biome.BiomeProperties("IIWasteland")).setBaseHeight(0.125F).setHeightVariation(0.05F).setTemperature(2.0F).setRainfall(0.0F).setWaterColor(0x26332E).setRainDisabled());
-		setRegistryName(new ResourceLocation(ImmersiveIntelligence.MODID,"wasteland"));
+		setRegistryName(new ResourceLocation(ImmersiveIntelligence.MODID, "wasteland"));
 	}
 
 	@Override
@@ -38,5 +42,11 @@ public class BiomeWasteland extends Biome
 	public float getSpawningChance()
 	{
 		return 0;
+	}
+
+	@Override
+	public List<SpawnListEntry> getSpawnableList(EnumCreatureType creatureType)
+	{
+		return Collections.emptyList();
 	}
 }

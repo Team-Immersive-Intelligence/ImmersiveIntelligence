@@ -11,6 +11,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.SPacketChunkData;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -23,6 +24,7 @@ import pl.pabilo8.immersiveintelligence.api.ammo.enums.ComponentEffectShape;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.ComponentRole;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIPotions;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
@@ -33,6 +35,10 @@ import pl.pabilo8.immersiveintelligence.common.util.IIDamageSources;
 import pl.pabilo8.immersiveintelligence.common.util.IIExplosion;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * @author Pabilo8
@@ -86,12 +92,13 @@ public class AmmoComponentNuke extends AmmoComponent
 
 		int wastelandRadius = (int)(5*multiplier)*16; //16 blocks in chunk
 
-		/*
-		char[][] bloks = new char[wastelandRadius*2+1][wastelandRadius*2+1];
-		for(int i = 0; i < wastelandRadius*2+1; i++)
-			for(int j = 0; j < wastelandRadius*2+1; j++)
-				bloks[i][j] = ' ';
-		*/
+		List<Byte> forbiddenBiomes = Arrays.stream(IIConfig.wastelandBiomeBlacklist)
+				.map(ResourceLocation::new)
+				.map(Biome.REGISTRY::getObject)
+				.filter(Objects::nonNull)
+				.map(Biome::getIdForBiome)
+				.map(Integer::byteValue)
+				.collect(Collectors.toList());
 
 		ArrayList<Chunk> radiatedChunks = new ArrayList<>();
 
@@ -110,7 +117,7 @@ public class AmmoComponentNuke extends AmmoComponent
 
 				int posID = ((ppos.getZ()+j)&15)<<4|(ppos.getX()+i)&15;
 				int val = (int)Math.max(dist-(wastelandRadius-endRad), 0);
-				boolean result = MathHelper.getInt(Utils.RAND, 0, val/2)==0;
+				boolean result = !forbiddenBiomes.contains(ground[posID])&&MathHelper.getInt(Utils.RAND, 0, val/2)==0;
 
 				//bloks[i+wastelandRadius][j+wastelandRadius] = result?' ': 'o';
 				ground[posID] = result?(byte)biomeWasteland: ground[posID];
