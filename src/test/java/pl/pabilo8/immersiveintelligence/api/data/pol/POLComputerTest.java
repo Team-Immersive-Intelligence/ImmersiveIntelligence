@@ -1,14 +1,10 @@
-package pl.pabilo8.immersiveintelligence.api.pol;
+package pl.pabilo8.immersiveintelligence.api.data.pol;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import pl.pabilo8.immersiveintelligence.api.data.IIDataOperationUtils;
 import pl.pabilo8.immersiveintelligence.api.data.IIDataTypeUtils;
 import pl.pabilo8.immersiveintelligence.api.data.device.IDataDevice;
-import pl.pabilo8.immersiveintelligence.api.data.pol.POLComputerMemory;
-import pl.pabilo8.immersiveintelligence.api.data.pol.POLProcess;
-import pl.pabilo8.immersiveintelligence.api.data.pol.POLScript;
-import pl.pabilo8.immersiveintelligence.api.data.pol.POLTerminal;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -62,6 +58,13 @@ public class POLComputerTest
 	{
 		execute(readFile("loading_bar"));
 		compareOutputs("loading_bar");
+	}
+
+	@Test
+	public void textFunctionsTest()
+	{
+		execute(readFile("circuits/text"));
+		compareOutputs("circuits/text");
 	}
 
 

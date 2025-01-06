@@ -1,0 +1,10 @@
+use TEXT
+
+type string_lowercase "sMoL_Letter TEXT"
+type string_uppercase "BiGLetter_text"
+type string_camel_case "snake_case Made into_Camel"
+type string_camel_case "snake_case Made into_Camel" false
+type string_camel_case "snake_case Made into_Camel" true
+type string_snake_case "CamelCase Made into_snake"
+
+end

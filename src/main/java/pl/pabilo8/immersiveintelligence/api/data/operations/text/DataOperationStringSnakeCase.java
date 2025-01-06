@@ -21,6 +21,6 @@ public class DataOperationStringSnakeCase extends DataOperation
 	public DataType execute(DataPacket packet, DataTypeExpression data)
 	{
 		DataTypeString t1 = packet.getVarInType(DataTypeString.class, data.getArgument(0));
-		return new DataTypeString(IIStringUtil.toSnakeCase(t1.value));
+		return new DataTypeString(IIStringUtil.toSnakeCase(t1.value.replace(' ', '_')));
 	}
 }
