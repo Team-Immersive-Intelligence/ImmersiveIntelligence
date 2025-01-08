@@ -1,6 +1,5 @@
 name: Bug Report
 description: Create a Bug Report
-title: "[Bug]: "
 labels: ["Bug"]
 projects: ["Team-Immersive-Intelligence/1"]
 assignees:
@@ -27,10 +26,23 @@ body:
         - ✈Vehicles
         - 🙋‍♂️Hanses
         - 🧩Compat
+        - 💬Translation
         - 📗Manual
         - 🧊Rendering
         - 🔑Utility
       default: 0
+
+  - type: dropdown
+    id: side
+    attributes:
+      label: Side
+      description: Select side this bug occurs on. Allows selecting both options.
+      multiple: true
+      options:
+        - Client
+        - Server
+    validations:
+      required: true
 
   - type: textarea
     id: what-happened
@@ -44,17 +56,6 @@ body:
     validations:
       required: true
 
-  - type: dropdown
-    id: side
-    attributes:
-      label: Side
-      description: Select side this bug occurs on. Allows selecting both options.
-      multiple: true
-      options:
-        - Client
-        - Server
-    validations:
-      required: true
 
   - type: textarea
     id: reproduction
@@ -85,13 +86,6 @@ body:
       description: |
         If the bug caused a crash or produced some visible evidence in the logs, upload them to [mclo.gs](https://mclo.gs/) and paste a link here. 
         MCLO.GS is a log upload platform, that makes them convenient to view. 
-
-  - type: textarea
-    id: other-evidence
-    attributes:
-      label: Other Evidence
-      description: |
-        If you have any images or other evidence that would help identify the bug, include them as well.
 
   - type: dropdown
     id: os
@@ -125,11 +119,14 @@ body:
       label: Immersive Intelligence Version
       description: Select Immersive Intelligence version.
       options:
+        - 0.4.0
+        - 0.3.2
+        - 0.3.1
         - 0.3.1-dev2
         - 0.3.1-dev1
         - 0.3.0
         - 0.2.2 and older
-      default: 0
+      default: 3
     validations:
       required: true
 

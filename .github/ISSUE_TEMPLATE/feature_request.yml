@@ -10,7 +10,7 @@ body:
     id: terms
     attributes:
       label: Initial Check
-      description: Before you submit this issue, please check if someone hasn't already requested this feature. In that case, if you have any additional thoughts on what already has been requested, include them in a comment there to avoid duplication.
+      description: Before you submit this issue, please check if someone hasn't already requested this feature. If that is the case, and you have any additional thoughts on what already has been requested, include them in a comment there to avoid duplication.
       options:
         - label: I have checked the existing issues and this one is not a duplicate
           required: true
@@ -25,6 +25,8 @@ body:
         - 💣Warfare
         - 📦Logistics
         - 🕵️‍♂️Intelligence
+        - ⚙Rotary Power
+        - 🏍Motorworks
       default: 0
     validations:
       required: true
@@ -41,6 +43,7 @@ body:
         - ✈Vehicles
         - 🙋‍♂️Hanses
         - 🧩Compat
+        - 💬Translation
         - 📗Manual
         - 🧊Rendering
         - 🔑Utility
@@ -59,7 +62,7 @@ body:
   - type: textarea
     id: reproduction
     attributes:
-      label: To Reproduce
+      label: Additional Details
       description: If you have something more about the idea, that's the place to go. If not, leave this empty ^^.
     validations:
       required: false
