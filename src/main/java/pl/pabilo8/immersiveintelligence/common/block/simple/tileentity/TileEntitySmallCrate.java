@@ -105,6 +105,19 @@ public class TileEntitySmallCrate extends TileEntityWoodenCrate implements IGuiT
 		return axis.getAxis().isHorizontal();
 	}
 
+	public boolean isWooden()
+	{
+		switch(world.getBlockState(pos).getValue(IIContent.blockSmallCrate.property))
+		{
+			case WOODEN_CRATE_BOX:
+			case WOODEN_CRATE_CUBE:
+			case WOODEN_CRATE_WIDE:
+				return true;
+			default:
+				return false;
+		}
+	}
+
 	@Override
 	@Nonnull
 	public float[] getBlockBounds()

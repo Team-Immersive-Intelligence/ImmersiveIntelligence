@@ -72,9 +72,8 @@ public class GuiDataRedstoneInterfaceRedstone extends GuiIEContainerBase impleme
 		refreshstoredRedstone();
 
 		ClientProxy proxy = (ClientProxy)ImmersiveIntelligence.proxy;
-		if(positionEqual(proxy, tile))
-			if(proxy.storedGuiData.hasKey("scrollPercent"))
-				scroll = Math.round(proxy.storedGuiData.getFloat("scrollPercent")*maxScroll);
+		if(positionEqual(tile))
+			proxy.getStoredGuiData().checkSetFloat("scroll_percent", f -> scroll = Math.round(f*maxScroll));
 
 		refreshstoredRedstone();
 	}
@@ -135,7 +134,7 @@ public class GuiDataRedstoneInterfaceRedstone extends GuiIEContainerBase impleme
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		GlStateManager.disableLighting();
 
-		this.drawTexturedModalRect(guiLeft+5, guiTop+44, 176, 48, 16, Math.round(48*(tile.productionProgress/DataInputMachine.timePunchtapeProduction)));
+		this.drawTexturedModalRect(guiLeft+5, guiTop+44, 176, 48, 16, Math.round(48*(tile.productionProgress/(float)DataInputMachine.timePunchtapeProduction)));
 
 		GlStateManager.popMatrix();
 
@@ -348,8 +347,7 @@ public class GuiDataRedstoneInterfaceRedstone extends GuiIEContainerBase impleme
 				if(!list.variables.containsKey(c))
 				{
 					//Save gui scroll, tile pos for validation
-					ClientProxy proxy = (ClientProxy)ImmersiveIntelligence.proxy;
-					saveGuiData(proxy);
+					saveGuiData();
 					list.setVariable(c, new DataTypeArray(new DataTypeInteger(0), new DataTypeInteger(0)));
 					//Set variable and change gui
 					refreshstoredRedstone();
@@ -447,14 +445,9 @@ public class GuiDataRedstoneInterfaceRedstone extends GuiIEContainerBase impleme
 		}
 	}
 
-	void saveGuiData(ClientProxy proxy)
+	void saveGuiData()
 	{
-		//I am absolutely 100% sure its client. How would a server even come here after all this rendering and proxy doohickeys?!
-		//But this is actually forge, so i should be kind of cautious... everything can happen ^^.
-
-		proxy.storedGuiData = new NBTTagCompound();
-		saveBasicData(proxy, tile);
-		if(maxScroll!=0)
-			proxy.storedGuiData.setFloat("scrollPercent", scroll/maxScroll);
+		saveBasicData(tile)
+				.conditionally(maxScroll!=0, nbt -> nbt.withFloat("scroll_percent", (float)scroll/maxScroll));
 	}
 }

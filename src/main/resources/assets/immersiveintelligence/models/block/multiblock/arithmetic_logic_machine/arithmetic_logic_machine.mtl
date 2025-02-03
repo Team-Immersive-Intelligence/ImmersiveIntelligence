@@ -1,0 +1,22 @@
+# Made by Pabilo8 with Blockbench
+
+newmtl arithmetic_logic_machine
+map_Kd immersiveintelligence:blocks/multiblock/arithmetic_logic_machine
+newmtl circuit_basic
+map_Kd immersiveintelligence:blocks/multiblock/circuits/circuit_basic
+newmtl common_steel
+map_Kd immersiveintelligence:blocks/common/common_steel
+newmtl common_bottom
+map_Kd immersiveintelligence:blocks/common/common_bottom
+newmtl common_table
+map_Kd immersiveintelligence:blocks/common/common_table
+newmtl common_copper_cable
+map_Kd immersiveintelligence:blocks/common/common_copper_cable
+newmtl common_thingies
+map_Kd immersiveintelligence:blocks/common/common_thingies
+newmtl metal
+map_Kd immersiveintelligence:blocks/small_crate/metal
+newmtl wooden
+map_Kd immersiveintelligence:blocks/small_crate/wooden
+newmtl typewriter_red
+map_Kd immersiveintelligence:blocks/metal_device/typewriter_red

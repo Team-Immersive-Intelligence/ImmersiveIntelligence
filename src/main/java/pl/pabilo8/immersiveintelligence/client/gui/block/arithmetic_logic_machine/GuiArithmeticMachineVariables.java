@@ -8,7 +8,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import org.apache.commons.lang3.ArrayUtils;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
-import pl.pabilo8.immersiveintelligence.client.gui.elements.GuiDataVariableList;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiDataVariableList;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityArithmeticLogicMachine;
@@ -48,10 +48,10 @@ public class GuiArithmeticMachineVariables extends GuiArithmeticLogicMachineBase
 				IIContent.itemCircuit.getStoredData(handler.getStackInSlot(page))
 		));
 
-		if(positionEqual(proxy, tile))
+		if(positionEqual(tile))
 		{
-			if(proxy.storedGuiData.hasKey("scrollPercent"))
-				variableList.setScrollPercent(proxy.storedGuiData.getFloat("scrollPercent"));
+			/*if(proxy.storedGuiData.hasKey("scrollPercent"))
+				variableList.setScrollPercent(proxy.storedGuiData.getFloat("scrollPercent"));*/
 		}
 	}
 
@@ -79,8 +79,8 @@ public class GuiArithmeticMachineVariables extends GuiArithmeticLogicMachineBase
 						{
 							//Save gui scroll, tile pos for validation
 							saveBasicData();
-							proxy.storedGuiData.setInteger("circuitToEdit", page);
-							proxy.storedGuiData.setString("variableToEdit", String.valueOf(c));
+//							proxy.storedGuiData.setInteger("circuitToEdit", page);
+//							proxy.storedGuiData.setString("variableToEdit", String.valueOf(c));
 							//Set variable and change gui
 							refreshStoredData();
 							syncDataToServer();
@@ -97,13 +97,13 @@ public class GuiArithmeticMachineVariables extends GuiArithmeticLogicMachineBase
 					refreshStoredData();
 					syncDataToServer();
 					saveBasicData();
-					proxy.storedGuiData.setInteger("circuitToEdit", page);
+					/*proxy.storedGuiData.setInteger("circuitToEdit", page);
 					proxy.storedGuiData.setString("variableToEdit",
 							String.valueOf(list.variables.keySet()
 									.stream()
 									.sorted(Comparator.comparingInt(o -> ArrayUtils.indexOf(DataPacket.varCharacters, o)))
 									.toArray(Character[]::new)[variableList.selectedOption])
-					);
+					);*/
 
 					//Set variable and change gui
 					refreshStoredData();
@@ -176,6 +176,6 @@ public class GuiArithmeticMachineVariables extends GuiArithmeticLogicMachineBase
 	public void saveBasicData()
 	{
 		super.saveBasicData();
-		proxy.storedGuiData.setFloat("scrollPercent", variableList.getScrollPercent());
+//		proxy.storedGuiData.setFloat("scrollPercent", variableList.getScrollPercent());
 	}
 }

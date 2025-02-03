@@ -12,6 +12,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.Rotation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
@@ -398,5 +399,24 @@ public abstract class TileEntityMultiblockIIBase<T extends TileEntityMultiblockI
 	public final BlockPos getPOIPos(MultiblockPOI poi)
 	{
 		return getBlockPosForPos(getPOI(poi)[0]);
+	}
+
+	public final EnumFacing getDirection(String name)
+	{
+		Rotation rotation = multiblock.getRotation(name);
+		if(rotation==null)
+			return null;
+		return mirrorRotation(rotation).rotate(facing);
+	}
+
+	private Rotation mirrorRotation(Rotation rot)
+	{
+		if(!mirrored)
+			return rot;
+		if(rot==Rotation.CLOCKWISE_90)
+			return Rotation.COUNTERCLOCKWISE_90;
+		if(rot==Rotation.COUNTERCLOCKWISE_90)
+			return Rotation.CLOCKWISE_90;
+		return rot;
 	}
 }

@@ -44,7 +44,6 @@ public class ContainerArithmeticLogicMachine extends ContainerIEBase<TileEntityA
 				break;
 		}
 
-
 		for(int i = 0; i < 3; i++)
 			for(int j = 0; j < 9; j++)
 				addSlotToContainer(new Slot(player.inventory, j+i*9+9, 8+j*18, 141+i*18));

@@ -8,6 +8,7 @@ import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
  * @author Pabilo8
  * @since 29.08.2022
  */
+@SuppressWarnings("UnnecessaryUnicodeEscape")
 public class IIReference
 {
 	//--- Tool Classes ---//
@@ -42,32 +43,32 @@ public class IIReference
 	public static final String DESC_HOLD_TAB = DESCRIPTION_KEY+"info.holdTab";
 
 	//--- Font Icons ---//
-	public static final char CHARICON_SPEED = '\u29c1'; //speed
-	public static final char CHARICON_TORQUE = '\u2296'; //torque
-	public static final char CHARICON_ENERGY = '\u2607'; //energy
-	public static final char CHARICON_RADIATION = '\u2622'; //nuclear / radiation
-	public static final char CHARICON_BULLET = '\u2023'; //bullet
-	public static final char CHARICON_BULLET_CONTENTS = '\u29b3'; //bullet contents
-	public static final char CHARICON_PENETRATION = '\u29b4'; //penetration
-	public static final char CHARICON_SKULL = '\u2295'; //damage / skull
-	public static final char CHARICON_CONTACT = '\u29b0'; //contact
-	public static final char CHARICON_PROXIMITY = '\u29b1'; //proximity
-	public static final char CHARICON_TIMED = '\u29b2'; //timed
-	public static final char CHARICON_FOLDER = '\u2348'; //folder
-	public static final char CHARICON_MG = '\u24b6'; //mg
-	public static final char CHARICON_SMG = '\u24b7'; //smg
-	public static final char CHARICON_RAILGUN = '\u24b8'; //railgun
-	public static final char CHARICON_REVOLVER = '\u24b9'; //revolver
-	public static final char CHARICON_AUTOREVOLVER = '\u24ba'; //autorevolver
-	public static final char CHARICON_STG = '\u24bb'; //stg
-	public static final char CHARICON_SPIGOT_MORTAR = '\u24bc'; //spigot mortar
-	public static final char CHARICON_RIFLE = '\u24bd'; //rifle
-	public static final char CHARICON_HELMET = '\u24be'; //helmet
-	public static final char CHARICON_CHESTPLATE = '\u24bf'; //chestplate
-	public static final char CHARICON_LEGGINGS = '\u24c0'; //leggings
-	public static final char CHARICON_BOOTS = '\u24c1'; //boots
+	public static final char CHARICON_SPEED = '\u29c1';
+	public static final char CHARICON_TORQUE = '\u2296';
+	public static final char CHARICON_ENERGY = '\u2607';
+	public static final char CHARICON_RADIATION = '\u2622';
+	public static final char CHARICON_BULLET = '\u2023';
+	public static final char CHARICON_BULLET_CONTENTS = '\u29b3';
+	public static final char CHARICON_PENETRATION = '\u29b4';
+	public static final char CHARICON_SKULL = '\u2295';
+	public static final char CHARICON_CONTACT = '\u29b0';
+	public static final char CHARICON_PROXIMITY = '\u29b1';
+	public static final char CHARICON_TIMED = '\u29b2';
+	public static final char CHARICON_FOLDER = '\u2348';
+	public static final char CHARICON_MG = '\u24b6';
+	public static final char CHARICON_SMG = '\u24b7';
+	public static final char CHARICON_RAILGUN = '\u24b8';
+	public static final char CHARICON_REVOLVER = '\u24b9';
+	public static final char CHARICON_AUTOREVOLVER = '\u24ba';
+	public static final char CHARICON_STG = '\u24bb';
+	public static final char CHARICON_SPIGOT_MORTAR = '\u24bc';
+	public static final char CHARICON_RIFLE = '\u24bd';
+	public static final char CHARICON_HELMET = '\u24be';
+	public static final char CHARICON_CHESTPLATE = '\u24bf';
+	public static final char CHARICON_LEGGINGS = '\u24c0';
+	public static final char CHARICON_BOOTS = '\u24c1';
 
-	//--- Patterns ---//
+	//--- Paths ---//
 	public static final ResLoc RES_II = ResLoc.root(ImmersiveIntelligence.MODID);
 	public static final ResLoc RES_IE = ResLoc.root(ImmersiveEngineering.MODID);
 	public static final ResLoc RES_MC = ResLoc.root("minecraft");
@@ -90,11 +91,50 @@ public class IIReference
 	//Textures
 	public static final ResLoc RES_TEXTURES = ResLoc.of(RES_II, "textures/");
 	public static final ResLoc RES_TEXTURES_GUI = ResLoc.of(RES_TEXTURES, "gui/");
+	public static final ResLoc RES_TEXTURES_GUI_TABS = ResLoc.of(RES_TEXTURES_GUI, "tabs/");
 	public static final ResLoc RES_TEXTURES_CREATIVE = ResLoc.of(RES_TEXTURES_GUI, "creative_gui/");
 	public static final ResLoc RES_TEXTURES_MANUAL = ResLoc.of(RES_TEXTURES_GUI, "manual/");
 	public static final ResLoc RES_TEXTURES_SKIN = ResLoc.of(RES_TEXTURES, "skins/");
 	public static final ResLoc RES_TEXTURES_ITEM = ResLoc.of(RES_TEXTURES, "items/");
 	public static final ResLoc RES_TEXTURES_BLOCK = ResLoc.of(RES_TEXTURES, "blocks/");
+	@Deprecated
+	public static final String SKIN_LOCATION = "immersiveintelligence:textures/skins/";
+
+	//Deco Base
+	public static final ResLoc RES_TEXTURES_DECO = ResLoc.of(RES_II, "gui/deco/");
+	public static final ResLoc RES_TEXTURES_DECO_BACKGROUND = ResLoc.of(RES_TEXTURES_DECO, "background/");
+	//Deco Templates
+	public static final ResLoc RES_TEXTURES_DECO_ROUND = ResLoc.of(RES_TEXTURES_DECO, "template/round");
+	public static final ResLoc RES_TEXTURES_DECO_SQUARE = ResLoc.of(RES_TEXTURES_DECO, "template/square");
+	//Deco Inventory Slots
+	public static final ResLoc RES_TEXTURES_DECO_INVENTORY_SLOT = ResLoc.of(RES_TEXTURES_DECO, "slot/vanilla");
+	public static final ResLoc RES_TEXTURES_DECO_IE_SLOT = ResLoc.of(RES_TEXTURES_DECO, "slot/steel");
+	public static final ResLoc RES_TEXTURES_DECO_IE_SLOT_MARKER = ResLoc.of(RES_TEXTURES_DECO, "slot/steel_marker");
+	public static final ResLoc RES_TEXTURES_DECO_IE_BRASS_SLOT = ResLoc.of(RES_TEXTURES_DECO, "slot/brass");
+	public static final ResLoc RES_TEXTURES_DECO_IE_BRASS_SLOT_MARKER = ResLoc.of(RES_TEXTURES_DECO, "slot/brass_marker");
+	//Deco Backgrounds
+	public static final ResLoc GUI_BG_WOODEN = ResLoc.of(RES_TEXTURES_DECO_BACKGROUND, "wooden");
+	public static final ResLoc GUI_BG_STEEL = ResLoc.of(RES_TEXTURES_DECO_BACKGROUND, "steel");
+	public static final ResLoc GUI_BG_STEEL_ROUGH = ResLoc.of(RES_TEXTURES_DECO_BACKGROUND, "steel_rough");
+	public static final ResLoc GUI_BG_SHEETMETAL = ResLoc.of(RES_TEXTURES_DECO_BACKGROUND, "sheetmetal");
+	public static final ResLoc GUI_BG_SHEETMETAL_STEEL = ResLoc.of(RES_TEXTURES_DECO_BACKGROUND, "sheetmetal_steel");
+	public static final ResLoc GUI_BG_PAPER = ResLoc.of(RES_TEXTURES_DECO_BACKGROUND, "paper");
+	public static final ResLoc GUI_BG_BLUEPRINT = ResLoc.of(RES_TEXTURES_DECO_BACKGROUND, "blueprint");
+	public static final ResLoc GUI_BG_DARK = ResLoc.of(RES_TEXTURES_DECO_BACKGROUND, "dark");
+	//Deco Labels
+
+	public static final ResLoc GUI_LABEL_WOODEN = ResLoc.of(RES_TEXTURES_DECO, "label/label_wooden");
+	public static final ResLoc GUI_LABEL_STEEL = ResLoc.of(RES_TEXTURES_DECO, "label/label_steel");
+	public static final ResLoc GUI_LABEL_HAZARD = ResLoc.of(RES_TEXTURES_DECO, "label/label_hazard");
+	//Deco Components
+	public static final ResLoc RES_TEXTURES_DECO_COMPONENT_BUTTON = ResLoc.of(RES_TEXTURES_DECO, "component/button");
+	public static final ResLoc RES_TEXTURES_DECO_COMPONENT_TAB = ResLoc.of(RES_TEXTURES_DECO, "component/tab");
+	public static final ResLoc RES_TEXTURES_DECO_COMPONENT_CHECKBOX = ResLoc.of(RES_TEXTURES_DECO, "component/checkbox");
+	public static final ResLoc RES_TEXTURES_DECO_COMPONENT_SWITCH = ResLoc.of(RES_TEXTURES_DECO, "component/switch");
+	public static final ResLoc RES_TEXTURES_DECO_COMPONENT_SWITCH_MOVING = ResLoc.of(RES_TEXTURES_DECO, "component/switch_moving");
+	public static final ResLoc RES_TEXTURES_DECO_COMPONENT_DROPDOWN = ResLoc.of(RES_TEXTURES_DECO, "component/dropdown");
+	public static final ResLoc RES_TEXTURES_DECO_COMPONENT_SLIDER = ResLoc.of(RES_TEXTURES_DECO, "component/slider");
+
 
 	//--- GameRules ---//
 	public static final String GAMERULE_AMMO_BREAKS_BLOCKS = "ammoBreaksBlocks";
@@ -105,9 +145,6 @@ public class IIReference
 	//public static final String GAMERULE_AMMO_NUCLEAR_DEVICE = "ammoNuclearDevice";
 
 	public static final String GAMERULE_HANS_INFINITE_AMMO = "hansInfiniteAmmo";
-
-	//--- Paths ---//
-	public static final String SKIN_LOCATION = "immersiveintelligence:textures/skins/";
 
 
 	//--- Manual ---//
@@ -127,14 +164,17 @@ public class IIReference
 
 	public static final IIColor COLOR_H1 = IIColor.fromPackedRGB(0x0a0a0a);
 	public static final IIColor COLOR_H2 = IIColor.fromPackedRGB(0x1a1a1a);
-	public static final IIColor COLOR_PRUSSIAN_BLUE = IIColor.fromPackedRGB(0x486c94);
+	public static final IIColor COLOR_ENGINEERS_BLUE = IIColor.fromPackedRGB(0x486c94);
 	public static final IIColor COLOR_IMMERSIVE_ORANGE = IIColor.fromPackedRGB(0xf78034);
 	public static final IIColor COLOR_GOLD = IIColor.fromPackedRGB(0xFFAA00);
 	public static final IIColor COLOR_LIGHT_BLUE = IIColor.fromPackedRGB(0x5555FF);
+
+	public static final IIColor COLOR_SWITCH_ON = COLOR_IMMERSIVE_ORANGE;
+	public static final IIColor COLOR_SWITCH_OFF = IIColor.fromPackedRGB(0x8c8c8c);
 
 	public static final IIColor COLOR_NIXIE_ORANGE = IIColor.fromPackedRGB(Lib.colour_nixieTubeText);
 	/**
 	 * Standard color palette for use in GUI tooltips
 	 */
-	public static final IIColor[] COLORS_STANDARD = new IIColor[]{COLOR_PRUSSIAN_BLUE, COLOR_IMMERSIVE_ORANGE, COLOR_GOLD, COLOR_LIGHT_BLUE};
+	public static final IIColor[] COLORS_STANDARD = new IIColor[]{COLOR_ENGINEERS_BLUE, COLOR_IMMERSIVE_ORANGE, COLOR_GOLD, COLOR_LIGHT_BLUE};
 }

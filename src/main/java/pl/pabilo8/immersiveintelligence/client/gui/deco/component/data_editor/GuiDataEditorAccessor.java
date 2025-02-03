@@ -1,0 +1,72 @@
+package pl.pabilo8.immersiveintelligence.client.gui.deco.component.data_editor;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.I18n;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeAccessor;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoDropdownDataLetters;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoDropdownDataLetters.ArrowsAlignment;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+
+/**
+ * @author Pabilo8
+ * @since 07.09.2021
+ */
+public class GuiDataEditorAccessor extends GuiDataEditor<DataTypeAccessor>
+{
+	private DecoDropdownDataLetters buttonVariable;
+	private char c;
+
+	public GuiDataEditorAccessor(int buttonId, DataTypeAccessor dataType)
+	{
+		super(buttonId, dataType);
+		c = dataType.variable;
+	}
+
+	@Override
+	public void init()
+	{
+		super.init();
+
+		this.buttonVariable = addButton(new DecoDropdownDataLetters(buttonList.size(), x+width-12-18-2, y+10+1-6, false, c, ArrowsAlignment.RIGHT));
+	}
+
+	@Override
+	public DataTypeAccessor createType()
+	{
+		return new DataTypeAccessor();
+	}
+
+	@Override
+	public void update()
+	{
+
+		super.update();
+	}
+
+	@Override
+	public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks)
+	{
+		super.drawButton(mc, mouseX, mouseY, partialTicks);
+		mc.fontRenderer.drawString(I18n.format(IIReference.DESCRIPTION_KEY+"variable"), x+2, y+10, 0x0a0a0a, false);
+
+	}
+
+	@Override
+	public boolean mousePressed(Minecraft mc, int mouseX, int mouseY)
+	{
+		if(buttonVariable.mousePressed(mc, mouseX, mouseY))
+		{
+			c = buttonVariable.selectedEntry;
+			return true;
+		}
+		return super.mousePressed(mc, mouseX, mouseY);
+	}
+
+	@Override
+	public DataTypeAccessor outputType()
+	{
+		dataType.variable = c;
+		return dataType;
+	}
+
+}

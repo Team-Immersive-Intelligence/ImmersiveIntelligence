@@ -77,6 +77,7 @@ public class IIFontRenderer extends FontRenderer
 	public float customSpaceWidth = 4f;
 	public float spacingModifier = 0f;
 	public boolean verticalBoldness = false;
+	private boolean previousUnicodeState;
 
 	public IIFontRenderer(ResourceLocation res)
 	{
@@ -289,6 +290,16 @@ public class IIFontRenderer extends FontRenderer
 		return super.sizeStringToWidth(str, wrapWidth)+m*hexColLength;
 	}
 
+	public void startForcedUnicode(boolean force)
+	{
+		this.previousUnicodeState = getUnicodeFlag();
+		setUnicodeFlag(force);
+	}
+
+	public void endForcedUnicode()
+	{
+		setUnicodeFlag(this.previousUnicodeState);
+	}
 
 	static class CharReplacement
 	{

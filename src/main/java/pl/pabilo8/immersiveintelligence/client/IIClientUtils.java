@@ -104,19 +104,10 @@ public class IIClientUtils
 	}
 
 	@SideOnly(Side.CLIENT)
+	@Deprecated
 	public static void drawStringCentered(FontRenderer fontRenderer, String string, int x, int y, int w, int h, int colour)
 	{
 		fontRenderer.drawString(string, x+(w/2)-(fontRenderer.getStringWidth(string)/2), y+h, colour);
-	}
-
-	@SideOnly(Side.CLIENT)
-	public static void drawStringCenteredScaled(FontRenderer fontRenderer, String string, int x, int y, int w, int h, float scale, int colour)
-	{
-		GlStateManager.pushMatrix();
-		GlStateManager.translate(x+((w/2)-(fontRenderer.getStringWidth(string)*scale/2)), y+h, 0);
-		GlStateManager.scale(scale, scale, 1);
-		fontRenderer.drawString(string, 0, 0, colour);
-		GlStateManager.popMatrix();
 	}
 
 	//Cheers, Blu ^^

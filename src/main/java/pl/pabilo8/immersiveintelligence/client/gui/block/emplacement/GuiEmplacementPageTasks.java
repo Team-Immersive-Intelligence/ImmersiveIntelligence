@@ -17,16 +17,15 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.registries.GameData;
 import org.apache.commons.lang3.ArrayUtils;
 import org.lwjgl.input.Keyboard;
-import pl.pabilo8.immersiveintelligence.client.gui.elements.GuiEmplacementTaskList;
-import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonCheckboxII;
-import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonDropdownList;
-import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonSwitch;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiEmplacementTaskList;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoCheckbox;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoDropdown;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoSwitch;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
-import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
@@ -50,10 +49,10 @@ public class GuiEmplacementPageTasks extends GuiEmplacement
 	@Nullable
 	private GuiTextField valueEdit;
 	@Nullable
-	private GuiButtonDropdownList valueList;
+	private DecoDropdown valueList;
 
-	private GuiButtonSwitch buttonEnabled;
-	private GuiButtonCheckboxII buttonInverted;
+	private DecoSwitch buttonEnabled;
+	private DecoCheckbox buttonInverted;
 	private GuiButtonIE buttonAdd, buttonRemove, buttonDuplicate, buttonClear;
 	private GuiButtonIE buttonTypePrev, buttonTypeNext;
 	private GuiEmplacementTaskList buttonTaskList;
@@ -81,13 +80,14 @@ public class GuiEmplacementPageTasks extends GuiEmplacement
 				addTaskTabButton(3),
 		};
 
-		buttonEnabled = addSwitch(122+11, 17, 60, IIReference.COLOR_H1, IIColor.fromPackedRGB(0xb51500), IIColor.fromPackedRGB(0x95ed00), currentTab==tile.defaultTargetMode,
+		buttonEnabled = addSwitch(122+11, 17, 60, IIReference.COLOR_H1,
+				IIReference.COLOR_SWITCH_OFF, IIReference.COLOR_SWITCH_ON, currentTab==tile.defaultTargetMode,
 				I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.emplacement.task_enabled"), tasksModified);
 
 		addLabel(122, 32+16-12, 83, 0, IIReference.COLOR_H1, I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.emplacement.selector_preset")).setCentered();
-		buttonInverted = addButton(new GuiButtonCheckboxII(buttonList.size(), guiLeft+122, guiTop+32+33-6+44, I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.emplacement.task_negation"), !tile.redstoneControl));
+		buttonInverted = addButton(new DecoCheckbox(buttonList.size(), guiLeft+122, guiTop+32+33-6+44, I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.emplacement.task_negation"), !tile.redstoneControl));
 		if(selected!=null)
-			buttonInverted.state = selected.negation;
+			buttonInverted.withChecked(selected.negation);
 		addLabel(122, 32+33+16, 83, 0, IIReference.COLOR_H1, I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.emplacement.filter")).setCentered();
 
 		buttonAdd = addButton(new GuiButtonIE(buttonList.size(), guiLeft+4, guiTop+32+2+96, 48, 12, I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.emplacement.add"), TEXTURE_ICONS.toString(), 0, 89));
@@ -105,7 +105,7 @@ public class GuiEmplacementPageTasks extends GuiEmplacement
 		valueEdit = null;
 		if(entries.length > 0)
 		{
-			valueList = addButton(new GuiButtonDropdownList(buttonList.size(), guiLeft+120, guiTop+87, 84, 13, 4, entries));
+			valueList = addButton(new DecoDropdown(buttonList.size(), guiLeft+120, guiTop+87, 84, 13, 4, entries));
 			if(!selected.filter.isEmpty())
 				valueList.selectedEntry = ArrayUtils.indexOf(entries, selected.filter);
 		}
@@ -158,7 +158,7 @@ public class GuiEmplacementPageTasks extends GuiEmplacement
 		else if(valueList!=null&&button==valueList)
 		{
 			if(selected!=null)
-				selected.filter = valueList.getEntry(this.valueList.selectedEntry);
+				selected.filter = valueList.getSelectedEntry(this.valueList.selectedEntry);
 		}
 		else if(button==buttonAdd)
 		{
@@ -195,7 +195,7 @@ public class GuiEmplacementPageTasks extends GuiEmplacement
 			initGui();
 		}
 		else if(button==buttonInverted)
-			selected.negation = buttonInverted.state;
+			selected.negation = buttonInverted.isChecked();
 		else if(button==buttonTypeNext)
 		{
 			selected.type = EnumTaskType.values()[IIUtils.cycleInt(true, selected.type.ordinal(), 0, EnumTaskType.values().length-1)];
@@ -215,7 +215,7 @@ public class GuiEmplacementPageTasks extends GuiEmplacement
 		EasyNBT nbt = EasyNBT.newNBT();
 
 
-		if(buttonEnabled.state)
+		if(buttonEnabled.getState())
 			nbt.withInt("defaultTargetMode", tile.defaultTargetMode = currentTab);
 		else if(tile.defaultTargetMode==currentTab)
 			nbt.withInt("defaultTargetMode", tile.defaultTargetMode = -1);

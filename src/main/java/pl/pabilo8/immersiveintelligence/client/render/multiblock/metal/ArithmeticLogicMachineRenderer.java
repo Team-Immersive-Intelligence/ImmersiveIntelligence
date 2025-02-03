@@ -1,86 +1,91 @@
 package pl.pabilo8.immersiveintelligence.client.render.multiblock.metal;
 
-import blusunrize.immersiveengineering.client.ClientUtils;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.util.math.MathHelper;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.ModelArithmeticLogicMachine;
-import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
-import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.util.Tuple;
+import pl.pabilo8.immersiveintelligence.client.render.IIMultiblockRenderer;
+import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer.RegisteredTileRenderer;
+import pl.pabilo8.immersiveintelligence.client.util.amt.*;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityArithmeticLogicMachine;
-
-import javax.annotation.Nullable;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 
 /**
  * @author Pabilo8
+ * @updated 08.01.2024
+ * @ii-approved 0.3.1
  * @since 28-06-2019
  */
-public class ArithmeticLogicMachineRenderer extends TileEntitySpecialRenderer<TileEntityArithmeticLogicMachine> implements IReloadableModelContainer<ArithmeticLogicMachineRenderer>
+@RegisteredTileRenderer(name = "multiblock/arithmetic_logic_machine", clazz = TileEntityArithmeticLogicMachine.class)
+public class ArithmeticLogicMachineRenderer extends IIMultiblockRenderer<TileEntityArithmeticLogicMachine>
 {
-	private static ModelArithmeticLogicMachine model;
-	private static ModelArithmeticLogicMachine modelFlipped;
+	private AMT[] model;
+	private IIMachineUpgradeModel upgradeCircuitRacks, upgradeMemory;
+	private IIAnimationCompiledMap animationDrawer, animationDoor, animationKeyboard;
 
 	@Override
-	public void render(@Nullable TileEntityArithmeticLogicMachine te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
+	public void drawAnimated(TileEntityArithmeticLogicMachine te, BufferBuilder buf, float partialTicks, Tessellator tes)
 	{
-		if(te!=null&&!te.isDummy())
-		{
-			String texture = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/arithmetic_logic_machine.png";
-			ClientUtils.bindTexture(texture);
-			GlStateManager.pushMatrix();
-			GlStateManager.translate((float)x, (float)y, (float)z);
-			GlStateManager.rotate(180F, 0F, 1F, 0F);
-			GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
+		//reset model to default state
+		for(AMT amt : model)
+			amt.defaultize();
 
-			if(te.hasWorld())
-			{
-				GlStateManager.translate(0f, 1f, 1f);
-				GlStateManager.rotate(90F, 0F, 1F, 0F);
-			}
+		animationDrawer.apply(te.drawer.getProgress(partialTicks));
+		animationDoor.apply(te.door.getProgress(partialTicks));
+		animationKeyboard.apply(te.keyboard.getProgress(partialTicks));
 
-			ModelArithmeticLogicMachine modelCurrent = te.mirrored?modelFlipped: model;
-			modelCurrent.getBlockRotation(te.facing, te.mirrored);
-			int flipMod = te.mirrored?-1: 1;
+		//Draw
+		applyStandardMirroring(te, true);
 
-			float door = MathHelper.clamp(te.doorAngle+(partialTicks*(te.isDoorOpened?5f: -6.5f)), 0, 135f)*flipMod;
+		//Render
+		for(AMT amt : model)
+			amt.render(tes, buf);
 
-			GlStateManager.pushMatrix();
-			GlStateManager.translate(1.9375f, 3f, -0.96875f*flipMod);
-			GlStateManager.rotate(door, 0, 1, 0);
-			for(ModelRendererTurbo model : modelCurrent.doorLeftModel)
-				model.render(0.0625f);
-			GlStateManager.popMatrix();
-
-			GlStateManager.pushMatrix();
-			GlStateManager.translate(0.0625f, 3.0f, -0.96875f*flipMod);
-			GlStateManager.rotate(-door, 0, 1, 0);
-			for(ModelRendererTurbo model : modelCurrent.doorRightModel)
-				model.render(0.0625f);
-			GlStateManager.popMatrix();
-
-			modelCurrent.render();
-
-			ModelRendererTurbo[][] circuits = new ModelRendererTurbo[][]{modelCurrent.chip1Model, modelCurrent.chip2Model, modelCurrent.chip3Model, modelCurrent.chip4Model};
-
-			for(int i = 0; i < te.renderCircuit.length; i++)
-				if(!te.renderCircuit[i].isEmpty())
-				{
-					ClientUtils.bindTexture(ImmersiveIntelligence.MODID+":textures/blocks/multiblock/alm_circuits/"+te.renderCircuit[i]+".png");
-					for(ModelRendererTurbo model : circuits[i])
-						model.render();
-				}
-
-			GlStateManager.popMatrix();
-
-		}
+		applyStandardMirroring(te, false);
 	}
 
 	@Override
-	public void reloadModels()
+	public void drawSimple(BufferBuilder buf, float partialTicks, Tessellator tes)
 	{
-		model = new ModelArithmeticLogicMachine();
-		modelFlipped = new ModelArithmeticLogicMachine();
-		modelFlipped.flipAllZ();
+		//reset model to default state
+		for(AMT amt : model)
+			amt.defaultize();
+
+		//Render
+		for(AMT amt : model)
+			amt.render(tes, buf);
+	}
+
+	@Override
+	public void compileModels(Tuple<IBlockState, IBakedModel> sModel)
+	{
+		//model loading
+		model = IIAnimationUtils.getAMT(sModel, IIAnimationLoader.loadHeader(sModel.getSecond()), header ->
+				new AMT[]{}
+		);
+
+		upgradeCircuitRacks = new IIMachineUpgradeModel(IIContent.UPGRADE_CIRCUIT_RACKS,
+				ResLoc.of(IIReference.RES_II, "block/metal_multiblock0/arithmetic_logic_machine/upgrade/circuit_racks.obj.ie"),
+				ResLoc.of(IIReference.RES_II, "arithmetic_logic_machine/upgrade_circuit_racks")
+		);
+		upgradeMemory = new IIMachineUpgradeModel(IIContent.UPGRADE_MEMORY,
+				ResLoc.of(IIReference.RES_II, "block/metal_multiblock0/arithmetic_logic_machine/memory.obj.ie"),
+				ResLoc.of(IIReference.RES_II, "arithmetic_logic_machine/upgrade_memory")
+		);
+
+		//animations
+		animationDrawer = IIAnimationCompiledMap.create(model, ResLoc.of(IIReference.RES_II, "data_input_machine/open_drawer"));
+		animationDoor = IIAnimationCompiledMap.create(model, ResLoc.of(IIReference.RES_II, "data_input_machine/open_door"));
+		animationKeyboard = IIAnimationCompiledMap.create(model, ResLoc.of(IIReference.RES_II, "data_input_machine/open_keyboard"));
+	}
+
+	@Override
+	protected void nullifyModels()
+	{
+		super.nullifyModels();
+		IIAnimationUtils.disposeOf(model);
 	}
 }

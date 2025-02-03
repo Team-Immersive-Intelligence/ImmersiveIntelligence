@@ -66,6 +66,7 @@ import pl.pabilo8.immersiveintelligence.common.item.crafting.material.ItemIIMate
 import pl.pabilo8.immersiveintelligence.common.item.crafting.material.ItemIIMaterialPlate.MaterialsPlate;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.material.ItemIIMaterialSpring.MaterialsSpring;
 import pl.pabilo8.immersiveintelligence.common.item.data.ItemIIFunctionalCircuit.Circuits;
+import pl.pabilo8.immersiveintelligence.common.item.data.ItemIIPunchtape;
 import pl.pabilo8.immersiveintelligence.common.item.mechanical.ItemIIMotorGear.MotorGear;
 import pl.pabilo8.immersiveintelligence.common.item.tools.backpack.ItemIIAdvancedPowerPack;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
@@ -121,6 +122,7 @@ public class IIRecipes
 
 		addSiliconProcessingRecipes();
 		addCircuitRecipes();
+		addDataProgrammingRecipes();
 
 		addFunctionalCircuits();
 		addSpringRecipes();
@@ -193,6 +195,28 @@ public class IIRecipes
 	private static void replaceRecipe(IForgeRegistryModifiable<IRecipe> recipeRegistry, boolean replace, String pathIE, String pathII)
 	{
 		recipeRegistry.remove(replace?IIReference.RES_IE.with(pathIE): IIReference.RES_II.with(pathII));
+	}
+
+	private static void addDataProgrammingRecipes()
+	{
+		//Empty Punchtape
+		DataProgrammingRecipe.addRecipe(new IngredientStack("punchtapeEmpty"),
+				(data, stack) -> {
+					ItemStack output = new ItemStack(IIContent.itemPunchtape, 1, 0);
+					((ItemIIPunchtape)output.getItem()).writeDataToItem(data, output);
+					return output;
+				}, null);
+
+		//Written Punchtape
+		DataProgrammingRecipe.addRecipe(IIContent.itemPunchtape.getIngredientStack(1),
+				null, (data, stack) -> ((ItemIIPunchtape)stack.getItem()).getStoredData(stack));
+
+		//Radio Explosives
+		DataProgrammingRecipe.addRecipe(IIContent.blockRadioExplosives.getIngredientStack(IIBlockTypes_Mine.MAIN, 1),
+				(data, stack) -> {
+					ItemNBTHelper.setTagCompound(stack, "programmed_data", data.clone().toNBT());
+					return stack;
+				}, null);
 	}
 
 	private static void addElectrolyzerRecipes()

@@ -13,10 +13,10 @@ import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeNull;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
-import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonDataLetterList;
-import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonDataLetterList.ArrowsAlignment;
-import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonII;
-import pl.pabilo8.immersiveintelligence.client.gui.elements.data_editor.GuiDataEditor;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoButton;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoDropdownDataLetters;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoDropdownDataLetters.ArrowsAlignment;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.data_editor.GuiDataEditor;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityDataInputMachine;
@@ -41,10 +41,10 @@ public class GuiDataInputMachineEdit extends GuiDataInputMachineBase
 {
 	public char variableToEdit = 'a';
 	public DataType dataType;
-	public GuiButtonDataLetterList buttonLetter;
+	public DecoDropdownDataLetters buttonLetter;
 	public GuiButtonIE buttonApply;
 	public GuiButtonIE buttonTypeNext, buttonTypePrev;
-	private GuiButtonII buttonVariableHelp;
+	private DecoButton buttonVariableHelp;
 	@Nullable
 	private GuiDataEditor<? extends DataType> editor = null;
 
@@ -74,7 +74,11 @@ public class GuiDataInputMachineEdit extends GuiDataInputMachineBase
 		buttonApply = addButton(new GuiButtonIE(buttonList.size(), guiLeft+96, guiTop+121, 64, 12, I18n.format("desc.immersiveintelligence.variable_apply"), TEXTURE_EDIT.toString(), 0, 222).setHoverOffset(64, 0));
 
 		//Displays Manual Page for Type
-		buttonVariableHelp = addButton(new GuiButtonII(buttonList.size(), guiLeft+152-10, guiTop+15, 16, 16, String.format("immersiveintelligence:textures/gui/data_types/%s.png", dataType.getName()), 0, 0, 1, 1));
+		buttonVariableHelp = addButton(
+				new DecoButton(guiLeft+152-10, guiTop+15)
+						.withSize(16, 16)
+						.withIcon(dataType.getTextureLocation())
+		);
 
 		buttonTypeNext = addButton(new GuiButtonIE(0, guiLeft+159, guiTop+14+2, 8, 6, "",
 				ImmersiveIntelligence.MODID+":textures/gui/emplacement_icons.png", 128, 77)
@@ -96,7 +100,7 @@ public class GuiDataInputMachineEdit extends GuiDataInputMachineBase
 		}
 
 		//Letter Change Buttons
-		buttonLetter = addButton(new GuiButtonDataLetterList(buttonList.size(), guiLeft+42-10, guiTop+14, false, variableToEdit, ArrowsAlignment.LEFT));
+		buttonLetter = addButton(new DecoDropdownDataLetters(buttonList.size(), guiLeft+42-10, guiTop+14, false, variableToEdit, ArrowsAlignment.LEFT));
 		buttonLetter.setAvoidGetter(() -> list);
 
 	}
@@ -138,7 +142,7 @@ public class GuiDataInputMachineEdit extends GuiDataInputMachineBase
 		{
 			if(this.editor!=null)
 				this.dataType = this.editor.outputType();
-			saveBasicData();
+			saveBasicData(tile);
 			syncDataToServer();
 			preparedForChange = true;
 			IIPacketHandler.sendToServer(new MessageGuiNBT(IIGuiList.GUI_DATA_INPUT_MACHINE_VARIABLES, tile));
@@ -193,10 +197,10 @@ public class GuiDataInputMachineEdit extends GuiDataInputMachineBase
 	{
 		super.refreshStoredData();
 		this.list = tile.storedData;
-		if(positionEqual(proxy, tile))
+		if(positionEqual(tile))
 		{
-			if(proxy.storedGuiData.hasKey("variableToEdit"))
-				variableToEdit = proxy.storedGuiData.getString("variableToEdit").charAt(0);
+			if(proxy.getStoredGuiData().hasKey("variableToEdit"))
+				variableToEdit = proxy.getStoredGuiData().getString("variableToEdit").charAt(0);
 		}
 		this.dataType = list.getPacketVariable(variableToEdit);
 	}
@@ -234,7 +238,8 @@ public class GuiDataInputMachineEdit extends GuiDataInputMachineBase
 	@Override
 	protected void syncDataToServer()
 	{
-		proxy.storedGuiData.setString("variableToEdit", String.valueOf(variableToEdit));
+		proxy.setStoredGuiData()
+				.withString("variableToEdit", String.valueOf(variableToEdit));
 		tile.storedData.setVariable(variableToEdit, dataType);
 		super.syncDataToServer();
 	}

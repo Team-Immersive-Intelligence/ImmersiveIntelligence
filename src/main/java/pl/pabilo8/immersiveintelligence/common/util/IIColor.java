@@ -26,8 +26,8 @@ public class IIColor implements Comparable<IIColor>, ToIntFunction<IIColor>
 {
 	//--- Constants ---//
 	public static final IIColor WHITE = IIColor.fromARGB(255, 255, 255, 255);
-	public static final IIColor BLACK = IIColor.fromARGB(0, 0, 0, 255);
-	public static final IIColor ALPHA = IIColor.fromARGB(255, 255, 255, 0);
+	public static final IIColor BLACK = IIColor.fromARGB(255, 0, 0, 0);
+	public static final IIColor ALPHA = IIColor.fromARGB(0, 255, 255, 255);
 
 	//--- Minecraft Colors ---//
 	public static final IIColor MC_BLACK = IIColor.fromHex("000000");

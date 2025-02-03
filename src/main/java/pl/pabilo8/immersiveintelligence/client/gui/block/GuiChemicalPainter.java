@@ -14,7 +14,7 @@ import net.minecraftforge.fml.client.config.GuiSlider;
 import net.minecraftforge.fml.client.config.GuiSlider.ISlider;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
-import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiSliderII;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoSlider;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityChemicalPainter;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerChemicalPainter;
@@ -38,9 +38,9 @@ public class GuiChemicalPainter extends GuiIEContainerBase implements ISlider
 	public static final ResourceLocation TEXTURE_ICONS = new ResourceLocation("immersiveintelligence:textures/gui/emplacement_icons.png");
 	TileEntityChemicalPainter tile;
 
-	private GuiSliderII sliderRed, sliderGreen, sliderBlue;
-	private GuiSliderII sliderCyan, sliderMagenta, sliderYellow, sliderBlack;
-	private GuiSliderII sliderHue, sliderSaturation, sliderValue;
+	private DecoSlider sliderRed, sliderGreen, sliderBlue;
+	private DecoSlider sliderCyan, sliderMagenta, sliderYellow, sliderBlack;
+	private DecoSlider sliderHue, sliderSaturation, sliderValue;
 
 	private ColorMode colorMode = ColorMode.RGB;
 	private IIColor color;
@@ -208,9 +208,9 @@ public class GuiChemicalPainter extends GuiIEContainerBase implements ISlider
 		}
 	}
 
-	public GuiSliderII getSlider(int id, String name, float value)
+	public DecoSlider getSlider(int id, String name, float value)
 	{
-		GuiSliderII slider = addButton(new GuiSliderII(buttonList.size(), guiLeft+25+((id%2)*75), guiTop+80+8+(17*(int)Math.floor(id/2f)), 70, name, value, IIReference.COLOR_H1));
+		DecoSlider slider = addButton(new DecoSlider(buttonList.size(), guiLeft+25+((id%2)*75), guiTop+80+8+(17*(int)Math.floor(id/2f)), 70, name, value, IIReference.COLOR_H1));
 		slider.parent = this;
 		return slider;
 	}

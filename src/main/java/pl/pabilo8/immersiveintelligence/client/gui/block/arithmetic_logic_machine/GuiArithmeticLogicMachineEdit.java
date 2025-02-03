@@ -7,10 +7,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeExpression;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
-import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonDataLetterList;
-import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonDataLetterList.ArrowsAlignment;
-import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonII;
-import pl.pabilo8.immersiveintelligence.client.gui.elements.data_editor.GuiDataEditorExpression;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoButton;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoDropdownDataLetters;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoDropdownDataLetters.ArrowsAlignment;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.data_editor.GuiDataEditorExpression;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityArithmeticLogicMachine;
@@ -18,6 +18,7 @@ import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageGuiNBT;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import javax.annotation.Nonnull;
@@ -34,9 +35,9 @@ public class GuiArithmeticLogicMachineEdit extends GuiArithmeticLogicMachineBase
 	private int page;
 	public char variableToEdit = 'a';
 	public DataType dataType;
-	public GuiButtonDataLetterList buttonLetter;
+	public DecoDropdownDataLetters buttonLetter;
 	public GuiButtonIE buttonApply;
-	public GuiButtonIE buttonVariableHelp;
+	public DecoButton buttonVariableHelp;
 
 	@Nullable
 	private GuiDataEditorExpression editor = null;
@@ -65,14 +66,18 @@ public class GuiArithmeticLogicMachineEdit extends GuiArithmeticLogicMachineBase
 		buttonApply = addButton(new GuiButtonIE(buttonList.size(), guiLeft+96, guiTop+121, 64, 12, I18n.format("desc.immersiveintelligence.variable_apply"), TEXTURE_EDIT.toString(), 0, 222).setHoverOffset(64, 0));
 
 		//Displays Manual Page for Type
-		buttonVariableHelp = addButton(new GuiButtonII(buttonList.size(), guiLeft+152, guiTop+15, 16, 16, "immersiveintelligence:textures/gui/data_types/expression.png", 0, 0, 1, 1));
+		buttonVariableHelp = addButton(
+				new DecoButton(guiLeft+152, guiTop+15)
+						.withSize(16, 16)
+						.withIcon(IIReference.RES_TEXTURES_GUI.with("data_types/expression").withExtension(ResLoc.EXT_PNG))
+		);
 
 		this.editor = addButton(new GuiDataEditorExpression(buttonList.size(),
 				this.editor!=null?this.editor.outputType(): new DataPacket().getVarInType(DataTypeExpression.class, dataType), handler.getStackInSlot(page)));
 		this.editor.setBounds(guiLeft+35, guiTop+46, 131, 80);
 
 		//Letter Change Buttons
-		buttonLetter = addButton(new GuiButtonDataLetterList(buttonList.size(), guiLeft+42-10, guiTop+14, false, variableToEdit, ArrowsAlignment.LEFT));
+		buttonLetter = addButton(new DecoDropdownDataLetters(buttonList.size(), guiLeft+42-10, guiTop+14, false, variableToEdit, ArrowsAlignment.LEFT));
 		buttonLetter.setAvoidGetter(this::getPacketFromPage);
 
 	}
@@ -138,12 +143,13 @@ public class GuiArithmeticLogicMachineEdit extends GuiArithmeticLogicMachineBase
 	void refreshStoredData()
 	{
 		super.refreshStoredData();
-		if(positionEqual(proxy, tile))
+		if(positionEqual(tile))
 		{
-			if(proxy.storedGuiData.hasKey("variableToEdit"))
+			EasyNBT guiData = proxy.getStoredGuiData();
+			if(guiData.hasKey("variableToEdit"))
 			{
-				page = proxy.storedGuiData.getInteger("circuitToEdit");
-				variableToEdit = proxy.storedGuiData.getString("variableToEdit").charAt(0);
+				page = guiData.getInt("circuitToEdit");
+				variableToEdit = guiData.getString("variableToEdit").charAt(0);
 			}
 		}
 		DataPacket list = IIContent.itemCircuit.getStoredData(handler.getStackInSlot(page));
@@ -191,7 +197,8 @@ public class GuiArithmeticLogicMachineEdit extends GuiArithmeticLogicMachineBase
 	{
 		super.syncDataToServer();
 
-		proxy.storedGuiData.setString("variableToEdit", String.valueOf(variableToEdit));
+		proxy.setStoredGuiData()
+				.withString("variableToEdit", String.valueOf(variableToEdit));
 		if(editor!=null)
 		{
 			DataPacket storedData = IIContent.itemCircuit.getStoredData(handler.getStackInSlot(page));

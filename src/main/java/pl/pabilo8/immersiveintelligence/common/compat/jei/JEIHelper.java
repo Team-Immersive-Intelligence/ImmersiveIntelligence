@@ -14,6 +14,8 @@ import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.oredict.OreDictionary;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
@@ -22,6 +24,7 @@ import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.api.crafting.*;
 import pl.pabilo8.immersiveintelligence.client.gui.block.*;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.compat.jei.gui_handlers.*;
 import pl.pabilo8.immersiveintelligence.common.compat.jei.recipe_handlers.*;
@@ -148,10 +151,12 @@ public class JEIHelper implements IModPlugin
 		modRegistry.addAdvancedGuiHandlers(new AmmoCrateGuiHandler(),
 				new ArithmeticLogicMachineGuiHandler(),
 				new DataInputMachineGuiHandler(),
-				new RedstoneInterfaceGuiHandler.Data(),
-				new RedstoneInterfaceGuiHandler.Redstone(),
 				new EmplacementGuiHandler()
 		);
+
+		if(FMLCommonHandler.instance().getSide()==Side.CLIENT)
+			IIGuiList.registerDecoJEICompat(modRegistry);
+
 
 		//modRegistry.addRecipes(RecipeMinecart.listAllRecipes, VanillaRecipeCategoryUid.CRAFTING);
 		//modRegistry.addRecipes(RecipeCrateConversion.listAllRecipes, VanillaRecipeCategoryUid.CRAFTING);

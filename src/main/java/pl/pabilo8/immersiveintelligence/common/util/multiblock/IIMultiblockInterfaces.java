@@ -3,12 +3,14 @@ package pl.pabilo8.immersiveintelligence.common.util.multiblock;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IAdvancedCollisionBounds;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IAdvancedSelectionBounds;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IComparatorOverride;
+import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IGuiTile;
 import blusunrize.immersiveengineering.common.util.Utils;
 import blusunrize.immersiveengineering.common.util.inventory.IIEInventory;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.RayTraceResult;
+import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -125,5 +127,16 @@ public class IIMultiblockInterfaces
 		{
 			setCurrentConstruction(nbt.getInteger("construction"));
 		}
+	}
+
+	public interface IIIGuiMultiblockTile extends IGuiTile
+	{
+		@Override
+		default int getGuiID()
+		{
+			return getGUI().ordinal();
+		}
+
+		IIGuiList getGUI();
 	}
 }

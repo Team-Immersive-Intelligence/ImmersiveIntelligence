@@ -18,6 +18,7 @@ public class ArithmeticLogicMachineGuiHandler implements IAdvancedGuiHandler<Gui
 	{
 
 	}
+
 	@Override
 	public Class<GuiArithmeticLogicMachineBase> getGuiContainerClass()
 	{
@@ -32,6 +33,8 @@ public class ArithmeticLogicMachineGuiHandler implements IAdvancedGuiHandler<Gui
 	{
 		List<Rectangle> areas = new ArrayList<>();
 		areas.add(new Rectangle(gui.getGuiLeft()-28, gui.getGuiTop()+4, 28, gui.TABS.size()*24));
+		if(gui.sideManual==null)
+			return areas;
 
 		areas.add(new Rectangle(gui.getGuiLeft()+176+(int)(146*(gui.sideManual.manualTime/100f)), gui.getGuiTop()+56, 32, 18)); //manual button
 		areas.add(new Rectangle(gui.getGuiLeft()+gui.getXSize()-20, gui.getGuiTop(), (int)(164*(gui.sideManual.manualTime/100f)), 198)); //manual

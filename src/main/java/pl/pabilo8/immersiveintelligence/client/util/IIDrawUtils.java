@@ -189,6 +189,45 @@ public class IIDrawUtils
 		return this;
 	}
 
+
+	public IIDrawUtils drawRepeatedColorRect(float x, float y, float w, float h, IIColor color,
+											 int tWidth, int tHeight, float... uv)
+	{
+		float tw = w/tWidth;
+		float th = h/tHeight;
+
+		//Split into smaller parts
+		if(tw < 1||th < 1)
+		{
+			if(tw < 1)
+			{
+				drawTexColorRect(x, y, w/2, h, color, uv[0], uv[0]+(uv[1]-uv[0])*tw/2, uv[2], uv[3]);
+				drawTexColorRect(x+w/2, y, w/2, h, color, uv[1]-(uv[1]-uv[0])*tw/2, uv[1], uv[2], uv[3]);
+			}
+			else
+			{
+				drawTexColorRect(x, y, w, h/2, color, uv[0], uv[1], uv[2], uv[2]+(uv[3]-uv[2])*th/2);
+				drawTexColorRect(x, y+h/2, w, h/2, color, uv[0], uv[1], uv[3]-(uv[3]-uv[2])*th/2, uv[3]);
+			}
+			return this;
+		}
+
+		for(int i = 0; i < tw; i++)
+			for(int j = 0; j < th; j++)
+			{
+				float realW = Math.min(tWidth, w-i*tWidth);
+				float realH = Math.min(tHeight, h-j*tHeight);
+				drawTexColorRect(x+i*tWidth, y+j*tHeight,
+						realW, realH, color,
+						uv[0],
+						uv[0]+(uv[1]-uv[0])*(realW/w),
+						uv[2],
+						uv[2]+(uv[3]-uv[2])*(realH/h)
+				);
+			}
+		return this;
+	}
+
 	//--- Offset and Rotation ---//
 
 	public IIDrawUtils setOffset(float x, float y)

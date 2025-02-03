@@ -25,8 +25,8 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 
 /**
- * This class is used to sync fields in any class<br>
- * To use it, create a new class and add the {@link SyncNBT} annotation to the fields you want to sync<br>
+ * This class is used to sync fields in any class using NBT<br>
+ * To use it, add the {@link SyncNBT} annotation to the fields you want to be synced<br>
  * Any non-static field, declared or inherited with the annotation will be synced automatically<br>
  *
  * @author Pabilo8
@@ -41,7 +41,7 @@ public class NBTSerialisation
 	 */
 	private static final HashMap<Class<?>, BiFunction<Field, SyncNBT, FieldSerializer<?, ?>>> serializerRegistry = new HashMap<>();
 	/**
-	 * Registry of all serializers for a tile entity class
+	 * Registry of all serializers for a class
 	 */
 	private static final HashMap<Class<?>, NBTSerializer<?>> serializers = new HashMap<>();
 
@@ -149,14 +149,14 @@ public class NBTSerialisation
 		serializerRegistry.put(dataClass, (field, annotation) -> new FieldSerializer<FIELD, NBT>(field, annotation)
 		{
 			@Override
-			protected FIELD fromNBT(Object tile, NBT nbt)
+			protected FIELD fromNBT(Object obj, NBT nbt)
 			{
 				FIELD invoke = null;
 				try
 				{
-					invoke = (FIELD)getter.invoke(tile);
+					invoke = (FIELD)getter.invoke(obj);
 					return deserialize.apply(nbt, invoke);
-				} catch(Throwable e)
+				} catch(Throwable ignored)
 				{
 
 				}
@@ -177,14 +177,14 @@ public class NBTSerialisation
 		});
 	}
 
-	public static void synchroniseFor(Object tile, BiConsumer<NBTSerializer, Object> action)
+	public static <T> void synchroniseFor(T obj, BiConsumer<NBTSerializer, T> action)
 	{
-		NBTSerializer<?> serializer = serializers.computeIfAbsent(tile.getClass(), NBTSerializer::new);
-		action.accept(serializer, tile);
+		NBTSerializer<?> serializer = serializers.computeIfAbsent(obj.getClass(), NBTSerializer::new);
+		action.accept(serializer, obj);
 	}
 
 	/**
-	 * Serializes the given TileEntity
+	 * Serializes the given Object
 	 */
 	public static class NBTSerializer<T>
 	{
@@ -257,52 +257,52 @@ public class NBTSerialisation
 		/**
 		 * Serializes all fields
 		 *
-		 * @param tile The tile entity
+		 * @param obj  The object
 		 * @param into The NBT to serialize into
 		 */
-		public void serializeAll(T tile, NBTTagCompound into)
+		public void serializeAll(T obj, NBTTagCompound into)
 		{
 			for(FieldSerializer<?, ?> field : fields)
-				field.serializeField(tile, into);
+				field.serializeField(obj, into);
 		}
 
 		/**
 		 * Serializes all fields for the given time
 		 *
-		 * @param tile The tile entity
+		 * @param obj  The object
 		 * @param into The NBT to serialize into
 		 * @param time The time to serialize for
 		 */
-		public void serializeForTime(T tile, NBTTagCompound into, int time)
+		public void serializeForTime(T obj, NBTTagCompound into, int time)
 		{
 			List<FieldSerializer<?, ?>> fields = timeFields.get(time);
 			if(fields!=null)
 				for(FieldSerializer<?, ?> field : fields)
-					field.serializeField(tile, into);
+					field.serializeField(obj, into);
 		}
 
 		/**
 		 * Serializes all fields for the given event
 		 *
-		 * @param tile  The tile entity
+		 * @param obj   The object
 		 * @param into  The NBT to serialize into
 		 * @param event The event to serialize for
 		 */
-		public void serializeForEvent(T tile, NBTTagCompound into, SyncEvents event)
+		public void serializeForEvent(T obj, NBTTagCompound into, SyncEvents event)
 		{
 			List<FieldSerializer<?, ?>> fields = eventFields.get(event);
 			if(fields!=null)
 				for(FieldSerializer<?, ?> field : fields)
-					field.serializeField(tile, into);
+					field.serializeField(obj, into);
 		}
 
 		/**
 		 * Deserializes all fields
 		 */
-		public void deserializeAll(T tile, NBTTagCompound from, boolean canSkip)
+		public void deserializeAll(T obj, NBTTagCompound from, boolean canSkip)
 		{
 			for(FieldSerializer<?, ?> field : fields)
-				field.deserializeField(tile, from, canSkip);
+				field.deserializeField(obj, from, canSkip);
 		}
 	}
 
@@ -337,40 +337,40 @@ public class NBTSerialisation
 		}
 
 		@SuppressWarnings("unchecked")
-		void serializeField(@Nonnull Object tile, @Nonnull NBTTagCompound into)
+		void serializeField(@Nonnull Object obj, @Nonnull NBTTagCompound into)
 		{
 			try
 			{
-				NBT nbt = toNBT((FIELD)getter.invoke(tile));
+				NBT nbt = toNBT((FIELD)getter.invoke(obj));
 				into.setTag(nbtName, nbt);
 			} catch(Throwable e)
 			{
-				IILogger.error("Error serializing field "+fieldName+" in "+tile.getClass().getName());
+				IILogger.error("Error serializing field "+fieldName+" in "+obj.getClass().getName());
 			}
 		}
 
 		@SuppressWarnings("unchecked")
-		void deserializeField(@Nonnull Object tile, @Nonnull NBTTagCompound from, boolean canSkip)
+		void deserializeField(@Nonnull Object obj, @Nonnull NBTTagCompound from, boolean canSkip)
 		{
 			try
 			{
 				if(canSkip&&!from.hasKey(nbtName))
 					return;
-				setter.invoke(tile, fromNBT(tile, (NBT)from.getTag(nbtName)));
+				setter.invoke(obj, fromNBT(obj, (NBT)from.getTag(nbtName)));
 			} catch(Throwable e)
 			{
-				IILogger.error("Error deserializing field "+fieldName+" in "+tile.getClass().getName());
+				IILogger.error("Error deserializing field "+fieldName+" in "+obj.getClass().getName());
 			}
 		}
 
 		/**
-		 * Override if you want to get the current value from the tile entity
+		 * Override if you want to get the current value from the object
 		 *
-		 * @param tile The tile entity
-		 * @param nbt  The nbt to deserialize from
+		 * @param obj The object
+		 * @param nbt The nbt to deserialize from
 		 * @return The deserialized value
 		 */
-		protected FIELD fromNBT(@Nonnull Object tile, NBT nbt)
+		protected FIELD fromNBT(@Nonnull Object obj, NBT nbt)
 		{
 			return fromNBT(nbt);
 		}

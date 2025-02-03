@@ -27,6 +27,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Rotation;
 import net.minecraft.util.Tuple;
 import net.minecraft.util.datafix.DataFixesManager;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -112,6 +113,7 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 	 * Map of named Points of Interest and their local positions in this multiblock
 	 */
 	private HashMap<String, int[]> POIs = new HashMap<>();
+	private HashMap<String, Rotation> rotations = new HashMap<>();
 	/**
 	 * Whether this structure requires an infinite bounding box in rendering due to its size
 	 */
@@ -646,9 +648,16 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 		return arr.length==0?0: arr[0];
 	}
 
+	@Nonnull
 	public int[] getPointsOfInterest(String name)
 	{
 		return POIs.getOrDefault(name, new int[0]);
+	}
+
+	@Nullable
+	public Rotation getRotation(String name)
+	{
+		return rotations.get(name);
 	}
 
 	public boolean isMassiveStructure()

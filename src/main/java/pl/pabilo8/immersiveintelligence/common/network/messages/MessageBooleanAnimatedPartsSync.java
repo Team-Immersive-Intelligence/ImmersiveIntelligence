@@ -11,6 +11,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
 import pl.pabilo8.immersiveintelligence.common.network.IIMessage;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockInteractablePart;
 
 /**
  * @author Pabilo8
@@ -28,6 +29,13 @@ public class MessageBooleanAnimatedPartsSync extends IIMessage
 		this.open = open;
 		this.id = id;
 		this.pos = pos;
+	}
+
+	public MessageBooleanAnimatedPartsSync(MultiblockInteractablePart part, TileEntity tile)
+	{
+		this.open = part.getState();
+		this.id = part.getID();
+		this.pos = tile.getPos();
 	}
 
 	public MessageBooleanAnimatedPartsSync()

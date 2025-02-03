@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.common.util.multiblock.production;
 
-import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IGuiTile;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
 import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.entity.player.EntityPlayer;
@@ -16,6 +15,7 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IIIGuiMultiblockTile;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultiblockIIGeneric;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionBase.IIIMultiblockRecipe;
@@ -36,7 +36,7 @@ import java.util.function.Consumer;
 
 public abstract class TileEntityMultiblockProductionBase<T extends TileEntityMultiblockProductionBase<T, R>, R extends IIIMultiblockRecipe>
 		extends TileEntityMultiblockIIGeneric<T>
-		implements IGuiTile
+		implements IIIGuiMultiblockTile
 {
 	public TileEntityMultiblockProductionBase(MultiblockStuctureBase<T> multiblock)
 	{

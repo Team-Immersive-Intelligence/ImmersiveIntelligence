@@ -8,7 +8,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
-import pl.pabilo8.immersiveintelligence.client.gui.elements.label.GuiLabelNoShadow;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoLabel;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
@@ -19,7 +19,6 @@ import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionBase;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.function.BiFunction;
 
 /**
@@ -82,15 +81,18 @@ public abstract class GuiAmmunitionBase<T extends TileEntityMultiblockProduction
 		IIPacketHandler.sendToServer(new MessageIITileSync(tile, EasyNBT.newNBT().withString(name, value)));
 	}
 
-	protected GuiLabelNoShadow addLabel(int x, int y, IIColor textColor, String... text)
+	protected DecoLabel addLabel(int x, int y, IIColor textColor, String... text)
 	{
 		return addLabel(x, y, 0, 0, textColor, text);
 	}
 
-	protected GuiLabelNoShadow addLabel(int x, int y, int w, int h, IIColor textColor, String... text)
+
+	protected DecoLabel addLabel(int x, int y, int w, int h, IIColor textColor, String... text)
 	{
-		GuiLabelNoShadow guiLabel = new GuiLabelNoShadow(this.fontRenderer, labelList.size(), x, y, w, h, textColor);
-		Arrays.stream(text).forEachOrdered(guiLabel::addLine);
+		DecoLabel guiLabel = new DecoLabel(fontRenderer, guiLeft+x, guiTop+y)
+				.withSize(w, h)
+				.withTextColor(textColor)
+				.withText(text);
 		labelList.add(guiLabel);
 		return guiLabel;
 	}

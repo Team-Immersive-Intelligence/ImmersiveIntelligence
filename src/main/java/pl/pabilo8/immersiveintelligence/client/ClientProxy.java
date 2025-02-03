@@ -27,7 +27,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
@@ -107,7 +106,10 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.gate_multiblock.
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.gate_multiblock.multiblock.MultiblockWoodenChainFenceGate.TileEntityWoodenChainFenceGate;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.gate_multiblock.multiblock.MultiblockWoodenFenceGate.TileEntityWoodenFenceGate;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.BlockIIMetalMultiblock0.MetalMultiblocks0;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.*;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityBallisticComputer;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityChemicalBath;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityPrecisionAssembler;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityRadioStation;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.BlockIIMetalMultiblock1.MetalMultiblocks1;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.*;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
@@ -131,14 +133,17 @@ import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIINavalMine;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.gun.ItemIIAmmoRevolver;
 import pl.pabilo8.immersiveintelligence.common.item.tools.ItemIIDrillHead.DrillHeads;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIWeaponUpgrade;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.block.BlockIIFluid;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIIStateMappings;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIIStateMappings.DummyEnum;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIIItemTextureOverride;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIBase;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 import java.util.Map.Entry;
@@ -152,7 +157,7 @@ import java.util.Map.Entry;
 public class ClientProxy extends CommonProxy
 {
 	public static KeyBinding keybind_manualReload, keybind_armorHelmet, keybind_armorExosuit, keybind_zoom, keybind_motorbikeEngine, keybind_motorbikeTowing;
-	public NBTTagCompound storedGuiData = new NBTTagCompound();
+	private EasyNBT storedGuiData = EasyNBT.newNBT();
 
 	private HashMap<Class<? extends TileEntityItemStackRenderer>, Block> TEISRRegistryQueue = new HashMap<>();
 
@@ -460,8 +465,8 @@ public class ClientProxy extends CommonProxy
 		//Data multiblocks renderers
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRadioStation.class, new RadioStationRenderer().subscribeToList("multiblock/radio_station"));
 
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDataInputMachine.class, new DataInputMachineRenderer().subscribeToList("multiblock/data_input_machine"));
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityArithmeticLogicMachine.class, new ArithmeticLogicMachineRenderer().subscribeToList("multiblock/arithmetic_logic_machine"));
+		registerTileRenderer(DataInputMachineRenderer.class);
+		registerTileRenderer(ArithmeticLogicMachineRenderer.class);
 		registerTileRenderer(PrintingPressRenderer.class);
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBallisticComputer.class, new BallisticComputerRenderer().subscribeToList("multiblock/ballistic_computer"));
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRedstoneInterface.class, new RedstoneInterfaceRenderer().subscribeToList("multiblock/redstone_data_interface"));
@@ -576,6 +581,37 @@ public class ClientProxy extends CommonProxy
 		ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":blocks/metal_device/inserter/tool_red");
 		ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":blocks/metal_device/inserter/tool_dim");
 		ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":blocks/metal_device/inserter/tool_gray");
+
+		//GUIs
+		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_ROUND);
+		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_SQUARE);
+
+		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_INVENTORY_SLOT);
+		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_IE_SLOT);
+		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_IE_SLOT_MARKER);
+		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_IE_BRASS_SLOT);
+		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_IE_BRASS_SLOT_MARKER);
+
+		ApiUtils.getRegisterSprite(event.getMap(), IIReference.GUI_BG_WOODEN);
+		ApiUtils.getRegisterSprite(event.getMap(), IIReference.GUI_BG_SHEETMETAL);
+		ApiUtils.getRegisterSprite(event.getMap(), IIReference.GUI_BG_SHEETMETAL_STEEL);
+		ApiUtils.getRegisterSprite(event.getMap(), IIReference.GUI_BG_PAPER);
+		ApiUtils.getRegisterSprite(event.getMap(), IIReference.GUI_BG_BLUEPRINT);
+		ApiUtils.getRegisterSprite(event.getMap(), IIReference.GUI_BG_STEEL);
+		ApiUtils.getRegisterSprite(event.getMap(), IIReference.GUI_BG_DARK);
+
+		ApiUtils.getRegisterSprite(event.getMap(), IIReference.GUI_LABEL_WOODEN);
+		ApiUtils.getRegisterSprite(event.getMap(), IIReference.GUI_LABEL_STEEL);
+		ApiUtils.getRegisterSprite(event.getMap(), IIReference.GUI_LABEL_HAZARD);
+
+		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_COMPONENT_BUTTON);
+		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_COMPONENT_TAB);
+		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_COMPONENT_CHECKBOX);
+		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_COMPONENT_SWITCH);
+		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_COMPONENT_SWITCH_MOVING);
+		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_COMPONENT_DROPDOWN);
+		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_COMPONENT_SLIDER);
+
 	}
 
 	@Override
@@ -751,5 +787,24 @@ public class ClientProxy extends CommonProxy
 		IIManualCategoryMotorworks.INSTANCE.addPages();
 		IIManualCategoryIntelligence.INSTANCE.addPages();
 		//IIManualCategoryOther.INSTANCE.addPages();
+	}
+
+	//--- Stored GUI Data ---//
+
+	/**
+	 * @return The stored GUI data, or an empty one if none was stored previously
+	 */
+	@Nonnull
+	public EasyNBT getStoredGuiData()
+	{
+		return storedGuiData;
+	}
+
+	/**
+	 * @return A new NBT tag compound to store GUI data in
+	 */
+	public EasyNBT setStoredGuiData()
+	{
+		return this.storedGuiData = EasyNBT.newNBT();
 	}
 }

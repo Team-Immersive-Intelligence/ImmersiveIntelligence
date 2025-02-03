@@ -1,0 +1,36 @@
+{
+	"origins": {
+		"main": [0, 0, 0],
+		"door_left": [-15.5, 48, -8.5],
+		"door_right": [15.5, 48, -8.5],
+		"circuit1": [-4.55899, 0, 0.43699],
+		"light1": [0, 0, -0.05],
+		"circuit2": [-7.6481, 0, -0.28878],
+		"light2": [0, 0, -0.05],
+		"circuit3": [-10.73721, 0, -1.01454],
+		"light3": [0, 0, -0.05],
+		"circuit4": [-13.82633, 0, -1.74031],
+		"light4": [0, 0, -0.05],
+		"additional_racks_upgrade": [0, 0, 0],
+		"circuit5": [-10, 57, 30],
+		"light5": [-0.5, -1.5, -0.05],
+		"circuit6": [-10, 60, 30],
+		"light6": [-0.5, -1.5, -0.05],
+		"memory_upgrade": [0, 0, 0],
+		"keyboard_door": [13, 21, -8],
+		"keyboard": [13, 20, -26],
+		"keyboard_button": [-10, 18.75, -8.5],
+		"drawer": [6, 11, -20],
+		"activity_lamp": [0, 0, -0.05]
+	},
+	"hierarchy": {
+		"light1": "circuit1",
+		"light2": "circuit2",
+		"light3": "circuit3",
+		"light4": "circuit4",
+		"circuit5": "additional_racks_upgrade",
+		"light5": "circuit5",
+		"circuit6": "additional_racks_upgrade",
+		"light6": "circuit6"
+	}
+}

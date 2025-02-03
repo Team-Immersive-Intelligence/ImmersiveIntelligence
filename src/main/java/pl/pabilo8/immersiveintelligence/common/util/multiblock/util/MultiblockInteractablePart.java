@@ -9,23 +9,49 @@ import net.minecraftforge.common.util.INBTSerializable;
  */
 public class MultiblockInteractablePart implements INBTSerializable<NBTTagCompound>
 {
-	boolean opened = false;
-	float progress = 0;
+	/**
+	 * The ID of the part, used for syncing
+	 */
+	final int id;
+	/**
+	 * The maximum progress of the part
+	 */
 	final float maxProgress;
+	/**
+	 * The speed at which the part closes, opening is always 1
+	 */
+	final float closingSpeed;
+	/**
+	 * Whether the part is opened
+	 */
+	boolean opened = false;
+	/**
+	 * The current progress of the part
+	 */
+	float progress = 0;
 
 	public MultiblockInteractablePart(float maxProgress)
 	{
 		this.maxProgress = maxProgress;
+		this.id = -1;
+		this.closingSpeed = 1;
+	}
+
+	public MultiblockInteractablePart(int id, float maxProgress, float closingSpeed)
+	{
+		this.id = id;
+		this.maxProgress = maxProgress;
+		this.closingSpeed = closingSpeed;
 	}
 
 	public float getProgress(float partialTicks)
 	{
-		return MathHelper.clamp(progress+(opened?partialTicks: -partialTicks), 0, maxProgress)/maxProgress;
+		return MathHelper.clamp(progress+(opened?partialTicks: -partialTicks*closingSpeed), 0, maxProgress)/maxProgress;
 	}
 
 	public void update()
 	{
-		this.progress = MathHelper.clamp(progress+(opened?1: -1), 0, maxProgress);
+		this.progress = MathHelper.clamp(progress+(opened?1: -closingSpeed), 0, maxProgress);
 	}
 
 	/**
@@ -93,5 +119,24 @@ public class MultiblockInteractablePart implements INBTSerializable<NBTTagCompou
 	public void deserializeNBT(NBTTagCompound nbt)
 	{
 		readFromNBT(nbt);
+	}
+
+	/**
+	 * @param state true if opened
+	 * @param part  the part ID
+	 * @param parts the parts to check
+	 * @return the part that changed state, or null if none did
+	 */
+	public static MultiblockInteractablePart setStates(boolean state, int part, MultiblockInteractablePart... parts)
+	{
+		for(MultiblockInteractablePart p : parts)
+			if(p.id==part)
+				return p.setState(state)?p: null;
+		return null;
+	}
+
+	public int getID()
+	{
+		return id;
 	}
 }

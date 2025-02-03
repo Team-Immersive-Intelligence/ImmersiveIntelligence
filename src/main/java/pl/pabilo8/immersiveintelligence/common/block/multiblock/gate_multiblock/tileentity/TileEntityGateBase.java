@@ -28,6 +28,7 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.gate_multiblock.multiblock.MultiblockFenceGateBase;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemUtil;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultiblockIIConnectable;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockInteractablePart;
@@ -49,6 +50,7 @@ import java.util.Objects;
  */
 public abstract class TileEntityGateBase<T extends TileEntityGateBase<T>> extends TileEntityMultiblockIIConnectable<T> implements IBooleanAnimatedPartsBlock, IPlayerInteraction, IUpgradeStorageMachine<TileEntityGateBase<T>>, IRedstoneConnector
 {
+	@SyncNBT
 	public MultiblockInteractablePart gate = new MultiblockInteractablePart(40);
 	protected MultiblockRedstoneNetwork<T> redstoneNetwork = new MultiblockRedstoneNetwork<>(((T)this));
 	protected UpgradeStorage<TileEntityGateBase<T>> upgradeStorage = new UpgradeStorage<>(this);
@@ -73,7 +75,6 @@ public abstract class TileEntityGateBase<T extends TileEntityGateBase<T>> extend
 
 		if(isDummy())
 			return;
-		this.gate.readFromNBT(nbt.getCompoundTag("gate"));
 		this.upgradeStorage.getUpgradesFromNBT(nbt.getCompoundTag("upgrades"));
 	}
 
@@ -84,7 +85,6 @@ public abstract class TileEntityGateBase<T extends TileEntityGateBase<T>> extend
 
 		if(isDummy())
 			return;
-		nbt.setTag("gate", this.gate.writeToNBT());
 		nbt.setTag("upgrades", this.upgradeStorage.saveUpgradesToNBT());
 	}
 

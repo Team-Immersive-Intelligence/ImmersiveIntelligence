@@ -8,8 +8,8 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
-import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonSwitch;
-import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiSliderII;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoSlider;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoSwitch;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.weapon.EmplacementWeapon.MachineUpgradeEmplacementWeapon;
@@ -27,8 +27,8 @@ import java.io.IOException;
  */
 public class GuiEmplacementPageStatus extends GuiEmplacement
 {
-	GuiButtonSwitch switchRSControl, switchDataControl, switchSendTarget;
-	GuiSliderII sliderRepair;
+	DecoSwitch switchRSControl, switchDataControl, switchSendTarget;
+	DecoSlider sliderRepair;
 
 	public GuiEmplacementPageStatus(EntityPlayer player, TileEntityEmplacement tile)
 	{
@@ -59,16 +59,16 @@ public class GuiEmplacementPageStatus extends GuiEmplacement
 		switchRSControl = addSwitch(112, 28, 80, IIReference.COLOR_H1, COLOR_IN, COLOR_OUT, tile.redstoneControl,
 				I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.emplacement.redstone_control"));
 		switchDataControl = addSwitch(112,
-				28+switchRSControl.getTextHeight(fontRenderer),
+				28+fontRenderer.FONT_HEIGHT,
 				80, IIReference.COLOR_H1, COLOR_IN, COLOR_OUT, tile.dataControl,
 				I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.emplacement.data_control"));
 		switchSendTarget = addSwitch(112,
-				28+switchRSControl.getTextHeight(fontRenderer)+switchDataControl.getTextHeight(fontRenderer),
+				28+2*fontRenderer.FONT_HEIGHT,
 				80, IIReference.COLOR_H1, COLOR_IN, COLOR_OUT, tile.sendAttackSignal,
 				I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.emplacement.send_attack_signal"));
 
 		sliderRepair = addSlider(116,
-				28+switchRSControl.getTextHeight(fontRenderer)+switchDataControl.getTextHeight(fontRenderer)+switchSendTarget.getTextHeight(fontRenderer)
+				28+3*fontRenderer.FONT_HEIGHT
 						+fontRenderer.getWordWrappedHeight(I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.emplacement.auto_repair_threshold"), 70),
 				80, IIReference.COLOR_H1, tile.autoRepairAmount,
 				I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.emplacement.auto_repair_threshold"));
@@ -79,7 +79,7 @@ public class GuiEmplacementPageStatus extends GuiEmplacement
 	protected void actionPerformed(GuiButton button) throws IOException
 	{
 		super.actionPerformed(button);
-		if(button instanceof GuiButtonSwitch)
+		if(button instanceof DecoSwitch)
 		{
 			syncDataToServer();
 		}
@@ -134,9 +134,9 @@ public class GuiEmplacementPageStatus extends GuiEmplacement
 		super.syncDataToServer();
 
 		IIPacketHandler.sendToServer(new MessageIITileSync(this.tile, EasyNBT.newNBT()
-				.withBoolean("redstoneControl", switchRSControl.state)
-				.withBoolean("dataControl", switchDataControl.state)
-				.withBoolean("sendAttackSignal", switchSendTarget.state)
+				.withBoolean("redstoneControl", switchRSControl.getState())
+				.withBoolean("dataControl", switchDataControl.getState())
+				.withBoolean("sendAttackSignal", switchSendTarget.getState())
 				.withFloat("autoRepairAmount", (float)sliderRepair.sliderValue)
 		));
 	}

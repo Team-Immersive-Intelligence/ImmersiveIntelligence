@@ -1,33 +1,34 @@
 package pl.pabilo8.immersiveintelligence.client.gui;
 
-import net.minecraft.nbt.NBTTagCompound;
+import blusunrize.immersiveengineering.api.DimensionBlockPos;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.ClientProxy;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 /**
  * @author Pabilo8
  * @since 05-07-2019
  */
+@SideOnly(Side.CLIENT)
 public interface ITabbedGui
 {
-	default boolean positionEqual(ClientProxy proxy, TileEntity tile)
+	default boolean positionEqual(TileEntity tile)
 	{
-		NBTTagCompound gdata = proxy.storedGuiData;
-		BlockPos p = tile.getPos();
-		if(gdata.hasKey("x")&&gdata.hasKey("y")&&gdata.hasKey("z")&&gdata.hasKey("dim"))
-		{
-			return p.getX()==gdata.getInteger("x")&&p.getY()==gdata.getInteger("y")&&p.getZ()==gdata.getInteger("z")&&tile.getWorld().provider.getDimension()==gdata.getInteger("dim");
-		}
-		return false;
+		assert ImmersiveIntelligence.proxy instanceof ClientProxy;
+		EasyNBT nbt = ((ClientProxy)ImmersiveIntelligence.proxy).getStoredGuiData();
+
+		if(!nbt.hasKey("pos"))
+			return false;
+		return new DimensionBlockPos(tile).equals(nbt.getDimPos("pos"));
 	}
 
-	default void saveBasicData(ClientProxy proxy, TileEntity tile)
+	default EasyNBT saveBasicData(TileEntity tile)
 	{
-		proxy.storedGuiData.setInteger("x", tile.getPos().getX());
-		proxy.storedGuiData.setInteger("y", tile.getPos().getY());
-		proxy.storedGuiData.setInteger("z", tile.getPos().getZ());
-		proxy.storedGuiData.setInteger("dim", tile.getWorld().provider.getDimension());
-
+		assert ImmersiveIntelligence.proxy instanceof ClientProxy;
+		return ((ClientProxy)ImmersiveIntelligence.proxy).setStoredGuiData()
+				.withDimPos("pos", new DimensionBlockPos(tile));
 	}
 }

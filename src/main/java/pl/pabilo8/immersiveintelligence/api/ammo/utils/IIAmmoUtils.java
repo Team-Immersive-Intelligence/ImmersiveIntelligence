@@ -369,7 +369,7 @@ public class IIAmmoUtils
 			//Ballistics section
 			CachedBallisticStats stats = AmmoBallisticsCache.get(ammo, stack);
 
-			tooltip.add(IIReference.COLOR_PRUSSIAN_BLUE.getHexCol(I18n.format(IIReference.DESC_BULLETS+"performance")));
+			tooltip.add(IIReference.COLOR_ENGINEERS_BLUE.getHexCol(I18n.format(IIReference.DESC_BULLETS+"performance")));
 			tooltip.add(I18n.format(IIReference.DESC_BULLETS+"damage_dealt", ammo.getDamage()*core.getDamageModifier()*coreType.getDamageMod()));
 			tooltip.add(I18n.format(IIReference.DESC_BULLETS+"standard_velocity", Utils.formatDouble(ammo.getVelocity(), "0.###")));
 
@@ -388,7 +388,7 @@ public class IIAmmoUtils
 						Utils.formatDouble(stats.getMaxDirectRange(), "0.##")));
 
 			//Penetration section
-			tooltip.add(IIReference.COLOR_PRUSSIAN_BLUE.getHexCol(I18n.format(IIReference.DESC_BULLETS+"armor_penetration")));
+			tooltip.add(IIReference.COLOR_ENGINEERS_BLUE.getHexCol(I18n.format(IIReference.DESC_BULLETS+"armor_penetration")));
 
 			//list of block penetration tests
 			listPenetratedAmount(tooltip, ammo, core, coreType, Blocks.GLASS, 0);

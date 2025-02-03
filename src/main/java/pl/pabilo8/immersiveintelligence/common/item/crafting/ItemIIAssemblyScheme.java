@@ -69,7 +69,7 @@ public class ItemIIAssemblyScheme extends ItemIIBase implements IAdvancedTooltip
 		}
 		if(ItemTooltipHandler.addExpandableTooltip(Keyboard.KEY_LCONTROL, descriptionKey+"info_hold2", tooltip))
 		{
-			tooltip.add(IIReference.COLOR_PRUSSIAN_BLUE.getHexCol(I18n.format(descriptionKey+"materials")));
+			tooltip.add(IIReference.COLOR_ENGINEERS_BLUE.getHexCol(I18n.format(descriptionKey+"materials")));
 			if(recipe!=null)
 				for(String tool : recipe.tools)
 					tooltip.add("   "+TextFormatting.GOLD+PrecisionAssemblerRecipe.getExampleToolStack(tool).getDisplayName());

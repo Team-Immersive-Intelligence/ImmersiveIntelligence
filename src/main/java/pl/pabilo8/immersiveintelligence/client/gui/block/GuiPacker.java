@@ -26,10 +26,10 @@ import pl.pabilo8.immersiveintelligence.api.PackerHandler;
 import pl.pabilo8.immersiveintelligence.api.PackerHandler.PackerActionType;
 import pl.pabilo8.immersiveintelligence.api.PackerHandler.PackerTask;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
-import pl.pabilo8.immersiveintelligence.client.gui.elements.GuiPackerTaskList;
-import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonDropdownList;
-import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonSwitch;
-import pl.pabilo8.immersiveintelligence.client.gui.elements.label.GuiLabelNoShadow;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiPackerTaskList;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoDropdown;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoSwitch;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoLabel;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityPacker;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerPacker;
@@ -57,8 +57,8 @@ public class GuiPacker extends GuiIEContainerBase
 	private GuiButtonIE buttonAdd, buttonRemove, buttonDuplicate, buttonClear, buttonSideInput, buttonSideOutput;
 	private GuiButtonState buttonRepeat;
 	private GuiPackerTaskList taskList;
-	private GuiButtonDropdownList putModeList;
-	private GuiButtonSwitch switchOreDict, switchNBT, switchDirection;
+	private DecoDropdown putModeList;
+	private DecoSwitch switchOreDict, switchNBT, switchDirection;
 	private GuiTextField textFieldAmount;
 
 	private final static IIColor COLOR_IN = IIColor.fromPackedRGB(0x4c7bb1), COLOR_OUT = IIColor.fromPackedRGB(0xffb515);
@@ -212,10 +212,8 @@ public class GuiPacker extends GuiIEContainerBase
 		{
 			//prevent resetting gui whilst dropping the list
 			saveGuiToTask(taskList.selectedOption);
-			if(!putModeList.dropped)
-			{
+			if(!putModeList.isDropped())
 				initGui();
-			}
 		}
 	}
 
@@ -310,20 +308,22 @@ public class GuiPacker extends GuiIEContainerBase
 		}
 	}
 
-	protected GuiButtonSwitch addSwitch(int x, int y, int textWidth, IIColor textColor, IIColor color1, IIColor color2, boolean state, String name, boolean firstTime)
+	protected DecoSwitch addSwitch(int x, int y, int textWidth, IIColor textColor, IIColor color1, IIColor color2, boolean state, String name, boolean firstTime)
 	{
-		return addButton(new GuiButtonSwitch(buttonList.size(), guiLeft+x, guiTop+y, textWidth, 8, 18, 9, 18, 52, state, TEXTURE_ICONS, textColor, color1, color2, name, firstTime));
+		return addButton(new DecoSwitch(buttonList.size(), guiLeft+x, guiTop+y, textWidth, 8, 18, 9, 18, 52, state, TEXTURE_ICONS, textColor, color1, color2, name, firstTime));
 	}
 
-	protected GuiLabelNoShadow addLabel(int x, int y, IIColor textColor, String... text)
+	protected DecoLabel addLabel(int x, int y, IIColor textColor, String... text)
 	{
 		return addLabel(x, y, 0, 0, textColor, text);
 	}
 
-	protected GuiLabelNoShadow addLabel(int x, int y, int w, int h, IIColor textColor, String... text)
+	protected DecoLabel addLabel(int x, int y, int w, int h, IIColor textColor, String... text)
 	{
-		GuiLabelNoShadow guiLabel = new GuiLabelNoShadow(this.fontRenderer, labelList.size(), guiLeft+x, guiTop+y, w, h, textColor);
-		Arrays.stream(text).forEachOrdered(guiLabel::addLine);
+		DecoLabel guiLabel = new DecoLabel(fontRenderer, guiLeft+x, guiTop+y)
+				.withSize(w, h)
+				.withTextColor(textColor)
+				.withText(text);
 		labelList.add(guiLabel);
 		return guiLabel;
 	}
@@ -386,18 +386,18 @@ public class GuiPacker extends GuiIEContainerBase
 			//save number
 			try {task.stack.inputSize = Integer.parseInt(gui.textFieldAmount.getText());} catch(
 					NumberFormatException ignored) {}
-			task.unpack = gui.switchDirection.state;
+			task.unpack = gui.switchDirection.getState();
 		}
 
 		public void initPage(PackerTask task)
 		{
 			gui.addLabel(88, 42, IIReference.COLOR_H1, "Mode:");
-			gui.putModeList = gui.addButton(new GuiButtonDropdownList(gui.buttonList.size(), gui.guiLeft+84+32+20, gui.guiTop+10+6+20, 112, 20,
+			gui.putModeList = gui.addButton(new DecoDropdown(gui.buttonList.size(), gui.guiLeft+84+32+20, gui.guiTop+10+6+20, 112, 20,
 					PackerHandler.PackerPutMode.values().length,
 					Arrays.stream(PackerHandler.PackerPutMode.values())
 							.map(PackerHandler.PackerPutMode::getName)
 							.toArray(String[]::new)));
-			gui.putModeList.setTranslationFunc(s -> I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.packer.mode."+s));
+//			gui.putModeList.withTranslationMethod(s -> I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.packer.mode."+s));
 			gui.putModeList.selectedEntry = task.mode.ordinal();
 
 			gui.addLabel(88, 54, IIReference.COLOR_H1, "Amount:");
@@ -488,14 +488,14 @@ public class GuiPacker extends GuiIEContainerBase
 			super.saveTask(task);
 			IngredientStack is = null;
 			ItemStack stack = gui.container.ghostSlot.getStack();
-			if(gui.switchOreDict.state&&!stack.isEmpty())
+			if(gui.switchOreDict.getState()&&!stack.isEmpty())
 			{
 				int[] oreIDs = OreDictionary.getOreIDs(stack);
 				if(oreIDs.length > 0)
 					is = new IngredientStack(OreDictionary.getOreName(oreIDs[0]));
 			}
 			task.stack = is==null?(stack.isEmpty()?new IngredientStack("*"): new IngredientStack(stack)): is;
-			task.stack.useNBT = gui.switchNBT.state;
+			task.stack.useNBT = gui.switchNBT.getState();
 		}
 
 		@Override

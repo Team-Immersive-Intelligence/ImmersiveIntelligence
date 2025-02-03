@@ -1,0 +1,28 @@
+{
+	"origins": {
+		"mess_basic": [-0.8972, 4, 8.53633],
+		"mb_book_holder": [-8.5, 4.25, 11.875],
+		"mb_book_left": [-8.25, 5.5, 16],
+		"mb_book_right": [-8.5, 5.5, 16],
+		"mb_cup": [1.69901, 2.68182, 5.41037],
+		"mb_pen": [3, 0.5, 10],
+		"mb_penholder": [6.43832, 1.5, 11.97361],
+		"mb_holder_pens": [6.40282, 3.49606, 12.14185],
+		"mb_book1": [10.69884, 1, 5.37971],
+		"mb_book2": [10.69884, 3, 5.37971],
+		"mess_upgraded": [13.375, 20.10989, -16.30264],
+		"drawer": [2, 11, -20],
+		"door": [0, 32, 15.5]
+	},
+	"hierarchy": {
+		"mb_book_holder": "mess_basic",
+		"mb_book_left": "mb_book_holder",
+		"mb_book_right": "mb_book_holder",
+		"mb_cup": "mess_basic",
+		"mb_pen": "mess_basic",
+		"mb_penholder": "mess_basic",
+		"mb_holder_pens": "mb_penholder",
+		"mb_book1": "mess_basic",
+		"mb_book2": "mess_basic"
+	}
+}

@@ -179,7 +179,7 @@ item.immersiveintelligence.circuit_functional.cryptographer.name=Cryptographer C
 
 item.immersiveintelligence.minecart.wooden_crate.name=Minecart with Wooden Crate
 item.immersiveintelligence.minecart.reinforced_crate.name=Minecart with Reinforced Crate
-item.immersiveintelligence.minecart.steel_crate.name=Minecart with Steel Crate
+item.immersiveintelligence.minecart.steel_crate.name=Minecart with Metal Crate
 item.immersiveintelligence.minecart.wooden_barrel.name=Minecart with Wooden Barrel
 item.immersiveintelligence.minecart.metal_barrel.name=Minecart with Metal Barrel
 item.immersiveintelligence.minecart.capacitor_lv.name=Minecart with LV Capacitor
@@ -605,7 +605,7 @@ item.immersiveintelligence.ammo_casing.naval_mine.name=Naval Mine Casing
 
 tile.immersiveintelligence.stone_decoration.sandbags.name=Sandbags
 
-tile.immersiveintelligence.metal_device.metal_crate.name=Steel Crate
+tile.immersiveintelligence.metal_device.metal_crate.name=Metal Crate
 tile.immersiveintelligence.metal_device.small_data_buffer.name=Small Data Buffer
 tile.immersiveintelligence.metal_device.item_buffer.name=Item Buffer
 tile.immersiveintelligence.metal_device.timed_buffer.name=Timed Buffer
@@ -999,7 +999,7 @@ subtitle.immersiveintelligence.gate_close=Gate Closing
 
 entity.minecart_wooden_crate.name=Minecart with Wooden Crate
 entity.minecart_reinforced_crate.name=Minecart with Reinforced Crate
-entity.minecart_steel_crate.name=Minecart with Steel Crate
+entity.minecart_steel_crate.name=Minecart with Metal Crate
 entity.minecart_wooden_barrel.name=Minecart with Wooden Barrel
 entity.minecart_metal_barrel.name=Minecart with Metal Barrel
 entity.minecart_capacitor_lv.name=Minecart with LV Capacitor
@@ -2029,6 +2029,13 @@ datasystem.immersiveintelligence.function.entity_get_dimension_id.param.entity=E
 datasystem.immersiveintelligence.function.entity_get_dimension_id.param.entity.desc=The entity to get the dimension ID of
 datasystem.immersiveintelligence.function.entity_get_dimension_id.result=Dimension ID
 datasystem.immersiveintelligence.function.entity_get_dimension_id.result.desc=The dimension ID of the input entity
+
+datasystem.immersiveintelligence.function.entity_get_pos=Get Position
+datasystem.immersiveintelligence.function.entity_get_pos.desc=Returns the 3D position of the input entity
+datasystem.immersiveintelligence.function.entity_get_pos.param.entity=Entity
+datasystem.immersiveintelligence.function.entity_get_pos.param.entity.desc=The entity to get the position of
+datasystem.immersiveintelligence.function.entity_get_pos.result=Position
+datasystem.immersiveintelligence.function.entity_get_pos.result.desc=The position of the input entity
 
 datasystem.immersiveintelligence.function.entity_get_x=Get X
 datasystem.immersiveintelligence.function.entity_get_x.desc=Returns the X coordinate of the input entity

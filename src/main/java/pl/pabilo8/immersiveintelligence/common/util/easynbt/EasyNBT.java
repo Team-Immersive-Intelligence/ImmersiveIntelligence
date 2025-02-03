@@ -552,6 +552,20 @@ public class EasyNBT extends Constants.NBT
 	}
 
 	/**
+	 * Checks if all tags exist
+	 *
+	 * @param keys tag names
+	 */
+	public boolean hasKey(String... keys)
+	{
+		for(String k : keys)
+			if(!wrapped.hasKey(k))
+				return false;
+		return true;
+	}
+
+
+	/**
 	 * Checks if a tag exists
 	 *
 	 * @param key name of this tag

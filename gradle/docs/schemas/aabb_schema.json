@@ -61,6 +61,19 @@
         ]
       }
     },
+    "rotations": {
+      "type": "object",
+      "description": "Stores relative rotations of multiblock POIs, used for determining port directions.",
+      "additionalProperties": {
+        "anyOf": [
+          {
+            "type": "string",
+            "description": "Rotation of this POI in multiblock",
+            "enum": ["none", "clockwise_90", "clockwise_180", "counterclockwise_90"]
+          }
+        ]
+      }
+    },
     "tactile": {
       "type": "object",
       "description": "Stores AMT Tactiles information. One AMT group can have multiple Tactiles."

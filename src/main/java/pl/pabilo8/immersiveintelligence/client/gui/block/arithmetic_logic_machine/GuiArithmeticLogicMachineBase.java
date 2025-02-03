@@ -22,10 +22,10 @@ import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.ClientProxy;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.ITabbedGui;
-import pl.pabilo8.immersiveintelligence.client.gui.elements.GuiWidgetManualWrapper;
-import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonItemAdvanced;
-import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonTab;
-import pl.pabilo8.immersiveintelligence.client.gui.elements.label.GuiLabelNoShadow;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoButton;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoTab;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoLabel;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.widget.GuiWidgetManualWrapper;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityArithmeticLogicMachine;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerArithmeticLogicMachine.CircuitSlot;
@@ -104,10 +104,10 @@ public class GuiArithmeticLogicMachineBase extends GuiIEContainerBase implements
 		if(trueManual==null||trueManual instanceof GuiWidgetManualWrapper)
 			trueManual = new GuiManual(ManualHelper.getManual(), ManualHelper.getManual().texture);
 
-		sideManual = new GuiWidgetManualWrapper(trueManual, guiLeft+xSize-20, guiTop, proxy.storedGuiData.getBoolean("manual"));
+		sideManual = new GuiWidgetManualWrapper(trueManual, guiLeft+xSize-20, guiTop, proxy.getStoredGuiData().getBoolean("manual"));
 
 		manualButton = addButton(new GuiButtonState(buttonList.size(),
-				0, guiTop+56, 32, 18, "", proxy.storedGuiData.getBoolean("manual"), TEXTURE_STORAGE.toString(), 176, 48, -1));
+				0, guiTop+56, 32, 18, "", proxy.getStoredGuiData().getBoolean("manual"), TEXTURE_STORAGE.toString(), 176, 48, -1));
 
 	}
 
@@ -230,7 +230,7 @@ public class GuiArithmeticLogicMachineBase extends GuiIEContainerBase implements
 	protected void addTab(IIGuiList gui, String name)
 	{
 		final int vOffset = TABS.size()*24;
-		GuiButtonTab button = new GuiButtonTab(buttonList.size(), guiLeft-28, guiTop+4+vOffset, 28, 24, thisGui==gui?204: 176, vOffset,
+		DecoTab button = new DecoTab(buttonList.size(), guiLeft-28, guiTop+4+vOffset, 28, 24, thisGui==gui?204: 176, vOffset,
 				TEXTURE_STORAGE, I18n.format(IIReference.DESCRIPTION_KEY+name));
 		TABS.put(button, gui);
 		addButton(button);
@@ -241,8 +241,9 @@ public class GuiArithmeticLogicMachineBase extends GuiIEContainerBase implements
 		final int vOffset = TABS.size()*24;
 		if(!handler.getStackInSlot(slot).isEmpty())
 		{
-			GuiButtonItemAdvanced button = new GuiButtonItemAdvanced(buttonList.size(), guiLeft-28, guiTop+4+vOffset, 28, 24, TEXTURE_STORAGE,
-					thisGui==gui?204: 176, 24, handler.getStackInSlot(slot), 6, 2);
+			DecoButton button = new DecoButton(guiLeft-28, guiTop+4+vOffset)
+					.withSize(28, 24)
+					.withIcon(handler.getStackInSlot(slot));
 			TABS.put(button, gui);
 			addButton(button);
 		}
@@ -257,7 +258,9 @@ public class GuiArithmeticLogicMachineBase extends GuiIEContainerBase implements
 	{
 		GuiLabel guiLabel =
 				shadow?new GuiLabel(this.fontRenderer, labelList.size(), guiLeft+x, guiTop+y, w, h, textColor.getPackedRGB()):
-						new GuiLabelNoShadow(this.fontRenderer, labelList.size(), guiLeft+x, guiTop+y, w, h, textColor);
+						new DecoLabel(this.fontRenderer, guiLeft+x, guiTop+y)
+								.withSize(w, h)
+								.withTextColor(textColor);
 		Arrays.stream(text).forEachOrdered(guiLabel::addLine);
 		labelList.add(guiLabel);
 		return guiLabel;
@@ -265,8 +268,8 @@ public class GuiArithmeticLogicMachineBase extends GuiIEContainerBase implements
 
 	public void saveBasicData()
 	{
-		ITabbedGui.super.saveBasicData(proxy, tile);
-		proxy.storedGuiData.setBoolean("manual", manualButton.state);
+		ITabbedGui.super.saveBasicData(tile);
+//		proxy.storedGuiData.setBoolean("manual", manualButton.state);
 	}
 
 	protected static IIGuiList getPage(int page)

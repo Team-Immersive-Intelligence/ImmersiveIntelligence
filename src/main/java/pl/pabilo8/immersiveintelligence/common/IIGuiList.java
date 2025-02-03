@@ -1,11 +1,16 @@
 package pl.pabilo8.immersiveintelligence.common;
 
+import blusunrize.immersiveengineering.common.blocks.TileEntityIEBase;
+import blusunrize.immersiveengineering.common.util.inventory.IIEInventory;
+import mezz.jei.api.IModRegistry;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.Optional.Method;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.utils.IUpgradableMachine;
@@ -21,6 +26,10 @@ import pl.pabilo8.immersiveintelligence.client.gui.block.data_input_machine.GuiD
 import pl.pabilo8.immersiveintelligence.client.gui.block.emplacement.GuiEmplacementPageStatus;
 import pl.pabilo8.immersiveintelligence.client.gui.block.emplacement.GuiEmplacementPageStorage;
 import pl.pabilo8.immersiveintelligence.client.gui.block.emplacement.GuiEmplacementPageTasks;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui.DecoResourcesLoader;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoResource;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoTemplate;
 import pl.pabilo8.immersiveintelligence.client.gui.item.GuiCasingPouch;
 import pl.pabilo8.immersiveintelligence.client.gui.item.GuiPrintedPage;
 import pl.pabilo8.immersiveintelligence.common.block.data_device.tileentity.TileEntityDataMerger;
@@ -36,11 +45,18 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multibloc
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.tileentity.TileEntitySkyCrateStation;
 import pl.pabilo8.immersiveintelligence.common.block.rotary_device.tileentity.TileEntityGearbox;
 import pl.pabilo8.immersiveintelligence.common.block.simple.tileentity.TileEntitySmallCrate;
+import pl.pabilo8.immersiveintelligence.common.compat.jei.gui_handlers.JeiDecoGuiHandler;
 import pl.pabilo8.immersiveintelligence.common.gui.*;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerEmplacement.ContainerEmplacementStorage;
+import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
+import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIBase;
 import pl.pabilo8.immersiveintelligence.common.util.lambda.TriFunction;
 
 import javax.annotation.Nonnull;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.BiFunction;
 
 /**
@@ -51,7 +67,7 @@ import java.util.function.BiFunction;
 public enum IIGuiList
 {
 	GUI_METAL_CRATE(TileEntityMetalCrate.class,
-			ContainerMetalCrate::new
+			ContainerIICrate::new
 	),
 	GUI_AMMUNITION_CRATE(TileEntityAmmunitionCrate.class,
 			ContainerAmmunitionCrate::new
@@ -64,7 +80,7 @@ public enum IIGuiList
 	),
 
 	GUI_SMALL_CRATE(TileEntitySmallCrate.class,
-			ContainerSmallCrate::new
+			ContainerIICrate::new
 	),
 
 	GUI_SKYCRATE_STATION(TileEntitySkyCrateStation.class,
@@ -203,6 +219,9 @@ public enum IIGuiList
 	public BiFunction<EntityPlayer, TileEntity, GuiScreen> guiFromTile;
 	@SideOnly(Side.CLIENT)
 	public TriFunction<EntityPlayer, ItemStack, EnumHand, GuiScreen> guiFromStack;
+	//Required for JEI
+	@SideOnly(Side.CLIENT)
+	public Class<? extends DecoGui<?, ?>> guiClass;
 
 	/**
 	 * TileEntity GUI constructor
@@ -244,8 +263,11 @@ public enum IIGuiList
 		IIGuiList.GUI_PACKER.setClientGui(GuiPacker::new);
 		IIGuiList.GUI_GEARBOX.setClientGui(GuiGearbox::new);
 
-		IIGuiList.GUI_DATA_REDSTONE_INTERFACE_DATA.setClientGui(GuiDataRedstoneInterfaceData::new);
-		IIGuiList.GUI_DATA_REDSTONE_INTERFACE_REDSTONE.setClientGui(GuiDataRedstoneInterfaceRedstone::new);
+		IIGuiList.GUI_DATA_REDSTONE_INTERFACE_DATA
+				.setClientGui(GuiDataRedstoneInterfaceData.class, GuiDataRedstoneInterfaceData::new);
+		IIGuiList.GUI_DATA_REDSTONE_INTERFACE_REDSTONE
+				.setClientGui(GuiDataRedstoneInterfaceRedstone::new);
+
 		IIGuiList.GUI_PRINTING_PRESS.setClientGui(GuiPrintingPress::new);
 		IIGuiList.GUI_CHEMICAL_BATH.setClientGui(GuiChemicalBath::new);
 		IIGuiList.GUI_ELECTROLYZER.setClientGui(GuiElectrolyzer::new);
@@ -294,9 +316,56 @@ public enum IIGuiList
 	}
 
 	@SideOnly(Side.CLIENT)
+	@Method(modid = "jei")
+	public static void registerDecoJEICompat(IModRegistry registry)
+	{
+		for(IIGuiList gui : values())
+			if(gui.guiClass!=null)
+				registry.addAdvancedGuiHandlers(new JeiDecoGuiHandler<>(gui));
+	}
+
+	@SideOnly(Side.CLIENT)
 	public <T extends TileEntity> void setClientGui(BiFunction<EntityPlayer, T, GuiScreen> guiFromTile)
 	{
 		this.guiFromTile = (player, tileEntity) -> guiFromTile.apply(player, (T)tileEntity);
+	}
+
+	@SideOnly(Side.CLIENT)
+	public <T extends TileEntityIEBase & IIEInventory, C extends ContainerIIBase<T>> void setClientGui(
+			Class<? extends DecoGui<T, C>> klass, BiFunction<EntityPlayer, T, DecoGui<T, C>> guiFromTile)
+	{
+		this.guiFromTile = (player, tileEntity) -> guiFromTile.apply(player, (T)tileEntity);
+		this.guiClass = klass;
+		DecoTemplate annotation = klass.getAnnotation(DecoTemplate.class);
+		if(annotation==null)
+		{
+			IILogger.error("GUI class "+klass.getName()+" is missing @DecoTemplate annotation!");
+			return;
+		}
+
+		List<ResLoc> resources = new ArrayList<>();
+		for(Field field : klass.getFields())
+		{
+			if(field.isAnnotationPresent(DecoResource.class)&&Modifier.isStatic(field.getModifiers()))
+			{
+				try
+				{
+					Object value = field.get(null);
+					if(value instanceof ResLoc)
+						resources.add(((ResLoc)value));
+					else if(value instanceof ResourceLocation)
+						resources.add(ResLoc.of((ResourceLocation)value));
+					else if(value instanceof String)
+						resources.add(ResLoc.of((String)value));
+				} catch(IllegalAccessException e)
+				{
+					IILogger.error("Failed to access field "+field.getName()+" in class "+klass.getName(), e);
+				}
+			}
+		}
+		if(!resources.isEmpty())
+			new DecoResourcesLoader(annotation.name(), resources);
+
 	}
 
 	@SideOnly(Side.CLIENT)

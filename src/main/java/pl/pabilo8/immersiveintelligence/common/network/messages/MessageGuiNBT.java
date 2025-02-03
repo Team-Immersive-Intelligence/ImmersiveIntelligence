@@ -21,25 +21,13 @@ import pl.pabilo8.immersiveintelligence.common.network.IIMessage;
 public class MessageGuiNBT extends IIMessage
 {
 	//Used in changing tabs in guis (its being sent to server only)
-	private int id;
+	private IIGuiList id;
 	private BlockPos pos;
-
-	public MessageGuiNBT(int id, BlockPos pos)
-	{
-		//The number of the opened gui
-		this.id = id;
-		this.pos = pos;
-	}
 
 	public MessageGuiNBT(IIGuiList id, TileEntity te)
 	{
-		this(id.ordinal(), te.getPos());
-	}
-
-	@Deprecated
-	public MessageGuiNBT(IIGuiList id, BlockPos pos)
-	{
-		this(id.ordinal(), pos);
+		this.id = id;
+		this.pos = te.getPos();
 	}
 
 	public MessageGuiNBT()
@@ -52,7 +40,7 @@ public class MessageGuiNBT extends IIMessage
 	{
 		TileEntity te;
 		if(handler.player!=null&&world.isBlockLoaded(pos)&&(te = world.getTileEntity(pos)) instanceof IGuiTile)
-			ImmersiveIntelligence.proxy.onServerGuiChangeRequest(te, id, handler.player);
+			ImmersiveIntelligence.proxy.onServerGuiChangeRequest(te, id.ordinal(), handler.player);
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -65,14 +53,14 @@ public class MessageGuiNBT extends IIMessage
 	@Override
 	public void toBytes(ByteBuf buf)
 	{
-		buf.writeInt(this.id);
+		writeEnum(buf, id);
 		writePos(buf, pos);
 	}
 
 	@Override
 	public void fromBytes(ByteBuf buf)
 	{
-		this.id = buf.readInt();
+		this.id = readEnum(buf, IIGuiList.class);
 		this.pos = readPos(buf);
 	}
 }

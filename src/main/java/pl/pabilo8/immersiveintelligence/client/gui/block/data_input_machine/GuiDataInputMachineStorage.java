@@ -45,9 +45,9 @@ public class GuiDataInputMachineStorage extends GuiDataInputMachineBase
 	}
 
 	@Override
-	public void drawScreen(int mx, int my, float partial)
+	public void drawScreen(int mx, int my, float partialTicks)
 	{
-		super.drawScreen(mx, my, partial);
+		super.drawScreen(mx, my, partialTicks);
 
 	}
 

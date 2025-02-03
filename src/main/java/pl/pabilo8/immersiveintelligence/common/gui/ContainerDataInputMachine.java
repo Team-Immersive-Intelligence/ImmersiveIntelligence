@@ -1,14 +1,11 @@
 package pl.pabilo8.immersiveintelligence.common.gui;
 
 import blusunrize.immersiveengineering.common.gui.ContainerIEBase;
-import blusunrize.immersiveengineering.common.gui.IESlot;
 import blusunrize.immersiveengineering.common.gui.IESlot.Output;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityDataInputMachine;
+import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIBase.FilteredDataInput;
 
 /**
  * @author Pabilo8
@@ -37,17 +34,4 @@ public class ContainerDataInputMachine extends ContainerIEBase<TileEntityDataInp
 			addSlotToContainer(new Slot(player.inventory, i, 8+i*18, 199));
 	}
 
-	public static class FilteredDataInput extends IESlot
-	{
-		public FilteredDataInput(Container container, IInventory inv, int id, int x, int y)
-		{
-			super(container, inv, id, x, y);
-		}
-
-		@Override
-		public boolean isItemValid(ItemStack stack)
-		{
-			return TileEntityDataInputMachine.dataOperations.keySet().stream().anyMatch(p -> p.test(stack));
-		}
-	}
 }

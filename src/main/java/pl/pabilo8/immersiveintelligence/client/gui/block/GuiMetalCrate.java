@@ -1,28 +1,33 @@
 package pl.pabilo8.immersiveintelligence.client.gui.block;
 
-import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
-import org.lwjgl.opengl.GL11;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundBuilder.SlotStyle;
+import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.TileEntityMetalCrate;
+import pl.pabilo8.immersiveintelligence.common.gui.ContainerIICrate;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 /**
  * @author Pabilo8
  * @since 2019-05-17
  */
-public class GuiMetalCrate extends blusunrize.immersiveengineering.client.gui.GuiCrate
+public class GuiMetalCrate extends DecoGui<TileEntityMetalCrate, ContainerIICrate<TileEntityMetalCrate>>
 {
 	public GuiMetalCrate(EntityPlayer player, TileEntityMetalCrate tile)
 	{
-		super(player.inventory, tile);
+		super(player, tile, IIGuiList.GUI_METAL_CRATE);
 	}
 
 	@Override
-	protected void drawGuiContainerBackgroundLayer(float f, int mx, int my)
+	public void onInit()
 	{
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		ClientUtils.bindTexture(ImmersiveIntelligence.MODID+":textures/gui/metal_crate.png");
-		this.drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
+		startBackground()
+				.withBox(IIReference.GUI_BG_STEEL, 0, 0, 176, 76)
+				.withTitleBar(tile)
+				.withBox(IIReference.GUI_BG_WOODEN, 0, 76, 176, 92)
+				.withInventorySlots(SlotStyle.VANILLA, container.inventorySlots)
+				.withInventoryTitleBar()
+				.build();
 	}
 }

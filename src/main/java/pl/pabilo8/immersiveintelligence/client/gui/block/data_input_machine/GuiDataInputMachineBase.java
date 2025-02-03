@@ -13,6 +13,7 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
@@ -23,10 +24,9 @@ import pl.pabilo8.immersiveintelligence.client.ClientProxy;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.IDataMachineGui;
 import pl.pabilo8.immersiveintelligence.client.gui.ITabbedGui;
-import pl.pabilo8.immersiveintelligence.client.gui.elements.GuiWidgetManualWrapper;
-import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonTab;
-import pl.pabilo8.immersiveintelligence.client.gui.elements.label.GuiLabelNoShadow;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.DataInputMachine;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoTab;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoLabel;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.widget.GuiWidgetManualWrapper;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityDataInputMachine;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerDataInputMachine;
@@ -42,7 +42,6 @@ import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 
 /**
@@ -62,7 +61,7 @@ public class GuiDataInputMachineBase extends GuiIEContainerBase implements ITabb
 	protected static final ResourceLocation TEXTURE_EDIT = new ResourceLocation(ImmersiveIntelligence.MODID+":textures/gui/data_input_machine_editing.png");
 	protected static final ResourceLocation TEXTURE_VARIABLES = new ResourceLocation(ImmersiveIntelligence.MODID+":textures/gui/data_input_machine.png");
 	private final IIGuiList thisGui;
-	public final LinkedHashMap<GuiButtonTab, IIGuiList> TABS = new LinkedHashMap<>();
+	public final LinkedHashMap<DecoTab, IIGuiList> TABS = new LinkedHashMap<>();
 	protected String title = I18n.format("tile.immersiveintelligence.metal_multiblock.data_input_machine.name");
 	private final ResourceLocation thisTexture;
 
@@ -115,10 +114,10 @@ public class GuiDataInputMachineBase extends GuiIEContainerBase implements ITabb
 		if(trueManual==null||trueManual instanceof GuiWidgetManualWrapper)
 			trueManual = new GuiManual(ManualHelper.getManual(), ManualHelper.getManual().texture);
 
-		sideManual = new GuiWidgetManualWrapper(trueManual, guiLeft+xSize-20, guiTop, proxy.storedGuiData.getBoolean("manual"));
+		sideManual = new GuiWidgetManualWrapper(trueManual, guiLeft+xSize-20, guiTop, proxy.getStoredGuiData().getBoolean("manual"));
 
 		manualButton = addButton(new GuiButtonState(buttonList.size(),
-				0, guiTop+56, 32, 18, "", proxy.storedGuiData.getBoolean("manual"), TEXTURE_STORAGE.toString(), 176, 96, -1));
+				0, guiTop+56, 32, 18, "", proxy.getStoredGuiData().getBoolean("manual"), TEXTURE_STORAGE.toString(), 176, 96, -1));
 
 		sendPacketButton = addButton(new GuiButtonIE(buttonList.size(), guiLeft-28, guiTop+98, 28, 24, "", TEXTURE_STORAGE.toString(), 176, 114))
 				.setHoverOffset(28, 0);
@@ -137,11 +136,11 @@ public class GuiDataInputMachineBase extends GuiIEContainerBase implements ITabb
 			IIPacketHandler.sendToServer(new MessageIITileSync(tile, EasyNBT.newNBT().withBoolean("send_packet", true)));
 		}
 		else if(button==manualButton)
-			saveBasicData();
-		else if(button instanceof GuiButtonTab)
+			saveBasicData(tile);
+		else if(button instanceof DecoTab)
 		{
 			syncDataToServer();
-			saveBasicData();
+			saveBasicData(tile);
 			preparedForChange = true;
 			IIPacketHandler.sendToServer(new MessageGuiNBT(TABS.get(button), tile));
 		}
@@ -172,11 +171,11 @@ public class GuiDataInputMachineBase extends GuiIEContainerBase implements ITabb
 	}
 
 	@Override
-	public void drawScreen(int mx, int my, float partial)
+	public void drawScreen(int mx, int my, float partialTicks)
 	{
-		super.drawScreen(mx, my, partial);
+		super.drawScreen(mx, my, partialTicks);
 
-		drawPunchtapeProgress();
+		drawPunchtapeProgress(partialTicks);
 
 		ArrayList<String> tooltip = getTooltip(mx, my);
 		if(!tooltip.isEmpty())
@@ -189,7 +188,9 @@ public class GuiDataInputMachineBase extends GuiIEContainerBase implements ITabb
 	public ArrayList<String> getTooltip(int mx, int my)
 	{
 		ArrayList<String> tooltip = new ArrayList<>();
-		TABS.keySet().stream().filter(GuiButtonTab::isMouseOver).findFirst().ifPresent(tab -> tooltip.add(tab.displayString));
+
+		//TODO: 12.01.2025 tooltips
+//		TABS.keySet().stream().filter(DecoTab::isMouseOver).findFirst().ifPresent(tab -> tooltip.add(tab.displayString));
 		if(this.sendPacketButton.isMouseOver())
 			tooltip.add(I18n.format(IIReference.DESCRIPTION_KEY+"variable_send_packet"));
 		else if(this.manualButton.isMouseOver())
@@ -200,12 +201,15 @@ public class GuiDataInputMachineBase extends GuiIEContainerBase implements ITabb
 	/**
 	 * Draw the punchcard progress bar
 	 */
-	private void drawPunchtapeProgress()
+	private void drawPunchtapeProgress(float partialTicks)
 	{
+		if(tile.currentProcess==null)
+			return;
+
 		IIClientUtils.bindTexture(TEXTURE_STORAGE);
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		GlStateManager.disableLighting();
-		this.drawTexturedModalRect(guiLeft+5, guiTop+44, 176, 48, 16, Math.round(48*(tile.productionProgress/DataInputMachine.timePunchtapeProduction)));
+		this.drawTexturedModalRect(guiLeft+5, guiTop+44, 176, 48, 16, Math.round(48*tile.getProductionProgress(tile.currentProcess, partialTicks)));
 
 	}
 
@@ -269,7 +273,7 @@ public class GuiDataInputMachineBase extends GuiIEContainerBase implements ITabb
 	protected void addTab(IIGuiList gui, String name)
 	{
 		final int vOffset = TABS.size()*24;
-		GuiButtonTab button = new GuiButtonTab(buttonList.size(), guiLeft-28, guiTop+4+vOffset, 28, 24, thisGui==gui?204: 176, vOffset,
+		DecoTab button = new DecoTab(buttonList.size(), guiLeft-28, guiTop+4+vOffset, 28, 24, thisGui==gui?204: 176, vOffset,
 				TEXTURE_STORAGE, I18n.format(IIReference.DESCRIPTION_KEY+name));
 		TABS.put(button, gui);
 		addButton(button);
@@ -280,20 +284,23 @@ public class GuiDataInputMachineBase extends GuiIEContainerBase implements ITabb
 		return addLabel(x, y, 0, 0, false, textColor, text);
 	}
 
-	protected GuiLabel addLabel(int x, int y, int w, int h, boolean shadow, IIColor textColor, String... text)
+
+	protected DecoLabel addLabel(int x, int y, int w, int h, boolean shadow, IIColor textColor, String... text)
 	{
-		GuiLabel guiLabel =
-				shadow?new GuiLabel(this.fontRenderer, labelList.size(), guiLeft+x, guiTop+y, w, h, textColor.getPackedRGB()):
-						new GuiLabelNoShadow(this.fontRenderer, labelList.size(), guiLeft+x, guiTop+y, w, h, textColor);
-		Arrays.stream(text).forEachOrdered(guiLabel::addLine);
+		DecoLabel guiLabel = new DecoLabel(fontRenderer, guiLeft+x, guiTop+y)
+				.withSize(w, h)
+				.withTextShadow(shadow)
+				.withTextColor(textColor)
+				.withText(text);
 		labelList.add(guiLabel);
 		return guiLabel;
 	}
 
-	public void saveBasicData()
+	@Override
+	public EasyNBT saveBasicData(TileEntity tile)
 	{
-		ITabbedGui.super.saveBasicData(proxy, tile);
-		proxy.storedGuiData.setBoolean("manual", manualButton.state);
+		return ITabbedGui.super.saveBasicData(tile)
+				.withBoolean("manual", manualButton.state);
 	}
 
 	@Override
@@ -303,10 +310,10 @@ public class GuiDataInputMachineBase extends GuiIEContainerBase implements ITabb
 			list.setVariable(c, type);
 
 		//Save gui scroll, tile pos for validation
-		saveBasicData();
+		saveBasicData(tile);
 		syncDataToServer();
 
-		proxy.storedGuiData.setString("variableToEdit", String.valueOf(c));
+		proxy.getStoredGuiData().withString("variableToEdit", String.valueOf(c));
 		//Set variable and change gui
 		refreshStoredData();
 		syncDataToServer();

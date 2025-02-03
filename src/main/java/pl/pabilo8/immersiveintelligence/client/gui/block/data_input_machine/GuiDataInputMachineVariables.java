@@ -6,14 +6,16 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.tileentity.TileEntity;
 import org.apache.commons.lang3.ArrayUtils;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
-import pl.pabilo8.immersiveintelligence.client.gui.elements.GuiDataVariableList;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiDataVariableList;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityDataInputMachine;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageGuiNBT;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
@@ -39,10 +41,12 @@ public class GuiDataInputMachineVariables extends GuiDataInputMachineBase
 	{
 		super.initGui();
 		variableList = addButton(new GuiDataVariableList(buttonList.size(), guiLeft+32, guiTop+12, 128+11, 114, tile.storedData));
-		if(positionEqual(proxy, tile))
+		if(positionEqual(tile))
 		{
-			if(proxy.storedGuiData.hasKey("scrollPercent"))
-				variableList.setScrollPercent(proxy.storedGuiData.getFloat("scrollPercent"));
+
+
+			if(proxy.getStoredGuiData().hasKey("scrollPercent"))
+				variableList.setScrollPercent(proxy.getStoredGuiData().getFloat("scrollPercent"));
 		}
 	}
 
@@ -59,13 +63,13 @@ public class GuiDataInputMachineVariables extends GuiDataInputMachineBase
 					if(!list.variables.containsKey(c))
 					{
 						//Save gui scroll, tile pos for validation
-						saveBasicData();
-						proxy.storedGuiData.setString("variableToEdit", String.valueOf(c));
+						saveBasicData(tile);
+						proxy.getStoredGuiData().withString("variableToEdit", String.valueOf(c));
 						//Set variable and change gui
 						refreshStoredData();
 						syncDataToServer();
 
-						preparedForChange=true;
+						preparedForChange = true;
 						IIPacketHandler.sendToServer(new MessageGuiNBT(IIGuiList.GUI_DATA_INPUT_MACHINE_EDIT, tile));
 
 						break;
@@ -76,8 +80,8 @@ public class GuiDataInputMachineVariables extends GuiDataInputMachineBase
 			{
 				refreshStoredData();
 				syncDataToServer();
-				saveBasicData();
-				proxy.storedGuiData.setString("variableToEdit",
+				saveBasicData(tile);
+				proxy.getStoredGuiData().withString("variableToEdit",
 						String.valueOf(tile.storedData.variables.keySet()
 								.stream()
 								.sorted(Comparator.comparingInt(o -> ArrayUtils.indexOf(DataPacket.varCharacters, o)))
@@ -88,7 +92,7 @@ public class GuiDataInputMachineVariables extends GuiDataInputMachineBase
 				refreshStoredData();
 				syncDataToServer();
 
-				preparedForChange=true;
+				preparedForChange = true;
 				IIPacketHandler.sendToServer(new MessageGuiNBT(IIGuiList.GUI_DATA_INPUT_MACHINE_EDIT, tile));
 			}
 			else if(variableList.delete)
@@ -106,9 +110,9 @@ public class GuiDataInputMachineVariables extends GuiDataInputMachineBase
 	}
 
 	@Override
-	public void drawScreen(int mx, int my, float partial)
+	public void drawScreen(int mx, int my, float partialTicks)
 	{
-		super.drawScreen(mx, my, partial);
+		super.drawScreen(mx, my, partialTicks);
 		GlStateManager.enableBlend();
 
 		ArrayList<String> tooltip = new ArrayList<>();
@@ -134,9 +138,9 @@ public class GuiDataInputMachineVariables extends GuiDataInputMachineBase
 	}
 
 	@Override
-	public void saveBasicData()
+	public EasyNBT saveBasicData(TileEntity tile)
 	{
-		super.saveBasicData();
-		proxy.storedGuiData.setFloat("scrollPercent", variableList.getScrollPercent());
+		return super.saveBasicData(tile)
+				.withFloat("scroll_percent", variableList.getScrollPercent());
 	}
 }

@@ -1,0 +1,18 @@
+{
+  "bounds": {
+  },
+  "positions": {
+  },
+  "poi": {
+    "energy": 10,
+    "data": 3,
+    "redstone": 2,
+    "punchtape": 7,
+    "hatch": [],
+    "crate": []
+  },
+  "rotations": {
+    "data": "clockwise_90",
+    "redstone": "counterclockwise_90"
+  }
+}

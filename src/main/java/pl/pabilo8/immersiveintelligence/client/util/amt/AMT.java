@@ -17,7 +17,7 @@ import java.util.ArrayList;
  * @since 03.04.2022
  * <p>
  * An attempt to combine .obj and TMT<br>
- * Introducing the Animated Model Thingy(tm)<br>
+ * Introducing the Advanced Model Technology(tm)<br>
  * Brace yourselves
  */
 public abstract class AMT

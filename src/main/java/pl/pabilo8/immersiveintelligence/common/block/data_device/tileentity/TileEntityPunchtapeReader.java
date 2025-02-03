@@ -34,7 +34,7 @@ public class TileEntityPunchtapeReader extends TileEntityIEBase implements ITick
 	//no redstone
 	//send signal on redstone
 	//redstone when signal is sent
-	public PunchtapeReaderMode mode;
+	public PunchtapeReaderMode mode = PunchtapeReaderMode.REDSTONE_INDIFFERENT;
 	public int rsTime = 0;
 	EnumFacing facing = EnumFacing.NORTH;
 	DataPacket received = null;

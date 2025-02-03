@@ -54,8 +54,8 @@ public class TextOverlayMechanical extends TextOverlayBase
 
 		if(intTorque!=extTorque&&intSpeed!=extSpeed)
 			return new String[]{
-					IIReference.COLOR_PRUSSIAN_BLUE.getHexCol("\u2296 "+I18n.format(IIReference.INFO_KEY+"tachometer.internal_torque", intTorque)),
-					IIReference.COLOR_PRUSSIAN_BLUE.getHexCol("\u29c1 "+I18n.format(IIReference.INFO_KEY+"tachometer.internal_speed", intSpeed)),
+					IIReference.COLOR_ENGINEERS_BLUE.getHexCol("\u2296 "+I18n.format(IIReference.INFO_KEY+"tachometer.internal_torque", intTorque)),
+					IIReference.COLOR_ENGINEERS_BLUE.getHexCol("\u29c1 "+I18n.format(IIReference.INFO_KEY+"tachometer.internal_speed", intSpeed)),
 					IIReference.CHARICON_TORQUE+I18n.format(IIReference.INFO_KEY+"tachometer.external_torque", extTorque),
 					IIReference.CHARICON_SPEED+I18n.format(IIReference.INFO_KEY+"tachometer.external_speed", extSpeed)
 			};

@@ -56,10 +56,10 @@ public class BlockIIMetalMultiblock0 extends BlockIIMultiblock<MetalMultiblocks0
 		@IIBlockProperties(needsCustomState = true)
 		PRINTING_PRESS,
 		@EnumMultiblockProvider(tile = TileEntityDataInputMachine.class, multiblock = MultiblockDataInputMachine.class)
-		//@IIBlockProperties(needsCustomState = true)
+		@IIBlockProperties(needsCustomState = true)
 		DATA_INPUT_MACHINE,
 		@EnumMultiblockProvider(tile = TileEntityArithmeticLogicMachine.class, multiblock = MultiblockArithmeticLogicMachine.class)
-		//@IIBlockProperties(needsCustomState = true)
+		@IIBlockProperties(needsCustomState = true)
 		ARITHMETIC_LOGIC_MACHINE,
 		@EnumMultiblockProvider(tile = TileEntityChemicalBath.class, multiblock = MultiblockChemicalBath.class)
 		@IIBlockProperties(needsCustomState = true)
@@ -105,6 +105,8 @@ public class BlockIIMetalMultiblock0 extends BlockIIMultiblock<MetalMultiblocks0
 	{
 		switch(state.getValue(property))
 		{
+			case DATA_INPUT_MACHINE:
+			case ARITHMETIC_LOGIC_MACHINE:
 			case PRINTING_PRESS:
 			case BALLISTIC_COMPUTER:
 			case ARTILLERY_HOWITZER:

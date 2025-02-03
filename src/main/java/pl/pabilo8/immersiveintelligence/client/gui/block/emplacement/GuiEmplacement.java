@@ -10,11 +10,11 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.gui.ITabbedGui;
-import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonSwitch;
-import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonTab;
-import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiSliderII;
-import pl.pabilo8.immersiveintelligence.client.gui.elements.label.GuiLabelNoShadow;
-import pl.pabilo8.immersiveintelligence.client.gui.elements.storage.GuiElementProgressBar;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoSlider;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoSwitch;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoTab;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoLabel;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoBar;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
@@ -27,7 +27,6 @@ import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 
@@ -41,9 +40,9 @@ public abstract class GuiEmplacement extends GuiIEContainerBase implements ITabb
 	public final ResourceLocation TEXTURE_ICONS = new ResourceLocation(ImmersiveIntelligence.MODID+":textures/gui/emplacement_icons.png");
 	protected final TileEntityEmplacement tile;
 	protected String title = I18n.format("tile."+ImmersiveIntelligence.MODID+".metal_multiblock1.emplacement.name");
-	private final LinkedHashMap<GuiButtonTab, IIGuiList> TABS = new LinkedHashMap<>();
+	private final LinkedHashMap<DecoTab, IIGuiList> TABS = new LinkedHashMap<>();
 	private final IIGuiList thisGui;
-	private GuiElementProgressBar barEnergy, barArmor;
+	private DecoBar barEnergy, barArmor;
 
 	protected final static IIColor COLOR_IN = IIColor.fromPackedRGB(0x4c7bb1), COLOR_OUT = IIColor.fromPackedRGB(0xffb515);
 
@@ -71,8 +70,8 @@ public abstract class GuiEmplacement extends GuiIEContainerBase implements ITabb
 
 		addLabel(8, 10, IIReference.COLOR_H1, title);
 
-		barEnergy = GuiElementProgressBar.createEnergyBar(guiLeft+213, guiTop+22, 7, 48);
-		barArmor = GuiElementProgressBar.createArmorBar(guiLeft+222, guiTop+22, 7, 48);
+		barEnergy = DecoBar.createEnergyBar(guiLeft+213, guiTop+22, 7, 48);
+		barArmor = DecoBar.createArmorBar(guiLeft+222, guiTop+22, 7, 48);
 	}
 
 	/**
@@ -82,11 +81,12 @@ public abstract class GuiEmplacement extends GuiIEContainerBase implements ITabb
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
 		ArrayList<String> tooltip = new ArrayList<>();
-		for(Entry<GuiButtonTab, IIGuiList> entry : TABS.entrySet())
+		for(Entry<DecoTab, IIGuiList> entry : TABS.entrySet())
 		{
 			if(entry.getKey().isMouseOver())
 			{
-				tooltip.add(entry.getKey().displayString);
+				//TODO: 12.01.2025 tooltips
+//				tooltip.add(entry.getKey().displayString);
 				break;
 			}
 		}
@@ -113,7 +113,7 @@ public abstract class GuiEmplacement extends GuiIEContainerBase implements ITabb
 	protected void actionPerformed(GuiButton button) throws IOException
 	{
 		super.actionPerformed(button);
-		if(button instanceof GuiButtonTab)
+		if(button instanceof DecoTab)
 		{
 			syncDataToServer();
 			IIPacketHandler.sendToServer(new MessageGuiNBT(TABS.get(button), tile));
@@ -155,36 +155,39 @@ public abstract class GuiEmplacement extends GuiIEContainerBase implements ITabb
 	protected void addTab(IIGuiList gui, String name)
 	{
 		final int vOffset = TABS.size()*24;
-		GuiButtonTab button = new GuiButtonTab(buttonList.size(), guiLeft-28, guiTop+4+vOffset, 28, 24, thisGui==gui?28: 0, 101+vOffset,
+		DecoTab button = new DecoTab(buttonList.size(), guiLeft-28, guiTop+4+vOffset, 28, 24, thisGui==gui?28: 0, 101+vOffset,
 				TEXTURE_ICONS, I18n.format(IIReference.DESCRIPTION_KEY+name));
 		TABS.put(button, gui);
 		addButton(button);
 	}
 
-	protected GuiButtonSwitch addSwitch(int x, int y, int textWidth, IIColor textColor, IIColor color1, IIColor color2, boolean state, String name, boolean firstTime)
+	protected DecoSwitch addSwitch(int x, int y, int textWidth, IIColor textColor, IIColor color1, IIColor color2, boolean state, String name, boolean firstTime)
 	{
-		return addButton(new GuiButtonSwitch(buttonList.size(), guiLeft+x, guiTop+y, textWidth, 8, 18, 9, 18, 52, state, TEXTURE_ICONS, textColor, color1, color2, name, firstTime));
+		return addButton(new DecoSwitch(buttonList.size(), guiLeft+x, guiTop+y, textWidth, 8, 18, 9, 18, 52, state, TEXTURE_ICONS, textColor, color1, color2, name, firstTime));
 	}
 
-	protected GuiButtonSwitch addSwitch(int x, int y, int textWidth, IIColor textColor, IIColor color1, IIColor color2, boolean state, String name)
+	protected DecoSwitch addSwitch(int x, int y, int textWidth, IIColor textColor, IIColor color1, IIColor color2, boolean state, String name)
 	{
 		return addSwitch(x, y, textWidth, textColor, color1, color2, state, name, false);
 	}
 
-	protected GuiSliderII addSlider(int x, int y, int width, IIColor textColor, float value, String name)
+	protected DecoSlider addSlider(int x, int y, int width, IIColor textColor, float value, String name)
 	{
-		return addButton(new GuiSliderII(buttonList.size(), guiLeft+x, guiTop+y, width, name, value, textColor));
+		return addButton(new DecoSlider(buttonList.size(), guiLeft+x, guiTop+y, width, name, value, textColor));
 	}
 
-	protected GuiLabelNoShadow addLabel(int x, int y, IIColor textColor, String... text)
+	protected DecoLabel addLabel(int x, int y, IIColor textColor, String... text)
 	{
 		return addLabel(x, y, 0, 0, textColor, text);
 	}
 
-	protected GuiLabelNoShadow addLabel(int x, int y, int w, int h, IIColor textColor, String... text)
+
+	protected DecoLabel addLabel(int x, int y, int w, int h, IIColor textColor, String... text)
 	{
-		GuiLabelNoShadow guiLabel = new GuiLabelNoShadow(this.fontRenderer, labelList.size(), guiLeft+x, guiTop+y, w, h, textColor);
-		Arrays.stream(text).forEachOrdered(guiLabel::addLine);
+		DecoLabel guiLabel = new DecoLabel(fontRenderer, guiLeft+x, guiTop+y)
+				.withSize(w, h)
+				.withTextColor(textColor)
+				.withText(text);
 		labelList.add(guiLabel);
 		return guiLabel;
 	}

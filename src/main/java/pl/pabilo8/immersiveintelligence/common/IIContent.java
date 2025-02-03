@@ -128,6 +128,12 @@ public class IIContent
 	//allows connecting redstone wire to a gate
 	public static final MachineUpgrade UPGRADE_REDSTONE_ACTIVATION = CommonProxy.createMachineUpgrade("rs_activation");
 
+	//data input machine upgrade
+	public static final MachineUpgrade UPGRADE_ADVANCED_DATA = CommonProxy.createMachineUpgrade("advanced_data");
+	//arithemtic logic machine upgrade
+	public static final MachineUpgrade UPGRADE_MEMORY = CommonProxy.createMachineUpgrade("memory");
+	public static final MachineUpgrade UPGRADE_CIRCUIT_RACKS = CommonProxy.createMachineUpgrade("circuit_racks");
+
 	public static final MachineUpgrade UPGRADE_EMPLACEMENT_WEAPON_MACHINEGUN = EmplacementWeapon.register(EmplacementWeaponMachinegun::new);
 	public static final MachineUpgrade UPGRADE_EMPLACEMENT_WEAPON_IROBSERVER = EmplacementWeapon.register(EmplacementWeaponInfraredObserver::new);
 
