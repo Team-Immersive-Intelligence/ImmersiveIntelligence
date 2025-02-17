@@ -87,7 +87,7 @@ The universal design of the [Circuit Boards](electronic_components) allows them 
 # vector_arithmetic
 |[item_display]{source:"%SECTION%"}|
 |[text]{source:"%SECTION%",bold:1b}|
-*Performs mathematical operations and functions on [Vectors](data_types.md#vector).*
+*Performs operations on [Vectors](data_types.md#vector).*
 |[data_circuit]{circuit:"%SECTION%"}|
 # cryptographer
 |[item_display]{source:"%SECTION%"}|

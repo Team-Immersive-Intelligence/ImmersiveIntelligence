@@ -120,5 +120,8 @@ public class IIManualCategoryLogistics extends IIManualCategory
 						IIContent.itemSawblade.getStack(SawBlades.STEEL),
 						IIContent.itemSawblade.getStack(SawBlades.TUNGSTEN)
 				));
+		addEntry("chemical_bath");
+		addEntry("chemical_painter");
+		addEntry("electrolyzer");
 	}
 }

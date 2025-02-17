@@ -16,14 +16,12 @@ The **Storage** section is used to store **Data Storage Devices**, such as [Punc
 The **Data** section is used for programming the Data Packet stored by the machine.
 
 # editing_packets
-The **DIM** persistently stores a single **Data Packet** that can be easily edited through the *interface*. The *Data section* consists of a list of variables.
-By default, there are no variables.
-
-# editing_variables
-When editing a variable, you can change its letter by using the up and down arrows, to change its type hold shift when clicking it.
+The **DIM** persistently stores a single **Data Packet** that can be easily edited through the *interface*. The *Data section* stores a list of **variables.**
+Press the plus to add a variable.
+When editing a variable, you can change its letter by using the up and down arrows on the left. You can change the [type](data_types.md) by using the arrows on the right.
 
 # punchtapes
-The **Data Input Machine** is capable of reading a **Packet** from a [Written Punchtape] and writing the currently stored **Packet** to [An Empty One].
+The **Data Input Machine** is capable of reading a **Packet** from a [written punchtape] and writing the currently stored **Packet** to [a blank one].
 Both operations can be performed by inserting a [Punchtape] into the *upper slot*. After processing, the [Punchtape] will be outputted into the *lower slot*.
 
 # circuit_interface_upgrade 

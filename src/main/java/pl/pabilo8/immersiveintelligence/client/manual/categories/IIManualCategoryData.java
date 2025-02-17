@@ -46,8 +46,7 @@ public class IIManualCategoryData extends IIManualCategory
 				.addSource("circuit_blueprints", getSourceForItems(
 						BlueprintCraftingRecipe.getTypedBlueprint("basic_circuits"),
 						BlueprintCraftingRecipe.getTypedBlueprint("advanced_circuits"),
-						BlueprintCraftingRecipe.getTypedBlueprint("processors"),
-						BlueprintCraftingRecipe.getTypedBlueprint("cryptography_circuits")
+						BlueprintCraftingRecipe.getTypedBlueprint("processors")
 				))
 				.addSource("basic_circuit_blueprints", getSourceForBlueprint("basic_circuits"))
 				.addSource("advanced_electronic_alloy", getSourceForItem(
@@ -90,7 +89,13 @@ public class IIManualCategoryData extends IIManualCategory
 				.addSource("processor_electronic_element", getSourceForItems(
 
 						IIContent.itemMaterial.getStack(Materials.PROCESSOR_ELECTRONIC_ELEMENT)
-				));
+				))
+				.addSource("cryptographic_circuit_board", getSourceForItem(IIContent.itemMaterial.getStack(Materials.CRYPTOGRAPHIC_CIRCUIT_BOARD)))
+				.addSource("basic_radio_tuner", getSourceForItem(IIContent.itemRadioTuner.getStack(1)))
+				//.addSource("advanced_radio_tuner", getSourceForItem(IIContent.itemMaterial.getStack(Materials.CRYPTOGRAPHIC_CIRCUIT_BOARD)))
+				//.addSource("mount", getSourceForItem(IIContent.itemSkycrateMount.getStack(1)))
+				//.addSource("data_combiner", getSourceForItem(IIContent.blockMetalDevice.getStack(IIBlockTypes_MetalDevice.DATA_MERGER)))
+				;
 		addEntry("data_types");
 		addEntry("data_wiring")
 				.addSource("data_cable", getSourceForItem(IIContent.itemDataWireCoil.getStack(1)))
@@ -165,9 +170,6 @@ public class IIManualCategoryData extends IIManualCategory
 		addEntry("scanning_conveyor");
 		addEntry("programmable_speaker");
 
-		addEntry("chemical_bath");
-		addEntry("chemical_painter");
-		addEntry("electrolyzer");
 		addEntry("precision_assembler")
 				.addSource("assembly_scheme", getSourceForItem(IIContent.itemAssemblyScheme.getStack(1)))
 				.addSource("precision_tools", getSourceForItems(

@@ -10,25 +10,25 @@ The **Chemical Painter** is a machine used to paint items in a precisely set col
 
 # details
 Painting items manually is tedious and not very precise, a lot of dye can be wasted on just trying to get the color of choice. 
-[Chemical Painter] eliminates this problem. 
+The [Chemical Painter] eliminates this problem. 
 
 Cyan, Magenta, Yellow and Black Ink have to be provided to four fluid input slots on the back of the device. 
 Electricity has to be provided to the top input port. Items can be inserted manually or through the inward facing conveyor.
 
+# uses
+In addition to coloring items like wool or carpet, the chemical painter can be used to paint markings on bullets to make them easier to identify visually. 
+Most painted items can be later cleaned using the [Chemical Bath](chemical_bath) to regain their original color.
+
 # interface
-To set the color use the interface or data system. In the interface there are 3 buttons, which allow switching the color model:  
+Color is set through the interface or with the data system. In the interface there are 3 buttons to switch the color model:  
 [R] - [RGB]  
 [C] - [CMYK]  
-[H] - [HSV]  
+[H] - [HSV]
 
-The chemical painter can be used to paint markings on bullets to make them easier to identify visually. 
-Most of these items can be later cleaned using the [Chemical Bath](chemical_bath) to regain their original color.
-
+If data control is desired, the following page contains descriptions of required variables.
 # data_output
-Output Variables
-<br>  
+**Data input:**<br>
 |[data_variable]{type:"integer", direction:"in", letter:"p", name:"Paint Color", description:"A number representing the RGB paint color. In its hexadecimal form its digits should be in RRGGBB form, where R is red, G is green and B is blue"}|
-<br>  
 |[data_variable]{type:"string", direction:"in", letter:"p", name:"Paint Color", description:"A string hex code for the color without any additional leading or trailing characters"}|
 
 # data_callback

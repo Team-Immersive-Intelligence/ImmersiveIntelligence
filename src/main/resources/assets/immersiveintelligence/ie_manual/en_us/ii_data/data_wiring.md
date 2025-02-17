@@ -4,17 +4,17 @@ Not really powerlines
 
 # intro
 Data can be transmitted in two ways: [wired] and [wireless].  
-In both cases there is no delay between sending and receiving **Data Packets**, this means the entire system is synchronised all the times and __there is no case where a packet might have arrived too late or too early__.
+In both cases there is no delay between sending and receiving **Data Packets**. This means the entire system is synchronised all the times and __there is no case where a packet might have arrived too late or too early__.
 
 # wired
-The **Wired** data system relies on **Connectors** - the end points of it, **Relays** - which allow connecting multiple wires to form and extend a [Data Network] and finally, **Data Devices** which send and/or receive data.
+The **Wired** data system relies on **Connectors** - the end points of it, **Relays** - which allow connecting multiple wires to form and extend a [Data Network] and **Data Devices**, which send and/or receive data.
   
 |[scenario]{source:"wired_connection"}|
 
 # data_cable
-|[crafting]{source:"%SECTION%"}|  
-The **Data Cable** is a transmission medium created from multiple twisted-pair copper wires coated in a white-colored insulating material.  
-It allows fast, reliable and relatively long-distance transmission of [Data Packets](data_main.md) without any loss in the information they store.
+|[crafting]{source:"%SECTION%"}|
+The **Data Cable** is a transmission medium created from multiple twisted-pair copper wires coated in a white insulating material.  
+It allows fast, reliable and relatively long-distance, lossless transmission of [Data Packets](data_main.md).
 
 # connector
 |[crafting]{source:"%SECTION%"}|  
@@ -23,7 +23,7 @@ In a similar manner to its [Electrical Counterparts](basic_wiring), only one wir
 
 
 # connector_colors
-A **Data Network** can contain multiple **Connectors** of various colors. When a packet is sent through a **Connector**, it will only be received on **Connectors** of the same color.
+A **Data Network** can contain multiple **Connectors** of various colors, similar to the more primitive Redstone wiring system. When a packet is sent through a **Connector**, it will only be received on **Connectors** of the same color.
 Using the [Engineer's Hammer] on a **Connector** will change its [color].
 This allows multiple isolated **Connectors** to share **Relays**, [without interfering] with each other.
 
@@ -33,10 +33,10 @@ The **Data Relay** serves as a connection point between multiple [Connectors](#c
 It does not interact with **Data Devices**.
 
 # duplex_connector
-|[crafting]{source:"%SECTION%"}|  
+|[crafting]{source:"%SECTION%"}|
 The **Duplex Connector** is a Data Connector with separate colors for [input] and [output].
-It is very useful in situations where a **Device** serves as both input and output and has only a single port.
-Using the [Engineer's Hammer](introduction#introductionHammer) on it will change the **Connector's** [output color] when sneaking and [input color] when not.
+It is very useful in situations where a **Device** serves as both input and output but only has only a single port.
+Using the [Engineer's Hammer](introduction#introductionHammer) on it will change the [input color]. Use while sneaking to change the [output color].
 
 # debugger
 |[crafting]{source:"%SECTION%"}|  
@@ -47,11 +47,11 @@ In the [Transmitter] mode, the **Debugger** will transmit a test package when pr
 |[data_packet]{data:{a:{Type:"string",Value:"Hello, World!"}}}|
 <br>In the [Receiver] mode, the device will receive and store any data packets going through it, and emit a [10 tick long] redstone pulse on reception.<br>
 The [Transceiver] mode combines functions of both.
+
 # wireless1
 **Wireless** data transfer is an extension over the **Wired** one. 
 It uses radio-capable devices, such as the [Radio Station](radio_station), [Radio Backpack](radio_station) and [Radio Explosives](radio_station).  
-For a **Packet** to be transmitted **wireless**, the [transmitter] and [receiver] have to use the same [frequency] and the [receiver] has to be in range of the [transmitter] or a [relay] of its signal.
-
+For a **Packet** to be transmitted **wirelessly**, the [transmitter] and [receiver] have to use the same [frequency] and the [receiver] has to be in range of the [transmitter] or a [relay] of its signal.
 # wireless2
 Any radio device of the same frequency will also act as [relays], extending your wireless network.  
 When designing radio networks, keep in mind that every device has a [limited maximum transmission range], which changes depending on [weather].  
