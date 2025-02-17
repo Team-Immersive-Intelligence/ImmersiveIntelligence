@@ -15,3 +15,5 @@ and a [redstone output connector](redstoneWires#1) to which you can attach a [wi
 # interface
 In the user interface there are two sections: data to redstone and the opposite.
 After you add an entry, you have to specify the variable letter and the corresponding redstone color.
+You may also change how the redstone conversion is interpreted by clicking the text on the right.
+To delete a variable, hold shift and click on it.

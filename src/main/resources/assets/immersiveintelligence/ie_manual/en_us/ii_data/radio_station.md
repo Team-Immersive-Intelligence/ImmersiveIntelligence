@@ -1,6 +1,6 @@
 # meta
 Radio Station
-The Wireless Wire™
+The Wireless Wire(TM)
 
 # intro
 @hammer_electric;level_circuits
@@ -15,9 +15,14 @@ Poor weather conditions such as [rain] or [snow] will [decrease this range], so 
 
 # tuner
 The **Radio Station**'s frequency can be set by using a **Radio Tuner**.
-|[crafting]{source:"tuner"}|
-There are 2 versions of the **Tuner** with different [ranges of frequencies] avaliable.
-To [change] the current frequency of the tuner, *sneak and scroll up or down*.
-To [check] the frequency a device is set, *sneak-right click* it with the Tuner.
+There are 2 versions of the **Radio Tuner** with different [frequency ranges] avaliable. The aspiring engineer will typically begin with the basic radio tuner:
+|[crafting]{source:"basic_radio_tuner"}|
 
-Keep in mind that [some Data Devices](explosives_mines#radio_satchel0) use a limited [Basic Frequency Range], which makes them unable to be configured with frequencies above [<config;i;radio_station_range>].
+# advtuner
+For sufficiently advanced engineers, the **Advanced Radio Tuner** may be used to access a wider range of frequencies.
+|[crafting]{source:"advanced_radio_tuner"}|
+
+# usage
+To [change] the current frequency of the tuner, *sneak and scroll up or down*.
+To [check] the frequency a device is set, *sneak-right click* it with the Tuner.<br>
+Keep in mind that [some Data Devices](explosives_mines#radio_satchel0) use the limited [Basic Frequency Range], which makes them unable to be configured with frequencies above [<config;i;radioBasicMaxFrequency>].

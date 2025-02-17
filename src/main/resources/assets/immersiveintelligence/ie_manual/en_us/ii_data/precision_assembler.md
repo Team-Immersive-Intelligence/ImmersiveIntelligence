@@ -15,12 +15,10 @@ The [input port] *will only accept ingredients marked by the currently installed
 The [output port] will automatically output to an adjacent container.
 
 # schemes
-Just like an [engineer follows a blueprint during work](blueprints), the **Precision Assembler** is guided by an Assembly Scheme.<br><br>
-|[crafting]{source:"assembly_scheme"}|
-<br>
+Just like an [engineer follows a blueprint during work](blueprints), the **Precision Assembler** is guided by an Assembly Scheme.<br>
+|[crafting]{source:"assembly_scheme"}| <br>
 The [scheme] can be installed through the user interface by placing it in the middle slot.
 
 # tools
 Depending on the scheme the manufacturing process requires different tools, these tools ware down over time and will need replacement.
 |[crafting]{source:"precision_tools"}|
-<br>

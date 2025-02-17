@@ -16,7 +16,7 @@ For example, if in a packet:
 'a' - a [String](#string) is requested as [Integer](#integer), a new [defaultized] (with the type's default value: 0) [Integer](#integer) will be returned instead.
 
 # default_value2
-The same would happen in a packet like:  
+The same would happen in a packet with numbers stored as a string:  
 |[data_packet]{data:{a:{Type:"string",Value:"123"}}}|
 Despite that for a human the *text* "123" seems identical to the *number* 123, a data machine sees it very different. A text type [can't be converted] to a number type, thus it too returns a [defaultized Integer], or simply put: 0.
 

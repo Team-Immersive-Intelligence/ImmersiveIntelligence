@@ -2042,6 +2042,8 @@ datasystem.immersiveintelligence.function.entity_get_dimension_id.param.entity.d
 datasystem.immersiveintelligence.function.entity_get_dimension_id.result=Dimension ID
 datasystem.immersiveintelligence.function.entity_get_dimension_id.result.desc=The dimension ID of the input entity
 
+datasystem.immersiveintelligence.function.entity_get_pos=Get Position
+
 datasystem.immersiveintelligence.function.entity_get_x=Get X
 datasystem.immersiveintelligence.function.entity_get_x.desc=Returns the X coordinate of the input entity
 datasystem.immersiveintelligence.function.entity_get_x.param.entity=Entity
