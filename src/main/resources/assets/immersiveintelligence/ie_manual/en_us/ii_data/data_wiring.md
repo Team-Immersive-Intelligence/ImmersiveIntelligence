@@ -19,7 +19,7 @@ It allows fast, reliable and relatively long-distance, lossless transmission of 
 # connector
 |[crafting]{source:"%SECTION%"}|  
 The **Data Connector** serves as an endpoint of a **Data Network**. It is placed on a side of a **Data Device** to allow it sending and/or receiving **Packets**.
-In a similar manner to its [Electrical Counterparts](basic_wiring), only one wire can be connected to a Data Connector. To extend the network, use a [Data Relay](#relay).
+In a similar manner to its [Electrical Counterparts](wiring), only one wire can be connected to a Data Connector. To extend the network, use a [Data Relay](#relay).
 
 
 # connector_colors
@@ -41,7 +41,7 @@ Using the [Engineer's Hammer](introduction#introductionHammer) on it will change
 # debugger
 |[crafting]{source:"%SECTION%"}|  
 The **Data Debugger** is a special type of [Data Relay](#relay), that captures, stores and displays the **Packet** flowing through it.
-It operates in 3 [modes], that can be switched between by sneak-using a [Hammer](tools), with default one being the [Transceiver Mode].
+It operates in 3 [modes], that can be switched between by sneak-using a [Hammer](introduction#introductionHammer), with default one being the [Transceiver Mode].
 # debugger2
 In the [Transmitter] mode, the **Debugger** will transmit a test package when provided a redstone signal.
 |[data_packet]{data:{a:{Type:"string",Value:"Hello, World!"}}}|

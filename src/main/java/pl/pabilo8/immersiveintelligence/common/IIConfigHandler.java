@@ -58,6 +58,7 @@ public class IIConfigHandler
 		public static Map<String, Boolean> compat = Maps.newHashMap(Maps.toMap(IICompatModule.moduleClasses.keySet(), (s) -> Boolean.TRUE));
 
 		@Comment({"The maximum frequency for basic radios."})
+		@Mapped (mapClass = IIConfigHandler.class, mapName = "manual_int")
 		public static int radioBasicMaxFrequency = 32;
 
 		@Comment({"The maximum frequency for advanced radios."})
@@ -1739,10 +1740,10 @@ public class IIConfigHandler
 	{
 		Config.manual_bool.put("petroleumHere", false);
 		Config.manual_bool.put("baublesHere", false);
-		Config.validateAndMapValues(IIConfig.class);
-
 		Config.manual_int.put("radio_station_range", RadioStation.radioRange);
-
+		Config.manual_int.put("basic_max_frequency", IIConfig.radioBasicMaxFrequency);
+		Config.validateAndMapValues(IIConfig.class);
+		
 		if(ev.getModID().equals(ImmersiveIntelligence.MODID))
 			ConfigManager.sync(ImmersiveIntelligence.MODID, Type.INSTANCE);
 	}

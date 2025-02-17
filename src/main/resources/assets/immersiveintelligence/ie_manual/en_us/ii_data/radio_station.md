@@ -9,7 +9,7 @@ The **Radio Station** is a device for sending, receiving and relaying [Data Pack
 |[text]{mb:"II:RadioStation"}|
 
 # details
-A **Radio Station** can send [Packets](data_main.md#packetsbasics) to compatible radio devices up to <config;i;radio_station_range> blocks distance.
+A **Radio Station** can send [Packets](data_main.md#packetsbasics) to compatible radio devices up to [<config;i;radio_station_range>] blocks distance.
 Poor weather conditions such as [rain] or [snow] will [decrease this range], so while planning construction of a radio network, an engineer should use ranges negating this effect.
 |[scenario]{}|
 
@@ -25,4 +25,4 @@ For sufficiently advanced engineers, the **Advanced Radio Tuner** may be used to
 # usage
 To [change] the current frequency of the tuner, *sneak and scroll up or down*.
 To [check] the frequency a device is set, *sneak-right click* it with the Tuner.<br>
-Keep in mind that [some Data Devices](explosives_mines#radio_satchel0) use the limited [Basic Frequency Range], which makes them unable to be configured with frequencies above [<config;i;radioBasicMaxFrequency>].
+Keep in mind that [some Data Devices](explosives_mines#radio_satchel0) use the limited [Basic Frequency Range], which makes them unable to be configured with frequencies above [<config;i;basic_max_frequency>].

@@ -3,7 +3,7 @@ Functional Circuits
 Not really Beep-Boop yet
 
 # intro
-The universal design of the [Circuit Boards](electronic_components) allows them to be easily [refitted] to perform various specialized operations using the [Engineer's Workbench]().
+The universal design of the [Circuit Boards](electronic_components) allows them to be easily [refitted] to perform various specialized operations using the [Engineer's Workbench](workbench).
 |[crafting]{source:"circuit_blueprints"}|
 
 # arithmetic
@@ -89,6 +89,7 @@ The universal design of the [Circuit Boards](electronic_components) allows them 
 |[text]{source:"%SECTION%",bold:1b}|
 *Performs operations on [Vectors](data_types.md#vector).*
 |[data_circuit]{circuit:"%SECTION%"}|
+
 # cryptographer
 |[item_display]{source:"%SECTION%"}|
 |[text]{source:"%SECTION%",bold:1b}|

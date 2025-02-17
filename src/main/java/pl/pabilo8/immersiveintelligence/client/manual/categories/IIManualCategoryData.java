@@ -90,12 +90,8 @@ public class IIManualCategoryData extends IIManualCategory
 
 						IIContent.itemMaterial.getStack(Materials.PROCESSOR_ELECTRONIC_ELEMENT)
 				))
-				.addSource("cryptographic_circuit_board", getSourceForItem(IIContent.itemMaterial.getStack(Materials.CRYPTOGRAPHIC_CIRCUIT_BOARD)))
-				.addSource("basic_radio_tuner", getSourceForItem(IIContent.itemRadioTuner.getStack(1)))
-				//.addSource("advanced_radio_tuner", getSourceForItem(IIContent.itemMaterial.getStack(Materials.CRYPTOGRAPHIC_CIRCUIT_BOARD)))
-				//.addSource("mount", getSourceForItem(IIContent.itemSkycrateMount.getStack(1)))
-				//.addSource("data_combiner", getSourceForItem(IIContent.blockMetalDevice.getStack(IIBlockTypes_MetalDevice.DATA_MERGER)))
-				;
+				.addSource("cryptographic_circuit_board", getSourceForItem(IIContent.itemMaterial.getStack(Materials.CRYPTOGRAPHIC_CIRCUIT_BOARD))
+				);
 		addEntry("data_types");
 		addEntry("data_wiring")
 				.addSource("data_cable", getSourceForItem(IIContent.itemDataWireCoil.getStack(1)))
@@ -165,11 +161,16 @@ public class IIManualCategoryData extends IIManualCategory
 
 				));
 
-		addEntry("radio_station");
+		addEntry("radio_station")
+				.addSource("basic_radio_tuner", getSourceForItem(IIContent.itemRadioTuner.getStack(1)))
+				.addSource("advanced_radio_tuner", getSourceForItem(new ItemStack(IIContent.itemRadioTuner, 1, 1)
+		));
 		addEntry("printing_press");
 		addEntry("scanning_conveyor");
-		addEntry("programmable_speaker");
-
+		addEntry("programmable_speaker")
+				.addSource("programmable_spkr", getSourceForItem(IIContent.blockDataConnector.getStack(IIBlockTypes_Connector.PROGRAMMABLE_SPEAKER)
+		));
+		
 		addEntry("precision_assembler")
 				.addSource("assembly_scheme", getSourceForItem(IIContent.itemAssemblyScheme.getStack(1)))
 				.addSource("precision_tools", getSourceForItems(

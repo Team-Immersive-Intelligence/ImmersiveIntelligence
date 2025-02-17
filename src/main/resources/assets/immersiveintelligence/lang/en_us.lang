@@ -1731,7 +1731,7 @@ datasystem.immersiveintelligence.function.string_replace_all.param.with.desc=The
 datasystem.immersiveintelligence.function.string_replace_all.result=Result
 datasystem.immersiveintelligence.function.string_replace_all.result.desc=The input string with all occurrences of the substring replaced
 
-datasystem.immersiveintelligence.function.string_lowercase=To Lowercase
+datasystem.immersiveintelligence.function.string_lowercase=To lowercase
 datasystem.immersiveintelligence.function.string_lowercase.desc=Converts the input string to lowercase
 datasystem.immersiveintelligence.function.string_lowercase.param.text=String
 datasystem.immersiveintelligence.function.string_lowercase.param.text.desc=The string to convert

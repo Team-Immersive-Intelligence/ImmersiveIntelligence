@@ -23,7 +23,7 @@ All types of circuit boards require a specialized blueprint to create them.
 # basic_general
 |[item_display]{source:"basic_general"}|
 **Basic Circuits** are the common, primary, and cheap circuits.
-Their universal design allows them to be easily [refitted](functions/_functional_circuits.md) to perform simple data operations, 
+Their universal design allows them to be easily [refitted](_functional_circuits.md) to perform simple data operations, 
 but their main use is construction of various **Data Devices**, such as 
 the [Printing Press](printing_press), the [Arithmetic Logic Machine](arithmetic_logic_machine) and the [Data Input Machine](data_input_machine.md).
 
@@ -45,7 +45,7 @@ Safeguarded by the Engineering Department, the **Advanced Electronic Alloy(TM)**
 # advanced_electronic_alloy_craft
 |[crafting]{source:"advanced_electronic_alloy"}|
 The blend is made by combining Constantan, Electrum, and Platinum in a 3:2:1 mixture to yield three units.
-Due to the advanced metallurgical needs, an [arc furnace](arcFurnace) is required to process the **Advanced Electronic Alloy(TM)** into other forms.
+Due to the advanced metallurgical needs, an [arc furnace](arcfurnace) is required to process the **Advanced Electronic Alloy(TM)** into other forms.
 
 # advanced_general  
 |[item_display]{source:"%SECTION%"}|
@@ -64,16 +64,16 @@ To make an **Advanced Board**, two **Basic Boards** are combined with a plate of
 
 # cryptographic_board
 |[item_display]{source:"cryptographic_circuit_board"}|
-The **Cryptographic Circuit Board** is a specially tailored version of the [Advanced Circuit Board](#advanced_board). It is used in the creation of the [Cryptographer Circuit](functions/_functional_circuits.md).<br>
+The **Cryptographic Circuit Board** is a specially tailored version of the [Advanced Circuit Board](#advanced_board). It is used in the creation of the [Cryptographer Circuit](_functional_circuits.md#cryptographer).
 
 # processor_general  
 |[item_display]{source:"%SECTION%"}|
 **Processor Circuits** are the most sophisticated and capable circuits.
-Created from silicon, advanced electronic alloy, and various other materials in a complicated assembly process, they work as the electronic brains of [Mainframe Computers], [Drones] and many [Advanced Weapon Systems]. 
+Created from silicon, advanced electronic alloy, and various other materials in a complicated assembly process, they work as the electronic brains of [Mainframe Computers], [Drones] and many [Advanced Weapon Systems].
 
 # processor_components
 |[item_display]{source:"processor_electronic_element"}|
-Being the state-of-the-art electronic component of our times, the **Processor** is able to perform [programmed operations on data](computers/data_pol.md).
+Being the state-of-the-art electronic component of our times, the **Processor** is able to perform [programmed operations on data](data_pol.md).
 The manufacturing process is sophisticated and requires 32 **transistors** and two **advanced vacuum tubes** to be combined according to a scheme in a [Precision Assembler](precision_assembler.md).
 
 # processor_board
