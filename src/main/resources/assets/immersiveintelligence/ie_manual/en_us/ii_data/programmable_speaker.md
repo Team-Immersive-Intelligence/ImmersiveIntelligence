@@ -8,8 +8,8 @@ The Programmable Speaker is a device, which emits a sound when provided a redsto
 
 # data
 **Data inputs:**<br>
-|[data_variable]{type:"integer", direction:"out", letter:"o", name:"Play Once", description:"If true, sound is played once, regardless of redstone signal"}|
-|[data_variable]{type:"integer", direction:"out", letter:"s", name:"Sound ID", description:"Example: immersiveintelligence:siren"}|
+|[data_variable]{type:"boolean", direction:"out", letter:"o", name:"Play Once", description:"If true, sound is played once, regardless of redstone signal"}|
+|[data_variable]{type:"string", direction:"out", letter:"s", name:"Sound ID", description:"Example: immersiveintelligence:siren"}|
 |[data_variable]{type:"integer", direction:"out", letter:"v", name:"Volume", description:"Value must be between 0 and 100"}|
 |[data_variable]{type:"integer", direction:"out", letter:"t", name:"Tone/Pitch", description:"Value must be between 0 and 200. 100 is normal pitch."}|
 
