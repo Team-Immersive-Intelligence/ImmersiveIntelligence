@@ -111,7 +111,7 @@ public class GuiDataRedstoneInterfaceRedstone extends GuiIEContainerBase impleme
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
-		this.fontRenderer.drawString(I18n.format("tile."+ImmersiveIntelligence.MODID+".metal_multiblock.redstone_interface.data"), 4, 2, IIReference.COLOR_H1.getPackedRGB());
+		this.fontRenderer.drawString(I18n.format("tile."+ImmersiveIntelligence.MODID+".metal_multiblock.redstone_interface.redstone"), 4, 2, IIReference.COLOR_H1.getPackedRGB());
 	}
 
 	@Override
@@ -241,7 +241,7 @@ public class GuiDataRedstoneInterfaceRedstone extends GuiIEContainerBase impleme
 					//this.drawTexturedModalRect(drawx+3, drawy+3, 155, 222, 16, 14);
 
 					this.drawTexturedModalRect(drawx+3, drawy+3, 155, 222, 16, 14);
-					this.fontRenderer.drawString(I18n.format("tile."+ImmersiveIntelligence.MODID+".metal_multiblock.redstone_interface.modes."+((DataTypeInteger)array.value[1]).value), drawx+64, drawy+6, data.getTypeColor().getPackedRGB(), true);
+					this.fontRenderer.drawString(I18n.format("tile."+ImmersiveIntelligence.MODID+".metal_multiblock.redstone_interface.modes."+((DataTypeInteger)array.value[1]).value), drawx+64, drawy+6, 0x300719, false);
 
 					GlStateManager.popMatrix();
 
