@@ -14,6 +14,7 @@ import pl.pabilo8.immersiveintelligence.common.block.rotary_device.BlockIIMechan
 import pl.pabilo8.immersiveintelligence.common.block.rotary_device.BlockIIMechanicalDevice1.IIBlockTypes_MechanicalDevice1;
 import pl.pabilo8.immersiveintelligence.common.item.ItemIIMinecart.Minecarts;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.ItemIISawBlade.SawBlades;
+import pl.pabilo8.immersiveintelligence.common.item.mechanical.ItemIIMotorBelt.MotorBelt;
 import pl.pabilo8.immersiveintelligence.common.item.mechanical.ItemIIMotorGear.MotorGear;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
@@ -86,8 +87,22 @@ public class IIManualCategoryLogistics extends IIManualCategory
 					IIContent.blockMechanicalConnector.getStack(IIBlockTypes_MechanicalConnector.STEEL_WHEEL)
 			))
 
-			.addSource("belt", getSourceForItem(
-					new ItemStack(IIContent.itemMotorBelt)))
+			.addSource("belt", getSourceForItems(
+					new ItemStack(IIContent.itemMotorBelt),
+					new ItemStack(IIContent.itemMotorBelt, 1, 1),
+					new ItemStack(IIContent.itemMotorBelt, 1, 2)
+			))
+			
+			/* .addSource("belt_items", getSourceForItems(
+					IIContent.itemMotorBelt.getStack(MotorBelt.CLOTH),
+					IIContent.itemMotorBelt.getStack(MotorBelt.STEEL),
+					IIContent.itemMotorBelt.getStack(MotorBelt.RUBBER)
+			)) */
+			
+			.addSource("belt_cloth", getSourceForItem(IIContent.itemMotorBelt.getStack(MotorBelt.CLOTH)))
+			.addSource("belt_steel", getSourceForItem(IIContent.itemMotorBelt.getStack(MotorBelt.STEEL)))
+			.addSource("belt_rubber", getSourceForItem(IIContent.itemMotorBelt.getStack(MotorBelt.RUBBER)))
+			
 			.addSource("gears", getSourceForItems(
 					IIContent.itemMotorGear.getStack(MotorGear.COPPER),
 					IIContent.itemMotorGear.getStack(MotorGear.BRASS),
