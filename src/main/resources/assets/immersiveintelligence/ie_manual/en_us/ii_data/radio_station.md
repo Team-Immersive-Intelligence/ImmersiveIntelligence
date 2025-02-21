@@ -5,8 +5,7 @@ The Wireless Wire(TM)
 # intro
 @hammer_electric;level_circuits
 |[multiblock]{mb:"II:RadioStation"}|
-The **Radio Station** is a device for sending, receiving and relaying [Data Packets](data_main.md#packetsbasics) wirelessly.
-|[text]{mb:"II:RadioStation"}|
+The **Radio Station** is a device for sending, receiving and relaying [Data Packets](data_main.md#packetsbasics) wirelessly. Since it is an advanced structure, it requires the [Electric Hammer](electric_tools.md) to be used on the [Advanced Electronic Engineering Block].
 
 # details
 A **Radio Station** can send [Packets](data_main.md#packetsbasics) to compatible radio devices up to [<config;i;radio_station_range>] blocks distance.
