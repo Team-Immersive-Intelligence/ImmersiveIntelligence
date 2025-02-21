@@ -1,7 +1,7 @@
 # meta
-Measuring cup
+Measuring Cup
 The Bakers Special
 
 # intro
-This section is currently a Work In Progress, please excuse our dust!
-
+|[crafting]{source:"m_cup"}|
+The Measuring Cup is a simple, but powerful tool for the crafty chemical engineer. It has a maximum 500mb capacity, but [sneaking] and [scrolling] will allow changing the capacity in [10mb increments]. This allows for precise fluid collection from containers.
