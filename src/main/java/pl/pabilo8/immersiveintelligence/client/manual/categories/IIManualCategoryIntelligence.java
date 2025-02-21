@@ -29,13 +29,14 @@ public class IIManualCategoryIntelligence extends IIManualCategory
 				.addSource("alarm_siren", getSourceForItem(IIContent.blockDataConnector.getStack(IIBlockTypes_Connector.ALARM_SIREN)));
 
 		addEntry("radar");
+		addEntry("binoculars")
+				.addSource("binoculars", getSourceForItem(new ItemStack(IIContent.itemBinoculars)))
+				.addSource("infbinoculars", getSourceForItem(new ItemStack(IIContent.itemBinoculars, 1, 1)));
+		
 		addEntry("tripod_periscope")
 				.addSource("tripod_periscope", getSourceForItem(
 						new ItemStack(IIContent.itemTripodPeriscope)));
-
-		addEntry("binoculars")
-				.addSource("binoculars", getSourceForItem(
-					new ItemStack(IIContent.itemBinoculars)));
-
+						
+		addEntry("strategic_command_table");
 	}
 }

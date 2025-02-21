@@ -1,10 +1,10 @@
 # meta
 Intelligence
-Knowledge is power
+Knowledge is Power
 
-# 0
-The collection of information of military or political value has always been a focus of the technological advancements, 
-information is beautiful. Intelligence is not only the gather of information, but also the way to use it.
-
-Surveillance, reconnaissance, and sabotage all is under the intelligence umbrella. As well as corporate espionage. 
-Intelligence is the lifeblood of the new warfare tactics and strategy.
+# intro
+Information is beautiful.<br>
+The collection of information of military or political value has always been a focus of the technological advancements.
+However, intelligence is not only the gather of information, but also the way to use it.
+Surveillance, reconnaissance, espionage, and sabotage are all under the intelligence umbrella.
+<br>Intelligence is the lifeblood of new warfare tactics and strategy.
