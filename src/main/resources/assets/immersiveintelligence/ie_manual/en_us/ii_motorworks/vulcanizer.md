@@ -10,7 +10,7 @@ The Vulcanizer is the final machine in the [Rubber Production](rubber_production
 Using heat, pressure, [molds], and set of additional compounds, the [Vulcanizer] transforms raw rubber sheets into a familiar industrial rubber, which is used to construct many new machines. Most notably, rubber is used to fabricate faster conveyors and more efficient motor belts, and is vital to wheeled vehicle production.
 
 #production2
-To process rubber, 3 ingredients are required: [raw rubber sheets], provided to the upper port on the iron container, [vulcanization compound](#vulcanizer_compounds) - provided to the port below, and [sulfur] - inputted into the steel tank.
+To process rubber, 3 ingredients are required: [raw rubber sheets], provided to the upper port on the iron container, [vulcanization compound](#vulcanizer_compounds), provided to the port below, and [sulfur], inputted into the steel tank.
 
 # molds
 To operate the machine, the vulcanizer requires a mold, which determines the final output and electricity usage.
