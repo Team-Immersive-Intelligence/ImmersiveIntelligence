@@ -6,7 +6,7 @@ A relic of Dover
 @level_circuits,hammer_electric,upgradable
 |[multiblock]{mb:"II:Radar"}|
 The [Radar] is a large detection device, capable of detecting entities in a direct line over incredibly long distances.
-To form it, use a [Hammer](introduction#introductionHammer) on the left wooden scaffolding block.
+To form it, use a [Electric Hammer](electric_tools.md) on the left wooden scaffolding block.
 
 # radar 2
 Radar has multiple uses. It can be linked to emplacement weapons, such as the [CPDS](emplacement_weapons.md#cpds0), and used to intercept projectiles at long ranges. It can also be linked with the [Strategic Command Table](strategic_command_table.md) [(WIP)].
