@@ -9,7 +9,7 @@ Fortunately, the Engineering Department has successfully developed several machi
 
 # bullet2
 |[item_display]{source:"bullet_twoparts"}|
-A bullet typically consists of two parts: the [core projectile](bullet_cores) and the [casing](#casings). The casing 
+A [bullet] typically consists of two parts: the [core projectile](bullet_cores) and the [casing](#casings). The casing 
 holds everything in place and is [filled](#filler) with [gunpowder]. The core is inserted to the casing.
 Optionally, bullets can be filled with [extra components](bullet_components) that add enhanced effects.
 
@@ -57,6 +57,7 @@ With this device, the [core] is inserted into the [casing]. Remember to match th
 To form the **Ammunition Assembler**, use a [hammer](introduction#introductionHammer) on the center steel scaffolding that is exposed.
 It also sets the fuse determining under what conditions its components will detonate. Fuses can be set through the interface or a [data packet](data_main.md).
 Ensure that bullet casings are fed to the close conveyor, and bullet cores are fed to the far one.
+Finally, bullets may be loaded into [magazines](magazines.md) with the help of the [Packer](packer.md).
 
 # ammunition_assembler_data
 **Input Variables:**<br>

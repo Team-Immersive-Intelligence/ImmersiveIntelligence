@@ -11,7 +11,7 @@ Several weapons with numerous strengths and weaknesses can be installed to creat
 This Emplacement is the most basic and *cheapest* of all the Emplacements available. It is a reliable choice for dealing with soft ground targets or light vehicles, when using [armor-piercing] ammunition.
 # mg1
 The **Machinegun** Emplacement comes in 3 variants: [Default], [Heavy Barreled], and [Water-Cooled], which are identical in function to those present in the [infantry version](machinegun.md) of the Machinegun.
-Take note, this weapon does not use magazines, [bullets have to be provided through the emplacement input port]. Due to its limited pitch, the MG Emplacement is a poor choice for firing at air targets.
+Take note, this weapon does not use [magazines](magazines.md). [Loose bullets have to be provided through the emplacement input port]. Due to its limited pitch, the MG Emplacement is a poor choice for firing at air targets.
 
 # chem0
 **Heavy Chemthrower**<br>
@@ -24,13 +24,13 @@ Normally, it ignites the fluid, but this can be toggled using a data packet. **T
 This Emplacement is a [standard, all-rounder option] for dealing with soft targets, vehicles and air targets. Depending on the ammo, it can serve as a great standard option for base protection against all sorts of threats.
 # flak1
 Due to its high velocity and diverse pitch and yaw ranges, the **Autocannon** is [especially effective against airborne targets].
-Its drawbacks are a slower rate of fire compared to the Machinegun and it's [relatively low magazine size], forcing it to reload very often. It is best to combine it with other emplacements.
+Its drawbacks are a slower rate of fire compared to the Machinegun and it's [relatively low magazine size](magazines.md), forcing it to reload very often. It is best to combine it with other emplacements.
 
 # railgun0
 **Heavy Railgun**<br>
 This Emplacement is used in [precision-dependent long range combat]. It is best used against [vehicles] and [single targets with high durability]. Damage is dependent on the metal out of which the rod is made, or composition of the [railgun grenade](grenades.md#1).
 # railgun1
-Due to the very low fire rate, turn rate, and low magazine count, it is a poor choice for engaging many targets. It is required to be paired with other emplacements for better protection.
+Due to the very low fire rate, turn rate, and low inventory space, it is a poor choice for engaging many targets. It is required to be paired with other emplacements for better protection.
 Fortunately, the **Heavy Railgun** possesses a high armor-piercing capability, so it is best utilized on armored targets, vehicles and targets behind steel walls. *No armor is too tough!*
 
 # cpds0

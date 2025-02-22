@@ -38,15 +38,15 @@ Instead of passing the angle directly, a [Ballistic Computer](ballistic_computer
 # callback0
 **Data Callback**
 |[data_callback]{type:"integer", name:"get_energy", label:"Energy Stored", returns:"Stored energy amount (IF)"}|
-|[data_callback]{type:"integer", name:"get_state", label:"Current State", returns:"idle, loading, unloading, shooting"}|
+|[data_callback]{type:"string", name:"get_state", label:"Current State", returns:"idle, loading, unloading, shooting"}|
 |[data_callback]{type:"integer", name:"get_state_num", label:"Current State in numbers", returns:"0,1,2,3"}|
-|[data_callback]{type:"integer", name:"get_state_progress", label:"State progress in percentage", returns:"Progress value 0:1"}|
-|[data_callback]{type:"integer", name:"get_yaw", label:"Current yaw", returns:"Current yaw"}|
-|[data_callback]{type:"integer", name:"get_pitch", label:"Current pitch", returns:"Current pitch"}|
-|[data_callback]{type:"integer", name:"get_planned_yaw", label:"Planned gun yaw", returns:"Planned yaw"}|
-|[data_callback]{type:"integer", name:"get_planned_pitch", label:"Planned gun pitch", returns:"Planned pitch"}|
+|[data_callback]{type:"float", name:"get_state_progress", label:"State progress in percentage", returns:"Progress value 0:1"}|
+|[data_callback]{type:"float", name:"get_yaw", label:"Current yaw", returns:"Current yaw"}|
+|[data_callback]{type:"float", name:"get_pitch", label:"Current pitch", returns:"Current pitch"}|
+|[data_callback]{type:"float", name:"get_planned_yaw", label:"Planned gun yaw", returns:"Planned yaw"}|
+|[data_callback]{type:"float", name:"get_planned_pitch", label:"Planned gun pitch", returns:"Planned pitch"}|
 
 # callback2
-|[data_callback]{type:"integer", name:"get_platform_height", label:"Current platform elevation", returns:"Progress value 0:1"}|
-|[data_callback]{type:"integer", name:"get_door_opened", label:"Current state of door", returns:"Opened or closed"}|
-|[data_callback]{type:"integer", name:"get_door_opening", label:"Current ongoing of door", returns:"Opening or closing"}|
+|[data_callback]{type:"float", name:"get_platform_height", label:"Current platform elevation", returns:"Progress value 0:1"}|
+|[data_callback]{type:"string", name:"get_door_opened", label:"Current state of door", returns:"Opened or closed"}|
+|[data_callback]{type:"string", name:"get_door_opening", label:"Current ongoing of door", returns:"Opening or closing"}|

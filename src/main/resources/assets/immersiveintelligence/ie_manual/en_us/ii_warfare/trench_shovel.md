@@ -1,5 +1,5 @@
 # meta
-Trench shovel
+Trench Shovel
 Into the blackness!
 
 # intro

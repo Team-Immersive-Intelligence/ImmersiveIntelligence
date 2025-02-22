@@ -2,6 +2,8 @@ package pl.pabilo8.immersiveintelligence.client.manual.categories;
 
 import blusunrize.immersiveengineering.api.ManualHelper;
 import blusunrize.lib.manual.ManualPages;
+import blusunrize.immersiveengineering.api.ManualPageBlueprint;
+import blusunrize.immersiveengineering.api.crafting.BlueprintCraftingRecipe;
 import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
@@ -20,6 +22,7 @@ import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoBase;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoCasing.Casing;
 import pl.pabilo8.immersiveintelligence.common.item.armor.ItemIIArmorUpgrade.ArmorUpgrades;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIWeaponUpgrade.WeaponUpgrade;
+import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine.Magazines;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 import java.util.ArrayList;
@@ -88,47 +91,18 @@ public class IIManualCategoryWarfare extends IIManualCategory
 				bullet_components.toArray(new ManualPages[]{})
 		);
 
-		addEntry("ammocrate")
-				.addSource("crafting", getSourceForItems(IIContent.blockMetalDevice.getStack(IIBlockTypes_MetalDevice.AMMUNITION_CRATE))
-				);
-		addEntry("casing_pouch")
-				.addSource("crafting", getSourceForItems(IIContent.itemCasingPouch.getStack(1))
-				);
-
-		addEntry("emplacement");
-		addEntry("emplacement_weapons");
-		addEntry("chemdispenser")
-			.addSource("chemical_dispenser", getSourceForItem(IIContent.blockDataConnector.getStack(IIBlockTypes_Connector.CHEMICAL_DISPENSER)));
-		addEntry("flagpole");
-		addEntry("explosives_mines")
-				.addSource("crafting_radio_equipped_satchel", getSourceForItems(IIContent.itemAmmoCasing.getStack(Casing.RADIO_EXPLOSIVES)))
-				.addSource("landmines", getSourceForItem((IIContent.blockTellermine.getStack(BlockIIMine.IIBlockTypes_Mine.MAIN))))
-				.addSource("tripmine", getSourceForItem((IIContent.blockTripmine.getStack(BlockIIMine.IIBlockTypes_Mine.MAIN))))
-				.addSource("navalmine", getSourceForItem((IIContent.itemNavalMine.getStack(ItemIIAmmoBase.AmmoParts.BULLET))));
-		addEntry("grenades");
-		addEntry("fortifications")
-				.addSource("sandbags", getSourceForItem(IIContent.blockSandbags.getStack(IIBlockTypes_Sandbags.SANDBAGS)))
-				.addSource("anti_tank_trap", getSourceForItem(IIContent.blockMetalFortification1.getStack(IIBlockTypes_MetalFortification1.TANK_TRAP)));
-		addEntry("light_engineer_armor")
-				.addSource("lea", getSourceForItems(new ItemStack(IIContent.itemLightEngineerHelmet), new ItemStack(IIContent.itemLightEngineerChestplate), new ItemStack(IIContent.itemLightEngineerLeggings), new ItemStack(IIContent.itemLightEngineerBoots)))
-				.addSource("gas_mask", getSourceForItems(IIContent.itemArmorUpgrade.getStack(ArmorUpgrades.GASMASK)))
-				.addSource("ir_headgear", getSourceForItems(IIContent.itemArmorUpgrade.getStack(ArmorUpgrades.INFILTRATOR_GEAR)))
-				.addSource("tech_headgear", getSourceForItems(IIContent.itemArmorUpgrade.getStack(ArmorUpgrades.TECHNICIAN_GEAR)))
-				.addSource("engineer_headgear", getSourceForItems(IIContent.itemArmorUpgrade.getStack(ArmorUpgrades.ENGINEER_GEAR)))
-				.addSource("steel_armor_plates", getSourceForItems(IIContent.itemArmorUpgrade.getStack(ArmorUpgrades.STEEL_ARMOR_PLATES)))
-				.addSource("composite_armor_plates", getSourceForItems(IIContent.itemArmorUpgrade.getStack(ArmorUpgrades.COMPOSITE_ARMOR_PLATES)))
-				.addSource("hazmat_coating", getSourceForItems(IIContent.itemArmorUpgrade.getStack(ArmorUpgrades.HAZMAT_COATING)))
-				.addSource("heat_resistant_coating", getSourceForItems(IIContent.itemArmorUpgrade.getStack(ArmorUpgrades.HEAT_RESISTANT_COATING)))
-				.addSource("anti_static_mesh", getSourceForItems(IIContent.itemArmorUpgrade.getStack(ArmorUpgrades.ANTI_STATIC_MESH)))
-				.addSource("camo_mesh", getSourceForItems(IIContent.itemArmorUpgrade.getStack(ArmorUpgrades.CAMOUFLAGE_MESH)))
-				.addSource("ir_absorbing_mesh", getSourceForItems(IIContent.itemArmorUpgrade.getStack(ArmorUpgrades.INFRARED_ABSORBING_MESH)))
-				.addSource("scuba_tank", getSourceForItems(IIContent.itemArmorUpgrade.getStack(ArmorUpgrades.SCUBA_TANK)))
-				.addSource("helipack", getSourceForItems(IIContent.itemArmorUpgrade.getStack(ArmorUpgrades.HELIPACK)))
-				.addSource("exoskeleton", getSourceForItems(IIContent.itemArmorUpgrade.getStack(ArmorUpgrades.EXOSKELETON)))
-				.addSource("boot_reinforcement", getSourceForItems(IIContent.itemArmorUpgrade.getStack(ArmorUpgrades.BOOT_REINFORCEMENT)))
-				.addSource("flippers", getSourceForItems(IIContent.itemArmorUpgrade.getStack(ArmorUpgrades.FLIPPERS)))
-				.addSource("snow_rackets", getSourceForItems(IIContent.itemArmorUpgrade.getStack(ArmorUpgrades.SNOW_RACKETS)))
-				.addSource("internal_springs", getSourceForItems(IIContent.itemArmorUpgrade.getStack(ArmorUpgrades.INTERNAL_SPRINGS)));
+		addEntry("magazines")
+				.addSource("magazine_all", getSourceForItems(
+						IIContent.itemBulletMagazine.getMagazine(Magazines.MACHINEGUN),
+						IIContent.itemBulletMagazine.getMagazine(Magazines.SUBMACHINEGUN),
+						IIContent.itemBulletMagazine.getMagazine(Magazines.RIFLE),
+						IIContent.itemBulletMagazine.getMagazine(Magazines.SUBMACHINEGUN_DRUM),
+						IIContent.itemBulletMagazine.getMagazine(Magazines.ASSAULT_RIFLE),
+						IIContent.itemBulletMagazine.getMagazine(Magazines.AUTOCANNON),
+						IIContent.itemBulletMagazine.getMagazine(Magazines.CPDS_DRUM)
+				))
+				.addSource("magazine_blueprint", getSourceForItem(BlueprintCraftingRecipe.getTypedBlueprint("bullet_magazines")));
+		
 		addEntry("machinegun")
 				.addSource("machinegun", getSourceForItem(new ItemStack(IIContent.itemMachinegun)));
 		addEntry("rifle")
@@ -159,6 +133,50 @@ public class IIManualCategoryWarfare extends IIManualCategory
 				.addSource("railgun_assisted_chamber", getSourceForItem(IIContent.itemWeaponUpgrade.getStack(WeaponUpgrade.RAILGUN_ASSISTED_CHAMBER)))
 				.addSource("sami_automatic", getSourceForItem(IIContent.itemWeaponUpgrade.getStack(WeaponUpgrade.SEMI_AUTOMATIC)))
 				.addSource("long_barrel", getSourceForItem(IIContent.itemWeaponUpgrade.getStack(WeaponUpgrade.EXTENDED_BARREL)));
+
+		addEntry("light_engineer_armor")
+				.addSource("lea", getSourceForItems(new ItemStack(IIContent.itemLightEngineerHelmet), new ItemStack(IIContent.itemLightEngineerChestplate), new ItemStack(IIContent.itemLightEngineerLeggings), new ItemStack(IIContent.itemLightEngineerBoots)))
+				.addSource("gas_mask", getSourceForItems(IIContent.itemArmorUpgrade.getStack(ArmorUpgrades.GASMASK)))
+				.addSource("ir_headgear", getSourceForItems(IIContent.itemArmorUpgrade.getStack(ArmorUpgrades.INFILTRATOR_GEAR)))
+				.addSource("tech_headgear", getSourceForItems(IIContent.itemArmorUpgrade.getStack(ArmorUpgrades.TECHNICIAN_GEAR)))
+				.addSource("engineer_headgear", getSourceForItems(IIContent.itemArmorUpgrade.getStack(ArmorUpgrades.ENGINEER_GEAR)))
+				.addSource("steel_armor_plates", getSourceForItems(IIContent.itemArmorUpgrade.getStack(ArmorUpgrades.STEEL_ARMOR_PLATES)))
+				.addSource("composite_armor_plates", getSourceForItems(IIContent.itemArmorUpgrade.getStack(ArmorUpgrades.COMPOSITE_ARMOR_PLATES)))
+				.addSource("hazmat_coating", getSourceForItems(IIContent.itemArmorUpgrade.getStack(ArmorUpgrades.HAZMAT_COATING)))
+				.addSource("heat_resistant_coating", getSourceForItems(IIContent.itemArmorUpgrade.getStack(ArmorUpgrades.HEAT_RESISTANT_COATING)))
+				.addSource("anti_static_mesh", getSourceForItems(IIContent.itemArmorUpgrade.getStack(ArmorUpgrades.ANTI_STATIC_MESH)))
+				.addSource("camo_mesh", getSourceForItems(IIContent.itemArmorUpgrade.getStack(ArmorUpgrades.CAMOUFLAGE_MESH)))
+				.addSource("ir_absorbing_mesh", getSourceForItems(IIContent.itemArmorUpgrade.getStack(ArmorUpgrades.INFRARED_ABSORBING_MESH)))
+				.addSource("scuba_tank", getSourceForItems(IIContent.itemArmorUpgrade.getStack(ArmorUpgrades.SCUBA_TANK)))
+				.addSource("helipack", getSourceForItems(IIContent.itemArmorUpgrade.getStack(ArmorUpgrades.HELIPACK)))
+				.addSource("exoskeleton", getSourceForItems(IIContent.itemArmorUpgrade.getStack(ArmorUpgrades.EXOSKELETON)))
+				.addSource("boot_reinforcement", getSourceForItems(IIContent.itemArmorUpgrade.getStack(ArmorUpgrades.BOOT_REINFORCEMENT)))
+				.addSource("flippers", getSourceForItems(IIContent.itemArmorUpgrade.getStack(ArmorUpgrades.FLIPPERS)))
+				.addSource("snow_rackets", getSourceForItems(IIContent.itemArmorUpgrade.getStack(ArmorUpgrades.SNOW_RACKETS)))
+				.addSource("internal_springs", getSourceForItems(IIContent.itemArmorUpgrade.getStack(ArmorUpgrades.INTERNAL_SPRINGS)));
+
+		addEntry("ammocrate")
+				.addSource("crafting", getSourceForItems(IIContent.blockMetalDevice.getStack(IIBlockTypes_MetalDevice.AMMUNITION_CRATE))
+				);
+		addEntry("casing_pouch")
+				.addSource("crafting", getSourceForItems(IIContent.itemCasingPouch.getStack(1))
+				);
+
+		addEntry("emplacement");
+		addEntry("emplacement_weapons");
+		addEntry("chemdispenser")
+			.addSource("chemical_dispenser", getSourceForItem(IIContent.blockDataConnector.getStack(IIBlockTypes_Connector.CHEMICAL_DISPENSER)));
+		addEntry("flagpole");
+		addEntry("explosives_mines")
+				.addSource("crafting_radio_equipped_satchel", getSourceForItems(IIContent.itemAmmoCasing.getStack(Casing.RADIO_EXPLOSIVES)))
+				.addSource("landmines", getSourceForItem((IIContent.blockTellermine.getStack(BlockIIMine.IIBlockTypes_Mine.MAIN))))
+				.addSource("tripmine", getSourceForItem((IIContent.blockTripmine.getStack(BlockIIMine.IIBlockTypes_Mine.MAIN))))
+				.addSource("navalmine", getSourceForItem((IIContent.itemNavalMine.getStack(ItemIIAmmoBase.AmmoParts.BULLET))));
+		addEntry("grenades");
+		addEntry("fortifications")
+				.addSource("sandbags", getSourceForItem(IIContent.blockSandbags.getStack(IIBlockTypes_Sandbags.SANDBAGS)))
+				.addSource("anti_tank_trap", getSourceForItem(IIContent.blockMetalFortification1.getStack(IIBlockTypes_MetalFortification1.TANK_TRAP)));
+
 		addEntry("mine_detector")
 				.addSource("mine_detector", getSourceForItem(new ItemStack(IIContent.itemMineDetector)));
 		addEntry("mortar")
