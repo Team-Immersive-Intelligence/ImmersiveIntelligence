@@ -10,7 +10,7 @@ A powerful, fully automatic weapon, [assault rifles] utilize the [intermediate b
 Sneak and scroll the mouse wheel to change modes.
 
 # 2
-__**Available Modifications**__<br>
+Available Modifications:<br>
 
 [Scope](weapon_upgrades.md#7)
 [Infrared Scope](weapon_upgrades.md#8)

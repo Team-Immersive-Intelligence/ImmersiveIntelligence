@@ -8,7 +8,7 @@ Several weapons with numerous strengths and weaknesses can be installed to creat
 
 # mg0
 **Machinegun**<br>
-This Emplacement is the most basic and *cheapest* of all the Emplacements available. It is a reliable choice for dealing with soft ground targets or light vehicles, when using [armor-piercing] ammunition.
+This Emplacement is the most basic and *cheapest* of all the Emplacements available. It is a reliable choice for dealing with soft ground targets or light vehicles, when using [armor-piercing long bullets] for ammunition.
 # mg1
 The **Machinegun** Emplacement comes in 3 variants: [Default], [Heavy Barreled], and [Water-Cooled], which are identical in function to those present in the [infantry version](machinegun.md) of the Machinegun.
 Take note, this weapon does not use [magazines](magazines.md). [Loose bullets have to be provided through the emplacement input port]. Due to its limited pitch, the MG Emplacement is a poor choice for firing at air targets.
@@ -35,7 +35,7 @@ Fortunately, the **Heavy Railgun** possesses a high armor-piercing capability, s
 
 # cpds0
 **Counter-Projectile Defense System**<br>
-A pinnacle of computer technology, mechanical skill and sophisticated targeting software, this Emplacement is the worst enemy of anything that can fly, walk, or swim.
+A pinnacle of computer technology, mechanical skill and sophisticated targeting software, this Emplacement is the worst enemy of anything that can fly, walk, or swim. It uses [long bullets].
 # cpds1
 Due to the astounding rate of fire, as well as fast tracking and response abilities, it is almost [impossible for targets to evade].
 Thanks to its advanced targeting system, it is the [best weapon for anti-projectile defense purposes], with the capability to [shoot down artillery projectiles in mid air]. In order to do that, it needs to be linked to a [Radar](radar.md) or [Observers](#ir_observer0) in order to maximize the chances of successful interception.

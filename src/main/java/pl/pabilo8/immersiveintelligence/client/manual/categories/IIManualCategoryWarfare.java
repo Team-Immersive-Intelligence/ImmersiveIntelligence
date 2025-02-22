@@ -90,8 +90,9 @@ public class IIManualCategoryWarfare extends IIManualCategory
 		ManualHelper.addEntry("bullet_components", getCategory(),
 				bullet_components.toArray(new ManualPages[]{})
 		);
-
-		addEntry("magazines")
+		
+		//Items in Infantry Weapons folder
+		addEntry("weaponry/magazines")
 				.addSource("magazine_all", getSourceForItems(
 						IIContent.itemBulletMagazine.getMagazine(Magazines.MACHINEGUN),
 						IIContent.itemBulletMagazine.getMagazine(Magazines.SUBMACHINEGUN),
@@ -102,16 +103,15 @@ public class IIManualCategoryWarfare extends IIManualCategory
 						IIContent.itemBulletMagazine.getMagazine(Magazines.CPDS_DRUM)
 				))
 				.addSource("magazine_blueprint", getSourceForItem(BlueprintCraftingRecipe.getTypedBlueprint("bullet_magazines")));
-		
-		addEntry("machinegun")
+		addEntry("weaponry/machinegun")
 				.addSource("machinegun", getSourceForItem(new ItemStack(IIContent.itemMachinegun)));
-		addEntry("rifle")
+		addEntry("weaponry/rifle")
 				.addSource("rifle", getSourceForItem(new ItemStack(IIContent.itemRifle)));
-		addEntry("assault_rifle")
+		addEntry("weaponry/assault_rifle")
 				.addSource("assaultrifle", getSourceForItem(new ItemStack(IIContent.itemAssaultRifle)));
-		addEntry("submachinegun")
+		addEntry("weaponry/submachinegun")
 				.addSource("submachinegun", getSourceForItem(new ItemStack(IIContent.itemSubmachinegun)));
-		addEntry("weapon_upgrades")
+		addEntry("weaponry/weapon_upgrades")
 				.addSource("heavy_barrel", getSourceForItem(IIContent.itemWeaponUpgrade.getStack(WeaponUpgrade.HEAVY_BARREL)))
 				.addSource("water_cooling", getSourceForItem(IIContent.itemWeaponUpgrade.getStack(WeaponUpgrade.WATER_COOLING)))
 				.addSource("belt_fed_loader", getSourceForItem(IIContent.itemWeaponUpgrade.getStack(WeaponUpgrade.BELT_FED_LOADER)))
@@ -133,8 +133,16 @@ public class IIManualCategoryWarfare extends IIManualCategory
 				.addSource("railgun_assisted_chamber", getSourceForItem(IIContent.itemWeaponUpgrade.getStack(WeaponUpgrade.RAILGUN_ASSISTED_CHAMBER)))
 				.addSource("sami_automatic", getSourceForItem(IIContent.itemWeaponUpgrade.getStack(WeaponUpgrade.SEMI_AUTOMATIC)))
 				.addSource("long_barrel", getSourceForItem(IIContent.itemWeaponUpgrade.getStack(WeaponUpgrade.EXTENDED_BARREL)));
+		addEntry("weaponry/grenades");
+		addEntry("weaponry/mortar")
+				.addSource("mortar", getSourceForItem(new ItemStack(IIContent.itemMortar)));
+		addEntry("weaponry/ammocrate")
+				.addSource("crafting", getSourceForItems(IIContent.blockMetalDevice.getStack(IIBlockTypes_MetalDevice.AMMUNITION_CRATE)));
+		addEntry("weaponry/casing_pouch")
+				.addSource("crafting", getSourceForItems(IIContent.itemCasingPouch.getStack(1)));
 
-		addEntry("light_engineer_armor")
+		//Items in Armor and Tools folder
+		addEntry("armortools/light_engineer_armor")
 				.addSource("lea", getSourceForItems(new ItemStack(IIContent.itemLightEngineerHelmet), new ItemStack(IIContent.itemLightEngineerChestplate), new ItemStack(IIContent.itemLightEngineerLeggings), new ItemStack(IIContent.itemLightEngineerBoots)))
 				.addSource("gas_mask", getSourceForItems(IIContent.itemArmorUpgrade.getStack(ArmorUpgrades.GASMASK)))
 				.addSource("ir_headgear", getSourceForItems(IIContent.itemArmorUpgrade.getStack(ArmorUpgrades.INFILTRATOR_GEAR)))
@@ -154,39 +162,28 @@ public class IIManualCategoryWarfare extends IIManualCategory
 				.addSource("flippers", getSourceForItems(IIContent.itemArmorUpgrade.getStack(ArmorUpgrades.FLIPPERS)))
 				.addSource("snow_rackets", getSourceForItems(IIContent.itemArmorUpgrade.getStack(ArmorUpgrades.SNOW_RACKETS)))
 				.addSource("internal_springs", getSourceForItems(IIContent.itemArmorUpgrade.getStack(ArmorUpgrades.INTERNAL_SPRINGS)));
+		addEntry("armortools/flagpole");
+		addEntry("armortools/mine_detector")
+				.addSource("mine_detector", getSourceForItem(new ItemStack(IIContent.itemMineDetector)));
+		addEntry("armortools/trench_shovel")
+				.addSource("trench_shovel", getSourceForItem(new ItemStack(IIContent.itemTrenchShovel)));
 
-		addEntry("ammocrate")
-				.addSource("crafting", getSourceForItems(IIContent.blockMetalDevice.getStack(IIBlockTypes_MetalDevice.AMMUNITION_CRATE))
-				);
-		addEntry("casing_pouch")
-				.addSource("crafting", getSourceForItems(IIContent.itemCasingPouch.getStack(1))
-				);
-
-		addEntry("emplacement");
-		addEntry("emplacement_weapons");
-		addEntry("chemdispenser")
+		//Items in Static Defenses folder
+		addEntry("staticdefense/artillery_howitzer");
+		addEntry("staticdefense/ballistic_computer");
+		addEntry("staticdefense/emplacement");
+		addEntry("staticdefense/emplacement_weapons");
+		addEntry("staticdefense/chemdispenser")
 			.addSource("chemical_dispenser", getSourceForItem(IIContent.blockDataConnector.getStack(IIBlockTypes_Connector.CHEMICAL_DISPENSER)));
-		addEntry("flagpole");
-		addEntry("explosives_mines")
+		addEntry("staticdefense/fortifications")
+			.addSource("sandbags", getSourceForItem(IIContent.blockSandbags.getStack(IIBlockTypes_Sandbags.SANDBAGS)))
+			.addSource("anti_tank_trap", getSourceForItem(IIContent.blockMetalFortification1.getStack(IIBlockTypes_MetalFortification1.TANK_TRAP)));
+		addEntry("staticdefense/explosives_mines")
 				.addSource("crafting_radio_equipped_satchel", getSourceForItems(IIContent.itemAmmoCasing.getStack(Casing.RADIO_EXPLOSIVES)))
 				.addSource("landmines", getSourceForItem((IIContent.blockTellermine.getStack(BlockIIMine.IIBlockTypes_Mine.MAIN))))
 				.addSource("tripmine", getSourceForItem((IIContent.blockTripmine.getStack(BlockIIMine.IIBlockTypes_Mine.MAIN))))
 				.addSource("navalmine", getSourceForItem((IIContent.itemNavalMine.getStack(ItemIIAmmoBase.AmmoParts.BULLET))));
-		addEntry("grenades");
-		addEntry("fortifications")
-				.addSource("sandbags", getSourceForItem(IIContent.blockSandbags.getStack(IIBlockTypes_Sandbags.SANDBAGS)))
-				.addSource("anti_tank_trap", getSourceForItem(IIContent.blockMetalFortification1.getStack(IIBlockTypes_MetalFortification1.TANK_TRAP)));
-
-		addEntry("mine_detector")
-				.addSource("mine_detector", getSourceForItem(new ItemStack(IIContent.itemMineDetector)));
-		addEntry("mortar")
-				.addSource("mortar", getSourceForItem(new ItemStack(IIContent.itemMortar)));
-		addEntry("trench_shovel")
-				.addSource("trench_shovel", getSourceForItem(new ItemStack(IIContent.itemTrenchShovel)));
-		addEntry("artillery_howitzer");
-		addEntry("ballistic_computer");
-		addEntry("explosive_mine_sign")
+		addEntry("staticdefense/explosive_mine_sign")
 				.addSource("mine_sign", getSourceForItem(new ItemStack(IIContent.blockMineSign)));
-
 	}
 }
