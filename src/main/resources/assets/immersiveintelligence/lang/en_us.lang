@@ -2745,6 +2745,8 @@ ie.manual.entry.false=False
 ie.manual.entry.true=True
 
 ie.manual.entry.callback_returns=Returns:
+ie.manual.entry.allowed_value=Allowed value:
+ie.manual.entry.allowed_values=Allowed values:
 
 #Bullet cores & components
 ie.manual.entry.bullet_cores.name=Bullet Cores
@@ -2921,8 +2923,7 @@ ie.manual.entry.bullet_component.shrapnel_wood=Wood Shrapnel
 ie.manual.entry.bullet_component.shrapnel_wood.lore=Eco-friendly!
 ie.manual.entry.bullet_component.shrapnel_wood.desc=Wood is a poor material for shrapnel. However, you can feel good about yourself for mowing down your enemies with biodegradable materials.
 
-ie.manual.entry.allowed_value=Allowed value:
-ie.manual.entry.allowed_values=Allowed values:
+
 
 death.attack.iiBullet=%1$s was shot by %2$s
 death.attack.iiBulletNoShooter=%1$s was shot
