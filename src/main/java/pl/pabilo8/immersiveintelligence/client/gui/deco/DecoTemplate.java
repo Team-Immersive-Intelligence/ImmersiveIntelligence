@@ -20,5 +20,5 @@ public @interface DecoTemplate
 	/**
 	 * The style of the gui, used for picking the default background and component textures
 	 */
-	String style();
+	String style() default "steel";
 }

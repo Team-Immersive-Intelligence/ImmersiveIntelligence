@@ -48,6 +48,7 @@ import pl.pabilo8.immersiveintelligence.common.block.simple.tileentity.TileEntit
 import pl.pabilo8.immersiveintelligence.common.compat.jei.gui_handlers.JeiDecoGuiHandler;
 import pl.pabilo8.immersiveintelligence.common.gui.*;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerEmplacement.ContainerEmplacementStorage;
+import pl.pabilo8.immersiveintelligence.common.util.ISerializableEnum;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIBase;
 import pl.pabilo8.immersiveintelligence.common.util.lambda.TriFunction;
@@ -64,7 +65,7 @@ import java.util.function.BiFunction;
  * Major update on 2020-06-08
  */
 
-public enum IIGuiList
+public enum IIGuiList implements ISerializableEnum
 {
 	GUI_METAL_CRATE(TileEntityMetalCrate.class,
 			ContainerIICrate::new
@@ -364,7 +365,7 @@ public enum IIGuiList
 			}
 		}
 		if(!resources.isEmpty())
-			new DecoResourcesLoader(annotation.name(), resources);
+			new DecoResourcesLoader(this.getName().replace("gui_", ""), resources);
 
 	}
 

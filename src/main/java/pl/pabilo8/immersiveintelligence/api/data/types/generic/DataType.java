@@ -1,8 +1,11 @@
 package pl.pabilo8.immersiveintelligence.api.data.types.generic;
 
 import mcp.MethodsReturnNonnullByDefault;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.data.IIDataHandlingUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
@@ -99,6 +102,12 @@ public abstract class DataType
 			this.supplier = supplier;
 			this.color = color;
 			this.textureLocation = ResLoc.of(IIReference.RES_TEXTURES_GUI, "data_types/"+name).withExtension(ResLoc.EXT_PNG);
+		}
+
+		@SideOnly(Side.CLIENT)
+		public String getTranslatedName()
+		{
+			return I18n.format(IIReference.DATA_KEY+"datatype."+name);
 		}
 
 		public ResourceLocation getTextureLocation()

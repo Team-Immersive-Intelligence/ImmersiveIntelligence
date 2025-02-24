@@ -26,7 +26,8 @@ import pl.pabilo8.immersiveintelligence.client.gui.block.*;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
-import pl.pabilo8.immersiveintelligence.common.compat.jei.gui_handlers.*;
+import pl.pabilo8.immersiveintelligence.common.compat.jei.gui_handlers.UpgradeGuiHandler;
+import pl.pabilo8.immersiveintelligence.common.compat.jei.gui_handlers.VulcanizerGuiHandler;
 import pl.pabilo8.immersiveintelligence.common.compat.jei.recipe_handlers.*;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.gun.ItemIIAmmoRevolver;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock;
@@ -148,15 +149,9 @@ public class JEIHelper implements IModPlugin
 		modRegistry.addRecipeClickArea(GuiFiller.class, 41, 2, 60, 60, "ii.filler");
 
 		modRegistry.addAdvancedGuiHandlers(new UpgradeGuiHandler());
-		modRegistry.addAdvancedGuiHandlers(new AmmoCrateGuiHandler(),
-				new ArithmeticLogicMachineGuiHandler(),
-				new DataInputMachineGuiHandler(),
-				new EmplacementGuiHandler()
-		);
 
 		if(FMLCommonHandler.instance().getSide()==Side.CLIENT)
 			IIGuiList.registerDecoJEICompat(modRegistry);
-
 
 		//modRegistry.addRecipes(RecipeMinecart.listAllRecipes, VanillaRecipeCategoryUid.CRAFTING);
 		//modRegistry.addRecipes(RecipeCrateConversion.listAllRecipes, VanillaRecipeCategoryUid.CRAFTING);

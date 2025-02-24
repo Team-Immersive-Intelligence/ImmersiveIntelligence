@@ -104,8 +104,9 @@ public class IIReference
 	public static final ResLoc RES_TEXTURES_DECO = ResLoc.of(RES_II, "gui/deco/");
 	public static final ResLoc RES_TEXTURES_DECO_BACKGROUND = ResLoc.of(RES_TEXTURES_DECO, "background/");
 	//Deco Templates
-	public static final ResLoc RES_TEXTURES_DECO_ROUND = ResLoc.of(RES_TEXTURES_DECO, "template/round");
-	public static final ResLoc RES_TEXTURES_DECO_SQUARE = ResLoc.of(RES_TEXTURES_DECO, "template/square");
+	public static final ResLoc RES_TEXTURES_DECO_TEMPLATE_ROUND = ResLoc.of(RES_TEXTURES_DECO, "template/round");
+	public static final ResLoc RES_TEXTURES_DECO_TEMPLATE_SQUARE = ResLoc.of(RES_TEXTURES_DECO, "template/square");
+	public static final ResLoc RES_TEXTURES_DECO_TEMPLATE_TICKET = ResLoc.of(RES_TEXTURES_DECO, "template/ticket");
 	//Deco Inventory Slots
 	public static final ResLoc RES_TEXTURES_DECO_INVENTORY_SLOT = ResLoc.of(RES_TEXTURES_DECO, "slot/vanilla");
 	public static final ResLoc RES_TEXTURES_DECO_IE_SLOT = ResLoc.of(RES_TEXTURES_DECO, "slot/steel");
@@ -122,7 +123,6 @@ public class IIReference
 	public static final ResLoc GUI_BG_BLUEPRINT = ResLoc.of(RES_TEXTURES_DECO_BACKGROUND, "blueprint");
 	public static final ResLoc GUI_BG_DARK = ResLoc.of(RES_TEXTURES_DECO_BACKGROUND, "dark");
 	//Deco Labels
-
 	public static final ResLoc GUI_LABEL_WOODEN = ResLoc.of(RES_TEXTURES_DECO, "label/label_wooden");
 	public static final ResLoc GUI_LABEL_STEEL = ResLoc.of(RES_TEXTURES_DECO, "label/label_steel");
 	public static final ResLoc GUI_LABEL_HAZARD = ResLoc.of(RES_TEXTURES_DECO, "label/label_hazard");
@@ -134,6 +134,18 @@ public class IIReference
 	public static final ResLoc RES_TEXTURES_DECO_COMPONENT_SWITCH_MOVING = ResLoc.of(RES_TEXTURES_DECO, "component/switch_moving");
 	public static final ResLoc RES_TEXTURES_DECO_COMPONENT_DROPDOWN = ResLoc.of(RES_TEXTURES_DECO, "component/dropdown");
 	public static final ResLoc RES_TEXTURES_DECO_COMPONENT_SLIDER = ResLoc.of(RES_TEXTURES_DECO, "component/slider");
+	//Deco Icons
+	public static final ResLoc RES_TEXTURES_DECO_ICON = ResLoc.of(RES_TEXTURES_DECO, "icons/");
+	public static final ResLoc RES_TEXTURES_DECO_ICON_ACTION_ADD = ResLoc.of(RES_TEXTURES_DECO_ICON, "action_add");
+	public static final ResLoc RES_TEXTURES_DECO_ICON_ACTION_REMOVE = ResLoc.of(RES_TEXTURES_DECO_ICON, "action_remove");
+	public static final ResLoc RES_TEXTURES_DECO_ICON_ACTION_EDIT = ResLoc.of(RES_TEXTURES_DECO_ICON, "action_edit");
+	public static final ResLoc RES_TEXTURES_DECO_ICON_ACTION_DUPLICATE = ResLoc.of(RES_TEXTURES_DECO_ICON, "action_duplicate");
+	public static final ResLoc RES_TEXTURES_DECO_ICON_ACTION_CLEAR = ResLoc.of(RES_TEXTURES_DECO_ICON, "action_clear");
+
+
+	//Custom Deco Component Textures
+	public static final ResLoc RES_TEXTURES_DECO_BUTTON_PAPER = ResLoc.of(RES_TEXTURES_DECO, "component/button_paper");
+	public static final ResLoc RES_TEXTURES_DECO_BUTTON_HANGING = ResLoc.of(RES_TEXTURES_DECO, "component/button_hanging");
 
 
 	//--- GameRules ---//

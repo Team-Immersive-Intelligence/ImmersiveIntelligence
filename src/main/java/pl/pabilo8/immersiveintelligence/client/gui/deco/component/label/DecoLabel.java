@@ -4,7 +4,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiLabel;
 import net.minecraft.client.resources.I18n;
-import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoAlignment;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
@@ -117,7 +116,7 @@ public class DecoLabel extends GuiLabel
 		{
 			int xx = textAlignment.getAlignX(x, fontRenderer.getStringWidth(label), width);
 			int yy = textAlignment.getAlignY(lineOffset, totalHeight, height);
-			IIClientUtils.fontRegular.drawString(label, xx, yy, textColor.getPackedARGB(), textShadow);
+			fontRenderer.drawString(label, xx, yy, textColor.getPackedARGB(), textShadow);
 			lineOffset += fontRenderer.FONT_HEIGHT;
 		}
 	}

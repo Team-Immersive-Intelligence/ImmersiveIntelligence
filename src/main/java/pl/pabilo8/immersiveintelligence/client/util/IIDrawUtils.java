@@ -1,10 +1,13 @@
 package pl.pabilo8.immersiveintelligence.client.util;
 
+import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.vertex.VertexFormat;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
@@ -189,14 +192,13 @@ public class IIDrawUtils
 		return this;
 	}
 
-
 	public IIDrawUtils drawRepeatedColorRect(float x, float y, float w, float h, IIColor color,
 											 int tWidth, int tHeight, float... uv)
 	{
 		float tw = w/tWidth;
 		float th = h/tHeight;
 
-		//Split into smaller parts
+		// Split into smaller parts
 		if(tw < 1||th < 1)
 		{
 			if(tw < 1)
@@ -220,12 +222,52 @@ public class IIDrawUtils
 				drawTexColorRect(x+i*tWidth, y+j*tHeight,
 						realW, realH, color,
 						uv[0],
-						uv[0]+(uv[1]-uv[0])*(realW/w),
+						uv[0]+(uv[1]-uv[0])*(Math.min(1, tw-i)),
 						uv[2],
-						uv[2]+(uv[3]-uv[2])*(realH/h)
+						uv[2]+(uv[3]-uv[2])*(Math.min(1, th-j))
 				);
 			}
 		return this;
+	}
+
+	public IIDrawUtils drawRepeatedColorRect(float x, float y, float w, float h, IIColor color,
+											 int texSizeX, int texSizeY, int xMargin, int yMargin, float... uv)
+	{
+		int iSizeX = Math.min(texSizeX-2*xMargin, Math.min((int)w, texSizeX)/2);
+		int iSizeY = Math.min(texSizeY-2*yMargin, Math.min((int)h, texSizeY)/2);
+		float tStartX = (xMargin/(float)texSizeX)*(uv[1]-uv[0])+uv[0];
+		float tStartY = (yMargin/(float)texSizeY)*(uv[3]-uv[2])+uv[2];
+
+		for(int yy = 0; yy < h; yy += iSizeY)
+		{
+			int drawHeight = Math.min(iSizeY, (int)h-yy);
+			boolean isTop = yy==0;
+			boolean isBottom = yy+iSizeY >= h;
+			float texY = isTop?uv[2]: (isBottom?uv[3]-(drawHeight/(float)texSizeY)*(uv[3]-uv[2]): tStartY);
+
+			for(int xx = 0; xx < w; xx += iSizeX)
+			{
+				int drawWidth = Math.min(iSizeX, (int)w-xx);
+				boolean isLeft = xx==0;
+				boolean isRight = xx+iSizeX >= w;
+				float texX = isLeft?uv[0]: (isRight?uv[1]-(drawWidth/(float)texSizeX)*(uv[1]-uv[0]): tStartX);
+
+				drawTexColorRect(
+						x+xx, y+yy, drawWidth, drawHeight, color,
+						texX, texX+(drawWidth/(float)texSizeX)*(uv[1]-uv[0]),
+						texY, texY+(drawHeight/(float)texSizeY)*(uv[3]-uv[2])
+				);
+			}
+		}
+		return this;
+	}
+
+	public IIDrawUtils drawRepeatedColorRect(float x, float y, float w, float h, IIColor color, ResourceLocation spriteLocation,
+											 int texSizeX, int texSizeY, int xMargin, int yMargin)
+	{
+		TextureAtlasSprite sprite = ClientUtils.getSprite(spriteLocation);
+		return drawRepeatedColorRect(x, y, w, h, color, texSizeX, texSizeY, xMargin, yMargin,
+				sprite.getMinU(), sprite.getMaxU(), sprite.getMinV(), sprite.getMaxV());
 	}
 
 	//--- Offset and Rotation ---//

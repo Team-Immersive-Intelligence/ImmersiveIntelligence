@@ -20,6 +20,11 @@ public abstract class GuiComponentDecoTextBase<TYPE extends GuiComponentDecoText
 	protected static final IIColor BACKGROUND_PRESSED = IIColor.MC_GRAY;
 	protected static final IIColor BACKGROUND_DISABLED = IIColor.fromHex("404040");
 
+	protected IIColor backgroundColor = BACKGROUND;
+	protected IIColor backgroundColorHovered = BACKGROUND_HOVERED;
+	protected IIColor backgroundColorPressed = BACKGROUND_PRESSED;
+	protected IIColor backgroundColorDisabled = BACKGROUND_DISABLED;
+
 	protected ResLoc backgroundLocation;
 	protected String text = "";
 	protected IIFontRenderer fontRenderer = IIClientUtils.fontRegular;
@@ -54,6 +59,16 @@ public abstract class GuiComponentDecoTextBase<TYPE extends GuiComponentDecoText
 		return (TYPE)this;
 	}
 
+	public TYPE withBackgroundColor(IIColor color)
+	{
+		this.backgroundColor = color;
+		this.backgroundColorDisabled = color.mixedWith(IIColor.BLACK, 0.5f);
+		this.backgroundColorHovered = color.mixedWith(IIColor.WHITE, 0.5f);
+		this.backgroundColorPressed = color.mixedWith(IIColor.MC_GRAY, 0.5f);
+
+		return (TYPE)this;
+	}
+
 	public TYPE withTextColor(IIColor textLabelColor, IIColor textBoxColor)
 	{
 		this.textLabelColor = textLabelColor;
@@ -83,7 +98,7 @@ public abstract class GuiComponentDecoTextBase<TYPE extends GuiComponentDecoText
 
 	protected final IIColor getBackgroundColor()
 	{
-		return enabled?(pressed?BACKGROUND_PRESSED: (hovered?BACKGROUND_HOVERED: BACKGROUND)): BACKGROUND_DISABLED;
+		return enabled?(pressed?backgroundColorPressed: (hovered?backgroundColorHovered: backgroundColor)): backgroundColorDisabled;
 	}
 
 	protected final IIColor getTextColor(boolean label)

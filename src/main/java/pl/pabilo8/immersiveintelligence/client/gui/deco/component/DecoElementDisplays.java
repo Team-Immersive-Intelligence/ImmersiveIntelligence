@@ -1,6 +1,7 @@
 package pl.pabilo8.immersiveintelligence.client.gui.deco.component;
 
 import net.minecraft.client.renderer.GlStateManager;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoScrolledCollection;
 import pl.pabilo8.immersiveintelligence.client.util.font.IIFontRenderer;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
@@ -25,7 +26,7 @@ public class DecoElementDisplays
 	 */
 	public static <T> DecoElementDisplay<T> getDefaultDisplay()
 	{
-		return (t, width, font, heightProbe) -> {
+		return (t, width, font, mouseX, mouseY, partialTicks, heightProbe) -> {
 			if(!heightProbe)
 				font.drawString(t.toString(), 0, 0, IIColor.fromHex("afafaf").getPackedRGB());
 			return font.FONT_HEIGHT;
@@ -49,19 +50,37 @@ public class DecoElementDisplays
 		/**
 		 * Displays an element field of a listing component.
 		 *
-		 * @param t           The element to display
-		 * @param width       The width of the element
-		 * @param font        The font renderer to use
-		 * @param heightProbe If true, the method should only return the height of the element, otherwise it should draw it
+		 * @param t            The element to display
+		 * @param width        The width of the element
+		 * @param font         The font renderer to use
+		 * @param mouseX       The x position of the mouse
+		 * @param mouseY       The y position of the mouse
+		 * @param partialTicks
+		 * @param heightProbe  If true, the method should only return the height of the element, otherwise it should draw it
 		 * @return The height of the element
 		 * @implNote Top-Left corner is at (0,0).
 		 * The draw action is wrapped in {@link GlStateManager#pushMatrix()} and {@link GlStateManager#popMatrix()}, so there is no need to add your own.
 		 */
-		int displayElement(T t, int width, IIFontRenderer font, boolean heightProbe);
+		int displayElement(T t, int width, IIFontRenderer font, int mouseX, int mouseY, float partialTicks, boolean heightProbe);
+
+		default int displayElement(T t, int width, IIFontRenderer font, boolean heightProbe)
+		{
+			return displayElement(t, width, font, 0, 0, 0, heightProbe);
+		}
 
 		default boolean isSelectable(T t)
 		{
 			return true;
+		}
+
+		default void drawCreateOption(int width, int height, IIFontRenderer font, int mouseX, int mouseY)
+		{
+			font.drawString("+ New Entry", 0, 0, IIColor.fromHex("afafaf").getPackedRGB());
+		}
+
+		default void bindCollection(DecoScrolledCollection<?, T> collection)
+		{
+
 		}
 	}
 

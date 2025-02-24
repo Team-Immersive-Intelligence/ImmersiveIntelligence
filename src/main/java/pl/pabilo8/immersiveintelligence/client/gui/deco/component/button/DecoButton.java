@@ -2,13 +2,13 @@ package pl.pabilo8.immersiveintelligence.client.gui.deco.component.button;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoAlignment;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiComponentDecoTextBase;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoGuiUtils;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
-import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 
@@ -24,10 +24,11 @@ import javax.annotation.Nullable;
 public class DecoButton extends GuiComponentDecoTextBase<DecoButton>
 {
 	private DecoAlignment iconAlignment = DecoAlignment.CENTER;
-	protected int[] padding = new int[]{2, 1, 2, 2};
+	protected int[] padding = new int[]{2, 2, 2, 2};
 
 	@Nullable
 	private ResLoc icon;
+	private int iconSize = 16;
 	@Nullable
 	private ItemStack stack;
 
@@ -41,6 +42,13 @@ public class DecoButton extends GuiComponentDecoTextBase<DecoButton>
 	public DecoButton withIcon(@Nonnull ResourceLocation icon)
 	{
 		this.icon = icon instanceof ResLoc?((ResLoc)icon): ResLoc.of(icon);
+		return this;
+	}
+
+	public DecoButton withIcon(@Nonnull ResourceLocation icon, int iconSize)
+	{
+		this.icon = icon instanceof ResLoc?((ResLoc)icon): ResLoc.of(icon);
+		this.iconSize = iconSize;
 		return this;
 	}
 
@@ -81,26 +89,31 @@ public class DecoButton extends GuiComponentDecoTextBase<DecoButton>
 		IIDrawUtils draw = IIDrawUtils.startTexturedColored();
 
 		DecoGuiUtils.drawRepeatedRect(draw, x, y, width, height, backgroundLocation, getBackgroundColor(), 32, 8);
-		int minIconSize = Math.min(Math.min(width, height), 16);
+		int minIconSize = Math.min(Math.min(width, height), iconSize);
 		DecoAlignment align = iconAlignment==DecoAlignment.CENTER&&text!=null?DecoAlignment.LEFT: iconAlignment;
 
-		int xPadding = padding[0]+padding[2];
-		int yPadding = padding[1]+padding[3];
+		int xPadding = minIconSize < width?padding[0]+padding[2]: -1;
+		int yPadding = minIconSize < height?padding[1]+padding[3]: -1;
 
-		if(icon==null)
+		if(icon!=null)
+		{
+			TextureAtlasSprite iconSprite = ClientUtils.getSprite(icon);
 			draw.drawTexColorRect(
-					align.getAlignX(x+padding[0], minIconSize, width-xPadding),
-					align.getAlignY(y+padding[1], minIconSize, height-yPadding),
-					minIconSize, minIconSize, IIColor.WHITE, 0, 0, 1, 1);
+					align.getAlignX(x+xPadding, iconSize, width-xPadding),
+					align.getAlignY(y+yPadding, iconSize, height-yPadding),
+					iconSize, iconSize, getTextColor(false),
+					iconSprite.getMinU(), iconSprite.getMaxU(), iconSprite.getMinV(), iconSprite.getMaxV());
+		}
 		draw.finish();
 		if(stack!=null)
 		{
 			GlStateManager.pushMatrix();
-			GlStateManager.scale(16f/minIconSize, 16f/minIconSize, 1);
-			ClientUtils.mc().getRenderItem().renderItemAndEffectIntoGUI(stack,
+			GlStateManager.translate(
 					align.getAlignX(x+padding[0], minIconSize, width-xPadding),
-					align.getAlignY(y+padding[1], minIconSize, height-yPadding)
-			);
+					align.getAlignY(y+padding[1], minIconSize, height-yPadding),
+					0);
+			GlStateManager.scale(minIconSize/(float)iconSize, minIconSize/(float)iconSize, 1);
+			ClientUtils.mc().getRenderItem().renderItemAndEffectIntoGUI(stack, 0, 0);
 			GlStateManager.popMatrix();
 		}
 

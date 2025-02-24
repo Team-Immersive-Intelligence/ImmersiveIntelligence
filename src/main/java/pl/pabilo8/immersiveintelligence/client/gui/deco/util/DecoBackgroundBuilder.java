@@ -75,7 +75,7 @@ public class DecoBackgroundBuilder<T extends TileEntityIEBase & IIEInventory, C 
 	 */
 	public DecoBackgroundBuilder<T, C> withBox(ResLoc style, int x, int y, int width, int height)
 	{
-		return withBox(style, IIReference.RES_TEXTURES_DECO_ROUND, x, y, width, height);
+		return withBox(style, IIReference.RES_TEXTURES_DECO_TEMPLATE_ROUND, x, y, width, height);
 	}
 
 	/**
@@ -228,9 +228,9 @@ public class DecoBackgroundBuilder<T extends TileEntityIEBase & IIEInventory, C 
 				GL11.glStencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_KEEP);
 				GL11.glStencilFunc(GL11.GL_EQUAL, 1, 0xFF);
 				DecoGuiUtils.drawBackgroundBlock(layer).finish();
-
 				GL11.glDisable(GL11.GL_STENCIL_TEST);
 
+				//Overlay
 				GlStateManager.enableBlend();
 				GlStateManager.blendFunc(SourceFactor.DST_COLOR, DestFactor.SRC_COLOR);
 				DecoGuiUtils.drawBackgroundMask(layer, 0, 0).finish();

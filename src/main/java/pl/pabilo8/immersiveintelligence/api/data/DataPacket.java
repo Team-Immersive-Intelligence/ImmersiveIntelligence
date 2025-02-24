@@ -3,6 +3,7 @@ package pl.pabilo8.immersiveintelligence.api.data;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.nbt.NBTTagCompound;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeAccessor;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeExpression;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeNull;
@@ -11,9 +12,7 @@ import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType.IGeneric
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 
 /**
@@ -149,6 +148,13 @@ public class DataPacket implements Iterable<DataType>
 			return true;
 		}
 		return false;
+	}
+
+	public List<Pair<Character, DataType>> getAllVariables()
+	{
+		List<Pair<Character, DataType>> all = new ArrayList<>(variables.size());
+		variables.forEach((key, value) -> all.add(Pair.of(key, value)));
+		return all;
 	}
 
 	public NBTTagCompound toNBT()

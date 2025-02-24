@@ -9,24 +9,30 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.ClientProxy;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiComponentDecoBase;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiComponentDecoBase.DecoGuiEvent;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoTab;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoLabel;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundBuilder;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoRectangle;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
-import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageGuiNBT;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.NBTSerialisation;
 import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIBase;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.awt.*;
 import java.io.IOException;
 import java.util.List;
@@ -60,8 +66,6 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 	protected final C container;
 	protected final InventoryPlayer playerContainer;
 
-	protected ResLoc fallbackBackground = IIReference.GUI_BG_STEEL;
-
 	//Components
 	protected final List<DecoTab> tabList = new ArrayList<>();
 
@@ -81,7 +85,6 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 		AtomicReference<String> guiName = new AtomicReference<>("deco");
 		Optional.ofNullable(this.getClass().getAnnotation(DecoTemplate.class))
 				.ifPresent(template -> {
-					fallbackBackground = ResLoc.of(template.style());
 					guiName.set(template.name());
 				});
 		name = guiName.get();
@@ -91,7 +94,8 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 	public final void initGui()
 	{
 		//Sync GUI NBT
-		this.loadGuiData();
+		NBTSerialisation.synchroniseFor(this, (tag, gui) ->
+				tag.deserializeAll(gui, this.loadGuiData().unwrap(), true));
 
 		//Clean GUI
 		this.buttonList.clear();
@@ -145,8 +149,13 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 		return super.addButton(button);
 	}
 
-	//Buttons and other components
-
+	/**
+	 * Adds a component to the GUI and returns it
+	 *
+	 * @param component The component to add
+	 * @param <B>       The type of the component
+	 * @return The added component
+	 */
 	protected final <B extends GuiComponentDecoBase<B>> B addComponent(B component)
 	{
 		buttonList.add(component);
@@ -165,6 +174,11 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 		return component;
 	}
 
+	/**
+	 * Adds multiple components to the GUI
+	 *
+	 * @param components The components to add
+	 */
 	@SuppressWarnings({"unchecked", "rawtypes"})
 	protected final void addComponents(GuiComponentDecoBase... components)
 	{
@@ -172,12 +186,27 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 			addComponent(component);
 	}
 
-	//Labels
+	//--- GUI Label Methods ---//
+
+	/**
+	 * Adds a label to the GUI and returns it
+	 *
+	 * @param text The text of the label
+	 * @param x    The x position of the label
+	 * @param y    The y position of the label
+	 * @return The added label
+	 */
 	protected final DecoLabel addLabel(String text, int x, int y)
 	{
 		return addLabel(new DecoLabel(fontRenderer, x, y)).withText(text);
 	}
 
+	/**
+	 * Adds a label to the GUI and returns it
+	 *
+	 * @param label The label to add
+	 * @return The added label
+	 */
 	protected final DecoLabel addLabel(DecoLabel label)
 	{
 		labelList.add(label);
@@ -187,6 +216,11 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 
 	//--- GUI Background Methods ---//
 
+	/**
+	 * Starts the background builder for this GUI
+	 *
+	 * @return The background builder
+	 */
 	protected DecoBackgroundBuilder<T, C> startBackground()
 	{
 		return this.backgroundBuilder = new DecoBackgroundBuilder<>(this);
@@ -198,16 +232,21 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 	 * Draws the background layer of this container (behind the items).
 	 */
 	@Override
-	protected void drawGuiContainerBackgroundLayer(float f, int mx, int my)
+	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY)
 	{
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
 		if(backgroundBuilder!=null)
 			backgroundBuilder.draw();
-
-		//TODO: 23.01.2024 draw background boxes, tabs
 	}
 
+	/**
+	 * Draws the GUI
+	 *
+	 * @param mouseX       The x position of the mouse cursor
+	 * @param mouseY       The y position of the mouse cursor
+	 * @param partialTicks The partial render ticks
+	 */
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks)
 	{
@@ -230,8 +269,14 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 		this.renderHoveredToolTip(mouseX, mouseY);
 	}
 
+	/**
+	 * Renders the tooltip for a hovered-over component or itemstack.
+	 *
+	 * @param mouseX The x position of the mouse cursor
+	 * @param mouseY The y position of the mouse cursor
+	 */
 	@Override
-	protected void renderHoveredToolTip(int mouseX, int mouseY)
+	protected final void renderHoveredToolTip(int mouseX, int mouseY)
 	{
 		List<String> tooltip = getTooltip();
 		if(tooltip.isEmpty())
@@ -242,24 +287,56 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 
 	//--- GUI Handling Methods ---//
 
+	/**
+	 * Handles mouse input.
+	 */
 	@Override
-	protected final void actionPerformed(GuiButton button) throws IOException
+	protected final void actionPerformed(@Nonnull GuiButton button) throws IOException
 	{
 		super.actionPerformed(button);
 	}
 
+	/**
+	 * Handles keyboard input.
+	 */
 	@Override
 	public final void keyTyped(char typedChar, int keyCode) throws IOException
 	{
 		//Process key typed for the currently focused component
 		if(focusedElement!=null)
+		{
+			//Common keys are turned into events for unified handling
+			if(Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)||Keyboard.isKeyDown(Keyboard.KEY_RCONTROL))
+				switch(keyCode)
+				{
+					case Keyboard.KEY_C:
+						focusedElement.onGuiEvent(DecoGuiEvent.COPY);
+						return;
+					case Keyboard.KEY_V:
+						focusedElement.onGuiEvent(DecoGuiEvent.PASTE);
+						return;
+					case Keyboard.KEY_X:
+						focusedElement.onGuiEvent(DecoGuiEvent.CUT);
+						return;
+					case Keyboard.KEY_Z:
+						focusedElement.onGuiEvent(DecoGuiEvent.UNDO);
+						return;
+					case Keyboard.KEY_Y:
+						focusedElement.onGuiEvent(DecoGuiEvent.REDO);
+						return;
+				}
+			//Other cases
 			if(focusedElement.keyTyped(typedChar, keyCode))
 				return;
+		}
 
 		//Result to super if no component handled the key
 		super.keyTyped(typedChar, keyCode);
 	}
 
+	/**
+	 * Handles mouse input.
+	 */
 	@Override
 	protected final void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException
 	{
@@ -268,14 +345,26 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 		super.mouseClicked(mouseX, mouseY, mouseButton);
 	}
 
+	/**
+	 * Triggered upon closing the GUI. Saves the GUI data to {@link ClientProxy} and (optionally) sends a sync message to the tile entity.
+	 */
 	@Override
 	public void onGuiClosed()
 	{
 		super.onGuiClosed();
+
+		//Save GUI data
 		saveGuiData();
+
+		//Send a sync message to the tile entity
+		EasyNBT nbt = onSaveTileData();
+		if(!nbt.isEmpty())
+			IIPacketHandler.sendToServer(new MessageIITileSync(tile, nbt));
+
 		//Cleanup background builder
 		if(backgroundBuilder!=null)
 			backgroundBuilder.cleanup();
+
 		//Cleanup components
 		for(GuiButton b : buttonList)
 			if(b instanceof GuiComponentDecoBase)
@@ -295,9 +384,9 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 		return Collections.emptyList();
 	}
 
-	public T getTile()
+	public void requestFocus(GuiComponentDecoBase<?> component)
 	{
-		return tile;
+		this.focusedElement = component;
 	}
 
 	//--- NBT ---//
@@ -307,37 +396,50 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 	 *
 	 * @return The NBT compound containing the data
 	 */
-	protected EasyNBT loadGuiData()
+	private EasyNBT loadGuiData()
 	{
+		//Load GUI data from the proxy
 		assert ImmersiveIntelligence.proxy instanceof ClientProxy;
 		ClientProxy proxy = (ClientProxy)ImmersiveIntelligence.proxy;
 		EasyNBT nbt = proxy.getStoredGuiData();
 
-		//Return valid compound or an empty one
+		//Return a valid compound or an empty one if location mismatch
 		if(!nbt.hasKey("pos")||!new DimensionBlockPos(tile).equals(nbt.getDimPos("pos")))
 			return proxy.setStoredGuiData();
 		return nbt;
 	}
 
 	/**
-	 * Called upon closing the GUI, saves the data to the client proxy
+	 * Called upon closing the GUI, gathers and saves the data to the client proxy.
 	 *
 	 * @return The NBT compound containing the data
 	 */
-	protected EasyNBT saveGuiData()
+	private EasyNBT saveGuiData()
 	{
+		//Save basic identification
 		assert ImmersiveIntelligence.proxy instanceof ClientProxy;
 		EasyNBT nbt = ((ClientProxy)ImmersiveIntelligence.proxy).setStoredGuiData()
 				.withDimPos("pos", new DimensionBlockPos(tile));
 
+		//Save component data
+		for(GuiButton button : buttonList)
+			if(button instanceof GuiComponentDecoBase)
+				((GuiComponentDecoBase<?>)button).onGuiSave();
+
+		//Save fields marked with @SyncNBT
 		NBTSerialisation.synchroniseFor(this, (tag, tile) -> tag.serializeAll(tile, nbt.unwrap()));
 
 		return nbt;
 	}
 
-	public void requestFocus(GuiComponentDecoBase<?> component)
+	/**
+	 * Called upon closing the GUI, collects data to be passed in a {@link MessageIITileSync} to the tile entity.
+	 *
+	 * @return The NBT compound containing the data
+	 */
+	protected EasyNBT onSaveTileData()
 	{
-		this.focusedElement = component;
+		return EasyNBT.newNBT();
 	}
 
 	/**
@@ -367,6 +469,11 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 		}
 	}
 
+	/**
+	 * JEI Compat, returns a list of rectangles that are taken by the GUI elements, so the JEI overlay can adjust.
+	 *
+	 * @return a list of AWT rectangles
+	 */
 	public final List<Rectangle> getTakenSpace()
 	{
 		//Return cached value if available
@@ -384,5 +491,47 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 			takenSpace.add(new Rectangle(tab.x, tab.y, tab.width, tab.height));
 
 		return this.takenSpace = takenSpace;
+	}
+
+	//--- Utilities ---//
+
+	/**
+	 * @return the tile entity associated with this GUI
+	 */
+	public T getTile()
+	{
+		return tile;
+	}
+
+	/**
+	 * Changes the GUI to the specified one, ensuring data is saved and sent to the server
+	 *
+	 * @param newGUI the new GUI to change to
+	 */
+	public final boolean changeGUI(@Nonnull IIGuiList newGUI)
+	{
+		return changeGUI(newGUI, null, null);
+	}
+
+	/**
+	 * Changes the GUI to the specified one, ensuring data is saved and sent to the server
+	 *
+	 * @param newGUI   the new GUI to change to
+	 * @param guiData  additional data to save for the GUI
+	 * @param tileData additional data to save for the tile entity
+	 */
+	public final boolean changeGUI(@Nonnull IIGuiList newGUI, @Nullable EasyNBT guiData, @Nullable EasyNBT tileData)
+	{
+		//Save Tile Entity data
+		EasyNBT nbt = onSaveTileData().conditionally(tileData!=null, e -> e.mergeWith(tileData));
+		if(!nbt.isEmpty())
+			IIPacketHandler.sendToServer(new MessageIITileSync(tile, nbt));
+
+		//Save GUI data
+		saveGuiData().conditionally(guiData!=null, e -> e.mergeWith(guiData));
+
+		//Send change GUI message
+		IIPacketHandler.sendToServer(new MessageGuiNBT(newGUI, tile));
+		return true;
 	}
 }

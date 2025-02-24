@@ -583,8 +583,9 @@ public class ClientProxy extends CommonProxy
 		ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":blocks/metal_device/inserter/tool_gray");
 
 		//GUIs
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_ROUND);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_SQUARE);
+		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_TEMPLATE_ROUND);
+		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_TEMPLATE_SQUARE);
+		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_TEMPLATE_TICKET);
 
 		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_INVENTORY_SLOT);
 		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_IE_SLOT);
@@ -611,6 +612,15 @@ public class ClientProxy extends CommonProxy
 		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_COMPONENT_SWITCH_MOVING);
 		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_COMPONENT_DROPDOWN);
 		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_COMPONENT_SLIDER);
+
+		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_ICON_ACTION_ADD);
+		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_ICON_ACTION_REMOVE);
+		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_ICON_ACTION_EDIT);
+		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_ICON_ACTION_DUPLICATE);
+		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_ICON_ACTION_CLEAR);
+
+		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_BUTTON_PAPER);
+		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_BUTTON_HANGING);
 
 	}
 

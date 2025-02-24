@@ -4,8 +4,6 @@ import net.minecraft.util.ResourceLocation;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
-import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
-import pl.pabilo8.immersiveintelligence.common.network.messages.MessageGuiNBT;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 /**
@@ -41,7 +39,7 @@ public class DecoTab extends DecoButton
 			if(parent==null)
 				IILogger.error("DecoTab: No parent gui found, cannot link to "+link);
 			else
-				IIPacketHandler.sendToServer(new MessageGuiNBT(link, parent.getTile()));
+				parent.changeGUI(link);
 			return true;
 		});
 		return this;
