@@ -1,0 +1,17 @@
+{
+  "type": "forge:ore_shaped",
+  "result": {
+    "item": "immersiveintelligence:concrete_decoration_slab",
+    "data": 5,
+    "count": 6
+  },
+  "pattern": [
+    "BBB"
+  ],
+  "key": {
+    "B": {
+      "item": "immersiveintelligence:concrete_decoration",
+      "data": 5
+    }
+  }
+}

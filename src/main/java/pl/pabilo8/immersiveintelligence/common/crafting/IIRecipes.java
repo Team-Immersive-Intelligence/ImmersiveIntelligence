@@ -967,6 +967,30 @@ public class IIRecipes
 				1024, 160, true, false, false
 		);
 
+		//gray concrete cleaning recipe
+
+		addBathingCleaningRecipe(//gray concrete
+				IIContent.blockConcreteDecoration.getStack(ConcreteDecorations.CONCRETE_BRICKS),
+				new IngredientStack(IIContent.blockConcreteDecoration.getStack(ConcreteDecorations.CONCRETE_BRICKS_GRAY)),
+				1000,
+				1024, 160, true, false, false);
+
+		addBathingCleaningRecipe(//gray panzer concrete
+				IIContent.blockConcreteDecoration.getStack(ConcreteDecorations.STURDY_CONCRETE_BRICKS),
+				new IngredientStack(IIContent.blockConcreteDecoration.getStack(ConcreteDecorations.STURDY_CONCRETE_BRICKS_GRAY)),
+				1000,
+				1024, 160, true, false, false);
+
+		addBathingCleaningRecipe(//gray uber concrete
+				IIContent.blockConcreteDecoration.getStack(ConcreteDecorations.UBERCONCRETE),
+				new IngredientStack(IIContent.blockConcreteDecoration.getStack(ConcreteDecorations.UBERCONCRETE_GRAY)),
+				1000,
+				1024, 160, true, false, false);
+
+/*		BathingRecipe.addRecipe(IIContent.blockConcreteDecoration.getStack(ConcreteDecorations.CONCRETE_BRICKS_GRAY),
+				new IngredientStack(IIContent.blockConcreteDecoration.getStack(ConcreteDecorations.CONCRETE_BRICKS)),
+				new FluidStack(FluidRegistry.getFluid("water"), 500), 1440, 280); **/
+
 	}
 
 	public static void addChemicalPainterRecipes()

@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "ccc",
+    "cdc",
+    "ccc"
+  ],
+  "key": {
+    "c": {
+      "item": "immersiveintelligence:concrete_decoration",
+      "data": 1
+    },
+    "d": {
+      "item": "minecraft:dye",
+      "data": 8
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:concrete_decoration",
+    "data": 4,
+    "count": 8
+  }
+}

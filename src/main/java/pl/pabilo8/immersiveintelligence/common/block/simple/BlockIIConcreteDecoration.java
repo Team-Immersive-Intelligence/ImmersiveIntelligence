@@ -36,7 +36,14 @@ public class BlockIIConcreteDecoration extends BlockIIBase<ConcreteDecorations>
 		@IIBlockProperties(hardness = 80, blastResistance = 1600, harvestLevel = 2, oreDict = "sturdyBricksConcrete")
 		STURDY_CONCRETE_BRICKS,
 		@IIBlockProperties(hardness = 120, blastResistance = 2400, harvestLevel = 3, oreDict = "uberConcrete")
-		UBERCONCRETE
+		UBERCONCRETE,
+
+		@IIBlockProperties(hardness = 10, blastResistance = 360, harvestLevel = 1, oreDict = "bricksConcreteGray")
+		CONCRETE_BRICKS_GRAY,
+		@IIBlockProperties(hardness = 80, blastResistance = 1600, harvestLevel = 2, oreDict = "sturdyBricksConcreteGray")
+		STURDY_CONCRETE_BRICKS_GRAY,
+		@IIBlockProperties(hardness = 120, blastResistance = 2400, harvestLevel = 3, oreDict = "uberConcreteGray")
+		UBERCONCRETE_GRAY
 	}
 
 	public static BlockIIStairs[] getStairs()

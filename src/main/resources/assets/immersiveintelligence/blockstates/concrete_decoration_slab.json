@@ -22,31 +22,97 @@
     "inventory,type=sturdy_concrete_bricks": [
       {
         "textures": {
-          "all": "immersiveintelligence:blocks/concrete/panzerbeton"
+          "all": "immersiveintelligence:blocks/concrete/panzerbeton",
+          "bottom": "immersiveintelligence:blocks/concrete/panzerbeton_top",
+          "top": "immersiveintelligence:blocks/concrete/panzerbeton_top",
+          "side": "immersiveintelligence:blocks/concrete/panzerbeton"
         }
       }
     ],
     "inventory,type=uberconcrete": [
       {
         "textures": {
-          "all": "immersiveintelligence:blocks/concrete/uberbeton"
+          "all": "immersiveintelligence:blocks/concrete/uberbeton",
+          "bottom": "immersiveintelligence:blocks/concrete/uberbeton_top",
+          "top": "immersiveintelligence:blocks/concrete/uberbeton_top",
+          "side": "immersiveintelligence:blocks/concrete/uberbeton"
+        }
+      }
+    ],
+    "inventory,type=concrete_bricks_gray": [
+      {
+        "textures": {
+          "all": "immersiveintelligence:blocks/concrete/volksbeton_grau"
+        }
+      }
+    ],
+    "inventory,type=sturdy_concrete_bricks_gray": [
+      {
+        "textures": {
+          "all": "immersiveintelligence:blocks/concrete/panzerbeton_grau",
+          "bottom": "immersiveintelligence:blocks/concrete/panzerbeton_grau_top",
+          "top": "immersiveintelligence:blocks/concrete/panzerbeton_grau_top",
+          "side": "immersiveintelligence:blocks/concrete/panzerbeton_grau"
+        }
+      }
+    ],
+    "inventory,type=uberconcrete_gray": [
+      {
+        "textures": {
+          "all": "immersiveintelligence:blocks/concrete/uberbeton_grau",
+          "bottom": "immersiveintelligence:blocks/concrete/uberbeton_grau_top",
+          "top": "immersiveintelligence:blocks/concrete/uberbeton_grau_top",
+          "side": "immersiveintelligence:blocks/concrete/uberbeton_grau"
         }
       }
     ],
     "type": {
       "concrete_bricks": {
         "textures": {
-          "all": "immersiveintelligence:blocks/concrete/volksbeton"
+          "all": "immersiveintelligence:blocks/concrete/volksbeton",
+          "bottom": "immersiveintelligence:blocks/concrete/volksbeton",
+          "top": "immersiveintelligence:blocks/concrete/volksbeton",
+          "side": "immersiveintelligence:blocks/concrete/volksbeton"
         }
       },
       "sturdy_concrete_bricks": {
         "textures": {
-          "all": "immersiveintelligence:blocks/concrete/panzerbeton"
+          "all": "immersiveintelligence:blocks/concrete/panzerbeton",
+          "bottom": "immersiveintelligence:blocks/concrete/panzerbeton_top",
+          "top": "immersiveintelligence:blocks/concrete/panzerbeton_top",
+          "side": "immersiveintelligence:blocks/concrete/panzerbeton"
         }
       },
       "uberconcrete": {
         "textures": {
-          "all": "immersiveintelligence:blocks/concrete/uberbeton"
+          "all": "immersiveintelligence:blocks/concrete/uberbeton",
+          "bottom": "immersiveintelligence:blocks/concrete/uberbeton_top",
+          "top": "immersiveintelligence:blocks/concrete/uberbeton_top",
+          "side": "immersiveintelligence:blocks/concrete/uberbeton"
+        }
+      },
+      "concrete_bricks_gray": {
+        "textures": {
+          "all": "immersiveintelligence:blocks/concrete/volksbeton_grau",
+          "bottom": "immersiveintelligence:blocks/concrete/volksbeton_grau",
+          "top": "immersiveintelligence:blocks/concrete/volksbeton_grau",
+          "side": "immersiveintelligence:blocks/concrete/volksbeton_grau"
+        }
+      },
+      "sturdy_concrete_bricks_gray": {
+        "textures": {
+          "all": "immersiveintelligence:blocks/concrete/panzerbeton_grau",
+          "bottom": "immersiveintelligence:blocks/concrete/panzerbeton_grau_top",
+          "top": "immersiveintelligence:blocks/concrete/panzerbeton_grau_top",
+          "side": "immersiveintelligence:blocks/concrete/panzerbeton_grau"
+        }
+      },
+      "uberconcrete_gray": {
+        "textures": {
+          "all": "immersiveintelligence:blocks/concrete/uberbeton_grau",
+          "bottom": "immersiveintelligence:blocks/concrete/uberbeton_grau_top",
+          "top": "immersiveintelligence:blocks/concrete/uberbeton_grau_top",
+          "side": "immersiveintelligence:blocks/concrete/uberbeton_grau"
         }
       }
     },
