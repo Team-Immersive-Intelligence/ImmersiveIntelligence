@@ -10,7 +10,7 @@ import pl.pabilo8.immersiveintelligence.api.crafting.DataProgrammingRecipe;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.DataInputMachine;
-import pl.pabilo8.immersiveintelligence.common.IIGuiList;
+import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.MultiblockDataInputMachine;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
@@ -131,9 +131,9 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockProductionSi
 	}
 
 	@Override
-	public IIGuiList getGUI()
+	public IIGUI getGUI()
 	{
-		return IIGuiList.GUI_DATA_INPUT_MACHINE_STORAGE;
+		return IIGUI.DATA_INPUT_MACHINE_STORAGE;
 	}
 
 	@Override

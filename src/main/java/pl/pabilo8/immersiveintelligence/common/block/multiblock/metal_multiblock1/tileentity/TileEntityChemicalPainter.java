@@ -43,7 +43,7 @@ import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.ChemicalPainter;
-import pl.pabilo8.immersiveintelligence.common.IIGuiList;
+import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockChemicalPainter;
@@ -536,7 +536,7 @@ public class TileEntityChemicalPainter extends TileEntityMultiblockMetal<TileEnt
 	@Override
 	public int getGuiID()
 	{
-		return IIGuiList.GUI_CHEMICAL_PAINTER.ordinal();
+		return IIGUI.CHEMICAL_PAINTER.ordinal();
 	}
 
 	@Override

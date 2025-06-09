@@ -13,7 +13,7 @@ import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeExpression;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.ArithmeticLogicMachine;
-import pl.pabilo8.immersiveintelligence.common.IIGuiList;
+import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.MultiblockArithmeticLogicMachine;
 import pl.pabilo8.immersiveintelligence.common.item.data.ItemIIFunctionalCircuit;
@@ -185,9 +185,9 @@ public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockIIGene
 	}
 
 	@Override
-	public IIGuiList getGUI()
+	public IIGUI getGUI()
 	{
-		return IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_STORAGE;
+		return IIGUI.ARITHMETIC_LOGIC_MACHINE_STORAGE;
 	}
 
 	@Override

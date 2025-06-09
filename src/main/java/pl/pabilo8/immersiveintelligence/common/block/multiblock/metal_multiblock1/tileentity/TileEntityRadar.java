@@ -26,7 +26,7 @@ import pl.pabilo8.immersiveintelligence.client.render.multiblock.metal.RadarRend
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Radar;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.IIGuiList;
+import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockRadar;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IAdvancedMultiblockTileEntity;
@@ -396,7 +396,7 @@ public class TileEntityRadar extends TileEntityMultiblockMetal<TileEntityRadar, 
 	@Override
 	public int getGuiID()
 	{
-		return IIGuiList.RADAR.ordinal();
+		return IIGUI.RADAR.ordinal();
 	}
 
 	@Nullable

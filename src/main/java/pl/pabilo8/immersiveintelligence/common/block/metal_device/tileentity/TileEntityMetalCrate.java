@@ -7,7 +7,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.common.IIGuiList;
+import pl.pabilo8.immersiveintelligence.common.IIGUI;
 
 import javax.annotation.Nullable;
 
@@ -26,7 +26,7 @@ public class TileEntityMetalCrate extends TileEntityWoodenCrate implements IGuiT
 	@Override
 	public int getGuiID()
 	{
-		return IIGuiList.GUI_METAL_CRATE.ordinal();
+		return IIGUI.METAL_CRATE.ordinal();
 	}
 
 	@Override

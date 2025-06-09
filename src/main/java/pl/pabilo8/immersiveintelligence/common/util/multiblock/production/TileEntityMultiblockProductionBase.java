@@ -13,7 +13,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
-import pl.pabilo8.immersiveintelligence.common.IIGuiList;
+import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IIIGuiMultiblockTile;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
@@ -150,7 +150,7 @@ public abstract class TileEntityMultiblockProductionBase<T extends TileEntityMul
 	}
 
 	@Nullable
-	public abstract IIGuiList getGUI();
+	public abstract IIGUI getGUI();
 
 	public abstract float getProductionProgress(IIMultiblockProcess<R> process, float partialTicks);
 

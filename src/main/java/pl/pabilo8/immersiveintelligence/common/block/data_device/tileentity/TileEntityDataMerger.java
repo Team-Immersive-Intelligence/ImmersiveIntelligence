@@ -19,7 +19,7 @@ import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.device.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.device.IDataDevice;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
-import pl.pabilo8.immersiveintelligence.common.IIGuiList;
+import pl.pabilo8.immersiveintelligence.common.IIGUI;
 
 import javax.annotation.Nullable;
 
@@ -230,7 +230,7 @@ public class TileEntityDataMerger extends TileEntityIEBase implements IPlayerInt
 	@Override
 	public int getGuiID()
 	{
-		return IIGuiList.GUI_DATA_MERGER.ordinal();
+		return IIGUI.DATA_MERGER.ordinal();
 	}
 
 	@Nullable

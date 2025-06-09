@@ -10,7 +10,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.RayTraceResult;
-import pl.pabilo8.immersiveintelligence.common.IIGuiList;
+import pl.pabilo8.immersiveintelligence.common.IIGUI;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -137,6 +137,6 @@ public class IIMultiblockInterfaces
 			return getGUI().ordinal();
 		}
 
-		IIGuiList getGUI();
+		IIGUI getGUI();
 	}
 }

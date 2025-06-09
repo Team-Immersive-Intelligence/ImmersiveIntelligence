@@ -2,7 +2,7 @@ package pl.pabilo8.immersiveintelligence.client.gui.deco.component.button;
 
 import net.minecraft.util.ResourceLocation;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
-import pl.pabilo8.immersiveintelligence.common.IIGuiList;
+import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
@@ -32,7 +32,7 @@ public class DecoTab extends DecoButton
 		withTranslatedTooltip(hoverText);
 	}
 
-	public DecoTab withLink(IIGuiList link)
+	public DecoTab withLink(IIGUI link)
 	{
 		this.withOnPressed((gui, mx, my) -> {
 			DecoGui<?, ?> parent = gui.getParentGui();

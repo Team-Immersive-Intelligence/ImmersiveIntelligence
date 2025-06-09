@@ -12,7 +12,7 @@ import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.IFluidTank;
 import pl.pabilo8.immersiveintelligence.api.crafting.ElectrolyzerRecipe;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Electrolyzer;
-import pl.pabilo8.immersiveintelligence.common.IIGuiList;
+import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.MultiblockElectrolyzer;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionBase;
@@ -123,9 +123,9 @@ public class TileEntityElectrolyzer extends TileEntityMultiblockProductionSingle
 	}
 
 	@Override
-	public IIGuiList getGUI()
+	public IIGUI getGUI()
 	{
-		return IIGuiList.GUI_ELECTROLYZER;
+		return IIGUI.ELECTROLYZER;
 	}
 
 	@Override

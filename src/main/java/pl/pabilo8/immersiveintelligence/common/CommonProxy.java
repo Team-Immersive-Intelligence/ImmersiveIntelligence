@@ -668,16 +668,16 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		TileEntity te = world.getTileEntity(new BlockPos(x, y, z));
 		ItemStack stack = player.getHeldItem(hand = (player.getHeldItem(EnumHand.MAIN_HAND).getItem() instanceof IGuiItem?EnumHand.MAIN_HAND: EnumHand.OFF_HAND));
 
-		if(ID==IIGuiList.GUI_UPGRADE.ordinal()&&te instanceof IUpgradableMachine)
+		if(ID==IIGUI.UPGRADE.ordinal()&&te instanceof IUpgradableMachine)
 		{
 			TileEntity upgradeMaster = ((IUpgradableMachine)te).getUpgradeMaster();
 			if(upgradeMaster!=null)
 				return new ContainerUpgrade(player, (TileEntity & IUpgradableMachine)upgradeMaster);
 		}
 
-		if(IIGuiList.values().length > ID)
+		if(IIGUI.values().length > ID)
 		{
-			IIGuiList gui = IIGuiList.values()[ID];
+			IIGUI gui = IIGUI.values()[ID];
 
 			if(gui.item)
 				return gui.containerFromStack==null?null: gui.containerFromStack.apply(player, stack, hand);

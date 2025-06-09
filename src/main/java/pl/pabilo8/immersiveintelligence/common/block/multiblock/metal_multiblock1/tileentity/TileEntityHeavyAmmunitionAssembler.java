@@ -17,7 +17,7 @@ import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.api.crafting.AmmunitionAssemblerRecipe;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.AmmunitionAssembler;
-import pl.pabilo8.immersiveintelligence.common.IIGuiList;
+import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockHeavyAmmunitionAssembler;
 import pl.pabilo8.immersiveintelligence.common.entity.tactile.TactileHandler;
 import pl.pabilo8.immersiveintelligence.common.entity.tactile.TactileHandler.ITactileListener;
@@ -117,7 +117,7 @@ public class TileEntityHeavyAmmunitionAssembler extends TileEntityMultiblockProd
 	}
 
 	@Override
-	public IIGuiList getGUI()
+	public IIGUI getGUI()
 	{
 		return null;
 	}

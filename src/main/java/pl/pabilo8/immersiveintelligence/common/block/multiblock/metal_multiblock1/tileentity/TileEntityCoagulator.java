@@ -14,9 +14,9 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.oredict.OreDictionary;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Coagulator;
 import pl.pabilo8.immersiveintelligence.api.crafting.CoagulatorRecipe;
-import pl.pabilo8.immersiveintelligence.common.IIGuiList;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Coagulator;
+import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockCoagulator;
 
@@ -106,7 +106,7 @@ public class TileEntityCoagulator extends TileEntityMultiblockMetal<TileEntityCo
 
 						this.craneBucket = -1;
 						this.craneProgress = 0;
-						this.craneAnimation=CraneAnimation.NONE;
+						this.craneAnimation = CraneAnimation.NONE;
 					}
 					break;
 				}
@@ -474,7 +474,7 @@ public class TileEntityCoagulator extends TileEntityMultiblockMetal<TileEntityCo
 	@Override
 	public int getGuiID()
 	{
-		return IIGuiList.GUI_COAGULATOR.ordinal();
+		return IIGUI.COAGULATOR.ordinal();
 	}
 
 	@Nullable

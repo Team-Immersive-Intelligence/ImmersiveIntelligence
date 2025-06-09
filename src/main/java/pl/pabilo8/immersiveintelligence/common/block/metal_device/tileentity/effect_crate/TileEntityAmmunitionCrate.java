@@ -23,7 +23,7 @@ import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
 import pl.pabilo8.immersiveintelligence.client.render.metal_device.AmmunitionCrateRenderer;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.IIGuiList;
+import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IIPotions;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.gun.ItemIIAmmoMachinegun;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
@@ -46,7 +46,7 @@ public class TileEntityAmmunitionCrate extends TileEntityEffectCrate
 	@Override
 	public int getGuiID()
 	{
-		return IIGuiList.GUI_AMMUNITION_CRATE.ordinal();
+		return IIGUI.AMMUNITION_CRATE.ordinal();
 	}
 
 	@Override

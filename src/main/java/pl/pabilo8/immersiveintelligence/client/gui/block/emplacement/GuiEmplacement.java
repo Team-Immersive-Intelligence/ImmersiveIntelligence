@@ -15,7 +15,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoSwi
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoTab;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoLabel;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoBar;
-import pl.pabilo8.immersiveintelligence.common.IIGuiList;
+import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerEmplacement;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerEmplacement.ContainerEmplacementStorage;
@@ -39,15 +39,15 @@ public abstract class GuiEmplacement extends GuiIEContainerBase implements ITabb
 	public final ResourceLocation TEXTURE_ICONS = new ResourceLocation(ImmersiveIntelligence.MODID+":textures/gui/emplacement_icons.png");
 	protected final TileEntityEmplacement tile;
 	protected String title = I18n.format("tile."+ImmersiveIntelligence.MODID+".metal_multiblock1.emplacement.name");
-	private final LinkedHashMap<DecoTab, IIGuiList> TABS = new LinkedHashMap<>();
-	private final IIGuiList thisGui;
+	private final LinkedHashMap<DecoTab, IIGUI> TABS = new LinkedHashMap<>();
+	private final IIGUI thisGui;
 	private DecoBar barEnergy, barArmor;
 
 	protected final static IIColor COLOR_IN = IIColor.fromPackedRGB(0x4c7bb1), COLOR_OUT = IIColor.fromPackedRGB(0xffb515);
 
-	public GuiEmplacement(EntityPlayer player, TileEntityEmplacement tile, IIGuiList gui)
+	public GuiEmplacement(EntityPlayer player, TileEntityEmplacement tile, IIGUI gui)
 	{
-		super(gui==IIGuiList.GUI_EMPLACEMENT_STORAGE?new ContainerEmplacementStorage(player, tile): new ContainerEmplacement(player, tile));
+		super(gui==IIGUI.EMPLACEMENT_STORAGE?new ContainerEmplacementStorage(player, tile): new ContainerEmplacement(player, tile));
 		this.tile = tile;
 		thisGui = gui;
 		this.xSize = 240;
@@ -63,9 +63,9 @@ public abstract class GuiEmplacement extends GuiIEContainerBase implements ITabb
 		labelList.clear();
 		TABS.clear();
 
-		addTab(IIGuiList.GUI_EMPLACEMENT_STORAGE, "storage_module");
-		addTab(IIGuiList.GUI_EMPLACEMENT_TASKS, "tasks_module");
-		addTab(IIGuiList.GUI_EMPLACEMENT_STATUS, "status_module");
+		addTab(IIGUI.EMPLACEMENT_STORAGE, "storage_module");
+		addTab(IIGUI.EMPLACEMENT_TASKS, "tasks_module");
+		addTab(IIGUI.EMPLACEMENT_STATUS, "status_module");
 
 		addLabel(8, 10, IIReference.COLOR_H1, title);
 
@@ -80,7 +80,7 @@ public abstract class GuiEmplacement extends GuiIEContainerBase implements ITabb
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
 		ArrayList<String> tooltip = new ArrayList<>();
-		for(Entry<DecoTab, IIGuiList> entry : TABS.entrySet())
+		for(Entry<DecoTab, IIGUI> entry : TABS.entrySet())
 		{
 			if(entry.getKey().isMouseOver())
 			{
@@ -151,7 +151,7 @@ public abstract class GuiEmplacement extends GuiIEContainerBase implements ITabb
 		mc.getTextureManager().bindTexture(TEXTURE_ICONS);
 	}
 
-	protected void addTab(IIGuiList gui, String name)
+	protected void addTab(IIGUI gui, String name)
 	{
 		final int vOffset = TABS.size()*24;
 		DecoTab button = new DecoTab(buttonList.size(), guiLeft-28, guiTop+4+vOffset, 28, 24, thisGui==gui?28: 0, 101+vOffset,

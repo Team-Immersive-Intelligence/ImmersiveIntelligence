@@ -20,7 +20,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoEntr
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundBuilder.SlotStyle;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoGuiUtils;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.IIGuiList;
+import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityRedstoneInterface;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerRedstoneDataInterface;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
@@ -41,7 +41,7 @@ public class GuiDataRedstoneInterfaceData extends DecoGui<TileEntityRedstoneInte
 
 	public GuiDataRedstoneInterfaceData(EntityPlayer player, TileEntityRedstoneInterface tile)
 	{
-		super(player, tile, IIGuiList.GUI_DATA_REDSTONE_INTERFACE_DATA);
+		super(player, tile, IIGUI.DATA_REDSTONE_INTERFACE_DATA);
 	}
 
 	@Override
@@ -75,18 +75,18 @@ public class GuiDataRedstoneInterfaceData extends DecoGui<TileEntityRedstoneInte
 		//Add components
 		addComponents(
 				new DecoTab()
-						.withLink(IIGuiList.GUI_DATA_REDSTONE_INTERFACE_DATA)
+						.withLink(IIGUI.DATA_REDSTONE_INTERFACE_DATA)
 						.withIcon(IIContent.itemDataWireCoil.getStack(1))
 						.withTranslatedTooltip("desc.immersiveintelligence.data_to_redstone_module"),
 				new DecoTab()
-						.withLink(IIGuiList.GUI_DATA_REDSTONE_INTERFACE_REDSTONE)
+						.withLink(IIGUI.DATA_REDSTONE_INTERFACE_REDSTONE)
 						.withIcon(new ItemStack(IEContent.itemWireCoil, 1, 5))
 						.withTranslatedTooltip("desc.immersiveintelligence.redstone_to_data_module"),
 
 				list = new DecoList<Pair<Character, DataType>>(32, 8)
 						.withSize(136, 120)
 						.withEntries(packet.getAllVariables())
-						.withCreateLaterAction(() -> changeGUI(IIGuiList.GUI_DATA_REDSTONE_INTERFACE_REDSTONE))
+						.withCreateLaterAction(() -> changeGUI(IIGUI.DATA_REDSTONE_INTERFACE_REDSTONE))
 						.withGuiSaveAction(gui -> this.scroll = gui.getScroll())
 						.withDisplayFunction(new DecoEntryPanelBuilder<Pair<Character, DataType>>()
 								.withPadding(1, 1)
@@ -94,7 +94,7 @@ public class GuiDataRedstoneInterfaceData extends DecoGui<TileEntityRedstoneInte
 								.withComponent(
 										p -> new DecoButton(p.width-17-16+3, 2)
 												.withTemplate(DecoGuiUtils.LIST_BUTTON_EDIT_TEMPLATE)
-												.withOnPressed((gui, mouseX, mouseY) -> changeGUI(IIGuiList.GUI_DATA_REDSTONE_INTERFACE_REDSTONE))
+												.withOnPressed((gui, mouseX, mouseY) -> changeGUI(IIGUI.DATA_REDSTONE_INTERFACE_REDSTONE))
 								)
 								.withComponent(p -> new DecoButton(p.width-17+1, 2)
 										.withTemplate(DecoGuiUtils.LIST_BUTTON_REMOVE_TEMPLATE)

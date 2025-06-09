@@ -44,7 +44,7 @@ import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.render.multiblock.metal.EmplacementRenderer;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Emplacement;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools;
-import pl.pabilo8.immersiveintelligence.common.IIGuiList;
+import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockEmplacement;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.task.*;
@@ -1252,7 +1252,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 	@Override
 	public int getGuiID()
 	{
-		return IIGuiList.GUI_EMPLACEMENT_STORAGE.ordinal();
+		return IIGUI.EMPLACEMENT_STORAGE.ordinal();
 	}
 
 	@Nullable

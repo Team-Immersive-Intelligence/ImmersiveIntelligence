@@ -11,8 +11,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler.IGuiItem;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
-import pl.pabilo8.immersiveintelligence.common.IIGuiList;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.item.ItemIIPrintedPage.SubItems;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
@@ -42,27 +41,27 @@ public class ItemIIPrintedPage extends ItemIISubItemsBase<SubItems> implements I
 	public enum SubItems implements IIItemEnum
 	{
 		@IIItemProperties(oreDict = "pageEmpty")
-		BLANK(IIGuiList.GUI_PRINTED_PAGE_BLANK),
+		BLANK(IIGUI.PRINTED_PAGE_BLANK),
 		@IIItemProperties(oreDict = {"pageText", "pageWritten"})
-		TEXT(IIGuiList.GUI_PRINTED_PAGE_TEXT),
+		TEXT(IIGUI.PRINTED_PAGE_TEXT),
 		@IIItemProperties(oreDict = {"pageCode", "pageWritten"})
-		CODE(IIGuiList.GUI_PRINTED_PAGE_CODE),
+		CODE(IIGUI.PRINTED_PAGE_CODE),
 		@IIItemProperties(oreDict = {"pageBlueprint", "pageWritten"})
-		BLUEPRINT(IIGuiList.GUI_PRINTED_PAGE_BLUEPRINT),
+		BLUEPRINT(IIGUI.PRINTED_PAGE_BLUEPRINT),
 
 		@IIItemProperties(oreDict = "pageBinded")
-		BOUND_PAGES(IIGuiList.GUI_PRINTED_PAGE_BLANK),
+		BOUND_PAGES(IIGUI.PRINTED_PAGE_BLANK),
 		@IIItemProperties(oreDict = "pageNewspaper")
-		NEWSPAPER(IIGuiList.GUI_PRINTED_PAGE_BLANK),
+		NEWSPAPER(IIGUI.PRINTED_PAGE_BLANK),
 		@IIItemProperties(oreDict = {"pageBook", "book", "bookPrinted"})
-		BOOK(IIGuiList.GUI_PRINTED_PAGE_BLANK),
+		BOOK(IIGUI.PRINTED_PAGE_BLANK),
 		@IIItemProperties(oreDict = {"pageLetter", "letter"})
-		LETTER(IIGuiList.GUI_PRINTED_PAGE_BLANK);
+		LETTER(IIGUI.PRINTED_PAGE_BLANK);
 
-		private final IIGuiList guiPage;
+		private final IIGUI guiPage;
 		private final String tooltip;
 
-		SubItems(IIGuiList guiPage)
+		SubItems(IIGUI guiPage)
 		{
 			this.guiPage = guiPage;
 			tooltip = IIReference.DESCRIPTION_KEY+"printed_page."+getName();
@@ -82,7 +81,7 @@ public class ItemIIPrintedPage extends ItemIISubItemsBase<SubItems> implements I
 	}
 
 	@Override
-	public IIGuiList getGUI(ItemStack stack)
+	public IIGUI getGUI(ItemStack stack)
 	{
 		return stackToSub(stack).guiPage;
 	}

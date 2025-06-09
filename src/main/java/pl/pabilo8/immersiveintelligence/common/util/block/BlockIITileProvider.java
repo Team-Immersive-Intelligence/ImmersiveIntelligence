@@ -54,7 +54,7 @@ import net.minecraftforge.items.IItemHandler;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.utils.IUpgradableMachine;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.IIGuiList;
+import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IITileProviderEnum;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemUtil;
@@ -508,7 +508,7 @@ public abstract class BlockIITileProvider<E extends Enum<E> & IITileProviderEnum
 			if(u!=null&&u.getInstallProgress()==0)
 			{
 				TileEntity master = (TileEntity)u;
-				player.openGui(ImmersiveIntelligence.INSTANCE, IIGuiList.GUI_UPGRADE.ordinal(), master.getWorld(), master.getPos().getX(),
+				player.openGui(ImmersiveIntelligence.INSTANCE, IIGUI.UPGRADE.ordinal(), master.getWorld(), master.getPos().getX(),
 						master.getPos().getY(), master.getPos().getZ());
 				return true;
 			}

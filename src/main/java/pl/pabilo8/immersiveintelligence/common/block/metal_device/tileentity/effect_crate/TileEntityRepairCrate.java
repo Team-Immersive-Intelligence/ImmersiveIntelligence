@@ -18,7 +18,7 @@ import pl.pabilo8.immersiveintelligence.api.utils.IEntitySpecialRepairable;
 import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
 import pl.pabilo8.immersiveintelligence.client.render.metal_device.RepairCrateRenderer;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.IIGuiList;
+import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IIPotions;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 
@@ -134,7 +134,7 @@ public class TileEntityRepairCrate extends TileEntityEffectCrate implements ISou
 	@Override
 	public int getGuiID()
 	{
-		return IIGuiList.GUI_REPAIR_CRATE.ordinal();
+		return IIGUI.REPAIR_CRATE.ordinal();
 	}
 
 	@Override

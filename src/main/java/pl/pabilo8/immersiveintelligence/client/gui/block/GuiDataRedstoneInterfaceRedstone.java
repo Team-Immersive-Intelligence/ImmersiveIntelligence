@@ -25,7 +25,7 @@ import pl.pabilo8.immersiveintelligence.client.ClientProxy;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.ITabbedGui;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.DataInputMachine;
-import pl.pabilo8.immersiveintelligence.common.IIGuiList;
+import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityRedstoneInterface;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerRedstoneDataInterface;
@@ -97,7 +97,7 @@ public class GuiDataRedstoneInterfaceRedstone extends GuiIEContainerBase impleme
 		if(button.id==0)
 		{
 			syncDataToServer();
-			IIPacketHandler.sendToServer(new MessageGuiNBT(IIGuiList.GUI_DATA_REDSTONE_INTERFACE_DATA, tile));
+			IIPacketHandler.sendToServer(new MessageGuiNBT(IIGUI.DATA_REDSTONE_INTERFACE_DATA, tile));
 
 		}
 		else if(button.id==1)

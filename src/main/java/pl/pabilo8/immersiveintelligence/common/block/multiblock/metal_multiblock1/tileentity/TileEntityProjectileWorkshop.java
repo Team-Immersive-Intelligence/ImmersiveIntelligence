@@ -27,7 +27,7 @@ import pl.pabilo8.immersiveintelligence.api.utils.IUpgradableMachine;
 import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.ProjectileWorkshop;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.IIGuiList;
+import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockProjectileWorkshop;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
@@ -307,9 +307,9 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockProduction
 	}
 
 	@Override
-	public IIGuiList getGUI()
+	public IIGUI getGUI()
 	{
-		return IIGuiList.GUI_PROJECTILE_WORKSHOP;
+		return IIGUI.PROJECTILE_WORKSHOP;
 	}
 
 	@Override

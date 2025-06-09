@@ -13,7 +13,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.IIGuiList;
+import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIISmallCrate.IIBlockTypes_SmallCrate;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
@@ -59,7 +59,7 @@ public class TileEntitySmallCrate extends TileEntityWoodenCrate implements IGuiT
 	@Override
 	public int getGuiID()
 	{
-		return IIGuiList.GUI_SMALL_CRATE.ordinal();
+		return IIGUI.SMALL_CRATE.ordinal();
 	}
 
 	@Override

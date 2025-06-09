@@ -7,7 +7,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoAlignment;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoButton;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoDropdownDataLetters;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.data_editor.GuiDataEditor;
-import pl.pabilo8.immersiveintelligence.common.IIGuiList;
+import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityDataInputMachine;
 
 import javax.annotation.Nullable;
@@ -32,7 +32,7 @@ public class GuiDataInputMachineEdit extends GuiDataInputMachine
 
 	public GuiDataInputMachineEdit(EntityPlayer player, TileEntityDataInputMachine tile)
 	{
-		super(player, tile, IIGuiList.GUI_DATA_INPUT_MACHINE_EDIT);
+		super(player, tile, IIGUI.DATA_INPUT_MACHINE_EDIT);
 	}
 
 	@Override

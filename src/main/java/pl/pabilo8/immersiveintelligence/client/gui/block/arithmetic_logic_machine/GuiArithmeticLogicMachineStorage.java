@@ -1,7 +1,7 @@
 package pl.pabilo8.immersiveintelligence.client.gui.block.arithmetic_logic_machine;
 
 import net.minecraft.entity.player.EntityPlayer;
-import pl.pabilo8.immersiveintelligence.common.IIGuiList;
+import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityArithmeticLogicMachine;
 
 /**
@@ -12,6 +12,6 @@ public class GuiArithmeticLogicMachineStorage extends GuiArithmeticLogicMachineB
 {
 	public GuiArithmeticLogicMachineStorage(EntityPlayer player, TileEntityArithmeticLogicMachine tile)
 	{
-		super(player, tile, IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_STORAGE);
+		super(player, tile, IIGUI.ARITHMETIC_LOGIC_MACHINE_STORAGE);
 	}
 }

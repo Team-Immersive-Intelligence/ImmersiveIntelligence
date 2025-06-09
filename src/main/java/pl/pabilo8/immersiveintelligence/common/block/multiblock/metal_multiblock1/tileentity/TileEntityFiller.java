@@ -22,7 +22,7 @@ import pl.pabilo8.immersiveintelligence.api.crafting.DustStack;
 import pl.pabilo8.immersiveintelligence.api.crafting.DustUtils;
 import pl.pabilo8.immersiveintelligence.api.crafting.FillerRecipe;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Filler;
-import pl.pabilo8.immersiveintelligence.common.IIGuiList;
+import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockFiller;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
@@ -275,8 +275,8 @@ public class TileEntityFiller extends TileEntityMultiblockProductionMulti<TileEn
 	}
 
 	@Override
-	public IIGuiList getGUI()
+	public IIGUI getGUI()
 	{
-		return IIGuiList.GUI_FILLER;
+		return IIGUI.FILLER;
 	}
 }

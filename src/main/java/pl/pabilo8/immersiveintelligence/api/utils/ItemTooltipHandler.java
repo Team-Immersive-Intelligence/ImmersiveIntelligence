@@ -16,7 +16,7 @@ import net.minecraftforge.client.event.RenderTooltipEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
-import pl.pabilo8.immersiveintelligence.common.IIGuiList;
+import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
@@ -49,7 +49,7 @@ public class ItemTooltipHandler
 			return getGUI(stack).ordinal();
 		}
 
-		IIGuiList getGUI(ItemStack stack);
+		IIGUI getGUI(ItemStack stack);
 	}
 
 	//--- Utility Methods ---//

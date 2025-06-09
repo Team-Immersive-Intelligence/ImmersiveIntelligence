@@ -22,7 +22,7 @@ import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.ISawblade;
 import pl.pabilo8.immersiveintelligence.client.util.carversound.TimedCompoundSound;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Sawmill;
-import pl.pabilo8.immersiveintelligence.common.IIGuiList;
+import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.multiblock.MultiblockSawmill;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
@@ -198,9 +198,9 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 	//--- IGuiTile ---//
 
 	@Override
-	public IIGuiList getGUI()
+	public IIGUI getGUI()
 	{
-		return IIGuiList.GUI_SAWMILL;
+		return IIGUI.SAWMILL;
 	}
 
 	//--- TileEntityMultiblockProduction ---//

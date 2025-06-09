@@ -28,9 +28,9 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.oredict.OreDictionary;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.ChemicalBath;
 import pl.pabilo8.immersiveintelligence.api.crafting.BathingRecipe;
-import pl.pabilo8.immersiveintelligence.common.IIGuiList;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.ChemicalBath;
+import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.MultiblockChemicalBath;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
@@ -400,7 +400,7 @@ public class TileEntityChemicalBath extends TileEntityMultiblockMetal<TileEntity
 	@Override
 	public int getGuiID()
 	{
-		return IIGuiList.GUI_CHEMICAL_BATH.ordinal();
+		return IIGUI.CHEMICAL_BATH.ordinal();
 	}
 
 	@Override

@@ -21,7 +21,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiEmplacement
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoCheckbox;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoSwitch;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoDropdown;
-import pl.pabilo8.immersiveintelligence.common.IIGuiList;
+import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
@@ -64,7 +64,7 @@ public class GuiEmplacementPageTasks extends GuiEmplacement
 
 	public GuiEmplacementPageTasks(EntityPlayer player, TileEntityEmplacement tile)
 	{
-		super(player, tile, IIGuiList.GUI_EMPLACEMENT_TASKS);
+		super(player, tile, IIGUI.EMPLACEMENT_TASKS);
 		title = I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.emplacement.tasks");
 	}
 

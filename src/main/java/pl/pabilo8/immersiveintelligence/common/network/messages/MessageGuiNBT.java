@@ -11,7 +11,7 @@ import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.common.IIGuiList;
+import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.network.IIMessage;
 
 /**
@@ -21,10 +21,10 @@ import pl.pabilo8.immersiveintelligence.common.network.IIMessage;
 public class MessageGuiNBT extends IIMessage
 {
 	//Used in changing tabs in guis (its being sent to server only)
-	private IIGuiList id;
+	private IIGUI id;
 	private BlockPos pos;
 
-	public MessageGuiNBT(IIGuiList id, TileEntity te)
+	public MessageGuiNBT(IIGUI id, TileEntity te)
 	{
 		this.id = id;
 		this.pos = te.getPos();
@@ -60,7 +60,7 @@ public class MessageGuiNBT extends IIMessage
 	@Override
 	public void fromBytes(ByteBuf buf)
 	{
-		this.id = readEnum(buf, IIGuiList.class);
+		this.id = readEnum(buf, IIGUI.class);
 		this.pos = readPos(buf);
 	}
 }

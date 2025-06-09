@@ -4,7 +4,7 @@ import blusunrize.immersiveengineering.common.blocks.TileEntityIEBase;
 import blusunrize.immersiveengineering.common.util.inventory.IIEInventory;
 import mezz.jei.api.gui.IAdvancedGuiHandler;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
-import pl.pabilo8.immersiveintelligence.common.IIGuiList;
+import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIBase;
 
 import javax.annotation.Nullable;
@@ -19,7 +19,7 @@ public class JeiDecoGuiHandler<GUI extends DecoGui<T, C>, T extends TileEntityIE
 {
 	Class<GUI> wrappedClass;
 
-	public JeiDecoGuiHandler(IIGuiList gui)
+	public JeiDecoGuiHandler(IIGUI gui)
 	{
 		this.wrappedClass = (Class<GUI>)gui.guiClass;
 	}

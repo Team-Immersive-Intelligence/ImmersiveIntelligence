@@ -32,14 +32,14 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.SkyCartStation;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.SkyCrateStation;
 import pl.pabilo8.immersiveintelligence.api.rotary.*;
 import pl.pabilo8.immersiveintelligence.api.utils.ISkyCrateConnector;
 import pl.pabilo8.immersiveintelligence.api.utils.MinecartBlockHelper;
 import pl.pabilo8.immersiveintelligence.api.utils.minecart.IMinecartBlockPickable;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.ISkycrateMount;
-import pl.pabilo8.immersiveintelligence.common.IIGuiList;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.SkyCartStation;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.SkyCrateStation;
+import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.multiblock.MultiblockSkyCartStation;
 import pl.pabilo8.immersiveintelligence.common.entity.EntitySkyCrate;
 import pl.pabilo8.immersiveintelligence.common.entity.EntitySkycrateInternal;
@@ -58,8 +58,8 @@ import static blusunrize.immersiveengineering.api.energy.wires.WireType.STRUCTUR
 
 /**
  * @author Pabilo8
- * @since 28-06-2019
  * @author Avalon
+ * @since 28-06-2019
  * @since 22-10-2024
  */
 public class TileEntitySkyCartStation extends TileEntityMultiblockConnectable<TileEntitySkyCartStation, IMultiblockRecipe> implements IAdvancedCollisionBounds, IAdvancedSelectionBounds, ISkyCrateConnector, IPlayerInteraction, IGuiTile, IRotationalEnergyBlock
@@ -369,42 +369,53 @@ public class TileEntitySkyCartStation extends TileEntityMultiblockConnectable<Ti
 					}
 	}
 
-	private void handleRotation() {
+	private void handleRotation()
+	{
 		boolean hasIssues = false;
 
 		// If rotation speed or torque exceeds the maximum allowed values, trigger self-destruction.
-		if (rotation.getRotationSpeed() > SkyCrateStation.rpmBreakingMax || rotation.getTorque() > SkyCrateStation.torqueBreakingMax) {
+		if(rotation.getRotationSpeed() > SkyCrateStation.rpmBreakingMax||rotation.getTorque() > SkyCrateStation.torqueBreakingMax)
+		{
 			selfDestruct();
 			return; // Exit early after self-destruct.
 		}
 
 		// Get the position of the tile entity based on the machine's orientation.
-		BlockPos rotationPos = getBlockPosForPos(6).offset((mirrored ? this.facing.rotateY() : this.facing.rotateYCCW()));
+		BlockPos rotationPos = getBlockPosForPos(6).offset((mirrored?this.facing.rotateY(): this.facing.rotateYCCW()));
 		TileEntity te = world.getTileEntity(rotationPos);
 
 		// Check if there is a valid TileEntity at the specified position.
-		if (te != null) {
+		if(te!=null)
+		{
 			// Check if the TileEntity has the rotary energy capability.
-			if (te.hasCapability(CapabilityRotaryEnergy.ROTARY_ENERGY, mirrored ? this.facing.rotateYCCW() : this.facing.rotateY())) {
-				IRotaryEnergy cap = te.getCapability(CapabilityRotaryEnergy.ROTARY_ENERGY, mirrored ? this.facing.rotateYCCW() : this.facing.rotateY());
+			if(te.hasCapability(CapabilityRotaryEnergy.ROTARY_ENERGY, mirrored?this.facing.rotateYCCW(): this.facing.rotateY()))
+			{
+				IRotaryEnergy cap = te.getCapability(CapabilityRotaryEnergy.ROTARY_ENERGY, mirrored?this.facing.rotateYCCW(): this.facing.rotateY());
 
 				// Ensure the capability is valid before processing.
-				if (cap != null && rotation.handleRotation(cap, mirrored ? this.facing.rotateYCCW() : this.facing.rotateY())) {
+				if(cap!=null&&rotation.handleRotation(cap, mirrored?this.facing.rotateYCCW(): this.facing.rotateY()))
+				{
 					// Synchronize the rotary power state with the clients.
 					IIPacketHandler.INSTANCE.sendToAllAround(new MessageRotaryPowerSync(rotation, 0, master().getPos()), IIPacketHandler.targetPointFromTile(master(), 24));
 				}
-			} else {
+			}
+			else
+			{
 				// No rotary energy capability found on the tile entity.
 				hasIssues = true;
 			}
-		} else {
+		}
+		else
+		{
 			// No valid tile entity found at the specified position.
 			hasIssues = true;
 		}
 
 		// If there are issues (missing capability or tile entity), grow rotation values more slowly.
-		if (rotation.getTorque() > 0 || rotation.getRotationSpeed() > 0) {
-			if (hasIssues) {
+		if(rotation.getTorque() > 0||rotation.getRotationSpeed() > 0)
+		{
+			if(hasIssues)
+			{
 				rotation.grow(0, 0, 0.98f); // Reduce growth due to issues.
 			}
 			// Always sync rotary power state, even with reduced growth.
@@ -734,7 +745,7 @@ public class TileEntitySkyCartStation extends TileEntityMultiblockConnectable<Ti
 	@Override
 	public int getGuiID()
 	{
-		return IIGuiList.GUI_SKYCART_STATION.ordinal();
+		return IIGUI.SKYCART_STATION.ordinal();
 	}
 
 	@Nullable

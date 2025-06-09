@@ -21,7 +21,7 @@ import net.minecraftforge.items.IItemHandler;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler.IGuiItem;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
-import pl.pabilo8.immersiveintelligence.common.IIGuiList;
+import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.crafting.IIRecipes;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
@@ -106,9 +106,9 @@ public class ItemIICasingPouch extends ItemIIBase implements IIIItemTextureOverr
 	}
 
 	@Override
-	public IIGuiList getGUI(ItemStack stack)
+	public IIGUI getGUI(ItemStack stack)
 	{
-		return IIGuiList.GUI_CASING_POUCH;
+		return IIGUI.CASING_POUCH;
 	}
 
 	//--- Model ---//

@@ -10,7 +10,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoSlider;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoSwitch;
-import pl.pabilo8.immersiveintelligence.common.IIGuiList;
+import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.weapon.EmplacementWeapon.MachineUpgradeEmplacementWeapon;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
@@ -32,7 +32,7 @@ public class GuiEmplacementPageStatus extends GuiEmplacement
 
 	public GuiEmplacementPageStatus(EntityPlayer player, TileEntityEmplacement tile)
 	{
-		super(player, tile, IIGuiList.GUI_EMPLACEMENT_STATUS);
+		super(player, tile, IIGUI.EMPLACEMENT_STATUS);
 		title = I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.emplacement.status");
 	}
 

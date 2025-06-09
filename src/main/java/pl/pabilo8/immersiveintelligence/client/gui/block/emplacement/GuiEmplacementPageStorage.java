@@ -7,7 +7,7 @@ import net.minecraft.client.renderer.GlStateManager.SourceFactor;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import org.lwjgl.opengl.GL11;
-import pl.pabilo8.immersiveintelligence.common.IIGuiList;
+import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
@@ -19,7 +19,7 @@ public class GuiEmplacementPageStorage extends GuiEmplacement
 {
 	public GuiEmplacementPageStorage(EntityPlayer player, TileEntityEmplacement tile)
 	{
-		super(player, tile, IIGuiList.GUI_EMPLACEMENT_STORAGE);
+		super(player, tile, IIGUI.EMPLACEMENT_STORAGE);
 		title = I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.emplacement.storage");
 	}
 

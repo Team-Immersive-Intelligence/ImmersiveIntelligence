@@ -25,7 +25,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import pl.pabilo8.immersiveintelligence.api.crafting.VulcanizerRecipe;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Vulcanizer;
-import pl.pabilo8.immersiveintelligence.common.IIGuiList;
+import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockVulcanizer;
 
 import javax.annotation.Nullable;
@@ -524,7 +524,7 @@ public class TileEntityVulcanizer extends TileEntityMultiblockMetal<TileEntityVu
 	@Override
 	public int getGuiID()
 	{
-		return IIGuiList.GUI_VULCANIZER.ordinal();
+		return IIGUI.VULCANIZER.ordinal();
 	}
 
 	@Nullable

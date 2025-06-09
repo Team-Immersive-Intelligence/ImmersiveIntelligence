@@ -51,7 +51,7 @@ import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Packer;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.IIGuiList;
+import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.MultiblockPacker;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultiblockIIGeneric;
@@ -675,7 +675,7 @@ public class TileEntityPacker extends TileEntityMultiblockIIGeneric<TileEntityPa
 	@Override
 	public int getGuiID()
 	{
-		return IIGuiList.GUI_PACKER.ordinal();
+		return IIGUI.PACKER.ordinal();
 	}
 
 	@Nullable

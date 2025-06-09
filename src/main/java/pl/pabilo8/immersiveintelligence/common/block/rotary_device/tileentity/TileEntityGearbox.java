@@ -28,7 +28,7 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.common.capabilities.Capability;
 import pl.pabilo8.immersiveintelligence.api.rotary.*;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.IAdvancedTextOverlay;
-import pl.pabilo8.immersiveintelligence.common.IIGuiList;
+import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageRotaryPowerSync;
 
@@ -274,7 +274,7 @@ public class TileEntityGearbox extends TileEntityIEBase implements ITickable, IA
 	@Override
 	public int getGuiID()
 	{
-		return IIGuiList.GUI_GEARBOX.ordinal();
+		return IIGUI.GEARBOX.ordinal();
 	}
 
 	@Nullable

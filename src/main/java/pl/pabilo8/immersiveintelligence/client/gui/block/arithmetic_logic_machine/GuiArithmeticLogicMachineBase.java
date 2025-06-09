@@ -26,7 +26,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoBut
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoTab;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoLabel;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.widget.GuiWidgetManualWrapper;
-import pl.pabilo8.immersiveintelligence.common.IIGuiList;
+import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityArithmeticLogicMachine;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerArithmeticLogicMachine.CircuitSlot;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
@@ -52,8 +52,8 @@ public class GuiArithmeticLogicMachineBase extends GuiIEContainerBase implements
 	protected static final ResourceLocation TEXTURE_EDIT = new ResourceLocation(ImmersiveIntelligence.MODID+":textures/gui/arithmetic_logic_machine_editing.png");
 	protected static final ResourceLocation TEXTURE_VARIABLES = new ResourceLocation(ImmersiveIntelligence.MODID+":textures/gui/arithmetic_logic_machine_variables.png");
 
-	private final IIGuiList thisGui;
-	public final LinkedHashMap<GuiButton, IIGuiList> TABS = new LinkedHashMap<>();
+	private final IIGUI thisGui;
+	public final LinkedHashMap<GuiButton, IIGUI> TABS = new LinkedHashMap<>();
 	protected String title = I18n.format("tile.immersiveintelligence.metal_multiblock.arithmetic_logic_machine.name");
 	private final ResourceLocation thisTexture;
 
@@ -68,10 +68,10 @@ public class GuiArithmeticLogicMachineBase extends GuiIEContainerBase implements
 	//this is due to the machine sending a close door message to the server and producing an annoying sound
 	protected boolean preparedForChange = false;
 
-	public GuiArithmeticLogicMachineBase(EntityPlayer player, TileEntityArithmeticLogicMachine tile, IIGuiList gui)
+	public GuiArithmeticLogicMachineBase(EntityPlayer player, TileEntityArithmeticLogicMachine tile, IIGUI gui)
 	{
 		super(gui.containerFromTile.apply(player, tile));
-		this.thisTexture = gui==IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_STORAGE?TEXTURE_STORAGE: gui==IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_EDIT?TEXTURE_EDIT: TEXTURE_VARIABLES;
+		this.thisTexture = gui==IIGUI.ARITHMETIC_LOGIC_MACHINE_STORAGE?TEXTURE_STORAGE: gui==IIGUI.ARITHMETIC_LOGIC_MACHINE_EDIT?TEXTURE_EDIT: TEXTURE_VARIABLES;
 		this.ySize = 222;
 		this.playerInv = player.inventory;
 		this.thisGui = gui;
@@ -94,11 +94,11 @@ public class GuiArithmeticLogicMachineBase extends GuiIEContainerBase implements
 
 		addLabel(4, 8, IIReference.COLOR_H1, title);
 
-		addTab(IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_STORAGE, "storage_module");
-		addItemTab(IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_VARIABLES_0, 0);
-		addItemTab(IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_VARIABLES_1, 1);
-		addItemTab(IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_VARIABLES_2, 2);
-		addItemTab(IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_VARIABLES_3, 3);
+		addTab(IIGUI.ARITHMETIC_LOGIC_MACHINE_STORAGE, "storage_module");
+		addItemTab(IIGUI.ARITHMETIC_LOGIC_MACHINE_VARIABLES_0, 0);
+		addItemTab(IIGUI.ARITHMETIC_LOGIC_MACHINE_VARIABLES_1, 1);
+		addItemTab(IIGUI.ARITHMETIC_LOGIC_MACHINE_VARIABLES_2, 2);
+		addItemTab(IIGUI.ARITHMETIC_LOGIC_MACHINE_VARIABLES_3, 3);
 
 		trueManual = ManualHelper.getManual().getGui();
 		if(trueManual==null||trueManual instanceof GuiWidgetManualWrapper)
@@ -227,7 +227,7 @@ public class GuiArithmeticLogicMachineBase extends GuiIEContainerBase implements
 		trueManual.page = sideManual.page;
 	}
 
-	protected void addTab(IIGuiList gui, String name)
+	protected void addTab(IIGUI gui, String name)
 	{
 		final int vOffset = TABS.size()*24;
 		DecoTab button = new DecoTab(buttonList.size(), guiLeft-28, guiTop+4+vOffset, 28, 24, thisGui==gui?204: 176, vOffset,
@@ -236,7 +236,7 @@ public class GuiArithmeticLogicMachineBase extends GuiIEContainerBase implements
 		addButton(button);
 	}
 
-	protected void addItemTab(IIGuiList gui, int slot)
+	protected void addItemTab(IIGUI gui, int slot)
 	{
 		final int vOffset = TABS.size()*24;
 		if(!handler.getStackInSlot(slot).isEmpty())
@@ -272,19 +272,19 @@ public class GuiArithmeticLogicMachineBase extends GuiIEContainerBase implements
 //		proxy.storedGuiData.setBoolean("manual", manualButton.state);
 	}
 
-	protected static IIGuiList getPage(int page)
+	protected static IIGUI getPage(int page)
 	{
 		switch(page)
 		{
 			default:
 			case 0:
-				return IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_VARIABLES_0;
+				return IIGUI.ARITHMETIC_LOGIC_MACHINE_VARIABLES_0;
 			case 1:
-				return IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_VARIABLES_1;
+				return IIGUI.ARITHMETIC_LOGIC_MACHINE_VARIABLES_1;
 			case 2:
-				return IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_VARIABLES_2;
+				return IIGUI.ARITHMETIC_LOGIC_MACHINE_VARIABLES_2;
 			case 3:
-				return IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_VARIABLES_3;
+				return IIGUI.ARITHMETIC_LOGIC_MACHINE_VARIABLES_3;
 		}
 	}
 }

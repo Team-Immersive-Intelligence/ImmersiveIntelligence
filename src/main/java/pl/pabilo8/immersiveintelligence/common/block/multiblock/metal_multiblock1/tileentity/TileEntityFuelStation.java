@@ -24,9 +24,9 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.FuelStation;
 import pl.pabilo8.immersiveintelligence.api.VehicleFuelHandler;
-import pl.pabilo8.immersiveintelligence.common.IIGuiList;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.FuelStation;
+import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockFuelStation;
@@ -153,7 +153,7 @@ public class TileEntityFuelStation extends TileEntityMultiblockMetal<TileEntityF
 					if(!canFill)
 					{
 						focusedEntity = null;
-						IIPacketHandler.sendToClient(this, new MessageIITileSync(this,makeSyncEntity()));
+						IIPacketHandler.sendToClient(this, new MessageIITileSync(this, makeSyncEntity()));
 						world.playSound(null, getPos().up(), IISounds.fuelStationEnd, SoundCategory.BLOCKS, 0.5f, 1f);
 					}
 				}
@@ -183,7 +183,7 @@ public class TileEntityFuelStation extends TileEntityMultiblockMetal<TileEntityF
 					{
 						focusedEntity = entity;
 						inserterAnimation = 0f;
-						IIPacketHandler.sendToClient(this, new MessageIITileSync(this,makeSyncEntity()));
+						IIPacketHandler.sendToClient(this, new MessageIITileSync(this, makeSyncEntity()));
 						world.playSound(null, getPos().up(), IISounds.fuelStationStart, SoundCategory.BLOCKS, 0.5f, 1f);
 						break;
 					}
@@ -194,7 +194,7 @@ public class TileEntityFuelStation extends TileEntityMultiblockMetal<TileEntityF
 		{
 			focusedEntity = null;
 			inserterAnimation = 0f;
-			IIPacketHandler.sendToClient(this, new MessageIITileSync(this,makeSyncEntity()));
+			IIPacketHandler.sendToClient(this, new MessageIITileSync(this, makeSyncEntity()));
 			world.playSound(null, getPos().up(), IISounds.fuelStationEnd, SoundCategory.BLOCKS, 0.5f, 1f);
 		}
 	}
@@ -467,7 +467,7 @@ public class TileEntityFuelStation extends TileEntityMultiblockMetal<TileEntityF
 	@Override
 	public int getGuiID()
 	{
-		return IIGuiList.GUI_FUEL_STATION.ordinal();
+		return IIGUI.FUEL_STATION.ordinal();
 	}
 
 	@Nullable

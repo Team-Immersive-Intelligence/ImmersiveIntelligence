@@ -26,7 +26,7 @@ import pl.pabilo8.immersiveintelligence.api.data.IIDataHandlingUtils;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.PrintingPress;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.IIGuiList;
+import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.MultiblockPrintingPress;
 import pl.pabilo8.immersiveintelligence.common.entity.tactile.EntityAMTTactile;
@@ -307,9 +307,9 @@ public class TileEntityPrintingPress extends TileEntityMultiblockProductionMulti
 	}
 
 	@Override
-	public IIGuiList getGUI()
+	public IIGUI getGUI()
 	{
-		return IIGuiList.GUI_PRINTING_PRESS;
+		return IIGUI.PRINTING_PRESS;
 	}
 
 	//--- Fluid Handling ---//

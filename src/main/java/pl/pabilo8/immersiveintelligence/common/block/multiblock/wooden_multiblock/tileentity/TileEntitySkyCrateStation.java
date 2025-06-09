@@ -32,12 +32,12 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.SkyCrateStation;
 import pl.pabilo8.immersiveintelligence.api.rotary.*;
 import pl.pabilo8.immersiveintelligence.api.utils.ISkyCrateConnector;
 import pl.pabilo8.immersiveintelligence.api.utils.MinecartBlockHelper;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.ISkycrateMount;
-import pl.pabilo8.immersiveintelligence.common.IIGuiList;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.SkyCrateStation;
+import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.multiblock.MultiblockSkyCrateStation;
 import pl.pabilo8.immersiveintelligence.common.entity.EntitySkyCrate;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
@@ -641,7 +641,7 @@ public class TileEntitySkyCrateStation extends TileEntityMultiblockConnectable<T
 	@Override
 	public int getGuiID()
 	{
-		return IIGuiList.GUI_SKYCRATE_STATION.ordinal();
+		return IIGUI.SKYCRATE_STATION.ordinal();
 	}
 
 	@Nullable

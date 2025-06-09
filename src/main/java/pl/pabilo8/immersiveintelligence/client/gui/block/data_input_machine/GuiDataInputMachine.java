@@ -22,7 +22,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoBa
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundBuilder.SlotStyle;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoGuiUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.widget.GuiWidgetManualWrapper;
-import pl.pabilo8.immersiveintelligence.common.IIGuiList;
+import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityDataInputMachine;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerDataInputMachine;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
@@ -76,7 +76,7 @@ public class GuiDataInputMachine extends DecoGui<TileEntityDataInputMachine, Con
 	@SyncNBT
 	int scroll;
 
-	public GuiDataInputMachine(EntityPlayer player, TileEntityDataInputMachine tile, IIGuiList gui)
+	public GuiDataInputMachine(EntityPlayer player, TileEntityDataInputMachine tile, IIGUI gui)
 	{
 		super(player, tile, gui);
 	}
@@ -111,11 +111,11 @@ public class GuiDataInputMachine extends DecoGui<TileEntityDataInputMachine, Con
 		//Add tabs
 		addComponents(
 				new DecoTab()
-						.withLink(IIGuiList.GUI_DATA_INPUT_MACHINE_STORAGE)
+						.withLink(IIGUI.DATA_INPUT_MACHINE_STORAGE)
 						.withIcon(ICON_STORAGE)
 						.withTranslatedTooltip(IIReference.DESCRIPTION_KEY+"storage_module"),
 				new DecoTab()
-						.withLink(IIGuiList.GUI_DATA_INPUT_MACHINE_VARIABLES)
+						.withLink(IIGUI.DATA_INPUT_MACHINE_VARIABLES)
 						.withIcon(ICON_VARIABLES)
 						.withTranslatedTooltip(IIReference.DESCRIPTION_KEY+"variables_module"),
 				new DecoTab()
@@ -155,7 +155,7 @@ public class GuiDataInputMachine extends DecoGui<TileEntityDataInputMachine, Con
 					new DecoList<Pair<Character, DataType>>(32, 8)
 							.withSize(136, 120)
 							.withEntries(tile.storedData.getAllVariables())
-							.withCreateLaterAction(() -> changeGUI(IIGuiList.GUI_DATA_REDSTONE_INTERFACE_REDSTONE))
+							.withCreateLaterAction(() -> changeGUI(IIGUI.DATA_REDSTONE_INTERFACE_REDSTONE))
 							.withGuiSaveAction(gui -> this.scroll = gui.getScroll())
 							//Display
 							.withDisplayFunction(new DecoEntryPanelBuilder<Pair<Character, DataType>>()
@@ -164,7 +164,7 @@ public class GuiDataInputMachine extends DecoGui<TileEntityDataInputMachine, Con
 									.withComponent(
 											new DecoButton(width-17-16+3, 2)
 													.withTemplate(DecoGuiUtils.LIST_BUTTON_EDIT_TEMPLATE)
-													.withOnPressed((gui, mouseX, mouseY) -> changeGUI(IIGuiList.GUI_DATA_INPUT_MACHINE_EDIT))
+													.withOnPressed((gui, mouseX, mouseY) -> changeGUI(IIGUI.DATA_INPUT_MACHINE_EDIT))
 									)
 									.withComponent(p -> new DecoButton(width-17+1, 2)
 											.withTemplate(DecoGuiUtils.LIST_BUTTON_REMOVE_TEMPLATE)

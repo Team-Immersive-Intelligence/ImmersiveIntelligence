@@ -31,7 +31,7 @@ import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.IPrecisionTool;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.PrecisionAssembler;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.IIGuiList;
+import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.MultiblockPrecisionAssembler;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.ItemIIAssemblyScheme;
@@ -489,7 +489,7 @@ public class TileEntityPrecisionAssembler extends TileEntityMultiblockMetal<Tile
 	@Override
 	public int getGuiID()
 	{
-		return IIGuiList.GUI_PRECISION_ASSEMBLER.ordinal();
+		return IIGUI.PRECISION_ASSEMBLER.ordinal();
 	}
 
 	@Override

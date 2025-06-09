@@ -23,7 +23,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoLabe
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundBuilder;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoRectangle;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
-import pl.pabilo8.immersiveintelligence.common.IIGuiList;
+import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageGuiNBT;
@@ -77,7 +77,7 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 	private List<Rectangle> takenSpace;
 	private GuiComponentDecoBase<?> focusedElement;
 
-	public DecoGui(EntityPlayer player, T tile, IIGuiList guiList)
+	public DecoGui(EntityPlayer player, T tile, IIGUI guiList)
 	{
 		super(guiList.containerFromTile.apply(player, tile));
 		this.tile = tile;
@@ -514,7 +514,7 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 	 *
 	 * @param newGUI the new GUI to change to
 	 */
-	public final boolean changeGUI(@Nonnull IIGuiList newGUI)
+	public final boolean changeGUI(@Nonnull IIGUI newGUI)
 	{
 		return changeGUI(newGUI, null, null);
 	}
@@ -526,7 +526,7 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 	 * @param guiData  additional data to save for the GUI
 	 * @param tileData additional data to save for the tile entity
 	 */
-	public final boolean changeGUI(@Nonnull IIGuiList newGUI, @Nullable EasyNBT guiData, @Nullable EasyNBT tileData)
+	public final boolean changeGUI(@Nonnull IIGUI newGUI, @Nullable EasyNBT guiData, @Nullable EasyNBT tileData)
 	{
 		//Save Tile Entity data
 		EasyNBT nbt = onSaveTileData().conditionally(tileData!=null, e -> e.mergeWith(tileData));

@@ -12,7 +12,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoDro
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoDropdownDataLetters.ArrowsAlignment;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.data_editor.GuiDataEditorExpression;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.IIGuiList;
+import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityArithmeticLogicMachine;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageGuiNBT;
@@ -44,7 +44,7 @@ public class GuiArithmeticLogicMachineEdit extends GuiArithmeticLogicMachineBase
 
 	public GuiArithmeticLogicMachineEdit(EntityPlayer player, TileEntityArithmeticLogicMachine tile)
 	{
-		super(player, tile, IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_EDIT);
+		super(player, tile, IIGUI.ARITHMETIC_LOGIC_MACHINE_EDIT);
 	}
 
 	@Override

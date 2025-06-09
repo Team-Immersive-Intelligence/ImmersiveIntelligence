@@ -24,7 +24,7 @@ import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.api.crafting.*;
 import pl.pabilo8.immersiveintelligence.client.gui.block.*;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.IIGuiList;
+import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.compat.jei.gui_handlers.UpgradeGuiHandler;
 import pl.pabilo8.immersiveintelligence.common.compat.jei.gui_handlers.VulcanizerGuiHandler;
@@ -152,7 +152,7 @@ public class JEIHelper implements IModPlugin
 		modRegistry.addAdvancedGuiHandlers(new UpgradeGuiHandler());
 
 		if(FMLCommonHandler.instance().getSide()==Side.CLIENT)
-			IIGuiList.registerDecoJEICompat(modRegistry);
+			IIGUI.registerDecoJEICompat(modRegistry);
 
 		//modRegistry.addRecipes(RecipeMinecart.listAllRecipes, VanillaRecipeCategoryUid.CRAFTING);
 		//modRegistry.addRecipes(RecipeCrateConversion.listAllRecipes, VanillaRecipeCategoryUid.CRAFTING);

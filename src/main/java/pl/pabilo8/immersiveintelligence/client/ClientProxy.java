@@ -311,7 +311,7 @@ public class ClientProxy extends CommonProxy
 		TileEntity te = world.getTileEntity(new BlockPos(x, y, z));
 		ItemStack stack = player.getHeldItem(hand = (player.getHeldItem(EnumHand.MAIN_HAND).getItem() instanceof IGuiItem?EnumHand.MAIN_HAND: EnumHand.OFF_HAND));
 
-		if(ID==IIGuiList.GUI_UPGRADE.ordinal()&&te instanceof IUpgradableMachine)
+		if(ID==IIGUI.UPGRADE.ordinal()&&te instanceof IUpgradableMachine)
 		{
 			TileEntity upgradeMaster = ((IUpgradableMachine)te).getUpgradeMaster();
 			if(upgradeMaster!=null)
@@ -319,9 +319,9 @@ public class ClientProxy extends CommonProxy
 		}
 
 		GuiScreen gui = null;
-		if(IIGuiList.values().length > ID)
+		if(IIGUI.values().length > ID)
 		{
-			IIGuiList guiBuilder = IIGuiList.values()[ID];
+			IIGUI guiBuilder = IIGUI.values()[ID];
 			if(guiBuilder.item)
 				return guiBuilder.guiFromStack.apply(player, stack, hand);
 
@@ -522,7 +522,7 @@ public class ClientProxy extends CommonProxy
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityAluminiumChainFenceGate.class, new FenceGateRenderer<>("multiblock/aluminium_chain_gate"));
 
 		//GUIs (auto texture registering)
-		IIGuiList.initClientGUIs();
+		IIGUI.initClientGUIs();
 
 		//Compat
 		IICompatModule.doModulesClientPreInit();
