@@ -37,11 +37,13 @@ import java.util.Optional;
 import java.util.function.Function;
 
 /**
- * Created by Pabilo8 on 13-07-2019.
  * Based on jabelar's tutorial
  * http://jabelarminecraft.blogspot.com/p/minecraft-modding-custom-fluid-handling.html
  * https://github.com/jabelar/ExampleMod-1.12/blob/master/src/main/java/com/blogspot/jabelarminecraft/examplemod/client/models/ModelSlimeBag.java
  * Also used the bottles' transform code from Rustic (https://github.com/the-realest-stu/Rustic/blob/master/src/main/java/rustic/common/items/ItemFluidBottle.java)
+ *
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 13.07.2019
  */
 
 public class ModelMeasuringCup extends ModelAbstractItem

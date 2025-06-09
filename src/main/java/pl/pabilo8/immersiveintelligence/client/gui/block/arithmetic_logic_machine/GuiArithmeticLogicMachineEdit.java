@@ -27,8 +27,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 /**
- * Created by Pabilo8 on 30-06-2019.
- * Some code you write, some you steal, but in most cases you adapt the existing solutions...
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 30.06.2019
  */
 public class GuiArithmeticLogicMachineEdit extends GuiArithmeticLogicMachineBase
 {

@@ -4,9 +4,11 @@ import pl.pabilo8.immersiveintelligence.client.model.ModelIIBase;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
 
 /**
- * Created by Pabilo8 on 07-06-2019.
  * Created using SMP-Toolbox 2.0 (Old stuff, probably considered dead ^^)
  * Thanks to The Flan's Mod Team for the Turbo Model Thingy used in there
+ *
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 07.06.2019
  */
 public class ModelSkyCrate extends ModelIIBase
 {

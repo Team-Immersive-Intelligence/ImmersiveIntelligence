@@ -30,10 +30,12 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Created by Pabilo8 on 07-06-2019.
  * I would really want to name it Skyblock, but it seems that the name is already taken...
  * Also, IE planned to add them some time ago (https://github.com/BluSunrize/ImmersiveEngineering/issues/2027)
  * The name skycrate derives from a name of a file inside IE's jar (skycrate.obj), but the model isn't used.
+ *
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 07.06.2019
  */
 public class EntitySkyCrate extends Entity implements ITeslaEntity
 {

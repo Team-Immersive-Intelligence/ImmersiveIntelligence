@@ -24,7 +24,8 @@ import java.util.ArrayList;
 import java.util.Comparator;
 
 /**
- * Created by Pabilo8 on 30-06-2019.
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 30.06.2019
  * Some code you write, some you steal, but in most cases you adapt the existing solutions...
  */
 public class GuiArithmeticMachineVariables extends GuiArithmeticLogicMachineBase

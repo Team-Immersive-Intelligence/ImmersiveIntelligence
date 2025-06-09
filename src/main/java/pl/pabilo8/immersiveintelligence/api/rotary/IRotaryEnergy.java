@@ -6,13 +6,15 @@ import net.minecraft.util.EnumFacing;
 import javax.annotation.Nullable;
 
 /**
- * Created by Pabilo8 on 06-01-2020.
  * It's definitely more advanced than the forge energy system, but it reflects at least a bit how it works irl
  * Used multiple sources to make this:
  * -Used physics equations and general info about how rotary energy works from https://www.engineeringtoolbox.com/
  * -Many ideas and implementations from RotaryCraft by Reika Kalseki https://sites.google.com/site/reikasminecraft/rotarycraft
  * -and RotaryCraft Wiki https://rotarycraft.fandom.com/wiki/RotaryCraft_Wiki
  * -General info from Wikipedia
+ *
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 06.01.2020
  */
 public interface IRotaryEnergy
 {

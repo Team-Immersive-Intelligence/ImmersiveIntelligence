@@ -33,7 +33,8 @@ import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
 import java.util.*;
 
 /**
- * Created by Pabilo8 on 14-09-2019.
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 14.09.2019
  * The bestest of best!
  * Blu, please make variables public (and available to addon makers)
  */

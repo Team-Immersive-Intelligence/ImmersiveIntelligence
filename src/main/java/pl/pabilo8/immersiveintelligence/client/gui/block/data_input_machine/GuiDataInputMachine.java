@@ -34,7 +34,13 @@ import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 
 /**
  * <p>
- * Created by Pabilo8 on 30-06-2019.
+ *
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 30.08.2021
+ * @updated 24.02.2025
+ * @ii-approved 0.3.1
+ * @since 30.06.2019
  * Some code you write, some you steal, but in most cases you adapt the existing solutions...
  * </p>
  *
@@ -47,11 +53,6 @@ import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
  * Reworked again by the same Pabilo8 on 24.02.2025.
  * All of the code you write, none of the code you steal, but for some of the code you generate...
  * </p>
- *
- * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 30.08.2021
- * @updated 24.02.2025
- * @ii-approved 0.3.1
  * @since 30.06.2019
  */
 @DecoTemplate(name = "data_input_machine")

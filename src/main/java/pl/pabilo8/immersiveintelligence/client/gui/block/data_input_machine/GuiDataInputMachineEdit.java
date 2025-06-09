@@ -15,8 +15,9 @@ import java.util.Map.Entry;
 import java.util.function.BiFunction;
 
 /**
- * Created by Pabilo8 on 30-06-2019.
- * Rework on 31.08.2021.
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 31.08.2021.
+ * @since 30.06.2019
  */
 @DecoTemplate(name = "data_input_machine_edit")
 public class GuiDataInputMachineEdit extends GuiDataInputMachine

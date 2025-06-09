@@ -5,8 +5,8 @@ import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityArithmeticLogicMachine;
 
 /**
- * Created by Pabilo8 on 30-06-2019.
- * Some code you write, some you steal, but in most cases you adapt the existing solutions...
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 30.06.2019
  */
 public class GuiArithmeticLogicMachineStorage extends GuiArithmeticLogicMachineBase
 {
