@@ -13,8 +13,8 @@ import javax.annotation.Nonnull;
 import java.util.Arrays;
 
 /**
- * @author Pabilo8
- * @since 05-07-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 05.07.2019
  */
 public class DataTypeExpression extends DataType
 {

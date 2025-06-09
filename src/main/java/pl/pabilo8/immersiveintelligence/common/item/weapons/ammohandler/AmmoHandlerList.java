@@ -22,16 +22,16 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 20.02.2023
  */
 public abstract class AmmoHandlerList extends AmmoHandler
 {
-	private final IAmmoTypeItem validAmmo;
+	private final IAmmoTypeItem<?, ?> validAmmo;
 	private final String tag;
 	private final int size;
 
-	public AmmoHandlerList(ItemIIGunBase item, String tag, IAmmoTypeItem validAmmo, int size)
+	public AmmoHandlerList(ItemIIGunBase item, String tag, IAmmoTypeItem<?, ?> validAmmo, int size)
 	{
 		super(item);
 		this.tag = tag;

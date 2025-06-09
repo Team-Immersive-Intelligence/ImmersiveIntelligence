@@ -23,7 +23,7 @@ import javax.annotation.Nullable;
 import java.lang.annotation.*;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 05.04.2022
  */
 public abstract class IITileRenderer<T extends TileEntity> extends TileEntitySpecialRenderer<T> implements IReloadableModelContainer<IITileRenderer<T>>

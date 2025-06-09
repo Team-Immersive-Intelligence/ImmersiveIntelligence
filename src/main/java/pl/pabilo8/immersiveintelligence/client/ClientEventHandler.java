@@ -131,8 +131,8 @@ import static pl.pabilo8.immersiveintelligence.api.ammo.utils.PenetrationCache.b
 /**
  * Handles events for client side.
  *
- * @author Pabilo8
- * @since 27-09-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 27.09.2019
  */
 @SideOnly(Side.CLIENT)
 public class ClientEventHandler implements ISelectiveResourceReloadListener
@@ -571,7 +571,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 		}*/
 
 		if(stack.getItem() instanceof IAmmoTypeItem)
-			IIAmmoUtils.createAmmoTooltip(((IAmmoTypeItem)stack.getItem()), stack, event.getEntity().world, event.getToolTip());
+			IIAmmoUtils.createAmmoTooltip(((IAmmoTypeItem<?, ?>)stack.getItem()), stack, event.getEntity().world, event.getToolTip());
 		else if(ItemNBTHelper.hasKey(stack, IIContent.NBT_AdvancedPowerpack))
 		{
 			ItemStack powerpack = ItemNBTHelper.getItemStack(stack, IIContent.NBT_AdvancedPowerpack);

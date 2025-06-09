@@ -9,7 +9,7 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerRadar;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 28.04.2023
  */
 public class GuiRadar extends GuiIEContainerBase implements ITabbedGui

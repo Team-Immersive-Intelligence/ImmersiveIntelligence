@@ -17,8 +17,8 @@ import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.component.EntityShrapnel;
 
 /**
- * @author Pabilo8
- * @since 30-08-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 30.08.2019
  */
 public class AmmoComponentShrapnel extends AmmoComponent
 {

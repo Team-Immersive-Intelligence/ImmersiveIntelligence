@@ -8,7 +8,6 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.MoverType;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
@@ -30,7 +29,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 13.09.2020
  */
 @IIItemProperties(category = IICategory.WARFARE)
@@ -47,12 +46,6 @@ public class ItemIILightEngineerBoots extends ItemIILightEngineerArmorBase imple
 	public ModelBiped getArmorModel(EntityLivingBase entityLiving, ItemStack itemStack, EntityEquipmentSlot armorSlot, ModelBiped _default)
 	{
 		return ModelLightEngineerArmor.getModel(armorSlot, itemStack);
-	}
-
-	@Override
-	protected String getMaterialName(ArmorMaterial material)
-	{
-		return "light_engineer_armor";
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -90,7 +83,7 @@ public class ItemIILightEngineerBoots extends ItemIILightEngineerArmorBase imple
 	@Override
 	public void onArmorTick(World world, EntityPlayer player, ItemStack stack)
 	{
-		if(getUpgrades(stack).hasKey("flippers") && player.isInWater())
+		if(getUpgrades(stack).hasKey("flippers")&&player.isInWater())
 		{
 			ItemNBTHelper.setBoolean(stack, "flippin", true);
 			player.addPotionEffect(new PotionEffect(MobEffects.SPEED, 15, 1, true, false)); // Speed level 1 for 15 ticks
@@ -115,7 +108,7 @@ public class ItemIILightEngineerBoots extends ItemIILightEngineerArmorBase imple
 
 
 		boolean springs = getUpgrades(stack).hasKey("internal_springs");
-		if(!world.isRemote && springs)
+		if(!world.isRemote&&springs)
 		{
 			ItemNBTHelper.setBoolean(stack, "internal_springs", true);
 			player.stepHeight = 0;  // Ensures no sound is made during stepping
@@ -123,7 +116,7 @@ public class ItemIILightEngineerBoots extends ItemIILightEngineerArmorBase imple
 
 
 		boolean reinforcement = getUpgrades(stack).hasKey("boot_reinforcement");
-		if(reinforcement && player.isBurning())
+		if(reinforcement&&player.isBurning())
 		{
 			ItemNBTHelper.setBoolean(stack, "boot_reinforcement", true);
 			player.extinguish();

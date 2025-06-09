@@ -35,7 +35,7 @@ import java.util.regex.Pattern;
  * A class for registering II particle effects, effect types and programs.
  * Allows loading particle effects from {@link ResLoc#EXT_FX_AMT .fx.amt} (JSON) files.
  *
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @updated 05.04.2024
  * @ii-approved 0.3.1
  * @since 17.07.2020
@@ -117,8 +117,8 @@ public class ParticleRegistry
 	/**
 	 * Registers a new {@link ParticleProgram particle program}.
 	 *
-	 * @param program
-	 * @param <T>
+	 * @param program The supplier of the particle program to register.
+	 * @param <T>     The type of the particle that the program will be applied to.
 	 */
 	public static <T extends AbstractParticle> void registerProgram(Supplier<ParticleProgram> program)
 	{

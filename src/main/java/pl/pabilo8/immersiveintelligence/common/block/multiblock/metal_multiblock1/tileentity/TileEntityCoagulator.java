@@ -24,7 +24,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 04.03.2021
  */
 public class TileEntityCoagulator extends TileEntityMultiblockMetal<TileEntityCoagulator, CoagulatorRecipe> implements ISoundTile, IGuiTile

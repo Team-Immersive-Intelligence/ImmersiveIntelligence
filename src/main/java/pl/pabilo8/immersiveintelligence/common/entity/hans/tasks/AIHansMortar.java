@@ -19,7 +19,7 @@ import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import java.util.Optional;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 05.04.2021
  */
 //TODO: 15.02.2024 create a superclass for AIHansHowitzer and AIHansMortar

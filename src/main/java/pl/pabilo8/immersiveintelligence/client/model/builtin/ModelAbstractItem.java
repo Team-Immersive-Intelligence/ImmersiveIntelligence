@@ -7,9 +7,9 @@ import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.model.item.ModelMeasuringCup.MeasuringCupModelLoader;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @ii-approved 0.1.0
- * @since 13-07-2019
+ * @since 13.07.2019
  */
 public abstract class ModelAbstractItem implements IModel
 {

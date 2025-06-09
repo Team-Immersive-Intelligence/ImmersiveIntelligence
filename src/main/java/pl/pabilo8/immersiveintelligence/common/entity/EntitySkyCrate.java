@@ -7,8 +7,6 @@ import blusunrize.immersiveengineering.api.tool.ITeslaEntity;
 import blusunrize.immersiveengineering.common.Config.IEConfig.Machines;
 import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.EntityFallingBlock;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
@@ -23,10 +21,10 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.ForgeChunkManager.Ticket;
 import net.minecraftforge.common.ForgeChunkManager.Type;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools.SkycrateMounts;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.utils.ISkyCrateConnector;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.ISkycrateMount;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools.SkycrateMounts;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -117,7 +115,7 @@ public class EntitySkyCrate extends Entity implements ITeslaEntity
 						Utils.dropStackAtPos(world, getPosition(), crate.copy());
 					} */
 					BlockPos ePos = getPosition();
-					BlockPos dropPos = new BlockPos(ePos.getX(), ePos.getY() - 2, ePos.getZ());
+					BlockPos dropPos = new BlockPos(ePos.getX(), ePos.getY()-2, ePos.getZ());
 					Utils.dropStackAtPos(world, dropPos, mount.copy());
 					Utils.dropStackAtPos(world, dropPos, crate.copy());
 					this.setDead();
@@ -204,7 +202,7 @@ public class EntitySkyCrate extends Entity implements ITeslaEntity
 		{
 			Vec3d v = this.connection.getVecAt(this.linePos);
 			this.setPosition(firstPos.getX()+v.x, firstPos.getY()+v.y, firstPos.getZ()+v.z);
-		} catch(NullPointerException e)
+		} catch(NullPointerException ignored)
 		{
 
 		}

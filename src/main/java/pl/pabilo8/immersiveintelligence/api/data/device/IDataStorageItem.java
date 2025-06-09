@@ -13,8 +13,8 @@ import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import java.util.List;
 
 /**
- * @author Pabilo8
- * @since 25-06-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 25.06.2019
  */
 public interface IDataStorageItem extends IAdvancedTooltipItem
 {

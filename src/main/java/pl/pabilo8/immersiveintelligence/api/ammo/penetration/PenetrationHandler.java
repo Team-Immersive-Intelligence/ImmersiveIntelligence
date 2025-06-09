@@ -9,7 +9,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 27.03.2024
  */
 public class PenetrationHandler implements IPenetrationHandler
@@ -25,7 +25,7 @@ public class PenetrationHandler implements IPenetrationHandler
 	 * @param hardness       penetration hardness level
 	 * @param thickness      density (constant resistance multiplier)
 	 * @param integrity      hit-points of the block
-	 * @param debrisParticle
+	 * @param debrisParticle the particle effect spawned when the block is destroyed, or {@code null} if none
 	 * @param impactSound    the sound played when the block is hit
 	 * @param ricochetSound  the sound played when the bullet ricochets off the block
 	 */

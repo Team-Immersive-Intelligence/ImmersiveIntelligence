@@ -11,7 +11,7 @@ import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import javax.annotation.Nonnull;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @ii-approved 0.2.0
  * @since 08.11.2022
  */

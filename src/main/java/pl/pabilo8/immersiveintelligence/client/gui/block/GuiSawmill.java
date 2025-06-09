@@ -20,8 +20,8 @@ import java.util.ArrayList;
 import static pl.pabilo8.immersiveintelligence.api.rotary.IIRotaryUtils.renderEnergyBars;
 
 /**
- * @author Pabilo8
- * @since 10-07-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 10.07.2019
  */
 public class GuiSawmill extends GuiIEContainerBase
 {

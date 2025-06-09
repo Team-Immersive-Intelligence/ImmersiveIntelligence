@@ -22,7 +22,7 @@ import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.Til
 import static blusunrize.immersiveengineering.api.IEProperties.FACING_HORIZONTAL;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 30.08.2020
  */
 public class LatexCollectorRenderer extends TileEntitySpecialRenderer<TileEntityLatexCollector>

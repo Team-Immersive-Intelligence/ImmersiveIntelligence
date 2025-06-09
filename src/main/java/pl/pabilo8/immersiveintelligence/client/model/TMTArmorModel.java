@@ -18,7 +18,7 @@ import javax.annotation.Nullable;
 import java.util.HashMap;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 13.09.2020
  */
 public class TMTArmorModel extends ModelBiped
@@ -105,7 +105,6 @@ public class TMTArmorModel extends ModelBiped
 				mod.render(0.0625f);
 			renderAddons(renderStack, renderSlot, rightLegModel, 0, false, 0.0625f);
 			GlStateManager.popMatrix();
-
 
 
 		}

@@ -6,8 +6,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
- * @author Pabilo8
- * @since 25-01-2020
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 25.01.2020
  */
 public interface ISkycrateMount
 {

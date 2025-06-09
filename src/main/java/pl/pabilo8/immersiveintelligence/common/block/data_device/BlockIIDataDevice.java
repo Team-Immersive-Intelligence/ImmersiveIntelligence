@@ -39,8 +39,8 @@ import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import java.util.ArrayList;
 
 /**
- * @author Pabilo8
- * @since 2019-05-31
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 31.05.2019
  */
 public class BlockIIDataDevice extends BlockIITileProvider<IIBlockTypes_Connector>
 {

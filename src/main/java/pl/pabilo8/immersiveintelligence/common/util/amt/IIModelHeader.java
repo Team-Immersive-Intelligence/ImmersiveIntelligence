@@ -25,7 +25,7 @@ import java.util.Set;
 /**
  * Defines offsets and hierarchy for an animated model's parts
  *
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 09.04.2022
  */
 public class IIModelHeader

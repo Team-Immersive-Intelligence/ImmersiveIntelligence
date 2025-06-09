@@ -25,7 +25,7 @@ import java.util.function.Supplier;
 
 /**
  * @param <E> The ammo entity class
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @ii-approved 0.3.1
  * @since 02.01.2024
  */

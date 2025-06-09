@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * Only traces through blocks, ignores blocks passed in a blacklist
  *
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 19.08.2023
  */
 public class BlacklistedRayTracer

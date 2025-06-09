@@ -17,7 +17,7 @@ import pl.pabilo8.immersiveintelligence.common.util.entity.IIEntityUtils;
 import javax.annotation.Nonnull;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 09.07.2020
  */
 public interface IVehicleMultiPart extends IEntityMultiPart

@@ -30,7 +30,7 @@ import java.util.function.BiPredicate;
 import java.util.stream.Collectors;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 21.04.2021
  */
 @IIItemProperties(category = IICategory.WARFARE)

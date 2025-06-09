@@ -21,7 +21,7 @@ import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIBase;
 import java.util.List;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 23.01.2021
  */
 @IIItemProperties(category = IICategory.WARFARE)

@@ -27,7 +27,7 @@ import java.util.Objects;
 import java.util.function.Consumer;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 29.09.2021
  */
 public class GuiPackerTaskList extends GuiButton

@@ -37,8 +37,8 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 
 /**
- * @author Pabilo8
- * @since 2019-05-17
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 17.05.2019
  */
 public class BlockIIMechanicalConnector extends BlockIITileProvider<IIBlockTypes_MechanicalConnector>
 {

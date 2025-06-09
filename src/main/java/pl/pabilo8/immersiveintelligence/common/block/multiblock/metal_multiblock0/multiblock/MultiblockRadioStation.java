@@ -11,8 +11,8 @@ import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
 
 /**
- * @author Pabilo8
- * @since 20-06-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 20.06.2019
  */
 @IAdvancedMultiblock
 public class MultiblockRadioStation extends MultiblockStuctureBase<TileEntityRadioStation>

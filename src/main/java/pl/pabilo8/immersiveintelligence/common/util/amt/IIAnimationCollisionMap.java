@@ -13,7 +13,7 @@ import java.util.List;
  * A map used for easily animating an array of AMTs
  * Use one per a single renderer per animation
  *
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 05.04.2022
  */
 public class IIAnimationCollisionMap extends HashMap<EntityAMTTactile, IIAnimationGroup>
@@ -80,18 +80,6 @@ public class IIAnimationCollisionMap extends HashMap<EntityAMTTactile, IIAnimati
 		if(group.rotation!=null)
 		{
 			tactile.rotation = group.rotation.getForTime(time);
-
-			switch(facing)
-			{
-				case NORTH:
-					break;
-				case SOUTH:
-					break;
-				case WEST:
-					break;
-				case EAST:
-					break;
-			}
 
 			if(facing==EnumFacing.EAST)
 				tactile.rotation = new Vec3d(-tactile.rotation.z, tactile.rotation.y, tactile.rotation.x);

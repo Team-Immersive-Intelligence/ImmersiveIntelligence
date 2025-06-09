@@ -11,7 +11,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 06.07.2020
  */
 public interface IUpgradableMachine

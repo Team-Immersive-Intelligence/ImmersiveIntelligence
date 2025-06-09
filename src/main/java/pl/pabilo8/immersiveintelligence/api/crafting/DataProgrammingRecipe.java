@@ -10,7 +10,7 @@ import javax.annotation.Nullable;
 import java.util.function.Consumer;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 08.01.2024
  */
 public class DataProgrammingRecipe extends IIMultiblockRecipe

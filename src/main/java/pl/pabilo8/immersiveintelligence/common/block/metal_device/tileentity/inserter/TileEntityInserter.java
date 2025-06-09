@@ -45,8 +45,8 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 /**
- * @author Pabilo8
- * @since 15-07-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 15.07.2019
  */
 public class TileEntityInserter extends TileEntityInserterBase
 {

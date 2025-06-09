@@ -15,7 +15,7 @@ import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import javax.annotation.Nullable;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 05.02.2021
  */
 public class BlockIITripwireConnector extends BlockIITileProvider<IIBlockTypesTripWireConnector>

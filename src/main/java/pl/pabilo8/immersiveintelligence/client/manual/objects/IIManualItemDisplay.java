@@ -15,7 +15,7 @@ import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import java.util.List;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 22.05.2022
  */
 public class IIManualItemDisplay extends IIManualObject

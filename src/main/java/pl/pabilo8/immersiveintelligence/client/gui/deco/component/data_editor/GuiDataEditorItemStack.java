@@ -18,7 +18,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 07.09.2021
  */
 public class GuiDataEditorItemStack extends GuiDataEditor<DataTypeItemStack>

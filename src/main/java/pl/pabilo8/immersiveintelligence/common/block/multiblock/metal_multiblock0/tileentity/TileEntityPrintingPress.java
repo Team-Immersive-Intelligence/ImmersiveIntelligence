@@ -45,7 +45,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayDeque;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @updated 13.12.2023
  * @since 28.06.2019
  */

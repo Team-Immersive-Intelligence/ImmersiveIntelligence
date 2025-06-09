@@ -21,7 +21,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 02.02.2022
  */
 public class AIHansOpenDoor extends AIHansBase

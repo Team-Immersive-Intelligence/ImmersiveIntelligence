@@ -45,8 +45,8 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 /**
- * @author Pabilo8
- * @since 17-09-2022
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 17.09.2022
  */
 @IIItemProperties(category = IICategory.WARFARE)
 

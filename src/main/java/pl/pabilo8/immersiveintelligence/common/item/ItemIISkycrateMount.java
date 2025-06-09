@@ -15,8 +15,8 @@ import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProper
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
 
 /**
- * @author Pabilo8
- * @since 27-12-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 27.12.2019
  */
 @IIItemProperties(category = IICategory.LOGISTICS)
 public class ItemIISkycrateMount extends ItemIISubItemsBase<SkycrateMounts> implements ISkycrateMount

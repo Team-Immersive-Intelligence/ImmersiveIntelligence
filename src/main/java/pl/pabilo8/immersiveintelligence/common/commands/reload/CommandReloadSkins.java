@@ -9,8 +9,8 @@ import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler.ThreadContribu
 import javax.annotation.Nonnull;
 
 /**
- * @author Pabilo8
- * @since 23-06-2020
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 23.06.2020
  */
 public class CommandReloadSkins extends CommandBase
 {

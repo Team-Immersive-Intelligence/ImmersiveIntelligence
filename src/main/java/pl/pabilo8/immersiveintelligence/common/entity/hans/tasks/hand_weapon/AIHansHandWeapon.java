@@ -21,7 +21,7 @@ import java.util.List;
  * Decided to make weapon tasks Hans-only<br>
  * Hans Hand Weapon task is a task used for dealing with ranged item weapons, such as bows, revolvers, railguns, etc.
  *
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 04.02.2022
  */
 public abstract class AIHansHandWeapon extends AIHansBase

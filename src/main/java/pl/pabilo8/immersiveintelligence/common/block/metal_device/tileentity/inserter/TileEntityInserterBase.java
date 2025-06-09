@@ -54,7 +54,7 @@ import java.util.Set;
 import java.util.function.Function;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 28.09.2020
  */
 public abstract class TileEntityInserterBase extends TileEntityImmersiveConnectable implements IIEInventory, ITileDrop, IComparatorOverride, IHammerInteraction, ITickable, IBlockBounds, IDataConnector

@@ -9,7 +9,7 @@ import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
 import java.util.List;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 21.09.2021
  */
 public abstract class AIHansBase extends EntityAIBase

@@ -4,7 +4,7 @@ package pl.pabilo8.immersiveintelligence.client.util.amt;
  * A wrapper for simple on/off animation<br>
  * Used for switching between active and inactive part
  *
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 23.08.2022
  */
 public class IIBooleanAnimation

@@ -20,7 +20,7 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
 import static pl.pabilo8.immersiveintelligence.client.IIClientUtils.drawRope;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 07.04.2021
  */
 public class VehicleWorkshopRenderer extends TileEntitySpecialRenderer<TileEntityVehicleWorkshop> implements IReloadableModelContainer<VehicleWorkshopRenderer>

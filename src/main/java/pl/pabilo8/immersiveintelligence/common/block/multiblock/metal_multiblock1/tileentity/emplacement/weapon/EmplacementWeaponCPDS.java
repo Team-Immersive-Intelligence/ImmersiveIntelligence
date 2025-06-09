@@ -219,6 +219,7 @@ public class EmplacementWeaponCPDS extends EmplacementWeapon<EntityAmmoProjectil
 			shootDelay--;
 	}
 
+	@Nonnull
 	@Override
 	public NBTTagCompound saveToNBT(boolean forClient)
 	{

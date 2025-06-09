@@ -17,7 +17,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 14.12.2022
  */
 public abstract class IIEntityRenderer<E extends Entity> extends Render<E> implements IReloadableModelContainer<IIEntityRenderer<E>>

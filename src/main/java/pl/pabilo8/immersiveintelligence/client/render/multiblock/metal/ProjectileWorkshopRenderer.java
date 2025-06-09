@@ -16,10 +16,10 @@ import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @updated 09.07.2024
  * @ii-approved 0.3.1
- * @since 21-06-2019
+ * @since 21.06.2019
  */
 @RegisteredTileRenderer(name = "multiblock/projectile_workshop", clazz = TileEntityProjectileWorkshop.class)
 public class ProjectileWorkshopRenderer extends IIMultiblockRenderer<TileEntityProjectileWorkshop>

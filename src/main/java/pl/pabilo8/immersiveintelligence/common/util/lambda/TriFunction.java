@@ -14,7 +14,7 @@ import java.util.function.Function;
  * @param <S> the type of the second argument to the function
  * @param <T> the type of the third argument to the function
  * @param <R> the type of the result of the function
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 25.09.2023
  */
 @FunctionalInterface

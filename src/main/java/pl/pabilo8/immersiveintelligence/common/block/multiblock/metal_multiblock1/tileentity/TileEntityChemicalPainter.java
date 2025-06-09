@@ -62,8 +62,8 @@ import java.util.List;
 import java.util.function.Predicate;
 
 /**
- * @author Pabilo8
- * @since 28-06-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 28.06.2019
  */
 @net.minecraftforge.fml.common.Optional.Interface(iface = "com.elytradev.mirage.lighting.ILightEventConsumer", modid = "mirage")
 public class TileEntityChemicalPainter extends TileEntityMultiblockMetal<TileEntityChemicalPainter, PaintingRecipe> implements IGuiTile, ISoundTile, IAdvancedBounds, ILightEventConsumer, IDataDevice

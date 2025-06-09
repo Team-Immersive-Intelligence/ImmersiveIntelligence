@@ -15,7 +15,7 @@ import net.minecraft.util.math.MathHelper;
 import pl.pabilo8.immersiveintelligence.client.gui.item.GuiPrintedPage;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 30.09.2022
  */
 public class PrintedPageRenderer

@@ -22,8 +22,8 @@ import pl.pabilo8.immersiveintelligence.common.util.AdvancedSounds.MultiSound;
 import pl.pabilo8.immersiveintelligence.common.util.AdvancedSounds.RangedSound;
 
 /**
- * @author Pabilo8
- * @since 2019-05-26
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 26.05.2019
  */
 public class IIPacketHandler
 {

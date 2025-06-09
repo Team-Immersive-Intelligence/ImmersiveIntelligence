@@ -8,8 +8,8 @@ import java.util.Base64;
 /**
  * This class is used for encrypting data using XOR Cipher.
  *
- * @author GabrielV
- * @author Avalon
+ * @author GabrielV(gabriel @ iiteam.net)
+ * @author Avalon (avalon@iiteam.net)
  * @ii-approved 0.3.1
  * @since 18.09.2024
  */
@@ -31,7 +31,7 @@ public class Cryptographer
 	}
 
 	/**
-	 * Encrypt <code>data</code> using xor cipher with <code>password</code>
+	 * Encrypt {@code data} using xor cipher with {@code password}
 	 *
 	 * @param data     Data to be encrypted
 	 * @param password Password for encryption
@@ -43,7 +43,7 @@ public class Cryptographer
 	}
 
 	/**
-	 * Encrypt <code>data</code> using xor cipher with <code>password</code>
+	 * Encrypt {@code data} using xor cipher with {@code password}
 	 *
 	 * @param data     Data to be encrypted
 	 * @param password Password for encryption
@@ -55,7 +55,7 @@ public class Cryptographer
 	}
 
 	/**
-	 * Decrypt <code>data</code> using xor cipher with <code>password</code>
+	 * Decrypt {@code data} using xor cipher with {@code password}
 	 *
 	 * @param data     Data to be decrypted
 	 * @param password Password for decryption (must be the same as for encryption)
@@ -76,7 +76,7 @@ public class Cryptographer
 	}
 
 	/**
-	 * Decrypt <code>data</code> using xor cipher with <code>password</code>
+	 * Decrypt {@code data} using xor cipher with {@code password}
 	 *
 	 * @param data     Data to be decrypted
 	 * @param password Password for decryption (must be the same as for encryption)
@@ -88,7 +88,7 @@ public class Cryptographer
 	}
 
 	/**
-	 * Decrypt <code>data</code> to string using xor cipher with <code>password</code>
+	 * Decrypt {@code data} to string using xor cipher with {@code password}
 	 *
 	 * @param data     Data to be decrypted
 	 * @param password Password for decryption (must be the same as for encryption)
@@ -107,7 +107,7 @@ public class Cryptographer
 	}
 
 	/**
-	 * Decrypt <code>data</code> to string using xor cipher with <code>password</code>
+	 * Decrypt {@code data} to string using xor cipher with {@code password}
 	 *
 	 * @param data     Data to be decrypted
 	 * @param password Password for decryption (must be the same as for encryption)

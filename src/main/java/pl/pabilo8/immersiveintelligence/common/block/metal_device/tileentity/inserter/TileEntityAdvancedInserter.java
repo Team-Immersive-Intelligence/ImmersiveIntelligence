@@ -11,8 +11,8 @@ import java.util.Set;
 import java.util.function.Function;
 
 /**
- * @author Pabilo8
- * @since 15-07-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 15.07.2019
  */
 public class TileEntityAdvancedInserter extends TileEntityInserter
 {

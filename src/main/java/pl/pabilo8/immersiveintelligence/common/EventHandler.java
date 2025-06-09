@@ -58,7 +58,7 @@ import java.util.ArrayList;
 /**
  * Handles events for server side.
  *
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 23.09.2023
  */
 public class EventHandler
@@ -317,7 +317,7 @@ public class EventHandler
 
 	/**
 	 * @author GabrielV (gabriel@iiteam.net)
-	 * @created 27/10/2023 - 6:05 PM
+	 * @since 27.10.2023
 	 */
 	@SubscribeEvent
 	public void onLivingFallEvent(LivingFallEvent event)

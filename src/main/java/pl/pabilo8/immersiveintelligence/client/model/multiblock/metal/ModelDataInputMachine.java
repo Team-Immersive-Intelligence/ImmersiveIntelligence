@@ -8,8 +8,8 @@ import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.Shape2D;
 
 /**
- * @author Pabilo8
- * @since 20-06-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 20.06.2019
  */
 public class ModelDataInputMachine extends ModelIIBase
 {
@@ -262,23 +262,31 @@ public class ModelDataInputMachine extends ModelIIBase
 	@Override
 	public void getBlockRotation(EnumFacing facing, boolean mirrored)
 	{
-		switch (facing)
+		switch(facing)
 		{
-			case NORTH: {
+			case NORTH:
+			{
 				GlStateManager.rotate(90F, 0F, 1F, 0F);
 				GlStateManager.translate(0f, -2f, 2f);
-			} break;
-			case SOUTH: {
+			}
+			break;
+			case SOUTH:
+			{
 				GlStateManager.rotate(270F, 0F, 1F, 0F);
 				GlStateManager.translate(-1f, -2f, -1f);
-			} break;
-			case EAST: {
+			}
+			break;
+			case EAST:
+			{
 				GlStateManager.translate(1f, -2f, 0f);
-			} break;
-			case WEST: {
+			}
+			break;
+			case WEST:
+			{
 				GlStateManager.rotate(180F, 0F, 1F, 0F);
 				GlStateManager.translate(-2f, -2f, 1f);
-			} break;
+			}
+			break;
 		}
 	}
 }

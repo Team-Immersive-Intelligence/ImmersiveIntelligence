@@ -11,7 +11,7 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 03.03.2023
  */
 public abstract class GuiOverlayGunBase extends GuiOverlayBase

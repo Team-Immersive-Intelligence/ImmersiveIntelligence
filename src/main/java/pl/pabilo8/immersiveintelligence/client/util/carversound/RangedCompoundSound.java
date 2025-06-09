@@ -5,7 +5,6 @@ import net.minecraft.client.audio.PositionedSound;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.Tuple;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -16,7 +15,7 @@ import java.util.Comparator;
 /**
  * A quick, non-repeating sound with different variants depending on distance
  *
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 21.09.2022
  */
 @SideOnly(Side.CLIENT)
@@ -35,7 +34,7 @@ public class RangedCompoundSound extends PositionedSound
 		this.volume = volume*(float)(0.25+0.75*distance);
 		this.pitch = pitch;
 		repeat = false;
-		attenuationType=AttenuationType.NONE;
+		attenuationType = AttenuationType.NONE;
 	}
 
 	private static SoundEvent getValidSound(RangedSound sound, Vec3d pos, int fullDistance)

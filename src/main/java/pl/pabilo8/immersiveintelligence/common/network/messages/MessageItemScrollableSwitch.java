@@ -11,8 +11,8 @@ import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler.IItemScroll
 import pl.pabilo8.immersiveintelligence.common.network.IIMessage;
 
 /**
- * @author Pabilo8
- * @since 24-06-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 24.06.2019
  */
 public class MessageItemScrollableSwitch extends IIMessage
 {

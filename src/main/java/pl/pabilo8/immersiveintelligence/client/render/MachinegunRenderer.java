@@ -22,6 +22,8 @@ import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.effect_crate.TileEntityAmmunitionCrate;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityMachinegun;
+import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
+import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoBase;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIMachinegun;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler;
@@ -190,7 +192,7 @@ public class MachinegunRenderer extends Render<EntityMachinegun> implements IRel
 						}
 						case "belt_fed_loader":
 							nmod.render(0.0625f);
-							IAmmoModel mm = AmmoRegistry.getModel(IIContent.itemAmmoMachinegun);
+							IAmmoModel<ItemIIAmmoBase<EntityAmmoProjectile>, EntityAmmoProjectile> mm = AmmoRegistry.getModel(IIContent.itemAmmoMachinegun);
 							GlStateManager.pushMatrix();
 							GlStateManager.translate(0.69f, 0.65f, -0.0625f+(-0.0625f*1.5f));
 							GlStateManager.rotate(180, 0, 1, 0);

@@ -45,7 +45,7 @@ import java.util.Arrays;
 import java.util.Optional;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @updated 09.07.2024
  * @ii-approved 0.3.1
  * @since 04.03.2021

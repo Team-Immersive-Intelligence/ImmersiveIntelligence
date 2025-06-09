@@ -6,7 +6,7 @@ import net.minecraft.util.math.Vec3d;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IVehicleMultiPart;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 23.12.2022
  */
 public class EntityVehicleParticleEmitter extends EntityVehiclePart
@@ -30,9 +30,4 @@ public class EntityVehicleParticleEmitter extends EntityVehiclePart
 		return false;
 	}
 
-	@Override
-	public boolean canBePushed()
-	{
-		return false;
-	}
 }

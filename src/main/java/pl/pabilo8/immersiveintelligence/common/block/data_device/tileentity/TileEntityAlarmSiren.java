@@ -26,8 +26,8 @@ import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.AlarmSiren;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.IAdvancedTextOverlay;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.AlarmSiren;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
@@ -38,8 +38,8 @@ import javax.annotation.Nullable;
 import static blusunrize.immersiveengineering.api.energy.wires.WireType.REDSTONE_CATEGORY;
 
 /**
- * @author Pabilo8
- * @since 15-06-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 15.06.2019
  */
 public class TileEntityAlarmSiren extends TileEntityImmersiveConnectable
 		implements IRedstoneConnector, ITickable, IDirectionalTile, IHammerInteraction, IAdvancedTextOverlay, ISoundTile

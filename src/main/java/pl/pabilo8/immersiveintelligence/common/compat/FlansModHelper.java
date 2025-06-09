@@ -1,7 +1,7 @@
 package pl.pabilo8.immersiveintelligence.common.compat;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 27.07.2021
  */
 public class FlansModHelper extends IICompatModule

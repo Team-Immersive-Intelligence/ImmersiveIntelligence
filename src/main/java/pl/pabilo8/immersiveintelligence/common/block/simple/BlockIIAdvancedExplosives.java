@@ -27,7 +27,7 @@ import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import javax.annotation.Nullable;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 08.12.2021
  */
 public class BlockIIAdvancedExplosives extends BlockIIBase<HMX_Explosives>

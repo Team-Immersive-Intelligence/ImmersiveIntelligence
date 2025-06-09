@@ -18,7 +18,7 @@ import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProper
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIBase;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 28.01.2021
  */
 @IIItemProperties(category = IICategory.WARFARE)

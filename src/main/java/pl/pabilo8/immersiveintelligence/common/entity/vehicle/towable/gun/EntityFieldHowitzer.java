@@ -45,7 +45,7 @@ import pl.pabilo8.immersiveintelligence.common.util.entity.IIEntityUtils;
 import javax.annotation.Nullable;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 18.07.2020
  */
 //TODO: 15.02.2024 mandatory cleanup
@@ -205,13 +205,6 @@ public class EntityFieldHowitzer extends Entity implements IVehicleMultiPart, IE
 	public AxisAlignedBB getEntityBoundingBox()
 	{
 		return AABB.offset(posX, posY, posZ);
-	}
-
-	@Nullable
-	@Override
-	public AxisAlignedBB getCollisionBoundingBox()
-	{
-		return null;
 	}
 
 	@Nullable

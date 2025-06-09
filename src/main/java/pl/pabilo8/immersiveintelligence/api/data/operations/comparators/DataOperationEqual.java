@@ -12,8 +12,8 @@ import javax.annotation.Nonnull;
 /**
  * Used to compare two data types, and return true if they're equal
  *
- * @author Pabilo8
- * @since 05-07-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 05.07.2019
  */
 @DataOperationMeta(name = "equal", expression = "==",
 		allowedTypes = {DataType.class, DataType.class}, params = {"compared", "compared"},

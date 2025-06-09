@@ -234,6 +234,7 @@ public class EmplacementWeaponHeavyRailgun extends EmplacementWeapon<EntityAmmoP
 			shootDelay--;
 	}
 
+	@Nonnull
 	@Override
 	public NBTTagCompound saveToNBT(boolean forClient)
 	{

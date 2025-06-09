@@ -7,10 +7,10 @@ import net.minecraft.tileentity.TileEntity;
 import pl.pabilo8.immersiveintelligence.api.utils.IUpgradableMachine;
 
 /**
- * @author Pabilo8
- * @since 10-07-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 10.07.2019
  */
-public class ContainerUpgrade extends ContainerIEBase
+public class ContainerUpgrade extends ContainerIEBase<TileEntity>
 {
 	public <T extends TileEntity & IUpgradableMachine> ContainerUpgrade(EntityPlayer player, T tile)
 	{

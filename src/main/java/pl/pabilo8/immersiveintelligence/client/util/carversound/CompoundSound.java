@@ -14,7 +14,7 @@ import pl.pabilo8.immersiveintelligence.common.util.AdvancedSounds.MultiSound;
 /**
  * A repeated sound with a beginning and end.
  *
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 19.09.2022
  */
 @SideOnly(Side.CLIENT)

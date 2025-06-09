@@ -21,8 +21,8 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 /**
- * @author Pabilo8
- * @since 25-06-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 25.06.2019
  */
 @IIItemProperties(category = IICategory.ELECTRONICS)
 public class ItemIIPunchtape extends ItemIIBase implements IDataStorageItem

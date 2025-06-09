@@ -167,12 +167,6 @@ public class ModelMeasuringCup extends ModelAbstractItem
 	}
 
 	@Override
-	public IModelState getDefaultState()
-	{
-		return TRSRTransformation.identity();
-	}
-
-	@Override
 	public ModelMeasuringCup process(ImmutableMap<String, String> customData)
 	{
 		String fluidName = customData.get("fluid");

@@ -17,8 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author Pabilo8
- * @since 16-08-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 16.08.2019
  */
 public class TileEntitySandbags extends TileEntityIEBase implements IDirectionalTile, IAdvancedCollisionBounds, IAdvancedSelectionBounds
 {

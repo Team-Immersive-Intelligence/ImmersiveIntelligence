@@ -5,7 +5,6 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.IRarity;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler;
 import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler.IISpecialSkin;
 import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
@@ -15,8 +14,8 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 /**
- * @author Pabilo8
- * @since 30-06-2020
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 30.06.2020
  */
 public interface ISkinnable
 {
@@ -38,18 +37,6 @@ public interface ISkinnable
 	default void applySkinnableSkin(ItemStack stack, String skinName)
 	{
 		ItemNBTHelper.setString(stack, IISkinHandler.NBT_ENTRY, skinName);
-	}
-
-	/**
-	 * @param skin skin ID
-	 * @return true if skin exists
-	 * @// TODO: 8/12/2023 Replace all usages of this function with <code>IISkinHandler.isValidSkin()</code>
-	 * @see pl.pabilo8.immersiveintelligence.common.util.IISkinHandler#isValidSkin(String)
-	 * @deprecated Replaced by <code>IISkinHandler.isValidSkin()</code>
-	 */
-	default boolean isValidSkin(String skin)
-	{
-		return !skin.isEmpty()&&IISkinHandler.specialSkins.containsKey(skin);
 	}
 
 	default void addSkinTooltip(@Nonnull ItemStack stack, @Nonnull List<String> tooltip)

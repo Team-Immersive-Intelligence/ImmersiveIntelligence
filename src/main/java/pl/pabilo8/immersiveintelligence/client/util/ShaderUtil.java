@@ -22,7 +22,7 @@ import static pl.pabilo8.immersiveintelligence.client.util.ShaderUtil.Shaders.*;
 /**
  * Utility class for handling ARB shaders.
  *
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @author Flaxbeard
  */
 public class ShaderUtil
@@ -216,7 +216,7 @@ public class ShaderUtil
 		} catch(Exception e)
 		{
 			ARBShaderObjects.glDeleteObjectARB(shader);
-			e.printStackTrace();
+			IILogger.error("Error creating shader: "+getLogInfo(shader));
 			return -1;
 		}
 	}

@@ -117,7 +117,7 @@ public class BulletComponentStack implements INBTSerializable<NBTTagCompound>
 		}
 	}
 
-	public boolean matches(IAmmoTypeItem bullet)
+	public boolean matches(IAmmoTypeItem<?, ?> bullet)
 	{
 		return component!=null&&component.matchesBullet(bullet);
 	}

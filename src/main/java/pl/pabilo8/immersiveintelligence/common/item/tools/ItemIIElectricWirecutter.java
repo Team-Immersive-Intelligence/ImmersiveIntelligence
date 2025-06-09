@@ -28,7 +28,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
@@ -37,7 +36,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
 import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
@@ -52,8 +50,8 @@ import java.util.Set;
 import static blusunrize.immersiveengineering.api.Lib.TOOL_WIRECUTTER;
 
 /**
- * @author Pabilo8
- * @since 07-06-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 07.06.2019
  */
 @IIItemProperties(category = IICategory.TOOLS)
 public class ItemIIElectricWirecutter extends ItemIIBase implements ITool, IIEEnergyItem
@@ -147,12 +145,6 @@ public class ItemIIElectricWirecutter extends ItemIIBase implements ITool, IIEEn
 				ImmersiveNetHandler.INSTANCE.removeConnectionAndDrop(target, world, player.getPosition());
 		}
 		return new ActionResult<>(EnumActionResult.SUCCESS, stack);
-	}
-
-	@Override
-	public boolean doesSneakBypassUse(ItemStack stack, IBlockAccess world, BlockPos pos, EntityPlayer player)
-	{
-		return false;
 	}
 
 	@Override

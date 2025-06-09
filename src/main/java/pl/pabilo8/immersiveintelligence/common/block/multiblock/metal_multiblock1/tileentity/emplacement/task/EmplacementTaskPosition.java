@@ -6,7 +6,7 @@ import net.minecraft.util.math.Vec3d;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 15.02.2024
  */
 public class EmplacementTaskPosition extends EmplacementTask

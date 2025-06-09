@@ -18,7 +18,7 @@ import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import java.util.List;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 17.09.2021
  */
 public class DecoDropdown<T> extends DecoScrolledCollection<DecoDropdown<T>, T>
@@ -93,6 +93,7 @@ public class DecoDropdown<T> extends DecoScrolledCollection<DecoDropdown<T>, T>
 		return 16;
 	}
 
+	@SafeVarargs
 	@Deprecated
 	public DecoDropdown(int buttonId, int x, int y, int w, int h, int perPage, T... entries)
 	{

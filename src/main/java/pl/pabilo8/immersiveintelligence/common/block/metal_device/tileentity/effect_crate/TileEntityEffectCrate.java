@@ -52,7 +52,7 @@ import static pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.M
 import static pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.EffectCrates.maxEnergyStored;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 06.07.2020
  */
 public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectable implements IDirectionalTile, IBooleanAnimatedPartsBlock, ITickable, IUpgradableMachine, IPlayerInteraction, IBlockBounds, IIEInventory, IGuiTile, ITileDrop, IComparatorOverride, ILootContainer

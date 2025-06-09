@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 /**
  * A metadata interface for {@link DecoGui}
  *
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 4.01.2025
  */
 @Retention(RetentionPolicy.RUNTIME)

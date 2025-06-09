@@ -11,8 +11,8 @@ import pl.pabilo8.immersiveintelligence.api.data.types.generic.NumericDataType;
 import javax.annotation.Nonnull;
 
 /**
- * @author Pabilo8
- * @since 05-07-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 05.07.2019
  */
 @DataOperationMeta(name = "ceil", allowedTypes = {NumericDataType.class}, params = {"number"}, expectedResult = DataTypeInteger.class)
 public class DataOperationCeil extends DataOperation

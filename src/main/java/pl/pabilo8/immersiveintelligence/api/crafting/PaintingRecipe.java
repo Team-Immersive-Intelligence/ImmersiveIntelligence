@@ -18,8 +18,8 @@ import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
 /**
- * @author Pabilo8
- * @since 08-08-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 08.08.2019
  */
 public class PaintingRecipe extends MultiblockRecipe
 {

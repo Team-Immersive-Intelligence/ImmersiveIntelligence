@@ -16,8 +16,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.util.function.Supplier;
 
 /**
- * @author Pabilo8
- * @since 2019-06-01
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 01.06.2019
  */
 @MethodsReturnNonnullByDefault
 public abstract class DataType

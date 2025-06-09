@@ -19,7 +19,7 @@ import pl.pabilo8.immersiveintelligence.common.block.data_device.tileentity.Tile
 import pl.pabilo8.immersiveintelligence.common.util.amt.IIAnimation;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 30.08.2020
  */
 @SideOnly(Side.CLIENT)

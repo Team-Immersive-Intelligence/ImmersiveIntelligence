@@ -12,9 +12,9 @@ import pl.pabilo8.immersiveintelligence.client.util.amt.AMTFluid;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityElectrolyzer;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @updated 23.10.2023
- * @since 28-06-2019
+ * @since 28.06.2019
  */
 @RegisteredTileRenderer(name = "multiblock/electrolyzer", clazz = TileEntityElectrolyzer.class)
 public class ElectrolyzerRenderer extends IIMultiblockRenderer<TileEntityElectrolyzer>

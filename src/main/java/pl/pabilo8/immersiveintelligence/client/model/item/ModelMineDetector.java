@@ -6,7 +6,7 @@ import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.Shape2D;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 28.01.2021
  */
 public class ModelMineDetector extends ModelIIBase
@@ -109,7 +109,7 @@ public class ModelMineDetector extends ModelIIBase
 
 		parts.put("base", baseModel);
 		parts.put("pole", poleModel);
-		translateAll(17,0,-0.5f);
+		translateAll(17, 0, -0.5f);
 
 		flipAll();
 	}

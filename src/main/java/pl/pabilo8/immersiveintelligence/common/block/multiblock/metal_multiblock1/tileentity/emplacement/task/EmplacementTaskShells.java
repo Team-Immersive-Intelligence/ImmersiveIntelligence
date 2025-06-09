@@ -3,7 +3,7 @@ package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multibloc
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoArtilleryProjectile;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 15.02.2024
  */
 public class EmplacementTaskShells extends EmplacementTaskEntities

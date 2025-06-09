@@ -65,7 +65,7 @@ public abstract class DecoEntryPanel<T> extends DecoPanel implements DecoElement
 	 * @param t            The element to display
 	 * @param width        The width of the element
 	 * @param font         The font renderer to use
-	 * @param partialTicks
+	 * @param partialTicks Partial render ticks (used for animations)
 	 * @param heightProbe  If true, the method should only return the height of the element, otherwise it should draw it
 	 * @return height of the element
 	 */

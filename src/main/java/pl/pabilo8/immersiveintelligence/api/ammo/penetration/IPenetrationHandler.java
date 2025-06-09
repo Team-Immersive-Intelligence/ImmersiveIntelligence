@@ -7,7 +7,7 @@ import pl.pabilo8.immersiveintelligence.api.ammo.enums.PenetrationHardness;
 import javax.annotation.Nullable;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 27.03.2024
  */
 public interface IPenetrationHandler

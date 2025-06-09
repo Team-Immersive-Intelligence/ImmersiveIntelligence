@@ -338,7 +338,7 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		{
 			if(!(state.getBlock() instanceof BlockTNT))
 				return false;
-			((BlockTNT)state.getBlock()).explode(world, pos, state.withProperty(BlockTNT.EXPLODE, Boolean.valueOf(true)), igniter);
+			((BlockTNT)state.getBlock()).explode(world, pos, state.withProperty(BlockTNT.EXPLODE, Boolean.TRUE), igniter);
 			world.setBlockToAir(pos);
 			return true;
 		});

@@ -25,16 +25,13 @@ import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 /**
- * @author Pabilo8
- * @since 11-06-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 11.06.2019
  */
 public class TileEntityPunchtapeReader extends TileEntityIEBase implements ITickable, IRedstoneOutput, IDataDevice, IPlayerInteraction, IHammerInteraction, IDirectionalTile
 {
 	public boolean hadRedstone = false;
-	//no redstone
-	//send signal on redstone
-	//redstone when signal is sent
-	public PunchtapeReaderMode mode = PunchtapeReaderMode.REDSTONE_INDIFFERENT;
+	private PunchtapeReaderMode mode = PunchtapeReaderMode.REDSTONE_INDIFFERENT;
 	public int rsTime = 0;
 	EnumFacing facing = EnumFacing.NORTH;
 	DataPacket received = null;

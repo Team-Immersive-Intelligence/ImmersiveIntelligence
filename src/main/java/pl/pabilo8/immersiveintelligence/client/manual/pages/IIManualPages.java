@@ -5,8 +5,8 @@ import blusunrize.lib.manual.ManualPages;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 
 /**
- * @author Pabilo8
- * @since 15-05-2020
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 15.05.2020
  */
 public abstract class IIManualPages extends ManualPages
 {

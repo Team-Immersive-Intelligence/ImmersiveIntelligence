@@ -6,7 +6,7 @@ import java.util.List;
 public interface IIIStateMappings<T extends Enum<T>>
 {
 	/**
-	 * @return The name of the block, used for the blockstate location, if {@link #getMappingsName()} is not specified
+	 * @return The name of the block, used for the blockstate location
 	 */
 	String getMappingsName();
 

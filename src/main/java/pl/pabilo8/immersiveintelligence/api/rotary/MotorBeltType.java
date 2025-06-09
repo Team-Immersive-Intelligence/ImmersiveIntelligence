@@ -15,10 +15,10 @@ import static pl.pabilo8.immersiveintelligence.api.rotary.IIRotaryUtils.BELT_GEN
 /**
  * Base class for an II motor belt. Extend to make your own.
  *
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @updated 02.08.2024
  * @ii-approved 0.3.1
- * @since 26-12-2019
+ * @since 26.12.2019
  */
 public abstract class MotorBeltType extends WireType
 {

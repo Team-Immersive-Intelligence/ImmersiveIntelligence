@@ -9,7 +9,7 @@ import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 /**
  * A standard inventory tab of the Deco GUI system
  *
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 12.01.2025
  */
 public class DecoTab extends DecoButton

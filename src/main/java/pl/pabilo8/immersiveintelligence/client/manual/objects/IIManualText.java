@@ -16,7 +16,7 @@ import java.util.List;
  * A text object, can display an item name, fluid name or (translated) text.<br>
  * Can be positioned freely and allows formatting through NBT.
  *
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 22.05.2022
  */
 public class IIManualText extends IIManualObject

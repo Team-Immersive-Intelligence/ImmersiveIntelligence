@@ -21,7 +21,7 @@ import javax.annotation.Nullable;
 import java.lang.reflect.Constructor;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 27.07.2021
  */
 public class ImmersivePostsHelper extends IICompatModule
@@ -159,7 +159,6 @@ public class ImmersivePostsHelper extends IICompatModule
 	}
 
 	@Nullable
-	@Deprecated
 	@Optional.Method(modid = "immersiveposts")
 	public static EnumPostMaterial addPostMaterial(String name, Block block)
 	{

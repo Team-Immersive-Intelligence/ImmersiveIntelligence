@@ -47,8 +47,8 @@ import java.util.List;
 import java.util.function.Function;
 
 /**
- * @author Pabilo8
- * @since 30-08-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 30.08.2019
  */
 @IIItemProperties(category = IICategory.WARFARE)
 public class ItemIINavalMine extends ItemIIAmmoBase<EntityNavalMine> implements IItemScrollable

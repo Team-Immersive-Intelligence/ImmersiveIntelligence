@@ -18,12 +18,12 @@ import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.common.item.ItemIITripWireCoil;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 02.02.2021
  */
 public class TileEntityTripwireConnector extends TileEntityImmersiveConnectable implements IPlayerInteraction, IBlockBounds
 {
-	private static final Vec3d CONN = new Vec3d(0.5,0.25,0.5);
+	private static final Vec3d CONN = new Vec3d(0.5, 0.25, 0.5);
 	public boolean grass = false;
 
 	@Override

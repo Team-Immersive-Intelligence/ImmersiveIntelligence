@@ -54,7 +54,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 11.01.2021
  */
 public class EntityHans extends EntityCreature implements INpc

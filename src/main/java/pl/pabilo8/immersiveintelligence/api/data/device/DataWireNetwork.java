@@ -15,8 +15,8 @@ import java.util.*;
 import static blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler.INSTANCE;
 
 /**
- * @author Pabilo8
- * @since 2019-05-31
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 31.05.2019
  */
 public class DataWireNetwork
 {

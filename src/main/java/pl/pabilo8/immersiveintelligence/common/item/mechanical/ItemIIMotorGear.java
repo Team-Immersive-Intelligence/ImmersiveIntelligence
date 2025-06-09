@@ -22,8 +22,8 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 /**
- * @author Pabilo8
- * @since 27-12-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 27.12.2019
  */
 @IBatchOredictRegister(oreDict = "gear")
 @IIItemProperties(category = IICategory.ROTARY)

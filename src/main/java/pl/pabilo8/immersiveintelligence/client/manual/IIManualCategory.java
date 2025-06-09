@@ -13,8 +13,8 @@ import java.util.LinkedHashSet;
 import java.util.List;
 
 /**
- * @author Pabilo8
- * @since 18-01-2020
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 18.01.2020
  */
 public abstract class IIManualCategory
 {

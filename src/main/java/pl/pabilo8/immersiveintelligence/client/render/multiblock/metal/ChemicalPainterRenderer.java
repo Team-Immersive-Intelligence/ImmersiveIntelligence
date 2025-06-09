@@ -28,8 +28,8 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 /**
- * @author Pabilo8
- * @since 21-06-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 21.06.2019
  */
 public class ChemicalPainterRenderer extends TileEntitySpecialRenderer<TileEntityChemicalPainter> implements IReloadableModelContainer<ChemicalPainterRenderer>
 {

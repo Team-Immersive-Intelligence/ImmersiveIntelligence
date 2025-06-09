@@ -22,7 +22,7 @@ import java.util.List;
 /**
  * Displays a crafting recipe for item(s).
  *
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 22.05.2022
  */
 public class IIManualBlueprint extends IIManualObject

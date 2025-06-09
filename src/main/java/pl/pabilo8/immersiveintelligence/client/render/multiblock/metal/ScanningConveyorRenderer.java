@@ -13,9 +13,9 @@ import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @updated 28.10.2023
- * @since 21-06-2019
+ * @since 21.06.2019
  */
 @RegisteredTileRenderer(name = "multiblock/scanning_conveyor", clazz = TileEntityScanningConveyor.class)
 public class ScanningConveyorRenderer extends IIMultiblockRenderer<TileEntityScanningConveyor>

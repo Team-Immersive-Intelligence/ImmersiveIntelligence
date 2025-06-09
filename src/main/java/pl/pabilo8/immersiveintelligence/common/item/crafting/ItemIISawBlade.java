@@ -28,8 +28,8 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * @author Pabilo8
- * @since 19-08-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 19.08.2019
  */
 @IIItemProperties(category = IICategory.RESOURCES)
 public class ItemIISawBlade extends ItemIISubItemsBase<SawBlades> implements ISawblade

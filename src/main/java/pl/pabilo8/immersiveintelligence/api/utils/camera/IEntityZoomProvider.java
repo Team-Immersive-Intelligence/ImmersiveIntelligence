@@ -4,7 +4,7 @@ import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.IAdvancedZoomTool;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 21.01.2021
  */
 public interface IEntityZoomProvider

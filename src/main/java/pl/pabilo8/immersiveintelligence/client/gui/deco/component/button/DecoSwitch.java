@@ -16,7 +16,7 @@ import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
  * A standard switch of the Deco GUI system.<br>
  * Similar to {@link DecoCheckbox}, but used for on/off toggles instead of selecting options in a list.
  *
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @updated 12.01.2025
  * @ii-approved 0.3.1
  * @since 18.07.2021

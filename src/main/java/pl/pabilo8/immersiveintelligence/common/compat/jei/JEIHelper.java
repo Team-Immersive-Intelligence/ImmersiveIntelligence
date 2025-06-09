@@ -66,6 +66,7 @@ public class JEIHelper implements IModPlugin
 
 	}
 
+	@SuppressWarnings("rawtypes")
 	LinkedHashMultimap<Class<? extends MultiblockRecipe>, IIRecipeCategory> categories = LinkedHashMultimap.create();
 
 	@Override

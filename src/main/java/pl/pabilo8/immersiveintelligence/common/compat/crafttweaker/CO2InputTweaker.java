@@ -16,22 +16,23 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * @author Pabilo8
- * @since 2019-05-24
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 24.05.2019
  */
 @ZenClass("mods."+ImmersiveIntelligence.MODID+".CO2Input")
 @ZenRegister
 public class CO2InputTweaker
 {
+	@SuppressWarnings({"unchecked"})
 	@ZenMethod
 	public static void addMultiblock(String classPath, int time, int amount, int[] pos)
 	{
 		try
 		{
-			Class c = Class.forName(classPath);
+			Class<?> c = Class.forName(classPath);
 			if(c.isAssignableFrom(TileEntityMultiblockMetal.class))
 			{
-				TileEntityCO2Filter.handlerMap.put(c, new MultiblockCO2Handler(c, time, amount, pos));
+				TileEntityCO2Filter.handlerMap.put(c, new MultiblockCO2Handler((Class<TileEntityMultiblockMetal<?, ?>>)c, time, amount, pos));
 				CraftTweakerAPI.getLogger().logInfo("CO2 Collector will now recognise "+classPath+" as a CO2 source");
 			}
 			else
@@ -43,14 +44,15 @@ public class CO2InputTweaker
 	}
 
 	@ZenMethod
+	@SuppressWarnings("unchecked")
 	public static void addTile(String classPath, int time, int amount)
 	{
 		try
 		{
-			Class c = Class.forName(classPath);
+			Class<?> c = Class.forName(classPath);
 			if(c.isAssignableFrom(TileEntity.class))
 			{
-				TileEntityCO2Filter.handlerMap.put(c, new TileEntityCO2Handler(c, time, amount));
+				TileEntityCO2Filter.handlerMap.put(c, new TileEntityCO2Handler((Class<TileEntity>)c, time, amount));
 				CraftTweakerAPI.getLogger().logInfo("CO2 Collector will now recognise "+classPath+" as a CO2 source");
 			}
 		} catch(ClassNotFoundException e)
@@ -61,11 +63,11 @@ public class CO2InputTweaker
 
 	private static class MultiblockCO2Handler extends TileEntityCO2Handler
 	{
-		private final Class<TileEntityMultiblockMetal> c;
+		private final Class<TileEntityMultiblockMetal<?, ?>> c;
 		private final List<Integer> pos;
 
 
-		public MultiblockCO2Handler(Class<TileEntityMultiblockMetal> c, int time, int amount, int[] pos)
+		public MultiblockCO2Handler(Class<TileEntityMultiblockMetal<?, ?>> c, int time, int amount, int[] pos)
 		{
 			super(((Class)c), time, amount);
 			this.c = c;
@@ -80,7 +82,7 @@ public class CO2InputTweaker
 			if(pos.contains(c.cast(tile).pos))
 				return 0;
 
-			TileEntityMultiblockMetal<?,?> machine = c.cast(c.cast(tile).master());
+			TileEntityMultiblockMetal<?, ?> machine = c.cast(c.cast(tile).master());
 			if(machine==null)
 				return 0;
 			int i = 0;

@@ -10,10 +10,10 @@ import pl.pabilo8.immersiveintelligence.client.model.builtin.IAmmoModel;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @updated 09.03.2024
  * @ii-approved 0.3.1
- * @since 08-06-2019
+ * @since 08.06.2019
  */
 public class ProjectileAmmoRenderer extends Render<EntityAmmoProjectile>
 {

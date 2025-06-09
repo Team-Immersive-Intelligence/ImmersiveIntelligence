@@ -10,7 +10,7 @@ import net.minecraft.util.math.Vec3d;
 import javax.annotation.Nonnull;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 23.12.2022
  */
 public class IIEntityUtils

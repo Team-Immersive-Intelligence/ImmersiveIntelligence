@@ -8,8 +8,8 @@ import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.api.utils.minecart.EntityMinecartCrateBase;
 
 /**
- * @author Pabilo8
- * @since 2019-06-01
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 01.06.2019
  */
 public class EntityMinecartCrateWooden extends EntityMinecartCrateBase
 {

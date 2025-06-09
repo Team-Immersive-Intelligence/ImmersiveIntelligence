@@ -30,8 +30,8 @@ import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import javax.annotation.Nullable;
 
 /**
- * @author Pabilo8
- * @since 2019-05-17
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 17.05.2019
  */
 public class BlockIIRubberLog extends BlockIIBase<RubberLogs>
 {
@@ -52,7 +52,7 @@ public class BlockIIRubberLog extends BlockIIBase<RubberLogs>
 		@IIBlockProperties(hidden = TernaryValue.TRUE)
 		REBBUR, //Carver reference, it's truly a great name xD
 		@IIBlockProperties(hidden = TernaryValue.TRUE, fullCube = TernaryValue.FALSE)
-		STRIPPED;
+		STRIPPED
 	}
 
 	@Nullable

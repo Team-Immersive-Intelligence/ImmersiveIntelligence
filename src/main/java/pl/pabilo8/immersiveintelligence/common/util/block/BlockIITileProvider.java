@@ -65,8 +65,8 @@ import java.util.*;
 import java.util.function.Function;
 
 /**
- * @author Pabilo8
- * @since 2019-05-17
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 17.05.2019
  */
 public abstract class BlockIITileProvider<E extends Enum<E> & IITileProviderEnum> extends BlockIIBase<E> implements IColouredBlock
 {
@@ -168,7 +168,7 @@ public abstract class BlockIITileProvider<E extends Enum<E> & IITileProviderEnum
 		if(hasConnections)
 		{
 			BlockStateContainer base = super.createBlockState();
-			IUnlistedProperty[] unlisted = (base instanceof ExtendedBlockState)?((ExtendedBlockState)base).getUnlistedProperties().toArray(new IUnlistedProperty[0]): new IUnlistedProperty[0];
+			IUnlistedProperty<?>[] unlisted = (base instanceof ExtendedBlockState)?((ExtendedBlockState)base).getUnlistedProperties().toArray(new IUnlistedProperty[0]): new IUnlistedProperty[0];
 			unlisted = Arrays.copyOf(unlisted, unlisted.length+1);
 			unlisted[unlisted.length-1] = IEProperties.CONNECTIONS;
 			return new ExtendedBlockState(this, base.getProperties().toArray(new IProperty[0]), unlisted);

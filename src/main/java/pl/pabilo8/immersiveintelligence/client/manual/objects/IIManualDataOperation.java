@@ -33,7 +33,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 02.11.2022
  */
 public class IIManualDataOperation extends IIManualObject
@@ -91,12 +91,6 @@ public class IIManualDataOperation extends IIManualObject
 	protected int getDefaultHeight()
 	{
 		return 16;
-	}
-
-	@Override
-	protected int getDefaultWidth()
-	{
-		return 120;
 	}
 
 	//--- Content Preparation ---//

@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 /**
  * @author GabrielV (gabriel@iiteam.net)
- * @since 21/04/2024 - 7:26 PM
+ * @since 21.04.2024
  * Class used for reflection aka hacky stuff to get something that forge does not give us peacefully
  */
 public class IIReflectionUtils
@@ -27,7 +27,7 @@ public class IIReflectionUtils
 
 	private static ConcurrentHashMap<Object, ArrayList<IEventListener>> listeners = null;
 
-	public static Field getField(Class cls, String name, boolean priv)
+	public static Field getField(Class<?> cls, String name, boolean priv)
 	{
 		try
 		{
@@ -63,10 +63,10 @@ public class IIReflectionUtils
 	/**
 	 * Hijack the original event handler to replace it with our own
 	 *
-	 * @param origEvent
-	 * @param overrideEvent
+	 * @param origEvent     the original event class to override
+	 * @param overrideEvent the new event handler to use instead
 	 */
-	public static void overrideEventHandler(Class origEvent, Object overrideEvent)
+	public static void overrideEventHandler(Class<?> origEvent, Object overrideEvent)
 	{
 		if(listeners==null)
 		{

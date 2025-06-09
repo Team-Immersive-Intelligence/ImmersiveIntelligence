@@ -23,7 +23,7 @@ import java.util.*;
  * Based on Embers' Particle Renderer<br>
  * Since the rework, introduces a novel, .obj model based particle format and particle chaining
  *
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @author EpicSquid
  * @updated 05.04.2024
  * @ii-approved 0.3.1

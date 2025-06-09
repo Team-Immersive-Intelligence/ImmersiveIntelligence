@@ -13,10 +13,10 @@ import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.IIMult
 import java.util.function.BiFunction;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @updated 08.06.2025
  * @ii-approved 0.3.1
- * @since 08-08-2019
+ * @since 08.08.2019
  */
 public class AmmunitionAssemblerRecipe extends IIMultiblockRecipe
 {

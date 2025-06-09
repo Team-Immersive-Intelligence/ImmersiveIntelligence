@@ -11,7 +11,7 @@ import javax.annotation.Nullable;
 /**
  * <p>Based on {@link net.minecraft.entity.ai.EntityAILookIdle}</p>
  *
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 22.09.2021
  */
 public class AIHansIdle extends AIHansBase

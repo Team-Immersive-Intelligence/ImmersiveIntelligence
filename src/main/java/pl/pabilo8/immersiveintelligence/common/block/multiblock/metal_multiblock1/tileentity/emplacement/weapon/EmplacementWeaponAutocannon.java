@@ -259,6 +259,7 @@ public class EmplacementWeaponAutocannon extends EmplacementWeapon<EntityAmmoPro
 		return requiresPlatformRefill;
 	}
 
+	@Nonnull
 	@Override
 	public NBTTagCompound saveToNBT(boolean forClient)
 	{

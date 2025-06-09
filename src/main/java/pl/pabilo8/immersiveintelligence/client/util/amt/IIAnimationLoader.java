@@ -31,7 +31,7 @@ import java.util.HashMap;
 /**
  * Handles loading of AMT animations for client and server side.
  *
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 05.04.2022
  */
 public class IIAnimationLoader

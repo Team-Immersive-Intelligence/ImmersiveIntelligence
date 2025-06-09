@@ -31,9 +31,9 @@ import pl.pabilo8.immersiveintelligence.common.util.amt.IIModelHeader;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @updated 23.12.2023
- * @since 13-10-2019
+ * @since 13.10.2019
  */
 @RegisteredItemRenderer(name = "items/weapons/submachinegun")
 public class SubmachinegunRenderer extends IIUpgradableItemRendererAMT<ItemIISubmachinegun> implements ISpecificHandRenderer
@@ -269,12 +269,6 @@ public class SubmachinegunRenderer extends IIUpgradableItemRendererAMT<ItemIISub
 		foldingStock = IIAnimationCachedMap.create(this.model, ResLoc.of(animationRes, "folding_stock"));
 	}
 
-
-	@Override
-	protected void nullifyModels()
-	{
-		IIAnimationUtils.disposeOf(model);
-	}
 
 	@Override
 	public boolean doHandRender(ItemStack stack, EnumHand hand, ItemStack otherHand, float swingProgress, float partialTicks)

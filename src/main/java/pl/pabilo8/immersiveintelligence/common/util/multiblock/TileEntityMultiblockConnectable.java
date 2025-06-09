@@ -25,8 +25,6 @@ import net.minecraft.util.math.Vec3i;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
-import org.apache.logging.log4j.Level;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 
 import javax.annotation.Nonnull;
@@ -41,8 +39,8 @@ import static blusunrize.immersiveengineering.api.energy.wires.WireApi.canMix;
 import static blusunrize.immersiveengineering.api.energy.wires.WireType.*;
 
 /**
- * @author Pabilo8
- * @since 17-10-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 17.10.2019
  */
 public abstract class TileEntityMultiblockConnectable<T extends TileEntityMultiblockMetal<T, R>, R extends IMultiblockRecipe> extends TileEntityMultiblockMetal<T, R> implements IImmersiveConnectable
 {
@@ -76,11 +74,6 @@ public abstract class TileEntityMultiblockConnectable<T extends TileEntityMultib
 	public int[] getConnectionPos()
 	{
 		return new int[]{};
-	}
-
-	@Override
-	public void onEnergyPassthrough(int amount)
-	{
 	}
 
 	@Override

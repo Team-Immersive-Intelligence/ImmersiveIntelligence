@@ -11,8 +11,8 @@ import pl.pabilo8.immersiveintelligence.client.model.metal_device.ModelRedstoneB
 import pl.pabilo8.immersiveintelligence.common.block.data_device.tileentity.TileEntityRedstoneBuffer;
 
 /**
- * @author Pabilo8
- * @since 2019-05-26
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 26.05.2019
  */
 @SideOnly(Side.CLIENT)
 public class RedstoneBufferRenderer extends TileEntitySpecialRenderer<TileEntityRedstoneBuffer>

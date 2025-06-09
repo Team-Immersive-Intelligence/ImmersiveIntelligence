@@ -4,7 +4,7 @@ import pl.pabilo8.immersiveintelligence.client.model.ModelIIBase;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 04.03.2021
  */
 public class ModelFlagpole extends ModelIIBase
@@ -1415,6 +1415,6 @@ public class ModelFlagpole extends ModelIIBase
 		baseModel[282].rotateAngleY = -0.08726646F;
 
 		flipAll();
-		translateAll(-24,-8f,24);
+		translateAll(-24, -8f, 24);
 	}
 }

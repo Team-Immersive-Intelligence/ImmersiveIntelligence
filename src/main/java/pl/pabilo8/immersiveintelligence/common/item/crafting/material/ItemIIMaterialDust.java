@@ -9,8 +9,8 @@ import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
 import pl.pabilo8.modworks.annotations.item.GeneratedItemModels;
 
 /**
- * @author Pabilo8
- * @since 2019-05-11
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 11.05.2019
  */
 @IBatchOredictRegister(oreDict = "dust")
 @IIItemProperties(category = IICategory.RESOURCES)

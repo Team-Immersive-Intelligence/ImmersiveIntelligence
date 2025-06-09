@@ -12,7 +12,7 @@ import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @ii-approved 0.3.1
  * @since 02.02.2024
  */

@@ -22,7 +22,7 @@ import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleRegistry;
 import java.util.List;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 22.12.2020
  */
 public class EntityGasCloud extends Entity

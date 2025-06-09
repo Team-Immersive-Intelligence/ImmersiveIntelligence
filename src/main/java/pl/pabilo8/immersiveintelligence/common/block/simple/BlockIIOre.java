@@ -19,7 +19,7 @@ import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import javax.annotation.Nonnull;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 01.09.2020
  */
 public class BlockIIOre extends BlockIIBase<Ores>

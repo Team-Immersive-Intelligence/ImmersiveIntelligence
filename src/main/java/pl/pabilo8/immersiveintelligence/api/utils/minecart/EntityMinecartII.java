@@ -14,7 +14,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 07.11.2021
  */
 public abstract class EntityMinecartII extends EntityMinecart implements IMinecartBlockPickable
@@ -53,12 +53,6 @@ public abstract class EntityMinecartII extends EntityMinecart implements IMineca
 	public int getDefaultDisplayTileOffset()
 	{
 		return 8;
-	}
-
-	@Override
-	public void setDead()
-	{
-		this.isDead = true;
 	}
 
 	@Override

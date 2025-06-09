@@ -48,8 +48,8 @@ import javax.annotation.Nullable;
 import java.util.Set;
 
 /**
- * @author Pabilo8
- * @since 15-07-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 15.07.2019
  */
 public class TileEntityChemicalDispenser extends TileEntityImmersiveConnectable implements ITickable, IDirectionalTile, IBlockBounds, IDataConnector
 {

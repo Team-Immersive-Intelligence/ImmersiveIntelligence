@@ -11,7 +11,7 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIUpgradeableArmor;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 08.01.2022
  */
 public abstract class ItemIILightEngineerArmorBase extends ItemIIUpgradeableArmor implements ICorrosionProtectionEquipment, IRadiationProtectionEquipment, IAcidProtectionEquipment, IIEEnergyItem

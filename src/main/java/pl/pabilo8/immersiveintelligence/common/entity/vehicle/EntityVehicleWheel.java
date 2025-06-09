@@ -8,12 +8,13 @@ import net.minecraft.util.math.Vec3d;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IVehicleMultiPart;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 13.07.2020
  */
 public class EntityVehicleWheel extends EntityVehiclePart
 {
 	public int wheelTraverse = 0;
+
 	public EntityVehicleWheel(IVehicleMultiPart parent, String partName, Vec3d offset, AxisAlignedBB aabb)
 	{
 		super(parent, partName, offset, aabb);

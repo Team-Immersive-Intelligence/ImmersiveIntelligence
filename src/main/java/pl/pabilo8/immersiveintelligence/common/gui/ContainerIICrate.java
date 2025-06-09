@@ -9,8 +9,8 @@ import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIBase;
 
 /**
- * @author Pabilo8
- * @since 2019-05-17
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 17.05.2019
  */
 @ChestContainer
 public class ContainerIICrate<T extends TileEntityWoodenCrate> extends ContainerIIBase<T>

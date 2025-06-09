@@ -18,10 +18,10 @@ import java.util.Map.Entry;
 /**
  * A container for 36 {@link DataType Data Variables} used to exchange information between {@link pl.pabilo8.immersiveintelligence.api.data.device.IDataDevice Data Devices}, central component of the data system.
  *
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @updated 28.10.2024
  * @ii-approved 0.3.1
- * @since 2019-05-31
+ * @since 31.05.2019
  */
 public class DataPacket implements Iterable<DataType>
 {
@@ -196,6 +196,7 @@ public class DataPacket implements Iterable<DataType>
 	}
 
 	@Override
+	@SuppressWarnings("MethodDoesntCallSuperMethod")
 	public DataPacket clone()
 	{
 		DataPacket packet = new DataPacket();

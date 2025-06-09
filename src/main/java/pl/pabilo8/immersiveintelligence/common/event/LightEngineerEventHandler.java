@@ -8,23 +8,23 @@ import pl.pabilo8.immersiveintelligence.common.item.armor.ItemIILightEngineerBoo
 
 /**
  * @author GabrielV (gabriel@iiteam.net)
- * @since 21/04/2024 - 7:20 PM
+ * @since 21.04.2024
  */
 public class LightEngineerEventHandler extends IIBaseEventHandler
 {
 	@SubscribeEvent
 	public void onLivingFallEvent(LivingFallEvent event)
 	{
-		if (!(event.getEntityLiving() instanceof EntityPlayer)) return;
+		if(!(event.getEntityLiving() instanceof EntityPlayer)) return;
 
 		EntityPlayer player = (EntityPlayer)event.getEntityLiving();
 		Iterable<ItemStack> armor = player.getArmorInventoryList();
 
-		for (ItemStack piece : armor)
+		for(ItemStack piece : armor)
 		{
-			if (!(piece.getItem() instanceof ItemIILightEngineerBoots)) continue;
+			if(!(piece.getItem() instanceof ItemIILightEngineerBoots)) continue;
 			ItemIILightEngineerBoots boots = (ItemIILightEngineerBoots)piece.getItem();
-			if (boots.hasUpgrade(piece, "internal_springs"))
+			if(boots.hasUpgrade(piece, "internal_springs"))
 			{
 				event.setDistance(0);
 			}

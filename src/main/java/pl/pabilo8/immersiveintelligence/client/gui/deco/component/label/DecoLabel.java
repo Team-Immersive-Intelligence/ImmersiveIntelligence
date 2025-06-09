@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * A Deco component used to display one or more lines of text.
  *
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 8.01.2025
  */
 public class DecoLabel extends GuiLabel

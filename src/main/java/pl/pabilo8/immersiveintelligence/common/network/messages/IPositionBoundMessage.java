@@ -5,7 +5,7 @@ import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 08.04.2024
  */
 public interface IPositionBoundMessage

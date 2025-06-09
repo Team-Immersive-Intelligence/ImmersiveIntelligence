@@ -15,8 +15,8 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
 import javax.annotation.Nonnull;
 
 /**
- * @author Pabilo8
- * @since 2019-05-17
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 17.05.2019
  */
 public class ContainerPacker extends ContainerIEBase<TileEntityPacker>
 {

@@ -13,10 +13,10 @@ import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import javax.annotation.Nullable;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @updated 19.02.2024
  * @ii-approved 0.3.1
- * @since 04-10-2019
+ * @since 04.10.2019
  */
 @SideOnly(Side.CLIENT)
 public interface IAmmoModel<T extends IAmmoType<T, E>, E extends EntityAmmoBase<? super E>>

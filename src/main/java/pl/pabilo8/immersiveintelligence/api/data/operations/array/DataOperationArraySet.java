@@ -10,8 +10,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
- * @author Pabilo8
- * @since 05-07-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 05.07.2019
  */
 @DataOperation.DataOperationMeta(name = "array_set", allowedTypes = {DataTypeArray.class, DataTypeInteger.class, DataType.class},
 		params = {"array", "index", "value"}, expectedResult = DataTypeNull.class, resultMatters = false)

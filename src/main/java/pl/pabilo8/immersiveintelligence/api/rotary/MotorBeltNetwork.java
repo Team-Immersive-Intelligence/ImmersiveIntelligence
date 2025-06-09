@@ -18,10 +18,10 @@ import static blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandl
 import static pl.pabilo8.immersiveintelligence.api.rotary.IIRotaryUtils.BELT_GENERAL_CATEGORY;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @updated 09.08.2024
  * @ii-approved 0.3.1
- * @since 2019-05-31
+ * @since 31.05.2019
  */
 public class MotorBeltNetwork
 {

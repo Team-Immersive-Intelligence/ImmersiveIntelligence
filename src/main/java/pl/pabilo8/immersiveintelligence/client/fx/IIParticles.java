@@ -26,10 +26,9 @@ import java.nio.file.Paths;
 import java.util.stream.Stream;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 08.04.2024
  */
-@SuppressWarnings("unchecked")
 public class IIParticles
 {
 	//--- Particle IDs Reference ---//

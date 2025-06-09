@@ -20,8 +20,8 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
 import javax.annotation.Nullable;
 
 /**
- * @author Pabilo8
- * @since 21-06-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 21.06.2019
  */
 public class ChemicalBathRenderer extends TileEntitySpecialRenderer<TileEntityChemicalBath> implements IReloadableModelContainer<ChemicalBathRenderer>
 {

@@ -13,7 +13,7 @@ import pl.pabilo8.immersiveintelligence.common.entity.ammo.component.EntityAtomi
 import java.util.Random;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 19.12.2020
  */
 public class AtomicBoomRenderer extends Render<EntityAtomicBoom>

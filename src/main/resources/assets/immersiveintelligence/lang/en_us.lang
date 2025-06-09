@@ -2687,6 +2687,10 @@ ie.manual.entry.data_operation.comment.import=importing data operation
 ie.manual.entry.data_operation.comment.import_more=alternatively
 ie.manual.entry.data_operation.comment.example=example use
 
+ie.manual.entry.data_variable.allowed_value=Allowed value:
+ie.manual.entry.data_variable.allowed_values=Allowed values:
+ie.manual.entry.data_variable.required_variables=Required variables:
+
 #manual multiblock forming block position text
 ie.manual.entry.multiblock_forming=The %1$s can be formed by using %2$s on the %3$s %4$s
 ie.manual.entry.multiblock_forming_short=It can be formed by using %2$s on the %3$s %4$s

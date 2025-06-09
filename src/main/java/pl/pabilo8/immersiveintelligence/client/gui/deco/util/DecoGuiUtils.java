@@ -21,7 +21,7 @@ import java.util.Collection;
 import java.util.function.Function;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 03.03.2022
  */
 @SideOnly(Side.CLIENT)

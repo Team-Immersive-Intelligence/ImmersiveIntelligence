@@ -11,13 +11,13 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fluids.FluidStack;
 import org.lwjgl.opengl.GL11;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Coagulator;
-import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.api.crafting.CoagulatorRecipe;
+import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.model.metal_device.ModelCraneElectric;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.ModelCoagulator;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Coagulator;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityCoagulator;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityCoagulator.CraneAnimation;
 
@@ -27,8 +27,8 @@ import java.util.Arrays;
 import static pl.pabilo8.immersiveintelligence.client.IIClientUtils.drawRope;
 
 /**
- * @author Pabilo8
- * @since 21-06-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 21.06.2019
  */
 public class CoagulatorRenderer extends TileEntitySpecialRenderer<TileEntityCoagulator> implements IReloadableModelContainer<CoagulatorRenderer>
 {

@@ -9,7 +9,7 @@ import pl.pabilo8.immersiveintelligence.common.util.block.ItemBlockIIBase;
 import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 29.08.2020
  */
 public class BlockIIMetalChainFence extends BlockIIFenceBase<MetalFortifications>

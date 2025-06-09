@@ -24,9 +24,9 @@ import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import javax.annotation.Nullable;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @author Avalon (avalon@iiteam.net)
  * @updated 06.03.2024
- * @authir Avalon
  * @updated 14.9.2024
  * @since 10.07.2021
  */

@@ -14,10 +14,10 @@ import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @updated 08.01.2024
  * @ii-approved 0.3.1
- * @since 28-06-2019
+ * @since 28.06.2019
  */
 @RegisteredTileRenderer(name = "multiblock/arithmetic_logic_machine", clazz = TileEntityArithmeticLogicMachine.class)
 public class ArithmeticLogicMachineRenderer extends IIMultiblockRenderer<TileEntityArithmeticLogicMachine>

@@ -28,7 +28,7 @@ import java.util.Objects;
 
 /**
  * @param <T> entity created by this ammo
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @ii-approved 0.3.1
  * @updated 26.05.2024
  * @since 30.12.2023

@@ -17,7 +17,7 @@ import java.util.Collections;
 import java.util.function.Supplier;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 16.07.2021
  */
 @ParametersAreNonnullByDefault

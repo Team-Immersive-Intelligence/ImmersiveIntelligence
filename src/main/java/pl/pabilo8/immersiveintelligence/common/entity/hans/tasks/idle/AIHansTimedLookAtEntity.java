@@ -5,7 +5,7 @@ import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
 import pl.pabilo8.immersiveintelligence.common.entity.hans.tasks.AIHansBase;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 28.12.2021
  */
 public class AIHansTimedLookAtEntity extends AIHansBase
@@ -26,7 +26,7 @@ public class AIHansTimedLookAtEntity extends AIHansBase
 	@Override
 	public void setRequiredAnimation()
 	{
-		hans.getLookHelper().setLookPositionWithEntity(lookedAt,hans.getHorizontalFaceSpeed()*rotatoSped,hans.getVerticalFaceSpeed()*rotatoSped);
+		hans.getLookHelper().setLookPositionWithEntity(lookedAt, hans.getHorizontalFaceSpeed()*rotatoSped, hans.getVerticalFaceSpeed()*rotatoSped);
 	}
 
 	@Override

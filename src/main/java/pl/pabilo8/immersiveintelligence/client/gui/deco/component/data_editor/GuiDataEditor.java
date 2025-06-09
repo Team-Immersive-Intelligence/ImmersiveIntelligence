@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.function.BiFunction;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 07.09.2021
  */
 public abstract class GuiDataEditor<T extends DataType> extends GuiButton

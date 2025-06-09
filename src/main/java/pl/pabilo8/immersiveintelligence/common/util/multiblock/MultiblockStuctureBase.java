@@ -55,7 +55,7 @@ import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 31.05.2021
  */
 public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<T>> implements IMultiblock
@@ -183,7 +183,7 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 	}
 
 	/**
-	 * @param file
+	 * @param file json object containing the multiblock info
 	 */
 	private void updateAABB(@Nonnull JsonObject file)
 	{
@@ -475,6 +475,7 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 	private TileEntitySpecialRenderer<T> tesr;
 
 	@Override
+	@SideOnly(Side.CLIENT)
 	public void renderFormedStructure()
 	{
 		if(te==null)
@@ -523,8 +524,8 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 	 *
 	 * @param state blockstate
 	 * @param stack to be compared to, uses stack's logic (ore/itemstack)
-	 * @param world
-	 * @param pos
+	 * @param world world to check against, can be null when called by IE manual
+	 * @param pos   position of the block in the world, can be null when called by IE manual
 	 * @return whether is equal
 	 */
 	private boolean checkState(IBlockState state, IngredientStack stack, @Nullable World world, @Nullable BlockPos pos)

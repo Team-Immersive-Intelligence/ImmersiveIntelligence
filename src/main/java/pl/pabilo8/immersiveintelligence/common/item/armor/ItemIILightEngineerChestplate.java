@@ -45,7 +45,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 13.09.2020
  */
 @IIItemProperties(category = IICategory.WARFARE)
@@ -100,10 +100,10 @@ public class ItemIILightEngineerChestplate extends ItemIILightEngineerArmorBase 
 		ItemStack boots = player.getItemStackFromSlot(EntityEquipmentSlot.FEET);
 
 		// Check if the boots are not empty and if the "reinforcement" upgrade is present
-		if (!boots.isEmpty())
+		if(!boots.isEmpty())
 		{
 			NBTTagCompound upgrades = getUpgrades(boots);
-			if (upgrades != null && upgrades.hasKey("boot_reinforcement"))
+			if(upgrades!=null&&upgrades.hasKey("boot_reinforcement"))
 			{
 				return true;
 			}
@@ -119,7 +119,7 @@ public class ItemIILightEngineerChestplate extends ItemIILightEngineerArmorBase 
 		boolean hasReinforcement = hasReinforcement(player);
 
 
-		if(hasHeatCoat && hasReinforcement)
+		if(hasHeatCoat&&hasReinforcement)
 		{
 			player.addPotionEffect(new PotionEffect(MobEffects.FIRE_RESISTANCE, 20, 0, true, false)); // Give fire resistance for 1 second
 			return;
@@ -147,13 +147,13 @@ public class ItemIILightEngineerChestplate extends ItemIILightEngineerArmorBase 
 			Material materialWest = world.getBlockState(player.getPosition().west()).getMaterial();
 
 			// Check if any of the blocks around the player or at their position match grass, leaves, or vine
-			if (player.isSneaking() && (
-					materialCurrent == Material.GRASS || materialCurrent == Material.LEAVES || materialCurrent == Material.VINE ||
-							materialBelow == Material.GRASS || materialBelow == Material.LEAVES || materialBelow == Material.VINE ||
-							materialNorth == Material.GRASS || materialNorth == Material.LEAVES || materialNorth == Material.VINE ||
-							materialSouth == Material.GRASS || materialSouth == Material.LEAVES || materialSouth == Material.VINE ||
-							materialEast == Material.GRASS || materialEast == Material.LEAVES || materialEast == Material.VINE ||
-							materialWest == Material.GRASS || materialWest == Material.LEAVES || materialWest == Material.VINE
+			if(player.isSneaking()&&(
+					materialCurrent==Material.GRASS||materialCurrent==Material.LEAVES||materialCurrent==Material.VINE||
+							materialBelow==Material.GRASS||materialBelow==Material.LEAVES||materialBelow==Material.VINE||
+							materialNorth==Material.GRASS||materialNorth==Material.LEAVES||materialNorth==Material.VINE||
+							materialSouth==Material.GRASS||materialSouth==Material.LEAVES||materialSouth==Material.VINE||
+							materialEast==Material.GRASS||materialEast==Material.LEAVES||materialEast==Material.VINE||
+							materialWest==Material.GRASS||materialWest==Material.LEAVES||materialWest==Material.VINE
 			))
 			{
 				player.addPotionEffect(new PotionEffect(IIPotions.concealed, 15, 0, true, false));
@@ -176,12 +176,6 @@ public class ItemIILightEngineerChestplate extends ItemIILightEngineerArmorBase 
 	public ModelBiped getArmorModel(EntityLivingBase entityLiving, ItemStack itemStack, EntityEquipmentSlot armorSlot, ModelBiped _default)
 	{
 		return ModelLightEngineerArmor.getModel(armorSlot, itemStack);
-	}
-
-	@Override
-	protected String getMaterialName(ArmorMaterial material)
-	{
-		return "light_engineer_armor";
 	}
 
 	@SideOnly(Side.CLIENT)

@@ -9,7 +9,7 @@ import pl.pabilo8.immersiveintelligence.api.data.pol.POLTerminal;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 22.04.2022
  */
 public class POLInstructionGoto extends POLInstruction

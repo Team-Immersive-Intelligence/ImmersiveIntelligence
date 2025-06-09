@@ -37,7 +37,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 14.12.2022
  */
 public class EntityDrone extends EntityFlying implements ISyncNBTEntity<EntityDrone>, IVehicleMultiPart, IEntitySpecialRepairable
@@ -261,21 +261,6 @@ public class EntityDrone extends EntityFlying implements ISyncNBTEntity<EntityDr
 	}
 
 	//--- Colision ---//
-
-	@Nullable
-	@Override
-	public AxisAlignedBB getCollisionBoundingBox()
-	{
-		return null;
-	}
-
-	@Nullable
-	@Override
-	public AxisAlignedBB getCollisionBox(Entity entityIn)
-	{
-		return null;
-	}
-
 	@Override
 	public boolean canBeCollidedWith()
 	{

@@ -14,8 +14,8 @@ import stanhebben.zenscript.annotations.ZenMethod;
 import java.util.Arrays;
 
 /**
- * @author Pabilo8
- * @since 2019-05-24
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 24.05.2019
  */
 @ZenClass("mods."+ImmersiveIntelligence.MODID+".FuelStation")
 @ZenRegister
@@ -32,8 +32,7 @@ public class FuelStationTweaker
 			if(c.isAssignableFrom(Entity.class))
 				VehicleFuelHandler.addVehicle(((Class<Entity>)c), f);
 			CraftTweakerAPI.getLogger().logInfo("The Fuel Station will now recognise "+classPath+" as a supported vehicle");
-		}
-		catch(ClassNotFoundException e)
+		} catch(ClassNotFoundException e)
 		{
 			CraftTweakerAPI.getLogger().logError("Couldn't add "+classPath+" as a supported vehicle, class doesn't exist");
 		}

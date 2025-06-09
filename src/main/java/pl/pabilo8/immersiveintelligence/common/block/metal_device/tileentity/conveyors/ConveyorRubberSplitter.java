@@ -9,7 +9,7 @@ import net.minecraft.util.math.Vec3d;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 29.04.2021
  */
 public class ConveyorRubberSplitter extends ConveyorSplit

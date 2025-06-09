@@ -39,7 +39,7 @@ import java.util.Set;
  * Expansion of the IE's Chemthrower.
  * Originally created due to forced Albedo compat on IE's side.
  *
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 08.07.2023
  */
 @net.minecraftforge.fml.common.Optional.Interface(iface = "com.elytradev.mirage.lighting.IEntityLightEventConsumer", modid = "mirage")

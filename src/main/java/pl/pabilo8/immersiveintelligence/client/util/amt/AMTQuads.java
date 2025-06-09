@@ -17,7 +17,7 @@ import java.util.Arrays;
 /**
  * AMT type for drawing 3d models using quads
  *
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 26.07.2022
  */
 public class AMTQuads extends AMT

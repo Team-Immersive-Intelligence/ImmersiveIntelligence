@@ -42,7 +42,7 @@ import javax.annotation.Nullable;
  * <hr>
  * Closer to {@link TileEntityMultiblockMetal} functionally, but doesn't feature recipes.<br>
  *
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 04.08.2022
  */
 @SuppressWarnings("unused")

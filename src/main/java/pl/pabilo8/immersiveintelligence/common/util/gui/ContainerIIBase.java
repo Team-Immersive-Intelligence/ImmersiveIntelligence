@@ -15,7 +15,7 @@ import pl.pabilo8.immersiveintelligence.api.crafting.DataProgrammingRecipe;
 import java.util.ArrayList;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 23.09.2023
  */
 public class ContainerIIBase<T extends TileEntityIEBase & IIEInventory> extends ContainerIEBase<T>

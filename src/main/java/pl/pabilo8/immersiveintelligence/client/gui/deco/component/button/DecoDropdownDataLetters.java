@@ -17,7 +17,7 @@ import javax.annotation.Nullable;
 import java.util.function.Supplier;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 18.09.2021
  */
 public class DecoDropdownDataLetters extends GuiButton

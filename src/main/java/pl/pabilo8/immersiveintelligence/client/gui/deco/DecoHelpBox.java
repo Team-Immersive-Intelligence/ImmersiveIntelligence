@@ -6,7 +6,7 @@ import net.minecraft.client.resources.I18n;
 /**
  * A class for displaying help information when hovering over a part of the gui
  *
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 19.01.2024
  */
 public class DecoHelpBox

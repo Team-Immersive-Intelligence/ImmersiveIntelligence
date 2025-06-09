@@ -6,9 +6,7 @@ import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.registries.IForgeRegistry;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
@@ -16,8 +14,8 @@ import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import java.util.ArrayList;
 
 /**
- * @author Pabilo8
- * @since 23-04-2020
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 23.04.2020
  */
 @Optional.Interface(iface = "mezz.jei.api.recipe.IRecipeWrapper", modid = "jei")
 public class RecipeCrateConversion extends net.minecraftforge.registries.IForgeRegistryEntry.Impl<IRecipe> implements IRecipe, IRecipeWrapper
@@ -97,12 +95,6 @@ public class RecipeCrateConversion extends net.minecraftforge.registries.IForgeR
 	public ItemStack getRecipeOutput()
 	{
 		return outputCrate.copy();
-	}
-
-	@Override
-	public NonNullList<ItemStack> getRemainingItems(InventoryCrafting inv)
-	{
-		return ForgeHooks.defaultRecipeGetRemainingItems(inv);
 	}
 
 	/**

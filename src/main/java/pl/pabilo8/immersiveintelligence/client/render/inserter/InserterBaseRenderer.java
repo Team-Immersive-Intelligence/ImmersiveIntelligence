@@ -19,7 +19,7 @@ import pl.pabilo8.immersiveintelligence.common.util.amt.IIModelHeader;
 import java.util.function.Function;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 26.07.2022
  */
 public abstract class InserterBaseRenderer<T extends TileEntityInserterBase> extends IITileRenderer<T>

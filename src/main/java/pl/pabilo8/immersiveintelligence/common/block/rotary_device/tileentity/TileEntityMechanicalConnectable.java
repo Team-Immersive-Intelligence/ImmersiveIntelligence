@@ -31,8 +31,8 @@ import javax.annotation.Nullable;
 import static blusunrize.immersiveengineering.api.energy.wires.WireApi.canMix;
 
 /**
- * @author Pabilo8
- * @since 29-12-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 29.12.2019
  */
 public abstract class TileEntityMechanicalConnectable extends TileEntityImmersiveConnectable implements IMotorBeltConnector, ITickable, IDirectionalTile, IHammerInteraction, IBlockBounds, IOBJModelCallback<IBlockState>, IRotationalEnergyBlock
 {

@@ -150,8 +150,8 @@ import java.util.*;
 import java.util.Map.Entry;
 
 /**
- * @author Pabilo8
- * @since 2019-05-07
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 07.05.2019
  */
 @SuppressWarnings("deprecation")
 @Mod.EventBusSubscriber(value = Side.CLIENT, modid = ImmersiveIntelligence.MODID)

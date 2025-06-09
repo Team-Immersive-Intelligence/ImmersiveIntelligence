@@ -16,7 +16,6 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.api.rotary.CapabilityRotaryEnergy;
 import pl.pabilo8.immersiveintelligence.api.rotary.IRotaryEnergy;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
 import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
@@ -29,8 +28,8 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * @author Pabilo8
- * @since 2019-05-30
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 30.05.2019
  */
 @IIItemProperties(category = IICategory.TOOLS)
 public class ItemIITachometer extends ItemIIBase implements ITool

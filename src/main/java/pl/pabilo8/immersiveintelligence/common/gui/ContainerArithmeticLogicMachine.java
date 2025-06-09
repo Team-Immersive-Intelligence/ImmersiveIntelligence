@@ -11,8 +11,8 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
 import pl.pabilo8.immersiveintelligence.common.item.data.ItemIIFunctionalCircuit;
 
 /**
- * @author Pabilo8
- * @since 30-06-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 30.06.2019
  */
 public class ContainerArithmeticLogicMachine extends ContainerIEBase<TileEntityArithmeticLogicMachine>
 {

@@ -3,7 +3,7 @@ package pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.co
 import net.minecraft.tileentity.TileEntity;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 29.04.2021
  */
 public class ConveyorRubberUncontrolled extends ConveyorRubber

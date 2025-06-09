@@ -15,8 +15,8 @@ import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 
 /**
- * @author Pabilo8
- * @since 29-12-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 29.12.2019
  */
 public class IIMotorBeltType extends MotorBeltType
 {

@@ -6,8 +6,8 @@ import net.minecraft.world.World;
 import javax.annotation.Nonnull;
 
 /**
- * @author Pabilo8
- * @since 26-12-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 26.12.2019
  */
 public interface IMotorBeltConnector
 {

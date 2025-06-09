@@ -18,7 +18,7 @@ import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIRailgunOverride;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 17.08.2023
  */
 public class ImmersiveEngineeringHelper extends IICompatModule

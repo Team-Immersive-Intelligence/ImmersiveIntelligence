@@ -17,7 +17,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 17.05.2021
  */
 public class EntityParachute extends Entity

@@ -17,7 +17,7 @@ import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctur
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultiblockIIBase;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 11.08.2023
  */
 public abstract class IIMultiblockRenderer<T extends TileEntityMultiblockIIBase<T>> extends IITileRenderer<T>
@@ -98,7 +98,7 @@ public abstract class IIMultiblockRenderer<T extends TileEntityMultiblockIIBase<
 		this.baseState = state.withProperty(IEProperties.FACING_HORIZONTAL, EnumFacing.EAST);
 		this.offset = new Vec3d(mb.getOffset());
 		baseModel = new AMTQuads("batched", offset,
-				IIAnimationUtils.getBRD().getModelForState(baseState).getQuads(baseState, null, 0l).toArray(new BakedQuad[0])
+				IIAnimationUtils.getBRD().getModelForState(baseState).getQuads(baseState, null, 0).toArray(new BakedQuad[0])
 		);
 	}
 }

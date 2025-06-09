@@ -23,7 +23,7 @@ import pl.pabilo8.immersiveintelligence.api.data.radio.RadioNetwork;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.Mines;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 06.02.2021
  */
 public class TileEntityRadioExplosives extends TileEntityMineBase implements ITickable, IBlockBounds, IDirectionalTile, IRadioDevice, IRedstoneConnector

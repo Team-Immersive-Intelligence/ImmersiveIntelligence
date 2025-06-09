@@ -9,7 +9,7 @@ import java.util.function.Function;
 /**
  * AABB wrapper handling their rotation
  *
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 13.04.2023
  */
 public class AxisAlignedFacingBB

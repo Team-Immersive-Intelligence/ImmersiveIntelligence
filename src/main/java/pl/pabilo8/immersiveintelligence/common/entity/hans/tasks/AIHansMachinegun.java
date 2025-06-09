@@ -20,7 +20,7 @@ import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import javax.annotation.Nullable;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 05.04.2021
  */
 public class AIHansMachinegun extends EntityAIBase

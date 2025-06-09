@@ -2,13 +2,12 @@ package pl.pabilo8.immersiveintelligence.common.gui;
 
 import blusunrize.immersiveengineering.common.gui.ContainerIEBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
 import pl.pabilo8.immersiveintelligence.common.block.data_device.tileentity.TileEntityDataMerger;
 
 /**
- * @author Pabilo8
- * @since 30-06-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 30.06.2019
  */
 public class ContainerDataMerger extends ContainerIEBase<TileEntityDataMerger>
 {

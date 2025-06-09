@@ -14,7 +14,7 @@ import pl.pabilo8.immersiveintelligence.client.util.CameraHandler;
 import java.util.Optional;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 06.08.2020
  * <p>
  * Just a marker for seats, doesn't do collision but it's an actual world handled entity on all sides
@@ -55,19 +55,7 @@ public class EntityVehicleSeat extends Entity
 	}
 
 	@Override
-	protected boolean canFitPassenger(Entity passenger)
-	{
-		return this.getPassengers().size() < 1;
-	}
-
-	@Override
 	public boolean canRenderOnFire()
-	{
-		return false;
-	}
-
-	@Override
-	public boolean canBeCollidedWith()
 	{
 		return false;
 	}

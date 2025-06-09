@@ -39,8 +39,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author Pabilo8
- * @since 13-04-2020
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 13.04.2020
  */
 public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<TileEntitySawmill, SawmillRecipe> implements IRotationalEnergyBlock, IBooleanAnimatedPartsBlock
 {

@@ -10,7 +10,7 @@ import pl.pabilo8.immersiveintelligence.common.util.block.ItemBlockIIBase;
 import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 05.09.2022
  */
 public class BlockIIMetalBase extends BlockIIBase<Metals>

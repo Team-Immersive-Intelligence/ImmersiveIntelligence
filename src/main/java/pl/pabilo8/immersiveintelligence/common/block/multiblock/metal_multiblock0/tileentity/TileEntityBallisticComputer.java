@@ -32,8 +32,8 @@ import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultibl
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
 /**
- * @author Pabilo8
- * @since 28-06-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 28.06.2019
  */
 public class TileEntityBallisticComputer extends TileEntityMultiblockIIGeneric<TileEntityBallisticComputer> implements IPlayerInteraction
 {

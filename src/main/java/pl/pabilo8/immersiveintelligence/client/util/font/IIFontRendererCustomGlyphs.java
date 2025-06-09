@@ -8,7 +8,7 @@ import javax.annotation.Nonnull;
 import java.io.IOException;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 27.09.2022
  */
 public class IIFontRendererCustomGlyphs extends IIFontRenderer

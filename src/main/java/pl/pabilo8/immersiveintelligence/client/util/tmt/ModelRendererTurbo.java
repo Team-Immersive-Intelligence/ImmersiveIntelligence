@@ -39,7 +39,7 @@ import java.util.*;
  * </p>
  *
  * @author GaryCXJk
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  */
 @Deprecated
 public class ModelRendererTurbo extends ModelRenderer
@@ -125,7 +125,7 @@ public class ModelRendererTurbo extends ModelRenderer
 	 * Creates a new ModelRenderTurbo object. It requires the coordinates of the
 	 * position of the texture.
 	 *
-	 * @param modelbase
+	 * @param modelbase the model base to attach this TMT to
 	 * @param textureX  the x-coordinate on the texture
 	 * @param textureY  the y-coordinate on the texture
 	 */
@@ -426,9 +426,9 @@ public class ModelRendererTurbo extends ModelRenderer
 
 	/**
 	 * Adds a trapezoid-like shape. It's achieved by expanding the shape on one side.
-	 * You can use the static variables <code>MR_RIGHT</code>, <code>MR_LEFT</code>,
-	 * <code>MR_FRONT</code>, <code>MR_BACK</code>, <code>MR_TOP</code> and
-	 * <code>MR_BOTTOM</code>.
+	 * You can use the static variables {@code MR_RIGHT}, {@code MR_LEFT},
+	 * {@code MR_FRONT}, {@code MR_BACK}, {@code MR_TOP} and
+	 * {@code MR_BOTTOM}.
 	 *
 	 * @param x           the starting x-position
 	 * @param y           the starting y-position
@@ -555,9 +555,9 @@ public class ModelRendererTurbo extends ModelRenderer
 
 	/**
 	 * Adds a trapezoid-like shape. It's achieved by expanding the shape on one side.
-	 * You can use the static variables <code>MR_RIGHT</code>, <code>MR_LEFT</code>,
-	 * <code>MR_FRONT</code>, <code>MR_BACK</code>, <code>MR_TOP</code> and
-	 * <code>MR_BOTTOM</code>.
+	 * You can use the static variables {@code MR_RIGHT}, {@code MR_LEFT},
+	 * {@code MR_FRONT}, {@code MR_BACK}, {@code MR_TOP} and
+	 * {@code MR_BOTTOM}.
 	 *
 	 * @param x       the starting x-position
 	 * @param y       the starting y-position
@@ -687,9 +687,9 @@ public class ModelRendererTurbo extends ModelRenderer
 
 	/**
 	 * Adds a trapezoid-like shape. It's achieved by expanding the shape on one side.
-	 * You can use the static variables <code>MR_RIGHT</code>, <code>MR_LEFT</code>,
-	 * <code>MR_FRONT</code>, <code>MR_BACK</code>, <code>MR_TOP</code> and
-	 * <code>MR_BOTTOM</code>.
+	 * You can use the static variables {@code MR_RIGHT}, {@code MR_LEFT},
+	 * {@code MR_FRONT}, {@code MR_BACK}, {@code MR_TOP} and
+	 * {@code MR_BOTTOM}.
 	 *
 	 * @param x       the starting x-position
 	 * @param y       the starting y-position
@@ -864,9 +864,9 @@ public class ModelRendererTurbo extends ModelRenderer
 
 	/**
 	 * Adds a trapezoid-like shape. It's achieved by expanding the shape on one side.
-	 * You can use the static variables <code>MR_RIGHT</code>, <code>MR_LEFT</code>,
-	 * <code>MR_FRONT</code>, <code>MR_BACK</code>, <code>MR_TOP</code> and
-	 * <code>MR_BOTTOM</code>.
+	 * You can use the static variables {@code MR_RIGHT}, {@code MR_LEFT},
+	 * {@code MR_FRONT}, {@code MR_BACK}, {@code MR_TOP} and
+	 * {@code MR_BOTTOM}.
 	 *
 	 * @param x        the starting x-position
 	 * @param y        the starting y-position

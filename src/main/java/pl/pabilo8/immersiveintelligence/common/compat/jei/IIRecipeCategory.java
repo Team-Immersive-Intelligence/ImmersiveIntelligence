@@ -5,19 +5,14 @@ import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.recipe.IRecipeCategory;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import mezz.jei.api.recipe.IRecipeWrapperFactory;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 
-import javax.annotation.Nullable;
-import java.util.Collections;
-import java.util.List;
-
 /**
- * @author Pabilo8
- * @since 21-11-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 21.11.2019
  */
 public abstract class IIRecipeCategory<T, W extends IRecipeWrapper> implements IRecipeCategory<W>, IRecipeWrapperFactory<T>
 {
@@ -37,17 +32,11 @@ public abstract class IIRecipeCategory<T, W extends IRecipeWrapper> implements I
 		this.recipeClass = recipeClass;
 		this.displayStacks = displayStacks;
 	}
+
 	public void addCatalysts(IModRegistry registry)
 	{
 		for(ItemStack stack : displayStacks)
 			registry.addRecipeCategoryCraftingItem(stack, getUid());
-	}
-
-	@Nullable
-	@Override
-	public IDrawable getIcon()
-	{
-		return null;
 	}
 
 	@Override
@@ -66,17 +55,6 @@ public abstract class IIRecipeCategory<T, W extends IRecipeWrapper> implements I
 	public IDrawable getBackground()
 	{
 		return background;
-	}
-
-	@Override
-	public void drawExtras(Minecraft minecraft)
-	{
-	}
-
-	@Override
-	public List<String> getTooltipStrings(int mouseX, int mouseY)
-	{
-		return Collections.emptyList();
 	}
 
 	//	@Override

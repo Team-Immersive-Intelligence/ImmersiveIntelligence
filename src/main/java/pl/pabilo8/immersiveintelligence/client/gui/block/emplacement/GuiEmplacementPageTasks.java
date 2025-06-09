@@ -38,7 +38,7 @@ import java.util.Locale;
 import java.util.function.Supplier;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 16.07.2021
  */
 public class GuiEmplacementPageTasks extends GuiEmplacement
@@ -49,7 +49,7 @@ public class GuiEmplacementPageTasks extends GuiEmplacement
 	@Nullable
 	private GuiTextField valueEdit;
 	@Nullable
-	private DecoDropdown valueList;
+	private DecoDropdown<String> valueList;
 
 	private DecoSwitch buttonEnabled;
 	private DecoCheckbox buttonInverted;
@@ -105,7 +105,7 @@ public class GuiEmplacementPageTasks extends GuiEmplacement
 		valueEdit = null;
 		if(entries.length > 0)
 		{
-			valueList = addButton(new DecoDropdown(buttonList.size(), guiLeft+120, guiTop+87, 84, 13, 4, entries));
+			valueList = addButton(new DecoDropdown<>(buttonList.size(), guiLeft+120, guiTop+87, 84, 13, 4, entries));
 			if(!selected.filter.isEmpty())
 				valueList.selectedEntry = ArrayUtils.indexOf(entries, selected.filter);
 		}

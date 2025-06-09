@@ -9,7 +9,7 @@ import pl.pabilo8.immersiveintelligence.api.ammo.enums.ComponentRole;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoCore;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 07.08.2021
  */
 public class IIManualPageBulletCore extends IIManualPageBulletComponent

@@ -17,7 +17,7 @@ import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import javax.vecmath.Vector2f;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 19.01.2021
  */
 public class EntityFlare extends Entity implements IEntityAdditionalSpawnData

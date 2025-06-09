@@ -21,7 +21,7 @@ import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 /**
  * Easy handling for simple, no reply messages.
  *
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 30.08.2022
  */
 public abstract class IIMessage implements IMessage

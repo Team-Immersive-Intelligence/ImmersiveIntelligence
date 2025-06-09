@@ -21,8 +21,8 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityPrecisionAssembler;
 
 /**
- * @author Pabilo8
- * @since 21-06-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 21.06.2019
  */
 public class PrecisionAssemblerRenderer extends TileEntitySpecialRenderer<TileEntityPrecisionAssembler> implements IReloadableModelContainer<PrecisionAssemblerRenderer>
 {

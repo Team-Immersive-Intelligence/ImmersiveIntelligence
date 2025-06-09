@@ -16,10 +16,10 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @updated 16.02.2024
  * @ii-approved 0.3.1
- * @since 30-08-2019
+ * @since 30.08.2019
  */
 public class AmmoRegistry
 {
@@ -296,7 +296,7 @@ public class AmmoRegistry
 	 * @param ammo  name of the model to replace
 	 * @param model new model
 	 */
-	public static void renewModel(IAmmoType<?, ?> ammo, IAmmoModel model)
+	public static void renewModel(IAmmoType<?, ?> ammo, IAmmoModel<?, ?> model)
 	{
 		REGISTERED_MODELS.remove(ammo);
 		REGISTERED_MODELS.put(ammo, model);

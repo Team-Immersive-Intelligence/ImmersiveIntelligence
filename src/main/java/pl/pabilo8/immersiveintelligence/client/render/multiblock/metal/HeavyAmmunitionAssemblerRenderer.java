@@ -18,8 +18,8 @@ import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import java.util.HashMap;
 
 /**
- * @author Pabilo8
- * @since 21-06-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 21.06.2019
  */
 @RegisteredTileRenderer(name = "multiblock/heavy_ammunition_assembler", clazz = TileEntityHeavyAmmunitionAssembler.class)
 public class HeavyAmmunitionAssemblerRenderer extends IIMultiblockRenderer<TileEntityHeavyAmmunitionAssembler>

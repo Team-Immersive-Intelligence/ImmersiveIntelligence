@@ -53,8 +53,8 @@ import java.util.List;
 import java.util.stream.Stream;
 
 /**
- * @author Pabilo8
- * @since 14-03-2020
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 14.03.2020
  */
 public class IIAmmoUtils
 {

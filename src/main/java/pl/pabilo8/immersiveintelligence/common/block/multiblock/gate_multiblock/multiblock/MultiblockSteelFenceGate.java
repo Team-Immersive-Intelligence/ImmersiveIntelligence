@@ -16,7 +16,7 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.gate_multiblock.
 import javax.annotation.Nullable;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 23.12.2021
  */
 public class MultiblockSteelFenceGate extends MultiblockFenceGateBase<TileEntitySteelFenceGate>

@@ -13,7 +13,7 @@ import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import java.util.Arrays;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 07.05.2021
  */
 public class IIMultiblockRecipeWrapper extends MultiblockRecipeWrapper

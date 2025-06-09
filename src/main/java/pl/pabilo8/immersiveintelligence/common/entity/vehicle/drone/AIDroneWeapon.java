@@ -7,7 +7,7 @@ import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityDrone;
 import javax.annotation.Nullable;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 19.12.2022
  */
 public abstract class AIDroneWeapon extends AIDroneBase

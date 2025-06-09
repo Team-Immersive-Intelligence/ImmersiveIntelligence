@@ -8,7 +8,7 @@ import javax.annotation.Nullable;
 import java.util.Arrays;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 14.05.2021
  */
 public class HansAnimations

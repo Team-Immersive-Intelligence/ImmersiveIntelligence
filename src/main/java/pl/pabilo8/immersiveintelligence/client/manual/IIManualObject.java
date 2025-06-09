@@ -22,7 +22,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 22.03.2022
  */
 public abstract class IIManualObject extends GuiButtonManual
@@ -96,7 +96,7 @@ public abstract class IIManualObject extends GuiButtonManual
 	/**
 	 * Used for drawing tooltips, called after drawing buttons
 	 *
-	 * @return
+	 * @return a list of strings to be displayed as a tooltip, or null if no tooltip should be displayed
 	 */
 	@Nullable
 	public abstract List<String> getTooltip(Minecraft mc, int mx, int my);

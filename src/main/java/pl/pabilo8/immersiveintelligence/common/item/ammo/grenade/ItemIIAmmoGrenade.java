@@ -37,8 +37,8 @@ import java.util.List;
 import java.util.function.Function;
 
 /**
- * @author Pabilo8
- * @since 30-08-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 30.08.2019
  */
 @GeneratedItemModels(itemName = "bullet_grenade_5bcal", type = ItemModelType.ITEM_SIMPLE_AUTOREPLACED, valueSet = AmmoParts.class)
 @IIItemProperties(category = IICategory.WARFARE)

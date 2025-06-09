@@ -44,9 +44,9 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @updated 06.12.2023
- * @since 28-06-2019
+ * @since 28.06.2019
  */
 public abstract class TileEntityGateBase<T extends TileEntityGateBase<T>> extends TileEntityMultiblockIIConnectable<T> implements IBooleanAnimatedPartsBlock, IPlayerInteraction, IUpgradeStorageMachine<TileEntityGateBase<T>>, IRedstoneConnector
 {

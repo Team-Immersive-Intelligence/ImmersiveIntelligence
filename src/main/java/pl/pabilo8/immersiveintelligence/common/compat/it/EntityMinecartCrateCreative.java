@@ -17,7 +17,7 @@ import pl.pabilo8.immersiveintelligence.api.utils.minecart.EntityMinecartCrateBa
 import pl.pabilo8.immersiveintelligence.api.utils.tools.IAdvancedTextOverlay;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 07.11.2021
  */
 public class EntityMinecartCrateCreative extends EntityMinecartCrateBase implements IAdvancedTextOverlay

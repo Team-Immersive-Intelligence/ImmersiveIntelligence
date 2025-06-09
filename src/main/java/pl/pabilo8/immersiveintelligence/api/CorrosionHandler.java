@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author Pabilo8
- * @since 2019-05-24
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 24.05.2019
  */
 public class CorrosionHandler
 {

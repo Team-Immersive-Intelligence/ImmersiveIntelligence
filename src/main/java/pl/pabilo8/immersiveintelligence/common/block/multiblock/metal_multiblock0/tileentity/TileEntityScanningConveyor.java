@@ -22,9 +22,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @updated 28.10.2023
- * @since 28-06-2019
+ * @since 28.06.2019
  */
 public class TileEntityScanningConveyor extends TileEntityMultiblockIIGeneric<TileEntityScanningConveyor> implements IConveyorAttachable, IConveyorTile
 {

@@ -28,8 +28,8 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * @author Pabilo8
- * @since 25-06-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 25.06.2019
  */
 @IIItemProperties(category = IICategory.RESOURCES)
 public class ItemIIAssemblyScheme extends ItemIIBase implements IAdvancedTooltipItem

@@ -8,8 +8,8 @@ import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import java.util.HashMap;
 
 /**
- * @author Pabilo8
- * @since 2019-05-24
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 24.05.2019
  */
 public class ShrapnelHandler
 {
@@ -77,7 +77,6 @@ public class ShrapnelHandler
 
 		/**
 		 * @param disruptsRadio whether the shrapnel disrupts radio signals
-		 * @return this
 		 */
 		public void setDisruptsRadio(boolean disruptsRadio)
 		{

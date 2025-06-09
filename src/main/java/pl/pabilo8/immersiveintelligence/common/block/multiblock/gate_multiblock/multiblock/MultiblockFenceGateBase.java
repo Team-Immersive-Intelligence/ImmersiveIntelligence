@@ -10,7 +10,7 @@ import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 27.11.2023
  */
 public abstract class MultiblockFenceGateBase<T extends TileEntityGateBase<T>> extends MultiblockStuctureBase<T>

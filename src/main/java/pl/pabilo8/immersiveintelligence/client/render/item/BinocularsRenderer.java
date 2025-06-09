@@ -14,7 +14,7 @@ import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.TmtUtil;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 20.01.2021
  */
 @SideOnly(Side.CLIENT)

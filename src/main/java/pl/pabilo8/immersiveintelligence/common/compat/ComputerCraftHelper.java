@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 27.07.2021
  */
 public class ComputerCraftHelper extends IICompatModule

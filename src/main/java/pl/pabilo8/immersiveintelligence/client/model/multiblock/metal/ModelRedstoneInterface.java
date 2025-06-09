@@ -6,8 +6,8 @@ import pl.pabilo8.immersiveintelligence.client.model.ModelIIBase;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
 
 /**
- * @author Pabilo8
- * @since 20-06-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 20.06.2019
  */
 public class ModelRedstoneInterface extends ModelIIBase
 {

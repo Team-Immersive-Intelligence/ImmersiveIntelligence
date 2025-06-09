@@ -7,7 +7,7 @@ import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityAmmoBase;
 import javax.annotation.Nonnull;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 16.02.2024
  */
 public class EntityAmmoMine extends EntityAmmoBase<EntityAmmoMine>

@@ -23,7 +23,7 @@ import java.util.List;
 /**
  * Displays a scene using 3D models. Very useful for showing practical in-world examples.
  *
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 04.11.2022
  */
 public class IIManualScenario extends IIManualObject
@@ -127,12 +127,6 @@ public class IIManualScenario extends IIManualObject
 	protected int getDefaultHeight()
 	{
 		return 64;
-	}
-
-	@Override
-	protected int getDefaultWidth()
-	{
-		return 120;
 	}
 
 	//--- Rendering, Reaction ---//

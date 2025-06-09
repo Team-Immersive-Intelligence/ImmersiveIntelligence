@@ -30,7 +30,6 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import pl.pabilo8.immersiveintelligence.api.utils.IUpgradableMachine;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.IWrench;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
 import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
@@ -43,8 +42,8 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * @author Pabilo8
- * @since 2019-05-30
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 30.05.2019
  */
 @IIItemProperties(category = IICategory.TOOLS)
 public class ItemIIElectricWrench extends ItemIIBase implements ITool, IIEEnergyItem, IWrench

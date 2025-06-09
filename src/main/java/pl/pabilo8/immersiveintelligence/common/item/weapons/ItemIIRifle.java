@@ -28,8 +28,8 @@ import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProper
 import javax.annotation.Nullable;
 
 /**
- * @author Pabilo8
- * @since 01-11-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 01.11.2019
  */
 @IIItemProperties(category = IICategory.WARFARE)
 public class ItemIIRifle extends ItemIIGunBase implements IAdvancedZoomTool

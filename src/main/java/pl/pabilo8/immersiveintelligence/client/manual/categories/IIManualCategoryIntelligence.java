@@ -7,8 +7,8 @@ import pl.pabilo8.immersiveintelligence.common.block.data_device.BlockIIDataDevi
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 /**
- * @author Pabilo8
- * @since 18-01-2020
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 18.01.2020
  */
 public class IIManualCategoryIntelligence extends IIManualCategory
 {
@@ -35,7 +35,7 @@ public class IIManualCategoryIntelligence extends IIManualCategory
 
 		addEntry("binoculars")
 				.addSource("binoculars", getSourceForItem(
-					new ItemStack(IIContent.itemBinoculars)));
+						new ItemStack(IIContent.itemBinoculars)));
 
 	}
 }

@@ -32,8 +32,8 @@ import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAn
 import static pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.EffectCrates.ammoCrateEnergyPerAction;
 
 /**
- * @author Pabilo8
- * @since 2019-05-17
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 17.05.2019
  */
 public class TileEntityAmmunitionCrate extends TileEntityEffectCrate
 {

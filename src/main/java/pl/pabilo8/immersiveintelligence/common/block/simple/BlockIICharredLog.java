@@ -26,7 +26,7 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 08.12.2021
  */
 public class BlockIICharredLog extends BlockIIBase<CharredLogs>

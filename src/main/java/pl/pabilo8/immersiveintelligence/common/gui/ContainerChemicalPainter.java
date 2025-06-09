@@ -7,8 +7,8 @@ import net.minecraft.inventory.Slot;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityChemicalPainter;
 
 /**
- * @author Pabilo8
- * @since 10-07-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 10.07.2019
  */
 public class ContainerChemicalPainter extends ContainerIEBase<TileEntityChemicalPainter>
 {

@@ -8,8 +8,8 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.BlockIIMetalDevice.IIBlockTypes_MetalDevice;
 
 /**
- * @author Pabilo8
- * @since 2019-06-01
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 01.06.2019
  */
 public class EntityMinecartCrateSteel extends EntityMinecartCrateBase
 {

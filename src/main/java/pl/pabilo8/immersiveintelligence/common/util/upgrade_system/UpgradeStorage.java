@@ -12,7 +12,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 03.12.2023
  */
 public class UpgradeStorage<T extends TileEntity & IUpgradableMachine>

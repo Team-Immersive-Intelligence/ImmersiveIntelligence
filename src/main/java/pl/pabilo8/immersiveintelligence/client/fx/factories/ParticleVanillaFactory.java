@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.function.BiFunction;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @ii-approved 0.3.1
  * @since 13.05.2024
  */

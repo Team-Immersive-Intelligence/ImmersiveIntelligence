@@ -31,12 +31,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
- * @author Pabilo8
- * @since 10-07-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 10.07.2019
  */
 public class GuiProjectileWorkshop extends GuiAmmunitionBase<TileEntityProjectileWorkshop>
 {
-	DecoDropdown typeList = null, bulletList = null;
+	DecoDropdown<String> typeList = null, bulletList = null;
 	private GuiTextField valueEdit;
 	ItemStack exampleStack = ItemStack.EMPTY;
 	boolean hasFillerUpgrade;

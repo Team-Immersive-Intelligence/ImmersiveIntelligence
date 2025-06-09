@@ -12,8 +12,8 @@ import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityRedstoneInterface;
 
 /**
- * @author Pabilo8
- * @since 21-06-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 21.06.2019
  */
 public class RedstoneInterfaceRenderer extends TileEntitySpecialRenderer<TileEntityRedstoneInterface> implements IReloadableModelContainer<RedstoneInterfaceRenderer>
 {

@@ -42,8 +42,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author Pabilo8
- * @since 28-06-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 28.06.2019
  */
 public class TileEntityChemicalBath extends TileEntityMultiblockMetal<TileEntityChemicalBath, BathingRecipe> implements IGuiTile, ISoundTile, IPlayerInteraction, IAdvancedBounds
 {

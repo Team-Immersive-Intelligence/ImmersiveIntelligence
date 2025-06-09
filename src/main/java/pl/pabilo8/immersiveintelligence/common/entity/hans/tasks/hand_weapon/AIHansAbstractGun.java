@@ -13,7 +13,7 @@ import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.entity.IIEntityUtils;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 23.04.2021
  */
 public abstract class AIHansAbstractGun extends AIHansHandWeapon

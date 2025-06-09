@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 15.04.2021
  */
 public class IIBipedLayerRenderer implements LayerRenderer<EntityLivingBase>

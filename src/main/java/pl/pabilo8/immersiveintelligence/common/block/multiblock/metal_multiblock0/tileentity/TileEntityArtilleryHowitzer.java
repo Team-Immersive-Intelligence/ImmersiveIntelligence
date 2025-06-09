@@ -59,8 +59,8 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 /**
- * @author Pabilo8
- * @since 28-06-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 28.06.2019
  */
 public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<TileEntityArtilleryHowitzer>
 		implements IBooleanAnimatedPartsBlock, IConveyorAttachable, ILadderMultiblock, IExplosionResistantMultiblock, ITactileListener

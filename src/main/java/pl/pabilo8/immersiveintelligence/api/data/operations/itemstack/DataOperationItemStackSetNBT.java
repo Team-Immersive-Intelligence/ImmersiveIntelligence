@@ -9,12 +9,13 @@ import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeExpression;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeItemStack;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
+import pl.pabilo8.immersiveintelligence.common.IILogger;
 
 import javax.annotation.Nonnull;
 
 /**
- * @author Pabilo8
- * @since 05-07-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 05.07.2019
  */
 @DataOperation.DataOperationMeta(name = "item_set_nbt", allowedTypes = {DataTypeItemStack.class, DataTypeString.class}, params = {"stack", "nbt"}, expectedResult = DataTypeItemStack.class)
 public class DataOperationItemStackSetNBT extends DataOperation
@@ -32,7 +33,7 @@ public class DataOperationItemStackSetNBT extends DataOperation
 			stack.setTagCompound(JsonToNBT.getTagFromJson(t2.value));
 		} catch(NBTException e)
 		{
-			e.printStackTrace();
+			IILogger.warn("Failed to set NBT for itemstack: "+t1.value.getDisplayName()+" with NBT: "+t2.value);
 		}
 
 		//Yes

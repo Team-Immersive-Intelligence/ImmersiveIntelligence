@@ -34,7 +34,7 @@ import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock
 import java.util.ArrayList;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 23.12.2021
  */
 public class BlockIIGateMultiblock extends BlockIIMultiblock<IIBlockTypes_FenceGate>

@@ -37,7 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 04.03.2021
  */
 public class TileEntityRadar extends TileEntityMultiblockMetal<TileEntityRadar, MultiblockRecipe> implements IAdvancedMultiblockTileEntity, IUpgradableMachine, IGuiTile

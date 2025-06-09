@@ -47,7 +47,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 23.01.2021
  */
 @IIItemProperties(category = IICategory.TOOLS)

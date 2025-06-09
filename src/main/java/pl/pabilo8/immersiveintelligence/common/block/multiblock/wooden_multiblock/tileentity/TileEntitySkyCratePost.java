@@ -30,8 +30,8 @@ import java.util.Set;
 import static blusunrize.immersiveengineering.api.energy.wires.WireType.STRUCTURE_CATEGORY;
 
 /**
- * @author Pabilo8
- * @since 28-06-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 28.06.2019
  */
 public class TileEntitySkyCratePost extends TileEntityMultiblockConnectable<TileEntitySkyCratePost, IMultiblockRecipe> implements IAdvancedCollisionBounds, IAdvancedSelectionBounds, ISkyCrateConnector
 {
@@ -245,24 +245,6 @@ public class TileEntitySkyCratePost extends TileEntityMultiblockConnectable<Tile
 	public <T> T getCapability(Capability<T> capability, EnumFacing facing)
 	{
 		return super.getCapability(capability, facing);
-	}
-
-	@Override
-	protected boolean canTakeMV()
-	{
-		return false;
-	}
-
-	@Override
-	protected boolean canTakeLV()
-	{
-		return false;
-	}
-
-	@Override
-	protected boolean canTakeHV()
-	{
-		return false;
 	}
 
 	@Override

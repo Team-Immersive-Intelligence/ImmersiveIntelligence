@@ -39,8 +39,8 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 /**
- * @author Pabilo8
- * @since 24-04-2020
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 24.04.2020
  */
 @IIItemProperties(category = IICategory.TOOLS)
 public class ItemIIDrillHead extends ItemIISubItemsBase<DrillHeads> implements IDrillHead

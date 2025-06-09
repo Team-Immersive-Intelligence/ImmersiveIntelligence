@@ -19,7 +19,7 @@ import stanhebben.zenscript.annotations.ZenMethod;
 import javax.annotation.Nullable;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @updated 27.03.2024
  * @ii-approved 0.3.1
  * @since 06.01.2022

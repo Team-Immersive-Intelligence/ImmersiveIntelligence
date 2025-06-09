@@ -18,7 +18,7 @@ import pl.pabilo8.immersiveintelligence.common.entity.ammo.component.EntityIIChe
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @updated 06.03.2024
  * @ii-approved 0.3.1
  * @since 10.07.2021

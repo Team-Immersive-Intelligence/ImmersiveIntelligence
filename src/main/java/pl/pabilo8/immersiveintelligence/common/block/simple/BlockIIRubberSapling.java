@@ -29,8 +29,8 @@ import javax.annotation.Nullable;
 import java.util.Random;
 
 /**
- * @author Pabilo8
- * @since 2019-05-17
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 17.05.2019
  */
 public class BlockIIRubberSapling extends BlockIIBase<RubberStuff> implements IGrowable, IPlantable
 {

@@ -38,7 +38,7 @@ import java.util.List;
 import java.util.function.Function;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 29.04.2021
  */
 public class ConveyorRubberExtract extends ConveyorBasic
@@ -287,12 +287,6 @@ public class ConveyorRubberExtract extends ConveyorBasic
 	}
 
 	static final AxisAlignedBB topBox = new AxisAlignedBB(0, .75, 0, 1, 1, 1);
-
-	@Override
-	public List<AxisAlignedBB> getColisionBoxes(TileEntity tile, EnumFacing facing)
-	{
-		return Lists.newArrayList(conveyorBounds);
-	}
 
 	@Override
 	public List<AxisAlignedBB> getSelectionBoxes(TileEntity tile, EnumFacing facing)

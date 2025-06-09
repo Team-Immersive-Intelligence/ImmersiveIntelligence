@@ -42,7 +42,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 23.09.2023
  */
 @GeneratedItemModels(itemName = "casing_pouch", type = ItemModelType.ITEM_SIMPLE_AUTOREPLACED)

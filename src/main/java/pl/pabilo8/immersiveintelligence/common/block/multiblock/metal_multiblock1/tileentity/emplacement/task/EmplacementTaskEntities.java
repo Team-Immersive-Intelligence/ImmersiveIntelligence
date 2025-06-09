@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 15.02.2024
  */
 public abstract class EmplacementTaskEntities extends EmplacementTask

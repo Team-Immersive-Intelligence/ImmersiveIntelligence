@@ -9,11 +9,12 @@ import pl.pabilo8.immersiveintelligence.client.model.builtin.IAmmoModel;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityAmmoBase;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @updated 09.03.2024
  * @ii-approved 0.3.1
- * @since 08-06-2019
+ * @since 08.06.2019
  */
+@SuppressWarnings("rawtypes")
 public class AmmoRenderer extends Render<EntityAmmoBase>
 {
 	public AmmoRenderer(RenderManager renderManagerIn)
@@ -23,6 +24,7 @@ public class AmmoRenderer extends Render<EntityAmmoBase>
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public void doRender(EntityAmmoBase entity, double x, double y, double z, float entityYaw, float partialTicks)
 	{
 		IAmmoModel model = AmmoRegistry.getModel(entity.getAmmoType());

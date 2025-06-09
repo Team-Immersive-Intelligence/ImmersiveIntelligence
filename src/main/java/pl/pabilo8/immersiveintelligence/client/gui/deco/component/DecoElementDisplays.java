@@ -55,7 +55,7 @@ public class DecoElementDisplays
 		 * @param font         The font renderer to use
 		 * @param mouseX       The x position of the mouse
 		 * @param mouseY       The y position of the mouse
-		 * @param partialTicks
+		 * @param partialTicks Partial render ticks (used for animations)
 		 * @param heightProbe  If true, the method should only return the height of the element, otherwise it should draw it
 		 * @return The height of the element
 		 * @implNote Top-Left corner is at (0,0).

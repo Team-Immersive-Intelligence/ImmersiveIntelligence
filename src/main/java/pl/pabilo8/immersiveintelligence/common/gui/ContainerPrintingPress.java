@@ -11,8 +11,8 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
 import javax.annotation.Nonnull;
 
 /**
- * @author Pabilo8
- * @since 10-07-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 10.07.2019
  */
 public class ContainerPrintingPress extends ContainerIEBase<TileEntityPrintingPress>
 {

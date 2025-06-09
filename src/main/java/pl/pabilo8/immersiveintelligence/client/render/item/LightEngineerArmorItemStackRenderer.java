@@ -8,8 +8,8 @@ import pl.pabilo8.immersiveintelligence.client.model.armor.ModelLightEngineerArm
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIUpgradeableArmor;
 
 /**
- * @author Pabilo8
- * @since 13-10-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 13.10.2019
  */
 public class LightEngineerArmorItemStackRenderer extends TileEntityItemStackRenderer
 {

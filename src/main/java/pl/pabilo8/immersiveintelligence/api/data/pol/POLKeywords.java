@@ -8,7 +8,7 @@ import java.util.Arrays;
 /**
  * Keywords used for declaring statements in a POL script
  *
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 15.04.2022
  */
 public enum POLKeywords implements IStringSerializable

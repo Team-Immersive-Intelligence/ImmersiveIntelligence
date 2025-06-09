@@ -4,7 +4,7 @@ import pl.pabilo8.immersiveintelligence.client.model.ModelIIBase;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 12.04.2021
  */
 public class ModelCrane extends ModelIIBase
@@ -162,15 +162,15 @@ public class ModelCrane extends ModelIIBase
 		craneArmShaftModel[0].setRotationPoint(0F, -29F, 0F);
 		craneArmShaftModel[0].rotateAngleX = 1.57079633F;
 
-		parts.put("base",baseModel);
-		parts.put("craneMain",craneMainModel);
-		parts.put("shaft",shaftModel);
-		parts.put("exhaust",exhaustModel);
-		parts.put("grabber",grabberModel);
-		parts.put("armTop",armTopModel);
-		parts.put("armBottom",armBottomModel);
-		parts.put("craneArm",craneArmModel);
-		parts.put("craneArmShaft",craneArmShaftModel);
+		parts.put("base", baseModel);
+		parts.put("craneMain", craneMainModel);
+		parts.put("shaft", shaftModel);
+		parts.put("exhaust", exhaustModel);
+		parts.put("grabber", grabberModel);
+		parts.put("armTop", armTopModel);
+		parts.put("armBottom", armBottomModel);
+		parts.put("craneArm", craneArmModel);
+		parts.put("craneArmShaft", craneArmShaftModel);
 
 		flipAll();
 	}

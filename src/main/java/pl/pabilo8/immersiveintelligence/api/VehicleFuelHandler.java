@@ -7,7 +7,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 08.04.2021
  */
 public class VehicleFuelHandler

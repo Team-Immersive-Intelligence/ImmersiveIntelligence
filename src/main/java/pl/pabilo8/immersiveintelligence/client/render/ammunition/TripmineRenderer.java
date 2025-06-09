@@ -26,7 +26,7 @@ import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoMine;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 02.02.2021
  */
 @RegisteredTileRenderer(name = "tripmine", clazz = TileEntityTripMine.class, teisrClazz = TripmineItemStackRenderer.class)

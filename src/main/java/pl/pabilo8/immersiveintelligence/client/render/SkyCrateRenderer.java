@@ -15,8 +15,8 @@ import pl.pabilo8.immersiveintelligence.common.entity.EntitySkyCrate;
 import pl.pabilo8.immersiveintelligence.common.item.ItemIISkycrateMount;
 
 /**
- * @author Pabilo8
- * @since 08-06-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 08.06.2019
  */
 public class SkyCrateRenderer extends Render<EntitySkyCrate>
 {
@@ -57,11 +57,6 @@ public class SkyCrateRenderer extends Render<EntitySkyCrate>
 		GlStateManager.popMatrix();
 
 		super.doRender(entity, x, y, z, entityYaw, partialTicks);
-	}
-
-	public boolean isMultipass()
-	{
-		return false;
 	}
 
 

@@ -23,8 +23,8 @@ import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEn
 import java.util.HashMap;
 
 /**
- * @author Pabilo8
- * @since 21-06-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 21.06.2019
  */
 @RegisteredTileRenderer(name = "multiblock/ammunition_assembler", clazz = TileEntityAmmunitionAssembler.class)
 public class AmmunitionAssemblerRenderer extends IIMultiblockRenderer<TileEntityAmmunitionAssembler>

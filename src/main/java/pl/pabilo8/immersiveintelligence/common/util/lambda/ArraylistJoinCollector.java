@@ -10,7 +10,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collector;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 06.06.2022
  */
 public class ArraylistJoinCollector<T> implements Collector<ArrayList<T>, ArrayList<T>, ArrayList<T>>

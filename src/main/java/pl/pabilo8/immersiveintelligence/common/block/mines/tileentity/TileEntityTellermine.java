@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 06.02.2021
  */
 public class TileEntityTellermine extends TileEntityMineBase implements IBlockBounds, IAdvancedCollisionBounds

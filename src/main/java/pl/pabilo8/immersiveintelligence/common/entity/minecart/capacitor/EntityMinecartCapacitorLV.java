@@ -6,11 +6,11 @@ import blusunrize.immersiveengineering.common.blocks.metal.BlockTypes_MetalDevic
 import net.minecraft.block.Block;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import pl.pabilo8.immersiveintelligence.api.utils.minecart.IMinecartBlockPickable;
 import pl.pabilo8.immersiveintelligence.api.utils.minecart.EntityMinecartEnergyContainer;
+import pl.pabilo8.immersiveintelligence.api.utils.minecart.IMinecartBlockPickable;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 07.11.2021
  */
 public class EntityMinecartCapacitorLV extends EntityMinecartEnergyContainer implements IMinecartBlockPickable

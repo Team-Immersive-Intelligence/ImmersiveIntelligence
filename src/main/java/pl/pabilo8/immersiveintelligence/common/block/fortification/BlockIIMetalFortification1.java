@@ -18,7 +18,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 29.08.2020
  */
 public class BlockIIMetalFortification1 extends BlockIIBase<IIBlockTypes_MetalFortification1>

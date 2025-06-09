@@ -6,7 +6,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.util.INBTSerializable;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 23.12.2022
  */
 public class VehicleDurability implements INBTSerializable<NBTTagInt>

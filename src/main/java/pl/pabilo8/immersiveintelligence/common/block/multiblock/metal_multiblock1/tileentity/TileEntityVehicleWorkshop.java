@@ -14,7 +14,7 @@ import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockVehicleWorkshop;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 04.03.2021
  */
 public class TileEntityVehicleWorkshop extends TileEntityMultiblockMetal<TileEntityVehicleWorkshop, MultiblockRecipe>
@@ -23,7 +23,7 @@ public class TileEntityVehicleWorkshop extends TileEntityMultiblockMetal<TileEnt
 	public FluidTank[] tanks = new FluidTank[]{
 			new FluidTank(VehicleWorkshop.dieselCapacity)
 	};
-	public int progress=0, maxProgress=0;
+	public int progress = 0, maxProgress = 0;
 
 	public TileEntityVehicleWorkshop()
 	{

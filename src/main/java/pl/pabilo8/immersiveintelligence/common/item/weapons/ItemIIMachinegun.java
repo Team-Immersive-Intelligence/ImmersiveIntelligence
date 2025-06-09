@@ -53,8 +53,8 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 /**
- * @author Pabilo8
- * @since 01-11-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 01.11.2019
  */
 @IIItemProperties(category = IICategory.WARFARE)
 public class ItemIIMachinegun extends ItemIIUpgradableTool implements IAdvancedFluidItem, ISkinnable

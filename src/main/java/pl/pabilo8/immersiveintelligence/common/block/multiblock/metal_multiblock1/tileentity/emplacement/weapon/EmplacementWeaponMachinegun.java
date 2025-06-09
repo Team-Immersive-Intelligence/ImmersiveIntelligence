@@ -252,6 +252,7 @@ public class EmplacementWeaponMachinegun extends EmplacementWeapon<EntityAmmoPro
 			shootDelay--;
 	}
 
+	@Nonnull
 	@Override
 	public NBTTagCompound saveToNBT(boolean forClient)
 	{

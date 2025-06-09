@@ -25,12 +25,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
- * @author Pabilo8
- * @author Bastian
- * @author Avalon
- * @since 18-01-2020
- * @since 24-03-2023
- * @since 9-6-2024
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @author Bastian (bastian@iiteam.net)
+ * @author Avalon (avalon@iiteam.net)
+ * @updated 24.03.2023
+ * @updated 06.09.2024
+ * @since 18.01.2020
  */
 public class IIManualCategoryWarfare extends IIManualCategory
 {
@@ -92,7 +92,7 @@ public class IIManualCategoryWarfare extends IIManualCategory
 		addEntry("emplacement");
 		addEntry("emplacement_weapons");
 		addEntry("chemdispenser")
-			.addSource("chemical_dispenser", getSourceForItem(IIContent.blockDataConnector.getStack(IIBlockTypes_Connector.CHEMICAL_DISPENSER)));
+				.addSource("chemical_dispenser", getSourceForItem(IIContent.blockDataConnector.getStack(IIBlockTypes_Connector.CHEMICAL_DISPENSER)));
 		addEntry("flagpole");
 		addEntry("explosives_mines")
 				.addSource("crafting_radio_equipped_satchel", getSourceForItems(IIContent.itemAmmoCasing.getStack(Casing.RADIO_EXPLOSIVES)))

@@ -10,7 +10,7 @@ import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 25.09.2023
  */
 public class GuiCasingPouch extends GuiIEContainerBase

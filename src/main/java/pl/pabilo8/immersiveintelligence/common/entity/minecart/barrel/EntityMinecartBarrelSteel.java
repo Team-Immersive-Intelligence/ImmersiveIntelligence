@@ -5,12 +5,12 @@ import blusunrize.immersiveengineering.common.blocks.metal.BlockTypes_MetalDevic
 import net.minecraft.block.Block;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import pl.pabilo8.immersiveintelligence.api.utils.minecart.IMinecartBlockPickable;
 import pl.pabilo8.immersiveintelligence.api.utils.minecart.EntityMinecartFluidContainer;
+import pl.pabilo8.immersiveintelligence.api.utils.minecart.IMinecartBlockPickable;
 
 /**
- * @author Pabilo8
- * @since 2019-06-01
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 01.06.2019
  */
 public class EntityMinecartBarrelSteel extends EntityMinecartFluidContainer implements IMinecartBlockPickable
 {

@@ -11,8 +11,8 @@ import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
 import javax.annotation.Nonnull;
 
 /**
- * @author Pabilo8
- * @since 05-07-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 05.07.2019
  */
 @DataOperation.DataOperationMeta(name = "string_camel_case", allowedTypes = {DataTypeString.class, DataTypeBoolean.class}, params = {"text", "start_small"}, expectedResult = DataTypeString.class)
 public class DataOperationStringCamelCase extends DataOperation

@@ -4,7 +4,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagString;
@@ -34,7 +33,7 @@ import javax.annotation.Nonnull;
 import java.util.function.Function;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 31.01.2021
  */
 public abstract class BlockIIMine extends BlockIITileProvider<IIBlockTypes_Mine>
@@ -78,12 +77,6 @@ public abstract class BlockIIMine extends BlockIITileProvider<IIBlockTypes_Mine>
 	}
 
 	protected abstract TileEntity getMineTileEntity();
-
-	@Override
-	public boolean canIEBlockBePlaced(World world, BlockPos pos, IBlockState newState, EnumFacing side, float hitX, float hitY, float hitZ, EntityPlayer player, ItemStack stack)
-	{
-		return true;
-	}
 
 	@Deprecated
 	public EnumBlockRenderType getRenderType(IBlockState state)

@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * A text object used instead of rendering a wall of text, like in default IE manual.
  *
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 22.05.2022
  */
 public class IIManuaRegularText extends IIManualObject

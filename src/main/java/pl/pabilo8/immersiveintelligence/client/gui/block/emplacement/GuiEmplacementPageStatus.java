@@ -22,7 +22,7 @@ import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import java.io.IOException;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 16.07.2021
  */
 public class GuiEmplacementPageStatus extends GuiEmplacement

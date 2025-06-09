@@ -35,7 +35,7 @@ import java.util.List;
 import java.util.function.Function;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 29.08.2020
  */
 public abstract class BlockIIFenceBase<E extends Enum<E> & IITileProviderEnum> extends BlockIITileProvider<E>
@@ -78,7 +78,6 @@ public abstract class BlockIIFenceBase<E extends Enum<E> & IITileProviderEnum> e
 
 	@Override
 	@Nonnull
-	@SuppressWarnings("deprecation")
 	@ParametersAreNonnullByDefault
 	public BlockFaceShape getBlockFaceShape(IBlockAccess world, IBlockState state, BlockPos pos, EnumFacing side)
 	{
@@ -92,7 +91,6 @@ public abstract class BlockIIFenceBase<E extends Enum<E> & IITileProviderEnum> e
 	@Override
 	@Nonnull
 	@ParametersAreNonnullByDefault
-	@SuppressWarnings("deprecation")
 	public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos)
 	{
 		state = super.getActualState(state, world, pos);
@@ -126,7 +124,6 @@ public abstract class BlockIIFenceBase<E extends Enum<E> & IITileProviderEnum> e
 
 	@Override
 	@ParametersAreNonnullByDefault
-	@SuppressWarnings("deprecation")
 	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, @Nullable Entity entityIn, boolean isActualState)
 	{
 		state = state.getActualState(worldIn, pos);
@@ -145,7 +142,6 @@ public abstract class BlockIIFenceBase<E extends Enum<E> & IITileProviderEnum> e
 	@Override
 	@Nonnull
 	@ParametersAreNonnullByDefault
-	@SuppressWarnings("deprecation")
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess world, BlockPos pos)
 	{
 		return new AxisAlignedBB(Utils.canFenceConnectTo(world, pos, EnumFacing.WEST, blockMaterial)?0: .375f, 0, Utils.canFenceConnectTo(world, pos, EnumFacing.NORTH, blockMaterial)?0: .375f, Utils.canFenceConnectTo(world, pos, EnumFacing.EAST, blockMaterial)?1: .625f, 1f, Utils.canFenceConnectTo(world, pos, EnumFacing.SOUTH, blockMaterial)?1: .625f);

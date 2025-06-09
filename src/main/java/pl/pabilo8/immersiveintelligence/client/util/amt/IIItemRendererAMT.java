@@ -31,7 +31,7 @@ import java.lang.annotation.Target;
 import static blusunrize.immersiveengineering.client.ClientUtils.mc;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 17.09.2022
  */
 public abstract class IIItemRendererAMT<I extends Item> extends TileEntityItemStackRenderer implements IReloadableModelContainer<IIItemRendererAMT<I>>

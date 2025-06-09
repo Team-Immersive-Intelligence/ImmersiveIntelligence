@@ -13,7 +13,7 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 15.04.2021
  */
 public class ModelAdvancedPowerpack extends TMTArmorModel implements IReloadableModelContainer<ModelAdvancedPowerpack>

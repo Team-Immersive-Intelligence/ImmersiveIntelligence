@@ -57,7 +57,7 @@ import java.util.concurrent.atomic.AtomicReference;
  * Class for advanced GUIs that store data in the client proxy NBT and use components for their display<br>
  * Use annotation {@link DecoTemplate} to specify traits
  *
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 04.01.2025
  */
 public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C extends ContainerIIBase<T>> extends GuiContainer
@@ -81,14 +81,13 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 	{
 		super(guiList.containerFromTile.apply(player, tile));
 		this.tile = tile;
+		//noinspection unchecked
 		this.container = ((C)this.inventorySlots);
 		this.playerContainer = player.inventory;
 
 		AtomicReference<String> guiName = new AtomicReference<>("deco");
 		Optional.ofNullable(this.getClass().getAnnotation(DecoTemplate.class))
-				.ifPresent(template -> {
-					guiName.set(template.name());
-				});
+				.ifPresent(template -> guiName.set(template.name()));
 		name = guiName.get();
 	}
 
@@ -381,7 +380,7 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 		//Buttons
 		for(GuiButton guiButton : buttonList)
 			if(guiButton instanceof GuiComponentDecoBase&&guiButton.isMouseOver())
-				return ((GuiComponentDecoBase)guiButton).getTooltip();
+				return ((GuiComponentDecoBase<?>)guiButton).getTooltip();
 
 		return Collections.emptyList();
 	}

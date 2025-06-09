@@ -46,10 +46,10 @@ import java.util.Arrays;
 import java.util.Optional;
 
 /**
- * @author Pabilo8
- * @author Avalon
- * @since 11-06-2019
- * @since 10-10-2024
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @author Avalon (avalon@iiteam.net)
+ * @since 11.06.2019
+ * @since 10.10.2024
  */
 public class TileEntityDataDebugger extends TileEntityImmersiveConnectable implements ITickable, IDataConnector, IHammerInteraction, IDirectionalTile, IOBJModelCallback<IBlockState>, IAdvancedTextOverlay, IActiveState, IRedstoneOutput
 {

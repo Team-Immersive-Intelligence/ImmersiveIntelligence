@@ -17,8 +17,8 @@ import pl.pabilo8.immersiveintelligence.common.gui.ContainerFiller;
 import java.util.ArrayList;
 
 /**
- * @author Pabilo8
- * @since 10-07-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 10.07.2019
  */
 public class GuiFiller extends GuiIEContainerBase
 {

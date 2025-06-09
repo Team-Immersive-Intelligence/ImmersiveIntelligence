@@ -24,8 +24,8 @@ import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import javax.annotation.Nullable;
 
 /**
- * @author Pabilo8
- * @since 2019-05-17
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 17.05.2019
  */
 // TODO: 22.09.2022 rework this shite of a device
 public class TileEntityDataMerger extends TileEntityIEBase implements IPlayerInteraction, ITickable, IBlockBounds, IDirectionalTile, IDataDevice, IGuiTile, IIEInventory

@@ -16,7 +16,7 @@ import pl.pabilo8.immersiveintelligence.common.util.amt.IIModelHeader;
 /**
  * AMT type for drawing IE wiring
  *
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 21.08.2022
  */
 public class AMTWire extends AMT

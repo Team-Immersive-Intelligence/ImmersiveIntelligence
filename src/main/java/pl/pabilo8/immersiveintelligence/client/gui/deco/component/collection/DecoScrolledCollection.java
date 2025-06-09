@@ -100,7 +100,8 @@ public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? 
 	 * @return this
 	 * @see #withEntries(Collection)
 	 */
-	public E withEntries(@Nonnull T... entries)
+	@SafeVarargs
+	public final E withEntries(@Nonnull T... entries)
 	{
 		return withEntries(new ArrayList<>(Arrays.asList(entries)));
 	}

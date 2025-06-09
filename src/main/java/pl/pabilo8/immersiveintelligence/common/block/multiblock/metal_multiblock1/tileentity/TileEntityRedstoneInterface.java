@@ -43,8 +43,8 @@ import java.util.Set;
 import static blusunrize.immersiveengineering.api.energy.wires.WireType.REDSTONE_CATEGORY;
 
 /**
- * @author Pabilo8
- * @since 28-06-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 28.06.2019
  */
 public class TileEntityRedstoneInterface extends TileEntityMultiblockConnectable<TileEntityRedstoneInterface, IMultiblockRecipe> implements IAdvancedCollisionBounds, IAdvancedSelectionBounds, IGuiTile, IDataDevice, IRedstoneConnector
 {
@@ -334,24 +334,6 @@ public class TileEntityRedstoneInterface extends TileEntityMultiblockConnectable
 	public List<AxisAlignedBB> getAdvancedColisionBounds()
 	{
 		return getAdvancedSelectionBounds();
-	}
-
-	@Override
-	protected boolean canTakeMV()
-	{
-		return false;
-	}
-
-	@Override
-	protected boolean canTakeLV()
-	{
-		return false;
-	}
-
-	@Override
-	protected boolean canTakeHV()
-	{
-		return false;
 	}
 
 	@Override

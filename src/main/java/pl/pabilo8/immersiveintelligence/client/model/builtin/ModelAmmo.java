@@ -31,7 +31,7 @@ import java.util.EnumMap;
 import java.util.HashMap;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @ii-approved 0.3.1
  * @since 19.02.2024
  */

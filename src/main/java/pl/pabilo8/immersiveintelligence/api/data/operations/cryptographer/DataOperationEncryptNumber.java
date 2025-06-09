@@ -11,7 +11,7 @@ import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 import javax.annotation.Nonnull;
 
 /**
- * @author GabrielV
+ * @author GabrielV(gabriel @ iiteam.net)
  * @ii-approved 0.3.1
  * @since 18.09.2024
  */

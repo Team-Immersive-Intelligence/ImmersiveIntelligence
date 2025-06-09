@@ -1,8 +1,8 @@
 package pl.pabilo8.immersiveintelligence.client.util.tmt;
 
 /**
- * @author Pabilo8
- * @since 2019-06-01
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 01.06.2019
  */
 @Deprecated
 public class TmtUtil

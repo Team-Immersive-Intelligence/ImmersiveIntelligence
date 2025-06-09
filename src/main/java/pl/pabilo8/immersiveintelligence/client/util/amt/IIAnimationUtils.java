@@ -42,7 +42,7 @@ import java.util.*;
 import java.util.function.Function;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 02.04.2022
  */
 @SideOnly(Side.CLIENT)

@@ -11,8 +11,8 @@ import javax.annotation.Nonnull;
 import java.util.Arrays;
 
 /**
- * @author Pabilo8
- * @since 05-07-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 05.07.2019
  */
 @DataOperation.DataOperationMeta(name = "string_split", allowedTypes = {DataTypeString.class, DataTypeString.class}, params = {"text", "delimiter"}, expectedResult = DataTypeArray.class)
 public class DataOperationStringSplit extends DataOperation

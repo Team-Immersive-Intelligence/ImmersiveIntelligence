@@ -8,7 +8,7 @@ import pl.pabilo8.immersiveintelligence.common.util.amt.IIModelHeader;
 /**
  * An empty AMT type, used to group models
  *
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 21.08.2022
  */
 public class AMTLocator extends AMT

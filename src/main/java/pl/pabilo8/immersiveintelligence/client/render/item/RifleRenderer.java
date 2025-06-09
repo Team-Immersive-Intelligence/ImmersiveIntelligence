@@ -36,7 +36,7 @@ import pl.pabilo8.immersiveintelligence.common.util.amt.IIModelHeader;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 18.09.2022
  */
 @RegisteredItemRenderer(name = "items/weapons/rifle")
@@ -276,12 +276,6 @@ public class RifleRenderer extends IIUpgradableItemRendererAMT<ItemIIRifle> impl
 		ApiUtils.getRegisterSprite(map, new ResourceLocation(ImmersiveIntelligence.MODID, "items/weapons/rifle_handmade"));
 		// Register skins
 		IISkinHandler.registerSprites(map, IIContent.itemRifle.getSkinnableName());
-	}
-
-	@Override
-	protected void nullifyModels()
-	{
-		IIAnimationUtils.disposeOf(model);
 	}
 
 	@Override

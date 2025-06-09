@@ -7,8 +7,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
- * @author Pabilo8
- * @since 27-09-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 27.09.2019
  */
 public interface IAdvancedZoomTool
 {

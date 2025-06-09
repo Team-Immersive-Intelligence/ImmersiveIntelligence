@@ -8,7 +8,7 @@ import java.util.Locale;
 /**
  * Default II serializable enum, returns its name in lower case
  *
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 03.09.2022
  */
 public interface ISerializableEnum extends IStringSerializable

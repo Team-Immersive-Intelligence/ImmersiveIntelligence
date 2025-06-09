@@ -10,7 +10,7 @@ import pl.pabilo8.immersiveintelligence.common.util.easynbt.NBTSerialisation;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 23.12.2022
  */
 public interface ISyncNBTEntity<T extends Entity & ISyncNBTEntity<T>>

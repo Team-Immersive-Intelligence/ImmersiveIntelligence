@@ -24,7 +24,7 @@ import pl.pabilo8.immersiveintelligence.common.util.amt.IIAnimation.IIAnimationG
 import pl.pabilo8.immersiveintelligence.common.util.amt.IIModelHeader;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 29.07.2022
  */
 @RegisteredTileRenderer(name = "multiblock/artillery_howitzer", clazz = TileEntityArtilleryHowitzer.class)

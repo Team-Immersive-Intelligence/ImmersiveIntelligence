@@ -1,7 +1,7 @@
 package pl.pabilo8.immersiveintelligence.common.entity.hans;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 15.05.2021
  */
 public class EmotionJsonHandler

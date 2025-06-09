@@ -18,7 +18,7 @@ import javax.annotation.Nullable;
 /**
  * A standard button of the Deco GUI system
  *
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 10.01.2025
  */
 public class DecoButton extends GuiComponentDecoTextBase<DecoButton>

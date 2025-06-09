@@ -33,7 +33,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 02.02.2021
  */
 public class TileEntityTripMine extends TileEntityMineBase implements IBlockBounds, IAdvancedCollisionBounds

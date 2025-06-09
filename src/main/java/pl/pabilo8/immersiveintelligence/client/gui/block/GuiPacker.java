@@ -42,7 +42,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 25.08.2022
  */
 public class GuiPacker extends GuiIEContainerBase
@@ -57,7 +57,7 @@ public class GuiPacker extends GuiIEContainerBase
 	private GuiButtonIE buttonAdd, buttonRemove, buttonDuplicate, buttonClear, buttonSideInput, buttonSideOutput;
 	private GuiButtonState buttonRepeat;
 	private GuiPackerTaskList taskList;
-	private DecoDropdown putModeList;
+	private DecoDropdown<String> putModeList;
 	private DecoSwitch switchOreDict, switchNBT, switchDirection;
 	private GuiTextField textFieldAmount;
 
@@ -392,7 +392,7 @@ public class GuiPacker extends GuiIEContainerBase
 		public void initPage(PackerTask task)
 		{
 			gui.addLabel(88, 42, IIReference.COLOR_H1, "Mode:");
-			gui.putModeList = gui.addButton(new DecoDropdown(gui.buttonList.size(), gui.guiLeft+84+32+20, gui.guiTop+10+6+20, 112, 20,
+			gui.putModeList = gui.addButton(new DecoDropdown<>(gui.buttonList.size(), gui.guiLeft+84+32+20, gui.guiTop+10+6+20, 112, 20,
 					PackerHandler.PackerPutMode.values().length,
 					Arrays.stream(PackerHandler.PackerPutMode.values())
 							.map(PackerHandler.PackerPutMode::getName)

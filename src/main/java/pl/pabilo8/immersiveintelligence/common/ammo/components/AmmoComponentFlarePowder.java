@@ -14,10 +14,10 @@ import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.component.EntityFlare;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @ii-approved 0.3.1
  * @updated 06.03.2024
- * @since 30-08-2019
+ * @since 30.08.2019
  */
 public class AmmoComponentFlarePowder extends AmmoComponentTracerPowder
 {

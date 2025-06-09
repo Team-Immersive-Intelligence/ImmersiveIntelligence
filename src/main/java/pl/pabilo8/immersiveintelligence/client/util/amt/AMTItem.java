@@ -14,7 +14,7 @@ import pl.pabilo8.immersiveintelligence.common.util.amt.IIModelHeader;
 /**
  * AMT type for drawing items ({@link ItemStack}s)
  *
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 26.07.2022
  */
 public class AMTItem extends AMT

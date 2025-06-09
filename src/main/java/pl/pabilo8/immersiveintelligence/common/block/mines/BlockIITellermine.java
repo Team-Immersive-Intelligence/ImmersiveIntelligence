@@ -16,7 +16,7 @@ import javax.annotation.Nonnull;
 import java.util.function.Function;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 05.02.2021
  */
 public class BlockIITellermine extends BlockIIMine

@@ -37,10 +37,10 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @updated 02.01.2024, 26.05.2024
  * @ii-approved 0.3.1
- * @since 2019-05-11
+ * @since 11.05.2019
  */
 public abstract class ItemIIAmmoBase<E extends EntityAmmoBase<? super E>> extends ItemIISubItemsBase<AmmoParts> implements IAmmoTypeItem<ItemIIAmmoBase<E>, E>, IIIItemTextureOverride
 {

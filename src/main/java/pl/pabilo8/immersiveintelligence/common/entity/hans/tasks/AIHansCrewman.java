@@ -7,7 +7,7 @@ import pl.pabilo8.immersiveintelligence.common.entity.EntityParachute;
 import javax.annotation.Nonnull;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 25.09.2021
  */
 public class AIHansCrewman extends AIHansBase

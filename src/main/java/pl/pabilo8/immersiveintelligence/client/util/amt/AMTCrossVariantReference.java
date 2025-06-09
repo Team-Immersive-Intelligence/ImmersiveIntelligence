@@ -6,7 +6,7 @@ import java.util.Map;
 /**
  * References an AMT part inside a {@link AMTModelCache}
  *
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 17.02.2023
  */
 public class AMTCrossVariantReference<T extends AMT>

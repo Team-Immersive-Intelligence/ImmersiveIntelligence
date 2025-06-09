@@ -17,7 +17,7 @@ import java.io.InputStreamReader;
 /**
  * Used for loading content from files inside the jar / resource packs.
  *
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @ii-approved 0.3.1
  * @since 19.05.2024
  */

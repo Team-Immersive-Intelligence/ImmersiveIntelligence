@@ -10,8 +10,8 @@ import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.Shape2D;
 
 /**
- * @author Pabilo8
- * @since 17-07-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 17.07.2019
  */
 public class ModelPrecisionSyringe extends ModelIIBase
 {

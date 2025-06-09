@@ -6,8 +6,8 @@ import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import javax.annotation.Nullable;
 
 /**
- * @author Pabilo8
- * @since 2019-06-01
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 01.06.2019
  */
 public interface IDataDevice
 {

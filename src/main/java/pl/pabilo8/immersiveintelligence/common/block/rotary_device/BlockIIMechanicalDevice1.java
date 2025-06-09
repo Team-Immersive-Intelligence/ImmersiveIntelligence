@@ -28,7 +28,7 @@ import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import javax.annotation.Nonnull;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 03.10.2020
  */
 public class BlockIIMechanicalDevice1 extends BlockIITileProvider<IIBlockTypes_MechanicalDevice1>

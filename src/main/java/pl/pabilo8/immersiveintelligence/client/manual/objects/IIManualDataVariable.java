@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 02.11.2022
  */
 //TODO: 07.08.2023 clickable links
@@ -181,18 +181,18 @@ public class IIManualDataVariable extends IIManualObject
 			if(values!=null)
 			{
 				lines.add("");
-				lines.add(I18n.format("ie.manual.entry.allowed_values"));
+				lines.add(I18n.format("ie.manual.entry.data_variable.allowed_values"));
 				values.forEach((key, value) -> lines.addAll(manual.fontRenderer.listFormattedStringToWidth(
 						TextFormatting.BOLD+" > "+key+TextFormatting.RESET+TextFormatting.GRAY+" - "+value,
 						160)));
 			}
 			else if(value!=null)
-				lines.add(I18n.format("ie.manual.entry.allowed_value")+" "+TextFormatting.GRAY+value);
+				lines.add(I18n.format("ie.manual.entry.data_variable.allowed_value")+" "+TextFormatting.GRAY+value);
 
 			if(requirements!=null)
 			{
 				lines.add("");
-				lines.add(I18n.format("ie.manual.entry.required_variables"));
+				lines.add(I18n.format("ie.manual.entry.data_variable.required_variables"));
 				requirements.forEach((key, value) -> lines.addAll(manual.fontRenderer.listFormattedStringToWidth(
 						TextFormatting.BOLD+" > "+key+TextFormatting.RESET+" = ["+TextFormatting.GRAY+value+TextFormatting.RESET+"]",
 						160)));

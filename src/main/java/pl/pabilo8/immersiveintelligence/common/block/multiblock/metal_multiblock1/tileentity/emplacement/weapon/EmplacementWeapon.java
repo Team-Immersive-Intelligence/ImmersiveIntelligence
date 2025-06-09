@@ -40,7 +40,7 @@ import java.util.Random;
 import java.util.function.Supplier;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 15.02.2024
  */
 public abstract class EmplacementWeapon<A extends EntityAmmoBase<A>>
@@ -185,8 +185,8 @@ public abstract class EmplacementWeapon<A extends EntityAmmoBase<A>>
 	 * Used for reloading and other actions
 	 * For setup delay use {@link #doSetUp(boolean)}
 	 *
-	 * @param te
-	 * @param active
+	 * @param te     the emplacement tile entity
+	 * @param active whether the weapon is active
 	 */
 	public void tick(TileEntityEmplacement te, boolean active)
 	{
@@ -203,7 +203,7 @@ public abstract class EmplacementWeapon<A extends EntityAmmoBase<A>>
 	}
 
 	/**
-	 * @param forClient
+	 * @param forClient whether the NBT tag is for client or server
 	 * @return nbt tag with weapon's saved data
 	 */
 	@Nonnull
@@ -268,10 +268,11 @@ public abstract class EmplacementWeapon<A extends EntityAmmoBase<A>>
 
 	}
 
+	@SuppressWarnings("rawtypes")
 	public static MachineUpgrade register(Supplier<EmplacementWeapon> supplier)
 	{
 		//hacky way, but works
-		EmplacementWeapon w = supplier.get();
+		EmplacementWeapon<?> w = supplier.get();
 		TileEntityEmplacement.weaponRegistry.put(w.getName(), supplier);
 		return new MachineUpgradeEmplacementWeapon(w);
 	}
@@ -314,9 +315,9 @@ public abstract class EmplacementWeapon<A extends EntityAmmoBase<A>>
 
 	public static class MachineUpgradeEmplacementWeapon extends MachineUpgrade
 	{
-		private final EmplacementWeapon weapon;
+		private final EmplacementWeapon<?> weapon;
 
-		public MachineUpgradeEmplacementWeapon(EmplacementWeapon weapon)
+		public MachineUpgradeEmplacementWeapon(EmplacementWeapon<?> weapon)
 		{
 			super(weapon.getName(), new ResourceLocation(ImmersiveIntelligence.MODID, "textures/gui/upgrade/"+weapon.getName()+".png"));
 			this.weapon = weapon;

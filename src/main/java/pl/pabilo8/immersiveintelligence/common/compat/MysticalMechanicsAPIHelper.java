@@ -27,11 +27,11 @@ import static mysticalmechanics.api.MysticalMechanicsAPI.MECH_CAPABILITY;
 
 /**
  * @author GabrielV (gabriel@iiteam.net)
- * @since 21/04/2024 - 7:50 PM
+ * @since 21.04.2024
  */
 public class MysticalMechanicsAPIHelper extends IICompatModule
 {
-	public static final ResourceLocation CAPABILITY_RES = new ResourceLocation(ImmersiveIntelligence.MODID, "nuclear_device");
+	public static final ResourceLocation CAPABILITY_RES = new ResourceLocation(ImmersiveIntelligence.MODID, "mm_transmision");
 
 	@Override
 	public void preInit()
@@ -68,16 +68,16 @@ public class MysticalMechanicsAPIHelper extends IICompatModule
 		if(event.getObject() instanceof TileEntityTransmissionBox)
 		{
 			if(!event.getCapabilities().containsKey(CAPABILITY_RES))
-				event.addCapability(CAPABILITY_RES, new NuclearDeviceHandler((TileEntityTransmissionBox)event.getObject()));
+				event.addCapability(CAPABILITY_RES, new MMTransmissionBoxHandler((TileEntityTransmissionBox)event.getObject()));
 		}
 	}
 
-	static class NuclearDeviceHandler implements IMechCapability, ICapabilityProvider
+	static class MMTransmissionBoxHandler implements IMechCapability, ICapabilityProvider
 	{
 		TileEntityTransmissionBox box;
 		double power = 0.0;
 
-		NuclearDeviceHandler(TileEntityTransmissionBox box)
+		MMTransmissionBoxHandler(TileEntityTransmissionBox box)
 		{
 			this.box = box;
 		}
@@ -125,7 +125,7 @@ public class MysticalMechanicsAPIHelper extends IICompatModule
 
 		private void calculatePower(@Nonnull EnumFacing facing)
 		{
-			float[] st = IIRotaryMath.MMToRoF(this.power);
+			float[] st = IIRotaryMath.MMToII(this.power);
 			box.energy.grow(Math.round(st[0]), Math.round(st[1]), 0.98f);
 			if(box.getWorld().getTotalWorldTime()%20==0)
 			{

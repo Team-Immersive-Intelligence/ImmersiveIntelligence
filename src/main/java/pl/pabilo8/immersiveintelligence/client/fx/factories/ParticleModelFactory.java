@@ -31,7 +31,7 @@ import java.util.stream.IntStream;
 /**
  * Builder for particle effects using 3D AMT models.
  *
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @ii-approved 0.3.1
  * @since 07.04.2024
  */

@@ -25,7 +25,7 @@ import net.minecraft.world.biome.Biome;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualObject;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualPage;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
@@ -40,7 +40,7 @@ import java.util.stream.Collectors;
 /**
  * Basically a copy of {@link blusunrize.immersiveengineering.api.ManualPageMultiblock} adapted for CTMB
  *
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 22.05.2022
  */
 public class IIManualMultiblock extends IIManualObject
@@ -64,7 +64,6 @@ public class IIManualMultiblock extends IIManualObject
 
 	//--- Setup ---//
 
-	@SuppressWarnings("deprecation")
 	public IIManualMultiblock(ManualObjectInfo info, EasyNBT nbt)
 	{
 		super(info, nbt);
@@ -248,7 +247,7 @@ public class IIManualMultiblock extends IIManualObject
 
 		} catch(Exception e)
 		{
-			e.printStackTrace();
+			IILogger.warn(e.toString());
 		}
 
 		int newStackDepth = GL11.glGetInteger(GL11.GL_MODELVIEW_STACK_DEPTH);

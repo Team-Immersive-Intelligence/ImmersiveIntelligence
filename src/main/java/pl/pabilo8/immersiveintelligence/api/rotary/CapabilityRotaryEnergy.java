@@ -9,8 +9,8 @@ import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 
 /**
- * @author Pabilo8
- * @since 05-01-2020
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 05.01.2020
  */
 public class CapabilityRotaryEnergy
 {

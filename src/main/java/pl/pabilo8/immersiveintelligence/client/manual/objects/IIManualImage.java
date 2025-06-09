@@ -14,7 +14,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 22.05.2022
  */
 public class IIManualImage extends IIManualObject

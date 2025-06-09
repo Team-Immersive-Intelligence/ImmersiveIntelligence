@@ -18,8 +18,8 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 
 /**
- * @author Pabilo8
- * @since 05-07-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 05.07.2019
  */
 @DataOperation.DataOperationMeta(name = "document_read_all_pages_array",
 		allowedTypes = {DataTypeItemStack.class}, params = {"document"},

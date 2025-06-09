@@ -15,7 +15,7 @@ import toughasnails.temperature.modifier.TemperatureModifier;
 
 /**
  * @author GabrielV (gabriel@iiteam.net)
- * @since 21/04/2024 - 7:39 PM
+ * @since 21.04.2024
  */
 public class TANHelper extends IICompatModule
 {
@@ -48,13 +48,13 @@ public class TANHelper extends IICompatModule
 		try
 		{
 			TemperatureHelper.registerTemperatureModifier((ITemperatureModifier)new IIArmorModifier());
-		} catch (Exception e)
+		} catch(Exception e)
 		{
 			IILogger.error(e);
 		}
 	}
 
-	public class IIArmorModifier extends TemperatureModifier
+	public static class IIArmorModifier extends TemperatureModifier
 	{
 		public IIArmorModifier()
 		{
@@ -71,16 +71,17 @@ public class TANHelper extends IICompatModule
 		public Temperature applyPlayerModifiers(EntityPlayer player, Temperature initialTemperature, IModifierMonitor monitor)
 		{
 			Iterable<ItemStack> armor = player.getArmorInventoryList();
-			for (ItemStack stack : armor)
+			for(ItemStack stack : armor)
 			{
 				if(stack.getItem() instanceof ItemIILightEngineerChestplate)
 				{
 					ItemIILightEngineerChestplate item = (ItemIILightEngineerChestplate)stack.getItem();
-					if (item.protectsFromHeat(stack))
+					if(item.protectsFromHeat(stack))
 					{
 						ITemperature temperature = player.getCapability(TANCapabilities.TEMPERATURE, null);
 						// Temperature value of 18 is the max value we will allow since it is close to overheating start which is 20.
-						if (temperature.getTemperature().getRawValue() > 18) temperature.setTemperature(new Temperature(18)); // Reset to our maximal temperature
+						if(temperature.getTemperature().getRawValue() > 18)
+							temperature.setTemperature(new Temperature(18)); // Reset to our maximal temperature
 					}
 				}
 			}

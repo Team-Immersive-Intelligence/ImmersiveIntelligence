@@ -6,7 +6,7 @@ import org.apache.logging.log4j.Logger;
 /**
  * Initialized in {@link pl.pabilo8.immersiveintelligence.ImmersiveIntelligence#preInit}
  *
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 30.08.2022
  */
 public class IILogger

@@ -8,7 +8,7 @@ import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import java.util.HashMap;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 16.04.2022
  */
 public class POLComputerMemory
@@ -78,5 +78,11 @@ public class POLComputerMemory
 	{
 		pages[page] = packet;
 		packet = pages[page = value];
+	}
+
+	@Override
+	public String toString()
+	{
+		return "POLComputerMemory{packet="+packet+", page="+page+'}';
 	}
 }

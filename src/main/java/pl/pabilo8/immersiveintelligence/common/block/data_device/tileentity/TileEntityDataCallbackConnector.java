@@ -1,7 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common.block.data_device.tileentity;
 
 import blusunrize.immersiveengineering.api.Lib;
-import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler.Connection;
 import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
@@ -14,17 +13,15 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.device.IDataDevice;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
-import pl.pabilo8.immersiveintelligence.common.wire.IIDataWireType;
 
 /**
- * @author Pabilo8
- * @since 2019-05-31
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 31.05.2019
  */
 public class TileEntityDataCallbackConnector extends TileEntityDataConnector
 {
@@ -93,14 +90,6 @@ public class TileEntityDataCallbackConnector extends TileEntityDataConnector
 		colorOut = nbt.getInteger("colorOut");
 	}
 
-	@Override
-	public Vec3d getConnectionOffset(Connection con)
-	{
-		EnumFacing side = facing.getOpposite();
-		double conRadius = con.cableType.getRenderDiameter()/2;
-		return new Vec3d(.5+side.getFrontOffsetX()*(.25-conRadius), 0.5+side.getFrontOffsetY()*(.25-conRadius), .5+side.getFrontOffsetZ()*(.25-conRadius));
-	}
-
 	@SideOnly(Side.CLIENT)
 	private AxisAlignedBB renderAABB;
 
@@ -110,41 +99,6 @@ public class TileEntityDataCallbackConnector extends TileEntityDataConnector
 	{
 		int inc = getRenderRadiusIncrease();
 		return new AxisAlignedBB(this.pos.getX()-inc, this.pos.getY()-inc, this.pos.getZ()-inc, this.pos.getX()+inc+1, this.pos.getY()+inc+1, this.pos.getZ()+inc+1);
-	}
-
-	int getRenderRadiusIncrease()
-	{
-		return IIDataWireType.DATA.getMaxLength();
-	}
-
-	@Override
-	public float[] getBlockBounds()
-	{
-		float length = .75f;
-		float wMin = .25f;
-		float wMax = .75f;
-		switch(facing.getOpposite())
-		{
-			case UP:
-				return new float[]{wMin, 0, wMin, wMax, length, wMax};
-			case DOWN:
-				return new float[]{wMin, 1-length, wMin, wMax, 1, wMax};
-			case SOUTH:
-				return new float[]{wMin, wMin, 0, wMax, wMax, length};
-			case NORTH:
-				return new float[]{wMin, wMin, 1-length, wMax, wMax, 1};
-			case EAST:
-				return new float[]{0, wMin, wMin, length, wMax, wMax};
-			case WEST:
-				return new float[]{1-length, wMin, wMin, 1, wMax, wMax};
-		}
-		return new float[]{0, 0, 0, 1, 1, 1};
-	}
-
-	@Override
-	public boolean moveConnectionTo(Connection c, BlockPos newEnd)
-	{
-		return true;
 	}
 
 	@SideOnly(Side.CLIENT)

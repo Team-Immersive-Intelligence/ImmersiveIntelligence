@@ -10,7 +10,7 @@ import pl.pabilo8.immersiveintelligence.common.entity.hans.HansAnimations.HansLe
 import pl.pabilo8.immersiveintelligence.common.entity.hans.tasks.idle.AIHansSalute;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 06.02.2022
  */
 public class AIHansBinoculars extends AIHansHandWeapon

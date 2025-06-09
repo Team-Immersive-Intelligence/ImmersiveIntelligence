@@ -15,8 +15,8 @@ import javax.annotation.Nonnull;
 import java.util.Optional;
 
 /**
- * @author Pabilo8
- * @since 05-07-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 05.07.2019
  */
 @DataOperation.DataOperationMeta(name = "itemstack_create", expression = "<itemstack>",
 		allowedTypes = {DataTypeString.class, DataTypeInteger.class, DataTypeInteger.class}, params = {"item_id", "amount", "meta"},

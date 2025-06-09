@@ -11,7 +11,7 @@ import javax.vecmath.Vector2f;
 import java.util.function.Supplier;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 17.04.2024
  */
 public class IIParticleUtils
@@ -90,29 +90,7 @@ public class IIParticleUtils
 		return new Vector2f(yaw, pitch);
 	}
 
-	//TODO: 22.12.2024 rework to a program
-	/*
-	 *//**
- * @param color1 first color
- * @param color2 second color
- * @return mixer of two colors in random ratio
- *//*
-	public static <T extends AbstractParticle> BiConsumer<T, EasyNBT> getRandomColorMixer(IIColor color1, IIColor color2)
-	{
-		return (particle, easyNBT) -> easyNBT.withColor(IIParticleReference.COLOR,
-				color1.mixedWith(color2, IIParticleUtils.randFloat.get()));
-	}*/
-
 	//--- Position ---//
-
-	//TODO: 22.12.2024 rework to a program
-	/*public static <T extends AbstractParticle> void getFoliageColor(T particle, EasyNBT easyNBT)
-	{
-		BlockPos pos = new BlockPos(particle.getPosition());
-		easyNBT.withColor(IIParticleReference.COLOR,
-				IIColor.fromPackedRGB(particle.getWorld().getBiome(pos).getFoliageColorAtPos(pos)));
-	}*/
-
 
 	/**
 	 * Specific method of vector normalization for an explosion direction, has a lower threshold for vertical axis

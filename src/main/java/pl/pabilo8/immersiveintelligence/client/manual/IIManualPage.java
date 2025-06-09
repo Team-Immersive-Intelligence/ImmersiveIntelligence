@@ -38,7 +38,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 20.03.2022
  */
 public class IIManualPage extends ManualPages

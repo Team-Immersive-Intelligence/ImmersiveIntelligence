@@ -13,7 +13,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 22.09.2023
  */
 public class CommandIIDevDetonate extends CommandIIBase

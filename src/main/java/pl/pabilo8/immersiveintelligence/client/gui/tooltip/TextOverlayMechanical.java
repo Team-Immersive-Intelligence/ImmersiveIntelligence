@@ -20,7 +20,7 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 09.10.2022
  */
 public class TextOverlayMechanical extends TextOverlayBase

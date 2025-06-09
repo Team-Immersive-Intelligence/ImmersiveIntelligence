@@ -10,7 +10,7 @@ import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 import javax.annotation.Nonnull;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 09.10.2024
  */
 @DataOperation.DataOperationMeta(name = "array_create", expression = "<array>",

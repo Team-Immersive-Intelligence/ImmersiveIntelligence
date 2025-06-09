@@ -16,7 +16,7 @@ import java.util.Set;
 import java.util.function.Consumer;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 20.09.2020
  */
 public abstract class IICompatModule

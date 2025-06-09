@@ -5,7 +5,7 @@ import pl.pabilo8.immersiveintelligence.common.entity.hans.HansAnimations.HansLe
 import pl.pabilo8.immersiveintelligence.common.entity.hans.tasks.AIHansBase;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 22.09.2021
  */
 public class AIHansKazachok extends AIHansBase

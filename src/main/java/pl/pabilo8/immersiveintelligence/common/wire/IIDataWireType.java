@@ -10,8 +10,8 @@ import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Wires;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 
 /**
- * @author Pabilo8
- * @since 2019-05-31
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 31.05.2019
  */
 public class IIDataWireType extends WireType
 {
@@ -98,15 +98,4 @@ public class IIDataWireType extends WireType
 		return IIDataWireType.DATA_CATEGORY;
 	}
 
-	@Override
-	public double getDamageRadius()
-	{
-		return 0;
-	}
-
-	@Override
-	public boolean canCauseDamage()
-	{
-		return false;
-	}
 }

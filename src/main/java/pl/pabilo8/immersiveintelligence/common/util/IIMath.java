@@ -8,8 +8,8 @@ import net.minecraft.util.math.Vec3d;
 import javax.annotation.Nonnull;
 
 /**
- * @author GabrielV
- * @since 28-07-2024
+ * @author GabrielV(gabriel @ iiteam.net)
+ * @since 28.07.2024
  */
 public class IIMath extends MathHelper
 {
@@ -68,7 +68,7 @@ public class IIMath extends MathHelper
 	 * @param yaw    of the vector (in radians)
 	 * @param pitch  of the vector (in radians)
 	 * @return direction transformed position
-	 * @author Pabilo8
+	 * @author Pabilo8 (pabilo@iiteam.net)
 	 * <p>
 	 * Used to calculate 3D vector offset in a direction
 	 * </p>

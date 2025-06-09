@@ -28,8 +28,8 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
 /**
- * @author Pabilo8
- * @since 2019-05-31
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 31.05.2019
  */
 @IIItemProperties(category = IICategory.ELECTRONICS)
 public class ItemIISmallWireCoil extends ItemIISubItemsBase<SmallWires> implements IWireCoil

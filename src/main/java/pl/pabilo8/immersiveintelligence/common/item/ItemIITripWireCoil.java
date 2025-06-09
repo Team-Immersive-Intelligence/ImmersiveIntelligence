@@ -29,8 +29,8 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 /**
- * @author Pabilo8
- * @since 2019-05-31
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 31.05.2019
  */
 @IIItemProperties(category = IICategory.WARFARE)
 public class ItemIITripWireCoil extends ItemIIBase implements IWireCoil
@@ -144,12 +144,6 @@ public class ItemIITripWireCoil extends ItemIIBase implements IWireCoil
 		public String getCategory()
 		{
 			return TRIPWIRE_CATEGORY;
-		}
-
-		@Override
-		public double getDamageRadius()
-		{
-			return 0;
 		}
 
 		@Override

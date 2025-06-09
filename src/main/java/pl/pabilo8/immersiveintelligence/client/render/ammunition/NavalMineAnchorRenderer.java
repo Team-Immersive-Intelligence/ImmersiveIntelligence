@@ -25,7 +25,7 @@ import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import java.util.List;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 21.01.2021
  */
 public class NavalMineAnchorRenderer extends IIEntityRenderer<EntityNavalMineAnchor>

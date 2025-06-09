@@ -14,8 +14,8 @@ import pl.pabilo8.immersiveintelligence.api.ammo.utils.PenetrationCache;
 import pl.pabilo8.immersiveintelligence.common.network.IIMessage;
 
 /**
- * @author Pabilo8
- * @since 2020-01-11
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 11.01.2020
  */
 public class MessageBlockDamageSync extends IIMessage
 {

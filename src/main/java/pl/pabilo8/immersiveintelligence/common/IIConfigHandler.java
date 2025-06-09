@@ -17,8 +17,8 @@ import pl.pabilo8.immersiveintelligence.common.world.IIWorldGen;
 import java.util.Map;
 
 /**
- * @author Pabilo8
- * @since 2019-05-12
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 12.05.2019
  */
 @Mod.EventBusSubscriber
 public class IIConfigHandler

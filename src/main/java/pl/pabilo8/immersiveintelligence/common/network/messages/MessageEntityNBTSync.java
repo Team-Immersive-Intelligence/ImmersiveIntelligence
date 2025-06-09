@@ -19,7 +19,7 @@ import pl.pabilo8.immersiveintelligence.common.util.entity.ISyncNBTEntity;
 /**
  * II's version of {@link MessageIITileSync}
  *
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @author BluSunrize
  * @since 22.09.2022
  */

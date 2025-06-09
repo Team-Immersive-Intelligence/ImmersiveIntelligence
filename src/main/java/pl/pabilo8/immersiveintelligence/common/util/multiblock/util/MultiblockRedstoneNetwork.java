@@ -5,7 +5,7 @@ import blusunrize.immersiveengineering.api.energy.wires.redstone.RedstoneWireNet
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultiblockIIBase;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 12.12.2023
  */
 public class MultiblockRedstoneNetwork<T extends TileEntityMultiblockIIBase<T> & IRedstoneConnector>

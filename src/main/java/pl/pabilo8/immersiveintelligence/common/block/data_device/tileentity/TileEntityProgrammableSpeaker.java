@@ -37,8 +37,8 @@ import pl.pabilo8.immersiveintelligence.common.wire.IIDataWireType;
 import java.util.Objects;
 
 /**
- * @author Pabilo8
- * @since 15-06-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 15.06.2019
  */
 public class TileEntityProgrammableSpeaker extends TileEntityImmersiveConnectable
 		implements IRedstoneConnector, IDataConnector, ITickable, IHammerInteraction, IAdvancedTextOverlay, ISoundTile
@@ -63,7 +63,7 @@ public class TileEntityProgrammableSpeaker extends TileEntityImmersiveConnectabl
 		{
 			if(active)
 				this.updateSound();
-			if(!soundID.equals(""))
+			if(!soundID.isEmpty())
 			{
 
 				if(sound!=null)

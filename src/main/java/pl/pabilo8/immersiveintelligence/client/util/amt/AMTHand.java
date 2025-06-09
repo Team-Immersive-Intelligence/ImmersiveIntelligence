@@ -19,7 +19,7 @@ import pl.pabilo8.immersiveintelligence.common.util.amt.IIModelHeader;
 /**
  * AMT type for drawing the player's hand in first person mode
  *
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 26.07.2022
  */
 public class AMTHand extends AMT

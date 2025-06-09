@@ -29,7 +29,7 @@ import java.util.function.Function;
  * To use it, add the {@link SyncNBT} annotation to the fields you want to be synced<br>
  * Any non-static field, declared or inherited with the annotation will be synced automatically<br>
  *
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @ii-approved 0.3.1
  * @since 25.12.2023
  */

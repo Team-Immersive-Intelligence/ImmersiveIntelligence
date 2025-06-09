@@ -27,8 +27,8 @@ import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.entity.IIEntityUtils;
 
 /**
- * @author Pabilo8
- * @since 26-10-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 26.10.2019
  */
 @net.minecraftforge.fml.common.Optional.Interface(iface = "com.elytradev.mirage.lighting.ILightEventConsumer", modid = "mirage")
 public class EntityWhitePhosphorus extends EntityIEProjectile implements ILightEventConsumer
@@ -53,12 +53,6 @@ public class EntityWhitePhosphorus extends EntityIEProjectile implements ILightE
 	public double getGravity()
 	{
 		return 0.07F;
-	}
-
-	@Override
-	public boolean canIgnite()
-	{
-		return false;
 	}
 
 	/**

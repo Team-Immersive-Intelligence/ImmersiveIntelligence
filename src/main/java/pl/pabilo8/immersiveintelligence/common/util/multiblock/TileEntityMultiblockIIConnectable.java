@@ -35,7 +35,7 @@ import static blusunrize.immersiveengineering.api.energy.wires.WireApi.canMix;
 import static blusunrize.immersiveengineering.api.energy.wires.WireType.*;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 12.12.2023
  */
 public abstract class TileEntityMultiblockIIConnectable<T extends TileEntityMultiblockIIConnectable<T>> extends TileEntityMultiblockIIBase<T> implements IImmersiveConnectable
@@ -45,12 +45,6 @@ public abstract class TileEntityMultiblockIIConnectable<T extends TileEntityMult
 	public TileEntityMultiblockIIConnectable(MultiblockStuctureBase<T> multiblock)
 	{
 		super(multiblock);
-	}
-
-	@Override
-	public void onEnergyPassthrough(int amount)
-	{
-
 	}
 
 	@Override

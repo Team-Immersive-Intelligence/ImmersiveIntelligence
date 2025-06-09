@@ -19,7 +19,7 @@ import java.util.function.Consumer;
 /**
  * AMT type for drawing particle effects (gunshots, smoke, etc.)
  *
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 21.08.2022
  */
 public class AMTParticle extends AMT

@@ -18,7 +18,7 @@ import java.lang.annotation.Target;
 /**
  * B O I L E R P L A T E (tm)
  *
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 01.09.2022
  */
 public class IIBlockInterfaces

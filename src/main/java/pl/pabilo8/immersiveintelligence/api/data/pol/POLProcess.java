@@ -6,7 +6,7 @@ import pl.pabilo8.immersiveintelligence.api.data.pol.POLScript.POLInstruction;
 import java.util.Stack;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 15.04.2022
  */
 public class POLProcess

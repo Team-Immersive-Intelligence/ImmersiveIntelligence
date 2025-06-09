@@ -39,7 +39,7 @@ import java.util.function.Consumer;
  * A new beginning!<br>
  * A lightweight alternative to using {@link blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal}
  *
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 04.08.2022
  */
 public abstract class TileEntityMultiblockIIBase<T extends TileEntityMultiblockIIBase<T>> extends TileEntityMultiblockPart<T> implements IMirrorAble, IIEInventory, IAdvancedBounds
@@ -83,12 +83,6 @@ public abstract class TileEntityMultiblockIIBase<T extends TileEntityMultiblockI
 	 * Cleans up dummy fields, so garbage collector can do its job
 	 */
 	protected abstract void dummyCleanup();
-
-	@Override
-	public void onLoad()
-	{
-
-	}
 
 	@Override
 	public void invalidate()

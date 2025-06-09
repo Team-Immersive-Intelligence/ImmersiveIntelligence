@@ -58,8 +58,8 @@ import java.util.Set;
 import java.util.function.Predicate;
 
 /**
- * @author Pabilo8
- * @since 22-06-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 22.06.2019
  */
 @SuppressWarnings("unused")
 public class IIUtils

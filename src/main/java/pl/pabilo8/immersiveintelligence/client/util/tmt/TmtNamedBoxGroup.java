@@ -1,8 +1,8 @@
 package pl.pabilo8.immersiveintelligence.client.util.tmt;
 
 /**
- * @author Pabilo8
- * @since 02-11-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 02.11.2019
  */
 @Deprecated
 public class TmtNamedBoxGroup

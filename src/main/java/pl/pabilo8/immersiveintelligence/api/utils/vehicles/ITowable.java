@@ -3,7 +3,7 @@ package pl.pabilo8.immersiveintelligence.api.utils.vehicles;
 import net.minecraft.entity.Entity;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 18.07.2020
  */
 public interface ITowable

@@ -22,8 +22,8 @@ import pl.pabilo8.immersiveintelligence.client.util.carversound.ConditionCompoun
 import java.util.Set;
 
 /**
- * @author Pabilo8
- * @since 29-12-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 29.12.2019
  */
 public abstract class TileEntityWheelBase extends TileEntityMechanicalConnectable implements IBlockBounds
 {

@@ -5,8 +5,8 @@ import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 
 /**
- * @author Pabilo8
- * @since 2019-05-31
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 31.05.2019
  */
 public interface IDataConnector extends IImmersiveConnectable
 {

@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 06.07.2020
  * <p>
  * Doesn't do anything on its own, it's just a reference object with icon to draw and items to use when upgrading

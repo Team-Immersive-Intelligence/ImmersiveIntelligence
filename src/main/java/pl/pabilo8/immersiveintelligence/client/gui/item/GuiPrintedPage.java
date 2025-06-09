@@ -19,8 +19,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * @author Pabilo8
- * @since 09-07-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 09.07.2019
  */
 public class GuiPrintedPage extends GuiScreen
 {

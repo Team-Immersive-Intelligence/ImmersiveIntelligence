@@ -21,10 +21,10 @@ import java.util.HashMap;
 import java.util.Set;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @updated 01.08.2024
  * @ii-approved 0.3.1
- * @since 2019-06-01
+ * @since 01.06.2019
  */
 @RegisteredTileRenderer(name = "mechanical/iron_wheel", clazz = TileEntityWheelIron.class)
 @RegisteredTileRenderer(name = "mechanical/steel_wheel", clazz = TileEntityWheelSteel.class)

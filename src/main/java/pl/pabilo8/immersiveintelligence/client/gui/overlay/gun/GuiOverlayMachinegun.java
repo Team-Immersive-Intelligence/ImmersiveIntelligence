@@ -11,7 +11,7 @@ import pl.pabilo8.immersiveintelligence.common.entity.EntityMachinegun;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 13.09.2022
  */
 public class GuiOverlayMachinegun extends GuiOverlayGunBase

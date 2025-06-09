@@ -46,7 +46,6 @@ import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIPotions;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.effect_crate.TileEntityAmmunitionCrate;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine;
@@ -59,8 +58,8 @@ import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import javax.annotation.Nullable;
 
 /**
- * @author Pabilo8
- * @since 01-11-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 01.11.2019
  */
 //TODO: 15.02.2024 full rework needed
 public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnData, IAdvancedTextOverlay, IEntitySpecialRepairable, IEntityZoomProvider
@@ -767,7 +766,7 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 				.setStack(stack)
 				.create();
 
-		ItemStack stack2 = ((IAmmoTypeItem)stack.getItem()).getCasingStack(1);
+		ItemStack stack2 = ((IAmmoTypeItem<?, ?>)stack.getItem()).getCasingStack(1);
 		blusunrize.immersiveengineering.common.util.Utils.dropStackAtPos(world, getPosition(), stack2);
 	}
 
@@ -1090,7 +1089,7 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 		return gun;
 	}
 
-	private class MachinegunZoom implements IAdvancedZoomTool
+	private static class MachinegunZoom implements IAdvancedZoomTool
 	{
 		@Override
 		public ResourceLocation getZoomOverlayTexture(ItemStack stack, EntityPlayer player)

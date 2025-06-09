@@ -16,7 +16,7 @@ import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 07.03.2023
  */
 public final class AMTModelCacheBuilder<T>

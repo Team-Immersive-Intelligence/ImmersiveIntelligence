@@ -51,8 +51,8 @@ import java.util.List;
 import java.util.function.Function;
 
 /**
- * @author Pabilo8
- * @since 30-08-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 30.08.2019
  */
 @IIAmmoProjectile
 @GeneratedItemModels(itemName = "bullet_revolver_1bcal", type = ItemModelType.ITEM_SIMPLE_AUTOREPLACED, valueSet = AmmoParts.class)

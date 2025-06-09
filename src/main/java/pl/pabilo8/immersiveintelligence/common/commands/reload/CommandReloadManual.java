@@ -13,8 +13,8 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 /**
- * @author Pabilo8
- * @since 23-06-2020
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 23.06.2020
  */
 public class CommandReloadManual extends CommandBase
 {

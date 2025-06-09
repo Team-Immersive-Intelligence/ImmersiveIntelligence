@@ -9,7 +9,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 28.06.2021
  */
 public class BiomeWasteland extends Biome

@@ -33,7 +33,7 @@ import pl.pabilo8.immersiveintelligence.common.util.amt.IIModelHeader;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 18.09.2022
  */
 @RegisteredItemRenderer(name = "items/weapons/assault_rifle")
@@ -337,12 +337,6 @@ public class AssaultRifleRenderer extends IIUpgradableItemRendererAMT<ItemIIAssa
 		fireGrenade = IIAnimationCachedMap.create(this.model, ResLoc.of(animationRes, "fire_grenade"));
 		stabilizer = IIAnimationCachedMap.create(this.model, ResLoc.of(animationRes, "stabilizer"));
 
-	}
-
-	@Override
-	protected void nullifyModels()
-	{
-		IIAnimationUtils.disposeOf(model);
 	}
 
 	@Override

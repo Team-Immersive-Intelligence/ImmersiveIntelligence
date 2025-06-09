@@ -14,7 +14,7 @@ import net.minecraftforge.common.ForgeHooks;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 15.04.2021
  */
 public class RecipePowerpackAdvanced extends net.minecraftforge.registries.IForgeRegistryEntry.Impl<IRecipe> implements IRecipe

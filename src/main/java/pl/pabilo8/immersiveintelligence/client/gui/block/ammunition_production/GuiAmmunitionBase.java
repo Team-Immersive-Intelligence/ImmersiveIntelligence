@@ -22,8 +22,8 @@ import java.util.ArrayList;
 import java.util.function.BiFunction;
 
 /**
- * @author Pabilo8
- * @since 10-07-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 10.07.2019
  */
 public abstract class GuiAmmunitionBase<T extends TileEntityMultiblockProductionBase<T, ?>> extends GuiIEContainerBase
 {

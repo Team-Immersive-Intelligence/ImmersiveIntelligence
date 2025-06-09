@@ -5,7 +5,7 @@ import pl.pabilo8.immersiveintelligence.api.data.device.IDataDevice;
 import javax.annotation.Nullable;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 17.04.2022
  */
 public abstract class POLTerminal

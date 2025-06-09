@@ -19,7 +19,7 @@ import java.util.List;
  * Contains all Immersive Intelligence multiblock interfaces.<br>
  * Feel free to extend.
  *
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 04.08.2022
  */
 public class IIMultiblockInterfaces

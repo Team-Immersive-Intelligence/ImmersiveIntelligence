@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.client.manual.objects;
 
-import blusunrize.lib.manual.ManualInstance;
 import blusunrize.lib.manual.ManualPages.PositionedItemStack;
 import blusunrize.lib.manual.ManualUtils;
 import blusunrize.lib.manual.gui.GuiButtonManualNavigation;
@@ -31,7 +30,7 @@ import java.util.stream.IntStream;
 /**
  * Displays a crafting recipe for item(s).
  *
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 22.05.2022
  */
 public class IIManualCraftingRecipe extends IIManualObject

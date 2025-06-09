@@ -14,7 +14,7 @@ import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIIRubberLog.Rub
 import java.util.Random;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 20.04.2021
  */
 public class IIWorldGenRubberTree extends WorldGenAbstractTree

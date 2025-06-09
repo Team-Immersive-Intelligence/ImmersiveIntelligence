@@ -14,8 +14,8 @@ import pl.pabilo8.immersiveintelligence.common.network.IIMessage;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockInteractablePart;
 
 /**
- * @author Pabilo8
- * @since 2019-05-26
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 26.05.2019
  */
 public class MessageBooleanAnimatedPartsSync extends IIMessage
 {

@@ -29,8 +29,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 /**
- * @author Pabilo8
- * @since 10-07-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 10.07.2019
  */
 public class GuiChemicalPainter extends GuiIEContainerBase implements ISlider
 {

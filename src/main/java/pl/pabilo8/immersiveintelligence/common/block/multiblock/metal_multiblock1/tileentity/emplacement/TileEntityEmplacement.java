@@ -96,7 +96,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 	public float autoRepairAmount = 0.25f;
 
 	public int progress = 0, upgradeProgress = 0, clientUpgradeProgress = 0;
-	public EmplacementWeapon currentWeapon = null;
+	public EmplacementWeapon<?> currentWeapon = null;
 	public boolean isShooting = false;
 	@Nullable
 	private MachineUpgrade currentlyInstalled = null;

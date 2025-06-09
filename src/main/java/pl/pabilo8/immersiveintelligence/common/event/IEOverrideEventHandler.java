@@ -15,8 +15,8 @@ import net.minecraftforge.event.entity.player.PlayerEvent.BreakSpeed;
 
 /**
  * @author GabrielV (gabriel@iiteam.net)
- * @since 21/04/2024 - 7:17 PM
- * Class made to override defaule IE <code>digSpeedEvent</code><br>
+ * @since 21.04.2024
+ * Class made to override defaule IE {@code digSpeedEvent}<br>
  * in order to make our electric wirecutter cut the razor wire ^^
  */
 public class IEOverrideEventHandler extends EventHandler

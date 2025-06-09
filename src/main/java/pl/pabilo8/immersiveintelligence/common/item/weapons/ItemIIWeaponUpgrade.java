@@ -37,8 +37,8 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
- * @author Pabilo8
- * @since 01-11-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 01.11.2019
  */
 @IIItemProperties(category = IICategory.WARFARE)
 public class ItemIIWeaponUpgrade extends ItemIISubItemsBase<WeaponUpgrade> implements IUpgrade

@@ -33,6 +33,7 @@ import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityEmplacementWeapon.EmplacementHitboxEntity;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -133,12 +134,7 @@ public class EmplacementWeaponInfraredObserver extends EmplacementWeapon
 			te.sendAttackSignal = true;
 	}
 
-	@Override
-	public void tick(TileEntityEmplacement te, boolean active)
-	{
-
-	}
-
+	@Nonnull
 	@Override
 	public NBTTagCompound saveToNBT(boolean forClient)
 	{

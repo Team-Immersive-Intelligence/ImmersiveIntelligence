@@ -29,8 +29,8 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
- * @author Pabilo8
- * @since 23-06-2020
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 23.06.2020
  */
 public class CommandIIGiveMagazine extends CommandBase
 {
@@ -114,7 +114,7 @@ public class CommandIIGiveMagazine extends CommandBase
 			if(!ArrayUtils.contains(IIContent.itemBulletMagazine.getSubNames(), args[1]))
 				return Collections.emptyList();
 
-			IAmmoTypeItem matchingType = IIContent.itemBulletMagazine.nameToSub(args[1]).ammo;
+			IAmmoTypeItem<?, ?> matchingType = IIContent.itemBulletMagazine.nameToSub(args[1]).ammo;
 			return getListOfStringsMatchingLastWord(args,
 					Arrays.stream(matchingType.getAllowedCoreTypes())
 							.map(CoreType::getName)

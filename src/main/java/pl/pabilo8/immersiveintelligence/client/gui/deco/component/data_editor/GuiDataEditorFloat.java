@@ -11,7 +11,7 @@ import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import java.io.IOException;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 07.09.2021
  */
 public class GuiDataEditorFloat extends GuiDataEditor<DataTypeFloat>

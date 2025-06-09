@@ -17,7 +17,7 @@ import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.entity.IIEntityUtils;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @updated 06.03.2024
  * @ii-approved 0.3.1
  * @since 10.07.2021
@@ -42,7 +42,7 @@ public class AmmoComponentTracerPowder extends AmmoComponent
 	}
 
 	@Override
-	public boolean spawnParticleTrail(EntityAmmoBase ammo, NBTTagCompound nbt)
+	public boolean spawnParticleTrail(EntityAmmoBase<?> ammo, NBTTagCompound nbt)
 	{
 		IIColor color = nbt.hasKey(ItemIITracerPowder.NBT_TRACER_COLOUR)?IIColor.fromPackedRGB(nbt.getInteger(ItemIITracerPowder.NBT_TRACER_COLOUR)): IIColor.WHITE;
 		ParticleRegistry.spawnTracerFX(ammo.getPositionVector(), IIEntityUtils.getEntityMotion(ammo), ammo.getAmmoType().getCaliber()/16f, color);

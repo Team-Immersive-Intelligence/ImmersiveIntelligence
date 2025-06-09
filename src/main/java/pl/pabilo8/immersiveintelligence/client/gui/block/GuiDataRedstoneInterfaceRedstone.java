@@ -40,8 +40,8 @@ import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import java.util.ArrayList;
 
 /**
- * @author Pabilo8
- * @since 09-02-2020
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 09.02.2020
  */
 public class GuiDataRedstoneInterfaceRedstone extends GuiIEContainerBase implements ITabbedGui
 {

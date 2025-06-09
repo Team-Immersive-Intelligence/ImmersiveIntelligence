@@ -21,7 +21,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 05.09.2022
  */
 public class ItemBlockIISlabs extends ItemBlockIIBase

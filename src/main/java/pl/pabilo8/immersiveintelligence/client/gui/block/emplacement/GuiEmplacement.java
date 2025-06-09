@@ -30,7 +30,7 @@ import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 16.07.2021
  */
 public abstract class GuiEmplacement extends GuiIEContainerBase implements ITabbedGui

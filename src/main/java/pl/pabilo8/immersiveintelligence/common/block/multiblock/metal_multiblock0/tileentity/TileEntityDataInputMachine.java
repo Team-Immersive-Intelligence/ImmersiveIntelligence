@@ -26,10 +26,10 @@ import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPO
 import java.util.Optional;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @updated 08.01.2024
  * @ii-approved 0.3.1
- * @since 28-06-2019
+ * @since 28.06.2019
  */
 public class TileEntityDataInputMachine extends TileEntityMultiblockProductionSingle<TileEntityDataInputMachine, DataProgrammingRecipe> implements IBooleanAnimatedPartsBlock
 {
@@ -162,10 +162,9 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockProductionSi
 		Optional<DataProgrammingRecipe> found = DataProgrammingRecipe.streamRecipes(DataProgrammingRecipe.class)
 				.filter(recipe -> recipe.input.matches(inventory.get(SLOT_INPUT)))
 				.findFirst();
-		if(found.isPresent())
-			return new IIMultiblockProcess<>(found.get())
-					.withNBT(easyNBT -> easyNBT.mergeWith(EasyNBT.wrapNBT(inventory.get(SLOT_INPUT))));
-		return null;
+		return found.map(recipe -> new IIMultiblockProcess<>(recipe)
+						.withNBT(easyNBT -> easyNBT.mergeWith(EasyNBT.wrapNBT(inventory.get(SLOT_INPUT)))))
+				.orElse(null);
 	}
 
 	@Override

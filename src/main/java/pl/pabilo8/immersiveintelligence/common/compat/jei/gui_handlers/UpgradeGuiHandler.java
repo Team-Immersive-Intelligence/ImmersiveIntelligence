@@ -11,7 +11,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 24.03.2021
  */
 public class UpgradeGuiHandler implements IAdvancedGuiHandler<GuiUpgrade>
@@ -46,6 +46,6 @@ public class UpgradeGuiHandler implements IAdvancedGuiHandler<GuiUpgrade>
 	@Override
 	public Object getIngredientUnderMouse(GuiUpgrade guiContainer, int mouseX, int mouseY)
 	{
-		return guiContainer.getPreviewedItem(mouseX,mouseY);
+		return guiContainer.getPreviewedItem(mouseX, mouseY);
 	}
 }

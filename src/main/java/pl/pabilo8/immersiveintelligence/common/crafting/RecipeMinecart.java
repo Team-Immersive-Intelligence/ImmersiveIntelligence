@@ -8,16 +8,14 @@ import net.minecraft.init.Items;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.fml.common.Optional;
 
 import java.util.ArrayList;
 
 /**
- * @author Pabilo8
- * @since 23-04-2020
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 23.04.2020
  */
 @Optional.Interface(iface = "mezz.jei.api.recipe.wrapper.IShapedCraftingRecipeWrapper", modid = "jei")
 public class RecipeMinecart extends net.minecraftforge.registries.IForgeRegistryEntry.Impl<IRecipe> implements IRecipe, IShapedCraftingRecipeWrapper
@@ -117,12 +115,6 @@ public class RecipeMinecart extends net.minecraftforge.registries.IForgeRegistry
 	public ItemStack getRecipeOutput()
 	{
 		return outputMinecart.copy();
-	}
-
-	@Override
-	public NonNullList<ItemStack> getRemainingItems(InventoryCrafting inv)
-	{
-		return ForgeHooks.defaultRecipeGetRemainingItems(inv);
 	}
 
 	@Override

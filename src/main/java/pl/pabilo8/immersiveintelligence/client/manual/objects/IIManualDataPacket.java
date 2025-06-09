@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * Displays the contents of a Data Packet similar to how a Debugger would do it.
  *
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 03.11.2022
  */
 public class IIManualDataPacket extends IIManualObject

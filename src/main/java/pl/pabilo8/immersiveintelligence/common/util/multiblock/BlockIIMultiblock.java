@@ -34,8 +34,8 @@ import javax.annotation.Nullable;
 import java.util.Arrays;
 
 /**
- * @author Pabilo8
- * @since 25-06-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 25.06.2019
  */
 public abstract class BlockIIMultiblock<E extends Enum<E> & IITileMultiblockEnum> extends BlockIITileProvider<E>
 {

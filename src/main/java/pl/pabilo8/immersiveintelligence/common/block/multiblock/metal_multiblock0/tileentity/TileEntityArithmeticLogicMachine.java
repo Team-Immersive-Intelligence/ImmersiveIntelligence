@@ -30,10 +30,10 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @updated 08.01.2024
  * @ii-approved 0.3.1
- * @since 28-06-2019
+ * @since 28.06.2019
  */
 public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockIIGeneric<TileEntityArithmeticLogicMachine> implements IIIGuiMultiblockTile, IBooleanAnimatedPartsBlock
 {

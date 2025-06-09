@@ -18,7 +18,7 @@ import pl.pabilo8.immersiveintelligence.common.util.item.IIItemStackHandler;
 import javax.annotation.Nonnull;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 23.09.2023
  */
 public abstract class ContainerIIItem extends Container implements ICallbackContainer

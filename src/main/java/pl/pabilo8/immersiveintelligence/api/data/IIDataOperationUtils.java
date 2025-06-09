@@ -37,10 +37,10 @@ import java.util.Set;
 /**
  * A class that handles registration and instantiation of {@link DataOperation Data Operations} and their {@link DataOperationMeta metadata}.
  *
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @updated 28.10.2024
  * @ii-approved 0.3.1
- * @since 05-07-2019
+ * @since 05.07.2019
  */
 public class IIDataOperationUtils
 {

@@ -43,8 +43,8 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * @author Pabilo8
- * @since 01-11-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 01.11.2019
  */
 @IIItemProperties(category = IICategory.WARFARE)
 public class ItemIIBulletMagazine extends ItemIISubItemsBase<Magazines> implements IIIItemTextureOverride, IAdvancedTooltipItem
@@ -74,15 +74,15 @@ public class ItemIIBulletMagazine extends ItemIISubItemsBase<Magazines> implemen
 		AUTOMATIC_REVOLVER(16, IIContent.itemAmmoRevolver);
 
 		public final int capacity;
-		public final IAmmoTypeItem ammo;
+		public final IAmmoTypeItem<?, ?> ammo;
 		public final boolean hasDisplayTexture;
 
-		Magazines(int capacity, IAmmoTypeItem ammo)
+		Magazines(int capacity, IAmmoTypeItem<?, ?> ammo)
 		{
 			this(capacity, ammo, false);
 		}
 
-		Magazines(int capacity, IAmmoTypeItem ammo, boolean hasDisplayTexture)
+		Magazines(int capacity, IAmmoTypeItem<?, ?> ammo, boolean hasDisplayTexture)
 		{
 			this.capacity = capacity;
 			this.ammo = ammo;

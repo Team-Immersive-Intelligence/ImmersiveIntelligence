@@ -21,8 +21,8 @@ import pl.pabilo8.immersiveintelligence.common.wire.IIDataWireType;
 import java.util.Set;
 
 /**
- * @author Pabilo8
- * @since 2019-05-31
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 31.05.2019
  */
 public class TileEntityDataRelay extends TileEntityImmersiveConnectable
 		implements ITickable, IDirectionalTile, IBlockBounds
@@ -90,18 +90,6 @@ public class TileEntityDataRelay extends TileEntityImmersiveConnectable
 	public boolean canRotate(EnumFacing axis)
 	{
 		return false;
-	}
-
-	@Override
-	public boolean isEnergyOutput()
-	{
-		return false;
-	}
-
-	@Override
-	public int outputEnergy(int amount, boolean simulate, int energyType)
-	{
-		return 0;
 	}
 
 	@Override

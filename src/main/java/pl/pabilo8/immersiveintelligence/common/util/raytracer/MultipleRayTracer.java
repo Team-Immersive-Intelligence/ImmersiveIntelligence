@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 09.11.2020
  * <p>
  * A raytracing class used by II in bullets to get all the entities and block a bullet penetrates

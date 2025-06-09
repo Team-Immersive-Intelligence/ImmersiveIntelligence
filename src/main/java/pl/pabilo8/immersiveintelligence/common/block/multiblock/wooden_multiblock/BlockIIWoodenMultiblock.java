@@ -21,8 +21,8 @@ import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IITi
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock;
 
 /**
- * @author Pabilo8
- * @since 2019-06-05
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 05.06.2019
  */
 public class BlockIIWoodenMultiblock extends BlockIIMultiblock<WoodenMultiblocks>
 {

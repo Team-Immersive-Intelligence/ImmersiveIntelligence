@@ -8,8 +8,8 @@ import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.Shape2D;
 
 /**
- * @author Pabilo8
- * @since 17-07-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 17.07.2019
  */
 public class ModelInserter extends ModelIIBase
 {
@@ -119,15 +119,15 @@ public class ModelInserter extends ModelIIBase
 		inserterInput[0].addBox(4F, 0F, -4F, 4, 1, 8, 0F); // BaseInputBox
 		inserterInput[0].setRotationPoint(8F, -4F, 8F);
 
-		parts.put("base",baseModel);
-		parts.put("inserter_mid_axle",inserterMidAxle);
-		parts.put("inserter_lower_arm",inserterLowerArm);
-		parts.put("inserter_upper_arm",inserterUpperArm);
-		parts.put("inserter_base_turntable",inserterBaseTurntable);
-		parts.put("inserter_item_picker_1",inserterItemPicker1);
-		parts.put("inserter_item_picker_2",inserterItemPicker2);
-		parts.put("inserter_output",inserterOutput);
-		parts.put("inserter_input",inserterInput);
+		parts.put("base", baseModel);
+		parts.put("inserter_mid_axle", inserterMidAxle);
+		parts.put("inserter_lower_arm", inserterLowerArm);
+		parts.put("inserter_upper_arm", inserterUpperArm);
+		parts.put("inserter_base_turntable", inserterBaseTurntable);
+		parts.put("inserter_item_picker_1", inserterItemPicker1);
+		parts.put("inserter_item_picker_2", inserterItemPicker2);
+		parts.put("inserter_output", inserterOutput);
+		parts.put("inserter_input", inserterInput);
 
 		flipAll();
 

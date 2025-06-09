@@ -13,8 +13,8 @@ import net.minecraftforge.oredict.OreDictionary;
 import java.util.*;
 
 /**
- * @author Pabilo8
- * @since 08-08-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 08.08.2019
  */
 public class BathingRecipe extends MultiblockRecipe
 {
@@ -45,14 +45,14 @@ public class BathingRecipe extends MultiblockRecipe
 
 	public static BathingRecipe addRecipe(ItemStack itemOutput, IngredientStack itemInput, FluidStack fluidInput, int energy, int time)
 	{
-		BathingRecipe r = new BathingRecipe(itemOutput, itemInput, fluidInput, energy, time,false);
+		BathingRecipe r = new BathingRecipe(itemOutput, itemInput, fluidInput, energy, time, false);
 		recipeList.add(r);
 		return r;
 	}
 
 	public static BathingRecipe addWashingRecipe(ItemStack itemOutput, IngredientStack itemInput, FluidStack fluidInput, int energy, int time)
 	{
-		BathingRecipe r = new BathingRecipe(itemOutput, itemInput, fluidInput, energy, time,true);
+		BathingRecipe r = new BathingRecipe(itemOutput, itemInput, fluidInput, energy, time, true);
 		recipeList.add(r);
 		return r;
 	}

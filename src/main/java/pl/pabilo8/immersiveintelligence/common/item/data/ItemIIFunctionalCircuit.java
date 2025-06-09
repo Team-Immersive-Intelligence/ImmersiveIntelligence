@@ -42,10 +42,10 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * @author Pabilo8
- * @since 25-06-2019
- * @author Avalon
- * @since 20-09-2024
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @author Avalon (avalon@iiteam.net)
+ * @since 25.06.2019
+ * @since 20.09.2024
  */
 @IIItemProperties(category = IICategory.ELECTRONICS)
 public class ItemIIFunctionalCircuit extends ItemIISubItemsBase<Circuits> implements IDataStorageItem, IAdvancedTooltipItem

@@ -11,7 +11,7 @@ import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.grenade.ItemIIAmmoGrenade;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 23.04.2021
  */
 public class AIHansGrenade extends AIHansHandWeapon

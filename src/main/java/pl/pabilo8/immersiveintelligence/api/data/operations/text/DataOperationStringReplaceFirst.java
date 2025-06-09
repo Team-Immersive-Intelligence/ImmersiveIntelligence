@@ -9,7 +9,7 @@ import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 import javax.annotation.Nonnull;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 21.01.2022
  */
 @DataOperation.DataOperationMeta(name = "string_replace_first", allowedTypes = {DataTypeString.class, DataTypeString.class, DataTypeString.class}, params = {"text", "fragment", "with"}, expectedResult = DataTypeString.class)

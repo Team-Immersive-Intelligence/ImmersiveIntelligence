@@ -18,7 +18,7 @@ import javax.annotation.Nonnull;
 /**
  * Handles rendering of a naval mine entity
  *
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @updated 5.02.2024
  * @ii-approved 0.3.1
  * @since 21.01.2021

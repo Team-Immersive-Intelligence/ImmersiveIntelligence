@@ -241,7 +241,8 @@ public class BlockIIBase<E extends Enum<E> & IIBlockEnum> extends Block implemen
 
 	//--- TMT TESR Registration ---//
 
-	public void addToTESRMap(E... id)
+	@SafeVarargs
+	public final void addToTESRMap(E... id)
 	{
 		Collections.addAll(tesrList, id);
 	}

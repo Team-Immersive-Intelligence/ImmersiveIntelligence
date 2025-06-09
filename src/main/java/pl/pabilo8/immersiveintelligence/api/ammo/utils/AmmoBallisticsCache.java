@@ -36,7 +36,7 @@ public class AmmoBallisticsCache
 	/**
 	 * Caches the ballistic stats for the given ammo stack
 	 *
-	 * @author Pabilo8
+	 * @author Pabilo8 (pabilo@iiteam.net)
 	 * @ii-approved 0.3.1
 	 * @since 04.06.2024
 	 */

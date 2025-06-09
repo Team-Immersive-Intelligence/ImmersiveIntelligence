@@ -48,7 +48,7 @@ import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
  * All of the code you write, none of the code you steal, but for some of the code you generate...
  * </p>
  *
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @updated 30.08.2021
  * @updated 24.02.2025
  * @ii-approved 0.3.1

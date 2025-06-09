@@ -35,7 +35,7 @@ import javax.vecmath.Vector4f;
 import java.util.*;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @updated 03.04.2024
  * @ii-approved 0.3.1
  * @since 25.12.2020

@@ -8,7 +8,7 @@ import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.common.block.fortification.tileentity.TileEntityMineSign;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 27.01.2021
  */
 public class MineSignRenderer extends TileEntitySpecialRenderer<TileEntityMineSign>

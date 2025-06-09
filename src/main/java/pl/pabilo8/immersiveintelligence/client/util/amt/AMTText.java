@@ -15,7 +15,7 @@ import javax.annotation.Nullable;
 /**
  * AMT type for drawing text with {@link FontRenderer}
  *
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 26.07.2022
  */
 public class AMTText extends AMT

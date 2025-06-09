@@ -10,7 +10,7 @@ import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeBoolean;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 07.09.2021
  */
 public class GuiDataEditorBoolean extends GuiDataEditor<DataTypeBoolean>

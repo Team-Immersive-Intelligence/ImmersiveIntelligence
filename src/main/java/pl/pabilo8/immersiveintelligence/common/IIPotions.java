@@ -21,8 +21,8 @@ import pl.pabilo8.immersiveintelligence.api.utils.armor.IRadiationProtectionEqui
 import pl.pabilo8.immersiveintelligence.common.util.IIDamageSources;
 
 /**
- * @author Pabilo8
- * @since 03-03-2020
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 03.03.2020
  */
 public class IIPotions
 {

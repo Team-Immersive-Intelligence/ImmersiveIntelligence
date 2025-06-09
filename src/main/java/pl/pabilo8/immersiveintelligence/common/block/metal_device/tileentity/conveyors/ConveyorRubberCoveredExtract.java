@@ -26,7 +26,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -41,7 +40,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 29.04.2021
  */
 public class ConveyorRubberCoveredExtract extends ConveyorRubberExtract
@@ -54,18 +53,6 @@ public class ConveyorRubberCoveredExtract extends ConveyorRubberExtract
 	public ConveyorRubberCoveredExtract(EnumFacing conveyorDir)
 	{
 		super(conveyorDir);
-	}
-
-	@Override
-	public ResourceLocation getActiveTexture()
-	{
-		return ConveyorRubber.texture_on;
-	}
-
-	@Override
-	public ResourceLocation getInactiveTexture()
-	{
-		return ConveyorRubber.texture_off;
 	}
 
 	@Override

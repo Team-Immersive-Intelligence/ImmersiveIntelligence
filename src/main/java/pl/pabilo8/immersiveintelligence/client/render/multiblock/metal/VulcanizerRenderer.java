@@ -16,8 +16,8 @@ import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityVulcanizer;
 
 /**
- * @author Pabilo8
- * @since 21-06-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 21.06.2019
  */
 public class VulcanizerRenderer extends TileEntitySpecialRenderer<TileEntityVulcanizer> implements IReloadableModelContainer<VulcanizerRenderer>
 {

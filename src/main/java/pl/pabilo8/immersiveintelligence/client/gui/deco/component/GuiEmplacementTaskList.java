@@ -13,7 +13,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.block.emplacement.GuiEmplacem
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 19.07.2021
  */
 public class GuiEmplacementTaskList extends GuiButton

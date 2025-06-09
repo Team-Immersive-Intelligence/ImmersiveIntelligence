@@ -10,7 +10,7 @@ import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
 import javax.annotation.Nonnull;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 28.12.2021
  */
 public class HansPathNavigate extends PathNavigateGround

@@ -28,7 +28,7 @@ import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 27.07.2021
  */
 public class ImmersiveTechnologyHelper extends IICompatModule

@@ -8,7 +8,7 @@ import static pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.M
 
 /**
  * @author GabrielV (gabriel@iiteam.net)
- * @since 21/04/2024 - 7:53 PM
+ * @since 21.04.2024
  */
 public class IIRotaryMath
 {
@@ -18,13 +18,13 @@ public class IIRotaryMath
 	}
 
 	/**
-	 * Calculate from IE dynamo output to II's rotary unit
+	 * Calculate from IE dynamo output to II's rotary units
 	 *
-	 * @param rotation
-	 * @param device
-	 * @return
+	 * @param rotation the rotation value of the IE dynamo
+	 * @param device   the IE device to calculate the torque for
+	 * @return an array containing the speed and torque in II's rotary units
 	 */
-	public static float[] IEToRoF(double rotation, TileEntity device)
+	public static float[] IEToII(double rotation, TileEntity device)
 	{
 		float torque = IIRotaryUtils.getTorqueForIEDevice(device, 1);
 		int output = (int)(20*Machines.dynamo_output*rotation*rofConversionRatio);
@@ -34,7 +34,7 @@ public class IIRotaryMath
 		return new float[]{speed, torque};
 	}
 
-	public static double RoFToIE(float energy)
+	public static double IIToIE(float energy)
 	{
 		return (energy/rofConversionRatio/Machines.dynamo_output);
 	}
@@ -49,9 +49,9 @@ public class IIRotaryMath
 		return power/rofConversionRatio;
 	}
 
-	public static float[] MMToRoF(double power)
+	public static float[] MMToII(double power)
 	{
 		double ii = MMToIE(power);
-		return IEToRoF(ii, new TileEntityAxle());
+		return IEToII(ii, new TileEntityAxle());
 	}
 }

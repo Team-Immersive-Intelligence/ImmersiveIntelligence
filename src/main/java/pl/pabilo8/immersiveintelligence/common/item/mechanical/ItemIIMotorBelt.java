@@ -33,8 +33,8 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 /**
- * @author Pabilo8
- * @since 27-12-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 27.12.2019
  */
 @IBatchOredictRegister(oreDict = "motorBelt")
 @IIItemProperties(category = IICategory.ROTARY)
@@ -80,7 +80,7 @@ public class ItemIIMotorBelt extends ItemIISubItemsBase<MotorBelt> implements IW
 		/**
 		 * The Item dropped when the belt is broken
 		 */
-		public IngredientStack dropItem;
+		public final IngredientStack dropItem;
 
 		MotorBelt(String category, IngredientStack dropItem, int length, int width, int maxTorque, float torqueLoss)
 		{

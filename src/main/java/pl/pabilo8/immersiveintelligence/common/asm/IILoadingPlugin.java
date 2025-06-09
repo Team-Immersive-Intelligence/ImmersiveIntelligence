@@ -6,7 +6,7 @@ import javax.annotation.Nullable;
 import java.util.Map;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 23.09.2020
  */
 @IFMLLoadingPlugin.SortingIndex(1001)

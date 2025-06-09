@@ -15,8 +15,8 @@ import java.util.*;
 import java.util.Map.Entry;
 
 /**
- * @author Pabilo8
- * @since 08-08-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 08.08.2019
  */
 public class CoagulatorRecipe extends MultiblockRecipe
 {

@@ -15,9 +15,9 @@ import pl.pabilo8.immersiveintelligence.client.ClientEventHandler;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityCamera;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @updated 16.02.2023
- * @since 10-11-2019
+ * @since 10.11.2019
  */
 @SideOnly(Side.CLIENT)
 public class CameraHandler

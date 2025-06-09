@@ -16,7 +16,7 @@ import java.util.Set;
  * A map used for easily animating an array of AMTs
  * Use one per a single renderer per animation
  *
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 05.04.2022
  */
 public class IIAnimationCachedMap

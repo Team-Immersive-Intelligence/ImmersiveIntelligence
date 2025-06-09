@@ -22,7 +22,7 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityMortar;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 21.01.2021
  */
 public class MortarRenderer extends Render<EntityMortar> implements IReloadableModelContainer<MortarRenderer>

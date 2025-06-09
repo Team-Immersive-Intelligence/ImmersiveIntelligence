@@ -22,7 +22,7 @@ import javax.annotation.Nullable;
 import java.util.Arrays;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 13.07.2022
  */
 public class IIMachineUpgradeModel

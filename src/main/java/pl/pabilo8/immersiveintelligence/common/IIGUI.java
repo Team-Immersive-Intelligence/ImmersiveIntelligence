@@ -60,7 +60,7 @@ import java.util.List;
 import java.util.function.BiFunction;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @updated 08.06.2020
  * @updated 09.06.2025
  * @ii-approved 0.3.1

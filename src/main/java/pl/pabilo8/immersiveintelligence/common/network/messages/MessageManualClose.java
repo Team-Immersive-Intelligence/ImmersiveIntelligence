@@ -11,7 +11,7 @@ import net.minecraft.world.WorldServer;
 import pl.pabilo8.immersiveintelligence.common.network.IIMessage;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 20.07.2021
  */
 public class MessageManualClose extends IIMessage

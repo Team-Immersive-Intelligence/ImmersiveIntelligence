@@ -10,7 +10,7 @@ import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import javax.annotation.Nonnull;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @ii-approved 0.3.1
  * @since 07.04.2024
  */

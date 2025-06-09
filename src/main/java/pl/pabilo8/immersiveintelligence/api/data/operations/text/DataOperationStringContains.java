@@ -10,8 +10,8 @@ import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 import javax.annotation.Nonnull;
 
 /**
- * @author Pabilo8
- * @since 05-07-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 05.07.2019
  */
 @DataOperation.DataOperationMeta(name = "string_contains", allowedTypes = {DataTypeString.class, DataTypeString.class}, params = {"text", "fragment"}, expectedResult = DataTypeBoolean.class)
 public class DataOperationStringContains extends DataOperation

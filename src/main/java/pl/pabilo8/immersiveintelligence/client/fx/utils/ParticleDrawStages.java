@@ -18,7 +18,7 @@ import javax.annotation.Nullable;
 import java.util.function.Function;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 06.04.2024
  */
 public enum ParticleDrawStages implements ISerializableEnum

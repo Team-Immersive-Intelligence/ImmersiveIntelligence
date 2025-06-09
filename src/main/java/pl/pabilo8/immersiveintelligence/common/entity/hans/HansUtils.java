@@ -28,7 +28,7 @@ import java.util.Map.Entry;
 import java.util.function.Function;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 12.05.2021
  */
 public class HansUtils

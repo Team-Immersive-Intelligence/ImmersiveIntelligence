@@ -14,8 +14,8 @@ import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.eff
 import pl.pabilo8.immersiveintelligence.common.item.ammo.gun.ItemIIAmmoMachinegun;
 
 /**
- * @author Pabilo8
- * @since 2019-05-17
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 17.05.2019
  */
 public class ContainerAmmunitionCrate extends ContainerIEBase<TileEntityAmmunitionCrate>
 {
@@ -101,18 +101,6 @@ public class ContainerAmmunitionCrate extends ContainerIEBase<TileEntityAmmuniti
 		public void putStack(ItemStack itemStack)
 		{
 			super.putStack(itemStack);
-		}
-
-		@Override
-		public boolean canTakeStack(EntityPlayer player)
-		{
-			return false;
-		}
-
-		@Override
-		public int getSlotStackLimit()
-		{
-			return 1;
 		}
 
 		@Override

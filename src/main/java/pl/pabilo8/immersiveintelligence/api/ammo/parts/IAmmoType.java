@@ -20,10 +20,10 @@ import java.util.function.Function;
  *
  * @param <T> this
  * @param <E> entity created by this ammo
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @updated 30.12.2023
  * @ii-approved 0.3.1
- * @since 31-07-2019
+ * @since 31.07.2019
  */
 public interface IAmmoType<T extends IAmmoType<T, E>, E extends EntityAmmoBase<? super E>>
 {
@@ -136,7 +136,7 @@ public interface IAmmoType<T extends IAmmoType<T, E>, E extends EntityAmmoBase<?
 	 *
 	 * @param stack        bullet stack
 	 * @param component    added component
-	 * @param componentNBT
+	 * @param componentNBT NBT data for the component
 	 * @return bullet components in appropriate order from stack NBT
 	 */
 	boolean addComponents(ItemStack stack, AmmoComponent component, NBTTagCompound componentNBT);
@@ -179,13 +179,13 @@ public interface IAmmoType<T extends IAmmoType<T, E>, E extends EntityAmmoBase<?
 	double getCoreMass(AmmoCore core, AmmoComponent[] components);
 
 	/**
-	 * @param stack
+	 * @param stack bullet stack
 	 * @param type  type of the fuse
 	 */
 	void setFuseType(ItemStack stack, FuseType type);
 
 	/**
-	 * @param stack
+	 * @param stack bullet stack
 	 * @return fuse type used in the bullet
 	 */
 	FuseType getFuseType(ItemStack stack);

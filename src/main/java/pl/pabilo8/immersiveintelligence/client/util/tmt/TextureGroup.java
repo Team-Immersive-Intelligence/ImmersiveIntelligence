@@ -26,7 +26,7 @@ public class TextureGroup
 
 	public void loadTexture(int defaultTexture)
 	{
-		if(!texture.equals(""))
+		if(!texture.isEmpty())
 		{
 			TextureManager renderengine = ClientUtils.mc().renderEngine;
 			renderengine.bindTexture(new ResourceLocation("", texture)); //TODO : Check. Not sure about this one

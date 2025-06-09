@@ -17,8 +17,8 @@ import pl.pabilo8.immersiveintelligence.common.item.crafting.ItemIIAssemblySchem
 import java.util.*;
 
 /**
- * @author Pabilo8
- * @since 08-08-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 08.08.2019
  */
 public class PrecisionAssemblerRecipe extends MultiblockRecipe
 {

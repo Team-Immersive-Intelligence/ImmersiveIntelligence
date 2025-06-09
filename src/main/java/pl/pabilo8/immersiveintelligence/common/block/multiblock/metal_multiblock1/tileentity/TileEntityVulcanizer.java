@@ -32,7 +32,7 @@ import javax.annotation.Nullable;
 import java.util.Iterator;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 04.03.2021
  */
 public class TileEntityVulcanizer extends TileEntityMultiblockMetal<TileEntityVulcanizer, VulcanizerRecipe> implements IPlayerInteraction, ISoundTile, IGuiTile

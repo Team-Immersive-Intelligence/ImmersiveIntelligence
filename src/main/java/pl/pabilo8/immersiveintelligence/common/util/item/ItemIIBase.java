@@ -3,10 +3,8 @@ package pl.pabilo8.immersiveintelligence.common.util.item;
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import blusunrize.immersiveengineering.common.items.IEItemInterfaces.IColouredItem;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
@@ -21,8 +19,8 @@ import javax.annotation.Nullable;
 /**
  * Use this class on items without sub-items (meta)
  *
- * @Author Pabilo8
- * @Since 2019-05-07
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 07.05.2019
  */
 public class ItemIIBase extends Item implements IColouredItem
 {

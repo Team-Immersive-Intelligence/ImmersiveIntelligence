@@ -5,7 +5,7 @@ import blusunrize.immersiveengineering.api.Lib;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 29.08.2022
  */
 @SuppressWarnings("UnnecessaryUnicodeEscape")

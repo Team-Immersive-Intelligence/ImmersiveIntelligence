@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.function.Predicate;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 17.09.2022
  */
 public abstract class IIUpgradableItemRendererAMT<I extends ItemIIUpgradableTool> extends IIItemRendererAMT<I>

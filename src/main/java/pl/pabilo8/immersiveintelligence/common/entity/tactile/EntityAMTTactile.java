@@ -18,7 +18,7 @@ import javax.annotation.Nullable;
 /**
  * A generic dynamic collision box (AABB) entity used by various multiblocks.
  *
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 07.10.2023
  */
 public class EntityAMTTactile extends Entity

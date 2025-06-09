@@ -12,8 +12,8 @@ import pl.pabilo8.immersiveintelligence.client.util.tmt.TmtUtil;
 import pl.pabilo8.immersiveintelligence.common.block.data_device.tileentity.TileEntityTimedBuffer;
 
 /**
- * @author Pabilo8
- * @since 2019-05-26
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 26.05.2019
  */
 @SideOnly(Side.CLIENT)
 public class TimedBufferRenderer extends TileEntitySpecialRenderer<TileEntityTimedBuffer>

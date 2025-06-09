@@ -10,8 +10,8 @@ import pl.pabilo8.immersiveintelligence.api.data.types.generic.IComparableDataTy
 import javax.annotation.Nonnull;
 
 /**
- * @author Pabilo8
- * @since 05-07-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 05.07.2019
  */
 @DataOperation.DataOperationMeta(name = "greater_or_equal", expression = ">=",
 		allowedTypes = {DataType.class, DataType.class}, params = {"compared", "compared"},
@@ -20,7 +20,7 @@ public class DataOperationGreaterOrEqual extends DataOperation
 {
 	@Nonnull
 	@Override
-	@SuppressWarnings({"raw", "unchecked"})
+	@SuppressWarnings({"rawtypes", "unchecked"})
 	public DataType execute(DataPacket packet, DataTypeExpression data)
 	{
 		DataType t1 = packet.evaluateVariable(data.getArgument(0), false);

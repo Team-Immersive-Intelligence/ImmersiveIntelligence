@@ -3,7 +3,7 @@ package pl.pabilo8.immersiveintelligence.api.utils.armor;
 import net.minecraft.item.ItemStack;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 01.05.2021
  */
 public interface IGasmask

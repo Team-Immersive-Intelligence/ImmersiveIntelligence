@@ -39,8 +39,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author Pabilo8
- * @since 28-06-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 28.06.2019
  */
 public class TileEntityFuelStation extends TileEntityMultiblockMetal<TileEntityFuelStation, IMultiblockRecipe> implements IAdvancedCollisionBounds, IAdvancedSelectionBounds, IGuiTile, ISoundTile
 {

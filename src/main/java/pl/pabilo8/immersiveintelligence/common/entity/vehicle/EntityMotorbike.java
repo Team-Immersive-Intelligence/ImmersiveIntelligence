@@ -54,7 +54,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 07.07.2020
  */
 public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntitySpecialRepairable, IEntityAdditionalSpawnData
@@ -210,12 +210,6 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 		compound.setInteger("fuelTankDurability", fuelTankDurability);
 
 		compound.setString("upgrade", upgrade);
-	}
-
-	@Override
-	public boolean canBeCollidedWith()
-	{
-		return false;
 	}
 
 	//--- Parts Handling ---//
@@ -624,13 +618,6 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 	public AxisAlignedBB getEntityBoundingBox()
 	{
 		return AABB.offset(posX, posY, posZ);
-	}
-
-	@Nullable
-	@Override
-	public AxisAlignedBB getCollisionBoundingBox()
-	{
-		return null;
 	}
 
 	@Nullable

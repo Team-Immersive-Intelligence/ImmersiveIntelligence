@@ -9,7 +9,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Axis;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 06.07.2020
  */
 public class TileEntityMineSign extends TileEntityIEBase implements IDirectionalTile, IBlockBounds

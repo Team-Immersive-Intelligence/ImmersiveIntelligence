@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 19.12.2022
  */
 public class AIDroneTarget<T extends Entity> extends AIDroneBase

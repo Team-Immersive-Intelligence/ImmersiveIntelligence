@@ -9,10 +9,10 @@ import java.util.Arrays;
 import java.util.Collections;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @updated 08.06.2025
  * @ii-approved 0.3.1
- * @since 08-08-2019
+ * @since 08.08.2019
  */
 public class ElectrolyzerRecipe extends IIMultiblockRecipe
 {

@@ -15,8 +15,8 @@ import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.network.IIMessage;
 
 /**
- * @author Pabilo8
- * @since 04-07-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 04.07.2019
  */
 public class MessageGuiNBT extends IIMessage
 {

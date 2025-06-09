@@ -47,8 +47,8 @@ import javax.annotation.Nullable;
 import java.util.Set;
 
 /**
- * @author Pabilo8
- * @since 15-07-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 15.07.2019
  */
 // TODO: 26.07.2022 rework
 public class TileEntityFluidInserter extends TileEntityImmersiveConnectable implements ITileDrop, IComparatorOverride, IHammerInteraction, ITickable, IBlockBounds, IDataConnector

@@ -47,10 +47,10 @@ import java.util.stream.Collectors;
 /**
  * Utility for Immersive Intelligence's Mechanical Power System.
  *
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @updated 01.08.2024
  * @ii-approved 0.3.1
- * @since 26-12-2019
+ * @since 26.12.2019
  */
 public class IIRotaryUtils
 {

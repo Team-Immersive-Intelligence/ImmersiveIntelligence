@@ -12,7 +12,7 @@ import pl.pabilo8.immersiveintelligence.common.entity.EntityTripodPeriscope;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 13.09.2022
  */
 public class GuiOverlayTripodPeriscope extends GuiOverlayBase

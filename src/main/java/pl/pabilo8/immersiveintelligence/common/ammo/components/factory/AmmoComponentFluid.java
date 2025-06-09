@@ -21,10 +21,10 @@ import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @updated 06.03.2024
  * @ii-approved 0.3.1
- * @since 30-08-2019
+ * @since 30.08.2019
  */
 public class AmmoComponentFluid extends AmmoComponent
 {

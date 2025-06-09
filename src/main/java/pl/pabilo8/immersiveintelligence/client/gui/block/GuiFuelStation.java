@@ -7,9 +7,9 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fluids.FluidStack;
 import org.lwjgl.opengl.GL11;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.FuelStation;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.FuelStation;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityFuelStation;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerFuelStation;
@@ -17,8 +17,8 @@ import pl.pabilo8.immersiveintelligence.common.gui.ContainerFuelStation;
 import java.util.ArrayList;
 
 /**
- * @author Pabilo8
- * @since 10-07-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 10.07.2019
  */
 public class GuiFuelStation extends GuiIEContainerBase
 {
@@ -52,17 +52,19 @@ public class GuiFuelStation extends GuiIEContainerBase
 		this.drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 
 		//Thanks, Flaxbeard!
-		int yy = guiTop + 63;
-		for(int i = this.tile.tanks[0].getFluidTypes() - 1; i >= 0; --i) {
+		int yy = guiTop+63;
+		for(int i = this.tile.tanks[0].getFluidTypes()-1; i >= 0; --i)
+		{
 			FluidStack fs = this.tile.tanks[0].fluids.get(i);
-			if (fs != null && fs.getFluid() != null) {
-				int fluidHeight = (int)(60f * ((float)fs.amount /FuelStation.fluidCapacity));
+			if(fs!=null&&fs.getFluid()!=null)
+			{
+				int fluidHeight = (int)(60f*((float)fs.amount/FuelStation.fluidCapacity));
 				yy -= fluidHeight;
-				ClientUtils.drawRepeatedFluidSprite(fs, (float)(guiLeft + 63), (float)yy, 52f, (float)fluidHeight);
+				ClientUtils.drawRepeatedFluidSprite(fs, (float)(guiLeft+63), (float)yy, 52f, (float)fluidHeight);
 			}
 		}
 
-		IIClientUtils.drawPowerBar(guiLeft+137, guiTop+22, 7,46,tile.getEnergyStored(null)/(float)tile.getMaxEnergyStored(null));
+		IIClientUtils.drawPowerBar(guiLeft+137, guiTop+22, 7, 46, tile.getEnergyStored(null)/(float)tile.getMaxEnergyStored(null));
 	}
 
 	@Override

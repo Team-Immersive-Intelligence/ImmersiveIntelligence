@@ -44,8 +44,8 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 
 /**
- * @author Pabilo8
- * @since 28-06-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 28.06.2019
  */
 public class TileEntityPrecisionAssembler extends TileEntityMultiblockMetal<TileEntityPrecisionAssembler, PrecisionAssemblerRecipe> implements IGuiTile, ISoundTile, IBooleanAnimatedPartsBlock
 {
@@ -295,7 +295,7 @@ public class TileEntityPrecisionAssembler extends TileEntityMultiblockMetal<Tile
 				break test;
 			}
 
-			if(!toolOrder[0].equals(""))
+			if(!toolOrder[0].isEmpty())
 			{
 				if(inventory.get(0).isEmpty())
 				{
@@ -309,7 +309,7 @@ public class TileEntityPrecisionAssembler extends TileEntityMultiblockMetal<Tile
 				}
 			}
 
-			if(!toolOrder[1].equals(""))
+			if(!toolOrder[1].isEmpty())
 			{
 				if(inventory.get(1).isEmpty())
 				{
@@ -323,7 +323,7 @@ public class TileEntityPrecisionAssembler extends TileEntityMultiblockMetal<Tile
 				}
 			}
 
-			if(!toolOrder[2].equals(""))
+			if(!toolOrder[2].isEmpty())
 			{
 				if(inventory.get(2).isEmpty())
 				{

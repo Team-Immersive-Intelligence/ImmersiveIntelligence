@@ -21,8 +21,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
- * @author Pabilo8
- * @since 2019-05-17
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 17.05.2019
  */
 public class TileEntitySmallCrate extends TileEntityWoodenCrate implements IGuiTile, IDirectionalTile, IBlockBounds
 {

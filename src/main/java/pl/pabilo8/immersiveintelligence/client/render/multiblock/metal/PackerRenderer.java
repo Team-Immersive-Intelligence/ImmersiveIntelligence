@@ -16,7 +16,7 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityPacker;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 20.08.2022
  */
 @RegisteredTileRenderer(name = "multiblock/packer", clazz = TileEntityPacker.class)

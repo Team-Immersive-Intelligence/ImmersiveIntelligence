@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 24.03.2021
  */
 public class AmmoCrateGuiHandler implements IAdvancedGuiHandler<GuiAmmunitionCrate>

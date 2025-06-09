@@ -34,7 +34,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 13.09.2020
  */
 @IIItemProperties(category = IICategory.WARFARE)
@@ -102,12 +102,6 @@ public class ItemIILightEngineerLeggings extends ItemIILightEngineerArmorBase im
 	public ModelBiped getArmorModel(EntityLivingBase entityLiving, ItemStack itemStack, EntityEquipmentSlot armorSlot, ModelBiped _default)
 	{
 		return ModelLightEngineerArmor.getModel(armorSlot, itemStack);
-	}
-
-	@Override
-	protected String getMaterialName(ArmorMaterial material)
-	{
-		return "light_engineer_armor";
 	}
 
 	@SideOnly(Side.CLIENT)

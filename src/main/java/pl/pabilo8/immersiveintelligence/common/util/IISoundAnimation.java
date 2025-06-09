@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 /**
  * A class for storing sounds to be played during an animation
  *
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 10.08.2022
  */
 // TODO: 11.08.2022 add loading from .json exported from blockbench

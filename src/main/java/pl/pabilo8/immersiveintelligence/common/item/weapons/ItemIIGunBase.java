@@ -449,7 +449,7 @@ public abstract class ItemIIGunBase extends ItemIIUpgradableTool implements ISki
 
 	/**
 	 * @param weapon the gun ItemStack
-	 * @param nbt
+	 * @param nbt    upgrade tag
 	 * @return equip speed (slot change delay) multiplier
 	 */
 	protected abstract double getEquipSpeed(ItemStack weapon, EasyNBT nbt);
@@ -477,7 +477,7 @@ public abstract class ItemIIGunBase extends ItemIIUpgradableTool implements ISki
 
 	/**
 	 * @param weapon the gun ItemStack
-	 * @param loaded
+	 * @param loaded the loaded ammo ItemStack
 	 * @param nbt    upgrade tag
 	 * @return reload time of the gun (in ticks)
 	 */
@@ -534,7 +534,7 @@ public abstract class ItemIIGunBase extends ItemIIUpgradableTool implements ISki
 	 */
 	protected ItemStack getCasingStack(ItemStack ammo)
 	{
-		return ((IAmmoTypeItem)ammo.getItem()).getCasingStack(1);
+		return ((IAmmoTypeItem<?, ?>)ammo.getItem()).getCasingStack(1);
 	}
 
 	/**

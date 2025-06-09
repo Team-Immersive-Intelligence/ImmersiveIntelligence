@@ -22,8 +22,8 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 /**
- * @author Pabilo8
- * @since 10-11-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 10.11.2019
  */
 @IIItemProperties(category = IICategory.RESOURCES)
 public class ItemIITracerPowder extends ItemIISubItemsBase<Powders>

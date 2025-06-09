@@ -13,7 +13,7 @@ import pl.pabilo8.immersiveintelligence.common.util.IIReference;
  * A standard checkbox of the Deco GUI system.<br>
  * Similar to {@link DecoSwitch}, but used for selecting options in a list instead of an on/off toggle.
  *
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @updated 12.01.2025
  * @ii-approved 0.3.1
  * @since 18.07.2021

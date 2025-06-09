@@ -11,8 +11,8 @@ import pl.pabilo8.immersiveintelligence.api.data.types.generic.NumericDataType;
 import javax.annotation.Nonnull;
 
 /**
- * @author Pabilo8
- * @since 05-07-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 05.07.2019
  */
 @DataOperationMeta(name = "cos", allowedTypes = {NumericDataType.class}, params = {"angle"}, expectedResult = NumericDataType.class)
 public class DataOperationCos extends DataOperation

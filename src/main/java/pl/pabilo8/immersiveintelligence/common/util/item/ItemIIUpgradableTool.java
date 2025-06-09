@@ -5,7 +5,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 27.01.2023
  */
 public abstract class ItemIIUpgradableTool extends ItemUpgradeableTool
@@ -16,8 +16,7 @@ public abstract class ItemIIUpgradableTool extends ItemUpgradeableTool
 	}
 
 	/**
-	 *
-	 * @param stack stack to check
+	 * @param stack   stack to check
 	 * @param upgrade upgrade
 	 * @return whether the stack has this upgrade installed
 	 */
@@ -27,8 +26,7 @@ public abstract class ItemIIUpgradableTool extends ItemUpgradeableTool
 	}
 
 	/**
-	 *
-	 * @param stack stack to check
+	 * @param stack   stack to check
 	 * @param upgrade list of upgrades
 	 * @return whether the stack has <b>ANY</b> of the upgrades listed
 	 */
@@ -42,8 +40,7 @@ public abstract class ItemIIUpgradableTool extends ItemUpgradeableTool
 	}
 
 	/**
-	 *
-	 * @param stack stack to check
+	 * @param stack   stack to check
 	 * @param upgrade list of upgrades
 	 * @return whether the stack has <b>ALL</b> of the upgrades listed
 	 */

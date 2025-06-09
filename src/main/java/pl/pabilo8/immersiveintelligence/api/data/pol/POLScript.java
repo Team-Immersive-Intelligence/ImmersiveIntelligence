@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 /**
  * An executable script of the POL Programming Language
  *
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 16.04.2022
  */
 public class POLScript

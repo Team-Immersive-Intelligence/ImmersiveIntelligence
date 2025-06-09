@@ -6,8 +6,8 @@ import pl.pabilo8.immersiveintelligence.client.model.ModelIIBase;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
 
 /**
- * @author Pabilo8
- * @since 16-07-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 16.07.2019
  */
 public class ModelSmallDataBuffer extends ModelIIBase
 {

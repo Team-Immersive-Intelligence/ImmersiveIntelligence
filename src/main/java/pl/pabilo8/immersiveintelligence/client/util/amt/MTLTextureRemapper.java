@@ -12,7 +12,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 18.02.2023
  */
 public class MTLTextureRemapper implements Function<ResourceLocation, ResourceLocation>
@@ -41,7 +41,6 @@ public class MTLTextureRemapper implements Function<ResourceLocation, ResourceLo
 	}
 
 	/**
-	 *
 	 * @param source source OBJ model
 	 * @return material->texture map of this model
 	 */

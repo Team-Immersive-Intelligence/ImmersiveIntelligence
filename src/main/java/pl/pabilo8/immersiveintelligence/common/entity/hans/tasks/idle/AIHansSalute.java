@@ -6,7 +6,7 @@ import pl.pabilo8.immersiveintelligence.common.entity.hans.HansAnimations.HansAr
 import pl.pabilo8.immersiveintelligence.common.entity.hans.HansAnimations.HansLegAnimation;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 02.02.2022
  */
 public class AIHansSalute extends AIHansTimedLookAtEntity

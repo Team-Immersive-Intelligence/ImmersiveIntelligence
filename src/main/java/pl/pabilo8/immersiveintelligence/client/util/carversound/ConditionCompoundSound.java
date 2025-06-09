@@ -11,7 +11,7 @@ import java.util.function.Supplier;
 /**
  * A repeated sound with a beginning and end which plays while a condition is met
  *
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 20.09.2022
  */
 @SideOnly(Side.CLIENT)

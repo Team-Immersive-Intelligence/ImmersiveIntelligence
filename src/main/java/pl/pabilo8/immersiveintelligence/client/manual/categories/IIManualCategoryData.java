@@ -19,8 +19,8 @@ import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import java.util.Arrays;
 
 /**
- * @author Pabilo8
- * @since 18-01-2020
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 18.01.2020
  */
 public class IIManualCategoryData extends IIManualCategory
 {

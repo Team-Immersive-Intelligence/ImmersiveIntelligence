@@ -9,8 +9,8 @@ import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 import javax.annotation.Nonnull;
 
 /**
- * @author Pabilo8
- * @since 05-07-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 05.07.2019
  */
 @DataOperation.DataOperationMeta(name = "and", expression = "&",
 		allowedTypes = {DataTypeBoolean.class, DataTypeBoolean.class}, params = {"input", "input"},

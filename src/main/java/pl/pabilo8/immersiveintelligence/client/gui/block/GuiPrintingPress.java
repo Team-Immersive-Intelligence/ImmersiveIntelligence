@@ -20,9 +20,9 @@ import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEn
 import java.util.ArrayList;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @updated 13.12.2023
- * @since 10-07-2019
+ * @since 10.07.2019
  */
 public class GuiPrintingPress extends GuiIEContainerBase
 {

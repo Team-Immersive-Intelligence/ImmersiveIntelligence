@@ -23,10 +23,10 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
 import javax.annotation.Nullable;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @author Kingcavespider1
- * @since 10-07-2019.
- * @since 07-05-2020
+ * @since 10.07.2019.
+ * @since 07.05.2020
  */
 public class BlockIIFluid extends BlockFluidClassic
 {

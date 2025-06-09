@@ -17,7 +17,7 @@ import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import java.util.ArrayList;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 29.05.2023
  */
 public class WrenchOverlay extends InWorldOverlayBase

@@ -8,7 +8,6 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockRenderLayer;
@@ -36,8 +35,8 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * @author Pabilo8
- * @since 2019-05-17
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 17.05.2019
  */
 public class BlockIIRubberLeaves extends BlockIIBase<RubberStuff> implements IShearable, IColouredBlock, IColouredItem
 {
@@ -76,7 +75,8 @@ public class BlockIIRubberLeaves extends BlockIIBase<RubberStuff> implements ISh
 	@Override
 	public int getMetaFromState(IBlockState state)
 	{
-		if(state==null||enumValues==null||!this.equals(state.getBlock())) return 0;
+		if(state==null||enumValues==null||!this.equals(state.getBlock()))
+			return 0;
 		return state.getValue(BlockLeaves.DECAYABLE)?1: 0;
 	}
 
@@ -84,12 +84,6 @@ public class BlockIIRubberLeaves extends BlockIIBase<RubberStuff> implements ISh
 	protected IBlockState getInitDefaultState()
 	{
 		return super.getInitDefaultState().withProperty(BlockLeaves.CHECK_DECAY, false).withProperty(BlockLeaves.DECAYABLE, false);
-	}
-
-	@Override
-	public boolean canIEBlockBePlaced(World world, BlockPos pos, IBlockState newState, EnumFacing side, float hitX, float hitY, float hitZ, EntityPlayer player, ItemStack stack)
-	{
-		return true;
 	}
 
 	public void breakBlock(World worldIn, BlockPos pos, @Nonnull IBlockState state)

@@ -36,8 +36,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author Pabilo8
- * @since 20-06-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 20.06.2019
  */
 public class TileEntityRadioStation extends TileEntityMultiblockMetal<TileEntityRadioStation, IMultiblockRecipe> implements IDataDevice, IAdvancedCollisionBounds, IAdvancedSelectionBounds, IRadioDevice, IAdvancedMultiblockTileEntity, ISoundTile
 {

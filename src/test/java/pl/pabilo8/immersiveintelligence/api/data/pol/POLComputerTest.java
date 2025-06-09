@@ -1,5 +1,7 @@
 package pl.pabilo8.immersiveintelligence.api.data.pol;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import pl.pabilo8.immersiveintelligence.api.data.IIDataOperationUtils;
@@ -26,6 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 public class POLComputerTest
 {
+	static Logger log = LogManager.getLogger("POLComputerTest");
 	static POLComputerMemory MEMORY;
 	static POLTerminal TERMINAL;
 
@@ -92,22 +95,20 @@ public class POLComputerTest
 
 	private static void execute(String id)
 	{
-		System.out.println("Starting program: "+id);
+		log.info("Starting program: "+id);
 		POLProcess process = new POLProcess(MEMORY.getScript(id));
-//		final String log = "["+id+"]";
 		do
 		{
 			process.run(MEMORY, TERMINAL);
-//			System.out.print(process.isRunning()?"[R]": "[H]");
-//			System.out.print(log);
-//			System.out.println(MEMORY);
+			log.debug(() -> "["+id+"]"+(process.isRunning()?"[R]": "[H]")+", "+MEMORY);
 		}
 		while(process.isRunning());
+		log.info("Program "+id+" finished");
 	}
 
 	private static class POLMockupTerminal extends POLTerminal
 	{
-		private ArrayList<String> output = new ArrayList<>();
+		private final ArrayList<String> output = new ArrayList<>();
 		private final String name;
 
 		public POLMockupTerminal(String name)
@@ -118,14 +119,14 @@ public class POLComputerTest
 		@Override
 		public void error(String text)
 		{
-			System.out.println(name+" "+text);
+			log.error(name+" "+text);
 		}
 
 		@Override
 		public void type(String text)
 		{
 			output.add(name+" "+text);
-			System.out.println(name+" "+text);
+			log.info(name+" "+text);
 		}
 
 		@Override
@@ -144,13 +145,6 @@ public class POLComputerTest
 		public void sleep(int value)
 		{
 			//Do nothing
-
-			/*try
-			{
-				Thread.sleep(value*20L);
-			} catch(InterruptedException ignored)
-			{
-			}*/
 		}
 	}
 

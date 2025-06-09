@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 13.09.2020
  */
 @IIItemProperties(category = IICategory.WARFARE)

@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * Internal ammunition storage handler for {@link pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIGunBase}
  *
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 20.02.2023
  */
 public abstract class AmmoHandler
@@ -46,12 +46,12 @@ public abstract class AmmoHandler
 	 * Reloads the weapon with ammunition
 	 *
 	 * @param weapon    weapon stack
-	 * @param world
+	 * @param world     the world
 	 * @param user      user of the weapon
 	 * @param nbt       stack's tag
 	 * @param upgrades  upgrade tag
 	 * @param reloading ticks
-	 * @return
+	 * @return ticks remaining until the weapon is reloaded, or 0 if it is or cannot be reloaded
 	 */
 	public abstract int reloadWeapon(ItemStack weapon, World world, Entity user, EasyNBT nbt, EasyNBT upgrades, int reloading);
 

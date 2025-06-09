@@ -21,7 +21,7 @@ import java.util.function.Consumer;
 /**
  * Use this class on items with sub-items (meta)
  *
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 01.09.2022
  */
 public class ItemIISubItemsBase<E extends Enum<E> & IIItemEnum> extends ItemIIBase
@@ -114,7 +114,8 @@ public class ItemIISubItemsBase<E extends Enum<E> & IIItemEnum> extends ItemIIBa
 		}
 	}
 
-	protected void setSortedSubItems(E... subItems)
+	@SafeVarargs
+	protected final void setSortedSubItems(E... subItems)
 	{
 		if(subItems.length!=this.subItems.length)
 		{
@@ -144,7 +145,8 @@ public class ItemIISubItemsBase<E extends Enum<E> & IIItemEnum> extends ItemIIBa
 
 	//--- SubItem Data ---//
 
-	public ItemIISubItemsBase<E> setMetaUnhidden(E... meta)
+	@SafeVarargs
+	public final ItemIISubItemsBase<E> setMetaUnhidden(E... meta)
 	{
 		for(E subItem : meta)
 			this.isMetaHidden[subItem.ordinal()] = false;

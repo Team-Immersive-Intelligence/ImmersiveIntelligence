@@ -18,9 +18,9 @@ import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.util.amt.IIModelHeader;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @updated 22.12.2023
- * @since 13-10-2019
+ * @since 13.10.2019
  */
 @RegisteredItemRenderer(name = "items/tools/tachometer")
 public class TachometerRenderer extends IIItemRendererAMT<ItemIITachometer>

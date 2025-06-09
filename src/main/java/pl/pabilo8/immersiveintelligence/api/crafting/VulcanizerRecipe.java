@@ -1,11 +1,3 @@
-/*
- * BluSunrize
- * Copyright (c) 2017
- *
- * This code is licensed under "Blu's License of Common Sense"
- * Details can be found in the license file in the root folder of this project
- */
-
 package pl.pabilo8.immersiveintelligence.api.crafting;
 
 import blusunrize.immersiveengineering.api.ApiUtils;
@@ -25,9 +17,10 @@ import java.util.*;
 import java.util.function.Function;
 
 /**
- * @author BluSunrize - 07.01.2016
- * <p>
- * The recipe for the metal press
+ * Vulcanizer production recipe.
+ *
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 20.06.2021
  */
 public class VulcanizerRecipe extends MultiblockRecipe
 {
@@ -57,7 +50,7 @@ public class VulcanizerRecipe extends MultiblockRecipe
 		this.totalProcessEnergy = (int)Math.floor(energy*energyModifier);
 		this.totalProcessTime = (int)Math.floor(1000*timeModifier);
 
-		this.inputList = Lists.newArrayList(this.input, this.compoundInput, this.sulfurInput,new IngredientStack(this.mold.stack));
+		this.inputList = Lists.newArrayList(this.input, this.compoundInput, this.sulfurInput, new IngredientStack(this.mold.stack));
 		this.outputList = ListUtils.fromItem(this.output);
 
 		this.resIn = resIn;

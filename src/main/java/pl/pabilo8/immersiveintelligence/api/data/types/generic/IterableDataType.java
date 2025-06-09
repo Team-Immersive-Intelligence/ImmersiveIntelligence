@@ -4,7 +4,7 @@ import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeArray;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType.IGenericDataType;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 26.08.2022
  */
 @IGenericDataType(defaultType = DataTypeArray.class)

@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
  * A generic dynamic collision box (AABB) handler used by various tile entities.<br>
  * Designed to support multiblocks.
  *
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 11.10.2023
  */
 public class TactileHandler
@@ -86,7 +86,7 @@ public class TactileHandler
 	 * Load the header file.<br>
 	 * Animations are loaded and cached dynamically by {@link #update(ResLoc, float)}.
 	 *
-	 * @return
+	 * @return true if the handler was initialized successfully (now or in a previous run), false otherwise
 	 */
 	private boolean init()
 	{
@@ -455,7 +455,7 @@ public class TactileHandler
 	/**
 	 * Listener class for Tactile events
 	 *
-	 * @author Pabilo8
+	 * @author Pabilo8 (pabilo@iiteam.net)
 	 * @since 11.10.2023
 	 */
 	public interface ITactileListener

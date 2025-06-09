@@ -3,8 +3,8 @@ package pl.pabilo8.immersiveintelligence.common.util;
 import net.minecraft.util.text.TextFormatting;
 
 /**
- * @author gabrielv
- * @since 28-07-2024
+ * @author GabrielV(gabriel @ iiteam.net)
+ * @since 28.07.2024
  */
 public class IIStringUtil
 {

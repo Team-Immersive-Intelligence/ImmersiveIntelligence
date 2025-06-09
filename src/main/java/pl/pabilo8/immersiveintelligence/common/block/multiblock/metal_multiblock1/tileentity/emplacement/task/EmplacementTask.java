@@ -9,7 +9,7 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
 import java.util.Arrays;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 15.02.2024
  */
 public abstract class EmplacementTask

@@ -39,10 +39,10 @@ import java.util.HashMap;
  * </ul>
  * </p>
  *
- * @author Pabilo8
- * @author Avalon
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @author Avalon (avalon@iiteam.net)
  * @ii-approved 0.3.1
- * @since 15-06-2019
+ * @since 15.06.2019
  * @since 30.03.2023
  */
 public class IISounds

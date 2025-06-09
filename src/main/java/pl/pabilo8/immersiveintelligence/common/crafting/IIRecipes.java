@@ -87,10 +87,10 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
- * @author Pabilo8
- * @author Avalon
- * @since 22-03-2020
- * @since 28-11-2024
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @author Avalon (avalon@iiteam.net)
+ * @since 22.03.2020
+ * @since 28.11.2024
  */
 public class IIRecipes
 {
@@ -1285,13 +1285,11 @@ public class IIRecipes
 		new FillerRecipe(IIContent.itemAmmoRevolver, 40, 400);
 
 		//Projectiles
-		for(ItemIIAmmoBase item : new ItemIIAmmoBase[]{IIContent.itemAmmoHeavyArtillery, IIContent.itemAmmoMediumArtillery, IIContent.itemAmmoLightArtillery,
+		for(ItemIIAmmoBase<?> item : new ItemIIAmmoBase[]{IIContent.itemAmmoHeavyArtillery, IIContent.itemAmmoMediumArtillery, IIContent.itemAmmoLightArtillery,
 				IIContent.itemAmmoLightGun, IIContent.itemAmmoMortar,
 				IIContent.itemAmmoAutocannon,
 				IIContent.itemAmmoMachinegun, IIContent.itemAmmoAssaultRifle, IIContent.itemAmmoSubmachinegun})
 		{
-			assert item!=null;
-
 			ItemStack casingStack = item.getCasingStack(1);
 			ItemNBTHelper.setBoolean(casingStack, "ii_FilledCasing", true);
 

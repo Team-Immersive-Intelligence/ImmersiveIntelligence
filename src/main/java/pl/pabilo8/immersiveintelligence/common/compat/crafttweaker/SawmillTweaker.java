@@ -17,8 +17,8 @@ import stanhebben.zenscript.annotations.ZenMethod;
 import java.util.List;
 
 /**
- * @author Pabilo8
- * @since 08-08-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 08.08.2019
  */
 @ZenClass("mods."+ImmersiveIntelligence.MODID+".Sawmill")
 @ZenRegister

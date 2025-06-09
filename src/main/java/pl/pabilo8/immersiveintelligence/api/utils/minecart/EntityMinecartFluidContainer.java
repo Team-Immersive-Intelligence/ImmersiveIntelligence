@@ -30,8 +30,8 @@ import pl.pabilo8.immersiveintelligence.api.utils.tools.IAdvancedTextOverlay;
 import javax.annotation.Nullable;
 
 /**
- * @author Pabilo8
- * @since 27-12-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 27.12.2019
  */
 public abstract class EntityMinecartFluidContainer extends EntityMinecartII implements IAdvancedTextOverlay
 {

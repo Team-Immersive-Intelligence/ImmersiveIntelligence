@@ -38,7 +38,7 @@ import java.util.function.Predicate;
 import static pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.EffectCrates.*;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 06.07.2020
  */
 public class TileEntityMedicalCrate extends TileEntityEffectCrate implements ITileDrop

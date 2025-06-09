@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 29.07.2021
  */
 public class DecoSlider extends GuiSliderIE

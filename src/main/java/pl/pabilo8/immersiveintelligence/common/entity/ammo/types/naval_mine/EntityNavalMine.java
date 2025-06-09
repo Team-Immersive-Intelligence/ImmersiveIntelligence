@@ -18,7 +18,7 @@ import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import javax.annotation.Nonnull;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @updated 02.02.2024
  * @ii-approved 0.3.1
  * @since 09.02.2021
@@ -92,12 +92,6 @@ public class EntityNavalMine extends EntityAmmoMine
 		compound.setInteger("maxLength", maxLength);
 	}
 
-	@Override
-	protected boolean shouldDecay()
-	{
-		return false;
-	}
-
 	public void setMaxLength(int length)
 	{
 		maxLength = length;
@@ -120,12 +114,6 @@ public class EntityNavalMine extends EntityAmmoMine
 	public AxisAlignedBB getCollisionBoundingBox()
 	{
 		return getEntityBoundingBox().grow(0.3f);
-	}
-
-	@Override
-	public boolean canBeCollidedWith()
-	{
-		return true;
 	}
 
 	@Override

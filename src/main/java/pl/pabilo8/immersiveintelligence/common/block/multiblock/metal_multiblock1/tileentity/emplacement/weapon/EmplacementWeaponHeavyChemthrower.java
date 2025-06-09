@@ -38,6 +38,7 @@ import pl.pabilo8.immersiveintelligence.common.entity.EntityEmplacementWeapon.Em
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.component.EntityIIChemthrowerShot;
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -203,6 +204,7 @@ public class EmplacementWeaponHeavyChemthrower extends EmplacementWeapon
 		//bulletsShot++;
 	}
 
+	@Nonnull
 	@Override
 	public NBTTagCompound saveToNBT(boolean forClient)
 	{

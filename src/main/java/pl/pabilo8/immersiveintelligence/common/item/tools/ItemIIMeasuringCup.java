@@ -34,8 +34,8 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 /**
- * @author Pabilo8
- * @since 13-07-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 13.07.2019
  */
 @IIItemProperties(category = IICategory.TOOLS)
 public class ItemIIMeasuringCup extends ItemIIBase implements ITool, IAdvancedFluidItem, IItemScrollable

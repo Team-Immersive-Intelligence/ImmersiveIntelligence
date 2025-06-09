@@ -34,11 +34,10 @@ import java.util.stream.Stream;
  * A utility class for convenient and easy {@link NBTTagCompound} construction<br>
  * Also features various other NBT related methods.
  *
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 03.09.2022
  */
 @SuppressWarnings("unused")
-//REFACTOR: 05.04.2024 EasyNBT checkSet to ifPresent
 public class EasyNBT extends Constants.NBT
 {
 	private final NBTTagCompound wrapped;
@@ -190,7 +189,8 @@ public class EasyNBT extends Constants.NBT
 	 *
 	 * @param key name of this tag
 	 */
-	public <T, E extends NBTBase> EasyNBT withList(String key, Function<T, E> conversion, T... objects)
+	@SafeVarargs
+	public final <T, E extends NBTBase> EasyNBT withList(String key, Function<T, E> conversion, T... objects)
 	{
 		wrapped.setTag(key, listOf((Object[])Arrays.stream(objects).filter(Objects::nonNull).map(conversion).toArray(NBTBase[]::new)));
 		return this;
@@ -471,9 +471,9 @@ public class EasyNBT extends Constants.NBT
 	/**
 	 * Performs an action when a condition is met. Allows branching.<br>
 	 * For example:<br>
-	 * <code>
+	 * {@code
 	 * nbt.conditionally(obj!=null, obj.toNBT()) //will not add the object if it's null
-	 * </code>
+	 * }
 	 *
 	 * @param condition condition to be met
 	 * @param whenTrue  action taken

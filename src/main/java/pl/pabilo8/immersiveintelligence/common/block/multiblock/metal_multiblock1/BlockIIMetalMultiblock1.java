@@ -19,8 +19,8 @@ import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.Tern
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock;
 
 /**
- * @author Pabilo8
- * @since 20-06-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 20.06.2019
  */
 public class BlockIIMetalMultiblock1 extends BlockIIMultiblock<MetalMultiblocks1>
 {

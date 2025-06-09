@@ -42,8 +42,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author Pabilo8
- * @since 2019-05-23
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 23.05.2019
  */
 @IIItemProperties(category = IICategory.TOOLS)
 public class ItemIILighter extends ItemIIBase implements ITool

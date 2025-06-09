@@ -10,8 +10,8 @@ import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.tileentity.TileEntitySkyCrateStation;
 
 /**
- * @author Pabilo8
- * @since 10-11-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 10.11.2019
  */
 public class EntitySkycrateInternal extends Entity
 {
@@ -64,12 +64,6 @@ public class EntitySkycrateInternal extends Entity
 
 	@Override
 	public boolean canPassengerSteer()
-	{
-		return false;
-	}
-
-	@Override
-	public boolean canBeCollidedWith()
 	{
 		return false;
 	}

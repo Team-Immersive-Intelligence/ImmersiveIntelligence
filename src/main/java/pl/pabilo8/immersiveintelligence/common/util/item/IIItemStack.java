@@ -4,7 +4,7 @@ import net.minecraft.item.ItemStack;
 
 /**
  * @author GabrielV (gabriel@iiteam.net)
- * @since 20/04/2024 - 11:49 AM
+ * @since 20.04.2024
  * Small dirty class for dirty purposes
  */
 public class IIItemStack

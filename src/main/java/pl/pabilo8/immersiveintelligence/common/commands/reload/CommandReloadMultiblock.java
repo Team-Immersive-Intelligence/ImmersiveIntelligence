@@ -19,8 +19,8 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
- * @author Pabilo8
- * @since 23-06-2020
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 23.06.2020
  */
 public class CommandReloadMultiblock extends CommandBase
 {

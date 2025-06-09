@@ -7,7 +7,7 @@ import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProper
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 01.05.2021
  */
 @IIItemProperties(category = IICategory.RESOURCES)

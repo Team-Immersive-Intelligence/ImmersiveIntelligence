@@ -37,7 +37,6 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.IAdvancedZoomTool;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.towable.gun.EntityFieldHowitzer;
 import pl.pabilo8.immersiveintelligence.common.item.tools.ItemIIBinoculars.Binoculars;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
@@ -56,8 +55,8 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * @author Pabilo8
- * @since 15-09-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 15.09.2019
  */
 @IIItemProperties(category = IICategory.TOOLS)
 public class ItemIIBinoculars extends ItemIISubItemsBase<Binoculars> implements IAdvancedZoomTool, IIEEnergyItem, IIIItemTextureOverride

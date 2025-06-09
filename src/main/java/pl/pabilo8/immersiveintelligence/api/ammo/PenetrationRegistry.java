@@ -27,10 +27,10 @@ import java.util.Map.Entry;
 import java.util.function.Predicate;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @updated 17.03.2024
  * @ii-approved 0.3.1
- * @since 05-03-2020
+ * @since 05.03.2020
  */
 public class PenetrationRegistry
 {

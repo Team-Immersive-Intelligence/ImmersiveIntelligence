@@ -44,7 +44,7 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  */
 public class GuiArithmeticLogicMachineBase extends GuiIEContainerBase implements ITabbedGui
 {

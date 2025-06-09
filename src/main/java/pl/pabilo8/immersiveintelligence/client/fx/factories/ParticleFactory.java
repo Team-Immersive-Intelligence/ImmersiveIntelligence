@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 /**
  * Used to build and spawn particle effects.
  *
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @ii-approved 0.3.1
  * @since 05.04.2024
  */
@@ -153,7 +153,6 @@ public class ParticleFactory<T extends AbstractParticle>
 				.forEach(this::withChainedParticle);
 	}
 
-	@SuppressWarnings("unchecked")
 	private Map.Entry<Integer, ParticleOffspring<T>> parseOffspringEntry(NBTTagCompound nbt)
 	{
 		int time = nbt.getInteger("time");

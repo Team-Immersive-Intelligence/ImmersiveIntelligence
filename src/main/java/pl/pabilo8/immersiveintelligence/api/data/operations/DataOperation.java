@@ -14,7 +14,7 @@ import java.lang.annotation.Target;
 /**
  * Represents a data operation that can be executed on a {@link DataPacket}, based on {@link DataTypeExpression} instructions.
  *
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @updated 09.10.2024
  * @ii-approved 0.3.1
  * @since 05.07.2019
@@ -76,7 +76,7 @@ public abstract class DataOperation
 	/**
 	 * Class representing a null operation, used as a default value for an uninitialized {@link DataTypeExpression}.
 	 *
-	 * @author Pabilo8
+	 * @author Pabilo8 (pabilo@iiteam.net)
 	 * @ii-approved 0.3.1
 	 * @since 27.10.2024
 	 */

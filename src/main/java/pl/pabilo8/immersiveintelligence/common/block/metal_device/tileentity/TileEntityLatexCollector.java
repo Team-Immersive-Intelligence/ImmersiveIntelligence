@@ -25,7 +25,7 @@ import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSyn
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 19.05.2021
  */
 public class TileEntityLatexCollector extends TileEntityIEBase implements IPlayerInteraction, ITickable, IBlockBounds, IDirectionalTile

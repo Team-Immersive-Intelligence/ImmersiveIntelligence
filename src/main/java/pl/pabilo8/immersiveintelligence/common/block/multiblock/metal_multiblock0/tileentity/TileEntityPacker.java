@@ -66,8 +66,8 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 /**
- * @author Pabilo8
- * @since 28-06-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 28.06.2019
  */
 public class TileEntityPacker extends TileEntityMultiblockIIGeneric<TileEntityPacker> implements IConveyorAttachable, IGuiTile, IUpgradableMachine, IPlayerInteraction
 {

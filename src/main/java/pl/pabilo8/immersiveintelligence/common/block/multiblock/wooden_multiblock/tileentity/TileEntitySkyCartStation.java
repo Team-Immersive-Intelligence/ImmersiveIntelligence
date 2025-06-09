@@ -57,10 +57,10 @@ import java.util.Set;
 import static blusunrize.immersiveengineering.api.energy.wires.WireType.STRUCTURE_CATEGORY;
 
 /**
- * @author Pabilo8
- * @author Avalon
- * @since 28-06-2019
- * @since 22-10-2024
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @author Avalon (avalon@iiteam.net)
+ * @since 28.06.2019
+ * @since 22.10.2024
  */
 public class TileEntitySkyCartStation extends TileEntityMultiblockConnectable<TileEntitySkyCartStation, IMultiblockRecipe> implements IAdvancedCollisionBounds, IAdvancedSelectionBounds, ISkyCrateConnector, IPlayerInteraction, IGuiTile, IRotationalEnergyBlock
 {
@@ -652,24 +652,6 @@ public class TileEntitySkyCartStation extends TileEntityMultiblockConnectable<Ti
 		if(pos==6&&capability==CapabilityRotaryEnergy.ROTARY_ENERGY&&facing==(mirrored?this.facing.rotateY(): this.facing.rotateYCCW()))
 			return (T)rotation;
 		return super.getCapability(capability, facing);
-	}
-
-	@Override
-	protected boolean canTakeMV()
-	{
-		return false;
-	}
-
-	@Override
-	protected boolean canTakeLV()
-	{
-		return false;
-	}
-
-	@Override
-	protected boolean canTakeHV()
-	{
-		return false;
 	}
 
 	@Override

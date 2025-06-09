@@ -13,8 +13,8 @@ import javax.annotation.Nonnull;
 /**
  * Used to compare two data types, and return true if the first is greater/longer than the second
  *
- * @author Pabilo8
- * @since 05-07-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 05.07.2019
  */
 @DataOperationMeta(name = "greater", expression = ">",
 		allowedTypes = {DataType.class, DataType.class}, params = {"compared", "compared"},
@@ -23,7 +23,7 @@ public class DataOperationGreater extends DataOperation
 {
 	@Nonnull
 	@Override
-	@SuppressWarnings({"raw", "unchecked"})
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	public DataType execute(DataPacket packet, DataTypeExpression data)
 	{
 		DataType t1 = packet.evaluateVariable(data.getArgument(0), false);

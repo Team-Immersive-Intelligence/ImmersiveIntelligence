@@ -24,8 +24,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * @author Pabilo8
- * @since 10-07-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 10.07.2019
  */
 public class GuiAmmunitionAssembler extends GuiAmmunitionBase<TileEntityAmmunitionAssembler>
 {

@@ -25,7 +25,7 @@ import java.util.LinkedHashMap;
 import java.util.stream.Collectors;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 21.03.2022
  */
 public class IIManualEntry extends ManualEntry

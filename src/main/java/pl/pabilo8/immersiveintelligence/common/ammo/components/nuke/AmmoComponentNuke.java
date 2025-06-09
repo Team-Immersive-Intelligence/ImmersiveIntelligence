@@ -41,7 +41,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @updated 06.03.2024
  * @ii-approved 0.3.1
  * @since 10.07.2021
@@ -144,7 +144,7 @@ public class AmmoComponentNuke extends AmmoComponent
 	}
 
 	@Override
-	public boolean matchesBullet(IAmmoTypeItem bullet)
+	public boolean matchesBullet(IAmmoTypeItem<?, ?> bullet)
 	{
 		return bullet.getCaliber() >= 6;
 	}

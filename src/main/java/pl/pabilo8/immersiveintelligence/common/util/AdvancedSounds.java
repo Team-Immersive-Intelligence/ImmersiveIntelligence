@@ -15,7 +15,7 @@ import static pl.pabilo8.immersiveintelligence.api.ammo.enums.HitEffect.RICOCHET
 /**
  * Despite being sounds, inner classes are NOT client side only
  *
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 23.09.2022
  */
 public class AdvancedSounds

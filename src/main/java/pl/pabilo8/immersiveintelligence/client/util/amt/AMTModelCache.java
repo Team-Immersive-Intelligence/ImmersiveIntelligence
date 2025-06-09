@@ -19,7 +19,7 @@ import java.util.*;
 import java.util.function.BiFunction;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 17.02.2023
  */
 public abstract class AMTModelCache<T> extends HashMap<String, AMT[]> implements Iterable<AMT>

@@ -15,7 +15,7 @@ import java.util.function.IntFunction;
 import java.util.stream.Collectors;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @updated 29.08.2024
  * @ii-approved 0.3.1
  * @since 29.07.2021

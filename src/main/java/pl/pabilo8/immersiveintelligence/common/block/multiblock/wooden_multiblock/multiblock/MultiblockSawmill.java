@@ -10,8 +10,8 @@ import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
 
 /**
- * @author Pabilo8
- * @since 13-04-2020
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 13.04.2020
  */
 public class MultiblockSawmill extends MultiblockStuctureBase<TileEntitySawmill>
 {

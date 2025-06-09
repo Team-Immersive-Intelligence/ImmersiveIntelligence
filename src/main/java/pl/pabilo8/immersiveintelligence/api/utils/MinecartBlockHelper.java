@@ -12,8 +12,8 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 /**
- * @author Pabilo8
- * @since 26-01-2020
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 26.01.2020
  */
 public class MinecartBlockHelper
 {

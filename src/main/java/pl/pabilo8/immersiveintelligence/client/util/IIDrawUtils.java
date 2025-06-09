@@ -28,7 +28,7 @@ import java.util.function.BiConsumer;
  *  .finish();
  * }</pre>
  *
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @ii-approved 0.3.1
  * @since 16.02.2023
  */

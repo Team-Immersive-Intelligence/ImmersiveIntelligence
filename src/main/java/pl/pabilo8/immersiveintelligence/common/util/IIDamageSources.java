@@ -16,8 +16,8 @@ import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityVehicleSeat;
 import java.util.Arrays;
 
 /**
- * @author Pabilo8
- * @since 30-08-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 30.08.2019
  */
 public class IIDamageSources
 {

@@ -13,10 +13,10 @@ import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.IIMult
 import javax.annotation.Nullable;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @updated 08.06.2025
  * @ii-approved 0.3.1
- * @since 14-04-2020
+ * @since 14.04.2020
  */
 public class FillerRecipe extends IIMultiblockRecipe
 {

@@ -22,7 +22,7 @@ import java.util.ArrayList;
 /**
  * AMT type for drawing chains
  *
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 02.08.2024
  */
 public class AMTChain extends AMT

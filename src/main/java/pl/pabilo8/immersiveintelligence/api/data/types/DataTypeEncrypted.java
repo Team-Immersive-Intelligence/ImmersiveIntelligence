@@ -4,7 +4,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.IterableDataType;
 
 /**
- * @author GabrielV
+ * @author GabrielV(gabriel @ iiteam.net)
  * Data type used for transferring encrypted data from Cryptographer
  */
 public class DataTypeEncrypted extends IterableDataType

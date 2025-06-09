@@ -11,7 +11,7 @@ import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine;
 import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIItem;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 23.09.2023
  */
 public class ContainerCasingPouch extends ContainerIIItem

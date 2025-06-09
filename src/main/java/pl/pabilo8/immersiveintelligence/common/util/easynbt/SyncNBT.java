@@ -5,7 +5,7 @@ import java.lang.annotation.*;
 /**
  * Annotation for fields that should be synced to NBT
  *
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @ii-approved 0.3.1
  * @since 30.12.2023
  */

@@ -24,7 +24,6 @@ import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.api.utils.IEntitySpecialRepairable;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Emplacement;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.weapon.EmplacementWeapon;
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
@@ -36,7 +35,7 @@ import java.util.Optional;
 /**
  * Yes, "living", as in: able to attract enemies towards it
  *
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 17.07.2021
  */
 public class EntityEmplacementWeapon extends EntityLivingBase implements IEntityMultiPart, IEntitySpecialRepairable
@@ -85,20 +84,6 @@ public class EntityEmplacementWeapon extends EntityLivingBase implements IEntity
 	public AxisAlignedBB getEntityBoundingBox()
 	{
 		return aabb.offset(posX, posY, posZ);
-	}
-
-	@Nullable
-	@Override
-	public AxisAlignedBB getCollisionBoundingBox()
-	{
-		return null;
-	}
-
-	@Nullable
-	@Override
-	public AxisAlignedBB getCollisionBox(Entity entityIn)
-	{
-		return null;
 	}
 
 	@Override
@@ -292,7 +277,7 @@ public class EntityEmplacementWeapon extends EntityLivingBase implements IEntity
 	}
 
 	@Nullable
-	public EmplacementWeapon getParent()
+	public EmplacementWeapon<?> getParent()
 	{
 		if(parent!=null)
 			return parent;

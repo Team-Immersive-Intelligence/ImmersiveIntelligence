@@ -16,8 +16,8 @@ import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer.RegisteredT
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityBallisticComputer;
 
 /**
- * @author Pabilo8
- * @since 28-06-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 28.06.2019
  */
 @RegisteredTileRenderer(name = "ballistic_computer", clazz = TileEntityBallisticComputer.class)
 public class BallisticComputerRenderer extends IIMultiblockRenderer<TileEntityBallisticComputer>

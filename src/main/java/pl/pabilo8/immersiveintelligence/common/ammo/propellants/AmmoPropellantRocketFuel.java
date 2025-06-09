@@ -6,7 +6,7 @@ import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoPropellant;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 28.05.2024
  */
 public class AmmoPropellantRocketFuel extends AmmoPropellant

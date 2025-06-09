@@ -4,7 +4,7 @@ import net.minecraft.entity.ai.EntityAIBase;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityDrone;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 19.12.2022
  */
 public abstract class AIDroneBase extends EntityAIBase

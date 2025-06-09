@@ -10,7 +10,7 @@ import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 05.01.2022
  */
 @ZenClass("mods."+ImmersiveIntelligence.MODID+".Dusts")

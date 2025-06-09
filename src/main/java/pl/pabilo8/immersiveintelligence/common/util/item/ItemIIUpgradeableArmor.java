@@ -48,7 +48,7 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @author Kuruma
  * @since 13.09.2020
  * <p>

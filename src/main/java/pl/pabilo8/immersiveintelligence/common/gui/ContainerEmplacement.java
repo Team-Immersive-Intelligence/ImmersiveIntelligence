@@ -9,7 +9,7 @@ import net.minecraftforge.items.IItemHandler;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 16.07.2021
  */
 public class ContainerEmplacement extends ContainerIEBase<TileEntityEmplacement>

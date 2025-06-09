@@ -4,7 +4,7 @@ import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @ii-approved 0.3.1
  * @since 27.05.2024
  */

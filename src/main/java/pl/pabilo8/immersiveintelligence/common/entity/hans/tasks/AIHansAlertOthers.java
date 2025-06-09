@@ -7,7 +7,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 07.05.2021
  */
 public class AIHansAlertOthers extends EntityAITarget

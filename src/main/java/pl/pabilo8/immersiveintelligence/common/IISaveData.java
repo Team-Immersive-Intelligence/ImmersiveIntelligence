@@ -10,8 +10,8 @@ import pl.pabilo8.immersiveintelligence.api.ammo.utils.PenetrationCache;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 /**
- * @author Pabilo8
- * @since 23-06-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 23.06.2019
  */
 public class IISaveData extends WorldSavedData
 {

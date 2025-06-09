@@ -1,5 +1,5 @@
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 05.04.2024
  */
 @API(owner = "ImmersiveIntelligence", apiVersion = "1.0", provides = "ImmersiveIntelligence|API")

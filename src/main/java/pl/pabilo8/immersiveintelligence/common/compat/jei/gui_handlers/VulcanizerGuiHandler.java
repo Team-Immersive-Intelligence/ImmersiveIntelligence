@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 24.03.2021
  */
 public class VulcanizerGuiHandler implements IAdvancedGuiHandler<GuiVulcanizer>
@@ -39,6 +39,6 @@ public class VulcanizerGuiHandler implements IAdvancedGuiHandler<GuiVulcanizer>
 	@Override
 	public Object getIngredientUnderMouse(GuiVulcanizer guiContainer, int mouseX, int mouseY)
 	{
-		return guiContainer.getPreviewedItem(mouseX,mouseY);
+		return guiContainer.getPreviewedItem(mouseX, mouseY);
 	}
 }

@@ -12,8 +12,8 @@ import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
 /**
- * @author Pabilo8
- * @since 2019-05-24
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 24.05.2019
  */
 @ZenClass("mods."+ImmersiveIntelligence.MODID+".Machinegun")
 @ZenRegister

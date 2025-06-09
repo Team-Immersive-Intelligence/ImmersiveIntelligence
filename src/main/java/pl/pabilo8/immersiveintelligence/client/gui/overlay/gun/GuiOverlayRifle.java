@@ -13,7 +13,7 @@ import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIWeaponUpgrade.
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 13.09.2022
  */
 public class GuiOverlayRifle extends GuiOverlayGunBase

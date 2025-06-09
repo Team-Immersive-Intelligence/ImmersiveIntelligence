@@ -27,8 +27,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 /**
- * @author Pabilo8
- * @since 30-06-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 30.06.2019
  */
 public class GuiDataMerger extends GuiIEContainerBase implements ITabbedGui
 {

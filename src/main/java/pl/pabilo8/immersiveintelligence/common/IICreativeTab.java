@@ -42,7 +42,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @author GabrielV (gabriel@iiteam.net) - Creative Sub Tabs
  * @updated 21.05.2024
  * @ii-approved 0.3.1

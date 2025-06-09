@@ -22,7 +22,7 @@ import pl.pabilo8.immersiveintelligence.api.ammo.utils.AmmoFactory;
 import javax.annotation.Nullable;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @ii-approved 0.3.1
  * @since 05.03.2024
  */

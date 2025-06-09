@@ -12,8 +12,8 @@ import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import javax.annotation.Nonnull;
 
 /**
- * @author Pabilo8
- * @since 05-07-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 05.07.2019
  */
 @DataOperation.DataOperationMeta(name = "root",
 		allowedTypes = {NumericDataType.class, NumericDataType.class}, params = {"base", "degree"},

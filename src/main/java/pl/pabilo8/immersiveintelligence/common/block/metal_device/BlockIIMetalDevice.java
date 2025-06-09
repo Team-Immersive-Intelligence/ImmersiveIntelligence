@@ -30,8 +30,8 @@ import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import javax.annotation.Nonnull;
 
 /**
- * @author Pabilo8
- * @since 2019-05-17
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 17.05.2019
  */
 public class BlockIIMetalDevice extends BlockIITileProvider<IIBlockTypes_MetalDevice>
 {
@@ -106,7 +106,6 @@ public class BlockIIMetalDevice extends BlockIITileProvider<IIBlockTypes_MetalDe
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	@Nonnull
 	public EnumBlockRenderType getRenderType(IBlockState state)
 	{

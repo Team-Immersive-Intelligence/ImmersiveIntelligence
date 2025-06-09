@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 06.02.2022
  */
 public class HansPlatoon
@@ -17,7 +17,7 @@ public class HansPlatoon
 	ArrayList<EntityHans> members;
 	HashMap<EntityHans, FormationPosition> positions;
 
-	public boolean inCombat=false;
+	public boolean inCombat = false;
 
 	public enum FormationPosition
 	{

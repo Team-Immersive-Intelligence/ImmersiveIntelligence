@@ -26,7 +26,7 @@ import java.util.List;
  * A class for wrapping IE's Manual to a GuiButton
  * Also, would be nice if Blu learned about 'protected' modifier, helps addons a lot
  *
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 04.09.2021
  */
 // TODO: 06.09.2021 scrolling

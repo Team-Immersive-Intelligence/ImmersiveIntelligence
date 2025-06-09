@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * An enum for common multiblock Points-of-Interest.
+ * Represents common multiblock Points-of-Interest types
  *
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 26.10.2023
  */
 public enum MultiblockPOI
@@ -63,27 +63,31 @@ public enum MultiblockPOI
 	MISC_CRATE,
 	MISC_WEAPON;
 
-	private List<MultiblockPOI> children;
-
-	MultiblockPOI(@Nonnull MultiblockPOI parent)
-	{
-		this();
-		parent.children.add(this);
-	}
+	private final List<MultiblockPOI> children;
 
 	MultiblockPOI()
 	{
 		children = new ArrayList<>();
 	}
 
+	@SuppressWarnings("IncompleteCopyConstructor")
+	MultiblockPOI(@Nonnull MultiblockPOI parent)
+	{
+		this();
+		parent.children.add(this);
+	}
+
 	/**
-	 * @return
+	 * @return true if this Point-of-Interest has children, false otherwise.
 	 */
 	public boolean hasChildren()
 	{
 		return !children.isEmpty();
 	}
 
+	/**
+	 * @return all children of this Point-of-Interest
+	 */
 	public List<MultiblockPOI> getChildren()
 	{
 		return children;

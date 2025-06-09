@@ -18,8 +18,8 @@ import java.net.URL;
 import java.util.*;
 
 /**
- * @author Pabilo8, GabrielV (rewrite)
- * @since 30-06-2020
+ * @author Pabilo8 (pabilo@iiteam.net), GabrielV (rewrite)
+ * @since 30.06.2020
  */
 public class IISkinHandler
 {
@@ -43,7 +43,7 @@ public class IISkinHandler
 	public static boolean isConnected = false;
 
 	/**
-	 * Prepare all skins sprites for <code>skinnable</code>. Used for models that use <code>obj</code> format to render models. This should be used inside skinnable's <code>registerSprites</code> function.
+	 * Prepare all skins sprites for {@code skinnable}. Used for models that use {@code obj} format to render models. This should be used inside skinnable's <code>registerSprites</code> function.
 	 *
 	 * @param map       Texture map
 	 * @param skinnable Skinnable name
@@ -62,7 +62,7 @@ public class IISkinHandler
 	 * Get skin by its name.
 	 *
 	 * @param skin Skin name
-	 * @return {@link IISpecialSkin} if skin exists otherwise <code>null</code>
+	 * @return {@link IISpecialSkin} if skin exists otherwise {@code null}
 	 */
 	@Nullable
 	public static IISpecialSkin getSkin(String skin)
@@ -116,7 +116,7 @@ public class IISkinHandler
 		 * Check if the skin applies to specific skinnable
 		 *
 		 * @param skinnableName Name of the skinnable to check
-		 * @return If skin can be applied to specified <code>skinnable</code>
+		 * @return If skin can be applied to specified {@code skinnable}
 		 */
 		public boolean doesApply(String skinnableName)
 		{
@@ -153,7 +153,8 @@ public class IISkinHandler
 	}
 
 	/**
-	 * @author BluSunrize (original), Pabilo8 (correct json implementation)
+	 * @author Pabilo8 (pabilo@iiteam.net)
+	 * @author BluSunrize
 	 * @since 0.2.0
 	 * <p>
 	 * Special thanks to:
@@ -236,9 +237,8 @@ public class IISkinHandler
 				IILogger.info(builder.delete(builder.lastIndexOf(", "), builder.length()).toString());
 			} catch(Exception e)
 			{
-				IILogger.info("Could not load contributor special skin list.");
+				IILogger.error("Could not load contributor special skin list, "+e);
 				isConnected = false;
-				e.printStackTrace();
 			}
 
 		}

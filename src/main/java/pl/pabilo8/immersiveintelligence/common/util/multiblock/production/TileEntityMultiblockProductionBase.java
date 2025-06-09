@@ -31,7 +31,7 @@ import java.util.function.Function;
  * A standard II production multiblock.<br>
  * Counterpart to {@link TileEntityMultiblockMetal}<br>
  *
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 13.04.2023
  */
 

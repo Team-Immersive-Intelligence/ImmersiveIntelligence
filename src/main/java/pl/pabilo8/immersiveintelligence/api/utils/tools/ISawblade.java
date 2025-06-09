@@ -6,8 +6,8 @@ import net.minecraft.util.ResourceLocation;
 import javax.annotation.Nonnull;
 
 /**
- * @author Pabilo8
- * @since 19-08-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 19.08.2019
  */
 public interface ISawblade
 {

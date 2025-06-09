@@ -6,7 +6,7 @@ import net.minecraft.util.ResourceLocation;
 /**
  * Pattern based, more programmer friendly extension of {@link net.minecraft.util.ResourceLocation}
  *
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 13.02.2023
  */
 public class ResLoc extends ResourceLocation

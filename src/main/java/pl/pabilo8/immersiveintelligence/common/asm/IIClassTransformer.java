@@ -12,9 +12,8 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 /**
- * @author BluSunrize - 20.07.2017
- *
- * @author Pabilo8
+ * @author BluSunrize
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @since 23.09.2020
  */
 public class IIClassTransformer implements IClassTransformer

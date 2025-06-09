@@ -15,10 +15,10 @@ import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import javax.annotation.Nullable;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @updated 06.03.2024
  * @ii-approved 0.3.1
- * @since 30-08-2019
+ * @since 30.08.2019
  */
 public abstract class AmmoComponent extends AmmoPart
 {
@@ -51,7 +51,7 @@ public abstract class AmmoComponent extends AmmoPart
 	 * @param dir             the direction of the explosion
 	 * @param shape           the core type
 	 * @param tag             the NBT tag of the bullet
-	 * @param componentAmount
+	 * @param componentAmount the fraction (0.0-1.0) of this component being contents of this bullet
 	 * @param multiplier      the component effect multiplier
 	 * @param owner           the owner of the bullet
 	 */

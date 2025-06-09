@@ -7,10 +7,10 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
 import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIBase;
 
 /**
- * @author Pabilo8
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @updated 24.02.2025
  * @ii-approved 0.3.1
- * @since 30-06-2019
+ * @since 30.06.2019
  */
 public class ContainerDataInputMachine extends ContainerIIBase<TileEntityDataInputMachine>
 {

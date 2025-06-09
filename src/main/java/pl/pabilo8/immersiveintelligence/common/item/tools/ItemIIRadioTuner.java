@@ -40,8 +40,8 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 /**
- * @author Pabilo8
- * @since 24-06-2019
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @since 24.06.2019
  */
 @IIItemProperties(category = IICategory.TOOLS)
 public class ItemIIRadioTuner extends ItemIISubItemsBase<RadioTuners> implements IItemScrollable
