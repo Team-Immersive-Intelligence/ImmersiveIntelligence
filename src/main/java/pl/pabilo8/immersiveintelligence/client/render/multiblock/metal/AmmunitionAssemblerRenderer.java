@@ -108,7 +108,7 @@ public class AmmunitionAssemblerRenderer extends IIMultiblockRenderer<TileEntity
 
 		//Load ammo production animations, excluding ones for the Heavy Ammunition Assembler
 		productionAnimations.clear();
-		for(AmmunitionAssemblerRecipe recipe : AmmunitionAssemblerRecipe.RECIPES)
+		for(AmmunitionAssemblerRecipe recipe : AmmunitionAssemblerRecipe.getRecipes(AmmunitionAssemblerRecipe.class))
 			if(!recipe.advanced)
 				productionAnimations.put(recipe.ammoItem, IIAnimationCompiledMap.create(model, ResLoc.of(IIReference.RES_II, "ammunition_assembler/"+recipe.ammoItem.getName())));
 	}

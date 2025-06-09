@@ -41,7 +41,10 @@ import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseType;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.api.crafting.*;
+import pl.pabilo8.immersiveintelligence.api.crafting.PrintingRecipe.PrintFunction;
+import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.PrintingPress;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Sawmill;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.BlockIIMetalDevice.IIBlockTypes_MetalDevice;
@@ -50,6 +53,7 @@ import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIIConcreteDecor
 import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIIOre.Ores;
 import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIISmallCrate.IIBlockTypes_SmallCrate;
 import pl.pabilo8.immersiveintelligence.common.item.ItemIIMinecart.Minecarts;
+import pl.pabilo8.immersiveintelligence.common.item.ItemIIPrintedPage.SubItems;
 import pl.pabilo8.immersiveintelligence.common.item.ItemIITracerPowder;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoBase;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoBase.AmmoParts;
@@ -69,6 +73,7 @@ import pl.pabilo8.immersiveintelligence.common.item.data.ItemIIFunctionalCircuit
 import pl.pabilo8.immersiveintelligence.common.item.data.ItemIIPunchtape;
 import pl.pabilo8.immersiveintelligence.common.item.mechanical.ItemIIMotorGear.MotorGear;
 import pl.pabilo8.immersiveintelligence.common.item.tools.backpack.ItemIIAdvancedPowerPack;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIUpgradeableArmor;
 
@@ -77,12 +82,14 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
  * @author Pabilo8
- * @since 22-03-2020
  * @author Avalon
+ * @since 22-03-2020
  * @since 28-11-2024
  */
 public class IIRecipes
@@ -123,6 +130,7 @@ public class IIRecipes
 		addSiliconProcessingRecipes();
 		addCircuitRecipes();
 		addDataProgrammingRecipes();
+		addPrintingRecipes();
 
 		addFunctionalCircuits();
 		addSpringRecipes();
@@ -200,39 +208,87 @@ public class IIRecipes
 	private static void addDataProgrammingRecipes()
 	{
 		//Empty Punchtape
-		DataProgrammingRecipe.addRecipe(new IngredientStack("punchtapeEmpty"),
-				(data, stack) -> {
+		new DataProgrammingRecipe(new IngredientStack("punchtapeEmpty"),
+				(stack, dataIn, machineStorage) -> {
 					ItemStack output = new ItemStack(IIContent.itemPunchtape, 1, 0);
-					((ItemIIPunchtape)output.getItem()).writeDataToItem(data, output);
+					((ItemIIPunchtape)output.getItem()).writeDataToItem(dataIn, output);
 					return output;
-				}, null);
+				});
 
 		//Written Punchtape
-		DataProgrammingRecipe.addRecipe(IIContent.itemPunchtape.getIngredientStack(1),
-				null, (data, stack) -> ((ItemIIPunchtape)stack.getItem()).getStoredData(stack));
+		new DataProgrammingRecipe(IIContent.itemPunchtape.getIngredientStack(1),
+				(stack, dataIn, machineStorage) -> {
+					machineStorage.accept(((ItemIIPunchtape)stack.getItem()).getStoredData(stack));
+					return stack;
+				});
 
 		//Radio Explosives
-		DataProgrammingRecipe.addRecipe(IIContent.blockRadioExplosives.getIngredientStack(IIBlockTypes_Mine.MAIN, 1),
-				(data, stack) -> {
-					ItemNBTHelper.setTagCompound(stack, "programmed_data", data.clone().toNBT());
+		new DataProgrammingRecipe(IIContent.blockRadioExplosives.getIngredientStack(IIBlockTypes_Mine.MAIN, 1),
+				(stack, dataIn, machineStorage) -> {
+					ItemNBTHelper.setTagCompound(stack, "programmed_data", dataIn.toNBT());
 					return stack;
-				}, null);
+				});
+	}
+
+	private static void addPrintingRecipes()
+	{
+		new PrintingRecipe(new IngredientStack("pageEmpty"), "text", new PrintFunction()
+		{
+			@Override
+			public ItemStack apply(ItemStack input, DataPacket data)
+			{
+				return IIContent.itemPrintedPage.getStack(SubItems.TEXT,
+						nbt -> nbt.withString("text", data.getPacketVariable('t').toString())
+				);
+			}
+
+			@Override
+			public int[] getInkTypesRequired(DataPacket data)
+			{
+				float c = 0, m = 0, y = 0, k = 0;
+				String text = data.getPacketVariable('t').toString();
+				if(!text.isEmpty())
+				{
+					Pattern pattern = Pattern.compile("<hexcol;([A-Fa-f0-9]{6});(.*?)>");
+					Matcher matcher = pattern.matcher(text);
+
+					while(matcher.find())
+					{
+						//Get CMYK proportions
+						float[] cmykValues = IIColor.fromHex(matcher.group(1)).getCMYK();
+
+						//Calculate ink usage based on CMYK percentages
+						c += PrintingPress.printInkUsage*cmykValues[0];
+						m += PrintingPress.printInkUsage*cmykValues[1];
+						y += PrintingPress.printInkUsage*cmykValues[2];
+						k += PrintingPress.printInkUsage*cmykValues[3];
+					}
+
+					//For all other text calculate the black ink cost
+					k += pattern.matcher(text)
+							.replaceAll("")
+							.replaceAll(" ", "")
+							.length()*PrintingPress.printInkUsage;
+				}
+				return new int[]{(int)c, (int)m, (int)y, (int)k};
+			}
+		});
 	}
 
 	private static void addElectrolyzerRecipes()
 	{
 		//Immersive Engineering can into space???
-		ElectrolyzerRecipe.addRecipe(FluidRegistry.getFluidStack("water", 750),
+		new ElectrolyzerRecipe(FluidRegistry.getFluidStack("water", 750),
 				FluidRegistry.getFluidStack("oxygen", 250),
 				FluidRegistry.getFluidStack("hydrogen", 500),
 				160, 80);
-		ElectrolyzerRecipe.addRecipe(FluidRegistry.getFluidStack("brine", 750),
+		new ElectrolyzerRecipe(FluidRegistry.getFluidStack("brine", 750),
 				FluidRegistry.getFluidStack("chlorine", 375),
 				FluidRegistry.getFluidStack("hydrogen", 375),
 				160, 80);
 
 		//Why Realism when you have Immersiveness ^^
-		ElectrolyzerRecipe.addRecipe(new FluidStack(IIContent.gasCO2, 750), new FluidStack(IIContent.gasCO, 500),
+		new ElectrolyzerRecipe(new FluidStack(IIContent.gasCO2, 750), new FluidStack(IIContent.gasCO, 500),
 				new FluidStack(IIContent.gasOxygen, 250), 160, 160);
 		RefineryRecipe.addRecipe(new FluidStack(IIContent.fluidFormicAcid, 16), new FluidStack(IIContent.fluidMethanol, 8),
 				new FluidStack(IIContent.gasCO, 8), 65);
@@ -674,7 +730,7 @@ public class IIRecipes
 									.forEachOrdered(stacks::add);
 
 						if(!stacks.isEmpty())
-							SawmillRecipe.addRecipe(out, new IngredientStack(stacks).setUseNBT(false),
+							new SawmillRecipe(out, new IngredientStack(stacks).setUseNBT(false),
 									IIContent.itemMaterial.getStack(Materials.DUST_WOOD),
 									Sawmill.torqueMin+2, 200, 1);
 
@@ -688,23 +744,24 @@ public class IIRecipes
 		CrusherRecipe.addRecipe(IIContent.itemMaterial.getStack(Materials.DUST_WOOD),
 				new IngredientStack("plankWood", 2), 3192);
 
-		// Add recipes for all planks dynamically
-		for (int i = 0; i < 6; i++) { // Vanilla planks (Oak, Spruce, Birch, etc.)
-			SawmillRecipe.addRecipe(new ItemStack(Items.STICK, 3),
+		//Add recipes for all planks dynamically
+
+		//Vanilla planks (Oak, Spruce, Birch, etc.)
+		for(int i = 0; i < 6; i++)
+			new SawmillRecipe(new ItemStack(Items.STICK, 3),
 					new IngredientStack(new ItemStack(Blocks.PLANKS, 1, i)), // Specific plank type
 					IIContent.itemMaterial.getStack(Materials.DUST_WOOD),
 					Sawmill.torqueMin, 100, 1);
-		}
 
-// Treated wood planks
-		SawmillRecipe.addRecipe(new ItemStack(IEContent.itemMaterial, 3, 0), // Treated sticks
+		//Treated wood planks
+		new SawmillRecipe(new ItemStack(IEContent.itemMaterial, 3, 0), // Treated sticks
 				new IngredientStack(new ItemStack(IEContent.blockTreatedWood)), // Treated planks
 				IIContent.itemMaterial.getStack(Materials.DUST_WOOD),
 				Sawmill.torqueMin, 100, 1);
 
-// Support modded planks or dynamically registered planks
+		//Support modded planks or dynamically registered planks
 		IngredientStack allPlanks = new IngredientStack("plankWood"); // Handles OreDict entries for any planks
-		SawmillRecipe.addRecipe(new ItemStack(Items.STICK, 3),
+		new SawmillRecipe(new ItemStack(Items.STICK, 3),
 				allPlanks,
 				IIContent.itemMaterial.getStack(Materials.DUST_WOOD),
 				Sawmill.torqueMin, 100, 1);
@@ -824,17 +881,15 @@ public class IIRecipes
 
 	public static void addFillerRecipes()
 	{
-		FillerRecipe.recipeList.clear();
-
 		//Sandbag
-		FillerRecipe.addRecipe(
+		new FillerRecipe(
 				IIContent.itemMaterial.getStack(Materials.SANDBAG),
 				new IngredientStack("fabricHemp"),
 				new DustStack("sand", 50),
 				100,
 				2000
 		);
-		FillerRecipe.addRecipe(
+		new FillerRecipe(
 				IIContent.itemMaterial.getStack(Materials.SANDBAG),
 				new IngredientStack("fabricHemp"),
 				new DustStack("gravel", 40),
@@ -1218,16 +1273,16 @@ public class IIRecipes
 
 	public static void addAmmunitionCasingRecipes()
 	{
-		FillerRecipe.addRecipe(IIContent.itemAmmoHeavyArtillery, 160, 8000);
-		FillerRecipe.addRecipe(IIContent.itemAmmoMediumArtillery, 150, 7000);
-		FillerRecipe.addRecipe(IIContent.itemAmmoLightArtillery, 140, 6000);
-		FillerRecipe.addRecipe(IIContent.itemAmmoMortar, 140, 6000);
-		FillerRecipe.addRecipe(IIContent.itemAmmoLightGun, 130, 4000);
-		FillerRecipe.addRecipe(IIContent.itemAmmoAutocannon, 80, 1000);
-		FillerRecipe.addRecipe(IIContent.itemAmmoMachinegun, 60, 800);
-		FillerRecipe.addRecipe(IIContent.itemAmmoAssaultRifle, 55, 700);
-		FillerRecipe.addRecipe(IIContent.itemAmmoSubmachinegun, 50, 600);
-		FillerRecipe.addRecipe(IIContent.itemAmmoRevolver, 40, 400);
+		new FillerRecipe(IIContent.itemAmmoHeavyArtillery, 160, 8000);
+		new FillerRecipe(IIContent.itemAmmoMediumArtillery, 150, 7000);
+		new FillerRecipe(IIContent.itemAmmoLightArtillery, 140, 6000);
+		new FillerRecipe(IIContent.itemAmmoMortar, 140, 6000);
+		new FillerRecipe(IIContent.itemAmmoLightGun, 130, 4000);
+		new FillerRecipe(IIContent.itemAmmoAutocannon, 80, 1000);
+		new FillerRecipe(IIContent.itemAmmoMachinegun, 60, 800);
+		new FillerRecipe(IIContent.itemAmmoAssaultRifle, 55, 700);
+		new FillerRecipe(IIContent.itemAmmoSubmachinegun, 50, 600);
+		new FillerRecipe(IIContent.itemAmmoRevolver, 40, 400);
 
 		//Projectiles
 		for(ItemIIAmmoBase item : new ItemIIAmmoBase[]{IIContent.itemAmmoHeavyArtillery, IIContent.itemAmmoMediumArtillery, IIContent.itemAmmoLightArtillery,
@@ -1240,7 +1295,7 @@ public class IIRecipes
 			ItemStack casingStack = item.getCasingStack(1);
 			ItemNBTHelper.setBoolean(casingStack, "ii_FilledCasing", true);
 
-			AmmunitionAssemblerRecipe.addRecipe(
+			new AmmunitionAssemblerRecipe(
 					(core, casing) -> {
 						ItemStack stack = item.getStack(AmmoParts.BULLET);
 						stack.deserializeNBT(core.serializeNBT());
@@ -1253,11 +1308,11 @@ public class IIRecipes
 			);
 		}
 
-		for(ItemIIAmmoBase item : new ItemIIAmmoBase[]{IIContent.itemAmmoRocketLight, IIContent.itemAmmoRocketHeavy, IIContent.itemAmmoGuidedMissile, IIContent.itemNavalMine})
+		for(ItemIIAmmoBase<?> item : new ItemIIAmmoBase[]{IIContent.itemAmmoRocketLight, IIContent.itemAmmoRocketHeavy, IIContent.itemAmmoGuidedMissile, IIContent.itemNavalMine})
 		{
 			assert item!=null;
 			ItemStack casingStack = item.getCasingStack(1);
-			AmmunitionAssemblerRecipe.addRecipe(
+			new AmmunitionAssemblerRecipe(
 					(core, casing) -> {
 						ItemStack stack = item.getStack(AmmoParts.BULLET);
 						stack.deserializeNBT(core.serializeNBT());
@@ -1274,9 +1329,9 @@ public class IIRecipes
 		for(Item item : new Item[]{IIContent.blockTripmine.itemBlock, IIContent.blockTellermine.itemBlock, IIContent.blockRadioExplosives.itemBlock})
 		{
 			assert item!=null;
-			IAmmoTypeItem bullet = (IAmmoTypeItem)item;
+			IAmmoTypeItem<?, ?> bullet = (IAmmoTypeItem<?, ?>)item;
 
-			AmmunitionAssemblerRecipe.addRecipe(
+			new AmmunitionAssemblerRecipe(
 					(core, casing) -> {
 						ItemStack stack = new ItemStack(item, 1, IIBlockTypes_Mine.MAIN.getMeta());
 						stack.deserializeNBT(core.serializeNBT());
@@ -1290,7 +1345,7 @@ public class IIRecipes
 		}
 
 		//Grenades
-		AmmunitionAssemblerRecipe.addRecipe(
+		new AmmunitionAssemblerRecipe(
 				(core, casing) -> {
 
 					ItemStack stack = IIContent.itemGrenade.getStack(AmmoParts.BULLET);
@@ -1301,7 +1356,7 @@ public class IIRecipes
 				new IngredientStack("stickTreatedWood"), 600, 480, false
 		);
 
-		AmmunitionAssemblerRecipe.addRecipe(
+		new AmmunitionAssemblerRecipe(
 				(core, casing) -> {
 					ItemStack stack = IIContent.itemRailgunGrenade.getStack(AmmoParts.BULLET);
 					stack.deserializeNBT(core.serializeNBT());

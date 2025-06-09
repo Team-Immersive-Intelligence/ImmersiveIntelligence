@@ -521,7 +521,7 @@ public class TileEntityPrecisionAssembler extends TileEntityMultiblockMetal<Tile
 		isDrawerOpened[part] = state;
 
 		for(int i = 0; i < 2; i++)
-			IIPacketHandler.INSTANCE.sendToAllAround(new MessageBooleanAnimatedPartsSync(isDrawerOpened[i], i, getPos()), IIPacketHandler.targetPointFromPos(this.getPos(), this.world, 32));
+			IIPacketHandler.INSTANCE.sendToAllAround(new MessageBooleanAnimatedPartsSync(i, isDrawerOpened[i], getPos()), IIPacketHandler.targetPointFromPos(this.getPos(), this.world, 32));
 	}
 
 	@Override

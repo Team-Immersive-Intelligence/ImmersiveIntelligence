@@ -11,10 +11,12 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.ArrayUtils;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Arrays;
+import java.util.function.Consumer;
 
 /**
  * Use this class on items with sub-items (meta)
@@ -180,6 +182,13 @@ public class ItemIISubItemsBase<E extends Enum<E> & IIItemEnum> extends ItemIIBa
 	public ItemStack getStack(E subItem)
 	{
 		return new ItemStack(this, 1, subItem.ordinal());
+	}
+
+	public ItemStack getStack(E subItem, Consumer<EasyNBT> nbt)
+	{
+		ItemStack stack = this.getStack(subItem);
+		nbt.accept(EasyNBT.wrapNBT(stack));
+		return stack;
 	}
 
 	public ComparableItemStack getComparableStack(E subItem)

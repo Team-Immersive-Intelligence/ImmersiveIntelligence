@@ -375,8 +375,8 @@ public class GuiDataRedstoneInterfaceRedstone extends GuiIEContainerBase impleme
 	public void onGuiClosed()
 	{
 		syncDataToServer();
-		IIPacketHandler.sendToServer(new MessageBooleanAnimatedPartsSync(false, 0, tile.getPos()));
-		IIPacketHandler.sendToServer(new MessageBooleanAnimatedPartsSync(false, 1, tile.getPos()));
+		IIPacketHandler.sendToServer(new MessageBooleanAnimatedPartsSync(0, false, tile.getPos()));
+		IIPacketHandler.sendToServer(new MessageBooleanAnimatedPartsSync(1, false, tile.getPos()));
 		super.onGuiClosed();
 	}
 

@@ -17,9 +17,9 @@ import net.minecraftforge.items.IItemHandler;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
-import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoCore;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.api.crafting.BulletComponentStack;
+import pl.pabilo8.immersiveintelligence.api.crafting.ProjectileWorkshopRecipe;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
 import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
@@ -30,12 +30,10 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockProjectileWorkshop;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityProjectileWorkshop.ProjectileWorkshopRecipe;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
-import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.IIMultiblockRecipe;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionBase;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionSingle;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockInteractablePart;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
@@ -236,7 +234,7 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockProduction
 	protected IIMultiblockProcess<ProjectileWorkshopRecipe> findNewProductionProcess()
 	{
 		//filling
-		if(hasUpgrade(IIContent.UPGRADE_CORE_FILLER))
+		/*if(hasUpgrade(IIContent.UPGRADE_CORE_FILLER))
 		{
 			//check for valid component and ammo core
 			if(componentInside.isEmpty()||inventory.get(SLOT_INPUT).isEmpty())
@@ -277,13 +275,14 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockProduction
 			IIMultiblockProcess<ProjectileWorkshopRecipe> out = new IIMultiblockProcess<>(new ProjectileWorkshopRecipe(producedAmmo, first.get(), coreType));
 			stack.shrink(producedAmmo.getCoreMaterialNeeded());
 			return out;
-		}
+		}*/
+		return null;
 	}
 
 	@Override
-	protected IIMultiblockProcess<ProjectileWorkshopRecipe> getProcessFromNBT(EasyNBT nbt)
+	protected IIMultiblockProcess<ProjectileWorkshopRecipe> getProcessByName(String name)
 	{
-		return null;
+		return TileEntityMultiblockProductionBase.findRecipeFromList(ProjectileWorkshopRecipe.class, name);
 	}
 
 	@Override
@@ -333,7 +332,7 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockProduction
 		if((part==0?lid1: lid2).setState(state))
 			world.playSound(null, getPos(), state?IISounds.metalBreadboxOpen: IISounds.metalBreadboxClose, SoundCategory.BLOCKS, 0.5F, 1f);
 
-		IIPacketHandler.INSTANCE.sendToAllAround(new MessageBooleanAnimatedPartsSync(state, part, getPos()),
+		IIPacketHandler.INSTANCE.sendToAllAround(new MessageBooleanAnimatedPartsSync(part, state, getPos()),
 				IIPacketHandler.targetPointFromPos(this.getPos(), this.world, 32));
 	}
 
@@ -407,86 +406,24 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockProduction
 
 	}
 
-	public static class ProjectileWorkshopRecipe extends IIMultiblockRecipe
+	public static class ProjectileWorkshopCoreMakingProcess extends IIMultiblockProcess<ProjectileWorkshopRecipe>
 	{
-		private int energyPerTick;
+		public ItemStack effect;
 
-		public IAmmoTypeItem<?, ?> ammo;
-		public boolean isFilling;
-		public ItemStack effect, ingredient;
-
-		/**
-		 * Production recipe
-		 *
-		 * @param ammo     Ammo to be produced
-		 * @param coreType Core type
-		 */
-		public ProjectileWorkshopRecipe(IAmmoTypeItem<?, ?> ammo, AmmoCore core, CoreType coreType)
+		public ProjectileWorkshopCoreMakingProcess(ProjectileWorkshopRecipe recipe)
 		{
-			this.ammo = ammo;
-			this.isFilling = false;
-
-			this.totalProcessTime = ProjectileWorkshop.productionTime*ammo.getCaliber();
-			this.energyPerTick = ProjectileWorkshop.productionEnergyUsage*ammo.getCaliber();
-
-			this.ingredient = core.getMaterial().getExampleStack();
-			this.effect = ammo.getAmmoCoreStack(core, coreType);
-		}
-
-		/**
-		 * Filling recipe
-		 *
-		 * @param inputStack Ammo to be filled
-		 */
-		public ProjectileWorkshopRecipe(ItemStack inputStack, BulletComponentStack component)
-		{
-			assert inputStack.getItem() instanceof IAmmoTypeItem;
-
-			this.ammo = (IAmmoTypeItem<?, ?>)inputStack.getItem();
-			this.isFilling = true;
-
-			this.totalProcessTime = ProjectileWorkshop.fillingTime;
-			this.energyPerTick = ProjectileWorkshop.fillingEnergyUsage;
-
-			this.effect = inputStack.copy();
-			this.effect.setCount(1);
-			ammo.addComponents(this.effect, component.getComponent(), component.tagCompound);
-		}
-
-		@Override
-		public int getTotalProcessTime()
-		{
-			return totalProcessTime;
-		}
-
-		@Override
-		public int getTotalProcessEnergy()
-		{
-			return energyPerTick*totalProcessTime;
-		}
-
-		public int getEnergyPerTick()
-		{
-			return energyPerTick;
-		}
-
-		public ItemStack getEffect()
-		{
-			return effect;
-		}
-
-		@Override
-		public int getMultipleProcessTicks()
-		{
-			return 0;
-		}
-
-		@Override
-		public EasyNBT writeToNBT()
-		{
-			return EasyNBT.newNBT()
-					.withBoolean("filling", isFilling)
-					.withItemStack("effect", effect);
+			super(recipe);
 		}
 	}
+
+	public static class ProjectileWorkshopCoreFillingProcess extends IIMultiblockProcess<ProjectileWorkshopRecipe>
+	{
+		public ItemStack effect;
+
+		public ProjectileWorkshopCoreFillingProcess(ProjectileWorkshopRecipe recipe)
+		{
+			super(recipe);
+		}
+	}
+
 }

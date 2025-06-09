@@ -153,19 +153,15 @@ public class IIDrawUtils
 	public IIDrawUtils drawColorGradient(int x, float y, int w, int h, IIColor colorBottom, IIColor colorTop)
 	{
 		buf.pos(offX+x, offY+y+h, 0)
-				.tex(0, 0)
 				.color(colorBottom.red, colorBottom.green, colorBottom.blue, colorBottom.alpha)
 				.endVertex();
 		buf.pos(offX+x+w, offY+y+h, 0)
-				.tex(0, 0)
 				.color(colorBottom.red, colorBottom.green, colorBottom.blue, colorBottom.alpha)
 				.endVertex();
 		buf.pos(offX+x+w, offY+y, 0)
-				.tex(0, 0)
 				.color(colorTop.red, colorTop.green, colorTop.blue, colorTop.alpha)
 				.endVertex();
 		buf.pos(offX+x, offY+y, 0)
-				.tex(0, 0)
 				.color(colorTop.red, colorTop.green, colorTop.blue, colorTop.alpha)
 				.endVertex();
 		return this;

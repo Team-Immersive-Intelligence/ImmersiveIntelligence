@@ -2,12 +2,13 @@ package pl.pabilo8.immersiveintelligence.common.gui;
 
 import blusunrize.immersiveengineering.common.gui.ContainerIEBase;
 import blusunrize.immersiveengineering.common.gui.IESlot;
-import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import pl.pabilo8.immersiveintelligence.api.crafting.PrintingRecipe;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityPrintingPress;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author Pabilo8
@@ -23,9 +24,10 @@ public class ContainerPrintingPress extends ContainerIEBase<TileEntityPrintingPr
 		this.addSlotToContainer(new Slot(this.inv, 0, 13, 39)
 		{
 			@Override
-			public boolean isItemValid(ItemStack stack)
+			public boolean isItemValid(@Nonnull ItemStack stack)
 			{
-				return Utils.compareToOreName(stack, "pageEmpty");
+				return PrintingRecipe.streamRecipes(PrintingRecipe.class)
+						.anyMatch(recipe -> recipe.getInput().matchesItemStackIgnoringSize(stack));
 			}
 		});
 

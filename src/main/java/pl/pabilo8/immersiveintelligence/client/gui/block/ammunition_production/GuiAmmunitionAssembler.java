@@ -35,7 +35,7 @@ public class GuiAmmunitionAssembler extends GuiAmmunitionBase<TileEntityAmmuniti
 	public GuiAmmunitionAssembler(EntityPlayer player, TileEntityAmmunitionAssembler tile)
 	{
 		super(player, tile, ContainerAmmunitionAssembler::new);
-		IIPacketHandler.sendToServer(new MessageBooleanAnimatedPartsSync(true, 0, tile.getPos()));
+		IIPacketHandler.sendToServer(new MessageBooleanAnimatedPartsSync(0, true, tile.getPos()));
 	}
 
 	@Override
@@ -171,6 +171,6 @@ public class GuiAmmunitionAssembler extends GuiAmmunitionBase<TileEntityAmmuniti
 				.withString("fuse", tile.fuse.getName())
 				.conditionally(valueEdit!=null, e -> e.withInt("fuse_config", Integer.parseInt(valueEdit.getText())))
 		));
-		IIPacketHandler.sendToServer(new MessageBooleanAnimatedPartsSync(false, 0, tile.getPos()));
+		IIPacketHandler.sendToServer(new MessageBooleanAnimatedPartsSync(0, false, tile.getPos()));
 	}
 }

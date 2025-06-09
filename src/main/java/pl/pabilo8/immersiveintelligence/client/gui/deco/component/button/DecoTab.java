@@ -17,8 +17,8 @@ public class DecoTab extends DecoButton
 	public DecoTab()
 	{
 		super(0, 0);
-		this.backgroundLocation = IIReference.RES_TEXTURES_DECO_COMPONENT_TAB;
-		padding = new int[]{6, 1, 4, 3};
+		withBackground(IIReference.RES_TEXTURES_DECO_COMPONENT_TAB);
+		withPadding(6, 1, 4, 3);
 	}
 
 	@Deprecated

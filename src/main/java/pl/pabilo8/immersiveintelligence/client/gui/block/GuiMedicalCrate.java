@@ -8,10 +8,9 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import org.lwjgl.opengl.GL11;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.EffectCrates;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.EffectCrates;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.effect_crate.TileEntityMedicalCrate;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerMedicalCrate;
@@ -47,8 +46,8 @@ public class GuiMedicalCrate extends GuiIEContainerBase
 		addButton(buttonBoost = new GuiButtonState(1, guiLeft+111, guiTop+24, 28, 24, "", tile.shouldBoost, TEXTURE, 176, 51, 0));
 
 		boolean upgraded = tile.hasUpgrade(IIContent.UPGRADE_INSERTER);
-		buttonHealing.visible=upgraded;
-		buttonBoost.visible=upgraded;
+		buttonHealing.visible = upgraded;
+		buttonBoost.visible = upgraded;
 	}
 
 	@Override
@@ -58,13 +57,13 @@ public class GuiMedicalCrate extends GuiIEContainerBase
 		{
 			tile.shouldHeal = !tile.shouldHeal;
 			buttonHealing.state = tile.shouldHeal;
-			IIPacketHandler.sendToServer(new MessageBooleanAnimatedPartsSync(tile.shouldHeal, 1, tile.getPos()));
+			IIPacketHandler.sendToServer(new MessageBooleanAnimatedPartsSync(1, tile.shouldHeal, tile.getPos()));
 		}
 		else if(button==buttonBoost)
 		{
 			tile.shouldBoost = !tile.shouldBoost;
 			buttonBoost.state = tile.shouldBoost;
-			IIPacketHandler.sendToServer(new MessageBooleanAnimatedPartsSync(tile.shouldBoost, 2, tile.getPos()));
+			IIPacketHandler.sendToServer(new MessageBooleanAnimatedPartsSync(2, tile.shouldBoost, tile.getPos()));
 		}
 	}
 
@@ -79,9 +78,9 @@ public class GuiMedicalCrate extends GuiIEContainerBase
 
 		if(upgraded)
 		{
-			if(IIMath.isPointInRectangle(buttonHealing.x,buttonHealing.y,buttonHealing.x+buttonHealing.width,buttonHealing.y+buttonHealing.height,mouseX,mouseY))
+			if(IIMath.isPointInRectangle(buttonHealing.x, buttonHealing.y, buttonHealing.x+buttonHealing.width, buttonHealing.y+buttonHealing.height, mouseX, mouseY))
 				tooltip.add(I18n.format(IIReference.DESCRIPTION_KEY+"medical_crate.heal"));
-			else if(IIMath.isPointInRectangle(buttonBoost.x,buttonBoost.y,buttonBoost.x+buttonBoost.width,buttonBoost.y+buttonBoost.height,mouseX,mouseY))
+			else if(IIMath.isPointInRectangle(buttonBoost.x, buttonBoost.y, buttonBoost.x+buttonBoost.width, buttonBoost.y+buttonBoost.height, mouseX, mouseY))
 				tooltip.add(I18n.format(IIReference.DESCRIPTION_KEY+"medical_crate.boost"));
 		}
 
@@ -112,7 +111,7 @@ public class GuiMedicalCrate extends GuiIEContainerBase
 		this.drawTexturedModalRect(guiLeft, guiTop+79, 0, 79, xSize, ySize-79);
 		this.drawTexturedModalRect(guiLeft+ww, guiTop, 9, 0, upgraded?167: 102, 79);
 
-		IIClientUtils.drawPowerBar(guiLeft+153, guiTop+24,7,47,tile.energyStorage/(float)EffectCrates.maxEnergyStored);
+		IIClientUtils.drawPowerBar(guiLeft+153, guiTop+24, 7, 47, tile.energyStorage/(float)EffectCrates.maxEnergyStored);
 
 		ClientUtils.handleGuiTank(tile.tanks[0], guiLeft+ww+10, guiTop+21, 16, 47, 177, 0, 20, 51, 0, 0, TEXTURE, null);
 		ClientUtils.handleGuiTank(tile.tanks[1], guiLeft+ww+54, guiTop+21, 16, 47, 177, 0, 20, 51, 0, 0, TEXTURE, null);

@@ -17,15 +17,16 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.oredict.OreDictionary;
 import pl.pabilo8.immersiveintelligence.api.crafting.DustStack;
 import pl.pabilo8.immersiveintelligence.api.crafting.DustUtils;
 import pl.pabilo8.immersiveintelligence.api.crafting.FillerRecipe;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Filler;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockFiller;
-import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionBase;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionMulti;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
@@ -193,10 +194,13 @@ public class TileEntityFiller extends TileEntityMultiblockProductionMulti<TileEn
 	}
 
 	@Override
-	public boolean isStackValid(int i, ItemStack itemStack)
+	public boolean isStackValid(int i, ItemStack stack)
 	{
-		if(i==SLOT_INPUT) return FillerRecipe.findRecipe(itemStack, dustStorage)!=null;
-		return DustUtils.isDustStack(itemStack);
+		if(i==SLOT_INPUT)
+			return FillerRecipe.streamRecipes(FillerRecipe.class)
+					.anyMatch(recipe -> OreDictionary.itemMatches(recipe.itemOutput, stack, true)&&
+							recipe.dust.canMergeWith(dustStorage)&&recipe.dust.amount <= dustStorage.amount);
+		return DustUtils.isDustStack(stack);
 	}
 
 	@Override
@@ -230,23 +234,24 @@ public class TileEntityFiller extends TileEntityMultiblockProductionMulti<TileEn
 	@Override
 	protected IIMultiblockProcess<FillerRecipe> findNewProductionProcess()
 	{
-		updateTileForEvent(SyncEvents.TILE_RECIPE_CHANGED);
-		FillerRecipe recipe = FillerRecipe.findRecipe(inventory.get(1), dustStorage);
-		if(recipe!=null)
-		{
-			inventory.get(1).shrink(recipe.itemInput.inputSize);
-			dustStorage = dustStorage.subtract(recipe.dust);
-			return new IIMultiblockProcess<>(recipe);
-		}
+		return FillerRecipe.streamRecipes(FillerRecipe.class)
+				.filter(recipe -> OreDictionary.itemMatches(recipe.itemOutput, inventory.get(1), true)&&
+						recipe.dust.canMergeWith(dustStorage)&&recipe.dust.amount <= dustStorage.amount)
+				.findFirst().map(recipe -> {
+					//Consume item and dust
+					inventory.get(1).shrink(recipe.itemInput.inputSize);
+					dustStorage = dustStorage.subtract(recipe.dust);
 
-		return null;
+					//Sync with clients
+					updateTileForEvent(SyncEvents.TILE_RECIPE_CHANGED);
+					return new IIMultiblockProcess<>(recipe);
+				}).orElse(null);
 	}
 
 	@Override
-	protected IIMultiblockProcess<FillerRecipe> getProcessFromNBT(EasyNBT nbt)
+	protected IIMultiblockProcess<FillerRecipe> getProcessByName(String name)
 	{
-		FillerRecipe recipe = FillerRecipe.findRecipe(nbt.getIngredientStack("item_input"), new DustStack(nbt.getCompound("dust")));
-		return recipe==null?null: new IIMultiblockProcess<>(recipe);
+		return TileEntityMultiblockProductionBase.findRecipeFromList(FillerRecipe.class, name);
 	}
 
 	@Override

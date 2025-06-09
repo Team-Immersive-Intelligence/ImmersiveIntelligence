@@ -1,49 +1,31 @@
 package pl.pabilo8.immersiveintelligence.client.gui.block.data_input_machine;
 
-import blusunrize.immersiveengineering.api.ManualHelper;
-import blusunrize.immersiveengineering.client.gui.elements.GuiButtonIE;
-import blusunrize.lib.manual.IManualPage;
-import blusunrize.lib.manual.ManualInstance.ManualEntry;
-import blusunrize.lib.manual.ManualPages;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeNull;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoTemplate;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoAlignment;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoButton;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoDropdownDataLetters;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoDropdownDataLetters.ArrowsAlignment;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.data_editor.GuiDataEditor;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityDataInputMachine;
-import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
-import pl.pabilo8.immersiveintelligence.common.network.messages.MessageGuiNBT;
-import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map.Entry;
-import java.util.Optional;
 import java.util.function.BiFunction;
 
 /**
  * Created by Pabilo8 on 30-06-2019.
  * Rework on 31.08.2021.
  */
-public class GuiDataInputMachineEdit extends GuiDataInputMachineBase
+@DecoTemplate(name = "data_input_machine_edit")
+public class GuiDataInputMachineEdit extends GuiDataInputMachine
 {
 	public char variableToEdit = 'a';
 	public DataType dataType;
 	public DecoDropdownDataLetters buttonLetter;
-	public GuiButtonIE buttonApply;
-	public GuiButtonIE buttonTypeNext, buttonTypePrev;
+	public DecoButton buttonApply;
+	public DecoButton buttonTypeNext, buttonTypePrev;
 	private DecoButton buttonVariableHelp;
 	@Nullable
 	private GuiDataEditor<? extends DataType> editor = null;
@@ -51,42 +33,21 @@ public class GuiDataInputMachineEdit extends GuiDataInputMachineBase
 	public GuiDataInputMachineEdit(EntityPlayer player, TileEntityDataInputMachine tile)
 	{
 		super(player, tile, IIGuiList.GUI_DATA_INPUT_MACHINE_EDIT);
-		title = I18n.format("tile.immersiveintelligence.metal_multiblock.data_input_machine.edit");
-		refreshStoredData();
 	}
 
 	@Override
-	public void initGui()
+	public void onInit()
 	{
-		super.initGui();
-
+		super.onInit();
 		//Properties
-		addLabel(43, 40, 115, 0, false, IIReference.COLOR_H1, I18n.format("desc.immersiveintelligence.variable_properties")).setCentered();
+		addLabel("desc.immersiveintelligence.variable_properties", 43, 40)
+				.withAlign(DecoAlignment.CENTER);
 		//Type:
-		addLabel(61, 24, IIReference.COLOR_H1, I18n.format("desc.immersiveintelligence.variable_type"));
+		addLabel("desc.immersiveintelligence.variable_type", 61, 24);
 		//Variable Type
-		addLabel(152-10-fontRenderer.getStringWidth(I18n.format(IIReference.DATA_KEY+"datatype."+dataType.getName())),
-				24, dataType.getTypeColor().withBrightness(0.4f),
-				I18n.format(IIReference.DATA_KEY+"datatype."+dataType.getName())
-		);
-
-		//Apply Button
-		buttonApply = addButton(new GuiButtonIE(buttonList.size(), guiLeft+96, guiTop+121, 64, 12, I18n.format("desc.immersiveintelligence.variable_apply"), TEXTURE_EDIT.toString(), 0, 222).setHoverOffset(64, 0));
-
-		//Displays Manual Page for Type
-		buttonVariableHelp = addButton(
-				new DecoButton(guiLeft+152-10, guiTop+15)
-						.withSize(16, 16)
-						.withIcon(dataType.getTextureLocation())
-		);
-
-		buttonTypeNext = addButton(new GuiButtonIE(0, guiLeft+159, guiTop+14+2, 8, 6, "",
-				ImmersiveIntelligence.MODID+":textures/gui/emplacement_icons.png", 128, 77)
-				.setHoverOffset(8, 0));
-
-		buttonTypePrev = addButton(new GuiButtonIE(0, guiLeft+159, guiTop+14+10, 8, 6, "",
-				ImmersiveIntelligence.MODID+":textures/gui/emplacement_icons.png", 128, 77+6)
-				.setHoverOffset(8, 0));
+		addLabel("desc.immersiveintelligence.variable_type", 152-10, 24)
+				.withAlign(DecoAlignment.CENTER)
+				.withTextColor(dataType.getTypeColor().withBrightness(0.4f));
 
 		editor = null;
 		for(Entry<Class<? extends DataType>, BiFunction<Integer, DataType, GuiDataEditor<? extends DataType>>> entry : GuiDataEditor.editors.entrySet())
@@ -98,34 +59,23 @@ public class GuiDataInputMachineEdit extends GuiDataInputMachineBase
 				break;
 			}
 		}
-
-		//Letter Change Buttons
-		buttonLetter = addButton(new DecoDropdownDataLetters(buttonList.size(), guiLeft+42-10, guiTop+14, false, variableToEdit, ArrowsAlignment.LEFT));
-		buttonLetter.setAvoidGetter(() -> list);
-
+		addComponents(
+				//Apply Button
+				buttonApply = new DecoButton(96, 121).withTranslatedTooltip("desc.immersiveintelligence.variable_apply"),
+				//Displays Manual Page for Type
+				buttonVariableHelp = new DecoButton(guiLeft+152-10, guiTop+15)
+						.withSize(16, 16)
+						.withIcon(dataType.getTextureLocation()),
+				//Type scroll buttons
+				buttonTypeNext = new DecoButton(159, 14+2).withRawText(">"),
+				buttonTypePrev = new DecoButton(159, 14+10).withRawText("<")
+				//Letter Change Buttons
+//				buttonLetter = new DecoDropdownDataLetters(buttonList.size(), guiLeft+42-10, guiTop+14, false, variableToEdit, ArrowsAlignment.LEFT)
+		);
+//		buttonLetter.setAvoidGetter(() -> list);
 	}
 
-	@Override
-	public void updateScreen()
-	{
-		super.updateScreen();
-		if(editor!=null)
-			editor.update();
-	}
-
-	@Override
-	protected void keyTyped(char typedChar, int keyCode) throws IOException
-	{
-		if(editor!=null&&editor.isFocused())
-			editor.keyTyped(typedChar, keyCode);
-		else
-		{
-			if(!buttonLetter.keyTyped(typedChar, keyCode))
-				super.keyTyped(typedChar, keyCode);
-		}
-	}
-
-	@Override
+	/*@Override
 	protected void actionPerformed(@Nonnull GuiButton button) throws IOException
 	{
 		super.actionPerformed(button);
@@ -144,7 +94,7 @@ public class GuiDataInputMachineEdit extends GuiDataInputMachineBase
 				this.dataType = this.editor.outputType();
 			saveBasicData(tile);
 			syncDataToServer();
-			preparedForChange = true;
+			soundPlayed = true;
 			IIPacketHandler.sendToServer(new MessageGuiNBT(IIGuiList.GUI_DATA_INPUT_MACHINE_VARIABLES, tile));
 		}
 		else if(button==buttonVariableHelp)
@@ -175,25 +125,16 @@ public class GuiDataInputMachineEdit extends GuiDataInputMachineBase
 				}
 			}
 
-			manualButton.state = true;
+//			manualButton.state = true;
 
 			sideManual.initGui();
 
 		}
 
-	}
-
-	@Override
-	public ArrayList<String> getTooltip(int mx, int my)
-	{
-		ArrayList<String> tooltip = super.getTooltip(mx, my);
-		if(editor!=null)
-			editor.getTooltip(tooltip, mx, my);
-		return tooltip;
-	}
+	}*/
 
 	//Used to refresh gui variables after one of the variables is changed
-	void refreshStoredData()
+	/*void refreshStoredData()
 	{
 		super.refreshStoredData();
 		this.list = tile.storedData;
@@ -203,9 +144,9 @@ public class GuiDataInputMachineEdit extends GuiDataInputMachineBase
 				variableToEdit = proxy.getStoredGuiData().getString("variableToEdit").charAt(0);
 		}
 		this.dataType = list.getPacketVariable(variableToEdit);
-	}
+	}*/
 
-	void switchType(boolean forward)
+	/*void switchType(boolean forward)
 	{
 		try
 		{
@@ -233,14 +174,5 @@ public class GuiDataInputMachineEdit extends GuiDataInputMachineBase
 
 		syncDataToServer();
 		initGui();
-	}
-
-	@Override
-	protected void syncDataToServer()
-	{
-		proxy.setStoredGuiData()
-				.withString("variableToEdit", String.valueOf(variableToEdit));
-		tile.storedData.setVariable(variableToEdit, dataType);
-		super.syncDataToServer();
-	}
+	}*/
 }

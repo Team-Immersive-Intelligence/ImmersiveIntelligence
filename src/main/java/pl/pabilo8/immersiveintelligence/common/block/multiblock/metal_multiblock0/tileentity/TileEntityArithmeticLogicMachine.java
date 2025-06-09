@@ -208,7 +208,7 @@ public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockIIGene
 		if(door.setState(state))
 		{
 			world.playSound(null, getPos(), state?IISounds.metalLockerOpen: IISounds.metalLockerClose, SoundCategory.BLOCKS, 0.25F, 1f);
-			IIPacketHandler.sendToClient(this, new MessageBooleanAnimatedPartsSync(state, 0, getPos()));
+			IIPacketHandler.sendToClient(this, new MessageBooleanAnimatedPartsSync(0, state, getPos()));
 		}
 	}
 }

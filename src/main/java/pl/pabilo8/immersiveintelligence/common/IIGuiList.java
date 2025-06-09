@@ -20,9 +20,8 @@ import pl.pabilo8.immersiveintelligence.client.gui.block.ammunition_production.G
 import pl.pabilo8.immersiveintelligence.client.gui.block.arithmetic_logic_machine.GuiArithmeticLogicMachineEdit;
 import pl.pabilo8.immersiveintelligence.client.gui.block.arithmetic_logic_machine.GuiArithmeticLogicMachineStorage;
 import pl.pabilo8.immersiveintelligence.client.gui.block.arithmetic_logic_machine.GuiArithmeticMachineVariables;
+import pl.pabilo8.immersiveintelligence.client.gui.block.data_input_machine.GuiDataInputMachine;
 import pl.pabilo8.immersiveintelligence.client.gui.block.data_input_machine.GuiDataInputMachineEdit;
-import pl.pabilo8.immersiveintelligence.client.gui.block.data_input_machine.GuiDataInputMachineStorage;
-import pl.pabilo8.immersiveintelligence.client.gui.block.data_input_machine.GuiDataInputMachineVariables;
 import pl.pabilo8.immersiveintelligence.client.gui.block.emplacement.GuiEmplacementPageStatus;
 import pl.pabilo8.immersiveintelligence.client.gui.block.emplacement.GuiEmplacementPageStorage;
 import pl.pabilo8.immersiveintelligence.client.gui.block.emplacement.GuiEmplacementPageTasks;
@@ -64,7 +63,7 @@ import java.util.function.BiFunction;
  * Created by Pabilo8 on 2019-05-17.
  * Major update on 2020-06-08
  */
-
+//REFACTOR: 26.02.2025 change class name to IIGUI and entry names to begin without "GUI_"
 public enum IIGuiList implements ISerializableEnum
 {
 	GUI_METAL_CRATE(TileEntityMetalCrate.class,
@@ -275,24 +274,34 @@ public enum IIGuiList implements ISerializableEnum
 		IIGuiList.GUI_PRECISION_ASSEMBLER.setClientGui(GuiPrecisionAssembler::new);
 		IIGuiList.GUI_FUEL_STATION.setClientGui(GuiFuelStation::new);
 		IIGuiList.GUI_DATA_MERGER.setClientGui(GuiDataMerger::new);
-
+		//Crates
 		IIGuiList.GUI_METAL_CRATE.setClientGui(GuiMetalCrate::new);
+		IIGuiList.GUI_SMALL_CRATE.setClientGui(GuiSmallCrate::new);
+		//Effect Crates
 		IIGuiList.GUI_AMMUNITION_CRATE.setClientGui(GuiAmmunitionCrate::new);
 		IIGuiList.GUI_MEDICRATE.setClientGui(GuiMedicalCrate::new);
 		IIGuiList.GUI_REPAIR_CRATE.setClientGui(GuiRepairCrate::new);
-		IIGuiList.GUI_SMALL_CRATE.setClientGui(GuiSmallCrate::new);
+		//Skycrate
 		IIGuiList.GUI_SKYCRATE_STATION.setClientGui(GuiSkycrateStation::new);
 		IIGuiList.GUI_SKYCART_STATION.setClientGui(GuiSkycartStation::new);
-		IIGuiList.GUI_DATA_INPUT_MACHINE_STORAGE.setClientGui(GuiDataInputMachineStorage::new);
-		IIGuiList.GUI_DATA_INPUT_MACHINE_VARIABLES.setClientGui(GuiDataInputMachineVariables::new);
-		IIGuiList.GUI_DATA_INPUT_MACHINE_EDIT.setClientGui(GuiDataInputMachineEdit::new);
+		//DIM
+		IIGuiList.GUI_DATA_INPUT_MACHINE_STORAGE.setClientGui(GuiDataInputMachine.class,
+				(player, te) -> new GuiDataInputMachine(player, te, IIGuiList.GUI_DATA_INPUT_MACHINE_STORAGE));
+		IIGuiList.GUI_DATA_INPUT_MACHINE_VARIABLES.setClientGui((player, te) ->
+				new GuiDataInputMachine(player, (TileEntityDataInputMachine)te, IIGuiList.GUI_DATA_INPUT_MACHINE_VARIABLES));
+		IIGuiList.GUI_DATA_INPUT_MACHINE_EDIT.setClientGui(GuiDataInputMachineEdit.class, GuiDataInputMachineEdit::new);
+		//ALM
 		IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_STORAGE.setClientGui(GuiArithmeticLogicMachineStorage::new);
-		IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_VARIABLES_0.setClientGui((player, te) -> new GuiArithmeticMachineVariables(player, (TileEntityArithmeticLogicMachine)te, 0));
-		IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_VARIABLES_1.setClientGui((player, te) -> new GuiArithmeticMachineVariables(player, (TileEntityArithmeticLogicMachine)te, 1));
-		IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_VARIABLES_2.setClientGui((player, te) -> new GuiArithmeticMachineVariables(player, (TileEntityArithmeticLogicMachine)te, 2));
-		IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_VARIABLES_3.setClientGui((player, te) -> new GuiArithmeticMachineVariables(player, (TileEntityArithmeticLogicMachine)te, 3));
+		IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_VARIABLES_0.setClientGui((player, te) ->
+				new GuiArithmeticMachineVariables(player, (TileEntityArithmeticLogicMachine)te, 0));
+		IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_VARIABLES_1.setClientGui((player, te) ->
+				new GuiArithmeticMachineVariables(player, (TileEntityArithmeticLogicMachine)te, 1));
+		IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_VARIABLES_2.setClientGui((player, te) ->
+				new GuiArithmeticMachineVariables(player, (TileEntityArithmeticLogicMachine)te, 2));
+		IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_VARIABLES_3.setClientGui((player, te) ->
+				new GuiArithmeticMachineVariables(player, (TileEntityArithmeticLogicMachine)te, 3));
 		IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_EDIT.setClientGui(GuiArithmeticLogicMachineEdit::new);
-
+		//Printed Page
 		IIGuiList.GUI_PRINTED_PAGE_BLANK.setClientStackGui(GuiPrintedPage::new);
 		IIGuiList.GUI_PRINTED_PAGE_TEXT.setClientStackGui(GuiPrintedPage::new);
 		IIGuiList.GUI_PRINTED_PAGE_CODE.setClientStackGui(GuiPrintedPage::new);
@@ -345,7 +354,7 @@ public enum IIGuiList implements ISerializableEnum
 		}
 
 		List<ResLoc> resources = new ArrayList<>();
-		for(Field field : klass.getFields())
+		for(Field field : klass.getDeclaredFields())
 		{
 			if(field.isAnnotationPresent(DecoResource.class)&&Modifier.isStatic(field.getModifiers()))
 			{

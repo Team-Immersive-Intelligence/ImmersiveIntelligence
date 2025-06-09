@@ -12,6 +12,8 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.api.crafting.DataProgrammingRecipe;
 
+import java.util.ArrayList;
+
 /**
  * @author Pabilo8
  * @since 23.09.2023
@@ -38,6 +40,20 @@ public class ContainerIIBase<T extends TileEntityIEBase & IIEInventory> extends 
 		return playerInventory;
 	}
 
+	@SuppressWarnings("unchecked")
+	protected <SLOT extends Slot> SLOT addSlot(int x, int y, int index, SlotConstructor<SLOT> aNew)
+	{
+		return (SLOT)addSlotToContainer(aNew.construct(this, this.inv, index, x, y));
+	}
+
+	protected <SLOT extends Slot> Slot[] addSlotArray(int x, int y, int startIndex, int totalSlots, int slotsPerRow, SlotConstructor<SLOT> aNew)
+	{
+		ArrayList<SLOT> slots = new ArrayList<>();
+		for(int i = 0; i < totalSlots; i++)
+			slots.add(this.addSlot(x+i%slotsPerRow*18, y+i/slotsPerRow*18, i+startIndex, aNew));
+		return slots.toArray(new Slot[0]);
+	}
+
 	public static class FilteredDataInput extends IESlot
 	{
 		public FilteredDataInput(Container container, IInventory inv, int id, int x, int y)
@@ -48,10 +64,19 @@ public class ContainerIIBase<T extends TileEntityIEBase & IIEInventory> extends 
 		@Override
 		public boolean isItemValid(ItemStack stack)
 		{
-			return DataProgrammingRecipe.RECIPE_LIST.stream().anyMatch(p -> p.input.matches(stack));
+			return DataProgrammingRecipe.streamRecipes(DataProgrammingRecipe.class)
+					.anyMatch(r -> r.input.matchesItemStackIgnoringSize(stack));
 		}
 	}
 
-
-	//TODO: 11.01.2025 use instead of ContainerIEBase
+	/**
+	 * Functional interface for {@link Slot} constructors to create them in batch.
+	 *
+	 * @param <SLOT> The type of the slot to construct.
+	 */
+	@FunctionalInterface
+	public interface SlotConstructor<SLOT extends Slot>
+	{
+		SLOT construct(Container container, IInventory inv, int id, int x, int y);
+	}
 }

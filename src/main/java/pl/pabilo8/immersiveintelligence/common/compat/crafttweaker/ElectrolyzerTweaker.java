@@ -31,9 +31,9 @@ public class ElectrolyzerTweaker
 		if(fluidOutput2!=null)
 			mcFluidOutputStack1 = CraftTweakerMC.getLiquidStack(fluidOutput2);
 
-		ElectrolyzerRecipe r = new ElectrolyzerRecipe(mcFluidInputStack, mcFluidOutputStack0, mcFluidOutputStack1, energy, time);
-
-		CraftTweakerAPI.apply(new Add(r));
+		CraftTweakerAPI.apply(new Add(
+				new ElectrolyzerRecipe(mcFluidInputStack, mcFluidOutputStack0, mcFluidOutputStack1, energy, time)
+		));
 	}
 
 	@ZenMethod
@@ -54,7 +54,7 @@ public class ElectrolyzerTweaker
 		@Override
 		public void apply()
 		{
-			ElectrolyzerRecipe.recipeList.add(recipe);
+
 		}
 
 		@Override
@@ -77,7 +77,9 @@ public class ElectrolyzerTweaker
 		@Override
 		public void apply()
 		{
-			removedRecipes = ElectrolyzerRecipe.removeRecipesForInput(f1);
+			removedRecipes = ElectrolyzerRecipe.removeRecipesByFilter(ElectrolyzerRecipe.class,
+					e -> e.fluidInput.isFluidEqual(f1)
+			);
 		}
 
 		@Override

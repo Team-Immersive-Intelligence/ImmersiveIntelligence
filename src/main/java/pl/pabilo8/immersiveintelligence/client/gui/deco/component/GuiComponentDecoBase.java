@@ -103,6 +103,11 @@ public abstract class GuiComponentDecoBase<TYPE extends GuiComponentDecoBase<? s
 		return (TYPE)this;
 	}
 
+	public TYPE withTemplate(DecoComponentTemplate<TYPE> template)
+	{
+		return template.apply((TYPE)this);
+	}
+
 	//--- Draw Methods ---//
 
 	@Override
@@ -376,5 +381,16 @@ public abstract class GuiComponentDecoBase<TYPE extends GuiComponentDecoBase<? s
 	public interface DecoKeyboardEvent<TYPE extends GuiComponentDecoBase<? super TYPE>>
 	{
 		boolean onKeyTyped(TYPE gui, char typedChar, int keyCode);
+	}
+
+	@FunctionalInterface
+	public interface DecoComponentTemplate<TYPE extends GuiComponentDecoBase<? super TYPE>>
+	{
+		TYPE apply(TYPE component);
+
+		default DecoComponentTemplate<TYPE> and(DecoComponentTemplate<TYPE> base)
+		{
+			return (TYPE component) -> base.apply(apply(component));
+		}
 	}
 }

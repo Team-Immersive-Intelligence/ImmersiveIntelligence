@@ -150,7 +150,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 		}
 
 		if(!world.isRemote&&wasDoorOpened^isDoorOpened)
-			IIPacketHandler.INSTANCE.sendToAllAround(new MessageBooleanAnimatedPartsSync(isDoorOpened, 0, this.getPos()), IIPacketHandler.targetPointFromTile(this, 48));
+			IIPacketHandler.INSTANCE.sendToAllAround(new MessageBooleanAnimatedPartsSync(0, isDoorOpened, this.getPos()), IIPacketHandler.targetPointFromTile(this, 48));
 
 		if(currentWeapon!=null)
 		{
@@ -756,7 +756,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 	{
 		if(part==0)
 			isDoorOpened = state;
-		IIPacketHandler.INSTANCE.sendToAllAround(new MessageBooleanAnimatedPartsSync(isDoorOpened, 1, getPos()), IIPacketHandler.targetPointFromTile(this, 32));
+		IIPacketHandler.INSTANCE.sendToAllAround(new MessageBooleanAnimatedPartsSync(1, isDoorOpened, getPos()), IIPacketHandler.targetPointFromTile(this, 32));
 	}
 
 	@Override
@@ -789,13 +789,13 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 			{
 				case "opendoor":
 				{
-					IIPacketHandler.INSTANCE.sendToAllAround(new MessageBooleanAnimatedPartsSync(master.isDoorOpened = true, 0, master.getPos()),
+					IIPacketHandler.INSTANCE.sendToAllAround(new MessageBooleanAnimatedPartsSync(0, master.isDoorOpened = true, master.getPos()),
 							IIPacketHandler.targetPointFromTile(master, 48));
 				}
 				break;
 				case "closedoor":
 				{
-					IIPacketHandler.INSTANCE.sendToAllAround(new MessageBooleanAnimatedPartsSync(master.isDoorOpened = false, 0, master.getPos()),
+					IIPacketHandler.INSTANCE.sendToAllAround(new MessageBooleanAnimatedPartsSync(0, master.isDoorOpened = false, master.getPos()),
 							IIPacketHandler.targetPointFromTile(master, 48));
 				}
 				break;
@@ -803,7 +803,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 				{
 					if(b instanceof DataTypeBoolean)
 					{
-						IIPacketHandler.INSTANCE.sendToAllAround(new MessageBooleanAnimatedPartsSync(master.isDoorOpened = ((DataTypeBoolean)b).value, 0, master.getPos()),
+						IIPacketHandler.INSTANCE.sendToAllAround(new MessageBooleanAnimatedPartsSync(0, master.isDoorOpened = ((DataTypeBoolean)b).value, master.getPos()),
 								IIPacketHandler.targetPointFromTile(master, 48));
 					}
 				}

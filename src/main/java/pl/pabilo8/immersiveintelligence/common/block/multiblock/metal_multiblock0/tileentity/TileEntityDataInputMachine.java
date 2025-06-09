@@ -1,6 +1,7 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity;
 
 import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorageAdvanced;
+import blusunrize.immersiveengineering.common.util.inventory.IEInventoryHandler;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
@@ -17,9 +18,12 @@ import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAn
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionBase;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionSingle;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockInteractablePart;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
+
+import java.util.Optional;
 
 /**
  * @author Pabilo8
@@ -29,13 +33,15 @@ import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPO
  */
 public class TileEntityDataInputMachine extends TileEntityMultiblockProductionSingle<TileEntityDataInputMachine, DataProgrammingRecipe> implements IBooleanAnimatedPartsBlock
 {
+	private static final int SLOT_INPUT = 0, SLOT_OUTPUT = 1;
+
 	/**
 	 * Used for GUI animations
 	 */
 	@SyncNBT(events = SyncEvents.TILE_GUI_OPENED)
-	public MultiblockInteractablePart hatch, drawer;
+	public MultiblockInteractablePart drawer, hatch;
 	/**
-	 * Will send stored packet if true
+	 * Will send stored packet if true, then switch back to false
 	 */
 	public boolean sendPacketToggle = false;
 	/**
@@ -43,6 +49,11 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockProductionSi
 	 */
 	@SyncNBT(name = "variables")
 	public DataPacket storedData = new DataPacket();
+
+	@SyncNBT(events = SyncEvents.TILE_GUI_OPENED)
+	public int selectedDataSlot;
+	private IEInventoryHandler inputHandler, outputHandler;
+
 
 	public TileEntityDataInputMachine()
 	{
@@ -52,8 +63,19 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockProductionSi
 		inventory = NonNullList.withSize(26, ItemStack.EMPTY);
 
 		//Init animated parts
-		hatch = new MultiblockInteractablePart(0, 20, 1.25f);
-		drawer = new MultiblockInteractablePart(1, 20, 0.85f);
+		drawer = new MultiblockInteractablePart(0, 15, 0.85f);
+		hatch = new MultiblockInteractablePart(1, 24, 1.25f);
+		inputHandler = getSingleInventoryHandler(SLOT_INPUT, true, false);
+		outputHandler = getSingleInventoryHandler(SLOT_OUTPUT, false, true);
+	}
+
+	@Override
+	protected void dummyCleanup()
+	{
+		super.dummyCleanup();
+		storedData = null;
+		drawer = hatch = null;
+		inputHandler = outputHandler = null;
 	}
 
 	@Override
@@ -104,7 +126,8 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockProductionSi
 	@Override
 	public boolean isStackValid(int slot, ItemStack stack)
 	{
-		return DataProgrammingRecipe.RECIPE_LIST.stream().anyMatch(p -> p.input.matches(stack));
+		return DataProgrammingRecipe.streamRecipes(DataProgrammingRecipe.class)
+				.anyMatch(p -> p.input.matches(stack));
 	}
 
 	@Override
@@ -133,29 +156,46 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockProductionSi
 		IIPacketHandler.sendToClient(this, new MessageBooleanAnimatedPartsSync(changed, this));
 	}
 
-	//TODO: 08.01.2024 reimplement programming data storage items
-
 	@Override
 	protected IIMultiblockProcess<DataProgrammingRecipe> findNewProductionProcess()
 	{
+		Optional<DataProgrammingRecipe> found = DataProgrammingRecipe.streamRecipes(DataProgrammingRecipe.class)
+				.filter(recipe -> recipe.input.matches(inventory.get(SLOT_INPUT)))
+				.findFirst();
+		if(found.isPresent())
+			return new IIMultiblockProcess<>(found.get())
+					.withNBT(easyNBT -> easyNBT.mergeWith(EasyNBT.wrapNBT(inventory.get(SLOT_INPUT))));
 		return null;
 	}
 
 	@Override
-	protected IIMultiblockProcess<DataProgrammingRecipe> getProcessFromNBT(EasyNBT nbt)
+	protected IIMultiblockProcess<DataProgrammingRecipe> getProcessByName(String name)
 	{
-		return null;
+		return TileEntityMultiblockProductionBase.findRecipeFromList(DataProgrammingRecipe.class, name);
 	}
 
 	@Override
 	public float getProductionStep(IIMultiblockProcess<DataProgrammingRecipe> process, boolean simulate)
 	{
-		return 0;
+		int perTick = process.recipe.getTotalProcessEnergy()/process.maxTicks;
+		if(energyStorage.extractEnergy(perTick, simulate) < perTick)
+			return 0;
+		return 1;
 	}
 
 	@Override
 	protected boolean attemptProductionOutput(IIMultiblockProcess<DataProgrammingRecipe> process)
 	{
+		if(!world.isRemote)
+		{
+			DataProgrammingRecipe recipe = process.recipe;
+			ItemStack output = recipe.operationFrom.apply(inventory.get(SLOT_INPUT), storedData, dataTypes -> storedData = dataTypes);
+			if(outputHandler.insertItem(0, output, false).isEmpty())
+			{
+				inventory.get(SLOT_INPUT).shrink(1);
+				return true;
+			}
+		}
 		return false;
 	}
 

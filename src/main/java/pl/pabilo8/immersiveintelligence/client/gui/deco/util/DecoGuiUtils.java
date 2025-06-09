@@ -1,5 +1,6 @@
 package pl.pabilo8.immersiveintelligence.client.gui.deco.util;
 
+import blusunrize.immersiveengineering.api.energy.immersiveflux.IFluxStorage;
 import blusunrize.immersiveengineering.client.ClientUtils;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
@@ -7,11 +8,17 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiComponentDecoBase.DecoComponentTemplate;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoButton;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoBar;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoBar.BarTooltipFormat;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 
 import java.util.Collection;
+import java.util.function.Function;
 
 /**
  * @author Pabilo8
@@ -20,6 +27,33 @@ import java.util.Collection;
 @SideOnly(Side.CLIENT)
 public class DecoGuiUtils
 {
+	public static DecoComponentTemplate<DecoButton> LIST_BUTTON_TEMPLATE = component -> component
+			.withBackground(IIReference.RES_TEXTURES_DECO_BUTTON_PAPER)
+			.withPadding(0, 0, 0, 0)
+			.withSize(14, 14);
+	public static DecoComponentTemplate<DecoButton> LIST_BUTTON_EDIT_TEMPLATE = LIST_BUTTON_TEMPLATE.and(
+			component -> component
+					.withBackgroundColor(IIColor.fromPackedRGB(0x8a7d67))
+					.withIcon(IIReference.RES_TEXTURES_DECO_ICON_ACTION_EDIT)
+	);
+	public static DecoComponentTemplate<DecoButton> LIST_BUTTON_REMOVE_TEMPLATE = LIST_BUTTON_TEMPLATE.and(
+			component -> component
+					.withBackgroundColor(IIColor.fromPackedRGB(0x8a6865))
+					.withIcon(IIReference.RES_TEXTURES_DECO_ICON_ACTION_REMOVE)
+	);
+	public static DecoComponentTemplate<DecoButton> LIST_BUTTON_ADD_TEMPLATE = LIST_BUTTON_TEMPLATE.and(
+			component -> component
+					.withBackgroundColor(IIColor.fromPackedRGB(0x778a78))
+					.withIcon(IIReference.RES_TEXTURES_DECO_ICON_ACTION_ADD)
+	);
+
+	public static Function<IFluxStorage, DecoComponentTemplate<DecoBar>> BAR_ELECTRIC_ENERGY =
+			energyStorage -> component -> component
+					.withIconLocation(IIReference.RES_ICON_ENERGY)
+					.withColors(IIColor.fromPackedRGB(0xb33929), IIColor.fromPackedRGB(0x662822))
+					.withValueTooltip("energy.stored", BarTooltipFormat.VALUE_TO_MAX)
+					.withLimits(0, energyStorage.getMaxEnergyStored(), energyStorage::getEnergyStored);
+
 	public static IIDrawUtils drawBackgroundMask(Collection<DecoRectangle> rects, int minXOffset, int minYOffset)
 	{
 		IIDrawUtils draw = IIDrawUtils.startTextured();
@@ -176,6 +210,4 @@ public class DecoGuiUtils
 	{
 		drawRepeatedRect(draw, rect.x, rect.y, rect.width, rect.height, rect.style, color, 32, borderSize);
 	}
-
-
 }

@@ -31,6 +31,7 @@ import pl.pabilo8.immersiveintelligence.common.compat.jei.gui_handlers.Vulcanize
 import pl.pabilo8.immersiveintelligence.common.compat.jei.recipe_handlers.*;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.gun.ItemIIAmmoRevolver;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.IIMultiblockRecipe;
 
 import javax.annotation.Nonnull;
 import java.util.stream.Collectors;
@@ -126,7 +127,7 @@ public class JEIHelper implements IModPlugin
 		modRegistry.addRecipeClickArea(GuiChemicalBath.class, 16, 58, 19, 12, "ii.bathing", "ii.washing");
 		modRegistry.addRecipeClickArea(GuiChemicalBath.class, 131, 57, 19, 13, "ii.bathing", "ii.washing");
 
-		modRegistry.addRecipes(ElectrolyzerRecipe.recipeList, "ii.electrolyzer");
+		modRegistry.addRecipes(IIMultiblockRecipe.getRecipes(ElectrolyzerRecipe.class), "ii.electrolyzer");
 		modRegistry.addRecipeClickArea(GuiElectrolyzer.class, 66, 45, 47, 4, "ii.electrolyzer");
 		modRegistry.addRecipeClickArea(GuiElectrolyzer.class, 113, 42, 6, 10, "ii.electrolyzer");
 
@@ -137,7 +138,7 @@ public class JEIHelper implements IModPlugin
 		modRegistry.addRecipeClickArea(GuiPrecisionAssembler.class, 85, 49, 6, 8, "ii.precision_assembler");
 		modRegistry.addRecipeClickArea(GuiPrecisionAssembler.class, 103, 49, 6, 8, "ii.precision_assembler");
 
-		modRegistry.addRecipes(SawmillRecipe.RECIPES, "ii.sawmill");
+		modRegistry.addRecipes(IIMultiblockRecipe.getRecipes(SawmillRecipe.class), "ii.sawmill");
 		modRegistry.addRecipeClickArea(GuiSawmill.class, 33, 42, 43, 4, "ii.sawmill");
 		modRegistry.addRecipeClickArea(GuiSawmill.class, 76, 38, 6, 12, "ii.sawmill");
 
@@ -145,7 +146,7 @@ public class JEIHelper implements IModPlugin
 		modRegistry.addRecipeClickArea(GuiVulcanizer.class, 71, 24, 30, 30, "ii.vulcanizer");
 		modRegistry.addAdvancedGuiHandlers(new VulcanizerGuiHandler());
 
-		modRegistry.addRecipes(FillerRecipe.recipeList, "ii.filler");
+		modRegistry.addRecipes(IIMultiblockRecipe.getRecipes(FillerRecipe.class), "ii.filler");
 		modRegistry.addRecipeClickArea(GuiFiller.class, 41, 2, 60, 60, "ii.filler");
 
 		modRegistry.addAdvancedGuiHandlers(new UpgradeGuiHandler());

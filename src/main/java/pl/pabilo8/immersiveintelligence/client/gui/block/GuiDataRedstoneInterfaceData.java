@@ -16,13 +16,13 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoBut
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoTab;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoList;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoLabel;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoEntryPanel;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoEntryPanelBuilder;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundBuilder.SlotStyle;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoGuiUtils;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityRedstoneInterface;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerRedstoneDataInterface;
-import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
@@ -52,7 +52,7 @@ public class GuiDataRedstoneInterfaceData extends DecoGui<TileEntityRedstoneInte
 				.withBox(IIReference.GUI_BG_STEEL, 0, 0, 176, 128+8)
 				.withTitleBar("desc.immersiveintelligence.data_to_redstone_module")
 				.withBox(IIReference.GUI_BG_WOODEN, 0, 128+8, 176, 92)
-				.withTitleBar("Inventory", DecoAlignment.TOP_LEFT)
+				.withInventoryTitleBar()
 
 				.withNextLayer()
 				.withBox(IIReference.GUI_BG_STEEL, IIReference.RES_TEXTURES_DECO_TEMPLATE_SQUARE, 0, 8, 32, 120)
@@ -88,57 +88,47 @@ public class GuiDataRedstoneInterfaceData extends DecoGui<TileEntityRedstoneInte
 						.withEntries(packet.getAllVariables())
 						.withCreateLaterAction(() -> changeGUI(IIGuiList.GUI_DATA_REDSTONE_INTERFACE_REDSTONE))
 						.withGuiSaveAction(gui -> this.scroll = gui.getScroll())
-						.withDisplayFunction(new DecoEntryPanel<Pair<Character, DataType>>()
-						{
-							DecoImage image;
-							DecoLabel letterLabel, typeLabel;
+						.withDisplayFunction(new DecoEntryPanelBuilder<Pair<Character, DataType>>()
+								.withPadding(1, 1)
+								//Edit / Remove Buttons
+								.withComponent(
+										p -> new DecoButton(p.width-17-16+3, 2)
+												.withTemplate(DecoGuiUtils.LIST_BUTTON_EDIT_TEMPLATE)
+												.withOnPressed((gui, mouseX, mouseY) -> changeGUI(IIGuiList.GUI_DATA_REDSTONE_INTERFACE_REDSTONE))
+								)
+								.withComponent(p -> new DecoButton(p.width-17+1, 2)
+										.withTemplate(DecoGuiUtils.LIST_BUTTON_REMOVE_TEMPLATE)
+										.withOnPressed((gui, mouseX, mouseY) -> p.getCurrentList().removeEntry(p.getCurrentElement()))
+								)
+								//Type Icon, Label, and Letter
+								.withComponent("image", new DecoImage(2+12, 1)
+										.withSize(16, 16))
+								.withLabel("typeLabel",
+										new DecoLabel(fontRenderer, 2+12+16+2, 2)
+												.withSize(48, 16)
+												.withAlign(DecoAlignment.LEFT)
+												.withText("Integer")
+								)
+								.withLabel("letterLabel",
+										new DecoLabel(fontRenderer, 2, 2)
+												.withSize(12, 16)
+												.withAlign(DecoAlignment.CENTER)
+								)
+								.withElementApplyMethod((entry, panel) -> {
+									TypeMetaInfo<?> typeMeta = entry.getValue().getTypeMeta();
 
-							@Override
-							protected void initializeChildren()
-							{
-								withPadding(1, 1);
-
-								this.addComponent(new DecoButton(width-17-16+3, 2)
-										.withBackground(IIReference.RES_TEXTURES_DECO_BUTTON_PAPER)
-										.withBackgroundColor(IIColor.fromPackedRGB(0x8a7d67))
-										.withIcon(IIReference.RES_TEXTURES_DECO_ICON_ACTION_EDIT)
-										.withSize(14, 14)
-										.withOnPressed((gui, mouseX, mouseY) -> changeGUI(IIGuiList.GUI_DATA_REDSTONE_INTERFACE_REDSTONE))
-								);
-								this.addComponent(new DecoButton(width-17+1, 2)
-										.withBackground(IIReference.RES_TEXTURES_DECO_BUTTON_PAPER)
-										.withBackgroundColor(IIColor.fromPackedRGB(0x8a6865))
-										.withIcon(IIReference.RES_TEXTURES_DECO_ICON_ACTION_REMOVE)
-										.withSize(14, 14)
-										.withOnPressed((gui, mouseX, mouseY) -> getCurrentList().removeEntry(getCurrentElement()))
-								);
-								this.addComponent(image = new DecoImage(2+12, 1)
-										.withSize(16, 16)
-								);
-								this.addLabel(typeLabel = new DecoLabel(fontRenderer, 2+12+16+2, 2)
-										.withSize(48, 16)
-										.withAlign(DecoAlignment.LEFT)
-										.withText("Integer")
-								);
-								this.addLabel(letterLabel = new DecoLabel(fontRenderer, 2, 2)
-										.withSize(12, 16)
-										.withAlign(DecoAlignment.CENTER)
-								);
-							}
-
-							@Override
-							protected void applyElementToChildren(Pair<Character, DataType> entry)
-							{
-								TypeMetaInfo<?> typeMeta = entry.getValue().getTypeMeta();
-								//letter label (f.e. a)
-								letterLabel.withRawText(entry.getKey().toString());
-								//type label (f.e. integer)
-								typeLabel.withText(typeMeta.getTranslatedName())
-										.withTextColor(typeMeta.color.withBrightness(0.5f));
-								//type icon
-								image.withImageLocation(entry.getValue().getTextureLocation());
-							}
-						})
+									//letter label (f.e. a)
+									panel.label("letterLabel")
+											.withRawText(entry.getKey().toString());
+									//type label (f.e. integer)
+									panel.label("typeLabel")
+											.withText(typeMeta.getTranslatedName())
+											.withTextColor(typeMeta.color.withBrightness(0.5f));
+									//type icon
+									panel.component("image", DecoImage.class)
+											.withImageLocation(entry.getValue().getTextureLocation());
+								})
+						)
 						.withScroll(scroll)
 		);
 	}

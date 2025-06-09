@@ -16,7 +16,6 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoTab
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoLabel;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoBar;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerEmplacement;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerEmplacement.ContainerEmplacementStorage;
@@ -70,8 +69,8 @@ public abstract class GuiEmplacement extends GuiIEContainerBase implements ITabb
 
 		addLabel(8, 10, IIReference.COLOR_H1, title);
 
-		barEnergy = DecoBar.createEnergyBar(guiLeft+213, guiTop+22, 7, 48);
-		barArmor = DecoBar.createArmorBar(guiLeft+222, guiTop+22, 7, 48);
+//		barEnergy = DecoBar.createEnergyBar(guiLeft+213, guiTop+22, 7, 48);
+//		barArmor = DecoBar.createArmorBar(guiLeft+222, guiTop+22, 7, 48);
 	}
 
 	/**
@@ -90,12 +89,12 @@ public abstract class GuiEmplacement extends GuiIEContainerBase implements ITabb
 				break;
 			}
 		}
-		if(barEnergy.mouseOver(mouseX, mouseY))
+		/*if(barEnergy.mouseOver(mouseX, mouseY))
 			tooltip.add(IIUtils.getPowerLevelString(tile));
 		if(tile.currentWeapon!=null&&barArmor.mouseOver(mouseX, mouseY))
 			tooltip.add(I18n.format(IIReference.DESCRIPTION_KEY+"tooltip.armor",
 					(getHealth())*100
-			));
+			));*/
 
 		if(!tooltip.isEmpty())
 		{
@@ -137,9 +136,9 @@ public abstract class GuiEmplacement extends GuiIEContainerBase implements ITabb
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		bindTexture();
 		this.drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
-		barEnergy.draw(tile.getEnergyStored(null)/(float)tile.getMaxEnergyStored(null));
+		/*barEnergy.draw(tile.getEnergyStored(null)/(float)tile.getMaxEnergyStored(null));
 		if(tile.currentWeapon!=null)
-			barArmor.draw(getHealth());
+			barArmor.draw(getHealth());*/
 	}
 
 	protected void bindTexture()

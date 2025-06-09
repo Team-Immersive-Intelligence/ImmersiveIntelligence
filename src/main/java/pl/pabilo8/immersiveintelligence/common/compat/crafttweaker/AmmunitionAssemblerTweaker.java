@@ -38,11 +38,11 @@ public class AmmunitionAssemblerTweaker
 			return;
 		}
 
-		AmmunitionAssemblerRecipe r = new AmmunitionAssemblerRecipe(
-				(s1, s2) -> CraftTweakerMC.getItemStack(function.process(CraftTweakerMC.getIItemStack(s1), CraftTweakerMC.getIItemStack(s2))),
-				iCoreInput, iCasingInput, energy, time, false);
-
-		CraftTweakerAPI.apply(new Add(r));
+		CraftTweakerAPI.apply(new Add(
+				new AmmunitionAssemblerRecipe(
+						(s1, s2) -> CraftTweakerMC.getItemStack(function.process(CraftTweakerMC.getIItemStack(s1), CraftTweakerMC.getIItemStack(s2))),
+						iCoreInput, iCasingInput, energy, time, false)
+		));
 	}
 
 	@ZenMethod
@@ -63,7 +63,7 @@ public class AmmunitionAssemblerTweaker
 		@Override
 		public void apply()
 		{
-			AmmunitionAssemblerRecipe.RECIPES.add(recipe);
+
 		}
 
 		@Override
@@ -86,7 +86,9 @@ public class AmmunitionAssemblerTweaker
 		@Override
 		public void apply()
 		{
-			removedRecipes = AmmunitionAssemblerRecipe.removeRecipesForCore(input);
+			removedRecipes = AmmunitionAssemblerRecipe.removeRecipesByFilter(AmmunitionAssemblerRecipe.class,
+					a -> a.coreInput.matchesItemStackIgnoringSize(input)||a.casingInput.matchesItemStackIgnoringSize(input)
+			);
 		}
 
 		@Override

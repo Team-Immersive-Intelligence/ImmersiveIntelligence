@@ -36,9 +36,9 @@ public class GuiPrecisionAssembler extends GuiIEContainerBase
 		first_opened = Math.random() < 0.5d;
 
 		if(first_opened)
-			IIPacketHandler.sendToServer(new MessageBooleanAnimatedPartsSync(true, 0, tile.getPos()));
+			IIPacketHandler.sendToServer(new MessageBooleanAnimatedPartsSync(0, true, tile.getPos()));
 		else
-			IIPacketHandler.sendToServer(new MessageBooleanAnimatedPartsSync(true, 1, tile.getPos()));
+			IIPacketHandler.sendToServer(new MessageBooleanAnimatedPartsSync(1, true, tile.getPos()));
 
 	}
 
@@ -46,9 +46,9 @@ public class GuiPrecisionAssembler extends GuiIEContainerBase
 	public void onGuiClosed()
 	{
 		if(first_opened)
-			IIPacketHandler.sendToServer(new MessageBooleanAnimatedPartsSync(false, 0, tile.getPos()));
+			IIPacketHandler.sendToServer(new MessageBooleanAnimatedPartsSync(0, false, tile.getPos()));
 		else
-			IIPacketHandler.sendToServer(new MessageBooleanAnimatedPartsSync(false, 1, tile.getPos()));
+			IIPacketHandler.sendToServer(new MessageBooleanAnimatedPartsSync(1, false, tile.getPos()));
 		super.onGuiClosed();
 	}
 

@@ -1,0 +1,118 @@
+package pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel;
+
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiComponentDecoBase;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoLabel;
+
+import javax.annotation.Nonnull;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
+
+/**
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @ii-approved 0.3.1
+ * @since 25.02.2025
+ **/
+public class DecoEntryPanelBuilder<TYPE> extends DecoEntryPanel<TYPE>
+{
+	private int paddingX, paddingY;
+	private final Map<String, Function<DecoEntryPanelBuilder<TYPE>, GuiComponentDecoBase<?>>> components = new HashMap<>();
+	private final Map<String, GuiComponentDecoBase<?>> childrenMap = new HashMap<>();
+	private final Map<String, DecoLabel> labels = new HashMap<>();
+	private BiConsumer<TYPE, DecoEntryPanelBuilder<TYPE>> elementApplyMethod;
+
+	public DecoEntryPanelBuilder()
+	{
+	}
+
+	@Override
+	protected void initializeChildren()
+	{
+		super.withPadding(paddingX, paddingY);
+		childrenMap.clear();
+
+		components.forEach((name, function) -> {
+			GuiComponentDecoBase<?> component = function.apply(this);
+			this.addComponent(component);
+			this.childrenMap.put(name, component);
+		});
+		for(DecoLabel label : labels.values())
+			this.addLabel(label);
+	}
+
+	@Override
+	protected void applyElementToChildren(TYPE type)
+	{
+		if(elementApplyMethod!=null)
+			elementApplyMethod.accept(type, this);
+	}
+
+	//--- Settings ---//
+
+	@Override
+	public DecoEntryPanelBuilder<TYPE> withPadding(int x, int y)
+	{
+		this.paddingX = x;
+		this.paddingY = y;
+		return this;
+	}
+
+	//--- Components ---//
+
+	public DecoEntryPanelBuilder<TYPE> withComponent(String name, GuiComponentDecoBase<?> component)
+	{
+		return withComponent(name, p -> component);
+	}
+
+	public DecoEntryPanelBuilder<TYPE> withComponent(GuiComponentDecoBase<?> component)
+	{
+		return withComponent(getGenericComponentName(), component);
+	}
+
+	public DecoEntryPanelBuilder<TYPE> withComponent(Function<DecoEntryPanelBuilder<TYPE>, GuiComponentDecoBase<?>> component)
+	{
+		return withComponent(getGenericComponentName(), component);
+	}
+
+	public DecoEntryPanelBuilder<TYPE> withComponent(String name, Function<DecoEntryPanelBuilder<TYPE>, GuiComponentDecoBase<?>> component)
+	{
+		this.components.put(name, component);
+		return this;
+	}
+
+	//--- Labels ---//
+
+	public DecoEntryPanelBuilder<TYPE> withLabel(String name, DecoLabel label)
+	{
+		this.labels.put(name, label);
+		return this;
+	}
+
+	//--- Type Update Event and Component/Label Accessors ---//
+
+	public DecoEntryPanelBuilder<TYPE> withElementApplyMethod(BiConsumer<TYPE, DecoEntryPanelBuilder<TYPE>> method)
+	{
+		this.elementApplyMethod = method;
+		return this;
+	}
+
+	public <T extends GuiComponentDecoBase<? super T>> T component(String name, Class<T> klass)
+	{
+		return (T)this.childrenMap.getOrDefault(name, null);
+	}
+
+	public DecoLabel label(String name)
+	{
+		return this.labels.getOrDefault(name, null);
+	}
+
+	//--- Utils ---//
+
+	@Nonnull
+	private String getGenericComponentName()
+	{
+		return String.valueOf(components.size());
+	}
+
+}

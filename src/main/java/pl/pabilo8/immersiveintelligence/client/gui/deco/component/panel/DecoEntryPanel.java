@@ -27,6 +27,7 @@ public abstract class DecoEntryPanel<T> extends DecoPanel implements DecoElement
 		withBackground(IIReference.GUI_BG_PAPER);
 		addButton = new DecoButton(0, 0)
 				.withSize(16, 16)
+				.withPadding(0, 0, 0, 0)
 				.withIcon(IIReference.RES_TEXTURES_DECO_ICON_ACTION_ADD)
 				.withBackground(IIReference.RES_TEXTURES_DECO_BUTTON_HANGING)
 		;
@@ -130,4 +131,6 @@ public abstract class DecoEntryPanel<T> extends DecoPanel implements DecoElement
 	 * @param t The element to apply
 	 */
 	protected abstract void applyElementToChildren(T t);
+
+
 }

@@ -28,6 +28,9 @@ public class IIReference
 	public static final String DATA_KEY = "datasystem.immersiveintelligence.";
 	public static final String ROTARY_KEY = "rotary.immersiveintelligence.";
 	public static final String BLOCK_KEY = "tile.immersiveintelligence.";
+	public static final String GUI_LABEL_KEY = "ii.gui.";
+	public static final String GUI_TOOLTIP_KEY = "ii.gui_tooltip.";
+	public static final String GUI_HELPBOX_LABEL_KEY = "ii.gui_help.";
 
 	//TODO: 09.08.2024 add energy and fluid I18n
 	public static final String INFO_KEY_SPEED = INFO_KEY+"tachometer.torque";
@@ -134,6 +137,10 @@ public class IIReference
 	public static final ResLoc RES_TEXTURES_DECO_COMPONENT_SWITCH_MOVING = ResLoc.of(RES_TEXTURES_DECO, "component/switch_moving");
 	public static final ResLoc RES_TEXTURES_DECO_COMPONENT_DROPDOWN = ResLoc.of(RES_TEXTURES_DECO, "component/dropdown");
 	public static final ResLoc RES_TEXTURES_DECO_COMPONENT_SLIDER = ResLoc.of(RES_TEXTURES_DECO, "component/slider");
+	public static final ResLoc RES_TEXTURES_DECO_COMPONENT_FRAME = ResLoc.of(RES_TEXTURES_DECO, "component/frame");
+	public static final ResLoc RES_TEXTURES_DECO_BAR_ICON_BACKGROUND = ResLoc.of(RES_TEXTURES_DECO, "component/bar_icon_background");
+	public static final ResLoc RES_TEXTURES_DECO_COMPONENT_TANK = ResLoc.of(RES_TEXTURES_DECO, "component/tank");
+
 	//Deco Icons
 	public static final ResLoc RES_TEXTURES_DECO_ICON = ResLoc.of(RES_TEXTURES_DECO, "icons/");
 	public static final ResLoc RES_TEXTURES_DECO_ICON_ACTION_ADD = ResLoc.of(RES_TEXTURES_DECO_ICON, "action_add");
@@ -141,7 +148,58 @@ public class IIReference
 	public static final ResLoc RES_TEXTURES_DECO_ICON_ACTION_EDIT = ResLoc.of(RES_TEXTURES_DECO_ICON, "action_edit");
 	public static final ResLoc RES_TEXTURES_DECO_ICON_ACTION_DUPLICATE = ResLoc.of(RES_TEXTURES_DECO_ICON, "action_duplicate");
 	public static final ResLoc RES_TEXTURES_DECO_ICON_ACTION_CLEAR = ResLoc.of(RES_TEXTURES_DECO_ICON, "action_clear");
+	public static final ResLoc[] RES_ACTION_ICONS = new ResLoc[]{
+			RES_TEXTURES_DECO_ICON, RES_TEXTURES_DECO_ICON_ACTION_ADD,
+			RES_TEXTURES_DECO_ICON_ACTION_REMOVE, RES_TEXTURES_DECO_ICON_ACTION_EDIT,
+			RES_TEXTURES_DECO_ICON_ACTION_DUPLICATE, RES_TEXTURES_DECO_ICON_ACTION_CLEAR
+	};
 
+	//Deco Bar Icons
+	public static final ResLoc RES_ICON_ENERGY = ResLoc.of(RES_TEXTURES_DECO_ICON, "icon_energy");
+	public static final ResLoc RES_ICON_ENERGY_INPUT = ResLoc.of(RES_TEXTURES_DECO_ICON, "icon_energy_input");
+	public static final ResLoc RES_ICON_ENERGY_OUTPUT = ResLoc.of(RES_TEXTURES_DECO_ICON, "icon_energy_output");
+
+	public static final ResLoc RES_ICON_AIR_PRESSURE = ResLoc.of(RES_TEXTURES_DECO_ICON, "icon_air_pressure");
+	public static final ResLoc RES_ICON_AIR_PRESSURE_INPUT = ResLoc.of(RES_TEXTURES_DECO_ICON, "icon_air_pressure_input");
+	public static final ResLoc RES_ICON_AIR_PRESSURE_OUTPUT = ResLoc.of(RES_TEXTURES_DECO_ICON, "icon_air_pressure_output");
+
+	public static final ResLoc RES_ICON_HEAT = ResLoc.of(RES_TEXTURES_DECO_ICON, "icon_heat");
+	public static final ResLoc RES_ICON_HEAT_INPUT = ResLoc.of(RES_TEXTURES_DECO_ICON, "icon_heat_input");
+	public static final ResLoc RES_ICON_HEAT_OUTPUT = ResLoc.of(RES_TEXTURES_DECO_ICON, "icon_heat_output");
+
+	public static final ResLoc RES_ICON_MECH_SPEED = ResLoc.of(RES_TEXTURES_DECO_ICON, "icon_mech_speed");
+	public static final ResLoc RES_ICON_MECH_SPEED_INPUT = ResLoc.of(RES_TEXTURES_DECO_ICON, "icon_mech_speed_input");
+	public static final ResLoc RES_ICON_MECH_SPEED_OUTPUT = ResLoc.of(RES_TEXTURES_DECO_ICON, "icon_mech_speed_output");
+
+	public static final ResLoc RES_ICON_MECH_TORQUE = ResLoc.of(RES_TEXTURES_DECO_ICON, "icon_mech_torque");
+	public static final ResLoc RES_ICON_MECH_TORQUE_INPUT = ResLoc.of(RES_TEXTURES_DECO_ICON, "icon_mech_torque_input");
+	public static final ResLoc RES_ICON_MECH_TORQUE_OUTPUT = ResLoc.of(RES_TEXTURES_DECO_ICON, "icon_mech_torque_output");
+
+	public static final ResLoc RES_ICON_STRUCTURAL_INTEGRITY = ResLoc.of(RES_TEXTURES_DECO_ICON, "icon_structural_integrity");
+	public static final ResLoc RES_ICON_STRUCTURAL_INTEGRITY_COLOR = ResLoc.of(RES_TEXTURES_DECO_ICON, "icon_structural_integrity_color");
+	public static final ResLoc RES_ICON_ARMOR_INTEGRITY = ResLoc.of(RES_TEXTURES_DECO_ICON, "icon_armor_integrity");
+	public static final ResLoc RES_ICON_EXREAC_ARMOR_INTEGRITY = ResLoc.of(RES_TEXTURES_DECO_ICON, "icon_exreac_armor_integrity");
+	public static final ResLoc RES_ICON_EXREAC_ARMOR_INTEGRITY_COLOR = ResLoc.of(RES_TEXTURES_DECO_ICON, "icon_exreac_armor_integrity_color");
+
+	public static final ResLoc RES_ICON_SOIL_FERTILITY = ResLoc.of(RES_TEXTURES_DECO_ICON, "icon_soil_fertility");
+	public static final ResLoc RES_ICON_SOIL_FERTILITY_COLOR = ResLoc.of(RES_TEXTURES_DECO_ICON, "icon_soil_fertility_color");
+
+	public static final ResLoc RES_ICON_PROGRESS = ResLoc.of(RES_TEXTURES_DECO_ICON, "icon_progress");
+	public static final ResLoc RES_ICON_SPEED = ResLoc.of(RES_TEXTURES_DECO_ICON, "icon_speed");
+	public static final ResLoc RES_ICON_TIME = ResLoc.of(RES_TEXTURES_DECO_ICON, "icon_time");
+	public static final ResLoc RES_ICON_FUEL = ResLoc.of(RES_TEXTURES_DECO_ICON, "icon_fuel");
+	public static final ResLoc[] RES_ICONS = new ResLoc[]{
+			RES_ICON_ENERGY, RES_ICON_ENERGY_INPUT, RES_ICON_ENERGY_OUTPUT,
+			RES_ICON_AIR_PRESSURE, RES_ICON_AIR_PRESSURE_INPUT, RES_ICON_AIR_PRESSURE_OUTPUT,
+			RES_ICON_HEAT, RES_ICON_HEAT_INPUT, RES_ICON_HEAT_OUTPUT,
+			RES_ICON_MECH_SPEED, RES_ICON_MECH_SPEED_INPUT, RES_ICON_MECH_SPEED_OUTPUT,
+			RES_ICON_MECH_TORQUE, RES_ICON_MECH_TORQUE_INPUT, RES_ICON_MECH_TORQUE_OUTPUT,
+			RES_ICON_STRUCTURAL_INTEGRITY, RES_ICON_STRUCTURAL_INTEGRITY_COLOR, RES_ICON_ARMOR_INTEGRITY,
+			RES_ICON_EXREAC_ARMOR_INTEGRITY, RES_ICON_EXREAC_ARMOR_INTEGRITY_COLOR,
+			RES_ICON_SOIL_FERTILITY, RES_ICON_SOIL_FERTILITY_COLOR,
+			RES_ICON_PROGRESS, RES_ICON_SPEED, RES_ICON_TIME,
+			RES_ICON_FUEL
+	};
 
 	//Custom Deco Component Textures
 	public static final ResLoc RES_TEXTURES_DECO_BUTTON_PAPER = ResLoc.of(RES_TEXTURES_DECO, "component/button_paper");

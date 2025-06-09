@@ -8,10 +8,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fluids.FluidStack;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.api.crafting.PrintingRecipe;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityPrintingPress;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityPrintingPress.PrintOrder;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerPrintingPress;
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
@@ -75,7 +75,7 @@ public class GuiPrintingPress extends GuiIEContainerBase
 
 		if(!tile.processQueue.isEmpty())
 		{
-			IIMultiblockProcess<PrintOrder> current = tile.processQueue.get(0);
+			IIMultiblockProcess<PrintingRecipe> current = tile.processQueue.get(0);
 			drawTexturedModalRect(guiLeft+31, guiTop+37, 176, 51,
 					(int)(55*tile.getProductionProgress(current, partialTicks)), 20);
 		}

@@ -13,12 +13,14 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import pl.pabilo8.immersiveintelligence.api.crafting.PrintingRecipe;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IIDataHandlingUtils;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
@@ -30,98 +32,57 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
 import pl.pabilo8.immersiveintelligence.common.entity.tactile.EntityAMTTactile;
 import pl.pabilo8.immersiveintelligence.common.entity.tactile.TactileHandler;
 import pl.pabilo8.immersiveintelligence.common.entity.tactile.TactileHandler.ITactileListener;
-import pl.pabilo8.immersiveintelligence.common.item.ItemIIPrintedPage.SubItems;
-import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIDamageSources;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.lambda.NBTTagCollector;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionBase;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionMulti;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayDeque;
-import java.util.HashMap;
-import java.util.function.Function;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * @author Pabilo8
  * @updated 13.12.2023
  * @since 28.06.2019
  */
-public class TileEntityPrintingPress extends TileEntityMultiblockProductionMulti<TileEntityPrintingPress, TileEntityPrintingPress.PrintOrder> implements ITactileListener
+public class TileEntityPrintingPress extends TileEntityMultiblockProductionMulti<TileEntityPrintingPress, PrintingRecipe> implements ITactileListener
 {
-	/**
-	 * Print order parser registry
-	 */
-	public static final HashMap<String, Function<DataPacket, PrintOrder>> PRINT_ORDER_PARSERS = new HashMap<>();
-	public static final Function<DataPacket, PrintOrder> ORDER_PARSER_TEXT;
-
 	/**
 	 * Inventory slots IDs
 	 */
 	public static final int SLOT_PAPER = 0, SLOT_OUTPUT = 1, SLOT_BUCKET_IN = 2, SLOT_BUCKET_OUT = 3;
 
-	static
-	{
-		PRINT_ORDER_PARSERS.put("text", ORDER_PARSER_TEXT = (packet -> {
-			String text = packet.getPacketVariable('t').toString();
-			float c = 0, m = 0, y = 0, k = 0;
-
-			if(!text.isEmpty())
-			{
-				Pattern pattern = Pattern.compile("<hexcol;([A-Fa-f0-9]{6});(.*?)>");
-				Matcher matcher = pattern.matcher(text);
-
-				while(matcher.find())
-				{
-					// Get CMYK proportions
-					float[] cmykValues = IIColor.fromHex(matcher.group(1)).getCMYK();
-
-					// Calculate ink usage based on CMYK percentages
-					c += PrintingPress.printInkUsage*cmykValues[0]; // Fraction of 2 units for cyan
-					m += PrintingPress.printInkUsage*cmykValues[1]; // Fraction of 2 units for magenta
-					y += PrintingPress.printInkUsage*cmykValues[2]; // Fraction of 2 units for yellow
-					k += PrintingPress.printInkUsage*cmykValues[3]; // Fraction of 2 units for black
-				}
-
-				//For all other text calculate the black ink cost
-				k += pattern.matcher(text)
-						.replaceAll("")
-						.replaceAll(" ", "")
-						.length()*PrintingPress.printInkUsage;
-			}
-
-			ItemStack stack = IIContent.itemPrintedPage.getStack(SubItems.TEXT);
-			EasyNBT.wrapNBT(stack).withString("text", text);
-
-			return new PrintOrder(stack, (int)k, (int)c, (int)m, (int)y);
-		}));
-	}
-
-	public ArrayDeque<QueuedPrintOrder> printQueue = new ArrayDeque<>();
 	@SyncNBT(time = 40, events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_RECIPE_CHANGED})
 	public MultiFluidTank tank;
 
-	IItemHandler inputHandler = new IEInventoryHandler(1, this, SLOT_PAPER, true, true);
-	IItemHandler outputHandler = new IEInventoryHandler(1, this, SLOT_OUTPUT, true, true);
-	TactileHandler tactileHandler = null;
+	private IItemHandler inputHandler = new IEInventoryHandler(1, this, SLOT_PAPER, true, true);
+	private IItemHandler outputHandler = new IEInventoryHandler(1, this, SLOT_OUTPUT, true, true);
+	private TactileHandler tactileHandler = null;
+
+	private ArrayDeque<PrintingRequest> printRequestsQueue;
 
 	public TileEntityPrintingPress()
 	{
 		super(MultiblockPrintingPress.INSTANCE);
-		energyStorage = new FluxStorageAdvanced(PrintingPress.energyCapacity);
-		tank = new MultiFluidTank(8000);
-		inventory = NonNullList.withSize(4, ItemStack.EMPTY);
+		this.tank = new MultiFluidTank(8000);
+		this.energyStorage = new FluxStorageAdvanced(PrintingPress.energyCapacity);
+		this.inventory = NonNullList.withSize(4, ItemStack.EMPTY);
+		this.printRequestsQueue = new ArrayDeque<>();
 	}
 
-	//--- NBT Handling ---//
-
+	@Override
+	protected void dummyCleanup()
+	{
+		super.dummyCleanup();
+		this.tank = null;
+		this.inputHandler = null;
+		this.outputHandler = null;
+		this.tactileHandler = null;
+	}
 
 	@Override
 	protected void onUpdate()
@@ -140,23 +101,21 @@ public class TileEntityPrintingPress extends TileEntityMultiblockProductionMulti
 			forceTileUpdate();
 	}
 
+	//--- NBT Handling ---//
+
 	@Override
 	public void readCustomNBT(NBTTagCompound nbt, boolean descPacket)
 	{
 		super.readCustomNBT(nbt, descPacket);
 		if(isDummy())
 			return;
+
 		if(nbt.hasKey("print_queue"))
 		{
-			printQueue.clear();
+			printRequestsQueue.clear();
 			for(NBTBase entry : nbt.getTagList("print_queue", EasyNBT.TAG_COMPOUND))
-			{
-				NBTTagCompound tag = (NBTTagCompound)entry;
-				printQueue.add(new QueuedPrintOrder(
-						tag.getInteger("amount"),
-						new PrintOrder(tag.getCompoundTag("order"))
-				));
-			}
+				printRequestsQueue.add(new PrintingRequest((NBTTagCompound)entry));
+			printRequestsQueue.removeIf(printingRequest -> printingRequest.recipe==null);
 		}
 	}
 
@@ -167,18 +126,14 @@ public class TileEntityPrintingPress extends TileEntityMultiblockProductionMulti
 		if(isDummy())
 			return;
 		EasyNBT.wrapNBT(nbt).withTag("print_queue",
-				printQueue.stream()
-						.map(tuple -> EasyNBT.newNBT()
-								.withInt("amount", tuple.amount)
-								.withTag("order", tuple.order.writeToNBT())
-						)
-						.map(EasyNBT::unwrap)
+				printRequestsQueue.stream()
+						.map(PrintingRequest::serializeNBT)
 						.collect(new NBTTagCollector())
 		);
 	}
 
-	//--- Properties ---//
 
+	//--- Properties ---//
 
 	@Override
 	protected int[] listAllPOI(MultiblockPOI poi)
@@ -234,11 +189,15 @@ public class TileEntityPrintingPress extends TileEntityMultiblockProductionMulti
 			if(amount <= 0)
 				return;
 
-
-			PrintOrder printOrder = PRINT_ORDER_PARSERS.getOrDefault(IIDataHandlingUtils.asString('m', packet), ORDER_PARSER_TEXT).apply(packet);
-			if(printOrder!=null)
-				printQueue.add(new QueuedPrintOrder(amount, printOrder));
-			forceTileUpdate();
+			String printingMode = IIDataHandlingUtils.asString('m', packet);
+			PrintingRecipe.streamRecipes(PrintingRecipe.class)
+					.filter(recipe -> recipe.getInput().matchesItemStackIgnoringSize(inventory.get(SLOT_PAPER)))
+					.filter(recipe -> recipe.getCategoryName().equals(printingMode))
+					.findFirst()
+					.ifPresent(printingRecipe -> {
+						this.printRequestsQueue.add(new PrintingRequest(printingRecipe, packet, amount));
+						forceTileUpdate();
+					});
 		}
 	}
 
@@ -280,25 +239,27 @@ public class TileEntityPrintingPress extends TileEntityMultiblockProductionMulti
 	}
 
 	@Override
-	protected IIMultiblockProcess<PrintOrder> findNewProductionProcess()
+	protected IIMultiblockProcess<PrintingRecipe> findNewProductionProcess()
 	{
 		// Check for queued orders
-		if(printQueue.isEmpty())
+		if(printRequestsQueue.isEmpty())
 			return null;
-		QueuedPrintOrder found = printQueue.getFirst();
+		PrintingRequest found = printRequestsQueue.getFirst();
 		if(found.amount-- <= 1)
-			printQueue.remove();
+			printRequestsQueue.remove();
+
+		if(!found.recipe.getInput().matchesItemStack(inputHandler.extractItem(SLOT_PAPER, 1, true)))
+			return null;
 
 		//Check if there's enough paper
-		if(!isStackValid(SLOT_PAPER, inventory.get(SLOT_PAPER)))
-			return null;
+		PrintingProcess process = new PrintingProcess(found.recipe, found.data, inventory.get(SLOT_PAPER));
 
 		//Check if there's enough ink
 		FluidStack[] fs = {
-				new FluidStack(IIContent.fluidInkBlack, found.order.blackCost),
-				new FluidStack(IIContent.fluidInkCyan, found.order.cyanCost),
-				new FluidStack(IIContent.fluidInkMagenta, found.order.magentaCost),
-				new FluidStack(IIContent.fluidInkYellow, found.order.yellowCost)
+				new FluidStack(IIContent.fluidInkBlack, process.blackCost),
+				new FluidStack(IIContent.fluidInkCyan, process.cyanCost),
+				new FluidStack(IIContent.fluidInkMagenta, process.magentaCost),
+				new FluidStack(IIContent.fluidInkYellow, process.yellowCost)
 		};
 		for(FluidStack f : fs)
 			if(f.amount!=0&&!f.isFluidEqual(tank.drain(f, false)))
@@ -310,17 +271,17 @@ public class TileEntityPrintingPress extends TileEntityMultiblockProductionMulti
 			tank.drain(f, true);
 
 		//Return process
-		return new IIMultiblockProcess<>(found.order);
+		return process;
 	}
 
 	@Override
-	protected IIMultiblockProcess<PrintOrder> getProcessFromNBT(EasyNBT nbt)
+	protected IIMultiblockProcess<PrintingRecipe> getProcessByName(String name)
 	{
 		return null;
 	}
 
 	@Override
-	public float getProductionStep(IIMultiblockProcess<PrintOrder> process, boolean simulate)
+	public float getProductionStep(IIMultiblockProcess<PrintingRecipe> process, boolean simulate)
 	{
 		int perTick = process.recipe.getTotalProcessEnergy()/process.maxTicks;
 		if(energyStorage.extractEnergy(perTick, simulate) < perTick)
@@ -330,14 +291,17 @@ public class TileEntityPrintingPress extends TileEntityMultiblockProductionMulti
 	}
 
 	@Override
-	protected boolean attemptProductionOutput(IIMultiblockProcess<PrintOrder> process)
+	protected boolean attemptProductionOutput(IIMultiblockProcess<PrintingRecipe> process)
 	{
-		outputOrDrop(process.recipe.result, outputHandler, facing, getPOI("output"));
+		assert process instanceof PrintingProcess;
+		PrintingProcess printingProcess = (PrintingProcess)process;
+
+		outputOrDrop(printingProcess.result, outputHandler, facing, getPOI("output"));
 		return true;
 	}
 
 	@Override
-	protected void onProductionFinish(IIMultiblockProcess<PrintOrder> process)
+	protected void onProductionFinish(IIMultiblockProcess<PrintingRecipe> process)
 	{
 
 	}
@@ -442,80 +406,88 @@ public class TileEntityPrintingPress extends TileEntityMultiblockProductionMulti
 
 	//--- Utilities ---//
 
-	/**
-	 * An order for a page to be printed that's placed in the Printing Press' queue.
-	 */
-	public static class QueuedPrintOrder
+	public static class PrintingRequest implements INBTSerializable<NBTTagCompound>
 	{
+		PrintingRecipe recipe;
+		DataPacket data;
 		int amount;
-		PrintOrder order;
 
-		public QueuedPrintOrder(int amount, PrintOrder order)
+		public PrintingRequest(PrintingRecipe recipe, DataPacket data, int amount)
 		{
+			this.recipe = recipe;
+			this.data = data;
 			this.amount = amount;
-			this.order = order;
+		}
+
+		public PrintingRequest(NBTTagCompound tag)
+		{
+			this.deserializeNBT(tag);
+		}
+
+		@Override
+		public NBTTagCompound serializeNBT()
+		{
+			return EasyNBT.newNBT()
+					.withInt("amount", amount)
+					.withString("recipe", recipe.getName())
+					.withTag("data", data.toNBT())
+					.unwrap();
+		}
+
+		@Override
+		public void deserializeNBT(NBTTagCompound nbt)
+		{
+			EasyNBT enbt = EasyNBT.wrapNBT(nbt);
+			this.amount = enbt.getInt("amount");
+			this.recipe = PrintingRecipe.getRecipe(PrintingRecipe.class, enbt.getString("recipe"));
+			this.data = new DataPacket().fromNBT(enbt.getCompound("data"));
 		}
 	}
 
 	/**
-	 * Data of a singular print order
+	 * An order for a page to be printed that's placed in the Printing Press' queue.
 	 */
-	public static class PrintOrder implements TileEntityMultiblockProductionBase.IIIMultiblockRecipe
+	public static class PrintingProcess extends IIMultiblockProcess<PrintingRecipe>
 	{
 		int blackCost, cyanCost, magentaCost, yellowCost;
 		ItemStack result;
 
-		public PrintOrder(ItemStack result, int blackCost, int cyanCost, int magentaCost, int yellowCost)
+		public PrintingProcess(PrintingRecipe recipe, DataPacket packet, ItemStack input)
 		{
-			this.result = result;
-			this.blackCost = blackCost;
-			this.cyanCost = cyanCost;
-			this.magentaCost = magentaCost;
-			this.yellowCost = yellowCost;
-		}
+			super(recipe);
+			this.result = recipe.getFunction().apply(input, packet);
 
-		public PrintOrder(NBTTagCompound nbt)
-		{
-			loadFromNBT(nbt);
-		}
-
-		PrintOrder loadFromNBT(NBTTagCompound nbt)
-		{
-			result = new ItemStack(nbt.getCompoundTag("result"));
-			blackCost = nbt.getInteger("black");
-			cyanCost = nbt.getInteger("cyan");
-			magentaCost = nbt.getInteger("magenta");
-			yellowCost = nbt.getInteger("yellow");
-			return this;
+			int[] inks = recipe.getFunction().getInkTypesRequired(packet);
+			this.cyanCost = inks[0];
+			this.magentaCost = inks[1];
+			this.yellowCost = inks[2];
+			this.blackCost = inks[3];
 		}
 
 		@Override
-		public int getTotalProcessTime()
+		public NBTTagCompound serializeNBT()
 		{
-			return PrintingPress.printTime;
-		}
-
-		@Override
-		public int getTotalProcessEnergy()
-		{
-			return PrintingPress.energyUsage;
-		}
-
-		@Override
-		public int getMultipleProcessTicks()
-		{
-			return 0;
-		}
-
-		@Override
-		public EasyNBT writeToNBT()
-		{
-			return EasyNBT.newNBT()
+			return EasyNBT.wrapNBT(super.serializeNBT())
 					.withItemStack("result", result)
 					.withInt("black", blackCost)
 					.withInt("cyan", cyanCost)
 					.withInt("magenta", magentaCost)
-					.withInt("yellow", yellowCost);
+					.withInt("yellow", yellowCost)
+					.unwrap();
+		}
+
+		@Override
+		public void deserializeNBT(NBTTagCompound nbt)
+		{
+			super.deserializeNBT(nbt);
+			EasyNBT enbt = EasyNBT.wrapNBT(nbt);
+
+			result = enbt.getItemStack("result");
+			blackCost = enbt.getInt("black");
+			cyanCost = enbt.getInt("cyan");
+			magentaCost = enbt.getInt("magenta");
+			yellowCost = enbt.getInt("yellow");
 		}
 	}
+
 }

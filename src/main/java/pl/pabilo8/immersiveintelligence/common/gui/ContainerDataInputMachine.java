@@ -1,37 +1,34 @@
 package pl.pabilo8.immersiveintelligence.common.gui;
 
-import blusunrize.immersiveengineering.common.gui.ContainerIEBase;
 import blusunrize.immersiveengineering.common.gui.IESlot.Output;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityDataInputMachine;
-import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIBase.FilteredDataInput;
+import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIBase;
 
 /**
  * @author Pabilo8
+ * @updated 24.02.2025
+ * @ii-approved 0.3.1
  * @since 30-06-2019
  */
-public class ContainerDataInputMachine extends ContainerIEBase<TileEntityDataInputMachine>
+public class ContainerDataInputMachine extends ContainerIIBase<TileEntityDataInputMachine>
 {
-	public ContainerDataInputMachine(EntityPlayer player, TileEntityDataInputMachine tile, boolean storage)
+	public Slot dataInput, dataOutput;
+	public Slot[] punchtapeStorage;
+	public boolean hasStorage;
+
+	public ContainerDataInputMachine(EntityPlayer player, TileEntityDataInputMachine tile, boolean hasStorage)
 	{
-		super(player.inventory, tile);
+		super(player, tile);
+		this.hasStorage = hasStorage;
 
-		this.addSlotToContainer(new FilteredDataInput(this, this.inv, 0, 5, 21));
-		this.addSlotToContainer(new Output(this, this.inv, 1, 5, 100));
+		dataInput = this.addSlotToContainer(new FilteredDataInput(this, this.inv, 0, 8, 21));
+		dataOutput = this.addSlotToContainer(new Output(this, this.inv, 1, 8, 100));
 
-		if(storage)
-			for(int i = 2; i < 26; i++)
-				this.addSlotToContainer(new FilteredDataInput(this, this.inv, i, 30+((i-2)%8)*18, 28+((i-2)/8)*18));
+		if(hasStorage)
+			punchtapeStorage = addSlotArray(32+2+1, 11+11, 2, 24, 6, FilteredDataInput::new);
 
-		this.slotCount = storage?tile.getInventory().size(): 2;
-		this.tile = tile;
-
-		for(int i = 0; i < 3; i++)
-			for(int j = 0; j < 9; j++)
-				addSlotToContainer(new Slot(player.inventory, j+i*9+9, 8+j*18, 141+i*18));
-		for(int i = 0; i < 9; i++)
-			addSlotToContainer(new Slot(player.inventory, i, 8+i*18, 199));
+		addPlayerInventory(player.inventory, 8, 141+8);
 	}
-
 }

@@ -69,6 +69,7 @@
     "output2": 2,
     "redstone_input": 10,
     "energy_input": 8,
-    "fluid_input": 6
+    "fluid_input": 6,
+    "visible_tank": 16
   }
 }

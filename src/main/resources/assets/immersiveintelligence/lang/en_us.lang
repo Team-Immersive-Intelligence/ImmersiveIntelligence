@@ -654,20 +654,6 @@ tile.immersiveintelligence.metal_multiblock.data_input_machine.programming=Data 
 tile.immersiveintelligence.metal_multiblock.data_input_machine.edit=Data Input Machine - Editing a Variable
 tile.immersiveintelligence.metal_multiblock.data_input_machine.label_punchtapes=Punchtape Storage
 
-tile.immersiveintelligence.metal_multiblock.redstone_interface.data=Redstone Data Interface - Data
-tile.immersiveintelligence.metal_multiblock.redstone_interface.redstone=Redstone Data Interface - Redstone
-
-tile.immersiveintelligence.metal_multiblock.redstone_interface.modes.0=None
-tile.immersiveintelligence.metal_multiblock.redstone_interface.modes.1=Boolean
-tile.immersiveintelligence.metal_multiblock.redstone_interface.modes.2=Int. (0-15)
-tile.immersiveintelligence.metal_multiblock.redstone_interface.modes.3=Int. (0-255)
-tile.immersiveintelligence.metal_multiblock.redstone_interface.modes.4=Int. (0-100)
-tile.immersiveintelligence.metal_multiblock.redstone_interface.modes.5=String
-
-tile.immersiveintelligence.metal_multiblock.arithmetic_logic_machine.storage=Arithmetic-Logic Machine - Storage
-tile.immersiveintelligence.metal_multiblock.arithmetic_logic_machine.programming=Arithmetic-Logic Machine - Programming
-tile.immersiveintelligence.metal_multiblock.arithmetic_logic_machine.edit=Arithmetic-Logic Machine - Editing an Expression
-
 tile.immersiveintelligence.data_connector.data_connector.name=Data Connector
 tile.immersiveintelligence.data_connector.data_relay.name=Data Relay
 tile.immersiveintelligence.data_connector.data_duplex_connector.name=Data Duplex Connector
@@ -1370,13 +1356,13 @@ info.immersiveintelligence.redstone_buffer_mode=Redstone Buffer Mode: %s
 info.immersiveintelligence.redstone_buffer_mode.passtrough=Passtrough
 info.immersiveintelligence.redstone_buffer_mode.signal=On Signal
 
-info.immersiveintelligence.tachometer_message.basic=Internal: speed %s DPT / torque %s TU.
-info.immersiveintelligence.tachometer_message.advanced=Internal: speed %s DPT / torque %s TU. External: speed %s DPT / torque %s TU.
-info.immersiveintelligence.tachometer.internal_torque=Internal Torque: %s TU
-info.immersiveintelligence.tachometer.external_torque=External Torque: %s TU
-info.immersiveintelligence.tachometer.internal_speed=Internal Speed: %s DPT
-info.immersiveintelligence.tachometer.external_speed=External Speed: %s DPT
-info.immersiveintelligence.tachometer.torque=Torque: %s TU
+info.immersiveintelligence.tachometer_message.basic=Internal: speed %s D/t | torque %s IT.
+info.immersiveintelligence.tachometer_message.advanced=Internal: speed %s D/t | torque %s IT. External: speed %s D/t | torque %s IT.
+info.immersiveintelligence.tachometer.internal_torque=Internal Torque: %s IT
+info.immersiveintelligence.tachometer.external_torque=External Torque: %s IT
+info.immersiveintelligence.tachometer.internal_speed=Internal Speed: %s D/t
+info.immersiveintelligence.tachometer.external_speed=External Speed: %s D/t
+info.immersiveintelligence.tachometer.torque=Torque: %s IT
 info.immersiveintelligence.tachometer.speed=Speed: %s D/t
 
 info.immersiveintelligence.machineupgrade.name=Installing: %s
@@ -2924,3 +2910,62 @@ death.attack.iiMotorbikeExplicit=%2$s has made %1$s's ass his free parking spot
 death.attack.iiMotorbikeSuicide=%1$s decided to jump off a moving motorcycle
 death.attack.iiPanzer1=%1$s was crushed under the Panzer's threads
 death.attack.iiPanzer2=The indomitable Panzer's threads have pulverized %1$s
+
+#GUI Labels
+ii.gui.data_input_machine.storage=Punchtape Storage
+ii.gui.data_input_machine.memory=Built-In Memory
+ii.gui.data_input_machine.memory.switch=Switch
+ii.gui.data_input_machine.memory.switch.tooltip=Switch Current Memory Slot
+
+#GUI HelpBoxes
+ii.gui_help.manual_widget.show=Displays the Immersive Engineering Manual on the side.
+
+ii.gui_help.data_input_machine.programming=These slots allow reading a punchtape into the DIM's memory or writing its contents into an empty one.
+ii.gui_help.data_input_machine.storage=These slots allow storing empty or programmed punchtapes for convenience.
+ii.gui_help.data_input_machine.variables=This list shows variables of the data packet stored inside the machine.
+
+#GUI Tooltips
+ii.gui_tooltip.energy.stored=Energy Stored: %s/%s IF
+ii.gui_tooltip.energy.input=Energy Consumed: %s IF
+ii.gui_tooltip.energy.required=Energy Required: %s IH / t
+ii.gui_tooltip.energy.output=Energy Produced: %s IF
+
+ii.gui_tooltip.heat.stored=Heat %s/%s IH
+ii.gui_tooltip.heat.input=Heat Consumed: %s IH
+ii.gui_tooltip.heat.required=Heat Required: %s IH /t
+ii.gui_tooltip.heat.output=Heat Produced: %s IH
+
+ii.gui_tooltip.pressure.stored=Pressure: %s/%s IP
+ii.gui_tooltip.pressure.input=Pressure Intake: %s IP
+ii.gui_tooltip.pressure.required=Pressure Required: %s IP /t
+ii.gui_tooltip.pressure.output=Pressure Created: %s IP
+
+ii.gui_tooltip.mech_torque.stored=Torque: %s/%s IT
+ii.gui_tooltip.mech_torque.input=Torque Input: %s IT
+ii.gui_tooltip.mech_torque.required=Torque Required: %s IT /t
+ii.gui_tooltip.mech_torque.output=Torque Output: %s IT
+
+ii.gui_tooltip.mech_speed.stored=Speed: %s/%s D/t
+ii.gui_tooltip.mech_speed.input=Speed Input: %s D/t
+ii.gui_tooltip.mech_speed.required=Speed Required: %s D/t
+ii.gui_tooltip.mech_speed.output=Speed Output: %s D/t
+
+ii.gui_tooltip.fluid.stored=%s - %s mB
+ii.gui_tooltip.fluid.input=%s Intake: %s mB
+ii.gui_tooltip.fluid.output=%s Output: %s mB
+
+ii.gui_tooltip.time.stored=Time Remaining: %s/%s t
+ii.gui_tooltip.time.required=Time Required: %s t
+
+ii.gui_tooltip.structural_integrity=Structural Integrity: %s/%s Hitpoints
+ii.gui_tooltip.structural_integrity.repair=Repair Threshold: Below %s Hitpoints
+ii.gui_tooltip.structural_integrity.repair.auto_tooltip=The structure will automatically repair itself if it falls below this threshold.
+ii.gui_tooltip.structural_integrity.repair.manual_tooltip=The structure will request repair if it falls below this threshold.
+
+ii.gui_tooltip.armor_integrity=Armor: %s/%s Hitpoints
+ii.gui_tooltip.reactive_armor_integrity=Reactive Armor: %s/%s Hitpoints
+
+ii.gui_tooltip.speed=Speed: %s
+ii.gui_tooltip.progress=Progress: %s %
+ii.gui_tooltip.fuel=Fuel: %s/%s mB
+ii.gui_tooltip.soil_fertility=Soil Fertility: %s %

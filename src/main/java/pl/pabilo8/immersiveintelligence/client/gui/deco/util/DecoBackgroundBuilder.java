@@ -3,13 +3,18 @@ package pl.pabilo8.immersiveintelligence.client.gui.deco.util;
 import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.common.blocks.TileEntityIEBase;
 import blusunrize.immersiveengineering.common.util.inventory.IIEInventory;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.GlStateManager.DestFactor;
 import net.minecraft.client.renderer.GlStateManager.SourceFactor;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.world.World;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
@@ -27,6 +32,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Consumer;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -150,8 +156,17 @@ public class DecoBackgroundBuilder<T extends TileEntityIEBase & IIEInventory, C 
 	public DecoBackgroundBuilder<T, C> withTitleBar(T tile)
 	{
 		ITextComponent displayName = tile.getDisplayName();
-		if(displayName==null)
-			return this;
+		if(displayName==null&&tile.hasWorld())
+		{
+			World world = tile.getWorld();
+			BlockPos pos = tile.getPos();
+			if(world.isBlockLoaded(pos))
+			{
+				IBlockState state = world.getBlockState(tile.getPos());
+				displayName = new TextComponentString(new ItemStack(state.getBlock(), 1, state.getBlock().getMetaFromState(state)).getDisplayName());
+			}
+
+		}
 		return withTitleBar(displayName.getUnformattedText(), DecoAlignment.TOP);
 	}
 
@@ -329,6 +344,13 @@ public class DecoBackgroundBuilder<T extends TileEntityIEBase & IIEInventory, C 
 	public DecoRectangle[] getTakenSpace()
 	{
 		return backgroundTiles.stream().flatMap(List::stream).toArray(DecoRectangle[]::new);
+	}
+
+	public DecoBackgroundBuilder<T, C> conditionally(boolean condition, Consumer<DecoBackgroundBuilder<T, C>> action)
+	{
+		if(condition)
+			action.accept(this);
+		return this;
 	}
 
 	private static class DecoSlot

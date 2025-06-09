@@ -21,7 +21,6 @@ import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockHeavyAmmunitionAssembler;
 import pl.pabilo8.immersiveintelligence.common.entity.tactile.TactileHandler;
 import pl.pabilo8.immersiveintelligence.common.entity.tactile.TactileHandler.ITactileListener;
-import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionSingle;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockInteractablePart;
@@ -110,7 +109,8 @@ public class TileEntityHeavyAmmunitionAssembler extends TileEntityMultiblockProd
 			case SLOT_CORE:
 				return stack.getItem() instanceof IAmmoTypeItem&&((IAmmoTypeItem<?, ?>)stack.getItem()).isBulletCore(stack);
 			case SLOT_CASING:
-				return AmmunitionAssemblerRecipe.RECIPES.stream().anyMatch(a -> a.casingInput.matchesItemStackIgnoringSize(stack));
+				return AmmunitionAssemblerRecipe.streamRecipes(AmmunitionAssemblerRecipe.class)
+						.anyMatch(a -> a.casingInput.matchesItemStackIgnoringSize(stack));
 			default:
 				return false;
 		}
@@ -140,7 +140,7 @@ public class TileEntityHeavyAmmunitionAssembler extends TileEntityMultiblockProd
 	protected IIMultiblockProcess<AmmunitionAssemblerRecipe> findNewProductionProcess()
 	{
 		if(!inventory.get(SLOT_CORE).isEmpty()&&!inventory.get(SLOT_CASING).isEmpty())
-			for(AmmunitionAssemblerRecipe recipe : AmmunitionAssemblerRecipe.RECIPES)
+			for(AmmunitionAssemblerRecipe recipe : AmmunitionAssemblerRecipe.getRecipes(AmmunitionAssemblerRecipe.class))
 				if(!recipe.advanced&&recipe.casingInput.matchesItemStack(inventory.get(SLOT_CASING))&&recipe.coreInput.matches(inventory.get(SLOT_CORE)))
 				{
 					IIMultiblockProcess<AmmunitionAssemblerRecipe> process = new IIMultiblockProcess<>(recipe)
@@ -156,13 +156,10 @@ public class TileEntityHeavyAmmunitionAssembler extends TileEntityMultiblockProd
 	}
 
 	@Override
-	protected IIMultiblockProcess<AmmunitionAssemblerRecipe> getProcessFromNBT(EasyNBT nbt)
+	protected IIMultiblockProcess<AmmunitionAssemblerRecipe> getProcessByName(String name)
 	{
-		AmmunitionAssemblerRecipe recipe = AmmunitionAssemblerRecipe.RECIPES.stream()
-				.filter(r -> !r.advanced)
-				.filter(r -> r.ammoItem.getName().equals(nbt.getString("ammo")))
-				.findFirst().orElse(null);
-		if(recipe!=null)
+		AmmunitionAssemblerRecipe recipe = AmmunitionAssemblerRecipe.getRecipe(AmmunitionAssemblerRecipe.class, name);
+		if(recipe!=null&&!recipe.advanced)
 			return new IIMultiblockProcess<>(recipe);
 		return null;
 	}

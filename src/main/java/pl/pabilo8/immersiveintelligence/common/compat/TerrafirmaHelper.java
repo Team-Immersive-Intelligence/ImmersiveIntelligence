@@ -54,12 +54,12 @@ public class TerrafirmaHelper extends IICompatModule
 	public void registerRecipes()
 	{
 		//Fresh Water -> Hydrogen + Oxygen
-		ElectrolyzerRecipe.addRecipe(FluidRegistry.getFluidStack("fresh_water", 750),
+		new ElectrolyzerRecipe(FluidRegistry.getFluidStack("fresh_water", 750),
 				FluidRegistry.getFluidStack("oxygen", 250),
 				FluidRegistry.getFluidStack("hydrogen", 500),
 				160, 80);
 		//Salt Water -> Hydrogen + Chlorine (less efficient)
-		ElectrolyzerRecipe.addRecipe(FluidRegistry.getFluidStack("salt_water", 750),
+		new ElectrolyzerRecipe(FluidRegistry.getFluidStack("salt_water", 750),
 				FluidRegistry.getFluidStack("chlorine", 375),
 				FluidRegistry.getFluidStack("hydrogen", 375),
 				200, 180);
@@ -101,7 +101,7 @@ public class TerrafirmaHelper extends IICompatModule
 		if(logStacks.isEmpty())
 			return;
 
-		SawmillRecipe.addRecipe(out, new IngredientStack(logStacks).setUseNBT(false),
+		new SawmillRecipe(out, new IngredientStack(logStacks).setUseNBT(false),
 				IIContent.itemMaterial.getStack(Materials.DUST_WOOD),
 				Sawmill.torqueMin+2, 400, 1);
 	}

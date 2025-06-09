@@ -51,9 +51,9 @@ public class GuiElectrolyzer extends GuiIEContainerBase
 		ClientUtils.bindTexture(texture_electrolyzer);
 		this.drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 
-		ClientUtils.handleGuiTank(tile.tanks[0], guiLeft+32, guiTop+23, 16, 47, 176, 0, 20, 51, mx, my, texture_electrolyzer, null);
-		ClientUtils.handleGuiTank(tile.tanks[1], guiLeft+90, guiTop+23, 45, 16, 176, 51, 49, 20, mx, my, texture_electrolyzer, null);
-		ClientUtils.handleGuiTank(tile.tanks[2], guiLeft+90, guiTop+55, 45, 16, 176, 51, 49, 20, mx, my, texture_electrolyzer, null);
+		ClientUtils.handleGuiTank(tile.tankInput, guiLeft+32, guiTop+23, 16, 47, 176, 0, 20, 51, mx, my, texture_electrolyzer, null);
+		ClientUtils.handleGuiTank(tile.tankOutput1, guiLeft+90, guiTop+23, 45, 16, 176, 51, 49, 20, mx, my, texture_electrolyzer, null);
+		ClientUtils.handleGuiTank(tile.tankOutput2, guiLeft+90, guiTop+55, 45, 16, 176, 51, 49, 20, mx, my, texture_electrolyzer, null);
 
 		ClientUtils.bindTexture(texture_electrolyzer);
 
@@ -76,10 +76,10 @@ public class GuiElectrolyzer extends GuiIEContainerBase
 
 		ArrayList<String> tooltip = new ArrayList<>();
 
-		ClientUtils.handleGuiTank(tile.tanks[0], guiLeft+32, guiTop+23, 16, 47, 176, 0, 20, 51, mx, my, texture_electrolyzer, tooltip);
+		ClientUtils.handleGuiTank(tile.tankInput, guiLeft+32, guiTop+23, 16, 47, 176, 0, 20, 51, mx, my, texture_electrolyzer, tooltip);
 
-		ClientUtils.handleGuiTank(tile.tanks[1], guiLeft+90, guiTop+23, 45, 16, 176, 51, 49, 20, mx, my, texture_electrolyzer, tooltip);
-		ClientUtils.handleGuiTank(tile.tanks[2], guiLeft+90, guiTop+55, 45, 16, 176, 51, 49, 20, mx, my, texture_electrolyzer, tooltip);
+		ClientUtils.handleGuiTank(tile.tankOutput1, guiLeft+90, guiTop+23, 45, 16, 176, 51, 49, 20, mx, my, texture_electrolyzer, tooltip);
+		ClientUtils.handleGuiTank(tile.tankOutput2, guiLeft+90, guiTop+55, 45, 16, 176, 51, 49, 20, mx, my, texture_electrolyzer, tooltip);
 
 		if(mx > guiLeft+161&&mx < guiLeft+168&&my > guiTop+24&&my < guiTop+71)
 			tooltip.add(IIUtils.getPowerLevelString(tile.energyStorage.getEnergyStored(), tile.energyStorage.getMaxEnergyStored()));

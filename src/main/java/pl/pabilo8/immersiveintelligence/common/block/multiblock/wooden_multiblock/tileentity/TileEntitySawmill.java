@@ -2,7 +2,6 @@ package pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblo
 
 import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorageAdvanced;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -30,7 +29,6 @@ import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageRotaryPowerSync;
 import pl.pabilo8.immersiveintelligence.common.util.IIDamageSources;
-import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionSingle;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockInteractablePart;
@@ -212,29 +210,21 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 	{
 		ItemStack stackSawblade = inventory.get(SLOT_SAWBLADE);
 
-		if(stackSawblade.isEmpty())
+		if(stackSawblade.isEmpty()||!(stackSawblade.getItem() instanceof ISawblade))
 			return null;
+		ISawblade saw = (ISawblade)stackSawblade.getItem();
 
-		SawmillRecipe recipe = SawmillRecipe.findRecipe(inventory.get(SLOT_INPUT));
-		if(recipe!=null)
-		{
-			Item item = stackSawblade.getItem();
-			if(!(item instanceof ISawblade))
-				return null;
-			ISawblade saw = (ISawblade)item;
+		final int sawHardness = saw.getHardness(stackSawblade);
+		return SawmillRecipe.streamRecipes(SawmillRecipe.class)
+				.filter(recipe -> recipe.itemInput.matchesItemStackIgnoringSize(inventory.get(SLOT_INPUT)))
+				.filter(recipe -> recipe.getHardness() <= sawHardness)
+				.findFirst()
+				.map(IIMultiblockProcess::new).orElse(null);
 
-			if(saw.getHardness(stackSawblade) < recipe.getHardness())
-				return null;
-
-			inventory.get(SLOT_INPUT).shrink(recipe.itemInput.inputSize);
-			return new IIMultiblockProcess<>(recipe);
-		}
-
-		return null;
 	}
 
 	@Override
-	protected IIMultiblockProcess<SawmillRecipe> getProcessFromNBT(EasyNBT nbt)
+	protected IIMultiblockProcess<SawmillRecipe> getProcessByName(String name)
 	{
 		return null;
 	}
@@ -296,7 +286,7 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 	{
 		if(vise.setState(state))
 			world.playSound(null, getPos(), state?IISounds.viseOpen: IISounds.viseClose, SoundCategory.BLOCKS, 1f, 1f);
-		IIPacketHandler.INSTANCE.sendToAllAround(new MessageBooleanAnimatedPartsSync(state, part, getPos()),
+		IIPacketHandler.INSTANCE.sendToAllAround(new MessageBooleanAnimatedPartsSync(part, state, getPos()),
 				IIPacketHandler.targetPointFromTile(this, 32));
 	}
 }

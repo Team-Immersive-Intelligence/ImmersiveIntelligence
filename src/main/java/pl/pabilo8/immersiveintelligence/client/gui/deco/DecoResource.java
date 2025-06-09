@@ -1,7 +1,9 @@
 package pl.pabilo8.immersiveintelligence.client.gui.deco;
 
+import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * Used to mark {@link pl.pabilo8.immersiveintelligence.common.util.ResLoc} or {@link net.minecraft.util.ResourceLocation}
@@ -10,6 +12,7 @@ import java.lang.annotation.RetentionPolicy;
  * @author Pabilo8
  * @since 4.01.2025
  */
+@Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface DecoResource
 {

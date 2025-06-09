@@ -36,7 +36,6 @@ import pl.pabilo8.immersiveintelligence.api.utils.IUpgradableMachine;
 import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
@@ -341,7 +340,7 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 		if(hasUpgrade(IIContent.UPGRADE_INSERTER))
 		{
 			if(open)
-				IIPacketHandler.INSTANCE.sendToDimension(new MessageBooleanAnimatedPartsSync(open = false, 0, this.pos), this.world.provider.getDimension());
+				IIPacketHandler.INSTANCE.sendToDimension(new MessageBooleanAnimatedPartsSync(0, open = false, this.pos), this.world.provider.getDimension());
 
 			return false;
 		}
@@ -349,7 +348,7 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 		if(player.isSneaking())
 		{
 			open = !open;
-			IIPacketHandler.INSTANCE.sendToDimension(new MessageBooleanAnimatedPartsSync(open, 0, this.pos), this.world.provider.getDimension());
+			IIPacketHandler.INSTANCE.sendToDimension(new MessageBooleanAnimatedPartsSync(0, open, this.pos), this.world.provider.getDimension());
 			return true;
 		}
 		else if(open&&isSupplied())

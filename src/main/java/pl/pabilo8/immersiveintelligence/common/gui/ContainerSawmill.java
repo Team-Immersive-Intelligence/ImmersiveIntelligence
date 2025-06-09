@@ -52,7 +52,8 @@ public class ContainerSawmill extends ContainerIEBase<TileEntitySawmill>
 		@Override
 		public boolean isItemValid(ItemStack itemStack)
 		{
-			return !itemStack.isEmpty()&&SawmillRecipe.isValidRecipeInput(itemStack);
+			return !itemStack.isEmpty()&&SawmillRecipe.streamRecipes(SawmillRecipe.class)
+					.anyMatch(r -> r.itemInput.matchesItemStackIgnoringSize(itemStack));
 		}
 	}
 

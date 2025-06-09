@@ -7,6 +7,7 @@ import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.item.IIngredient;
 import crafttweaker.api.item.IItemStack;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.oredict.OreDictionary;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.crafting.SawmillRecipe;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
@@ -34,10 +35,9 @@ public class SawmillTweaker
 			return;
 		}
 
-
-		SawmillRecipe r = new SawmillRecipe(CraftTweakerHelper.toStack(itemOutput), oItemInput, CraftTweakerHelper.toStack(secondaryItemOutput), torque, time, hardness, IIColor.fromPackedRGB(dustColor));
-
-		CraftTweakerAPI.apply(new Add(r));
+		CraftTweakerAPI.apply(new Add(
+				new SawmillRecipe(CraftTweakerHelper.toStack(itemOutput), oItemInput, CraftTweakerHelper.toStack(secondaryItemOutput), torque, time, hardness, IIColor.fromPackedRGB(dustColor))
+		));
 	}
 
 	@ZenMethod
@@ -58,7 +58,7 @@ public class SawmillTweaker
 		@Override
 		public void apply()
 		{
-			SawmillRecipe.RECIPES.add(recipe);
+
 		}
 
 		@Override
@@ -81,7 +81,8 @@ public class SawmillTweaker
 		@Override
 		public void apply()
 		{
-			removedRecipes = SawmillRecipe.removeRecipesForOutput(output);
+			this.removedRecipes = SawmillRecipe.removeRecipesByFilter(SawmillRecipe.class,
+					recipe -> OreDictionary.itemMatches(recipe.itemOutput, output, true));
 		}
 
 		@Override

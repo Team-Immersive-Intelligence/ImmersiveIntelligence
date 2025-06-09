@@ -9,6 +9,7 @@ import crafttweaker.api.item.IIngredient;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.oredict.OreDictionary;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.crafting.DustStack;
 import pl.pabilo8.immersiveintelligence.api.crafting.FillerRecipe;
@@ -31,8 +32,9 @@ public class FillerTweaker
 		ItemStack stackOut = CraftTweakerMC.getItemStack(itemOutput);
 		IngredientStack stackIn = CraftTweakerHelper.toIEIngredientStack(itemInput);
 
-		FillerRecipe r = new FillerRecipe(stackOut, stackIn, new DustStack(dust, amount), time, energy);
-		CraftTweakerAPI.apply(new Add(r));
+		CraftTweakerAPI.apply(new Add(
+				new FillerRecipe(stackOut, stackIn, new DustStack(dust, amount), time, energy)
+		));
 	}
 
 	@ZenMethod
@@ -53,7 +55,6 @@ public class FillerTweaker
 		@Override
 		public void apply()
 		{
-			FillerRecipe.recipeList.add(recipe);
 		}
 
 		@Override
@@ -76,7 +77,8 @@ public class FillerTweaker
 		@Override
 		public void apply()
 		{
-			removedRecipes = FillerRecipe.removeRecipesForOutput(output);
+			removedRecipes = FillerRecipe.removeRecipesByFilter(FillerRecipe.class,
+					r -> OreDictionary.itemMatches(r.itemOutput, output, true));
 		}
 
 		@Override

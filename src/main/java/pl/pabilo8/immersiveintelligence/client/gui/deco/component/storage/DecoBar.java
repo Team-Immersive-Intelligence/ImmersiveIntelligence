@@ -1,48 +1,197 @@
 package pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage;
 
-import net.minecraft.client.gui.Gui;
-import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
+import blusunrize.immersiveengineering.client.ClientUtils;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.I18n;
+import org.lwjgl.opengl.GL11;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiComponentDecoBase;
+import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
+
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.Collections;
+import java.util.function.Supplier;
 
 /**
  * @author Pabilo8
  * @since 16.07.2021
  */
-public class DecoBar extends Gui
+@ParametersAreNonnullByDefault
+public class DecoBar extends GuiComponentDecoBase<DecoBar>
 {
-	public int x;
-	public int y;
-	private final IIColor color1, color2;
-	private final int w, h;
+	protected ResLoc backgroundLocation, iconBackgroundLocation;
+	@Nullable
+	protected ResLoc iconLocation;
+	private IIColor colorTop, colorBottom;
+	private int minValue = 0, maxValue = 2;
+	private Supplier<Integer> valueSupplier = () -> 1;
 
-	public DecoBar(int x, int y, int w, int h, IIColor color1, IIColor color2)
+	public DecoBar(int x, int y)
 	{
-		this.x = x;
-		this.y = y;
-		this.w = w;
-		this.h = h;
-		this.color1 = color1;
-		this.color2 = color2;
+		super(x, y);
+		withSize(12, 64+7);
+		withColors(IIColor.BLACK, IIColor.WHITE);
+		withBackgroundLocation(IIReference.RES_TEXTURES_DECO_COMPONENT_FRAME, IIReference.RES_TEXTURES_DECO_BAR_ICON_BACKGROUND);
 	}
 
-	public static DecoBar createEnergyBar(int x, int y, int w, int h)
+	@Deprecated
+	public DecoBar(int x, int y, int w, int h, IIColor colorTop, IIColor colorBottom)
 	{
-		return new DecoBar(x, y, w, h, IIReference.COLOR_POWERBAR1, IIReference.COLOR_POWERBAR2);
+		this(x, y);
+		withSize(w, h);
+		withColors(colorTop, colorBottom);
 	}
 
-	public static DecoBar createArmorBar(int x, int y, int w, int h)
+	//--- Setters ---//
+
+	public DecoBar withBackgroundLocation(ResLoc backgroundLocation, ResLoc iconBackgroundLocation)
 	{
-		return new DecoBar(x, y, w, h, IIReference.COLOR_ARMORBAR1, IIReference.COLOR_ARMORBAR2);
+		this.backgroundLocation = backgroundLocation;
+		this.iconBackgroundLocation = iconBackgroundLocation;
+		return this;
 	}
 
-	public void draw(float progress)
+	public DecoBar withIconLocation(ResLoc iconLocation)
 	{
-		IIClientUtils.drawGradientBar(x, y, w, h, color1, color2, progress);
+		this.iconLocation = iconLocation;
+		return this;
 	}
 
-	public boolean mouseOver(int mouseX, int mouseY)
+	public DecoBar withColors(IIColor colorTop, IIColor colorBottom)
 	{
-		return mouseX >= this.x&&mouseY >= this.y&&mouseX < this.x+this.w&&mouseY < this.y+this.h;
+		this.colorTop = colorTop;
+		this.colorBottom = colorBottom;
+		return this;
+	}
+
+	public DecoBar withColor(IIColor color)
+	{
+		this.colorTop = this.colorBottom = color;
+		return this;
+	}
+
+	public DecoBar withLimits(int min, int max, Supplier<Integer> current)
+	{
+		this.minValue = min;
+		this.maxValue = max;
+		return withValueSupplier(current);
+	}
+
+	public DecoBar withValueSupplier(Supplier<Integer> currentValue)
+	{
+		this.valueSupplier = currentValue;
+		return this;
+	}
+
+	public DecoBar withValueTooltip(String text, BarTooltipFormat format)
+	{
+		switch(format)
+		{
+			case VALUE:
+				return this.withOnTooltip(
+						decoBar -> Collections.singleton(I18n.format(IIReference.GUI_TOOLTIP_KEY+text, decoBar.getCurrentValue()))
+				);
+			case VALUE_TO_MAX:
+				return this.withOnTooltip(
+						decoBar -> Collections.singleton(I18n.format(IIReference.GUI_TOOLTIP_KEY+text, decoBar.getCurrentValue(), decoBar.getMaxValue()))
+				);
+			case VALUE_WITH_LIMITS:
+				return this.withOnTooltip(
+						decoBar -> Collections.singleton(I18n.format(IIReference.GUI_TOOLTIP_KEY+text, decoBar.getCurrentValue(), decoBar.getMinValue(), decoBar.getMaxValue()))
+				);
+		}
+		return this;
+	}
+
+	//--- Getters ---//
+
+	public int getMinValue()
+	{
+		return minValue;
+	}
+
+	public int getMaxValue()
+	{
+		return maxValue;
+	}
+
+	public int getCurrentValue()
+	{
+		return valueSupplier.get();
+	}
+
+	@Override
+	protected boolean initialize()
+	{
+		return true;
+	}
+
+	@Override
+	protected void draw(int mouseX, int mouseY, float partialTicks)
+	{
+		bindAtlas();
+		TextureAtlasSprite bgSprite = ClientUtils.getSprite(backgroundLocation);
+
+		//Draw the bar background
+		IIDrawUtils draw = IIDrawUtils.startTexturedColored()
+				.drawRepeatedColorRect(
+						x, y+8, width, height-8,
+						IIColor.WHITE, 64, 64, 8, 8,
+						bgSprite.getMinU(), bgSprite.getMaxU(),
+						bgSprite.getMinV(), bgSprite.getMaxV()
+				);
+		//Draw the icon with its background
+		if(iconLocation!=null)
+		{
+			TextureAtlasSprite iconBgSprite = ClientUtils.getSprite(iconBackgroundLocation);
+			TextureAtlasSprite iconSprite = ClientUtils.getSprite(iconLocation);
+			//Draw the icon background
+			draw.drawRepeatedColorRect(
+					x+(width*0.5f)-9, y-9, 18, 18, IIColor.WHITE,
+					32, 32, 4, 4,
+					iconBgSprite.getMinU(), iconBgSprite.getMaxU(),
+					iconBgSprite.getMinV(), iconBgSprite.getMaxV()
+			);
+			//and the icon
+			draw.drawTexColorRect(
+					x+(width*0.5f)-8, y-8, 16, 16, IIColor.WHITE,
+					iconSprite.getMinU(), iconSprite.getMaxU(),
+					iconSprite.getMinV(), iconSprite.getMaxV()
+			);
+		}
+		draw.finish();
+
+		//Draw the bar gradient
+		GlStateManager.disableTexture2D();
+		GlStateManager.disableAlpha();
+		GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
+		GlStateManager.shadeModel(GL11.GL_SMOOTH);
+
+		int totalHeight = height-4-8;
+		float barHeight = totalHeight*(float)(getCurrentValue()-minValue)/(maxValue-minValue);
+		IIDrawUtils.startColored()
+				.drawColorGradient(x+2, y+8+2+totalHeight-barHeight, width-4, (int)barHeight, colorBottom, colorTop)
+				.finish();
+		GlStateManager.enableTexture2D();
+		GlStateManager.shadeModel(GL11.GL_FLAT);
+		GlStateManager.disableBlend();
+		GlStateManager.enableAlpha();
+	}
+
+	@Override
+	public void cleanup()
+	{
+
+	}
+
+	public enum BarTooltipFormat
+	{
+		VALUE,
+		VALUE_TO_MAX,
+		VALUE_WITH_LIMITS,
 	}
 }

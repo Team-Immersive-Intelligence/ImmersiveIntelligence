@@ -1,5 +1,6 @@
 package pl.pabilo8.immersiveintelligence.client.gui.deco;
 
+import blusunrize.immersiveengineering.api.ApiUtils;
 import blusunrize.immersiveengineering.api.DimensionBlockPos;
 import blusunrize.immersiveengineering.common.blocks.TileEntityIEBase;
 import blusunrize.immersiveengineering.common.util.inventory.IIEInventory;
@@ -24,6 +25,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoRectangle;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageGuiNBT;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
@@ -35,8 +37,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.awt.*;
 import java.io.IOException;
-import java.util.List;
 import java.util.*;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
@@ -464,8 +466,7 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 		@Override
 		public void registerSprites(TextureMap map)
 		{
-			IReloadableModelContainer.super.registerSprites(map);
-			resources.forEach(map::registerSprite);
+			resources.forEach(resLoc -> ApiUtils.getRegisterSprite(map, resLoc));
 		}
 	}
 
@@ -501,6 +502,11 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 	public T getTile()
 	{
 		return tile;
+	}
+
+	public void syncAnimatedParts(int id, boolean state)
+	{
+		IIPacketHandler.sendToServer(new MessageBooleanAnimatedPartsSync(id, state, tile.getPos()));
 	}
 
 	/**

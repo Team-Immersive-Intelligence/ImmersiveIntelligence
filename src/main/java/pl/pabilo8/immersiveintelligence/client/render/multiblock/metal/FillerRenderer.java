@@ -131,7 +131,7 @@ public class FillerRenderer extends IIMultiblockRenderer<TileEntityFiller>
 			//Special handling for ammo
 			if(isBullet = recipe.getBullet()!=null)
 			{
-				bullet.setModel(AmmoRegistry.getModel(recipe.getBullet()));
+				bullet.setModel(AmmoRegistry.getGenericModel(recipe.getBullet()));
 				bullet.withState(BulletState.CASING);
 				bullet.withGunpowderPercentage(transition);
 			}

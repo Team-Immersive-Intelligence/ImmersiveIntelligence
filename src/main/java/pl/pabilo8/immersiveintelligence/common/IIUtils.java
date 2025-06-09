@@ -100,6 +100,11 @@ public class IIUtils
 		return ret;
 	}
 
+	public static <T extends IFluidTank & IFluidHandler> boolean handleBucketTankInteraction(T tank, NonNullList<ItemStack> inventory, int bucketInputSlot, int bucketOutputSlot, boolean fillBucket)
+	{
+		return handleBucketTankInteraction(tank, inventory, bucketInputSlot, bucketOutputSlot, fillBucket, fluidStack -> true);
+	}
+
 	public static <T extends IFluidTank & IFluidHandler> boolean handleBucketTankInteraction(T tank, NonNullList<ItemStack> inventory, int bucketInputSlot, int bucketOutputSlot, boolean fillBucket, Predicate<FluidStack> filter)
 	{
 		if(inventory.get(bucketInputSlot).hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null))

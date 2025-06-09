@@ -83,7 +83,7 @@ public class GuiArithmeticLogicMachineBase extends GuiIEContainerBase implements
 	@Override
 	public void initGui()
 	{
-		IIPacketHandler.sendToServer(new MessageBooleanAnimatedPartsSync(true, 0, tile.getPos()));
+		IIPacketHandler.sendToServer(new MessageBooleanAnimatedPartsSync(0, true, tile.getPos()));
 
 		buttonList.clear();
 		labelList.clear();
@@ -188,7 +188,7 @@ public class GuiArithmeticLogicMachineBase extends GuiIEContainerBase implements
 	{
 		syncDataToServer();
 		if(!preparedForChange)
-			IIPacketHandler.sendToServer(new MessageBooleanAnimatedPartsSync(false, 0, tile.getPos()));
+			IIPacketHandler.sendToServer(new MessageBooleanAnimatedPartsSync(0, false, tile.getPos()));
 		super.onGuiClosed();
 	}
 

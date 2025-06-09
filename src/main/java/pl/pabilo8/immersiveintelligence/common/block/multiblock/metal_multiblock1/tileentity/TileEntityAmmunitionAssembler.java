@@ -23,8 +23,8 @@ import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockAmmunitionAssembler;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
-import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionBase;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionMulti;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockInteractablePart;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
@@ -40,9 +40,9 @@ import javax.annotation.Nullable;
  */
 public class TileEntityAmmunitionAssembler extends TileEntityMultiblockProductionMulti<TileEntityAmmunitionAssembler, AmmunitionAssemblerRecipe> implements IBooleanAnimatedPartsBlock
 {
-	public String NBT_KEY_EFFECT = "effect";
-
 	public static final int SLOT_CORE = 0, SLOT_CASING = 1, SLOT_OUTPUT = 2;
+	public static final String NBT_KEY_EFFECT = "effect";
+
 	public FuseType fuse = FuseType.CONTACT;
 	@SyncNBT
 	public int fuseConfig = 0; //depends on fuse type: time for timed fuse, distance for proximity fuse
@@ -104,7 +104,8 @@ public class TileEntityAmmunitionAssembler extends TileEntityMultiblockProductio
 			case SLOT_CORE:
 				return stack.getItem() instanceof IAmmoTypeItem&&((IAmmoTypeItem<?, ?>)stack.getItem()).isBulletCore(stack);
 			case SLOT_CASING:
-				return AmmunitionAssemblerRecipe.RECIPES.stream().anyMatch(a -> a.casingInput.matchesItemStackIgnoringSize(stack));
+				return AmmunitionAssemblerRecipe.streamRecipes(AmmunitionAssemblerRecipe.class)
+						.anyMatch(a -> a.casingInput.matchesItemStackIgnoringSize(stack));
 			default:
 				return false;
 		}
@@ -134,7 +135,7 @@ public class TileEntityAmmunitionAssembler extends TileEntityMultiblockProductio
 	protected IIMultiblockProcess<AmmunitionAssemblerRecipe> findNewProductionProcess()
 	{
 		if(!inventory.get(SLOT_CORE).isEmpty()&&!inventory.get(SLOT_CASING).isEmpty())
-			for(AmmunitionAssemblerRecipe recipe : AmmunitionAssemblerRecipe.RECIPES)
+			for(AmmunitionAssemblerRecipe recipe : AmmunitionAssemblerRecipe.getRecipes(AmmunitionAssemblerRecipe.class))
 				if(!recipe.advanced&&recipe.casingInput.matchesItemStack(inventory.get(SLOT_CASING))&&recipe.coreInput.matches(inventory.get(SLOT_CORE)))
 				{
 					IIMultiblockProcess<AmmunitionAssemblerRecipe> process = new IIMultiblockProcess<>(recipe)
@@ -150,15 +151,9 @@ public class TileEntityAmmunitionAssembler extends TileEntityMultiblockProductio
 	}
 
 	@Override
-	protected IIMultiblockProcess<AmmunitionAssemblerRecipe> getProcessFromNBT(EasyNBT nbt)
+	protected IIMultiblockProcess<AmmunitionAssemblerRecipe> getProcessByName(String name)
 	{
-		AmmunitionAssemblerRecipe recipe = AmmunitionAssemblerRecipe.RECIPES.stream()
-				.filter(r -> !r.advanced)
-				.filter(r -> r.ammoItem.getName().equals(nbt.getString("ammo")))
-				.findFirst().orElse(null);
-		if(recipe!=null)
-			return new IIMultiblockProcess<>(recipe);
-		return null;
+		return TileEntityMultiblockProductionBase.findRecipeFromList(AmmunitionAssemblerRecipe.class, name);
 	}
 
 	@Override
@@ -254,7 +249,7 @@ public class TileEntityAmmunitionAssembler extends TileEntityMultiblockProductio
 		if(hatch.setState(state))
 		{
 			world.playSound(null, getPOIPos("lid"), state?IISounds.metalSlideOpen: IISounds.metalSlideClose, SoundCategory.BLOCKS, 1f, 1f);
-			IIPacketHandler.sendToClient(getPos(), getWorld(), new MessageBooleanAnimatedPartsSync(state, part, getPos()));
+			IIPacketHandler.sendToClient(getPos(), getWorld(), new MessageBooleanAnimatedPartsSync(part, state, getPos()));
 		}
 	}
 }

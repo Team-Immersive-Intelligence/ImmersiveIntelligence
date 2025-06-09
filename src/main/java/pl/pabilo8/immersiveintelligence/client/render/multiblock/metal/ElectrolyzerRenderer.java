@@ -26,11 +26,11 @@ public class ElectrolyzerRenderer extends IIMultiblockRenderer<TileEntityElectro
 	{
 		applyStandardMirroring(te, true);
 
-		fluid.setFluid(te.tanks[0].getFluid());
-		float tankAmount = te.tanks[0].getFluidAmount();
+		fluid.setFluid(te.tankInput.getFluid());
+		float tankAmount = te.tankInput.getFluidAmount();
 		if(te.currentProcess!=null)
 			tankAmount -= te.getProductionProgress(te.currentProcess, partialTicks)*te.currentProcess.recipe.fluidInput.amount;
-		fluid.setLevel(tankAmount/(float)te.tanks[0].getCapacity());
+		fluid.setLevel(tankAmount/(float)te.tankInput.getCapacity());
 
 		fluid.setFlowing(false);
 		fluid.render(tes, buf);

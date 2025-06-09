@@ -69,7 +69,7 @@ public class TileEntityAmmunitionCrate extends TileEntityEffectCrate
 	{
 		if(player.isSneaking())
 		{
-			IIPacketHandler.INSTANCE.sendToDimension(new MessageBooleanAnimatedPartsSync(open = !open, 0, this.pos), this.world.provider.getDimension());
+			IIPacketHandler.INSTANCE.sendToDimension(new MessageBooleanAnimatedPartsSync(0, open = !open, this.pos), this.world.provider.getDimension());
 			return true;
 		}
 		else if(open)

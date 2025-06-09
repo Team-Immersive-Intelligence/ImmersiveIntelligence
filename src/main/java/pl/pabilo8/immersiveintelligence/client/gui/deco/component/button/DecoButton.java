@@ -89,18 +89,12 @@ public class DecoButton extends GuiComponentDecoTextBase<DecoButton>
 		IIDrawUtils draw = IIDrawUtils.startTexturedColored();
 
 		DecoGuiUtils.drawRepeatedRect(draw, x, y, width, height, backgroundLocation, getBackgroundColor(), 32, 8);
-		int minIconSize = Math.min(Math.min(width, height), iconSize);
 		DecoAlignment align = iconAlignment==DecoAlignment.CENTER&&text!=null?DecoAlignment.LEFT: iconAlignment;
-
-		int xPadding = minIconSize < width?padding[0]+padding[2]: -1;
-		int yPadding = minIconSize < height?padding[1]+padding[3]: -1;
-
 		if(icon!=null)
 		{
 			TextureAtlasSprite iconSprite = ClientUtils.getSprite(icon);
 			draw.drawTexColorRect(
-					align.getAlignX(x+xPadding, iconSize, width-xPadding),
-					align.getAlignY(y+yPadding, iconSize, height-yPadding),
+					getIconXOffset(align, 16), getIconYOffset(align, 16),
 					iconSize, iconSize, getTextColor(false),
 					iconSprite.getMinU(), iconSprite.getMaxU(), iconSprite.getMinV(), iconSprite.getMaxV());
 		}
@@ -108,22 +102,33 @@ public class DecoButton extends GuiComponentDecoTextBase<DecoButton>
 		if(stack!=null)
 		{
 			GlStateManager.pushMatrix();
-			GlStateManager.translate(
-					align.getAlignX(x+padding[0], minIconSize, width-xPadding),
-					align.getAlignY(y+padding[1], minIconSize, height-yPadding),
-					0);
-			GlStateManager.scale(minIconSize/(float)iconSize, minIconSize/(float)iconSize, 1);
+			GlStateManager.translate(getIconXOffset(align, 16), getIconYOffset(align, 16), 0);
+			GlStateManager.scale(16/(float)iconSize, 16/(float)iconSize, 1);
 			ClientUtils.mc().getRenderItem().renderItemAndEffectIntoGUI(stack, 0, 0);
 			GlStateManager.popMatrix();
 		}
 
 		if(text!=null)
 		{
+			int xPadding = padding[0]+padding[2];
+			int yPadding = padding[1]+padding[3];
 			fontRenderer.drawString(text,
 					this.iconAlignment.getAlignX(x+padding[0], fontRenderer.getStringWidth(text), width-xPadding),
 					this.iconAlignment.getAlignY(y+padding[1], fontRenderer.FONT_HEIGHT, height-yPadding),
 					getTextColor(false).getPackedARGB());
 		}
+	}
+
+	private int getIconXOffset(DecoAlignment align, int defaultIconSize)
+	{
+		int xPadding = padding[0]+padding[2];
+		return align.getAlignX(x+padding[0], 16, width-xPadding)+(defaultIconSize-this.iconSize)/2;
+	}
+
+	private int getIconYOffset(DecoAlignment align, int defaultIconSize)
+	{
+		int yPadding = padding[1]+padding[3];
+		return align.getAlignY(y+padding[1], 16, height-yPadding)+(defaultIconSize-this.iconSize)/2;
 	}
 
 	@Override

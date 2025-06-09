@@ -40,9 +40,21 @@ public class DecoPanel extends GuiComponentDecoBase<DecoPanel>
 		children.add(component);
 	}
 
+	public void addComponents(GuiComponentDecoBase<?>... components)
+	{
+		for(GuiComponentDecoBase<?> component : components)
+			addComponent(component);
+	}
+
 	public void addLabel(DecoLabel label)
 	{
 		labels.add(label);
+	}
+
+	public void addLabels(DecoLabel... labels)
+	{
+		for(DecoLabel label : labels)
+			addLabel(label);
 	}
 
 	public DecoPanel withBackground(ResLoc background)

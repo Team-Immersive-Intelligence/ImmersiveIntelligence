@@ -24,7 +24,7 @@ public class MessageBooleanAnimatedPartsSync extends IIMessage
 	private int id; //The number of the opened / closed component
 	private BlockPos pos;
 
-	public MessageBooleanAnimatedPartsSync(boolean open, int id, BlockPos pos)
+	public MessageBooleanAnimatedPartsSync(int id, boolean open, BlockPos pos)
 	{
 		this.open = open;
 		this.id = id;

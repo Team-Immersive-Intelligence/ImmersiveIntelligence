@@ -24,6 +24,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 
 /**
@@ -84,10 +85,10 @@ public abstract class TileEntityMultiblockProductionBase<T extends TileEntityMul
 	protected abstract IIMultiblockProcess<R> findNewProductionProcess();
 
 	/**
-	 * @param nbt NBT data of a saved production process
+	 * @param name NBT data of a saved production process
 	 * @return a new production process from NBT
 	 */
-	protected abstract IIMultiblockProcess<R> getProcessFromNBT(EasyNBT nbt);
+	protected abstract IIMultiblockProcess<R> getProcessByName(String name);
 
 	/**
 	 * @param process  the production process
@@ -174,7 +175,7 @@ public abstract class TileEntityMultiblockProductionBase<T extends TileEntityMul
 			this.recipe = recipe;
 			this.ticks = 0;
 			this.maxTicks = recipe.getTotalProcessTime();
-			this.processData = recipe.writeToNBT();
+			this.processData = EasyNBT.newNBT();
 		}
 
 		public IIMultiblockProcess<R> withNBT(Consumer<EasyNBT> consumer)
@@ -186,7 +187,8 @@ public abstract class TileEntityMultiblockProductionBase<T extends TileEntityMul
 		@Override
 		public NBTTagCompound serializeNBT()
 		{
-			return processData
+			return EasyNBT.newNBT()
+					.withString("recipe", recipe.getName())
 					.withFloat("ticks", ticks)
 					.withInt("maxTicks", maxTicks)
 					.unwrap();
@@ -210,7 +212,7 @@ public abstract class TileEntityMultiblockProductionBase<T extends TileEntityMul
 
 		int getMultipleProcessTicks();
 
-		EasyNBT writeToNBT();
+		String getName();
 	}
 
 	/**
@@ -247,7 +249,7 @@ public abstract class TileEntityMultiblockProductionBase<T extends TileEntityMul
 				if(nbtBase instanceof NBTTagCompound)
 				{
 					//Get an empty process
-					IIMultiblockProcess<R> process = tile.getProcessFromNBT(EasyNBT.wrapNBT(((NBTTagCompound)nbtBase)));
+					IIMultiblockProcess<R> process = tile.getProcessByName(((NBTTagCompound)nbtBase).getString("recipe"));
 					if(process==null)
 						continue;
 
@@ -256,5 +258,21 @@ public abstract class TileEntityMultiblockProductionBase<T extends TileEntityMul
 					add(process);
 				}
 		}
+	}
+
+	//--- Production Utils ---//
+
+	protected static <RECIPE extends IIMultiblockRecipe> IIMultiblockProcess<RECIPE> findRecipeFromList(Class<RECIPE> klass, String name)
+	{
+		return findRecipeFromList(klass, IIMultiblockProcess::new, name);
+	}
+
+	protected static <RECIPE extends IIMultiblockRecipe, PROCESS extends IIMultiblockProcess<RECIPE>> PROCESS
+	findRecipeFromList(Class<RECIPE> klass, Function<RECIPE, PROCESS> constructor, String name)
+	{
+		RECIPE recipe = IIMultiblockRecipe.getRecipe(klass, name);
+		if(recipe!=null)
+			return constructor.apply(recipe);
+		return null;
 	}
 }

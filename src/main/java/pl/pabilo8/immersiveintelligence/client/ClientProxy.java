@@ -134,6 +134,7 @@ import pl.pabilo8.immersiveintelligence.common.item.ammo.gun.ItemIIAmmoRevolver;
 import pl.pabilo8.immersiveintelligence.common.item.tools.ItemIIDrillHead.DrillHeads;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIWeaponUpgrade;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.util.block.BlockIIFluid;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIIStateMappings;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIIStateMappings.DummyEnum;
@@ -520,6 +521,9 @@ public class ClientProxy extends CommonProxy
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityAluminiumFenceGate.class, new FenceGateRenderer<>("multiblock/aluminium_gate"));
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityAluminiumChainFenceGate.class, new FenceGateRenderer<>("multiblock/aluminium_chain_gate"));
 
+		//GUIs (auto texture registering)
+		IIGuiList.initClientGUIs();
+
 		//Compat
 		IICompatModule.doModulesClientPreInit();
 	}
@@ -612,12 +616,14 @@ public class ClientProxy extends CommonProxy
 		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_COMPONENT_SWITCH_MOVING);
 		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_COMPONENT_DROPDOWN);
 		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_COMPONENT_SLIDER);
+		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_BAR_ICON_BACKGROUND);
+		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_COMPONENT_FRAME);
+		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_COMPONENT_TANK);
 
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_ICON_ACTION_ADD);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_ICON_ACTION_REMOVE);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_ICON_ACTION_EDIT);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_ICON_ACTION_DUPLICATE);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_ICON_ACTION_CLEAR);
+		for(ResLoc icon : IIReference.RES_ACTION_ICONS)
+			ApiUtils.getRegisterSprite(event.getMap(), icon);
+		for(ResLoc icon : IIReference.RES_ICONS)
+			ApiUtils.getRegisterSprite(event.getMap(), icon);
 
 		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_BUTTON_PAPER);
 		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_BUTTON_HANGING);
@@ -628,7 +634,6 @@ public class ClientProxy extends CommonProxy
 	public void init()
 	{
 		super.init();
-		IIGuiList.initClientGUIs();
 
 		ClientEventHandler handler = new ClientEventHandler();
 		MinecraftForge.EVENT_BUS.register(handler);

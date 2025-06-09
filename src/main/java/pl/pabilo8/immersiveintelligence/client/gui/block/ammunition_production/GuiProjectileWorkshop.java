@@ -46,7 +46,7 @@ public class GuiProjectileWorkshop extends GuiAmmunitionBase<TileEntityProjectil
 	{
 		super(player, tile, ContainerProjectileWorkshop::new);
 		IIPacketHandler.sendToServer(
-				new MessageBooleanAnimatedPartsSync(true, blusunrize.immersiveengineering.common.util.Utils.RAND.nextInt(2), tile.getPos()));
+				new MessageBooleanAnimatedPartsSync(blusunrize.immersiveengineering.common.util.Utils.RAND.nextInt(2), true, tile.getPos()));
 		hasFillerUpgrade = tile.hasUpgrade(IIContent.UPGRADE_CORE_FILLER);
 	}
 
@@ -227,8 +227,8 @@ public class GuiProjectileWorkshop extends GuiAmmunitionBase<TileEntityProjectil
 			} catch(NumberFormatException ignored) {}
 		}
 
-		IIPacketHandler.sendToServer(new MessageBooleanAnimatedPartsSync(false, 0, tile.getPos()));
-		IIPacketHandler.sendToServer(new MessageBooleanAnimatedPartsSync(false, 1, tile.getPos()));
+		IIPacketHandler.sendToServer(new MessageBooleanAnimatedPartsSync(0, false, tile.getPos()));
+		IIPacketHandler.sendToServer(new MessageBooleanAnimatedPartsSync(1, false, tile.getPos()));
 	}
 
 	@Override
