@@ -62,9 +62,7 @@ public class CommandIIGivePunchtape extends CommandBase
 					builder.append(args[i]);
 				NBTTagCompound nbt = JsonToNBT.getTagFromJson(builder.toString());
 				ItemStack stack = new ItemStack(IIContent.itemPunchtape, 1, 1);
-				DataPacket dataPacket = new DataPacket();
-				dataPacket.fromNBT(nbt);
-				IIContent.itemPunchtape.writeDataToItem(dataPacket, stack);
+				IIContent.itemPunchtape.writeDataToItem(new DataPacket(nbt), stack);
 
 				player.addItemStackToInventory(stack);
 				sender.sendMessage(new TextComponentString("Punchtape given!"));

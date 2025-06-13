@@ -331,15 +331,13 @@ public class ItemIIFunctionalCircuit extends ItemIISubItemsBase<Circuits> implem
 	@Override
 	public DataPacket getStoredData(ItemStack stack)
 	{
-		DataPacket data = new DataPacket();
-		data.fromNBT(ItemNBTHelper.getTagCompound(stack, "operations"));
-		return data;
+		return new DataPacket(ItemNBTHelper.getTagCompound(stack, "operations"));
 	}
 
 	@Override
 	public void writeDataToItem(DataPacket packet, ItemStack stack)
 	{
-		ItemNBTHelper.setTagCompound(stack, "operations", packet.toNBT());
+		ItemNBTHelper.setTagCompound(stack, "operations", packet.serializeNBT());
 	}
 
 

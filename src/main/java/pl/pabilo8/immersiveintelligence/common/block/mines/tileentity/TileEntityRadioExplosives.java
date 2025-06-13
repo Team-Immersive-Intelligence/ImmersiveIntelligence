@@ -88,7 +88,7 @@ public class TileEntityRadioExplosives extends TileEntityMineBase implements ITi
 	{
 		super.readOnPlacement(placer, stack);
 		if(!stack.isEmpty())
-			this.programmedPacket = new DataPacket().fromNBT(ItemNBTHelper.getTagCompound(stack, "programmed_data"));
+			this.programmedPacket = new DataPacket(ItemNBTHelper.getTagCompound(stack, "programmed_data"));
 	}
 
 	@Override

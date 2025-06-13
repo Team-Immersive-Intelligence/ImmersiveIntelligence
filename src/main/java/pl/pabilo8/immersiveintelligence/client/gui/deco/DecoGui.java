@@ -20,6 +20,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiComponentDe
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiComponentDecoBase.DecoGuiEvent;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoTab;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoLabel;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.widget.GuiComponentWidgetBase;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundBuilder;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoRectangle;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
@@ -70,6 +71,7 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 
 	//Components
 	protected final List<DecoTab> tabList = new ArrayList<>();
+	protected final List<DecoTab> widgetTabList = new ArrayList<>();
 
 	//Help framework
 	private boolean helpMode = false;
@@ -173,6 +175,23 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 		}
 
 		return component;
+	}
+
+	protected final <W extends GuiComponentWidgetBase<W>> W addWidget(W widget)
+	{
+		//Add the widget tab
+		DecoTab tab = widget.provideTab();
+		buttonList.add(tab);
+		tab.id = buttonList.size();
+		tab.withSize(28, 24);
+		tab.x = xSize;
+		tab.y = ySize-10-tabList.size()*24;
+
+		//Add the widget itself
+		widget.x = xSize;
+		widget.y = (ySize-widget.height)/2;
+		widget.setParentGUI(this);
+		return widget;
 	}
 
 	/**

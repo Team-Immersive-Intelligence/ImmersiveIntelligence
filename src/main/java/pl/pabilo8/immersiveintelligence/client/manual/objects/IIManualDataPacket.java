@@ -37,7 +37,7 @@ public class IIManualDataPacket extends IIManualObject
 	{
 		super.postInit(page);
 
-		packet = new DataPacket().fromNBT(dataSource.getCompound("data"));
+		packet = new DataPacket(dataSource.getCompound("data"));
 		text = compilePacketString();
 		obstructed = false;
 	}

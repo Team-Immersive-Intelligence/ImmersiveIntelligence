@@ -6,6 +6,7 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiComponentDecoBase.DecoComponentTemplate;
@@ -51,7 +52,7 @@ public class DecoGuiUtils
 			energyStorage -> component -> component
 					.withIconLocation(IIReference.RES_ICON_ENERGY)
 					.withColors(IIColor.fromPackedRGB(0xb33929), IIColor.fromPackedRGB(0x662822))
-					.withValueTooltip("energy.stored", BarTooltipFormat.VALUE_TO_MAX)
+					.withValueTooltip("energy.stored", BarTooltipFormat.VALUE_TO_MAX, TextFormatting.GOLD)
 					.withLimits(0, energyStorage.getMaxEnergyStored(), energyStorage::getEnergyStored);
 
 	public static IIDrawUtils drawBackgroundMask(Collection<DecoRectangle> rects, int minXOffset, int minYOffset)

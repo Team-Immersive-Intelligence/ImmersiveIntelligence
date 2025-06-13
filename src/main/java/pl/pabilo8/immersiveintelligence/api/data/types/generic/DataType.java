@@ -11,6 +11,7 @@ import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 
+import javax.annotation.Nonnull;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.function.Supplier;
@@ -20,7 +21,7 @@ import java.util.function.Supplier;
  * @since 01.06.2019
  */
 @MethodsReturnNonnullByDefault
-public abstract class DataType
+public abstract class DataType implements Cloneable
 {
 	/**
 	 * @param nbt to load values from
@@ -75,6 +76,10 @@ public abstract class DataType
 	{
 		return getTypeMeta().getTextureLocation();
 	}
+
+	@Override
+	@Nonnull
+	public abstract DataType clone();
 
 	/**
 	 * Used by interfaces extending IDataType to provide a generic "bridge" between data types

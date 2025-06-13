@@ -33,26 +33,10 @@ import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 
 /**
- * <p>
- *
- * @author Pabilo8 (pabilo@iiteam.net)
  * @author Pabilo8 (pabilo@iiteam.net)
  * @updated 30.08.2021
  * @updated 24.02.2025
  * @ii-approved 0.3.1
- * @since 30.06.2019
- * Some code you write, some you steal, but in most cases you adapt the existing solutions...
- * </p>
- *
- * <p>
- * Edited by the same Pabilo8 on 30.08.2021
- * Most of the code you write, little you steal, but in most cases you improve on what you have created...
- * </p>
- *
- * <p>
- * Reworked again by the same Pabilo8 on 24.02.2025.
- * All of the code you write, none of the code you steal, but for some of the code you generate...
- * </p>
  * @since 30.06.2019
  */
 @DecoTemplate(name = "data_input_machine")
@@ -127,11 +111,11 @@ public class GuiDataInputMachine extends DecoGui<TileEntityDataInputMachine, Con
 									.withBoolean("send_packet", true)
 							));
 							return true;
-						}),
-
-				manualButton = new DecoButton(176, 98)
-						.withSize(28, 24)
+						})
 		);
+
+		//TODO: 10.06.2025 Add manual widget
+//		addWidget(new GuiWidgetManual<>());
 
 		//Add storage display and bars or the variable list, if in the "variables" tab
 		if(isStorage)
@@ -156,18 +140,17 @@ public class GuiDataInputMachine extends DecoGui<TileEntityDataInputMachine, Con
 					new DecoList<Pair<Character, DataType>>(32, 8)
 							.withSize(136, 120)
 							.withEntries(tile.storedData.getAllVariables())
-							.withCreateLaterAction(() -> changeGUI(IIGUI.DATA_REDSTONE_INTERFACE_REDSTONE))
+							.withCreateLaterAction(() -> changeGUI(IIGUI.DATA_INPUT_MACHINE_EDIT))
 							.withGuiSaveAction(gui -> this.scroll = gui.getScroll())
 							//Display
 							.withDisplayFunction(new DecoEntryPanelBuilder<Pair<Character, DataType>>()
 									.withPadding(1, 1)
 									//Edit / Remove Buttons
-									.withComponent(
-											new DecoButton(width-17-16+3, 2)
-													.withTemplate(DecoGuiUtils.LIST_BUTTON_EDIT_TEMPLATE)
-													.withOnPressed((gui, mouseX, mouseY) -> changeGUI(IIGUI.DATA_INPUT_MACHINE_EDIT))
+									.withComponent(p -> new DecoButton(p.width-17-16+3, 2)
+											.withTemplate(DecoGuiUtils.LIST_BUTTON_EDIT_TEMPLATE)
+											.withOnPressed((gui, mouseX, mouseY) -> changeGUI(IIGUI.DATA_INPUT_MACHINE_EDIT))
 									)
-									.withComponent(p -> new DecoButton(width-17+1, 2)
+									.withComponent(p -> new DecoButton(p.width-17+1, 2)
 											.withTemplate(DecoGuiUtils.LIST_BUTTON_REMOVE_TEMPLATE)
 											.withOnPressed((gui, mouseX, mouseY) -> p.getCurrentList().removeEntry(p.getCurrentElement()))
 									)
@@ -194,7 +177,7 @@ public class GuiDataInputMachine extends DecoGui<TileEntityDataInputMachine, Con
 										//type label (f.e. integer)
 										panel.label("typeLabel")
 												.withText(typeMeta.getTranslatedName())
-												.withTextColor(typeMeta.color.withBrightness(0.5f));
+												.withTextColor(typeMeta.color.withBrightness(0.4f));
 										//type icon
 										panel.component("image", DecoImage.class)
 												.withImageLocation(entry.getValue().getTextureLocation());

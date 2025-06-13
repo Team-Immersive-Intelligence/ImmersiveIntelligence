@@ -56,6 +56,15 @@ public class DataTypeFluidStack extends DataType
 	}
 
 	@Override
+	@Nonnull
+	public DataType clone()
+	{
+		if(value==null)
+			return new DataTypeFluidStack();
+		return new DataTypeFluidStack(new FluidStack(value.getFluid(), value.amount, value.tag));
+	}
+
+	@Override
 	public boolean equals(Object obj)
 	{
 		return obj instanceof DataTypeFluidStack&&(

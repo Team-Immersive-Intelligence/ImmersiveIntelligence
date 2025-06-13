@@ -225,7 +225,7 @@ public class IIRecipes
 		//Radio Explosives
 		new DataProgrammingRecipe(IIContent.blockRadioExplosives.getIngredientStack(IIBlockTypes_Mine.MAIN, 1),
 				(stack, dataIn, machineStorage) -> {
-					ItemNBTHelper.setTagCompound(stack, "programmed_data", dataIn.toNBT());
+					ItemNBTHelper.setTagCompound(stack, "programmed_data", dataIn.serializeNBT());
 					return stack;
 				});
 	}

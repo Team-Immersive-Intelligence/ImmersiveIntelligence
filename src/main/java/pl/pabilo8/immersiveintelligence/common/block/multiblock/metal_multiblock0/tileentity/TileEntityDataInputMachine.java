@@ -15,7 +15,6 @@ import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.MultiblockDataInputMachine;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
-import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionBase;
@@ -47,7 +46,7 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockProductionSi
 	/**
 	 * Stored data packet
 	 */
-	@SyncNBT(name = "variables")
+	@SyncNBT(name = "variables", events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_GUI_CLOSED})
 	public DataPacket storedData = new DataPacket();
 
 	@SyncNBT(events = SyncEvents.TILE_GUI_OPENED)
@@ -65,8 +64,8 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockProductionSi
 		//Init animated parts
 		drawer = new MultiblockInteractablePart(0, 15, 0.85f);
 		hatch = new MultiblockInteractablePart(1, 24, 1.25f);
-		inputHandler = getSingleInventoryHandler(SLOT_INPUT, true, false);
-		outputHandler = getSingleInventoryHandler(SLOT_OUTPUT, false, true);
+		inputHandler = getSingleInventoryHandler(SLOT_INPUT);
+		outputHandler = getSingleInventoryHandler(SLOT_OUTPUT);
 	}
 
 	@Override
@@ -83,7 +82,7 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockProductionSi
 	{
 		super.receiveMessageFromClient(message);
 		if(message.hasKey("variables"))
-			storedData.fromNBT(message.getCompoundTag("variables"));
+			storedData.deserializeNBT(message.getCompoundTag("variables"));
 		if(message.hasKey("send_packet"))
 			this.sendData(storedData, getDirection("sending"), getPOI(MultiblockPOI.DATA_OUTPUT)[0]);
 	}
@@ -162,9 +161,7 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockProductionSi
 		Optional<DataProgrammingRecipe> found = DataProgrammingRecipe.streamRecipes(DataProgrammingRecipe.class)
 				.filter(recipe -> recipe.input.matches(inventory.get(SLOT_INPUT)))
 				.findFirst();
-		return found.map(recipe -> new IIMultiblockProcess<>(recipe)
-						.withNBT(easyNBT -> easyNBT.mergeWith(EasyNBT.wrapNBT(inventory.get(SLOT_INPUT)))))
-				.orElse(null);
+		return found.map(IIMultiblockProcess::new).orElse(null);
 	}
 
 	@Override
@@ -191,7 +188,8 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockProductionSi
 			ItemStack output = recipe.operationFrom.apply(inventory.get(SLOT_INPUT), storedData, dataTypes -> storedData = dataTypes);
 			if(outputHandler.insertItem(0, output, false).isEmpty())
 			{
-				inventory.get(SLOT_INPUT).shrink(1);
+				inputHandler.extractItem(0, 1, false);
+				updateTileForEvent(SyncEvents.TILE_CUSTOM1);
 				return true;
 			}
 		}

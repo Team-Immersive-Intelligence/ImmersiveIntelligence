@@ -56,6 +56,19 @@ public class DataTypeEntity extends DataType
 	}
 
 	@Override
+	@Nonnull
+	public DataType clone()
+	{
+		DataTypeEntity clone = new DataTypeEntity();
+		clone.entityID = this.entityID;
+		clone.dimensionID = this.dimensionID;
+		clone.entityClass = this.entityClass;
+		clone.customName = this.customName;
+		clone.lastPos = this.lastPos;
+		return clone;
+	}
+
+	@Override
 	public void valueFromNBT(NBTTagCompound n)
 	{
 		this.entityID = n.getInteger("entityID");

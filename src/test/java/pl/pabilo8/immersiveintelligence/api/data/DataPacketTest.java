@@ -45,16 +45,16 @@ public class DataPacketTest
 	}
 
 	@Test
-	public void testToNBT()
+	public void testSerializeNBT()
 	{
 		DataType booleanType = new DataTypeBoolean(true);
 		dataPacket.setVariable('a', booleanType);
-		NBTTagCompound nbt = dataPacket.toNBT();
+		NBTTagCompound nbt = dataPacket.serializeNBT();
 		assertTrue(nbt.hasKey("a"));
 	}
 
 	@Test
-	public void testFromNBT()
+	public void testDeserializeNBT()
 	{
 		NBTTagCompound nbt = new NBTTagCompound();
 		NBTTagCompound booleanNBT = new NBTTagCompound();
@@ -62,7 +62,7 @@ public class DataPacketTest
 		booleanNBT.setBoolean("Value", true);
 		nbt.setTag("a", booleanNBT);
 
-		dataPacket.fromNBT(nbt);
+		dataPacket.deserializeNBT(nbt);
 		assertTrue(dataPacket.hasVariable('a'));
 		assertTrue(((DataTypeBoolean)dataPacket.getPacketVariable('a')).value);
 	}

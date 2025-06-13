@@ -80,7 +80,7 @@ public class TileEntityPunchtapeReader extends TileEntityIEBase implements ITick
 		mode = PunchtapeReaderMode.values()[nbt.getInteger("mode")];
 		setFacing(EnumFacing.getFront(nbt.getInteger("facing")));
 		if(nbt.hasKey("received"))
-			received = new DataPacket().fromNBT(nbt.getCompoundTag("received"));
+			received = new DataPacket(nbt.getCompoundTag("received"));
 	}
 
 	@Override
@@ -89,7 +89,7 @@ public class TileEntityPunchtapeReader extends TileEntityIEBase implements ITick
 		nbt.setInteger("mode", mode.ordinal());
 		nbt.setInteger("facing", facing.ordinal());
 		if(received!=null)
-			nbt.setTag("received", received.toNBT());
+			nbt.setTag("received", received.serializeNBT());
 	}
 
 	@Override

@@ -65,6 +65,16 @@ public class DataTypeVector extends DataType
 	}
 
 	@Override
+	@Nonnull
+	public DataType clone()
+	{
+		if(integerVector)
+			return new DataTypeVector((int)x, (int)y, (int)z);
+		else
+			return new DataTypeVector(x, y, z);
+	}
+
+	@Override
 	public boolean equals(Object obj)
 	{
 		if(!(obj instanceof DataTypeVector))

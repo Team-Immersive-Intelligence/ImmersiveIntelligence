@@ -34,9 +34,7 @@ public class TileEntityRedstoneBuffer extends TileEntityIEBase implements IPlaye
 	public void readCustomNBT(NBTTagCompound nbt, boolean descPacket)
 	{
 		facing = EnumFacing.getFront(nbt.getInteger("facing"));
-		packet = new DataPacket();
-		if(nbt.hasKey("packet"))
-			packet.fromNBT(nbt.getCompoundTag("packet"));
+		packet = new DataPacket(nbt.getCompoundTag("packet"));
 		passtroughMode = nbt.getBoolean("passtroughMode");
 	}
 
@@ -44,7 +42,7 @@ public class TileEntityRedstoneBuffer extends TileEntityIEBase implements IPlaye
 	public void writeCustomNBT(NBTTagCompound nbt, boolean descPacket)
 	{
 		nbt.setInteger("facing", facing.ordinal());
-		nbt.setTag("packet", packet.toNBT());
+		nbt.setTag("packet", packet.serializeNBT());
 		nbt.setBoolean("passtroughMode", passtroughMode);
 	}
 

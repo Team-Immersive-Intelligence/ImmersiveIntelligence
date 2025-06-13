@@ -124,8 +124,7 @@ public class TileEntityDataDebugger extends TileEntityImmersiveConnectable imple
 		setFacing(EnumFacing.getFront(nbt.getInteger("facing")));
 		if(nbt.hasKey("packet"))
 		{
-			this.lastPacket = new DataPacket();
-			this.lastPacket.fromNBT(nbt.getCompoundTag("packet"));
+			this.lastPacket = new DataPacket(nbt.getCompoundTag("packet"));
 			if(world!=null&&world.isRemote)
 				this.packetString = compilePacketString();
 		}
@@ -143,7 +142,7 @@ public class TileEntityDataDebugger extends TileEntityImmersiveConnectable imple
 		{
 			if(!world.isRemote)
 				this.packetString = compilePacketString();
-			nbt.setTag("packet", this.lastPacket.toNBT());
+			nbt.setTag("packet", this.lastPacket.serializeNBT());
 		}
 	}
 

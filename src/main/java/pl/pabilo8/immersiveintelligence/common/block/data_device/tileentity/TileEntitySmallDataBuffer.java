@@ -39,11 +39,7 @@ public class TileEntitySmallDataBuffer extends TileEntityIEBase implements IPlay
 		{
 			packets.clear();
 			for(NBTBase base : nbt.getTagList("", 10).tagList)
-			{
-				DataPacket pack = new DataPacket();
-				pack.fromNBT((NBTTagCompound)base);
-				packets.add(pack);
-			}
+				packets.add(new DataPacket(((NBTTagCompound)base)));
 		}
 	}
 
@@ -53,9 +49,7 @@ public class TileEntitySmallDataBuffer extends TileEntityIEBase implements IPlay
 		nbt.setInteger("facing", facing.ordinal());
 		NBTTagList list = new NBTTagList();
 		for(DataPacket pack : packets)
-		{
-			list.appendTag(pack.toNBT());
-		}
+			list.appendTag(pack.serializeNBT());
 		nbt.setTag("packet", list);
 	}
 
@@ -70,10 +64,8 @@ public class TileEntitySmallDataBuffer extends TileEntityIEBase implements IPlay
 	public void update()
 	{
 		if(!world.isRemote)
-		{
 			if(toggle^world.isBlockPowered(this.getPos()))
 			{
-
 				toggle = !toggle;
 
 				if(toggle)
@@ -87,7 +79,6 @@ public class TileEntitySmallDataBuffer extends TileEntityIEBase implements IPlay
 					}
 				}
 			}
-		}
 	}
 
 	@Override
@@ -136,12 +127,7 @@ public class TileEntitySmallDataBuffer extends TileEntityIEBase implements IPlay
 	public void onReceive(DataPacket packet, EnumFacing side)
 	{
 		if(packets.size() < SmallDataBuffer.packetCapacity)
-		{
-			DataPacket np = new DataPacket();
-			np.fromNBT(packet.toNBT());
-			this.packets.add(np);
-		}
-		//for (DataPacket pck : packets)
+			this.packets.add(packet.clone());
 	}
 
 }

@@ -48,11 +48,11 @@ public class TileEntityDataMerger extends TileEntityIEBase implements IPlayerInt
 		packetLeft = new DataPacket();
 		packetRight = new DataPacket();
 		if(nbt.hasKey("packet"))
-			packet.fromNBT(nbt.getCompoundTag("packet"));
+			packet.deserializeNBT(nbt.getCompoundTag("packet"));
 		if(nbt.hasKey("packetLeft"))
-			packetLeft.fromNBT(nbt.getCompoundTag("packetLeft"));
+			packetLeft.deserializeNBT(nbt.getCompoundTag("packetLeft"));
 		if(nbt.hasKey("packetRight"))
-			packetRight.fromNBT(nbt.getCompoundTag("packetRight"));
+			packetRight.deserializeNBT(nbt.getCompoundTag("packetRight"));
 
 	}
 
@@ -61,9 +61,9 @@ public class TileEntityDataMerger extends TileEntityIEBase implements IPlayerInt
 	{
 		nbt.setByte("mode", mode);
 		nbt.setInteger("facing", facing.ordinal());
-		nbt.setTag("packet", packet.toNBT());
-		nbt.setTag("packetLeft", packetLeft.toNBT());
-		nbt.setTag("packetRight", packetRight.toNBT());
+		nbt.setTag("packet", packet.serializeNBT());
+		nbt.setTag("packetLeft", packetLeft.serializeNBT());
+		nbt.setTag("packetRight", packetRight.serializeNBT());
 	}
 
 	@Override
@@ -85,7 +85,7 @@ public class TileEntityDataMerger extends TileEntityIEBase implements IPlayerInt
 		if(message.hasKey("mode"))
 			mode = message.getByte("mode");
 		if(message.hasKey("packet"))
-			packet.fromNBT(message.getCompoundTag("packet"));
+			packet.deserializeNBT(message.getCompoundTag("packet"));
 	}
 
 	@Override

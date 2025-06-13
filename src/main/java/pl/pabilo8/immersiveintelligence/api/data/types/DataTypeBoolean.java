@@ -39,6 +39,13 @@ public class DataTypeBoolean extends DataType implements IComparableDataType<Dat
 	}
 
 	@Override
+	@Nonnull
+	public DataType clone()
+	{
+		return new DataTypeBoolean(value);
+	}
+
+	@Override
 	public boolean equals(Object obj)
 	{
 		return obj instanceof DataTypeBoolean&&((DataTypeBoolean)obj).value==value;

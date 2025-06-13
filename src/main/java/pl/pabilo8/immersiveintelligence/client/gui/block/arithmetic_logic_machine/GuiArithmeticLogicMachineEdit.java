@@ -207,7 +207,7 @@ public class GuiArithmeticLogicMachineEdit extends GuiArithmeticLogicMachineBase
 			IIPacketHandler.sendToServer(new MessageIITileSync(tile, EasyNBT.newNBT()
 					.withTag("expressions", EasyNBT.newNBT()
 							.withInt("page", page)
-							.withTag("list", storedData.toNBT())
+							.withTag("list", storedData.serializeNBT())
 					)
 			));
 		}

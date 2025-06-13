@@ -4,6 +4,7 @@ import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.text.TextFormatting;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiComponentDecoBase;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
@@ -87,21 +88,28 @@ public class DecoBar extends GuiComponentDecoBase<DecoBar>
 		return this;
 	}
 
-	public DecoBar withValueTooltip(String text, BarTooltipFormat format)
+	public DecoBar withValueTooltip(String text, BarTooltipFormat format, TextFormatting color)
 	{
 		switch(format)
 		{
 			case VALUE:
 				return this.withOnTooltip(
-						decoBar -> Collections.singleton(I18n.format(IIReference.GUI_TOOLTIP_KEY+text, decoBar.getCurrentValue()))
+						decoBar -> Collections.singleton(I18n.format(IIReference.GUI_TOOLTIP_KEY+text, color.toString()+decoBar.getCurrentValue()+TextFormatting.RESET))
 				);
 			case VALUE_TO_MAX:
 				return this.withOnTooltip(
-						decoBar -> Collections.singleton(I18n.format(IIReference.GUI_TOOLTIP_KEY+text, decoBar.getCurrentValue(), decoBar.getMaxValue()))
+						decoBar -> Collections.singleton(I18n.format(IIReference.GUI_TOOLTIP_KEY+text,
+								color.toString()+decoBar.getCurrentValue()+TextFormatting.RESET,
+								color.toString()+decoBar.getMaxValue()+TextFormatting.RESET
+						))
 				);
 			case VALUE_WITH_LIMITS:
 				return this.withOnTooltip(
-						decoBar -> Collections.singleton(I18n.format(IIReference.GUI_TOOLTIP_KEY+text, decoBar.getCurrentValue(), decoBar.getMinValue(), decoBar.getMaxValue()))
+						decoBar -> Collections.singleton(I18n.format(IIReference.GUI_TOOLTIP_KEY+text,
+								color.toString()+decoBar.getCurrentValue()+TextFormatting.RESET,
+								color.toString()+decoBar.getMinValue()+TextFormatting.RESET,
+								color.toString()+decoBar.getMaxValue()+TextFormatting.RESET
+						))
 				);
 		}
 		return this;

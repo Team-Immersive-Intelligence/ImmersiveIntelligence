@@ -430,7 +430,7 @@ public class TileEntityPrintingPress extends TileEntityMultiblockProductionMulti
 			return EasyNBT.newNBT()
 					.withInt("amount", amount)
 					.withString("recipe", recipe.getName())
-					.withTag("data", data.toNBT())
+					.withTag("data", data.serializeNBT())
 					.unwrap();
 		}
 
@@ -440,7 +440,7 @@ public class TileEntityPrintingPress extends TileEntityMultiblockProductionMulti
 			EasyNBT enbt = EasyNBT.wrapNBT(nbt);
 			this.amount = enbt.getInt("amount");
 			this.recipe = PrintingRecipe.getRecipe(PrintingRecipe.class, enbt.getString("recipe"));
-			this.data = new DataPacket().fromNBT(enbt.getCompound("data"));
+			this.data = new DataPacket(enbt.getCompound("data"));
 		}
 	}
 

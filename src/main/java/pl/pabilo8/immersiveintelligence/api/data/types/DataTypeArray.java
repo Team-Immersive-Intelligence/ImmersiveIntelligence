@@ -65,6 +65,17 @@ public class DataTypeArray extends IterableDataType
 	}
 
 	@Override
+	@Nonnull
+	public DataType clone()
+	{
+		DataTypeArray clone = new DataTypeArray();
+		clone.value = new DataType[value.length];
+		for(int i = 0; i < value.length; i++)
+			clone.value[i] = value[i].clone();
+		return clone;
+	}
+
+	@Override
 	public String toString()
 	{
 		if(value==null||value.length==0)

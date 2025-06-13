@@ -2,6 +2,7 @@ package pl.pabilo8.immersiveintelligence.api.data;
 
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.common.util.INBTSerializable;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeAccessor;
@@ -23,13 +24,23 @@ import java.util.Map.Entry;
  * @ii-approved 0.3.1
  * @since 31.05.2019
  */
-public class DataPacket implements Iterable<DataType>
+public class DataPacket implements Iterable<DataType>, INBTSerializable<NBTTagCompound>
 {
 	public Map<Character, DataType> variables = new HashMap<>();
 	private EnumDyeColor packetColor = EnumDyeColor.WHITE;
 	private int packetAddress = -1;
 
 	public static final char[] varCharacters = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0'};
+
+	public DataPacket()
+	{
+
+	}
+
+	public DataPacket(NBTTagCompound tag)
+	{
+		deserializeNBT(tag);
+	}
 
 	/**
 	 * @param preferred type, can be {@link DataType} for *any* type and an interface annotated with {@link IGenericDataType} a generic/bridging type
@@ -75,7 +86,7 @@ public class DataPacket implements Iterable<DataType>
 
 	public boolean hasAnyVariables()
 	{
-		return variables.size() > 0;
+		return !variables.isEmpty();
 	}
 
 	public boolean hasVariable(Character c)
@@ -150,6 +161,11 @@ public class DataPacket implements Iterable<DataType>
 		return false;
 	}
 
+	public void trimNulls()
+	{
+		variables.entrySet().removeIf(entry -> entry.getValue() instanceof DataTypeNull);
+	}
+
 	public List<Pair<Character, DataType>> getAllVariables()
 	{
 		List<Pair<Character, DataType>> all = new ArrayList<>(variables.size());
@@ -157,7 +173,8 @@ public class DataPacket implements Iterable<DataType>
 		return all;
 	}
 
-	public NBTTagCompound toNBT()
+	@Override
+	public NBTTagCompound serializeNBT()
 	{
 		NBTTagCompound nbt = new NBTTagCompound();
 
@@ -173,7 +190,8 @@ public class DataPacket implements Iterable<DataType>
 		return nbt;
 	}
 
-	public DataPacket fromNBT(NBTTagCompound nbt)
+	@Override
+	public void deserializeNBT(NBTTagCompound nbt)
 	{
 		variables.clear();
 		for(Character c : varCharacters)
@@ -192,7 +210,17 @@ public class DataPacket implements Iterable<DataType>
 			this.packetColor = EnumDyeColor.byMetadata(nbt.getInteger("color"));
 		if(nbt.hasKey("address"))
 			this.packetAddress = nbt.getInteger("address");
-		return this;
+	}
+
+	@Override
+	public Iterator<DataType> iterator()
+	{
+		return variables.values().iterator();
+	}
+
+	public int size()
+	{
+		return variables.size();
 	}
 
 	@Override
@@ -200,14 +228,17 @@ public class DataPacket implements Iterable<DataType>
 	public DataPacket clone()
 	{
 		DataPacket packet = new DataPacket();
-		packet.fromNBT(this.toNBT());
+		packet.variables = new HashMap<>();
+		this.variables.forEach((character, dataType) -> packet.variables.put(character, dataType.clone()));
+		packet.packetColor = this.packetColor;
+		packet.packetAddress = this.packetAddress;
 		return packet;
 	}
 
 	@Override
 	public String toString()
 	{
-		return this.toNBT().toString();
+		return this.serializeNBT().toString();
 	}
 
 	@Override
@@ -230,21 +261,5 @@ public class DataPacket implements Iterable<DataType>
 			return true;
 		}
 		return false;
-	}
-
-	@Override
-	public Iterator<DataType> iterator()
-	{
-		return variables.values().iterator();
-	}
-
-	public int size()
-	{
-		return variables.size();
-	}
-
-	public void trimNulls()
-	{
-		variables.entrySet().removeIf(entry -> entry.getValue() instanceof DataTypeNull);
 	}
 }

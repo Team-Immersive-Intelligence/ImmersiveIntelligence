@@ -117,6 +117,18 @@ public class DataTypeExpression extends DataType
 	}
 
 	@Override
+	@Nonnull
+	public DataType clone()
+	{
+		DataTypeExpression clone = new DataTypeExpression();
+		clone.data = Arrays.stream(data).map(DataType::clone).toArray(DataType[]::new);
+		clone.operation = operation;
+		clone.meta = meta;
+		clone.requiredVariable = requiredVariable;
+		return clone;
+	}
+
+	@Override
 	public String toString()
 	{
 		String symbol = operation.getMeta().expression();

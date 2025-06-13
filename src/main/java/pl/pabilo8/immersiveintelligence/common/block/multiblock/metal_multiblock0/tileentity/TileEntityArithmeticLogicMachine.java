@@ -85,7 +85,7 @@ public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockIIGene
 
 			//Update circuit stack
 			ItemStack stack = inventory.get(page);
-			DataPacket packet = new DataPacket().fromNBT(expressions.getCompoundTag("list"));
+			DataPacket packet = new DataPacket(expressions.getCompoundTag("list"));
 			((ItemIIFunctionalCircuit)stack.getItem()).writeDataToItem(packet, stack);
 			inventory.set(page, stack);
 		}

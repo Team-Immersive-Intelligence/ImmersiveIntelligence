@@ -42,6 +42,13 @@ public class DataTypeItemStack extends DataType
 	}
 
 	@Override
+	@Nonnull
+	public DataType clone()
+	{
+		return new DataTypeItemStack(value.copy());
+	}
+
+	@Override
 	public boolean equals(Object obj)
 	{
 		return obj instanceof DataTypeItemStack&&((DataTypeItemStack)obj).value.isItemEqual(value);

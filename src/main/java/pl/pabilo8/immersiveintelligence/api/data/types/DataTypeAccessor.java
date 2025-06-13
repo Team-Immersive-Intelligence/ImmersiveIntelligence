@@ -44,6 +44,13 @@ public class DataTypeAccessor extends DataType
 		return nbt;
 	}
 
+	@Nonnull
+	@Override
+	public DataType clone()
+	{
+		return new DataTypeAccessor(variable);
+	}
+
 	@Override
 	public boolean equals(Object obj)
 	{

@@ -36,9 +36,7 @@ public class TileEntityTimedBuffer extends TileEntityIEBase implements IPlayerIn
 		facing = EnumFacing.getFront(nbt.getInteger("facing"));
 		timer = nbt.getInteger("timer");
 		maxtimer = nbt.getInteger("maxtimer");
-		packet = new DataPacket();
-		if(nbt.hasKey("packet"))
-			packet.fromNBT(nbt.getCompoundTag("packet"));
+		packet = new DataPacket(nbt.getCompoundTag("packet"));
 	}
 
 	@Override
@@ -47,7 +45,7 @@ public class TileEntityTimedBuffer extends TileEntityIEBase implements IPlayerIn
 		nbt.setInteger("facing", facing.ordinal());
 		nbt.setInteger("timer", timer);
 		nbt.setInteger("maxtimer", maxtimer);
-		nbt.setTag("packet", packet.toNBT());
+		nbt.setTag("packet", packet.serializeNBT());
 	}
 
 	@Override

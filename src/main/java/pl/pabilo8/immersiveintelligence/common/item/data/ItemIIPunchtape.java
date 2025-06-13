@@ -56,14 +56,12 @@ public class ItemIIPunchtape extends ItemIIBase implements IDataStorageItem
 	@Override
 	public DataPacket getStoredData(ItemStack stack)
 	{
-		DataPacket data = new DataPacket();
-		data.fromNBT(ItemNBTHelper.getTagCompound(stack, "stored_data"));
-		return data;
+		return new DataPacket(ItemNBTHelper.getTagCompound(stack, "stored_data"));
 	}
 
 	@Override
 	public void writeDataToItem(DataPacket packet, ItemStack stack)
 	{
-		ItemNBTHelper.setTagCompound(stack, "stored_data", packet.toNBT());
+		ItemNBTHelper.setTagCompound(stack, "stored_data", packet.serializeNBT());
 	}
 }

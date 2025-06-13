@@ -118,7 +118,7 @@ public class GuiDataMerger extends GuiIEContainerBase implements ITabbedGui
 	@Override
 	public void onGuiClosed()
 	{
-		IIPacketHandler.sendToServer(new MessageIITileSync(tile, EasyNBT.newNBT().withTag("packet", packet.toNBT())));
+		IIPacketHandler.sendToServer(new MessageIITileSync(tile, EasyNBT.newNBT().withTag("packet", packet.serializeNBT())));
 		super.onGuiClosed();
 	}
 

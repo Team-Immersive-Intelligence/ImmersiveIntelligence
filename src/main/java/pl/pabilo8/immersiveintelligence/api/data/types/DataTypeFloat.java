@@ -1,6 +1,7 @@
 package pl.pabilo8.immersiveintelligence.api.data.types;
 
 import net.minecraft.nbt.NBTTagCompound;
+import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.NumericDataType;
 
 import javax.annotation.Nonnull;
@@ -37,6 +38,13 @@ public class DataTypeFloat extends NumericDataType
 		NBTTagCompound nbt = getHeaderTag();
 		nbt.setFloat("Value", value);
 		return nbt;
+	}
+
+	@Override
+	@Nonnull
+	public DataType clone()
+	{
+		return new DataTypeFloat(value);
 	}
 
 

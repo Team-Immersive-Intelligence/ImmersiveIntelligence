@@ -36,7 +36,7 @@ public class POLComputerMemory
 		pages = new DataPacket[list.tagCount()];
 
 		for(int i = 1; i < pages.length; i++)
-			pages[i] = new DataPacket().fromNBT((NBTTagCompound)list.get(i));
+			pages[i] = new DataPacket((NBTTagCompound)list.get(i));
 	}
 
 	/**
@@ -47,7 +47,7 @@ public class POLComputerMemory
 		NBTTagCompound nbt = new NBTTagCompound();
 		NBTTagList list = new NBTTagList();
 		for(DataPacket p : pages)
-			list.appendTag(p.toNBT());
+			list.appendTag(p.serializeNBT());
 		nbt.setTag("pages", list);
 		return nbt;
 	}

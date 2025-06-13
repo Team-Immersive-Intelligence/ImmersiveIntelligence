@@ -418,7 +418,7 @@ public class GuiDataRedstoneInterfaceRedstone extends GuiIEContainerBase impleme
 	{
 		if(tile==null)
 			return;
-		IIPacketHandler.sendToServer(new MessageIITileSync(tile, EasyNBT.newNBT().withTag("storedRedstone", this.list.toNBT())));
+		IIPacketHandler.sendToServer(new MessageIITileSync(tile, EasyNBT.newNBT().withTag("storedRedstone", this.list.serializeNBT())));
 	}
 
 	//Stolen from Flaxbeard (https://github.com/Flaxbeard/QuestionablyImmersive/blob/dev/src/main/java/flaxbeard/questionablyimmersive/client/gui/GuiCokeOvenBattery.java)

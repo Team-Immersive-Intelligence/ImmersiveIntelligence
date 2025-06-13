@@ -75,9 +75,9 @@ public class TileEntityRedstoneInterface extends TileEntityMultiblockConnectable
 			if(nbt.hasKey("copySide"))
 				copySide = nbt.getBoolean("copySide");
 			if(nbt.hasKey("storedData"))
-				storedData.fromNBT(nbt.getCompoundTag("storedData"));
+				storedData.deserializeNBT(nbt.getCompoundTag("storedData"));
 			if(nbt.hasKey("storedRedstone"))
-				storedRedstone.fromNBT(nbt.getCompoundTag("storedRedstone"));
+				storedRedstone.deserializeNBT(nbt.getCompoundTag("storedRedstone"));
 			if(nbt.hasKey("productionProgress"))
 				productionProgress = nbt.getInteger("productionProgress");
 		}
@@ -98,8 +98,8 @@ public class TileEntityRedstoneInterface extends TileEntityMultiblockConnectable
 			if(!descPacket)
 				nbt.setTag("inventory", Utils.writeInventory(getInventory()));
 			nbt.setBoolean("copySide", copySide);
-			nbt.setTag("storedData", storedData.toNBT());
-			nbt.setTag("storedRedstone", storedRedstone.toNBT());
+			nbt.setTag("storedData", storedData.serializeNBT());
+			nbt.setTag("storedRedstone", storedRedstone.serializeNBT());
 			nbt.setInteger("productionProgress", productionProgress);
 		}
 	}
@@ -112,9 +112,9 @@ public class TileEntityRedstoneInterface extends TileEntityMultiblockConnectable
 		if(message.hasKey("copySide"))
 			copySide = message.getBoolean("copySide");
 		if(message.hasKey("storedData"))
-			storedData.fromNBT(message.getCompoundTag("storedData"));
+			storedData.deserializeNBT(message.getCompoundTag("storedData"));
 		if(message.hasKey("storedRedstone"))
-			storedRedstone.fromNBT(message.getCompoundTag("storedRedstone"));
+			storedRedstone.deserializeNBT(message.getCompoundTag("storedRedstone"));
 		if(message.hasKey("productionProgress"))
 			productionProgress = message.getInteger("productionProgress");
 
@@ -128,9 +128,9 @@ public class TileEntityRedstoneInterface extends TileEntityMultiblockConnectable
 		if(message.hasKey("copySide"))
 			copySide = message.getBoolean("copySide");
 		if(message.hasKey("storedData"))
-			storedData.fromNBT(message.getCompoundTag("storedData"));
+			storedData.deserializeNBT(message.getCompoundTag("storedData"));
 		if(message.hasKey("storedRedstone"))
-			storedRedstone.fromNBT(message.getCompoundTag("storedRedstone"));
+			storedRedstone.deserializeNBT(message.getCompoundTag("storedRedstone"));
 	}
 
 	IItemHandler inventoryHandler = new IEInventoryHandler(2, this, 0, true, true);

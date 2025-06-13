@@ -153,6 +153,15 @@ public class DataTypeMap extends IterableDataType implements Map<DataType, DataT
 	}
 
 	@Override
+	@Nonnull
+	public DataType clone()
+	{
+		DataTypeMap clone = new DataTypeMap();
+		values.forEach((key, value) -> clone.put(key.clone(), value.clone()));
+		return clone;
+	}
+
+	@Override
 	public String toString()
 	{
 		return values.toString();
