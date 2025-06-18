@@ -249,13 +249,13 @@ public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? 
 
 		//Background
 		int listHeight = getListHeight();
-		draw.drawRepeatedColorRect(x, y, width, listHeight, IIColor.WHITE, listBackgroundLocation, 64, 64, 8, 8);
+		draw.drawConnectedColorRect(x, y, width, listHeight, IIColor.WHITE, listBackgroundLocation, 64, 64, 8, 8);
 		//Scrollbar
 		if(shouldAlwaysHaveScrollbar()||maxScroll > 0)
 		{
 			TextureAtlasSprite scrollbarSprite = ClientUtils.getSprite(scrollBarLocation);
 			//Scrollbar background
-			draw.drawRepeatedColorRect(x+width-11, y,
+			draw.drawConnectedColorRect(x+width-11, y,
 					10, listHeight,
 					IIColor.WHITE, 10, 32, 0, 4,
 					scrollbarSprite.getMinU(), scrollbarSprite.getInterpolatedU(5),
@@ -266,7 +266,7 @@ public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? 
 			{
 				int scrollBarHeight = Math.max(10, (int)((listHeight/(float)(maxScroll+listHeight))*listHeight));
 				int scrollbarOffset = (int)((scroll/(float)maxScroll)*(listHeight-scrollBarHeight));
-				draw.drawRepeatedColorRect(
+				draw.drawConnectedColorRect(
 						x+width-11, y+1+scrollbarOffset, 10, scrollBarHeight,
 						IIColor.WHITE, 10, 32, 2, 8,
 						scrollbarSprite.getInterpolatedU(5), scrollbarSprite.getInterpolatedU(10),

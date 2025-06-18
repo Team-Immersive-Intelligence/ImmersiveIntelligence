@@ -56,6 +56,12 @@ public class DecoBar extends GuiComponentDecoBase<DecoBar>
 		return this;
 	}
 
+	public DecoBar withIconBackgroundLocation(ResLoc iconBackgroundLocation)
+	{
+		this.iconBackgroundLocation = iconBackgroundLocation;
+		return this;
+	}
+
 	public DecoBar withIconLocation(ResLoc iconLocation)
 	{
 		this.iconLocation = iconLocation;
@@ -146,8 +152,8 @@ public class DecoBar extends GuiComponentDecoBase<DecoBar>
 
 		//Draw the bar background
 		IIDrawUtils draw = IIDrawUtils.startTexturedColored()
-				.drawRepeatedColorRect(
-						x, y+8, width, height-8,
+				.drawConnectedColorRect(
+						x, y+8, width, (((height&1)==0)?height: height+1)-8,
 						IIColor.WHITE, 64, 64, 8, 8,
 						bgSprite.getMinU(), bgSprite.getMaxU(),
 						bgSprite.getMinV(), bgSprite.getMaxV()
@@ -158,7 +164,7 @@ public class DecoBar extends GuiComponentDecoBase<DecoBar>
 			TextureAtlasSprite iconBgSprite = ClientUtils.getSprite(iconBackgroundLocation);
 			TextureAtlasSprite iconSprite = ClientUtils.getSprite(iconLocation);
 			//Draw the icon background
-			draw.drawRepeatedColorRect(
+			draw.drawConnectedColorRect(
 					x+(width*0.5f)-9, y-9, 18, 18, IIColor.WHITE,
 					32, 32, 4, 4,
 					iconBgSprite.getMinU(), iconBgSprite.getMaxU(),
@@ -179,7 +185,7 @@ public class DecoBar extends GuiComponentDecoBase<DecoBar>
 		GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
 		GlStateManager.shadeModel(GL11.GL_SMOOTH);
 
-		int totalHeight = height-4-8;
+		int totalHeight = (((height&1)==0)?height: height+1)-4-8;
 		float barHeight = totalHeight*(float)(getCurrentValue()-minValue)/(maxValue-minValue);
 		IIDrawUtils.startColored()
 				.drawColorGradient(x+2, y+8+2+totalHeight-barHeight, width-4, (int)barHeight, colorBottom, colorTop)

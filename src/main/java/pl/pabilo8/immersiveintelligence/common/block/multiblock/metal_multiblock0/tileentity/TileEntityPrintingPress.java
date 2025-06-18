@@ -93,7 +93,7 @@ public class TileEntityPrintingPress extends TileEntityMultiblockProductionMulti
 			tactileHandler = new TactileHandler(multiblock, this);
 		tactileHandler.defaultize();
 
-		if(IIUtils.handleBucketTankInteraction(tank, inventory, SLOT_BUCKET_IN, SLOT_BUCKET_OUT, false,
+		if(IIUtils.handleBucketTankInteraction(tank, inventory, SLOT_BUCKET_IN, SLOT_BUCKET_OUT, true,
 				fs -> IIContent.fluidInkBlack.equals(fs.getFluid())||
 						IIContent.fluidInkCyan.equals(fs.getFluid())||
 						IIContent.fluidInkMagenta.equals(fs.getFluid())||

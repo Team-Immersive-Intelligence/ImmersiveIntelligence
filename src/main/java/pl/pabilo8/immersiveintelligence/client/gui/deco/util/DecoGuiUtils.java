@@ -5,6 +5,7 @@ import blusunrize.immersiveengineering.client.ClientUtils;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.relauncher.Side;
@@ -17,6 +18,9 @@ import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionBase.IIIMultiblockRecipe;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionMulti;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionSingle;
 
 import java.util.Collection;
 import java.util.function.Function;
@@ -51,7 +55,7 @@ public class DecoGuiUtils
 	public static Function<IFluxStorage, DecoComponentTemplate<DecoBar>> BAR_ELECTRIC_ENERGY =
 			energyStorage -> component -> component
 					.withIconLocation(IIReference.RES_ICON_ENERGY)
-					.withColors(IIColor.fromPackedRGB(0xb33929), IIColor.fromPackedRGB(0x662822))
+					.withColors(IIColor.fromPackedRGB(0xb37e28), IIColor.fromPackedRGB(0x663f26))
 					.withValueTooltip("energy.stored", BarTooltipFormat.VALUE_TO_MAX, TextFormatting.GOLD)
 					.withLimits(0, energyStorage.getMaxEnergyStored(), energyStorage::getEnergyStored);
 
@@ -176,7 +180,7 @@ public class DecoGuiUtils
 	 * @param texSize size of the texture to calculate corners from (it's drawn 1:1)
 	 */
 	public static void drawRepeatedRect(IIDrawUtils draw, int x, int y, int width, int height,
-										ResLoc spriteLocation, IIColor color, int texSize, int borderSize)
+										ResourceLocation spriteLocation, IIColor color, int texSize, int borderSize)
 	{
 		int iSize = Math.min(texSize-2*borderSize, Math.min(width, height)/2);
 		float tSize = (iSize/(float)texSize)*16;
@@ -210,5 +214,25 @@ public class DecoGuiUtils
 	public static void drawRepeatedRect(IIDrawUtils draw, DecoRectangle rect, IIColor color, int borderSize)
 	{
 		drawRepeatedRect(draw, rect.x, rect.y, rect.width, rect.height, rect.style, color, 32, borderSize);
+	}
+
+	public static <T extends TileEntityMultiblockProductionMulti<T, R>, R extends IIIMultiblockRecipe> Function<Float, Float>
+	getMultiblockProductionMultiProgress(TileEntityMultiblockProductionMulti<T, R> tile)
+	{
+		return partialTicks -> {
+			if(tile.processQueue.isEmpty())
+				return 0f;
+			return tile.getProductionProgress(tile.processQueue.get(0), partialTicks);
+		};
+	}
+
+	public static <T extends TileEntityMultiblockProductionSingle<T, R>, R extends IIIMultiblockRecipe> Function<Float, Float>
+	getMultiblockProductionSingleProgress(TileEntityMultiblockProductionSingle<T, R> tile)
+	{
+		return partialTicks -> {
+			if(tile.currentProcess==null)
+				return 0f;
+			return tile.getProductionProgress(tile.currentProcess, partialTicks);
+		};
 	}
 }

@@ -16,13 +16,16 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseType;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.api.crafting.*;
-import pl.pabilo8.immersiveintelligence.client.gui.block.*;
+import pl.pabilo8.immersiveintelligence.client.gui.block.GuiChemicalBath;
+import pl.pabilo8.immersiveintelligence.client.gui.block.GuiVulcanizer;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiComponentDecoBase;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
@@ -34,6 +37,7 @@ import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.IIMultiblockRecipe;
 
 import javax.annotation.Nonnull;
+import java.util.Collections;
 import java.util.stream.Collectors;
 
 @JEIPlugin
@@ -42,6 +46,7 @@ public class JEIHelper implements IModPlugin
 {
 	public static IJeiHelpers jeiHelpers;
 	public static IModRegistry modRegistry;
+	public static IJeiRuntime jeiRuntime;
 	public static IDrawable slotDrawable;
 	public static IEFluidTooltipCallback fluidTooltipCallback = new IEFluidTooltipCallback();
 
@@ -129,39 +134,39 @@ public class JEIHelper implements IModPlugin
 		modRegistry.addRecipeClickArea(GuiChemicalBath.class, 131, 57, 19, 13, "ii.bathing", "ii.washing");
 
 		modRegistry.addRecipes(IIMultiblockRecipe.getRecipes(ElectrolyzerRecipe.class), "ii.electrolyzer");
-		modRegistry.addRecipeClickArea(GuiElectrolyzer.class, 66, 45, 47, 4, "ii.electrolyzer");
-		modRegistry.addRecipeClickArea(GuiElectrolyzer.class, 113, 42, 6, 10, "ii.electrolyzer");
-
 		modRegistry.addRecipes(PrecisionAssemblerRecipe.recipeList, "ii.precision_assembler");
-		modRegistry.addRecipeClickArea(GuiPrecisionAssembler.class, 49, 45, 78, 4, "ii.precision_assembler");
-		modRegistry.addRecipeClickArea(GuiPrecisionAssembler.class, 127, 40, 7, 14, "ii.precision_assembler");
-		modRegistry.addRecipeClickArea(GuiPrecisionAssembler.class, 67, 49, 6, 8, "ii.precision_assembler");
-		modRegistry.addRecipeClickArea(GuiPrecisionAssembler.class, 85, 49, 6, 8, "ii.precision_assembler");
-		modRegistry.addRecipeClickArea(GuiPrecisionAssembler.class, 103, 49, 6, 8, "ii.precision_assembler");
-
 		modRegistry.addRecipes(IIMultiblockRecipe.getRecipes(SawmillRecipe.class), "ii.sawmill");
-		modRegistry.addRecipeClickArea(GuiSawmill.class, 33, 42, 43, 4, "ii.sawmill");
-		modRegistry.addRecipeClickArea(GuiSawmill.class, 76, 38, 6, 12, "ii.sawmill");
 
 		modRegistry.addRecipes(VulcanizerRecipe.recipeList.values(), "ii.vulcanizer");
 		modRegistry.addRecipeClickArea(GuiVulcanizer.class, 71, 24, 30, 30, "ii.vulcanizer");
 		modRegistry.addAdvancedGuiHandlers(new VulcanizerGuiHandler());
 
 		modRegistry.addRecipes(IIMultiblockRecipe.getRecipes(FillerRecipe.class), "ii.filler");
-		modRegistry.addRecipeClickArea(GuiFiller.class, 41, 2, 60, 60, "ii.filler");
-
 		modRegistry.addAdvancedGuiHandlers(new UpgradeGuiHandler());
 
 		if(FMLCommonHandler.instance().getSide()==Side.CLIENT)
 			IIGUI.registerDecoJEICompat(modRegistry);
+	}
 
-		//modRegistry.addRecipes(RecipeMinecart.listAllRecipes, VanillaRecipeCategoryUid.CRAFTING);
-		//modRegistry.addRecipes(RecipeCrateConversion.listAllRecipes, VanillaRecipeCategoryUid.CRAFTING);
+	@SideOnly(Side.CLIENT)
+	public static void addRecipesDecoGuiLink(GuiComponentDecoBase<?> gui, String categoryName)
+	{
+		if(jeiRuntime==null)
+			return;
+		IRecipesGui recipesGui = jeiRuntime.getRecipesGui();
+		if(recipesGui==null)
+			return;
+
+		gui.withTranslatedTooltip("jei.tooltip.show.recipes")
+				.withOnPressed((g, mouseX, mouseY) -> {
+					recipesGui.showCategories(Collections.singletonList(categoryName));
+					return true;
+				});
 	}
 
 	@Override
 	public void onRuntimeAvailable(@Nonnull IJeiRuntime jeiRuntime)
 	{
-
+		this.jeiRuntime = jeiRuntime;
 	}
 }

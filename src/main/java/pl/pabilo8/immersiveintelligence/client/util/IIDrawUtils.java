@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
@@ -188,16 +189,32 @@ public class IIDrawUtils
 		return this;
 	}
 
-	public IIDrawUtils drawRepeatedColorRect(float x, float y, float w, float h, IIColor color,
-											 int tWidth, int tHeight, float... uv)
+	public void drawRepeatedColorRect(int x, int y, int width, int height, IIColor color, ResourceLocation texture, int tileSize)
+	{
+		for(int yy = 0; yy < height; yy += tileSize)
+			for(int xx = 0; xx < width; xx += tileSize)
+			{
+				TextureAtlasSprite sprite = ClientUtils.getSprite(texture);
+				drawTexColorRect(x+xx, y+yy,
+						MathHelper.clamp(width-xx, 0, tileSize),
+						MathHelper.clamp(height-yy, 0, tileSize),
+						color,
+						sprite.getMinU(), sprite.getInterpolatedU(Math.min(width-xx, tileSize)/2f),
+						sprite.getMinV(), sprite.getInterpolatedV(Math.min(height-yy, tileSize)/2f)
+				);
+			}
+	}
+
+	public IIDrawUtils drawConnectedColorRect(float x, float y, float w, float h, IIColor color,
+											  int tWidth, int tHeight, float... uv)
 	{
 		float tw = w/tWidth;
 		float th = h/tHeight;
 
 		// Split into smaller parts
-		if(tw < 1||th < 1)
+		if(tw < 2||th < 2)
 		{
-			if(tw < 1)
+			if(tw < 2)
 			{
 				drawTexColorRect(x, y, w/2, h, color, uv[0], uv[0]+(uv[1]-uv[0])*tw/2, uv[2], uv[3]);
 				drawTexColorRect(x+w/2, y, w/2, h, color, uv[1]-(uv[1]-uv[0])*tw/2, uv[1], uv[2], uv[3]);
@@ -226,8 +243,8 @@ public class IIDrawUtils
 		return this;
 	}
 
-	public IIDrawUtils drawRepeatedColorRect(float x, float y, float w, float h, IIColor color,
-											 int texSizeX, int texSizeY, int xMargin, int yMargin, float... uv)
+	public IIDrawUtils drawConnectedColorRect(float x, float y, float w, float h, IIColor color,
+											  int texSizeX, int texSizeY, int xMargin, int yMargin, float... uv)
 	{
 		int iSizeX = Math.min(texSizeX-2*xMargin, Math.min((int)w, texSizeX)/2);
 		int iSizeY = Math.min(texSizeY-2*yMargin, Math.min((int)h, texSizeY)/2);
@@ -258,11 +275,11 @@ public class IIDrawUtils
 		return this;
 	}
 
-	public IIDrawUtils drawRepeatedColorRect(float x, float y, float w, float h, IIColor color, ResourceLocation spriteLocation,
-											 int texSizeX, int texSizeY, int xMargin, int yMargin)
+	public IIDrawUtils drawConnectedColorRect(float x, float y, float w, float h, IIColor color, ResourceLocation spriteLocation,
+											  int texSizeX, int texSizeY, int xMargin, int yMargin)
 	{
 		TextureAtlasSprite sprite = ClientUtils.getSprite(spriteLocation);
-		return drawRepeatedColorRect(x, y, w, h, color, texSizeX, texSizeY, xMargin, yMargin,
+		return drawConnectedColorRect(x, y, w, h, color, texSizeX, texSizeY, xMargin, yMargin,
 				sprite.getMinU(), sprite.getMaxU(), sprite.getMinV(), sprite.getMaxV());
 	}
 

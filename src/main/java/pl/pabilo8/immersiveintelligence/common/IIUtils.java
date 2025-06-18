@@ -110,23 +110,17 @@ public class IIUtils
 		if(inventory.get(bucketInputSlot).hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null))
 		{
 			IFluidHandlerItem capability = inventory.get(bucketInputSlot).getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null);
-			if(!filter.test(capability.getTankProperties()[0].getContents()))
-				return false;
-
+			FluidStack contents = capability.getTankProperties()[0].getContents();
 			int amount_prev = tank.getFluidAmount();
 			ItemStack emptyContainer;
 
-			if(fillBucket)
-			{
-				if(tank.getTankProperties()[0].getContents()==null)
-					return false;
-				emptyContainer = blusunrize.immersiveengineering.common.util.Utils.fillFluidContainer(tank, inventory.get(bucketInputSlot), inventory.get(bucketOutputSlot), null);
-			}
+			if(fillBucket&&contents==null)
+				emptyContainer = Utils.fillFluidContainer(tank, inventory.get(bucketInputSlot), inventory.get(bucketOutputSlot), null);
 			else
 			{
-				if(capability.getTankProperties()[0].getContents()==null)
+				if(contents==null||!filter.test(contents))
 					return false;
-				emptyContainer = blusunrize.immersiveengineering.common.util.Utils.drainFluidContainer(tank, inventory.get(bucketInputSlot), inventory.get(bucketOutputSlot), null);
+				emptyContainer = Utils.drainFluidContainer(tank, inventory.get(bucketInputSlot), inventory.get(bucketOutputSlot), null);
 			}
 
 			if(amount_prev!=tank.getFluidAmount())

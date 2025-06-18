@@ -15,6 +15,7 @@ import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.MultiblockElectrolyzer;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionBase;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionSingle;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
@@ -34,11 +35,11 @@ public class TileEntityElectrolyzer extends TileEntityMultiblockProductionSingle
 	public static int SLOT_T1_BUCKET_INPUT = 2, SLOT_T1_BUCKET_OUTPUT = 4;
 	public static int SLOT_T2_BUCKET_INPUT = 3, SLOT_T2_BUCKET_OUTPUT = 5;
 
-	@SyncNBT(name = "tank0")
+	@SyncNBT(name = "tank0", events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_RECIPE_CHANGED, SyncEvents.TILE_CUSTOM1})
 	public FluidTank tankInput;
-	@SyncNBT(name = "tank1")
+	@SyncNBT(name = "tank1", events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_RECIPE_CHANGED, SyncEvents.TILE_CUSTOM1})
 	public FluidTank tankOutput1;
-	@SyncNBT(name = "tank2")
+	@SyncNBT(name = "tank2", events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_RECIPE_CHANGED, SyncEvents.TILE_CUSTOM1})
 	public FluidTank tankOutput2;
 
 	public TileEntityElectrolyzer()
@@ -99,7 +100,7 @@ public class TileEntityElectrolyzer extends TileEntityMultiblockProductionSingle
 
 		if(!world.isRemote&&world.getTotalWorldTime()%10==0)
 		{
-			boolean update = handleBucketTankInteraction(tankInput, inventory, SLOT_T0_BUCKET_INPUT, SLOT_T0_BUCKET_OUTPUT, false);
+			boolean update = handleBucketTankInteraction(tankInput, inventory, SLOT_T0_BUCKET_INPUT, SLOT_T0_BUCKET_OUTPUT, true);
 			if(outputFluidToTank(tankOutput1, 100, getPOIPos("output1"), this.world, this.facing.getOpposite()))
 				update = true;
 			if(outputFluidToTank(tankOutput2, 100, getPOIPos("output2"), this.world, this.facing.getOpposite()))
@@ -110,8 +111,8 @@ public class TileEntityElectrolyzer extends TileEntityMultiblockProductionSingle
 			if(handleBucketTankInteraction(tankOutput2, inventory, SLOT_T2_BUCKET_INPUT, SLOT_T2_BUCKET_OUTPUT, true))
 				update = true;
 
-			if(update&&world.getTotalWorldTime()%40==0)
-				forceTileUpdate();
+			if(update)
+				updateTileForEvent(SyncEvents.TILE_CUSTOM1);
 		}
 
 	}

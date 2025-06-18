@@ -339,6 +339,18 @@ public abstract class GuiComponentDecoBase<TYPE extends GuiComponentDecoBase<? s
 	}
 
 	/**
+	 * Provides an ingredient that can be used by JEI compat.
+	 *
+	 * @return an ingredient, like an {@link net.minecraft.item.ItemStack},
+	 * a {@link net.minecraftforge.fluids.FluidStack}, or an {@link net.minecraft.item.crafting.Ingredient} associated with this component
+	 */
+	@Nullable
+	public Object getProvidedIngredient()
+	{
+		return null;
+	}
+
+	/**
 	 * A set of GUI events that can be triggered on any {@link GuiComponentDecoBase} by a {@link DecoGui}
 	 */
 	public enum DecoGuiEvent

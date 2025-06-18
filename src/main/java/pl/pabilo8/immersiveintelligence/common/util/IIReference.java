@@ -128,6 +128,7 @@ public class IIReference
 	//Deco Labels
 	public static final ResLoc GUI_LABEL_WOODEN = ResLoc.of(RES_TEXTURES_DECO, "label/label_wooden");
 	public static final ResLoc GUI_LABEL_STEEL = ResLoc.of(RES_TEXTURES_DECO, "label/label_steel");
+	public static final ResLoc GUI_LABEL_STEEL_ROUGH = ResLoc.of(RES_TEXTURES_DECO, "label/label_steel_rough");
 	public static final ResLoc GUI_LABEL_HAZARD = ResLoc.of(RES_TEXTURES_DECO, "label/label_hazard");
 	//Deco Components
 	public static final ResLoc RES_TEXTURES_DECO_COMPONENT_BUTTON = ResLoc.of(RES_TEXTURES_DECO, "component/button");

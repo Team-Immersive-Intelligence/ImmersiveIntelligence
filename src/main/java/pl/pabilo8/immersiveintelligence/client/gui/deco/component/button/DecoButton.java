@@ -26,6 +26,9 @@ public class DecoButton extends GuiComponentDecoTextBase<DecoButton>
 	private DecoAlignment iconAlignment = DecoAlignment.CENTER;
 	protected int[] padding = new int[]{2, 2, 2, 2};
 
+	// Cached positions
+	private int cachedIconX, cachedIconY, cachedTextX, cachedTextY;
+
 	@Nullable
 	private ResLoc icon;
 	private int iconSize = 16;
@@ -41,8 +44,7 @@ public class DecoButton extends GuiComponentDecoTextBase<DecoButton>
 
 	public DecoButton withIcon(@Nonnull ResourceLocation icon)
 	{
-		this.icon = icon instanceof ResLoc?((ResLoc)icon): ResLoc.of(icon);
-		return this;
+		return withIcon(icon, 16);
 	}
 
 	public DecoButton withIcon(@Nonnull ResourceLocation icon, int iconSize)
@@ -79,6 +81,23 @@ public class DecoButton extends GuiComponentDecoTextBase<DecoButton>
 	@Override
 	protected boolean initialize()
 	{
+		int xPadding = padding[0]+padding[2];
+		int yPadding = padding[1]+padding[3];
+
+		int combinedWidth = iconSize+(text!=null?fontRenderer.getStringWidth(text): 0);
+		int combinedHeight = Math.max(iconSize, text!=null?fontRenderer.FONT_HEIGHT: 0);
+
+		int alignedX = iconAlignment.getAlignX(x+padding[0], combinedWidth, width-xPadding);
+		int alignedY = iconAlignment.getAlignY(y+padding[1], combinedHeight, height-yPadding);
+
+		cachedIconX = alignedX;
+		cachedIconY = alignedY;
+
+		//Offset by icon width + spacing
+		cachedTextX = cachedIconX+iconSize+2;
+		//Center text vertically
+		cachedTextY = cachedIconY+(iconSize-fontRenderer.FONT_HEIGHT)/2;
+
 		return true;
 	}
 
@@ -89,46 +108,26 @@ public class DecoButton extends GuiComponentDecoTextBase<DecoButton>
 		IIDrawUtils draw = IIDrawUtils.startTexturedColored();
 
 		DecoGuiUtils.drawRepeatedRect(draw, x, y, width, height, backgroundLocation, getBackgroundColor(), 32, 8);
-		DecoAlignment align = iconAlignment==DecoAlignment.CENTER&&text!=null?DecoAlignment.LEFT: iconAlignment;
 		if(icon!=null)
 		{
 			TextureAtlasSprite iconSprite = ClientUtils.getSprite(icon);
-			draw.drawTexColorRect(
-					getIconXOffset(align, 16), getIconYOffset(align, 16),
+			draw.drawTexColorRect(cachedIconX, cachedIconY,
 					iconSize, iconSize, getTextColor(false),
 					iconSprite.getMinU(), iconSprite.getMaxU(), iconSprite.getMinV(), iconSprite.getMaxV());
 		}
 		draw.finish();
+
 		if(stack!=null)
 		{
 			GlStateManager.pushMatrix();
-			GlStateManager.translate(getIconXOffset(align, 16), getIconYOffset(align, 16), 0);
+			GlStateManager.translate(cachedIconX, cachedIconY, 0);
 			GlStateManager.scale(16/(float)iconSize, 16/(float)iconSize, 1);
 			ClientUtils.mc().getRenderItem().renderItemAndEffectIntoGUI(stack, 0, 0);
 			GlStateManager.popMatrix();
 		}
 
 		if(text!=null)
-		{
-			int xPadding = padding[0]+padding[2];
-			int yPadding = padding[1]+padding[3];
-			fontRenderer.drawString(text,
-					this.iconAlignment.getAlignX(x+padding[0], fontRenderer.getStringWidth(text), width-xPadding),
-					this.iconAlignment.getAlignY(y+padding[1], fontRenderer.FONT_HEIGHT, height-yPadding),
-					getTextColor(false).getPackedARGB());
-		}
-	}
-
-	private int getIconXOffset(DecoAlignment align, int defaultIconSize)
-	{
-		int xPadding = padding[0]+padding[2];
-		return align.getAlignX(x+padding[0], 16, width-xPadding)+(defaultIconSize-this.iconSize)/2;
-	}
-
-	private int getIconYOffset(DecoAlignment align, int defaultIconSize)
-	{
-		int yPadding = padding[1]+padding[3];
-		return align.getAlignY(y+padding[1], 16, height-yPadding)+(defaultIconSize-this.iconSize)/2;
+			fontRenderer.drawString(text, cachedTextX, cachedTextY, getTextColor(false).getPackedARGB());
 	}
 
 	@Override

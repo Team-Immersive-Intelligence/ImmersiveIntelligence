@@ -1,93 +1,86 @@
 package pl.pabilo8.immersiveintelligence.client.gui.block;
 
-import blusunrize.immersiveengineering.client.ClientUtils;
-import blusunrize.immersiveengineering.client.gui.GuiIEContainerBase;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
-import org.lwjgl.opengl.GL11;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.Optional.Method;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoResource;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoTemplate;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoImage;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoImage.ImageAnimationDirection;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoBar;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoFluidTank;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundBuilder.SlotStyle;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoGuiUtils;
+import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityElectrolyzer;
+import pl.pabilo8.immersiveintelligence.common.compat.jei.JEIHelper;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerElectrolyzer;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
-
-import java.util.ArrayList;
+import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 10.07.2019
  */
-public class GuiElectrolyzer extends GuiIEContainerBase
+@DecoTemplate(name = "electrolyzer")
+public class GuiElectrolyzer extends DecoGui<TileEntityElectrolyzer, ContainerElectrolyzer>
 {
-	//REFACTOR: 22.10.2023 use drawutils 
-	public static final String texture_electrolyzer = ImmersiveIntelligence.MODID+":textures/gui/electrolyzer.png";
-	TileEntityElectrolyzer tile;
+	@DecoResource
+	public static final ResourceLocation BACKGROUND = ResLoc.of(IIReference.RES_II, "gui/electrolyzer");
+	private DecoImage imageProgress;
 
 	public GuiElectrolyzer(EntityPlayer player, TileEntityElectrolyzer tile)
 	{
-		super(new ContainerElectrolyzer(player, tile));
-		this.ySize = 168;
-		this.tile = tile;
-	}
-
-	/**
-	 * Draw the foreground layer for the GuiContainer (everything in front of the items)
-	 */
-	@Override
-	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
-	{
-		this.fontRenderer.drawString(I18n.format("tile."+ImmersiveIntelligence.MODID+".metal_multiblock.electrolyzer.name"), 8, 6, IIReference.COLOR_H1.getPackedRGB());
-	}
-
-	/**
-	 * Draws the background layer of this container (behind the items).
-	 */
-	@Override
-	protected void drawGuiContainerBackgroundLayer(float f, int mx, int my)
-	{
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		ClientUtils.bindTexture(texture_electrolyzer);
-		this.drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
-
-		ClientUtils.handleGuiTank(tile.tankInput, guiLeft+32, guiTop+23, 16, 47, 176, 0, 20, 51, mx, my, texture_electrolyzer, null);
-		ClientUtils.handleGuiTank(tile.tankOutput1, guiLeft+90, guiTop+23, 45, 16, 176, 51, 49, 20, mx, my, texture_electrolyzer, null);
-		ClientUtils.handleGuiTank(tile.tankOutput2, guiLeft+90, guiTop+55, 45, 16, 176, 51, 49, 20, mx, my, texture_electrolyzer, null);
-
-		ClientUtils.bindTexture(texture_electrolyzer);
-
-		this.drawTexturedModalRect(guiLeft+50, guiTop+21, 196, 0, 15, 51);
-
-		IIClientUtils.drawPowerBar(guiLeft+161, guiTop+24, 7, 47, tile.getEnergyStored(null)/(float)tile.getMaxEnergyStored(null));
-
-		if(tile.currentProcess!=null)
-		{
-			float progress = Math.min(1f, tile.currentProcess.ticks/(float)tile.currentProcess.maxTicks);
-			this.drawTexturedModalRect(guiLeft+66, guiTop+42, 176, 71, Math.round(54*progress), 10);
-		}
+		super(player, tile, IIGUI.ELECTROLYZER);
 	}
 
 	@Override
-	public void drawScreen(int mx, int my, float partial)
+	public void onInit()
 	{
-		super.drawScreen(mx, my, partial);
-		this.renderHoveredToolTip(mx, my);
+		startBackground()
+				.withBox(IIReference.GUI_BG_STEEL_ROUGH, 0, 0, 176, 76)
+				.withTitleBar(tile)
+				.withInventorySlots(SlotStyle.IE_INPUT, container.slotsInput)
+				.withInventorySlots(SlotStyle.IE_OUTPUT, container.slotsOutput)
 
-		ArrayList<String> tooltip = new ArrayList<>();
+				.withBox(IIReference.GUI_BG_WOODEN, 0, 76, 176, 92)
+				.withInventorySlots(SlotStyle.VANILLA, container.playerInventory)
+				.withInventoryTitleBar()
+				.build();
 
-		ClientUtils.handleGuiTank(tile.tankInput, guiLeft+32, guiTop+23, 16, 47, 176, 0, 20, 51, mx, my, texture_electrolyzer, tooltip);
+		addComponents(
+				new DecoFluidTank(32-1, 12)
+						.withSize(24, 58)
+						.withFluidTank(tile.tankInput),
+				new DecoFluidTank(90-10+2, 10)
+						.withSize(58, 24)
+						.withFluidTank(tile.tankOutput1),
+				new DecoFluidTank(90-10+2, 55-8-1)
+						.withSize(58, 24)
+						.withFluidTank(tile.tankOutput2),
 
-		ClientUtils.handleGuiTank(tile.tankOutput1, guiLeft+90, guiTop+23, 45, 16, 176, 51, 49, 20, mx, my, texture_electrolyzer, tooltip);
-		ClientUtils.handleGuiTank(tile.tankOutput2, guiLeft+90, guiTop+55, 45, 16, 176, 51, 49, 20, mx, my, texture_electrolyzer, tooltip);
+				new DecoBar(168, 0)
+						.withTemplate(DecoGuiUtils.BAR_ELECTRIC_ENERGY.apply(tile.energyStorage)),
 
-		if(mx > guiLeft+161&&mx < guiLeft+168&&my > guiTop+24&&my < guiTop+71)
-			tooltip.add(IIUtils.getPowerLevelString(tile.energyStorage.getEnergyStored(), tile.energyStorage.getMaxEnergyStored()));
+				this.imageProgress = new DecoImage(66-10-1, 42-8)
+						.withSize(60, 12)
+						.withImageLocation(BACKGROUND, true)
+						.withUV(64, 0, 0, 60, 12),
+				new DecoImage(66-10-1, 42-8)
+						.withSize(60, 12)
+						.withImageLocation(BACKGROUND, true)
+						.withUV(64, 0, 12, 60, 24)
+						.withAnimation(ImageAnimationDirection.LEFT_TO_RIGHT, DecoGuiUtils.getMultiblockProductionSingleProgress(tile)),
+				new DecoImage(66-10-1, 42-8)
+						.withSize(23, 24)
+		);
+	}
 
-		if(!tooltip.isEmpty())
-		{
-			ClientUtils.drawHoveringText(tooltip, mx, my, fontRenderer, guiLeft+xSize, -1);
-			RenderHelper.enableGUIStandardItemLighting();
-		}
+	@Override
+	@Method(modid = "jei")
+	public void onInitJEICompat()
+	{
+		JEIHelper.addRecipesDecoGuiLink(this.imageProgress, "ii.electrolyzer");
 	}
 }

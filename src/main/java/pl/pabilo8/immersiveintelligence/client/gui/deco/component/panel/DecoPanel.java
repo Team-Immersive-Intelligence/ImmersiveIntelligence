@@ -88,7 +88,7 @@ public class DecoPanel extends GuiComponentDecoBase<DecoPanel>
 		GL11.glClear(GL11.GL_STENCIL_BUFFER_BIT);
 		GL11.glStencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_REPLACE);
 		GL11.glStencilFunc(GL11.GL_ALWAYS, 1, 0xFF);
-		draw.drawRepeatedColorRect(x, y, width, height, IIColor.WHITE, 32, 32, 4, 4,
+		draw.drawConnectedColorRect(x, y, width, height, IIColor.WHITE, 32, 32, 4, 4,
 				maskSprite.getMinU(), maskSprite.getInterpolatedU(8), maskSprite.getMinV(), maskSprite.getInterpolatedV(8)
 		);
 		draw.finish();
@@ -97,7 +97,7 @@ public class DecoPanel extends GuiComponentDecoBase<DecoPanel>
 		draw = IIDrawUtils.startTexturedColored();
 		GL11.glStencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_KEEP);
 		GL11.glStencilFunc(GL11.GL_EQUAL, 1, 0xFF);
-		draw.drawRepeatedColorRect(x, y, width, height, IIColor.WHITE, background, 32, 32, 0, 0);
+		draw.drawConnectedColorRect(x, y, width, height, IIColor.WHITE, background, 32, 32, 0, 0);
 		draw.finish();
 
 		//Overlay
@@ -105,7 +105,7 @@ public class DecoPanel extends GuiComponentDecoBase<DecoPanel>
 		GL11.glDisable(GL11.GL_STENCIL_TEST);
 		GlStateManager.enableBlend();
 		GlStateManager.blendFunc(SourceFactor.DST_COLOR, DestFactor.SRC_COLOR);
-		draw.drawRepeatedColorRect(x, y, width, height, IIColor.WHITE, 32, 32, 4, 4,
+		draw.drawConnectedColorRect(x, y, width, height, IIColor.WHITE, 32, 32, 4, 4,
 				maskSprite.getMinU(), maskSprite.getInterpolatedU(8), maskSprite.getMinV(), maskSprite.getInterpolatedV(8)
 		);
 		draw.finish();

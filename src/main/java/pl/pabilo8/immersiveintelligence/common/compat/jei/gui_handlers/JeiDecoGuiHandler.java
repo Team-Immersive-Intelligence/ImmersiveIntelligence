@@ -31,6 +31,13 @@ public class JeiDecoGuiHandler<GUI extends DecoGui<T, C>, T extends TileEntityIE
 		return guiContainer.getTakenSpace();
 	}
 
+	@Nullable
+	@Override
+	public Object getIngredientUnderMouse(GUI guiContainer, int mouseX, int mouseY)
+	{
+		return guiContainer.getIngredientUnderMouse();
+	}
+
 	@Override
 	public Class<GUI> getGuiContainerClass()
 	{

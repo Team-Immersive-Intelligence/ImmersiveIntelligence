@@ -10,6 +10,7 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraftforge.fml.common.Loader;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
@@ -78,10 +79,11 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 	private DecoBackgroundBuilder<T, C> backgroundBuilder;
 	private List<Rectangle> takenSpace;
 	private GuiComponentDecoBase<?> focusedElement;
+	private GuiComponentDecoBase<?> hoveredElement;
 
-	public DecoGui(EntityPlayer player, T tile, IIGUI guiList)
+	public DecoGui(EntityPlayer player, T tile, IIGUI iigui)
 	{
-		super(guiList.containerFromTile.apply(player, tile));
+		super(iigui.containerFromTile.apply(player, tile));
 		this.tile = tile;
 		//noinspection unchecked
 		this.container = ((C)this.inventorySlots);
@@ -124,6 +126,9 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 		//Resize using vanilla method
 		super.initGui();
 
+		if(Loader.isModLoaded("jei"))
+			onInitJEICompat();
+
 		//Apply label and component position corrections
 		for(GuiLabel guiLabel : labelList)
 		{
@@ -139,6 +144,15 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 	 * Called upon Deco GUI initialization.
 	 */
 	public abstract void onInit();
+
+	/**
+	 * Called after {@link #onInit()} for GUI JEI compatibility initialization.
+	 * Overriding methods should be annotated with @{@link net.minecraftforge.fml.common.Optional.Method} to not cause a crash if JEI is not present.
+	 */
+	public void onInitJEICompat()
+	{
+
+	}
 
 	//--- GUI Component Methods ---//
 
@@ -396,10 +410,14 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 
 	protected List<String> getTooltip()
 	{
+		this.hoveredElement = null;
 		//Buttons
 		for(GuiButton guiButton : buttonList)
 			if(guiButton instanceof GuiComponentDecoBase&&guiButton.isMouseOver())
+			{
+				this.hoveredElement = (GuiComponentDecoBase<?>)guiButton;
 				return ((GuiComponentDecoBase<?>)guiButton).getTooltip();
+			}
 
 		return Collections.emptyList();
 	}
@@ -460,6 +478,12 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 	protected EasyNBT onSaveTileData()
 	{
 		return EasyNBT.newNBT();
+	}
+
+	@Nullable
+	public Object getIngredientUnderMouse()
+	{
+		return hoveredElement==null?null: hoveredElement.getProvidedIngredient();
 	}
 
 	/**

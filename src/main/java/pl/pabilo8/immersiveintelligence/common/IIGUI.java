@@ -201,9 +201,9 @@ public enum IIGUI implements ISerializableEnum
 		IIGUI.DATA_REDSTONE_INTERFACE_REDSTONE
 				.setClientGui(GuiDataRedstoneInterfaceRedstone::new);
 
-		IIGUI.PRINTING_PRESS.setClientGui(GuiPrintingPress::new);
+		IIGUI.PRINTING_PRESS.setClientGui(GuiPrintingPress.class, GuiPrintingPress::new);
 		IIGUI.CHEMICAL_BATH.setClientGui(GuiChemicalBath::new);
-		IIGUI.ELECTROLYZER.setClientGui(GuiElectrolyzer::new);
+		IIGUI.ELECTROLYZER.setClientGui(GuiElectrolyzer.class, GuiElectrolyzer::new);
 		IIGUI.PRECISION_ASSEMBLER.setClientGui(GuiPrecisionAssembler::new);
 		IIGUI.FUEL_STATION.setClientGui(GuiFuelStation::new);
 		IIGUI.DATA_MERGER.setClientGui(GuiDataMerger::new);

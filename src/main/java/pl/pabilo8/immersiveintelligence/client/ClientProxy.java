@@ -603,10 +603,12 @@ public class ClientProxy extends CommonProxy
 		ApiUtils.getRegisterSprite(event.getMap(), IIReference.GUI_BG_PAPER);
 		ApiUtils.getRegisterSprite(event.getMap(), IIReference.GUI_BG_BLUEPRINT);
 		ApiUtils.getRegisterSprite(event.getMap(), IIReference.GUI_BG_STEEL);
+		ApiUtils.getRegisterSprite(event.getMap(), IIReference.GUI_BG_STEEL_ROUGH);
 		ApiUtils.getRegisterSprite(event.getMap(), IIReference.GUI_BG_DARK);
 
 		ApiUtils.getRegisterSprite(event.getMap(), IIReference.GUI_LABEL_WOODEN);
 		ApiUtils.getRegisterSprite(event.getMap(), IIReference.GUI_LABEL_STEEL);
+		ApiUtils.getRegisterSprite(event.getMap(), IIReference.GUI_LABEL_STEEL_ROUGH);
 		ApiUtils.getRegisterSprite(event.getMap(), IIReference.GUI_LABEL_HAZARD);
 
 		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_COMPONENT_BUTTON);

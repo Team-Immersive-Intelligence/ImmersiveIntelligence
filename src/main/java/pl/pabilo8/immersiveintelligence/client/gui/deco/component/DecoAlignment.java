@@ -36,7 +36,7 @@ public enum DecoAlignment
 			case TOP:
 			case CENTER:
 			case BOTTOM:
-				return x+Math.max(parentWidth-width, 0)/2;
+				return x+((parentWidth-width)/2);
 			case TOP_RIGHT:
 			case RIGHT:
 			case BOTTOM_RIGHT:
@@ -64,7 +64,7 @@ public enum DecoAlignment
 			case LEFT:
 			case CENTER:
 			case RIGHT:
-				return y+Math.max(parentHeight-height, 0)/2;
+				return y+(parentHeight-height)/2;
 			case BOTTOM_LEFT:
 			case BOTTOM:
 			case BOTTOM_RIGHT:
