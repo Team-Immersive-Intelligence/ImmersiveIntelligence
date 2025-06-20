@@ -45,3 +45,5 @@ run_tests/
 # Act
 .secret
 custom.gradle.template
+
+# Misc

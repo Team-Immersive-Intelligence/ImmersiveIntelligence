@@ -225,6 +225,7 @@ public class IIReference
 	public static final String CAT_LOGISTICS = "ii_logistics";
 	public static final String CAT_INTELLIGENCE = "ii_intel";
 	public static final String CAT_MOTORWORKS = "ii_motorworks";
+	public static final String CAT_OTHER = "ii_other";
 
 	//--- GUI ---//
 

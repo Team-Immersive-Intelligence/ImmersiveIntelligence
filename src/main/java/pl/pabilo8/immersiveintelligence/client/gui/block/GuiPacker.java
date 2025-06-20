@@ -533,32 +533,52 @@ public class GuiPacker extends GuiIEContainerBase
 		@Override
 		void draw(int mx, int my)
 		{
-			//CTMB's GUI system needs to be moved to II, it really needs to
 			IIClientUtils.bindTexture(TEXTURE_ICONS);
-			gui.drawTexturedModalRect(gui.guiLeft+264, gui.guiTop+12, 40, 0, 40, 40);
-
-			gui.drawTexturedModalRect(gui.guiLeft+264, gui.guiTop+12, 40, 0, 40, 40);
-			gui.drawTexturedModalRect(gui.guiLeft+264, gui.guiTop+12+40, 40, 19, 40, 20);
-			gui.drawTexturedModalRect(gui.guiLeft+264, gui.guiTop+12+60, 40, 10, 40, 40);
+			gui.drawTexturedModalRect(gui.guiLeft + 264, gui.guiTop + 12, 40, 0, 40, 40);
+			gui.drawTexturedModalRect(gui.guiLeft + 264, gui.guiTop + 12 + 40, 40, 19, 40, 20);
+			gui.drawTexturedModalRect(gui.guiLeft + 264, gui.guiTop + 12 + 60, 40, 10, 40, 40);
 
 			int hh = 0;
 
-			for(FluidStack fluid : gui.tile.fluidTank.fluids)
+			for (FluidStack fluid : gui.tile.fluidTank.fluids)
 			{
-				int height = (int)((fluid.amount/(float)gui.tile.fluidTank.getCapacity())*96);
+				int height = (int) ((fluid.amount / (float) gui.tile.fluidTank.getCapacity()) * 96);
 				hh += height;
-				ClientUtils.drawRepeatedFluidSprite(fluid, gui.guiLeft+264, gui.guiTop+12+2+96-hh, 40, height);
+				ClientUtils.drawRepeatedFluidSprite(fluid, gui.guiLeft + 264, gui.guiTop + 12 + 2 + 96 - hh, 40, height);
 			}
 
 			IIClientUtils.bindTexture(TEXTURE_ICONS);
-			gui.drawTexturedModalRect(gui.guiLeft+264, gui.guiTop+12, 80, 0, 40, 40);
-			gui.drawTexturedModalRect(gui.guiLeft+264, gui.guiTop+12+40, 80, 19, 40, 20);
-			gui.drawTexturedModalRect(gui.guiLeft+264, gui.guiTop+12+60, 80, 10, 40, 40);
+			gui.drawTexturedModalRect(gui.guiLeft + 264, gui.guiTop + 12, 80, 0, 40, 40);
+			gui.drawTexturedModalRect(gui.guiLeft + 264, gui.guiTop + 12 + 40, 80, 19, 40, 20);
+			gui.drawTexturedModalRect(gui.guiLeft + 264, gui.guiTop + 12 + 60, 80, 10, 40, 40);
 
-			gui.drawTexturedModalRect(gui.guiLeft+308, gui.guiTop+34, 0, 50, 18, 18);
-			gui.drawTexturedModalRect(gui.guiLeft+308, gui.guiTop+70, 0, 50, 18, 18);
+			gui.drawTexturedModalRect(gui.guiLeft + 308, gui.guiTop + 34, 0, 50, 18, 18);
+			gui.drawTexturedModalRect(gui.guiLeft + 308, gui.guiTop + 70, 0, 50, 18, 18);
 
-			//ClientUtils.handleGuiTank(gui.tile.fluidTank, gui.guiLeft+264, gui.guiTop+8, 40, 50, 80, 0, 40, 50, mx, my, TEXTURE_PACKER.toString(), null);
+			// Handle hover tooltips
+			drawFluidTooltip(mx, my);
+		}
+
+		private void drawFluidTooltip(int mx, int my)
+		{
+			int tankX = gui.guiLeft + 264;
+			int tankY = gui.guiTop + 12;
+			int tankWidth = 40;
+			int tankHeight = 96;
+
+			if (gui.isPointInRegion(tankX - gui.guiLeft, tankY - gui.guiTop, tankWidth, tankHeight, mx, my))
+			{
+				ArrayList<String> tooltip = new ArrayList<>();
+				for (FluidStack fluid : gui.tile.fluidTank.fluids)
+				{
+					tooltip.add(fluid.getLocalizedName());
+					tooltip.add(fluid.amount + " / " + gui.tile.fluidTank.getCapacity() + " mB");
+				}
+				if (!tooltip.isEmpty())
+				{
+					gui.drawHoveringText(tooltip, mx, my, gui.fontRenderer);
+				}
+			}
 		}
 
 		@Override
@@ -582,7 +602,7 @@ public class GuiPacker extends GuiIEContainerBase
 		@Override
 		public void drawPage(int mx, int my)
 		{
-			// TODO: 25.08.2022 draw tank
+			//TODO DRAW FLUID TANK
 		}
 	}
 

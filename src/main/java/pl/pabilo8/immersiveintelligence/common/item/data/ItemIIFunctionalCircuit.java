@@ -1,5 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common.item.data;
 
+import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;

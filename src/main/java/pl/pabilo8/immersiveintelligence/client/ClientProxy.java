@@ -803,7 +803,7 @@ public class ClientProxy extends CommonProxy
 		IIManualCategoryWarfare.INSTANCE.addPages();
 		IIManualCategoryMotorworks.INSTANCE.addPages();
 		IIManualCategoryIntelligence.INSTANCE.addPages();
-		//IIManualCategoryOther.INSTANCE.addPages();
+		IIManualCategoryOther.INSTANCE.addPages();
 	}
 
 	//--- Stored GUI Data ---//
