@@ -12,6 +12,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import pl.pabilo8.immersiveintelligence.api.data.radio.RadioNetwork;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.IISaveData;
 import pl.pabilo8.immersiveintelligence.common.commands.ii.CommandII;
@@ -49,6 +50,7 @@ public class ImmersiveIntelligence
 	public void preInit(FMLPreInitializationEvent event)
 	{
 		IILogger.logger = event.getModLog();
+		IIConfigHandler.putConfigValues();
 		proxy.preInit();
 		ForgeChunkManager.setForcedChunkLoadingCallback(this, proxy);
 		new IISkinHandler.ThreadContributorSpecialsDownloader();

@@ -169,32 +169,32 @@ public class IIConfigHandler
 
 			@Comment({"Generation config for Platinum Ore.", "Parameters: Vein size, lowest possible Y, highest possible Y, veins per chunk, chance for vein to spawn (out of 100). Set vein size to 0 to disable the generation"})
 			@RequiresMcRestart
-			@Mapped(mapClass = IIConfigHandler.class, mapName = "manual_intA")
+			@Mapped(mapClass = Config.class, mapName = "manual_intA")
 			public static int[] orePlatinum = new int[]{6, 0, 10, 2, 75};
 
 			@Comment({"Generation config for Zinc Ore.", "Parameters: Vein size, lowest possible Y, highest possible Y, veins per chunk, chance for vein to spawn (out of 100). Set vein size to 0 to disable the generation"})
 			@RequiresMcRestart
-			@Mapped(mapClass = IIConfigHandler.class, mapName = "manual_intA")
+			@Mapped(mapClass = Config.class, mapName = "manual_intA")
 			public static int[] oreZinc = new int[]{10, 35, 95, 2, 100};
 
 			@Comment({"Generation config for Tungsten Ore.", "Parameters: Vein size, lowest possible Y, highest possible Y, veins per chunk, chance for vein to spawn (out of 100). Set vein size to 0 to disable the generation"})
 			@RequiresMcRestart
-			@Mapped(mapClass = IIConfigHandler.class, mapName = "manual_intA")
+			@Mapped(mapClass = Config.class, mapName = "manual_intA")
 			public static int[] oreTungsten = new int[]{6, 0, 35, 2, 75};
 
 			@Comment({"Generation config for Salt Ore.", "Parameters: Vein size, lowest possible Y, highest possible Y, veins per chunk, chance for vein to spawn (out of 100). Set vein size to 0 to disable the generation"})
 			@RequiresMcRestart
-			@Mapped(mapClass = IIConfigHandler.class, mapName = "manual_intA")
+			@Mapped(mapClass = Config.class, mapName = "manual_intA")
 			public static int[] oreSalt = new int[]{12, 55, 95, 1, 75};
 
 			@Comment({"Generation config for Fluorite Ore.", "Parameters: Vein size, lowest possible Y, highest possible Y, veins per chunk, chance for vein to spawn (out of 100). Set vein size to 0 to disable the generation"})
 			@RequiresMcRestart
-			@Mapped(mapClass = IIConfigHandler.class, mapName = "manual_intA")
+			@Mapped(mapClass = Config.class, mapName = "manual_intA")
 			public static int[] oreFluorite = new int[]{6, 1, 55, 1, 65};
 
 			@Comment({"Generation config for Fluorite Ore.", "Parameters: Vein size, lowest possible Y, highest possible Y, veins per chunk, chance for vein to spawn (out of 100). Set vein size to 0 to disable the generation"})
 			@RequiresMcRestart
-			@Mapped(mapClass = IIConfigHandler.class, mapName = "manual_intA")
+			@Mapped(mapClass = Config.class, mapName = "manual_intA")
 			public static int[] orePhosphorus = new int[]{12, 1, 55, 1, 80};
 
 			@Comment({"Set this to true to allow retro-generation of Platinum Ore."})
@@ -303,12 +303,10 @@ public class IIConfigHandler
 
 			@Comment({"Max zoom of the binoculars (in Blu's Unit of Magnification Measurement™)."})
 			@RequiresMcRestart
-			@Mapped(mapClass = IIConfigHandler.class, mapName = "manual_floatA")
 			public static float[] binocularsMaxZoom = new float[]{0.1f, 0.125f, 0.167f, 0.25f, 0.5f};
 
 			@Comment({"Max zoom of the advanced binoculars (in Blu's Unit of Magnification Measurement™)."})
 			@RequiresMcRestart
-			@Mapped(mapClass = IIConfigHandler.class, mapName = "manual_floatA")
 			public static float[] advancedBinocularsMaxZoom = new float[]{0.05f, 0.0625f, 0.0833f, 0.1f, 0.25f, 0.5f};
 
 			@Comment({"The energy capacity of advanced binoculars (when using Infrared Sight)."})
@@ -421,7 +419,6 @@ public class IIConfigHandler
 
 				@Comment({"Max zoom of a machinegun with a scope mounted (in Blu's Unit of Distance Measurement™)."})
 				@RequiresMcRestart
-				@Mapped(mapClass = IIConfigHandler.class, mapName = "manual_floatA")
 				public static float[] tripodZoomSteps = new float[]{0.01f, 0.02f, 0.04f, 0.0625f, 0.0833f, 0.125f, 0.25f, 0.5f};
 			}
 
@@ -661,7 +658,7 @@ public class IIConfigHandler
 				public static int energyUsageIdle = 512;
 
 				@Comment({"Range of the radio station (in which the signals can be received) in blocks from center (radius)."})
-				@Mapped(mapClass = IIConfigHandler.class, mapName = "manual_int")
+				@Mapped(mapClass = Config.class, mapName = "manual_int")
 				public static int radioRange = 128;
 
 				@RangeDouble(min = 0, max = 1)
@@ -1561,7 +1558,6 @@ public class IIConfigHandler
 
 				@Comment({"Max zoom of a machinegun with a scope mounted (in Blu's Unit of Distance Measurement™)."})
 				@RequiresMcRestart
-				@Mapped(mapClass = IIConfigHandler.class, mapName = "manual_floatA")
 				public static float[] machinegunScopeMaxZoom = new float[]{0.55f, 0.35f, 0.15f};
 
 				@Comment({"Shield's initial strength (resistance vs attacks)."})
@@ -1697,39 +1693,30 @@ public class IIConfigHandler
 		public static class MechanicalDevices
 		{
 			@Comment({"The modifier of internal torque of a machine using this gear.", GEARS})
-			@Mapped(mapClass = IIConfigHandler.class, mapName = "manual_floatA")
 			public static float[] gearTorqueModifier = new float[]{0.25f, 0.5f, 1f, 2f, 4f};
 
 			@Comment({"Belts will break if Torque is higher than this value.", BELTS})
-			@Mapped(mapClass = IIConfigHandler.class, mapName = "manual_intA")
 			public static int[] beltMaxTorque = new int[]{50, 200, 100};
 
 			@Comment({"Torque loss, later multiplied by belt length.", BELTS})
-			@Mapped(mapClass = IIConfigHandler.class, mapName = "manual_floatA")
 			public static float[] beltTorqueLoss = new float[]{0.05f, 0.1f, 0.01f};
 
 			@Comment({"Max length of the belt, works exactly like wires (measured in blocks).", BELTS})
-			@Mapped(mapClass = IIConfigHandler.class, mapName = "manual_intA")
 			public static int[] beltLength = new int[]{8, 16, 16};
 
 			@Comment({"Immersive Flux to Rotary Flux conversion ratio (default 4 RoF = 1 IF)."})
-			@Mapped(mapClass = IIConfigHandler.class, mapName = "manual_floatA")
 			public static float rofConversionRatio = 4f;
 
 			@Comment({"Default torque, used as a fallback, when IE rotational device is not recognised."})
-			@Mapped(mapClass = IIConfigHandler.class, mapName = "manual_floatA")
 			public static float dynamoDefaultTorque = 16f;
 
 			@Comment({"Torque multiplier for the windmill."})
-			@Mapped(mapClass = IIConfigHandler.class, mapName = "manual_floatA")
 			public static float dynamoWindmillTorque = 20f;
 
 			@Comment({"Torque multiplier for the windmill."})
-			@Mapped(mapClass = IIConfigHandler.class, mapName = "manual_floatA")
 			public static float dynamoWatermillTorque = 24f;
 
 			@Comment({"Torque multiplier for the axle from MysticalMechanics."})
-			@Mapped(mapClass = Config.class, mapName = "manual_floatA")
 			public static float dynamoAxleTorque = 18f;
 		}
 	}
@@ -1737,13 +1724,17 @@ public class IIConfigHandler
 	@SubscribeEvent
 	public static void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent ev)
 	{
-		Config.manual_bool.put("petroleumHere", false);
-		Config.manual_bool.put("baublesHere", false);
-		Config.validateAndMapValues(IIConfig.class);
-
-		Config.manual_int.put("radio_station_range", RadioStation.radioRange);
+		putConfigValues();
 
 		if(ev.getModID().equals(ImmersiveIntelligence.MODID))
 			ConfigManager.sync(ImmersiveIntelligence.MODID, Type.INSTANCE);
+	}
+
+	public static void putConfigValues()
+	{
+		Config.manual_bool.put("petroleumHere", false);
+		Config.manual_bool.put("baublesHere", false);
+		Config.manual_int.put("radio_station_range", RadioStation.radioRange);
+		Config.validateAndMapValues(IIConfig.class);
 	}
 }

@@ -2664,6 +2664,10 @@ ie.manual.category.ii_other.name=Other
 ie.manual.folder.functions=Function Reference
 ie.manual.folder.computers=Computers
 
+ie.manual.folder.weaponry=Weaponry
+ie.manual.folder.armortools=Armor and Tools
+ie.manual.folder.staticdefense=Defensive Structures
+
 ie.manual.entry.traits.level_beginner=Complexity: Pre-Industrial
 ie.manual.entry.traits.level_early_industrial=Complexity: Early Industrial
 ie.manual.entry.traits.level_industrial=Complexity: Industrial

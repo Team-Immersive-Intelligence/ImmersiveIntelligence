@@ -24,4 +24,4 @@ For sufficiently advanced engineers, the **Advanced Radio Tuner** may be used to
 # usage
 To [change] the current frequency of the tuner, *sneak and scroll up or down*.
 To [check] the frequency a device is set, *sneak-right click* it with the Tuner.<br>
-Keep in mind that [some Data Devices](explosives_mines#radio_satchel0) use the limited [Basic Frequency Range], which makes them unable to be configured with frequencies above [<config;i;basic_max_frequency>].
+Keep in mind that [some Data Devices](explosives_mines#radio_satchel0) use the limited [Basic Frequency Range], which makes them unable to be configured with frequencies above <config;i;radio_station_range>.

@@ -233,10 +233,10 @@ public class SubmachinegunRenderer extends IIUpgradableItemRendererAMT<ItemIISub
 				).withTextureProvider(
 						(res, stack) ->
 						{
-							String skin = IIContent.itemAssaultRifle.getSkinnableCurrentSkin(stack);
+							String skin = IIContent.itemSubmachinegun.getSkinnableCurrentSkin(stack);
 							if(IISkinHandler.isValidSkin(skin))
 							{
-								this.skinRemapper = new MTLTextureRemapper(model, ResLoc.of(IIReference.RES_TEXTURES_SKIN, skin, "/assault_rifle").withExtension(ResLoc.EXT_MTL));
+								this.skinRemapper = new MTLTextureRemapper(model, ResLoc.of(IIReference.RES_TEXTURES_SKIN, skin, "/submachinegun").withExtension(ResLoc.EXT_MTL));
 								return ClientUtils.getSprite(this.skinRemapper.apply(res));
 							}
 

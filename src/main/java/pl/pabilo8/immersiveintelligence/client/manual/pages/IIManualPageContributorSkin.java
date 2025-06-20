@@ -5,10 +5,12 @@ import blusunrize.lib.manual.ManualUtils;
 import blusunrize.lib.manual.gui.GuiManual;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler.IISpecialSkin;
 
 import java.util.List;
@@ -20,6 +22,7 @@ import java.util.List;
 public class IIManualPageContributorSkin extends IIManualPages
 {
 	public IISpecialSkin skin;
+	public ItemStack renderStack;
 	protected String localizedName;
 	protected String localizedLore;
 
@@ -27,6 +30,28 @@ public class IIManualPageContributorSkin extends IIManualPages
 	{
 		super(manual, "contributor_skin_"+skin.name);
 		this.skin = skin;
+		if(skin.doesApply(IIContent.itemSubmachinegun.getSkinnableName()))
+		{
+			renderStack = new ItemStack(IIContent.itemSubmachinegun);
+			IIContent.itemSubmachinegun.applySkinnableSkin(renderStack, skin.name);
+		}
+		else if(skin.doesApply(IIContent.itemLightEngineerHelmet.getSkinnableName()))
+		{
+			renderStack = new ItemStack(IIContent.itemLightEngineerHelmet);
+			IIContent.itemLightEngineerHelmet.applySkinnableSkin(renderStack, skin.name);
+		}
+		else if(skin.doesApply(IIContent.itemAssaultRifle.getSkinnableName()))
+		{
+			renderStack = new ItemStack(IIContent.itemAssaultRifle);
+			IIContent.itemAssaultRifle.applySkinnableSkin(renderStack, skin.name);
+		}
+		else if(skin.doesApply(IIContent.itemMachinegun.getSkinnableName()))
+		{
+			renderStack = new ItemStack(IIContent.itemMachinegun);
+			IIContent.itemMachinegun.applySkinnableSkin(renderStack, skin.name);
+		}
+		else
+			renderStack = ItemStack.EMPTY;
 	}
 
 	@Override
@@ -63,17 +88,15 @@ public class IIManualPageContributorSkin extends IIManualPages
 
 		if(localizedText!=null&&!localizedText.isEmpty())
 			ManualUtils.drawSplitString(manual.fontRenderer, localizedText, x, y+56+shift, 120, manual.getTextColour());
-		/*
-
-
-
-
-
-		 */
-
 		drawOrnamentalFrame(gui, x+42, y+4);
-
 		GlStateManager.enableBlend();
+
+		GlStateManager.pushMatrix();
+		RenderHelper.enableGUIStandardItemLighting();
+		GlStateManager.translate(x+42, y+4, 0);
+		GlStateManager.scale(2, 2, 2);
+		ManualUtils.renderItem().renderItemAndEffectIntoGUI(renderStack, 0, 0);
+		GlStateManager.popMatrix();
 	}
 
 	void drawOrnamentalFrame(GuiManual gui, int x, int y)
