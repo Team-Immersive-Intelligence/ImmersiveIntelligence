@@ -1,17 +1,13 @@
 package pl.pabilo8.immersiveintelligence.client.manual.categories;
 
-import blusunrize.immersiveengineering.api.ManualHelper;
-import blusunrize.immersiveengineering.api.ManualPageBlueprint;
-import blusunrize.immersiveengineering.api.ManualPageMultiblock;
-import blusunrize.immersiveengineering.api.crafting.BlueprintCraftingRecipe;
-import blusunrize.lib.manual.ManualPages;
 import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualCategory;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 /**
- * @author Pabilo8 and fastdelaspeed
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @author fastdelaspeed
  * @since 20-02-2025
  */
 public class IIManualCategoryOther extends IIManualCategory
@@ -27,19 +23,19 @@ public class IIManualCategoryOther extends IIManualCategory
 	@Override
 	public void addPages()
 	{
-		super .addPages();
+		super.addPages();
 		addEntry("electric_tools")
 				.addSource("e_hammer", getSourceForItem(new ItemStack(IIContent.itemHammer)))
 				.addSource("e_wrench", getSourceForItem(new ItemStack(IIContent.itemElectricWrench)))
 				.addSource("e_cutter", getSourceForItem(new ItemStack(IIContent.itemWirecutter)
-		));
-		
+				));
+
 		addEntry("lighter")
 				.addSource("lighter", getSourceForItem(new ItemStack(IIContent.itemLighter)
-		));
-		
+				));
+
 		addEntry("measuring_cup")
 				.addSource("m_cup", getSourceForItem(new ItemStack(IIContent.itemMeasuringCup)
-		));
+				));
 	}
 }

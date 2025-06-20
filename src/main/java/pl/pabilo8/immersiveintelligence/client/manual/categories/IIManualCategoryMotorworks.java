@@ -1,11 +1,14 @@
 package pl.pabilo8.immersiveintelligence.client.manual.categories;
 
 import blusunrize.immersiveengineering.api.crafting.BlueprintCraftingRecipe;
+import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualCategory;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @author fastdelaspeed
  * @since 18.01.2020
  */
 public class IIManualCategoryMotorworks extends IIManualCategory
@@ -22,14 +25,13 @@ public class IIManualCategoryMotorworks extends IIManualCategory
 	public void addPages()
 	{
 		super.addPages();
-		addEntry("coagulator");
-		addEntry("fuel_station");
 		addEntry("motorworks");
-		addEntry("rubber_production");
+		addEntry("fuel_station");
 		addEntry("vehicle_workshop");
+		addEntry("rubber_production");
+		addEntry("coagulator");
 		addEntry("vulcanizer")
-
-				//.addSource("compound_silicon", getSourceForItem(new ItemStack(IIitemMaterial)))
+				.addSource("compound", getSourceForItem(new ItemStack(IIContent.itemMaterial, 1, 31)))
 				.addSource("vulcanizer_blueprint", getSourceForItem(
 						BlueprintCraftingRecipe.getTypedBlueprint("vulcanizer_molds")
 				));
