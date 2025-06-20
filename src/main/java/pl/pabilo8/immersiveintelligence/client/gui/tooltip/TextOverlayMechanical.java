@@ -13,7 +13,7 @@ import pl.pabilo8.immersiveintelligence.api.rotary.IRotaryEnergy;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
-import pl.pabilo8.immersiveintelligence.common.util.item.IIItemUtil;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -33,7 +33,7 @@ public class TextOverlayMechanical extends TextOverlayBase
 			return false;
 
 		return te!=null&&te.hasCapability(CapabilityRotaryEnergy.ROTARY_ENERGY, mouseOver.sideHit.getOpposite())&&
-				IIItemUtil.isTachometer(player.getHeldItem(EnumHand.MAIN_HAND));
+				IIItemUtils.isTachometer(player.getHeldItem(EnumHand.MAIN_HAND));
 	}
 
 	@ParametersAreNonnullByDefault
@@ -54,15 +54,15 @@ public class TextOverlayMechanical extends TextOverlayBase
 
 		if(intTorque!=extTorque&&intSpeed!=extSpeed)
 			return new String[]{
-					IIReference.COLOR_ENGINEERS_BLUE.getHexCol("\u2296 "+I18n.format(IIReference.INFO_KEY+"tachometer.internal_torque", intTorque)),
-					IIReference.COLOR_ENGINEERS_BLUE.getHexCol("\u29c1 "+I18n.format(IIReference.INFO_KEY+"tachometer.internal_speed", intSpeed)),
-					IIReference.CHARICON_TORQUE+I18n.format(IIReference.INFO_KEY+"tachometer.external_torque", extTorque),
-					IIReference.CHARICON_SPEED+I18n.format(IIReference.INFO_KEY+"tachometer.external_speed", extSpeed)
+					IIReference.COLOR_ENGINEERS_BLUE.getHexCol("\u2296 "+I18n.format(IIReference.GUI_TOOLTIP_KEY+"mech_torque.input", intTorque)),
+					IIReference.COLOR_ENGINEERS_BLUE.getHexCol("\u29c1 "+I18n.format(IIReference.GUI_TOOLTIP_KEY+"mech_speed.input", intSpeed)),
+					IIReference.CHARICON_TORQUE+I18n.format(IIReference.GUI_TOOLTIP_KEY+"mech_torque.output", extTorque),
+					IIReference.CHARICON_SPEED+I18n.format(IIReference.GUI_TOOLTIP_KEY+"mech_speed.output", extSpeed)
 			};
 		else
 			return new String[]{
-					IIReference.CHARICON_TORQUE+I18n.format(IIReference.INFO_KEY+"tachometer.torque", intTorque),
-					IIReference.CHARICON_SPEED+I18n.format(IIReference.INFO_KEY+"tachometer.speed", intSpeed)
+					IIReference.CHARICON_TORQUE+I18n.format(IIReference.GUI_TOOLTIP_KEY+"mech_torque.stored", intTorque),
+					IIReference.CHARICON_SPEED+I18n.format(IIReference.GUI_TOOLTIP_KEY+"mech_speed.stored", intSpeed)
 			};
 	}
 

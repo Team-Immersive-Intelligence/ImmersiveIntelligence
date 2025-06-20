@@ -106,6 +106,7 @@ public class IIReference
 	//Deco Base
 	public static final ResLoc RES_TEXTURES_DECO = ResLoc.of(RES_II, "gui/deco/");
 	public static final ResLoc RES_TEXTURES_DECO_BACKGROUND = ResLoc.of(RES_TEXTURES_DECO, "background/");
+	public static final ResLoc RES_TEXTURES_DECO_FRAME = ResLoc.of(RES_TEXTURES_DECO, "frame/");
 	//Deco Templates
 	public static final ResLoc RES_TEXTURES_DECO_TEMPLATE_ROUND = ResLoc.of(RES_TEXTURES_DECO, "template/round");
 	public static final ResLoc RES_TEXTURES_DECO_TEMPLATE_SQUARE = ResLoc.of(RES_TEXTURES_DECO, "template/square");
@@ -125,6 +126,11 @@ public class IIReference
 	public static final ResLoc GUI_BG_PAPER = ResLoc.of(RES_TEXTURES_DECO_BACKGROUND, "paper");
 	public static final ResLoc GUI_BG_BLUEPRINT = ResLoc.of(RES_TEXTURES_DECO_BACKGROUND, "blueprint");
 	public static final ResLoc GUI_BG_DARK = ResLoc.of(RES_TEXTURES_DECO_BACKGROUND, "dark");
+
+	public static final ResLoc GUI_FRAME_WOODEN_THIN = ResLoc.of(RES_TEXTURES_DECO_FRAME, "wooden_thin");
+	public static final ResLoc GUI_FRAME_STEEL_THIN = ResLoc.of(RES_TEXTURES_DECO_FRAME, "steel_thin");
+	public static final ResLoc GUI_FRAME_CORNERS_BRASS = ResLoc.of(RES_TEXTURES_DECO_FRAME, "corners_brass");
+	public static final ResLoc GUI_FRAME_CORNERS_SILVER = ResLoc.of(RES_TEXTURES_DECO_FRAME, "corners_silver");
 	//Deco Labels
 	public static final ResLoc GUI_LABEL_WOODEN = ResLoc.of(RES_TEXTURES_DECO, "label/label_wooden");
 	public static final ResLoc GUI_LABEL_STEEL = ResLoc.of(RES_TEXTURES_DECO, "label/label_steel");
@@ -177,13 +183,10 @@ public class IIReference
 	public static final ResLoc RES_ICON_MECH_TORQUE_OUTPUT = ResLoc.of(RES_TEXTURES_DECO_ICON, "icon_mech_torque_output");
 
 	public static final ResLoc RES_ICON_STRUCTURAL_INTEGRITY = ResLoc.of(RES_TEXTURES_DECO_ICON, "icon_structural_integrity");
-	public static final ResLoc RES_ICON_STRUCTURAL_INTEGRITY_COLOR = ResLoc.of(RES_TEXTURES_DECO_ICON, "icon_structural_integrity_color");
 	public static final ResLoc RES_ICON_ARMOR_INTEGRITY = ResLoc.of(RES_TEXTURES_DECO_ICON, "icon_armor_integrity");
 	public static final ResLoc RES_ICON_EXREAC_ARMOR_INTEGRITY = ResLoc.of(RES_TEXTURES_DECO_ICON, "icon_exreac_armor_integrity");
-	public static final ResLoc RES_ICON_EXREAC_ARMOR_INTEGRITY_COLOR = ResLoc.of(RES_TEXTURES_DECO_ICON, "icon_exreac_armor_integrity_color");
 
 	public static final ResLoc RES_ICON_SOIL_FERTILITY = ResLoc.of(RES_TEXTURES_DECO_ICON, "icon_soil_fertility");
-	public static final ResLoc RES_ICON_SOIL_FERTILITY_COLOR = ResLoc.of(RES_TEXTURES_DECO_ICON, "icon_soil_fertility_color");
 
 	public static final ResLoc RES_ICON_PROGRESS = ResLoc.of(RES_TEXTURES_DECO_ICON, "icon_progress");
 	public static final ResLoc RES_ICON_SPEED = ResLoc.of(RES_TEXTURES_DECO_ICON, "icon_speed");
@@ -195,9 +198,8 @@ public class IIReference
 			RES_ICON_HEAT, RES_ICON_HEAT_INPUT, RES_ICON_HEAT_OUTPUT,
 			RES_ICON_MECH_SPEED, RES_ICON_MECH_SPEED_INPUT, RES_ICON_MECH_SPEED_OUTPUT,
 			RES_ICON_MECH_TORQUE, RES_ICON_MECH_TORQUE_INPUT, RES_ICON_MECH_TORQUE_OUTPUT,
-			RES_ICON_STRUCTURAL_INTEGRITY, RES_ICON_STRUCTURAL_INTEGRITY_COLOR, RES_ICON_ARMOR_INTEGRITY,
-			RES_ICON_EXREAC_ARMOR_INTEGRITY, RES_ICON_EXREAC_ARMOR_INTEGRITY_COLOR,
-			RES_ICON_SOIL_FERTILITY, RES_ICON_SOIL_FERTILITY_COLOR,
+			RES_ICON_STRUCTURAL_INTEGRITY, RES_ICON_ARMOR_INTEGRITY, RES_ICON_EXREAC_ARMOR_INTEGRITY,
+			RES_ICON_SOIL_FERTILITY,
 			RES_ICON_PROGRESS, RES_ICON_SPEED, RES_ICON_TIME,
 			RES_ICON_FUEL
 	};

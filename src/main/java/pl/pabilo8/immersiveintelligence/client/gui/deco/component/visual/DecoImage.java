@@ -1,10 +1,11 @@
-package pl.pabilo8.immersiveintelligence.client.gui.deco.component;
+package pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.ResourceLocation;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiComponentDecoBase;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 

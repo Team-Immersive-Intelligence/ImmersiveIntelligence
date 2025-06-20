@@ -18,7 +18,6 @@ import net.minecraft.world.World;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoAlignment;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoLabel;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoTitleLabel;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
@@ -33,6 +32,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -41,7 +41,8 @@ import java.util.function.Consumer;
  **/
 public class DecoBackgroundBuilder<T extends TileEntityIEBase & IIEInventory, C extends ContainerIIBase<T>>
 {
-	private final List<List<DecoRectangle>> backgroundTiles = new ArrayList<>();
+	private final List<List<DecoBackgroundTile>> backgroundTiles = new ArrayList<>();
+	private final List<DecoBackgroundTile> backgroundFrames = new ArrayList<>();
 	private final List<DecoSlot> inventorySlots = new ArrayList<>();
 	private final DecoGui<T, C> gui;
 
@@ -97,8 +98,114 @@ public class DecoBackgroundBuilder<T extends TileEntityIEBase & IIEInventory, C 
 	 */
 	public DecoBackgroundBuilder<T, C> withBox(ResLoc style, ResLoc mask, int x, int y, int width, int height)
 	{
-		backgroundTiles.get(backgroundTiles.size()-1).add(new DecoRectangle(x, y, width, height, style, mask));
+		return withBox(style, mask, x, y, width, height, IIColor.WHITE);
+	}
+
+	/**
+	 * Adds a box to the current background layer
+	 *
+	 * @param style  filling texture of the box
+	 * @param mask   mask texture of the box
+	 * @param x      x position of the box
+	 * @param y      y position of the box
+	 * @param width  width of the box in pixels; must be a multiple of 8 or will get rounded up
+	 * @param height height of the box in pixels; must be a multiple of 8 or will get rounded up
+	 * @param color  color to apply to the box
+	 * @return this
+	 */
+	public DecoBackgroundBuilder<T, C> withBox(ResLoc style, ResLoc mask, int x, int y, int width, int height, IIColor color)
+	{
+		backgroundTiles.get(backgroundTiles.size()-1).add(new DecoBackgroundTile(x, y, width, height, color, style, mask));
 		return this;
+	}
+
+	/**
+	 * Adds an image box to the current background layer
+	 *
+	 * @param imageLocation location of the image to display
+	 * @param x             x position of the box
+	 * @param y             y position of the box
+	 * @param width         width of the box in pixels
+	 * @param height        height of the box in pixels
+	 * @return this
+	 */
+	public DecoBackgroundBuilder<T, C> withImageBox(ResLoc imageLocation, int x, int y, int width, int height)
+	{
+		backgroundTiles.get(backgroundTiles.size()-1).add(new DecoBackgroundImage(x, y, width, height, imageLocation));
+		return this;
+	}
+
+	/**
+	 * Sets the frame of the most recently added background tile
+	 *
+	 * @param imageLocation location of the frame texture
+	 * @param thickness     thickness of the frame in pixels
+	 * @param cornersOnly   if true, only the corners of the framewill be drawn
+	 * @param frame         sides of the frame to draw, in order: top, bottom, left, right
+	 * @return this
+	 */
+	public DecoBackgroundBuilder<T, C> withFrame(ResLoc imageLocation, int thickness, boolean cornersOnly, boolean[] frame)
+	{
+		List<DecoBackgroundTile> tiles = backgroundTiles.get(backgroundTiles.size()-1);
+		DecoBackgroundTile lastTile = tiles.get(tiles.size()-1);
+		lastTile.frame = new DecoFrame(imageLocation, false, thickness)
+				.withSides(frame[0], frame[1], frame[2], frame[3]);
+		return this;
+	}
+
+	/**
+	 * Sets the frame of the most recently added background tile
+	 *
+	 * @param imageLocation location of the frame texture
+	 * @param thickness     thickness of the frame in pixels
+	 * @param cornersOnly   if true, only the corners of the frame will be drawn
+	 * @return this
+	 */
+	public DecoBackgroundBuilder<T, C> withFrame(ResLoc imageLocation, int thickness, boolean cornersOnly)
+	{
+		return withFrame(imageLocation, thickness, cornersOnly, new boolean[]{true, true, true, true});
+	}
+
+	/**
+	 * Adds a standalone frame to the background, which is not attached to any background tile.
+	 * This is useful for decorative frames that are not meant to be part of the background layers.
+	 *
+	 * @param x             x position of the frame
+	 * @param y             y position ofthe frame
+	 * @param width         width of the frame in pixels
+	 * @param height        height of the frame in pixels
+	 * @param imageLocation location of the frame texture
+	 * @param thickness     thickness of the frame in pixels
+	 * @param cornersOnly   if true, only the corners of the frame will be drawn
+	 * @param frame         sides of the frame to draw, in order: top, bottom, left, right
+	 * @return this
+	 */
+	public DecoBackgroundBuilder<T, C> withStandaloneFrame(int x, int y, int width, int height, ResLoc imageLocation, int thickness, boolean cornersOnly, boolean[] frame)
+	{
+		DecoBackgroundTile tile = new DecoBackgroundTile(x, y, width, height, IIColor.WHITE, imageLocation, IIReference.RES_TEXTURES_DECO_TEMPLATE_ROUND);
+		tile.frame = new DecoFrame(imageLocation, cornersOnly, thickness)
+				.withSides(frame[0], frame[1], frame[2], frame[3]);
+
+		backgroundFrames.add(tile);
+		return this;
+	}
+
+	/**
+	 * Adds a standalone frame to the background, which is not attached to any background tile.
+	 * This is useful for decorative frames that are not meant to be part of the background layers.
+	 *
+	 * @param x             x position of the frame
+	 * @param y             y position ofthe frame
+	 * @param width         width of the frame in pixels
+	 * @param height        height of the frame in pixels
+	 * @param imageLocation location of the frame texture
+	 * @param thickness     thickness of the frame in pixels
+	 * @param cornersOnly   if true, only the corners of the frame will be drawn
+	 * @return this
+	 */
+	public DecoBackgroundBuilder<T, C> withStandaloneFrame(int x, int y, int width, int height, ResLoc imageLocation, int thickness, boolean cornersOnly)
+	{
+		return withStandaloneFrame(x, y, width, height, imageLocation, thickness, cornersOnly, new boolean[]{true, true, true, true});
 	}
 
 	/**
@@ -189,7 +296,7 @@ public class DecoBackgroundBuilder<T extends TileEntityIEBase & IIEInventory, C 
 		if(backgroundTiles.isEmpty())
 			return this;
 		//Attach the title bar to the last passed background tile
-		List<DecoRectangle> currentLayer = backgroundTiles.get(backgroundTiles.size()-1);
+		List<DecoBackgroundTile> currentLayer = backgroundTiles.get(backgroundTiles.size()-1);
 		if(!currentLayer.isEmpty())
 			titleBars.add(new TitleBarData(currentLayer.get(currentLayer.size()-1), alignment, I18n.format(title)));
 		return this;
@@ -205,8 +312,8 @@ public class DecoBackgroundBuilder<T extends TileEntityIEBase & IIEInventory, C 
 		int minX = Integer.MAX_VALUE, minY = Integer.MAX_VALUE;
 		int maxX = Integer.MIN_VALUE, maxY = Integer.MIN_VALUE;
 
-		for(List<DecoRectangle> layer : backgroundTiles)
-			for(DecoRectangle tile : layer)
+		for(List<DecoBackgroundTile> layer : backgroundTiles)
+			for(DecoBackgroundTile tile : layer)
 			{
 				minX = Math.min(minX, tile.x);
 				minY = Math.min(minY, tile.y);
@@ -227,28 +334,32 @@ public class DecoBackgroundBuilder<T extends TileEntityIEBase & IIEInventory, C 
 			GlStateManager.glNewList(vbo, GL11.GL_COMPILE);
 
 			//Draw background layers
-			for(List<DecoRectangle> layer : backgroundTiles)
+			for(List<DecoBackgroundTile> layer : backgroundTiles)
 			{
 				GlStateManager.color(1f, 1f, 1f, 1f);
 				GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
+
+				List<DecoBackgroundTile> tiles = layer.stream()
+						.filter(tile -> !(tile instanceof DecoBackgroundImage))
+						.collect(Collectors.toList());
 
 				//Mask
 				GL11.glEnable(GL11.GL_STENCIL_TEST);
 				GL11.glClear(GL11.GL_STENCIL_BUFFER_BIT);
 				GL11.glStencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_REPLACE);
 				GL11.glStencilFunc(GL11.GL_ALWAYS, 1, 0xFF);
-				DecoGuiUtils.drawBackgroundMask(layer, 0, 0).finish();
+				DecoGuiUtils.drawBackgroundMask(tiles, 0, 0).finish();
 
 				//Background
 				GL11.glStencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_KEEP);
 				GL11.glStencilFunc(GL11.GL_EQUAL, 1, 0xFF);
-				DecoGuiUtils.drawBackgroundBlock(layer).finish();
+				DecoGuiUtils.drawBackgroundBlock(tiles).finish();
 				GL11.glDisable(GL11.GL_STENCIL_TEST);
 
 				//Overlay
 				GlStateManager.enableBlend();
 				GlStateManager.blendFunc(SourceFactor.DST_COLOR, DestFactor.SRC_COLOR);
-				DecoGuiUtils.drawBackgroundMask(layer, 0, 0).finish();
+				DecoGuiUtils.drawBackgroundMask(tiles, 0, 0).finish();
 			}
 
 			//Blending inventory slots (using previous blend func.)
@@ -262,11 +373,34 @@ public class DecoBackgroundBuilder<T extends TileEntityIEBase & IIEInventory, C 
 				}
 			draw.finish();
 
-			//Non-blending inventory slots
+			//Non-blending parts
 			GlStateManager.color(1f, 1f, 1f, 1f);
 			GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
 			GlStateManager.disableBlend();
 			draw = IIDrawUtils.startTexturedColored();
+
+			//Background images
+			for(List<DecoBackgroundTile> layer : backgroundTiles)
+				for(DecoBackgroundTile tile : layer)
+				{
+					if(tile instanceof DecoBackgroundImage)
+					{
+						DecoBackgroundImage image = (DecoBackgroundImage)tile;
+						draw.drawTexColorRect(image.x, image.y, image.width, image.height,
+								image.color,
+								ClientUtils.getSprite(image.style).getMinU(), ClientUtils.getSprite(image.style).getMaxU(),
+								ClientUtils.getSprite(image.style).getMinV(), ClientUtils.getSprite(image.style).getMaxV()
+						);
+					}
+					if(tile.frame!=null)
+						handleFrameDrawing(draw, tile);
+				}
+
+			//Standalone Frames
+			for(DecoBackgroundTile backgroundFrame : backgroundFrames)
+				handleFrameDrawing(draw, backgroundFrame);
+
+			//Non-blending inventory slots
 			for(DecoSlot slot : inventorySlots)
 			{
 				if(slot.style.blending)
@@ -305,6 +439,16 @@ public class DecoBackgroundBuilder<T extends TileEntityIEBase & IIEInventory, C 
 		GlStateManager.popMatrix();
 	}
 
+	private void handleFrameDrawing(IIDrawUtils draw, DecoBackgroundTile backgroundFrame)
+	{
+		DecoFrame frame = backgroundFrame.frame;
+		assert frame!=null;
+		if(frame.cornersOnly)
+			DecoGuiUtils.drawFrameCorners(draw, backgroundFrame.x, backgroundFrame.y, backgroundFrame.width, backgroundFrame.height, frame.style, frame.sides);
+		else
+			DecoGuiUtils.drawFrame(draw, backgroundFrame.x, backgroundFrame.y, backgroundFrame.width, backgroundFrame.height, frame.style, frame.sides, frame.frameThickness);
+	}
+
 	@Nonnull
 	public DecoTitleLabel[] getTitleLabel()
 	{
@@ -341,9 +485,9 @@ public class DecoBackgroundBuilder<T extends TileEntityIEBase & IIEInventory, C 
 		}
 	}
 
-	public DecoRectangle[] getTakenSpace()
+	public DecoBackgroundTile[] getTakenSpace()
 	{
-		return backgroundTiles.stream().flatMap(List::stream).toArray(DecoRectangle[]::new);
+		return backgroundTiles.stream().flatMap(List::stream).toArray(DecoBackgroundTile[]::new);
 	}
 
 	public DecoBackgroundBuilder<T, C> conditionally(boolean condition, Consumer<DecoBackgroundBuilder<T, C>> action)
@@ -425,11 +569,11 @@ public class DecoBackgroundBuilder<T extends TileEntityIEBase & IIEInventory, C 
 
 	private static class TitleBarData
 	{
-		final DecoRectangle barRectangle;
+		final DecoBackgroundTile barRectangle;
 		final DecoAlignment barAlignment;
 		final String barTitle;
 
-		public TitleBarData(DecoRectangle barRectangle, DecoAlignment barAlignment, String barTitle)
+		public TitleBarData(DecoBackgroundTile barRectangle, DecoAlignment barAlignment, String barTitle)
 		{
 			this.barRectangle = barRectangle;
 			this.barAlignment = barAlignment;

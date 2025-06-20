@@ -12,6 +12,7 @@ import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.SkyCrateStation;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.tileentity.TileEntitySkyCartStation;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerSkycartStation;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemUtils;
 
 import java.util.ArrayList;
 
@@ -40,7 +41,7 @@ public class GuiSkycartStation extends GuiIEContainerBase
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
 		IIClientUtils.drawStringCentered(fontRenderer, I18n.format("tile."+ImmersiveIntelligence.MODID+".wooden_multiblock.skycart_station.name"), 0, 0, getXSize(), 6, 0xd99747);
-		fontRenderer.drawString((IIRotaryUtils.getGearEffectiveness(tile.getInventory(), tile.getEfficiencyMultiplier(), 3)*100)+"%", 76, 47, 0xd99747);
+		fontRenderer.drawString((IIRotaryUtils.getGearEfficiency(IIItemUtils.trimInventory(tile.getInventory(), 0, 3))*100)+"%", 76, 47, 0xd99747);
 	}
 
 	/**

@@ -7,7 +7,6 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.Tuple;
 import net.minecraft.util.math.MathHelper;
 import org.lwjgl.opengl.GL11;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoElementDisplays;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiComponentDecoTextBase;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;

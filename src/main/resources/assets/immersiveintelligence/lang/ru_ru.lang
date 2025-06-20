@@ -530,11 +530,6 @@ rotary.immersiveintelligence.belt_system.cantSee=Соединение забло
 rotary.immersiveintelligence.belt_system.connectionExists=Подключение уже существует
 rotary.immersiveintelligence.belt_system.invalidPoint=Одна из точек подключения недействительна
 
-rotary.immersiveintelligence.mechanical.speed=Скорость
-rotary.immersiveintelligence.mechanical.speed_unit=об/мин
-rotary.immersiveintelligence.mechanical.torque=Крутящий момент
-rotary.immersiveintelligence.mechanical.torque_unit=Нм
-
 //Описание системы данных
 datasystem.immersiveintelligence.function.add=Сложение
 datasystem.immersiveintelligence.function.subtract=Вычитание

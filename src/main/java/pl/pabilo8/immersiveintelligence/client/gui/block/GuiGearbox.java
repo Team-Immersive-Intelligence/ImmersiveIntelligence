@@ -1,73 +1,55 @@
 package pl.pabilo8.immersiveintelligence.client.gui.block;
 
-import blusunrize.immersiveengineering.client.ClientUtils;
-import blusunrize.immersiveengineering.client.gui.GuiIEContainerBase;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
-import org.lwjgl.opengl.GL11;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.rotary.IIRotaryUtils;
-import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoTemplate;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoBarGroup;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoAlignment;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundBuilder.SlotStyle;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoGuiUtils;
+import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.block.rotary_device.tileentity.TileEntityGearbox;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerGearbox;
-
-import java.util.ArrayList;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 10.07.2019
  */
-public class GuiGearbox extends GuiIEContainerBase
+@DecoTemplate(name = "wooden_gearbox")
+public class GuiGearbox extends DecoGui<TileEntityGearbox, ContainerGearbox>
 {
-	public static final String texture_skycrate_station = ImmersiveIntelligence.MODID+":textures/gui/wooden_gearbox.png";
-	TileEntityGearbox tile;
-
 	public GuiGearbox(EntityPlayer player, TileEntityGearbox tile)
 	{
-		super(new ContainerGearbox(player, tile));
-		this.ySize = 176;
-		this.tile = tile;
-	}
-
-	/**
-	 * Draw the foreground layer for the GuiContainer (everything in front of the items)
-	 */
-	@Override
-	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
-	{
-		IIClientUtils.drawStringCentered(fontRenderer, I18n.format("tile."+ImmersiveIntelligence.MODID+".gearbox.wooden_gearbox.name"), 0, 0, getXSize(), 6, 0xd99747);
-		fontRenderer.drawString((IIRotaryUtils.getGearEffectiveness(tile.getInventory(), tile.getEfficiencyMultiplier())*100)+"%", 76, 47, 0xd99747);
-		fontRenderer.drawString(String.format("%.2f", IIRotaryUtils.getGearTorqueRatio(tile.getInventory())), 76, 59, 0xd99747);
-	}
-
-	/**
-	 * Draws the background layer of this container (behind the items).
-	 */
-	@Override
-	protected void drawGuiContainerBackgroundLayer(float f, int mx, int my)
-	{
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		ClientUtils.bindTexture(texture_skycrate_station);
-		this.drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
-		IIRotaryUtils.renderEnergyBars(guiLeft+148, guiTop+20, tile.rotation, 0, 100);
+		super(player, tile, IIGUI.GEARBOX);
 	}
 
 	@Override
-	public void drawScreen(int mx, int my, float partial)
+	public void onInit()
 	{
-		super.drawScreen(mx, my, partial);
-		this.renderHoveredToolTip(mx, my);
+		startBackground()
+				.withBox(IIReference.GUI_BG_WOODEN, 0, 0, 176, 76)
+				.withStandaloneFrame(24, 12, 128, 64-8, IIReference.GUI_FRAME_CORNERS_BRASS, 4, true)
+				.withTitleBar(tile)
+				.withBox(IIReference.GUI_BG_WOODEN, 0, 76, 176, 92)
+				.withInventorySlots(SlotStyle.VANILLA, container.inventorySlots)
+				.withInventoryTitleBar()
+				.build();
 
-		//Thanks Flaxbeard!
-		ArrayList<String> tooltip = new ArrayList<>();
+		addComponents(
+				new DecoBarGroup(-4, 0)
+						.withBar(b -> b.withTemplate(DecoGuiUtils.BAR_MECH_TORQUE_INPUT.apply(tile.rotation)))
+						.withBar(b -> b.withTemplate(DecoGuiUtils.BAR_MECH_SPEED_INPUT.apply(tile.rotation))),
 
-		IIRotaryUtils.renderEnergyTooltip(tooltip, mx, my, guiLeft+148, guiTop+20, tile.rotation);
+				new DecoBarGroup(128+28, 0)
+						.withBar(b -> b.withTemplate(DecoGuiUtils.BAR_MECH_TORQUE_OUTPUT.apply(tile.rotation)))
+						.withBar(b -> b.withTemplate(DecoGuiUtils.BAR_MECH_SPEED_OUTPUT.apply(tile.rotation)))
+		);
 
-		if(!tooltip.isEmpty())
-		{
-			ClientUtils.drawHoveringText(tooltip, mx, my, fontRenderer, guiLeft+xSize, -1);
-			RenderHelper.enableGUIStandardItemLighting();
-		}
+		addLabel("Gear Ratio: 4:1", 24, 54)
+				.withSize(128, 11)
+				.withTextColor(IIColor.fromPackedRGB(0xd99747))
+				.withAlign(DecoAlignment.CENTER);
 	}
 }

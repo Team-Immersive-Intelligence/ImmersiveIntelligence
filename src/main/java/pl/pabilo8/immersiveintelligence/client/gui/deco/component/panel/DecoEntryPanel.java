@@ -1,11 +1,11 @@
 package pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoAlignment;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoElementDisplays.DecoElementDisplay;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiComponentDecoBase;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoButton;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoElementDisplays.DecoElementDisplay;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoScrolledCollection;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoAlignment;
 import pl.pabilo8.immersiveintelligence.client.util.font.IIFontRenderer;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 

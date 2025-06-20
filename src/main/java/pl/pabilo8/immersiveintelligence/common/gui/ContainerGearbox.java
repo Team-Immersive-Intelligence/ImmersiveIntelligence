@@ -1,43 +1,20 @@
 package pl.pabilo8.immersiveintelligence.common.gui;
 
-import blusunrize.immersiveengineering.common.gui.ContainerIEBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemStack;
-import pl.pabilo8.immersiveintelligence.api.rotary.IMotorGear;
 import pl.pabilo8.immersiveintelligence.common.block.rotary_device.tileentity.TileEntityGearbox;
+import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIBase;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 17.05.2019
  */
-public class ContainerGearbox extends ContainerIEBase<TileEntityGearbox>
+public class ContainerGearbox extends ContainerIIBase<TileEntityGearbox>
 {
 	public ContainerGearbox(EntityPlayer player, TileEntityGearbox tile)
 	{
-		super(player.inventory, tile);
-		for(int i = 0; i < tile.getInventory().size(); i++)
-			this.addSlotToContainer(new Slot(this.inv, i, 52+(i%9)*18, 29+(i/9)*18)
-			{
-				@Override
-				public int getSlotStackLimit()
-				{
-					return 1;
-				}
+		super(player, tile);
+		this.addSlotArray(52+12-2, 29, 0, TileEntityGearbox.GEAR_SLOTS, 5, MotorGearSlot::new);
 
-				@Override
-				public boolean isItemValid(ItemStack stack)
-				{
-					return stack.getItem() instanceof IMotorGear;
-				}
-			});
-		this.slotCount = tile.getInventory().size();
-		this.tile = tile;
-
-		for(int i = 0; i < 3; i++)
-			for(int j = 0; j < 9; j++)
-				addSlotToContainer(new Slot(player.inventory, j+i*9+9, 8+j*18, 87+i*18));
-		for(int i = 0; i < 9; i++)
-			addSlotToContainer(new Slot(player.inventory, i, 8+i*18, 145));
+		this.addPlayerInventory(player.inventory, 8, 87);
 	}
 }

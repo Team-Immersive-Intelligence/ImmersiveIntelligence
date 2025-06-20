@@ -523,10 +523,6 @@ rotary.immersiveintelligence.belt_system.cantSee=Połączenie jest zablokowane
 rotary.immersiveintelligence.belt_system.connectionExists=Takie połączenie już istnieje
 rotary.immersiveintelligence.belt_system.invalidPoint=Jeden z punktów jest niewłaściwy
 
-rotary.immersiveintelligence.mechanical.speed=Prędkość
-rotary.immersiveintelligence.mechanical.speed_unit=Obr./min
-rotary.immersiveintelligence.mechanical.torque=Moment Obrotowy
-rotary.immersiveintelligence.mechanical.torque_unit=Nm
 
 #Data System Descriptions
 datasystem.immersiveintelligence.function.add=Dodawanie

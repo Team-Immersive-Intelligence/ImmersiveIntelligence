@@ -2,11 +2,12 @@ package pl.pabilo8.immersiveintelligence.common.util.item;
 
 import blusunrize.immersiveengineering.common.IEContent;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 import net.minecraftforge.oredict.OreDictionary;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.IWrench;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
-public class IIItemUtil
+public class IIItemUtils
 {
 	public static boolean isWrench(ItemStack stack)
 	{
@@ -41,5 +42,21 @@ public class IIItemUtil
 		if(stack.isEmpty())
 			return false;
 		return stack.getItem().getToolClasses(stack).contains(IIReference.TOOL_ADVANCED_HAMMER);
+	}
+
+	public static NonNullList<ItemStack> trimInventory(NonNullList<ItemStack> inventory, int start, int end)
+	{
+		if(inventory.size() <= end)
+			return inventory;
+
+		NonNullList<ItemStack> trimmed = NonNullList.create();
+		for(int i = start; i < end; i++)
+		{
+			if(i < inventory.size())
+				trimmed.add(inventory.get(i));
+			else
+				trimmed.add(ItemStack.EMPTY);
+		}
+		return trimmed;
 	}
 }

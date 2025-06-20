@@ -1,7 +1,6 @@
-package pl.pabilo8.immersiveintelligence.client.gui.deco.component;
+package pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection;
 
 import net.minecraft.client.renderer.GlStateManager;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoScrolledCollection;
 import pl.pabilo8.immersiveintelligence.client.util.font.IIFontRenderer;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 

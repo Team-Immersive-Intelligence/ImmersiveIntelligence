@@ -205,6 +205,28 @@ public class IIDrawUtils
 			}
 	}
 
+	public void drawRepeatedColorRect(int x, int y, int width, int height, IIColor color, ResourceLocation texture,
+									  int tWidth, int tHeight, float... uv)
+	{
+		TextureAtlasSprite sprite = ClientUtils.getSprite(texture);
+		float u = sprite.getInterpolatedU(uv[0]);
+		float uu = sprite.getInterpolatedU(uv[1])-u;
+		float v = sprite.getInterpolatedV(uv[2]);
+		float vv = sprite.getInterpolatedV(uv[3])-v;
+
+		for(int yy = 0; yy < height; yy += tHeight)
+			for(int xx = 0; xx < width; xx += tWidth)
+			{
+				drawTexColorRect(x+xx, y+yy,
+						MathHelper.clamp(width-xx, 0, tWidth),
+						MathHelper.clamp(height-yy, 0, tHeight),
+						color,
+						u, u+uu*(Math.min(width-xx, tWidth)/2f/16f),
+						v, v+vv*(Math.min(height-yy, tHeight)/2f/16f)
+				);
+			}
+	}
+
 	public IIDrawUtils drawConnectedColorRect(float x, float y, float w, float h, IIColor color,
 											  int tWidth, int tHeight, float... uv)
 	{

@@ -23,7 +23,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.common.capabilities.Capability;
 import pl.pabilo8.immersiveintelligence.api.rotary.*;
@@ -33,31 +32,16 @@ import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageRotaryPowerSync;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 
 public class TileEntityGearbox extends TileEntityIEBase implements ITickable, IAdvancedTextOverlay, IConfigurableSides,
 		IComparatorOverride, ITileDrop, IGuiTile, IIEInventory, IRotationalEnergyBlock
 {
+	public static final int GEAR_SLOTS = 3;
+
 	public SideConfig[] sideConfig = {SideConfig.NONE, SideConfig.INPUT, SideConfig.NONE, SideConfig.NONE, SideConfig.NONE, SideConfig.NONE};
 	public int comparatorOutput = 0;
-	NonNullList<ItemStack> inventory = NonNullList.withSize(3, ItemStack.EMPTY);
-	float efficiency = 0;
-	public RotaryStorage rotation = new RotaryStorage(0, 0)
-	{
-		@Override
-		public RotationSide getSide(@Nullable EnumFacing facing)
-		{
-			switch(sideConfig[facing.getIndex()])
-			{
-				case INPUT:
-					return RotationSide.INPUT;
-				case OUTPUT:
-					return RotationSide.OUTPUT;
-				default:
-					return RotationSide.NONE;
-			}
-		}
-	};
+	NonNullList<ItemStack> inventory = NonNullList.withSize(GEAR_SLOTS, ItemStack.EMPTY);
+	public GearboxRotaryStorage rotation = new GearboxRotaryStorage();
 
 	@Override
 	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing)
@@ -101,52 +85,64 @@ public class TileEntityGearbox extends TileEntityIEBase implements ITickable, IA
 			return;
 		}
 
-		if(world.getTotalWorldTime()%20==0)
+		//Update and calculate rotary power
+		if(world.getTotalWorldTime()%10==0)
 		{
 			rotation.setRotationSpeed(0);
 			rotation.setTorque(0);
-			ArrayList<IRotaryEnergy> in = new ArrayList<>();
-			ArrayList<IRotaryEnergy> out = new ArrayList<>();
+			float totalTorque = 0;
+			float totalSpeed = Float.POSITIVE_INFINITY;
+			int inputs = 0, outputs = 0;
 
-			for(int i = 0; i < sideConfig.length; i++)
+			for(EnumFacing facing : EnumFacing.values())
 			{
-				SideConfig s = sideConfig[i];
+				//Get the side config
+				SideConfig config = sideConfig[facing.getIndex()];
+				if(config==SideConfig.NONE)
+					continue;
+				TileEntity tile = world.getTileEntity(pos.offset(facing));
 
-				if(s==SideConfig.NONE)
+				//Skip non-existant or non-rotary capable tiles
+				if(tile==null||!(tile.hasCapability(CapabilityRotaryEnergy.ROTARY_ENERGY, facing.getOpposite())))
 					continue;
 
-				EnumFacing f = EnumFacing.getFront(i);
-				BlockPos p = pos.offset(f);
+				//Get the rotary energy capability
+				IRotaryEnergy energy = tile.getCapability(CapabilityRotaryEnergy.ROTARY_ENERGY, facing.getOpposite());
+				assert energy!=null;
 
-				if(world.getTileEntity(p)==null)
-					continue;
-				if(!world.getTileEntity(p).hasCapability(CapabilityRotaryEnergy.ROTARY_ENERGY, f.getOpposite()))
-					continue;
-
-				IRotaryEnergy energy = world.getTileEntity(p).getCapability(CapabilityRotaryEnergy.ROTARY_ENERGY, f.getOpposite());
-
-				if(s==SideConfig.INPUT)
+				//Calculate the energy components
+				if(config==SideConfig.INPUT)
 				{
-					if(rotation.getRotationSpeed()==0)
-						rotation.setRotationSpeed(energy.getOutputRotationSpeed());
-					in.add(energy);
+					totalTorque += energy.getOutputTorque();
+					totalSpeed = Math.min(totalSpeed, energy.getOutputRotationSpeed());
+					inputs++;
 				}
 				else
-					out.add(energy);
+					outputs++;
 			}
 
-			in.forEach((iRotationalEnergy ->
-			{
-				rotation.setTorque(rotation.getCombinedTorque(iRotationalEnergy));
-				//IILogger.info(rotation.getTorque());
-			}));
-			if(out.size() > 1)
-				rotation.setTorque(rotation.getTorque()/(float)out.size());
-			float eff = IIRotaryUtils.getGearEffectiveness(inventory, getEfficiencyMultiplier());
-			float tmod = IIRotaryUtils.getGearTorqueRatio(inventory);
-			rotation.setRotationSpeed((rotation.getRotationSpeed()*eff)/tmod);
-			rotation.setTorque(rotation.getTorque()*eff*tmod);
+			//Prevents division by zero, while maintaining a good GUI torque display value
+			if(outputs==0)
+				outputs = 1;
 
+			//Set input values
+			rotation.setTorque(totalTorque/inputs);
+			rotation.setRotationSpeed(totalSpeed);
+
+			//Set output values
+			float torqueRatio = IIRotaryUtils.getGearTorqueRatio(inventory);
+			if(inputs==0||torqueRatio==0)
+				rotation.setOutput(0, 0);
+			else
+			{
+				//Calculate the efficiency and torque ratio
+				rotation.setOutput(
+						rotation.getTorque()/outputs*torqueRatio,
+						(rotation.getRotationSpeed()*IIRotaryUtils.getGearEfficiency(inventory))/torqueRatio
+				);
+			}
+
+			//Sync with clients
 			IIPacketHandler.INSTANCE.sendToAllAround(new MessageRotaryPowerSync(rotation, 0, getPos()), IIPacketHandler.targetPointFromTile(this, 32));
 		}
 	}
@@ -201,7 +197,6 @@ public class TileEntityGearbox extends TileEntityIEBase implements ITickable, IA
 		for(int i = 0; i < 6; i++)
 			nbt.setInteger("sideConfig_"+i, sideConfig[i].ordinal());
 		nbt.setTag("rotation", rotation.toNBT());
-		nbt.setFloat("efficiency", efficiency);
 
 	}
 
@@ -222,7 +217,6 @@ public class TileEntityGearbox extends TileEntityIEBase implements ITickable, IA
 				sideConfig[i] = SideConfig.values()[nbt.getInteger("sideConfig_"+i)];
 		if(nbt.hasKey("rotation"))
 			rotation.fromNBT(nbt.getCompoundTag("rotation"));
-		efficiency = nbt.getFloat("efficiency");
 	}
 
 	@Override
@@ -308,8 +302,59 @@ public class TileEntityGearbox extends TileEntityIEBase implements ITickable, IA
 
 	}
 
-	public float getEfficiencyMultiplier()
+	public class GearboxRotaryStorage extends RotaryStorage
 	{
-		return 1.0f;
+		private float outputTorque = 0, outputSpeed = 0;
+
+		public void setOutput(float torque, float speed)
+		{
+			this.outputTorque = torque;
+			this.outputSpeed = speed;
+		}
+
+		@Override
+		public RotationSide getSide(@Nullable EnumFacing facing)
+		{
+			switch(sideConfig[facing.getIndex()])
+			{
+				case INPUT:
+					return RotationSide.INPUT;
+				case OUTPUT:
+					return RotationSide.OUTPUT;
+				default:
+					return RotationSide.NONE;
+			}
+		}
+
+		@Override
+		public void fromNBT(NBTTagCompound nbt)
+		{
+			super.fromNBT(nbt);
+			outputTorque = nbt.getFloat("outputTorque");
+			outputSpeed = nbt.getFloat("outputSpeed");
+		}
+
+		@Override
+		public NBTTagCompound toNBT()
+		{
+			NBTTagCompound nbt = super.toNBT();
+			nbt.setFloat("outputTorque", outputTorque);
+			nbt.setFloat("outputSpeed", outputSpeed);
+			return nbt;
+
+		}
+
+		@Override
+		public float getOutputTorque()
+		{
+			return outputTorque;
+		}
+
+		@Override
+		public float getOutputRotationSpeed()
+		{
+			return outputSpeed;
+		}
 	}
+
 }

@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.client.gui.deco.component;
+package pl.pabilo8.immersiveintelligence.client.gui.deco.util;
 
 /**
  * Enum for constraints in Deco GUI layout.

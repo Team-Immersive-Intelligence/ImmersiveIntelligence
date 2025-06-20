@@ -29,7 +29,7 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.gate_multiblock.
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
-import pl.pabilo8.immersiveintelligence.common.util.item.IIItemUtil;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemUtils;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultiblockIIConnectable;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockInteractablePart;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
@@ -204,7 +204,7 @@ public abstract class TileEntityGateBase<T extends TileEntityGateBase<T>> extend
 	public boolean interact(EnumFacing side, EntityPlayer player, EnumHand hand, ItemStack heldItem, float hitX, float hitY, float hitZ)
 	{
 		T master = master();
-		if(!IIItemUtil.isWrench(player.getHeldItem(hand))&&master!=null&&!master.hasUpgrade(IIContent.UPGRADE_REDSTONE_ACTIVATION))
+		if(!IIItemUtils.isWrench(player.getHeldItem(hand))&&master!=null&&!master.hasUpgrade(IIContent.UPGRADE_REDSTONE_ACTIVATION))
 		{
 			if(!world.isRemote)
 				master.onAnimationChangeServer(!master.gate.getState(), 0);

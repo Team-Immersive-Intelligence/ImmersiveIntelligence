@@ -64,12 +64,12 @@
     "14": "pipe_left"
   },
   "poi": {
-    "fluid_output": [0,2],
+    "fluid_output": [0, 2],
     "output1": 0,
     "output2": 2,
     "redstone_input": 10,
     "energy_input": 8,
     "fluid_input": 6,
-    "visible_tank": 16
+    "visible_tank": [7, 16]
   }
 }

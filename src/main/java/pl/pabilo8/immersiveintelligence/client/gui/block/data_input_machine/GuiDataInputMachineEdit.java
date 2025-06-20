@@ -3,10 +3,10 @@ package pl.pabilo8.immersiveintelligence.client.gui.block.data_input_machine;
 import net.minecraft.entity.player.EntityPlayer;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoTemplate;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoAlignment;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoButton;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoDropdownDataLetters;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.data_editor.GuiDataEditor;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoAlignment;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityDataInputMachine;
 

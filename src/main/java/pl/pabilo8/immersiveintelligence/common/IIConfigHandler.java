@@ -1698,7 +1698,7 @@ public class IIConfigHandler
 		{
 			@Comment({"The modifier of internal torque of a machine using this gear.", GEARS})
 			@Mapped(mapClass = IIConfigHandler.class, mapName = "manual_floatA")
-			public static float[] gearTorqueModifier = new float[]{0.25f, 0.5f, 1f, 1.5f, 2f};
+			public static float[] gearTorqueModifier = new float[]{0.25f, 0.5f, 1f, 2f, 4f};
 
 			@Comment({"Belts will break if Torque is higher than this value.", BELTS})
 			@Mapped(mapClass = IIConfigHandler.class, mapName = "manual_intA")

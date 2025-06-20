@@ -324,6 +324,7 @@ public class IIRotaryUtils
 	}
 
 	@SideOnly(Side.CLIENT)
+	@Deprecated
 	public static void renderEnergyTooltip(ArrayList<String> tooltip, int mx, int my, int x, int y, RotaryStorage storage,
 										   int w, int h, int spacing, int iconSize, boolean iconsAbove, boolean tooltipIcons)
 	{
@@ -352,12 +353,14 @@ public class IIRotaryUtils
 			tooltip.add(I18n.format(IIReference.INFO_KEY_TORQUE, storage.getTorque()));
 	}
 
+	@Deprecated
 	public static void renderEnergyTooltip(ArrayList<String> tooltip, int mx, int my, int x, int y,
 										   RotaryStorage storage)
 	{
 		renderEnergyTooltip(tooltip, mx, my, x, y, storage, 7, 48, 2, 8, true, true);
 	}
 
+	@Deprecated
 	public static void renderEnergyBars(int x, int y, int w, int h, int spacing, RotaryStorage storage, float maxRPM,
 										float maxTorque)
 	{
@@ -373,30 +376,38 @@ public class IIRotaryUtils
 		renderEnergyBars(x, y, 7, 48, 2, storage, maxRPM, maxTorque);
 	}
 
-	public static float getGearEffectiveness(NonNullList<ItemStack> inventory, float modifier, int slots)
+	public static float getGearEfficiency(NonNullList<ItemStack> inventory)
 	{
-		float fraction = 1f/(slots+1);
-		float effectiveness = 0;
+		float fraction = 1f/(inventory.size());
+		float efficiency = 0;
 		for(ItemStack stack : inventory)
 			if(!stack.isEmpty())
-				effectiveness += fraction;
-		return MathHelper.clamp((effectiveness*modifier)+fraction, 0, 1);
+				efficiency += fraction;
+		return MathHelper.clamp(efficiency+fraction, 0, 1);
 	}
 
-	public static float getGearEffectiveness(NonNullList<ItemStack> inventory, float modifier)
-	{
-		return getGearEffectiveness(inventory, modifier, inventory.size());
-	}
-
+	/**
+	 * Calculates the torque ratio for given gears. Already includes the efficiency (presence modifier) of the gears, so don't combine it with {@link #getGearEfficiency(NonNullList)}
+	 *
+	 * @param inventory the gears to calculate the torque ratio for
+	 * @return a speed to torque ratio for given gears
+	 */
 	public static float getGearTorqueRatio(NonNullList<ItemStack> inventory)
 	{
 		float torque = 0;
 		for(ItemStack stack : inventory)
 			if(!stack.isEmpty()&&stack.getItem() instanceof IMotorGear)
 				torque += ((IMotorGear)stack.getItem()).getGearTorqueModifier(stack);
-		return MathHelper.clamp(torque/inventory.size(), 0, 10);
+		return MathHelper.clamp(torque/inventory.size(), 0, 8);
 	}
 
+	/**
+	 * Calculates the torque for a rotary device based on its rotation speed.
+	 *
+	 * @param t        the tile entity of the rotary device
+	 * @param rotation the rotation speed of the rotary device in RPM
+	 * @return the torque for the rotary device, based on its rotation speed and the torque modifiers defined in {@link MechanicalDevices#dynamoDefaultTorque}
+	 */
 	public static float getTorqueForIEDevice(TileEntity t, double rotation)
 	{
 		for(Entry<Predicate<TileEntity>, Function<Float, Float>> e : TORQUE_BLOCKS.entrySet())

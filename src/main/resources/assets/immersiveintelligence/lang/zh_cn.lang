@@ -1307,11 +1307,6 @@ rotary.immersiveintelligence.belt_system.cantSee=连接被阻挡!
 rotary.immersiveintelligence.belt_system.connectionExists=连接已存在
 rotary.immersiveintelligence.belt_system.invalidPoint=其中一个连接点无效
 
-rotary.immersiveintelligence.mechanical.speed=速度
-rotary.immersiveintelligence.mechanical.speed_unit=RPM
-rotary.immersiveintelligence.mechanical.torque=扭矩
-rotary.immersiveintelligence.mechanical.torque_unit=Nm
-
 #Data System Descriptions
 datasystem.immersiveintelligence.function.add=加
 datasystem.immersiveintelligence.function.subtract=减

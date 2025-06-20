@@ -11,6 +11,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.api.crafting.DataProgrammingRecipe;
+import pl.pabilo8.immersiveintelligence.api.rotary.IMotorGear;
 
 import java.util.ArrayList;
 
@@ -66,6 +67,27 @@ public class ContainerIIBase<T extends TileEntityIEBase & IIEInventory> extends 
 		{
 			return DataProgrammingRecipe.streamRecipes(DataProgrammingRecipe.class)
 					.anyMatch(r -> r.input.matchesItemStackIgnoringSize(stack));
+		}
+	}
+
+	public static class MotorGearSlot extends IESlot
+	{
+		public MotorGearSlot(Container container, IInventory inv, int id, int x, int y)
+		{
+			super(container, inv, id, x, y);
+		}
+
+		@Override
+		public int getSlotStackLimit()
+		{
+			return 1;
+		}
+
+		@Override
+		public boolean isItemValid(ItemStack stack)
+		{
+			//TODO: 18.06.2025 capabilities
+			return stack.getItem() instanceof IMotorGear;
 		}
 	}
 

@@ -29,6 +29,7 @@ import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.SkyCrateStation;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.tileentity.TileEntitySkyCrateStation;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemUtils;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -77,7 +78,7 @@ public class SkyCrateStationRenderer extends TileEntitySpecialRenderer<TileEntit
 			if(te.hasWorld())
 			{
 				motorTick = (te.getWorld().getTotalWorldTime()%IIRotaryUtils.getRPMMax()+partialTicks)/IIRotaryUtils.getRPMMax();
-				progress = te.progress+(partialTicks*te.getEffectiveEnergy()*IIRotaryUtils.getGearEffectiveness(te.getInventory(), te.getEfficiencyMultiplier()));
+				progress = te.progress+(partialTicks*te.getEffectiveEnergy()*IIRotaryUtils.getGearEfficiency(IIItemUtils.trimInventory(te.getInventory(), 0, 3)));
 				crateItem = te.getInventory().get(3);
 				mountItem = te.getInventory().get(4);
 

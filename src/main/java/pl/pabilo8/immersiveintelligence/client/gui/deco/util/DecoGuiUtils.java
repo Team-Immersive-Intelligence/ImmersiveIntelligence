@@ -10,6 +10,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.pabilo8.immersiveintelligence.api.rotary.IRotaryEnergy;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiComponentDecoBase.DecoComponentTemplate;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoButton;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoBar;
@@ -32,34 +33,108 @@ import java.util.function.Function;
 @SideOnly(Side.CLIENT)
 public class DecoGuiUtils
 {
-	public static DecoComponentTemplate<DecoButton> LIST_BUTTON_TEMPLATE = component -> component
+	public static final DecoComponentTemplate<DecoButton> LIST_BUTTON_TEMPLATE = component -> component
 			.withBackground(IIReference.RES_TEXTURES_DECO_BUTTON_PAPER)
 			.withPadding(0, 0, 0, 0)
 			.withSize(14, 14);
-	public static DecoComponentTemplate<DecoButton> LIST_BUTTON_EDIT_TEMPLATE = LIST_BUTTON_TEMPLATE.and(
+	public static final DecoComponentTemplate<DecoButton> LIST_BUTTON_EDIT_TEMPLATE = LIST_BUTTON_TEMPLATE.and(
 			component -> component
 					.withBackgroundColor(IIColor.fromPackedRGB(0x8a7d67))
 					.withIcon(IIReference.RES_TEXTURES_DECO_ICON_ACTION_EDIT)
+					.withTranslatedTooltip(IIReference.GUI_TOOLTIP_KEY+"button.edit")
 	);
-	public static DecoComponentTemplate<DecoButton> LIST_BUTTON_REMOVE_TEMPLATE = LIST_BUTTON_TEMPLATE.and(
+	public static final DecoComponentTemplate<DecoButton> LIST_BUTTON_REMOVE_TEMPLATE = LIST_BUTTON_TEMPLATE.and(
 			component -> component
 					.withBackgroundColor(IIColor.fromPackedRGB(0x8a6865))
 					.withIcon(IIReference.RES_TEXTURES_DECO_ICON_ACTION_REMOVE)
+					.withTranslatedTooltip(IIReference.GUI_TOOLTIP_KEY+"button.remove")
 	);
-	public static DecoComponentTemplate<DecoButton> LIST_BUTTON_ADD_TEMPLATE = LIST_BUTTON_TEMPLATE.and(
+	public static final DecoComponentTemplate<DecoButton> LIST_BUTTON_ADD_TEMPLATE = LIST_BUTTON_TEMPLATE.and(
 			component -> component
 					.withBackgroundColor(IIColor.fromPackedRGB(0x778a78))
 					.withIcon(IIReference.RES_TEXTURES_DECO_ICON_ACTION_ADD)
+					.withTranslatedTooltip(IIReference.GUI_TOOLTIP_KEY+"button.add")
 	);
 
-	public static Function<IFluxStorage, DecoComponentTemplate<DecoBar>> BAR_ELECTRIC_ENERGY =
+	//--- Energy Bar ---//
+	private static final DecoComponentTemplate<DecoBar> BAR_ELECTRIC_ENERGY_BASE = component -> component
+			.withColors(IIColor.fromPackedRGB(0xb37e28), IIColor.fromPackedRGB(0x663f26))
+			.withIconLocation(IIReference.RES_ICON_ENERGY);
+
+	public static final Function<IFluxStorage, DecoComponentTemplate<DecoBar>> BAR_ELECTRIC_ENERGY =
 			energyStorage -> component -> component
-					.withIconLocation(IIReference.RES_ICON_ENERGY)
-					.withColors(IIColor.fromPackedRGB(0xb37e28), IIColor.fromPackedRGB(0x663f26))
+					.withTemplate(BAR_ELECTRIC_ENERGY_BASE)
 					.withValueTooltip("energy.stored", BarTooltipFormat.VALUE_TO_MAX, TextFormatting.GOLD)
 					.withLimits(0, energyStorage.getMaxEnergyStored(), energyStorage::getEnergyStored);
 
-	public static IIDrawUtils drawBackgroundMask(Collection<DecoRectangle> rects, int minXOffset, int minYOffset)
+	public static final DecoComponentTemplate<DecoBar> BAR_ELECTRIC_ENERGY_INPUT = component -> component
+			.withTemplate(BAR_ELECTRIC_ENERGY_BASE)
+			.withIconLocation(IIReference.RES_ICON_ENERGY_INPUT)
+			.withValueTooltip("energy.input", BarTooltipFormat.VALUE, TextFormatting.GOLD);
+	public static final DecoComponentTemplate<DecoBar> BAR_ELECTRIC_ENERGY_OUTPUT = component -> component
+			.withTemplate(BAR_ELECTRIC_ENERGY_BASE)
+			.withIconLocation(IIReference.RES_ICON_ENERGY_OUTPUT)
+			.withValueTooltip("energy.output", BarTooltipFormat.VALUE, TextFormatting.GOLD);
+
+	//--- Mechanical Torque Bar ---//
+	public static final Function<IRotaryEnergy, DecoComponentTemplate<DecoBar>> BAR_MECH_TORQUE =
+			rotaryEnergy -> component -> component
+					.withColors(IIColor.fromPackedRGB(0x4e5e36), IIColor.fromPackedRGB(0x314a1d))
+					.withIconLocation(IIReference.RES_ICON_MECH_TORQUE)
+					.withValueTooltip("mech_torque.stored", BarTooltipFormat.VALUE_TO_MAX, TextFormatting.GOLD)
+					.withLimits(0, 100, () -> (int)rotaryEnergy.getTorque())
+					.withSmoothAnimation();
+	public static final Function<IRotaryEnergy, DecoComponentTemplate<DecoBar>> BAR_MECH_TORQUE_INPUT =
+			rotaryEnergy -> component -> component
+					.withTemplate(BAR_MECH_TORQUE.apply(rotaryEnergy))
+					.withIconLocation(IIReference.RES_ICON_MECH_TORQUE_INPUT)
+					.withValueTooltip("mech_torque.input", BarTooltipFormat.VALUE, TextFormatting.GOLD);
+	public static final Function<IRotaryEnergy, DecoComponentTemplate<DecoBar>> BAR_MECH_TORQUE_OUTPUT =
+			rotaryEnergy -> component -> component
+					.withTemplate(BAR_MECH_TORQUE.apply(rotaryEnergy))
+					.withIconLocation(IIReference.RES_ICON_MECH_TORQUE_OUTPUT)
+					.withValueTooltip("mech_torque.output", BarTooltipFormat.VALUE, TextFormatting.GOLD)
+					.withLimits(0, 100, () -> (int)rotaryEnergy.getOutputTorque());
+
+	//--- Mechanical Speed Bar ---//
+	public static final Function<IRotaryEnergy, DecoComponentTemplate<DecoBar>> BAR_MECH_SPEED =
+			rotaryEnergy -> component -> component
+					.withColors(IIColor.fromPackedRGB(0x5e443d), IIColor.fromPackedRGB(0x49211d))
+					.withIconLocation(IIReference.RES_ICON_MECH_SPEED)
+					.withValueTooltip("mech_speed.stored", BarTooltipFormat.VALUE_TO_MAX, TextFormatting.GOLD)
+					.withLimits(0, 720, () -> (int)rotaryEnergy.getRotationSpeed())
+					.withSmoothAnimation();
+	public static final Function<IRotaryEnergy, DecoComponentTemplate<DecoBar>> BAR_MECH_SPEED_INPUT =
+			rotaryEnergy -> component -> component
+					.withTemplate(BAR_MECH_SPEED.apply(rotaryEnergy))
+					.withIconLocation(IIReference.RES_ICON_MECH_SPEED_INPUT)
+					.withValueTooltip("mech_speed.input", BarTooltipFormat.VALUE, TextFormatting.GOLD);
+	public static final Function<IRotaryEnergy, DecoComponentTemplate<DecoBar>> BAR_MECH_SPEED_OUTPUT =
+			rotaryEnergy -> component -> component
+					.withTemplate(BAR_MECH_SPEED.apply(rotaryEnergy))
+					.withIconLocation(IIReference.RES_ICON_MECH_SPEED_OUTPUT)
+					.withValueTooltip("mech_speed.output", BarTooltipFormat.VALUE, TextFormatting.GOLD)
+					.withLimits(0, 720, () -> (int)rotaryEnergy.getOutputRotationSpeed());
+
+	//--- Armor ---//
+	public static final DecoComponentTemplate<DecoBar> BAR_ARMOR_INTEGRITY = component -> component
+			.withColors(IIColor.fromPackedRGB(0x6b6b6b), IIColor.fromPackedRGB(0x3c3c3c))
+			.withIconLocation(IIReference.RES_ICON_ARMOR_INTEGRITY)
+			.withValueTooltip("armor_integrity", BarTooltipFormat.VALUE_TO_MAX, TextFormatting.GOLD)
+			.withSmoothAnimation();
+	public static final DecoComponentTemplate<DecoBar> BAR_REACTIVE_ARMOR_INTEGRITY = component -> component
+			.withColors(IIColor.fromPackedRGB(0x536369), IIColor.fromPackedRGB(0x30383b))
+			.withIconLocation(IIReference.RES_ICON_ARMOR_INTEGRITY)
+			.withValueTooltip("reactive_armor_integrity", BarTooltipFormat.VALUE_TO_MAX, TextFormatting.GOLD)
+			.withSmoothAnimation();
+	public static final DecoComponentTemplate<DecoBar> BAR_STRUCTURAL_INTEGRITY = component -> component
+			.withColors(IIColor.fromPackedRGB(0x79675a), IIColor.fromPackedRGB(0x4a3035))
+			.withIconLocation(IIReference.RES_ICON_STRUCTURAL_INTEGRITY)
+			.withValueTooltip("structural_integrity", BarTooltipFormat.VALUE_TO_MAX, TextFormatting.GOLD)
+			.withSmoothAnimation();
+
+
+	public static IIDrawUtils drawBackgroundMask(Collection<DecoBackgroundTile> rects, int minXOffset, int minYOffset)
 	{
 		IIDrawUtils draw = IIDrawUtils.startTextured();
 
@@ -112,7 +187,7 @@ public class DecoGuiUtils
 		return draw;
 	}
 
-	public static byte[][] getBoxesOutline(Collection<DecoRectangle> rects, BiMap<ResLoc, Byte> spriteMap,
+	public static byte[][] getBoxesOutline(Collection<DecoBackgroundTile> rects, BiMap<ResLoc, Byte> spriteMap,
 										   int unit, int minXOffset, int minYOffset)
 	{
 		if(rects.isEmpty())
@@ -120,7 +195,7 @@ public class DecoGuiUtils
 
 		int xx, yy;
 
-		DecoRectangle b = rects.stream().min((o1, o2) -> o2.x+o2.width-(o1.x+o1.width)).orElse(null);
+		DecoBackgroundTile b = rects.stream().min((o1, o2) -> o2.x+o2.width-(o1.x+o1.width)).orElse(null);
 		xx = b.x+b.width-minXOffset;
 		b = rects.stream().min((o1, o2) -> o2.y+o2.height-(o1.y+o1.height)).orElse(null);
 		yy = b.y+b.height-minYOffset;
@@ -137,7 +212,7 @@ public class DecoGuiUtils
 
 
 		//fill box occupied spaces with 1
-		for(DecoRectangle rect : rects)
+		for(DecoBackgroundTile rect : rects)
 			for(int x = rect.x; x < rect.x+rect.width; x += unit)
 				for(int y = rect.y; y < rect.y+rect.height; y += unit)
 					fillmap[(x-minXOffset)/unit][(y-minYOffset)/unit] = spriteMap.get(rect.mask);
@@ -146,10 +221,10 @@ public class DecoGuiUtils
 
 	}
 
-	public static IIDrawUtils drawBackgroundBlock(Collection<DecoRectangle> rects)
+	public static IIDrawUtils drawBackgroundBlock(Collection<DecoBackgroundTile> rects)
 	{
-		IIDrawUtils draw = IIDrawUtils.startTextured();
-		for(DecoRectangle rect : rects)
+		IIDrawUtils draw = IIDrawUtils.startTexturedColored();
+		for(DecoBackgroundTile rect : rects)
 		{
 			float rectX = (int)Math.floor(rect.x/8f)*8f;
 			float rectY = (int)Math.floor(rect.y/8f)*8f;
@@ -160,9 +235,10 @@ public class DecoGuiUtils
 				for(int xx = 0; xx < rectW; xx += 32)
 				{
 					TextureAtlasSprite sprite = ClientUtils.getSprite(rect.style);
-					draw.drawTexRect(rectX+xx, rectY+yy,
+					draw.drawTexColorRect(rectX+xx, rectY+yy,
 							MathHelper.clamp(rectW-xx, 8, 32),
 							MathHelper.clamp(rectH-yy, 8, 32),
+							rect.color,
 							sprite.getMinU(), sprite.getInterpolatedU(Math.min(rectW-xx, 32)/2f),
 							sprite.getMinV(), sprite.getInterpolatedV(Math.min(rectH-yy, 32)/2f)
 					);
@@ -170,6 +246,45 @@ public class DecoGuiUtils
 		}
 
 		return draw;
+	}
+
+	public static void drawFrameCorners(IIDrawUtils draw, int x, int y, int width, int height, ResLoc style, boolean[] sides)
+	{
+		TextureAtlasSprite sprite = ClientUtils.getSprite(style);
+		int cornerSize = 16;
+
+		//Top-left corner
+		if(sides[0]&&sides[3])
+			draw.drawTexColorRect(x, y, cornerSize, cornerSize, IIColor.WHITE,
+					sprite.getMinU(), sprite.getInterpolatedU(8), sprite.getMinV(), sprite.getInterpolatedV(8));
+		//Top-right corner
+		if(sides[0]&&sides[1])
+			draw.drawTexColorRect(x+width-cornerSize, y, cornerSize, cornerSize, IIColor.WHITE,
+					sprite.getInterpolatedU(16-8), sprite.getInterpolatedU(16), sprite.getMinV(), sprite.getInterpolatedV(8));
+		//Bottom-left corner
+		if(sides[2]&&sides[3])
+			draw.drawTexColorRect(x, y+height-cornerSize, cornerSize, cornerSize, IIColor.WHITE,
+					sprite.getMinU(), sprite.getInterpolatedU(8), sprite.getInterpolatedV(16-8), sprite.getInterpolatedV(16));
+		//Bottom-right corner
+		if(sides[2]&&sides[1])
+			draw.drawTexColorRect(x+width-cornerSize, y+height-cornerSize, cornerSize, cornerSize, IIColor.WHITE,
+					sprite.getInterpolatedU(16-8), sprite.getInterpolatedU(16), sprite.getInterpolatedV(16-8), sprite.getInterpolatedV(16));
+	}
+
+	public static void drawFrame(IIDrawUtils draw, int x, int y, int width, int height, ResLoc style, boolean[] sides, int frameThickness)
+	{
+		IIColor color = IIColor.WHITE;
+		x -= frameThickness/2;
+		y -= frameThickness/2;
+		width += frameThickness;
+		height += frameThickness;
+
+		//Top side
+		if(sides[0])
+			draw.drawRepeatedColorRect(x, y, width, frameThickness, color, style, 20, frameThickness, 3/16f, 13/16f, 0, frameThickness/32f);
+
+		//Draw corners on top of the frame
+		drawFrameCorners(draw, x, y, width, height, style, sides);
 	}
 
 
@@ -209,11 +324,6 @@ public class DecoGuiUtils
 				);
 			}
 		}
-	}
-
-	public static void drawRepeatedRect(IIDrawUtils draw, DecoRectangle rect, IIColor color, int borderSize)
-	{
-		drawRepeatedRect(draw, rect.x, rect.y, rect.width, rect.height, rect.style, color, 32, borderSize);
 	}
 
 	public static <T extends TileEntityMultiblockProductionMulti<T, R>, R extends IIIMultiblockRecipe> Function<Float, Float>

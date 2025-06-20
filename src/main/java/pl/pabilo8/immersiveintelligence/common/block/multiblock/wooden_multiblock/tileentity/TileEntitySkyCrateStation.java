@@ -44,6 +44,7 @@ import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageRotaryPowerSync;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemUtils;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultiblockConnectable;
 
 import javax.annotation.Nullable;
@@ -194,7 +195,9 @@ public class TileEntitySkyCrateStation extends TileEntityMultiblockConnectable<T
 			if(animation > 1)
 			{
 				if(progress < getAnimationLength())
-					progress += getEffectiveEnergy()*IIRotaryUtils.getGearEffectiveness(getInventory(), getEfficiencyMultiplier(), 3);
+					progress += getEffectiveEnergy()*IIRotaryUtils.getGearEfficiency(
+							IIItemUtils.trimInventory(inventory, 0, 3)
+					);
 				else
 				{
 					switch(animation)
@@ -631,11 +634,6 @@ public class TileEntitySkyCrateStation extends TileEntityMultiblockConnectable<T
 	public TileEntity getGuiMaster()
 	{
 		return master();
-	}
-
-	public float getEfficiencyMultiplier()
-	{
-		return 1.0f;
 	}
 
 	public int getAnimationLength()

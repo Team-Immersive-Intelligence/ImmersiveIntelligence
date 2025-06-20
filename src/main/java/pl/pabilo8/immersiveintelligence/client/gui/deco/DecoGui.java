@@ -23,7 +23,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoTab
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoLabel;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.widget.GuiComponentWidgetBase;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundBuilder;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoRectangle;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundTile;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
@@ -526,7 +526,7 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 		List<Rectangle> takenSpace = new ArrayList<>();
 		//Add rectangles from the background builder
 		if(backgroundBuilder!=null)
-			for(DecoRectangle rect : backgroundBuilder.getTakenSpace())
+			for(DecoBackgroundTile rect : backgroundBuilder.getTakenSpace())
 				takenSpace.add(new Rectangle(guiLeft+rect.x, guiTop+rect.y, rect.width, rect.height));
 
 		//Add rectangles for each tab

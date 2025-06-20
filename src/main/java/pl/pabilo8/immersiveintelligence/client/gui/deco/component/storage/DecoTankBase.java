@@ -48,7 +48,7 @@ public abstract class DecoTankBase<TYPE extends DecoTankBase<TYPE, RESOURCE>, RE
 		List<RESOURCE> contents = getContents();
 		if(contents!=null&&!contents.isEmpty())
 			for(RESOURCE resource : contents)
-				displayedAmounts.put(resource, (float)getResourceAmount(resource));
+				displayedAmounts.put(resource, 0f); //(float)getResourceAmount(resource)
 		return true;
 	}
 

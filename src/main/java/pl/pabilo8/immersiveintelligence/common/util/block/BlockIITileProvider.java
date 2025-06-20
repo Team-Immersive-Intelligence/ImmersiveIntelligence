@@ -57,7 +57,7 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IITileProviderEnum;
-import pl.pabilo8.immersiveintelligence.common.util.item.IIItemUtil;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemUtils;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.ILadderMultiblock;
 
 import javax.annotation.Nullable;
@@ -502,7 +502,7 @@ public abstract class BlockIITileProvider<E extends Enum<E> & IITileProviderEnum
 			if(b)
 				return b;
 		}
-		if(tile instanceof IUpgradableMachine&&IIItemUtil.isWrench(heldItem))
+		if(tile instanceof IUpgradableMachine&&IIItemUtils.isWrench(heldItem))
 		{
 			IUpgradableMachine u = ((IUpgradableMachine)tile).getUpgradeMaster();
 			if(u!=null&&u.getInstallProgress()==0)
