@@ -666,8 +666,8 @@ tile.immersiveintelligence.metal_multiblock.data_input_machine.programming=Data 
 tile.immersiveintelligence.metal_multiblock.data_input_machine.edit=Data Input Machine - Editing a Variable
 tile.immersiveintelligence.metal_multiblock.data_input_machine.label_punchtapes=Punchtape Storage
 
-tile.immersiveintelligence.metal_multiblock.redstone_interface.data=Redstone Data Interface - Data
-tile.immersiveintelligence.metal_multiblock.redstone_interface.redstone=Redstone Data Interface - Redstone
+tile.immersiveintelligence.metal_multiblock.redstone_interface.data=Configure Data to Redstone
+tile.immersiveintelligence.metal_multiblock.redstone_interface.redstone=Configure Redstone to Data
 
 tile.immersiveintelligence.metal_multiblock.redstone_interface.modes.0=None
 tile.immersiveintelligence.metal_multiblock.redstone_interface.modes.1=Boolean

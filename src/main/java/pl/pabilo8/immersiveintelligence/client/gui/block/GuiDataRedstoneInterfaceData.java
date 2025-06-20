@@ -241,7 +241,7 @@ public class GuiDataRedstoneInterfaceData extends GuiIEContainerBase implements 
 					//this.drawTexturedModalRect(drawx+3, drawy+3, 155, 222, 16, 14);
 
 					this.drawTexturedModalRect(drawx+33, drawy+3, 155, 222, 16, 14);
-					this.fontRenderer.drawString(I18n.format("tile."+ImmersiveIntelligence.MODID+".metal_multiblock.redstone_interface.modes."+((DataTypeInteger)array.value[1]).value), drawx+64, drawy+6, data.getTypeColor().getPackedRGB(), true);
+					this.fontRenderer.drawString(I18n.format("tile."+ImmersiveIntelligence.MODID+".metal_multiblock.redstone_interface.modes."+((DataTypeInteger)array.value[1]).value), drawx+64, drawy+6, 0x300719, false);
 
 					GlStateManager.popMatrix();
 
