@@ -2683,6 +2683,9 @@ ie.manual.category.ii_other.name=Other
 
 ie.manual.folder.functions=Function Reference
 ie.manual.folder.computers=Computers
+ie.manual.folder.weaponry=Infantry Weapons
+ie.manual.folder.staticdefense=Static Defenses
+ie.manual.folder.armortools=Armor and Tools
 
 ie.manual.entry.traits.level_beginner=Complexity: Pre-Industrial
 ie.manual.entry.traits.level_early_industrial=Complexity: Early Industrial
@@ -2742,6 +2745,8 @@ ie.manual.entry.false=False
 ie.manual.entry.true=True
 
 ie.manual.entry.callback_returns=Returns:
+ie.manual.entry.allowed_value=Allowed value:
+ie.manual.entry.allowed_values=Allowed values:
 
 #Bullet cores & components
 ie.manual.entry.bullet_cores.name=Bullet Cores
@@ -2749,31 +2754,31 @@ ie.manual.entry.bullet_cores.subtext=That one bounced!
 
 ie.manual.entry.bullet_core.core_brass=Brass Core
 ie.manual.entry.bullet_core.core_brass.lore=Make it Steampunk
-ie.manual.entry.bullet_core.core_brass.desc=Brass is a heavy metal with bad penetration capabilities, but it greatly increases the effect of other components.
+ie.manual.entry.bullet_core.core_brass.desc=Brass is a heavy metal with subpar penetration and damage capabilities, but it greatly increases the effectiveness of components.
 
 ie.manual.entry.bullet_core.core_copper=Copper Core
-ie.manual.entry.bullet_core.core_copper.lore=Every Penny Counts
-ie.manual.entry.bullet_core.core_copper.desc=Copper is a cheap material for bullets, its penetration ability is worse than one of brass, but its component effect.
+ie.manual.entry.bullet_core.core_copper.lore=Every penny counts
+ie.manual.entry.bullet_core.core_copper.desc=Copper is a cheap material for bullets. However, its penetration ability and damage is poor and it does not improve the effectiveness of components.
 
 ie.manual.entry.bullet_core.core_lead=Lead Core
-ie.manual.entry.bullet_core.core_lead.lore=Good, bad and ugly
-ie.manual.entry.bullet_core.core_lead.desc=Lead is a good material for cheap bullets with high damage and mediocre penetrating power, however due to its high density limits the maximum range of projectiles made of it.
+ie.manual.entry.bullet_core.core_lead.lore=The good, the bad, and the ugly
+ie.manual.entry.bullet_core.core_lead.desc=Lead is a good material for cheap bullets with high damage and middling penetrating power. However, its high density limits range the effectiveness of components.
 
 ie.manual.entry.bullet_core.core_iron=Iron Core
 ie.manual.entry.bullet_core.core_iron.lore=The Middle Class
-ie.manual.entry.bullet_core.core_iron.desc=Iron is a good early material for bullets, it offers above-average penetrating power and range, but has weak component effect and damage.
+ie.manual.entry.bullet_core.core_iron.desc=Iron is a good early material for bullets. It offers above-average penetrating power and range, but has weak damage and does not improve the effectiveness of components.
 
 ie.manual.entry.bullet_core.core_steel=Steel Core
 ie.manual.entry.bullet_core.core_steel.lore=Full Metal Jacket
-ie.manual.entry.bullet_core.core_steel.desc=Using steel is a non-expensive way to increase the penetration capabilties of the projectiles, only disadvantage is slightly decreased component effect.
+ie.manual.entry.bullet_core.core_steel.desc=Using steel is a non-expensive way to increase the penetration capabilties and range of bullets. The only disadvantage is the reduced effectiveness of components.
 
 ie.manual.entry.bullet_core.core_tungsten=Tungsten Core
 ie.manual.entry.bullet_core.core_tungsten.lore=Load APCR!
-ie.manual.entry.bullet_core.core_tungsten.desc=Tungsten is a better at penetrating objects than steel, but it decreases the effect of other components
+ie.manual.entry.bullet_core.core_tungsten.desc=Tungsten has very high penetration, damage, and range capabilities, but it greatly reduces the effectiveness of components.
 
 ie.manual.entry.bullet_core.core_uranium=Uranium Core
 ie.manual.entry.bullet_core.core_uranium.lore=What do you mean, ammo is depleted?
-ie.manual.entry.bullet_core.core_uranium.desc=Low weight and hardness make uranium a great penetrator without loosing capability to carry explosive materials. Great, but expensive choice.
+ie.manual.entry.bullet_core.core_uranium.desc=Low weight and high hardness make uranium a great, high-damage penetrator, with minor penalties to explosive materials. A great, but expensive choice.
 
 ie.manual.entry.bullet_components.name=Bullet Components
 ie.manual.entry.bullet_components.subtext=Load APCRHEFSPTSD B-Capped!
@@ -2791,17 +2796,17 @@ ie.manual.entry.bullet_component.firework.desc=Fireworks, while mostly known for
 #Quote from Company of Heroes/Market Garden campaign
 ie.manual.entry.bullet_component.tracer_powder=Tracer Powder
 ie.manual.entry.bullet_component.tracer_powder.lore=Fill the sky with tracers!
-ie.manual.entry.bullet_component.tracer_powder.desc=Tracers are a good way to see which way your bullet flies, this can be used for purely decorative purposes or for correcting a gun's shot angle.
+ie.manual.entry.bullet_component.tracer_powder.desc=Tracers are a good way to see which way your bullet flies. This can be used for purely decorative purposes or for correcting a gun's shot angle.
 
 #Reference to Codename Panzers: Cold War
 ie.manual.entry.bullet_component.flare_powder=Flare Powder
 ie.manual.entry.bullet_component.flare_powder.lore=Night became Day
-ie.manual.entry.bullet_component.flare_powder.desc=Flares can be used for illuminating or marking positions, this can be useful in directing artillery
+ie.manual.entry.bullet_component.flare_powder.desc=Flares can be used for illuminating or marking positions. This can be useful in directing artillery.
 
 #Reference to the book "Thus Spoke Zarathustra"
 ie.manual.entry.bullet_component.propaganda=Propaganda
 ie.manual.entry.bullet_component.propaganda.lore=He who obeys, does not listen to himself!
-ie.manual.entry.bullet_component.propaganda.desc=Propaganda can be used to instill fear in your enemies, that is if they can read, obviously.
+ie.manual.entry.bullet_component.propaganda.desc=Propaganda can be used to instill fear in your enemies. That is, if they can read, obviously.
 
 #Fallout reference
 ie.manual.entry.bullet_component.nuke=Nuke
@@ -2810,18 +2815,18 @@ ie.manual.entry.bullet_component.nuke.desc=Nuclear Explosives are the most power
 
 #Reference to a song
 ie.manual.entry.bullet_component.tnt=TNT
-ie.manual.entry.bullet_component.tnt.lore=Tons of it!
+ie.manual.entry.bullet_component.tnt.lore=Dynamite!
 ie.manual.entry.bullet_component.tnt.desc=TNT is an explosive material with mediocre destructive power. Because of how easy it is to produce, it is a good choice for machinegun bullets and grenades.
 
 #CoH2 Reference
 ie.manual.entry.bullet_component.rdx=RDX
 ie.manual.entry.bullet_component.rdx.lore=Things go up, things go down!
-ie.manual.entry.bullet_component.rdx.desc=RDX, also known as the §shexogen§r is a powerful high-explosive material. Being twice as powerful as TNT and it's able to destroy even the heaviest emplacements.
+ie.manual.entry.bullet_component.rdx.desc=RDX, also known as the §shexogen§r is a powerful high-explosive material. Twice as powerful as TNT, it's able to destroy even the heaviest emplacements.
 
 #There are many variants of HMX's full name, one of them is Her Majesty's Explosive
 ie.manual.entry.bullet_component.hmx=HMX
 ie.manual.entry.bullet_component.hmx.lore=Her Majesty's Finest
-ie.manual.entry.bullet_component.hmx.desc=HMX is one of the most powerful conventional explosives, it's three times more powerful than TNT it's capable of breaching trough any fortifications.
+ie.manual.entry.bullet_component.hmx.desc=HMX is one of the most powerful conventional explosives: it's three times more powerful than TNT! It's capable of breaching through any fortifications.
 
 #Reference to a song
 ie.manual.entry.bullet_component.white_phosphorus=White Phosphorus
@@ -2832,12 +2837,12 @@ ie.manual.entry.bullet_component.white_phosphorus.desc=White phosphorus is the m
 #similar to how the Finns made a cocktail for Molotov (soviet foreign affairs minister) during the Winter War, a tesla grenade would be a nice one for Edison
 ie.manual.entry.bullet_component.tesla=Discharge Emitters
 ie.manual.entry.bullet_component.tesla.lore=A gift for Edison
-ie.manual.entry.bullet_component.tesla.desc=Discharge emitters create a field which disrupts the flow of electricity. They are useful in disabling industrial equipment, emplacements and sabotaging energy production.
+ie.manual.entry.bullet_component.tesla.desc=Discharge emitters create a field which disrupts the flow of electricity. They are useful in disabling industrial equipment, emplacements, and sabotaging energy production.
 
 
 ie.manual.entry.bullet_component.shrapnel_aluminum=Aluminum Shrapnel
 ie.manual.entry.bullet_component.shrapnel_aluminum.lore=Amelinium, one does not simply paint it
-ie.manual.entry.bullet_component.shrapnel_aluminum.desc=Aluminum is not the best material for shrapnel, but it's cheap enough to be mass used in combat.
+ie.manual.entry.bullet_component.shrapnel_aluminum.desc=Aluminum is not the best material for shrapnel, but it's cheap enough to be mass produced for combat.
 
 ie.manual.entry.bullet_component.shrapnel_zinc=Zinc Shrapnel
 ie.manual.entry.bullet_component.shrapnel_zinc.lore=Better than tin!
@@ -2846,49 +2851,49 @@ ie.manual.entry.bullet_component.shrapnel_zinc.desc=Zinc is not a good shrapnel 
 #Reference to Terraria's coin gun
 ie.manual.entry.bullet_component.shrapnel_copper=Copper Shrapnel
 ie.manual.entry.bullet_component.shrapnel_copper.lore=Make coins your ammo
-ie.manual.entry.bullet_component.shrapnel_copper.desc=While throwing copper at the enemies won't bribe them, after a few shots it might make them dead.
+ie.manual.entry.bullet_component.shrapnel_copper.desc=While throwing copper at the enemies won't bribe them, a few shots it might make them dead.
 
 #Reference to JoJo, yes even in the II there has to be one
 ie.manual.entry.bullet_component.shrapnel_platinum=Platinum Shrapnel
 ie.manual.entry.bullet_component.shrapnel_platinum.lore=A Shrapnel User, huh?
-ie.manual.entry.bullet_component.shrapnel_platinum.desc=Choosing Platinum? Yes, definitely, make yourself poor, you want it, not me.
+ie.manual.entry.bullet_component.shrapnel_platinum.desc=Choosing Platinum? Yes, definitely, make yourself poor. You want it, not me.
 
 #Murica' fuck yeah
 ie.manual.entry.bullet_component.shrapnel_gold=Gold Shrapnel
 ie.manual.entry.bullet_component.shrapnel_gold.lore=And who cares about Taxpayers?
-ie.manual.entry.bullet_component.shrapnel_gold.desc=Ah yes, the good old way of wasting money - war. While the bullets are somewhat expensive, they don't seem to have much effect on the opponent.
+ie.manual.entry.bullet_component.shrapnel_gold.desc=Ah yes, the good old way of wasting money - war. While the bullets are somewhat expensive, they don't seem to have much effect on the enemy.
 
 ie.manual.entry.bullet_component.shrapnel_nickel=Nickel Shrapnel
 ie.manual.entry.bullet_component.shrapnel_nickel.lore=Nickels and dimes
-ie.manual.entry.bullet_component.shrapnel_nickel.desc=Nickel is a bad choice for shrapnel, it doesn't deal much damage, but in hard times it can save the day.
+ie.manual.entry.bullet_component.shrapnel_nickel.desc=Nickel is a bad choice for shrapnel. It doesn't deal much damage, but in hard times, it can save the day.
 
 #Reference to the Netflix's Witcher series
 ie.manual.entry.bullet_component.shrapnel_silver=Silver Shrapnel
 ie.manual.entry.bullet_component.shrapnel_silver.lore=Toss a coin to your gunner
-ie.manual.entry.bullet_component.shrapnel_silver.desc=Silver shrapnel is a good option for combating undead enemies, the shrapnel deals more damage to them and slows them down.
+ie.manual.entry.bullet_component.shrapnel_silver.desc=Silver shrapnel is a good option for combatting undead enemies. The shrapnel deals more damage to them and slows them down.
 
 ie.manual.entry.bullet_component.shrapnel_electrum=Electrum Shrapnel
 ie.manual.entry.bullet_component.shrapnel_electrum.lore=The Shock Troops have arrived
-ie.manual.entry.bullet_component.shrapnel_electrum.desc=Electrum excels at conducting electricity, while the shapnel won't hurt much, enemies hit will receive more damage from energy weapons, such as tesla coils.
+ie.manual.entry.bullet_component.shrapnel_electrum.desc=Electrum excels at conducting electricity. While the shapnel won't hurt much, enemies hit will receive more damage from energy weapons, such as tesla coils.
 
 #Reference to a post-ww2 poster for inter-country help in Western Europe
 ie.manual.entry.bullet_component.shrapnel_constantan=Constantan Shrapnel
 ie.manual.entry.bullet_component.shrapnel_constantan.lore=<br>Whatever the weather, we kill enemies together.
-ie.manual.entry.bullet_component.shrapnel_constantan.desc=Constantan is well known for its heat conductive properties, enemies hit will be prone to fire damage for some time.
+ie.manual.entry.bullet_component.shrapnel_constantan.desc=Constantan is well known for its heat conductive properties. Enemies hit will be prone to fire damage for some time.
 
 #Reference to words by Otto von Bismarck
 ie.manual.entry.bullet_component.shrapnel_iron=Iron Shrapnel
 ie.manual.entry.bullet_component.shrapnel_iron.lore=With Blood and Iron!
-ie.manual.entry.bullet_component.shrapnel_iron.desc=Iron is a good choice for shrapnel, it easily penetrates enemies wearing light armor.
+ie.manual.entry.bullet_component.shrapnel_iron.desc=Iron is a good choice for shrapnel. It easily penetrates enemies wearing light armor.
 
 ie.manual.entry.bullet_component.shrapnel_lead=Lead Shrapnel
 ie.manual.entry.bullet_component.shrapnel_lead.lore=Let the Lead rain!
-ie.manual.entry.bullet_component.shrapnel_lead.desc=Lead is a good shrapnel material, it's heavy and inflicts high damage on unarmored enemies.
+ie.manual.entry.bullet_component.shrapnel_lead.desc=Lead is a good shrapnel material. It is heavy and inflicts high damage to unarmored enemies.
 
 #Japanese "hagane" means steel, but the literal translation is "full metal", Hagane no Renkinjutsushi
 ie.manual.entry.bullet_component.shrapnel_steel=Steel Shrapnel
 ie.manual.entry.bullet_component.shrapnel_steel.lore=The fullmetal in all its glory
-ie.manual.entry.bullet_component.shrapnel_steel.desc=Steel is a fine shrapnel material, good damage, scatter and speed make it effective against all opponents.
+ie.manual.entry.bullet_component.shrapnel_steel.desc=Steel is a fine shrapnel material. Good damage, scatter, and speed make it effective against all opponents.
 
 ie.manual.entry.bullet_component.shrapnel_brass=Brass Shrapnel
 ie.manual.entry.bullet_component.shrapnel_brass.lore=Ornamental Design
@@ -2897,7 +2902,7 @@ ie.manual.entry.bullet_component.shrapnel_brass.desc=Brass is a bad choice for m
 #A reference to Bear989sr. - a gregtech player, I just love when he says the word "steel", also some nice GT tutorials
 ie.manual.entry.bullet_component.shrapnel_tungsten=Tungsten Shrapnel
 ie.manual.entry.bullet_component.shrapnel_tungsten.lore=And now we make *ekhem* TUNGSTEN-STEEL...
-ie.manual.entry.bullet_component.shrapnel_tungsten.desc=Tungsten is a very good material for shrapnel, its high damage allows to shred enemies to pieces.
+ie.manual.entry.bullet_component.shrapnel_tungsten.desc=Tungsten is a very good material for shrapnel. Its high damage allows the shredding of enemies to itty-bitty pieces.
 
 #Reference to Kuruma saying IEn's thorium railgun rods are the strongest railgun ammo
 ie.manual.entry.bullet_component.shrapnel_thorium=Thorium Shrapnel
@@ -2905,12 +2910,19 @@ ie.manual.entry.bullet_component.shrapnel_thorium.lore=Make grenades, not rods!
 ie.manual.entry.bullet_component.shrapnel_thorium.desc=Thorium is a good, but costly shrapnel material with high damage and penetration values.
 
 ie.manual.entry.bullet_component.shrapnel_HOPGraphite=HOP Graphite Shrapnel
-ie.manual.entry.bullet_component.shrapnel_HOPGraphite.lore=HOP to it!
-ie.manual.entry.bullet_component.shrapnel_HOPGraphite.desc=Graphite is a very good shrapnel material, its low weight and high piercing capabilities make it useful in combat.
+ie.manual.entry.bullet_component.shrapnel_HOPGraphite.lore=<br>HOP to it!
+ie.manual.entry.bullet_component.shrapnel_HOPGraphite.desc=Graphite is a very good shrapnel material. Its low weight and high piercing capabilities make it useful in combat.
 
+#Reference to a song by a fantasized, mythical lizard
 ie.manual.entry.bullet_component.shrapnel_uranium=Uranium Shrapnel
 ie.manual.entry.bullet_component.shrapnel_uranium.lore=Ra-di-o-active
-ie.manual.entry.bullet_component.shrapnel_uranium.desc=Uranium is one of the best materials for shrapnel, the scattering fragments have no problem piercing trough armor and can deal high damage to any target.
+ie.manual.entry.bullet_component.shrapnel_uranium.desc=Uranium is one of the best materials for shrapnel. The scattering fragments have no problem piercing trough armor and can deal high damage to any target.
+
+#What a silly idea for a bullet component!
+ie.manual.entry.bullet_component.shrapnel_wood=Wood Shrapnel
+ie.manual.entry.bullet_component.shrapnel_wood.lore=Eco-friendly!
+ie.manual.entry.bullet_component.shrapnel_wood.desc=Wood is a poor material for shrapnel. However, you can feel good about yourself for mowing down your enemies with biodegradable materials.
+
 
 
 death.attack.iiBullet=%1$s was shot by %2$s
