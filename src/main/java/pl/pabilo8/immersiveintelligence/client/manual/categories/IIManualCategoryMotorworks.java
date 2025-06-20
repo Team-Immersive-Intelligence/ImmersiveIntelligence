@@ -32,14 +32,13 @@ public class IIManualCategoryMotorworks extends IIManualCategory
 	public void addPages()
 	{
 		super .addPages();
-		addEntry("coagulator");
-		addEntry("fuel_station");
 		addEntry("motorworks");
-		addEntry("rubber_production");
+		addEntry("fuel_station");
 		addEntry("vehicle_workshop");
+		addEntry("rubber_production");
+		addEntry("coagulator");
 		addEntry("vulcanizer")
-
-				//.addSource("compound_silicon", getSourceForItem(new ItemStack(IIitemMaterial)))
+				.addSource("compound", getSourceForItem(new ItemStack(IIContent.itemMaterial, 1, 31)))
 				.addSource("vulcanizer_blueprint", getSourceForItem(
 						BlueprintCraftingRecipe.getTypedBlueprint("vulcanizer_molds")
 				));
