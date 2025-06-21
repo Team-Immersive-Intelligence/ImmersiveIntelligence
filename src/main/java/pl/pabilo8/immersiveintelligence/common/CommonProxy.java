@@ -427,6 +427,7 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		AmmoRegistry.registerCore(IIContent.ammoCoreTungsten);
 		AmmoRegistry.registerCore(IIContent.ammoCoreUranium);
 		AmmoRegistry.registerCore(IIContent.ammoCorePabilium);
+		AmmoRegistry.registerCore(IIContent.ammoCoreRubber);
 
 		//Tiny dusts (1 -> 9) from GregTech are a bit too much :P
 		DustUtils.registerDust(new IngredientStack("gunpowder", 100), "gunpowder", IIColor.fromPackedRGB(0x242424));

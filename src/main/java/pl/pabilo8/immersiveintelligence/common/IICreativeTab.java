@@ -192,6 +192,7 @@ public class IICreativeTab extends CreativeTabs
 		items.put("AH6K", IIContent.itemAmmoLightArtillery);
 		items.put("AG4", IIContent.itemAmmoLightGun);
 		items.put("G4", IIContent.itemRailgunGrenade);
+		items.put("E2", IIContent.itemAmmoMortar);
 
 		//Guns and Howitzers
 		items.forEach((name, item) -> {
@@ -239,7 +240,6 @@ public class IICreativeTab extends CreativeTabs
 		items.put("AR6", IIContent.itemAmmoRocketLight);
 		items.put("AR10", IIContent.itemAmmoRocketHeavy);
 		items.put("AR6F", IIContent.itemAmmoGuidedMissile);
-
 
 		items.forEach((name, item) -> {
 			tabNewLine(list);
@@ -297,7 +297,6 @@ public class IICreativeTab extends CreativeTabs
 		items.put("AM1M", IIContent.itemAmmoAssaultRifle);
 		items.put("AM2", IIContent.itemAmmoMachinegun);
 		items.put("AM3", IIContent.itemAmmoAutocannon);
-		items.put("E2", IIContent.itemAmmoMortar);
 
 		items.forEach((name, item) -> {
 			tabNewLine(list);
@@ -316,6 +315,8 @@ public class IICreativeTab extends CreativeTabs
 					IIContent.ammoCoreBrass, CoreType.CANISTER, FuseType.PROXIMITY, IIContent.ammoComponentTesla, IIContent.ammoComponentWhitePhosphorus);
 			ItemStack stackA1 = addAmmo(list, item, name+"/A1 Sprengpatrone",
 					IIContent.ammoCoreBrass, CoreType.SOFTPOINT, FuseType.CONTACT, IIContent.ammoComponentHMX);
+			ItemStack stackT = addAmmo(list, item, name+"/T Gummigeschoss",
+					IIContent.ammoCoreRubber, CoreType.SOFTPOINT, FuseType.CONTACT);
 
 			//Color tracer bullets
 			ItemStack stackM1 = addAmmo(list, item, name+"/P14 Blaumarkierungpatrone",
@@ -346,6 +347,7 @@ public class IICreativeTab extends CreativeTabs
 					list.add(getMagazine(magazine, name+"/SP1P2 Magazine", stackP1, stackP2));
 					list.add(getMagazine(magazine, name+"/SP1P5W6 Magazine", stackP1, stackP5, stackW6));
 					list.add(getMagazine(magazine, name+"/SW1W6 Magazine", stackW1, stackA1));
+					list.add(getMagazine(magazine, name+"/ST Magazine", stackT));
 				}
 
 			//Magazines

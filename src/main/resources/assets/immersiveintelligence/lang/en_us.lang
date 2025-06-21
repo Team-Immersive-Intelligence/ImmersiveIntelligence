@@ -453,14 +453,15 @@ item.immersiveintelligence.bullet.component.nuke.name=Nuclear Warhead
 
 #Cores
 
-item.immersiveintelligence.bullet.component.core_steel.name=Steel Core
-item.immersiveintelligence.bullet.component.core_brass.name=Brass Core
-item.immersiveintelligence.bullet.component.core_copper.name=Copper Core
-item.immersiveintelligence.bullet.component.core_iron.name=Iron Core
-item.immersiveintelligence.bullet.component.core_tungsten.name=Tungsten Core
-item.immersiveintelligence.bullet.component.core_lead.name=Lead Core
-item.immersiveintelligence.bullet.component.core_uranium.name=Uranium Core
-item.immersiveintelligence.bullet.component.core_pabilium.name=Pabilium Core
+item.immersiveintelligence.bullet.component.core_steel.name=Steel
+item.immersiveintelligence.bullet.component.core_brass.name=Brass
+item.immersiveintelligence.bullet.component.core_copper.name=Copper
+item.immersiveintelligence.bullet.component.core_iron.name=Iron
+item.immersiveintelligence.bullet.component.core_tungsten.name=Tungsten
+item.immersiveintelligence.bullet.component.core_lead.name=Lead
+item.immersiveintelligence.bullet.component.core_uranium.name=Uranium
+item.immersiveintelligence.bullet.component.core_pabilium.name=Pabilium
+item.immersiveintelligence.bullet.component.core_rubber.name=Rubber
 
 item.immersiveintelligence.bullet_magazine.machinegun.name=Machinegun Magazine
 item.immersiveintelligence.bullet_magazine.submachinegun.name=Submachinegun Magazine

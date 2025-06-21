@@ -348,6 +348,7 @@ public class IIContent
 	public static final AmmoCore ammoCoreTungsten = new AmmoCoreTungsten();
 	public static final AmmoCore ammoCoreUranium = new AmmoCoreUranium();
 	public static final AmmoCore ammoCorePabilium = new AmmoCorePabilium();
+	public static final AmmoCore ammoCoreRubber = new AmmoCoreRubber();
 
 	//ammo components
 	public static final AmmoComponent ammoComponentTNT = new AmmoComponentTNT();

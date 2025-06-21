@@ -30,6 +30,7 @@ public class ItemIIMaterialNugget extends ItemIISubItemsBase<MaterialsNugget>
 		TUNGSTEN,
 		ZINC,
 		SILICON,
-		DURALUMINIUM
+		DURALUMINIUM,
+		RUBBER
 	}
 }
