@@ -21,12 +21,14 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
+import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.rotary.*;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageRotaryPowerSync;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Set;
 
 import static blusunrize.immersiveengineering.api.energy.wires.WireApi.canMix;
 
@@ -64,27 +66,21 @@ public abstract class TileEntityMechanicalConnectable extends TileEntityImmersiv
 	public void updateRotationStorage(float rpm, float torque, int part)
 	{
 		if(world.isRemote)
-		{
 			if(part==0)
 			{
 				energy.setRotationSpeed(rpm);
 				energy.setTorque(torque);
 			}
 			else if(part==1)
-			{
 				getNetwork().setClient(rpm, torque);
-			}
-		}
 	}
 
 	@Override
 	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing)
 	{
 		if(capability==CapabilityRotaryEnergy.ROTARY_ENERGY)
-		{
 			if(facing==null||facing==getFacing())
 				return true;
-		}
 		return super.hasCapability(capability, facing);
 	}
 
@@ -92,10 +88,8 @@ public abstract class TileEntityMechanicalConnectable extends TileEntityImmersiv
 	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing)
 	{
 		if(capability==CapabilityRotaryEnergy.ROTARY_ENERGY)
-		{
 			if(facing==null||facing==getFacing())
 				return (T)energy;
-		}
 		return super.getCapability(capability, facing);
 	}
 
@@ -142,9 +136,7 @@ public abstract class TileEntityMechanicalConnectable extends TileEntityImmersiv
 				{
 					IRotaryEnergy other = te.getCapability(CapabilityRotaryEnergy.ROTARY_ENERGY, getFacing().getOpposite());
 					if(energy.handleRotation(other, getFacing().getOpposite()))
-					{
 						getNetwork().updateValues();
-					}
 				}
 			}
 
@@ -229,8 +221,17 @@ public abstract class TileEntityMechanicalConnectable extends TileEntityImmersiv
 	{
 		super.removeCable(connection);
 		beltNetwork.removeFromNetwork(this);
+		ImmersiveIntelligence.proxy.onMechanicalConnectorRemoved(connection);
 	}
 
+	@Override
+	public void invalidate()
+	{
+		Set<Connection> connections = ImmersiveNetHandler.INSTANCE.getConnections(world, pos);
+		if(connections!=null)
+			connections.forEach(ImmersiveIntelligence.proxy::onMechanicalConnectorRemoved);
+		super.invalidate();
+	}
 
 	@Override
 	public RotaryStorage getRotaryStorage()
@@ -242,9 +243,7 @@ public abstract class TileEntityMechanicalConnectable extends TileEntityImmersiv
 	public float getDamageAmount(Entity e, Connection c)
 	{
 		if(c.cableType instanceof MotorBeltType)
-		{
 			return (float)beltNetwork.getNetworkTorque()/4f;
-		}
 		return super.getDamageAmount(e, c);
 	}
 }

@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.Tuple;
 import pl.pabilo8.immersiveintelligence.api.rotary.IIRotaryUtils;
+import pl.pabilo8.immersiveintelligence.client.model.IIModelRegistry;
 import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer.RegisteredTileRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.amt.*;
@@ -17,7 +18,6 @@ import pl.pabilo8.immersiveintelligence.common.block.rotary_device.tileentity.Ti
 import pl.pabilo8.immersiveintelligence.common.block.rotary_device.tileentity.TileEntityWheelSteel;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
-import java.util.HashMap;
 import java.util.Set;
 
 /**
@@ -31,7 +31,6 @@ import java.util.Set;
 public class WheelRenderer extends IITileRenderer<TileEntityWheelBase>
 {
 	private IIAnimationCompiledMap rotationClockwise, rotationCounterCw;
-	private final HashMap<TileEntityWheelBase, AMTChain> connections = new HashMap<>();
 	AMT[] models;
 
 	@Override
@@ -50,16 +49,12 @@ public class WheelRenderer extends IITileRenderer<TileEntityWheelBase>
 		Set<Connection> outputs = ImmersiveNetHandler.INSTANCE.getConnections(te.getWorld(), te.getPos());
 		//Make or get the connection model
 		if(outputs==null)
-		{
-			//Preventive method, for when a wheel is replaced
-			connections.remove(te);
 			return;
-		}
 		for(Connection connection : outputs)
 		{
 			if(!shouldRenderConnection(te, connection))
 				continue;
-			AMTChain chain = connections.computeIfAbsent(te, t -> AMTChain.getChainForNetwork(t, connection));
+			AMTChain chain = IIModelRegistry.INSTANCE.getMotorBeltConnectionModel(te, connection);
 			//Apply rotation
 			float rpm = (float)te.getOutputRPM();
 			if(rpm==0)
@@ -88,7 +83,6 @@ public class WheelRenderer extends IITileRenderer<TileEntityWheelBase>
 		models = IIAnimationUtils.getAMT(sModel, IIAnimationLoader.loadHeader(sModel.getSecond()));
 		rotationClockwise = IIAnimationCompiledMap.create(models, IIReference.RES_II.with("wheel/rotate_cw"));
 		rotationCounterCw = IIAnimationCompiledMap.create(models, IIReference.RES_II.with("wheel/rotate_ccw"));
-		connections.clear();
 	}
 
 	@Override

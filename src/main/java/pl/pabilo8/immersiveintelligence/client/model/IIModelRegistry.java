@@ -1,5 +1,6 @@
 package pl.pabilo8.immersiveintelligence.client.model;
 
+import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler.Connection;
 import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.client.ImmersiveModelRegistry;
 import blusunrize.immersiveengineering.client.models.ModelItemDynamicOverride;
@@ -23,7 +24,9 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
+import pl.pabilo8.immersiveintelligence.client.util.amt.AMTChain;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
+import pl.pabilo8.immersiveintelligence.common.block.rotary_device.tileentity.TileEntityMechanicalConnectable;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
@@ -55,6 +58,7 @@ public class IIModelRegistry extends ImmersiveModelRegistry
 	public final HashMap<ModelResourceLocation, ItemModelReplacement> itemModelReplacements = new HashMap<>();
 	private final Map<ResourceLocation, IReloadableModelContainer<?>> reloadableModels = new HashMap<>();
 	private final List<IReloadableModelContainer<?>> temporaryReloadableModels = new ArrayList<>();
+	private final HashMap<Connection, AMTChain> motorBeltConnections = new HashMap<>();
 
 	@Override
 	@SubscribeEvent
@@ -213,5 +217,29 @@ public class IIModelRegistry extends ImmersiveModelRegistry
 		temporaryReloadableModels.clear();
 		//Actual models
 		reloadableModels.values().forEach(mod -> mod.registerSprites(map));
+	}
+
+	/**
+	 * Gets or creates a motor belt connection model for the given connection.
+	 *
+	 * @param te         the tile entity of the mechanical connector (wheel)
+	 * @param connection the connection to get the model for
+	 * @return the motor belt connection model for the given connection, or a new one if it doesn't exist yet
+	 */
+	public AMTChain getMotorBeltConnectionModel(TileEntityMechanicalConnectable te, Connection connection)
+	{
+		return motorBeltConnections.computeIfAbsent(connection, c -> AMTChain.getChainForNetwork(te, connection));
+	}
+
+	/**
+	 * Finds and removes a motor belt connection model
+	 *
+	 * @param connection the connection to remove the model for
+	 */
+	public void removeMotorBeltConnectionModel(Connection connection)
+	{
+		AMTChain remove = motorBeltConnections.remove(connection);
+		if(remove!=null)
+			remove.disposeOf();
 	}
 }

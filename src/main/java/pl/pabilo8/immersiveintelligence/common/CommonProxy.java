@@ -5,6 +5,7 @@ import blusunrize.immersiveengineering.api.MultiblockHandler;
 import blusunrize.immersiveengineering.api.MultiblockHandler.IMultiblock;
 import blusunrize.immersiveengineering.api.crafting.CrusherRecipe;
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
+import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler.Connection;
 import blusunrize.immersiveengineering.api.tool.BulletHandler;
 import blusunrize.immersiveengineering.api.tool.ConveyorHandler;
 import blusunrize.immersiveengineering.api.tool.ConveyorHandler.IConveyorTile;
@@ -820,5 +821,10 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 
 		IICreativeTab.fluidBucketMap.add(fl);
 		return fl;
+	}
+
+	public void onMechanicalConnectorRemoved(Connection connection)
+	{
+
 	}
 }
