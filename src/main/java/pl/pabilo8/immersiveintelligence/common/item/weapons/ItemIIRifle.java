@@ -118,7 +118,7 @@ public class ItemIIRifle extends ItemIIGunBase implements IAdvancedZoomTool
 	@Override
 	protected FireModeType getFireMode(ItemStack weapon)
 	{
-		return hasIIUpgrade(weapon, WeaponUpgrade.SEMI_AUTOMATIC)?FireModeType.AUTOMATIC: FireModeType.SINGULAR;
+		return hasIIUpgrade(weapon, WeaponUpgrade.SEMI_AUTOMATIC)?FireModeType.SINGULAR: FireModeType.AUTOMATIC;
 	}
 
 	@Override
