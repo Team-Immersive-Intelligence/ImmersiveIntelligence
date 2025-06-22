@@ -8,8 +8,6 @@ import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType.TypeMeta
 import pl.pabilo8.immersiveintelligence.client.gui.IDataMachineGui;
 import pl.pabilo8.immersiveintelligence.client.gui.ITabbedGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoResource;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoTemplate;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoButton;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoTab;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoDropdown;
@@ -18,10 +16,12 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoLabe
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoEntryPanelBuilder;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoBar;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoImage;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.widget.DecoManualWidget;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoAlignment;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundBuilder.SlotStyle;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoGuiUtils;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.widget.GuiWidgetManualWrapper;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoResource;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTemplate;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityDataInputMachine;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerDataInputMachine;
@@ -48,9 +48,8 @@ public class GuiDataInputMachine extends DecoGui<TileEntityDataInputMachine, Con
 	public static ResourceLocation ICON_VARIABLES = ResLoc.of(IIReference.RES_II, "gui/tab_icons/variables");
 	@DecoResource
 	public static ResourceLocation ICON_SEND_PACKET = ResLoc.of(IIReference.RES_II, "gui/tab_icons/send_packet");
-
-	public GuiWidgetManualWrapper sideManual = null;
-	protected DecoButton manualButton;
+	@DecoResource
+	public static ResourceLocation PROGRESS_IMAGE = ResLoc.of(IIReference.RES_II, "gui/data_input_machine");
 
 	protected DecoList<Pair<Character, DataType>> list;
 
@@ -115,7 +114,7 @@ public class GuiDataInputMachine extends DecoGui<TileEntityDataInputMachine, Con
 		);
 
 		//TODO: 10.06.2025 Add manual widget
-//		addWidget(new GuiWidgetManual<>());
+		addWidget(new DecoManualWidget());
 
 		//Add storage display and bars or the variable list, if in the "variables" tab
 		if(isStorage)

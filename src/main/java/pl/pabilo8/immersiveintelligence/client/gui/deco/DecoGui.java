@@ -7,9 +7,11 @@ import blusunrize.immersiveengineering.common.util.inventory.IIEInventory;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiLabel;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraftforge.client.event.GuiScreenEvent.ActionPerformedEvent;
 import net.minecraftforge.fml.common.Loader;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -21,10 +23,13 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiComponentDe
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiComponentDecoBase.DecoGuiEvent;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoTab;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoLabel;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.widget.GuiComponentWidgetBase;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.widget.DecoComponentWidgetBase;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundBuilder;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundTile;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoResource;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTemplate;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
+import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationUtils;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
@@ -64,6 +69,8 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C extends ContainerIIBase<T>> extends GuiContainer
 {
+	private static final int MAX_WIDGET_TIME = 40;
+
 	//Gui basics
 	protected final String name;
 	protected final T tile;
@@ -73,13 +80,20 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 	//Components
 	protected final List<DecoTab> tabList = new ArrayList<>();
 	protected final List<DecoTab> widgetTabList = new ArrayList<>();
+	private final List<DecoComponentWidgetBase<?>> widgetList = new ArrayList<>();
 
-	//Help framework
-	private boolean helpMode = false;
+	//Background
 	private DecoBackgroundBuilder<T, C> backgroundBuilder;
 	private List<Rectangle> takenSpace;
 	private GuiComponentDecoBase<?> focusedElement;
 	private GuiComponentDecoBase<?> hoveredElement;
+
+	//Widgets
+	private DecoComponentWidgetBase<?> previousWidget, currentWidget;
+	private int widgetTime = 0;
+
+	//Help framework
+	private boolean helpMode = false;
 
 	public DecoGui(EntityPlayer player, T tile, IIGUI iigui)
 	{
@@ -99,8 +113,9 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 	public final void initGui()
 	{
 		//Sync GUI NBT
+		EasyNBT nbt = this.loadGuiData();
 		NBTSerialisation.synchroniseFor(this, (tag, gui) ->
-				tag.deserializeAll(gui, this.loadGuiData().unwrap(), true));
+				tag.deserializeAll(gui, nbt.unwrap(), true));
 
 		//Clean GUI
 		this.buttonList.clear();
@@ -112,6 +127,19 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 
 		//Fire initialization event for the extending Deco GUI class
 		onInit();
+
+		//Load the last widget
+		nbt.checkSetString("currentWidget", s -> {
+			for(DecoComponentWidgetBase<?> widget : widgetList)
+				if(widget.getName().equals(s))
+				{
+					setCurrentWidget(widget);
+					widgetTime = 0;
+					for(DecoTab decoTab : widgetTabList)
+						decoTab.x += widget.getWidgetWidth();
+					return;
+				}
+		});
 
 		//Build background and generate gui size
 		if(backgroundBuilder!=null)
@@ -138,6 +166,8 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 		for(GuiButton button : buttonList)
 			if(button instanceof GuiComponentDecoBase)
 				((GuiComponentDecoBase<?>)button).setParentGUI(this);
+		for(DecoComponentWidgetBase<?> widget : widgetList)
+			widget.setParentGUI(this);
 	}
 
 	/**
@@ -184,28 +214,38 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 			DecoTab tab = (DecoTab)component;
 			tab.withSize(28, 24);
 			tab.x = -28;
-			tab.y = 5+tabList.size()*24;
+			tab.y = 5+tabList.stream().mapToInt(d -> d.height).sum();
 			tabList.add(tab);
 		}
 
 		return component;
 	}
 
-	protected final <W extends GuiComponentWidgetBase<W>> W addWidget(W widget)
+	protected final <W extends DecoComponentWidgetBase<W>> W addWidget(W widget)
 	{
 		//Add the widget tab
 		DecoTab tab = widget.provideTab();
 		buttonList.add(tab);
 		tab.id = buttonList.size();
-		tab.withSize(28, 24);
+		tab.withSize(32, 18);
+		tab.withOnPressed((gui, mouseX, mouseY) -> setCurrentWidget(widget));
 		tab.x = xSize;
-		tab.y = ySize-10-tabList.size()*24;
+		tab.y = ySize/2-10-widgetTabList.stream().mapToInt(d -> d.height).sum();
+		widgetTabList.add(tab);
 
 		//Add the widget itself
 		widget.x = xSize;
-		widget.y = (ySize-widget.height)/2;
-		widget.setParentGUI(this);
+		widget.y = 0;
+		widgetList.add(widget);
 		return widget;
+	}
+
+	private boolean setCurrentWidget(DecoComponentWidgetBase<?> widget)
+	{
+		previousWidget = currentWidget;
+		currentWidget = currentWidget==widget?null: widget;
+		widgetTime = MAX_WIDGET_TIME;
+		return true;
 	}
 
 	/**
@@ -270,6 +310,10 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 	{
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
+		//Draw widgets
+		drawWidgets(mouseX, mouseY, partialTicks);
+
+		//Draw the tiled GUI background
 		if(backgroundBuilder!=null)
 			backgroundBuilder.draw();
 	}
@@ -286,21 +330,59 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 	{
 		//Draw the dark background
 		this.drawDefaultBackground();
+
 		//Draw tiled background, labels, and buttons
 		super.drawScreen(mouseX, mouseY, partialTicks);
 		//Check scroll on components
 		float scroll = Mouse.getDWheel();
 		if(scroll!=0)
-			for(GuiButton b : buttonList)
-				if(b instanceof GuiComponentDecoBase)
-					((GuiComponentDecoBase<?>)b).onComponentScroll(mouseX, mouseY, scroll);
+		{
+			if(currentWidget!=null&&!currentWidget.onComponentScroll(mouseX, mouseY, scroll))
+				for(GuiButton b : buttonList)
+					if(b instanceof GuiComponentDecoBase)
+						((GuiComponentDecoBase<?>)b).onComponentScroll(mouseX, mouseY, scroll);
+		}
 
 		//Draw the upper layer of buttons
 		for(GuiButton b : buttonList)
 			if(b instanceof GuiComponentDecoBase)
 				((GuiComponentDecoBase<?>)b).drawButtonUpperLayer(mc, mouseX, mouseY, partialTicks);
+
 		//Draw tooltip
 		this.renderHoveredToolTip(mouseX, mouseY);
+	}
+
+	private void drawWidgets(int mouseX, int mouseY, float partialTicks)
+	{
+		//Calculate show/hide progress
+		float progress = IIAnimationUtils.getAnimationProgress(widgetTime--, MAX_WIDGET_TIME, true, partialTicks);
+
+		//Draw the previous (hiding) widget
+		if(previousWidget!=null)
+		{
+			GlStateManager.pushMatrix();
+			GlStateManager.translate(-(progress)*previousWidget.getWidgetWidth(), 0, 0);
+			if(progress < 1)
+				previousWidget.drawButton(mc, mouseX, mouseY, partialTicks);
+			GlStateManager.popMatrix();
+		}
+		//Draw the current widget
+		if(currentWidget!=null)
+		{
+			GlStateManager.pushMatrix();
+			GlStateManager.translate(-(1f-progress)*currentWidget.getWidgetWidth(), 0, 0);
+			currentWidget.drawButton(mc, mouseX, mouseY, partialTicks);
+			GlStateManager.popMatrix();
+		}
+
+		//Update widget tabs position
+		int wSize = (int)(currentWidget!=null?currentWidget.getWidgetWidth()*progress:
+				(previousWidget!=null?previousWidget.getWidgetWidth()*(1f-progress): 0));
+		for(DecoTab decoTab : widgetTabList)
+		{
+			decoTab.x = this.guiLeft+this.xSize+wSize;
+			decoTab.initialize();
+		}
 	}
 
 	/**
@@ -376,6 +458,18 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 	{
 		//Lose element focus
 		focusedElement = null;
+
+		//Widgets are not a part of the button list, so we need to check them separately
+		if(currentWidget!=null&&currentWidget.mousePressed(this.mc, mouseX, mouseY))
+		{
+			ActionPerformedEvent.Pre event = new ActionPerformedEvent.Pre(this, currentWidget, this.buttonList);
+			if(net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(event))
+				return;
+			this.selectedButton = currentWidget;
+			if(this.equals(this.mc.currentScreen))
+				net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new ActionPerformedEvent.Post(this, event.getButton(), this.buttonList));
+		}
+
 		super.mouseClicked(mouseX, mouseY, mouseButton);
 	}
 
@@ -403,7 +497,12 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 		for(GuiButton b : buttonList)
 			if(b instanceof GuiComponentDecoBase)
 				((GuiComponentDecoBase<?>)b).cleanup();
+
 		//Labels shouldn't create VBOs, so no cleanup needed
+
+		//Cleanup widgets
+		for(DecoComponentWidgetBase<?> widget : widgetList)
+			widget.cleanup();
 	}
 
 	//--- Component Events ---//
@@ -411,6 +510,9 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 	protected List<String> getTooltip()
 	{
 		this.hoveredElement = null;
+		//Widget
+		if(currentWidget!=null&&currentWidget.isMouseOver())
+			return currentWidget.getTooltip();
 		//Buttons
 		for(GuiButton guiButton : buttonList)
 			if(guiButton instanceof GuiComponentDecoBase&&guiButton.isMouseOver())
@@ -463,6 +565,10 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 		for(GuiButton button : buttonList)
 			if(button instanceof GuiComponentDecoBase)
 				((GuiComponentDecoBase<?>)button).onGuiSave();
+
+		//Save current widget data
+		if(currentWidget!=null)
+			nbt.withString("currentWidget", currentWidget.getName());
 
 		//Save fields marked with @SyncNBT
 		NBTSerialisation.synchroniseFor(this, (tag, tile) -> tag.serializeAll(tile, nbt.unwrap()));
@@ -521,7 +627,31 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 	{
 		//Return cached value if available
 		if(takenSpace!=null)
+		{
+			//Get the widget show animation progress
+			float progress = IIAnimationUtils.getAnimationProgress(widgetTime--, MAX_WIDGET_TIME, true, 0);
+
+			//Set the previous widget rectangle
+			Rectangle previousWidgetRectangle = takenSpace.get(takenSpace.size()-2);
+			if(previousWidget!=null)
+				previousWidgetRectangle.setBounds((int)(previousWidget.x-(progress*xSize)), previousWidget.y,
+						previousWidget.getWidgetWidth(), previousWidget.height);
+			else
+				previousWidgetRectangle.setBounds(0, 0, 0, 0);
+
+			//Set the current widget rectangle
+			Rectangle widgetRectangle = takenSpace.get(takenSpace.size()-1);
+			if(currentWidget!=null)
+				widgetRectangle.setBounds((int)(currentWidget.x-(1f-progress)*xSize), currentWidget.y,
+						currentWidget.getWidgetWidth(), currentWidget.height);
+			else
+				widgetRectangle.setBounds(0, 0, 0, 0);
+
+			for(int i = takenSpace.size()-widgetTabList.size()-2; i < takenSpace.size()-2; i++)
+				takenSpace.get(i).x = guiLeft+xSize+(int)(progress*(currentWidget!=null?currentWidget.getWidgetWidth(): 0));
+
 			return takenSpace;
+		}
 
 		List<Rectangle> takenSpace = new ArrayList<>();
 		//Add rectangles from the background builder
@@ -532,6 +662,15 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 		//Add rectangles for each tab
 		for(DecoTab tab : tabList)
 			takenSpace.add(new Rectangle(tab.x, tab.y, tab.width, tab.height));
+
+		//Add widget tabs
+		for(DecoTab tab : widgetTabList)
+			takenSpace.add(new Rectangle(tab.x, tab.y, tab.width, tab.height));
+
+		//Previous widget
+		takenSpace.add(new Rectangle(0, 0, 0, 0));
+		//Current wigdet
+		takenSpace.add(new Rectangle(0, 0, 0, 0));
 
 		return this.takenSpace = takenSpace;
 	}

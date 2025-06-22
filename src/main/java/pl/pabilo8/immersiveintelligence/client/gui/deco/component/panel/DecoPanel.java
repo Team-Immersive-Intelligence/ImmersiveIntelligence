@@ -8,11 +8,13 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiComponentDecoBase;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoLabel;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoFrame;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +26,8 @@ import java.util.List;
 public class DecoPanel extends GuiComponentDecoBase<DecoPanel>
 {
 	private List<DecoLabel> labels = new ArrayList<>();
+	@Nullable
+	private DecoFrame frame = null;
 	private ResLoc background = IIReference.GUI_BG_STEEL;
 	private ResLoc backgroundMask = IIReference.RES_TEXTURES_DECO_TEMPLATE_SQUARE;
 	int vbo = -1;
@@ -66,6 +70,12 @@ public class DecoPanel extends GuiComponentDecoBase<DecoPanel>
 	public DecoPanel withBackgroundMask(ResLoc backgroundMask)
 	{
 		this.backgroundMask = backgroundMask;
+		return this;
+	}
+
+	public DecoPanel withFrame(@Nullable DecoFrame frame)
+	{
+		this.frame = frame;
 		return this;
 	}
 

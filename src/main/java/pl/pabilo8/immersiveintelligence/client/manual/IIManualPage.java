@@ -21,6 +21,7 @@ import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.widget.ManualSystemWrapper;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualObject.ManualObjectInfo;
 import pl.pabilo8.immersiveintelligence.client.manual.objects.*;
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
@@ -429,8 +430,13 @@ public class IIManualPage extends ManualPages
 		{
 			if(tooltip!=null&&!tooltip.isEmpty())
 			{
-				ClientUtils.drawHoveringText(tooltip, mx, my, IIClientUtils.fontRegular, gui.width, -1);
-				RenderHelper.enableGUIStandardItemLighting();
+				if(gui instanceof ManualSystemWrapper)
+					gui.drawHoveringText(tooltip, mx, my, IIClientUtils.fontRegular);
+				else
+				{
+					ClientUtils.drawHoveringText(tooltip, mx, my, IIClientUtils.fontRegular, gui.width, -1);
+					RenderHelper.enableGUIStandardItemLighting();
+				}
 			}
 		}
 	}

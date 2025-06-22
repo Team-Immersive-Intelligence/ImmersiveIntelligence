@@ -1,4 +1,6 @@
-package pl.pabilo8.immersiveintelligence.client.gui.deco;
+package pl.pabilo8.immersiveintelligence.client.gui.deco.util;
+
+import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

@@ -328,6 +328,7 @@ public class DecoBackgroundBuilder<T extends TileEntityIEBase & IIEInventory, C 
 	public void draw()
 	{
 		ClientUtils.bindAtlas();
+		GlStateManager.enableBlend();
 		if(vbo==-1)
 		{
 			vbo = GlStateManager.glGenLists(1);

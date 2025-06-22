@@ -27,8 +27,8 @@ import pl.pabilo8.immersiveintelligence.client.gui.block.emplacement.GuiEmplacem
 import pl.pabilo8.immersiveintelligence.client.gui.block.emplacement.GuiEmplacementPageTasks;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui.DecoResourcesLoader;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoResource;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoTemplate;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoResource;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTemplate;
 import pl.pabilo8.immersiveintelligence.client.gui.item.GuiCasingPouch;
 import pl.pabilo8.immersiveintelligence.client.gui.item.GuiPrintedPage;
 import pl.pabilo8.immersiveintelligence.common.block.data_device.tileentity.TileEntityDataMerger;

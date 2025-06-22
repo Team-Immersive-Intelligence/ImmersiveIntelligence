@@ -1245,8 +1245,6 @@ desc.immersiveintelligence.variable_set=Set
 desc.immersiveintelligence.variable_set_desc=Change the value of a variable
 desc.immersiveintelligence.variable_send_packet=Send Packet
 desc.immersiveintelligence.variable_send_packet_desc=Sends the current packet to data network
-desc.immersiveintelligence.hide_manual_widget=Hide Side Manual
-desc.immersiveintelligence.show_manual_widget=Show Side Manual
 desc.immersiveintelligence.variable_remove=Remove
 desc.immersiveintelligence.variable_remove_desc=Remove a variable
 desc.immersiveintelligence.variable_properties=Properties
@@ -2938,6 +2936,9 @@ ii.gui_tooltip.button.remove=Remove
 ii.gui_tooltip.button.edit=Edit
 ii.gui_tooltip.button.duplicate=Duplicate
 ii.gui_tooltip.button.clear=Clear
+
+ii.gui_tooltip.widget.manual.show=Show Side Manual
+ii.gui_tooltip.widget.manual.hide=Hide Side Manual
 
 ii.gui_tooltip.energy.stored=Energy Stored: %s/%s IF
 ii.gui_tooltip.energy.input=Energy Consumed: %s IF

@@ -139,6 +139,7 @@ public class IIReference
 	//Deco Components
 	public static final ResLoc RES_TEXTURES_DECO_COMPONENT_BUTTON = ResLoc.of(RES_TEXTURES_DECO, "component/button");
 	public static final ResLoc RES_TEXTURES_DECO_COMPONENT_TAB = ResLoc.of(RES_TEXTURES_DECO, "component/tab");
+	public static final ResLoc RES_TEXTURES_DECO_COMPONENT_TAB_WIDGET = ResLoc.of(RES_TEXTURES_DECO, "component/tab_widget");
 	public static final ResLoc RES_TEXTURES_DECO_COMPONENT_CHECKBOX = ResLoc.of(RES_TEXTURES_DECO, "component/checkbox");
 	public static final ResLoc RES_TEXTURES_DECO_COMPONENT_SWITCH = ResLoc.of(RES_TEXTURES_DECO, "component/switch");
 	public static final ResLoc RES_TEXTURES_DECO_COMPONENT_SWITCH_MOVING = ResLoc.of(RES_TEXTURES_DECO, "component/switch_moving");

@@ -30,7 +30,7 @@ public class DecoButton extends GuiComponentDecoTextBase<DecoButton>
 	private int cachedIconX, cachedIconY, cachedTextX, cachedTextY;
 
 	@Nullable
-	private ResLoc icon;
+	private ResourceLocation icon;
 	private int iconSize = 16;
 	@Nullable
 	private ItemStack stack;
@@ -49,7 +49,7 @@ public class DecoButton extends GuiComponentDecoTextBase<DecoButton>
 
 	public DecoButton withIcon(@Nonnull ResourceLocation icon, int iconSize)
 	{
-		this.icon = icon instanceof ResLoc?((ResLoc)icon): ResLoc.of(icon);
+		this.icon = icon;
 		this.iconSize = iconSize;
 		return this;
 	}
@@ -79,7 +79,7 @@ public class DecoButton extends GuiComponentDecoTextBase<DecoButton>
 	}
 
 	@Override
-	protected boolean initialize()
+	public boolean initialize()
 	{
 		int xPadding = padding[0]+padding[2];
 		int yPadding = padding[1]+padding[3];
