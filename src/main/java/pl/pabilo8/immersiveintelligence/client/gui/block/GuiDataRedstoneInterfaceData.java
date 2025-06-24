@@ -9,6 +9,7 @@ import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType.TypeMetaInfo;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiComponentDecoBase.MouseButton;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoButton;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoTab;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoList;
@@ -94,11 +95,25 @@ public class GuiDataRedstoneInterfaceData extends DecoGui<TileEntityRedstoneInte
 								.withComponent(
 										p -> new DecoButton(p.width-17-16+3, 2)
 												.withTemplate(DecoGuiUtils.LIST_BUTTON_EDIT_TEMPLATE)
-												.withOnPressed((gui, mouseX, mouseY) -> changeGUI(IIGUI.DATA_REDSTONE_INTERFACE_REDSTONE))
+												.withOnPressed((gui, mouseButton, mouseX, mouseY) -> {
+													if(mouseButton==MouseButton.LEFT)
+													{
+														changeGUI(IIGUI.DATA_REDSTONE_INTERFACE_REDSTONE);
+														return true;
+													}
+													return false;
+												})
 								)
 								.withComponent(p -> new DecoButton(p.width-17+1, 2)
 										.withTemplate(DecoGuiUtils.LIST_BUTTON_REMOVE_TEMPLATE)
-										.withOnPressed((gui, mouseX, mouseY) -> p.getCurrentList().removeEntry(p.getCurrentElement()))
+										.withOnPressed((gui, mouseButton, mouseX, mouseY) -> {
+											if(mouseButton==MouseButton.LEFT)
+											{
+												p.getCurrentList().removeEntry(p.getCurrentElement());
+												return true;
+											}
+											return false;
+										})
 								)
 								//Type Icon, Label, and Letter
 								.withComponent("image", new DecoImage(2+12, 1)

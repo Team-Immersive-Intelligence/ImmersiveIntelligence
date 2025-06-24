@@ -18,11 +18,11 @@ public class DecoList<T> extends DecoScrolledCollection<DecoList<T>, T>
 		super(x, y);
 
 		//Mouse
-		withOnPressed((gui, mouseX, mouseY) ->
+		withOnPressed((gui, mouseButton, mouseX, mouseY) ->
 				getHoveredPanel(mouseX, mouseY).map(pair ->
-						pair.getKey().mousePressed(ClientUtils.mc(), mouseX-gui.x, mouseY-pair.getValue())
+						pair.getKey().decoMousePressed(ClientUtils.mc(), mouseY-pair.getValue(), mouseX-gui.x, mouseButton)
 				).orElse(false));
-		withOnReleased((gui, mouseX, mouseY) ->
+		withOnReleased((gui, mouseButton, mouseX, mouseY) ->
 				getHoveredPanel(mouseX, mouseY).map(pair ->
 						{
 							pair.getKey().mouseReleased(mouseX-gui.x, mouseY-pair.getValue());

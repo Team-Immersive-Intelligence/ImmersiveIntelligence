@@ -41,6 +41,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 import pl.pabilo8.immersiveintelligence.client.render.IIMultiblockRenderer;
+import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
@@ -174,11 +175,15 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 		//Collect from file
 		JsonObject file = loadAABBFromJSON();
 		if(file==null)
+		{
+			IILogger.error("Multiblock "+loc.toString()+" is missing a configuration file.");
 			return;
+		}
 
 		//Load parts
 		updateAABB(file);
 		updatePOI(file);
+		updateRotations(file);
 		updateTactiles(file);
 	}
 
@@ -190,7 +195,10 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 		//Set AABB
 		AABBs.clear();
 		if(!file.has("bounds"))
+		{
+			IILogger.error("Multiblock"+name+" has no Axis-Aligned Bounding Boxes defined");
 			return;
+		}
 
 		//Collect AABB dictionary
 		Map<String, AxisAlignedFacingBB> allBounds = file.get("bounds").getAsJsonObject()
@@ -255,7 +263,10 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 		//Load POIs
 		POIs.clear();
 		if(!file.has("poi"))
+		{
+			IILogger.error("Multiblock "+loc.toString()+" has no Points of Interest defined!");
 			return;
+		}
 
 		JsonObject poiJSON = file.get("poi").getAsJsonObject();
 		for(Entry<String, JsonElement> poi : poiJSON.entrySet())
@@ -273,10 +284,38 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 			//Single Value
 			else if(poi.getValue() instanceof JsonPrimitive)
 				POIs.put(poi.getKey(), new int[]{poi.getValue().getAsInt()});
+			else
+				IILogger.warn("Invalid POI value for \""+poi.getKey()+"\" in multiblock "+loc.toString()+", expected array or primitive, got "+poi.getValue().getClass().getSimpleName());
 		}
 
 		//Sorting needed for binary search to work
 		POIs.values().forEach(Arrays::sort);
+	}
+
+	private void updateRotations(@Nonnull JsonObject file)
+	{
+		//Load rotations
+		rotations.clear();
+		if(!file.has("rotations"))
+			return;
+
+		JsonObject rotationsJSON = file.get("rotations").getAsJsonObject();
+		for(Entry<String, JsonElement> rotation : rotationsJSON.entrySet())
+		{
+			if(rotation.getValue() instanceof JsonPrimitive)
+			{
+				String rot = rotation.getValue().getAsString();
+				if(rot.equalsIgnoreCase("none"))
+					continue;
+				try
+				{
+					rotations.put(rotation.getKey(), Rotation.valueOf(rot.toUpperCase(Locale.ROOT)));
+				} catch(IllegalArgumentException e)
+				{
+					IILogger.warn("Invalid rotation value \""+rot+"\" for POI \""+rotation.getKey()+"\" in multiblock "+loc.toString());
+				}
+			}
+		}
 	}
 
 	/**

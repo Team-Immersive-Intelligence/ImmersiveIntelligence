@@ -8,8 +8,7 @@
     "data": 3,
     "redstone": 2,
     "punchtape": 7,
-    "hatch": [],
-    "crate": []
+    "hatch": 10
   },
   "rotations": {
     "data": "clockwise_90",

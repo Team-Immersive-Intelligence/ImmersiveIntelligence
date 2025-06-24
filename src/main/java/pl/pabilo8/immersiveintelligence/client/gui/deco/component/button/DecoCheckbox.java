@@ -28,9 +28,13 @@ public class DecoCheckbox extends GuiComponentDecoTextBase<DecoCheckbox>
 		super(x, y);
 		backgroundLocation = IIReference.RES_TEXTURES_DECO_COMPONENT_CHECKBOX;
 		withSize(120, 11);
-		withOnPressed((gui, mouseX, mouseY) -> {
-			checked = !checked;
-			return true;
+		withOnPressed((gui, mouseButton, mouseX, mouseY) -> {
+			if(mouseButton==MouseButton.LEFT)
+			{
+				checked = !checked;
+				return true;
+			}
+			return false;
 		});
 	}
 

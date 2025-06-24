@@ -26,6 +26,7 @@ import pl.pabilo8.immersiveintelligence.api.crafting.*;
 import pl.pabilo8.immersiveintelligence.client.gui.block.GuiChemicalBath;
 import pl.pabilo8.immersiveintelligence.client.gui.block.GuiVulcanizer;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiComponentDecoBase;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiComponentDecoBase.MouseButton;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
@@ -158,9 +159,13 @@ public class JEIHelper implements IModPlugin
 			return;
 
 		gui.withTranslatedTooltip("jei.tooltip.show.recipes")
-				.withOnPressed((g, mouseX, mouseY) -> {
-					recipesGui.showCategories(Collections.singletonList(categoryName));
-					return true;
+				.withOnPressed((g, mouseButton, mouseX, mouseY) -> {
+					if(mouseButton==MouseButton.LEFT)
+					{
+						recipesGui.showCategories(Collections.singletonList(categoryName));
+						return true;
+					}
+					return false;
 				});
 	}
 

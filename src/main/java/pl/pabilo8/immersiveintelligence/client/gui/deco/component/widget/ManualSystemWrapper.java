@@ -179,6 +179,12 @@ public class ManualSystemWrapper extends GuiManual
 	}
 
 	@Override
+	public void mouseClickMove(int mx, int my, int button, long time)
+	{
+		super.mouseClickMove(mx, my, button, time);
+	}
+
+	@Override
 	public void keyTyped(char c, int i)
 	{
 		try

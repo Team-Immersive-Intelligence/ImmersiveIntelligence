@@ -8,6 +8,7 @@ import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType.TypeMeta
 import pl.pabilo8.immersiveintelligence.client.gui.IDataMachineGui;
 import pl.pabilo8.immersiveintelligence.client.gui.ITabbedGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiComponentDecoBase.MouseButton;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoButton;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoTab;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoDropdown;
@@ -54,9 +55,7 @@ public class GuiDataInputMachine extends DecoGui<TileEntityDataInputMachine, Con
 	protected DecoList<Pair<Character, DataType>> list;
 
 	@SyncNBT
-	protected boolean soundPlayed = false;
-	@SyncNBT
-	protected boolean manual = false;
+	protected boolean soundPlayed;
 	@SyncNBT
 	int scroll;
 
@@ -70,8 +69,12 @@ public class GuiDataInputMachine extends DecoGui<TileEntityDataInputMachine, Con
 	{
 		//Set animation for the machine hatches
 		boolean isStorage = container.hasStorage;
-		syncAnimatedParts(0, isStorage);
-		syncAnimatedParts(1, !isStorage);
+		if(!soundPlayed)
+		{
+			syncAnimatedParts(0, isStorage);
+			syncAnimatedParts(1, !isStorage);
+			soundPlayed = true;
+		}
 
 		//Build background
 		startBackground()
@@ -105,11 +108,15 @@ public class GuiDataInputMachine extends DecoGui<TileEntityDataInputMachine, Con
 				new DecoTab()
 						.withIcon(ICON_SEND_PACKET, 32)
 						.withTranslatedTooltip(IIReference.DESCRIPTION_KEY+"variable_send_packet")
-						.withOnPressed((gui, mouseX, mouseY) -> {
-							IIPacketHandler.sendToServer(new MessageIITileSync(tile, EasyNBT.newNBT()
-									.withBoolean("send_packet", true)
-							));
-							return true;
+						.withOnPressed((gui, mouseButton, mouseX, mouseY) -> {
+							if(mouseButton==MouseButton.LEFT)
+							{
+								IIPacketHandler.sendToServer(new MessageIITileSync(tile, EasyNBT.newNBT()
+										.withBoolean("send_packet", true)
+								));
+								return true;
+							}
+							return false;
 						})
 		);
 
@@ -147,11 +154,14 @@ public class GuiDataInputMachine extends DecoGui<TileEntityDataInputMachine, Con
 									//Edit / Remove Buttons
 									.withComponent(p -> new DecoButton(p.width-17-16+3, 2)
 											.withTemplate(DecoGuiUtils.LIST_BUTTON_EDIT_TEMPLATE)
-											.withOnPressed((gui, mouseX, mouseY) -> changeGUI(IIGUI.DATA_INPUT_MACHINE_EDIT))
+											.withOnLMBPressed(() -> {
+												Pair<Character, DataType> element = p.getCurrentElement();
+												editVariable(element.getKey(), element.getValue());
+											})
 									)
 									.withComponent(p -> new DecoButton(p.width-17+1, 2)
 											.withTemplate(DecoGuiUtils.LIST_BUTTON_REMOVE_TEMPLATE)
-											.withOnPressed((gui, mouseX, mouseY) -> p.getCurrentList().removeEntry(p.getCurrentElement()))
+											.withOnLMBPressed(() -> p.getCurrentList().removeEntry(p.getCurrentElement()))
 									)
 									//Type Icon, Label, and Letter
 									.withComponent("image", new DecoImage(2+12, 1)
@@ -201,6 +211,7 @@ public class GuiDataInputMachine extends DecoGui<TileEntityDataInputMachine, Con
 	@Override
 	public void editVariable(char c, DataType type)
 	{
+
 		/*if(!list.variables.containsKey(c)||list.getPacketVariable(c).getClass()!=type.getClass())
 			list.setVariable(c, type);
 

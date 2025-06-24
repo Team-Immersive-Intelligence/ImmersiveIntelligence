@@ -40,6 +40,7 @@ public abstract class GuiComponentDecoBase<TYPE extends GuiComponentDecoBase<? s
 	protected boolean initialized;
 
 	private DecoMouseEvent<TYPE> onPressed;
+	private DecoMouseEvent<TYPE> onDragged;
 	private DecoMouseEvent<TYPE> onReleased;
 	private DecoMouseScrollEvent<TYPE> onScroll;
 	private DecoMouseEvent<TYPE> onHovered;
@@ -124,7 +125,7 @@ public abstract class GuiComponentDecoBase<TYPE extends GuiComponentDecoBase<? s
 		{
 			this.hovered = canBeClicked(mouseX, mouseY);
 			if(onHovered!=null)
-				onHovered.onMouse((TYPE)this, mouseX, mouseY);
+				onHovered.onMouse((TYPE)this, null, mouseX, mouseY);
 
 			draw(mouseX, mouseY, partialTicks);
 
@@ -157,10 +158,28 @@ public abstract class GuiComponentDecoBase<TYPE extends GuiComponentDecoBase<? s
 	@Override
 	public final boolean mousePressed(Minecraft mc, int mouseX, int mouseY)
 	{
+		return false;
+	}
+
+
+	@Override
+	public final void mouseReleased(int mouseX, int mouseY)
+	{
+
+	}
+
+	@Override
+	public final void mouseDragged(Minecraft mc, int mouseX, int mouseY)
+	{
+
+	}
+
+	public final boolean decoMousePressed(Minecraft mc, int mouseY, int mouseX, MouseButton button)
+	{
 		if(this.enabled&&canBeClicked(mouseX, mouseY))
 		{
-			pressed = children.stream().anyMatch(child -> child.mousePressed(mc, mouseX-x, mouseY-y));
-			pressed = pressed||(onPressed!=null&&onPressed.onMouse((TYPE)this, mouseX, mouseY));
+			pressed = children.stream().anyMatch(child -> child.decoMousePressed(mc, mouseY-y, mouseX-x, button));
+			pressed = pressed||(onPressed!=null&&onPressed.onMouse((TYPE)this, button, mouseX, mouseY));
 			if(pressed)
 				playPressSound(mc.getSoundHandler());
 			if(parentGui!=null)
@@ -170,13 +189,22 @@ public abstract class GuiComponentDecoBase<TYPE extends GuiComponentDecoBase<? s
 		return false;
 	}
 
-	@Override
-	public final void mouseReleased(int mouseX, int mouseY)
+	public final void decoMouseReleased(int mouseX, int mouseY, MouseButton mouseButton)
 	{
 		if(this.enabled)
 		{
-			pressed = !(onReleased==null||onReleased.onMouse((TYPE)this, mouseX, mouseY));
+			pressed = !(onReleased==null||onReleased.onMouse((TYPE)this, mouseButton, mouseX, mouseY));
 			children.forEach(child -> child.mouseReleased(mouseX-x, mouseY-y));
+		}
+	}
+
+	public final void decoMouseDragged(Minecraft mc, int mouseX, int mouseY, MouseButton button)
+	{
+		if(this.enabled&&canBeClicked(mouseX, mouseY))
+		{
+			if(onDragged!=null)
+				onDragged.onMouse((TYPE)this, button, mouseX, mouseY);
+			children.forEach(child -> child.mouseDragged(mc, mouseX-x, mouseY-y));
 		}
 	}
 
@@ -249,6 +277,26 @@ public abstract class GuiComponentDecoBase<TYPE extends GuiComponentDecoBase<? s
 	}
 
 	/**
+	 * An extension of {@link #withOnPressed(DecoMouseEvent)} that works only with the left mouse button.
+	 *
+	 * @param onPressed The event handler
+	 * @return this
+	 */
+	public final TYPE withOnLMBPressed(Runnable onPressed)
+	{
+		this.onPressed = (gui, mouseButton, mouseX, mouseY) ->
+		{
+			if(mouseButton==MouseButton.LEFT)
+			{
+				onPressed.run();
+				return true;
+			}
+			return false;
+		};
+		return (TYPE)this;
+	}
+
+	/**
 	 * Adds an onReleased event handler to the component, triggered when the mouse is released on the component
 	 *
 	 * @param onReleased The event handler
@@ -257,6 +305,18 @@ public abstract class GuiComponentDecoBase<TYPE extends GuiComponentDecoBase<? s
 	public final TYPE withOnReleased(DecoMouseEvent<TYPE> onReleased)
 	{
 		this.onReleased = onReleased;
+		return (TYPE)this;
+	}
+
+	/**
+	 * Adds an onDragged event handler to the component, triggered when the mouse is dragged over the component
+	 *
+	 * @param onDragged The event handler
+	 * @return this
+	 */
+	public final TYPE withOnDragged(DecoMouseEvent<TYPE> onDragged)
+	{
+		this.onDragged = onDragged;
 		return (TYPE)this;
 	}
 
@@ -380,7 +440,7 @@ public abstract class GuiComponentDecoBase<TYPE extends GuiComponentDecoBase<? s
 	@FunctionalInterface
 	public interface DecoMouseEvent<TYPE extends GuiComponentDecoBase<? super TYPE>>
 	{
-		boolean onMouse(TYPE gui, int mouseX, int mouseY);
+		boolean onMouse(TYPE gui, MouseButton button, int mouseX, int mouseY);
 	}
 
 	@FunctionalInterface
@@ -404,5 +464,14 @@ public abstract class GuiComponentDecoBase<TYPE extends GuiComponentDecoBase<? s
 		{
 			return (TYPE component) -> base.apply(apply(component));
 		}
+	}
+
+	public enum MouseButton
+	{
+		LEFT,
+		RIGHT,
+		MIDDLE,
+		FORWARD,
+		BACKWARD
 	}
 }

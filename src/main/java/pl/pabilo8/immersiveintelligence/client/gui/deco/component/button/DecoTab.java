@@ -34,7 +34,10 @@ public class DecoTab extends DecoButton
 
 	public DecoTab withLink(IIGUI link)
 	{
-		this.withOnPressed((gui, mx, my) -> {
+		this.withOnPressed((gui, mouseButton, mx, my) -> {
+			if(mouseButton!=MouseButton.LEFT)
+				return false;
+
 			DecoGui<?, ?> parent = gui.getParentGui();
 			if(parent==null)
 				IILogger.error("DecoTab: No parent gui found, cannot link to "+link);

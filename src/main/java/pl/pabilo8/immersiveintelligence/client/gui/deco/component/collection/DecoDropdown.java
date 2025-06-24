@@ -35,24 +35,28 @@ public class DecoDropdown<T> extends DecoScrolledCollection<DecoDropdown<T>, T>
 		super(x, y);
 		this.backgroundLocation = IIReference.RES_TEXTURES_DECO_COMPONENT_BUTTON;
 		withSize(120, 12);
-		withOnPressed((gui, mouseX, mouseY) -> {
-			if(dropped)
+		withOnPressed((gui, mouseButton, mouseX, mouseY) -> {
+			if(mouseButton==MouseButton.LEFT)
 			{
-				Tuple<Integer, Integer> clicked = getClickedEntryIndex(gui.x+2, gui.y-scroll+height+2, mouseX, mouseY);
-				if(clicked!=null)
+				if(dropped)
 				{
-					if(clicked.getFirst()==ON_CREATE_OPTION)
-						gui.runCreateAction();
-					else
-						selectedEntry = clicked.getFirst();
-					text = "";
-					dropped = false;
-					return true;
+					Tuple<Integer, Integer> clicked = getClickedEntryIndex(gui.x+2, gui.y-scroll+height+2, mouseX, mouseY);
+					if(clicked!=null)
+					{
+						if(clicked.getFirst()==ON_CREATE_OPTION)
+							gui.runCreateAction();
+						else
+							selectedEntry = clicked.getFirst();
+						text = "";
+						dropped = false;
+						return true;
+					}
 				}
+				dropped = !dropped;
+				pressed = false;
+				return true;
 			}
-			dropped = !dropped;
-			pressed = false;
-			return true;
+			return false;
 		});
 		withOnKeyTyped((gui, typedChar, keyCode) -> {
 			//Should only work when dropped

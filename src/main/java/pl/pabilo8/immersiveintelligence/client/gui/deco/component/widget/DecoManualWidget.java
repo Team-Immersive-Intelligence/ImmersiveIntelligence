@@ -44,12 +44,16 @@ public class DecoManualWidget extends DecoComponentWidgetBase<DecoManualWidget>
 			wrapper.onScroll(mouseScroll);
 			return true;
 		});
-		withOnPressed((gui, mouseX, mouseY) -> {
-			wrapper.mouseClicked(mouseX, mouseY, 0);
+		withOnPressed((gui, mouseButton, mouseX, mouseY) -> {
+			wrapper.mouseClicked(mouseX, mouseY, mouseButton.ordinal());
 			return true;
 		});
-		withOnReleased((gui, mouseX, mouseY) -> {
+		withOnReleased((gui, mouseButton, mouseX, mouseY) -> {
 			wrapper.mouseReleased(mouseX, mouseY, 0);
+			return true;
+		});
+		withOnDragged((gui, mouseButton, mouseX, mouseY) -> {
+			wrapper.mouseClickMove(mouseX, mouseY, mouseButton.ordinal(), 0);
 			return true;
 		});
 		withOnKeyTyped((gui, charTyped, keyCode) ->

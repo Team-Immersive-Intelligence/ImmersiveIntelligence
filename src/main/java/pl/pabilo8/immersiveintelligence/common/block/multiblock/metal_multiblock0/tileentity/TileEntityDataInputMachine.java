@@ -84,7 +84,7 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockProductionSi
 		if(message.hasKey("variables"))
 			storedData.deserializeNBT(message.getCompoundTag("variables"));
 		if(message.hasKey("send_packet"))
-			this.sendData(storedData, getDirection("sending"), getPOI(MultiblockPOI.DATA_OUTPUT)[0]);
+			this.sendData(storedData, getDirection("data"), getPOI(MultiblockPOI.DATA_OUTPUT)[0]);
 	}
 
 	@Override
@@ -99,7 +99,7 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockProductionSi
 			sendPacketToggle = !sendPacketToggle;
 			//Finally!
 			if(sendPacketToggle)
-				this.sendData(storedData, getDirection("sending"), getPOI(MultiblockPOI.DATA_OUTPUT)[0]);
+				this.sendData(storedData, getDirection("data"), getPOI(MultiblockPOI.DATA_OUTPUT)[0]);
 		}
 	}
 
@@ -108,16 +108,14 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockProductionSi
 	{
 		switch(poi)
 		{
-			case DATA_INPUT:
-				return getPOI("data");
-			case REDSTONE_INPUT:
-				return getPOI("redstone");
 			case ENERGY_INPUT:
 				return getPOI("energy");
+			case REDSTONE_INPUT:
+				return getPOI("redstone");
+			case DATA_OUTPUT:
+				return getPOI("data");
 			case MISC_HATCH:
 				return getPOI("hatch");
-			case MISC_CRATE:
-				return getPOI("crate");
 		}
 		return new int[0];
 	}

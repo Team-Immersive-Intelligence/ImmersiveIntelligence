@@ -37,9 +37,13 @@ public class DecoSwitch extends GuiComponentDecoTextBase<DecoSwitch>
 		super(x, y);
 		backgroundLocation = IIReference.RES_TEXTURES_DECO_COMPONENT_SWITCH;
 		withSize(120, 11);
-		withOnPressed((gui, mx, my) -> {
-			timer = (state = !state)?0: MAX_SWITCH_TICKS;
-			return true;
+		withOnPressed((gui, mouseButton, mx, my) -> {
+			if(mouseButton==MouseButton.LEFT)
+			{
+				timer = (state = !state)?0: MAX_SWITCH_TICKS;
+				return true;
+			}
+			return false;
 		});
 	}
 

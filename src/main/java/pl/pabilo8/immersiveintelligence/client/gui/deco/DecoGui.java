@@ -21,6 +21,7 @@ import pl.pabilo8.immersiveintelligence.client.ClientProxy;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiComponentDecoBase;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiComponentDecoBase.DecoGuiEvent;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiComponentDecoBase.MouseButton;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoTab;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoLabel;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.widget.DecoComponentWidgetBase;
@@ -228,7 +229,7 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 		buttonList.add(tab);
 		tab.id = buttonList.size();
 		tab.withSize(32, 18);
-		tab.withOnPressed((gui, mouseX, mouseY) -> setCurrentWidget(widget));
+		tab.withOnPressed((gui, mouseButton, mouseX, mouseY) -> setCurrentWidget(widget));
 		tab.x = xSize;
 		tab.y = ySize/2-10-widgetTabList.stream().mapToInt(d -> d.height).sum();
 		widgetTabList.add(tab);
@@ -459,8 +460,10 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 		//Lose element focus
 		focusedElement = null;
 
+		MouseButton mouseButtonEnum = MouseButton.values()[mouseButton%MouseButton.values().length];
+
 		//Widgets are not a part of the button list, so we need to check them separately
-		if(currentWidget!=null&&currentWidget.mousePressed(this.mc, mouseX, mouseY))
+		if(currentWidget!=null&&currentWidget.decoMousePressed(this.mc, mouseY, mouseX, mouseButtonEnum))
 		{
 			ActionPerformedEvent.Pre event = new ActionPerformedEvent.Pre(this, currentWidget, this.buttonList);
 			if(net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(event))
@@ -470,7 +473,27 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 				net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new ActionPerformedEvent.Post(this, event.getButton(), this.buttonList));
 		}
 
+		for(GuiButton guiButton : this.buttonList)
+			if(guiButton instanceof GuiComponentDecoBase)
+				((GuiComponentDecoBase<?>)guiButton).decoMousePressed(this.mc, mouseY, mouseX, mouseButtonEnum);
+
 		super.mouseClicked(mouseX, mouseY, mouseButton);
+	}
+
+	@Override
+	protected final void mouseReleased(int mouseX, int mouseY, int state)
+	{
+		if(focusedElement!=null)
+			focusedElement.decoMouseReleased(mouseX, mouseY, MouseButton.values()[state]);
+		super.mouseReleased(mouseX, mouseY, state);
+	}
+
+	@Override
+	protected final void mouseClickMove(int mouseX, int mouseY, int clickedMouseButton, long timeSinceLastClick)
+	{
+		if(focusedElement!=null)
+			focusedElement.decoMouseDragged(mc, mouseX, mouseY, MouseButton.values()[clickedMouseButton]);
+		super.mouseClickMove(mouseX, mouseY, clickedMouseButton, timeSinceLastClick);
 	}
 
 	/**
