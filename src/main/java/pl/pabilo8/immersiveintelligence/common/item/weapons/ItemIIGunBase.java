@@ -64,6 +64,7 @@ public abstract class ItemIIGunBase extends ItemIIUpgradableTool implements ISki
 
 	public static final String MAGAZINE = "magazine";
 	public static final String BULLETS = "bullets";
+	public static final String SHOULD_FIRE_SEMI = "shouldFireSemi";
 
 	public ItemIIGunBase(String name)
 	{
@@ -188,6 +189,23 @@ public abstract class ItemIIGunBase extends ItemIIUpgradableTool implements ISki
 		return getFireDelay(stack, EasyNBT.wrapNBT(stack.getTagCompound()))+1;
 	}
 
+	private boolean hasFiredThisClick(ItemStack stack) {
+		EasyNBT nbt = getNBT(stack);
+		return nbt.getBoolean(SHOULD_FIRE_SEMI);
+	}
+
+	private void setHasFiredThisClick(ItemStack stack, boolean hasFired) {
+		EasyNBT nbt = getNBT(stack);
+		nbt.withBoolean(SHOULD_FIRE_SEMI, hasFired);
+	}
+
+	@Override
+	public void onPlayerStoppedUsing(ItemStack stack, World world, EntityLivingBase entity, int timeLeft) {
+		if(getFireMode(stack) == FireModeType.SINGULAR || getFireMode(stack) == FireModeType.SINGULAR_CHARGED) {
+			setHasFiredThisClick(stack, false);
+		}
+	}
+
 	//--- Gun Handling ---//
 
 	@Override
@@ -259,7 +277,7 @@ public abstract class ItemIIGunBase extends ItemIIUpgradableTool implements ISki
 		switch(getFireMode(stack))
 		{
 			case SINGULAR:
-				if(!(user instanceof EntityPlayer)) //for hanses
+				if(!(user instanceof EntityPlayer)) // for hanses
 					shoot(stack, user, count);
 				break;
 			case AUTOMATIC:
@@ -300,9 +318,14 @@ public abstract class ItemIIGunBase extends ItemIIUpgradableTool implements ISki
 		if(hand==EnumHand.MAIN_HAND)
 		{
 			player.setActiveHand(hand);
-			if(getFireMode(weapon)==FireModeType.SINGULAR)
+			if(getFireMode(weapon)==FireModeType.SINGULAR || getFireMode(weapon)==FireModeType.SINGULAR_CHARGED)
 			{
-				shoot(weapon, player, 1);
+
+				if(!hasFiredThisClick(weapon)) {
+					shoot(weapon, player, 1);
+					setHasFiredThisClick(weapon, true);
+				}
+
 				return new ActionResult<>(EnumActionResult.FAIL, weapon);
 			}
 
