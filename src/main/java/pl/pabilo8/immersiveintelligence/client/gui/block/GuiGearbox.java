@@ -10,7 +10,6 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTemplate;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.block.rotary_device.tileentity.TileEntityGearbox;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerGearbox;
-import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 /**
@@ -49,7 +48,7 @@ public class GuiGearbox extends DecoGui<TileEntityGearbox, ContainerGearbox>
 
 		addLabel("Gear Ratio: 4:1", 24, 54)
 				.withSize(128, 11)
-				.withTextColor(IIColor.fromPackedRGB(0xd99747))
+				.withTextColor(IIReference.COLOR_GUI_BRASS)
 				.withAlign(DecoAlignment.CENTER);
 	}
 }

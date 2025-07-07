@@ -64,6 +64,22 @@ public class GuiDataInputMachine extends DecoGui<TileEntityDataInputMachine, Con
 		super(player, tile, gui);
 	}
 
+	public static class GuiDataInputMachineStorage extends GuiDataInputMachine
+	{
+		public GuiDataInputMachineStorage(EntityPlayer player, TileEntityDataInputMachine tile)
+		{
+			super(player, tile, IIGUI.DATA_INPUT_MACHINE_STORAGE);
+		}
+	}
+
+	public static class GuiDataInputMachineVariables extends GuiDataInputMachine
+	{
+		public GuiDataInputMachineVariables(EntityPlayer player, TileEntityDataInputMachine tile)
+		{
+			super(player, tile, IIGUI.DATA_INPUT_MACHINE_VARIABLES);
+		}
+	}
+
 	@Override
 	public void onInit()
 	{

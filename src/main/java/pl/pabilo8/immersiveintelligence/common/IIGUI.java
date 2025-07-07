@@ -20,7 +20,8 @@ import pl.pabilo8.immersiveintelligence.client.gui.block.ammunition_production.G
 import pl.pabilo8.immersiveintelligence.client.gui.block.arithmetic_logic_machine.GuiArithmeticLogicMachineEdit;
 import pl.pabilo8.immersiveintelligence.client.gui.block.arithmetic_logic_machine.GuiArithmeticLogicMachineStorage;
 import pl.pabilo8.immersiveintelligence.client.gui.block.arithmetic_logic_machine.GuiArithmeticMachineVariables;
-import pl.pabilo8.immersiveintelligence.client.gui.block.data_input_machine.GuiDataInputMachine;
+import pl.pabilo8.immersiveintelligence.client.gui.block.data_input_machine.GuiDataInputMachine.GuiDataInputMachineStorage;
+import pl.pabilo8.immersiveintelligence.client.gui.block.data_input_machine.GuiDataInputMachine.GuiDataInputMachineVariables;
 import pl.pabilo8.immersiveintelligence.client.gui.block.data_input_machine.GuiDataInputMachineEdit;
 import pl.pabilo8.immersiveintelligence.client.gui.block.emplacement.GuiEmplacementPageStatus;
 import pl.pabilo8.immersiveintelligence.client.gui.block.emplacement.GuiEmplacementPageStorage;
@@ -192,18 +193,18 @@ public enum IIGUI implements ISerializableEnum
 	@SideOnly(Side.CLIENT)
 	public static void initClientGUIs()
 	{
-		IIGUI.SAWMILL.setClientGui(GuiSawmill::new);
+		IIGUI.SAWMILL.setClientDecoGui(GuiSawmill::new);
 		IIGUI.PACKER.setClientGui(GuiPacker::new);
 		IIGUI.GEARBOX.setClientGui(GuiGearbox::new);
 
 		IIGUI.DATA_REDSTONE_INTERFACE_DATA
-				.setClientGui(GuiDataRedstoneInterfaceData.class, GuiDataRedstoneInterfaceData::new);
+				.setClientDecoGui(GuiDataRedstoneInterfaceData::new);
 		IIGUI.DATA_REDSTONE_INTERFACE_REDSTONE
 				.setClientGui(GuiDataRedstoneInterfaceRedstone::new);
 
-		IIGUI.PRINTING_PRESS.setClientGui(GuiPrintingPress.class, GuiPrintingPress::new);
+		IIGUI.PRINTING_PRESS.setClientDecoGui(GuiPrintingPress::new);
 		IIGUI.CHEMICAL_BATH.setClientGui(GuiChemicalBath::new);
-		IIGUI.ELECTROLYZER.setClientGui(GuiElectrolyzer.class, GuiElectrolyzer::new);
+		IIGUI.ELECTROLYZER.setClientDecoGui(GuiElectrolyzer::new);
 		IIGUI.PRECISION_ASSEMBLER.setClientGui(GuiPrecisionAssembler::new);
 		IIGUI.FUEL_STATION.setClientGui(GuiFuelStation::new);
 		IIGUI.DATA_MERGER.setClientGui(GuiDataMerger::new);
@@ -218,11 +219,9 @@ public enum IIGUI implements ISerializableEnum
 		IIGUI.SKYCRATE_STATION.setClientGui(GuiSkycrateStation::new);
 		IIGUI.SKYCART_STATION.setClientGui(GuiSkycartStation::new);
 		//DIM
-		IIGUI.DATA_INPUT_MACHINE_STORAGE.setClientGui(GuiDataInputMachine.class,
-				(player, te) -> new GuiDataInputMachine(player, te, IIGUI.DATA_INPUT_MACHINE_STORAGE));
-		IIGUI.DATA_INPUT_MACHINE_VARIABLES.setClientGui((player, te) ->
-				new GuiDataInputMachine(player, (TileEntityDataInputMachine)te, IIGUI.DATA_INPUT_MACHINE_VARIABLES));
-		IIGUI.DATA_INPUT_MACHINE_EDIT.setClientGui(GuiDataInputMachineEdit.class, GuiDataInputMachineEdit::new);
+		IIGUI.DATA_INPUT_MACHINE_STORAGE.setClientDecoGui(GuiDataInputMachineStorage::new);
+		IIGUI.DATA_INPUT_MACHINE_VARIABLES.setClientDecoGui(GuiDataInputMachineVariables::new);
+		IIGUI.DATA_INPUT_MACHINE_EDIT.setClientDecoGui(GuiDataInputMachineEdit::new);
 		//ALM
 		IIGUI.ARITHMETIC_LOGIC_MACHINE_STORAGE.setClientGui(GuiArithmeticLogicMachineStorage::new);
 		IIGUI.ARITHMETIC_LOGIC_MACHINE_VARIABLES_0.setClientGui((player, te) ->
@@ -268,15 +267,16 @@ public enum IIGUI implements ISerializableEnum
 	}
 
 	@SideOnly(Side.CLIENT)
+	@Deprecated
 	public <T extends TileEntity> void setClientGui(BiFunction<EntityPlayer, T, GuiScreen> guiFromTile)
 	{
 		this.guiFromTile = (player, tileEntity) -> guiFromTile.apply(player, (T)tileEntity);
 	}
 
 	@SideOnly(Side.CLIENT)
-	public <T extends TileEntityIEBase & IIEInventory, C extends ContainerIIBase<T>> void setClientGui(
-			Class<? extends DecoGui<T, C>> klass, BiFunction<EntityPlayer, T, DecoGui<T, C>> guiFromTile)
+	public <T extends TileEntityIEBase & IIEInventory, C extends ContainerIIBase<T>> void setClientDecoGui(BiFunction<EntityPlayer, T, DecoGui<T, C>> guiFromTile)
 	{
+		Class<DecoGui<T, C>> klass = (Class<DecoGui<T, C>>)guiFromTile.apply(null, null).getClass();
 		this.guiFromTile = (player, tileEntity) -> guiFromTile.apply(player, (T)tileEntity);
 		this.guiClass = klass;
 		DecoTemplate annotation = klass.getAnnotation(DecoTemplate.class);

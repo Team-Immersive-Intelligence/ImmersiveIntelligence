@@ -98,7 +98,18 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 
 	public DecoGui(EntityPlayer player, T tile, IIGUI iigui)
 	{
-		super(iigui.containerFromTile.apply(player, tile));
+		//The player can be null ONLY for the GUI's resource annotation loading
+		//In a normal scenario the player is never null
+		super(player==null?null: iigui.containerFromTile.apply(player, tile));
+		if(player==null)
+		{
+			this.name = null;
+			this.tile = null;
+			this.container = null;
+			this.playerContainer = null;
+			return;
+		}
+
 		this.tile = tile;
 		//noinspection unchecked
 		this.container = ((C)this.inventorySlots);

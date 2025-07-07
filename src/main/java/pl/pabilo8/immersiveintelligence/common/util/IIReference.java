@@ -239,6 +239,8 @@ public class IIReference
 
 	public static final IIColor COLOR_H1 = IIColor.fromPackedRGB(0x0a0a0a);
 	public static final IIColor COLOR_H2 = IIColor.fromPackedRGB(0x1a1a1a);
+	public static final IIColor COLOR_GUI_BRASS = IIColor.fromPackedRGB(0xd99747);
+
 	public static final IIColor COLOR_ENGINEERS_BLUE = IIColor.fromPackedRGB(0x486c94);
 	public static final IIColor COLOR_IMMERSIVE_ORANGE = IIColor.fromPackedRGB(0xf78034);
 	public static final IIColor COLOR_GOLD = IIColor.fromPackedRGB(0xFFAA00);

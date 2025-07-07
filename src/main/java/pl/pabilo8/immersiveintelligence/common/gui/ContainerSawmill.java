@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.common.gui;
 
-import blusunrize.immersiveengineering.common.gui.ContainerIEBase;
 import blusunrize.immersiveengineering.common.gui.IESlot;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -11,44 +10,38 @@ import net.minecraft.util.DamageSource;
 import pl.pabilo8.immersiveintelligence.api.crafting.SawmillRecipe;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.ISawblade;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.tileentity.TileEntitySawmill;
+import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIBase;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 01.07.2025
+ * @ii-approved 0.3.1
  * @since 10.07.2019
  */
-public class ContainerSawmill extends ContainerIEBase<TileEntitySawmill>
+public class ContainerSawmill extends ContainerIIBase<TileEntitySawmill>
 {
+	public final Slot slotInput, slotSaw, slotOutput, slotOutputTrash;
+
 	public ContainerSawmill(EntityPlayer player, TileEntitySawmill tile)
 	{
-		super(player.inventory, tile);
-		//Input/Output Slots
+		super(player, tile);
 
-		this.addSlotToContainer(new SawmillInput(this, this.inv, 0, 13, 36));
-		this.addSlotToContainer(new Saw(tile, this, this.inv, 1, 48, 23));
+		this.slotInput = addSlotToContainer(new SawmillInputSlot(this, this.inv, 0, 13+8, 36));
+		this.slotSaw = addSlotToContainer(new SawSlot(tile, this, this.inv, 1, 48+8, 23));
 
-		this.addSlotToContainer(new IESlot.Output(this, this.inv, 2, 86, 36));
-		this.addSlotToContainer(new IESlot.Output(this, this.inv, 3, 108, 36));
+		this.slotOutput = addSlotToContainer(new IESlot.Output(this, this.inv, 2, 86+8, 36));
+		this.slotOutputTrash = addSlotToContainer(new IESlot.Output(this, this.inv, 3, 108+8, 36));
 
-		this.slotCount = tile.getInventory().size();
-		this.tile = tile;
-
-		for(int i = 0; i < 3; i++)
-			for(int j = 0; j < 9; j++)
-				addSlotToContainer(new Slot(player.inventory, j+i*9+9, 8+j*18, 86+i*18));
-		for(int i = 0; i < 9; i++)
-			addSlotToContainer(new Slot(player.inventory, i, 8+i*18, 144));
+		addPlayerInventory(player.inventory, 8, 86);
 	}
 
-	public static class SawmillInput extends IESlot
+	public static class SawmillInputSlot extends IESlot
 	{
-		public SawmillInput(Container container, IInventory inv, int id, int x, int y)
+		public SawmillInputSlot(Container container, IInventory inv, int id, int x, int y)
 		{
 			super(container, inv, id, x, y);
 		}
 
-		/**
-		 * Check if the stack is allowed to be placed in this slot, used for armor slots as well as furnace fuel.
-		 */
 		@Override
 		public boolean isItemValid(ItemStack itemStack)
 		{
@@ -57,11 +50,11 @@ public class ContainerSawmill extends ContainerIEBase<TileEntitySawmill>
 		}
 	}
 
-	public static class Saw extends IESlot
+	public static class SawSlot extends IESlot
 	{
-		TileEntitySawmill tile;
+		private final TileEntitySawmill tile;
 
-		public Saw(TileEntitySawmill tile, Container container, IInventory inv, int id, int x, int y)
+		public SawSlot(TileEntitySawmill tile, Container container, IInventory inv, int id, int x, int y)
 		{
 			super(container, inv, id, x, y);
 			this.tile = tile;
