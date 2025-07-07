@@ -1448,17 +1448,11 @@ public class IIConfigHandler
 				@Comment({"Time required to reload a magazine in AR. (in ticks)"})
 				public static int clipReloadTime = 45;
 
-				@Comment({"Time required to load a railgun grenade to an upgraded AR. (in ticks)"})
-				public static int grenadeReloadTime = 80;
-
 				@Comment({"Time required to aim the AR. (in ticks)"})
 				public static int aimTime = 15;
 
 				@Comment({"Time required to fire a single bullet in Auto mode."})
-				public static int bulletFireTimeAuto = 2;
-
-				@Comment({"Time required to fire a single bullet in Semi-Auto mode."})
-				public static int bulletFireTimeSemiAuto = 5;
+				public static int bulletFireTime = 2;
 
 				@Comment({"Amount of horizontal recoil after taking a shot."})
 				public static float recoilHorizontal = 0.345f;
@@ -1477,11 +1471,20 @@ public class IIConfigHandler
 
 				//--- Upgrades ---//
 
+				@Comment({"Time required to load a railgun grenade to an upgraded AR. (in ticks)"})
+				public static int grenadeReloadTime = 80;
+
+				@Comment({"Time required to fire a railgun grenade in AR with the upgrade. (in ticks)"})
+				public static int grenadeFireTime = 40;
+
 				@Comment({"Energy used per tick by the Infrared Scope upgrade."})
 				public static int upgradeIRScopeEnergy = 20;
 
 				@Comment({"Energy used per shot by the Electric Firing Motor upgrade."})
 				public static int upgradeFiringMotorEnergy = 10;
+
+				@Comment({"Time required to fire the AR in semi-auto mode with the railgun chamber upgrade"})
+				public static int upgradeRailgunChamberFireTime = 4;
 
 				@Comment({"Energy used per shot by the Railgun Chamber upgrade."})
 				public static int upgradeRailgunChamberEnergy = 40;

@@ -95,7 +95,7 @@ public class ItemIIAmmoRailgunGrenade extends ItemIIAmmoBase<EntityAmmoProjectil
 	@Override
 	public CoreType[] getAllowedCoreTypes()
 	{
-		return new CoreType[]{CoreType.PIERCING, CoreType.PIERCING_SABOT, CoreType.SHAPED, CoreType.SOFTPOINT, CoreType.CANISTER};
+		return new CoreType[]{CoreType.PIERCING, CoreType.PIERCING_SABOT, CoreType.SHAPED, CoreType.CANISTER};
 	}
 
 	@Override

@@ -61,10 +61,11 @@ public abstract class ItemIIGunBase extends ItemIIUpgradableTool implements ISki
 	public static final String RECOIL_H = "recoilH";
 	public static final String RECOIL_V = "recoilV";
 	public static final String FIRE_DELAY = "fireDelay";
+	public static final String CHARGE_DELAY = "chargeDelay";
 
 	public static final String MAGAZINE = "magazine";
 	public static final String BULLETS = "bullets";
-	public static final String SHOULD_FIRE_SEMI = "shouldFireSemi";
+	public static final String SHOULD_FIRE_SINGULAR = "shouldFireSemi";
 
 	public ItemIIGunBase(String name)
 	{
@@ -186,23 +187,39 @@ public abstract class ItemIIGunBase extends ItemIIUpgradableTool implements ISki
 	@Override
 	public int getMaxItemUseDuration(@Nonnull ItemStack stack)
 	{
+		if(getFireMode(stack)==FireModeType.SINGULAR_CHARGED)
+			return 72000;
 		return getFireDelay(stack, EasyNBT.wrapNBT(stack.getTagCompound()))+1;
 	}
 
-	private boolean hasFiredThisClick(ItemStack stack) {
-		EasyNBT nbt = getNBT(stack);
-		return nbt.getBoolean(SHOULD_FIRE_SEMI);
+	private boolean hasFiredThisClick(ItemStack stack)
+	{
+		return getNBT(stack).getBoolean(SHOULD_FIRE_SINGULAR);
 	}
 
-	private void setHasFiredThisClick(ItemStack stack, boolean hasFired) {
-		EasyNBT nbt = getNBT(stack);
-		nbt.withBoolean(SHOULD_FIRE_SEMI, hasFired);
+	private void setHasFiredThisClick(ItemStack stack, boolean hasFired)
+	{
+		getNBT(stack).withBoolean(SHOULD_FIRE_SINGULAR, hasFired);
 	}
 
 	@Override
-	public void onPlayerStoppedUsing(ItemStack stack, World world, EntityLivingBase entity, int timeLeft) {
-		if(getFireMode(stack) == FireModeType.SINGULAR || getFireMode(stack) == FireModeType.SINGULAR_CHARGED) {
-			setHasFiredThisClick(stack, false);
+	public void onPlayerStoppedUsing(ItemStack stack, World world, EntityLivingBase entity, int timeLeft)
+	{
+		switch(getFireMode(stack))
+		{
+			case SINGULAR:
+				setHasFiredThisClick(stack, false);
+				break;
+			case SINGULAR_CHARGED:
+				EasyNBT nbt = getNBT(stack);
+				if(!getAmmoHandler(stack).canFire(stack, nbt))
+					break;
+				if(nbt.getInt(FIRE_DELAY)==1)
+				{
+					nbt.withInt(FIRE_DELAY, 0);
+					shoot(stack, entity, 1);
+				}
+				break;
 		}
 	}
 
@@ -237,7 +254,7 @@ public abstract class ItemIIGunBase extends ItemIIUpgradableTool implements ISki
 		//Decrease time until next shot is possible
 		if(fireDelay > 0)
 		{
-			if(fireDelay!=1||(getFireMode(stack)!=FireModeType.SINGULAR||!((EntityLivingBase)user).isHandActive()))
+			if(fireDelay!=1||(getFireMode(stack)!=FireModeType.SINGULAR_CHARGED||!((EntityLivingBase)user).isHandActive()))
 				fireDelay--;
 		}
 
@@ -288,17 +305,17 @@ public abstract class ItemIIGunBase extends ItemIIUpgradableTool implements ISki
 				EasyNBT nbt = getNBT(stack);
 				if(!getAmmoHandler(stack).canFire(stack, nbt))
 					break;
+				int useTicks = getMaxItemUseDuration(stack)-count;
 
-				if(count==getMaxItemUseDuration(stack))
+				if(useTicks==0)
 				{
 					nbt.withInt(FIRE_DELAY, getFireDelay(stack, nbt));
 					SoundEvent sound = getChargeFireSound(stack, nbt);
 					if(sound!=null)
 						user.world.playSound(null, user.posX, user.posY, user.posZ, sound, SoundCategory.PLAYERS, 0.5f, 0.9f);
-
 				}
-				shoot(stack, user, count);
-				user.stopActiveHand();
+				else
+					nbt.withInt(FIRE_DELAY, Math.max(nbt.getInt(FIRE_DELAY)-1, 1));
 			}
 			break;
 			default:
@@ -313,24 +330,21 @@ public abstract class ItemIIGunBase extends ItemIIUpgradableTool implements ISki
 	public ActionResult<ItemStack> onItemRightClick(@Nonnull World world, EntityPlayer player, @Nonnull EnumHand hand)
 	{
 		ItemStack weapon = player.getHeldItem(hand);
-		AmmoHandler ammoHandler = getAmmoHandler(weapon);
 
 		if(hand==EnumHand.MAIN_HAND)
 		{
 			player.setActiveHand(hand);
-			if(getFireMode(weapon)==FireModeType.SINGULAR || getFireMode(weapon)==FireModeType.SINGULAR_CHARGED)
+			if(getFireMode(weapon)==FireModeType.SINGULAR)
 			{
-
-				if(!hasFiredThisClick(weapon)) {
+				if(!hasFiredThisClick(weapon))
+				{
 					shoot(weapon, player, 1);
 					setHasFiredThisClick(weapon, true);
+					return new ActionResult<>(EnumActionResult.FAIL, weapon);
 				}
-
-				return new ActionResult<>(EnumActionResult.FAIL, weapon);
 			}
 
-			if(ammoHandler.canFire(weapon, getNBT(weapon)))
-				return new ActionResult<>(EnumActionResult.FAIL, weapon);
+			return new ActionResult<>(EnumActionResult.FAIL, weapon);
 
 		}
 		return new ActionResult<>(EnumActionResult.FAIL, weapon);
@@ -390,11 +404,6 @@ public abstract class ItemIIGunBase extends ItemIIUpgradableTool implements ISki
 							sound, SoundCategory.PLAYERS, 75, 1.5f,
 							1f+(float)(Utils.RAND.nextGaussian()*0.02)
 					);
-
-				//Create the gunfire particle effect
-				/*IIPacketHandler.INSTANCE.sendToAllAround(
-						new MessageParticleGunfire(user, 1.5f),
-						IIPacketHandler.targetPointFromEntity(user, 32));*/
 
 				//Add recoil
 				nbt.withFloat(RECOIL_H, MathHelper.clamp(

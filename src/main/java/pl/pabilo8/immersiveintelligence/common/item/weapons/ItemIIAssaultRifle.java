@@ -49,7 +49,6 @@ import java.util.List;
  * @since 17.09.2022
  */
 @IIItemProperties(category = IICategory.WARFARE)
-
 public class ItemIIAssaultRifle extends ItemIIGunBase implements IItemScrollable, IAdvancedZoomTool, IIEEnergyItem
 {
 	//--- NBT Values Reference ---//
@@ -225,16 +224,16 @@ public class ItemIIAssaultRifle extends ItemIIGunBase implements IItemScrollable
 			{
 				if(hasIIUpgrade(weapon, WeaponUpgrade.ELECTRIC_FIRING_MOTOR)&&getEnergyStored(weapon) >= AssaultRifle.upgradeFiringMotorEnergy)
 					return 1;
-				return AssaultRifle.bulletFireTimeAuto;
+				return AssaultRifle.bulletFireTime;
 			}
 			case 1:
 			{
 				if(hasIIUpgrade(weapon, WeaponUpgrade.RAILGUN_ASSISTED_CHAMBER)) //penalty still applied
-					return 10;
-				return AssaultRifle.bulletFireTimeSemiAuto;
+					return AssaultRifle.upgradeRailgunChamberFireTime;
+				return AssaultRifle.bulletFireTime;
 			}
 			case 2:
-				return 40;
+				return AssaultRifle.grenadeFireTime;
 		}
 		return 0;
 	}
