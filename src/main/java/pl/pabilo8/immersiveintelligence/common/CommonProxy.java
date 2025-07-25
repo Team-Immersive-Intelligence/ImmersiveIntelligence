@@ -47,10 +47,10 @@ import net.minecraftforge.common.ForgeChunkManager.LoadingCallback;
 import net.minecraftforge.common.ForgeChunkManager.Ticket;
 import net.minecraftforge.common.ForgeChunkManager.Type;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.event.RegistryEvent.Register;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
@@ -70,6 +70,7 @@ import pl.pabilo8.immersiveintelligence.api.rotary.IIRotaryUtils;
 import pl.pabilo8.immersiveintelligence.api.utils.IUpgradableMachine;
 import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
 import pl.pabilo8.immersiveintelligence.api.utils.MinecartBlockHelper;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.MechanicalDevices;
 import pl.pabilo8.immersiveintelligence.common.ammo.components.factory.AmmoComponentFluid;
 import pl.pabilo8.immersiveintelligence.common.block.data_device.BlockIIDataDevice.IIBlockTypes_Connector;
@@ -133,7 +134,7 @@ import static blusunrize.immersiveengineering.api.energy.wires.WireApi.registerF
  * for how long? ask github
  * how did you not notice that? ... that was really unexpected, didn't even consider such a thing being there
  */
-@Mod.EventBusSubscriber(modid = ImmersiveIntelligence.MODID)
+@EventBusSubscriber(modid = ImmersiveIntelligence.MODID)
 public class CommonProxy implements IGuiHandler, LoadingCallback
 {
 	public CommonProxy()
@@ -144,7 +145,7 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 	//--- Registry Handling ---//
 
 	@SubscribeEvent
-	public static void registerBlocks(RegistryEvent.Register<Block> event)
+	public static void registerBlocks(Register<Block> event)
 	{
 		IILogger.info("Registering Blocks");
 
@@ -159,7 +160,7 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 	}
 
 	@SubscribeEvent
-	public static void registerItems(RegistryEvent.Register<Item> event)
+	public static void registerItems(Register<Item> event)
 	{
 		IILogger.info("Registering Items");
 
@@ -170,7 +171,7 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 	}
 
 	@SubscribeEvent
-	public static void registerPotions(RegistryEvent.Register<Potion> event)
+	public static void registerPotions(Register<Potion> event)
 	{
 		IILogger.info("Registering Potions");
 
@@ -188,7 +189,7 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 	}
 
 	@SubscribeEvent
-	public static void registerBiomes(RegistryEvent.Register<Biome> event)
+	public static void registerBiomes(Register<Biome> event)
 	{
 		IILogger.info("Registering Biomes");
 		event.getRegistry().register(IIContent.biomeWasteland);
@@ -291,7 +292,7 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 	}
 
 	@SubscribeEvent
-	public static void registerRecipes(RegistryEvent.Register<IRecipe> event)
+	public static void registerRecipes(Register<IRecipe> event)
 	{
 		IILogger.info("Registering Recipes");
 
@@ -541,12 +542,12 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		MinecraftForge.EVENT_BUS.register(iiWorldGen);
 
 		IILogger.info("Adding oregen");
-		addConfiguredWorldgen(IIContent.blockOre.getStateFromMeta(Ores.PLATINUM.getMeta()), "platinum", IIConfigHandler.IIConfig.Ores.orePlatinum, EnumOreType.OVERWORLD);
-		addConfiguredWorldgen(IIContent.blockOre.getStateFromMeta(Ores.ZINC.getMeta()), "zinc", IIConfigHandler.IIConfig.Ores.oreZinc, EnumOreType.OVERWORLD);
-		addConfiguredWorldgen(IIContent.blockOre.getStateFromMeta(Ores.TUNGSTEN.getMeta()), "tungsten", IIConfigHandler.IIConfig.Ores.oreTungsten, EnumOreType.OVERWORLD);
-		addConfiguredWorldgen(IIContent.blockOre.getStateFromMeta(Ores.SALT.getMeta()), "salt", IIConfigHandler.IIConfig.Ores.oreSalt, EnumOreType.OVERWORLD);
-		addConfiguredWorldgen(IIContent.blockOre.getStateFromMeta(Ores.FLUORITE.getMeta()), "fluorite", IIConfigHandler.IIConfig.Ores.oreFluorite, EnumOreType.NETHER);
-		addConfiguredWorldgen(IIContent.blockOre.getStateFromMeta(Ores.PHOSPHORUS.getMeta()), "phosphorus", IIConfigHandler.IIConfig.Ores.orePhosphorus, EnumOreType.NETHER);
+		addConfiguredWorldgen(IIContent.blockOre.getStateFromMeta(Ores.PLATINUM.getMeta()), "platinum", IIConfig.Ores.orePlatinum, EnumOreType.OVERWORLD);
+		addConfiguredWorldgen(IIContent.blockOre.getStateFromMeta(Ores.ZINC.getMeta()), "zinc", IIConfig.Ores.oreZinc, EnumOreType.OVERWORLD);
+		addConfiguredWorldgen(IIContent.blockOre.getStateFromMeta(Ores.TUNGSTEN.getMeta()), "tungsten", IIConfig.Ores.oreTungsten, EnumOreType.OVERWORLD);
+		addConfiguredWorldgen(IIContent.blockOre.getStateFromMeta(Ores.SALT.getMeta()), "salt", IIConfig.Ores.oreSalt, EnumOreType.OVERWORLD);
+		addConfiguredWorldgen(IIContent.blockOre.getStateFromMeta(Ores.FLUORITE.getMeta()), "fluorite", IIConfig.Ores.oreFluorite, EnumOreType.NETHER);
+		addConfiguredWorldgen(IIContent.blockOre.getStateFromMeta(Ores.PHOSPHORUS.getMeta()), "phosphorus", IIConfig.Ores.orePhosphorus, EnumOreType.NETHER);
 
 
 		//Disallow crates in crates
@@ -709,11 +710,14 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 
 	public void onServerGuiChangeRequest(TileEntity tile, int gui, EntityPlayer player)
 	{
-		if(!(tile instanceof IGuiTile)||((IGuiTile)tile).getGuiMaster()==null)
+		if(!(tile instanceof IGuiTile))
 			return;
+		IGuiTile guiTile = (IGuiTile)tile;
 
 		//I like casting things
-		IGuiTile te = ((IGuiTile)((IGuiTile)tile).getGuiMaster());
+		TileEntity guiMaster = guiTile.getGuiMaster();
+		IGuiTile te = ((IGuiTile)guiMaster);
+
 		if(!((TileEntity)te).getWorld().isRemote&&te.canOpenGui(player))
 			player.openGui(ImmersiveIntelligence.INSTANCE, gui, tile.getWorld(), tile.getPos().getX(),
 					tile.getPos().getY(), tile.getPos().getZ());

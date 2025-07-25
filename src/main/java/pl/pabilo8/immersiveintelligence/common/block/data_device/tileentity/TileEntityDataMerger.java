@@ -16,52 +16,44 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.NonNullList;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
-import pl.pabilo8.immersiveintelligence.api.data.device.IDataConnector;
+import pl.pabilo8.immersiveintelligence.api.data.IIDataHandlingUtils;
 import pl.pabilo8.immersiveintelligence.api.data.device.IDataDevice;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 
 import javax.annotation.Nullable;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 24.06.2025
  * @since 17.05.2019
  */
-// TODO: 22.09.2022 rework this shite of a device
 public class TileEntityDataMerger extends TileEntityIEBase implements IPlayerInteraction, ITickable, IBlockBounds, IDirectionalTile, IDataDevice, IGuiTile, IIEInventory
 {
 	public EnumFacing facing = EnumFacing.NORTH;
-	public DataPacket packet = new DataPacket();
-	//0 - both, 1 - left only, 2 - right only
-	public byte mode = 0;
+	public DataPacket settingsPacket = new DataPacket();
+	public DataMergerSendMode mode = DataMergerSendMode.SEND_ON_BOTH;
 	DataPacket packetLeft = new DataPacket();
 	DataPacket packetRight = new DataPacket();
 
 	@Override
 	public void readCustomNBT(NBTTagCompound nbt, boolean descPacket)
 	{
-		mode = nbt.getByte("mode");
+		mode = DataMergerSendMode.values()[nbt.getByte("mode")];
 		facing = EnumFacing.getFront(nbt.getInteger("facing"));
-		packet = new DataPacket();
-		for(char c : DataPacket.varCharacters)
-			packet.setVariable(c, new DataTypeInteger(0));
-		packetLeft = new DataPacket();
-		packetRight = new DataPacket();
-		if(nbt.hasKey("packet"))
-			packet.deserializeNBT(nbt.getCompoundTag("packet"));
-		if(nbt.hasKey("packetLeft"))
-			packetLeft.deserializeNBT(nbt.getCompoundTag("packetLeft"));
-		if(nbt.hasKey("packetRight"))
-			packetRight.deserializeNBT(nbt.getCompoundTag("packetRight"));
+
+		settingsPacket = new DataPacket(nbt.getCompoundTag("packet"));
+		packetLeft = new DataPacket(nbt.getCompoundTag("packetLeft"));
+		packetRight = new DataPacket(nbt.getCompoundTag("packetRight"));
 
 	}
 
 	@Override
 	public void writeCustomNBT(NBTTagCompound nbt, boolean descPacket)
 	{
-		nbt.setByte("mode", mode);
+		nbt.setByte("mode", (byte)mode.ordinal());
 		nbt.setInteger("facing", facing.ordinal());
-		nbt.setTag("packet", packet.serializeNBT());
+
+		nbt.setTag("packet", settingsPacket.serializeNBT());
 		nbt.setTag("packetLeft", packetLeft.serializeNBT());
 		nbt.setTag("packetRight", packetRight.serializeNBT());
 	}
@@ -83,9 +75,9 @@ public class TileEntityDataMerger extends TileEntityIEBase implements IPlayerInt
 	{
 		super.receiveMessageFromClient(message);
 		if(message.hasKey("mode"))
-			mode = message.getByte("mode");
+			mode = DataMergerSendMode.values()[message.getByte("mode")];
 		if(message.hasKey("packet"))
-			packet.deserializeNBT(message.getCompoundTag("packet"));
+			settingsPacket.deserializeNBT(message.getCompoundTag("packet"));
 	}
 
 	@Override
@@ -139,86 +131,53 @@ public class TileEntityDataMerger extends TileEntityIEBase implements IPlayerInt
 	@Override
 	public void onReceive(DataPacket packet, EnumFacing side)
 	{
-		DataPacket newpacket = packet.clone();
-		boolean send = mode==0;
+		boolean send = mode==DataMergerSendMode.SEND_ON_BOTH;
 
-		//Left -2 -1 (1)
+		//Incoming packet on the left
 		if(side==facing.rotateYCCW())
 		{
 			packetLeft = packet.clone();
-			send = send||mode==1;
-			if(send&&packetRight.hasAnyVariables())
-			{
-				for(char c : packetRight.variables.keySet())
-				{
-					if(!packetLeft.hasVariable(c))
-					{
-						newpacket.setVariable(c, packetRight.getPacketVariable(c));
-					}
-				}
-			}
+			send = send||mode==DataMergerSendMode.SEND_LEFT_ONLY;
 		}
 
-		//Right 1 2 (2)
+		//Incoming packet on the right
 		if(side==facing.rotateY())
 		{
 			packetRight = packet.clone();
-			send = send||mode==2;
-			if(send&&packetLeft.hasAnyVariables())
-			{
-				for(char c : packetLeft.variables.keySet())
-				{
-					if(!packetRight.hasVariable(c))
-					{
-						newpacket.setVariable(c, packetLeft.getPacketVariable(c));
-					}
-				}
-			}
+			send = send||mode==DataMergerSendMode.SEND_RIGHT_ONLY;
 		}
 
-		for(char c : DataPacket.varCharacters)
-			if(this.packet.getPacketVariable(c) instanceof DataTypeInteger)
-				switch(((DataTypeInteger)this.packet.getPacketVariable(c)).value)
-				{
-					case 0:
-					{
-					}
-					break;
-					case 2:
-					{
-						if(packetLeft.variables.containsKey(c))
-							newpacket.setVariable(c, packetLeft.getPacketVariable(c));
-						else
-							newpacket.removeVariable(c);
-					}
-					break;
-					case 1:
-					{
-						if(packetLeft.variables.containsKey(c))
-							newpacket.setVariable(c, packetLeft.getPacketVariable(c));
-					}
-					break;
-					case -2:
-					{
-						if(packetRight.variables.containsKey(c))
-							newpacket.setVariable(c, packetRight.getPacketVariable(c));
-						else
-							newpacket.removeVariable(c);
-					}
-					break;
-					case -1:
-					{
-						if(packetRight.variables.containsKey(c))
-							newpacket.setVariable(c, packetRight.getPacketVariable(c));
-					}
-					break;
-				}
-		if(send&&world.isBlockLoaded(this.pos.offset(facing))&&world.getTileEntity(this.pos.offset(facing)) instanceof IDataConnector)
-		{
-			IDataConnector d = (IDataConnector)world.getTileEntity(this.pos.offset(facing));
-			d.sendPacket(newpacket);
-		}
+		if(!send)
+			return;
 
+		for(char c : DataPacket.VARIABLE_NAMES)
+			IIDataHandlingUtils.optionalInt(c, packet).ifPresent(integer -> {
+				switch(VariableMergeMode.values()[integer+2])
+				{
+					//Original
+					case RETAIN_ORIGINAL:
+						break;
+					//Left
+					case FORCE_LEFT:
+						packet.set(c, packetLeft.get(c));
+						break;
+					case PREFER_LEFT:
+						if(packetLeft.has(c))
+							packet.set(c, packetLeft.get(c));
+						break;
+					//Right
+					case FORCE_RIGHT:
+						packet.set(c, packetRight.get(c));
+						break;
+					case PREFER_RIGHT:
+						if(packetRight.has(c))
+							packet.set(c, packetRight.get(c));
+						break;
+				}
+			});
+
+		//Send packet
+		IIDataHandlingUtils.sendPacketAdjacently(packet, world, this.pos, facing);
 	}
 
 	@Override
@@ -262,5 +221,21 @@ public class TileEntityDataMerger extends TileEntityIEBase implements IPlayerInt
 	public void doGraphicalUpdates(int slot)
 	{
 
+	}
+
+	public enum DataMergerSendMode
+	{
+		SEND_ON_BOTH,
+		SEND_LEFT_ONLY,
+		SEND_RIGHT_ONLY,
+	}
+
+	enum VariableMergeMode
+	{
+		PREFER_RIGHT,
+		FORCE_RIGHT,
+		RETAIN_ORIGINAL,
+		PREFER_LEFT,
+		FORCE_LEFT
 	}
 }

@@ -52,7 +52,7 @@ public class TileEntityDataCallbackConnector extends TileEntityDataConnector
 	@Override
 	public void sendPacket(DataPacket packet)
 	{
-		this.getDataNetwork().sendPacket(packet.setPacketColor(EnumDyeColor.byMetadata(this.colorOut)), this);
+		this.getDataNetwork().sendPacket(packet.withPacketColor(EnumDyeColor.byMetadata(this.colorOut)), this);
 	}
 
 	@Override

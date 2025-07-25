@@ -3,10 +3,9 @@ package pl.pabilo8.immersiveintelligence.client.gui.block;
 import blusunrize.immersiveengineering.common.IEContent;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import org.apache.commons.lang3.tuple.Pair;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
+import pl.pabilo8.immersiveintelligence.api.data.DataVariable;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
-import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType.TypeMetaInfo;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiComponentDecoBase.MouseButton;
@@ -38,7 +37,7 @@ public class GuiDataRedstoneInterfaceData extends DecoGui<TileEntityRedstoneInte
 {
 	@SyncNBT
 	public int scroll = 0;
-	private DecoList<Pair<Character, DataType>> list;
+	private DecoList<DataVariable> list;
 
 	public GuiDataRedstoneInterfaceData(EntityPlayer player, TileEntityRedstoneInterface tile)
 	{
@@ -64,14 +63,14 @@ public class GuiDataRedstoneInterfaceData extends DecoGui<TileEntityRedstoneInte
 				.build();
 
 		DataPacket packet = new DataPacket();
-		packet.setVariable('a', new DataTypeString("test"));
-		packet.setVariable('b', new DataTypeString("test2"));
-		packet.setVariable('e', new DataTypeString("test3"));
-		packet.setVariable('f', new DataTypeString("test4"));
-		packet.setVariable('g', new DataTypeString("test5"));
-		packet.setVariable('h', new DataTypeString("test6"));
-		packet.setVariable('i', new DataTypeString("test7"));
-		packet.setVariable('j', new DataTypeString("test8"));
+		packet.set('a', new DataTypeString("test"));
+		packet.set('b', new DataTypeString("test2"));
+		packet.set('e', new DataTypeString("test3"));
+		packet.set('f', new DataTypeString("test4"));
+		packet.set('g', new DataTypeString("test5"));
+		packet.set('h', new DataTypeString("test6"));
+		packet.set('i', new DataTypeString("test7"));
+		packet.set('j', new DataTypeString("test8"));
 
 		//Add components
 		addComponents(
@@ -84,12 +83,12 @@ public class GuiDataRedstoneInterfaceData extends DecoGui<TileEntityRedstoneInte
 						.withIcon(new ItemStack(IEContent.itemWireCoil, 1, 5))
 						.withTranslatedTooltip("desc.immersiveintelligence.redstone_to_data_module"),
 
-				list = new DecoList<Pair<Character, DataType>>(32, 8)
+				list = new DecoList<DataVariable>(32, 8)
 						.withSize(136, 120)
 						.withEntries(packet.getAllVariables())
 						.withCreateLaterAction(() -> changeGUI(IIGUI.DATA_REDSTONE_INTERFACE_REDSTONE))
 						.withGuiSaveAction(gui -> this.scroll = gui.getScroll())
-						.withDisplayFunction(new DecoEntryPanelBuilder<Pair<Character, DataType>>()
+						.withDisplayFunction(new DecoEntryPanelBuilder<DataVariable>()
 								.withPadding(1, 1)
 								//Edit / Remove Buttons
 								.withComponent(
@@ -134,7 +133,7 @@ public class GuiDataRedstoneInterfaceData extends DecoGui<TileEntityRedstoneInte
 
 									//letter label (f.e. a)
 									panel.label("letterLabel")
-											.withRawText(entry.getKey().toString());
+											.withRawText(String.valueOf(entry.getName()));
 									//type label (f.e. integer)
 									panel.label("typeLabel")
 											.withText(typeMeta.getTranslatedName())

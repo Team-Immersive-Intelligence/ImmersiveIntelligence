@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.common.item.data;
 
-import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
@@ -14,6 +13,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.ArrayUtils;
 import org.lwjgl.input.Keyboard;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
+import pl.pabilo8.immersiveintelligence.api.data.DataVariable;
 import pl.pabilo8.immersiveintelligence.api.data.IIDataOperationUtils;
 import pl.pabilo8.immersiveintelligence.api.data.IIDataTypeUtils;
 import pl.pabilo8.immersiveintelligence.api.data.device.IDataStorageItem;
@@ -225,9 +225,10 @@ public class ItemIIFunctionalCircuit extends ItemIISubItemsBase<Circuits> implem
 		if(ItemTooltipHandler.addExpandableTooltip(Keyboard.KEY_LCONTROL, IIReference.DESCRIPTION_KEY+"functional_circuit_ctrl", tooltip))
 		{
 			tooltip.add(I18n.format(IIReference.DESCRIPTION_KEY+"functional_circuit_data"));
-			for(DataType type : getStoredData(stack))
-				if(type instanceof DataTypeExpression)
-					tooltip.add("   "+I18n.format(IIReference.DATA_KEY+"function."+((DataTypeExpression)type).getMeta().name()));
+			getStoredData(stack).forEach((character, dataType) -> {
+				if(dataType instanceof DataTypeExpression)
+					tooltip.add("   "+I18n.format(IIReference.DATA_KEY+"function."+((DataTypeExpression)dataType).getMeta().name()));
+			});
 		}
 	}
 
@@ -268,7 +269,8 @@ public class ItemIIFunctionalCircuit extends ItemIISubItemsBase<Circuits> implem
 		if(ItemTooltipHandler.canExpandTooltip(Keyboard.KEY_LCONTROL))
 		{
 			DataPacket storedData = getStoredData(stack);
-			TypeMetaInfo<?>[] types = storedData.variables.values().stream()
+			TypeMetaInfo<?>[] types = storedData.stream()
+					.map(DataVariable::getValue)
 					.filter(o -> o instanceof DataTypeExpression)
 					.map(o -> (DataTypeExpression)o)
 					.map(DataTypeExpression::getMeta)

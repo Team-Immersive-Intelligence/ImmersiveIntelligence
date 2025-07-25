@@ -28,9 +28,9 @@ public class POLInstructionWipe extends POLInstruction
 	{
 		DataType type = text.get(memory.packet);
 		if(type instanceof DataTypeInteger)
-			memory.pages[((DataTypeInteger)type).value].removeAllVariables();
+			memory.pages[((DataTypeInteger)type).value].clear();
 		else
-			memory.packet.removeAllVariables();
+			memory.packet.clear();
 	}
 
 	@Override

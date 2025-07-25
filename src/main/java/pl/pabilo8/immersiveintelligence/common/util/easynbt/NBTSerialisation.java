@@ -53,6 +53,11 @@ public class NBTSerialisation
 		registerSerializer(boolean.class, NBTTagByte.class, i -> new NBTTagByte((byte)(i?1: 0)), nbt -> nbt.getByte()==1);
 		registerSerializer(float.class, NBTTagFloat.class, NBTTagFloat::new, NBTTagFloat::getFloat);
 		registerSerializer(double.class, NBTTagDouble.class, NBTTagDouble::new, NBTTagDouble::getDouble);
+		registerSerializer(long.class, NBTTagLong.class, NBTTagLong::new, NBTTagLong::getLong);
+		registerSerializer(char.class, NBTTagString.class,
+				c -> new NBTTagString(String.valueOf(c)),
+				nbt -> nbt.getString().isEmpty()?'\0': nbt.getString().charAt(0)
+		);
 
 		//Register serializers for all primitive array types
 		registerSerializer(int[].class, NBTTagIntArray.class, NBTTagIntArray::new, NBTTagIntArray::getIntArray);
@@ -313,6 +318,7 @@ public class NBTSerialisation
 	{
 		private final String nbtName, fieldName;
 		private final Field field;
+		private final boolean canBeNull;
 		protected MethodHandle getter, setter;
 
 		FieldSerializer(@Nonnull Field field, SyncNBT annotation)
@@ -320,6 +326,7 @@ public class NBTSerialisation
 			this.field = field;
 			this.nbtName = !annotation.name().isEmpty()?annotation.name(): IIStringUtil.toSnakeCase(field.getName());
 			this.fieldName = field.getName();
+			this.canBeNull = annotation.nullable();
 
 			field.setAccessible(true);
 
@@ -341,7 +348,10 @@ public class NBTSerialisation
 		{
 			try
 			{
-				NBT nbt = toNBT((FIELD)getter.invoke(obj));
+				FIELD value = (FIELD)getter.invoke(obj);
+				if(value==null&&canBeNull)
+					return;
+				NBT nbt = toNBT(value);
 				into.setTag(nbtName, nbt);
 			} catch(Throwable e)
 			{
@@ -354,9 +364,15 @@ public class NBTSerialisation
 		{
 			try
 			{
-				if(canSkip&&!from.hasKey(nbtName))
-					return;
-				setter.invoke(obj, fromNBT(obj, (NBT)from.getTag(nbtName)));
+				if(from.hasKey(nbtName))
+					setter.invoke(obj, fromNBT(obj, (NBT)from.getTag(nbtName)));
+				else
+				{
+					if(canSkip)
+						return;
+					if(canBeNull)
+						setter.invoke(obj, null);
+				}
 			} catch(Throwable e)
 			{
 				IILogger.error("Error deserializing field "+fieldName+" in "+obj.getClass().getName());

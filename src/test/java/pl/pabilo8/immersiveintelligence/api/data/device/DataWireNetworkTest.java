@@ -84,7 +84,7 @@ class DataWireNetworkTest extends GameTestWorld
 
 		//Send, mismatched colors
 		assertFalse(((TestConnector)connector1).packetSent);
-		connector1.sendPacket(dataPacket.setPacketColor(EnumDyeColor.BLACK));
+		connector1.sendPacket(dataPacket.withPacketColor(EnumDyeColor.BLACK));
 
 		//Receive, mismatched colors
 		assertTrue(((TestConnector)connector1).packetSent);
@@ -94,7 +94,7 @@ class DataWireNetworkTest extends GameTestWorld
 		//Send, matching colors
 		((TestConnector)connector1).setColor(EnumDyeColor.ORANGE);
 		((TestConnector)connector2).setColor(EnumDyeColor.ORANGE);
-		connector1.sendPacket(dataPacket.setPacketColor(EnumDyeColor.ORANGE));
+		connector1.sendPacket(dataPacket.withPacketColor(EnumDyeColor.ORANGE));
 
 		//Receive, matching colors
 		assertTrue(((TestConnector)connector1).packetSent);

@@ -22,7 +22,7 @@ public class DataPacketTest
 	public void setUp()
 	{
 		dataPacket = new DataPacket();
-		assertFalse(dataPacket.hasAnyVariables());
+		assertFalse(dataPacket.isEmpty());
 		IIDataTypeUtils.registerDataTypes();
 		IIDataOperationUtils.registerDataOperations();
 	}
@@ -31,24 +31,24 @@ public class DataPacketTest
 	public void testSetAndGetVariable()
 	{
 		DataType booleanType = new DataTypeBoolean(true);
-		assertTrue(dataPacket.setVariable('a', booleanType));
-		assertEquals(booleanType, dataPacket.getPacketVariable('a'));
+		assertTrue(dataPacket.set('a', booleanType));
+		assertEquals(booleanType, dataPacket.get('a'));
 	}
 
 	@Test
-	public void testRemoveVariable()
+	public void testRemove()
 	{
 		DataType integerType = new DataTypeInteger(42);
-		dataPacket.setVariable('b', integerType);
-		assertTrue(dataPacket.removeVariable('b'));
-		assertFalse(dataPacket.hasVariable('b'));
+		dataPacket.set('b', integerType);
+		assertTrue(dataPacket.remove('b'));
+		assertFalse(dataPacket.has('b'));
 	}
 
 	@Test
 	public void testSerializeNBT()
 	{
 		DataType booleanType = new DataTypeBoolean(true);
-		dataPacket.setVariable('a', booleanType);
+		dataPacket.set('a', booleanType);
 		NBTTagCompound nbt = dataPacket.serializeNBT();
 		assertTrue(nbt.hasKey("a"));
 	}
@@ -63,21 +63,21 @@ public class DataPacketTest
 		nbt.setTag("a", booleanNBT);
 
 		dataPacket.deserializeNBT(nbt);
-		assertTrue(dataPacket.hasVariable('a'));
-		assertTrue(((DataTypeBoolean)dataPacket.getPacketVariable('a')).value);
+		assertTrue(dataPacket.has('a'));
+		assertTrue(((DataTypeBoolean)dataPacket.get('a')).value);
 	}
 
 	@Test
-	public void testSetPacketColor()
+	public void testWithPacketColor()
 	{
-		dataPacket.setPacketColor(EnumDyeColor.RED);
+		dataPacket.withPacketColor(EnumDyeColor.RED);
 		assertTrue(dataPacket.matchesConnector(EnumDyeColor.RED, -1));
 	}
 
 	@Test
-	public void testSetPacketAddress()
+	public void testWithPacketAddress()
 	{
-		dataPacket.setPacketAddress(123);
+		dataPacket.withPacketAddress(123);
 		assertTrue(dataPacket.matchesConnector(EnumDyeColor.WHITE, 123));
 	}
 
@@ -85,7 +85,7 @@ public class DataPacketTest
 	public void testClone()
 	{
 		DataType booleanType = new DataTypeBoolean(true);
-		dataPacket.setVariable('a', booleanType);
+		dataPacket.set('a', booleanType);
 		DataPacket clonedPacket = dataPacket.clone();
 		assertEquals(dataPacket, clonedPacket);
 	}

@@ -509,11 +509,11 @@ public class TileEntityPacker extends TileEntityMultiblockIIGeneric<TileEntityPa
 			e: (optional) expires after @e items/MBs
 			s: (optional) {stack} or string
 			*/
-		DataType a = packet.getPacketVariable('a');
-		DataType m = packet.getPacketVariable('m');
-		DataType e = packet.getPacketVariable('e');
-		DataType s = packet.getPacketVariable('s');
-		DataType c = packet.getPacketVariable('c');
+		DataType a = packet.get('a');
+		DataType m = packet.get('m');
+		DataType e = packet.get('e');
+		DataType s = packet.get('s');
+		DataType c = packet.get('c');
 
 		switch(c.toString())
 		{
@@ -523,7 +523,7 @@ public class TileEntityPacker extends TileEntityMultiblockIIGeneric<TileEntityPa
 				PackerActionType action = PackerHandler.PackerActionType.fromName(a.toString());
 				IngredientStack stack = IIUtils.ingredientFromData(s);
 				PackerTask packerTask = new PackerTask(mode, action, stack);
-				if(packet.hasVariable('e'))
+				if(packet.has('e'))
 					packerTask.expirationAmount = packet.getVarInType(DataTypeInteger.class, e).value;
 				tasks.add(packerTask);
 
@@ -550,9 +550,9 @@ public class TileEntityPacker extends TileEntityMultiblockIIGeneric<TileEntityPa
 					else
 						p = packerTask -> true;
 
-					if(packet.hasVariable('m'))
+					if(packet.has('m'))
 						p = p.and(packerTask -> packerTask.mode==PackerHandler.PackerPutMode.fromName(m.toString()));
-					if(packet.hasVariable('a'))
+					if(packet.has('a'))
 						p = p.and(packerTask -> packerTask.actionType==PackerHandler.PackerActionType.fromName(a.toString()));
 					tasks.removeIf(p);
 				}

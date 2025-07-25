@@ -3,11 +3,15 @@ package pl.pabilo8.immersiveintelligence.api.data;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec2f;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.api.data.device.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.device.IDataDevice;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeBoolean;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeEntity;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeVector;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType.TypeMetaInfo;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.NumericDataType;
@@ -15,7 +19,7 @@ import pl.pabilo8.immersiveintelligence.common.util.ISerializableEnum;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -38,22 +42,64 @@ public class IIDataHandlingUtils
 
 	public static boolean asBoolean(char variable, DataPacket packet)
 	{
-		return packet.getVarInType(DataTypeBoolean.class, packet.getPacketVariable(variable)).value;
+		return packet.getVarInType(DataTypeBoolean.class, packet.get(variable)).value;
 	}
 
 	public static int asInt(char variable, DataPacket packet)
 	{
-		return packet.getVarInType(NumericDataType.class, packet.getPacketVariable(variable)).intValue();
+		return packet.getVarInType(NumericDataType.class, packet.get(variable)).intValue();
 	}
 
 	public static float asFloat(char variable, DataPacket packet)
 	{
-		return packet.getVarInType(NumericDataType.class, packet.getPacketVariable(variable)).floatValue();
+		return packet.getVarInType(NumericDataType.class, packet.get(variable)).floatValue();
 	}
 
 	public static String asString(char variable, DataPacket packet)
 	{
-		return packet.getPacketVariable(variable).toString();
+		return packet.get(variable).toString();
+	}
+
+	//--- Optional ---//
+
+	public static Optional<Boolean> optionalBoolean(char variable, DataPacket packet)
+	{
+		DataType data = packet.get(variable);
+		if(data instanceof DataTypeBoolean)
+			return Optional.of(((DataTypeBoolean)data).value);
+		return Optional.empty();
+	}
+
+	public static Optional<Integer> optionalInt(char variable, DataPacket packet)
+	{
+		DataType data = packet.get(variable);
+		if(data instanceof NumericDataType)
+			return Optional.of(((NumericDataType)data).intValue());
+		return Optional.empty();
+	}
+
+	public static Optional<Float> optionalFloat(char variable, DataPacket packet)
+	{
+		DataType data = packet.get(variable);
+		if(data instanceof NumericDataType)
+			return Optional.of(((NumericDataType)data).floatValue());
+		return Optional.empty();
+	}
+
+	public static Optional<String> optionalString(char variable, DataPacket packet)
+	{
+		DataType data = packet.get(variable);
+		if(data instanceof DataTypeString)
+			return Optional.of(((DataTypeString)data).value);
+		return Optional.empty();
+	}
+
+	public static Optional<DataTypeEntity> optionalEntity(char variable, DataPacket packet)
+	{
+		DataType entityData = packet.get(variable);
+		if(entityData instanceof DataTypeEntity)
+			return Optional.of((DataTypeEntity)entityData);
+		return Optional.empty();
 	}
 
 	//--- IfPresent Parameters ---//
@@ -66,10 +112,70 @@ public class IIDataHandlingUtils
 	 */
 	public static boolean expectingNumericParam(char variable, DataPacket packet, Consumer<Float> ifPresent)
 	{
-		boolean present = packet.getPacketVariable(variable) instanceof NumericDataType;
+		boolean present = packet.get(variable) instanceof NumericDataType;
 		if(present)
-			ifPresent.accept(((NumericDataType)packet.getPacketVariable(variable)).floatValue());
+			ifPresent.accept(((NumericDataType)packet.get(variable)).floatValue());
 		return present;
+	}
+
+	/**
+	 * Checks for a vector parameter in the packet, either as a single vector variable, three separate numeric variables, or yaw+pitch variables.
+	 *
+	 * @param packet   the packet to check
+	 * @param vector   consumer for the vector parameter, can be null to avoid checking
+	 * @param yawPitch consumer for the yaw and pitch parameters, can be null to avoid checking
+	 * @return true if the packet contains a valid vector or yaw+pitch parameter, false otherwise
+	 */
+	public static boolean expectingVectorParam(DataPacket packet, @Nullable Consumer<Vec3d> vector, @Nullable Consumer<Vec2f> yawPitch)
+	{
+		if(vector!=null)
+		{
+			DataType v = packet.get('v');
+			//vector data type option
+			if(v instanceof DataTypeVector)
+			{
+				DataTypeVector casted = (DataTypeVector)v;
+				vector.accept(new Vec3d(
+						(int)casted.x,
+						(int)casted.y,
+						(int)casted.z
+				));
+				return true;
+			}
+			//3 numeric variables option
+			else if(packet.has('x', 'y', 'z'))
+			{
+				DataType x = packet.get('x');
+				DataType y = packet.get('y');
+				DataType z = packet.get('z');
+				if(x instanceof NumericDataType&&y instanceof NumericDataType&&z instanceof NumericDataType)
+				{
+					vector.accept(new Vec3d(
+							((NumericDataType)x).floatValue(),
+							((NumericDataType)y).floatValue(),
+							((NumericDataType)z).floatValue()
+					));
+					return true;
+				}
+			}
+		}
+		//Checking for yaw and pitch parameters
+		if(yawPitch!=null&&packet.has('y', 'p'))
+		{
+			DataType y = packet.get('y');
+			DataType p = packet.get('p');
+			if(y instanceof NumericDataType&&p instanceof NumericDataType)
+			{
+				yawPitch.accept(new Vec2f(
+						//yaw
+						((NumericDataType)y).floatValue(),
+						//pitch
+						((NumericDataType)p).floatValue()
+				));
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -80,9 +186,9 @@ public class IIDataHandlingUtils
 	 */
 	public static boolean expectingBooleanParam(char variable, DataPacket packet, Consumer<Boolean> ifPresent)
 	{
-		boolean present = packet.getPacketVariable(variable) instanceof DataTypeBoolean;
+		boolean present = packet.get(variable) instanceof DataTypeBoolean;
 		if(present)
-			ifPresent.accept(((DataTypeBoolean)packet.getPacketVariable(variable)).value);
+			ifPresent.accept(((DataTypeBoolean)packet.get(variable)).value);
 		return present;
 	}
 
@@ -94,9 +200,9 @@ public class IIDataHandlingUtils
 	 */
 	public static boolean expectingStringParam(char variable, DataPacket packet, Consumer<String> ifPresent)
 	{
-		boolean present = packet.getPacketVariable(variable) instanceof DataTypeString;
+		boolean present = packet.get(variable) instanceof DataTypeString;
 		if(present)
-			ifPresent.accept(((DataTypeString)packet.getPacketVariable(variable)).value);
+			ifPresent.accept(((DataTypeString)packet.get(variable)).value);
 		return present;
 	}
 
@@ -109,10 +215,10 @@ public class IIDataHandlingUtils
 	 */
 	public static <T extends Enum<T> & ISerializableEnum> boolean expectingEnumParam(char variable, DataPacket packet, Class<T> e, Consumer<T> ifPresent)
 	{
-		boolean present = packet.getPacketVariable(variable) instanceof DataTypeString;
+		boolean present = packet.get(variable) instanceof DataTypeString;
 		if(present)
 		{
-			String name = ((DataTypeString)packet.getPacketVariable(variable)).value;
+			String name = ((DataTypeString)packet.get(variable)).value;
 			try
 			{
 				T found = T.valueOf(e, name.toUpperCase());
@@ -134,10 +240,10 @@ public class IIDataHandlingUtils
 	 */
 	public static <T extends Enum<T> & ISerializableEnum> boolean expectingEnumParam(char variable, DataPacket packet, Function<String, T> mapping, Consumer<T> ifPresent)
 	{
-		boolean present = packet.getPacketVariable(variable) instanceof DataTypeString;
+		boolean present = packet.get(variable) instanceof DataTypeString;
 		if(present)
 		{
-			T found = mapping.apply(((DataTypeString)packet.getPacketVariable(variable)).value);
+			T found = mapping.apply(((DataTypeString)packet.get(variable)).value);
 			if(found!=null)
 				ifPresent.accept(found);
 			else
@@ -153,16 +259,17 @@ public class IIDataHandlingUtils
 	{
 		//Detect any callback strings and give responses to them in a new packet
 		DataPacket sent = new DataPacket();
-		for(Entry<Character, DataType> entry : packet.variables.entrySet())
-			if(entry.getKey()!='c'&&entry.getValue() instanceof DataTypeString)
+		packet.forEach((name, value) -> {
+			if(name!='c'&&value instanceof DataTypeString)
 			{
-				DataType reply = mapper.apply(entry.getValue().toString());
+				DataType reply = mapper.apply(value.toString());
 				if(reply!=null)
-					sent.setVariable(entry.getKey(), reply);
+					sent.set(name, reply);
 			}
+		});
 
 		//If there are no callback variables, return null
-		return sent.hasAnyVariables()?sent: null;
+		return sent.isEmpty()?sent: null;
 	}
 
 	//--- Sending ---//

@@ -1,11 +1,15 @@
 package pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
+import blusunrize.immersiveengineering.common.blocks.TileEntityIEBase;
+import blusunrize.immersiveengineering.common.util.inventory.IIEInventory;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.GlStateManager.DestFactor;
 import net.minecraft.client.renderer.GlStateManager.SourceFactor;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import org.lwjgl.opengl.GL11;
+import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiComponentDecoBase;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoLabel;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoFrame;
@@ -13,6 +17,7 @@ import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
+import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIBase;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -25,7 +30,7 @@ import java.util.List;
  **/
 public class DecoPanel extends GuiComponentDecoBase<DecoPanel>
 {
-	private List<DecoLabel> labels = new ArrayList<>();
+	private final List<DecoLabel> labels = new ArrayList<>();
 	@Nullable
 	private DecoFrame frame = null;
 	private ResLoc background = IIReference.GUI_BG_STEEL;
@@ -39,9 +44,22 @@ public class DecoPanel extends GuiComponentDecoBase<DecoPanel>
 		super(x, y);
 	}
 
+	@Override
+	public <T extends TileEntityIEBase & IIEInventory, C extends ContainerIIBase<T>> void setParentGUI(DecoGui<T, C> parent)
+	{
+		super.setParentGUI(parent);
+		for(DecoLabel label : labels)
+		{
+			label.x += parent.guiLeft;
+			label.y += parent.guiTop;
+		}
+	}
+
 	public void addComponent(GuiComponentDecoBase<?> component)
 	{
 		children.add(component);
+		component.x += x+xPadding;
+		component.y += y+yPadding;
 	}
 
 	public void addComponents(GuiComponentDecoBase<?>... components)
@@ -50,9 +68,16 @@ public class DecoPanel extends GuiComponentDecoBase<DecoPanel>
 			addComponent(component);
 	}
 
+	public void addLabel(String text, int x, int y)
+	{
+		addLabel(new DecoLabel(IIClientUtils.fontRegular, x, y).withText(text));
+	}
+
 	public void addLabel(DecoLabel label)
 	{
 		labels.add(label);
+		label.x += x+xPadding;
+		label.y += y+yPadding;
 	}
 
 	public void addLabels(DecoLabel... labels)

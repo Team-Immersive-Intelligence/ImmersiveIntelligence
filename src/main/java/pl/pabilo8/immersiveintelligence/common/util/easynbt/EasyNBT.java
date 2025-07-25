@@ -163,6 +163,17 @@ public class EasyNBT extends Constants.NBT
 	}
 
 	/**
+	 * Appends a character as a string
+	 *
+	 * @param key name of this tag
+	 */
+	public EasyNBT withChar(String key, char value)
+	{
+		wrapped.setString(key, String.valueOf(value));
+		return this;
+	}
+
+	/**
 	 * Appends an enum value in form of a string
 	 *
 	 * @param key name of this tag
@@ -644,6 +655,18 @@ public class EasyNBT extends Constants.NBT
 	public String getString(String key)
 	{
 		return wrapped.getString(key);
+	}
+
+	/**
+	 * Gets a character as a string
+	 *
+	 * @param key name of this tag
+	 * @return the first character ofthe string, or {@code '\0'} if the string is empty
+	 */
+	public char getChar(String key)
+	{
+		String value = wrapped.getString(key);
+		return value.isEmpty()?'\0': value.charAt(0);
 	}
 
 	/**

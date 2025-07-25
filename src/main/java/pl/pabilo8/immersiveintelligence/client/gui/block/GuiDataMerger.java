@@ -17,6 +17,7 @@ import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 import pl.pabilo8.immersiveintelligence.client.gui.ITabbedGui;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.data_device.tileentity.TileEntityDataMerger;
+import pl.pabilo8.immersiveintelligence.common.block.data_device.tileentity.TileEntityDataMerger.DataMergerSendMode;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerDataMerger;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
@@ -36,7 +37,7 @@ public class GuiDataMerger extends GuiIEContainerBase implements ITabbedGui
 
 	public TileEntityDataMerger tile;
 	public InventoryPlayer playerInv;
-	public DataPacket packet;
+	public DataPacket settingsPacket;
 	public GuiButtonIE buttonForward, buttonBackward;
 
 	public GuiDataMerger(EntityPlayer player, TileEntityDataMerger tile)
@@ -45,7 +46,7 @@ public class GuiDataMerger extends GuiIEContainerBase implements ITabbedGui
 		this.ySize = 222;
 		this.playerInv = player.inventory;
 		this.tile = tile;
-		this.packet = tile.packet;
+		this.settingsPacket = tile.settingsPacket;
 	}
 
 	@Override
@@ -71,9 +72,9 @@ public class GuiDataMerger extends GuiIEContainerBase implements ITabbedGui
 		if(button==buttonForward||button==buttonBackward)
 		{
 			//cycle the mode depending on button
-			tile.mode = (byte)IIUtils.cycleInt(button==buttonForward, tile.mode, 0, 2);
+			tile.mode = IIUtils.cycleEnum(button==buttonForward, DataMergerSendMode.class, tile.mode);
 			//send update to server side
-			IIPacketHandler.sendToServer(new MessageIITileSync(tile, EasyNBT.newNBT().withByte("mode", tile.mode)));
+			IIPacketHandler.sendToServer(new MessageIITileSync(tile, EasyNBT.newNBT().withByte("mode", tile.mode.ordinal())));
 		}
 	}
 
@@ -86,13 +87,13 @@ public class GuiDataMerger extends GuiIEContainerBase implements ITabbedGui
 		ArrayList<String> tooltip = new ArrayList<>();
 
 		int i = 0;
-		for(char c : DataPacket.varCharacters)
+		for(char c : DataPacket.VARIABLE_NAMES)
 		{
 			int xoff = (int)Math.floor(i/6f), yoff = i%6;
 			int col = 0xefefef;
-			if(packet.getPacketVariable(c) instanceof DataTypeInteger)
+			if(settingsPacket.get(c) instanceof DataTypeInteger)
 			{
-				int o = ((DataTypeInteger)packet.getPacketVariable(c)).value;
+				int o = ((DataTypeInteger)settingsPacket.get(c)).value;
 				switch(o)
 				{
 					case -2:
@@ -118,7 +119,7 @@ public class GuiDataMerger extends GuiIEContainerBase implements ITabbedGui
 	@Override
 	public void onGuiClosed()
 	{
-		IIPacketHandler.sendToServer(new MessageIITileSync(tile, EasyNBT.newNBT().withTag("packet", packet.serializeNBT())));
+		IIPacketHandler.sendToServer(new MessageIITileSync(tile, EasyNBT.newNBT().withTag("packet", settingsPacket.serializeNBT())));
 		super.onGuiClosed();
 	}
 
@@ -140,7 +141,7 @@ public class GuiDataMerger extends GuiIEContainerBase implements ITabbedGui
 			int i_pos_y = (int)Math.floor((mouseY-guiTop-16)/20f);
 
 			if(mouseX <= guiLeft+(i_pos_x*20)+12+54&&mouseY <= guiTop+(i_pos_y*20)+12+16)
-				switchMode(DataPacket.varCharacters[i_pos_y+(i_pos_x*6)], fw);
+				switchMode(DataPacket.VARIABLE_NAMES[i_pos_y+(i_pos_x*6)], fw);
 		}
 	}
 
@@ -157,15 +158,15 @@ public class GuiDataMerger extends GuiIEContainerBase implements ITabbedGui
 
 	void switchMode(char c, boolean forward)
 	{
-		DataType p = packet.getPacketVariable(c);
+		DataType p = settingsPacket.get(c);
 		//increment or decrement the number, clamp it between -2 and 2
 		if(p instanceof DataTypeInteger)
-			packet.setVariable(c, new DataTypeInteger(
+			settingsPacket.set(c, new DataTypeInteger(
 					MathHelper.clamp(((DataTypeInteger)p).value+(forward?1: -1), -2, 2)
 			));
 		else
 			//if there's no such variable, set it to -1 or 1, as 0 is the default state
-			packet.setVariable(c, new DataTypeInteger(forward?1: -1));
+			settingsPacket.set(c, new DataTypeInteger(forward?1: -1));
 	}
 
 }

@@ -339,19 +339,19 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockProduction
 	@Override
 	public void receiveData(DataPacket packet, int pos)
 	{
-		if(packet.hasVariable('b'))
+		if(packet.has('b'))
 		{
-			IAmmoTypeItem<?, ?> ammoItem = AmmoRegistry.getAmmoItem(packet.getPacketVariable('b').toString());
+			IAmmoTypeItem<?, ?> ammoItem = AmmoRegistry.getAmmoItem(packet.get('b').toString());
 			this.producedAmmo = ammoItem==null?IIContent.itemAmmoHeavyArtillery: ammoItem;
 		}
-		if(packet.hasVariable('t'))
-			this.coreType = CoreType.v(packet.getPacketVariable('t').toString());
+		if(packet.has('t'))
+			this.coreType = CoreType.v(packet.get('t').toString());
 
 		if(Arrays.stream(producedAmmo.getAllowedCoreTypes()).noneMatch(ct -> ct==coreType))
 			this.coreType = this.producedAmmo.getAllowedCoreTypes()[0];
 
-		if(packet.hasVariable('a'))
-			this.fillAmount = packet.getVarInType(DataTypeInteger.class, packet.getPacketVariable('a')).value;
+		if(packet.has('a'))
+			this.fillAmount = packet.getVarInType(DataTypeInteger.class, packet.get('a')).value;
 	}
 
 	//TODO: 09.07.2024 conveyor interaction

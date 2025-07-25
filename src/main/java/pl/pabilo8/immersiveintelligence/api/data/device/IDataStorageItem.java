@@ -1,14 +1,14 @@
 package pl.pabilo8.immersiveintelligence.api.data.device;
 
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
-import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
+import pl.pabilo8.immersiveintelligence.api.data.DataVariable;
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler.IAdvancedTooltipItem;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
+import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
 
 import java.util.List;
 
@@ -31,16 +31,18 @@ public interface IDataStorageItem extends IAdvancedTooltipItem
 		IDataStorageItem ds = (IDataStorageItem)stack.getItem();
 		DataPacket packet = ds.getStoredData(stack);
 
+		IIClientUtils.bindAtlas();
 		GlStateManager.translate(offsetX, offsetsY.get(0), 700);
+		GlStateManager.color(1f, 1f, 1f, 1f);
 		GlStateManager.scale(.5f, .5f, 1);
 
-		int i = 0;
-		for(DataType type : packet)
+		float[] uv = new float[]{0, 1, 0, 1};
+		IIDrawUtils draw = IIDrawUtils.startTextured();
+		for(DataVariable dataVariable : packet)
 		{
-			GlStateManager.color(1f, 1f, 1f, 1f);
-			IIClientUtils.bindTexture(type.getTextureLocation());
-			Gui.drawModalRectWithCustomSizedTexture(0, i*20, 0, 0, 16, 16, 16, 16);
-			i++;
+			IIClientUtils.bindTexture(dataVariable.getValue().getTypeMeta().getTextureLocation());
+			draw.drawTexRect(0, 0, 16, 16, uv).addOffset(0, 20);
 		}
+		draw.finish();
 	}
 }

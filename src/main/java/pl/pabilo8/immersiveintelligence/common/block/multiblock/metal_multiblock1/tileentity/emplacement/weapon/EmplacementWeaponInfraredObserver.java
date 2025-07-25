@@ -162,10 +162,10 @@ public class EmplacementWeaponInfraredObserver extends EmplacementWeapon
 	public void handleDataPacket(DataPacket packet)
 	{
 		super.handleDataPacket(packet);
-		String c = packet.getPacketVariable('c').toString();
+		String c = packet.get('c').toString();
 		if(c.equals("facing"))
 		{
-			DataType f = packet.getPacketVariable('f');
+			DataType f = packet.get('f');
 			if(f instanceof DataTypeInteger)
 				nextYaw = EnumFacing.getHorizontal(((DataTypeInteger)f).value).getHorizontalAngle();
 			else if(f instanceof DataTypeString)

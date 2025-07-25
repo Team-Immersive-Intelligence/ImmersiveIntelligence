@@ -14,9 +14,9 @@ public class DataTypeString extends DataType implements IComparableDataType<Data
 {
 	public String value = "";
 
-	public DataTypeString(String i)
+	public DataTypeString(String value)
 	{
-		this.value = i;
+		this.value = value;
 	}
 
 	public DataTypeString()

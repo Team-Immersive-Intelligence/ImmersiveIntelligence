@@ -390,22 +390,18 @@ public class TileEntityRedstoneInterface extends TileEntityMultiblockConnectable
 
 		if(pos==0&&side==facing.getOpposite())
 		{
-			for(char c : packet.variables.keySet())
-			{
-				if(storedData.variables.containsKey(c))
+			packet.forEach((character, dataType) -> {
+				if(dataType instanceof DataTypeArray)
 				{
-					if(storedData.variables.get(c) instanceof DataTypeArray)
-					{
-						DataTypeArray a = (DataTypeArray)storedData.variables.get(c);
-						DataTypeInteger int1 = (DataTypeInteger)a.value[0];
-						DataTypeInteger int2 = (DataTypeInteger)a.value[1];
-						redstoneOutput[int1.value] = getRedstoneFromPacket(int2.value, packet, c);
-
-					}
-					else
-						storedData.removeVariable(c);
+					DataTypeArray a = (DataTypeArray)dataType;
+					DataTypeInteger int1 = (DataTypeInteger)a.value[0];
+					DataTypeInteger int2 = (DataTypeInteger)a.value[1];
+					redstoneOutput[int1.value] = getRedstoneFromPacket(int2.value, packet, character);
 				}
-			}
+				else
+					storedData.remove(character);
+			});
+
 			master.redstoneChanged = true;
 			if(getTileForPos(4)!=null)
 				getTileForPos(4).getNetwork().updateValues();
@@ -423,16 +419,16 @@ public class TileEntityRedstoneInterface extends TileEntityMultiblockConnectable
 			}
 			case 1:
 			{
-				if(packet.getPacketVariable(c) instanceof DataTypeBoolean)
-					return (byte)(((DataTypeBoolean)packet.getPacketVariable(c)).value?15: 0);
+				if(packet.get(c) instanceof DataTypeBoolean)
+					return (byte)(((DataTypeBoolean)packet.get(c)).value?15: 0);
 				else
 					return 0;
 			}
 			case 2:
 			{
-				if(packet.getPacketVariable(c) instanceof DataTypeInteger)
+				if(packet.get(c) instanceof DataTypeInteger)
 				{
-					int i = ((DataTypeInteger)packet.getPacketVariable(c)).value;
+					int i = ((DataTypeInteger)packet.get(c)).value;
 					return (byte)MathHelper.clamp(i, 0, 15);
 				}
 				else
@@ -440,9 +436,9 @@ public class TileEntityRedstoneInterface extends TileEntityMultiblockConnectable
 			}
 			case 3:
 			{
-				if(packet.getPacketVariable(c) instanceof DataTypeInteger)
+				if(packet.get(c) instanceof DataTypeInteger)
 				{
-					int i = ((DataTypeInteger)packet.getPacketVariable(c)).value;
+					int i = ((DataTypeInteger)packet.get(c)).value;
 					return (byte)MathHelper.clamp(((float)i/255f)*15, 0, 15);
 				}
 				else
@@ -450,9 +446,9 @@ public class TileEntityRedstoneInterface extends TileEntityMultiblockConnectable
 			}
 			case 4:
 			{
-				if(packet.getPacketVariable(c) instanceof DataTypeInteger)
+				if(packet.get(c) instanceof DataTypeInteger)
 				{
-					int i = ((DataTypeInteger)packet.getPacketVariable(c)).value;
+					int i = ((DataTypeInteger)packet.get(c)).value;
 					return (byte)MathHelper.clamp(((float)i/100f)*15, 0, 15);
 				}
 				else
@@ -460,9 +456,9 @@ public class TileEntityRedstoneInterface extends TileEntityMultiblockConnectable
 			}
 			case 5:
 			{
-				if(packet.getPacketVariable(c) instanceof DataTypeString)
+				if(packet.get(c) instanceof DataTypeString)
 				{
-					String s = ((DataTypeString)packet.getPacketVariable(c)).value;
+					String s = ((DataTypeString)packet.get(c)).value;
 					switch(s)
 					{
 						case "on":
@@ -576,25 +572,25 @@ public class TileEntityRedstoneInterface extends TileEntityMultiblockConnectable
 	private void dataToRedstone()
 	{
 		TileEntityRedstoneInterface m = master();
-		if(m==null||!m.storedRedstone.hasAnyVariables())
+		if(m==null||!m.storedRedstone.isEmpty())
 			return;
 
 		DataPacket out = new DataPacket();
-		for(char c : DataPacket.varCharacters)
+		for(char c : DataPacket.VARIABLE_NAMES)
 		{
-			if(m.storedRedstone.variables.containsKey(c)&&m.storedRedstone.variables.get(c) instanceof DataTypeArray)
+			if(m.storedRedstone.has(c)&&m.storedRedstone.get(c) instanceof DataTypeArray)
 			{
-				DataTypeArray a = (DataTypeArray)m.storedRedstone.variables.get(c);
+				DataTypeArray a = (DataTypeArray)m.storedRedstone.get(c);
 				int i1 = ((DataTypeInteger)a.value[0]).value;
 				int i2 = ((DataTypeInteger)a.value[1]).value;
 
 				TileEntityRedstoneInterface m4 = getTileForPos(4);
 				if(m4!=null)
-					out.setVariable(c, getTypeFromRedstone((byte)m4.getNetwork().getPowerOutput(i1), i2));
+					out.set(c, getTypeFromRedstone((byte)m4.getNetwork().getPowerOutput(i1), i2));
 			}
 		}
 
-		if(!out.hasAnyVariables())
+		if(!out.isEmpty())
 			return;
 		IIDataHandlingUtils.sendPacketAdjacently(out, world, m.getPos(), facing.getOpposite());
 	}

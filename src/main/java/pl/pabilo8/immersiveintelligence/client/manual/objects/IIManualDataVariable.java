@@ -96,7 +96,7 @@ public class IIManualDataVariable extends IIManualObject
 		{
 			requirements = new HashMap<>();
 			EasyNBT nbt = dataSource.getEasyCompound("requirements");
-			for(char c : DataPacket.varCharacters)
+			for(char c : DataPacket.VARIABLE_NAMES)
 				nbt.checkSetString(String.valueOf(c),
 						tag -> requirements.put(c, tag)
 				);

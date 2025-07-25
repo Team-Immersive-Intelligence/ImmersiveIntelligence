@@ -408,14 +408,14 @@ public class TileEntityFluidInserter extends TileEntityImmersiveConnectable impl
 	@Override
 	public void onPacketReceive(DataPacket packet)
 	{
-		if(packet.getPacketVariable('m').getName().equals("string"))
+		if(packet.get('m').getName().equals("string"))
 		{
-			fluidTakeMode = ((DataTypeString)packet.getPacketVariable('m')).value;
+			fluidTakeMode = ((DataTypeString)packet.get('m')).value;
 		}
 
-		if(packet.getPacketVariable('c').getName().equals("integer"))
+		if(packet.get('c').getName().equals("integer"))
 		{
-			int items = ((DataTypeInteger)packet.getPacketVariable('c')).value;
+			int items = ((DataTypeInteger)packet.get('c')).value;
 			fluidToTake = (fluidTakeMode.equals("add"))?fluidToTake+items: items;
 		}
 	}

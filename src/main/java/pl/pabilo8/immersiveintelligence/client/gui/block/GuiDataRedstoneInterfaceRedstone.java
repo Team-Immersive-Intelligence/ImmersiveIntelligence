@@ -151,10 +151,10 @@ public class GuiDataRedstoneInterfaceRedstone extends GuiIEContainerBase impleme
 
 
 		int i = 0;
-		for(char c : DataPacket.varCharacters)
-			if(list.variables.containsKey(c))
+		for(char c : DataPacket.VARIABLE_NAMES)
+			if(list.has(c))
 			{
-				DataType data = list.getPacketVariable(c);
+				DataType data = list.get(c);
 				//Base
 				int drawx = guiLeft+32;
 				int drawy = guiTop+12+(i*24)-scroll;
@@ -228,9 +228,9 @@ public class GuiDataRedstoneInterfaceRedstone extends GuiIEContainerBase impleme
 				if(IIMath.isPointInRectangle(drawx+62, drawy+4, drawx+125, drawy+17, mx, my))
 					changeButton = 5;
 
-				if(list.getPacketVariable(c) instanceof DataTypeArray)
+				if(list.get(c) instanceof DataTypeArray)
 				{
-					DataTypeArray array = (DataTypeArray)list.getPacketVariable(c);
+					DataTypeArray array = (DataTypeArray)list.get(c);
 					GlStateManager.pushMatrix();
 					if(array.value.length < 2||!(array.value[0] instanceof DataTypeInteger)||!(array.value[1] instanceof DataTypeInteger))
 						array.value = new DataTypeInteger[]{new DataTypeInteger(0), new DataTypeInteger(0)};
@@ -261,12 +261,12 @@ public class GuiDataRedstoneInterfaceRedstone extends GuiIEContainerBase impleme
 							case 3:
 							{
 								char d = IIUtils.cycleDataPacketChars(c, true, false);
-								for(int j = 0; j < DataPacket.varCharacters.length; j += 1)
+								for(int j = 0; j < DataPacket.VARIABLE_NAMES.length; j += 1)
 								{
-									if(!list.variables.containsKey(d))
+									if(!list.has(d))
 									{
-										list.setVariable(d, list.getPacketVariable(c));
-										list.removeVariable(c);
+										list.set(d, list.get(c));
+										list.remove(c);
 										syncDataToServer();
 										break;
 									}
@@ -278,12 +278,12 @@ public class GuiDataRedstoneInterfaceRedstone extends GuiIEContainerBase impleme
 							case 4:
 							{
 								char d = IIUtils.cycleDataPacketChars(c, false, false);
-								for(int j = 0; j < DataPacket.varCharacters.length; j += 1)
+								for(int j = 0; j < DataPacket.VARIABLE_NAMES.length; j += 1)
 								{
-									if(!list.variables.containsKey(d))
+									if(!list.has(d))
 									{
-										list.setVariable(d, list.getPacketVariable(c));
-										list.removeVariable(c);
+										list.set(d, list.get(c));
+										list.remove(c);
 										syncDataToServer();
 										break;
 
@@ -343,12 +343,12 @@ public class GuiDataRedstoneInterfaceRedstone extends GuiIEContainerBase impleme
 		if(hovered&&!wasDown&&Mouse.isButtonDown(0))
 		{
 			boolean done = false;
-			for(char c : DataPacket.varCharacters)
-				if(!list.variables.containsKey(c))
+			for(char c : DataPacket.VARIABLE_NAMES)
+				if(!list.has(c))
 				{
 					//Save gui scroll, tile pos for validation
 					saveGuiData();
-					list.setVariable(c, new DataTypeArray(new DataTypeInteger(0), new DataTypeInteger(0)));
+					list.set(c, new DataTypeArray(new DataTypeInteger(0), new DataTypeInteger(0)));
 					//Set variable and change gui
 					refreshstoredRedstone();
 					syncDataToServer();
@@ -407,7 +407,7 @@ public class GuiDataRedstoneInterfaceRedstone extends GuiIEContainerBase impleme
 	//Used to refresh gui variables after one of the variables is changed
 	void refreshstoredRedstone()
 	{
-		maxScroll = (Math.max(list.variables.size()-4, 0))*24;
+		maxScroll = (Math.max(list.size()-4, 0))*24;
 		wasDown = false;
 
 		tile = (TileEntityRedstoneInterface)tile.getWorld().getTileEntity(tile.getPos());
@@ -436,11 +436,11 @@ public class GuiDataRedstoneInterfaceRedstone extends GuiIEContainerBase impleme
 	void onVariableRemoveButtonClick(char variable, boolean hovered)
 	{
 		//Check for button click
-		if(hovered&&!wasDown&&Mouse.isButtonDown(0)&&list.variables.containsKey(variable))
+		if(hovered&&!wasDown&&Mouse.isButtonDown(0)&&list.has(variable))
 		{
-			list.removeVariable(variable);
+			list.remove(variable);
 			syncDataToServer();
-			maxScroll = (Math.max(list.variables.size()-4, 0))*24;
+			maxScroll = (Math.max(list.size()-4, 0))*24;
 			wasDown = false;
 		}
 	}

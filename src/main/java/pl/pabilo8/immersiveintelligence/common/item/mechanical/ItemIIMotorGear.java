@@ -3,6 +3,7 @@ package pl.pabilo8.immersiveintelligence.common.item.mechanical;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -45,8 +46,8 @@ public class ItemIIMotorGear extends ItemIISubItemsBase<MotorGear> implements IM
 		float torque = mod >= 1?mod: 1;
 
 		tooltip.add(I18n.format(IIReference.INFO_KEY+"gear_ratio",
-				speed==(int)speed?String.valueOf((int)speed): String.valueOf(speed),
-				torque==(int)torque?String.valueOf((int)torque): String.valueOf(torque)
+				TextFormatting.GOLD+(speed%1==0?Integer.toString((int)speed): Float.toString(speed))+TextFormatting.RESET,
+				TextFormatting.GOLD+(torque%1==0?Integer.toString((int)torque): Float.toString(torque))+TextFormatting.RESET
 		));
 	}
 

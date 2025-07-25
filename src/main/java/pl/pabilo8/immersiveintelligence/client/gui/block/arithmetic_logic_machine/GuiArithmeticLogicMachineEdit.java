@@ -8,15 +8,12 @@ import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeExpression;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoButton;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoDropdownDataLetters;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoDropdownDataLetters.ArrowsAlignment;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.data_editor.GuiDataEditorExpression;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.data_editor.DecoDataEditorExpression;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityArithmeticLogicMachine;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageGuiNBT;
-import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
@@ -35,12 +32,12 @@ public class GuiArithmeticLogicMachineEdit extends GuiArithmeticLogicMachineBase
 	private int page;
 	public char variableToEdit = 'a';
 	public DataType dataType;
-	public DecoDropdownDataLetters buttonLetter;
+	//	public DecoDropdownDataLetters buttonLetter;
 	public GuiButtonIE buttonApply;
 	public DecoButton buttonVariableHelp;
 
 	@Nullable
-	private GuiDataEditorExpression editor = null;
+	private DecoDataEditorExpression editor = null;
 
 	public GuiArithmeticLogicMachineEdit(EntityPlayer player, TileEntityArithmeticLogicMachine tile)
 	{
@@ -72,13 +69,13 @@ public class GuiArithmeticLogicMachineEdit extends GuiArithmeticLogicMachineBase
 						.withIcon(IIReference.RES_TEXTURES_GUI.with("data_types/expression").withExtension(ResLoc.EXT_PNG))
 		);
 
-		this.editor = addButton(new GuiDataEditorExpression(buttonList.size(),
+		/*this.editor = addButton(new DecoDataEditorExpression(buttonList.size(),
 				this.editor!=null?this.editor.outputType(): new DataPacket().getVarInType(DataTypeExpression.class, dataType), handler.getStackInSlot(page)));
 		this.editor.setBounds(guiLeft+35, guiTop+46, 131, 80);
 
 		//Letter Change Buttons
 		buttonLetter = addButton(new DecoDropdownDataLetters(buttonList.size(), guiLeft+42-10, guiTop+14, false, variableToEdit, ArrowsAlignment.LEFT));
-		buttonLetter.setAvoidGetter(this::getPacketFromPage);
+		buttonLetter.setAvoidGetter(this::getPacketFromPage);*/
 
 	}
 
@@ -86,32 +83,21 @@ public class GuiArithmeticLogicMachineEdit extends GuiArithmeticLogicMachineBase
 	public void updateScreen()
 	{
 		super.updateScreen();
-		if(editor!=null)
-			editor.update();
-	}
-
-	@Override
-	protected void keyTyped(char typedChar, int keyCode) throws IOException
-	{
-		if(editor!=null&&editor.isFocused())
-			editor.keyTyped(typedChar, keyCode);
-		else
-		{
-			if(!buttonLetter.keyTyped(typedChar, keyCode))
-				super.keyTyped(typedChar, keyCode);
-		}
+		/*if(editor!=null)
+			editor.update();*/
 	}
 
 	@Override
 	protected void actionPerformed(@Nonnull GuiButton button) throws IOException
 	{
 		super.actionPerformed(button);
-		if(button==buttonLetter)
+		/*if(button==buttonLetter)
 		{
 			if(buttonLetter.selectedEntry!=variableToEdit)
 				switchLetter();
 		}
-		else if(button==buttonApply)
+		else*/
+		if(button==buttonApply)
 		{
 			if(this.editor!=null)
 				this.dataType = this.editor.outputType();
@@ -153,8 +139,8 @@ public class GuiArithmeticLogicMachineEdit extends GuiArithmeticLogicMachineBase
 			}
 		}
 		DataPacket list = IIContent.itemCircuit.getStoredData(handler.getStackInSlot(page));
-		if(list.variables.containsKey(variableToEdit))
-			this.dataType = list.getPacketVariable(variableToEdit);
+		if(list.has(variableToEdit))
+			this.dataType = list.get(variableToEdit);
 		else
 			this.dataType = new DataTypeExpression();
 	}
@@ -167,17 +153,17 @@ public class GuiArithmeticLogicMachineEdit extends GuiArithmeticLogicMachineBase
 
 	void switchLetter()
 	{
-		if(handler.getSlots() > page&&handler.getStackInSlot(page).isEmpty())
+		/*if(handler.getSlots() > page&&handler.getStackInSlot(page).isEmpty())
 			return;
 
 		DataPacket list = IIContent.itemCircuit.getStoredData(handler.getStackInSlot(page));
-		if(!list.variables.containsKey(buttonLetter.selectedEntry))
+		if(!list.has(buttonLetter.selectedEntry))
 		{
-			list.setVariable(buttonLetter.selectedEntry, list.getPacketVariable(variableToEdit));
-			list.removeVariable(variableToEdit);
+			list.set(buttonLetter.selectedEntry, list.get(variableToEdit));
+			list.remove(variableToEdit);
 			variableToEdit = buttonLetter.selectedEntry;
 		}
-		IIContent.itemCircuit.writeDataToItem(list, handler.getStackInSlot(page));
+		IIContent.itemCircuit.writeDataToItem(list, handler.getStackInSlot(page));*/
 
 		syncDataToServer();
 		initGui();
@@ -187,8 +173,8 @@ public class GuiArithmeticLogicMachineEdit extends GuiArithmeticLogicMachineBase
 	public ArrayList<String> getTooltip(int mx, int my)
 	{
 		ArrayList<String> tooltip = super.getTooltip(mx, my);
-		if(editor!=null)
-			editor.getTooltip(tooltip, mx, my);
+		/*if(editor!=null)
+			editor.getTooltip(tooltip, mx, my);*/
 		return tooltip;
 	}
 
@@ -197,12 +183,12 @@ public class GuiArithmeticLogicMachineEdit extends GuiArithmeticLogicMachineBase
 	{
 		super.syncDataToServer();
 
-		proxy.setStoredGuiData()
+		/*proxy.setStoredGuiData()
 				.withString("variableToEdit", String.valueOf(variableToEdit));
 		if(editor!=null)
 		{
 			DataPacket storedData = IIContent.itemCircuit.getStoredData(handler.getStackInSlot(page));
-			storedData.setVariable(variableToEdit, editor.outputType());
+			storedData.set(variableToEdit, editor.outputType());
 
 			IIPacketHandler.sendToServer(new MessageIITileSync(tile, EasyNBT.newNBT()
 					.withTag("expressions", EasyNBT.newNBT()
@@ -210,7 +196,7 @@ public class GuiArithmeticLogicMachineEdit extends GuiArithmeticLogicMachineBase
 							.withTag("list", storedData.serializeNBT())
 					)
 			));
-		}
+		}*/
 
 	}
 }

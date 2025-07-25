@@ -8,6 +8,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import org.apache.commons.lang3.ArrayUtils;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
+import pl.pabilo8.immersiveintelligence.api.data.DataVariable;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiDataVariableList;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
@@ -74,9 +75,9 @@ public class GuiArithmeticMachineVariables extends GuiArithmeticLogicMachineBase
 			{
 				if(variableList.add)
 				{
-					for(char c : DataPacket.varCharacters)
+					for(char c : DataPacket.VARIABLE_NAMES)
 					{
-						if(!list.variables.containsKey(c))
+						if(!list.has(c))
 						{
 							//Save gui scroll, tile pos for validation
 							saveBasicData();
@@ -115,10 +116,10 @@ public class GuiArithmeticMachineVariables extends GuiArithmeticLogicMachineBase
 				}
 				else if(variableList.delete)
 				{
-					list.removeVariable(
-							list.variables.keySet()
-									.stream()
-									.sorted(Comparator.comparingInt(o -> ArrayUtils.indexOf(DataPacket.varCharacters, o)))
+					list.remove(
+							list.stream()
+									.map(DataVariable::getName)
+									.sorted(Comparator.comparingInt(o -> ArrayUtils.indexOf(DataPacket.VARIABLE_NAMES, o)))
 									.toArray(Character[]::new)[variableList.selectedOption]
 					);
 					IIContent.itemCircuit.writeDataToItem(list, tile.inventory.get(page));

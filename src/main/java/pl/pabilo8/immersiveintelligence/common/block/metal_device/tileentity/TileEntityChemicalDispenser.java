@@ -528,22 +528,22 @@ public class TileEntityChemicalDispenser extends TileEntityImmersiveConnectable 
 	@Override
 	public void onPacketReceive(DataPacket packet)
 	{
-		if(packet.getPacketVariable('p') instanceof NumericDataType)
+		if(packet.get('p') instanceof NumericDataType)
 			this.plannedPitch = MathHelper.clamp(
-					packet.getVarInType(NumericDataType.class, packet.getPacketVariable('p')).floatValue(),
+					packet.getVarInType(NumericDataType.class, packet.get('p')).floatValue(),
 					-45, 45);
 
-		if(packet.getPacketVariable('y') instanceof NumericDataType)
+		if(packet.get('y') instanceof NumericDataType)
 			this.plannedYaw = MathHelper.clamp(
-					packet.getVarInType(NumericDataType.class, packet.getPacketVariable('y')).floatValue(),
+					packet.getVarInType(NumericDataType.class, packet.get('y')).floatValue(),
 					-45, 45);
 
-		if(packet.getPacketVariable('a') instanceof DataTypeInteger)
-			this.plannedAmount = ((DataTypeInteger)packet.getPacketVariable('a')).value;
-		if(packet.getPacketVariable('s') instanceof DataTypeInteger)
-			this.scatter = MathHelper.clamp(((DataTypeInteger)packet.getPacketVariable('s')).value, 0, 100);
-		if(packet.getPacketVariable('i') instanceof DataTypeBoolean)
-			this.shouldIgnite = ((DataTypeBoolean)packet.getPacketVariable('i')).value;
+		if(packet.get('a') instanceof DataTypeInteger)
+			this.plannedAmount = ((DataTypeInteger)packet.get('a')).value;
+		if(packet.get('s') instanceof DataTypeInteger)
+			this.scatter = MathHelper.clamp(((DataTypeInteger)packet.get('s')).value, 0, 100);
+		if(packet.get('i') instanceof DataTypeBoolean)
+			this.shouldIgnite = ((DataTypeBoolean)packet.get('i')).value;
 
 		IIPacketHandler.sendToClient(this, new MessageIITileSync(this, EasyNBT.newNBT()
 				.withFloat("plannedPitch", plannedPitch)

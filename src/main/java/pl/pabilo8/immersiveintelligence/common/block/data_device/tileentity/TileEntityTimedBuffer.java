@@ -139,9 +139,9 @@ public class TileEntityTimedBuffer extends TileEntityIEBase implements IPlayerIn
 	{
 		this.packet = packet;
 		timer = 1;
-		if(packet.getPacketVariable('0').getName().equals("integer"))
+		if(packet.get('0').getName().equals("integer"))
 		{
-			maxtimer = ((DataTypeInteger)packet.getPacketVariable('0')).value;
+			maxtimer = ((DataTypeInteger)packet.get('0')).value;
 
 			IIPacketHandler.sendToClient(this, new MessageIITileSync(this,
 					EasyNBT.newNBT().withInt("maxtimer", maxtimer).withInt("timer", timer))

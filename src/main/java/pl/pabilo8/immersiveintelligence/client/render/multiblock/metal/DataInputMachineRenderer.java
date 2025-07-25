@@ -33,7 +33,13 @@ public class DataInputMachineRenderer extends IIMultiblockRenderer<TileEntityDat
 			amt.defaultize();
 		animationDrawer.apply(te.drawer.getProgress(partialTicks));
 		animationHatch.apply(te.hatch.getProgress(partialTicks));
-		animationProgrammingStart.apply(0);
+
+		if(te.currentProcess!=null&&te.currentProcess.recipe.showItem)
+		{
+			animationProgrammingStart.apply(1f);
+		}
+		else
+			animationProgrammingStart.apply(0);
 
 		//Draw
 		applyStandardMirroring(te, true);
@@ -66,7 +72,6 @@ public class DataInputMachineRenderer extends IIMultiblockRenderer<TileEntityDat
 		);
 
 		//animations
-
 		animationDrawer = IIAnimationCompiledMap.create(model, ResLoc.of(IIReference.RES_II, "data_input_machine/drawer"));
 		animationHatch = IIAnimationCompiledMap.create(model, ResLoc.of(IIReference.RES_II, "data_input_machine/hatch"));
 		animationProgrammingStart = IIAnimationCompiledMap.create(model, ResLoc.of(IIReference.RES_II, "data_input_machine/programming_start"));

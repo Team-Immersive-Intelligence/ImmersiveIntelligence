@@ -106,9 +106,9 @@ public class TileEntityDataRouter extends TileEntityIEBase implements IPlayerInt
 	@Override
 	public void onReceive(DataPacket packet, EnumFacing side)
 	{
-		if(packet.getPacketVariable(variable) instanceof DataTypeInteger)
+		if(packet.get(variable) instanceof DataTypeInteger)
 		{
-			int c = ((DataTypeInteger)packet.getPacketVariable(variable)).value;
+			int c = ((DataTypeInteger)packet.get(variable)).value;
 			if(world.isBlockLoaded(this.pos.offset(EnumFacing.getFront(c)))&&world.getTileEntity(this.pos.offset(EnumFacing.getFront(c))) instanceof IDataConnector)
 			{
 				IDataConnector d = (IDataConnector)world.getTileEntity(this.pos.offset(EnumFacing.getFront(c)));

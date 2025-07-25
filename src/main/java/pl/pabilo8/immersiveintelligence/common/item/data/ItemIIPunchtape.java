@@ -38,13 +38,14 @@ public class ItemIIPunchtape extends ItemIIBase implements IDataStorageItem
 	{
 		super.addInformation(stack, worldIn, tooltip, flagIn);
 		DataPacket packet = getStoredData(stack);
-		if(packet.hasAnyVariables())
+		if(packet.isEmpty())
 		{
 			if(ItemTooltipHandler.addExpandableTooltip(Keyboard.KEY_LSHIFT, IIReference.DESCRIPTION_KEY+"data_storage_shift", tooltip))
 			{
 				tooltip.add(I18n.format(IIReference.DESCRIPTION_KEY+"data_storage"));
-				packet.variables.forEach(
-						(c, t) -> tooltip.add("   "+t.getTypeColor().getHexCol(I18n.format(IIReference.DATA_KEY+"datatype."+t.getName()))+" "+TextFormatting.GRAY+c)
+				packet.forEach(
+						(c, t) -> tooltip.add("   "+t.getTypeColor().getHexCol(I18n.format(
+								IIReference.DATA_KEY+"datatype."+t.getName()))+" "+TextFormatting.GRAY+c)
 				);
 			}
 		}

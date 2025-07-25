@@ -126,7 +126,7 @@ public class TileEntityDataConnector extends TileEntityImmersiveConnectable impl
 	@Override
 	public void sendPacket(DataPacket packet)
 	{
-		this.getDataNetwork().sendPacket(packet.setPacketColor(EnumDyeColor.byMetadata(this.color)), this);
+		this.getDataNetwork().sendPacket(packet.withPacketColor(EnumDyeColor.byMetadata(this.color)), this);
 	}
 
 	@Override

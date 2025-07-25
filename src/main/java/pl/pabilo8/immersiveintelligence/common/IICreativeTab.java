@@ -192,7 +192,7 @@ public class IICreativeTab extends CreativeTabs
 		items.put("AH6K", IIContent.itemAmmoLightArtillery);
 		items.put("AG4", IIContent.itemAmmoLightGun);
 		items.put("G4", IIContent.itemRailgunGrenade);
-		items.put("E2", IIContent.itemAmmoMortar);
+		items.put("AH6M", IIContent.itemAmmoMortar);
 
 		//Guns and Howitzers
 		items.forEach((name, item) -> {

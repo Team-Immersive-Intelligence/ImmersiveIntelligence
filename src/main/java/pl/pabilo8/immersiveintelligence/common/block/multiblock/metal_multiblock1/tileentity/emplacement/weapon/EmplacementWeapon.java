@@ -268,8 +268,7 @@ public abstract class EmplacementWeapon<A extends EntityAmmoBase<A>>
 
 	}
 
-	@SuppressWarnings("rawtypes")
-	public static MachineUpgrade register(Supplier<EmplacementWeapon> supplier)
+	public static MachineUpgrade register(Supplier<EmplacementWeapon<?>> supplier)
 	{
 		//hacky way, but works
 		EmplacementWeapon<?> w = supplier.get();

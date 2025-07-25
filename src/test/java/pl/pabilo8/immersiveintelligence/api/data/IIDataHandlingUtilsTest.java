@@ -26,28 +26,28 @@ public class IIDataHandlingUtilsTest
 	@Test
 	public void testAsInt()
 	{
-		dataPacket.setVariable('a', new DataTypeInteger(42));
+		dataPacket.set('a', new DataTypeInteger(42));
 		assertEquals(42, IIDataHandlingUtils.asInt('a', dataPacket));
 	}
 
 	@Test
 	public void testAsFloat()
 	{
-		dataPacket.setVariable('a', new DataTypeFloat(3.14f));
+		dataPacket.set('a', new DataTypeFloat(3.14f));
 		assertEquals(3.14f, IIDataHandlingUtils.asFloat('a', dataPacket));
 	}
 
 	@Test
 	public void testAsString()
 	{
-		dataPacket.setVariable('a', new DataTypeString("test"));
+		dataPacket.set('a', new DataTypeString("test"));
 		assertEquals("test", IIDataHandlingUtils.asString('a', dataPacket));
 	}
 
 	@Test
 	public void testExpectingNumericParam()
 	{
-		dataPacket.setVariable('a', new DataTypeFloat(3.14f));
+		dataPacket.set('a', new DataTypeFloat(3.14f));
 		Consumer<Float> consumer = value -> assertEquals(3.14f, value);
 		assertTrue(IIDataHandlingUtils.expectingNumericParam('a', dataPacket, consumer));
 	}
@@ -55,7 +55,7 @@ public class IIDataHandlingUtilsTest
 	@Test
 	public void testExpectingBooleanParam()
 	{
-		dataPacket.setVariable('a', new DataTypeBoolean(true));
+		dataPacket.set('a', new DataTypeBoolean(true));
 		Consumer<Boolean> consumer = value -> assertTrue(value);
 		assertTrue(IIDataHandlingUtils.expectingBooleanParam('a', dataPacket, consumer));
 	}
@@ -63,7 +63,7 @@ public class IIDataHandlingUtilsTest
 	@Test
 	public void testExpectingStringParam()
 	{
-		dataPacket.setVariable('a', new DataTypeString("test"));
+		dataPacket.set('a', new DataTypeString("test"));
 		Consumer<String> consumer = value -> assertEquals("test", value);
 		assertTrue(IIDataHandlingUtils.expectingStringParam('a', dataPacket, consumer));
 	}
@@ -71,7 +71,7 @@ public class IIDataHandlingUtilsTest
 	@Test
 	public void testExpectingEnumParam()
 	{
-		dataPacket.setVariable('a', new DataTypeString("piercing_sabot"));
+		dataPacket.set('a', new DataTypeString("piercing_sabot"));
 		Consumer<CoreType> consumer = value -> assertEquals(CoreType.PIERCING_SABOT, value);
 		assertTrue(IIDataHandlingUtils.expectingEnumParam('a', dataPacket, CoreType.class, consumer));
 	}
@@ -79,9 +79,9 @@ public class IIDataHandlingUtilsTest
 	@Test
 	public void testHandleCallback()
 	{
-		dataPacket.setVariable('a', new DataTypeString("ab"));
-		dataPacket.setVariable('b', new DataTypeString("cd"));
-		dataPacket.setVariable('c', new DataTypeString("cb"));
+		dataPacket.set('a', new DataTypeString("ab"));
+		dataPacket.set('b', new DataTypeString("cd"));
+		dataPacket.set('c', new DataTypeString("cb"));
 		DataPacket responsePacket = IIDataHandlingUtils.handleCallback(dataPacket, s -> {
 			switch(s)
 			{
@@ -94,8 +94,8 @@ public class IIDataHandlingUtilsTest
 			}
 		});
 		assertNotNull(responsePacket);
-		assertEquals("response", ((DataTypeString)responsePacket.getPacketVariable('a')).value);
-		assertEquals("response2", ((DataTypeString)responsePacket.getPacketVariable('b')).value);
-		assertEquals(new DataTypeNull(), responsePacket.getPacketVariable('c'));
+		assertEquals("response", ((DataTypeString)responsePacket.get('a')).value);
+		assertEquals("response2", ((DataTypeString)responsePacket.get('b')).value);
+		assertEquals(new DataTypeNull(), responsePacket.get('c'));
 	}
 }

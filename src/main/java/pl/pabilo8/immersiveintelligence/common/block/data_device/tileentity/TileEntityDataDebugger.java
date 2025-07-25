@@ -102,7 +102,7 @@ public class TileEntityDataDebugger extends TileEntityImmersiveConnectable imple
 				{
 					toggle = true;
 					DataPacket pack = new DataPacket();
-					pack.setVariable('a', new DataTypeString("Hello World!"));
+					pack.set('a', new DataTypeString("Hello World!"));
 					this.getDataNetwork().sendPacket(pack, this);
 					this.world.playSound(null, pos, IISounds.debuggerBeep, SoundCategory.BLOCKS, 1.0f, 0.0f);
 				}
@@ -150,10 +150,10 @@ public class TileEntityDataDebugger extends TileEntityImmersiveConnectable imple
 	{
 		//gets variables in format l:{Value:0}
 		return minimizeArrays(
-				lastPacket.variables.entrySet().stream()
+				lastPacket.stream()
 						.map(entry -> String.format("%s %s = %s",
 								entry.getValue().getTypeColor().getHexCol(entry.getValue().getName()),
-								entry.getKey(),
+								entry.getName(),
 								entry.getValue().toString().replace(
 												"\n", "\n"+StringUtils.repeat(' ', (entry.getValue().getName().length()+7)))
 										.trim()

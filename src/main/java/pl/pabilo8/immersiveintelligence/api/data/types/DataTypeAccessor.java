@@ -25,7 +25,7 @@ public class DataTypeAccessor extends DataType
 
 	public DataType getRealValue(DataPacket data)
 	{
-		return data.getPacketVariable(this.variable);
+		return data.get(this.variable);
 	}
 
 	@Override

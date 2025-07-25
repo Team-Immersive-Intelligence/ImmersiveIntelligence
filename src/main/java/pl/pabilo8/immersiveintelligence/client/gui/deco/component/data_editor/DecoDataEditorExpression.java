@@ -1,52 +1,24 @@
 package pl.pabilo8.immersiveintelligence.client.gui.deco.component.data_editor;
 
-import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.client.gui.elements.GuiButtonIE;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.TextFormatting;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
-import pl.pabilo8.immersiveintelligence.api.data.IIDataOperationUtils;
-import pl.pabilo8.immersiveintelligence.api.data.IIDataTypeUtils;
-import pl.pabilo8.immersiveintelligence.api.data.operations.DataOperation;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeAccessor;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeExpression;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
-import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType.IGenericDataType;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoButton;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoDropdownDataLetters;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoDropdownDataLetters.ArrowsAlignment;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoDropdown;
-import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.IILogger;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
-import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map.Entry;
-import java.util.function.BiFunction;
-import java.util.stream.Collectors;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 07.09.2021
  */
-public class GuiDataEditorExpression extends GuiDataEditor<DataTypeExpression>
+public class DecoDataEditorExpression extends DecoDataEditor<DataTypeExpression>
 {
 	int page = 0;
 	@Nullable
-	private GuiDataEditor<? extends DataType> pageEditor;
-	@Nonnull
-	private final List<String> operations;
+	private DecoDataEditor<? extends DataType> pageEditor;
 
 	private DecoDropdown dropdownOperationPicker;
 	private DecoDropdownDataLetters dropdownLetterPicker;
@@ -59,13 +31,24 @@ public class GuiDataEditorExpression extends GuiDataEditor<DataTypeExpression>
 	private IIColor paramColor = IIColor.WHITE;
 	private String paramName;
 
-	public GuiDataEditorExpression(int buttonId, DataTypeExpression dataType, ItemStack circuit)
+	public DecoDataEditorExpression(int x, int y, DataTypeExpression dataType)
 	{
-		super(buttonId, dataType);
-		this.operations = IIContent.itemCircuit.getOperationsList(circuit);
+		super(x, y, dataType);
 	}
 
 	@Override
+	public DataTypeExpression outputType()
+	{
+		return dataType;
+	}
+
+	/*public DecoDataEditorExpression(int buttonId, DataTypeExpression dataType, ItemStack circuit)
+	{
+		super(buttonId, dataType);
+		this.operations = IIContent.itemCircuit.getOperationsList(circuit);
+	}*/
+
+	/*@Override
 	public void init()
 	{
 		super.init();
@@ -111,12 +94,12 @@ public class GuiDataEditorExpression extends GuiDataEditor<DataTypeExpression>
 			{
 				if(currentType==DataTypeAccessor.class)
 				{
-					this.pageEditor = addButton(new GuiDataEditorAccessor(buttonList.size(), ((DataTypeAccessor)edited)));
+					this.pageEditor = addButton(new DecoDataEditorAccessor(buttonList.size(), ((DataTypeAccessor)edited)));
 					buttonUseAccessor.enabled = false;
 				}
 				else
 				{
-					for(Entry<Class<? extends DataType>, BiFunction<Integer, DataType, GuiDataEditor<? extends DataType>>> entry : GuiDataEditor.editors.entrySet())
+					for(Entry<Class<? extends DataType>, BiFunction<Integer, DataType, DecoDataEditor<? extends DataType>>> entry : DecoDataEditor.editors.entrySet())
 						if(entry.getKey()==edited.getClass())
 						{
 							this.pageEditor = addButton(entry.getValue().apply(buttonList.size(), edited));
@@ -124,10 +107,10 @@ public class GuiDataEditorExpression extends GuiDataEditor<DataTypeExpression>
 						}
 					if(pageEditor==null)
 					{
-						this.pageEditor = addButton(new GuiDataEditorAccessor(buttonList.size(),
+						this.pageEditor = addButton(new DecoDataEditorAccessor(buttonList.size(),
 								edited instanceof DataTypeAccessor?((DataTypeAccessor)edited): new DataTypeAccessor('a')
 						));
-						buttonUseAccessor.enabled = GuiDataEditor.editors.keySet().stream().anyMatch(currentType::isAssignableFrom);
+						buttonUseAccessor.enabled = DecoDataEditor.editors.keySet().stream().anyMatch(currentType::isAssignableFrom);
 					}
 				}
 				if(pageEditor!=null)
@@ -300,12 +283,6 @@ public class GuiDataEditorExpression extends GuiDataEditor<DataTypeExpression>
 	}
 
 	@Override
-	public DataTypeExpression createType()
-	{
-		return new DataTypeExpression();
-	}
-
-	@Override
 	public DataTypeExpression outputType()
 	{
 		if(page==0)
@@ -337,5 +314,5 @@ public class GuiDataEditorExpression extends GuiDataEditor<DataTypeExpression>
 		}
 		else if(pageEditor!=null)
 			pageEditor.getTooltip(tooltip, mx, my);
-	}
+	}*/
 }

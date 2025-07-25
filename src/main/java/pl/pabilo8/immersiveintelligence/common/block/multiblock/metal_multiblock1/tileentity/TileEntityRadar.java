@@ -87,7 +87,7 @@ public class TileEntityRadar extends TileEntityMultiblockMetal<TileEntityRadar, 
 		DataTypeEntity[] entities = hostiles.stream().map(entity -> new DataTypeEntity(entity, center)).toArray(DataTypeEntity[]::new);
 		DataTypeArray arr = new DataTypeArray(entities);
 
-		packet.setVariable('e', arr);
+		packet.set('e', arr);
 
 		IIDataHandlingUtils.sendPacketAdjacently(packet, world, getBlockPosForPos(77), facing.rotateYCCW());
 

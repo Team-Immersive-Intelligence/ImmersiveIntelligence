@@ -5,7 +5,11 @@ import net.minecraft.util.Tuple;
 import org.apache.commons.lang3.tuple.Pair;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoEntryPanel;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 /**
  * @ii-approved 0.3.1
@@ -46,7 +50,7 @@ public class DecoList<T> extends DecoScrolledCollection<DecoList<T>, T>
 	@Override
 	protected void draw(int mouseX, int mouseY, float partialTicks)
 	{
-		drawList(x, y, mouseX, mouseY, partialTicks);
+		drawList(x, y, width, mouseX, mouseY, partialTicks);
 	}
 
 	@Override
@@ -54,6 +58,61 @@ public class DecoList<T> extends DecoScrolledCollection<DecoList<T>, T>
 	{
 
 	}
+
+	//--- Public Methods ---//
+
+	/**
+	 * @return the entries of the collection
+	 * @apiNote This returns a copy of the entries list, so modifications to the returned list will not affect the original list.
+	 */
+	public List<T> getEntries()
+	{
+		ArrayList<T> result = new ArrayList<>(entries);
+		result.removeAll(toBeRemoved);
+		return result;
+	}
+
+	/**
+	 * @return a stream of the entries in the collection
+	 */
+	public Stream<T> streamEntries()
+	{
+		return getEntries().stream();
+	}
+
+	/**
+	 * Checks if the list contains any entry that matches the given predicate
+	 *
+	 * @param predicate The predicate to match the entries against
+	 * @return true if any entry matches the predicate, false otherwise
+	 */
+	public boolean hasAny(Predicate<T> predicate)
+	{
+		return getEntries().stream().anyMatch(predicate);
+	}
+
+	/**
+	 * Matches the first entry against the given predicate
+	 *
+	 * @param predicate The predicate to match the entries against
+	 * @return the first entry that matches the predicate, or null if no entry matches
+	 */
+	public Optional<T> findFirst(Predicate<T> predicate)
+	{
+		return getEntries().stream().filter(predicate).findFirst();
+	}
+
+	/**
+	 * Removes all entries that match the given predicate from the list
+	 *
+	 * @param predicate The predicate to match the entries against
+	 */
+	public void removeIf(Predicate<T> predicate)
+	{
+		getEntries().stream().filter(predicate).forEach(this::removeEntry);
+	}
+
+	//--- Internal Methods ---//
 
 	private Optional<Pair<DecoEntryPanel<T>, Integer>> getHoveredPanel(int mouseX, int mouseY)
 	{

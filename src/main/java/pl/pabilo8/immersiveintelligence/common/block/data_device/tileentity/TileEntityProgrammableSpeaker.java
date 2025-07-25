@@ -23,10 +23,9 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
+import pl.pabilo8.immersiveintelligence.api.data.IIDataHandlingUtils;
 import pl.pabilo8.immersiveintelligence.api.data.device.DataWireNetwork;
 import pl.pabilo8.immersiveintelligence.api.data.device.IDataConnector;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeBoolean;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.IAdvancedTextOverlay;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.ProgrammableSpeaker;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
@@ -136,29 +135,23 @@ public class TileEntityProgrammableSpeaker extends TileEntityImmersiveConnectabl
 	@Override
 	public void onPacketReceive(DataPacket packet)
 	{
-		//once
-		boolean once = packet.getPacketVariable('o') instanceof DataTypeBoolean&&((DataTypeBoolean)packet.getPacketVariable('o')).value;
+		IIDataHandlingUtils.optionalInt('t', packet).ifPresent(t ->
+				tone = MathHelper.clamp(t/100f, -2, 2));
+		IIDataHandlingUtils.optionalInt('v', packet).ifPresent(v ->
+				soundVolume = MathHelper.clamp(v/100f, 0, 1));
 
-		if(packet.getPacketVariable('t') instanceof DataTypeInteger)
-			tone = MathHelper.clamp(((DataTypeInteger)packet.getPacketVariable('t')).value/100f, -2, 2);
-
-		if(packet.getPacketVariable('v') instanceof DataTypeInteger)
-			soundVolume = MathHelper.clamp(((DataTypeInteger)packet.getPacketVariable('v')).value/100f, 0, 1);
-
-		if(packet.variables.containsKey('s'))
-		{
-			if(once)
+		//Update played sound
+		IIDataHandlingUtils.expectingStringParam('s', packet, s -> {
+			if(IIDataHandlingUtils.asBoolean('o', packet)) //play once
 			{
-				SoundEvent s = SoundEvent.REGISTRY.getObject(new ResourceLocation(packet.getPacketVariable('s').toString()));
-				if(s!=null)
-					world.playSound(null, getPos(), s, SoundCategory.BLOCKS, ((ProgrammableSpeaker.soundRange+4)/20f), tone);
+				SoundEvent soundEvent = SoundEvent.REGISTRY.getObject(new ResourceLocation(s));
+				if(soundEvent!=null)
+					world.playSound(null, getPos(), soundEvent, SoundCategory.BLOCKS, ((ProgrammableSpeaker.soundRange+4)/20f), tone);
 			}
 			else
-			{
-				soundID = packet.getPacketVariable('s').toString();
-				sendSoundUpdate();
-			}
-		}
+				soundID = packet.get('s').toString();
+		});
+		sendSoundUpdate();
 	}
 
 	private void sendSoundUpdate()

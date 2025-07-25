@@ -33,8 +33,8 @@ public class POLInstructionCopy extends POLInstruction
 	public void execute(POLComputerMemory memory, POLTerminal terminal, POLProcess polProcess, int executionTime)
 	{
 		int pageID = (page!=null&&page.get(memory.packet) instanceof DataTypeInteger)?((DataTypeInteger)page.get(memory.packet)).value: memory.page;
-		DataType f = memory.packet.getPacketVariable(from);
-		memory.pages[pageID].setVariable(to, f);
+		DataType f = memory.packet.get(from);
+		memory.pages[pageID].set(to, f);
 
 	}
 

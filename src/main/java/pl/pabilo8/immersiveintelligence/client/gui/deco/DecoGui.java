@@ -11,8 +11,11 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraftforge.client.event.GuiScreenEvent.ActionPerformedEvent;
+import net.minecraftforge.client.event.GuiScreenEvent.ActionPerformedEvent.Post;
+import net.minecraftforge.client.event.GuiScreenEvent.ActionPerformedEvent.Pre;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.Optional.Method;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
@@ -25,10 +28,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiComponentDe
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoTab;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoLabel;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.widget.DecoComponentWidgetBase;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundBuilder;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundTile;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoResource;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTemplate;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.*;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationUtils;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
@@ -48,6 +48,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Supplier;
 
 /**
  * <p>
@@ -82,6 +83,7 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 	protected final List<DecoTab> tabList = new ArrayList<>();
 	protected final List<DecoTab> widgetTabList = new ArrayList<>();
 	private final List<DecoComponentWidgetBase<?>> widgetList = new ArrayList<>();
+	private final List<ValueListener<?>> valueListeners = new ArrayList<>();
 
 	//Background
 	private DecoBackgroundBuilder<T, C> backgroundBuilder;
@@ -133,6 +135,14 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 		this.buttonList.clear();
 		this.labelList.clear();
 		this.tabList.clear();
+		this.widgetTabList.clear();
+		this.widgetList.clear();
+		this.focusedElement = null;
+		this.hoveredElement = null;
+		this.previousWidget = null;
+		this.currentWidget = null;
+		this.valueListeners.clear();
+
 		this.fontRenderer = IIClientUtils.fontRegular;
 		//JEI Compatibility
 		this.takenSpace = null;
@@ -189,7 +199,7 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 
 	/**
 	 * Called after {@link #onInit()} for GUI JEI compatibility initialization.
-	 * Overriding methods should be annotated with @{@link net.minecraftforge.fml.common.Optional.Method} to not cause a crash if JEI is not present.
+	 * Overriding methods should be annotated with @{@link Method} to not cause a crash if JEI is not present.
 	 */
 	public void onInitJEICompat()
 	{
@@ -209,7 +219,7 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 	}
 
 	/**
-	 * Adds a component to the GUI and returns it
+	 * Adds a {@link GuiComponentDecoBase} to the GUI and returns it
 	 *
 	 * @param component The component to add
 	 * @param <B>       The type of the component
@@ -233,6 +243,13 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 		return component;
 	}
 
+	/**
+	 * Adds a {@link DecoComponentWidgetBase} to the GUI and returns it
+	 *
+	 * @param widget the widget to add
+	 * @param <W>    the type of the widget
+	 * @return the added widget
+	 */
 	protected final <W extends DecoComponentWidgetBase<W>> W addWidget(W widget)
 	{
 		//Add the widget tab
@@ -272,6 +289,18 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 			addComponent(component);
 	}
 
+	/**
+	 * Adds a {@link ValueListener} to the GUI, which will be notified of value changes.
+	 *
+	 * @param supplier the value supplier of the new listener
+	 */
+	protected final <V> ValueListener<V> addValueListener(Supplier<V> supplier)
+	{
+		ValueListener<V> valueListener = new ValueListener<>(supplier);
+		valueListeners.add(valueListener);
+		return valueListener;
+	}
+
 	//--- GUI Label Methods ---//
 
 	/**
@@ -285,6 +314,20 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 	protected final DecoLabel addLabel(String text, int x, int y)
 	{
 		return addLabel(new DecoLabel(fontRenderer, x, y)).withText(text);
+	}
+
+	/**
+	 * Adds a dynamically updated label to the GUI and returns it
+	 *
+	 * @param textFormat The language key of the label's text
+	 * @param listener   A supplier that provides the text of the label
+	 * @param x          The x position of the label
+	 * @param y          The y position of the label
+	 * @return The added label
+	 */
+	protected final DecoLabel addLabel(String textFormat, Supplier<String[]> listener, int x, int y)
+	{
+		return addLabel(new DecoLabel(fontRenderer, x, y)).withFormattedTextListener(textFormat, listener);
 	}
 
 	/**
@@ -342,6 +385,9 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 	{
 		//Draw the dark background
 		this.drawDefaultBackground();
+
+		//Update value listeners before GUI is displayed
+		valueListeners.forEach(ValueListener::update);
 
 		//Draw tiled background, labels, and buttons
 		super.drawScreen(mouseX, mouseY, partialTicks);
@@ -430,6 +476,23 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 	@Override
 	public final void keyTyped(char typedChar, int keyCode) throws IOException
 	{
+		if(Keyboard.isKeyDown(Keyboard.KEY_F5))
+		{
+			if(backgroundBuilder!=null)
+				backgroundBuilder.cleanup();
+
+			//Cleanup components
+			for(GuiButton b : buttonList)
+				if(b instanceof GuiComponentDecoBase)
+					((GuiComponentDecoBase<?>)b).cleanup();
+			//Cleanup widgets
+			for(DecoComponentWidgetBase<?> widget : widgetList)
+				widget.cleanup();
+
+			initGui();
+			return;
+		}
+
 		//Process key typed for the currently focused component
 		if(focusedElement!=null)
 		{
@@ -476,12 +539,12 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 		//Widgets are not a part of the button list, so we need to check them separately
 		if(currentWidget!=null&&currentWidget.decoMousePressed(this.mc, mouseY, mouseX, mouseButtonEnum))
 		{
-			ActionPerformedEvent.Pre event = new ActionPerformedEvent.Pre(this, currentWidget, this.buttonList);
-			if(net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(event))
+			Pre event = new Pre(this, currentWidget, this.buttonList);
+			if(MinecraftForge.EVENT_BUS.post(event))
 				return;
 			this.selectedButton = currentWidget;
 			if(this.equals(this.mc.currentScreen))
-				net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new ActionPerformedEvent.Post(this, event.getButton(), this.buttonList));
+				MinecraftForge.EVENT_BUS.post(new Post(this, event.getButton(), this.buttonList));
 		}
 
 		for(GuiButton guiButton : this.buttonList)
@@ -554,6 +617,10 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 				this.hoveredElement = (GuiComponentDecoBase<?>)guiButton;
 				return ((GuiComponentDecoBase<?>)guiButton).getTooltip();
 			}
+		//Labels
+		for(GuiLabel guiLabel : labelList)
+			if(guiLabel instanceof DecoLabel&&((DecoLabel)guiLabel).shouldDisplayTooltip())
+				return ((DecoLabel)guiLabel).getTooltip();
 
 		return Collections.emptyList();
 	}

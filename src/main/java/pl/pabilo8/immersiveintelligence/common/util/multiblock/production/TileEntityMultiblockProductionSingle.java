@@ -2,6 +2,7 @@ package pl.pabilo8.immersiveintelligence.common.util.multiblock.production;
 
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IGuiTile;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionBase.IIIMultiblockRecipe;
@@ -25,6 +26,7 @@ public abstract class TileEntityMultiblockProductionSingle<T extends TileEntityM
 	 * The current process
 	 */
 	@Nullable
+	@SyncNBT(events = {SyncEvents.TILE_RECIPE_CHANGED, SyncEvents.TILE_GUI_OPENED}, nullable = true)
 	public IIMultiblockProcess<R> currentProcess;
 
 	public TileEntityMultiblockProductionSingle(MultiblockStuctureBase<T> multiblock)

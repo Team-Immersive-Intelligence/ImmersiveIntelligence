@@ -8,6 +8,8 @@ import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 
+import javax.annotation.Nonnull;
+
 /**
  * A label with a background drawn behind it.
  *
@@ -36,7 +38,7 @@ public class DecoTitleLabel extends DecoLabel
 	}
 
 	@Override
-	public void drawLabel(Minecraft mc, int mouseX, int mouseY)
+	public void drawLabel(@Nonnull Minecraft mc, int mouseX, int mouseY)
 	{
 		//Draw background
 		TextureAtlasSprite sprite = ClientUtils.getSprite(backgroundLocation);

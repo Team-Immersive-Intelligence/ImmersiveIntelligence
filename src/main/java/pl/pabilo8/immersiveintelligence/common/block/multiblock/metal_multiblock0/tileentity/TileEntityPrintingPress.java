@@ -157,7 +157,7 @@ public class TileEntityPrintingPress extends TileEntityMultiblockProductionMulti
 	@Override
 	public void receiveData(DataPacket packet, int pos)
 	{
-		if(packet.getPacketVariable('c').toString().equals("callback"))
+		if(packet.get('c').toString().equals("callback"))
 		{
 			DataPacket response = IIDataHandlingUtils.handleCallback(packet,
 					var -> {

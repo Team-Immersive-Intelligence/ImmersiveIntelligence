@@ -58,7 +58,7 @@ public class TileEntityRedstoneBuffer extends TileEntityIEBase implements IPlaye
 	{
 		if(!world.isRemote)
 		{
-			if(packet.hasAnyVariables())
+			if(packet.isEmpty())
 			{
 				if(passtroughMode&&world.isBlockPowered(this.getPos()))
 					IIDataHandlingUtils.sendPacketAdjacently(packet, world, pos, facing);

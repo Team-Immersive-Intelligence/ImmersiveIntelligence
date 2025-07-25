@@ -208,7 +208,7 @@ public class IIRecipes
 	private static void addDataProgrammingRecipes()
 	{
 		//Empty Punchtape
-		new DataProgrammingRecipe(new IngredientStack("punchtapeEmpty"),
+		new DataProgrammingRecipe(new IngredientStack("punchtapeEmpty"), false,
 				(stack, dataIn, machineStorage) -> {
 					ItemStack output = new ItemStack(IIContent.itemPunchtape, 1, 0);
 					((ItemIIPunchtape)output.getItem()).writeDataToItem(dataIn, output);
@@ -216,14 +216,14 @@ public class IIRecipes
 				});
 
 		//Written Punchtape
-		new DataProgrammingRecipe(IIContent.itemPunchtape.getIngredientStack(1),
+		new DataProgrammingRecipe(IIContent.itemPunchtape.getIngredientStack(1), false,
 				(stack, dataIn, machineStorage) -> {
 					machineStorage.accept(((ItemIIPunchtape)stack.getItem()).getStoredData(stack));
 					return stack;
 				});
 
 		//Radio Explosives
-		new DataProgrammingRecipe(IIContent.blockRadioExplosives.getIngredientStack(IIBlockTypes_Mine.MAIN, 1),
+		new DataProgrammingRecipe(IIContent.blockRadioExplosives.getIngredientStack(IIBlockTypes_Mine.MAIN, 1), true,
 				(stack, dataIn, machineStorage) -> {
 					ItemNBTHelper.setTagCompound(stack, "programmed_data", dataIn.serializeNBT());
 					return stack;
@@ -238,7 +238,7 @@ public class IIRecipes
 			public ItemStack apply(ItemStack input, DataPacket data)
 			{
 				return IIContent.itemPrintedPage.getStack(SubItems.TEXT,
-						nbt -> nbt.withString("text", data.getPacketVariable('t').toString())
+						nbt -> nbt.withString("text", data.get('t').toString())
 				);
 			}
 
@@ -246,7 +246,7 @@ public class IIRecipes
 			public int[] getInkTypesRequired(DataPacket data)
 			{
 				float c = 0, m = 0, y = 0, k = 0;
-				String text = data.getPacketVariable('t').toString();
+				String text = data.get('t').toString();
 				if(!text.isEmpty())
 				{
 					Pattern pattern = Pattern.compile("<hexcol;([A-Fa-f0-9]{6});(.*?)>");

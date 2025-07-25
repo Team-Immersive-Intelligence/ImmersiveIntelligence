@@ -49,7 +49,7 @@ public class GuiDataVariableList extends GuiButton
 	 */
 	public void recalculateEntries()
 	{
-		maxScroll = (Math.max(packet.variables.size()-4, 0))*20;
+		maxScroll = (Math.max(packet.size()-4, 0))*20;
 		edit = false;
 		delete = false;
 	}
@@ -83,7 +83,7 @@ public class GuiDataVariableList extends GuiButton
 
 		if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)||Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))
 			delete = true;
-		else if(packet.variables.size() > 0&&IIMath.isPointInRectangle(x, y, x+width, y+height, mx, my))
+		else if(packet.size() > 0&&IIMath.isPointInRectangle(x, y, x+width, y+height, mx, my))
 		{
 			//scrolling
 			int mouseChange = Mouse.getDWheel();
@@ -97,7 +97,7 @@ public class GuiDataVariableList extends GuiButton
 
 			//variable selection
 			selectedOption = (int)Math.floor(((my+scroll)-this.y)/20f);
-			if(selectedOption >= packet.variables.size())
+			if(selectedOption >= packet.size())
 				selectedOption = -1;
 			else
 			{
@@ -125,11 +125,11 @@ public class GuiDataVariableList extends GuiButton
 		int i = 0;
 
 		//draw variables
-		for(char c : DataPacket.varCharacters)
+		for(char c : DataPacket.VARIABLE_NAMES)
 		{
-			if(packet.variables.containsKey(c))
+			if(packet.has(c))
 			{
-				DataType data = packet.getPacketVariable(c);
+				DataType data = packet.get(c);
 				drawEntry(mc, this.x, this.y+(i*20)-scroll, i==selectedOption, data, c);
 				i += 1;
 			}
@@ -147,7 +147,7 @@ public class GuiDataVariableList extends GuiButton
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		IIClientUtils.bindTexture(TEXTURE_VARIABLES);
 		GlStateManager.pushMatrix();
-		int length = (this.packet.variables.size()*20)-scroll;
+		int length = (this.packet.size()*20)-scroll;
 
 		this.drawTexturedModalRect(x+56, y+length, 137, 222, 18, 18);
 		add = IIMath.isPointInRectangle(x+56, y+length, x+56+18, y+length+18, mx, my);

@@ -885,6 +885,7 @@ subtitle.immersiveintelligence.paper_eject=Paper Falling
 
 subtitle.immersiveintelligence.radio_beep=Short Radio Beeps
 subtitle.immersiveintelligence.radio_noise=Radio Noise
+subtitle.immersiveintelligence.debugger_beep=Data Debugger Beeps
 
 subtitle.immersiveintelligence.rolling=Rolling Mechanism in Motion
 subtitle.immersiveintelligence.chain=Chain Being Lifted
@@ -1342,6 +1343,7 @@ info.immersiveintelligence.requires_advanced_hammer=Advanced engineering require
 
 info.immersiveintelligence.tool_durability=Durability: %1$s / %2$s
 info.immersiveintelligence.gear_ratio=Torque/Speed Ratio: %1$s >> %2$s
+info.immersiveintelligence.gear_ratio_short=%1$s >> %2$s
 info.immersiveintelligence.charge_with_if=Charge with IF
 
 info.immersiveintelligence.yaw=Yaw: %s

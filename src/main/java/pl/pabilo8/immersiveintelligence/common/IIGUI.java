@@ -20,8 +20,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.block.ammunition_production.G
 import pl.pabilo8.immersiveintelligence.client.gui.block.arithmetic_logic_machine.GuiArithmeticLogicMachineEdit;
 import pl.pabilo8.immersiveintelligence.client.gui.block.arithmetic_logic_machine.GuiArithmeticLogicMachineStorage;
 import pl.pabilo8.immersiveintelligence.client.gui.block.arithmetic_logic_machine.GuiArithmeticMachineVariables;
-import pl.pabilo8.immersiveintelligence.client.gui.block.data_input_machine.GuiDataInputMachine.GuiDataInputMachineStorage;
-import pl.pabilo8.immersiveintelligence.client.gui.block.data_input_machine.GuiDataInputMachine.GuiDataInputMachineVariables;
+import pl.pabilo8.immersiveintelligence.client.gui.block.data_input_machine.GuiDataInputMachine;
 import pl.pabilo8.immersiveintelligence.client.gui.block.data_input_machine.GuiDataInputMachineEdit;
 import pl.pabilo8.immersiveintelligence.client.gui.block.emplacement.GuiEmplacementPageStatus;
 import pl.pabilo8.immersiveintelligence.client.gui.block.emplacement.GuiEmplacementPageStorage;
@@ -84,9 +83,7 @@ public enum IIGUI implements ISerializableEnum
 	DATA_INPUT_MACHINE_VARIABLES(TileEntityDataInputMachine.class,
 			(player, te) -> new ContainerDataInputMachine(player, te, false)
 	),
-	DATA_INPUT_MACHINE_EDIT(TileEntityDataInputMachine.class,
-			(player, te) -> new ContainerDataInputMachine(player, te, false)
-	),
+	DATA_INPUT_MACHINE_EDIT(TileEntityDataInputMachine.class, ContainerDataInputMachineEditing::new),
 
 	ARITHMETIC_LOGIC_MACHINE_STORAGE(TileEntityArithmeticLogicMachine.class,
 			(player, te) -> new ContainerArithmeticLogicMachine(player, te, 0)
@@ -195,7 +192,7 @@ public enum IIGUI implements ISerializableEnum
 	{
 		IIGUI.SAWMILL.setClientDecoGui(GuiSawmill::new);
 		IIGUI.PACKER.setClientGui(GuiPacker::new);
-		IIGUI.GEARBOX.setClientGui(GuiGearbox::new);
+		IIGUI.GEARBOX.setClientDecoGui(GuiGearbox::new);
 
 		IIGUI.DATA_REDSTONE_INTERFACE_DATA
 				.setClientDecoGui(GuiDataRedstoneInterfaceData::new);
@@ -209,8 +206,8 @@ public enum IIGUI implements ISerializableEnum
 		IIGUI.FUEL_STATION.setClientGui(GuiFuelStation::new);
 		IIGUI.DATA_MERGER.setClientGui(GuiDataMerger::new);
 		//Crates
-		IIGUI.METAL_CRATE.setClientGui(GuiMetalCrate::new);
-		IIGUI.SMALL_CRATE.setClientGui(GuiSmallCrate::new);
+		IIGUI.METAL_CRATE.setClientDecoGui(GuiMetalCrate::new);
+		IIGUI.SMALL_CRATE.setClientDecoGui(GuiSmallCrate::new);
 		//Effect Crates
 		IIGUI.AMMUNITION_CRATE.setClientGui(GuiAmmunitionCrate::new);
 		IIGUI.MEDIC_CRATE.setClientGui(GuiMedicalCrate::new);
@@ -219,8 +216,8 @@ public enum IIGUI implements ISerializableEnum
 		IIGUI.SKYCRATE_STATION.setClientGui(GuiSkycrateStation::new);
 		IIGUI.SKYCART_STATION.setClientGui(GuiSkycartStation::new);
 		//DIM
-		IIGUI.DATA_INPUT_MACHINE_STORAGE.setClientDecoGui(GuiDataInputMachineStorage::new);
-		IIGUI.DATA_INPUT_MACHINE_VARIABLES.setClientDecoGui(GuiDataInputMachineVariables::new);
+		IIGUI.DATA_INPUT_MACHINE_STORAGE.setClientDecoGui(GuiDataInputMachine::getStorageGui);
+		IIGUI.DATA_INPUT_MACHINE_VARIABLES.setClientDecoGui(GuiDataInputMachine::getVariablesGui);
 		IIGUI.DATA_INPUT_MACHINE_EDIT.setClientDecoGui(GuiDataInputMachineEdit::new);
 		//ALM
 		IIGUI.ARITHMETIC_LOGIC_MACHINE_STORAGE.setClientGui(GuiArithmeticLogicMachineStorage::new);
@@ -287,7 +284,7 @@ public enum IIGUI implements ISerializableEnum
 		}
 
 		List<ResLoc> resources = new ArrayList<>();
-		for(Field field : klass.getDeclaredFields())
+		for(Field field : klass.getFields())
 		{
 			if(field.isAnnotationPresent(DecoResource.class)&&Modifier.isStatic(field.getModifiers()))
 			{

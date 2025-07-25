@@ -123,20 +123,20 @@ public class TileEntityInserter extends TileEntityInserterBase
 	{
 		super.onPacketReceive(packet);
 
-		DataType c = packet.getPacketVariable('c');
-		DataType m = packet.getPacketVariable('m');
-		DataType s = packet.getPacketVariable('s');
-		DataType a = packet.getPacketVariable('a');
+		DataType c = packet.get('c');
+		DataType m = packet.get('m');
+		DataType s = packet.get('s');
+		DataType a = packet.get('a');
 
-		DataType i = packet.getPacketVariable('i');
-		DataType o = packet.getPacketVariable('o');
+		DataType i = packet.get('i');
+		DataType o = packet.get('o');
 
 		//old inserter compat
 		if(m.toString().equals("set")||m.toString().equals("add"))
 		{
 			DataTypeInteger count = packet.getVarInType(DataTypeInteger.class, c);
 			IngredientStack ss;
-			if(packet.hasVariable('s'))
+			if(packet.has('s'))
 			{
 				ss = new IngredientStack(packet.getVarInType(DataTypeItemStack.class, s).value);
 				ss.inputSize = count.value;
@@ -171,13 +171,13 @@ public class TileEntityInserter extends TileEntityInserterBase
 			{
 				case "add":
 				{
-					if(packet.hasVariable('a')&&TASKS.containsKey(a.toString()))
+					if(packet.has('a')&&TASKS.containsKey(a.toString()))
 					{
 						Function<NBTTagCompound, InserterTask> fun = TASKS.get(a.toString());
 						InserterTask task = fun.apply(new NBTTagCompound());
 
 						//input facing, default null
-						if(packet.hasVariable('i'))
+						if(packet.has('i'))
 						{
 							EnumFacing f = null;
 							if(i instanceof DataTypeInteger)
@@ -192,7 +192,7 @@ public class TileEntityInserter extends TileEntityInserterBase
 						}
 
 						//output facing, default null
-						if(packet.hasVariable('o'))
+						if(packet.has('o'))
 						{
 							EnumFacing f = null;
 							if(o instanceof DataTypeInteger)
@@ -207,21 +207,21 @@ public class TileEntityInserter extends TileEntityInserterBase
 						}
 
 						//1 resembles I, and 0 resembles O
-						if(packet.getPacketVariable('1') instanceof DataTypeInteger)
-							task.distanceIn = MathHelper.clamp(((DataTypeInteger)packet.getPacketVariable('1')).value, -1, 2);
-						if(packet.getPacketVariable('0') instanceof DataTypeInteger)
-							task.distanceOut = MathHelper.clamp(((DataTypeInteger)packet.getPacketVariable('0')).value, -1, 2);
+						if(packet.get('1') instanceof DataTypeInteger)
+							task.distanceIn = MathHelper.clamp(((DataTypeInteger)packet.get('1')).value, -1, 2);
+						if(packet.get('0') instanceof DataTypeInteger)
+							task.distanceOut = MathHelper.clamp(((DataTypeInteger)packet.get('0')).value, -1, 2);
 
-						if(packet.hasVariable('s'))
-							task.stack = IIUtils.ingredientFromData(packet.getPacketVariable('s'));
+						if(packet.has('s'))
+							task.stack = IIUtils.ingredientFromData(packet.get('s'));
 
 						//expires (requests - tasks ending after r amount of items)
-						if(packet.hasVariable('e'))
+						if(packet.has('e'))
 						{
 
 							int requested =
-									packet.getPacketVariable('e') instanceof DataTypeInteger?
-											packet.getVarInType(DataTypeInteger.class, packet.getPacketVariable('e')).value:
+									packet.get('e') instanceof DataTypeInteger?
+											packet.getVarInType(DataTypeInteger.class, packet.get('e')).value:
 											task.stack.inputSize;
 							task.overrideTakeAmount = task.stack.inputSize;
 							task.stack.inputSize = requested;
@@ -229,10 +229,10 @@ public class TileEntityInserter extends TileEntityInserterBase
 						}
 
 						//overrides amount of items per operation
-						if(packet.hasVariable('t'))
+						if(packet.has('t'))
 						{
 							task.overrideTakeAmount = MathHelper.clamp(
-									packet.getVarInType(DataTypeInteger.class, packet.getPacketVariable('t')).value, 1, 64);
+									packet.getVarInType(DataTypeInteger.class, packet.get('t')).value, 1, 64);
 							task.strictAmount = true;
 						}
 						tasks.add(task);
@@ -261,7 +261,7 @@ public class TileEntityInserter extends TileEntityInserterBase
 						else
 							p = packerTask -> true;
 
-						if(packet.hasVariable('a'))
+						if(packet.has('a'))
 							p = p.and(task -> task.getName().equals(a.toString()));
 						tasks.removeIf(p);
 					}

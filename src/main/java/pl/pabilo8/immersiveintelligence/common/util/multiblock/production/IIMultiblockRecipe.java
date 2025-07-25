@@ -2,6 +2,7 @@ package pl.pabilo8.immersiveintelligence.common.util.multiblock.production;
 
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import blusunrize.immersiveengineering.api.crafting.MultiblockRecipe;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionBase.IIIMultiblockRecipe;
@@ -40,7 +41,7 @@ public abstract class IIMultiblockRecipe extends MultiblockRecipe implements III
 				//IngredientStacks don't have a custom toString method, but NBT does
 				.map(o -> {
 					if(o instanceof IngredientStack)
-						return ((IngredientStack)o).writeToNBT(new NBTTagCompound());
+						return createIngredientStackName(((IngredientStack)o));
 					if(o instanceof FluidStack)
 						return ((FluidStack)o).getUnlocalizedName();
 					return o;
@@ -50,6 +51,29 @@ public abstract class IIMultiblockRecipe extends MultiblockRecipe implements III
 				.collect(Collectors.joining("_"));
 
 		registries.computeIfAbsent(this.getClass(), MultiblockRecipeRegistry::new).addRecipe(this);
+	}
+
+	private static String createIngredientStackName(IngredientStack stack)
+	{
+		StringBuilder sb = new StringBuilder();
+
+		if(stack.fluid!=null)
+			sb.append(stack.fluid.getUnlocalizedName())
+					.append("_")
+					.append(stack.fluid.amount);
+		else if(stack.oreName!=null)
+			sb.append(stack.oreName);
+		else if(stack.stackList!=null)
+		{
+			for(ItemStack contained : stack.stackList)
+				if(!contained.isEmpty())
+					sb.append("_").append(contained);
+		}
+		else
+			sb.append(stack.stack);
+		sb.append("_").append(stack.inputSize);
+
+		return sb.toString();
 	}
 
 	protected final void setTimeAndEnergy(int totalProcessTime, int totalProcessEnergy)

@@ -12,13 +12,13 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
+import pl.pabilo8.immersiveintelligence.api.data.DataVariable;
 import pl.pabilo8.immersiveintelligence.api.data.types.*;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 import pl.pabilo8.immersiveintelligence.common.block.data_device.tileentity.TileEntityDataConnector;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -91,7 +91,7 @@ public class OpenComputersHelper extends IICompatModule
 			if(args.isTable(0))
 			{
 				Map<?, ?> map = args.checkTable(0);
-				for(char c : DataPacket.varCharacters)
+				for(char c : DataPacket.VARIABLE_NAMES)
 					if(map.containsKey(String.valueOf(c))) //parse into IDataType
 					{
 						Object o = map.get(String.valueOf(c));
@@ -111,7 +111,7 @@ public class OpenComputersHelper extends IICompatModule
 						}
 						else //string or other type
 							type = new DataTypeString(o.toString());
-						packet.setVariable(c, type);
+						packet.set(c, type);
 					}
 			}
 
@@ -132,8 +132,8 @@ public class OpenComputersHelper extends IICompatModule
 			if(!te.compatReceived)
 			{
 				Map<String, Object> map = new HashMap<>();
-				for(Entry<Character, DataType> entry : te.lastReceived.variables.entrySet())
-					map.put(entry.getKey().toString(), entry.getValue().toString());
+				for(DataVariable dataVariable : te.lastReceived)
+					map.put(String.valueOf(dataVariable.getName()), dataVariable.getValue().toString());
 
 				te.compatReceived = true;
 				return new Object[]{map};

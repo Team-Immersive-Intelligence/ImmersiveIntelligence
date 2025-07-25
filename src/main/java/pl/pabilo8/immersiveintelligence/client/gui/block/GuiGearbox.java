@@ -1,6 +1,8 @@
 package pl.pabilo8.immersiveintelligence.client.gui.block;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.text.TextFormatting;
+import pl.pabilo8.immersiveintelligence.api.rotary.IIRotaryUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoBarGroup;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoAlignment;
@@ -46,9 +48,24 @@ public class GuiGearbox extends DecoGui<TileEntityGearbox, ContainerGearbox>
 						.withBar(b -> b.withTemplate(DecoGuiUtils.BAR_MECH_SPEED_OUTPUT.apply(tile.rotation)))
 		);
 
-		addLabel("Gear Ratio: 4:1", 24, 54)
+		addLabel(IIReference.INFO_KEY+"gear_ratio_short", this::getRatio, 24, 48)
+				.withTranslatedTooltipListener(IIReference.INFO_KEY+"gear_ratio", this::getRatio)
 				.withSize(128, 11)
 				.withTextColor(IIReference.COLOR_GUI_BRASS)
 				.withAlign(DecoAlignment.CENTER);
+	}
+
+	private String[] getRatio()
+	{
+		float torqueRatio = IIRotaryUtils.getGearTorqueRatio(tile.getInventory());
+
+		//speed : torque
+		float speed = torqueRatio < 1&&torqueRatio!=0?1f/torqueRatio: 1;
+		float torque = torqueRatio >= 1?torqueRatio: 1;
+
+		return new String[]{
+				TextFormatting.GOLD+(speed%1==0?Integer.toString((int)speed): Float.toString(speed))+TextFormatting.RESET,
+				TextFormatting.GOLD+(torque%1==0?Integer.toString((int)torque): Float.toString(torque))+TextFormatting.RESET
+		};
 	}
 }

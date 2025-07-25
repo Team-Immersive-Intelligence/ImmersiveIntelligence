@@ -4,7 +4,6 @@ import net.minecraft.item.EnumDyeColor;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.INBTSerializable;
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.tuple.Pair;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeAccessor;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeExpression;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeNull;
@@ -15,6 +14,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.function.BiConsumer;
+import java.util.stream.Stream;
 
 /**
  * A container for 36 {@link DataType Data Variables} used to exchange information between {@link pl.pabilo8.immersiveintelligence.api.data.device.IDataDevice Data Devices}, central component of the data system.
@@ -24,13 +25,30 @@ import java.util.Map.Entry;
  * @ii-approved 0.3.1
  * @since 31.05.2019
  */
-public class DataPacket implements Iterable<DataType>, INBTSerializable<NBTTagCompound>
+public class DataPacket implements Iterable<DataVariable>, INBTSerializable<NBTTagCompound>
 {
-	public Map<Character, DataType> variables = new HashMap<>();
+	/**
+	 * A list of all valid variable names, used to identify variables in the packet.
+	 */
+	public static final char[] VARIABLE_NAMES = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0'};
+	/**
+	 * A list of all variables in this packet, used for iteration and serialization.
+	 */
+	private List<DataVariable> variableList = new ArrayList<>();
+	/**
+	 * A map of all variables in this packet, used for quick access by name.
+	 */
+	private Map<Character, DataType> variableMap = new HashMap<>();
+	/**
+	 * The color of the packet, used to identify the packet connector sub-network.
+	 * Defaults to {@link EnumDyeColor#WHITE} if not set.
+	 */
 	private EnumDyeColor packetColor = EnumDyeColor.WHITE;
+	/**
+	 * The destination address of the packet, used in advanced data networks.
+	 */
 	private int packetAddress = -1;
 
-	public static final char[] varCharacters = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0'};
 
 	public DataPacket()
 	{
@@ -40,6 +58,25 @@ public class DataPacket implements Iterable<DataType>, INBTSerializable<NBTTagCo
 	public DataPacket(NBTTagCompound tag)
 	{
 		deserializeNBT(tag);
+	}
+
+	public DataPacket(List<DataVariable> entries)
+	{
+		entries.forEach(this::set);
+	}
+
+	/**
+	 * Checks if the given variable name is valid.
+	 *
+	 * @param variableName the name of the variable to check, must be a single character
+	 * @return true if the variable name is valid, false otherwise
+	 */
+	public static boolean isValidVariable(char variableName)
+	{
+		for(char name : VARIABLE_NAMES)
+			if(name==variableName)
+				return true;
+		return false;
 	}
 
 	/**
@@ -74,6 +111,18 @@ public class DataPacket implements Iterable<DataType>, INBTSerializable<NBTTagCo
 		return (T)IIDataTypeUtils.getVarInstance(preferred);
 	}
 
+	/**
+	 * Evaluates a variable:
+	 * <ul>
+	 * <li>if it is an {@link DataTypeAccessor} it will access amd retirm the real value</li>
+	 * <li>if it is a {@link DataTypeExpression} and allowExpressions is true, it will evaluate the expression and return the result</li>
+	 * <li>otherwise it will return the actual value as is</li>
+	 * </ul>
+	 *
+	 * @param actual           the actual value of the variable, can be null
+	 * @param allowExpressions if true, expressions will be evaluated, if false, only the real value will be returned
+	 * @return the evaluated value of the variable
+	 */
 	public DataType evaluateVariable(@Nullable DataType actual, boolean allowExpressions)
 	{
 		if(actual instanceof DataTypeAccessor)
@@ -84,49 +133,102 @@ public class DataPacket implements Iterable<DataType>, INBTSerializable<NBTTagCo
 			return actual;
 	}
 
-	public boolean hasAnyVariables()
+	/**
+	 * Checks if this packet contains any variables.
+	 *
+	 * @return true if the packet is empty, false otherwise
+	 */
+	public boolean isEmpty()
 	{
-		return !variables.isEmpty();
+		return !variableMap.isEmpty();
 	}
 
-	public boolean hasVariable(Character c)
+	/**
+	 * Checks if this packet contains a variable with the given name.
+	 *
+	 * @param c the name of the variable
+	 * @return true if the packet contains the variable, false otherwise
+	 */
+	public boolean has(Character c)
 	{
-		return variables.containsKey(c);
+		return variableMap.containsKey(c);
 	}
 
-	public boolean hasAnyVariables(Character... names)
+	/**
+	 * Checks if this packet contains all the given variables.
+	 *
+	 * @param names the names of the variables to check
+	 * @return true if the packet contains all the variables, false otherwise
+	 */
+	public boolean has(Character... names)
 	{
 		for(Character c : names)
-			if(!variables.containsKey(c))
+			if(!variableMap.containsKey(c))
 				return false;
 		return true;
 	}
 
-	public DataType getPacketVariable(Character name)
+	/**
+	 * Gets the variable with the given name.
+	 *
+	 * @param name the name of the variable
+	 * @return the variable, or a {@link DataTypeNull} if it does not exist
+	 */
+	@Nonnull
+	public DataType get(Character name)
 	{
-		if(variables.containsKey(name))
-			return variables.get(name);
-		return new DataTypeNull();
+		return variableMap.getOrDefault(name, new DataTypeNull());
 	}
 
-	public boolean setVariable(Character c, DataType type)
+	/**
+	 * Sets the variable with the given name to the given type.
+	 * If the variable already exists, it will be updated.
+	 * If the variable does not exist, it will be added.
+	 *
+	 * @param name  the name of the variable
+	 * @param value the value to set the variable
+	 * @return true if the variable was set or added, false if the character is not valid
+	 */
+	public boolean set(Character name, DataType value)
 	{
-		if(ArrayUtils.contains(varCharacters, c))
+		if(ArrayUtils.contains(VARIABLE_NAMES, name))
 		{
-			variables.remove(c);
-			variables.put(c, type);
+			variableMap.put(name, value);
+			for(int i = 0; i < variableList.size(); i++)
+				if(variableList.get(i).name==name)
+				{
+					variableList.set(i, new DataVariable(name, value));
+					return true;
+				}
+			variableList.add(new DataVariable(name, value));
 			return true;
 		}
 		return false;
 	}
 
-	public DataPacket setPacketColor(EnumDyeColor color)
+	/**
+	 * Sets the variable with the given name to the given type.
+	 *
+	 * @param dataVariable the variable to set, must not be null
+	 */
+	public void set(@Nonnull DataVariable dataVariable)
+	{
+		set(dataVariable.name, dataVariable.value);
+	}
+
+	/**
+	 * Sets the packet color, used to identify the packet connector sub-network.
+	 *
+	 * @param color the color of the packet, if null, it will result to {@link EnumDyeColor#WHITE}
+	 * @return this packet instance, for chaining
+	 */
+	public DataPacket withPacketColor(EnumDyeColor color)
 	{
 		this.packetColor = color;
 		return this;
 	}
 
-	public DataPacket setPacketAddress(int address)
+	public DataPacket withPacketAddress(int address)
 	{
 		if(address >= -1)
 			this.packetAddress = address;
@@ -138,39 +240,31 @@ public class DataPacket implements Iterable<DataType>, INBTSerializable<NBTTagCo
 		return (packetAddress==-1||packetAddress==connAddress)&&(packetColor==EnumDyeColor.WHITE||packetColor==connColor);
 	}
 
-	public void removeAllVariables()
+	public void clear()
 	{
-		for(char c : varCharacters)
-			removeVariable(c);
+		for(char c : VARIABLE_NAMES)
+			remove(c);
 	}
 
-	public void removeVariables(Character... names)
+	public void remove(Character... names)
 	{
 		for(Character c : names)
-			if(ArrayUtils.contains(varCharacters, c))
-				variables.remove(c);
+			if(ArrayUtils.contains(VARIABLE_NAMES, c))
+			{
+				variableMap.remove(c);
+				variableList.removeIf(variable -> variable.name==c);
+			}
 	}
 
-	public boolean removeVariable(Character c)
+	public boolean remove(Character c)
 	{
-		if(ArrayUtils.contains(varCharacters, c))
+		if(ArrayUtils.contains(VARIABLE_NAMES, c))
 		{
-			variables.remove(c);
+			variableMap.remove(c);
+			variableList.removeIf(variable -> variable.name==c);
 			return true;
 		}
 		return false;
-	}
-
-	public void trimNulls()
-	{
-		variables.entrySet().removeIf(entry -> entry.getValue() instanceof DataTypeNull);
-	}
-
-	public List<Pair<Character, DataType>> getAllVariables()
-	{
-		List<Pair<Character, DataType>> all = new ArrayList<>(variables.size());
-		variables.forEach((key, value) -> all.add(Pair.of(key, value)));
-		return all;
 	}
 
 	@Override
@@ -178,8 +272,8 @@ public class DataPacket implements Iterable<DataType>, INBTSerializable<NBTTagCo
 	{
 		NBTTagCompound nbt = new NBTTagCompound();
 
-		for(Map.Entry<Character, DataType> entry : variables.entrySet())
-			nbt.setTag(String.valueOf(entry.getKey()), entry.getValue().valueToNBT());
+		for(DataVariable entry : variableList)
+			nbt.setTag(String.valueOf(entry.name), entry.value.valueToNBT());
 
 		if(packetColor!=EnumDyeColor.WHITE)
 			nbt.setInteger("color", packetColor.getMetadata());
@@ -193,8 +287,9 @@ public class DataPacket implements Iterable<DataType>, INBTSerializable<NBTTagCo
 	@Override
 	public void deserializeNBT(NBTTagCompound nbt)
 	{
-		variables.clear();
-		for(Character c : varCharacters)
+		variableMap.clear();
+		variableList.clear();
+		for(Character c : VARIABLE_NAMES)
 			if(nbt.hasKey(String.valueOf(c)))
 			{
 				NBTTagCompound n = nbt.getCompoundTag(String.valueOf(c));
@@ -203,7 +298,8 @@ public class DataPacket implements Iterable<DataType>, INBTSerializable<NBTTagCo
 				{
 					DataType data = IIDataTypeUtils.metaTypesByName.get(type).supplier.get();
 					data.valueFromNBT(n);
-					variables.put(c, data);
+					variableMap.put(c, data);
+					variableList.add(new DataVariable(c, data));
 				}
 			}
 		if(nbt.hasKey("color"))
@@ -212,24 +308,62 @@ public class DataPacket implements Iterable<DataType>, INBTSerializable<NBTTagCo
 			this.packetAddress = nbt.getInteger("address");
 	}
 
-	@Override
-	public Iterator<DataType> iterator()
+	/**
+	 * @return a list of all variables in this packet
+	 */
+	public List<DataVariable> getAllVariables()
 	{
-		return variables.values().iterator();
+		return variableList;
 	}
 
+	/**
+	 * @return an iterator over the variables in this packet
+	 */
+	@Override
+	public Iterator<DataVariable> iterator()
+	{
+		return variableList.iterator();
+	}
+
+	/**
+	 * Applies the given consumer to each variable in this packet.
+	 *
+	 * @param consumer the consumer to apply
+	 */
+	public void forEach(BiConsumer<Character, DataType> consumer)
+	{
+		variableMap.forEach(consumer);
+	}
+
+	/**
+	 * @return a stream of all variables in this packet, useful for functional programming
+	 */
+	@Nonnull
+	public Stream<DataVariable> stream()
+	{
+		return variableList.stream();
+	}
+
+	/**
+	 * @return the count of variables in this packet
+	 */
 	public int size()
 	{
-		return variables.size();
+		return variableList.size();
 	}
 
+	/**
+	 * @return a deep copy of this packet
+	 */
 	@Override
 	@SuppressWarnings("MethodDoesntCallSuperMethod")
 	public DataPacket clone()
 	{
 		DataPacket packet = new DataPacket();
-		packet.variables = new HashMap<>();
-		this.variables.forEach((character, dataType) -> packet.variables.put(character, dataType.clone()));
+		this.variableMap.forEach((character, dataType) -> {
+			packet.variableMap.put(character, dataType.clone());
+			packet.variableList.add(new DataVariable(character, dataType));
+		});
 		packet.packetColor = this.packetColor;
 		packet.packetAddress = this.packetAddress;
 		return packet;
@@ -250,12 +384,12 @@ public class DataPacket implements Iterable<DataType>, INBTSerializable<NBTTagCo
 		{
 			DataPacket other = (DataPacket)obj;
 
-			if(!variables.keySet().equals(other.variables.keySet()))
+			if(!variableMap.keySet().equals(other.variableMap.keySet()))
 				return false;
 			if(!matchesConnector(other.packetColor, other.packetAddress))
 				return false;
-			for(Entry<Character, DataType> entry : variables.entrySet())
-				if(!other.getPacketVariable(entry.getKey()).toString().equals(entry.getValue().toString()))
+			for(Entry<Character, DataType> entry : variableMap.entrySet())
+				if(!other.get(entry.getKey()).toString().equals(entry.getValue().toString()))
 					return false;
 
 			return true;

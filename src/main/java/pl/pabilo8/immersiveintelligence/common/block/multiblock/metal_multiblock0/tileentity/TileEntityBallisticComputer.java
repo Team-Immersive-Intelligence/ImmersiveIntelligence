@@ -83,21 +83,21 @@ public class TileEntityBallisticComputer extends TileEntityMultiblockIIGeneric<T
 		packet = packet.clone();
 
 		//No target
-		if(!packet.hasAnyVariables('x', 'y', 'z'))
+		if(!packet.has('x', 'y', 'z'))
 			return;
 
 		float x = IIDataHandlingUtils.asFloat('x', packet);
 		float y = IIDataHandlingUtils.asFloat('y', packet);
 		float z = IIDataHandlingUtils.asFloat('z', packet);
-		packet.removeVariables('x', 'y', 'z');
+		packet.remove('x', 'y', 'z');
 
 		double mass = 0;
 		double force = IIContent.itemAmmoHeavyArtillery.getVelocity();
 
 		//Get info from item
-		if(packet.hasVariable('s'))
+		if(packet.has('s'))
 		{
-			DataTypeItemStack t = packet.getVarInType(DataTypeItemStack.class, packet.getPacketVariable('s'));
+			DataTypeItemStack t = packet.getVarInType(DataTypeItemStack.class, packet.get('s'));
 			ItemStack stack = t.value;
 			if(stack.getItem() instanceof IAmmoTypeItem)
 			{
@@ -105,25 +105,25 @@ public class TileEntityBallisticComputer extends TileEntityMultiblockIIGeneric<T
 				force = bullet.getVelocity();
 				mass = bullet.getMass(stack);
 			}
-			packet.removeVariable('s');
+			packet.remove('s');
 		}
 		//Get info from variables
 		else
 		{
-			if(packet.hasVariable('m'))
-				mass = packet.getVarInType(DataTypeInteger.class, packet.getPacketVariable('m')).value;
-			if(packet.hasVariable('f'))
-				force = packet.getVarInType(DataTypeInteger.class, packet.getPacketVariable('f')).value;
-			if(packet.hasVariable('t'))
+			if(packet.has('m'))
+				mass = packet.getVarInType(DataTypeInteger.class, packet.get('m')).value;
+			if(packet.has('f'))
+				force = packet.getVarInType(DataTypeInteger.class, packet.get('f')).value;
+			if(packet.has('t'))
 			{
-				String bname = packet.getPacketVariable('t').toString();
+				String bname = packet.get('t').toString();
 				IAmmoTypeItem<?, ?> bullet = AmmoRegistry.getAmmoItem(bname);
 				if(bullet!=null)
 					force = bullet.getVelocity();
 			}
 
 
-			packet.removeVariables('m', 'f', 't');
+			packet.remove('m', 'f', 't');
 		}
 
 		float distance = (float)new Vec3d(0, 0, 0).distanceTo(new Vec3d(x, 0, z));
@@ -144,13 +144,13 @@ public class TileEntityBallisticComputer extends TileEntityMultiblockIIGeneric<T
 		float pitch;
 
 		//direct
-		if(packet.getVarInType(DataTypeBoolean.class, packet.getPacketVariable('d')).value)
+		if(packet.getVarInType(DataTypeBoolean.class, packet.get('d')).value)
 			pitch = 90-IIAmmoUtils.getDirectFireAngle((float)force, mass, new Vec3d(x, y, z));
 		else //ballistic
 			pitch = IIAmmoUtils.calculateBallisticAngle(distance, y, (float)force, gravity, drag, 0.002);
 
-		packet.setVariable('y', new DataTypeFloat(yaw));
-		packet.setVariable('p', new DataTypeFloat(pitch));
+		packet.set('y', new DataTypeFloat(yaw));
+		packet.set('p', new DataTypeFloat(pitch));
 
 		sendData(packet, facing, multiblock.getPointOfInterest("data_output"));
 	}

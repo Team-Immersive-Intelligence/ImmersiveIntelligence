@@ -2,8 +2,11 @@ package pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel;
 
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiComponentDecoBase;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoLabel;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoFrame;
+import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiConsumer;
@@ -48,6 +51,13 @@ public class DecoEntryPanelBuilder<TYPE> extends DecoEntryPanel<TYPE>
 			elementApplyMethod.accept(type, this);
 	}
 
+	@Override
+	public DecoEntryPanelBuilder<TYPE> withElementTooltip(Function<TYPE, String> onTooltip)
+	{
+		super.withElementTooltip(onTooltip);
+		return this;
+	}
+
 	//--- Settings ---//
 
 	@Override
@@ -56,6 +66,27 @@ public class DecoEntryPanelBuilder<TYPE> extends DecoEntryPanel<TYPE>
 		this.paddingX = x;
 		this.paddingY = y;
 		return this;
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public DecoEntryPanelBuilder<TYPE> withFrame(@Nullable DecoFrame frame)
+	{
+		return (DecoEntryPanelBuilder<TYPE>)super.withFrame(frame);
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public DecoEntryPanelBuilder<TYPE> withBackgroundMask(ResLoc backgroundMask)
+	{
+		return (DecoEntryPanelBuilder<TYPE>)super.withBackgroundMask(backgroundMask);
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public DecoEntryPanelBuilder<TYPE> withBackground(ResLoc background)
+	{
+		return (DecoEntryPanelBuilder<TYPE>)super.withBackground(background);
 	}
 
 	//--- Components ---//

@@ -17,12 +17,14 @@ public class DataProgrammingRecipe extends IIMultiblockRecipe
 {
 	public final IngredientStack input;
 	public final DataProgrammingFunction operationFrom;
+	public final boolean showItem;
 
-	public DataProgrammingRecipe(IngredientStack input, @Nullable DataProgrammingFunction operation)
+	public DataProgrammingRecipe(IngredientStack input, boolean showItem, @Nullable DataProgrammingFunction operation)
 	{
 		super(input);
 		this.input = input;
 		this.operationFrom = operation;
+		this.showItem = showItem;
 		this.setTimeAndEnergy(
 				DataInputMachine.timePunchtapeProduction,
 				DataInputMachine.energyUsagePunchtape

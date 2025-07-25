@@ -29,7 +29,7 @@ public class POLInstructionExt extends POLInstruction
 	@Override
 	public void execute(POLComputerMemory memory, POLTerminal terminal, POLProcess polProcess, int executionTime)
 	{
-		memory.packet.setVariable(letter, memory.packet.getVarInType(type, text.get(memory.packet)));
+		memory.packet.set(letter, memory.packet.getVarInType(type, text.get(memory.packet)));
 	}
 
 	@Override

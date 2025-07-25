@@ -6,23 +6,11 @@ import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeNull;
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 07.09.2021
  */
-public class GuiDataEditorNull extends GuiDataEditor<DataTypeNull>
+public class DecoDataEditorNull extends DecoDataEditor<DataTypeNull>
 {
-	public GuiDataEditorNull(int buttonId, DataTypeNull dataType)
+	public DecoDataEditorNull(int x, int y, DataTypeNull dataType)
 	{
-		super(buttonId, dataType);
-	}
-
-	@Override
-	public void init()
-	{
-		super.init();
-	}
-
-	@Override
-	public DataTypeNull createType()
-	{
-		return new DataTypeNull();
+		super(x, y, dataType);
 	}
 
 	@Override

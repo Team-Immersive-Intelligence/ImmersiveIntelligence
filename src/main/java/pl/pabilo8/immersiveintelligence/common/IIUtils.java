@@ -210,42 +210,42 @@ public class IIUtils
 		if(hasEmpty)
 			if(current==' ')
 				if(forward)
-					current = DataPacket.varCharacters[0];
+					current = DataPacket.VARIABLE_NAMES[0];
 				else
-					current = DataPacket.varCharacters[DataPacket.varCharacters.length-1];
+					current = DataPacket.VARIABLE_NAMES[DataPacket.VARIABLE_NAMES.length-1];
 			else
 			{
 				int current_char;
 
-				current_char = ArrayUtils.indexOf(DataPacket.varCharacters, current);
+				current_char = ArrayUtils.indexOf(DataPacket.VARIABLE_NAMES, current);
 				current_char += forward?1: -1;
 
-				if(current_char >= DataPacket.varCharacters.length||current_char < 0)
+				if(current_char >= DataPacket.VARIABLE_NAMES.length||current_char < 0)
 					current = ' ';
 				else
-					current = DataPacket.varCharacters[current_char];
+					current = DataPacket.VARIABLE_NAMES[current_char];
 			}
 		else
 		{
 			int current_char;
 
-			current_char = ArrayUtils.indexOf(DataPacket.varCharacters, current);
+			current_char = ArrayUtils.indexOf(DataPacket.VARIABLE_NAMES, current);
 			current_char += forward?1: -1;
 
-			if(current_char >= DataPacket.varCharacters.length)
-				current = DataPacket.varCharacters[0];
+			if(current_char >= DataPacket.VARIABLE_NAMES.length)
+				current = DataPacket.VARIABLE_NAMES[0];
 			else if(current_char < 0)
-				current = DataPacket.varCharacters[DataPacket.varCharacters.length-1];
+				current = DataPacket.VARIABLE_NAMES[DataPacket.VARIABLE_NAMES.length-1];
 			else
-				current = DataPacket.varCharacters[current_char];
+				current = DataPacket.VARIABLE_NAMES[current_char];
 		}
 		return current;
 	}
 
-	public static char cyclePacketCharsAvoiding(char current, boolean forward, boolean hasEmpty, DataPacket packet)
+	public static char cycleDataPacketCharsAvoiding(char current, boolean forward, boolean hasEmpty, DataPacket packet)
 	{
-		int current_char = ArrayUtils.indexOf(DataPacket.varCharacters, current);
-		int repeats = DataPacket.varCharacters.length+(hasEmpty?1: 0);
+		int current_char = ArrayUtils.indexOf(DataPacket.VARIABLE_NAMES, current);
+		int repeats = DataPacket.VARIABLE_NAMES.length+(hasEmpty?1: 0);
 
 		for(int i = 0; i < repeats; i++)
 		{
@@ -255,9 +255,9 @@ public class IIUtils
 			if(current_char < 0)
 				current_char = repeats-1;
 
-			char c = (hasEmpty&&current_char==DataPacket.varCharacters.length)?' ': DataPacket.varCharacters[current_char];
+			char c = (hasEmpty&&current_char==DataPacket.VARIABLE_NAMES.length)?' ': DataPacket.VARIABLE_NAMES[current_char];
 
-			if(!packet.hasVariable(c))
+			if(!packet.has(c))
 				return c;
 		}
 		return current; //¯\_(ツ)_/¯
@@ -359,8 +359,8 @@ public class IIUtils
 
 	public static DataPacket getSimpleCallbackMessage(DataPacket packet, String parameter, DataType value)
 	{
-		packet.setVariable('c', new DataTypeString(parameter));
-		packet.setVariable('g', value);
+		packet.set('c', new DataTypeString(parameter));
+		packet.set('g', value);
 		return packet;
 	}
 

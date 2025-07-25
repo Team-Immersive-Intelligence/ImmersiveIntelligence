@@ -1,7 +1,6 @@
 package pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
-import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.Tuple;
@@ -20,20 +19,21 @@ import java.util.*;
 import java.util.function.Supplier;
 
 /**
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @ii-approved 0.3.1
  * @since 31.01.2025
  **/
 public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? super E, T>, T> extends GuiComponentDecoTextBase<E>
 {
 	protected static final int ON_CREATE_OPTION = -10;
-	protected final ResLoc listBackgroundLocation = IIReference.GUI_BG_DARK;
-	protected final ResLoc scrollBarLocation = IIReference.RES_TEXTURES_DECO_COMPONENT_SLIDER;
+	protected ResLoc listBackgroundLocation = IIReference.GUI_BG_DARK;
+	protected ResLoc scrollBarLocation = IIReference.RES_TEXTURES_DECO_COMPONENT_SLIDER;
 
-	private Queue<T> toBeAdded = new ArrayDeque<>();
-	private Queue<T> toBeRemoved = new ArrayDeque<>();
-	private Runnable onCreate = null;
+	protected Queue<T> toBeAdded = new ArrayDeque<>();
+	protected Queue<T> toBeRemoved = new ArrayDeque<>();
+	protected Runnable onCreate = null;
 
-	protected List<T> entries;
+	protected List<T> entries = new ArrayList<>();
 	protected int scroll = 0, maxScroll = 0, scrollStep = fontRenderer.FONT_HEIGHT;
 	protected int entriesInGrid = 1;
 	protected int entryMaxWidth;
@@ -44,13 +44,37 @@ public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? 
 	{
 		super(x, y);
 		withOnScroll((gui, scroll, mouseX, mouseY) -> {
-			if(hovered)
+			if(hovered&&maxScroll > 0)
 			{
 				this.scroll = MathHelper.clamp(this.scroll-(scroll/scrollStep), 0, maxScroll);
 				return true;
 			}
 			return false;
 		});
+	}
+
+	/**
+	 * Sets the background texture of the list
+	 *
+	 * @param listBackgroundLocation The background location
+	 * @return this
+	 */
+	public DecoScrolledCollection<E, T> withListBackgroundLocation(ResLoc listBackgroundLocation)
+	{
+		this.listBackgroundLocation = listBackgroundLocation;
+		return this;
+	}
+
+	/**
+	 * Sets the texture of the scrollbar
+	 *
+	 * @param scrollBarLocation The scrollbar location
+	 * @return this
+	 */
+	public DecoScrolledCollection<E, T> withScrollBarLocation(ResLoc scrollBarLocation)
+	{
+		this.scrollBarLocation = scrollBarLocation;
+		return this;
 	}
 
 	/**
@@ -224,7 +248,7 @@ public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? 
 		return entries;
 	}
 
-	protected final void drawList(int x, int y, int mouseX, int mouseY, float partialTicks)
+	protected final void drawList(int x, int y, int listWidth, int mouseX, int mouseY, float partialTicks)
 	{
 		//Apply queued changes to the list
 		if(!toBeAdded.isEmpty()||!toBeRemoved.isEmpty())
@@ -248,13 +272,13 @@ public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? 
 
 		//Background
 		int listHeight = getListHeight();
-		draw.drawConnectedColorRect(x, y, width, listHeight, IIColor.WHITE, listBackgroundLocation, 64, 64, 8, 8);
+		draw.drawConnectedColorRect(x, y, listWidth, listHeight, IIColor.WHITE, listBackgroundLocation, 64, 64, 8, 8);
 		//Scrollbar
 		if(shouldAlwaysHaveScrollbar()||maxScroll > 0)
 		{
 			TextureAtlasSprite scrollbarSprite = ClientUtils.getSprite(scrollBarLocation);
 			//Scrollbar background
-			draw.drawConnectedColorRect(x+width-11, y,
+			draw.drawConnectedColorRect(x+listWidth-11, y,
 					10, listHeight,
 					IIColor.WHITE, 10, 32, 0, 4,
 					scrollbarSprite.getMinU(), scrollbarSprite.getInterpolatedU(5),
@@ -266,7 +290,7 @@ public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? 
 				int scrollBarHeight = Math.max(10, (int)((listHeight/(float)(maxScroll+listHeight))*listHeight));
 				int scrollbarOffset = (int)((scroll/(float)maxScroll)*(listHeight-scrollBarHeight));
 				draw.drawConnectedColorRect(
-						x+width-11, y+1+scrollbarOffset, 10, scrollBarHeight,
+						x+listWidth-11, y+1+scrollbarOffset, 10, scrollBarHeight,
 						IIColor.WHITE, 10, 32, 2, 8,
 						scrollbarSprite.getInterpolatedU(5), scrollbarSprite.getInterpolatedU(10),
 						scrollbarSprite.getMinV(), scrollbarSprite.getMaxV()
@@ -277,7 +301,7 @@ public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? 
 
 		//Draw only a cutout of the elements
 		GlStateManager.pushMatrix();
-		scissor(x, y, width, listHeight);
+		scissor(x, y, listWidth, listHeight);
 		GlStateManager.translate(0, -scroll, 0);
 
 		//Filter entries based on search input
@@ -288,7 +312,7 @@ public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? 
 		{
 			GlStateManager.pushMatrix();
 			GlStateManager.translate(x+(currentColumn*entryMaxWidth), y+1+alreadyDrawnHeight, 0);
-			int offset = display.displayElement(filteredEntry, entryMaxWidth, fontRenderer, mouseX-x, mouseY+scroll-y-alreadyDrawnHeight, partialTicks, false);
+			int offset = display.displayElement(filteredEntry, entryMaxWidth, fontRenderer, mouseX-(x+(currentColumn*entryMaxWidth)), mouseY+scroll-y-alreadyDrawnHeight, partialTicks, false);
 			GlStateManager.popMatrix();
 
 			currentColumn++;
@@ -310,17 +334,6 @@ public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? 
 
 		GL11.glDisable(GL11.GL_SCISSOR_TEST);
 		GlStateManager.popMatrix();
-	}
-
-	protected void scissor(int x, int y, int xSize, int ySize)
-	{
-		GL11.glEnable(GL11.GL_SCISSOR_TEST);
-		ScaledResolution res = new ScaledResolution(ClientUtils.mc());
-		x = x*res.getScaleFactor();
-		ySize = ySize*res.getScaleFactor();
-		y = ClientUtils.mc().displayHeight-(y*res.getScaleFactor())-ySize;
-		xSize = xSize*res.getScaleFactor();
-		GL11.glScissor(x, y, xSize, ySize);
 	}
 
 	@Override

@@ -2,12 +2,15 @@ package pl.pabilo8.immersiveintelligence.client.gui.block.data_input_machine;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
-import org.apache.commons.lang3.tuple.Pair;
+import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
+import pl.pabilo8.immersiveintelligence.api.data.DataVariable;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType.TypeMetaInfo;
 import pl.pabilo8.immersiveintelligence.client.gui.IDataMachineGui;
 import pl.pabilo8.immersiveintelligence.client.gui.ITabbedGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiComponentDecoBase;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiComponentDecoBase.MouseButton;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoButton;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoTab;
@@ -24,6 +27,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoGuiUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoResource;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTemplate;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityDataInputMachine;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerDataInputMachine;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
@@ -52,7 +56,7 @@ public class GuiDataInputMachine extends DecoGui<TileEntityDataInputMachine, Con
 	@DecoResource
 	public static ResourceLocation PROGRESS_IMAGE = ResLoc.of(IIReference.RES_II, "gui/data_input_machine");
 
-	protected DecoList<Pair<Character, DataType>> list;
+	protected DecoList<DataVariable> list;
 
 	@SyncNBT
 	protected boolean soundPlayed;
@@ -64,20 +68,14 @@ public class GuiDataInputMachine extends DecoGui<TileEntityDataInputMachine, Con
 		super(player, tile, gui);
 	}
 
-	public static class GuiDataInputMachineStorage extends GuiDataInputMachine
+	public static GuiDataInputMachine getStorageGui(EntityPlayer player, TileEntityDataInputMachine tile)
 	{
-		public GuiDataInputMachineStorage(EntityPlayer player, TileEntityDataInputMachine tile)
-		{
-			super(player, tile, IIGUI.DATA_INPUT_MACHINE_STORAGE);
-		}
+		return new GuiDataInputMachine(player, tile, IIGUI.DATA_INPUT_MACHINE_STORAGE);
 	}
 
-	public static class GuiDataInputMachineVariables extends GuiDataInputMachine
+	public static GuiDataInputMachine getVariablesGui(EntityPlayer player, TileEntityDataInputMachine tile)
 	{
-		public GuiDataInputMachineVariables(EntityPlayer player, TileEntityDataInputMachine tile)
-		{
-			super(player, tile, IIGUI.DATA_INPUT_MACHINE_VARIABLES);
-		}
+		return new GuiDataInputMachine(player, tile, IIGUI.DATA_INPUT_MACHINE_VARIABLES);
 	}
 
 	@Override
@@ -111,32 +109,9 @@ public class GuiDataInputMachine extends DecoGui<TileEntityDataInputMachine, Con
 				.withInventorySlots(SlotStyle.IE_OUTPUT, container.dataOutput)
 				.build();
 
-		//Add tabs
-		addComponents(
-				new DecoTab()
-						.withLink(IIGUI.DATA_INPUT_MACHINE_STORAGE)
-						.withIcon(ICON_STORAGE)
-						.withTranslatedTooltip(IIReference.DESCRIPTION_KEY+"storage_module"),
-				new DecoTab()
-						.withLink(IIGUI.DATA_INPUT_MACHINE_VARIABLES)
-						.withIcon(ICON_VARIABLES)
-						.withTranslatedTooltip(IIReference.DESCRIPTION_KEY+"variables_module"),
-				new DecoTab()
-						.withIcon(ICON_SEND_PACKET, 32)
-						.withTranslatedTooltip(IIReference.DESCRIPTION_KEY+"variable_send_packet")
-						.withOnPressed((gui, mouseButton, mouseX, mouseY) -> {
-							if(mouseButton==MouseButton.LEFT)
-							{
-								IIPacketHandler.sendToServer(new MessageIITileSync(tile, EasyNBT.newNBT()
-										.withBoolean("send_packet", true)
-								));
-								return true;
-							}
-							return false;
-						})
-		);
+		//Add tabs and energy bars
+		addComponents(getCommonParts(tile));
 
-		//TODO: 10.06.2025 Add manual widget
 		addWidget(new DecoManualWidget());
 
 		//Add storage display and bars or the variable list, if in the "variables" tab
@@ -151,33 +126,36 @@ public class GuiDataInputMachine extends DecoGui<TileEntityDataInputMachine, Con
 			addComponent(new DecoDropdown<String>(32+8-4-2, 8+76+8+8+8-4+4)
 					.withWidth(96+8+4)
 					.withEntries("Slot 1", "Slot 2", "Slot 3", "Slot 4")
+					.withSelectedEntry(0)
 			);
 			addComponent(new DecoBar(128+32-8+2, 24)
 					.withHeight(95)
 					.withTemplate(DecoGuiUtils.BAR_ELECTRIC_ENERGY.apply(tile.energyStorage))
 			);
 		}
-		else
+		else //List the variables in the packet
+		{
 			list = addComponent(
-					new DecoList<Pair<Character, DataType>>(32, 8)
+					new DecoList<DataVariable>(32, 8)
 							.withSize(136, 120)
 							.withEntries(tile.storedData.getAllVariables())
-							.withCreateLaterAction(() -> changeGUI(IIGUI.DATA_INPUT_MACHINE_EDIT))
+							.withCreateLaterAction(this::addVariable)
 							.withGuiSaveAction(gui -> this.scroll = gui.getScroll())
 							//Display
-							.withDisplayFunction(new DecoEntryPanelBuilder<Pair<Character, DataType>>()
-									.withPadding(1, 1)
+							.withDisplayFunction(new DecoEntryPanelBuilder<DataVariable>()
 									//Edit / Remove Buttons
 									.withComponent(p -> new DecoButton(p.width-17-16+3, 2)
 											.withTemplate(DecoGuiUtils.LIST_BUTTON_EDIT_TEMPLATE)
 											.withOnLMBPressed(() -> {
-												Pair<Character, DataType> element = p.getCurrentElement();
-												editVariable(element.getKey(), element.getValue());
+												editVariable(p.getCurrentElement());
 											})
 									)
 									.withComponent(p -> new DecoButton(p.width-17+1, 2)
 											.withTemplate(DecoGuiUtils.LIST_BUTTON_REMOVE_TEMPLATE)
-											.withOnLMBPressed(() -> p.getCurrentList().removeEntry(p.getCurrentElement()))
+											.withOnLMBPressed(() -> {
+												p.getCurrentList().removeEntry(p.getCurrentElement());
+												IIPacketHandler.sendToServer(new MessageIITileSync(tile, onSaveTileData()));
+											})
 									)
 									//Type Icon, Label, and Letter
 									.withComponent("image", new DecoImage(2+12, 1)
@@ -198,7 +176,7 @@ public class GuiDataInputMachine extends DecoGui<TileEntityDataInputMachine, Con
 
 										//letter label (f.e. a)
 										panel.label("letterLabel")
-												.withRawText(entry.getKey().toString());
+												.withRawText(String.valueOf(entry.getName()));
 										//type label (f.e. integer)
 										panel.label("typeLabel")
 												.withText(typeMeta.getTranslatedName())
@@ -210,37 +188,81 @@ public class GuiDataInputMachine extends DecoGui<TileEntityDataInputMachine, Con
 							)
 							.withScroll(scroll)
 			);
+			//Listen to changes in the DataPacket's size
+			addValueListener(() -> tile.storedData)
+					.withObserver(v -> list.withEntries(v.getAllVariables()));
+		}
+	}
+
+	public static GuiComponentDecoBase<?>[] getCommonParts(TileEntityDataInputMachine tile)
+	{
+		return new GuiComponentDecoBase[]{
+				new DecoImage(4+2, 12+24+8-2-1)
+						.withSize(20, 52)
+						.withImageLocation(PROGRESS_IMAGE, true)
+						.withUV(64, 0, 0, 20, 52),
+				new DecoTab()
+						.withLink(IIGUI.DATA_INPUT_MACHINE_STORAGE)
+						.withIcon(ICON_STORAGE)
+						.withTranslatedTooltip(IIReference.DESCRIPTION_KEY+"storage_module"),
+				new DecoTab()
+						.withLink(IIGUI.DATA_INPUT_MACHINE_VARIABLES)
+						.withIcon(ICON_VARIABLES)
+						.withTranslatedTooltip(IIReference.DESCRIPTION_KEY+"variables_module"),
+
+				new DecoTab()
+						.withIcon(ICON_SEND_PACKET, 32)
+						.withTranslatedTooltip(IIReference.DESCRIPTION_KEY+"variable_send_packet")
+						.withOnPressed((gui, mouseButton, mouseX, mouseY) -> {
+					if(mouseButton==MouseButton.LEFT)
+					{
+						IIPacketHandler.sendToServer(new MessageIITileSync(tile, EasyNBT.newNBT()
+								.withBoolean("send_packet", true)
+						));
+						return true;
+					}
+					return false;
+				})
+		};
 	}
 
 	@Override
 	public void onGuiClosed()
 	{
 		//Close the hatches
-		if(!soundPlayed)
-		{
-			syncAnimatedParts(0, false);
-			syncAnimatedParts(1, false);
-		}
+		syncAnimatedParts(0, false);
+		syncAnimatedParts(1, false);
 		super.onGuiClosed();
 	}
 
 	@Override
-	public void editVariable(char c, DataType type)
+	protected EasyNBT onSaveTileData()
 	{
+		return super.onSaveTileData()
+				.conditionally(list!=null, e -> e
+						.withSerializable("variables", new DataPacket(list.getEntries()))
+				);
+	}
 
-		/*if(!list.variables.containsKey(c)||list.getPacketVariable(c).getClass()!=type.getClass())
-			list.setVariable(c, type);
+	private void addVariable()
+	{
+		DataPacket currentPacket = new DataPacket(list.getEntries());
+		if(currentPacket.size() >= DataPacket.VARIABLE_NAMES.length)
+			return;
+		char name = IIUtils.cycleDataPacketCharsAvoiding('a', true, false, currentPacket);
+		editVariable(name, new DataTypeInteger());
+	}
 
-		//Save gui scroll, tile pos for validation
-		saveBasicData(tile);
-		syncDataToServer();
+	@Override
+	public void editVariable(char name, DataType initialValue)
+	{
+		DataPacket currentPacket = new DataPacket(list.getEntries());
 
-		proxy.getStoredGuiData().withString("variableToEdit", String.valueOf(c));
-		//Set variable and change gui
-		refreshStoredData();
-		syncDataToServer();
+		if(!currentPacket.has(name)||currentPacket.get(name).getClass()!=initialValue.getClass())
+			currentPacket.set(name, initialValue);
 
-		soundPlayed = true;
-		IIPacketHandler.sendToServer(new MessageGuiNBT(IIGuiList.GUI_DATA_INPUT_MACHINE_EDIT, tile));*/
+		changeGUI(IIGUI.DATA_INPUT_MACHINE_EDIT,
+				EasyNBT.newNBT().withChar("variable_to_edit", name), null
+		);
 	}
 }

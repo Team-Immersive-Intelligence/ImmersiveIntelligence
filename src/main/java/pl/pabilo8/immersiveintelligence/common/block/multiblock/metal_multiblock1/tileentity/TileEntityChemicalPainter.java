@@ -636,8 +636,8 @@ public class TileEntityChemicalPainter extends TileEntityMultiblockMetal<TileEnt
 		TileEntityChemicalPainter master = master();
 		if(pos==10&&master!=null)
 		{
-			DataType c = packet.getPacketVariable('c');
-			DataType p = packet.getPacketVariable('p');
+			DataType c = packet.get('c');
+			DataType p = packet.get('p');
 
 			if(c.toString().equals("callback"))
 			{

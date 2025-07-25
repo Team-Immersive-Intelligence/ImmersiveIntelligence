@@ -15,7 +15,6 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.vertex.VertexFormat;
@@ -117,7 +116,6 @@ public class IIClientUtils
 		Tessellator tes = Tessellator.getInstance();
 		BufferBuilder buf = tes.getBuffer();
 		BlockRendererDispatcher brd = mc().getBlockRendererDispatcher();
-		TextureManager tex = mc().renderEngine;
 		EntityPlayer player = ClientUtils.mc().player;
 
 		//get rendering centre position
@@ -125,7 +123,7 @@ public class IIClientUtils
 		double posY = player.lastTickPosY+(player.posY-player.lastTickPosY)*(double)partialTicks;
 		double posZ = player.lastTickPosZ+(player.posZ-player.lastTickPosZ)*(double)partialTicks;
 
-		tex.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+		bindAtlas();
 		GlStateManager.pushMatrix();
 		GlStateManager.enableBlend();
 		GlStateManager.tryBlendFuncSeparate(774, 768, 1, 1);
@@ -196,6 +194,11 @@ public class IIClientUtils
 	public static void bindTexture(ResourceLocation path)
 	{
 		mc().getTextureManager().bindTexture(path);
+	}
+
+	public static void bindAtlas()
+	{
+		bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 	}
 
 	@SideOnly(Side.CLIENT)

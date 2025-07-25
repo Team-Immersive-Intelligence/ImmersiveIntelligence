@@ -149,9 +149,9 @@ public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockIIGene
 					break;
 
 				//Perform operations
-				for(char c : DataPacket.varCharacters)
+				for(char c : DataPacket.VARIABLE_NAMES)
 				{
-					DataType var = cPacket[i].getPacketVariable(c);
+					DataType var = cPacket[i].get(c);
 					if(!(var instanceof DataTypeExpression))
 						continue;
 
@@ -160,7 +160,7 @@ public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockIIGene
 
 					//Respect condition, if set
 					if(condition==' '||IIDataHandlingUtils.asBoolean(condition, packet))
-						newPacket.setVariable(c, exp.getValue(newPacket));
+						newPacket.set(c, exp.getValue(newPacket));
 				}
 			}
 

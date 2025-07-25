@@ -35,8 +35,8 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IIDataHandlingUtils;
 import pl.pabilo8.immersiveintelligence.api.data.device.IDataDevice;
-import pl.pabilo8.immersiveintelligence.api.data.types.*;
-import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeArray;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeEntity;
 import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
 import pl.pabilo8.immersiveintelligence.api.utils.IUpgradableMachine;
 import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
@@ -65,10 +65,13 @@ import java.util.function.Supplier;
 // TODO: 26.09.2021 improve task sync and fix GUI
 //TODO: 15.02.2024 move to new multiblock technology and AMT
 @net.minecraftforge.fml.common.Optional.Interface(iface = "com.elytradev.mirage.lighting.ILightEventConsumer", modid = "mirage")
-public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityEmplacement, MultiblockRecipe> implements IBooleanAnimatedPartsBlock, IDataDevice, IUpgradableMachine, IAdvancedCollisionBounds, IAdvancedSelectionBounds, ISoundTile, IGuiTile, ILightEventConsumer
+public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityEmplacement, MultiblockRecipe> implements IBooleanAnimatedPartsBlock,
+		IDataDevice, IUpgradableMachine, IAdvancedCollisionBounds, IAdvancedSelectionBounds, ISoundTile, IGuiTile, ILightEventConsumer
 {
-	public static final HashMap<String, Supplier<EmplacementWeapon>> weaponRegistry = new HashMap<>();
+	public static final HashMap<String, Supplier<EmplacementWeapon<?>>> weaponRegistry = new HashMap<>();
 	public static final HashMap<String, BiFunction<NBTTagCompound, TileEntityEmplacement, EmplacementTask>> targetRegistry = new HashMap<>();
+	private static final int BLOCKPOS_WEAPON = 49;
+	private static final int BLOCKPOS_DATA_OUT = 0;
 
 	static
 	{
@@ -764,56 +767,44 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 	{
 		if(pos!=0)
 			return;
-
-		DataType i = packet.variables.get('i');
-		DataType b = packet.variables.get('b');
-		DataType c = packet.variables.get('c');
-		DataType w = packet.variables.get('w');
-		DataType e = packet.variables.get('e');
-		DataType a = packet.variables.get('a');
-		DataType x = packet.variables.get('x');
-		DataType y = packet.variables.get('y');
-		DataType p = packet.variables.get('p');
-		DataType z = packet.variables.get('z');
-
 		TileEntityEmplacement master = master();
 		if(master==null||!master.dataControl)
 			return;
 
+		//Let the weapon handle the data packet too
 		if(master.currentWeapon!=null)
 			master.currentWeapon.handleDataPacket(packet.clone());
 
-		if(c instanceof DataTypeString)
-		{
-			switch(((DataTypeString)c).value)
+		//Handle the command
+		IIDataHandlingUtils.expectingStringParam('c', packet, command -> {
+			switch(command)
 			{
+				//Door control
 				case "opendoor":
 				{
-					IIPacketHandler.INSTANCE.sendToAllAround(new MessageBooleanAnimatedPartsSync(0, master.isDoorOpened = true, master.getPos()),
-							IIPacketHandler.targetPointFromTile(master, 48));
+					IIPacketHandler.sendToClient(master, new MessageBooleanAnimatedPartsSync(0, master.isDoorOpened = true, master.getPos()));
 				}
 				break;
 				case "closedoor":
 				{
-					IIPacketHandler.INSTANCE.sendToAllAround(new MessageBooleanAnimatedPartsSync(0, master.isDoorOpened = false, master.getPos()),
-							IIPacketHandler.targetPointFromTile(master, 48));
+					IIPacketHandler.sendToClient(master, new MessageBooleanAnimatedPartsSync(0, master.isDoorOpened = false, master.getPos()));
 				}
 				break;
 				case "door":
 				{
-					if(b instanceof DataTypeBoolean)
-					{
-						IIPacketHandler.INSTANCE.sendToAllAround(new MessageBooleanAnimatedPartsSync(0, master.isDoorOpened = ((DataTypeBoolean)b).value, master.getPos()),
-								IIPacketHandler.targetPointFromTile(master, 48));
-					}
+					if(IIDataHandlingUtils.asBoolean('b', packet))
+						IIPacketHandler.sendToClient(master, new MessageBooleanAnimatedPartsSync(0, master.isDoorOpened = true, master.getPos()));
 				}
 				break;
+
+				//Settings
 				case "rscontrol":
 				{
-					if(b instanceof DataTypeBoolean)
-						master.redstoneControl = ((DataTypeBoolean)b).value;
+					IIDataHandlingUtils.optionalBoolean('b', packet).ifPresent(b -> master.redstoneControl = b);
 				}
 				break;
+
+				//Gun Action
 				case "reload":
 					break;
 				case "stop":
@@ -836,22 +827,14 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 				}
 				break;
 				case "target":
-				{
-					if(i instanceof DataTypeInteger)
-					{
-						//0,1,2,3,4
-						master.defaultTargetMode = MathHelper.clamp(((DataTypeInteger)i).value, 0, 4)-1;
-
-						if(master.defaultTargetMode==-1)
-							master.task = null;
-						else
-							master.task = new EmplacementTaskCustom(defaultTaskNBT[defaultTargetMode]);
-						master.syncTask();
-					}
-				}
-				break;
 				case "targetreset":
 				{
+					//Set the default task id
+					if(command.equals("target"))
+						master.defaultTargetMode = IIDataHandlingUtils.optionalInt('i', packet)
+								.orElse(master.defaultTargetMode);
+
+					//Reset the current task to the default task
 					if(master.defaultTargetMode==-1)
 						master.task = null;
 					else if(!(task instanceof EmplacementTaskCustom))
@@ -866,69 +849,55 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 				}
 				break;
 				case "fire":
-					if(e instanceof DataTypeNull)
+				{
+					java.util.Optional<DataTypeEntity> e = IIDataHandlingUtils.optionalEntity('e', packet);
+
+					if(e.isPresent())
 					{
-						if(master.defaultTargetMode==-1)
-							master.task = null;
-						else if(!(task instanceof EmplacementTaskCustom))
-							master.task = new EmplacementTaskCustom(defaultTaskNBT[defaultTargetMode]);
-						master.syncTask();
-					}
-					else if(e instanceof DataTypeInteger||(e instanceof DataTypeEntity&&((DataTypeEntity)e).dimensionID==world.provider.getDimension()))
-					{
-						int id = e instanceof DataTypeInteger?((DataTypeInteger)e).value: ((DataTypeEntity)e).entityID;
-						Entity entityByID = world.getEntityByID(id);
+						Entity entityByID = world.getEntityByID(e.get().entityID);
 						if(entityByID!=null)
-						{
 							master.task = new EmplacementTaskEntity(entityByID);
-							master.syncTask();
-						}
 					}
-					else if(x instanceof DataTypeInteger&&y instanceof DataTypeInteger&&z instanceof DataTypeInteger)
+					else
 					{
-						int xx = ((DataTypeInteger)x).value;
-						int yy = ((DataTypeInteger)y).value;
-						int zz = ((DataTypeInteger)z).value;
-						int amount = a instanceof DataTypeInteger?((DataTypeInteger)a).value: 1;
+						int amount = IIDataHandlingUtils.optionalInt('a', packet).orElse(1);
+						IIDataHandlingUtils.expectingVectorParam(packet, vec -> {
+									//Block/Vector based
+									master.task = new EmplacementTaskPosition(new BlockPos(vec).add(this.getBlockPosForPos(BLOCKPOS_WEAPON)), amount);
+								},
+								angle -> {
+									//Yaw+Pitch based
+									double true_angle = Math.toRadians(-angle.x);
+									double true_angle2 = Math.toRadians(angle.y);
+									int distance = IIDataHandlingUtils.optionalInt('d', packet).orElse(40);
 
-						//Same as in howitzer
-						master.task = new EmplacementTaskPosition(new BlockPos(xx, yy, zz).add(this.getBlockPosForPos(49)), amount);
-						master.syncTask();
+									master.task = new EmplacementTaskPosition(new BlockPos(IIMath.offsetPosDirection(distance,
+											true_angle, true_angle2)).add(this.getBlockPosForPos(BLOCKPOS_WEAPON)), amount);
+								});
 					}
-					else if(y instanceof DataTypeInteger&&p instanceof DataTypeInteger)
-					{
-						int yy = ((DataTypeInteger)y).value;
-						int pp = ((DataTypeInteger)p).value;
-
-						double true_angle = Math.toRadians(-yy);
-						double true_angle2 = Math.toRadians(pp);
-
-						int amount = a instanceof DataTypeInteger?((DataTypeInteger)a).value: 1;
-
-						DataType d = packet.getPacketVariable('d');
-						int distance = 40;
-						if(d instanceof DataTypeInteger)
-							distance = ((DataTypeInteger)d).value;
-
-						master.task = new EmplacementTaskPosition(new BlockPos(IIMath.offsetPosDirection(distance, true_angle, true_angle2)).add(this.getBlockPosForPos(49)), amount);
-						master.syncTask();
-
-					}
-					break;
+					//Synchronize the task
+					master.syncTask();
+				}
+				break;
 			}
-		}
+		});
 	}
 
+	/**
+	 * Sends an array of spotted entities on the data port
+	 *
+	 * @param spottedEntity Array of spotted entities, can be empty
+	 */
 	public void handleSendingEnemyPos(Entity[] spottedEntity)
 	{
 		DataPacket packet = new DataPacket();
-		final BlockPos center = this.getBlockPosForPos(49);
-		DataTypeEntity[] entities = Arrays.stream(spottedEntity).map(entity -> new DataTypeEntity(entity, center)).toArray(DataTypeEntity[]::new);
-		DataTypeArray arr = new DataTypeArray(entities);
+		final BlockPos center = this.getBlockPosForPos(BLOCKPOS_WEAPON);
+		DataTypeEntity[] entities = Arrays.stream(spottedEntity)
+				.map(entity -> new DataTypeEntity(entity, center))
+				.toArray(DataTypeEntity[]::new);
 
-		packet.setVariable('e', arr);
-
-		IIDataHandlingUtils.sendPacketAdjacently(packet, world, getBlockPosForPos(0), facing.rotateYCCW());
+		packet.set('e', new DataTypeArray(entities));
+		IIDataHandlingUtils.sendPacketAdjacently(packet, world, getBlockPosForPos(BLOCKPOS_DATA_OUT), facing.rotateYCCW());
 	}
 
 	@Override
@@ -959,17 +928,6 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 	{
 		if(currentWeapon==null)
 			return upgrade instanceof MachineUpgradeEmplacementWeapon;
-		// TODO: 02.08.2021 machinegun
-		/*
-		if(currentWeapon instanceof EmplacementWeaponAutocannon)
-		{
-			if((upgrade==IIContent.UPGRADE_EMPLACEMENT_MACHINEGUN_HEAVYBARREL&&!hasUpgrade(IIContent.UPGRADE_EMPLACEMENT_MACHINEGUN_WATERCOOLED))
-					||(upgrade==IIContent.UPGRADE_EMPLACEMENT_MACHINEGUN_WATERCOOLED&&!hasUpgrade(IIContent.UPGRADE_EMPLACEMENT_MACHINEGUN_HEAVYBARREL))
-					||upgrade==IIContent.UPGRADE_EMPLACEMENT_MACHINEGUN_BUNKER)
-				return true;
-		}
-		return (upgrade==IIContent.UPGRADE_EMPLACEMENT_FALLBACK_GRENADES||upgrade==IIContent.UPGRADE_EMPLACEMENT_STURDY_BEARINGS);
-		 */
 		return false;
 	}
 
@@ -1118,7 +1076,8 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 	}
 
 	@Override
-	public boolean isOverrideBox(AxisAlignedBB box, EntityPlayer player, RayTraceResult mop, ArrayList<AxisAlignedBB> list)
+	public boolean isOverrideBox(AxisAlignedBB box, EntityPlayer player, RayTraceResult
+			mop, ArrayList<AxisAlignedBB> list)
 	{
 		return false;
 	}
@@ -1163,7 +1122,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 
 	public void handleSounds(TileEntityEmplacement master)
 	{
-		TileEntityEmplacement t1 = master.getTileForPos(49);
+		TileEntityEmplacement t1 = master.getTileForPos(BLOCKPOS_WEAPON);
 		TileEntityEmplacement t2 = master.getTileForPos(48);
 		TileEntityEmplacement t3 = master.getTileForPos(47);
 		TileEntityEmplacement t4 = master.getTileForPos(46);
@@ -1287,7 +1246,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 
 	public Vec3d getWeaponCenter()
 	{
-		return new Vec3d(this.getBlockPosForPos(49).up()).addVector(0.5, 0, 0.5);
+		return new Vec3d(this.getBlockPosForPos(BLOCKPOS_WEAPON).up()).addVector(0.5, 0, 0.5);
 	}
 
 	private NBTTagCompound createDefaultTask()

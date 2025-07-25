@@ -152,7 +152,7 @@ public class IIManualDataOperation extends IIManualObject
 					.append(" = ");
 			builder.append(colorCodePlainText.getHexCol(dataOperation.expression()));
 			for(int i = 0; i < dataOperation.params().length; i++)
-				builder.append(" @").append(DataPacket.varCharacters[startFromLetter+i]);
+				builder.append(" @").append(DataPacket.VARIABLE_NAMES[startFromLetter+i]);
 			code.add(builder.toString());
 		}
 
@@ -164,7 +164,7 @@ public class IIManualDataOperation extends IIManualObject
 					.append(" = ");
 		builder.append(colorCodePlainText.getHexCol(dataOperation.name()));
 		for(int i = 0; i < dataOperation.params().length; i++)
-			builder.append(" @").append(DataPacket.varCharacters[startFromLetter+i]);
+			builder.append(" @").append(DataPacket.VARIABLE_NAMES[startFromLetter+i]);
 		code.add(builder.toString());
 
 		return code.toArray(new String[0]);

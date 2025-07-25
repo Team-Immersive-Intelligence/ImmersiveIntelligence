@@ -1,6 +1,7 @@
 package pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
+import net.minecraft.client.resources.I18n;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiComponentDecoBase;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoButton;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoElementDisplays.DecoElementDisplay;
@@ -8,6 +9,9 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.Dec
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoAlignment;
 import pl.pabilo8.immersiveintelligence.client.util.font.IIFontRenderer;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+
+import java.util.Collections;
+import java.util.function.Function;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -133,4 +137,15 @@ public abstract class DecoEntryPanel<T> extends DecoPanel implements DecoElement
 	protected abstract void applyElementToChildren(T t);
 
 
+	/**
+	 * Sets the tooltip function for this panel using the current element.
+	 *
+	 * @param onTooltip Function that takes the current element and returns a tooltip string.
+	 * @return this
+	 */
+	public DecoEntryPanel<T> withElementTooltip(Function<T, String> onTooltip)
+	{
+		withOnTooltip(decoPanel -> Collections.singleton(I18n.format(onTooltip.apply(element))));
+		return this;
+	}
 }

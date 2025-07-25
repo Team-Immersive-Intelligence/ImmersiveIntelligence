@@ -83,7 +83,7 @@ public class TileEntityScanningConveyor extends TileEntityMultiblockIIGeneric<Ti
 					{
 						ItemStack stack = ((EntityItem)entity).getItem();
 						DataPacket packet = new DataPacket();
-						packet.setVariable('s', new DataTypeItemStack(stack));
+						packet.set('s', new DataTypeItemStack(stack));
 						sendData(packet, facing.rotateY(), getPOI(MultiblockPOI.DATA_OUTPUT)[0]);
 
 					}

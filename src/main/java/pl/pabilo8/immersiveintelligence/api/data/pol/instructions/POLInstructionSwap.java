@@ -33,11 +33,11 @@ public class POLInstructionSwap extends POLInstruction
 	public void execute(POLComputerMemory memory, POLTerminal terminal, POLProcess polProcess, int executionTime)
 	{
 		int pageID = (page!=null&&page.get(memory.packet) instanceof DataTypeInteger)?((DataTypeInteger)page.get(memory.packet)).value: memory.page;
-		DataType f = memory.packet.getPacketVariable(from);
-		DataType t = memory.pages[pageID].getPacketVariable(to);
+		DataType f = memory.packet.get(from);
+		DataType t = memory.pages[pageID].get(to);
 
-		memory.pages[pageID].setVariable(to, f);
-		memory.packet.setVariable(from, t);
+		memory.pages[pageID].set(to, f);
+		memory.packet.set(from, t);
 
 	}
 

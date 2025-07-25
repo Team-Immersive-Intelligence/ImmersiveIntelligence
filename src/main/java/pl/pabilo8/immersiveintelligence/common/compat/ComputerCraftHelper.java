@@ -7,6 +7,7 @@ import dan200.computercraft.api.peripheral.IComputerAccess;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import net.minecraftforge.fml.common.Optional;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
+import pl.pabilo8.immersiveintelligence.api.data.DataVariable;
 import pl.pabilo8.immersiveintelligence.api.data.types.*;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 import pl.pabilo8.immersiveintelligence.common.block.data_device.tileentity.TileEntityDataConnector;
@@ -15,7 +16,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -100,7 +100,7 @@ public class ComputerCraftHelper extends IICompatModule
 					if(args.length > 0)
 					{
 						Map<?, ?> map = ArgumentHelper.optTable(args, 0, new HashMap<>());
-						for(char c : DataPacket.varCharacters)
+						for(char c : DataPacket.VARIABLE_NAMES)
 							if(map.containsKey(String.valueOf(c))) //parse into IDataType
 							{
 								Object o = map.get(String.valueOf(c));
@@ -127,7 +127,7 @@ public class ComputerCraftHelper extends IICompatModule
 									}
 									break;
 								}
-								packet.setVariable(c, type);
+								packet.set(c, type);
 							}
 					}
 
@@ -141,8 +141,8 @@ public class ComputerCraftHelper extends IICompatModule
 					if(!te.compatReceived)
 					{
 						Map<String, Object> map = new HashMap<>();
-						for(Entry<Character, DataType> entry : te.lastReceived.variables.entrySet())
-							map.put(entry.getKey().toString(), entry.getValue().toString());
+						for(DataVariable dataVariable : te.lastReceived)
+							map.put(String.valueOf(dataVariable.getName()), dataVariable.getValue().toString());
 
 						te.compatReceived = true;
 						return new Object[]{map};

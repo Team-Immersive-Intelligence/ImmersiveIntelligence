@@ -15,10 +15,14 @@ import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
+import javax.annotation.Nullable;
 import java.util.List;
+import java.util.function.BiConsumer;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 24.02.2025
+ * @ii-approved 0.3.1
  * @since 17.09.2021
  */
 public class DecoDropdown<T> extends DecoScrolledCollection<DecoDropdown<T>, T>
@@ -26,9 +30,11 @@ public class DecoDropdown<T> extends DecoScrolledCollection<DecoDropdown<T>, T>
 	private final ResLoc dropdownSymbolLocation = IIReference.RES_TEXTURES_DECO_COMPONENT_DROPDOWN;
 
 	public int selectedEntry = -1;
-	private int blinkTime = 0;
-	private int maxDropHeight = 32;
-	private boolean dropped = false;
+	protected int blinkTime = 0;
+	protected int maxDropHeight = 32;
+	protected int dropdownWidth;
+	protected boolean dropped = false;
+	protected BiConsumer<T, T> onSelectedEntry;
 
 	public DecoDropdown(int x, int y)
 	{
@@ -92,6 +98,14 @@ public class DecoDropdown<T> extends DecoScrolledCollection<DecoDropdown<T>, T>
 	}
 
 	@Override
+	public DecoDropdown<T> withSize(int width, int height)
+	{
+		//Change only if width is the same as dropdown width
+		dropdownWidth = this.width==width?dropdownWidth: width-12;
+		return super.withSize(width, height);
+	}
+
+	@Override
 	protected int getAddButtonHeight()
 	{
 		return 16;
@@ -107,22 +121,92 @@ public class DecoDropdown<T> extends DecoScrolledCollection<DecoDropdown<T>, T>
 
 	}
 
+	/**
+	 * Sets the selected entry to a given index. Runs the {@link #onSelectedEntry} event.
+	 *
+	 * @param selectedEntry the index of the selected entry, -1 for no selection
+	 * @return this
+	 */
 	public DecoDropdown<T> withSelectedEntry(int selectedEntry)
 	{
-		this.selectedEntry = selectedEntry;
+		changeSelectedEntry(selectedEntry);
 		return this;
 	}
 
+	/**
+	 * Sets the selected entry to a given index. Runs the {@link #onSelectedEntry} event.
+	 *
+	 * @param newSelectedEntry new selected entry index, -1 for no selection
+	 */
+	private void changeSelectedEntry(int newSelectedEntry)
+	{
+		if(this.onSelectedEntry!=null)
+			this.onSelectedEntry.accept(getSelectedEntry(), getEntry(newSelectedEntry));
+		this.selectedEntry = newSelectedEntry;
+	}
+
+	/**
+	 * Sets the selected entry to a given entry. Runs the {@link #onSelectedEntry} event.
+	 *
+	 * @param selectedEntry new selected entry, null for no selection
+	 */
 	public DecoDropdown<T> withSelectedEntry(T selectedEntry)
 	{
 		this.selectedEntry = entries.indexOf(selectedEntry);
 		return this;
 	}
 
+	/**
+	 * Sets the onSelectedEntry event, which is called when the selected entry changes.
+	 *
+	 * @param onSelectedEntry the event to run, with the previous and new selected entry as parameters
+	 **/
+	public DecoDropdown<T> withOnSelectedEntry(BiConsumer<T, T> onSelectedEntry)
+	{
+		this.onSelectedEntry = onSelectedEntry;
+		return this;
+	}
+
+	/**
+	 * Sets the maximum height of the dropdown list.
+	 * If the list exceeds this height, a scrollbar will be shown.
+	 *
+	 * @param maxDropHeight the maximum height of the dropdown list
+	 */
 	public DecoDropdown<T> withMaxDropHeight(int maxDropHeight)
 	{
 		this.maxDropHeight = maxDropHeight;
 		return this;
+	}
+
+	/**
+	 * Sets the width of the dropdown list.
+	 * This is the width of the list when it is dropped down.
+	 *
+	 * @param dropdownWidth the width of the dropdown list
+	 */
+	public DecoDropdown<T> withDropdownWidth(int dropdownWidth)
+	{
+		this.dropdownWidth = dropdownWidth;
+		this.calculateSlideLength();
+		return this;
+	}
+
+	@Override
+	protected int calculateSlideLength()
+	{
+		List<T> filteredEntries = autocomplete();
+		int alreadyDrawnHeight = 0;
+		for(int i = 0; i < filteredEntries.size(); i += entriesInGrid)
+			alreadyDrawnHeight += display.displayElement(filteredEntries.get(i), dropdownWidth-12, fontRenderer, true);
+		if(onCreate!=null)
+			alreadyDrawnHeight += getAddButtonHeight();
+
+		this.entryMaxWidth = ((shouldAlwaysHaveScrollbar()||alreadyDrawnHeight > height)?(dropdownWidth-12): dropdownWidth)/entriesInGrid;
+		this.maxScroll = Math.max(0, alreadyDrawnHeight-getListHeight());
+		this.scrollStep = !filteredEntries.isEmpty()?Math.max(1, alreadyDrawnHeight/filteredEntries.size()/entriesInGrid): 1;
+		this.scroll = MathHelper.clamp(this.scroll, 0, maxScroll);
+		return alreadyDrawnHeight;
 	}
 
 	@Override
@@ -194,7 +278,11 @@ public class DecoDropdown<T> extends DecoScrolledCollection<DecoDropdown<T>, T>
 			fontRenderer.drawString(drawn, 0, 0, getTextColor(false).getPackedRGB());
 		}
 		else
-			display.displayElement(getSelectedEntry(), width-12, fontRenderer, false);
+		{
+			T entry = getSelectedEntry();
+			if(entry!=null)
+				display.displayElement(entry, width-12, fontRenderer, false);
+		}
 		GlStateManager.popMatrix();
 	}
 
@@ -202,7 +290,7 @@ public class DecoDropdown<T> extends DecoScrolledCollection<DecoDropdown<T>, T>
 	public void drawUpperLayer(int mouseX, int mouseY, float partialTicks)
 	{
 		if(dropped)
-			drawList(x, y+height, mouseX, mouseY, partialTicks);
+			drawList(x, y+height, dropdownWidth, mouseX, mouseY, partialTicks);
 	}
 
 	@Override
@@ -211,9 +299,18 @@ public class DecoDropdown<T> extends DecoScrolledCollection<DecoDropdown<T>, T>
 
 	}
 
+	@Nullable
 	public T getSelectedEntry()
 	{
-		return entries.get(MathHelper.clamp(selectedEntry, 0, entries.size()-1));
+		return getEntry(selectedEntry);
+	}
+
+	@Nullable
+	private T getEntry(int index)
+	{
+		if(index==-1)
+			return null;
+		return entries.get(MathHelper.clamp(index, 0, entries.size()-1));
 	}
 
 	@Deprecated

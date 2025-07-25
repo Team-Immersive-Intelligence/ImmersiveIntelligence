@@ -39,6 +39,7 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockProductionSi
 	 */
 	@SyncNBT(events = SyncEvents.TILE_GUI_OPENED)
 	public MultiblockInteractablePart drawer, hatch;
+
 	/**
 	 * Will send stored packet if true, then switch back to false
 	 */
@@ -46,11 +47,11 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockProductionSi
 	/**
 	 * Stored data packet
 	 */
-	@SyncNBT(name = "variables", events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_GUI_CLOSED})
+	@SyncNBT(name = "variables", events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_GUI_CLOSED, SyncEvents.TILE_RECIPE_CHANGED})
 	public DataPacket storedData = new DataPacket();
-
 	@SyncNBT(events = SyncEvents.TILE_GUI_OPENED)
 	public int selectedDataSlot;
+
 	private IEInventoryHandler inputHandler, outputHandler;
 
 
@@ -94,13 +95,20 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockProductionSi
 		drawer.update();
 		hatch.update();
 
-		if(!world.isRemote&&sendPacketToggle^getRedstoneAtPos(0))
+		if(world.isRemote)
+			return;
+
+		//Send packet on redstone
+		if(sendPacketToggle^getRedstoneAtPos(0))
 		{
 			sendPacketToggle = !sendPacketToggle;
 			//Finally!
 			if(sendPacketToggle)
 				this.sendData(storedData, getDirection("data"), getPOI(MultiblockPOI.DATA_OUTPUT)[0]);
 		}
+		//Check for item being taken out
+		if(currentProcess!=null&&!currentProcess.recipe.input.matchesItemStack(inventory.get(SLOT_INPUT)))
+			this.currentProcess.ticks = this.currentProcess.maxTicks;
 	}
 
 	@Override
@@ -157,7 +165,7 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockProductionSi
 	protected IIMultiblockProcess<DataProgrammingRecipe> findNewProductionProcess()
 	{
 		Optional<DataProgrammingRecipe> found = DataProgrammingRecipe.streamRecipes(DataProgrammingRecipe.class)
-				.filter(recipe -> recipe.input.matches(inventory.get(SLOT_INPUT)))
+				.filter(recipe -> recipe.input.matchesItemStack(inventory.get(SLOT_INPUT)))
 				.findFirst();
 		return found.map(IIMultiblockProcess::new).orElse(null);
 	}
@@ -183,11 +191,14 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockProductionSi
 		if(!world.isRemote)
 		{
 			DataProgrammingRecipe recipe = process.recipe;
+			//Skip the recipe if input is invalid
+			if(!recipe.input.matchesItemStack(inventory.get(SLOT_INPUT)))
+				return true;
+			//Proceed
 			ItemStack output = recipe.operationFrom.apply(inventory.get(SLOT_INPUT), storedData, dataTypes -> storedData = dataTypes);
 			if(outputHandler.insertItem(0, output, false).isEmpty())
 			{
 				inputHandler.extractItem(0, 1, false);
-				updateTileForEvent(SyncEvents.TILE_CUSTOM1);
 				return true;
 			}
 		}

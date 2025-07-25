@@ -62,9 +62,9 @@ public abstract class GuiComponentDecoTextBase<TYPE extends GuiComponentDecoText
 	public TYPE withBackgroundColor(IIColor color)
 	{
 		this.backgroundColor = color;
-		this.backgroundColorDisabled = color.mixedWith(IIColor.BLACK, 0.5f);
-		this.backgroundColorHovered = color.mixedWith(IIColor.WHITE, 0.5f);
-		this.backgroundColorPressed = color.mixedWith(IIColor.MC_GRAY, 0.5f);
+		this.backgroundColorDisabled = color.withBrightness(0.25f);
+		this.backgroundColorHovered = color.withBrightness(0.75f);
+		this.backgroundColorPressed = color.withBrightness(1f);
 
 		return (TYPE)this;
 	}

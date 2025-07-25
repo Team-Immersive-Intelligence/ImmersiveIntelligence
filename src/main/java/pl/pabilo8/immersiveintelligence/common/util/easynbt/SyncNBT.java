@@ -29,6 +29,11 @@ public @interface SyncNBT
 	 */
 	SyncEvents[] events() default {};
 
+	/**
+	 * @return true, if the updated value can be set to null
+	 */
+	boolean nullable() default false;
+
 	enum SyncEvents
 	{
 		TILE_GUI_OPENED,
