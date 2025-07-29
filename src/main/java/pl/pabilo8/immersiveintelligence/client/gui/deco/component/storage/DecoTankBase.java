@@ -55,6 +55,7 @@ public abstract class DecoTankBase<TYPE extends DecoTankBase<TYPE, RESOURCE>, RE
 	@Override
 	protected void draw(int mouseX, int mouseY, float partialTicks)
 	{
+		bindAtlas();
 		//Draw background
 		IIDrawUtils draw = IIDrawUtils.startTexturedColored();
 		draw.drawConnectedColorRect(x, y, width, height, IIColor.WHITE, tankBackgroundLocation, 64, 64, 8, 8);

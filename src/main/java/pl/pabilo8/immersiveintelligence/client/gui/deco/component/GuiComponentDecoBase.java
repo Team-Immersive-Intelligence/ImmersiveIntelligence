@@ -5,9 +5,7 @@ import blusunrize.immersiveengineering.common.blocks.TileEntityIEBase;
 import blusunrize.immersiveengineering.common.util.inventory.IIEInventory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.resources.I18n;
-import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIBase;
@@ -477,16 +475,5 @@ public abstract class GuiComponentDecoBase<TYPE extends GuiComponentDecoBase<? s
 		MIDDLE,
 		FORWARD,
 		BACKWARD
-	}
-
-	protected void scissor(int x, int y, int xSize, int ySize)
-	{
-		GL11.glEnable(GL11.GL_SCISSOR_TEST);
-		ScaledResolution res = new ScaledResolution(ClientUtils.mc());
-		x = x*res.getScaleFactor();
-		ySize = ySize*res.getScaleFactor();
-		y = ClientUtils.mc().displayHeight-(y*res.getScaleFactor())-ySize;
-		xSize = xSize*res.getScaleFactor();
-		GL11.glScissor(x, y, xSize, ySize);
 	}
 }

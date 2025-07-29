@@ -5,7 +5,6 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.Tuple;
 import net.minecraft.util.math.MathHelper;
-import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiComponentDecoTextBase;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
@@ -301,7 +300,8 @@ public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? 
 
 		//Draw only a cutout of the elements
 		GlStateManager.pushMatrix();
-		scissor(x, y, listWidth, listHeight);
+		assert parentGui!=null;
+		parentGui.scissorStart(x, y, listWidth, listHeight);
 		GlStateManager.translate(0, -scroll, 0);
 
 		//Filter entries based on search input
@@ -332,7 +332,7 @@ public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? 
 			GlStateManager.popMatrix();
 		}
 
-		GL11.glDisable(GL11.GL_SCISSOR_TEST);
+		parentGui.scissorEnd();
 		GlStateManager.popMatrix();
 	}
 

@@ -2,20 +2,29 @@ package pl.pabilo8.immersiveintelligence.client.gui.deco;
 
 import blusunrize.immersiveengineering.api.ApiUtils;
 import blusunrize.immersiveengineering.api.DimensionBlockPos;
+import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.common.blocks.TileEntityIEBase;
 import blusunrize.immersiveengineering.common.util.inventory.IIEInventory;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiLabel;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.client.shader.Framebuffer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.event.ClickEvent;
 import net.minecraftforge.client.event.GuiScreenEvent.ActionPerformedEvent.Post;
 import net.minecraftforge.client.event.GuiScreenEvent.ActionPerformedEvent.Pre;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Optional.Method;
+import org.lwjgl.BufferUtils;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
@@ -32,6 +41,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.util.*;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationUtils;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
+import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageGuiNBT;
@@ -43,8 +53,12 @@ import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIBase;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
@@ -95,8 +109,8 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 	private DecoComponentWidgetBase<?> previousWidget, currentWidget;
 	private int widgetTime = 0;
 
-	//Help framework
-	private boolean helpMode = false;
+	//Screenshot mode, changes the GL scissor method
+	private boolean screenshotMode = false;
 
 	public DecoGui(EntityPlayer player, T tile, IIGUI iigui)
 	{
@@ -492,6 +506,10 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 			initGui();
 			return;
 		}
+		else if(Keyboard.isKeyDown(Keyboard.KEY_F6))
+		{
+			exportCurrentGui();
+		}
 
 		//Process key typed for the currently focused component
 		if(focusedElement!=null)
@@ -821,5 +839,165 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 		//Send change GUI message
 		IIPacketHandler.sendToServer(new MessageGuiNBT(newGUI, tile));
 		return true;
+	}
+
+	/**
+	 * Starts the scissor function, enabling OpenGL scissor test.
+	 * This is used to limit rendering to a specific area of the screen.
+	 *
+	 * @param x     The x position of the scissor box
+	 * @param y     The y position of the scissor box
+	 * @param xSize The width of the scissor box
+	 * @param ySize The height of the scissor box
+	 */
+	public void scissorStart(int x, int y, int xSize, int ySize)
+	{
+		GL11.glEnable(GL11.GL_SCISSOR_TEST);
+
+		if(screenshotMode)
+		{
+			//When in screenshot mode, use coordinates relative to the framebuffer
+			//Add offsets to account for the GUI position adjustment
+			GL11.glScissor(
+					x-guiLeft+16,  //Offset by the same amount as in exportCurrentGui
+					height-(y-guiTop+16)-ySize,  //Flip Y coordinate for OpenGL
+					xSize,
+					ySize
+			);
+		}
+		else
+		{
+			//Normal rendering with Minecraft scaling
+			ScaledResolution res = new ScaledResolution(ClientUtils.mc());
+			x = x*res.getScaleFactor();
+			ySize = ySize*res.getScaleFactor();
+			y = ClientUtils.mc().displayHeight-(y*res.getScaleFactor())-ySize;
+			xSize = xSize*res.getScaleFactor();
+			GL11.glScissor(x, y, xSize, ySize);
+		}
+	}
+
+	/**
+	 * Ends the scissor function, restoring the OpenGL state.
+	 */
+	public void scissorEnd()
+	{
+		GL11.glDisable(GL11.GL_SCISSOR_TEST);
+	}
+
+	private void exportCurrentGui()
+	{
+		try
+		{
+			//Create directory for exports if it doesn't exist
+			File exportDir = new File("screenshots/ii_gui/");
+			if(!exportDir.exists()&&!exportDir.mkdirs())
+			{
+				IILogger.error("Could not create screenshot directory.");
+				return;
+			}
+
+			int width = xSize+32;
+			int height = ySize+32;
+			this.screenshotMode = true;
+
+			//Set up framebuffer for rendering with transparency
+			Framebuffer framebuffer = new Framebuffer(width, height, true);
+			framebuffer.enableStencil();
+			framebuffer.bindFramebuffer(true);
+
+			GlStateManager.pushMatrix();
+			//Clear with transparent background
+			GlStateManager.clearColor(0, 0, 0, 0);
+			GlStateManager.clear(GL11.GL_COLOR_BUFFER_BIT|GL11.GL_DEPTH_BUFFER_BIT);
+
+			//Set up projection matrix for GUI rendering
+			GlStateManager.matrixMode(GL11.GL_PROJECTION);
+			GlStateManager.loadIdentity();
+			GlStateManager.ortho(0, width, height, 0, 1000.0D, 3000.0D);
+			GlStateManager.matrixMode(GL11.GL_MODELVIEW);
+			GlStateManager.loadIdentity();
+			GlStateManager.translate(-guiLeft+16, -guiTop+16, -2000.0F);
+
+			//Configure proper blending for transparency
+			GlStateManager.enableAlpha();
+			GlStateManager.alphaFunc(GL11.GL_GREATER, 0.003921569F); // ~1/255
+			GlStateManager.enableBlend();
+			GlStateManager.blendFunc(GL11.GL_ONE, GL11.GL_ONE_MINUS_SRC_ALPHA); // Pre-multiplied alpha
+			GlStateManager.disableDepth();
+			GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+
+			//Disable lighting and normals rescale
+			GlStateManager.disableRescaleNormal();
+			RenderHelper.disableStandardItemLighting();
+			GlStateManager.disableLighting();
+
+			//Draw widgets
+			drawWidgets(0, 0, 0);
+			//Draw tiled background,
+			backgroundBuilder.draw();
+
+			GlStateManager.color(1f, 1f, 1f, 1f);
+			GlStateManager.enableAlpha();
+			GlStateManager.alphaFunc(GL11.GL_GREATER, 0.003921569F); // ~1/255
+			GlStateManager.enableBlend();
+			GlStateManager.blendFunc(GL11.GL_ONE, GL11.GL_ONE_MINUS_SRC_ALPHA); // Pre-multiplied alpha
+			GlStateManager.disableDepth();
+			GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+
+			//Draw labels and buttons
+			for(GuiLabel guiButton : this.labelList)
+				guiButton.drawLabel(mc, 0, 0);
+			for(GuiButton guiButton : this.buttonList)
+				guiButton.drawButton(mc, 0, 0, 0);
+
+			//Draw the upper layer of buttons
+			for(GuiButton b : buttonList)
+				if(b instanceof GuiComponentDecoBase)
+					((GuiComponentDecoBase<?>)b).drawButtonUpperLayer(mc, 0, 0, 0);
+
+			GlStateManager.popMatrix();
+			//Read pixels from framebuffer
+			ByteBuffer buffer = BufferUtils.createByteBuffer(width*height*4);
+			GL11.glReadPixels(0, 0, width, height, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, buffer);
+
+			//Restore default framebuffer
+			framebuffer.unbindFramebuffer();
+			framebuffer.deleteFramebuffer();
+
+			//Convert buffer to image and flip Y-axis (OpenGL vs Java image coordinates)
+			BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+			for(int x = 0; x < width; x++)
+			{
+				for(int y = 0; y < height; y++)
+				{
+					int i = (x+(height-y-1)*width)*4;
+					int r = buffer.get(i)&0xFF;
+					int g = buffer.get(i+1)&0xFF;
+					int b = buffer.get(i+2)&0xFF;
+					int a = buffer.get(i+3)&0xFF;
+					image.setRGB(x, y, (a<<24)|(r<<16)|(g<<8)|b);
+				}
+			}
+
+			//Generate file with GUI name and timestamp
+			String filename = name+".png";
+			File outputFile = new File(exportDir, filename);
+			ImageIO.write(image, "PNG", outputFile);
+
+			//Notify user
+			ITextComponent itextcomponent = new TextComponentString(outputFile.getName());
+			itextcomponent.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, outputFile.getCanonicalFile().getAbsolutePath()));
+			itextcomponent.getStyle().setUnderlined(true);
+			mc.player.sendMessage(new TextComponentTranslation("screenshot.success", itextcomponent));
+
+		} catch(Exception e)
+		{
+			mc.player.sendMessage(new TextComponentTranslation("screenshot.failure", e.getMessage()));
+			IILogger.error("Failed to export GUI: "+e.getMessage());
+		} finally
+		{
+			this.screenshotMode = false;
+		}
 	}
 }

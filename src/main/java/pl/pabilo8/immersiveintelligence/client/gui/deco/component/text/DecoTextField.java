@@ -5,7 +5,6 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ChatAllowedCharacters;
 import net.minecraft.util.math.MathHelper;
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiComponentDecoBase;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
@@ -92,7 +91,8 @@ public class DecoTextField extends GuiComponentDecoBase<DecoTextField>
 
 		//Begin scissoring to prevent drawing outside bounds
 		GlStateManager.pushMatrix();
-		scissor(x+padding, y+padding, width-(padding*2), height-(padding*2));
+		assert parentGui!=null;
+		parentGui.scissorStart(x+padding, y+padding, width-(padding*2), height-(padding*2));
 
 		//Calculate visible lines
 		int visibleLines = multiLine?((height-(padding*2))/fontRenderer.FONT_HEIGHT): 1;
@@ -152,7 +152,7 @@ public class DecoTextField extends GuiComponentDecoBase<DecoTextField>
 		}
 
 		//End scissoring
-		GL11.glDisable(GL11.GL_SCISSOR_TEST);
+		parentGui.scissorEnd();
 		GlStateManager.popMatrix();
 	}
 
