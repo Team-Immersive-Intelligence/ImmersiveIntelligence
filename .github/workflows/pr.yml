@@ -14,11 +14,11 @@ jobs:
     runs-on: ubuntu-latest
     name: Request Review
     steps:
-      - name: Request Review
-        uses: hkusu/review-assign-action@v1
+      - name: Review Assign Action
+        uses: hkusu/review-assign-action@v1.4.0
         with:
           assignees: ${{ github.actor }}
-          reviewers: Avalon2106, Pabilo8
+          reviewers: Pabilo8, Avalon2106
 
   check:
     runs-on: ubuntu-latest
