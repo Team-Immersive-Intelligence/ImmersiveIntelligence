@@ -19,7 +19,6 @@ jobs:
         with:
           assignees: ${{ github.actor }}
           reviewers: Avalon2106, Pabilo8
-          github-token: ${{ github.token }}
 
   check:
     runs-on: ubuntu-latest
