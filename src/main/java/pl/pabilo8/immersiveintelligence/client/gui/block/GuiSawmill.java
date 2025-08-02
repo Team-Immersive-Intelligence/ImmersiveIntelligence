@@ -71,6 +71,6 @@ public class GuiSawmill extends DecoGui<TileEntitySawmill, ContainerSawmill>
 	public void onGuiClosed()
 	{
 		super.onGuiClosed();
-		syncAnimatedParts(0, true);
+		syncAnimatedParts(0, false);
 	}
 }

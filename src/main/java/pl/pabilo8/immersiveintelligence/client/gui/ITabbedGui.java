@@ -13,6 +13,7 @@ import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
  * @since 05.07.2019
  */
 @SideOnly(Side.CLIENT)
+@Deprecated
 public interface ITabbedGui
 {
 	default boolean positionEqual(TileEntity tile)

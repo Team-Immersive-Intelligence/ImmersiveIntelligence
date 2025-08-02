@@ -3,6 +3,7 @@ package pl.pabilo8.immersiveintelligence.client.gui.deco.component.widget;
 import blusunrize.immersiveengineering.api.ManualHelper;
 import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.lib.manual.gui.GuiManual;
+import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.item.ItemStack;
@@ -76,6 +77,12 @@ public class DecoManualWidget extends DecoComponentWidgetBase<DecoManualWidget>
 		//Cleanup
 		RenderHelper.disableStandardItemLighting();
 		GlStateManager.color(1, 1, 1, 1);
+	}
+
+	@Override
+	public void playPressSound(SoundHandler soundHandlerIn)
+	{
+
 	}
 
 	@Override

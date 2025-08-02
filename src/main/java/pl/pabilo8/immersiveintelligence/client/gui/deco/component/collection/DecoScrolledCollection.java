@@ -58,10 +58,10 @@ public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? 
 	 * @param listBackgroundLocation The background location
 	 * @return this
 	 */
-	public DecoScrolledCollection<E, T> withListBackgroundLocation(ResLoc listBackgroundLocation)
+	public E withListBackground(ResLoc listBackgroundLocation)
 	{
 		this.listBackgroundLocation = listBackgroundLocation;
-		return this;
+		return (E)this;
 	}
 
 	/**
@@ -70,10 +70,10 @@ public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? 
 	 * @param scrollBarLocation The scrollbar location
 	 * @return this
 	 */
-	public DecoScrolledCollection<E, T> withScrollBarLocation(ResLoc scrollBarLocation)
+	public E withScrollBarBackground(ResLoc scrollBarLocation)
 	{
 		this.scrollBarLocation = scrollBarLocation;
-		return this;
+		return (E)this;
 	}
 
 	/**
@@ -400,7 +400,7 @@ public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? 
 			}
 
 		}
-		if(onCreate!=null&&IIMath.isPointInRectangle(xx, yy+drawOffset, xx+width, yy+drawOffset+getAddButtonHeight(), mouseX, mouseY))
+		if(onCreate!=null&&display.isMouseOverCreateOption(mouseX, mouseY, entryMaxWidth, getAddButtonHeight()))
 			return new Tuple<>(ON_CREATE_OPTION, yy+drawOffset);
 
 		return null;

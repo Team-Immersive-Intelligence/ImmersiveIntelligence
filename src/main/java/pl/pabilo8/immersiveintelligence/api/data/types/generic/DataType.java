@@ -99,14 +99,16 @@ public abstract class DataType implements Cloneable
 		public final Supplier<T> supplier;
 		public final IIColor color;
 		private final ResourceLocation textureLocation;
+		private final boolean advancedType;
 
-		public TypeMetaInfo(String name, Class<T> type, Supplier<T> supplier, IIColor color)
+		public TypeMetaInfo(String name, Class<T> type, Supplier<T> supplier, IIColor color, boolean advancedType)
 		{
 			this.name = name;
 			this.type = type;
 			this.supplier = supplier;
 			this.color = color;
 			this.textureLocation = ResLoc.of(IIReference.RES_TEXTURES_GUI, "data_types/"+name).withExtension(ResLoc.EXT_PNG);
+			this.advancedType = advancedType;
 		}
 
 		@SideOnly(Side.CLIENT)
@@ -118,6 +120,11 @@ public abstract class DataType implements Cloneable
 		public ResourceLocation getTextureLocation()
 		{
 			return textureLocation;
+		}
+
+		public boolean isAdvancedType()
+		{
+			return advancedType;
 		}
 	}
 }

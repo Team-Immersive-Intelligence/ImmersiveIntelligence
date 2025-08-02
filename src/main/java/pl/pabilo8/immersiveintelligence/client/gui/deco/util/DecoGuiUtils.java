@@ -34,7 +34,7 @@ import java.util.function.Function;
 public class DecoGuiUtils
 {
 	public static final DecoComponentTemplate<DecoButton> LIST_BUTTON_TEMPLATE = component -> component
-			.withBackground(IIReference.RES_TEXTURES_DECO_BUTTON_PAPER)
+			.withBackground(IIReference.RES_TEXTURES_DECO_BUTTON_PAPER_HIGHLIGHT)
 			.withPadding(0, 0, 0, 0)
 			.withSize(14, 14);
 	public static final DecoComponentTemplate<DecoButton> LIST_BUTTON_EDIT_TEMPLATE = LIST_BUTTON_TEMPLATE.and(
@@ -54,6 +54,19 @@ public class DecoGuiUtils
 					.withBackgroundColor(IIColor.fromPackedRGB(0x778a78))
 					.withIcon(IIReference.RES_TEXTURES_DECO_ICON_ACTION_ADD)
 					.withTranslatedTooltip(IIReference.GUI_TOOLTIP_KEY+"button.add")
+	);
+	public static final DecoComponentTemplate<DecoButton> LIST_BUTTON_DUPLICATE_TEMPLATE = LIST_BUTTON_TEMPLATE.and(
+			component -> component
+					.withBackgroundColor(IIColor.fromPackedRGB(0x7c8a6d))
+					.withIcon(IIReference.RES_TEXTURES_DECO_ICON_ACTION_DUPLICATE)
+					.withTranslatedTooltip(IIReference.GUI_TOOLTIP_KEY+"button.duplicate")
+	);
+
+	public static final DecoComponentTemplate<DecoButton> LIST_BUTTON_CLEAR_TEMPLATE = LIST_BUTTON_TEMPLATE.and(
+			component -> component
+					.withBackgroundColor(IIColor.fromPackedRGB(0x8a7568))
+					.withIcon(IIReference.RES_TEXTURES_DECO_ICON_ACTION_CLEAR)
+					.withTranslatedTooltip(IIReference.GUI_TOOLTIP_KEY+"button.clear")
 	);
 
 	//--- Energy Bar ---//
@@ -221,7 +234,7 @@ public class DecoGuiUtils
 
 	}
 
-	public static IIDrawUtils drawBackgroundBlock(Collection<DecoBackgroundTile> rects)
+	public static IIDrawUtils drawBackgroundBlock(Collection<DecoBackgroundTile> rects, int minXOffset, int minYOffset)
 	{
 		IIDrawUtils draw = IIDrawUtils.startTexturedColored();
 		for(DecoBackgroundTile rect : rects)
@@ -235,7 +248,7 @@ public class DecoGuiUtils
 				for(int xx = 0; xx < rectW; xx += 32)
 				{
 					TextureAtlasSprite sprite = ClientUtils.getSprite(rect.style);
-					draw.drawTexColorRect(rectX+xx, rectY+yy,
+					draw.drawTexColorRect(rectX+xx+minXOffset, rectY+yy+minYOffset,
 							MathHelper.clamp(rectW-xx, 8, 32),
 							MathHelper.clamp(rectH-yy, 8, 32),
 							rect.color,

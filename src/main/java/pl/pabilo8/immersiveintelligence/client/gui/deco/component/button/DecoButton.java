@@ -10,7 +10,6 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoAlignment;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoGuiUtils;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
-import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -60,12 +59,6 @@ public class DecoButton extends GuiComponentDecoTextBase<DecoButton>
 		return this;
 	}
 
-	public DecoButton withBackground(ResLoc background)
-	{
-		this.backgroundLocation = background;
-		return this;
-	}
-
 	public DecoButton withIconAlignment(DecoAlignment iconAlignment)
 	{
 		this.iconAlignment = iconAlignment;
@@ -84,8 +77,11 @@ public class DecoButton extends GuiComponentDecoTextBase<DecoButton>
 		int xPadding = padding[0]+padding[2];
 		int yPadding = padding[1]+padding[3];
 
-		int combinedWidth = iconSize+(text!=null?fontRenderer.getStringWidth(text): 0);
-		int combinedHeight = Math.max(iconSize, text!=null?fontRenderer.FONT_HEIGHT: 0);
+		int textWidth = text!=null?fontRenderer.getStringWidth(text): 0;
+		int textHeight = text!=null?fontRenderer.FONT_HEIGHT: 0;
+		int iconSize = (icon!=null||stack!=null)?this.iconSize: 0;
+		int combinedWidth = iconSize+textWidth;
+		int combinedHeight = Math.max(iconSize, textHeight);
 
 		int alignedX = iconAlignment.getAlignX(x+padding[0], combinedWidth, width-xPadding);
 		int alignedY = iconAlignment.getAlignY(y+padding[1], combinedHeight, height-yPadding);
@@ -94,9 +90,10 @@ public class DecoButton extends GuiComponentDecoTextBase<DecoButton>
 		cachedIconY = alignedY;
 
 		//Offset by icon width + spacing
-		cachedTextX = cachedIconX+iconSize+2;
+		cachedTextX = cachedIconX+iconSize+(iconSize==0?0: 2);
 		//Center text vertically
-		cachedTextY = cachedIconY+(iconSize-fontRenderer.FONT_HEIGHT)/2;
+		cachedTextY = iconSize==0?alignedY: (cachedIconY+(iconSize-fontRenderer.FONT_HEIGHT)/2);
+
 
 		return true;
 	}

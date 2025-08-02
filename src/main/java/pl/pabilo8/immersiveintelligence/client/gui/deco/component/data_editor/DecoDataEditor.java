@@ -1,11 +1,15 @@
 package pl.pabilo8.immersiveintelligence.client.gui.deco.component.data_editor;
 
+import pl.pabilo8.immersiveintelligence.api.data.IIDataTypeUtils;
 import pl.pabilo8.immersiveintelligence.api.data.types.*;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
+import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType.TypeMetaInfo;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoPanel;
 
 import javax.annotation.Nullable;
 import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -23,8 +27,10 @@ public abstract class DecoDataEditor<T extends DataType> extends DecoPanel
 		registerEditor(DataTypeString.class, DecoDataEditorString::new);
 		registerEditor(DataTypeInteger.class, DecoDataEditorInteger::new);
 		registerEditor(DataTypeFloat.class, DecoDataEditorFloat::new);
+		registerEditor(DataTypeVector.class, DecoDataEditorVector::new);
 		registerEditor(DataTypeNull.class, DecoDataEditorNull::new);
 		registerEditor(DataTypeItemStack.class, DecoDataEditorItemStack::new);
+		registerEditor(DataTypeFluidStack.class, DecoDataEditorFluidStack::new);
 		//registerEditor(DataPacketTypeAccessor.class, GuiDataEditorAccessor::new);
 	}
 
@@ -80,5 +86,13 @@ public abstract class DecoDataEditor<T extends DataType> extends DecoPanel
 	{
 		DataEditorConstructor<T> constructor = (DataEditorConstructor<T>)EDITORS.get(type.getClass());
 		return constructor==null?null: constructor.construct(x, y, type);
+	}
+
+	public static List<TypeMetaInfo<?>> getEditorTypes(boolean advanced)
+	{
+		return EDITORS.keySet().stream()
+				.map(IIDataTypeUtils.metaTypesByClass::get)
+				//.filter(typeMetaInfo -> !advanced||typeMetaInfo.isAdvancedType())
+				.collect(Collectors.toList());
 	}
 }

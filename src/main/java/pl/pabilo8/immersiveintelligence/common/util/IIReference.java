@@ -111,6 +111,7 @@ public class IIReference
 	public static final ResLoc RES_TEXTURES_DECO_TEMPLATE_ROUND = ResLoc.of(RES_TEXTURES_DECO, "template/round");
 	public static final ResLoc RES_TEXTURES_DECO_TEMPLATE_SQUARE = ResLoc.of(RES_TEXTURES_DECO, "template/square");
 	public static final ResLoc RES_TEXTURES_DECO_TEMPLATE_TICKET = ResLoc.of(RES_TEXTURES_DECO, "template/ticket");
+	public static final ResLoc RES_TEXTURES_DECO_TEMPLATE_PAPER = ResLoc.of(RES_TEXTURES_DECO, "template/paper");
 	//Deco Inventory Slots
 	public static final ResLoc RES_TEXTURES_DECO_INVENTORY_SLOT = ResLoc.of(RES_TEXTURES_DECO, "slot/vanilla");
 	public static final ResLoc RES_TEXTURES_DECO_IE_SLOT = ResLoc.of(RES_TEXTURES_DECO, "slot/steel");
@@ -138,13 +139,16 @@ public class IIReference
 	public static final ResLoc GUI_LABEL_HAZARD = ResLoc.of(RES_TEXTURES_DECO, "label/label_hazard");
 	//Deco Components
 	public static final ResLoc RES_TEXTURES_DECO_COMPONENT_BUTTON = ResLoc.of(RES_TEXTURES_DECO, "component/button");
+	public static final ResLoc RES_TEXTURES_DECO_COMPONENT_TEXT_FIELD = ResLoc.of(RES_TEXTURES_DECO, "component/text_field");
 	public static final ResLoc RES_TEXTURES_DECO_COMPONENT_TAB = ResLoc.of(RES_TEXTURES_DECO, "component/tab");
 	public static final ResLoc RES_TEXTURES_DECO_COMPONENT_TAB_WIDGET = ResLoc.of(RES_TEXTURES_DECO, "component/tab_widget");
 	public static final ResLoc RES_TEXTURES_DECO_COMPONENT_CHECKBOX = ResLoc.of(RES_TEXTURES_DECO, "component/checkbox");
 	public static final ResLoc RES_TEXTURES_DECO_COMPONENT_SWITCH = ResLoc.of(RES_TEXTURES_DECO, "component/switch");
 	public static final ResLoc RES_TEXTURES_DECO_COMPONENT_SWITCH_MOVING = ResLoc.of(RES_TEXTURES_DECO, "component/switch_moving");
-	public static final ResLoc RES_TEXTURES_DECO_COMPONENT_DROPDOWN = ResLoc.of(RES_TEXTURES_DECO, "component/dropdown");
+	public static final ResLoc RES_TEXTURES_DECO_COMPONENT_DROPDOWN_SYMBOL = ResLoc.of(RES_TEXTURES_DECO, "component/dropdown");
+	public static final ResLoc RES_TEXTURES_DECO_COMPONENT_DROPDOWN_DATA_LETTER = ResLoc.of(RES_TEXTURES_DECO, "component/data_letter_dropdown");
 	public static final ResLoc RES_TEXTURES_DECO_COMPONENT_SLIDER = ResLoc.of(RES_TEXTURES_DECO, "component/slider");
+	public static final ResLoc RES_TEXTURES_DECO_COMPONENT_ARROWS = ResLoc.of(RES_TEXTURES_DECO, "component/arrows");
 	public static final ResLoc RES_TEXTURES_DECO_COMPONENT_FRAME = ResLoc.of(RES_TEXTURES_DECO, "component/frame");
 	public static final ResLoc RES_TEXTURES_DECO_BAR_ICON_BACKGROUND = ResLoc.of(RES_TEXTURES_DECO, "component/bar_icon_background");
 	public static final ResLoc RES_TEXTURES_DECO_COMPONENT_TANK = ResLoc.of(RES_TEXTURES_DECO, "component/tank");
@@ -207,7 +211,13 @@ public class IIReference
 
 	//Custom Deco Component Textures
 	public static final ResLoc RES_TEXTURES_DECO_BUTTON_PAPER = ResLoc.of(RES_TEXTURES_DECO, "component/button_paper");
+	public static final ResLoc RES_TEXTURES_DECO_BUTTON_PAPER_HIGHLIGHT = ResLoc.of(RES_TEXTURES_DECO, "component/button_paper_highlight");
 	public static final ResLoc RES_TEXTURES_DECO_BUTTON_HANGING = ResLoc.of(RES_TEXTURES_DECO, "component/button_hanging");
+	public static final ResLoc RES_TEXTURES_DECO_COMPONENT_ARROWS_PAPER = ResLoc.of(RES_TEXTURES_DECO, "component/arrows_paper");
+	public static final ResLoc RES_TEXTURES_DECO_COMPONENT_BUTTON_ROUND = ResLoc.of(RES_TEXTURES_DECO, "component/button_round");
+	public static final ResLoc RES_TEXTURES_DECO_COMPONENT_SLIDER_PAPER = ResLoc.of(RES_TEXTURES_DECO, "component/slider_paper");
+	public static final ResLoc RES_TEXTURES_DECO_COMPONENT_DROPDOWN_DATA_LETTER_PAPER = ResLoc.of(RES_TEXTURES_DECO, "component/data_letter_dropdown_paper");
+	public static final ResLoc RES_TEXTURES_DECO_COMPONENT_DROPDOWN_SYMBOL_PAPER = ResLoc.of(RES_TEXTURES_DECO, "component/dropdown_paper");
 
 
 	//--- GameRules ---//

@@ -12,6 +12,8 @@ import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 
+import java.util.function.Consumer;
+
 /**
  * A standard switch of the Deco GUI system.<br>
  * Similar to {@link DecoCheckbox}, but used for on/off toggles instead of selecting options in a list.
@@ -28,6 +30,7 @@ public class DecoSwitch extends GuiComponentDecoTextBase<DecoSwitch>
 	private ResLoc movingPartLocation = IIReference.RES_TEXTURES_DECO_COMPONENT_SWITCH_MOVING;
 	private IIColor colorOff = IIReference.COLOR_SWITCH_OFF;
 	private IIColor colorRight = IIReference.COLOR_SWITCH_ON;
+	private Consumer<Boolean> onToggle;
 
 	private boolean state;
 	private int timer = 0;
@@ -41,6 +44,8 @@ public class DecoSwitch extends GuiComponentDecoTextBase<DecoSwitch>
 			if(mouseButton==MouseButton.LEFT)
 			{
 				timer = (state = !state)?0: MAX_SWITCH_TICKS;
+				if(onToggle!=null)
+					onToggle.accept(state);
 				return true;
 			}
 			return false;
@@ -83,6 +88,12 @@ public class DecoSwitch extends GuiComponentDecoTextBase<DecoSwitch>
 	public DecoSwitch withColorRight(IIColor colorRight)
 	{
 		this.colorRight = colorRight;
+		return this;
+	}
+
+	public DecoSwitch withOnToggle(Consumer<Boolean> onToggle)
+	{
+		this.onToggle = onToggle;
 		return this;
 	}
 

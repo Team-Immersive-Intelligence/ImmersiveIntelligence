@@ -58,6 +58,12 @@ public class DecoPanel extends GuiComponentDecoBase<DecoPanel>
 	public void addComponent(GuiComponentDecoBase<?> component)
 	{
 		children.add(component);
+		if(parentGui!=null)
+		{
+			component.setParentGUI(parentGui);
+			component.x -= parentGui.guiLeft;
+			component.y -= parentGui.guiTop;
+		}
 		component.x += x+xPadding;
 		component.y += y+yPadding;
 	}

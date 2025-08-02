@@ -109,8 +109,14 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 	private DecoComponentWidgetBase<?> previousWidget, currentWidget;
 	private int widgetTime = 0;
 
-	//Screenshot mode, changes the GL scissor method
+	/**
+	 * Screenshot mode, changes the GL scissor method
+	 */
 	private boolean screenshotMode = false;
+	/**
+	 * if true, the GUI won't perform saving to NBT during {@link #onGuiClosed()}, used for transitions between GUIs
+	 */
+	protected boolean changeGUIFlag = false;
 
 	public DecoGui(EntityPlayer player, T tile, IIGUI iigui)
 	{
@@ -409,16 +415,26 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 		float scroll = Mouse.getDWheel();
 		if(scroll!=0)
 		{
-			if(currentWidget!=null&&!currentWidget.onComponentScroll(mouseX, mouseY, scroll))
-				for(GuiButton b : buttonList)
-					if(b instanceof GuiComponentDecoBase)
-						((GuiComponentDecoBase<?>)b).onComponentScroll(mouseX, mouseY, scroll);
+			if(currentWidget==null||!currentWidget.onComponentScroll(mouseX, mouseY, scroll))
+				if(focusedElement==null||!focusedElement.onComponentScroll(mouseX, mouseY, scroll))
+					for(GuiButton b : buttonList)
+						if(b instanceof GuiComponentDecoBase)
+							((GuiComponentDecoBase<?>)b).onComponentScroll(mouseX, mouseY, scroll);
 		}
 
 		//Draw the upper layer of buttons
+		GlStateManager.pushMatrix();
+		GlStateManager.disableRescaleNormal();
+		RenderHelper.disableStandardItemLighting();
+		GlStateManager.disableLighting();
+		GlStateManager.disableDepth();
 		for(GuiButton b : buttonList)
 			if(b instanceof GuiComponentDecoBase)
 				((GuiComponentDecoBase<?>)b).drawButtonUpperLayer(mc, mouseX, mouseY, partialTicks);
+		GlStateManager.enableLighting();
+		GlStateManager.enableDepth();
+		RenderHelper.enableStandardItemLighting();
+		GlStateManager.popMatrix();
 
 		//Draw tooltip
 		this.renderHoveredToolTip(mouseX, mouseY);
@@ -514,6 +530,12 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 		//Process key typed for the currently focused component
 		if(focusedElement!=null)
 		{
+			if(keyCode==Keyboard.KEY_ESCAPE)
+			{
+				requestFocus(null);
+				return;
+			}
+
 			//Common keys are turned into events for unified handling
 			if(Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)||Keyboard.isKeyDown(Keyboard.KEY_RCONTROL))
 				switch(keyCode)
@@ -549,14 +571,13 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 	@Override
 	protected final void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException
 	{
-		//Lose element focus
-		focusedElement = null;
-
 		MouseButton mouseButtonEnum = MouseButton.values()[mouseButton%MouseButton.values().length];
 
 		//Widgets are not a part of the button list, so we need to check them separately
+		boolean anyPressed = false;
 		if(currentWidget!=null&&currentWidget.decoMousePressed(this.mc, mouseY, mouseX, mouseButtonEnum))
 		{
+			anyPressed = true;
 			Pre event = new Pre(this, currentWidget, this.buttonList);
 			if(MinecraftForge.EVENT_BUS.post(event))
 				return;
@@ -565,9 +586,21 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 				MinecraftForge.EVENT_BUS.post(new Post(this, event.getButton(), this.buttonList));
 		}
 
+		if(focusedElement!=null)
+			anyPressed = focusedElement.decoMousePressed(this.mc, mouseY, mouseX, mouseButtonEnum)||anyPressed;
+
 		for(GuiButton guiButton : this.buttonList)
+		{
+			if(guiButton==focusedElement)
+				continue;
 			if(guiButton instanceof GuiComponentDecoBase)
-				((GuiComponentDecoBase<?>)guiButton).decoMousePressed(this.mc, mouseY, mouseX, mouseButtonEnum);
+				anyPressed = ((GuiComponentDecoBase<?>)guiButton).decoMousePressed(this.mc, mouseY, mouseX, mouseButtonEnum)||anyPressed;
+			else if(mouseButtonEnum==MouseButton.LEFT)
+				anyPressed = guiButton.mousePressed(this.mc, mouseX, mouseY)||anyPressed;
+		}
+
+		if(!anyPressed)
+			requestFocus(null);
 
 		super.mouseClicked(mouseX, mouseY, mouseButton);
 	}
@@ -597,25 +630,23 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 		super.onGuiClosed();
 
 		//Save GUI data
-		saveGuiData();
+		if(!changeGUIFlag)
+		{
+			saveGuiData();
 
-		//Send a sync message to the tile entity
-		EasyNBT nbt = onSaveTileData();
-		if(!nbt.isEmpty())
-			IIPacketHandler.sendToServer(new MessageIITileSync(tile, nbt));
+			//Send an NBT sync message to the tile entity
+			EasyNBT nbt = onSaveTileData();
+			if(!nbt.isEmpty())
+				IIPacketHandler.sendToServer(new MessageIITileSync(tile, nbt));
+		}
 
-		//Cleanup background builder
+		//Perform background and component cleanup
 		if(backgroundBuilder!=null)
 			backgroundBuilder.cleanup();
-
-		//Cleanup components
 		for(GuiButton b : buttonList)
 			if(b instanceof GuiComponentDecoBase)
 				((GuiComponentDecoBase<?>)b).cleanup();
-
 		//Labels shouldn't create VBOs, so no cleanup needed
-
-		//Cleanup widgets
 		for(DecoComponentWidgetBase<?> widget : widgetList)
 			widget.cleanup();
 	}
@@ -645,6 +676,14 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 
 	public void requestFocus(GuiComponentDecoBase<?> component)
 	{
+		if(this.focusedElement!=component)
+		{
+			if(this.focusedElement!=null)
+				this.focusedElement.setFocused(false);
+			if(component!=null)
+				component.setFocused(true);
+		}
+
 		this.focusedElement = component;
 	}
 
@@ -828,6 +867,9 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 	 */
 	public final boolean changeGUI(@Nonnull IIGUI newGUI, @Nullable EasyNBT guiData, @Nullable EasyNBT tileData)
 	{
+		//Switch the Change GUI flag to prevent double saving
+		this.changeGUIFlag = true;
+
 		//Save Tile Entity data
 		EasyNBT nbt = onSaveTileData().conditionally(tileData!=null, e -> e.mergeWith(tileData));
 		if(!nbt.isEmpty())

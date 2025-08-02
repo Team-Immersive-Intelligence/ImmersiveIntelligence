@@ -1,6 +1,5 @@
-package pl.pabilo8.immersiveintelligence.client.gui;
+package pl.pabilo8.immersiveintelligence.api.data;
 
-import pl.pabilo8.immersiveintelligence.api.data.DataVariable;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 
 /**

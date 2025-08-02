@@ -1,5 +1,6 @@
 package pl.pabilo8.immersiveintelligence.client.gui.deco.component.text;
 
+import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ChatAllowedCharacters;
@@ -35,7 +36,7 @@ public class DecoTextField extends GuiComponentDecoBase<DecoTextField>
 
 	private IIFontRenderer fontRenderer = IIClientUtils.fontRegular;
 	private int maxStringLength = 32767;
-	private ResLoc backgroundLocation = IIReference.GUI_BG_DARK;
+	private ResLoc backgroundLocation = IIReference.RES_TEXTURES_DECO_COMPONENT_TEXT_FIELD;
 	private IIColor textColor = IIColor.WHITE;
 	private IIColor cursorColor = IIReference.COLOR_IMMERSIVE_ORANGE;
 	private IIColor selectionColor = IIReference.COLOR_IMMERSIVE_ORANGE.withBrightness(0.35f);
@@ -49,7 +50,7 @@ public class DecoTextField extends GuiComponentDecoBase<DecoTextField>
 	private int verticalScroll = 0, maxVerticalScroll = 0, lineScrollOffset = 0;
 
 	//Render state
-	private int cursorCounter = 0, blinkRate = 6;
+	private int cursorCounter = 0, blinkRate = 30;
 
 	/**
 	 * Creates a new text field
@@ -62,7 +63,7 @@ public class DecoTextField extends GuiComponentDecoBase<DecoTextField>
 		super(x, y);
 		lines.add("");
 
-		withSize(36, fontRenderer.FONT_HEIGHT+1+4);
+		withSize(36, (fontRenderer.FONT_HEIGHT+2)+1+4);
 		withOnKeyTyped(this::onKeyTyped);
 		withOnPressed(this::onMousePressed);
 		withOnDragged(this::onMouseDragged);
@@ -85,7 +86,7 @@ public class DecoTextField extends GuiComponentDecoBase<DecoTextField>
 			bindAtlas();
 			IIDrawUtils.startTexturedColored()
 					.drawConnectedColorRect(x, y, width, height,
-							IIColor.WHITE, backgroundLocation, 64, 64, 8, 8)
+							IIColor.WHITE, backgroundLocation, 32, 32, 8, 8)
 					.finish();
 		}
 
@@ -115,8 +116,7 @@ public class DecoTextField extends GuiComponentDecoBase<DecoTextField>
 			fontRenderer.drawString(visibleText, x+padding, lineY, textColor.getPackedARGB());
 
 			//Draw cursor and selection if this is the current line and we're focused
-			//TODO: 12.07.2025 check for focus
-			if(lineIdx==currentLine&&cursorCounter/blinkRate%2==0)
+			if(isFocused()&&lineIdx==currentLine&&cursorCounter/blinkRate%2==0)
 			{
 				//Only handle cursor/selection if this is the active line
 				if(cursorPosition >= 0&&cursorPosition <= line.length())
@@ -154,6 +154,8 @@ public class DecoTextField extends GuiComponentDecoBase<DecoTextField>
 		//End scissoring
 		parentGui.scissorEnd();
 		GlStateManager.popMatrix();
+
+		cursorCounter++;
 	}
 
 	@Override
@@ -187,24 +189,12 @@ public class DecoTextField extends GuiComponentDecoBase<DecoTextField>
 	}
 
 	/**
-	 * Update the cursor blink counter
-	 */
-	public void updateCursorCounter()
-	{
-		cursorCounter++;
-	}
-
-	/**
 	 * Handle key input
 	 */
 	private boolean onKeyTyped(DecoTextField textField, char typedChar, int keyCode)
 	{
 		switch(keyCode)
 		{
-			//Escape always defocuses the text field
-			case Keyboard.KEY_ESCAPE:
-				parentGui.requestFocus(null);
-				return true;
 			//Enter adds a newline or defocuses (confirms) for single-line fields
 			case Keyboard.KEY_RETURN:
 				if(multiLine)
@@ -744,7 +734,7 @@ public class DecoTextField extends GuiComponentDecoBase<DecoTextField>
 		{
 			lines.clear();
 			lines.add(text);
-			cursorPosition = Math.min(cursorPosition, text.length());
+			cursorPosition = text.length();
 			selectionEnd = cursorPosition;
 		}
 		else
@@ -842,6 +832,12 @@ public class DecoTextField extends GuiComponentDecoBase<DecoTextField>
 	public int getLineCount()
 	{
 		return lines.size();
+	}
+
+	@Override
+	public void playPressSound(SoundHandler soundHandlerIn)
+	{
+
 	}
 
 	//--- Sub-Classes ---//

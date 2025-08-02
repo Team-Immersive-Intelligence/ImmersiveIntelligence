@@ -59,6 +59,12 @@ public abstract class GuiComponentDecoTextBase<TYPE extends GuiComponentDecoText
 		return (TYPE)this;
 	}
 
+	public TYPE withBackground(ResLoc backgroundLocation)
+	{
+		this.backgroundLocation = backgroundLocation;
+		return (TYPE)this;
+	}
+
 	public TYPE withBackgroundColor(IIColor color)
 	{
 		this.backgroundColor = color;

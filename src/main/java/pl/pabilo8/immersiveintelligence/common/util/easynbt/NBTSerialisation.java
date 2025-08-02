@@ -8,6 +8,8 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.fluids.FluidTank;
+import pl.pabilo8.immersiveintelligence.api.data.DataVariable;
+import pl.pabilo8.immersiveintelligence.api.data.IIDataTypeUtils;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
@@ -124,6 +126,22 @@ public class NBTSerialisation
 				(nbt, field) -> {
 					field.deserializeNBT(nbt);
 					return field;
+				}
+		);
+
+		registerSerializer(
+				DataVariable.class,
+				NBTTagCompound.class,
+				dataVariable -> {
+					NBTTagCompound nbtTagCompound = new NBTTagCompound();
+					nbtTagCompound.setString("name", String.valueOf(dataVariable.getName()));
+					nbtTagCompound.setTag("value", dataVariable.getValue().valueToNBT());
+					return nbtTagCompound;
+				},
+				nbtTagCompound -> {
+					char name = nbtTagCompound.getString("name").isEmpty()?'a': nbtTagCompound.getString("name").charAt(0);
+					NBTTagCompound valueTag = nbtTagCompound.getCompoundTag("value");
+					return new DataVariable(name, IIDataTypeUtils.getVarFromNBT(valueTag));
 				}
 		);
 	}

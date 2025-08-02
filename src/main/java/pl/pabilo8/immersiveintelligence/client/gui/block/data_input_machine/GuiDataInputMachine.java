@@ -4,10 +4,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.DataVariable;
+import pl.pabilo8.immersiveintelligence.api.data.IDataMachineGui;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType.TypeMetaInfo;
-import pl.pabilo8.immersiveintelligence.client.gui.IDataMachineGui;
 import pl.pabilo8.immersiveintelligence.client.gui.ITabbedGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiComponentDecoBase;
@@ -62,6 +62,9 @@ public class GuiDataInputMachine extends DecoGui<TileEntityDataInputMachine, Con
 	protected boolean soundPlayed;
 	@SyncNBT
 	int scroll;
+
+	@SyncNBT
+	public DataVariable variableToEdit;
 
 	public GuiDataInputMachine(EntityPlayer player, TileEntityDataInputMachine tile, IIGUI gui)
 	{
@@ -143,7 +146,20 @@ public class GuiDataInputMachine extends DecoGui<TileEntityDataInputMachine, Con
 							.withGuiSaveAction(gui -> this.scroll = gui.getScroll())
 							//Display
 							.withDisplayFunction(new DecoEntryPanelBuilder<DataVariable>()
-									//Edit / Remove Buttons
+									.withBackground(IIReference.GUI_BG_PAPER)
+									.withBackgroundMask(IIReference.RES_TEXTURES_DECO_TEMPLATE_TICKET)
+
+									//Duplicate / Edit / Remove Buttons
+									.withComponent(p -> new DecoButton(p.width-17-16-14+3, 2)
+											.withTemplate(DecoGuiUtils.LIST_BUTTON_DUPLICATE_TEMPLATE)
+											.withOnLMBPressed(() -> {
+												DataVariable current = p.getCurrentElement();
+												char name = findNextFreeVariableName();
+												if(name=='\0')
+													return;
+												editVariable(name, current.getValue());
+											})
+									)
 									.withComponent(p -> new DecoButton(p.width-17-16+3, 2)
 											.withTemplate(DecoGuiUtils.LIST_BUTTON_EDIT_TEMPLATE)
 											.withOnLMBPressed(() -> {
@@ -230,8 +246,11 @@ public class GuiDataInputMachine extends DecoGui<TileEntityDataInputMachine, Con
 	public void onGuiClosed()
 	{
 		//Close the hatches
-		syncAnimatedParts(0, false);
-		syncAnimatedParts(1, false);
+		if(!changeGUIFlag)
+		{
+			syncAnimatedParts(0, false);
+			syncAnimatedParts(1, false);
+		}
 		super.onGuiClosed();
 	}
 
@@ -244,12 +263,19 @@ public class GuiDataInputMachine extends DecoGui<TileEntityDataInputMachine, Con
 				);
 	}
 
-	private void addVariable()
+	private char findNextFreeVariableName()
 	{
 		DataPacket currentPacket = new DataPacket(list.getEntries());
 		if(currentPacket.size() >= DataPacket.VARIABLE_NAMES.length)
+			return '\0';
+		return IIUtils.cycleDataPacketCharsAvoiding('a', true, false, currentPacket);
+	}
+
+	private void addVariable()
+	{
+		char name = findNextFreeVariableName();
+		if(name=='\0')
 			return;
-		char name = IIUtils.cycleDataPacketCharsAvoiding('a', true, false, currentPacket);
 		editVariable(name, new DataTypeInteger());
 	}
 
@@ -261,8 +287,7 @@ public class GuiDataInputMachine extends DecoGui<TileEntityDataInputMachine, Con
 		if(!currentPacket.has(name)||currentPacket.get(name).getClass()!=initialValue.getClass())
 			currentPacket.set(name, initialValue);
 
-		changeGUI(IIGUI.DATA_INPUT_MACHINE_EDIT,
-				EasyNBT.newNBT().withChar("variable_to_edit", name), null
-		);
+		variableToEdit = new DataVariable(name, initialValue);
+		changeGUI(IIGUI.DATA_INPUT_MACHINE_EDIT);
 	}
 }

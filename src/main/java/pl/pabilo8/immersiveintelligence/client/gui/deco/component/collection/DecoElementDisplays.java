@@ -27,7 +27,7 @@ public class DecoElementDisplays
 	{
 		return (t, width, font, mouseX, mouseY, partialTicks, heightProbe) -> {
 			if(!heightProbe)
-				font.drawString(t.toString(), 0, 0, IIColor.fromHex("afafaf").getPackedRGB());
+				font.drawString(t.toString(), 2, 2, IIColor.fromHex("afafaf").getPackedRGB());
 			return font.FONT_HEIGHT;
 		};
 	}
@@ -75,6 +75,11 @@ public class DecoElementDisplays
 		default void drawCreateOption(int width, int height, IIFontRenderer font, int mouseX, int mouseY)
 		{
 			font.drawString("+ New Entry", 0, 0, IIColor.fromHex("afafaf").getPackedRGB());
+		}
+
+		default boolean isMouseOverCreateOption(int mouseX, int mouseY, int width, int height)
+		{
+			return mouseX >= 0&&mouseX < width&&mouseY >= 0&&mouseY < height;
 		}
 
 		default void bindCollection(DecoScrolledCollection<?, T> collection)

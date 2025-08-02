@@ -217,6 +217,33 @@ public class DataPacket implements Iterable<DataVariable>, INBTSerializable<NBTT
 	}
 
 	/**
+	 * Sets the variable with the given name to the given type.
+	 *
+	 * @param name  the name of the variable, must be a single character from {@link #VARIABLE_NAMES}
+	 * @param value the value to set the variable, must not be null
+	 * @return this packet instance, for chaining
+	 */
+	@Nonnull
+	public DataPacket with(Character name, DataType value)
+	{
+		set(name, value);
+		return this;
+	}
+
+	/**
+	 * Sets the variable with the given name to the given type.
+	 *
+	 * @param dataVariable the variable to set, must not be null
+	 * @return this packet instance, for chaining
+	 */
+	@Nonnull
+	public DataPacket with(@Nonnull DataVariable dataVariable)
+	{
+		set(dataVariable);
+		return this;
+	}
+
+	/**
 	 * Sets the packet color, used to identify the packet connector sub-network.
 	 *
 	 * @param color the color of the packet, if null, it will result to {@link EnumDyeColor#WHITE}

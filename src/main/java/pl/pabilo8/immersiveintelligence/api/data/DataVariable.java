@@ -15,7 +15,7 @@ public class DataVariable
 	final char name;
 	final DataType value;
 
-	DataVariable(Character c, DataType type)
+	public DataVariable(Character c, DataType type)
 	{
 		this.name = c;
 		this.value = type;

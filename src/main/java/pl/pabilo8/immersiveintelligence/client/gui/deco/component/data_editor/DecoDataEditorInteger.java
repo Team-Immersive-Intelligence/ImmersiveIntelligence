@@ -29,7 +29,9 @@ public class DecoDataEditorInteger extends DecoDataEditor<DataTypeInteger>
 		addComponents(
 				//Text field
 				valueEdit = new DecoTextField(2, 12)
-						.withFilter(TextFilter.DECIMAL),
+						.withSize(width-8, 16)
+						.withFilter(TextFilter.DECIMAL)
+						.withText(dataType.value),
 				//Mode select dropdown
 				valueDropdown = new DecoDropdown<TextFilter>(2, 32+2)
 						.withEntries(TextFilter.BINARY, TextFilter.DECIMAL, TextFilter.HEXADECIMAL)

@@ -344,23 +344,30 @@ public class DecoBackgroundBuilder<T extends TileEntityIEBase & IIEInventory, C 
 						.filter(tile -> !(tile instanceof DecoBackgroundImage))
 						.collect(Collectors.toList());
 
+				int minXOffset = 0, minYOffset = 0;
+				if(!tiles.isEmpty())
+				{
+					minXOffset = tiles.get(0).x%8;
+					minYOffset = tiles.get(0).y%8;
+				}
+
 				//Mask
 				GL11.glEnable(GL11.GL_STENCIL_TEST);
 				GL11.glClear(GL11.GL_STENCIL_BUFFER_BIT);
 				GL11.glStencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_REPLACE);
 				GL11.glStencilFunc(GL11.GL_ALWAYS, 1, 0xFF);
-				DecoGuiUtils.drawBackgroundMask(tiles, 0, 0).finish();
+				DecoGuiUtils.drawBackgroundMask(tiles, minXOffset, minYOffset).finish();
 
 				//Background
 				GL11.glStencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_KEEP);
 				GL11.glStencilFunc(GL11.GL_EQUAL, 1, 0xFF);
-				DecoGuiUtils.drawBackgroundBlock(tiles).finish();
+				DecoGuiUtils.drawBackgroundBlock(tiles, minXOffset, minYOffset).finish();
 				GL11.glDisable(GL11.GL_STENCIL_TEST);
 
 				//Overlay
 				GlStateManager.enableBlend();
 				GlStateManager.blendFunc(SourceFactor.DST_COLOR, DestFactor.SRC_COLOR);
-				DecoGuiUtils.drawBackgroundMask(tiles, 0, 0).finish();
+				DecoGuiUtils.drawBackgroundMask(tiles, minXOffset, minYOffset).finish();
 			}
 
 			//Blending inventory slots (using previous blend func.)

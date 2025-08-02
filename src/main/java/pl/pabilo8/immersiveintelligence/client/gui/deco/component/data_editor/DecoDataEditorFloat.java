@@ -16,11 +16,18 @@ public class DecoDataEditorFloat extends DecoDataEditor<DataTypeFloat>
 	public DecoDataEditorFloat(int x, int y, DataTypeFloat dataType)
 	{
 		super(x, y, dataType);
+	}
+
+	@Override
+	protected boolean initialize()
+	{
 		addLabel(IIReference.DESCRIPTION_KEY+"variable_value", 2, 2);
 		addComponent(this.valueEdit = new DecoTextField(2, 12)
+				.withSize(width-8, 16)
 				.withText(dataType.toString())
 				.withFilter(TextFilter.FLOAT)
 		);
+		return super.initialize();
 	}
 
 	@Override

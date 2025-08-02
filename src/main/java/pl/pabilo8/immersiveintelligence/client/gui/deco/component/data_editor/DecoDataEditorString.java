@@ -22,7 +22,7 @@ public class DecoDataEditorString extends DecoDataEditor<DataTypeString>
 	{
 		addLabel(IIReference.DESCRIPTION_KEY+"variable_value", 2, 2);
 		addComponent(this.valueEdit = new DecoTextField(2, 12)
-				//.withSize(width-4, height-20)
+				.withSize(width-8, height-20)
 				.withText(dataType.toString())
 				.withMultiLine(true)
 		);

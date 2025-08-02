@@ -30,36 +30,36 @@ public class IIDataTypeUtils
 	public static void registerDataTypes()
 	{
 		//null
-		registerType("null", DataTypeNull.class, DataTypeNull::new, IIColor.fromPackedRGB(0x8f2fb3));
+		registerType("null", DataTypeNull.class, DataTypeNull::new, IIColor.fromPackedRGB(0x8f2fb3), false);
 
 		//logic types
-		registerType("boolean", DataTypeBoolean.class, DataTypeBoolean::new, IIColor.fromPackedRGB(0x922020));
+		registerType("boolean", DataTypeBoolean.class, DataTypeBoolean::new, IIColor.fromPackedRGB(0x922020), false);
 
 		//number types
-		registerType("integer", DataTypeInteger.class, DataTypeInteger::new, IIColor.fromPackedRGB(0x26732e));
-		registerType("float", DataTypeFloat.class, DataTypeFloat::new, IIColor.fromPackedRGB(0x0d6b68));
-		registerType("vector", DataTypeVector.class, DataTypeVector::new, IIColor.fromPackedRGB(0x9d8900));
+		registerType("integer", DataTypeInteger.class, DataTypeInteger::new, IIColor.fromPackedRGB(0x26732e), false);
+		registerType("float", DataTypeFloat.class, DataTypeFloat::new, IIColor.fromPackedRGB(0x0d6b68), false);
+		registerType("vector", DataTypeVector.class, DataTypeVector::new, IIColor.fromPackedRGB(0x9d8900), false);
 		registerGenericType("number", NumericDataType.class);
 
 		//text types
-		registerType("string", DataTypeString.class, DataTypeString::new, IIColor.fromPackedRGB(0xb86300));
+		registerType("string", DataTypeString.class, DataTypeString::new, IIColor.fromPackedRGB(0xb86300), false);
 
 		//statement types
-		registerType("accessor", DataTypeAccessor.class, DataTypeAccessor::new, IIColor.fromPackedRGB(0x161c26));
-		registerType("expression", DataTypeExpression.class, DataTypeExpression::new, IIColor.fromPackedRGB(0x2a4db4));
+		registerType("accessor", DataTypeAccessor.class, DataTypeAccessor::new, IIColor.fromPackedRGB(0x161c26), true);
+		registerType("expression", DataTypeExpression.class, DataTypeExpression::new, IIColor.fromPackedRGB(0x2a4db4), true);
 
 		//collection types
-		registerType("array", DataTypeArray.class, DataTypeArray::new, IIColor.fromPackedRGB(0x520c2b));
-		registerType("map", DataTypeMap.class, DataTypeMap::new, IIColor.fromPackedRGB(0x4d5914));
+		registerType("array", DataTypeArray.class, DataTypeArray::new, IIColor.fromPackedRGB(0x520c2b), true);
+		registerType("map", DataTypeMap.class, DataTypeMap::new, IIColor.fromPackedRGB(0x4d5914), true);
 		registerGenericType("iterable", IterableDataType.class);
 
 		//in-world types
-		registerType("itemstack", DataTypeItemStack.class, DataTypeItemStack::new, IIColor.fromPackedRGB(0x121031));
-		registerType("fluidstack", DataTypeFluidStack.class, DataTypeFluidStack::new, IIColor.fromPackedRGB(0x082730));
-		registerType("entity", DataTypeEntity.class, DataTypeEntity::new, IIColor.fromPackedRGB(0x435e46));
+		registerType("itemstack", DataTypeItemStack.class, DataTypeItemStack::new, IIColor.fromPackedRGB(0x121031), false);
+		registerType("fluidstack", DataTypeFluidStack.class, DataTypeFluidStack::new, IIColor.fromPackedRGB(0x082730), false);
+		registerType("entity", DataTypeEntity.class, DataTypeEntity::new, IIColor.fromPackedRGB(0x435e46), true);
 
 		//cryptographic types
-		registerType("encrypted", DataTypeEncrypted.class, DataTypeEncrypted::new, IIColor.fromPackedRGB(0x5a0d75));
+		registerType("encrypted", DataTypeEncrypted.class, DataTypeEncrypted::new, IIColor.fromPackedRGB(0x5a0d75), true);
 	}
 
 	private static <T extends DataType> void registerGenericType(String name, Class<T> klass)
@@ -78,9 +78,9 @@ public class IIDataTypeUtils
 		metaTypesByClass.put(klass, metaInfo);
 	}
 
-	public static <T extends DataType> void registerType(String name, Class<T> klass, Supplier<T> supplier, IIColor color)
+	public static <T extends DataType> void registerType(String name, Class<T> klass, Supplier<T> supplier, IIColor color, boolean advancedType)
 	{
-		TypeMetaInfo<T> metaInfo = new TypeMetaInfo<>(name, klass, supplier, color);
+		TypeMetaInfo<T> metaInfo = new TypeMetaInfo<>(name, klass, supplier, color, advancedType);
 		metaTypesByName.put(name, metaInfo);
 		metaTypesByClass.put(klass, metaInfo);
 	}

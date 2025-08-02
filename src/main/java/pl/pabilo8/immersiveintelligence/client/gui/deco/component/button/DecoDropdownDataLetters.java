@@ -24,6 +24,7 @@ public class DecoDropdownDataLetters extends DecoDropdown<Character> implements 
 	{
 		super(x, y);
 		withSize(18, 18);
+		withBackground(IIReference.RES_TEXTURES_DECO_COMPONENT_TEXT_FIELD);
 		withEntriesInGrid(6);
 		withEntries(new String(DataPacket.VARIABLE_NAMES)
 				.chars()
@@ -83,7 +84,7 @@ public class DecoDropdownDataLetters extends DecoDropdown<Character> implements 
 		//Selected entry or search text
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(x+2, y+2, 0);
-		if(dropped&&!text.isEmpty())
+		if(isFocused()&&!text.isEmpty())
 		{
 			String drawn = blinkTime > 20?(text+"_"): text;
 			fontRenderer.drawString(drawn, 0, 0, getTextColor(false).getPackedRGB());
@@ -116,7 +117,7 @@ public class DecoDropdownDataLetters extends DecoDropdown<Character> implements 
 		{
 			color = IIReference.COLOR_IMMERSIVE_ORANGE;
 			offsetX = (width-font.getStringWidth(String.valueOf(character)))/2-2;
-			offsetY = (height-font.FONT_HEIGHT)/2-2;
+			offsetY = (height-font.FONT_HEIGHT)/2-1;
 		}
 		else if(isSelectable(character))
 		{

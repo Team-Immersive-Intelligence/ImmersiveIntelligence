@@ -11,10 +11,7 @@ import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIBase;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -38,6 +35,7 @@ public abstract class GuiComponentDecoBase<TYPE extends GuiComponentDecoBase<? s
 	protected List<GuiComponentDecoBase<?>> children = new ArrayList<>();
 	protected boolean pressed;
 	protected boolean initialized;
+	private boolean focused;
 
 	private DecoMouseEvent<TYPE> onPressed;
 	private DecoMouseEvent<TYPE> onDragged;
@@ -179,12 +177,17 @@ public abstract class GuiComponentDecoBase<TYPE extends GuiComponentDecoBase<? s
 	{
 		if(this.enabled&&canBeClicked(mouseX, mouseY))
 		{
-			pressed = children.stream().anyMatch(child -> child.decoMousePressed(mc, mouseY-y, mouseX-x, button));
-			pressed = pressed||(onPressed!=null&&onPressed.onMouse((TYPE)this, button, mouseX, mouseY));
+			Optional<GuiComponentDecoBase<?>> childrenPressed = children.stream().filter(child -> child.decoMousePressed(mc, mouseY, mouseX, button)).findFirst();
+			pressed = childrenPressed.isPresent()||(onPressed!=null&&onPressed.onMouse((TYPE)this, button, mouseX, mouseY));
 			if(pressed)
+			{
 				playPressSound(mc.getSoundHandler());
-			if(parentGui!=null)
-				parentGui.requestFocus(this);
+				if(parentGui!=null)
+				{
+					GuiComponentDecoBase<?> component = childrenPressed.orElse(this);
+					parentGui.requestFocus(component);
+				}
+			}
 			return pressed;
 		}
 		return false;
@@ -195,7 +198,7 @@ public abstract class GuiComponentDecoBase<TYPE extends GuiComponentDecoBase<? s
 		if(this.enabled)
 		{
 			pressed = !(onReleased==null||onReleased.onMouse((TYPE)this, mouseButton, mouseX, mouseY));
-			children.forEach(child -> child.mouseReleased(mouseX-x, mouseY-y));
+			children.forEach(child -> child.mouseReleased(mouseX, mouseY));
 		}
 	}
 
@@ -205,7 +208,7 @@ public abstract class GuiComponentDecoBase<TYPE extends GuiComponentDecoBase<? s
 		{
 			if(onDragged!=null)
 				onDragged.onMouse((TYPE)this, button, mouseX, mouseY);
-			children.forEach(child -> child.mouseDragged(mc, mouseX-x, mouseY-y));
+			children.forEach(child -> child.mouseDragged(mc, mouseX, mouseY));
 		}
 	}
 
@@ -409,6 +412,16 @@ public abstract class GuiComponentDecoBase<TYPE extends GuiComponentDecoBase<? s
 	public Object getProvidedIngredient()
 	{
 		return null;
+	}
+
+	public void setFocused(boolean focused)
+	{
+		this.focused = focused;
+	}
+
+	public boolean isFocused()
+	{
+		return focused;
 	}
 
 	/**

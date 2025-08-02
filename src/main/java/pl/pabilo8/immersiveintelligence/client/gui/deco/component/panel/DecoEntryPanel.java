@@ -27,7 +27,7 @@ public abstract class DecoEntryPanel<T> extends DecoPanel implements DecoElement
 	public DecoEntryPanel()
 	{
 		super(0, 0);
-		withBackgroundMask(IIReference.RES_TEXTURES_DECO_TEMPLATE_TICKET);
+		withBackgroundMask(IIReference.RES_TEXTURES_DECO_TEMPLATE_PAPER);
 		withBackground(IIReference.GUI_BG_PAPER);
 		addButton = new DecoButton(0, 0)
 				.withSize(16, 16)
@@ -110,6 +110,12 @@ public abstract class DecoEntryPanel<T> extends DecoPanel implements DecoElement
 		addButton.x = DecoAlignment.CENTER.getAlignX(x, addButton.width, width);
 		addButton.y = y;
 		addButton.drawButton(ClientUtils.mc(), mouseX, mouseY, 0f);
+	}
+
+	@Override
+	public boolean isMouseOverCreateOption(int mouseX, int mouseY, int width, int height)
+	{
+		return addButton.isMouseOver();
 	}
 
 	@Override

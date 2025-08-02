@@ -29,15 +29,15 @@ public class DecoDataEditorItemStack extends DecoDataEditor<DataTypeItemStack>
 		addLabel(IIReference.DESCRIPTION_KEY+"variable_value", 2, 2);
 		addLabel("Item:", 2, 12);
 		addLabel("Meta:", 2, 2+20+12);
-		addLabel("Count:", 2, 32+16+2);
+		addLabel("Count:", 2, 2+20+12+18);
 
 		addComponents(
-				metaEdit = new DecoTextField(40, 2+20+10)
-						.withSize(width-42, 12)
+				metaEdit = new DecoTextField(40, 2+20+12)
+						.withSize(width-42, 16)
 						.withFilter(TextFilter.DECIMAL)
 						.withText(scanned.getMetadata()),
-				countEdit = new DecoTextField(40, 32+16)
-						.withSize(width-42, 12)
+				countEdit = new DecoTextField(40, 2+20+12+18)
+						.withSize(width-42, 16)
 						.withFilter(TextFilter.DECIMAL)
 						.withText(scanned.getCount()),
 				new DecoItemStackDisplay((width/2)-8, 8)
@@ -49,7 +49,9 @@ public class DecoDataEditorItemStack extends DecoDataEditor<DataTypeItemStack>
 	@Override
 	public DataTypeItemStack outputType()
 	{
-		dataType.value = scanned;
+		dataType.value = scanned.copy();
+		dataType.value.setItemDamage(Integer.parseInt(metaEdit.getText()));
+		dataType.value.setCount(Integer.parseInt(countEdit.getText()));
 		return dataType;
 	}
 }

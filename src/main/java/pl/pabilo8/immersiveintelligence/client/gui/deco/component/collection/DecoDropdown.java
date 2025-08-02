@@ -7,6 +7,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.Tuple;
 import net.minecraft.util.math.MathHelper;
 import org.lwjgl.input.Keyboard;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoAlignment;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoGuiUtils;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
@@ -27,7 +28,7 @@ import java.util.function.BiConsumer;
  */
 public class DecoDropdown<T> extends DecoScrolledCollection<DecoDropdown<T>, T>
 {
-	private final ResLoc dropdownSymbolLocation = IIReference.RES_TEXTURES_DECO_COMPONENT_DROPDOWN;
+	private ResLoc dropdownSymbolLocation = IIReference.RES_TEXTURES_DECO_COMPONENT_DROPDOWN_SYMBOL;
 
 	public int selectedEntry = -1;
 	protected int blinkTime = 0;
@@ -52,7 +53,7 @@ public class DecoDropdown<T> extends DecoScrolledCollection<DecoDropdown<T>, T>
 						if(clicked.getFirst()==ON_CREATE_OPTION)
 							gui.runCreateAction();
 						else
-							selectedEntry = clicked.getFirst();
+							changeSelectedEntry(clicked.getFirst());
 						text = "";
 						dropped = false;
 						return true;
@@ -78,12 +79,6 @@ public class DecoDropdown<T> extends DecoScrolledCollection<DecoDropdown<T>, T>
 				dropped = false;
 				return true;
 			}
-			else if(keyCode==Keyboard.KEY_ESCAPE)
-			{
-				text = "";
-				dropped = false;
-				return true;
-			}
 			else if(keyCode==Keyboard.KEY_BACK)
 			{
 				if(!text.isEmpty())
@@ -95,6 +90,17 @@ public class DecoDropdown<T> extends DecoScrolledCollection<DecoDropdown<T>, T>
 				text += typedChar;
 			return true;
 		});
+	}
+
+	@Override
+	public void setFocused(boolean focused)
+	{
+		if(!focused)
+		{
+			text = "";
+			dropped = false;
+		}
+		super.setFocused(focused);
 	}
 
 	@Override
@@ -119,6 +125,12 @@ public class DecoDropdown<T> extends DecoScrolledCollection<DecoDropdown<T>, T>
 		withSize(w, h);
 		withEntries(entries);
 
+	}
+
+	public DecoDropdown<T> withDropdownSymbol(ResLoc dropdownSymbolLocation)
+	{
+		this.dropdownSymbolLocation = dropdownSymbolLocation;
+		return this;
 	}
 
 	/**
@@ -259,19 +271,20 @@ public class DecoDropdown<T> extends DecoScrolledCollection<DecoDropdown<T>, T>
 
 		//Dropdown Symbol
 		TextureAtlasSprite dropdownSymbol = ClientUtils.getSprite(dropdownSymbolLocation);
+		int alignY = DecoAlignment.CENTER.getAlignY(y, 9, height);
 		if(dropped)
-			draw.drawTexColorRect(x+width-11, y+1, 9, 9, getTextColor(false),
+			draw.drawTexColorRect(x+width-11, alignY, 9, 9, getTextColor(false),
 					dropdownSymbol.getMinU(), dropdownSymbol.getInterpolatedU(9),
 					dropdownSymbol.getInterpolatedV(7), dropdownSymbol.getMaxV());
 		else
-			draw.drawTexColorRect(x+width-11, y+1, 9, 9, getTextColor(false),
+			draw.drawTexColorRect(x+width-11, alignY, 9, 9, getTextColor(false),
 					dropdownSymbol.getInterpolatedU(7), dropdownSymbol.getMaxU(),
 					dropdownSymbol.getMinV(), dropdownSymbol.getInterpolatedV(9));
 		draw.finish();
 
 		//Selected entry or search text
 		GlStateManager.pushMatrix();
-		GlStateManager.translate(x+2, y+2, 0);
+		GlStateManager.translate(x, y, 0);
 		if(dropped&&!text.isEmpty())
 		{
 			String drawn = blinkTime > 20?(text+"_"): text;
@@ -319,6 +332,7 @@ public class DecoDropdown<T> extends DecoScrolledCollection<DecoDropdown<T>, T>
 		return entries.get(MathHelper.clamp(selectedEntry, 0, entries.size()-1)).toString();
 	}
 
+	@Deprecated
 	public boolean isDropped()
 	{
 		return dropped;
@@ -339,6 +353,6 @@ public class DecoDropdown<T> extends DecoScrolledCollection<DecoDropdown<T>, T>
 	@Override
 	protected boolean canBeClicked(int mouseX, int mouseY)
 	{
-		return IIMath.isPointInRectangle(x, y, x+width, y+height+(dropped?32: 0), mouseX, mouseY);
+		return IIMath.isPointInRectangle(x, y, x+width, y+height+(dropped?maxDropHeight: 0), mouseX, mouseY);
 	}
 }
