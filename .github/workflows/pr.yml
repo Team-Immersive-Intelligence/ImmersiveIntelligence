@@ -2,25 +2,24 @@ name: Check Pull Request
 
 on:
   pull_request:
+    types: [ opened, ready_for_review ]
     branches: [ "master", "dev/**" ]
 permissions:
   contents: read
   actions: read
   checks: write
-env:
-  GITHUB_USERNAME: "CarverBot"
-  GITHUB_TOKEN: ${{ secrets.OPTIMIZATION_TOKEN }}
 
 jobs:
   assign-reviewer:
     runs-on: ubuntu-latest
-    name: Assign a reviewer
+    name: Request Review
     steps:
-      - name: Assign task to a Reviewer
+      - name: Request Review
         uses: hkusu/review-assign-action@v1
         with:
-          assignees: Pabilo8
-          github-token: ${{ secrets.OPTIMIZATION_TOKEN }}
+          assignees: ${{ github.actor }}
+          reviewers: Avalon2106, Pabilo8
+          github-token: ${{ github.token }}
 
   check:
     runs-on: ubuntu-latest
@@ -55,7 +54,7 @@ jobs:
           name: Tests            # Name of the check run which will be created
           path: build/test-results/test/TEST-*.xml    # Path to test results
           reporter: java-junit        # Format of test results
-          token: ${{ secrets.OPTIMIZATION_TOKEN }}
+          token: ${{ github.token }}
 
   notify-discord:
     runs-on: ubuntu-latest

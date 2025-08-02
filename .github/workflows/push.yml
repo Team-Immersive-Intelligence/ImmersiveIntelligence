@@ -58,7 +58,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Notify Discord
-        if: ${{ github.ref == 'refs/heads/dev/main' }}
+        if: ${{ github.ref == 'refs/heads/dev/main' && !contains(github.event.head_commit.message, 'GitHub Actions') }}
         env:
           COMMIT_FROM: ${{ github.event.before }}
           COMMIT_TO: ${{ github.event.after }}
