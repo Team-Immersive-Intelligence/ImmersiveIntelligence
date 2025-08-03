@@ -2900,8 +2900,7 @@ ie.manual.entry.bullet_component.shrapnel_HOPGraphite.desc=Graphite is a very go
 ie.manual.entry.bullet_component.shrapnel_uranium=Uranium Shrapnel
 ie.manual.entry.bullet_component.shrapnel_uranium.lore=Ra-di-o-active
 ie.manual.entry.bullet_component.shrapnel_uranium.desc=Uranium is one of the best materials for shrapnel, the scattering fragments have no problem piercing trough armor and can deal high damage to any target.
-
-
+#Death Messages
 death.attack.iiBullet=%1$s was shot by %2$s
 death.attack.iiBulletNoShooter=%1$s was shot
 death.attack.iiBulletHeadShot=%1$s took a %2$s's bullet to their head
@@ -2918,6 +2917,24 @@ death.attack.iiMotorbikeExplicit=%2$s has made %1$s's ass his free parking spot
 death.attack.iiMotorbikeSuicide=%1$s decided to jump off a moving motorcycle
 death.attack.iiPanzer1=%1$s was crushed under the Panzer's threads
 death.attack.iiPanzer2=The indomitable Panzer's threads have pulverized %1$s
+
+#Additional stuff for the Config Panel
+ii.config.Graphics=Graphics
+ii.config.Ores=Ores
+ii.config.Machines=Machines
+ii.config.MechanicalDevices=Mechanical Devices
+ii.config.Weapons=Weapons
+ii.config.Wires=Wires
+ii.config.Tools=Tools
+ii.config.Vehicles=Vehicles
+ii.config.EffectCrates=Effect Crates
+
+#Weapon Configs
+ii.config.Ammunition=Ammunition
+ii.config.Emplacement_Weapons=Emplacement Weapons
+ii.config.Grenade=Grenade
+ii.config.Mines=Mines
+ii.config.Light_Engineer_Armor=Light Engineer Armor
 
 #GUI Labels
 ii.gui.data_input_machine.storage=Punchtape Storage
