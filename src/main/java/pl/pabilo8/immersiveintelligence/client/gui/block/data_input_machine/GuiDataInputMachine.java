@@ -282,7 +282,7 @@ public class GuiDataInputMachine extends DecoGui<TileEntityDataInputMachine, Con
 	@Override
 	public void editVariable(char name, DataType initialValue)
 	{
-		DataPacket currentPacket = new DataPacket(list.getEntries());
+		DataPacket currentPacket = list==null?tile.storedData: new DataPacket(list.getEntries());
 
 		if(!currentPacket.has(name)||currentPacket.get(name).getClass()!=initialValue.getClass())
 			currentPacket.set(name, initialValue);
