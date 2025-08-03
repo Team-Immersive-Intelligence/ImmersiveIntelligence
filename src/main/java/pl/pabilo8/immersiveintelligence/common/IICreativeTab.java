@@ -70,6 +70,8 @@ public class IICreativeTab extends CreativeTabs
 	@Override
 	public ResourceLocation getBackgroundImage()
 	{
+		if(!IIConfig.australianCreativeTabs)
+			return super.getBackgroundImage();
 		return selectedCategory.getCreativeTabTexture();
 	}
 
