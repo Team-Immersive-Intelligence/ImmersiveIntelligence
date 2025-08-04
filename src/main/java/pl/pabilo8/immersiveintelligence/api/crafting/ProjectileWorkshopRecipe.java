@@ -59,10 +59,4 @@ public class ProjectileWorkshopRecipe extends IIMultiblockRecipe
 	{
 		return effect;
 	}
-
-	@Override
-	public int getMultipleProcessTicks()
-	{
-		return 0;
-	}
 }

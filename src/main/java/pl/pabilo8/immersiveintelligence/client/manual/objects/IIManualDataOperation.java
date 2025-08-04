@@ -3,8 +3,8 @@ package pl.pabilo8.immersiveintelligence.client.manual.objects;
 import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.client.gui.elements.GuiButtonState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextFormatting;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
@@ -19,6 +19,7 @@ import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType.TypeMeta
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualObject;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualPage;
+import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
 import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationUtils;
 import pl.pabilo8.immersiveintelligence.common.item.data.ItemIIFunctionalCircuit.Circuits;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
@@ -38,14 +39,12 @@ import java.util.List;
  */
 public class IIManualDataOperation extends IIManualObject
 {
-	private final static ResLoc TEXTURE_IN = ResLoc.of(IIReference.RES_TEXTURES_MANUAL, "data/input").withExtension(ResLoc.EXT_PNG);
-	private final static ResLoc TEXTURE_OUT = ResLoc.of(IIReference.RES_TEXTURES_MANUAL, "data/output").withExtension(ResLoc.EXT_PNG);
-	private static IIColor colorCodePlainText = IIColor.fromPackedRGB(0xA9B7C6);
-	private static IIColor colorCodeKeyword = IIColor.fromPackedRGB(0xCC7832);
-	private static IIColor colorCodeVariable = IIColor.fromPackedRGB(0x7e6b80);
-	private static IIColor colorCodeString = IIColor.fromPackedRGB(0x6A8759);
-	private static IIColor colorCodeComment = IIColor.fromPackedRGB(0x49633f);
-	private static IIColor colorCodeNumber = IIColor.fromPackedRGB(0x6897BB);
+	private static final IIColor COLOR_CODE_PLAIN_TEXT = IIColor.fromPackedRGB(0xA9B7C6);
+	private static final IIColor COLOR_CODE_KEYWORD = IIColor.fromPackedRGB(0xCC7832);
+	private static final IIColor COLOR_CODE_VARIABLE = IIColor.fromPackedRGB(0x7e6b80);
+	private static final IIColor COLOR_CODE_STRING = IIColor.fromPackedRGB(0x6A8759);
+	private static final IIColor COLOR_CODE_COMMENT = IIColor.fromPackedRGB(0x49633f);
+	private static final IIColor COLOR_CODE_NUMBER = IIColor.fromPackedRGB(0x6897BB);
 
 	private static boolean lastState = false;
 	private GuiButtonState codeSwitch;
@@ -120,7 +119,7 @@ public class IIManualDataOperation extends IIManualObject
 		ArrayList<String> code = new ArrayList<>();
 
 		//Comment about importing
-		code.add(colorCodeComment.getHexCol(TextFormatting.ITALIC+";"+I18n.format("ie.manual.entry.data_operation.comment.import")));
+		code.add(COLOR_CODE_COMMENT.getHexCol(TextFormatting.ITALIC+";"+I18n.format("ie.manual.entry.data_operation.comment.import")));
 
 		//Operation Import
 		boolean importPresent = false;
@@ -128,16 +127,16 @@ public class IIManualDataOperation extends IIManualObject
 			if(Arrays.stream(value.getFunctions()).anyMatch(s -> s.equals(dataOperation.name())))
 			{
 				if(importPresent)
-					code.add(colorCodeComment.getHexCol(TextFormatting.ITALIC+";"+I18n.format("ie.manual.entry.data_operation.comment.import_more")));
+					code.add(COLOR_CODE_COMMENT.getHexCol(TextFormatting.ITALIC+";"+I18n.format("ie.manual.entry.data_operation.comment.import_more")));
 				builder = new StringBuilder()
-						.append(colorCodeKeyword.getHexCol("use "))
-						.append(colorCodeVariable.getHexCol(value.getName().toUpperCase()));
+						.append(COLOR_CODE_KEYWORD.getHexCol("use "))
+						.append(COLOR_CODE_VARIABLE.getHexCol(value.getName().toUpperCase()));
 				code.add(builder.toString());
 				importPresent = true;
 			}
 
 		//Comment about use cases
-		code.add(colorCodeComment.getHexCol(TextFormatting.ITALIC+";"+I18n.format("ie.manual.entry.data_operation.comment.example")));
+		code.add(COLOR_CODE_COMMENT.getHexCol(TextFormatting.ITALIC+";"+I18n.format("ie.manual.entry.data_operation.comment.example")));
 
 		//If the result is saved to a variable (a), start from letter b
 		final int startFromLetter = dataOperation.resultMatters()?1: 0;
@@ -147,10 +146,10 @@ public class IIManualDataOperation extends IIManualObject
 		{
 			builder = new StringBuilder();
 			if(dataOperation.resultMatters())
-				builder.append(colorCodeKeyword.getHexCol(resultingType.name)).append(' ');
-			builder.append(colorCodeVariable.getHexCol("a"))
+				builder.append(COLOR_CODE_KEYWORD.getHexCol(resultingType.name)).append(' ');
+			builder.append(COLOR_CODE_VARIABLE.getHexCol("a"))
 					.append(" = ");
-			builder.append(colorCodePlainText.getHexCol(dataOperation.expression()));
+			builder.append(COLOR_CODE_PLAIN_TEXT.getHexCol(dataOperation.expression()));
 			for(int i = 0; i < dataOperation.params().length; i++)
 				builder.append(" @").append(DataPacket.VARIABLE_NAMES[startFromLetter+i]);
 			code.add(builder.toString());
@@ -159,10 +158,10 @@ public class IIManualDataOperation extends IIManualObject
 		//Operation example using name
 		builder = new StringBuilder();
 		if(dataOperation.resultMatters())
-			builder.append(colorCodeKeyword.getHexCol(resultingType.name)).append(' ')
-					.append(colorCodeVariable.getHexCol("a"))
+			builder.append(COLOR_CODE_KEYWORD.getHexCol(resultingType.name)).append(' ')
+					.append(COLOR_CODE_VARIABLE.getHexCol("a"))
 					.append(" = ");
-		builder.append(colorCodePlainText.getHexCol(dataOperation.name()));
+		builder.append(COLOR_CODE_PLAIN_TEXT.getHexCol(dataOperation.name()));
 		for(int i = 0; i < dataOperation.params().length; i++)
 			builder.append(" @").append(DataPacket.VARIABLE_NAMES[startFromLetter+i]);
 		code.add(builder.toString());
@@ -184,15 +183,16 @@ public class IIManualDataOperation extends IIManualObject
 		if(typeInfo==null)
 			typeInfo = IIDataTypeUtils.metaTypesByClass.get(DataTypeNull.class);
 
-		GlStateManager.pushMatrix();
-		IIClientUtils.bindTexture(typeInfo.getTextureLocation());
-		GlStateManager.color(1f, 1f, 1f, 1f);
-		GlStateManager.enableBlend();
-		Gui.drawModalRectWithCustomSizedTexture(x, yOffset, 0, 0, 16, 16, 16, 16);
-
-		IIClientUtils.bindTexture(inputVariable?TEXTURE_IN: TEXTURE_OUT);
-		Gui.drawModalRectWithCustomSizedTexture(x-3, yOffset, 0, 0, 16, 16, 16, 16);
-		GlStateManager.popMatrix();
+		GlStateManager.color(1, 1, 1, 1);
+		ClientUtils.bindAtlas();
+		TextureAtlasSprite typeTexture = ClientUtils.getSprite(typeInfo.getTextureLocation());
+		TextureAtlasSprite callbackTexture = ClientUtils.getSprite(inputVariable?IIReference.RES_CONTEXT_DATA_IN: IIReference.RES_CONTEXT_DATA_OUT);
+		IIDrawUtils.startTextured()
+				.drawTexRect(x, yOffset, 16, 16,
+						typeTexture.getMinU(), typeTexture.getMaxU(), typeTexture.getMinV(), typeTexture.getMaxV())
+				.drawTexRect(x-3, yOffset, 16, 16,
+						callbackTexture.getMinU(), callbackTexture.getMaxU(), callbackTexture.getMinV(), callbackTexture.getMaxV())
+				.finish();
 
 		manual.fontRenderer.setUnicodeFlag(true);
 		manual.fontRenderer.drawString(TextFormatting.BOLD+paramName, x+18, yOffset-4, manual.getTextColour());
@@ -235,7 +235,7 @@ public class IIManualDataOperation extends IIManualObject
 			ClientUtils.drawColouredRect(x-2, yOffset-2, width+4, manual.getGui().height-yOffset-80-12, 0xaa000000);
 			for(String codeSnippet : getArrayElementForTime(codeSnippets))
 			{
-				IIClientUtils.fontRegular.drawString(codeSnippet, x, yOffset, colorCodePlainText.getPackedRGB());
+				IIClientUtils.fontRegular.drawString(codeSnippet, x, yOffset, COLOR_CODE_PLAIN_TEXT.getPackedRGB());
 				yOffset += fontHeight;
 			}
 			IIClientUtils.fontRegular.setUnicodeFlag(codeFontUnicode);

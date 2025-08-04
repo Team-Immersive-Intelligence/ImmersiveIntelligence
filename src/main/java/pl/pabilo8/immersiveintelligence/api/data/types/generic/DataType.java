@@ -107,7 +107,7 @@ public abstract class DataType implements Cloneable
 			this.type = type;
 			this.supplier = supplier;
 			this.color = color;
-			this.textureLocation = ResLoc.of(IIReference.RES_TEXTURES_GUI, "data_types/"+name).withExtension(ResLoc.EXT_PNG);
+			this.textureLocation = ResLoc.of(IIReference.RES_II, "gui/data_types/"+name);
 			this.advancedType = advancedType;
 		}
 

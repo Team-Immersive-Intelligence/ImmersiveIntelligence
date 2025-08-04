@@ -146,7 +146,7 @@ public class GuiDataInputMachineEdit extends DecoGui<TileEntityDataInputMachine,
 											.withTextColor(typeMeta.color.withBrightness(0.4f));
 									//type icon
 									panel.component("image", DecoImage.class)
-											.withImageLocation(typeMeta.getTextureLocation());
+											.withImageLocation(typeMeta.getTextureLocation(), true);
 								})
 								.withElementTooltip(typeMeta -> "a")
 						)

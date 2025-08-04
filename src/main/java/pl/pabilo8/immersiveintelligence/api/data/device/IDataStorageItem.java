@@ -1,6 +1,8 @@
 package pl.pabilo8.immersiveintelligence.api.data.device;
 
+import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -20,7 +22,7 @@ public interface IDataStorageItem extends IAdvancedTooltipItem
 {
 	DataPacket getStoredData(ItemStack stack);
 
-	void writeDataToItem(DataPacket packet, ItemStack stack);
+	void writeDataToItem(ItemStack stack, DataPacket packet);
 
 	@SideOnly(Side.CLIENT)
 	@Override
@@ -36,12 +38,13 @@ public interface IDataStorageItem extends IAdvancedTooltipItem
 		GlStateManager.color(1f, 1f, 1f, 1f);
 		GlStateManager.scale(.5f, .5f, 1);
 
-		float[] uv = new float[]{0, 1, 0, 1};
+		ClientUtils.bindAtlas();
 		IIDrawUtils draw = IIDrawUtils.startTextured();
 		for(DataVariable dataVariable : packet)
 		{
-			IIClientUtils.bindTexture(dataVariable.getValue().getTypeMeta().getTextureLocation());
-			draw.drawTexRect(0, 0, 16, 16, uv).addOffset(0, 20);
+			TextureAtlasSprite sprite = ClientUtils.getSprite(dataVariable.getValue().getTypeMeta().getTextureLocation());
+			draw.drawTexRect(0, 0, 16, 16, sprite.getMinU(), sprite.getMaxU(), sprite.getMinV(), sprite.getMaxV())
+					.addOffset(0, 20);
 		}
 		draw.finish();
 	}

@@ -1,9 +1,10 @@
 package pl.pabilo8.immersiveintelligence.common.item.data;
 
+import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
@@ -25,6 +26,7 @@ import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType.TypeMeta
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler;
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler.IAdvancedTooltipItem;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
+import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
 import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationUtils;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.item.data.ItemIIFunctionalCircuit.Circuits;
@@ -249,6 +251,10 @@ public class ItemIIFunctionalCircuit extends ItemIISubItemsBase<Circuits> implem
 			GlStateManager.scale(.5f, .5f, 1);
 		}
 
+		GlStateManager.color(1f, 1f, 1f, 1f);
+		ClientUtils.bindAtlas();
+		IIDrawUtils draw = IIDrawUtils.startTextured();
+
 		boolean b = ItemTooltipHandler.canExpandTooltip(Keyboard.KEY_LSHIFT);
 		if(b)
 		{
@@ -258,11 +264,11 @@ public class ItemIIFunctionalCircuit extends ItemIISubItemsBase<Circuits> implem
 					.map(this::getDisplayedType)
 					.toArray(TypeMetaInfo[]::new);
 
-			GlStateManager.color(1f, 1f, 1f, 1f);
-			for(int i = 0; i < types.length; i++)
+			for(TypeMetaInfo<?> type : types)
 			{
-				IIClientUtils.bindTexture(types[i].getTextureLocation());
-				Gui.drawModalRectWithCustomSizedTexture(0, i*20, 0, 0, 16, 16, 16, 16);
+				TextureAtlasSprite sprite = ClientUtils.getSprite(type.getTextureLocation());
+				draw.drawTexRect(0, 0, 16, 16, sprite.getMinU(), sprite.getMaxU(), sprite.getMinV(), sprite.getMaxV())
+						.addOffset(0, 20);
 			}
 		}
 
@@ -278,19 +284,20 @@ public class ItemIIFunctionalCircuit extends ItemIISubItemsBase<Circuits> implem
 					.map(this::getDisplayedType)
 					.toArray(TypeMetaInfo[]::new);
 
-			GlStateManager.color(1f, 1f, 1f, 1f);
 
 			// Check if offsetsY has enough elements for the secondary offset (b ? 1 : 0)
-			int off = 0;
-			if(offsetsY.size() > (b?1: 0))
-				off = offsetsY.get(b?1: 0)-offsetsY.get(0);
+			if(offsetsY.size() > 1)
+				draw.setOffset(0, (offsetsY.get(1)-offsetsY.get(0))*2f);
 
-			for(int i = 0; i < types.length; i++)
+			for(TypeMetaInfo<?> type : types)
 			{
-				IIClientUtils.bindTexture(types[i].getTextureLocation());
-				Gui.drawModalRectWithCustomSizedTexture(0, off+i*20, 0, 0, 16, 16, 16, 16);
+				TextureAtlasSprite sprite = ClientUtils.getSprite(type.getTextureLocation());
+				draw.drawTexRect(0, 0, 16, 16, sprite.getMinU(), sprite.getMaxU(), sprite.getMinV(), sprite.getMaxV())
+						.addOffset(0, 20);
 			}
 		}
+
+		draw.finish();
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -338,7 +345,7 @@ public class ItemIIFunctionalCircuit extends ItemIISubItemsBase<Circuits> implem
 	}
 
 	@Override
-	public void writeDataToItem(DataPacket packet, ItemStack stack)
+	public void writeDataToItem(ItemStack stack, DataPacket packet)
 	{
 		ItemNBTHelper.setTagCompound(stack, "operations", packet.serializeNBT());
 	}

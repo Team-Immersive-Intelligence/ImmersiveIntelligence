@@ -1,12 +1,17 @@
 package pl.pabilo8.immersiveintelligence.common;
 
+import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
+import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.common.ForgeModContainer;
 import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.UniversalBucket;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
@@ -19,6 +24,18 @@ import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseType;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoCore;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
+import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
+import pl.pabilo8.immersiveintelligence.api.data.operations.arithmetic.DataOperationAdd;
+import pl.pabilo8.immersiveintelligence.api.data.operations.arithmetic.DataOperationMultiply;
+import pl.pabilo8.immersiveintelligence.api.data.operations.fluidstack.DataOperationFluidGetAmount;
+import pl.pabilo8.immersiveintelligence.api.data.operations.fluidstack.DataOperationFluidGetID;
+import pl.pabilo8.immersiveintelligence.api.data.operations.itemstack.DataOperationItemStackGetCount;
+import pl.pabilo8.immersiveintelligence.api.data.operations.itemstack.DataOperationItemStackGetItemID;
+import pl.pabilo8.immersiveintelligence.api.data.operations.itemstack.DataOperationItemStackGetMeta;
+import pl.pabilo8.immersiveintelligence.api.data.operations.text.DataOperationStringLength;
+import pl.pabilo8.immersiveintelligence.api.data.operations.vector.DataOperationVectorLength;
+import pl.pabilo8.immersiveintelligence.api.data.types.*;
+import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 import pl.pabilo8.immersiveintelligence.client.gui.GuiWidgetAustralianTabs;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.BlockIIMetalDecoration.IIBlockTypes_MetalDecoration;
@@ -160,6 +177,12 @@ public class IICreativeTab extends CreativeTabs
 
 		switch(selectedCategory)
 		{
+			case ELECTRONICS:
+				tabNewLine(list);
+				addExamplePunchtapes(list);
+				tabNewLine(list);
+				addExampleCircuits(list);
+				break;
 			case WARFARE:
 				addExampleAmmo(list);
 				break;
@@ -174,6 +197,220 @@ public class IICreativeTab extends CreativeTabs
 				break;
 		}
 
+	}
+
+	private void addExamplePunchtapes(NonNullList<ItemStack> list)
+	{
+		ArrayList<String> propagandaMessages = new ArrayList<>();
+		propagandaMessages.add("Glory to Engineers Cause!");
+		propagandaMessages.add("Engineers Prevail!");
+		propagandaMessages.add("Engineers of All Addons - Unite!");
+		propagandaMessages.add("Steel is Certain.");
+		propagandaMessages.add("They build sailboats, we're building Battleships!");
+		propagandaMessages.add("Strong Industry - Our Key to Victory!");
+		propagandaMessages.add("Stronger Heart, Stronger Steel.");
+		propagandaMessages.add("Might through Science and Industry.");
+
+		//Example Data Packet
+		addPunchtape(list, "Example Punchtape", "Example Punchtape that has a few random value variables.",
+				new DataPacket()
+						.with('a', new DataTypeInteger(Math.round(Utils.RAND.nextFloat()*1000)))
+						.with('b', new DataTypeInteger(Math.round(Utils.RAND.nextFloat()*10)))
+						.with('d', new DataTypeBoolean(Utils.RAND.nextBoolean()))
+						.with('t', new DataTypeString(propagandaMessages.get(Math.round(Utils.RAND.nextFloat()*(propagandaMessages.size()-1)))))
+						.with('u', new DataTypeString("This is a non-random test string!"))
+						.with('r', new DataTypeArray(
+								new DataTypeInteger(5),
+								new DataTypeFloat(10),
+								new DataTypeInteger(25),
+								new DataTypeFloat(100)
+						))
+						.with('v', new DataTypeVector(new Vec3d(
+								Math.round(Utils.RAND.nextFloat()*100)-50,
+								Math.round(Utils.RAND.nextFloat()*100)-50,
+								Math.round(Utils.RAND.nextFloat()*100)-50
+						)))
+						.with('s', new DataTypeItemStack(
+								list.stream().filter(itemStack -> !itemStack.isEmpty()).findAny().orElse(
+										new ItemStack(IIContent.itemRifle)
+								)
+						))
+						.with('f', new DataTypeFluidStack(new FluidStack(
+								FluidRegistry.getBucketFluids().stream()
+										.skip((int)(Utils.RAND.nextFloat()*FluidRegistry.getBucketFluids().size()))
+										.findFirst().orElse(FluidRegistry.WATER),
+								Utils.RAND.nextInt(5000)
+						)))
+		);
+
+		//Artillery Howitzer
+		addPunchtape(list, "Artillery Howitzer - Fire", "Example Punchtape that makes the Artillery Howitzer fire at a random yaw and pitch.",
+				new DataPacket()
+						.with('c', new DataTypeString("fire"))
+						.with('y', new DataTypeFloat(Math.round(Utils.RAND.nextFloat()*360)-180))
+						.with('p', new DataTypeFloat(Math.round(Utils.RAND.nextFloat()*90)))
+		);
+		addPunchtape(list, "Artillery Howitzer - Aim", "Example Punchtape that makes the Artillery Howitzer aim at a specific yaw and pitch.",
+				new DataPacket()
+						.with('c', new DataTypeString("aim"))
+						.with('y', new DataTypeFloat(Math.round(Utils.RAND.nextFloat()*360)-180))
+						.with('p', new DataTypeFloat(Math.round(Utils.RAND.nextFloat()*90)))
+		);
+		addPunchtape(list, "Artillery Howitzer - Load", "Example Punchtape that makes the Artillery Howitzer load next shell from the ammunition conveyor.",
+				new DataPacket()
+						.with('c', new DataTypeString("load"))
+		);
+		addPunchtape(list, "Artillery Howitzer - Unload", "Example Punchtape that makes the Artillery Howitzer unload its current shell.",
+				new DataPacket()
+						.with('c', new DataTypeString("unload"))
+		);
+		addPunchtape(list, "Artillery Howitzer - Stop", "Example Punchtape that makes the Artillery Howitzer stop its current action.",
+				new DataPacket()
+						.with('c', new DataTypeString("stop"))
+		);
+
+		//Emplacement
+		addPunchtape(list, "Emplacement - Fire", "Example Punchtape that makes the Emplacement fire at a random yaw and pitch.",
+				new DataPacket()
+						.with('c', new DataTypeString("fire"))
+						.with('y', new DataTypeFloat(Math.round(Utils.RAND.nextFloat()*360)-180))
+						.with('p', new DataTypeFloat(Math.round(Utils.RAND.nextFloat()*90)))
+		);
+		addPunchtape(list, "Emplacement - Fire at XYZ Position", "Example Punchtape that makes the Emplacement fire at a specific XYZ position offset from its center.",
+				new DataPacket()
+						.with('c', new DataTypeString("fire"))
+						.with('x', new DataTypeFloat(Math.round(Utils.RAND.nextFloat()*100)-50))
+						.with('y', new DataTypeFloat(Math.round(Utils.RAND.nextFloat()*100)-50))
+						.with('z', new DataTypeFloat(Math.round(Utils.RAND.nextFloat()*100)-50))
+		);
+
+		addPunchtape(list, "Emplacement - Hide for Repairs", "Example Punchtape that makes the Emplacement hide for repairs.",
+				new DataPacket()
+						.with('c', new DataTypeString("hide"))
+		);
+		addPunchtape(list, "Emplacement - Show", "Example Punchtape that makes the Emplacement show itself.",
+				new DataPacket()
+						.with('c', new DataTypeString("show"))
+		);
+
+		//Inserter
+		int maxItems = Utils.RAND.nextInt(96), itemsPerTurn = Utils.RAND.nextInt(5)+1;
+		addPunchtape(list, "Inserter", String.format("Example Punchtape that makes the Inserter insert %s items from one inventory to another, grabbing %s per turn.",
+						maxItems, itemsPerTurn),
+				new DataPacket()
+						.with('c', new DataTypeString("add"))
+						.with('a', new DataTypeString("item"))
+						.with('e', new DataTypeInteger(maxItems))
+						.with('t', new DataTypeInteger(itemsPerTurn))
+		);
+
+		maxItems = Utils.RAND.nextInt(96);
+		itemsPerTurn = Utils.RAND.nextInt(5)+1;
+		addPunchtape(list, "Inserter - Clay Balls Only", "Example Punchtape that makes the Inserter insert only Clay Balls from one inventory to another, grabbing 1 per turn.",
+				new DataPacket()
+						.with('c', new DataTypeString("add"))
+						.with('a', new DataTypeString("item"))
+						.with('e', new DataTypeInteger(maxItems))
+						.with('t', new DataTypeInteger(itemsPerTurn))
+						.with('s', new DataTypeItemStack(new ItemStack(Items.CLAY_BALL)))
+		);
+
+		//Printing Press
+		addPunchtape(list, "Printing Press - Print Text", "Example Punchtape that makes the Printing Press print a random amount of pages filled with engineer propaganda.",
+				new DataPacket()
+						.with('m', new DataTypeString("text"))
+						.with('a', new DataTypeInteger(Math.round(Utils.RAND.nextFloat()*9)+1))
+						.with('t', new DataTypeString(propagandaMessages.get(Math.round(Utils.RAND.nextFloat()*(propagandaMessages.size()-1)))))
+		);
+
+		//Packer
+		addPunchtape(list, "Packer - Pack Items", "Example Punchtape that makes the Packer pack a random amount of items into a container.",
+				new DataPacket()
+						.with('c', new DataTypeString("add"))
+						.with('a', new DataTypeString("item"))
+						.with('m', new DataTypeString("amount"))
+						.with('e', new DataTypeInteger(Math.round(Utils.RAND.nextFloat()*10)+1))
+		);
+	}
+
+	private void addExampleCircuits(NonNullList<ItemStack> list)
+	{
+		//Add A and B
+		addFunctionalCircuit(list, "C=A+B Circuit", "Example Circuit that adds two numbers together.",
+				new DataPacket()
+						.with('c', new DataTypeExpression(new DataType[]{
+								new DataTypeAccessor('a'),
+								new DataTypeAccessor('b')
+						}, new DataOperationAdd(), ' '))
+		);
+
+		//Multiply A by B if D
+		addFunctionalCircuit(list, "IF D => K=A*B Circuit", "Example Circuit that multiplies two numbers together if variable D of type boolean equals true.",
+				new DataPacket()
+						.with('k', new DataTypeExpression(new DataType[]{
+								new DataTypeAccessor('a'),
+								new DataTypeAccessor('b')
+						}, new DataOperationMultiply(), 'd'))
+		);
+
+		//Character Count of String U
+		addFunctionalCircuit(list, "Character Count Circuit", "Example Circuit that counts the amount of characters in a string.",
+				new DataPacket()
+						.with('c', new DataTypeExpression(new DataType[]{
+								new DataTypeAccessor('u')
+						}, new DataOperationStringLength(), ' '))
+		);
+
+		//Length of Vector V
+		addFunctionalCircuit(list, "Vector Length Circuit", "Example Circuit that calculates the length of a vector.",
+				new DataPacket()
+						.with('c', new DataTypeExpression(new DataType[]{
+								new DataTypeAccessor('v')
+						}, new DataOperationVectorLength(), ' '))
+		);
+
+		//Count, ID and Damage of ItemStack S
+		addFunctionalCircuit(list, "ItemStack Properties Circuit", "Example Circuit that returns the count (A), ID (B) and damage/metadata (C) of an ItemStack.",
+				new DataPacket()
+						.with('a', new DataTypeExpression(new DataType[]{
+								new DataTypeAccessor('s')
+						}, new DataOperationItemStackGetCount(), ' '))
+						.with('b', new DataTypeExpression(new DataType[]{
+								new DataTypeAccessor('s')
+						}, new DataOperationItemStackGetItemID(), ' '))
+						.with('c', new DataTypeExpression(new DataType[]{
+								new DataTypeAccessor('s')
+						}, new DataOperationItemStackGetMeta(), ' '))
+		);
+
+		//Count and ID of FluidStack F
+		addFunctionalCircuit(list, "FluidStack Properties Circuit", "Example Circuit that returns the amount (A) and ID (B) of a FluidStack.",
+				new DataPacket()
+						.with('a', new DataTypeExpression(new DataType[]{
+								new DataTypeAccessor('f')
+						}, new DataOperationFluidGetAmount(), ' '))
+						.with('b', new DataTypeExpression(new DataType[]{
+								new DataTypeAccessor('f')
+						}, new DataOperationFluidGetID(), ' '))
+		);
+	}
+
+	private void addPunchtape(NonNullList<ItemStack> list, String name, String description, DataPacket packet)
+	{
+		ItemStack stack = IIContent.itemPunchtape.getStack(1);
+		stack.setStackDisplayName(name);
+		ItemNBTHelper.setLore(stack, description);
+		IIContent.itemPunchtape.writeDataToItem(stack, packet);
+		list.add(stack);
+	}
+
+	private void addFunctionalCircuit(NonNullList<ItemStack> list, String name, String description, DataPacket packet)
+	{
+		ItemStack stack = IIContent.itemCircuit.getStack(1);
+		stack.setStackDisplayName(name);
+		ItemNBTHelper.setLore(stack, description);
+		IIContent.itemCircuit.writeDataToItem(stack, packet);
+		list.add(stack);
 	}
 
 	public void addFluidBucket(Fluid fluid, NonNullList<ItemStack> list)

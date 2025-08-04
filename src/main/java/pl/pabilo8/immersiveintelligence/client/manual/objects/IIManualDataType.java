@@ -1,15 +1,16 @@
 package pl.pabilo8.immersiveintelligence.client.manual.objects;
 
+import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.I18n;
 import pl.pabilo8.immersiveintelligence.api.data.IIDataTypeUtils;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeNull;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
-import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualObject;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualPage;
+import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
@@ -59,12 +60,13 @@ public class IIManualDataType extends IIManualObject
 	{
 		super.drawButton(mc, mx, my, partialTicks);
 
-		GlStateManager.pushMatrix();
-		IIClientUtils.bindTexture(type.getTextureLocation());
+		ClientUtils.bindAtlas();
 		GlStateManager.color(1f, 1f, 1f, 1f);
-		GlStateManager.enableBlend();
-		Gui.drawModalRectWithCustomSizedTexture(x, y, 0, 0, width, height, 16, 16);
-		GlStateManager.popMatrix();
+		TextureAtlasSprite typeTexture = ClientUtils.getSprite(type.getTextureLocation());
+		IIDrawUtils.startTextured()
+				.drawTexRect(x, y, width, height,
+						typeTexture.getMinU(), typeTexture.getMaxU(), typeTexture.getMinV(), typeTexture.getMaxV())
+				.finish();
 
 	}
 

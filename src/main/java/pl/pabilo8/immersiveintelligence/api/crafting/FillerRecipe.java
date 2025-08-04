@@ -59,12 +59,6 @@ public class FillerRecipe extends IIMultiblockRecipe
 		return casingStack;
 	}
 
-	@Override
-	public int getMultipleProcessTicks()
-	{
-		return 0;
-	}
-
 	public DustStack getDust()
 	{
 		return this.dust;

@@ -1,8 +1,9 @@
 package pl.pabilo8.immersiveintelligence.client.manual.objects;
 
+import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
@@ -12,12 +13,11 @@ import pl.pabilo8.immersiveintelligence.api.data.IDataMachineGui;
 import pl.pabilo8.immersiveintelligence.api.data.IIDataTypeUtils;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeNull;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
-import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualObject;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualPage;
+import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
-import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import javax.annotation.Nonnull;
@@ -30,13 +30,8 @@ import java.util.stream.Collectors;
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 02.11.2022
  */
-//TODO: 07.08.2023 clickable links
 public class IIManualDataVariable extends IIManualObject
 {
-	private final static ResLoc TEXTURE_IN = ResLoc.of(IIReference.RES_TEXTURES_MANUAL, "data/input").withExtension(ResLoc.EXT_PNG);
-	private final static ResLoc TEXTURE_OUT = ResLoc.of(IIReference.RES_TEXTURES_MANUAL, "data/output").withExtension(ResLoc.EXT_PNG);
-	private final static ResLoc TEXTURE_EVENT = ResLoc.of(IIReference.RES_TEXTURES_MANUAL, "data/event").withExtension(ResLoc.EXT_PNG);
-
 	@Nonnull
 	DataType type = new DataTypeNull();
 	/**
@@ -126,15 +121,16 @@ public class IIManualDataVariable extends IIManualObject
 	{
 		super.drawButton(mc, mx, my, partialTicks);
 
-		GlStateManager.pushMatrix();
-		IIClientUtils.bindTexture(type.getTextureLocation());
+		ClientUtils.bindAtlas();
 		GlStateManager.color(1f, 1f, 1f, 1f);
-		GlStateManager.enableBlend();
-		Gui.drawModalRectWithCustomSizedTexture(x, y, 0, 0, 16, 16, 16, 16);
-
-		IIClientUtils.bindTexture(inputVariable?TEXTURE_IN: TEXTURE_OUT);
-		Gui.drawModalRectWithCustomSizedTexture(x-3, y, 0, 0, 16, 16, 16, 16);
-		GlStateManager.popMatrix();
+		TextureAtlasSprite typeTexture = ClientUtils.getSprite(type.getTextureLocation());
+		TextureAtlasSprite contextTexture = ClientUtils.getSprite(inputVariable?IIReference.RES_CONTEXT_DATA_IN: IIReference.RES_CONTEXT_DATA_OUT);
+		IIDrawUtils.startTextured()
+				.drawTexRect(x, y, 16, 16,
+						typeTexture.getMinU(), typeTexture.getMaxU(), typeTexture.getMinV(), typeTexture.getMaxV())
+				.drawTexRect(x-3, y, 16, 16,
+						contextTexture.getMinU(), contextTexture.getMaxU(), contextTexture.getMinV(), contextTexture.getMaxV())
+				.finish();
 
 		boolean unicodeFlag = manual.fontRenderer.getUnicodeFlag();
 		manual.fontRenderer.setUnicodeFlag(true);

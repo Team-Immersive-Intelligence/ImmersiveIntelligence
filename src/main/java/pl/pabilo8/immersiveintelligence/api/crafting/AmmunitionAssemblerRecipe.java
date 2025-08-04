@@ -53,10 +53,4 @@ public class AmmunitionAssemblerRecipe extends IIMultiblockRecipe
 			return NonNullList.from(ItemStack.EMPTY, process.apply(((TileEntityAmmunitionAssembler)te).inventory.get(0), ((TileEntityAmmunitionAssembler)te).inventory.get(1).copy()));
 		return NonNullList.from(ItemStack.EMPTY);
 	}
-
-	@Override
-	public int getMultipleProcessTicks()
-	{
-		return 0;
-	}
 }

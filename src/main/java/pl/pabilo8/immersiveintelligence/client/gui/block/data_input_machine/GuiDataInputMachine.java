@@ -6,6 +6,7 @@ import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.DataVariable;
 import pl.pabilo8.immersiveintelligence.api.data.IDataMachineGui;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeNull;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType.TypeMetaInfo;
 import pl.pabilo8.immersiveintelligence.client.gui.ITabbedGui;
@@ -59,12 +60,12 @@ public class GuiDataInputMachine extends DecoGui<TileEntityDataInputMachine, Con
 	protected DecoList<DataVariable> list;
 
 	@SyncNBT
-	protected boolean soundPlayed;
+	public boolean soundPlayed;
 	@SyncNBT
-	int scroll;
+	public int scroll;
 
 	@SyncNBT
-	public DataVariable variableToEdit;
+	public DataVariable variableToEdit = new DataVariable('a', new DataTypeNull());
 
 	public GuiDataInputMachine(EntityPlayer player, TileEntityDataInputMachine tile, IIGUI gui)
 	{
@@ -199,7 +200,7 @@ public class GuiDataInputMachine extends DecoGui<TileEntityDataInputMachine, Con
 												.withTextColor(typeMeta.color.withBrightness(0.4f));
 										//type icon
 										panel.component("image", DecoImage.class)
-												.withImageLocation(entry.getValue().getTextureLocation());
+												.withImageLocation(entry.getValue().getTextureLocation(), true);
 									})
 							)
 							.withScroll(scroll)

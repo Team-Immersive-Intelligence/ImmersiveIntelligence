@@ -31,12 +31,6 @@ public class DataProgrammingRecipe extends IIMultiblockRecipe
 		);
 	}
 
-	@Override
-	public int getMultipleProcessTicks()
-	{
-		return 0;
-	}
-
 	public interface DataProgrammingFunction
 	{
 		ItemStack apply(ItemStack itemInput, DataPacket dataInput, Consumer<DataPacket> saveOperation);

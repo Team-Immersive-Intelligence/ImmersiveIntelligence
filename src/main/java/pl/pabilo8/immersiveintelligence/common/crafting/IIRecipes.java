@@ -211,7 +211,7 @@ public class IIRecipes
 		new DataProgrammingRecipe(new IngredientStack("punchtapeEmpty"), false,
 				(stack, dataIn, machineStorage) -> {
 					ItemStack output = new ItemStack(IIContent.itemPunchtape, 1, 0);
-					((ItemIIPunchtape)output.getItem()).writeDataToItem(dataIn, output);
+					((ItemIIPunchtape)output.getItem()).writeDataToItem(output, dataIn);
 					return output;
 				});
 

@@ -40,10 +40,4 @@ public class ElectrolyzerRecipe extends IIMultiblockRecipe
 		this.fluidInputList = Collections.singletonList(this.fluidInput);
 		this.fluidOutputList = Arrays.asList(fluidOutputs);
 	}
-
-	@Override
-	public int getMultipleProcessTicks()
-	{
-		return 0;
-	}
 }

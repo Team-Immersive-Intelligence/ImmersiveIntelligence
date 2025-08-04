@@ -210,8 +210,6 @@ public abstract class TileEntityMultiblockProductionBase<T extends TileEntityMul
 
 		int getTotalProcessEnergy();
 
-		int getMultipleProcessTicks();
-
 		String getName();
 	}
 

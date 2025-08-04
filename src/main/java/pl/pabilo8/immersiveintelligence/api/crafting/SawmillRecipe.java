@@ -85,12 +85,6 @@ public class SawmillRecipe extends IIMultiblockRecipe implements RotaryMachineRe
 		toolMap.putIfAbsent(name, blade);
 	}
 
-	@Override
-	public int getMultipleProcessTicks()
-	{
-		return 0;
-	}
-
 	public int getTorque()
 	{
 		return torque;

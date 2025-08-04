@@ -3,6 +3,7 @@ package pl.pabilo8.immersiveintelligence.api.crafting;
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.PrintingPress;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.IIMultiblockRecipe;
 
 /**
@@ -22,15 +23,10 @@ public class PrintingRecipe extends IIMultiblockRecipe
 	public PrintingRecipe(IngredientStack input, String categoryName, PrintFunction function)
 	{
 		super(categoryName, input);
+		this.setTimeAndEnergy(PrintingPress.printTime, PrintingPress.energyUsage);
 		this.input = input;
 		this.categoryName = categoryName;
 		this.function = function;
-	}
-
-	@Override
-	public int getMultipleProcessTicks()
-	{
-		return 0;
 	}
 
 	public IngredientStack getInput()

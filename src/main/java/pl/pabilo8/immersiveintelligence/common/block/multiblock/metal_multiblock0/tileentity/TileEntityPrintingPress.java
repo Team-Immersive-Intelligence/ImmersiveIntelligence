@@ -37,6 +37,7 @@ import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.lambda.NBTTagCollector;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionBase;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionMulti;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
@@ -191,7 +192,7 @@ public class TileEntityPrintingPress extends TileEntityMultiblockProductionMulti
 
 			String printingMode = IIDataHandlingUtils.asString('m', packet);
 			PrintingRecipe.streamRecipes(PrintingRecipe.class)
-					.filter(recipe -> recipe.getInput().matchesItemStackIgnoringSize(inventory.get(SLOT_PAPER)))
+					.filter(recipe -> recipe.getInput().matchesItemStack(inventory.get(SLOT_PAPER)))
 					.filter(recipe -> recipe.getCategoryName().equals(printingMode))
 					.findFirst()
 					.ifPresent(printingRecipe -> {
@@ -277,7 +278,7 @@ public class TileEntityPrintingPress extends TileEntityMultiblockProductionMulti
 	@Override
 	protected IIMultiblockProcess<PrintingRecipe> getProcessByName(String name)
 	{
-		return null;
+		return TileEntityMultiblockProductionBase.findRecipeFromList(PrintingRecipe.class, PrintingProcess::new, name);
 	}
 
 	@Override
@@ -296,7 +297,7 @@ public class TileEntityPrintingPress extends TileEntityMultiblockProductionMulti
 		assert process instanceof PrintingProcess;
 		PrintingProcess printingProcess = (PrintingProcess)process;
 
-		outputOrDrop(printingProcess.result, outputHandler, facing, getPOI("output"));
+		outputOrDrop(printingProcess.result.copy(), outputHandler, facing, getPOI("output"));
 		return true;
 	}
 
@@ -451,6 +452,11 @@ public class TileEntityPrintingPress extends TileEntityMultiblockProductionMulti
 	{
 		int blackCost, cyanCost, magentaCost, yellowCost;
 		ItemStack result;
+
+		public PrintingProcess(PrintingRecipe recipe)
+		{
+			super(recipe);
+		}
 
 		public PrintingProcess(PrintingRecipe recipe, DataPacket packet, ItemStack input)
 		{

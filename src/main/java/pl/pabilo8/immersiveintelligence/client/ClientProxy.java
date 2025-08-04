@@ -55,6 +55,8 @@ import pl.pabilo8.immersiveintelligence.api.ShrapnelHandler;
 import pl.pabilo8.immersiveintelligence.api.ShrapnelHandler.Shrapnel;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
+import pl.pabilo8.immersiveintelligence.api.data.IIDataTypeUtils;
+import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType.TypeMetaInfo;
 import pl.pabilo8.immersiveintelligence.api.utils.IUpgradableMachine;
 import pl.pabilo8.immersiveintelligence.client.fx.IIParticles;
 import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleRegistry;
@@ -586,6 +588,15 @@ public class ClientProxy extends CommonProxy
 		ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":blocks/metal_device/inserter/tool_red");
 		ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":blocks/metal_device/inserter/tool_dim");
 		ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":blocks/metal_device/inserter/tool_gray");
+
+		//Data Types
+		IIDataTypeUtils.metaTypesByClass.values().stream()
+				.map(TypeMetaInfo::getTextureLocation)
+				.forEach(res -> ApiUtils.getRegisterSprite(event.getMap(), res));
+		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_CONTEXT_DATA_IN);
+		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_CONTEXT_DATA_OUT);
+		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_CONTEXT_DATA_CALLBACK);
+		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_CONTEXT_DATA_EVENT);
 
 		//GUIs
 		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_TEMPLATE_ROUND);

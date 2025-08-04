@@ -75,7 +75,7 @@ public abstract class TileEntityMultiblockProductionMulti<T extends TileEntityMu
 		//Add new process to the queue
 		int processes = processQueue.size();
 		int maxProcesses = getMaxProductionQueue();
-		if(processes <= maxProcesses)
+		if(!world.isRemote&&processes < maxProcesses)
 		{
 			boolean canAdd = true;
 			if(maxProcesses > 1&&processes > 0)

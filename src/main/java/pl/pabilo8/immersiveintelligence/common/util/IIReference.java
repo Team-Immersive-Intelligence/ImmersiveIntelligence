@@ -103,6 +103,11 @@ public class IIReference
 	@Deprecated
 	public static final String SKIN_LOCATION = "immersiveintelligence:textures/skins/";
 
+	public static final ResLoc RES_CONTEXT_DATA_CALLBACK = ResLoc.of(IIReference.RES_II, "gui/data_types/context/callback");
+	public static final ResLoc RES_CONTEXT_DATA_IN = ResLoc.of(IIReference.RES_II, "gui/data_types/context/input");
+	public static final ResLoc RES_CONTEXT_DATA_OUT = ResLoc.of(IIReference.RES_II, "gui/data_types/context/output");
+	public static final ResLoc RES_CONTEXT_DATA_EVENT = ResLoc.of(IIReference.RES_II, "gui/data_types/context/event");
+
 	//Deco Base
 	public static final ResLoc RES_TEXTURES_DECO = ResLoc.of(RES_II, "gui/deco/");
 	public static final ResLoc RES_TEXTURES_DECO_BACKGROUND = ResLoc.of(RES_TEXTURES_DECO, "background/");

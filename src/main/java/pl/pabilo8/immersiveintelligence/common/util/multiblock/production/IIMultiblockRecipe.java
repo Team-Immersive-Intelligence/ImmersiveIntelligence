@@ -109,6 +109,13 @@ public abstract class IIMultiblockRecipe extends MultiblockRecipe implements III
 	}
 
 	@Override
+	@Deprecated
+	public final int getMultipleProcessTicks()
+	{
+		return 0;
+	}
+
+	@Override
 	public String getName()
 	{
 		return name;
