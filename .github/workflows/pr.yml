@@ -11,6 +11,7 @@ permissions:
   pull-requests: write
 
 jobs:
+
   assign-reviewer:
     runs-on: ubuntu-latest
     name: Request Review
@@ -20,6 +21,13 @@ jobs:
         with:
           reviewers: Pabilo8, Avalon2106
           token: ${{ secrets.GITHUB_TOKEN }}
+
+  editorconfig:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: editorconfig-checker/action-editorconfig-checker@main
+      - run: editorconfig-checker
 
   check:
     runs-on: ubuntu-latest
