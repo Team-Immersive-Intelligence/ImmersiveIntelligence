@@ -27,7 +27,7 @@ while getopts "ia" arg; do
     case $arg in
         i)
             echo "Processing images..."
-            for f in $(find ./src/main/resources/assets/*/textures -name '*.png'); do ./gradle/tools/oxipng $f --zc 9 -f 0-5 --nc --strip all; done
+            for f in $(find ./src/main/resources/assets/*/textures -name '*.png'); do chmod 644 "$f"; ./gradle/tools/oxipng "$f" --zc 9 -f 0-5 --nc --strip all; done
             ;;
         a)
             echo "Processing audio..."
