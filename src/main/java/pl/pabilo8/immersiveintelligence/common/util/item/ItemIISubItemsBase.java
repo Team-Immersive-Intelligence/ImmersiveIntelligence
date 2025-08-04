@@ -114,6 +114,12 @@ public class ItemIISubItemsBase<E extends Enum<E> & IIItemEnum> extends ItemIIBa
 		}
 	}
 
+	@Nonnull
+	public E[] getSortedSubItems()
+	{
+		return sortedSubItems==null?subItems: sortedSubItems;
+	}
+
 	@SafeVarargs
 	protected final void setSortedSubItems(E... subItems)
 	{
@@ -124,13 +130,6 @@ public class ItemIISubItemsBase<E extends Enum<E> & IIItemEnum> extends ItemIIBa
 		}
 		this.sortedSubItems = subItems;
 	}
-
-	@Nonnull
-	public E[] getSortedSubItems()
-	{
-		return sortedSubItems==null?subItems: sortedSubItems;
-	}
-
 
 	/**
 	 * Returns the unlocalized name of this item. This version accepts an ItemStack so different stacks can have different

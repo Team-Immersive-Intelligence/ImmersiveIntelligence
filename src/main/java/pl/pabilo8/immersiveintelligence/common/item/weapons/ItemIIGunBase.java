@@ -646,16 +646,16 @@ public abstract class ItemIIGunBase extends ItemIIUpgradableTool implements ISki
 		return getAmmoHandler(stack).getAmmoList(stack);
 	}
 
+	@SideOnly(Side.CLIENT)
+	public IIUpgradableItemRendererAMT<?> getItemRenderer()
+	{
+		return ((IIUpgradableItemRendererAMT<?>)getTileEntityItemStackRenderer());
+	}
+
 	public enum FireModeType
 	{
 		AUTOMATIC,
 		SINGULAR,
 		SINGULAR_CHARGED
-	}
-
-	@SideOnly(Side.CLIENT)
-	public IIUpgradableItemRendererAMT<?> getItemRenderer()
-	{
-		return ((IIUpgradableItemRendererAMT<?>)getTileEntityItemStackRenderer());
 	}
 }

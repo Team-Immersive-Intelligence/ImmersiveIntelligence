@@ -15,8 +15,8 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
  */
 public class IIDataWireType extends WireType
 {
-	public static IIDataWireType DATA;
 	public static final String DATA_CATEGORY = "DATA";
+	public static IIDataWireType DATA;
 
 	public IIDataWireType()
 	{

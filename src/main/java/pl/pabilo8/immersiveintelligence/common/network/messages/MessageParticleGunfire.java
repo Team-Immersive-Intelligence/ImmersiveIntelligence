@@ -18,12 +18,11 @@ import pl.pabilo8.immersiveintelligence.common.network.IIMessage;
  */
 public class MessageParticleGunfire extends IIMessage
 {
-	private boolean usesEntity;
-	private int entityID;
-
 	public Vec3d pos;
 	public Vec3d dir;
 	public float size;
+	private boolean usesEntity;
+	private int entityID;
 
 	/**
 	 * @param pos  of the shooter

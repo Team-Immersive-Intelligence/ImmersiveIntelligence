@@ -59,37 +59,6 @@ public class ItemIIBulletMagazine extends ItemIISubItemsBase<Magazines> implemen
 		super("bullet_magazine", 1, Magazines.values());
 	}
 
-
-	@GeneratedItemModels(itemName = "bullet_magazine", type = ItemModelType.ITEM_SIMPLE_AUTOREPLACED)
-	public enum Magazines implements IIItemEnum
-	{
-		MACHINEGUN(48, IIContent.itemAmmoMachinegun),
-		SUBMACHINEGUN(24, IIContent.itemAmmoSubmachinegun, true),
-		RIFLE(12, IIContent.itemAmmoMachinegun),
-		SUBMACHINEGUN_DRUM(64, IIContent.itemAmmoSubmachinegun),
-		ASSAULT_RIFLE(32, IIContent.itemAmmoAssaultRifle, true),
-		AUTOCANNON(16, IIContent.itemAmmoAutocannon),
-		CPDS_DRUM(128, IIContent.itemAmmoMachinegun),
-		@IIItemProperties(hidden = true)
-		AUTOMATIC_REVOLVER(16, IIContent.itemAmmoRevolver);
-
-		public final int capacity;
-		public final IAmmoTypeItem<?, ?> ammo;
-		public final boolean hasDisplayTexture;
-
-		Magazines(int capacity, IAmmoTypeItem<?, ?> ammo)
-		{
-			this(capacity, ammo, false);
-		}
-
-		Magazines(int capacity, IAmmoTypeItem<?, ?> ammo, boolean hasDisplayTexture)
-		{
-			this.capacity = capacity;
-			this.ammo = ammo;
-			this.hasDisplayTexture = hasDisplayTexture;
-		}
-	}
-
 	public void defaultize(ItemStack stack)
 	{
 		if(!ItemNBTHelper.hasKey(stack, "bullets"))
@@ -133,7 +102,6 @@ public class ItemIIBulletMagazine extends ItemIISubItemsBase<Magazines> implemen
 			}
 	}
 
-
 	@SideOnly(Side.CLIENT)
 	@Override
 	@ParametersAreNonnullByDefault
@@ -164,13 +132,13 @@ public class ItemIIBulletMagazine extends ItemIISubItemsBase<Magazines> implemen
 					ItemNBTHelper.getTagCompound(stack, "bullets").getTagList("dictionary", 10));
 	}
 
-	//--- ITextureOverride ---//
-
 	@Override
 	public String getModelCacheKey(ItemStack stack)
 	{
 		return stackToSub(stack).getName()+"_"+checkBullets(stack)+"_"+checkColors(stack);
 	}
+
+	//--- ITextureOverride ---//
 
 	@Override
 	@SideOnly(Side.CLIENT)
@@ -197,7 +165,6 @@ public class ItemIIBulletMagazine extends ItemIISubItemsBase<Magazines> implemen
 
 		return l;
 	}
-
 
 	@SideOnly(Side.CLIENT)
 	@Override
@@ -245,14 +212,14 @@ public class ItemIIBulletMagazine extends ItemIISubItemsBase<Magazines> implemen
 		return ss.toString();
 	}
 
-	//--- IColouredItem ---//
-
 	@Override
 	@SideOnly(Side.CLIENT)
 	public boolean hasCustomItemColours()
 	{
 		return true;
 	}
+
+	//--- IColouredItem ---//
 
 	@Override
 	@SideOnly(Side.CLIENT)
@@ -278,8 +245,6 @@ public class ItemIIBulletMagazine extends ItemIISubItemsBase<Magazines> implemen
 		NBTTagCompound nbt = ItemNBTHelper.getTagCompound(stack, "bullets");
 		return nbt.getTagList("inventory", NBT.TAG_INT).tagCount();
 	}
-
-	//--- Inventory Storage ---//
 
 	/**
 	 * Slower, but allows storing more of nbt-rich bullets
@@ -311,6 +276,8 @@ public class ItemIIBulletMagazine extends ItemIISubItemsBase<Magazines> implemen
 		}
 		return inv;
 	}
+
+	//--- Inventory Storage ---//
 
 	/**
 	 * Slower, but more efficient in case of magazines filled with nbt-rich bullets
@@ -360,7 +327,6 @@ public class ItemIIBulletMagazine extends ItemIISubItemsBase<Magazines> implemen
 		return bullets;
 	}
 
-
 	public ItemStack takeBullet(ItemStack stack, boolean doTake)
 	{
 		NonNullList<ItemStack> bullets = readInventory(stack);
@@ -396,5 +362,35 @@ public class ItemIIBulletMagazine extends ItemIISubItemsBase<Magazines> implemen
 		//apply colors, etc.
 		defaultize(stack);
 		return stack;
+	}
+
+	@GeneratedItemModels(itemName = "bullet_magazine", type = ItemModelType.ITEM_SIMPLE_AUTOREPLACED)
+	public enum Magazines implements IIItemEnum
+	{
+		MACHINEGUN(48, IIContent.itemAmmoMachinegun),
+		SUBMACHINEGUN(24, IIContent.itemAmmoSubmachinegun, true),
+		RIFLE(12, IIContent.itemAmmoMachinegun),
+		SUBMACHINEGUN_DRUM(64, IIContent.itemAmmoSubmachinegun),
+		ASSAULT_RIFLE(32, IIContent.itemAmmoAssaultRifle, true),
+		AUTOCANNON(16, IIContent.itemAmmoAutocannon),
+		CPDS_DRUM(128, IIContent.itemAmmoMachinegun),
+		@IIItemProperties(hidden = true)
+		AUTOMATIC_REVOLVER(16, IIContent.itemAmmoRevolver);
+
+		public final int capacity;
+		public final IAmmoTypeItem<?, ?> ammo;
+		public final boolean hasDisplayTexture;
+
+		Magazines(int capacity, IAmmoTypeItem<?, ?> ammo)
+		{
+			this(capacity, ammo, false);
+		}
+
+		Magazines(int capacity, IAmmoTypeItem<?, ?> ammo, boolean hasDisplayTexture)
+		{
+			this.capacity = capacity;
+			this.ammo = ammo;
+			this.hasDisplayTexture = hasDisplayTexture;
+		}
 	}
 }

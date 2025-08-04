@@ -39,7 +39,7 @@ public class ParticleSystem
 
 	//--- Constants ---//
 	public static final ResourceLocation PARTICLE_TEXTURES = new ResourceLocation("textures/particle/particles.png");
-
+	private final Int2ObjectOpenHashMap<List<AbstractParticle>> scheduledParticles = new Int2ObjectOpenHashMap<>();
 	//--- Fields ---//
 	private int particleAmount = 0;
 	private final Map<ParticleDrawStages, Queue<AbstractParticle>> particles = new HashMap<ParticleDrawStages, Queue<AbstractParticle>>()
@@ -51,9 +51,25 @@ public class ParticleSystem
 			particleAmount = 0;
 		}
 	};
-	private final Int2ObjectOpenHashMap<List<AbstractParticle>> scheduledParticles = new Int2ObjectOpenHashMap<>();
 
 	//--- Update and Rendering ---//
+
+	/**
+	 * Updates static fields of the particle system used for rendering
+	 *
+	 * @param partialTicks partial render ticks
+	 * @param player       player entity
+	 */
+	private static void updateParticleFields(float partialTicks, EntityPlayer player)
+	{
+		AbstractParticle.interpTicks = partialTicks;
+		AbstractParticle.interPos = new Vec3d(
+				player.lastTickPosX+(player.posX-player.lastTickPosX)*partialTicks,
+				player.lastTickPosY+(player.posY-player.lastTickPosY)*partialTicks,
+				player.lastTickPosZ+(player.posZ-player.lastTickPosZ)*partialTicks
+		);
+		AbstractParticle.cameraViewDir = player.getLook(partialTicks);
+	}
 
 	/**
 	 * Updates all particles in the system.<br>
@@ -183,23 +199,6 @@ public class ParticleSystem
 			GlStateManager.popMatrix();
 		}
 
-	}
-
-	/**
-	 * Updates static fields of the particle system used for rendering
-	 *
-	 * @param partialTicks partial render ticks
-	 * @param player       player entity
-	 */
-	private static void updateParticleFields(float partialTicks, EntityPlayer player)
-	{
-		AbstractParticle.interpTicks = partialTicks;
-		AbstractParticle.interPos = new Vec3d(
-				player.lastTickPosX+(player.posX-player.lastTickPosX)*partialTicks,
-				player.lastTickPosY+(player.posY-player.lastTickPosY)*partialTicks,
-				player.lastTickPosZ+(player.posZ-player.lastTickPosZ)*partialTicks
-		);
-		AbstractParticle.cameraViewDir = player.getLook(partialTicks);
 	}
 
 	//--- External ---//

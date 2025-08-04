@@ -164,13 +164,13 @@ public class IIManualCategoryData extends IIManualCategory
 		addEntry("radio_station")
 				.addSource("basic_radio_tuner", getSourceForItem(IIContent.itemRadioTuner.getStack(1)))
 				.addSource("advanced_radio_tuner", getSourceForItem(new ItemStack(IIContent.itemRadioTuner, 1, 1)
-		));
+				));
 		addEntry("printing_press");
 		addEntry("scanning_conveyor");
 		addEntry("programmable_speaker")
 				.addSource("programmable_spkr", getSourceForItem(IIContent.blockDataConnector.getStack(IIBlockTypes_Connector.PROGRAMMABLE_SPEAKER)
-		));
-		
+				));
+
 		addEntry("precision_assembler")
 				.addSource("assembly_scheme", getSourceForItem(IIContent.itemAssemblyScheme.getStack(1)))
 				.addSource("precision_tools", getSourceForItems(

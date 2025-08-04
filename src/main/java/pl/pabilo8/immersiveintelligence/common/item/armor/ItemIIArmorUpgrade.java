@@ -41,6 +41,43 @@ public class ItemIIArmorUpgrade extends ItemIISubItemsBase<ArmorUpgrades> implem
 		super("armor_upgrade", 1, ArmorUpgrades.values());
 	}
 
+	@Override
+	public void addInformation(@Nonnull ItemStack stack, @Nullable World world, @Nonnull List<String> list, @Nonnull ITooltipFlag flag)
+	{
+		ArmorUpgrades sub = stackToSub(stack);
+		//add valid weapon types
+		for(ArmorTypes type : sub.toolset)
+			list.add(type.color.getHexCol(type.symbol+" "+I18n.format(IIReference.DESC_TOOLUPGRADE+"item."+type.getName())));
+
+		//add description
+		String[] flavour = ImmersiveEngineering.proxy.splitStringOnWidth(
+				I18n.format(IIReference.DESC_TOOLUPGRADE+sub.getName()), 200);
+		Arrays.stream(flavour).map(IIStringUtil::getItalicString).forEach(list::add);
+	}
+
+	@Override
+	public Set<String> getUpgradeTypes(ItemStack stack)
+	{
+		return stackToSub(stack).toolset.stream()
+				.map(ISerializableEnum::getName)
+				.map(String::toUpperCase)
+				.collect(Collectors.toSet());
+	}
+
+	@Override
+	public boolean canApplyUpgrades(ItemStack target, ItemStack upgrade)
+	{
+		if(target.getItem() instanceof IUpgradeableTool)
+			return stackToSub(upgrade).check.test(target, upgrade);
+		return false;
+	}
+
+	@Override
+	public void applyUpgrades(ItemStack target, ItemStack upgrade, NBTTagCompound modifications)
+	{
+		stackToSub(upgrade).function.accept(upgrade, modifications);
+	}
+
 	/**
 	 * Describes armors and their types
 	 */
@@ -184,42 +221,5 @@ public class ItemIIArmorUpgrade extends ItemIISubItemsBase<ArmorUpgrades> implem
 				return true;
 			};
 		}
-	}
-
-	@Override
-	public void addInformation(@Nonnull ItemStack stack, @Nullable World world, @Nonnull List<String> list, @Nonnull ITooltipFlag flag)
-	{
-		ArmorUpgrades sub = stackToSub(stack);
-		//add valid weapon types
-		for(ArmorTypes type : sub.toolset)
-			list.add(type.color.getHexCol(type.symbol+" "+I18n.format(IIReference.DESC_TOOLUPGRADE+"item."+type.getName())));
-
-		//add description
-		String[] flavour = ImmersiveEngineering.proxy.splitStringOnWidth(
-				I18n.format(IIReference.DESC_TOOLUPGRADE+sub.getName()), 200);
-		Arrays.stream(flavour).map(IIStringUtil::getItalicString).forEach(list::add);
-	}
-
-	@Override
-	public Set<String> getUpgradeTypes(ItemStack stack)
-	{
-		return stackToSub(stack).toolset.stream()
-				.map(ISerializableEnum::getName)
-				.map(String::toUpperCase)
-				.collect(Collectors.toSet());
-	}
-
-	@Override
-	public boolean canApplyUpgrades(ItemStack target, ItemStack upgrade)
-	{
-		if(target.getItem() instanceof IUpgradeableTool)
-			return stackToSub(upgrade).check.test(target, upgrade);
-		return false;
-	}
-
-	@Override
-	public void applyUpgrades(ItemStack target, ItemStack upgrade, NBTTagCompound modifications)
-	{
-		stackToSub(upgrade).function.accept(upgrade, modifications);
 	}
 }

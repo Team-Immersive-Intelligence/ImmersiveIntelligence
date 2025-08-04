@@ -42,26 +42,6 @@ public class ItemIIPrecisionTool extends ItemIISubItemsBase<PrecisionTools> impl
 			PrecisionAssemblerRecipe.registerToolType(e.getName(), this);
 	}
 
-	@GeneratedItemModels(itemName = "precission_tool", texturePath = "precision_tool")
-	public enum PrecisionTools implements IIItemEnum
-	{
-		BUZZSAW(Tools.precisionToolBuzzsawDurability, Tools.precisionToolBuzzsawUsageTime),
-		DRILL(Tools.precisionToolDrillDurability, Tools.precisionToolDrillUsageTime),
-		INSERTER(Tools.precisionToolInserterDurability, Tools.precisionToolInserterUsageTime),
-		SOLDERER(Tools.precisionToolSoldererDurability, Tools.precisionToolSoldererUsageTime),
-		WELDER(Tools.precisionToolWelderDurability, Tools.precisionToolWelderUsageTime),
-		HAMMER(Tools.precisionToolHammerDurability, Tools.precisionToolHammerUsageTime);
-
-		private final int durability;
-		private final int usageTime;
-
-		PrecisionTools(int durability, int usageTime)
-		{
-			this.durability = durability;
-			this.usageTime = usageTime;
-		}
-	}
-
 	@Override
 	@ParametersAreNonnullByDefault
 	public void onCreated(ItemStack stack, World worldIn, EntityPlayer playerIn)
@@ -159,6 +139,26 @@ public class ItemIIPrecisionTool extends ItemIISubItemsBase<PrecisionTools> impl
 			case HAMMER:
 				PrecisionAssemblerRenderer.modelHammer.renderProgress(progress, angle, maxProgress);
 				break;
+		}
+	}
+
+	@GeneratedItemModels(itemName = "precission_tool", texturePath = "precision_tool")
+	public enum PrecisionTools implements IIItemEnum
+	{
+		BUZZSAW(Tools.precisionToolBuzzsawDurability, Tools.precisionToolBuzzsawUsageTime),
+		DRILL(Tools.precisionToolDrillDurability, Tools.precisionToolDrillUsageTime),
+		INSERTER(Tools.precisionToolInserterDurability, Tools.precisionToolInserterUsageTime),
+		SOLDERER(Tools.precisionToolSoldererDurability, Tools.precisionToolSoldererUsageTime),
+		WELDER(Tools.precisionToolWelderDurability, Tools.precisionToolWelderUsageTime),
+		HAMMER(Tools.precisionToolHammerDurability, Tools.precisionToolHammerUsageTime);
+
+		private final int durability;
+		private final int usageTime;
+
+		PrecisionTools(int durability, int usageTime)
+		{
+			this.durability = durability;
+			this.usageTime = usageTime;
 		}
 	}
 }

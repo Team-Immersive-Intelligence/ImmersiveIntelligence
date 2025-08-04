@@ -56,16 +56,13 @@ public class GuiDataInputMachine extends DecoGui<TileEntityDataInputMachine, Con
 	public static ResourceLocation ICON_SEND_PACKET = ResLoc.of(IIReference.RES_II, "gui/tab_icons/send_packet");
 	@DecoResource
 	public static ResourceLocation PROGRESS_IMAGE = ResLoc.of(IIReference.RES_II, "gui/data_input_machine");
-
-	protected DecoList<DataVariable> list;
-
 	@SyncNBT
 	public boolean soundPlayed;
 	@SyncNBT
 	public int scroll;
-
 	@SyncNBT
 	public DataVariable variableToEdit = new DataVariable('a', new DataTypeNull());
+	protected DecoList<DataVariable> list;
 
 	public GuiDataInputMachine(EntityPlayer player, TileEntityDataInputMachine tile, IIGUI gui)
 	{
@@ -80,6 +77,38 @@ public class GuiDataInputMachine extends DecoGui<TileEntityDataInputMachine, Con
 	public static GuiDataInputMachine getVariablesGui(EntityPlayer player, TileEntityDataInputMachine tile)
 	{
 		return new GuiDataInputMachine(player, tile, IIGUI.DATA_INPUT_MACHINE_VARIABLES);
+	}
+
+	public static GuiComponentDecoBase<?>[] getCommonParts(TileEntityDataInputMachine tile)
+	{
+		return new GuiComponentDecoBase[]{
+				new DecoImage(4+2, 12+24+8-2-1)
+						.withSize(20, 52)
+						.withImageLocation(PROGRESS_IMAGE, true)
+						.withUV(64, 0, 0, 20, 52),
+				new DecoTab()
+						.withLink(IIGUI.DATA_INPUT_MACHINE_STORAGE)
+						.withIcon(ICON_STORAGE)
+						.withTranslatedTooltip(IIReference.DESCRIPTION_KEY+"storage_module"),
+				new DecoTab()
+						.withLink(IIGUI.DATA_INPUT_MACHINE_VARIABLES)
+						.withIcon(ICON_VARIABLES)
+						.withTranslatedTooltip(IIReference.DESCRIPTION_KEY+"variables_module"),
+
+				new DecoTab()
+						.withIcon(ICON_SEND_PACKET, 32)
+						.withTranslatedTooltip(IIReference.DESCRIPTION_KEY+"variable_send_packet")
+						.withOnPressed((gui, mouseButton, mouseX, mouseY) -> {
+					if(mouseButton==MouseButton.LEFT)
+					{
+						IIPacketHandler.sendToServer(new MessageIITileSync(tile, EasyNBT.newNBT()
+								.withBoolean("send_packet", true)
+						));
+						return true;
+					}
+					return false;
+				})
+		};
 	}
 
 	@Override
@@ -209,38 +238,6 @@ public class GuiDataInputMachine extends DecoGui<TileEntityDataInputMachine, Con
 			addValueListener(() -> tile.storedData)
 					.withObserver(v -> list.withEntries(v.getAllVariables()));
 		}
-	}
-
-	public static GuiComponentDecoBase<?>[] getCommonParts(TileEntityDataInputMachine tile)
-	{
-		return new GuiComponentDecoBase[]{
-				new DecoImage(4+2, 12+24+8-2-1)
-						.withSize(20, 52)
-						.withImageLocation(PROGRESS_IMAGE, true)
-						.withUV(64, 0, 0, 20, 52),
-				new DecoTab()
-						.withLink(IIGUI.DATA_INPUT_MACHINE_STORAGE)
-						.withIcon(ICON_STORAGE)
-						.withTranslatedTooltip(IIReference.DESCRIPTION_KEY+"storage_module"),
-				new DecoTab()
-						.withLink(IIGUI.DATA_INPUT_MACHINE_VARIABLES)
-						.withIcon(ICON_VARIABLES)
-						.withTranslatedTooltip(IIReference.DESCRIPTION_KEY+"variables_module"),
-
-				new DecoTab()
-						.withIcon(ICON_SEND_PACKET, 32)
-						.withTranslatedTooltip(IIReference.DESCRIPTION_KEY+"variable_send_packet")
-						.withOnPressed((gui, mouseButton, mouseX, mouseY) -> {
-					if(mouseButton==MouseButton.LEFT)
-					{
-						IIPacketHandler.sendToServer(new MessageIITileSync(tile, EasyNBT.newNBT()
-								.withBoolean("send_packet", true)
-						));
-						return true;
-					}
-					return false;
-				})
-		};
 	}
 
 	@Override

@@ -52,6 +52,13 @@ public class AMTQuads extends AMT
 		this.quads = quads;
 	}
 
+	private static AMT recolorChild(AMT child, IIColor color)
+	{
+		if(child instanceof AMTQuads)
+			return ((AMTQuads)child).recolor(color);
+		return child;
+	}
+
 	@Override
 	protected void draw(Tessellator tes, BufferBuilder buf)
 	{
@@ -130,13 +137,6 @@ public class AMTQuads extends AMT
 		if(children!=null)
 			copy.setChildren(Arrays.stream(children).map(child -> recolorChild(child, color)).toArray(AMT[]::new));
 		return copy;
-	}
-
-	private static AMT recolorChild(AMT child, IIColor color)
-	{
-		if(child instanceof AMTQuads)
-			return ((AMTQuads)child).recolor(color);
-		return child;
 	}
 
 	public void setLighting(boolean hasLighting)

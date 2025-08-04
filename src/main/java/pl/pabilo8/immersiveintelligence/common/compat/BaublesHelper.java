@@ -29,14 +29,6 @@ import javax.annotation.Nullable;
  */
 public class BaublesHelper extends IICompatModule
 {
-	private ResourceLocation res = new ResourceLocation("baubles", "bauble_cap");
-
-	@Override
-	public String getName()
-	{
-		return "Baubles";
-	}
-
 	private static final IBauble BAUBLE_POWERPACK = new IBauble()
 	{
 		@Override
@@ -54,6 +46,18 @@ public class BaublesHelper extends IICompatModule
 				IIContent.itemAdvancedPowerPack.onArmorTick(player.world, (EntityPlayer)player, itemstack);
 		}
 	};
+	private ResourceLocation res = new ResourceLocation("baubles", "bauble_cap");
+
+	public static ItemStack getWornPouch(EntityPlayer player)
+	{
+		return BaublesApi.getBaublesHandler(player).getStackInSlot(BaubleType.AMULET.getValidSlots()[0]);
+	}
+
+	@Override
+	public String getName()
+	{
+		return "Baubles";
+	}
 
 	@Override
 	public void preInit()
@@ -77,11 +81,6 @@ public class BaublesHelper extends IICompatModule
 	@Override
 	public void postInit()
 	{
-	}
-
-	public static ItemStack getWornPouch(EntityPlayer player)
-	{
-		return BaublesApi.getBaublesHandler(player).getStackInSlot(BaubleType.AMULET.getValidSlots()[0]);
 	}
 
 	@SubscribeEvent

@@ -69,12 +69,6 @@ public class ItemIIBinoculars extends ItemIISubItemsBase<Binoculars> implements 
 		super("binoculars", 1, Binoculars.values());
 	}
 
-	public enum Binoculars implements IIItemEnum
-	{
-		BINOCULARS,
-		INFRARED_BINOCULARS
-	}
-
 	public boolean isAdvanced(ItemStack stack)
 	{
 		return stackToSub(stack)==Binoculars.INFRARED_BINOCULARS;
@@ -171,7 +165,7 @@ public class ItemIIBinoculars extends ItemIISubItemsBase<Binoculars> implements 
 		return OVERLAY_TEXTURE;
 	}
 
-	// TODO: 15.07.2021 make it properly, not the current lazy way 
+	// TODO: 15.07.2021 make it properly, not the current lazy way
 	@Override
 	@SideOnly(Side.CLIENT)
 	public String getModelCacheKey(ItemStack stack)
@@ -251,5 +245,11 @@ public class ItemIIBinoculars extends ItemIISubItemsBase<Binoculars> implements 
 		if(slot==EntityEquipmentSlot.MAINHAND)
 			multimap.put(SharedMonsterAttributes.FOLLOW_RANGE.getName(), new AttributeModifier(visionUUID, "Increased Sight Range (Mobs)", 30.0D, 0));
 		return multimap;
+	}
+
+	public enum Binoculars implements IIItemEnum
+	{
+		BINOCULARS,
+		INFRARED_BINOCULARS
 	}
 }

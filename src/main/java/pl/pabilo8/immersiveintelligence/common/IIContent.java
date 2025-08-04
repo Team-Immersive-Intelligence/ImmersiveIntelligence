@@ -97,17 +97,12 @@ public class IIContent
 	public static final List<IMultiblock> MULTIBLOCKS = new ArrayList<>();
 
 	public static final IICreativeTab II_CREATIVE_TAB = new IICreativeTab(MODID);
-
-	//Shares code with Immersive Energy, long live II-IEn Cooperation!
-	public static List<Predicate<TileEntity>> tileEntitiesWeDontLike = new ArrayList<>();
+	public static final MachineUpgrade UPGRADE_PACKER_FLUID = CommonProxy.createMachineUpgrade("packer_fluid"); //allows filling items with fluids
 
 	//--- Upgrades ---//
-
-	public static final MachineUpgrade UPGRADE_PACKER_FLUID = CommonProxy.createMachineUpgrade("packer_fluid"); //allows filling items with fluids
 	public static final MachineUpgrade UPGRADE_PACKER_ENERGY = CommonProxy.createMachineUpgrade("packer_energy"); //allows charging items with IF
 	public static final MachineUpgrade UPGRADE_PACKER_NAMING = CommonProxy.createMachineUpgrade("packer_naming"); //allows (re)naming items on conveyor
 	public static final MachineUpgrade UPGRADE_PACKER_RAILWAY = CommonProxy.createMachineUpgrade("packer_railway"); //makes packer accept minecarts instead of items
-
 	//used by effect crates
 	public static final MachineUpgrade UPGRADE_INSERTER = CommonProxy.createMachineUpgrade("inserter");
 	//increases machine speed
@@ -116,39 +111,33 @@ public class IIContent
 	public static final MachineUpgrade UPGRADE_SAW_UNREGULATOR = CommonProxy.createMachineUpgrade("saw_unregulator");
 	//allows to use belt fed upgrade for mg
 	public static final MachineUpgrade UPGRADE_MG_LOADER = CommonProxy.createMachineUpgrade("mg_loader");
-
 	//allows the radar to detect radio signal emitters and send their positions
 	public static final MachineUpgrade UPGRADE_RADIO_LOCATORS = CommonProxy.createMachineUpgrade("radio_locators");
-
 	//changes the projectile workshop to *fill* projectiles
 	public static final MachineUpgrade UPGRADE_CORE_FILLER = CommonProxy.createMachineUpgrade("core_filler");
-
 	//adds razor wire on top of a gate
 	public static final MachineUpgrade UPGRADE_RAZOR_WIRE = CommonProxy.createMachineUpgrade("razor_wire");
 	//allows connecting redstone wire to a gate
 	public static final MachineUpgrade UPGRADE_REDSTONE_ACTIVATION = CommonProxy.createMachineUpgrade("rs_activation");
-
 	//data input machine upgrade
 	public static final MachineUpgrade UPGRADE_ADVANCED_DATA = CommonProxy.createMachineUpgrade("advanced_data");
 	//arithemtic logic machine upgrade
 	public static final MachineUpgrade UPGRADE_MEMORY = CommonProxy.createMachineUpgrade("memory");
 	public static final MachineUpgrade UPGRADE_CIRCUIT_RACKS = CommonProxy.createMachineUpgrade("circuit_racks");
-
 	public static final MachineUpgrade UPGRADE_EMPLACEMENT_WEAPON_MACHINEGUN = EmplacementWeapon.register(EmplacementWeaponMachinegun::new);
 	public static final MachineUpgrade UPGRADE_EMPLACEMENT_WEAPON_IROBSERVER = EmplacementWeapon.register(EmplacementWeaponInfraredObserver::new);
-
 	public static final MachineUpgrade UPGRADE_EMPLACEMENT_WEAPON_AUTOCANNON = EmplacementWeapon.register(EmplacementWeaponAutocannon::new);
 	public static final MachineUpgrade UPGRADE_EMPLACEMENT_WEAPON_HEAVY_CHEMTHROWER = EmplacementWeapon.register(EmplacementWeaponHeavyChemthrower::new);
 	public static final MachineUpgrade UPGRADE_EMPLACEMENT_WEAPON_HEAVY_RAILGUN = EmplacementWeapon.register(EmplacementWeaponHeavyRailgun::new);
 	//public static final MachineUpgrade UPGRADE_EMPLACEMENT_SPOTLIGHT_TOWER = EmplacementWeapon.register(EmplacementWeaponSpotlightTower::new);
 	public static final MachineUpgrade UPGRADE_EMPLACEMENT_WEAPON_TESLA = EmplacementWeapon.register(EmplacementWeaponTeslaCoil::new);
+	public static final MachineUpgrade UPGRADE_EMPLACEMENT_WEAPON_CPDS = EmplacementWeapon.register(EmplacementWeaponCPDS::new);
 	//public static final MachineUpgrade UPGRADE_EMPLACEMENT_WEAPON_MORTAR = EmplacementWeapon.register(EmplacementWeaponMortar::new);
 	//public static final MachineUpgrade UPGRADE_EMPLACEMENT_WEAPON_LIGHT_HOWITZER = EmplacementWeapon.register(EmplacementWeaponLightHowitzer::new);
 	//public static final MachineUpgrade UPGRADE_EMPLACEMENT_WEAPON_LIGHT_ROCKET_LAUNCHER = EmplacementWeapon.register(EmplacementWeaponLightRocketLauncher::new);
 	//public static final MachineUpgrade UPGRADE_EMPLACEMENT_WEAPON_GUIDED_MISSILE_LAUNCHER = EmplacementWeapon.register(EmplacementWeaponGuidedMissileLauncher::new);
-
-
-	public static final MachineUpgrade UPGRADE_EMPLACEMENT_WEAPON_CPDS = EmplacementWeapon.register(EmplacementWeaponCPDS::new);
+	//materials
+	public static final ItemIIMaterial itemMaterial = new ItemIIMaterial();
 
 	//public static final MachineUpgrade UPGRADE_EMPLACEMENT_FALLBACK_GRENADES = CommonProxy.createMachineUpgrade("emplacement_grenades");
 	//public static final MachineUpgrade UPGRADE_EMPLACEMENT_STURDY_BEARINGS = CommonProxy.createMachineUpgrade("emplacement_bearings");
@@ -158,9 +147,6 @@ public class IIContent
 	//public static final MachineUpgrade UPGRADE_EMPLACEMENT_MACHINEGUN_BUNKER = CommonProxy.createMachineUpgrade("mg_bunker");
 
 	//--- Items ---//
-
-	//materials
-	public static final ItemIIMaterial itemMaterial = new ItemIIMaterial();
 	public static final ItemIIMaterialIngot itemMaterialIngot = new ItemIIMaterialIngot();
 	public static final ItemIIMaterialPlate itemMaterialPlate = new ItemIIMaterialPlate();
 	public static final ItemIIMaterialRod itemMaterialRod = new ItemIIMaterialRod();
@@ -175,33 +161,25 @@ public class IIContent
 	public static final ItemIIFunctionalCircuit itemCircuit = new ItemIIFunctionalCircuit();
 	public static final ItemIIMotorBelt itemMotorBelt = new ItemIIMotorBelt();
 	public static final ItemIIMotorGear itemMotorGear = new ItemIIMotorGear();
-
 	//ammo
 	public static final ItemIIAmmoCasing itemAmmoCasing = new ItemIIAmmoCasing();
-
 	public static final ItemIIAmmoArtilleryHeavy itemAmmoHeavyArtillery = new ItemIIAmmoArtilleryHeavy();
 	public static final ItemIIAmmoArtilleryMedium itemAmmoMediumArtillery = new ItemIIAmmoArtilleryMedium();
 	public static final ItemIIAmmoArtilleryLight itemAmmoLightArtillery = new ItemIIAmmoArtilleryLight();
 	public static final ItemIIAmmoMortar itemAmmoMortar = new ItemIIAmmoMortar();
-
 	public static final ItemIIAmmoGuidedMissile itemAmmoGuidedMissile = new ItemIIAmmoGuidedMissile();
 	public static final ItemIIAmmoRocketHeavy itemAmmoRocketHeavy = new ItemIIAmmoRocketHeavy();
 	public static final ItemIIAmmoRocketLight itemAmmoRocketLight = new ItemIIAmmoRocketLight();
-
 	public static final ItemIIAmmoLightGun itemAmmoLightGun = new ItemIIAmmoLightGun();
 	public static final ItemIIAmmoAutocannon itemAmmoAutocannon = new ItemIIAmmoAutocannon();
 	public static final ItemIIAmmoRailgunGrenade itemRailgunGrenade = new ItemIIAmmoRailgunGrenade();
-
 	public static final ItemIIAmmoGrenade itemGrenade = new ItemIIAmmoGrenade();
-
 	public static final ItemIIAmmoMachinegun itemAmmoMachinegun = new ItemIIAmmoMachinegun();
 	public static final ItemIIAmmoAssaultRifle itemAmmoAssaultRifle = new ItemIIAmmoAssaultRifle();
 	public static final ItemIIAmmoSubmachinegun itemAmmoSubmachinegun = new ItemIIAmmoSubmachinegun();
 	public static final ItemIIAmmoRevolver itemAmmoRevolver = new ItemIIAmmoRevolver();
-
 	public static final ItemIIBulletMagazine itemBulletMagazine = new ItemIIBulletMagazine();
 	public static final ItemIICasingPouch itemCasingPouch = new ItemIICasingPouch();
-
 	//tools
 	public static final ItemIISkycrateMount itemSkycrateMount = new ItemIISkycrateMount();
 	public static final ItemIILighter itemLighter = new ItemIILighter();
@@ -210,10 +188,8 @@ public class IIContent
 	public static final ItemIIElectricWirecutter itemWirecutter = new ItemIIElectricWirecutter();
 	public static final ItemIIWrench itemWrench = new ItemIIWrench();
 	public static final ItemIITrenchShovel itemTrenchShovel = new ItemIITrenchShovel();
-
 	public static final ItemIITripodPeriscope itemTripodPeriscope = new ItemIITripodPeriscope();
 	public static final ItemIIMineDetector itemMineDetector = new ItemIIMineDetector();
-
 	public static final ItemIIDrillHead itemDrillhead = new ItemIIDrillHead();
 	//Don't know if i should make a seperate item for a torque meter
 	public static final ItemIITachometer itemTachometer = new ItemIITachometer();
@@ -233,7 +209,6 @@ public class IIContent
 	public static final ItemIIRifle itemRifle = new ItemIIRifle();
 	public static final ItemIIMortar itemMortar = new ItemIIMortar();
 	public static final ItemIIWeaponUpgrade itemWeaponUpgrade = new ItemIIWeaponUpgrade();
-
 	//armor
 	public static final ArmorMaterial ARMOR_MATERIAL_LIGHT_ENGINEER = EnumHelper.addArmorMaterial("light_engineer_armor",
 			ImmersiveIntelligence.MODID+":light_engineer_armor", 42,
@@ -243,26 +218,21 @@ public class IIContent
 	public static final ItemIILightEngineerLeggings itemLightEngineerLeggings = new ItemIILightEngineerLeggings();
 	public static final ItemIILightEngineerBoots itemLightEngineerBoots = new ItemIILightEngineerBoots();
 	public static final ItemIIArmorUpgrade itemArmorUpgrade = new ItemIIArmorUpgrade();
-
 	//Backpacks
 	public static final ItemIIAdvancedPowerPack itemAdvancedPowerPack = new ItemIIAdvancedPowerPack();
 	public static final String NBT_AdvancedPowerpack = "II:Powerpack";
-
-
 	//data
 	@IBatchOredictRegister(oreDict = "punchtape")
 	public static final ItemIIPunchtape itemPunchtape = new ItemIIPunchtape();
 	public static final ItemIIPrintedPage itemPrintedPage = new ItemIIPrintedPage();
 	public static final ItemIITracerPowder itemTracerPowder = new ItemIITracerPowder();
-
-	//--- Blocks ---//
-
 	//rubber
 	public static final BlockIIRubberLog blockRubberLog = new BlockIIRubberLog();
+
+	//--- Blocks ---//
 	public static final BlockIIRubberLeaves blockRubberLeaves = new BlockIIRubberLeaves();
 	public static final BlockIIRubberSapling blockRubberSapling = new BlockIIRubberSapling();
 	public static final BlockIICharredLog blockCharredLog = new BlockIICharredLog();
-
 	//metal
 	@IBatchOredictRegister(oreDict = "ore")
 	public static final BlockIIOre blockOre = new BlockIIOre();
@@ -274,32 +244,26 @@ public class IIContent
 	public static final BlockIISlab<Metals> blockMetalSlabs = new BlockIISlab<>(blockSheetmetal);
 	@IBatchOredictRegister(oreDict = "slabSheetmetal")
 	public static final BlockIISlab<Metals> blockSheetmetalSlabs = new BlockIISlab<>(blockMetalStorage);
-
 	//regular blocks
 	public static final BlockIISandbags blockSandbags = new BlockIISandbags();
 	public static final BlockIIClothDecoration blockClothDecoration = new BlockIIClothDecoration();
 	public static final BlockIIMetalDecoration blockMetalDecoration = new BlockIIMetalDecoration();
-
 	//b e t o n
 	public static final BlockIIConcreteDecoration blockConcreteDecoration = new BlockIIConcreteDecoration();
 	public static final BlockIISlab<ConcreteDecorations> blockConcreteSlabs = new BlockIISlab<>(blockConcreteDecoration);
 	public static final BlockIIStairs[] blockIIConcreteStairs = BlockIIConcreteDecoration.getStairs();
-
 	//mesh fences
 	public static final BlockIIMetalChainFence blockMetalFortification = new BlockIIMetalChainFence();
 	public static final BlockIIWoodenChainFence blockWoodenFortification = new BlockIIWoodenChainFence();
 	//tank trap
 	public static final BlockIIMetalFortification1 blockMetalFortification1 = new BlockIIMetalFortification1();
-
 	//devices
 	public static final BlockIIMetalDevice blockMetalDevice = new BlockIIMetalDevice();
 	public static final BlockIIMetalDevice1 blockMetalDevice1 = new BlockIIMetalDevice1();
 	public static final BlockIIDataDevice blockDataConnector = new BlockIIDataDevice();
 	public static final BlockIISmallCrate blockSmallCrate = new BlockIISmallCrate();
-
 	//explosives
 	public static final BlockIIAdvancedExplosives blockAdvancedExplosives = new BlockIIAdvancedExplosives();
-
 	//ammunition
 	public static final BlockIIMineSign blockMineSign = new BlockIIMineSign();
 	public static final BlockIITripmine blockTripmine = new BlockIITripmine();
@@ -307,37 +271,16 @@ public class IIContent
 	public static final BlockIIRadioExplosives blockRadioExplosives = new BlockIIRadioExplosives();
 	public static final ItemIINavalMine itemNavalMine = new ItemIINavalMine();
 	public static final BlockIITripwireConnector blockTripwireConnector = new BlockIITripwireConnector();
-
 	//rotary devices
 	public static final BlockIIMechanicalDevice blockMechanicalDevice = new BlockIIMechanicalDevice();
 	public static final BlockIIMechanicalDevice1 blockMechanicalDevice1 = new BlockIIMechanicalDevice1();
 	public static final BlockIIGearbox blockGearbox = new BlockIIGearbox();
 	public static final BlockIIMechanicalConnector blockMechanicalConnector = new BlockIIMechanicalConnector();
 	public static final BlockIIWoodenMultiblock blockWoodenMultiblock = new BlockIIWoodenMultiblock();
-
 	//multiblocks
 	public static final BlockIIMetalMultiblock0 blockMetalMultiblock0 = new BlockIIMetalMultiblock0();
 	public static final BlockIIMetalMultiblock1 blockMetalMultiblock1 = new BlockIIMetalMultiblock1();
 	public static final BlockIIGateMultiblock blockFenceGateMultiblock = new BlockIIGateMultiblock();
-
-	//fluid blocks
-	public static BlockIIFluid blockFluidInkBlack, blockFluidInkCyan, blockFluidInkMagenta, blockFluidInkYellow;
-	public static BlockIIFluid blockFluidEtchingAcid, blockFluidSulfuricAcid, blockFluidNitricAcid, blockFluidHydrofluoricAcid, blockFluidFormicAcid;
-	public static BlockIIFluid blockFluidAmmonia, blockFluidMethanol;
-	public static BlockIIFluid blockFluidBrine;
-	public static BlockIIFluid blockGasHydrogen, blockGasOxygen, blockGasChlorine, blockGasCO2, blockGasCO;
-	public static BlockIIFluid blockGasMustardGas;
-	public static BlockIIFluid blockFluidLatex;
-
-	//fluids
-	public static Fluid fluidInkBlack, fluidInkCyan, fluidInkMagenta, fluidInkYellow;
-	public static Fluid fluidEtchingAcid, fluidSulfuricAcid, fluidHydrofluoricAcid, fluidNitricAcid, fluidFormicAcid;
-	public static Fluid fluidAmmonia, fluidMethanol;
-	public static Fluid fluidBrine;
-	public static Fluid gasHydrogen, gasOxygen, gasChlorine, gasCO2, gasCO;
-	public static Fluid gasMustardGas;
-	public static Fluid fluidLatex;
-
 	//--- Ammunition System ---//
 	//ammo cores
 	public static final AmmoCore ammoCoreCopper = new AmmoCoreCopper();
@@ -349,7 +292,6 @@ public class IIContent
 	public static final AmmoCore ammoCoreUranium = new AmmoCoreUranium();
 	public static final AmmoCore ammoCorePabilium = new AmmoCorePabilium();
 	public static final AmmoCore ammoCoreRubber = new AmmoCoreRubber();
-
 	//ammo components
 	public static final AmmoComponent ammoComponentTNT = new AmmoComponentTNT();
 	public static final AmmoComponent ammoComponentRDX = new AmmoComponentRDX();
@@ -362,7 +304,6 @@ public class IIContent
 	public static final AmmoComponent ammoComponentPropaganda = new AmmoComponentPropaganda();
 	public static final AmmoComponent ammoComponentTesla = new AmmoComponentTesla();
 	public static final AmmoComponent ammoComponentFish = new AmmoComponentFish();
-
 	//ammo propellants
 	public static final AmmoPropellant ammoPropellantGunpowder = new AmmoPropellantGunpowder();
 	public static final AmmoPropellant ammoPropellantCordite = new AmmoPropellantCordite();
@@ -371,7 +312,24 @@ public class IIContent
 	public static final AmmoPropellant ammoPropellantRocketFuel = new AmmoPropellantRocketFuel();
 	public static final AmmoPropellant ammoPropellantExperimentalRocketFuel = new AmmoPropellantRocketFuelExperimental();
 	public static final AmmoPropellant ammoPropellantStableRocketFuel = new AmmoPropellantRocketFuelStable();
-
+	//Shares code with Immersive Energy, long live II-IEn Cooperation!
+	public static List<Predicate<TileEntity>> tileEntitiesWeDontLike = new ArrayList<>();
+	//fluid blocks
+	public static BlockIIFluid blockFluidInkBlack, blockFluidInkCyan, blockFluidInkMagenta, blockFluidInkYellow;
+	public static BlockIIFluid blockFluidEtchingAcid, blockFluidSulfuricAcid, blockFluidNitricAcid, blockFluidHydrofluoricAcid, blockFluidFormicAcid;
+	public static BlockIIFluid blockFluidAmmonia, blockFluidMethanol;
+	public static BlockIIFluid blockFluidBrine;
+	public static BlockIIFluid blockGasHydrogen, blockGasOxygen, blockGasChlorine, blockGasCO2, blockGasCO;
+	public static BlockIIFluid blockGasMustardGas;
+	public static BlockIIFluid blockFluidLatex;
+	//fluids
+	public static Fluid fluidInkBlack, fluidInkCyan, fluidInkMagenta, fluidInkYellow;
+	public static Fluid fluidEtchingAcid, fluidSulfuricAcid, fluidHydrofluoricAcid, fluidNitricAcid, fluidFormicAcid;
+	public static Fluid fluidAmmonia, fluidMethanol;
+	public static Fluid fluidBrine;
+	public static Fluid gasHydrogen, gasOxygen, gasChlorine, gasCO2, gasCO;
+	public static Fluid gasMustardGas;
+	public static Fluid fluidLatex;
 	//biomes
 	public static BiomeWasteland biomeWasteland = new BiomeWasteland();
 

@@ -44,6 +44,20 @@ public class MultiblockInteractablePart implements INBTSerializable<NBTTagCompou
 		this.closingSpeed = closingSpeed;
 	}
 
+	/**
+	 * @param state true if opened
+	 * @param part  the part ID
+	 * @param parts the parts to check
+	 * @return the part that changed state, or null if none did
+	 */
+	public static MultiblockInteractablePart setStates(boolean state, int part, MultiblockInteractablePart... parts)
+	{
+		for(MultiblockInteractablePart p : parts)
+			if(p.id==part)
+				return p.setState(state)?p: null;
+		return null;
+	}
+
 	public float getProgress(float partialTicks)
 	{
 		return MathHelper.clamp(progress+(opened?partialTicks: -partialTicks*closingSpeed), 0, maxProgress)/maxProgress;
@@ -67,7 +81,6 @@ public class MultiblockInteractablePart implements INBTSerializable<NBTTagCompou
 		}
 		return false;
 	}
-
 
 	/**
 	 * Switches the state between opened/closed
@@ -119,20 +132,6 @@ public class MultiblockInteractablePart implements INBTSerializable<NBTTagCompou
 	public void deserializeNBT(NBTTagCompound nbt)
 	{
 		readFromNBT(nbt);
-	}
-
-	/**
-	 * @param state true if opened
-	 * @param part  the part ID
-	 * @param parts the parts to check
-	 * @return the part that changed state, or null if none did
-	 */
-	public static MultiblockInteractablePart setStates(boolean state, int part, MultiblockInteractablePart... parts)
-	{
-		for(MultiblockInteractablePart p : parts)
-			if(p.id==part)
-				return p.setState(state)?p: null;
-		return null;
 	}
 
 	public int getID()

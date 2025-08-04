@@ -11,8 +11,8 @@ import pl.pabilo8.immersiveintelligence.common.entity.hans.tasks.AIHansBase;
 public class AIHansTimedLookAtEntity extends AIHansBase
 {
 	final Entity lookedAt;
-	int timer;
 	final float rotatoSped;
+	int timer;
 
 	public AIHansTimedLookAtEntity(EntityHans hans, Entity lookedAt, int time, float rotatoSped)
 	{

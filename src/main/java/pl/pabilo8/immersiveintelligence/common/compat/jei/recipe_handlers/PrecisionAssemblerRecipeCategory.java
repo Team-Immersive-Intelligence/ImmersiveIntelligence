@@ -91,9 +91,9 @@ public class PrecisionAssemblerRecipeCategory extends IIRecipeCategory<Precision
 
 	public static class PrecisionAssemblerRecipeWrapper extends IIMultiblockRecipeWrapper
 	{
-		final int inputCount, toolCount;
 		protected final List<ItemStack> tools = new ArrayList<>();
 		protected final ItemStack scheme;
+		final int inputCount, toolCount;
 
 		public PrecisionAssemblerRecipeWrapper(PrecisionAssemblerRecipe recipe)
 		{

@@ -44,6 +44,37 @@ public class ItemIIRailgunOverride extends ItemRailgun
 		IEContent.registeredIEItems.add(this);
 	}
 
+	public static ItemStack findAmmo(EntityLivingBase entity)
+	{
+		if(isAmmo(entity.getHeldItem(EnumHand.OFF_HAND)))
+			return entity.getHeldItem(EnumHand.OFF_HAND);
+		else if(isAmmo(entity.getHeldItem(EnumHand.MAIN_HAND)))
+			return entity.getHeldItem(EnumHand.MAIN_HAND);
+		else if(entity.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null))
+		{
+			final IItemHandler capability = entity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+			if(capability==null)
+				return ItemStack.EMPTY;
+
+			for(int i = 0; i < capability.getSlots(); i++)
+			{
+				ItemStack itemstack = capability.getStackInSlot(i);
+				if(isAmmo(itemstack))
+					return itemstack;
+			}
+		}
+		return ItemStack.EMPTY;
+	}
+
+	public static boolean isAmmo(ItemStack stack)
+	{
+		if(stack.isEmpty())
+			return false;
+		if(stack.getItem() instanceof ItemIIAmmoRailgunGrenade)
+			return true;
+		return RailgunHandler.getProjectileProperties(stack)!=null;
+	}
+
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand)
 	{
@@ -121,37 +152,6 @@ public class ItemIIRailgunOverride extends ItemRailgun
 				}
 			}
 		}
-	}
-
-	public static ItemStack findAmmo(EntityLivingBase entity)
-	{
-		if(isAmmo(entity.getHeldItem(EnumHand.OFF_HAND)))
-			return entity.getHeldItem(EnumHand.OFF_HAND);
-		else if(isAmmo(entity.getHeldItem(EnumHand.MAIN_HAND)))
-			return entity.getHeldItem(EnumHand.MAIN_HAND);
-		else if(entity.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null))
-		{
-			final IItemHandler capability = entity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
-			if(capability==null)
-				return ItemStack.EMPTY;
-
-			for(int i = 0; i < capability.getSlots(); i++)
-			{
-				ItemStack itemstack = capability.getStackInSlot(i);
-				if(isAmmo(itemstack))
-					return itemstack;
-			}
-		}
-		return ItemStack.EMPTY;
-	}
-
-	public static boolean isAmmo(ItemStack stack)
-	{
-		if(stack.isEmpty())
-			return false;
-		if(stack.getItem() instanceof ItemIIAmmoRailgunGrenade)
-			return true;
-		return RailgunHandler.getProjectileProperties(stack)!=null;
 	}
 
 	private EnumHandSide getActiveSide(EntityLivingBase user)

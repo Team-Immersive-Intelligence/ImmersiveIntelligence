@@ -44,14 +44,13 @@ public class TactileHandler
 
 	//Final values
 	private final ResLoc aabbLoc;
-	private ResLoc headerLoc;
 	private final ITactileListener listener;
-
+	private final ArrayList<EntityAMTTactile> entities;
+	private final HashMap<ResLoc, IIAnimationCollisionMap> animations;
+	private ResLoc headerLoc;
 	//Reloadable values
 	private boolean initialized = false;
 	private IIModelHeader header;
-	private final ArrayList<EntityAMTTactile> entities;
-	private final HashMap<ResLoc, IIAnimationCollisionMap> animations;
 	private Vec3d globalOffset = Vec3d.ZERO;
 
 	/**

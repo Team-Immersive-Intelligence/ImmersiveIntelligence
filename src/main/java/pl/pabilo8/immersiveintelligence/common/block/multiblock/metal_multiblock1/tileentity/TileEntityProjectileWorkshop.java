@@ -70,11 +70,10 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockProduction
 	 */
 	@SyncNBT
 	public FluidTank tanksFiller = new FluidTank(ProjectileWorkshop.componentTankCapacity);
-	IItemHandler inputHandler = new IEInventoryHandler(1, this, 0, true, false); //pos 15
-	IItemHandler componentInputHandler = new IEInventoryHandler(1, this, 1, true, false); //pos 22
-
 	public MultiblockInteractablePart lid1 = new MultiblockInteractablePart(14), lid2 = new MultiblockInteractablePart(16);
 	public UpgradeStorage<TileEntityProjectileWorkshop> upgradeStorage;
+	IItemHandler inputHandler = new IEInventoryHandler(1, this, 0, true, false); //pos 15
+	IItemHandler componentInputHandler = new IEInventoryHandler(1, this, 1, true, false); //pos 22
 
 	public TileEntityProjectileWorkshop()
 	{

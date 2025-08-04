@@ -34,10 +34,10 @@ import java.util.Set;
  */
 public class SkyCartStationRenderer extends TileEntitySpecialRenderer<TileEntitySkyCartStation> implements IReloadableModelContainer<SkyCartStationRenderer>
 {
-	private static ModelSkyCartStation model;
-	private static ModelSkyCartStation modelFlipped;
 	private static final TileEntityBanner banner = new TileEntityBanner();
 	private static final ModelBanner modelBanner = new ModelBanner();
+	private static ModelSkyCartStation model;
+	private static ModelSkyCartStation modelFlipped;
 
 	static
 	{

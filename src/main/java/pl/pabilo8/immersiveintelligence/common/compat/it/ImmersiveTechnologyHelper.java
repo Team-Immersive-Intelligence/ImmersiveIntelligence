@@ -34,6 +34,14 @@ import java.util.function.Supplier;
 public class ImmersiveTechnologyHelper extends IICompatModule
 {
 
+	public static void addMinecartToItem(String name, BiFunction<World, Vec3d, EntityMinecart> minecart, Supplier<ItemStack> stack)
+	{
+		EnumHelper.addEnum(Minecarts.class, name.toUpperCase(),
+				new Class[]{BiFunction.class, Supplier.class},
+				minecart, stack
+		);
+	}
+
 	@Override
 	public String getName()
 	{
@@ -123,13 +131,5 @@ public class ImmersiveTechnologyHelper extends IICompatModule
 		EntityRegistry.registerModEntity(new ResourceLocation(ImmersiveIntelligence.MODID, "minecart_open_barrel"),
 				EntityMinecartBarrelOpen.class, "minecart_open_barrel", 503, ImmersiveIntelligence.INSTANCE, 64, 1,
 				true);
-	}
-
-	public static void addMinecartToItem(String name, BiFunction<World, Vec3d, EntityMinecart> minecart, Supplier<ItemStack> stack)
-	{
-		EnumHelper.addEnum(Minecarts.class, name.toUpperCase(),
-				new Class[]{BiFunction.class, Supplier.class},
-				minecart, stack
-		);
 	}
 }

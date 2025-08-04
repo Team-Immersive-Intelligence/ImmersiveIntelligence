@@ -25,15 +25,6 @@ public class EntityAMTTactile extends Entity
 {
 	private static final AxisAlignedBB EMPTY = new AxisAlignedBB(0, 0, 0, 0, 0, 0);
 	/**
-	 * Handler object this one adheres to
-	 */
-	private TactileHandler handler;
-	/**
-	 * Parent object of this
-	 */
-	@Nullable
-	private EntityAMTTactile parent;
-	/**
 	 * Name of this part
 	 */
 	public String name;
@@ -53,6 +44,15 @@ public class EntityAMTTactile extends Entity
 	 * Bounding box of this part, moved dynamically
 	 */
 	public AxisAlignedBB aabb;
+	/**
+	 * Handler object this one adheres to
+	 */
+	private TactileHandler handler;
+	/**
+	 * Parent object of this
+	 */
+	@Nullable
+	private EntityAMTTactile parent;
 	/**
 	 * Rotation in Z axis
 	 */

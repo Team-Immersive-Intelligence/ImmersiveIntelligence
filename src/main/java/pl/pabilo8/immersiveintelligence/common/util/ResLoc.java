@@ -39,6 +39,40 @@ public class ResLoc extends ResourceLocation
 	}
 
 	/**
+	 * @param domain domain of this ResLoc
+	 * @return a base {@link ResLoc}
+	 */
+	public static ResLoc root(String domain)
+	{
+		return new ResLoc(domain, "");
+	}
+
+	public static ResLoc of(ResLoc blueprint, Object... elements)
+	{
+		if(!blueprint.resourcePath.contains("%"))
+		{
+			StringBuilder builder = new StringBuilder(blueprint.resourcePath);
+			for(Object e : elements)
+				builder.append(e);
+
+			return new ResLoc(blueprint.resourceDomain, builder.toString());
+		}
+
+		return new ResLoc(blueprint.resourceDomain,
+				String.format(blueprint.resourcePath, elements));
+	}
+
+	public static ResLoc of(ResourceLocation res)
+	{
+		return new ResLoc(res.getResourceDomain(), res.getResourcePath());
+	}
+
+	public static ResLoc of(String resString)
+	{
+		return of(new ResourceLocation(resString));
+	}
+
+	/**
 	 * @return file type extension of this {@link ResLoc}
 	 */
 	public String getExtension()
@@ -72,40 +106,6 @@ public class ResLoc extends ResourceLocation
 		if(extensionIndex==-1)
 			return new ResLoc(resourceDomain, resourcePath+extension, extension, resourcePath.length());
 		return new ResLoc(resourceDomain, resourcePath.substring(0, extensionIndex)+extension, extension, extensionIndex);
-	}
-
-	/**
-	 * @param domain domain of this ResLoc
-	 * @return a base {@link ResLoc}
-	 */
-	public static ResLoc root(String domain)
-	{
-		return new ResLoc(domain, "");
-	}
-
-	public static ResLoc of(ResLoc blueprint, Object... elements)
-	{
-		if(!blueprint.resourcePath.contains("%"))
-		{
-			StringBuilder builder = new StringBuilder(blueprint.resourcePath);
-			for(Object e : elements)
-				builder.append(e);
-
-			return new ResLoc(blueprint.resourceDomain, builder.toString());
-		}
-
-		return new ResLoc(blueprint.resourceDomain,
-				String.format(blueprint.resourcePath, elements));
-	}
-
-	public static ResLoc of(ResourceLocation res)
-	{
-		return new ResLoc(res.getResourceDomain(), res.getResourcePath());
-	}
-
-	public static ResLoc of(String resString)
-	{
-		return of(new ResourceLocation(resString));
 	}
 
 	public ResLoc with(Object... elements)

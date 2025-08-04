@@ -20,14 +20,6 @@ import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
  */
 public class BlockIIMechanicalDevice extends BlockIITileProvider<IIBlockTypes_MechanicalDevice>
 {
-	public enum IIBlockTypes_MechanicalDevice implements IITileProviderEnum
-	{
-		@EnumTileProvider(tile = TileEntityTransmissionBox.class)
-		WOODEN_TRANSMISSION_BOX,
-		@EnumTileProvider(tile = TileEntityTransmissionBoxCreative.class)
-		CREATIVE_TRANSMISSION_BOX
-	}
-
 	public BlockIIMechanicalDevice()
 	{
 		super("mechanical_device", Material.WOOD, PropertyEnum.create("type", IIBlockTypes_MechanicalDevice.class), ItemBlockIIBase::new,
@@ -38,5 +30,13 @@ public class BlockIIMechanicalDevice extends BlockIITileProvider<IIBlockTypes_Me
 		setFullCube(true);
 		setBlockLayer(BlockRenderLayer.CUTOUT_MIPPED);
 		setToolTypes(IIReference.TOOL_HAMMER);
+	}
+
+	public enum IIBlockTypes_MechanicalDevice implements IITileProviderEnum
+	{
+		@EnumTileProvider(tile = TileEntityTransmissionBox.class)
+		WOODEN_TRANSMISSION_BOX,
+		@EnumTileProvider(tile = TileEntityTransmissionBoxCreative.class)
+		CREATIVE_TRANSMISSION_BOX
 	}
 }

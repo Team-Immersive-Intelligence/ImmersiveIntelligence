@@ -29,8 +29,8 @@ import java.util.HashMap;
  */
 public class GuiAmmunitionAssembler extends GuiAmmunitionBase<TileEntityAmmunitionAssembler>
 {
-	private GuiTextField valueEdit;
 	HashMap<GuiButtonState, FuseType> fuseButtons = new HashMap<>();
+	private GuiTextField valueEdit;
 
 	public GuiAmmunitionAssembler(EntityPlayer player, TileEntityAmmunitionAssembler tile)
 	{

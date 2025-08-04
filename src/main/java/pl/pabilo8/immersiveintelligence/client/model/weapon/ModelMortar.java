@@ -11,10 +11,9 @@ import pl.pabilo8.immersiveintelligence.client.util.tmt.Shape2D;
  */
 public class ModelMortar extends ModelIIBase
 {
+	public ModelRendererTurbo[] baseHandleModel, tubeModel, bipodModel, heightRodModel, heightKnobModel, horizontalRodModel, horizontalKnobModel, tubeRodsModel, sightsHolderModel, sightsModel;
 	int textureX = 64;
 	int textureY = 64;
-
-	public ModelRendererTurbo[] baseHandleModel, tubeModel, bipodModel, heightRodModel, heightKnobModel, horizontalRodModel, horizontalKnobModel, tubeRodsModel, sightsHolderModel, sightsModel;
 
 
 	public ModelMortar() //Same as Filename

@@ -23,14 +23,19 @@ import pl.pabilo8.immersiveintelligence.common.entity.EntityParachute;
  */
 public class ParachuteRenderer extends Render<EntityParachute> implements IReloadableModelContainer<ParachuteRenderer>
 {
-	public static ModelParachute model = new ModelParachute();
 	private static final String TEXTURE = ImmersiveIntelligence.MODID+":textures/entity/parachute.png";
 	private static final ResourceLocation TEXTURE_WHITE = new ResourceLocation("immersiveengineering", "textures/items/white.png");
+	public static ModelParachute model = new ModelParachute();
 
 	public ParachuteRenderer(RenderManager renderManager)
 	{
 		super(renderManager);
 		subscribeToList("parachute");
+	}
+
+	public static void drawRope(BufferBuilder buff, double x, double y, double z, double xx, double yy, double zz, int xdiff, int zdiff)
+	{
+		IIClientUtils.drawRope(buff, x, y, z, xx, yy, zz, xdiff, zdiff);
 	}
 
 	@Override
@@ -122,10 +127,5 @@ public class ParachuteRenderer extends Render<EntityParachute> implements IReloa
 	protected ResourceLocation getEntityTexture(EntityParachute entity)
 	{
 		return null;
-	}
-
-	public static void drawRope(BufferBuilder buff, double x, double y, double z, double xx, double yy, double zz, int xdiff, int zdiff)
-	{
-		IIClientUtils.drawRope(buff, x, y, z, xx, yy, zz, xdiff, zdiff);
 	}
 }

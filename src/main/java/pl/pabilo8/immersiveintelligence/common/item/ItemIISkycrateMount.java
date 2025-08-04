@@ -26,23 +26,6 @@ public class ItemIISkycrateMount extends ItemIISubItemsBase<SkycrateMounts> impl
 		super("skycrate_mount", 1, SkycrateMounts.values());
 	}
 
-	public enum SkycrateMounts implements IIItemEnum
-	{
-		MECHANICAL(IIConfigHandler.IIConfig.Tools.SkycrateMounts.mechEnergy, IIConfigHandler.IIConfig.Tools.SkycrateMounts.mechSpeed, IIConfigHandler.IIConfig.Tools.SkycrateMounts.mechSpeed, false),
-		ELECTRIC(0, IIConfigHandler.IIConfig.Tools.SkycrateMounts.electricEnergy, IIConfigHandler.IIConfig.Tools.SkycrateMounts.electricSpeed, true);
-
-		private final float mountEnergy, mountMaxEnergy, electricEnergy;
-		private final boolean isTeslaCharged;
-
-		SkycrateMounts(float mountEnergy, float mountMaxEnergy, float electricEnergy, boolean isTeslaCharged)
-		{
-			this.mountEnergy = mountEnergy;
-			this.mountMaxEnergy = mountMaxEnergy;
-			this.electricEnergy = electricEnergy;
-			this.isTeslaCharged = isTeslaCharged;
-		}
-	}
-
 	// TODO: 01.09.2022 replace with capabilities
 	@Override
 	public double getMountEnergy(ItemStack stack)
@@ -83,5 +66,22 @@ public class ItemIISkycrateMount extends ItemIISubItemsBase<SkycrateMounts> impl
 	public boolean isTesla(ItemStack stack)
 	{
 		return stackToSub(stack).isTeslaCharged;
+	}
+
+	public enum SkycrateMounts implements IIItemEnum
+	{
+		MECHANICAL(IIConfigHandler.IIConfig.Tools.SkycrateMounts.mechEnergy, IIConfigHandler.IIConfig.Tools.SkycrateMounts.mechSpeed, IIConfigHandler.IIConfig.Tools.SkycrateMounts.mechSpeed, false),
+		ELECTRIC(0, IIConfigHandler.IIConfig.Tools.SkycrateMounts.electricEnergy, IIConfigHandler.IIConfig.Tools.SkycrateMounts.electricSpeed, true);
+
+		private final float mountEnergy, mountMaxEnergy, electricEnergy;
+		private final boolean isTeslaCharged;
+
+		SkycrateMounts(float mountEnergy, float mountMaxEnergy, float electricEnergy, boolean isTeslaCharged)
+		{
+			this.mountEnergy = mountEnergy;
+			this.mountMaxEnergy = mountMaxEnergy;
+			this.electricEnergy = electricEnergy;
+			this.isTeslaCharged = isTeslaCharged;
+		}
 	}
 }

@@ -46,15 +46,6 @@ public class BlockIIRubberLog extends BlockIIBase<RubberLogs>
 		setSubBlockLayer(RubberLogs.STRIPPED, BlockRenderLayer.CUTOUT);
 	}
 
-	public enum RubberLogs implements IIBlockEnum
-	{
-		RAW,
-		@IIBlockProperties(hidden = TernaryValue.TRUE)
-		REBBUR, //Carver reference, it's truly a great name xD
-		@IIBlockProperties(hidden = TernaryValue.TRUE, fullCube = TernaryValue.FALSE)
-		STRIPPED
-	}
-
 	@Nullable
 	@Override
 	public String getMappingsExtension(int meta, boolean itemBlock)
@@ -134,5 +125,14 @@ public class BlockIIRubberLog extends BlockIIBase<RubberLogs>
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
 	{
 		return state.getValue(property)==RubberLogs.STRIPPED?new AxisAlignedBB(0.0625, 0, 0.0625, 0.9375, 1, 0.9375): FULL_BLOCK_AABB;
+	}
+
+	public enum RubberLogs implements IIBlockEnum
+	{
+		RAW,
+		@IIBlockProperties(hidden = TernaryValue.TRUE)
+		REBBUR, //Carver reference, it's truly a great name xD
+		@IIBlockProperties(hidden = TernaryValue.TRUE, fullCube = TernaryValue.FALSE)
+		STRIPPED
 	}
 }

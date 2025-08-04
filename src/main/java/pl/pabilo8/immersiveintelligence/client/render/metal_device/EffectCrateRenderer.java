@@ -27,6 +27,25 @@ public abstract class EffectCrateRenderer<T extends TileEntityEffectCrate> exten
 	private IIMachineUpgradeModel modelUpgrade = null;
 	private AMT partInserter, partLower, partUpper;
 
+	public static void renderWithUpgrade(MachineUpgrade... upgrades)
+	{
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(-0.5, 0, 0.5);
+		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
+
+		//model.getBlockRotation(EnumFacing.NORTH, false);
+
+		for(MachineUpgrade upgrade : upgrades)
+		{
+			if(upgrade==IIContent.UPGRADE_INSERTER)
+			{
+				GlStateManager.pushMatrix();
+				GlStateManager.popMatrix();
+			}
+		}
+
+		GlStateManager.popMatrix();
+	}
 
 	@Override
 	public void draw(T te, BufferBuilder buf, float partialTicks, Tessellator tes)
@@ -87,26 +106,6 @@ public abstract class EffectCrateRenderer<T extends TileEntityEffectCrate> exten
 		modelUpgrade = modelUpgrade==null?null: modelUpgrade.disposeOf();
 
 		animationOpen = null;
-	}
-
-	public static void renderWithUpgrade(MachineUpgrade... upgrades)
-	{
-		GlStateManager.pushMatrix();
-		GlStateManager.translate(-0.5, 0, 0.5);
-		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
-
-		//model.getBlockRotation(EnumFacing.NORTH, false);
-
-		for(MachineUpgrade upgrade : upgrades)
-		{
-			if(upgrade==IIContent.UPGRADE_INSERTER)
-			{
-				GlStateManager.pushMatrix();
-				GlStateManager.popMatrix();
-			}
-		}
-
-		GlStateManager.popMatrix();
 	}
 
 	//--- Abstract Methods ---//

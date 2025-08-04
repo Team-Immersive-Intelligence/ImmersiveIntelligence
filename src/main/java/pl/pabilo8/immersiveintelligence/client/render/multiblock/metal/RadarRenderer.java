@@ -28,6 +28,34 @@ public class RadarRenderer extends TileEntitySpecialRenderer<TileEntityRadar> im
 	private static ModelRadar model, modelFlipped;
 	private static ModelRendererTurbo[] modelConstruction, modelConstructionFlipped;
 
+	public static void renderWithUpgrades(MachineUpgrade[] upgrades)
+	{
+		ClientUtils.bindTexture(TEXTURE);
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(-0.5, -0.25f, 0);
+		GlStateManager.scale(0.25f, 0.25f, 0.25f);
+		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
+
+		for(ModelRendererTurbo mod : modelFlipped.baseModel)
+			mod.render();
+
+		for(MachineUpgrade upgrade : upgrades)
+		{
+			if(upgrade==IIContent.UPGRADE_RADIO_LOCATORS)
+			{
+				for(ModelRendererTurbo mod : modelFlipped.triangulatorsModel)
+					mod.render();
+			}
+		}
+
+		GlStateManager.translate(3, 0, 1);
+		for(ModelRendererTurbo mod : modelFlipped.radarModel)
+			mod.render();
+
+
+		GlStateManager.popMatrix();
+	}
+
 	@Override
 	public void render(TileEntityRadar te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
 	{
@@ -177,33 +205,5 @@ public class RadarRenderer extends TileEntitySpecialRenderer<TileEntityRadar> im
 		GlStateManager.enableLighting();
 		GlStateManager.popMatrix();
 
-	}
-
-	public static void renderWithUpgrades(MachineUpgrade[] upgrades)
-	{
-		ClientUtils.bindTexture(TEXTURE);
-		GlStateManager.pushMatrix();
-		GlStateManager.translate(-0.5, -0.25f, 0);
-		GlStateManager.scale(0.25f, 0.25f, 0.25f);
-		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
-
-		for(ModelRendererTurbo mod : modelFlipped.baseModel)
-			mod.render();
-
-		for(MachineUpgrade upgrade : upgrades)
-		{
-			if(upgrade==IIContent.UPGRADE_RADIO_LOCATORS)
-			{
-				for(ModelRendererTurbo mod : modelFlipped.triangulatorsModel)
-					mod.render();
-			}
-		}
-
-		GlStateManager.translate(3, 0, 1);
-		for(ModelRendererTurbo mod : modelFlipped.radarModel)
-			mod.render();
-
-
-		GlStateManager.popMatrix();
 	}
 }

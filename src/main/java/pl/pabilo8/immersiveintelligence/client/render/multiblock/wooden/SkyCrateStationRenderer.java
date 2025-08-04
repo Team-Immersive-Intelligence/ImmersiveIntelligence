@@ -42,11 +42,11 @@ import java.util.function.Consumer;
  */
 public class SkyCrateStationRenderer extends TileEntitySpecialRenderer<TileEntitySkyCrateStation> implements IReloadableModelContainer<SkyCrateStationRenderer>
 {
-	private static ModelSkyCrateStation model;
-	private static ModelSkyCrateStation modelFlipped;
 	private static final TileEntityBanner banner = new TileEntityBanner();
 	private static final ModelBanner modelBanner = new ModelBanner();
 	private static final String texture = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/skycrate_station.png";
+	private static ModelSkyCrateStation model;
+	private static ModelSkyCrateStation modelFlipped;
 
 	static
 	{

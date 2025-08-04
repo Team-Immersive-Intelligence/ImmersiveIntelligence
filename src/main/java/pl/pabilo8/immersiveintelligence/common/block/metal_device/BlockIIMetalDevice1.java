@@ -30,26 +30,6 @@ import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
  */
 public class BlockIIMetalDevice1 extends BlockIITileProvider<IIBlockTypes_MetalDevice1>
 {
-	public enum IIBlockTypes_MetalDevice1 implements IITileProviderEnum
-	{
-		@EnumTileProvider(tile = TileEntityCO2Filter.class)
-		@IIBlockProperties(needsCustomState = true, renderLayer = BlockRenderLayer.CUTOUT, category = IICategory.TOOLS)
-		CO2_FILTER,
-		@IIBlockProperties(hidden = TernaryValue.TRUE, category = IICategory.ELECTRONICS)
-		NEWSPAPER_STAND,
-		//Scheduled for 0.4.0
-		@IIBlockProperties(hidden = TernaryValue.TRUE, category = IICategory.LOGISTICS)
-		VENDING_MACHINE,
-		@IIBlockProperties(hidden = TernaryValue.TRUE, category = IICategory.ELECTRONICS)
-		TYPEWRITER_TABLE,
-		@IIBlockProperties(hidden = TernaryValue.TRUE, category = IICategory.LOGISTICS)
-		CASHIER_TABLE,
-		@IIBlockProperties(hidden = TernaryValue.TRUE, category = IICategory.ELECTRONICS)
-		PLANNING_TABLE,
-		@IIBlockProperties(hidden = TernaryValue.TRUE, category = IICategory.ELECTRONICS)
-		REMOTE_CONTROL_TABLE,
-	}
-
 	public BlockIIMetalDevice1()
 	{
 		super("metal_device1", Material.IRON, PropertyEnum.create("type", IIBlockTypes_MetalDevice1.class), ItemBlockIIBase::new,
@@ -91,5 +71,25 @@ public class BlockIIMetalDevice1 extends BlockIITileProvider<IIBlockTypes_MetalD
 			}
 		}
 		return true;
+	}
+
+	public enum IIBlockTypes_MetalDevice1 implements IITileProviderEnum
+	{
+		@EnumTileProvider(tile = TileEntityCO2Filter.class)
+		@IIBlockProperties(needsCustomState = true, renderLayer = BlockRenderLayer.CUTOUT, category = IICategory.TOOLS)
+		CO2_FILTER,
+		@IIBlockProperties(hidden = TernaryValue.TRUE, category = IICategory.ELECTRONICS)
+		NEWSPAPER_STAND,
+		//Scheduled for 0.4.0
+		@IIBlockProperties(hidden = TernaryValue.TRUE, category = IICategory.LOGISTICS)
+		VENDING_MACHINE,
+		@IIBlockProperties(hidden = TernaryValue.TRUE, category = IICategory.ELECTRONICS)
+		TYPEWRITER_TABLE,
+		@IIBlockProperties(hidden = TernaryValue.TRUE, category = IICategory.LOGISTICS)
+		CASHIER_TABLE,
+		@IIBlockProperties(hidden = TernaryValue.TRUE, category = IICategory.ELECTRONICS)
+		PLANNING_TABLE,
+		@IIBlockProperties(hidden = TernaryValue.TRUE, category = IICategory.ELECTRONICS)
+		REMOTE_CONTROL_TABLE,
 	}
 }

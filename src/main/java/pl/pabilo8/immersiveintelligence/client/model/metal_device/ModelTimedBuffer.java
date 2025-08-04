@@ -11,10 +11,9 @@ import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
  */
 public class ModelTimedBuffer extends ModelIIBase
 {
+	public ModelRendererTurbo[] clockModel;
 	int textureX = 64;
 	int textureY = 64;
-
-	public ModelRendererTurbo[] clockModel;
 
 	public ModelTimedBuffer() //Same as Filename
 	{

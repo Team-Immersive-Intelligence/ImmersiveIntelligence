@@ -43,16 +43,21 @@ public class RecipeSkinCraftingHandler extends net.minecraftforge.registries.IFo
 		return new SkinResult(inv).remaining;
 	}
 
+	@Override
+	public boolean canFit(int width, int height)
+	{
+		return width >= 2||height >= 2;
+	}
+
 	private static class SkinResult
 	{
 		private final boolean canCraft;
 		private final NonNullList<ItemStack> remaining;
 		private final ItemStack output;
-
+		int manualStack = 0;
 		private ISkinnable skinnable;
 		private ItemStack item;
 		private ItemStack manual;
-		int manualStack = 0;
 
 		public SkinResult(InventoryCrafting inv)
 		{
@@ -138,12 +143,6 @@ public class RecipeSkinCraftingHandler extends net.minecraftforge.registries.IFo
 
 			return result;
 		}
-	}
-
-	@Override
-	public boolean canFit(int width, int height)
-	{
-		return width >= 2||height >= 2;
 	}
 
 }

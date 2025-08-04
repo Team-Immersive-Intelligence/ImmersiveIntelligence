@@ -16,12 +16,12 @@ import javax.vecmath.Vector3f;
  **/
 public class ParticleOffspring<T extends AbstractParticle>
 {
-	private boolean initialized = false;
 	private final String factoryName;
 	private final PositionGenerator positionGenerator;
 	private final float size;
 	private final int minAmount;
 	private final int randAmount;
+	private boolean initialized = false;
 	private ParticleFactory<T> particleFactory;
 
 	public ParticleOffspring(String factoryName, PositionGenerator positionGenerator,

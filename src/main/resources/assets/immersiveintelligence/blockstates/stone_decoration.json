@@ -23,7 +23,6 @@
     },
     "left": {
       "0": {
-
       },
       "1": {
         "submodel": "immersiveintelligence:sandbags/sandbags_none_left.obj"
@@ -34,18 +33,15 @@
     },
     "right": {
       "0": {
-
       },
       "1": {
         "submodel": "immersiveintelligence:sandbags/sandbags_none_right.obj"
       },
       "2": {
-
       }
     },
     "corner": {
       "0": {
-
       },
       "1": {
         "model": "immersiveintelligence:sandbags/sandbags_corner.obj"

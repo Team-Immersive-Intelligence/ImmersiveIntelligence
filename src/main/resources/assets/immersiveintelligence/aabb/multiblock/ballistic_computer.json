@@ -43,9 +43,9 @@
   },
   "positions": {
     "4": "plate",
-    "1": ["slab", "mug", "artillery_shell", "shelf_below","wall"],
+    "1": ["slab", "mug", "artillery_shell", "shelf_below", "wall"],
     "7": ["slab", "cable1", "cable2"],
-    "5": ["shelf","wall_upper"]
+    "5": ["shelf", "wall_upper"]
   },
   "poi": {
     "energy": 6,

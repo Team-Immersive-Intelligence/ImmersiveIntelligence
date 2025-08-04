@@ -42,16 +42,6 @@ import java.util.ArrayList;
  */
 public class BlockIIMechanicalConnector extends BlockIITileProvider<IIBlockTypes_MechanicalConnector>
 {
-	public enum IIBlockTypes_MechanicalConnector implements IITileProviderEnum
-	{
-		@IIBlockProperties(oreDict = "wheelIron", needsCustomState = true)
-		@EnumTileProvider(tile = TileEntityWheelIron.class)
-		IRON_WHEEL,
-		@IIBlockProperties(oreDict = "wheelSteel", needsCustomState = true)
-		@EnumTileProvider(tile = TileEntityWheelSteel.class)
-		STEEL_WHEEL
-	}
-
 	public BlockIIMechanicalConnector()
 	{
 		super("mechanical_connector", Material.IRON, PropertyEnum.create("type", IIBlockTypes_MechanicalConnector.class), ItemBlockIIBase::new,
@@ -163,5 +153,15 @@ public class BlockIIMechanicalConnector extends BlockIITileProvider<IIBlockTypes
 			}
 		}
 		return super.getPickBlock(state, target, world, pos, player);
+	}
+
+	public enum IIBlockTypes_MechanicalConnector implements IITileProviderEnum
+	{
+		@IIBlockProperties(oreDict = "wheelIron", needsCustomState = true)
+		@EnumTileProvider(tile = TileEntityWheelIron.class)
+		IRON_WHEEL,
+		@IIBlockProperties(oreDict = "wheelSteel", needsCustomState = true)
+		@EnumTileProvider(tile = TileEntityWheelSteel.class)
+		STEEL_WHEEL
 	}
 }

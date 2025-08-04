@@ -20,13 +20,13 @@ import pl.pabilo8.immersiveintelligence.common.util.entity.IIEntityUtils;
 public class AIHansRailgun extends AIHansHandWeapon
 {
 	/**
-	 * Snipers lie down instead of kneeling
-	 */
-	boolean sniper = false;
-	/**
 	 * The maximum time the Hans has to wait before peforming another ranged attack.
 	 */
 	protected final int holdFireTime;
+	/**
+	 * Snipers lie down instead of kneeling
+	 */
+	boolean sniper = false;
 
 	public AIHansRailgun(EntityHans hans)
 	{

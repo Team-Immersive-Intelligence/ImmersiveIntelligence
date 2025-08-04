@@ -27,11 +27,6 @@ import java.util.List;
 public abstract class AIHansHandWeapon extends AIHansBase
 {
 	/**
-	 * The target currently attacked by the Hans
-	 */
-	@Nullable
-	protected EntityLivingBase attackTarget;
-	/**
 	 * The maximum distance the Hans will attack enemies from
 	 * Will walk towards if necessary.
 	 */
@@ -46,6 +41,20 @@ public abstract class AIHansHandWeapon extends AIHansBase
 	 */
 	protected final int safeAttackDistance;
 	/**
+	 * The movement speed modifier of the Hans
+	 */
+	protected final double moveSpeed;
+	/**
+	 * The current combat motion state
+	 */
+	@Nonnull
+	public MotionState motionState = MotionState.IN_POSITION;
+	/**
+	 * The target currently attacked by the Hans
+	 */
+	@Nullable
+	protected EntityLivingBase attackTarget;
+	/**
 	 * Determines for how many ticks an AI has to see its target to attack it
 	 */
 	protected int minSeeTime;
@@ -58,15 +67,6 @@ public abstract class AIHansHandWeapon extends AIHansBase
 	 * Determines for how many ticks an AI has seen its target
 	 */
 	protected int seeTime;
-	/**
-	 * The movement speed modifier of the Hans
-	 */
-	protected final double moveSpeed;
-	/**
-	 * The current combat motion state
-	 */
-	@Nonnull
-	public MotionState motionState = MotionState.IN_POSITION;
 	/**
 	 * Determines whether the Hans can fire at the target
 	 */
@@ -244,17 +244,6 @@ public abstract class AIHansHandWeapon extends AIHansBase
 
 	}
 
-	/**
-	 * The motion state returned by {@link #getMotionState()}
-	 */
-	protected enum MotionState
-	{
-		COME_TOWARDS,
-		IN_POSITION,
-		SET_UP,
-		FALLBACK
-	}
-
 	protected void lookOnTarget()
 	{
 		assert attackTarget!=null;
@@ -278,6 +267,17 @@ public abstract class AIHansHandWeapon extends AIHansBase
 	protected boolean hasToSeeEnemy()
 	{
 		return true;
+	}
+
+	/**
+	 * The motion state returned by {@link #getMotionState()}
+	 */
+	protected enum MotionState
+	{
+		COME_TOWARDS,
+		IN_POSITION,
+		SET_UP,
+		FALLBACK
 	}
 
 }

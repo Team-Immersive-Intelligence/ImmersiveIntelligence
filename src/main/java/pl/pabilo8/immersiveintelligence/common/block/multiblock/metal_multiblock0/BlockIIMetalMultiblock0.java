@@ -48,6 +48,27 @@ public class BlockIIMetalMultiblock0 extends BlockIIMultiblock<MetalMultiblocks0
 		);
 	}
 
+	@Nonnull
+	@Override
+	public EnumBlockRenderType getRenderType(@Nonnull IBlockState state)
+	{
+		switch(state.getValue(property))
+		{
+			case DATA_INPUT_MACHINE:
+			case ARITHMETIC_LOGIC_MACHINE:
+			case PRINTING_PRESS:
+			case BALLISTIC_COMPUTER:
+			case ARTILLERY_HOWITZER:
+			case MISSILE_SILO:
+			case PACKER:
+			case ELECTROLYZER:
+			case SCANNING_CONVEYOR:
+				return EnumBlockRenderType.MODEL;
+			default:
+				return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
+		}
+	}
+
 	public enum MetalMultiblocks0 implements IITileMultiblockEnum
 	{
 		@EnumMultiblockProvider(tile = TileEntityRadioStation.class, multiblock = MultiblockRadioStation.class)
@@ -97,26 +118,5 @@ public class BlockIIMetalMultiblock0 extends BlockIIMultiblock<MetalMultiblocks0
 
 		@IIBlockProperties(hidden = TernaryValue.TRUE)
 		MISSILE_SILO //not implemented
-	}
-
-	@Nonnull
-	@Override
-	public EnumBlockRenderType getRenderType(@Nonnull IBlockState state)
-	{
-		switch(state.getValue(property))
-		{
-			case DATA_INPUT_MACHINE:
-			case ARITHMETIC_LOGIC_MACHINE:
-			case PRINTING_PRESS:
-			case BALLISTIC_COMPUTER:
-			case ARTILLERY_HOWITZER:
-			case MISSILE_SILO:
-			case PACKER:
-			case ELECTROLYZER:
-			case SCANNING_CONVEYOR:
-				return EnumBlockRenderType.MODEL;
-			default:
-				return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
-		}
 	}
 }

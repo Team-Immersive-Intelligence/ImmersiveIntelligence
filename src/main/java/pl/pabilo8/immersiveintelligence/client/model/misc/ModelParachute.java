@@ -11,10 +11,9 @@ import pl.pabilo8.immersiveintelligence.client.util.tmt.Shape2D;
  */
 public class ModelParachute extends ModelIIBase
 {
+	public ModelRendererTurbo[] linkThingyModel;
 	int textureX = 128;
 	int textureY = 64;
-
-	public ModelRendererTurbo[] linkThingyModel;
 
 	public ModelParachute() //Same as Filename
 	{

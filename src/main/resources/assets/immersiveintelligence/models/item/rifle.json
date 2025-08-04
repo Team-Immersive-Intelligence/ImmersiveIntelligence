@@ -1,5 +1,5 @@
 {
-  "parent":"immersiveengineering:item/ie_item_base",
+  "parent": "immersiveengineering:item/ie_item_base",
   "textures": {
   },
   "display": {

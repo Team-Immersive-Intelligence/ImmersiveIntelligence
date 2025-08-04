@@ -1,7 +1,6 @@
 # meta
 Alarm Siren
 The reactor is OK, was, at least.
-
 # alarm siren 1
 |[crafting]{source:"alarm_siren"}|
 The alarm siren is a device which emits a loud noise when provided a redstone signal. Volume depends on signal strength.

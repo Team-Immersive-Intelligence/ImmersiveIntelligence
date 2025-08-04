@@ -32,6 +32,29 @@ public class ImmersivePostsHelper extends IICompatModule
 	private BlockFence platinumFence;
 	private BlockFence duraluminiumFence;
 
+	@Optional.Method(modid = "immersiveposts")
+	private static BlockPost createMetalPost(EnumPostMaterial postMat)
+	{
+		return new BlockPost(Material.IRON, postMat);
+	}
+
+	private static BlockFence createFence(String name)
+	{
+		return new BlockMetalFence(name);
+	}
+
+	@Nullable
+	@Optional.Method(modid = "immersiveposts")
+	public static EnumPostMaterial addPostMaterial(String name, Block block)
+	{
+		return EnumHelper.addEnum(EnumPostMaterial.class, name.toUpperCase(),
+				new Class[]{
+						String.class, Block.class, boolean.class, boolean.class
+				},
+				name+"post", block, true, true
+		);
+	}
+
 	@Override
 	public String getName()
 	{
@@ -115,17 +138,6 @@ public class ImmersivePostsHelper extends IICompatModule
 
 	}
 
-	@Optional.Method(modid = "immersiveposts")
-	private static BlockPost createMetalPost(EnumPostMaterial postMat)
-	{
-		return new BlockPost(Material.IRON, postMat);
-	}
-
-	private static BlockFence createFence(String name)
-	{
-		return new BlockMetalFence(name);
-	}
-
 	public static class BlockMetalFence extends BlockFence implements IIISingleMetaStateMappings
 	{
 		public final String rawName;
@@ -156,17 +168,5 @@ public class ImmersivePostsHelper extends IICompatModule
 		{
 			return "fence/"+rawName;
 		}
-	}
-
-	@Nullable
-	@Optional.Method(modid = "immersiveposts")
-	public static EnumPostMaterial addPostMaterial(String name, Block block)
-	{
-		return EnumHelper.addEnum(EnumPostMaterial.class, name.toUpperCase(),
-				new Class[]{
-						String.class, Block.class, boolean.class, boolean.class
-				},
-				name+"post", block, true, true
-		);
 	}
 }

@@ -40,16 +40,6 @@ public class BlockIIAdvancedExplosives extends BlockIIBase<HMX_Explosives>
 		setCategory(IICategory.WARFARE);
 	}
 
-	public enum HMX_Explosives implements IIBlockEnum
-	{
-		@IIBlockProperties(oreDict = {"explosiveRDX", "explosiveHexogen"}, needsCustomState = true)
-		RDX,
-		@IIBlockProperties(oreDict = {"explosiveHMX", "explosiveHexamine"}, needsCustomState = true)
-		HMX,
-		@IIBlockProperties(oreDict = {"explosiveWhitePhosphorus"}, needsCustomState = true)
-		WHITE_PHOSPHORUS
-	}
-
 	@Override
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
 	{
@@ -101,6 +91,16 @@ public class BlockIIAdvancedExplosives extends BlockIIBase<HMX_Explosives>
 			}
 			component.onEffect(world, new Vec3d(pos), Vec3d.ZERO, ComponentEffectShape.ORB, new NBTTagCompound(), 1.0f, 1.0f, igniter);
 		}
+	}
+
+	public enum HMX_Explosives implements IIBlockEnum
+	{
+		@IIBlockProperties(oreDict = {"explosiveRDX", "explosiveHexogen"}, needsCustomState = true)
+		RDX,
+		@IIBlockProperties(oreDict = {"explosiveHMX", "explosiveHexamine"}, needsCustomState = true)
+		HMX,
+		@IIBlockProperties(oreDict = {"explosiveWhitePhosphorus"}, needsCustomState = true)
+		WHITE_PHOSPHORUS
 	}
 }
 

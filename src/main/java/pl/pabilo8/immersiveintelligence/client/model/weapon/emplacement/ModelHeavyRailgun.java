@@ -7,10 +7,9 @@ import pl.pabilo8.immersiveintelligence.client.util.tmt.Shape2D;
 
 public class ModelHeavyRailgun extends ModelIIBase
 {
+	public ModelRendererTurbo[] gunModel;
 	int textureX = 128;
 	int textureY = 128;
-
-	public ModelRendererTurbo[] gunModel;
 
 	public ModelHeavyRailgun(boolean doOffsets) //Same as Filename
 	{
@@ -116,11 +115,11 @@ public class ModelHeavyRailgun extends ModelIIBase
 		baseModel[20].setRotationPoint(10F, -29F, 2F);
 		baseModel[20].rotateAngleX = -0.06981317F;
 
-		baseModel[21].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[] { new Coord2D(0, 0, 0, 0), new Coord2D(10, 0, 10, 0), new Coord2D(10, 22, 10, 22), new Coord2D(6, 26, 6, 26), new Coord2D(0, 26, 0, 26) }), 1, 10, 26, 70, 1, ModelRendererTurbo.MR_FRONT, new float[] {26 ,6 ,6 ,22 ,10}); // Shape 168
+		baseModel[21].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[]{new Coord2D(0, 0, 0, 0), new Coord2D(10, 0, 10, 0), new Coord2D(10, 22, 10, 22), new Coord2D(6, 26, 6, 26), new Coord2D(0, 26, 0, 26)}), 1, 10, 26, 70, 1, ModelRendererTurbo.MR_FRONT, new float[]{26, 6, 6, 22, 10}); // Shape 168
 		baseModel[21].setRotationPoint(10F, -2F, 1F);
 		baseModel[21].rotateAngleX = -0.06981317F;
 
-		baseModel[22].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[] { new Coord2D(0, 0, 0, 0), new Coord2D(10, 0, 10, 0), new Coord2D(10, 22, 10, 22), new Coord2D(6, 26, 6, 26), new Coord2D(0, 26, 0, 26) }), 1, 10, 26, 70, 1, ModelRendererTurbo.MR_FRONT, new float[] {26 ,6 ,6 ,22 ,10}); // Shape 168
+		baseModel[22].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[]{new Coord2D(0, 0, 0, 0), new Coord2D(10, 0, 10, 0), new Coord2D(10, 22, 10, 22), new Coord2D(6, 26, 6, 26), new Coord2D(0, 26, 0, 26)}), 1, 10, 26, 70, 1, ModelRendererTurbo.MR_FRONT, new float[]{26, 6, 6, 22, 10}); // Shape 168
 		baseModel[22].setRotationPoint(22F, -2F, 0F);
 		baseModel[22].rotateAngleX = 0.06981317F;
 		baseModel[22].rotateAngleY = -3.14159265F;
@@ -800,13 +799,13 @@ public class ModelHeavyRailgun extends ModelIIBase
 		gunModel[152].addShapeBox(0F, 0F, 0F, 2, 2, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // GUN09
 		gunModel[152].setRotationPoint(19F, -21F, 30.99F);
 
-		parts.put("base",  baseModel);
+		parts.put("base", baseModel);
 		parts.put("gun", gunModel);
-		translateAll(-16,-1,-16);
+		translateAll(-16, -1, -16);
 
 		if(doOffsets)
 		{
-			translate(gunModel,0,20,4);
+			translate(gunModel, 0, 20, 4);
 		}
 
 		flipAll();

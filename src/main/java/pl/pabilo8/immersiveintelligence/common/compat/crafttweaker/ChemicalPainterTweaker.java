@@ -50,6 +50,13 @@ public class ChemicalPainterTweaker
 		CraftTweakerAPI.apply(new Remove(CraftTweakerHelper.toStack(output)));
 	}
 
+	@ZenClass("mods."+ImmersiveIntelligence.MODID+".IChemicalPainterFunction")
+	@ZenRegister
+	public interface IChemicalPainterFunction
+	{
+		IItemStack process(IItemStack input, int color, int baseColor);
+	}
+
 	private static class Add implements IAction
 	{
 		private final PaintingRecipe recipe;
@@ -93,13 +100,6 @@ public class ChemicalPainterTweaker
 		{
 			return "Removing Chemical Painter Recipe for "+input.getDisplayName();
 		}
-	}
-
-	@ZenClass("mods."+ImmersiveIntelligence.MODID+".IChemicalPainterFunction")
-	@ZenRegister
-	public interface IChemicalPainterFunction
-	{
-		IItemStack process(IItemStack input, int color, int baseColor);
 	}
 
 }

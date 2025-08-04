@@ -43,24 +43,20 @@ import java.util.function.Supplier;
  */
 public class GuiEmplacementPageTasks extends GuiEmplacement
 {
+	private final ArrayList<TaskFilter> taskFilters = new ArrayList<>();
 	int currentTab = 0;
 	private GuiButtonIE[] taskTabButtons = new GuiButtonIE[0];
-
 	@Nullable
 	private GuiTextField valueEdit;
 	@Nullable
 	private DecoDropdown<String> valueList;
-
 	private DecoSwitch buttonEnabled;
 	private DecoCheckbox buttonInverted;
 	private GuiButtonIE buttonAdd, buttonRemove, buttonDuplicate, buttonClear;
 	private GuiButtonIE buttonTypePrev, buttonTypeNext;
 	private GuiEmplacementTaskList buttonTaskList;
-
 	private TaskFilter selected = null;
-
 	private boolean tasksModified = false;
-	private final ArrayList<TaskFilter> taskFilters = new ArrayList<>();
 
 	public GuiEmplacementPageTasks(EntityPlayer player, TileEntityEmplacement tile)
 	{
@@ -307,25 +303,6 @@ public class GuiEmplacementPageTasks extends GuiEmplacement
 	}
 
 
-	public static class TaskFilter
-	{
-		public EnumTaskType type;
-		protected boolean negation;
-		protected String filter;
-
-		public TaskFilter(EnumTaskType type, boolean negation, String filter)
-		{
-			this.type = type;
-			this.negation = negation;
-			this.filter = filter;
-		}
-
-		public TaskFilter(NBTTagCompound tag)
-		{
-			this(EnumTaskType.valueOf(tag.getString("type").toUpperCase()), tag.getBoolean("negation"), tag.getString("filter"));
-		}
-	}
-
 	//Yes, this had to be done
 	//Else I'd have to do ATs on internal classes and get it somehow
 	public enum EnumTaskType implements IStringSerializable
@@ -370,6 +347,8 @@ public class GuiEmplacementPageTasks extends GuiEmplacement
 		TEAM,
 		NAME;
 
+		private final Supplier<String[]> entries;
+
 		EnumTaskType()
 		{
 			this(() -> new String[0]);
@@ -379,8 +358,6 @@ public class GuiEmplacementPageTasks extends GuiEmplacement
 		{
 			this.entries = entries;
 		}
-
-		private final Supplier<String[]> entries;
 
 		@Nonnull
 		@Override
@@ -392,6 +369,25 @@ public class GuiEmplacementPageTasks extends GuiEmplacement
 		public String[] getDropdownEntries()
 		{
 			return entries.get();
+		}
+	}
+
+	public static class TaskFilter
+	{
+		public EnumTaskType type;
+		protected boolean negation;
+		protected String filter;
+
+		public TaskFilter(EnumTaskType type, boolean negation, String filter)
+		{
+			this.type = type;
+			this.negation = negation;
+			this.filter = filter;
+		}
+
+		public TaskFilter(NBTTagCompound tag)
+		{
+			this(EnumTaskType.valueOf(tag.getString("type").toUpperCase()), tag.getBoolean("negation"), tag.getString("filter"));
 		}
 	}
 }

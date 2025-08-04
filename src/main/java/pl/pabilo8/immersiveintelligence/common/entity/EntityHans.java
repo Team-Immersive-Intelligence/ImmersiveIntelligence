@@ -59,7 +59,10 @@ import java.util.Arrays;
  */
 public class EntityHans extends EntityCreature implements INpc
 {
-	public static boolean INFINITE_AMMO = false;
+	/**
+	 * A dangerously close distance, most {@link AIHansHandWeapon} tasks will resort to {@link EntityAIAttackMelee}
+	 */
+	public static final float MELEE_DISTANCE = 1.25f;
 	private static final IIColor[] EYE_COLORS = new IIColor[]{
 			IIColor.fromPackedRGB(0x597179),//cyan
 			IIColor.fromPackedRGB(0x536579),//toned blue
@@ -78,45 +81,33 @@ public class EntityHans extends EntityCreature implements INpc
 	private static final DataParameter<String> DATA_MARKER_ARM_ANIMATION = EntityDataManager.createKey(EntityHans.class, DataSerializers.STRING);
 	private static final DataParameter<Integer> DATA_MARKER_EYE_COLOR = EntityDataManager.createKey(EntityHans.class, DataSerializers.VARINT);
 	private static final DataParameter<NBTTagCompound> DATA_MARKER_SPEECH = EntityDataManager.createKey(EntityHans.class, DataSerializers.COMPOUND_TAG);
-
+	public static boolean INFINITE_AMMO = false;
+	public final NonNullList<ItemStack> mainInventory = NonNullList.withSize(27, ItemStack.EMPTY);
+	private final net.minecraftforge.items.IItemHandlerModifiable handHandler = new net.minecraftforge.items.wrapper.EntityHandsInvWrapper(this);
+	private final net.minecraftforge.items.IItemHandlerModifiable armorHandler = new net.minecraftforge.items.wrapper.EntityArmorInvWrapper(this);
+	private final net.minecraftforge.items.IItemHandlerModifiable invHandler = new ItemStackHandler(this.mainInventory);
+	private final net.minecraftforge.items.IItemHandler joinedHandler = new net.minecraftforge.items.wrapper.CombinedInvWrapper(armorHandler, handHandler, invHandler);
 	public HansLegAnimation prevLegAnimation = HansLegAnimation.STANDING;
 	public HansLegAnimation legAnimation = HansLegAnimation.STANDING;
 	public int legAnimationTimer = 0;
-
 	public HansArmAnimation prevArmAnimation = HansArmAnimation.NORMAL;
 	public HansArmAnimation armAnimation = HansArmAnimation.NORMAL;
 	public int armAnimationTimer = 8;
-
 	public EyeEmotions eyeEmotion = HansAnimations.EyeEmotions.NEUTRAL;
 	public MouthEmotions mouthEmotion = HansAnimations.MouthEmotions.NEUTRAL;
 	public MouthShapes mouthShape = HansAnimations.MouthShapes.CLOSED;
 	public ArrayList<Tuple<Integer, MouthShapes>> mouthShapeQueue = new ArrayList<>();
 	public int speechProgress = 0;
 	public IIColor eyeColor;
-
-	/**
-	 * A dangerously close distance, most {@link AIHansHandWeapon} tasks will resort to {@link EntityAIAttackMelee}
-	 */
-	public static final float MELEE_DISTANCE = 1.25f;
-
-	private EntityAIBase vehicleTask = null;
-	private AIHansHandWeapon weaponTask = null;
-	private AIHansOpenDoor doorTask = null;
-
 	/**
 	 * Whether this Hans is a head of a Squad
 	 */
 	public boolean commander = false;
-
 	public boolean enemyContact = false;
 	public boolean hasAmmo = true;
-
-	public final NonNullList<ItemStack> mainInventory = NonNullList.withSize(27, ItemStack.EMPTY);
-
-	private final net.minecraftforge.items.IItemHandlerModifiable handHandler = new net.minecraftforge.items.wrapper.EntityHandsInvWrapper(this);
-	private final net.minecraftforge.items.IItemHandlerModifiable armorHandler = new net.minecraftforge.items.wrapper.EntityArmorInvWrapper(this);
-	private final net.minecraftforge.items.IItemHandlerModifiable invHandler = new ItemStackHandler(this.mainInventory);
-	private final net.minecraftforge.items.IItemHandler joinedHandler = new net.minecraftforge.items.wrapper.CombinedInvWrapper(armorHandler, handHandler, invHandler);
+	private EntityAIBase vehicleTask = null;
+	private AIHansHandWeapon weaponTask = null;
+	private AIHansOpenDoor doorTask = null;
 
 	public EntityHans(World worldIn)
 	{

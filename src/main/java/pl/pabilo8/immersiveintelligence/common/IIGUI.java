@@ -142,10 +142,10 @@ public enum IIGUI implements ISerializableEnum
 
 	//GUI_PERISCOPE,
 
-	public boolean item;
 	public final Class<? extends TileEntity> teClass;
 	public final BiFunction<EntityPlayer, TileEntity, Container> containerFromTile;
 	public final TriFunction<EntityPlayer, ItemStack, EnumHand, Container> containerFromStack;
+	public boolean item;
 	@SideOnly(Side.CLIENT)
 	public BiFunction<EntityPlayer, TileEntity, GuiScreen> guiFromTile;
 	@SideOnly(Side.CLIENT)

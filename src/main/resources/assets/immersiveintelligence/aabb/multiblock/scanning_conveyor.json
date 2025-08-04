@@ -30,8 +30,8 @@
     ]
   },
   "positions": {
-    "1": ["conveyor","conveyor_side1","conveyor_side2"],
-    "2": ["top_box","top_box2","conveyor_side_top1","conveyor_side_top2"]
+    "1": ["conveyor", "conveyor_side1", "conveyor_side2"],
+    "2": ["top_box", "top_box2", "conveyor_side_top1", "conveyor_side_top2"]
   },
   "poi": {
     "power": 2,

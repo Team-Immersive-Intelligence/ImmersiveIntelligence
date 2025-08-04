@@ -30,8 +30,8 @@ import java.util.Set;
 @RegisteredTileRenderer(name = "mechanical/steel_wheel", clazz = TileEntityWheelSteel.class)
 public class WheelRenderer extends IITileRenderer<TileEntityWheelBase>
 {
-	private IIAnimationCompiledMap rotationClockwise, rotationCounterCw;
 	AMT[] models;
+	private IIAnimationCompiledMap rotationClockwise, rotationCounterCw;
 
 	@Override
 	public void draw(TileEntityWheelBase te, BufferBuilder buf, float partialTicks, Tessellator tes)

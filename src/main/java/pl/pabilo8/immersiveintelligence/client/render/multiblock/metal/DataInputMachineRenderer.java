@@ -21,8 +21,8 @@ import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 @RegisteredTileRenderer(name = "multiblock/data_input_machine", clazz = TileEntityDataInputMachine.class)
 public class DataInputMachineRenderer extends IIMultiblockRenderer<TileEntityDataInputMachine>
 {
-	private AMT[] model;
 	IIMachineUpgradeModel upgradeModel;
+	private AMT[] model;
 	private IIAnimationCompiledMap animationDrawer, animationHatch, animationProgrammingStart;
 
 	@Override

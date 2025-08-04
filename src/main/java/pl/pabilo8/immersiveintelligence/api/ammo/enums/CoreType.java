@@ -40,6 +40,14 @@ public enum CoreType implements ISerializableEnum
 		this.effectShape = effectShape;
 	}
 
+	//TODO: 28.05.2024 replace with IIUtils.enumValue
+	@Nonnull
+	public static CoreType v(String s)
+	{
+		String ss = s.toUpperCase();
+		return Arrays.stream(values()).filter(e -> e.name().equals(ss)).findFirst().orElse(SOFTPOINT);
+	}
+
 	public float getPenDepthMod()
 	{
 		return penDepthMod;
@@ -81,13 +89,5 @@ public enum CoreType implements ISerializableEnum
 	public ComponentEffectShape getEffectShape()
 	{
 		return effectShape;
-	}
-
-	//TODO: 28.05.2024 replace with IIUtils.enumValue
-	@Nonnull
-	public static CoreType v(String s)
-	{
-		String ss = s.toUpperCase();
-		return Arrays.stream(values()).filter(e -> e.name().equals(ss)).findFirst().orElse(SOFTPOINT);
 	}
 }

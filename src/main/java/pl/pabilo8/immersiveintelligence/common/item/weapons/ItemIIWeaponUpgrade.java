@@ -48,6 +48,163 @@ public class ItemIIWeaponUpgrade extends ItemIISubItemsBase<WeaponUpgrade> imple
 		super("weapon_upgrade", 1, WeaponUpgrade.values());
 	}
 
+	private static Predicate<EasyNBT> hasUpgrade(@Nonnull WeaponUpgrade upgrade)
+	{
+		return easyNBT -> easyNBT.hasKey(upgrade.getName());
+	}
+
+	@SideOnly(Side.CLIENT)
+	public static void addUpgradesToRender()
+	{
+		//--- Machinegun ---//
+
+		MachinegunRenderer.upgrades.put(
+				stack -> (IIContent.itemMachinegun.getUpgrades(stack).getBoolean("water_cooling")),
+				(stack, tmtNamedBoxGroups) ->
+				{
+					tmtNamedBoxGroups.remove(MachinegunRenderer.model.barrelBox);
+					tmtNamedBoxGroups.add(MachinegunRenderer.model.waterCoolingBox);
+				}
+		);
+
+		MachinegunRenderer.upgrades.put(
+				stack -> (IIContent.itemMachinegun.getUpgrades(stack).getBoolean("heavy_barrel")),
+				(stack, tmtNamedBoxGroups) ->
+				{
+					tmtNamedBoxGroups.remove(MachinegunRenderer.model.barrelBox);
+					tmtNamedBoxGroups.add(MachinegunRenderer.model.heavyBarrelBox);
+				}
+		);
+
+		MachinegunRenderer.upgrades.put(
+				stack -> (IIContent.itemMachinegun.getUpgrades(stack).getBoolean("second_magazine")),
+				(stack, tmtNamedBoxGroups) ->
+				{
+					tmtNamedBoxGroups.add(MachinegunRenderer.model.secondMagazineMainBox);
+					tmtNamedBoxGroups.add(MachinegunRenderer.model.secondMagazineMagBox);
+				}
+		);
+
+		MachinegunRenderer.upgrades.put(
+				stack -> (IIContent.itemMachinegun.getUpgrades(stack).getBoolean("belt_fed_loader")),
+				(stack, tmtNamedBoxGroups) ->
+				{
+					tmtNamedBoxGroups.remove(MachinegunRenderer.model.ammoBox);
+					tmtNamedBoxGroups.add(MachinegunRenderer.model.beltFedLoaderBox);
+				}
+		);
+
+		MachinegunRenderer.upgrades.put(
+				stack -> (IIContent.itemMachinegun.getUpgrades(stack).getBoolean("scope")),
+				(stack, tmtNamedBoxGroups) ->
+						tmtNamedBoxGroups.add(MachinegunRenderer.model.scopeBox)
+		);
+
+		MachinegunRenderer.upgrades.put(
+				stack -> (IIContent.itemMachinegun.getUpgrades(stack).getBoolean("infrared_scope")),
+				(stack, tmtNamedBoxGroups) ->
+						tmtNamedBoxGroups.add(MachinegunRenderer.model.infraredScopeBox)
+		);
+
+		MachinegunRenderer.upgrades.put(
+				stack -> (IIContent.itemMachinegun.getUpgrades(stack).getBoolean("hasty_bipod")),
+				(stack, tmtNamedBoxGroups) ->
+				{
+					tmtNamedBoxGroups.remove(MachinegunRenderer.model.bipodBox);
+					tmtNamedBoxGroups.add(MachinegunRenderer.model.hastyBipodBox);
+				}
+		);
+
+		MachinegunRenderer.upgrades.put(
+				stack -> (IIContent.itemMachinegun.getUpgrades(stack).getBoolean("precise_bipod")),
+				(stack, tmtNamedBoxGroups) ->
+				{
+					tmtNamedBoxGroups.remove(MachinegunRenderer.model.bipodBox);
+					tmtNamedBoxGroups.add(MachinegunRenderer.model.preciseBipodBox);
+				}
+		);
+
+		MachinegunRenderer.upgrades.put(
+				stack -> (IIContent.itemMachinegun.getUpgrades(stack).getBoolean("tripod")),
+				(stack, tmtNamedBoxGroups) ->
+				{
+					tmtNamedBoxGroups.remove(MachinegunRenderer.model.bipodBox);
+					tmtNamedBoxGroups.add(MachinegunRenderer.model.tripodBox);
+				}
+		);
+
+		MachinegunRenderer.upgrades.put(
+				stack -> (IIContent.itemMachinegun.getUpgrades(stack).getBoolean("shield")),
+				(stack, tmtNamedBoxGroups) ->
+						tmtNamedBoxGroups.add(MachinegunRenderer.model.shieldBox)
+		);
+
+		//--- Submachinegun ---//
+		IIUpgradableItemRendererAMT<?> smg = IIContent.itemSubmachinegun.getItemRenderer();
+		smg.addUpgradePart(hasUpgrade(WeaponUpgrade.STURDY_BARREL), "sturdy_barrel");
+		smg.addUpgradePart(hasUpgrade(WeaponUpgrade.SUPPRESSOR), "suppressor");
+		smg.addUpgradePart(hasUpgrade(WeaponUpgrade.BOTTOM_LOADING), "bottom_loading");
+		smg.addUpgradePart(hasUpgrade(WeaponUpgrade.FOLDING_STOCK), "folding_stock");
+		smg.addUpgradePart(easyNBT -> easyNBT.hasKey("melee"), "bayonet");
+
+		//--- Assault Rifle ---//
+		IIUpgradableItemRendererAMT<?> stg = IIContent.itemAssaultRifle.getItemRenderer();
+		stg.addUpgradePart(hasUpgrade(WeaponUpgrade.SCOPE), "scope");
+		stg.addUpgradePart(hasUpgrade(WeaponUpgrade.INFRARED_SCOPE), "infrared_scope");
+		stg.addUpgradePart(hasUpgrade(WeaponUpgrade.STEREOSCOPIC_RANGEFINDER), "rangefinder");
+		stg.addUpgradePart(hasUpgrade(WeaponUpgrade.RAILGUN_ASSISTED_CHAMBER), "railgun");
+		stg.addUpgradePart(hasUpgrade(WeaponUpgrade.RIFLE_GRENADE_LAUNCHER), "grenade_launcher");
+		stg.addUpgradePart(hasUpgrade(WeaponUpgrade.ELECTRIC_FIRING_MOTOR), "electric_motor");
+		stg.addUpgradePart(hasUpgrade(WeaponUpgrade.GYROSCOPIC_STABILIZER), "stabilizer");
+
+		//--- Rifle ---//
+		IIUpgradableItemRendererAMT<?> rifle = IIContent.itemRifle.getItemRenderer();
+		rifle.addUpgradePart(hasUpgrade(WeaponUpgrade.SCOPE), "scope");
+		rifle.addUpgradePart(easyNBT -> easyNBT.hasKey("melee"), "bayonet");
+		rifle.addUpgradePart(hasUpgrade(WeaponUpgrade.EXTENDED_BARREL), "extended_barrel");
+		rifle.addUpgradePart(hasUpgrade(WeaponUpgrade.SEMI_AUTOMATIC), "semi_automatic");
+	}
+
+	/**
+	 * allows items to add custom lines of information to the mouseover description
+	 */
+	@Override
+	public void addInformation(@Nonnull ItemStack stack, @Nullable World world, @Nonnull List<String> list, @Nonnull ITooltipFlag flag)
+	{
+		WeaponUpgrade sub = stackToSub(stack);
+		//add valid weapon types
+		for(WeaponType type : sub.toolset)
+			list.add(type.color.getHexCol(type.symbol+" "+I18n.format(IIReference.DESC_TOOLUPGRADE+"item."+type.getName())));
+
+		//add description
+		String[] flavour = ImmersiveEngineering.proxy.splitStringOnWidth(
+				I18n.format(IIReference.DESCRIPTION_KEY+"toolupgrade."+sub.getName()), 200);
+		Arrays.stream(flavour).map(IIStringUtil::getItalicString).forEach(list::add);
+	}
+
+	@Override
+	public Set<String> getUpgradeTypes(ItemStack stack)
+	{
+		return stackToSub(stack).toolset.stream()
+				.map(ISerializableEnum::getName)
+				.map(String::toUpperCase)
+				.collect(Collectors.toSet());
+	}
+
+	@Override
+	public boolean canApplyUpgrades(ItemStack target, ItemStack upgrade)
+	{
+		if(target.getItem() instanceof IUpgradeableTool)
+			return stackToSub(upgrade).applyCheck.test(target, upgrade);
+		return false;
+	}
+
+	@Override
+	public void applyUpgrades(ItemStack target, ItemStack upgrade, NBTTagCompound modifications)
+	{
+		stackToSub(upgrade).function.accept(upgrade, modifications);
+	}
+
 	/**
 	 * Categories of upgradable weapon and tool types
 	 */
@@ -195,162 +352,5 @@ public class ItemIIWeaponUpgrade extends ItemIISubItemsBase<WeaponUpgrade> imple
 			BiConsumer<ItemStack, NBTTagCompound> nbtFunction = (upgrade, modifications) -> modifications.setBoolean(getName(), true);
 			this.function = (appliedTag!=null)?nbtFunction.andThen(appliedTag): nbtFunction;
 		}
-	}
-
-	/**
-	 * allows items to add custom lines of information to the mouseover description
-	 */
-	@Override
-	public void addInformation(@Nonnull ItemStack stack, @Nullable World world, @Nonnull List<String> list, @Nonnull ITooltipFlag flag)
-	{
-		WeaponUpgrade sub = stackToSub(stack);
-		//add valid weapon types
-		for(WeaponType type : sub.toolset)
-			list.add(type.color.getHexCol(type.symbol+" "+I18n.format(IIReference.DESC_TOOLUPGRADE+"item."+type.getName())));
-
-		//add description
-		String[] flavour = ImmersiveEngineering.proxy.splitStringOnWidth(
-				I18n.format(IIReference.DESCRIPTION_KEY+"toolupgrade."+sub.getName()), 200);
-		Arrays.stream(flavour).map(IIStringUtil::getItalicString).forEach(list::add);
-	}
-
-	@Override
-	public Set<String> getUpgradeTypes(ItemStack stack)
-	{
-		return stackToSub(stack).toolset.stream()
-				.map(ISerializableEnum::getName)
-				.map(String::toUpperCase)
-				.collect(Collectors.toSet());
-	}
-
-	@Override
-	public boolean canApplyUpgrades(ItemStack target, ItemStack upgrade)
-	{
-		if(target.getItem() instanceof IUpgradeableTool)
-			return stackToSub(upgrade).applyCheck.test(target, upgrade);
-		return false;
-	}
-
-	@Override
-	public void applyUpgrades(ItemStack target, ItemStack upgrade, NBTTagCompound modifications)
-	{
-		stackToSub(upgrade).function.accept(upgrade, modifications);
-	}
-
-	private static Predicate<EasyNBT> hasUpgrade(@Nonnull WeaponUpgrade upgrade)
-	{
-		return easyNBT -> easyNBT.hasKey(upgrade.getName());
-	}
-
-	@SideOnly(Side.CLIENT)
-	public static void addUpgradesToRender()
-	{
-		//--- Machinegun ---//
-
-		MachinegunRenderer.upgrades.put(
-				stack -> (IIContent.itemMachinegun.getUpgrades(stack).getBoolean("water_cooling")),
-				(stack, tmtNamedBoxGroups) ->
-				{
-					tmtNamedBoxGroups.remove(MachinegunRenderer.model.barrelBox);
-					tmtNamedBoxGroups.add(MachinegunRenderer.model.waterCoolingBox);
-				}
-		);
-
-		MachinegunRenderer.upgrades.put(
-				stack -> (IIContent.itemMachinegun.getUpgrades(stack).getBoolean("heavy_barrel")),
-				(stack, tmtNamedBoxGroups) ->
-				{
-					tmtNamedBoxGroups.remove(MachinegunRenderer.model.barrelBox);
-					tmtNamedBoxGroups.add(MachinegunRenderer.model.heavyBarrelBox);
-				}
-		);
-
-		MachinegunRenderer.upgrades.put(
-				stack -> (IIContent.itemMachinegun.getUpgrades(stack).getBoolean("second_magazine")),
-				(stack, tmtNamedBoxGroups) ->
-				{
-					tmtNamedBoxGroups.add(MachinegunRenderer.model.secondMagazineMainBox);
-					tmtNamedBoxGroups.add(MachinegunRenderer.model.secondMagazineMagBox);
-				}
-		);
-
-		MachinegunRenderer.upgrades.put(
-				stack -> (IIContent.itemMachinegun.getUpgrades(stack).getBoolean("belt_fed_loader")),
-				(stack, tmtNamedBoxGroups) ->
-				{
-					tmtNamedBoxGroups.remove(MachinegunRenderer.model.ammoBox);
-					tmtNamedBoxGroups.add(MachinegunRenderer.model.beltFedLoaderBox);
-				}
-		);
-
-		MachinegunRenderer.upgrades.put(
-				stack -> (IIContent.itemMachinegun.getUpgrades(stack).getBoolean("scope")),
-				(stack, tmtNamedBoxGroups) ->
-						tmtNamedBoxGroups.add(MachinegunRenderer.model.scopeBox)
-		);
-
-		MachinegunRenderer.upgrades.put(
-				stack -> (IIContent.itemMachinegun.getUpgrades(stack).getBoolean("infrared_scope")),
-				(stack, tmtNamedBoxGroups) ->
-						tmtNamedBoxGroups.add(MachinegunRenderer.model.infraredScopeBox)
-		);
-
-		MachinegunRenderer.upgrades.put(
-				stack -> (IIContent.itemMachinegun.getUpgrades(stack).getBoolean("hasty_bipod")),
-				(stack, tmtNamedBoxGroups) ->
-				{
-					tmtNamedBoxGroups.remove(MachinegunRenderer.model.bipodBox);
-					tmtNamedBoxGroups.add(MachinegunRenderer.model.hastyBipodBox);
-				}
-		);
-
-		MachinegunRenderer.upgrades.put(
-				stack -> (IIContent.itemMachinegun.getUpgrades(stack).getBoolean("precise_bipod")),
-				(stack, tmtNamedBoxGroups) ->
-				{
-					tmtNamedBoxGroups.remove(MachinegunRenderer.model.bipodBox);
-					tmtNamedBoxGroups.add(MachinegunRenderer.model.preciseBipodBox);
-				}
-		);
-
-		MachinegunRenderer.upgrades.put(
-				stack -> (IIContent.itemMachinegun.getUpgrades(stack).getBoolean("tripod")),
-				(stack, tmtNamedBoxGroups) ->
-				{
-					tmtNamedBoxGroups.remove(MachinegunRenderer.model.bipodBox);
-					tmtNamedBoxGroups.add(MachinegunRenderer.model.tripodBox);
-				}
-		);
-
-		MachinegunRenderer.upgrades.put(
-				stack -> (IIContent.itemMachinegun.getUpgrades(stack).getBoolean("shield")),
-				(stack, tmtNamedBoxGroups) ->
-						tmtNamedBoxGroups.add(MachinegunRenderer.model.shieldBox)
-		);
-
-		//--- Submachinegun ---//
-		IIUpgradableItemRendererAMT<?> smg = IIContent.itemSubmachinegun.getItemRenderer();
-		smg.addUpgradePart(hasUpgrade(WeaponUpgrade.STURDY_BARREL), "sturdy_barrel");
-		smg.addUpgradePart(hasUpgrade(WeaponUpgrade.SUPPRESSOR), "suppressor");
-		smg.addUpgradePart(hasUpgrade(WeaponUpgrade.BOTTOM_LOADING), "bottom_loading");
-		smg.addUpgradePart(hasUpgrade(WeaponUpgrade.FOLDING_STOCK), "folding_stock");
-		smg.addUpgradePart(easyNBT -> easyNBT.hasKey("melee"), "bayonet");
-
-		//--- Assault Rifle ---//
-		IIUpgradableItemRendererAMT<?> stg = IIContent.itemAssaultRifle.getItemRenderer();
-		stg.addUpgradePart(hasUpgrade(WeaponUpgrade.SCOPE), "scope");
-		stg.addUpgradePart(hasUpgrade(WeaponUpgrade.INFRARED_SCOPE), "infrared_scope");
-		stg.addUpgradePart(hasUpgrade(WeaponUpgrade.STEREOSCOPIC_RANGEFINDER), "rangefinder");
-		stg.addUpgradePart(hasUpgrade(WeaponUpgrade.RAILGUN_ASSISTED_CHAMBER), "railgun");
-		stg.addUpgradePart(hasUpgrade(WeaponUpgrade.RIFLE_GRENADE_LAUNCHER), "grenade_launcher");
-		stg.addUpgradePart(hasUpgrade(WeaponUpgrade.ELECTRIC_FIRING_MOTOR), "electric_motor");
-		stg.addUpgradePart(hasUpgrade(WeaponUpgrade.GYROSCOPIC_STABILIZER), "stabilizer");
-
-		//--- Rifle ---//
-		IIUpgradableItemRendererAMT<?> rifle = IIContent.itemRifle.getItemRenderer();
-		rifle.addUpgradePart(hasUpgrade(WeaponUpgrade.SCOPE), "scope");
-		rifle.addUpgradePart(easyNBT -> easyNBT.hasKey("melee"), "bayonet");
-		rifle.addUpgradePart(hasUpgrade(WeaponUpgrade.EXTENDED_BARREL), "extended_barrel");
-		rifle.addUpgradePart(hasUpgrade(WeaponUpgrade.SEMI_AUTOMATIC), "semi_automatic");
 	}
 }

@@ -31,10 +31,10 @@ import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 public class TileEntityPunchtapeReader extends TileEntityIEBase implements ITickable, IRedstoneOutput, IDataDevice, IPlayerInteraction, IHammerInteraction, IDirectionalTile
 {
 	public boolean hadRedstone = false;
-	private PunchtapeReaderMode mode = PunchtapeReaderMode.REDSTONE_INDIFFERENT;
 	public int rsTime = 0;
 	EnumFacing facing = EnumFacing.NORTH;
 	DataPacket received = null;
+	private PunchtapeReaderMode mode = PunchtapeReaderMode.REDSTONE_INDIFFERENT;
 
 	@Override
 	public void update()

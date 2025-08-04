@@ -357,6 +357,85 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 
 	//--- Main Loading Events ---//
 
+	private static ResourceLocation createRegistryName(String unlocalized)
+	{
+		unlocalized = unlocalized.substring(unlocalized.indexOf(ImmersiveIntelligence.MODID));
+		unlocalized = unlocalized.replaceFirst("\\.", ":");
+		return new ResourceLocation(unlocalized);
+	}
+
+	public static MachineUpgrade createMachineUpgrade(String name)
+	{
+		return new MachineUpgrade(name, new ResourceLocation(ImmersiveIntelligence.MODID, "textures/gui/upgrade/"+name+".png"));
+	}
+
+	public static void openGuiForItem(@Nonnull EntityPlayer player, @Nonnull EnumHand hand)
+	{
+		ItemStack stack = player.getItemStackFromSlot(hand==EnumHand.MAIN_HAND?EntityEquipmentSlot.MAINHAND: EntityEquipmentSlot.OFFHAND);
+		if(stack.isEmpty()||!(stack.getItem() instanceof IGuiItem))
+			return;
+		IGuiItem gui = (IGuiItem)stack.getItem();
+		player.openGui(ImmersiveIntelligence.INSTANCE, gui.getGuiID(stack), player.world, (int)player.posX, (int)player.posY, (int)player.posZ);
+	}
+
+	//--- GUI Handling ---//
+
+	public static void addConfiguredWorldgen(IBlockState state, String name, int[] config, EnumOreType type)
+	{
+		if(config!=null&&config.length >= 5&&config[0] > 0)
+			IIWorldGen.addOreGen(name, state, config[0], config[1], config[2], config[3], config[4], type);
+	}
+
+	public static void registerTile(Class<? extends TileEntity> tile)
+	{
+		String s = tile.getSimpleName();
+		s = s.substring(s.indexOf("TileEntity")+"TileEntity".length());
+		GameRegistry.registerTileEntity(tile, new ResourceLocation(ImmersiveIntelligence.MODID+":"+s));
+	}
+
+	public static void registerEntity(int id, Class<? extends Entity> entity, String name, int trackingRange, int updateFrequency, boolean sendVelocityUpdates)
+	{
+		EntityRegistry.registerModEntity(new ResourceLocation(ImmersiveIntelligence.MODID, name),
+				entity, name, id, ImmersiveIntelligence.INSTANCE, trackingRange, updateFrequency, sendVelocityUpdates);
+	}
+
+	//--- Resource Reload Handling ---//
+
+	/**
+	 * Works only for annotated CLASSES, not fields
+	 */
+	static String[] getAnnotatedOreDict(Object o)
+	{
+		String[] ores = null;
+		if(o.getClass().isAnnotationPresent(IBatchOredictRegister.class))
+			ores = o.getClass().getAnnotation(IBatchOredictRegister.class).oreDict();
+		return ores;
+	}
+
+	public static Fluid makeFluid(String name, int density, int viscosity)
+	{
+		return makeFluid(name, density, viscosity, "");
+	}
+
+	//--- Chunkloading Handling ---//
+
+	public static Fluid makeFluid(String name, int density, int viscosity, String prefix)
+	{
+		Fluid fl = new Fluid(
+				name,
+				new ResourceLocation(ImmersiveIntelligence.MODID+":blocks/fluid/"+prefix+name+"_still"),
+				new ResourceLocation(ImmersiveIntelligence.MODID+":blocks/fluid/"+prefix+name+"_flow")
+		).setDensity(density).setViscosity(viscosity);
+		FluidRegistry.addBucketForFluid(fl);
+		if(!FluidRegistry.registerFluid(fl))
+			fl = FluidRegistry.getFluid(fl.getName());
+
+		IICreativeTab.fluidBucketMap.add(fl);
+		return fl;
+	}
+
+	//--- Utils ---//
+
 	public void preInit()
 	{
 		IIDataWireType.init();
@@ -656,8 +735,6 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		CorrosionHandler.addItemToBlacklist(new ItemStack(Items.DIAMOND_BOOTS));
 	}
 
-	//--- GUI Handling ---//
-
 	@Override
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
 	{
@@ -723,8 +800,6 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 					tile.getPos().getY(), tile.getPos().getZ());
 	}
 
-	//--- Resource Reload Handling ---//
-
 	public void reloadModels()
 	{
 
@@ -734,8 +809,6 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 	{
 
 	}
-
-	//--- Chunkloading Handling ---//
 
 	@Override
 	public void ticketsLoaded(List<Ticket> tickets, World world)
@@ -751,80 +824,6 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 					minecraftServer.addScheduledTask(() -> ForgeChunkManager.releaseTicket(ticket));
 			}
 		}
-	}
-
-	//--- Utils ---//
-
-	private static ResourceLocation createRegistryName(String unlocalized)
-	{
-		unlocalized = unlocalized.substring(unlocalized.indexOf(ImmersiveIntelligence.MODID));
-		unlocalized = unlocalized.replaceFirst("\\.", ":");
-		return new ResourceLocation(unlocalized);
-	}
-
-	public static MachineUpgrade createMachineUpgrade(String name)
-	{
-		return new MachineUpgrade(name, new ResourceLocation(ImmersiveIntelligence.MODID, "textures/gui/upgrade/"+name+".png"));
-	}
-
-	public static void openGuiForItem(@Nonnull EntityPlayer player, @Nonnull EnumHand hand)
-	{
-		ItemStack stack = player.getItemStackFromSlot(hand==EnumHand.MAIN_HAND?EntityEquipmentSlot.MAINHAND: EntityEquipmentSlot.OFFHAND);
-		if(stack.isEmpty()||!(stack.getItem() instanceof IGuiItem))
-			return;
-		IGuiItem gui = (IGuiItem)stack.getItem();
-		player.openGui(ImmersiveIntelligence.INSTANCE, gui.getGuiID(stack), player.world, (int)player.posX, (int)player.posY, (int)player.posZ);
-	}
-
-	public static void addConfiguredWorldgen(IBlockState state, String name, int[] config, EnumOreType type)
-	{
-		if(config!=null&&config.length >= 5&&config[0] > 0)
-			IIWorldGen.addOreGen(name, state, config[0], config[1], config[2], config[3], config[4], type);
-	}
-
-	public static void registerTile(Class<? extends TileEntity> tile)
-	{
-		String s = tile.getSimpleName();
-		s = s.substring(s.indexOf("TileEntity")+"TileEntity".length());
-		GameRegistry.registerTileEntity(tile, new ResourceLocation(ImmersiveIntelligence.MODID+":"+s));
-	}
-
-	public static void registerEntity(int id, Class<? extends Entity> entity, String name, int trackingRange, int updateFrequency, boolean sendVelocityUpdates)
-	{
-		EntityRegistry.registerModEntity(new ResourceLocation(ImmersiveIntelligence.MODID, name),
-				entity, name, id, ImmersiveIntelligence.INSTANCE, trackingRange, updateFrequency, sendVelocityUpdates);
-	}
-
-
-	/**
-	 * Works only for annotated CLASSES, not fields
-	 */
-	static String[] getAnnotatedOreDict(Object o)
-	{
-		String[] ores = null;
-		if(o.getClass().isAnnotationPresent(IBatchOredictRegister.class))
-			ores = o.getClass().getAnnotation(IBatchOredictRegister.class).oreDict();
-		return ores;
-	}
-
-	public static Fluid makeFluid(String name, int density, int viscosity)
-	{
-		return makeFluid(name, density, viscosity, "");
-	}
-
-	public static Fluid makeFluid(String name, int density, int viscosity, String prefix)
-	{
-		Fluid fl = new Fluid(
-				name,
-				new ResourceLocation(ImmersiveIntelligence.MODID+":blocks/fluid/"+prefix+name+"_still"),
-				new ResourceLocation(ImmersiveIntelligence.MODID+":blocks/fluid/"+prefix+name+"_flow")
-		).setDensity(density).setViscosity(viscosity);
-		FluidRegistry.addBucketForFluid(fl);
-		if(!FluidRegistry.registerFluid(fl))
-			fl = FluidRegistry.getFluid(fl.getName());
-
-		IICreativeTab.fluidBucketMap.add(fl);
-		return fl;
 	}
 
 	public void onMechanicalConnectorRemoved(Connection connection)

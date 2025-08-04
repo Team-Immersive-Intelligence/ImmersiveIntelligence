@@ -17,9 +17,8 @@ import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityMotorbike;
 
 public class MotorbikeRenderer extends Render<EntityMotorbike> implements IReloadableModelContainer<MotorbikeRenderer>
 {
-	public static ModelMotorbike model;
-
 	public static final ResourceLocation TEXTURE = new ResourceLocation(ImmersiveIntelligence.MODID+":textures/entity/motorbike.png");
+	public static ModelMotorbike model;
 
 	public MotorbikeRenderer(RenderManager renderManager)
 	{

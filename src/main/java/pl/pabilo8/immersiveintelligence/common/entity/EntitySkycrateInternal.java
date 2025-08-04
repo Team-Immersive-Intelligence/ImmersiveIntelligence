@@ -15,17 +15,15 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multibloc
  */
 public class EntitySkycrateInternal extends Entity
 {
+	private static final DataParameter<Float> dataMarkerRidingX = EntityDataManager.createKey(EntitySkycrateInternal.class, DataSerializers.FLOAT);
+	private static final DataParameter<Float> dataMarkerRidingY = EntityDataManager.createKey(EntitySkycrateInternal.class, DataSerializers.FLOAT);
+	private static final DataParameter<Float> dataMarkerRidingZ = EntityDataManager.createKey(EntitySkycrateInternal.class, DataSerializers.FLOAT);
 	public float riding_x = 0, riding_y = 0, riding_z = 0;
 	public BlockPos origin_pos = new BlockPos(0, 0, 0);
-
 	public EntitySkycrateInternal(World worldIn)
 	{
 		super(worldIn);
 	}
-
-	private static final DataParameter<Float> dataMarkerRidingX = EntityDataManager.createKey(EntitySkycrateInternal.class, DataSerializers.FLOAT);
-	private static final DataParameter<Float> dataMarkerRidingY = EntityDataManager.createKey(EntitySkycrateInternal.class, DataSerializers.FLOAT);
-	private static final DataParameter<Float> dataMarkerRidingZ = EntityDataManager.createKey(EntitySkycrateInternal.class, DataSerializers.FLOAT);
 
 	public EntitySkycrateInternal(World worldIn, BlockPos pos)
 	{

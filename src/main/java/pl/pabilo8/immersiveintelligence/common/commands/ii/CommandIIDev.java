@@ -74,11 +74,6 @@ import java.util.stream.Collectors;
  */
 public class CommandIIDev extends CommandTreeHelp
 {
-	public CommandIIDev(CommandTreeBase parent)
-	{
-		super(parent);
-	}
-
 	private static final Set<String> OPTIONS = new HashSet<>();
 
 	static
@@ -109,6 +104,29 @@ public class CommandIIDev extends CommandTreeHelp
 
 		OPTIONS.add("particle");
 		OPTIONS.add("inyerface");
+	}
+
+	public CommandIIDev(CommandTreeBase parent)
+	{
+		super(parent);
+	}
+
+	/**
+	 * @param entity        entity being the origin point
+	 * @param traceDistance length in which blocks will be traced
+	 * @return a nullable {@link RayTraceResult} of type {@link Type#BLOCK} or {@link Type#MISS}
+	 */
+	@Nullable
+	private static RayTraceResult getRayTraceResult(@Nullable Entity entity, float traceDistance)
+	{
+		if(entity==null)
+			return null;
+
+		Vec3d eyesPos = entity.getPositionEyes(0);
+		Vec3d lookVector = entity.getLook(0);
+		Vec3d traceVector = eyesPos.addVector(lookVector.x*traceDistance, lookVector.y*traceDistance, lookVector.z*traceDistance);
+
+		return entity.getEntityWorld().rayTraceBlocks(eyesPos, traceVector, false, false, true);
 	}
 
 	/**
@@ -563,24 +581,6 @@ public class CommandIIDev extends CommandTreeHelp
 		}
 		else
 			throw new WrongUsageException(getUsage(sender));
-	}
-
-	/**
-	 * @param entity        entity being the origin point
-	 * @param traceDistance length in which blocks will be traced
-	 * @return a nullable {@link RayTraceResult} of type {@link Type#BLOCK} or {@link Type#MISS}
-	 */
-	@Nullable
-	private static RayTraceResult getRayTraceResult(@Nullable Entity entity, float traceDistance)
-	{
-		if(entity==null)
-			return null;
-
-		Vec3d eyesPos = entity.getPositionEyes(0);
-		Vec3d lookVector = entity.getLook(0);
-		Vec3d traceVector = eyesPos.addVector(lookVector.x*traceDistance, lookVector.y*traceDistance, lookVector.z*traceDistance);
-
-		return entity.getEntityWorld().rayTraceBlocks(eyesPos, traceVector, false, false, true);
 	}
 
 	/**

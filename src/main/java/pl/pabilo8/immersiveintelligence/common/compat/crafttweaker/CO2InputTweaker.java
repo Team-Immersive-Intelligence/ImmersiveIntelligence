@@ -95,9 +95,9 @@ public class CO2InputTweaker
 
 	private static class TileEntityCO2Handler extends CO2Handler
 	{
-		private final Class<TileEntity> c;
 		protected final int time;
 		protected final int amount;
+		private final Class<TileEntity> c;
 
 		public TileEntityCO2Handler(Class<TileEntity> c, int time, int amount)
 		{

@@ -45,9 +45,8 @@ public class DecoBackgroundBuilder<T extends TileEntityIEBase & IIEInventory, C 
 	private final List<DecoBackgroundTile> backgroundFrames = new ArrayList<>();
 	private final List<DecoSlot> inventorySlots = new ArrayList<>();
 	private final DecoGui<T, C> gui;
-
-	private List<TitleBarData> titleBars = new ArrayList<>();
 	int vbo = -1;
+	private List<TitleBarData> titleBars = new ArrayList<>();
 
 	public DecoBackgroundBuilder(DecoGui<T, C> gui)
 	{
@@ -505,21 +504,6 @@ public class DecoBackgroundBuilder<T extends TileEntityIEBase & IIEInventory, C 
 		return this;
 	}
 
-	private static class DecoSlot
-	{
-		final int x, y, width, height;
-		final SlotStyle style;
-
-		public DecoSlot(int x, int y, int width, int height, SlotStyle style)
-		{
-			this.x = x;
-			this.y = y;
-			this.width = width;
-			this.height = height;
-			this.style = style;
-		}
-	}
-
 	public enum SlotStyle
 	{
 		//Vanilla MC bevel mask inventory slot
@@ -572,6 +556,21 @@ public class DecoBackgroundBuilder<T extends TileEntityIEBase & IIEInventory, C 
 			this.markerLocation = base.markerLocation;
 			this.borderSize = base.borderSize;
 			this.markerOffset = markerOffset;
+		}
+	}
+
+	private static class DecoSlot
+	{
+		final int x, y, width, height;
+		final SlotStyle style;
+
+		public DecoSlot(int x, int y, int width, int height, SlotStyle style)
+		{
+			this.x = x;
+			this.y = y;
+			this.width = width;
+			this.height = height;
+			this.style = style;
 		}
 	}
 

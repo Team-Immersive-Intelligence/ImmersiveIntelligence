@@ -25,13 +25,12 @@ public abstract class ContainerIIItem extends Container implements ICallbackCont
 {
 	protected final InventoryPlayer inventoryPlayer;
 	protected final World world;
-	public IItemHandler inv;
-
-	protected int blockedSlot;
 	protected final EntityEquipmentSlot equipmentSlot;
 	protected final ItemStack heldItem;
 	protected final EntityPlayer player;
+	public IItemHandler inv;
 	public int internalSlots;
+	protected int blockedSlot;
 
 	public ContainerIIItem(EntityPlayer player, ItemStack heldStack, EnumHand hand)
 	{

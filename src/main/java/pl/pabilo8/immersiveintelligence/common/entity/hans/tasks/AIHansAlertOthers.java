@@ -13,11 +13,11 @@ import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
 public class AIHansAlertOthers extends EntityAITarget
 {
 	private final boolean entityCallsForHelp;
+	private final EntityHans hans;
 	/**
 	 * Store the previous revengeTimer value
 	 */
 	private int revengeTimerOld;
-	private final EntityHans hans;
 
 	public AIHansAlertOthers(EntityHans hans, boolean entityCallsForHelpIn)
 	{

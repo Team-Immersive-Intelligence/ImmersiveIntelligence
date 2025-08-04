@@ -46,16 +46,6 @@ public class DataTypeExpression extends DataType
 		return operation;
 	}
 
-	public DataOperationMeta getMeta()
-	{
-		return meta;
-	}
-
-	public char getRequiredVariable()
-	{
-		return requiredVariable;
-	}
-
 	public void setOperation(@Nonnull DataOperation operation)
 	{
 		this.operation = operation;
@@ -77,6 +67,16 @@ public class DataTypeExpression extends DataType
 				newData[i] = IIDataTypeUtils.getVarInstance(allowedTypes[i]);
 
 		this.data = newData;
+	}
+
+	public DataOperationMeta getMeta()
+	{
+		return meta;
+	}
+
+	public char getRequiredVariable()
+	{
+		return requiredVariable;
 	}
 
 	public void setRequiredVariable(char requiredVariable)

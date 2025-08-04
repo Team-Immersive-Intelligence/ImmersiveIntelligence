@@ -75,17 +75,17 @@ public class ShrapnelHandler
 			return this;
 		}
 
+		public boolean isDisruptsRadio()
+		{
+			return disruptsRadio;
+		}
+
 		/**
 		 * @param disruptsRadio whether the shrapnel disrupts radio signals
 		 */
 		public void setDisruptsRadio(boolean disruptsRadio)
 		{
 			this.disruptsRadio = disruptsRadio;
-		}
-
-		public boolean isDisruptsRadio()
-		{
-			return disruptsRadio;
 		}
 	}
 }

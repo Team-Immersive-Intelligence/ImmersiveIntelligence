@@ -28,14 +28,13 @@ import java.util.function.BiConsumer;
  */
 public class DecoDropdown<T> extends DecoScrolledCollection<DecoDropdown<T>, T>
 {
-	private ResLoc dropdownSymbolLocation = IIReference.RES_TEXTURES_DECO_COMPONENT_DROPDOWN_SYMBOL;
-
 	public int selectedEntry = -1;
 	protected int blinkTime = 0;
 	protected int maxDropHeight = 32;
 	protected int dropdownWidth;
 	protected boolean dropped = false;
 	protected BiConsumer<T, T> onSelectedEntry;
+	private ResLoc dropdownSymbolLocation = IIReference.RES_TEXTURES_DECO_COMPONENT_DROPDOWN_SYMBOL;
 
 	public DecoDropdown(int x, int y)
 	{
@@ -92,6 +91,16 @@ public class DecoDropdown<T> extends DecoScrolledCollection<DecoDropdown<T>, T>
 		});
 	}
 
+	@SafeVarargs
+	@Deprecated
+	public DecoDropdown(int buttonId, int x, int y, int w, int h, int perPage, T... entries)
+	{
+		this(x, y);
+		withSize(w, h);
+		withEntries(entries);
+
+	}
+
 	@Override
 	public void setFocused(boolean focused)
 	{
@@ -115,16 +124,6 @@ public class DecoDropdown<T> extends DecoScrolledCollection<DecoDropdown<T>, T>
 	protected int getAddButtonHeight()
 	{
 		return 16;
-	}
-
-	@SafeVarargs
-	@Deprecated
-	public DecoDropdown(int buttonId, int x, int y, int w, int h, int perPage, T... entries)
-	{
-		this(x, y);
-		withSize(w, h);
-		withEntries(entries);
-
 	}
 
 	public DecoDropdown<T> withDropdownSymbol(ResLoc dropdownSymbolLocation)

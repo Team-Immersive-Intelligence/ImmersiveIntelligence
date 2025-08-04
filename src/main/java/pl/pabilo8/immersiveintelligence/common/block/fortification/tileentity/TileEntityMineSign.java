@@ -14,9 +14,9 @@ import net.minecraft.util.EnumFacing.Axis;
  */
 public class TileEntityMineSign extends TileEntityIEBase implements IDirectionalTile, IBlockBounds
 {
-	public EnumFacing facing = EnumFacing.NORTH;
 	private static final float[] boundsX = new float[]{0.4375f, 0, 0, 0.5625f, 1, 1};
 	private static final float[] boundsY = new float[]{0, 0, 0.4375f, 1, 1, 0.5625f};
+	public EnumFacing facing = EnumFacing.NORTH;
 
 	@Override
 	public EnumFacing getFacing()

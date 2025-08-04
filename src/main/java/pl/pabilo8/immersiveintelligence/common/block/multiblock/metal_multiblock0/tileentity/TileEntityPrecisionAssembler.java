@@ -59,13 +59,11 @@ public class TileEntityPrecisionAssembler extends TileEntityMultiblockMetal<Tile
 	public boolean stack1Visible, stack2Visible, stack3Visible;
 	public ItemStack stackPicked1, stackPicked2, stackPicked3;
 	public ItemStack effect;
-	private boolean update = false;
 	public boolean active = false;
-
 	public boolean[] isDrawerOpened = {false, false};
 	public float[] drawerAngle = {0, 0};
-
 	IItemHandler insertionHandler = new IEInventoryHandler(5, this, 4, true, false);
+	private boolean update = false;
 
 	public TileEntityPrecisionAssembler()
 	{

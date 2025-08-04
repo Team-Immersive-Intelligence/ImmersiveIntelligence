@@ -22,11 +22,11 @@ import java.util.stream.Collectors;
  */
 public class DecoLabel extends GuiLabel
 {
+	private final List<Object> labels = new ArrayList<>();
+	IIColor textColor = IIColor.BLACK, bgColor = IIColor.ALPHA;
 	private Supplier<Collection<String>> onTooltip = null;
 	private FontRenderer fontRenderer;
 	private DecoAlignment textAlignment = DecoAlignment.LEFT;
-	private final List<Object> labels = new ArrayList<>();
-	IIColor textColor = IIColor.BLACK, bgColor = IIColor.ALPHA;
 	private boolean textShadow = false;
 	private int totalHeight = 0;
 	private boolean hovered;

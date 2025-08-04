@@ -34,18 +34,12 @@ import java.util.HashMap;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
- * @since 19.05.2021
  * @author Avalon
+ * @since 19.05.2021
  * @since 15.12.2024
  */
 public class TileEntityCO2Filter extends TileEntityIEBase implements ITickable, IBlockBounds, IDirectionalTile, IHasDummyBlocks
 {
-	public int subBlockID = 0;
-	public EnumFacing facing = EnumFacing.NORTH;
-	public FluidTank tank = new FluidTank(1000);
-	FluidWrapper fluidWrapper = new FluidWrapper(this);
-
-	IItemHandler insertionHandler = new CO2ItemHandler(this);
 	public static final HashMap<Class<?>, CO2Handler> handlerMap = new HashMap<>();
 
 	static
@@ -95,6 +89,12 @@ public class TileEntityCO2Filter extends TileEntityIEBase implements ITickable, 
 				}
 		);
 	}
+
+	public int subBlockID = 0;
+	public EnumFacing facing = EnumFacing.NORTH;
+	public FluidTank tank = new FluidTank(1000);
+	FluidWrapper fluidWrapper = new FluidWrapper(this);
+	IItemHandler insertionHandler = new CO2ItemHandler(this);
 
 	@Override
 	public void readCustomNBT(NBTTagCompound nbt, boolean descPacket)
@@ -285,58 +285,70 @@ public class TileEntityCO2Filter extends TileEntityIEBase implements ITickable, 
 		}
 	}
 
-	public static class CO2ItemHandler implements IItemHandlerModifiable {
+	public static class CO2ItemHandler implements IItemHandlerModifiable
+	{
 		TileEntityCO2Filter tile;
 
-		public CO2ItemHandler(TileEntityCO2Filter tile) {
+		public CO2ItemHandler(TileEntityCO2Filter tile)
+		{
 			this.tile = tile;
 		}
 
 		@Override
-		public int getSlots() {
+		public int getSlots()
+		{
 			IItemHandler handlerBelow = getHandlerBelow();
-			return handlerBelow != null ? handlerBelow.getSlots() : 1;
+			return handlerBelow!=null?handlerBelow.getSlots(): 1;
 		}
 
 		@Override
-		public ItemStack getStackInSlot(int slot) {
+		public ItemStack getStackInSlot(int slot)
+		{
 			IItemHandler handlerBelow = getHandlerBelow();
-			return handlerBelow != null ? handlerBelow.getStackInSlot(slot) : ItemStack.EMPTY;
+			return handlerBelow!=null?handlerBelow.getStackInSlot(slot): ItemStack.EMPTY;
 		}
 
 		@Override
-		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate)
+		{
 			IItemHandler handlerBelow = getHandlerBelow();
-			if (handlerBelow != null) {
+			if(handlerBelow!=null)
+			{
 				return handlerBelow.insertItem(slot, stack, simulate);
 			}
 			return stack;  // Return full stack if no valid handler
 		}
 
 		@Override
-		public ItemStack extractItem(int slot, int amount, boolean simulate) {
+		public ItemStack extractItem(int slot, int amount, boolean simulate)
+		{
 			IItemHandler handlerBelow = getHandlerBelow();
-			return handlerBelow != null ? handlerBelow.extractItem(slot, amount, simulate) : ItemStack.EMPTY;
+			return handlerBelow!=null?handlerBelow.extractItem(slot, amount, simulate): ItemStack.EMPTY;
 		}
 
 		@Override
-		public int getSlotLimit(int slot) {
+		public int getSlotLimit(int slot)
+		{
 			IItemHandler handlerBelow = getHandlerBelow();
-			return handlerBelow != null ? handlerBelow.getSlotLimit(slot) : 64;
+			return handlerBelow!=null?handlerBelow.getSlotLimit(slot): 64;
 		}
 
 		@Override
-		public void setStackInSlot(int slot, ItemStack stack) {
-			IItemHandlerModifiable handlerBelow = (IItemHandlerModifiable) getHandlerBelow();
-			if (handlerBelow != null) {
+		public void setStackInSlot(int slot, ItemStack stack)
+		{
+			IItemHandlerModifiable handlerBelow = (IItemHandlerModifiable)getHandlerBelow();
+			if(handlerBelow!=null)
+			{
 				handlerBelow.setStackInSlot(slot, stack);
 			}
 		}
 
 		@Nullable
-		private IItemHandler getHandlerBelow() {
+		private IItemHandler getHandlerBelow()
+		{
 			TileEntity te = tile.getWorld().getTileEntity(tile.pos.down());
-			if (te != null && te.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP)) {
+			if(te!=null&&te.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP))
+			{
 				return te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP);
 			}
 			return null;

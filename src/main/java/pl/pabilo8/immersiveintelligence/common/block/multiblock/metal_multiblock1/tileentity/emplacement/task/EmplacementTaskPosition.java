@@ -11,8 +11,8 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
  */
 public class EmplacementTaskPosition extends EmplacementTask
 {
-	int shotAmount;
 	final BlockPos pos;
+	int shotAmount;
 
 	public EmplacementTaskPosition(BlockPos pos, int shotAmount)
 	{

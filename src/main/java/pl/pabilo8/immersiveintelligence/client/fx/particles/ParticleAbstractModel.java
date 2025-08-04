@@ -17,8 +17,8 @@ import javax.annotation.Nonnull;
 public abstract class ParticleAbstractModel extends AbstractParticle
 {
 	protected float size, scale;
-	int textureShift = 0;
 	protected IIColor color = IIColor.WHITE;
+	int textureShift = 0;
 
 	public ParticleAbstractModel(World world, Vec3d pos)
 	{

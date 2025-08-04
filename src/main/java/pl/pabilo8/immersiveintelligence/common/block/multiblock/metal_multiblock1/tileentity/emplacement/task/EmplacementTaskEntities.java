@@ -19,14 +19,13 @@ import java.util.function.Predicate;
 public abstract class EmplacementTaskEntities extends EmplacementTask
 {
 	private final Predicate<Entity> predicate;
+	Entity[] spottedEntities = new Entity[0];
+	Entity currentTarget = null;
 
 	public EmplacementTaskEntities(Predicate<Entity> predicate)
 	{
 		this.predicate = predicate;
 	}
-
-	Entity[] spottedEntities = new Entity[0];
-	Entity currentTarget = null;
 
 	@Override
 	public float[] getPositionVector(TileEntityEmplacement emplacement)

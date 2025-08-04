@@ -44,14 +44,12 @@ public class TileEntityRadar extends TileEntityMultiblockMetal<TileEntityRadar, 
 {
 	public static int PART_AMOUNT = 1;
 	public int construction = 0, clientConstruction = 0;
-
+	public int clientUpgradeProgress = 0;
+	public int dishRotation = 0;
+	public boolean active = false;
 	protected ArrayList<MachineUpgrade> upgrades = new ArrayList<>();
 	MachineUpgrade currentlyInstalled = null;
 	int upgradeProgress = 0;
-	public int clientUpgradeProgress = 0;
-
-	public int dishRotation = 0;
-	public boolean active = false;
 
 	public TileEntityRadar()
 	{

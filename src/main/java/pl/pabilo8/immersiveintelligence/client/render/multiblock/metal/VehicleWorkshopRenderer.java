@@ -25,13 +25,92 @@ import static pl.pabilo8.immersiveintelligence.client.IIClientUtils.drawRope;
  */
 public class VehicleWorkshopRenderer extends TileEntitySpecialRenderer<TileEntityVehicleWorkshop> implements IReloadableModelContainer<VehicleWorkshopRenderer>
 {
-	private static ModelVehicleWorkshop model;
-	private static ModelVehicleWorkshop modelFlipped;
 	private static final String TEXTURE = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/vehicle_workshop.png";
 	private static final String TEXTURE_CRANE = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/vehicle_workshop/crane.png";
 	private static final String TEXTURE_INSERTER = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/vehicle_workshop/inserter.png";
+	private static ModelVehicleWorkshop model;
+	private static ModelVehicleWorkshop modelFlipped;
 	private static ModelHeavyInserter modelInserter;
 	private static ModelCrane modelCrane;
+
+	public static void renderCrane(float yaw, float distance, float drop, float grabProgress, Runnable function)
+	{
+		GlStateManager.pushMatrix();
+		GlStateManager.rotate(180+yaw, 0, 1, 0);
+		ClientUtils.bindTexture(TEXTURE_CRANE);
+
+		for(ModelRendererTurbo mod : modelCrane.craneMainModel)
+			mod.render(0.0625f);
+		for(ModelRendererTurbo mod : modelCrane.exhaustModel)
+			mod.render(0.0625f);
+		for(ModelRendererTurbo mod : modelCrane.shaftModel)
+			mod.render(0.0625f);
+
+		GlStateManager.translate(0, 0, 1f-distance);
+
+		for(ModelRendererTurbo mod : modelCrane.craneArmModel)
+			mod.render(0.0625f);
+		for(ModelRendererTurbo mod : modelCrane.craneArmShaftModel)
+			mod.render(0.0625f);
+
+		GlStateManager.translate(0, -drop, 0);
+
+		for(ModelRendererTurbo mod : modelCrane.grabberModel)
+			mod.render(0.0625f);
+
+		GlStateManager.translate(0, 1.25+0.0625, 0);
+
+		ClientUtils.mc().getTextureManager().bindTexture(new ResourceLocation("immersiveengineering:textures/blocks/wire.png"));
+		GlStateManager.disableCull();
+		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
+		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		drawRope(buffer, 0, 0, -1.59375, 0, drop+0.25, -1.59375, 0.0625, 0);
+		drawRope(buffer, 0, 0, -1.59375, 0, drop+0.25, -1.59375, 0, 0.0625);
+		Tessellator.getInstance().draw();
+		GlStateManager.enableCull();
+
+		GlStateManager.popMatrix();
+	}
+
+	public static void renderInserter(float yaw, float pitch1, float pitch2, float progress, Runnable function)
+	{
+		GlStateManager.pushMatrix();
+		ClientUtils.bindTexture(TEXTURE_INSERTER);
+
+		GlStateManager.rotate(yaw, 0, 1, 0);
+		for(ModelRendererTurbo mod : modelInserter.baseModel)
+			mod.render(0.0625f);
+
+		GlStateManager.translate(0f, 0.385f, 0);
+		GlStateManager.rotate(15+55*progress, 1, 0, 0);
+
+		for(ModelRendererTurbo mod : modelInserter.inserterLowerArmModel)
+			mod.render(0.0625f);
+
+		GlStateManager.translate(0f, 1.0f, -0.0625f);
+		GlStateManager.rotate(135-(95f*progress), 1, 0, 0);
+		GlStateManager.translate(0f, 0.0625f, 0.03125f);
+
+		for(ModelRendererTurbo mod : modelInserter.inserterUpperArmModel)
+			mod.render(0.0625f);
+
+		for(ModelRendererTurbo mod : modelInserter.boxDoorLeftModel)
+			mod.render(0.0625f);
+		for(ModelRendererTurbo mod : modelInserter.boxDoorRightModel)
+			mod.render(0.0625f);
+
+		GlStateManager.pushMatrix();
+
+		GlStateManager.translate(0.125f, -0.03125f, -0.03125f);
+
+		GlStateManager.rotate(-45f*progress, 0f, 0f, 1f);
+
+		GlStateManager.popMatrix();
+
+		function.run();
+
+		GlStateManager.popMatrix();
+	}
 
 	@Override
 	public void render(TileEntityVehicleWorkshop te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
@@ -161,84 +240,5 @@ public class VehicleWorkshopRenderer extends TileEntitySpecialRenderer<TileEntit
 
 		modelInserter = new ModelHeavyInserter();
 		modelCrane = new ModelCrane();
-	}
-
-	public static void renderCrane(float yaw, float distance, float drop, float grabProgress, Runnable function)
-	{
-		GlStateManager.pushMatrix();
-		GlStateManager.rotate(180+yaw, 0, 1, 0);
-		ClientUtils.bindTexture(TEXTURE_CRANE);
-
-		for(ModelRendererTurbo mod : modelCrane.craneMainModel)
-			mod.render(0.0625f);
-		for(ModelRendererTurbo mod : modelCrane.exhaustModel)
-			mod.render(0.0625f);
-		for(ModelRendererTurbo mod : modelCrane.shaftModel)
-			mod.render(0.0625f);
-
-		GlStateManager.translate(0, 0, 1f-distance);
-
-		for(ModelRendererTurbo mod : modelCrane.craneArmModel)
-			mod.render(0.0625f);
-		for(ModelRendererTurbo mod : modelCrane.craneArmShaftModel)
-			mod.render(0.0625f);
-
-		GlStateManager.translate(0, -drop, 0);
-
-		for(ModelRendererTurbo mod : modelCrane.grabberModel)
-			mod.render(0.0625f);
-
-		GlStateManager.translate(0, 1.25+0.0625, 0);
-
-		ClientUtils.mc().getTextureManager().bindTexture(new ResourceLocation("immersiveengineering:textures/blocks/wire.png"));
-		GlStateManager.disableCull();
-		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
-		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		drawRope(buffer, 0, 0, -1.59375, 0, drop+0.25, -1.59375, 0.0625, 0);
-		drawRope(buffer, 0, 0, -1.59375, 0, drop+0.25, -1.59375, 0, 0.0625);
-		Tessellator.getInstance().draw();
-		GlStateManager.enableCull();
-
-		GlStateManager.popMatrix();
-	}
-
-	public static void renderInserter(float yaw, float pitch1, float pitch2, float progress, Runnable function)
-	{
-		GlStateManager.pushMatrix();
-		ClientUtils.bindTexture(TEXTURE_INSERTER);
-
-		GlStateManager.rotate(yaw, 0, 1, 0);
-		for(ModelRendererTurbo mod : modelInserter.baseModel)
-			mod.render(0.0625f);
-
-		GlStateManager.translate(0f, 0.385f, 0);
-		GlStateManager.rotate(15+55*progress, 1, 0, 0);
-
-		for(ModelRendererTurbo mod : modelInserter.inserterLowerArmModel)
-			mod.render(0.0625f);
-
-		GlStateManager.translate(0f, 1.0f, -0.0625f);
-		GlStateManager.rotate(135-(95f*progress), 1, 0, 0);
-		GlStateManager.translate(0f, 0.0625f, 0.03125f);
-
-		for(ModelRendererTurbo mod : modelInserter.inserterUpperArmModel)
-			mod.render(0.0625f);
-
-		for(ModelRendererTurbo mod : modelInserter.boxDoorLeftModel)
-			mod.render(0.0625f);
-		for(ModelRendererTurbo mod : modelInserter.boxDoorRightModel)
-			mod.render(0.0625f);
-
-		GlStateManager.pushMatrix();
-
-		GlStateManager.translate(0.125f, -0.03125f, -0.03125f);
-
-		GlStateManager.rotate(-45f*progress, 0f, 0f, 1f);
-
-		GlStateManager.popMatrix();
-
-		function.run();
-
-		GlStateManager.popMatrix();
 	}
 }

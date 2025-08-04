@@ -1,7 +1,6 @@
 # meta
 Intelligence
 Knowledge is Power
-
 # intro
 Information is beautiful.<br>
 The collection of information of military or political value has always been a focus of the technological advancements.

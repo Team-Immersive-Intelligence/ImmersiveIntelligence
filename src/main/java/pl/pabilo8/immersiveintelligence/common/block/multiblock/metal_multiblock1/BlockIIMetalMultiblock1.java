@@ -44,6 +44,22 @@ public class BlockIIMetalMultiblock1 extends BlockIIMultiblock<MetalMultiblocks1
 		setSubBlockLayer(MetalMultiblocks1.HEAVY_AMMUNITION_ASSEMBLER, BlockRenderLayer.CUTOUT);
 	}
 
+	@Deprecated
+	public EnumBlockRenderType getRenderType(IBlockState state)
+	{
+		switch(state.getValue(property))
+		{
+			case PROJECTILE_WORKSHOP:
+			case AMMUNITION_ASSEMBLER:
+			case HEAVY_AMMUNITION_ASSEMBLER:
+			case REDSTONE_DATA_INTERFACE:
+			case FILLER:
+				return EnumBlockRenderType.MODEL;
+			default:
+				return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
+		}
+	}
+
 	public enum MetalMultiblocks1 implements IITileMultiblockEnum
 	{
 		@EnumMultiblockProvider(multiblock = MultiblockRedstoneInterface.class, tile = TileEntityRedstoneInterface.class)
@@ -86,21 +102,5 @@ public class BlockIIMetalMultiblock1 extends BlockIIMultiblock<MetalMultiblocks1
 		@IIBlockProperties(needsCustomState = true)
 		@EnumMultiblockProvider(multiblock = MultiblockHeavyAmmunitionAssembler.class, tile = TileEntityHeavyAmmunitionAssembler.class)
 		HEAVY_AMMUNITION_ASSEMBLER,
-	}
-
-	@Deprecated
-	public EnumBlockRenderType getRenderType(IBlockState state)
-	{
-		switch(state.getValue(property))
-		{
-			case PROJECTILE_WORKSHOP:
-			case AMMUNITION_ASSEMBLER:
-			case HEAVY_AMMUNITION_ASSEMBLER:
-			case REDSTONE_DATA_INTERFACE:
-			case FILLER:
-				return EnumBlockRenderType.MODEL;
-			default:
-				return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
-		}
 	}
 }

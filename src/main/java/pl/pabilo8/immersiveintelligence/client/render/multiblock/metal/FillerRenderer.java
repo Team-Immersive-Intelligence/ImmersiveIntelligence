@@ -115,10 +115,10 @@ public class FillerRenderer extends IIMultiblockRenderer<TileEntityFiller>
 	 */
 	private static class AMTFillerBullet extends AMT
 	{
+		private final AMTBullet bullet;
 		private boolean isBullet;
 		private float transition;
 		private ItemStack stackFrom, stackInto;
-		private final AMTBullet bullet;
 
 		public AMTFillerBullet(String name, IIModelHeader header)
 		{

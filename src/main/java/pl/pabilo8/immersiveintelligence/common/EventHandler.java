@@ -65,6 +65,48 @@ public class EventHandler
 {
 	public static ArrayList<IIExplosion> pendingExplosions = new ArrayList<>();
 
+	@SubscribeEvent
+	public static void onSave(WorldEvent.Save event)
+	{
+		IISaveData.setDirty(event.getWorld().provider.getDimension());
+	}
+
+	@SubscribeEvent
+	public static void onUnload(WorldEvent.Unload event)
+	{
+		IISaveData.setDirty(event.getWorld().provider.getDimension());
+	}
+
+	@SubscribeEvent
+	public static void hurtEvent(LivingHurtEvent event)
+	{
+		EntityLivingBase entity = event.getEntityLiving();
+		ItemStack head, chest, legs, boots;
+		head = entity.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
+		chest = entity.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
+		legs = entity.getItemStackFromSlot(EntityEquipmentSlot.LEGS);
+		boots = entity.getItemStackFromSlot(EntityEquipmentSlot.FEET);
+
+		//plates
+		if(event.getSource()==DamageSource.CACTUS||(event.getSource() instanceof EntityDamageSourceIndirect&&event.getSource().getImmediateSource() instanceof EntityArrow))
+		{
+			if(ItemIIUpgradeableArmor.isArmorWithUpgrade(boots, "toughness_increase"))
+				event.setCanceled(true);
+		}
+		//heat resist
+		else if(event.getSource()==DamageSource.IN_FIRE||event.getSource()==DamageSource.HOT_FLOOR)
+		{
+			if(ItemIIUpgradeableArmor.isArmorWithUpgrade(chest, "heat_coating")&&ItemIIUpgradeableArmor.isArmorWithUpgrade(boots, "reinforced"))
+				event.setCanceled(true);
+		}
+		//springs
+		else if(event.getSource()==DamageSource.FALL)
+		{
+			if(ItemIIUpgradeableArmor.isArmorWithUpgrade(boots, "springs"))
+				event.setCanceled(true);
+		}
+	}
+
 	//--- World Load Handling ---//
 	@SubscribeEvent
 	public void onWorldLoad(WorldEvent.Load event)
@@ -118,18 +160,6 @@ public class EventHandler
 	}
 
 	@SubscribeEvent
-	public static void onSave(WorldEvent.Save event)
-	{
-		IISaveData.setDirty(event.getWorld().provider.getDimension());
-	}
-
-	@SubscribeEvent
-	public static void onUnload(WorldEvent.Unload event)
-	{
-		IISaveData.setDirty(event.getWorld().provider.getDimension());
-	}
-
-	@SubscribeEvent
 	public void onGameRuleChange(GameRuleChangeEvent event)
 	{
 		switch(event.getRuleName())
@@ -149,14 +179,16 @@ public class EventHandler
 		}
 	}
 
+
+	//--- Multiblocks ---//
+
 	@SubscribeEvent
 	public void onWorldTick(WorldTickEvent event)
 	{
 		pendingExplosions.removeIf(IIExplosion::explodeBlocks);
 	}
 
-
-	//--- Multiblocks ---//
+	//--- Vehicle or Gun Mounts ---//
 
 	@SubscribeEvent
 	public void onMultiblockForm(MultiblockFormEvent.Post event)
@@ -172,8 +204,6 @@ public class EventHandler
 			}
 		}
 	}
-
-	//--- Vehicle or Gun Mounts ---//
 
 	//TODO: 11.03.2024 include vehicles and crewed weapons
 	//Cancel when using a machinegun
@@ -228,6 +258,8 @@ public class EventHandler
 		}
 	}
 
+	//--- Hanses ---//
+
 	@SubscribeEvent(priority = EventPriority.LOW)
 	public void onLivingUpdate(LivingUpdateEvent event)
 	{
@@ -241,7 +273,7 @@ public class EventHandler
 		}
 	}
 
-	//--- Hanses ---//
+	//--- Armor ---//
 
 	@SubscribeEvent
 	public void spawnEvent(EntityJoinWorldEvent event)
@@ -253,40 +285,8 @@ public class EventHandler
 		}
 	}
 
-	//--- Armor ---//
-
 	@SubscribeEvent
 	public void onLivingAttack(LivingAttackEvent event)
-	{
-		EntityLivingBase entity = event.getEntityLiving();
-		ItemStack head, chest, legs, boots;
-		head = entity.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
-		chest = entity.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
-		legs = entity.getItemStackFromSlot(EntityEquipmentSlot.LEGS);
-		boots = entity.getItemStackFromSlot(EntityEquipmentSlot.FEET);
-
-		//plates
-		if(event.getSource()==DamageSource.CACTUS||(event.getSource() instanceof EntityDamageSourceIndirect&&event.getSource().getImmediateSource() instanceof EntityArrow))
-		{
-			if(ItemIIUpgradeableArmor.isArmorWithUpgrade(boots, "toughness_increase"))
-				event.setCanceled(true);
-		}
-		//heat resist
-		else if(event.getSource()==DamageSource.IN_FIRE||event.getSource()==DamageSource.HOT_FLOOR)
-		{
-			if(ItemIIUpgradeableArmor.isArmorWithUpgrade(chest, "heat_coating")&&ItemIIUpgradeableArmor.isArmorWithUpgrade(boots, "reinforced"))
-				event.setCanceled(true);
-		}
-		//springs
-		else if(event.getSource()==DamageSource.FALL)
-		{
-			if(ItemIIUpgradeableArmor.isArmorWithUpgrade(boots, "springs"))
-				event.setCanceled(true);
-		}
-	}
-
-	@SubscribeEvent
-	public static void hurtEvent(LivingHurtEvent event)
 	{
 		EntityLivingBase entity = event.getEntityLiving();
 		ItemStack head, chest, legs, boots;

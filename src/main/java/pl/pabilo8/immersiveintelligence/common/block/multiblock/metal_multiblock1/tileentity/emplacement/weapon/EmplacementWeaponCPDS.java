@@ -45,36 +45,10 @@ import java.util.List;
 
 public class EmplacementWeaponCPDS extends EmplacementWeapon<EntityAmmoProjectile>
 {
-	/**
-	 * CPDS Q&A
-	 * <p>
-	 * Q: Is CPDS a real life thing?
-	 * A: Not really, it's based on CIWS, but in II it performs a counter-projectile role with anti-aircraft as secondary task
-	 * <p>
-	 * Q: What does CPDS stand for?
-	 * A: Counter-Projectile Defense System
-	 * <p>
-	 * Q: Why gatling?
-	 * A: It's the most high-tech II can get ^^ Historically, gatling guns were used since the US Civil War, so yes, they existed in interwar/ww2
-	 * Decided to choose it because of the unique design
-	 * <p>
-	 * Q: Isn't it OP? it's 8 barrels
-	 * A: Yes, but it costs a lot
-	 */
-	private AxisAlignedBB vision;
 	int reloadDelay = 0;
 	int bulletsShot = 0;
-	private Vec3d vv;
 	float shootDelay = 0;
-
 	NonNullList<ItemStack> inventory = NonNullList.withSize(8, ItemStack.EMPTY);
-	NonNullList<ItemStack> inventoryPlatform = NonNullList.withSize(3, ItemStack.EMPTY);
-	private int casingsToDrop = 0;
-	private boolean requiresPlatformRefill = false;
-
-	ArrayDeque<ItemStack> magazine = new ArrayDeque<>();
-	private ItemStack s2 = ItemStack.EMPTY;
-
 	private final IItemHandler inventoryHandler = new ItemStackHandler(inventory)
 	{
 		@Override
@@ -96,6 +70,29 @@ public class EmplacementWeaponCPDS extends EmplacementWeapon<EntityAmmoProjectil
 			return itemStack;
 		}
 	};
+	NonNullList<ItemStack> inventoryPlatform = NonNullList.withSize(3, ItemStack.EMPTY);
+	ArrayDeque<ItemStack> magazine = new ArrayDeque<>();
+	/**
+	 * CPDS Q&A
+	 * <p>
+	 * Q: Is CPDS a real life thing?
+	 * A: Not really, it's based on CIWS, but in II it performs a counter-projectile role with anti-aircraft as secondary task
+	 * <p>
+	 * Q: What does CPDS stand for?
+	 * A: Counter-Projectile Defense System
+	 * <p>
+	 * Q: Why gatling?
+	 * A: It's the most high-tech II can get ^^ Historically, gatling guns were used since the US Civil War, so yes, they existed in interwar/ww2
+	 * Decided to choose it because of the unique design
+	 * <p>
+	 * Q: Isn't it OP? it's 8 barrels
+	 * A: Yes, but it costs a lot
+	 */
+	private AxisAlignedBB vision;
+	private Vec3d vv;
+	private int casingsToDrop = 0;
+	private boolean requiresPlatformRefill = false;
+	private ItemStack s2 = ItemStack.EMPTY;
 
 	@Override
 	public String getName()

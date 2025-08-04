@@ -69,9 +69,6 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 	private static final IISoundAnimation loadingSoundAnimation;
 	private static final IISoundAnimation unloadingSoundAnimation;
 	private static final IISoundAnimation firingSoundAnimation;
-
-	@SideOnly(Side.CLIENT)
-	private ConditionCompoundSound soundRotationV, soundRotationH, soundDoorOpen, soundDoorClose;
 	//Tactile Animations
 	private static final ResLoc animationPlatform, animationOpen, animationFire, animationLoading, animationUnloading, animationPitch, animationYaw;
 
@@ -188,22 +185,21 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 				.compile(ArtilleryHowitzer.loadRackTime);
 	}
 
-	//--- Variables ---//
-
 	public ArrayList<HowitzerOrder> orderList = new ArrayList<>();
+
+	//--- Variables ---//
 	//currently performed action
 	public ArtilleryHowitzerAnimation animation = ArtilleryHowitzerAnimation.STOP;
 	//animation related variables
 	public int animationTime = 0, animationTimeMax = 0, shellConveyorTime = 0;
 	public boolean isDoorOpened = false, platformPosition = false;
-
 	public int platformTime = 0, doorTime = 0;
 	public float turretYaw = 0, turretPitch = 0, plannedYaw = 0, plannedPitch = 0;
-
 	//shells loaded into the rack
 	public NonNullList<ItemStack> loadedShells;
 	public IItemHandler inventoryHandler, insertionHandler;
-
+	@SideOnly(Side.CLIENT)
+	private ConditionCompoundSound soundRotationV, soundRotationH, soundDoorOpen, soundDoorClose;
 	@SideOnly(Side.CLIENT)
 	private List<TimedCompoundSound> soundsList;
 	private TactileHandler tactileHandler = null;
@@ -1088,16 +1084,6 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 			this.executeTime = executeTime;
 		}
 
-		public boolean matchesRequirements(TileEntityArtilleryHowitzer te)
-		{
-			return requirements.test(te);
-		}
-
-		public boolean isFulfilled(TileEntityArtilleryHowitzer te)
-		{
-			return fulfilled.test(te);
-		}
-
 		@Nullable
 		public static ArtilleryHowitzerAnimation v(String s, TileEntityArtilleryHowitzer te)
 		{
@@ -1111,6 +1097,16 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 					.findFirst()
 					.orElse(null));
 
+		}
+
+		public boolean matchesRequirements(TileEntityArtilleryHowitzer te)
+		{
+			return requirements.test(te);
+		}
+
+		public boolean isFulfilled(TileEntityArtilleryHowitzer te)
+		{
+			return fulfilled.test(te);
 		}
 	}
 

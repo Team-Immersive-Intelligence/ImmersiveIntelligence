@@ -12,7 +12,6 @@
     }
   },
   "parent": "immersiveintelligence:main/root",
-
   "criteria": {
     "craft": {
       "trigger": "minecraft:inventory_changed",

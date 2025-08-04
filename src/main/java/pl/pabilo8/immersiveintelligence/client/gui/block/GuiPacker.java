@@ -50,18 +50,16 @@ public class GuiPacker extends GuiIEContainerBase
 	private static final ResourceLocation TEXTURE_ICONS = new ResourceLocation("immersiveintelligence:textures/gui/emplacement_icons.png");
 	private static final ResourceLocation TEXTURE_PACKER = new ResourceLocation("immersiveintelligence:textures/gui/packer.png");
 	private static final ResourceLocation TEXTURE_PAGE = new ResourceLocation("immersiveintelligence:textures/gui/printed_page.png");
-	TileEntityPacker tile;
+	private final static IIColor COLOR_IN = IIColor.fromPackedRGB(0x4c7bb1), COLOR_OUT = IIColor.fromPackedRGB(0xffb515);
 	final SideResourceDisplay sideDisplay;
 	private final ContainerPacker container;
-
+	TileEntityPacker tile;
 	private GuiButtonIE buttonAdd, buttonRemove, buttonDuplicate, buttonClear, buttonSideInput, buttonSideOutput;
 	private GuiButtonState buttonRepeat;
 	private GuiPackerTaskList taskList;
 	private DecoDropdown<String> putModeList;
 	private DecoSwitch switchOreDict, switchNBT, switchDirection;
 	private GuiTextField textFieldAmount;
-
-	private final static IIColor COLOR_IN = IIColor.fromPackedRGB(0x4c7bb1), COLOR_OUT = IIColor.fromPackedRGB(0xffb515);
 
 	public GuiPacker(EntityPlayer player, TileEntityPacker tile)
 	{
@@ -415,9 +413,9 @@ public class GuiPacker extends GuiIEContainerBase
 
 	private static class SideItemDisplay extends SideResourceDisplay
 	{
+		private final int maxScroll;
 		//slot scrolling
 		private int scroll;
-		private final int maxScroll;
 
 		public SideItemDisplay(GuiPacker gui)
 		{
@@ -534,26 +532,26 @@ public class GuiPacker extends GuiIEContainerBase
 		void draw(int mx, int my)
 		{
 			IIClientUtils.bindTexture(TEXTURE_ICONS);
-			gui.drawTexturedModalRect(gui.guiLeft + 264, gui.guiTop + 12, 40, 0, 40, 40);
-			gui.drawTexturedModalRect(gui.guiLeft + 264, gui.guiTop + 12 + 40, 40, 19, 40, 20);
-			gui.drawTexturedModalRect(gui.guiLeft + 264, gui.guiTop + 12 + 60, 40, 10, 40, 40);
+			gui.drawTexturedModalRect(gui.guiLeft+264, gui.guiTop+12, 40, 0, 40, 40);
+			gui.drawTexturedModalRect(gui.guiLeft+264, gui.guiTop+12+40, 40, 19, 40, 20);
+			gui.drawTexturedModalRect(gui.guiLeft+264, gui.guiTop+12+60, 40, 10, 40, 40);
 
 			int hh = 0;
 
-			for (FluidStack fluid : gui.tile.fluidTank.fluids)
+			for(FluidStack fluid : gui.tile.fluidTank.fluids)
 			{
-				int height = (int) ((fluid.amount / (float) gui.tile.fluidTank.getCapacity()) * 96);
+				int height = (int)((fluid.amount/(float)gui.tile.fluidTank.getCapacity())*96);
 				hh += height;
-				ClientUtils.drawRepeatedFluidSprite(fluid, gui.guiLeft + 264, gui.guiTop + 12 + 2 + 96 - hh, 40, height);
+				ClientUtils.drawRepeatedFluidSprite(fluid, gui.guiLeft+264, gui.guiTop+12+2+96-hh, 40, height);
 			}
 
 			IIClientUtils.bindTexture(TEXTURE_ICONS);
-			gui.drawTexturedModalRect(gui.guiLeft + 264, gui.guiTop + 12, 80, 0, 40, 40);
-			gui.drawTexturedModalRect(gui.guiLeft + 264, gui.guiTop + 12 + 40, 80, 19, 40, 20);
-			gui.drawTexturedModalRect(gui.guiLeft + 264, gui.guiTop + 12 + 60, 80, 10, 40, 40);
+			gui.drawTexturedModalRect(gui.guiLeft+264, gui.guiTop+12, 80, 0, 40, 40);
+			gui.drawTexturedModalRect(gui.guiLeft+264, gui.guiTop+12+40, 80, 19, 40, 20);
+			gui.drawTexturedModalRect(gui.guiLeft+264, gui.guiTop+12+60, 80, 10, 40, 40);
 
-			gui.drawTexturedModalRect(gui.guiLeft + 308, gui.guiTop + 34, 0, 50, 18, 18);
-			gui.drawTexturedModalRect(gui.guiLeft + 308, gui.guiTop + 70, 0, 50, 18, 18);
+			gui.drawTexturedModalRect(gui.guiLeft+308, gui.guiTop+34, 0, 50, 18, 18);
+			gui.drawTexturedModalRect(gui.guiLeft+308, gui.guiTop+70, 0, 50, 18, 18);
 
 			// Handle hover tooltips
 			drawFluidTooltip(mx, my);
@@ -561,20 +559,20 @@ public class GuiPacker extends GuiIEContainerBase
 
 		private void drawFluidTooltip(int mx, int my)
 		{
-			int tankX = gui.guiLeft + 264;
-			int tankY = gui.guiTop + 12;
+			int tankX = gui.guiLeft+264;
+			int tankY = gui.guiTop+12;
 			int tankWidth = 40;
 			int tankHeight = 96;
 
-			if (gui.isPointInRegion(tankX - gui.guiLeft, tankY - gui.guiTop, tankWidth, tankHeight, mx, my))
+			if(gui.isPointInRegion(tankX-gui.guiLeft, tankY-gui.guiTop, tankWidth, tankHeight, mx, my))
 			{
 				ArrayList<String> tooltip = new ArrayList<>();
-				for (FluidStack fluid : gui.tile.fluidTank.fluids)
+				for(FluidStack fluid : gui.tile.fluidTank.fluids)
 				{
 					tooltip.add(fluid.getLocalizedName());
-					tooltip.add(fluid.amount + " / " + gui.tile.fluidTank.getCapacity() + " mB");
+					tooltip.add(fluid.amount+" / "+gui.tile.fluidTank.getCapacity()+" mB");
 				}
-				if (!tooltip.isEmpty())
+				if(!tooltip.isEmpty())
 				{
 					gui.drawHoveringText(tooltip, mx, my, gui.fontRenderer);
 				}

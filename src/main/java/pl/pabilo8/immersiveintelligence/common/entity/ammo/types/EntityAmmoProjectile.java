@@ -52,6 +52,14 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 {
 	//--- Constants ---//
 	/**
+	 * Modifier for enemy armor effectiveness, used for calculating damage
+	 */
+	public static final float ARMOR_FACTOR = 0.3f;
+	/**
+	 * Modifier for enemy armor toughness, used for calculating penetration
+	 */
+	public static final float TOUGHNESS_FACTOR = 0.45f;
+	/**
 	 * Tick limit for the projectile, used for decay
 	 */
 	public static int MAX_TICKS = 600;
@@ -73,16 +81,8 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 		setSlowmo(1);
 	}
 
-	/**
-	 * Modifier for enemy armor effectiveness, used for calculating damage
-	 */
-	public static final float ARMOR_FACTOR = 0.3f;
-	/**
-	 * Modifier for enemy armor toughness, used for calculating penetration
-	 */
-	public static final float TOUGHNESS_FACTOR = 0.45f;
-
 	//--- Properties ---//
+
 	/**
 	 * The base motion of the bullet, used for calculating the motion vector
 	 */
@@ -99,20 +99,19 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 	@SyncNBT(events = SyncEvents.ENTITY_COLLISION)
 	public float velocity;
 	/**
-	 * The mass of the bullet, used for calculating the motion vector
-	 */
-	protected double mass;
-
-	//--- Penetration System Properties ---//
-	/**
 	 * The penetration ability of the projectile, in blocks<br>
 	 * The penetration hardness of a projectile, uses block hardness values
 	 */
 	@SyncNBT(events = SyncEvents.ENTITY_COLLISION)
 	public float penetrationDepth;
+
+	//--- Penetration System Properties ---//
 	@SyncNBT(events = SyncEvents.ENTITY_COLLISION)
 	public PenetrationHardness penetrationHardness;
-
+	/**
+	 * The mass of the bullet, used for calculating the motion vector
+	 */
+	protected double mass;
 	/**
 	 * Blocks and Entities to ignore during hit detection
 	 */
@@ -135,13 +134,26 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 		super(world);
 	}
 
+	/**
+	 * Sets the slowmo coefficient for all projectiles
+	 *
+	 * @param newSlowmo The new slowmo coefficient
+	 */
+	public static void setSlowmo(float newSlowmo)
+	{
+		//Apply new values
+		SLOWMO = newSlowmo;
+		GRAVITY = 0.1f*SLOWMO;
+		DRAG = 0.01f*SLOWMO;
+	}
+
+	//--- Getters ---//
+
 	@Override
 	protected boolean shouldDecay()
 	{
 		return ticksExisted > MAX_TICKS||posY < 0;
 	}
-
-	//--- Getters ---//
 
 	@Override
 	@Nonnull
@@ -155,12 +167,12 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 		return ammoType.getDamage()*coreType.getDamageMod()*core.getDamageModifier()*velocityModifier;
 	}
 
+	//--- Update ---//
+
 	public float getVelocity()
 	{
 		return velocity;
 	}
-
-	//--- Update ---//
 
 	@Override
 	public void onUpdate()
@@ -407,6 +419,8 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 		return false;
 	}
 
+	//--- Builder ---//
+
 	/**
 	 * @return the position the projectile will be at in the next tick
 	 */
@@ -414,8 +428,6 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 	{
 		return getPositionVector().addVector(motionX, motionY, motionZ);
 	}
-
-	//--- Builder ---//
 
 	/**
 	 * Called when the projectile goes through a block or entity
@@ -433,6 +445,8 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 		if(sound!=null)
 			playSound(sound, 0.5f, 1f);
 	}
+
+	//--- Setters ---//
 
 	/**
 	 * Called when the projectile ricochets off a block or entity
@@ -481,8 +495,6 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 		if(sound!=null)
 			playSound(sound, 0.5f, 1f);
 	}
-
-	//--- Setters ---//
 
 	/**
 	 * @param owner The owner of this bullet, used for statistics and hit detection
@@ -555,6 +567,8 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 			nbt.withList("ignored_pos", e -> new NBTTagIntArray(new int[]{e.getX(), e.getY(), e.getZ()}), ignoredPositions);
 	}
 
+	//--- Static Methods ---//
+
 	/**
 	 * @param ignoredBlocks   The blocks to ignore during hit detection
 	 * @param ignoredEntities The entities to ignore during hit detection
@@ -566,21 +580,6 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 			this.ignoredPositions.addAll(ignoredBlocks);
 		if(ignoredEntities!=null)
 			this.ignoredEntities.addAll(ignoredEntities);
-	}
-
-	//--- Static Methods ---//
-
-	/**
-	 * Sets the slowmo coefficient for all projectiles
-	 *
-	 * @param newSlowmo The new slowmo coefficient
-	 */
-	public static void setSlowmo(float newSlowmo)
-	{
-		//Apply new values
-		SLOWMO = newSlowmo;
-		GRAVITY = 0.1f*SLOWMO;
-		DRAG = 0.01f*SLOWMO;
 	}
 
 }

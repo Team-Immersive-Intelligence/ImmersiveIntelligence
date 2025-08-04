@@ -28,13 +28,11 @@ public abstract class GuiComponentDecoBase<TYPE extends GuiComponentDecoBase<? s
 {
 	@Nullable
 	protected DecoGui<?, ?> parentGui;
-
-	@SuppressWarnings("unused")
-	private String displayString;
-
 	protected List<GuiComponentDecoBase<?>> children = new ArrayList<>();
 	protected boolean pressed;
 	protected boolean initialized;
+	@SuppressWarnings("unused")
+	private String displayString;
 	private boolean focused;
 
 	private DecoMouseEvent<TYPE> onPressed;
@@ -414,14 +412,27 @@ public abstract class GuiComponentDecoBase<TYPE extends GuiComponentDecoBase<? s
 		return null;
 	}
 
+	public boolean isFocused()
+	{
+		return focused;
+	}
+
 	public void setFocused(boolean focused)
 	{
 		this.focused = focused;
 	}
 
-	public boolean isFocused()
+	/**
+	 * Called when the mouse is scrolled over the component
+	 *
+	 * @param mouseX   The x position of the mouse
+	 * @param mouseY   The y position of the mouse
+	 * @param scrolled The amount the mouse was scrolled
+	 * @return Whether the scroll was handled
+	 */
+	public final boolean onComponentScroll(int mouseX, int mouseY, float scrolled)
 	{
-		return focused;
+		return onScroll==null||(canBeClicked(mouseX, mouseY)&&onScroll.onMouse((TYPE)this, (int)scrolled, mouseX, mouseY));
 	}
 
 	/**
@@ -439,17 +450,13 @@ public abstract class GuiComponentDecoBase<TYPE extends GuiComponentDecoBase<? s
 		JEI_USES
 	}
 
-	/**
-	 * Called when the mouse is scrolled over the component
-	 *
-	 * @param mouseX   The x position of the mouse
-	 * @param mouseY   The y position of the mouse
-	 * @param scrolled The amount the mouse was scrolled
-	 * @return Whether the scroll was handled
-	 */
-	public final boolean onComponentScroll(int mouseX, int mouseY, float scrolled)
+	public enum MouseButton
 	{
-		return onScroll==null||(canBeClicked(mouseX, mouseY)&&onScroll.onMouse((TYPE)this, (int)scrolled, mouseX, mouseY));
+		LEFT,
+		RIGHT,
+		MIDDLE,
+		FORWARD,
+		BACKWARD
 	}
 
 	@FunctionalInterface
@@ -479,14 +486,5 @@ public abstract class GuiComponentDecoBase<TYPE extends GuiComponentDecoBase<? s
 		{
 			return (TYPE component) -> base.apply(apply(component));
 		}
-	}
-
-	public enum MouseButton
-	{
-		LEFT,
-		RIGHT,
-		MIDDLE,
-		FORWARD,
-		BACKWARD
 	}
 }

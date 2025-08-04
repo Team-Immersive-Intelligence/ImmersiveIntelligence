@@ -13,11 +13,10 @@ import pl.pabilo8.immersiveintelligence.client.util.tmt.Shape2D;
  */
 public class ModelDataInputMachine extends ModelIIBase
 {
-	int textureX = 128;
-	int textureY = 256;
-
 	public ModelRendererTurbo[] lidModel;
 	public ModelRendererTurbo[] drawerModel;
+	int textureX = 128;
+	int textureY = 256;
 
 	public ModelDataInputMachine() //Same as Filename
 	{

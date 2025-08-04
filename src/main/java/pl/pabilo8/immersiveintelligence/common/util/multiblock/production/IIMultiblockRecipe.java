@@ -76,6 +76,50 @@ public abstract class IIMultiblockRecipe extends MultiblockRecipe implements III
 		return sb.toString();
 	}
 
+	/**
+	 * Collects recipes matching the given filter and removes them from the registry
+	 *
+	 * @param recipeClass  recipe type class
+	 * @param recipeFilter filter to apply to the recipes
+	 * @param <T>          the type of the recipe
+	 * @return a list of recipes matching the filter
+	 */
+	@SuppressWarnings("unchecked")
+	@Nonnull
+	public static <T extends IIMultiblockRecipe> List<T> removeRecipesByFilter(Class<T> recipeClass, Predicate<T> recipeFilter)
+	{
+		MultiblockRecipeRegistry<T> registry = (MultiblockRecipeRegistry<T>)registries.get(recipeClass);
+		List<T> recipes = registry.recipesList.stream()
+				.filter(recipeFilter)
+				.collect(Collectors.toList());
+		registry.recipesList.removeAll(recipes);
+
+		return recipes;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Nonnull
+	public static <T extends IIMultiblockRecipe> List<T> getRecipes(Class<T> recipeClass)
+	{
+		MultiblockRecipeRegistry<T> registry = (MultiblockRecipeRegistry<T>)registries.get(recipeClass);
+		return registry.getRecipes();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Nonnull
+	public static <T extends IIMultiblockRecipe> Stream<T> streamRecipes(Class<T> recipeClass)
+	{
+		return (Stream<T>)registries.get(recipeClass).recipesList.stream();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Nullable
+	public static <T extends IIMultiblockRecipe> T getRecipe(Class<T> recipeClass, String name)
+	{
+		MultiblockRecipeRegistry<T> registry = (MultiblockRecipeRegistry<T>)registries.get(recipeClass);
+		return registry.getRecipe(name);
+	}
+
 	protected final void setTimeAndEnergy(int totalProcessTime, int totalProcessEnergy)
 	{
 		this.totalProcessTime = totalProcessTime;
@@ -119,50 +163,6 @@ public abstract class IIMultiblockRecipe extends MultiblockRecipe implements III
 	public String getName()
 	{
 		return name;
-	}
-
-	/**
-	 * Collects recipes matching the given filter and removes them from the registry
-	 *
-	 * @param recipeClass  recipe type class
-	 * @param recipeFilter filter to apply to the recipes
-	 * @param <T>          the type of the recipe
-	 * @return a list of recipes matching the filter
-	 */
-	@SuppressWarnings("unchecked")
-	@Nonnull
-	public static <T extends IIMultiblockRecipe> List<T> removeRecipesByFilter(Class<T> recipeClass, Predicate<T> recipeFilter)
-	{
-		MultiblockRecipeRegistry<T> registry = (MultiblockRecipeRegistry<T>)registries.get(recipeClass);
-		List<T> recipes = registry.recipesList.stream()
-				.filter(recipeFilter)
-				.collect(Collectors.toList());
-		registry.recipesList.removeAll(recipes);
-
-		return recipes;
-	}
-
-	@SuppressWarnings("unchecked")
-	@Nonnull
-	public static <T extends IIMultiblockRecipe> List<T> getRecipes(Class<T> recipeClass)
-	{
-		MultiblockRecipeRegistry<T> registry = (MultiblockRecipeRegistry<T>)registries.get(recipeClass);
-		return registry.getRecipes();
-	}
-
-	@SuppressWarnings("unchecked")
-	@Nonnull
-	public static <T extends IIMultiblockRecipe> Stream<T> streamRecipes(Class<T> recipeClass)
-	{
-		return (Stream<T>)registries.get(recipeClass).recipesList.stream();
-	}
-
-	@SuppressWarnings("unchecked")
-	@Nullable
-	public static <T extends IIMultiblockRecipe> T getRecipe(Class<T> recipeClass, String name)
-	{
-		MultiblockRecipeRegistry<T> registry = (MultiblockRecipeRegistry<T>)registries.get(recipeClass);
-		return registry.getRecipe(name);
 	}
 
 	private static class MultiblockRecipeRegistry<T extends IIMultiblockRecipe>

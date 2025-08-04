@@ -44,6 +44,26 @@ public class TerrafirmaHelper extends IICompatModule
 		planksRes = ResLoc.of(tfcRoot, "wood/planks/");
 	}
 
+	private static void woodRecipe(IRecipe recipe)
+	{
+		ItemStack out = recipe.getRecipeOutput().copy();
+		if(!Utils.compareToOreName(out, "lumber"))
+			return;
+		out.setCount((int)(out.getCount()*1.5));
+
+		List<ItemStack> logStacks = new ArrayList<>();
+		for(Ingredient ingredient : recipe.getIngredients())
+			Arrays.stream(ingredient.getMatchingStacks())
+					.filter(stack -> Utils.compareToOreName(stack, "logWood"))
+					.forEachOrdered(logStacks::add);
+		if(logStacks.isEmpty())
+			return;
+
+		new SawmillRecipe(out, new IngredientStack(logStacks).setUseNBT(false),
+				IIContent.itemMaterial.getStack(Materials.DUST_WOOD),
+				Sawmill.torqueMin+2, 400, 1);
+	}
+
 	@Override
 	public void preInit()
 	{
@@ -84,25 +104,5 @@ public class TerrafirmaHelper extends IICompatModule
 	public void postInit()
 	{
 
-	}
-
-	private static void woodRecipe(IRecipe recipe)
-	{
-		ItemStack out = recipe.getRecipeOutput().copy();
-		if(!Utils.compareToOreName(out, "lumber"))
-			return;
-		out.setCount((int)(out.getCount()*1.5));
-
-		List<ItemStack> logStacks = new ArrayList<>();
-		for(Ingredient ingredient : recipe.getIngredients())
-			Arrays.stream(ingredient.getMatchingStacks())
-					.filter(stack -> Utils.compareToOreName(stack, "logWood"))
-					.forEachOrdered(logStacks::add);
-		if(logStacks.isEmpty())
-			return;
-
-		new SawmillRecipe(out, new IngredientStack(logStacks).setUseNBT(false),
-				IIContent.itemMaterial.getStack(Materials.DUST_WOOD),
-				Sawmill.torqueMin+2, 400, 1);
 	}
 }

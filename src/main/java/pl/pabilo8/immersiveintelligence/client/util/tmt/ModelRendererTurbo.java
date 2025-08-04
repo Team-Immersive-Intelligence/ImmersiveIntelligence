@@ -44,38 +44,21 @@ import java.util.*;
 @Deprecated
 public class ModelRendererTurbo extends ModelRenderer
 {
-	/**
-	 * Vertices of this TMT
-	 */
-	private PositionTextureVertex[] vertices;
-	/**
-	 * Faces of this TMT
-	 */
-	private TexturedPolygon[] faces;
-	/**
-	 * Texture Offsets of this TMT
-	 */
-	private int textureOffsetX, textureOffsetY;
-	/**
-	 * Whether this TMT has been compiled into GL Display Lists
-	 */
-	private boolean compiled;
-	/**
-	 * GL Display List ID
-	 */
-	public boolean forcedRecompile;
-	/**
-	 * Array of compiled GL display lists for each texture group
-	 */
-	private int[] displayListArray;
+	public static final int MR_FRONT = 0;
+	public static final int MR_BACK = 1;
+	public static final int MR_LEFT = 2;
+	public static final int MR_RIGHT = 3;
+	public static final int MR_TOP = 4;
+	public static final int MR_BOTTOM = 5;
+	private static final float pi = (float)Math.PI;
 	/**
 	 * Map of texture groups
 	 */
 	private final Map<String, TextureGroup> textureGroup;
 	/**
-	 * Current texture group
+	 * GL Display List ID
 	 */
-	private TextureGroup currentTextureGroup;
+	public boolean forcedRecompile;
 	/**
 	 * Whether this TMT is mirrored (X-axis)
 	 */
@@ -96,15 +79,30 @@ public class ModelRendererTurbo extends ModelRenderer
 	 * List of child models
 	 */
 	public ArrayList<ModelRenderer> childModels;
-
-	public static final int MR_FRONT = 0;
-	public static final int MR_BACK = 1;
-	public static final int MR_LEFT = 2;
-	public static final int MR_RIGHT = 3;
-	public static final int MR_TOP = 4;
-	public static final int MR_BOTTOM = 5;
-
-	private static final float pi = (float)Math.PI;
+	/**
+	 * Vertices of this TMT
+	 */
+	private PositionTextureVertex[] vertices;
+	/**
+	 * Faces of this TMT
+	 */
+	private TexturedPolygon[] faces;
+	/**
+	 * Texture Offsets of this TMT
+	 */
+	private int textureOffsetX, textureOffsetY;
+	/**
+	 * Whether this TMT has been compiled into GL Display Lists
+	 */
+	private boolean compiled;
+	/**
+	 * Array of compiled GL display lists for each texture group
+	 */
+	private int[] displayListArray;
+	/**
+	 * Current texture group
+	 */
+	private TextureGroup currentTextureGroup;
 
 	public ModelRendererTurbo(ModelBase modelbase)
 	{

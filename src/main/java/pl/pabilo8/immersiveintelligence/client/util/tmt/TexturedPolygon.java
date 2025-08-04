@@ -7,6 +7,12 @@ import java.util.ArrayList;
 
 public class TexturedPolygon
 {
+	public PositionTextureVertex[] vertexPositions;
+	public int nVertices;
+	private boolean invertNormal;
+	private float[] normals;
+	private ArrayList<Vec3d> iNormals;
+
 	public TexturedPolygon(PositionTextureVertex[] apositionTexturevertex)
 	{
 		this.invertNormal = false;
@@ -118,10 +124,4 @@ public class TexturedPolygon
 
 		tessellator.draw();
 	}
-
-	public PositionTextureVertex[] vertexPositions;
-	public int nVertices;
-	private boolean invertNormal;
-	private float[] normals;
-	private ArrayList<Vec3d> iNormals;
 }

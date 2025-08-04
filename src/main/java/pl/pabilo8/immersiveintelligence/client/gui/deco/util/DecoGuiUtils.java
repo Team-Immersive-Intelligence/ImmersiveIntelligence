@@ -68,27 +68,6 @@ public class DecoGuiUtils
 					.withIcon(IIReference.RES_TEXTURES_DECO_ICON_ACTION_CLEAR)
 					.withTranslatedTooltip(IIReference.GUI_TOOLTIP_KEY+"button.clear")
 	);
-
-	//--- Energy Bar ---//
-	private static final DecoComponentTemplate<DecoBar> BAR_ELECTRIC_ENERGY_BASE = component -> component
-			.withColors(IIColor.fromPackedRGB(0xb37e28), IIColor.fromPackedRGB(0x663f26))
-			.withIconLocation(IIReference.RES_ICON_ENERGY);
-
-	public static final Function<IFluxStorage, DecoComponentTemplate<DecoBar>> BAR_ELECTRIC_ENERGY =
-			energyStorage -> component -> component
-					.withTemplate(BAR_ELECTRIC_ENERGY_BASE)
-					.withValueTooltip("energy.stored", BarTooltipFormat.VALUE_TO_MAX, TextFormatting.GOLD)
-					.withLimits(0, energyStorage.getMaxEnergyStored(), energyStorage::getEnergyStored);
-
-	public static final DecoComponentTemplate<DecoBar> BAR_ELECTRIC_ENERGY_INPUT = component -> component
-			.withTemplate(BAR_ELECTRIC_ENERGY_BASE)
-			.withIconLocation(IIReference.RES_ICON_ENERGY_INPUT)
-			.withValueTooltip("energy.input", BarTooltipFormat.VALUE, TextFormatting.GOLD);
-	public static final DecoComponentTemplate<DecoBar> BAR_ELECTRIC_ENERGY_OUTPUT = component -> component
-			.withTemplate(BAR_ELECTRIC_ENERGY_BASE)
-			.withIconLocation(IIReference.RES_ICON_ENERGY_OUTPUT)
-			.withValueTooltip("energy.output", BarTooltipFormat.VALUE, TextFormatting.GOLD);
-
 	//--- Mechanical Torque Bar ---//
 	public static final Function<IRotaryEnergy, DecoComponentTemplate<DecoBar>> BAR_MECH_TORQUE =
 			rotaryEnergy -> component -> component
@@ -108,7 +87,6 @@ public class DecoGuiUtils
 					.withIconLocation(IIReference.RES_ICON_MECH_TORQUE_OUTPUT)
 					.withValueTooltip("mech_torque.output", BarTooltipFormat.VALUE, TextFormatting.GOLD)
 					.withLimits(0, 100, () -> (int)rotaryEnergy.getOutputTorque());
-
 	//--- Mechanical Speed Bar ---//
 	public static final Function<IRotaryEnergy, DecoComponentTemplate<DecoBar>> BAR_MECH_SPEED =
 			rotaryEnergy -> component -> component
@@ -128,7 +106,6 @@ public class DecoGuiUtils
 					.withIconLocation(IIReference.RES_ICON_MECH_SPEED_OUTPUT)
 					.withValueTooltip("mech_speed.output", BarTooltipFormat.VALUE, TextFormatting.GOLD)
 					.withLimits(0, 720, () -> (int)rotaryEnergy.getOutputRotationSpeed());
-
 	//--- Armor ---//
 	public static final DecoComponentTemplate<DecoBar> BAR_ARMOR_INTEGRITY = component -> component
 			.withColors(IIColor.fromPackedRGB(0x6b6b6b), IIColor.fromPackedRGB(0x3c3c3c))
@@ -145,7 +122,23 @@ public class DecoGuiUtils
 			.withIconLocation(IIReference.RES_ICON_STRUCTURAL_INTEGRITY)
 			.withValueTooltip("structural_integrity", BarTooltipFormat.VALUE_TO_MAX, TextFormatting.GOLD)
 			.withSmoothAnimation();
-
+	//--- Energy Bar ---//
+	private static final DecoComponentTemplate<DecoBar> BAR_ELECTRIC_ENERGY_BASE = component -> component
+			.withColors(IIColor.fromPackedRGB(0xb37e28), IIColor.fromPackedRGB(0x663f26))
+			.withIconLocation(IIReference.RES_ICON_ENERGY);
+	public static final Function<IFluxStorage, DecoComponentTemplate<DecoBar>> BAR_ELECTRIC_ENERGY =
+			energyStorage -> component -> component
+					.withTemplate(BAR_ELECTRIC_ENERGY_BASE)
+					.withValueTooltip("energy.stored", BarTooltipFormat.VALUE_TO_MAX, TextFormatting.GOLD)
+					.withLimits(0, energyStorage.getMaxEnergyStored(), energyStorage::getEnergyStored);
+	public static final DecoComponentTemplate<DecoBar> BAR_ELECTRIC_ENERGY_INPUT = component -> component
+			.withTemplate(BAR_ELECTRIC_ENERGY_BASE)
+			.withIconLocation(IIReference.RES_ICON_ENERGY_INPUT)
+			.withValueTooltip("energy.input", BarTooltipFormat.VALUE, TextFormatting.GOLD);
+	public static final DecoComponentTemplate<DecoBar> BAR_ELECTRIC_ENERGY_OUTPUT = component -> component
+			.withTemplate(BAR_ELECTRIC_ENERGY_BASE)
+			.withIconLocation(IIReference.RES_ICON_ENERGY_OUTPUT)
+			.withValueTooltip("energy.output", BarTooltipFormat.VALUE, TextFormatting.GOLD);
 
 	public static IIDrawUtils drawBackgroundMask(Collection<DecoBackgroundTile> rects, int minXOffset, int minYOffset)
 	{

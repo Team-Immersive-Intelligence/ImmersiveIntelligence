@@ -23,10 +23,10 @@ import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
  */
 public class MineDetectorRenderer extends TileEntityItemStackRenderer implements IReloadableModelContainer<MineDetectorRenderer>
 {
+	private static final String TEXTURE = ImmersiveIntelligence.MODID+":textures/items/tools/mine_detector.png";
 	public static MineDetectorRenderer instance = new MineDetectorRenderer().subscribeToList("mine_detector");
 	@SideOnly(Side.CLIENT)
 	private static ModelMineDetector model;
-	private static final String TEXTURE = ImmersiveIntelligence.MODID+":textures/items/tools/mine_detector.png";
 
 	@Override
 	public void renderByItem(ItemStack itemStackIn, float partialTicks)

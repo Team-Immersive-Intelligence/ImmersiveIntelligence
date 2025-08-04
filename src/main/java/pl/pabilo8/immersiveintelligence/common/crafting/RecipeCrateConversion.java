@@ -20,16 +20,28 @@ import java.util.ArrayList;
 @Optional.Interface(iface = "mezz.jei.api.recipe.IRecipeWrapper", modid = "jei")
 public class RecipeCrateConversion extends net.minecraftforge.registries.IForgeRegistryEntry.Impl<IRecipe> implements IRecipe, IRecipeWrapper
 {
+	public static ArrayList<RecipeCrateConversion> listAllRecipes = new ArrayList<>();
 	private final ItemStack outputCrate;
 	private final ItemStack inputCrate;
-
-	public static ArrayList<RecipeCrateConversion> listAllRecipes = new ArrayList<>();
 
 	public RecipeCrateConversion(ItemStack outputCrate, ItemStack inputCrate)
 	{
 		this.outputCrate = outputCrate;
 		this.inputCrate = inputCrate;
 		listAllRecipes.add(this);
+	}
+
+	/**
+	 * Method to create recipes for cycling between crates.
+	 */
+	public static void createCrateConversionRecipes(IForgeRegistry<IRecipe> registry, String baseName, ItemStack... crates)
+	{
+		for(int i = 0; i < crates.length; i++)
+		{
+			int nextIndex = (i+1)%crates.length;
+			registry.register(new RecipeCrateConversion(crates[nextIndex], crates[i])
+					.setRegistryName(ImmersiveIntelligence.MODID, baseName+i));
+		}
 	}
 
 	/**
@@ -95,19 +107,6 @@ public class RecipeCrateConversion extends net.minecraftforge.registries.IForgeR
 	public ItemStack getRecipeOutput()
 	{
 		return outputCrate.copy();
-	}
-
-	/**
-	 * Method to create recipes for cycling between crates.
-	 */
-	public static void createCrateConversionRecipes(IForgeRegistry<IRecipe> registry, String baseName, ItemStack... crates)
-	{
-		for(int i = 0; i < crates.length; i++)
-		{
-			int nextIndex = (i+1)%crates.length;
-			registry.register(new RecipeCrateConversion(crates[nextIndex], crates[i])
-					.setRegistryName(ImmersiveIntelligence.MODID, baseName+i));
-		}
 	}
 
 	@Override

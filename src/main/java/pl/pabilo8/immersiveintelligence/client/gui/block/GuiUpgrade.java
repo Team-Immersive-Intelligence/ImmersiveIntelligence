@@ -38,12 +38,12 @@ import java.util.List;
 public class GuiUpgrade extends GuiIEContainerBase
 {
 	public static final String TEXTURE = ImmersiveIntelligence.MODID+":textures/gui/upgrade_lowtier.png";
+	public boolean info = false;
+	public boolean previewInstalled = false;
 	IUpgradableMachine upgradableMachine;
 	TileEntity tileEntity;
 	List<MachineUpgrade> upgrades;
 	MachineUpgrade previewed = null;
-	public boolean info = false;
-	public boolean previewInstalled = false;
 	GuiButtonIE buttonInfo = null, buttonUpgrade = null, buttonQuit = null;
 	private String textUpgradeMachine, textInfo, textUpgrade, textRemove, textBack;
 

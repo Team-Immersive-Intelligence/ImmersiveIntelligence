@@ -55,13 +55,13 @@ public enum ParticleDrawStages implements ISerializableEnum
 	 */
 	CUSTOM_SOLID(GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, IIParticleUtils.PARTICLE_SOLID, false, true, TextureMap.LOCATION_BLOCKS_TEXTURE);
 
+	public final boolean renderThroughBlocks, applyLighting;
+	public final boolean requiresNormals;
 	final DestFactor destFactor;
 	final VertexFormat vertexFormat;
-	public final boolean renderThroughBlocks, applyLighting;
 	final ResourceLocation textureRes;
 	final Shaders shader;
 	final Function<Float, float[]> shaderParameters;
-	public final boolean requiresNormals;
 
 	ParticleDrawStages(DestFactor destFactor, VertexFormat vertexFormat, boolean renderThroughBlocks, boolean applyLighting, @Nullable ResourceLocation textureRes)
 	{

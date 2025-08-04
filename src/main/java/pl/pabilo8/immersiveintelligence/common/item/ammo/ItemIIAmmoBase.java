@@ -60,14 +60,6 @@ public abstract class ItemIIAmmoBase<E extends EntityAmmoBase<? super E>> extend
 		this.casing = casing;
 	}
 
-	public enum AmmoParts implements IIItemEnum
-	{
-		@IIItemProperties(hidden = true)
-		BULLET,
-		@IIItemProperties(hidden = true)
-		CORE
-	}
-
 	public void makeDefault(ItemStack stack)
 	{
 		if(!ItemNBTHelper.hasKey(stack, NBT_CORE))
@@ -83,7 +75,6 @@ public abstract class ItemIIAmmoBase<E extends EntityAmmoBase<? super E>> extend
 	{
 		return casing!=null?IIContent.itemAmmoCasing.getStack(casing, amount): ItemStack.EMPTY;
 	}
-
 
 	public void registerSprites(TextureMap map)
 	{
@@ -187,7 +178,6 @@ public abstract class ItemIIAmmoBase<E extends EntityAmmoBase<? super E>> extend
 		return NAME;
 	}
 
-
 	@SideOnly(Side.CLIENT)
 	@Nullable
 	@Override
@@ -228,5 +218,13 @@ public abstract class ItemIIAmmoBase<E extends EntityAmmoBase<? super E>> extend
 		}
 
 		return a;
+	}
+
+	public enum AmmoParts implements IIItemEnum
+	{
+		@IIItemProperties(hidden = true)
+		BULLET,
+		@IIItemProperties(hidden = true)
+		CORE
 	}
 }

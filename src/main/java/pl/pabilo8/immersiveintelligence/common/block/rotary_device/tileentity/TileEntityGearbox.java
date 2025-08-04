@@ -40,8 +40,8 @@ public class TileEntityGearbox extends TileEntityIEBase implements ITickable, IA
 
 	public SideConfig[] sideConfig = {SideConfig.NONE, SideConfig.INPUT, SideConfig.NONE, SideConfig.NONE, SideConfig.NONE, SideConfig.NONE};
 	public int comparatorOutput = 0;
-	NonNullList<ItemStack> inventory = NonNullList.withSize(GEAR_SLOTS, ItemStack.EMPTY);
 	public GearboxRotaryStorage rotation = new GearboxRotaryStorage();
+	NonNullList<ItemStack> inventory = NonNullList.withSize(GEAR_SLOTS, ItemStack.EMPTY);
 
 	@Override
 	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing)

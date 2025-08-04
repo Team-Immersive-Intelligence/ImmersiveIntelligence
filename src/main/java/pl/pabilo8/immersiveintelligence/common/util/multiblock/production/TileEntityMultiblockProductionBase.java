@@ -47,6 +47,22 @@ public abstract class TileEntityMultiblockProductionBase<T extends TileEntityMul
 
 	//--- Production-related Utilities ---//
 
+	protected static <RECIPE extends IIMultiblockRecipe> IIMultiblockProcess<RECIPE> findRecipeFromList(Class<RECIPE> klass, String name)
+	{
+		return findRecipeFromList(klass, IIMultiblockProcess::new, name);
+	}
+
+	//--- Production Abstracts ---//
+
+	protected static <RECIPE extends IIMultiblockRecipe, PROCESS extends IIMultiblockProcess<RECIPE>> PROCESS
+	findRecipeFromList(Class<RECIPE> klass, Function<RECIPE, PROCESS> constructor, String name)
+	{
+		RECIPE recipe = IIMultiblockRecipe.getRecipe(klass, name);
+		if(recipe!=null)
+			return constructor.apply(recipe);
+		return null;
+	}
+
 	public void outputOrDrop(ItemStack output, @Nullable IItemHandler itemHandler, EnumFacing facing, int... outputPos)
 	{
 		for(int p : outputPos)
@@ -66,8 +82,6 @@ public abstract class TileEntityMultiblockProductionBase<T extends TileEntityMul
 			Utils.dropStackAtPos(world, getBlockPosForPos(outputPos[0]).offset(facing.getOpposite()), output, facing.getOpposite());
 
 	}
-
-	//--- Production Abstracts ---//
 
 	/**
 	 * @return minimal offset between production processes
@@ -97,6 +111,9 @@ public abstract class TileEntityMultiblockProductionBase<T extends TileEntityMul
 	 */
 	public abstract float getProductionStep(IIMultiblockProcess<R> process, boolean simulate);
 
+
+	//--- IGuiTile ---//
+
 	/**
 	 * @param process the production process
 	 * @return true if output was successful, false if it should be repeated in one more tick
@@ -110,10 +127,6 @@ public abstract class TileEntityMultiblockProductionBase<T extends TileEntityMul
 	 * @param process the production process
 	 */
 	protected abstract void onProductionFinish(IIMultiblockProcess<R> process);
-
-
-	//--- IGuiTile ---//
-
 
 	@Override
 	public final T getGuiMaster()
@@ -153,6 +166,17 @@ public abstract class TileEntityMultiblockProductionBase<T extends TileEntityMul
 	public abstract IIGUI getGUI();
 
 	public abstract float getProductionProgress(IIMultiblockProcess<R> process, float partialTicks);
+
+	public interface IIIMultiblockRecipe
+	{
+		int getTotalProcessTime();
+
+		int getTotalProcessEnergy();
+
+		String getName();
+	}
+
+	//--- Production Utils ---//
 
 	public static class IIMultiblockProcess<R extends IIIMultiblockRecipe> implements INBTSerializable<NBTTagCompound>
 	{
@@ -204,15 +228,6 @@ public abstract class TileEntityMultiblockProductionBase<T extends TileEntityMul
 		}
 	}
 
-	public interface IIIMultiblockRecipe
-	{
-		int getTotalProcessTime();
-
-		int getTotalProcessEnergy();
-
-		String getName();
-	}
-
 	/**
 	 * Used for storing a queue of production processes and serializing their NBT.
 	 *
@@ -256,21 +271,5 @@ public abstract class TileEntityMultiblockProductionBase<T extends TileEntityMul
 					add(process);
 				}
 		}
-	}
-
-	//--- Production Utils ---//
-
-	protected static <RECIPE extends IIMultiblockRecipe> IIMultiblockProcess<RECIPE> findRecipeFromList(Class<RECIPE> klass, String name)
-	{
-		return findRecipeFromList(klass, IIMultiblockProcess::new, name);
-	}
-
-	protected static <RECIPE extends IIMultiblockRecipe, PROCESS extends IIMultiblockProcess<RECIPE>> PROCESS
-	findRecipeFromList(Class<RECIPE> klass, Function<RECIPE, PROCESS> constructor, String name)
-	{
-		RECIPE recipe = IIMultiblockRecipe.getRecipe(klass, name);
-		if(recipe!=null)
-			return constructor.apply(recipe);
-		return null;
 	}
 }

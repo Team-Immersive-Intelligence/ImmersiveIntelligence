@@ -20,8 +20,8 @@ import java.util.function.Consumer;
  */
 public class DecoBarGroup extends GuiComponentDecoBase<DecoBarGroup>
 {
-	protected ResLoc backgroundLocation, iconBackgroundLocation;
 	private final List<DecoBar> bars = new ArrayList<>();
+	protected ResLoc backgroundLocation, iconBackgroundLocation;
 
 	public DecoBarGroup(int x, int y)
 	{

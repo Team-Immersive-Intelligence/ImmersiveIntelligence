@@ -31,11 +31,11 @@ import java.util.List;
 public class DecoPanel extends GuiComponentDecoBase<DecoPanel>
 {
 	private final List<DecoLabel> labels = new ArrayList<>();
+	int vbo = -1;
 	@Nullable
 	private DecoFrame frame = null;
 	private ResLoc background = IIReference.GUI_BG_STEEL;
 	private ResLoc backgroundMask = IIReference.RES_TEXTURES_DECO_TEMPLATE_SQUARE;
-	int vbo = -1;
 	private int xPadding = 0;
 	private int yPadding = 0;
 

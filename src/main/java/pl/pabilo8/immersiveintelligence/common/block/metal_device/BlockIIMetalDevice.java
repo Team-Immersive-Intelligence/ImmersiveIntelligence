@@ -35,43 +35,6 @@ import javax.annotation.Nonnull;
  */
 public class BlockIIMetalDevice extends BlockIITileProvider<IIBlockTypes_MetalDevice>
 {
-	public enum IIBlockTypes_MetalDevice implements IITileProviderEnum
-	{
-		@IIBlockProperties(category = IICategory.ELECTRONICS)
-		@EnumTileProvider(tile = TileEntityMetalCrate.class)
-		METAL_CRATE,
-		@IIBlockProperties(category = IICategory.LOGISTICS)
-		@EnumTileProvider(tile = TileEntityAmmunitionCrate.class)
-		AMMUNITION_CRATE,
-		@IIBlockProperties(category = IICategory.ELECTRONICS)
-		@EnumTileProvider(tile = TileEntitySmallDataBuffer.class)
-		SMALL_DATA_BUFFER,
-		@IIBlockProperties(category = IICategory.ELECTRONICS)
-		@EnumTileProvider(tile = TileEntityTimedBuffer.class)
-		TIMED_BUFFER,
-		@IIBlockProperties(category = IICategory.ELECTRONICS)
-		@EnumTileProvider(tile = TileEntityRedstoneBuffer.class)
-		REDSTONE_BUFFER,
-		@IIBlockProperties(category = IICategory.ELECTRONICS)
-		@EnumTileProvider(tile = TileEntityPunchtapeReader.class)
-		PUNCHTAPE_READER,
-		@IIBlockProperties(category = IICategory.ELECTRONICS)
-		@EnumTileProvider(tile = TileEntityDataRouter.class)
-		DATA_ROUTER,
-		@IIBlockProperties(category = IICategory.ELECTRONICS)
-		@EnumTileProvider(tile = TileEntityDataMerger.class)
-		DATA_MERGER,
-		@IIBlockProperties(category = IICategory.LOGISTICS)
-		@EnumTileProvider(tile = TileEntityMedicalCrate.class)
-		MEDIC_CRATE,
-		@IIBlockProperties(category = IICategory.LOGISTICS)
-		@EnumTileProvider(tile = TileEntityRepairCrate.class)
-		REPAIR_CRATE,
-		@IIBlockProperties(category = IICategory.TOOLS)
-		@EnumTileProvider(tile = TileEntityLatexCollector.class)
-		LATEX_COLLECTOR
-	}
-
 	public BlockIIMetalDevice()
 	{
 		super("metal_device", Material.IRON, PropertyEnum.create("type", IIBlockTypes_MetalDevice.class), ItemBlockIIBase::new,
@@ -139,6 +102,43 @@ public class BlockIIMetalDevice extends BlockIITileProvider<IIBlockTypes_MetalDe
 				connector.getWorld().setBlockToAir(pos);
 			}
 		}
+	}
+
+	public enum IIBlockTypes_MetalDevice implements IITileProviderEnum
+	{
+		@IIBlockProperties(category = IICategory.ELECTRONICS)
+		@EnumTileProvider(tile = TileEntityMetalCrate.class)
+		METAL_CRATE,
+		@IIBlockProperties(category = IICategory.LOGISTICS)
+		@EnumTileProvider(tile = TileEntityAmmunitionCrate.class)
+		AMMUNITION_CRATE,
+		@IIBlockProperties(category = IICategory.ELECTRONICS)
+		@EnumTileProvider(tile = TileEntitySmallDataBuffer.class)
+		SMALL_DATA_BUFFER,
+		@IIBlockProperties(category = IICategory.ELECTRONICS)
+		@EnumTileProvider(tile = TileEntityTimedBuffer.class)
+		TIMED_BUFFER,
+		@IIBlockProperties(category = IICategory.ELECTRONICS)
+		@EnumTileProvider(tile = TileEntityRedstoneBuffer.class)
+		REDSTONE_BUFFER,
+		@IIBlockProperties(category = IICategory.ELECTRONICS)
+		@EnumTileProvider(tile = TileEntityPunchtapeReader.class)
+		PUNCHTAPE_READER,
+		@IIBlockProperties(category = IICategory.ELECTRONICS)
+		@EnumTileProvider(tile = TileEntityDataRouter.class)
+		DATA_ROUTER,
+		@IIBlockProperties(category = IICategory.ELECTRONICS)
+		@EnumTileProvider(tile = TileEntityDataMerger.class)
+		DATA_MERGER,
+		@IIBlockProperties(category = IICategory.LOGISTICS)
+		@EnumTileProvider(tile = TileEntityMedicalCrate.class)
+		MEDIC_CRATE,
+		@IIBlockProperties(category = IICategory.LOGISTICS)
+		@EnumTileProvider(tile = TileEntityRepairCrate.class)
+		REPAIR_CRATE,
+		@IIBlockProperties(category = IICategory.TOOLS)
+		@EnumTileProvider(tile = TileEntityLatexCollector.class)
+		LATEX_COLLECTOR
 	}
 
 

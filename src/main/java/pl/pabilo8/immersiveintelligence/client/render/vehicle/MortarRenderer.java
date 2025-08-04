@@ -27,9 +27,9 @@ import pl.pabilo8.immersiveintelligence.common.entity.EntityMortar;
  */
 public class MortarRenderer extends Render<EntityMortar> implements IReloadableModelContainer<MortarRenderer>
 {
+	public static final ResourceLocation TEXTURE = new ResourceLocation(ImmersiveIntelligence.MODID+":textures/entity/mortar.png");
 	public static MortarItemstackRenderer instance = new MortarItemstackRenderer();
 	public static ModelMortar model;
-	public static final ResourceLocation TEXTURE = new ResourceLocation(ImmersiveIntelligence.MODID+":textures/entity/mortar.png");
 
 	public MortarRenderer(RenderManager renderManager)
 	{

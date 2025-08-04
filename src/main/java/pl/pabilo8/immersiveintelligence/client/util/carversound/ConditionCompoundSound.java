@@ -17,8 +17,8 @@ import java.util.function.Supplier;
 @SideOnly(Side.CLIENT)
 public class ConditionCompoundSound extends CompoundSound
 {
-	private boolean forceStop = false, initialTick = true;
 	private final Supplier<Boolean> shouldPlay;
+	private boolean forceStop = false, initialTick = true;
 
 	public ConditionCompoundSound(MultiSound multiSound, SoundCategory category, Vec3d pos, float volume, float pitch, Supplier<Boolean> shouldPlay)
 	{

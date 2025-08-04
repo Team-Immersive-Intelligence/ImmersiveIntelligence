@@ -58,161 +58,6 @@ public class ItemIIFunctionalCircuit extends ItemIISubItemsBase<Circuits> implem
 		super("circuit_functional", 1, Circuits.values());
 	}
 
-	@GeneratedItemModels(itemName = "circuit_functional")
-	public enum Circuits implements IIItemEnum
-	{
-		ARITHMETIC(CircuitTypes.BASIC,
-				"add", "subtract", "multiply", "divide",
-				"modulo",
-				"abs"
-		),
-		ADVANCED_ARITHMETIC(CircuitTypes.ADVANCED, ARITHMETIC,
-				"power", "root",
-				"min", "max",
-				"sign",
-				"ceil", "round", "floor",
-				"sin", "cos", "tan"
-		),
-		LOGIC(CircuitTypes.BASIC,
-				"and",
-				"or",
-				"not"
-		),
-		COMPARATOR(CircuitTypes.BASIC,
-				"greater",
-				"less",
-				"greater_or_equal",
-				"less_or_equal",
-				"equal"
-		),
-		ADVANCED_LOGIC(CircuitTypes.ADVANCED, LOGIC,
-				"nand",
-				"nor",
-				"xor",
-				"xnor"
-		),
-		TEXT(CircuitTypes.BASIC,
-				"string_join", "equal",
-				"string_split",
-				"string_length",
-				"string_char_at", "string_substring", "string_trim",
-				"string_hexcol", "string_format",
-				"string_contains", "string_contains_count",
-				"string_replace_first", "string_replace_all",
-				"string_lowercase", "string_uppercase", "string_snake_case", "string_camel_case",
-				"string_reverse"
-		),
-		ITEMSTACK(CircuitTypes.ADVANCED,
-				"itemstack_create",
-				"item_get_count",
-				"item_set_count",
-				"item_get_meta",
-				"item_set_meta",
-				"item_get_nbt",
-				"item_set_nbt",
-				"item_get_id",
-				"item_is_empty",
-				"item_stacks_with"
-		),
-		ARRAY(CircuitTypes.BASIC,
-				"array_create",
-				"array_get", "array_set",
-				"array_length",
-				"array_push", "array_pop",
-				"array_swap"
-		),
-		ENTITY(CircuitTypes.ADVANCED,
-				"entity_get_id",
-				"entity_get_type",
-				"entity_get_name",
-				"entity_get_dimension_id",
-				"entity_get_pos",
-				"entity_get_x",
-				"entity_get_y",
-				"entity_get_z"
-		),
-		DOCUMENT(CircuitTypes.ADVANCED,
-				"document_read_page",
-				"document_read_all_pages_array",
-				"document_read_all_pages_string",
-				"document_get_author",
-				"document_get_title"
-		),
-		TYPE_CONVERSION(CircuitTypes.BASIC,
-				"is_null",
-				"to_integer",
-				"to_float",
-				"to_string",
-				"to_boolean",
-				"to_null"
-		),
-		FLUIDSTACK(CircuitTypes.ADVANCED,
-				"fluidstack_create",
-				"fluid_get_id",
-				"fluid_get_amount",
-				"fluid_set_amount",
-				"fluid_get_nbt",
-				"fluid_set_nbt",
-				"fluid_is_empty",
-				"fluid_stacks_with"
-		),
-		MAP(CircuitTypes.ADVANCED,
-				"map_create",
-				"map_set", "map_get", "map_remove", "map_clear",
-				"map_contains",
-				"map_keys", "map_values"
-		),
-		VECTOR_ARITHMETIC(CircuitTypes.PROCESSOR,
-				"vector_create", "vector_create_angle",
-				"vector_add", "vector_sub", "vector_mul", "vector_scale",
-				"vector_length", "vector_dot", "vector_cross", "vector_normalize", "vector_distance",
-				"vector_get_x", "vector_get_y", "vector_get_z",
-				"vector_set_x", "vector_set_y", "vector_set_z",
-				"vector_get_yaw", "vector_get_pitch"
-		),
-		CRYPTOGRAPHER(CircuitTypes.CRYPTOGRAPHIC,
-				"encrypt_text",
-				"encrypt_number",
-				"decrypt_text",
-				"decrypt_number"
-		);
-
-		private final String[] functions;
-		public final CircuitTypes tier;
-
-		Circuits(CircuitTypes tier, String... functions)
-		{
-			this.tier = tier;
-			this.functions = functions;
-		}
-
-		Circuits(CircuitTypes tier, Circuits parent, String... functions)
-		{
-			this(tier, ArrayUtils.addAll(parent.functions, functions));
-		}
-
-		public String[] getFunctions()
-		{
-			return functions;
-		}
-	}
-
-	public enum CircuitTypes implements ISerializableEnum
-	{
-		BASIC("basic_circuits", "circuitBasic"),
-		ADVANCED("advanced_circuits", "circuitAdvanced"),
-		CRYPTOGRAPHIC("cryptography_circuits", "circuitCryptographic"),
-		PROCESSOR("processor_circuits", "circuitProcessor");
-
-		public final String texture, material;
-
-		CircuitTypes(String texture, String material)
-		{
-			this.texture = texture;
-			this.material = material;
-		}
-	}
-
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(@Nonnull ItemStack stack, @Nullable World world, List<String> tooltip, @Nonnull ITooltipFlag flag)
@@ -350,7 +195,6 @@ public class ItemIIFunctionalCircuit extends ItemIISubItemsBase<Circuits> implem
 		ItemNBTHelper.setTagCompound(stack, "operations", packet.serializeNBT());
 	}
 
-
 	public List<String> getOperationsList(ItemStack stack)
 	{
 		if(stack.getMetadata() < Circuits.values().length)
@@ -364,5 +208,161 @@ public class ItemIIFunctionalCircuit extends ItemIISubItemsBase<Circuits> implem
 	public String getTESRRenderTexture(ItemStack stack)
 	{
 		return stackToSub(stack).tier.texture;
+	}
+
+
+	@GeneratedItemModels(itemName = "circuit_functional")
+	public enum Circuits implements IIItemEnum
+	{
+		ARITHMETIC(CircuitTypes.BASIC,
+				"add", "subtract", "multiply", "divide",
+				"modulo",
+				"abs"
+		),
+		ADVANCED_ARITHMETIC(CircuitTypes.ADVANCED, ARITHMETIC,
+				"power", "root",
+				"min", "max",
+				"sign",
+				"ceil", "round", "floor",
+				"sin", "cos", "tan"
+		),
+		LOGIC(CircuitTypes.BASIC,
+				"and",
+				"or",
+				"not"
+		),
+		COMPARATOR(CircuitTypes.BASIC,
+				"greater",
+				"less",
+				"greater_or_equal",
+				"less_or_equal",
+				"equal"
+		),
+		ADVANCED_LOGIC(CircuitTypes.ADVANCED, LOGIC,
+				"nand",
+				"nor",
+				"xor",
+				"xnor"
+		),
+		TEXT(CircuitTypes.BASIC,
+				"string_join", "equal",
+				"string_split",
+				"string_length",
+				"string_char_at", "string_substring", "string_trim",
+				"string_hexcol", "string_format",
+				"string_contains", "string_contains_count",
+				"string_replace_first", "string_replace_all",
+				"string_lowercase", "string_uppercase", "string_snake_case", "string_camel_case",
+				"string_reverse"
+		),
+		ITEMSTACK(CircuitTypes.ADVANCED,
+				"itemstack_create",
+				"item_get_count",
+				"item_set_count",
+				"item_get_meta",
+				"item_set_meta",
+				"item_get_nbt",
+				"item_set_nbt",
+				"item_get_id",
+				"item_is_empty",
+				"item_stacks_with"
+		),
+		ARRAY(CircuitTypes.BASIC,
+				"array_create",
+				"array_get", "array_set",
+				"array_length",
+				"array_push", "array_pop",
+				"array_swap"
+		),
+		ENTITY(CircuitTypes.ADVANCED,
+				"entity_get_id",
+				"entity_get_type",
+				"entity_get_name",
+				"entity_get_dimension_id",
+				"entity_get_pos",
+				"entity_get_x",
+				"entity_get_y",
+				"entity_get_z"
+		),
+		DOCUMENT(CircuitTypes.ADVANCED,
+				"document_read_page",
+				"document_read_all_pages_array",
+				"document_read_all_pages_string",
+				"document_get_author",
+				"document_get_title"
+		),
+		TYPE_CONVERSION(CircuitTypes.BASIC,
+				"is_null",
+				"to_integer",
+				"to_float",
+				"to_string",
+				"to_boolean",
+				"to_null"
+		),
+		FLUIDSTACK(CircuitTypes.ADVANCED,
+				"fluidstack_create",
+				"fluid_get_id",
+				"fluid_get_amount",
+				"fluid_set_amount",
+				"fluid_get_nbt",
+				"fluid_set_nbt",
+				"fluid_is_empty",
+				"fluid_stacks_with"
+		),
+		MAP(CircuitTypes.ADVANCED,
+				"map_create",
+				"map_set", "map_get", "map_remove", "map_clear",
+				"map_contains",
+				"map_keys", "map_values"
+		),
+		VECTOR_ARITHMETIC(CircuitTypes.PROCESSOR,
+				"vector_create", "vector_create_angle",
+				"vector_add", "vector_sub", "vector_mul", "vector_scale",
+				"vector_length", "vector_dot", "vector_cross", "vector_normalize", "vector_distance",
+				"vector_get_x", "vector_get_y", "vector_get_z",
+				"vector_set_x", "vector_set_y", "vector_set_z",
+				"vector_get_yaw", "vector_get_pitch"
+		),
+		CRYPTOGRAPHER(CircuitTypes.CRYPTOGRAPHIC,
+				"encrypt_text",
+				"encrypt_number",
+				"decrypt_text",
+				"decrypt_number"
+		);
+
+		public final CircuitTypes tier;
+		private final String[] functions;
+
+		Circuits(CircuitTypes tier, String... functions)
+		{
+			this.tier = tier;
+			this.functions = functions;
+		}
+
+		Circuits(CircuitTypes tier, Circuits parent, String... functions)
+		{
+			this(tier, ArrayUtils.addAll(parent.functions, functions));
+		}
+
+		public String[] getFunctions()
+		{
+			return functions;
+		}
+	}
+
+	public enum CircuitTypes implements ISerializableEnum
+	{
+		BASIC("basic_circuits", "circuitBasic"),
+		ADVANCED("advanced_circuits", "circuitAdvanced"),
+		CRYPTOGRAPHIC("cryptography_circuits", "circuitCryptographic"),
+		PROCESSOR("processor_circuits", "circuitProcessor");
+
+		public final String texture, material;
+
+		CircuitTypes(String texture, String material)
+		{
+			this.texture = texture;
+			this.material = material;
+		}
 	}
 }

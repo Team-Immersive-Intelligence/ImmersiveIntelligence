@@ -31,9 +31,8 @@ public class GuiPrintedPage extends GuiScreen
 	private static final Pattern patternStrikethrough = Pattern.compile("~~(.+?)~~");
 
 	private static final String PAGE_TEXTURE = ImmersiveIntelligence.MODID+":textures/gui/printed_page.png";
-	private int guiLeft = 0, guiTop = 0;
-
 	private final FormattedTextLine[] lines;
+	private int guiLeft = 0, guiTop = 0;
 
 	public GuiPrintedPage(EntityPlayer player, ItemStack heldStack, EnumHand hand)
 	{

@@ -11,10 +11,9 @@ import pl.pabilo8.immersiveintelligence.client.util.tmt.Shape2D;
  */
 public class ModelFieldHowitzer extends ModelIIBase
 {
+	public ModelRendererTurbo[] gunModel, barrelModel, leftWheelModel, rightWheelModel, wheelAxleModel, triggerModel, ejectionPlateModel, pitchThingyModel;
 	int textureX = 128;
 	int textureY = 64;
-
-	public ModelRendererTurbo[] gunModel, barrelModel, leftWheelModel, rightWheelModel, wheelAxleModel, triggerModel, ejectionPlateModel, pitchThingyModel;
 
 
 	public ModelFieldHowitzer() //Same as Filename

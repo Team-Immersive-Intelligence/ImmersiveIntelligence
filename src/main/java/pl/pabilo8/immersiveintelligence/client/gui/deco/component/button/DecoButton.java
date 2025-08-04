@@ -22,9 +22,8 @@ import javax.annotation.Nullable;
  */
 public class DecoButton extends GuiComponentDecoTextBase<DecoButton>
 {
-	private DecoAlignment iconAlignment = DecoAlignment.CENTER;
 	protected int[] padding = new int[]{2, 2, 2, 2};
-
+	private DecoAlignment iconAlignment = DecoAlignment.CENTER;
 	// Cached positions
 	private int cachedIconX, cachedIconY, cachedTextX, cachedTextY;
 

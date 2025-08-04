@@ -33,22 +33,6 @@ public class BlockIIOre extends BlockIIBase<Ores>
 		setCategory(IICategory.RESOURCES);
 	}
 
-	public enum Ores implements IIBlockEnum
-	{
-		@IIBlockProperties(harvestLevel = 3)
-		PLATINUM,
-		@IIBlockProperties(harvestLevel = 1)
-		ZINC,
-		@IIBlockProperties(harvestLevel = 2)
-		TUNGSTEN,
-		@IIBlockProperties(harvestLevel = 1)
-		SALT,
-		@IIBlockProperties(harvestLevel = 3)
-		FLUORITE,
-		@IIBlockProperties(harvestLevel = 3)
-		PHOSPHORUS
-	}
-
 	@Override
 	public void getDrops(@Nonnull NonNullList<ItemStack> drops, @Nonnull IBlockAccess world, @Nonnull BlockPos pos, @Nonnull IBlockState state, int fortune)
 	{
@@ -67,5 +51,21 @@ public class BlockIIOre extends BlockIIBase<Ores>
 				break;
 		}
 
+	}
+
+	public enum Ores implements IIBlockEnum
+	{
+		@IIBlockProperties(harvestLevel = 3)
+		PLATINUM,
+		@IIBlockProperties(harvestLevel = 1)
+		ZINC,
+		@IIBlockProperties(harvestLevel = 2)
+		TUNGSTEN,
+		@IIBlockProperties(harvestLevel = 1)
+		SALT,
+		@IIBlockProperties(harvestLevel = 3)
+		FLUORITE,
+		@IIBlockProperties(harvestLevel = 3)
+		PHOSPHORUS
 	}
 }

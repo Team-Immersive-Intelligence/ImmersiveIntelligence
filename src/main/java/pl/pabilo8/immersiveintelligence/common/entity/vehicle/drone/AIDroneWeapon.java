@@ -13,11 +13,6 @@ import javax.annotation.Nullable;
 public abstract class AIDroneWeapon extends AIDroneBase
 {
 	/**
-	 * The target currently attacked by the Hans
-	 */
-	@Nullable
-	protected EntityLivingBase attackTarget;
-	/**
 	 * The maximum distance the drone will attack enemies from
 	 * Will walk towards if necessary.
 	 */
@@ -31,6 +26,11 @@ public abstract class AIDroneWeapon extends AIDroneBase
 	 * The distance drone will maintain when attacking an enemy
 	 */
 	protected final int safeAttackDistance;
+	/**
+	 * The target currently attacked by the Hans
+	 */
+	@Nullable
+	protected EntityLivingBase attackTarget;
 	/**
 	 * Determines for how many ticks an AI has to see its target to attack it
 	 */

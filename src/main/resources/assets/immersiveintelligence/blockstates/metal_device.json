@@ -62,10 +62,8 @@
     },
     "facing": {
       "down": {
-
       },
       "up": {
-
       },
       "north": {
         "transform": {
@@ -75,7 +73,6 @@
         }
       },
       "south": {
-
       },
       "west": {
         "transform": {

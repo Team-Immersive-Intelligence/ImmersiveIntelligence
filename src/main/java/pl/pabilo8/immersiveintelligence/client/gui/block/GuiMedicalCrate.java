@@ -27,8 +27,8 @@ import java.util.ArrayList;
  */
 public class GuiMedicalCrate extends GuiIEContainerBase
 {
-	private final TileEntityMedicalCrate tile;
 	private static final String TEXTURE = ImmersiveIntelligence.MODID+":textures/gui/medical_crate.png";
+	private final TileEntityMedicalCrate tile;
 	GuiButtonState buttonHealing = null, buttonBoost = null;
 
 	public GuiMedicalCrate(EntityPlayer player, TileEntityMedicalCrate tile)

@@ -27,8 +27,8 @@ import java.util.Set;
  */
 public abstract class TileEntityWheelBase extends TileEntityMechanicalConnectable implements IBlockBounds
 {
-	private ConditionCompoundSound loopSound = null;
 	public EnumFacing facing = EnumFacing.NORTH;
+	private ConditionCompoundSound loopSound = null;
 
 	@Override
 	public void update()

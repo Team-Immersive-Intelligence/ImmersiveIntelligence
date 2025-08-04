@@ -9,9 +9,9 @@ import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
  * @author Flemmli97
  * @since 28.12.2021
  * <p>
- *     Stolen (rightfully, kinda) from Improved Mobs. Huge thanks to Flemmli97 for this piece of code.<br>
- *     <a href="https://github.com/Flemmli97/ImprovedMobs/blob/1.12.2/src/main/java/com/flemmli97/improvedmobs/entity/ai/EntityAIClimbLadder.java">https://github.com/Flemmli97/ImprovedMobs/blob/1.12.2/src/main/java/com/flemmli97/improvedmobs/entity/ai/EntityAIClimbLadder.java</a><br>
- *     Code was adapted to II's Hanses.
+ * Stolen (rightfully, kinda) from Improved Mobs. Huge thanks to Flemmli97 for this piece of code.<br>
+ * <a href="https://github.com/Flemmli97/ImprovedMobs/blob/1.12.2/src/main/java/com/flemmli97/improvedmobs/entity/ai/EntityAIClimbLadder.java">https://github.com/Flemmli97/ImprovedMobs/blob/1.12.2/src/main/java/com/flemmli97/improvedmobs/entity/ai/EntityAIClimbLadder.java</a><br>
+ * Code was adapted to II's Hanses.
  * </p>
  */
 public class AIHansClimbLadder extends AIHansBase

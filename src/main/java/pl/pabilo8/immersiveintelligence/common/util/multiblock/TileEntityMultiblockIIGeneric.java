@@ -49,12 +49,12 @@ import javax.annotation.Nullable;
 public abstract class TileEntityMultiblockIIGeneric<T extends TileEntityMultiblockIIGeneric<T>> extends TileEntityMultiblockIIBase<T>
 		implements IIIInventory, IIEInternalFluxHandler, IHammerInteraction, IRedstoneOutput, IDataDevice, IComparatorOverride
 {
-	@SyncNBT(name = "redstone_control")
-	protected boolean redstoneControlInverted = false;
 	@SyncNBT(name = "inventory", events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_GUI_CLOSED, SyncEvents.TILE_RECIPE_CHANGED})
 	public NonNullList<ItemStack> inventory;
 	@SyncNBT(name = "ifluxEnergy")
 	public FluxStorageAdvanced energyStorage;
+	@SyncNBT(name = "redstone_control")
+	protected boolean redstoneControlInverted = false;
 	private IEForgeEnergyWrapper wrapper = new IEForgeEnergyWrapper(this, null);
 
 

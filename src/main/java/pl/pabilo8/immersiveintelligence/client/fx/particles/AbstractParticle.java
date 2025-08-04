@@ -87,30 +87,29 @@ public abstract class AbstractParticle implements INBTSerializable<NBTTagCompoun
 	 */
 	protected boolean onGround;
 	/**
-	 * this particle's bounding box without offsets
-	 */
-	private AxisAlignedBB baseBoundingBox;
-	/**
 	 * the collision / bounding box of this particle
 	 */
 	protected AxisAlignedBB boundingBox;
-
-	//--- Programmable Particles ---//
 	/**
 	 * Programs executed by the particle
 	 */
 	@Nonnull
 	protected Set<ParticleProgram> programs = DEFAULT_PROGRAMS;
 
-	//--- Chaining Fields ---//
-	private Multimap<Integer, ParticleOffspring<?>> scheduledParticles;
-	private Set<ParticleOffspring<? super AbstractParticle>> chainedParticles;
-
-	//--- Drawing Related Fields ---//
+	//--- Programmable Particles ---//
 	/**
 	 * at which stage of the rendering process should this particle be drawn
 	 */
 	protected ParticleDrawStages drawStage;
+	/**
+	 * this particle's bounding box without offsets
+	 */
+	private AxisAlignedBB baseBoundingBox;
+	//--- Chaining Fields ---//
+	private Multimap<Integer, ParticleOffspring<?>> scheduledParticles;
+
+	//--- Drawing Related Fields ---//
+	private Set<ParticleOffspring<? super AbstractParticle>> chainedParticles;
 
 	/**
 	 * Extending constructors should be passed as a parameter to {@link ParticleFactory}

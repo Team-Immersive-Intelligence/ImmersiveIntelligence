@@ -19,9 +19,9 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 public class DecoItemStackDisplay extends GuiComponentDecoBase<DecoItemStackDisplay>
 {
+	protected int[] padding = new int[]{2, 2, 2, 2};
 	private DecoAlignment iconAlignment = DecoAlignment.CENTER;
 	private ItemStack stack = ItemStack.EMPTY;
-	protected int[] padding = new int[]{2, 2, 2, 2};
 	private int iconSize = 16;
 	private int cachedIconX, cachedIconY;
 	private TooltipFlags tooltipFlag;

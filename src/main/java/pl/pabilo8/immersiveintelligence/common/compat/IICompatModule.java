@@ -26,6 +26,8 @@ public abstract class IICompatModule
 	public static Set<IICompatModule> modules = new HashSet<>();
 
 	public static boolean serene = false, baubles = false, petroleum = false;
+	//We don't want this to happen multiple times after all >_>
+	public static boolean serverStartingDone = false;
 
 	static
 	{
@@ -43,8 +45,6 @@ public abstract class IICompatModule
 		moduleClasses.put("mysticalmechanics", MysticalMechanicsAPIHelper.class);
 		moduleClasses.put("tfc", TerrafirmaHelper.class);
 	}
-
-	public abstract String getName();
 
 	public static void doModulesPreInit()
 	{
@@ -119,9 +119,6 @@ public abstract class IICompatModule
 		doModuleAction(IICompatModule::clientPostInit, "could not be post-initialized on client side");
 	}
 
-	//We don't want this to happen multiple times after all >_>
-	public static boolean serverStartingDone = false;
-
 	public static void doModulesLoadComplete()
 	{
 		if(!serverStartingDone)
@@ -130,6 +127,8 @@ public abstract class IICompatModule
 			doModuleAction(IICompatModule::loadComplete, "could not complete loading");
 		}
 	}
+
+	public abstract String getName();
 
 	public abstract void preInit();
 

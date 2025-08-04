@@ -18,12 +18,11 @@ import java.util.stream.Collectors;
 public class MachineUpgrade
 {
 	private static final List<MachineUpgrade> registeredUpgrades = new ArrayList<>();
-
+	private final List<IngredientStack> requiredStacks = new ArrayList<>();
 	protected String name;
 	protected ResourceLocation icon;
 	private int progress = 0;
 	private int steps = 1;
-	private final List<IngredientStack> requiredStacks = new ArrayList<>();
 
 	public MachineUpgrade(String name, ResourceLocation icon)
 	{
@@ -36,6 +35,22 @@ public class MachineUpgrade
 	public static MachineUpgrade getUpgradeByID(String id)
 	{
 		return registeredUpgrades.stream().filter(machineUpgrade -> machineUpgrade.name.equals(id)).findFirst().orElse(null);
+	}
+
+	public static List<MachineUpgrade> getUpgradesFromNBT(NBTTagCompound tag)
+	{
+		List<MachineUpgrade> upgrades = new ArrayList<>();
+		for(MachineUpgrade machineUpgrade : registeredUpgrades)
+		{
+			if(tag.hasKey(machineUpgrade.name))
+				upgrades.add(machineUpgrade);
+		}
+		return upgrades;
+	}
+
+	public static List<MachineUpgrade> getMatchingUpgrades(IUpgradableMachine machine)
+	{
+		return registeredUpgrades.stream().filter(machine::upgradeMatches).collect(Collectors.toList());
 	}
 
 	public MachineUpgrade addStack(IngredientStack stack)
@@ -69,22 +84,6 @@ public class MachineUpgrade
 	public List<IngredientStack> getRequiredStacks()
 	{
 		return requiredStacks;
-	}
-
-	public static List<MachineUpgrade> getUpgradesFromNBT(NBTTagCompound tag)
-	{
-		List<MachineUpgrade> upgrades = new ArrayList<>();
-		for(MachineUpgrade machineUpgrade : registeredUpgrades)
-		{
-			if(tag.hasKey(machineUpgrade.name))
-				upgrades.add(machineUpgrade);
-		}
-		return upgrades;
-	}
-
-	public static List<MachineUpgrade> getMatchingUpgrades(IUpgradableMachine machine)
-	{
-		return registeredUpgrades.stream().filter(machine::upgradeMatches).collect(Collectors.toList());
 	}
 
 	public int getProgressRequired()

@@ -16,7 +16,7 @@
           "side": "immersiveintelligence:blocks/metal_decoration/coil_data_side",
           "top": "immersiveintelligence:blocks/metal_decoration/coil_data_top",
           "bottom": "immersiveintelligence:blocks/metal_decoration/coil_data_top"
-      }
+        }
       }
     ],
     "inventory,type=coil_steel_motor_belt": [
@@ -26,7 +26,7 @@
           "side": "immersiveintelligence:blocks/metal_decoration/coil_steel_motor_belt_side",
           "top": "immersiveintelligence:blocks/metal_decoration/coil_steel_motor_belt_top",
           "bottom": "immersiveintelligence:blocks/metal_decoration/coil_steel_motor_belt_top"
-      }
+        }
       }
     ],
     "inventory,type=electronic_engineering": [
@@ -69,7 +69,6 @@
         }
       }
     ],
-
     "type": {
       "coil_data": {
         "model": "immersiveengineering:ie_pillar",

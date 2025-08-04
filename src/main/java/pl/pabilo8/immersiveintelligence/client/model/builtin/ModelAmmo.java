@@ -40,15 +40,7 @@ public class ModelAmmo<T extends IAmmoType<T, E>, E extends EntityAmmoBase<? sup
 {
 	//--- Constants ---//
 	public static final ResLoc RES_ITEM_MODEL = ResLoc.of(IIReference.RES_ITEM_MODEL, "ammo/");
-
-	//--- Local ---//
-	protected boolean loaded = false;
 	protected final T ammo;
-	private final ResLoc modelLocation;
-	/**
-	 * Casing models, generally casings shouldn't change
-	 */
-	protected AMT modelCasing, modelCasingSimple, modelPaintBase;
 	/**
 	 * Core models, baked and assigned by material
 	 */
@@ -58,6 +50,13 @@ public class ModelAmmo<T extends IAmmoType<T, E>, E extends EntityAmmoBase<? sup
 	 * Core models, baked and assigned by material
 	 */
 	protected final HashMap<IIColor, AMT> modelPaint = new HashMap<>();
+	private final ResLoc modelLocation;
+	//--- Local ---//
+	protected boolean loaded = false;
+	/**
+	 * Casing models, generally casings shouldn't change
+	 */
+	protected AMT modelCasing, modelCasingSimple, modelPaintBase;
 
 
 	protected ModelAmmo(T ammo, ResLoc modelLocation)

@@ -11,8 +11,8 @@ import net.minecraftforge.common.util.INBTSerializable;
  */
 public class VehicleDurability implements INBTSerializable<NBTTagInt>
 {
-	private int durability;
 	public final int maxDurability, armor;
+	private int durability;
 
 	public VehicleDurability(int maxDurability, int armor)
 	{

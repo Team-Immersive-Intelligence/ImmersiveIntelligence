@@ -4,6 +4,8 @@ import net.minecraft.util.math.Vec3d;
 
 public class PositionTransformVertex extends PositionTextureVertex
 {
+	public Vec3d neutralVector;
+
 	public PositionTransformVertex(float x, float y, float z, float u, float v)
 	{
 		this(new Vec3d(x, y, z), u, v);
@@ -33,7 +35,5 @@ public class PositionTransformVertex extends PositionTextureVertex
 	{
 		vector3D = new Vec3d(neutralVector.x, neutralVector.y, neutralVector.z);
 	}
-
-	public Vec3d neutralVector;
 
 }

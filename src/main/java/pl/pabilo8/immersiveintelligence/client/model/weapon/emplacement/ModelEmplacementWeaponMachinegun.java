@@ -7,10 +7,9 @@ import java.util.Arrays;
 
 public class ModelEmplacementWeaponMachinegun extends ModelIIBase
 {
+	public ModelRendererTurbo[] turretModel, turretBaseModel, ammoCrateModel, ammoCrateLidModel, barrelsModel;
 	int textureX = 128;
 	int textureY = 64;
-
-	public ModelRendererTurbo[] turretModel, turretBaseModel, ammoCrateModel, ammoCrateLidModel, barrelsModel;
 
 	public ModelEmplacementWeaponMachinegun(boolean doOffsets)
 	{
@@ -415,14 +414,14 @@ public class ModelEmplacementWeaponMachinegun extends ModelIIBase
 		parts.put("ammoCrateLid", ammoCrateLidModel);
 		parts.put("barrels", barrelsModel);
 
-		translateAll(-16,0,-16);
+		translateAll(-16, 0, -16);
 
 		if(doOffsets)
 		{
-			translate(turretModel,0,15,2);
-			translate(ammoCrateModel,0,15,2);
-			translate(ammoCrateLidModel,0,15,2);
-			translate(barrelsModel,0,15,2);
+			translate(turretModel, 0, 15, 2);
+			translate(ammoCrateModel, 0, 15, 2);
+			translate(ammoCrateLidModel, 0, 15, 2);
+			translate(barrelsModel, 0, 15, 2);
 		}
 
 

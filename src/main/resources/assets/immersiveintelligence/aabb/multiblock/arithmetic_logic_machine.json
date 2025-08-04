@@ -1,13 +1,11 @@
 {
   "bounds": {
-
   },
   "positions": {
-
   },
   "poi": {
     "energy": 16,
-    "data": [2,3],
+    "data": [2, 3],
     "data_left": 2,
     "data_right": 3,
     "front_panel": [],

@@ -28,8 +28,8 @@ import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
  */
 public class FenceGateRenderer<T extends TileEntityGateBase<T>> extends IIMultiblockRenderer<T>
 {
-	private AMT[] model;
 	IIMachineUpgradeModel redstoneUpgrade, razorUpgrade;
+	private AMT[] model;
 	private IIAnimationCompiledMap open, redstone, razor;
 
 	public FenceGateRenderer(String name)

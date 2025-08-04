@@ -27,6 +27,8 @@ public class TileEntityDataCallbackConnector extends TileEntityDataConnector
 {
 	public int colorIn = 0;
 	public int colorOut = 1;
+	@SideOnly(Side.CLIENT)
+	private AxisAlignedBB renderAABB;
 
 	@Override
 	public void onPacketReceive(DataPacket packet)
@@ -89,9 +91,6 @@ public class TileEntityDataCallbackConnector extends TileEntityDataConnector
 		colorIn = nbt.getInteger("colorIn");
 		colorOut = nbt.getInteger("colorOut");
 	}
-
-	@SideOnly(Side.CLIENT)
-	private AxisAlignedBB renderAABB;
 
 	@SideOnly(Side.CLIENT)
 	@Override

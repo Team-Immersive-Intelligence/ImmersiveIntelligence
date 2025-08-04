@@ -47,10 +47,13 @@ import java.util.HashMap;
  */
 public class IISounds
 {
-	static HashMap<ResourceLocation, SoundEvent> registeredEvents = new HashMap<>();
 	public static ArrayList<RangedSound> rangedSounds = new ArrayList<>();
 	public static ArrayList<MultiSound> multiSounds = new ArrayList<>();
-
+	public static RangedSound assaultRifleRailgunShot = new RangedSound(
+			new Tuple<>(0.0, IESounds.railgunFire)
+	);
+	public static SoundEvent assaultRifleRailgunCharge = IESounds.chargeSlow;
+	static HashMap<ResourceLocation, SoundEvent> registeredEvents = new HashMap<>();
 	//--- Devices ---//
 	@ModSound(sounds = {"device/*"}, subtitle = "siren")
 	public static SoundEvent siren = registerSound("siren");
@@ -58,15 +61,12 @@ public class IISounds
 	public static SoundEvent punchtapeReader = registerSound("punchtape_reader");
 	@ModSound(sounds = {"paper_falling"}, subtitle = "paper_eject")
 	public static SoundEvent paperEject = registerSound("paper_eject");
-
 	@ModSound(sounds = {"device/radio/*{0..1}"}, subtitle = "*")
 	public static SoundEvent radioNoise = registerSound("radio_noise");
 	@ModSound(sounds = {"device/radio/*"}, subtitle = "*")
 	public static SoundEvent radioBeep = registerSound("radio_beep");
-
 	@ModSound(sounds = {"device/radio/*"}, subtitle = "*")
 	public static SoundEvent debuggerBeep = registerSound("debugger_beep");
-
 	@ModSound(sounds = {"device/electric_motor/start"}, subtitle = "inserter")
 	public static SoundEvent inserterStart = registerSound("inserter_start");
 	@ModSound(sounds = {"device/electric_motor/forward"}, subtitle = "inserter")
@@ -76,13 +76,11 @@ public class IISounds
 	@ModSound(sounds = {"device/electric_motor/end"}, subtitle = "inserter")
 	public static SoundEvent inserterEnd = registerSound("inserter_end");
 
+	//--- Machine Motion ---//
 	public static MultiSound inserterYawM = new MultiSound(inserterStart,
 			inserterYaw, inserterEnd);
 	public static MultiSound inserterPitchM = new MultiSound(inserterEnd,
 			inserterPitch, inserterStart);
-
-	//--- Machine Motion ---//
-
 	//electric motor
 	@ModSound(sounds = {"device/electric_motor/start"})
 	public static SoundEvent electricMotorStart = registerSound("electric_motor_start");
@@ -92,12 +90,10 @@ public class IISounds
 	public static SoundEvent electricMotorForward = registerSound("electric_motor_forward");
 	@ModSound(sounds = {"device/electric_motor/backward"}, subtitle = "*")
 	public static SoundEvent electricMotorBackward = registerSound("electric_motor_backward");
-
 	public static MultiSound electricMotorForwardM = new MultiSound(electricMotorStart,
 			electricMotorForward, electricMotorBackward);
 	public static MultiSound electricMotorBackwardM = new MultiSound(electricMotorStart,
 			electricMotorEnd, electricMotorBackward);
-
 	//heavy electric motor
 	@ModSound(sounds = {"device/electric_motor_heavy/start"})
 	public static SoundEvent electricMotorHeavyStart = registerSound("electric_motor_heavy_start");
@@ -105,14 +101,12 @@ public class IISounds
 	public static SoundEvent electricMotorHeavyEnd = registerSound("electric_motor_heavy_end");
 	@ModSound(sounds = {"device/electric_motor_heavy/forward"}, subtitle = "*")
 	public static SoundEvent electricMotorHeavyForward = registerSound("electric_motor_heavy_forward");
-	@ModSound(sounds = {"device/electric_motor_heavy/backward"}, subtitle = "*")
-	public static SoundEvent electricMotorHeavyBackward = registerSound("electric_motor_heavy_backward");
-
 	public static MultiSound electricMotorHeavyForwardM = new MultiSound(electricMotorHeavyStart,
 			electricMotorHeavyForward, electricMotorHeavyEnd);
+	@ModSound(sounds = {"device/electric_motor_heavy/backward"}, subtitle = "*")
+	public static SoundEvent electricMotorHeavyBackward = registerSound("electric_motor_heavy_backward");
 	public static MultiSound electricMotorHeavyBackwardM = new MultiSound(electricMotorHeavyStart,
 			electricMotorHeavyBackward, electricMotorHeavyEnd);
-
 	//turntable
 	@ModSound(sounds = {"device/turntable/start"})
 	public static SoundEvent turntableStart = registerSound("turntable_start");
@@ -120,18 +114,16 @@ public class IISounds
 	public static SoundEvent turntableEnd = registerSound("turntable_end");
 	@ModSound(sounds = {"device/turntable/forward"}, subtitle = "*")
 	public static SoundEvent turntableForward = registerSound("turntable_forward");
+	public static MultiSound turntableForwardM = new MultiSound(turntableStart, turntableForward, turntableEnd);
 	@ModSound(sounds = {"device/turntable/backward"}, subtitle = "*")
 	public static SoundEvent turntableBackward = registerSound("turntable_backward");
+	public static MultiSound turntableBackwardM = new MultiSound(turntableStart, turntableBackward, turntableEnd);
 	@ModSound(sounds = {"device/turntable/forward_alt"}, subtitle = "turntable_forward")
 	public static SoundEvent turntableAltForward = registerSound("turntable_forward_alt");
+	public static MultiSound turntableAltForwardM = new MultiSound(turntableStart, turntableAltForward, turntableEnd);
 	@ModSound(sounds = {"device/turntable/backward_alt"}, subtitle = "turntable_backward")
 	public static SoundEvent turntableAltBackward = registerSound("turntable_backward_alt");
-
-	public static MultiSound turntableForwardM = new MultiSound(turntableStart, turntableForward, turntableEnd);
-	public static MultiSound turntableBackwardM = new MultiSound(turntableStart, turntableBackward, turntableEnd);
-	public static MultiSound turntableAltForwardM = new MultiSound(turntableStart, turntableAltForward, turntableEnd);
 	public static MultiSound turntableAltBackwardM = new MultiSound(turntableStart, turntableAltBackward, turntableEnd);
-
 	//heavy turntable
 	@ModSound(sounds = {"device/turntable_heavy/start"})
 	public static SoundEvent turntableHeavyStart = registerSound("turntable_heavy_start");
@@ -139,12 +131,10 @@ public class IISounds
 	public static SoundEvent turntableHeavyEnd = registerSound("turntable_heavy_end");
 	@ModSound(sounds = {"device/turntable_heavy/forward"}, subtitle = "*")
 	public static SoundEvent turntableHeavyForward = registerSound("turntable_heavy_forward");
+	public static MultiSound turntableHeavyForwardM = new MultiSound(turntableHeavyStart, turntableHeavyForward, turntableHeavyEnd);
 	@ModSound(sounds = {"device/turntable_heavy/backward"}, subtitle = "*")
 	public static SoundEvent turntableHeavyBackward = registerSound("turntable_heavy_backward");
-
-	public static MultiSound turntableHeavyForwardM = new MultiSound(turntableHeavyStart, turntableHeavyForward, turntableHeavyEnd);
 	public static MultiSound turntableHeavyBackwardM = new MultiSound(turntableHeavyStart, turntableHeavyBackward, turntableHeavyEnd);
-
 	//light metal door
 	@ModSound(sounds = {"device/turntable/start"})
 	public static SoundEvent slidingDoorStart = registerSound("sliding_door_start");
@@ -152,9 +142,10 @@ public class IISounds
 	public static SoundEvent slidingDoorEnd = registerSound("sliding_door_end");
 	@ModSound(sounds = {"device/turntable/forward"}, subtitle = "*")
 	public static SoundEvent slidingDoorOpen = registerSound("sliding_door_open");
+	public static MultiSound slidingDoorOpenM = new MultiSound(slidingDoorStart, slidingDoorOpen, slidingDoorEnd);
 	@ModSound(sounds = {"device/turntable/backward"}, subtitle = "*")
 	public static SoundEvent slidingDoorClose = registerSound("sliding_door_close");
-
+	public static MultiSound slidingDoorCloseM = new MultiSound(slidingDoorStart, slidingDoorClose, slidingDoorClose);
 	//--- Sawmill ---//
 	@ModSound(sounds = {"device/sawmill/start"}, subtitle = "sawmill")
 	public static SoundEvent sawmillStart = registerSound("sawmill_start");
@@ -163,15 +154,12 @@ public class IISounds
 	@ModSound(sounds = {"device/sawmill/end"}, subtitle = "sawmill")
 	public static SoundEvent sawmillEnd = registerSound("sawmill_end");
 	public static MultiSound sawmillRunning = new MultiSound(sawmillStart, sawmillMid, sawmillEnd);
-
 	@ModSound(sounds = {"device/sawmill/inserter_start"}, subtitle = "sawmill")
 	public static SoundEvent sawmillInserterStart = registerSound("sawmill_inserter_start");
 	@ModSound(sounds = {"device/sawmill/inserter_end"}, subtitle = "sawmill")
 	public static SoundEvent sawmillInserterEnd = registerSound("sawmill_inserter_end");
-
 	@ModSound(sounds = {"device/sawmill/wood_tumble{0..4}"}, subtitle = "sawmill")
 	public static SoundEvent sawmillWoodTumble = registerSound("sawmill_wood_tumble");
-
 	//--- Printing Press---//
 	@ModSound(sounds = {"device/printingpress/start"}, subtitle = "press_start")
 	public static SoundEvent pressStart = registerSound("Printing Press");
@@ -180,7 +168,6 @@ public class IISounds
 	@ModSound(sounds = {"device/printingpress/end"}, subtitle = "press_end")
 	public static SoundEvent pressEnd = registerSound("Printing Press");
 	public static MultiSound printingPressRunning = new MultiSound(pressStart, pressMid, pressEnd);
-
 	//--- Packer ---//
 	@ModSound(sounds = {"device/packer/start"}, subtitle = "packer_start")
 	public static SoundEvent packerStart = registerSound("Packer");
@@ -188,7 +175,8 @@ public class IISounds
 	public static SoundEvent packerMid = registerSound("Packer");
 	@ModSound(sounds = {"device/packer/end"}, subtitle = "packer_end")
 	public static SoundEvent packerEnd = registerSound("Packer");
-
+	//--- Packer ---//
+	public static MultiSound packerRunning = new MultiSound(packerStart, packerMid, packerEnd);
 	//--- Vulcanizer ---//
 	@ModSound(sounds = {"devices/vulcanizer/start"}, subtitle = "vulcanizer_pull_start")
 	public static SoundEvent vulcanizerPullStart = registerSound("vulcanizer");
@@ -197,13 +185,6 @@ public class IISounds
 	@ModSound(sounds = {"devices/vulcanizer/end"}, subtitle = "vulcanizer_pull_end")
 	public static SoundEvent vulcanizerPullEnd = registerSound("vulcanizer");
 	public static MultiSound vulcanizerRunning = new MultiSound(vulcanizerPullStart, vulcanizerPullMid, vulcanizerPullEnd);
-
-	//--- Packer ---//
-	public static MultiSound packerRunning = new MultiSound(packerStart, packerMid, packerEnd);
-
-	public static MultiSound slidingDoorOpenM = new MultiSound(slidingDoorStart, slidingDoorOpen, slidingDoorEnd);
-	public static MultiSound slidingDoorCloseM = new MultiSound(slidingDoorStart, slidingDoorClose, slidingDoorClose);
-
 	//--- Gate Sounds---//
 	@ModSound(sounds = {"device/hatch/gate_wooden/open"}, subtitle = "gate_open")
 	public static SoundEvent gateWoodenOpen = registerSound("gate_wooden_open");
@@ -213,43 +194,36 @@ public class IISounds
 	public static SoundEvent gateMetalOpen = registerSound("gate_metal_open");
 	@ModSound(sounds = {"device/hatch/gate_metal/close"}, subtitle = "gate_close")
 	public static SoundEvent gateMetalClose = registerSound("gate_metal_close");
-
 	//--- Machines ---//
 	@ModSound(sounds = {"device/*"}, subtitle = "device_*")
 	public static SoundEvent rolling = registerSound("rolling");
 	@ModSound(sounds = {"device/*"}, subtitle = "device_*")
 	public static SoundEvent chain = registerSound("chain");
+	public static MultiSound chainM = new MultiSound(electricMotorStart, chain, electricMotorEnd);
 	@ModSound(sounds = {"device/*"}, subtitle = "device_*")
 	public static SoundEvent lamp = registerSound("lamp");
 	@ModSound(sounds = {"device/*"}, subtitle = "device_*")
 	public static SoundEvent heating = registerSound("heating");
-
-	public static MultiSound chainM = new MultiSound(electricMotorStart, chain, electricMotorEnd);
-
 	@ModSound(sounds = {"device/welding/start"}, subtitle = "welding")
 	public static SoundEvent weldingStart = registerSound("welding_start");
 	@ModSound(sounds = {"device/welding/mid"}, subtitle = "welding")
 	public static SoundEvent weldingMid = registerSound("welding_mid");
 	@ModSound(sounds = {"device/welding/end"}, subtitle = "welding")
 	public static SoundEvent weldingEnd = registerSound("welding_end");
-
 	@ModSound(sounds = {"device/fuel_station/start"}, subtitle = "fuel_station")
 	public static SoundEvent fuelStationStart = registerSound("fuel_station_start");
 	@ModSound(sounds = {"device/fuel_station/mid"}, subtitle = "fuel_station")
 	public static SoundEvent fuelStationMid = registerSound("fuel_station_mid");
 	@ModSound(sounds = {"device/fuel_station/end"}, subtitle = "fuel_station")
 	public static SoundEvent fuelStationEnd = registerSound("fuel_station_end");
-
 	public static SoundEvent chemicalPainterLights = registerSound("chemical_painter_lights");
 	public static SoundEvent chemicalPainterLiftUp = registerSound("chemical_painter_lift_up");
 	public static SoundEvent chemicalPainterLiftDown = registerSound("chemical_painter_lift_down");
-
 	//--- Hatches ---//
 	@ModSound(sounds = {"device/hatch/drawer/open{0..1}"}, subtitle = "drawer_open")
 	public static SoundEvent drawerOpen = registerSound("drawer_open");
 	@ModSound(sounds = {"device/hatch/drawer/close{0..3}"}, subtitle = "drawer_close")
 	public static SoundEvent drawerClose = registerSound("drawer_close");
-
 	@ModSound(sounds = {"device/hatch/locker/open{0..2}"}, subtitle = "metal_locker_open")
 	public static SoundEvent metalLockerOpen = registerSound("metal_locker_open");
 	@ModSound(sounds = {"device/hatch/locker/close{0..2}"}, subtitle = "metal_locker_close")
@@ -262,19 +236,16 @@ public class IISounds
 	public static SoundEvent metalSlideOpen = registerSound("metal_slide_open");
 	@ModSound(sounds = {"device/hatch/slide/close{0..0}"}, subtitle = "metal_hatch_close")
 	public static SoundEvent metalSlideClose = registerSound("metal_slide_close");
-
 	@ModSound(sounds = {"device/hatch/vise/open0"}, subtitle = "*")
 	public static SoundEvent viseOpen = registerSound("vise_open");
 	@ModSound(sounds = {"device/hatch/vise/close0"}, subtitle = "*")
 	public static SoundEvent viseClose = registerSound("vise_close");
-
 	//--- Motor Belts ---//
 	@ModSound(sounds = {"device/motor_belt/*"}, subtitle = "motor_belt_break")
 	public static SoundEvent motorBeltBreak = registerSound("motor_belt_break");
 	@ModSound(sounds = {"device/motor_belt/*"}, subtitle = "motor_belt")
 	public static SoundEvent motorBeltLoop = registerSound("motor_belt_loop");
 	public static MultiSound motorBeltRunning = new MultiSound(motorBeltLoop);
-
 	//--- Tracks ---//
 	@ModSound(sounds = {"device/motor_belt/*"}, subtitle = "track_break")
 	public static SoundEvent trackBreak = registerSound("track_break");
@@ -282,65 +253,51 @@ public class IISounds
 	public static SoundEvent trackLoop = registerSound("track_loop");
 	public static MultiSound trackRunning = new MultiSound(trackLoop);
 
+	//--- Guns ---//
 	//--- Tools ---//
 	@ModSound(sounds = {"device/*"}, subtitle = "mine_detector")
 	public static SoundEvent mineDetector = registerSound("mine_detector");
 	@ModSound(sounds = {"construction/hammer/hammer{0..5}"}, subtitle = "construction")
 	public static SoundEvent constructionHammer = registerSound("construction_hammer");
-
-	//--- Guns ---//
-
 	//Ammo Pickup
 	@ModSound(sounds = {"weapons/rifle/load{0..2}"}, subtitle = "*")
 	public static SoundEvent casingPickup = registerSound("casing_pickup");
-
 	//Machinegun
 	@ModSound(sounds = {"weapons/dryfire{0..1}"}, subtitle = "dryfire")
 	public static SoundEvent machinegunShotDry = registerSound("machinegun_shot_dry");
-
 	@ModSound(name = "machinegun_shot_muffled", sounds = {"weapons/machinegun/mg_muffled{0..1}"}, subtitle = "machinegun_shot_distant")
 	public static SoundEvent machinegunShotMuffled = registerSound("machinegun_shot_muffled");
 	@ModSound(name = "machinegun_shot_distant", sounds = {"weapons/machinegun/mg_distant"}, subtitle = "distant_gunshot")
 	public static SoundEvent machinegunShotDistant = registerSound("machinegun_shot_distant");
-
-
 	@ModSound(name = "machinegun_shot", sounds = {"weapons/machinegun/mg"}, subtitle = "machinegun_shot")
 	public static RangedSound machinegunShot = new RangedSound(
 			new Tuple<>(0.0, registerSound("machinegun_shot")),
 			new Tuple<>(0.7, machinegunShotMuffled),
 			new Tuple<>(0.9, machinegunShotDistant)
 	);
-
 	@ModSound(name = "machinegun_shot_heavybarrel", sounds = {"weapons/machinegun/mg_heavybarrel"}, subtitle = "machinegun_shot")
 	public static RangedSound machinegunShotHeavyBarrel = new RangedSound(
 			new Tuple<>(0.0, registerSound("machinegun_shot_heavybarrel")),
 			new Tuple<>(0.7, machinegunShotMuffled),
 			new Tuple<>(0.9, machinegunShotDistant)
 	);
-
 	@ModSound(name = "machinegun_shot_watercooled", sounds = {"weapons/machinegun/mg_watercooled"}, subtitle = "machinegun_shot")
 	public static RangedSound machinegunShotWaterCooled = new RangedSound(
 			new Tuple<>(0.0, registerSound("machinegun_shot_watercooled")),
 			new Tuple<>(0.7, machinegunShotMuffled),
 			new Tuple<>(0.9, machinegunShotDistant)
 	);
-
 	@ModSound(sounds = {"weapons/machinegun/reload"}, subtitle = "machinegun_reload")
 	public static SoundEvent machinegunReload = registerSound("machinegun_reload");
-
 	@ModSound(sounds = {"weapons/machinegun/unload"}, subtitle = "machinegun_reload")
 	public static SoundEvent machinegunUnload = registerSound("machinegun_unload");
-
 	//Submachinegun
 	@ModSound(sounds = {"weapons/submachinegun/reload"}, subtitle = "*")
 	public static SoundEvent submachinegunReload = registerSound("submachinegun_reload");
-
 	@ModSound(sounds = {"weapons/submachinegun/unload"}, subtitle = "*")
 	public static SoundEvent submachinegunUnload = registerSound("submachinegun_unload");
-
 	@ModSound(sounds = {"weapons/dryfire{0..1}"}, subtitle = "dryfire")
 	public static SoundEvent submachinegunShotDry = registerSound("submachinegun_shot_dry");
-
 	@ModSound(name = "submachinegun_shot_close", sounds = {"weapons/submachinegun/smg{0..2}"}, subtitle = "submachinegun_shot")
 	@ModSound(name = "submachinegun_shot_muffled", sounds = {"weapons/submachinegun/smg_muffled{0..2}"}, subtitle = "submachinegun_shot_distant")
 	@ModSound(name = "submachinegun_shot_distant", sounds = {"weapons/submachinegun/smg_distant{0..2}"}, subtitle = "distant_gunshot")
@@ -349,17 +306,13 @@ public class IISounds
 			new Tuple<>(0.5, registerSound("submachinegun_shot_muffled")),
 			new Tuple<>(0.75, registerSound("submachinegun_shot_distant"))
 	);
-
 	//Assault Rifle
 	@ModSound(sounds = {"weapons/assault_rifle/reload"}, subtitle = "*")
 	public static SoundEvent assaultRifleReload = registerSound("assault_rifle_reload");
-
 	@ModSound(sounds = {"weapons/assault_rifle/unload"}, subtitle = "*")
 	public static SoundEvent assaultRifleUnload = registerSound("assault_rifle_unload");
-
 	@ModSound(sounds = {"weapons/dryfire{0..1}"}, subtitle = "dryfire")
 	public static SoundEvent assaultRifleShotDry = registerSound("assault_rifle_shot_dry");
-
 	@ModSound(name = "assault_rifle_shot", sounds = {"weapons/assault_rifle/stg{0..1}"}, subtitle = "assault_rifle_shot")
 	@ModSound(name = "assault_rifle_shot_muffled", sounds = {"weapons/assault_rifle/stg_muffled{0..1}"}, subtitle = "assault_rifle_shot_muffled")
 	@ModSound(name = "assault_rifle_shot_distant", sounds = {"weapons/assault_rifle/stg_distant{0..1}"}, subtitle = "distant_gunshot")
@@ -370,14 +323,8 @@ public class IISounds
 	);
 	@ModSound(sounds = {"weapons/assault_rifle/load_grenade"}, subtitle = "*")
 	public static SoundEvent assaultRifleLoadGrenade = registerSound("assault_rifle_load_grenade");
-
 	@ModSound(sounds = {"weapons/assault_rifle/mode_change"}, subtitle = "*")
 	public static SoundEvent assaultRifleModeChange = registerSound("assault_rifle_mode_change");
-	public static RangedSound assaultRifleRailgunShot = new RangedSound(
-			new Tuple<>(0.0, IESounds.railgunFire)
-	);
-	public static SoundEvent assaultRifleRailgunCharge = IESounds.chargeSlow;
-
 	//Rifle
 	@ModSound(sounds = {"weapons/rifle/load_start"}, subtitle = "rifle_load")
 	public static SoundEvent rifleLoadStart = registerSound("rifle_load_start");

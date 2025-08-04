@@ -37,6 +37,36 @@ public class ItemIIPrintedPage extends ItemIISubItemsBase<SubItems> implements I
 		super("printed_page", 64, SubItems.values());
 	}
 
+	@Override
+	public void addInformation(@Nonnull ItemStack stack, @Nullable World worldIn, @Nonnull List<String> tooltip, @Nonnull ITooltipFlag flagIn)
+	{
+		super.addInformation(stack, worldIn, tooltip, flagIn);
+		tooltip.add(IIStringUtil.getItalicString(I18n.format(stackToSub(stack).tooltip)));
+	}
+
+	public void setText(ItemStack stack, String text)
+	{
+		ItemNBTHelper.setString(stack, "text", text);
+	}
+
+	@Override
+	public IIGUI getGUI(ItemStack stack)
+	{
+		return stackToSub(stack).guiPage;
+	}
+
+	/**
+	 * Called when the equipped item is right clicked.
+	 */
+	@Override
+	@Nonnull
+	public ActionResult<ItemStack> onItemRightClick(@Nonnull World world, EntityPlayer player, @Nonnull EnumHand hand)
+	{
+		ItemStack stack = player.getHeldItem(hand);
+		CommonProxy.openGuiForItem(player, hand);
+		return new ActionResult<>(EnumActionResult.SUCCESS, stack);
+	}
+
 	@GeneratedItemModels(itemName = "printed_page")
 	public enum SubItems implements IIItemEnum
 	{
@@ -66,35 +96,5 @@ public class ItemIIPrintedPage extends ItemIISubItemsBase<SubItems> implements I
 			this.guiPage = guiPage;
 			tooltip = IIReference.DESCRIPTION_KEY+"printed_page."+getName();
 		}
-	}
-
-	@Override
-	public void addInformation(@Nonnull ItemStack stack, @Nullable World worldIn, @Nonnull List<String> tooltip, @Nonnull ITooltipFlag flagIn)
-	{
-		super.addInformation(stack, worldIn, tooltip, flagIn);
-		tooltip.add(IIStringUtil.getItalicString(I18n.format(stackToSub(stack).tooltip)));
-	}
-
-	public void setText(ItemStack stack, String text)
-	{
-		ItemNBTHelper.setString(stack, "text", text);
-	}
-
-	@Override
-	public IIGUI getGUI(ItemStack stack)
-	{
-		return stackToSub(stack).guiPage;
-	}
-
-	/**
-	 * Called when the equipped item is right clicked.
-	 */
-	@Override
-	@Nonnull
-	public ActionResult<ItemStack> onItemRightClick(@Nonnull World world, EntityPlayer player, @Nonnull EnumHand hand)
-	{
-		ItemStack stack = player.getHeldItem(hand);
-		CommonProxy.openGuiForItem(player, hand);
-		return new ActionResult<>(EnumActionResult.SUCCESS, stack);
 	}
 }

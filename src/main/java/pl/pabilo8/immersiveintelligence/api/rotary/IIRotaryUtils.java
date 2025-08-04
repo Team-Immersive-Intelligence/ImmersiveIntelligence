@@ -54,14 +54,10 @@ import java.util.stream.Collectors;
  */
 public class IIRotaryUtils
 {
-	private static final String ADVANCEMENT_DUMB_BELT_TRYING = "main/secret_connect_wire";
-	private static final String NBT_LINKPOS = "linkingPos", NBT_TARGETTING_INFO = "targettingInfo", NBT_TRIES = "tries";
-
 	/**
 	 * General {@link WireType} category for all motor belts
 	 */
 	public static final String BELT_GENERAL_CATEGORY = "MOTOR_BELT";
-
 	/**
 	 * Motor belts are fragments of cloth or rubber that are used to connect wheels
 	 */
@@ -74,6 +70,8 @@ public class IIRotaryUtils
 	 * Map of blocks providing a constant torque (by their existence) to a rotary system
 	 */
 	public static final Map<Predicate<TileEntity>, Function<Float, Float>> TORQUE_BLOCKS = new HashMap<>();
+	private static final String ADVANCEMENT_DUMB_BELT_TRYING = "main/secret_connect_wire";
+	private static final String NBT_LINKPOS = "linkingPos", NBT_TARGETTING_INFO = "targettingInfo", NBT_TRIES = "tries";
 
 	/**
 	 * @param start start of the connection

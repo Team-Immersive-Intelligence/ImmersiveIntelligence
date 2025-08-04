@@ -1,7 +1,6 @@
 # meta
 Warfare
 Craft and Conquer
-
 # intro
 Warfare is one of the oldest branches of engineering, along with civil engineering.
 Military engineering and its advancements have brought about [optimization], [maintenance of military works],

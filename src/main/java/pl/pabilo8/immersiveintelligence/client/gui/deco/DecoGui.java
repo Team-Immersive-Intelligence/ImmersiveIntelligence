@@ -98,25 +98,22 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 	protected final List<DecoTab> widgetTabList = new ArrayList<>();
 	private final List<DecoComponentWidgetBase<?>> widgetList = new ArrayList<>();
 	private final List<ValueListener<?>> valueListeners = new ArrayList<>();
-
+	/**
+	 * if true, the GUI won't perform saving to NBT during {@link #onGuiClosed()}, used for transitions between GUIs
+	 */
+	protected boolean changeGUIFlag = false;
 	//Background
 	private DecoBackgroundBuilder<T, C> backgroundBuilder;
 	private List<Rectangle> takenSpace;
 	private GuiComponentDecoBase<?> focusedElement;
 	private GuiComponentDecoBase<?> hoveredElement;
-
 	//Widgets
 	private DecoComponentWidgetBase<?> previousWidget, currentWidget;
 	private int widgetTime = 0;
-
 	/**
 	 * Screenshot mode, changes the GL scissor method
 	 */
 	private boolean screenshotMode = false;
-	/**
-	 * if true, the GUI won't perform saving to NBT during {@link #onGuiClosed()}, used for transitions between GUIs
-	 */
-	protected boolean changeGUIFlag = false;
 
 	public DecoGui(EntityPlayer player, T tile, IIGUI iigui)
 	{
@@ -751,32 +748,6 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 	}
 
 	/**
-	 * A resource loader for a Deco based GUI, created when one of its resource fields is marked by {@link DecoResource}
-	 */
-	public static class DecoResourcesLoader implements IReloadableModelContainer<DecoResourcesLoader>
-	{
-		private final List<ResLoc> resources;
-
-		public DecoResourcesLoader(String name, List<ResLoc> resources)
-		{
-			this.resources = resources;
-			subscribeToList("gui/"+name);
-		}
-
-		@Override
-		public void reloadModels()
-		{
-
-		}
-
-		@Override
-		public void registerSprites(TextureMap map)
-		{
-			resources.forEach(resLoc -> ApiUtils.getRegisterSprite(map, resLoc));
-		}
-	}
-
-	/**
 	 * JEI Compat, returns a list of rectangles that are taken by the GUI elements, so the JEI overlay can adjust.
 	 *
 	 * @return a list of AWT rectangles
@@ -833,8 +804,6 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 		return this.takenSpace = takenSpace;
 	}
 
-	//--- Utilities ---//
-
 	/**
 	 * @return the tile entity associated with this GUI
 	 */
@@ -843,7 +812,9 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 		return tile;
 	}
 
-	public void syncAnimatedParts(int id, boolean state)
+	//--- Utilities ---//
+
+	public void syncAnimatedParts(MultiblockInteractablePart part, boolean state)
 	{
 		IIPacketHandler.sendToServer(new MessageBooleanAnimatedPartsSync(id, state, tile.getPos()));
 	}
@@ -1040,6 +1011,32 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 		} finally
 		{
 			this.screenshotMode = false;
+		}
+	}
+
+	/**
+	 * A resource loader for a Deco based GUI, created when one of its resource fields is marked by {@link DecoResource}
+	 */
+	public static class DecoResourcesLoader implements IReloadableModelContainer<DecoResourcesLoader>
+	{
+		private final List<ResLoc> resources;
+
+		public DecoResourcesLoader(String name, List<ResLoc> resources)
+		{
+			this.resources = resources;
+			subscribeToList("gui/"+name);
+		}
+
+		@Override
+		public void reloadModels()
+		{
+
+		}
+
+		@Override
+		public void registerSprites(TextureMap map)
+		{
+			resources.forEach(resLoc -> ApiUtils.getRegisterSprite(map, resLoc));
 		}
 	}
 }

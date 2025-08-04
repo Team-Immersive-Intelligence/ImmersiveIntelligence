@@ -46,15 +46,7 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 {
 	// Inventory Slots
 	public static final int SLOT_INPUT = 0, SLOT_SAWBLADE = 1, SLOT_OUTPUT = 2, SLOT_SAWDUST = 3;
-
-	// Inventory Handlers
-	IItemHandler insertionHandler = getSingleInventoryHandler(SLOT_INPUT, true, false);
-	IItemHandler dustExtractionHandler = getSingleInventoryHandler(SLOT_SAWDUST, false, true);
-	// Recipe Output Handlers
-	IItemHandler outputHandler = getSingleInventoryHandler(SLOT_OUTPUT), sawdustOutputHandler = getSingleInventoryHandler(SLOT_SAWDUST);
-	private List<TimedCompoundSound> soundsList = new ArrayList<>();
 	public MultiblockInteractablePart vise;
-
 	// Rotary Power
 	@SyncNBT
 	public RotaryStorage rotation = new RotaryStorage(0, 0)
@@ -65,6 +57,12 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 			return facing==getFacing()?RotationSide.INPUT: RotationSide.NONE;
 		}
 	};
+	// Inventory Handlers
+	IItemHandler insertionHandler = getSingleInventoryHandler(SLOT_INPUT, true, false);
+	IItemHandler dustExtractionHandler = getSingleInventoryHandler(SLOT_SAWDUST, false, true);
+	// Recipe Output Handlers
+	IItemHandler outputHandler = getSingleInventoryHandler(SLOT_OUTPUT), sawdustOutputHandler = getSingleInventoryHandler(SLOT_SAWDUST);
+	private List<TimedCompoundSound> soundsList = new ArrayList<>();
 
 	public TileEntitySawmill()
 	{

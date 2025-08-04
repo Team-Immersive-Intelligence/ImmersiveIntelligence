@@ -23,6 +23,11 @@ import java.util.Map;
  */
 public class ComputerCraftHelper extends IICompatModule
 {
+	public static DataConnectorPeripheral createConnectorPeripheral(TileEntityDataConnector te)
+	{
+		return new DataConnectorPeripheral(te);
+	}
+
 	@Override
 	public void preInit()
 	{
@@ -51,11 +56,6 @@ public class ComputerCraftHelper extends IICompatModule
 	public void postInit()
 	{
 
-	}
-
-	public static DataConnectorPeripheral createConnectorPeripheral(TileEntityDataConnector te)
-	{
-		return new DataConnectorPeripheral(te);
 	}
 
 	@Optional.Interface(iface = "dan200.computercraft.api.peripheral.IPeripheral", modid = "computercraft")

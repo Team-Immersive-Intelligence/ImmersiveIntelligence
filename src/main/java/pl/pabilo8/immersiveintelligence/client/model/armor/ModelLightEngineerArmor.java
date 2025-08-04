@@ -31,6 +31,7 @@ public class ModelLightEngineerArmor extends TMTArmorModel implements IReloadabl
 {
 	static int textureX = 64;
 	static int textureY = 64;
+	static ModelLightEngineerArmor modelInstance;
 	private static String TEXTURE = ImmersiveIntelligence.MODID+":textures/armor/engineer_light.png";
 	private static String TEXTURE_GASMASK = ImmersiveIntelligence.MODID+":textures/armor/engineer_light_gasmask.png";
 	private static String TEXTURE_GOGGLES = ImmersiveIntelligence.MODID+":textures/armor/engineer_light_goggles.png";
@@ -38,15 +39,14 @@ public class ModelLightEngineerArmor extends TMTArmorModel implements IReloadabl
 	private static String TEXTURE_EXOSUIT = ImmersiveIntelligence.MODID+":textures/armor/engineer_light_exosuit.png";
 	private static String TEXTURE_SCUBA = ImmersiveIntelligence.MODID+":textures/armor/engineer_light_scuba.png";
 
-	ModelRendererTurbo[] capeModel, gasmaskModel, infiltratorGogglesModel, technicianGogglesModel, engineerGogglesModel;
-	ModelRendererTurbo[] scubaTankModel, exoSuitRightLegModel, exoSuitLeftLegModel, racketsModel, flippersModel;
-	ModelRendererTurbo[] platesHelmetModel, platesRightArmModel, platesLeftArmModel, platesChestModel, platesRightLegModel, platesLeftLegModel, platesSkirtRightModel, platesSkirtLeftModel;
-
 	static
 	{
 		modelInstance = new ModelLightEngineerArmor().subscribeToList("light_engineer_armor");
 	}
 
+	ModelRendererTurbo[] capeModel, gasmaskModel, infiltratorGogglesModel, technicianGogglesModel, engineerGogglesModel;
+	ModelRendererTurbo[] scubaTankModel, exoSuitRightLegModel, exoSuitLeftLegModel, racketsModel, flippersModel;
+	ModelRendererTurbo[] platesHelmetModel, platesRightArmModel, platesLeftArmModel, platesChestModel, platesRightLegModel, platesLeftLegModel, platesSkirtRightModel, platesSkirtLeftModel;
 
 	public ModelLightEngineerArmor()
 	{
@@ -1113,7 +1113,10 @@ public class ModelLightEngineerArmor extends TMTArmorModel implements IReloadabl
 		init();
 	}
 
-	static ModelLightEngineerArmor modelInstance;
+	public static ModelLightEngineerArmor getModel(EntityEquipmentSlot part, ItemStack stack)
+	{
+		return (ModelLightEngineerArmor)modelInstance.prepareForRender(part, stack);
+	}
 
 	private void setSkin(String skin)
 	{
@@ -1142,12 +1145,6 @@ public class ModelLightEngineerArmor extends TMTArmorModel implements IReloadabl
 			setSkin("");
 		return super.prepareForRender(part, stack);
 	}
-
-	public static ModelLightEngineerArmor getModel(EntityEquipmentSlot part, ItemStack stack)
-	{
-		return (ModelLightEngineerArmor)modelInstance.prepareForRender(part, stack);
-	}
-
 
 	public void renderAddons(ItemStack renderStack, EntityEquipmentSlot renderSlot, ModelRendererTurbo[] part, float ageInTicks, boolean entity, float scale)
 	{

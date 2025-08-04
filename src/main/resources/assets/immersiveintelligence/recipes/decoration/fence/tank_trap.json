@@ -12,12 +12,12 @@
     },
     "f": {
       "item": "immersiveintelligence:metal_fortification",
-      "data" : 0
+      "data": 0
     }
   },
   "result": {
     "item": "immersiveintelligence:metal_fortification1",
-    "data" : 0,
+    "data": 0,
     "count": 1
   }
 }

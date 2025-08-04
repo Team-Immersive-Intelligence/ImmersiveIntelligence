@@ -50,14 +50,15 @@ public class TileEntityDataConnector extends TileEntityImmersiveConnectable impl
 		ITickable, IDirectionalTile, IHammerInteraction, IBlockBounds, IDataConnector, IOBJModelCallback<IBlockState>, IAdvancedTextOverlay,
 		IPeripheralTile
 {
-	protected EnumFacing facing = EnumFacing.DOWN;
-	private int color = 0;
-	protected DataWireNetwork wireNetwork = new DataWireNetwork().add(this);
-	private boolean refreshWireNetwork = false;
-
 	//--- OpenComputers / ComputerCraft compat ---//
 	public DataPacket lastReceived = null;
 	public boolean compatReceived = true; //whether a computer received the signal
+	protected EnumFacing facing = EnumFacing.DOWN;
+	protected DataWireNetwork wireNetwork = new DataWireNetwork().add(this);
+	private int color = 0;
+	private boolean refreshWireNetwork = false;
+	@SideOnly(Side.CLIENT)
+	private AxisAlignedBB renderAABB;
 
 	/**
 	 * Like the old updateEntity(), except more generic.
@@ -73,15 +74,15 @@ public class TileEntityDataConnector extends TileEntityImmersiveConnectable impl
 	}
 
 	@Override
-	public void setDataNetwork(DataWireNetwork net)
-	{
-		wireNetwork = net;
-	}
-
-	@Override
 	public DataWireNetwork getDataNetwork()
 	{
 		return wireNetwork;
+	}
+
+	@Override
+	public void setDataNetwork(DataWireNetwork net)
+	{
+		wireNetwork = net;
 	}
 
 	@Override
@@ -197,7 +198,6 @@ public class TileEntityDataConnector extends TileEntityImmersiveConnectable impl
 		return false;
 	}
 
-
 	@Override
 	public void writeCustomNBT(NBTTagCompound nbt, boolean descPacket)
 	{
@@ -227,9 +227,6 @@ public class TileEntityDataConnector extends TileEntityImmersiveConnectable impl
 	{
 		refreshWireNetwork = false;
 	}
-
-	@SideOnly(Side.CLIENT)
-	private AxisAlignedBB renderAABB;
 
 	@SideOnly(Side.CLIENT)
 	@Override

@@ -50,10 +50,32 @@ public class JEIHelper implements IModPlugin
 	public static IJeiRuntime jeiRuntime;
 	public static IDrawable slotDrawable;
 	public static IEFluidTooltipCallback fluidTooltipCallback = new IEFluidTooltipCallback();
+	@SuppressWarnings("rawtypes")
+	LinkedHashMultimap<Class<? extends MultiblockRecipe>, IIRecipeCategory> categories = LinkedHashMultimap.create();
 
 	public JEIHelper()
 	{
 
+	}
+
+	@SideOnly(Side.CLIENT)
+	public static void addRecipesDecoGuiLink(GuiComponentDecoBase<?> gui, String categoryName)
+	{
+		if(jeiRuntime==null)
+			return;
+		IRecipesGui recipesGui = jeiRuntime.getRecipesGui();
+		if(recipesGui==null)
+			return;
+
+		gui.withTranslatedTooltip("jei.tooltip.show.recipes")
+				.withOnPressed((g, mouseButton, mouseX, mouseY) -> {
+					if(mouseButton==MouseButton.LEFT)
+					{
+						recipesGui.showCategories(Collections.singletonList(categoryName));
+						return true;
+					}
+					return false;
+				});
 	}
 
 	@Override
@@ -71,9 +93,6 @@ public class JEIHelper implements IModPlugin
 	{
 
 	}
-
-	@SuppressWarnings("rawtypes")
-	LinkedHashMultimap<Class<? extends MultiblockRecipe>, IIRecipeCategory> categories = LinkedHashMultimap.create();
 
 	@Override
 	public void registerCategories(IRecipeCategoryRegistration registry)
@@ -147,26 +166,6 @@ public class JEIHelper implements IModPlugin
 
 		if(FMLCommonHandler.instance().getSide()==Side.CLIENT)
 			IIGUI.registerDecoJEICompat(modRegistry);
-	}
-
-	@SideOnly(Side.CLIENT)
-	public static void addRecipesDecoGuiLink(GuiComponentDecoBase<?> gui, String categoryName)
-	{
-		if(jeiRuntime==null)
-			return;
-		IRecipesGui recipesGui = jeiRuntime.getRecipesGui();
-		if(recipesGui==null)
-			return;
-
-		gui.withTranslatedTooltip("jei.tooltip.show.recipes")
-				.withOnPressed((g, mouseButton, mouseX, mouseY) -> {
-					if(mouseButton==MouseButton.LEFT)
-					{
-						recipesGui.showCategories(Collections.singletonList(categoryName));
-						return true;
-					}
-					return false;
-				});
 	}
 
 	@Override

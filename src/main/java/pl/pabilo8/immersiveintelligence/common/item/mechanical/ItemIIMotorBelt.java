@@ -45,6 +45,33 @@ public class ItemIIMotorBelt extends ItemIISubItemsBase<MotorBelt> implements IW
 		super("motor_belt", 64, MotorBelt.values());
 	}
 
+	@Override
+	public WireType getWireType(ItemStack stack)
+	{
+		return stackToSub(stack).type;
+	}
+
+	@Override
+	public boolean canConnectCable(ItemStack stack, TileEntity targetEntity)
+	{
+		return targetEntity instanceof IMotorBeltConnector;
+	}
+
+	@Override
+	public void addInformation(@Nonnull ItemStack stack, @Nullable World worldIn, @Nonnull List<String> tooltip, @Nonnull ITooltipFlag flagIn)
+	{
+		int[] link = ItemNBTHelper.getIntArray(stack, "linkingPos");
+		if(link.length > 3)
+			tooltip.add(I18n.format(Lib.DESC_INFO+"attachedToDim", link[1], link[2], link[3], link[0]));
+	}
+
+	@Nonnull
+	@Override
+	public EnumActionResult onItemUseFirst(@Nonnull EntityPlayer player, @Nonnull World world, @Nonnull BlockPos pos, @Nonnull EnumFacing side, float hitX, float hitY, float hitZ, @Nonnull EnumHand hand)
+	{
+		return IIRotaryUtils.useCoil(this, player, world, pos, hand, side, hitX, hitY, hitZ);
+	}
+
 	@GeneratedItemModels(itemName = "motor_belt")
 	public enum MotorBelt implements IIItemEnum
 	{
@@ -93,32 +120,5 @@ public class ItemIIMotorBelt extends ItemIISubItemsBase<MotorBelt> implements IW
 
 			type = new IIMotorBeltType(this);
 		}
-	}
-
-	@Override
-	public WireType getWireType(ItemStack stack)
-	{
-		return stackToSub(stack).type;
-	}
-
-	@Override
-	public boolean canConnectCable(ItemStack stack, TileEntity targetEntity)
-	{
-		return targetEntity instanceof IMotorBeltConnector;
-	}
-
-	@Override
-	public void addInformation(@Nonnull ItemStack stack, @Nullable World worldIn, @Nonnull List<String> tooltip, @Nonnull ITooltipFlag flagIn)
-	{
-		int[] link = ItemNBTHelper.getIntArray(stack, "linkingPos");
-		if(link.length > 3)
-			tooltip.add(I18n.format(Lib.DESC_INFO+"attachedToDim", link[1], link[2], link[3], link[0]));
-	}
-
-	@Nonnull
-	@Override
-	public EnumActionResult onItemUseFirst(@Nonnull EntityPlayer player, @Nonnull World world, @Nonnull BlockPos pos, @Nonnull EnumFacing side, float hitX, float hitY, float hitZ, @Nonnull EnumHand hand)
-	{
-		return IIRotaryUtils.useCoil(this, player, world, pos, hand, side, hitX, hitY, hitZ);
 	}
 }

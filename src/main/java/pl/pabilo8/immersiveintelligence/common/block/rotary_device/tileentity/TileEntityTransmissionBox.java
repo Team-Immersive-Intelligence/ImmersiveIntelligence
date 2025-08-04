@@ -27,8 +27,8 @@ import static pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.M
  */
 public class TileEntityTransmissionBox extends TileEntityIEBase implements ITickable, IRotationAcceptor, IDirectionalTile, IHammerInteraction, IRotationalEnergyBlock
 {
-	EnumFacing facing = EnumFacing.NORTH;
 	public int tick = 0;
+	EnumFacing facing = EnumFacing.NORTH;
 	public RotaryStorage energy = new RotaryStorage()
 	{
 		@Override

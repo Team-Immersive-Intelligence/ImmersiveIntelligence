@@ -53,18 +53,16 @@ import java.util.Optional;
  */
 public class TileEntityDataDebugger extends TileEntityImmersiveConnectable implements ITickable, IDataConnector, IHammerInteraction, IDirectionalTile, IOBJModelCallback<IBlockState>, IAdvancedTextOverlay, IActiveState, IRedstoneOutput
 {
+	//Purely decorational, client only
+	public int setupTime = 25;
+	public int outputTime = 0;
 	private DebuggerMode mode = DebuggerMode.TRANSCEIVER;
 	private EnumFacing facing = EnumFacing.NORTH;
 	private boolean toggle = false;
-
 	private DataWireNetwork wireNetwork = new DataWireNetwork().add(this);
 	private boolean refreshWireNetwork = false;
 	private DataPacket lastPacket = null;
 	private String[] packetString = new String[0];
-
-	//Purely decorational, client only
-	public int setupTime = 25;
-	public int outputTime = 0;
 
 	@Override
 	public void update()
@@ -229,15 +227,15 @@ public class TileEntityDataDebugger extends TileEntityImmersiveConnectable imple
 	}
 
 	@Override
-	public void setDataNetwork(DataWireNetwork net)
-	{
-		wireNetwork = net;
-	}
-
-	@Override
 	public DataWireNetwork getDataNetwork()
 	{
 		return wireNetwork;
+	}
+
+	@Override
+	public void setDataNetwork(DataWireNetwork net)
+	{
+		wireNetwork = net;
 	}
 
 	@Override

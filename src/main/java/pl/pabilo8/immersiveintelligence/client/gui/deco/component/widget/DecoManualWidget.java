@@ -103,15 +103,15 @@ public class DecoManualWidget extends DecoComponentWidgetBase<DecoManualWidget>
 		ieManualGUI.page = wrapper.page;
 	}
 
-	public void setTooltip(List<String> tooltip)
-	{
-		this.tooltip = tooltip;
-	}
-
 	@Override
 	public List<String> getTooltip()
 	{
 		return tooltip==null?tooltip = new ArrayList<>(): tooltip;
+	}
+
+	public void setTooltip(List<String> tooltip)
+	{
+		this.tooltip = tooltip;
 	}
 
 	@Override

@@ -46,13 +46,11 @@ public class TileEntityAmmunitionAssembler extends TileEntityMultiblockProductio
 	public FuseType fuse = FuseType.CONTACT;
 	@SyncNBT
 	public int fuseConfig = 0; //depends on fuse type: time for timed fuse, distance for proximity fuse
-
+	@SyncNBT
+	public MultiblockInteractablePart hatch;
 	//inventory: core, casing
 	IItemHandler coreInputHandler = getSingleInventoryHandler(SLOT_CORE, true, false);
 	IItemHandler casingInputHandler = getSingleInventoryHandler(SLOT_CASING, true, false);
-
-	@SyncNBT
-	public MultiblockInteractablePart hatch;
 
 	public TileEntityAmmunitionAssembler()
 	{

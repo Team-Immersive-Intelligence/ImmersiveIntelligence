@@ -17,6 +17,9 @@ import java.util.function.Supplier;
 public class IIParticleUtils
 {
 	public static final VertexFormat PARTICLE_SOLID = new VertexFormat();
+	public static Supplier<Float> randFloat = Utils.RAND::nextFloat;
+	public static Supplier<Double> randDouble = Utils.RAND::nextGaussian;
+	public static Supplier<Integer> randInt = Utils.RAND::nextInt;
 
 	static
 	{
@@ -26,10 +29,6 @@ public class IIParticleUtils
 		PARTICLE_SOLID.addElement(DefaultVertexFormats.TEX_2S);
 		PARTICLE_SOLID.addElement(DefaultVertexFormats.NORMAL_3B);
 	}
-
-	public static Supplier<Float> randFloat = Utils.RAND::nextFloat;
-	public static Supplier<Double> randDouble = Utils.RAND::nextGaussian;
-	public static Supplier<Integer> randInt = Utils.RAND::nextInt;
 
 	/**
 	 * @return a random float value ranging from -1.0 to 1.0

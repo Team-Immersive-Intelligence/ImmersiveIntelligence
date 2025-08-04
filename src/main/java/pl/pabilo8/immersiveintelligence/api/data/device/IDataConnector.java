@@ -11,16 +11,16 @@ import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 public interface IDataConnector extends IImmersiveConnectable
 {
 	/**
+	 * @return the DataWireNetwork this connector is connected to.
+	 */
+	DataWireNetwork getDataNetwork();
+
+	/**
 	 * Sets the DataWireNetwork this connector is connected to.
 	 *
 	 * @param net the new network for this connector.
 	 */
 	void setDataNetwork(DataWireNetwork net);
-
-	/**
-	 * @return the DataWireNetwork this connector is connected to.
-	 */
-	DataWireNetwork getDataNetwork();
 
 	/**
 	 * Called whenever the DataWireNetwork is changed in some way (both adding/removing connectors and changes in RS values).

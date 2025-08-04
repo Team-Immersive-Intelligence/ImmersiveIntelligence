@@ -140,16 +140,6 @@ public abstract class EntityAmmoBase<T extends EntityAmmoBase<? super T>> extend
 		this.setEntityBoundingBox(this.aabb = new AxisAlignedBB(-fraction, -fraction, -fraction, fraction, fraction, fraction));
 	}
 
-	/**
-	 * @param owner The owner of this bullet, used for statistics
-	 */
-	public void setOwner(@Nullable Entity owner)
-	{
-		this.owner = owner;
-	}
-
-	//--- Update ---//
-
 	@Override
 	public void onUpdate()
 	{
@@ -164,6 +154,8 @@ public abstract class EntityAmmoBase<T extends EntityAmmoBase<? super T>> extend
 		if(shouldDecay())
 			setDead();
 	}
+
+	//--- Update ---//
 
 	public void detonate()
 	{
@@ -194,8 +186,6 @@ public abstract class EntityAmmoBase<T extends EntityAmmoBase<? super T>> extend
 	@Nonnull
 	protected abstract Vec3d getDirection();
 
-	//--- NBT ---//
-
 	@Override
 	public void readEntityFromNBT(NBTTagCompound compound)
 	{
@@ -213,6 +203,8 @@ public abstract class EntityAmmoBase<T extends EntityAmmoBase<? super T>> extend
 		);
 		owner = world.getEntityByID(compound.getInteger("owner"));
 	}
+
+	//--- NBT ---//
 
 	@Override
 	public void writeEntityToNBT(NBTTagCompound compound)
@@ -252,13 +244,13 @@ public abstract class EntityAmmoBase<T extends EntityAmmoBase<? super T>> extend
 	//--- Abstract ---//
 	protected abstract boolean shouldDecay();
 
-	//--- Misc ---//
-
 	@Override
 	public boolean canBeCollidedWith()
 	{
 		return true;
 	}
+
+	//--- Misc ---//
 
 	@Override
 	public boolean isBurning()
@@ -272,12 +264,12 @@ public abstract class EntityAmmoBase<T extends EntityAmmoBase<? super T>> extend
 
 	}
 
-	//--- Getters ---//
-
 	public IAmmoType<?, T> getAmmoType()
 	{
 		return ammoType;
 	}
+
+	//--- Getters ---//
 
 	public AmmoCore getCore()
 	{
@@ -312,6 +304,14 @@ public abstract class EntityAmmoBase<T extends EntityAmmoBase<? super T>> extend
 	public Entity getOwner()
 	{
 		return owner;
+	}
+
+	/**
+	 * @param owner The owner of this bullet, used for statistics
+	 */
+	public void setOwner(@Nullable Entity owner)
+	{
+		this.owner = owner;
 	}
 
 	//--- Mirage Compat ---//

@@ -5,14 +5,14 @@
   },
   "display": {
     "thirdperson_righthand": {
-      "rotation": [ 0, -90, -12.5 ],
-      "translation": [ 0, 2.0, 1 ],
-      "scale": [ 0.45, 0.45, 0.45 ]
+      "rotation": [0, -90, -12.5],
+      "translation": [0, 2.0, 1],
+      "scale": [0.45, 0.45, 0.45]
     },
     "thirdperson_lefthand": {
-      "rotation": [ 0, 90, 12.5 ],
-      "translation": [ 0, 2.0, 1 ],
-      "scale": [ 0.45, 0.45, 0.45 ]
+      "rotation": [0, 90, 12.5],
+      "translation": [0, 2.0, 1],
+      "scale": [0.45, 0.45, 0.45]
     }
   }
 }

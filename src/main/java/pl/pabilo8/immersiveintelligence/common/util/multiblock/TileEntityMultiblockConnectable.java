@@ -44,12 +44,14 @@ import static blusunrize.immersiveengineering.api.energy.wires.WireType.*;
  */
 public abstract class TileEntityMultiblockConnectable<T extends TileEntityMultiblockMetal<T, R>, R extends IMultiblockRecipe> extends TileEntityMultiblockMetal<T, R> implements IImmersiveConnectable
 {
+	private final List<Pair<Float, Consumer<Float>>> sources = new ArrayList<>();
+	protected WireType limitType = null;
+	private long lastSourceUpdate = 0;
+
 	public TileEntityMultiblockConnectable(IMultiblock mutliblockInstance, int[] structureDimensions, int energyCapacity, boolean redstoneControl)
 	{
 		super(mutliblockInstance, structureDimensions, energyCapacity, redstoneControl);
 	}
-
-	protected WireType limitType = null;
 
 	protected boolean canTakeLV()
 	{
@@ -150,9 +152,6 @@ public abstract class TileEntityMultiblockConnectable<T extends TileEntityMultib
 			world.notifyBlockUpdate(this.getPos(), state, state, 3);
 		}
 	}
-
-	private final List<Pair<Float, Consumer<Float>>> sources = new ArrayList<>();
-	private long lastSourceUpdate = 0;
 
 	@Override
 	public void addAvailableEnergy(float amount, Consumer<Float> consume)

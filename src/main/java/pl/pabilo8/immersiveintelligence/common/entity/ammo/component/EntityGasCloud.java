@@ -27,12 +27,11 @@ import java.util.List;
  */
 public class EntityGasCloud extends Entity
 {
-	private FluidStack fluid;
 	private static final DataParameter<Optional<FluidStack>> dataMarker_fluid = EntityDataManager.createKey(EntityGasCloud.class, IEFluid.OPTIONAL_FLUID_STACK);
 	private static final DataParameter<Float> dataMarker_radius = EntityDataManager.createKey(EntityGasCloud.class, DataSerializers.FLOAT);
-
 	int duration, maxDuration;
 	float radius;
+	private FluidStack fluid;
 
 	public EntityGasCloud(World worldIn)
 	{

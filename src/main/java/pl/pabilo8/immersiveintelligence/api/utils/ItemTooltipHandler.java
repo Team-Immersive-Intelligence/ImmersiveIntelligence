@@ -30,31 +30,6 @@ import java.util.List;
  */
 public class ItemTooltipHandler
 {
-	public interface IAdvancedTooltipItem
-	{
-		@SideOnly(Side.CLIENT)
-		void addAdvancedInformation(ItemStack stack, int offsetX, List<Integer> offsetsY);
-	}
-
-	public interface IItemScrollable
-	{
-		void onScroll(ItemStack stack, boolean forward, EntityPlayerMP player);
-	}
-
-	public interface IGuiItem extends IEItemInterfaces.IGuiItem
-	{
-		@Override
-		default int getGuiID(ItemStack stack)
-		{
-			return getGUI(stack).ordinal();
-		}
-
-		IIGUI getGUI(ItemStack stack);
-	}
-
-	//--- Utility Methods ---//
-
-
 	@SideOnly(Side.CLIENT)
 	public static boolean addExpandableTooltip(int key, String message, @Nullable List<String> tooltip)
 	{
@@ -112,6 +87,8 @@ public class ItemTooltipHandler
 		return findTooltipY(event.getLines(), event.getY(), event.getFontRenderer());
 	}
 
+	//--- Utility Methods ---//
+
 	@SideOnly(Side.CLIENT)
 	public static ArrayList<Integer> findTooltipY(List<String> lines, int y, FontRenderer font)
 	{
@@ -161,5 +138,27 @@ public class ItemTooltipHandler
 		GlStateManager.disableDepth();
 		GlStateManager.disableRescaleNormal();
 		GlStateManager.popMatrix();
+	}
+
+	public interface IAdvancedTooltipItem
+	{
+		@SideOnly(Side.CLIENT)
+		void addAdvancedInformation(ItemStack stack, int offsetX, List<Integer> offsetsY);
+	}
+
+	public interface IItemScrollable
+	{
+		void onScroll(ItemStack stack, boolean forward, EntityPlayerMP player);
+	}
+
+	public interface IGuiItem extends IEItemInterfaces.IGuiItem
+	{
+		@Override
+		default int getGuiID(ItemStack stack)
+		{
+			return getGUI(stack).ordinal();
+		}
+
+		IIGUI getGUI(ItemStack stack);
 	}
 }

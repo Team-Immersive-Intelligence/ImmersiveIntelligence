@@ -11,10 +11,9 @@ import pl.pabilo8.immersiveintelligence.client.util.tmt.Shape2D;
  */
 public class ModelMineDetector extends ModelIIBase
 {
+	public ModelRendererTurbo[] poleModel;
 	int textureX = 32;
 	int textureY = 32;
-
-	public ModelRendererTurbo[] poleModel;
 
 	public ModelMineDetector() //Same as Filename
 	{

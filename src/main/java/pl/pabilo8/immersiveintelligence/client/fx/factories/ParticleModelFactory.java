@@ -228,6 +228,12 @@ public class ParticleModelFactory<T extends ParticleAbstractModel> extends Parti
 
 	//--- Supporting Classes ---//
 
+	private enum ModelMode
+	{
+		SINGLE_MODEL,
+		MULTI_MODEL
+	}
+
 	public static class ParticleModel
 	{
 		public final int elementsCount;
@@ -271,11 +277,5 @@ public class ParticleModelFactory<T extends ParticleAbstractModel> extends Parti
 				}
 			}
 		}
-	}
-
-	private enum ModelMode
-	{
-		SINGLE_MODEL,
-		MULTI_MODEL
 	}
 }

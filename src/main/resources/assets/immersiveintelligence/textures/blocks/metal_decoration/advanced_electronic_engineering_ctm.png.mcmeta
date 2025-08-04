@@ -2,9 +2,9 @@
   "ctm": {
     "ctm_version": 1,
     "layer": "CUTOUT_MIPPED",
-        "type": "pattern",
-        "extra": {
-          "size": 3
-        }
+    "type": "pattern",
+    "extra": {
+      "size": 3
+    }
   }
 }

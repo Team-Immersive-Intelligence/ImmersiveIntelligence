@@ -35,10 +35,10 @@ import java.util.stream.IntStream;
  */
 public class IIManualCraftingRecipe extends IIManualObject
 {
+	final ArrayList<PositionedItemStack[]> recipes = new ArrayList<>();
 	GuiButtonManualNavigation buttonNext, buttonPrev;
 	NonNullList<ItemStack> stacks;
 	ItemStack highlighted = ItemStack.EMPTY;
-	final ArrayList<PositionedItemStack[]> recipes = new ArrayList<>();
 	int recipePage;
 	int yOff;
 

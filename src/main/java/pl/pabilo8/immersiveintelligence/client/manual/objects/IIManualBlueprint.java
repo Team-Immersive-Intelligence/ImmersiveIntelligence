@@ -27,12 +27,12 @@ import java.util.List;
  */
 public class IIManualBlueprint extends IIManualObject
 {
+	final ArrayList<PositionedItemStack[]> recipes = new ArrayList<>();
 	GuiButtonManualNavigation buttonNext, buttonPrev;
 	ItemStack highlighted = ItemStack.EMPTY;
-	final ArrayList<PositionedItemStack[]> recipes = new ArrayList<>();
-	private String blueprintName;
 	int recipePage;
 	int yOff;
+	private String blueprintName;
 
 	public IIManualBlueprint(ManualObjectInfo info, EasyNBT nbt)
 	{

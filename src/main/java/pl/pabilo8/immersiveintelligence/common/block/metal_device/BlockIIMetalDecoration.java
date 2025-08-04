@@ -16,17 +16,6 @@ import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
  */
 public class BlockIIMetalDecoration extends BlockIIBase<IIBlockTypes_MetalDecoration>
 {
-	public enum IIBlockTypes_MetalDecoration implements IIBlockEnum
-	{
-		COIL_DATA,
-		ELECTRONIC_ENGINEERING,
-		ADVANCED_ELECTRONIC_ENGINEERING,
-		MECHANICAL_ENGINEERING,
-		HEAVY_MECHANICAL_ENGINEERING,
-		COIL_STEEL_MOTOR_BELT,
-		COMPUTER_ENGINEERING
-	}
-
 	public BlockIIMetalDecoration()
 	{
 		super("metal_decoration", PropertyEnum.create("type", IIBlockTypes_MetalDecoration.class), Material.IRON, ItemBlockIIBase::new);
@@ -37,5 +26,16 @@ public class BlockIIMetalDecoration extends BlockIIBase<IIBlockTypes_MetalDecora
 		setToolTypes(IIReference.TOOL_HAMMER);
 
 		setBlockLayer(BlockRenderLayer.CUTOUT_MIPPED);
+	}
+
+	public enum IIBlockTypes_MetalDecoration implements IIBlockEnum
+	{
+		COIL_DATA,
+		ELECTRONIC_ENGINEERING,
+		ADVANCED_ELECTRONIC_ENGINEERING,
+		MECHANICAL_ENGINEERING,
+		HEAVY_MECHANICAL_ENGINEERING,
+		COIL_STEEL_MOTOR_BELT,
+		COMPUTER_ENGINEERING
 	}
 }

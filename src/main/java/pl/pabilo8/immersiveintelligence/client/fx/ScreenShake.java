@@ -12,12 +12,12 @@ import net.minecraft.util.math.Vec3d;
  */
 public class ScreenShake implements Comparable<ScreenShake>
 {
-	@SuppressWarnings("unused")
-	private Vec3d position;
 	/**
 	 * The strength of the screen shake, used as a multiplier for gaussian noise.
 	 */
 	private final double strength;
+	@SuppressWarnings("unused")
+	private Vec3d position;
 	/**
 	 * The duration of the screen shake in ticks.
 	 */

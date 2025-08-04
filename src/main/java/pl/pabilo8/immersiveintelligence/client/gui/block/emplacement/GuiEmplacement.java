@@ -35,15 +35,14 @@ import java.util.Map.Entry;
  */
 public abstract class GuiEmplacement extends GuiIEContainerBase implements ITabbedGui
 {
-	protected final ResourceLocation TEXTURE = new ResourceLocation(ImmersiveIntelligence.MODID+":textures/gui/emplacement.png");
+	protected final static IIColor COLOR_IN = IIColor.fromPackedRGB(0x4c7bb1), COLOR_OUT = IIColor.fromPackedRGB(0xffb515);
 	public final ResourceLocation TEXTURE_ICONS = new ResourceLocation(ImmersiveIntelligence.MODID+":textures/gui/emplacement_icons.png");
+	protected final ResourceLocation TEXTURE = new ResourceLocation(ImmersiveIntelligence.MODID+":textures/gui/emplacement.png");
 	protected final TileEntityEmplacement tile;
-	protected String title = I18n.format("tile."+ImmersiveIntelligence.MODID+".metal_multiblock1.emplacement.name");
 	private final LinkedHashMap<DecoTab, IIGUI> TABS = new LinkedHashMap<>();
 	private final IIGUI thisGui;
+	protected String title = I18n.format("tile."+ImmersiveIntelligence.MODID+".metal_multiblock1.emplacement.name");
 	private DecoBar barEnergy, barArmor;
-
-	protected final static IIColor COLOR_IN = IIColor.fromPackedRGB(0x4c7bb1), COLOR_OUT = IIColor.fromPackedRGB(0xffb515);
 
 	public GuiEmplacement(EntityPlayer player, TileEntityEmplacement tile, IIGUI gui)
 	{

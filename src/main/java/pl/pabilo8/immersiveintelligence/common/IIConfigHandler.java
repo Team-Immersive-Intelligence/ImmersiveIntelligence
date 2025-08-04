@@ -19,14 +19,31 @@ import java.util.Map;
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
  * @author Avalon (avalon@iiteam.net)
- * @since 12.05.2019
  * @updated 3.07.2025
+ * @since 12.05.2019
  */
 @Mod.EventBusSubscriber
 public class IIConfigHandler
 {
 	public static final String GEARS = "Gears: Copper, Brass, Iron, Steel, Tungsten";
 	public static final String BELTS = "Belts: Cloth, Steel, Rubber";
+
+	@SubscribeEvent
+	public static void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent ev)
+	{
+		putConfigValues();
+
+		if(ev.getModID().equals(ImmersiveIntelligence.MODID))
+			ConfigManager.sync(ImmersiveIntelligence.MODID, Type.INSTANCE);
+	}
+
+	public static void putConfigValues()
+	{
+		Config.manual_bool.put("petroleumHere", false);
+		Config.manual_bool.put("baublesHere", false);
+		Config.manual_int.put("radio_station_range", RadioStation.radioRange);
+		Config.validateAndMapValues(IIConfig.class);
+	}
 
 	@net.minecraftforge.common.config.Config(modid = ImmersiveIntelligence.MODID)
 	public static class IIConfig
@@ -395,6 +412,9 @@ public class IIConfigHandler
 			@Comment({"The usage time of the Precision Hammer."})
 			@RequiresMcRestart
 			public static int precisionToolHammerUsageTime = 40;
+			@Comment({"The capacity of the Improved Capacitor Backpack (in IF)."})
+			@RequiresMcRestart
+			public static int advancedPowerpackCapacity = 1000000;
 
 			public static class SkycrateMounts
 			{
@@ -435,10 +455,6 @@ public class IIConfigHandler
 				@RequiresMcRestart
 				public static float[] tripodZoomSteps = new float[]{0.01f, 0.02f, 0.04f, 0.0625f, 0.0833f, 0.125f, 0.25f, 0.5f};
 			}
-
-			@Comment({"The capacity of the Improved Capacitor Backpack (in IF)."})
-			@RequiresMcRestart
-			public static int advancedPowerpackCapacity = 1000000;
 		}
 
 		public static class Machines
@@ -1134,6 +1150,7 @@ public class IIConfigHandler
 			@Comment("Config for the Light Engineers armor. Allows for changes to upgrade energy and resource usage.")
 
 			public static LightEngineerArmor lightEngineerArmor;
+
 			public static class LightEngineerArmor
 			{
 				@Comment({"The energy usage of the Infiltrator's Headgear when IR is active (in IF / 20 ticks)."})
@@ -1829,22 +1846,5 @@ public class IIConfigHandler
 			@Comment({"Torque multiplier for the axle from MysticalMechanics."})
 			public static float dynamoAxleTorque = 18f;
 		}
-	}
-
-	@SubscribeEvent
-	public static void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent ev)
-	{
-		putConfigValues();
-
-		if(ev.getModID().equals(ImmersiveIntelligence.MODID))
-			ConfigManager.sync(ImmersiveIntelligence.MODID, Type.INSTANCE);
-	}
-
-	public static void putConfigValues()
-	{
-		Config.manual_bool.put("petroleumHere", false);
-		Config.manual_bool.put("baublesHere", false);
-		Config.manual_int.put("radio_station_range", RadioStation.radioRange);
-		Config.validateAndMapValues(IIConfig.class);
 	}
 }

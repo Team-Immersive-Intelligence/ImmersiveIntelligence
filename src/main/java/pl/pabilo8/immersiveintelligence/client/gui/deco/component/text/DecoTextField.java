@@ -29,11 +29,12 @@ import java.util.function.Predicate;
  */
 public class DecoTextField extends GuiComponentDecoBase<DecoTextField>
 {
+	//Content state
+	private final List<String> lines = new ArrayList<>();
 	//Settings
 	private boolean multiLine = false;
 	private TextFilter filter = TextFilter.NONE;
 	private Predicate<String> customFilter = (s) -> true;
-
 	private IIFontRenderer fontRenderer = IIClientUtils.fontRegular;
 	private int maxStringLength = 32767;
 	private ResLoc backgroundLocation = IIReference.RES_TEXTURES_DECO_COMPONENT_TEXT_FIELD;
@@ -41,9 +42,6 @@ public class DecoTextField extends GuiComponentDecoBase<DecoTextField>
 	private IIColor cursorColor = IIReference.COLOR_IMMERSIVE_ORANGE;
 	private IIColor selectionColor = IIReference.COLOR_IMMERSIVE_ORANGE.withBrightness(0.35f);
 	private int padding = 4;
-
-	//Content state
-	private final List<String> lines = new ArrayList<>();
 	private int currentLine = 0, cursorPosition = 0, selectionEnd = 0;
 
 	//Scroll state
@@ -516,43 +514,6 @@ public class DecoTextField extends GuiComponentDecoBase<DecoTextField>
 	}
 
 	/**
-	 * Set cursor position
-	 */
-	public void setCursorPosition(int position)
-	{
-		if(!multiLine)
-		{
-			//Single-line mode
-			String currentLineText = getCurrentLine();
-			cursorPosition = MathHelper.clamp(position, 0, currentLineText.length());
-			selectionEnd = cursorPosition;
-			return;
-		}
-
-		//Multi-line mode
-		String currentLineText = getCurrentLine();
-
-		if(position < 0&&currentLine > 0)
-		{
-			//Move to end of previous line
-			currentLine--;
-			cursorPosition = getCurrentLine().length();
-		}
-		else //Move within current line
-			if(position > currentLineText.length()&&currentLine < lines.size()-1)
-			{
-				//Move to start of next line
-				currentLine++;
-				cursorPosition = 0;
-			}
-			else
-				cursorPosition = MathHelper.clamp(position, 0, currentLineText.length());
-
-		selectionEnd = cursorPosition;
-		ensureCursorVisible();
-	}
-
-	/**
 	 * Set cursor position to beginning
 	 */
 	public void setCursorPositionZero()
@@ -808,14 +769,51 @@ public class DecoTextField extends GuiComponentDecoBase<DecoTextField>
 		return this;
 	}
 
-	//--- Getters ---//
-
 	/**
 	 * Get cursor position
 	 */
 	public int getCursorPosition()
 	{
 		return cursorPosition;
+	}
+
+	//--- Getters ---//
+
+	/**
+	 * Set cursor position
+	 */
+	public void setCursorPosition(int position)
+	{
+		if(!multiLine)
+		{
+			//Single-line mode
+			String currentLineText = getCurrentLine();
+			cursorPosition = MathHelper.clamp(position, 0, currentLineText.length());
+			selectionEnd = cursorPosition;
+			return;
+		}
+
+		//Multi-line mode
+		String currentLineText = getCurrentLine();
+
+		if(position < 0&&currentLine > 0)
+		{
+			//Move to end of previous line
+			currentLine--;
+			cursorPosition = getCurrentLine().length();
+		}
+		else //Move within current line
+			if(position > currentLineText.length()&&currentLine < lines.size()-1)
+			{
+				//Move to start of next line
+				currentLine++;
+				cursorPosition = 0;
+			}
+			else
+				cursorPosition = MathHelper.clamp(position, 0, currentLineText.length());
+
+		selectionEnd = cursorPosition;
+		ensureCursorVisible();
 	}
 
 	/**

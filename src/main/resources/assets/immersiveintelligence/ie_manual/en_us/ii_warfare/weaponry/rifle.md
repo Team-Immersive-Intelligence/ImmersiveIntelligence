@@ -9,12 +9,10 @@ Rifles use [long bullets]. An unmodified rifle does not use a magazine, rather, 
 |[crafting]{source:""}|
 Fabricated from simple parts, the [Handmade Rifle] is a tried and true weapon that has seen many a battle and likely the first weapon a marksman Engineer will handle.
 Due to its weight, [readying time is increased].
-
 # 2
 |[crafting]{source:""}|
 Fabricated with precision, the [Rifle] is an improvement over the handmade version.
 Its reduced weight allows [quicker readying time].
-
 # 3
 Available Modifications:<br>
 

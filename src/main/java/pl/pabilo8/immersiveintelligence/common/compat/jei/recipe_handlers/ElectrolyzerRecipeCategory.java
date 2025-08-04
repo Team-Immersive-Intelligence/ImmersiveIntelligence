@@ -25,8 +25,8 @@ import java.util.List;
 
 public class ElectrolyzerRecipeCategory extends IIRecipeCategory<ElectrolyzerRecipe, ElectrolyzerRecipeCategory.ElectrolyzerRecipeWrapper>
 {
-	private final IDrawable tankOverlay;
 	static ItemStack machineStack;
+	private final IDrawable tankOverlay;
 
 	public ElectrolyzerRecipeCategory(IGuiHelper helper)
 	{
@@ -36,7 +36,7 @@ public class ElectrolyzerRecipeCategory extends IIRecipeCategory<ElectrolyzerRec
 				ElectrolyzerRecipe.class,
 				new ItemStack(IIContent.blockMetalMultiblock0, 1, MetalMultiblocks0.ELECTROLYZER.getMeta())
 		);
-		tankOverlay =helper.drawableBuilder(texture, 0, 52, 20, 51)
+		tankOverlay = helper.drawableBuilder(texture, 0, 52, 20, 51)
 				.addPadding(-2, 2, -2, 2)
 				.build();
 		machineStack = new ItemStack(IIContent.blockMetalMultiblock0, 1, MetalMultiblocks0.ELECTROLYZER.getMeta());

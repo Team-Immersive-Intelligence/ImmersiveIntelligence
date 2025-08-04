@@ -13,9 +13,9 @@ import pl.pabilo8.immersiveintelligence.client.util.tmt.Shape2D;
  */
 public class ModelCoagulator extends ModelIIBase
 {
-	public ModelRendererTurbo[] tankRightModel, valveRightModel, pistonsRightModel, tankLeftModel, valveLeftModel, pistonsLeftModel, mixerModel, starterSlideModel, bucketHolderModel, bucketRailModel, bucketTimerModel, cartModel, cartWheelsModel, bucketModel, bucketHandleModel;
 	final int textureX = 256;
 	final int textureY = 256;
+	public ModelRendererTurbo[] tankRightModel, valveRightModel, pistonsRightModel, tankLeftModel, valveLeftModel, pistonsLeftModel, mixerModel, starterSlideModel, bucketHolderModel, bucketRailModel, bucketTimerModel, cartModel, cartWheelsModel, bucketModel, bucketHandleModel;
 
 	public ModelCoagulator()
 	{

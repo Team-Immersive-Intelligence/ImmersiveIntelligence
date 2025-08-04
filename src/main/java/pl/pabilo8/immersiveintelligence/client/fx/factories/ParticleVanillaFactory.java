@@ -25,9 +25,8 @@ import java.util.function.BiFunction;
 public class ParticleVanillaFactory extends ParticleFactory<ParticleVanilla> implements IReloadableModelContainer<ParticleVanillaFactory>
 {
 	private static ResLoc EMPTY_TEXTURE = ResLoc.of(IIReference.RES_TEXTURES, "empty").withExtension(ResLoc.EXT_PNG);
-
-	List<ResourceLocation> textures = new ArrayList<>();
 	public ResourceLocation[] compiledTextures;
+	List<ResourceLocation> textures = new ArrayList<>();
 
 	public ParticleVanillaFactory(BiFunction<World, Vec3d, ParticleVanilla> particleConstructor)
 	{

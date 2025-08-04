@@ -34,6 +34,11 @@ public interface IIIStateMappings<T extends Enum<T>>
 		return null;
 	}
 
+	enum DummyEnum
+	{
+		NULL
+	}
+
 	interface IIISingleMetaStateMappings extends IIIStateMappings<DummyEnum>
 	{
 		@Nullable
@@ -49,10 +54,5 @@ public interface IIIStateMappings<T extends Enum<T>>
 		{
 			return DummyEnum.values();
 		}
-	}
-
-	enum DummyEnum
-	{
-		NULL
 	}
 }

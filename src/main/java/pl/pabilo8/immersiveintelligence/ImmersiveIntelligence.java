@@ -33,10 +33,15 @@ public class ImmersiveIntelligence
 {
 	public static final String MODID = "immersiveintelligence";
 	public static final String VERSION = "@VERSION@";
-
+	//If anyone wants to acquire a righteously certified loicense:tm:, ask @Pabilo8, it is probable he can grant you one
+	private static final String[] alternativeCerts = {
+			"011e706a5b5f954d1a99bcded5c51c3cc104d915", // Gabriel
+			"068e23a5c5552d79ac66ece9dcaed54cfb74a992", // Automated Carver Device(tm)
+			"312cffade27b8eeb91fca5f5ae219495ebc86ab1", // Avalon
+			"6644e1691cd979e50755e3f86aa72a702ecd69d1", // Prism
+	};
 	@SidedProxy(clientSide = "pl.pabilo8.immersiveintelligence.client.ClientProxy", serverSide = "pl.pabilo8.immersiveintelligence.common.CommonProxy")
 	public static CommonProxy proxy;
-
 	@Instance(MODID)
 	public static ImmersiveIntelligence INSTANCE;
 
@@ -107,14 +112,6 @@ public class ImmersiveIntelligence
 	{
 		event.registerServerCommand(new CommandII());
 	}
-
-	//If anyone wants to acquire a righteously certified loicense:tm:, ask @Pabilo8, it is probable he can grant you one
-	private static final String[] alternativeCerts = {
-			"011e706a5b5f954d1a99bcded5c51c3cc104d915", // Gabriel
-			"068e23a5c5552d79ac66ece9dcaed54cfb74a992", // Automated Carver Device(tm)
-			"312cffade27b8eeb91fca5f5ae219495ebc86ab1", // Avalon
-			"6644e1691cd979e50755e3f86aa72a702ecd69d1", // Prism
-	};
 
 	@Mod.EventHandler
 	public void wrongSignature(FMLFingerprintViolationEvent event)

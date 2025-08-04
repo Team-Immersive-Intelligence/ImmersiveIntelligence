@@ -16,10 +16,10 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
 
 public class FlagpoleRenderer extends TileEntitySpecialRenderer<TileEntityFlagpole> implements IReloadableModelContainer<FlagpoleRenderer>
 {
-	private static ModelFlagpole model;
-	private static ModelFlagpole modelFlipped;
 	private static final String texture = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/flagpole.png";
 	private static final TileEntityBanner banner = new TileEntityBanner();
+	private static ModelFlagpole model;
+	private static ModelFlagpole modelFlipped;
 
 	@Override
 	public void render(TileEntityFlagpole te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
@@ -38,10 +38,10 @@ public class FlagpoleRenderer extends TileEntitySpecialRenderer<TileEntityFlagpo
 			{
 				Vec3i offset = te.facing.getDirectionVec();
 				GlStateManager.translate(offset.getX(), 0, offset.getZ());
-				GlStateManager.rotate(te.facing.getOpposite().getHorizontalAngle()*(te.facing.getAxis()==Axis.Z?1f:-1f), 0F, 1F, 0F);
+				GlStateManager.rotate(te.facing.getOpposite().getHorizontalAngle()*(te.facing.getAxis()==Axis.Z?1f: -1f), 0F, 1F, 0F);
 			}
 
-			for(ModelRendererTurbo mod : (te.mirrored?modelFlipped:model).baseModel)
+			for(ModelRendererTurbo mod : (te.mirrored?modelFlipped: model).baseModel)
 				mod.render();
 
 			if(!te.flag.isEmpty())
@@ -52,10 +52,10 @@ public class FlagpoleRenderer extends TileEntitySpecialRenderer<TileEntityFlagpo
 				if(res!=null)
 				{
 					ClientUtils.mc().getTextureManager().bindTexture(res);
-					GlStateManager.translate(0,5f-0.125f,0);
-					GlStateManager.rotate(90,0,0,1);
+					GlStateManager.translate(0, 5f-0.125f, 0);
+					GlStateManager.rotate(90, 0, 0, 1);
 
-					drawFlag(3,f);
+					drawFlag(3, f);
 					//ClientUtils.drawTexturedRect(0f,0f,1f,40/21f, 0.015625f,21/64f,0.015625f,1/40f);
 				}
 
@@ -85,26 +85,26 @@ public class FlagpoleRenderer extends TileEntitySpecialRenderer<TileEntityFlagpo
 	private void drawFlag(int n, double rot)
 	{
 		// TODO: 27.07.2021 fix uv
-		float length=40/(float)n;
+		float length = 40/(float)n;
 		for(int i = 0; i < n; i++)
 		{
-			GlStateManager.rotate((float)(rot*6.5f*n*(n%2==0?1:-1)),1,0,0);
-			ClientUtils.drawTexturedRect(0f,0f,1f,length/21f, 0.015625f,21/64f,0.015625f+(i*length/64f),(length*(i+1))/64f);
-			GlStateManager.translate(0f,0f,0.0625f);
-			ClientUtils.drawTexturedRect(0f,length/21f,1f,-length/21f, 0.015625f,21/64f,0.015625f+((i+1)*length/64f),(length*i)/64f);
+			GlStateManager.rotate((float)(rot*6.5f*n*(n%2==0?1: -1)), 1, 0, 0);
+			ClientUtils.drawTexturedRect(0f, 0f, 1f, length/21f, 0.015625f, 21/64f, 0.015625f+(i*length/64f), (length*(i+1))/64f);
+			GlStateManager.translate(0f, 0f, 0.0625f);
+			ClientUtils.drawTexturedRect(0f, length/21f, 1f, -length/21f, 0.015625f, 21/64f, 0.015625f+((i+1)*length/64f), (length*i)/64f);
 			GlStateManager.pushMatrix();
-			GlStateManager.rotate(90,0,1,0);
-			ClientUtils.drawTexturedRect(0f,0f,0.0625f,length/21f, 0.015625f, 0.015625f,0.015625f+(i*length/64f),(length*(i+1))/64f);
-			GlStateManager.translate(0f,0f,1f);
-			ClientUtils.drawTexturedRect(0f,length/21f,0.0625f,-length/21f, 0.328125f, 0.328125f,0.015625f+((i+1)*length/64f),(length*i)/64f);
+			GlStateManager.rotate(90, 0, 1, 0);
+			ClientUtils.drawTexturedRect(0f, 0f, 0.0625f, length/21f, 0.015625f, 0.015625f, 0.015625f+(i*length/64f), (length*(i+1))/64f);
+			GlStateManager.translate(0f, 0f, 1f);
+			ClientUtils.drawTexturedRect(0f, length/21f, 0.0625f, -length/21f, 0.328125f, 0.328125f, 0.015625f+((i+1)*length/64f), (length*i)/64f);
 
 			GlStateManager.popMatrix();
-			GlStateManager.translate(0f,length/24f,-0.0625f);
+			GlStateManager.translate(0f, length/24f, -0.0625f);
 		}
 		//GlStateManager.rotate(90,0,0,1);
-		GlStateManager.rotate(90,1,0,0);
-		GlStateManager.translate(0f,0f,-0.0625f);
-		ClientUtils.drawTexturedRect(0f,0f,1f,1.5f/21f, 0.015625f,0.015625f,0.625f, 0.625f);
+		GlStateManager.rotate(90, 1, 0, 0);
+		GlStateManager.translate(0f, 0f, -0.0625f);
+		ClientUtils.drawTexturedRect(0f, 0f, 1f, 1.5f/21f, 0.015625f, 0.015625f, 0.625f, 0.625f);
 
 	}
 

@@ -19,10 +19,10 @@ import java.util.function.Function;
  **/
 public class DecoEntryPanelBuilder<TYPE> extends DecoEntryPanel<TYPE>
 {
-	private int paddingX, paddingY;
 	private final Map<String, Function<DecoEntryPanelBuilder<TYPE>, GuiComponentDecoBase<?>>> components = new HashMap<>();
 	private final Map<String, GuiComponentDecoBase<?>> childrenMap = new HashMap<>();
 	private final Map<String, DecoLabel> labels = new HashMap<>();
+	private int paddingX, paddingY;
 	private BiConsumer<TYPE, DecoEntryPanelBuilder<TYPE>> elementApplyMethod;
 
 	public DecoEntryPanelBuilder()

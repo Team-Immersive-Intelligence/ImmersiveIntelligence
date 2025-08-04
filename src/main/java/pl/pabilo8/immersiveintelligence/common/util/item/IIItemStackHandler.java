@@ -23,15 +23,14 @@ public class IIItemStackHandler extends ItemStackHandler implements ICapabilityP
 {
 	private boolean first = true;
 	private ItemStack stack;
+	@Nullable
+	private Runnable onChange = null;
 
 	public IIItemStackHandler(ItemStack stack)
 	{
 		super();
 		this.stack = stack;
 	}
-
-	@Nullable
-	private Runnable onChange = null;
 
 	public void setTile(TileEntity tile)
 	{

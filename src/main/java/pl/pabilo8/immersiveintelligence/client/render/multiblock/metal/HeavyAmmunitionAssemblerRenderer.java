@@ -24,11 +24,11 @@ import java.util.HashMap;
 @RegisteredTileRenderer(name = "multiblock/heavy_ammunition_assembler", clazz = TileEntityHeavyAmmunitionAssembler.class)
 public class HeavyAmmunitionAssemblerRenderer extends IIMultiblockRenderer<TileEntityHeavyAmmunitionAssembler>
 {
+	final HashMap<IAmmoTypeItem<?, ?>, IIAnimationCompiledMap> productionAnimations = new HashMap<>();
 	AMT[] model;
 	AMT glass;
 	AMTBullet casing, core;
 	IIAnimationCompiledMap drawer1, drawer2, drawer3, drawer4;
-	final HashMap<IAmmoTypeItem<?, ?>, IIAnimationCompiledMap> productionAnimations = new HashMap<>();
 
 	@Override
 	public void drawAnimated(TileEntityHeavyAmmunitionAssembler te, BufferBuilder buf, float partialTicks, Tessellator tes)

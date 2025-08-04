@@ -31,6 +31,7 @@ import javax.annotation.Nullable;
 
 public class TileEntityHeavyAmmunitionAssembler extends TileEntityMultiblockProductionSingle<TileEntityHeavyAmmunitionAssembler, AmmunitionAssemblerRecipe> implements ITactileListener
 {
+	public static final int SLOT_CORE = 0, SLOT_CASING = 1, SLOT_OUTPUT = 2;
 	@SyncNBT
 	public MultiblockInteractablePart drawer1 = new MultiblockInteractablePart(20);
 	@SyncNBT
@@ -39,18 +40,14 @@ public class TileEntityHeavyAmmunitionAssembler extends TileEntityMultiblockProd
 	public MultiblockInteractablePart drawer3 = new MultiblockInteractablePart(19);
 	@SyncNBT
 	public MultiblockInteractablePart drawer4 = new MultiblockInteractablePart(21);
-	private TactileHandler tactileHandler;
-
 	public String NBT_KEY_EFFECT = "effect";
-
-	public static final int SLOT_CORE = 0, SLOT_CASING = 1, SLOT_OUTPUT = 2;
 	public FuseType fuse = FuseType.CONTACT;
 	@SyncNBT
 	public int fuseConfig = 0; //depends on fuse type: time for timed fuse, distance for proximity fuse
-
 	//inventory: core, casing
 	IItemHandler coreInputHandler = getSingleInventoryHandler(SLOT_CORE, true, false);
 	IItemHandler casingInputHandler = getSingleInventoryHandler(SLOT_CASING, true, false);
+	private TactileHandler tactileHandler;
 
 	public TileEntityHeavyAmmunitionAssembler()
 	{

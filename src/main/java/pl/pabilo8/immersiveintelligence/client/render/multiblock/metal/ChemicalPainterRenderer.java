@@ -34,8 +34,8 @@ import java.util.List;
 public class ChemicalPainterRenderer extends TileEntitySpecialRenderer<TileEntityChemicalPainter> implements IReloadableModelContainer<ChemicalPainterRenderer>
 {
 	private static final ResourceLocation TEXTURE = new ResourceLocation(ImmersiveIntelligence.MODID+":textures/blocks/multiblock/chemical_painter.png");
-	private static IConveyorBelt con;
 	static RenderItem renderItem = ClientUtils.mc().getRenderItem();
+	private static IConveyorBelt con;
 	private static ModelChemicalPainter model;
 	private static ModelChemicalPainter modelFlipped;
 

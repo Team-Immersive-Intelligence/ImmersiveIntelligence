@@ -13,10 +13,9 @@ import pl.pabilo8.immersiveintelligence.client.util.tmt.TmtUtil;
 public class ModelArithmeticLogicMachine extends ModelIIBase
 {
 
+	public ModelRendererTurbo[] doorRightModel, doorLeftModel, chip1Model, chip2Model, chip3Model, chip4Model;
 	int textureX = 256;
 	int textureY = 256;
-
-	public ModelRendererTurbo[] doorRightModel, doorLeftModel, chip1Model, chip2Model, chip3Model, chip4Model;
 
 	public ModelArithmeticLogicMachine() //Same as Filename
 	{

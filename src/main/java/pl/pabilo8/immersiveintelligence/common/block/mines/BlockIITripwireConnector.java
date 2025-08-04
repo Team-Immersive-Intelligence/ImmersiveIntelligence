@@ -20,12 +20,6 @@ import javax.annotation.Nullable;
  */
 public class BlockIITripwireConnector extends BlockIITileProvider<IIBlockTypesTripWireConnector>
 {
-	public enum IIBlockTypesTripWireConnector implements IITileProviderEnum
-	{
-		@EnumTileProvider(tile = TileEntityTripwireConnector.class)
-		MAIN
-	}
-
 	public BlockIITripwireConnector()
 	{
 		super("tripwire_connector", Material.WOOD, PropertyEnum.create("type", IIBlockTypesTripWireConnector.class), ItemBlockIIBase::new,
@@ -39,5 +33,11 @@ public class BlockIITripwireConnector extends BlockIITileProvider<IIBlockTypesTr
 	public String getMappingsExtension(int meta, boolean itemBlock)
 	{
 		return null;
+	}
+
+	public enum IIBlockTypesTripWireConnector implements IITileProviderEnum
+	{
+		@EnumTileProvider(tile = TileEntityTripwireConnector.class)
+		MAIN
 	}
 }

@@ -24,9 +24,11 @@ import javax.annotation.Nullable;
  */
 public class IIArmorItemStackHandler extends ItemStackHandler implements ICapabilityProvider
 {
+	EnergyHelper.ItemEnergyStorage energyStorage;
 	private boolean first = true;
 	private ItemStack stack;
-	EnergyHelper.ItemEnergyStorage energyStorage;
+	@Nullable
+	private Runnable onChange = null;
 
 	public IIArmorItemStackHandler(ItemStack stack)
 	{
@@ -34,9 +36,6 @@ public class IIArmorItemStackHandler extends ItemStackHandler implements ICapabi
 		this.stack = stack;
 		this.energyStorage = new EnergyHelper.ItemEnergyStorage(stack);
 	}
-
-	@Nullable
-	private Runnable onChange = null;
 
 	public void setTile(TileEntity tile)
 	{

@@ -23,11 +23,9 @@ import java.util.stream.Collectors;
  */
 public class PaintingRecipe extends MultiblockRecipe
 {
+	public static LinkedList<PaintingRecipe> recipeList = new LinkedList<>();
 	public final BiFunction<IIColor, ItemStack, ItemStack> process;
 	public final IngredientStack itemInput;
-
-	public static LinkedList<PaintingRecipe> recipeList = new LinkedList<>();
-
 	int paintAmount;
 	int totalProcessTime;
 	int totalProcessEnergy;
@@ -42,17 +40,6 @@ public class PaintingRecipe extends MultiblockRecipe
 
 		this.inputList = Lists.newArrayList(this.itemInput);
 		this.outputList = getExampleColoredItems();
-	}
-
-	private NonNullList<ItemStack> getExampleColoredItems()
-	{
-		NonNullList<ItemStack> list = NonNullList.create();
-		Set<ItemStack> collect = Arrays.stream(EnumDyeColor.values())
-				.map(IIColor::fromDye)
-				.map(integer -> process.apply(integer, itemInput.getExampleStack().copy()))
-				.collect(Collectors.toSet());
-		list.addAll(collect);
-		return list;
 	}
 
 	public static PaintingRecipe addRecipe(BiFunction<IIColor, ItemStack, ItemStack> process, IngredientStack itemInput, int energy, int time, int paintAmount)
@@ -83,6 +70,25 @@ public class PaintingRecipe extends MultiblockRecipe
 		return recipeList.stream().filter(recipe -> recipe.itemInput.matchesItemStack(input)).findFirst().orElse(null);
 	}
 
+	public static PaintingRecipe loadFromNBT(NBTTagCompound nbt)
+	{
+		IngredientStack item_input = IngredientStack.readFromNBT(nbt.getCompoundTag("item_input"));
+		FluidStack fluid_input = FluidStack.loadFluidStackFromNBT(nbt.getCompoundTag("fluid_input"));
+
+		return findRecipe(item_input.stack);
+	}
+
+	private NonNullList<ItemStack> getExampleColoredItems()
+	{
+		NonNullList<ItemStack> list = NonNullList.create();
+		Set<ItemStack> collect = Arrays.stream(EnumDyeColor.values())
+				.map(IIColor::fromDye)
+				.map(integer -> process.apply(integer, itemInput.getExampleStack().copy()))
+				.collect(Collectors.toSet());
+		list.addAll(collect);
+		return list;
+	}
+
 	@Override
 	public NonNullList<ItemStack> getActualItemOutputs(TileEntity te)
 	{
@@ -102,14 +108,6 @@ public class PaintingRecipe extends MultiblockRecipe
 	{
 		nbt.setTag("item_input", itemInput.writeToNBT(new NBTTagCompound()));
 		return nbt;
-	}
-
-	public static PaintingRecipe loadFromNBT(NBTTagCompound nbt)
-	{
-		IngredientStack item_input = IngredientStack.readFromNBT(nbt.getCompoundTag("item_input"));
-		FluidStack fluid_input = FluidStack.loadFluidStackFromNBT(nbt.getCompoundTag("fluid_input"));
-
-		return findRecipe(item_input.stack);
 	}
 
 	public int getTotalProcessTime()

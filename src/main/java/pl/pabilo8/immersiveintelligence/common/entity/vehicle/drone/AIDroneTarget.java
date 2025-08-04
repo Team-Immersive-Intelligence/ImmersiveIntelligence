@@ -16,15 +16,13 @@ import java.util.function.Predicate;
  */
 public class AIDroneTarget<T extends Entity> extends AIDroneBase
 {
-	private final Class<T> targetClass;
 	protected final Predicate<? super T> targetEntitySelector;
 	protected final Sorter sorter;
-
+	private final Class<T> targetClass;
 	protected boolean seesThroughWalls = false;
+	protected T targetEntity = null;
 	private int targetSearchStatus;
 	private int targetUnseenTicks;
-
-	protected T targetEntity = null;
 
 	public AIDroneTarget(EntityDrone drone, Class<T> targetClass, Predicate<? super T> targetEntitySelector)
 	{

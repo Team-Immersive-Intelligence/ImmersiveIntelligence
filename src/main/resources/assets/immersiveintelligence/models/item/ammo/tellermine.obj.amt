@@ -1,7 +1,7 @@
 {
-	"origins": {
-		"casing": [0, 2, 0],
-		"core_canister": [0, 3, 0]
-	},
-	"hierarchy": {}
+  "origins": {
+    "casing": [0, 2, 0],
+    "core_canister": [0, 3, 0]
+  },
+  "hierarchy": {}
 }

@@ -31,9 +31,9 @@ import static pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.T
  */
 public class EntityTripodPeriscope extends Entity implements IEntityZoomProvider, IEntityAdditionalSpawnData
 {
+	private static final IAdvancedZoomTool ZOOM = new TripodZoom();
 	public int setupTime = 0;
 	public float periscopeYaw = 0, periscopeNextYaw = 0;
-	private static final IAdvancedZoomTool ZOOM = new TripodZoom();
 
 	public EntityTripodPeriscope(World worldIn)
 	{

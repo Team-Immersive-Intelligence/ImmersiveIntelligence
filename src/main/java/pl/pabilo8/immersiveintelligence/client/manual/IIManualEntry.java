@@ -167,13 +167,13 @@ public class IIManualEntry extends ManualEntry
 		return -1;
 	}
 
-	public void setFolder(IIManualPageFolder folder)
-	{
-		this.folder = folder;
-	}
-
 	public IIManualPageFolder getFolder()
 	{
 		return folder;
+	}
+
+	public void setFolder(IIManualPageFolder folder)
+	{
+		this.folder = folder;
 	}
 }

@@ -24,4 +24,5 @@ The output Packet looks as follows:
 |[data_packet]{h:22,data:{j:{Type:"integer",Value:1000},i:{Type:"integer",Value:2000}}}|
 The variables that contained [queries] were replaced with [answers] to them. One of the queries was invalid (there was a typo), therefore [nothing](data_types.md#null) was returned.
 # scenario3
-Now it's up to the Engineer *(that's you!)* to decide what to do with these received outputs. *Perhaps it's a starting point of an automated supply system?*
+Now it's up to the Engineer *(that's you!)* to decide what to do with these received outputs. *Perhaps it's a starting
+point of an automated supply system?*

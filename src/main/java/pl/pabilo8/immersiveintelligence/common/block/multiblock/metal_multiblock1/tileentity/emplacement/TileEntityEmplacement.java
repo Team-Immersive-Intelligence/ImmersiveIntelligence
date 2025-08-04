@@ -101,11 +101,11 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 	public int progress = 0, upgradeProgress = 0, clientUpgradeProgress = 0;
 	public EmplacementWeapon<?> currentWeapon = null;
 	public boolean isShooting = false;
+	public boolean sendAttackSignal = false;
+	EmplacementTask task = new EmplacementTaskCustom(defaultTaskNBT[defaultTargetMode]);
 	@Nullable
 	private MachineUpgrade currentlyInstalled = null;
-	EmplacementTask task = new EmplacementTaskCustom(defaultTaskNBT[defaultTargetMode]);
 	private float[] target = null;
-	public boolean sendAttackSignal = false;
 
 	//Config, -1 is null, 0-3 are valid
 	//public String defaultTargetMode = "target_mobs";

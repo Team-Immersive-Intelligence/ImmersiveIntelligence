@@ -37,18 +37,14 @@ public class GuiChemicalPainter extends GuiIEContainerBase implements ISlider
 	public static final ResourceLocation TEXTURE = new ResourceLocation("immersiveintelligence:textures/gui/chemical_painter.png");
 	public static final ResourceLocation TEXTURE_ICONS = new ResourceLocation("immersiveintelligence:textures/gui/emplacement_icons.png");
 	TileEntityChemicalPainter tile;
-
+	GuiButtonIE buttonModeRGB, buttonModeCMYK, buttonModeHSV;
+	GuiButtonIE buttonActiveColor;
+	int colorDelay = 0;
 	private DecoSlider sliderRed, sliderGreen, sliderBlue;
 	private DecoSlider sliderCyan, sliderMagenta, sliderYellow, sliderBlack;
 	private DecoSlider sliderHue, sliderSaturation, sliderValue;
-
 	private ColorMode colorMode = ColorMode.RGB;
 	private IIColor color;
-
-	GuiButtonIE buttonModeRGB, buttonModeCMYK, buttonModeHSV;
-
-	GuiButtonIE buttonActiveColor;
-	int colorDelay = 0;
 
 	public GuiChemicalPainter(EntityPlayer player, TileEntityChemicalPainter tile)
 	{

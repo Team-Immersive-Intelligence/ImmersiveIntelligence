@@ -25,8 +25,8 @@
       16, 13, 16
     ],
     "item_hatch": [
-        0, 2, 0,
-        16, 12, 4
+      0, 2, 0,
+      16, 12, 4
     ],
     "energy_box": [
       2, 0, 1,
@@ -43,7 +43,7 @@
     "19,23": "tank_bottom",
     "13,14": ["breadbox_back", "breadbox_front"],
     "15,16": "item_hatch",
-    "46": ["energy_box","energy_top"]
+    "46": ["energy_box", "energy_top"]
   },
   "poi": {
     "item_inputs": [15],

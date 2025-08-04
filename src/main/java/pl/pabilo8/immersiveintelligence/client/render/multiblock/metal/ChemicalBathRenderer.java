@@ -25,10 +25,10 @@ import javax.annotation.Nullable;
  */
 public class ChemicalBathRenderer extends TileEntitySpecialRenderer<TileEntityChemicalBath> implements IReloadableModelContainer<ChemicalBathRenderer>
 {
+	private static final String TEXTURE = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/chemical_bath.png";
 	static RenderItem renderItem = ClientUtils.mc().getRenderItem();
 	private static ModelChemicalBath model;
 	private static ModelChemicalBath modelFlipped;
-	private static final String TEXTURE = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/chemical_bath.png";
 
 	@Override
 	public void render(@Nullable TileEntityChemicalBath te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)

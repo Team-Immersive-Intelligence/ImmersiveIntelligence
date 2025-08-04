@@ -39,16 +39,16 @@ public class MessageIITileSync extends IIMessage
 		this(tile, getNBT(tile));
 	}
 
+	public MessageIITileSync()
+	{
+
+	}
+
 	public static NBTTagCompound getNBT(TileEntityIEBase tile)
 	{
 		NBTTagCompound nbt = new NBTTagCompound();
 		tile.writeCustomNBT(nbt, false);
 		return nbt;
-	}
-
-	public MessageIITileSync()
-	{
-
 	}
 
 	@Override

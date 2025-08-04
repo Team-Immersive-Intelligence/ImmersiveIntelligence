@@ -45,16 +45,15 @@ import java.util.function.Consumer;
 public abstract class TileEntityMultiblockIIBase<T extends TileEntityMultiblockIIBase<T>> extends TileEntityMultiblockPart<T> implements IMirrorAble, IIEInventory, IAdvancedBounds
 {
 	public static final String KEY_SYNC_AABB = "_sync_aabb";
+	public static final String KEY_SYNC_ALL_VALUES = "_sync_all_values";
 	//The multiblock INSTANCE, for easy access
 	protected final MultiblockStuctureBase<T> multiblock;
-	//Master multiblock cached for faster access
-	private T master = null;
 
 
 	//--- Reference Variables ---//
-
-	public static final String KEY_SYNC_ALL_VALUES = "_sync_all_values";
 	protected List<AxisAlignedBB> aabb = null;
+	//Master multiblock cached for faster access
+	private T master = null;
 
 	protected TileEntityMultiblockIIBase(MultiblockStuctureBase<T> multiblock)
 	{

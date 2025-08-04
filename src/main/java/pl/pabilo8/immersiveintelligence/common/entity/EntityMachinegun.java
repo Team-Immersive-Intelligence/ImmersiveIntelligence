@@ -72,12 +72,12 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 	private static final DataParameter<Integer> dataMarkerFluidCap = EntityDataManager.createKey(EntityMachinegun.class, DataSerializers.VARINT);
 
 	private final MachinegunZoom SCOPE = new MachinegunZoom();
+	private final AmmoFactory<EntityAmmoProjectile> ammoFactory;
 	//Second magazine is an upgrade
 	public ItemStack gun = ItemStack.EMPTY, magazine1 = ItemStack.EMPTY, magazine2 = ItemStack.EMPTY;
 	public int bulletDelay = 0, bulletDelayMax = 0, clipReload = 0, setupTime = Machinegun.setupTime, maxSetupTime = Machinegun.setupTime, overheating = 0, tankCapacity = 0, bullets1 = 0, bullets2 = 0;
 	public float setYaw = 0, recoilYaw = 0, recoilPitch = 0, gunYaw = 0, gunPitch = 0, maxRecoilPitch = Machinegun.recoilHorizontal, maxRecoilYaw = Machinegun.recoilVertical, currentlyLoaded = -1, shieldStrength = 0f, maxShieldStrength = 0f;
 	public boolean shoot = false, aiming = false, hasSecondMag = false, mag1Empty = false, mag2Empty = false, hasInfrared = false, loadedFromCrate = false, overheated = false, tripod = false;
-	private final AmmoFactory<EntityAmmoProjectile> ammoFactory;
 	public FluidTank tank = new FluidTank(tankCapacity);
 
 	AxisAlignedBB aabb = new AxisAlignedBB(0.15d, 0d, 0.15d, 0.85d, 0.65d, 0.85d).offset(-0.5, 0, -0.5);
@@ -1089,6 +1089,12 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 		return gun;
 	}
 
+	@Override
+	public double getYOffset()
+	{
+		return isRiding()?1D: super.getYOffset();
+	}
+
 	private static class MachinegunZoom implements IAdvancedZoomTool
 	{
 		@Override
@@ -1161,11 +1167,5 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 		{
 			return machinegun.tank.getTankProperties();
 		}
-	}
-
-	@Override
-	public double getYOffset()
-	{
-		return isRiding()?1D: super.getYOffset();
 	}
 }

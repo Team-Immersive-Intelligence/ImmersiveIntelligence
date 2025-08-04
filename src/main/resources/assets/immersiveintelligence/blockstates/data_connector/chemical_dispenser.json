@@ -6,7 +6,9 @@
       "texture": "immersiveengineering:blocks/storage_aluminum",
       "particle": "immersiveengineering:blocks/storage_aluminum"
     },
-    "custom": { "flip-v": true }
+    "custom": {
+      "flip-v": true
+    }
   },
   "variants": {
     "inventory,type=chemical_dispenser": [
@@ -28,24 +30,60 @@
     "facing": {
       "down": {
         "transform": {
-          "rotation": [{"y": 90 }]
+          "rotation": [
+            {
+              "y": 90
+            }
+          ]
         }
       },
-      "up": { "transform": {
-        "rotation": [{"y": 90 },{"z": 180 }]
-      }},
-      "north": { "transform": {
-        "rotation": {"x": 90 }
-      }},
-      "south": { "transform": {
-        "rotation": {"x": -90 }
-      }},
-      "west": { "transform": {
-        "rotation": [{"y": 90 },{"x": 90 }]
-      }},
-      "east": { "transform": {
-        "rotation": [{"y": -90 },{"x": 90 }]
-      }}
+      "up": {
+        "transform": {
+          "rotation": [
+            {
+              "y": 90
+            }, {
+              "z": 180
+            }
+          ]
+        }
+      },
+      "north": {
+        "transform": {
+          "rotation": {
+            "x": 90
+          }
+        }
+      },
+      "south": {
+        "transform": {
+          "rotation": {
+            "x": -90
+          }
+        }
+      },
+      "west": {
+        "transform": {
+          "rotation": [
+            {
+              "y": 90
+            }, {
+              "x": 90
+            }
+          ]
+        }
+      },
+      "east": {
+        "transform": {
+          "rotation": [
+            {
+              "y": -90
+            }, {
+              "x": 90
+            }
+          ]
+        }
+      }
     },
     "boolean0": {
       "false": {},

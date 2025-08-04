@@ -11,7 +11,9 @@
     "inventory,type=ammunition_crate": [
       {
         "model": "immersiveintelligence:metal_device/effect_crate/ammunition_crate_inv.obj",
-        "custom": { "flip-v": true }
+        "custom": {
+          "flip-v": true
+        }
       }
     ],
     "type": {

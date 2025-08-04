@@ -16,8 +16,8 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
  */
 public class FuelStationRenderer extends TileEntitySpecialRenderer<TileEntityFuelStation> implements IReloadableModelContainer<FuelStationRenderer>
 {
-	private static ModelFuelStation model;
 	private static final String TEXTURE = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/fuel_station.png";
+	private static ModelFuelStation model;
 	private static ModelHeavyInserter modelInserter;
 
 	@Override

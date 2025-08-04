@@ -46,14 +46,13 @@ public class TileEntityAlarmSiren extends TileEntityImmersiveConnectable
 {
 	public int redstoneChannel = 0;
 	public boolean rsDirty = false;
-
-	EnumFacing facing = EnumFacing.NORTH;
-
 	public boolean active = false;
 	public float soundVolume = 1f;
-
 	protected RedstoneWireNetwork wireNetwork = new RedstoneWireNetwork().add(this);
+	EnumFacing facing = EnumFacing.NORTH;
 	private boolean refreshWireNetwork = false;
+	@SideOnly(Side.CLIENT)
+	private AxisAlignedBB renderAABB;
 
 	@Override
 	public void update()
@@ -117,15 +116,15 @@ public class TileEntityAlarmSiren extends TileEntityImmersiveConnectable
 	}
 
 	@Override
-	public void setNetwork(RedstoneWireNetwork net)
-	{
-		wireNetwork = net;
-	}
-
-	@Override
 	public RedstoneWireNetwork getNetwork()
 	{
 		return wireNetwork;
+	}
+
+	@Override
+	public void setNetwork(RedstoneWireNetwork net)
+	{
+		wireNetwork = net;
 	}
 
 	@Override
@@ -233,9 +232,6 @@ public class TileEntityAlarmSiren extends TileEntityImmersiveConnectable
 	{
 		refreshWireNetwork = false;
 	}
-
-	@SideOnly(Side.CLIENT)
-	private AxisAlignedBB renderAABB;
 
 	@SideOnly(Side.CLIENT)
 	@Override

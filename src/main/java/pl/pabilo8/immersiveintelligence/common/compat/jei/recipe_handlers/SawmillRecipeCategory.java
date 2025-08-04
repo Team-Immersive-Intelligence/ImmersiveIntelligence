@@ -31,8 +31,8 @@ import java.util.stream.Collectors;
 
 /**
  * @author Pabilo8
- * @since 29.09.2021
  * @author Avalon
+ * @since 29.09.2021
  * @since 29-11-2024
  */
 
@@ -112,32 +112,33 @@ public class SawmillRecipeCategory extends IIRecipeCategory<SawmillRecipe, Sawmi
 		}
 
 		@Override
-		public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
+		public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY)
+		{
 
-				// Render the multiblock model
-				GlStateManager.pushMatrix();
-				GlStateManager.enableDepth();
-				GlStateManager.translate(85F, 13f, 150.5F);
-				GlStateManager.rotate(50, 0, 1, 0);
-				GlStateManager.rotate(8.5f, 1, 0, 0);
-				GlStateManager.rotate(-12.5f, 0, 0, 1);
-				GlStateManager.scale(65, -65, 65);
-				minecraft.getRenderItem().renderItem(machineStack, TransformType.GUI);
-				GlStateManager.popMatrix();
+			// Render the multiblock model
+			GlStateManager.pushMatrix();
+			GlStateManager.enableDepth();
+			GlStateManager.translate(85F, 13f, 150.5F);
+			GlStateManager.rotate(50, 0, 1, 0);
+			GlStateManager.rotate(8.5f, 1, 0, 0);
+			GlStateManager.rotate(-12.5f, 0, 0, 1);
+			GlStateManager.scale(65, -65, 65);
+			minecraft.getRenderItem().renderItem(machineStack, TransformType.GUI);
+			GlStateManager.popMatrix();
 
-				// Render slots for inputs and outputs
-				ClientUtils.drawSlot(0, 12, 16, 16);    // Input
-				ClientUtils.drawSlot(115, 12, 16, 16); // Main output
-				ClientUtils.drawSlot(135, 12, 16, 16); // Secondary output
+			// Render slots for inputs and outputs
+			ClientUtils.drawSlot(0, 12, 16, 16);    // Input
+			ClientUtils.drawSlot(115, 12, 16, 16); // Main output
+			ClientUtils.drawSlot(135, 12, 16, 16); // Secondary output
 
-				// Render energy and time
-				drawEnergyTimeInfo(minecraft, 0, recipeHeight - 26);
+			// Render energy and time
+			drawEnergyTimeInfo(minecraft, 0, recipeHeight-26);
 
-				// Clear depth buffer and render sawblade on top
-				GlStateManager.pushMatrix();
-				GlStateManager.clear(GL11.GL_DEPTH_BUFFER_BIT); // Clear the depth buffer
-				ClientUtils.drawSlot(64, 8, 16, 16); // Render sawblade slot
-				GlStateManager.popMatrix();
+			// Clear depth buffer and render sawblade on top
+			GlStateManager.pushMatrix();
+			GlStateManager.clear(GL11.GL_DEPTH_BUFFER_BIT); // Clear the depth buffer
+			ClientUtils.drawSlot(64, 8, 16, 16); // Render sawblade slot
+			GlStateManager.popMatrix();
 		}
 
 		@Override

@@ -22,17 +22,14 @@ import java.util.*;
  */
 public class PrecisionAssemblerRecipe extends MultiblockRecipe
 {
+	public static HashMap<String, IPrecisionTool> toolMap = new HashMap<>();
+	public static ArrayList<PrecisionAssemblerRecipe> recipeList = new ArrayList<>();
 	public float timeModifier;
-
 	public ItemStack output;
 	public ItemStack trashOutput;
 	public IngredientStack[] inputs;
 	public String[] tools;
 	public String[] animations;
-
-	public static HashMap<String, IPrecisionTool> toolMap = new HashMap<>();
-	public static ArrayList<PrecisionAssemblerRecipe> recipeList = new ArrayList<>();
-
 	int totalProcessTime;
 	int totalProcessEnergy;
 
@@ -187,6 +184,26 @@ public class PrecisionAssemblerRecipe extends MultiblockRecipe
 		return list;
 	}
 
+	public static PrecisionAssemblerRecipe loadFromNBT(NBTTagCompound nbt)
+	{
+		//Not needed?
+		return null;
+	}
+
+	public static void registerToolType(String name, IPrecisionTool tool)
+	{
+		toolMap.put(name, tool);
+	}
+
+	public static ItemStack getExampleToolStack(String name)
+	{
+		if(toolMap.containsKey(name))
+		{
+			return toolMap.get(name).getToolPresentationStack(name);
+		}
+		return ItemStack.EMPTY;
+	}
+
 	@Override
 	public int getMultipleProcessTicks()
 	{
@@ -203,12 +220,6 @@ public class PrecisionAssemblerRecipe extends MultiblockRecipe
 		return nbt;
 	}
 
-	public static PrecisionAssemblerRecipe loadFromNBT(NBTTagCompound nbt)
-	{
-		//Not needed?
-		return null;
-	}
-
 	public int getTotalProcessTime()
 	{
 		return this.totalProcessTime;
@@ -217,19 +228,5 @@ public class PrecisionAssemblerRecipe extends MultiblockRecipe
 	public int getTotalProcessEnergy()
 	{
 		return this.totalProcessEnergy;
-	}
-
-	public static void registerToolType(String name, IPrecisionTool tool)
-	{
-		toolMap.put(name, tool);
-	}
-
-	public static ItemStack getExampleToolStack(String name)
-	{
-		if(toolMap.containsKey(name))
-		{
-			return toolMap.get(name).getToolPresentationStack(name);
-		}
-		return ItemStack.EMPTY;
 	}
 }

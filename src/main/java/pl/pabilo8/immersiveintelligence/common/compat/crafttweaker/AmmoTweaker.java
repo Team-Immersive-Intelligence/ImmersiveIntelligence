@@ -81,6 +81,25 @@ public class AmmoTweaker
 		});
 	}
 
+	@ZenMethod
+	public static void removeCore(String name)
+	{
+		AmmoRegistry.unregisterCore(name);
+	}
+
+	@ZenMethod
+	public static void removeComponent(String name)
+	{
+		AmmoRegistry.unregisterComponent(name);
+	}
+
+	@ZenClass("mods."+ImmersiveIntelligence.MODID+".ammo.IComponentFunction")
+	@ZenRegister
+	public interface IComponentFunction
+	{
+		void process(IWorld world, IVector3d pos, IVector3d dir, String effectShape, float amount, IData nbt);
+	}
+
 	@ZenClass("mods."+ImmersiveIntelligence.MODID+".ammo.CoreMaterialBuilder")
 	@ZenRegister
 	public static class CoreMaterialBuilder
@@ -295,24 +314,5 @@ public class AmmoTweaker
 				return "Adding Bullet Core for material "+component.name;
 			}
 		}
-	}
-
-	@ZenClass("mods."+ImmersiveIntelligence.MODID+".ammo.IComponentFunction")
-	@ZenRegister
-	public interface IComponentFunction
-	{
-		void process(IWorld world, IVector3d pos, IVector3d dir, String effectShape, float amount, IData nbt);
-	}
-
-	@ZenMethod
-	public static void removeCore(String name)
-	{
-		AmmoRegistry.unregisterCore(name);
-	}
-
-	@ZenMethod
-	public static void removeComponent(String name)
-	{
-		AmmoRegistry.unregisterComponent(name);
 	}
 }

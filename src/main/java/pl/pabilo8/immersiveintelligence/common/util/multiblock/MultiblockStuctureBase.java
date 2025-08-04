@@ -72,6 +72,10 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 	 */
 	private final String name;
 	/**
+	 * Offset for trigger block
+	 */
+	protected Vec3i offset = Vec3i.NULL_VECTOR;
+	/**
 	 * The .nbt file
 	 */
 	private Template template;
@@ -87,10 +91,6 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 	 * Check array for blockstates
 	 */
 	private IngredientStack[][][] checkStructure = new IngredientStack[0][0][0];
-	/**
-	 * Offset for trigger block
-	 */
-	protected Vec3i offset = Vec3i.NULL_VECTOR;
 	/**
 	 * Multiblock dimensions
 	 */
@@ -119,6 +119,9 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 	 * Whether this structure requires an infinite bounding box in rendering due to its size
 	 */
 	private boolean massiveStructure;
+	private T te;
+	@SideOnly(Side.CLIENT)
+	private TileEntitySpecialRenderer<T> tesr;
 
 	public MultiblockStuctureBase(ResourceLocation loc)
 	{
@@ -508,10 +511,6 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 	{
 		return true;
 	}
-
-	private T te;
-	@SideOnly(Side.CLIENT)
-	private TileEntitySpecialRenderer<T> tesr;
 
 	@Override
 	@SideOnly(Side.CLIENT)

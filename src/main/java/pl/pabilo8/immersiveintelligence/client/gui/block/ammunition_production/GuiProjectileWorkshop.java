@@ -37,10 +37,10 @@ import java.util.Arrays;
 public class GuiProjectileWorkshop extends GuiAmmunitionBase<TileEntityProjectileWorkshop>
 {
 	DecoDropdown<String> typeList = null, bulletList = null;
-	private GuiTextField valueEdit;
 	ItemStack exampleStack = ItemStack.EMPTY;
 	boolean hasFillerUpgrade;
 	int coreIconID = 0;
+	private GuiTextField valueEdit;
 
 	public GuiProjectileWorkshop(EntityPlayer player, TileEntityProjectileWorkshop tile)
 	{

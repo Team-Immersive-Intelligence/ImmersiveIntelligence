@@ -77,6 +77,83 @@ public class IICreativeTab extends CreativeTabs
 		super(name);
 	}
 
+	/**
+	 * Adds empty slots to the list to fill the entire row
+	 *
+	 * @param list The list to add to
+	 */
+	private static void tabNewLine(NonNullList<ItemStack> list)
+	{
+		int missing = (9-list.size()%9)%9;
+		for(int i = 0; i < missing; i++)
+			list.add(ItemStack.EMPTY);
+	}
+
+	private static ItemStack getMagazine(Magazines magazine, String name, ItemStack... bullets)
+	{
+		return IIContent.itemBulletMagazine.getMagazine(magazine, bullets).setStackDisplayName(name);
+	}
+
+	private static ItemStack getColorMagazine(Magazines magazine, String name, IIColor... colors)
+	{
+		ItemStack[] bullets = new ItemStack[colors.length];
+		for(int i = 0; i < colors.length; i++)
+		{
+			//get bullet stack
+			ItemStack stack = magazine.ammo.getAmmoStack(IIContent.ammoCoreIron, CoreType.PIERCING, FuseType.CONTACT, IIContent.ammoComponentTracerPowder)
+					.setStackDisplayName(getGermanColorName(colors[i])+"markierungspatrone");
+			//set tracer color
+			magazine.ammo.setComponentNBT(stack, EasyNBT.parseNBT("{colour: %s}", colors[i]));
+			//set paint color
+			magazine.ammo.setPaintColor(stack, colors[i]);
+			bullets[i] = stack;
+		}
+		return getMagazine(magazine, name, bullets);
+	}
+
+	/**
+	 * Deutsche Qualität
+	 */
+	private static String getGermanColorName(IIColor color)
+	{
+		switch(color.getDyeColor())
+		{
+			case WHITE:
+				return "Weiß";
+			case ORANGE:
+				return "Orange";
+			case MAGENTA:
+				return "Magenta";
+			case LIGHT_BLUE:
+				return "Hellblau";
+			case YELLOW:
+				return "Gelb";
+			case LIME:
+				return "Lime";
+			case PINK:
+				return "Rosa";
+			case GRAY:
+				return "Grau";
+			case SILVER:
+				return "Silber";
+			case CYAN:
+				return "Cyan";
+			case PURPLE:
+				return "Purpur";
+			case BLUE:
+				return "Blau";
+			case BROWN:
+				return "Braun";
+			case GREEN:
+				return "Grün";
+			case RED:
+				return "Rot";
+			default:
+			case BLACK:
+				return "Schwarz";
+		}
+	}
+
 	@Override
 	@Nonnull
 	public ItemStack getTabIconItem()
@@ -614,18 +691,6 @@ public class IICreativeTab extends CreativeTabs
 		});
 	}
 
-	/**
-	 * Adds empty slots to the list to fill the entire row
-	 *
-	 * @param list The list to add to
-	 */
-	private static void tabNewLine(NonNullList<ItemStack> list)
-	{
-		int missing = (9-list.size()%9)%9;
-		for(int i = 0; i < missing; i++)
-			list.add(ItemStack.EMPTY);
-	}
-
 	@Nullable
 	private AmmoComponent getFluidComponent(String fluidName)
 	{
@@ -659,71 +724,6 @@ public class IICreativeTab extends CreativeTabs
 
 		list.add(stack);
 		return stack;
-	}
-
-	private static ItemStack getMagazine(Magazines magazine, String name, ItemStack... bullets)
-	{
-		return IIContent.itemBulletMagazine.getMagazine(magazine, bullets).setStackDisplayName(name);
-	}
-
-	private static ItemStack getColorMagazine(Magazines magazine, String name, IIColor... colors)
-	{
-		ItemStack[] bullets = new ItemStack[colors.length];
-		for(int i = 0; i < colors.length; i++)
-		{
-			//get bullet stack
-			ItemStack stack = magazine.ammo.getAmmoStack(IIContent.ammoCoreIron, CoreType.PIERCING, FuseType.CONTACT, IIContent.ammoComponentTracerPowder)
-					.setStackDisplayName(getGermanColorName(colors[i])+"markierungspatrone");
-			//set tracer color
-			magazine.ammo.setComponentNBT(stack, EasyNBT.parseNBT("{colour: %s}", colors[i]));
-			//set paint color
-			magazine.ammo.setPaintColor(stack, colors[i]);
-			bullets[i] = stack;
-		}
-		return getMagazine(magazine, name, bullets);
-	}
-
-	/**
-	 * Deutsche Qualität
-	 */
-	private static String getGermanColorName(IIColor color)
-	{
-		switch(color.getDyeColor())
-		{
-			case WHITE:
-				return "Weiß";
-			case ORANGE:
-				return "Orange";
-			case MAGENTA:
-				return "Magenta";
-			case LIGHT_BLUE:
-				return "Hellblau";
-			case YELLOW:
-				return "Gelb";
-			case LIME:
-				return "Lime";
-			case PINK:
-				return "Rosa";
-			case GRAY:
-				return "Grau";
-			case SILVER:
-				return "Silber";
-			case CYAN:
-				return "Cyan";
-			case PURPLE:
-				return "Purpur";
-			case BLUE:
-				return "Blau";
-			case BROWN:
-				return "Braun";
-			case GREEN:
-				return "Grün";
-			case RED:
-				return "Rot";
-			default:
-			case BLACK:
-				return "Schwarz";
-		}
 	}
 
 	@SideOnly(Side.CLIENT)

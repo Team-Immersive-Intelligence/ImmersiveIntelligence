@@ -44,23 +44,17 @@ import java.util.List;
 
 public class EmplacementWeaponHeavyRailgun extends EmplacementWeapon<EntityAmmoProjectile>
 {
+	float shootDelay = HeavyRailgun.shotFireTime;
+	int reloadDelay = 0;
 	/**
 	 * To Blu:
 	 * I do as I promised, I promised to not add a railgun turret
 	 * so I added a Heavy Railgun emplacement
 	 */
 	private AxisAlignedBB vision;
-	float shootDelay = HeavyRailgun.shotFireTime;
-	int reloadDelay = 0;
 	private Vec3d vv;
 
 	private NonNullList<ItemStack> inventory = NonNullList.withSize(3, ItemStack.EMPTY);
-	private NonNullList<ItemStack> inventoryPlatform = NonNullList.withSize(6, ItemStack.EMPTY);
-	private boolean requiresPlatformRefill = false;
-
-	private ArrayDeque<ItemStack> magazine = new ArrayDeque<>();
-	private ItemStack s2 = ItemStack.EMPTY;
-
 	private final IItemHandler inventoryHandler = new ItemStackHandler(inventory)
 	{
 		@Override
@@ -82,6 +76,10 @@ public class EmplacementWeaponHeavyRailgun extends EmplacementWeapon<EntityAmmoP
 			return itemStack;
 		}
 	};
+	private NonNullList<ItemStack> inventoryPlatform = NonNullList.withSize(6, ItemStack.EMPTY);
+	private boolean requiresPlatformRefill = false;
+	private ArrayDeque<ItemStack> magazine = new ArrayDeque<>();
+	private ItemStack s2 = ItemStack.EMPTY;
 
 	@Override
 	public String getName()

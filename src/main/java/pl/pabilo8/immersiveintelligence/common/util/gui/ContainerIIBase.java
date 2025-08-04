@@ -55,6 +55,17 @@ public class ContainerIIBase<T extends TileEntityIEBase & IIEInventory> extends 
 		return slots.toArray(new Slot[0]);
 	}
 
+	/**
+	 * Functional interface for {@link Slot} constructors to create them in batch.
+	 *
+	 * @param <SLOT> The type of the slot to construct.
+	 */
+	@FunctionalInterface
+	public interface SlotConstructor<SLOT extends Slot>
+	{
+		SLOT construct(Container container, IInventory inv, int id, int x, int y);
+	}
+
 	public static class FilteredDataInput extends IESlot
 	{
 		public FilteredDataInput(Container container, IInventory inv, int id, int x, int y)
@@ -89,16 +100,5 @@ public class ContainerIIBase<T extends TileEntityIEBase & IIEInventory> extends 
 			//TODO: 18.06.2025 capabilities
 			return stack.getItem() instanceof IMotorGear;
 		}
-	}
-
-	/**
-	 * Functional interface for {@link Slot} constructors to create them in batch.
-	 *
-	 * @param <SLOT> The type of the slot to construct.
-	 */
-	@FunctionalInterface
-	public interface SlotConstructor<SLOT extends Slot>
-	{
-		SLOT construct(Container container, IInventory inv, int id, int x, int y);
 	}
 }

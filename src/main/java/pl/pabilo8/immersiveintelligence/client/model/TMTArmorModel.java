@@ -26,9 +26,9 @@ public class TMTArmorModel extends ModelBiped
 	public ModelRendererTurbo[] headModel, bodyModel, leftArmModel, rightArmModel, leftLegModel, rightLegModel, leftFootModel, rightFootModel;
 	//List of parts for group flipping / translation / rotation
 	public HashMap<String, ModelRendererTurbo[]> parts = new HashMap<>();
+	protected EntityEquipmentSlot renderSlot = EntityEquipmentSlot.HEAD;
 	private String texture;
 	private ItemStack renderStack = ItemStack.EMPTY;
-	protected EntityEquipmentSlot renderSlot = EntityEquipmentSlot.HEAD;
 
 	public TMTArmorModel(int textureWidthIn, int textureHeightIn, String texture)
 	{

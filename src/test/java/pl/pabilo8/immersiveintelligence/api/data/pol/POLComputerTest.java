@@ -32,6 +32,63 @@ public class POLComputerTest
 	static POLComputerMemory MEMORY;
 	static POLTerminal TERMINAL;
 
+	/**
+	 * load a POL file into scripts
+	 */
+	private static String readFile(String name)
+	{
+		try
+		{
+			InputStream inputStream = POLComputerTest.class.getClassLoader().getResourceAsStream("computer_tests/"+name+".pol");
+			assert inputStream!=null;
+			BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+			ArrayList<String> c = reader.lines().collect(Collectors.toCollection(ArrayList::new));
+
+			MEMORY.putScript(name, POLScript.prepareScript(c));
+			reader.close();
+			return name;
+		} catch(IOException ignored)
+		{
+
+		}
+		return "";
+	}
+
+	private static void execute(String id)
+	{
+		log.info("Starting program: "+id);
+		POLProcess process = new POLProcess(MEMORY.getScript(id));
+		do
+		{
+			process.run(MEMORY, TERMINAL);
+			log.debug(() -> "["+id+"]"+(process.isRunning()?"[R]": "[H]")+", "+MEMORY);
+		}
+		while(process.isRunning());
+		log.info("Program "+id+" finished");
+	}
+
+	private static void compareOutputs(String name)
+	{
+		try
+		{
+			InputStream inputStream = POLComputerTest.class.getClassLoader().getResourceAsStream("computer_tests/"+name+".out");
+			assert inputStream!=null;
+			BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+			ArrayList<String> c = reader.lines().collect(Collectors.toCollection(ArrayList::new));
+			POLMockupTerminal mockupTerminal = (POLMockupTerminal)TERMINAL;
+
+			for(int i = 0; i < c.size(); i++)
+			{
+				assertTrue(mockupTerminal.output.size() > i);
+				assertEquals(c.get(i), mockupTerminal.output.get(i));
+			}
+			reader.close();
+		} catch(IOException ignored)
+		{
+
+		}
+	}
+
 	@BeforeEach
 	public void init()
 	{
@@ -68,42 +125,6 @@ public class POLComputerTest
 	{
 		execute(readFile("circuits/text"));
 		compareOutputs("circuits/text");
-	}
-
-
-	/**
-	 * load a POL file into scripts
-	 */
-	private static String readFile(String name)
-	{
-		try
-		{
-			InputStream inputStream = POLComputerTest.class.getClassLoader().getResourceAsStream("computer_tests/"+name+".pol");
-			assert inputStream!=null;
-			BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-			ArrayList<String> c = reader.lines().collect(Collectors.toCollection(ArrayList::new));
-
-			MEMORY.putScript(name, POLScript.prepareScript(c));
-			reader.close();
-			return name;
-		} catch(IOException ignored)
-		{
-
-		}
-		return "";
-	}
-
-	private static void execute(String id)
-	{
-		log.info("Starting program: "+id);
-		POLProcess process = new POLProcess(MEMORY.getScript(id));
-		do
-		{
-			process.run(MEMORY, TERMINAL);
-			log.debug(() -> "["+id+"]"+(process.isRunning()?"[R]": "[H]")+", "+MEMORY);
-		}
-		while(process.isRunning());
-		log.info("Program "+id+" finished");
 	}
 
 	private static class POLMockupTerminal extends POLTerminal
@@ -145,28 +166,6 @@ public class POLComputerTest
 		public void sleep(int value)
 		{
 			//Do nothing
-		}
-	}
-
-	private static void compareOutputs(String name)
-	{
-		try
-		{
-			InputStream inputStream = POLComputerTest.class.getClassLoader().getResourceAsStream("computer_tests/"+name+".out");
-			assert inputStream!=null;
-			BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-			ArrayList<String> c = reader.lines().collect(Collectors.toCollection(ArrayList::new));
-			POLMockupTerminal mockupTerminal = (POLMockupTerminal)TERMINAL;
-
-			for(int i = 0; i < c.size(); i++)
-			{
-				assertTrue(mockupTerminal.output.size() > i);
-				assertEquals(c.get(i), mockupTerminal.output.get(i));
-			}
-			reader.close();
-		} catch(IOException ignored)
-		{
-
 		}
 	}
 }

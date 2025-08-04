@@ -18,18 +18,19 @@ import pl.pabilo8.immersiveintelligence.common.util.IIColor;
  */
 public class ModelAdvancedPowerpack extends TMTArmorModel implements IReloadableModelContainer<ModelAdvancedPowerpack>
 {
-	static int textureX = 64;
-	static int textureY = 32;
 	private static final String texture = ImmersiveIntelligence.MODID+":textures/armor/advanced_powerpack.png";
 	private static final String textureLayer = ImmersiveIntelligence.MODID+":textures/armor/advanced_powerpack_paint.png";
-	private IIColor renderColor;
-
-	private final ModelRendererTurbo[] bodyColoredModel;
+	static int textureX = 64;
+	static int textureY = 32;
+	static ModelAdvancedPowerpack modelInstance;
 
 	static
 	{
 		modelInstance = new ModelAdvancedPowerpack().subscribeToList("advanced_powerpack");
 	}
+
+	private final ModelRendererTurbo[] bodyColoredModel;
+	private IIColor renderColor;
 
 	public ModelAdvancedPowerpack()
 	{
@@ -285,8 +286,6 @@ public class ModelAdvancedPowerpack extends TMTArmorModel implements IReloadable
 		flipAll();
 		init();
 	}
-
-	static ModelAdvancedPowerpack modelInstance;
 
 	public static ModelAdvancedPowerpack getModel(EntityEquipmentSlot part, ItemStack stack)
 	{

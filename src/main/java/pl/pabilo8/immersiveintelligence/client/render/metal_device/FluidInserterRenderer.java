@@ -31,9 +31,9 @@ import javax.annotation.Nullable;
 @SideOnly(Side.CLIENT)
 public class FluidInserterRenderer extends TileEntitySpecialRenderer<TileEntityFluidInserter> implements IReloadableModelContainer<FluidInserterRenderer>
 {
-	private static ModelFluidInserter model;
 	public static ItemStack conn_data, conn_mv;
 	static RenderItem renderItem = ClientUtils.mc().getRenderItem();
+	private static ModelFluidInserter model;
 
 	@Override
 	public void render(@Nullable TileEntityFluidInserter te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)

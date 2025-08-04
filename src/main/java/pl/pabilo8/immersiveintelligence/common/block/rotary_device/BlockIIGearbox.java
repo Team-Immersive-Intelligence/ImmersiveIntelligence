@@ -19,12 +19,6 @@ import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
  */
 public class BlockIIGearbox extends BlockIITileProvider<IIBlockTypes_Gearbox>
 {
-	public enum IIBlockTypes_Gearbox implements IITileProviderEnum
-	{
-		@EnumTileProvider(tile = TileEntityGearbox.class)
-		WOODEN_GEARBOX
-	}
-
 	public BlockIIGearbox()
 	{
 		super("gearbox", Material.IRON, PropertyEnum.create("type", IIBlockTypes_Gearbox.class), ItemBlockIIBase::new,
@@ -37,5 +31,11 @@ public class BlockIIGearbox extends BlockIITileProvider<IIBlockTypes_Gearbox>
 		setFullCube(true);
 		setToolTypes(IIReference.TOOL_HAMMER);
 		setCategory(IICategory.ROTARY);
+	}
+
+	public enum IIBlockTypes_Gearbox implements IITileProviderEnum
+	{
+		@EnumTileProvider(tile = TileEntityGearbox.class)
+		WOODEN_GEARBOX
 	}
 }

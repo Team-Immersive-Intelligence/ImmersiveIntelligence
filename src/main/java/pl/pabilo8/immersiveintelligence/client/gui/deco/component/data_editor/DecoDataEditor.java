@@ -19,7 +19,6 @@ public abstract class DecoDataEditor<T extends DataType> extends DecoPanel
 {
 	private static final LinkedHashMap<Class<? extends DataType>, DataEditorConstructor<?>>
 			EDITORS = new LinkedHashMap<>();
-	protected T dataType;
 
 	static
 	{
@@ -34,6 +33,8 @@ public abstract class DecoDataEditor<T extends DataType> extends DecoPanel
 		//registerEditor(DataPacketTypeAccessor.class, GuiDataEditorAccessor::new);
 	}
 
+	protected T dataType;
+
 
 	public DecoDataEditor(int x, int y, T dataType)
 	{
@@ -41,25 +42,6 @@ public abstract class DecoDataEditor<T extends DataType> extends DecoPanel
 		withBackground(null);
 		withBackgroundMask(null);
 		withDataType(dataType);
-	}
-
-	public DecoDataEditor<T> withDataType(T dataType)
-	{
-		this.dataType = dataType;
-		return this;
-	}
-
-	public abstract T outputType();
-
-	/**
-	 * Standard constructor interface for DecoDataEditor.
-	 *
-	 * @param <T> The type of DataType that the editor will handle.
-	 */
-	@FunctionalInterface
-	private interface DataEditorConstructor<T extends DataType>
-	{
-		DecoDataEditor<T> construct(int x, int y, T dataType);
 	}
 
 	/**
@@ -94,5 +76,24 @@ public abstract class DecoDataEditor<T extends DataType> extends DecoPanel
 				.map(IIDataTypeUtils.metaTypesByClass::get)
 				//.filter(typeMetaInfo -> !advanced||typeMetaInfo.isAdvancedType())
 				.collect(Collectors.toList());
+	}
+
+	public DecoDataEditor<T> withDataType(T dataType)
+	{
+		this.dataType = dataType;
+		return this;
+	}
+
+	public abstract T outputType();
+
+	/**
+	 * Standard constructor interface for DecoDataEditor.
+	 *
+	 * @param <T> The type of DataType that the editor will handle.
+	 */
+	@FunctionalInterface
+	private interface DataEditorConstructor<T extends DataType>
+	{
+		DecoDataEditor<T> construct(int x, int y, T dataType);
 	}
 }

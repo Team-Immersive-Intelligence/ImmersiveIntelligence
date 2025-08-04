@@ -19,9 +19,9 @@ import java.util.Arrays;
  */
 public class ModelHansBiped extends ModelPlayer
 {
+	private final ModelHansBiped bipedHelper;
 	public ModelRenderer bipedLeftHand, bipedRightHand, bipedLeftFoot, bipedRightFoot;
 	public ModelRenderer bipedLeftHandWear, bipedRightHandWear, bipedLeftFootWear, bipedRightFootWear;
-	private final ModelHansBiped bipedHelper;
 
 	public ModelHansBiped(float expand)
 	{
@@ -74,49 +74,6 @@ public class ModelHansBiped extends ModelPlayer
 
 		bipedLeftArm.addChild(mod);
 		return mod;
-	}
-
-	public static class BipedTextureUVs
-	{
-		int armLeftU, armLeftV;
-		int armRightU, armRightV;
-
-		int armWearLeftU, armWearLeftV;
-		int armWearRightU, armWearRightV;
-
-		int legLeftU, legLeftV;
-		int legRightU, legRightV;
-
-		int legWearLeftU, legWearLeftV;
-		int legWearRightU, legWearRightV;
-
-		int bodyU, bodyV;
-
-		public BipedTextureUVs(int armLeftU, int armLeftV, int armRightU, int armRightV,
-							   int armWearLeftU, int armWearLeftV, int armWearRightU, int armWearRightV,
-							   int legLeftU, int legLeftV, int legRightU, int legRightV,
-							   int legWearLeftU, int legWearLeftV, int legWearRightU, int legWearRightV,
-							   int bodyU, int bodyV)
-		{
-			this.armLeftU = armLeftU;
-			this.armLeftV = armLeftV;
-			this.armRightU = armRightU;
-			this.armRightV = armRightV;
-			this.armWearLeftU = armWearLeftU;
-			this.armWearLeftV = armWearLeftV;
-			this.armWearRightU = armWearRightU;
-			this.armWearRightV = armWearRightV;
-			this.legLeftU = legLeftU;
-			this.legLeftV = legLeftV;
-			this.legRightU = legRightU;
-			this.legRightV = legRightV;
-			this.legWearLeftU = legWearLeftU;
-			this.legWearLeftV = legWearLeftV;
-			this.legWearRightU = legWearRightU;
-			this.legWearRightV = legWearRightV;
-			this.bodyU = bodyU;
-			this.bodyV = bodyV;
-		}
 	}
 
 	@Override
@@ -433,6 +390,49 @@ public class ModelHansBiped extends ModelPlayer
 		hand.rotationPointY += 3;
 		hand.rotationPointZ -= 1;
 		arm.rotationPointX -= f;
+	}
+
+	public static class BipedTextureUVs
+	{
+		int armLeftU, armLeftV;
+		int armRightU, armRightV;
+
+		int armWearLeftU, armWearLeftV;
+		int armWearRightU, armWearRightV;
+
+		int legLeftU, legLeftV;
+		int legRightU, legRightV;
+
+		int legWearLeftU, legWearLeftV;
+		int legWearRightU, legWearRightV;
+
+		int bodyU, bodyV;
+
+		public BipedTextureUVs(int armLeftU, int armLeftV, int armRightU, int armRightV,
+							   int armWearLeftU, int armWearLeftV, int armWearRightU, int armWearRightV,
+							   int legLeftU, int legLeftV, int legRightU, int legRightV,
+							   int legWearLeftU, int legWearLeftV, int legWearRightU, int legWearRightV,
+							   int bodyU, int bodyV)
+		{
+			this.armLeftU = armLeftU;
+			this.armLeftV = armLeftV;
+			this.armRightU = armRightU;
+			this.armRightV = armRightV;
+			this.armWearLeftU = armWearLeftU;
+			this.armWearLeftV = armWearLeftV;
+			this.armWearRightU = armWearRightU;
+			this.armWearRightV = armWearRightV;
+			this.legLeftU = legLeftU;
+			this.legLeftV = legLeftV;
+			this.legRightU = legRightU;
+			this.legRightV = legRightV;
+			this.legWearLeftU = legWearLeftU;
+			this.legWearLeftV = legWearLeftV;
+			this.legWearRightU = legWearRightU;
+			this.legWearRightV = legWearRightV;
+			this.bodyU = bodyU;
+			this.bodyV = bodyV;
+		}
 	}
 
 	//stolen from the Betweenlands,

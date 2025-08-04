@@ -16,8 +16,8 @@ import java.util.Optional;
  */
 public abstract class CommandIIBase extends CommandBase
 {
-	private final CommandTreeBase parent;
 	protected final String name;
+	private final CommandTreeBase parent;
 
 	public CommandIIBase(CommandTreeBase parent, String name)
 	{

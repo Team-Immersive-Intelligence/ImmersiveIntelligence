@@ -30,9 +30,9 @@ import java.util.List;
  */
 public class ManualSystemWrapper extends GuiManual
 {
+	private final DecoManualWidget parent;
 	//not to be confused with GuiManual's manual variable
 	private ManualInstance manualInstance;
-	private final DecoManualWidget parent;
 
 	public ManualSystemWrapper(DecoManualWidget parent, ManualInstance instance, String texture)
 	{

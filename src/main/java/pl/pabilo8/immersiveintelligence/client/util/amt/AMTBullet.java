@@ -22,15 +22,14 @@ import javax.annotation.Nullable;
  */
 public class AMTBullet extends AMT
 {
-	@Nullable
-	private IAmmoModel<?, ?> model;
-	private BulletState state = BulletState.BULLET_UNUSED;
-
 	AmmoCore core = null;
 	CoreType coreType = null;
 	float gunpowderPercentage = 0;
 	@Nullable
 	IIColor paintColor = null;
+	@Nullable
+	private IAmmoModel<?, ?> model;
+	private BulletState state = BulletState.BULLET_UNUSED;
 
 	public AMTBullet(String name, Vec3d originPos, @Nullable IAmmoModel<?, ?> model)
 	{

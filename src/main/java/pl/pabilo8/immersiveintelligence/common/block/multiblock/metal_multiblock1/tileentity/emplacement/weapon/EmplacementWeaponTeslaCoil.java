@@ -53,10 +53,10 @@ import java.util.List;
 
 public class EmplacementWeaponTeslaCoil extends EmplacementWeapon
 {
-	private AxisAlignedBB vision;
-	private AxisAlignedBB attack;
 	private final ArrayList<Integer> targetedEntities = new ArrayList<>();
 	private final ArrayList<LightningAnimation> effects = new ArrayList<>();
+	private AxisAlignedBB vision;
+	private AxisAlignedBB attack;
 
 	@Override
 	public String getName()

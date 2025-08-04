@@ -39,24 +39,6 @@ import java.util.ArrayList;
  */
 public class BlockIIGateMultiblock extends BlockIIMultiblock<IIBlockTypes_FenceGate>
 {
-	public enum IIBlockTypes_FenceGate implements IITileMultiblockEnum
-	{
-		@EnumMultiblockProvider(multiblock = MultiblockWoodenFenceGate.class, tile = TileEntityWoodenFenceGate.class)
-		WOODEN,
-		@EnumMultiblockProvider(multiblock = MultiblockWoodenChainFenceGate.class, tile = TileEntityWoodenChainFenceGate.class)
-		WOODEN_CHAIN,
-		@IIBlockProperties(hardness = 20, blastResistance = 10)
-		@EnumMultiblockProvider(multiblock = MultiblockSteelFenceGate.class, tile = TileEntitySteelFenceGate.class)
-		STEEL,
-		@IIBlockProperties(hardness = 20, blastResistance = 10)
-		@EnumMultiblockProvider(multiblock = MultiblockSteelChainFenceGate.class, tile = TileEntitySteelChainFenceGate.class)
-		STEEL_CHAIN,
-		@EnumMultiblockProvider(multiblock = MultiblockAluminiumFenceGate.class, tile = TileEntityAluminiumFenceGate.class)
-		ALUMINIUM,
-		@EnumMultiblockProvider(multiblock = MultiblockAluminiumChainFenceGate.class, tile = TileEntityAluminiumChainFenceGate.class)
-		ALUMINIUM_CHAIN
-	}
-
 	public BlockIIGateMultiblock()
 	{
 		super("gate_multiblock", Material.IRON, PropertyEnum.create("type", IIBlockTypes_FenceGate.class),
@@ -155,5 +137,23 @@ public class BlockIIGateMultiblock extends BlockIIMultiblock<IIBlockTypes_FenceG
 			}
 		}
 		return super.getPickBlock(state, target, world, pos, player);
+	}
+
+	public enum IIBlockTypes_FenceGate implements IITileMultiblockEnum
+	{
+		@EnumMultiblockProvider(multiblock = MultiblockWoodenFenceGate.class, tile = TileEntityWoodenFenceGate.class)
+		WOODEN,
+		@EnumMultiblockProvider(multiblock = MultiblockWoodenChainFenceGate.class, tile = TileEntityWoodenChainFenceGate.class)
+		WOODEN_CHAIN,
+		@IIBlockProperties(hardness = 20, blastResistance = 10)
+		@EnumMultiblockProvider(multiblock = MultiblockSteelFenceGate.class, tile = TileEntitySteelFenceGate.class)
+		STEEL,
+		@IIBlockProperties(hardness = 20, blastResistance = 10)
+		@EnumMultiblockProvider(multiblock = MultiblockSteelChainFenceGate.class, tile = TileEntitySteelChainFenceGate.class)
+		STEEL_CHAIN,
+		@EnumMultiblockProvider(multiblock = MultiblockAluminiumFenceGate.class, tile = TileEntityAluminiumFenceGate.class)
+		ALUMINIUM,
+		@EnumMultiblockProvider(multiblock = MultiblockAluminiumChainFenceGate.class, tile = TileEntityAluminiumChainFenceGate.class)
+		ALUMINIUM_CHAIN
 	}
 }

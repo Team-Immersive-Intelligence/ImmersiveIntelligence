@@ -23,15 +23,14 @@ import java.util.HashMap;
 public class SawmillRecipe extends IIMultiblockRecipe implements RotaryMachineRecipe
 {
 	private static final IIColor DEFAULT_COLOR = IIColor.fromFloatRGB(0.22392157f, 0.21372549019607842f, 0.15176470588235294f);
+	public static HashMap<String, ISawblade> toolMap = new HashMap<>();
 	public final IngredientStack itemInput;
 	public final ItemStack itemOutput, itemSecondaryOutput;
-
-	public static HashMap<String, ISawblade> toolMap = new HashMap<>();
-	IISoundAnimation soundAnimation;
 	private final int torque;
 	//The tier of the saw required, 1 for cutting wood (bronze), 2 iron, 3 steel, 4 tungsten
 	private final int hardness;
 	private final IIColor dustColor;
+	IISoundAnimation soundAnimation;
 
 	public SawmillRecipe(ItemStack itemOutput, Object itemInput, ItemStack itemSecondaryOutput, int torque, int time, int hardness, IIColor dustColor)
 	{
@@ -75,14 +74,14 @@ public class SawmillRecipe extends IIMultiblockRecipe implements RotaryMachineRe
 		this(itemOutput, itemInput, itemSecondaryOutput, torque, time, hardness, DEFAULT_COLOR);
 	}
 
-	public IISoundAnimation getSoundAnimation()
-	{
-		return soundAnimation;
-	}
-
 	public static void registerSawblade(String name, ISawblade blade)
 	{
 		toolMap.putIfAbsent(name, blade);
+	}
+
+	public IISoundAnimation getSoundAnimation()
+	{
+		return soundAnimation;
 	}
 
 	public int getTorque()

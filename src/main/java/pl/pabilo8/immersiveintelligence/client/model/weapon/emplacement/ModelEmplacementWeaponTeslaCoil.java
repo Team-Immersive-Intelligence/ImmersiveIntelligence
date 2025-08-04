@@ -264,24 +264,24 @@ public class ModelEmplacementWeaponTeslaCoil extends ModelIIBase
 		baseModel[56].setRotationPoint(16.5F, -15F, 6.5F);
 		baseModel[56].rotateAngleY = 4.71238898F;
 
-		baseModel[57].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[] { new Coord2D(0, 0, 0, 0), new Coord2D(7, 0, 7, 0), new Coord2D(7, 4, 7, 4), new Coord2D(4, 4, 4, 4), new Coord2D(0, 1, 0, 1) }), 10, 7, 4, 20, 10, ModelRendererTurbo.MR_FRONT, new float[] {1 ,5 ,3 ,4 ,7}); // Shape 72
+		baseModel[57].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[]{new Coord2D(0, 0, 0, 0), new Coord2D(7, 0, 7, 0), new Coord2D(7, 4, 7, 4), new Coord2D(4, 4, 4, 4), new Coord2D(0, 1, 0, 1)}), 10, 7, 4, 20, 10, ModelRendererTurbo.MR_FRONT, new float[]{1, 5, 3, 4, 7}); // Shape 72
 		baseModel[57].setRotationPoint(32F, -8F, 21F);
 
-		baseModel[58].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[] { new Coord2D(0, 0, 0, 0), new Coord2D(7, 0, 7, 0), new Coord2D(7, 4, 7, 4), new Coord2D(4, 4, 4, 4), new Coord2D(0, 1, 0, 1) }), 10, 7, 4, 20, 10, ModelRendererTurbo.MR_FRONT, new float[] {1 ,5 ,3 ,4 ,7}); // Shape 72
+		baseModel[58].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[]{new Coord2D(0, 0, 0, 0), new Coord2D(7, 0, 7, 0), new Coord2D(7, 4, 7, 4), new Coord2D(4, 4, 4, 4), new Coord2D(0, 1, 0, 1)}), 10, 7, 4, 20, 10, ModelRendererTurbo.MR_FRONT, new float[]{1, 5, 3, 4, 7}); // Shape 72
 		baseModel[58].setRotationPoint(11F, -8F, 31F);
 		baseModel[58].rotateAngleY = 1.57079633F;
 
-		baseModel[59].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[] { new Coord2D(0, 0, 0, 0), new Coord2D(7, 0, 7, 0), new Coord2D(7, 4, 7, 4), new Coord2D(4, 4, 4, 4), new Coord2D(0, 1, 0, 1) }), 10, 7, 4, 20, 10, ModelRendererTurbo.MR_FRONT, new float[] {1 ,5 ,3 ,4 ,7}); // Shape 72
+		baseModel[59].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[]{new Coord2D(0, 0, 0, 0), new Coord2D(7, 0, 7, 0), new Coord2D(7, 4, 7, 4), new Coord2D(4, 4, 4, 4), new Coord2D(0, 1, 0, 1)}), 10, 7, 4, 20, 10, ModelRendererTurbo.MR_FRONT, new float[]{1, 5, 3, 4, 7}); // Shape 72
 		baseModel[59].setRotationPoint(0F, -8F, 11F);
 		baseModel[59].rotateAngleY = 3.14159265F;
 
-		baseModel[60].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[] { new Coord2D(0, 0, 0, 0), new Coord2D(7, 0, 7, 0), new Coord2D(7, 4, 7, 4), new Coord2D(4, 4, 4, 4), new Coord2D(0, 1, 0, 1) }), 10, 7, 4, 20, 10, ModelRendererTurbo.MR_FRONT, new float[] {1 ,5 ,3 ,4 ,7}); // Shape 72
+		baseModel[60].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[]{new Coord2D(0, 0, 0, 0), new Coord2D(7, 0, 7, 0), new Coord2D(7, 4, 7, 4), new Coord2D(4, 4, 4, 4), new Coord2D(0, 1, 0, 1)}), 10, 7, 4, 20, 10, ModelRendererTurbo.MR_FRONT, new float[]{1, 5, 3, 4, 7}); // Shape 72
 		baseModel[60].setRotationPoint(21F, -8F, 0F);
 		baseModel[60].rotateAngleY = 4.71238898F;
 
 		parts.put("base", baseModel);
 
-		translateAll(-16,0,-16);
+		translateAll(-16, 0, -16);
 
 		baseModel = Arrays.stream(baseModel).
 				sorted((o1, o2) -> Float.compare(o1.rotationPointY, o2.rotationPointY)).

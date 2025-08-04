@@ -10,11 +10,6 @@ import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 public class DecoFrame
 {
 	/**
-	 * Sides of the frame, in order: top, bottom, left, right.
-	 * If a side is true, it will be drawn.
-	 */
-	public boolean[] sides = new boolean[]{true, true, true, true};
-	/**
 	 * Resource location of the frame texture
 	 */
 	public final ResLoc style;
@@ -28,6 +23,11 @@ public class DecoFrame
 	 * This is used to determine how thick the frame should be drawn.
 	 */
 	public final int frameThickness;
+	/**
+	 * Sides of the frame, in order: top, bottom, left, right.
+	 * If a side is true, it will be drawn.
+	 */
+	public boolean[] sides = new boolean[]{true, true, true, true};
 
 	public DecoFrame(ResLoc style, boolean cornersOnly, int frameThickness)
 	{

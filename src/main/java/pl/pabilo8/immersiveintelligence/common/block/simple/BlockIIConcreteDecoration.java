@@ -29,6 +29,14 @@ public class BlockIIConcreteDecoration extends BlockIIBase<ConcreteDecorations>
 		setCategory(IICategory.RESOURCES);
 	}
 
+	public static BlockIIStairs[] getStairs()
+	{
+		return Arrays.stream(ConcreteDecorations.values())
+				.map(s -> new BlockIIStairs("concrete_decoration_stairs", s.getName(),
+						IIContent.blockConcreteDecoration.getStateFromMeta(s.ordinal())))
+				.toArray(BlockIIStairs[]::new);
+	}
+
 	public enum ConcreteDecorations implements IIBlockEnum
 	{
 		@IIBlockProperties(hardness = 10, blastResistance = 360, harvestLevel = 1, oreDict = "bricksConcrete")
@@ -44,13 +52,5 @@ public class BlockIIConcreteDecoration extends BlockIIBase<ConcreteDecorations>
 		STURDY_CONCRETE_BRICKS_GRAY,
 		@IIBlockProperties(hardness = 120, blastResistance = 2400, harvestLevel = 3, oreDict = "uberConcreteGray")
 		UBERCONCRETE_GRAY
-	}
-
-	public static BlockIIStairs[] getStairs()
-	{
-		return Arrays.stream(ConcreteDecorations.values())
-				.map(s -> new BlockIIStairs("concrete_decoration_stairs", s.getName(),
-						IIContent.blockConcreteDecoration.getStateFromMeta(s.ordinal())))
-				.toArray(BlockIIStairs[]::new);
 	}
 }

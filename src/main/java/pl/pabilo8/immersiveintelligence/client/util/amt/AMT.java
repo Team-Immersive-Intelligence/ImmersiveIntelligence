@@ -33,17 +33,6 @@ public abstract class AMT
 	 */
 	protected final Vec3d originPos;
 	/**
-	 * Children ModelThingies, rendered after this one
-	 */
-	private AMT[] children;
-	/**
-	 * Whether this AMT is a child<br>
-	 * If it is - it shouldn't be rendered on its own
-	 */
-	private boolean isChild = false;
-
-	//--- Basic Mutable Properties ---//
-	/**
 	 * Whether this AMT should be rendered
 	 */
 	protected boolean visible;
@@ -51,12 +40,12 @@ public abstract class AMT
 	 * Offset (XYZ), Scale (XYZ)
 	 */
 	protected Vec3d off, scale;
+
+	//--- Basic Mutable Properties ---//
 	/**
 	 * Rotation (XYZ) with values in degrees
 	 */
 	protected Vec3d rot;
-
-	//--- Extended Mutable Properties ---//
 	/**
 	 * Current shader type and values passed to it.<br>
 	 * Only one shader is allowed to be used at the same time
@@ -65,10 +54,21 @@ public abstract class AMT
 	protected Shaders shader;
 	@Nonnull
 	protected Float[] shaderValue;
+
+	//--- Extended Mutable Properties ---//
 	/**
 	 * Custom Property Value, used by some AMT components
 	 */
 	protected float property;
+	/**
+	 * Children ModelThingies, rendered after this one
+	 */
+	private AMT[] children;
+	/**
+	 * Whether this AMT is a child<br>
+	 * If it is - it shouldn't be rendered on its own
+	 */
+	private boolean isChild = false;
 
 	public AMT(String name, IIModelHeader header)
 	{
@@ -181,11 +181,6 @@ public abstract class AMT
 	 */
 	public abstract void disposeOf();
 
-	public final void setChildren(AMT[] children)
-	{
-		this.children = children;
-	}
-
 	/**
 	 * @return the children of this AMT
 	 */
@@ -201,6 +196,11 @@ public abstract class AMT
 	protected final AMT[] getChildren()
 	{
 		return children;
+	}
+
+	public final void setChildren(AMT[] children)
+	{
+		this.children = children;
 	}
 
 	/**

@@ -16,8 +16,8 @@ import pl.pabilo8.immersiveintelligence.common.entity.vehicle.towable.gun.Entity
 
 public class FieldHowitzerRenderer extends Render<EntityFieldHowitzer> implements IReloadableModelContainer<FieldHowitzerRenderer>
 {
-	public static ModelFieldHowitzer model = new ModelFieldHowitzer();
 	public static final String texture = ImmersiveIntelligence.MODID+":textures/entity/field_howitzer.png";
+	public static ModelFieldHowitzer model = new ModelFieldHowitzer();
 
 	public FieldHowitzerRenderer(RenderManager renderManager)
 	{

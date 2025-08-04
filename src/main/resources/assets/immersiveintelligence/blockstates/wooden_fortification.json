@@ -3,7 +3,9 @@
   "defaults": {
     "transform": "forge:default-block",
     "model": "cube_all",
-    "textures": {"texture": "immersiveengineering:blocks/storage_steel"}
+    "textures": {
+      "texture": "immersiveengineering:blocks/storage_steel"
+    }
   },
   "variants": {
     "inventory,type=wooden_steel_chain_fence": [
@@ -14,7 +16,9 @@
     "inventory,type=wooden_brass_chain_fence": [
       {
         "model": "immersiveintelligence:chain_fence/chain_fence",
-        "textures": {"texture": "immersiveintelligence:blocks/fortification/wooden_brass_chain_fence"}
+        "textures": {
+          "texture": "immersiveintelligence:blocks/fortification/wooden_brass_chain_fence"
+        }
       }
     ],
     "type": {

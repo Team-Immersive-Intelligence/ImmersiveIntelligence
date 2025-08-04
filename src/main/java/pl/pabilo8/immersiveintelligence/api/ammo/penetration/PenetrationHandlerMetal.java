@@ -27,12 +27,6 @@ public class PenetrationHandlerMetal extends PenetrationHandler
 		this.name = IIStringUtil.toCamelCase(name.toLowerCase(), false);
 	}
 
-
-	public String getName()
-	{
-		return name;
-	}
-
 	/**
 	 * Gets the penetration handler for the given metal name. If the penetration handler does not exist, it will be created.
 	 *
@@ -59,5 +53,10 @@ public class PenetrationHandlerMetal extends PenetrationHandler
 	public static PenetrationHandlerMetal get(String name)
 	{
 		return REGISTRY.get(name);
+	}
+
+	public String getName()
+	{
+		return name;
 	}
 }

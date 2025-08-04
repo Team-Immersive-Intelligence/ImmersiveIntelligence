@@ -10,39 +10,45 @@ import net.minecraft.village.MerchantRecipeList;
 import net.minecraftforge.fml.common.registry.VillagerRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 
-import java.util.Random;
-
 import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Random;
 
-public class IEVillagerHandlerCustom extends IEVillagerHandler {
+public class IEVillagerHandlerCustom extends IEVillagerHandler
+{
 
 	// Initialize trades with instance method
-	public static void initIEVillagerTrades() {
+	public static void initIEVillagerTrades()
+	{
 		// Call parent initialization method if needed
 		IEVillagerHandler.initIEVillagerTrades();
 
 		// Retrieve the profession and add career if it doesn't already exist
 		VillagerRegistry.VillagerProfession engineerProfession = IEVillagerHandler.PROF_ENGINEER;
-		if (engineerProfession != null) {
+		if(engineerProfession!=null)
+		{
 			boolean careerExists = false;
 
-			try {
+			try
+			{
 				// Access private "careers" field using reflection
 				Field careersField = VillagerRegistry.VillagerProfession.class.getDeclaredField("careers");
 				careersField.setAccessible(true);
-				List<VillagerRegistry.VillagerCareer> careers = (List<VillagerRegistry.VillagerCareer>) careersField.get(engineerProfession);
+				List<VillagerRegistry.VillagerCareer> careers = (List<VillagerRegistry.VillagerCareer>)careersField.get(engineerProfession);
 
 				// Check if the "gunsmith" career already exists
-				for (VillagerRegistry.VillagerCareer career : careers) {
-					if ("immersiveengineering.gunsmith".equals(career.getName())) {
+				for(VillagerRegistry.VillagerCareer career : careers)
+				{
+					if("immersiveengineering.gunsmith".equals(career.getName()))
+					{
 						careerExists = true;
 						break;
 					}
 				}
 
 				// Add career if it doesn't exist
-				if (!careerExists) {
+				if(!careerExists)
+				{
 					VillagerRegistry.VillagerCareer careerGunsmith = new VillagerRegistry.VillagerCareer(engineerProfession, "immersiveengineering.gunsmith");
 
 					// Add a custom trade for iron barrel replacement
@@ -50,7 +56,8 @@ public class IEVillagerHandlerCustom extends IEVillagerHandler {
 							new ReplaceSteelBarrelWithIron()
 					});
 				}
-			} catch (NoSuchFieldException | IllegalAccessException e) {
+			} catch(NoSuchFieldException|IllegalAccessException e)
+			{
 				e.printStackTrace();
 			}
 		}

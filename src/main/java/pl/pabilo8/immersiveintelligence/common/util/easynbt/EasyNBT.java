@@ -82,6 +82,92 @@ public class EasyNBT extends Constants.NBT
 	//--- With ---//
 	//TODO: 18.07.2024 use one "with" method
 
+	public static NBTTagCompound parseNBT(String format, Object... arguments)
+	{
+		String json = String.format(format, arguments);
+		//Error-Proof(tm)
+		try {return JsonToNBT.getTagFromJson(json);} catch(NBTException ignored)
+		{
+			//well, at least I think so
+			return new NBTTagCompound();
+		}
+	}
+
+	/**
+	 * Thus spoke EasyNBT - a parser for all and none
+	 *
+	 * @param elements valid objects such as {@link net.minecraft.nbt.NBTBase}, int, float, double, boolean,
+	 *                 {@link EasyNBT}, {@link BlockPos}, {@link net.minecraft.util.math.Vec3d}, {@link net.minecraft.item.ItemStack},
+	 *                 {@link net.minecraftforge.fluids.FluidStack} and {@link java.util.Collection} or array of the above
+	 * @implNote Accepts only a single type of object, will not work if multiple types are passed
+	 */
+	public static NBTTagList listOf(Object... elements)
+	{
+		NBTTagList list = new NBTTagList();
+
+		for(Object element : elements)
+		{
+			if(element==null)
+				continue;
+			if(element instanceof NBTBase)
+				list.appendTag(((NBTBase)element));
+
+			else if(element instanceof Integer)
+				list.appendTag(new NBTTagInt(((Integer)element)));
+			else if(element instanceof Long)
+				list.appendTag(new NBTTagLong(((Long)element)));
+			else if(element instanceof Short)
+				list.appendTag(new NBTTagShort(((Short)element)));
+			else if(element instanceof Byte)
+				list.appendTag(new NBTTagByte(((Byte)element)));
+			else if(element instanceof Float)
+				list.appendTag(new NBTTagFloat(((Float)element)));
+			else if(element instanceof Double)
+				list.appendTag(new NBTTagDouble(((Double)element)));
+			else if(element instanceof Boolean)
+				list.appendTag(new NBTTagByte((byte)(((Boolean)element)?1: 0)));
+
+			else if(element instanceof EasyNBT)
+				list.appendTag(((EasyNBT)element).wrapped);
+
+			else if(element instanceof DimensionBlockPos)
+			{
+				DimensionBlockPos pos = (DimensionBlockPos)element;
+				list.appendTag(listOf(pos.getX(), pos.getY(), pos.getZ(), pos.dimension));
+			}
+			else if(element instanceof BlockPos)
+			{
+				BlockPos pos = (BlockPos)element;
+				list.appendTag(listOf(pos.getX(), pos.getY(), pos.getZ()));
+			}
+			else if(element instanceof Vec3d)
+			{
+				Vec3d pos = (Vec3d)element;
+				list.appendTag(listOf(pos.x, pos.y, pos.z));
+			}
+
+			else if(element instanceof ItemStack)
+				list.appendTag(((ItemStack)element).serializeNBT());
+			else if(element instanceof FluidStack)
+				list.appendTag(((FluidStack)element).writeToNBT(new NBTTagCompound()));
+
+			else if(element instanceof int[])
+				list.appendTag(new NBTTagIntArray(((int[])element)));
+			else if(element instanceof Object[])
+				list.appendTag(listOf(element));
+			else if(element instanceof Collection)
+				list.appendTag(listOf(((Collection<?>)element).toArray(new Object[0])));
+
+		}
+
+		return list;
+	}
+
+	public static NBTTagIntArray intArrayOf(int... ints)
+	{
+		return new NBTTagIntArray(ints);
+	}
+
 	/**
 	 * Appends a serializable object
 	 *
@@ -378,6 +464,8 @@ public class EasyNBT extends Constants.NBT
 		return withTag(key, value.writeToNBT(new NBTTagCompound()));
 	}
 
+	//--- Remove ---//
+
 	/**
 	 * Appends a Color
 	 *
@@ -397,6 +485,8 @@ public class EasyNBT extends Constants.NBT
 	{
 		return withList(key, value.minX, value.minY, value.minZ, value.maxX, value.maxY, value.maxZ);
 	}
+
+	//--- Lambda Expessions ---//
 
 	/**
 	 * Appends any value extending {@link NBTBase}, as well as common types such as int, double, String, etc.
@@ -452,8 +542,6 @@ public class EasyNBT extends Constants.NBT
 		return this;
 	}
 
-	//--- Remove ---//
-
 	/**
 	 * Removes a Tag from the Compound
 	 *
@@ -477,7 +565,7 @@ public class EasyNBT extends Constants.NBT
 		return this;
 	}
 
-	//--- Lambda Expessions ---//
+	//--- Merging ---//
 
 	/**
 	 * Performs an action when a condition is met. Allows branching.<br>
@@ -508,6 +596,8 @@ public class EasyNBT extends Constants.NBT
 		return this;
 	}
 
+	//--- Getting ---//
+
 	/**
 	 * Filters tags of this Compound by removing those that are not present in the remaining array
 	 *
@@ -521,8 +611,6 @@ public class EasyNBT extends Constants.NBT
 		keySet.forEach(wrapped::removeTag);
 		return this;
 	}
-
-	//--- Merging ---//
 
 	/**
 	 * Merges Tags of another Compound into this one
@@ -550,8 +638,6 @@ public class EasyNBT extends Constants.NBT
 		return this;
 	}
 
-	//--- Getting ---//
-
 	/**
 	 * Checks if a tag exists
 	 *
@@ -574,7 +660,6 @@ public class EasyNBT extends Constants.NBT
 				return false;
 		return true;
 	}
-
 
 	/**
 	 * Checks if a tag exists
@@ -875,6 +960,9 @@ public class EasyNBT extends Constants.NBT
 		return FluidStack.loadFluidStackFromNBT(getCompound(key));
 	}
 
+
+	//--- Check-Action ---//
+
 	/**
 	 * Gets an enum value from a string
 	 *
@@ -890,7 +978,6 @@ public class EasyNBT extends Constants.NBT
 	{
 		return IIColor.fromPackedARGB(getInt(key));
 	}
-
 
 	/**
 	 * Gets an {@link AxisAlignedBB}
@@ -911,9 +998,6 @@ public class EasyNBT extends Constants.NBT
 				):
 				new AxisAlignedBB(0, 0, 0, 0, 0, 0);
 	}
-
-
-	//--- Check-Action ---//
 
 	public EasyNBT checkSetInt(String key, Consumer<Integer> ifPresent, int ifNot)
 	{
@@ -1038,6 +1122,8 @@ public class EasyNBT extends Constants.NBT
 		return this;
 	}
 
+	//--- Pseudo - Map ---//
+
 	public EasyNBT checkSetVec3D(String key, Consumer<Vec3d> ifPresent)
 	{
 		if(wrapped.hasKey(key))
@@ -1059,7 +1145,7 @@ public class EasyNBT extends Constants.NBT
 		return this;
 	}
 
-	//--- Pseudo - Map ---//
+	//--- Unwrapping ---//
 
 	public int size()
 	{
@@ -1076,7 +1162,7 @@ public class EasyNBT extends Constants.NBT
 		return key instanceof String&&wrapped.hasKey(((String)key));
 	}
 
-	//--- Unwrapping ---//
+	//--- General Utils ---//
 
 	/**
 	 * @return the NBT created using this wrapper
@@ -1104,19 +1190,6 @@ public class EasyNBT extends Constants.NBT
 		return wrapped.toString();
 	}
 
-	//--- General Utils ---//
-
-	public static NBTTagCompound parseNBT(String format, Object... arguments)
-	{
-		String json = String.format(format, arguments);
-		//Error-Proof(tm)
-		try {return JsonToNBT.getTagFromJson(json);} catch(NBTException ignored)
-		{
-			//well, at least I think so
-			return new NBTTagCompound();
-		}
-	}
-
 	public <T extends NBTBase> byte getTagIDByClass(Class<T> clazz)
 	{
 		try
@@ -1126,81 +1199,6 @@ public class EasyNBT extends Constants.NBT
 		{
 			return 0;
 		}
-	}
-
-	/**
-	 * Thus spoke EasyNBT - a parser for all and none
-	 *
-	 * @param elements valid objects such as {@link net.minecraft.nbt.NBTBase}, int, float, double, boolean,
-	 *                 {@link EasyNBT}, {@link BlockPos}, {@link net.minecraft.util.math.Vec3d}, {@link net.minecraft.item.ItemStack},
-	 *                 {@link net.minecraftforge.fluids.FluidStack} and {@link java.util.Collection} or array of the above
-	 * @implNote Accepts only a single type of object, will not work if multiple types are passed
-	 */
-	public static NBTTagList listOf(Object... elements)
-	{
-		NBTTagList list = new NBTTagList();
-
-		for(Object element : elements)
-		{
-			if(element==null)
-				continue;
-			if(element instanceof NBTBase)
-				list.appendTag(((NBTBase)element));
-
-			else if(element instanceof Integer)
-				list.appendTag(new NBTTagInt(((Integer)element)));
-			else if(element instanceof Long)
-				list.appendTag(new NBTTagLong(((Long)element)));
-			else if(element instanceof Short)
-				list.appendTag(new NBTTagShort(((Short)element)));
-			else if(element instanceof Byte)
-				list.appendTag(new NBTTagByte(((Byte)element)));
-			else if(element instanceof Float)
-				list.appendTag(new NBTTagFloat(((Float)element)));
-			else if(element instanceof Double)
-				list.appendTag(new NBTTagDouble(((Double)element)));
-			else if(element instanceof Boolean)
-				list.appendTag(new NBTTagByte((byte)(((Boolean)element)?1: 0)));
-
-			else if(element instanceof EasyNBT)
-				list.appendTag(((EasyNBT)element).wrapped);
-
-			else if(element instanceof DimensionBlockPos)
-			{
-				DimensionBlockPos pos = (DimensionBlockPos)element;
-				list.appendTag(listOf(pos.getX(), pos.getY(), pos.getZ(), pos.dimension));
-			}
-			else if(element instanceof BlockPos)
-			{
-				BlockPos pos = (BlockPos)element;
-				list.appendTag(listOf(pos.getX(), pos.getY(), pos.getZ()));
-			}
-			else if(element instanceof Vec3d)
-			{
-				Vec3d pos = (Vec3d)element;
-				list.appendTag(listOf(pos.x, pos.y, pos.z));
-			}
-
-			else if(element instanceof ItemStack)
-				list.appendTag(((ItemStack)element).serializeNBT());
-			else if(element instanceof FluidStack)
-				list.appendTag(((FluidStack)element).writeToNBT(new NBTTagCompound()));
-
-			else if(element instanceof int[])
-				list.appendTag(new NBTTagIntArray(((int[])element)));
-			else if(element instanceof Object[])
-				list.appendTag(listOf(element));
-			else if(element instanceof Collection)
-				list.appendTag(listOf(((Collection<?>)element).toArray(new Object[0])));
-
-		}
-
-		return list;
-	}
-
-	public static NBTTagIntArray intArrayOf(int... ints)
-	{
-		return new NBTTagIntArray(ints);
 	}
 
 	public ByteBuf writeToByteBuf(ByteBuf buffer)

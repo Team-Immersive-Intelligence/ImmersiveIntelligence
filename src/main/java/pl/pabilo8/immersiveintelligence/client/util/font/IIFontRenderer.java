@@ -24,9 +24,6 @@ import java.util.regex.Pattern;
 public class IIFontRenderer extends FontRenderer
 {
 	static HashMap<Character, CharReplacement> unicodeReplacements = new HashMap<>();
-	private final Pattern hexColPattern = Pattern.compile("<hexcol=(......):([^>]*)>");
-	private final int hexColLength = "<hexcol=012345:>".length();
-	private int hexColWidth;
 
 	static
 	{
@@ -72,11 +69,14 @@ public class IIFontRenderer extends FontRenderer
 		unicodeReplacements.put(IIReference.CHARICON_BOOTS, new CharReplacement(3, 5)); //boots
 	}
 
-	int[] backupColors;
-	String colorFormattingKeys = "0123456789abcdef";
+	private final Pattern hexColPattern = Pattern.compile("<hexcol=(......):([^>]*)>");
+	private final int hexColLength = "<hexcol=012345:>".length();
 	public float customSpaceWidth = 4f;
 	public float spacingModifier = 0f;
 	public boolean verticalBoldness = false;
+	int[] backupColors;
+	String colorFormattingKeys = "0123456789abcdef";
+	private int hexColWidth;
 	private boolean previousUnicodeState;
 
 	public IIFontRenderer(ResourceLocation res)

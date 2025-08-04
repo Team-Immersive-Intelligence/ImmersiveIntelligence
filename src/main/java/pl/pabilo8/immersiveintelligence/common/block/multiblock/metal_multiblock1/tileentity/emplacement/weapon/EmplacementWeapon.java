@@ -46,20 +46,27 @@ import java.util.function.Supplier;
 public abstract class EmplacementWeapon<A extends EntityAmmoBase<A>>
 {
 	/**
-	 * Used to fire ammo for the weapon
-	 */
-	protected AmmoFactory<A> ammoFactory;
-	/**
 	 * Acts as a hitbox container for the weapon
 	 */
 	//TODO: 15.02.2024 replace with AMTTactile
 	public EntityEmplacementWeapon entity = null;
-
 	//TODO: 15.02.2024 make yaw, pitch and health protected
 	public float pitch = 0;
 	public float yaw = 0;
-	protected float nextPitch = 0, nextYaw = 0;
 	public int health = 0;
+	/**
+	 * Used to fire ammo for the weapon
+	 */
+	protected AmmoFactory<A> ammoFactory;
+	protected float nextPitch = 0, nextYaw = 0;
+
+	public static MachineUpgrade register(Supplier<EmplacementWeapon<?>> supplier)
+	{
+		//hacky way, but works
+		EmplacementWeapon<?> w = supplier.get();
+		TileEntityEmplacement.weaponRegistry.put(w.getName(), supplier);
+		return new MachineUpgradeEmplacementWeapon(w);
+	}
 
 	/**
 	 * @return name of the emplacement, must be the same as the name in the weapon registry
@@ -268,14 +275,6 @@ public abstract class EmplacementWeapon<A extends EntityAmmoBase<A>>
 
 	}
 
-	public static MachineUpgrade register(Supplier<EmplacementWeapon<?>> supplier)
-	{
-		//hacky way, but works
-		EmplacementWeapon<?> w = supplier.get();
-		TileEntityEmplacement.weaponRegistry.put(w.getName(), supplier);
-		return new MachineUpgradeEmplacementWeapon(w);
-	}
-
 	@Nonnull
 	public abstract AxisAlignedBB getVisionAABB();
 
@@ -311,29 +310,6 @@ public abstract class EmplacementWeapon<A extends EntityAmmoBase<A>>
 	public abstract void renderStorageInventory(GuiEmplacementPageStorage gui, int mx, int my, float partialTicks, boolean first);
 
 	public abstract void performPlatformRefill(TileEntityEmplacement te);
-
-	public static class MachineUpgradeEmplacementWeapon extends MachineUpgrade
-	{
-		private final EmplacementWeapon<?> weapon;
-
-		public MachineUpgradeEmplacementWeapon(EmplacementWeapon<?> weapon)
-		{
-			super(weapon.getName(), new ResourceLocation(ImmersiveIntelligence.MODID, "textures/gui/upgrade/"+weapon.getName()+".png"));
-			this.weapon = weapon;
-		}
-
-		@SideOnly(Side.CLIENT)
-		public void render(TileEntityEmplacement te)
-		{
-			weapon.render(te, 0);
-		}
-
-		@SideOnly(Side.CLIENT)
-		public void renderUpgradeProgress(int clientProgress, int serverProgress, float partialTicks)
-		{
-			weapon.renderUpgradeProgress(clientProgress, serverProgress, partialTicks);
-		}
-	}
 
 	public abstract int getEnergyUpkeepCost();
 
@@ -388,4 +364,27 @@ public abstract class EmplacementWeapon<A extends EntityAmmoBase<A>>
 
 	@SideOnly(Side.CLIENT)
 	protected abstract Tuple<ResourceLocation, List<ModelRendererTurbo>> getDebris();
+
+	public static class MachineUpgradeEmplacementWeapon extends MachineUpgrade
+	{
+		private final EmplacementWeapon<?> weapon;
+
+		public MachineUpgradeEmplacementWeapon(EmplacementWeapon<?> weapon)
+		{
+			super(weapon.getName(), new ResourceLocation(ImmersiveIntelligence.MODID, "textures/gui/upgrade/"+weapon.getName()+".png"));
+			this.weapon = weapon;
+		}
+
+		@SideOnly(Side.CLIENT)
+		public void render(TileEntityEmplacement te)
+		{
+			weapon.render(te, 0);
+		}
+
+		@SideOnly(Side.CLIENT)
+		public void renderUpgradeProgress(int clientProgress, int serverProgress, float partialTicks)
+		{
+			weapon.renderUpgradeProgress(clientProgress, serverProgress, partialTicks);
+		}
+	}
 }

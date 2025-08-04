@@ -25,6 +25,11 @@ public class DustStack implements INBTSerializable<NBTTagCompound>
 		deserializeNBT(nbt);
 	}
 
+	public static DustStack getEmptyStack()
+	{
+		return new DustStack("", 0);
+	}
+
 	public DustStack subtract(DustStack dust)
 	{
 		if(amount > dust.amount)
@@ -35,11 +40,6 @@ public class DustStack implements INBTSerializable<NBTTagCompound>
 	public boolean isEmpty()
 	{
 		return "".equals(name)||amount==0;
-	}
-
-	public static DustStack getEmptyStack()
-	{
-		return new DustStack("", 0);
 	}
 
 	public DustStack copy()

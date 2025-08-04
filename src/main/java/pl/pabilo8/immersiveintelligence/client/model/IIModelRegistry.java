@@ -60,6 +60,24 @@ public class IIModelRegistry extends ImmersiveModelRegistry
 	private final List<IReloadableModelContainer<?>> temporaryReloadableModels = new ArrayList<>();
 	private final HashMap<Connection, AMTChain> motorBeltConnections = new HashMap<>();
 
+	/**
+	 * Loads the empty quad model, which is rendered last to fix display issues with recolored faces
+	 */
+	private static void loadEmptyQuadModel()
+	{
+		try
+		{
+			OBJModel model = (OBJModel)OBJLoader.INSTANCE.loadModel(QUAD_EMPTY_RESLOC).process(ImmutableMap.of("flip-v", String.valueOf(true)));
+			BakedQuad[] quads = model
+					.bake(new OBJState(ImmutableList.of("empty"), true, ModelRotation.X0_Y0), DefaultVertexFormats.BLOCK, ClientUtils::getSprite)
+					.getQuads(null, null, 0L).toArray(new BakedQuad[0]);
+			QUAD_EMPTY = quads[0];
+		} catch(Exception e)
+		{
+			throw new RuntimeException(e);
+		}
+	}
+
 	@Override
 	@SubscribeEvent
 	public void onModelBakeEvent(ModelBakeEvent event)
@@ -79,24 +97,6 @@ public class IIModelRegistry extends ImmersiveModelRegistry
 		}
 		loadEmptyQuadModel();
 
-	}
-
-	/**
-	 * Loads the empty quad model, which is rendered last to fix display issues with recolored faces
-	 */
-	private static void loadEmptyQuadModel()
-	{
-		try
-		{
-			OBJModel model = (OBJModel)OBJLoader.INSTANCE.loadModel(QUAD_EMPTY_RESLOC).process(ImmutableMap.of("flip-v", String.valueOf(true)));
-			BakedQuad[] quads = model
-					.bake(new OBJState(ImmutableList.of("empty"), true, ModelRotation.X0_Y0), DefaultVertexFormats.BLOCK, ClientUtils::getSprite)
-					.getQuads(null, null, 0L).toArray(new BakedQuad[0]);
-			QUAD_EMPTY = quads[0];
-		} catch(Exception e)
-		{
-			throw new RuntimeException(e);
-		}
 	}
 
 	/**

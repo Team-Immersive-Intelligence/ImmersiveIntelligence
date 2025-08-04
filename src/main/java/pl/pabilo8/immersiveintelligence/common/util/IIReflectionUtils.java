@@ -21,11 +21,11 @@ import java.util.stream.Collectors;
  */
 public class IIReflectionUtils
 {
+	private static ConcurrentHashMap<Object, ArrayList<IEventListener>> listeners = null;
+
 	private IIReflectionUtils()
 	{
 	}
-
-	private static ConcurrentHashMap<Object, ArrayList<IEventListener>> listeners = null;
 
 	public static Field getField(Class<?> cls, String name, boolean priv)
 	{
