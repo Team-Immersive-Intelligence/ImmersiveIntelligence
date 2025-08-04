@@ -123,6 +123,7 @@ item.immersiveintelligence.material_nugget.brass.name=Brass Nugget
 item.immersiveintelligence.material_nugget.advanced_electronic_alloy.name=Advanced Electronic Alloy Nugget
 item.immersiveintelligence.material_nugget.silicon.name=Silicon Piece
 item.immersiveintelligence.material_nugget.duraluminium.name=Duraluminium Nugget
+item.immersiveintelligence.material_nugget.rubber.name=Rubber Nugget
 
 item.immersiveintelligence.material_wire.tungsten.name=Tungsten Wire
 item.immersiveintelligence.material_wire.brass.name=Brass Wire
