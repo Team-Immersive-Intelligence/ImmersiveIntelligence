@@ -1,0 +1,20 @@
+{
+  "Version": "v3.3.0",
+  "Verbose": false,
+  "Format": "",
+  "Debug": false,
+  "IgnoreDefaults": false,
+  "SpacesAfterTabs": false,
+  "NoColor": false,
+  "Exclude": ["Model(.*).java", ".lang", "ie_manual/(.*).md", ".sh"],
+  "AllowedContentTypes": [],
+  "PassedFiles": [],
+  "Disable": {
+    "EndOfLine": true,
+    "Indentation": true,
+    "InsertFinalNewline": true,
+    "TrimTrailingWhitespace": false,
+    "IndentSize": false,
+    "MaxLineLength": false
+  }
+}

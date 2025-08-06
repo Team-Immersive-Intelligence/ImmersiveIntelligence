@@ -7,7 +7,8 @@
 
 This project uses a proprietary setup script called **Mk.4/5 Mod Setup Script** made by **Team Immersive Intelligence
 **.  
-The setup script is meant to be modular (to a degree) and consists of multiple scripts-modules contained in the [./gradle/](./gradle/) folder, as well as the , [gradle.properties](./gradle.properties) and [./custom.gradle](./custom.gradle) files.
+The setup script is meant to be modular (to a degree) and consists of multiple scripts-modules contained in the [./gradle/](./gradle/) folder, as well as the , [gradle.properties](./gradle.properties)
+and [./custom.gradle](./custom.gradle) files.
 A more detailed description of it is avaliable after running `gradlew modSetupDocs`
 
 ### IntelliJ Setup

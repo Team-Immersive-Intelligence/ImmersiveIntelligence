@@ -80,7 +80,9 @@ public class ItemBlockIISlabs extends ItemBlockIIBase
 		{
 			stackSlab.slabType = 2;
 			stackSlab.markContainingBlockForUpdate(null);
-			world.playSound(stackSlab.getPos().getX()+.5, stackSlab.getPos().getY()+.5, stackSlab.getPos().getZ()+.5, this.block.getSoundType().getPlaceSound(), SoundCategory.BLOCKS, (this.block.getSoundType().getVolume()+1.0F)/2.0F, this.block.getSoundType().getPitch()*0.8F, false);
+			world.playSound(stackSlab.getPos().getX()+.5, stackSlab.getPos().getY()+.5, stackSlab.getPos().getZ()+.5,
+					this.block.getSoundType().getPlaceSound(), SoundCategory.BLOCKS,
+					(this.block.getSoundType().getVolume()+1.0F)/2.0F, this.block.getSoundType().getPitch()*0.8F, false);
 			stack.shrink(1);
 			return EnumActionResult.SUCCESS;
 		}

@@ -1,8 +1,8 @@
 name: Feature Request
 description: Request a New Feature
 title: "[Feature Request]: "
-labels: ["Feature"]
-projects: ["Team-Immersive-Intelligence/1"]
+labels: [ "Feature" ]
+projects: [ "Team-Immersive-Intelligence/1" ]
 assignees:
   - CarverBot
 body:

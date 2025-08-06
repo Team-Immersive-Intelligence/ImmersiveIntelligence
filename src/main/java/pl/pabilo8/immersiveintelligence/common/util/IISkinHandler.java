@@ -95,7 +95,11 @@ public class IISkinHandler
 	{
 		ManualHelper.getManual().manualContents.removeAll("Contributor Skins");
 		ArrayList<ManualPages> skin_pages = new ArrayList<>();
-		skin_pages.add(new ManualPages.Text(ManualHelper.getManual(), "Contributors of Immersive Intelligence, whether through direct help by providing assets, code, translations, recording tutorial videos, donations through Patreon or simply contributing to II community, can not be overlooked and have to be rewarded.\nFor that, a collection of skins has been added to the game, these are applicable to various weapons, ranging from machineguns to howitzers. Huge thanks to all of you, without you this project would take much longer than Soon(TM)."));
+		skin_pages.add(new ManualPages.Text(ManualHelper.getManual(),
+				"Contributors of Immersive Intelligence, whether through direct help by providing assets, code, translations, recording tutorial videos, "+
+						"donations through Patreon or simply contributing to II community, can not be overlooked and have to be rewarded.\n"+
+						"For that, a collection of skins has been added to the game, these are applicable to various weapons, ranging from machineguns to howitzers. "+
+						"Huge thanks to all of you, without you this project would take much longer than Soon(TM)."));
 		for(IISpecialSkin skin : IISkinHandler.specialSkins.values())
 			skin_pages.add(new IIManualPageContributorSkin(ManualHelper.getManual(), skin));
 
