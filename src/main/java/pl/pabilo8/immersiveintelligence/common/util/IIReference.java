@@ -108,6 +108,7 @@ public class IIReference
 	public static final ResLoc RES_CONTEXT_DATA_OUT = ResLoc.of(IIReference.RES_II, "gui/data_types/context/output");
 	public static final ResLoc RES_CONTEXT_DATA_EVENT = ResLoc.of(IIReference.RES_II, "gui/data_types/context/event");
 
+	//TODO: 03.08.2025 move Deco textures to a separate class and automate registration
 	//Deco Base
 	public static final ResLoc RES_TEXTURES_DECO = ResLoc.of(RES_II, "gui/deco/");
 	public static final ResLoc RES_TEXTURES_DECO_BACKGROUND = ResLoc.of(RES_TEXTURES_DECO, "background/");

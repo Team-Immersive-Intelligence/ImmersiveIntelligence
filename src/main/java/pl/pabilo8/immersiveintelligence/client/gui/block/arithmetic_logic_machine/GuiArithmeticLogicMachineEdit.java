@@ -1,43 +1,23 @@
 package pl.pabilo8.immersiveintelligence.client.gui.block.arithmetic_logic_machine;
 
-import blusunrize.immersiveengineering.client.gui.elements.GuiButtonIE;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
-import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeExpression;
-import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoButton;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.data_editor.DecoDataEditorExpression;
-import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTemplate;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityArithmeticLogicMachine;
-import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
-import pl.pabilo8.immersiveintelligence.common.network.messages.MessageGuiNBT;
-import pl.pabilo8.immersiveintelligence.common.util.IIReference;
-import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
-import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.io.IOException;
-import java.util.ArrayList;
+import pl.pabilo8.immersiveintelligence.common.gui.ContainerArithmeticLogicMachine;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 03.08.2025
+ * @ii-approved 0.3.1
  * @since 30.06.2019
  */
-public class GuiArithmeticLogicMachineEdit extends GuiArithmeticLogicMachineBase
+@DecoTemplate(name = "arithmetic_logic_machine_edit")
+public class GuiArithmeticLogicMachineEdit extends DecoGui<TileEntityArithmeticLogicMachine, ContainerArithmeticLogicMachine>
 {
-	private int page;
-	public char variableToEdit = 'a';
-	public DataType dataType;
-	//	public DecoDropdownDataLetters buttonLetter;
-	public GuiButtonIE buttonApply;
-	public DecoButton buttonVariableHelp;
-
-	@Nullable
-	private DecoDataEditorExpression editor = null;
+	private DecoDataEditorExpression editor;
 
 	public GuiArithmeticLogicMachineEdit(EntityPlayer player, TileEntityArithmeticLogicMachine tile)
 	{
@@ -45,6 +25,14 @@ public class GuiArithmeticLogicMachineEdit extends GuiArithmeticLogicMachineBase
 	}
 
 	@Override
+	public void onInit()
+	{
+		syncAnimatedParts(tile.door, true);
+		syncAnimatedParts(tile.drawer, false);
+		syncAnimatedParts(tile.keyboard, true);
+	}
+
+	/*@Override
 	public void initGui()
 	{
 		super.initGui();
@@ -69,134 +57,14 @@ public class GuiArithmeticLogicMachineEdit extends GuiArithmeticLogicMachineBase
 						.withIcon(IIReference.RES_TEXTURES_GUI.with("data_types/expression").withExtension(ResLoc.EXT_PNG))
 		);
 
-		/*this.editor = addButton(new DecoDataEditorExpression(buttonList.size(),
+		*//*this.editor = addButton(new DecoDataEditorExpression(buttonList.size(),
 				this.editor!=null?this.editor.outputType(): new DataPacket().getVarInType(DataTypeExpression.class, dataType), handler.getStackInSlot(page)));
 		this.editor.setBounds(guiLeft+35, guiTop+46, 131, 80);
 
 		//Letter Change Buttons
 		buttonLetter = addButton(new DecoDropdownDataLetters(buttonList.size(), guiLeft+42-10, guiTop+14, false, variableToEdit, ArrowsAlignment.LEFT));
-		buttonLetter.setAvoidGetter(this::getPacketFromPage);*/
+		buttonLetter.setAvoidGetter(this::getPacketFromPage);*//*
 
-	}
+	}*/
 
-	@Override
-	public void updateScreen()
-	{
-		super.updateScreen();
-		/*if(editor!=null)
-			editor.update();*/
-	}
-
-	@Override
-	protected void actionPerformed(@Nonnull GuiButton button) throws IOException
-	{
-		super.actionPerformed(button);
-		/*if(button==buttonLetter)
-		{
-			if(buttonLetter.selectedEntry!=variableToEdit)
-				switchLetter();
-		}
-		else*/
-		if(button==buttonApply)
-		{
-			if(this.editor!=null)
-				this.dataType = this.editor.outputType();
-			saveBasicData();
-			syncDataToServer();
-			preparedForChange = true;
-			IIPacketHandler.sendToServer(new MessageGuiNBT(getPage(page), tile));
-		}
-
-	}
-
-	@Override
-	public void drawScreen(int mx, int my, float partial)
-	{
-		super.drawScreen(mx, my, partial);
-	}
-
-	/**
-	 * Draws the background layer of this container (behind the items).
-	 */
-	@Override
-	protected void drawGuiContainerBackgroundLayer(float f, int mx, int my)
-	{
-		super.drawGuiContainerBackgroundLayer(f, mx, my);
-
-	}
-
-	//Used to refresh gui variables after one of the variables is changed
-	void refreshStoredData()
-	{
-		super.refreshStoredData();
-		if(positionEqual(tile))
-		{
-			EasyNBT guiData = proxy.getStoredGuiData();
-			if(guiData.hasKey("variableToEdit"))
-			{
-				page = guiData.getInt("circuitToEdit");
-				variableToEdit = guiData.getString("variableToEdit").charAt(0);
-			}
-		}
-		DataPacket list = IIContent.itemCircuit.getStoredData(handler.getStackInSlot(page));
-		if(list.has(variableToEdit))
-			this.dataType = list.get(variableToEdit);
-		else
-			this.dataType = new DataTypeExpression();
-	}
-
-	public DataPacket getPacketFromPage()
-	{
-		return IIContent.itemCircuit.getStoredData(handler.getStackInSlot(page));
-	}
-
-
-	void switchLetter()
-	{
-		/*if(handler.getSlots() > page&&handler.getStackInSlot(page).isEmpty())
-			return;
-
-		DataPacket list = IIContent.itemCircuit.getStoredData(handler.getStackInSlot(page));
-		if(!list.has(buttonLetter.selectedEntry))
-		{
-			list.set(buttonLetter.selectedEntry, list.get(variableToEdit));
-			list.remove(variableToEdit);
-			variableToEdit = buttonLetter.selectedEntry;
-		}
-		IIContent.itemCircuit.writeDataToItem(list, handler.getStackInSlot(page));*/
-
-		syncDataToServer();
-		initGui();
-	}
-
-	@Override
-	public ArrayList<String> getTooltip(int mx, int my)
-	{
-		ArrayList<String> tooltip = super.getTooltip(mx, my);
-		/*if(editor!=null)
-			editor.getTooltip(tooltip, mx, my);*/
-		return tooltip;
-	}
-
-	@Override
-	protected void syncDataToServer()
-	{
-		super.syncDataToServer();
-
-		/*proxy.setStoredGuiData()
-				.withString("variableToEdit", String.valueOf(variableToEdit));
-		if(editor!=null)
-		{
-			DataPacket storedData = IIContent.itemCircuit.getStoredData(handler.getStackInSlot(page));
-			storedData.set(variableToEdit, editor.outputType());
-
-			IIPacketHandler.sendToServer(new MessageIITileSync(tile, EasyNBT.newNBT()
-					.withTag("expressions", EasyNBT.newNBT()
-							.withInt("page", page)
-							.withTag("list", storedData.serializeNBT())
-					)
-			));
-		}*/
-
-	}
 }

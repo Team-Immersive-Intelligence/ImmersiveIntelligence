@@ -36,7 +36,7 @@ public class GuiSawmill extends DecoGui<TileEntitySawmill, ContainerSawmill>
 	@Override
 	public void onInit()
 	{
-		syncAnimatedParts(0, true);
+		syncAnimatedParts(tile.vise, true);
 		startBackground()
 				.withBox(IIReference.GUI_BG_WOODEN, 8, 0, 176-24, 76)
 				.withStandaloneFrame(6+8, 12, 128+4-2, 64-8, IIReference.GUI_FRAME_CORNERS_BRASS, 4, true)
@@ -71,6 +71,6 @@ public class GuiSawmill extends DecoGui<TileEntitySawmill, ContainerSawmill>
 	public void onGuiClosed()
 	{
 		super.onGuiClosed();
-		syncAnimatedParts(0, false);
+		syncAnimatedParts(tile.vise, false);
 	}
 }

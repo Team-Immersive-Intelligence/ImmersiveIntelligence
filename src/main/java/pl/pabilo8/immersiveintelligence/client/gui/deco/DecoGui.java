@@ -50,6 +50,7 @@ import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.NBTSerialisation;
 import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIBase;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockInteractablePart;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -816,7 +817,7 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 
 	public void syncAnimatedParts(MultiblockInteractablePart part, boolean state)
 	{
-		IIPacketHandler.sendToServer(new MessageBooleanAnimatedPartsSync(id, state, tile.getPos()));
+		IIPacketHandler.sendToServer(new MessageBooleanAnimatedPartsSync(part.getID(), state, tile.getPos()));
 	}
 
 	/**

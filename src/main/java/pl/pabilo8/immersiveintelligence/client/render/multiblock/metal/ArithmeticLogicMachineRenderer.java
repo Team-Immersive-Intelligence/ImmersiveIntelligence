@@ -77,9 +77,9 @@ public class ArithmeticLogicMachineRenderer extends IIMultiblockRenderer<TileEnt
 		);
 
 		//animations
-		animationDrawer = IIAnimationCompiledMap.create(model, ResLoc.of(IIReference.RES_II, "data_input_machine/open_drawer"));
-		animationDoor = IIAnimationCompiledMap.create(model, ResLoc.of(IIReference.RES_II, "data_input_machine/open_door"));
-		animationKeyboard = IIAnimationCompiledMap.create(model, ResLoc.of(IIReference.RES_II, "data_input_machine/open_keyboard"));
+		animationDrawer = IIAnimationCompiledMap.create(model, ResLoc.of(IIReference.RES_II, "arithmetic_logic_machine/open_drawer"));
+		animationDoor = IIAnimationCompiledMap.create(model, ResLoc.of(IIReference.RES_II, "arithmetic_logic_machine/open_door"));
+		animationKeyboard = IIAnimationCompiledMap.create(model, ResLoc.of(IIReference.RES_II, "arithmetic_logic_machine/open_keyboard"));
 	}
 
 	@Override

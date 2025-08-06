@@ -118,8 +118,8 @@ public class GuiDataInputMachine extends DecoGui<TileEntityDataInputMachine, Con
 		boolean isStorage = container.hasStorage;
 		if(!soundPlayed)
 		{
-			syncAnimatedParts(0, isStorage);
-			syncAnimatedParts(1, !isStorage);
+			syncAnimatedParts(tile.drawer, isStorage);
+			syncAnimatedParts(tile.hatch, !isStorage);
 			soundPlayed = true;
 		}
 
@@ -246,8 +246,8 @@ public class GuiDataInputMachine extends DecoGui<TileEntityDataInputMachine, Con
 		//Close the hatches
 		if(!changeGUIFlag)
 		{
-			syncAnimatedParts(0, false);
-			syncAnimatedParts(1, false);
+			syncAnimatedParts(tile.drawer, false);
+			syncAnimatedParts(tile.hatch, false);
 		}
 		super.onGuiClosed();
 	}

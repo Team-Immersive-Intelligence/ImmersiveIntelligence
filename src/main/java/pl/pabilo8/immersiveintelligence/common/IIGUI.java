@@ -17,9 +17,8 @@ import pl.pabilo8.immersiveintelligence.api.utils.IUpgradableMachine;
 import pl.pabilo8.immersiveintelligence.client.gui.block.*;
 import pl.pabilo8.immersiveintelligence.client.gui.block.ammunition_production.GuiAmmunitionAssembler;
 import pl.pabilo8.immersiveintelligence.client.gui.block.ammunition_production.GuiProjectileWorkshop;
+import pl.pabilo8.immersiveintelligence.client.gui.block.arithmetic_logic_machine.GuiArithmeticLogicMachine;
 import pl.pabilo8.immersiveintelligence.client.gui.block.arithmetic_logic_machine.GuiArithmeticLogicMachineEdit;
-import pl.pabilo8.immersiveintelligence.client.gui.block.arithmetic_logic_machine.GuiArithmeticLogicMachineStorage;
-import pl.pabilo8.immersiveintelligence.client.gui.block.arithmetic_logic_machine.GuiArithmeticMachineVariables;
 import pl.pabilo8.immersiveintelligence.client.gui.block.data_input_machine.GuiDataInputMachine;
 import pl.pabilo8.immersiveintelligence.client.gui.block.data_input_machine.GuiDataInputMachineEdit;
 import pl.pabilo8.immersiveintelligence.client.gui.block.emplacement.GuiEmplacementPageStatus;
@@ -88,17 +87,8 @@ public enum IIGUI implements ISerializableEnum
 	ARITHMETIC_LOGIC_MACHINE_STORAGE(TileEntityArithmeticLogicMachine.class,
 			(player, te) -> new ContainerArithmeticLogicMachine(player, te, 0)
 	),
-	ARITHMETIC_LOGIC_MACHINE_VARIABLES_0(TileEntityArithmeticLogicMachine.class,
-			(player, te) -> new ContainerArithmeticLogicMachine(player, te, 1, 0)
-	),
-	ARITHMETIC_LOGIC_MACHINE_VARIABLES_1(TileEntityArithmeticLogicMachine.class,
-			(player, te) -> new ContainerArithmeticLogicMachine(player, te, 1, 1)
-	),
-	ARITHMETIC_LOGIC_MACHINE_VARIABLES_2(TileEntityArithmeticLogicMachine.class,
-			(player, te) -> new ContainerArithmeticLogicMachine(player, te, 1, 2)
-	),
-	ARITHMETIC_LOGIC_MACHINE_VARIABLES_3(TileEntityArithmeticLogicMachine.class,
-			(player, te) -> new ContainerArithmeticLogicMachine(player, te, 1, 3)
+	ARITHMETIC_LOGIC_MACHINE_VARIABLES(TileEntityArithmeticLogicMachine.class,
+			(player, te) -> new ContainerArithmeticLogicMachine(player, te, 1)
 	),
 	ARITHMETIC_LOGIC_MACHINE_EDIT(TileEntityArithmeticLogicMachine.class,
 			(player, te) -> new ContainerArithmeticLogicMachine(player, te, 2)
@@ -220,15 +210,8 @@ public enum IIGUI implements ISerializableEnum
 		IIGUI.DATA_INPUT_MACHINE_VARIABLES.setClientDecoGui(GuiDataInputMachine::getVariablesGui);
 		IIGUI.DATA_INPUT_MACHINE_EDIT.setClientDecoGui(GuiDataInputMachineEdit::new);
 		//ALM
-		IIGUI.ARITHMETIC_LOGIC_MACHINE_STORAGE.setClientGui(GuiArithmeticLogicMachineStorage::new);
-		IIGUI.ARITHMETIC_LOGIC_MACHINE_VARIABLES_0.setClientGui((player, te) ->
-				new GuiArithmeticMachineVariables(player, (TileEntityArithmeticLogicMachine)te, 0));
-		IIGUI.ARITHMETIC_LOGIC_MACHINE_VARIABLES_1.setClientGui((player, te) ->
-				new GuiArithmeticMachineVariables(player, (TileEntityArithmeticLogicMachine)te, 1));
-		IIGUI.ARITHMETIC_LOGIC_MACHINE_VARIABLES_2.setClientGui((player, te) ->
-				new GuiArithmeticMachineVariables(player, (TileEntityArithmeticLogicMachine)te, 2));
-		IIGUI.ARITHMETIC_LOGIC_MACHINE_VARIABLES_3.setClientGui((player, te) ->
-				new GuiArithmeticMachineVariables(player, (TileEntityArithmeticLogicMachine)te, 3));
+		IIGUI.ARITHMETIC_LOGIC_MACHINE_STORAGE.setClientGui(GuiArithmeticLogicMachine::getStorageGui);
+		IIGUI.ARITHMETIC_LOGIC_MACHINE_VARIABLES.setClientGui(GuiArithmeticLogicMachine::getVariablesGui);
 		IIGUI.ARITHMETIC_LOGIC_MACHINE_EDIT.setClientGui(GuiArithmeticLogicMachineEdit::new);
 		//Printed Page
 		IIGUI.PRINTED_PAGE_BLANK.setClientStackGui(GuiPrintedPage::new);

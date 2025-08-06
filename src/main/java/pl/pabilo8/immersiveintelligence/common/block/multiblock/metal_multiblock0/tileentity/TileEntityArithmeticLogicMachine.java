@@ -59,9 +59,9 @@ public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockIIGene
 		memory = new DataPacket();
 
 		//interactable parts
-		door = new MultiblockInteractablePart(30);
-		keyboard = new MultiblockInteractablePart(10);
-		drawer = new MultiblockInteractablePart(20);
+		door = new MultiblockInteractablePart(0, 30, 1);
+		keyboard = new MultiblockInteractablePart(1, 10, 1);
+		drawer = new MultiblockInteractablePart(2, 20, 1);
 	}
 
 	@Override
@@ -70,6 +70,7 @@ public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockIIGene
 		super.dummyCleanup();
 		door = null;
 		memory = null;
+		keyboard = null;
 	}
 
 	@Override
@@ -199,16 +200,20 @@ public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockIIGene
 	@Override
 	public void onAnimationChangeClient(boolean state, int part)
 	{
-		door.setState(state);
+		MultiblockInteractablePart.setStates(state, part, door, keyboard, drawer);
 	}
 
 	@Override
 	public void onAnimationChangeServer(boolean state, int part)
 	{
-		if(door.setState(state))
+		MultiblockInteractablePart result = MultiblockInteractablePart.setStates(state, part, door, keyboard, drawer);
+		if(result!=null)
 		{
-			world.playSound(null, getPos(), state?IISounds.metalLockerOpen: IISounds.metalLockerClose, SoundCategory.BLOCKS, 0.25F, 1f);
-			IIPacketHandler.sendToClient(this, new MessageBooleanAnimatedPartsSync(0, state, getPos()));
+			if(result==door)
+				world.playSound(null, getPos(), state?IISounds.metalLockerOpen: IISounds.metalLockerClose, SoundCategory.BLOCKS, 0.25F, 1f);
+			else //keyboard and drawer make the same sound
+				world.playSound(null, getPos(), state?IISounds.drawerOpen: IISounds.drawerClose, SoundCategory.BLOCKS, 0.25F, 1f);
+			IIPacketHandler.sendToClient(this, new MessageBooleanAnimatedPartsSync(result, this));
 		}
 	}
 }

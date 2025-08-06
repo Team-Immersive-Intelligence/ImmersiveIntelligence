@@ -126,7 +126,7 @@ public class DecoTextField extends GuiComponentDecoBase<DecoTextField>
 								line.substring(lineScrollOffset, Math.min(cursorPosition, line.length())));
 
 					//Draw cursor
-					drawRect(cursorX, lineY, cursorX+1, lineY+fontRenderer.FONT_HEIGHT, cursorColor.getPackedARGB());
+					fontRenderer.drawString("|", cursorX, lineY, textColor.getPackedARGB());
 				}
 
 				//Draw selection if needed
@@ -142,8 +142,10 @@ public class DecoTextField extends GuiComponentDecoBase<DecoTextField>
 						int endX = x+padding+fontRenderer.getStringWidth(
 								line.substring(lineScrollOffset, Math.min(selEnd, line.length())));
 
+						//TODO: 02.08.2025 fix
 						IIDrawUtils.startColored()
-								.drawColorRect(startX, lineY, endX-startX, fontRenderer.FONT_HEIGHT, selectionColor);
+								.drawColorRect(startX, lineY, endX-startX, fontRenderer.FONT_HEIGHT, selectionColor)
+								.finish();
 					}
 				}
 			}
@@ -260,38 +262,18 @@ public class DecoTextField extends GuiComponentDecoBase<DecoTextField>
 		int clickX = mouseX-(x+padding);
 		int clickY = mouseY-(y+padding);
 
+		//Change current line
 		if(multiLine)
-		{
-			int lineIndex = verticalScroll+(clickY/fontRenderer.FONT_HEIGHT);
-			if(lineIndex >= 0&&lineIndex < lines.size())
-			{
-				//Change current line
-				currentLine = lineIndex;
-				String line = getCurrentLine();
+			currentLine = MathHelper.clamp(verticalScroll+(clickY/fontRenderer.FONT_HEIGHT), 0, lines.size()-1);
 
-				//Find cursor position in line
-				cursorPosition = fontRenderer.trimStringToWidth(line, clickX).length();
-				if(cursorPosition < 0) cursorPosition = 0;
-				if(cursorPosition > line.length()) cursorPosition = line.length();
+		//Find cursor position in line
+		String line = getCurrentLine();
+		cursorPosition = MathHelper.clamp(fontRenderer.trimStringToWidth(line, clickX).length(), 0, line.length());
+		cursorCounter = 0;
 
-				//Set selection end to cursor position
-				setSelectionPos(cursorPosition);
-				return true;
-			}
-		}
-		else
-		{
-			//Single line
-			String line = getCurrentLine();
-			cursorPosition = fontRenderer.trimStringToWidth(line, clickX).length();
-			if(cursorPosition < 0) cursorPosition = 0;
-			if(cursorPosition > line.length()) cursorPosition = line.length();
-
-			setSelectionPos(cursorPosition);
-			return true;
-		}
-
-		return false;
+		//Set selection end to cursor position
+		setSelectionPos(cursorPosition);
+		return true;
 	}
 
 	/**
@@ -694,15 +676,15 @@ public class DecoTextField extends GuiComponentDecoBase<DecoTextField>
 		if(!multiLine)
 		{
 			lines.clear();
-			lines.add(text);
+			//Single-line mode, replace special characters
+			lines.add(text.replace("\n", "").replace("\r", "").replace("\t", ""));
 			cursorPosition = text.length();
 			selectionEnd = cursorPosition;
 		}
 		else
 		{
-			String[] lineArray = text.split("\n", -1);
 			lines.clear();
-			Collections.addAll(lines, lineArray);
+			Collections.addAll(lines, text.split("\n"));
 
 			if(lines.isEmpty())
 				lines.add("");
