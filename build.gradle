@@ -1,30 +1,30 @@
 //--- Boilerplate
 
 buildscript {
-    repositories {
-        mavenCentral()
-        jcenter()
-        maven {
-            name = "forge"
-            url = "https://maven.minecraftforge.net/"
-        }
-        maven {
-            name = "sonatype"
-            url = "https://oss.sonatype.org/content/repositories/snapshots/"
-        }
-        maven {
-            name = "iiMavenReleases"
-            url = uri("https://maven.iiteam.net/releases")
-        }
+	repositories {
+		mavenCentral()
+		jcenter()
+		maven {
+			name = "forge"
+			url = "https://maven.minecraftforge.net/"
+		}
+		maven {
+			name = "sonatype"
+			url = "https://oss.sonatype.org/content/repositories/snapshots/"
+		}
+		maven {
+			name = "iiMavenReleases"
+			url = uri("https://maven.iiteam.net/releases")
+		}
 
-    }
-    dependencies {
-        classpath("com.anatawa12.forge:ForgeGradle:2.3-1.0.+") {
-            changing = true
-        }
+	}
+	dependencies {
+		classpath("com.anatawa12.forge:ForgeGradle:2.3-1.0.+") {
+			changing = true
+		}
 
-        classpath('xyz.vdeltagabriel:GradleUtils:2.1.0')
-    }
+		classpath('xyz.vdeltagabriel:GradleUtils:2.1.0')
+	}
 }
 
 // Apply boilerplate code

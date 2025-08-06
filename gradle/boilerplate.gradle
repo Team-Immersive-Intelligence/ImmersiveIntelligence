@@ -5,9 +5,9 @@ apply plugin: 'idea'
 apply plugin: 'gradleutils'
 
 //--- Script Utilties
-project.getOr = {String envProp, projectProp -> System.getenv(envProp) ?: projectProp}
-project.logFile = {LogLevel logLevel, String file ->  logger.log(logLevel, new File('gradle/docs/'+file+'.txt').getText('UTF-8'))}
-project.printDocs = {String file -> println(new File('gradle/docs/'+file+'.txt').getText('UTF-8'))}
+project.getOr = { String envProp, projectProp -> System.getenv(envProp) ?: projectProp }
+project.logFile = { LogLevel logLevel, String file -> logger.log(logLevel, new File('gradle/docs/' + file + '.txt').getText('UTF-8')) }
+project.printDocs = { String file -> println(new File('gradle/docs/' + file + '.txt').getText('UTF-8')) }
 
 //--- Project SourceSets
 sourceSets {
@@ -50,7 +50,7 @@ minecraft {
     version = modForge
     runDir = "run"
 
-    replace "@VERSION@":modVersion
+    replace "@VERSION@": modVersion
     mappings = modMappings
     useDepAts = true
 }
@@ -63,36 +63,37 @@ minecraft {
 
 // We have to put it **BEFORE** any other gradle files are parsed.
 def customGradle = rootProject.file('custom.gradle')
-if (customGradle.exists()) {
+if (customGradle.exists())
+{
     apply from: customGradle
 }
 
 //--- Include the ModWorks Processor
-if(ii_useModworksPreprocessor.asBoolean())
+if (ii_useModworksPreprocessor.asBoolean())
     apply from: rootProject.file("gradle/modworks.gradle")
 
 //--- Include Minecraft JUnit
-if(ii_useJUnit.asBoolean())
+if (ii_useJUnit.asBoolean())
     apply from: rootProject.file("gradle/junit.gradle")
 
 compileJava {
     logFile(LogLevel.WARN, "gradlephant")
     logger.log(LogLevel.WARN, ii_gradlephantTitle)
-    logger.log(LogLevel.WARN, ii_gradlephantLink+'\n')
+    logger.log(LogLevel.WARN, ii_gradlephantLink + '\n')
 
-    if(ii_printSourceSets.toBoolean())
+    if (ii_printSourceSets.toBoolean())
     {
         logger.log(LogLevel.WARN, 'SourceSets in Project: ')
         sourceSets.each { srcSet ->
-            println "> ["+srcSet.name+"]"
-            print "   - Sources: "+srcSet.allJava.srcDirs+"\n"
+            println "> [" + srcSet.name + "]"
+            print "   - Sources: " + srcSet.allJava.srcDirs + "\n"
         }
         println ""
     }
 
     println 'This mod uses Team II\'s Mod Setup Script, run [gradlew modSetupHelp].'
 
-    if(ii_generateCoreJar=='true')
+    if (ii_generateCoreJar == 'true')
     {
         println 'This mod will generate a [core jar] and place it inside its [main jar] during build.'
         println 'For this, a valid fingerprint and configured keystore is needed.'
@@ -100,9 +101,9 @@ compileJava {
     else
         println 'This mod will not generate a [core jar] inside its [main jar]. Enable it in [gradle.properties] if needed.'
 
-    if(ii_useModworksPreprocessor)
+    if (ii_useModworksPreprocessor)
         println 'This mod has ModWorks annotation processor enabled, check out https://github.com/Team-Immersive-Intelligence/ModworksProcessor for more information.'
-    if(ii_useJUnit)
+    if (ii_useJUnit)
         println 'This mod has JUnit tests enabled, check out https://github.com/Team-Immersive-Intelligence/Libelle for more information.'
 
 }
@@ -164,21 +165,22 @@ processTestResources {
 
 //--- Core Jar Generation
 // Create a core jar, sign it and place it inside the main jar
-if(ii_generateCoreJar=='true')
+if (ii_generateCoreJar == 'true')
     apply from: rootProject.file('gradle/corejar.gradle')
 
 //--- IE Addon
 apply from: rootProject.file('gradle/ieaddon.gradle')
 
-if(ii_enableSigning.asBoolean())
+if (ii_enableSigning.asBoolean())
     apply from: rootProject.file('gradle/codesign.gradle')
 
-tasks.build.doLast(){
-    if(ii_printSourceSets.toBoolean())
-        logger.log(LogLevel.WARN, 'Build Location: '+file("./build/libs/").getPath())
+tasks.build.doLast() {
+    if (ii_printSourceSets.toBoolean())
+        logger.log(LogLevel.WARN, 'Build Location: ' + file("./build/libs/").getPath())
 }
 
-if(ii_enableSigning.asBoolean()) {
+if (ii_enableSigning.asBoolean())
+{
     tasks.build.finalizedBy() {
         signMainJar
     }
