@@ -13,7 +13,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.Optional.Method;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.api.utils.IUpgradableMachine;
+import pl.pabilo8.immersiveintelligence.api.utils.upgrade_system.IUpgradableMachine;
 import pl.pabilo8.immersiveintelligence.client.gui.block.*;
 import pl.pabilo8.immersiveintelligence.client.gui.block.ammunition_production.GuiAmmunitionAssembler;
 import pl.pabilo8.immersiveintelligence.client.gui.block.ammunition_production.GuiProjectileWorkshop;
@@ -210,9 +210,9 @@ public enum IIGUI implements ISerializableEnum
 		IIGUI.DATA_INPUT_MACHINE_VARIABLES.setClientDecoGui(GuiDataInputMachine::getVariablesGui);
 		IIGUI.DATA_INPUT_MACHINE_EDIT.setClientDecoGui(GuiDataInputMachineEdit::new);
 		//ALM
-		IIGUI.ARITHMETIC_LOGIC_MACHINE_STORAGE.setClientGui(GuiArithmeticLogicMachine::getStorageGui);
-		IIGUI.ARITHMETIC_LOGIC_MACHINE_VARIABLES.setClientGui(GuiArithmeticLogicMachine::getVariablesGui);
-		IIGUI.ARITHMETIC_LOGIC_MACHINE_EDIT.setClientGui(GuiArithmeticLogicMachineEdit::new);
+		IIGUI.ARITHMETIC_LOGIC_MACHINE_STORAGE.setClientDecoGui(GuiArithmeticLogicMachine::getStorageGui);
+		IIGUI.ARITHMETIC_LOGIC_MACHINE_VARIABLES.setClientDecoGui(GuiArithmeticLogicMachine::getVariablesGui);
+		IIGUI.ARITHMETIC_LOGIC_MACHINE_EDIT.setClientDecoGui(GuiArithmeticLogicMachineEdit::new);
 		//Printed Page
 		IIGUI.PRINTED_PAGE_BLANK.setClientStackGui(GuiPrintedPage::new);
 		IIGUI.PRINTED_PAGE_TEXT.setClientStackGui(GuiPrintedPage::new);

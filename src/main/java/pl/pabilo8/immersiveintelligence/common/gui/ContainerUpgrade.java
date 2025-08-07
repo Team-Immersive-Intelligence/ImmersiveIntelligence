@@ -4,7 +4,7 @@ import blusunrize.immersiveengineering.common.gui.ContainerIEBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.tileentity.TileEntity;
-import pl.pabilo8.immersiveintelligence.api.utils.IUpgradableMachine;
+import pl.pabilo8.immersiveintelligence.api.utils.upgrade_system.IUpgradableMachine;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)

@@ -7,7 +7,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
-import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
+import pl.pabilo8.immersiveintelligence.api.utils.upgrade_system.MachineUpgrade;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoSlider;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoSwitch;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;

@@ -16,7 +16,7 @@ import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoCore;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoPropellant;
-import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
+import pl.pabilo8.immersiveintelligence.api.utils.upgrade_system.MachineUpgrade;
 import pl.pabilo8.immersiveintelligence.common.ammo.components.*;
 import pl.pabilo8.immersiveintelligence.common.ammo.components.explosives.AmmoComponentHMX;
 import pl.pabilo8.immersiveintelligence.common.ammo.components.explosives.AmmoComponentRDX;
@@ -124,11 +124,13 @@ public class IIContent
 	//arithemtic logic machine upgrade
 	public static final MachineUpgrade UPGRADE_MEMORY = CommonProxy.createMachineUpgrade("memory");
 	public static final MachineUpgrade UPGRADE_CIRCUIT_RACKS = CommonProxy.createMachineUpgrade("circuit_racks");
+
 	public static final MachineUpgrade UPGRADE_EMPLACEMENT_WEAPON_MACHINEGUN = EmplacementWeapon.register(EmplacementWeaponMachinegun::new);
 	public static final MachineUpgrade UPGRADE_EMPLACEMENT_WEAPON_IROBSERVER = EmplacementWeapon.register(EmplacementWeaponInfraredObserver::new);
 	public static final MachineUpgrade UPGRADE_EMPLACEMENT_WEAPON_AUTOCANNON = EmplacementWeapon.register(EmplacementWeaponAutocannon::new);
 	public static final MachineUpgrade UPGRADE_EMPLACEMENT_WEAPON_HEAVY_CHEMTHROWER = EmplacementWeapon.register(EmplacementWeaponHeavyChemthrower::new);
 	public static final MachineUpgrade UPGRADE_EMPLACEMENT_WEAPON_HEAVY_RAILGUN = EmplacementWeapon.register(EmplacementWeaponHeavyRailgun::new);
+	//public static final MachineUpgrade UPGRADE_EMPLACEMENT_SEARCHLIGHT = EmplacementWeapon.register(EmplacementWeaponSearchlight::new);
 	//public static final MachineUpgrade UPGRADE_EMPLACEMENT_SPOTLIGHT_TOWER = EmplacementWeapon.register(EmplacementWeaponSpotlightTower::new);
 	public static final MachineUpgrade UPGRADE_EMPLACEMENT_WEAPON_TESLA = EmplacementWeapon.register(EmplacementWeaponTeslaCoil::new);
 	public static final MachineUpgrade UPGRADE_EMPLACEMENT_WEAPON_CPDS = EmplacementWeapon.register(EmplacementWeaponCPDS::new);

@@ -7,6 +7,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoBa
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoImage;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoImage.ImageAnimationDirection;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundBuilder.SlotStyle;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoGuiCategory;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoGuiUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoResource;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTemplate;
@@ -22,7 +23,7 @@ import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
  * @ii-approved 0.3.1
  * @since 10.07.2019
  */
-@DecoTemplate(name = "wooden_gearbox")
+@DecoTemplate(name = "wooden_gearbox", category = DecoGuiCategory.PRODUCTION_TILE)
 public class GuiSawmill extends DecoGui<TileEntitySawmill, ContainerSawmill>
 {
 	@DecoResource

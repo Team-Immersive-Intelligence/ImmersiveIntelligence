@@ -8,7 +8,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.RayTraceResult.Type;
-import pl.pabilo8.immersiveintelligence.api.utils.IUpgradableMachine;
+import pl.pabilo8.immersiveintelligence.api.utils.upgrade_system.IUpgradableMachine;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;

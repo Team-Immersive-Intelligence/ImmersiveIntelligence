@@ -23,8 +23,10 @@ import pl.pabilo8.immersiveintelligence.api.crafting.ProjectileWorkshopRecipe;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
 import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
-import pl.pabilo8.immersiveintelligence.api.utils.IUpgradableMachine;
-import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
+import pl.pabilo8.immersiveintelligence.api.utils.upgrade_system.IUpgradableMachine;
+import pl.pabilo8.immersiveintelligence.api.utils.upgrade_system.IUpgradeStorageMachine;
+import pl.pabilo8.immersiveintelligence.api.utils.upgrade_system.MachineUpgrade;
+import pl.pabilo8.immersiveintelligence.api.utils.upgrade_system.UpgradeStorage;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.ProjectileWorkshop;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
@@ -37,8 +39,6 @@ import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEn
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionSingle;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockInteractablePart;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
-import pl.pabilo8.immersiveintelligence.common.util.upgrade_system.IUpgradeStorageMachine;
-import pl.pabilo8.immersiveintelligence.common.util.upgrade_system.UpgradeStorage;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
@@ -139,7 +139,7 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockProduction
 
 		componentInside.deserializeNBT(nbt.getCompoundTag("component_inside"));
 		coreType = CoreType.v(nbt.getString("core_type"));
-		upgradeStorage.getUpgradesFromNBT(nbt.getCompoundTag("upgrades"));
+		upgradeStorage.deserializeNBT(nbt.getCompoundTag("upgrades"));
 	}
 
 	@Override
@@ -153,7 +153,7 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockProduction
 		nbt.setTag("component_inside", componentInside.serializeNBT());
 		nbt.setString("produced_bullet", producedAmmo.getName());
 		nbt.setString("core_type", coreType.getName());
-		nbt.setTag("upgrades", upgradeStorage.saveUpgradesToNBT());
+		nbt.setTag("upgrades", upgradeStorage.serializeNBT());
 
 	}
 

@@ -7,7 +7,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Tuple;
-import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
+import pl.pabilo8.immersiveintelligence.api.utils.upgrade_system.MachineUpgrade;
 import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.amt.*;
 import pl.pabilo8.immersiveintelligence.client.util.amt.IIMachineUpgradeModel.UpgradeStage;

@@ -1,11 +1,9 @@
-package pl.pabilo8.immersiveintelligence.common.util.upgrade_system;
+package pl.pabilo8.immersiveintelligence.api.utils.upgrade_system;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.api.utils.IUpgradableMachine;
-import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -29,16 +27,24 @@ public interface IUpgradeStorageMachine<T extends TileEntity & IUpgradableMachin
 
 	//upgradeMatches
 
+	/**
+	 * @deprecated Do not use, save upgradeStorage to NBT instead
+	 */
 	@Override
+	@Deprecated
 	default void saveUpgradesToNBT(NBTTagCompound tag)
 	{
-		tag.setTag("upgrades", getUpgradeStorage().saveUpgradesToNBT());
+
 	}
 
+	/**
+	 * @deprecated Do not use, save upgradeStorage to NBT instead
+	 */
 	@Override
+	@Deprecated
 	default void getUpgradesFromNBT(NBTTagCompound tag)
 	{
-		getUpgradeStorage().getUpgradesFromNBT(tag.getCompoundTag("upgrades"));
+
 	}
 
 	@Override

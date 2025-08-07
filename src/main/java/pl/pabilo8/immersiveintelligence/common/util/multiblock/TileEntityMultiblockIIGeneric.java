@@ -49,7 +49,7 @@ import javax.annotation.Nullable;
 public abstract class TileEntityMultiblockIIGeneric<T extends TileEntityMultiblockIIGeneric<T>> extends TileEntityMultiblockIIBase<T>
 		implements IIIInventory, IIEInternalFluxHandler, IHammerInteraction, IRedstoneOutput, IDataDevice, IComparatorOverride
 {
-	@SyncNBT(name = "inventory", events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_GUI_CLOSED, SyncEvents.TILE_RECIPE_CHANGED})
+	@SyncNBT(name = "inventory", events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_RECIPE_CHANGED})
 	public NonNullList<ItemStack> inventory;
 	@SyncNBT(name = "ifluxEnergy")
 	public FluxStorageAdvanced energyStorage;
@@ -108,14 +108,14 @@ public abstract class TileEntityMultiblockIIGeneric<T extends TileEntityMultiblo
 		NBTSerialisation.synchroniseFor(this, (tag, tile) -> tag.deserializeAll(tile, message, true));
 	}
 
-	protected void updateTileForTime()
+	public final void updateTileForTime()
 	{
 		NBTTagCompound nbt = new NBTTagCompound();
 		NBTSerialisation.synchroniseFor(this, (tag, tile) -> tag.serializeForTime(tile, nbt, (int)(world.getTotalWorldTime()%1000)));
 		sendNBTMessageClient(nbt);
 	}
 
-	protected void updateTileForEvent(SyncNBT.SyncEvents event)
+	public final void updateTileForEvent(SyncNBT.SyncEvents event)
 	{
 		NBTTagCompound nbt = new NBTTagCompound();
 		NBTSerialisation.synchroniseFor(this, (tag, tile) -> tag.serializeForEvent(tile, nbt, event));

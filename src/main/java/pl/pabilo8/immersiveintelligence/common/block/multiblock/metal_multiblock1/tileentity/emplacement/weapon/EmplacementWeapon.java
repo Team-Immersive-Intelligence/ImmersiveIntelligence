@@ -18,7 +18,7 @@ import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.ComponentEffectShape;
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.AmmoFactory;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
-import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
+import pl.pabilo8.immersiveintelligence.api.utils.upgrade_system.MachineUpgrade;
 import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleRegistry;
 import pl.pabilo8.immersiveintelligence.client.gui.block.emplacement.GuiEmplacementPageStorage;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;

@@ -24,7 +24,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
+import pl.pabilo8.immersiveintelligence.api.utils.upgrade_system.MachineUpgrade;
 import pl.pabilo8.immersiveintelligence.client.render.metal_device.MedicalCrateRenderer;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;

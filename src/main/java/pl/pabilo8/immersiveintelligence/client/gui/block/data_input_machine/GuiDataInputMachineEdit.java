@@ -15,9 +15,9 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.data_editor.De
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoLabel;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoEntryPanelBuilder;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoImage;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.widget.DecoManualWidget;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoAlignment;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundBuilder.SlotStyle;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoGuiCategory;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoGuiUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTemplate;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
@@ -38,7 +38,7 @@ import javax.annotation.Nullable;
  * @ii-approved 0.3.1
  * @since 30.06.2019
  */
-@DecoTemplate(name = "data_input_machine_edit")
+@DecoTemplate(name = "data_input_machine_edit", category = DecoGuiCategory.DATA_TILE)
 public class GuiDataInputMachineEdit extends DecoGui<TileEntityDataInputMachine, ContainerDataInputMachineEditing> implements IDataMachineGui
 {
 	@SyncNBT
@@ -85,7 +85,6 @@ public class GuiDataInputMachineEdit extends DecoGui<TileEntityDataInputMachine,
 
 		//Shared parts, like punchtape progress bar, tabs
 		addComponents(GuiDataInputMachine.getCommonParts(tile));
-		addWidget(new DecoManualWidget());
 
 		//Editor component specific to the data type
 		editor = DecoDataEditor.getEditorFor(variableToEdit.getValue(), 38+8-3, 46+6-1-8);

@@ -3,6 +3,8 @@ package pl.pabilo8.immersiveintelligence.client.gui.block;
 import net.minecraft.entity.player.EntityPlayer;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundBuilder.SlotStyle;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoGuiCategory;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTemplate;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.TileEntityMetalCrate;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerIICrate;
@@ -12,6 +14,7 @@ import pl.pabilo8.immersiveintelligence.common.util.IIReference;
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 17.05.2019
  */
+@DecoTemplate(name = "metal_crate", category = DecoGuiCategory.GENERIC_TILE)
 public class GuiMetalCrate extends DecoGui<TileEntityMetalCrate, ContainerIICrate<TileEntityMetalCrate>>
 {
 	public GuiMetalCrate(EntityPlayer player, TileEntityMetalCrate tile)

@@ -35,9 +35,7 @@ public class DataInputMachineRenderer extends IIMultiblockRenderer<TileEntityDat
 		animationHatch.apply(te.hatch.getProgress(partialTicks));
 
 		if(te.currentProcess!=null&&te.currentProcess.recipe.showItem)
-		{
 			animationProgrammingStart.apply(1f);
-		}
 		else
 			animationProgrammingStart.apply(0);
 

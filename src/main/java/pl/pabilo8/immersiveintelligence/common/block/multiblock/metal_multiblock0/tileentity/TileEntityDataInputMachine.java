@@ -4,12 +4,20 @@ import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorageAdvan
 import blusunrize.immersiveengineering.common.util.inventory.IEInventoryHandler;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.crafting.DataProgrammingRecipe;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
+import pl.pabilo8.immersiveintelligence.api.utils.upgrade_system.IUpgradableMachine;
+import pl.pabilo8.immersiveintelligence.api.utils.upgrade_system.IUpgradeStorageMachine;
+import pl.pabilo8.immersiveintelligence.api.utils.upgrade_system.MachineUpgrade;
+import pl.pabilo8.immersiveintelligence.api.utils.upgrade_system.UpgradeStorage;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.DataInputMachine;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.MultiblockDataInputMachine;
@@ -30,7 +38,8 @@ import java.util.Optional;
  * @ii-approved 0.3.1
  * @since 28.06.2019
  */
-public class TileEntityDataInputMachine extends TileEntityMultiblockProductionSingle<TileEntityDataInputMachine, DataProgrammingRecipe> implements IBooleanAnimatedPartsBlock
+public class TileEntityDataInputMachine extends TileEntityMultiblockProductionSingle<TileEntityDataInputMachine, DataProgrammingRecipe>
+		implements IBooleanAnimatedPartsBlock, IUpgradeStorageMachine<TileEntityDataInputMachine>
 {
 	private static final int SLOT_INPUT = 0, SLOT_OUTPUT = 1;
 
@@ -47,10 +56,13 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockProductionSi
 	/**
 	 * Stored data packet
 	 */
-	@SyncNBT(name = "variables", events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_GUI_CLOSED, SyncEvents.TILE_RECIPE_CHANGED})
+	@SyncNBT(name = "variables", events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_RECIPE_CHANGED})
 	public DataPacket storedData = new DataPacket();
 	@SyncNBT(events = SyncEvents.TILE_GUI_OPENED)
 	public int selectedDataSlot;
+
+	@SyncNBT
+	public UpgradeStorage<TileEntityDataInputMachine> upgradeStorage;
 
 	private IEInventoryHandler inputHandler, outputHandler;
 
@@ -67,6 +79,8 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockProductionSi
 		hatch = new MultiblockInteractablePart(1, 24, 1.25f);
 		inputHandler = getSingleInventoryHandler(SLOT_INPUT);
 		outputHandler = getSingleInventoryHandler(SLOT_OUTPUT);
+
+		upgradeStorage = new UpgradeStorage<>(this);
 	}
 
 	@Override
@@ -76,6 +90,7 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockProductionSi
 		storedData = null;
 		drawer = hatch = null;
 		inputHandler = outputHandler = null;
+		upgradeStorage = null;
 	}
 
 	@Override
@@ -207,6 +222,32 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockProductionSi
 
 	@Override
 	protected void onProductionFinish(IIMultiblockProcess<DataProgrammingRecipe> process)
+	{
+
+	}
+
+	@Override
+	public UpgradeStorage<TileEntityDataInputMachine> getUpgradeStorage()
+	{
+		return upgradeStorage;
+	}
+
+	@Override
+	public boolean upgradeMatches(MachineUpgrade upgrade)
+	{
+		return upgrade==IIContent.UPGRADE_ADVANCED_DATA;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T extends TileEntity & IUpgradableMachine> T getUpgradeMaster()
+	{
+		return (T)master();
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void renderWithUpgrades(MachineUpgrade... upgrades)
 	{
 
 	}

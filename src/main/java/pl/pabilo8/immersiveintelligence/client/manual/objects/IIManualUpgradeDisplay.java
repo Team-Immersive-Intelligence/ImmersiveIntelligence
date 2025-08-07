@@ -4,7 +4,7 @@ import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.text.TextFormatting;
-import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
+import pl.pabilo8.immersiveintelligence.api.utils.upgrade_system.MachineUpgrade;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualObject;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualPage;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;

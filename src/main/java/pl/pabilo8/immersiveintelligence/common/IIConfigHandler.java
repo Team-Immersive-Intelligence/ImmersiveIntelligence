@@ -779,7 +779,7 @@ public class IIConfigHandler
 				public static int energyCapacity = 24000;
 
 				@Comment({"Energy usage of the arithmetic-logic machine per circuit."})
-				public static int energyUsage = 2048;
+				public static int energyUsage = 1536;
 			}
 
 			public static class PrintingPress

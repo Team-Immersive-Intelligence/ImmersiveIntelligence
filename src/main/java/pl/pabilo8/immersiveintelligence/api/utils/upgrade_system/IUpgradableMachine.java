@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.api.utils;
+package pl.pabilo8.immersiveintelligence.api.utils.upgrade_system;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -29,6 +29,7 @@ public interface IUpgradableMachine
 	void getUpgradesFromNBT(NBTTagCompound tag);
 
 	@SideOnly(Side.CLIENT)
+	@Deprecated
 	void renderWithUpgrades(MachineUpgrade... upgrades);
 
 	List<MachineUpgrade> getUpgrades();

@@ -1,18 +1,26 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity;
 
 import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorageAdvanced;
+import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.ArrayUtils;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IIDataHandlingUtils;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeExpression;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
+import pl.pabilo8.immersiveintelligence.api.utils.upgrade_system.IUpgradableMachine;
+import pl.pabilo8.immersiveintelligence.api.utils.upgrade_system.IUpgradeStorageMachine;
+import pl.pabilo8.immersiveintelligence.api.utils.upgrade_system.MachineUpgrade;
+import pl.pabilo8.immersiveintelligence.api.utils.upgrade_system.UpgradeStorage;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.ArithmeticLogicMachine;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.MultiblockArithmeticLogicMachine;
@@ -35,7 +43,8 @@ import javax.annotation.Nullable;
  * @ii-approved 0.3.1
  * @since 28.06.2019
  */
-public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockIIGeneric<TileEntityArithmeticLogicMachine> implements IIIGuiMultiblockTile, IBooleanAnimatedPartsBlock
+public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockIIGeneric<TileEntityArithmeticLogicMachine>
+		implements IIIGuiMultiblockTile, IBooleanAnimatedPartsBlock, IUpgradeStorageMachine<TileEntityArithmeticLogicMachine>
 {
 	/**
 	 * ALM has 4 circuits by default, 6 with upgrade<br>
@@ -49,6 +58,8 @@ public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockIIGene
 	public MultiblockInteractablePart door, keyboard, drawer;
 	@SyncNBT
 	public DataPacket memory;
+	@SyncNBT
+	public UpgradeStorage<TileEntityArithmeticLogicMachine> upgradeStorage;
 
 	public TileEntityArithmeticLogicMachine()
 	{
@@ -56,6 +67,7 @@ public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockIIGene
 		//basic machine properties
 		energyStorage = new FluxStorageAdvanced(ArithmeticLogicMachine.energyCapacity);
 		inventory = NonNullList.withSize(CIRCUITS_UPGRADED+STORAGE_SLOTS, ItemStack.EMPTY);
+		upgradeStorage = new UpgradeStorage<>(this);
 		memory = new DataPacket();
 
 		//interactable parts
@@ -71,6 +83,7 @@ public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockIIGene
 		door = null;
 		memory = null;
 		keyboard = null;
+		upgradeStorage = null;
 	}
 
 	@Override
@@ -127,7 +140,7 @@ public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockIIGene
 		DataPacket newPacket = packet.clone();
 
 		//Process received packet with circuits
-		int circuitsAmount = CIRCUITS_BASE; //TODO: 08.01.2024 6 circuits with upgrade
+		int circuitsAmount = hasUpgrade(IIContent.UPGRADE_CIRCUIT_RACKS)?CIRCUITS_UPGRADED: CIRCUITS_BASE;
 		boolean[] circuit = new boolean[circuitsAmount];
 		DataPacket[] cPacket = new DataPacket[circuitsAmount];
 
@@ -215,5 +228,52 @@ public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockIIGene
 				world.playSound(null, getPos(), state?IISounds.drawerOpen: IISounds.drawerClose, SoundCategory.BLOCKS, 0.25F, 1f);
 			IIPacketHandler.sendToClient(this, new MessageBooleanAnimatedPartsSync(result, this));
 		}
+	}
+
+	//--- IUpgradeStorageMachine ---//
+
+	@Override
+	public UpgradeStorage<TileEntityArithmeticLogicMachine> getUpgradeStorage()
+	{
+		return upgradeStorage;
+	}
+
+	@Override
+	public boolean upgradeMatches(MachineUpgrade upgrade)
+	{
+		return upgrade==IIContent.UPGRADE_MEMORY||upgrade==IIContent.UPGRADE_CIRCUIT_RACKS;
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public <T extends TileEntity & IUpgradableMachine> T getUpgradeMaster()
+	{
+		return (T)master();
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void renderWithUpgrades(MachineUpgrade... upgrades)
+	{
+
+	}
+
+	@Override
+	public void removeUpgrade(MachineUpgrade upgrade)
+	{
+		IUpgradeStorageMachine.super.removeUpgrade(upgrade);
+		if(upgrade==IIContent.UPGRADE_CIRCUIT_RACKS)
+		{
+			for(int i = CIRCUITS_BASE; i < CIRCUITS_UPGRADED; i++)
+				if(!inventory.get(i).isEmpty())
+				{
+					ItemStack stack = inventory.get(i);
+					Utils.dropStackAtPos(world, getPos().offset(facing), stack, facing.getOpposite());
+					inventory.set(i, ItemStack.EMPTY);
+				}
+		}
+		else if(upgrade==IIContent.UPGRADE_MEMORY)
+			memory = new DataPacket();
+		updateTileForEvent(SyncEvents.TILE_UPGRADES_MODIFIED);
 	}
 }

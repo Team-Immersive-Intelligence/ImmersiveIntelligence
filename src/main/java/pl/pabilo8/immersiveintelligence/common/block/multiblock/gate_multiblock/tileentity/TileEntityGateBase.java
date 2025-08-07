@@ -22,8 +22,10 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
-import pl.pabilo8.immersiveintelligence.api.utils.IUpgradableMachine;
-import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
+import pl.pabilo8.immersiveintelligence.api.utils.upgrade_system.IUpgradableMachine;
+import pl.pabilo8.immersiveintelligence.api.utils.upgrade_system.IUpgradeStorageMachine;
+import pl.pabilo8.immersiveintelligence.api.utils.upgrade_system.MachineUpgrade;
+import pl.pabilo8.immersiveintelligence.api.utils.upgrade_system.UpgradeStorage;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.gate_multiblock.multiblock.MultiblockFenceGateBase;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
@@ -34,8 +36,6 @@ import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultibl
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockInteractablePart;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockRedstoneNetwork;
-import pl.pabilo8.immersiveintelligence.common.util.upgrade_system.IUpgradeStorageMachine;
-import pl.pabilo8.immersiveintelligence.common.util.upgrade_system.UpgradeStorage;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -48,8 +48,10 @@ import java.util.Objects;
  * @updated 06.12.2023
  * @since 28.06.2019
  */
-public abstract class TileEntityGateBase<T extends TileEntityGateBase<T>> extends TileEntityMultiblockIIConnectable<T> implements IBooleanAnimatedPartsBlock, IPlayerInteraction, IUpgradeStorageMachine<TileEntityGateBase<T>>, IRedstoneConnector
+public abstract class TileEntityGateBase<T extends TileEntityGateBase<T>> extends TileEntityMultiblockIIConnectable<T>
+		implements IBooleanAnimatedPartsBlock, IPlayerInteraction, IUpgradeStorageMachine<TileEntityGateBase<T>>, IRedstoneConnector
 {
+	//TODO: 07.08.2025 add NBT Synchronization to TileEntityMultiblockIIConnectable or move it
 	@SyncNBT
 	public MultiblockInteractablePart gate = new MultiblockInteractablePart(40);
 	protected MultiblockRedstoneNetwork<T> redstoneNetwork = new MultiblockRedstoneNetwork<>(((T)this));
@@ -75,7 +77,7 @@ public abstract class TileEntityGateBase<T extends TileEntityGateBase<T>> extend
 
 		if(isDummy())
 			return;
-		this.upgradeStorage.getUpgradesFromNBT(nbt.getCompoundTag("upgrades"));
+		this.upgradeStorage.deserializeNBT(nbt.getCompoundTag("upgrades"));
 	}
 
 	@Override
@@ -85,7 +87,7 @@ public abstract class TileEntityGateBase<T extends TileEntityGateBase<T>> extend
 
 		if(isDummy())
 			return;
-		nbt.setTag("upgrades", this.upgradeStorage.saveUpgradesToNBT());
+		nbt.setTag("upgrades", this.upgradeStorage.serializeNBT());
 	}
 
 	@Override

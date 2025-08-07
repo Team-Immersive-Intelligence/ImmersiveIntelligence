@@ -7,6 +7,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoBarGroup;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoAlignment;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundBuilder.SlotStyle;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoGuiCategory;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoGuiUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTemplate;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
@@ -18,7 +19,7 @@ import pl.pabilo8.immersiveintelligence.common.util.IIReference;
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 10.07.2019
  */
-@DecoTemplate(name = "wooden_gearbox")
+@DecoTemplate(name = "wooden_gearbox", category = DecoGuiCategory.PRODUCTION_TILE)
 public class GuiGearbox extends DecoGui<TileEntityGearbox, ContainerGearbox>
 {
 	public GuiGearbox(EntityPlayer player, TileEntityGearbox tile)

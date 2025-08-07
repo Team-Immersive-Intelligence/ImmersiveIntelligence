@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.api.utils;
+package pl.pabilo8.immersiveintelligence.api.utils.upgrade_system;
 
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import net.minecraft.nbt.NBTTagCompound;

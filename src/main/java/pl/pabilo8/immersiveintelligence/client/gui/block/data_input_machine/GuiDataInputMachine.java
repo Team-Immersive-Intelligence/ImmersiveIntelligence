@@ -21,12 +21,8 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoLabe
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoEntryPanelBuilder;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoBar;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoImage;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.widget.DecoManualWidget;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoAlignment;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.*;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundBuilder.SlotStyle;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoGuiUtils;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoResource;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTemplate;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityDataInputMachine;
@@ -45,7 +41,7 @@ import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
  * @ii-approved 0.3.1
  * @since 30.06.2019
  */
-@DecoTemplate(name = "data_input_machine")
+@DecoTemplate(name = "data_input_machine", category = DecoGuiCategory.DATA_TILE)
 public class GuiDataInputMachine extends DecoGui<TileEntityDataInputMachine, ContainerDataInputMachine> implements ITabbedGui, IDataMachineGui
 {
 	@DecoResource
@@ -144,8 +140,6 @@ public class GuiDataInputMachine extends DecoGui<TileEntityDataInputMachine, Con
 
 		//Add tabs and energy bars
 		addComponents(getCommonParts(tile));
-
-		addWidget(new DecoManualWidget());
 
 		//Add storage display and bars or the variable list, if in the "variables" tab
 		if(isStorage)

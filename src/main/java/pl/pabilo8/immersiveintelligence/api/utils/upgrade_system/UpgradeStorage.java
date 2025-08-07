@@ -1,11 +1,12 @@
-package pl.pabilo8.immersiveintelligence.common.util.upgrade_system;
+package pl.pabilo8.immersiveintelligence.api.utils.upgrade_system;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import pl.pabilo8.immersiveintelligence.api.utils.IUpgradableMachine;
-import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
+import net.minecraftforge.common.util.INBTSerializable;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultiblockIIGeneric;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -15,11 +16,11 @@ import java.util.ArrayList;
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 03.12.2023
  */
-public class UpgradeStorage<T extends TileEntity & IUpgradableMachine>
+public class UpgradeStorage<T extends TileEntity & IUpgradableMachine> implements INBTSerializable<NBTTagCompound>
 {
 	//REFACTOR: 12.12.2023 move to capabilities
-	private T tile;
-	private ArrayList<MachineUpgrade> upgrades = new ArrayList<>();
+	private final T tile;
+	private final ArrayList<MachineUpgrade> upgrades = new ArrayList<>();
 	private MachineUpgrade currentlyInstalled = null;
 	private int upgradeProgress = 0, clientUpgradeProgress = 0;
 
@@ -34,7 +35,7 @@ public class UpgradeStorage<T extends TileEntity & IUpgradableMachine>
 			clientUpgradeProgress = (int)Math.min(clientUpgradeProgress+(Tools.wrenchUpgradeProgress/2f), getMaxClientProgress());
 	}
 
-	public NBTTagCompound saveUpgradesToNBT()
+	public NBTTagCompound serializeNBT()
 	{
 		NBTTagCompound tag = new NBTTagCompound();
 		for(MachineUpgrade upgrade : upgrades)
@@ -42,7 +43,7 @@ public class UpgradeStorage<T extends TileEntity & IUpgradableMachine>
 		return tag;
 	}
 
-	public void getUpgradesFromNBT(NBTTagCompound tag)
+	public void deserializeNBT(NBTTagCompound tag)
 	{
 		upgrades.clear();
 		upgrades.addAll(MachineUpgrade.getUpgradesFromNBT(tag));
@@ -76,6 +77,13 @@ public class UpgradeStorage<T extends TileEntity & IUpgradableMachine>
 		return getInstallProgress();
 	}
 
+	private void sendTileUpdate()
+	{
+		//TODO: 07.08.2025 change to IIBase once functionality is moved
+		if(tile instanceof TileEntityMultiblockIIGeneric<?>)
+			((TileEntityMultiblockIIGeneric<?>)tile).updateTileForEvent(SyncEvents.TILE_UPGRADES_MODIFIED);
+	}
+
 	public boolean addUpgradeInstallProgress(int toAdd)
 	{
 		upgradeProgress += toAdd;
@@ -89,6 +97,7 @@ public class UpgradeStorage<T extends TileEntity & IUpgradableMachine>
 		{
 			upgradeProgress = 0;
 			clientUpgradeProgress = 0;
+			sendTileUpdate();
 			return true;
 		}
 		return false;
@@ -99,11 +108,13 @@ public class UpgradeStorage<T extends TileEntity & IUpgradableMachine>
 		currentlyInstalled = upgrade;
 		upgradeProgress = 0;
 		clientUpgradeProgress = 0;
+		sendTileUpdate();
 	}
 
 	public void removeUpgrade(MachineUpgrade upgrade)
 	{
 		upgrades.remove(upgrade);
+		sendTileUpdate();
 	}
 
 	public boolean hasUpgrade(MachineUpgrade upgrade)
@@ -116,6 +127,7 @@ public class UpgradeStorage<T extends TileEntity & IUpgradableMachine>
 		if(!test&&!hasUpgrade(upgrade))
 		{
 			upgrades.add(upgrade);
+			sendTileUpdate();
 			return true;
 		}
 		return false;

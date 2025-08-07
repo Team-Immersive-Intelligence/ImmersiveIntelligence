@@ -5,7 +5,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.util.math.MathHelper;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
+import pl.pabilo8.immersiveintelligence.api.utils.upgrade_system.MachineUpgrade;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.ModelRadar;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;

@@ -17,6 +17,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoEntr
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoImage;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoAlignment;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundBuilder.SlotStyle;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoGuiCategory;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoGuiUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTemplate;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
@@ -32,7 +33,7 @@ import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
  * @updated 02.02.2024
  * @since 09.02.2020
  */
-@DecoTemplate(name = "data_redstone_interface")
+@DecoTemplate(name = "data_redstone_interface", category = DecoGuiCategory.DATA_TILE)
 public class GuiDataRedstoneInterfaceData extends DecoGui<TileEntityRedstoneInterface, ContainerRedstoneDataInterface>
 {
 	@SyncNBT

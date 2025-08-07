@@ -3,6 +3,7 @@ package pl.pabilo8.immersiveintelligence.client.gui.block.arithmetic_logic_machi
 import net.minecraft.entity.player.EntityPlayer;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.data_editor.DecoDataEditorExpression;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoGuiCategory;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTemplate;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityArithmeticLogicMachine;
@@ -14,7 +15,7 @@ import pl.pabilo8.immersiveintelligence.common.gui.ContainerArithmeticLogicMachi
  * @ii-approved 0.3.1
  * @since 30.06.2019
  */
-@DecoTemplate(name = "arithmetic_logic_machine_edit")
+@DecoTemplate(name = "arithmetic_logic_machine_edit", category = DecoGuiCategory.DATA_TILE)
 public class GuiArithmeticLogicMachineEdit extends DecoGui<TileEntityArithmeticLogicMachine, ContainerArithmeticLogicMachine>
 {
 	private DecoDataEditorExpression editor;

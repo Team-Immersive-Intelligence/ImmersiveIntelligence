@@ -57,7 +57,7 @@ import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.api.data.IIDataTypeUtils;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType.TypeMetaInfo;
-import pl.pabilo8.immersiveintelligence.api.utils.IUpgradableMachine;
+import pl.pabilo8.immersiveintelligence.api.utils.upgrade_system.IUpgradableMachine;
 import pl.pabilo8.immersiveintelligence.client.fx.IIParticles;
 import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleRegistry;
 import pl.pabilo8.immersiveintelligence.client.gui.block.GuiUpgrade;

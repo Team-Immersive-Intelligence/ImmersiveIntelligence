@@ -31,7 +31,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.api.ammo.penetration.DamageBlockPos;
-import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
+import pl.pabilo8.immersiveintelligence.api.utils.upgrade_system.MachineUpgrade;
 import pl.pabilo8.immersiveintelligence.client.model.ModelIIBase;
 import pl.pabilo8.immersiveintelligence.client.util.font.IIFontRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.font.IIFontRendererCustomGlyphs;

@@ -37,6 +37,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiComponentDe
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoTab;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoLabel;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.widget.DecoComponentWidgetBase;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.widget.DecoManualWidget;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.*;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationUtils;
@@ -60,9 +61,10 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
 
 /**
@@ -92,6 +94,7 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 	protected final String name;
 	protected final T tile;
 	protected final C container;
+	protected final DecoGuiCategory category;
 	protected final InventoryPlayer playerContainer;
 
 	//Components
@@ -127,6 +130,7 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 			this.tile = null;
 			this.container = null;
 			this.playerContainer = null;
+			this.category = null;
 			return;
 		}
 
@@ -135,10 +139,18 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 		this.container = ((C)this.inventorySlots);
 		this.playerContainer = player.inventory;
 
-		AtomicReference<String> guiName = new AtomicReference<>("deco");
-		Optional.ofNullable(this.getClass().getAnnotation(DecoTemplate.class))
-				.ifPresent(template -> guiName.set(template.name()));
-		name = guiName.get();
+		//Get meta data from annotation
+		DecoTemplate annotation = this.getClass().getAnnotation(DecoTemplate.class);
+		if(annotation!=null)
+		{
+			name = annotation.name();
+			category = annotation.category();
+		}
+		else
+		{
+			name = "deco";
+			category = DecoGuiCategory.GENERIC_TILE;
+		}
 	}
 
 	@Override
@@ -167,6 +179,8 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 
 		//Fire initialization event for the extending Deco GUI class
 		onInit();
+		if(category!=null)
+			onInitStandardAddons();
 
 		//Load the last widget
 		nbt.checkSetString("currentWidget", s -> {
@@ -214,6 +228,15 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 	 * Called upon Deco GUI initialization.
 	 */
 	public abstract void onInit();
+
+	/**
+	 * Called after {@link #onInit()} for standard Deco GUI addons initialization.
+	 */
+	protected void onInitStandardAddons()
+	{
+		if(category==DecoGuiCategory.DATA_TILE||category==DecoGuiCategory.PRODUCTION_TILE)
+			addWidget(new DecoManualWidget());
+	}
 
 	/**
 	 * Called after {@link #onInit()} for GUI JEI compatibility initialization.
