@@ -60,7 +60,7 @@ public class GuiElectrolyzer extends DecoGui<TileEntityElectrolyzer, ContainerEl
 						.withSize(58, 24)
 						.withFluidTank(tile.tankOutput2),
 
-				new DecoBar(168, 0)
+				new DecoBar(162, 0)
 						.withTemplate(DecoGuiUtils.BAR_ELECTRIC_ENERGY.apply(tile.energyStorage)),
 
 				this.imageProgress = new DecoImage(66-10-1, 42-8)
