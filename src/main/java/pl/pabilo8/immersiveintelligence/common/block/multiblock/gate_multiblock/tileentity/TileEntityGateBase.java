@@ -10,8 +10,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
@@ -22,7 +20,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
-import pl.pabilo8.immersiveintelligence.api.utils.upgrade_system.IUpgradableMachine;
 import pl.pabilo8.immersiveintelligence.api.utils.upgrade_system.IUpgradeStorageMachine;
 import pl.pabilo8.immersiveintelligence.api.utils.upgrade_system.MachineUpgrade;
 import pl.pabilo8.immersiveintelligence.api.utils.upgrade_system.UpgradeStorage;
@@ -37,7 +34,6 @@ import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockIn
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockRedstoneNetwork;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
@@ -51,15 +47,18 @@ import java.util.Objects;
 public abstract class TileEntityGateBase<T extends TileEntityGateBase<T>> extends TileEntityMultiblockIIConnectable<T>
 		implements IBooleanAnimatedPartsBlock, IPlayerInteraction, IUpgradeStorageMachine<TileEntityGateBase<T>>, IRedstoneConnector
 {
-	//TODO: 07.08.2025 add NBT Synchronization to TileEntityMultiblockIIConnectable or move it
 	@SyncNBT
-	public MultiblockInteractablePart gate = new MultiblockInteractablePart(40);
-	protected MultiblockRedstoneNetwork<T> redstoneNetwork = new MultiblockRedstoneNetwork<>(((T)this));
-	protected UpgradeStorage<TileEntityGateBase<T>> upgradeStorage = new UpgradeStorage<>(this);
+	public MultiblockInteractablePart gate;
+	protected MultiblockRedstoneNetwork<T> redstoneNetwork;
+	@SyncNBT(name = "upgrades")
+	public UpgradeStorage<TileEntityGateBase<T>> upgradeStorage;
 
 	public TileEntityGateBase(MultiblockFenceGateBase<T> multiblock)
 	{
 		super(multiblock);
+		upgradeStorage = new UpgradeStorage<>(this);
+		gate = new MultiblockInteractablePart(40);
+		redstoneNetwork = new MultiblockRedstoneNetwork<>(((T)this));
 	}
 
 	@Override
@@ -68,35 +67,6 @@ public abstract class TileEntityGateBase<T extends TileEntityGateBase<T>> extend
 		gate = null;
 		redstoneNetwork = null;
 		upgradeStorage = null;
-	}
-
-	@Override
-	public void readCustomNBT(@Nonnull NBTTagCompound nbt, boolean descPacket)
-	{
-		super.readCustomNBT(nbt, descPacket);
-
-		if(isDummy())
-			return;
-		this.upgradeStorage.deserializeNBT(nbt.getCompoundTag("upgrades"));
-	}
-
-	@Override
-	public void writeCustomNBT(@Nonnull NBTTagCompound nbt, boolean descPacket)
-	{
-		super.writeCustomNBT(nbt, descPacket);
-
-		if(isDummy())
-			return;
-		nbt.setTag("upgrades", this.upgradeStorage.serializeNBT());
-	}
-
-	@Override
-	public void receiveMessageFromServer(@Nonnull NBTTagCompound message)
-	{
-		super.receiveMessageFromServer(message);
-
-		if(!isDummy())
-			this.gate.readFromNBT(message.getCompoundTag("gate"));
 	}
 
 	@Override
@@ -187,10 +157,11 @@ public abstract class TileEntityGateBase<T extends TileEntityGateBase<T>> extend
 		return upgrade==IIContent.UPGRADE_REDSTONE_ACTIVATION||upgrade==IIContent.UPGRADE_RAZOR_WIRE;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public <T extends TileEntity & IUpgradableMachine> T getUpgradeMaster()
+	public TileEntityGateBase<T> getUpgradeMaster()
 	{
-		return (T)master();
+		return master();
 	}
 
 	@SideOnly(Side.CLIENT)

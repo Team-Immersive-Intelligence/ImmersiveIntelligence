@@ -6,6 +6,7 @@ dependencies {
 	testImplementation files('libs/MinecraftJUnit-1.5.0-deobf.jar')
 
 	testImplementation 'io.hosuaby:inject-resources-junit-jupiter:0.3.2'
+	testImplementation 'org.reflections:reflections:0.10.2'
 
 	//Mockito
 	testImplementation 'org.mockito:mockito-inline:4.3.1'

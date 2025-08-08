@@ -27,7 +27,6 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IIDataHandlingUtils;
 import pl.pabilo8.immersiveintelligence.api.data.device.IDataDevice;
-import pl.pabilo8.immersiveintelligence.common.util.easynbt.NBTSerialisation;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IIIInventory;
@@ -73,53 +72,6 @@ public abstract class TileEntityMultiblockIIGeneric<T extends TileEntityMultiblo
 		inventory = null;
 		energyStorage = null;
 		wrapper = null;
-	}
-
-	//--- NBT ---//
-
-	@Override
-	public void readCustomNBT(@Nonnull NBTTagCompound nbt, boolean descPacket)
-	{
-		super.readCustomNBT(nbt, descPacket);
-		if(isDummy())
-			return;
-
-		NBTSerialisation.synchroniseFor(this, (tag, tile) -> tag.deserializeAll(tile, nbt, false));
-	}
-
-	@Override
-	public void writeCustomNBT(@Nonnull NBTTagCompound nbt, boolean descPacket)
-	{
-		super.writeCustomNBT(nbt, descPacket);
-		if(isDummy())
-			return;
-
-		NBTSerialisation.synchroniseFor(this, (tag, tile) -> tag.serializeAll(tile, nbt));
-	}
-
-	@Override
-	public void receiveMessageFromServer(@Nonnull NBTTagCompound message)
-	{
-		super.receiveMessageFromServer(message);
-
-		if(isDummy()||isFullSyncMessage(message))
-			return;
-
-		NBTSerialisation.synchroniseFor(this, (tag, tile) -> tag.deserializeAll(tile, message, true));
-	}
-
-	public final void updateTileForTime()
-	{
-		NBTTagCompound nbt = new NBTTagCompound();
-		NBTSerialisation.synchroniseFor(this, (tag, tile) -> tag.serializeForTime(tile, nbt, (int)(world.getTotalWorldTime()%1000)));
-		sendNBTMessageClient(nbt);
-	}
-
-	public final void updateTileForEvent(SyncNBT.SyncEvents event)
-	{
-		NBTTagCompound nbt = new NBTTagCompound();
-		NBTSerialisation.synchroniseFor(this, (tag, tile) -> tag.serializeForEvent(tile, nbt, event));
-		sendNBTMessageClient(nbt);
 	}
 
 	//--- Redstone ---//

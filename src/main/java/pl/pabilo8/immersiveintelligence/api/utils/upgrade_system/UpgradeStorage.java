@@ -6,7 +6,7 @@ import net.minecraftforge.common.util.INBTSerializable;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultiblockIIGeneric;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultiblockIIBase;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -18,7 +18,6 @@ import java.util.ArrayList;
  */
 public class UpgradeStorage<T extends TileEntity & IUpgradableMachine> implements INBTSerializable<NBTTagCompound>
 {
-	//REFACTOR: 12.12.2023 move to capabilities
 	private final T tile;
 	private final ArrayList<MachineUpgrade> upgrades = new ArrayList<>();
 	private MachineUpgrade currentlyInstalled = null;
@@ -79,9 +78,8 @@ public class UpgradeStorage<T extends TileEntity & IUpgradableMachine> implement
 
 	private void sendTileUpdate()
 	{
-		//TODO: 07.08.2025 change to IIBase once functionality is moved
-		if(tile instanceof TileEntityMultiblockIIGeneric<?>)
-			((TileEntityMultiblockIIGeneric<?>)tile).updateTileForEvent(SyncEvents.TILE_UPGRADES_MODIFIED);
+		if(tile instanceof TileEntityMultiblockIIBase<?>)
+			((TileEntityMultiblockIIBase<?>)tile).updateTileForEvent(SyncEvents.TILE_UPGRADES_MODIFIED);
 	}
 
 	public boolean addUpgradeInstallProgress(int toAdd)

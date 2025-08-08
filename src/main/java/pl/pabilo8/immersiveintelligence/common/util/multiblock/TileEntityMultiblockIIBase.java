@@ -25,6 +25,8 @@ import pl.pabilo8.immersiveintelligence.common.entity.tactile.TactileHandler;
 import pl.pabilo8.immersiveintelligence.common.entity.tactile.TactileHandler.ITactileListener;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.NBTSerialisation;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IAdvancedBounds;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
@@ -48,7 +50,6 @@ public abstract class TileEntityMultiblockIIBase<T extends TileEntityMultiblockI
 	public static final String KEY_SYNC_ALL_VALUES = "_sync_all_values";
 	//The multiblock INSTANCE, for easy access
 	protected final MultiblockStuctureBase<T> multiblock;
-
 
 	//--- Reference Variables ---//
 	protected List<AxisAlignedBB> aabb = null;
@@ -113,14 +114,54 @@ public abstract class TileEntityMultiblockIIBase<T extends TileEntityMultiblockI
 
 	//--- NBT ---//
 
+	public final void updateTileForTime()
+	{
+		NBTTagCompound nbt = new NBTTagCompound();
+		NBTSerialisation.synchroniseFor(this, (tag, tile) -> tag.serializeForTime(tile, nbt, (int)(world.getTotalWorldTime()%1000)));
+		sendNBTMessageClient(nbt);
+	}
+
+	public final void updateTileForEvent(SyncNBT.SyncEvents event)
+	{
+		NBTTagCompound nbt = new NBTTagCompound();
+		NBTSerialisation.synchroniseFor(this, (tag, tile) -> tag.serializeForEvent(tile, nbt, event));
+		sendNBTMessageClient(nbt);
+	}
+
+
+	@Override
+	public void readCustomNBT(@Nonnull NBTTagCompound nbt, boolean descPacket)
+	{
+		super.readCustomNBT(nbt, descPacket);
+		if(isDummy())
+			return;
+
+		NBTSerialisation.synchroniseFor(this, (tag, tile) -> tag.deserializeAll(tile, nbt, false));
+	}
+
+	@Override
+	public void writeCustomNBT(@Nonnull NBTTagCompound nbt, boolean descPacket)
+	{
+		super.writeCustomNBT(nbt, descPacket);
+		if(isDummy())
+			return;
+
+		NBTSerialisation.synchroniseFor(this, (tag, tile) -> tag.serializeAll(tile, nbt));
+	}
+
 	@Override
 	public void receiveMessageFromServer(@Nonnull NBTTagCompound message)
 	{
+		super.receiveMessageFromServer(message);
+
+		if(isDummy())
+			return;
 		if(isFullSyncMessage(message))
 			readCustomNBT(message, false);
-
-		if(message.hasKey(KEY_SYNC_AABB))
+		else if(message.hasKey(KEY_SYNC_AABB))
 			forMultiblockBlocks(TileEntityMultiblockIIBase::forceReCacheAABB);
+
+		NBTSerialisation.synchroniseFor(this, (tag, tile) -> tag.deserializeAll(tile, message, true));
 	}
 
 	/**

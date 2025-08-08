@@ -111,6 +111,7 @@ public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockIIGene
 		door.update();
 		drawer.update();
 		keyboard.update();
+		upgradeStorage.update();
 	}
 
 	@Override

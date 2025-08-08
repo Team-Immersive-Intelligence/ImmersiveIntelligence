@@ -70,10 +70,13 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockProduction
 	 */
 	@SyncNBT
 	public FluidTank tanksFiller = new FluidTank(ProjectileWorkshop.componentTankCapacity);
+	@SyncNBT
 	public MultiblockInteractablePart lid1 = new MultiblockInteractablePart(14), lid2 = new MultiblockInteractablePart(16);
+	@SyncNBT(name = "upgrades")
 	public UpgradeStorage<TileEntityProjectileWorkshop> upgradeStorage;
-	IItemHandler inputHandler = new IEInventoryHandler(1, this, 0, true, false); //pos 15
-	IItemHandler componentInputHandler = new IEInventoryHandler(1, this, 1, true, false); //pos 22
+
+	IItemHandler inputHandler = new IEInventoryHandler(1, this, 0, true, false);
+	IItemHandler componentInputHandler = new IEInventoryHandler(1, this, 1, true, false);
 
 	public TileEntityProjectileWorkshop()
 	{
@@ -99,6 +102,7 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockProduction
 		//Update breadbox lid animations
 		lid1.update();
 		lid2.update();
+		upgradeStorage.update();
 
 		//fill component tank
 		if(hasUpgrade(IIContent.UPGRADE_CORE_FILLER)&&!world.isRemote)
@@ -136,10 +140,8 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockProduction
 
 		if(isDummy())
 			return;
-
 		componentInside.deserializeNBT(nbt.getCompoundTag("component_inside"));
 		coreType = CoreType.v(nbt.getString("core_type"));
-		upgradeStorage.deserializeNBT(nbt.getCompoundTag("upgrades"));
 	}
 
 	@Override
@@ -149,11 +151,9 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockProduction
 
 		if(isDummy())
 			return;
-
 		nbt.setTag("component_inside", componentInside.serializeNBT());
 		nbt.setString("produced_bullet", producedAmmo.getName());
 		nbt.setString("core_type", coreType.getName());
-		nbt.setTag("upgrades", upgradeStorage.serializeNBT());
 
 	}
 

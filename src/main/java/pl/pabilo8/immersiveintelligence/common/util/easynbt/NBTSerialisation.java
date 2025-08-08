@@ -19,9 +19,8 @@ import javax.annotation.Nullable;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.lang.reflect.Modifier;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -59,6 +58,10 @@ public class NBTSerialisation
 		registerSerializer(char.class, NBTTagString.class,
 				c -> new NBTTagString(String.valueOf(c)),
 				nbt -> nbt.getString().isEmpty()?'\0': nbt.getString().charAt(0)
+		);
+		registerSerializer(Enum.class, NBTTagString.class,
+				e -> new NBTTagString(e.name()),
+				(nbt, en) -> en.valueOf(en.getDeclaringClass(), nbt.getString())
 		);
 
 		//Register serializers for all primitive array types
@@ -223,6 +226,14 @@ public class NBTSerialisation
 			eventFields = new HashMap<>();
 
 			Field[] fields = clazz.getFields();
+
+			//Get the max time value
+			int maxTime = Arrays.stream(fields)
+					.map(f -> f.getAnnotation(SyncNBT.class))
+					.filter(Objects::nonNull)
+					.mapToInt(SyncNBT::time)
+					.max().orElse(1);
+
 			for(Field field : fields)
 				if(field.isAnnotationPresent(SyncNBT.class))
 				{
@@ -252,8 +263,8 @@ public class NBTSerialisation
 
 					//Fields synced on time (modulus)
 					if(annotation.time() > 0)
-						for(int i = 1; i <= annotation.time(); i++)
-							if(annotation.time()%i==0)
+						for(int i = 1; i <= maxTime; i++)
+							if(i%annotation.time()==0)
 								timeFields.compute(i, (t, list) ->
 								{
 									if(list==null)
@@ -263,6 +274,12 @@ public class NBTSerialisation
 								});
 
 				}
+
+			//Check for fields that are not public, either the annotation or access level is incorrect
+			Arrays.stream(clazz.getDeclaredFields())
+					.filter(field -> field.isAnnotationPresent(SyncNBT.class))
+					.filter(field -> !Modifier.isPublic(field.getModifiers()))
+					.forEach(field -> IILogger.warn("SyncNBT field "+field.getName()+" in "+clazz.getName()+" is not public!"));
 		}
 
 		/**

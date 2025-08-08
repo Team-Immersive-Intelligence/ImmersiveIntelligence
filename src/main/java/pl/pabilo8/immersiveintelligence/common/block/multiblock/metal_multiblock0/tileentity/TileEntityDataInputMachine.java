@@ -109,6 +109,7 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockProductionSi
 		super.onUpdate();
 		drawer.update();
 		hatch.update();
+		upgradeStorage.update();
 
 		if(world.isRemote)
 			return;

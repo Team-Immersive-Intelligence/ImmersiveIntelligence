@@ -47,38 +47,40 @@ public class EntityDrone extends EntityFlying implements ISyncNBTEntity<EntityDr
 	//--- Parts ---//
 	private final EntityVehiclePart[] partArray;
 
-	//sub-entities for colision and hitboxes
+	//Sub-entities for colision and hitboxes
 	private EntityVehiclePart partMain, partTankRight1, partTankRight2, partTankLeft1, partTankLeft2, partEngine;
 	private EntityVehiclePart partRotorFrontRight, partRotorFrontLeft, partRotorBackRight, partRotorBackLeft;
 	private EntityVehiclePart exhaust1, exhaust2;
 
-	//part durability (health)
+	//Part durability (health)
 	@SyncNBT
 	private VehicleDurability durabilityMain, durabilityTankLeft, durabilityTankRight, durabilityEngine;
 	@SyncNBT
-	private VehicleDurability[] durabilityRotors = new VehicleDurability[4];
+	private VehicleDurability durabilityRotorFrontRight, durabilityRotorFrontLeft, durabilityRotorBackRight, durabilityRotorBackLeft;
 
 	public EntityDrone(World world)
 	{
 		super(world);
 		setSize(4, 2.5f);
 
-		//set ammo factory (bomb dropping)
+		//Set ammo factory (bomb dropping)
 		this.ammoFactory = new AmmoFactory<>(this);
 		ammoFactory.setStack(IIContent.itemAmmoMortar.getAmmoStack(IIContent.ammoCoreBrass, CoreType.SOFTPOINT, FuseType.CONTACT, IIContent.ammoComponentTNT))
 				.setDirection(new Vec3d(0, -1, 0))
 				.setVelocityModifier(0);
 
-		//set durability and armor
+		//Set durability and armor
 		durabilityMain = new VehicleDurability(100, 4);
 		durabilityTankLeft = new VehicleDurability(45, 6);
 		durabilityTankRight = new VehicleDurability(45, 6);
 		durabilityEngine = new VehicleDurability(40, 2);
 
-		for(int i = 0; i < durabilityRotors.length; i++)
-			durabilityRotors[i] = new VehicleDurability(20, 24);
+		durabilityRotorFrontRight = new VehicleDurability(20, 24);
+		durabilityRotorFrontLeft = new VehicleDurability(20, 24);
+		durabilityRotorBackRight = new VehicleDurability(20, 24);
+		durabilityRotorBackLeft = new VehicleDurability(20, 24);
 
-		//set parts
+		//Set parts
 		partArray = new EntityVehiclePart[]{
 				partMain = new EntityVehiclePart(this, "main",
 						Vec3d.ZERO, 0.65, 0.4)
@@ -102,16 +104,16 @@ public class EntityDrone extends EntityFlying implements ISyncNBTEntity<EntityDr
 
 				partRotorFrontRight = new EntityVehiclePart(this, "rotor_fr",
 						new Vec3d(1.8, 1.125, 1.7), 0.35, 0.4)
-						.setHitbox(durabilityRotors[0]),
+						.setHitbox(durabilityRotorFrontRight),
 				partRotorFrontLeft = new EntityVehiclePart(this, "rotor_fl",
 						new Vec3d(1.8, 1.125, -1.7), 0.35, 0.4)
-						.setHitbox(durabilityRotors[1]),
+						.setHitbox(durabilityRotorFrontLeft),
 				partRotorBackRight = new EntityVehiclePart(this, "rotor_br",
 						new Vec3d(-1.625, 1.125, 1.7), 0.35, 0.4)
-						.setHitbox(durabilityRotors[2]),
+						.setHitbox(durabilityRotorBackRight),
 				partRotorBackLeft = new EntityVehiclePart(this, "rotor_bl",
 						new Vec3d(-1.625, 1.125, -1.7), 0.35, 0.4)
-						.setHitbox(durabilityRotors[3]),
+						.setHitbox(durabilityRotorBackLeft),
 
 				exhaust1 = new EntityVehiclePart(this, "exhaust1",
 						new Vec3d(-0.125, 1.85, -0.8), 0.25),
