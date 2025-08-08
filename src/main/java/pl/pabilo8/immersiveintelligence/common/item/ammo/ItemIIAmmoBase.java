@@ -189,7 +189,7 @@ public abstract class ItemIIAmmoBase<E extends EntityAmmoBase<? super E>> extend
 	@Override
 	public String getModelCacheKey(ItemStack stack)
 	{
-		return String.format("%s%s_%s%s", stackToSub(stack).name(), NAME, getPaintColor(stack)==null?"no_": "paint_", getCoreType(stack).getName());
+		return String.format("%s_%s_%s%s", stackToSub(stack).getName(), NAME, getPaintColor(stack)==null?"no_": "paint_", getCoreType(stack).getName());
 	}
 
 	@Override
