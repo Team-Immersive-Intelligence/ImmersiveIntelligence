@@ -1,5 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.gate_multiblock.tileentity;
 
+import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler;
 import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler.Connection;
 import blusunrize.immersiveengineering.api.energy.wires.WireType;
 import blusunrize.immersiveengineering.api.energy.wires.redstone.IRedstoneConnector;
@@ -79,8 +80,11 @@ public abstract class TileEntityGateBase<T extends TileEntityGateBase<T>> extend
 	@Override
 	public List<AxisAlignedBB> getBounds(boolean collision)
 	{
-		if(isPOI("gate")&&master().gate.getProgress(0) > 0)
+		T master = master();
+		if((isPOI("gate")&&master.gate.getProgress(0) > 0)||
+				(isPOI("redstone")&&!master.hasUpgrade(IIContent.UPGRADE_REDSTONE_ACTIVATION)))
 			return Collections.singletonList(new AxisAlignedBB(0, 0, 0, 0, 0, 0));
+
 		return super.getBounds(collision);
 	}
 
@@ -157,6 +161,14 @@ public abstract class TileEntityGateBase<T extends TileEntityGateBase<T>> extend
 		return upgrade==IIContent.UPGRADE_REDSTONE_ACTIVATION||upgrade==IIContent.UPGRADE_RAZOR_WIRE;
 	}
 
+	@Override
+	public void removeUpgrade(MachineUpgrade upgrade)
+	{
+		if(upgrade==IIContent.UPGRADE_REDSTONE_ACTIVATION)
+			ImmersiveNetHandler.INSTANCE.clearAllConnectionsFor(getPOIPos("redstone"), world, true);
+		IUpgradeStorageMachine.super.removeUpgrade(upgrade);
+	}
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public TileEntityGateBase<T> getUpgradeMaster()
@@ -196,6 +208,11 @@ public abstract class TileEntityGateBase<T extends TileEntityGateBase<T>> extend
 
 	//--- IRedstoneConnector ---//
 
+	@Override
+	public boolean canConnect()
+	{
+		return super.canConnect()&&master().hasUpgrade(IIContent.UPGRADE_REDSTONE_ACTIVATION);
+	}
 
 	@Override
 	protected boolean isMatchingCable(WireType cableType)
