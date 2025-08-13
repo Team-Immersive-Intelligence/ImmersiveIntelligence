@@ -5,31 +5,29 @@ import blusunrize.immersiveengineering.common.gui.IESlot;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityChemicalPainter;
+import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIBase;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @author Avalon (avalon@iiteam.net)
  * @since 10.07.2019
+ * @since 08.13.2025
  */
-public class ContainerChemicalPainter extends ContainerIEBase<TileEntityChemicalPainter>
+public class ContainerChemicalPainter extends ContainerIIBase<TileEntityChemicalPainter>
 {
+
+	public Slot inputSlot, outputSlot, inputFluidSlot, outputFluidSlot;
+
 	public ContainerChemicalPainter(EntityPlayer player, TileEntityChemicalPainter tile)
 	{
-		super(player.inventory, tile);
-		//Input/Output Slots
+		super(player, tile);
 
-		this.addSlotToContainer(new Slot(this.inv, 0, 13, 13));
-		this.addSlotToContainer(new IESlot.Output(this, this.inv, 1, 13, 59));
+		inputSlot = this.addSlotToContainer(new Slot(this.inv, 0, 13, 13));
+		outputSlot = this.addSlotToContainer(new Slot(this.inv, 1, 13, 59));
 
-		this.addSlotToContainer(new IESlot.FluidContainer(this, this.inv, 2, 137, 21, 0));
-		this.addSlotToContainer(new IESlot.FluidContainer(this, this.inv, 3, 137, 57, 0));
+		inputFluidSlot = this.addSlotToContainer(new Slot(this.inv, 2, 137, 21));
+		outputFluidSlot = this.addSlotToContainer(new Slot(this.inv, 3, 137, 57));
 
-		this.slotCount = tile.getInventory().size();
-		this.tile = tile;
-
-		for(int i = 0; i < 3; i++)
-			for(int j = 0; j < 9; j++)
-				addSlotToContainer(new Slot(player.inventory, j+i*9+9, 8+j*18, 107+15+i*18));
-		for(int i = 0; i < 9; i++)
-			addSlotToContainer(new Slot(player.inventory, i, 8+i*18, 165+15));
+		addPlayerInventory(player.inventory, 8, 141);
 	}
 }

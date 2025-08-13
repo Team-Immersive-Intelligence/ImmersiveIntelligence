@@ -13,7 +13,9 @@ import javax.annotation.Nonnull;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @author Avalon (avalon@iiteam.net)
  * @since 10.07.2019
+ * @since 08.12.2025
  */
 public class ContainerVulcanizer extends ContainerIIBase<TileEntityVulcanizer>
 {
