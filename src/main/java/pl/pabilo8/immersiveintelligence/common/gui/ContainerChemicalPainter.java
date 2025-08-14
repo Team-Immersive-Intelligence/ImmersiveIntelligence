@@ -25,8 +25,8 @@ public class ContainerChemicalPainter extends ContainerIIBase<TileEntityChemical
 		inputSlot = this.addSlotToContainer(new Slot(this.inv, 0, 13, 13));
 		outputSlot = this.addSlotToContainer(new Slot(this.inv, 1, 13, 59));
 
-		inputFluidSlot = this.addSlotToContainer(new Slot(this.inv, 2, 137, 21));
-		outputFluidSlot = this.addSlotToContainer(new Slot(this.inv, 3, 137, 57));
+		inputFluidSlot = this.addSlotToContainer(new IESlot.FluidContainer(this, this.inv, 2, 137, 21,0));
+		outputFluidSlot = this.addSlotToContainer(new IESlot.FluidContainer(this, this.inv, 3, 137, 57, 0));
 
 		addPlayerInventory(player.inventory, 8, 141);
 	}

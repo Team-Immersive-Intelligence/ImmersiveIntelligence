@@ -5,28 +5,27 @@ import blusunrize.immersiveengineering.common.gui.IESlot;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityFuelStation;
+import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIBase;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @author Avalon (avalon@iiteam.net)
  * @since 10.07.2019
+ * @since 08.14.2025
  */
-public class ContainerFuelStation extends ContainerIEBase<TileEntityFuelStation>
+public class ContainerFuelStation extends ContainerIIBase<TileEntityFuelStation>
 {
+
+	public Slot inputFluidSlot, outputFluidSlot;
+
 	public ContainerFuelStation(EntityPlayer player, TileEntityFuelStation tile)
 	{
-		super(player.inventory, tile);
+		super(player, tile);
 
 		//Fluid Container Slots
-		this.addSlotToContainer(new IESlot.FluidContainer(this, this.inv, 0, 39, 14, 0));
-		this.addSlotToContainer(new IESlot.FluidContainer(this, this.inv, 1, 39, 42, 0));
+		inputFluidSlot = this.addSlotToContainer(new IESlot.FluidContainer(this, this.inv, 0, 39, 14, 0));
+		outputFluidSlot = this.addSlotToContainer(new IESlot.FluidContainer(this, this.inv, 0, 39, 42, 0));
 
-		this.slotCount = tile.getInventory().size();
-		this.tile = tile;
-
-		for(int i = 0; i < 3; i++)
-			for(int j = 0; j < 9; j++)
-				addSlotToContainer(new Slot(player.inventory, j+i*9+9, 8+j*18, 86+i*18));
-		for(int i = 0; i < 9; i++)
-			addSlotToContainer(new Slot(player.inventory, i, 8+i*18, 144));
+		addPlayerInventory(player.inventory, 8, 141);
 	}
 }
