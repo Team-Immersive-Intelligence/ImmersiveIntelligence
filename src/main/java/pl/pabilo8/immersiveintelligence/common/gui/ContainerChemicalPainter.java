@@ -23,7 +23,7 @@ public class ContainerChemicalPainter extends ContainerIIBase<TileEntityChemical
 		super(player, tile);
 
 		inputSlot = this.addSlotToContainer(new Slot(this.inv, 0, 13, 13));
-		outputSlot = this.addSlotToContainer(new Slot(this.inv, 1, 13, 59));
+		outputSlot = this.addSlotToContainer(new IESlot.Output(this, this.inv, 1, 13, 59));
 
 		inputFluidSlot = this.addSlotToContainer(new IESlot.FluidContainer(this, this.inv, 2, 137, 21,0));
 		outputFluidSlot = this.addSlotToContainer(new IESlot.FluidContainer(this, this.inv, 3, 137, 57, 0));
