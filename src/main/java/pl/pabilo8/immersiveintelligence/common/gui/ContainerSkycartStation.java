@@ -6,18 +6,24 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.api.rotary.IMotorGear;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.tileentity.TileEntitySkyCartStation;
+import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIBase;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @author Avalon (avalon@iiteam.net)
  * @since 17.05.2019
+ * @since 08.14.2025
  */
-public class ContainerSkycartStation extends ContainerIEBase<TileEntitySkyCartStation>
+public class ContainerSkycartStation extends ContainerIIBase<TileEntitySkyCartStation>
 {
+
+	public Slot inputSlot;
+
 	public ContainerSkycartStation(EntityPlayer player, TileEntitySkyCartStation tile)
 	{
-		super(player.inventory, tile);
-		for(int i = 0; i < tile.getInventory().size(); i++)
-			this.addSlotToContainer(new Slot(this.inv, i, 52+(i%9)*18, 29+(i/9)*18)
+		super(player, tile);
+
+		inputSlot = this.addSlotToContainer(new Slot(this.inv, 0, 70, 47)
 			{
 				@Override
 				public int getSlotStackLimit()
@@ -31,13 +37,8 @@ public class ContainerSkycartStation extends ContainerIEBase<TileEntitySkyCartSt
 					return stack.getItem() instanceof IMotorGear;
 				}
 			});
-		this.slotCount = tile.getInventory().size();
-		this.tile = tile;
 
-		for(int i = 0; i < 3; i++)
-			for(int j = 0; j < 9; j++)
-				addSlotToContainer(new Slot(player.inventory, j+i*9+9, 8+j*18, 87+i*18));
-		for(int i = 0; i < 9; i++)
-			addSlotToContainer(new Slot(player.inventory, i, 8+i*18, 145));
+		addPlayerInventory(player.inventory, 8, 141);
+
 	}
 }

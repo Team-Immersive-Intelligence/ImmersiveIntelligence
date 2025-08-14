@@ -9,28 +9,25 @@ import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIBase;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @author Avalon (avalon@iiteam.net)
  * @since 10.07.2019
+ * @since 08.13.2025
  */
 public class ContainerChemicalPainter extends ContainerIIBase<TileEntityChemicalPainter>
 {
-	public Slot[] inputSlot, outputSlot;
+
+	public Slot inputSlot, outputSlot, inputFluidSlot, outputFluidSlot;
 
 	public ContainerChemicalPainter(EntityPlayer player, TileEntityChemicalPainter tile)
 	{
 		super(player, tile);
 
-			this.inputSlot = new Slot[2];
-			this.outputSlot = new Slot[2];
+		inputSlot = this.addSlotToContainer(new Slot(this.inv, 0, 13, 13));
+		outputSlot = this.addSlotToContainer(new IESlot.Output(this, this.inv, 1, 13, 59));
 
-			//Item Slots
-			inputSlot[0] = this.addSlotToContainer(new Slot(this.inv, 0, 13, 13));
-			outputSlot[0] = this.addSlotToContainer(new Slot(this.inv, 1, 13, 59));
+		inputFluidSlot = this.addSlotToContainer(new IESlot.FluidContainer(this, this.inv, 2, 137, 21,0));
+		outputFluidSlot = this.addSlotToContainer(new IESlot.FluidContainer(this, this.inv, 3, 137, 57, 0));
 
-			//Fluid Slots
-			inputSlot[1] = this.addSlotToContainer(new IESlot.FluidContainer(this, this.inv, 2, 137, 21, 0));
-			outputSlot[1] = this.addSlotToContainer(new IESlot.FluidContainer(this, this.inv, 3, 137, 57, 0));
-
-			//Invin Slots
-			addPlayerInventory(player.inventory, 8 ,141);
+		addPlayerInventory(player.inventory, 8, 141);
 	}
 }

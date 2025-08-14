@@ -7,24 +7,31 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.effect_crate.TileEntityMedicalCrate;
+import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIBase;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @author Avalon (avalon@iiteam.net)
  * @since 17.05.2019
+ * @since 08.14.2025
  */
-public class ContainerMedicalCrate extends ContainerIEBase<TileEntityMedicalCrate>
+public class ContainerMedicalCrate extends ContainerIIBase<TileEntityMedicalCrate>
 {
+
+	public Slot inputSlot, inputFluidSlot, outputSlot, outputSlo2;
+
 	public ContainerMedicalCrate(EntityPlayer player, TileEntityMedicalCrate tile)
 	{
 		//Normal bullet slots
 
-		super(player.inventory, tile);
+		super(player, tile);
 		int shift = tile.hasUpgrade(IIContent.UPGRADE_INSERTER)?0: 27;
 
-		this.addSlotToContainer(new IESlot.FluidContainer(this, this.inv, 0, 41+shift, 21, 2));
-		this.addSlotToContainer(new IESlot.Output(this, this.inv, 1, 41+shift, 57));
 
-		this.addSlotToContainer(new IESlot(this, this.inv, 2, 85+shift, 21)
+		inputFluidSlot = this.addSlotToContainer(new IESlot.FluidContainer(this, this.inv, 0, 41, 21,2));
+		outputSlot = this.addSlotToContainer(new IESlot.Output(this, this.inv, 1, 41, 57));
+
+		inputSlot = this.addSlotToContainer(new IESlot.Output(this, this.inv, 2, 85, 21)
 		{
 			@Override
 			public boolean isItemValid(ItemStack stack)
@@ -32,15 +39,9 @@ public class ContainerMedicalCrate extends ContainerIEBase<TileEntityMedicalCrat
 				return TileEntityMedicalCrate.BOOST_POTION_ITEM.test(stack);
 			}
 		});
-		this.addSlotToContainer(new IESlot.Output(this, this.inv, 3, 85+shift, 57));
 
-		this.slotCount = tile.getInventory().size();
-		this.tile = tile;
+		outputSlo2 = this.addSlotToContainer(new IESlot.Output(this, this.inv, 3, 85, 57));
 
-		for(int i = 0; i < 3; i++)
-			for(int j = 0; j < 9; j++)
-				addSlotToContainer(new Slot(player.inventory, j+i*9+9, 8+j*18, 87+i*18));
-		for(int i = 0; i < 9; i++)
-			addSlotToContainer(new Slot(player.inventory, i, 8+i*18, 145));
+		addPlayerInventory(player.inventory, 8, 141);
 	}
 }
