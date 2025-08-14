@@ -45,6 +45,18 @@ public class EntityNavalMineAnchor extends Entity
 			setDead();
 	}
 
+	@SideOnly(Side.CLIENT)
+	@Override
+	public AxisAlignedBB getRenderBoundingBox()
+	{
+		List<Entity> passengers = this.getPassengers();
+		if(passengers.isEmpty())
+			return super.getRenderBoundingBox();
+
+		return this.getEntityBoundingBox().grow(0, passengers.get(0).posY-this.posY, 0);
+	}
+
+	@Override
 	public void updatePassenger(Entity passenger)
 	{
 		if(this.isPassenger(passenger))
