@@ -16,6 +16,7 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.Tuple;
+import net.minecraftforge.client.model.obj.OBJModel;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMT;
 import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationCompiledMap;
 
@@ -45,7 +46,7 @@ public abstract class IITileRenderer<T extends TileEntity> extends TileEntitySpe
 			if(model==ACCEPTABLE||model.getSecond() instanceof IESmartObjModel)
 			{
 				nullifyModels();
-				compileModels(model);
+				compileModels(model.getFirst(), ((IESmartObjModel)model.getSecond()).getModel());
 				unCompiled = false;
 			}
 			else
@@ -138,9 +139,10 @@ public abstract class IITileRenderer<T extends TileEntity> extends TileEntitySpe
 	/**
 	 * Load the {@link AMT} and prepare {@link IIAnimationCompiledMap} here.
 	 *
-	 * @param sModel tuple of the blockstate and model, use it to load model groups
+	 * @param state
+	 * @param model
 	 */
-	public abstract void compileModels(Tuple<IBlockState, IBakedModel> sModel);
+	public abstract void compileModels(IBlockState state, OBJModel model);
 
 	/**
 	 * Called when cached models, animations should be unloaded/reloaded

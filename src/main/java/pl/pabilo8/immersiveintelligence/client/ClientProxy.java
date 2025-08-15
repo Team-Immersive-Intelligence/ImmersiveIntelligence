@@ -134,6 +134,7 @@ import pl.pabilo8.immersiveintelligence.common.entity.vehicle.towable.gun.Entity
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoBase;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIINavalMine;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.gun.ItemIIAmmoRevolver;
+import pl.pabilo8.immersiveintelligence.common.item.data.ItemIIFunctionalCircuit.CircuitTypes;
 import pl.pabilo8.immersiveintelligence.common.item.tools.ItemIIDrillHead.DrillHeads;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIWeaponUpgrade;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
@@ -588,6 +589,10 @@ public class ClientProxy extends CommonProxy
 		ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":blocks/metal_device/inserter/tool_red");
 		ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":blocks/metal_device/inserter/tool_dim");
 		ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":blocks/metal_device/inserter/tool_gray");
+
+		//Universal Circuit Textures
+		for(CircuitTypes value : CircuitTypes.values())
+			ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":blocks/multiblock/circuits/circuit_"+value.getName());
 
 		//Data Types
 		IIDataTypeUtils.metaTypesByClass.values().stream()

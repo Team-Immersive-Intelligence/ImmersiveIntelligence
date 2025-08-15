@@ -4,13 +4,12 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.Tuple;
+import net.minecraftforge.client.model.obj.OBJModel;
 import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer.RegisteredTileRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMT;
-import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationLoader;
+import pl.pabilo8.immersiveintelligence.client.util.amt.AMTModel;
 import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationUtils;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.TileEntityChemicalDispenser;
 
@@ -21,33 +20,32 @@ import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.Til
 @RegisteredTileRenderer(name = "block/device/chemical_dispenser", clazz = TileEntityChemicalDispenser.class)
 public class ChemicalDispenserRenderer extends IITileRenderer<TileEntityChemicalDispenser>
 {
-	private static AMT[] models = null;
+	private static AMTModel model = null;
 
 	@Override
 	public void draw(TileEntityChemicalDispenser te, BufferBuilder buf, float partialTicks, Tessellator tes)
 	{
 		//apply animation
-		for(AMT model : models)
+		for(AMT model : model)
 			IIAnimationUtils.setModelRotation(model, te.pitch, 0, te.yaw);
 
 		//apply rotation for block facing
 		applyStandardRotation(te.facing);
 
 		//render
-		for(AMT mod : models)
-			mod.render(tes, buf);
+		model.render(tes, buf);
 	}
 
 	@Override
-	public void compileModels(Tuple<IBlockState, IBakedModel> sModel)
+	public void compileModels(IBlockState state, OBJModel model)
 	{
-		models = IIAnimationUtils.getAMT(sModel, IIAnimationLoader.loadHeader(sModel.getSecond()));
+		ChemicalDispenserRenderer.model = new AMTModel(state, model);
 	}
 
 	@Override
 	protected void nullifyModels()
 	{
-		models = IIAnimationUtils.disposeOf(models);
+		model = IIAnimationUtils.disposeOf(model);
 	}
 
 	@Override

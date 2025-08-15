@@ -3,9 +3,8 @@ package pl.pabilo8.immersiveintelligence.client.util.amt;
 import net.minecraft.util.ResourceLocation;
 import pl.pabilo8.immersiveintelligence.common.util.amt.IIAnimation;
 import pl.pabilo8.immersiveintelligence.common.util.amt.IIAnimation.IIAnimationGroup;
-import pl.pabilo8.immersiveintelligence.common.util.lambda.ArraylistJoinCollector;
 
-import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 
 /**
@@ -22,14 +21,14 @@ public class IIAnimationCompiledMap extends HashMap<AMT, IIAnimationGroup>
 		super();
 	}
 
-	public static IIAnimationCompiledMap create(AMT[] amts, IIAnimation animation)
+	public static IIAnimationCompiledMap create(AMTModel model, IIAnimation animation)
 	{
 		IIAnimationCompiledMap map = new IIAnimationCompiledMap();
 		//collect all child parts of the array
-		AMT[] parts = Arrays.stream(amts)
+		AMT[] parts = model.stream()
 				.map(AMT::getChildrenRecursive)
-				.collect(new ArraylistJoinCollector<>())
-				.toArray(new AMT[0]);
+				.flatMap(Collection::stream)
+				.toArray(AMT[]::new);
 
 		//iterate through all animation groups, if name matches, put the part into the animation map
 		for(IIAnimationGroup group : animation.groups)
@@ -43,9 +42,9 @@ public class IIAnimationCompiledMap extends HashMap<AMT, IIAnimationGroup>
 		return map;
 	}
 
-	public static IIAnimationCompiledMap create(AMT[] AMTs, ResourceLocation res)
+	public static IIAnimationCompiledMap create(AMTModel model, ResourceLocation res)
 	{
-		return create(AMTs, IIAnimationLoader.loadAnimation(res));
+		return create(model, AMTLoader.loadAnimation(res));
 	}
 
 	/**

@@ -14,8 +14,8 @@ import net.minecraft.util.math.MathHelper;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.render.IIEntityRenderer;
-import pl.pabilo8.immersiveintelligence.client.util.amt.AMT;
-import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationLoader;
+import pl.pabilo8.immersiveintelligence.client.util.amt.AMTLoader;
+import pl.pabilo8.immersiveintelligence.client.util.amt.AMTModel;
 import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationUtils;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.naval_mine.EntityNavalMine;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.naval_mine.EntityNavalMineAnchor;
@@ -31,7 +31,7 @@ import java.util.List;
 public class NavalMineAnchorRenderer extends IIEntityRenderer<EntityNavalMineAnchor>
 {
 	private static final ResLoc CHAIN = ResLoc.of(IIReference.RES_II, "blocks/fortification/steel_chain_fence");
-	private AMT[] models;
+	private AMTModel model;
 
 	public NavalMineAnchorRenderer(RenderManager render)
 	{
@@ -41,8 +41,7 @@ public class NavalMineAnchorRenderer extends IIEntityRenderer<EntityNavalMineAnc
 	@Override
 	public void draw(EntityNavalMineAnchor entity, BufferBuilder buf, float partialTicks, Tessellator tes)
 	{
-		for(AMT amt : models)
-			amt.render(tes, buf);
+		model.render(tes, buf);
 
 		List<Entity> passengers = entity.getPassengers();
 		if(!passengers.isEmpty())
@@ -73,16 +72,15 @@ public class NavalMineAnchorRenderer extends IIEntityRenderer<EntityNavalMineAnc
 	@Override
 	public void compileModels()
 	{
-		models = IIAnimationUtils.getAMTFromRes(
-				ResLoc.of(IIReference.RES_ITEM_MODEL, "ammo/naval_mine_anchor").withExtension(ResLoc.EXT_OBJ),
-				ResLoc.of(IIReference.RES_ITEM_MODEL, "ammo/naval_mine_anchor").withExtension(ResLoc.EXT_OBJAMT)
+		model = new AMTModel(DefaultVertexFormats.BLOCK,
+				ResLoc.of(IIReference.RES_ITEM_MODEL, "ammo/naval_mine_anchor").withExtension(ResLoc.EXT_OBJ)
 		);
 	}
 
 	@Override
 	public void registerSprites(TextureMap map)
 	{
-		IIAnimationLoader.preloadTexturesFromMTL(ResLoc.of(IIReference.RES_ITEM_MODEL, "ammo/naval_mine_anchor")
+		AMTLoader.preloadTexturesFromMTL(ResLoc.of(IIReference.RES_ITEM_MODEL, "ammo/naval_mine_anchor")
 				.withExtension(ResLoc.EXT_MTL), map);
 		ApiUtils.getRegisterSprite(map, CHAIN);
 	}
@@ -90,6 +88,6 @@ public class NavalMineAnchorRenderer extends IIEntityRenderer<EntityNavalMineAnc
 	@Override
 	protected void nullifyModels()
 	{
-		IIAnimationUtils.disposeOf(models);
+		IIAnimationUtils.disposeOf(model);
 	}
 }

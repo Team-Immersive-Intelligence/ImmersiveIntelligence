@@ -12,6 +12,7 @@ import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Tuple;
+import net.minecraftforge.client.model.obj.OBJModel;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.client.model.builtin.IAmmoModel;
@@ -69,9 +70,9 @@ public class TripmineRenderer extends IITileRenderer<TileEntityTripMine>
 	}
 
 	@Override
-	public void compileModels(Tuple<IBlockState, IBakedModel> sModel)
+	public void compileModels(IBlockState state, OBJModel model)
 	{
-		model = AmmoRegistry.getModel((ItemBlockMineBase)IIContent.blockTripmine.itemBlock);
+		this.model = AmmoRegistry.getModel((ItemBlockMineBase)IIContent.blockTripmine.itemBlock);
 	}
 
 	@Override

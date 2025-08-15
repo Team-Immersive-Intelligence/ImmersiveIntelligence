@@ -4,8 +4,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.block.model.IBakedModel;
-import net.minecraft.util.Tuple;
+import net.minecraftforge.client.model.obj.OBJModel;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.client.render.IIMultiblockRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer.RegisteredTileRenderer;
@@ -25,7 +24,7 @@ import java.util.HashMap;
 public class HeavyAmmunitionAssemblerRenderer extends IIMultiblockRenderer<TileEntityHeavyAmmunitionAssembler>
 {
 	final HashMap<IAmmoTypeItem<?, ?>, IIAnimationCompiledMap> productionAnimations = new HashMap<>();
-	AMT[] model;
+	AMTModel model;
 	AMT glass;
 	AMTBullet casing, core;
 	IIAnimationCompiledMap drawer1, drawer2, drawer3, drawer4;
@@ -33,22 +32,26 @@ public class HeavyAmmunitionAssemblerRenderer extends IIMultiblockRenderer<TileE
 	@Override
 	public void drawAnimated(TileEntityHeavyAmmunitionAssembler te, BufferBuilder buf, float partialTicks, Tessellator tes)
 	{
-		for(AMT amt : model)
-			amt.defaultize();
+		//Reset model to default state
+		model.defaultize();
 
+		//Draw drawer animations
 		drawer1.apply(te.drawer1.getProgress(partialTicks));
 		drawer2.apply(te.drawer2.getProgress(partialTicks));
 		drawer3.apply(te.drawer3.getProgress(partialTicks));
 		drawer4.apply(te.drawer4.getProgress(partialTicks));
 
+		//Apply standard rotations
 		applyStandardRotation(te.facing);
 		if(!te.getIsMirrored())
 			mirrorRender();
 		GlStateManager.translate(0, 0, 0);
-		IIAnimationUtils.setModelVisibility(glass, false);
-		for(AMT amt : model)
-			amt.render(tes, buf);
 
+		//Render solid part of the model
+		IIAnimationUtils.setModelVisibility(glass, false);
+		model.render(tes, buf);
+
+		//Render translucent part of the model
 		IIAnimationUtils.setModelVisibility(glass, true);
 		glass.render(tes, buf);
 	}
@@ -60,19 +63,19 @@ public class HeavyAmmunitionAssemblerRenderer extends IIMultiblockRenderer<TileE
 	}
 
 	@Override
-	public void compileModels(Tuple<IBlockState, IBakedModel> sModel)
+	public void compileModels(IBlockState state, OBJModel model)
 	{
-		model = IIAnimationUtils.getAMT(sModel, IIAnimationLoader.loadHeader(sModel.getSecond()), header -> new AMT[]{
+		this.model = new AMTModel(state, model, header -> new AMT[]{
 				new AMTLocator("total", header),
 				casing = new AMTBullet("casing", header, null).withState(BulletState.CASING),
 				core = new AMTBullet("core", header, null).withState(BulletState.CORE)
 		});
-		glass = IIAnimationUtils.getPart(model, "glass");
+		glass = this.model.getPart("glass");
 
-		drawer1 = IIAnimationCompiledMap.create(model, ResLoc.of(IIReference.RES_II, "heavy_ammunition_assembler/drawer1"));
-		drawer2 = IIAnimationCompiledMap.create(model, ResLoc.of(IIReference.RES_II, "heavy_ammunition_assembler/drawer2"));
-		drawer3 = IIAnimationCompiledMap.create(model, ResLoc.of(IIReference.RES_II, "heavy_ammunition_assembler/drawer3"));
-		drawer4 = IIAnimationCompiledMap.create(model, ResLoc.of(IIReference.RES_II, "heavy_ammunition_assembler/drawer4"));
+		drawer1 = IIAnimationCompiledMap.create(this.model, ResLoc.of(IIReference.RES_II, "heavy_ammunition_assembler/drawer1"));
+		drawer2 = IIAnimationCompiledMap.create(this.model, ResLoc.of(IIReference.RES_II, "heavy_ammunition_assembler/drawer2"));
+		drawer3 = IIAnimationCompiledMap.create(this.model, ResLoc.of(IIReference.RES_II, "heavy_ammunition_assembler/drawer3"));
+		drawer4 = IIAnimationCompiledMap.create(this.model, ResLoc.of(IIReference.RES_II, "heavy_ammunition_assembler/drawer4"));
 
 
 		productionAnimations.clear();

@@ -1,0 +1,315 @@
+package pl.pabilo8.immersiveintelligence.client.util.amt;
+
+import blusunrize.immersiveengineering.api.ApiUtils;
+import blusunrize.immersiveengineering.client.ClientUtils;
+import com.google.common.collect.ImmutableList;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.block.model.ModelRotation;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.client.renderer.vertex.VertexFormat;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.Vec3d;
+import net.minecraftforge.client.model.obj.OBJModel;
+import net.minecraftforge.client.model.obj.OBJModel.Group;
+import net.minecraftforge.client.model.obj.OBJModel.OBJBakedModel;
+import net.minecraftforge.client.model.obj.OBJModel.OBJState;
+import net.minecraftforge.common.property.IExtendedBlockState;
+import net.minecraftforge.common.property.Properties;
+import pl.pabilo8.immersiveintelligence.common.util.amt.IIModelHeader;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Stream;
+
+/**
+ * Replacement for AMT[] arrays used before with convenient rendering methods.
+ *
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @ii-approved 0.3.1
+ * @since 10.08.2025
+ */
+public class AMTModel implements Iterable<AMT>, AMTRenderable
+{
+	@Nonnull
+	private final AMT[] model;
+
+	//--- AMT Model from AMTs ---//
+
+	public AMTModel()
+	{
+		model = new AMT[0];
+	}
+
+	public AMTModel(AMT... model)
+	{
+		this.model = model==null?new AMT[0]: model;
+	}
+
+	public AMTModel(Collection<AMT> model)
+	{
+		this(model.toArray(new AMT[0]));
+	}
+
+	public AMTModel(AMTModel... models)
+	{
+		ArrayList<AMT> modelList = new ArrayList<>();
+		for(AMTModel m : models)
+			Collections.addAll(modelList, m.model);
+		this.model = modelList.toArray(new AMT[0]);
+	}
+
+	//--- AMTModel with VertexFormats.BLOCK from existing OBJ Model ---//
+
+	//Baked Model
+
+	public AMTModel(@Nullable IBlockState state, OBJBakedModel model)
+	{
+		this(state, model, null);
+	}
+
+	public AMTModel(@Nullable IBlockState state, OBJBakedModel model, @Nullable Function<IIModelHeader, AMT[]> custom)
+	{
+		this(state, model.getModel(), AMTLoader.loadHeader(model.getModel()), custom);
+	}
+
+	//Unbaked Model
+
+	public AMTModel(@Nullable IBlockState state, OBJModel model)
+	{
+		this(state, model, null);
+	}
+
+	public AMTModel(@Nullable IBlockState state, OBJModel model, @Nullable Function<IIModelHeader, AMT[]> custom)
+	{
+		this(state, model, AMTLoader.loadHeader(model), custom);
+	}
+
+	public AMTModel(@Nullable IBlockState state, OBJModel model, @Nullable IIModelHeader header, @Nullable Function<IIModelHeader, AMT[]> custom)
+	{
+		this(getModel(state, model, header, custom, DefaultVertexFormats.BLOCK, null));
+	}
+
+	public AMTModel(@Nullable IBlockState state, OBJModel model, @Nullable IIModelHeader header, @Nullable Function<IIModelHeader, AMT[]> custom,
+					@Nullable Function<ResourceLocation, TextureAtlasSprite> textureRemapper)
+	{
+		this(getModel(state, model, header, custom, DefaultVertexFormats.BLOCK, textureRemapper));
+	}
+
+	//VertexFormat
+
+	public AMTModel(VertexFormat format, OBJModel model)
+	{
+		this(format, model, null);
+	}
+
+	public AMTModel(VertexFormat format, OBJModel model, @Nullable Function<IIModelHeader, AMT[]> custom)
+	{
+		this(format, model, AMTLoader.loadHeader(model), custom);
+	}
+
+	public AMTModel(VertexFormat format, OBJModel modelLocation, @Nullable IIModelHeader header, @Nullable Function<IIModelHeader, AMT[]> custom)
+	{
+		this(getModel(null, modelLocation, header, custom, format, null));
+	}
+
+	//--- AMT Model from ResLoc ---//
+
+	public AMTModel(VertexFormat format, ResourceLocation modelLocation)
+	{
+		this(format, modelLocation, null);
+	}
+
+	public AMTModel(VertexFormat format, ResourceLocation modelLocation, @Nullable Function<IIModelHeader, AMT[]> custom)
+	{
+		this(getModel(null, modelLocation, AMTLoader.loadHeader(modelLocation), custom, null, format));
+	}
+
+	public AMTModel(VertexFormat format, ResourceLocation modelLocation, @Nullable IIModelHeader header, @Nullable Function<IIModelHeader, AMT[]> custom)
+	{
+		this(getModel(null, modelLocation, header, custom, null, format));
+	}
+
+	public AMTModel(VertexFormat format, ResourceLocation modelLocation, @Nullable IIModelHeader header, @Nullable Function<IIModelHeader, AMT[]> custom,
+					@Nullable Function<ResourceLocation, TextureAtlasSprite> textureRemapper)
+	{
+		this(getModel(null, modelLocation, header, custom, textureRemapper, format));
+	}
+
+	//--- Base Model Method ---//
+
+	private static AMT[] getModel(@Nullable IBlockState state, ResourceLocation modelLocation, @Nullable IIModelHeader header,
+								  @Nullable Function<IIModelHeader, AMT[]> customPartsProvider, @Nullable Function<ResourceLocation, TextureAtlasSprite> textureRemapper,
+								  VertexFormat format)
+	{
+		try
+		{
+			OBJModel model = IIAnimationUtils.modelFromRes(modelLocation);
+			return getModel(state, model, header, customPartsProvider, format, null);
+
+		} catch(Exception e)
+		{
+			return new AMT[0];
+		}
+	}
+
+	private static AMT[] getModel(@Nullable IBlockState state, OBJModel model, @Nullable IIModelHeader header,
+								  @Nullable Function<IIModelHeader, AMT[]> customPartProvider, VertexFormat format,
+								  @Nullable Function<ResourceLocation, TextureAtlasSprite> textureRemapper)
+	{
+		//get group list from the unbaked model
+		Map<String, Group> groups = model.getMatLib().getGroups();
+		//Provide default texture remapper if not specified otherwise
+		Function<ResourceLocation, TextureAtlasSprite> textureMappings = textureRemapper==null?ClientUtils::getSprite: textureRemapper;
+
+		//create an array for AMT
+		ArrayList<AMT> models = new ArrayList<>();
+
+		//turn .obj groups into AMT
+		for(String group : groups.keySet())
+		{
+			OBJState objState = new OBJState(ImmutableList.of(group), true, ModelRotation.X0_Y0);
+			//Null for Items
+			IBlockState modelState = state==null?null: ((IExtendedBlockState)state).withProperty(Properties.AnimationProperty, objState);
+			Vec3d origin = header==null?Vec3d.ZERO: header.getOffset(group);
+
+			//Register textures of this AMT to the block atlast
+			model.getTextures().forEach((s) -> ApiUtils.getRegisterSprite(ClientUtils.mc().getTextureMapBlocks(), s));
+
+			//get baked quads
+			BakedQuad[] quads = model
+					.bake(objState, format, textureMappings)
+					.getQuads(modelState, null, 0L).toArray(new BakedQuad[0]);
+
+			//do not load empty models, fixes obj models having an additional empty element
+			if(quads.length==0)
+				continue;
+
+			models.add(new AMTQuads(group, origin, quads));
+		}
+
+		//add customPartProvider AMTs | item/fluid placeholders
+		if(customPartProvider!=null)
+			models.addAll(Arrays.asList(customPartProvider.apply(header)));
+		//Apply model part hierarchy
+		if(header!=null)
+			header.applyHierarchy(models);
+
+		//Organise model parts
+		return models.stream().filter(amt -> !amt.isChild()).toArray(AMT[]::new);
+	}
+
+	//--- AMTRenderable ---//
+
+	@Override
+	public Iterator<AMT> iterator()
+	{
+		return new Iterator<AMT>()
+		{
+			private int index = 0;
+
+			@Override
+			public boolean hasNext()
+			{
+				return index < model.length;
+			}
+
+			@Override
+			public AMT next()
+			{
+				return model[index++];
+			}
+		};
+	}
+
+	@Override
+	public void defaultize()
+	{
+		for(AMT amt : model)
+			amt.defaultize();
+	}
+
+	@Override
+	public void render(Tessellator tes, BufferBuilder buf)
+	{
+		for(AMT amt : model)
+			amt.render(tes, buf);
+	}
+
+	@Override
+	public void disposeOf()
+	{
+		for(AMT amt : model)
+			amt.disposeOf();
+	}
+
+	//--- Transformations ---//
+
+	/**
+	 * Creates a single AMT out of all AMTQuads inside this AMTModel for more performant rendering
+	 *
+	 * @param name batched element name
+	 * @return batched {@link AMTQuads} or {@link AMTLocator} if there's nothing to display
+	 */
+	public AMT batch(String name)
+	{
+		//Add all quads to list
+		List<BakedQuad> quads = new ArrayList<>();
+		for(AMT amt : getChildrenRecursive())
+			if(amt instanceof AMTQuads)
+				quads.addAll(Arrays.asList(((AMTQuads)amt).quads));
+
+		//Output
+		return quads.isEmpty()?
+				new AMTLocator(name, Vec3d.ZERO):
+				new AMTQuads(name, Vec3d.ZERO, quads.toArray(new BakedQuad[0]));
+	}
+
+	public AMT[] getChildrenRecursive()
+	{
+		return stream()
+				.map(AMT::getChildrenRecursive)
+				.flatMap(Collection::stream)
+				.toArray(AMT[]::new);
+	}
+
+	@Nullable
+	public AMT getPart(String name)
+	{
+		return stream()
+				.filter(amt -> amt.name.equals(name))
+				.findFirst().orElse(null);
+	}
+
+	@Nullable
+	public AMT getPartRecursive(String name)
+	{
+		return stream()
+				.map(AMT::getChildrenRecursive)
+				.flatMap(Collection::stream)
+				.filter(amt -> amt.name.equals(name))
+				.findFirst().orElse(null);
+	}
+
+	//--- Streams and Iteration ---//
+
+	public Stream<AMT> stream()
+	{
+		return Arrays.stream(model);
+	}
+
+	public boolean isEmpty()
+	{
+		return model.length==0;
+	}
+
+	public AMT[] getParts()
+	{
+		return model;
+	}
+}

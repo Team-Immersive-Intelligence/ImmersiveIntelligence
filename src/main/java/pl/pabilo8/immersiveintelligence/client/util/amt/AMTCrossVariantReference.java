@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * References an AMT part inside a {@link AMTModelCache}
+ * References an AMT part inside a {@link AMTCachedModel}
  *
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 17.02.2023
@@ -12,10 +12,10 @@ import java.util.Map;
 public class AMTCrossVariantReference<T extends AMT>
 {
 	private final String name;
-	private final AMTModelCache<?> model;
-	private final Map<AMT[], T> references;
+	private final AMTCachedModel<?> model;
+	private final Map<AMTModel, T> references;
 
-	public AMTCrossVariantReference(String name, AMTModelCache<?> model)
+	public AMTCrossVariantReference(String name, AMTCachedModel<?> model)
 	{
 		this.name = name;
 		this.model = model;
@@ -24,14 +24,17 @@ public class AMTCrossVariantReference<T extends AMT>
 
 	public T get()
 	{
-		AMT[] last = model.getLast();
+		AMTModel last = model.getLast();
 
 		//Return already mapped
 		if(references.containsKey(last))
 			return references.get(last);
+		if(last==null)
+			return null;
 
 		//Search and add to map if not
-		T part = (T)IIAnimationUtils.getPart(last, name);
+		@SuppressWarnings("unchecked")
+		T part = (T)last.getPart(name);
 		references.put(last, part);
 		return part;
 	}

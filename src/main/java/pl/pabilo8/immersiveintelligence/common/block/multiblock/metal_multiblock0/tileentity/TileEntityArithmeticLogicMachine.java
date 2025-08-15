@@ -50,7 +50,7 @@ public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockIIGene
 	 * ALM has 4 circuits by default, 6 with upgrade<br>
 	 * and 16 storage slots for additional circuits
 	 */
-	public static final int CIRCUITS_BASE = 4, CIRCUITS_UPGRADED = 6, STORAGE_SLOTS = 16;
+	public static final int CIRCUITS_BASE = 4, CIRCUITS_UPGRADED = 6, STORAGE_SLOTS = 18;
 	/**
 	 * Used for GUI animations
 	 */

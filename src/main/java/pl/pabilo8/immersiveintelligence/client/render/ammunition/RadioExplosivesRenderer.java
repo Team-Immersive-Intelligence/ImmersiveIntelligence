@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.Tuple;
+import net.minecraftforge.client.model.obj.OBJModel;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.client.model.builtin.IAmmoModel;
 import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer;
@@ -70,9 +71,9 @@ public class RadioExplosivesRenderer extends IITileRenderer<TileEntityRadioExplo
 	}
 
 	@Override
-	public void compileModels(Tuple<IBlockState, IBakedModel> sModel)
+	public void compileModels(IBlockState state, OBJModel model)
 	{
-		model = AmmoRegistry.getModel((ItemBlockMineBase)IIContent.blockRadioExplosives.itemBlock);
+		this.model = AmmoRegistry.getModel((ItemBlockMineBase)IIContent.blockRadioExplosives.itemBlock);
 	}
 
 	@Override

@@ -23,6 +23,7 @@ public class ContainerArithmeticLogicMachine extends ContainerIIBase<TileEntityA
 {
 	public final boolean storage;
 	public final Slot[] circuitSlots;
+	public final Slot[] storageSlots;
 
 	public ContainerArithmeticLogicMachine(EntityPlayer player, TileEntityArithmeticLogicMachine tile, int gui)
 	{
@@ -32,16 +33,16 @@ public class ContainerArithmeticLogicMachine extends ContainerIIBase<TileEntityA
 		{
 			case 0: //Storage
 			{
-				int slots = tile.hasUpgrade(IIContent.UPGRADE_CIRCUIT_RACKS)?CIRCUITS_UPGRADED: CIRCUITS_BASE;
-				this.circuitSlots = addSlotArray(6+2, 26-8-2-1, 0, slots, 1, CircuitSlot::new);
-				addSlotArray(32, 6, CIRCUITS_UPGRADED, STORAGE_SLOTS, 8, CircuitSlot::new);
-
+				boolean circuitUpgrade = tile.hasUpgrade(IIContent.UPGRADE_CIRCUIT_RACKS);
+				this.circuitSlots = addSlotArray(6+2, 26-8-2-1+(circuitUpgrade?0: 18), 0,
+						circuitUpgrade?CIRCUITS_UPGRADED: CIRCUITS_BASE, 1, CircuitSlot::new);
+				this.storageSlots = addSlotArray(32+4, 6+4+32-16, CIRCUITS_UPGRADED, STORAGE_SLOTS, 6, CircuitSlot::new);
 				this.storage = true;
 			}
 			break;
 			default:
 				this.storage = false;
-				this.circuitSlots = new Slot[0];
+				this.circuitSlots = storageSlots = new Slot[0];
 				break;
 		}
 

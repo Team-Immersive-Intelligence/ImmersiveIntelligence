@@ -207,14 +207,13 @@ public class SubmachinegunRenderer extends IIUpgradableItemRendererAMT<ItemIISub
 
 
 		//Finally, render
-		for(AMT amt : model)
-			amt.render(tes, buf);
+		model.render(tes, buf);
 	}
 
 	@Override
 	public void compileModels(OBJModel model, IIModelHeader header)
 	{
-		this.model = AMTModelCacheBuilder.startItemModel()
+		this.model = AMTCachedModelBuilder.startItemModel()
 				.withModel(model)
 				.withModels(listUpgradeModels())
 				.withHeader(header)

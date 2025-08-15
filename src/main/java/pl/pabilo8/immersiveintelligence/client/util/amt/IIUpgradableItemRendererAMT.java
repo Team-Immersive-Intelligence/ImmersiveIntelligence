@@ -35,7 +35,7 @@ public abstract class IIUpgradableItemRendererAMT<I extends ItemIIUpgradableTool
 	protected final ResLoc directoryRes;
 	private final HashMap<Predicate<EasyNBT>, IIAnimationCachedMap> UPGRADES = new HashMap<>();
 
-	protected AMTModelCache<ItemStack> model;
+	protected AMTCachedModel<ItemStack> model;
 	IIAnimationCachedMap upgradeVisibility;
 
 	public IIUpgradableItemRendererAMT(@Nonnull I item, ResLoc modelRes)

@@ -3,9 +3,8 @@ package pl.pabilo8.immersiveintelligence.client.render.multiblock.metal;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.Tuple;
+import net.minecraftforge.client.model.obj.OBJModel;
 import pl.pabilo8.immersiveintelligence.client.render.IIMultiblockRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer.RegisteredTileRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.amt.*;
@@ -21,7 +20,7 @@ import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 @RegisteredTileRenderer(name = "multiblock/printing_press", clazz = TileEntityPrintingPress.class)
 public class PrintingPressRenderer extends IIMultiblockRenderer<TileEntityPrintingPress>
 {
-	private AMT[] model;
+	private AMTModel model;
 	private IIAnimationCompiledMap animationWork, animationDefault;
 	//For falling paper page and paper stack
 	private AMTItem itemModel, stackModel;
@@ -30,8 +29,7 @@ public class PrintingPressRenderer extends IIMultiblockRenderer<TileEntityPrinti
 	public void drawAnimated(TileEntityPrintingPress te, BufferBuilder buf, float partialTicks, Tessellator tes)
 	{
 		//reset model to default state
-		for(AMT mod : model)
-			mod.defaultize();
+		model.defaultize();
 		animationDefault.apply(0);
 
 		itemModel.setStack(te.inventory.get(TileEntityPrintingPress.SLOT_PAPER));
@@ -48,8 +46,7 @@ public class PrintingPressRenderer extends IIMultiblockRenderer<TileEntityPrinti
 		applyStandardMirroring(te, true);
 
 		//Render
-		for(AMT mod : model)
-			mod.render(tes, buf);
+		model.render(tes, buf);
 
 		applyStandardMirroring(te, false);
 	}
@@ -63,16 +60,15 @@ public class PrintingPressRenderer extends IIMultiblockRenderer<TileEntityPrinti
 		stackModel.setStack(ItemStack.EMPTY);
 
 		//Render
-		for(AMT mod : model)
-			mod.render(tes, buf);
+		model.render(tes, buf);
 	}
 
 
 	@Override
-	public void compileModels(Tuple<IBlockState, IBakedModel> sModel)
+	public void compileModels(IBlockState state, OBJModel model)
 	{
 		//model loading
-		model = IIAnimationUtils.getAMT(sModel, IIAnimationLoader.loadHeader(sModel.getSecond()), header ->
+		this.model = new AMTModel(state, model, header ->
 				new AMT[]{
 						itemModel = new AMTItem("paper", header),
 						stackModel = new AMTItem("stack", header).setStacking(true)
@@ -80,8 +76,8 @@ public class PrintingPressRenderer extends IIMultiblockRenderer<TileEntityPrinti
 		);
 
 		//animations
-		animationDefault = IIAnimationCompiledMap.create(model, ResLoc.of(IIReference.RES_II, "printing_press/default"));
-		animationWork = IIAnimationCompiledMap.create(model, ResLoc.of(IIReference.RES_II, "printing_press/work"));
+		animationDefault = IIAnimationCompiledMap.create(this.model, ResLoc.of(IIReference.RES_II, "printing_press/default"));
+		animationWork = IIAnimationCompiledMap.create(this.model, ResLoc.of(IIReference.RES_II, "printing_press/work"));
 	}
 
 	@Override

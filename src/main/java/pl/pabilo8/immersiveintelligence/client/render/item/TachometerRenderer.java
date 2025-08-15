@@ -6,6 +6,7 @@ import blusunrize.immersiveengineering.common.util.chickenbones.Matrix4;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraftforge.client.model.obj.OBJModel;
@@ -25,7 +26,7 @@ import pl.pabilo8.immersiveintelligence.common.util.amt.IIModelHeader;
 @RegisteredItemRenderer(name = "items/tools/tachometer")
 public class TachometerRenderer extends IIItemRendererAMT<ItemIITachometer>
 {
-	AMT[] amt;
+	AMTModel model;
 	IIAnimationCompiledMap gauge, hand;
 
 	public TachometerRenderer()
@@ -65,23 +66,22 @@ public class TachometerRenderer extends IIItemRendererAMT<ItemIITachometer>
 	public void draw(ItemStack stack, TransformType transform, BufferBuilder buf, Tessellator tes, float partialTicks)
 	{
 		hand.apply(is1stPerson(transform)?1: 0);
-		for(AMT mod : amt)
-			mod.render(tes, buf);
+		model.render(tes, buf);
 	}
 
 	@Override
 	public void compileModels(OBJModel model, IIModelHeader header)
 	{
-		this.amt = IIAnimationUtils.getAMTItemModel(model, header, header1 -> new AMT[]{
+		this.model = new AMTModel(DefaultVertexFormats.ITEM, model, header, header1 -> new AMT[]{
 				new AMTHand("hand", header, EnumHand.MAIN_HAND)
 		});
-		this.gauge = IIAnimationCompiledMap.create(this.amt, ResLoc.of(IIReference.RES_II, "tools/tachometer/gauge"));
-		this.hand = IIAnimationCompiledMap.create(this.amt, ResLoc.of(IIReference.RES_II, "tools/hand"));
+		this.gauge = IIAnimationCompiledMap.create(this.model, ResLoc.of(IIReference.RES_II, "tools/tachometer/gauge"));
+		this.hand = IIAnimationCompiledMap.create(this.model, ResLoc.of(IIReference.RES_II, "tools/hand"));
 	}
 
 	@Override
 	protected void nullifyModels()
 	{
-		IIAnimationUtils.disposeOf(this.amt);
+		IIAnimationUtils.disposeOf(this.model);
 	}
 }

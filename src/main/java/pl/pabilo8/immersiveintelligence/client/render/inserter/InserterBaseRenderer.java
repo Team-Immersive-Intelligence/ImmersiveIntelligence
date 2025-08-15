@@ -3,15 +3,14 @@ package pl.pabilo8.immersiveintelligence.client.render.inserter;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Tuple;
+import net.minecraftforge.client.model.obj.OBJModel;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMT;
+import pl.pabilo8.immersiveintelligence.client.util.amt.AMTModel;
 import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationCompiledMap;
-import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationLoader;
 import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationUtils;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.inserter.TileEntityInserterBase;
 import pl.pabilo8.immersiveintelligence.common.util.amt.IIModelHeader;
@@ -27,7 +26,7 @@ public abstract class InserterBaseRenderer<T extends TileEntityInserterBase> ext
 	//inserter animations for all directions
 	private IIAnimationCompiledMap animationDefaults, animationFrontBack, animationFrontRight, animationFrontLeft, animationFrontFront;
 	//directions + actual inserter
-	private AMT[] model = null;
+	private AMTModel model;
 	//reference to model parts
 	private AMT inBox, outBox, turntable;
 
@@ -39,8 +38,7 @@ public abstract class InserterBaseRenderer<T extends TileEntityInserterBase> ext
 		EnumFacing teIn = te.getCurrentInputFacing();
 
 		//defaultize model angles
-		for(AMT mod : model)
-			mod.defaultize();
+		model.defaultize();
 		animationDefaults.apply(0); //apply default animation
 
 		//apply input box direction
@@ -84,25 +82,24 @@ public abstract class InserterBaseRenderer<T extends TileEntityInserterBase> ext
 		doAdditionalTransforms(te, buf, partialTicks, tes);
 
 		//render
-		for(AMT mod : model)
-			mod.render(tes, buf);
+		model.render(tes, buf);
 	}
 
 	protected abstract void doAdditionalTransforms(T te, BufferBuilder buf, float partialTicks, Tessellator tes);
 
 	@Override
-	public void compileModels(Tuple<IBlockState, IBakedModel> sModel)
+	public void compileModels(IBlockState state, OBJModel model)
 	{
-		model = IIAnimationUtils.getAMT(sModel, IIAnimationLoader.loadHeader(sModel.getSecond()), getAdditionalParts());
-		inBox = IIAnimationUtils.getPart(model, "input");
-		outBox = IIAnimationUtils.getPart(model, "output");
-		turntable = IIAnimationUtils.getPart(model, "turntable");
+		this.model = new AMTModel(state, model, getAdditionalParts());
+		inBox = this.model.getPart("input");
+		outBox = this.model.getPart("output");
+		turntable = this.model.getPart("turntable");
 
-		animationDefaults = IIAnimationCompiledMap.create(model, new ResourceLocation(ImmersiveIntelligence.MODID, "inserter/item"));
-		animationFrontBack = IIAnimationCompiledMap.create(model, new ResourceLocation(ImmersiveIntelligence.MODID, "inserter/front_back"));
-		animationFrontRight = IIAnimationCompiledMap.create(model, new ResourceLocation(ImmersiveIntelligence.MODID, "inserter/front_right"));
-		animationFrontLeft = IIAnimationCompiledMap.create(model, new ResourceLocation(ImmersiveIntelligence.MODID, "inserter/front_left"));
-		animationFrontFront = IIAnimationCompiledMap.create(model, new ResourceLocation(ImmersiveIntelligence.MODID, "inserter/front_front"));
+		animationDefaults = IIAnimationCompiledMap.create(this.model, new ResourceLocation(ImmersiveIntelligence.MODID, "inserter/item"));
+		animationFrontBack = IIAnimationCompiledMap.create(this.model, new ResourceLocation(ImmersiveIntelligence.MODID, "inserter/front_back"));
+		animationFrontRight = IIAnimationCompiledMap.create(this.model, new ResourceLocation(ImmersiveIntelligence.MODID, "inserter/front_right"));
+		animationFrontLeft = IIAnimationCompiledMap.create(this.model, new ResourceLocation(ImmersiveIntelligence.MODID, "inserter/front_left"));
+		animationFrontFront = IIAnimationCompiledMap.create(this.model, new ResourceLocation(ImmersiveIntelligence.MODID, "inserter/front_front"));
 	}
 
 	protected abstract Function<IIModelHeader, AMT[]> getAdditionalParts();

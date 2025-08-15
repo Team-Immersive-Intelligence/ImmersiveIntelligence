@@ -3,11 +3,13 @@ package pl.pabilo8.immersiveintelligence.client.render.multiblock.metal;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.block.model.IBakedModel;
-import net.minecraft.util.Tuple;
+import net.minecraftforge.client.model.obj.OBJModel;
 import pl.pabilo8.immersiveintelligence.client.render.IIMultiblockRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer.RegisteredTileRenderer;
-import pl.pabilo8.immersiveintelligence.client.util.amt.*;
+import pl.pabilo8.immersiveintelligence.client.util.amt.AMTModel;
+import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationCompiledMap;
+import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationUtils;
+import pl.pabilo8.immersiveintelligence.client.util.amt.MachineUpgradeModel;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityDataInputMachine;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
@@ -21,19 +23,19 @@ import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 @RegisteredTileRenderer(name = "multiblock/data_input_machine", clazz = TileEntityDataInputMachine.class)
 public class DataInputMachineRenderer extends IIMultiblockRenderer<TileEntityDataInputMachine>
 {
-	IIMachineUpgradeModel upgradeModel;
-	private AMT[] model;
+	MachineUpgradeModel upgradeModel;
+	private AMTModel model;
 	private IIAnimationCompiledMap animationDrawer, animationHatch, animationProgrammingStart;
 
 	@Override
 	public void drawAnimated(TileEntityDataInputMachine te, BufferBuilder buf, float partialTicks, Tessellator tes)
 	{
-		//reset model to default state
-		for(AMT amt : model)
-			amt.defaultize();
+		//Reset model to default state
+		model.defaultize();
 		animationDrawer.apply(te.drawer.getProgress(partialTicks));
 		animationHatch.apply(te.hatch.getProgress(partialTicks));
 
+		//Show item programming animation for items like radio explosives
 		if(te.currentProcess!=null&&te.currentProcess.recipe.showItem)
 			animationProgrammingStart.apply(1f);
 		else
@@ -43,8 +45,7 @@ public class DataInputMachineRenderer extends IIMultiblockRenderer<TileEntityDat
 		applyStandardMirroring(te, true);
 
 		//Render
-		for(AMT amt : model)
-			amt.render(tes, buf);
+		model.render(tes, buf);
 
 		applyStandardMirroring(te, false);
 	}
@@ -52,27 +53,22 @@ public class DataInputMachineRenderer extends IIMultiblockRenderer<TileEntityDat
 	@Override
 	public void drawSimple(BufferBuilder buf, float partialTicks, Tessellator tes)
 	{
-		//reset model to default state
-		for(AMT amt : model)
-			amt.defaultize();
-
+		//Reset model to default state
+		model.defaultize();
 		//Render
-		for(AMT amt : model)
-			amt.render(tes, buf);
+		model.render(tes, buf);
 	}
 
 	@Override
-	public void compileModels(Tuple<IBlockState, IBakedModel> sModel)
+	public void compileModels(IBlockState state, OBJModel model)
 	{
 		//model loading
-		model = IIAnimationUtils.getAMT(sModel, IIAnimationLoader.loadHeader(sModel.getSecond()), header ->
-				new AMT[]{}
-		);
+		this.model = new AMTModel(state, model);
 
 		//animations
-		animationDrawer = IIAnimationCompiledMap.create(model, ResLoc.of(IIReference.RES_II, "data_input_machine/drawer"));
-		animationHatch = IIAnimationCompiledMap.create(model, ResLoc.of(IIReference.RES_II, "data_input_machine/hatch"));
-		animationProgrammingStart = IIAnimationCompiledMap.create(model, ResLoc.of(IIReference.RES_II, "data_input_machine/programming_start"));
+		animationDrawer = IIAnimationCompiledMap.create(this.model, ResLoc.of(IIReference.RES_II, "data_input_machine/drawer"));
+		animationHatch = IIAnimationCompiledMap.create(this.model, ResLoc.of(IIReference.RES_II, "data_input_machine/hatch"));
+		animationProgrammingStart = IIAnimationCompiledMap.create(this.model, ResLoc.of(IIReference.RES_II, "data_input_machine/programming_start"));
 	}
 
 	@Override

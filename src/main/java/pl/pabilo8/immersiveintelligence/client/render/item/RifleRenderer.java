@@ -208,8 +208,7 @@ public class RifleRenderer extends IIUpgradableItemRendererAMT<ItemIIRifle> impl
 			offhandVisibility.apply(0);
 
 		//Finally, render
-		for(AMT amt : model)
-			amt.render(tes, buf);
+		model.render(tes, buf);
 	}
 
 	@Override
@@ -217,11 +216,11 @@ public class RifleRenderer extends IIUpgradableItemRendererAMT<ItemIIRifle> impl
 	{
 		this.handmadeRemapper = new MTLTextureRemapper(model, ResLoc.of(directoryRes, "rifle_handmade").withExtension(ResLoc.EXT_MTL));
 
-		this.model = AMTModelCacheBuilder.startItemModel()
+		this.model = AMTCachedModelBuilder.startItemModel()
 				.withModel(model)
 				.withModels(listUpgradeModels())
 				.withHeader(header)
-				.withHeader(IIAnimationLoader.loadHeader(new ResourceLocation(ImmersiveIntelligence.MODID, "models/item/weapons/rifle/rifle_upgrades.obj.amt")))
+				.withHeader(AMTLoader.loadHeader(new ResourceLocation(ImmersiveIntelligence.MODID, "models/item/weapons/rifle/rifle_upgrades.obj.amt")))
 				.withModelProvider(
 						(stack, combinedHeader) -> new AMT[]{
 								new AMTBullet("bullet", combinedHeader, AmmoRegistry.getModel(IIContent.itemAmmoMachinegun))

@@ -5,6 +5,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.math.MathHelper;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
@@ -24,8 +25,8 @@ import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 public class DroneRenderer extends IIEntityRenderer<EntityDrone>
 {
 	private static IIAnimationCompiledMap animationFloat, animationEngine, animationSetup;
-	private static AMT[] models;
-	private static AMT modelIRMount, modelIRBall;
+	private static AMTModel model;
+	private static AMT IRMount, IRBall;
 
 	public DroneRenderer(RenderManager render)
 	{
@@ -50,17 +51,16 @@ public class DroneRenderer extends IIEntityRenderer<EntityDrone>
 		if(entity.ticksExisted > 40)
 			faceCamera(entity, rotYaw, partialTicks);
 
-		for(AMT amt : models)
-			amt.render(tes, buf);
+		model.render(tes, buf);
 		GlStateManager.enableCull();
 	}
 
 	public void faceCamera(EntityDrone entity, float rotYaw, float partialTicks)
 	{
-		IIAnimationUtils.setModelRotation(modelIRMount, 0,
+		IIAnimationUtils.setModelRotation(IRMount, 0,
 				-MathHelper.clampedLerp(entity.prevRotationYawHead, entity.rotationYawHead, partialTicks)+rotYaw,
 				0);
-		IIAnimationUtils.setModelRotation(modelIRBall,
+		IIAnimationUtils.setModelRotation(IRBall,
 				(MathHelper.clampedLerp(entity.prevRotationPitch, entity.rotationPitch, partialTicks)),
 				0, 0);
 	}
@@ -69,9 +69,9 @@ public class DroneRenderer extends IIEntityRenderer<EntityDrone>
 	public void compileModels()
 	{
 		IIColor missilePaint = IIColor.fromPackedRGB(0x2fad64);
-		models = IIAnimationUtils.getAMTFromRes(
+		model = new AMTModel(
+				DefaultVertexFormats.BLOCK,
 				ResLoc.of(IIReference.RES_ENTITY_MODEL, "combat_drone").withExtension(ResLoc.EXT_OBJ),
-				ResLoc.of(IIReference.RES_ENTITY_MODEL, "combat_drone").withExtension(ResLoc.EXT_OBJAMT),
 				header -> new AMT[]{
 						new AMTLocator("Rotors", header),
 						new AMTBullet("WeaponMount1", header.getOffset("WeaponMount1"), AmmoRegistry.getModel(IIContent.itemAmmoRocketLight))
@@ -85,23 +85,23 @@ public class DroneRenderer extends IIEntityRenderer<EntityDrone>
 				}
 		);
 
-		modelIRMount = IIAnimationUtils.getPart(models, "IRMount");
-		modelIRBall = IIAnimationUtils.getPart(models, "IRBall");
+		IRMount = model.getPart("IRMount");
+		IRBall = model.getPart("IRBall");
 
-		animationFloat = IIAnimationCompiledMap.create(models, ResLoc.of(IIReference.RES_II, "drone/propellers"));
-		animationEngine = IIAnimationCompiledMap.create(models, ResLoc.of(IIReference.RES_II, "drone/engine"));
-		animationSetup = IIAnimationCompiledMap.create(models, ResLoc.of(IIReference.RES_II, "drone/setup"));
+		animationFloat = IIAnimationCompiledMap.create(model, ResLoc.of(IIReference.RES_II, "drone/propellers"));
+		animationEngine = IIAnimationCompiledMap.create(model, ResLoc.of(IIReference.RES_II, "drone/engine"));
+		animationSetup = IIAnimationCompiledMap.create(model, ResLoc.of(IIReference.RES_II, "drone/setup"));
 	}
 
 	@Override
 	public void registerSprites(TextureMap map)
 	{
-		IIAnimationLoader.preloadTexturesFromMTL(ResLoc.of(IIReference.RES_ENTITY_MODEL, "combat_drone").withExtension(ResLoc.EXT_MTL), map);
+		AMTLoader.preloadTexturesFromMTL(ResLoc.of(IIReference.RES_ENTITY_MODEL, "combat_drone").withExtension(ResLoc.EXT_MTL), map);
 	}
 
 	@Override
 	protected void nullifyModels()
 	{
-		IIAnimationUtils.disposeOf(models);
+		IIAnimationUtils.disposeOf(model);
 	}
 }

@@ -263,15 +263,14 @@ public class AssaultRifleRenderer extends IIUpgradableItemRendererAMT<ItemIIAssa
 		}
 
 		//Finally, render
-		for(AMT amt : model)
-			amt.render(tes, buf);
+		model.render(tes, buf);
 
 	}
 
 	@Override
 	public void compileModels(OBJModel model, IIModelHeader header)
 	{
-		this.model = AMTModelCacheBuilder.startItemModel()
+		this.model = AMTCachedModelBuilder.startItemModel()
 				.withModel(model)
 				.withModel(ResLoc.of(this.directoryRes, "upgrades/common.obj"))
 				.withModels(listUpgradeModels())

@@ -22,26 +22,26 @@ import java.util.Set;
 public class IIAnimationCachedMap
 {
 	@Nonnull
-	AMTModelCache<?> model;
+	AMTCachedModel<?> model;
 	@Nonnull
 	IIAnimation animation;
 	@Nonnull
-	HashMap<AMT[], IIAnimationCompiledMap> map = new HashMap<>();
+	HashMap<AMTModel, IIAnimationCompiledMap> map = new HashMap<>();
 
-	private IIAnimationCachedMap(@Nonnull AMTModelCache<?> model, @Nonnull IIAnimation animation)
+	private IIAnimationCachedMap(@Nonnull AMTCachedModel<?> model, @Nonnull IIAnimation animation)
 	{
 		this.model = model;
 		this.animation = animation;
 	}
 
-	public static IIAnimationCachedMap create(@Nonnull AMTModelCache<?> model, @Nonnull IIAnimation animation)
+	public static IIAnimationCachedMap create(@Nonnull AMTCachedModel<?> model, @Nonnull IIAnimation animation)
 	{
 		return new IIAnimationCachedMap(model, animation);
 	}
 
-	public static IIAnimationCachedMap create(@Nonnull AMTModelCache<?> model, @Nonnull ResourceLocation res)
+	public static IIAnimationCachedMap create(@Nonnull AMTCachedModel<?> model, @Nonnull ResourceLocation res)
 	{
-		return create(model, IIAnimationLoader.loadAnimation(res));
+		return create(model, AMTLoader.loadAnimation(res));
 	}
 
 	/**
@@ -52,10 +52,11 @@ public class IIAnimationCachedMap
 	 * @param mainModel primary model of the cache
 	 * @return visibility animation
 	 */
-	public static IIAnimationCachedMap createVisibilityAnimation(@Nonnull AMTModelCache<?> model, @Nonnull OBJModel mainModel)
+	public static IIAnimationCachedMap createVisibilityAnimation(@Nonnull AMTCachedModel<?> model, @Nonnull OBJModel mainModel)
 	{
 		Set<String> present = mainModel.getMatLib().getGroups().keySet();
-		IIAnimationGroup[] groups = Arrays.stream(IIAnimationUtils.getChildrenRecursive(model.getBase()))
+		assert model.getBase()!=null;
+		IIAnimationGroup[] groups = Arrays.stream(model.getBase().getChildrenRecursive())
 				.filter(amt -> amt instanceof AMTQuads)
 				.filter(amt -> !present.contains(amt.name))
 				.map(amt ->
@@ -76,7 +77,7 @@ public class IIAnimationCachedMap
 	 */
 	public void apply(float time)
 	{
-		AMT[] last = model.getLast();
+		AMTModel last = model.getLast();
 		map.putIfAbsent(last, IIAnimationCompiledMap.create(last, animation));
 		map.get(last).apply(time);
 	}

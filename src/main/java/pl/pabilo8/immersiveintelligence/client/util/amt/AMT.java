@@ -20,7 +20,7 @@ import java.util.ArrayList;
  * Introducing the Advanced Model Technology(tm)<br>
  * Brace yourselves
  */
-public abstract class AMT
+public abstract class AMT implements AMTRenderable
 {
 	//--- Final Properties ---//
 
@@ -90,6 +90,7 @@ public abstract class AMT
 	 * @param tes Tesselator to be used
 	 * @param buf BufferBuilder of tes
 	 */
+	@Override
 	public final void render(Tessellator tes, BufferBuilder buf)
 	{
 		if(!visible)
@@ -155,14 +156,9 @@ public abstract class AMT
 
 	}
 
-	/**
-	 * Draw this AMT
-	 */
 	protected abstract void draw(Tessellator tes, BufferBuilder buf);
 
-	/**
-	 * Set all variables to default values
-	 */
+	@Override
 	public void defaultize()
 	{
 		visible = true;
@@ -176,9 +172,7 @@ public abstract class AMT
 				mod.defaultize();
 	}
 
-	/**
-	 * Remove GL CallLists so they won't waste space, when not needed
-	 */
+	@Override
 	public abstract void disposeOf();
 
 	/**

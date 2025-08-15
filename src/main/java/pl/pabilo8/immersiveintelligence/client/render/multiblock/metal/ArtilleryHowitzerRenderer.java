@@ -4,11 +4,10 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Tuple;
 import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.client.model.obj.OBJModel;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.client.fx.IIParticles;
@@ -30,7 +29,7 @@ import pl.pabilo8.immersiveintelligence.common.util.amt.IIModelHeader;
 @RegisteredTileRenderer(name = "multiblock/artillery_howitzer", clazz = TileEntityArtilleryHowitzer.class)
 public class ArtilleryHowitzerRenderer extends IIMultiblockRenderer<TileEntityArtilleryHowitzer>
 {
-	private AMT[] model = null, allParts = null;
+	private AMTModel model = null;
 	//animations
 	private IIAnimationCompiledMap animationDefault, animationOpen, animationPlatform;
 	private IIAnimationCompiledMap[] animationFire, animationLoading, animationUnloading;
@@ -48,8 +47,7 @@ public class ArtilleryHowitzerRenderer extends IIMultiblockRenderer<TileEntityAr
 	public void drawAnimated(TileEntityArtilleryHowitzer te, BufferBuilder buf, float partialTicks, Tessellator tes)
 	{
 		//defaultize
-		for(AMT mod : allParts)
-			mod.defaultize();
+		model.defaultize();
 		//apply default animation (for inserter angle)
 		animationDefault.apply(0);
 
@@ -172,8 +170,7 @@ public class ArtilleryHowitzerRenderer extends IIMultiblockRenderer<TileEntityAr
 			mirrorRender();
 
 		//render
-		for(AMT mod : model)
-			mod.render(tes, buf);
+		model.render(tes, buf);
 
 		if(te.mirrored)
 			unMirrorRender();
@@ -183,17 +180,14 @@ public class ArtilleryHowitzerRenderer extends IIMultiblockRenderer<TileEntityAr
 	public void drawSimple(BufferBuilder buf, float partialTicks, Tessellator tes)
 	{
 		GlStateManager.translate(0, 0, -0.5);
-
 		//defaultize
-		for(AMT mod : allParts)
-			mod.defaultize();
+		model.defaultize();
 
 		//apply default animation (for inserter angle)
 		animationDefault.apply(0);
 
 		//render
-		for(AMT mod : model)
-			mod.render(tes, buf);
+		model.render(tes, buf);
 	}
 
 	private void setupShellDisplay(TileEntityArtilleryHowitzer te, BulletState state, int slot)
@@ -224,12 +218,12 @@ public class ArtilleryHowitzerRenderer extends IIMultiblockRenderer<TileEntityAr
 	}
 
 	@Override
-	public void compileModels(Tuple<IBlockState, IBakedModel> sModel)
+	public void compileModels(IBlockState state, OBJModel model)
 	{
 		shells = new AMTBullet[12];
 		shellsStorage = new AMTBullet[4];
 
-		model = IIAnimationUtils.getAMT(sModel, IIAnimationLoader.loadHeader(sModel.getSecond()),
+		this.model = new AMTModel(state, model,
 				header -> new AMT[]{
 						//add shell models to placeholders
 						createShellQueueAMT(true, 0, header),
@@ -257,10 +251,9 @@ public class ArtilleryHowitzerRenderer extends IIMultiblockRenderer<TileEntityAr
 						new AMTParticle("muzzle_flash", header).setParticle(IIParticles.PARTICLE_GUNFIRE)
 				}
 		);
-		allParts = IIAnimationUtils.getChildrenRecursive(model);
-		animationDefault = IIAnimationCompiledMap.create(model, new ResourceLocation(ImmersiveIntelligence.MODID, "artillery_howitzer/artillery_howitzer_default"));
-		animationOpen = IIAnimationCompiledMap.create(model, new ResourceLocation(ImmersiveIntelligence.MODID, "artillery_howitzer/artillery_howitzer_door"));
-		animationPlatform = IIAnimationCompiledMap.create(model, new ResourceLocation(ImmersiveIntelligence.MODID, "artillery_howitzer/artillery_howitzer_platform"));
+		animationDefault = IIAnimationCompiledMap.create(this.model, new ResourceLocation(ImmersiveIntelligence.MODID, "artillery_howitzer/artillery_howitzer_default"));
+		animationOpen = IIAnimationCompiledMap.create(this.model, new ResourceLocation(ImmersiveIntelligence.MODID, "artillery_howitzer/artillery_howitzer_door"));
+		animationPlatform = IIAnimationCompiledMap.create(this.model, new ResourceLocation(ImmersiveIntelligence.MODID, "artillery_howitzer/artillery_howitzer_platform"));
 
 		//firing and loading animations, for each ammo rack shell
 		animationLoading = new IIAnimationCompiledMap[4];
@@ -268,16 +261,16 @@ public class ArtilleryHowitzerRenderer extends IIMultiblockRenderer<TileEntityAr
 		animationFire = new IIAnimationCompiledMap[4];
 		for(int i = 0; i < 4; i++)
 		{
-			animationLoading[i] = IIAnimationCompiledMap.create(model, new ResourceLocation(ImmersiveIntelligence.MODID, "artillery_howitzer/artillery_howitzer_loading"+(i+1)));
-			animationUnloading[i] = IIAnimationCompiledMap.create(model, new ResourceLocation(ImmersiveIntelligence.MODID, "artillery_howitzer/artillery_howitzer_unloading"+(i+1)));
-			animationFire[i] = IIAnimationCompiledMap.create(model, new ResourceLocation(ImmersiveIntelligence.MODID, "artillery_howitzer/artillery_howitzer_fire"+(i+1)));
+			animationLoading[i] = IIAnimationCompiledMap.create(this.model, new ResourceLocation(ImmersiveIntelligence.MODID, "artillery_howitzer/artillery_howitzer_loading"+(i+1)));
+			animationUnloading[i] = IIAnimationCompiledMap.create(this.model, new ResourceLocation(ImmersiveIntelligence.MODID, "artillery_howitzer/artillery_howitzer_unloading"+(i+1)));
+			animationFire[i] = IIAnimationCompiledMap.create(this.model, new ResourceLocation(ImmersiveIntelligence.MODID, "artillery_howitzer/artillery_howitzer_fire"+(i+1)));
 		}
 
-		animationQueueIn = IIAnimationLoader.loadAnimation(new ResourceLocation(ImmersiveIntelligence.MODID, "artillery_howitzer/artillery_howitzer_queue_in")).getLeadingGroup();
-		animationQueueOut = IIAnimationLoader.loadAnimation(new ResourceLocation(ImmersiveIntelligence.MODID, "artillery_howitzer/artillery_howitzer_queue_out")).getLeadingGroup();
+		animationQueueIn = AMTLoader.loadAnimation(new ResourceLocation(ImmersiveIntelligence.MODID, "artillery_howitzer/artillery_howitzer_queue_in")).getLeadingGroup();
+		animationQueueOut = AMTLoader.loadAnimation(new ResourceLocation(ImmersiveIntelligence.MODID, "artillery_howitzer/artillery_howitzer_queue_out")).getLeadingGroup();
 
-		gunYaw = IIAnimationUtils.getPart(model, "turret");
-		gunPitch = IIAnimationUtils.getPart(model, "gun");
+		gunYaw = this.model.getPart("turret");
+		gunPitch = this.model.getPart("gun");
 	}
 
 	@Override

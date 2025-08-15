@@ -10,13 +10,16 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Tuple;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.client.model.obj.OBJModel;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.render.IIMultiblockRenderer;
-import pl.pabilo8.immersiveintelligence.client.util.amt.*;
-import pl.pabilo8.immersiveintelligence.client.util.amt.IIMachineUpgradeModel.UpgradeStage;
+import pl.pabilo8.immersiveintelligence.client.util.amt.AMTModel;
+import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationCompiledMap;
+import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationUtils;
+import pl.pabilo8.immersiveintelligence.client.util.amt.MachineUpgradeModel;
+import pl.pabilo8.immersiveintelligence.client.util.amt.MachineUpgradeModel.UpgradeStage;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.gate_multiblock.tileentity.TileEntityGateBase;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
@@ -28,8 +31,8 @@ import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
  */
 public class FenceGateRenderer<T extends TileEntityGateBase<T>> extends IIMultiblockRenderer<T>
 {
-	IIMachineUpgradeModel redstoneUpgrade, razorUpgrade;
-	private AMT[] model;
+	MachineUpgradeModel redstoneUpgrade, razorUpgrade;
+	private AMTModel model;
 	private IIAnimationCompiledMap open, redstone, razor;
 
 	public FenceGateRenderer(String name)
@@ -52,8 +55,7 @@ public class FenceGateRenderer<T extends TileEntityGateBase<T>> extends IIMultib
 		redstone.apply((redstoneUpgrade.renderConstruction(te, tes, buf, partialTicks)==UpgradeStage.INSTALLED)?1: 0);
 		razor.apply((razorUpgrade.renderConstruction(te, tes, buf, partialTicks)==UpgradeStage.INSTALLED)?1: 0);
 
-		for(AMT amt : model)
-			amt.render(tes, buf);
+		model.render(tes, buf);
 
 		drawConnectedFences(te, buf, tes);
 
@@ -110,22 +112,20 @@ public class FenceGateRenderer<T extends TileEntityGateBase<T>> extends IIMultib
 	}
 
 	@Override
-	public void compileModels(Tuple<IBlockState, IBakedModel> sModel)
+	public void compileModels(IBlockState state, OBJModel model)
 	{
-		model = IIAnimationUtils.getAMT(sModel, IIAnimationLoader.loadHeader(sModel.getSecond()));
-		open = IIAnimationCompiledMap.create(model, ResLoc.of(IIReference.RES_II, "gate/open"));
+		this.model = new AMTModel(state, model);
+		open = IIAnimationCompiledMap.create(this.model, ResLoc.of(IIReference.RES_II, "gate/open"));
 
-		AMT[] modelUpgrades = IIAnimationUtils.getAMTFromRes(
-				new ResourceLocation(ImmersiveIntelligence.MODID, "models/block/multiblock/gate_construction.obj.ie"),
-				new ResourceLocation(ImmersiveIntelligence.MODID, "models/block/multiblock/gate_construction.obj.amt")
-		);
+		AMTModel modelUpgrades = new AMTModel(DefaultVertexFormats.BLOCK,
+				IIReference.RES_II.with("models/block/multiblock/gate_construction.obj.ie"));
 
-		redstone = IIAnimationCompiledMap.create(model, ResLoc.of(IIReference.RES_II, "gate/redstone"));
-		razor = IIAnimationCompiledMap.create(model, ResLoc.of(IIReference.RES_II, "gate/razor"));
+		redstone = IIAnimationCompiledMap.create(this.model, ResLoc.of(IIReference.RES_II, "gate/redstone"));
+		razor = IIAnimationCompiledMap.create(this.model, ResLoc.of(IIReference.RES_II, "gate/razor"));
 
-		redstoneUpgrade = new IIMachineUpgradeModel(IIContent.UPGRADE_REDSTONE_ACTIVATION, modelUpgrades,
+		redstoneUpgrade = new MachineUpgradeModel(IIContent.UPGRADE_REDSTONE_ACTIVATION, modelUpgrades,
 				new ResourceLocation(ImmersiveIntelligence.MODID, "gate/upgrade_redstone"));
-		razorUpgrade = new IIMachineUpgradeModel(IIContent.UPGRADE_RAZOR_WIRE, modelUpgrades,
+		razorUpgrade = new MachineUpgradeModel(IIContent.UPGRADE_RAZOR_WIRE, modelUpgrades,
 				new ResourceLocation(ImmersiveIntelligence.MODID, "gate/upgrade_razor"));
 	}
 

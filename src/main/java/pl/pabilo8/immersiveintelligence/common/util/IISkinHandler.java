@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.client.manual.pages.IIManualPageContributorSkin;
-import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationLoader;
+import pl.pabilo8.immersiveintelligence.client.util.amt.AMTLoader;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 
 import javax.annotation.Nullable;
@@ -54,7 +54,7 @@ public class IISkinHandler
 		{
 			IISpecialSkin skin = entry.getValue();
 			if(skin.doesApply(skinnable))
-				IIAnimationLoader.preloadTexturesFromMTL(ResLoc.of(IIReference.RES_TEXTURES_SKIN, skin.name, "/", skinnable).withExtension(ResLoc.EXT_MTL), map);
+				AMTLoader.preloadTexturesFromMTL(ResLoc.of(IIReference.RES_TEXTURES_SKIN, skin.name, "/", skinnable).withExtension(ResLoc.EXT_MTL), map);
 		}
 	}
 
@@ -217,7 +217,7 @@ public class IISkinHandler
 			try
 			{
 				IILogger.info("Attempting to download II special skin list from GitHub");
-				URL url = new URL("https://raw.githubusercontent.com/Pabilo8/ImmersiveIntelligence/dev/main/gui/contributor_skins.json");
+				URL url = new URL("https://raw.githubusercontent.com/Pabilo8/ImmersiveIntelligence/dev/main/contributor_skins.json");
 				specialSkins.clear();
 				specialSkinsByUUID.clear();
 				JsonStreamParser parser = new JsonStreamParser(new InputStreamReader(url.openStream()));

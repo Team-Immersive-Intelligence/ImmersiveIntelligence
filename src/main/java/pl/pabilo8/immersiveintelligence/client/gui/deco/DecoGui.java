@@ -102,10 +102,11 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 	protected final List<DecoTab> widgetTabList = new ArrayList<>();
 	private final List<DecoComponentWidgetBase<?>> widgetList = new ArrayList<>();
 	private final List<ValueListener<?>> valueListeners = new ArrayList<>();
+	private final IIGUI gui;
 	/**
 	 * if true, the GUI won't perform saving to NBT during {@link #onGuiClosed()}, used for transitions between GUIs
 	 */
-	protected boolean changeGUIFlag = false;
+	protected boolean changeGUIFlag = false, refreshGUIFlag = false;
 	//Background
 	private DecoBackgroundBuilder<T, C> backgroundBuilder;
 	private List<Rectangle> takenSpace;
@@ -124,6 +125,7 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 		//The player can be null ONLY for the GUI's resource annotation loading
 		//In a normal scenario the player is never null
 		super(player==null?null: iigui.containerFromTile.apply(player, tile));
+		this.gui = iigui;
 		if(player==null)
 		{
 			this.name = null;
@@ -158,8 +160,6 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 	{
 		//Sync GUI NBT
 		EasyNBT nbt = this.loadGuiData();
-		NBTSerialisation.synchroniseFor(this, (tag, gui) ->
-				tag.deserializeAll(gui, nbt.unwrap(), true));
 
 		//Clean GUI
 		this.buttonList.clear();
@@ -424,6 +424,21 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks)
 	{
+		if(refreshGUIFlag)
+		{
+			if(backgroundBuilder!=null)
+				backgroundBuilder.cleanup();
+			//Cleanup components
+			for(GuiButton b : buttonList)
+				if(b instanceof GuiComponentDecoBase)
+					((GuiComponentDecoBase<?>)b).cleanup();
+			//Cleanup widgets
+			for(DecoComponentWidgetBase<?> widget : widgetList)
+				widget.cleanup();
+			initGui();
+			refreshGUIFlag = false;
+		}
+
 		//Draw the dark background
 		this.drawDefaultBackground();
 
@@ -529,24 +544,11 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 	{
 		if(Keyboard.isKeyDown(Keyboard.KEY_F5))
 		{
-			if(backgroundBuilder!=null)
-				backgroundBuilder.cleanup();
-
-			//Cleanup components
-			for(GuiButton b : buttonList)
-				if(b instanceof GuiComponentDecoBase)
-					((GuiComponentDecoBase<?>)b).cleanup();
-			//Cleanup widgets
-			for(DecoComponentWidgetBase<?> widget : widgetList)
-				widget.cleanup();
-
-			initGui();
+			refreshGUI();
 			return;
 		}
 		else if(Keyboard.isKeyDown(Keyboard.KEY_F6))
-		{
 			exportCurrentGui();
-		}
 
 		//Process key typed for the currently focused component
 		if(focusedElement!=null)
@@ -653,13 +655,15 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 		//Save GUI data
 		if(!changeGUIFlag)
 		{
-			saveGuiData();
-
 			//Send an NBT sync message to the tile entity
 			EasyNBT nbt = onSaveTileData();
 			if(!nbt.isEmpty())
 				IIPacketHandler.sendToServer(new MessageIITileSync(tile, nbt));
+			//Clean stored data
+			((ClientProxy)ImmersiveIntelligence.proxy).setStoredGuiData();
 		}
+		else
+			saveGuiData();
 
 		//Perform background and component cleanup
 		if(backgroundBuilder!=null)
@@ -725,6 +729,10 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 		//Return a valid compound or an empty one if location mismatch
 		if(!nbt.hasKey("pos")||!new DimensionBlockPos(tile).equals(nbt.getDimPos("pos")))
 			return proxy.setStoredGuiData();
+
+		//Deserialize all SyncNBT fields
+		NBTSerialisation.synchroniseFor(this, (tag, gui) ->
+				tag.deserializeAll(gui, nbt.unwrap(), true));
 		return nbt;
 	}
 
@@ -843,6 +851,11 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 		IIPacketHandler.sendToServer(new MessageBooleanAnimatedPartsSync(part.getID(), state, tile.getPos()));
 	}
 
+	public final boolean refreshGUI()
+	{
+		return changeGUI(this.gui);
+	}
+
 	/**
 	 * Changes the GUI to the specified one, ensuring data is saved and sent to the server
 	 *
@@ -874,7 +887,10 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 		saveGuiData().conditionally(guiData!=null, e -> e.mergeWith(guiData));
 
 		//Send change GUI message
-		IIPacketHandler.sendToServer(new MessageGuiNBT(newGUI, tile));
+		if(newGUI!=gui)
+			IIPacketHandler.sendToServer(new MessageGuiNBT(newGUI, tile));
+		else
+			refreshGUIFlag = true;
 		return true;
 	}
 

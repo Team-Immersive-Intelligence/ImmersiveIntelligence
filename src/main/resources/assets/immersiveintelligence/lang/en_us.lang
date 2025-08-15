@@ -2943,6 +2943,8 @@ ii.gui.data_input_machine.memory=Built-In Memory
 ii.gui.data_input_machine.memory.switch=Switch
 ii.gui.data_input_machine.memory.switch.tooltip=Switch Current Memory Slot
 
+ii.gui.arithmetic_logic_machine.storage=Circuit Storage
+
 #GUI HelpBoxes
 ii.gui_help.manual_widget.show=Displays the Immersive Engineering Manual on the side.
 

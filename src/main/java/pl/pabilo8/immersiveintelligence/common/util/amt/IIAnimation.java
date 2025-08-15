@@ -8,7 +8,7 @@ import net.minecraft.util.Tuple;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import pl.pabilo8.immersiveintelligence.client.util.ShaderUtil.Shaders;
-import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationUtils;
+import pl.pabilo8.immersiveintelligence.common.util.IIFileUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -136,7 +136,7 @@ public class IIAnimation
 				{
 					JsonObject obj = jsonElement.getAsJsonObject();
 					timeframes.add(obj.get("time").getAsFloat());
-					vectors.add(IIAnimationUtils.jsonToVec3d(obj.get("transform").getAsJsonArray()));
+					vectors.add(IIFileUtils.jsonToVec3d(obj.get("transform").getAsJsonArray()));
 				}
 
 			return new Tuple<>(timeframes, vectors);

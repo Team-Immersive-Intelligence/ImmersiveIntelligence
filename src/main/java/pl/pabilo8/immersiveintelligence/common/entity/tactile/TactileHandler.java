@@ -12,7 +12,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationLoader;
+import pl.pabilo8.immersiveintelligence.client.util.amt.AMTLoader;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Graphics;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.util.amt.IIAnimation;
@@ -103,7 +103,7 @@ public class TactileHandler
 		BlockPos mainPos = getPos();
 
 		//Load the header json
-		JsonObject jsonObject = IIAnimationLoader.readServerFileToJson(aabbLoc);
+		JsonObject jsonObject = AMTLoader.readServerFileToJson(aabbLoc);
 		if(jsonObject.size()==0)
 			return false;
 
@@ -138,7 +138,7 @@ public class TactileHandler
 		//Header absent, can't continue loading
 		if(headerLoc==null)
 			return false;
-		header = HEADERS.computeIfAbsent(headerLoc, IIAnimationLoader::loadHeaderServer);
+		header = HEADERS.computeIfAbsent(headerLoc, AMTLoader::loadHeaderServer);
 
 		//Parse and process tactiles
 		ArrayList<EntityAMTTactile> tempEntities = parseTactiles(tactile, allBounds);
@@ -368,7 +368,7 @@ public class TactileHandler
 		//Animation not found in cache, it must be loaded from json
 		if(anim==null)
 		{
-			IIAnimation animation = IIAnimationLoader.loadAnimationServer(res);
+			IIAnimation animation = AMTLoader.loadAnimationServer(res);
 			ANIMATIONS.put(res, animation);
 		}
 

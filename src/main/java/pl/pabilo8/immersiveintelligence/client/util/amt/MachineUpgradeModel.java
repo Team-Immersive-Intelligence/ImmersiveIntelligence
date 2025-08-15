@@ -3,6 +3,7 @@ package pl.pabilo8.immersiveintelligence.client.util.amt;
 import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import pl.pabilo8.immersiveintelligence.api.utils.upgrade_system.IUpgradableMachine;
@@ -12,42 +13,41 @@ import pl.pabilo8.immersiveintelligence.client.util.ShaderUtil.Shaders;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.amt.IIAnimation;
 import pl.pabilo8.immersiveintelligence.common.util.amt.IIAnimation.IIAnimationGroup;
 import pl.pabilo8.immersiveintelligence.common.util.amt.IIAnimation.IIShaderLine;
 import pl.pabilo8.immersiveintelligence.common.util.amt.IIAnimation.IIVectorLine;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Arrays;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 13.07.2022
  */
-public class IIMachineUpgradeModel
+@ParametersAreNonnullByDefault
+public class MachineUpgradeModel implements AMTRenderable
 {
 	private final MachineUpgrade upgrade;
 	private final IIAnimationCompiledMap animation;
-	private final AMT[] model;
+	private final AMTModel model;
 	private final AMT assembledModel;
 	private final int steps;
 
-	public IIMachineUpgradeModel(MachineUpgrade upgrade, ResourceLocation model, ResourceLocation animation)
+	public MachineUpgradeModel(MachineUpgrade upgrade, ResourceLocation model, ResourceLocation animation)
 	{
-		this(upgrade,
-				IIAnimationUtils.getAMTFromRes(model, new ResourceLocation(model.getResourceDomain(),
-						model.getResourcePath().replace(".obj.ie", ".obj.amt"))),
-				animation);
+		this(upgrade, new AMTModel(DefaultVertexFormats.BLOCK, model), animation);
 	}
 
-	public IIMachineUpgradeModel(MachineUpgrade upgrade, AMT[] model, ResourceLocation animation)
+	public MachineUpgradeModel(MachineUpgrade upgrade, AMTModel model, ResourceLocation animation)
 	{
 		this.upgrade = upgrade;
 
-		IIAnimation loaded = IIAnimationLoader.loadAnimation(animation);
+		IIAnimation loaded = AMTLoader.loadAnimation(animation);
 
-		this.animation = IIAnimationCompiledMap.create(model, new IIAnimation(new ResourceLocation(""),
+		this.animation = IIAnimationCompiledMap.create(model, new IIAnimation(IIReference.RES_II.with("machine_upgrade/"+upgrade.getName()),
 				Arrays.stream(loaded.groups)
 						.map(g -> new IIAnimationGroup(g.groupName, g.position, g.scale, g.rotation, null, vecToAlpha(g.position), null))
 						.toArray(IIAnimationGroup[]::new)));
@@ -55,14 +55,14 @@ public class IIMachineUpgradeModel
 		upgrade.setRequiredSteps(this.steps = this.animation.size());
 
 		//get only base level models (model), contained in animation
-		this.model = Arrays.stream(model)
+		this.model = new AMTModel(model.stream()
 				.filter(this.animation::containsKey)
-				.toArray(AMT[]::new);
-		this.assembledModel = IIAnimationUtils.batchMultipleAMTQuads(this.model, "batched");
+				.toArray(AMT[]::new));
+		this.assembledModel = this.model.batch("batched");
 	}
 
 	@Nullable
-	private IIShaderLine vecToAlpha(IIVectorLine position)
+	private IIShaderLine vecToAlpha(@Nullable IIVectorLine position)
 	{
 		if(position==null||position.values.length < 2)
 			return null;
@@ -96,39 +96,36 @@ public class IIMachineUpgradeModel
 		this.assembledModel.render(tes, buf);
 		ShaderUtil.releaseShader();
 
-		for(AMT mod : model)
-			mod.defaultize();
+		model.defaultize();
 
 		//draw construction animation
 		animation.apply(install);
-		for(AMT mod : model)
-			mod.render(tes, buf);
+		model.render(tes, buf);
 
 		return UpgradeStage.IN_PROGRESS;
 	}
 
-	public IIMachineUpgradeModel disposeOf()
+	@Override
+	public void disposeOf()
 	{
 		IIAnimationUtils.disposeOf(model);
-		return null;
 	}
 
+	@Override
 	public void defaultize()
 	{
-		for(AMT mod : model)
-			mod.defaultize();
+		model.defaultize();
 	}
 
+	@Override
 	public void render(Tessellator tes, BufferBuilder buf)
 	{
-		for(AMT amt : model)
-			amt.render(tes, buf);
+		model.render(tes, buf);
 	}
 
-	@Nonnull
 	public AMT getPart(String name)
 	{
-		return IIAnimationUtils.getPart(model, name);
+		return model.getPart(name);
 	}
 
 	public enum UpgradeStage

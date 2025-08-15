@@ -82,7 +82,7 @@ public abstract class IIItemRendererAMT<I extends Item> extends TileEntityItemSt
 				nullifyModels();
 
 				//load header
-				compileModels(this.model.getModel(), IIAnimationLoader.loadHeader(headerRes));
+				compileModels(this.model.getModel(), AMTLoader.loadHeader(headerRes));
 				this.unCompiled = false;
 			}
 		}
@@ -120,7 +120,7 @@ public abstract class IIItemRendererAMT<I extends Item> extends TileEntityItemSt
 	@Override
 	public void registerSprites(TextureMap map)
 	{
-		IIAnimationLoader.preloadTexturesFromMTL(headerRes.withExtension(ResLoc.EXT_MTL), map);
+		AMTLoader.preloadTexturesFromMTL(headerRes.withExtension(ResLoc.EXT_MTL), map);
 	}
 
 	//--- Abstract Methods ---//

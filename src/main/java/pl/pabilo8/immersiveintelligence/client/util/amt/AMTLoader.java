@@ -1,18 +1,17 @@
 package pl.pabilo8.immersiveintelligence.client.util.amt;
 
 import blusunrize.immersiveengineering.api.ApiUtils;
-import blusunrize.immersiveengineering.client.models.IESmartObjModel;
-import blusunrize.immersiveengineering.client.models.obj.IEOBJModel;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonStreamParser;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.client.model.obj.OBJModel;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
@@ -34,7 +33,7 @@ import java.util.HashMap;
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 05.04.2022
  */
-public class IIAnimationLoader
+public class AMTLoader
 {
 	@SideOnly(Side.CLIENT)
 	public static JsonObject readFileToJSON(@Nonnull ResourceLocation res)
@@ -97,11 +96,11 @@ public class IIAnimationLoader
 
 
 	@SideOnly(Side.CLIENT)
-	public static IIModelHeader loadHeader(@Nonnull IBakedModel model)
+	public static IIModelHeader loadHeader(@Nonnull OBJModel model)
 	{
-		IEOBJModel ieobjModel = (IEOBJModel)((IESmartObjModel)model).getModel();
-		ResourceLocation res = ieobjModel.getResourceLocation();
-		ResourceLocation fullRes = new ResourceLocation(res.getResourceDomain(), res.getResourcePath().replace(".obj.ie", ".obj.amt"));
+		ResourceLocation res = ObfuscationReflectionHelper.getPrivateValue(OBJModel.class, model, "modelLocation");
+		ResourceLocation fullRes = new ResourceLocation(res.getResourceDomain(),
+				res.getResourcePath().replace(".obj.ie", ".obj.amt"));
 
 		return loadHeader(fullRes);
 	}

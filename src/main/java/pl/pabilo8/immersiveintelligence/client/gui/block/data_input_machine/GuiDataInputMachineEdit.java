@@ -152,7 +152,7 @@ public class GuiDataInputMachineEdit extends DecoGui<TileEntityDataInputMachine,
 						.withOnSelectedEntry((typeMetaInfo, typeMetaInfo2) -> {
 							cancel = true;
 							variableToEdit = new DataVariable(variableToEdit.getName(), typeMetaInfo2.supplier.get());
-							changeGUI(IIGUI.DATA_INPUT_MACHINE_EDIT);
+							refreshGUI();
 						}),
 
 				new DecoButton(xSize-48-4-4-4-2, 128+8-16+32-2+3)
@@ -189,7 +189,7 @@ public class GuiDataInputMachineEdit extends DecoGui<TileEntityDataInputMachine,
 
 		//Place it in the packet with the new name
 		variableToEdit = new DataVariable(newName, editor.outputType());
-		changeGUI(IIGUI.DATA_INPUT_MACHINE_EDIT);
+		refreshGUI();
 	}
 
 	@Override

@@ -121,12 +121,12 @@ public class ModelAmmoProjectile<T extends IAmmoType<T, E>, E extends EntityAmmo
 	}
 
 	@Override
-	protected void loadModels(AMT[] amt)
+	protected void loadModels(AMTModel amt)
 	{
 		super.loadModels(amt);
 
 		//load propellant filling animation
-		modelCasingFilling = IIAnimationUtils.getPart(amt, "casing_filling");
+		modelCasingFilling = amt.getPart("casing_filling");
 		casingFilling = IIAnimationCompiledMap.create(amt, ResLoc.of(IIReference.RES_II, "ammo/"+this.ammo.getName()+"/filling"));
 
 		//load special core animations
@@ -163,11 +163,11 @@ public class ModelAmmoProjectile<T extends IAmmoType<T, E>, E extends EntityAmmo
 			return;
 
 		//load the unbaked animation
-		IIAnimation unbaked = IIAnimationLoader.loadAnimation(ResLoc.of(IIReference.RES_II, "ammo/"+this.ammo.getName()+"/"+animationName));
+		IIAnimation unbaked = AMTLoader.loadAnimation(ResLoc.of(IIReference.RES_II, "ammo/"+this.ammo.getName()+"/"+animationName));
 
 		//apply the animation to the core types
 		for(Entry<AmmoCore, AMT> entry : coreMap.entrySet())
-			animationMap.put(entry.getKey(), IIAnimationCompiledMap.create(new AMT[]{entry.getValue()}, unbaked));
+			animationMap.put(entry.getKey(), IIAnimationCompiledMap.create(new AMTModel(entry.getValue()), unbaked));
 	}
 
 	@Override

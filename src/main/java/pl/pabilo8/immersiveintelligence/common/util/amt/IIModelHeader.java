@@ -10,8 +10,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMT;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMTQuads;
-import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationUtils;
 import pl.pabilo8.immersiveintelligence.common.entity.tactile.EntityAMTTactile;
+import pl.pabilo8.immersiveintelligence.common.util.IIFileUtils;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import javax.annotation.Nonnull;
@@ -48,7 +48,7 @@ public class IIModelHeader
 			JsonObject origins = json.getAsJsonObject("origins");
 			for(Entry<String, JsonElement> entry : origins.entrySet())
 				offsets.put(entry.getKey(),
-						IIAnimationUtils.jsonToVec3d(entry.getValue().getAsJsonArray()).scale(0.0625));
+						IIFileUtils.jsonToVec3d(entry.getValue().getAsJsonArray()).scale(0.0625));
 		}
 
 		//if doesn't contain key, is not a child
@@ -91,7 +91,7 @@ public class IIModelHeader
 						JsonElement scale = transform.get("scale");
 						if(scale.isJsonArray())
 						{
-							Vec3d vec = IIAnimationUtils.jsonToVec3d(scale.getAsJsonArray());
+							Vec3d vec = IIFileUtils.jsonToVec3d(scale.getAsJsonArray());
 							matrix.scale(vec.x, vec.y, vec.z);
 						}
 					}
@@ -100,7 +100,7 @@ public class IIModelHeader
 						JsonElement rotate = transform.get("rotate");
 						if(rotate.isJsonArray())
 						{
-							Vec3d vec = IIAnimationUtils.jsonToVec3d(rotate.getAsJsonArray());
+							Vec3d vec = IIFileUtils.jsonToVec3d(rotate.getAsJsonArray());
 							matrix.rotate(Math.toRadians(vec.x), 1, 0, 0);
 							matrix.rotate(Math.toRadians(vec.y), 0, 1, 0);
 							matrix.rotate(Math.toRadians(vec.z), 0, 0, 1);
@@ -111,7 +111,7 @@ public class IIModelHeader
 						JsonElement translate = transform.get("translate");
 						if(translate.isJsonArray())
 						{
-							Vec3d vec = IIAnimationUtils.jsonToVec3d(translate.getAsJsonArray());
+							Vec3d vec = IIFileUtils.jsonToVec3d(translate.getAsJsonArray());
 							matrix.translate(vec.x, vec.y, vec.z);
 						}
 					}

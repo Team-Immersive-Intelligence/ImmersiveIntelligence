@@ -1,12 +1,10 @@
 package pl.pabilo8.immersiveintelligence.common.util;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonStreamParser;
+import com.google.gson.*;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IResource;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.gen.structure.template.Template;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -94,6 +92,18 @@ public class IIFileUtils
 	public static Template readTemplateFile(ResLoc res) throws ResourceException
 	{
 		return null;
+	}
+
+	/**
+	 * Turns a json [x,y,z] array into Vec3D
+	 */
+	public static Vec3d jsonToVec3d(JsonArray array)
+	{
+		return new Vec3d(
+				array.get(0).getAsNumber().doubleValue(),
+				array.get(1).getAsNumber().doubleValue(),
+				array.get(2).getAsNumber().doubleValue()
+		);
 	}
 
 	/**

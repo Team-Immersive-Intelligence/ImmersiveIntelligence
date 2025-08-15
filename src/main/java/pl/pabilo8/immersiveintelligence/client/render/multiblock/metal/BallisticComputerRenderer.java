@@ -6,10 +6,9 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.util.Tuple;
+import net.minecraftforge.client.model.obj.OBJModel;
 import net.minecraftforge.fluids.FluidStack;
 import pl.pabilo8.immersiveintelligence.client.render.IIMultiblockRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer.RegisteredTileRenderer;
@@ -22,7 +21,7 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
 @RegisteredTileRenderer(name = "ballistic_computer", clazz = TileEntityBallisticComputer.class)
 public class BallisticComputerRenderer extends IIMultiblockRenderer<TileEntityBallisticComputer>
 {
-	//TODO: 08.01.2024 replace with AMT
+	//TODO: 12.08.2025 Replace with AMTFluid
 
 	@Override
 	public void drawAnimated(TileEntityBallisticComputer te, BufferBuilder buf, float partialTicks, Tessellator tes)
@@ -72,7 +71,7 @@ public class BallisticComputerRenderer extends IIMultiblockRenderer<TileEntityBa
 	}
 
 	@Override
-	public void compileModels(Tuple<IBlockState, IBakedModel> sModel)
+	public void compileModels(IBlockState state, OBJModel model)
 	{
 
 	}

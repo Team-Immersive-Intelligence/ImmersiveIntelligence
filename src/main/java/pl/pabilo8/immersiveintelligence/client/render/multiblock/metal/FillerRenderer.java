@@ -5,11 +5,10 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.Tuple;
+import net.minecraftforge.client.model.obj.OBJModel;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.api.crafting.FillerRecipe;
@@ -32,7 +31,7 @@ import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEn
 @RegisteredTileRenderer(name = "multiblock/filler", clazz = TileEntityFiller.class)
 public class FillerRenderer extends IIMultiblockRenderer<TileEntityFiller>
 {
-	AMT[] model;
+	AMTModel model;
 	private IIBooleanAnimation active;
 	private IIAnimationCompiledMap work, work2;
 	private AMTFillerBullet item, itemOut;
@@ -68,12 +67,10 @@ public class FillerRenderer extends IIMultiblockRenderer<TileEntityFiller>
 
 		}
 		else
-			for(AMT amt : model)
-				amt.defaultize();
+			model.defaultize();
 
 		//Finally, render
-		for(AMT amt : model)
-			amt.render(tes, buf);
+		model.render(tes, buf);
 
 		applyStandardMirroring(te, false);
 	}
@@ -82,25 +79,24 @@ public class FillerRenderer extends IIMultiblockRenderer<TileEntityFiller>
 	public void drawSimple(BufferBuilder buf, float partialTicks, Tessellator tes)
 	{
 		active.apply(false);
-		for(AMT amt : model)
-			amt.render(tes, buf);
+		model.render(tes, buf);
 	}
 
 	@Override
-	public void compileModels(Tuple<IBlockState, IBakedModel> sModel)
+	public void compileModels(IBlockState state, OBJModel model)
 	{
-		model = IIAnimationUtils.getAMT(sModel, IIAnimationLoader.loadHeader(sModel.getSecond()),
+		this.model = new AMTModel(state, model,
 				h -> new AMT[]{
 						item = new AMTFillerBullet("item", h),
 						itemOut = new AMTFillerBullet("item_out", h)
 				}
 		);
 		active = new IIBooleanAnimation(
-				IIAnimationUtils.getPart(model, "conveyor_on"),
-				IIAnimationUtils.getPart(model, "conveyor_off")
+				this.model.getPart("conveyor_on"),
+				this.model.getPart("conveyor_off")
 		);
-		work = IIAnimationCompiledMap.create(model, ResLoc.of(IIReference.RES_II, "filler/work"));
-		work2 = IIAnimationCompiledMap.create(model, ResLoc.of(IIReference.RES_II, "filler/work2"));
+		work = IIAnimationCompiledMap.create(this.model, ResLoc.of(IIReference.RES_II, "filler/work"));
+		work2 = IIAnimationCompiledMap.create(this.model, ResLoc.of(IIReference.RES_II, "filler/work2"));
 	}
 
 	@Override
@@ -216,7 +212,7 @@ public class FillerRenderer extends IIMultiblockRenderer<TileEntityFiller>
 		@Override
 		public void disposeOf()
 		{
-			IIAnimationUtils.disposeOf(new AMT[]{bullet});
+			IIAnimationUtils.disposeOf(bullet);
 		}
 	}
 }

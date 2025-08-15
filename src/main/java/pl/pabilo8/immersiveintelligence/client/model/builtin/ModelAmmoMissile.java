@@ -9,6 +9,7 @@ import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoCore;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoType;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMT;
+import pl.pabilo8.immersiveintelligence.client.util.amt.AMTModel;
 import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationUtils;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoMissile;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
@@ -84,9 +85,9 @@ public class ModelAmmoMissile<T extends IAmmoType<T, E>, E extends EntityAmmoMis
 	}
 
 	@Override
-	protected void loadModels(AMT[] amt)
+	protected void loadModels(AMTModel amt)
 	{
 		super.loadModels(amt);
-		modelJet = IIAnimationUtils.getPart(amt, "jet_flame");
+		modelJet = amt.getPart("jet_flame");
 	}
 }

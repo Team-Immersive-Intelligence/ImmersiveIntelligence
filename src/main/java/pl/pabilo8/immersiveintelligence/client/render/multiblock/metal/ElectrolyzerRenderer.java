@@ -3,9 +3,8 @@ package pl.pabilo8.immersiveintelligence.client.render.multiblock.metal;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.block.model.IBakedModel;
-import net.minecraft.util.Tuple;
 import net.minecraft.util.math.Vec3d;
+import net.minecraftforge.client.model.obj.OBJModel;
 import pl.pabilo8.immersiveintelligence.client.render.IIMultiblockRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer.RegisteredTileRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMTFluid;
@@ -45,7 +44,7 @@ public class ElectrolyzerRenderer extends IIMultiblockRenderer<TileEntityElectro
 	}
 
 	@Override
-	public void compileModels(Tuple<IBlockState, IBakedModel> sModel)
+	public void compileModels(IBlockState state, OBJModel model)
 	{
 		fluid = new AMTFluid("fluid", new Vec3d(-3, -6, 19.9), new Vec3d(10/16f, 14/16f, 25/16f));
 	}

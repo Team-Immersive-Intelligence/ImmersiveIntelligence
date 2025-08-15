@@ -14,7 +14,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.client.fx.particles.ParticleAbstractModel;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
-import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationLoader;
+import pl.pabilo8.immersiveintelligence.client.util.amt.AMTLoader;
 import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationUtils;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
@@ -223,7 +223,7 @@ public class ParticleModelFactory<T extends ParticleAbstractModel> extends Parti
 	{
 		//load textures from MTL referenced by OBJ
 		for(ResLoc modelLocation : modelLocations)
-			IIAnimationLoader.preloadTexturesFromOBJ(modelLocation, map);
+			AMTLoader.preloadTexturesFromOBJ(modelLocation, map);
 	}
 
 	//--- Supporting Classes ---//
