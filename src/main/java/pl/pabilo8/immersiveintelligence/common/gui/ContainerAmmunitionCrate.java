@@ -12,20 +12,27 @@ import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.effect_crate.TileEntityAmmunitionCrate;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.gun.ItemIIAmmoMachinegun;
+import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIBase;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @author Avalon (avalon@iiteam.net)
  * @since 17.05.2019
+ * @since 08.18.2025
  */
-public class ContainerAmmunitionCrate extends ContainerIEBase<TileEntityAmmunitionCrate>
+public class ContainerAmmunitionCrate extends ContainerIIBase<TileEntityAmmunitionCrate>
 {
+
+	public Slot[] slotsInputbullet, slotsInputshell, slotsInputrevolver, slotsInputmg;
+
 	public ContainerAmmunitionCrate(EntityPlayer player, TileEntityAmmunitionCrate tile)
 	{
 		//Normal bullet slots
 
-		super(player.inventory, tile);
+		super(player, tile);
 		for(int i = 0; i < 20; i++)
-			this.addSlotToContainer(new Slot(this.inv, i, 8+(i%5)*18, 18+(i/5)*18)
+
+			this.slotsInputbullet[0] = addSlotToContainer(new Slot(this.inv, i, 8+(i%5)*18, 18+(i/5)*18)
 			{
 				/**
 				 * Check if the stack is allowed to be placed in this slot, used for armor slots as well as furnace fuel.
@@ -40,7 +47,7 @@ public class ContainerAmmunitionCrate extends ContainerIEBase<TileEntityAmmuniti
 		//Empty shell slots
 
 		for(int i = 0; i < 9; i++)
-			this.addSlotToContainer(new Slot(this.inv, 20+i, 8+(i*18), 108)
+			this.slotsInputshell[0] = addSlotToContainer(new Slot(this.inv, 20+i, 8+(i*18), 108)
 			{
 				@Override
 				public boolean isItemValid(ItemStack stack)
@@ -50,21 +57,20 @@ public class ContainerAmmunitionCrate extends ContainerIEBase<TileEntityAmmuniti
 			});
 
 		//Revolver Layout Slots
-
-		this.addSlotToContainer(new GhostFilteredBullet(this, this.inv, 29, 125, 18));
-		this.addSlotToContainer(new GhostFilteredBullet(this, this.inv, 30, 144, 26));
-		this.addSlotToContainer(new GhostFilteredBullet(this, this.inv, 31, 152, 45));
-		this.addSlotToContainer(new GhostFilteredBullet(this, this.inv, 32, 144, 64));
-		this.addSlotToContainer(new GhostFilteredBullet(this, this.inv, 33, 125, 72));
-		this.addSlotToContainer(new GhostFilteredBullet(this, this.inv, 34, 106, 64));
-		this.addSlotToContainer(new GhostFilteredBullet(this, this.inv, 35, 98, 45));
-		this.addSlotToContainer(new GhostFilteredBullet(this, this.inv, 36, 106, 26));
+		this.slotsInputrevolver[0] = addSlotToContainer(new GhostFilteredBullet(this, this.inv, 29, 125, 18));
+		this.slotsInputrevolver[0] = addSlotToContainer(new GhostFilteredBullet(this, this.inv, 30, 144, 26));
+		this.slotsInputrevolver[0] = addSlotToContainer(new GhostFilteredBullet(this, this.inv, 31, 152, 45));
+		this.slotsInputrevolver[0] = addSlotToContainer(new GhostFilteredBullet(this, this.inv, 32, 144, 64));
+		this.slotsInputrevolver[0] = addSlotToContainer(new GhostFilteredBullet(this, this.inv, 33, 125, 72));
+		this.slotsInputrevolver[0] = addSlotToContainer(new GhostFilteredBullet(this, this.inv, 34, 106, 64));
+		this.slotsInputrevolver[0] = addSlotToContainer(new GhostFilteredBullet(this, this.inv, 35, 98, 45));
+		this.slotsInputrevolver[0] = addSlotToContainer(new GhostFilteredBullet(this, this.inv, 36, 106, 26));
 
 		boolean mg = tile.hasUpgrade(IIContent.UPGRADE_MG_LOADER);
 		if(mg)
 		{
 			for(int i = 0; i < 12; i++)
-				this.addSlotToContainer(new Slot(this.inv, 38+i, 184+(i%2)*18, 18+(i/2)*18)
+				this.slotsInputmg[0] = addSlotToContainer(new Slot(this.inv, i+30, 184+(i%2)*18, 18+(i/2)*18)
 				{
 					/**
 					 * Check if the stack is allowed to be placed in this slot, used for armor slots as well as furnace fuel.
@@ -77,14 +83,7 @@ public class ContainerAmmunitionCrate extends ContainerIEBase<TileEntityAmmuniti
 				});
 		}
 
-		this.slotCount = mg?50: 38;
-		this.tile = tile;
-
-		for(int i = 0; i < 3; i++)
-			for(int j = 0; j < 9; j++)
-				addSlotToContainer(new Slot(player.inventory, j+i*9+9, 8+j*18, 141+i*18));
-		for(int i = 0; i < 9; i++)
-			addSlotToContainer(new Slot(player.inventory, i, 8+i*18, 199));
+		addPlayerInventory(player.inventory, 8, 141);
 	}
 
 	public static class GhostFilteredBullet extends IESlot.Ghost
