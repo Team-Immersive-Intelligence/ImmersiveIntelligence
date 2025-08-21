@@ -48,9 +48,11 @@ import java.util.stream.Collectors;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 18.08.2025
+ * @ii-approved 0.3.1
  * @since 10.07.2019
  */
-@DecoTemplate(name = "projectile_workshop", category = DecoGuiCategory.PRODUCTION_TILE)
+@DecoTemplate(name = "project ile_workshop", category = DecoGuiCategory.PRODUCTION_TILE)
 public class GuiProjectileWorkshop extends DecoGui<TileEntityProjectileWorkshop, ContainerProjectileWorkshop>
 {
 	@DecoResource

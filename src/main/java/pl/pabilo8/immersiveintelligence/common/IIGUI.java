@@ -192,7 +192,7 @@ public enum IIGUI implements ISerializableEnum
 		IIGUI.CHEMICAL_BATH.setClientGui(GuiChemicalBath::new);
 		IIGUI.ELECTROLYZER.setClientDecoGui(GuiElectrolyzer::new);
 		IIGUI.PRECISION_ASSEMBLER.setClientGui(GuiPrecisionAssembler::new);
-		IIGUI.FUEL_STATION.setClientGui(GuiFuelStation::new);
+		IIGUI.FUEL_STATION.setClientDecoGui(GuiFuelStation::new);
 		IIGUI.DATA_MERGER.setClientGui(GuiDataMerger::new);
 		//Crates
 		IIGUI.METAL_CRATE.setClientDecoGui(GuiMetalCrate::new);
@@ -227,7 +227,7 @@ public enum IIGUI implements ISerializableEnum
 		IIGUI.EMPLACEMENT_TASKS.setClientGui(GuiEmplacementPageTasks::new);
 		IIGUI.EMPLACEMENT_STATUS.setClientGui(GuiEmplacementPageStatus::new);
 
-		IIGUI.FILLER.setClientGui(GuiFiller::new);
+		IIGUI.FILLER.setClientDecoGui(GuiFiller::new);
 		IIGUI.CHEMICAL_PAINTER.setClientGui(GuiChemicalPainter::new);
 
 		IIGUI.AMMUNITION_ASSEMBLER.setClientGui(GuiAmmunitionAssembler::new);

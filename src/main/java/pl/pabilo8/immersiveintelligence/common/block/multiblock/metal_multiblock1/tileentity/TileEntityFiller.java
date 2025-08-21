@@ -17,7 +17,9 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.oredict.OreDictionary;
+import pl.pabilo8.immersiveintelligence.api.DustTank;
 import pl.pabilo8.immersiveintelligence.api.crafting.DustStack;
 import pl.pabilo8.immersiveintelligence.api.crafting.DustUtils;
 import pl.pabilo8.immersiveintelligence.api.crafting.FillerRecipe;
@@ -30,10 +32,6 @@ import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEn
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionMulti;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 04.03.2021
@@ -42,8 +40,8 @@ public class TileEntityFiller extends TileEntityMultiblockProductionMulti<TileEn
 {
 	public static int SLOT_DUST = 0, SLOT_INPUT = 1;
 
-	@SyncNBT(time = 40, events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_RECIPE_CHANGED})
-	public DustStack dustStorage;
+	@SyncNBT(events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_RECIPE_CHANGED, SyncEvents.ENTITY_CUSTOM1})
+	public DustTank dustStorage;
 	private IItemHandler insertionHandlerDust, insertionHandlerStack;
 
 	public TileEntityFiller()
@@ -51,7 +49,7 @@ public class TileEntityFiller extends TileEntityMultiblockProductionMulti<TileEn
 		super(MultiblockFiller.INSTANCE);
 		this.energyStorage = new FluxStorageAdvanced(Filler.energyCapacity);
 		this.inventory = NonNullList.withSize(2, ItemStack.EMPTY);
-		this.dustStorage = DustStack.getEmptyStack();
+		this.dustStorage = new DustTank(Filler.dustCapacity);
 		this.insertionHandlerDust = getSingleInventoryHandler(SLOT_DUST, true, false);
 		this.insertionHandlerStack = getSingleInventoryHandler(SLOT_INPUT, true, false);
 	}
@@ -70,15 +68,13 @@ public class TileEntityFiller extends TileEntityMultiblockProductionMulti<TileEn
 		super.onUpdate();
 
 		//Insert dust into the tank
-		if(dustStorage.amount < Filler.dustCapacity&&world.getTotalWorldTime()%4==0&&!inventory.get(SLOT_DUST).isEmpty())
+		if(world.getTotalWorldTime()%4==0&&!inventory.get(SLOT_DUST).isEmpty())
 		{
-			ItemStack copy = inventory.get(SLOT_DUST).copy();
-			copy.setCount(1);
-			DustStack dustStack = DustUtils.fromItemStack(copy);
-			if(!dustStack.isEmpty()&&dustStorage.mergeWith(dustStack)!=dustStorage)
+			DustStack dustStack = DustUtils.fromItemStack(ItemHandlerHelper.copyStackWithSize(inventory.get(SLOT_DUST), 1));
+			if(!dustStack.isEmpty()&&dustStorage.fill(dustStack, true) > 0)
 			{
 				inventory.get(SLOT_DUST).shrink(1);
-				dustStorage = dustStorage.mergeWith(dustStack);
+				updateTileForEvent(SyncEvents.ENTITY_CUSTOM1);
 			}
 		}
 	}
@@ -198,8 +194,7 @@ public class TileEntityFiller extends TileEntityMultiblockProductionMulti<TileEn
 	{
 		if(i==SLOT_INPUT)
 			return FillerRecipe.streamRecipes(FillerRecipe.class)
-					.anyMatch(recipe -> OreDictionary.itemMatches(recipe.itemOutput, stack, true)&&
-							recipe.dust.canMergeWith(dustStorage)&&recipe.dust.amount <= dustStorage.amount);
+					.anyMatch(recipe -> OreDictionary.itemMatches(recipe.itemOutput, stack, true)&&dustStorage.fill(recipe.dust, false) > 0);
 		return DustUtils.isDustStack(stack);
 	}
 
@@ -207,15 +202,8 @@ public class TileEntityFiller extends TileEntityMultiblockProductionMulti<TileEn
 	public NonNullList<ItemStack> getDroppedItems()
 	{
 		NonNullList<ItemStack> droppedItems = super.getDroppedItems();
-		if(!isDummy()&&!dustStorage.isEmpty())
-		{
-			List<ItemStack> itemStacks = new ArrayList<>(droppedItems);
-			itemStacks.addAll(Arrays.asList(DustUtils.fromDustStack(dustStorage)));
-			NonNullList<ItemStack> list = NonNullList.withSize(itemStacks.size(), ItemStack.EMPTY);
-			for(int i = 0; i < list.size(); i++)
-				list.set(0, list.get(i));
-			return list;
-		}
+		if(!isDummy())
+			droppedItems.addAll(dustStorage.turnIntoItems());
 		return droppedItems;
 	}
 
@@ -236,11 +224,11 @@ public class TileEntityFiller extends TileEntityMultiblockProductionMulti<TileEn
 	{
 		return FillerRecipe.streamRecipes(FillerRecipe.class)
 				.filter(recipe -> OreDictionary.itemMatches(recipe.itemOutput, inventory.get(1), true)&&
-						recipe.dust.canMergeWith(dustStorage)&&recipe.dust.amount <= dustStorage.amount)
+						!dustStorage.drain(recipe.dust, false).isEmpty())
 				.findFirst().map(recipe -> {
 					//Consume item and dust
 					inventory.get(1).shrink(recipe.itemInput.inputSize);
-					dustStorage = dustStorage.subtract(recipe.dust);
+					dustStorage.drain(recipe.dust, true);
 
 					//Sync with clients
 					updateTileForEvent(SyncEvents.TILE_RECIPE_CHANGED);

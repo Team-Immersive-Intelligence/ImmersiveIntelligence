@@ -625,6 +625,7 @@ public class ClientProxy extends CommonProxy
 		ApiUtils.getRegisterSprite(event.getMap(), IIReference.GUI_BG_STEEL);
 		ApiUtils.getRegisterSprite(event.getMap(), IIReference.GUI_BG_STEEL_ROUGH);
 		ApiUtils.getRegisterSprite(event.getMap(), IIReference.GUI_BG_DARK);
+		ApiUtils.getRegisterSprite(event.getMap(), IIReference.GUI_BG_DARK_TANK);
 
 		ApiUtils.getRegisterSprite(event.getMap(), IIReference.GUI_FRAME_WOODEN_THIN);
 		ApiUtils.getRegisterSprite(event.getMap(), IIReference.GUI_FRAME_STEEL_THIN);
@@ -650,6 +651,7 @@ public class ClientProxy extends CommonProxy
 		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_BAR_ICON_BACKGROUND);
 		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_COMPONENT_FRAME);
 		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_COMPONENT_TANK);
+		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_COMPONENT_TANK_DUST);
 
 		for(ResLoc icon : IIReference.RES_ACTION_ICONS)
 			ApiUtils.getRegisterSprite(event.getMap(), icon);

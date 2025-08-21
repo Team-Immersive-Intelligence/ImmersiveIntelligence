@@ -29,17 +29,37 @@
       16, 12, 4
     ],
     "energy_box": [
-      2, 0, 1,
-      16, 8, 14
+      1, 0, 1,
+      15, 8, 14
     ],
     "energy_top": [
-      5, 8, 2,
-      15, 16, 12
+      3, 8, 3,
+      13, 16, 13
+    ],
+    "box_top_right": [
+      0, 0, 0,
+      16, 16, 16
+    ],
+    "box_bottom_right": [
+      0, 0, 0,
+      16, 16, 16
+    ],
+    "box_bottom_left": [
+      0, 0, 0,
+      16, 16, 16
+    ],
+    "box_output": [
+      0, 0, 0,
+      16, 16, 16
     ]
   },
   "positions": {
     "12,15,16": "conveyor",
     "31,35": "tank_top",
+    "33": "box_top_right",
+    "29": "box_bottom_right",
+    "29": "box_bottom_left",
+    "20": "box_output",
     "19,23": "tank_bottom",
     "13,14": ["breadbox_back", "breadbox_front"],
     "15,16": "item_hatch",

@@ -121,6 +121,7 @@ public class IIReference
 	public static final ResLoc GUI_BG_PAPER = ResLoc.of(RES_TEXTURES_DECO_BACKGROUND, "paper");
 	public static final ResLoc GUI_BG_BLUEPRINT = ResLoc.of(RES_TEXTURES_DECO_BACKGROUND, "blueprint");
 	public static final ResLoc GUI_BG_DARK = ResLoc.of(RES_TEXTURES_DECO_BACKGROUND, "dark");
+	public static final ResLoc GUI_BG_DARK_TANK = ResLoc.of(RES_TEXTURES_DECO_BACKGROUND, "dark_tank");
 	public static final ResLoc RES_TEXTURES_DECO_FRAME = ResLoc.of(RES_TEXTURES_DECO, "frame/");
 	public static final ResLoc GUI_FRAME_WOODEN_THIN = ResLoc.of(RES_TEXTURES_DECO_FRAME, "wooden_thin");
 	public static final ResLoc GUI_FRAME_STEEL_THIN = ResLoc.of(RES_TEXTURES_DECO_FRAME, "steel_thin");
@@ -157,6 +158,7 @@ public class IIReference
 	public static final ResLoc RES_TEXTURES_DECO_COMPONENT_FRAME = ResLoc.of(RES_TEXTURES_DECO, "component/frame");
 	public static final ResLoc RES_TEXTURES_DECO_BAR_ICON_BACKGROUND = ResLoc.of(RES_TEXTURES_DECO, "component/bar_icon_background");
 	public static final ResLoc RES_TEXTURES_DECO_COMPONENT_TANK = ResLoc.of(RES_TEXTURES_DECO, "component/tank");
+	public static final ResLoc RES_TEXTURES_DECO_COMPONENT_TANK_DUST = ResLoc.of(RES_TEXTURES_DECO, "component/dust");
 
 	//Deco Icons
 	public static final ResLoc RES_TEXTURES_DECO_ICON = ResLoc.of(RES_TEXTURES_DECO, "icons/");

@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.common.gui;
 
-import blusunrize.immersiveengineering.common.gui.ContainerIEBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityFiller;
@@ -20,10 +19,9 @@ public class ContainerFiller extends ContainerIIBase<TileEntityFiller>
 	{
 		super(player, tile);
 		//Dust Input slot
-		inputSlot = this.addSlotToContainer(new Slot(this.inv, 0, 120, 5));
-
+		inputSlot = addSlot(120, 5-4, TileEntityFiller.SLOT_DUST);
 		//player inventory
-		addPlayerInventory(player.inventory, 8, 86);
+		addPlayerInventory(player.inventory, 8, 87);
 
 	}
 }

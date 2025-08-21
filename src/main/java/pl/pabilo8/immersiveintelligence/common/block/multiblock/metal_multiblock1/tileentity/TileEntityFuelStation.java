@@ -1,16 +1,10 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity;
 
 import blusunrize.immersiveengineering.ImmersiveEngineering;
-import blusunrize.immersiveengineering.api.crafting.IMultiblockRecipe;
-import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IAdvancedCollisionBounds;
-import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IAdvancedSelectionBounds;
-import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IGuiTile;
+import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorageAdvanced;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.ISoundTile;
-import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
-import blusunrize.immersiveengineering.common.util.Utils;
 import blusunrize.immersiveengineering.common.util.inventory.MultiFluidTank;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -18,7 +12,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
@@ -32,20 +25,23 @@ import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockFuelStation;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
-import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IIIGuiMultiblockTile;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultiblockIIGeneric;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 28.06.2019
  */
-public class TileEntityFuelStation extends TileEntityMultiblockMetal<TileEntityFuelStation, IMultiblockRecipe> implements IAdvancedCollisionBounds, IAdvancedSelectionBounds, IGuiTile, ISoundTile
+public class TileEntityFuelStation extends TileEntityMultiblockIIGeneric<TileEntityFuelStation> implements IIIGuiMultiblockTile, ISoundTile
 {
-	public MultiFluidTank[] tanks = {new MultiFluidTank(FuelStation.fluidCapacity)};
-	public NonNullList<ItemStack> inventory = NonNullList.withSize(2, ItemStack.EMPTY);
+	@SyncNBT(events = {SyncEvents.TILE_RECIPE_CHANGED, SyncEvents.TILE_GUI_OPENED})
+	public MultiFluidTank tank = new MultiFluidTank(FuelStation.fluidCapacity);
 
 	//Client only
 	float inserterAnimation = 0f;
@@ -55,51 +51,30 @@ public class TileEntityFuelStation extends TileEntityMultiblockMetal<TileEntityF
 
 	public TileEntityFuelStation()
 	{
-		super(MultiblockFuelStation.INSTANCE, new int[]{3, 3, 2}, FuelStation.energyCapacity, true);
+		super(MultiblockFuelStation.INSTANCE);
+
+		energyStorage = new FluxStorageAdvanced(FuelStation.energyCapacity);
+		inventory = NonNullList.withSize(2, ItemStack.EMPTY);
 	}
 
 	@Override
-	public void readCustomNBT(NBTTagCompound nbt, boolean descPacket)
+	protected void dummyCleanup()
 	{
-		super.readCustomNBT(nbt, descPacket);
-		tanks[0].readFromNBT(nbt.getCompoundTag("tank"));
-		if(!descPacket)
-			inventory = Utils.readInventory(nbt.getTagList("inventory", 10), 4);
-	}
-
-	@Override
-	public void writeCustomNBT(NBTTagCompound nbt, boolean descPacket)
-	{
-		super.writeCustomNBT(nbt, descPacket);
-		nbt.setTag("tank", tanks[0].writeToNBT(new NBTTagCompound()));
-		if(!descPacket)
-			nbt.setTag("inventory", Utils.writeInventory(inventory));
+		super.dummyCleanup();
+		this.focusedEntity = null;
+		this.tank = null;
 	}
 
 	@Override
 	public void receiveMessageFromServer(NBTTagCompound message)
 	{
 		super.receiveMessageFromServer(message);
-		if(message.hasKey("tank"))
-			tanks[0].readFromNBT(message.getCompoundTag("tank"));
-		if(message.hasKey("inventory"))
-			inventory = Utils.readInventory(message.getTagList("inventory", 10), 4);
-		if(message.hasKey("focused"))
-			focusedEntity = world.getEntityByID(message.getInteger("focused"));
-		else
-			focusedEntity = null;
+		focusedEntity = message.hasKey("focused")?world.getEntityByID(message.getInteger("focused")): null;
 	}
 
-	/**
-	 * Like the old updateEntity(), except more generic.
-	 */
 	@Override
-	public void update()
+	protected void onUpdate()
 	{
-		super.update();
-		if(isDummy())
-			return;
-
 		if(world.isRemote)
 		{
 			inserterAnimation = calculateInserterAnimation(0);
@@ -107,17 +82,8 @@ public class TileEntityFuelStation extends TileEntityMultiblockMetal<TileEntityF
 
 			ImmersiveEngineering.proxy.handleTileSound(IISounds.fuelStationMid, this, this.inserterAnimation > 0.35&&focusedEntity!=null, 0.5f, 1);
 		}
-		else
-		{
-			boolean update = IIUtils.handleBucketTankInteraction(tanks, inventory, 0, 1, 0, false);
-			if(update)
-			{
-				IIPacketHandler.sendToClient(this, new MessageIITileSync(this, EasyNBT.newNBT()
-						.withTag("inventory", Utils.writeInventory(inventory))
-						.withTag("tank", tanks[0].writeToNBT(new NBTTagCompound()))
-				));
-			}
-		}
+		else if(IIUtils.handleBucketTankInteraction(tank, inventory, 0, 1, false))
+			updateTileForEvent(SyncEvents.TILE_RECIPE_CHANGED);
 
 
 		//get all in range
@@ -134,7 +100,7 @@ public class TileEntityFuelStation extends TileEntityMultiblockMetal<TileEntityF
 				if(capability!=null)
 				{
 					boolean canFill = false;
-					for(FluidStack fluid : tanks[0].fluids)
+					for(FluidStack fluid : tank.fluids)
 					{
 						if(!VehicleFuelHandler.isFuelValidForVehicle(focusedEntity, fluid.getFluid()))
 							continue;
@@ -143,7 +109,7 @@ public class TileEntityFuelStation extends TileEntityMultiblockMetal<TileEntityF
 						int i = capability.fill(fs, false);
 						i = (energyStorage.extractEnergy(i*FuelStation.energyUsage, false)/FuelStation.energyUsage);
 						capability.fill(new FluidStack(fs, i), true);
-						tanks[0].drain(new FluidStack(fs, i), true);
+						tank.drain(new FluidStack(fs, i), true);
 						if(i > 0)
 							canFill = true;
 
@@ -167,7 +133,7 @@ public class TileEntityFuelStation extends TileEntityMultiblockMetal<TileEntityF
 						break;
 					boolean canFill = false;
 
-					for(FluidStack fluid : tanks[0].fluids)
+					for(FluidStack fluid : tank.fluids)
 					{
 						if(!VehicleFuelHandler.isFuelValidForVehicle(entity, fluid.getFluid()))
 							continue;
@@ -251,27 +217,21 @@ public class TileEntityFuelStation extends TileEntityMultiblockMetal<TileEntityF
 	}
 
 	@Override
-	public float[] getBlockBounds()
+	protected int[] listAllPOI(MultiblockPOI poi)
 	{
-		return new float[]{0, 0, 0, 1, 1, 1};
-	}
-
-	@Override
-	public int[] getEnergyPos()
-	{
-		return new int[]{6};
-	}
-
-	@Override
-	public int[] getRedstonePos()
-	{
-		return new int[]{};
-	}
-
-	@Override
-	public NonNullList<ItemStack> getInventory()
-	{
-		return inventory;
+		switch(poi)
+		{
+			case ENERGY_INPUT:
+				return getPOI("energy_input");
+			case FLUID_INPUT:
+				return getPOI("fluid_input");
+			case REDSTONE:
+				return getPOI("redstone");
+			case MISC_CONTROL_PANEL:
+				return getPOI("table");
+			default:
+				return new int[0];
+		}
 	}
 
 	@Override
@@ -280,182 +240,18 @@ public class TileEntityFuelStation extends TileEntityMultiblockMetal<TileEntityF
 		return true;
 	}
 
+	//--- Fluid Handling ---//
+
 	@Override
-	public int getSlotLimit(int slot)
+	protected IFluidTank[] getFluidTanks(int pos, EnumFacing side)
 	{
-		return 64;
+		return new IFluidTank[]{tank};
 	}
 
 	@Override
-	public int[] getOutputSlots()
+	protected boolean isTankAvailable(int pos, int tank)
 	{
-		return new int[]{1};
-	}
-
-	@Override
-	public int[] getOutputTanks()
-	{
-		return new int[]{};
-	}
-
-	@Override
-	public boolean additionalCanProcessCheck(MultiblockProcess<IMultiblockRecipe> process)
-	{
-		return false;
-	}
-
-	@Override
-	public void doProcessOutput(ItemStack output)
-	{
-
-	}
-
-	@Override
-	public void doProcessFluidOutput(FluidStack output)
-	{
-
-	}
-
-	@Override
-	public void onProcessFinish(MultiblockProcess<IMultiblockRecipe> process)
-	{
-
-	}
-
-	@Override
-	public int getMaxProcessPerTick()
-	{
-		return 0;
-	}
-
-	@Override
-	public int getProcessQueueMaxLength()
-	{
-		return 0;
-	}
-
-	@Override
-	public float getMinProcessDistance(MultiblockProcess<IMultiblockRecipe> process)
-	{
-		return 0;
-	}
-
-	@Override
-	public boolean isInWorldProcessingMachine()
-	{
-		return false;
-	}
-
-	@Override
-	public IFluidTank[] getInternalTanks()
-	{
-		return tanks;
-	}
-
-	@Override
-	protected IFluidTank[] getAccessibleFluidTanks(EnumFacing side)
-	{
-		TileEntityFuelStation master = this.master();
-		if(master!=null)
-		{
-			if((pos==10&&(side==facing||side==facing.rotateYCCW())))
-				return new MultiFluidTank[]{master.tanks[0]};
-		}
-		return new MultiFluidTank[0];
-	}
-
-	@Override
-	protected boolean canFillTankFrom(int iTank, EnumFacing side, FluidStack resource)
-	{
-		if((pos==10&&(side==facing||side==facing.rotateYCCW())))
-		{
-			TileEntityFuelStation master = this.master();
-			return master!=null&&master.tanks[iTank].getFluidAmount() < master.tanks[iTank].getCapacity();
-		}
-		return false;
-	}
-
-	@Override
-	protected boolean canDrainTankFrom(int iTank, EnumFacing side)
-	{
-		return false;
-	}
-
-	@Override
-	public void doGraphicalUpdates(int slot)
-	{
-		this.markDirty();
-		this.markContainingBlockForUpdate(null);
-	}
-
-	@Override
-	public IMultiblockRecipe findRecipeForInsertion(ItemStack inserting)
-	{
-		return null;
-	}
-
-	@Override
-	protected IMultiblockRecipe readRecipeFromNBT(NBTTagCompound tag)
-	{
-		return null;
-	}
-
-	@Override
-	public List<AxisAlignedBB> getAdvancedColisionBounds()
-	{
-		return getAdvancedSelectionBounds();
-	}
-
-	@Override
-	public List<AxisAlignedBB> getAdvancedSelectionBounds()
-	{
-		ArrayList<AxisAlignedBB> list = new ArrayList<>();
-		if(pos==0||pos==1)
-		{
-			list.add(new AxisAlignedBB(0, 0.8125-0.0625, 0, 1, 1-0.0625, 1).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
-
-			switch(mirrored^pos==1?facing.getOpposite(): facing)
-			{
-				case NORTH:
-					list.add(new AxisAlignedBB(0.0625, 0, 0.0625, 0.0625+0.1875, 0.75, 0.0625+0.1875).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
-					list.add(new AxisAlignedBB(0.0625, 0, 0.75, 0.0625+0.1875, 0.75, 1-0.0625).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
-					break;
-				case SOUTH:
-					list.add(new AxisAlignedBB(0.75, 0, 0.0625, 0.9375, 0.75, 0.0625+0.1875).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
-					list.add(new AxisAlignedBB(0.75, 0, 0.75, 0.9375, 0.75, 1-0.0625).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
-					break;
-				case EAST:
-					list.add(new AxisAlignedBB(0.0625, 0, 0.0625, 0.0625+0.1875, 0.75, 0.0625+0.1875).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
-					list.add(new AxisAlignedBB(0.75, 0, 0.0625, 1-0.0625, 0.75, 0.0625+0.1875).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
-					break;
-				case WEST:
-					list.add(new AxisAlignedBB(0.0625, 0, 0.75, 0.0625+0.1875, 0.75, 0.9375).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
-					list.add(new AxisAlignedBB(0.75, 0, 0.75, 1-0.0625, 0.75, 0.9375).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
-					break;
-			}
-		}
-		else if(pos==6)
-		{
-			list.add(new AxisAlignedBB(0.25, 0.375, 0.25, 0.75, 1, 0.75)
-					.offset(getPos().getX(), getPos().getY(), getPos().getZ()));
-			list.add(new AxisAlignedBB(0.25-0.125, 0.375-0.125, 0.25-0.125, 0.75+0.125, 0.375, 0.75+0.125)
-					.offset(getPos().getX(), getPos().getY(), getPos().getZ()));
-
-			list.add(new AxisAlignedBB(0.25, 0, 0.25, 0.75, 0.375-0.125, 0.75)
-					.offset(getPos().getX(), getPos().getY(), getPos().getZ()));
-		}
-		else if(pos==7)
-		{
-			list.add(new AxisAlignedBB(0.125, 0, 0.125, 0.875, 0.0625, 0.875)
-					.offset(getPos().getX(), getPos().getY(), getPos().getZ()));
-		}
-		return list;
-	}
-
-	@Override
-	public boolean isOverrideBox(AxisAlignedBB box, EntityPlayer player, RayTraceResult mop, ArrayList<AxisAlignedBB> list)
-	{
-		return false;
+		return true;
 	}
 
 	@Override
@@ -465,9 +261,9 @@ public class TileEntityFuelStation extends TileEntityMultiblockMetal<TileEntityF
 	}
 
 	@Override
-	public int getGuiID()
+	public IIGUI getGUI()
 	{
-		return IIGUI.FUEL_STATION.ordinal();
+		return IIGUI.FUEL_STATION;
 	}
 
 	@Nullable

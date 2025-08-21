@@ -16,7 +16,6 @@ import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.crafting.DustStack;
 import pl.pabilo8.immersiveintelligence.api.crafting.DustUtils;
 import pl.pabilo8.immersiveintelligence.api.crafting.FillerRecipe;
-import pl.pabilo8.immersiveintelligence.client.gui.block.GuiFiller;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.BlockIIMetalMultiblock1.MetalMultiblocks1;
 import pl.pabilo8.immersiveintelligence.common.compat.jei.IIMultiblockRecipeWrapper;
@@ -81,7 +80,8 @@ public class FillerRecipeCategory extends IIRecipeCategory<FillerRecipe, FillerR
 
 			GlStateManager.pushMatrix();
 
-			ClientUtils.bindTexture(GuiFiller.TEXTURE);
+			//TODO: 21.08.2025 update
+			//ClientUtils.bindTexture(GuiFiller.TEXTURE);
 			ClientUtils.drawTexturedRect(39, 0, 84, 64, 54/256f, (54+84)/256f, 0/256f, (64)/256f);
 			int stored = (int)(60*0.5); //
 			float[] rgb = DustUtils.getColor(dust).getFloatRGB();

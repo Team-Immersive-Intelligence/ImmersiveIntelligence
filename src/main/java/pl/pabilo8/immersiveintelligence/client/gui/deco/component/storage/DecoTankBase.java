@@ -2,6 +2,7 @@ package pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage;
 
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fluids.FluidStack;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiComponentDecoBase;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
@@ -17,6 +18,7 @@ import java.util.Map;
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
  * @ii-approved 0.3.1
+ * @implNote RESOURCE must implement {@link #hashCode()} method properly, see {@link FluidStack#hashCode()}
  * @since 16.06.2025
  */
 public abstract class DecoTankBase<TYPE extends DecoTankBase<TYPE, RESOURCE>, RESOURCE> extends GuiComponentDecoBase<TYPE>
@@ -24,7 +26,7 @@ public abstract class DecoTankBase<TYPE extends DecoTankBase<TYPE, RESOURCE>, RE
 	private final String STRING_TANK_EMPTY = I18n.format("gui.immersiveengineering.empty");
 	private final Map<RESOURCE, Float> displayedAmounts = new HashMap<>();
 
-	protected ResLoc tankBackgroundLocation = IIReference.GUI_BG_DARK;
+	protected ResLoc tankBackgroundLocation = IIReference.GUI_BG_DARK_TANK;
 	protected ResLoc tankOverlayLocation = IIReference.RES_TEXTURES_DECO_COMPONENT_TANK;
 
 	protected int lastMouseY = 0;
@@ -39,6 +41,21 @@ public abstract class DecoTankBase<TYPE extends DecoTankBase<TYPE, RESOURCE>, RE
 	public TYPE withBorderSize(int borderSize)
 	{
 		this.borderSize = borderSize;
+		//noinspection unchecked
+		return (TYPE)this;
+	}
+
+	public TYPE withTankBackgroundLocation(ResLoc tankBackgroundLocation)
+	{
+		this.tankBackgroundLocation = tankBackgroundLocation;
+		//noinspection unchecked
+		return (TYPE)this;
+	}
+
+	public TYPE withTankOverlayLocation(ResLoc tankOverlayLocation)
+	{
+		this.tankOverlayLocation = tankOverlayLocation;
+		//noinspection unchecked
 		return (TYPE)this;
 	}
 

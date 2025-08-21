@@ -2,7 +2,6 @@ package pl.pabilo8.immersiveintelligence.common.gui;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityAmmunitionAssembler;
 import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIBase;
 
@@ -20,23 +19,8 @@ public class ContainerAmmunitionAssembler extends ContainerIIBase<TileEntityAmmu
 	{
 		super(player, tile);
 
-		inputSlot = this.addSlotToContainer(new Slot(this.inv, 0, 8, 20)
-		{
-			@Override
-			public boolean isItemValid(ItemStack itemStack)
-			{
-				return tile.isStackValid(0, itemStack);
-			}
-		});
-
-		outputSlot = this.addSlotToContainer(new Slot(this.inv, 1, 8, 60)
-		{
-			@Override
-			public boolean isItemValid(ItemStack itemStack)
-			{
-				return tile.isStackValid(1, itemStack);
-			}
-		});
+		inputSlot = addSlot(8, 20, 0);
+		outputSlot = addSlot(8, 60, 1);
 
 		addPlayerInventory(player.inventory, 8, 141);
 

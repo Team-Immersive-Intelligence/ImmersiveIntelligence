@@ -1,8 +1,10 @@
 package pl.pabilo8.immersiveintelligence.common.util.gui;
 
+import blusunrize.immersiveengineering.api.IEEnums.SideConfig;
 import blusunrize.immersiveengineering.common.blocks.TileEntityIEBase;
 import blusunrize.immersiveengineering.common.gui.ContainerIEBase;
 import blusunrize.immersiveengineering.common.gui.IESlot;
+import blusunrize.immersiveengineering.common.gui.IESlot.FluidContainer;
 import blusunrize.immersiveengineering.common.util.inventory.IIEInventory;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -41,6 +43,11 @@ public class ContainerIIBase<T extends TileEntityIEBase & IIEInventory> extends 
 		return playerInventory;
 	}
 
+	protected DefaultInputSlot addSlot(int x, int y, int index)
+	{
+		return addSlot(x, y, index, DefaultInputSlot::new);
+	}
+
 	@SuppressWarnings("unchecked")
 	protected <SLOT extends Slot> SLOT addSlot(int x, int y, int index, SlotConstructor<SLOT> aNew)
 	{
@@ -64,6 +71,20 @@ public class ContainerIIBase<T extends TileEntityIEBase & IIEInventory> extends 
 	public interface SlotConstructor<SLOT extends Slot>
 	{
 		SLOT construct(Container container, IInventory inv, int id, int x, int y);
+	}
+
+	public class DefaultInputSlot extends IESlot
+	{
+		public DefaultInputSlot(Container container, IInventory inv, int id, int x, int y)
+		{
+			super(container, inv, id, x, y);
+		}
+
+		@Override
+		public boolean isItemValid(ItemStack itemStack)
+		{
+			return tile.isStackValid(getSlotIndex(), itemStack);
+		}
 	}
 
 	public static class FilteredDataInput extends IESlot
@@ -100,5 +121,13 @@ public class ContainerIIBase<T extends TileEntityIEBase & IIEInventory> extends 
 			//TODO: 18.06.2025 capabilities
 			return stack.getItem() instanceof IMotorGear;
 		}
+	}
+
+	public static SlotConstructor<FluidContainer> getFluidContainerSlot(SideConfig mode)
+	{
+		//Because fuck logic, that's why
+		//-Blusunrize, allegedly
+		int filter = mode==SideConfig.NONE?0: (mode==SideConfig.INPUT?2: 1);
+		return (container, inv1, id, x, y) -> new FluidContainer(container, inv1, id, x, y, filter);
 	}
 }

@@ -1,6 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common.gui;
 
-import blusunrize.immersiveengineering.common.gui.ContainerIEBase;
+import blusunrize.immersiveengineering.api.IEEnums.SideConfig;
 import blusunrize.immersiveengineering.common.gui.IESlot;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
@@ -22,11 +22,11 @@ public class ContainerChemicalPainter extends ContainerIIBase<TileEntityChemical
 	{
 		super(player, tile);
 
-		inputSlot = this.addSlotToContainer(new Slot(this.inv, 0, 13, 13));
-		outputSlot = this.addSlotToContainer(new IESlot.Output(this, this.inv, 1, 13, 59));
+		inputSlot = addSlot(13, 13, 0, DefaultInputSlot::new);
+		outputSlot = addSlot(13, 59, 1, IESlot.Output::new);
 
-		inputFluidSlot = this.addSlotToContainer(new IESlot.FluidContainer(this, this.inv, 2, 137, 21,0));
-		outputFluidSlot = this.addSlotToContainer(new IESlot.FluidContainer(this, this.inv, 3, 137, 57, 0));
+		inputFluidSlot = addSlot(137, 21, 2, getFluidContainerSlot(SideConfig.INPUT));
+		outputFluidSlot = addSlot(137, 57, 3, getFluidContainerSlot(SideConfig.OUTPUT));
 
 		addPlayerInventory(player.inventory, 8, 141);
 	}

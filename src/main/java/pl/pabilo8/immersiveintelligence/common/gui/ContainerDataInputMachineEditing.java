@@ -20,8 +20,9 @@ public class ContainerDataInputMachineEditing extends ContainerIIBase<TileEntity
 	{
 		super(player, tile);
 
-		dataInput = this.addSlotToContainer(new FilteredDataInput(this, this.inv, 0, 8, 21));
-		dataOutput = this.addSlotToContainer(new Output(this, this.inv, 1, 8, 100));
+		dataInput = addSlot(8, 21, 0, FilteredDataInput::new);
+		dataOutput = addSlot(8, 100, 1, Output::new);
+
 
 		addPlayerInventory(player.inventory, 40, 141+8+32);
 	}
