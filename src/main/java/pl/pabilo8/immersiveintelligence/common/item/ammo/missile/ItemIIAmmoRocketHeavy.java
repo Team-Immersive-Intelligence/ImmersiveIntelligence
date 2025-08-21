@@ -56,7 +56,7 @@ public class ItemIIAmmoRocketHeavy extends ItemIIAmmoBase<EntityAmmoMissile>
 	@Override
 	public int getCoreMaterialNeeded()
 	{
-		return 3;
+		return 24;
 	}
 
 	@Override

@@ -340,6 +340,7 @@ public class DecoBackgroundBuilder<T extends TileEntityIEBase & IIEInventory, C 
 				GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
 
 				List<DecoBackgroundTile> tiles = layer.stream()
+						.filter(decoBackgroundTile -> decoBackgroundTile.style!=null)
 						.filter(tile -> !(tile instanceof DecoBackgroundImage))
 						.collect(Collectors.toList());
 

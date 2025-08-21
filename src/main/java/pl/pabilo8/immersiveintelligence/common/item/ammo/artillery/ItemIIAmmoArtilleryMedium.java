@@ -58,7 +58,7 @@ public class ItemIIAmmoArtilleryMedium extends ItemIIAmmoBase<EntityAmmoArtiller
 	@Override
 	public int getCoreMaterialNeeded()
 	{
-		return 3;
+		return 16;
 	}
 
 	@Override

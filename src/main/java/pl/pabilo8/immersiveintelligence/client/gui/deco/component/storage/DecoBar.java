@@ -165,6 +165,7 @@ public class DecoBar extends GuiComponentDecoBase<DecoBar>
 		bindAtlas();
 
 		//Draw the bar background
+		GlStateManager.enableBlend();
 		IIDrawUtils draw = IIDrawUtils.startTexturedColored();
 		drawBarBackground(draw);
 		//Draw the icon with its background

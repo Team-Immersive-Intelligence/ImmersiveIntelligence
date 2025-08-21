@@ -310,18 +310,18 @@ public class DecoGuiUtils
 		TextureAtlasSprite sprite = ClientUtils.getSprite(spriteLocation);
 		for(int yy = 0; yy < height; yy += iSize)
 		{
+			int drawHeight = Math.min(iSize, height-yy);
+			boolean isTop = yy==0;
+			boolean isBottom = yy+drawHeight >= height;
+
 			for(int xx = 0; xx < width; xx += iSize)
 			{
-				boolean isLeft = xx==0;
-				boolean isRight = xx+iSize >= width;
-				boolean isTop = yy==0;
-				boolean isBottom = yy+iSize >= height;
-
-				float texX = isLeft?0: (isRight?16-tSize: tStart);
-				float texY = isTop?0: (isBottom?16-tSize: tStart);
-
 				int drawWidth = Math.min(iSize, width-xx);
-				int drawHeight = Math.min(iSize, height-yy);
+				boolean isLeft = xx==0;
+				boolean isRight = xx+drawWidth >= width;
+
+				float texX = isLeft?0: (isRight?16-((drawWidth/(float)texSize)*16): tStart);
+				float texY = isTop?0: (isBottom?16-((drawHeight/(float)texSize)*16): tStart);
 
 				draw.drawTexColorRect(
 						x+xx, y+yy, drawWidth, drawHeight, color,

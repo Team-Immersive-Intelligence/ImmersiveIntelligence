@@ -9,7 +9,6 @@ import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeNull;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType.TypeMetaInfo;
-import pl.pabilo8.immersiveintelligence.client.gui.ITabbedGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiComponentDecoBase;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiComponentDecoBase.MouseButton;
@@ -42,7 +41,7 @@ import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
  * @since 30.06.2019
  */
 @DecoTemplate(name = "data_input_machine", category = DecoGuiCategory.DATA_TILE)
-public class GuiDataInputMachine extends DecoGui<TileEntityDataInputMachine, ContainerDataInputMachine> implements ITabbedGui, IDataMachineGui
+public class GuiDataInputMachine extends DecoGui<TileEntityDataInputMachine, ContainerDataInputMachine> implements IDataMachineGui
 {
 	@DecoResource
 	public static ResourceLocation ICON_STORAGE = ResLoc.of(IIReference.RES_II, "gui/tab_icons/storage");

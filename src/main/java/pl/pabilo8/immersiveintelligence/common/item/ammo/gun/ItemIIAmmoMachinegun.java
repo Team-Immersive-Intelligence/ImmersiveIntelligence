@@ -58,7 +58,7 @@ public class ItemIIAmmoMachinegun extends ItemIIAmmoBase<EntityAmmoProjectile>
 	@Override
 	public int getCoreMaterialNeeded()
 	{
-		return 4;
+		return 3;
 	}
 
 	@Override

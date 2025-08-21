@@ -1,11 +1,13 @@
 package pl.pabilo8.immersiveintelligence.client.gui.block.arithmetic_logic_machine;
 
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextFormatting;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.DataVariable;
 import pl.pabilo8.immersiveintelligence.api.data.IDataMachineGui;
@@ -49,6 +51,8 @@ public class GuiArithmeticLogicMachine extends DecoGui<TileEntityArithmeticLogic
 {
 	@DecoResource
 	public static ResourceLocation ICON_STORAGE = ResLoc.of(IIReference.RES_II, "gui/tab_icons/storage");
+	@DecoResource
+	public static ResourceLocation ICON_MEMORY = ResLoc.of(IIReference.RES_II, "gui/tab_icons/memory");
 
 	@SyncNBT
 	public int editedCircuit = 0;
@@ -216,6 +220,14 @@ public class GuiArithmeticLogicMachine extends DecoGui<TileEntityArithmeticLogic
 				.withIcon(ICON_STORAGE)
 				.withTranslatedTooltip(IIReference.DESCRIPTION_KEY+"storage_module")
 		);
+
+		if(tile.hasUpgrade(IIContent.UPGRADE_MEMORY))
+			addComponent(new DecoTab()
+					.withLink(IIGUI.ARITHMETIC_LOGIC_MACHINE_STORAGE)
+					.withIcon(ICON_MEMORY)
+					.withTranslatedTooltip(IIReference.DESCRIPTION_KEY+"memory_in_module")
+			);
+
 		//Circuit tabs
 		NonNullList<ItemStack> inventory = tile.inventory;
 		for(int i = 0, inventorySize = inventory.size(); i < inventorySize; i++)
@@ -230,10 +242,18 @@ public class GuiArithmeticLogicMachine extends DecoGui<TileEntityArithmeticLogic
 							return changeGUI(IIGUI.ARITHMETIC_LOGIC_MACHINE_VARIABLES);
 						})
 						.withIcon(circuit)
-						.withTranslatedTooltip(circuit.getDisplayName(), IIReference.DESCRIPTION_KEY+"variables_module")
+						.withTranslatedTooltip(circuit.getDisplayName(),
+								TextFormatting.GRAY.toString()+TextFormatting.ITALIC+I18n.format(IIReference.DESCRIPTION_KEY+"variables_module"))
 				);
 			}
 		}
+
+		if(tile.hasUpgrade(IIContent.UPGRADE_MEMORY))
+			addComponent(new DecoTab()
+					.withLink(IIGUI.ARITHMETIC_LOGIC_MACHINE_STORAGE)
+					.withIcon(ICON_MEMORY)
+					.withTranslatedTooltip(IIReference.DESCRIPTION_KEY+"memory_out_module")
+			);
 	}
 
 	@Override

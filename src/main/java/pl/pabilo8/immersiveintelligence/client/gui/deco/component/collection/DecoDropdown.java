@@ -30,7 +30,7 @@ public class DecoDropdown<T> extends DecoScrolledCollection<DecoDropdown<T>, T>
 {
 	public int selectedEntry = -1;
 	protected int blinkTime = 0;
-	protected int maxDropHeight = 32;
+	protected int maxDropHeight = 32, maxPossibleDropHeight = 32;
 	protected int dropdownWidth;
 	protected boolean dropped = false;
 	protected BiConsumer<T, T> onSelectedEntry;
@@ -44,7 +44,7 @@ public class DecoDropdown<T> extends DecoScrolledCollection<DecoDropdown<T>, T>
 		withOnPressed((gui, mouseButton, mouseX, mouseY) -> {
 			if(mouseButton==MouseButton.LEFT)
 			{
-				if(dropped)
+				if(dropped&&!IIMath.isPointInRectangle(x, y, x+width, y+height, mouseX, mouseY))
 				{
 					Tuple<Integer, Integer> clicked = getClickedEntryIndex(gui.x+2, gui.y-scroll+height+2, mouseX, mouseY);
 					if(clicked!=null)
@@ -163,8 +163,7 @@ public class DecoDropdown<T> extends DecoScrolledCollection<DecoDropdown<T>, T>
 	 */
 	public DecoDropdown<T> withSelectedEntry(T selectedEntry)
 	{
-		this.selectedEntry = entries.indexOf(selectedEntry);
-		return this;
+		return withSelectedEntry(entries.indexOf(selectedEntry));
 	}
 
 	/**
@@ -213,7 +212,8 @@ public class DecoDropdown<T> extends DecoScrolledCollection<DecoDropdown<T>, T>
 		if(onCreate!=null)
 			alreadyDrawnHeight += getAddButtonHeight();
 
-		this.entryMaxWidth = ((shouldAlwaysHaveScrollbar()||alreadyDrawnHeight > height)?(dropdownWidth-12): dropdownWidth)/entriesInGrid;
+		this.entryMaxWidth = ((shouldAlwaysHaveScrollbar()||alreadyDrawnHeight > maxDropHeight)?(dropdownWidth-12): dropdownWidth)/entriesInGrid;
+		this.maxPossibleDropHeight = Math.min(alreadyDrawnHeight, maxDropHeight);
 		this.maxScroll = Math.max(0, alreadyDrawnHeight-getListHeight());
 		this.scrollStep = !filteredEntries.isEmpty()?Math.max(1, alreadyDrawnHeight/filteredEntries.size()/entriesInGrid): 1;
 		this.scroll = MathHelper.clamp(this.scroll, 0, maxScroll);
@@ -346,7 +346,7 @@ public class DecoDropdown<T> extends DecoScrolledCollection<DecoDropdown<T>, T>
 	@Override
 	protected int getListHeight()
 	{
-		return maxDropHeight;
+		return maxPossibleDropHeight;
 	}
 
 	@Override

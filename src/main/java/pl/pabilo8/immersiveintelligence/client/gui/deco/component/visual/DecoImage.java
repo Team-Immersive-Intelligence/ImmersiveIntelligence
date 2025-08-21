@@ -146,7 +146,6 @@ public class DecoImage extends GuiComponentDecoBase<DecoImage>
 		}
 
 		draw.finish();
-		GlStateManager.disableBlend();
 	}
 
 	@Override

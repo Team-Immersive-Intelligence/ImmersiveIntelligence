@@ -1,7 +1,5 @@
 package pl.pabilo8.immersiveintelligence.common.gui;
 
-import blusunrize.immersiveengineering.common.gui.ContainerIEBase;
-import blusunrize.immersiveengineering.common.gui.IESlot;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
@@ -17,7 +15,6 @@ import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIBase;
  */
 public class ContainerProjectileWorkshop extends ContainerIIBase<TileEntityProjectileWorkshop>
 {
-
 	public Slot inputSlot, outputSlot;
 
 	public ContainerProjectileWorkshop(EntityPlayer player, TileEntityProjectileWorkshop tile)
@@ -27,7 +24,6 @@ public class ContainerProjectileWorkshop extends ContainerIIBase<TileEntityProje
 
 		if(tile.hasUpgrade(IIContent.UPGRADE_CORE_FILLER))
 		{
-
 			inputSlot = this.addSlotToContainer(new Slot(this.inv, 0, 8, 46)
 			{
 				@Override
@@ -36,7 +32,7 @@ public class ContainerProjectileWorkshop extends ContainerIIBase<TileEntityProje
 					return tile.isStackValid(0, itemStack);
 				}
 			});
-			inputSlot = this.addSlotToContainer(new Slot(this.inv, 1, 48, 20)
+			outputSlot = this.addSlotToContainer(new Slot(this.inv, 1, 48, 20)
 			{
 				@Override
 				public boolean isItemValid(ItemStack itemStack)
@@ -46,7 +42,7 @@ public class ContainerProjectileWorkshop extends ContainerIIBase<TileEntityProje
 			});
 		}
 		else
-			inputSlot = this.addSlotToContainer(new Slot(this.inv, 0, 8, 40)
+			inputSlot = this.addSlotToContainer(new Slot(this.inv, 0, 8, 8+2)
 			{
 				@Override
 				public boolean isItemValid(ItemStack itemStack)
@@ -55,6 +51,6 @@ public class ContainerProjectileWorkshop extends ContainerIIBase<TileEntityProje
 				}
 			});
 
-		addPlayerInventory(player.inventory, 8, 141);
+		addPlayerInventory(player.inventory, 8+32+8+4, 141+8);
 	}
 }

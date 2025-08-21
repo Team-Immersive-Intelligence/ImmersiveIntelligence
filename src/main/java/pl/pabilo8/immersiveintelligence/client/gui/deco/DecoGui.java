@@ -222,6 +222,8 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 				((GuiComponentDecoBase<?>)button).setParentGUI(this);
 		for(DecoComponentWidgetBase<?> widget : widgetList)
 			widget.setParentGUI(this);
+
+
 	}
 
 	/**

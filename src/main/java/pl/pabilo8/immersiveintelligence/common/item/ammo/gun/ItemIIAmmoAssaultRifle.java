@@ -65,7 +65,7 @@ public class ItemIIAmmoAssaultRifle extends ItemIIAmmoBase<EntityAmmoProjectile>
 	@Override
 	public int getCoreMaterialNeeded()
 	{
-		return 3;
+		return 2;
 	}
 
 	@Override

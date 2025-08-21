@@ -65,7 +65,7 @@ public class ItemIIAmmoAutocannon extends ItemIIAmmoBase<EntityAmmoProjectile>
 	@Override
 	public int getCoreMaterialNeeded()
 	{
-		return 6;
+		return 4;
 	}
 
 	@Override

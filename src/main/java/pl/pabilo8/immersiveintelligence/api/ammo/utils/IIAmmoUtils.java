@@ -340,6 +340,8 @@ public class IIAmmoUtils
 					core.getColor().getHexCol(I18n.format("item."+ImmersiveIntelligence.MODID+".bullet.component."+core.getName()+".name"))
 			);
 
+			//TODO: 20.08.2025 propellant
+
 			//fuse
 			if(ammo.getAllowedFuseTypes().length > 0)
 			{

@@ -63,6 +63,12 @@ public abstract class GuiComponentDecoBase<TYPE extends GuiComponentDecoBase<? s
 	{
 		if(onTooltip!=null)
 			return new ArrayList<>(onTooltip.apply((TYPE)this));
+		if(!children.isEmpty())
+			return children.stream()
+					.filter(GuiComponentDecoBase::isMouseOver)
+					.map(GuiComponentDecoBase::getTooltip)
+					.flatMap(Collection::stream)
+					.collect(Collectors.toList());
 		return new ArrayList<>();
 	}
 

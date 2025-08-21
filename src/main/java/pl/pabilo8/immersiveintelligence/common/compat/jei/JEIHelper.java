@@ -33,7 +33,7 @@ import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.compat.jei.gui_handlers.UpgradeGuiHandler;
 import pl.pabilo8.immersiveintelligence.common.compat.jei.gui_handlers.VulcanizerGuiHandler;
 import pl.pabilo8.immersiveintelligence.common.compat.jei.recipe_handlers.*;
-import pl.pabilo8.immersiveintelligence.common.item.ammo.gun.ItemIIAmmoRevolver;
+import pl.pabilo8.immersiveintelligence.common.item.ammo.gun.ItemIIAmmoRevolver.RevolverAmmoPart;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.IIMultiblockRecipe;
 
@@ -126,7 +126,8 @@ public class JEIHelper implements IModPlugin
 		jeiHelpers.getIngredientBlacklist().addIngredientToBlacklist(new ItemStack(IIContent.itemPrintedPage, 1, 3));
 		//jeiHelpers.getIngredientBlacklist().addIngredientToBlacklist(new ItemStack(CommonProxy.item_assembly_scheme, 1, OreDictionary.WILDCARD_VALUE));
 
-		jeiHelpers.getIngredientBlacklist().addIngredientToBlacklist(new ItemStack(IIContent.itemAmmoRevolver, 1, ItemIIAmmoRevolver.UNUSED));
+		jeiHelpers.getIngredientBlacklist().addIngredientToBlacklist(new ItemStack(IIContent.itemAmmoRevolver,
+				1, RevolverAmmoPart.UNUSED.ordinal()));
 
 
 		for(IAmmoTypeItem<?, ?> bullet : AmmoRegistry.getAllAmmoItems())

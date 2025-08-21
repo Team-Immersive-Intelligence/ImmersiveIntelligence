@@ -422,8 +422,8 @@ item.immersiveintelligence.ammo_casing.smg_1bcal.name=Short Bullet Casing
 item.immersiveintelligence.smg_1bcal.core.name=Short Bullet Core
 item.immersiveintelligence.smg_1bcal.bullet.name=Short Bullet
 
-item.immersiveintelligence.revolver_1bcal.core.name=Revolver Bullet Core
-item.immersiveintelligence.revolver_1bcal.bullet.name=Revolver Bullet
+item.immersiveintelligence.revolver_1bcal.core.name=Revolver Cartridge Core
+item.immersiveintelligence.revolver_1bcal.bullet.name=Revolver Cartridge
 
 item.immersiveintelligence.ammo_casing.autocannon_3bcal.name=Autocannon Shell Casing
 item.immersiveintelligence.autocannon_3bcal.core.name=Autocannon Shell Core
@@ -1226,6 +1226,8 @@ desc.immersiveintelligence.weapon.magazine2=%s - Magazine #2
 
 desc.immersiveintelligence.storage_module=Storage
 desc.immersiveintelligence.variables_module=Variables
+desc.immersiveintelligence.memory_in_module=Input Memory
+desc.immersiveintelligence.memory_out_module=Output Memory
 desc.immersiveintelligence.data_module=Data
 desc.immersiveintelligence.redstone_module=Redstone
 desc.immersiveintelligence.data_to_redstone_module=Data to Redstone
@@ -1279,6 +1281,27 @@ desc.immersiveintelligence.bullet_core_type.piercing=Armor-Piercing
 desc.immersiveintelligence.bullet_core_type.piercing_sabot=Sabot
 desc.immersiveintelligence.bullet_core_type.canister=Canister
 desc.immersiveintelligence.bullet_core_type.cluster=Cluster
+
+desc.immersiveintelligence.effect_shape.star=Star
+desc.immersiveintelligence.effect_shape.orb=Orb
+desc.immersiveintelligence.effect_shape.line=Line
+desc.immersiveintelligence.effect_shape.cone=Cone
+
+desc.immersiveintelligence.penetration_hardness.foliage=Foliage
+desc.immersiveintelligence.penetration_hardness.fragile=Fragiles
+desc.immersiveintelligence.penetration_hardness.ground=Ground
+desc.immersiveintelligence.penetration_hardness.wood=Wood
+desc.immersiveintelligence.penetration_hardness.weak_metal=Brittle Metals
+desc.immersiveintelligence.penetration_hardness.rock=Rock
+desc.immersiveintelligence.penetration_hardness.bricks=Bricks
+desc.immersiveintelligence.penetration_hardness.iron=Iron
+desc.immersiveintelligence.penetration_hardness.concrete=Concrete
+desc.immersiveintelligence.penetration_hardness.steel=Steel
+desc.immersiveintelligence.penetration_hardness.panzerconcrete=Panzerconcrete
+desc.immersiveintelligence.penetration_hardness.tungsten=Tungsten
+desc.immersiveintelligence.penetration_hardness.uberconcrete=Überconcrete
+desc.immersiveintelligence.penetration_hardness.pabilium=Pabilium
+desc.immersiveintelligence.penetration_hardness.bedrock=Bedrock
 
 desc.immersiveintelligence.bullet_fuse.contact=Contact
 desc.immersiveintelligence.bullet_fuse.timed=Timed

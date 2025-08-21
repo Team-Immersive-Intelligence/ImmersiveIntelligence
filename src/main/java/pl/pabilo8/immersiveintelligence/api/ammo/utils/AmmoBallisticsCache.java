@@ -88,8 +88,8 @@ public class AmmoBallisticsCache
 			//get max height (fired at 0 degrees)
 			this.maxHeightReached = maxHeightReached;
 
-			//get max direct range (fired at 90 degrees)
-			maxDirectRange = distances[distances.length-1];
+			//get max direct range (fired at 15 degrees)
+			maxDirectRange = distances[(int)(15/BALLISTIC_PRECISION)];
 			//get max artillery distance (fired at 45 degrees)
 			getMaxArtilleryRange = distances.length%2==0?distances[distances.length/2]: (distances[distances.length/2]+distances[distances.length/2+1])/2;
 

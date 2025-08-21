@@ -58,11 +58,15 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockProduction
 	//for core production
 	@Nonnull
 	public IAmmoTypeItem<?, ?> producedAmmo = IIContent.itemAmmoHeavyArtillery;
+
+	@SyncNBT
 	@Nonnull
 	public CoreType coreType = producedAmmo.getAllowedCoreTypes()[0];
+
 	//how many slots to fill
 	@SyncNBT
 	public int fillAmount = 1;
+	@SyncNBT
 	public BulletComponentStack componentInside = new BulletComponentStack();
 
 	/**
@@ -71,7 +75,7 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockProduction
 	@SyncNBT
 	public FluidTank tanksFiller = new FluidTank(ProjectileWorkshop.componentTankCapacity);
 	@SyncNBT
-	public MultiblockInteractablePart lid1 = new MultiblockInteractablePart(14), lid2 = new MultiblockInteractablePart(16);
+	public MultiblockInteractablePart lid1, lid2;
 	@SyncNBT(name = "upgrades")
 	public UpgradeStorage<TileEntityProjectileWorkshop> upgradeStorage;
 
@@ -82,8 +86,11 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockProduction
 	{
 		super(MultiblockProjectileWorkshop.INSTANCE);
 		energyStorage = new FluxStorageAdvanced(ProjectileWorkshop.energyCapacity);
-		inventory = NonNullList.withSize(3, ItemStack.EMPTY); //input, componentInput
+		inventory = NonNullList.withSize(3, ItemStack.EMPTY);
 		upgradeStorage = new UpgradeStorage<>(this);
+
+		lid1 = new MultiblockInteractablePart(14);
+		lid2 = new MultiblockInteractablePart(16);
 	}
 
 	@Override
@@ -141,7 +148,6 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockProduction
 		if(isDummy())
 			return;
 		componentInside.deserializeNBT(nbt.getCompoundTag("component_inside"));
-		coreType = CoreType.v(nbt.getString("core_type"));
 	}
 
 	@Override
@@ -151,10 +157,7 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockProduction
 
 		if(isDummy())
 			return;
-		nbt.setTag("component_inside", componentInside.serializeNBT());
 		nbt.setString("produced_bullet", producedAmmo.getName());
-		nbt.setString("core_type", coreType.getName());
-
 	}
 
 	@Override
@@ -164,16 +167,11 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockProduction
 
 		if(isDummy())
 			return;
-
-		if(message.hasKey("component_inside"))
-			componentInside.deserializeNBT(message.getCompoundTag("component_inside"));
 		if(message.hasKey("produced_bullet"))
 		{
-			IAmmoTypeItem bb = AmmoRegistry.getAmmoItem(message.getString("produced_bullet"));
+			IAmmoTypeItem<?, ?> bb = AmmoRegistry.getAmmoItem(message.getString("produced_bullet"));
 			producedAmmo = bb==null?IIContent.itemAmmoHeavyArtillery: bb;
 		}
-		if(message.hasKey("core_type"))
-			coreType = CoreType.v(message.getString("core_type"));
 	}
 
 	@Override
@@ -184,7 +182,7 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockProduction
 			coreType = CoreType.v(message.getString("core_type"));
 		if(message.hasKey("produced_bullet"))
 		{
-			IAmmoTypeItem bb = AmmoRegistry.getAmmoItem(message.getString("produced_bullet"));
+			IAmmoTypeItem<?, ?> bb = AmmoRegistry.getAmmoItem(message.getString("produced_bullet"));
 			producedAmmo = bb==null?IIContent.itemAmmoHeavyArtillery: bb;
 		}
 	}
@@ -314,25 +312,18 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockProduction
 	@Override
 	public void onAnimationChangeClient(boolean state, int part)
 	{
-		if(part==0)
-			lid1.setState(state);
-		else
-			lid2.setState(state);
+		MultiblockInteractablePart.setStates(state, part, lid1, lid2);
 	}
 
 	@Override
 	public void onAnimationChangeServer(boolean state, int part)
 	{
-		if(part==0)
-			lid1.setState(state);
-		else
-			lid2.setState(state);
-
-		if((part==0?lid1: lid2).setState(state))
+		MultiblockInteractablePart changed = MultiblockInteractablePart.setStates(state, part, lid1, lid2);
+		if(changed!=null)
+		{
 			world.playSound(null, getPos(), state?IISounds.metalBreadboxOpen: IISounds.metalBreadboxClose, SoundCategory.BLOCKS, 0.5F, 1f);
-
-		IIPacketHandler.INSTANCE.sendToAllAround(new MessageBooleanAnimatedPartsSync(part, state, getPos()),
-				IIPacketHandler.targetPointFromPos(this.getPos(), this.world, 32));
+			IIPacketHandler.sendToClient(this, new MessageBooleanAnimatedPartsSync(changed, this));
+		}
 	}
 
 	@Override

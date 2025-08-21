@@ -1,7 +1,5 @@
 package pl.pabilo8.immersiveintelligence.common.gui;
 
-import blusunrize.immersiveengineering.common.gui.ContainerIEBase;
-import blusunrize.immersiveengineering.common.gui.IESlot;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
@@ -16,7 +14,6 @@ import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIBase;
  */
 public class ContainerAmmunitionAssembler extends ContainerIIBase<TileEntityAmmunitionAssembler>
 {
-
 	public Slot inputSlot, outputSlot;
 
 	public ContainerAmmunitionAssembler(EntityPlayer player, TileEntityAmmunitionAssembler tile)
@@ -32,7 +29,7 @@ public class ContainerAmmunitionAssembler extends ContainerIIBase<TileEntityAmmu
 			}
 		});
 
-		inputSlot = this.addSlotToContainer(new Slot(this.inv, 1, 8, 60)
+		outputSlot = this.addSlotToContainer(new Slot(this.inv, 1, 8, 60)
 		{
 			@Override
 			public boolean isItemValid(ItemStack itemStack)

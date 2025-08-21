@@ -16,7 +16,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.utils.upgrade_system.IUpgradableMachine;
 import pl.pabilo8.immersiveintelligence.client.gui.block.*;
 import pl.pabilo8.immersiveintelligence.client.gui.block.ammunition_production.GuiAmmunitionAssembler;
-import pl.pabilo8.immersiveintelligence.client.gui.block.ammunition_production.GuiProjectileWorkshop;
 import pl.pabilo8.immersiveintelligence.client.gui.block.arithmetic_logic_machine.GuiArithmeticLogicMachine;
 import pl.pabilo8.immersiveintelligence.client.gui.block.arithmetic_logic_machine.GuiArithmeticLogicMachineEdit;
 import pl.pabilo8.immersiveintelligence.client.gui.block.data_input_machine.GuiDataInputMachine;
@@ -232,7 +231,7 @@ public enum IIGUI implements ISerializableEnum
 		IIGUI.CHEMICAL_PAINTER.setClientGui(GuiChemicalPainter::new);
 
 		IIGUI.AMMUNITION_ASSEMBLER.setClientGui(GuiAmmunitionAssembler::new);
-		IIGUI.PROJECTILE_WORKSHOP.setClientGui(GuiProjectileWorkshop::new);
+		IIGUI.PROJECTILE_WORKSHOP.setClientDecoGui(GuiProjectileWorkshop::new);
 
 		IIGUI.RADAR.setClientGui(GuiRadar::new);
 	}

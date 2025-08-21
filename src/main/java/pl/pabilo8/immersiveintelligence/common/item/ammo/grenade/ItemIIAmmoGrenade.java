@@ -65,7 +65,7 @@ public class ItemIIAmmoGrenade extends ItemIIAmmoBase<EntityAmmoGrenade>
 	@Override
 	public int getCoreMaterialNeeded()
 	{
-		return 2;
+		return 9;
 	}
 
 	@Override

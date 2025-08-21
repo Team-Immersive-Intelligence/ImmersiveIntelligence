@@ -134,6 +134,7 @@ import pl.pabilo8.immersiveintelligence.common.entity.vehicle.towable.gun.Entity
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoBase;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIINavalMine;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.gun.ItemIIAmmoRevolver;
+import pl.pabilo8.immersiveintelligence.common.item.ammo.gun.ItemIIAmmoRevolver.RevolverAmmoPart;
 import pl.pabilo8.immersiveintelligence.common.item.data.ItemIIFunctionalCircuit.CircuitTypes;
 import pl.pabilo8.immersiveintelligence.common.item.tools.ItemIIDrillHead.DrillHeads;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIWeaponUpgrade;
@@ -403,7 +404,8 @@ public class ClientProxy extends CommonProxy
 			if(bullet instanceof ItemIIAmmoBase)
 				IIModelRegistry.INSTANCE.registerCustomItemModel(((ItemIIAmmoBase)bullet));
 			else if(bullet instanceof ItemIIAmmoRevolver)
-				IIModelRegistry.INSTANCE.registerCustomItemModel((ItemIIAmmoRevolver)bullet, ImmersiveIntelligence.MODID, ItemIIAmmoRevolver.BULLET, ItemIIAmmoRevolver.CORE);
+				IIModelRegistry.INSTANCE.registerCustomItemModel((ItemIIAmmoRevolver)bullet, ImmersiveIntelligence.MODID,
+						RevolverAmmoPart.BULLET.ordinal(), RevolverAmmoPart.CORE.ordinal());
 		}
 
 		//Old items

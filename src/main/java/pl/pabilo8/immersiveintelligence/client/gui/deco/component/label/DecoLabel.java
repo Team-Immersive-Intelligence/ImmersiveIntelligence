@@ -27,6 +27,7 @@ public class DecoLabel extends GuiLabel
 	private Supplier<Collection<String>> onTooltip = null;
 	private FontRenderer fontRenderer;
 	private DecoAlignment textAlignment = DecoAlignment.LEFT;
+	private boolean forcedUnicode = false;
 	private boolean textShadow = false;
 	private int totalHeight = 0;
 	private boolean hovered;
@@ -81,6 +82,18 @@ public class DecoLabel extends GuiLabel
 	public DecoLabel withTextShadow(boolean textShadow)
 	{
 		this.textShadow = textShadow;
+		return this;
+	}
+
+	/**
+	 * Sets whether the label should be forced to use unicode characters.
+	 *
+	 * @param forcedUnicode If true, the label will use unicode characters regardless of the system's locale settings.
+	 * @return this
+	 */
+	public DecoLabel withForcedUnicode(boolean forcedUnicode)
+	{
+		this.forcedUnicode = forcedUnicode;
 		return this;
 	}
 
@@ -190,6 +203,10 @@ public class DecoLabel extends GuiLabel
 			IIDrawUtils.startColored().drawColorRect(x, y, x+width, y+height, bgColor).finish();
 
 		int lineOffset = y;
+		boolean unicode = fontRenderer.getUnicodeFlag();
+		//Force unicode if flag is set
+		if(forcedUnicode)
+			fontRenderer.setUnicodeFlag(true);
 		for(Object line : this.labels)
 		{
 			//Determine the displayed text
@@ -213,6 +230,7 @@ public class DecoLabel extends GuiLabel
 
 			lineOffset += fontRenderer.FONT_HEIGHT;
 		}
+		fontRenderer.setUnicodeFlag(unicode);
 
 	}
 

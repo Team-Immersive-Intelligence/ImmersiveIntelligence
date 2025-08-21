@@ -64,7 +64,7 @@ public class ItemIIAmmoMortar extends ItemIIAmmoBase<EntityAmmoArtilleryProjecti
 	@Override
 	public int getCoreMaterialNeeded()
 	{
-		return 3;
+		return 10;
 	}
 
 	@Override
@@ -103,7 +103,7 @@ public class ItemIIAmmoMortar extends ItemIIAmmoBase<EntityAmmoArtilleryProjecti
 	@Override
 	public CoreType[] getAllowedCoreTypes()
 	{
-		return new CoreType[]{CoreType.PIERCING, CoreType.SHAPED, CoreType.CANISTER};
+		return new CoreType[]{CoreType.PIERCING, CoreType.CANISTER};
 	}
 
 	@Override

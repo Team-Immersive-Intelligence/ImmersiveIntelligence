@@ -40,7 +40,7 @@ public class IIAnimationUtils
 	@SideOnly(Side.CLIENT)
 	public static float getDebugProgress(float max, float partialTicks)
 	{
-		return (ClientUtils.mc().world.getTotalWorldTime()%max+partialTicks)/max;
+		return (ClientUtils.mc().world.getTotalWorldTime()%(int)max+partialTicks)/max;
 	}
 
 	public static float getAnimationOffsetProgress(float current, float begin, float end, float partialTicks)
