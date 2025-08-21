@@ -11,16 +11,19 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityPacker;
+import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIBase;
 
 import javax.annotation.Nonnull;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @author Avalon (avalon@iiteam.net)
  * @since 17.05.2019
+ * @since 20.08.2025
  */
-public class ContainerPacker extends ContainerIEBase<TileEntityPacker>
+public class ContainerPacker extends ContainerIIBase<TileEntityPacker>
 {
-	public Slot[] slots;
+	public Slot[] slots, slotsfluid, slotsoutput;
 	public IESlot.Ghost ghostSlot;
 	//added only on client side
 	public Runnable ghostUpdateFunction;
@@ -28,28 +31,29 @@ public class ContainerPacker extends ContainerIEBase<TileEntityPacker>
 
 	public ContainerPacker(EntityPlayer player, TileEntityPacker tile)
 	{
-		super(player.inventory, tile);
+		super(player, tile);
 
 		slots = new Slot[tile.getInventory().size()];
 		assert this.inv!=null;
 
 		if(tile.hasUpgrade(IIContent.UPGRADE_PACKER_FLUID))
 		{
-			addSlotToContainer(new IESlot.FluidContainer(this, ghostInv, 1, 309, 35, 0));
-			addSlotToContainer(new IESlot.Output(this, ghostInv, 2, 309, 71));
+			this. slotsfluid[0] = addSlotToContainer(new IESlot.FluidContainer(this, ghostInv, 1, 309, 35, 0));
+			this. slotsoutput[0] = addSlotToContainer(new IESlot.Output(this, ghostInv, 2, 309, 71));
 			this.slotCount = 2;
 		}
 		else if(tile.hasUpgrade(IIContent.UPGRADE_PACKER_ENERGY))
 		{
-			addSlotToContainer(new IESlot.FluidContainer(this, ghostInv, 1, 309, 35, 0));
-			addSlotToContainer(new IESlot.Output(this, ghostInv, 2, 309, 71));
+
+			this. slotsfluid[0] = addSlotToContainer(new IESlot.FluidContainer(this, ghostInv, 1, 309, 35, 0));
+			this. slotsoutput[0] = addSlotToContainer(new IESlot.Output(this, ghostInv, 2, 309, 71));
 			this.slotCount = 2;
 		}
 		else
 		{
 			for(int i = 0; i < tile.getInventory().size()-1; i++)
 			{
-				slots[i] = this.addSlotToContainer(new Slot(this.inv, i+1, 0, 0)
+				this.slots[i] = addSlotToContainer(new Slot(this.inv, i+1, 0, 0)
 				{
 					@Override
 					public boolean isItemValid(@Nonnull ItemStack stack)
@@ -72,13 +76,8 @@ public class ContainerPacker extends ContainerIEBase<TileEntityPacker>
 			this.slotCount = tile.getInventory().size();
 		}
 
-		this.tile = tile;
+		this.addPlayerInventory(player.inventory, 8, 86);
 
-		for(int i = 0; i < 3; i++)
-			for(int j = 0; j < 9; j++)
-				addSlotToContainer(new Slot(player.inventory, j+i*9+9, 89+j*18, 130+i*18));
-		for(int i = 0; i < 9; i++)
-			addSlotToContainer(new Slot(player.inventory, i, 89+i*18, 161+27));
 	}
 
 	private static class DummyInventory implements IInventory
