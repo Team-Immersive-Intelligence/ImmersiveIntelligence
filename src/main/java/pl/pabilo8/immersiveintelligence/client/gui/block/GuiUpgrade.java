@@ -20,6 +20,7 @@ import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.utils.upgrade_system.IUpgradableMachine;
 import pl.pabilo8.immersiveintelligence.api.utils.upgrade_system.MachineUpgrade;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerUpgrade;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBeginMachineUpgrade;
@@ -239,7 +240,7 @@ public class GuiUpgrade extends GuiIEContainerBase
 
 			boolean uni = fontRenderer.getUnicodeFlag();
 			fontRenderer.setUnicodeFlag(true);
-			fontRenderer.drawSplitString(getUpgradeDescTranslation(previewed), guiLeft+xSize+2, guiTop+8, 76, IIReference.COLOR_H1.getPackedRGB());
+			fontRenderer.drawSplitString(getUpgradeDescTranslation(previewed), guiLeft+xSize+2, guiTop+8, 76, DecoTextures.COLOR_H1.getPackedRGB());
 			fontRenderer.setUnicodeFlag(uni);
 		}
 

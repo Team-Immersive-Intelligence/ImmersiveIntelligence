@@ -32,12 +32,12 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.api.ammo.penetration.DamageBlockPos;
 import pl.pabilo8.immersiveintelligence.api.utils.upgrade_system.MachineUpgrade;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
 import pl.pabilo8.immersiveintelligence.client.model.ModelIIBase;
 import pl.pabilo8.immersiveintelligence.client.util.font.IIFontRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.font.IIFontRendererCustomGlyphs;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
-import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock;
 
 import javax.annotation.Nonnull;
@@ -174,13 +174,13 @@ public class IIClientUtils
 	@Deprecated
 	public static void drawArmorBar(int x, int y, int w, int h, float progress)
 	{
-		drawGradientBar(x, y, w, h, IIReference.COLOR_ARMORBAR1, IIReference.COLOR_ARMORBAR2, progress);
+		drawGradientBar(x, y, w, h, DecoTextures.COLOR_ARMORBAR1, DecoTextures.COLOR_ARMORBAR2, progress);
 	}
 
 	@Deprecated
 	public static void drawPowerBar(int x, int y, int w, int h, float progress)
 	{
-		drawGradientBar(x, y, w, h, IIReference.COLOR_POWERBAR1, IIReference.COLOR_POWERBAR2, progress);
+		drawGradientBar(x, y, w, h, DecoTextures.COLOR_POWERBAR1, DecoTextures.COLOR_POWERBAR2, progress);
 	}
 
 	@Deprecated

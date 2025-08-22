@@ -2,9 +2,9 @@ package pl.pabilo8.immersiveintelligence.client.gui.deco.component.button;
 
 import net.minecraft.util.ResourceLocation;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
-import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 /**
  * A standard inventory tab of the Deco GUI system
@@ -17,7 +17,7 @@ public class DecoTab extends DecoButton
 	public DecoTab()
 	{
 		super(0, 0);
-		withBackground(IIReference.RES_TEXTURES_DECO_COMPONENT_TAB);
+		withBackground(DecoTextures.RES_TEXTURES_DECO_COMPONENT_TAB);
 		withPadding(6, 1, 4, 3);
 	}
 

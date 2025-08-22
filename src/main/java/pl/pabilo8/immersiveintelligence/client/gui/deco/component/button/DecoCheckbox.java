@@ -4,10 +4,10 @@ import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiComponentDecoTextBase;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoAlignment;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
-import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 /**
  * A standard checkbox of the Deco GUI system.<br>
@@ -26,7 +26,7 @@ public class DecoCheckbox extends GuiComponentDecoTextBase<DecoCheckbox>
 	public DecoCheckbox(int x, int y)
 	{
 		super(x, y);
-		backgroundLocation = IIReference.RES_TEXTURES_DECO_COMPONENT_CHECKBOX;
+		backgroundLocation = DecoTextures.RES_TEXTURES_DECO_COMPONENT_CHECKBOX;
 		withSize(120, 11);
 		withOnPressed((gui, mouseButton, mouseX, mouseY) -> {
 			if(mouseButton==MouseButton.LEFT)

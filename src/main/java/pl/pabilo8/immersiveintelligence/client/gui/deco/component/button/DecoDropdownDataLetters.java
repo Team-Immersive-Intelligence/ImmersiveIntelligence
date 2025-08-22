@@ -5,6 +5,7 @@ import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoDropdown;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoElementDisplays.DecoElementDisplay;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoGuiUtils;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
 import pl.pabilo8.immersiveintelligence.client.util.font.IIFontRenderer;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
@@ -24,7 +25,7 @@ public class DecoDropdownDataLetters extends DecoDropdown<Character> implements 
 	{
 		super(x, y);
 		withSize(18, 18);
-		withBackground(IIReference.RES_TEXTURES_DECO_COMPONENT_TEXT_FIELD);
+		withBackground(DecoTextures.RES_TEXTURES_DECO_COMPONENT_TEXT_FIELD);
 		withEntriesInGrid(6);
 		withEntries(new String(DataPacket.VARIABLE_NAMES)
 				.chars()

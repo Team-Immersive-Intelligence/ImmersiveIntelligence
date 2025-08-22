@@ -8,10 +8,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoFl
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoImage;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoImage.ImageAnimationDirection;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundBuilder.SlotStyle;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoGuiCategory;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoGuiUtils;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoResource;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTemplate;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.*;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityPrintingPress;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerPrintingPress;
@@ -43,14 +40,14 @@ public class GuiPrintingPress extends DecoGui<TileEntityPrintingPress, Container
 	public void onInit()
 	{
 		startBackground()
-				.withBox(IIReference.GUI_BG_STEEL_ROUGH, 0, 0, 176, 76)
+				.withBox(DecoTextures.GUI_BG_STEEL_ROUGH, 0, 0, 176, 76)
 				.withTitleBar(tile)
 				.withInventorySlots(SlotStyle.IE_INPUT, container.slotInput)
 				.withInventorySlots(SlotStyle.IE_OUTPUT, container.slotOutput)
 				.withInventorySlots(SlotStyle.IE_INPUT, container.slotBucketIn)
 				.withInventorySlots(SlotStyle.IE_OUTPUT, container.slotBucketOut)
 
-				.withBox(IIReference.GUI_BG_WOODEN, 0, 76, 176, 92)
+				.withBox(DecoTextures.GUI_BG_WOODEN, 0, 76, 176, 92)
 				.withInventorySlots(SlotStyle.VANILLA, container.playerInventory)
 				.withInventoryTitleBar()
 				.build();

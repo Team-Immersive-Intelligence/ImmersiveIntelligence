@@ -9,6 +9,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiComponentDecoBase;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
@@ -43,7 +44,7 @@ public class DecoBar extends GuiComponentDecoBase<DecoBar>
 		super(x, y);
 		withSize(12, 64+7);
 		withColors(IIColor.BLACK, IIColor.WHITE);
-		withBackgroundLocation(IIReference.RES_TEXTURES_DECO_COMPONENT_FRAME, IIReference.RES_TEXTURES_DECO_BAR_ICON_BACKGROUND);
+		withBackgroundLocation(DecoTextures.RES_TEXTURES_DECO_COMPONENT_FRAME, DecoTextures.RES_TEXTURES_DECO_BAR_ICON_BACKGROUND);
 	}
 
 	@Deprecated

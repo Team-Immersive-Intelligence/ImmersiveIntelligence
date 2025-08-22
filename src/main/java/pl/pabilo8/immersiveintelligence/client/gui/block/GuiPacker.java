@@ -30,6 +30,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiPackerTaskL
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoSwitch;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoDropdown;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoLabel;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityPacker;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerPacker;
@@ -86,7 +87,7 @@ public class GuiPacker extends GuiIEContainerBase
 		buttonList.clear();
 		labelList.clear();
 
-		addLabel(5, 6, 78, 11, IIReference.COLOR_H1, "Tasks");
+		addLabel(5, 6, 78, 11, DecoTextures.COLOR_H1, "Tasks");
 
 		buttonAdd = addButton(new GuiButtonIE(buttonList.size(), guiLeft+6, guiTop+96+4+8, 12, 12, "", TEXTURE_PACKER.toString(), 0, 223));
 		buttonRemove = addButton(new GuiButtonIE(buttonList.size(), guiLeft+6+12, guiTop+96+4+8, 12, 12, "", TEXTURE_PACKER.toString(), 24, 223));
@@ -118,7 +119,7 @@ public class GuiPacker extends GuiIEContainerBase
 			PackerTask task = tile.tasks.get(taskList.selectedOption);
 			if(task!=null)
 			{
-				addLabel(84, 10, 168, 0, IIReference.COLOR_H1, "Task: "+
+				addLabel(84, 10, 168, 0, DecoTextures.COLOR_H1, "Task: "+
 						I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.packer.task."+task.actionType.getActionName(task.unpack))
 				).setCentered();
 				sideDisplay.initPage(task);
@@ -389,7 +390,7 @@ public class GuiPacker extends GuiIEContainerBase
 
 		public void initPage(PackerTask task)
 		{
-			gui.addLabel(88, 42, IIReference.COLOR_H1, "Mode:");
+			gui.addLabel(88, 42, DecoTextures.COLOR_H1, "Mode:");
 			gui.putModeList = gui.addButton(new DecoDropdown<>(gui.buttonList.size(), gui.guiLeft+84+32+20, gui.guiTop+10+6+20, 112, 20,
 					PackerHandler.PackerPutMode.values().length,
 					Arrays.stream(PackerHandler.PackerPutMode.values())
@@ -398,14 +399,14 @@ public class GuiPacker extends GuiIEContainerBase
 //			gui.putModeList.withTranslationMethod(s -> I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.packer.mode."+s));
 			gui.putModeList.selectedEntry = task.mode.ordinal();
 
-			gui.addLabel(88, 54, IIReference.COLOR_H1, "Amount:");
-			gui.addLabel(88+80, 54, IIReference.COLOR_H1, "Expires After:");
+			gui.addLabel(88, 54, DecoTextures.COLOR_H1, "Amount:");
+			gui.addLabel(88+80, 54, DecoTextures.COLOR_H1, "Expires After:");
 
 			gui.textFieldAmount = new GuiTextField(gui.buttonList.size(), gui.mc.fontRenderer, gui.guiLeft+84+4, gui.guiTop+10+6+10+32+1, 72, 14);
 			gui.textFieldAmount.setText(task.mode==PackerHandler.PackerPutMode.ALL_POSSIBLE?"*": String.valueOf(task.stack.inputSize));
 			gui.textFieldAmount.setEnabled(task.mode!=PackerHandler.PackerPutMode.ALL_POSSIBLE);
 
-			gui.switchDirection = gui.switchDirection==null?gui.addSwitch(232, 4, 85, IIReference.COLOR_H2, COLOR_IN, COLOR_OUT, task.unpack, "", false): gui.addButton(gui.switchDirection);
+			gui.switchDirection = gui.switchDirection==null?gui.addSwitch(232, 4, 85, DecoTextures.COLOR_H2, COLOR_IN, COLOR_OUT, task.unpack, "", false): gui.addButton(gui.switchDirection);
 		}
 
 		public abstract void drawPage(int mx, int my);
@@ -501,9 +502,9 @@ public class GuiPacker extends GuiIEContainerBase
 		{
 			super.initPage(task);
 
-			gui.addLabel(88, 26, IIReference.COLOR_H1, "Item:");
-			gui.switchOreDict = gui.switchOreDict==null?gui.addSwitch(88, 78, 85, IIReference.COLOR_H2, IIColor.fromPackedRGB(0xb51500), IIColor.fromPackedRGB(0x95ed00), task.stack.oreName!=null, "Uses OreDict", false): gui.addButton(gui.switchOreDict);
-			gui.switchNBT = gui.switchNBT==null?gui.addSwitch(88, 90, 85, IIReference.COLOR_H2, IIColor.fromPackedRGB(0xb51500), IIColor.fromPackedRGB(0x95ed00), task.stack.useNBT, "NBT Sensitive:", false): gui.addButton(gui.switchNBT);
+			gui.addLabel(88, 26, DecoTextures.COLOR_H1, "Item:");
+			gui.switchOreDict = gui.switchOreDict==null?gui.addSwitch(88, 78, 85, DecoTextures.COLOR_H2, IIColor.fromPackedRGB(0xb51500), IIColor.fromPackedRGB(0x95ed00), task.stack.oreName!=null, "Uses OreDict", false): gui.addButton(gui.switchOreDict);
+			gui.switchNBT = gui.switchNBT==null?gui.addSwitch(88, 90, 85, DecoTextures.COLOR_H2, IIColor.fromPackedRGB(0xb51500), IIColor.fromPackedRGB(0x95ed00), task.stack.useNBT, "NBT Sensitive:", false): gui.addButton(gui.switchNBT);
 			//switchExpire = switchExpire==null?addSwitch(88, 90, 85, Utils.COLOR_H2, 0xb51500, 0x95ed00, false, "Expire After:", false): addButton(switchExpire);//task.stack.expires
 
 			//textFieldExpire = new GuiTextField(buttonList.size(), mc.fontRenderer, guiLeft+84+4, guiTop+10+6+10+32+1+42, 80, 14);

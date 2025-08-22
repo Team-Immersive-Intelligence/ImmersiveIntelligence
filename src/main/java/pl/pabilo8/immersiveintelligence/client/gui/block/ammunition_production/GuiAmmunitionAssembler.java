@@ -11,12 +11,12 @@ import net.minecraft.client.util.ITooltipFlag.TooltipFlags;
 import net.minecraft.entity.player.EntityPlayer;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseType;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityAmmunitionAssembler;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerAmmunitionAssembler;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
-import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import java.io.IOException;
@@ -46,7 +46,7 @@ public class GuiAmmunitionAssembler extends GuiAmmunitionBase<TileEntityAmmuniti
 		buttonList.clear();
 		fuseButtons.clear();
 
-		addLabel(guiLeft+1, guiTop+8, 118, 0, IIReference.COLOR_H1, I18n.format("tile.immersiveintelligence.metal_multiblock1.ammunition_assembler.name")).setCentered();
+		addLabel(guiLeft+1, guiTop+8, 118, 0, DecoTextures.COLOR_H1, I18n.format("tile.immersiveintelligence.metal_multiblock1.ammunition_assembler.name")).setCentered();
 
 		int i = 0;
 		for(FuseType fuse : FuseType.values())
@@ -75,8 +75,8 @@ public class GuiAmmunitionAssembler extends GuiAmmunitionBase<TileEntityAmmuniti
 				break;
 		}
 
-		addLabel(guiLeft+122, guiTop+5+5, IIReference.COLOR_H1, "Fuse:");
-		addLabel(guiLeft+122, guiTop+5+5+32, IIReference.COLOR_H1, "Parameters:");
+		addLabel(guiLeft+122, guiTop+5+5, DecoTextures.COLOR_H1, "Fuse:");
+		addLabel(guiLeft+122, guiTop+5+5+32, DecoTextures.COLOR_H1, "Parameters:");
 	}
 
 	@Override

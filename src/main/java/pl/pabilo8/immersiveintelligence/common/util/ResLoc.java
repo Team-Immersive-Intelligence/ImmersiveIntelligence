@@ -97,6 +97,11 @@ public class ResLoc extends ResourceLocation
 		return new ResLoc(this.resourceDomain, this.resourcePath.substring(0, i)+"/");
 	}
 
+	public boolean isDirectory()
+	{
+		return this.resourcePath.endsWith("/")||this.resourcePath.isEmpty();
+	}
+
 	/**
 	 * @param extension new extension
 	 * @return new {@link ResLoc} based on this, but with another file extension

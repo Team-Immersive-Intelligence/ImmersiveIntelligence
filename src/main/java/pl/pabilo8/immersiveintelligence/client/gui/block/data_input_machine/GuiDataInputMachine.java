@@ -120,16 +120,16 @@ public class GuiDataInputMachine extends DecoGui<TileEntityDataInputMachine, Con
 
 		//Build background
 		startBackground()
-				.withBox(IIReference.GUI_BG_STEEL, 0, 0, 176, 128+8)
+				.withBox(DecoTextures.GUI_BG_STEEL, 0, 0, 176, 128+8)
 				.withTitleBar(tile)
-				.withBox(IIReference.GUI_BG_WOODEN, 0, 128+8, 176, 92)
+				.withBox(DecoTextures.GUI_BG_WOODEN, 0, 128+8, 176, 92)
 				.withInventoryTitleBar()
 
 				.withNextLayer()
-				.withBox(IIReference.GUI_BG_STEEL, IIReference.RES_TEXTURES_DECO_TEMPLATE_SQUARE, 0, 8, 32, 120)
+				.withBox(DecoTextures.GUI_BG_STEEL, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_SQUARE, 0, 8, 32, 120)
 				.conditionally(isStorage,
 						b -> b
-								.withBox(IIReference.GUI_BG_STEEL, IIReference.RES_TEXTURES_DECO_TEMPLATE_ROUND, 128-32+16+32, 8, 32, 120)
+								.withBox(DecoTextures.GUI_BG_STEEL, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_ROUND, 128-32+16+32, 8, 32, 120)
 								.withInventorySlots(SlotStyle.VANILLA, container.punchtapeStorage)
 				)
 				.withInventorySlots(SlotStyle.VANILLA, container.playerInventory)
@@ -169,8 +169,8 @@ public class GuiDataInputMachine extends DecoGui<TileEntityDataInputMachine, Con
 							.withGuiSaveAction(gui -> this.scroll = gui.getScroll())
 							//Display
 							.withDisplayFunction(new DecoEntryPanelBuilder<DataVariable>()
-									.withBackground(IIReference.GUI_BG_PAPER)
-									.withBackgroundMask(IIReference.RES_TEXTURES_DECO_TEMPLATE_TICKET)
+									.withBackground(DecoTextures.GUI_BG_PAPER)
+									.withBackgroundMask(DecoTextures.RES_TEXTURES_DECO_TEMPLATE_TICKET)
 
 									//Duplicate / Edit / Remove Buttons
 									.withComponent(p -> new DecoButton(p.width-17-16-14+3, 2)

@@ -61,6 +61,7 @@ import pl.pabilo8.immersiveintelligence.api.utils.upgrade_system.IUpgradableMach
 import pl.pabilo8.immersiveintelligence.client.fx.IIParticles;
 import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleRegistry;
 import pl.pabilo8.immersiveintelligence.client.gui.block.GuiUpgrade;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualCategory;
 import pl.pabilo8.immersiveintelligence.client.manual.categories.*;
 import pl.pabilo8.immersiveintelligence.client.model.IIModelRegistry;
@@ -139,7 +140,6 @@ import pl.pabilo8.immersiveintelligence.common.item.data.ItemIIFunctionalCircuit
 import pl.pabilo8.immersiveintelligence.common.item.tools.ItemIIDrillHead.DrillHeads;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIWeaponUpgrade;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
-import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.util.block.BlockIIFluid;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIIStateMappings;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIIStateMappings.DummyEnum;
@@ -606,66 +606,7 @@ public class ClientProxy extends CommonProxy
 		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_CONTEXT_DATA_EVENT);
 
 		//GUIs
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_TEMPLATE_ROUND);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_TEMPLATE_SQUARE);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_TEMPLATE_TICKET);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_TEMPLATE_PAPER);
-
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_INVENTORY_SLOT);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_IE_SLOT);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_IE_SLOT_MARKER);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_IE_BRASS_SLOT);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_IE_BRASS_SLOT_MARKER);
-
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.GUI_BG_WOODEN);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.GUI_BG_SHEETMETAL);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.GUI_BG_SHEETMETAL_STEEL);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.GUI_BG_PAPER);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.GUI_BG_BLUEPRINT);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.GUI_BG_STEEL);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.GUI_BG_STEEL_ROUGH);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.GUI_BG_DARK);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.GUI_BG_DARK_TANK);
-
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.GUI_FRAME_WOODEN_THIN);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.GUI_FRAME_STEEL_THIN);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.GUI_FRAME_CORNERS_BRASS);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.GUI_FRAME_CORNERS_SILVER);
-
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.GUI_LABEL_WOODEN);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.GUI_LABEL_STEEL);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.GUI_LABEL_STEEL_ROUGH);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.GUI_LABEL_HAZARD);
-
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_COMPONENT_BUTTON);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_COMPONENT_TEXT_FIELD);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_COMPONENT_TAB);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_COMPONENT_TAB_WIDGET);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_COMPONENT_CHECKBOX);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_COMPONENT_SWITCH);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_COMPONENT_SWITCH_MOVING);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_COMPONENT_DROPDOWN_SYMBOL);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_COMPONENT_DROPDOWN_DATA_LETTER);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_COMPONENT_SLIDER);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_COMPONENT_ARROWS);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_BAR_ICON_BACKGROUND);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_COMPONENT_FRAME);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_COMPONENT_TANK);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_COMPONENT_TANK_DUST);
-
-		for(ResLoc icon : IIReference.RES_ACTION_ICONS)
-			ApiUtils.getRegisterSprite(event.getMap(), icon);
-		for(ResLoc icon : IIReference.RES_ICONS)
-			ApiUtils.getRegisterSprite(event.getMap(), icon);
-
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_BUTTON_PAPER);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_BUTTON_PAPER_HIGHLIGHT);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_BUTTON_HANGING);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_COMPONENT_ARROWS_PAPER);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_COMPONENT_BUTTON_ROUND);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_COMPONENT_SLIDER_PAPER);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_COMPONENT_DROPDOWN_DATA_LETTER_PAPER);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_COMPONENT_DROPDOWN_SYMBOL_PAPER);
+		DecoTextures.registerAllTextures(event.getMap());
 
 	}
 

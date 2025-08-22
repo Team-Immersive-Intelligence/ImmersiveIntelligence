@@ -21,6 +21,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiEmplacement
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoCheckbox;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoSwitch;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoDropdown;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
@@ -76,15 +77,15 @@ public class GuiEmplacementPageTasks extends GuiEmplacement
 				addTaskTabButton(3),
 		};
 
-		buttonEnabled = addSwitch(122+11, 17, 60, IIReference.COLOR_H1,
+		buttonEnabled = addSwitch(122+11, 17, 60, DecoTextures.COLOR_H1,
 				IIReference.COLOR_SWITCH_OFF, IIReference.COLOR_SWITCH_ON, currentTab==tile.defaultTargetMode,
 				I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.emplacement.task_enabled"), tasksModified);
 
-		addLabel(122, 32+16-12, 83, 0, IIReference.COLOR_H1, I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.emplacement.selector_preset")).setCentered();
+		addLabel(122, 32+16-12, 83, 0, DecoTextures.COLOR_H1, I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.emplacement.selector_preset")).setCentered();
 		buttonInverted = addButton(new DecoCheckbox(buttonList.size(), guiLeft+122, guiTop+32+33-6+44, I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.emplacement.task_negation"), !tile.redstoneControl));
 		if(selected!=null)
 			buttonInverted.withChecked(selected.negation);
-		addLabel(122, 32+33+16, 83, 0, IIReference.COLOR_H1, I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.emplacement.filter")).setCentered();
+		addLabel(122, 32+33+16, 83, 0, DecoTextures.COLOR_H1, I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.emplacement.filter")).setCentered();
 
 		buttonAdd = addButton(new GuiButtonIE(buttonList.size(), guiLeft+4, guiTop+32+2+96, 48, 12, I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.emplacement.add"), TEXTURE_ICONS.toString(), 0, 89));
 		buttonRemove = addButton(new GuiButtonIE(buttonList.size(), guiLeft+4+48, guiTop+32+2+96, 48, 12, I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.emplacement.remove"), TEXTURE_ICONS.toString(), 0, 89));
@@ -114,7 +115,7 @@ public class GuiEmplacementPageTasks extends GuiEmplacement
 		}
 
 		if(selected!=null)
-			addLabel(120+12, 32+15, 60, 0, IIReference.COLOR_H1, IIReference.DESCRIPTION_KEY+"metal_multiblock1.emplacement.target."+selected.type.getName()).setCentered();
+			addLabel(120+12, 32+15, 60, 0, DecoTextures.COLOR_H1, IIReference.DESCRIPTION_KEY+"metal_multiblock1.emplacement.target."+selected.type.getName()).setCentered();
 
 		buttonInverted.enabled = (selected!=null);
 		buttonTypePrev.enabled = (selected!=null);

@@ -5,9 +5,9 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiComponentDecoBase;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
-import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ public class DecoBarGroup extends GuiComponentDecoBase<DecoBarGroup>
 	public DecoBarGroup(int x, int y)
 	{
 		super(x, y);
-		withBackgroundLocation(IIReference.RES_TEXTURES_DECO_COMPONENT_FRAME, IIReference.RES_TEXTURES_DECO_BAR_ICON_BACKGROUND);
+		withBackgroundLocation(DecoTextures.RES_TEXTURES_DECO_COMPONENT_FRAME, DecoTextures.RES_TEXTURES_DECO_BAR_ICON_BACKGROUND);
 	}
 
 	public DecoBarGroup withBackgroundLocation(ResLoc backgroundLocation, ResLoc iconBackgroundLocation)

@@ -6,6 +6,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiComponentDecoTextBase;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoAlignment;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
@@ -27,7 +28,7 @@ public class DecoSwitch extends GuiComponentDecoTextBase<DecoSwitch>
 {
 	private static final int X_SIZE = 16, SWITCH_X_SIZE = 8, Y_SIZE = 9;
 	private static final int MAX_SWITCH_TICKS = 20;
-	private ResLoc movingPartLocation = IIReference.RES_TEXTURES_DECO_COMPONENT_SWITCH_MOVING;
+	private ResLoc movingPartLocation = DecoTextures.RES_TEXTURES_DECO_COMPONENT_SWITCH_MOVING;
 	private IIColor colorOff = IIReference.COLOR_SWITCH_OFF;
 	private IIColor colorRight = IIReference.COLOR_SWITCH_ON;
 	private Consumer<Boolean> onToggle;
@@ -38,7 +39,7 @@ public class DecoSwitch extends GuiComponentDecoTextBase<DecoSwitch>
 	public DecoSwitch(int x, int y)
 	{
 		super(x, y);
-		backgroundLocation = IIReference.RES_TEXTURES_DECO_COMPONENT_SWITCH;
+		backgroundLocation = DecoTextures.RES_TEXTURES_DECO_COMPONENT_SWITCH;
 		withSize(120, 11);
 		withOnPressed((gui, mouseButton, mx, my) -> {
 			if(mouseButton==MouseButton.LEFT)

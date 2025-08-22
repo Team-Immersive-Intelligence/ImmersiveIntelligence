@@ -4,8 +4,8 @@ import net.minecraft.util.ResourceLocation;
 import pl.pabilo8.immersiveintelligence.api.DustTank;
 import pl.pabilo8.immersiveintelligence.api.crafting.DustStack;
 import pl.pabilo8.immersiveintelligence.api.crafting.DustUtils;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
-import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -63,7 +63,7 @@ public class DecoDustTank extends DecoTankBase<DecoDustTank, DustStack>
 	@Override
 	public ResourceLocation getResourceTexture(@Nonnull DustStack dustStack)
 	{
-		return IIReference.RES_TEXTURES_DECO_COMPONENT_TANK_DUST;
+		return DecoTextures.RES_TEXTURES_DECO_COMPONENT_TANK_DUST;
 	}
 
 	@Override

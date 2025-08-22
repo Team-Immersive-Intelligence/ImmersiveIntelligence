@@ -17,12 +17,12 @@ import net.minecraft.util.Tuple;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.crafting.SawmillRecipe;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Sawmill;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.BlockIIWoodenMultiblock.WoodenMultiblocks;
 import pl.pabilo8.immersiveintelligence.common.compat.jei.IIMultiblockRecipeWrapper;
 import pl.pabilo8.immersiveintelligence.common.compat.jei.IIRecipeCategory;
-import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -156,10 +156,10 @@ public class SawmillRecipeCategory extends IIRecipeCategory<SawmillRecipe, Sawmi
 			String time = GuiScreen.isShiftKeyDown()?
 					this.time+" t":
 					Utils.formatDouble(this.time*0.05, "0.##")+" s";
-			minecraft.fontRenderer.drawString(time, x+16, y, IIReference.COLOR_H2.getPackedRGB());
+			minecraft.fontRenderer.drawString(time, x+16, y, DecoTextures.COLOR_H2.getPackedRGB());
 
-			minecraft.fontRenderer.drawString(Sawmill.rpmMin+"-"+Sawmill.rpmBreakingMax+" RPM", x+64+16, y, IIReference.COLOR_H2.getPackedRGB());
-			minecraft.fontRenderer.drawString(torque+" Nm", x+64+16, y+16, IIReference.COLOR_H2.getPackedRGB());
+			minecraft.fontRenderer.drawString(Sawmill.rpmMin+"-"+Sawmill.rpmBreakingMax+" RPM", x+64+16, y, DecoTextures.COLOR_H2.getPackedRGB());
+			minecraft.fontRenderer.drawString(torque+" Nm", x+64+16, y+16, DecoTextures.COLOR_H2.getPackedRGB());
 		}
 	}
 }

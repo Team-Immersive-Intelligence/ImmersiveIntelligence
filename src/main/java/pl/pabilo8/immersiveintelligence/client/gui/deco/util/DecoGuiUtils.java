@@ -34,98 +34,98 @@ import java.util.function.Function;
 public class DecoGuiUtils
 {
 	public static final DecoComponentTemplate<DecoButton> LIST_BUTTON_TEMPLATE = component -> component
-			.withBackground(IIReference.RES_TEXTURES_DECO_BUTTON_PAPER_HIGHLIGHT)
+			.withBackground(DecoTextures.RES_TEXTURES_DECO_BUTTON_PAPER_HIGHLIGHT)
 			.withPadding(0, 0, 0, 0)
 			.withSize(14, 14);
 	public static final DecoComponentTemplate<DecoButton> LIST_BUTTON_EDIT_TEMPLATE = LIST_BUTTON_TEMPLATE.and(
 			component -> component
 					.withBackgroundColor(IIColor.fromPackedRGB(0x8a7d67))
-					.withIcon(IIReference.RES_TEXTURES_DECO_ICON_ACTION_EDIT)
+					.withIcon(DecoTextures.RES_TEXTURES_DECO_ICON_ACTION_EDIT)
 					.withTranslatedTooltip(IIReference.GUI_TOOLTIP_KEY+"button.edit")
 	);
 	public static final DecoComponentTemplate<DecoButton> LIST_BUTTON_REMOVE_TEMPLATE = LIST_BUTTON_TEMPLATE.and(
 			component -> component
 					.withBackgroundColor(IIColor.fromPackedRGB(0x8a6865))
-					.withIcon(IIReference.RES_TEXTURES_DECO_ICON_ACTION_REMOVE)
+					.withIcon(DecoTextures.RES_TEXTURES_DECO_ICON_ACTION_REMOVE)
 					.withTranslatedTooltip(IIReference.GUI_TOOLTIP_KEY+"button.remove")
 	);
 	public static final DecoComponentTemplate<DecoButton> LIST_BUTTON_ADD_TEMPLATE = LIST_BUTTON_TEMPLATE.and(
 			component -> component
 					.withBackgroundColor(IIColor.fromPackedRGB(0x778a78))
-					.withIcon(IIReference.RES_TEXTURES_DECO_ICON_ACTION_ADD)
+					.withIcon(DecoTextures.RES_TEXTURES_DECO_ICON_ACTION_ADD)
 					.withTranslatedTooltip(IIReference.GUI_TOOLTIP_KEY+"button.add")
 	);
 	public static final DecoComponentTemplate<DecoButton> LIST_BUTTON_DUPLICATE_TEMPLATE = LIST_BUTTON_TEMPLATE.and(
 			component -> component
 					.withBackgroundColor(IIColor.fromPackedRGB(0x7c8a6d))
-					.withIcon(IIReference.RES_TEXTURES_DECO_ICON_ACTION_DUPLICATE)
+					.withIcon(DecoTextures.RES_TEXTURES_DECO_ICON_ACTION_DUPLICATE)
 					.withTranslatedTooltip(IIReference.GUI_TOOLTIP_KEY+"button.duplicate")
 	);
 
 	public static final DecoComponentTemplate<DecoButton> LIST_BUTTON_CLEAR_TEMPLATE = LIST_BUTTON_TEMPLATE.and(
 			component -> component
 					.withBackgroundColor(IIColor.fromPackedRGB(0x8a7568))
-					.withIcon(IIReference.RES_TEXTURES_DECO_ICON_ACTION_CLEAR)
+					.withIcon(DecoTextures.RES_TEXTURES_DECO_ICON_ACTION_CLEAR)
 					.withTranslatedTooltip(IIReference.GUI_TOOLTIP_KEY+"button.clear")
 	);
 	//--- Mechanical Torque Bar ---//
 	public static final Function<IRotaryEnergy, DecoComponentTemplate<DecoBar>> BAR_MECH_TORQUE =
 			rotaryEnergy -> component -> component
 					.withColors(IIColor.fromPackedRGB(0x4e5e36), IIColor.fromPackedRGB(0x314a1d))
-					.withIconLocation(IIReference.RES_ICON_MECH_TORQUE)
+					.withIconLocation(DecoTextures.RES_ICON_MECH_TORQUE)
 					.withValueTooltip("mech_torque.stored", BarTooltipFormat.VALUE_TO_MAX, TextFormatting.GOLD)
 					.withLimits(0, 100, () -> (int)rotaryEnergy.getTorque())
 					.withSmoothAnimation();
 	public static final Function<IRotaryEnergy, DecoComponentTemplate<DecoBar>> BAR_MECH_TORQUE_INPUT =
 			rotaryEnergy -> component -> component
 					.withTemplate(BAR_MECH_TORQUE.apply(rotaryEnergy))
-					.withIconLocation(IIReference.RES_ICON_MECH_TORQUE_INPUT)
+					.withIconLocation(DecoTextures.RES_ICON_MECH_TORQUE_INPUT)
 					.withValueTooltip("mech_torque.input", BarTooltipFormat.VALUE, TextFormatting.GOLD);
 	public static final Function<IRotaryEnergy, DecoComponentTemplate<DecoBar>> BAR_MECH_TORQUE_OUTPUT =
 			rotaryEnergy -> component -> component
 					.withTemplate(BAR_MECH_TORQUE.apply(rotaryEnergy))
-					.withIconLocation(IIReference.RES_ICON_MECH_TORQUE_OUTPUT)
+					.withIconLocation(DecoTextures.RES_ICON_MECH_TORQUE_OUTPUT)
 					.withValueTooltip("mech_torque.output", BarTooltipFormat.VALUE, TextFormatting.GOLD)
 					.withLimits(0, 100, () -> (int)rotaryEnergy.getOutputTorque());
 	//--- Mechanical Speed Bar ---//
 	public static final Function<IRotaryEnergy, DecoComponentTemplate<DecoBar>> BAR_MECH_SPEED =
 			rotaryEnergy -> component -> component
 					.withColors(IIColor.fromPackedRGB(0x5e443d), IIColor.fromPackedRGB(0x49211d))
-					.withIconLocation(IIReference.RES_ICON_MECH_SPEED)
+					.withIconLocation(DecoTextures.RES_ICON_MECH_SPEED)
 					.withValueTooltip("mech_speed.stored", BarTooltipFormat.VALUE_TO_MAX, TextFormatting.GOLD)
 					.withLimits(0, 720, () -> (int)rotaryEnergy.getRotationSpeed())
 					.withSmoothAnimation();
 	public static final Function<IRotaryEnergy, DecoComponentTemplate<DecoBar>> BAR_MECH_SPEED_INPUT =
 			rotaryEnergy -> component -> component
 					.withTemplate(BAR_MECH_SPEED.apply(rotaryEnergy))
-					.withIconLocation(IIReference.RES_ICON_MECH_SPEED_INPUT)
+					.withIconLocation(DecoTextures.RES_ICON_MECH_SPEED_INPUT)
 					.withValueTooltip("mech_speed.input", BarTooltipFormat.VALUE, TextFormatting.GOLD);
 	public static final Function<IRotaryEnergy, DecoComponentTemplate<DecoBar>> BAR_MECH_SPEED_OUTPUT =
 			rotaryEnergy -> component -> component
 					.withTemplate(BAR_MECH_SPEED.apply(rotaryEnergy))
-					.withIconLocation(IIReference.RES_ICON_MECH_SPEED_OUTPUT)
+					.withIconLocation(DecoTextures.RES_ICON_MECH_SPEED_OUTPUT)
 					.withValueTooltip("mech_speed.output", BarTooltipFormat.VALUE, TextFormatting.GOLD)
 					.withLimits(0, 720, () -> (int)rotaryEnergy.getOutputRotationSpeed());
 	//--- Armor ---//
 	public static final DecoComponentTemplate<DecoBar> BAR_ARMOR_INTEGRITY = component -> component
 			.withColors(IIColor.fromPackedRGB(0x6b6b6b), IIColor.fromPackedRGB(0x3c3c3c))
-			.withIconLocation(IIReference.RES_ICON_ARMOR_INTEGRITY)
+			.withIconLocation(DecoTextures.RES_ICON_ARMOR_INTEGRITY)
 			.withValueTooltip("armor_integrity", BarTooltipFormat.VALUE_TO_MAX, TextFormatting.GOLD)
 			.withSmoothAnimation();
 	public static final DecoComponentTemplate<DecoBar> BAR_REACTIVE_ARMOR_INTEGRITY = component -> component
 			.withColors(IIColor.fromPackedRGB(0x536369), IIColor.fromPackedRGB(0x30383b))
-			.withIconLocation(IIReference.RES_ICON_ARMOR_INTEGRITY)
+			.withIconLocation(DecoTextures.RES_ICON_ARMOR_INTEGRITY)
 			.withValueTooltip("reactive_armor_integrity", BarTooltipFormat.VALUE_TO_MAX, TextFormatting.GOLD)
 			.withSmoothAnimation();
 	public static final DecoComponentTemplate<DecoBar> BAR_STRUCTURAL_INTEGRITY = component -> component
 			.withColors(IIColor.fromPackedRGB(0x79675a), IIColor.fromPackedRGB(0x4a3035))
-			.withIconLocation(IIReference.RES_ICON_STRUCTURAL_INTEGRITY)
+			.withIconLocation(DecoTextures.RES_ICON_STRUCTURAL_INTEGRITY)
 			.withValueTooltip("structural_integrity", BarTooltipFormat.VALUE_TO_MAX, TextFormatting.GOLD)
 			.withSmoothAnimation();
 	//--- Energy Bar ---//
 	private static final DecoComponentTemplate<DecoBar> BAR_ELECTRIC_ENERGY_BASE = component -> component
 			.withColors(IIColor.fromPackedRGB(0xb37e28), IIColor.fromPackedRGB(0x663f26))
-			.withIconLocation(IIReference.RES_ICON_ENERGY);
+			.withIconLocation(DecoTextures.RES_ICON_ENERGY);
 	public static final Function<IFluxStorage, DecoComponentTemplate<DecoBar>> BAR_ELECTRIC_ENERGY =
 			energyStorage -> component -> component
 					.withTemplate(BAR_ELECTRIC_ENERGY_BASE)
@@ -133,11 +133,11 @@ public class DecoGuiUtils
 					.withLimits(0, energyStorage.getMaxEnergyStored(), energyStorage::getEnergyStored);
 	public static final DecoComponentTemplate<DecoBar> BAR_ELECTRIC_ENERGY_INPUT = component -> component
 			.withTemplate(BAR_ELECTRIC_ENERGY_BASE)
-			.withIconLocation(IIReference.RES_ICON_ENERGY_INPUT)
+			.withIconLocation(DecoTextures.RES_ICON_ENERGY_INPUT)
 			.withValueTooltip("energy.input", BarTooltipFormat.VALUE, TextFormatting.GOLD);
 	public static final DecoComponentTemplate<DecoBar> BAR_ELECTRIC_ENERGY_OUTPUT = component -> component
 			.withTemplate(BAR_ELECTRIC_ENERGY_BASE)
-			.withIconLocation(IIReference.RES_ICON_ENERGY_OUTPUT)
+			.withIconLocation(DecoTextures.RES_ICON_ENERGY_OUTPUT)
 			.withValueTooltip("energy.output", BarTooltipFormat.VALUE, TextFormatting.GOLD);
 
 	public static IIDrawUtils drawBackgroundMask(Collection<DecoBackgroundTile> rects, int minXOffset, int minYOffset)

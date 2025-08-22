@@ -9,10 +9,10 @@ import net.minecraft.util.math.MathHelper;
 import org.lwjgl.input.Keyboard;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoAlignment;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoGuiUtils;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
-import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
@@ -34,12 +34,12 @@ public class DecoDropdown<T> extends DecoScrolledCollection<DecoDropdown<T>, T>
 	protected int dropdownWidth;
 	protected boolean dropped = false;
 	protected BiConsumer<T, T> onSelectedEntry;
-	private ResLoc dropdownSymbolLocation = IIReference.RES_TEXTURES_DECO_COMPONENT_DROPDOWN_SYMBOL;
+	private ResLoc dropdownSymbolLocation = DecoTextures.RES_TEXTURES_DECO_COMPONENT_DROPDOWN_SYMBOL;
 
 	public DecoDropdown(int x, int y)
 	{
 		super(x, y);
-		this.backgroundLocation = IIReference.RES_TEXTURES_DECO_COMPONENT_BUTTON;
+		this.backgroundLocation = DecoTextures.RES_TEXTURES_DECO_COMPONENT_BUTTON;
 		withSize(120, 12);
 		withOnPressed((gui, mouseButton, mouseX, mouseY) -> {
 			if(mouseButton==MouseButton.LEFT)

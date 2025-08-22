@@ -8,6 +8,7 @@ import net.minecraft.util.math.MathHelper;
 import org.lwjgl.input.Keyboard;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiComponentDecoBase;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
 import pl.pabilo8.immersiveintelligence.client.util.font.IIFontRenderer;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
@@ -37,7 +38,7 @@ public class DecoTextField extends GuiComponentDecoBase<DecoTextField>
 	private Predicate<String> customFilter = (s) -> true;
 	private IIFontRenderer fontRenderer = IIClientUtils.fontRegular;
 	private int maxStringLength = 32767;
-	private ResLoc backgroundLocation = IIReference.RES_TEXTURES_DECO_COMPONENT_TEXT_FIELD;
+	private ResLoc backgroundLocation = DecoTextures.RES_TEXTURES_DECO_COMPONENT_TEXT_FIELD;
 	private IIColor textColor = IIColor.WHITE;
 	private IIColor cursorColor = IIReference.COLOR_IMMERSIVE_ORANGE;
 	private IIColor selectionColor = IIReference.COLOR_IMMERSIVE_ORANGE.withBrightness(0.35f);

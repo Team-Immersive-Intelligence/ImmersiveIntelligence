@@ -13,9 +13,9 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiComponentDecoBase;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoLabel;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoFrame;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
-import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIBase;
 
@@ -34,8 +34,8 @@ public class DecoPanel extends GuiComponentDecoBase<DecoPanel>
 	int vbo = -1;
 	@Nullable
 	private DecoFrame frame = null;
-	private ResLoc background = IIReference.GUI_BG_STEEL;
-	private ResLoc backgroundMask = IIReference.RES_TEXTURES_DECO_TEMPLATE_SQUARE;
+	private ResLoc background = DecoTextures.GUI_BG_STEEL;
+	private ResLoc backgroundMask = DecoTextures.RES_TEXTURES_DECO_TEMPLATE_SQUARE;
 	private int xPadding = 0;
 	private int yPadding = 0;
 

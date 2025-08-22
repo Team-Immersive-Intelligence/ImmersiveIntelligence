@@ -7,10 +7,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoBa
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoFluidTank;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoImage;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundBuilder.SlotStyle;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoGuiCategory;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoGuiUtils;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoResource;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTemplate;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.*;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityFuelStation;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerFuelStation;
@@ -36,9 +33,9 @@ public class GuiFuelStation extends DecoGui<TileEntityFuelStation, ContainerFuel
 	{
 		startBackground()
 				.withBox(null, 0, 0, 176, 76)
-				.withBox(IIReference.GUI_BG_STEEL, 152, 0, 24, 76)
+				.withBox(DecoTextures.GUI_BG_STEEL, 152, 0, 24, 76)
 				//.withTitleBar(tile)
-				.withBox(IIReference.GUI_BG_WOODEN, 0, 76, 176, 92)
+				.withBox(DecoTextures.GUI_BG_WOODEN, 0, 76, 176, 92)
 				.withInventorySlots(SlotStyle.VANILLA, container.playerInventory)
 				.withInventorySlots(SlotStyle.IE_INPUT, container.inputFluidSlot)
 				.withInventorySlots(SlotStyle.IE_OUTPUT, container.outputFluidSlot)

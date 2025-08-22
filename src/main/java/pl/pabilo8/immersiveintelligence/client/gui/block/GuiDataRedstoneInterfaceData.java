@@ -15,16 +15,12 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.Dec
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoLabel;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoEntryPanelBuilder;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoImage;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoAlignment;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.*;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundBuilder.SlotStyle;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoGuiCategory;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoGuiUtils;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTemplate;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityRedstoneInterface;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerRedstoneDataInterface;
-import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 
@@ -50,13 +46,13 @@ public class GuiDataRedstoneInterfaceData extends DecoGui<TileEntityRedstoneInte
 	{
 		//Create background
 		startBackground()
-				.withBox(IIReference.GUI_BG_STEEL, 0, 0, 176, 128+8)
+				.withBox(DecoTextures.GUI_BG_STEEL, 0, 0, 176, 128+8)
 				.withTitleBar("desc.immersiveintelligence.data_to_redstone_module")
-				.withBox(IIReference.GUI_BG_WOODEN, 0, 128+8, 176, 92)
+				.withBox(DecoTextures.GUI_BG_WOODEN, 0, 128+8, 176, 92)
 				.withInventoryTitleBar()
 
 				.withNextLayer()
-				.withBox(IIReference.GUI_BG_STEEL, IIReference.RES_TEXTURES_DECO_TEMPLATE_SQUARE, 0, 8, 32, 120)
+				.withBox(DecoTextures.GUI_BG_STEEL, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_SQUARE, 0, 8, 32, 120)
 
 				.withInventorySlots(SlotStyle.VANILLA, container.playerInventory)
 				.withInventorySlots(SlotStyle.IE_INPUT, container.dataInput)

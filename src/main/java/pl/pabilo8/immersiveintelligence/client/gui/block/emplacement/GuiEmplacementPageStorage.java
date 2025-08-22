@@ -7,6 +7,7 @@ import net.minecraft.client.renderer.GlStateManager.SourceFactor;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import org.lwjgl.opengl.GL11;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
@@ -29,7 +30,7 @@ public class GuiEmplacementPageStorage extends GuiEmplacement
 		super.initGui();
 		if(tile.currentWeapon!=null&&tile.currentWeapon.getBaseInventory().size() > 0)
 		{
-			addLabel(xSize/2, 8+16, IIReference.COLOR_H1, I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.emplacement.base_inventory"))
+			addLabel(xSize/2, 8+16, DecoTextures.COLOR_H1, I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.emplacement.base_inventory"))
 					.setCentered();
 		}
 	}

@@ -4,9 +4,9 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiComponentDecoBase;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
-import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 
 import javax.annotation.Nonnull;
@@ -26,8 +26,8 @@ public abstract class DecoTankBase<TYPE extends DecoTankBase<TYPE, RESOURCE>, RE
 	private final String STRING_TANK_EMPTY = I18n.format("gui.immersiveengineering.empty");
 	private final Map<RESOURCE, Float> displayedAmounts = new HashMap<>();
 
-	protected ResLoc tankBackgroundLocation = IIReference.GUI_BG_DARK_TANK;
-	protected ResLoc tankOverlayLocation = IIReference.RES_TEXTURES_DECO_COMPONENT_TANK;
+	protected ResLoc tankBackgroundLocation = DecoTextures.GUI_BG_DARK_TANK;
+	protected ResLoc tankOverlayLocation = DecoTextures.RES_TEXTURES_DECO_COMPONENT_TANK;
 
 	protected int lastMouseY = 0;
 	protected int borderSize = 0;

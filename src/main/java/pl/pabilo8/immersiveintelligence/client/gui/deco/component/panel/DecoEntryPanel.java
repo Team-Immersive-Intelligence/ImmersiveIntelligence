@@ -7,8 +7,8 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoBut
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoElementDisplays.DecoElementDisplay;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoScrolledCollection;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoAlignment;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
 import pl.pabilo8.immersiveintelligence.client.util.font.IIFontRenderer;
-import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 import java.util.Collections;
 import java.util.function.Function;
@@ -27,13 +27,13 @@ public abstract class DecoEntryPanel<T> extends DecoPanel implements DecoElement
 	public DecoEntryPanel()
 	{
 		super(0, 0);
-		withBackgroundMask(IIReference.RES_TEXTURES_DECO_TEMPLATE_PAPER);
-		withBackground(IIReference.GUI_BG_PAPER);
+		withBackgroundMask(DecoTextures.RES_TEXTURES_DECO_TEMPLATE_PAPER);
+		withBackground(DecoTextures.GUI_BG_PAPER);
 		addButton = new DecoButton(0, 0)
 				.withSize(16, 16)
 				.withPadding(0, 0, 0, 0)
-				.withIcon(IIReference.RES_TEXTURES_DECO_ICON_ACTION_ADD)
-				.withBackground(IIReference.RES_TEXTURES_DECO_BUTTON_HANGING)
+				.withIcon(DecoTextures.RES_TEXTURES_DECO_ICON_ACTION_ADD)
+				.withBackground(DecoTextures.RES_TEXTURES_DECO_BUTTON_HANGING)
 		;
 	}
 

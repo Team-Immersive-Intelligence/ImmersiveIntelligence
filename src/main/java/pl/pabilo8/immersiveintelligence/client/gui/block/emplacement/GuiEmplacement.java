@@ -15,6 +15,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoSwi
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoTab;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoLabel;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoBar;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerEmplacement;
@@ -66,7 +67,7 @@ public abstract class GuiEmplacement extends GuiIEContainerBase implements ITabb
 		addTab(IIGUI.EMPLACEMENT_TASKS, "tasks_module");
 		addTab(IIGUI.EMPLACEMENT_STATUS, "status_module");
 
-		addLabel(8, 10, IIReference.COLOR_H1, title);
+		addLabel(8, 10, DecoTextures.COLOR_H1, title);
 
 //		barEnergy = DecoBar.createEnergyBar(guiLeft+213, guiTop+22, 7, 48);
 //		barArmor = DecoBar.createArmorBar(guiLeft+222, guiTop+22, 7, 48);

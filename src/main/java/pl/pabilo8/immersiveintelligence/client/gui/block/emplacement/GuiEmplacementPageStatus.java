@@ -10,6 +10,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import pl.pabilo8.immersiveintelligence.api.utils.upgrade_system.MachineUpgrade;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoSlider;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoSwitch;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.weapon.EmplacementWeapon.MachineUpgradeEmplacementWeapon;
@@ -44,7 +45,7 @@ public class GuiEmplacementPageStatus extends GuiEmplacement
 		addLabel(8, 24, 96, 0, IIColor.WHITE, tile.currentWeapon!=null?(
 				I18n.format("machineupgrade.immersiveintelligence."+tile.currentWeapon.getName())):
 				I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.emplacement.weapon_none")).setCentered();
-		addLabel(8, 86, IIReference.COLOR_H1, I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.emplacement.upgrades"));
+		addLabel(8, 86, DecoTextures.COLOR_H1, I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.emplacement.upgrades"));
 		//
 		GuiReactiveList upgradeList = new GuiReactiveList(this, buttonList.size(), guiLeft+11, guiTop+86+6+1, 124, 54,
 				tile.getUpgrades().stream().filter(upgrade -> !(upgrade instanceof MachineUpgradeEmplacementWeapon)).map(MachineUpgrade::getName).toArray(String[]::new))
@@ -53,24 +54,24 @@ public class GuiEmplacementPageStatus extends GuiEmplacement
 				.setFormatting(0.75f, true);
 		addButton(upgradeList);
 
-		addLabel(112, 22, 93, 0, IIReference.COLOR_H1,
+		addLabel(112, 22, 93, 0, DecoTextures.COLOR_H1,
 				I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.emplacement.settings")).setCentered();
 
-		switchRSControl = addSwitch(112, 28, 80, IIReference.COLOR_H1, COLOR_IN, COLOR_OUT, tile.redstoneControl,
+		switchRSControl = addSwitch(112, 28, 80, DecoTextures.COLOR_H1, COLOR_IN, COLOR_OUT, tile.redstoneControl,
 				I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.emplacement.redstone_control"));
 		switchDataControl = addSwitch(112,
 				28+fontRenderer.FONT_HEIGHT,
-				80, IIReference.COLOR_H1, COLOR_IN, COLOR_OUT, tile.dataControl,
+				80, DecoTextures.COLOR_H1, COLOR_IN, COLOR_OUT, tile.dataControl,
 				I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.emplacement.data_control"));
 		switchSendTarget = addSwitch(112,
 				28+2*fontRenderer.FONT_HEIGHT,
-				80, IIReference.COLOR_H1, COLOR_IN, COLOR_OUT, tile.sendAttackSignal,
+				80, DecoTextures.COLOR_H1, COLOR_IN, COLOR_OUT, tile.sendAttackSignal,
 				I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.emplacement.send_attack_signal"));
 
 		sliderRepair = addSlider(116,
 				28+3*fontRenderer.FONT_HEIGHT
 						+fontRenderer.getWordWrappedHeight(I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.emplacement.auto_repair_threshold"), 70),
-				80, IIReference.COLOR_H1, tile.autoRepairAmount,
+				80, DecoTextures.COLOR_H1, tile.autoRepairAmount,
 				I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.emplacement.auto_repair_threshold"));
 
 	}

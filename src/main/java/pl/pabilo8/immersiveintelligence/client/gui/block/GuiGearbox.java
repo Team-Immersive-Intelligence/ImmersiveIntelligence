@@ -5,11 +5,8 @@ import net.minecraft.util.text.TextFormatting;
 import pl.pabilo8.immersiveintelligence.api.rotary.IIRotaryUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoBarGroup;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoAlignment;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.*;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundBuilder.SlotStyle;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoGuiCategory;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoGuiUtils;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTemplate;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.block.rotary_device.tileentity.TileEntityGearbox;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerGearbox;
@@ -31,10 +28,10 @@ public class GuiGearbox extends DecoGui<TileEntityGearbox, ContainerGearbox>
 	public void onInit()
 	{
 		startBackground()
-				.withBox(IIReference.GUI_BG_WOODEN, 0, 0, 176, 76)
-				.withStandaloneFrame(24, 12, 128, 64-8, IIReference.GUI_FRAME_CORNERS_BRASS, 4, true)
+				.withBox(DecoTextures.GUI_BG_WOODEN, 0, 0, 176, 76)
+				.withStandaloneFrame(24, 12, 128, 64-8, DecoTextures.GUI_FRAME_CORNERS_BRASS, 4, true)
 				.withTitleBar(tile)
-				.withBox(IIReference.GUI_BG_WOODEN, 0, 76, 176, 92)
+				.withBox(DecoTextures.GUI_BG_WOODEN, 0, 76, 176, 92)
 				.withInventorySlots(SlotStyle.VANILLA, container.inventorySlots)
 				.withInventoryTitleBar()
 				.build();

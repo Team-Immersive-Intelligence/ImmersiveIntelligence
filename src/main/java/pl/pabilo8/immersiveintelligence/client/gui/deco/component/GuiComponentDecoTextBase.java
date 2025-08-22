@@ -2,6 +2,7 @@ package pl.pabilo8.immersiveintelligence.client.gui.deco.component;
 
 import net.minecraft.client.resources.I18n;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
 import pl.pabilo8.immersiveintelligence.client.util.font.IIFontRenderer;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
@@ -28,7 +29,7 @@ public abstract class GuiComponentDecoTextBase<TYPE extends GuiComponentDecoText
 	protected ResLoc backgroundLocation;
 	protected String text = "";
 	protected IIFontRenderer fontRenderer = IIClientUtils.fontRegular;
-	protected IIColor textLabelColor = IIReference.COLOR_H1;
+	protected IIColor textLabelColor = DecoTextures.COLOR_H1;
 	protected IIColor textBoxColor = IIColor.fromHex("afafaf");
 	protected IIColor textHoveredColor = IIColor.fromHex("cfcfcf");
 	protected IIColor textPressedColor = IIReference.COLOR_IMMERSIVE_ORANGE;

@@ -8,8 +8,8 @@ import net.minecraft.util.ResourceLocation;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiComponentDecoTextBase;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoAlignment;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoGuiUtils;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
-import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -37,7 +37,7 @@ public class DecoButton extends GuiComponentDecoTextBase<DecoButton>
 	public DecoButton(int x, int y)
 	{
 		super(x, y);
-		this.backgroundLocation = IIReference.RES_TEXTURES_DECO_COMPONENT_BUTTON;
+		this.backgroundLocation = DecoTextures.RES_TEXTURES_DECO_COMPONENT_BUTTON;
 	}
 
 	public DecoButton withIcon(@Nonnull ResourceLocation icon)

@@ -96,24 +96,24 @@ public class GuiArithmeticLogicMachine extends DecoGui<TileEntityArithmeticLogic
 
 		//Build background
 		startBackground()
-				.withBox(IIReference.GUI_BG_STEEL, 0, 0, 176, 128+8)
+				.withBox(DecoTextures.GUI_BG_STEEL, 0, 0, 176, 128+8)
 				.withTitleBar(tile)
-				.withBox(IIReference.GUI_BG_WOODEN, 0, 128+8, 176, 92)
+				.withBox(DecoTextures.GUI_BG_WOODEN, 0, 128+8, 176, 92)
 				.withInventorySlots(SlotStyle.VANILLA, container.playerInventory)
 				.withInventoryTitleBar()
 
 				.withNextLayer()
 				.conditionally(isStorage, b -> b
 						//Circuit slots background box
-						.withBox(IIReference.GUI_BG_STEEL, IIReference.RES_TEXTURES_DECO_TEMPLATE_SQUARE, 0, 8, 32, 120)
+						.withBox(DecoTextures.GUI_BG_STEEL, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_SQUARE, 0, 8, 32, 120)
 						.withInventorySlots(SlotStyle.IE, container.circuitSlots)
 						//Energy bar background box
-						.withBox(IIReference.GUI_BG_STEEL, IIReference.RES_TEXTURES_DECO_TEMPLATE_ROUND, 128-32+16+32, 8, 32, 120)
+						.withBox(DecoTextures.GUI_BG_STEEL, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_ROUND, 128-32+16+32, 8, 32, 120)
 						//Circuit storage slots
 						.withInventorySlots(SlotStyle.VANILLA, container.storageSlots)
 				)
 				.conditionally(!isStorage, b -> b
-						.withBox(IIReference.GUI_BG_PAPER, IIReference.RES_TEXTURES_DECO_TEMPLATE_PAPER, 4+2, 8, 170-16, 16)
+						.withBox(DecoTextures.GUI_BG_PAPER, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_PAPER, 4+2, 8, 170-16, 16)
 				)
 				.build();
 
@@ -134,11 +134,11 @@ public class GuiArithmeticLogicMachine extends DecoGui<TileEntityArithmeticLogic
 			DataPacket storedData = IIContent.itemCircuit.getStoredData(stack);
 
 			addLabel(stack.getDisplayName(), 4+2+16, 8)
-					.withTextColor(IIReference.COLOR_H2)
+					.withTextColor(DecoTextures.COLOR_H2)
 					.withSize(170-16-16, 16)
 					.withAlign(DecoAlignment.CENTER);
 			addComponent(new DecoButton(4+2, 8)
-					.withBackground(IIReference.RES_TEXTURES_DECO_BUTTON_PAPER)
+					.withBackground(DecoTextures.RES_TEXTURES_DECO_BUTTON_PAPER)
 					.withBackgroundColor(IIColor.fromPackedRGB(0xb37f46))
 					.withIcon(null, 16)
 					.withText(String.valueOf(editedCircuit))
@@ -154,8 +154,8 @@ public class GuiArithmeticLogicMachine extends DecoGui<TileEntityArithmeticLogic
 							.withGuiSaveAction(gui -> this.scroll = gui.getScroll())
 							//Display
 							.withDisplayFunction(new DecoEntryPanelBuilder<DataVariable>()
-									.withBackground(IIReference.GUI_BG_PAPER)
-									.withBackgroundMask(IIReference.RES_TEXTURES_DECO_TEMPLATE_TICKET)
+									.withBackground(DecoTextures.GUI_BG_PAPER)
+									.withBackgroundMask(DecoTextures.RES_TEXTURES_DECO_TEMPLATE_TICKET)
 
 									//Duplicate / Edit / Remove Buttons
 									.withComponent(p -> new DecoButton(p.width-17-16-14+3, 2)

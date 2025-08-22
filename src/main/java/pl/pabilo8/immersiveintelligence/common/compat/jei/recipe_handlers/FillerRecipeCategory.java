@@ -16,13 +16,13 @@ import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.crafting.DustStack;
 import pl.pabilo8.immersiveintelligence.api.crafting.DustUtils;
 import pl.pabilo8.immersiveintelligence.api.crafting.FillerRecipe;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.BlockIIMetalMultiblock1.MetalMultiblocks1;
 import pl.pabilo8.immersiveintelligence.common.compat.jei.IIMultiblockRecipeWrapper;
 import pl.pabilo8.immersiveintelligence.common.compat.jei.IIRecipeCategory;
 import pl.pabilo8.immersiveintelligence.common.compat.jei.recipe_handlers.FillerRecipeCategory.FillerRecipeWrapper;
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
-import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -128,12 +128,12 @@ public class FillerRecipeCategory extends IIRecipeCategory<FillerRecipe, FillerR
 			String time = GuiScreen.isShiftKeyDown()?
 					this.time+" t":
 					Utils.formatDouble(this.time*0.05, "0.##")+" s";
-			minecraft.fontRenderer.drawString(time, x+16, y, IIReference.COLOR_H2.getPackedRGB());
+			minecraft.fontRenderer.drawString(time, x+16, y, DecoTextures.COLOR_H2.getPackedRGB());
 
 			String energy = GuiScreen.isShiftKeyDown()?
 					this.energy+" IF":
 					Utils.formatDouble(this.energy/(double)this.time, "0")+" IF/t";
-			minecraft.fontRenderer.drawString(energy, x+104+16, y, IIReference.COLOR_H2.getPackedRGB());
+			minecraft.fontRenderer.drawString(energy, x+104+16, y, DecoTextures.COLOR_H2.getPackedRGB());
 		}
 	}
 }

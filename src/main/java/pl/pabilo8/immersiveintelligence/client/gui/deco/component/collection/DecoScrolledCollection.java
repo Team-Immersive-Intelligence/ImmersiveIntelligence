@@ -6,10 +6,10 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.Tuple;
 import net.minecraft.util.math.MathHelper;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiComponentDecoTextBase;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
-import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 
 import javax.annotation.Nonnull;
@@ -25,8 +25,8 @@ import java.util.function.Supplier;
 public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? super E, T>, T> extends GuiComponentDecoTextBase<E>
 {
 	protected static final int ON_CREATE_OPTION = -10;
-	protected ResLoc listBackgroundLocation = IIReference.GUI_BG_DARK;
-	protected ResLoc scrollBarLocation = IIReference.RES_TEXTURES_DECO_COMPONENT_SLIDER;
+	protected ResLoc listBackgroundLocation = DecoTextures.GUI_BG_DARK;
+	protected ResLoc scrollBarLocation = DecoTextures.RES_TEXTURES_DECO_COMPONENT_SLIDER;
 
 	protected Queue<T> toBeAdded = new ArrayDeque<>();
 	protected Queue<T> toBeRemoved = new ArrayDeque<>();
