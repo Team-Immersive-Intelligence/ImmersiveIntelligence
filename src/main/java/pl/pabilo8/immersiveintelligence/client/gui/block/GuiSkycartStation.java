@@ -5,13 +5,23 @@ import blusunrize.immersiveengineering.client.gui.GuiIEContainerBase;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextFormatting;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.rotary.IIRotaryUtils;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoBarGroup;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.*;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundBuilder.SlotStyle;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.SkyCrateStation;
+import pl.pabilo8.immersiveintelligence.common.IIGUI;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityFuelStation;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.tileentity.TileEntitySkyCartStation;
+import pl.pabilo8.immersiveintelligence.common.gui.ContainerFuelStation;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerSkycartStation;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemUtils;
 
 import java.util.ArrayList;
@@ -20,57 +30,54 @@ import static pl.pabilo8.immersiveintelligence.api.rotary.IIRotaryUtils.renderEn
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @author Avalon (avalon@iiteam.net)
  * @since 10.07.2019
+ * @since 27.08.2025
  */
-public class GuiSkycartStation extends GuiIEContainerBase
+public class GuiSkycartStation extends DecoGui<TileEntitySkyCartStation, ContainerSkycartStation>
 {
-	public static final String texture_skycrate_station = ImmersiveIntelligence.MODID+":textures/gui/wooden_gearbox.png";
-	TileEntitySkyCartStation tile;
 
 	public GuiSkycartStation(EntityPlayer player, TileEntitySkyCartStation tile)
 	{
-		super(new ContainerSkycartStation(player, tile));
-		this.ySize = 176;
-		this.tile = tile;
-	}
-
-	/**
-	 * Draw the foreground layer for the GuiContainer (everything in front of the items)
-	 */
-	@Override
-	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
-	{
-		IIClientUtils.drawStringCentered(fontRenderer, I18n.format("tile."+ImmersiveIntelligence.MODID+".wooden_multiblock.skycart_station.name"), 0, 0, getXSize(), 6, 0xd99747);
-		fontRenderer.drawString((IIRotaryUtils.getGearEfficiency(IIItemUtils.trimInventory(tile.getInventory(), 0, 3))*100)+"%", 76, 47, 0xd99747);
-	}
-
-	/**
-	 * Draws the background layer of this container (behind the items).
-	 */
-	@Override
-	protected void drawGuiContainerBackgroundLayer(float f, int mx, int my)
-	{
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		ClientUtils.bindTexture(texture_skycrate_station);
-		this.drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
-		renderEnergyBars(guiLeft+148, guiTop+20, 7, 48, 2, tile.rotation, SkyCrateStation.rpmMin, SkyCrateStation.torqueMin);
+		super(player, tile, IIGUI.SKYCART_STATION);
 	}
 
 	@Override
-	public void drawScreen(int mx, int my, float partial)
+	public void onInit()
 	{
-		super.drawScreen(mx, my, partial);
-		this.renderHoveredToolTip(mx, my);
+		startBackground()
+				.withBox(DecoTextures.GUI_BG_WOODEN, 0, 0, 176, 76)
+				.withStandaloneFrame(24, 12, 128, 64-8, DecoTextures.GUI_FRAME_CORNERS_BRASS, 4, true)
+				.withTitleBar(tile)
+				.withBox(DecoTextures.GUI_BG_WOODEN, 0, 76, 176, 92)
+				.withInventorySlots(SlotStyle.VANILLA, container.inventorySlots)
+				.withInventoryTitleBar()
+				.build();
 
-		//Thanks Flaxbeard!
-		ArrayList<String> tooltip = new ArrayList<>();
+		addComponents(
+				new DecoBarGroup(128+28, 0)
+						.withBar(b -> b.withTemplate(DecoGuiUtils.BAR_MECH_TORQUE.apply(tile.rotation)))
+						.withBar(b -> b.withTemplate(DecoGuiUtils.BAR_MECH_SPEED.apply(tile.rotation)))
+		);
 
-		IIRotaryUtils.renderEnergyTooltip(tooltip, mx, my, guiLeft+148, guiTop+20, tile.rotation);
+		addLabel(IIReference.INFO_KEY+"gear_ratio_short", this::getRatio, 24, 48)
+				.withTranslatedTooltipListener(IIReference.INFO_KEY+"gear_ratio", this::getRatio)
+				.withSize(128, 11)
+				.withTextColor(IIReference.COLOR_GUI_BRASS)
+				.withAlign(DecoAlignment.CENTER);
+	}
 
-		if(!tooltip.isEmpty())
-		{
-			ClientUtils.drawHoveringText(tooltip, mx, my, fontRenderer, guiLeft+xSize, -1);
-			RenderHelper.enableGUIStandardItemLighting();
-		}
+	private String[] getRatio()
+	{
+		float torqueRatio = IIRotaryUtils.getGearTorqueRatio(tile.getInventory());
+
+		//speed : torque
+		float speed = torqueRatio < 1&&torqueRatio!=0?1f/torqueRatio: 1;
+		float torque = torqueRatio >= 1?torqueRatio: 1;
+
+		return new String[]{
+				TextFormatting.GOLD+(speed%1==0?Integer.toString((int)speed): Float.toString(speed))+TextFormatting.RESET,
+				TextFormatting.GOLD+(torque%1==0?Integer.toString((int)torque): Float.toString(torque))+TextFormatting.RESET
+		};
 	}
 }

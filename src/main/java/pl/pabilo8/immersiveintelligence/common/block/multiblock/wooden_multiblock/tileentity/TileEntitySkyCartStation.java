@@ -65,6 +65,7 @@ import static blusunrize.immersiveengineering.api.energy.wires.WireType.STRUCTUR
  */
 public class TileEntitySkyCartStation extends TileEntityMultiblockConnectable<TileEntitySkyCartStation, IMultiblockRecipe> implements IAdvancedCollisionBounds, IAdvancedSelectionBounds, ISkyCrateConnector, IPlayerInteraction, IGuiTile, IRotationalEnergyBlock
 {
+	public static final int GEAR_SLOTS = 3;
 	public boolean occupied = false;
 	public EntityMinecart cart = null;
 	//none, minecart ,minecart in, minecart out, minecart load, minecart unload

@@ -56,11 +56,14 @@ import static blusunrize.immersiveengineering.api.energy.wires.WireType.STRUCTUR
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @author Avalon
  * @since 28.06.2019
+ * @since 27.08.2025
  */
 public class TileEntitySkyCrateStation extends TileEntityMultiblockConnectable<TileEntitySkyCrateStation, IMultiblockRecipe> implements IAdvancedCollisionBounds, IAdvancedSelectionBounds, ISkyCrateConnector, IPlayerInteraction, IGuiTile, IRotationalEnergyBlock
 {
 	//none, crate, crate in, crate out, crate load, crate unload
+	public static final int GEAR_SLOTS = 3;
 	public int animation = 0;
 	public float progress = 0;
 	public RotaryStorage rotation = new RotaryStorage(0, 0)
