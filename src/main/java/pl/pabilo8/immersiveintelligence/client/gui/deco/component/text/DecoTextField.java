@@ -7,7 +7,7 @@ import net.minecraft.util.ChatAllowedCharacters;
 import net.minecraft.util.math.MathHelper;
 import org.lwjgl.input.Keyboard;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiComponentDecoBase;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoComponent;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
 import pl.pabilo8.immersiveintelligence.client.util.font.IIFontRenderer;
@@ -28,7 +28,7 @@ import java.util.function.Predicate;
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 12.07.2025
  */
-public class DecoTextField extends GuiComponentDecoBase<DecoTextField>
+public class DecoTextField extends DecoComponent<DecoTextField>
 {
 	//Content state
 	private final List<String> lines = new ArrayList<>();
@@ -41,7 +41,7 @@ public class DecoTextField extends GuiComponentDecoBase<DecoTextField>
 	private ResLoc backgroundLocation = DecoTextures.RES_TEXTURES_DECO_COMPONENT_TEXT_FIELD;
 	private IIColor textColor = IIColor.WHITE;
 	private IIColor cursorColor = IIReference.COLOR_IMMERSIVE_ORANGE;
-	private IIColor selectionColor = IIReference.COLOR_IMMERSIVE_ORANGE.withBrightness(0.35f);
+	private IIColor selectionColor = IIReference.COLOR_IMMERSIVE_ORANGE.withBrightness(0.35f).withAlpha(0.85f);
 	private int padding = 4;
 	private int currentLine = 0, cursorPosition = 0, selectionEnd = 0;
 
@@ -84,13 +84,14 @@ public class DecoTextField extends GuiComponentDecoBase<DecoTextField>
 		{
 			bindAtlas();
 			IIDrawUtils.startTexturedColored()
-					.drawConnectedColorRect(x, y, width, height,
+					.drawConnectedTexColorRect(x, y, width, height,
 							IIColor.WHITE, backgroundLocation, 32, 32, 8, 8)
 					.finish();
 		}
 
 		//Begin scissoring to prevent drawing outside bounds
 		GlStateManager.pushMatrix();
+		GlStateManager.enableBlend();
 		assert parentGui!=null;
 		parentGui.scissorStart(x+padding, y+padding, width-(padding*2), height-(padding*2));
 
@@ -114,6 +115,9 @@ public class DecoTextField extends GuiComponentDecoBase<DecoTextField>
 			//Draw the text
 			fontRenderer.drawString(visibleText, x+padding, lineY, textColor.getPackedARGB());
 
+
+			GlStateManager.disableTexture2D();
+			IIDrawUtils draw = IIDrawUtils.startColored();
 			//Draw cursor and selection if this is the current line and we're focused
 			if(isFocused()&&lineIdx==currentLine&&cursorCounter/blinkRate%2==0)
 			{
@@ -127,29 +131,28 @@ public class DecoTextField extends GuiComponentDecoBase<DecoTextField>
 								line.substring(lineScrollOffset, Math.min(cursorPosition, line.length())));
 
 					//Draw cursor
-					fontRenderer.drawString("|", cursorX, lineY, textColor.getPackedARGB());
-				}
-
-				//Draw selection if needed
-				if(selectionEnd!=cursorPosition)
-				{
-					int selStart = Math.min(cursorPosition, selectionEnd);
-					int selEnd = Math.max(cursorPosition, selectionEnd);
-
-					if(selStart >= lineScrollOffset)
-					{
-						int startX = x+padding+fontRenderer.getStringWidth(
-								line.substring(lineScrollOffset, selStart));
-						int endX = x+padding+fontRenderer.getStringWidth(
-								line.substring(lineScrollOffset, Math.min(selEnd, line.length())));
-
-						//TODO: 02.08.2025 fix
-						IIDrawUtils.startColored()
-								.drawColorRect(startX, lineY, endX-startX, fontRenderer.FONT_HEIGHT, selectionColor)
-								.finish();
-					}
+					draw.drawColorRect(cursorX, lineY-1, 1, fontRenderer.FONT_HEIGHT+2, cursorColor);
 				}
 			}
+			//Draw selection if needed
+			if(selectionEnd!=cursorPosition)
+			{
+				int selStart = Math.min(cursorPosition, selectionEnd);
+				int selEnd = Math.max(cursorPosition, selectionEnd);
+
+				if(selStart >= lineScrollOffset)
+				{
+					int startX = x+padding+fontRenderer.getStringWidth(
+							line.substring(lineScrollOffset, selStart));
+					int endX = x+padding+fontRenderer.getStringWidth(
+							line.substring(lineScrollOffset, Math.min(selEnd, line.length())));
+
+					//TODO: 02.08.2025 fix
+					draw.drawColorRect(startX, lineY-1, endX-startX, fontRenderer.FONT_HEIGHT+2, selectionColor);
+				}
+			}
+			draw.finish();
+			GlStateManager.enableTexture2D();
 		}
 
 		//End scissoring

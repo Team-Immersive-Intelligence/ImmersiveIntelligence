@@ -2,7 +2,7 @@ package pl.pabilo8.immersiveintelligence.client.gui.deco.component.button;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiComponentDecoTextBase;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoTextBasedComponent;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoAlignment;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
@@ -18,7 +18,7 @@ import pl.pabilo8.immersiveintelligence.common.util.IIMath;
  * @ii-approved 0.3.1
  * @since 18.07.2021
  */
-public class DecoCheckbox extends GuiComponentDecoTextBase<DecoCheckbox>
+public class DecoCheckbox extends DecoTextBasedComponent<DecoCheckbox>
 {
 	private static int BOX_SIZE = 9;
 	private boolean checked = false;

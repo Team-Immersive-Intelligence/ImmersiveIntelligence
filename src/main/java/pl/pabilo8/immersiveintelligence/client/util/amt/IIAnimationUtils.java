@@ -14,6 +14,7 @@ import net.minecraftforge.client.model.obj.OBJModel;
 import net.minecraftforge.client.model.obj.OBJModel.MaterialLibrary;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.pabilo8.immersiveintelligence.client.util.ShaderUtil.Shaders;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
@@ -127,6 +128,15 @@ public class IIAnimationUtils
 	public static void setModelVisibility(AMT model, boolean visible)
 	{
 		model.visible = visible;
+	}
+
+	/**
+	 * Manual approach, use in things requiring a direct value instead of an animation
+	 */
+	public static void setModelShader(AMT model, Shaders shader, Float... value)
+	{
+		model.shader = shader;
+		model.shaderValue = value;
 	}
 
 	/**

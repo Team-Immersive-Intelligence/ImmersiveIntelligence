@@ -14,7 +14,7 @@ import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
  * @since 16.01.2025
  **/
 @SuppressWarnings("unchecked")
-public abstract class GuiComponentDecoTextBase<TYPE extends GuiComponentDecoTextBase<? super TYPE>> extends GuiComponentDecoBase<TYPE>
+public abstract class DecoTextBasedComponent<TYPE extends DecoTextBasedComponent<? super TYPE>> extends DecoComponent<TYPE>
 {
 	protected static final IIColor BACKGROUND = IIColor.fromHex("efefef");
 	protected static final IIColor BACKGROUND_HOVERED = IIColor.WHITE;
@@ -35,7 +35,7 @@ public abstract class GuiComponentDecoTextBase<TYPE extends GuiComponentDecoText
 	protected IIColor textPressedColor = IIReference.COLOR_IMMERSIVE_ORANGE;
 	protected IIColor textDisabledColor = IIColor.BLACK;
 
-	public GuiComponentDecoTextBase(int x, int y)
+	public DecoTextBasedComponent(int x, int y)
 	{
 		super(x, y);
 	}

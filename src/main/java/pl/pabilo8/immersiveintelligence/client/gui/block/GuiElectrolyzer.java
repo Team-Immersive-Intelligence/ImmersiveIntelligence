@@ -25,7 +25,7 @@ import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 public class GuiElectrolyzer extends DecoGui<TileEntityElectrolyzer, ContainerElectrolyzer>
 {
 	@DecoResource
-	public static final ResourceLocation PROGRESS_ARROW = ResLoc.of(IIReference.RES_II, "gui/electrolyzer");
+	public static final ResourceLocation TEXTURE = ResLoc.of(IIReference.RES_II, "gui/electrolyzer");
 	private DecoImage imageProgress;
 
 	public GuiElectrolyzer(EntityPlayer player, TileEntityElectrolyzer tile)
@@ -48,6 +48,7 @@ public class GuiElectrolyzer extends DecoGui<TileEntityElectrolyzer, ContainerEl
 				.build();
 
 		addComponents(
+				//Input and Output Fluid Tanks
 				new DecoFluidTank(32-1, 12)
 						.withSize(24, 58)
 						.withFluidTank(tile.tankInput),
@@ -57,17 +58,17 @@ public class GuiElectrolyzer extends DecoGui<TileEntityElectrolyzer, ContainerEl
 				new DecoFluidTank(90-10+2, 55-8-1)
 						.withSize(58, 24)
 						.withFluidTank(tile.tankOutput2),
-
+				//Energy bar
 				new DecoBar(168, 0)
 						.withTemplate(DecoGuiUtils.BAR_ELECTRIC_ENERGY.apply(tile.energyStorage)),
-
+				//Production progress
 				this.imageProgress = new DecoImage(66-10-1, 42-8)
 						.withSize(60, 12)
-						.withImageLocation(PROGRESS_ARROW, true)
+						.withImageLocation(TEXTURE, true)
 						.withUV(64, 0, 0, 60, 12),
 				new DecoImage(66-10-1, 42-8)
 						.withSize(60, 12)
-						.withImageLocation(PROGRESS_ARROW, true)
+						.withImageLocation(TEXTURE, true)
 						.withUV(64, 0, 12, 60, 24)
 						.withAnimation(ImageAnimationDirection.LEFT_TO_RIGHT, DecoGuiUtils.getMultiblockProductionSingleProgress(tile)),
 				new DecoImage(66-10-1, 42-8)

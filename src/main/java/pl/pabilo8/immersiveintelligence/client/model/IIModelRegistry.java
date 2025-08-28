@@ -239,7 +239,7 @@ public class IIModelRegistry extends ImmersiveModelRegistry
 	public void removeMotorBeltConnectionModel(Connection connection)
 	{
 		AMTChain remove = motorBeltConnections.remove(connection);
-		if(remove!=null)
-			remove.disposeOf();
+		/*if(remove!=null)
+			remove.disposeOf();*/
 	}
 }

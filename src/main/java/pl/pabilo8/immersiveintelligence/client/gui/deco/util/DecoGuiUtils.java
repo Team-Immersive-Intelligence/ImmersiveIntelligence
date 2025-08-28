@@ -11,7 +11,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.rotary.IRotaryEnergy;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiComponentDecoBase.DecoComponentTemplate;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoComponent.DecoComponentTemplate;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoButton;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoBar;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoBar.BarTooltipFormat;
@@ -126,11 +126,10 @@ public class DecoGuiUtils
 	private static final DecoComponentTemplate<DecoBar> BAR_ELECTRIC_ENERGY_BASE = component -> component
 			.withColors(IIColor.fromPackedRGB(0xb37e28), IIColor.fromPackedRGB(0x663f26))
 			.withIconLocation(DecoTextures.RES_ICON_ENERGY);
-	public static final Function<IFluxStorage, DecoComponentTemplate<DecoBar>> BAR_ELECTRIC_ENERGY =
-			energyStorage -> component -> component
-					.withTemplate(BAR_ELECTRIC_ENERGY_BASE)
-					.withValueTooltip("energy.stored", BarTooltipFormat.VALUE_TO_MAX, TextFormatting.GOLD)
-					.withLimits(0, energyStorage.getMaxEnergyStored(), energyStorage::getEnergyStored);
+	public static final Function<IFluxStorage, DecoComponentTemplate<DecoBar>> BAR_ELECTRIC_ENERGY = energyStorage -> component -> component
+			.withTemplate(BAR_ELECTRIC_ENERGY_BASE)
+			.withValueTooltip("energy.stored", BarTooltipFormat.VALUE_TO_MAX, TextFormatting.GOLD)
+			.withLimits(0, energyStorage.getMaxEnergyStored(), energyStorage::getEnergyStored);
 	public static final DecoComponentTemplate<DecoBar> BAR_ELECTRIC_ENERGY_INPUT = component -> component
 			.withTemplate(BAR_ELECTRIC_ENERGY_BASE)
 			.withIconLocation(DecoTextures.RES_ICON_ENERGY_INPUT)
@@ -287,7 +286,7 @@ public class DecoGuiUtils
 
 		//Top side
 		if(sides[0])
-			draw.drawRepeatedColorRect(x, y, width, frameThickness, color, style, 20, frameThickness, 3/16f, 13/16f, 0, frameThickness/32f);
+			draw.drawRepeatedTexColorRect(x, y, width, frameThickness, color, style, 20, frameThickness, 3/16f, 13/16f, 0, frameThickness/32f);
 
 		//Draw corners on top of the frame
 		drawFrameCorners(draw, x, y, width, height, style, sides);

@@ -5,6 +5,8 @@ import blusunrize.immersiveengineering.api.crafting.MultiblockRecipe;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionBase.IIIMultiblockRecipe;
 
 import javax.annotation.Nonnull;
@@ -118,6 +120,22 @@ public abstract class IIMultiblockRecipe extends MultiblockRecipe implements III
 	{
 		MultiblockRecipeRegistry<T> registry = (MultiblockRecipeRegistry<T>)registries.get(recipeClass);
 		return registry.getRecipe(name);
+	}
+
+	protected void loadClientSideContent()
+	{
+
+	}
+
+	/**
+	 * Called on post-init and after reload to load client-side recipe content, like animations or sound references.
+	 */
+	@SideOnly(Side.CLIENT)
+	public static void loadAllClientSideContent()
+	{
+		registries.values().forEach(registry ->
+				registry.recipesList.forEach(IIMultiblockRecipe::loadClientSideContent)
+		);
 	}
 
 	protected final void setTimeAndEnergy(int totalProcessTime, int totalProcessEnergy)

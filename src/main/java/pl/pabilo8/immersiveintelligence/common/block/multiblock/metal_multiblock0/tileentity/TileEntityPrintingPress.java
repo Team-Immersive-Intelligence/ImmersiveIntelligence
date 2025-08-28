@@ -10,8 +10,6 @@ import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.fluids.Fluid;
@@ -41,7 +39,6 @@ import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEn
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionMulti;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayDeque;
 
@@ -158,7 +155,7 @@ public class TileEntityPrintingPress extends TileEntityMultiblockProductionMulti
 	@Override
 	public void receiveData(DataPacket packet, int pos)
 	{
-		if(packet.get('c').toString().equals("callback"))
+		if(IIDataHandlingUtils.isCallbackPacket(packet))
 		{
 			DataPacket response = IIDataHandlingUtils.handleCallback(packet,
 					var -> {
@@ -370,34 +367,6 @@ public class TileEntityPrintingPress extends TileEntityMultiblockProductionMulti
 		return tactileHandler;
 	}
 
-
-	@Nonnull
-	@Override
-	public World getTactileWorld()
-	{
-		return world;
-	}
-
-	@Nonnull
-	@Override
-	public BlockPos getTactilePos()
-	{
-		return this.getPos();
-	}
-
-	@Nonnull
-	@Override
-	public EnumFacing getTactileFacing()
-	{
-		return facing;
-	}
-
-	@Override
-	public boolean getIsTactileMirrored()
-	{
-		return mirrored;
-	}
-
 	@Override
 	public boolean onTactileCollide(EntityAMTTactile tactile, Entity entity)
 	{
@@ -445,9 +414,12 @@ public class TileEntityPrintingPress extends TileEntityMultiblockProductionMulti
 		}
 	}
 
+	//TODO: 28.08.2025 replace with the generic recipe
+
 	/**
 	 * An order for a page to be printed that's placed in the Printing Press' queue.
 	 */
+	@Deprecated
 	public static class PrintingProcess extends IIMultiblockProcess<PrintingRecipe>
 	{
 		int blackCost, cyanCost, magentaCost, yellowCost;

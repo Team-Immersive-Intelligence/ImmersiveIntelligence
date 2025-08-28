@@ -83,6 +83,24 @@ public abstract class TileEntityMultiblockProductionBase<T extends TileEntityMul
 
 	}
 
+	public void attemptStackOutput(IItemHandler itemHandler, EnumFacing facing, int... outputPos)
+	{
+		for(int p : outputPos)
+		{
+			BlockPos pos = getBlockPosForPos(p).offset(facing.getOpposite());
+			TileEntity inventoryTile = this.world.getTileEntity(pos);
+			if(inventoryTile!=null)
+			{
+				for(int i = 0; i < itemHandler.getSlots(); i++)
+				{
+					ItemStack stack = itemHandler.extractItem(i, Integer.MAX_VALUE, false);
+					stack = Utils.insertStackIntoInventory(inventoryTile, stack, facing, world.isRemote);
+					itemHandler.insertItem(i, stack, false);
+				}
+			}
+		}
+	}
+
 	/**
 	 * @return minimal offset between production processes
 	 */

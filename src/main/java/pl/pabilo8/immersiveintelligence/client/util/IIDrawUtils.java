@@ -44,6 +44,7 @@ public class IIDrawUtils
 	private BufferBuilder buf;
 	private Tessellator tes;
 	private float offX, offY, rotation;
+	private int listID = -1;
 
 	//--- Begin Methods ---//
 	private static IIDrawUtils start(BufferBuilder buf, VertexFormat format)
@@ -115,6 +116,15 @@ public class IIDrawUtils
 		return startTexturedColored(Tessellator.getInstance().getBuffer());
 	}
 
+	//--- GLCallList Creation ---//
+
+	public IIDrawUtils createCallList(boolean execute)
+	{
+		listID = GlStateManager.glGenLists(1);
+		GlStateManager.glNewList(listID, execute?GL11.GL_COMPILE_AND_EXECUTE: GL11.GL_COMPILE);
+		return this;
+	}
+
 	//--- Draw Methods ---//
 
 	public IIDrawUtils drawTexRect(float x, float y, float w, float h, float... uv)
@@ -168,6 +178,23 @@ public class IIDrawUtils
 		return this;
 	}
 
+	public IIDrawUtils drawColorGradient(int x, float y, int w, int h, IIColor colorNW, IIColor colorNE, IIColor colorSW, IIColor colorSE)
+	{
+		buf.pos(offX+x, offY+y+h, 0)
+				.color(colorSW.red, colorSW.green, colorSW.blue, colorSW.alpha)
+				.endVertex();
+		buf.pos(offX+x+w, offY+y+h, 0)
+				.color(colorSE.red, colorSE.green, colorSE.blue, colorSE.alpha)
+				.endVertex();
+		buf.pos(offX+x+w, offY+y, 0)
+				.color(colorNE.red, colorNE.green, colorNE.blue, colorNE.alpha)
+				.endVertex();
+		buf.pos(offX+x, offY+y, 0)
+				.color(colorNW.red, colorNW.green, colorNW.blue, colorNW.alpha)
+				.endVertex();
+		return this;
+	}
+
 	public IIDrawUtils drawTexColorRect(float x, float y, float w, float h, IIColor color, float... uv)
 	{
 		buf.pos(offX+x, offY+y+h, 0)
@@ -189,7 +216,7 @@ public class IIDrawUtils
 		return this;
 	}
 
-	public void drawRepeatedColorRect(int x, int y, int width, int height, IIColor color, ResourceLocation texture, int tileSize)
+	public IIDrawUtils drawRepeatedTexColorRect(int x, int y, int width, int height, IIColor color, ResourceLocation texture, int tileSize)
 	{
 		for(int yy = 0; yy < height; yy += tileSize)
 			for(int xx = 0; xx < width; xx += tileSize)
@@ -203,10 +230,11 @@ public class IIDrawUtils
 						sprite.getMinV(), sprite.getInterpolatedV(Math.min(height-yy, tileSize)/2f)
 				);
 			}
+		return this;
 	}
 
-	public void drawRepeatedColorRect(int x, int y, int width, int height, IIColor color, ResourceLocation texture,
-									  int tWidth, int tHeight, float... uv)
+	public IIDrawUtils drawRepeatedTexColorRect(int x, int y, int width, int height, IIColor color, ResourceLocation texture,
+												int tWidth, int tHeight, float... uv)
 	{
 		TextureAtlasSprite sprite = ClientUtils.getSprite(texture);
 		float u = sprite.getInterpolatedU(uv[0]);
@@ -225,10 +253,11 @@ public class IIDrawUtils
 						v, v+vv*(Math.min(height-yy, tHeight)/2f/16f)
 				);
 			}
+		return this;
 	}
 
-	public IIDrawUtils drawConnectedColorRect(float x, float y, float w, float h, IIColor color,
-											  int tWidth, int tHeight, float... uv)
+	public IIDrawUtils drawConnectedTexColorRect(float x, float y, float w, float h, IIColor color,
+												 int tWidth, int tHeight, float... uv)
 	{
 		float tw = w/tWidth;
 		float th = h/tHeight;
@@ -265,8 +294,8 @@ public class IIDrawUtils
 		return this;
 	}
 
-	public IIDrawUtils drawConnectedColorRect(float x, float y, float w, float h, IIColor color,
-											  int texSizeX, int texSizeY, int xMargin, int yMargin, float... uv)
+	public IIDrawUtils drawConnectedTexColorRect(float x, float y, float w, float h, IIColor color,
+												 int texSizeX, int texSizeY, int xMargin, int yMargin, float... uv)
 	{
 		int iSizeX = Math.min(texSizeX-2*xMargin, Math.min((int)w, texSizeX)/2);
 		int iSizeY = Math.min(texSizeY-2*yMargin, Math.min((int)h, texSizeY)/2);
@@ -297,11 +326,11 @@ public class IIDrawUtils
 		return this;
 	}
 
-	public IIDrawUtils drawConnectedColorRect(float x, float y, float w, float h, IIColor color, ResourceLocation spriteLocation,
-											  int texSizeX, int texSizeY, int xMargin, int yMargin)
+	public IIDrawUtils drawConnectedTexColorRect(float x, float y, float w, float h, IIColor color, ResourceLocation spriteLocation,
+												 int texSizeX, int texSizeY, int xMargin, int yMargin)
 	{
 		TextureAtlasSprite sprite = ClientUtils.getSprite(spriteLocation);
-		return drawConnectedColorRect(x, y, w, h, color, texSizeX, texSizeY, xMargin, yMargin,
+		return drawConnectedTexColorRect(x, y, w, h, color, texSizeX, texSizeY, xMargin, yMargin,
 				sprite.getMinU(), sprite.getMaxU(), sprite.getMinV(), sprite.getMaxV());
 	}
 
@@ -347,5 +376,13 @@ public class IIDrawUtils
 	public void finish()
 	{
 		tes.draw();
+	}
+
+	public int finishCallList()
+	{
+		finish();
+		if(listID!=-1)
+			GlStateManager.glEndList();
+		return listID;
 	}
 }

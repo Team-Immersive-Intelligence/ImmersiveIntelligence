@@ -56,9 +56,9 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockProductionSi
 	/**
 	 * Stored data packet
 	 */
-	@SyncNBT(name = "variables", events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_RECIPE_CHANGED})
+	@SyncNBT(name = "variables", events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_RECIPE_CHANGED, SyncEvents.TILE_CLIENT_MESSAGE})
 	public DataPacket storedData = new DataPacket();
-	@SyncNBT(events = SyncEvents.TILE_GUI_OPENED)
+	@SyncNBT(events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_CLIENT_MESSAGE})
 	public int selectedDataSlot;
 
 	@SyncNBT
@@ -97,8 +97,6 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockProductionSi
 	public void receiveMessageFromClient(NBTTagCompound message)
 	{
 		super.receiveMessageFromClient(message);
-		if(message.hasKey("variables"))
-			storedData.deserializeNBT(message.getCompoundTag("variables"));
 		if(message.hasKey("send_packet"))
 			this.sendData(storedData, getDirection("data"), getPOI(MultiblockPOI.DATA_OUTPUT)[0]);
 	}

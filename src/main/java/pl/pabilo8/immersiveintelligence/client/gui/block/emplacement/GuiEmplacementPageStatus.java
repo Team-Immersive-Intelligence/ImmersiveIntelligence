@@ -138,7 +138,7 @@ public class GuiEmplacementPageStatus extends GuiEmplacement
 				.withBoolean("redstoneControl", switchRSControl.getState())
 				.withBoolean("dataControl", switchDataControl.getState())
 				.withBoolean("sendAttackSignal", switchSendTarget.getState())
-				.withFloat("autoRepairAmount", (float)sliderRepair.sliderValue)
+				.withFloat("autoRepairAmount", sliderRepair.getValue())
 		));
 	}
 }

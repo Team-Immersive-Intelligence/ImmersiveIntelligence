@@ -2,6 +2,7 @@ package pl.pabilo8.immersiveintelligence.client.gui.block;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.Optional.Method;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoBar;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoDustTank;
@@ -11,6 +12,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.util.*;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Filler;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityFiller;
+import pl.pabilo8.immersiveintelligence.common.compat.jei.JEIHelper;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerFiller;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
@@ -25,6 +27,7 @@ public class GuiFiller extends DecoGui<TileEntityFiller, ContainerFiller>
 {
 	@DecoResource
 	public static final ResourceLocation TEXTURE = IIReference.RES_II.with("gui/filler");
+	private DecoImage imageProgress;
 
 	public GuiFiller(EntityPlayer player, TileEntityFiller tile)
 	{
@@ -45,7 +48,7 @@ public class GuiFiller extends DecoGui<TileEntityFiller, ContainerFiller>
 				.build();
 
 		addComponents(
-				new DecoImage(54, 64-4)
+				this.imageProgress = new DecoImage(54, 64-4)
 						.withSize(64, 15)
 						.withImageLocation(TEXTURE, true)
 						.withUV(64, 0, 0, 64, 15),
@@ -62,5 +65,12 @@ public class GuiFiller extends DecoGui<TileEntityFiller, ContainerFiller>
 						.withTemplate(DecoGuiUtils.BAR_ELECTRIC_ENERGY.apply(tile.energyStorage))
 
 		);
+	}
+
+	@Override
+	@Method(modid = "jei")
+	public void onInitJEICompat()
+	{
+		JEIHelper.addRecipesDecoGuiLink(this.imageProgress, "ii.filler");
 	}
 }

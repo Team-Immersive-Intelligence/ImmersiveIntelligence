@@ -16,6 +16,12 @@ import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctur
 public class MultiblockElectrolyzer extends MultiblockStuctureBase<TileEntityElectrolyzer>
 {
 	public static MultiblockElectrolyzer INSTANCE;
+	public static int SLOT_T0_BUCKET_INPUT = 0;
+	public static int SLOT_T0_BUCKET_OUTPUT = 1;
+	public static int SLOT_T1_BUCKET_INPUT = 2;
+	public static int SLOT_T1_BUCKET_OUTPUT = 4;
+	public static int SLOT_T2_BUCKET_INPUT = 3;
+	public static int SLOT_T2_BUCKET_OUTPUT = 5;
 
 	public MultiblockElectrolyzer()
 	{

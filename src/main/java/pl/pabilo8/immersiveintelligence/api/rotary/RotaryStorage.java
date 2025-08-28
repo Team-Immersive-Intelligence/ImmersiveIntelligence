@@ -22,15 +22,15 @@ package pl.pabilo8.immersiveintelligence.api.rotary;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.util.INBTSerializable;
-import net.minecraftforge.energy.IEnergyStorage;
 
 import javax.annotation.Nullable;
 
 /**
- * Reference implementation of {@link IEnergyStorage}. Use/extend this or implement your own.
- * <p>
- * Derived from the Redstone Flux power system designed by King Lemming and originally utilized in Thermal Expansion and related mods.
- * Created with consent and permission of King Lemming and Team CoFH. Released with permission under LGPL 2.1 when bundled with Forge.
+ * Reference implementation of {@link IRotaryEnergy}. Use/extend this or implement your own.
+ *
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @ii-approved 0.1.0
+ * @since 06.01.2020
  */
 public class RotaryStorage implements IRotaryEnergy, INBTSerializable<NBTTagCompound>
 {

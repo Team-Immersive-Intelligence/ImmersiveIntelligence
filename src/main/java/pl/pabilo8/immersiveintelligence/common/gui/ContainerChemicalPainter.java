@@ -4,6 +4,7 @@ import blusunrize.immersiveengineering.api.IEEnums.SideConfig;
 import blusunrize.immersiveengineering.common.gui.IESlot;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockChemicalPainter;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityChemicalPainter;
 import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIBase;
 
@@ -15,19 +16,18 @@ import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIBase;
  */
 public class ContainerChemicalPainter extends ContainerIIBase<TileEntityChemicalPainter>
 {
-
 	public Slot inputSlot, outputSlot, inputFluidSlot, outputFluidSlot;
 
 	public ContainerChemicalPainter(EntityPlayer player, TileEntityChemicalPainter tile)
 	{
 		super(player, tile);
 
-		inputSlot = addSlot(13, 13, 0, DefaultInputSlot::new);
-		outputSlot = addSlot(13, 59, 1, IESlot.Output::new);
+		inputFluidSlot = addSlot(5, 13+4, MultiblockChemicalPainter.SLOT_BUCKET_INPUT, getFluidContainerSlot(SideConfig.INPUT));
+		outputFluidSlot = addSlot(5, 59-4, MultiblockChemicalPainter.SLOT_BUCKET_OUTPUT, getFluidContainerSlot(SideConfig.OUTPUT));
 
-		inputFluidSlot = addSlot(137, 21, 2, getFluidContainerSlot(SideConfig.INPUT));
-		outputFluidSlot = addSlot(137, 57, 3, getFluidContainerSlot(SideConfig.OUTPUT));
+		inputSlot = addSlot(137+10, 13, MultiblockChemicalPainter.SLOT_INPUT, DefaultInputSlot::new);
+		outputSlot = addSlot(137+10, 59, MultiblockChemicalPainter.SLOT_OUTPUT, IESlot.Output::new);
 
-		addPlayerInventory(player.inventory, 8, 141);
+		addPlayerInventory(player.inventory, 8, 128+12);
 	}
 }

@@ -202,8 +202,8 @@ public enum IIGUI implements ISerializableEnum
 		IIGUI.MEDIC_CRATE.setClientGui(GuiMedicalCrate::new);
 		IIGUI.REPAIR_CRATE.setClientGui(GuiRepairCrate::new);
 		//Skycrate
-		IIGUI.SKYCRATE_STATION.setClientGui(GuiSkycrateStation::new);
-		IIGUI.SKYCART_STATION.setClientGui(GuiSkycartStation::new);
+		IIGUI.SKYCRATE_STATION.setClientDecoGui(GuiSkycrateStation::new);
+		IIGUI.SKYCART_STATION.setClientDecoGui(GuiSkycartStation::new);
 		//DIM
 		IIGUI.DATA_INPUT_MACHINE_STORAGE.setClientDecoGui(GuiDataInputMachine::getStorageGui);
 		IIGUI.DATA_INPUT_MACHINE_VARIABLES.setClientDecoGui(GuiDataInputMachine::getVariablesGui);
@@ -228,7 +228,7 @@ public enum IIGUI implements ISerializableEnum
 		IIGUI.EMPLACEMENT_STATUS.setClientGui(GuiEmplacementPageStatus::new);
 
 		IIGUI.FILLER.setClientDecoGui(GuiFiller::new);
-		IIGUI.CHEMICAL_PAINTER.setClientGui(GuiChemicalPainter::new);
+		IIGUI.CHEMICAL_PAINTER.setClientDecoGui(GuiChemicalPainter::new);
 
 		IIGUI.AMMUNITION_ASSEMBLER.setClientGui(GuiAmmunitionAssembler::new);
 		IIGUI.PROJECTILE_WORKSHOP.setClientDecoGui(GuiProjectileWorkshop::new);

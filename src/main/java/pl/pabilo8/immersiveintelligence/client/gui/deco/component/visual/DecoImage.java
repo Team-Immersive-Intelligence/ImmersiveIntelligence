@@ -5,7 +5,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.ResourceLocation;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiComponentDecoBase;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoComponent;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
@@ -19,11 +19,12 @@ import java.util.function.Function;
  *
  * @since 10.01.2025
  */
-public class DecoImage extends GuiComponentDecoBase<DecoImage>
+public class DecoImage extends DecoComponent<DecoImage>
 {
 	@Nullable
 	private ResourceLocation imageLocation;
 	private boolean usesBlockAtlas;
+	private IIColor color = IIColor.WHITE;
 	private TextureAtlasSprite sprite;
 	private float[] uv;
 
@@ -97,6 +98,12 @@ public class DecoImage extends GuiComponentDecoBase<DecoImage>
 		return this;
 	}
 
+	public DecoImage withColor(IIColor color)
+	{
+		this.color = color;
+		return this;
+	}
+
 	/**
 	 * Sets the animation direction and progress function for this DecoImage.
 	 *
@@ -133,14 +140,13 @@ public class DecoImage extends GuiComponentDecoBase<DecoImage>
 
 		//Draw the image with the specified UV coordinates
 		if(animationDirection==null)
-			draw.drawTexColorRect(x, y, width, height, IIColor.WHITE, uv);
+			draw.drawTexColorRect(x, y, width, height, color, uv);
 		else
 		{
 			float[] drawnUV = animationDirection.animate(uv, animationProgress.apply(partialTicks));
 			float[] drawnDimensions = animationDirection.animate(new float[]{0, width, 0, height}, animationProgress.apply(partialTicks));
 			draw.drawTexColorRect(
-					x+drawnDimensions[0], y+drawnDimensions[2], drawnDimensions[1], drawnDimensions[3],
-					IIColor.WHITE,
+					x+drawnDimensions[0], y+drawnDimensions[2], drawnDimensions[1], drawnDimensions[3], color,
 					drawnUV[0], drawnUV[1], drawnUV[2], drawnUV[3]
 			);
 		}
@@ -172,6 +178,22 @@ public class DecoImage extends GuiComponentDecoBase<DecoImage>
 						uv[1]-(uv[1]-uv[0])*(1-progress),
 						uv[1],
 						uv[2],
+						uv[3]
+				}
+		),
+		TOP_TO_BOTTOM(
+				(uv, progress) -> new float[]{
+						uv[0],
+						uv[1],
+						uv[2],
+						uv[2]+(uv[3]-uv[2])*progress
+				}
+		),
+		BOTTOM_TO_TOP(
+				(uv, progress) -> new float[]{
+						uv[0],
+						uv[1],
+						uv[3]-(uv[3]-uv[2])*(1-progress),
 						uv[3]
 				}
 		);

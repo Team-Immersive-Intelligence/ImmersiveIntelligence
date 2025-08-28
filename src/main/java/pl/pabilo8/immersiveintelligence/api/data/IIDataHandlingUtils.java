@@ -254,6 +254,11 @@ public class IIDataHandlingUtils
 
 	//--- Callback ---//
 
+	public static boolean isCallbackPacket(DataPacket packet)
+	{
+		return packet.get('c').toString().equals("callback");
+	}
+
 	@Nullable
 	public static DataPacket handleCallback(DataPacket packet, Function<String, DataType> mapper)
 	{

@@ -31,9 +31,9 @@ import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.ClientProxy;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiComponentDecoBase;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiComponentDecoBase.DecoGuiEvent;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiComponentDecoBase.MouseButton;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoComponent;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoComponent.DecoGuiEvent;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoComponent.MouseButton;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoTab;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoLabel;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.widget.DecoComponentWidgetBase;
@@ -50,6 +50,7 @@ import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSyn
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.NBTSerialisation;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIBase;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockInteractablePart;
 
@@ -77,7 +78,7 @@ import java.util.function.Supplier;
  *         <li>Optimized</li>
  *     </ul>
  *     Offering a variety of {@link pl.pabilo8.immersiveintelligence.client.gui.deco.component components},
- *     {@link pl.pabilo8.immersiveintelligence.client.gui.deco.widget widgets} and a tile-based
+ *     {@link pl.pabilo8.immersiveintelligence.client.gui.deco.component.widget widgets} and a tile-based
  *     {@link DecoBackgroundBuilder} to make GUI creation easier and more efficient
  * </p>
  * Class for advanced GUIs that store data in the client proxy NBT and use components for their display<br>
@@ -110,8 +111,8 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 	//Background
 	private DecoBackgroundBuilder<T, C> backgroundBuilder;
 	private List<Rectangle> takenSpace;
-	private GuiComponentDecoBase<?> focusedElement;
-	private GuiComponentDecoBase<?> hoveredElement;
+	private DecoComponent<?> focusedElement;
+	private DecoComponent<?> hoveredElement;
 	//Widgets
 	private DecoComponentWidgetBase<?> previousWidget, currentWidget;
 	private int widgetTime = 0;
@@ -218,8 +219,8 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 			guiLabel.y += guiTop;
 		}
 		for(GuiButton button : buttonList)
-			if(button instanceof GuiComponentDecoBase)
-				((GuiComponentDecoBase<?>)button).setParentGUI(this);
+			if(button instanceof DecoComponent)
+				((DecoComponent<?>)button).setParentGUI(this);
 		for(DecoComponentWidgetBase<?> widget : widgetList)
 			widget.setParentGUI(this);
 
@@ -252,7 +253,7 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 	//--- GUI Component Methods ---//
 
 	/**
-	 * @deprecated use {@link #addComponent(GuiComponentDecoBase)} instead
+	 * @deprecated use {@link #addComponent(DecoComponent)} instead
 	 */
 	@Override
 	@Deprecated
@@ -262,13 +263,13 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 	}
 
 	/**
-	 * Adds a {@link GuiComponentDecoBase} to the GUI and returns it
+	 * Adds a {@link DecoComponent} to the GUI and returns it
 	 *
 	 * @param component The component to add
 	 * @param <B>       The type of the component
 	 * @return The added component
 	 */
-	protected final <B extends GuiComponentDecoBase<B>> B addComponent(B component)
+	protected final <B extends DecoComponent<B>> B addComponent(B component)
 	{
 		buttonList.add(component);
 		component.id = buttonList.size();
@@ -326,9 +327,9 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 	 * @param components The components to add
 	 */
 	@SuppressWarnings({"unchecked", "rawtypes"})
-	protected final void addComponents(GuiComponentDecoBase... components)
+	protected final void addComponents(DecoComponent... components)
 	{
-		for(GuiComponentDecoBase component : components)
+		for(DecoComponent component : components)
 			addComponent(component);
 	}
 
@@ -432,8 +433,8 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 				backgroundBuilder.cleanup();
 			//Cleanup components
 			for(GuiButton b : buttonList)
-				if(b instanceof GuiComponentDecoBase)
-					((GuiComponentDecoBase<?>)b).cleanup();
+				if(b instanceof DecoComponent)
+					((DecoComponent<?>)b).cleanup();
 			//Cleanup widgets
 			for(DecoComponentWidgetBase<?> widget : widgetList)
 				widget.cleanup();
@@ -456,8 +457,8 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 			if(currentWidget==null||!currentWidget.onComponentScroll(mouseX, mouseY, scroll))
 				if(focusedElement==null||!focusedElement.onComponentScroll(mouseX, mouseY, scroll))
 					for(GuiButton b : buttonList)
-						if(b instanceof GuiComponentDecoBase)
-							((GuiComponentDecoBase<?>)b).onComponentScroll(mouseX, mouseY, scroll);
+						if(b instanceof DecoComponent)
+							((DecoComponent<?>)b).onComponentScroll(mouseX, mouseY, scroll);
 		}
 
 		//Draw the upper layer of buttons
@@ -467,8 +468,8 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 		GlStateManager.disableLighting();
 		GlStateManager.disableDepth();
 		for(GuiButton b : buttonList)
-			if(b instanceof GuiComponentDecoBase)
-				((GuiComponentDecoBase<?>)b).drawButtonUpperLayer(mc, mouseX, mouseY, partialTicks);
+			if(b instanceof DecoComponent)
+				((DecoComponent<?>)b).drawButtonUpperLayer(mc, mouseX, mouseY, partialTicks);
 		GlStateManager.enableLighting();
 		GlStateManager.enableDepth();
 		RenderHelper.enableStandardItemLighting();
@@ -600,7 +601,7 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 
 		//Widgets are not a part of the button list, so we need to check them separately
 		boolean anyPressed = false;
-		if(currentWidget!=null&&currentWidget.decoMousePressed(this.mc, mouseY, mouseX, mouseButtonEnum))
+		if(currentWidget!=null&&currentWidget.decoMousePressed(this.mc, mouseX, mouseY, mouseButtonEnum))
 		{
 			anyPressed = true;
 			Pre event = new Pre(this, currentWidget, this.buttonList);
@@ -612,14 +613,14 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 		}
 
 		if(focusedElement!=null)
-			anyPressed = focusedElement.decoMousePressed(this.mc, mouseY, mouseX, mouseButtonEnum)||anyPressed;
+			anyPressed = focusedElement.decoMousePressed(this.mc, mouseX, mouseY, mouseButtonEnum)||anyPressed;
 
 		for(GuiButton guiButton : this.buttonList)
 		{
 			if(guiButton==focusedElement)
 				continue;
-			if(guiButton instanceof GuiComponentDecoBase)
-				anyPressed = ((GuiComponentDecoBase<?>)guiButton).decoMousePressed(this.mc, mouseY, mouseX, mouseButtonEnum)||anyPressed;
+			if(guiButton instanceof DecoComponent)
+				anyPressed = ((DecoComponent<?>)guiButton).decoMousePressed(this.mc, mouseX, mouseY, mouseButtonEnum)||anyPressed;
 			else if(mouseButtonEnum==MouseButton.LEFT)
 				anyPressed = guiButton.mousePressed(this.mc, mouseX, mouseY)||anyPressed;
 		}
@@ -671,8 +672,8 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 		if(backgroundBuilder!=null)
 			backgroundBuilder.cleanup();
 		for(GuiButton b : buttonList)
-			if(b instanceof GuiComponentDecoBase)
-				((GuiComponentDecoBase<?>)b).cleanup();
+			if(b instanceof DecoComponent)
+				((DecoComponent<?>)b).cleanup();
 		//Labels shouldn't create VBOs, so no cleanup needed
 		for(DecoComponentWidgetBase<?> widget : widgetList)
 			widget.cleanup();
@@ -688,10 +689,10 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 			return currentWidget.getTooltip();
 		//Buttons
 		for(GuiButton guiButton : buttonList)
-			if(guiButton instanceof GuiComponentDecoBase&&guiButton.isMouseOver())
+			if(guiButton instanceof DecoComponent&&guiButton.isMouseOver())
 			{
-				this.hoveredElement = (GuiComponentDecoBase<?>)guiButton;
-				return ((GuiComponentDecoBase<?>)guiButton).getTooltip();
+				this.hoveredElement = (DecoComponent<?>)guiButton;
+				return ((DecoComponent<?>)guiButton).getTooltip();
 			}
 		//Labels
 		for(GuiLabel guiLabel : labelList)
@@ -701,7 +702,7 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 		return Collections.emptyList();
 	}
 
-	public void requestFocus(GuiComponentDecoBase<?> component)
+	public void requestFocus(DecoComponent<?> component)
 	{
 		if(this.focusedElement!=component)
 		{
@@ -752,8 +753,8 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 
 		//Save component data
 		for(GuiButton button : buttonList)
-			if(button instanceof GuiComponentDecoBase)
-				((GuiComponentDecoBase<?>)button).onGuiSave();
+			if(button instanceof DecoComponent)
+				((DecoComponent<?>)button).onGuiSave();
 
 		//Save current widget data
 		if(currentWidget!=null)
@@ -772,7 +773,9 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 	 */
 	protected EasyNBT onSaveTileData()
 	{
-		return EasyNBT.newNBT();
+		EasyNBT nbt = EasyNBT.newNBT();
+		NBTSerialisation.synchroniseFor(this, (tag, gui) -> tag.serializeForEvent(gui, nbt.unwrap(), SyncEvents.DECO_TILE_DATA));
+		return nbt;
 	}
 
 	@Nullable
@@ -1008,8 +1011,8 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 
 			//Draw the upper layer of buttons
 			for(GuiButton b : buttonList)
-				if(b instanceof GuiComponentDecoBase)
-					((GuiComponentDecoBase<?>)b).drawButtonUpperLayer(mc, 0, 0, 0);
+				if(b instanceof DecoComponent)
+					((DecoComponent<?>)b).drawButtonUpperLayer(mc, 0, 0, 0);
 
 			GlStateManager.popMatrix();
 			//Read pixels from framebuffer

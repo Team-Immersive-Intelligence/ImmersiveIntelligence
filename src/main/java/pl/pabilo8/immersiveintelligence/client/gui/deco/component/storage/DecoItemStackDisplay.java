@@ -6,7 +6,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.util.ITooltipFlag.TooltipFlags;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiComponentDecoBase;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoComponent;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoAlignment;
 import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationUtils;
 
@@ -23,7 +23,7 @@ import java.util.List;
  * @since 10.07.2025
  **/
 @ParametersAreNonnullByDefault
-public class DecoItemStackDisplay extends GuiComponentDecoBase<DecoItemStackDisplay>
+public class DecoItemStackDisplay extends DecoComponent<DecoItemStackDisplay>
 {
 	private List<ItemStack> stackList;
 	private IngredientStack stack = new IngredientStack(ItemStack.EMPTY);

@@ -2,12 +2,10 @@ package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multibloc
 
 import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorageAdvanced;
 import blusunrize.immersiveengineering.api.tool.ConveyorHandler.IConveyorAttachable;
-import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.common.util.Utils;
 import blusunrize.immersiveengineering.common.util.inventory.IEInventoryHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
@@ -31,7 +29,6 @@ import pl.pabilo8.immersiveintelligence.api.data.types.*;
 import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
 import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleRegistry;
 import pl.pabilo8.immersiveintelligence.client.util.carversound.ConditionCompoundSound;
-import pl.pabilo8.immersiveintelligence.client.util.carversound.TimedCompoundSound;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.ArtilleryHowitzer;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
@@ -42,21 +39,24 @@ import pl.pabilo8.immersiveintelligence.common.entity.tactile.TactileHandler.ITa
 import pl.pabilo8.immersiveintelligence.common.item.ammo.artillery.ItemIIAmmoArtilleryHeavy;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
-import pl.pabilo8.immersiveintelligence.common.util.AdvancedSounds.MultiSound;
-import pl.pabilo8.immersiveintelligence.common.util.*;
+import pl.pabilo8.immersiveintelligence.common.util.IIMath;
+import pl.pabilo8.immersiveintelligence.common.util.ISerializableEnum;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.lambda.NBTTagCollector;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IExplosionResistantMultiblock;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.ILadderMultiblock;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultiblockIIGeneric;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
+import pl.pabilo8.immersiveintelligence.common.util.sound.IISoundAnimation;
+import pl.pabilo8.immersiveintelligence.common.util.sound.SoundHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -65,145 +65,35 @@ import java.util.function.Predicate;
 public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<TileEntityArtilleryHowitzer>
 		implements IBooleanAnimatedPartsBlock, IConveyorAttachable, ILadderMultiblock, IExplosionResistantMultiblock, ITactileListener
 {
-	//Sound Animations
-	private static final IISoundAnimation loadingSoundAnimation;
-	private static final IISoundAnimation unloadingSoundAnimation;
-	private static final IISoundAnimation firingSoundAnimation;
-	//Tactile Animations
-	private static final ResLoc animationPlatform, animationOpen, animationFire, animationLoading, animationUnloading, animationPitch, animationYaw;
+	//--- Variables ---//
 
-	static
-	{
-		//Load tactile animations
-		animationOpen = ResLoc.of(IIReference.RES_II, "artillery_howitzer/artillery_howitzer_door");
-		animationPlatform = ResLoc.of(IIReference.RES_II, "artillery_howitzer/artillery_howitzer_platform");
-		animationLoading = ResLoc.of(IIReference.RES_II, "artillery_howitzer/artillery_howitzer_loading1");
-		animationUnloading = ResLoc.of(IIReference.RES_II, "artillery_howitzer/artillery_howitzer_unloading1");
-		animationFire = ResLoc.of(IIReference.RES_II, "artillery_howitzer/artillery_howitzer_fire1");
-		animationPitch = ResLoc.of(IIReference.RES_II, "artillery_howitzer/artillery_howitzer_tactile_pitch");
-		animationYaw = ResLoc.of(IIReference.RES_II, "artillery_howitzer/artillery_howitzer_tactile_yaw");
-
-		//load sound animations
-		loadingSoundAnimation = new IISoundAnimation(18);
-		unloadingSoundAnimation = new IISoundAnimation(18);
-		firingSoundAnimation = new IISoundAnimation(15.96);
-
-		//TODO: 21.04.2023 do it properly
-		loadingSoundAnimation
-				.withRepeatedSound(0.64, 3.6, IISounds.slidingDoorOpenM)
-
-				.withSound(4.36, IISounds.metalLockerOpen)
-				.withRepeatedSound(5.0, 11.28, IISounds.chainM)
-
-				.withSound(8.4, IISounds.artilleryShellPlace)
-				.withSound(9, SoundEvents.ENTITY_MINECART_RIDING)
-				.withSound(8.92, IISounds.howitzerPlatformStart)
-
-				.withSound(11.52, IISounds.metalLockerClose)
-
-				.withRepeatedSound(11.96, 13.24, IISounds.inserterYawM)
-				.withSound(13.96, IISounds.artilleryShellPick)
-				.withSound(14, SoundEvents.ENTITY_MINECART_RIDING)
-				.withRepeatedSound(14.24, 14.96, IISounds.inserterPitchM)
-				.withRepeatedSound(15.12, 15.90, IISounds.inserterYawM)
-				.withSound(16.36, IISounds.artilleryShellPlace)
-				.withRepeatedSound(15.12, 16.68, IISounds.inserterPitchM)
-
-				.withRepeatedSound(17.0, 18.0, IISounds.slidingDoorCloseM)
-				.compile(ArtilleryHowitzer.loadRackTime);
-
-		firingSoundAnimation
-				/*.withSound(0.0, IISounds.metalBreadboxOpen)
-				.withSound(0.52, IISounds.inserterForward)
-				.withSound(1.0, IISounds.inserterForward)
-				.withSound(1.32, IISounds.inserterForward)
-				.withSound(1.76, IISounds.inserterForward)
-				.withSound(2.24, IISounds.inserterForward)
-				.withSound(2.28, IISounds.inserterForward)
-				.withSound(2.8, IISounds.inserterForward)
-				.withSound(3.24, IISounds.inserterForward)
-				.withSound(3.72, IISounds.inserterForward)
-				.withSound(4.16, IISounds.inserterForward)
-				.withSound(4.4, IISounds.metalBreadboxClose)
-				.withSound(4.56, IISounds.inserterForward)
-				.withSound(4.96, IISounds.artilleryShellPick)
-				.withSound(5.04, IISounds.inserterForward)
-				.withSound(5.48, IISounds.inserterForward)
-				.withSound(5.92, IISounds.inserterForward)
-				.withSound(6.36, IISounds.inserterForward)
-				.withSound(6.8, IISounds.inserterForward)
-				.withSound(7.08, IISounds.metalBreadboxClose)
-				.withSound(7.72, IISounds.artilleryShellPut)
-				.withSound(7.8, IISounds.inserterForward)
-				.withSound(8.24, IISounds.inserterForward)
-				.withSound(8.44, IISounds.inserterForward)
-				.withSound(8.48, IISounds.inserterForward)
-				.withSound(9.0, IISounds.inserterForward)
-				//fire!
-				.withSound(9.52, IISounds.inserterForward)
-				.withSound(10.0, IISounds.inserterForward)
-				.withSound(10.36, IISounds.inserterForward)
-				.withSound(10.64, IISounds.inserterForward)
-				.withSound(10.68, IISounds.inserterForward)
-				.withSound(11.2, IISounds.inserterForward)
-				.withSound(11.68, IISounds.inserterForward)
-				.withSound(12.16, IISounds.inserterForward)
-				.withSound(12.24, IISounds.artilleryShellPick)
-				.withSound(12.64, IISounds.inserterBackward)
-				.withSound(13.08, IISounds.inserterBackward)
-				.withSound(13.52, IISounds.inserterBackward)
-				.withSound(13.96, IISounds.inserterForward)
-				.withSound(14.12, IISounds.metalBreadboxClose)
-				.withSound(14.48, IISounds.artilleryShellPut)
-				.withSound(14.76, IISounds.inserterBackward)
-				.withSound(15.24, IISounds.inserterBackward)
-				.withSound(15.6, IISounds.inserterBackward)
-				.withSound(15.72, IISounds.metalBreadboxOpen)*/
-				.compile(ArtilleryHowitzer.gunFireTime);
-
-		unloadingSoundAnimation
-				.withRepeatedSound(0.04, 1.24, IISounds.inserterYawM)
-
-				.withRepeatedSound(0.36, 1, IISounds.slidingDoorCloseM)
-
-				.withSound(1.36, IISounds.artilleryShellPick)
-				.withSound(2, SoundEvents.ENTITY_MINECART_RIDING)
-
-				.withRepeatedSound(1.44, 3.8, IISounds.inserterYawM)
-				.withSound(4.0, IISounds.artilleryShellPlace)
-				.withSound(4.5, SoundEvents.ENTITY_MINECART_RIDING)
-
-
-				.withRepeatedSound(4.28, 5.8, IISounds.inserterYawM)
-
-				.withSound(5.92, IISounds.metalLockerOpen)
-				.withRepeatedSound(6.6, 9.28, IISounds.chainM)
-				.withSound(8, IISounds.artilleryShellPick)
-				.withSound(12.44, IISounds.metalLockerClose)
-
-				.withRepeatedSound(8.08, 10.5, IISounds.slidingDoorCloseM)
-				.compile(ArtilleryHowitzer.loadRackTime);
-	}
-
+	//currently performed action
+	@SyncNBT
+	public ArtilleryHowitzerAction action = ArtilleryHowitzerAction.STOP;
 	public ArrayList<HowitzerOrder> orderList = new ArrayList<>();
 
-	//--- Variables ---//
-	//currently performed action
-	public ArtilleryHowitzerAnimation animation = ArtilleryHowitzerAnimation.STOP;
 	//animation related variables
+	@SyncNBT
 	public int animationTime = 0, animationTimeMax = 0, shellConveyorTime = 0;
+	@SyncNBT
 	public boolean isDoorOpened = false, platformPosition = false;
+	@SyncNBT
 	public int platformTime = 0, doorTime = 0;
+	@SyncNBT
 	public float turretYaw = 0, turretPitch = 0, plannedYaw = 0, plannedPitch = 0;
+
 	//shells loaded into the rack
+	@SyncNBT
 	public NonNullList<ItemStack> loadedShells;
 	public IItemHandler inventoryHandler, insertionHandler;
-	@SideOnly(Side.CLIENT)
-	private ConditionCompoundSound soundRotationV, soundRotationH, soundDoorOpen, soundDoorClose;
-	@SideOnly(Side.CLIENT)
-	private List<TimedCompoundSound> soundsList;
-	private TactileHandler tactileHandler = null;
 
+	@SideOnly(Side.CLIENT)
+	private ConditionCompoundSound<TileEntityArtilleryHowitzer> soundRotationV, soundRotationH, soundDoorOpen, soundDoorClose;
+
+	@SideOnly(Side.CLIENT)
+	private SoundHandler sounds;
+
+	private TactileHandler tactileHandler = null;
 
 	public TileEntityArtilleryHowitzer()
 	{
@@ -216,6 +106,16 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 		loadedShells = NonNullList.withSize(4, ItemStack.EMPTY);
 		inventoryHandler = new IEInventoryHandler(inventory.size(), this, 0, true, true);
 		insertionHandler = new IEInventoryHandler(1, this, 0, true, false);
+		sounds = new SoundHandler(this);
+	}
+
+	@Override
+	protected void dummyCleanup()
+	{
+		super.dummyCleanup();
+		loadedShells = null;
+		inventoryHandler = insertionHandler = null;
+		sounds = null;
 	}
 
 	@Override
@@ -247,15 +147,15 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 
 		//howitzer door movement
 		doorTime = MathHelper.clamp(doorTime+(isDoorOpened?1: -2), 0, ArtilleryHowitzer.doorTime);
-		tactileHandler.update(animationOpen, (float)doorTime/ArtilleryHowitzer.doorTime);
+		tactileHandler.update(MultiblockArtilleryHowitzer.INSTANCE.animationOpen, (float)doorTime/ArtilleryHowitzer.doorTime);
 
 		//howitzer platform movement
 		platformTime = MathHelper.clamp(platformTime+(platformPosition?1: -1), 0, ArtilleryHowitzer.platformTime);
-		tactileHandler.update(animationPlatform, (float)platformTime/ArtilleryHowitzer.platformTime);
+		tactileHandler.update(MultiblockArtilleryHowitzer.INSTANCE.animationPlatform, (float)platformTime/ArtilleryHowitzer.platformTime);
 
 		//hide howitzer if door is closed
 		if(!isDoorOpened)
-			animation = ArtilleryHowitzerAnimation.HIDE;
+			action = ArtilleryHowitzerAction.HIDE;
 
 		//shell conveyor action
 		if(shellConveyorTime < ArtilleryHowitzer.conveyorTime)
@@ -303,7 +203,7 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 		animateGunTactiles();
 
 		//S T O P
-		if(animation==ArtilleryHowitzerAnimation.STOP)
+		if(action==ArtilleryHowitzerAction.STOP)
 		{
 			if(world.isRemote||orderList.isEmpty())
 				return;
@@ -314,9 +214,9 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 				orderList.remove(0);
 			else if(newOrder.animation.matchesRequirements(this)) //can be done
 			{
-				animation = newOrder.animation;
+				action = newOrder.animation;
 				animationTime = 0;
-				animationTimeMax = animation.animationTime;
+				animationTimeMax = action.animationTime;
 				plannedPitch = newOrder.pitch;
 				plannedYaw = newOrder.yaw;
 
@@ -328,7 +228,7 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 
 
 		boolean canContinue = true;
-		switch(animation.gunPosition)
+		switch(action.gunPosition)
 		{
 			case NEUTRAL: //doesn't need anything
 				break;
@@ -359,7 +259,7 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 				animationTime++;
 			else
 			{
-				animation = ArtilleryHowitzerAnimation.STOP;
+				action = ArtilleryHowitzerAction.STOP;
 				animationTimeMax = 0;
 				animationTime = 0;
 				forceTileUpdate();
@@ -369,7 +269,7 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 				handleAnimationSounds();
 
 			//update tactile animation
-			switch(animation)
+			switch(action)
 			{
 				case AIM:
 					break;
@@ -377,26 +277,26 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 				case FIRE2:
 				case FIRE3:
 				case FIRE4:
-					tactileHandler.update(animationFire, (float)animationTime/animationTimeMax);
+					tactileHandler.update(MultiblockArtilleryHowitzer.INSTANCE.animationFire, (float)animationTime/animationTimeMax);
 					break;
 				case LOAD1:
 				case LOAD2:
 				case LOAD3:
 				case LOAD4:
-					tactileHandler.update(animationLoading, (float)animationTime/animationTimeMax);
+					tactileHandler.update(MultiblockArtilleryHowitzer.INSTANCE.animationLoading, (float)animationTime/animationTimeMax);
 					break;
 				case UNLOAD1:
 				case UNLOAD2:
 				case UNLOAD3:
 				case UNLOAD4:
-					tactileHandler.update(animationUnloading, (float)animationTime/animationTimeMax);
+					tactileHandler.update(MultiblockArtilleryHowitzer.INSTANCE.animationUnloading, (float)animationTime/animationTimeMax);
 					break;
 			}
 
 			//update animations
-			if(animationTime==(int)(animationTimeMax*animation.executeTime))
+			if(animationTime==(int)(animationTimeMax*action.executeTime))
 			{
-				switch(animation)
+				switch(action)
 				{
 					case AIM:
 						break;
@@ -404,14 +304,14 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 					case FIRE2:
 					case FIRE3:
 					case FIRE4:
-						fireGun(animation.ordinal()-ArtilleryHowitzerAnimation.FIRE1.ordinal());
+						fireGun(action.ordinal()-ArtilleryHowitzerAction.FIRE1.ordinal());
 						break;
 					case LOAD1:
 					case LOAD2:
 					case LOAD3:
 					case LOAD4:
 					{
-						int slot = animation.ordinal()-ArtilleryHowitzerAnimation.LOAD1.ordinal();
+						int slot = action.ordinal()-ArtilleryHowitzerAction.LOAD1.ordinal();
 						loadedShells.set(slot, inventoryHandler.extractItem(5, 1, false));
 					}
 					break;
@@ -420,7 +320,7 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 					case UNLOAD3:
 					case UNLOAD4:
 					{
-						int slot = animation.ordinal()-ArtilleryHowitzerAnimation.UNLOAD1.ordinal();
+						int slot = action.ordinal()-ArtilleryHowitzerAction.UNLOAD1.ordinal();
 						inventory.set(6, loadedShells.get(slot).copy());
 						loadedShells.set(slot, ItemStack.EMPTY);
 					}
@@ -435,8 +335,8 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 
 	private void animateGunTactiles()
 	{
-		tactileHandler.update(animationPitch, turretPitch/105f);
-		tactileHandler.update(animationYaw, ((720-turretYaw-facing.getHorizontalAngle()-90)%360)/360f);
+		tactileHandler.update(MultiblockArtilleryHowitzer.INSTANCE.animationPitch, turretPitch/105f);
+		tactileHandler.update(MultiblockArtilleryHowitzer.INSTANCE.animationYaw, ((720-turretYaw-facing.getHorizontalAngle()-90)%360)/360f);
 	}
 
 	private void fireGun(int i)
@@ -486,40 +386,13 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 		if(isDummy())
 			return;
 
-		if(!descPacket)
-		{
-			loadedShells = Utils.readInventory(nbt.getTagList("loaded_shells", 10), loadedShells.size());
-
-			//for compatibility with old howitzer
-			if(nbt.hasKey("bullet"))
-				loadedShells = NonNullList.from(ItemStack.EMPTY, new ItemStack(nbt.getCompoundTag("bullet")),
-						ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY);
-		}
-
-		turretYaw = nbt.getFloat("turretYaw");
-		plannedYaw = nbt.getFloat("plannedYaw");
-		turretPitch = nbt.getFloat("turretPitch");
-		plannedPitch = nbt.getFloat("plannedPitch");
-
-		isDoorOpened = nbt.getBoolean("isDoorOpened");
-
-		animation = ArtilleryHowitzerAnimation.values()[nbt.getInteger("animation")];
-		animationTime = nbt.getInteger("animation_time");
-		animationTimeMax = nbt.getInteger("animation_time_max");
-
-		doorTime = nbt.getInteger("door_time");
-		platformTime = nbt.getInteger("platform_time");
-		platformPosition = nbt.getBoolean("platform_position");
-
-		shellConveyorTime = nbt.getInteger("shell_conveyor_time");
-
 		orderList.clear();
 		for(NBTBase order : nbt.getTagList("order_queue", NBT.TAG_COMPOUND))
 			if(order instanceof NBTTagCompound)
 			{
 				NBTTagCompound compound = (NBTTagCompound)order;
 				orderList.add(
-						new HowitzerOrder(ArtilleryHowitzerAnimation.values()[compound.getInteger("order")],
+						new HowitzerOrder(ArtilleryHowitzerAction.values()[compound.getInteger("order")],
 								compound.getFloat("pitch"),
 								compound.getFloat("yaw")
 						));
@@ -534,29 +407,6 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 		if(isDummy())
 			return;
 
-		if(!descPacket)
-		{
-			nbt.setTag("loaded_shells", Utils.writeInventory(loadedShells));
-		}
-
-		nbt.setFloat("turretYaw", turretYaw);
-		nbt.setFloat("plannedYaw", plannedYaw);
-		nbt.setFloat("turretPitch", turretPitch);
-		nbt.setFloat("plannedPitch", plannedPitch);
-
-		nbt.setBoolean("isDoorOpened", isDoorOpened);
-
-		nbt.setInteger("animation", animation.ordinal());
-		nbt.setInteger("animation_time", animationTime);
-		nbt.setInteger("animation_time_max", animationTimeMax);
-
-		nbt.setInteger("door_time", doorTime);
-		nbt.setInteger("platform_time", platformTime);
-		nbt.setBoolean("platform_position", platformPosition);
-
-		nbt.setInteger("shell_conveyor_time", shellConveyorTime);
-
-
 		nbt.setTag("order_queue",
 				orderList.stream()
 						.map(order -> {
@@ -568,55 +418,6 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 						})
 						.collect(new NBTTagCollector())
 		);
-
-	}
-
-	@Override
-	public void receiveMessageFromClient(@Nonnull NBTTagCompound message)
-	{
-
-	}
-
-	@Override
-	public void receiveMessageFromServer(@Nonnull NBTTagCompound message)
-	{
-		super.receiveMessageFromServer(message);
-
-		if(isFullSyncMessage(message)||isDummy())
-			return;
-
-		if(message.hasKey("loaded_shells"))
-			loadedShells = Utils.readInventory(message.getTagList("loaded_shells", 10), loadedShells.size());
-
-		if(message.hasKey("turretYaw"))
-			turretYaw = message.getFloat("turretYaw");
-		if(message.hasKey("plannedYaw"))
-			plannedYaw = message.getFloat("plannedYaw");
-		if(message.hasKey("turretPitch"))
-			turretPitch = message.getFloat("turretPitch");
-		if(message.hasKey("plannedPitch"))
-			plannedPitch = message.getFloat("plannedPitch");
-
-		if(message.hasKey("isDoorOpened"))
-			isDoorOpened = message.getBoolean("isDoorOpened");
-
-		if(message.hasKey("animation"))
-			animation = ArtilleryHowitzerAnimation.values()[message.getInteger("animation")];
-		if(message.hasKey("animation_time"))
-			animationTime = message.getInteger("animation_time");
-		if(message.hasKey("animation_time_max"))
-			animationTimeMax = message.getInteger("animation_time_max");
-
-		if(message.hasKey("door_time"))
-			doorTime = message.getInteger("door_time");
-		if(message.hasKey("platform_time"))
-			platformTime = message.getInteger("platform_time");
-		if(message.hasKey("platform_position"))
-			platformPosition = message.getBoolean("platform_position");
-
-		if(message.hasKey("shell_conveyor_time"))
-			shellConveyorTime = message.getInteger("shell_conveyor_time");
-
 
 	}
 
@@ -653,89 +454,60 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 	private void handleAnimationSounds()
 	{
 		IISoundAnimation current = null;
-
-		switch(animation)
+		switch(action)
 		{
 			case FIRE1:
 			case FIRE2:
 			case FIRE3:
 			case FIRE4:
-				current = firingSoundAnimation;
+				current = MultiblockArtilleryHowitzer.INSTANCE.firingSoundAnimation;
 				break;
 			case LOAD1:
 			case LOAD2:
 			case LOAD3:
 			case LOAD4:
-				current = loadingSoundAnimation;
+				current = MultiblockArtilleryHowitzer.INSTANCE.loadingSoundAnimation;
 				break;
 			case UNLOAD1:
 			case UNLOAD2:
 			case UNLOAD3:
 			case UNLOAD4:
-				current = unloadingSoundAnimation;
+				current = MultiblockArtilleryHowitzer.INSTANCE.unloadingSoundAnimation;
 				break;
 			default:
 				break;
 		}
 
 		if(current!=null)
-		{
-			BlockPos soundPos = getBlockPosForPos(202);
-			if(soundsList==null)
-				soundsList = new ArrayList<>();
-			current.handleSounds(soundsList, soundPos, animationTime, .75f);
-		}
+			current.handleSounds(sounds, animationTime, .75f);
 	}
 
 	@SideOnly(Side.CLIENT)
 	private void handleSounds()
 	{
-		boolean hasEnergy = energyStorage.getEnergyStored() >= ArtilleryHowitzer.energyUsagePassive;
-		boolean hasActiveEnergy = energyStorage.getEnergyStored() >= ArtilleryHowitzer.energyUsagePassive+ArtilleryHowitzer.energyUsageActive;
+		//Load the sounds only once
+		if(soundDoorOpen!=null&&soundDoorClose!=null&&soundRotationH!=null&&soundRotationV!=null)
+			return;
 
-		boolean platformOK = animation==ArtilleryHowitzerAnimation.STOP||platformTime==(platformPosition?ArtilleryHowitzer.platformTime: 0);
-		boolean yawOK = turretYaw==MathHelper.wrapDegrees(plannedYaw);
-		boolean pitchOK = turretPitch==plannedPitch;
+		Supplier<Boolean> hasEnergy = () -> energyStorage.getEnergyStored() >= ArtilleryHowitzer.energyUsagePassive;
+		Supplier<Boolean> hasActiveEnergy = () -> energyStorage.getEnergyStored() >= ArtilleryHowitzer.energyUsagePassive+ArtilleryHowitzer.energyUsageActive;
+		Supplier<Boolean> platformOK = () -> action==ArtilleryHowitzerAction.STOP||platformTime==(platformPosition?ArtilleryHowitzer.platformTime: 0);
+		Supplier<Boolean> yawOK = () -> turretYaw==MathHelper.wrapDegrees(plannedYaw);
+		Supplier<Boolean> pitchOK = () -> turretPitch==plannedPitch;
 
 		Vec3d posDoor = new Vec3d(getBlockPosForPos(525));
-		soundDoorOpen = playRepeatedSound(soundDoorOpen, IISounds.slidingDoorOpenM, posDoor, .5f, 1f,
-				hasEnergy&&isDoorOpened&&doorTime < ArtilleryHowitzer.doorTime
-		);
-		soundDoorClose = playRepeatedSound(soundDoorClose, IISounds.slidingDoorCloseM, posDoor, .5f, 1f,
-				hasEnergy&&!isDoorOpened&&doorTime > 0
-		);
 
-		soundRotationH = playRepeatedSound(soundRotationH, IISounds.turntableHeavyForwardM, posDoor, .5f, 1f,
-				hasEnergy&&platformOK&&!yawOK
-		);
-		soundRotationV = playRepeatedSound(soundRotationV, IISounds.electricMotorHeavyForwardM, posDoor, .5f, 1f,
-				hasEnergy&&platformOK&&!pitchOK
-		);
+		soundDoorOpen = new ConditionCompoundSound<>(IISounds.slidingDoorOpenLoop, posDoor, this,
+				te -> hasEnergy.get()&&isDoorOpened&&doorTime < ArtilleryHowitzer.doorTime);
 
-		/*soundRotationV = playRepeatedSound(soundRotationV, IISounds.howitzerPlatformLower, posDoor, .5f, 1f,
-				hasEnergy&&platformOK&&!pitchOK
-		);*/
+		soundDoorClose = new ConditionCompoundSound<>(IISounds.slidingDoorCloseLoop, posDoor, this,
+				te -> hasEnergy.get()&&!isDoorOpened&&doorTime > 0);
 
-		//TODO: 16.05.2023 platform lowering
+		soundRotationH = new ConditionCompoundSound<>(IISounds.turntableHeavyForwardLoop, posDoor, this,
+				te -> hasActiveEnergy.get()&&platformOK.get()&&!yawOK.get());
 
-	}
-
-	@SideOnly(Side.CLIENT)
-	private ConditionCompoundSound playRepeatedSound(ConditionCompoundSound current, MultiSound sound, Vec3d pos, float volume, float pitch, boolean condition)
-	{
-		if(!condition)
-		{
-			if(current!=null)
-				current.forceStop();
-			return null;
-		}
-
-		if(current==null)
-		{
-			current = new ConditionCompoundSound(sound, SoundCategory.BLOCKS, pos, volume, pitch, () -> true);
-			ClientUtils.mc().getSoundHandler().playSound(current);
-		}
-		return current;
+		soundRotationV = new ConditionCompoundSound<>(IISounds.electricMotorHeavyForwardLoop, posDoor, this,
+				te -> hasActiveEnergy.get()&&platformOK.get()&&!pitchOK.get());
 	}
 
 	@Override
@@ -792,26 +564,26 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 						float vOffset = IIDataHandlingUtils.asFloat('v', packet);
 						float hOffset = IIDataHandlingUtils.asFloat('h', packet);
 
-						orderList.add(new HowitzerOrder(ArtilleryHowitzerAnimation.FIRE1, plannedPitch-vOffset, plannedYaw-hOffset));
-						orderList.add(new HowitzerOrder(ArtilleryHowitzerAnimation.FIRE2, plannedPitch+vOffset, plannedYaw+hOffset));
-						orderList.add(new HowitzerOrder(ArtilleryHowitzerAnimation.FIRE3, plannedPitch-vOffset, plannedYaw-hOffset));
-						orderList.add(new HowitzerOrder(ArtilleryHowitzerAnimation.FIRE4, plannedPitch+vOffset, plannedYaw+hOffset));
+						orderList.add(new HowitzerOrder(ArtilleryHowitzerAction.FIRE1, plannedPitch-vOffset, plannedYaw-hOffset));
+						orderList.add(new HowitzerOrder(ArtilleryHowitzerAction.FIRE2, plannedPitch+vOffset, plannedYaw+hOffset));
+						orderList.add(new HowitzerOrder(ArtilleryHowitzerAction.FIRE3, plannedPitch-vOffset, plannedYaw-hOffset));
+						orderList.add(new HowitzerOrder(ArtilleryHowitzerAction.FIRE4, plannedPitch+vOffset, plannedYaw+hOffset));
 					}
 					break;
 					case "load_all":
 					{
-						orderList.add(new HowitzerOrder(ArtilleryHowitzerAnimation.LOAD1));
-						orderList.add(new HowitzerOrder(ArtilleryHowitzerAnimation.LOAD2));
-						orderList.add(new HowitzerOrder(ArtilleryHowitzerAnimation.LOAD3));
-						orderList.add(new HowitzerOrder(ArtilleryHowitzerAnimation.LOAD4));
+						orderList.add(new HowitzerOrder(ArtilleryHowitzerAction.LOAD1));
+						orderList.add(new HowitzerOrder(ArtilleryHowitzerAction.LOAD2));
+						orderList.add(new HowitzerOrder(ArtilleryHowitzerAction.LOAD3));
+						orderList.add(new HowitzerOrder(ArtilleryHowitzerAction.LOAD4));
 					}
 					break;
 					case "unload_all":
 					{
-						orderList.add(new HowitzerOrder(ArtilleryHowitzerAnimation.UNLOAD1));
-						orderList.add(new HowitzerOrder(ArtilleryHowitzerAnimation.UNLOAD2));
-						orderList.add(new HowitzerOrder(ArtilleryHowitzerAnimation.UNLOAD3));
-						orderList.add(new HowitzerOrder(ArtilleryHowitzerAnimation.UNLOAD4));
+						orderList.add(new HowitzerOrder(ArtilleryHowitzerAction.UNLOAD1));
+						orderList.add(new HowitzerOrder(ArtilleryHowitzerAction.UNLOAD2));
+						orderList.add(new HowitzerOrder(ArtilleryHowitzerAction.UNLOAD3));
+						orderList.add(new HowitzerOrder(ArtilleryHowitzerAction.UNLOAD4));
 					}
 					break;
 					case "callback":
@@ -854,9 +626,9 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 									));
 								}
 								case "get_state":
-									return new DataTypeString(animation.getName());
+									return new DataTypeString(action.getName());
 								case "get_state_num":
-									return new DataTypeInteger(animation.ordinal());
+									return new DataTypeInteger(action.ordinal());
 							}
 							return null;
 						});
@@ -866,15 +638,15 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 					//Single Commands
 					default:
 					{
-						ArtilleryHowitzerAnimation anim = ArtilleryHowitzerAnimation.v(command, this);
+						ArtilleryHowitzerAction anim = ArtilleryHowitzerAction.v(command, this);
 						if(anim!=null)
 						{
-							if(anim==ArtilleryHowitzerAnimation.STOP)
+							if(anim==ArtilleryHowitzerAction.STOP)
 								orderList.clear();
 
 							if(anim.matchesRequirements(this))
 							{
-								animation = anim;
+								action = anim;
 								animationTime = 0;
 								animationTimeMax = anim.animationTime;
 								forceTileUpdate();
@@ -985,34 +757,7 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 		return tactileHandler;
 	}
 
-	@Nonnull
-	@Override
-	public World getTactileWorld()
-	{
-		return world;
-	}
-
-	@Nonnull
-	@Override
-	public BlockPos getTactilePos()
-	{
-		return this.getPos();
-	}
-
-	@Nonnull
-	@Override
-	public EnumFacing getTactileFacing()
-	{
-		return facing;
-	}
-
-	@Override
-	public boolean getIsTactileMirrored()
-	{
-		return mirrored;
-	}
-
-	public enum ArtilleryHowitzerAnimation implements ISerializableEnum
+	public enum ArtilleryHowitzerAction implements ISerializableEnum
 	{
 		STOP(false, false, GunPosition.NEUTRAL, t -> true, t -> false, 0, null, 1f), //stops current action
 		HIDE(false, false, GunPosition.LOADING, t -> true, t -> t.platformTime==0, 0, null, 1f), //makes howitzer go down
@@ -1069,10 +814,10 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 		final int animationTime;
 		final float executeTime;
 
-		ArtilleryHowitzerAnimation(boolean requiresPlatform, boolean platformUp, GunPosition gunPosition,
-								   Predicate<TileEntityArtilleryHowitzer> requirements,
-								   Predicate<TileEntityArtilleryHowitzer> fulfilled,
-								   int animationTime, @Nullable String alias, float executeTime)
+		ArtilleryHowitzerAction(boolean requiresPlatform, boolean platformUp, GunPosition gunPosition,
+								Predicate<TileEntityArtilleryHowitzer> requirements,
+								Predicate<TileEntityArtilleryHowitzer> fulfilled,
+								int animationTime, @Nullable String alias, float executeTime)
 		{
 			this.requiresPlatform = requiresPlatform;
 			this.platformUp = platformUp;
@@ -1085,10 +830,10 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 		}
 
 		@Nullable
-		public static ArtilleryHowitzerAnimation v(String s, TileEntityArtilleryHowitzer te)
+		public static ArtilleryHowitzerAction v(String s, TileEntityArtilleryHowitzer te)
 		{
 			String ss = s.toUpperCase();
-			Optional<ArtilleryHowitzerAnimation> found = Arrays.stream(values())
+			Optional<ArtilleryHowitzerAction> found = Arrays.stream(values())
 					.filter(e -> e.alias!=null&&e.alias.toLowerCase().equals(s))
 					.filter(a -> a.matchesRequirements(te))
 					.findFirst();
@@ -1119,17 +864,17 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 
 	public static class HowitzerOrder
 	{
-		final ArtilleryHowitzerAnimation animation;
+		final ArtilleryHowitzerAction animation;
 		final float pitch, yaw;
 
-		public HowitzerOrder(ArtilleryHowitzerAnimation animation, float pitch, float yaw)
+		public HowitzerOrder(ArtilleryHowitzerAction animation, float pitch, float yaw)
 		{
 			this.animation = animation;
 			this.pitch = pitch;
 			this.yaw = yaw;
 		}
 
-		public HowitzerOrder(ArtilleryHowitzerAnimation animation)
+		public HowitzerOrder(ArtilleryHowitzerAction animation)
 		{
 			this(animation, 0, 0);
 		}

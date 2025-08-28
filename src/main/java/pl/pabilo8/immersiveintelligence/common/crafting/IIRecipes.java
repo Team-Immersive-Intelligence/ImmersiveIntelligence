@@ -995,48 +995,44 @@ public class IIRecipes
 
 	public static void addChemicalPainterRecipes()
 	{
-		// TODO: 14.10.2021 colored crates
-		// TODO: 14.10.2021 banners
-
 		//Vanilla Blocks
-
-		PaintingRecipe.addRecipe((rgb, stack) -> {
+		new PaintingRecipe((rgb, stack) -> {
 			//get closest approximated dye
 			return new ItemStack(Blocks.WOOL, 1, rgb.getDyeColor().getMetadata());
 		}, new IngredientStack(new ItemStack(Blocks.WOOL)), 512, 240, 125);
 
-		PaintingRecipe.addRecipe((rgb, stack) -> {
+		new PaintingRecipe((rgb, stack) -> {
 			//get closest approximated dye
 			return new ItemStack(Blocks.CARPET, 1, rgb.getDyeColor().getMetadata());
 		}, new IngredientStack(new ItemStack(Blocks.CARPET)), 512, 240, 50);
 
-		PaintingRecipe.addRecipe((rgb, stack) -> {
+		new PaintingRecipe((rgb, stack) -> {
 			//get closest approximated dye
 			return new ItemStack(Blocks.STAINED_GLASS, 1, rgb.getDyeColor().getMetadata());
 		}, new IngredientStack(new ItemStack(Blocks.GLASS)), 512, 240, 125);
 
-		PaintingRecipe.addRecipe((rgb, stack) -> {
+		new PaintingRecipe((rgb, stack) -> {
 			//get closest approximated dye
 			return new ItemStack(Blocks.STAINED_GLASS_PANE, 1, rgb.getDyeColor().getMetadata());
 		}, new IngredientStack(new ItemStack(Blocks.GLASS_PANE)), 512, 240, 125);
 
-		PaintingRecipe.addRecipe((rgb, stack) -> {
+		new PaintingRecipe((rgb, stack) -> {
 			//get closest approximated dye
 			return new ItemStack(Blocks.STAINED_HARDENED_CLAY, 1, rgb.getDyeColor().getMetadata());
 		}, new IngredientStack(new ItemStack(Blocks.HARDENED_CLAY)), 512, 240, 125);
 
-		PaintingRecipe.addRecipe((rgb, stack) -> {
+		new PaintingRecipe((rgb, stack) -> {
 			//get closest approximated dye
 			return new ItemStack(Items.BED, 1, rgb.getDyeColor().getMetadata());
 		}, new IngredientStack(new ItemStack(Items.BED)), 512, 240, 200);
 
 		//II / IE items
-		PaintingRecipe.addRecipe((rgb, stack) -> {
+		new PaintingRecipe((rgb, stack) -> {
 			IIContent.itemAdvancedPowerPack.setColor(stack, rgb.getPackedRGB());
 			return stack;
 		}, new IngredientStack(new ItemStack(IIContent.itemAdvancedPowerPack)), 8192, 340, 2000);
 
-		PaintingRecipe.addRecipe((rgb, stack) -> {
+		new PaintingRecipe((rgb, stack) -> {
 			Items.LEATHER_HELMET.setColor(stack, rgb.getPackedRGB());
 			return stack;
 		}, new IngredientStack(NonNullList.from(ItemStack.EMPTY,
@@ -1046,9 +1042,8 @@ public class IIRecipes
 				new ItemStack(Items.LEATHER_BOOTS)
 		)), 8192, 340, 2000);
 
-		//TODO: 15.10.2021 dyable LE armor
-		PaintingRecipe.addRecipe((rgb, stack) -> {
-			//IIContent.itemLightEngineerChestplate.setColor(stack,rgb);
+		new PaintingRecipe((rgb, stack) -> {
+			IIContent.itemLightEngineerChestplate.setColor(stack, rgb.getPackedRGB());
 			return stack;
 		}, new IngredientStack(NonNullList.from(ItemStack.EMPTY,
 				new ItemStack(IIContent.itemLightEngineerHelmet),
@@ -1062,7 +1057,7 @@ public class IIRecipes
 			ItemStack bulletStack = bullet.getAmmoStack(AmmoRegistry.MISSING_CORE, CoreType.SOFTPOINT, FuseType.CONTACT);
 			//clear nbt
 			bulletStack.setTagCompound(new NBTTagCompound());
-			PaintingRecipe.addRecipe((rgb, stack) -> {
+			new PaintingRecipe((rgb, stack) -> {
 				ItemStack ret = bullet.setPaintColor(stack, rgb);
 				ret.setCount(1);
 				return ret;

@@ -21,7 +21,7 @@ import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 public class GuiFuelStation extends DecoGui<TileEntityFuelStation, ContainerFuelStation>
 {
 	@DecoResource
-	public static final ResourceLocation BASE_TEXTURE = IIReference.RES_II.with("gui/fuel_station");
+	public static final ResourceLocation TEXTURE = IIReference.RES_II.with("gui/fuel_station");
 
 	public GuiFuelStation(EntityPlayer player, TileEntityFuelStation tile)
 	{
@@ -45,11 +45,11 @@ public class GuiFuelStation extends DecoGui<TileEntityFuelStation, ContainerFuel
 		addComponents(
 				new DecoImage(57, 64)
 						.withSize(32, 9)
-						.withImageLocation(BASE_TEXTURE, true)
+						.withImageLocation(TEXTURE, true)
 						.withUV(32, 0, 0, 32, 10),
 				new DecoImage(57+32, 64)
 						.withSize(32, 9)
-						.withImageLocation(BASE_TEXTURE, true)
+						.withImageLocation(TEXTURE, true)
 						.withUV(32, 0, 10, 32, 20),
 				new DecoFluidTank(57, 0)
 						.withSize(64, 64)

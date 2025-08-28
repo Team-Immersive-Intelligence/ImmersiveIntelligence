@@ -8,9 +8,9 @@ import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.ISawblade;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
-import pl.pabilo8.immersiveintelligence.common.util.IISoundAnimation;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.IIMultiblockRecipe;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.RotaryMachineRecipe;
+import pl.pabilo8.immersiveintelligence.common.util.sound.IISoundAnimation;
 
 import java.util.HashMap;
 
@@ -45,12 +45,17 @@ public class SawmillRecipe extends IIMultiblockRecipe implements RotaryMachineRe
 		this.inputList = Lists.newArrayList(this.itemInput);
 		this.outputList = ListUtils.fromItems(this.itemOutput, this.itemSecondaryOutput);
 		this.dustColor = dustColor;
+	}
 
+	@Override
+	protected void loadClientSideContent()
+	{
 		//0 - 0.1 - grabbing sound
 		//0.1 - 1 - cutting,
 		//sections each through 0.4/3-1.5/3
 		//rolling each 1.5/3 - 2.5/3, landing 3/3
 
+		int time = getTotalProcessTime();
 		double cuttingTimeStart = time*0.1;
 		double cuttingSection = (time*0.9)/itemOutput.getCount();
 
@@ -61,7 +66,7 @@ public class SawmillRecipe extends IIMultiblockRecipe implements RotaryMachineRe
 			this.soundAnimation
 					.withSound(cuttingTimeStart+cuttingSection*i, IISounds.sawmillInserterStart)
 					.withRepeatedSound(cuttingTimeStart+cuttingSection*(i+0.13),
-							cuttingTimeStart+cuttingSection*(i+0.5), IISounds.sawmillRunning)
+							cuttingTimeStart+cuttingSection*(i+0.5), IISounds.sawmillLoop)
 					.withSound(cuttingTimeStart+cuttingSection*(i+0.76), IISounds.sawmillWoodTumble)
 					.withSound(cuttingTimeStart+cuttingSection*(i+0.83), IISounds.sawmillWoodTumble)
 					.withSound(cuttingTimeStart+cuttingSection*(i+0.85), IISounds.sawmillInserterEnd)

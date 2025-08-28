@@ -26,7 +26,7 @@ import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 public class GuiPrintingPress extends DecoGui<TileEntityPrintingPress, ContainerPrintingPress>
 {
 	@DecoResource
-	public static ResourceLocation BACKGROUND = ResLoc.of(IIReference.RES_II, "gui/printing_press");
+	public static ResourceLocation TEXTURE = ResLoc.of(IIReference.RES_II, "gui/printing_press");
 	private final TileEntityPrintingPress tile;
 
 	public GuiPrintingPress(EntityPlayer player, TileEntityPrintingPress tile)
@@ -60,11 +60,11 @@ public class GuiPrintingPress extends DecoGui<TileEntityPrintingPress, Container
 						.withFluidTank(tile.tank),
 				new DecoImage(13-4+16+10, 39-8-1)
 						.withSize(51, 18)
-						.withImageLocation(BACKGROUND, true)
+						.withImageLocation(TEXTURE, true)
 						.withUV(64, 0, 0, 51, 18),
 				new DecoImage(13-4+16+10, 39-8-1)
 						.withSize(51, 18)
-						.withImageLocation(BACKGROUND, true)
+						.withImageLocation(TEXTURE, true)
 						.withUV(64, 0, 18, 51, 18+18)
 						.withAnimation(ImageAnimationDirection.LEFT_TO_RIGHT, DecoGuiUtils.getMultiblockProductionMultiProgress(tile))
 		);

@@ -4,7 +4,6 @@ import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorageAdvan
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
@@ -24,12 +23,12 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionBase;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionMulti;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockInteractablePart;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -43,11 +42,13 @@ public class TileEntityAmmunitionAssembler extends TileEntityMultiblockProductio
 	public static final int SLOT_CORE = 0, SLOT_CASING = 1, SLOT_OUTPUT = 2;
 	public static final String NBT_KEY_EFFECT = "effect";
 
+	@SyncNBT(events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_CLIENT_MESSAGE})
 	public FuseType fuse = FuseType.CONTACT;
-	@SyncNBT
+	@SyncNBT(events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_CLIENT_MESSAGE})
 	public int fuseConfig = 0; //depends on fuse type: time for timed fuse, distance for proximity fuse
 	@SyncNBT
 	public MultiblockInteractablePart hatch;
+
 	//inventory: core, casing
 	IItemHandler coreInputHandler = getSingleInventoryHandler(SLOT_CORE, true, false);
 	IItemHandler casingInputHandler = getSingleInventoryHandler(SLOT_CASING, true, false);
@@ -182,34 +183,6 @@ public class TileEntityAmmunitionAssembler extends TileEntityMultiblockProductio
 	{
 		if(packet.has('f'))
 			fuse = FuseType.v(packet.get('f').toString());
-	}
-
-	@Override
-	public void receiveMessageFromServer(@Nonnull NBTTagCompound message)
-	{
-		super.receiveMessageFromServer(message);
-
-		if(isDummy())
-			return;
-
-		if(message.hasKey("fuse"))
-			this.fuse = FuseType.v(message.getString("fuse"));
-		if(message.hasKey("fuse_config"))
-			this.fuseConfig = message.getInteger("fuse_config");
-	}
-
-	@Override
-	public void receiveMessageFromClient(NBTTagCompound message)
-	{
-		super.receiveMessageFromClient(message);
-
-		if(isDummy())
-			return;
-
-		if(message.hasKey("fuse"))
-			this.fuse = FuseType.v(message.getString("fuse"));
-		if(message.hasKey("fuse_config"))
-			this.fuseConfig = message.getInteger("fuse_config");
 	}
 
 	public ItemStack getProductionResult(int processID)

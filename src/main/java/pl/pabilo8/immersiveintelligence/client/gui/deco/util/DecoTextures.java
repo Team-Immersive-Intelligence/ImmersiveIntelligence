@@ -14,6 +14,7 @@ import java.lang.reflect.Field;
  * @ii-approved 0.3.1
  * @since 22.08.2025
  */
+//TODO: 23.08.2025 shorten names
 public class DecoTextures
 {
 	//--- Base Directories ---//
@@ -68,11 +69,14 @@ public class DecoTextures
 	public static final ResLoc RES_TEXTURES_DECO_COMPONENT_DROPDOWN_SYMBOL = ResLoc.of(RES_TEXTURES_DECO, "component/dropdown");
 	public static final ResLoc RES_TEXTURES_DECO_COMPONENT_DROPDOWN_DATA_LETTER = ResLoc.of(RES_TEXTURES_DECO, "component/data_letter_dropdown");
 	public static final ResLoc RES_TEXTURES_DECO_COMPONENT_SLIDER = ResLoc.of(RES_TEXTURES_DECO, "component/slider");
+	public static final ResLoc RES_TEXTURES_DECO_COMPONENT_SLIDER_BAR = ResLoc.of(RES_TEXTURES_DECO, "component/slider_bar");
 	public static final ResLoc RES_TEXTURES_DECO_COMPONENT_ARROWS = ResLoc.of(RES_TEXTURES_DECO, "component/arrows");
 	public static final ResLoc RES_TEXTURES_DECO_COMPONENT_FRAME = ResLoc.of(RES_TEXTURES_DECO, "component/frame");
 	public static final ResLoc RES_TEXTURES_DECO_BAR_ICON_BACKGROUND = ResLoc.of(RES_TEXTURES_DECO, "component/bar_icon_background");
 	public static final ResLoc RES_TEXTURES_DECO_COMPONENT_TANK = ResLoc.of(RES_TEXTURES_DECO, "component/tank");
+	public static final ResLoc RES_TEXTURES_DECO_COMPONENT_TANK_MARKER = ResLoc.of(RES_TEXTURES_DECO, "component/tank_marker");
 	public static final ResLoc RES_TEXTURES_DECO_COMPONENT_TANK_DUST = ResLoc.of(RES_TEXTURES_DECO, "component/dust");
+	public static final ResLoc RES_TEXTURES_DECO_COMPONENT_COLOR = ResLoc.of(RES_TEXTURES_DECO, "component/color");
 
 	//--- Colored 12x Icons ---//
 	public static final ResLoc RES_TEXTURES_DECO_ICON = ResLoc.of(RES_TEXTURES_DECO, "icons/");
@@ -131,7 +135,9 @@ public class DecoTextures
 			if(field.getType()==ResLoc.class)
 				try
 				{
-					ApiUtils.getRegisterSprite(map, (ResLoc)field.get(null));
+					ResLoc resLoc = (ResLoc)field.get(null);
+					if(!resLoc.isDirectory())
+						ApiUtils.getRegisterSprite(map, resLoc);
 				} catch(IllegalAccessException e)
 				{
 					IILogger.error("Failed to register texture: "+field.getName(), e);

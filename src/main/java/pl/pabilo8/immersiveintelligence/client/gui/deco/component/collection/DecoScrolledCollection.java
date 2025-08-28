@@ -5,7 +5,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.Tuple;
 import net.minecraft.util.math.MathHelper;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiComponentDecoTextBase;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoTextBasedComponent;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
@@ -22,7 +22,7 @@ import java.util.function.Supplier;
  * @ii-approved 0.3.1
  * @since 31.01.2025
  **/
-public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? super E, T>, T> extends GuiComponentDecoTextBase<E>
+public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? super E, T>, T> extends DecoTextBasedComponent<E>
 {
 	protected static final int ON_CREATE_OPTION = -10;
 	protected ResLoc listBackgroundLocation = DecoTextures.GUI_BG_DARK;
@@ -271,13 +271,13 @@ public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? 
 
 		//Background
 		int listHeight = getListHeight();
-		draw.drawConnectedColorRect(x, y, listWidth, listHeight, IIColor.WHITE, listBackgroundLocation, 64, 64, 8, 8);
+		draw.drawConnectedTexColorRect(x, y, listWidth, listHeight, IIColor.WHITE, listBackgroundLocation, 64, 64, 8, 8);
 		//Scrollbar
 		if(shouldAlwaysHaveScrollbar()||maxScroll > 0)
 		{
 			TextureAtlasSprite scrollbarSprite = ClientUtils.getSprite(scrollBarLocation);
 			//Scrollbar background
-			draw.drawConnectedColorRect(x+listWidth-11, y,
+			draw.drawConnectedTexColorRect(x+listWidth-11, y,
 					10, listHeight,
 					IIColor.WHITE, 10, 32, 0, 4,
 					scrollbarSprite.getMinU(), scrollbarSprite.getInterpolatedU(5),
@@ -288,7 +288,7 @@ public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? 
 			{
 				int scrollBarHeight = Math.max(10, (int)((listHeight/(float)(maxScroll+listHeight))*listHeight));
 				int scrollbarOffset = (int)((scroll/(float)maxScroll)*(listHeight-scrollBarHeight));
-				draw.drawConnectedColorRect(
+				draw.drawConnectedTexColorRect(
 						x+listWidth-11, y+1+scrollbarOffset, 10, scrollBarHeight,
 						IIColor.WHITE, 10, 32, 2, 8,
 						scrollbarSprite.getInterpolatedU(5), scrollbarSprite.getInterpolatedU(10),

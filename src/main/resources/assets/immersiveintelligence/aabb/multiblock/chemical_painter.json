@@ -1,0 +1,67 @@
+{
+  "bounds": {
+    "full": [
+      0, 0, 0,
+      16, 16, 16
+    ],
+    "tank_bottom": [
+      1, 0, 1,
+      15, 16, 15
+    ],
+    "tank_top": [
+      1, 0, 1,
+      15, 10, 15
+    ],
+    "energy_box": [
+      4, 8, 4,
+      12, 16, 12
+    ],
+    "energy_box_holder": [
+      4, 11, 12,
+      12, 13, 16
+    ],
+    "glass_slope1": [
+      0, 0, 0,
+      16, 16, 4
+    ],
+    "glass_slope2": [
+      0, 0, 4,
+      16, 10, 8
+    ],
+    "glass_slope3": [
+      0, 0, 8,
+      16, 6, 12
+    ],
+    "glass_bottom": [
+      0, 0, 0,
+      16, 16, 14
+    ]
+  },
+  "positions": {
+    "39,38,36,35": "tank_bottom",
+    "59,58,56,55": "tank_top",
+    "57": ["energy_box", "energy_box_holder"],
+    "43,42,41": ["glass_slope1", "glass_slope2", "glass_slope3"],
+    "23,22,21": "glass_bottom"
+  },
+  "poi": {
+    "fluid_inputs": [15, 16, 18, 19],
+    "input_cyan": 19,
+    "input_magenta": 18,
+    "input_yellow": 16,
+    "input_black": 15,
+    "energy_input": 57,
+    "redstone": 14,
+    "data": 10,
+    "item_input": 29,
+    "item_output": 25,
+    "uv_light": 47,
+    "tank_cyan": [39, 59],
+    "tank_magenta": [38, 58],
+    "tank_yellow": [36, 56],
+    "tank_black": [35, 55]
+  },
+  "rotations": {
+    "item_output": "clockwise_90"
+  }
+}

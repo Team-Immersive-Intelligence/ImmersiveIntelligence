@@ -24,11 +24,11 @@ import java.util.stream.Collectors;
  * @since 07.01.2025
  **/
 @SuppressWarnings("unchecked")
-public abstract class GuiComponentDecoBase<TYPE extends GuiComponentDecoBase<? super TYPE>> extends GuiButton
+public abstract class DecoComponent<TYPE extends DecoComponent<? super TYPE>> extends GuiButton
 {
 	@Nullable
 	protected DecoGui<?, ?> parentGui;
-	protected List<GuiComponentDecoBase<?>> children = new ArrayList<>();
+	protected List<DecoComponent<?>> children = new ArrayList<>();
 	protected boolean pressed;
 	protected boolean initialized;
 	@SuppressWarnings("unused")
@@ -44,7 +44,7 @@ public abstract class GuiComponentDecoBase<TYPE extends GuiComponentDecoBase<? s
 	private Function<TYPE, Collection<String>> onTooltip;
 	private Consumer<TYPE> onGuiSave;
 
-	public GuiComponentDecoBase(int x, int y)
+	public DecoComponent(int x, int y)
 	{
 		super(-1, x, y, 20, 20, "");
 		this.parentGui = null;
@@ -65,8 +65,8 @@ public abstract class GuiComponentDecoBase<TYPE extends GuiComponentDecoBase<? s
 			return new ArrayList<>(onTooltip.apply((TYPE)this));
 		if(!children.isEmpty())
 			return children.stream()
-					.filter(GuiComponentDecoBase::isMouseOver)
-					.map(GuiComponentDecoBase::getTooltip)
+					.filter(DecoComponent::isMouseOver)
+					.map(DecoComponent::getTooltip)
 					.flatMap(Collection::stream)
 					.collect(Collectors.toList());
 		return new ArrayList<>();
@@ -132,7 +132,7 @@ public abstract class GuiComponentDecoBase<TYPE extends GuiComponentDecoBase<? s
 
 			draw(mouseX, mouseY, partialTicks);
 
-			for(GuiComponentDecoBase<?> child : children)
+			for(DecoComponent<?> child : children)
 				child.drawButton(mc, mouseX, mouseY, partialTicks);
 		}
 	}
@@ -144,7 +144,7 @@ public abstract class GuiComponentDecoBase<TYPE extends GuiComponentDecoBase<? s
 
 		drawUpperLayer(mouseX, mouseY, partialTicks);
 
-		for(GuiComponentDecoBase<?> child : children)
+		for(DecoComponent<?> child : children)
 			child.drawButtonUpperLayer(mc, mouseX, mouseY, partialTicks);
 	}
 
@@ -177,18 +177,18 @@ public abstract class GuiComponentDecoBase<TYPE extends GuiComponentDecoBase<? s
 
 	}
 
-	public final boolean decoMousePressed(Minecraft mc, int mouseY, int mouseX, MouseButton button)
+	public final boolean decoMousePressed(Minecraft mc, int mouseX, int mouseY, MouseButton button)
 	{
 		if(this.enabled&&canBeClicked(mouseX, mouseY))
 		{
-			Optional<GuiComponentDecoBase<?>> childrenPressed = children.stream().filter(child -> child.decoMousePressed(mc, mouseY, mouseX, button)).findFirst();
+			Optional<DecoComponent<?>> childrenPressed = children.stream().filter(child -> child.decoMousePressed(mc, mouseX, mouseY, button)).findFirst();
 			pressed = childrenPressed.isPresent()||(onPressed!=null&&onPressed.onMouse((TYPE)this, button, mouseX, mouseY));
 			if(pressed)
 			{
 				playPressSound(mc.getSoundHandler());
 				if(parentGui!=null)
 				{
-					GuiComponentDecoBase<?> component = childrenPressed.orElse(this);
+					DecoComponent<?> component = childrenPressed.orElse(this);
 					parentGui.requestFocus(component);
 				}
 			}
@@ -254,7 +254,7 @@ public abstract class GuiComponentDecoBase<TYPE extends GuiComponentDecoBase<? s
 	{
 		if(onKeyTyped!=null&&onKeyTyped.onKeyTyped((TYPE)this, typedChar, keyCode))
 			return true;
-		for(GuiComponentDecoBase<?> child : children)
+		for(DecoComponent<?> child : children)
 			if(child.keyTyped(typedChar, keyCode))
 				return true;
 		return false;
@@ -442,7 +442,7 @@ public abstract class GuiComponentDecoBase<TYPE extends GuiComponentDecoBase<? s
 	}
 
 	/**
-	 * A set of GUI events that can be triggered on any {@link GuiComponentDecoBase} by a {@link DecoGui}
+	 * A set of GUI events that can be triggered on any {@link DecoComponent} by a {@link DecoGui}
 	 */
 	public enum DecoGuiEvent
 	{
@@ -466,25 +466,25 @@ public abstract class GuiComponentDecoBase<TYPE extends GuiComponentDecoBase<? s
 	}
 
 	@FunctionalInterface
-	public interface DecoMouseEvent<TYPE extends GuiComponentDecoBase<? super TYPE>>
+	public interface DecoMouseEvent<TYPE extends DecoComponent<? super TYPE>>
 	{
 		boolean onMouse(TYPE gui, MouseButton button, int mouseX, int mouseY);
 	}
 
 	@FunctionalInterface
-	public interface DecoMouseScrollEvent<TYPE extends GuiComponentDecoBase<? super TYPE>>
+	public interface DecoMouseScrollEvent<TYPE extends DecoComponent<? super TYPE>>
 	{
 		boolean onMouse(TYPE gui, int mouseScroll, int mouseX, int mouseY);
 	}
 
 	@FunctionalInterface
-	public interface DecoKeyboardEvent<TYPE extends GuiComponentDecoBase<? super TYPE>>
+	public interface DecoKeyboardEvent<TYPE extends DecoComponent<? super TYPE>>
 	{
 		boolean onKeyTyped(TYPE gui, char typedChar, int keyCode);
 	}
 
 	@FunctionalInterface
-	public interface DecoComponentTemplate<TYPE extends GuiComponentDecoBase<? super TYPE>>
+	public interface DecoComponentTemplate<TYPE extends DecoComponent<? super TYPE>>
 	{
 		TYPE apply(TYPE component);
 

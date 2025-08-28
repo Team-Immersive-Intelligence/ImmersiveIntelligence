@@ -56,31 +56,29 @@ import java.util.stream.Collectors;
 public class GuiProjectileWorkshop extends DecoGui<TileEntityProjectileWorkshop, ContainerProjectileWorkshop>
 {
 	@DecoResource
-	public static ResourceLocation ICON_PROGRESS_BAR = ResLoc.of(IIReference.RES_II, "gui/projectile_workshop");
+	public static ResourceLocation PROGRESS_BAR = ResLoc.of(IIReference.RES_II, "gui/projectile_workshop");
 	@DecoResource
-	public static ResourceLocation AMMO_ARTILLERY_RANGE = IIReference.RES_II.with("gui/ammo_icons/artillery_range");
+	public static ResourceLocation ARTILLERY_RANGE = IIReference.RES_II.with("gui/icons/artillery_range");
 	@DecoResource
-	public static ResourceLocation AMMO_AVAILABLE_FUZES = IIReference.RES_II.with("gui/ammo_icons/available_fuzes");
+	public static ResourceLocation AVAILABLE_FUZES = IIReference.RES_II.with("gui/icons/available_fuzes");
 	@DecoResource
-	public static ResourceLocation AMMO_COMPONENT_EFFICIENCY = IIReference.RES_II.with("gui/ammo_icons/component_efficiency");
+	public static ResourceLocation COMPONENT_EFFICIENCY = IIReference.RES_II.with("gui/icons/component_efficiency");
 	@DecoResource
-	public static ResourceLocation AMMO_COMPONENT_SHAPE = IIReference.RES_II.with("gui/ammo_icons/component_shape");
+	public static ResourceLocation COMPONENT_SHAPE = IIReference.RES_II.with("gui/icons/component_shape");
 	@DecoResource
-	public static ResourceLocation AMMO_COMPONENT_SIZE = IIReference.RES_II.with("gui/ammo_icons/component_size");
+	public static ResourceLocation COMPONENT_SIZE = IIReference.RES_II.with("gui/icons/component_size");
 	@DecoResource
-	public static ResourceLocation AMMO_COMPONENT_SLOTS = IIReference.RES_II.with("gui/ammo_icons/component_slots");
+	public static ResourceLocation COMPONENT_SLOTS = IIReference.RES_II.with("gui/icons/component_slots");
 	@DecoResource
-	public static ResourceLocation AMMO_DAMAGE = IIReference.RES_II.with("gui/ammo_icons/damage");
+	public static ResourceLocation DAMAGE = IIReference.RES_II.with("gui/icons/damage");
 	@DecoResource
-	public static ResourceLocation AMMO_FLAT_TRAJECTORY_RANGE = IIReference.RES_II.with("gui/ammo_icons/flat_trajectory_range");
+	public static ResourceLocation FLAT_TRAJECTORY_RANGE = IIReference.RES_II.with("gui/icons/flat_trajectory_range");
 	@DecoResource
-	public static ResourceLocation AMMO_MASS = IIReference.RES_II.with("gui/ammo_icons/mass");
+	public static ResourceLocation MASS = IIReference.RES_II.with("gui/icons/mass");
 	@DecoResource
-	public static ResourceLocation AMMO_MAX_PENETRATION_DEPTH = IIReference.RES_II.with("gui/ammo_icons/max_penetration_depth");
+	public static ResourceLocation PENETRATION_HARDNESS = IIReference.RES_II.with("gui/icons/penetration_hardness");
 	@DecoResource
-	public static ResourceLocation AMMO_PENETRATION_HARDNESS = IIReference.RES_II.with("gui/ammo_icons/penetration_hardness");
-	@DecoResource
-	public static ResourceLocation AMMO_VELOCITY = IIReference.RES_II.with("gui/ammo_icons/velocity");
+	public static ResourceLocation VELOCITY = IIReference.RES_II.with("gui/icons/velocity");
 
 	private MultiblockInteractablePart openedPart;
 	boolean hasFillerUpgrade;
@@ -237,7 +235,7 @@ public class GuiProjectileWorkshop extends DecoGui<TileEntityProjectileWorkshop,
 				//Progress bar
 				new DecoImage(8, 28)
 						.withSize(37, 39)
-						.withImageLocation(ICON_PROGRESS_BAR, true)
+						.withImageLocation(PROGRESS_BAR, true)
 						.withUV(64, 0, 0, 37, 39)
 		);
 		addLabel("Cost:", 48, 79)
@@ -327,14 +325,14 @@ public class GuiProjectileWorkshop extends DecoGui<TileEntityProjectileWorkshop,
 				.withSize(ammoInfoPanel.width, 8)
 				.withAlign(DecoAlignment.CENTER)
 		);
-		addImageWithLabel(1, 45, AMMO_COMPONENT_SLOTS, coreType.getComponentSlots(),
+		addImageWithLabel(1, 45, COMPONENT_SLOTS, coreType.getComponentSlots(),
 				"Component Slots");
-		addImageWithLabel(ammoInfoPanel.width/2, 45, AMMO_COMPONENT_SHAPE, "desc.immersiveintelligence.effect_shape."+coreType.getEffectShape().getName().toLowerCase(),
+		addImageWithLabel(ammoInfoPanel.width/2, 45, COMPONENT_SHAPE, "desc.immersiveintelligence.effect_shape."+coreType.getEffectShape().getName().toLowerCase(),
 				"Component Effect Shape");
 
-		addImageWithLabel(1, 45+13, AMMO_COMPONENT_EFFICIENCY, coreType.getComponentEffectivenessMod()*ammoCore.getExplosionModifier()+"x",
+		addImageWithLabel(1, 45+13, COMPONENT_EFFICIENCY, coreType.getComponentEffectivenessMod()*ammoCore.getExplosionModifier()+"x",
 				"Component Efficiency Modifier", "Determines potency.", "Responsible for explosive power, chemical gas concentration.");
-		addImageWithLabel(ammoInfoPanel.width/2, 45+13, AMMO_COMPONENT_SIZE, Utils.formatDouble(ammoType.getComponentMultiplier(), "0.##")+"x",
+		addImageWithLabel(ammoInfoPanel.width/2, 45+13, COMPONENT_SIZE, Utils.formatDouble(ammoType.getComponentMultiplier(), "0.##")+"x",
 				"Component Size Multiplier", "Determines component volume, responsible for explosion radius, gas spread range multiplier.");
 
 		//Ballistics
@@ -349,23 +347,23 @@ public class GuiProjectileWorkshop extends DecoGui<TileEntityProjectileWorkshop,
 					.withAlign(DecoAlignment.CENTER)
 			);
 
-			addImageWithLabel(1, 81-2, AMMO_MASS, Utils.formatDouble(ammoType.getCoreMass(ammoCore, new AmmoComponent[0]), "0.##"),
+			addImageWithLabel(1, 81-2, MASS, Utils.formatDouble(ammoType.getCoreMass(ammoCore, new AmmoComponent[0]), "0.##"),
 					"Core Mass");
-			addImageWithLabel(ammoInfoPanel.width/2, 81-2, AMMO_DAMAGE, Utils.formatDouble(ammoType.getDamage()*ammoCore.getDamageModifier()*coreType.getDamageMod(), "0.##"),
+			addImageWithLabel(ammoInfoPanel.width/2, 81-2, DAMAGE, Utils.formatDouble(ammoType.getDamage()*ammoCore.getDamageModifier()*coreType.getDamageMod(), "0.##"),
 					"Damage Dealt");
-			addImageWithLabel(1, 81+13, AMMO_VELOCITY, ammoType.getVelocity()+" b/t",
+			addImageWithLabel(1, 81+13, VELOCITY, ammoType.getVelocity()+" b/t",
 					"Velocity");
-			addImageWithLabel(ammoInfoPanel.width/2, 81+13, AMMO_AVAILABLE_FUZES, ammoType.getAllowedFuseTypes().length+"/"+FuseType.values().length,
+			addImageWithLabel(ammoInfoPanel.width/2, 81+13, AVAILABLE_FUZES, ammoType.getAllowedFuseTypes().length+"/"+FuseType.values().length,
 					"Available Fuzes");
-			addImageWithLabel(1, 81+13+13, AMMO_PENETRATION_HARDNESS,
+			addImageWithLabel(1, 81+13+13, PENETRATION_HARDNESS,
 					Utils.formatDouble(IIAmmoUtils.getCombinedDepth(ammoType, coreType), "0.##")+"b "+
 							I18n.format("desc.immersiveintelligence.penetration_hardness."+IIAmmoUtils.getCombinedHardness(ammoCore, coreType).getName().toLowerCase()),
 					"Penetration Hardness");
-			/*addImageWithLabel(ammoInfoPanel.width/2, 81+13+13, AMMO_MAX_PENETRATION_DEPTH, ,
+			/*addImageWithLabel(ammoInfoPanel.width/2, 81+13+13, MAX_PENETRATION_DEPTH, ,
 					"Max. Penetration Depth");*/
-			addImageWithLabel(1, 81+13+13+13, AMMO_FLAT_TRAJECTORY_RANGE, Utils.formatDouble(stats.getMaxDirectRange(), "0.##")+"b",
+			addImageWithLabel(1, 81+13+13+13, FLAT_TRAJECTORY_RANGE, Utils.formatDouble(stats.getMaxDirectRange(), "0.##")+"b",
 					"Flat-Trajectory Range");
-			addImageWithLabel(ammoInfoPanel.width/2, 81+13+13+13, AMMO_ARTILLERY_RANGE, projectileInfo.artillery()?
+			addImageWithLabel(ammoInfoPanel.width/2, 81+13+13+13, ARTILLERY_RANGE, projectileInfo.artillery()?
 							Utils.formatDouble(stats.getGetMaxArtilleryRange(), "0.##")+"b": "-",
 					"Max. Artillery Range");
 		}

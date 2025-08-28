@@ -10,7 +10,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiComponentDecoBase;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoComponent;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoLabel;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoFrame;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
@@ -28,7 +28,7 @@ import java.util.List;
  * @ii-approved 0.3.1
  * @since 10.02.2025
  **/
-public class DecoPanel extends GuiComponentDecoBase<DecoPanel>
+public class DecoPanel extends DecoComponent<DecoPanel>
 {
 	private final List<DecoLabel> labels = new ArrayList<>();
 	int vbo = -1;
@@ -55,7 +55,7 @@ public class DecoPanel extends GuiComponentDecoBase<DecoPanel>
 		}
 	}
 
-	public void addComponent(GuiComponentDecoBase<?> component)
+	public void addComponent(DecoComponent<?> component)
 	{
 		children.add(component);
 		if(parentGui!=null)
@@ -68,10 +68,25 @@ public class DecoPanel extends GuiComponentDecoBase<DecoPanel>
 		component.y += y+yPadding;
 	}
 
-	public void addComponents(GuiComponentDecoBase<?>... components)
+	public void addComponents(DecoComponent<?>... components)
 	{
-		for(GuiComponentDecoBase<?> component : components)
+		for(DecoComponent<?> component : components)
 			addComponent(component);
+	}
+
+	public void addComponentsRow(int width, int gap, int height, DecoComponent<?>... components)
+	{
+		if(components==null)
+			return;
+		int initialX = components[0].x;
+		int singleWidth = (width-Math.max(0, gap*(components.length-1)))/components.length;
+		int offset = singleWidth+gap;
+		for(int i = 0; i < components.length; i++)
+		{
+			DecoComponent<?> comp = components[i].withSize(singleWidth, height);
+			comp.x = initialX+i*offset;
+			addComponent(comp);
+		}
 	}
 
 	public void addLabel(String text, int x, int y)
@@ -129,7 +144,7 @@ public class DecoPanel extends GuiComponentDecoBase<DecoPanel>
 		GL11.glClear(GL11.GL_STENCIL_BUFFER_BIT);
 		GL11.glStencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_REPLACE);
 		GL11.glStencilFunc(GL11.GL_ALWAYS, 1, 0xFF);
-		draw.drawConnectedColorRect(x, y, width, height, IIColor.WHITE, 32, 32, 4, 4,
+		draw.drawConnectedTexColorRect(x, y, width, height, IIColor.WHITE, 32, 32, 4, 4,
 				maskSprite.getMinU(), maskSprite.getInterpolatedU(8), maskSprite.getMinV(), maskSprite.getInterpolatedV(8)
 		);
 		draw.finish();
@@ -138,7 +153,7 @@ public class DecoPanel extends GuiComponentDecoBase<DecoPanel>
 		draw = IIDrawUtils.startTexturedColored();
 		GL11.glStencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_KEEP);
 		GL11.glStencilFunc(GL11.GL_EQUAL, 1, 0xFF);
-		draw.drawConnectedColorRect(x, y, width, height, IIColor.WHITE, background, 32, 32, 0, 0);
+		draw.drawConnectedTexColorRect(x, y, width, height, IIColor.WHITE, background, 32, 32, 0, 0);
 		draw.finish();
 
 		//Overlay
@@ -146,7 +161,7 @@ public class DecoPanel extends GuiComponentDecoBase<DecoPanel>
 		GL11.glDisable(GL11.GL_STENCIL_TEST);
 		GlStateManager.enableBlend();
 		GlStateManager.blendFunc(SourceFactor.DST_COLOR, DestFactor.SRC_COLOR);
-		draw.drawConnectedColorRect(x, y, width, height, IIColor.WHITE, 32, 32, 4, 4,
+		draw.drawConnectedTexColorRect(x, y, width, height, IIColor.WHITE, 32, 32, 4, 4,
 				maskSprite.getMinU(), maskSprite.getInterpolatedU(8), maskSprite.getMinV(), maskSprite.getInterpolatedV(8)
 		);
 		draw.finish();
@@ -178,6 +193,7 @@ public class DecoPanel extends GuiComponentDecoBase<DecoPanel>
 	@Override
 	public void cleanup()
 	{
+		children.forEach(DecoComponent::cleanup);
 		children.clear();
 		labels.clear();
 		if(vbo!=-1)

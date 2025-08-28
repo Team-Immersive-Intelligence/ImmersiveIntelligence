@@ -20,7 +20,6 @@ import pl.pabilo8.immersiveintelligence.api.rotary.IRotationalEnergyBlock;
 import pl.pabilo8.immersiveintelligence.api.rotary.RotaryStorage;
 import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.ISawblade;
-import pl.pabilo8.immersiveintelligence.client.util.carversound.TimedCompoundSound;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Sawmill;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
@@ -30,13 +29,16 @@ import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAn
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageRotaryPowerSync;
 import pl.pabilo8.immersiveintelligence.common.util.IIDamageSources;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionBase;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionSingle;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockInteractablePart;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
+import pl.pabilo8.immersiveintelligence.common.util.sound.SoundHandler;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.List;
+
+import static pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.multiblock.MultiblockSawmill.*;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -44,10 +46,8 @@ import java.util.List;
  */
 public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<TileEntitySawmill, SawmillRecipe> implements IRotationalEnergyBlock, IBooleanAnimatedPartsBlock
 {
-	// Inventory Slots
-	public static final int SLOT_INPUT = 0, SLOT_SAWBLADE = 1, SLOT_OUTPUT = 2, SLOT_SAWDUST = 3;
 	public MultiblockInteractablePart vise;
-	// Rotary Power
+	//Rotary Power
 	@SyncNBT
 	public RotaryStorage rotation = new RotaryStorage(0, 0)
 	{
@@ -58,11 +58,11 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 		}
 	};
 	// Inventory Handlers
-	IItemHandler insertionHandler = getSingleInventoryHandler(SLOT_INPUT, true, false);
-	IItemHandler dustExtractionHandler = getSingleInventoryHandler(SLOT_SAWDUST, false, true);
+	private IItemHandler insertionHandler = getSingleInventoryHandler(SLOT_INPUT, true, false);
+	private IItemHandler dustExtractionHandler = getSingleInventoryHandler(SLOT_SAWDUST, false, true);
 	// Recipe Output Handlers
-	IItemHandler outputHandler = getSingleInventoryHandler(SLOT_OUTPUT), sawdustOutputHandler = getSingleInventoryHandler(SLOT_SAWDUST);
-	private List<TimedCompoundSound> soundsList = new ArrayList<>();
+	private IItemHandler outputHandler = getSingleInventoryHandler(SLOT_OUTPUT), sawdustOutputHandler = getSingleInventoryHandler(SLOT_SAWDUST);
+	private SoundHandler sounds;
 
 	public TileEntitySawmill()
 	{
@@ -71,18 +71,18 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 		energyStorage = new FluxStorageAdvanced(0);
 		inventory = NonNullList.withSize(4, ItemStack.EMPTY);
 		vise = new MultiblockInteractablePart(22);
+		sounds = new SoundHandler(this);
 	}
 
 	@Override
 	protected void dummyCleanup()
 	{
 		super.dummyCleanup();
-		outputHandler = null;
-		insertionHandler = null;
-		dustExtractionHandler = null;
-		soundsList = null;
-		vise = null;
+		outputHandler = sawdustOutputHandler = null;
+		insertionHandler = dustExtractionHandler = null;
 		rotation = null;
+		sounds = null;
+		vise = null;
 	}
 
 	@Override
@@ -125,19 +125,18 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 
 		boolean receivesPower = false;
 
-		// Self destruct
+		//Self destruct
 		if(rotation.getRotationSpeed() > Sawmill.rpmBreakingMax||rotation.getTorque() > Sawmill.torqueBreakingMax)
 		{
 			selfDestruct();
 			return;
 		}
 
-		// Wheel or mechanical device connected to multiblock
+		//Wheel or mechanical device connected to multiblock
 		TileEntity te = world.getTileEntity(getPOIPos(MultiblockPOI.ROTARY_INPUT).offset(facing));
-
 		if(te!=null&&te.hasCapability(CapabilityRotaryEnergy.ROTARY_ENERGY, facing.getOpposite()))
 		{
-			// Increase internal rotation if powered
+			//Increase internal rotation if powered
 			IRotaryEnergy cap = te.getCapability(CapabilityRotaryEnergy.ROTARY_ENERGY, facing.getOpposite());
 			assert cap!=null;
 			if(rotation.handleRotation(cap, facing.getOpposite()))
@@ -149,14 +148,14 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 
 		if(rotation.getTorque() > 0||rotation.getRotationSpeed() > 0)
 		{
-			// Decrease internal rotation if not powered
+			//Decrease internal rotation if not powered
 			if(!receivesPower)
 			{
 				rotation.grow(0, 0, 0.98f);
 				IIPacketHandler.INSTANCE.sendToAllAround(new MessageRotaryPowerSync(rotation, 0, getPos()), IIPacketHandler.targetPointFromTile(this, 24));
 			}
 
-			// Hurt entities stepping on sawblade
+			//Hurt entities stepping on sawblade
 			ItemStack sawStack = inventory.get(SLOT_SAWBLADE);
 
 			if(sawStack.getItem() instanceof ISawblade)
@@ -174,9 +173,8 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 		}
 		super.onUpdate();
 
-		//TODO: 30.07.2024 proper particle implementation
 		if(world.isRemote&&currentProcess!=null)
-			currentProcess.recipe.getSoundAnimation().handleSounds(soundsList, getPos(), (int)currentProcess.ticks, 1f);
+			currentProcess.recipe.getSoundAnimation().handleSounds(sounds, (int)currentProcess.ticks, 1f);
 	}
 
 	public float getCurrentEfficiency()
@@ -224,7 +222,7 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 	@Override
 	protected IIMultiblockProcess<SawmillRecipe> getProcessByName(String name)
 	{
-		return null;
+		return TileEntityMultiblockProductionBase.findRecipeFromList(SawmillRecipe.class, name);
 	}
 
 	@Override

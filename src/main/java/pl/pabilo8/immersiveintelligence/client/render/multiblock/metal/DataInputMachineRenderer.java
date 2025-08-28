@@ -9,7 +9,6 @@ import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer.RegisteredT
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMTModel;
 import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationCompiledMap;
 import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationUtils;
-import pl.pabilo8.immersiveintelligence.client.util.amt.MachineUpgradeModel;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityDataInputMachine;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
@@ -23,7 +22,6 @@ import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 @RegisteredTileRenderer(name = "multiblock/data_input_machine", clazz = TileEntityDataInputMachine.class)
 public class DataInputMachineRenderer extends IIMultiblockRenderer<TileEntityDataInputMachine>
 {
-	MachineUpgradeModel upgradeModel;
 	private AMTModel model;
 	private IIAnimationCompiledMap animationDrawer, animationHatch, animationProgrammingStart;
 
@@ -43,10 +41,8 @@ public class DataInputMachineRenderer extends IIMultiblockRenderer<TileEntityDat
 
 		//Draw
 		applyStandardMirroring(te, true);
-
 		//Render
 		model.render(tes, buf);
-
 		applyStandardMirroring(te, false);
 	}
 

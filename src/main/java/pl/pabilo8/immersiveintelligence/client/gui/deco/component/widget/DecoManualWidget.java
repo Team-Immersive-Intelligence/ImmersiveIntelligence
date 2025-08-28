@@ -10,7 +10,6 @@ import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoTab;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoAlignment;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.widget.GuiWidgetManualWrapper;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
@@ -35,7 +34,7 @@ public class DecoManualWidget extends DecoComponentWidgetBase<DecoManualWidget>
 
 		//Initialize the default manual, if it wasn't already
 		GuiManual trueManual = ManualHelper.getManual().getGui();
-		if(trueManual==null||trueManual instanceof GuiWidgetManualWrapper)
+		if(trueManual==null)
 			trueManual = new GuiManual(ManualHelper.getManual(), ManualHelper.getManual().texture);
 		this.ieManualGUI = trueManual;
 

@@ -1,21 +1,12 @@
 package pl.pabilo8.immersiveintelligence.client.gui.block;
 
-import blusunrize.immersiveengineering.client.ClientUtils;
-import blusunrize.immersiveengineering.client.gui.GuiIEContainerBase;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.TextFormatting;
-import org.lwjgl.opengl.GL11;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.rotary.IIRotaryUtils;
-import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoBarGroup;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoAlignment;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.*;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundBuilder.SlotStyle;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoGuiUtils;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.tileentity.TileEntitySkyCrateStation;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerSkycrateStation;
@@ -24,12 +15,13 @@ import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
  * @author Avalon (avalon@itteam.net)
+ * @updated 27.08.2025
+ * @ii-approved 0.3.1
  * @since 10.07.2019
- * @since 327.08.2025
  */
+@DecoTemplate(name = "skycrate_station", category = DecoGuiCategory.PRODUCTION_TILE)
 public class GuiSkycrateStation extends DecoGui<TileEntitySkyCrateStation, ContainerSkycrateStation>
 {
-
 	public GuiSkycrateStation(EntityPlayer player, TileEntitySkyCrateStation tile)
 	{
 		super(player, tile, IIGUI.SKYCRATE_STATION);

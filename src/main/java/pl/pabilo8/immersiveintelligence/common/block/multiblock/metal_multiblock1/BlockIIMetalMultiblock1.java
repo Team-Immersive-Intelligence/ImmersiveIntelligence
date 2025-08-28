@@ -36,9 +36,10 @@ public class BlockIIMetalMultiblock1 extends BlockIIMultiblock<MetalMultiblocks1
 
 		addToTESRMap(MetalMultiblocks1.EMPLACEMENT, MetalMultiblocks1.FLAGPOLE, MetalMultiblocks1.FUEL_STATION,
 				MetalMultiblocks1.VEHICLE_WORKSHOP, MetalMultiblocks1.RADAR,
-				MetalMultiblocks1.VULCANIZER, MetalMultiblocks1.CHEMICAL_PAINTER, MetalMultiblocks1.COAGULATOR
+				MetalMultiblocks1.VULCANIZER, MetalMultiblocks1.COAGULATOR
 		);
 
+		setSubBlockLayer(MetalMultiblocks1.CHEMICAL_PAINTER, BlockRenderLayer.CUTOUT);
 		setSubBlockLayer(MetalMultiblocks1.PROJECTILE_WORKSHOP, BlockRenderLayer.CUTOUT);
 		setSubBlockLayer(MetalMultiblocks1.AMMUNITION_ASSEMBLER, BlockRenderLayer.CUTOUT);
 		setSubBlockLayer(MetalMultiblocks1.HEAVY_AMMUNITION_ASSEMBLER, BlockRenderLayer.CUTOUT);
@@ -53,6 +54,7 @@ public class BlockIIMetalMultiblock1 extends BlockIIMultiblock<MetalMultiblocks1
 			case AMMUNITION_ASSEMBLER:
 			case HEAVY_AMMUNITION_ASSEMBLER:
 			case REDSTONE_DATA_INTERFACE:
+			case CHEMICAL_PAINTER:
 			case FILLER:
 				return EnumBlockRenderType.MODEL;
 			default:
@@ -81,6 +83,7 @@ public class BlockIIMetalMultiblock1 extends BlockIIMultiblock<MetalMultiblocks1
 
 		@EnumMultiblockProvider(multiblock = MultiblockFuelStation.class, tile = TileEntityFuelStation.class)
 		FUEL_STATION,
+
 		@EnumMultiblockProvider(multiblock = MultiblockVehicleWorkshop.class, tile = TileEntityVehicleWorkshop.class)
 		@IIBlockProperties(hidden = TernaryValue.TRUE)
 		VEHICLE_WORKSHOP,
@@ -94,6 +97,7 @@ public class BlockIIMetalMultiblock1 extends BlockIIMultiblock<MetalMultiblocks1
 		@IIBlockProperties(hidden = TernaryValue.TRUE)
 		STRATEGIC_COMMAND_TABLE, //not implemented
 
+		@IIBlockProperties(needsCustomState = true)
 		@EnumMultiblockProvider(multiblock = MultiblockChemicalPainter.class, tile = TileEntityChemicalPainter.class)
 		CHEMICAL_PAINTER,
 		@EnumMultiblockProvider(multiblock = MultiblockVulcanizer.class, tile = TileEntityVulcanizer.class)

@@ -2,17 +2,21 @@ package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multibloc
 
 import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorageAdvanced;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IPlayerInteraction;
+import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.IFluidTank;
 import pl.pabilo8.immersiveintelligence.api.crafting.ElectrolyzerRecipe;
+import pl.pabilo8.immersiveintelligence.api.utils.tools.IAdvancedTextOverlay;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Electrolyzer;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.MultiblockElectrolyzer;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
@@ -29,12 +33,8 @@ import static pl.pabilo8.immersiveintelligence.common.IIUtils.outputFluidToTank;
  * @ii-approved 0.3.1
  * @since 28.06.2019
  */
-public class TileEntityElectrolyzer extends TileEntityMultiblockProductionSingle<TileEntityElectrolyzer, ElectrolyzerRecipe> implements IPlayerInteraction
+public class TileEntityElectrolyzer extends TileEntityMultiblockProductionSingle<TileEntityElectrolyzer, ElectrolyzerRecipe> implements IPlayerInteraction, IAdvancedTextOverlay
 {
-	public static int SLOT_T0_BUCKET_INPUT = 0, SLOT_T0_BUCKET_OUTPUT = 1;
-	public static int SLOT_T1_BUCKET_INPUT = 2, SLOT_T1_BUCKET_OUTPUT = 4;
-	public static int SLOT_T2_BUCKET_INPUT = 3, SLOT_T2_BUCKET_OUTPUT = 5;
-
 	@SyncNBT(name = "tank0", events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_RECIPE_CHANGED, SyncEvents.TILE_CUSTOM1})
 	public FluidTank tankInput;
 	@SyncNBT(name = "tank1", events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_RECIPE_CHANGED, SyncEvents.TILE_CUSTOM1})
@@ -52,6 +52,13 @@ public class TileEntityElectrolyzer extends TileEntityMultiblockProductionSingle
 
 		this.inventory = NonNullList.withSize(6, ItemStack.EMPTY);
 		this.energyStorage = new FluxStorageAdvanced(Electrolyzer.energyCapacity);
+	}
+
+	@Override
+	protected void dummyCleanup()
+	{
+		super.dummyCleanup();
+		this.tankInput = tankOutput1 = tankOutput2 = null;
 	}
 
 	@Override
@@ -100,15 +107,15 @@ public class TileEntityElectrolyzer extends TileEntityMultiblockProductionSingle
 
 		if(!world.isRemote&&world.getTotalWorldTime()%10==0)
 		{
-			boolean update = handleBucketTankInteraction(tankInput, inventory, SLOT_T0_BUCKET_INPUT, SLOT_T0_BUCKET_OUTPUT, true);
+			boolean update = handleBucketTankInteraction(tankInput, inventory, MultiblockElectrolyzer.SLOT_T0_BUCKET_INPUT, MultiblockElectrolyzer.SLOT_T0_BUCKET_OUTPUT, true);
 			if(outputFluidToTank(tankOutput1, 100, getPOIPos("output1"), this.world, this.facing.getOpposite()))
 				update = true;
 			if(outputFluidToTank(tankOutput2, 100, getPOIPos("output2"), this.world, this.facing.getOpposite()))
 				update = true;
 
-			if(handleBucketTankInteraction(tankOutput1, inventory, SLOT_T1_BUCKET_INPUT, SLOT_T1_BUCKET_OUTPUT, true))
+			if(handleBucketTankInteraction(tankOutput1, inventory, MultiblockElectrolyzer.SLOT_T1_BUCKET_INPUT, MultiblockElectrolyzer.SLOT_T1_BUCKET_OUTPUT, true))
 				update = true;
-			if(handleBucketTankInteraction(tankOutput2, inventory, SLOT_T2_BUCKET_INPUT, SLOT_T2_BUCKET_OUTPUT, true))
+			if(handleBucketTankInteraction(tankOutput2, inventory, MultiblockElectrolyzer.SLOT_T2_BUCKET_INPUT, MultiblockElectrolyzer.SLOT_T2_BUCKET_OUTPUT, true))
 				update = true;
 
 			if(update)
@@ -184,5 +191,18 @@ public class TileEntityElectrolyzer extends TileEntityMultiblockProductionSingle
 			return master!=null&&FluidUtil.interactWithFluidHandler(player, hand, master.tankInput);
 		}
 		return false;
+	}
+
+	@Override
+	public String[] getOverlayText(EntityPlayer player, RayTraceResult mop)
+	{
+		if(!Utils.isFluidRelatedItemStack(player.getHeldItem(EnumHand.MAIN_HAND)))
+			return new String[0];
+
+		TileEntityElectrolyzer master = master();
+		if(master!=null&&isPOI("visible_tank"))
+			return new String[]{IIUtils.getFluidNameOverlayText(master.tankInput.getFluid())};
+
+		return new String[0];
 	}
 }

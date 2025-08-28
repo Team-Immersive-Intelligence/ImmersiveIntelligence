@@ -1,5 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common.entity.tactile;
 
+import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IMirrorAble;
 import blusunrize.immersiveengineering.common.blocks.TileEntityMultiblockPart;
 import blusunrize.immersiveengineering.common.util.chickenbones.Matrix4;
 import com.google.gson.JsonArray;
@@ -27,6 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
@@ -48,18 +50,30 @@ public class TactileHandler
 	private final ArrayList<EntityAMTTactile> entities;
 	private final HashMap<ResLoc, IIAnimationCollisionMap> animations;
 	private ResLoc headerLoc;
+
 	//Reloadable values
 	private boolean initialized = false;
 	private IIModelHeader header;
 	private Vec3d globalOffset = Vec3d.ZERO;
 
+	private final Supplier<World> worldSupplier;
+	private final Supplier<BlockPos> posSupplier;
+	private final Supplier<EnumFacing> facingSupplier;
+	private final Supplier<Boolean> mirroredSupplier;
+
 	/**
 	 * Constructor from an AABB file
 	 */
-	public TactileHandler(ResLoc aabbLoc, ITactileListener listener)
+	public TactileHandler(ResLoc aabbLoc, ITactileListener listener, Supplier<World> worldSupplier, Supplier<BlockPos> posSupplier,
+						  Supplier<EnumFacing> facingSupplier, Supplier<Boolean> mirroredSupplier)
 	{
 		this.aabbLoc = aabbLoc;
 		this.listener = listener;
+
+		this.worldSupplier = worldSupplier;
+		this.posSupplier = posSupplier;
+		this.facingSupplier = facingSupplier;
+		this.mirroredSupplier = mirroredSupplier;
 
 		//Initialize storage
 		entities = new ArrayList<>();
@@ -75,6 +89,17 @@ public class TactileHandler
 	{
 		this.aabbLoc = multiblock.getAABBFileLocation();
 		this.listener = listener;
+
+		this.worldSupplier = listener::getWorld;
+		this.posSupplier = listener::getPos;
+		this.facingSupplier = listener::getFacing;
+		if(listener instanceof IMirrorAble)
+		{
+			IMirrorAble mirrorAble = (IMirrorAble)listener;
+			this.mirroredSupplier = mirrorAble::getIsMirrored;
+		}
+		else
+			this.mirroredSupplier = null;
 
 		//Initialize storage
 		entities = new ArrayList<>();
@@ -211,11 +236,11 @@ public class TactileHandler
 				.add(offset)
 				.add(globalOffset)
 				.addVector(-1, 0, -1.5);
-		boolean mirrored = listener.getIsTactileMirrored();
+		boolean mirrored = getIsMirrored();
 		total = new Vec3d(mirrored?(total.x-1): -total.x, total.y, -total.z);
 		//.add(new Vec3d(0.5, 0.5, 1));
 		//rotate the vector depending on facing
-		EnumFacing facing = listener.getTactileFacing();
+		EnumFacing facing = getFacing();
 
 		Vec3d apply = new Matrix4(facing)
 				.apply(total);
@@ -301,14 +326,14 @@ public class TactileHandler
 				array.get(4).getAsDouble()*0.0625,
 				array.get(5).getAsDouble()*0.0625
 		);
-		if(listener.getIsTactileMirrored())
+		if(getIsMirrored())
 		{
 			double xLength = Math.abs(aabb.maxX-aabb.minX);
 			aabb = new AxisAlignedBB(-aabb.minX+2, aabb.minY, aabb.minZ, -aabb.maxX+2, aabb.maxY, aabb.maxZ);
 		}
 
 		//aabb = new AxisAlignedBB(-0.25, -0.25, -0.25, 0.25, 0.25, 0.25);
-		Matrix4 mat = new Matrix4(listener.getTactileFacing());
+		Matrix4 mat = new Matrix4(getFacing());
 		Vec3d vMin = mat.apply(new Vec3d(aabb.minX, aabb.minY, aabb.minZ));
 		Vec3d vMax = mat.apply(new Vec3d(aabb.maxX, aabb.maxY, aabb.maxZ));
 		return new AxisAlignedBB(vMin.x, vMin.y, vMin.z, vMax.x, vMax.y, vMax.z);
@@ -376,7 +401,7 @@ public class TactileHandler
 		IIAnimationCollisionMap mapped = null;
 		if(anim!=null)
 		{
-			mapped = IIAnimationCollisionMap.create(entities, anim, listener.getTactileFacing(), listener.getIsTactileMirrored());
+			mapped = IIAnimationCollisionMap.create(entities, anim, getFacing(), getIsMirrored());
 			animations.put(res, mapped);
 		}
 
@@ -403,7 +428,7 @@ public class TactileHandler
 	 */
 	public World getWorld()
 	{
-		return listener.getTactileWorld();
+		return worldSupplier.get();
 	}
 
 	/**
@@ -413,7 +438,17 @@ public class TactileHandler
 	 */
 	public BlockPos getPos()
 	{
-		return listener.getTactilePos();
+		return posSupplier.get();
+	}
+
+	public EnumFacing getFacing()
+	{
+		return facingSupplier.get();
+	}
+
+	public boolean getIsMirrored()
+	{
+		return mirroredSupplier.get();
 	}
 
 	/**
@@ -464,23 +499,6 @@ public class TactileHandler
 		 */
 		@Nullable
 		TactileHandler getTactileHandler();
-
-		/**
-		 * @return world this tactile listener is in
-		 */
-		@Nonnull
-		World getTactileWorld();
-
-		/**
-		 * @return position in the world
-		 */
-		@Nonnull
-		BlockPos getTactilePos();
-
-		@Nonnull
-		EnumFacing getTactileFacing();
-
-		boolean getIsTactileMirrored();
 
 		/**
 		 * @return true if interaction happened

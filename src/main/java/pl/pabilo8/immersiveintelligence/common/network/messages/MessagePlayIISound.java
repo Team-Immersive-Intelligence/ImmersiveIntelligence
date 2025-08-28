@@ -5,6 +5,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.network.NetHandlerPlayServer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.WorldServer;
@@ -14,8 +15,8 @@ import pl.pabilo8.immersiveintelligence.client.util.carversound.RangedCompoundSo
 import pl.pabilo8.immersiveintelligence.client.util.carversound.TimedCompoundSound;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.network.IIMessage;
-import pl.pabilo8.immersiveintelligence.common.util.AdvancedSounds.MultiSound;
-import pl.pabilo8.immersiveintelligence.common.util.AdvancedSounds.RangedSound;
+import pl.pabilo8.immersiveintelligence.common.util.sound.AdvancedSounds.MultiSound;
+import pl.pabilo8.immersiveintelligence.common.util.sound.AdvancedSounds.RangedSound;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -103,11 +104,11 @@ public class MessagePlayIISound extends IIMessage
 		switch(type)
 		{
 			case RANGED:
-				soundRanged = IISounds.rangedSounds.get(buf.readInt());
+				soundRanged = IISounds.rangedSounds.get(new ResourceLocation(readString(buf)));
 				distance = buf.readInt();
 				break;
 			case COMPOUND:
-				soundCompound = IISounds.multiSounds.get(buf.readInt());
+				soundCompound = IISounds.multiSounds.get(new ResourceLocation(readString(buf)));
 				duration = buf.readInt();
 				break;
 		}
@@ -128,11 +129,11 @@ public class MessagePlayIISound extends IIMessage
 		switch(type)
 		{
 			case RANGED:
-				buf.writeInt(soundRanged.id);
+				writeString(buf, soundRanged.id.toString());
 				buf.writeInt(distance);
 				break;
 			case COMPOUND:
-				buf.writeInt(soundCompound.id);
+				writeString(buf, soundCompound.id.toString());
 				buf.writeInt(duration);
 				break;
 

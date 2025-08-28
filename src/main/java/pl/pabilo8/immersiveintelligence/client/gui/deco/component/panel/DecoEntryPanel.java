@@ -2,7 +2,7 @@ package pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.resources.I18n;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiComponentDecoBase;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoComponent;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoButton;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoElementDisplays.DecoElementDisplay;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoScrolledCollection;
@@ -20,6 +20,7 @@ import java.util.function.Function;
  **/
 public abstract class DecoEntryPanel<T> extends DecoPanel implements DecoElementDisplay<T>
 {
+	private int displayedHeight;
 	private DecoButton addButton;
 	private DecoScrolledCollection<?, T> list;
 	private T element;
@@ -44,6 +45,7 @@ public abstract class DecoEntryPanel<T> extends DecoPanel implements DecoElement
 		{
 			cleanup();
 			initializeChildren();
+			this.displayedHeight = height;
 		}
 		return super.initialize();
 	}
@@ -86,22 +88,22 @@ public abstract class DecoEntryPanel<T> extends DecoPanel implements DecoElement
 
 			//Readjust the height
 			int minY = Integer.MAX_VALUE, maxY = Integer.MIN_VALUE;
-			for(GuiComponentDecoBase<?> child : children)
+			for(DecoComponent<?> child : children)
 			{
 				minY = Math.min(minY, child.y);
 				maxY = Math.max(maxY, child.y+child.height);
 			}
-			this.height = 2+maxY-minY;
+			this.displayedHeight = Math.max(2+maxY-minY, height);
 		}
 
 		//If the height is being probed, return the height
 		if(heightProbe)
-			return height;
+			return displayedHeight;
 
 		//Apply the element to the panel and draw it
 		applyElement(t);
 		drawButton(ClientUtils.mc(), mouseX, mouseY, partialTicks);
-		return height;
+		return displayedHeight;
 	}
 
 	@Override

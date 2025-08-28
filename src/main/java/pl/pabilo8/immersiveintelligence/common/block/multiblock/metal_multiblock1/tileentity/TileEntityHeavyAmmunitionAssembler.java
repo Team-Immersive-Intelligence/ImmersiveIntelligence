@@ -4,10 +4,8 @@ import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorageAdvan
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -22,11 +20,11 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
 import pl.pabilo8.immersiveintelligence.common.entity.tactile.TactileHandler;
 import pl.pabilo8.immersiveintelligence.common.entity.tactile.TactileHandler.ITactileListener;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionSingle;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockInteractablePart;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class TileEntityHeavyAmmunitionAssembler extends TileEntityMultiblockProductionSingle<TileEntityHeavyAmmunitionAssembler, AmmunitionAssemblerRecipe> implements ITactileListener
@@ -41,9 +39,12 @@ public class TileEntityHeavyAmmunitionAssembler extends TileEntityMultiblockProd
 	@SyncNBT
 	public MultiblockInteractablePart drawer4 = new MultiblockInteractablePart(21);
 	public String NBT_KEY_EFFECT = "effect";
+
+	@SyncNBT(events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_CLIENT_MESSAGE})
 	public FuseType fuse = FuseType.CONTACT;
-	@SyncNBT
-	public int fuseConfig = 0; //depends on fuse type: time for timed fuse, distance for proximity fuse
+	@SyncNBT(events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_CLIENT_MESSAGE})
+	public int fuseConfig = 0;
+
 	//inventory: core, casing
 	IItemHandler coreInputHandler = getSingleInventoryHandler(SLOT_CORE, true, false);
 	IItemHandler casingInputHandler = getSingleInventoryHandler(SLOT_CASING, true, false);
@@ -191,34 +192,6 @@ public class TileEntityHeavyAmmunitionAssembler extends TileEntityMultiblockProd
 			fuse = FuseType.v(packet.get('f').toString());
 	}
 
-	@Override
-	public void receiveMessageFromServer(@Nonnull NBTTagCompound message)
-	{
-		super.receiveMessageFromServer(message);
-
-		if(isDummy())
-			return;
-
-		if(message.hasKey("fuse"))
-			this.fuse = FuseType.v(message.getString("fuse"));
-		if(message.hasKey("fuse_config"))
-			this.fuseConfig = message.getInteger("fuse_config");
-	}
-
-	@Override
-	public void receiveMessageFromClient(NBTTagCompound message)
-	{
-		super.receiveMessageFromClient(message);
-
-		if(isDummy())
-			return;
-
-		if(message.hasKey("fuse"))
-			this.fuse = FuseType.v(message.getString("fuse"));
-		if(message.hasKey("fuse_config"))
-			this.fuseConfig = message.getInteger("fuse_config");
-	}
-
 	public ItemStack getProductionResult()
 	{
 		if(currentProcess==null)
@@ -246,32 +219,5 @@ public class TileEntityHeavyAmmunitionAssembler extends TileEntityMultiblockProd
 	public TactileHandler getTactileHandler()
 	{
 		return tactileHandler;
-	}
-
-	@Nonnull
-	@Override
-	public World getTactileWorld()
-	{
-		return getWorld();
-	}
-
-	@Nonnull
-	@Override
-	public BlockPos getTactilePos()
-	{
-		return getPos();
-	}
-
-	@Nonnull
-	@Override
-	public EnumFacing getTactileFacing()
-	{
-		return getIsMirrored()?getFacing().getOpposite(): getFacing();
-	}
-
-	@Override
-	public boolean getIsTactileMirrored()
-	{
-		return true;
 	}
 }

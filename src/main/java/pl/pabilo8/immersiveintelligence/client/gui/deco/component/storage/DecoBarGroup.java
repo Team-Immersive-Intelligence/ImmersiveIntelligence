@@ -4,7 +4,7 @@ import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import org.lwjgl.opengl.GL11;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiComponentDecoBase;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoComponent;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
@@ -18,7 +18,7 @@ import java.util.function.Consumer;
  * A group of DecoBars that can be drawn together.
  * This class allows for the management of multiple DecoBar instances,
  */
-public class DecoBarGroup extends GuiComponentDecoBase<DecoBarGroup>
+public class DecoBarGroup extends DecoComponent<DecoBarGroup>
 {
 	private final List<DecoBar> bars = new ArrayList<>();
 	protected ResLoc backgroundLocation, iconBackgroundLocation;
@@ -80,7 +80,7 @@ public class DecoBarGroup extends GuiComponentDecoBase<DecoBarGroup>
 
 		//Draw common icon background
 		TextureAtlasSprite iconBgSprite = ClientUtils.getSprite(iconBackgroundLocation);
-		draw.drawConnectedColorRect(
+		draw.drawConnectedTexColorRect(
 				x-3, y-9, width, 18, IIColor.WHITE,
 				32, 32, 4, 4,
 				iconBgSprite.getMinU(), iconBgSprite.getMaxU(),
@@ -127,6 +127,6 @@ public class DecoBarGroup extends GuiComponentDecoBase<DecoBarGroup>
 	@Override
 	public void cleanup()
 	{
-		bars.forEach(GuiComponentDecoBase::cleanup);
+		bars.forEach(DecoComponent::cleanup);
 	}
 }

@@ -35,6 +35,7 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionBase;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionSingle;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockInteractablePart;
@@ -59,8 +60,8 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockProduction
 	@Nonnull
 	public IAmmoTypeItem<?, ?> producedAmmo = IIContent.itemAmmoHeavyArtillery;
 
-	@SyncNBT
 	@Nonnull
+	@SyncNBT(events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_CLIENT_MESSAGE})
 	public CoreType coreType = producedAmmo.getAllowedCoreTypes()[0];
 
 	//how many slots to fill
@@ -147,7 +148,8 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockProduction
 
 		if(isDummy())
 			return;
-		componentInside.deserializeNBT(nbt.getCompoundTag("component_inside"));
+		IAmmoTypeItem<?, ?> bb = AmmoRegistry.getAmmoItem(nbt.getString("produced_bullet"));
+		producedAmmo = bb==null?IIContent.itemAmmoHeavyArtillery: bb;
 	}
 
 	@Override
@@ -178,8 +180,6 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockProduction
 	public void receiveMessageFromClient(NBTTagCompound message)
 	{
 		super.receiveMessageFromClient(message);
-		if(message.hasKey("core_type"))
-			coreType = CoreType.v(message.getString("core_type"));
 		if(message.hasKey("produced_bullet"))
 		{
 			IAmmoTypeItem<?, ?> bb = AmmoRegistry.getAmmoItem(message.getString("produced_bullet"));

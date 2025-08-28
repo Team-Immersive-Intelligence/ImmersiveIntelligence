@@ -2,7 +2,7 @@ package pl.pabilo8.immersiveintelligence.client.gui.deco.component.button;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiComponentDecoTextBase;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoTextBasedComponent;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
 
@@ -13,7 +13,7 @@ import java.util.function.Consumer;
  * @ii-approved 0.3.1
  * @since 01.08.2025
  */
-public class DecoArrows extends GuiComponentDecoTextBase<DecoArrows>
+public class DecoArrows extends DecoTextBasedComponent<DecoArrows>
 {
 	private Consumer<Boolean> onArrow;
 

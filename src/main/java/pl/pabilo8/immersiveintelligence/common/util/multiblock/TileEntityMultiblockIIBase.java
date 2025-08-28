@@ -150,6 +150,15 @@ public abstract class TileEntityMultiblockIIBase<T extends TileEntityMultiblockI
 	}
 
 	@Override
+	public void receiveMessageFromClient(NBTTagCompound message)
+	{
+		super.receiveMessageFromClient(message);
+		if(isDummy())
+			return;
+		NBTSerialisation.synchroniseFor(this, (tag, tile) -> tag.deserializeAll(tile, message, true));
+	}
+
+	@Override
 	public void receiveMessageFromServer(@Nonnull NBTTagCompound message)
 	{
 		super.receiveMessageFromServer(message);

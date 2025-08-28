@@ -11,6 +11,7 @@ import net.minecraftforge.fluids.FluidTank;
 import pl.pabilo8.immersiveintelligence.api.data.DataVariable;
 import pl.pabilo8.immersiveintelligence.api.data.IIDataTypeUtils;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 
@@ -131,6 +132,8 @@ public class NBTSerialisation
 					return field;
 				}
 		);
+
+		registerSerializer(IIColor.class, NBTTagInt.class, color -> new NBTTagInt(color.getPackedRGB()), nbt -> IIColor.fromPackedRGB(nbt.getInt()));
 
 		registerSerializer(
 				DataVariable.class,

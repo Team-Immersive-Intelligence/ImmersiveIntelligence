@@ -359,7 +359,7 @@ public class IIAnimation
 				return t2;
 			Float[] interpolated = new Float[Math.min(t1.length, t2.length)];
 			for(int i = 0; i < interpolated.length; i++)
-				interpolated[i] = (t1[i]+t2[i])*0.5f;
+				interpolated[i] = (float)MathHelper.clampedLerp(t1[i], t2[i], value);
 			return interpolated;
 		}
 

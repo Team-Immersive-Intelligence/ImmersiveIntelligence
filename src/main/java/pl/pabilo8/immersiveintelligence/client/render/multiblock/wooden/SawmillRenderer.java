@@ -16,6 +16,7 @@ import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer.RegisteredTileRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.amt.*;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.multiblock.MultiblockSawmill;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.tileentity.TileEntitySawmill;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.ItemIISawBlade.SawBlades;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
@@ -46,8 +47,8 @@ public class SawmillRenderer extends IITileRenderer<TileEntitySawmill>
 	public void draw(TileEntitySawmill te, BufferBuilder buf, float partialTicks, Tessellator tes)
 	{
 		//Prepare variables
-		ItemStack sawBlade = te.inventory.get(TileEntitySawmill.SLOT_SAWBLADE);
-		ItemStack sawDust = te.getInventory().get(TileEntitySawmill.SLOT_SAWDUST);
+		ItemStack sawBlade = te.inventory.get(MultiblockSawmill.SLOT_SAWBLADE);
+		ItemStack sawDust = te.getInventory().get(MultiblockSawmill.SLOT_SAWDUST);
 		float progress = te.getProductionProgress(te.currentProcess, partialTicks);
 
 		//Get model variant, defaultize
@@ -56,15 +57,15 @@ public class SawmillRenderer extends IITileRenderer<TileEntitySawmill>
 		model.defaultize();
 
 		//Set item display
-		partItemInput.get().setStack(te.inventory.get(TileEntitySawmill.SLOT_INPUT));
-		partItemOutput.get().setStack(te.inventory.get(TileEntitySawmill.SLOT_OUTPUT));
+		partItemInput.get().setStack(te.inventory.get(MultiblockSawmill.SLOT_INPUT));
+		partItemOutput.get().setStack(te.inventory.get(MultiblockSawmill.SLOT_OUTPUT));
 		partItemInserter.get().setStack(ItemStack.EMPTY);
 
 		//Dust pile size
 		animationDustPile.apply(sawDust.isEmpty()?0f: sawDust.getCount()/(float)sawDust.getMaxStackSize());
 
 		//Saw Blade model visibility
-		IIAnimationUtils.setModelVisibility(partSawblade.get(), !te.getInventory().get(TileEntitySawmill.SLOT_SAWBLADE).isEmpty());
+		IIAnimationUtils.setModelVisibility(partSawblade.get(), !te.getInventory().get(MultiblockSawmill.SLOT_SAWBLADE).isEmpty());
 
 		//Rotation
 		animationRotate.apply(IIRotaryUtils.getDisplayRotation(te, te.rotation, partialTicks));
@@ -127,7 +128,7 @@ public class SawmillRenderer extends IITileRenderer<TileEntitySawmill>
 					//Default
 					if(te==null||!te.hasWorld())
 						return ClientUtils.getSprite(res);
-					ItemStack sawblade = te.inventory.get(TileEntitySawmill.SLOT_SAWBLADE);
+					ItemStack sawblade = te.inventory.get(MultiblockSawmill.SLOT_SAWBLADE);
 
 					//Sawblade
 					if(res.getResourcePath().endsWith("iron")&&sawblade.getItem() instanceof ISawblade)

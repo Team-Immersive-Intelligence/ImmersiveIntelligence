@@ -172,7 +172,12 @@ public abstract class GuiEmplacement extends GuiIEContainerBase implements ITabb
 
 	protected DecoSlider addSlider(int x, int y, int width, IIColor textColor, float value, String name)
 	{
-		return addButton(new DecoSlider(buttonList.size(), guiLeft+x, guiTop+y, width, name, value, textColor));
+		return addButton(new DecoSlider(guiLeft+x, guiTop+y)
+				.withSize(width, 12)
+				.withTextColor(textColor, IIColor.WHITE)
+				.withValue(value)
+				.withText(name)
+		);
 	}
 
 	protected DecoLabel addLabel(int x, int y, IIColor textColor, String... text)

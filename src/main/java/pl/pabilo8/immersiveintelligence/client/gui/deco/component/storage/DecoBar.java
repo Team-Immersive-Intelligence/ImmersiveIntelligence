@@ -8,7 +8,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
 import org.lwjgl.opengl.GL11;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiComponentDecoBase;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoComponent;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
@@ -29,7 +29,7 @@ import java.util.function.Supplier;
  * @since 16.07.2021
  */
 @ParametersAreNonnullByDefault
-public class DecoBar extends GuiComponentDecoBase<DecoBar>
+public class DecoBar extends DecoComponent<DecoBar>
 {
 	protected ResLoc backgroundLocation, iconBackgroundLocation;
 	@Nullable
@@ -195,7 +195,7 @@ public class DecoBar extends GuiComponentDecoBase<DecoBar>
 	void drawBarBackground(IIDrawUtils draw)
 	{
 		TextureAtlasSprite bgSprite = ClientUtils.getSprite(backgroundLocation);
-		draw.drawConnectedColorRect(
+		draw.drawConnectedTexColorRect(
 				x, y+8, width, (((height&1)==0)?height: height+1)-8,
 				IIColor.WHITE, 64, 64, 8, 8,
 				bgSprite.getMinU(), bgSprite.getMaxU(),
@@ -227,7 +227,7 @@ public class DecoBar extends GuiComponentDecoBase<DecoBar>
 		if(drawBackground)
 		{
 			TextureAtlasSprite iconBgSprite = ClientUtils.getSprite(iconBackgroundLocation);
-			draw.drawConnectedColorRect(
+			draw.drawConnectedTexColorRect(
 					x+(width*0.5f)-9, y-9, 18, 18, IIColor.WHITE,
 					32, 32, 4, 4,
 					iconBgSprite.getMinU(), iconBgSprite.getMaxU(),

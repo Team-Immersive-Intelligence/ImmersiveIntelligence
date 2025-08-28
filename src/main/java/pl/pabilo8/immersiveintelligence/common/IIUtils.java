@@ -1,6 +1,7 @@
 package pl.pabilo8.immersiveintelligence.common;
 
 import blusunrize.immersiveengineering.api.ApiUtils;
+import blusunrize.immersiveengineering.api.Lib;
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorage;
 import blusunrize.immersiveengineering.api.energy.wires.IImmersiveConnectable;
@@ -14,6 +15,7 @@ import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementManager;
 import net.minecraft.advancements.PlayerAdvancements;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -203,6 +205,12 @@ public class IIUtils
 			}
 		}
 		return false;
+	}
+
+	public static String getFluidNameOverlayText(@Nullable FluidStack stack)
+	{
+		return (stack==null||stack.amount <= 0)?I18n.format(Lib.GUI+"empty"):
+				(stack.getLocalizedName()+": "+stack.amount);
 	}
 
 	public static char cycleDataPacketChars(char current, boolean forward, boolean hasEmpty)

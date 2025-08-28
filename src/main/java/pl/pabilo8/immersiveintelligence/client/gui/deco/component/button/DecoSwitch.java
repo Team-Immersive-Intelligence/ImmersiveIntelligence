@@ -4,7 +4,7 @@ import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiComponentDecoTextBase;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoTextBasedComponent;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoAlignment;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
@@ -24,7 +24,7 @@ import java.util.function.Consumer;
  * @ii-approved 0.3.1
  * @since 18.07.2021
  */
-public class DecoSwitch extends GuiComponentDecoTextBase<DecoSwitch>
+public class DecoSwitch extends DecoTextBasedComponent<DecoSwitch>
 {
 	private static final int X_SIZE = 16, SWITCH_X_SIZE = 8, Y_SIZE = 9;
 	private static final int MAX_SWITCH_TICKS = 20;

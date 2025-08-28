@@ -10,8 +10,8 @@ import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeNull;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType.TypeMetaInfo;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiComponentDecoBase;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiComponentDecoBase.MouseButton;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoComponent;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoComponent.MouseButton;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoButton;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoTab;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoDropdown;
@@ -74,9 +74,9 @@ public class GuiDataInputMachine extends DecoGui<TileEntityDataInputMachine, Con
 		return new GuiDataInputMachine(player, tile, IIGUI.DATA_INPUT_MACHINE_VARIABLES);
 	}
 
-	public static GuiComponentDecoBase<?>[] getCommonParts(TileEntityDataInputMachine tile)
+	public static DecoComponent<?>[] getCommonParts(TileEntityDataInputMachine tile)
 	{
-		return new GuiComponentDecoBase[]{
+		return new DecoComponent[]{
 				new DecoImage(4+2, 12+24+8-2-1)
 						.withSize(20, 52)
 						.withImageLocation(PROGRESS_IMAGE, true)

@@ -1,10 +1,13 @@
-package pl.pabilo8.immersiveintelligence.common.util;
+package pl.pabilo8.immersiveintelligence.common.util.sound;
 
 import com.google.common.collect.Sets;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.Tuple;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.HitEffect;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -25,22 +28,25 @@ public class AdvancedSounds
 	 */
 	public static class MultiSound
 	{
-		public final int id;
+		public final ResourceLocation id;
 		@Nullable
 		private final SoundEvent soundBegin, soundEnd;
 		@Nonnull
 		private final SoundEvent soundMid;
+
+		public MultiSound(String id, SoundEvent soundBegin, SoundEvent soundMid, SoundEvent soundEnd)
+		{
+			this(IIReference.RES_II.with(id), soundBegin, soundMid, soundEnd);
+		}
 
 		/**
 		 * @param soundBegin start sound
 		 * @param soundMid   middle/looped sound
 		 * @param soundEnd   end sound
 		 */
-		public MultiSound(SoundEvent soundBegin, SoundEvent soundMid, SoundEvent soundEnd)
+		public MultiSound(ResourceLocation id, SoundEvent soundBegin, SoundEvent soundMid, SoundEvent soundEnd)
 		{
-			this.id = IISounds.rangedSounds.size();
-			IISounds.multiSounds.add(this);
-
+			IISounds.multiSounds.put(this.id = id, this);
 			this.soundBegin = soundBegin;
 			this.soundMid = soundMid;
 			this.soundEnd = soundEnd;
@@ -53,7 +59,7 @@ public class AdvancedSounds
 		 */
 		public MultiSound(SoundEvent sound)
 		{
-			this(null, sound, null);
+			this(ResLoc.of(sound.getSoundName()+"_loop"), null, sound, null);
 		}
 
 		@Nullable
@@ -107,15 +113,19 @@ public class AdvancedSounds
 
 	public static class RangedSound
 	{
-		public final int id;
+		public final ResourceLocation id;
 		private final Set<Tuple<Double, SoundEvent>> sounds;
 
 		@SafeVarargs
-		public RangedSound(Tuple<Double, SoundEvent>... sounds)
+		public RangedSound(String id, Tuple<Double, SoundEvent>... sounds)
 		{
-			this.id = IISounds.rangedSounds.size();
-			IISounds.rangedSounds.add(this);
+			this(IIReference.RES_II.with(id), sounds);
+		}
 
+		@SafeVarargs
+		public RangedSound(ResourceLocation id, Tuple<Double, SoundEvent>... sounds)
+		{
+			IISounds.rangedSounds.put(this.id = id, this);
 			this.sounds = Sets.newHashSet(sounds);
 		}
 

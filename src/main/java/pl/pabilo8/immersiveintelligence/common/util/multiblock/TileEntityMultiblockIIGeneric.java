@@ -264,6 +264,6 @@ public abstract class TileEntityMultiblockIIGeneric<T extends TileEntityMultiblo
 
 	protected boolean isTankAvailable(int pos, int tank)
 	{
-		return false;
+		return true;
 	}
 }

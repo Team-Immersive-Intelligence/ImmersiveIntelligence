@@ -1,0 +1,16 @@
+{
+  "duration": 17,
+  "sounds": {
+    "0.1": {
+      "multisound": "immersiveintelligence:platform_raise_loop",
+      "end": 0.2
+    },
+    "0.5": {
+      "sound": "immersiveengineering:spray"
+    },
+    "0.7": {
+      "multisound": "immersiveintelligence:platform_lower_loop",
+      "end": 0.2
+    }
+  }
+}

@@ -6,7 +6,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiComponentDecoBase;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoComponent;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoGuiUtils;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMT;
@@ -21,7 +21,7 @@ import javax.annotation.Nullable;
  * @ii-approved 0.3.1
  * @since 18.08.2025
  */
-public class DecoScenarioDisplay extends GuiComponentDecoBase<DecoScenarioDisplay>
+public class DecoScenarioDisplay extends DecoComponent<DecoScenarioDisplay>
 {
 	private AMTModel scene;
 

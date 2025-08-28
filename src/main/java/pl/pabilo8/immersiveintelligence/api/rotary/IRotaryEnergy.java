@@ -14,6 +14,7 @@ import javax.annotation.Nullable;
  * -General info from Wikipedia
  *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @ii-approved 0.1.0
  * @since 06.01.2020
  */
 public interface IRotaryEnergy

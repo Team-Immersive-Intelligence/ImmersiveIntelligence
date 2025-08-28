@@ -18,7 +18,7 @@ import pl.pabilo8.immersiveintelligence.client.util.amt.AMTBullet.BulletState;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.ArtilleryHowitzer;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityArtilleryHowitzer;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityArtilleryHowitzer.ArtilleryHowitzerAnimation;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityArtilleryHowitzer.ArtilleryHowitzerAction;
 import pl.pabilo8.immersiveintelligence.common.util.amt.IIAnimation.IIAnimationGroup;
 import pl.pabilo8.immersiveintelligence.common.util.amt.IIModelHeader;
 
@@ -95,8 +95,8 @@ public class ArtilleryHowitzerRenderer extends IIMultiblockRenderer<TileEntityAr
 		IIAnimationUtils.setModelVisibility(shellLoaded, false);
 
 		float animationProgress = IIAnimationUtils.getAnimationProgress(te.animationTime, te.animationTimeMax,
-				canOperateActive&&te.animation!=ArtilleryHowitzerAnimation.STOP, false, 1f, 0f, partialTicks);
-		switch(te.animation)
+				canOperateActive&&te.action!=ArtilleryHowitzerAction.STOP, false, 1f, 0f, partialTicks);
+		switch(te.action)
 		{
 			case LOAD1:
 			case LOAD2:
@@ -104,7 +104,7 @@ public class ArtilleryHowitzerRenderer extends IIMultiblockRenderer<TileEntityAr
 			case LOAD4:
 			{
 				//loading animation
-				int slot = te.animation.ordinal()-ArtilleryHowitzerAnimation.LOAD1.ordinal();
+				int slot = te.action.ordinal()-ArtilleryHowitzerAction.LOAD1.ordinal();
 				setupShellDisplay(te, BulletState.BULLET_UNUSED, slot);
 				animationLoading[slot].apply(animationProgress);
 			}
@@ -115,7 +115,7 @@ public class ArtilleryHowitzerRenderer extends IIMultiblockRenderer<TileEntityAr
 			case UNLOAD4:
 			{
 				//unloading animation
-				int slot = te.animation.ordinal()-ArtilleryHowitzerAnimation.UNLOAD1.ordinal();
+				int slot = te.action.ordinal()-ArtilleryHowitzerAction.UNLOAD1.ordinal();
 				setupShellDisplay(te, shellsStorage[slot].getState(), slot);
 				animationUnloading[slot].apply(animationProgress);
 			}
@@ -126,7 +126,7 @@ public class ArtilleryHowitzerRenderer extends IIMultiblockRenderer<TileEntityAr
 			case FIRE4:
 			{
 				//loading from rack / firing animation
-				int slot = te.animation.ordinal()-ArtilleryHowitzerAnimation.FIRE1.ordinal();
+				int slot = te.action.ordinal()-ArtilleryHowitzerAction.FIRE1.ordinal();
 				BulletState firingState = animationProgress > ArtilleryHowitzer.gunFireMoment?BulletState.CASING: BulletState.BULLET_UNUSED;
 				setupShellDisplay(te, firingState, slot);
 				animationFire[slot].apply(animationProgress);

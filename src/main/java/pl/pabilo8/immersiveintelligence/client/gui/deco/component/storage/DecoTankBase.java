@@ -1,9 +1,11 @@
 package pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage;
 
+import blusunrize.immersiveengineering.client.ClientUtils;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiComponentDecoBase;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoComponent;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
@@ -21,13 +23,16 @@ import java.util.Map;
  * @implNote RESOURCE must implement {@link #hashCode()} method properly, see {@link FluidStack#hashCode()}
  * @since 16.06.2025
  */
-public abstract class DecoTankBase<TYPE extends DecoTankBase<TYPE, RESOURCE>, RESOURCE> extends GuiComponentDecoBase<TYPE>
+public abstract class DecoTankBase<TYPE extends DecoTankBase<TYPE, RESOURCE>, RESOURCE> extends DecoComponent<TYPE>
 {
 	private final String STRING_TANK_EMPTY = I18n.format("gui.immersiveengineering.empty");
 	private final Map<RESOURCE, Float> displayedAmounts = new HashMap<>();
 
 	protected ResLoc tankBackgroundLocation = DecoTextures.GUI_BG_DARK_TANK;
 	protected ResLoc tankOverlayLocation = DecoTextures.RES_TEXTURES_DECO_COMPONENT_TANK;
+	protected ResLoc tankColorMarkerLocation = DecoTextures.RES_TEXTURES_DECO_COMPONENT_TANK_MARKER;
+	@Nullable
+	protected IIColor colorMarker;
 
 	protected int lastMouseY = 0;
 	protected int borderSize = 0;
@@ -59,6 +64,20 @@ public abstract class DecoTankBase<TYPE extends DecoTankBase<TYPE, RESOURCE>, RE
 		return (TYPE)this;
 	}
 
+	public TYPE withTankColorMarkerLocation(ResLoc tankColorMarkerLocation)
+	{
+		this.tankColorMarkerLocation = tankColorMarkerLocation;
+		//noinspection unchecked
+		return (TYPE)this;
+	}
+
+	public TYPE withColorMarker(@Nullable IIColor colorMarker)
+	{
+		this.colorMarker = colorMarker;
+		//noinspection unchecked
+		return (TYPE)this;
+	}
+
 	@Override
 	protected boolean initialize()
 	{
@@ -75,7 +94,16 @@ public abstract class DecoTankBase<TYPE extends DecoTankBase<TYPE, RESOURCE>, RE
 		bindAtlas();
 		//Draw background
 		IIDrawUtils draw = IIDrawUtils.startTexturedColored();
-		draw.drawConnectedColorRect(x, y, width, height, IIColor.WHITE, tankBackgroundLocation, 64, 64, 8, 8);
+		draw.drawConnectedTexColorRect(x, y, width, height, IIColor.WHITE, tankBackgroundLocation, 64, 64, 8, 8);
+		//Draw color marker (useful for f.e. ink fluid tanks)
+		if(colorMarker!=null)
+		{
+			TextureAtlasSprite marker = ClientUtils.getSprite(tankColorMarkerLocation);
+			draw.drawTexColorRect(x+width/2f-3, y-4, 6, 4, IIColor.WHITE,
+					marker.getMinU(), marker.getInterpolatedU(6), marker.getMinV(), marker.getInterpolatedV(4));
+			draw.drawTexColorRect(x+width/2f-3, y-4, 6, 4, colorMarker,
+					marker.getInterpolatedU(6), marker.getInterpolatedU(12), marker.getMinV(), marker.getInterpolatedV(4));
+		}
 
 		//Draw contents
 		List<RESOURCE> contents = getContents();
@@ -105,13 +133,13 @@ public abstract class DecoTankBase<TYPE extends DecoTankBase<TYPE, RESOURCE>, RE
 
 				//Draw the layer, offset upwards by the height of it
 				yOffset -= resourceHeight;
-				draw.drawRepeatedColorRect(x+borderSize, yOffset, fullWidth, resourceHeight, getResourceColor(resource),
+				draw.drawRepeatedTexColorRect(x+borderSize, yOffset, fullWidth, resourceHeight, getResourceColor(resource),
 						getResourceTexture(resource), 16);
 			}
 		}
 
 		//Draw overlay
-		draw.drawConnectedColorRect(x, y, width, height, IIColor.WHITE, tankOverlayLocation, 64, 64, 8, 8)
+		draw.drawConnectedTexColorRect(x, y, width, height, IIColor.WHITE, tankOverlayLocation, 64, 64, 8, 8)
 				.finish();
 	}
 

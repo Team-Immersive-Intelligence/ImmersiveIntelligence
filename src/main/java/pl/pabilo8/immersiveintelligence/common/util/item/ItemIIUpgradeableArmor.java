@@ -131,6 +131,12 @@ public abstract class ItemIIUpgradeableArmor extends ItemArmor implements IUpgra
 		return 0xffffff;
 	}
 
+	@Override
+	public void setColor(ItemStack stack, int color)
+	{
+		ItemNBTHelper.setInt(stack, NBT_COLOR, color);
+	}
+
 	protected String getNameForPart(EntityEquipmentSlot equipmentSlotIn)
 	{
 		switch(equipmentSlotIn)

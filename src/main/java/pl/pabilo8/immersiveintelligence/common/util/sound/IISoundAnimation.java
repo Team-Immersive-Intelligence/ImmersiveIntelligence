@@ -1,8 +1,10 @@
-package pl.pabilo8.immersiveintelligence.common.util;
+package pl.pabilo8.immersiveintelligence.common.util.sound;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.common.util.Utils;
+import com.google.gson.JsonObject;
 import net.minecraft.client.Minecraft;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.Tuple;
@@ -11,7 +13,12 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.client.util.carversound.TimedCompoundSound;
-import pl.pabilo8.immersiveintelligence.common.util.AdvancedSounds.MultiSound;
+import pl.pabilo8.immersiveintelligence.common.IILogger;
+import pl.pabilo8.immersiveintelligence.common.IISounds;
+import pl.pabilo8.immersiveintelligence.common.util.IIFileUtils;
+import pl.pabilo8.immersiveintelligence.common.util.IIFileUtils.ResourceException;
+import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
+import pl.pabilo8.immersiveintelligence.common.util.sound.AdvancedSounds.MultiSound;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -25,7 +32,6 @@ import java.util.stream.Collectors;
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 10.08.2022
  */
-// TODO: 11.08.2022 add loading from .json exported from blockbench
 public class IISoundAnimation
 {
 	//--- Compiled ---//
@@ -39,10 +45,61 @@ public class IISoundAnimation
 	private final HashMap<Integer, Tuple<MultiSound, Integer>> compiledRepeatedSounds = new HashMap<>();
 	private final double animationDuration;
 
-	// TODO: 11.08.2022 dispose of animationDuration when adding .json
 	public IISoundAnimation(double animationDuration)
 	{
 		this.animationDuration = animationDuration;
+	}
+
+	public IISoundAnimation(ResLoc location)
+	{
+		double duration = 1f;
+		ResLoc fullRes = ResLoc.of(location.getResourceDomain()+":animations/"+location.getResourcePath()+".json");
+		try
+		{
+			JsonObject json = IIFileUtils.readJSONFile(fullRes);
+
+			//Parse duration
+			if(json.has("duration"))
+				duration = json.get("duration").getAsDouble();
+			//Parse sounds
+			if(json.has("sounds"))
+			{
+				JsonObject soundsObj = json.getAsJsonObject("sounds");
+
+				soundsObj.entrySet().forEach(entry -> {
+					//Get the element
+					double time = Double.parseDouble(entry.getKey());
+					JsonObject soundData = entry.getValue().getAsJsonObject();
+					//Single sound
+					if(soundData.has("sound"))
+					{
+						ResourceLocation res = new ResourceLocation(soundData.get("sound").getAsString());
+						SoundEvent soundEvent = SoundEvent.REGISTRY.getObject(res);
+						if(soundEvent!=null)
+							sounds.put(time, soundEvent);
+						else
+							IILogger.warn("Missing SoundEvent for sound animation "+fullRes+": "+res);
+					}
+					//Repeated compound sound
+					else if(soundData.has("multisound"))
+					{
+						ResourceLocation res = new ResourceLocation(soundData.get("multisound").getAsString());
+						double endTime = soundData.has("end")?soundData.get("end").getAsDouble(): time+0.1;
+
+						MultiSound multiSound = IISounds.multiSounds.get(res);
+						if(multiSound!=null)
+							repeatedSounds.put(time, new Tuple<>(multiSound, endTime-time));
+						else
+							IILogger.warn("Missing MultiSound for sound animation "+fullRes+": "+res);
+					}
+				});
+			}
+
+		} catch(ResourceException e)
+		{
+			IILogger.error("[IISoundAnimation] Couldn't load sound animation "+fullRes+", "+e);
+		}
+		this.animationDuration = duration;
 	}
 
 	/**
@@ -50,7 +107,7 @@ public class IISoundAnimation
 	 *
 	 * @param maxTime animation duration
 	 */
-	public void compile(int maxTime)
+	public IISoundAnimation compile(int maxTime)
 	{
 		compiledSounds.clear();
 		//Compile single sounds
@@ -70,6 +127,7 @@ public class IISoundAnimation
 						(int)(sound.getSecond()*maxTime)
 				)));
 
+		return this;
 	}
 
 	/**
@@ -109,14 +167,14 @@ public class IISoundAnimation
 
 	//--- Sound handling ---//
 
-	public void handleSounds(List<TimedCompoundSound> current, BlockPos pos, int animationTime, float volume)
+	public void handleSounds(SoundHandler soundStorage, int animationTime, float volume)
 	{
-		handleSingleSounds(pos, animationTime, volume);
-		handleRepeatedSounds(current, pos, animationTime, volume);
+		handleSingleSounds(soundStorage.getPosition(), animationTime, volume);
+		handleRepeatedSounds(soundStorage.getCurrentPlayingList(), soundStorage.getPosition(), animationTime, volume);
 	}
 
 	@SideOnly(Side.CLIENT)
-	public void handleSingleSounds(BlockPos pos, int animationTime, float volume)
+	protected void handleSingleSounds(BlockPos pos, int animationTime, float volume)
 	{
 		SoundEvent[] sounds = getSounds(animationTime);
 		Minecraft mc = ClientUtils.mc();
@@ -137,10 +195,8 @@ public class IISoundAnimation
 	}
 
 	@SideOnly(Side.CLIENT)
-	public void handleRepeatedSounds(List<TimedCompoundSound> current, BlockPos pos, int animationTime, float volume)
+	protected void handleRepeatedSounds(List<TimedCompoundSound> current, BlockPos pos, int animationTime, float volume)
 	{
-		Minecraft mc = ClientUtils.mc();
-
 		if(animationTime==0)
 			return;
 
@@ -150,7 +206,7 @@ public class IISoundAnimation
 		{
 			TimedCompoundSound sound = new TimedCompoundSound(added.getFirst(), SoundCategory.BLOCKS, new Vec3d(pos), added.getSecond(), volume, 1);
 			current.add(sound);
-			mc.getSoundHandler().playSound(sound);
+			sound.start();
 		}
 
 		//Remove sounds that ended playing

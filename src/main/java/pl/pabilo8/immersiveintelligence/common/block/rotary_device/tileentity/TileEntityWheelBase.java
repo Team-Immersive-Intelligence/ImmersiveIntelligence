@@ -2,7 +2,6 @@ package pl.pabilo8.immersiveintelligence.common.block.rotary_device.tileentity;
 
 import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler;
 import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler.Connection;
-import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IBlockBounds;
 import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.entity.EntityLivingBase;
@@ -28,7 +27,7 @@ import java.util.Set;
 public abstract class TileEntityWheelBase extends TileEntityMechanicalConnectable implements IBlockBounds
 {
 	public EnumFacing facing = EnumFacing.NORTH;
-	private ConditionCompoundSound loopSound = null;
+	private ConditionCompoundSound<TileEntityMechanicalConnectable> loopSound = null;
 
 	@Override
 	public void update()
@@ -85,19 +84,14 @@ public abstract class TileEntityWheelBase extends TileEntityMechanicalConnectabl
 			{
 				if(!(connection.cableType instanceof MotorBeltType))
 					continue;
-				ClientUtils.mc().getSoundHandler().playSound(loopSound = new ConditionCompoundSound(((MotorBeltType)connection.cableType).getLoopSound(), SoundCategory.BLOCKS,
-						new Vec3d(pos).addVector(0.5, 0.5, 0.5), 1f, 1f, () -> !tileEntityInvalid));
+				loopSound = new ConditionCompoundSound<>(((MotorBeltType)connection.cableType).getLoopSound(),
+						new Vec3d(pos).addVector(0.5, 0.5, 0.5), this, o -> o.getNetwork().getNetworkSpeed() > 1);
 				break;
 			}
 
 		}
-
-		//Update sound
-		if(loopSound!=null)
-		{
-			loopSound.update();
+		else
 			loopSound.setPitch(((float)MathHelper.clamp(getNetwork().getNetworkSpeed()/80f, 0, 2)));
-		}
 	}
 
 	@Override

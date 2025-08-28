@@ -18,8 +18,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.network.IIMessage.IIMessageHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.*;
-import pl.pabilo8.immersiveintelligence.common.util.AdvancedSounds.MultiSound;
-import pl.pabilo8.immersiveintelligence.common.util.AdvancedSounds.RangedSound;
+import pl.pabilo8.immersiveintelligence.common.util.sound.AdvancedSounds.MultiSound;
+import pl.pabilo8.immersiveintelligence.common.util.sound.AdvancedSounds.RangedSound;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
