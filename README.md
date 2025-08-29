@@ -3,6 +3,8 @@
 ![CurseForge Downloads](https://img.shields.io/curseforge/dt/344344?logo=curseforge&label=Curseforge&color=orange)
 ![Modrinth Downloads](https://img.shields.io/modrinth/dt/immersive-intelligence?logo=modrinth&label=Modrinth&link=https%3A%2F%2Fmodrinth.com%2Fmod%2Fimmersive-intelligence)
 [![Join Here!](https://img.shields.io/discord/610912351142674434?logo=discord&logoColor=237289da&color=%237289da&label=Discord)](https://discord.gg/teMfm3R)
+[![Commit Activity!](https://img.shields.io/github/commit-activity/m/Team-Immersive-Intelligence/ImmersiveIntelligence)](https://github.com/Team-Immersive-Intelligence/ImmersiveIntelligence/pulse)
+
 [![Jitpack](https://jitpack.io/v/Pabilo8/ImmersiveIntelligence.svg)](https://jitpack.io/#Pabilo8/ImmersiveIntelligence)
 ![Test Status](https://github.com/Team-Immersive-Intelligence/ImmersiveIntelligence/actions/workflows/push.yml/badge.svg)
 [![Become a Patron!](https://img.shields.io/badge/Become%20a%20Patron-Pabilo8-red?style=flat-square&logo=patreon)](https://www.patreon.com/bePatron?u=34304036)
