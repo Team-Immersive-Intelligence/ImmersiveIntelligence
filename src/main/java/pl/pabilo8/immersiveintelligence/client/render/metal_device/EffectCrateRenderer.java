@@ -6,7 +6,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.obj.OBJModel;
-import pl.pabilo8.immersiveintelligence.api.utils.upgrade_system.MachineUpgrade;
+import pl.pabilo8.immersiveintelligence.api.utils.upgrade.Upgrade;
 import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.amt.*;
 import pl.pabilo8.immersiveintelligence.client.util.amt.MachineUpgradeModel.UpgradeStage;
@@ -26,7 +26,7 @@ public abstract class EffectCrateRenderer<T extends TileEntityEffectCrate> exten
 	private MachineUpgradeModel modelUpgrade = null;
 	private AMT partInserter, partLower, partUpper;
 
-	public static void renderWithUpgrade(MachineUpgrade... upgrades)
+	public static void renderWithUpgrade(Upgrade... upgrades)
 	{
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(-0.5, 0, 0.5);
@@ -34,7 +34,7 @@ public abstract class EffectCrateRenderer<T extends TileEntityEffectCrate> exten
 
 		//model.getBlockRotation(EnumFacing.NORTH, false);
 
-		for(MachineUpgrade upgrade : upgrades)
+		for(Upgrade upgrade : upgrades)
 		{
 			if(upgrade==IIContent.UPGRADE_INSERTER)
 			{

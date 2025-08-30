@@ -20,6 +20,7 @@ import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 import pl.pabilo8.immersiveintelligence.api.utils.armor.IInfraredProtectionEquipment;
+import pl.pabilo8.immersiveintelligence.api.utils.upgrade.UpgradeUtils;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.block.emplacement.GuiEmplacementPageStorage;
 import pl.pabilo8.immersiveintelligence.client.render.multiblock.metal.EmplacementRenderer;
@@ -29,7 +30,6 @@ import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.EmplacementWeapons.InfraredObserver;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityEmplacementWeapon.EmplacementHitboxEntity;
 
@@ -270,8 +270,8 @@ public class EmplacementWeaponInfraredObserver extends EmplacementWeapon
 		GlStateManager.pushMatrix();
 
 		final int req = IIContent.UPGRADE_EMPLACEMENT_WEAPON_IROBSERVER.getProgressRequired();
-		final int l = EmplacementRenderer.modelInfraredObserverConstruction.length;
-		double maxClientProgress = IIUtils.getMaxClientProgress(serverProgress, req, l);
+		final int l = EmplacementRenderer.modelTeslaCoilConstruction.length;
+		double maxClientProgress = UpgradeUtils.getMaxClientProgress(serverProgress, IIContent.UPGRADE_EMPLACEMENT_WEAPON_IROBSERVER);
 
 		double cc = (int)Math.min(clientProgress+((partialTicks*(Tools.wrenchUpgradeProgress/2f))), maxClientProgress);
 		double progress = MathHelper.clamp(cc/req, 0, 1);

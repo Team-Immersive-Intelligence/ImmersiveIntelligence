@@ -3,9 +3,7 @@ package pl.pabilo8.immersiveintelligence.client.render.multiblock.metal;
 import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.util.math.MathHelper;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.utils.upgrade_system.MachineUpgrade;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.ModelRadar;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
@@ -13,9 +11,7 @@ import pl.pabilo8.immersiveintelligence.client.util.ShaderUtil;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.Coord2D;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.Shape2D;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityRadar;
 
 /**
@@ -27,34 +23,6 @@ public class RadarRenderer extends TileEntitySpecialRenderer<TileEntityRadar> im
 	private static final String TEXTURE = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/radar.png";
 	private static ModelRadar model, modelFlipped;
 	private static ModelRendererTurbo[] modelConstruction, modelConstructionFlipped;
-
-	public static void renderWithUpgrades(MachineUpgrade[] upgrades)
-	{
-		ClientUtils.bindTexture(TEXTURE);
-		GlStateManager.pushMatrix();
-		GlStateManager.translate(-0.5, -0.25f, 0);
-		GlStateManager.scale(0.25f, 0.25f, 0.25f);
-		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
-
-		for(ModelRendererTurbo mod : modelFlipped.baseModel)
-			mod.render();
-
-		for(MachineUpgrade upgrade : upgrades)
-		{
-			if(upgrade==IIContent.UPGRADE_RADIO_LOCATORS)
-			{
-				for(ModelRendererTurbo mod : modelFlipped.triangulatorsModel)
-					mod.render();
-			}
-		}
-
-		GlStateManager.translate(3, 0, 1);
-		for(ModelRendererTurbo mod : modelFlipped.radarModel)
-			mod.render();
-
-
-		GlStateManager.popMatrix();
-	}
 
 	@Override
 	public void render(TileEntityRadar te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
@@ -83,7 +51,7 @@ public class RadarRenderer extends TileEntitySpecialRenderer<TileEntityRadar> im
 				for(ModelRendererTurbo mod : modelCurrent.baseModel)
 					mod.render();
 
-				if(te.hasUpgrade(IIContent.UPGRADE_RADIO_LOCATORS))
+				if(te.isUpgradeInstalled(IIContent.UPGRADE_RADIO_LOCATORS))
 					for(ModelRendererTurbo mod : modelCurrent.triangulatorsModel)
 						mod.render();
 
@@ -154,39 +122,19 @@ public class RadarRenderer extends TileEntitySpecialRenderer<TileEntityRadar> im
 
 		modelConstruction = IIClientUtils.createConstructionModel(null, model);
 		modelConstructionFlipped = IIClientUtils.createConstructionModel(null, modelFlipped);
-		TileEntityRadar.PART_AMOUNT = modelConstruction.length;
+		//TileEntityRadar.PART_AMOUNT = modelConstruction.length;
 
 		//ah yes, even in my own code there is this cheeky maneuvering
 		model.parts.put("triangulators", model.triangulatorsModel);
 		modelFlipped.parts.put("triangulators", modelFlipped.triangulatorsModel);
 
-		IIContent.UPGRADE_RADIO_LOCATORS.setRequiredSteps(model.triangulatorsModel.length);
+		IIContent.UPGRADE_RADIO_LOCATORS.withProgressStages(model.triangulatorsModel.length);
 
 	}
 
 	public void renderConstruction(TileEntityRadar te, float partialTicks)
 	{
 		ModelRendererTurbo[] tt = te.mirrored?modelConstructionFlipped: modelConstruction;
-		double cc = (int)Math.min(te.clientConstruction+((partialTicks*(Tools.electricHammerEnergyPerUseConstruction/4.25f))), IIUtils.getMaxClientProgress(te.construction, te.getConstructionCost(), TileEntityRadar.PART_AMOUNT));
-		double progress = MathHelper.clamp(cc/(float)te.getConstructionCost(), 0f, 1f);
-
-		for(int i = 0; i < TileEntityRadar.PART_AMOUNT*progress; i++)
-		{
-			if(1+i > Math.round(TileEntityRadar.PART_AMOUNT*progress))
-			{
-				GlStateManager.pushMatrix();
-				double scale = 1f-(((progress*TileEntityRadar.PART_AMOUNT)%1f));
-				GlStateManager.enableBlend();
-				GlStateManager.color(1f, 1f, 1f, (float)Math.min(scale*2, 1));
-				GlStateManager.translate(0, scale*1.5f, 0);
-
-				tt[i].render(0.0625f);
-				GlStateManager.color(1f, 1f, 1f, 1f);
-				GlStateManager.popMatrix();
-			}
-			else
-				tt[i].render(0.0625f);
-		}
 
 		GlStateManager.pushMatrix();
 		GlStateManager.enableBlend();
@@ -196,10 +144,8 @@ public class RadarRenderer extends TileEntitySpecialRenderer<TileEntityRadar> im
 		//float flicker = (te.getWorld().rand.nextInt(10)==0)?0.75F: (te.getWorld().rand.nextInt(20)==0?0.5F: 1F);
 
 		ShaderUtil.useBlueprint(0.35f, ClientUtils.mc().player.ticksExisted+partialTicks);
-		for(int i = modelConstruction.length-1; i >= Math.max(((modelConstruction.length-1)*progress)-1, 0); i--)
-		{
-			tt[i].render(0.0625f);
-		}
+		for(ModelRendererTurbo tmt : tt)
+			tmt.render();
 		ShaderUtil.releaseShader();
 		GlStateManager.disableBlend();
 		GlStateManager.enableLighting();

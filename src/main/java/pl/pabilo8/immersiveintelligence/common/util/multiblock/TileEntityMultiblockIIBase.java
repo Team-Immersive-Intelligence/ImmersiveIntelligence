@@ -21,8 +21,8 @@ import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
-import pl.pabilo8.immersiveintelligence.common.entity.tactile.TactileHandler;
-import pl.pabilo8.immersiveintelligence.common.entity.tactile.TactileHandler.ITactileListener;
+import pl.pabilo8.immersiveintelligence.common.entity.tactile.TactileManager;
+import pl.pabilo8.immersiveintelligence.common.entity.tactile.TactileManager.ITactileListener;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.NBTSerialisation;
@@ -383,7 +383,7 @@ public abstract class TileEntityMultiblockIIBase<T extends TileEntityMultiblockI
 		this.aabb = null;
 		if(this instanceof ITactileListener)
 		{
-			TactileHandler handler = ((ITactileListener)this).getTactileHandler();
+			TactileManager handler = ((ITactileListener)this).getTactileHandler();
 			if(handler!=null)
 				handler.forceReload();
 		}

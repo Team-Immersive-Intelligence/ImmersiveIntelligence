@@ -8,14 +8,14 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.client.model.obj.OBJModel;
-import pl.pabilo8.immersiveintelligence.api.utils.upgrade_system.IUpgradableMachine;
-import pl.pabilo8.immersiveintelligence.api.utils.upgrade_system.MachineUpgrade;
+import pl.pabilo8.immersiveintelligence.api.utils.upgrade.IUpgradableDevice;
+import pl.pabilo8.immersiveintelligence.api.utils.upgrade.Upgrade;
+import pl.pabilo8.immersiveintelligence.api.utils.upgrade.UpgradeUtils;
 import pl.pabilo8.immersiveintelligence.client.util.ShaderUtil;
 import pl.pabilo8.immersiveintelligence.client.util.ShaderUtil.Shaders;
 import pl.pabilo8.immersiveintelligence.client.util.amt.MachineUpgradeModel.UpgradeStage;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.amt.IIAnimation;
 import pl.pabilo8.immersiveintelligence.common.util.amt.IIAnimation.IIAnimationGroup;
@@ -30,9 +30,9 @@ import java.util.Arrays;
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 13.07.2022
  */
-public class MachineCachedUpgradeModel<T extends TileEntity & IUpgradableMachine> implements AMTRenderable
+public class MachineCachedUpgradeModel<T extends TileEntity & IUpgradableDevice> implements AMTRenderable
 {
-	private final MachineUpgrade upgrade;
+	private final Upgrade upgrade;
 	//Construction
 	private final IIAnimationCompiledMap constructionAnimation;
 	private final AMTModel constructionModel, batchedConstructionModel;
@@ -55,7 +55,7 @@ public class MachineCachedUpgradeModel<T extends TileEntity & IUpgradableMachine
 						.map(g -> new IIAnimationGroup(g.groupName, g.position, g.scale, g.rotation, null, vecToAlpha(g.position), null))
 						.toArray(IIAnimationGroup[]::new)));
 
-		this.upgrade.setRequiredSteps(this.steps = this.constructionAnimation.size());
+		this.upgrade.withProgressStages(this.steps = this.constructionAnimation.size());
 
 		//get only base level models (model), contained in animation
 		this.constructionModel = new AMTModel(builder.constructionModel.stream()
@@ -104,7 +104,7 @@ public class MachineCachedUpgradeModel<T extends TileEntity & IUpgradableMachine
 		}
 
 		//Check if the machine has the upgrade installed
-		if(machine.hasUpgrade(upgrade))
+		if(machine.isUpgradeInstalled(upgrade))
 		{
 			//Make parts invisible
 			this.finishedAnimation.apply(1f);
@@ -112,7 +112,7 @@ public class MachineCachedUpgradeModel<T extends TileEntity & IUpgradableMachine
 		}
 
 		//Skip construction animation, if the machine does not have the upgrade installed
-		if(machine.getCurrentlyInstalled()!=upgrade)
+		if(machine.getCurrentUpgrade()!=upgrade)
 		{
 			this.finishedAnimation.apply(0f);
 			return UpgradeStage.NOT_INSTALLED;
@@ -120,9 +120,9 @@ public class MachineCachedUpgradeModel<T extends TileEntity & IUpgradableMachine
 
 		//calculate progress per part
 		final int maxProgress = IIContent.UPGRADE_INSERTER.getProgressRequired();
-		double maxClientProgress = IIUtils.getMaxClientProgress(machine.getInstallProgress(), maxProgress, steps);
+		double maxClientProgress = UpgradeUtils.getMaxClientProgress(machine.getUpgradeInstallProgress(true), upgrade);
 
-		double currentProgress = (int)Math.min(machine.getClientInstallProgress()+((partialTicks*(Tools.wrenchUpgradeProgress*0.5f))), maxClientProgress);
+		double currentProgress = (int)Math.min(machine.getUpgradeInstallProgress(true)+((partialTicks*(Tools.wrenchUpgradeProgress*0.5f))), maxClientProgress);
 		float install = (float)MathHelper.clamp(currentProgress/maxProgress, 0, 1);
 
 		//Draw blueprint
@@ -157,9 +157,9 @@ public class MachineCachedUpgradeModel<T extends TileEntity & IUpgradableMachine
 		constructionModel.disposeOf();
 	}
 
-	public static class MachineCachedUpgradeModelBuilder<T extends TileEntity & IUpgradableMachine>
+	public static class MachineCachedUpgradeModelBuilder<T extends TileEntity & IUpgradableDevice>
 	{
-		private MachineUpgrade upgrade;
+		private Upgrade upgrade;
 		private AMTModel constructionModel;
 		private OBJModel finishedModel;
 		private ResourceLocation animation;
@@ -170,7 +170,7 @@ public class MachineCachedUpgradeModel<T extends TileEntity & IUpgradableMachine
 			this.cachedModelBuilder = cachedModelBuilder;
 		}
 
-		public MachineCachedUpgradeModelBuilder<T> withUpgrade(MachineUpgrade upgrade)
+		public MachineCachedUpgradeModelBuilder<T> withUpgrade(Upgrade upgrade)
 		{
 			this.upgrade = upgrade;
 			return this;

@@ -6,13 +6,10 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.IItemHandler;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
@@ -23,10 +20,8 @@ import pl.pabilo8.immersiveintelligence.api.crafting.ProjectileWorkshopRecipe;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
 import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
-import pl.pabilo8.immersiveintelligence.api.utils.upgrade_system.IUpgradableMachine;
-import pl.pabilo8.immersiveintelligence.api.utils.upgrade_system.IUpgradeStorageMachine;
-import pl.pabilo8.immersiveintelligence.api.utils.upgrade_system.MachineUpgrade;
-import pl.pabilo8.immersiveintelligence.api.utils.upgrade_system.UpgradeStorage;
+import pl.pabilo8.immersiveintelligence.api.utils.upgrade.IManagedUpgradableDevice;
+import pl.pabilo8.immersiveintelligence.api.utils.upgrade.UpgradeManager;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.ProjectileWorkshop;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
@@ -52,7 +47,7 @@ import java.util.Optional;
  * @since 04.03.2021
  */
 public class TileEntityProjectileWorkshop extends TileEntityMultiblockProductionSingle<TileEntityProjectileWorkshop, ProjectileWorkshopRecipe>
-		implements IUpgradeStorageMachine<TileEntityProjectileWorkshop>, IBooleanAnimatedPartsBlock
+		implements IManagedUpgradableDevice<TileEntityProjectileWorkshop>, IBooleanAnimatedPartsBlock
 {
 	public static final int SLOT_INPUT = 0, SLOT_COMPONENT_INPUT = 1, SLOT_OUTPUT = 2;
 
@@ -77,8 +72,8 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockProduction
 	public FluidTank tanksFiller = new FluidTank(ProjectileWorkshop.componentTankCapacity);
 	@SyncNBT
 	public MultiblockInteractablePart lid1, lid2;
-	@SyncNBT(name = "upgrades")
-	public UpgradeStorage<TileEntityProjectileWorkshop> upgradeStorage;
+	@SyncNBT(name = "upgrades", events = SyncEvents.TILE_UPGRADES_MODIFIED)
+	public UpgradeManager<TileEntityProjectileWorkshop> upgrades;
 
 	IItemHandler inputHandler = new IEInventoryHandler(1, this, 0, true, false);
 	IItemHandler componentInputHandler = new IEInventoryHandler(1, this, 1, true, false);
@@ -86,12 +81,12 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockProduction
 	public TileEntityProjectileWorkshop()
 	{
 		super(MultiblockProjectileWorkshop.INSTANCE);
-		energyStorage = new FluxStorageAdvanced(ProjectileWorkshop.energyCapacity);
-		inventory = NonNullList.withSize(3, ItemStack.EMPTY);
-		upgradeStorage = new UpgradeStorage<>(this);
+		this.energyStorage = new FluxStorageAdvanced(ProjectileWorkshop.energyCapacity);
+		this.inventory = NonNullList.withSize(3, ItemStack.EMPTY);
+		this.upgrades = new UpgradeManager<>(this);
 
-		lid1 = new MultiblockInteractablePart(14);
-		lid2 = new MultiblockInteractablePart(16);
+		this.lid1 = new MultiblockInteractablePart(14);
+		this.lid2 = new MultiblockInteractablePart(16);
 	}
 
 	@Override
@@ -100,7 +95,7 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockProduction
 		super.dummyCleanup();
 		lid1 = lid2 = null;
 		tanksFiller = null;
-		upgradeStorage = null;
+		upgrades = null;
 		componentInside = null;
 	}
 
@@ -110,10 +105,10 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockProduction
 		//Update breadbox lid animations
 		lid1.update();
 		lid2.update();
-		upgradeStorage.update();
+		upgrades.update();
 
 		//fill component tank
-		if(hasUpgrade(IIContent.UPGRADE_CORE_FILLER)&&!world.isRemote)
+		if(isUpgradeInstalled(IIContent.UPGRADE_CORE_FILLER)&&!world.isRemote)
 		{
 			if(!componentInputHandler.getStackInSlot(0).isEmpty())
 			{
@@ -209,11 +204,11 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockProduction
 	@Override
 	public boolean isStackValid(int slot, ItemStack stack)
 	{
-		if(slot==SLOT_COMPONENT_INPUT&&hasUpgrade(IIContent.UPGRADE_CORE_FILLER))
+		if(slot==SLOT_COMPONENT_INPUT&&isUpgradeInstalled(IIContent.UPGRADE_CORE_FILLER))
 			return AmmoRegistry.getAllComponents().stream().anyMatch(comp -> comp.getMaterial().matchesItemStackIgnoringSize(stack));
 		else if(slot==SLOT_INPUT)
 		{
-			if(hasUpgrade(IIContent.UPGRADE_CORE_FILLER))
+			if(isUpgradeInstalled(IIContent.UPGRADE_CORE_FILLER))
 				return stack.getItem() instanceof IAmmoTypeItem&&((IAmmoTypeItem<?, ?>)stack.getItem()).isBulletCore(stack);
 			else
 				return AmmoRegistry.getAllCores().stream().anyMatch(core -> core.getMaterial().matchesItemStackIgnoringSize(stack));
@@ -371,49 +366,10 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockProduction
 
 	//--- IUpgradeStorageMachine ---//
 
+	@Nonnull
 	@Override
-	public UpgradeStorage<TileEntityProjectileWorkshop> getUpgradeStorage()
+	public UpgradeManager<TileEntityProjectileWorkshop> getUpgradeManager()
 	{
-		return upgradeStorage;
+		return upgrades;
 	}
-
-	@Override
-	public boolean upgradeMatches(MachineUpgrade upgrade)
-	{
-		return upgrade==IIContent.UPGRADE_CORE_FILLER;
-	}
-
-	@Override
-	public <T extends TileEntity & IUpgradableMachine> T getUpgradeMaster()
-	{
-		return (T)master();
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void renderWithUpgrades(MachineUpgrade... upgrades)
-	{
-
-	}
-
-	public static class ProjectileWorkshopCoreMakingProcess extends IIMultiblockProcess<ProjectileWorkshopRecipe>
-	{
-		public ItemStack effect;
-
-		public ProjectileWorkshopCoreMakingProcess(ProjectileWorkshopRecipe recipe)
-		{
-			super(recipe);
-		}
-	}
-
-	public static class ProjectileWorkshopCoreFillingProcess extends IIMultiblockProcess<ProjectileWorkshopRecipe>
-	{
-		public ItemStack effect;
-
-		public ProjectileWorkshopCoreFillingProcess(ProjectileWorkshopRecipe recipe)
-		{
-			super(recipe);
-		}
-	}
-
 }

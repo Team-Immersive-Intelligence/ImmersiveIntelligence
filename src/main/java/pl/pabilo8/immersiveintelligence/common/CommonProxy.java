@@ -14,6 +14,7 @@ import blusunrize.immersiveengineering.api.tool.ExcavatorHandler.MineralMix;
 import blusunrize.immersiveengineering.common.Config.IEConfig.Tools;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IGuiTile;
 import blusunrize.immersiveengineering.common.blocks.ItemBlockIEBase;
+import blusunrize.immersiveengineering.common.blocks.TileEntityIEBase;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityChargingStation;
 import blusunrize.immersiveengineering.common.blocks.wooden.TileEntityWatermill;
 import blusunrize.immersiveengineering.common.blocks.wooden.TileEntityWindmill;
@@ -68,8 +69,7 @@ import pl.pabilo8.immersiveintelligence.api.data.IIDataTypeUtils;
 import pl.pabilo8.immersiveintelligence.api.rotary.CapabilityRotaryEnergy;
 import pl.pabilo8.immersiveintelligence.api.rotary.IIRotaryUtils;
 import pl.pabilo8.immersiveintelligence.api.utils.MinecartBlockHelper;
-import pl.pabilo8.immersiveintelligence.api.utils.upgrade_system.IUpgradableMachine;
-import pl.pabilo8.immersiveintelligence.api.utils.upgrade_system.MachineUpgrade;
+import pl.pabilo8.immersiveintelligence.api.utils.upgrade.IUpgradableDevice;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.MechanicalDevices;
 import pl.pabilo8.immersiveintelligence.common.ammo.components.factory.AmmoComponentFluid;
@@ -362,11 +362,6 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		unlocalized = unlocalized.substring(unlocalized.indexOf(ImmersiveIntelligence.MODID));
 		unlocalized = unlocalized.replaceFirst("\\.", ":");
 		return new ResourceLocation(unlocalized);
-	}
-
-	public static MachineUpgrade createMachineUpgrade(String name)
-	{
-		return new MachineUpgrade(name, new ResourceLocation(ImmersiveIntelligence.MODID, "textures/gui/upgrade/"+name+".png"));
 	}
 
 	public static void openGuiForItem(@Nonnull EntityPlayer player, @Nonnull EnumHand hand)
@@ -748,11 +743,11 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		TileEntity te = world.getTileEntity(new BlockPos(x, y, z));
 		ItemStack stack = player.getHeldItem(hand = (player.getHeldItem(EnumHand.MAIN_HAND).getItem() instanceof IGuiItem?EnumHand.MAIN_HAND: EnumHand.OFF_HAND));
 
-		if(ID==IIGUI.UPGRADE.ordinal()&&te instanceof IUpgradableMachine)
+		if(ID==IIGUI.UPGRADE.ordinal()&&te instanceof IUpgradableDevice)
 		{
-			TileEntity upgradeMaster = ((IUpgradableMachine)te).getUpgradeMaster();
+			IUpgradableDevice upgradeMaster = ((IUpgradableDevice)te).master();
 			if(upgradeMaster!=null)
-				return new ContainerUpgrade(player, (TileEntity & IUpgradableMachine)upgradeMaster);
+				return new ContainerUpgrade(player, (TileEntityIEBase & IUpgradableDevice)upgradeMaster);
 		}
 
 		if(IIGUI.values().length > ID)

@@ -28,8 +28,8 @@ import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.MultiblockPrintingPress;
 import pl.pabilo8.immersiveintelligence.common.entity.tactile.EntityAMTTactile;
-import pl.pabilo8.immersiveintelligence.common.entity.tactile.TactileHandler;
-import pl.pabilo8.immersiveintelligence.common.entity.tactile.TactileHandler.ITactileListener;
+import pl.pabilo8.immersiveintelligence.common.entity.tactile.TactileManager;
+import pl.pabilo8.immersiveintelligence.common.entity.tactile.TactileManager.ITactileListener;
 import pl.pabilo8.immersiveintelligence.common.util.IIDamageSources;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
@@ -59,7 +59,7 @@ public class TileEntityPrintingPress extends TileEntityMultiblockProductionMulti
 
 	private IItemHandler inputHandler = new IEInventoryHandler(1, this, SLOT_PAPER, true, true);
 	private IItemHandler outputHandler = new IEInventoryHandler(1, this, SLOT_OUTPUT, true, true);
-	private TactileHandler tactileHandler = null;
+	private TactileManager tactileManager = null;
 
 	private ArrayDeque<PrintingRequest> printRequestsQueue;
 
@@ -79,7 +79,7 @@ public class TileEntityPrintingPress extends TileEntityMultiblockProductionMulti
 		this.tank = null;
 		this.inputHandler = null;
 		this.outputHandler = null;
-		this.tactileHandler = null;
+		this.tactileManager = null;
 	}
 
 	@Override
@@ -87,9 +87,9 @@ public class TileEntityPrintingPress extends TileEntityMultiblockProductionMulti
 	{
 		super.onUpdate();
 
-		if(tactileHandler==null)
-			tactileHandler = new TactileHandler(multiblock, this);
-		tactileHandler.defaultize();
+		if(tactileManager==null)
+			tactileManager = new TactileManager(multiblock, this);
+		tactileManager.defaultize();
 
 		if(IIUtils.handleBucketTankInteraction(tank, inventory, SLOT_BUCKET_IN, SLOT_BUCKET_OUT, true,
 				fs -> IIContent.fluidInkBlack.equals(fs.getFluid())||
@@ -362,9 +362,9 @@ public class TileEntityPrintingPress extends TileEntityMultiblockProductionMulti
 
 	@Override
 	@Nullable
-	public TactileHandler getTactileHandler()
+	public TactileManager getTactileHandler()
 	{
-		return tactileHandler;
+		return tactileManager;
 	}
 
 	@Override

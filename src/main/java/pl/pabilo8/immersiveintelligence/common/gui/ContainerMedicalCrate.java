@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.common.gui;
 
-import blusunrize.immersiveengineering.common.gui.ContainerIEBase;
 import blusunrize.immersiveengineering.common.gui.IESlot;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
@@ -25,10 +24,10 @@ public class ContainerMedicalCrate extends ContainerIIBase<TileEntityMedicalCrat
 		//Normal bullet slots
 
 		super(player, tile);
-		int shift = tile.hasUpgrade(IIContent.UPGRADE_INSERTER)?0: 27;
+		int shift = tile.isUpgradeInstalled(IIContent.UPGRADE_INSERTER)?0: 27;
 
 
-		inputFluidSlot = this.addSlotToContainer(new IESlot.FluidContainer(this, this.inv, 0, 41, 21,2));
+		inputFluidSlot = this.addSlotToContainer(new IESlot.FluidContainer(this, this.inv, 0, 41, 21, 2));
 		outputSlot = this.addSlotToContainer(new IESlot.Output(this, this.inv, 1, 41, 57));
 
 		inputSlot = this.addSlotToContainer(new IESlot.Output(this, this.inv, 2, 85, 21)

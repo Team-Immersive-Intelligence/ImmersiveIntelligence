@@ -52,7 +52,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.utils.upgrade_system.IUpgradableMachine;
+import pl.pabilo8.immersiveintelligence.api.utils.upgrade.IUpgradableDevice;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
@@ -502,10 +502,10 @@ public abstract class BlockIITileProvider<E extends Enum<E> & IITileProviderEnum
 			if(b)
 				return b;
 		}
-		if(tile instanceof IUpgradableMachine&&IIItemUtils.isWrench(heldItem))
+		if(tile instanceof IUpgradableDevice&&IIItemUtils.isWrench(heldItem))
 		{
-			IUpgradableMachine u = ((IUpgradableMachine)tile).getUpgradeMaster();
-			if(u!=null&&u.getInstallProgress()==0)
+			IUpgradableDevice u = ((IUpgradableDevice)tile).master();
+			if(u!=null&&u.getUpgradeInstallProgress(false)==0&&!player.isSneaking())
 			{
 				TileEntity master = (TileEntity)u;
 				player.openGui(ImmersiveIntelligence.INSTANCE, IIGUI.UPGRADE.ordinal(), master.getWorld(), master.getPos().getX(),

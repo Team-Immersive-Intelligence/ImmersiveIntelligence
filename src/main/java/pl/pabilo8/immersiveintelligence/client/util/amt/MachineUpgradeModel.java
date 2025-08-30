@@ -6,13 +6,13 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
-import pl.pabilo8.immersiveintelligence.api.utils.upgrade_system.IUpgradableMachine;
-import pl.pabilo8.immersiveintelligence.api.utils.upgrade_system.MachineUpgrade;
+import pl.pabilo8.immersiveintelligence.api.utils.upgrade.IUpgradableDevice;
+import pl.pabilo8.immersiveintelligence.api.utils.upgrade.Upgrade;
+import pl.pabilo8.immersiveintelligence.api.utils.upgrade.UpgradeUtils;
 import pl.pabilo8.immersiveintelligence.client.util.ShaderUtil;
 import pl.pabilo8.immersiveintelligence.client.util.ShaderUtil.Shaders;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.amt.IIAnimation;
 import pl.pabilo8.immersiveintelligence.common.util.amt.IIAnimation.IIAnimationGroup;
@@ -30,18 +30,18 @@ import java.util.Arrays;
 @ParametersAreNonnullByDefault
 public class MachineUpgradeModel implements AMTRenderable
 {
-	private final MachineUpgrade upgrade;
+	private final Upgrade upgrade;
 	private final IIAnimationCompiledMap animation;
 	private final AMTModel model;
 	private final AMT assembledModel;
 	private final int steps;
 
-	public MachineUpgradeModel(MachineUpgrade upgrade, ResourceLocation model, ResourceLocation animation)
+	public MachineUpgradeModel(Upgrade upgrade, ResourceLocation model, ResourceLocation animation)
 	{
 		this(upgrade, new AMTModel(DefaultVertexFormats.BLOCK, model), animation);
 	}
 
-	public MachineUpgradeModel(MachineUpgrade upgrade, AMTModel model, ResourceLocation animation)
+	public MachineUpgradeModel(Upgrade upgrade, AMTModel model, ResourceLocation animation)
 	{
 		this.upgrade = upgrade;
 
@@ -52,7 +52,7 @@ public class MachineUpgradeModel implements AMTRenderable
 						.map(g -> new IIAnimationGroup(g.groupName, g.position, g.scale, g.rotation, null, vecToAlpha(g.position), null))
 						.toArray(IIAnimationGroup[]::new)));
 
-		upgrade.setRequiredSteps(this.steps = this.animation.size());
+		upgrade.withProgressStages(this.steps = this.animation.size());
 
 		//get only base level models (model), contained in animation
 		this.model = new AMTModel(model.stream()
@@ -78,16 +78,16 @@ public class MachineUpgradeModel implements AMTRenderable
 		);
 	}
 
-	public UpgradeStage renderConstruction(IUpgradableMachine machine, Tessellator tes, BufferBuilder buf, float partialTicks)
+	public UpgradeStage renderConstruction(IUpgradableDevice machine, Tessellator tes, BufferBuilder buf, float partialTicks)
 	{
-		if(machine.getCurrentlyInstalled()!=upgrade)
-			return machine.hasUpgrade(upgrade)?UpgradeStage.INSTALLED: UpgradeStage.NOT_INSTALLED;
+		if(machine.getCurrentUpgrade()!=upgrade)
+			return machine.isUpgradeInstalled(upgrade)?UpgradeStage.INSTALLED: UpgradeStage.NOT_INSTALLED;
 
 		//calculate progress per part
 		final int maxProgress = IIContent.UPGRADE_INSERTER.getProgressRequired();
-		double maxClientProgress = IIUtils.getMaxClientProgress(machine.getInstallProgress(), maxProgress, steps);
+		double maxClientProgress = UpgradeUtils.getMaxClientProgress(machine.getUpgradeInstallProgress(false), upgrade);
 
-		double currentProgress = (int)Math.min(machine.getClientInstallProgress()+((partialTicks*(Tools.wrenchUpgradeProgress*0.5f))), maxClientProgress);
+		double currentProgress = (int)Math.min(machine.getUpgradeInstallProgress(true)+((partialTicks*(Tools.wrenchUpgradeProgress*0.5f))), maxClientProgress);
 		float install = (float)MathHelper.clamp(currentProgress/maxProgress, 0, 1);
 
 

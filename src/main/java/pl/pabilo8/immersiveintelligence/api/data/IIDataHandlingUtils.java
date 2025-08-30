@@ -1,5 +1,6 @@
 package pl.pabilo8.immersiveintelligence.api.data;
 
+import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -8,10 +9,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.api.data.device.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.device.IDataDevice;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeBoolean;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeEntity;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeVector;
+import pl.pabilo8.immersiveintelligence.api.data.types.*;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType.TypeMetaInfo;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.NumericDataType;
@@ -308,5 +306,15 @@ public class IIDataHandlingUtils
 			return true;
 		}
 		return false;
+	}
+
+	public static IngredientStack ingredientFromData(DataType dataType)
+	{
+		if(dataType instanceof DataTypeItemStack)
+			return new IngredientStack((((DataTypeItemStack)dataType).value.copy()));
+		else if(dataType instanceof DataTypeString)
+			return new IngredientStack(dataType.toString());
+		else
+			return new IngredientStack("*");
 	}
 }

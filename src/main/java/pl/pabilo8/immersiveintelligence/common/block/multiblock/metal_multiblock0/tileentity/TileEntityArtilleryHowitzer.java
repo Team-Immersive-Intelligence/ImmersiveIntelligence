@@ -34,8 +34,8 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.MultiblockArtilleryHowitzer;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoArtilleryProjectile;
-import pl.pabilo8.immersiveintelligence.common.entity.tactile.TactileHandler;
-import pl.pabilo8.immersiveintelligence.common.entity.tactile.TactileHandler.ITactileListener;
+import pl.pabilo8.immersiveintelligence.common.entity.tactile.TactileManager;
+import pl.pabilo8.immersiveintelligence.common.entity.tactile.TactileManager.ITactileListener;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.artillery.ItemIIAmmoArtilleryHeavy;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
@@ -93,7 +93,7 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 	@SideOnly(Side.CLIENT)
 	private SoundHandler sounds;
 
-	private TactileHandler tactileHandler = null;
+	private TactileManager tactileManager = null;
 
 	public TileEntityArtilleryHowitzer()
 	{
@@ -126,9 +126,9 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 			handleSounds();
 
 		//Handle Tactile AMT on server side
-		if(tactileHandler==null)
-			tactileHandler = new TactileHandler(multiblock, this);
-		tactileHandler.defaultize();
+		if(tactileManager==null)
+			tactileManager = new TactileManager(multiblock, this);
+		tactileManager.defaultize();
 
 
 		boolean rs = getRedstoneAtPos(0);
@@ -147,11 +147,11 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 
 		//howitzer door movement
 		doorTime = MathHelper.clamp(doorTime+(isDoorOpened?1: -2), 0, ArtilleryHowitzer.doorTime);
-		tactileHandler.update(MultiblockArtilleryHowitzer.INSTANCE.animationOpen, (float)doorTime/ArtilleryHowitzer.doorTime);
+		tactileManager.update(MultiblockArtilleryHowitzer.INSTANCE.animationOpen, (float)doorTime/ArtilleryHowitzer.doorTime);
 
 		//howitzer platform movement
 		platformTime = MathHelper.clamp(platformTime+(platformPosition?1: -1), 0, ArtilleryHowitzer.platformTime);
-		tactileHandler.update(MultiblockArtilleryHowitzer.INSTANCE.animationPlatform, (float)platformTime/ArtilleryHowitzer.platformTime);
+		tactileManager.update(MultiblockArtilleryHowitzer.INSTANCE.animationPlatform, (float)platformTime/ArtilleryHowitzer.platformTime);
 
 		//hide howitzer if door is closed
 		if(!isDoorOpened)
@@ -277,19 +277,19 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 				case FIRE2:
 				case FIRE3:
 				case FIRE4:
-					tactileHandler.update(MultiblockArtilleryHowitzer.INSTANCE.animationFire, (float)animationTime/animationTimeMax);
+					tactileManager.update(MultiblockArtilleryHowitzer.INSTANCE.animationFire, (float)animationTime/animationTimeMax);
 					break;
 				case LOAD1:
 				case LOAD2:
 				case LOAD3:
 				case LOAD4:
-					tactileHandler.update(MultiblockArtilleryHowitzer.INSTANCE.animationLoading, (float)animationTime/animationTimeMax);
+					tactileManager.update(MultiblockArtilleryHowitzer.INSTANCE.animationLoading, (float)animationTime/animationTimeMax);
 					break;
 				case UNLOAD1:
 				case UNLOAD2:
 				case UNLOAD3:
 				case UNLOAD4:
-					tactileHandler.update(MultiblockArtilleryHowitzer.INSTANCE.animationUnloading, (float)animationTime/animationTimeMax);
+					tactileManager.update(MultiblockArtilleryHowitzer.INSTANCE.animationUnloading, (float)animationTime/animationTimeMax);
 					break;
 			}
 
@@ -335,8 +335,8 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 
 	private void animateGunTactiles()
 	{
-		tactileHandler.update(MultiblockArtilleryHowitzer.INSTANCE.animationPitch, turretPitch/105f);
-		tactileHandler.update(MultiblockArtilleryHowitzer.INSTANCE.animationYaw, ((720-turretYaw-facing.getHorizontalAngle()-90)%360)/360f);
+		tactileManager.update(MultiblockArtilleryHowitzer.INSTANCE.animationPitch, turretPitch/105f);
+		tactileManager.update(MultiblockArtilleryHowitzer.INSTANCE.animationYaw, ((720-turretYaw-facing.getHorizontalAngle()-90)%360)/360f);
 	}
 
 	private void fireGun(int i)
@@ -362,7 +362,7 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 			new AmmoFactory<EntityAmmoArtilleryProjectile>(world)
 					.setPosition(getGunPosition().add(gunEnd))
 					.setDirection(gunVec.scale(1.5))
-					.setIgnoredEntities(tactileHandler!=null?tactileHandler.getEntities(): null)
+					.setIgnoredEntities(tactileManager!=null?tactileManager.getEntities(): null)
 					.setIgnoredBlocks(getMultiblockBlocks())
 					.setStack(loadedShells.get(i))
 					.create();
@@ -752,9 +752,9 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 
 	@Override
 	@Nullable
-	public TactileHandler getTactileHandler()
+	public TactileManager getTactileHandler()
 	{
-		return tactileHandler;
+		return tactileManager;
 	}
 
 	public enum ArtilleryHowitzerAction implements ISerializableEnum

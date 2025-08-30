@@ -38,7 +38,7 @@ public class ProjectileWorkshopRenderer extends IIMultiblockRenderer<TileEntityP
 
 		//Get parameters from TE
 		active.apply(!te.getRedstoneAtPos(0));
-		boolean upgradeFiller = te.hasUpgrade(IIContent.UPGRADE_CORE_FILLER);
+		boolean upgradeFiller = te.isUpgradeInstalled(IIContent.UPGRADE_CORE_FILLER);
 
 		//Apply mode visibility and animation
 		mode.apply(upgradeFiller);

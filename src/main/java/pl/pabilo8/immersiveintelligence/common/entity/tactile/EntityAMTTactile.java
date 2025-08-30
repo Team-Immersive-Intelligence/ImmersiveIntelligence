@@ -45,9 +45,9 @@ public class EntityAMTTactile extends Entity
 	 */
 	public AxisAlignedBB aabb;
 	/**
-	 * Handler object this one adheres to
+	 * Manager object this one adheres to
 	 */
-	private TactileHandler handler;
+	private TactileManager manager;
 	/**
 	 * Parent object of this
 	 */
@@ -63,25 +63,25 @@ public class EntityAMTTactile extends Entity
 		super(worldIn);
 	}
 
-	public EntityAMTTactile(TactileHandler handler, String name, Vec3d offset, AxisAlignedBB aabb)
+	public EntityAMTTactile(TactileManager manager, String name, Vec3d offset, AxisAlignedBB aabb)
 	{
-		super(handler.getWorld());
+		super(manager.getWorld());
 		this.name = name;
-		this.handler = handler;
+		this.manager = manager;
 		this.offset = offset;
 		this.aabb = aabb;
 		this.height = (float)(aabb.maxY-aabb.minY);
 		this.width = (float)Math.max(aabb.maxX-aabb.minX, aabb.maxZ-aabb.minZ);
 	}
 
-	public EntityAMTTactile(TactileHandler handler, String name, Vec3d offset, double radius, double height)
+	public EntityAMTTactile(TactileManager manager, String name, Vec3d offset, double radius, double height)
 	{
-		this(handler, name, offset, new AxisAlignedBB(-radius, -height, -radius, radius, height, radius));
+		this(manager, name, offset, new AxisAlignedBB(-radius, -height, -radius, radius, height, radius));
 	}
 
-	public EntityAMTTactile(TactileHandler handler, String name, Vec3d offset, double radius)
+	public EntityAMTTactile(TactileManager manager, String name, Vec3d offset, double radius)
 	{
-		this(handler, name, offset, radius, radius);
+		this(manager, name, offset, radius, radius);
 	}
 
 	public void setParent(@Nullable EntityAMTTactile parent)
@@ -98,7 +98,7 @@ public class EntityAMTTactile extends Entity
 	@Override
 	public void onEntityUpdate()
 	{
-		if(handler==null||!handler.getEntities().contains(this))
+		if(manager==null||!manager.getEntities().contains(this))
 		{
 			setDead();
 			return;
@@ -112,7 +112,7 @@ public class EntityAMTTactile extends Entity
 		//Is one of root elements
 		if(parent==null)
 		{
-			BlockPos handlerPos = handler.getPos();
+			BlockPos handlerPos = manager.getPos();
 			this.posX = handlerPos.getX()+offset.x+translation.x;
 			this.posY = handlerPos.getY()+offset.y+translation.y;
 			this.posZ = handlerPos.getZ()-0.5+offset.z+translation.z;
@@ -176,14 +176,14 @@ public class EntityAMTTactile extends Entity
 		if(!(entity instanceof EntityAMTTactile))
 		{
 			entity.move(MoverType.PISTON, motionX, motionY, motionZ);
-			handler.onCollide(this, entity);
+			manager.onCollide(this, entity);
 		}
 	}
 
 	@Override
 	public boolean attackEntityFrom(DamageSource source, float amount)
 	{
-		return handler.onAttacked(this, source, amount);
+		return manager.onAttacked(this, source, amount);
 	}
 
 	@Override
@@ -225,7 +225,7 @@ public class EntityAMTTactile extends Entity
 	@Override
 	public boolean processInitialInteract(EntityPlayer player, EnumHand hand)
 	{
-		return handler.onInteract(this, player, hand);
+		return manager.onInteract(this, player, hand);
 	}
 
 	@Override

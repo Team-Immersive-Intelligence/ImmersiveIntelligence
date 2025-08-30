@@ -1083,121 +1083,115 @@ public class IIRecipes
 	public static void addUpgradeRecipes()
 	{
 		//Effect Crates
-
 		IIContent.UPGRADE_INSERTER
-				.addStack(new IngredientStack(IIContent.itemPrecisionTool.getStack(PrecisionTools.INSERTER)))
-				.addStack(new IngredientStack("scaffoldingSteel"))
-				.setRequiredProgress(20000)
-				.setRequiredSteps(12);
+				.withCost(new IngredientStack(IIContent.itemPrecisionTool.getStack(PrecisionTools.INSERTER)))
+				.withCost(new IngredientStack("scaffoldingSteel"))
+				.withRequiredProgress(20000)
+				.withProgressStages(12);
 
 		IIContent.UPGRADE_MG_LOADER
-				.addStack(new IngredientStack("plateSteel", 8))
-				.setRequiredProgress(20000)
-				.setRequiredSteps(10);
+				.withCost(new IngredientStack("plateSteel", 8))
+				.withRequiredProgress(20000)
+				.withProgressStages(10);
 
 		//Sawmill
-
 		IIContent.UPGRADE_SAW_UNREGULATOR
-				.addStack(new IngredientStack(IIContent.itemMotorGear.getStack(MotorGear.STEEL)))
-				.addStack(new IngredientStack(new ItemStack(IEContent.itemMaterial, 1, 8)))
-				.addStack(new IngredientStack("stickSteel", 2))
-				.setRequiredProgress(32000);
+				.withCost(
+						new IngredientStack(IIContent.itemMotorGear.getStack(MotorGear.STEEL)),
+						new IngredientStack(new ItemStack(IEContent.itemMaterial, 1, 8)),
+						new IngredientStack("stickSteel", 2)
+				)
+				.withRequiredProgress(32000);
 
 		IIContent.UPGRADE_IMPROVED_GEARBOX
-				.addStack(new IngredientStack(IIContent.itemMotorGear.getStack(MotorGear.TUNGSTEN, 2)))
-				.addStack(new IngredientStack(new ItemStack(IEContent.itemMaterial, 1, 9)))
-				.addStack(new IngredientStack(new ItemStack(IEContent.blockMetalDecoration0, 2, BlockTypes_MetalDecoration0.LIGHT_ENGINEERING.getMeta())))
-				.setRequiredProgress(32000);
+				.withCost(new IngredientStack(IIContent.itemMotorGear.getStack(MotorGear.TUNGSTEN, 2)))
+				.withCost(new IngredientStack(new ItemStack(IEContent.itemMaterial, 1, 9)))
+				.withCost(new IngredientStack(new ItemStack(IEContent.blockMetalDecoration0, 2, BlockTypes_MetalDecoration0.LIGHT_ENGINEERING.getMeta())))
+				.withRequiredProgress(32000);
 
 		//Packer
-
 		IIContent.UPGRADE_PACKER_FLUID
-				.addStack(new IngredientStack(new ItemStack(IEContent.blockMetalDevice0, 1, BlockTypes_MetalDevice0.FLUID_PUMP.getMeta())))
-				.addStack(new IngredientStack(new ItemStack(IEContent.blockMetalDevice0, 2, BlockTypes_MetalDevice0.BARREL.getMeta())))
-				.setRequiredProgress(20000);
+				.withCost(new IngredientStack(new ItemStack(IEContent.blockMetalDevice0, 1, BlockTypes_MetalDevice0.FLUID_PUMP.getMeta())))
+				.withCost(new IngredientStack(new ItemStack(IEContent.blockMetalDevice0, 2, BlockTypes_MetalDevice0.BARREL.getMeta())))
+				.withRequiredProgress(20000);
 
 		IIContent.UPGRADE_PACKER_ENERGY
-				.addStack(new IngredientStack(new ItemStack(IEContent.blockMetalDevice1, 1, BlockTypes_MetalDevice1.TESLA_COIL.getMeta())))
-				.addStack(new IngredientStack(new ItemStack(IEContent.blockMetalDevice0, 2, BlockTypes_MetalDevice0.CAPACITOR_MV.getMeta())))
-				.setRequiredProgress(20000);
+				.withCost(new IngredientStack(new ItemStack(IEContent.blockMetalDevice1, 1, BlockTypes_MetalDevice1.TESLA_COIL.getMeta())))
+				.withCost(new IngredientStack(new ItemStack(IEContent.blockMetalDevice0, 2, BlockTypes_MetalDevice0.CAPACITOR_MV.getMeta())))
+				.withRequiredProgress(20000);
 
 		IIContent.UPGRADE_PACKER_RAILWAY
-				.addStack(new IngredientStack("gravel", 3))
-				.addStack(new IngredientStack("rail", 3))
-				.setRequiredProgress(40000);
+				.withCost(new IngredientStack("gravel", 3))
+				.withCost(new IngredientStack("rail", 3))
+				.withRequiredProgress(40000);
 
 		IIContent.UPGRADE_PACKER_NAMING
-				.addStack(new IngredientStack("circuitBasic", 2))
-				.setRequiredProgress(20000);
+				.withCost(new IngredientStack("circuitBasic", 2))
+				.withRequiredProgress(20000);
 
 		//Radar
-
 		IIContent.UPGRADE_RADIO_LOCATORS
-				.addStack(new IngredientStack("plateSteel", 4))
-				.addStack(new IngredientStack(new ItemStack(IIContent.itemRadioTuner, 2, 1)))
-				.addStack(new IngredientStack(new ItemStack(IIContent.itemDataWireCoil, 10, 0)))
-				.setRequiredProgress(250000)
-				.setRequiredSteps(1);
+				.withCost(new IngredientStack("plateSteel", 4))
+				.withCost(new IngredientStack(new ItemStack(IIContent.itemRadioTuner, 2, 1)))
+				.withCost(new IngredientStack(new ItemStack(IIContent.itemDataWireCoil, 10, 0)))
+				.withRequiredProgress(250000);
 
 		//Gates
 		IIContent.UPGRADE_REDSTONE_ACTIVATION
-				.addStack(new IngredientStack(new ItemStack(IEContent.blockMetalDecoration0, 4, BlockTypes_MetalDecoration0.LIGHT_ENGINEERING.getMeta())))
-				.addStack(new IngredientStack(new ItemStack(IEContent.blockMetalDecoration0, 2, BlockTypes_MetalDecoration0.RS_ENGINEERING.getMeta())))
-				.setRequiredProgress(20000);
+				.withCost(new IngredientStack(new ItemStack(IEContent.blockMetalDecoration0, 4, BlockTypes_MetalDecoration0.LIGHT_ENGINEERING.getMeta())))
+				.withCost(new IngredientStack(new ItemStack(IEContent.blockMetalDecoration0, 2, BlockTypes_MetalDecoration0.RS_ENGINEERING.getMeta())))
+				.withRequiredProgress(20000);
 		IIContent.UPGRADE_RAZOR_WIRE
-				.addStack(new IngredientStack(new ItemStack(IEContent.blockMetalDecoration2, 6, BlockTypes_MetalDecoration2.RAZOR_WIRE.getMeta())))
-				.setRequiredProgress(20000);
+				.withCost(new IngredientStack(new ItemStack(IEContent.blockMetalDecoration2, 6, BlockTypes_MetalDecoration2.RAZOR_WIRE.getMeta())))
+				.withRequiredProgress(20000);
 
 		//Weapons - Basic Tier
-
 		IIContent.UPGRADE_EMPLACEMENT_WEAPON_MACHINEGUN
-				.addStack(new IngredientStack(new ItemStack(IIContent.blockSandbags, 4))) //Sandbags
-				.addStack(new IngredientStack(new ItemStack(IIContent.itemMachinegun, 2)))
-				.addStack(new IngredientStack(new ItemStack(IIContent.blockMetalDevice, 2, IIBlockTypes_MetalDevice.AMMUNITION_CRATE.getMeta())))
-				.addStack(new IngredientStack("circuitBasic", 4))
-				.setRequiredProgress(40000);
+				.withCost(new IngredientStack(new ItemStack(IIContent.blockSandbags, 4))) //Sandbags
+				.withCost(new IngredientStack(new ItemStack(IIContent.itemMachinegun, 2)))
+				.withCost(new IngredientStack(new ItemStack(IIContent.blockMetalDevice, 2, IIBlockTypes_MetalDevice.AMMUNITION_CRATE.getMeta())))
+				.withCost(new IngredientStack("circuitBasic", 4))
+				.withRequiredProgress(40000);
 
 		IIContent.UPGRADE_EMPLACEMENT_WEAPON_IROBSERVER
-				.addStack(new IngredientStack("blockGlassRed", 1))
-				.addStack(new IngredientStack("blockGlass", 1))
-				.addStack(new IngredientStack("blockSteel", 2))
-				.addStack(new IngredientStack(new ItemStack(IEContent.blockMetalDecoration0, 2, BlockTypes_MetalDecoration0.LIGHT_ENGINEERING.getMeta())))
-				.addStack(new IngredientStack("circuitBasic", 6))
-				.setRequiredProgress(40000);
+				.withCost(new IngredientStack("blockGlassRed", 1))
+				.withCost(new IngredientStack("blockGlass", 1))
+				.withCost(new IngredientStack("blockSteel", 2))
+				.withCost(new IngredientStack(new ItemStack(IEContent.blockMetalDecoration0, 2, BlockTypes_MetalDecoration0.LIGHT_ENGINEERING.getMeta())))
+				.withCost(new IngredientStack("circuitBasic", 6))
+				.withRequiredProgress(40000);
 
 		//Weapons - Advanced Tier
-
-		//TODO: 17.07.2024 change costs when reworking emplacements
 		IIContent.UPGRADE_EMPLACEMENT_WEAPON_AUTOCANNON
-				.addStack(new IngredientStack(new ItemStack(IEContent.itemMaterial, 4, 14)))
-				.addStack(new IngredientStack("blockSteel", 2))
-				.addStack(new IngredientStack(new ItemStack(IEContent.itemMaterial, 3, 9)))
-				.addStack(new IngredientStack(new ItemStack(IIContent.blockMetalDevice, 1, IIBlockTypes_MetalDevice.AMMUNITION_CRATE.getMeta())))
-				.addStack(new IngredientStack("circuitAdvanced", 6))
-				.setRequiredProgress(80000);
+				.withCost(new IngredientStack(new ItemStack(IEContent.itemMaterial, 4, 14)))
+				.withCost(new IngredientStack("blockSteel", 2))
+				.withCost(new IngredientStack(new ItemStack(IEContent.itemMaterial, 3, 9)))
+				.withCost(new IngredientStack(new ItemStack(IIContent.blockMetalDevice, 1, IIBlockTypes_MetalDevice.AMMUNITION_CRATE.getMeta())))
+				.withCost(new IngredientStack("circuitAdvanced", 6))
+				.withRequiredProgress(80000);
 
 		IIContent.UPGRADE_EMPLACEMENT_WEAPON_HEAVY_CHEMTHROWER
-				.addStack(new IngredientStack(new ItemStack(IEContent.blockMetalDevice0, 2, BlockTypes_MetalDevice0.FLUID_PLACER.getMeta())))
-				.addStack(new IngredientStack(new ItemStack(IEContent.blockMetalDevice1, 4, BlockTypes_MetalDevice1.FLUID_PIPE.getMeta())))
-				.addStack(new IngredientStack(new ItemStack(IEContent.itemMaterial, 2, 14)))
-				.addStack(new IngredientStack("blockSteel", 1))
-				.addStack(new IngredientStack("circuitAdvanced", 6))
-				.setRequiredProgress(80000);
+				.withCost(new IngredientStack(new ItemStack(IEContent.blockMetalDevice0, 2, BlockTypes_MetalDevice0.FLUID_PLACER.getMeta())))
+				.withCost(new IngredientStack(new ItemStack(IEContent.blockMetalDevice1, 4, BlockTypes_MetalDevice1.FLUID_PIPE.getMeta())))
+				.withCost(new IngredientStack(new ItemStack(IEContent.itemMaterial, 2, 14)))
+				.withCost(new IngredientStack("blockSteel", 1))
+				.withCost(new IngredientStack("circuitAdvanced", 6))
+				.withRequiredProgress(80000);
 
 		IIContent.UPGRADE_EMPLACEMENT_WEAPON_HEAVY_RAILGUN
-				.addStack(new IngredientStack(new ItemStack(IEContent.blockMetalDevice0, 2, BlockTypes_MetalDevice0.CAPACITOR_HV.getMeta())))
-				.addStack(new IngredientStack(new ItemStack(IEContent.blockMetalDecoration0, 1, BlockTypes_MetalDecoration0.COIL_HV.getMeta())))
-				.addStack(new IngredientStack("blockSteel", 1))
-				.addStack(new IngredientStack(new ItemStack(IEContent.itemMaterial, 2, 9)))
-				.addStack(new IngredientStack(new ItemStack(IIContent.blockMetalDevice, 1, IIBlockTypes_MetalDevice.AMMUNITION_CRATE.getMeta())))
-				.addStack(new IngredientStack("circuitAdvanced", 6))
-				.setRequiredProgress(80000);
+				.withCost(new IngredientStack(new ItemStack(IEContent.blockMetalDevice0, 2, BlockTypes_MetalDevice0.CAPACITOR_HV.getMeta())))
+				.withCost(new IngredientStack(new ItemStack(IEContent.blockMetalDecoration0, 1, BlockTypes_MetalDecoration0.COIL_HV.getMeta())))
+				.withCost(new IngredientStack("blockSteel", 1))
+				.withCost(new IngredientStack(new ItemStack(IEContent.itemMaterial, 2, 9)))
+				.withCost(new IngredientStack(new ItemStack(IIContent.blockMetalDevice, 1, IIBlockTypes_MetalDevice.AMMUNITION_CRATE.getMeta())))
+				.withCost(new IngredientStack("circuitAdvanced", 6))
+				.withRequiredProgress(80000);
 
 		IIContent.UPGRADE_EMPLACEMENT_WEAPON_TESLA
-				.addStack(new IngredientStack(new ItemStack(IEContent.blockMetalDevice0, 8, BlockTypes_MetalDevice0.CAPACITOR_HV.getMeta())))
-				.addStack(new IngredientStack(new ItemStack(IEContent.blockMetalDecoration0, 8, BlockTypes_MetalDecoration0.COIL_HV.getMeta())))
-				.addStack(new IngredientStack("circuitAdvanced", 6))
-				.setRequiredProgress(120000);
+				.withCost(new IngredientStack(new ItemStack(IEContent.blockMetalDevice0, 8, BlockTypes_MetalDevice0.CAPACITOR_HV.getMeta())))
+				.withCost(new IngredientStack(new ItemStack(IEContent.blockMetalDecoration0, 8, BlockTypes_MetalDecoration0.COIL_HV.getMeta())))
+				.withCost(new IngredientStack("circuitAdvanced", 6))
+				.withRequiredProgress(120000);
 
 		/*
 		IIContent.UPGRADE_EMPLACEMENT_SPOTLIGHT_TOWER
@@ -1223,11 +1217,11 @@ public class IIRecipes
 
 		//Weapons - Processor Tier
 		IIContent.UPGRADE_EMPLACEMENT_WEAPON_CPDS
-				.addStack(new IngredientStack(new ItemStack(IEContent.itemMaterial, 8, 14)))
-				.addStack(new IngredientStack(new ItemStack(IEContent.itemMaterial, 2, 9)))
-				.addStack(new IngredientStack("blockSteel", 3))
-				.addStack(new IngredientStack("circuitProcessor", 6))
-				.setRequiredProgress(300000);
+				.withCost(new IngredientStack(new ItemStack(IEContent.itemMaterial, 8, 14)))
+				.withCost(new IngredientStack(new ItemStack(IEContent.itemMaterial, 2, 9)))
+				.withCost(new IngredientStack("blockSteel", 3))
+				.withCost(new IngredientStack("circuitProcessor", 6))
+				.withRequiredProgress(300000);
 	}
 
 	public static void addSmeltingRecipes()

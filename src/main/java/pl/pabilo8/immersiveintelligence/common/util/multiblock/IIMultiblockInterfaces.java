@@ -7,9 +7,9 @@ import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IGuiTile;
 import blusunrize.immersiveengineering.common.util.Utils;
 import blusunrize.immersiveengineering.common.util.inventory.IIEInventory;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.RayTraceResult;
+import pl.pabilo8.immersiveintelligence.api.utils.MultiblockConstructionManager;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 
 import java.util.ArrayList;
@@ -103,29 +103,54 @@ public class IIMultiblockInterfaces
 		}
 	}
 
-	public interface IAdvancedMultiblockTileEntity
+	/**
+	 * A {@link net.minecraft.tileentity.TileEntity} that requires construction (transferring IF through player's hammer action) in order to be fully usable.
+	 */
+	public interface IConstructionRequiringDevice
 	{
-		int getConstructionCost();
+		/**
+		 * @return The master block, in case this device is a multiblock dummy. Otherwise, return this.
+		 */
+		IConstructionRequiringDevice master();
 
-		int getCurrentConstruction();
+		/**
+		 * @return The {@link MultiblockConstructionManager} instance that handles construction progress
+		 */
+		MultiblockConstructionManager getConstructionManager();
 
-		void setCurrentConstruction(int construction);
+		/**
+		 * @return Cost of construction in IF
+		 */
+		default int getConstructionCost()
+		{
+			return getConstructionManager().getConstructionCost();
+		}
 
-		void onConstructionFinish();
+		/**
+		 * @param client Whether to get the client or server progress
+		 * @return Current construction progress in IF
+		 */
+		default int getCurrentConstruction(boolean client)
+		{
+			return getConstructionManager().getCurrentConstruction(client);
+		}
 
+		/**
+		 * Progresses construction by the specified amount of IF
+		 *
+		 * @param construction Amount of IF to progress construction by
+		 */
+		default void progressConstruction(int construction)
+		{
+			getConstructionManager().progressConstruction(construction);
+		}
+
+		/**
+		 * @return true if construction is finished
+		 */
 		default boolean isConstructionFinished()
 		{
-			return getCurrentConstruction() >= getConstructionCost();
-		}
-
-		default void setConstructionNBT(NBTTagCompound nbt)
-		{
-			nbt.setInteger("construction", getCurrentConstruction());
-		}
-
-		default void getConstructionNBT(NBTTagCompound nbt)
-		{
-			setCurrentConstruction(nbt.getInteger("construction"));
+			return getConstructionManager().isConstructionFinished();
 		}
 	}
 

@@ -12,7 +12,6 @@ import blusunrize.immersiveengineering.common.util.ChatUtils;
 import com.elytradev.mirage.event.GatherLightsEvent;
 import com.elytradev.mirage.lighting.ILightEventConsumer;
 import com.elytradev.mirage.lighting.Light;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -38,35 +37,36 @@ import pl.pabilo8.immersiveintelligence.api.data.device.IDataDevice;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeArray;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeEntity;
 import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
-import pl.pabilo8.immersiveintelligence.api.utils.upgrade_system.IUpgradableMachine;
-import pl.pabilo8.immersiveintelligence.api.utils.upgrade_system.MachineUpgrade;
-import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
-import pl.pabilo8.immersiveintelligence.client.render.multiblock.metal.EmplacementRenderer;
+import pl.pabilo8.immersiveintelligence.api.utils.upgrade.IManagedUpgradableDevice;
+import pl.pabilo8.immersiveintelligence.api.utils.upgrade.Upgrade;
+import pl.pabilo8.immersiveintelligence.api.utils.upgrade.UpgradeManager;
+import pl.pabilo8.immersiveintelligence.api.utils.upgrade.UpgradeUtils.UpgradeOperation;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Emplacement;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockEmplacement;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.task.*;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.weapon.EmplacementWeapon;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.weapon.EmplacementWeapon.MachineUpgradeEmplacementWeapon;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.weapon.EmplacementWeaponMachinegun;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
-// TODO: 26.09.2021 improve task sync and fix GUI
-//TODO: 15.02.2024 move to new multiblock technology and AMT
 @net.minecraftforge.fml.common.Optional.Interface(iface = "com.elytradev.mirage.lighting.ILightEventConsumer", modid = "mirage")
 public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityEmplacement, MultiblockRecipe> implements IBooleanAnimatedPartsBlock,
-		IDataDevice, IUpgradableMachine, IAdvancedCollisionBounds, IAdvancedSelectionBounds, ISoundTile, IGuiTile, ILightEventConsumer
+		IDataDevice, IManagedUpgradableDevice<TileEntityEmplacement>, IAdvancedCollisionBounds, IAdvancedSelectionBounds, ISoundTile, IGuiTile, ILightEventConsumer
 {
 	public static final HashMap<String, Supplier<EmplacementWeapon<?>>> weaponRegistry = new HashMap<>();
 	public static final HashMap<String, BiFunction<NBTTagCompound, TileEntityEmplacement, EmplacementTask>> targetRegistry = new HashMap<>();
@@ -98,13 +98,14 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 	public boolean forcedRepair = false, firstRepairTick = true;
 	public float autoRepairAmount = 0.25f;
 
-	public int progress = 0, upgradeProgress = 0, clientUpgradeProgress = 0;
+	public int progress = 0;
 	public EmplacementWeapon<?> currentWeapon = null;
 	public boolean isShooting = false;
 	public boolean sendAttackSignal = false;
-	EmplacementTask task = new EmplacementTaskCustom(defaultTaskNBT[defaultTargetMode]);
-	@Nullable
-	private MachineUpgrade currentlyInstalled = null;
+	private EmplacementTask task = new EmplacementTaskCustom(defaultTaskNBT[defaultTargetMode]);
+	@SyncNBT(name = "upgrades", events = SyncEvents.TILE_UPGRADES_MODIFIED)
+	public UpgradeManager<TileEntityEmplacement> upgradeManager;
+
 	private float[] target = null;
 
 	//Config, -1 is null, 0-3 are valid
@@ -113,6 +114,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 	public TileEntityEmplacement()
 	{
 		super(MultiblockEmplacement.INSTANCE, new int[]{6, 3, 3}, Emplacement.energyCapacity, true);
+		upgradeManager = new UpgradeManager<>(this);
 	}
 
 	@Override
@@ -123,34 +125,19 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 		if(isDummy()||!hasWorld())
 			return;
 
-		if(world.isRemote)
-		{
-			if(clientUpgradeProgress < getMaxClientProgress())
-				clientUpgradeProgress = (int)Math.min(clientUpgradeProgress+(Tools.wrenchUpgradeProgress/2f), getMaxClientProgress());
-		}
-
 		boolean wasDoorOpened = isDoorOpened;
-
-		if(currentlyInstalled!=null)
-		{
+		if(upgradeManager.getCurrentUpgrade()!=null)
 			isDoorOpened = true;
-		}
 		else if(currentWeapon!=null&&((forcedRepair&&currentWeapon.getHealth()!=currentWeapon.getMaxHealth())||currentWeapon.requiresPlatformRefill()))
-		{
 			isDoorOpened = false;
-		}
 		else if(currentWeapon!=null&&(currentWeapon.getHealth()/(float)currentWeapon.getMaxHealth() <= autoRepairAmount))
 		{
 			forcedRepair = true;
 			isDoorOpened = false;
 		}
 		else if(!world.isRemote&&redstoneControl)
-		{
 			if(isDoorOpened^world.isBlockPowered(getBlockPosForPos(getRedstonePos()[0])))
-			{
 				isDoorOpened = world.isBlockPowered(getBlockPosForPos(getRedstonePos()[0]));
-			}
-		}
 
 		if(!world.isRemote&&wasDoorOpened^isDoorOpened)
 			IIPacketHandler.INSTANCE.sendToAllAround(new MessageBooleanAnimatedPartsSync(0, isDoorOpened, this.getPos()), IIPacketHandler.targetPointFromTile(this, 48));
@@ -179,71 +166,58 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 			handleSounds(master());
 
 		if(isDoorOpened)
-		{
 			if(progress < Emplacement.lidTime)
 				progress++;
-			else
+			else if(currentWeapon!=null&&energyStorage.extractEnergy(currentWeapon.getEnergyUpkeepCost(), true) >= currentWeapon.getEnergyUpkeepCost())
 			{
-				if(currentWeapon!=null&&energyStorage.extractEnergy(currentWeapon.getEnergyUpkeepCost(), true) >= currentWeapon.getEnergyUpkeepCost())
+				if(!world.isRemote)
+					energyStorage.modifyEnergyStored(-currentWeapon.getEnergyUpkeepCost());
+
+				if(currentWeapon.isSetUp(true))
 				{
-					if(!world.isRemote)
-						energyStorage.modifyEnergyStored(-currentWeapon.getEnergyUpkeepCost());
-
-					if(currentWeapon.isSetUp(true))
+					currentWeapon.tick(this, true);
+					if(this.task!=null)
 					{
-						currentWeapon.tick(this, true);
-						if(this.task!=null)
+
+						if(world.getTotalWorldTime()%Emplacement.sightUpdateTime==0)
+							this.task.updateTargets(this);
+						target = this.task.getPositionVector(this);
+
+						if(target!=null)
 						{
+							target[0] = MathHelper.wrapDegrees(target[0]);
+							target[1] = MathHelper.wrapDegrees(target[1]);
 
-							if(world.getTotalWorldTime()%Emplacement.sightUpdateTime==0)
-								this.task.updateTargets(this);
-							target = this.task.getPositionVector(this);
+							currentWeapon.aimAt(target[0], target[1]);
 
-							if(target!=null)
-							{
-								target[0] = MathHelper.wrapDegrees(target[0]);
-								target[1] = MathHelper.wrapDegrees(target[1]);
-
-								currentWeapon.aimAt(target[0], target[1]);
-
-								if(currentWeapon.isAimedAt(target[0], target[1]))
+							if(currentWeapon.isAimedAt(target[0], target[1]))
+								if(currentWeapon.canShoot(this))
 								{
-									if(currentWeapon.canShoot(this))
-									{
-										isShooting = true;
-										currentWeapon.shoot(this);
-										task.onShot();
-									}
-									else
-										isShooting = false;
+									isShooting = true;
+									currentWeapon.shoot(this);
+									task.onShot();
 								}
 								else
 									isShooting = false;
-							}
 							else
-							{
 								isShooting = false;
-								currentWeapon.aimAt(currentWeapon.yaw, currentWeapon.pitch);
-							}
 						}
-						if(task==null||!task.shouldContinue())
+						else
 						{
-							if(defaultTargetMode==-1)
-								task = null;
-							else
-								task = new EmplacementTaskCustom(defaultTaskNBT[defaultTargetMode]);
+							isShooting = false;
+							currentWeapon.aimAt(currentWeapon.yaw, currentWeapon.pitch);
 						}
 					}
-					else
-					{
-						currentWeapon.doSetUp(true);
-					}
+					if(task==null||!task.shouldContinue())
+						if(defaultTargetMode==-1)
+							task = null;
+						else
+							task = new EmplacementTaskCustom(defaultTaskNBT[defaultTargetMode]);
 				}
+				else
+					currentWeapon.doSetUp(true);
 			}
-		}
-		else
-		{
-			if(currentWeapon!=null)
+			else if(currentWeapon!=null)
 			{
 				currentWeapon.tick(this, false);
 				if(progress==0&&!forcedRepair&&currentWeapon.requiresPlatformRefill())
@@ -252,16 +226,13 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 						currentWeapon.performPlatformRefill(this);
 				}
 				else if(currentWeapon.health!=currentWeapon.getMaxHealth())
-				{
 					if(progress==0)
 					{
 
 						if(world.isRemote&&(energyStorage.getEnergyStored() >= Emplacement.repairCost))
-						{
 							ImmersiveEngineering.proxy.handleTileSound(IISounds.weldingMid, getTileForPos(31),
 									true,
 									5f, 1f);
-						}
 
 						if(firstRepairTick)
 						{
@@ -288,27 +259,22 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 							firstRepairTick = true;
 						}
 					}
-				}
 
 				if(currentWeapon.isSetUp(false))
 				{
 					if(progress > 0)
 						progress--;
+					//machine gun yaw is limited, use special method
 					if(currentWeapon instanceof EmplacementWeaponMachinegun)
-					{ //machine gun yaw is limited, use special method
 						((EmplacementWeaponMachinegun)currentWeapon).aimAtUnrestricted(facing.getHorizontalAngle(), -90);
-					}
 					else
-					{
 						currentWeapon.aimAt(facing.getHorizontalAngle(), -90);
-					}
 				}
 				else
 					currentWeapon.doSetUp(false);
 			}
 			else if(progress > 0)
 				progress--;
-		}
 
 	}
 
@@ -489,16 +455,12 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 			return;
 
 		this.progress = nbt.getInteger("progress");
-		this.upgradeProgress = nbt.getInteger("upgradeProgress");
 		this.isDoorOpened = nbt.getBoolean("isDoorOpened");
 		this.redstoneControl = nbt.getBoolean("redstoneControl");
 		this.forcedRepair = nbt.getBoolean("forcedRepair");
 		this.autoRepairAmount = nbt.getFloat("autoRepairAmount");
 		this.dataControl = nbt.getBoolean("dataControl");
 		this.sendAttackSignal = nbt.getBoolean("sendAttackSignal");
-
-		this.currentlyInstalled = MachineUpgrade.getUpgradeByID(nbt.getString("currentlyInstalled"));
-		this.upgradeProgress = nbt.getInteger("upgradeProgress");
 
 		this.owner = nbt.getString("owner");
 
@@ -545,8 +507,6 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 		nbt.setFloat("autoRepairAmount", this.autoRepairAmount);
 		nbt.setBoolean("dataControl", this.dataControl);
 		nbt.setBoolean("sendAttackSignal", this.sendAttackSignal);
-		nbt.setInteger("upgradeProgress", this.upgradeProgress);
-		nbt.setString("currentlyInstalled", this.currentlyInstalled==null?"": currentlyInstalled.toString());
 
 		nbt.setString("owner", owner);
 
@@ -567,9 +527,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 				nbt.setTag("currentWeapon", currentWeapon.saveToNBT(false));
 			}
 			if(task!=null)
-			{
 				nbt.setTag("task", task.saveToNBT());
-			}
 		}
 	}
 
@@ -591,15 +549,6 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 			this.dataControl = message.getBoolean("dataControl");
 		if(message.hasKey("sendAttackSignal"))
 			this.sendAttackSignal = message.getBoolean("sendAttackSignal");
-		if(message.hasKey("progress"))
-			this.progress = message.getInteger("progress");
-
-		if(message.hasKey("currentlyInstalled"))
-		{
-			this.currentlyInstalled = MachineUpgrade.getUpgradeByID(message.getString("currentlyInstalled"));
-			this.upgradeProgress = message.getInteger("upgradeProgress");
-			this.clientUpgradeProgress = this.upgradeProgress;
-		}
 
 		if(message.hasKey("defaultTaskNBT1"))
 			this.defaultTaskNBT[0] = message.getCompoundTag("defaultTaskNBT1");
@@ -614,14 +563,11 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 			this.sendAttackSignal = message.getBoolean("sendAttackSignal");
 
 		if(message.hasKey("health")&&this.currentWeapon!=null)
-		{
 			this.currentWeapon.health = message.getInteger("health");
-		}
 
 		if(!isDummy())
 		{
 			if(message.hasKey("weaponName"))
-			{
 				if(message.getString("weaponName").isEmpty())
 					this.currentWeapon = null;
 				else
@@ -630,14 +576,10 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 						currentWeapon = getWeaponFromName(message.getString("weaponName"));
 					if(currentWeapon!=null)
 					{
-						if(currentlyInstalled instanceof MachineUpgradeEmplacementWeapon)
-							resetInstallProgress();
 						currentWeapon.readFromNBT(message.getCompoundTag("currentWeapon"));
 						currentWeapon.init(this, false);
 					}
 				}
-
-			}
 
 			if(message.hasKey("task"))
 			{
@@ -719,7 +661,6 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 	public AxisAlignedBB getRenderBoundingBox()
 	{
 		if(!isDummy())
-		{
 			return new AxisAlignedBB(
 					getPos().getX()-1,
 					getPos().getY()+1,
@@ -728,7 +669,6 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 					getPos().getY()-8,
 					getPos().getZ()+1
 			);
-		}
 		return super.getRenderBoundingBox();
 	}
 
@@ -900,11 +840,17 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 		IIDataHandlingUtils.sendPacketAdjacently(packet, world, getBlockPosForPos(BLOCKPOS_DATA_OUT), facing.rotateYCCW());
 	}
 
+	@Nonnull
 	@Override
-	public boolean addUpgrade(MachineUpgrade upgrade, boolean test)
+	public UpgradeManager<TileEntityEmplacement> getUpgradeManager()
 	{
-		if(upgrade instanceof MachineUpgradeEmplacementWeapon)
-		{
+		return upgradeManager;
+	}
+
+	@Override
+	public boolean addUpgrade(Upgrade upgrade, UpgradeOperation operation)
+	{
+		if(operation==UpgradeOperation.FORCE_ADD&&upgrade instanceof EmplacementWeapon.UpgradeEmplacementWeapon)
 			if(currentWeapon==null)
 			{
 				currentWeapon = getWeaponFromName(upgrade.getName());
@@ -913,149 +859,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 					currentWeapon.syncWithClient(this);
 				return true;
 			}
-		}
 		return false;
-	}
-
-	@Override
-	public boolean hasUpgrade(MachineUpgrade upgrade)
-	{
-		return currentWeapon!=null&&upgrade.getName().equals(currentWeapon.getName());
-	}
-
-	@Override
-	public boolean upgradeMatches(MachineUpgrade upgrade)
-	{
-		if(currentWeapon==null)
-			return upgrade instanceof MachineUpgradeEmplacementWeapon;
-		return false;
-	}
-
-	@Override
-	public <T extends TileEntity & IUpgradableMachine> T getUpgradeMaster()
-	{
-		return (T)master();
-	}
-
-	@Deprecated
-	@Override
-	public void saveUpgradesToNBT(NBTTagCompound tag)
-	{
-
-	}
-
-	@Deprecated
-	@Override
-	public void getUpgradesFromNBT(NBTTagCompound tag)
-	{
-
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void renderWithUpgrades(MachineUpgrade... upgrades)
-	{
-		GlStateManager.pushMatrix();
-		GlStateManager.scale(0.75, 0.75, 0.75);
-		IIClientUtils.bindTexture(EmplacementRenderer.texture);
-		GlStateManager.translate(-0.5, -3.0625, 1.5);
-		EmplacementRenderer.model.platformModel[0].render();
-		EmplacementRenderer.model.platformModel[2].render();
-		GlStateManager.translate(0.5, 3.0625, -1.5);
-		for(MachineUpgrade upgrade : upgrades)
-		{
-			if(upgrade instanceof MachineUpgradeEmplacementWeapon)
-				((MachineUpgradeEmplacementWeapon)upgrade).render(this);
-		}
-		GlStateManager.popMatrix();
-	}
-
-	@Override
-	public List<MachineUpgrade> getUpgrades()
-	{
-		if(isDummy())
-			return master().getUpgrades();
-
-		if(currentWeapon!=null)
-			return Collections.singletonList(weaponToUpgrade());
-		else
-			return new ArrayList<>();
-	}
-
-	@Nullable
-	@Override
-	public MachineUpgrade getCurrentlyInstalled()
-	{
-		return currentlyInstalled;
-	}
-
-	@Override
-	public int getInstallProgress()
-	{
-		return upgradeProgress;
-	}
-
-	@Override
-	public int getClientInstallProgress()
-	{
-		return clientUpgradeProgress;
-	}
-
-	@Override
-	public boolean addUpgradeInstallProgress(int toAdd)
-	{
-		if(finishedDoorAction())
-		{
-			upgradeProgress += toAdd;
-			return true;
-		}
-		return false;
-	}
-
-	@Override
-	public boolean resetInstallProgress()
-	{
-		currentlyInstalled = null;
-		if(upgradeProgress > 0)
-		{
-			upgradeProgress = 0;
-			clientUpgradeProgress = 0;
-			return true;
-		}
-
-		if(!world.isRemote)
-		{
-			markDirty();
-			markContainingBlockForUpdate(null);
-		}
-
-		return false;
-	}
-
-	@Override
-	public void startUpgrade(@Nonnull MachineUpgrade upgrade)
-	{
-		currentlyInstalled = upgrade;
-		upgradeProgress = 0;
-		clientUpgradeProgress = 0;
-	}
-
-	@Override
-	public void removeUpgrade(MachineUpgrade upgrade)
-	{
-		if(currentWeapon==null)
-			return;
-
-		if(currentWeapon.entity!=null)
-			currentWeapon.entity.setDead();
-		currentWeapon = null;
-		upgradeProgress = 0;
-		clientUpgradeProgress = 0;
-	}
-
-	private MachineUpgradeEmplacementWeapon weaponToUpgrade()
-	{
-		return (MachineUpgradeEmplacementWeapon)MachineUpgrade.getUpgradeByID(currentWeapon.getName());
 	}
 
 	@Override
@@ -1087,7 +891,6 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 	{
 		TileEntityEmplacement master = master();
 		if(master!=null&&master.currentWeapon!=null)
-		{
 			if(pos==2||pos==8)
 			{
 				boolean in = pos==2;
@@ -1096,7 +899,6 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 				else if(capability==CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY&&facing==this.facing.rotateY())
 					return master.currentWeapon.getFluidHandler(in)!=null;
 			}
-		}
 
 		return super.hasCapability(capability, facing);
 	}
@@ -1106,7 +908,6 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 	{
 		TileEntityEmplacement master = master();
 		if(master!=null&&master.currentWeapon!=null)
-		{
 			if(pos==2||pos==8)
 			{
 				boolean in = pos==2;
@@ -1115,7 +916,6 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 				else if(capability==CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY&&facing==this.facing.rotateY())
 					return (T)master.currentWeapon.getFluidHandler(in);
 			}
-		}
 
 		return super.getCapability(capability, facing);
 	}
@@ -1148,7 +948,6 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 	{
 		TileEntityEmplacement master = master();
 		if(master!=null)
-		{
 			switch(sound)
 			{
 				case "immersiveintelligence:emplacement_rotation_h":
@@ -1179,7 +978,6 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 				default:
 					return false;
 			}
-		}
 		return false;
 	}
 
@@ -1229,7 +1027,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 		if(isDummy())
 			return;
 
-		if(currentWeapon!=null&&forcedRepair&&progress==0)
+		if(currentWeapon!=null&&forcedRepair)
 		{
 			BlockPos pp = getBlockPosForPos(31);
 			float f = Math.abs(((world.getTotalWorldTime()%6)/6f)-0.5f)*2f;

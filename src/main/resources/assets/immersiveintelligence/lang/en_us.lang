@@ -1115,6 +1115,9 @@ machineupgrade.immersiveintelligence.emplacement_grenades.desc=When emplacement'
 machineupgrade.immersiveintelligence.emplacement_bearings=Sturdy Bearings
 machineupgrade.immersiveintelligence.emplacement_bearings.desc=Higher quality bearings increase the maximum weapon rotation speed, to work at full capacity lubrication is required
 
+machineupgrade.immersiveintelligence.emplacement_targetting=Enhanced Targetting Systems
+machineupgrade.immersiveintelligence.emplacement_targetting.desc=Improved optics and fire control systems allow for better target acquisition and tracking, increasing accuracy.
+
 machineupgrade.immersiveintelligence.infrared_observer=Infrared Observer
 machineupgrade.immersiveintelligence.infrared_observer.desc=The Infrared Observer allows surveillance of distant enemies and sending their coordinates via data cables.
 

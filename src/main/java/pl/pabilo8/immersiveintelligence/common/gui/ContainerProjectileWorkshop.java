@@ -22,7 +22,7 @@ public class ContainerProjectileWorkshop extends ContainerIIBase<TileEntityProje
 		super(player, tile);
 
 
-		if(tile.hasUpgrade(IIContent.UPGRADE_CORE_FILLER))
+		if(tile.isUpgradeInstalled(IIContent.UPGRADE_CORE_FILLER))
 		{
 			inputSlot = this.addSlotToContainer(new Slot(this.inv, 0, 8, 46)
 			{

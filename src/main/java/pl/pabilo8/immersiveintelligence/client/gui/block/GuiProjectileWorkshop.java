@@ -52,33 +52,33 @@ import java.util.stream.Collectors;
  * @ii-approved 0.3.1
  * @since 10.07.2019
  */
-@DecoTemplate(name = "project ile_workshop", category = DecoGuiCategory.PRODUCTION_TILE)
+@DecoTemplate(name = "projectile_workshop", category = DecoGuiCategory.PRODUCTION_TILE)
 public class GuiProjectileWorkshop extends DecoGui<TileEntityProjectileWorkshop, ContainerProjectileWorkshop>
 {
 	@DecoResource
 	public static ResourceLocation PROGRESS_BAR = ResLoc.of(IIReference.RES_II, "gui/projectile_workshop");
 	@DecoResource
-	public static ResourceLocation ARTILLERY_RANGE = IIReference.RES_II.with("gui/icons/artillery_range");
+	public static ResourceLocation ARTILLERY_RANGE = IIReference.RES_II.with("gui/ammo_icons/artillery_range");
 	@DecoResource
-	public static ResourceLocation AVAILABLE_FUZES = IIReference.RES_II.with("gui/icons/available_fuzes");
+	public static ResourceLocation AVAILABLE_FUZES = IIReference.RES_II.with("gui/ammo_icons/available_fuzes");
 	@DecoResource
-	public static ResourceLocation COMPONENT_EFFICIENCY = IIReference.RES_II.with("gui/icons/component_efficiency");
+	public static ResourceLocation COMPONENT_EFFICIENCY = IIReference.RES_II.with("gui/ammo_icons/component_efficiency");
 	@DecoResource
-	public static ResourceLocation COMPONENT_SHAPE = IIReference.RES_II.with("gui/icons/component_shape");
+	public static ResourceLocation COMPONENT_SHAPE = IIReference.RES_II.with("gui/ammo_icons/component_shape");
 	@DecoResource
-	public static ResourceLocation COMPONENT_SIZE = IIReference.RES_II.with("gui/icons/component_size");
+	public static ResourceLocation COMPONENT_SIZE = IIReference.RES_II.with("gui/ammo_icons/component_size");
 	@DecoResource
-	public static ResourceLocation COMPONENT_SLOTS = IIReference.RES_II.with("gui/icons/component_slots");
+	public static ResourceLocation COMPONENT_SLOTS = IIReference.RES_II.with("gui/ammo_icons/component_slots");
 	@DecoResource
-	public static ResourceLocation DAMAGE = IIReference.RES_II.with("gui/icons/damage");
+	public static ResourceLocation DAMAGE = IIReference.RES_II.with("gui/ammo_icons/damage");
 	@DecoResource
-	public static ResourceLocation FLAT_TRAJECTORY_RANGE = IIReference.RES_II.with("gui/icons/flat_trajectory_range");
+	public static ResourceLocation FLAT_TRAJECTORY_RANGE = IIReference.RES_II.with("gui/ammo_icons/flat_trajectory_range");
 	@DecoResource
-	public static ResourceLocation MASS = IIReference.RES_II.with("gui/icons/mass");
+	public static ResourceLocation MASS = IIReference.RES_II.with("gui/ammo_icons/mass");
 	@DecoResource
-	public static ResourceLocation PENETRATION_HARDNESS = IIReference.RES_II.with("gui/icons/penetration_hardness");
+	public static ResourceLocation PENETRATION_HARDNESS = IIReference.RES_II.with("gui/ammo_icons/penetration_hardness");
 	@DecoResource
-	public static ResourceLocation VELOCITY = IIReference.RES_II.with("gui/icons/velocity");
+	public static ResourceLocation VELOCITY = IIReference.RES_II.with("gui/ammo_icons/velocity");
 
 	private MultiblockInteractablePart openedPart;
 	boolean hasFillerUpgrade;
@@ -101,7 +101,7 @@ public class GuiProjectileWorkshop extends DecoGui<TileEntityProjectileWorkshop,
 		super(player, tile, IIGUI.PROJECTILE_WORKSHOP);
 		if(tile==null)
 			return;
-		hasFillerUpgrade = tile.hasUpgrade(IIContent.UPGRADE_CORE_FILLER);
+		hasFillerUpgrade = tile.isUpgradeInstalled(IIContent.UPGRADE_CORE_FILLER);
 		ammoCore = IIContent.ammoCoreIron;
 		coreType = tile.coreType;
 		ammoType = tile.producedAmmo;
@@ -145,7 +145,7 @@ public class GuiProjectileWorkshop extends DecoGui<TileEntityProjectileWorkshop,
 			addCoreFillerComponents();
 
 		//Restart this GUI when upgrade is installed
-		addValueListener(() -> tile.hasUpgrade(IIContent.UPGRADE_CORE_FILLER))
+		addValueListener(() -> tile.isUpgradeInstalled(IIContent.UPGRADE_CORE_FILLER))
 				.addObserver(hasFillerUpgrade -> refreshGUI());
 	}
 

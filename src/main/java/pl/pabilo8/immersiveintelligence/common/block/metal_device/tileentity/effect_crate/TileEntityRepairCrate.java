@@ -12,11 +12,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.utils.IEntitySpecialRepairable;
-import pl.pabilo8.immersiveintelligence.api.utils.upgrade_system.MachineUpgrade;
-import pl.pabilo8.immersiveintelligence.client.render.metal_device.RepairCrateRenderer;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IIPotions;
@@ -77,7 +73,7 @@ public class TileEntityRepairCrate extends TileEntityEffectCrate implements ISou
 	public void update()
 	{
 		super.update();
-		ImmersiveEngineering.proxy.handleTileSound(IISounds.weldingMid, this, hasUpgrade(IIContent.UPGRADE_INSERTER)&&focusedEntity!=null, .5f, 1);
+		ImmersiveEngineering.proxy.handleTileSound(IISounds.weldingMid, this, isUpgradeInstalled(IIContent.UPGRADE_INSERTER)&&focusedEntity!=null, .5f, 1);
 	}
 
 	@Override
@@ -143,13 +139,6 @@ public class TileEntityRepairCrate extends TileEntityEffectCrate implements ISou
 		return Utils.compareToOreName(stack, "plateSteel");
 	}
 
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void renderWithUpgrades(MachineUpgrade... upgrades)
-	{
-		RepairCrateRenderer.renderWithUpgrade(upgrades);
-	}
-
 	@Override
 	public boolean shoudlPlaySound(String sound)
 	{
@@ -181,7 +170,7 @@ public class TileEntityRepairCrate extends TileEntityEffectCrate implements ISou
 	@Override
 	protected NBTTagCompound makeSyncEntity()
 	{
-		if(hasUpgrade(IIContent.UPGRADE_INSERTER))
+		if(isUpgradeInstalled(IIContent.UPGRADE_INSERTER))
 		{
 			world.playSound(null, getPos(), focusedEntity!=null?IISounds.weldingStart: IISounds.weldingEnd, SoundCategory.BLOCKS, 1f, 1f);
 		}

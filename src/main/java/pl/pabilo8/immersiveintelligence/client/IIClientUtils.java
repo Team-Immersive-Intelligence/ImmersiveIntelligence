@@ -31,7 +31,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.api.ammo.penetration.DamageBlockPos;
-import pl.pabilo8.immersiveintelligence.api.utils.upgrade_system.MachineUpgrade;
+import pl.pabilo8.immersiveintelligence.api.utils.upgrade.Upgrade;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
 import pl.pabilo8.immersiveintelligence.client.model.ModelIIBase;
 import pl.pabilo8.immersiveintelligence.client.util.font.IIFontRenderer;
@@ -310,11 +310,11 @@ public class IIClientUtils
 	}
 
 	@SideOnly(Side.CLIENT)
-	public static ModelRendererTurbo[] createConstructionModel(@Nullable MachineUpgrade upgrade, ModelIIBase model)
+	public static ModelRendererTurbo[] createConstructionModel(@Nullable Upgrade upgrade, ModelIIBase model)
 	{
 		int partCount = model.parts.values().stream().mapToInt(modelRendererTurbos -> modelRendererTurbos.length).sum();
 		if(upgrade!=null)
-			upgrade.setRequiredSteps(partCount);
+			upgrade.withProgressStages(partCount);
 		ModelRendererTurbo[] output = new ModelRendererTurbo[partCount];
 		int i = 0;
 		for(ModelRendererTurbo[] value : model.parts.values())

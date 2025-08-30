@@ -90,7 +90,7 @@ public class PackerRenderer extends IIMultiblockRenderer<TileEntityPacker>
 			energyUpgrade.defaultize();
 			energyUpgrade.render(tes, buf);
 		}
-		else if(te.getCurrentlyInstalled()!=IIContent.UPGRADE_PACKER_FLUID&&te.getCurrentlyInstalled()!=IIContent.UPGRADE_PACKER_ENERGY)
+		else if(te.getCurrentUpgrade()!=IIContent.UPGRADE_PACKER_FLUID&&te.getCurrentUpgrade()!=IIContent.UPGRADE_PACKER_ENERGY)
 		{
 			//show item packer (default mode) elements
 			animationDefault.apply(0);

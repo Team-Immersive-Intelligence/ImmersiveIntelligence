@@ -21,6 +21,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.pabilo8.immersiveintelligence.api.utils.upgrade.UpgradeUtils;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.block.emplacement.GuiEmplacementPageStorage;
 import pl.pabilo8.immersiveintelligence.client.render.multiblock.metal.EmplacementRenderer;
@@ -31,7 +32,6 @@ import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.EmplacementWeapons.Autocannon;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.EmplacementWeapons.HeavyChemthrower;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityEmplacementWeapon;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityEmplacementWeapon.EmplacementHitboxEntity;
@@ -290,7 +290,7 @@ public class EmplacementWeaponHeavyChemthrower extends EmplacementWeapon
 
 		final int req = IIContent.UPGRADE_EMPLACEMENT_WEAPON_HEAVY_CHEMTHROWER.getProgressRequired();
 		final int l = EmplacementRenderer.modelHeavyChemthrowerConstruction.length;
-		double maxClientProgress = IIUtils.getMaxClientProgress(serverProgress, req, l);
+		double maxClientProgress = UpgradeUtils.getMaxClientProgress(serverProgress, IIContent.UPGRADE_EMPLACEMENT_WEAPON_HEAVY_CHEMTHROWER);
 
 		double cc = (int)Math.min(clientProgress+((partialTicks*(Tools.wrenchUpgradeProgress/2f))), maxClientProgress);
 		double progress = MathHelper.clamp(cc/req, 0, 1);

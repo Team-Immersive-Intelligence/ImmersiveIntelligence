@@ -3,8 +3,9 @@ package pl.pabilo8.immersiveintelligence.client.manual.objects;
 import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.text.TextFormatting;
-import pl.pabilo8.immersiveintelligence.api.utils.upgrade_system.MachineUpgrade;
+import pl.pabilo8.immersiveintelligence.api.utils.upgrade.Upgrade;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualObject;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualPage;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
@@ -18,7 +19,7 @@ import java.util.List;
  */
 public class IIManualUpgradeDisplay extends IIManualObject
 {
-	MachineUpgrade upgrade;
+	Upgrade upgrade;
 
 	public IIManualUpgradeDisplay(ManualObjectInfo info, EasyNBT nbt)
 	{
@@ -31,7 +32,7 @@ public class IIManualUpgradeDisplay extends IIManualObject
 		super.postInit(page);
 
 		//set the upgrade
-		upgrade = MachineUpgrade.getUpgradeByID(dataSource.getString("upgrade"));
+		upgrade = Upgrade.getUpgradeByID(dataSource.getString("upgrade"));
 		if(upgrade==null)
 			height = 0;
 	}
@@ -49,9 +50,10 @@ public class IIManualUpgradeDisplay extends IIManualObject
 		ClientUtils.drawColouredRect(x-2, y, width+2, height, 0xaa000000);
 		GlStateManager.color(1f, 1f, 1f, 1f);
 
-		mc.getTextureManager().bindTexture(upgrade.getIcon());
+		ClientUtils.bindAtlas();
 		GlStateManager.enableBlend();
-		ClientUtils.drawTexturedRect(x, y+2, 16, 16, 0d, 1d, 0d, 1d);
+		TextureAtlasSprite sprite = ClientUtils.getSprite(upgrade.getIcon());
+		ClientUtils.drawTexturedRect(x, y+2, 16, 16, sprite.getMinU(), sprite.getMaxU(), sprite.getMinV(), sprite.getMaxV());
 
 		manual.fontRenderer.setUnicodeFlag(true);
 		manual.fontRenderer.drawSplitString(TextFormatting.ITALIC+"Upgrade applied using a wrench.", x+18, y+2, 100, manual.getHighlightColour());

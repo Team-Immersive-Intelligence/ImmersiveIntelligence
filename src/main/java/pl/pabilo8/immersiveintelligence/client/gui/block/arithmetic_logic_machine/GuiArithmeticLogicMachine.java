@@ -221,7 +221,7 @@ public class GuiArithmeticLogicMachine extends DecoGui<TileEntityArithmeticLogic
 				.withTranslatedTooltip(IIReference.DESCRIPTION_KEY+"storage_module")
 		);
 
-		if(tile.hasUpgrade(IIContent.UPGRADE_MEMORY))
+		if(tile.isUpgradeInstalled(IIContent.UPGRADE_MEMORY))
 			addComponent(new DecoTab()
 					.withLink(IIGUI.ARITHMETIC_LOGIC_MACHINE_STORAGE)
 					.withIcon(ICON_MEMORY)
@@ -248,7 +248,7 @@ public class GuiArithmeticLogicMachine extends DecoGui<TileEntityArithmeticLogic
 			}
 		}
 
-		if(tile.hasUpgrade(IIContent.UPGRADE_MEMORY))
+		if(tile.isUpgradeInstalled(IIContent.UPGRADE_MEMORY))
 			addComponent(new DecoTab()
 					.withLink(IIGUI.ARITHMETIC_LOGIC_MACHINE_STORAGE)
 					.withIcon(ICON_MEMORY)

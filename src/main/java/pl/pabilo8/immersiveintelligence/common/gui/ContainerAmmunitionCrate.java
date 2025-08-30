@@ -1,7 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common.gui;
 
 import blusunrize.immersiveengineering.api.tool.BulletHandler;
-import blusunrize.immersiveengineering.common.gui.ContainerIEBase;
 import blusunrize.immersiveengineering.common.gui.IESlot;
 import blusunrize.immersiveengineering.common.items.ItemBullet;
 import net.minecraft.entity.player.EntityPlayer;
@@ -66,7 +65,7 @@ public class ContainerAmmunitionCrate extends ContainerIIBase<TileEntityAmmuniti
 		this.slotsInputrevolver[0] = addSlotToContainer(new GhostFilteredBullet(this, this.inv, 35, 98, 45));
 		this.slotsInputrevolver[0] = addSlotToContainer(new GhostFilteredBullet(this, this.inv, 36, 106, 26));
 
-		boolean mg = tile.hasUpgrade(IIContent.UPGRADE_MG_LOADER);
+		boolean mg = tile.isUpgradeInstalled(IIContent.UPGRADE_MG_LOADER);
 		if(mg)
 		{
 			for(int i = 0; i < 12; i++)

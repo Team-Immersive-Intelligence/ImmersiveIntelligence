@@ -45,7 +45,7 @@ public class GuiMedicalCrate extends GuiIEContainerBase
 		addButton(buttonHealing = new GuiButtonState(0, guiLeft+111, guiTop+2, 28, 24, "", tile.shouldHeal, TEXTURE, 176, 75, 0));
 		addButton(buttonBoost = new GuiButtonState(1, guiLeft+111, guiTop+24, 28, 24, "", tile.shouldBoost, TEXTURE, 176, 51, 0));
 
-		boolean upgraded = tile.hasUpgrade(IIContent.UPGRADE_INSERTER);
+		boolean upgraded = tile.isUpgradeInstalled(IIContent.UPGRADE_INSERTER);
 		buttonHealing.visible = upgraded;
 		buttonBoost.visible = upgraded;
 	}
@@ -71,7 +71,7 @@ public class GuiMedicalCrate extends GuiIEContainerBase
 	public void drawScreen(int mouseX, int mouseY, float partialTicks)
 	{
 		super.drawScreen(mouseX, mouseY, partialTicks);
-		boolean upgraded = tile.hasUpgrade(IIContent.UPGRADE_INSERTER);
+		boolean upgraded = tile.isUpgradeInstalled(IIContent.UPGRADE_INSERTER);
 		int ww = upgraded?9: 36;
 
 		ArrayList<String> tooltip = new ArrayList<>();
@@ -103,7 +103,7 @@ public class GuiMedicalCrate extends GuiIEContainerBase
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float f, int mx, int my)
 	{
-		boolean upgraded = tile.hasUpgrade(IIContent.UPGRADE_INSERTER);
+		boolean upgraded = tile.isUpgradeInstalled(IIContent.UPGRADE_INSERTER);
 		int ww = upgraded?9: 36;
 
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);

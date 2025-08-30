@@ -6,12 +6,12 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
-import pl.pabilo8.immersiveintelligence.api.utils.upgrade_system.IUpgradableMachine;
+import pl.pabilo8.immersiveintelligence.api.utils.upgrade.IUpgradableDevice;
+import pl.pabilo8.immersiveintelligence.api.utils.upgrade.UpgradeUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 import java.util.ArrayList;
@@ -45,17 +45,10 @@ public class WrenchOverlay extends InWorldOverlayBase
 				for(int y = -16; y <= 16; y++)
 				{
 					BlockPos pos = base.add(x, y, z);
-					TileEntity te = world.getTileEntity(pos);
-
-					if(!(te instanceof IUpgradableMachine))
+					IUpgradableDevice master = UpgradeUtils.getUpgradeMaster(world, pos);
+					if(master==null||master.getCurrentUpgrade()!=null)
 						continue;
-					IUpgradableMachine machine = (IUpgradableMachine)te;
-					if(machine.getUpgradeMaster().getCurrentlyInstalled()!=null)
-						continue;
-
-					//TODO: 29.05.2023 check
 					world.getBlockState(pos).addCollisionBoxToList(world, pos, full, aabb, player, true);
-
 				}
 
 		//Start Draw

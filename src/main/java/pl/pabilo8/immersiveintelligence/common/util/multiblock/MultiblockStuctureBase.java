@@ -42,6 +42,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 import pl.pabilo8.immersiveintelligence.client.render.IIMultiblockRenderer;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
+import pl.pabilo8.immersiveintelligence.common.entity.tactile.TactileManager;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
@@ -322,7 +323,7 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 	}
 
 	/**
-	 * Does not actually load tactiles info. It's handled by {@link pl.pabilo8.immersiveintelligence.common.entity.tactile.TactileHandler}
+	 * Does not actually load tactiles info. It's handled by {@link TactileManager}
 	 *
 	 * @param file json file
 	 */

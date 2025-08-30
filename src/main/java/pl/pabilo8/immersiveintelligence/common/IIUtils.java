@@ -2,7 +2,6 @@ package pl.pabilo8.immersiveintelligence.common;
 
 import blusunrize.immersiveengineering.api.ApiUtils;
 import blusunrize.immersiveengineering.api.Lib;
-import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorage;
 import blusunrize.immersiveengineering.api.energy.wires.IImmersiveConnectable;
 import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler;
@@ -44,9 +43,6 @@ import net.minecraftforge.oredict.OreDictionary;
 import org.apache.commons.lang3.ArrayUtils;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeItemStack;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
-import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 import pl.pabilo8.immersiveintelligence.common.compat.BaublesHelper;
 import pl.pabilo8.immersiveintelligence.common.compat.IICompatModule;
 import pl.pabilo8.immersiveintelligence.common.util.ISerializableEnum;
@@ -333,12 +329,6 @@ public class IIUtils
 	}
 
 
-	public static float getMaxClientProgress(float current, float required, int parts)
-	{
-		return current-(current%(required/parts));
-	}
-
-
 	@Deprecated
 	public static String getPowerLevelString(TileEntityMultiblockMetal<?, ?> tile)
 	{
@@ -353,23 +343,6 @@ public class IIUtils
 	public static String getPowerLevelString(int min, int max)
 	{
 		return String.format("%s/%s IF", min, max);
-	}
-
-	public static IngredientStack ingredientFromData(DataType dataType)
-	{
-		if(dataType instanceof DataTypeItemStack)
-			return new IngredientStack((((DataTypeItemStack)dataType).value.copy()));
-		else if(dataType instanceof DataTypeString)
-			return new IngredientStack(dataType.toString());
-		else
-			return new IngredientStack("*");
-	}
-
-	public static DataPacket getSimpleCallbackMessage(DataPacket packet, String parameter, DataType value)
-	{
-		packet.set('c', new DataTypeString(parameter));
-		packet.set('g', value);
-		return packet;
 	}
 
 	public static void giveOrDropCasingStack(@Nonnull Entity entity, ItemStack stack)
@@ -451,8 +424,6 @@ public class IIUtils
 			return o.getClass().getAnnotation(annotationClass);
 		return null;
 	}
-
-	//REFACTOR: 27.03.2024 replace lambda variant of this in project
 
 	/**
 	 * @param en   enum class

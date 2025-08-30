@@ -18,7 +18,8 @@ import pl.pabilo8.immersiveintelligence.client.util.tmt.TmtUtil;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Emplacement;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.weapon.EmplacementWeapon.MachineUpgradeEmplacementWeapon;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.weapon.EmplacementWeapon;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.weapon.EmplacementWeapon.UpgradeEmplacementWeapon;
 
 public class EmplacementRenderer extends TileEntitySpecialRenderer<TileEntityEmplacement> implements IReloadableModelContainer<EmplacementRenderer>
 {
@@ -194,11 +195,14 @@ public class EmplacementRenderer extends TileEntitySpecialRenderer<TileEntityEmp
 			GlStateManager.rotate(te.facing.getHorizontalAngle()-90, 0F, 1F, 0F);
 			if(te.currentWeapon!=null)
 				te.currentWeapon.render(te, partialTicks);
-			else if(te.getCurrentlyInstalled() instanceof MachineUpgradeEmplacementWeapon)
+			else if(te.getCurrentUpgrade() instanceof EmplacementWeapon.UpgradeEmplacementWeapon)
 			{
 				RenderHelper.disableStandardItemLighting();
 				GlStateManager.disableLighting();
-				((MachineUpgradeEmplacementWeapon)te.getCurrentlyInstalled()).renderUpgradeProgress(te.clientUpgradeProgress, te.upgradeProgress, partialTicks);
+				((UpgradeEmplacementWeapon)te.getCurrentUpgrade()).renderUpgradeProgress(
+						te.getUpgradeInstallProgress(true),
+						te.getUpgradeInstallProgress(false),
+						partialTicks);
 				GlStateManager.enableLighting();
 				RenderHelper.enableStandardItemLighting();
 			}

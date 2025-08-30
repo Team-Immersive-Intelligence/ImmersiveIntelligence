@@ -1,26 +1,22 @@
 package pl.pabilo8.immersiveintelligence.common.gui;
 
-import blusunrize.immersiveengineering.common.gui.ContainerIEBase;
+import blusunrize.immersiveengineering.common.blocks.TileEntityIEBase;
+import blusunrize.immersiveengineering.common.util.inventory.IIEInventory;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Slot;
-import net.minecraft.tileentity.TileEntity;
-import pl.pabilo8.immersiveintelligence.api.utils.upgrade_system.IUpgradableMachine;
+import pl.pabilo8.immersiveintelligence.api.utils.upgrade.IUpgradableDevice;
+import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIBase;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 10.07.2019
  */
-public class ContainerUpgrade extends ContainerIEBase<TileEntity>
+public class ContainerUpgrade<T extends TileEntityIEBase & IIEInventory & IUpgradableDevice> extends ContainerIIBase<T>
 {
-	public <T extends TileEntity & IUpgradableMachine> ContainerUpgrade(EntityPlayer player, T tile)
+	public ContainerUpgrade(EntityPlayer player, T tile)
 	{
-		super(player.inventory, tile);
+		super(player, tile);
 		//Input/Output Slots
 
-		for(int i = 0; i < 3; i++)
-			for(int j = 0; j < 9; j++)
-				addSlotToContainer(new Slot(player.inventory, j+i*9+9, 8+j*18, 87+i*18));
-		for(int i = 0; i < 9; i++)
-			addSlotToContainer(new Slot(player.inventory, i, 8+i*18, 145));
+		addPlayerInventory(player.inventory, 9, 18+32+32+8-4);
 	}
 }

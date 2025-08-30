@@ -4,7 +4,6 @@ import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorageAdvanced;
 import blusunrize.immersiveengineering.api.tool.ConveyorHandler.IConveyorAttachable;
 import blusunrize.immersiveengineering.common.Config.IEConfig.Machines;
-import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IGuiTile;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IPlayerInteraction;
 import blusunrize.immersiveengineering.common.util.EnergyHelper;
 import blusunrize.immersiveengineering.common.util.Utils;
@@ -32,8 +31,6 @@ import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -42,18 +39,21 @@ import pl.pabilo8.immersiveintelligence.api.PackerHandler.PackerActionType;
 import pl.pabilo8.immersiveintelligence.api.PackerHandler.PackerPutMode;
 import pl.pabilo8.immersiveintelligence.api.PackerHandler.PackerTask;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
+import pl.pabilo8.immersiveintelligence.api.data.IIDataHandlingUtils;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeItemStack;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
-import pl.pabilo8.immersiveintelligence.api.utils.upgrade_system.IUpgradableMachine;
-import pl.pabilo8.immersiveintelligence.api.utils.upgrade_system.MachineUpgrade;
+import pl.pabilo8.immersiveintelligence.api.utils.upgrade.IManagedUpgradableDevice;
+import pl.pabilo8.immersiveintelligence.api.utils.upgrade.Upgrade;
+import pl.pabilo8.immersiveintelligence.api.utils.upgrade.UpgradeManager;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Packer;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.MultiblockPacker;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IIIGuiMultiblockTile;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultiblockIIGeneric;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
@@ -69,30 +69,37 @@ import java.util.function.Predicate;
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 28.06.2019
  */
-public class TileEntityPacker extends TileEntityMultiblockIIGeneric<TileEntityPacker> implements IConveyorAttachable, IGuiTile, IUpgradableMachine, IPlayerInteraction
+//TODO: 30.08.2025 rebase onto TileEntityMultiblockProductionSingle
+public class TileEntityPacker extends TileEntityMultiblockIIGeneric<TileEntityPacker>
+		implements IConveyorAttachable, IManagedUpgradableDevice<TileEntityPacker>, IPlayerInteraction, IIIGuiMultiblockTile
 {
+	@SyncNBT(name = "upgrades", events = SyncEvents.TILE_UPGRADES_MODIFIED)
+	public UpgradeManager<TileEntityPacker> upgradeManager;
+	@SyncNBT
 	public boolean repeatActions = false;
-	public int clientUpgradeProgress = 0;
+	@SyncNBT
 	public int processTime = 0;
 	public ArrayList<PackerTask> tasks = new ArrayList<>();
-	public IItemHandler containerHandler = new IEInventoryHandler(1, this, 0, true, true);
-	public FluxStorageAdvanced energyStorageUpgrade;
+
+	@SyncNBT
 	public MultiFluidTank fluidTank;
-	protected ArrayList<MachineUpgrade> upgrades = new ArrayList<>();
-	MachineUpgrade currentlyInstalled = null;
-	int upgradeProgress = 0;
-	IItemHandler inventoryInHandler = new IEInventoryHandler(54, this, 1, true, true);
-	IItemHandler inventoryOutHandler = new IEInventoryHandler(54, this, 55, true, true);
+	@SyncNBT
+	public FluxStorageAdvanced energyStorageUpgrade;
+
+	private final IItemHandler containerHandler = new IEInventoryHandler(1, this, 0, true, true);
+	private final IItemHandler inventoryInHandler = new IEInventoryHandler(54, this, 1, true, true);
+	private final IItemHandler inventoryOutHandler = new IEInventoryHandler(54, this, 55, true, true);
 
 	public TileEntityPacker()
 	{
 		super(MultiblockPacker.INSTANCE);
 
 		this.energyStorage = new FluxStorageAdvanced(Packer.energyCapacity);
-		inventory = NonNullList.withSize(109, ItemStack.EMPTY);
+		this.inventory = NonNullList.withSize(109, ItemStack.EMPTY);
+		this.upgradeManager = new UpgradeManager<>(this);
 
-		energyStorageUpgrade = new FluxStorageAdvanced(Packer.energyCapacityUpgrade);
-		fluidTank = new MultiFluidTank(Packer.fluidCapacityUpgrade);
+		this.energyStorageUpgrade = new FluxStorageAdvanced(Packer.energyCapacityUpgrade);
+		this.fluidTank = new MultiFluidTank(Packer.fluidCapacityUpgrade);
 	}
 
 	@Override
@@ -272,12 +279,7 @@ public class TileEntityPacker extends TileEntityMultiblockIIGeneric<TileEntityPa
 				update = true;
 			}
 
-		if(world.isRemote)
-		{
-			if(clientUpgradeProgress < getMaxClientProgress())
-				clientUpgradeProgress = (int)Math.min(clientUpgradeProgress+(Tools.wrenchUpgradeProgress/2f), getMaxClientProgress());
-		}
-		else //storage output
+		if(!world.isRemote)
 		{
 			BlockPos pos = getBlockPosForPos(15)
 					.offset(mirrored?facing.rotateY(): facing.rotateYCCW());
@@ -286,7 +288,7 @@ public class TileEntityPacker extends TileEntityMultiblockIIGeneric<TileEntityPa
 
 			if(te!=null)
 			{
-				if(hasUpgrade(IIContent.UPGRADE_PACKER_FLUID))
+				if(isUpgradeInstalled(IIContent.UPGRADE_PACKER_FLUID))
 				{
 					if(te.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, outputFacing))
 					{
@@ -303,7 +305,7 @@ public class TileEntityPacker extends TileEntityMultiblockIIGeneric<TileEntityPa
 						}
 					}
 				}
-				else if(hasUpgrade(IIContent.UPGRADE_PACKER_ENERGY))
+				else if(isUpgradeInstalled(IIContent.UPGRADE_PACKER_ENERGY))
 				{
 					if(te.hasCapability(CapabilityEnergy.ENERGY, outputFacing))
 					{
@@ -344,14 +346,13 @@ public class TileEntityPacker extends TileEntityMultiblockIIGeneric<TileEntityPa
 		if(isDummy())
 			return;
 
-		getUpgradesFromNBT(nbt);
 		repeatActions = nbt.getBoolean("repeatActions");
 
 		processTime = nbt.getInteger("process_time");
 
-		if(hasUpgrade(IIContent.UPGRADE_PACKER_ENERGY))
+		if(isUpgradeInstalled(IIContent.UPGRADE_PACKER_ENERGY))
 			energyStorage.readFromNBT(nbt.getCompoundTag("energy_upgrade"));
-		else if(hasUpgrade(IIContent.UPGRADE_PACKER_FLUID))
+		else if(isUpgradeInstalled(IIContent.UPGRADE_PACKER_FLUID))
 			fluidTank.readFromNBT(nbt.getCompoundTag("fluid_tank"));
 
 		readTasks(nbt.getTagList("tasks", 10));
@@ -364,14 +365,13 @@ public class TileEntityPacker extends TileEntityMultiblockIIGeneric<TileEntityPa
 		if(isDummy())
 			return;
 
-		saveUpgradesToNBT(nbt);
 		nbt.setBoolean("repeatActions", repeatActions);
 
 		nbt.setInteger("process_time", processTime);
 
-		if(hasUpgrade(IIContent.UPGRADE_PACKER_ENERGY))
+		if(isUpgradeInstalled(IIContent.UPGRADE_PACKER_ENERGY))
 			nbt.setTag("energy_upgrade", energyStorage.writeToNBT(new NBTTagCompound()));
-		else if(hasUpgrade(IIContent.UPGRADE_PACKER_FLUID))
+		else if(isUpgradeInstalled(IIContent.UPGRADE_PACKER_FLUID))
 			nbt.setTag("fluid_tank", fluidTank.writeToNBT(new NBTTagCompound()));
 
 		nbt.setTag("tasks", writeTasks());
@@ -466,7 +466,7 @@ public class TileEntityPacker extends TileEntityMultiblockIIGeneric<TileEntityPa
 		if(pos==23||pos==15)
 		{
 			TileEntityPacker master = master();
-			if(master!=null&&master.hasUpgrade(IIContent.UPGRADE_PACKER_FLUID))
+			if(master!=null&&master.isUpgradeInstalled(IIContent.UPGRADE_PACKER_FLUID))
 				return new IFluidTank[]{master.fluidTank};
 		}
 		return new FluidTank[0];
@@ -478,7 +478,7 @@ public class TileEntityPacker extends TileEntityMultiblockIIGeneric<TileEntityPa
 		if(pos==23)
 		{
 			TileEntityPacker master = master();
-			return master!=null&&master.hasUpgrade(IIContent.UPGRADE_PACKER_FLUID);
+			return master!=null&&master.isUpgradeInstalled(IIContent.UPGRADE_PACKER_FLUID);
 		}
 		return super.canFillTankFrom(iTank, side, resource);
 	}
@@ -489,7 +489,7 @@ public class TileEntityPacker extends TileEntityMultiblockIIGeneric<TileEntityPa
 		if(pos==15)
 		{
 			TileEntityPacker master = master();
-			return master!=null&&master.hasUpgrade(IIContent.UPGRADE_PACKER_FLUID);
+			return master!=null&&master.isUpgradeInstalled(IIContent.UPGRADE_PACKER_FLUID);
 		}
 		return super.canDrainTankFrom(iTank, side);
 	}
@@ -518,7 +518,7 @@ public class TileEntityPacker extends TileEntityMultiblockIIGeneric<TileEntityPa
 			{
 				PackerPutMode mode = PackerHandler.PackerPutMode.fromName(m.toString());
 				PackerActionType action = PackerHandler.PackerActionType.fromName(a.toString());
-				IngredientStack stack = IIUtils.ingredientFromData(s);
+				IngredientStack stack = IIDataHandlingUtils.ingredientFromData(s);
 				PackerTask packerTask = new PackerTask(mode, action, stack);
 				if(packet.has('e'))
 					packerTask.expirationAmount = packet.getVarInType(DataTypeInteger.class, e).value;
@@ -543,7 +543,7 @@ public class TileEntityPacker extends TileEntityMultiblockIIGeneric<TileEntityPa
 					if(s instanceof DataTypeString)
 						p = packerTask -> packerTask.stack.oreName.equals(s.toString());
 					else if(s instanceof DataTypeItemStack)
-						p = packerTask -> packerTask.stack.equals(IIUtils.ingredientFromData(s));
+						p = packerTask -> packerTask.stack.equals(IIDataHandlingUtils.ingredientFromData(s));
 					else
 						p = packerTask -> true;
 
@@ -581,14 +581,14 @@ public class TileEntityPacker extends TileEntityMultiblockIIGeneric<TileEntityPa
 			if(pos==0&&capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
 				return (T)master.containerHandler;
 
-			if(hasUpgrade(IIContent.UPGRADE_PACKER_ENERGY))
+			if(isUpgradeInstalled(IIContent.UPGRADE_PACKER_ENERGY))
 			{
 				/*if(pos==23)
 					return */
 			}
 			else if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
 			{
-				if(!hasUpgrade(IIContent.UPGRADE_PACKER_ENERGY)&&!hasUpgrade(IIContent.UPGRADE_PACKER_FLUID))
+				if(!isUpgradeInstalled(IIContent.UPGRADE_PACKER_ENERGY)&&!isUpgradeInstalled(IIContent.UPGRADE_PACKER_FLUID))
 				{
 					if(pos==23)
 						return (T)master.inventoryInHandler;
@@ -597,7 +597,6 @@ public class TileEntityPacker extends TileEntityMultiblockIIGeneric<TileEntityPa
 				}
 			}
 		}
-
 
 		return super.getCapability(capability, facing);
 	}
@@ -609,7 +608,7 @@ public class TileEntityPacker extends TileEntityMultiblockIIGeneric<TileEntityPa
 			return false;
 
 		TileEntityPacker master = master();
-		if(master!=null&&(pos==18||pos==21||pos==22||(pos > 29&&pos < 35)||(pos > 41&&pos < 47))&&master.hasUpgrade(IIContent.UPGRADE_PACKER_FLUID))
+		if(master!=null&&(pos==18||pos==21||pos==22||(pos > 29&&pos < 35)||(pos > 41&&pos < 47))&&master.isUpgradeInstalled(IIContent.UPGRADE_PACKER_FLUID))
 		{
 			if(heldItem.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null))
 			{
@@ -656,23 +655,37 @@ public class TileEntityPacker extends TileEntityMultiblockIIGeneric<TileEntityPa
 		}*/
 	}
 
+	//--- IManagedUpgradableDevice ---//
+
+	@Nonnull
 	@Override
-	public void onGuiOpened(EntityPlayer player, boolean clientside)
+	public UpgradeManager<TileEntityPacker> getUpgradeManager()
 	{
-		if(!clientside)
-			forceTileUpdate();
+		return upgradeManager;
+	}
+
+	@Override
+	public boolean removeUpgrade(Upgrade upgrade)
+	{
+		if(IManagedUpgradableDevice.super.removeUpgrade(upgrade))
+		{
+			Predicate<PackerTask> task;
+			if(isUpgradeInstalled(IIContent.UPGRADE_PACKER_FLUID))
+				task = p -> p.actionType==PackerHandler.PackerActionType.FLUID;
+			else if(isUpgradeInstalled(IIContent.UPGRADE_PACKER_ENERGY))
+				task = p -> p.actionType==PackerHandler.PackerActionType.ENERGY;
+			else
+				task = p -> p.actionType==PackerHandler.PackerActionType.ITEM;
+			tasks.removeIf(task.negate());
+			return true;
+		}
+		return false;
 	}
 
 	@Override
 	public boolean canOpenGui()
 	{
 		return true;
-	}
-
-	@Override
-	public int getGuiID()
-	{
-		return IIGUI.PACKER.ordinal();
 	}
 
 	@Nullable
@@ -683,121 +696,8 @@ public class TileEntityPacker extends TileEntityMultiblockIIGeneric<TileEntityPa
 	}
 
 	@Override
-	public boolean addUpgrade(MachineUpgrade upgrade, boolean test)
+	public IIGUI getGUI()
 	{
-		boolean b = !hasUpgrade(upgrade);
-		if(!test&&b)
-			upgrades.add(upgrade);
-		return b;
+		return IIGUI.PACKER;
 	}
-
-	@Override
-	public boolean hasUpgrade(MachineUpgrade upgrade)
-	{
-		return upgrades.stream().anyMatch(machineUpgrade -> machineUpgrade.getName().equals(upgrade.getName()));
-	}
-
-	@Override
-	public boolean upgradeMatches(MachineUpgrade upgrade)
-	{
-		return upgrade==IIContent.UPGRADE_PACKER_RAILWAY||upgrade==IIContent.UPGRADE_PACKER_NAMING||
-				(upgrade==IIContent.UPGRADE_PACKER_FLUID&&!hasUpgrade(IIContent.UPGRADE_PACKER_ENERGY))||
-				(upgrade==IIContent.UPGRADE_PACKER_ENERGY&&!hasUpgrade(IIContent.UPGRADE_PACKER_FLUID));
-	}
-
-	@Override
-	public TileEntityPacker getUpgradeMaster()
-	{
-		return master();
-	}
-
-	@Override
-	public void saveUpgradesToNBT(NBTTagCompound tag)
-	{
-		for(MachineUpgrade upgrade : upgrades)
-			tag.setBoolean(upgrade.getName(), true);
-	}
-
-	@Override
-	public void getUpgradesFromNBT(NBTTagCompound tag)
-	{
-		upgrades.clear();
-		upgrades.addAll(MachineUpgrade.getUpgradesFromNBT(tag));
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void renderWithUpgrades(MachineUpgrade... upgrades)
-	{
-		// TODO: 19.08.2022 upgrade rendering
-		//PackerRenderer.renderWithUpgrades(upgrades);
-	}
-
-	public ArrayList<MachineUpgrade> getUpgrades()
-	{
-		return upgrades;
-	}
-
-	@Nullable
-	@Override
-	public MachineUpgrade getCurrentlyInstalled()
-	{
-		return currentlyInstalled;
-	}
-
-	@Override
-	public int getInstallProgress()
-	{
-		return upgradeProgress;
-	}
-
-	@Override
-	public int getClientInstallProgress()
-	{
-		return clientUpgradeProgress;
-	}
-
-	@Override
-	public boolean addUpgradeInstallProgress(int toAdd)
-	{
-		upgradeProgress += toAdd;
-		return true;
-	}
-
-	@Override
-	public boolean resetInstallProgress()
-	{
-		currentlyInstalled = null;
-		if(upgradeProgress > 0)
-		{
-			upgradeProgress = 0;
-			clientUpgradeProgress = 0;
-			return true;
-		}
-		Predicate<PackerTask> task;
-		if(hasUpgrade(IIContent.UPGRADE_PACKER_FLUID))
-			task = p -> p.actionType==PackerHandler.PackerActionType.FLUID;
-		else if(hasUpgrade(IIContent.UPGRADE_PACKER_ENERGY))
-			task = p -> p.actionType==PackerHandler.PackerActionType.ENERGY;
-		else
-			task = p -> p.actionType==PackerHandler.PackerActionType.ITEM;
-		tasks.removeIf(task.negate());
-
-		return false;
-	}
-
-	@Override
-	public void startUpgrade(@Nonnull MachineUpgrade upgrade)
-	{
-		currentlyInstalled = upgrade;
-		upgradeProgress = 0;
-		clientUpgradeProgress = 0;
-	}
-
-	@Override
-	public void removeUpgrade(MachineUpgrade upgrade)
-	{
-		upgrades.remove(upgrade);
-	}
-
 }

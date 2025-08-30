@@ -1,0 +1,18 @@
+{
+  "bounds": {
+    "full": [
+      0, 0, 0,
+      16, 16, 16
+    ]
+  },
+  "positions": {
+  },
+  "poi": {
+    "energy": 83,
+    "redstone": 71,
+    "data": 272
+  },
+  "rotations": {
+    "data": "counterclockwise_90"
+  }
+}

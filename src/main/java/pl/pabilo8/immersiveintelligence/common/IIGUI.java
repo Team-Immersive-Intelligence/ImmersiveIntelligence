@@ -13,7 +13,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.Optional.Method;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.api.utils.upgrade_system.IUpgradableMachine;
 import pl.pabilo8.immersiveintelligence.client.gui.block.*;
 import pl.pabilo8.immersiveintelligence.client.gui.block.ammunition_production.GuiAmmunitionAssembler;
 import pl.pabilo8.immersiveintelligence.client.gui.block.arithmetic_logic_machine.GuiArithmeticLogicMachine;
@@ -111,8 +110,10 @@ public enum IIGUI implements ISerializableEnum
 	GEARBOX(TileEntityGearbox.class, ContainerGearbox::new),
 	PACKER(TileEntityPacker.class, ContainerPacker::new),
 	SAWMILL(TileEntitySawmill.class, ContainerSawmill::new),
-	UPGRADE(TileEntity.class,
-			(player, te) -> new ContainerUpgrade(player, (TileEntity & IUpgradableMachine)te)
+
+	@SuppressWarnings({"rawtypes", "unchecked"})
+	UPGRADE(TileEntityIEBase.class,
+			(player, te) -> new ContainerUpgrade(player, te)
 	),
 	VULCANIZER(TileEntityVulcanizer.class, ContainerVulcanizer::new),
 
@@ -149,6 +150,7 @@ public enum IIGUI implements ISerializableEnum
 	<T extends TileEntity> IIGUI(@Nonnull Class<T> teClass, BiFunction<EntityPlayer, T, Container> containerFromTile)
 	{
 		this.teClass = teClass;
+		//noinspection unchecked
 		this.containerFromTile = (player, tileEntity) -> containerFromTile.apply(player, (T)tileEntity);
 		this.containerFromStack = null;
 		this.item = false;
@@ -220,7 +222,8 @@ public enum IIGUI implements ISerializableEnum
 
 		IIGUI.CASING_POUCH.setClientStackGui(GuiCasingPouch::new);
 
-		IIGUI.UPGRADE.setClientGui((player, te) -> new GuiUpgrade(player, ((TileEntity & IUpgradableMachine)te)));
+		//noinspection rawtypes,unchecked
+		IIGUI.UPGRADE.setClientDecoGui((player, tile) -> new GuiUpgrade(player, tile));
 
 		IIGUI.VULCANIZER.setClientGui(GuiVulcanizer::new);
 		IIGUI.EMPLACEMENT_STORAGE.setClientGui(GuiEmplacementPageStorage::new);
@@ -253,6 +256,7 @@ public enum IIGUI implements ISerializableEnum
 	}
 
 	@SideOnly(Side.CLIENT)
+	@SuppressWarnings("unchecked")
 	public <T extends TileEntityIEBase & IIEInventory, C extends ContainerIIBase<T>> void setClientDecoGui(BiFunction<EntityPlayer, T, DecoGui<T, C>> guiFromTile)
 	{
 		Class<DecoGui<T, C>> klass = (Class<DecoGui<T, C>>)guiFromTile.apply(null, null).getClass();

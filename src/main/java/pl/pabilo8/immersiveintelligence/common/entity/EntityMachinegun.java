@@ -803,7 +803,7 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 			if(!crate.open)
 				return false;
 
-			if(crate.hasUpgrade(IIContent.UPGRADE_MG_LOADER))
+			if(crate.isUpgradeInstalled(IIContent.UPGRADE_MG_LOADER))
 			{
 				for(int i = 38; i < 50; i++)
 				{

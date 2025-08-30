@@ -16,7 +16,7 @@ import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoCore;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoPropellant;
-import pl.pabilo8.immersiveintelligence.api.utils.upgrade_system.MachineUpgrade;
+import pl.pabilo8.immersiveintelligence.api.utils.upgrade.Upgrade;
 import pl.pabilo8.immersiveintelligence.common.ammo.components.*;
 import pl.pabilo8.immersiveintelligence.common.ammo.components.explosives.AmmoComponentHMX;
 import pl.pabilo8.immersiveintelligence.common.ammo.components.explosives.AmmoComponentRDX;
@@ -97,58 +97,10 @@ public class IIContent
 	public static final List<IMultiblock> MULTIBLOCKS = new ArrayList<>();
 
 	public static final IICreativeTab II_CREATIVE_TAB = new IICreativeTab(MODID);
-	public static final MachineUpgrade UPGRADE_PACKER_FLUID = CommonProxy.createMachineUpgrade("packer_fluid"); //allows filling items with fluids
-
-	//--- Upgrades ---//
-	public static final MachineUpgrade UPGRADE_PACKER_ENERGY = CommonProxy.createMachineUpgrade("packer_energy"); //allows charging items with IF
-	public static final MachineUpgrade UPGRADE_PACKER_NAMING = CommonProxy.createMachineUpgrade("packer_naming"); //allows (re)naming items on conveyor
-	public static final MachineUpgrade UPGRADE_PACKER_RAILWAY = CommonProxy.createMachineUpgrade("packer_railway"); //makes packer accept minecarts instead of items
-	//used by effect crates
-	public static final MachineUpgrade UPGRADE_INSERTER = CommonProxy.createMachineUpgrade("inserter");
-	//increases machine speed
-	public static final MachineUpgrade UPGRADE_IMPROVED_GEARBOX = CommonProxy.createMachineUpgrade("improved_gearbox");
-	//more sawdust for cost of planks
-	public static final MachineUpgrade UPGRADE_SAW_UNREGULATOR = CommonProxy.createMachineUpgrade("saw_unregulator");
-	//allows to use belt fed upgrade for mg
-	public static final MachineUpgrade UPGRADE_MG_LOADER = CommonProxy.createMachineUpgrade("mg_loader");
-	//allows the radar to detect radio signal emitters and send their positions
-	public static final MachineUpgrade UPGRADE_RADIO_LOCATORS = CommonProxy.createMachineUpgrade("radio_locators");
-	//changes the projectile workshop to *fill* projectiles
-	public static final MachineUpgrade UPGRADE_CORE_FILLER = CommonProxy.createMachineUpgrade("core_filler");
-	//adds razor wire on top of a gate
-	public static final MachineUpgrade UPGRADE_RAZOR_WIRE = CommonProxy.createMachineUpgrade("razor_wire");
-	//allows connecting redstone wire to a gate
-	public static final MachineUpgrade UPGRADE_REDSTONE_ACTIVATION = CommonProxy.createMachineUpgrade("rs_activation");
-	//data input machine upgrade
-	public static final MachineUpgrade UPGRADE_ADVANCED_DATA = CommonProxy.createMachineUpgrade("advanced_data");
-	//arithemtic logic machine upgrade
-	public static final MachineUpgrade UPGRADE_MEMORY = CommonProxy.createMachineUpgrade("memory");
-	public static final MachineUpgrade UPGRADE_CIRCUIT_RACKS = CommonProxy.createMachineUpgrade("circuit_racks");
-
-	public static final MachineUpgrade UPGRADE_EMPLACEMENT_WEAPON_MACHINEGUN = EmplacementWeapon.register(EmplacementWeaponMachinegun::new);
-	public static final MachineUpgrade UPGRADE_EMPLACEMENT_WEAPON_IROBSERVER = EmplacementWeapon.register(EmplacementWeaponInfraredObserver::new);
-	public static final MachineUpgrade UPGRADE_EMPLACEMENT_WEAPON_AUTOCANNON = EmplacementWeapon.register(EmplacementWeaponAutocannon::new);
-	public static final MachineUpgrade UPGRADE_EMPLACEMENT_WEAPON_HEAVY_CHEMTHROWER = EmplacementWeapon.register(EmplacementWeaponHeavyChemthrower::new);
-	public static final MachineUpgrade UPGRADE_EMPLACEMENT_WEAPON_HEAVY_RAILGUN = EmplacementWeapon.register(EmplacementWeaponHeavyRailgun::new);
-	//public static final MachineUpgrade UPGRADE_EMPLACEMENT_SEARCHLIGHT = EmplacementWeapon.register(EmplacementWeaponSearchlight::new);
-	//public static final MachineUpgrade UPGRADE_EMPLACEMENT_SPOTLIGHT_TOWER = EmplacementWeapon.register(EmplacementWeaponSpotlightTower::new);
-	public static final MachineUpgrade UPGRADE_EMPLACEMENT_WEAPON_TESLA = EmplacementWeapon.register(EmplacementWeaponTeslaCoil::new);
-	public static final MachineUpgrade UPGRADE_EMPLACEMENT_WEAPON_CPDS = EmplacementWeapon.register(EmplacementWeaponCPDS::new);
-	//public static final MachineUpgrade UPGRADE_EMPLACEMENT_WEAPON_MORTAR = EmplacementWeapon.register(EmplacementWeaponMortar::new);
-	//public static final MachineUpgrade UPGRADE_EMPLACEMENT_WEAPON_LIGHT_HOWITZER = EmplacementWeapon.register(EmplacementWeaponLightHowitzer::new);
-	//public static final MachineUpgrade UPGRADE_EMPLACEMENT_WEAPON_LIGHT_ROCKET_LAUNCHER = EmplacementWeapon.register(EmplacementWeaponLightRocketLauncher::new);
-	//public static final MachineUpgrade UPGRADE_EMPLACEMENT_WEAPON_GUIDED_MISSILE_LAUNCHER = EmplacementWeapon.register(EmplacementWeaponGuidedMissileLauncher::new);
-	//materials
-	public static final ItemIIMaterial itemMaterial = new ItemIIMaterial();
-
-	//public static final MachineUpgrade UPGRADE_EMPLACEMENT_FALLBACK_GRENADES = CommonProxy.createMachineUpgrade("emplacement_grenades");
-	//public static final MachineUpgrade UPGRADE_EMPLACEMENT_STURDY_BEARINGS = CommonProxy.createMachineUpgrade("emplacement_bearings");
-
-	//public static final MachineUpgrade UPGRADE_EMPLACEMENT_MACHINEGUN_HEAVYBARREL = CommonProxy.createMachineUpgrade("mg_heavy_barrel");
-	//public static final MachineUpgrade UPGRADE_EMPLACEMENT_MACHINEGUN_WATERCOOLED = CommonProxy.createMachineUpgrade("mg_watercooled");
-	//public static final MachineUpgrade UPGRADE_EMPLACEMENT_MACHINEGUN_BUNKER = CommonProxy.createMachineUpgrade("mg_bunker");
 
 	//--- Items ---//
+	//materials
+	public static final ItemIIMaterial itemMaterial = new ItemIIMaterial();
 	public static final ItemIIMaterialIngot itemMaterialIngot = new ItemIIMaterialIngot();
 	public static final ItemIIMaterialPlate itemMaterialPlate = new ItemIIMaterialPlate();
 	public static final ItemIIMaterialRod itemMaterialRod = new ItemIIMaterialRod();
@@ -193,7 +145,6 @@ public class IIContent
 	public static final ItemIITripodPeriscope itemTripodPeriscope = new ItemIITripodPeriscope();
 	public static final ItemIIMineDetector itemMineDetector = new ItemIIMineDetector();
 	public static final ItemIIDrillHead itemDrillhead = new ItemIIDrillHead();
-	//Don't know if i should make a seperate item for a torque meter
 	public static final ItemIITachometer itemTachometer = new ItemIITachometer();
 	public static final ItemIIDataWireCoil itemDataWireCoil = new ItemIIDataWireCoil();
 	public static final ItemIISmallWireCoil itemSmallWireCoil = new ItemIISmallWireCoil();
@@ -384,6 +335,67 @@ public class IIContent
 		IIContent.blockGasMustardGas = new BlockIIFluid("mustard_gas", IIContent.gasMustardGas, Material.WATER)
 				.setPotionEffects(new PotionEffect(MobEffects.POISON, 60, 0));
 	}
+
+	//--- Upgrades ---//
+	//allows filling items with fluids
+	public static final Upgrade UPGRADE_PACKER_FLUID = new Upgrade("packer_fluid");
+	//allows charging items with IF
+	public static final Upgrade UPGRADE_PACKER_ENERGY = new Upgrade("packer_energy");
+	//allows (re)naming items on conveyor
+	public static final Upgrade UPGRADE_PACKER_NAMING = new Upgrade("packer_naming");
+	//makes packer accept minecarts instead of items
+	public static final Upgrade UPGRADE_PACKER_RAILWAY = new Upgrade("packer_railway");
+	//used by effect crates
+	public static final Upgrade UPGRADE_INSERTER = new Upgrade("inserter");
+	//increases machine speed
+	public static final Upgrade UPGRADE_IMPROVED_GEARBOX = new Upgrade("improved_gearbox");
+	//more sawdust for cost of planks
+	public static final Upgrade UPGRADE_SAW_UNREGULATOR = new Upgrade("saw_unregulator");
+	//allows to use belt fed upgrade for mg
+	public static final Upgrade UPGRADE_MG_LOADER = new Upgrade("mg_loader");
+	//allows the radar to detect radio signal emitters and send their positions
+	public static final Upgrade UPGRADE_RADIO_LOCATORS = new Upgrade("radio_locators");
+	//changes the projectile workshop to *fill* projectiles
+	public static final Upgrade UPGRADE_CORE_FILLER = new Upgrade("core_filler");
+	//adds razor wire on top of a gate
+	public static final Upgrade UPGRADE_RAZOR_WIRE = new Upgrade("razor_wire");
+	//allows connecting redstone wire to a gate
+	public static final Upgrade UPGRADE_REDSTONE_ACTIVATION = new Upgrade("rs_activation");
+	//data input machine upgrade
+	public static final Upgrade UPGRADE_ADVANCED_DATA = new Upgrade("advanced_data");
+	//arithemtic logic machine upgrade
+	public static final Upgrade UPGRADE_MEMORY = new Upgrade("memory");
+	public static final Upgrade UPGRADE_CIRCUIT_RACKS = new Upgrade("circuit_racks");
+
+	public static final Upgrade UPGRADE_EMPLACEMENT_WEAPON_MACHINEGUN = EmplacementWeapon.register(EmplacementWeaponMachinegun::new);
+	public static final Upgrade UPGRADE_EMPLACEMENT_WEAPON_IROBSERVER = EmplacementWeapon.register(EmplacementWeaponInfraredObserver::new);
+	public static final Upgrade UPGRADE_EMPLACEMENT_WEAPON_AUTOCANNON = EmplacementWeapon.register(EmplacementWeaponAutocannon::new);
+	public static final Upgrade UPGRADE_EMPLACEMENT_WEAPON_HEAVY_CHEMTHROWER = EmplacementWeapon.register(EmplacementWeaponHeavyChemthrower::new);
+	public static final Upgrade UPGRADE_EMPLACEMENT_WEAPON_HEAVY_RAILGUN = EmplacementWeapon.register(EmplacementWeaponHeavyRailgun::new);
+	//public static final MachineUpgrade UPGRADE_EMPLACEMENT_SEARCHLIGHT = EmplacementWeapon.register(EmplacementWeaponSearchlight::new);
+	//public static final MachineUpgrade UPGRADE_EMPLACEMENT_SPOTLIGHT_TOWER = EmplacementWeapon.register(EmplacementWeaponSpotlightTower::new);
+	public static final Upgrade UPGRADE_EMPLACEMENT_WEAPON_TESLA = EmplacementWeapon.register(EmplacementWeaponTeslaCoil::new);
+	public static final Upgrade UPGRADE_EMPLACEMENT_WEAPON_CPDS = EmplacementWeapon.register(EmplacementWeaponCPDS::new);
+	//public static final MachineUpgrade UPGRADE_EMPLACEMENT_WEAPON_MORTAR = EmplacementWeapon.register(EmplacementWeaponMortar::new);
+	//public static final MachineUpgrade UPGRADE_EMPLACEMENT_WEAPON_LIGHT_HOWITZER = EmplacementWeapon.register(EmplacementWeaponLightHowitzer::new);
+	//public static final MachineUpgrade UPGRADE_EMPLACEMENT_WEAPON_LIGHT_ROCKET_LAUNCHER = EmplacementWeapon.register(EmplacementWeaponLightRocketLauncher::new);
+	//public static final MachineUpgrade UPGRADE_EMPLACEMENT_WEAPON_GUIDED_MISSILE_LAUNCHER = EmplacementWeapon.register(EmplacementWeaponGuidedMissileLauncher::new);
+
+	public static final Upgrade UPGRADE_REINFORCEMENT = new Upgrade("reinforcement");
+	public static final Upgrade UPGRADE_SOVEREIGNTY = new Upgrade("sovereignty");
+
+	public static final Upgrade UPGRADE_EMPLACEMENT_FALLBACK_GRENADES = new Upgrade("emplacement/grenades");
+	public static final Upgrade UPGRADE_EMPLACEMENT_STURDY_BEARINGS = new Upgrade("emplacement/bearings");
+	public static final Upgrade UPGRADE_EMPLACEMENT_ENHANCED_TARGETTING_SYSTEMS = new Upgrade("emplacement/targetting");
+
+	public static final Upgrade UPGRADE_EMPLACEMENT_MACHINEGUN_HEAVYBARREL = new Upgrade("emplacement/mg_heavy_barrel");
+	public static final Upgrade UPGRADE_EMPLACEMENT_MACHINEGUN_WATERCOOLED = new Upgrade("emplacement/mg_watercooled");
+	public static final Upgrade UPGRADE_EMPLACEMENT_MACHINEGUN_BUNKER = new Upgrade("emplacement/mg_bunker");
+
+	public static final Upgrade UPGRADE_FLAGPOLE_TASER_LOCKS = new Upgrade("flagpole/taser_locks");
+	public static final Upgrade UPGRADE_FLAGPOLE_CAPTURE_DEFIANCE = new Upgrade("flagpole/capture_defiance");
+	public static final Upgrade UPGRADE_FLAGPOLE_UNIT_POST = new Upgrade("flagpole/unit_post");
+	public static final Upgrade UPGRADE_FLAGPOLE_COMMAND_POST = new Upgrade("flagpole/command_post");
 
 	//dummy method, called so that the static fields above get loaded
 	static void init()

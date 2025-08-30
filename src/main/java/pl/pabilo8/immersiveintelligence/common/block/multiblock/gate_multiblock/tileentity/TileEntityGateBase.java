@@ -18,23 +18,24 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
-import pl.pabilo8.immersiveintelligence.api.utils.upgrade_system.IUpgradeStorageMachine;
-import pl.pabilo8.immersiveintelligence.api.utils.upgrade_system.MachineUpgrade;
-import pl.pabilo8.immersiveintelligence.api.utils.upgrade_system.UpgradeStorage;
+import pl.pabilo8.immersiveintelligence.api.utils.upgrade.IManagedUpgradableDevice;
+import pl.pabilo8.immersiveintelligence.api.utils.upgrade.Upgrade;
+import pl.pabilo8.immersiveintelligence.api.utils.upgrade.UpgradeManager;
+import pl.pabilo8.immersiveintelligence.api.utils.upgrade.UpgradeTechTree;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.gate_multiblock.multiblock.MultiblockFenceGateBase;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemUtils;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultiblockIIConnectable;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockInteractablePart;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockRedstoneNetwork;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
@@ -46,18 +47,19 @@ import java.util.Objects;
  * @since 28.06.2019
  */
 public abstract class TileEntityGateBase<T extends TileEntityGateBase<T>> extends TileEntityMultiblockIIConnectable<T>
-		implements IBooleanAnimatedPartsBlock, IPlayerInteraction, IUpgradeStorageMachine<TileEntityGateBase<T>>, IRedstoneConnector
+		implements IBooleanAnimatedPartsBlock, IPlayerInteraction, IManagedUpgradableDevice<TileEntityGateBase<T>>, IRedstoneConnector
 {
 	@SyncNBT
 	public MultiblockInteractablePart gate;
 	protected MultiblockRedstoneNetwork<T> redstoneNetwork;
-	@SyncNBT(name = "upgrades")
-	public UpgradeStorage<TileEntityGateBase<T>> upgradeStorage;
+	@SyncNBT(name = "upgrades", events = SyncEvents.TILE_UPGRADES_MODIFIED)
+	public UpgradeManager<TileEntityGateBase<T>> upgradeManager;
 
 	public TileEntityGateBase(MultiblockFenceGateBase<T> multiblock)
 	{
 		super(multiblock);
-		upgradeStorage = new UpgradeStorage<>(this);
+		//Use common upgrades for all sorts of gates
+		upgradeManager = new UpgradeManager<>(this, UpgradeTechTree.getTreeFor(TileEntityGateBase.class));
 		gate = new MultiblockInteractablePart(40);
 		redstoneNetwork = new MultiblockRedstoneNetwork<>(((T)this));
 	}
@@ -67,14 +69,14 @@ public abstract class TileEntityGateBase<T extends TileEntityGateBase<T>> extend
 	{
 		gate = null;
 		redstoneNetwork = null;
-		upgradeStorage = null;
+		upgradeManager = null;
 	}
 
 	@Override
 	protected void onUpdate()
 	{
 		gate.update();
-		upgradeStorage.update();
+		upgradeManager.update();
 	}
 
 	@Override
@@ -82,7 +84,7 @@ public abstract class TileEntityGateBase<T extends TileEntityGateBase<T>> extend
 	{
 		T master = master();
 		if((isPOI("gate")&&master.gate.getProgress(0) > 0)||
-				(isPOI("redstone")&&!master.hasUpgrade(IIContent.UPGRADE_REDSTONE_ACTIVATION)))
+				(isPOI("redstone")&&!master.isUpgradeInstalled(IIContent.UPGRADE_REDSTONE_ACTIVATION)))
 			return Collections.singletonList(new AxisAlignedBB(0, 0, 0, 0, 0, 0));
 
 		return super.getBounds(collision);
@@ -149,38 +151,23 @@ public abstract class TileEntityGateBase<T extends TileEntityGateBase<T>> extend
 	//--- IUpgradeStorageMachine ---//
 
 
+	@Nonnull
 	@Override
-	public UpgradeStorage<TileEntityGateBase<T>> getUpgradeStorage()
+	public UpgradeManager<TileEntityGateBase<T>> getUpgradeManager()
 	{
-		return upgradeStorage;
+		return upgradeManager;
 	}
 
 	@Override
-	public boolean upgradeMatches(MachineUpgrade upgrade)
+	public boolean removeUpgrade(Upgrade upgrade)
 	{
-		return upgrade==IIContent.UPGRADE_REDSTONE_ACTIVATION||upgrade==IIContent.UPGRADE_RAZOR_WIRE;
-	}
-
-	@Override
-	public void removeUpgrade(MachineUpgrade upgrade)
-	{
-		if(upgrade==IIContent.UPGRADE_REDSTONE_ACTIVATION)
-			ImmersiveNetHandler.INSTANCE.clearAllConnectionsFor(getPOIPos("redstone"), world, true);
-		IUpgradeStorageMachine.super.removeUpgrade(upgrade);
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public TileEntityGateBase<T> getUpgradeMaster()
-	{
-		return master();
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void renderWithUpgrades(MachineUpgrade... upgrades)
-	{
-
+		if(IManagedUpgradableDevice.super.removeUpgrade(upgrade))
+		{
+			if(upgrade==IIContent.UPGRADE_REDSTONE_ACTIVATION)
+				ImmersiveNetHandler.INSTANCE.clearAllConnectionsFor(getPOIPos("redstone"), world, true);
+			return true;
+		}
+		return false;
 	}
 
 	//--- IPlayerInteraction ---//
@@ -189,7 +176,7 @@ public abstract class TileEntityGateBase<T extends TileEntityGateBase<T>> extend
 	public boolean interact(EnumFacing side, EntityPlayer player, EnumHand hand, ItemStack heldItem, float hitX, float hitY, float hitZ)
 	{
 		T master = master();
-		if(!IIItemUtils.isWrench(player.getHeldItem(hand))&&master!=null&&!master.hasUpgrade(IIContent.UPGRADE_REDSTONE_ACTIVATION))
+		if(!IIItemUtils.isWrench(player.getHeldItem(hand))&&master!=null&&!master.isUpgradeInstalled(IIContent.UPGRADE_REDSTONE_ACTIVATION))
 		{
 			if(!world.isRemote)
 				master.onAnimationChangeServer(!master.gate.getState(), 0);
@@ -201,7 +188,7 @@ public abstract class TileEntityGateBase<T extends TileEntityGateBase<T>> extend
 	@Override
 	public void onEntityCollision(World world, Entity entity)
 	{
-		if(isPOI("razor")&&master().hasUpgrade(IIContent.UPGRADE_RAZOR_WIRE)&&!entity.isDead)
+		if(isPOI("razor")&&master().isUpgradeInstalled(IIContent.UPGRADE_RAZOR_WIRE)&&!entity.isDead)
 			entity.attackEntityFrom(IEDamageSources.razorWire, 3f);
 		super.onEntityCollision(world, entity);
 	}
@@ -211,7 +198,7 @@ public abstract class TileEntityGateBase<T extends TileEntityGateBase<T>> extend
 	@Override
 	public boolean canConnect()
 	{
-		return super.canConnect()&&master().hasUpgrade(IIContent.UPGRADE_REDSTONE_ACTIVATION);
+		return super.canConnect()&&master().isUpgradeInstalled(IIContent.UPGRADE_REDSTONE_ACTIVATION);
 	}
 
 	@Override

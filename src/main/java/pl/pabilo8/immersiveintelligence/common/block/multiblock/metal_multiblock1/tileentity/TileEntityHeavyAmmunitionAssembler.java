@@ -17,8 +17,8 @@ import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.AmmunitionAssembler;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockHeavyAmmunitionAssembler;
-import pl.pabilo8.immersiveintelligence.common.entity.tactile.TactileHandler;
-import pl.pabilo8.immersiveintelligence.common.entity.tactile.TactileHandler.ITactileListener;
+import pl.pabilo8.immersiveintelligence.common.entity.tactile.TactileManager;
+import pl.pabilo8.immersiveintelligence.common.entity.tactile.TactileManager.ITactileListener;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionSingle;
@@ -48,28 +48,28 @@ public class TileEntityHeavyAmmunitionAssembler extends TileEntityMultiblockProd
 	//inventory: core, casing
 	IItemHandler coreInputHandler = getSingleInventoryHandler(SLOT_CORE, true, false);
 	IItemHandler casingInputHandler = getSingleInventoryHandler(SLOT_CASING, true, false);
-	private TactileHandler tactileHandler;
+	private TactileManager tactileManager;
 
 	public TileEntityHeavyAmmunitionAssembler()
 	{
 		super(MultiblockHeavyAmmunitionAssembler.INSTANCE);
 		energyStorage = new FluxStorageAdvanced(AmmunitionAssembler.energyCapacity);
 		inventory = NonNullList.withSize(4, ItemStack.EMPTY);
-		tactileHandler = new TactileHandler(multiblock, this);
+		tactileManager = new TactileManager(multiblock, this);
 	}
 
 	@Override
 	protected void dummyCleanup()
 	{
 		super.dummyCleanup();
-		tactileHandler = null;
+		tactileManager = null;
 	}
 
 	@Override
 	protected void onUpdate()
 	{
 		//Handle Tactile AMT on server side
-		tactileHandler.defaultize();
+		tactileManager.defaultize();
 	}
 
 	@Override
@@ -216,8 +216,8 @@ public class TileEntityHeavyAmmunitionAssembler extends TileEntityMultiblockProd
 
 	@Nullable
 	@Override
-	public TactileHandler getTactileHandler()
+	public TactileManager getTactileHandler()
 	{
-		return tactileHandler;
+		return tactileManager;
 	}
 }

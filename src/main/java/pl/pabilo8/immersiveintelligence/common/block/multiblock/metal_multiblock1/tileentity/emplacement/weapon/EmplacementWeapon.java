@@ -14,11 +14,10 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.IItemHandler;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.ComponentEffectShape;
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.AmmoFactory;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
-import pl.pabilo8.immersiveintelligence.api.utils.upgrade_system.MachineUpgrade;
+import pl.pabilo8.immersiveintelligence.api.utils.upgrade.Upgrade;
 import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleRegistry;
 import pl.pabilo8.immersiveintelligence.client.gui.block.emplacement.GuiEmplacementPageStorage;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
@@ -30,6 +29,7 @@ import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
 import pl.pabilo8.immersiveintelligence.common.util.IIExplosion;
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import javax.annotation.Nonnull;
@@ -60,12 +60,12 @@ public abstract class EmplacementWeapon<A extends EntityAmmoBase<A>>
 	protected AmmoFactory<A> ammoFactory;
 	protected float nextPitch = 0, nextYaw = 0;
 
-	public static MachineUpgrade register(Supplier<EmplacementWeapon<?>> supplier)
+	public static Upgrade register(Supplier<EmplacementWeapon<?>> supplier)
 	{
 		//hacky way, but works
 		EmplacementWeapon<?> w = supplier.get();
 		TileEntityEmplacement.weaponRegistry.put(w.getName(), supplier);
-		return new MachineUpgradeEmplacementWeapon(w);
+		return new UpgradeEmplacementWeapon(w);
 	}
 
 	/**
@@ -365,13 +365,13 @@ public abstract class EmplacementWeapon<A extends EntityAmmoBase<A>>
 	@SideOnly(Side.CLIENT)
 	protected abstract Tuple<ResourceLocation, List<ModelRendererTurbo>> getDebris();
 
-	public static class MachineUpgradeEmplacementWeapon extends MachineUpgrade
+	public static class UpgradeEmplacementWeapon extends Upgrade
 	{
 		private final EmplacementWeapon<?> weapon;
 
-		public MachineUpgradeEmplacementWeapon(EmplacementWeapon<?> weapon)
+		public UpgradeEmplacementWeapon(EmplacementWeapon<?> weapon)
 		{
-			super(weapon.getName(), new ResourceLocation(ImmersiveIntelligence.MODID, "textures/gui/upgrade/"+weapon.getName()+".png"));
+			super(IIReference.RES_II.with(weapon.getName()));
 			this.weapon = weapon;
 		}
 

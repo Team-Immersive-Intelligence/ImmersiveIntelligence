@@ -30,7 +30,6 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoComponent.
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
-import pl.pabilo8.immersiveintelligence.common.compat.jei.gui_handlers.UpgradeGuiHandler;
 import pl.pabilo8.immersiveintelligence.common.compat.jei.gui_handlers.VulcanizerGuiHandler;
 import pl.pabilo8.immersiveintelligence.common.compat.jei.recipe_handlers.*;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.gun.ItemIIAmmoRevolver.RevolverAmmoPart;
@@ -163,7 +162,6 @@ public class JEIHelper implements IModPlugin
 		modRegistry.addAdvancedGuiHandlers(new VulcanizerGuiHandler());
 
 		modRegistry.addRecipes(IIMultiblockRecipe.getRecipes(FillerRecipe.class), "ii.filler");
-		modRegistry.addAdvancedGuiHandlers(new UpgradeGuiHandler());
 
 		if(FMLCommonHandler.instance().getSide()==Side.CLIENT)
 			IIGUI.registerDecoJEICompat(modRegistry);

@@ -8,7 +8,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.RayTraceResult.Type;
-import pl.pabilo8.immersiveintelligence.api.utils.upgrade_system.IUpgradableMachine;
+import pl.pabilo8.immersiveintelligence.api.utils.upgrade.IUpgradableDevice;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
@@ -31,7 +31,7 @@ public class TextOverlayUpgrade extends TextOverlayBase
 		if(mouseOver.typeOfHit!=Type.BLOCK)
 			return false;
 
-		return te instanceof IUpgradableMachine&&
+		return te instanceof IUpgradableDevice&&
 				IIItemUtils.isWrench(player.getHeldItem(EnumHand.MAIN_HAND));
 	}
 
@@ -41,13 +41,13 @@ public class TextOverlayUpgrade extends TextOverlayBase
 	public String[] getText(EntityPlayer player, RayTraceResult mouseOver, @Nullable TileEntity te, @Nullable Entity entityHit)
 	{
 		assert te!=null;
-		IUpgradableMachine teU = (IUpgradableMachine)te;
+		IUpgradableDevice teU = (IUpgradableDevice)te;
 
-		teU = teU.getUpgradeMaster();
-		if(teU!=null&&teU.getCurrentlyInstalled()!=null)
+		teU = teU.master();
+		if(teU!=null&&teU.getCurrentUpgrade()!=null)
 			return new String[]{
-					I18n.format(IIReference.INFO_KEY+"machineupgrade.name", I18n.format("machineupgrade.immersiveintelligence."+teU.getCurrentlyInstalled().getName())),
-					I18n.format(IIReference.INFO_KEY+"machineupgrade.progress", teU.getInstallProgress(), teU.getCurrentlyInstalled().getProgressRequired())
+					teU.getCurrentUpgrade().getLocalizedName(),
+					I18n.format(IIReference.INFO_KEY+"machineupgrade.progress", teU.getUpgradeInstallProgress(false), teU.getCurrentUpgrade().getProgressRequired())
 			};
 		return null;
 	}

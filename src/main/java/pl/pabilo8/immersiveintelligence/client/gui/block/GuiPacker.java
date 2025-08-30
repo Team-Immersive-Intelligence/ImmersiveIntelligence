@@ -71,9 +71,9 @@ public class GuiPacker extends GuiIEContainerBase
 		this.container = ((ContainerPacker)inventorySlots);
 		this.container.ghostUpdateFunction = this::saveBasicData;
 
-		if(tile.hasUpgrade(IIContent.UPGRADE_PACKER_FLUID))
+		if(tile.isUpgradeInstalled(IIContent.UPGRADE_PACKER_FLUID))
 			sideDisplay = new SideFluidDisplay(this);
-		else if(tile.hasUpgrade(IIContent.UPGRADE_PACKER_ENERGY))
+		else if(tile.isUpgradeInstalled(IIContent.UPGRADE_PACKER_ENERGY))
 			sideDisplay = new SideEnergyDisplay(this);
 		else
 			sideDisplay = new SideItemDisplay(this);

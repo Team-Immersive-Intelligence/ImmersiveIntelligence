@@ -1,7 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common.gui;
 
 import blusunrize.immersiveengineering.api.IEApi;
-import blusunrize.immersiveengineering.common.gui.ContainerIEBase;
 import blusunrize.immersiveengineering.common.gui.IESlot;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -36,17 +35,17 @@ public class ContainerPacker extends ContainerIIBase<TileEntityPacker>
 		slots = new Slot[tile.getInventory().size()];
 		assert this.inv!=null;
 
-		if(tile.hasUpgrade(IIContent.UPGRADE_PACKER_FLUID))
+		if(tile.isUpgradeInstalled(IIContent.UPGRADE_PACKER_FLUID))
 		{
-			this. slotsfluid[0] = addSlotToContainer(new IESlot.FluidContainer(this, ghostInv, 1, 309, 35, 0));
-			this. slotsoutput[0] = addSlotToContainer(new IESlot.Output(this, ghostInv, 2, 309, 71));
+			this.slotsfluid[0] = addSlotToContainer(new IESlot.FluidContainer(this, ghostInv, 1, 309, 35, 0));
+			this.slotsoutput[0] = addSlotToContainer(new IESlot.Output(this, ghostInv, 2, 309, 71));
 			this.slotCount = 2;
 		}
-		else if(tile.hasUpgrade(IIContent.UPGRADE_PACKER_ENERGY))
+		else if(tile.isUpgradeInstalled(IIContent.UPGRADE_PACKER_ENERGY))
 		{
 
-			this. slotsfluid[0] = addSlotToContainer(new IESlot.FluidContainer(this, ghostInv, 1, 309, 35, 0));
-			this. slotsoutput[0] = addSlotToContainer(new IESlot.Output(this, ghostInv, 2, 309, 71));
+			this.slotsfluid[0] = addSlotToContainer(new IESlot.FluidContainer(this, ghostInv, 1, 309, 35, 0));
+			this.slotsoutput[0] = addSlotToContainer(new IESlot.Output(this, ghostInv, 2, 309, 71));
 			this.slotCount = 2;
 		}
 		else
@@ -76,7 +75,7 @@ public class ContainerPacker extends ContainerIIBase<TileEntityPacker>
 			this.slotCount = tile.getInventory().size();
 		}
 
-		this.addPlayerInventory(player.inventory, 8, 86);
+		this.addPlayerInventory(player.inventory, 8+64+32-16, 86+32+12);
 
 	}
 

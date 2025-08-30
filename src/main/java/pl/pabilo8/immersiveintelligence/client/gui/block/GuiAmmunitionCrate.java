@@ -24,7 +24,7 @@ public class GuiAmmunitionCrate extends GuiIEContainerBase
 	public GuiAmmunitionCrate(EntityPlayer player, TileEntityAmmunitionCrate tile)
 	{
 		super(new ContainerAmmunitionCrate(player, tile));
-		upgraded = tile.hasUpgrade(IIContent.UPGRADE_MG_LOADER);
+		upgraded = tile.isUpgradeInstalled(IIContent.UPGRADE_MG_LOADER);
 		this.ySize = 222;
 	}
 

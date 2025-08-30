@@ -25,6 +25,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
+import pl.pabilo8.immersiveintelligence.api.data.IIDataHandlingUtils;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeItemStack;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
@@ -32,7 +33,6 @@ import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 import pl.pabilo8.immersiveintelligence.api.utils.MinecartBlockHelper;
 import pl.pabilo8.immersiveintelligence.api.utils.minecart.IMinecartBlockPickable;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Inserter;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -213,7 +213,7 @@ public class TileEntityInserter extends TileEntityInserterBase
 							task.distanceOut = MathHelper.clamp(((DataTypeInteger)packet.get('0')).value, -1, 2);
 
 						if(packet.has('s'))
-							task.stack = IIUtils.ingredientFromData(packet.get('s'));
+							task.stack = IIDataHandlingUtils.ingredientFromData(packet.get('s'));
 
 						//expires (requests - tasks ending after r amount of items)
 						if(packet.has('e'))
@@ -257,7 +257,7 @@ public class TileEntityInserter extends TileEntityInserterBase
 						if(s instanceof DataTypeString)
 							p = packerTask -> packerTask.stack.oreName.equals(s.toString());
 						else if(s instanceof DataTypeItemStack)
-							p = packerTask -> packerTask.stack.equals(IIUtils.ingredientFromData(s));
+							p = packerTask -> packerTask.stack.equals(IIDataHandlingUtils.ingredientFromData(s));
 						else
 							p = packerTask -> true;
 

@@ -33,7 +33,7 @@ public class ContainerArithmeticLogicMachine extends ContainerIIBase<TileEntityA
 		{
 			case 0: //Storage
 			{
-				boolean circuitUpgrade = tile.hasUpgrade(IIContent.UPGRADE_CIRCUIT_RACKS);
+				boolean circuitUpgrade = tile.isUpgradeInstalled(IIContent.UPGRADE_CIRCUIT_RACKS);
 				this.circuitSlots = addSlotArray(6+2, 26-8-2-1+(circuitUpgrade?0: 18), 0,
 						circuitUpgrade?CIRCUITS_UPGRADED: CIRCUITS_BASE, 1, CircuitSlot::new);
 				this.storageSlots = addSlotArray(32+4, 6+4+32-16, CIRCUITS_UPGRADED, STORAGE_SLOTS, 6, CircuitSlot::new);

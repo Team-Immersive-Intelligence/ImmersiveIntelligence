@@ -18,6 +18,7 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.oredict.OreDictionary;
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.IIAmmoUtils;
+import pl.pabilo8.immersiveintelligence.api.utils.upgrade.UpgradeUtils;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleRegistry;
 import pl.pabilo8.immersiveintelligence.client.gui.block.emplacement.GuiEmplacementPageStorage;
@@ -28,7 +29,6 @@ import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.EmplacementWeapons.Autocannon;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityEmplacementWeapon.EmplacementHitboxEntity;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
@@ -600,7 +600,7 @@ public class EmplacementWeaponAutocannon extends EmplacementWeapon<EntityAmmoPro
 
 		final int req = IIContent.UPGRADE_EMPLACEMENT_WEAPON_AUTOCANNON.getProgressRequired();
 		final int l = EmplacementRenderer.modelAutocannonConstruction.length;
-		double maxClientProgress = IIUtils.getMaxClientProgress(serverProgress, req, l);
+		double maxClientProgress = UpgradeUtils.getMaxClientProgress(serverProgress, IIContent.UPGRADE_EMPLACEMENT_WEAPON_AUTOCANNON);
 
 		double cc = (int)Math.min(clientProgress+((partialTicks*(Tools.wrenchUpgradeProgress/2f))), maxClientProgress);
 		double progress = MathHelper.clamp(cc/req, 0, 1);

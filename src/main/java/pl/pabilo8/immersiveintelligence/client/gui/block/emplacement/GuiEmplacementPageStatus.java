@@ -7,13 +7,13 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
-import pl.pabilo8.immersiveintelligence.api.utils.upgrade_system.MachineUpgrade;
+import pl.pabilo8.immersiveintelligence.api.utils.upgrade.Upgrade;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoSlider;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoSwitch;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.weapon.EmplacementWeapon.MachineUpgradeEmplacementWeapon;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.weapon.EmplacementWeapon;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
@@ -48,7 +48,7 @@ public class GuiEmplacementPageStatus extends GuiEmplacement
 		addLabel(8, 86, DecoTextures.COLOR_H1, I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.emplacement.upgrades"));
 		//
 		GuiReactiveList upgradeList = new GuiReactiveList(this, buttonList.size(), guiLeft+11, guiTop+86+6+1, 124, 54,
-				tile.getUpgrades().stream().filter(upgrade -> !(upgrade instanceof MachineUpgradeEmplacementWeapon)).map(MachineUpgrade::getName).toArray(String[]::new))
+				tile.getAllInstalledUpgrades().stream().filter(upgrade -> !(upgrade instanceof EmplacementWeapon.UpgradeEmplacementWeapon)).map(Upgrade::getName).toArray(String[]::new))
 				//"Heavy Barrel","Ballistic Circuitry","High-Quality Bearings")
 				.setTranslationFunc(s -> I18n.format("machineupgrade.immersiveintelligence."+s))
 				.setFormatting(0.75f, true);
@@ -123,7 +123,8 @@ public class GuiEmplacementPageStatus extends GuiEmplacement
 		GlStateManager.rotate(-15, 1, 0, 0);
 		GlStateManager.scale(-22, -22, -1);
 		GlStateManager.rotate(360*(((mc.world.getTotalWorldTime()%120)+partialTicks)/120f), 0, 1, 0);
-		tile.renderWithUpgrades(tile.getUpgrades().toArray(new MachineUpgrade[0]));
+		//TODO: 29.08.2025 add 3D rotato
+		//tile.renderWithUpgrades(tile.getAllInstalledUpgrades().toArray(new Upgrade[0]));
 		GlStateManager.disableLighting();
 		RenderHelper.disableStandardItemLighting();
 		GlStateManager.popMatrix();

@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 11.10.2023
  */
-public class TactileHandler
+public class TactileManager
 {
 	//--- Animation Cache ---//
 	private static HashMap<ResLoc, IIModelHeader> HEADERS = new HashMap<>();
@@ -64,7 +64,7 @@ public class TactileHandler
 	/**
 	 * Constructor from an AABB file
 	 */
-	public TactileHandler(ResLoc aabbLoc, ITactileListener listener, Supplier<World> worldSupplier, Supplier<BlockPos> posSupplier,
+	public TactileManager(ResLoc aabbLoc, ITactileListener listener, Supplier<World> worldSupplier, Supplier<BlockPos> posSupplier,
 						  Supplier<EnumFacing> facingSupplier, Supplier<Boolean> mirroredSupplier)
 	{
 		this.aabbLoc = aabbLoc;
@@ -85,7 +85,7 @@ public class TactileHandler
 	 *
 	 * @param multiblock multiblock with an AABB file
 	 */
-	public <T extends TileEntityMultiblockPart<T> & ITactileListener> TactileHandler(MultiblockStuctureBase<T> multiblock, T listener)
+	public <T extends TileEntityMultiblockPart<T> & ITactileListener> TactileManager(MultiblockStuctureBase<T> multiblock, T listener)
 	{
 		this.aabbLoc = multiblock.getAABBFileLocation();
 		this.listener = listener;
@@ -498,7 +498,7 @@ public class TactileHandler
 		 * @return tactile handler instance this listener is using
 		 */
 		@Nullable
-		TactileHandler getTactileHandler();
+		TactileManager getTactileHandler();
 
 		/**
 		 * @return true if interaction happened

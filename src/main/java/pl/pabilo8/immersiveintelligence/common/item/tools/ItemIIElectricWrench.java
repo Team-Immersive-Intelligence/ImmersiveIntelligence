@@ -17,6 +17,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockAccess;
@@ -28,8 +29,10 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.IWrench;
-import pl.pabilo8.immersiveintelligence.api.utils.upgrade_system.IUpgradableMachine;
+import pl.pabilo8.immersiveintelligence.api.utils.upgrade.IUpgradableDevice;
+import pl.pabilo8.immersiveintelligence.api.utils.upgrade.UpgradeUtils;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools;
+import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
 import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
@@ -96,22 +99,17 @@ public class ItemIIElectricWrench extends ItemIIBase implements ITool, IIEEnergy
 	@Override
 	public EnumActionResult onItemUseFirst(EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand)
 	{
-		if(world.getTileEntity(pos) instanceof IUpgradableMachine)
+		IUpgradableDevice te = UpgradeUtils.getUpgradeMaster(world, pos);
+		if(te==null||te.getCurrentUpgrade()==null)
+			return EnumActionResult.PASS;
+
+		if(te.addUpgradeInstallProgress(player.isCreative()?999999: Tools.electricWrenchUpgradeProgress))
 		{
-			IUpgradableMachine te = ((IUpgradableMachine)world.getTileEntity(pos)).getUpgradeMaster();
-			if(te!=null&&te.getCurrentlyInstalled()!=null)
-			{
-				te.addUpgradeInstallProgress(player.isCreative()?999999: Tools.electricWrenchUpgradeProgress);
-				if(te.getInstallProgress() >= te.getCurrentlyInstalled().getProgressRequired())
-				{
-					if(te.addUpgrade(te.getCurrentlyInstalled(), false))
-						te.resetInstallProgress();
-				}
-				damageWrench(player.getHeldItem(hand), player);
-				return EnumActionResult.SUCCESS;
-			}
+			world.playSound(null, pos, IISounds.constructionElectricWrench, SoundCategory.PLAYERS, 0.5f, 1);
+			damageWrench(player.getHeldItem(hand), player);
 		}
-		return EnumActionResult.PASS;
+		return EnumActionResult.SUCCESS;
+
 	}
 
 	/**
@@ -179,11 +177,9 @@ public class ItemIIElectricWrench extends ItemIIBase implements ITool, IIEEnergy
 	public float getDestroySpeed(ItemStack stack, IBlockState state)
 	{
 		if(hasEnoughEnergy(stack))
-		{
 			for(String type : this.getToolClasses(stack))
 				if(state.getBlock().isToolEffective(type, state))
 					return 16;
-		}
 		return super.getDestroySpeed(stack, state);
 	}
 
@@ -210,11 +206,9 @@ public class ItemIIElectricWrench extends ItemIIBase implements ITool, IIEEnergy
 	public boolean canHarvestBlock(@Nonnull IBlockState state, ItemStack stack)
 	{
 		if(hasEnoughEnergy(stack))
-		{
 			if(state.getBlock().isToolEffective(IIReference.TOOL_WRENCH, state))
 				return true;
 			else return state.getBlock().isToolEffective(IIReference.TOOL_ADVANCED_WRENCH, state);
-		}
 		return false;
 	}
 

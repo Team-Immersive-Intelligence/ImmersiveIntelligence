@@ -7,7 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.obj.OBJModel;
-import pl.pabilo8.immersiveintelligence.api.utils.upgrade_system.IUpgradableMachine;
+import pl.pabilo8.immersiveintelligence.api.utils.upgrade.IUpgradableDevice;
 import pl.pabilo8.immersiveintelligence.client.util.amt.MachineCachedUpgradeModel.MachineCachedUpgradeModelBuilder;
 import pl.pabilo8.immersiveintelligence.common.util.amt.IIModelHeader;
 
@@ -66,7 +66,7 @@ public final class AMTCachedModelBuilder<T>
 		return withModel(IIAnimationUtils.modelFromRes(res));
 	}
 
-	public <K extends TileEntity & IUpgradableMachine> AMTCachedModelBuilder<K> withModel(MachineCachedUpgradeModelBuilder<K> modelBuilder)
+	public <K extends TileEntity & IUpgradableDevice> AMTCachedModelBuilder<K> withModel(MachineCachedUpgradeModelBuilder<K> modelBuilder)
 	{
 		return (AMTCachedModelBuilder<K>)this;
 	}
