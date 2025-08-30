@@ -19,6 +19,8 @@ import java.util.ArrayList;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @author Avalon (avalon@iiteam.net)
+ * @updated 30.80.2025
  * @since 10.07.2019
  */
 public class GuiPrecisionAssembler extends GuiIEContainerBase
