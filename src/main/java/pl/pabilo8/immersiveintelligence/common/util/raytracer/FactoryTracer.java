@@ -134,9 +134,6 @@ public class FactoryTracer
 				while(iterator.hasNext())
 				{
 					Entity entity = iterator.next();
-					if(!entity.isEntityAlive())
-						iterator.remove();
-
 					if(entity.getEntityBoundingBox().intersects(aabb))
 					{
 						Vec3d hitVec = entity.getPositionVector().subtract(getAABBCenter(this.aabb));
