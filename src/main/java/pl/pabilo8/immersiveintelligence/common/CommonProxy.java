@@ -429,6 +429,11 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		return fl;
 	}
 
+	public static void refreshFluidReferences()
+	{
+		IIContent.refreshFluidReferences();
+	}
+
 	//--- Utils ---//
 
 	public void preInit()

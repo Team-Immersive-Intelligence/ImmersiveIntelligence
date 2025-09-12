@@ -90,6 +90,7 @@ public class ImmersiveIntelligence
 	{
 		if(FMLCommonHandler.instance().getEffectiveSide()==Side.SERVER)
 		{
+			IILogger.info("WorldData loading");
 			RadioNetwork.INSTANCE.clearDevices();
 			World world = FMLCommonHandler.instance().getMinecraftServerInstance().getEntityWorld();
 			if(!world.isRemote)
@@ -99,12 +100,15 @@ public class ImmersiveIntelligence
 				{
 					worldData = new IISaveData(IISaveData.dataName);
 					world.setData(IISaveData.dataName, worldData);
+					IILogger.info("WorldData created");
 				}
+				else
+					IILogger.info("WorldData retrieved");
 				IISaveData.setInstance(world.provider.getDimension(), worldData);
 			}
 		}
 
-		//CommonProxy.refreshFluidReferences();
+		CommonProxy.refreshFluidReferences();
 	}
 
 	@Mod.EventHandler

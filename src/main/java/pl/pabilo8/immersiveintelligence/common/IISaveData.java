@@ -18,9 +18,11 @@ public class IISaveData extends WorldSavedData
 	public static final String dataName = "ImmersiveIntelligence-SaveData";
 	private static IISaveData INSTANCE;
 
-	public IISaveData(String s)
+	public IISaveData(String name)
 	{
-		super(s);
+		super(name);
+		//Required for diplomacy to work
+		readFromNBT(new NBTTagCompound());
 	}
 
 	public static void setDirty(int dimension)

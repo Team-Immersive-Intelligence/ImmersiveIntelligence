@@ -402,4 +402,28 @@ public class IIContent
 	{
 		new ItemStack(IIContent.itemLightEngineerHelmet);
 	}
+
+	//TODO: 12.09.2025 rework fluids
+	public static void refreshFluidReferences()
+	{
+		IIContent.fluidInkBlack = FluidRegistry.getFluid("ink");
+		IIContent.fluidInkCyan = FluidRegistry.getFluid("ink_cyan");
+		IIContent.fluidInkMagenta = FluidRegistry.getFluid("ink_magenta");
+		IIContent.fluidInkYellow = FluidRegistry.getFluid("ink_yellow");
+		IIContent.fluidEtchingAcid = FluidRegistry.getFluid("etching_acid");
+		IIContent.fluidSulfuricAcid = FluidRegistry.getFluid("sulfuric_acid");
+		IIContent.fluidHydrofluoricAcid = FluidRegistry.getFluid("hydrofluoric_acid");
+		IIContent.fluidFormicAcid = FluidRegistry.getFluid("formic_acid");
+		IIContent.fluidNitricAcid = FluidRegistry.getFluid("nitric_acid");
+		IIContent.fluidBrine = FluidRegistry.getFluid("brine");
+		IIContent.gasHydrogen = FluidRegistry.getFluid("hydrogen");
+		IIContent.gasOxygen = FluidRegistry.getFluid("oxygen");
+		IIContent.gasCO2 = FluidRegistry.getFluid("carbon_dioxide");
+		IIContent.gasCO = FluidRegistry.getFluid("carbon_monoxide");
+		IIContent.gasChlorine = FluidRegistry.getFluid("chlorine");
+		IIContent.fluidAmmonia = FluidRegistry.getFluid("ammonia");
+		IIContent.fluidMethanol = FluidRegistry.getFluid("methanol");
+		IIContent.fluidLatex = FluidRegistry.getFluid("latex");
+		IIContent.gasMustardGas = FluidRegistry.getFluid("mustard_gas");
+	}
 }
