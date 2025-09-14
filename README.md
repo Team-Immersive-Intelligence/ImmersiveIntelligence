@@ -11,28 +11,24 @@
 
 ### Description
 
-**Immersive Intelligence
-** is a Minecraft mod, an addon for Immersive Engineering for 1.12.2. There are four main categories of the mod's content:
+**Immersive Intelligence** is a Minecraft mod, an addon for Immersive Engineering for 1.12.2. There are four main categories of the mod's content:
 
-- **Data and Electronics
-  ** – alows the player to transmit signals on the data network via packets of variables, there are many multiblock machines which allow reading, writing, transmitting and receiving data, allowing it to be an upgraded version of redstone
+- **Data and Electronics** – alows the player to transmit signals on the data network via packets of variables,
+  there are many multiblock machines which allow reading, writing, transmitting and receiving data, allowing it to be an upgraded version of redstone
 
-- **Logistics
-  ** – great storage and crafting system based on multiblocks, data transmission, and drones, it will be customizable while staying as immersive as possible. Includes skycrates!
+- **Logistics** – great storage and crafting system based on multiblocks, data transmission,
+  and drones, it will be customizable while staying as immersive as possible. Includes skycrates!
 
-- **Warfare
-  ** – weapons of all sorts – machine guns, submachine guns, autocannons, railguns, chemthrowers, combat drones, howitzers, mines, missiles, and much more
+- **Warfare** – weapons of all sorts – machine guns, submachine guns, autocannons, railguns, chemthrowers, combat drones, howitzers, mines, missiles, and much more
 
-- **Intelligence
-  ** – espionage – infiltration – sabotage – this category contains surveillance devices, such as the Infrared Observer and Tripod Periscope, which allow you to spy on other players and monitor the world
+- **Intelligence** – espionage – infiltration – sabotage – this category contains surveillance devices,
+  such as the Infrared Observer and Tripod Periscope, which allow you to spy on other players and monitor the world
 
 Additionally, the mod adds:
 
-- **Rotary Power
-  ** – early game mechanical power using wheels and motor belts, which can power machines like the sawmill and skycrate station
+- **Rotary Power** – early game mechanical power using wheels and motor belts, which can power machines like the sawmill and skycrate station
 
-- **Motorworks
-  ** – production of various vehicles and their components, including a whole new production chain for rubber processing
+- **Motorworks** – production of various vehicles and their components, including a whole new production chain for rubber processing
 
 The mod also features a new early game rotary power system.
 
