@@ -6,6 +6,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.server.command.CommandTreeBase;
 import net.minecraftforge.server.command.CommandTreeHelp;
+import pl.pabilo8.immersiveintelligence.common.commands.ii.dev.CommandIIDev;
 import pl.pabilo8.immersiveintelligence.common.commands.ii.item.CommandIIGiveBullet;
 import pl.pabilo8.immersiveintelligence.common.commands.ii.item.CommandIIGiveMagazine;
 import pl.pabilo8.immersiveintelligence.common.commands.ii.item.CommandIIGivePunchtape;
@@ -28,7 +29,7 @@ public class CommandII extends CommandTreeBase
 	public CommandII()
 	{
 
-		addSubcommand(new CommandIIDev(this));
+		addSubcommand(new CommandIIDev());
 
 		addSubcommand(new CommandIIHans());
 

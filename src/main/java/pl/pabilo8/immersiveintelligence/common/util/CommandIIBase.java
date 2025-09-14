@@ -17,7 +17,7 @@ import java.util.Optional;
 public abstract class CommandIIBase extends CommandBase
 {
 	protected final String name;
-	private final CommandTreeBase parent;
+	protected final CommandTreeBase parent;
 
 	public CommandIIBase(CommandTreeBase parent, String name)
 	{
@@ -42,7 +42,7 @@ public abstract class CommandIIBase extends CommandBase
 	}
 
 	@Nullable
-	protected abstract String getSyntax();
+	public abstract String getSyntax();
 
 	@Nullable
 	public abstract String getDescription(ICommandSender sender);
