@@ -126,6 +126,8 @@ public class AssaultRifleRenderer extends IIUpgradableItemRendererAMT<ItemIIAssa
 		model.forEach(AMT::defaultize);
 
 		//Make upgrade AMTs visible
+		nixie1.get().setVisible(false);
+		nixie2.get().setVisible(false);
 		showUpgrades(stack, nbt);
 
 		//magazine stack
