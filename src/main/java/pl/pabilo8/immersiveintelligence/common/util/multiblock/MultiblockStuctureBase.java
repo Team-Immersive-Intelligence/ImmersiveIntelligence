@@ -40,12 +40,14 @@ import net.minecraft.world.gen.structure.template.TemplateManager;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
-import pl.pabilo8.immersiveintelligence.client.render.IIMultiblockRenderer;
+import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IIMultiblockRenderer;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.entity.tactile.TactileManager;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyUtils;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.IOwnableProperty;
 import pl.pabilo8.immersiveintelligence.common.util.raytracer.AxisAlignedFacingBB;
 
 import javax.annotation.Nonnull;
@@ -273,9 +275,8 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 		}
 
 		JsonObject poiJSON = file.get("poi").getAsJsonObject();
+		//Multiple Values
 		for(Entry<String, JsonElement> poi : poiJSON.entrySet())
-		{
-			//Multiple Values
 			if(poi.getValue() instanceof JsonArray)
 			{
 				JsonArray arr = poi.getValue().getAsJsonArray();
@@ -290,7 +291,6 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 				POIs.put(poi.getKey(), new int[]{poi.getValue().getAsInt()});
 			else
 				IILogger.warn("Invalid POI value for \""+poi.getKey()+"\" in multiblock "+loc.toString()+", expected array or primitive, got "+poi.getValue().getClass().getSimpleName());
-		}
 
 		//Sorting needed for binary search to work
 		POIs.values().forEach(Arrays::sort);
@@ -305,7 +305,6 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 
 		JsonObject rotationsJSON = file.get("rotations").getAsJsonObject();
 		for(Entry<String, JsonElement> rotation : rotationsJSON.entrySet())
-		{
 			if(rotation.getValue() instanceof JsonPrimitive)
 			{
 				String rot = rotation.getValue().getAsString();
@@ -319,7 +318,6 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 					IILogger.warn("Invalid rotation value \""+rot+"\" for POI \""+rotation.getKey()+"\" in multiblock "+loc.toString());
 				}
 			}
-		}
 	}
 
 	/**
@@ -362,9 +360,7 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 	{
 		side = side.getOpposite();
 		if(side==EnumFacing.UP||side==EnumFacing.DOWN)
-		{
 			side = EnumFacing.fromAngle(player.rotationYaw);
-		}
 
 		boolean mirrored = false;
 		boolean b = structureCheck(world, startPos, side, false);
@@ -406,6 +402,10 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 						tile.offset = useNewOffset()?
 								new int[]{(side==EnumFacing.WEST?-l+1: side==EnumFacing.EAST?l-1: side==EnumFacing.NORTH?ww: -ww), h, (side==EnumFacing.NORTH?-l+1: side==EnumFacing.SOUTH?l-1: side==EnumFacing.EAST?ww: -ww)}:
 								new int[]{(side==EnumFacing.WEST?-l: side==EnumFacing.EAST?l: side==EnumFacing.NORTH?ww: -ww), h, (side==EnumFacing.NORTH?-l: side==EnumFacing.SOUTH?l: side==EnumFacing.EAST?ww: -ww)};
+
+						if(tile instanceof IOwnableProperty)
+							((IOwnableProperty)tile).setOwnerIdentity(DiplomacyUtils.getOwnerIdentityForEntity(player));
+
 						tile.markDirty();
 						addBlockEvent(world, pos2);
 					}
@@ -520,20 +520,24 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 		if(te==null)
 		{
 			te = getMBInstance();
-			te.facing = EnumFacing.NORTH;
+			te.facing = EnumFacing.EAST;
 			tesr = TileEntityRendererDispatcher.instance.getRenderer(te);
 			if(tesr instanceof IIMultiblockRenderer)
+				//noinspection unchecked, rawtypes
 				((IIMultiblockRenderer)tesr).setFastMultiblockState(this, getBlock().getStateFromMeta(getMeta()));
 		}
 
 		if(tesr==null)
 			return;
 
+
 		GlStateManager.pushMatrix();
-		tesr.render(te,
-				Math.floor(size.getX()/2f)-offset.getX()+1,
-				offset.getY(),
-				Math.floor(size.getZ()/2f)-offset.getZ()-(size.getZ()%2==1?0: 1),
+
+		GlStateManager.rotate(EnumFacing.EAST.getHorizontalAngle(), 0, 1, 0);
+		GlStateManager.translate(offset.getX(), offset.getY(), -offset.getZ()-(useNewOffset()?1: 0));
+		GlStateManager.rotate(EnumFacing.EAST.getHorizontalAngle(), 0, -1, 0);
+
+		tesr.render(te, 0, 0, 0,
 				0, 0, 0);
 		GlStateManager.popMatrix();
 	}
@@ -574,12 +578,10 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 			return true;
 
 		if(stack.stack.getItem() instanceof ItemBlockIEBase&&((ItemBlockIEBase)stack.stack.getItem()).getBlock()==IEContent.blockConveyor)
-		{
 			if(world!=null)
 				return ConveyorHandler.isConveyor(world, pos, ItemNBTHelper.getString(stack.stack, "conveyorType"), null);
 			else
 				return state.getBlock()==IEContent.blockConveyor;
-		}
 
 		return stack.matchesItemStackIgnoringSize(new ItemStack(state.getBlock(), 1, state.getBlock().getMetaFromState(state)));
 	}

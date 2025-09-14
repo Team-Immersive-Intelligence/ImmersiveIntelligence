@@ -7,13 +7,13 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
-import pl.pabilo8.immersiveintelligence.api.utils.upgrade.Upgrade;
+import pl.pabilo8.immersiveintelligence.api.upgrade.Upgrade;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoSlider;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoSwitch;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.weapon.EmplacementWeapon;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.weapon.UpgradeEmplacementWeapon;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
@@ -48,7 +48,7 @@ public class GuiEmplacementPageStatus extends GuiEmplacement
 		addLabel(8, 86, DecoTextures.COLOR_H1, I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.emplacement.upgrades"));
 		//
 		GuiReactiveList upgradeList = new GuiReactiveList(this, buttonList.size(), guiLeft+11, guiTop+86+6+1, 124, 54,
-				tile.getAllInstalledUpgrades().stream().filter(upgrade -> !(upgrade instanceof EmplacementWeapon.UpgradeEmplacementWeapon)).map(Upgrade::getName).toArray(String[]::new))
+				tile.getAllInstalledUpgrades().stream().filter(upgrade -> !(upgrade instanceof UpgradeEmplacementWeapon)).map(Upgrade::getName).toArray(String[]::new))
 				//"Heavy Barrel","Ballistic Circuitry","High-Quality Bearings")
 				.setTranslationFunc(s -> I18n.format("machineupgrade.immersiveintelligence."+s))
 				.setFormatting(0.75f, true);

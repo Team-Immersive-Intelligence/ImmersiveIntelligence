@@ -1,31 +1,18 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.weapon;
 
-import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.common.util.Utils;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.Tuple;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.oredict.OreDictionary;
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.IIAmmoUtils;
-import pl.pabilo8.immersiveintelligence.api.utils.upgrade.UpgradeUtils;
-import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleRegistry;
 import pl.pabilo8.immersiveintelligence.client.gui.block.emplacement.GuiEmplacementPageStorage;
-import pl.pabilo8.immersiveintelligence.client.render.multiblock.metal.EmplacementRenderer;
-import pl.pabilo8.immersiveintelligence.client.util.ShaderUtil;
-import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.EmplacementWeapons.CPDS;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
@@ -40,10 +27,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
-public class EmplacementWeaponCPDS extends EmplacementWeapon<EntityAmmoProjectile>
+public class EmplacementWeaponCPDS extends EmplacementWeaponGunBase<EntityAmmoProjectile>
 {
 	int reloadDelay = 0;
 	int bulletsShot = 0;
@@ -93,6 +78,11 @@ public class EmplacementWeaponCPDS extends EmplacementWeapon<EntityAmmoProjectil
 	private int casingsToDrop = 0;
 	private boolean requiresPlatformRefill = false;
 	private ItemStack s2 = ItemStack.EMPTY;
+
+	public EmplacementWeaponCPDS()
+	{
+
+	}
 
 	@Override
 	public String getName()
@@ -252,107 +242,7 @@ public class EmplacementWeaponCPDS extends EmplacementWeapon<EntityAmmoProjectil
 	@Override
 	public boolean canShoot(TileEntityEmplacement te)
 	{
-		return vv!=null&&te.isDoorOpened&&!magazine.isEmpty();
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void render(TileEntityEmplacement te, float partialTicks)
-	{
-		GlStateManager.pushMatrix();
-		float p, pp, y, yy;
-		p = this.nextPitch-this.pitch;
-		y = this.nextYaw-this.yaw;
-		boolean power = te.energyStorage.getEnergyStored() >= getEnergyUpkeepCost();
-		pp = pitch+(power?(Math.signum(p)*MathHelper.clamp(Math.abs(p), 0, 1)*partialTicks*getPitchTurnSpeed()): 0);
-		yy = yaw+(power?(Math.signum(y)*MathHelper.clamp(Math.abs(y), 0, 1)*partialTicks*getYawTurnSpeed()): 0);
-
-		float f = (((te.getWorld().getTotalWorldTime()%4+partialTicks))/4f)*(shootDelay/20f);
-
-		IIClientUtils.bindTexture(EmplacementRenderer.textureCPDS);
-
-		GlStateManager.rotate(yy, 0, 1, 0);
-		for(ModelRendererTurbo mod : EmplacementRenderer.modelCPDS.baseModel)
-			mod.render();
-		for(ModelRendererTurbo mod : EmplacementRenderer.modelCPDS.internalsModel)
-			mod.render();
-		for(ModelRendererTurbo mod : EmplacementRenderer.modelCPDS.hatchModel)
-			mod.render();
-
-		GlStateManager.pushMatrix();
-		GlStateManager.translate(0, 31.5f/16f, -2.5f/16f);
-		float idle = MathHelper.cos((te.getWorld().getTotalWorldTime()+partialTicks)%2000*0.09F)*0.05F+0.05F;
-		GlStateManager.rotate(isAimedAt(nextYaw, nextPitch)?(idle*225-35): this.nextPitch, 1, 0, 0);
-		for(ModelRendererTurbo mod : EmplacementRenderer.modelCPDS.observeModel)
-			mod.render();
-		GlStateManager.popMatrix();
-
-		GlStateManager.translate(0, 19.5/16f, 7.5F/16f);
-		GlStateManager.rotate(pp, 1, 0, 0);
-		for(ModelRendererTurbo mod : EmplacementRenderer.modelCPDS.gunModel)
-			mod.render();
-		GlStateManager.translate(0, -0.5f/16f, -0.5f/16f);
-		GlStateManager.rotate(f*180f, 0, 0, 1);
-		for(ModelRendererTurbo mod : EmplacementRenderer.modelCPDS.barrelsModel)
-			mod.render();
-
-		GlStateManager.popMatrix();
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void renderUpgradeProgress(int clientProgress, int serverProgress, float partialTicks)
-	{
-		GlStateManager.pushMatrix();
-
-		final int req = IIContent.UPGRADE_EMPLACEMENT_WEAPON_CPDS.getProgressRequired();
-		final int l = EmplacementRenderer.modelCPDSConstruction.length;
-		double maxClientProgress = UpgradeUtils.getMaxClientProgress(serverProgress, IIContent.UPGRADE_EMPLACEMENT_WEAPON_CPDS);
-
-		double cc = (int)Math.min(clientProgress+((partialTicks*(Tools.wrenchUpgradeProgress/2f))), maxClientProgress);
-		double progress = MathHelper.clamp(cc/req, 0, 1);
-
-		IIClientUtils.bindTexture(EmplacementRenderer.textureCPDS);
-		for(int i = 0; i < l*progress; i++)
-		{
-			if(1+i > Math.round(l*progress))
-			{
-				GlStateManager.pushMatrix();
-				double scale = 1f-(((progress*l)%1f));
-				GlStateManager.enableBlend();
-				GlStateManager.color(1f, 1f, 1f, (float)Math.min(scale, 1));
-				GlStateManager.translate(0, scale*1.5f, 0);
-
-				EmplacementRenderer.modelCPDSConstruction[i].render(0.0625f);
-				GlStateManager.color(1f, 1f, 1f, 1f);
-				GlStateManager.popMatrix();
-			}
-			else
-				EmplacementRenderer.modelCPDSConstruction[i].render(0.0625f);
-		}
-
-		GlStateManager.pushMatrix();
-		GlStateManager.enableBlend();
-		GlStateManager.disableLighting();
-		GlStateManager.scale(0.98f, 0.98f, 0.98f);
-		GlStateManager.translate(0.0625f/2f, 0f, -0.0265f/2f);
-		//float flicker = (te.getWorld().rand.nextInt(10)==0)?0.75F: (te.getWorld().rand.nextInt(20)==0?0.5F: 1F);
-
-		ShaderUtil.useBlueprint(0.35f, ClientUtils.mc().player.ticksExisted+partialTicks);
-		for(int i = l-1; i >= Math.max((l*progress)-1, 0); i--)
-		{
-			EmplacementRenderer.modelCPDSConstruction[i].render(0.0625f);
-		}
-
-		ShaderUtil.releaseShader();
-		GlStateManager.disableBlend();
-		GlStateManager.enableLighting();
-		GlStateManager.popMatrix();
-
-		GlStateManager.disableBlend();
-
-		GlStateManager.enableLighting();
-		GlStateManager.popMatrix();
+		return vv!=null&&!magazine.isEmpty();
 	}
 
 	@Override
@@ -406,12 +296,12 @@ public class EmplacementWeaponCPDS extends EmplacementWeapon<EntityAmmoProjectil
 	{
 		while(casingsToDrop > 0)
 		{
-			te.doProcessOutput(IIContent.itemAmmoMachinegun.getCasingStack(Math.min(casingsToDrop, 24)));
+			//te.doProcessOutput(IIContent.itemAmmoMachinegun.getCasingStack(Math.min(casingsToDrop, 24)));
 			casingsToDrop = Math.max(casingsToDrop-24, 0);
 		}
 		for(int i = 0; i < inventoryPlatform.size(); i++)
 		{
-			te.doProcessOutput(inventoryPlatform.get(i));
+			//te.doProcessOutput(inventoryPlatform.get(i));
 			inventoryPlatform.set(i, ItemStack.EMPTY);
 		}
 		int moved = 0;
@@ -461,10 +351,4 @@ public class EmplacementWeaponCPDS extends EmplacementWeapon<EntityAmmoProjectil
 		return CPDS.maxHealth;
 	}
 
-	@SideOnly(Side.CLIENT)
-	@Override
-	protected Tuple<ResourceLocation, List<ModelRendererTurbo>> getDebris()
-	{
-		return new Tuple<>(EmplacementRenderer.textureCPDS, Arrays.asList(EmplacementRenderer.modelCPDSConstruction));
-	}
 }

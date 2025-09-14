@@ -4,16 +4,21 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraftforge.client.model.obj.OBJModel;
-import pl.pabilo8.immersiveintelligence.client.render.IIMultiblockRenderer;
-import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer.RegisteredTileRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.ShaderUtil.Shaders;
-import pl.pabilo8.immersiveintelligence.client.util.amt.*;
+import pl.pabilo8.immersiveintelligence.client.util.amt.animation.IIAnimationCompiledMap;
+import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTModel;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMT;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTItem;
+import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IIMultiblockRenderer;
+import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IITileRenderer.RegisteredTileRenderer;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityChemicalPainter;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 29.08.2025
+ * @ii-approved 0.3.1
  * @since 21.06.2019
  */
 @RegisteredTileRenderer(name = "multiblock/chemical_painter", clazz = TileEntityChemicalPainter.class)
@@ -39,9 +44,9 @@ public class ChemicalPainterRenderer extends IIMultiblockRenderer<TileEntityChem
 			animationProduction.apply(productionProgress);
 
 			Float[] colors = new Float[]{te.color.red/255f, te.color.green/255f, te.color.blue/255f};
-			IIAnimationUtils.setModelShader(paintSmall, Shaders.COLOR, colors);
-			IIAnimationUtils.setModelShader(paintBig, Shaders.COLOR, colors);
-			IIAnimationUtils.setModelShader(paintAtomizer, Shaders.COLOR, colors);
+			paintSmall.setShader(Shaders.COLOR, colors);
+			paintBig.setShader(Shaders.COLOR, colors);
+			paintAtomizer.setShader(Shaders.COLOR, colors);
 			/*if(productionProgress > 0.583f)
 				IIAnimationUtils.setModelShader(item, Shaders.COLOR, colors);
 			else if(productionProgress > 0.33)

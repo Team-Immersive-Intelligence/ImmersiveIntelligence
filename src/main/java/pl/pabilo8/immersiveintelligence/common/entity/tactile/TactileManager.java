@@ -16,9 +16,9 @@ import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMTLoader;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Graphics;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
+import pl.pabilo8.immersiveintelligence.common.util.amt.AMTModelHeader;
 import pl.pabilo8.immersiveintelligence.common.util.amt.IIAnimation;
 import pl.pabilo8.immersiveintelligence.common.util.amt.IIAnimationCollisionMap;
-import pl.pabilo8.immersiveintelligence.common.util.amt.IIModelHeader;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
 
 import javax.annotation.Nonnull;
@@ -41,7 +41,7 @@ import java.util.stream.Collectors;
 public class TactileManager
 {
 	//--- Animation Cache ---//
-	private static HashMap<ResLoc, IIModelHeader> HEADERS = new HashMap<>();
+	private static HashMap<ResLoc, AMTModelHeader> HEADERS = new HashMap<>();
 	private static HashMap<ResLoc, IIAnimation> ANIMATIONS = new HashMap<>();
 
 	//Final values
@@ -53,7 +53,7 @@ public class TactileManager
 
 	//Reloadable values
 	private boolean initialized = false;
-	private IIModelHeader header;
+	private AMTModelHeader header;
 	private Vec3d globalOffset = Vec3d.ZERO;
 
 	private final Supplier<World> worldSupplier;
@@ -128,7 +128,7 @@ public class TactileManager
 		BlockPos mainPos = getPos();
 
 		//Load the header json
-		JsonObject jsonObject = AMTLoader.readServerFileToJson(aabbLoc);
+		JsonObject jsonObject = AMTLoader.readServerFileToJson(aabbLoc, "animation");
 		if(jsonObject.size()==0)
 			return false;
 
@@ -229,7 +229,7 @@ public class TactileManager
 		return tempEntities;
 	}
 
-	private Vec3d processOffset(IIModelHeader header, String key, Vec3d offset)
+	private Vec3d processOffset(AMTModelHeader header, String key, Vec3d offset)
 	{
 		//.add(new Vec3d(0, 0, -0.5))
 		Vec3d total = header.getOffset(key)

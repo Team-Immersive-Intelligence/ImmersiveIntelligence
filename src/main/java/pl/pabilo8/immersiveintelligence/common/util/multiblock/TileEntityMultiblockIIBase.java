@@ -1,8 +1,8 @@
 package pl.pabilo8.immersiveintelligence.common.util.multiblock;
 
-import blusunrize.immersiveengineering.api.ApiUtils;
 import blusunrize.immersiveengineering.api.IEProperties;
 import blusunrize.immersiveengineering.api.IEProperties.PropertyBoolInverted;
+import blusunrize.immersiveengineering.common.EventHandler;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IMirrorAble;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IUsesBooleanProperty;
 import blusunrize.immersiveengineering.common.blocks.TileEntityMultiblockPart;
@@ -55,6 +55,8 @@ public abstract class TileEntityMultiblockIIBase<T extends TileEntityMultiblockI
 	protected List<AxisAlignedBB> aabb = null;
 	//Master multiblock cached for faster access
 	private T master = null;
+	//Contrary to what forge's javadoc says, this has to be done; during onLoad, the NBT data is not properly loaded yet
+	private boolean firstTick = true;
 
 	protected TileEntityMultiblockIIBase(MultiblockStuctureBase<T> multiblock)
 	{
@@ -68,15 +70,29 @@ public abstract class TileEntityMultiblockIIBase<T extends TileEntityMultiblockI
 	public final void update()
 	{
 		//Optimize
-		ApiUtils.checkForNeedlessTicking(this);
-		if(isDummy())
+		if(!getWorld().isRemote&&isDummy())
 		{
+			EventHandler.REMOVE_FROM_TICKING.add(this);
 			dummyCleanup();
 			return;
 		}
 
+		//First Tick
+		if(firstTick)
+		{
+			onBeforeFirstTick();
+			firstTick = false;
+		}
 		//Tick
 		onUpdate();
+	}
+
+	/**
+	 * Called before the master tile's first update tick
+	 */
+	public void onBeforeFirstTick()
+	{
+
 	}
 
 	/**

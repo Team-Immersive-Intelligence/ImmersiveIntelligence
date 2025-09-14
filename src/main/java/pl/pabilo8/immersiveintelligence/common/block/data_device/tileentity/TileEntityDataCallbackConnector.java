@@ -117,6 +117,7 @@ public class TileEntityDataCallbackConnector extends TileEntityDataConnector
 		return this.colorIn+";"+this.colorOut;
 	}
 
+	@SideOnly(Side.CLIENT)
 	@Override
 	public String[] getOverlayText(EntityPlayer player, RayTraceResult mop)
 	{

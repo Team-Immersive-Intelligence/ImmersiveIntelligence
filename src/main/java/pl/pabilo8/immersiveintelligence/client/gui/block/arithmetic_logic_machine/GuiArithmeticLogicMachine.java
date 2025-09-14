@@ -98,7 +98,7 @@ public class GuiArithmeticLogicMachine extends DecoGui<TileEntityArithmeticLogic
 		startBackground()
 				.withBox(DecoTextures.GUI_BG_STEEL, 0, 0, 176, 128+8)
 				.withTitleBar(tile)
-				.withBox(DecoTextures.GUI_BG_WOODEN, 0, 128+8, 176, 92)
+				.withBox(DecoTextures.GUI_BG_WOODEN, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_ROUND_WOODEN, 0, 128+8, 176, 92)
 				.withInventorySlots(SlotStyle.VANILLA, container.playerInventory)
 				.withInventoryTitleBar()
 

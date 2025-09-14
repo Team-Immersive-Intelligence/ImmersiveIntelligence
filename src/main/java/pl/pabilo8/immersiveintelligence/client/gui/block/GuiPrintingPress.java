@@ -47,7 +47,7 @@ public class GuiPrintingPress extends DecoGui<TileEntityPrintingPress, Container
 				.withInventorySlots(SlotStyle.IE_INPUT, container.slotBucketIn)
 				.withInventorySlots(SlotStyle.IE_OUTPUT, container.slotBucketOut)
 
-				.withBox(DecoTextures.GUI_BG_WOODEN, 0, 76, 176, 92)
+				.withBox(DecoTextures.GUI_BG_WOODEN, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_ROUND_WOODEN, 0, 76, 176, 92)
 				.withInventorySlots(SlotStyle.VANILLA, container.playerInventory)
 				.withInventoryTitleBar()
 				.build();

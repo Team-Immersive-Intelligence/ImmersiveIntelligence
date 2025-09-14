@@ -12,6 +12,8 @@ import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoComponent;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoLabel;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoTitleLabel;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoAlignment;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoFrame;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
@@ -30,7 +32,7 @@ import java.util.List;
  **/
 public class DecoPanel extends DecoComponent<DecoPanel>
 {
-	private final List<DecoLabel> labels = new ArrayList<>();
+	protected final List<DecoLabel> labels = new ArrayList<>();
 	int vbo = -1;
 	@Nullable
 	private DecoFrame frame = null;
@@ -89,16 +91,17 @@ public class DecoPanel extends DecoComponent<DecoPanel>
 		}
 	}
 
-	public void addLabel(String text, int x, int y)
+	public DecoLabel addLabel(String text, int x, int y)
 	{
-		addLabel(new DecoLabel(IIClientUtils.fontRegular, x, y).withText(text));
+		return addLabel(new DecoLabel(IIClientUtils.fontRegular, x, y).withText(text));
 	}
 
-	public void addLabel(DecoLabel label)
+	public DecoLabel addLabel(DecoLabel label)
 	{
 		labels.add(label);
 		label.x += x+xPadding;
 		label.y += y+yPadding;
+		return label;
 	}
 
 	public void addLabels(DecoLabel... labels)
@@ -122,6 +125,23 @@ public class DecoPanel extends DecoComponent<DecoPanel>
 	public DecoPanel withFrame(@Nullable DecoFrame frame)
 	{
 		this.frame = frame;
+		return this;
+	}
+
+	public DecoPanel withTitleLabel(String title, DecoAlignment alignment)
+	{
+		int stringWidth = Math.min(this.width, IIClientUtils.fontRegular.getStringWidth(title));
+		int stringHeight = IIClientUtils.fontRegular.getWordWrappedHeight(title, stringWidth);
+
+		int titleBarX = alignment.getAlignX(-2, stringWidth, this.width+4);
+		int titleBarY = alignment.getAlignY(-2, stringHeight, this.height+4);
+
+		addLabel(new DecoTitleLabel(IIClientUtils.fontRegular, titleBarX, titleBarY)
+				.withBackgroundLocation(this.background.replace("background/", "label/label_"))
+				.withAlign(alignment)
+				.withSize(stringWidth, stringHeight)
+				.withRawText(title)
+		);
 		return this;
 	}
 

@@ -16,8 +16,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
+import pl.pabilo8.immersiveintelligence.common.util.amt.AMTModelHeader;
 import pl.pabilo8.immersiveintelligence.common.util.amt.IIAnimation;
-import pl.pabilo8.immersiveintelligence.common.util.amt.IIModelHeader;
 
 import javax.annotation.Nonnull;
 import java.io.BufferedReader;
@@ -36,7 +36,7 @@ import java.util.HashMap;
 public class AMTLoader
 {
 	@SideOnly(Side.CLIENT)
-	public static JsonObject readFileToJSON(@Nonnull ResourceLocation res)
+	public static JsonObject readFileToJSON(@Nonnull ResourceLocation res, String description)
 	{
 		try
 		{
@@ -46,7 +46,8 @@ public class AMTLoader
 			return object.getAsJsonObject();
 		} catch(Exception exception)
 		{
-			IILogger.error("[AMT] Couldn't load animation "+
+			IILogger.error("[AMT] Couldn't load "+
+					description+" "+
 					TextFormatting.GOLD+
 					res.toString()
 							.replaceFirst("animations/", "")
@@ -62,7 +63,7 @@ public class AMTLoader
 	 * This first attempts get the template from an external folder.
 	 * If it isn't there then it attempts to take it from the minecraft jar.
 	 */
-	public static JsonObject readServerFileToJson(@Nonnull ResourceLocation res)
+	public static JsonObject readServerFileToJson(@Nonnull ResourceLocation res, String description)
 	{
 		try
 		{
@@ -72,6 +73,7 @@ public class AMTLoader
 		} catch(Exception exception)
 		{
 			IILogger.error("[AMT/Server] Couldn't load "+
+					description+" "+
 					TextFormatting.GOLD+
 					res.toString()
 							.replaceFirst(".json", "")+
@@ -85,18 +87,18 @@ public class AMTLoader
 	public static IIAnimation loadAnimation(@Nonnull ResourceLocation res)
 	{
 		ResourceLocation fullRes = new ResourceLocation(res.getResourceDomain(), "animations/"+res.getResourcePath()+".json");
-		return new IIAnimation(res, readFileToJSON(fullRes));
+		return new IIAnimation(res, readFileToJSON(fullRes, "model header"));
 	}
 
 	public static IIAnimation loadAnimationServer(@Nonnull ResourceLocation res)
 	{
 		ResourceLocation fullRes = new ResourceLocation(res.getResourceDomain(), "animations/"+res.getResourcePath()+".json");
-		return new IIAnimation(res, readServerFileToJson(fullRes));
+		return new IIAnimation(res, readServerFileToJson(fullRes, "animation"));
 	}
 
 
 	@SideOnly(Side.CLIENT)
-	public static IIModelHeader loadHeader(@Nonnull OBJModel model)
+	public static AMTModelHeader loadHeader(@Nonnull OBJModel model)
 	{
 		ResourceLocation res = ObfuscationReflectionHelper.getPrivateValue(OBJModel.class, model, "modelLocation");
 		ResourceLocation fullRes = new ResourceLocation(res.getResourceDomain(),
@@ -106,14 +108,14 @@ public class AMTLoader
 	}
 
 	@SideOnly(Side.CLIENT)
-	public static IIModelHeader loadHeader(@Nonnull ResourceLocation res)
+	public static AMTModelHeader loadHeader(@Nonnull ResourceLocation res)
 	{
-		return new IIModelHeader(readFileToJSON(res));
+		return new AMTModelHeader(readFileToJSON(res, "model header"));
 	}
 
-	public static IIModelHeader loadHeaderServer(@Nonnull ResourceLocation res)
+	public static AMTModelHeader loadHeaderServer(@Nonnull ResourceLocation res)
 	{
-		return new IIModelHeader(readServerFileToJson(res));
+		return new AMTModelHeader(readServerFileToJson(res, "animation"));
 	}
 
 	@SideOnly(Side.CLIENT)

@@ -13,10 +13,10 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
-import pl.pabilo8.immersiveintelligence.client.render.IIEntityRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMTLoader;
-import pl.pabilo8.immersiveintelligence.client.util.amt.AMTModel;
-import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationUtils;
+import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
+import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTModel;
+import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IIEntityRenderer;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.naval_mine.EntityNavalMine;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.naval_mine.EntityNavalMineAnchor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
@@ -88,6 +88,6 @@ public class NavalMineAnchorRenderer extends IIEntityRenderer<EntityNavalMineAnc
 	@Override
 	protected void nullifyModels()
 	{
-		IIAnimationUtils.disposeOf(model);
+		AMTUtils.disposeOf(model);
 	}
 }

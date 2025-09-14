@@ -5,15 +5,16 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.model.obj.OBJModel;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer;
-import pl.pabilo8.immersiveintelligence.client.util.amt.AMT;
-import pl.pabilo8.immersiveintelligence.client.util.amt.AMTModel;
-import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationCompiledMap;
-import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationUtils;
+import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
+import pl.pabilo8.immersiveintelligence.client.util.amt.animation.IIAnimationCompiledMap;
+import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTModel;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMT;
+import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IITileRenderer;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.inserter.TileEntityInserterBase;
-import pl.pabilo8.immersiveintelligence.common.util.amt.IIModelHeader;
+import pl.pabilo8.immersiveintelligence.common.util.amt.AMTModelHeader;
 
 import java.util.function.Function;
 
@@ -42,9 +43,9 @@ public abstract class InserterBaseRenderer<T extends TileEntityInserterBase> ext
 		animationDefaults.apply(0); //apply default animation
 
 		//apply input box direction
-		IIAnimationUtils.setModelRotation(inBox, 0, -te.defaultInputFacing.getHorizontalAngle(), 0);
+		inBox.setRotation(new Vec3d(0, -te.defaultInputFacing.getHorizontalAngle(), 0));
 		//apply output box direction
-		IIAnimationUtils.setModelRotation(outBox, 0, -te.defaultOutputFacing.getHorizontalAngle(), 0);
+		outBox.setRotation(new Vec3d(0, -te.defaultOutputFacing.getHorizontalAngle(), 0));
 
 		//if doing a task
 		if(te.current!=null)
@@ -77,8 +78,7 @@ public abstract class InserterBaseRenderer<T extends TileEntityInserterBase> ext
 			animationFrontFront.apply(0); //apply default animation if no task is performed
 
 		//apply inserter direction | face input
-		IIAnimationUtils.addModelRotation(turntable, 0, -teIn.getHorizontalAngle(), 0);
-
+		turntable.addRotation(new Vec3d(0, -teIn.getHorizontalAngle(), 0));
 		doAdditionalTransforms(te, buf, partialTicks, tes);
 
 		//render
@@ -102,12 +102,12 @@ public abstract class InserterBaseRenderer<T extends TileEntityInserterBase> ext
 		animationFrontFront = IIAnimationCompiledMap.create(this.model, new ResourceLocation(ImmersiveIntelligence.MODID, "inserter/front_front"));
 	}
 
-	protected abstract Function<IIModelHeader, AMT[]> getAdditionalParts();
+	protected abstract Function<AMTModelHeader, AMT[]> getAdditionalParts();
 
 	@Override
 	protected void nullifyModels()
 	{
-		model = IIAnimationUtils.disposeOf(model);
+		model = AMTUtils.disposeOf(model);
 		inBox = outBox = turntable = null;
 	}
 }

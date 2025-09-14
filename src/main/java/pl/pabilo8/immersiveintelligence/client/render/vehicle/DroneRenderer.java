@@ -7,11 +7,18 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
-import pl.pabilo8.immersiveintelligence.client.render.IIEntityRenderer;
-import pl.pabilo8.immersiveintelligence.client.util.amt.*;
-import pl.pabilo8.immersiveintelligence.client.util.amt.AMTBullet.BulletState;
+import pl.pabilo8.immersiveintelligence.client.util.amt.AMTLoader;
+import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
+import pl.pabilo8.immersiveintelligence.client.util.amt.animation.IIAnimationCompiledMap;
+import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTModel;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMT;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTBullet;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTBullet.BulletState;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTLocator;
+import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IIEntityRenderer;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityDrone;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
@@ -44,10 +51,10 @@ public class DroneRenderer extends IIEntityRenderer<EntityDrone>
 		GlStateManager.rotate(((float)MathHelper.clamp(entity.motionY, -2f, 2f))*5f, 1, 0, 0);
 
 
-		animationFloat.apply(IIAnimationUtils.getDebugProgress(8, partialTicks));
-		animationEngine.apply(IIAnimationUtils.getDebugProgress(4, partialTicks));
+		animationFloat.apply(AMTUtils.getDebugProgress(8, partialTicks));
+		animationEngine.apply(AMTUtils.getDebugProgress(4, partialTicks));
 
-		animationSetup.apply(IIAnimationUtils.getAnimationProgress(entity.ticksExisted, 40, false, partialTicks));
+		animationSetup.apply(AMTUtils.getAnimationProgress(entity.ticksExisted, 40, false, partialTicks));
 		if(entity.ticksExisted > 40)
 			faceCamera(entity, rotYaw, partialTicks);
 
@@ -57,12 +64,8 @@ public class DroneRenderer extends IIEntityRenderer<EntityDrone>
 
 	public void faceCamera(EntityDrone entity, float rotYaw, float partialTicks)
 	{
-		IIAnimationUtils.setModelRotation(IRMount, 0,
-				-MathHelper.clampedLerp(entity.prevRotationYawHead, entity.rotationYawHead, partialTicks)+rotYaw,
-				0);
-		IIAnimationUtils.setModelRotation(IRBall,
-				(MathHelper.clampedLerp(entity.prevRotationPitch, entity.rotationPitch, partialTicks)),
-				0, 0);
+		IRMount.setRotation(new Vec3d(0, -MathHelper.clampedLerp(entity.prevRotationYawHead, entity.rotationYawHead, partialTicks)+rotYaw, 0));
+		IRBall.setRotation(new Vec3d(MathHelper.clampedLerp(entity.prevRotationPitch, entity.rotationPitch, partialTicks), 0, 0));
 	}
 
 	@Override
@@ -102,6 +105,6 @@ public class DroneRenderer extends IIEntityRenderer<EntityDrone>
 	@Override
 	protected void nullifyModels()
 	{
-		IIAnimationUtils.disposeOf(model);
+		AMTUtils.disposeOf(model);
 	}
 }

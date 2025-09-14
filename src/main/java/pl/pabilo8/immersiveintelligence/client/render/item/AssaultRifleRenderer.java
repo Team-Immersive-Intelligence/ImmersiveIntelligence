@@ -18,9 +18,15 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.client.model.obj.OBJModel;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.client.fx.IIParticles;
-import pl.pabilo8.immersiveintelligence.client.util.amt.*;
-import pl.pabilo8.immersiveintelligence.client.util.amt.AMTBullet.BulletState;
-import pl.pabilo8.immersiveintelligence.client.util.amt.IIItemRendererAMT.RegisteredItemRenderer;
+import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
+import pl.pabilo8.immersiveintelligence.client.util.amt.MTLTextureRemapper;
+import pl.pabilo8.immersiveintelligence.client.util.amt.animation.IIAnimationCachedMap;
+import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTCachedModelBuilder;
+import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTCrossVariantReference;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.*;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTBullet.BulletState;
+import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IIItemRendererAMT.RegisteredItemRenderer;
+import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IIUpgradableItemRendererAMT;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.AssaultRifle;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIAssaultRifle;
@@ -29,7 +35,7 @@ import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIWeaponUpgrade.
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
-import pl.pabilo8.immersiveintelligence.common.util.amt.IIModelHeader;
+import pl.pabilo8.immersiveintelligence.common.util.amt.AMTModelHeader;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 /**
@@ -116,7 +122,7 @@ public class AssaultRifleRenderer extends IIUpgradableItemRendererAMT<ItemIIAssa
 
 		EasyNBT nbt = EasyNBT.wrapNBT(stack);
 
-		model.getVariant(nbt.getString(IISkinHandler.NBT_ENTRY), stack);
+		model.getVariant(stack, nbt.getString(IISkinHandler.NBT_ENTRY));
 		model.forEach(AMT::defaultize);
 
 		//Make upgrade AMTs visible
@@ -125,7 +131,7 @@ public class AssaultRifleRenderer extends IIUpgradableItemRendererAMT<ItemIIAssa
 		//magazine stack
 		ItemStack magazine = nbt.getItemStack(ItemIIAssaultRifle.MAGAZINE);
 		ItemStack grenade = nbt.getItemStack(ItemIIAssaultRifle.LOADED_GRENADE);
-		IIAnimationUtils.setModelVisibility(this.magazine.get(), !magazine.isEmpty());
+		this.magazine.get().setVisible(!magazine.isEmpty());
 
 		int firing = nbt.getInt(ItemIIAssaultRifle.FIRE_DELAY);
 		int firingDelay = item.getFireDelay(stack, nbt);
@@ -139,12 +145,12 @@ public class AssaultRifleRenderer extends IIUpgradableItemRendererAMT<ItemIIAssa
 		boolean handRender = is1stPerson(transform);
 
 		//hand should be visible only in 1st person mode
-		IIAnimationUtils.setModelVisibility(hand.get(), handRender);
+		hand.get().setVisible(handRender);
 		if(handRender)
 		{
 			int aiming = nbt.getInt(ItemIIAssaultRifle.AIMING);
 			boolean scoped = item.isScoped(stack);
-			float preciseAim = IIAnimationUtils.getAnimationProgress(aiming, item.getAimingTime(stack, nbt),
+			float preciseAim = AMTUtils.getAnimationProgress(aiming, item.getAimingTime(stack, nbt),
 					true, !Minecraft.getMinecraft().player.isSneaking(),
 					1, 3,
 					partialTicks);
@@ -177,17 +183,17 @@ public class AssaultRifleRenderer extends IIUpgradableItemRendererAMT<ItemIIAssa
 		//Don't show muzzle flash GUI
 		if(transform==TransformType.GUI)
 		{
-			IIAnimationUtils.setModelVisibility(muzzleFlash.get(), false);
-			IIAnimationUtils.setModelVisibility(casingFired.get(), false);
+			muzzleFlash.get().setVisible(false);
+			casingFired.get().setVisible(false);
 		}
 
 		//Display the grenade mounted
 		this.grenade.get().withStack(grenade, BulletState.BULLET_USED);
 
-		IIAnimationUtils.setModelVisibility(this.magazine.get(), !magazine.isEmpty());
+		this.magazine.get().setVisible(!magazine.isEmpty());
 		if(reloading > 0)
 		{
-			float v = IIAnimationUtils.getAnimationProgress(
+			float v = AMTUtils.getAnimationProgress(
 					reloading,
 					(float)item.getReloadTime(stack, ItemStack.EMPTY, EasyNBT.wrapNBT(item.getUpgrades(stack))),
 					false,
@@ -256,7 +262,7 @@ public class AssaultRifleRenderer extends IIUpgradableItemRendererAMT<ItemIIAssa
 					value = (int)MathHelper.clamp((1f-((firing-partialTicks)/(float)(firingDelay)))*99, 0, 99);
 			}
 			if(item.hasIIUpgrade(stack, WeaponUpgrade.GYROSCOPIC_STABILIZER))
-				stabilizer.apply(IIAnimationUtils.getDebugProgress(30, partialTicks));
+				stabilizer.apply(AMTUtils.getDebugProgress(30, partialTicks));
 
 			nixie1.get().setText(String.valueOf(value/10));
 			nixie2.get().setText(String.valueOf(value%10));
@@ -268,7 +274,7 @@ public class AssaultRifleRenderer extends IIUpgradableItemRendererAMT<ItemIIAssa
 	}
 
 	@Override
-	public void compileModels(OBJModel model, IIModelHeader header)
+	public void compileModels(OBJModel model, AMTModelHeader header)
 	{
 		this.model = AMTCachedModelBuilder.startItemModel()
 				.withModel(model)

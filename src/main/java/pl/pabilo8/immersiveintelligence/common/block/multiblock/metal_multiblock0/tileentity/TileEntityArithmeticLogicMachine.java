@@ -12,10 +12,11 @@ import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IIDataHandlingUtils;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeExpression;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
+import pl.pabilo8.immersiveintelligence.api.upgrade.IManagedUpgradableDevice;
+import pl.pabilo8.immersiveintelligence.api.upgrade.Upgrade;
+import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeManager;
+import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeUtils.DeviceTier;
 import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
-import pl.pabilo8.immersiveintelligence.api.utils.upgrade.IManagedUpgradableDevice;
-import pl.pabilo8.immersiveintelligence.api.utils.upgrade.Upgrade;
-import pl.pabilo8.immersiveintelligence.api.utils.upgrade.UpgradeManager;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.ArithmeticLogicMachine;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
@@ -235,6 +236,12 @@ public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockIIGene
 	public UpgradeManager<TileEntityArithmeticLogicMachine> getUpgradeManager()
 	{
 		return upgradeManager;
+	}
+
+	@Override
+	public DeviceTier getUpgradableMachineTier()
+	{
+		return DeviceTier.STEEL;
 	}
 
 	@Override

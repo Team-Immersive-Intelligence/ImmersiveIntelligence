@@ -1,89 +1,56 @@
 package pl.pabilo8.immersiveintelligence.client.render.multiblock.metal;
 
-import blusunrize.immersiveengineering.client.ClientUtils;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.model.obj.OBJModel;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.ModelRadioStation;
-import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
-import pl.pabilo8.immersiveintelligence.client.util.ShaderUtil;
+import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTConstructionModel;
+import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTConstructionModel.ConstructionStage;
+import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTModel;
+import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IIMultiblockRenderer;
+import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IITileRenderer.RegisteredTileRenderer;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityRadioStation;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 30.08.2025
+ * @ii-approved 0.3.1
  * @since 21.06.2019
  */
-public class RadioStationRenderer extends TileEntitySpecialRenderer<TileEntityRadioStation> implements IReloadableModelContainer<RadioStationRenderer>
+@RegisteredTileRenderer(name = "multiblock/radio_station", clazz = TileEntityRadioStation.class)
+public class RadioStationRenderer extends IIMultiblockRenderer<TileEntityRadioStation>
 {
-	private static ModelRadioStation model;
-	private static ModelRadioStation modelFlipped;
+	private AMTModel model;
+	private AMTConstructionModel constructionModel;
 
 	@Override
-	public void render(TileEntityRadioStation te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
+	public void drawAnimated(TileEntityRadioStation te, BufferBuilder buf, float partialTicks, Tessellator tes)
 	{
-		String texture = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/radio_station.png";
-		if(te!=null&&!te.isDummy())
-		{
-			ClientUtils.bindTexture(texture);
-			GlStateManager.pushMatrix();
-			GlStateManager.translate((float)x, (float)y, (float)z);
-			GlStateManager.rotate(180F, 0F, 1F, 0F);
-			GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
-
-			if(te.hasWorld())
-			{
-				GlStateManager.translate(0f, 1f, 1f);
-				GlStateManager.rotate(90F, 0F, 1F, 0F);
-			}
-
-			ModelRadioStation modelCurrent = te.mirrored?modelFlipped: model;
-
-			modelCurrent.getBlockRotation(te.facing, te.mirrored);
-
-			if(te.isConstructionFinished())
-			{
-				modelCurrent.render();
-			}
-			else
-			{
-				GlStateManager.pushMatrix();
-				GlStateManager.enableBlend();
-				GlStateManager.disableLighting();
-				GlStateManager.scale(0.98f, 0.98f, 0.98f);
-				GlStateManager.translate(0.0625f/2f, 0f, -0.0265f/2f);
-				//float flicker = (te.getWorld().rand.nextInt(10)==0)?0.75F: (te.getWorld().rand.nextInt(20)==0?0.5F: 1F);
-
-				ShaderUtil.useBlueprint(0.35f, ClientUtils.mc().player.ticksExisted+partialTicks);
-				modelCurrent.render();
-				ShaderUtil.releaseShader();
-				GlStateManager.disableBlend();
-				GlStateManager.enableLighting();
-				GlStateManager.popMatrix();
-
-			}
-
-			GlStateManager.popMatrix();
-
-		}
-		else if(te==null)
-		{
-			ClientUtils.bindTexture(texture);
-			GlStateManager.pushMatrix();
-			GlStateManager.translate((float)x+2.5, (float)y+1, (float)z+1.75);
-			GlStateManager.rotate(180F, 0F, 1F, 0F);
-			GlStateManager.scale(0.25, 0.25, 0.25);
-			GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
-			model.render();
-			GlStateManager.popMatrix();
-
-		}
+		//Reset model to default state + apply rotation and mirroring
+		model.defaultize();
+		applyStandardMirroring(te, true);
+		//Draw construction model or finished one
+		if(constructionModel.renderProgress(te, tes, buf, partialTicks)==ConstructionStage.FINISHED)
+			model.render(tes, buf);
 	}
 
 	@Override
-	public void reloadModels()
+	public void drawSimple(BufferBuilder buf, float partialTicks, Tessellator tes)
 	{
-		model = new ModelRadioStation();
-		modelFlipped = new ModelRadioStation();
-		modelFlipped.flipAllZ();
+		//Reset model to default state and render
+		model.defaultize();
+		model.render(tes, buf);
+	}
+
+	@Override
+	public void compileModels(IBlockState state, OBJModel model)
+	{
+		this.model = new AMTModel(state, model);
+		this.constructionModel = new AMTConstructionModel(
+				new ResourceLocation(ImmersiveIntelligence.MODID, "models/block/multiblock/radio_station/radio_station_construction.obj.ie"),
+				new ResourceLocation(ImmersiveIntelligence.MODID, "radio_station/construction")
+		);
 	}
 }

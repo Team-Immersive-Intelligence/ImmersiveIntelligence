@@ -1,5 +1,7 @@
 package pl.pabilo8.immersiveintelligence.client.fx;
 
+import net.minecraft.client.resources.IResourcePack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -15,15 +17,14 @@ import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleProgram;
 import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleProperties;
 import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleRegistry;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
+import pl.pabilo8.immersiveintelligence.common.util.IIFileUtils;
+import pl.pabilo8.immersiveintelligence.common.util.IIFileUtils.ResourceException;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 
 import javax.vecmath.Vector3f;
 import java.io.File;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.stream.Stream;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -207,22 +208,25 @@ public class IIParticles
 	@SideOnly(Side.CLIENT)
 	public static void init()
 	{
-		URL url = IIParticles.class.getResource("/assets/immersiveintelligence/particles/");
-		if(url!=null)
-			try(Stream<Path> paths = Files.walk(Paths.get(url.toURI())))
-			{
-				paths.filter(Files::isRegularFile)
-						.map(Path::toString)
-						.filter(file -> file.endsWith(".fx.amt"))
-						.forEach(file -> {
-							String name = file.substring(file.indexOf("particles")+10, file.length()-7)
-									.replace(File.separator, "/");
-							ParticleRegistry.registerParticle(name);
-						});
-			} catch(Exception e)
-			{
-				IILogger.error("Failed to load particles from jar!");
-			}
-//		ParticleRegistry.registerParticle(PARTICLE_GUNFIRE);
+		//Load particles from resource packs and jar
+		List<ResourceLocation> locations = new ArrayList<>();
+		try
+		{
+			for(IResourcePack pack : IIFileUtils.getAllResourcePacks())
+				locations.addAll(IIFileUtils.getLocationsInResourcePack(pack, "particles", f -> f.endsWith(".fx.amt")));
+		} catch(ResourceException e)
+		{
+
+			IILogger.error("Failed to load particles from jar! ");
+			IILogger.error(e);
+		}
+
+		//Register listed particles
+		locations.stream().distinct().forEach(location -> {
+			String path = location.getResourcePath();
+			String name = path.substring(path.indexOf("particles")+10, path.length()-7)
+					.replace(File.separator, "/");
+			ParticleRegistry.registerParticle(name);
+		});
 	}
 }

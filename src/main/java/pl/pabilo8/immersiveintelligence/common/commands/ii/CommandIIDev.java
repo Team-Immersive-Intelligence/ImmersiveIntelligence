@@ -59,6 +59,9 @@ import pl.pabilo8.immersiveintelligence.common.network.messages.MessageParticleE
 import pl.pabilo8.immersiveintelligence.common.util.IIExplosion;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ISerializableEnum;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.IOwnableProperty;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultiblockIIBase;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 import pl.pabilo8.immersiveintelligence.common.util.raytracer.BlacklistedRayTracer;
 import pl.pabilo8.immersiveintelligence.common.util.raytracer.MultipleRayTracer;
 import pl.pabilo8.immersiveintelligence.common.world.IIWorldGen;
@@ -461,7 +464,7 @@ public class CommandIIDev extends CommandTreeHelp
 							//Vec3d offset = pos.add(new Vec3d(EnumFacing.getHorizontal(i).getDirectionVec()).scale(parachute?3f:1f).scale(1+(Math.floor(i/4f))));
 							Vec3d offset = pos
 									.addVector(-roff, 0, -roff)
-									.add(new Vec3d(Math.floor(c/(float)row), 0, (c%row))
+									.add(new Vec3d(Math.floor(c/(float)row), 0, c%row)
 									);
 
 							if(world.getBlockState(new BlockPos(offset)).causesSuffocation())
@@ -506,11 +509,32 @@ public class CommandIIDev extends CommandTreeHelp
 					TileEntity te = senderEntity.getEntityWorld().getTileEntity(traceResult.getBlockPos());
 
 					if(te instanceof TileEntityMultiblockPart<?>)
-						senderEntity.sendMessage(
-								new TextComponentString(TextFormatting.GOLD+"ID: "+TextFormatting.RESET+((TileEntityMultiblockPart<?>)te).pos+" | ")
-										.appendSibling(new TextComponentString(TextFormatting.GOLD+"Mirrored: "+TextFormatting.RESET+((TileEntityMultiblockPart<?>)te).mirrored+" | "))
-										.appendSibling(new TextComponentString(TextFormatting.GOLD+"Facing: "+TextFormatting.RESET+((TileEntityMultiblockPart<?>)te).facing.name()))
-						);
+					{
+						TileEntityMultiblockPart<?> mb = (TileEntityMultiblockPart<?>)te;
+						ITextComponent message = new TextComponentString(TextFormatting.GOLD+"ID: "+TextFormatting.RESET+mb.pos+" | ")
+								.appendSibling(new TextComponentString(TextFormatting.GOLD+"Mirrored: "+TextFormatting.RESET+mb.mirrored+" | "))
+								.appendSibling(new TextComponentString(TextFormatting.GOLD+"Facing: "+TextFormatting.RESET+mb.facing.name()));
+						if(mb instanceof TileEntityMultiblockIIBase)
+						{
+							TileEntityMultiblockIIBase<?> iiMb = (TileEntityMultiblockIIBase<?>)mb;
+							message.appendSibling(new TextComponentString(" | POIs: "));
+							boolean first = true;
+							for(MultiblockPOI poi : MultiblockPOI.values())
+								if(iiMb.isPOI(poi))
+								{
+									message.appendSibling(new TextComponentString(((first)?"": ", ")+TextFormatting.GOLD+poi.name()+TextFormatting.RESET));
+									first = false;
+								}
+						}
+						if(mb instanceof IOwnableProperty)
+						{
+							IOwnableProperty property = (IOwnableProperty)mb.master();
+							if(property!=null)
+								message.appendSibling(new TextComponentString(" | Owner: "+TextFormatting.GOLD+property.getOwnerIdentity()+TextFormatting.RESET));
+						}
+
+						senderEntity.sendMessage(message);
+					}
 				}
 				break;
 				case "place_mb":
@@ -535,7 +559,7 @@ public class CommandIIDev extends CommandTreeHelp
 										ItemStack stack = manual[y][z][x];
 										if(stack==null||stack.isEmpty())
 											continue;
-										IBlockState state = mb.getBlockstateFromStack((y*ww*ll)+(z*ww)+x, stack);
+										IBlockState state = mb.getBlockstateFromStack(y*ww*ll+z*ww+x, stack);
 
 										if(state!=null)
 											senderEntity.world.setBlockState(placed.add(x, y, z), state);
@@ -610,7 +634,7 @@ public class CommandIIDev extends CommandTreeHelp
 						return getListOfStringsMatchingLastWord(args, MultiblockHandler.getMultiblocks()
 								.stream()
 								.map(IMultiblock::getUniqueName)
-								.map(s -> s.startsWith("II:")?(TextFormatting.GOLD+s+TextFormatting.RESET): s)
+								.map(s -> s.startsWith("II:")?TextFormatting.GOLD+s+TextFormatting.RESET: s)
 								.collect(Collectors.toList()));
 					case "particle":
 						return getListOfStringsMatchingLastWord(args, ParticleRegistry.getRegisteredNames());
@@ -648,7 +672,7 @@ public class CommandIIDev extends CommandTreeHelp
 
 	public ITextComponent getMessageForCommand(String subcommand, String description, String arguments)
 	{
-		return new TextComponentString("/ii dev ").appendText(subcommand).appendText(arguments.isEmpty()?arguments: (" "+arguments))
+		return new TextComponentString("/ii dev ").appendText(subcommand).appendText(arguments.isEmpty()?arguments: " "+arguments)
 				.setStyle(new Style().setColor(TextFormatting.GOLD).setClickEvent(new ClickEvent(Action.SUGGEST_COMMAND, "/ii dev "+subcommand)))
 				.appendSibling(new TextComponentString(" - ").appendText(description).setStyle(new Style().setColor(TextFormatting.RESET)));
 	}

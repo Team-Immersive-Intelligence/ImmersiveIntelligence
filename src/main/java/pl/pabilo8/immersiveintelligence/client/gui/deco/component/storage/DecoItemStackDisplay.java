@@ -8,7 +8,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoComponent;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoAlignment;
-import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationUtils;
+import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -123,7 +123,7 @@ public class DecoItemStackDisplay extends DecoComponent<DecoItemStackDisplay>
 
 	private ItemStack getCurrentlyDisplayedStack()
 	{
-		float progress = IIAnimationUtils.getDebugProgress(maxTimer, 0);
+		float progress = AMTUtils.getDebugProgress(maxTimer, 0);
 		return this.stackList.get((int)MathHelper.clamp(progress*this.stackList.size(), 0, stackList.size()-1));
 	}
 

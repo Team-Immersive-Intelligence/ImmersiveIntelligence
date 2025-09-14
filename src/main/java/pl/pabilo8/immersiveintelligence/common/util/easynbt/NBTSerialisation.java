@@ -13,18 +13,22 @@ import pl.pabilo8.immersiveintelligence.api.data.IIDataTypeUtils;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyUtils;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.OwnerIdentity;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * This class is used to sync fields in any class using NBT<br>
@@ -47,6 +51,16 @@ public class NBTSerialisation
 	 */
 	private static final HashMap<Class<?>, NBTSerializer<?>> serializers = new HashMap<>();
 
+	/**
+	 * Polymorphic type registry for ITypeNBTSerializable implementations.
+	 */
+	private static final HashMap<String, Supplier<ITypeNBTSerializable>> typeRegistry = new HashMap<>();
+	/**
+	 * Reverse lookup for typeRegistry
+	 */
+	private static final HashMap<Class<? extends ITypeNBTSerializable>, String> typeIdLookup = new HashMap<>();
+	private static final List<Class<? extends ITypeNBTSerializable>> mainTypeRegistry = new ArrayList<>();
+
 	static
 	{
 		//Register serializers for all primitive types
@@ -60,6 +74,7 @@ public class NBTSerialisation
 				c -> new NBTTagString(String.valueOf(c)),
 				nbt -> nbt.getString().isEmpty()?'\0': nbt.getString().charAt(0)
 		);
+		//noinspection unchecked,AccessStaticViaInstance
 		registerSerializer(Enum.class, NBTTagString.class,
 				e -> new NBTTagString(e.name()),
 				(nbt, en) -> en.valueOf(en.getDeclaringClass(), nbt.getString())
@@ -111,6 +126,7 @@ public class NBTSerialisation
 				list ->
 				{
 					NBTTagList nbt = new NBTTagList();
+					//noinspection unchecked
 					for(ItemStack stack : (NonNullList<ItemStack>)list)
 						nbt.appendTag(stack.serializeNBT());
 					return nbt;
@@ -118,16 +134,47 @@ public class NBTSerialisation
 				(nbt, list) ->
 				{
 					for(int i = 0; i < nbt.tagCount(); i++)
+						//noinspection unchecked
 						list.set(i, new ItemStack(nbt.getCompoundTagAt(i)));
 					return list;
 				}
 		);
 
+		registerSerializer(ITypeNBTSerializable.class, NBTTagCompound.class,
+				type -> {
+					if(type==null)
+						return new NBTTagCompound();
+
+					NBTTagCompound nbt = new NBTTagCompound();
+					nbt.setString("type", typeIdLookup.getOrDefault(type.getClass(), "null"));
+					nbt.setTag("value", type.serializeNBT());
+					return nbt;
+				},
+				(nbtTagCompound, type) -> {
+					if(nbtTagCompound.hasNoTags())
+						return null;
+					String typeId = nbtTagCompound.getString("type");
+					if(typeId.equals("null"))
+						return null;
+
+					NBTBase value = nbtTagCompound.getTag("value");
+					if(type==null||!type.getClass().getName().equals(typeId))
+					{
+						Supplier<ITypeNBTSerializable> supplier = typeRegistry.get(typeId);
+						if(supplier==null)
+							return null;
+						type = supplier.get();
+					}
+					//noinspection unchecked
+					type.deserializeNBT(value);
+					return type;
+				});
+
 		registerSerializer(
-				INBTSerializable.class,
-				NBTBase.class,
+				INBTSerializable.class, NBTBase.class,
 				INBTSerializable::serializeNBT,
 				(nbt, field) -> {
+					//noinspection unchecked
 					field.deserializeNBT(nbt);
 					return field;
 				}
@@ -136,8 +183,7 @@ public class NBTSerialisation
 		registerSerializer(IIColor.class, NBTTagInt.class, color -> new NBTTagInt(color.getPackedRGB()), nbt -> IIColor.fromPackedRGB(nbt.getInt()));
 
 		registerSerializer(
-				DataVariable.class,
-				NBTTagCompound.class,
+				DataVariable.class, NBTTagCompound.class,
 				dataVariable -> {
 					NBTTagCompound nbtTagCompound = new NBTTagCompound();
 					nbtTagCompound.setString("name", String.valueOf(dataVariable.getName()));
@@ -150,10 +196,21 @@ public class NBTSerialisation
 					return new DataVariable(name, IIDataTypeUtils.getVarFromNBT(valueTag));
 				}
 		);
+
+		registerSerializer(
+				OwnerIdentity.class, NBTTagString.class,
+				ownerIdentity -> new NBTTagString(ownerIdentity.getDisplayName()),
+				nbt -> DiplomacyUtils.getIdentityByName(nbt.getString())
+		);
+
+		registerSerializer(UUID.class, NBTTagString.class,
+				uuid -> new NBTTagString(uuid.toString()),
+				nbt -> UUID.fromString(nbt.getString())
+		);
 	}
 
-	private static <FIELD, NBT extends NBTBase> void registerSerializer(Class<FIELD> dataClass, Class<NBT> nbtClass,
-																		Function<FIELD, NBT> serialize, Function<NBT, FIELD> deserialize)
+	public static <FIELD, NBT extends NBTBase> void registerSerializer(Class<FIELD> dataClass, Class<NBT> nbtClass,
+																	   Function<FIELD, NBT> serialize, Function<NBT, FIELD> deserialize)
 	{
 		serializerRegistry.put(dataClass, (field, annotation) -> new FieldSerializer<FIELD, NBT>(field, annotation)
 		{
@@ -169,20 +226,22 @@ public class NBTSerialisation
 				return serialize.apply(field);
 			}
 		});
+		IILogger.debug("Registered NBT serializer for "+dataClass.getName());
 	}
 
-	private static <FIELD, NBT extends NBTBase> void registerSerializer(Class<FIELD> dataClass, Class<NBT> nbtClass,
-																		Function<FIELD, NBT> serialize,
-																		BiFunction<NBT, FIELD, FIELD> deserialize)
+	public static <FIELD, NBT extends NBTBase> void registerSerializer(Class<FIELD> dataClass, Class<NBT> nbtClass,
+																	   Function<FIELD, NBT> serialize,
+																	   BiFunction<NBT, FIELD, FIELD> deserialize)
 	{
 		serializerRegistry.put(dataClass, (field, annotation) -> new FieldSerializer<FIELD, NBT>(field, annotation)
 		{
 			@Override
-			protected FIELD fromNBT(Object obj, NBT nbt)
+			protected FIELD fromNBT(@Nonnull Object obj, NBT nbt)
 			{
 				FIELD invoke = null;
 				try
 				{
+					//noinspection unchecked
 					invoke = (FIELD)getter.invoke(obj);
 					return deserialize.apply(nbt, invoke);
 				} catch(Throwable ignored)
@@ -204,6 +263,60 @@ public class NBTSerialisation
 				return serialize.apply(field);
 			}
 		});
+		IILogger.debug("Registered NBT serializer for "+dataClass.getName());
+	}
+
+	/**
+	 * Registers an ITypeNBTSerializable implementation for polymorphic serialization.
+	 *
+	 * @param clazz The class to register. It and its extending classes have a public no-arg constructor.
+	 */
+	public static void registerTypeClass(Class<? extends ITypeNBTSerializable> clazz)
+	{
+		if(mainTypeRegistry.contains(clazz))
+			return;
+
+		mainTypeRegistry.add(clazz);
+		for(Class<?> declaredClass : clazz.getDeclaredClasses())
+		{
+			if(declaredClass.isEnum()||declaredClass.isInterface())
+				continue;
+			try
+			{
+				//Get the constructor
+				@SuppressWarnings("unchecked")
+				Class<ITypeNBTSerializable> type = (Class<ITypeNBTSerializable>)declaredClass;
+				Constructor<ITypeNBTSerializable> constructor = type.getDeclaredConstructor();
+				constructor.setAccessible(true);
+
+				//Turn the public no-arg constructor into a Supplier
+				Supplier<ITypeNBTSerializable> supplier = () -> {
+					try
+					{
+						return constructor.newInstance();
+					} catch(Exception ignored)
+					{
+						return null;
+					}
+				};
+				try
+				{
+					//Ensure it works
+					supplier.get();
+					//Register the type
+					String name = declaredClass.getSimpleName();
+					typeRegistry.put(name, supplier);
+					typeIdLookup.put(type, name);
+					IILogger.debug("Registered NBT polymorphic type \""+name+"\" -> "+clazz.getName());
+				} catch(Throwable e)
+				{
+					throw new RuntimeException("Could not instantiate type \""+declaredClass.getName()+"\"");
+				}
+			} catch(Exception e)
+			{
+				IILogger.error("Could not find no-arg constructor for type \""+clazz.getName()+"\"", e);
+			}
+		}
 	}
 
 	public static <T> void synchroniseFor(T obj, BiConsumer<NBTSerializer, T> action)
@@ -248,6 +361,13 @@ public class NBTSerialisation
 					{
 						IILogger.error("Field "+field.getName()+" in "+clazz.getName()+" is not serializable!");
 						continue;
+					}
+
+					//Register type
+					if(ITypeNBTSerializable.class.isAssignableFrom(field.getType()))
+					{
+						//noinspection unchecked
+						registerTypeClass((Class<? extends ITypeNBTSerializable>)field.getType());
 					}
 
 					//Add to all matching lists

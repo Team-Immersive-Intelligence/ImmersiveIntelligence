@@ -5,12 +5,13 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.model.obj.OBJModel;
-import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer;
-import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer.RegisteredTileRenderer;
-import pl.pabilo8.immersiveintelligence.client.util.amt.AMT;
-import pl.pabilo8.immersiveintelligence.client.util.amt.AMTModel;
-import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationUtils;
+import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
+import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTModel;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMT;
+import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IITileRenderer;
+import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IITileRenderer.RegisteredTileRenderer;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.TileEntityChemicalDispenser;
 
 /**
@@ -26,8 +27,9 @@ public class ChemicalDispenserRenderer extends IITileRenderer<TileEntityChemical
 	public void draw(TileEntityChemicalDispenser te, BufferBuilder buf, float partialTicks, Tessellator tes)
 	{
 		//apply animation
+		Vec3d rotation = new Vec3d(te.pitch, 0, te.yaw);
 		for(AMT model : model)
-			IIAnimationUtils.setModelRotation(model, te.pitch, 0, te.yaw);
+			model.setRotation(rotation);
 
 		//apply rotation for block facing
 		applyStandardRotation(te.facing);
@@ -45,7 +47,7 @@ public class ChemicalDispenserRenderer extends IITileRenderer<TileEntityChemical
 	@Override
 	protected void nullifyModels()
 	{
-		model = IIAnimationUtils.disposeOf(model);
+		model = AMTUtils.disposeOf(model);
 	}
 
 	@Override

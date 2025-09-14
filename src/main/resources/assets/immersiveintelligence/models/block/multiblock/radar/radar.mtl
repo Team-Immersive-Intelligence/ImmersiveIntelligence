@@ -1,0 +1,24 @@
+# Made by Pabilo8 with Blockbench
+
+newmtl common_thingies
+map_Kd immersiveintelligence:blocks/common/common_thingies
+newmtl common_copper_cable
+map_Kd immersiveintelligence:blocks/common/common_copper_cable
+newmtl common_steel
+map_Kd immersiveintelligence:blocks/common/common_steel
+newmtl radar
+map_Kd immersiveintelligence:blocks/multiblock/radar
+newmtl common_table
+map_Kd immersiveintelligence:blocks/common/common_table
+newmtl metal
+map_Kd immersiveintelligence:blocks/small_crate/metal
+newmtl wooden
+map_Kd immersiveintelligence:blocks/small_crate/wooden
+newmtl reinforced_brass
+map_Kd immersiveintelligence:blocks/small_crate/reinforced_brass
+newmtl reinforced
+map_Kd immersiveintelligence:blocks/small_crate/reinforced
+newmtl metal_ammo
+map_Kd immersiveintelligence:blocks/small_crate/metal_ammo
+newmtl typewriter_red
+map_Kd immersiveintelligence:blocks/metal_device/typewriter_red

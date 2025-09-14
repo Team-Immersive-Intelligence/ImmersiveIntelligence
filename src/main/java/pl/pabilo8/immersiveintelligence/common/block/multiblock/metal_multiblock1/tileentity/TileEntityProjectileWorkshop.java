@@ -19,9 +19,10 @@ import pl.pabilo8.immersiveintelligence.api.crafting.BulletComponentStack;
 import pl.pabilo8.immersiveintelligence.api.crafting.ProjectileWorkshopRecipe;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
+import pl.pabilo8.immersiveintelligence.api.upgrade.IManagedUpgradableDevice;
+import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeManager;
+import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeUtils.DeviceTier;
 import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
-import pl.pabilo8.immersiveintelligence.api.utils.upgrade.IManagedUpgradableDevice;
-import pl.pabilo8.immersiveintelligence.api.utils.upgrade.UpgradeManager;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.ProjectileWorkshop;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
@@ -371,5 +372,11 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockProduction
 	public UpgradeManager<TileEntityProjectileWorkshop> getUpgradeManager()
 	{
 		return upgrades;
+	}
+
+	@Override
+	public DeviceTier getUpgradableMachineTier()
+	{
+		return DeviceTier.STEEL;
 	}
 }

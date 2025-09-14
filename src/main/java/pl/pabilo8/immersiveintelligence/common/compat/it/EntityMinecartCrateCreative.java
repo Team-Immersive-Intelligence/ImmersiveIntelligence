@@ -13,6 +13,8 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.utils.minecart.EntityMinecartCrateBase;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.IAdvancedTextOverlay;
 
@@ -112,6 +114,7 @@ public class EntityMinecartCrateCreative extends EntityMinecartCrateBase impleme
 	}
 
 
+	@SideOnly(Side.CLIENT)
 	@Override
 	public String[] getOverlayText(EntityPlayer player, RayTraceResult mop)
 	{

@@ -2,31 +2,18 @@ package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multibloc
 
 import blusunrize.immersiveengineering.api.tool.RailgunHandler;
 import blusunrize.immersiveengineering.api.tool.RailgunHandler.RailgunProjectileProperties;
-import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.common.entities.EntityRailgunShot;
 import blusunrize.immersiveengineering.common.util.IESounds;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.Tuple;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.IIAmmoUtils;
-import pl.pabilo8.immersiveintelligence.api.utils.upgrade.UpgradeUtils;
-import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.block.emplacement.GuiEmplacementPageStorage;
-import pl.pabilo8.immersiveintelligence.client.render.multiblock.metal.EmplacementRenderer;
-import pl.pabilo8.immersiveintelligence.client.util.ShaderUtil;
-import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.EmplacementWeapons.HeavyRailgun;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
@@ -39,10 +26,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
-public class EmplacementWeaponHeavyRailgun extends EmplacementWeapon<EntityAmmoProjectile>
+public class EmplacementWeaponHeavyRailgun extends EmplacementWeaponGunBase<EntityAmmoProjectile>
 {
 	float shootDelay = HeavyRailgun.shotFireTime;
 	int reloadDelay = 0;
@@ -80,6 +65,11 @@ public class EmplacementWeaponHeavyRailgun extends EmplacementWeapon<EntityAmmoP
 	private boolean requiresPlatformRefill = false;
 	private ArrayDeque<ItemStack> magazine = new ArrayDeque<>();
 	private ItemStack s2 = ItemStack.EMPTY;
+
+	public EmplacementWeaponHeavyRailgun()
+	{
+
+	}
 
 	@Override
 	public String getName()
@@ -274,145 +264,7 @@ public class EmplacementWeaponHeavyRailgun extends EmplacementWeapon<EntityAmmoP
 				te.getWorld().playSound(null, te.getPos().getX(), te.getPos().getY(), te.getPos().getZ(), IESounds.chargeSlow, SoundCategory.PLAYERS, 1.5f, 0f);
 			shootDelay--;
 		}
-		return vv!=null&&te.isDoorOpened&&shootDelay==0&&!magazine.isEmpty();
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void render(TileEntityEmplacement te, float partialTicks)
-	{
-		GlStateManager.pushMatrix();
-		float p, pp, y, yy;
-		p = this.nextPitch-this.pitch;
-		y = this.nextYaw-this.yaw;
-		boolean power = te.energyStorage.getEnergyStored() >= getEnergyUpkeepCost();
-		pp = pitch+(power?(Math.signum(p)*MathHelper.clamp(Math.abs(p), 0, 1)*partialTicks*getPitchTurnSpeed()): 0);
-		yy = yaw+(power?(Math.signum(y)*MathHelper.clamp(Math.abs(y), 0, 1)*partialTicks*getYawTurnSpeed()): 0);
-
-		IIClientUtils.bindTexture(EmplacementRenderer.textureHeavyRailgun);
-
-		GlStateManager.rotate(yy, 0, 1, 0);
-		for(ModelRendererTurbo mod : EmplacementRenderer.modelHeavyRailgun.baseModel)
-			mod.render();
-
-		GlStateManager.pushMatrix();
-		GlStateManager.translate(0, 20/16f, 4F/16f);
-		GlStateManager.rotate(pp, 1, 0, 0);
-		for(ModelRendererTurbo mod : EmplacementRenderer.modelHeavyRailgun.gunModel)
-			mod.render();
-		GlStateManager.popMatrix();
-
-		GlStateManager.translate(-0.75f, 0.5f, -0.75f);
-		//125 0.35f, 0f
-		//0, 0.75f, 0f
-		float craneYaw = 0, craneDist = 0.75f, craneDrop = 0f, craneGrab = 0f;
-		if(reloadDelay > 0&&pitch==0)
-		{
-			float craneProgress = Math.min((reloadDelay+partialTicks)/(float)HeavyRailgun.reloadAmmoBoxTime, 1f);
-			if(craneProgress < 0.2)
-				craneDrop = craneProgress/0.2f;
-			else if(craneProgress < 0.25)
-			{
-				craneDrop = 1f;
-				craneGrab = (craneProgress-0.2f)/0.05f;
-			}
-			else if(craneProgress < 0.4)
-			{
-				craneGrab = 1f;
-				craneDrop = 1f-(craneProgress-0.25f)/0.15f;
-				craneDist = 0.75f-(((craneProgress-0.25f)/0.15f)*0.4f);
-			}
-			else if(craneProgress < 0.65)
-			{
-				craneGrab = 1f;
-				craneDrop = 0f;
-				craneDist = 0.35f;
-				craneYaw = 125f*((craneProgress-0.4f)/0.25f);
-			}
-			else if(craneProgress < 0.75f)
-			{
-				craneDrop = ((craneProgress-0.65f)/0.1f)*0.125f;
-				craneDist = 0.35f;
-				craneYaw = 125f;
-			}
-			else if(craneProgress < 0.8f)
-			{
-				craneDrop = 0.125f*(1f-((craneProgress-0.75f)/0.05f));
-				craneGrab = (1f-((craneProgress-0.75f)/0.05f));
-				craneDist = 0.35f;
-				craneYaw = 125f;
-			}
-			else if(craneProgress < 0.925f)
-			{
-				craneYaw = 125f*(1f-((craneProgress-0.8f)/0.125f));
-				craneDist = 0.35f;
-			}
-			else
-			{
-
-			}
-
-		}
-		EmplacementRenderer.renderCrane(craneYaw, craneDist, craneDrop, craneGrab, () -> {
-		});
-
-		GlStateManager.popMatrix();
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void renderUpgradeProgress(int clientProgress, int serverProgress, float partialTicks)
-	{
-		GlStateManager.pushMatrix();
-
-		final int req = IIContent.UPGRADE_EMPLACEMENT_WEAPON_HEAVY_RAILGUN.getProgressRequired();
-		final int l = EmplacementRenderer.modelHeavyRailgunConstruction.length;
-		double maxClientProgress = UpgradeUtils.getMaxClientProgress(serverProgress, IIContent.UPGRADE_EMPLACEMENT_WEAPON_HEAVY_RAILGUN);
-
-		double cc = (int)Math.min(clientProgress+((partialTicks*(Tools.wrenchUpgradeProgress/2f))), maxClientProgress);
-		double progress = MathHelper.clamp(cc/req, 0, 1);
-
-		IIClientUtils.bindTexture(EmplacementRenderer.textureHeavyRailgun);
-		for(int i = 0; i < l*progress; i++)
-		{
-			if(1+i > Math.round(l*progress))
-			{
-				GlStateManager.pushMatrix();
-				double scale = 1f-(((progress*l)%1f));
-				GlStateManager.enableBlend();
-				GlStateManager.color(1f, 1f, 1f, (float)Math.min(scale, 1));
-				GlStateManager.translate(0, scale*1.5f, 0);
-
-				EmplacementRenderer.modelHeavyRailgunConstruction[i].render(0.0625f);
-				GlStateManager.color(1f, 1f, 1f, 1f);
-				GlStateManager.popMatrix();
-			}
-			else
-				EmplacementRenderer.modelHeavyRailgunConstruction[i].render(0.0625f);
-		}
-
-		GlStateManager.pushMatrix();
-		GlStateManager.enableBlend();
-		GlStateManager.disableLighting();
-		GlStateManager.scale(0.98f, 0.98f, 0.98f);
-		GlStateManager.translate(0.0625f/2f, 0f, -0.0265f/2f);
-		//float flicker = (te.getWorld().rand.nextInt(10)==0)?0.75F: (te.getWorld().rand.nextInt(20)==0?0.5F: 1F);
-
-		ShaderUtil.useBlueprint(0.35f, ClientUtils.mc().player.ticksExisted+partialTicks);
-		for(int i = l-1; i >= Math.max((l*progress)-1, 0); i--)
-		{
-			EmplacementRenderer.modelHeavyRailgunConstruction[i].render(0.0625f);
-		}
-
-		ShaderUtil.releaseShader();
-		GlStateManager.disableBlend();
-		GlStateManager.enableLighting();
-		GlStateManager.popMatrix();
-
-		GlStateManager.disableBlend();
-
-		GlStateManager.enableLighting();
-		GlStateManager.popMatrix();
+		return vv!=null&&shootDelay==0&&!magazine.isEmpty();
 	}
 
 	@Override
@@ -476,7 +328,7 @@ public class EmplacementWeaponHeavyRailgun extends EmplacementWeapon<EntityAmmoP
 	{
 		for(int i = 0; i < inventoryPlatform.size(); i++)
 		{
-			te.doProcessOutput(inventoryPlatform.get(i));
+			//te.doProcessOutput(inventoryPlatform.get(i));
 			inventoryPlatform.set(i, ItemStack.EMPTY);
 		}
 		int moved = 0;
@@ -511,13 +363,6 @@ public class EmplacementWeaponHeavyRailgun extends EmplacementWeapon<EntityAmmoP
 	public int getMaxHealth()
 	{
 		return HeavyRailgun.maxHealth;
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	protected Tuple<ResourceLocation, List<ModelRendererTurbo>> getDebris()
-	{
-		return new Tuple<>(EmplacementRenderer.textureHeavyRailgun, Arrays.asList(EmplacementRenderer.modelHeavyRailgunConstruction));
 	}
 
 	@Nullable

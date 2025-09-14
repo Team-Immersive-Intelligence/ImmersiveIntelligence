@@ -13,7 +13,9 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualObject;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualPage;
-import pl.pabilo8.immersiveintelligence.client.util.amt.*;
+import pl.pabilo8.immersiveintelligence.client.util.amt.animation.IIAnimationCompiledMap;
+import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTModel;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.*;
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
@@ -98,7 +100,7 @@ public class IIManualScenario extends IIManualObject
 				amt = new AMTWire(nbt.getString("name"), Vec3d.ZERO,
 						nbt.getVec3d("start"),
 						nbt.getVec3d("end"),
-						nbt.getInt("color"),
+						nbt.getColor("color"),
 						nbt.getFloat("diameter")
 				);
 				break;
@@ -113,9 +115,8 @@ public class IIManualScenario extends IIManualObject
 			break;
 		}
 
-		IIAnimationUtils.setModelTranslation(amt, nbt.getVec3d("pos"));
-		IIAnimationUtils.setModelRotation(amt, nbt.getVec3d("rot"));
-
+		amt.setPosition(nbt.getVec3d("pos"));
+		amt.setRotation(nbt.getVec3d("rot"));
 		return amt;
 	}
 

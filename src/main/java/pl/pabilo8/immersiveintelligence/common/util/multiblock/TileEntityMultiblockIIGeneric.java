@@ -27,6 +27,9 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IIDataHandlingUtils;
 import pl.pabilo8.immersiveintelligence.api.data.device.IDataDevice;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyUtils;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.IOwnableProperty;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IIIInventory;
@@ -34,6 +37,7 @@ import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPO
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.UUID;
 
 /**
  * A standard II "medium-high tier" multiblock.<br>
@@ -54,8 +58,9 @@ public abstract class TileEntityMultiblockIIGeneric<T extends TileEntityMultiblo
 	public FluxStorageAdvanced energyStorage;
 	@SyncNBT(name = "redstone_control")
 	protected boolean redstoneControlInverted = false;
+	@SyncNBT(nullable = true)
+	protected UUID uuid = null;
 	private IEForgeEnergyWrapper wrapper = new IEForgeEnergyWrapper(this, null);
-
 
 	//--- Constructor, Initialization ---//
 
@@ -72,6 +77,30 @@ public abstract class TileEntityMultiblockIIGeneric<T extends TileEntityMultiblo
 		inventory = null;
 		energyStorage = null;
 		wrapper = null;
+		uuid = null;
+	}
+
+	@Override
+	public void onBeforeFirstTick()
+	{
+		super.onBeforeFirstTick();
+		if(!world.isRemote&&this instanceof IOwnableProperty)
+			DiplomacyUtils.validateProperty(((IOwnableProperty)this));
+	}
+
+	@Override
+	public void invalidate()
+	{
+		super.invalidate();
+		if(!world.isRemote&&this instanceof IOwnableProperty&&!isDummy())
+			DiplomacyUtils.invalidateProperty(((IOwnableProperty)this));
+	}
+
+	public UUID getUUID()
+	{
+		if(isDummy())
+			return master().getUUID();
+		return this.uuid==null?this.uuid = IIUtils.getBlockPosUUID(getPos()): this.uuid;
 	}
 
 	//--- Redstone ---//

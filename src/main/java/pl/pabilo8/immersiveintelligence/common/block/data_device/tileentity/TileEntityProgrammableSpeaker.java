@@ -323,6 +323,7 @@ public class TileEntityProgrammableSpeaker extends TileEntityImmersiveConnectabl
 		return true;
 	}
 
+	@SideOnly(Side.CLIENT)
 	@Override
 	public String[] getOverlayText(EntityPlayer player, RayTraceResult mop)
 	{

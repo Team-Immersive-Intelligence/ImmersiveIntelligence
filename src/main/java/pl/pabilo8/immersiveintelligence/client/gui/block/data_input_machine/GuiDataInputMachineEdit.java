@@ -61,7 +61,7 @@ public class GuiDataInputMachineEdit extends DecoGui<TileEntityDataInputMachine,
 				.withBox(DecoTextures.GUI_BG_STEEL, 0, 0, 176+64, 128+8)
 				.withTitleBar(tile)
 				.withBox(DecoTextures.GUI_BG_STEEL, 32, 128+8, 176+32, 32)
-				.withBox(DecoTextures.GUI_BG_WOODEN, 32, 128+8+32, 176, 92)
+				.withBox(DecoTextures.GUI_BG_WOODEN, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_ROUND_WOODEN, 32, 128+8+32, 176, 92)
 				.withInventoryTitleBar()
 
 				.withNextLayer()

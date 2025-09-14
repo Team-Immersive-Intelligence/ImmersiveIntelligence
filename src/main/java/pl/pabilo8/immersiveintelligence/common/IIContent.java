@@ -12,11 +12,12 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoCore;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoPropellant;
-import pl.pabilo8.immersiveintelligence.api.utils.upgrade.Upgrade;
+import pl.pabilo8.immersiveintelligence.api.upgrade.Upgrade;
 import pl.pabilo8.immersiveintelligence.common.ammo.components.*;
 import pl.pabilo8.immersiveintelligence.common.ammo.components.explosives.AmmoComponentHMX;
 import pl.pabilo8.immersiveintelligence.common.ammo.components.explosives.AmmoComponentRDX;
@@ -367,35 +368,33 @@ public class IIContent
 	public static final Upgrade UPGRADE_MEMORY = new Upgrade("memory");
 	public static final Upgrade UPGRADE_CIRCUIT_RACKS = new Upgrade("circuit_racks");
 
-	public static final Upgrade UPGRADE_EMPLACEMENT_WEAPON_MACHINEGUN = EmplacementWeapon.register(EmplacementWeaponMachinegun::new);
-	public static final Upgrade UPGRADE_EMPLACEMENT_WEAPON_IROBSERVER = EmplacementWeapon.register(EmplacementWeaponInfraredObserver::new);
-	public static final Upgrade UPGRADE_EMPLACEMENT_WEAPON_AUTOCANNON = EmplacementWeapon.register(EmplacementWeaponAutocannon::new);
-	public static final Upgrade UPGRADE_EMPLACEMENT_WEAPON_HEAVY_CHEMTHROWER = EmplacementWeapon.register(EmplacementWeaponHeavyChemthrower::new);
-	public static final Upgrade UPGRADE_EMPLACEMENT_WEAPON_HEAVY_RAILGUN = EmplacementWeapon.register(EmplacementWeaponHeavyRailgun::new);
-	//public static final MachineUpgrade UPGRADE_EMPLACEMENT_SEARCHLIGHT = EmplacementWeapon.register(EmplacementWeaponSearchlight::new);
-	//public static final MachineUpgrade UPGRADE_EMPLACEMENT_SPOTLIGHT_TOWER = EmplacementWeapon.register(EmplacementWeaponSpotlightTower::new);
-	public static final Upgrade UPGRADE_EMPLACEMENT_WEAPON_TESLA = EmplacementWeapon.register(EmplacementWeaponTeslaCoil::new);
-	public static final Upgrade UPGRADE_EMPLACEMENT_WEAPON_CPDS = EmplacementWeapon.register(EmplacementWeaponCPDS::new);
-	//public static final MachineUpgrade UPGRADE_EMPLACEMENT_WEAPON_MORTAR = EmplacementWeapon.register(EmplacementWeaponMortar::new);
-	//public static final MachineUpgrade UPGRADE_EMPLACEMENT_WEAPON_LIGHT_HOWITZER = EmplacementWeapon.register(EmplacementWeaponLightHowitzer::new);
-	//public static final MachineUpgrade UPGRADE_EMPLACEMENT_WEAPON_LIGHT_ROCKET_LAUNCHER = EmplacementWeapon.register(EmplacementWeaponLightRocketLauncher::new);
-	//public static final MachineUpgrade UPGRADE_EMPLACEMENT_WEAPON_GUIDED_MISSILE_LAUNCHER = EmplacementWeapon.register(EmplacementWeaponGuidedMissileLauncher::new);
+	public static final Upgrade UPGRADE_EMPLACEMENT_WEAPON_MACHINEGUN = new UpgradeEmplacementWeapon<>("machinegun", EmplacementWeaponMachinegun::new);
+	public static final Upgrade UPGRADE_EMPLACEMENT_WEAPON_IROBSERVER = new UpgradeEmplacementWeapon<>("infrared_observer", EmplacementWeaponInfraredObserver::new);
+	public static final Upgrade UPGRADE_EMPLACEMENT_WEAPON_AUTOCANNON = new UpgradeEmplacementWeapon<>("autocannon", EmplacementWeaponAutocannon::new);
+	public static final Upgrade UPGRADE_EMPLACEMENT_WEAPON_HEAVY_CHEMTHROWER = new UpgradeEmplacementWeapon<>("chemthrower", EmplacementWeaponHeavyChemthrower::new);
+	public static final Upgrade UPGRADE_EMPLACEMENT_WEAPON_HEAVY_RAILGUN = new UpgradeEmplacementWeapon<>("heavy_railgun", EmplacementWeaponHeavyRailgun::new);
+	public static final Upgrade UPGRADE_EMPLACEMENT_SEARCHLIGHT = new UpgradeEmplacementWeapon<>("searchlight", EmplacementWeaponMachinegun::new);
+	public static final Upgrade UPGRADE_EMPLACEMENT_SPOTLIGHT_TOWER = new UpgradeEmplacementWeapon<>("spotlight_tower", EmplacementWeaponMachinegun::new);
+	public static final Upgrade UPGRADE_EMPLACEMENT_WEAPON_TESLA = new UpgradeEmplacementWeapon<>("tesla", EmplacementWeaponTeslaCoil::new);
+	public static final Upgrade UPGRADE_EMPLACEMENT_WEAPON_CPDS = new UpgradeEmplacementWeapon<>("cpds", EmplacementWeaponCPDS::new);
+	public static final Upgrade UPGRADE_EMPLACEMENT_WEAPON_MORTAR = new UpgradeEmplacementWeapon<>("mortar", EmplacementWeaponMachinegun::new);
+	public static final Upgrade UPGRADE_EMPLACEMENT_WEAPON_LIGHT_HOWITZER = new UpgradeEmplacementWeapon<>("light_howitzer", EmplacementWeaponMachinegun::new);
+	public static final Upgrade UPGRADE_EMPLACEMENT_WEAPON_MLRS = new UpgradeEmplacementWeapon<>("mlrs", EmplacementWeaponMachinegun::new);
+	public static final Upgrade UPGRADE_EMPLACEMENT_WEAPON_GUIDED_MISSILE_LAUNCHER = new UpgradeEmplacementWeapon<>("guided_missile_launcher", EmplacementWeaponMachinegun::new);
 
-	public static final Upgrade UPGRADE_REINFORCEMENT = new Upgrade("reinforcement");
 	public static final Upgrade UPGRADE_SOVEREIGNTY = new Upgrade("sovereignty");
 
 	public static final Upgrade UPGRADE_EMPLACEMENT_FALLBACK_GRENADES = new Upgrade("emplacement/grenades");
 	public static final Upgrade UPGRADE_EMPLACEMENT_STURDY_BEARINGS = new Upgrade("emplacement/bearings");
-	public static final Upgrade UPGRADE_EMPLACEMENT_ENHANCED_TARGETTING_SYSTEMS = new Upgrade("emplacement/targetting");
 
 	public static final Upgrade UPGRADE_EMPLACEMENT_MACHINEGUN_HEAVYBARREL = new Upgrade("emplacement/mg_heavy_barrel");
 	public static final Upgrade UPGRADE_EMPLACEMENT_MACHINEGUN_WATERCOOLED = new Upgrade("emplacement/mg_watercooled");
 	public static final Upgrade UPGRADE_EMPLACEMENT_MACHINEGUN_BUNKER = new Upgrade("emplacement/mg_bunker");
 
-	public static final Upgrade UPGRADE_FLAGPOLE_TASER_LOCKS = new Upgrade("flagpole/taser_locks");
 	public static final Upgrade UPGRADE_FLAGPOLE_CAPTURE_DEFIANCE = new Upgrade("flagpole/capture_defiance");
+	public static final Upgrade UPGRADE_FLAGPOLE_TASER_LOCKS = new Upgrade("flagpole/taser_locks");
+	public static final Upgrade UPGRADE_FLAGPOLE_DISTRESS_SIGNAL = new Upgrade("flagpole/distress_signal");
 	public static final Upgrade UPGRADE_FLAGPOLE_UNIT_POST = new Upgrade("flagpole/unit_post");
-	public static final Upgrade UPGRADE_FLAGPOLE_COMMAND_POST = new Upgrade("flagpole/command_post");
 
 	//dummy method, called so that the static fields above get loaded
 	static void init()

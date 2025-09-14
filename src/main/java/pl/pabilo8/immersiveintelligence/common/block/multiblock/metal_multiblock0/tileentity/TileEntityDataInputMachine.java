@@ -8,9 +8,10 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
 import pl.pabilo8.immersiveintelligence.api.crafting.DataProgrammingRecipe;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
+import pl.pabilo8.immersiveintelligence.api.upgrade.IManagedUpgradableDevice;
+import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeManager;
+import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeUtils.DeviceTier;
 import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
-import pl.pabilo8.immersiveintelligence.api.utils.upgrade.IManagedUpgradableDevice;
-import pl.pabilo8.immersiveintelligence.api.utils.upgrade.UpgradeManager;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.DataInputMachine;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
@@ -225,5 +226,11 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockProductionSi
 	public UpgradeManager<TileEntityDataInputMachine> getUpgradeManager()
 	{
 		return upgradeManager;
+	}
+
+	@Override
+	public DeviceTier getUpgradableMachineTier()
+	{
+		return DeviceTier.STEEL;
 	}
 }

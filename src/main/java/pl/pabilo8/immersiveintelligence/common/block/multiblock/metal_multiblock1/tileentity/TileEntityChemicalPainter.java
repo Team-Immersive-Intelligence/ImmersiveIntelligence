@@ -323,6 +323,7 @@ public class TileEntityChemicalPainter extends TileEntityMultiblockProductionSin
 		return false;
 	}
 
+	@SideOnly(Side.CLIENT)
 	@Override
 	public String[] getOverlayText(EntityPlayer player, RayTraceResult mop)
 	{

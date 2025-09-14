@@ -51,8 +51,11 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.nio.ByteBuffer;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 /**
@@ -395,6 +398,14 @@ public class IIUtils
 			Utils.dropStackAtPos(entity.world, entity.getPosition(), stack);
 	}
 
+	@Nullable
+	public static <T> T requireMaster(@Nullable T object, @Nonnull Function<T, T> master)
+	{
+		if(object==null)
+			return null;
+		return master.apply(object);
+	}
+
 	/**
 	 * <i>Trust me, I'm an Engineer!</i><br>
 	 * Returns a value of an annotation for an enum extending {@link ISerializableEnum}<br>
@@ -457,4 +468,13 @@ public class IIUtils
 		player.sendStatusMessage(new TextComponentTranslation(messageFormat, args), true);
 	}
 
+	public static UUID getBlockPosUUID(BlockPos pos)
+	{
+		ByteBuffer buffer = ByteBuffer.allocate(16);
+		buffer.putInt(1234); //Tile Entity
+		buffer.putInt(pos.getX());
+		buffer.putInt(pos.getY());
+		buffer.putInt(pos.getZ());
+		return UUID.nameUUIDFromBytes(buffer.array());
+	}
 }

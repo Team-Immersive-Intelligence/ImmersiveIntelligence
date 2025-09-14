@@ -31,10 +31,10 @@ public class GuiSkycartStation extends DecoGui<TileEntitySkyCartStation, Contain
 	public void onInit()
 	{
 		startBackground()
-				.withBox(DecoTextures.GUI_BG_WOODEN, 0, 0, 176, 76)
+				.withBox(DecoTextures.GUI_BG_WOODEN, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_ROUND_WOODEN, 0, 0, 176, 76)
 				.withStandaloneFrame(24, 12, 128, 64-8, DecoTextures.GUI_FRAME_CORNERS_BRASS, 4, true)
 				.withTitleBar(tile)
-				.withBox(DecoTextures.GUI_BG_WOODEN, 0, 76, 176, 92)
+				.withBox(DecoTextures.GUI_BG_WOODEN, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_ROUND_WOODEN, 0, 76, 176, 92)
 				.withInventorySlots(SlotStyle.VANILLA, container.inventorySlots)
 				.withInventoryTitleBar()
 				.build();

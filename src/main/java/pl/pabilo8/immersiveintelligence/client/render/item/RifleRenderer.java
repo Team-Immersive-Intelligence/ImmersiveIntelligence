@@ -20,9 +20,19 @@ import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
 import pl.pabilo8.immersiveintelligence.client.fx.IIParticles;
-import pl.pabilo8.immersiveintelligence.client.util.amt.*;
-import pl.pabilo8.immersiveintelligence.client.util.amt.AMTBullet.BulletState;
-import pl.pabilo8.immersiveintelligence.client.util.amt.IIItemRendererAMT.RegisteredItemRenderer;
+import pl.pabilo8.immersiveintelligence.client.util.amt.AMTLoader;
+import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
+import pl.pabilo8.immersiveintelligence.client.util.amt.MTLTextureRemapper;
+import pl.pabilo8.immersiveintelligence.client.util.amt.animation.IIAnimationCachedMap;
+import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTCachedModelBuilder;
+import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTCrossVariantReference;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMT;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTBullet;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTBullet.BulletState;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTHand;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTParticle;
+import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IIItemRendererAMT.RegisteredItemRenderer;
+import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IIUpgradableItemRendererAMT;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.AssaultRifle;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIGunBase;
@@ -32,7 +42,7 @@ import pl.pabilo8.immersiveintelligence.common.item.weapons.ammohandler.AmmoHand
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
-import pl.pabilo8.immersiveintelligence.common.util.amt.IIModelHeader;
+import pl.pabilo8.immersiveintelligence.common.util.amt.AMTModelHeader;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 /**
@@ -113,7 +123,7 @@ public class RifleRenderer extends IIUpgradableItemRendererAMT<ItemIIRifle> impl
 		AmmoHandler ammoHandler = item.getAmmoHandler(stack);
 
 		//Set model variant
-		model.getVariant(nbt.hasKey("handmade")?"diy": nbt.getString(IISkinHandler.NBT_ENTRY), stack);
+		model.getVariant(stack, nbt.hasKey("handmade")?"diy": nbt.getString(IISkinHandler.NBT_ENTRY));
 		model.forEach(AMT::defaultize);
 
 		int firing = nbt.getInt(ItemIIRifle.FIRE_DELAY);
@@ -130,7 +140,7 @@ public class RifleRenderer extends IIUpgradableItemRendererAMT<ItemIIRifle> impl
 		if(handRender)
 		{
 			int aiming = nbt.getInt(ItemIIRifle.AIMING);
-			float preciseAim = IIAnimationUtils.getAnimationProgress(aiming, item.getAimingTime(stack, nbt),
+			float preciseAim = AMTUtils.getAnimationProgress(aiming, item.getAimingTime(stack, nbt),
 					true, !Minecraft.getMinecraft().player.isSneaking(),
 					1, 3,
 					partialTicks);
@@ -170,7 +180,7 @@ public class RifleRenderer extends IIUpgradableItemRendererAMT<ItemIIRifle> impl
 
 		(semiAuto?fireSemiAutomatic: fireBoltAction).apply(gui?0: (1f-((firing-partialTicks)/(item.getFireDelay(stack, nbt)))));
 
-		float v = IIAnimationUtils.getAnimationProgress(
+		float v = AMTUtils.getAnimationProgress(
 				reloading,
 				(float)item.getReloadTime(stack, ItemStack.EMPTY, EasyNBT.wrapNBT(item.getUpgrades(stack))),
 				reloading > 0,
@@ -202,7 +212,7 @@ public class RifleRenderer extends IIUpgradableItemRendererAMT<ItemIIRifle> impl
 		}
 
 		if(gui)
-			IIAnimationUtils.setModelVisibility(this.casing.get(), false);
+			this.casing.get().setVisible(false);
 
 		if(transform==TransformType.FIRST_PERSON_LEFT_HAND)
 			offhandVisibility.apply(0);
@@ -212,7 +222,7 @@ public class RifleRenderer extends IIUpgradableItemRendererAMT<ItemIIRifle> impl
 	}
 
 	@Override
-	public void compileModels(OBJModel model, IIModelHeader header)
+	public void compileModels(OBJModel model, AMTModelHeader header)
 	{
 		this.handmadeRemapper = new MTLTextureRemapper(model, ResLoc.of(directoryRes, "rifle_handmade").withExtension(ResLoc.EXT_MTL));
 

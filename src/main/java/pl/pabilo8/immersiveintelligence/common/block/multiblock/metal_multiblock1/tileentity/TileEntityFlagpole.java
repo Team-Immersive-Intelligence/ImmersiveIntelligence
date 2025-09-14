@@ -7,19 +7,23 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
-import net.minecraftforge.common.ForgeChunkManager;
-import net.minecraftforge.common.ForgeChunkManager.Ticket;
-import net.minecraftforge.common.ForgeChunkManager.Type;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.utils.upgrade.IManagedUpgradableDevice;
-import pl.pabilo8.immersiveintelligence.api.utils.upgrade.UpgradeManager;
+import pl.pabilo8.immersiveintelligence.api.style.IStyleCustomizable;
+import pl.pabilo8.immersiveintelligence.api.style.StyleCustomization;
+import pl.pabilo8.immersiveintelligence.api.upgrade.IManagedUpgradableDevice;
+import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeManager;
+import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeUtils.DeviceTier;
+import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockFlagpole;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyUtils;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.IOwnableProperty;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.OwnerIdentity;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultiblockIIGeneric;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -27,48 +31,59 @@ import javax.annotation.Nonnull;
  * @ii-approved 0.3.1
  * @since 04.03.2021
  */
-public class TileEntityFlagpole extends TileEntityMultiblockIIGeneric<TileEntityFlagpole> implements IPlayerInteraction, IManagedUpgradableDevice<TileEntityFlagpole>
+public class TileEntityFlagpole extends TileEntityMultiblockIIGeneric<TileEntityFlagpole> implements IPlayerInteraction, IManagedUpgradableDevice<TileEntityFlagpole>,
+		IStyleCustomizable, IOwnableProperty
 {
-	@SyncNBT(events = SyncEvents.TILE_CUSTOM1)
+	@SyncNBT(events = SyncEvents.TILE_CUSTOM1, nullable = true)
 	public ItemStack flag = ItemStack.EMPTY;
 	@SyncNBT(name = "upgrades", events = SyncEvents.TILE_UPGRADES_MODIFIED)
 	public UpgradeManager<TileEntityFlagpole> upgradeManager;
-	private Ticket ticket = null;
+	@SyncNBT(events = {SyncEvents.TILE_UPGRADES_MODIFIED, SyncEvents.TILE_CLIENT_MESSAGE})
+	public StyleCustomization style;
+	//private Ticket ticket = null;
+	@SyncNBT(events = SyncEvents.TILE_OWNERSHIP_MODIFIED)
+	public OwnerIdentity ownerIdentity;
 
 	public TileEntityFlagpole()
 	{
 		super(MultiblockFlagpole.INSTANCE);
 		this.upgradeManager = new UpgradeManager<>(this);
+		this.style = new StyleCustomization(MultiblockFlagpole.STYLE_CONSTRAINTS);
+		this.ownerIdentity = DiplomacyUtils.NEUTRAL;
 	}
 
 	@Override
-	public void validate()
+	protected void dummyCleanup()
 	{
-		super.validate();
-		if(!isDummy())
-		{
-			if(!world.isRemote)
-			{
-				if(ticket!=null)
-					ticket.getChunkList();
-				else
-					ticket = ForgeChunkManager.requestTicket(ImmersiveIntelligence.INSTANCE, this.getWorld(), Type.NORMAL);
-			}
-		}
+		super.dummyCleanup();
+		this.flag = ItemStack.EMPTY;
+		this.upgradeManager = null;
+		this.ownerIdentity = null;
+		this.style = null;
 	}
 
 	@Override
 	protected void onUpdate()
 	{
+		/*if(!world.isRemote&&ownerIdentity!=DiplomacyUtils.NEUTRAL)
+			IILogger.info("Owner Identity for "+uuid+" : "+ownerIdentity);*/
+		/*if(!world.isRemote)
+		{
+			if(ticket!=null)
+				ticket.getChunkList();
+			else
+				ticket = ForgeChunkManager.requestTicket(ImmersiveIntelligence.INSTANCE, this.getWorld(), Type.NORMAL);
+		}
+
 		if(!world.isRemote&&ticket!=null)
-			ForgeChunkManager.forceChunk(ticket, this.world.getChunkFromBlockCoords(getPos()).getPos());
+			ForgeChunkManager.forceChunk(ticket, this.world.getChunkFromBlockCoords(getPos()).getPos());*/
 	}
 
 	@Override
 	protected int[] listAllPOI(MultiblockPOI poi)
 	{
 		if(poi==MultiblockPOI.MISC_FLAGPOLE)
-			return getPOI("post");
+			return getPOI("pole");
 		return new int[0];
 	}
 
@@ -76,8 +91,17 @@ public class TileEntityFlagpole extends TileEntityMultiblockIIGeneric<TileEntity
 	public boolean interact(EnumFacing side, EntityPlayer player, EnumHand hand, ItemStack heldItem, float hitX, float hitY, float hitZ)
 	{
 		TileEntityFlagpole master = master();
-		if(!world.isRemote&&master!=null&&isPOI("post"))
+		if(!world.isRemote&&master!=null&&isPOI("pole"))
 		{
+			if(player.isSneaking())
+			{
+				ArrayList<String> styles = new ArrayList<>(MultiblockFlagpole.STYLE_CONSTRAINTS.getStyles());
+				String nextStyle = styles.get((styles.indexOf(master.style.getStyle())+1)%styles.size());
+				master.style.withStyle(nextStyle);
+				master.updateTileForEvent(SyncEvents.TILE_UPGRADES_MODIFIED);
+				return true;
+			}
+
 			if(master.flag.isEmpty()&&heldItem.getItem()==Items.BANNER)
 			{
 				master.flag = heldItem.copy();
@@ -107,7 +131,7 @@ public class TileEntityFlagpole extends TileEntityMultiblockIIGeneric<TileEntity
 
 		Utils.dropStackAtPos(world, getBlockPosForPos(67), flag.copy());
 		flag = ItemStack.EMPTY;
-		ForgeChunkManager.releaseTicket(ticket);
+		//ForgeChunkManager.releaseTicket(ticket);
 	}
 
 	@Override
@@ -116,10 +140,42 @@ public class TileEntityFlagpole extends TileEntityMultiblockIIGeneric<TileEntity
 		return false;
 	}
 
+	//--- IManagedUpgradableDevice ---//
+
 	@Nonnull
 	@Override
 	public UpgradeManager<TileEntityFlagpole> getUpgradeManager()
 	{
 		return upgradeManager;
+	}
+
+	@Override
+	public DeviceTier getUpgradableMachineTier()
+	{
+		return DeviceTier.STEEL;
+	}
+
+	//--- IOwnableProperty ---//
+
+	@Override
+	public OwnerIdentity getOwnerIdentity()
+	{
+		return ownerIdentity;
+	}
+
+	@Override
+	public void setOwnerIdentity(OwnerIdentity ownerIdentity)
+	{
+		this.ownerIdentity = ownerIdentity;
+		updateTileForEvent(SyncEvents.TILE_OWNERSHIP_MODIFIED);
+		IILogger.info("Owner Identity for "+uuid+" : "+ownerIdentity+" / world is "+(world.isRemote?"remote": "local"));
+	}
+
+	//--- IStyleCustomizable ---//
+
+	@Override
+	public StyleCustomization getStyle()
+	{
+		return style;
 	}
 }

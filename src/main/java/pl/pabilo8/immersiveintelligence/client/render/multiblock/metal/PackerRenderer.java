@@ -7,10 +7,17 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.obj.OBJModel;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.client.render.IIMultiblockRenderer;
-import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer.RegisteredTileRenderer;
-import pl.pabilo8.immersiveintelligence.client.util.amt.*;
-import pl.pabilo8.immersiveintelligence.client.util.amt.MachineUpgradeModel.UpgradeStage;
+import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
+import pl.pabilo8.immersiveintelligence.client.util.amt.animation.IIAnimationCompiledMap;
+import pl.pabilo8.immersiveintelligence.client.util.amt.animation.IIBooleanAnimation;
+import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTModel;
+import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTUpgradeModel;
+import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTUpgradeModel.UpgradeStage;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMT;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTItem;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTLocator;
+import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IIMultiblockRenderer;
+import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IITileRenderer.RegisteredTileRenderer;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Packer;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityPacker;
@@ -25,7 +32,7 @@ public class PackerRenderer extends IIMultiblockRenderer<TileEntityPacker>
 	AMTModel model, upgradeParts;
 
 	IIBooleanAnimation conveyor;
-	MachineUpgradeModel fluidUpgrade, energyUpgrade, railwayUpgrade, namingUpgrade;
+	AMTUpgradeModel fluidUpgrade, energyUpgrade, railwayUpgrade, namingUpgrade;
 	private IIAnimationCompiledMap animationWork, animationDefault;
 	private AMTItem itemModel;
 
@@ -34,7 +41,7 @@ public class PackerRenderer extends IIMultiblockRenderer<TileEntityPacker>
 	{
 		//reset model to default state
 		model.defaultize();
-		IIAnimationUtils.setModelVisibility(upgradeParts, false);
+		upgradeParts.setVisible(false);
 
 		//Render
 		model.render(tes, buf);
@@ -49,11 +56,11 @@ public class PackerRenderer extends IIMultiblockRenderer<TileEntityPacker>
 	{
 		//reset model to default state
 		model.defaultize();
-		IIAnimationUtils.setModelVisibility(upgradeParts, false);
+		upgradeParts.setVisible(false);
 
 		//loading progress
 		boolean active = !te.getRedstoneAtPos(0);
-		float animationProgress = IIAnimationUtils.getAnimationProgress(te.processTime, Packer.actionTime,
+		float animationProgress = AMTUtils.getAnimationProgress(te.processTime, Packer.actionTime,
 				te.processTime > 0&&active, false, 1f, 0f, partialTicks);
 
 		//set conveyor item
@@ -69,7 +76,7 @@ public class PackerRenderer extends IIMultiblockRenderer<TileEntityPacker>
 		conveyor.apply(active);
 
 		//render upgrades
-		UpgradeStage railway = railwayUpgrade.renderConstruction(te, tes, buf, partialTicks);
+		UpgradeStage railway = railwayUpgrade.renderProgress(te, tes, buf, partialTicks);
 		if(railway!=UpgradeStage.NOT_INSTALLED)
 			conveyor.applyVisibility(false);
 		if(railway==UpgradeStage.INSTALLED)
@@ -78,14 +85,14 @@ public class PackerRenderer extends IIMultiblockRenderer<TileEntityPacker>
 			railwayUpgrade.render(tes, buf);
 		}
 
-		namingUpgrade.renderConstruction(te, tes, buf, partialTicks);
+		namingUpgrade.renderProgress(te, tes, buf, partialTicks);
 
-		if(fluidUpgrade.renderConstruction(te, tes, buf, partialTicks)==UpgradeStage.INSTALLED)
+		if(fluidUpgrade.renderProgress(te, tes, buf, partialTicks)==UpgradeStage.INSTALLED)
 		{
 			fluidUpgrade.defaultize();
 			fluidUpgrade.render(tes, buf);
 		}
-		else if(energyUpgrade.renderConstruction(te, tes, buf, partialTicks)==UpgradeStage.INSTALLED)
+		else if(energyUpgrade.renderProgress(te, tes, buf, partialTicks)==UpgradeStage.INSTALLED)
 		{
 			energyUpgrade.defaultize();
 			energyUpgrade.render(tes, buf);
@@ -132,14 +139,14 @@ public class PackerRenderer extends IIMultiblockRenderer<TileEntityPacker>
 		);
 		animationDefault = IIAnimationCompiledMap.create(upgradeParts, new ResourceLocation(ImmersiveIntelligence.MODID, "packer/default"));
 
-		railwayUpgrade = new MachineUpgradeModel(IIContent.UPGRADE_PACKER_RAILWAY, upgradeParts,
+		railwayUpgrade = new AMTUpgradeModel(IIContent.UPGRADE_PACKER_RAILWAY, upgradeParts,
 				new ResourceLocation(ImmersiveIntelligence.MODID, "packer/upgrade_railway"));
-		namingUpgrade = new MachineUpgradeModel(IIContent.UPGRADE_PACKER_NAMING, upgradeParts,
+		namingUpgrade = new AMTUpgradeModel(IIContent.UPGRADE_PACKER_NAMING, upgradeParts,
 				new ResourceLocation(ImmersiveIntelligence.MODID, "packer/upgrade_naming"));
 
-		fluidUpgrade = new MachineUpgradeModel(IIContent.UPGRADE_PACKER_FLUID, upgradeParts,
+		fluidUpgrade = new AMTUpgradeModel(IIContent.UPGRADE_PACKER_FLUID, upgradeParts,
 				new ResourceLocation(ImmersiveIntelligence.MODID, "packer/upgrade_fluid"));
-		energyUpgrade = new MachineUpgradeModel(IIContent.UPGRADE_PACKER_ENERGY, upgradeParts,
+		energyUpgrade = new AMTUpgradeModel(IIContent.UPGRADE_PACKER_ENERGY, upgradeParts,
 				new ResourceLocation(ImmersiveIntelligence.MODID, "packer/upgrade_energy"));
 	}
 
@@ -147,11 +154,11 @@ public class PackerRenderer extends IIMultiblockRenderer<TileEntityPacker>
 	protected void nullifyModels()
 	{
 		super.nullifyModels();
-		IIAnimationUtils.disposeOf(model);
+		AMTUtils.disposeOf(model);
 
-		IIAnimationUtils.disposeOf(railwayUpgrade);
-		IIAnimationUtils.disposeOf(namingUpgrade);
-		IIAnimationUtils.disposeOf(fluidUpgrade);
-		IIAnimationUtils.disposeOf(energyUpgrade);
+		AMTUtils.disposeOf(railwayUpgrade);
+		AMTUtils.disposeOf(namingUpgrade);
+		AMTUtils.disposeOf(fluidUpgrade);
+		AMTUtils.disposeOf(energyUpgrade);
 	}
 }

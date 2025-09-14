@@ -51,8 +51,6 @@ public class TileEntityRadioStation extends TileEntityMultiblockIIGeneric<TileEn
 	{
 		if(!construction.update())
 			return;
-
-		//TODO: 30.08.2025 play sounds
 	}
 
 	@Override

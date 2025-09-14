@@ -19,6 +19,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.event.ClickEvent;
+import net.minecraft.util.text.event.ClickEvent.Action;
 import net.minecraftforge.client.event.GuiScreenEvent.ActionPerformedEvent.Post;
 import net.minecraftforge.client.event.GuiScreenEvent.ActionPerformedEvent.Pre;
 import net.minecraftforge.common.MinecraftForge;
@@ -29,6 +30,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.api.style.IStyleCustomizable;
 import pl.pabilo8.immersiveintelligence.client.ClientProxy;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoComponent;
@@ -38,9 +40,11 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoTab
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoLabel;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.widget.DecoComponentWidgetBase;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.widget.DecoManualWidget;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.widget.DecoOwnershipWidget;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.widget.DecoStyleWidget;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.*;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
-import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationUtils;
+import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
@@ -48,6 +52,7 @@ import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAn
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageGuiNBT;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.IOwnableProperty;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.NBTSerialisation;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
@@ -239,6 +244,10 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 	{
 		if(category==DecoGuiCategory.DATA_TILE||category==DecoGuiCategory.PRODUCTION_TILE)
 			addWidget(new DecoManualWidget());
+		if(tile instanceof IOwnableProperty)
+			addWidget(new DecoOwnershipWidget(((IOwnableProperty)tile)));
+		if(tile instanceof IStyleCustomizable)
+			addWidget(new DecoStyleWidget(((IStyleCustomizable)tile)));
 	}
 
 	/**
@@ -482,7 +491,7 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 	private void drawWidgets(int mouseX, int mouseY, float partialTicks)
 	{
 		//Calculate show/hide progress
-		float progress = IIAnimationUtils.getAnimationProgress(widgetTime--, MAX_WIDGET_TIME, true, partialTicks);
+		float progress = AMTUtils.getAnimationProgress(widgetTime--, MAX_WIDGET_TIME, true, partialTicks);
 
 		//Draw the previous (hiding) widget
 		if(previousWidget!=null)
@@ -795,7 +804,7 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 		if(takenSpace!=null)
 		{
 			//Get the widget show animation progress
-			float progress = IIAnimationUtils.getAnimationProgress(widgetTime--, MAX_WIDGET_TIME, true, 0);
+			float progress = AMTUtils.getAnimationProgress(widgetTime--, MAX_WIDGET_TIME, true, 0);
 
 			//Set the previous widget rectangle
 			Rectangle previousWidgetRectangle = takenSpace.get(takenSpace.size()-2);
@@ -1045,7 +1054,7 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 
 			//Notify user
 			ITextComponent itextcomponent = new TextComponentString(outputFile.getName());
-			itextcomponent.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, outputFile.getCanonicalFile().getAbsolutePath()));
+			itextcomponent.getStyle().setClickEvent(new ClickEvent(Action.OPEN_FILE, outputFile.getCanonicalFile().getAbsolutePath()));
 			itextcomponent.getStyle().setUnderlined(true);
 			mc.player.sendMessage(new TextComponentTranslation("screenshot.success", itextcomponent));
 

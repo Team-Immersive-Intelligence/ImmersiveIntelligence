@@ -8,11 +8,11 @@ import net.minecraftforge.client.model.obj.OBJModel;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer;
-import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer.RegisteredTileRenderer;
-import pl.pabilo8.immersiveintelligence.client.util.amt.AMTModel;
-import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationCompiledMap;
-import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationUtils;
+import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
+import pl.pabilo8.immersiveintelligence.client.util.amt.animation.IIAnimationCompiledMap;
+import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTModel;
+import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IITileRenderer;
+import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IITileRenderer.RegisteredTileRenderer;
 import pl.pabilo8.immersiveintelligence.common.block.data_device.tileentity.TileEntityDataDebugger;
 
 /**
@@ -31,7 +31,7 @@ public class DataDebuggerRenderer extends IITileRenderer<TileEntityDataDebugger>
 	{
 		if(te.setupTime > 0)
 		{
-			float progress = IIAnimationUtils.getAnimationProgress(te.setupTime, 25, true, partialTicks);
+			float progress = AMTUtils.getAnimationProgress(te.setupTime, 25, true, partialTicks);
 
 			//apply animation
 			construction.apply(progress);
@@ -55,7 +55,7 @@ public class DataDebuggerRenderer extends IITileRenderer<TileEntityDataDebugger>
 	@Override
 	protected void nullifyModels()
 	{
-		this.model = IIAnimationUtils.disposeOf(model);
+		this.model = AMTUtils.disposeOf(model);
 		this.construction = null;
 	}
 }

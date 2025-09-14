@@ -83,6 +83,13 @@ public class EasyNBTListOfTest extends GameTestBasic
 		assertEquals(new NBTTagByte((byte)0), booleans.get(1));
 		assertEquals(new NBTTagByte((byte)1), booleans.get(2));
 
+		//String
+		NBTTagList strings = EasyNBT.listOf("test1", "test2", "test3");
+		assertEquals(3, strings.tagCount());
+		assertEquals(new NBTTagString("test1"), strings.get(0));
+		assertEquals(new NBTTagString("test2"), strings.get(1));
+		assertEquals(new NBTTagString("test3"), strings.get(2));
+
 	}
 
 	@Test

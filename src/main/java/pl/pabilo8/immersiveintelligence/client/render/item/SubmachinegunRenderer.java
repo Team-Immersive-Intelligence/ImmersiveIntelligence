@@ -16,9 +16,18 @@ import net.minecraft.util.EnumHand;
 import net.minecraftforge.client.model.obj.OBJModel;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.client.fx.IIParticles;
-import pl.pabilo8.immersiveintelligence.client.util.amt.*;
-import pl.pabilo8.immersiveintelligence.client.util.amt.AMTBullet.BulletState;
-import pl.pabilo8.immersiveintelligence.client.util.amt.IIItemRendererAMT.RegisteredItemRenderer;
+import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
+import pl.pabilo8.immersiveintelligence.client.util.amt.MTLTextureRemapper;
+import pl.pabilo8.immersiveintelligence.client.util.amt.animation.IIAnimationCachedMap;
+import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTCachedModelBuilder;
+import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTCrossVariantReference;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMT;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTBullet;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTBullet.BulletState;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTHand;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTParticle;
+import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IIItemRendererAMT.RegisteredItemRenderer;
+import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IIUpgradableItemRendererAMT;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.AssaultRifle;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIGunBase;
@@ -27,7 +36,7 @@ import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIWeaponUpgrade.
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
-import pl.pabilo8.immersiveintelligence.common.util.amt.IIModelHeader;
+import pl.pabilo8.immersiveintelligence.common.util.amt.AMTModelHeader;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 /**
@@ -116,7 +125,7 @@ public class SubmachinegunRenderer extends IIUpgradableItemRendererAMT<ItemIISub
 	{
 		EasyNBT nbt = EasyNBT.wrapNBT(stack);
 
-		model.getVariant(nbt.getString(IISkinHandler.NBT_ENTRY), stack);
+		model.getVariant(stack, nbt.getString(IISkinHandler.NBT_ENTRY));
 		model.forEach(AMT::defaultize);
 
 		//Make upgrade AMTs visible
@@ -134,14 +143,14 @@ public class SubmachinegunRenderer extends IIUpgradableItemRendererAMT<ItemIISub
 		boolean handRender = is1stPerson(transform);
 
 		//hand should be visible only in 1st person mode
-		IIAnimationUtils.setModelVisibility(hand.get(), handRender);
-		IIAnimationUtils.setModelVisibility(offHand.get(), handRender);
+		hand.get().setVisible(handRender);
+		offHand.get().setVisible(handRender);
 
 
 		//Aiming animation
 		int aiming = nbt.getInt(ItemIISubmachinegun.AIMING);
 		EasyNBT upgradeNBT = EasyNBT.wrapNBT(item.getUpgrades(stack));
-		float preciseAim = IIAnimationUtils.getAnimationProgress(aiming, item.getAimingTime(stack, upgradeNBT),
+		float preciseAim = AMTUtils.getAnimationProgress(aiming, item.getAimingTime(stack, upgradeNBT),
 				true, !Minecraft.getMinecraft().player.isSneaking(),
 				1, 3,
 				partialTicks);
@@ -171,11 +180,11 @@ public class SubmachinegunRenderer extends IIUpgradableItemRendererAMT<ItemIISub
 		//Don't show muzzle flash GUI
 		if(transform==TransformType.GUI)
 		{
-			IIAnimationUtils.setModelVisibility(muzzleFlash.get(), false);
-			IIAnimationUtils.setModelVisibility(casingFired.get(), false);
+			muzzleFlash.get().setVisible(false);
+			casingFired.get().setVisible(false);
 		}
 
-		float v = IIAnimationUtils.getAnimationProgress(
+		float v = AMTUtils.getAnimationProgress(
 				reloading,
 				(float)item.getReloadTime(stack, ItemStack.EMPTY, EasyNBT.wrapNBT(item.getUpgrades(stack))),
 				false,
@@ -211,7 +220,7 @@ public class SubmachinegunRenderer extends IIUpgradableItemRendererAMT<ItemIISub
 	}
 
 	@Override
-	public void compileModels(OBJModel model, IIModelHeader header)
+	public void compileModels(OBJModel model, AMTModelHeader header)
 	{
 		this.model = AMTCachedModelBuilder.startItemModel()
 				.withModel(model)

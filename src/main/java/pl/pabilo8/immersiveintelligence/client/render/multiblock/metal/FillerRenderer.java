@@ -12,14 +12,19 @@ import net.minecraftforge.client.model.obj.OBJModel;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.api.crafting.FillerRecipe;
-import pl.pabilo8.immersiveintelligence.client.render.IIMultiblockRenderer;
-import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer.RegisteredTileRenderer;
-import pl.pabilo8.immersiveintelligence.client.util.amt.*;
-import pl.pabilo8.immersiveintelligence.client.util.amt.AMTBullet.BulletState;
+import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
+import pl.pabilo8.immersiveintelligence.client.util.amt.animation.IIAnimationCompiledMap;
+import pl.pabilo8.immersiveintelligence.client.util.amt.animation.IIBooleanAnimation;
+import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTModel;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMT;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTBullet;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTBullet.BulletState;
+import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IIMultiblockRenderer;
+import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IITileRenderer.RegisteredTileRenderer;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityFiller;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
-import pl.pabilo8.immersiveintelligence.common.util.amt.IIModelHeader;
+import pl.pabilo8.immersiveintelligence.common.util.amt.AMTModelHeader;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionBase.IIMultiblockProcess;
 
 /**
@@ -103,7 +108,7 @@ public class FillerRenderer extends IIMultiblockRenderer<TileEntityFiller>
 	protected void nullifyModels()
 	{
 		super.nullifyModels();
-		model = IIAnimationUtils.disposeOf(model);
+		model = AMTUtils.disposeOf(model);
 	}
 
 	/**
@@ -116,7 +121,7 @@ public class FillerRenderer extends IIMultiblockRenderer<TileEntityFiller>
 		private float transition;
 		private ItemStack stackFrom, stackInto;
 
-		public AMTFillerBullet(String name, IIModelHeader header)
+		public AMTFillerBullet(String name, AMTModelHeader header)
 		{
 			super(name, header);
 			bullet = new AMTBullet(name, header, null);
@@ -212,7 +217,7 @@ public class FillerRenderer extends IIMultiblockRenderer<TileEntityFiller>
 		@Override
 		public void disposeOf()
 		{
-			IIAnimationUtils.disposeOf(bullet);
+			AMTUtils.disposeOf(bullet);
 		}
 	}
 }

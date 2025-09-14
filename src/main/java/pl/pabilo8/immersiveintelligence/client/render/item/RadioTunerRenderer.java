@@ -11,15 +11,21 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraftforge.client.model.obj.OBJModel;
-import pl.pabilo8.immersiveintelligence.client.util.amt.*;
-import pl.pabilo8.immersiveintelligence.client.util.amt.IIItemRendererAMT.RegisteredItemRenderer;
+import pl.pabilo8.immersiveintelligence.client.util.amt.AMTLoader;
+import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
+import pl.pabilo8.immersiveintelligence.client.util.amt.animation.IIAnimationCompiledMap;
+import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTModel;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMT;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTHand;
+import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IIItemRendererAMT;
+import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IIItemRendererAMT.RegisteredItemRenderer;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.item.tools.ItemIIRadioTuner;
 import pl.pabilo8.immersiveintelligence.common.item.tools.ItemIIRadioTuner.RadioTuners;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
-import pl.pabilo8.immersiveintelligence.common.util.amt.IIModelHeader;
+import pl.pabilo8.immersiveintelligence.common.util.amt.AMTModelHeader;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 /**
@@ -106,7 +112,7 @@ public class RadioTunerRenderer extends IIItemRendererAMT<ItemIIRadioTuner>
 	}
 
 	@Override
-	public void compileModels(OBJModel model, IIModelHeader header)
+	public void compileModels(OBJModel model, AMTModelHeader header)
 	{
 		//Basic radio tuner
 		this.amtBasic = new AMTModel(DefaultVertexFormats.ITEM, model, header, header1 -> new AMT[]{
@@ -132,8 +138,8 @@ public class RadioTunerRenderer extends IIItemRendererAMT<ItemIIRadioTuner>
 	@Override
 	protected void nullifyModels()
 	{
-		IIAnimationUtils.disposeOf(this.amtBasic);
-		IIAnimationUtils.disposeOf(this.amtAdvanced);
+		AMTUtils.disposeOf(this.amtBasic);
+		AMTUtils.disposeOf(this.amtAdvanced);
 	}
 
 	@Override

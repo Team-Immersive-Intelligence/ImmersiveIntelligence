@@ -6,12 +6,13 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoComponent;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoGuiUtils;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
-import pl.pabilo8.immersiveintelligence.client.util.amt.AMT;
-import pl.pabilo8.immersiveintelligence.client.util.amt.AMTModel;
-import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationUtils;
+import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
+import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTModel;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMT;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
 import javax.annotation.Nullable;
@@ -39,6 +40,8 @@ public class DecoScenarioDisplay extends DecoComponent<DecoScenarioDisplay>
 	//Optional background texture
 	@Nullable
 	private ResourceLocation backgroundLocation;
+	@Nullable
+	private IIColor backgroundColor;
 
 	//Lighting settings
 	private boolean useStandardGUILighting = true;
@@ -55,7 +58,7 @@ public class DecoScenarioDisplay extends DecoComponent<DecoScenarioDisplay>
 	@Override
 	protected boolean initialize()
 	{
-		return scene!=null;
+		return true;
 	}
 
 	/**
@@ -123,6 +126,15 @@ public class DecoScenarioDisplay extends DecoComponent<DecoScenarioDisplay>
 	}
 
 	/**
+	 * Sets a background color for the scenario display
+	 */
+	public DecoScenarioDisplay withBackgroundColor(@Nullable IIColor backgroundColor)
+	{
+		this.backgroundColor = backgroundColor;
+		return this;
+	}
+
+	/**
 	 * Whether to use standard GUI lighting
 	 */
 	public DecoScenarioDisplay withUseStandardGUILighting(boolean useStandardLighting)
@@ -143,19 +155,36 @@ public class DecoScenarioDisplay extends DecoComponent<DecoScenarioDisplay>
 	@Override
 	protected void draw(int mouseX, int mouseY, float partialTicks)
 	{
-		if(scene==null)
-			return;
-
 		bindAtlas();
-		//Draw background if set
+		//Draw textured background if set
 		if(backgroundLocation!=null)
 		{
 			IIDrawUtils draw = IIDrawUtils.startTexturedColored();
 			DecoGuiUtils.drawRepeatedRect(draw, x, y, width, height,
-					backgroundLocation, IIColor.WHITE, 32, 8);
+					backgroundLocation, backgroundColor==null?IIColor.WHITE: backgroundColor, 32, 8);
 			draw.finish();
-
 		}
+		//Draw color only
+		else if(backgroundColor!=null)
+		{
+			//Disable textures
+			GlStateManager.disableTexture2D();
+			GlStateManager.disableAlpha();
+			GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
+			GlStateManager.shadeModel(GL11.GL_SMOOTH);
+			//Draw color background
+			IIDrawUtils.startColored()
+					.drawColorRect(x, y, width, height, backgroundColor)
+					.finish();
+			//Re-enable textures
+			GlStateManager.enableTexture2D();
+			GlStateManager.shadeModel(GL11.GL_FLAT);
+			GlStateManager.disableBlend();
+			GlStateManager.enableAlpha();
+		}
+
+		if(scene==null)
+			return;
 
 		//Set up OpenGL state for rendering 3D model
 		GlStateManager.pushMatrix();
@@ -172,9 +201,9 @@ public class DecoScenarioDisplay extends DecoComponent<DecoScenarioDisplay>
 		GlStateManager.translate(translation.x, translation.y, translation.z);
 
 		if(yawRotationTicks > 0)
-			GlStateManager.rotate((float)(IIAnimationUtils.getDebugProgress(yawRotationTicks, partialTicks)*360d), 0, 1, 0);
+			GlStateManager.rotate((float)(AMTUtils.getDebugProgress(yawRotationTicks, partialTicks)*360d), 0, 1, 0);
 		if(pitchRotationTicks > 0)
-			GlStateManager.rotate((float)(IIAnimationUtils.getDebugProgress(pitchRotationTicks, partialTicks)*360d), 1, 0, 0);
+			GlStateManager.rotate((float)(AMTUtils.getDebugProgress(pitchRotationTicks, partialTicks)*360d), 1, 0, 0);
 
 		//Set up lighting
 		RenderHelper.enableStandardItemLighting();

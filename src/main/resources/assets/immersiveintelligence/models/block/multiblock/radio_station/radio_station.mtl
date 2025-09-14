@@ -1,0 +1,10 @@
+# Made by Pabilo8 with Blockbench
+
+newmtl radio_station
+map_Kd immersiveintelligence:blocks/multiblock/radio_station
+newmtl common_concrete
+map_Kd immersiveintelligence:blocks/common/common_concrete
+newmtl common_copper_cable
+map_Kd immersiveintelligence:blocks/common/common_copper_cable
+newmtl common_thingies
+map_Kd immersiveintelligence:blocks/common/common_thingies

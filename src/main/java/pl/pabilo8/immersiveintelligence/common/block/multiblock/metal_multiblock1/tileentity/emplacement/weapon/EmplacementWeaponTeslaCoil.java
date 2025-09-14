@@ -2,15 +2,12 @@ package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multibloc
 
 import blusunrize.immersiveengineering.api.tool.IElectricEquipment;
 import blusunrize.immersiveengineering.api.tool.IElectricEquipment.ElectricSource;
-import blusunrize.immersiveengineering.client.ClientUtils;
-import blusunrize.immersiveengineering.client.render.TileRenderTeslaCoil;
 import blusunrize.immersiveengineering.common.Config.IEConfig;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityTeslaCoil.LightningAnimation;
 import blusunrize.immersiveengineering.common.util.IEDamageSources;
 import blusunrize.immersiveengineering.common.util.IEDamageSources.ElectricDamageSource;
 import blusunrize.immersiveengineering.common.util.IEPotions;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
@@ -19,25 +16,12 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Tuple;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.opengl.GL11;
-import pl.pabilo8.immersiveintelligence.api.utils.upgrade.UpgradeUtils;
-import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.block.emplacement.GuiEmplacementPageStorage;
-import pl.pabilo8.immersiveintelligence.client.render.multiblock.metal.EmplacementRenderer;
-import pl.pabilo8.immersiveintelligence.client.util.ShaderUtil;
-import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.EmplacementWeapons.TeslaCoil;
-import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityEmplacementWeapon;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityEmplacementWeapon.EmplacementHitboxEntity;
@@ -47,8 +31,6 @@ import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 
 public class EmplacementWeaponTeslaCoil extends EmplacementWeapon
@@ -57,6 +39,11 @@ public class EmplacementWeaponTeslaCoil extends EmplacementWeapon
 	private final ArrayList<LightningAnimation> effects = new ArrayList<>();
 	private AxisAlignedBB vision;
 	private AxisAlignedBB attack;
+
+	public EmplacementWeaponTeslaCoil()
+	{
+
+	}
 
 	@Override
 	public String getName()
@@ -251,109 +238,6 @@ public class EmplacementWeaponTeslaCoil extends EmplacementWeapon
 		return true;
 	}
 
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void render(TileEntityEmplacement te, float partialTicks)
-	{
-		IIClientUtils.bindTexture(EmplacementRenderer.textureTeslaCoil);
-		for(ModelRendererTurbo mod : EmplacementRenderer.modelTeslaCoil.baseModel)
-			mod.render();
-
-		Iterator<LightningAnimation> animationIt = effects.iterator();
-
-		ClientUtils.setLightmapDisabled(true);
-		boolean wasLightingEnabled = GL11.glIsEnabled(GL11.GL_LIGHTING);
-		GlStateManager.disableCull();
-		GlStateManager.disableLighting();
-		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-		while(animationIt.hasNext())
-		{
-			LightningAnimation animation = animationIt.next();
-			if(animation.shoudlRecalculateLightning())
-				animation.createLightning(blusunrize.immersiveengineering.common.util.Utils.RAND);
-
-			GlStateManager.pushMatrix();
-
-			GlStateManager.disableTexture2D();
-			GlStateManager.enableBlend();
-
-			double tx = 0;
-			double ty = 1.5;
-			double tz = 0;
-			float curWidth = GL11.glGetFloat(GL11.GL_LINE_WIDTH);
-			TileRenderTeslaCoil.drawAnimation(animation, tx, ty, tz, new float[]{77/255f, 74/255f, 152/255f, .75f}, 10f);
-			TileRenderTeslaCoil.drawAnimation(animation, tx, ty, tz, new float[]{1, 1, 1, 1}, 6f);
-			GL11.glLineWidth(curWidth);
-
-			GlStateManager.enableTexture2D();
-			GlStateManager.disableBlend();
-
-			GlStateManager.popMatrix();
-		}
-		if(wasLightingEnabled)
-			GlStateManager.enableLighting();
-		else
-			GlStateManager.disableLighting();
-		ClientUtils.setLightmapDisabled(false);
-		GlStateManager.enableCull();
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void renderUpgradeProgress(int clientProgress, int serverProgress, float partialTicks)
-	{
-		GlStateManager.pushMatrix();
-
-		final int req = IIContent.UPGRADE_EMPLACEMENT_WEAPON_TESLA.getProgressRequired();
-		final int l = EmplacementRenderer.modelTeslaCoilConstruction.length;
-		double maxClientProgress = UpgradeUtils.getMaxClientProgress(serverProgress, IIContent.UPGRADE_EMPLACEMENT_WEAPON_TESLA);
-
-		double cc = (int)Math.min(clientProgress+((partialTicks*(Tools.wrenchUpgradeProgress/2f))), maxClientProgress);
-		double progress = MathHelper.clamp(cc/req, 0, 1);
-
-		IIClientUtils.bindTexture(EmplacementRenderer.textureTeslaCoil);
-		for(int i = 0; i < l*progress; i++)
-		{
-			if(1+i > Math.round(l*progress))
-			{
-				GlStateManager.pushMatrix();
-				double scale = 1f-(((progress*l)%1f));
-				GlStateManager.enableBlend();
-				GlStateManager.color(1f, 1f, 1f, (float)Math.min(scale, 1));
-				GlStateManager.translate(0, scale*1.5f, 0);
-
-				EmplacementRenderer.modelTeslaCoilConstruction[i].render(0.0625f);
-				GlStateManager.color(1f, 1f, 1f, 1f);
-				GlStateManager.popMatrix();
-			}
-			else
-				EmplacementRenderer.modelTeslaCoilConstruction[i].render(0.0625f);
-		}
-
-		GlStateManager.pushMatrix();
-		GlStateManager.enableBlend();
-		GlStateManager.disableLighting();
-		GlStateManager.scale(0.98f, 0.98f, 0.98f);
-		GlStateManager.translate(0.0625f/2f, 0f, -0.0265f/2f);
-		//float flicker = (te.getWorld().rand.nextInt(10)==0)?0.75F: (te.getWorld().rand.nextInt(20)==0?0.5F: 1F);
-
-		ShaderUtil.useBlueprint(0.35f, ClientUtils.mc().player.ticksExisted+partialTicks);
-		for(int i = l-1; i >= Math.max((l*progress)-1, 0); i--)
-		{
-			EmplacementRenderer.modelTeslaCoilConstruction[i].render(0.0625f);
-		}
-
-		ShaderUtil.releaseShader();
-		GlStateManager.disableBlend();
-		GlStateManager.enableLighting();
-		GlStateManager.popMatrix();
-
-		GlStateManager.disableBlend();
-
-		GlStateManager.enableLighting();
-		GlStateManager.popMatrix();
-	}
-
 	@Override
 	public AxisAlignedBB getVisionAABB()
 	{
@@ -438,13 +322,6 @@ public class EmplacementWeaponTeslaCoil extends EmplacementWeapon
 	public int getMaxHealth()
 	{
 		return TeslaCoil.maxHealth;
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	protected Tuple<ResourceLocation, List<ModelRendererTurbo>> getDebris()
-	{
-		return new Tuple<>(EmplacementRenderer.textureTeslaCoil, Arrays.asList(EmplacementRenderer.modelTeslaCoilConstruction));
 	}
 
 }

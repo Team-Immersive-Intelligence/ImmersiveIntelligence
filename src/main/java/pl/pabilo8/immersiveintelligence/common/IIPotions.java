@@ -28,6 +28,7 @@ public class IIPotions
 {
 	public static Potion suppression, brokenArmor, corrosion, infraredVision, ironWill, wellSupplied, concealed;
 	public static Potion exposed, medicalTreatment, undergoingRepairs, radiation, nuclearHeat, movementAssist;
+	public static Potion foreignShores, enemySoil, enemysNest, homeShores, homeland, heartland;
 
 	public static void init()
 	{

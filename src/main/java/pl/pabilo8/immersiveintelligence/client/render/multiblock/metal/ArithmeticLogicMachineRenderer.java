@@ -7,10 +7,14 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.client.model.obj.OBJModel;
-import pl.pabilo8.immersiveintelligence.client.render.IIMultiblockRenderer;
-import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer.RegisteredTileRenderer;
-import pl.pabilo8.immersiveintelligence.client.util.amt.*;
-import pl.pabilo8.immersiveintelligence.client.util.amt.MachineCachedUpgradeModel.MachineCachedUpgradeModelBuilder;
+import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
+import pl.pabilo8.immersiveintelligence.client.util.amt.animation.IIAnimationCachedMap;
+import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTCachedModel;
+import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTCachedModelBuilder;
+import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTUpgradeCachedModel;
+import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTUpgradeCachedModel.MachineCachedUpgradeModelBuilder;
+import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IIMultiblockRenderer;
+import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IITileRenderer.RegisteredTileRenderer;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityArithmeticLogicMachine;
 import pl.pabilo8.immersiveintelligence.common.item.data.ItemIIFunctionalCircuit;
@@ -30,7 +34,7 @@ import java.util.regex.Pattern;
 public class ArithmeticLogicMachineRenderer extends IIMultiblockRenderer<TileEntityArithmeticLogicMachine>
 {
 	private AMTCachedModel<TileEntityArithmeticLogicMachine> model;
-	private MachineCachedUpgradeModel<TileEntityArithmeticLogicMachine> upgradeCircuitRacks, upgradeMemory;
+	private AMTUpgradeCachedModel<TileEntityArithmeticLogicMachine> upgradeCircuitRacks, upgradeMemory;
 	private IIAnimationCachedMap animationDrawer, animationDoor, animationKeyboard;
 
 	@Override
@@ -43,7 +47,7 @@ public class ArithmeticLogicMachineRenderer extends IIMultiblockRenderer<TileEnt
 			ItemStack stack = te.inventory.get(i);
 			cacheKey.append(stack.isEmpty()?"_": IIContent.itemCircuit.stackToSub(te.inventory.get(i)).ordinal());
 		}
-		this.model.getVariant(cacheKey.toString(), te);
+		this.model.getVariant(te, cacheKey.toString());
 
 		//Reset model to default state
 		this.model.defaultize();
@@ -128,6 +132,6 @@ public class ArithmeticLogicMachineRenderer extends IIMultiblockRenderer<TileEnt
 	protected void nullifyModels()
 	{
 		super.nullifyModels();
-		IIAnimationUtils.disposeOf(model);
+		AMTUtils.disposeOf(model);
 	}
 }

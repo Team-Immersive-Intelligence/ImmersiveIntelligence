@@ -16,13 +16,17 @@ import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoCore;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoType;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
-import pl.pabilo8.immersiveintelligence.client.util.amt.*;
+import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
+import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTModel;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMT;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTLocator;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTQuads;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityAmmoBase;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoMine;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
-import pl.pabilo8.immersiveintelligence.common.util.amt.IIModelHeader;
+import pl.pabilo8.immersiveintelligence.common.util.amt.AMTModelHeader;
 
 import javax.annotation.Nullable;
 import java.util.EnumMap;
@@ -141,7 +145,7 @@ public class ModelAmmo<T extends IAmmoType<T, E>, E extends EntityAmmoBase<? sup
 		modelCore.clear();
 		modelCoreSimple.clear();
 		modelPaint.clear();
-		IIAnimationUtils.disposeOf(modelCasing, modelCasingSimple, modelPaintBase);
+		AMTUtils.disposeOf(modelCasing, modelCasingSimple, modelPaintBase);
 
 		//Load new models
 		AMTModel amt = new AMTModel(DefaultVertexFormats.BLOCK, modelLocation, this::getExtraModelParts);
@@ -152,7 +156,7 @@ public class ModelAmmo<T extends IAmmoType<T, E>, E extends EntityAmmoBase<? sup
 		loadModels(amt);
 	}
 
-	protected AMT[] getExtraModelParts(IIModelHeader header)
+	protected AMT[] getExtraModelParts(AMTModelHeader header)
 	{
 		return new AMT[0];
 	}

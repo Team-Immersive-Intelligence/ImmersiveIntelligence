@@ -126,6 +126,8 @@ public class EasyNBT extends Constants.NBT
 				list.appendTag(new NBTTagDouble(((Double)element)));
 			else if(element instanceof Boolean)
 				list.appendTag(new NBTTagByte((byte)(((Boolean)element)?1: 0)));
+			else if(element instanceof String)
+				list.appendTag(new NBTTagString(((String)element)));
 
 			else if(element instanceof EasyNBT)
 				list.appendTag(((EasyNBT)element).wrapped);
@@ -156,7 +158,7 @@ public class EasyNBT extends Constants.NBT
 			else if(element instanceof Object[])
 				list.appendTag(listOf(element));
 			else if(element instanceof Collection)
-				list.appendTag(listOf(((Collection<?>)element).toArray(new Object[0])));
+				list.appendTag(listOf(((Collection<?>)element).toArray()));
 
 		}
 
@@ -1108,6 +1110,23 @@ public class EasyNBT extends Constants.NBT
 	{
 		if(wrapped.hasKey(key))
 			ifPresent.accept(wrapped.getCompoundTag(key));
+		return this;
+	}
+
+
+	public EasyNBT checkSetItemStack(String key, Consumer<ItemStack> ifPresent, ItemStack ifNot)
+	{
+		if(wrapped.hasKey(key))
+			ifPresent.accept(new ItemStack(wrapped.getCompoundTag(key)));
+		else
+			ifPresent.accept(ifNot);
+		return this;
+	}
+
+	public EasyNBT checkSetItemStack(String key, Consumer<ItemStack> ifPresent)
+	{
+		if(wrapped.hasKey(key))
+			ifPresent.accept(new ItemStack(wrapped.getCompoundTag(key)));
 		return this;
 	}
 

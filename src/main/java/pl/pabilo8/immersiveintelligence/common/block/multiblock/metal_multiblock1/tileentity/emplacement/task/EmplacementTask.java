@@ -7,6 +7,8 @@ import net.minecraft.util.math.Vec3d;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.function.BiFunction;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -14,6 +16,16 @@ import java.util.Arrays;
  */
 public abstract class EmplacementTask
 {
+	public static final HashMap<String, BiFunction<NBTTagCompound, TileEntityEmplacement, EmplacementTask>> targetRegistry = new HashMap<>();
+
+	static
+	{
+		targetRegistry.put("target_custom", (tagCompound, emplacement) -> new EmplacementTaskCustom(tagCompound));
+		targetRegistry.put("target_shells", (tagCompound, emplacement) -> new EmplacementTaskShells());
+		targetRegistry.put("target_position", (tagCompound, emplacement) -> new EmplacementTaskPosition(tagCompound));
+		targetRegistry.put("target_entity", (tagCompound, emplacement) -> new EmplacementTaskEntity(emplacement, tagCompound));
+	}
+
 	protected static float[] getPosForEntityTask(TileEntityEmplacement emplacement, Entity entity)
 	{
 		if(entity!=null&&entity.isEntityAlive())

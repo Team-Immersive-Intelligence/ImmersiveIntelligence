@@ -56,6 +56,8 @@ public class IIPacketHandler
 		registerMessage(MessageParticleGunfire.class, true, false);
 		registerMessage(MessageManualClose.class, false, true);
 		registerMessage(MessagePlayIISound.class, true, false);
+		registerMessage(MessageDiplomacySync.class, true, false);
+		registerMessage(MessageDiplomacyAction.class, false, true);
 	}
 
 	private static <T extends IIMessage> void registerMessage(Class<T> message, boolean clientSide, boolean serverSide)
@@ -107,6 +109,11 @@ public class IIPacketHandler
 	public static void sendToClient(TileEntity tile, IIMessage message)
 	{
 		INSTANCE.sendToAllTracking(message, targetPointFromTile(tile, DEFAULT_RANGE));
+	}
+
+	public static void sendToAllClients(IIMessage message)
+	{
+		INSTANCE.sendToAll(message);
 	}
 
 	public static void sendChatInfo(EntityPlayer player, ITextComponent... components)

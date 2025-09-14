@@ -7,6 +7,7 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import pl.pabilo8.immersiveintelligence.api.ammo.penetration.DamageBlockPos;
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.PenetrationCache;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyUtils;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 /**
@@ -15,7 +16,7 @@ import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
  */
 public class IISaveData extends WorldSavedData
 {
-	public static final String dataName = "ImmersiveIntelligence-SaveData";
+	public static final String DATA_NAME = "II-SaveData";
 	private static IISaveData INSTANCE;
 
 	public IISaveData(String name)
@@ -60,18 +61,19 @@ public class IISaveData extends WorldSavedData
 		{
 			IILogger.info("Error in the block damage list!");
 		}
+
+		DiplomacyUtils.loadAllFromNBT(enbt.getEasyCompound("diplomacy"));
 	}
 
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
 	{
-
-		//Save block damage data
-		EasyNBT.wrapNBT(nbt)
+		return EasyNBT.wrapNBT(nbt)
 				.withList("block_dmg", e -> new NBTTagIntArray(new int[]{
 						e.getX(), e.getY(), e.getZ(), e.dimension, (int)(e.damage*16)
-				}), PenetrationCache.blockDamage);
-		return nbt;
+				}), PenetrationCache.blockDamage)
+				.withTag("diplomacy", DiplomacyUtils.saveAllToNBT())
+				.unwrap();
 	}
 
 }

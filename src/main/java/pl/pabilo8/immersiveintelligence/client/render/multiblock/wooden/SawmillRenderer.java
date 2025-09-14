@@ -12,9 +12,18 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.crafting.SawmillRecipe;
 import pl.pabilo8.immersiveintelligence.api.rotary.IIRotaryUtils;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.ISawblade;
-import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer;
-import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer.RegisteredTileRenderer;
-import pl.pabilo8.immersiveintelligence.client.util.amt.*;
+import pl.pabilo8.immersiveintelligence.client.util.amt.AMTLoader;
+import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
+import pl.pabilo8.immersiveintelligence.client.util.amt.animation.IIAnimationCachedMap;
+import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTCachedModel;
+import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTCachedModelBuilder;
+import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTCrossVariantReference;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMT;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTItem;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTLocator;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTQuads;
+import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IITileRenderer;
+import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IITileRenderer.RegisteredTileRenderer;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.multiblock.MultiblockSawmill;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.tileentity.TileEntitySawmill;
@@ -53,7 +62,7 @@ public class SawmillRenderer extends IITileRenderer<TileEntitySawmill>
 
 		//Get model variant, defaultize
 		applyStandardRotation(te.facing);
-		model.getVariant(sawBlade.isEmpty()?"": ((ISawblade)sawBlade.getItem()).getMaterialName(sawBlade), te);
+		model.getVariant(te, sawBlade.isEmpty()?"": ((ISawblade)sawBlade.getItem()).getMaterialName(sawBlade));
 		model.defaultize();
 
 		//Set item display
@@ -65,7 +74,7 @@ public class SawmillRenderer extends IITileRenderer<TileEntitySawmill>
 		animationDustPile.apply(sawDust.isEmpty()?0f: sawDust.getCount()/(float)sawDust.getMaxStackSize());
 
 		//Saw Blade model visibility
-		IIAnimationUtils.setModelVisibility(partSawblade.get(), !te.getInventory().get(MultiblockSawmill.SLOT_SAWBLADE).isEmpty());
+		partSawblade.get().setVisible(!te.getInventory().get(MultiblockSawmill.SLOT_SAWBLADE).isEmpty());
 
 		//Rotation
 		animationRotate.apply(IIRotaryUtils.getDisplayRotation(te, te.rotation, partialTicks));
@@ -165,6 +174,6 @@ public class SawmillRenderer extends IITileRenderer<TileEntitySawmill>
 	@Override
 	protected void nullifyModels()
 	{
-		IIAnimationUtils.disposeOf(model);
+		AMTUtils.disposeOf(model);
 	}
 }

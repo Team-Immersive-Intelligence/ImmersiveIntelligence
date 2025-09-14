@@ -1,0 +1,185 @@
+package pl.pabilo8.immersiveintelligence.api.upgrade;
+
+import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeUtils.UpgradePurpose;
+import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeUtils.UpgradeTier;
+import pl.pabilo8.immersiveintelligence.common.IILogger;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.*;
+import java.util.stream.Collectors;
+
+/**
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @ii-approved 0.3.1
+ * @since 29.08.2025
+ */
+public class UpgradeTechTree
+{
+	private static final Map<Class<? extends IUpgradableDevice>, UpgradeTechTree> UPGRADE_TECH_TREES = new HashMap<>();
+	private final List<UpgradeTreeNode> nodes = new ArrayList<>();
+
+	public static UpgradeTechTree getTreeFor(IUpgradableDevice machine)
+	{
+		return getTreeFor(machine.getClass());
+	}
+
+	public static UpgradeTechTree getTreeFor(Class<? extends IUpgradableDevice> klass)
+	{
+		return UPGRADE_TECH_TREES.computeIfAbsent(klass, c -> new UpgradeTechTree());
+	}
+
+	public UpgradeTechTree addUpgrade(Upgrade upgrade, UpgradeTier tier)
+	{
+		nodes.add(new UpgradeTreeNode(upgrade, tier));
+		return this;
+	}
+
+	public UpgradeTechTree addDependency(Upgrade from, Upgrade to)
+	{
+		//Get from node
+		UpgradeTreeNode fromNode = getUpgradeNodeFor(from);
+		if(fromNode==null)
+			IILogger.warn("Could not find upgrade "+from.getName()+" in tech tree to add dependency to "+to.getName());
+		//Get to node
+		UpgradeTreeNode toNode = getUpgradeNodeFor(to);
+		if(toNode==null)
+			IILogger.warn("Could not find upgrade "+to.getName()+" in tech tree to add dependency from "+from.getName());
+
+		//Add dependency
+		if(toNode!=null&&fromNode!=null)
+			toNode.dependencies.add(fromNode);
+		return this;
+	}
+
+	public UpgradeTechTree addLockOut(Upgrade... between)
+	{
+		//Get all upgrade nodes
+		List<UpgradeTreeNode> lockOutNodes = Arrays.stream(between)
+				.map(this::getUpgradeNodeFor)
+				.filter(Objects::nonNull)
+				.collect(Collectors.toList());
+
+		//Add lock outs
+		for(UpgradeTreeNode thisNode : lockOutNodes)
+			for(UpgradeTreeNode otherNode : lockOutNodes)
+				if(thisNode!=otherNode)
+					thisNode.locksOut.add(otherNode);
+
+		return this;
+	}
+
+	public UpgradeTechTree addLockOut(UpgradePurpose purpose)
+	{
+		//Get all upgrade nodes
+		List<UpgradeTreeNode> lockOutNodes = nodes.stream()
+				.filter(n -> n.upgrade.getPurpose()==purpose)
+				.collect(Collectors.toList());
+
+		//Add lock outs
+		for(UpgradeTreeNode thisNode : lockOutNodes)
+			for(UpgradeTreeNode otherNode : lockOutNodes)
+				if(thisNode!=otherNode)
+					thisNode.locksOut.add(otherNode);
+
+		return this;
+	}
+
+	private UpgradeTreeNode getUpgradeNodeFor(Upgrade upgrade)
+	{
+		return nodes.stream().filter(n -> n.upgrade==upgrade).findFirst().orElse(null);
+	}
+
+	/**
+	 * @param upgrade upgrade to check for
+	 * @return whether the upgrade is present in this tech tree
+	 */
+	public boolean isUpgradePresent(Upgrade upgrade)
+	{
+		return nodes.stream().map(UpgradeTreeNode::getUpgrade).anyMatch(upgrade::equals);
+	}
+
+	/**
+	 * Checks if the given machine upgrade can be installed, based on already installed upgrades.
+	 *
+	 * @param installed list of already installed upgrades
+	 * @param upgrade   upgrade to check for
+	 * @return if the upgrade can be installed
+	 */
+	public boolean isUpgradeAvailable(@Nonnull List<Upgrade> installed, @Nullable Upgrade upgrade)
+	{
+		//Upgrade invalid
+		if(upgrade==null)
+			return false;
+		//Upgrade already installed
+		if(installed.contains(upgrade))
+			return false;
+
+		//Find the node
+		UpgradeTreeNode node = nodes.stream()
+				.filter(n -> n.upgrade==upgrade)
+				.findFirst().orElse(null);
+		if(node==null)
+			return false;
+
+		//Check if all dependencies are installed
+		if(node.dependencies.stream().anyMatch(dependency -> !installed.contains(dependency.upgrade)))
+			return false;
+		//Check if no upgrades locking this one are installed
+		return node.locksOut.stream().noneMatch(dependency -> installed.contains(dependency.upgrade));
+	}
+
+	/**
+	 * @return all upgrades in this tech tree
+	 */
+	public List<UpgradeTreeNode> getAllUpgrades()
+	{
+		return nodes;
+	}
+
+	/**
+	 * @return all base level upgrades in this tech tree (upgrades without dependencies)
+	 */
+	public List<UpgradeTreeNode> getAllBaseUpgrades()
+	{
+		return nodes.stream().filter(nodes -> nodes.dependencies.isEmpty()).collect(Collectors.toList());
+	}
+
+	/**
+	 * Represents a node in the upgrade tech tree of a machine. Can be connected to other nodes via a dependency or lock relationship.
+	 */
+	public static class UpgradeTreeNode
+	{
+		private final Upgrade upgrade;
+		private final UpgradeTier tier;
+		private final Set<UpgradeTreeNode> dependencies = new HashSet<>();
+		private final Set<UpgradeTreeNode> locksOut = new HashSet<>();
+
+		public UpgradeTreeNode(Upgrade upgrade, UpgradeTier tier)
+		{
+			this.upgrade = upgrade;
+			this.tier = tier;
+		}
+
+		public Upgrade getUpgrade()
+		{
+			return upgrade;
+		}
+
+		public UpgradeTier getTier()
+		{
+			return tier;
+		}
+
+		public Set<UpgradeTreeNode> getDependencies()
+		{
+			return dependencies;
+		}
+
+		public Set<UpgradeTreeNode> getLocksOut()
+		{
+			return locksOut;
+		}
+	}
+}
+

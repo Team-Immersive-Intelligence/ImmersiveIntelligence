@@ -1262,6 +1262,136 @@ desc.immersiveintelligence.conditional_variable=Conditional Variable:
 desc.immersiveintelligence.no_variable=None
 desc.immersiveintelligence.variable=Variable:
 
+desc.immersiveintelligence.diplomacy.ownedby=Property of %s
+desc.immersiveintelligence.diplomacy.noowner=Abandoned Property
+desc.immersiveintelligence.diplomacy.noowner_long=This property has no owner. It lies open to claim.
+desc.immersiveintelligence.diplomacy.noowner_long.company=This property has no owner. Its assets await acquisition.
+desc.immersiveintelligence.diplomacy.noowner_long.republic=This property is unrepresented. It awaits a new voice of governance.
+desc.immersiveintelligence.diplomacy.noowner_long.commune=This property lies fallow, awaiting the hands of workers and peasants.
+desc.immersiveintelligence.diplomacy.noowner_long.commisariat=This property is left without oversight. It yearns for a new order.
+desc.immersiveintelligence.diplomacy.noowner_long.free_city=No charter protects this property. Its markets and streets lie empty of law.
+desc.immersiveintelligence.diplomacy.noowner_long.dynasty=No ruler has claimed this property. It awaits for our banner to rise over it.
+
+desc.immersiveintelligence.diplomacy.status.member=Member
+desc.immersiveintelligence.diplomacy.status.member_long=You belong to this faction.
+desc.immersiveintelligence.diplomacy.status.ally=Ally
+desc.immersiveintelligence.diplomacy.status.ally_long=Bound by trust and cooperation, this faction stands beside you.
+desc.immersiveintelligence.diplomacy.status.neutral=Neutral
+desc.immersiveintelligence.diplomacy.status.neutral_long=No strong ties bind you to this faction. Relations are balanced and uncertain.
+desc.immersiveintelligence.diplomacy.status.hostile=Hostile
+desc.immersiveintelligence.diplomacy.status.hostile_long=This faction regards you as an enemy. Conflict is to be expected.
+
+desc.immersiveintelligence.diplomacy.ownership.claim=Claim Property
+desc.immersiveintelligence.diplomacy.ownership.start_capture=Seize Property
+desc.immersiveintelligence.diplomacy.ownership.owned_chunks=Chunks Controlled: %s
+desc.immersiveintelligence.diplomacy.ownership.flagpoles=Flagpoles Placed: %s
+desc.immersiveintelligence.diplomacy.ownership.law_form=Law Form: %s
+desc.immersiveintelligence.diplomacy.ownership.members=Members: %s
+
+desc.immersiveintelligence.diplomacy.ownership.comparison.far_stronger=This faction dwarfs your strength and influence.
+desc.immersiveintelligence.diplomacy.ownership.comparison.stronger=This faction holds advantage over yours.
+desc.immersiveintelligence.diplomacy.ownership.comparison.equal=This faction matches your strength.
+desc.immersiveintelligence.diplomacy.ownership.comparison.weaker=This faction falls short of your strength.
+desc.immersiveintelligence.diplomacy.ownership.comparison.far_weaker=This faction is vastly outclassed by yours.
+
+# Company
+desc.immersiveintelligence.diplomacy.law_form.company=Company
+desc.immersiveintelligence.diplomacy.law_form.company.tier1=Venture
+desc.immersiveintelligence.diplomacy.law_form.company.tier1_long=A fledgling venture with modest assets and limited reach.
+desc.immersiveintelligence.diplomacy.law_form.company.tier2=Firm
+desc.immersiveintelligence.diplomacy.law_form.company.tier2_long=A growing business with factories and employees under its banner.
+desc.immersiveintelligence.diplomacy.law_form.company.tier3=Corporation
+desc.immersiveintelligence.diplomacy.law_form.company.tier3_long=A powerful corporate body with vast holdings and organized management.
+desc.immersiveintelligence.diplomacy.law_form.company.tier4=Conglomerate
+desc.immersiveintelligence.diplomacy.law_form.company.tier4_long=A sprawling empire of industries, armed forces, and strategic resources.
+desc.immersiveintelligence.diplomacy.law_form.company.tier5=Trust
+desc.immersiveintelligence.diplomacy.law_form.company.tier5_long=A monopolistic titan controlling entire sectors of production.
+#Republic
+desc.immersiveintelligence.diplomacy.law_form.republic=Republic
+desc.immersiveintelligence.diplomacy.law_form.republic.tier1=Town Council
+desc.immersiveintelligence.diplomacy.law_form.republic.tier1_long=A small assembly of elected voices governing a handful of citizens.
+desc.immersiveintelligence.diplomacy.law_form.republic.tier2=Republic
+desc.immersiveintelligence.diplomacy.law_form.republic.tier2_long=An organized state with elections and a growing populace.
+desc.immersiveintelligence.diplomacy.law_form.republic.tier3=Federal Republic
+desc.immersiveintelligence.diplomacy.law_form.republic.tier3_long=A union of regions united under a shared banner of representation.
+desc.immersiveintelligence.diplomacy.law_form.republic.tier4=Commonwealth
+desc.immersiveintelligence.diplomacy.law_form.republic.tier4_long=A vast and influential republic commanding armies and infrastructure.
+desc.immersiveintelligence.diplomacy.law_form.republic.tier5=Great Commonwealth
+desc.immersiveintelligence.diplomacy.law_form.republic.tier5_long=A grand alliance of states, joined in common governance and defense.
+#Commune
+desc.immersiveintelligence.diplomacy.law_form.commune=Commune
+desc.immersiveintelligence.diplomacy.law_form.commune.tier1=Collective
+desc.immersiveintelligence.diplomacy.law_form.commune.tier1_long=A handful of people working together with shared property.
+desc.immersiveintelligence.diplomacy.law_form.commune.tier2=Commune
+desc.immersiveintelligence.diplomacy.law_form.commune.tier2_long=A larger group pooling land, tools, and production for the common good.
+desc.immersiveintelligence.diplomacy.law_form.commune.tier3=Federated Commune
+desc.immersiveintelligence.diplomacy.law_form.commune.tier3_long=Multiple collectives joined in solidarity and mutual support.
+desc.immersiveintelligence.diplomacy.law_form.commune.tier4=Regional Commune
+desc.immersiveintelligence.diplomacy.law_form.commune.tier4_long=A wide communal network operating diverse industries together.
+desc.immersiveintelligence.diplomacy.law_form.commune.tier5=Union of People’s Communes
+desc.immersiveintelligence.diplomacy.law_form.commune.tier5_long=A sprawling society bound entirely by collective ownership and decision.
+#Commissariat
+desc.immersiveintelligence.diplomacy.law_form.commisariat=Commissariat
+desc.immersiveintelligence.diplomacy.law_form.commisariat.tier1=Cell
+desc.immersiveintelligence.diplomacy.law_form.commisariat.tier1_long=A small cadre loyal to a commissar, enforcing order through ideology.
+desc.immersiveintelligence.diplomacy.law_form.commisariat.tier2=Bureau
+desc.immersiveintelligence.diplomacy.law_form.commisariat.tier2_long=An administrative office directing policy and propaganda.
+desc.immersiveintelligence.diplomacy.law_form.commisariat.tier3=Regional Commissariat
+desc.immersiveintelligence.diplomacy.law_form.commisariat.tier3_long=A strong authority ruling multiple regions with loyal armed forces.
+desc.immersiveintelligence.diplomacy.law_form.commisariat.tier4=High Commissariat
+desc.immersiveintelligence.diplomacy.law_form.commisariat.tier4_long=A commanding power with centralized control of production and war.
+desc.immersiveintelligence.diplomacy.law_form.commisariat.tier5=Supreme Commissariat
+desc.immersiveintelligence.diplomacy.law_form.commisariat.tier5_long=A totalitarian regime, enforcing absolute order and unquestioned loyalty.
+#Free City
+desc.immersiveintelligence.diplomacy.law_form.free_city=Free City
+desc.immersiveintelligence.diplomacy.law_form.free_city.tier1=Hamlet
+desc.immersiveintelligence.diplomacy.law_form.free_city.tier1_long=A small autonomous village with its own local governance.
+desc.immersiveintelligence.diplomacy.law_form.free_city.tier2=Village
+desc.immersiveintelligence.diplomacy.law_form.free_city.tier2_long=A community organized around trade and exchange.
+desc.immersiveintelligence.diplomacy.law_form.free_city.tier3=Town
+desc.immersiveintelligence.diplomacy.law_form.free_city.tier3_long=A prosperous city enriched by commerce and external trade.
+desc.immersiveintelligence.diplomacy.law_form.free_city.tier4=City
+desc.immersiveintelligence.diplomacy.law_form.free_city.tier4_long=A hub of commerce and diplomacy, commanding regional markets.
+desc.immersiveintelligence.diplomacy.law_form.free_city.tier5=Metropolis
+desc.immersiveintelligence.diplomacy.law_form.free_city.tier5_long=A dominant city-state whose wealth and trade shape entire regions.
+#Dynasty
+desc.immersiveintelligence.diplomacy.law_form.dynasty=Dynasty
+desc.immersiveintelligence.diplomacy.law_form.dynasty.tier1=House
+desc.immersiveintelligence.diplomacy.law_form.dynasty.tier1_long=A family line holding a modest estate and its crest.
+desc.immersiveintelligence.diplomacy.law_form.dynasty.tier2=Clan
+desc.immersiveintelligence.diplomacy.law_form.dynasty.tier2_long=A broader kinship, with vassals and sworn allies under its banner.
+desc.immersiveintelligence.diplomacy.law_form.dynasty.tier3=Noble House
+desc.immersiveintelligence.diplomacy.law_form.dynasty.tier3_long=A fortified noble line wielding armies and strongholds.
+desc.immersiveintelligence.diplomacy.law_form.dynasty.tier4=Royal Dynasty
+desc.immersiveintelligence.diplomacy.law_form.dynasty.tier4_long=A ruling bloodline commanding vast lands and multiple heirs.
+desc.immersiveintelligence.diplomacy.law_form.dynasty.tier5=Imperial Dynasty
+desc.immersiveintelligence.diplomacy.law_form.dynasty.tier5_long=A lineage of emperors, wielding unmatched dominion and legacy.
+
+desc.immersiveintelligence.diplomacy.action.disband=Disband
+desc.immersiveintelligence.diplomacy.action.merge=Merge
+desc.immersiveintelligence.diplomacy.action.add_members=Add Members
+desc.immersiveintelligence.diplomacy.action.propose=Propose
+desc.immersiveintelligence.diplomacy.action.demand=Demand
+desc.immersiveintelligence.diplomacy.action.declare_war=Declare War
+desc.immersiveintelligence.diplomacy.action.declare_alliance=Declare Alliance
+
+desc.immersiveintelligence.diplomacy.permission.disband=Disband
+desc.immersiveintelligence.diplomacy.permission.merge=Merge
+desc.immersiveintelligence.diplomacy.permission.add_members=Add Members
+desc.immersiveintelligence.diplomacy.permission.remove_members=Remove Members
+desc.immersiveintelligence.diplomacy.permission.military_aid=Military Aid
+desc.immersiveintelligence.diplomacy.permission.transit=Transit
+desc.immersiveintelligence.diplomacy.permission.trade=Trade
+desc.immersiveintelligence.diplomacy.permission.research=Research
+desc.immersiveintelligence.diplomacy.permission.logistics=Logistics
+desc.immersiveintelligence.diplomacy.permission.container_access=Container Access
+
+desc.immersiveintelligence.diplomacy.permission_level.owner_allow=Owners
+desc.immersiveintelligence.diplomacy.permission_level.member_allow=Members
+desc.immersiveintelligence.diplomacy.permission_level.allies_allow=Allies
+desc.immersiveintelligence.diplomacy.permission_level.others_allow=Others
+desc.immersiveintelligence.diplomacy.permission_level.enemy_allow=Enemies
+
 #Bullets
 
 desc.immersiveintelligence.bullet_type.general_purpose=General Purpose
@@ -2972,8 +3102,6 @@ ii.gui.data_input_machine.memory.switch.tooltip=Switch Current Memory Slot
 ii.gui.arithmetic_logic_machine.storage=Circuit Storage
 
 #GUI HelpBoxes
-ii.gui_help.manual_widget.show=Displays the Immersive Engineering Manual on the side.
-
 ii.gui_help.data_input_machine.programming=These slots allow reading a punchtape into the DIM's memory or writing its contents into an empty one.
 ii.gui_help.data_input_machine.storage=These slots allow storing empty or programmed punchtapes for convenience.
 ii.gui_help.data_input_machine.variables=This list shows variables of the data packet stored inside the machine.
@@ -2985,8 +3113,16 @@ ii.gui_tooltip.button.edit=Edit
 ii.gui_tooltip.button.duplicate=Duplicate
 ii.gui_tooltip.button.clear=Clear
 
+#GUI Widgets
+ii.gui_tooltip.widget.style.show=Show Style Customization
+ii.gui_tooltip.widget.style.hide=Hide Style Customization
+ii.gui_tooltip.widget.style=Customization
+ii.gui_tooltip.widget.ownership.show=Show Ownership Data
+ii.gui_tooltip.widget.ownership.hide=Hide Ownership Data
+ii.gui_tooltip.widget.ownership=Ownership
 ii.gui_tooltip.widget.manual.show=Show Side Manual
 ii.gui_tooltip.widget.manual.hide=Hide Side Manual
+ii.gui_tooltip.widget.manual=Engineer's Manual
 
 ii.gui_tooltip.energy.stored=Energy Stored: %s/%s IF
 ii.gui_tooltip.energy.input=Energy Consumed: %s IF

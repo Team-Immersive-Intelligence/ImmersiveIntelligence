@@ -1,118 +1,58 @@
 package pl.pabilo8.immersiveintelligence.client.render.multiblock.metal;
 
-import blusunrize.immersiveengineering.client.ClientUtils;
-import net.minecraft.client.renderer.BannerTextures;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.tileentity.TileEntityBanner;
-import net.minecraft.util.EnumFacing.Axis;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.Vec3i;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.ModelFlagpole;
-import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
-import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraftforge.client.model.obj.OBJModel;
+import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTCachedModel;
+import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTCachedModelBuilder;
+import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IIMultiblockRenderer;
+import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IITileRenderer.RegisteredTileRenderer;
+import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IITileRenderer.RegisteredUpgradeRenderer;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityFlagpole;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
-public class FlagpoleRenderer extends TileEntitySpecialRenderer<TileEntityFlagpole> implements IReloadableModelContainer<FlagpoleRenderer>
+/**
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @ii-approved 0.3.1
+ * @since 06.09.2025
+ */
+@RegisteredTileRenderer(name = "multiblock/flagpole", clazz = TileEntityFlagpole.class)
+@RegisteredUpgradeRenderer(clazz = TileEntityFlagpole.class)
+public class FlagpoleRenderer extends IIMultiblockRenderer<TileEntityFlagpole>
 {
-	private static final String texture = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/flagpole.png";
-	private static final TileEntityBanner banner = new TileEntityBanner();
-	private static ModelFlagpole model;
-	private static ModelFlagpole modelFlipped;
+	private AMTCachedModel<TileEntityFlagpole> model;
 
 	@Override
-	public void render(TileEntityFlagpole te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
+	public void drawAnimated(TileEntityFlagpole te, BufferBuilder buf, float partialTicks, Tessellator tes)
 	{
-		///tp @p -100 5 -761 126.4 -0.3
-		if(te!=null)
-		{
-			if(te.isDummy())
-				return;
-			ClientUtils.bindTexture(texture);
-			GlStateManager.pushMatrix();
-			GlStateManager.translate(x+0.5f, y-1, z+0.5f);
-			GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
-
-			if(te.hasWorld())
-			{
-				Vec3i offset = te.facing.getDirectionVec();
-				GlStateManager.translate(offset.getX(), 0, offset.getZ());
-				GlStateManager.rotate(te.facing.getOpposite().getHorizontalAngle()*(te.facing.getAxis()==Axis.Z?1f: -1f), 0F, 1F, 0F);
-			}
-
-			for(ModelRendererTurbo mod : (te.mirrored?modelFlipped: model).baseModel)
-				mod.render();
-
-			if(!te.flag.isEmpty())
-			{
-				banner.setItemValues(te.flag, false);
-				double f = ((Math.abs((((getWorld().getTotalWorldTime()+partialTicks)%200)/200f)-0.5f)/0.5f)-0.5f)/0.5f;
-				ResourceLocation res = BannerTextures.BANNER_DESIGNS.getResourceLocation(banner.getPatternResourceLocation(), banner.getPatternList(), banner.getColorList());
-				if(res!=null)
-				{
-					ClientUtils.mc().getTextureManager().bindTexture(res);
-					GlStateManager.translate(0, 5f-0.125f, 0);
-					GlStateManager.rotate(90, 0, 0, 1);
-
-					drawFlag(3, f);
-					//ClientUtils.drawTexturedRect(0f,0f,1f,40/21f, 0.015625f,21/64f,0.015625f,1/40f);
-				}
-
-
-			}
-
-			GlStateManager.popMatrix();
-
-		}
-		else
-		{
-			GlStateManager.pushMatrix();
-			GlStateManager.translate(x-0.35, y-1.1, z-0.35);
-			GlStateManager.rotate(90, 0, 1, 0);
-			GlStateManager.rotate(-7.5f, 0, 0, 1);
-			GlStateManager.rotate(-7.5f, 1, 0, 0);
-			GlStateManager.scale(0.4, 0.4, 0.4);
-			GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
-
-			ClientUtils.bindTexture(texture);
-			model.render();
-
-			GlStateManager.popMatrix();
-		}
-	}
-
-	private void drawFlag(int n, double rot)
-	{
-		// TODO: 27.07.2021 fix uv
-		float length = 40/(float)n;
-		for(int i = 0; i < n; i++)
-		{
-			GlStateManager.rotate((float)(rot*6.5f*n*(n%2==0?1: -1)), 1, 0, 0);
-			ClientUtils.drawTexturedRect(0f, 0f, 1f, length/21f, 0.015625f, 21/64f, 0.015625f+(i*length/64f), (length*(i+1))/64f);
-			GlStateManager.translate(0f, 0f, 0.0625f);
-			ClientUtils.drawTexturedRect(0f, length/21f, 1f, -length/21f, 0.015625f, 21/64f, 0.015625f+((i+1)*length/64f), (length*i)/64f);
-			GlStateManager.pushMatrix();
-			GlStateManager.rotate(90, 0, 1, 0);
-			ClientUtils.drawTexturedRect(0f, 0f, 0.0625f, length/21f, 0.015625f, 0.015625f, 0.015625f+(i*length/64f), (length*(i+1))/64f);
-			GlStateManager.translate(0f, 0f, 1f);
-			ClientUtils.drawTexturedRect(0f, length/21f, 0.0625f, -length/21f, 0.328125f, 0.328125f, 0.015625f+((i+1)*length/64f), (length*i)/64f);
-
-			GlStateManager.popMatrix();
-			GlStateManager.translate(0f, length/24f, -0.0625f);
-		}
-		//GlStateManager.rotate(90,0,0,1);
-		GlStateManager.rotate(90, 1, 0, 0);
-		GlStateManager.translate(0f, 0f, -0.0625f);
-		ClientUtils.drawTexturedRect(0f, 0f, 1f, 1.5f/21f, 0.015625f, 0.015625f, 0.625f, 0.625f);
-
+		applyStandardMirroring(te, true);
+		model.getVariant(te, te.style);
+		model.render(tes, buf);
 	}
 
 	@Override
-	public void reloadModels()
+	public void drawSimple(BufferBuilder buf, float partialTicks, Tessellator tes)
 	{
-		model = new ModelFlagpole();
-		modelFlipped = new ModelFlagpole();
-		modelFlipped.flipAllX();
+		model.render(tes, buf);
+	}
+
+	@Override
+	public void compileModels(IBlockState state, OBJModel model)
+	{
+		this.model = AMTCachedModelBuilder.startTileEntityModel(TileEntityFlagpole.class)
+				.withModel(model)
+				//Style Variants
+				.withModel(te -> te==null||te.style.getStyle().equals("sandbags"),
+						IIReference.RES_BLOCK_MODEL.with("multiblock/flagpole/variant_sandbags.obj"))
+				.withModel(te -> te!=null&&te.style.getStyle().equals("bricks"),
+						IIReference.RES_BLOCK_MODEL.with("multiblock/flagpole/variant_bricks.obj"))
+				.withModel(te -> te!=null&&te.style.getStyle().equals("concrete"),
+						IIReference.RES_BLOCK_MODEL.with("multiblock/flagpole/variant_concrete.obj"))
+				.withModel(te -> te!=null&&te.style.getStyle().equals("wooden"),
+						IIReference.RES_BLOCK_MODEL.with("multiblock/flagpole/variant_wooden.obj"))
+				.withModel(te -> te!=null&&te.style.getStyle().equals("steel"),
+						IIReference.RES_BLOCK_MODEL.with("multiblock/flagpole/variant_steel.obj"))
+				.build();
 	}
 }

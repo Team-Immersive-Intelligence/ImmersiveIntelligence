@@ -22,7 +22,6 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.api.utils.IEntitySpecialRepairable;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Emplacement;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.weapon.EmplacementWeapon;
@@ -101,16 +100,17 @@ public class EntityEmplacementWeapon extends EntityLivingBase implements IEntity
 		{
 			name = parent.getName();
 			TileEntity tileEntity = world.getTileEntity(getPosition());
-			if(tileEntity instanceof TileEntityEmplacement)
+			//TODO: 04.09.2025 re-implement
+			/*if(tileEntity instanceof TileEntityEmplacement)
 			{
 				TileEntityEmplacement master = ((TileEntityEmplacement)tileEntity).master();
 				if(master!=null)
 				{
-					EntityPlayer player = world.getPlayerEntityByName(master.owner);
+					EntityPlayer player = world.getPlayerEntityByName();
 					if(player!=null)
 						t = player.getTeam();
 				}
-			}
+			}*/
 		}
 
 		TextComponentTranslation textComponent = new TextComponentTranslation("machineupgrade.immersiveintelligence."+name);
@@ -187,7 +187,7 @@ public class EntityEmplacementWeapon extends EntityLivingBase implements IEntity
 		if(t==null)
 			return;
 
-		float f = MathHelper.clamp(t.progress/(float)Emplacement.lidTime, 0f, 1f);
+		float f = t.door.getProgress(0);
 		float turretHeight;
 		if(f <= 0.65)
 		{
@@ -277,7 +277,7 @@ public class EntityEmplacementWeapon extends EntityLivingBase implements IEntity
 	}
 
 	@Nullable
-	public EmplacementWeapon<?> getParent()
+	public EmplacementWeapon getParent()
 	{
 		if(parent!=null)
 			return parent;

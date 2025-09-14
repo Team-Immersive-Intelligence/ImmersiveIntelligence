@@ -29,9 +29,9 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoSc
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoImage;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.*;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundBuilder.SlotStyle;
-import pl.pabilo8.immersiveintelligence.client.util.amt.AMTBullet;
-import pl.pabilo8.immersiveintelligence.client.util.amt.AMTBullet.BulletState;
-import pl.pabilo8.immersiveintelligence.client.util.amt.AMTLocator;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTBullet;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTBullet.BulletState;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTLocator;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
@@ -117,7 +117,7 @@ public class GuiProjectileWorkshop extends DecoGui<TileEntityProjectileWorkshop,
 				.withBox(DecoTextures.GUI_BG_STEEL_ROUGH, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_SQUARE, 0, 0, 256, 130)
 				.withTitleBar(tile)
 				.withNextLayer()
-				.withBox(DecoTextures.GUI_BG_WOODEN, 44, 136, 176, 92)
+				.withBox(DecoTextures.GUI_BG_WOODEN, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_ROUND_WOODEN, 44, 136, 176, 92)
 				.withInventorySlots(SlotStyle.VANILLA, container.playerInventory)
 				.withInventoryTitleBar()
 

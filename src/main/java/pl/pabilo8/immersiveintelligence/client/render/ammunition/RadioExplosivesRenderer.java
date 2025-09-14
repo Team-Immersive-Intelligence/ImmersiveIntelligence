@@ -12,10 +12,10 @@ import net.minecraft.util.Tuple;
 import net.minecraftforge.client.model.obj.OBJModel;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.client.model.builtin.IAmmoModel;
-import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer;
-import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer.RegisteredTileRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.ammunition.RadioExplosivesRenderer.RadioExplosivesItemStackRenderer;
-import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationUtils;
+import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
+import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IITileRenderer;
+import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IITileRenderer.RegisteredTileRenderer;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.mines.BlockIIMine.ItemBlockMineBase;
 import pl.pabilo8.immersiveintelligence.common.block.mines.tileentity.TileEntityRadioExplosives;
@@ -38,7 +38,7 @@ public class RadioExplosivesRenderer extends IITileRenderer<TileEntityRadioExplo
 	public void draw(TileEntityRadioExplosives te, BufferBuilder buf, float partialTicks, Tessellator tes)
 	{
 		applyStandardRotation(te.facing);
-		float debugProgress = IIAnimationUtils.getDebugProgress(30, partialTicks);
+		float debugProgress = AMTUtils.getDebugProgress(30, partialTicks);
 		GlStateManager.translate(0.5, 0, 0.5);
 //		GlStateManager.rotate(debugProgress*360f, 0, 1, 0);
 

@@ -8,6 +8,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseType;
 import pl.pabilo8.immersiveintelligence.client.model.builtin.IAmmoModel;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMT;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityAmmoBase;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
@@ -80,7 +81,7 @@ public interface IAmmoType<T extends IAmmoType<T, E>, E extends EntityAmmoBase<?
 
 	/**
 	 * @return A bullet model, it's required to extend {@link IAmmoModel},<br>
-	 * {@link pl.pabilo8.immersiveintelligence.client.util.amt.AMT} is preferred, but you can use any renderer you like
+	 * {@link AMT} is preferred, but you can use any renderer you like
 	 */
 	@Nonnull
 	@SideOnly(Side.CLIENT)

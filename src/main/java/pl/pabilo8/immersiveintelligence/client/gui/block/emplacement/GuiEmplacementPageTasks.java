@@ -5,16 +5,7 @@ import blusunrize.immersiveengineering.client.gui.elements.GuiButtonIE;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.INpc;
-import net.minecraft.entity.monster.IMob;
-import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.IStringSerializable;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.registries.GameData;
 import org.apache.commons.lang3.ArrayUtils;
 import org.lwjgl.input.Keyboard;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiEmplacementTaskList;
@@ -25,18 +16,17 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.task.EnumTaskType;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.task.TaskFilter;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Locale;
-import java.util.function.Supplier;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -78,7 +68,7 @@ public class GuiEmplacementPageTasks extends GuiEmplacement
 		};
 
 		buttonEnabled = addSwitch(122+11, 17, 60, DecoTextures.COLOR_H1,
-				IIReference.COLOR_SWITCH_OFF, IIReference.COLOR_SWITCH_ON, currentTab==tile.defaultTargetMode,
+				IIReference.COLOR_SWITCH_OFF, IIReference.COLOR_SWITCH_ON, true,//currentTab==tile.defaultTask
 				I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.emplacement.task_enabled"), tasksModified);
 
 		addLabel(122, 32+16-12, 83, 0, DecoTextures.COLOR_H1, I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.emplacement.selector_preset")).setCentered();
@@ -133,11 +123,11 @@ public class GuiEmplacementPageTasks extends GuiEmplacement
 	{
 		tasksModified = true;
 		taskFilters.clear();
-		NBTTagCompound nbt = tile.defaultTaskNBT[currentTab];
+		/*NBTTagCompound nbt = tile.taskManager[currentTab];
 		NBTTagList tagList = nbt.getTagList("filters", 10);
 		for(NBTBase nbtBase : tagList)
 			if(nbtBase instanceof NBTTagCompound)
-				taskFilters.add(new TaskFilter(((NBTTagCompound)nbtBase)));
+				taskFilters.add(new TaskFilter(((NBTTagCompound)nbtBase)));*/
 	}
 
 	@Override
@@ -212,10 +202,10 @@ public class GuiEmplacementPageTasks extends GuiEmplacement
 		EasyNBT nbt = EasyNBT.newNBT();
 
 
-		if(buttonEnabled.getState())
-			nbt.withInt("defaultTargetMode", tile.defaultTargetMode = currentTab);
-		else if(tile.defaultTargetMode==currentTab)
-			nbt.withInt("defaultTargetMode", tile.defaultTargetMode = -1);
+	/*	if(buttonEnabled.getState())
+			nbt.withInt("defaultTargetMode", tile.defaultTask = currentTab);
+		else if(tile.defaultTask==currentTab)
+			nbt.withInt("defaultTargetMode", tile.defaultTask = -1);*/
 
 		IIPacketHandler.sendToServer(new MessageIITileSync(tile, nbt
 				.withTag("defaultTaskNBT"+(currentTab+1), EasyNBT.newNBT()
@@ -304,91 +294,4 @@ public class GuiEmplacementPageTasks extends GuiEmplacement
 	}
 
 
-	//Yes, this had to be done
-	//Else I'd have to do ATs on internal classes and get it somehow
-	public enum EnumTaskType implements IStringSerializable
-	{
-		MOBS(() ->
-				ArrayUtils.add(
-						GameData.getEntityClassMap().values().stream()
-								.filter(entityEntry -> IMob.class.isAssignableFrom(entityEntry.getEntityClass()))
-								.map(entityEntry -> entityEntry.delegate.name())
-								.map(ResourceLocation::toString)
-								.toArray(String[]::new),
-						0,
-						""
-				)
-
-		),
-		ANIMALS(() ->
-				ArrayUtils.add(
-						GameData.getEntityClassMap().values().stream()
-								.filter(entityEntry -> EntityAnimal.class.isAssignableFrom(entityEntry.getEntityClass()))
-								.map(entityEntry -> entityEntry.delegate.name())
-								.map(ResourceLocation::toString)
-								.toArray(String[]::new),
-						0,
-						""
-				)
-		),
-		PLAYERS,
-		NPCS(() ->
-				ArrayUtils.add(
-						GameData.getEntityClassMap().values().stream()
-								.filter(entityEntry -> INpc.class.isAssignableFrom(entityEntry.getEntityClass()))
-								.map(entityEntry -> entityEntry.delegate.name())
-								.map(ResourceLocation::toString)
-								.toArray(String[]::new),
-						0,
-						""
-				)
-		),
-		VEHICLES,
-		SHELLS,
-		TEAM,
-		NAME;
-
-		private final Supplier<String[]> entries;
-
-		EnumTaskType()
-		{
-			this(() -> new String[0]);
-		}
-
-		EnumTaskType(Supplier<String[]> entries)
-		{
-			this.entries = entries;
-		}
-
-		@Nonnull
-		@Override
-		public String getName()
-		{
-			return this.toString().toLowerCase(Locale.ENGLISH);
-		}
-
-		public String[] getDropdownEntries()
-		{
-			return entries.get();
-		}
-	}
-
-	public static class TaskFilter
-	{
-		public EnumTaskType type;
-		protected boolean negation;
-		protected String filter;
-
-		public TaskFilter(EnumTaskType type, boolean negation, String filter)
-		{
-			this.type = type;
-			this.negation = negation;
-			this.filter = filter;
-		}
-
-		public TaskFilter(NBTTagCompound tag)
-		{
-			this(EnumTaskType.valueOf(tag.getString("type").toUpperCase()), tag.getBoolean("negation"), tag.getString("filter"));
-		}
-	}
 }

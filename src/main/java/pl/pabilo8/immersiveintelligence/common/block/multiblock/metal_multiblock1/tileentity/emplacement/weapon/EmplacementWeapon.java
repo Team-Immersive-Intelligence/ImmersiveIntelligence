@@ -5,8 +5,6 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Tuple;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -14,59 +12,33 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.IItemHandler;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.ComponentEffectShape;
-import pl.pabilo8.immersiveintelligence.api.ammo.utils.AmmoFactory;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
-import pl.pabilo8.immersiveintelligence.api.utils.upgrade.Upgrade;
-import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleRegistry;
 import pl.pabilo8.immersiveintelligence.client.gui.block.emplacement.GuiEmplacementPageStorage;
-import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityEmplacementWeapon;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityEmplacementWeapon.EmplacementHitboxEntity;
-import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityAmmoBase;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
-import pl.pabilo8.immersiveintelligence.common.util.IIExplosion;
-import pl.pabilo8.immersiveintelligence.common.util.IIMath;
-import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.ITypeNBTSerializable;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
-import java.util.function.Supplier;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 15.02.2024
  */
-public abstract class EmplacementWeapon<A extends EntityAmmoBase<A>>
+public abstract class EmplacementWeapon implements ITypeNBTSerializable<NBTTagCompound>
 {
 	/**
 	 * Acts as a hitbox container for the weapon
 	 */
-	//TODO: 15.02.2024 replace with AMTTactile
 	public EntityEmplacementWeapon entity = null;
-	//TODO: 15.02.2024 make yaw, pitch and health protected
 	public float pitch = 0;
 	public float yaw = 0;
 	public int health = 0;
-	/**
-	 * Used to fire ammo for the weapon
-	 */
-	protected AmmoFactory<A> ammoFactory;
 	protected float nextPitch = 0, nextYaw = 0;
-
-	public static Upgrade register(Supplier<EmplacementWeapon<?>> supplier)
-	{
-		//hacky way, but works
-		EmplacementWeapon<?> w = supplier.get();
-		TileEntityEmplacement.weaponRegistry.put(w.getName(), supplier);
-		return new UpgradeEmplacementWeapon(w);
-	}
 
 	/**
 	 * @return name of the emplacement, must be the same as the name in the weapon registry
@@ -167,9 +139,6 @@ public abstract class EmplacementWeapon<A extends EntityAmmoBase<A>>
 		//Exception is the IR Observer, which overrides this method
 		if(firstTime)
 		{
-			this.ammoFactory = new AmmoFactory<A>(te.getWorld())
-					.setIgnoredBlocks(te.getAllBlocks())
-					.setOwner(entity);
 			this.health = getMaxHealth();
 			this.nextPitch = this.pitch = -90;
 			this.nextYaw = this.yaw = te.facing.getHorizontalAngle();
@@ -182,7 +151,6 @@ public abstract class EmplacementWeapon<A extends EntityAmmoBase<A>>
 				Vec3d vv = te.getWeaponCenter().subtract(0, 1, 0);
 				entity = new EntityEmplacementWeapon(te.getWorld());
 				entity.setPosition(vv.x, vv.y, vv.z);
-				ammoFactory.setIgnoredEntities(Arrays.asList(entity.partArray));
 				te.getWorld().spawnEntity(entity);
 			}
 		}
@@ -263,18 +231,6 @@ public abstract class EmplacementWeapon<A extends EntityAmmoBase<A>>
 
 	}
 
-	@SideOnly(Side.CLIENT)
-	public void render(TileEntityEmplacement te, float partialTicks)
-	{
-
-	}
-
-	@SideOnly(Side.CLIENT)
-	public void renderUpgradeProgress(int clientProgress, int serverProgress, float partialTicks)
-	{
-
-	}
-
 	@Nonnull
 	public abstract AxisAlignedBB getVisionAABB();
 
@@ -313,6 +269,8 @@ public abstract class EmplacementWeapon<A extends EntityAmmoBase<A>>
 
 	public abstract int getEnergyUpkeepCost();
 
+	//--- Damage ---//
+
 	public abstract int getMaxHealth();
 
 	public int getHealth()
@@ -331,10 +289,12 @@ public abstract class EmplacementWeapon<A extends EntityAmmoBase<A>>
 		return health <= 0;
 	}
 
+	//--- Graphics ---//
+
 	@SideOnly(Side.CLIENT)
 	public void spawnDebrisExplosion(TileEntityEmplacement te)
 	{
-		double true_angle = Math.toRadians((-yaw) > 180?360f-(-yaw): (-yaw));
+		/*double true_angle = Math.toRadians((-yaw) > 180?360f-(-yaw): (-yaw));
 		double true_angle2 = Math.toRadians((-yaw-90) > 180?360f-(-yaw-90): (-yaw-90));
 		Random rand = new Random(431L);
 
@@ -359,32 +319,21 @@ public abstract class EmplacementWeapon<A extends EntityAmmoBase<A>>
 			Vec3d vecDir = new Vec3d(rand.nextGaussian()*0.075, rand.nextGaussian()*0.15, rand.nextGaussian()*0.075);
 
 			ParticleRegistry.spawnTMTModelFX(vo, vx.add(vz).addVector(0, 0.25+vecDir.y, 0).scale(0.66), 0.0625f, mod, texture);
-		}
+		}*/
 	}
 
-	@SideOnly(Side.CLIENT)
-	protected abstract Tuple<ResourceLocation, List<ModelRendererTurbo>> getDebris();
+	//--- NBT ---//
 
-	public static class UpgradeEmplacementWeapon extends Upgrade
+
+	@Override
+	public void deserializeNBT(NBTTagCompound nbt)
 	{
-		private final EmplacementWeapon<?> weapon;
 
-		public UpgradeEmplacementWeapon(EmplacementWeapon<?> weapon)
-		{
-			super(IIReference.RES_II.with(weapon.getName()));
-			this.weapon = weapon;
-		}
+	}
 
-		@SideOnly(Side.CLIENT)
-		public void render(TileEntityEmplacement te)
-		{
-			weapon.render(te, 0);
-		}
-
-		@SideOnly(Side.CLIENT)
-		public void renderUpgradeProgress(int clientProgress, int serverProgress, float partialTicks)
-		{
-			weapon.renderUpgradeProgress(clientProgress, serverProgress, partialTicks);
-		}
+	@Override
+	public NBTTagCompound serializeNBT()
+	{
+		return null;
 	}
 }

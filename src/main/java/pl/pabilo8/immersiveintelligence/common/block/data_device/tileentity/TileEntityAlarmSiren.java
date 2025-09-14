@@ -259,6 +259,7 @@ public class TileEntityAlarmSiren extends TileEntityImmersiveConnectable
 		return active;
 	}
 
+	@SideOnly(Side.CLIENT)
 	@Override
 	public String[] getOverlayText(EntityPlayer player, RayTraceResult mop)
 	{

@@ -4,34 +4,20 @@ import blusunrize.immersiveengineering.api.tool.ChemthrowerHandler;
 import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.util.Utils;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Tuple;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.api.utils.upgrade.UpgradeUtils;
-import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.block.emplacement.GuiEmplacementPageStorage;
-import pl.pabilo8.immersiveintelligence.client.render.multiblock.metal.EmplacementRenderer;
-import pl.pabilo8.immersiveintelligence.client.util.ShaderUtil;
-import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Emplacement;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.EmplacementWeapons.Autocannon;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.EmplacementWeapons.HeavyChemthrower;
-import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityEmplacementWeapon;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityEmplacementWeapon.EmplacementHitboxEntity;
@@ -41,7 +27,6 @@ import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class EmplacementWeaponHeavyChemthrower extends EmplacementWeapon
@@ -53,6 +38,11 @@ public class EmplacementWeaponHeavyChemthrower extends EmplacementWeapon
 	SidedFluidHandler fluidHandler = new SidedFluidHandler(this);
 	private AxisAlignedBB vision;
 	private Vec3d vv;
+
+	public EmplacementWeaponHeavyChemthrower()
+	{
+
+	}
 
 	@Override
 	public String getName()
@@ -225,7 +215,7 @@ public class EmplacementWeaponHeavyChemthrower extends EmplacementWeapon
 	@Override
 	public boolean canShoot(TileEntityEmplacement te)
 	{
-		return vv!=null&&shootDelay <= 0&&te.isDoorOpened&&tank.getFluidAmount() > 0;
+		return vv!=null&&shootDelay <= 0&&tank.getFluidAmount() > 0;
 	}
 
 	@Nullable
@@ -233,109 +223,6 @@ public class EmplacementWeaponHeavyChemthrower extends EmplacementWeapon
 	public IFluidHandler getFluidHandler(boolean in)
 	{
 		return in?fluidHandler: null;
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void render(TileEntityEmplacement te, float partialTicks)
-	{
-		GlStateManager.pushMatrix();
-		float p, pp, y, yy;
-		p = this.nextPitch-this.pitch;
-		y = this.nextYaw-this.yaw;
-		boolean power = te.energyStorage.getEnergyStored() >= getEnergyUpkeepCost();
-		pp = pitch+(power?(Math.signum(p)*MathHelper.clamp(Math.abs(p), 0, 1)*partialTicks*getPitchTurnSpeed()): 0);
-		yy = yaw+(power?(Math.signum(y)*MathHelper.clamp(Math.abs(y), 0, 1)*partialTicks*getYawTurnSpeed()): 0);
-		float setupProgress = 1f-(MathHelper.clamp(setupDelay+(pitch==-90?(te.isDoorOpened?(te.progress==Emplacement.lidTime?partialTicks: 0): -partialTicks): 0), 0, HeavyChemthrower.setupTime)/(float)HeavyChemthrower.setupTime);
-
-		IIClientUtils.bindTexture(EmplacementRenderer.textureHeavyChemthrower);
-
-		for(ModelRendererTurbo mod : EmplacementRenderer.modelHeavyChemthrower.baseModel)
-			mod.render();
-
-
-		GlStateManager.rotate(yy, 0, 1, 0);
-		for(ModelRendererTurbo mod : EmplacementRenderer.modelHeavyChemthrower.turretModel)
-			mod.render();
-		GlStateManager.translate(0.28125f, 0.875f, 0.25f);
-		GlStateManager.rotate(pp, 1, 0, 0);
-		for(ModelRendererTurbo mod : EmplacementRenderer.modelHeavyChemthrower.barrelStartModel)
-			mod.render();
-		for(ModelRendererTurbo mod : EmplacementRenderer.modelHeavyChemthrower.barrelMidModel)
-		{
-			mod.rotateAngleX = 0.00000001f;
-			mod.hasOffset = true;
-			mod.offsetZ = (MathHelper.clamp((setupProgress-0.5f)/0.5f, 0, 1f)*-9);
-			mod.render();
-		}
-
-		GlStateManager.disableCull();
-		for(ModelRendererTurbo mod : EmplacementRenderer.modelHeavyChemthrower.barrelEndModel)
-		{
-			mod.rotateAngleX = 0.00000001f;
-			mod.hasOffset = true;
-			mod.offsetZ = (Math.min(setupProgress/0.5f, 1f)*-9)+(MathHelper.clamp((setupProgress-0.5f)/0.5f, 0, 1f)*-9);
-			mod.render();
-		}
-		GlStateManager.enableCull();
-
-		GlStateManager.popMatrix();
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void renderUpgradeProgress(int clientProgress, int serverProgress, float partialTicks)
-	{
-		GlStateManager.pushMatrix();
-
-		final int req = IIContent.UPGRADE_EMPLACEMENT_WEAPON_HEAVY_CHEMTHROWER.getProgressRequired();
-		final int l = EmplacementRenderer.modelHeavyChemthrowerConstruction.length;
-		double maxClientProgress = UpgradeUtils.getMaxClientProgress(serverProgress, IIContent.UPGRADE_EMPLACEMENT_WEAPON_HEAVY_CHEMTHROWER);
-
-		double cc = (int)Math.min(clientProgress+((partialTicks*(Tools.wrenchUpgradeProgress/2f))), maxClientProgress);
-		double progress = MathHelper.clamp(cc/req, 0, 1);
-
-		IIClientUtils.bindTexture(EmplacementRenderer.textureHeavyChemthrower);
-		for(int i = 0; i < l*progress; i++)
-		{
-			if(1+i > Math.round(l*progress))
-			{
-				GlStateManager.pushMatrix();
-				double scale = 1f-(((progress*l)%1f));
-				GlStateManager.enableBlend();
-				GlStateManager.color(1f, 1f, 1f, (float)Math.min(scale, 1));
-				GlStateManager.translate(0, scale*1.5f, 0);
-
-				EmplacementRenderer.modelHeavyChemthrowerConstruction[i].render(0.0625f);
-				GlStateManager.color(1f, 1f, 1f, 1f);
-				GlStateManager.popMatrix();
-			}
-			else
-				EmplacementRenderer.modelHeavyChemthrowerConstruction[i].render(0.0625f);
-		}
-
-		GlStateManager.pushMatrix();
-		GlStateManager.enableBlend();
-		GlStateManager.disableLighting();
-		GlStateManager.scale(0.98f, 0.98f, 0.98f);
-		GlStateManager.translate(0.03125f, 0f, -0.01325f);
-		//float flicker = (te.getWorld().rand.nextInt(10)==0)?0.75F: (te.getWorld().rand.nextInt(20)==0?0.5F: 1F);
-
-		ShaderUtil.useBlueprint(0.35f, ClientUtils.mc().player.ticksExisted+partialTicks);
-		for(int i = l-1; i >= Math.max((l*progress)-1, 0); i--)
-		{
-			EmplacementRenderer.modelHeavyChemthrowerConstruction[i].render(0.0625f);
-		}
-
-		ShaderUtil.releaseShader();
-		GlStateManager.disableBlend();
-		GlStateManager.enableLighting();
-		GlStateManager.popMatrix();
-
-		GlStateManager.disableBlend();
-
-		GlStateManager.enableLighting();
-		GlStateManager.popMatrix();
 	}
 
 	@Override
@@ -457,13 +344,6 @@ public class EmplacementWeaponHeavyChemthrower extends EmplacementWeapon
 	public int getMaxHealth()
 	{
 		return HeavyChemthrower.maxHealth;
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	protected Tuple<ResourceLocation, List<ModelRendererTurbo>> getDebris()
-	{
-		return new Tuple<>(EmplacementRenderer.textureHeavyChemthrower, Arrays.asList(EmplacementRenderer.modelHeavyChemthrowerConstruction));
 	}
 
 	private double getStackMass()

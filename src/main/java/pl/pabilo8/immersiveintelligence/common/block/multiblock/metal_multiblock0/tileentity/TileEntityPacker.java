@@ -44,9 +44,10 @@ import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeItemStack;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
-import pl.pabilo8.immersiveintelligence.api.utils.upgrade.IManagedUpgradableDevice;
-import pl.pabilo8.immersiveintelligence.api.utils.upgrade.Upgrade;
-import pl.pabilo8.immersiveintelligence.api.utils.upgrade.UpgradeManager;
+import pl.pabilo8.immersiveintelligence.api.upgrade.IManagedUpgradableDevice;
+import pl.pabilo8.immersiveintelligence.api.upgrade.Upgrade;
+import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeManager;
+import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeUtils.DeviceTier;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Packer;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
@@ -665,6 +666,12 @@ public class TileEntityPacker extends TileEntityMultiblockIIGeneric<TileEntityPa
 	}
 
 	@Override
+	public DeviceTier getUpgradableMachineTier()
+	{
+		return DeviceTier.STEEL;
+	}
+
+	@Override
 	public boolean removeUpgrade(Upgrade upgrade)
 	{
 		if(IManagedUpgradableDevice.super.removeUpgrade(upgrade))
@@ -681,6 +688,8 @@ public class TileEntityPacker extends TileEntityMultiblockIIGeneric<TileEntityPa
 		}
 		return false;
 	}
+
+	//--- IIIGuiMultiblockTile ---//
 
 	@Override
 	public boolean canOpenGui()

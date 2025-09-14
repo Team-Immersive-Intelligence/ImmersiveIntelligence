@@ -31,6 +31,7 @@ public class DecoLabel extends GuiLabel
 	private boolean textShadow = false;
 	private int totalHeight = 0;
 	private boolean hovered;
+	private boolean wrap = false;
 
 	/**
 	 * @param fontRenderer The font renderer to use
@@ -130,6 +131,12 @@ public class DecoLabel extends GuiLabel
 		return withOnTooltip(() -> Collections.singletonList(I18n.format(textFormat, (Object[])listener.get())));
 	}
 
+	public DecoLabel withWrapping(boolean wrap)
+	{
+		this.wrap = wrap;
+		return this;
+	}
+
 	//--- Text Setting ---//
 
 	public DecoLabel withText(String... text)
@@ -189,7 +196,29 @@ public class DecoLabel extends GuiLabel
 
 	private void recalculateHeight()
 	{
-		this.totalHeight = fontRenderer.FONT_HEIGHT*labels.size();
+		if(wrap)
+		{
+			this.totalHeight = 0;
+			for(Object line : this.labels)
+			{
+				String label;
+				if(line instanceof String)
+					label = ((String)line);
+				else
+					//noinspection unchecked
+					label = ((Supplier<String>)line).get();
+				this.totalHeight += fontRenderer.getWordWrappedHeight(label, width);
+			}
+		}
+		else
+			this.totalHeight = fontRenderer.FONT_HEIGHT*labels.size();
+	}
+
+	//--- Getters ---//
+
+	public int getTotalHeight()
+	{
+		return totalHeight;
 	}
 
 	//--- Drawing ---//
@@ -217,18 +246,49 @@ public class DecoLabel extends GuiLabel
 				//noinspection unchecked
 				label = ((Supplier<String>)line).get();
 
-			//Calculate the position of the text
-			int stringWidth = fontRenderer.getStringWidth(label);
-			int xx = textAlignment.getAlignX(x, stringWidth, width);
-			int yy = textAlignment.getAlignY(lineOffset, totalHeight, height);
+			int xx, yy, stringWidth, stringHeight;
+			//Wrap into multiple lines
+			if(wrap)
+			{
+				yy = -1;
+				stringHeight = 0;
+				stringWidth = 0;
+				for(String subLine : fontRenderer.listFormattedStringToWidth(label, width))
+				{
+					//Calculate the sub-line offset
+					int subLineWidth = fontRenderer.getStringWidth(subLine);
+					int currentX = textAlignment.getAlignX(x, subLineWidth, width);
+					int currentY = textAlignment.getAlignY(lineOffset+stringHeight, totalHeight, height);
 
-			//Draw the string
-			fontRenderer.drawString(label, xx, yy, textColor.getPackedARGB(), textShadow);
+					if(yy==-1)
+						yy = currentY;
+
+					//Draw the sub-line
+					fontRenderer.drawString(subLine, currentX, currentY, textColor.getPackedARGB(), textShadow);
+					stringHeight += fontRenderer.FONT_HEIGHT;
+
+					// Track the widest sub-line for hover detection
+					if(subLineWidth > stringWidth)
+						stringWidth = subLineWidth;
+				}
+				xx = textAlignment.getAlignX(x, stringWidth, width);
+			}
+			//Single line
+			else
+			{
+				//Calculate the position of the text
+				stringWidth = fontRenderer.getStringWidth(label);
+				xx = textAlignment.getAlignX(x, stringWidth, width);
+				yy = textAlignment.getAlignY(lineOffset, totalHeight, height);
+
+				//Draw the string
+				fontRenderer.drawString(label, xx, yy, textColor.getPackedARGB(), textShadow);
+				stringHeight = fontRenderer.FONT_HEIGHT;
+			}
 
 			//Check for hover if tooltip is set
-			this.hovered = this.hovered||IIMath.isPointInRectangle(xx, yy, xx+stringWidth, yy+fontRenderer.FONT_HEIGHT, mouseX, mouseY);
-
-			lineOffset += fontRenderer.FONT_HEIGHT;
+			this.hovered = this.hovered||IIMath.isPointInRectangle(xx, yy, xx+stringWidth, yy+stringHeight, mouseX, mouseY);
+			lineOffset += stringHeight;
 		}
 		fontRenderer.setUnicodeFlag(unicode);
 

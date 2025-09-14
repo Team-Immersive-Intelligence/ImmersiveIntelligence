@@ -275,7 +275,7 @@ public class IISounds
 	public static SoundEvent mineDetector = registerSound("mine_detector");
 	@ModSound(sounds = {"construction/hammer/hammer{0..5}"}, subtitle = "construction")
 	public static SoundEvent constructionHammer = registerSound("construction_hammer");
-	@ModSound(sounds = {"construction/wrench/wrench_electric{0..2}"}, subtitle = "construction")
+	@ModSound(sounds = {"construction/wrench/electric_wrench{0..3}"}, subtitle = "construction")
 	public static SoundEvent constructionElectricWrench = registerSound("construction_electric_wrench");
 	@ModSound(sounds = {"construction/wrench/wrench{0..2}"}, subtitle = "construction")
 	public static SoundEvent constructionWrench = registerSound("construction_wrench");

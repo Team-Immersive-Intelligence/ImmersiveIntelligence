@@ -9,9 +9,10 @@ import net.minecraft.util.math.BlockPos;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeArray;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeEntity;
+import pl.pabilo8.immersiveintelligence.api.upgrade.IManagedUpgradableDevice;
+import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeManager;
+import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeUtils.DeviceTier;
 import pl.pabilo8.immersiveintelligence.api.utils.MultiblockConstructionManager;
-import pl.pabilo8.immersiveintelligence.api.utils.upgrade.IManagedUpgradableDevice;
-import pl.pabilo8.immersiveintelligence.api.utils.upgrade.UpgradeManager;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Radar;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockRadar;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
@@ -66,7 +67,7 @@ public class TileEntityRadar extends TileEntityMultiblockIIGeneric<TileEntityRad
 
 		//Rotate dish if powered
 		if(active = redstoneControlInverted^getRedstoneAtPos(0)&&energyStorage.extractEnergy(Radar.energyUsage, false)==Radar.energyUsage)
-			dishRotation++;
+			dishRotation = dishRotation >= 360?0: dishRotation+1;
 
 		//Scan for entities
 		if(!world.isRemote)
@@ -111,6 +112,12 @@ public class TileEntityRadar extends TileEntityMultiblockIIGeneric<TileEntityRad
 	public UpgradeManager<TileEntityRadar> getUpgradeManager()
 	{
 		return upgrades;
+	}
+
+	@Override
+	public DeviceTier getUpgradableMachineTier()
+	{
+		return DeviceTier.STEEL;
 	}
 
 	@Override

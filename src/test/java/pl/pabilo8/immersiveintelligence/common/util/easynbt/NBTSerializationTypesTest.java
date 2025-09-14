@@ -58,13 +58,12 @@ public class NBTSerializationTypesTest
 		NBTSerialisation.synchroniseFor(testClassB, (serializer, object) -> serializer.deserializeAll(object, tag, true));
 
 		//Log fields that could not serialize
-		if(!listAppender.getEvents().isEmpty())
-			Assertions.fail("Serialization failed, reason:\n"+
-					listAppender.getEvents().stream()
-							.filter(logEvent -> logEvent.getLevel().isMoreSpecificThan(Level.INFO))
-							.map(logEvent -> logEvent.getMessage()+"\n")
-							.collect(Collectors.joining())
-			);
+		String collected = listAppender.getEvents().stream()
+				.filter(logEvent -> logEvent.getLevel().isMoreSpecificThan(Level.INFO))
+				.map(logEvent -> logEvent.getMessage()+"\n")
+				.collect(Collectors.joining());
+		if(!collected.isEmpty())
+			Assertions.fail("Serialization failed, reason:\n"+collected);
 	}
 
 	@Test

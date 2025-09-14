@@ -36,10 +36,10 @@ public class GuiSawmill extends DecoGui<TileEntitySawmill, ContainerSawmill>
 	{
 		syncAnimatedParts(tile.vise, true);
 		startBackground()
-				.withBox(DecoTextures.GUI_BG_WOODEN, 8, 0, 176-24, 76)
+				.withBox(DecoTextures.GUI_BG_WOODEN, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_ROUND_WOODEN, 8, 0, 176-24, 76)
 				.withStandaloneFrame(6+8, 12, 128+4-2, 64-8, DecoTextures.GUI_FRAME_CORNERS_BRASS, 4, true)
 				.withTitleBar(tile)
-				.withBox(DecoTextures.GUI_BG_WOODEN, 0, 76, 176, 92)
+				.withBox(DecoTextures.GUI_BG_WOODEN, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_ROUND_WOODEN, 0, 76, 176, 92)
 				.withInventorySlots(SlotStyle.IE_INPUT, container.slotInput)
 				.withInventorySlots(SlotStyle.VANILLA, container.slotSaw)
 				.withInventorySlots(SlotStyle.IE_OUTPUT, container.slotOutput)

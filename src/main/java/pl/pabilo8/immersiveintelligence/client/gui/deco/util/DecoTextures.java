@@ -25,8 +25,7 @@ public class DecoTextures
 	public static final ResLoc GUI_BG_WOODEN = ResLoc.of(RES_TEXTURES_DECO_BACKGROUND, "wooden");
 	public static final ResLoc GUI_BG_STEEL = ResLoc.of(RES_TEXTURES_DECO_BACKGROUND, "steel");
 	public static final ResLoc GUI_BG_STEEL_ROUGH = ResLoc.of(RES_TEXTURES_DECO_BACKGROUND, "steel_rough");
-	public static final ResLoc GUI_BG_SHEETMETAL = ResLoc.of(RES_TEXTURES_DECO_BACKGROUND, "sheetmetal");
-	public static final ResLoc GUI_BG_SHEETMETAL_STEEL = ResLoc.of(RES_TEXTURES_DECO_BACKGROUND, "sheetmetal_steel");
+	public static final ResLoc GUI_BG_ALUMINIUM = ResLoc.of(RES_TEXTURES_DECO_BACKGROUND, "aluminium");
 	public static final ResLoc GUI_BG_PAPER = ResLoc.of(RES_TEXTURES_DECO_BACKGROUND, "paper");
 	public static final ResLoc GUI_BG_BLUEPRINT = ResLoc.of(RES_TEXTURES_DECO_BACKGROUND, "blueprint");
 	public static final ResLoc GUI_BG_DARK = ResLoc.of(RES_TEXTURES_DECO_BACKGROUND, "dark");
@@ -42,6 +41,7 @@ public class DecoTextures
 	//--- Templates ---//
 	public static final ResLoc RES_TEXTURES_DECO_TEMPLATE_ROUND = ResLoc.of(RES_TEXTURES_DECO, "template/round");
 	public static final ResLoc RES_TEXTURES_DECO_TEMPLATE_SQUARE = ResLoc.of(RES_TEXTURES_DECO, "template/square");
+	public static final ResLoc RES_TEXTURES_DECO_TEMPLATE_ROUND_WOODEN = ResLoc.of(RES_TEXTURES_DECO, "template/round_wooden");
 	public static final ResLoc RES_TEXTURES_DECO_TEMPLATE_TICKET = ResLoc.of(RES_TEXTURES_DECO, "template/ticket");
 	public static final ResLoc RES_TEXTURES_DECO_TEMPLATE_PAPER = ResLoc.of(RES_TEXTURES_DECO, "template/paper");
 
@@ -55,8 +55,11 @@ public class DecoTextures
 	//--- Label Backgrounds ---//
 	public static final ResLoc GUI_LABEL_WOODEN = ResLoc.of(RES_TEXTURES_DECO, "label/label_wooden");
 	public static final ResLoc GUI_LABEL_STEEL = ResLoc.of(RES_TEXTURES_DECO, "label/label_steel");
+	public static final ResLoc GUI_LABEL_ALUMINIUM = ResLoc.of(RES_TEXTURES_DECO, "label/label_aluminium");
 	public static final ResLoc GUI_LABEL_STEEL_ROUGH = ResLoc.of(RES_TEXTURES_DECO, "label/label_steel_rough");
 	public static final ResLoc GUI_LABEL_HAZARD = ResLoc.of(RES_TEXTURES_DECO, "label/label_hazard");
+	public static final ResLoc GUI_LABEL_PAPER = ResLoc.of(RES_TEXTURES_DECO, "label/label_paper");
+	public static final ResLoc GUI_LABEL_BLUEPRINT = ResLoc.of(RES_TEXTURES_DECO, "label/label_blueprint");
 
 	//--- Deco Components ---//
 	public static final ResLoc RES_TEXTURES_DECO_COMPONENT_BUTTON = ResLoc.of(RES_TEXTURES_DECO, "component/button");
@@ -77,6 +80,11 @@ public class DecoTextures
 	public static final ResLoc RES_TEXTURES_DECO_COMPONENT_TANK_MARKER = ResLoc.of(RES_TEXTURES_DECO, "component/tank_marker");
 	public static final ResLoc RES_TEXTURES_DECO_COMPONENT_TANK_DUST = ResLoc.of(RES_TEXTURES_DECO, "component/dust");
 	public static final ResLoc RES_TEXTURES_DECO_COMPONENT_COLOR = ResLoc.of(RES_TEXTURES_DECO, "component/color");
+
+	//--- Standard Deco Tab Icons ---//
+	public static final ResLoc RES_ICON_STORAGE = ResLoc.of(IIReference.RES_II, "gui/tab_icons/storage");
+	public static final ResLoc RES_ICON_STYLE = ResLoc.of(IIReference.RES_II, "gui/tab_icons/style");
+	public static final ResLoc RES_ICON_OWNERSHIP = ResLoc.of(IIReference.RES_II, "gui/tab_icons/ownership");
 
 	//--- Colored 12x Icons ---//
 	public static final ResLoc RES_TEXTURES_DECO_ICON = ResLoc.of(RES_TEXTURES_DECO, "icons/");

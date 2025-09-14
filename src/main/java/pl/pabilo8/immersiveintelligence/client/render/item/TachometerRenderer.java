@@ -10,13 +10,18 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraftforge.client.model.obj.OBJModel;
-import pl.pabilo8.immersiveintelligence.client.util.amt.*;
-import pl.pabilo8.immersiveintelligence.client.util.amt.IIItemRendererAMT.RegisteredItemRenderer;
+import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
+import pl.pabilo8.immersiveintelligence.client.util.amt.animation.IIAnimationCompiledMap;
+import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTModel;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMT;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTHand;
+import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IIItemRendererAMT;
+import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IIItemRendererAMT.RegisteredItemRenderer;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.item.tools.ItemIITachometer;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
-import pl.pabilo8.immersiveintelligence.common.util.amt.IIModelHeader;
+import pl.pabilo8.immersiveintelligence.common.util.amt.AMTModelHeader;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -70,7 +75,7 @@ public class TachometerRenderer extends IIItemRendererAMT<ItemIITachometer>
 	}
 
 	@Override
-	public void compileModels(OBJModel model, IIModelHeader header)
+	public void compileModels(OBJModel model, AMTModelHeader header)
 	{
 		this.model = new AMTModel(DefaultVertexFormats.ITEM, model, header, header1 -> new AMT[]{
 				new AMTHand("hand", header, EnumHand.MAIN_HAND)
@@ -82,6 +87,6 @@ public class TachometerRenderer extends IIItemRendererAMT<ItemIITachometer>
 	@Override
 	protected void nullifyModels()
 	{
-		IIAnimationUtils.disposeOf(this.model);
+		AMTUtils.disposeOf(this.model);
 	}
 }

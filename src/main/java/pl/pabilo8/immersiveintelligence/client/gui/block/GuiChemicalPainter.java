@@ -52,7 +52,7 @@ public class GuiChemicalPainter extends DecoGui<TileEntityChemicalPainter, Conta
 				.withInventorySlots(SlotStyle.IE_INPUT, container.inputSlot, container.inputFluidSlot)
 				.withInventorySlots(SlotStyle.IE_OUTPUT, container.outputSlot, container.outputFluidSlot)
 				//Player inventory
-				.withBox(DecoTextures.GUI_BG_WOODEN, 0, 128, 176, 92)
+				.withBox(DecoTextures.GUI_BG_WOODEN, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_ROUND_WOODEN, 0, 128, 176, 92)
 				.withInventorySlots(SlotStyle.VANILLA, container.playerInventory)
 				.withInventoryTitleBar()
 				//Color panel

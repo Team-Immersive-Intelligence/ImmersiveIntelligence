@@ -6,6 +6,7 @@ import blusunrize.lib.manual.gui.GuiManual;
 import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoTab;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoAlignment;
@@ -31,6 +32,10 @@ public class DecoManualWidget extends DecoComponentWidgetBase<DecoManualWidget>
 	public DecoManualWidget()
 	{
 		super();
+
+		//Do not draw a background box
+		withBackground(null);
+		withBackgroundMask(null);
 
 		//Initialize the default manual, if it wasn't already
 		GuiManual trueManual = ManualHelper.getManual().getGui();
@@ -77,6 +82,8 @@ public class DecoManualWidget extends DecoComponentWidgetBase<DecoManualWidget>
 		//Cleanup
 		RenderHelper.disableStandardItemLighting();
 		GlStateManager.color(1, 1, 1, 1);
+
+		super.draw(mouseX, mouseY, partialTicks);
 	}
 
 	@Override
@@ -88,8 +95,17 @@ public class DecoManualWidget extends DecoComponentWidgetBase<DecoManualWidget>
 	@Override
 	protected boolean initialize()
 	{
-		wrapper.initGui();
-		return true;
+		if(super.initialize())
+		{
+			wrapper.initGui();
+			withBackground(DecoTextures.GUI_BG_PAPER);
+			this.width -= 24;
+			withTitleLabel(I18n.format(IIReference.GUI_TOOLTIP_KEY+"widget.manual"), DecoAlignment.TOP);
+			this.width += 24;
+			withBackground(null);
+			return true;
+		}
+		return false;
 	}
 
 	@Override

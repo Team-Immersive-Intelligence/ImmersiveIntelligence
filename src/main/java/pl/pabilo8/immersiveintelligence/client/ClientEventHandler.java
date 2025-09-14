@@ -169,8 +169,10 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 		TEXT_OVERLAYS.add(new TextOverlayHeadgear());
 		TEXT_OVERLAYS.add(new TextOverlayMechanical());
 		TEXT_OVERLAYS.add(new TextOverlayUpgrade());
+		TEXT_OVERLAYS.add(new TextOverlayConstruction());
 		TEXT_OVERLAYS.add(new TextOverlayAdvanced());
 		TEXT_OVERLAYS.add(new TextOverlayVoltmeterEntities());
+		TEXT_OVERLAYS.add(new TextOverlayOwnership());
 
 		IN_WORLD_OVERLAYS.add(new WrenchOverlay());
 	}
@@ -995,11 +997,12 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 					//start drawing text lines
 					int i = 0;
 					if(text!=null)
+					{
 						for(String s : text)
 							font.drawString(s, x+8, y+i++*font.FONT_HEIGHT, defaultColor, true);
-
-					//one tooltip at once
-					break;
+						//one tooltip at once
+						break;
+					}
 				}
 		}
 

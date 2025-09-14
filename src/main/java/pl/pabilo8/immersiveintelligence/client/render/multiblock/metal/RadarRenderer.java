@@ -1,155 +1,65 @@
 package pl.pabilo8.immersiveintelligence.client.render.multiblock.metal;
 
-import blusunrize.immersiveengineering.client.ClientUtils;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.model.obj.OBJModel;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
-import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.ModelRadar;
-import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
-import pl.pabilo8.immersiveintelligence.client.util.ShaderUtil;
-import pl.pabilo8.immersiveintelligence.client.util.tmt.Coord2D;
-import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
-import pl.pabilo8.immersiveintelligence.client.util.tmt.Shape2D;
-import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
+import pl.pabilo8.immersiveintelligence.client.util.amt.animation.IIAnimationCompiledMap;
+import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTConstructionModel;
+import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTModel;
+import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IIMultiblockRenderer;
+import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IITileRenderer.RegisteredTileRenderer;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityRadar;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 31.08.2025
+ * @ii-approved 0.3.1
  * @since 21.06.2019
  */
-public class RadarRenderer extends TileEntitySpecialRenderer<TileEntityRadar> implements IReloadableModelContainer<RadarRenderer>
+@RegisteredTileRenderer(name = "multiblock/radar", clazz = TileEntityRadar.class)
+public class RadarRenderer extends IIMultiblockRenderer<TileEntityRadar>
 {
-	private static final String TEXTURE = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/radar.png";
-	private static ModelRadar model, modelFlipped;
-	private static ModelRendererTurbo[] modelConstruction, modelConstructionFlipped;
+	private AMTModel model;
+	private AMTConstructionModel constructionModel;
+	private IIAnimationCompiledMap animationDish;
 
 	@Override
-	public void render(TileEntityRadar te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
+	public void drawAnimated(TileEntityRadar te, BufferBuilder buf, float partialTicks, Tessellator tes)
 	{
-		if(te!=null&&!te.isDummy())
+		//Reset model to default state + apply rotation and mirroring
+		model.defaultize();
+		applyStandardMirroring(te, true);
+
+		//Draw construction model or finished one
+		if(constructionModel.renderProgress(te, tes, buf, partialTicks)==AMTConstructionModel.ConstructionStage.FINISHED)
 		{
-			ClientUtils.bindTexture(TEXTURE);
-			GlStateManager.pushMatrix();
-			GlStateManager.translate((float)x, (float)y, (float)z);
-			GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
-
-			if(te.hasWorld())
-			{
-				GlStateManager.translate(0f, 0, 1f);
-				GlStateManager.rotate(90F, 0F, 1F, 0F);
-			}
-
-			float ff = (te.dishRotation+(te.active?partialTicks: 0));
-
-			float rotMod = te.mirrored?-1: 1;
-			ModelRadar modelCurrent = te.mirrored?modelFlipped: model;
-			modelCurrent.getBlockRotation(te.facing, te.mirrored);
-
-			if(!te.hasWorld()||te.isConstructionFinished())
-			{
-				for(ModelRendererTurbo mod : modelCurrent.baseModel)
-					mod.render();
-
-				if(te.isUpgradeInstalled(IIContent.UPGRADE_RADIO_LOCATORS))
-					for(ModelRendererTurbo mod : modelCurrent.triangulatorsModel)
-						mod.render();
-
-				GlStateManager.translate(3, 0, -1*rotMod);
-				GlStateManager.rotate(ff, 0, 1, 0);
-				for(ModelRendererTurbo mod : modelCurrent.radarModel)
-					mod.render();
-			}
-			else
-			{
-				renderConstruction(te, partialTicks);
-			}
-
-			GlStateManager.popMatrix();
-		}
-		else if(te==null)
-		{
-			GlStateManager.pushMatrix();
-			GlStateManager.translate(x-0.25, y-0.25, z);
-			GlStateManager.rotate(7.5f, 0, 0, 1);
-			GlStateManager.rotate(-7.5f, 1, 0, 0);
-			GlStateManager.scale(0.23, 0.23, 0.23);
-			GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
-			ClientUtils.bindTexture(TEXTURE);
-
-			for(ModelRendererTurbo mod : model.baseModel)
-				mod.render();
-
-			//GlStateManager.translate(1.0625f, 0, 1.3125f);
-
-			for(ModelRendererTurbo mod : model.radarModel)
-				mod.render();
-
-			GlStateManager.popMatrix();
+			animationDish.apply(AMTUtils.getAnimationProgress(te.dishRotation, 360, te.active, false, 1, 0, partialTicks));
+			model.render(tes, buf);
 		}
 	}
 
 	@Override
-	public void reloadModels()
+	public void drawSimple(BufferBuilder buf, float partialTicks, Tessellator tes)
 	{
-		model = new ModelRadar();
-		model.flipZ(model.baseModel);
-		for(ModelRendererTurbo mod : model.baseModel)
-		{
-			mod.rotateAngleX = -mod.rotateAngleX;
-			mod.rotateAngleY = -mod.rotateAngleY;
-		}
-
-		model.baseModel[129].setRotationPoint(48F, 0F, -64f);
-		model.baseModel[130].setRotationPoint(0F, 0F, -16f);
-
-		model.baseModel[132].setRotationPoint(48F, 8F, -48F);
-		model.baseModel[133].setRotationPoint(17F, 8F, -16F);
-
-		model.baseModel[90].rotationPointY += 40;
-		model.baseModel[90].rotationPointZ += 32;
-
-		model.baseModel[149].clear();
-		model.baseModel[149].setMirrored(true);
-		model.baseModel[149].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[]{new Coord2D(0, 0, 0, 0), new Coord2D(15, 0, 15, 0), new Coord2D(15, 4, 15, 4), new Coord2D(6, 4, 6, 4)}), 12, 15, 4, 36, 12, ModelRendererTurbo.MR_FRONT, new float[]{8, 9, 4, 15}); // TableKeyboardMain
-		model.baseModel[149].setRotationPoint(-15.5F, 14F, 15);
-		model.baseModel[149].rotateAngleY = -3.14159265F;
-
-		modelFlipped = new ModelRadar();
-
-		model.parts.remove("triangulators");
-		modelFlipped.parts.remove("triangulators");
-
-		modelConstruction = IIClientUtils.createConstructionModel(null, model);
-		modelConstructionFlipped = IIClientUtils.createConstructionModel(null, modelFlipped);
-		//TileEntityRadar.PART_AMOUNT = modelConstruction.length;
-
-		//ah yes, even in my own code there is this cheeky maneuvering
-		model.parts.put("triangulators", model.triangulatorsModel);
-		modelFlipped.parts.put("triangulators", modelFlipped.triangulatorsModel);
-
-		IIContent.UPGRADE_RADIO_LOCATORS.withProgressStages(model.triangulatorsModel.length);
-
+		//Reset model to default state and render
+		model.defaultize();
+		model.render(tes, buf);
 	}
 
-	public void renderConstruction(TileEntityRadar te, float partialTicks)
+	@Override
+	public void compileModels(IBlockState state, OBJModel model)
 	{
-		ModelRendererTurbo[] tt = te.mirrored?modelConstructionFlipped: modelConstruction;
+		this.model = new AMTModel(state, model);
+		this.constructionModel = new AMTConstructionModel(
+				new ResourceLocation(ImmersiveIntelligence.MODID, "models/block/multiblock/radar/radar_construction.obj.ie"),
+				new ResourceLocation(ImmersiveIntelligence.MODID, "radar/construction")
+		);
 
-		GlStateManager.pushMatrix();
-		GlStateManager.enableBlend();
-		GlStateManager.disableLighting();
-		GlStateManager.scale(0.98f, 0.98f, 0.98f);
-		GlStateManager.translate(0.0625f/2f, 0f, -0.0265f/2f);
-		//float flicker = (te.getWorld().rand.nextInt(10)==0)?0.75F: (te.getWorld().rand.nextInt(20)==0?0.5F: 1F);
-
-		ShaderUtil.useBlueprint(0.35f, ClientUtils.mc().player.ticksExisted+partialTicks);
-		for(ModelRendererTurbo tmt : tt)
-			tmt.render();
-		ShaderUtil.releaseShader();
-		GlStateManager.disableBlend();
-		GlStateManager.enableLighting();
-		GlStateManager.popMatrix();
-
+		this.animationDish = IIAnimationCompiledMap.create(this.model, IIReference.RES_II.with("radar/dish"));
 	}
 }
