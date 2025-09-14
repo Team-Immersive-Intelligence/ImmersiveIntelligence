@@ -3,7 +3,10 @@ package pl.pabilo8.immersiveintelligence.client.gui.deco;
 import net.minecraft.util.ResourceLocation;
 import org.junit.jupiter.api.Test;
 import org.reflections.Reflections;
-import org.reflections.scanners.SubTypesScanner;
+import org.reflections.scanners.Scanners;
+import org.reflections.util.ClasspathHelper;
+import org.reflections.util.ConfigurationBuilder;
+import org.reflections.util.FilterBuilder;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoResource;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTemplate;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
@@ -27,7 +30,10 @@ public class DecoGuiTest
 	public void testAnnotationPresent()
 	{
 		//Scan for all classes extending DecoGui
-		Reflections reflections = new Reflections("pl.pabilo8.immersiveintelligence", new SubTypesScanner());
+		Reflections reflections = new Reflections(new ConfigurationBuilder()
+				.setUrls(ClasspathHelper.forPackage("pl.pabilo8.immersiveintelligence"))
+				.filterInputsBy(new FilterBuilder().excludePattern(".*com/elytradev/mirage/lighting/ILightEventConsumer.*"))
+				.setScanners(Scanners.SubTypes));
 		Set<Class<? extends DecoGui>> decoGuiClasses = reflections.getSubTypesOf(DecoGui.class);
 
 		List<String> errors = new ArrayList<>();

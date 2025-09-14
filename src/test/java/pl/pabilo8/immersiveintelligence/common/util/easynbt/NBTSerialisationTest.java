@@ -2,9 +2,10 @@ package pl.pabilo8.immersiveintelligence.common.util.easynbt;
 
 import org.junit.jupiter.api.Test;
 import org.reflections.Reflections;
-import org.reflections.scanners.FieldAnnotationsScanner;
+import org.reflections.scanners.Scanners;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
+import org.reflections.util.FilterBuilder;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -21,7 +22,8 @@ public class NBTSerialisationTest
 		//Create reflections scanner to find annotated fields
 		Reflections reflections = new Reflections(new ConfigurationBuilder()
 				.setUrls(ClasspathHelper.forPackage("pl.pabilo8.immersiveintelligence"))
-				.setScanners(new FieldAnnotationsScanner()));
+				.filterInputsBy(new FilterBuilder().excludePattern(".*com/elytradev/mirage/lighting/ILightEventConsumer.*"))
+				.setScanners(Scanners.FieldsAnnotated));
 
 		//Find all fields annotated with @SyncNBT
 		Set<Field> syncNBTFields = reflections.getFieldsAnnotatedWith(SyncNBT.class);
