@@ -353,7 +353,7 @@ item.immersiveintelligence.data_wire.name=Катушка кабеля данны
 item.immersiveintelligence.trip_wire.name=Проволока мины-растяжки
 
 item.immersiveintelligence.small_wirecoil.data.name=Катушка малого кабеля данных
-item.immersiveintelligence.small_wirecoil.redstone.name=Катушка малого краснокаменного кабеля
+item.immersiveintelligence.small_wirecoil.redstone.name=Катушка малого редстоун кабеля
 desc.immersiveintelligence.small_wirecoil=Используется для соединения точной электроники, такой как встроенные платы.
 
 item.immersiveintelligence.printed_page.blank.name=Пустая страница
@@ -584,7 +584,7 @@ tile.immersiveintelligence.mine_sign.mine_sign.desc=Стоп;Мины!
 
 tile.immersiveengineering.conveyor.immersiveintelligence:rubber_conveyor.name=Резиновый конвейер
 tile.immersiveengineering.conveyor.immersiveintelligence:rubber_uncontrolled.name=Резиновый конвейер
-tile.immersiveengineering.conveyor.immersiveintelligence:rubber_uncontrolled.flavour=Игнорирует управление красного камня
+tile.immersiveengineering.conveyor.immersiveintelligence:rubber_uncontrolled.flavour=Игнорирует управление редстоуном
 tile.immersiveengineering.conveyor.immersiveintelligence:rubber_dropper.name=Сбрасывающий резиновый конвейер
 tile.immersiveengineering.conveyor.immersiveintelligence:rubber_droppercovered.name=Крытый сбрасывающий резиновый конвейер
 tile.immersiveengineering.conveyor.immersiveintelligence:rubber_vertical.name=Вертикальный резиновый конвейер
@@ -623,7 +623,7 @@ tile.immersiveintelligence.metal_device.metal_crate.name=Металлическ�
 tile.immersiveintelligence.metal_device.small_data_buffer.name=Маленький буфер данных
 tile.immersiveintelligence.metal_device.item_buffer.name=Буфер предметов
 tile.immersiveintelligence.metal_device.timed_buffer.name=Временной буфер
-tile.immersiveintelligence.metal_device.redstone_buffer.name=Краснокаменный буфер
+tile.immersiveintelligence.metal_device.redstone_buffer.name=Редстоун буфер
 tile.immersiveintelligence.metal_device.punchtape_reader.name=Считыватель перфоленты
 tile.immersiveintelligence.metal_device.data_router.name=Маршрутизатор данных
 tile.immersiveintelligence.metal_device.data_merger.name=Объеденитель данных
@@ -1122,7 +1122,7 @@ machineupgrade.immersiveintelligence.cpds=СПРО
 machineupgrade.immersiveintelligence.cpds.desc=Система ПротивоРакетной Обороны (СПРО) - это современное противовоздушное оружие, способное уничтожать летящие артиллерийские снаряды в воздухе.
 
 machineupgrade.immersiveintelligence.autocannon=Автоматическая пушка
-machineupgrade.immersiveintelligence.autocannon.desc=Четыре автоматические пушки 3 б\Кал обеспечивают большую огневую мощь, что делает это оружие универсальным средством защиты от воздушных и наземных целей.
+machineupgrade.immersiveintelligence.autocannon.desc=Четыре автоматические пушки 3 б/Кал обеспечивают большую огневую мощь, что делает это оружие универсальным средством защиты от воздушных и наземных целей.
 
 machineupgrade.immersiveintelligence.heavy_chemthrower=Тяжёлый жидкомёт
 machineupgrade.immersiveintelligence.heavy_chemthrower.desc=Более тяжелая версия хорошо известного химического жидкомёта с более высоким давлением позволяет атаковать врагов на расстоянии в 4 раза большем, чем у портативного.
@@ -1170,7 +1170,7 @@ machineupgrade.immersiveintelligence.radio_locators=Радиолокаторы
 machineupgrade.immersiveintelligence.radio_locators.desc=Позволяет радару обнаруживать радиосигналы и вычислять точки их происхождения. Увеличивает количество энергии, требуемой для работы.
 
 machineupgrade.immersiveintelligence.rs_activation=Редстоун активация
-machineupgrade.immersiveintelligence.rs_activation.desc=Подключение проводного разъема красного камня и пары приводов позволяет открывать ворота по сигналу красного камня.
+machineupgrade.immersiveintelligence.rs_activation.desc=Подключение проводного редстоун разъема и пары приводов позволяет открывать ворота по редстоун сигналу.
 
 machineupgrade.immersiveintelligence.razor_wire=Колючая проволока
 machineupgrade.immersiveintelligence.razor_wire.desc=Прикрепляет колючую проволоку поверх ворот, нанося урон любому врагу, который осмелится попытаться перелезть через них.
@@ -1201,692 +1201,692 @@ desc.immersiveintelligence.printed_page.newspaper=Несколько стран�
 desc.immersiveintelligence.printed_page.book=Несколько страниц, переплетенных в печатную книгу.
 desc.immersiveintelligence.printed_page.letter=Страница, упакованная в конверт для отправки кому-либо.
 
-desc.immersiveintelligence.punchtape.empty=No variables written
-desc.immersiveintelligence.punchtape.written=Written
+desc.immersiveintelligence.punchtape.empty=Переменные не записаны
+desc.immersiveintelligence.punchtape.written=Записаны
 
-desc.immersiveintelligence.infrared_enabled=§4Infrared§r Vision Active!
-desc.immersiveintelligence.infrared_disabled=§cInfrared§r Vision Disabled!
+desc.immersiveintelligence.infrared_enabled=§4Инфракрасное§r зрение включено!
+desc.immersiveintelligence.infrared_disabled=§cИнфракрасное§r зрение выключено!
 
-desc.immersiveintelligence.assembly_scheme.used_to_create=Used to create: %s
-desc.immersiveintelligence.assembly_scheme.items_created=Items Created: %s
+desc.immersiveintelligence.assembly_scheme.used_to_create=Используется для создания: %s
+desc.immersiveintelligence.assembly_scheme.items_created=Созданные предметы: %s
 
-desc.immersiveintelligence.info.holdControl=Hold [Ctrl]
-desc.immersiveintelligence.info.holdShift=Hold [Shift]
-desc.immersiveintelligence.info.holdAlt=Hold [Alt]
-desc.immersiveintelligence.info.holdTab=Hold [Tab]
+desc.immersiveintelligence.info.holdControl=Удерживайте [Ctrl]
+desc.immersiveintelligence.info.holdShift=Удерживайте [Shift]
+desc.immersiveintelligence.info.holdAlt=Удерживайте [Alt]
+desc.immersiveintelligence.info.holdTab=Удерживайте [Tab]
 
-desc.immersiveintelligence.assembly_scheme.info_hold1=%s - Materials Used
-desc.immersiveintelligence.assembly_scheme.info_hold2=%s - Tools Used
-desc.immersiveintelligence.assembly_scheme.materials=Materials used:
-desc.immersiveintelligence.assembly_scheme.tools=Tools used:
+desc.immersiveintelligence.assembly_scheme.info_hold1=%s - Материалы использованы:
+desc.immersiveintelligence.assembly_scheme.info_hold2=%s - Инструменты использованы:
+desc.immersiveintelligence.assembly_scheme.materials=Материалы использованы:
+desc.immersiveintelligence.assembly_scheme.tools=Инструменты использованы:
 
-desc.immersiveintelligence.weapon.magazine1=%s - Magazine #1
-desc.immersiveintelligence.weapon.magazine2=%s - Magazine #2
+desc.immersiveintelligence.weapon.magazine1=%s - Магазин #1
+desc.immersiveintelligence.weapon.magazine2=%s - Магазин #2
 
 
-desc.immersiveintelligence.storage_module=Storage
-desc.immersiveintelligence.variables_module=Variables
-desc.immersiveintelligence.data_module=Data
-desc.immersiveintelligence.redstone_module=Redstone
-desc.immersiveintelligence.data_to_redstone_module=Data to Redstone
-desc.immersiveintelligence.redstone_to_data_module=Redstone to Data
-desc.immersiveintelligence.tasks_module=Tasks
-desc.immersiveintelligence.status_module=Status
+desc.immersiveintelligence.storage_module=Хранилище
+desc.immersiveintelligence.variables_module=Переменные
+desc.immersiveintelligence.data_module=Данные
+desc.immersiveintelligence.redstone_module=Редстоун
+desc.immersiveintelligence.data_to_redstone_module=Данные в редстоун
+desc.immersiveintelligence.redstone_to_data_module=Редстоун в данные
+desc.immersiveintelligence.tasks_module=Задачи
+desc.immersiveintelligence.status_module=Статус
 
-desc.immersiveintelligence.tooltip.armor=Armor %f%%
+desc.immersiveintelligence.tooltip.armor=Броня %f%%
 
-desc.immersiveintelligence.upgrade_gui.title=Upgrade Machine
-desc.immersiveintelligence.upgrade_gui.info=Info
-desc.immersiveintelligence.upgrade_gui.install=Install
-desc.immersiveintelligence.upgrade_gui.remove=Remove
-desc.immersiveintelligence.upgrade_gui.back=Back
+desc.immersiveintelligence.upgrade_gui.title=Улучшить машину
+desc.immersiveintelligence.upgrade_gui.info=Инфо
+desc.immersiveintelligence.upgrade_gui.install=Установить
+desc.immersiveintelligence.upgrade_gui.remove=Удалить
+desc.immersiveintelligence.upgrade_gui.back=Назад
 
-desc.immersiveintelligence.variable_type=Type:
-desc.immersiveintelligence.variable_add_desc=Add a new variable
-desc.immersiveintelligence.variable_set=Set
-desc.immersiveintelligence.variable_set_desc=Change the value of a variable
-desc.immersiveintelligence.variable_send_packet=Send Packet
-desc.immersiveintelligence.variable_send_packet_desc=Sends the current packet to data network
-desc.immersiveintelligence.variable_remove=Remove
-desc.immersiveintelligence.variable_remove_desc=Remove a variable
-desc.immersiveintelligence.variable_properties=Properties
-desc.immersiveintelligence.variable_apply=Apply
-desc.immersiveintelligence.variable_value=Value:
-desc.immersiveintelligence.operation=Operation:
-desc.immersiveintelligence.conditional_variable=Conditional Variable:
-desc.immersiveintelligence.no_variable=None
-desc.immersiveintelligence.variable=Variable:
+desc.immersiveintelligence.variable_type=Тип:
+desc.immersiveintelligence.variable_add_desc=Добавить новую переменную
+desc.immersiveintelligence.variable_set=Установить
+desc.immersiveintelligence.variable_set_desc=Изменить значение переменной
+desc.immersiveintelligence.variable_send_packet=Отправить пакет
+desc.immersiveintelligence.variable_send_packet_desc=Отправляет текущий пакет в сеть данных
+desc.immersiveintelligence.variable_remove=Удалить
+desc.immersiveintelligence.variable_remove_desc=Удалить переменную
+desc.immersiveintelligence.variable_properties=Свойства
+desc.immersiveintelligence.variable_apply=Применить
+desc.immersiveintelligence.variable_value=Значение:
+desc.immersiveintelligence.operation=Операция:
+desc.immersiveintelligence.conditional_variable=Условная переменная:
+desc.immersiveintelligence.no_variable=Пусто
+desc.immersiveintelligence.variable=Переменная:
 
 #Bullets
 
-desc.immersiveintelligence.bullet_type.general_purpose=General Purpose
-desc.immersiveintelligence.bullet_type.shrapnel=Shrapnel
-desc.immersiveintelligence.bullet_type.piercing=Armor Piercing
-desc.immersiveintelligence.bullet_type.shaped=Shaped Charge
-desc.immersiveintelligence.bullet_type.explosive=High Explosive
-desc.immersiveintelligence.bullet_type.incendiary=Incendiary
-desc.immersiveintelligence.bullet_type.tracer=Tracer
-desc.immersiveintelligence.bullet_type.flare=Flare
-desc.immersiveintelligence.bullet_type.chemical=Chemical
-desc.immersiveintelligence.bullet_type.emp=EMP
-desc.immersiveintelligence.bullet_type.terrain_denial=Terrain Denial
-desc.immersiveintelligence.bullet_type.special=Special Purpose
+desc.immersiveintelligence.bullet_type.general_purpose=Общего назначения
+desc.immersiveintelligence.bullet_type.shrapnel=Шрапнель
+desc.immersiveintelligence.bullet_type.piercing=Бронебойный
+desc.immersiveintelligence.bullet_type.shaped=Кумулятивный
+desc.immersiveintelligence.bullet_type.explosive=Взрывной
+desc.immersiveintelligence.bullet_type.incendiary=Зажигательный
+desc.immersiveintelligence.bullet_type.tracer=Трассирующий
+desc.immersiveintelligence.bullet_type.flare=Вспышка
+desc.immersiveintelligence.bullet_type.chemical=Химический
+desc.immersiveintelligence.bullet_type.emp=ЭМИ
+desc.immersiveintelligence.bullet_type.terrain_denial=По местности
+desc.immersiveintelligence.bullet_type.special=Спец. назначения
 
-desc.immersiveintelligence.bullet_core_type.softpoint=Soft Point
-desc.immersiveintelligence.bullet_core_type.shaped=Shaped
-desc.immersiveintelligence.bullet_core_type.shaped_sabot=Shaped Fin-Stabilized
-desc.immersiveintelligence.bullet_core_type.piercing=Armor-Piercing
-desc.immersiveintelligence.bullet_core_type.piercing_sabot=Sabot
-desc.immersiveintelligence.bullet_core_type.canister=Canister
-desc.immersiveintelligence.bullet_core_type.cluster=Cluster
+desc.immersiveintelligence.bullet_core_type.softpoint=Полуоболочное
+desc.immersiveintelligence.bullet_core_type.shaped=Кумулятивное
+desc.immersiveintelligence.bullet_core_type.shaped_sabot=Оперённое кумулятивное
+desc.immersiveintelligence.bullet_core_type.piercing=Бронебойное
+desc.immersiveintelligence.bullet_core_type.piercing_sabot=Кассетное
+desc.immersiveintelligence.bullet_core_type.canister=Шрапнельное
+desc.immersiveintelligence.bullet_core_type.cluster=Кластерное
 
-desc.immersiveintelligence.bullet_fuse.contact=Contact
-desc.immersiveintelligence.bullet_fuse.timed=Timed
-desc.immersiveintelligence.bullet_fuse.tooltip.timed=Timed Fuse, delay set to %s ticks
-desc.immersiveintelligence.bullet_fuse.proximity=Proximity
-desc.immersiveintelligence.bullet_fuse.tooltip.proximity=Proximity Fuse, distance set to %s blocks
+desc.immersiveintelligence.bullet_fuse.contact=Контактный
+desc.immersiveintelligence.bullet_fuse.timed=Хронометрированный
+desc.immersiveintelligence.bullet_fuse.tooltip.timed=Предохранитель с таймером, задержка установлена на %с тиков
+desc.immersiveintelligence.bullet_fuse.proximity=Бесконтактный
+desc.immersiveintelligence.bullet_fuse.tooltip.proximity=Бесконтактный предохранитель, расстояние установлено в %s блоков
 
-desc.immersiveintelligence.bullets.composition=%s - Composition
-desc.immersiveintelligence.bullets.details=Details:
-desc.immersiveintelligence.bullets.core=Fitted with %1$s %2$s Core
-desc.immersiveintelligence.bullets.fuse=%s Fuse
-desc.immersiveintelligence.bullets.mass=Mass: %s
-desc.immersiveintelligence.bullets.caliber=Caliber: %s bCal
+desc.immersiveintelligence.bullets.composition=%s - Состав
+desc.immersiveintelligence.bullets.details=Детали:
+desc.immersiveintelligence.bullets.core=Заполнен с %1$s %2$s ядром
+desc.immersiveintelligence.bullets.fuse=%s взрыватель
+desc.immersiveintelligence.bullets.mass=Масса: %s
+desc.immersiveintelligence.bullets.caliber=Калибр: %s б/Кал
 
-desc.immersiveintelligence.bullets.components=Components:
-desc.immersiveintelligence.bullets.ballistics=%s - Ballistics
-desc.immersiveintelligence.bullets.performance=Performance:
-desc.immersiveintelligence.bullets.damage_dealt=Damage Dealt: %s
-desc.immersiveintelligence.bullets.standard_velocity=Standard Velocity: %s b/t
-desc.immersiveintelligence.bullets.max_artillery_range=Max Artillery Range: %s blocks
-desc.immersiveintelligence.bullets.max_artillery_height=Max Height Reached: %s blocks
-desc.immersiveintelligence.bullets.max_direct_range=Max Direct Range: %s blocks
-desc.immersiveintelligence.bullets.max_range=Max Range: %s blocks
-desc.immersiveintelligence.bullets.armor_penetration=Armor Penetration:
+desc.immersiveintelligence.bullets.components=Компоненты:
+desc.immersiveintelligence.bullets.ballistics=%s - Баллистика
+desc.immersiveintelligence.bullets.performance=Представление:
+desc.immersiveintelligence.bullets.damage_dealt=Нанесенный урон: %s
+desc.immersiveintelligence.bullets.standard_velocity=Стандартная скорость: %s б/т
+desc.immersiveintelligence.bullets.max_artillery_range=Максимальная артиллерийская дальность: %s блоков
+desc.immersiveintelligence.bullets.max_artillery_height=Максимальная достигаемая высота: %s блоков
+desc.immersiveintelligence.bullets.max_direct_range=Максимальный прямой радиус действия: %s блоков
+desc.immersiveintelligence.bullets.max_range=Максимальная дальность: %s блоков
+desc.immersiveintelligence.bullets.armor_penetration=Бронебойность:
 
-desc.immersiveintelligence.bullet_magazine.remaining=Remaining Bullets: %s
-desc.immersiveintelligence.bullet_magazine.empty=Empty
+desc.immersiveintelligence.bullet_magazine.remaining=Осталось патронов: %s
+desc.immersiveintelligence.bullet_magazine.empty=Пуст
 
-desc.immersiveintelligence.data_merger.0=Both
-desc.immersiveintelligence.data_merger.1=Left
-desc.immersiveintelligence.data_merger.2=Right
+desc.immersiveintelligence.data_merger.0=Оба
+desc.immersiveintelligence.data_merger.1=Лево
+desc.immersiveintelligence.data_merger.2=Право
 
-desc.immersiveintelligence.medical_crate.heal=Heal Wounded Entities
-desc.immersiveintelligence.medical_crate.boost=Apply Effects to Entities
+desc.immersiveintelligence.medical_crate.heal=Исцеляет раненых существ
+desc.immersiveintelligence.medical_crate.boost=Применять эффекты к существам
 
-desc.immersiveintelligence.repair_crate.repair_armor=Repair Worn Armor
-desc.immersiveintelligence.repair_crate.repair_vehicles=Repair Vehicles
+desc.immersiveintelligence.repair_crate.repair_armor=Восстанавливать изношенную броню
+desc.immersiveintelligence.repair_crate.repair_vehicles=Восстанавливать технику
 
-desc.immersiveintelligence.jei.washing_recipe=Chemical Washing
+desc.immersiveintelligence.jei.washing_recipe=Химическая мойка
 
 #Potion effects
 
-potion.immersiveintelligence.suppression=Suppressed
-potion.immersiveintelligence.broken_armor=Penetrated Armor
-potion.immersiveintelligence.corrosion=Corrosion
-potion.immersiveintelligence.infrared_vision=Infrared Vision
-potion.immersiveintelligence.iron_will=Iron Will
-potion.immersiveintelligence.well_supplied=Well Supplied
-potion.immersiveintelligence.concealed=Concealed
-potion.immersiveintelligence.exposed=Exposed
-potion.immersiveintelligence.medical_treatment=Medical Treatment
-potion.immersiveintelligence.undergoing_repairs=Undergoing Repairs
-potion.immersiveintelligence.radiation=Radiation
-potion.immersiveintelligence.nuclear_heat=Nuclear Heat
-potion.immersiveintelligence.movement_assist=Motion Assist
+potion.immersiveintelligence.suppression=Подавлен
+potion.immersiveintelligence.broken_armor=Броня пробита
+potion.immersiveintelligence.corrosion=Коррозия
+potion.immersiveintelligence.infrared_vision=Инфракрасное зрение
+potion.immersiveintelligence.iron_will=Железная воля
+potion.immersiveintelligence.well_supplied=Хорошо снабженный
+potion.immersiveintelligence.concealed=Замаскированный
+potion.immersiveintelligence.exposed=Незащищенный
+potion.immersiveintelligence.medical_treatment=Медицинское лечение
+potion.immersiveintelligence.undergoing_repairs=Ремонт
+potion.immersiveintelligence.radiation=Радиация
+potion.immersiveintelligence.nuclear_heat=Ядерное тепло
+potion.immersiveintelligence.movement_assist=Помощь в движении
 
 #Chat info / debug
-info.immersiveintelligence.frequency_set=Radio frequency has been set to %s
-info.immersiveintelligence.frequency_invalid=Invalid frequency, basic devices can use frequencies up to %s!
-info.immersiveintelligence.current_frequency=Current frequency: %s
+info.immersiveintelligence.frequency_set=Радиочастота была установлена на %s
+info.immersiveintelligence.frequency_invalid=Неверная частота, базовые устройства могут использовать частоты до %s!
+info.immersiveintelligence.current_frequency=Текущая частота: %s
 
-info.immersiveintelligence.requires_advanced_hammer=Advanced engineering requires advanced tools... you need an Electric Hammer to build this machine!
+info.immersiveintelligence.requires_advanced_hammer=Для продвинутой инженерии требуются продвинутые инструменты... чтобы построить эту машину, вам понадобится электрический молоток!
 
-info.immersiveintelligence.tool_durability=Durability: %1$s / %2$s
-info.immersiveintelligence.gear_ratio=Torque/Speed Ratio: %1$s >> %2$s
+info.immersiveintelligence.tool_durability=Прочность: %1$s / %2$s
+info.immersiveintelligence.gear_ratio=Крутящий момент/скорость: %1$s >> %2$s
 info.immersiveintelligence.gear_ratio_short=%1$s >> %2$s
-info.immersiveintelligence.charge_with_if=Charge with IF
+info.immersiveintelligence.charge_with_if=Зарядка с помощью IF
 
-info.immersiveintelligence.yaw=Yaw: %s
-info.immersiveintelligence.pitch=Pitch: %s
-info.immersiveintelligence.distance=Distance: %s
-info.immersiveintelligence.distance_unknown=Unknown
+info.immersiveintelligence.yaw=Рыск: %s
+info.immersiveintelligence.pitch=Угол наклона: %s
+info.immersiveintelligence.distance=Расстояние: %s
+info.immersiveintelligence.distance_unknown=Неизвестно
 
-info.immersiveintelligence.debugger_mode=Debugger Mode: %s
-info.immersiveintelligence.debugger_mode.transceiver=Transceiver
-info.immersiveintelligence.debugger_mode.transmitter=Transmitter
-info.immersiveintelligence.debugger_mode.receiver=Receiver
+info.immersiveintelligence.debugger_mode=Режим отладки: %s
+info.immersiveintelligence.debugger_mode.transceiver=Приёмопередатчик
+info.immersiveintelligence.debugger_mode.transmitter=Передатчик
+info.immersiveintelligence.debugger_mode.receiver=Приёмник
 
-info.immersiveintelligence.punchtape_reader_mode=Punchtape Reader Mode: %s
-info.immersiveintelligence.punchtape_reader_mode.0=Redstone Indifferent
-info.immersiveintelligence.punchtape_reader_mode.1=Packet on Redstone
-info.immersiveintelligence.punchtape_reader_mode.2=Redstone on Packet
+info.immersiveintelligence.punchtape_reader_mode=Режим считывания перфоленты: %s
+info.immersiveintelligence.punchtape_reader_mode.0=Не зависит от редстоуна
+info.immersiveintelligence.punchtape_reader_mode.1=Отправка при редстоун сигнале
+info.immersiveintelligence.punchtape_reader_mode.2=При считывании выдаёт редстоун сигнал
 
-info.immersiveintelligence.redstone_buffer_mode=Redstone Buffer Mode: %s
-info.immersiveintelligence.redstone_buffer_mode.passtrough=Passtrough
-info.immersiveintelligence.redstone_buffer_mode.signal=On Signal
+info.immersiveintelligence.redstone_buffer_mode=Редстоуновый буферный режим: %s
+info.immersiveintelligence.redstone_buffer_mode.passtrough=Постоянный
+info.immersiveintelligence.redstone_buffer_mode.signal=Импульс
 
-info.immersiveintelligence.machineupgrade.name=Installing: %s
-info.immersiveintelligence.machineupgrade.progress=Progress: %1$s / %2$s IF
+info.immersiveintelligence.machineupgrade.name=Установка: %s
+info.immersiveintelligence.machineupgrade.progress=Прогресс: %1$s / %2$s IF
 
-info.immersiveintelligence.exoskeleton.0=Exoskeleton: §4Off§r
-info.immersiveintelligence.exoskeleton.1=Exoskeleton: §aMotion Assist§r
-info.immersiveintelligence.exoskeleton.2=Exoskeleton: §2Overdrive§r
+info.immersiveintelligence.exoskeleton.0=Экзоскелет: §4Выкл§r
+info.immersiveintelligence.exoskeleton.1=Экзоскелет: §aВкл§r
+info.immersiveintelligence.exoskeleton.2=Экзоскелет: §2Перегрузка§r
 
-info.immersiveintelligence.machineupgrade.mg_loader.gui_tooltip=MG
+info.immersiveintelligence.machineupgrade.mg_loader.gui_tooltip=Пулемёт
 
-info.immersiveintelligence.towing.no=Can't find a towable vehicle
-info.immersiveintelligence.towing.towed=Successfully towed!
-info.immersiveintelligence.towing.untowed=Successfully untowed!
+info.immersiveintelligence.towing.no=Не удалось определить буксируемое транспортное средство
+info.immersiveintelligence.towing.towed=Успешно прикреплен!
+info.immersiveintelligence.towing.untowed=Успешно откреплен!
 #Do not translate, it's a Factorio reference ^^
 info.immersiveintelligence.towing.no_easter_egg=Nie można rozsprzęgać taboru nie będąc w pojeździe!
 
 #Rotational Energy
 
-rotary.immersiveintelligence.belt_system.wrongCable=Can't attach motor belts to a wire connector
-rotary.immersiveintelligence.belt_system.wrongCable1=One does not simply attach belts to a wire system
-rotary.immersiveintelligence.belt_system.wrongCable2=As I said, you CAN'T connect them, stop trying
-rotary.immersiveintelligence.belt_system.wrongCable3=Listen to me, if you try to connect them once again...
-rotary.immersiveintelligence.belt_system.wrongCable4=WHAT PART OF YOU CAN'T ATTACH BELTS YOU DO NOT UNDERSTAND?!
-rotary.immersiveintelligence.belt_system.wrongCable5=Just leave me alone... Dummkopf! Here, have an advancement, and now f**k off!
-rotary.immersiveintelligence.belt_system.itsBoringGetALife=You're really boring, even i, MotorBeltUtils.java have feelings, ok?!
-rotary.immersiveintelligence.belt_system.wrongBelt=You cannot attach this belt here
+rotary.immersiveintelligence.belt_system.wrongCable=Не удается прикрепить ремни к разъему проводов
+rotary.immersiveintelligence.belt_system.wrongCable1=Нельзя просто прикрепить ремни к системе проводов
+rotary.immersiveintelligence.belt_system.wrongCable2=Как я уже сказал, вы НЕ МОЖЕТЕ соединить их, хватит пытаться
+rotary.immersiveintelligence.belt_system.wrongCable3=Послушайте меня, если вы попробуете их еще раз соединить ...
+rotary.immersiveintelligence.belt_system.wrongCable4=КАКАЯ ЧАСТЬ ВАС НЕ ПОНИМАЕТ, ЧТО ВЫ НЕ МОЖЕТЕ ПРИКРЕПИТЬ ЗДЕСЬ РЕМНИ?!
+rotary.immersiveintelligence.belt_system.wrongCable5=Оставь меня в покое... Думмкопф! Вот, получи достижение, а теперь иди к чёрту!
+rotary.immersiveintelligence.belt_system.itsBoringGetALife=Ты действительно скучный, даже у меня, MotorBeltUtils.java есть чувства, ладно?!
+rotary.immersiveintelligence.belt_system.wrongBelt=Вы не можете прикрепить этот ремень здесь
 
-rotary.immersiveintelligence.belt_system.wrongDimension=You are in the wrong dimension
-rotary.immersiveintelligence.belt_system.sameConnection=You cannot attach a belt to the same point
-rotary.immersiveintelligence.belt_system.tooFar=You are too far away from the previous connection
-rotary.immersiveintelligence.belt_system.cantSee=The connection is obstructed
-rotary.immersiveintelligence.belt_system.connectionExists=The connection exists already
-rotary.immersiveintelligence.belt_system.invalidPoint=One of the connection points is invalid
-rotary.immersiveintelligence.belt_system.differentAxis=Belts cannot be connected diagonally.
+rotary.immersiveintelligence.belt_system.wrongDimension=Вы находитесь в неправильном измерении
+rotary.immersiveintelligence.belt_system.sameConnection=Ремень нельзя прикрепить к одной и той же точке
+rotary.immersiveintelligence.belt_system.tooFar=Вы слишком далеко от предыдущего подключения
+rotary.immersiveintelligence.belt_system.cantSee=Соединение заблокировано
+rotary.immersiveintelligence.belt_system.connectionExists=Подключение уже существует
+rotary.immersiveintelligence.belt_system.invalidPoint=Одна из точек подключения недействительна
+rotary.immersiveintelligence.belt_system.differentAxis=Ремни нельзя соединять по диагонали.
 
 #Data System Descriptions
-datasystem.immersiveintelligence.function.null=Missing Function
-datasystem.immersiveintelligence.function.null.desc=Please report the bug with details to the mod developers on II's GitHub.
+datasystem.immersiveintelligence.function.null=Отсутствует функция
+datasystem.immersiveintelligence.function.null.desc=Пожалуйста, сообщите об ошибке с подробностями разработчикам мода II на GitHub.
 
 #Arithmetic
-datasystem.immersiveintelligence.function.add=Addition
-datasystem.immersiveintelligence.function.add.desc=Adds all inputs together
-datasystem.immersiveintelligence.function.add.param.summand=Summand
-datasystem.immersiveintelligence.function.add.param.summand.desc=Part of the sum
-datasystem.immersiveintelligence.function.add.result=Sum
-datasystem.immersiveintelligence.function.add.result.desc=Sum of all inputs. For example 2+2=4
+datasystem.immersiveintelligence.function.add=Сложение
+datasystem.immersiveintelligence.function.add.desc=Складывает все входные данные
+datasystem.immersiveintelligence.function.add.param.summand=Слагаемое
+datasystem.immersiveintelligence.function.add.param.summand.desc=Часть суммы
+datasystem.immersiveintelligence.function.add.result=Сумма
+datasystem.immersiveintelligence.function.add.result.desc=Сумма всех входных данных. Например, 2 + 2 = 4
 
-datasystem.immersiveintelligence.function.subtract=Subtraction
-datasystem.immersiveintelligence.function.subtract.desc=Subtracts the subtrahend from the minuend.
-datasystem.immersiveintelligence.function.subtract.param.minuend=Minuend
-datasystem.immersiveintelligence.function.subtract.param.minuend.desc=The number from which the subtrahend is subtracted
-datasystem.immersiveintelligence.function.subtract.param.subtrahend=Subtrahend
-datasystem.immersiveintelligence.function.subtract.param.subtrahend.desc=The number that is subtracted from the minuend
-datasystem.immersiveintelligence.function.subtract.result=Difference
-datasystem.immersiveintelligence.function.subtract.result.desc=Result of the subtraction. For example 5-3=2
+datasystem.immersiveintelligence.function.subtract=Вычитание
+datasystem.immersiveintelligence.function.subtract.desc=Вычитает вычитаемое из уменьшаемого.
+datasystem.immersiveintelligence.function.subtract.param.minuend=Уменьшаемое
+datasystem.immersiveintelligence.function.subtract.param.minuend.desc=Число, из которого вычитается вычитаемое
+datasystem.immersiveintelligence.function.subtract.param.subtrahend=Вычитаемое
+datasystem.immersiveintelligence.function.subtract.param.subtrahend.desc=Число, которое вычитается из уменьшаемого
+datasystem.immersiveintelligence.function.subtract.result=Разность
+datasystem.immersiveintelligence.function.subtract.result.desc=Результат вычитания. Например, 5 - 3 = 2
 
-datasystem.immersiveintelligence.function.multiply=Multiplication
-datasystem.immersiveintelligence.function.multiply.desc=Multiplies the factors.
-datasystem.immersiveintelligence.function.multiply.param.factor=Factor
-datasystem.immersiveintelligence.function.multiply.param.factor.desc=The number by which the multiplicand is multiplied
-datasystem.immersiveintelligence.function.multiply.result=Product
-datasystem.immersiveintelligence.function.multiply.result.desc=Result of the multiplication. For example 2*3=6
+datasystem.immersiveintelligence.function.multiply=Умножение
+datasystem.immersiveintelligence.function.multiply.desc=Умножает множители.
+datasystem.immersiveintelligence.function.multiply.param.factor=Множитель
+datasystem.immersiveintelligence.function.multiply.param.factor.desc=Число, на которое умножается множимое.
+datasystem.immersiveintelligence.function.multiply.result=Произведение
+datasystem.immersiveintelligence.function.multiply.result.desc=Результат умножения. Например, 2*3=6.
 
-datasystem.immersiveintelligence.function.divide=Division
-datasystem.immersiveintelligence.function.divide.desc=Divides the dividend by the divisor.
-datasystem.immersiveintelligence.function.divide.param.dividend=Dividend
-datasystem.immersiveintelligence.function.divide.param.dividend.desc=The number that is divided by the divisor
-datasystem.immersiveintelligence.function.divide.param.divisor=Divisor
-datasystem.immersiveintelligence.function.divide.param.divisor.desc=The number by which the dividend is divided
-datasystem.immersiveintelligence.function.divide.result=Fraction
-datasystem.immersiveintelligence.function.divide.result.desc=Result of the division. For example 10/2=5
+datasystem.immersiveintelligence.function.divide=Деление
+datasystem.immersiveintelligence.function.divide.desc=Делит делимое на делитель.
+datasystem.immersiveintelligence.function.divide.param.dividend=Делимое
+datasystem.immersiveintelligence.function.divide.param.dividend.desc=Число, которое делит делитель
+datasystem.immersiveintelligence.function.divide.param.divisor=Делитель
+datasystem.immersiveintelligence.function.divide.param.divisor.desc=Число, на которое делится делимое
+datasystem.immersiveintelligence.function.divide.result=Дробь
+datasystem.immersiveintelligence.function.divide.result.desc=Результат деления. Например, 10/2=5
 
-datasystem.immersiveintelligence.function.modulo=Mod
-datasystem.immersiveintelligence.function.modulo.desc=Calculates the remainder of the division of the dividend by the divisor.
-datasystem.immersiveintelligence.function.modulo.param.dividend=Dividend
-datasystem.immersiveintelligence.function.modulo.param.dividend.desc=The number that is divided by the divisor
-datasystem.immersiveintelligence.function.modulo.param.divisor=Divisor
-datasystem.immersiveintelligence.function.modulo.param.divisor.desc=The number by which the dividend is divided
-datasystem.immersiveintelligence.function.modulo.result=Remainder
-datasystem.immersiveintelligence.function.modulo.result.desc=Result of the modulo operation. For example 10 mod 3=1
+datasystem.immersiveintelligence.function.modulo=Остаток целочисленного деления
+datasystem.immersiveintelligence.function.modulo.desc=Вычисляет остаток от деления делимого на делитель.
+datasystem.immersiveintelligence.function.modulo.param.dividend=Делимое
+datasystem.immersiveintelligence.function.modulo.param.dividend.desc=Число, которое делит делитель
+datasystem.immersiveintelligence.function.modulo.param.divisor=Делитель
+datasystem.immersiveintelligence.function.modulo.param.divisor.desc=Число, на которое делится делимое
+datasystem.immersiveintelligence.function.modulo.result=Остаток
+datasystem.immersiveintelligence.function.modulo.result.desc=Результат операции. Например, 10 mod 3=1
 
-datasystem.immersiveintelligence.function.abs=Abs
-datasystem.immersiveintelligence.function.abs.desc=Returns the absolute value of the input.
-datasystem.immersiveintelligence.function.abs.param.value=Value
-datasystem.immersiveintelligence.function.abs.param.value.desc=The number to get the absolute value of
-datasystem.immersiveintelligence.function.abs.result=Absolute Value
-datasystem.immersiveintelligence.function.abs.result.desc=The absolute value of the input. For example abs(-5)=5
+datasystem.immersiveintelligence.function.abs=Модуль
+datasystem.immersiveintelligence.function.abs.desc=Возвращает абсолютную величину входного значения.
+datasystem.immersiveintelligence.function.abs.param.value=Значение
+datasystem.immersiveintelligence.function.abs.param.value.desc=Число, для которого необходимо получить абсолютную величину.
+datasystem.immersiveintelligence.function.abs.result=Абсолютная величина
+datasystem.immersiveintelligence.function.abs.result.desc=Модуль входного значения. Например, abs(-5)=5
 
 # Advanced Arithmetic
-datasystem.immersiveintelligence.function.power=Power
-datasystem.immersiveintelligence.function.power.desc=Raises the base to the power of the exponent.
-datasystem.immersiveintelligence.function.power.param.base=Base
-datasystem.immersiveintelligence.function.power.param.base.desc=The number to be raised to the power of the exponent
-datasystem.immersiveintelligence.function.power.param.exponent=Exponent
-datasystem.immersiveintelligence.function.power.param.exponent.desc=The power to which the base is raised
-datasystem.immersiveintelligence.function.power.result=Result
-datasystem.immersiveintelligence.function.power.result.desc=Result of raising the base to the power of the exponent. For example 2^3=8
+datasystem.immersiveintelligence.function.power=Степень
+datasystem.immersiveintelligence.function.power.desc=Возводит основание в указанную степень.
+datasystem.immersiveintelligence.function.power.param.base=Основание
+datasystem.immersiveintelligence.function.power.param.base.desc=Число, которое необходимо возвести в указанную степень.
+datasystem.immersiveintelligence.function.power.param.exponent=Экспонента
+datasystem.immersiveintelligence.function.power.param.exponent.desc=Степень, в которую возводится основание.
+datasystem.immersiveintelligence.function.power.result=Результат
+datasystem.immersiveintelligence.function.power.result.desc=Результат возведения основания в указанную степень. Например, 2^3=8
 
-datasystem.immersiveintelligence.function.root=Root
-datasystem.immersiveintelligence.function.root.desc=Calculates the root of the base.
-datasystem.immersiveintelligence.function.root.param.base=Base
-datasystem.immersiveintelligence.function.root.param.base.desc=The number to find the root of
-datasystem.immersiveintelligence.function.root.param.degree=Degree
-datasystem.immersiveintelligence.function.root.param.degree.desc=The degree of the root
-datasystem.immersiveintelligence.function.root.result=Result
-datasystem.immersiveintelligence.function.root.result.desc=Result of finding the root of the base. For example square root of 9=3
+datasystem.immersiveintelligence.function.root=Корень
+datasystem.immersiveintelligence.function.root.desc=Вычисляет корень по основанию.
+datasystem.immersiveintelligence.function.root.param.base=Основание
+datasystem.immersiveintelligence.function.root.param.base.desc=Число, из которого нужно извлечь корень
+datasystem.immersiveintelligence.function.root.param.degree=Степень
+datasystem.immersiveintelligence.function.root.param.degree.desc=Степень корня
+datasystem.immersiveintelligence.function.root.result=Результат
+datasystem.immersiveintelligence.function.root.result.desc=Результат извлечения корня по основанию. Например, квадратный корень из 9=3
 
-datasystem.immersiveintelligence.function.max=Max
-datasystem.immersiveintelligence.function.max.desc=Finds the maximum value among the inputs.
-datasystem.immersiveintelligence.function.max.param.number=Number
-datasystem.immersiveintelligence.function.max.param.number.desc=The number to compare
-datasystem.immersiveintelligence.function.max.result=Maximum
-datasystem.immersiveintelligence.function.max.result.desc=The maximum value among the inputs
+datasystem.immersiveintelligence.function.max=Максимум
+datasystem.immersiveintelligence.function.max.desc=Находит максимальное значение среди входных данных.
+datasystem.immersiveintelligence.function.max.param.number=Число
+datasystem.immersiveintelligence.function.max.param.number.desc=Число для сравнения
+datasystem.immersiveintelligence.function.max.result=Максимум
+datasystem.immersiveintelligence.function.max.result.desc=Максимальное значение среди входных данных
 
-datasystem.immersiveintelligence.function.min=Min
-datasystem.immersiveintelligence.function.min.desc=Finds the minimum value among the inputs.
-datasystem.immersiveintelligence.function.min.param.number=Number
-datasystem.immersiveintelligence.function.min.param.number.desc=The number to compare
-datasystem.immersiveintelligence.function.min.result=Minimum
-datasystem.immersiveintelligence.function.min.result.desc=The minimum value among the inputs
+datasystem.immersiveintelligence.function.min=Минимум
+datasystem.immersiveintelligence.function.min.desc=Находит минимальное значение среди входных данных.
+datasystem.immersiveintelligence.function.min.param.number=Число
+datasystem.immersiveintelligence.function.min.param.number.desc=Число для сравнения
+datasystem.immersiveintelligence.function.min.result=Минимум
+datasystem.immersiveintelligence.function.min.result.desc=Минимальное значение среди входных данных
 
-datasystem.immersiveintelligence.function.sign=Sign
-datasystem.immersiveintelligence.function.sign.desc=Returns the sign of the input.
-datasystem.immersiveintelligence.function.sign.param.number=Number
-datasystem.immersiveintelligence.function.sign.param.number.desc=The number to get the sign of
-datasystem.immersiveintelligence.function.sign.result=Sign
-datasystem.immersiveintelligence.function.sign.result.desc=The sign of the input. For example, -1 for negative numbers, 1 for positive numbers, and 0 for zero
+datasystem.immersiveintelligence.function.sign=Знак
+datasystem.immersiveintelligence.function.sign.desc=Возвращает знак входного числа.
+datasystem.immersiveintelligence.function.sign.param.number=Число
+datasystem.immersiveintelligence.function.sign.param.number.desc=Число, знак которого необходимо получить
+datasystem.immersiveintelligence.function.sign.result=Знак
+datasystem.immersiveintelligence.function.sign.result.desc=Знак входного числа. Например, -1 для отрицательных чисел, 1 для положительных чисел и 0 для нуля.
 
-datasystem.immersiveintelligence.function.ceil=Ceiling
-datasystem.immersiveintelligence.function.ceil.desc=Returns the smallest integer greater than or equal to the input.
-datasystem.immersiveintelligence.function.ceil.param.number=Number
-datasystem.immersiveintelligence.function.ceil.param.number.desc=The number to get the ceiling of
-datasystem.immersiveintelligence.function.ceil.result=Ceiling
-datasystem.immersiveintelligence.function.ceil.result.desc=The smallest integer greater than or equal to the input
+datasystem.immersiveintelligence.function.ceil=Потолок
+datasystem.immersiveintelligence.function.ceil.desc=Окгругляет число до целого в большую сторону.
+datasystem.immersiveintelligence.function.ceil.param.number=Число
+datasystem.immersiveintelligence.function.ceil.param.number.desc=Число, для которого определяется потолок
+datasystem.immersiveintelligence.function.ceil.result=Потолок
+datasystem.immersiveintelligence.function.ceil.result.desc=Наименьшее целое число, большее или равное входному значению.
 
-datasystem.immersiveintelligence.function.round=Round
-datasystem.immersiveintelligence.function.round.desc=Rounds the input to the nearest integer.
-datasystem.immersiveintelligence.function.round.param.number=Number
-datasystem.immersiveintelligence.function.round.param.number.desc=The number to round
-datasystem.immersiveintelligence.function.round.result=Rounded Value
-datasystem.immersiveintelligence.function.round.result.desc=The input rounded to the nearest integer
+datasystem.immersiveintelligence.function.round=Округление
+datasystem.immersiveintelligence.function.round.desc=Округляет входное значение до ближайшего целого числа.
+datasystem.immersiveintelligence.function.round.param.number=Число
+datasystem.immersiveintelligence.function.round.param.number.desc=Округляемое число
+datasystem.immersiveintelligence.function.round.result=Округленное значение
+datasystem.immersiveintelligence.function.round.result.desc=Входное значение, округлённое до ближайшего целого числа
 
-datasystem.immersiveintelligence.function.floor=Floor
-datasystem.immersiveintelligence.function.floor.desc=Returns the largest integer less than or equal to the input.
-datasystem.immersiveintelligence.function.floor.param.number=Number
-datasystem.immersiveintelligence.function.floor.param.number.desc=The number to get the floor of
-datasystem.immersiveintelligence.function.floor.result=Floor
-datasystem.immersiveintelligence.function.floor.result.desc=The largest integer less than or equal to the input
+datasystem.immersiveintelligence.function.floor=Пол
+datasystem.immersiveintelligence.function.floor.desc=Окгругляет число до целого в меньшую сторону.
+datasystem.immersiveintelligence.function.floor.param.number=Число
+datasystem.immersiveintelligence.function.floor.param.number.desc=Число, для которого определяется пол
+datasystem.immersiveintelligence.function.floor.result=Пол
+datasystem.immersiveintelligence.function.floor.result.desc=Наибольшее целое число, меньшее или равное входному значению
 
-datasystem.immersiveintelligence.function.sin=Sin
-datasystem.immersiveintelligence.function.sin.desc=Calculates the sine of the input.
-datasystem.immersiveintelligence.function.sin.param.angle=Angle
-datasystem.immersiveintelligence.function.sin.param.angle.desc=The angle in degrees
-datasystem.immersiveintelligence.function.sin.result=Sine
-datasystem.immersiveintelligence.function.sin.result.desc=The sine of the input angle
+datasystem.immersiveintelligence.function.sin=Синус
+datasystem.immersiveintelligence.function.sin.desc=Вычисляет синус входного значения.
+datasystem.immersiveintelligence.function.sin.param.angle=Угол
+datasystem.immersiveintelligence.function.sin.param.angle.desc=Угол в градусах
+datasystem.immersiveintelligence.function.sin.result=Синус
+datasystem.immersiveintelligence.function.sin.result.desc=Синус входного угла
 
-datasystem.immersiveintelligence.function.cos=Cos
-datasystem.immersiveintelligence.function.cos.desc=Calculates the cosine of the input.
-datasystem.immersiveintelligence.function.cos.param.angle=Angle
-datasystem.immersiveintelligence.function.cos.param.angle.desc=The angle in degrees
-datasystem.immersiveintelligence.function.cos.result=Cosine
-datasystem.immersiveintelligence.function.cos.result.desc=The cosine of the input angle
+datasystem.immersiveintelligence.function.cos=Косинус
+datasystem.immersiveintelligence.function.cos.desc=Вычисляет косинус входного значения.
+datasystem.immersiveintelligence.function.cos.param.angle=Угол
+datasystem.immersiveintelligence.function.cos.param.angle.desc=Угол в градусах
+datasystem.immersiveintelligence.function.cos.result=Косинус
+datasystem.immersiveintelligence.function.cos.result.desc=Косинус входного угла
 
-datasystem.immersiveintelligence.function.tan=Tan
-datasystem.immersiveintelligence.function.tan.desc=Calculates the tangent of the input.
-datasystem.immersiveintelligence.function.tan.param.angle=Angle
-datasystem.immersiveintelligence.function.tan.param.angle.desc=The angle in degrees
-datasystem.immersiveintelligence.function.tan.result=Tangent
-datasystem.immersiveintelligence.function.tan.result.desc=The tangent of the input angle
+datasystem.immersiveintelligence.function.tan=Тангенс
+datasystem.immersiveintelligence.function.tan.desc=Вычисляет тангенс входного значения.
+datasystem.immersiveintelligence.function.tan.param.angle=Угол
+datasystem.immersiveintelligence.function.tan.param.angle.desc=Угол в градусах
+datasystem.immersiveintelligence.function.tan.result=Тангенс
+datasystem.immersiveintelligence.function.tan.result.desc=Тангенс входного угла
 
 # Logic
-datasystem.immersiveintelligence.function.and=AND
-datasystem.immersiveintelligence.function.and.desc=Returns true if all inputs are true
-datasystem.immersiveintelligence.function.and.param.input=Input
-datasystem.immersiveintelligence.function.and.param.input.desc=The input to check
-datasystem.immersiveintelligence.function.and.result=Result
-datasystem.immersiveintelligence.function.and.result.desc=Result of the AND operation.
+datasystem.immersiveintelligence.function.and=И
+datasystem.immersiveintelligence.function.and.desc=Возвращает истину, если все входные данные верны
+datasystem.immersiveintelligence.function.and.param.input=Входные данные
+datasystem.immersiveintelligence.function.and.param.input.desc=Входные данные для проверки
+datasystem.immersiveintelligence.function.and.result=Результат
+datasystem.immersiveintelligence.function.and.result.desc=Результат операции И.
 
-datasystem.immersiveintelligence.function.or=OR
-datasystem.immersiveintelligence.function.or.desc=Returns true if any of the inputs are true
-datasystem.immersiveintelligence.function.or.param.input=Input
-datasystem.immersiveintelligence.function.or.param.input.desc=The input to check
-datasystem.immersiveintelligence.function.or.result=Result
-datasystem.immersiveintelligence.function.or.result.desc=Result of the OR operation.
+datasystem.immersiveintelligence.function.or=ИЛИ
+datasystem.immersiveintelligence.function.or.desc=Возвращает истину, если хотя бы одно из входных значений истинно
+datasystem.immersiveintelligence.function.or.param.input=Входные данные
+datasystem.immersiveintelligence.function.or.param.input.desc=Входные данные для проверки
+datasystem.immersiveintelligence.function.or.result=Результат
+datasystem.immersiveintelligence.function.or.result.desc=Результат операции ИЛИ.
 
-datasystem.immersiveintelligence.function.not=NOT
-datasystem.immersiveintelligence.function.not.desc=Returns the opposite of the input
-datasystem.immersiveintelligence.function.not.param.input=Input
-datasystem.immersiveintelligence.function.not.param.input.desc=The input to negate
-datasystem.immersiveintelligence.function.not.result=Result
-datasystem.immersiveintelligence.function.not.result.desc=Result of the NOT operation.
+datasystem.immersiveintelligence.function.not=НЕ
+datasystem.immersiveintelligence.function.not.desc=Возвращает противоположное входному значению
+datasystem.immersiveintelligence.function.not.param.input=Входные данные
+datasystem.immersiveintelligence.function.not.param.input.desc=Входные данные для отрицания
+datasystem.immersiveintelligence.function.not.result=Результат
+datasystem.immersiveintelligence.function.not.result.desc=Результат операции НЕ.
 
-datasystem.immersiveintelligence.function.nand=NAND
-datasystem.immersiveintelligence.function.nand.desc=Returns false if all inputs are true
-datasystem.immersiveintelligence.function.nand.param.input=Input
-datasystem.immersiveintelligence.function.nand.param.input.desc=The input to check
-datasystem.immersiveintelligence.function.nand.result=Result
-datasystem.immersiveintelligence.function.nand.result.desc=Result of the NAND operation.
+datasystem.immersiveintelligence.function.nand=НЕ-И
+datasystem.immersiveintelligence.function.nand.desc=Возвращает ложь, если все входные данные истинны
+datasystem.immersiveintelligence.function.nand.param.input=Входные данные
+datasystem.immersiveintelligence.function.nand.param.input.desc=Входные данные для проверки
+datasystem.immersiveintelligence.function.nand.result=Результат
+datasystem.immersiveintelligence.function.nand.result.desc=Результат операции НЕ-И.
 
-datasystem.immersiveintelligence.function.nor=NOR
-datasystem.immersiveintelligence.function.nor.desc=Returns false if any of the inputs are true
-datasystem.immersiveintelligence.function.nor.param.input=Input
-datasystem.immersiveintelligence.function.nor.param.input.desc=The input to check
-datasystem.immersiveintelligence.function.nor.result=Result
-datasystem.immersiveintelligence.function.nor.result.desc=Result of the NOR operation.
+datasystem.immersiveintelligence.function.nor=НЕ-ИЛИ
+datasystem.immersiveintelligence.function.nor.desc=Возвращает ложь, если хотя бы одно из входных значений истинно.
+datasystem.immersiveintelligence.function.nor.param.input=Входные данные.
+datasystem.immersiveintelligence.function.nor.param.input.desc=Входные данные для проверки
+datasystem.immersiveintelligence.function.nor.result=Результат
+datasystem.immersiveintelligence.function.nor.result.desc=Результат операции НЕ-ИЛИ.
 
-datasystem.immersiveintelligence.function.xor=XOR
-datasystem.immersiveintelligence.function.xor.desc=Returns true if exactly one of the inputs is true
-datasystem.immersiveintelligence.function.xor.param.input=Input
-datasystem.immersiveintelligence.function.xor.param.input.desc=The input to check
-datasystem.immersiveintelligence.function.xor.result=Result
-datasystem.immersiveintelligence.function.xor.result.desc=Result of the XOR operation.
+datasystem.immersiveintelligence.function.xor=Исключающее ИЛИ
+datasystem.immersiveintelligence.function.xor.desc=Возвращает истину, когда только одно из входных данных имеет значений истинно
+datasystem.immersiveintelligence.function.xor.param.input=Входные данные
+datasystem.immersiveintelligence.function.xor.param.input.desc=Проверяемые входные данные
+datasystem.immersiveintelligence.function.xor.result=Результат
+datasystem.immersiveintelligence.function.xor.result.desc=Результат операции Исключающее ИЛИ.
 
-datasystem.immersiveintelligence.function.xnor=XNOR
-datasystem.immersiveintelligence.function.xnor.desc=Returns true if an even number of the inputs are true
-datasystem.immersiveintelligence.function.xnor.param.input=Input
-datasystem.immersiveintelligence.function.xnor.param.input.desc=The input to check
-datasystem.immersiveintelligence.function.xnor.result=Result
-datasystem.immersiveintelligence.function.xnor.result.desc=Result of the XNOR operation.
+datasystem.immersiveintelligence.function.xnor=Исключающее НЕ-ИЛИ
+datasystem.immersiveintelligence.function.xnor.desc=Возвращает истину, если чётное количество входных данных равно истине
+datasystem.immersiveintelligence.function.xnor.param.input=Входные данные
+datasystem.immersiveintelligence.function.xnor.param.input.desc=Проверяемые входные данные
+datasystem.immersiveintelligence.function.xnor.result=Результат
+datasystem.immersiveintelligence.function.xnor.result.desc=Результат операции Исключающее НЕ-ИЛИ.
 
 # Comparator
-datasystem.immersiveintelligence.function.greater=Greater
-datasystem.immersiveintelligence.function.greater.desc=Returns true if the first input is greater than the second
-datasystem.immersiveintelligence.function.greater.param.compared=Compared
-datasystem.immersiveintelligence.function.greater.param.compared.desc=The value to compare
-datasystem.immersiveintelligence.function.greater.result=Result
-datasystem.immersiveintelligence.function.greater.result.desc=Result of the comparison
+datasystem.immersiveintelligence.function.greater=Больше
+datasystem.immersiveintelligence.function.greater.desc=Возвращает истину, если первое входное значение больше второго
+datasystem.immersiveintelligence.function.greater.param.compared=Сравниваемое
+datasystem.immersiveintelligence.function.greater.param.compared.desc=Значение для сравнения
+datasystem.immersiveintelligence.function.greater.result=Результат
+datasystem.immersiveintelligence.function.greater.result.desc=Результат сравнения
 
-datasystem.immersiveintelligence.function.less=Less
-datasystem.immersiveintelligence.function.less.desc=Returns true if the first input is less than the second
-datasystem.immersiveintelligence.function.less.param.compared=Compared
-datasystem.immersiveintelligence.function.less.param.compared.desc=The value to compare
-datasystem.immersiveintelligence.function.less.result=Result
-datasystem.immersiveintelligence.function.less.result.desc=Result of the comparison
+datasystem.immersiveintelligence.function.less=Меньше
+datasystem.immersiveintelligence.function.less.desc=Возвращает истину, если первое входное значение меньше второго
+datasystem.immersiveintelligence.function.less.param.compared=Сравниваемое
+datasystem.immersiveintelligence.function.less.param.compared.desc=Значение для сравнения
+datasystem.immersiveintelligence.function.less.result=Результат
+datasystem.immersiveintelligence.function.less.result.desc=Результат сравнения
 
-datasystem.immersiveintelligence.function.greater_or_equal=Greater or Equal
-datasystem.immersiveintelligence.function.greater_or_equal.desc=Returns true if the first input is greater than or equal to the second
-datasystem.immersiveintelligence.function.greater_or_equal.param.compared=Compared
-datasystem.immersiveintelligence.function.greater_or_equal.param.compared.desc=The value to compare
-datasystem.immersiveintelligence.function.greater_or_equal.result=Result
-datasystem.immersiveintelligence.function.greater_or_equal.result.desc=Result of the comparison
+datasystem.immersiveintelligence.function.greater_or_equal=Больше или равно
+datasystem.immersiveintelligence.function.greater_or_equal.desc=Возвращает истину, если первое входное значение больше или равно второму
+datasystem.immersiveintelligence.function.greater_or_equal.param.compared=Сравниваемое
+datasystem.immersiveintelligence.function.greater_or_equal.param.compared.desc=Значение для сравнения
+datasystem.immersiveintelligence.function.greater_or_equal.result=Результат
+datasystem.immersiveintelligence.function.greater_or_equal.result.desc=Результат сравнения
 
-datasystem.immersiveintelligence.function.less_or_equal=Less or Equal
-datasystem.immersiveintelligence.function.less_or_equal.desc=Returns true if the first input is less than or equal to the second
-datasystem.immersiveintelligence.function.less_or_equal.param.compared=Compared
-datasystem.immersiveintelligence.function.less_or_equal.param.compared.desc=The value to compare
-datasystem.immersiveintelligence.function.less_or_equal.result=Result
-datasystem.immersiveintelligence.function.less_or_equal.result.desc=Result of the comparison
+datasystem.immersiveintelligence.function.less_or_equal=Меньше или равно
+datasystem.immersiveintelligence.function.less_or_equal.desc=Возвращает истину, если первое входное значение меньше или равно второму
+datasystem.immersiveintelligence.function.less_or_equal.param.compared=Сравниваемое
+datasystem.immersiveintelligence.function.less_or_equal.param.compared.desc=Значение для сравнения
+datasystem.immersiveintelligence.function.less_or_equal.result=Результат
+datasystem.immersiveintelligence.function.less_or_equal.result.desc=Результат сравнения
 
-datasystem.immersiveintelligence.function.equal=Equal
-datasystem.immersiveintelligence.function.equal.desc=Returns true if the inputs are equal
-datasystem.immersiveintelligence.function.equal.param.compared=Compared
-datasystem.immersiveintelligence.function.equal.param.compared.desc=The value to compare
-datasystem.immersiveintelligence.function.equal.result=Result
-datasystem.immersiveintelligence.function.equal.result.desc=Result of the comparison
+datasystem.immersiveintelligence.function.equal=Равно
+datasystem.immersiveintelligence.function.equal.desc=Возвращает истину, если входные значения равны
+datasystem.immersiveintelligence.function.equal.param.compared=Сравниваемое
+datasystem.immersiveintelligence.function.equal.param.compared.desc=Значение для сравнения
+datasystem.immersiveintelligence.function.equal.result=Результат
+datasystem.immersiveintelligence.function.equal.result.desc=Результат сравнения
 
 # Text
-datasystem.immersiveintelligence.function.string_join=Join
-datasystem.immersiveintelligence.function.string_join.desc=Joins two inputs into a single string, for example, joining strings "Engineers" and "Cause" results in "EngineersCause"
-datasystem.immersiveintelligence.function.string_join.param.first=First
-datasystem.immersiveintelligence.function.string_join.param.first.desc=The first string to join
-datasystem.immersiveintelligence.function.string_join.param.second=Second
-datasystem.immersiveintelligence.function.string_join.param.second.desc=The second string to join
-datasystem.immersiveintelligence.function.string_join.result=Result
-datasystem.immersiveintelligence.function.string_join.result.desc=The combined string
+datasystem.immersiveintelligence.function.string_join=Объединить
+datasystem.immersiveintelligence.function.string_join.desc=Объединяет два входных значения в одну строку. Например, объединение строк "Engineers" и "Cause" даёт "EngineersCause"
+datasystem.immersiveintelligence.function.string_join.param.first=Первая
+datasystem.immersiveintelligence.function.string_join.param.first.desc=Первая строка для объединения
+datasystem.immersiveintelligence.function.string_join.param.second=Вторая
+datasystem.immersiveintelligence.function.string_join.param.second.desc=Вторая строка для объединения
+datasystem.immersiveintelligence.function.string_join.result=Результат
+datasystem.immersiveintelligence.function.string_join.result.desc=Объединенная строка
 
-datasystem.immersiveintelligence.function.string_split=Split
-datasystem.immersiveintelligence.function.string_split.desc=Splits the input string into an array of strings
-datasystem.immersiveintelligence.function.string_split.param.text=String
-datasystem.immersiveintelligence.function.string_split.param.text.desc=The string to split
-datasystem.immersiveintelligence.function.string_split.param.delimiter=Delimiter
-datasystem.immersiveintelligence.function.string_split.param.delimiter.desc=The string used to separate the input
-datasystem.immersiveintelligence.function.string_split.result=Result
-datasystem.immersiveintelligence.function.string_split.result.desc=Array of strings
+datasystem.immersiveintelligence.function.string_split=Разделить
+datasystem.immersiveintelligence.function.string_split.desc=Разделяет входную строку на массив строк
+datasystem.immersiveintelligence.function.string_split.param.text=Строка
+datasystem.immersiveintelligence.function.string_split.param.text.desc=Строка для разделения
+datasystem.immersiveintelligence.function.string_split.param.delimiter=Разделитель
+datasystem.immersiveintelligence.function.string_split.param.delimiter.desc=Строка, используемая для разделения входные данные
+datasystem.immersiveintelligence.function.string_split.result=Результат
+datasystem.immersiveintelligence.function.string_split.result.desc=Массив строк
 
-datasystem.immersiveintelligence.function.string_length=Length
-datasystem.immersiveintelligence.function.string_length.desc=Returns the length of the input string
-datasystem.immersiveintelligence.function.string_length.param.text=String
-datasystem.immersiveintelligence.function.string_length.param.text.desc=The string to get the length of
-datasystem.immersiveintelligence.function.string_length.result=Length
-datasystem.immersiveintelligence.function.string_length.result.desc=The length of the input string
+datasystem.immersiveintelligence.function.string_length=Длина
+datasystem.immersiveintelligence.function.string_length.desc=Возвращает длину входной строки
+datasystem.immersiveintelligence.function.string_length.param.text=Строка
+datasystem.immersiveintelligence.function.string_length.param.text.desc=Строка, длину которой нужно получить
+datasystem.immersiveintelligence.function.string_length.result=Длина
+datasystem.immersiveintelligence.function.string_length.result.desc=Длина входной строки
 
-datasystem.immersiveintelligence.function.string_char_at=Character At
-datasystem.immersiveintelligence.function.string_char_at.desc=Returns the character at the specified index, starting from 0. For example, the character at index 2 of "Engineers" is "g"
-datasystem.immersiveintelligence.function.string_char_at.param.text=String
-datasystem.immersiveintelligence.function.string_char_at.param.text.desc=The string to get the character from
-datasystem.immersiveintelligence.function.string_char_at.param.index=Index
-datasystem.immersiveintelligence.function.string_char_at.param.index.desc=The index of the character to get, starting from 0
-datasystem.immersiveintelligence.function.string_char_at.result=Character
-datasystem.immersiveintelligence.function.string_char_at.result.desc=The character at the specified index
+datasystem.immersiveintelligence.function.string_char_at=Символ в позиции
+datasystem.immersiveintelligence.function.string_char_at.desc=Возвращает символ с указанным индексом, начиная с 0. Например, символ с индексом 2 в строке "Engineers" — это "g"
+datasystem.immersiveintelligence.function.string_char_at.param.text=Строка
+datasystem.immersiveintelligence.function.string_char_at.param.text.desc=Строка, из которой необходимо получить символ
+datasystem.immersiveintelligence.function.string_char_at.param.index=Индекс
+datasystem.immersiveintelligence.function.string_char_at.param.index.desc=Индекс символа, который необходимо получить, начиная с 0
+datasystem.immersiveintelligence.function.string_char_at.result=Символ
+datasystem.immersiveintelligence.function.string_char_at.result.desc=Символ по указанному индексу
 
-datasystem.immersiveintelligence.function.string_substring=Substring
-datasystem.immersiveintelligence.function.string_substring.desc=Returns a substring of the input string, for example, the substring of "Engineers' Cause" from index 1 "Cause"
-datasystem.immersiveintelligence.function.string_substring.param.text=String
-datasystem.immersiveintelligence.function.string_substring.param.text.desc=The string to get the substring from
-datasystem.immersiveintelligence.function.string_substring.param.index=Start
-datasystem.immersiveintelligence.function.string_substring.param.index.desc=The starting index of the substring, starting from 0
-datasystem.immersiveintelligence.function.string_substring.result=Substring
-datasystem.immersiveintelligence.function.string_substring.result.desc=The substring of the input string
+datasystem.immersiveintelligence.function.string_substring=Подстрока
+datasystem.immersiveintelligence.function.string_substring.desc=Возвращает подстроку входной строки, например, подстрока "Engineers' Cause" с индексом 1 "Cause"
+datasystem.immersiveintelligence.function.string_substring.param.text=Строка
+datasystem.immersiveintelligence.function.string_substring.param.text.desc=Строка, подстроку которой требуется получить
+datasystem.immersiveintelligence.function.string_substring.param.index=Начало
+datasystem.immersiveintelligence.function.string_substring.param.index.desc=Начальный индекс подстроки, начиная с 0
+datasystem.immersiveintelligence.function.string_substring.result=Подстрока
+datasystem.immersiveintelligence.function.string_substring.result.desc=Подстрока входной строки
 
 #todo: change to match the actual workings
-datasystem.immersiveintelligence.function.string_trim=Trim
-datasystem.immersiveintelligence.function.string_trim.desc=Returns a string trimmed to a given length, string "Engineers' Cause" trimmed to 7 characters is "Engineer"
-datasystem.immersiveintelligence.function.string_trim.param.text=String
-datasystem.immersiveintelligence.function.string_trim.param.text.desc=The string to trim
-datasystem.immersiveintelligence.function.string_trim.param.to_index=End
-datasystem.immersiveintelligence.function.string_trim.param.to_index.desc=The ending index of the substring, starting from 0
-datasystem.immersiveintelligence.function.string_trim.result=Trimmed String
-datasystem.immersiveintelligence.function.string_trim.result.desc=The input string trimmed to the specified length
+datasystem.immersiveintelligence.function.string_trim=Обрезать
+datasystem.immersiveintelligence.function.string_trim.desc=Возвращает строку, обрезанную до заданной длины. Строка "Engineers' Cause", обрезанная до 7 символов, возвращает "Engineer".
+datasystem.immersiveintelligence.function.string_trim.param.text=Строка
+datasystem.immersiveintelligence.function.string_trim.param.text.desc=Строка для обрезки
+datasystem.immersiveintelligence.function.string_trim.param.to_index=Конец
+datasystem.immersiveintelligence.function.string_trim.param.to_index.desc=Конечный индекс подстроки, начиная с 0
+datasystem.immersiveintelligence.function.string_trim.result=Обрезанная строка
+datasystem.immersiveintelligence.function.string_trim.result.desc=Строка, обрезанная до указанной длины
 
-datasystem.immersiveintelligence.function.string_hexcol=Format using Hexcol
-datasystem.immersiveintelligence.function.string_hexcol.desc=Formats the input string using hexadecimal color codes. Used to color text for printing on paper.
-datasystem.immersiveintelligence.function.string_hexcol.param.text=String
-datasystem.immersiveintelligence.function.string_hexcol.param.text.desc=The string to format
-datasystem.immersiveintelligence.function.string_hexcol.param.color=Color
-datasystem.immersiveintelligence.function.string_hexcol.param.color.desc=The hexadecimal color code to use
-datasystem.immersiveintelligence.function.string_hexcol.result=Formatted String
-datasystem.immersiveintelligence.function.string_hexcol.result.desc=The input string formatted using the hexadecimal color code
+datasystem.immersiveintelligence.function.string_hexcol=Форматировать с использованием Hexcol
+datasystem.immersiveintelligence.function.string_hexcol.desc=Форматирует входную строку с использованием шестнадцатеричных кодов цветов. Используется для раскрашивания текста при печати на бумаге.
+datasystem.immersiveintelligence.function.string_hexcol.param.text=Строка
+datasystem.immersiveintelligence.function.string_hexcol.param.text.desc=Строка для форматирования
+datasystem.immersiveintelligence.function.string_hexcol.param.color=Цвет
+datasystem.immersiveintelligence.function.string_hexcol.param.color.desc=Шестнадцатеричный код цвета для использования
+datasystem.immersiveintelligence.function.string_hexcol.result=Форматированная строка
+datasystem.immersiveintelligence.function.string_hexcol.result.desc=Строка, отформатированная с использованием шестнадцатеричного кода цвета
 
-datasystem.immersiveintelligence.function.string_format=Format using TextFormatting
-datasystem.immersiveintelligence.function.string_format.desc=Formats the input string using Text Formatting. Used to color text for signs or chat messages.
-datasystem.immersiveintelligence.function.string_format.param.text=String
-datasystem.immersiveintelligence.function.string_format.param.text.desc=The string to format
-datasystem.immersiveintelligence.function.string_format.param.formatting=Formatting
-datasystem.immersiveintelligence.function.string_format.param.formatting.desc=The Formatting color to use
-datasystem.immersiveintelligence.function.string_format.result=Formatted String
-datasystem.immersiveintelligence.function.string_format.result.desc=The input string formatted using the TextFormatting color
+datasystem.immersiveintelligence.function.string_format=Форматирование с использованием §
+datasystem.immersiveintelligence.function.string_format.desc=Форматирует входную строку с использованием §. Используется для выделения цветом текста на вывесках или в сообщениях чата.
+datasystem.immersiveintelligence.function.string_format.param.text=Строка
+datasystem.immersiveintelligence.function.string_format.param.text.desc=Строка для форматирования
+datasystem.immersiveintelligence.function.string_format.param.formatting=Форматирование
+datasystem.immersiveintelligence.function.string_format.param.formatting.desc=Цвет форматирования
+datasystem.immersiveintelligence.function.string_format.result=Отформатированная строка
+datasystem.immersiveintelligence.function.string_format.result.desc=Входная строка, отформатированная с использованием цвета §
 
-datasystem.immersiveintelligence.function.string_contains=Contains
-datasystem.immersiveintelligence.function.string_contains.desc=Returns true if the input string contains the specified substring
-datasystem.immersiveintelligence.function.string_contains.param.text=String
-datasystem.immersiveintelligence.function.string_contains.param.text.desc=The string to check
-datasystem.immersiveintelligence.function.string_contains.param.fragment=Fragment
-datasystem.immersiveintelligence.function.string_contains.param.fragment.desc=The substring to check for
-datasystem.immersiveintelligence.function.string_contains.result=Result
-datasystem.immersiveintelligence.function.string_contains.result.desc=Result of the contains operation
+datasystem.immersiveintelligence.function.string_contains=Содержит
+datasystem.immersiveintelligence.function.string_contains.desc=Возвращает истину, если входная строка содержит указанную подстроку
+datasystem.immersiveintelligence.function.string_contains.param.text=Строка
+datasystem.immersiveintelligence.function.string_contains.param.text.desc=Строка для проверки
+datasystem.immersiveintelligence.function.string_contains.param.fragment=Фрагмент
+datasystem.immersiveintelligence.function.string_contains.param.fragment.desc=Подстрока для проверки
+datasystem.immersiveintelligence.function.string_contains.result=Результат
+datasystem.immersiveintelligence.function.string_contains.result.desc=Результат операции "содержит"
 
-datasystem.immersiveintelligence.function.string_contains_count=Contained Amount
-datasystem.immersiveintelligence.function.string_contains_count.desc=Returns the number of times the specified substring appears in the input string
-datasystem.immersiveintelligence.function.string_contains_count.param.text=String
-datasystem.immersiveintelligence.function.string_contains_count.param.text.desc=The string to check
-datasystem.immersiveintelligence.function.string_contains_count.param.fragment=Fragment
-datasystem.immersiveintelligence.function.string_contains_count.param.fragment.desc=The substring to check for
-datasystem.immersiveintelligence.function.string_contains_count.result=Count
-datasystem.immersiveintelligence.function.string_contains_count.result.desc=The number of times the substring appears in the input string
+datasystem.immersiveintelligence.function.string_contains_count=Содержащееся количество
+datasystem.immersiveintelligence.function.string_contains_count.desc=Возвращает количество вхождений указанной подстроки во входной строке
+datasystem.immersiveintelligence.function.string_contains_count.param.text=Строка
+datasystem.immersiveintelligence.function.string_contains_count.param.text.desc=Строка для проверки
+datasystem.immersiveintelligence.function.string_contains_count.param.fragment=Фрагмент
+datasystem.immersiveintelligence.function.string_contains_count.param.fragment.desc=Подстрока для проверки
+datasystem.immersiveintelligence.function.string_contains_count.result=Количество
+datasystem.immersiveintelligence.function.string_contains_count.result.desc=Количество вхождений подстроки во входной строке
 
-datasystem.immersiveintelligence.function.string_replace_first=Replace First
-datasystem.immersiveintelligence.function.string_replace_first.desc=Replaces the first occurrence of the specified substring in the input string with the replacement
-datasystem.immersiveintelligence.function.string_replace_first.param.text=String
-datasystem.immersiveintelligence.function.string_replace_first.param.text.desc=The string to modify
-datasystem.immersiveintelligence.function.string_replace_first.param.fragment=Fragment
-datasystem.immersiveintelligence.function.string_replace_first.param.fragment.desc=The substring to replace
-datasystem.immersiveintelligence.function.string_replace_first.param.with=Replacement
-datasystem.immersiveintelligence.function.string_replace_first.param.with.desc=The string to replace the substring with
-datasystem.immersiveintelligence.function.string_replace_first.result=Result
-datasystem.immersiveintelligence.function.string_replace_first.result.desc=The input string with the first occurrence of the substring replaced
+datasystem.immersiveintelligence.function.string_replace_first=Заменить первое
+datasystem.immersiveintelligence.function.string_replace_first.desc=Заменяет первое вхождение указанной подстроки во входной строке на заменяющую
+datasystem.immersiveintelligence.function.string_replace_first.param.text=Строка
+datasystem.immersiveintelligence.function.string_replace_first.param.text.desc=Строка для замены
+datasystem.immersiveintelligence.function.string_replace_first.param.fragment=Фрагмент
+datasystem.immersiveintelligence.function.string_replace_first.param.fragment.desc=Подстрока для замены
+datasystem.immersiveintelligence.function.string_replace_first.param.with=Замена
+datasystem.immersiveintelligence.function.string_replace_first.param.with.desc=Строка, на которую заменяется подстрока
+datasystem.immersiveintelligence.function.string_replace_first.result=Результат
+datasystem.immersiveintelligence.function.string_replace_first.result.desc=Строка с заменённым первым вхождением подстроки
 
-datasystem.immersiveintelligence.function.string_replace_all=Replace All
-datasystem.immersiveintelligence.function.string_replace_all.desc=Replaces all occurrences of the specified substring in the input string with the replacement
-datasystem.immersiveintelligence.function.string_replace_all.param.text=String
-datasystem.immersiveintelligence.function.string_replace_all.param.text.desc=The string to modify
-datasystem.immersiveintelligence.function.string_replace_all.param.fragment=Fragment
-datasystem.immersiveintelligence.function.string_replace_all.param.fragment.desc=The substring to replace
-datasystem.immersiveintelligence.function.string_replace_all.param.with=Replacement
-datasystem.immersiveintelligence.function.string_replace_all.param.with.desc=The string to replace the substring with
-datasystem.immersiveintelligence.function.string_replace_all.result=Result
-datasystem.immersiveintelligence.function.string_replace_all.result.desc=The input string with all occurrences of the substring replaced
+datasystem.immersiveintelligence.function.string_replace_all=Заменить всё
+datasystem.immersiveintelligence.function.string_replace_all.desc=Заменяет все вхождения указанной подстроки во входной строке на заменяющую
+datasystem.immersiveintelligence.function.string_replace_all.param.text=Строка
+datasystem.immersiveintelligence.function.string_replace_all.param.text.desc=Строка для изменения
+datasystem.immersiveintelligence.function.string_replace_all.param.fragment=Фрагмент
+datasystem.immersiveintelligence.function.string_replace_all.param.fragment.desc=Заменяемая подстрока
+datasystem.immersiveintelligence.function.string_replace_all.param.with=Замена
+datasystem.immersiveintelligence.function.string_replace_all.param.with.desc=Строка, на которую заменяется подстрока
+datasystem.immersiveintelligence.function.string_replace_all.result=Результат
+datasystem.immersiveintelligence.function.string_replace_all.result.desc=Входная строка, на которую заменяются все вхождения подстроки
 
-datasystem.immersiveintelligence.function.string_lowercase=To lowercase
-datasystem.immersiveintelligence.function.string_lowercase.desc=Converts the input string to lowercase
-datasystem.immersiveintelligence.function.string_lowercase.param.text=String
-datasystem.immersiveintelligence.function.string_lowercase.param.text.desc=The string to convert
-datasystem.immersiveintelligence.function.string_lowercase.result=lowercase
-datasystem.immersiveintelligence.function.string_lowercase.result.desc=The input string converted to lowercase
+datasystem.immersiveintelligence.function.string_lowercase=В нижний регистр
+datasystem.immersiveintelligence.function.string_lowercase.desc=Преобразует входную строку в нижний регистр
+datasystem.immersiveintelligence.function.string_lowercase.param.text=Строка
+datasystem.immersiveintelligence.function.string_lowercase.param.text.desc=Строка для преобразования
+datasystem.immersiveintelligence.function.string_lowercase.result=нижний регистр
+datasystem.immersiveintelligence.function.string_lowercase.result.desc=Входная строка, преобразованная в нижний регистр
 
-datasystem.immersiveintelligence.function.string_uppercase=To Uppercase
-datasystem.immersiveintelligence.function.string_uppercase.desc=Converts the input string to uppercase
-datasystem.immersiveintelligence.function.string_uppercase.param.text=String
-datasystem.immersiveintelligence.function.string_uppercase.param.text.desc=The string to convert
-datasystem.immersiveintelligence.function.string_uppercase.result=UPPERCASE
-datasystem.immersiveintelligence.function.string_uppercase.result.desc=The input string converted to uppercase
+datasystem.immersiveintelligence.function.string_uppercase=В верхний регистр
+datasystem.immersiveintelligence.function.string_uppercase.desc=Преобразует входную строку в верхний регистр
+datasystem.immersiveintelligence.function.string_uppercase.param.text=Строка
+datasystem.immersiveintelligence.function.string_uppercase.param.text.desc=Строка для преобразования
+datasystem.immersiveintelligence.function.string_uppercase.result=ВЕРХНИЙ РЕГИСТР
+datasystem.immersiveintelligence.function.string_uppercase.result.desc=Входная строка, преобразованная в верхний регистр
 
-datasystem.immersiveintelligence.function.string_snake_case=To snake_case
-datasystem.immersiveintelligence.function.string_snake_case.desc=Converts the input string to snake_case
-datasystem.immersiveintelligence.function.string_snake_case.param.text=String
-datasystem.immersiveintelligence.function.string_snake_case.param.text.desc=The string to convert
+datasystem.immersiveintelligence.function.string_snake_case=В формат snake_case
+datasystem.immersiveintelligence.function.string_snake_case.desc=Преобразует входную строку в формат snake_case
+datasystem.immersiveintelligence.function.string_snake_case.param.text=Строка
+datasystem.immersiveintelligence.function.string_snake_case.param.text.desc=Строка для преобразования
 datasystem.immersiveintelligence.function.string_snake_case.result=snake_case
-datasystem.immersiveintelligence.function.string_snake_case.result.desc=The input string converted to snake_case
+datasystem.immersiveintelligence.function.string_snake_case.result.desc=Входная строка, преобразованная в формат snake_case
 
-datasystem.immersiveintelligence.function.string_camel_case=To camelCase
-datasystem.immersiveintelligence.function.string_camel_case.desc=Converts the input string to camelCase
-datasystem.immersiveintelligence.function.string_camel_case.param.text=String
-datasystem.immersiveintelligence.function.string_camel_case.param.text.desc=The string to convert
-datasystem.immersiveintelligence.function.string_camel_case.param.start_small=Start Small
-datasystem.immersiveintelligence.function.string_camel_case.param.start_small.desc=Whether the first letter should be lowercase
+datasystem.immersiveintelligence.function.string_camel_case=В формат camelCase
+datasystem.immersiveintelligence.function.string_camel_case.desc=Преобразует входную строку в формат camelCase
+datasystem.immersiveintelligence.function.string_camel_case.param.text=Строка
+datasystem.immersiveintelligence.function.string_camel_case.param.text.desc=Строка для преобразования
+datasystem.immersiveintelligence.function.string_camel_case.param.start_small=Начать с малой
+datasystem.immersiveintelligence.function.string_camel_case.param.start_small.desc=Должна ли первая буква быть строчной буквой
 datasystem.immersiveintelligence.function.string_camel_case.result=camelCase
-datasystem.immersiveintelligence.function.string_camel_case.result.desc=The input string converted to camelCase
+datasystem.immersiveintelligence.function.string_camel_case.result.desc=Входная строка, преобразованная в формат camelCase
 
-datasystem.immersiveintelligence.function.string_reverse=Reverse
-datasystem.immersiveintelligence.function.string_reverse.desc=Reverses the input string
-datasystem.immersiveintelligence.function.string_reverse.param.text=String
-datasystem.immersiveintelligence.function.string_reverse.param.text.desc=The string to reverse
-datasystem.immersiveintelligence.function.string_reverse.result=Reversed
-datasystem.immersiveintelligence.function.string_reverse.result.desc=The input string reversed
+datasystem.immersiveintelligence.function.string_reverse=Реверс
+datasystem.immersiveintelligence.function.string_reverse.desc=Переворачивает входную строку с конца в начало
+datasystem.immersiveintelligence.function.string_reverse.param.text=Строка
+datasystem.immersiveintelligence.function.string_reverse.param.text.desc=Строка, которую нужно перевернуть
+datasystem.immersiveintelligence.function.string_reverse.result=Реверс
+datasystem.immersiveintelligence.function.string_reverse.result.desc=Перевёрнутая входная строка
 
 # ItemStack
-datasystem.immersiveintelligence.function.itemstack_create=Create From ID
-datasystem.immersiveintelligence.function.itemstack_create.desc=Creates an ItemStack from the input item ID, amount and metadata value
+datasystem.immersiveintelligence.function.itemstack_create=Создать из ID
+datasystem.immersiveintelligence.function.itemstack_create.desc=Создаёт ItemStack на основе ID элемента, количества и значения метаданных
 datasystem.immersiveintelligence.function.itemstack_create.param.item_id=ID
-datasystem.immersiveintelligence.function.itemstack_create.param.item_id.desc=The ID of the item
-datasystem.immersiveintelligence.function.itemstack_create.param.amount=Amount
-datasystem.immersiveintelligence.function.itemstack_create.param.amount.desc=The amount of the item
-datasystem.immersiveintelligence.function.itemstack_create.param.meta=Meta
-datasystem.immersiveintelligence.function.itemstack_create.param.meta.desc=The metadata value of the item
+datasystem.immersiveintelligence.function.itemstack_create.param.item_id.desc=Идентификатор элемента
+datasystem.immersiveintelligence.function.itemstack_create.param.amount=Количество
+datasystem.immersiveintelligence.function.itemstack_create.param.amount.desc=Количество элементов
+datasystem.immersiveintelligence.function.itemstack_create.param.meta=Метаданные
+datasystem.immersiveintelligence.function.itemstack_create.param.meta.desc=Значение метаданных элемента
 datasystem.immersiveintelligence.function.itemstack_create.result=ItemStack
-datasystem.immersiveintelligence.function.itemstack_create.result.desc=The ItemStack created from the ID
+datasystem.immersiveintelligence.function.itemstack_create.result.desc=ItemStack, созданный на основе идентификатора
 
-datasystem.immersiveintelligence.function.item_get_count=Get Count
-datasystem.immersiveintelligence.function.item_get_count.desc=Returns the count of the input ItemStack
+datasystem.immersiveintelligence.function.item_get_count=Получить количество
+datasystem.immersiveintelligence.function.item_get_count.desc=Возвращает количество входных элементов в ItemStack
 datasystem.immersiveintelligence.function.item_get_count.param.stack=ItemStack
-datasystem.immersiveintelligence.function.item_get_count.param.stack.desc=The ItemStack
-datasystem.immersiveintelligence.function.item_get_count.result=Count
-datasystem.immersiveintelligence.function.item_get_count.result.desc=The count of the input ItemStack
+datasystem.immersiveintelligence.function.item_get_count.param.stack.desc=Сущность ItemStack
+datasystem.immersiveintelligence.function.item_get_count.result=Количество
+datasystem.immersiveintelligence.function.item_get_count.result.desc=Количество входных элементов в ItemStack
 
-datasystem.immersiveintelligence.function.item_set_count=Set Count
-datasystem.immersiveintelligence.function.item_set_count.desc=Sets the count of the input ItemStack
+datasystem.immersiveintelligence.function.item_set_count=Установить количество
+datasystem.immersiveintelligence.function.item_set_count.desc=Устанавливает количество входных элементов в ItemStack
 datasystem.immersiveintelligence.function.item_set_count.param.stack=ItemStack
-datasystem.immersiveintelligence.function.item_set_count.param.stack.desc=The ItemStack
-datasystem.immersiveintelligence.function.item_set_count.param.count=Count
-datasystem.immersiveintelligence.function.item_set_count.param.count.desc=The count to set
+datasystem.immersiveintelligence.function.item_set_count.param.stack.desc=Сущность ItemStack
+datasystem.immersiveintelligence.function.item_set_count.param.count=Количество
+datasystem.immersiveintelligence.function.item_set_count.param.count.desc=Устанавливаемое количество
 datasystem.immersiveintelligence.function.item_set_count.result=ItemStack
-datasystem.immersiveintelligence.function.item_set_count.result.desc=The ItemStack with the new count
+datasystem.immersiveintelligence.function.item_set_count.result.desc=Сущность ItemStack с новым количеством
 
-datasystem.immersiveintelligence.function.item_get_meta=Get Meta Value
-datasystem.immersiveintelligence.function.item_get_meta.desc=Returns the meta value (often being the damage taken by a tool) of the input ItemStack
+datasystem.immersiveintelligence.function.item_get_meta=Получить значение метаданных
+datasystem.immersiveintelligence.function.item_get_meta.desc=Возвращает значение метаданных (часто представляющее собой урон, полученный инструментом) входного ItemStack
 datasystem.immersiveintelligence.function.item_get_meta.param.stack=ItemStack
-datasystem.immersiveintelligence.function.item_get_meta.param.stack.desc=The ItemStack
-datasystem.immersiveintelligence.function.item_get_meta.result=Meta
-datasystem.immersiveintelligence.function.item_get_meta.result.desc=The meta value of the input ItemStack
+datasystem.immersiveintelligence.function.item_get_meta.param.stack.desc=Сущность ItemStack
+datasystem.immersiveintelligence.function.item_get_meta.result=Метаданные
+datasystem.immersiveintelligence.function.item_get_meta.result.desc=Значение метаданных входного ItemStack
 
-datasystem.immersiveintelligence.function.item_set_meta=Set Meta Value
-datasystem.immersiveintelligence.function.item_set_meta.desc=Sets the meta value (f.e. the taken damage by a tool) of the input ItemStack
+datasystem.immersiveintelligence.function.item_set_meta=Установить значение метаданных
+datasystem.immersiveintelligence.function.item_set_meta.desc=Устанавливает значение метаданных (например, урон, полученный инструментом) входного ItemStack
 datasystem.immersiveintelligence.function.item_set_meta.param.stack=ItemStack
-datasystem.immersiveintelligence.function.item_set_meta.param.stack.desc=The ItemStack
-datasystem.immersiveintelligence.function.item_set_meta.param.damage=Meta
-datasystem.immersiveintelligence.function.item_set_meta.param.damage.desc=The meta value to set
+datasystem.immersiveintelligence.function.item_set_meta.param.stack.desc=Сущность ItemStack
+datasystem.immersiveintelligence.function.item_set_meta.param.damage=Метаданные
+datasystem.immersiveintelligence.function.item_set_meta.param.damage.desc=Значение метаданных для установки
 datasystem.immersiveintelligence.function.item_set_meta.result=ItemStack
-datasystem.immersiveintelligence.function.item_set_meta.result.desc=The ItemStack with the new meta value
+datasystem.immersiveintelligence.function.item_set_meta.result.desc=ItemStack с новым значением метаданных
 
-datasystem.immersiveintelligence.function.item_get_nbt=Get NBT
-datasystem.immersiveintelligence.function.item_get_nbt.desc=Returns the NBT tag of the input ItemStack
+datasystem.immersiveintelligence.function.item_get_nbt=Получить NBT
+datasystem.immersiveintelligence.function.item_get_nbt.desc=Возвращает тег NBT входного ItemStack
 datasystem.immersiveintelligence.function.item_get_nbt.param.stack=ItemStack
-datasystem.immersiveintelligence.function.item_get_nbt.param.stack.desc=The ItemStack
+datasystem.immersiveintelligence.function.item_get_nbt.param.stack.desc=Сущность ItemStack
 datasystem.immersiveintelligence.function.item_get_nbt.result=NBT
-datasystem.immersiveintelligence.function.item_get_nbt.result.desc=The NBT tag of the input ItemStack
+datasystem.immersiveintelligence.function.item_get_nbt.result.desc=Тег NBT входного ItemStack
 
-datasystem.immersiveintelligence.function.item_set_nbt=Set NBT
-datasystem.immersiveintelligence.function.item_set_nbt.desc=Sets the NBT tag of the input ItemStack
+datasystem.immersiveintelligence.function.item_set_nbt=Установить NBT
+datasystem.immersiveintelligence.function.item_set_nbt.desc=Устанавливает тег NBT для входного ItemStack
 datasystem.immersiveintelligence.function.item_set_nbt.param.stack=ItemStack
-datasystem.immersiveintelligence.function.item_set_nbt.param.stack.desc=The ItemStack
+datasystem.immersiveintelligence.function.item_set_nbt.param.stack.desc=Сущность ItemStack
 datasystem.immersiveintelligence.function.item_set_nbt.param.nbt=NBT
-datasystem.immersiveintelligence.function.item_set_nbt.param.nbt.desc=The NBT tag to set
+datasystem.immersiveintelligence.function.item_set_nbt.param.nbt.desc=Тег NBT для установки
 datasystem.immersiveintelligence.function.item_set_nbt.result=ItemStack
-datasystem.immersiveintelligence.function.item_set_nbt.result.desc=The ItemStack with the new NBT tag
+datasystem.immersiveintelligence.function.item_set_nbt.result.desc=ItemStack с новым тегом NBT
 
-datasystem.immersiveintelligence.function.item_get_id=Get ID
-datasystem.immersiveintelligence.function.item_get_id.desc=Returns the ID of the input ItemStack
+datasystem.immersiveintelligence.function.item_get_id=Получить ID
+datasystem.immersiveintelligence.function.item_get_id.desc=Возвращает идентификатор входного ItemStack
 datasystem.immersiveintelligence.function.item_get_id.param.stack=ItemStack
-datasystem.immersiveintelligence.function.item_get_id.param.stack.desc=The ItemStack
+datasystem.immersiveintelligence.function.item_get_id.param.stack.desc=Сущность ItemStack
 datasystem.immersiveintelligence.function.item_get_id.result=ID
-datasystem.immersiveintelligence.function.item_get_id.result.desc=The ID of the input ItemStack
+datasystem.immersiveintelligence.function.item_get_id.result.desc=Идентификатор входного ItemStack
 
-datasystem.immersiveintelligence.function.item_is_empty=Is Empty
-datasystem.immersiveintelligence.function.item_is_empty.desc=Returns true if the input ItemStack is empty
+datasystem.immersiveintelligence.function.item_is_empty=Пусто ли
+datasystem.immersiveintelligence.function.item_is_empty.desc=Возвращает истину, если входной ItemStack пуст
 datasystem.immersiveintelligence.function.item_is_empty.param.stack=ItemStack
-datasystem.immersiveintelligence.function.item_is_empty.param.stack.desc=The ItemStack to check
-datasystem.immersiveintelligence.function.item_is_empty.result=Result
-datasystem.immersiveintelligence.function.item_is_empty.result.desc=True, if the ItemStack is empty
+datasystem.immersiveintelligence.function.item_is_empty.param.stack.desc=Сущность ItemStack для проверки
+datasystem.immersiveintelligence.function.item_is_empty.result=Результат
+datasystem.immersiveintelligence.function.item_is_empty.result.desc=Истина, если стек элементов ItemStack пуст
 
-datasystem.immersiveintelligence.function.item_stacks_with=Stacks With
-datasystem.immersiveintelligence.function.item_stacks_with.desc=Returns true if the input ItemStack can stack with the specified ItemStack
-datasystem.immersiveintelligence.function.item_stacks_with.param.stack=ItemStack
-datasystem.immersiveintelligence.function.item_stacks_with.param.stack.desc=The ItemStack to check
-datasystem.immersiveintelligence.function.item_stacks_with.param.with=With
-datasystem.immersiveintelligence.function.item_stacks_with.param.with.desc=The ItemStack to check against
-datasystem.immersiveintelligence.function.item_stacks_with.result=Result
-datasystem.immersiveintelligence.function.item_stacks_with.result.desc=Result of the stacking check
+datasystem.immersiveintelligence.function.item_stacks_with=Можно ли сложить
+datasystem.immersiveintelligence.function.item_stacks_with.desc=Возвращает истину, если входной ItemStack может быть сложен с указанным ItemStack
+datasystem.immersiveintelligence.function.item_stacks_with.param.stack=Первый
+datasystem.immersiveintelligence.function.item_stacks_with.param.stack.desc=ItemStack для проверки
+datasystem.immersiveintelligence.function.item_stacks_with.param.with=Второй
+datasystem.immersiveintelligence.function.item_stacks_with.param.with.desc=Другой ItemStack для проверки
+datasystem.immersiveintelligence.function.item_stacks_with.result=Результат
+datasystem.immersiveintelligence.function.item_stacks_with.result.desc=Результат проверки сложения ItemStack
 
-datasystem.immersiveintelligence.function.item_matches_oredict=Matches OreDictionary
-datasystem.immersiveintelligence.function.item_matches_oredict.desc=Returns true if the input ItemStack matches the specified Ore Dictionary entry
+datasystem.immersiveintelligence.function.item_matches_oredict=Соответствие словарю руд
+datasystem.immersiveintelligence.function.item_matches_oredict.desc=Возвращает истину, если входной ItemStack соответствует указанной записи словаря руд
 datasystem.immersiveintelligence.function.item_matches_oredict.param.stack=ItemStack
-datasystem.immersiveintelligence.function.item_matches_oredict.param.stack.desc=The ItemStack to check
-datasystem.immersiveintelligence.function.item_matches_oredict.param.ore_dictionary=Ore Dictionary
-datasystem.immersiveintelligence.function.item_matches_oredict.param.ore_dictionary.desc=The Ore Dictionary entry to check against
-datasystem.immersiveintelligence.function.item_matches_oredict.result=Result
-datasystem.immersiveintelligence.function.item_matches_oredict.result.desc=Result of the Ore Dictionary check
+datasystem.immersiveintelligence.function.item_matches_oredict.param.stack.desc=ItemStack для проверки
+datasystem.immersiveintelligence.function.item_matches_oredict.param.ore_dictionary=Словарь руд
+datasystem.immersiveintelligence.function.item_matches_oredict.param.ore_dictionary.desc=Запись словаря руд для проверки
+datasystem.immersiveintelligence.function.item_matches_oredict.result=Результат
+datasystem.immersiveintelligence.function.item_matches_oredict.result.desc=Результат проверки по словарю руд
 
 # FluidStack
-datasystem.immersiveintelligence.function.fluidstack_create=Create FluidStack
-datasystem.immersiveintelligence.function.fluidstack_create.desc=Creates a FluidStack from the input fluid ID, amount and NBT tag
+datasystem.immersiveintelligence.function.fluidstack_create=Создать FluidStack
+datasystem.immersiveintelligence.function.fluidstack_create.desc=Создает FluidStack на основе входных ID жидкости, количества и тега NBT
 datasystem.immersiveintelligence.function.fluidstack_create.param.fluid_id=ID
-datasystem.immersiveintelligence.function.fluidstack_create.param.fluid_id.desc=The ID of the fluid
-datasystem.immersiveintelligence.function.fluidstack_create.param.amount=Amount
-datasystem.immersiveintelligence.function.fluidstack_create.param.amount.desc=The amount of the fluid
+datasystem.immersiveintelligence.function.fluidstack_create.param.fluid_id.desc=Идентификатор жидкости
+datasystem.immersiveintelligence.function.fluidstack_create.param.amount=Количество
+datasystem.immersiveintelligence.function.fluidstack_create.param.amount.desc=Количество жидкости
 datasystem.immersiveintelligence.function.fluidstack_create.param.nbt=NBT
-datasystem.immersiveintelligence.function.fluidstack_create.param.nbt.desc=The NBT tag of the fluid
+datasystem.immersiveintelligence.function.fluidstack_create.param.nbt.desc=Тег NBT жидкости
 datasystem.immersiveintelligence.function.fluidstack_create.result=FluidStack
-datasystem.immersiveintelligence.function.fluidstack_create.result.desc=The FluidStack created from the ID
+datasystem.immersiveintelligence.function.fluidstack_create.result.desc=FluidStack, созданный на основе ID
 
-datasystem.immersiveintelligence.function.fluid_get_id=Get ID
-datasystem.immersiveintelligence.function.fluid_get_id.desc=Returns the ID of the input FluidStack
+datasystem.immersiveintelligence.function.fluid_get_id=Получить ID
+datasystem.immersiveintelligence.function.fluid_get_id.desc=Возвращает идентификатор входного FluidStack
 datasystem.immersiveintelligence.function.fluid_get_id.param.stack=FluidStack
-datasystem.immersiveintelligence.function.fluid_get_id.param.stack.desc=The FluidStack
+datasystem.immersiveintelligence.function.fluid_get_id.param.stack.desc=Сущность FluidStack
 datasystem.immersiveintelligence.function.fluid_get_id.result=ID
-datasystem.immersiveintelligence.function.fluid_get_id.result.desc=The ID of the input FluidStack
+datasystem.immersiveintelligence.function.fluid_get_id.result.desc=Идентификатор входного FluidStack
 
-datasystem.immersiveintelligence.function.fluid_get_amount=Get Amount
-datasystem.immersiveintelligence.function.fluid_get_amount.desc=Returns the amount of the input FluidStack
+datasystem.immersiveintelligence.function.fluid_get_amount=Получить количество
+datasystem.immersiveintelligence.function.fluid_get_amount.desc=Возвращает количество входного FluidStack
 datasystem.immersiveintelligence.function.fluid_get_amount.param.stack=FluidStack
-datasystem.immersiveintelligence.function.fluid_get_amount.param.stack.desc=The FluidStack
-datasystem.immersiveintelligence.function.fluid_get_amount.result=Amount
-datasystem.immersiveintelligence.function.fluid_get_amount.result.desc=The amount of the input FluidStack
+datasystem.immersiveintelligence.function.fluid_get_amount.param.stack.desc=Сущность FluidStack
+datasystem.immersiveintelligence.function.fluid_get_amount.result=Количество
+datasystem.immersiveintelligence.function.fluid_get_amount.result.desc=Объем входного FluidStack
 
 datasystem.immersiveintelligence.function.fluid_set_amount=Set Amount
 datasystem.immersiveintelligence.function.fluid_set_amount.desc=Sets the amount of the input FluidStack
