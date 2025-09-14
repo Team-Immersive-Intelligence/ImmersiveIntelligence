@@ -135,7 +135,7 @@ public abstract class EntityAmmoBase<T extends EntityAmmoBase<? super T>> extend
 		this.fuseType = fuseType;
 		this.fuseParameter = fuseParameter;
 		this.components = components;
-		this.height = this.width = ammoType.getCaliber()/16f;
+		this.height = this.width = Math.max(0.25f, (ammoType.getCaliber()/16f));
 		float fraction = height/2f;
 		this.setEntityBoundingBox(this.aabb = new AxisAlignedBB(-fraction, -fraction, -fraction, fraction, fraction, fraction));
 	}

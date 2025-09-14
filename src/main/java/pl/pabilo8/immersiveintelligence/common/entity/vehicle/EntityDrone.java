@@ -249,24 +249,12 @@ public class EntityDrone extends EntityFlying implements ISyncNBTEntity<EntityDr
 
 	}
 
-	@Override
-	public void receiveNBTMessageServer(NBTTagCompound nbt)
-	{
-
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void receiveNBTMessageClient(NBTTagCompound nbt)
-	{
-
-	}
-
 	//--- Colision ---//
+
 	@Override
-	public boolean canBeCollidedWith()
+	public void knockBack(Entity entityIn, float strength, double xRatio, double zRatio)
 	{
-		return false;
+
 	}
 
 	@Override

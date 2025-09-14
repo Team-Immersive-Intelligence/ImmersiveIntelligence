@@ -15,7 +15,7 @@ public class AmmoCoreUranium extends AmmoCore
 {
 	public AmmoCoreUranium()
 	{
-		super("core_uranium", 0.45f, PenetrationHardness.UBERCONCRETE, 0.75f, 1.35f, IIColor.fromPackedRGB(0x659269));
+		super("core_uranium", 0.45f, PenetrationHardness.UBERCONCRETE, 0.75f, 1.45f, IIColor.fromPackedRGB(0x659269));
 	}
 
 	@Override

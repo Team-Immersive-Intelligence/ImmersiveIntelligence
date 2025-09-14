@@ -288,7 +288,7 @@ public class ItemIIAmmoRevolver extends ItemBullet implements IAmmoTypeItem<Item
 	@Override
 	public float getDamage()
 	{
-		return 8;
+		return 10;
 	}
 
 	@Override

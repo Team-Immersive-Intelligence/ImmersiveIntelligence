@@ -392,11 +392,15 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 
 		//Collide with any other entity
 		IPenetrationHandler penHandler = PenetrationRegistry.getPenetrationHandler(other);
+		EntityLivingBase living = null;
+		if(other instanceof EntityLivingBase)
+			living = (EntityLivingBase)other;
+
 
 		//Damage entity armor
-		if(other instanceof EntityLivingBase)
+		if(living!=null)
 		{
-			float armor = MathHelper.floor(((EntityLivingBase)other).getEntityAttribute(SharedMonsterAttributes.ARMOR).getAttributeValue())*ARMOR_FACTOR;
+			float armor = MathHelper.floor(living.getEntityAttribute(SharedMonsterAttributes.ARMOR).getAttributeValue())*ARMOR_FACTOR;
 			//Damage the other entity armour whether penetrated or not
 			if(armor > 0)
 				IIAmmoUtils.breakArmour(other, (int)getDamage());
@@ -407,15 +411,15 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 
 		onHitPenetrate(hit, penHandler);
 		//If entity can't be damaged, detonate the projectile
-		if(!other.attackEntityFrom(IIDamageSources.causeBulletDamage(this, other), getDamage()))
+
+		boolean attackSuccessful = other.attackEntityFrom(IIDamageSources.causeBulletDamage(this, other), getDamage());
+		other.hurtResistantTime = 0;
+
+		if(!attackSuccessful)
 		{
 			detonate();
 			return true;
 		}
-		other.hurtResistantTime = 0;
-		if(other instanceof EntityLivingBase)
-			((EntityLivingBase)other).maxHurtTime = 0;
-
 		return false;
 	}
 

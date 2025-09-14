@@ -15,7 +15,7 @@ public class AmmoCoreLead extends AmmoCore
 {
 	public AmmoCoreLead()
 	{
-		super("core_lead", 1.5f, PenetrationHardness.ROCK, 1f, 1.1f, IIColor.fromPackedRGB(0x3a3e44));
+		super("core_lead", 1.5f, PenetrationHardness.ROCK, 1f, 1.15f, IIColor.fromPackedRGB(0x3a3e44));
 	}
 
 	@Override
