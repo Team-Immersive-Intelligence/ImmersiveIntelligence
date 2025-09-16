@@ -332,7 +332,7 @@ public class GuiProjectileWorkshop extends DecoGui<TileEntityProjectileWorkshop,
 
 		addImageWithLabel(1, 45+13, COMPONENT_EFFICIENCY, coreType.getComponentEffectivenessMod()*ammoCore.getExplosionModifier()+"x",
 				"Component Efficiency Modifier", "Determines potency.", "Responsible for explosive power, chemical gas concentration.");
-		addImageWithLabel(ammoInfoPanel.width/2, 45+13, COMPONENT_SIZE, Utils.formatDouble(ammoType.getComponentMultiplier(), "0.##")+"x",
+		addImageWithLabel(ammoInfoPanel.width/2, 45+13, COMPONENT_SIZE, Utils.formatDouble(ammoType.getComponentSize(), "0.##")+"x",
 				"Component Size Multiplier", "Determines component volume, responsible for explosion radius, gas spread range multiplier.");
 
 		//Ballistics

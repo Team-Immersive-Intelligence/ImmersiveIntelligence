@@ -4,6 +4,7 @@ import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextComponentString;
+import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.fx.IIParticles;
 import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleRegistry;
 import pl.pabilo8.immersiveintelligence.client.model.IIModelRegistry;
@@ -42,6 +43,9 @@ public class CommandReloadParticles extends CommandBase
 	@Override
 	public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, @Nonnull String[] args)
 	{
+		//Reload the particle system
+		ImmersiveIntelligence.proxy.reloadParticles();
+		//Clear and re-init the particle registry
 		ParticleRegistry.cleanBuilderRegistry();
 		IIParticles.preInit();
 		IIParticles.init();

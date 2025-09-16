@@ -31,11 +31,10 @@ public class AmmoComponentTNT extends AmmoComponent
 	}
 
 	@Override
-	public void onEffect(World world, Vec3d pos, Vec3d dir, ComponentEffectShape shape, NBTTagCompound tag, float componentAmount, float multiplier, Entity owner)
+	public void onEffect(World world, Vec3d pos, Vec3d dir, ComponentEffectShape shape, NBTTagCompound tag, float componentSize, float multiplier, Entity owner)
 	{
-		float size = (float)Math.floor(6*componentAmount*multiplier);
 		new IIExplosion(world, owner, pos, dir,
-				size, 4, shape, false, componentAmount > 0.125f, false)
+				6*componentSize, 4*multiplier, shape, false, componentSize > 0.125f, false)
 				.doExplosion();
 	}
 }

@@ -9,12 +9,15 @@ import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.ComponentEffectShape;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.ComponentRole;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
+import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleProperties;
 import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleRegistry;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityAmmoBase;
 import pl.pabilo8.immersiveintelligence.common.item.ItemIITracerPowder;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.entity.IIEntityUtils;
+
+import javax.vecmath.Vector2f;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -36,7 +39,7 @@ public class AmmoComponentTracerPowder extends AmmoComponent
 	}
 
 	@Override
-	public void onEffect(World world, Vec3d pos, Vec3d dir, ComponentEffectShape shape, NBTTagCompound tag, float componentAmount, float multiplier, Entity owner)
+	public void onEffect(World world, Vec3d pos, Vec3d dir, ComponentEffectShape shape, NBTTagCompound tag, float size, float multiplier, Entity owner)
 	{
 
 	}
@@ -45,7 +48,11 @@ public class AmmoComponentTracerPowder extends AmmoComponent
 	public boolean spawnParticleTrail(EntityAmmoBase<?> ammo, NBTTagCompound nbt)
 	{
 		IIColor color = nbt.hasKey(ItemIITracerPowder.NBT_TRACER_COLOUR)?IIColor.fromPackedRGB(nbt.getInteger(ItemIITracerPowder.NBT_TRACER_COLOUR)): IIColor.WHITE;
-		ParticleRegistry.spawnTracerFX(ammo.getPositionVector(), IIEntityUtils.getEntityMotion(ammo), ammo.getAmmoType().getCaliber()/16f, color);
+		ParticleRegistry.spawnParticle("ammo/tracer", ammo.getPositionVector(), IIEntityUtils.getEntityMotion(ammo),
+						new Vector2f((float)Math.toRadians(ammo.rotationYaw), (float)Math.toRadians(ammo.rotationPitch-90)))
+				.withProperty(ParticleProperties.COLOR, color)
+				.withProperty(ParticleProperties.SIZE, ammo.getAmmoType().getCaliber()/8f)
+				.withProperty(ParticleProperties.MAX_LIFETIME, 20);
 		return true;
 	}
 

@@ -847,4 +847,9 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 	{
 
 	}
+
+	public void reloadParticles()
+	{
+
+	}
 }

@@ -143,28 +143,40 @@ public class ParticleFactory<T extends AbstractParticle>
 
 		//Parse scheduled particles
 		nbt.streamList(NBTTagCompound.class, "scheduled")
+				.map(EasyNBT::wrapNBT)
 				.map(this::parseOffspringEntry)
 				.forEach(entry -> withScheduledParticle(entry.getKey(), entry.getValue()));
 
 		//Parse chained particles
 		nbt.streamList(NBTTagCompound.class, "chained")
+				.map(EasyNBT::wrapNBT)
 				.map(this::parseOffspringEntry)
 				.map(Map.Entry::getValue)
 				.forEach(this::withChainedParticle);
 	}
 
-	private Map.Entry<Integer, ParticleOffspring<T>> parseOffspringEntry(NBTTagCompound nbt)
+	private Map.Entry<Integer, ParticleOffspring<T>> parseOffspringEntry(EasyNBT nbt)
 	{
-		int time = nbt.getInteger("time");
+		int time = nbt.getInt("time");
 		String generatorType = nbt.getString("generator");
 		float distance = nbt.getFloat("distance");
-		int amount = nbt.getInteger("amount");
-		int minAmount = amount==0?nbt.getInteger("min_amount"): amount;
-		int maxAmount = amount==0?nbt.getInteger("max_amount"): amount;
+		int amount = nbt.getInt("amount");
+		int minAmount = amount==0?nbt.getInt("min_amount"): amount;
+		int maxAmount = amount==0?nbt.getInt("max_amount"): amount;
 		String type = nbt.getString("type");
 
+		List<ParticleProperties> inheritedProperties = new ArrayList<>();
+		if(nbt.hasKey("inherited_properties"))
+			//noinspection ConstantValue
+			nbt.streamList(NBTTagString.class, "inherited_properties")
+					.map(NBTTagString::getString)
+					.map(String::toUpperCase)
+					.map(ParticleProperties::valueOf)
+					.filter(Objects::nonNull)
+					.forEach(inheritedProperties::add);
+
 		PositionGenerator positionGenerator = PositionGenerator.valueOf(generatorType.toUpperCase());
-		ParticleOffspring<T> offspring = new ParticleOffspring<>(type, positionGenerator, distance, minAmount, maxAmount);
+		ParticleOffspring<T> offspring = new ParticleOffspring<>(type, positionGenerator, distance, minAmount, maxAmount, inheritedProperties);
 		return new AbstractMap.SimpleEntry<>(time, offspring);
 	}
 

@@ -169,8 +169,8 @@ public abstract class TileEntityMechanicalConnectable extends TileEntityImmersiv
 		markContainingBlockForUpdate(stateHere);
 		markBlockForUpdate(getConnectionPos(), stateHere);
 
-		//IIPacketHandler.INSTANCE.sendToAllAround(new MessageRotaryPowerSync(energy, 0, getPos()), Utils.targetPointFromTile(this, 32));
-		IIPacketHandler.INSTANCE.sendToAllAround(new MessageRotaryPowerSync(getNetwork().getEnergyStorage(), 1, getPos()), IIPacketHandler.targetPointFromTile(this, 32));
+		//IIPacketHandler.sendToClient(new MessageRotaryPowerSync(energy, 0, getPos()), Utils.targetPointFromTile(this, 32));
+		IIPacketHandler.sendToClient(new MessageRotaryPowerSync(world, getPos(), 1, getNetwork().getEnergyStorage()));
 
 	}
 

@@ -3,6 +3,7 @@
   "models": [
     "debris/plank/plank1.obj", "debris/plank/plank2.obj", "debris/plank/plank3.obj", "debris/plank/plank4.obj"
   ],
+  "color": "AEAEAE",
   "max_lifetime": 50,
   "draw_stage": "custom",
   "aabb": 0.125,

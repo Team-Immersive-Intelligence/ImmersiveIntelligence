@@ -66,10 +66,8 @@ public class MysticalMechanicsAPIHelper extends IICompatModule
 	public void onAttachCapabilities(AttachCapabilitiesEvent<TileEntity> event)
 	{
 		if(event.getObject() instanceof TileEntityTransmissionBox)
-		{
 			if(!event.getCapabilities().containsKey(CAPABILITY_RES))
 				event.addCapability(CAPABILITY_RES, new MMTransmissionBoxHandler((TileEntityTransmissionBox)event.getObject()));
-		}
 	}
 
 	static class MMTransmissionBoxHandler implements IMechCapability, ICapabilityProvider
@@ -128,9 +126,7 @@ public class MysticalMechanicsAPIHelper extends IICompatModule
 			float[] st = IIRotaryMath.MMToII(this.power);
 			box.energy.grow(Math.round(st[0]), Math.round(st[1]), 0.98f);
 			if(box.getWorld().getTotalWorldTime()%20==0)
-			{
-				IIPacketHandler.INSTANCE.sendToAllAround(new MessageRotaryPowerSync(box.energy, 0, box.getPos()), IIPacketHandler.targetPointFromTile(box, 24));
-			}
+				IIPacketHandler.sendToClient(new MessageRotaryPowerSync(box.getWorld(), box.getPos(), 0, box.energy));
 		}
 
 		public void readFromNBT(NBTTagCompound tag)

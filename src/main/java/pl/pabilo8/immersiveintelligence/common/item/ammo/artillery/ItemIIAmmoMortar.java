@@ -44,7 +44,7 @@ public class ItemIIAmmoMortar extends ItemIIAmmoBase<EntityAmmoArtilleryProjecti
 	}
 
 	@Override
-	public float getComponentMultiplier()
+	public float getComponentSize()
 	{
 		return 0.65f;
 	}

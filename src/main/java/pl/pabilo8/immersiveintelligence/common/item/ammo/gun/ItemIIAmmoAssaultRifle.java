@@ -39,7 +39,7 @@ public class ItemIIAmmoAssaultRifle extends ItemIIAmmoBase<EntityAmmoProjectile>
 	}
 
 	@Override
-	public float getComponentMultiplier()
+	public float getComponentSize()
 	{
 		return 0.085f;
 	}

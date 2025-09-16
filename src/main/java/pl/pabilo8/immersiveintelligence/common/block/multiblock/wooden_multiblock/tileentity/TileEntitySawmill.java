@@ -141,7 +141,7 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 			assert cap!=null;
 			if(rotation.handleRotation(cap, facing.getOpposite()))
 			{
-				IIPacketHandler.INSTANCE.sendToAllAround(new MessageRotaryPowerSync(rotation, 0, getPos()), IIPacketHandler.targetPointFromTile(this, 24));
+				IIPacketHandler.sendToClient(new MessageRotaryPowerSync(world, getPos(), 0, rotation));
 				receivesPower = true;
 			}
 		}
@@ -152,7 +152,8 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 			if(!receivesPower)
 			{
 				rotation.grow(0, 0, 0.98f);
-				IIPacketHandler.INSTANCE.sendToAllAround(new MessageRotaryPowerSync(rotation, 0, getPos()), IIPacketHandler.targetPointFromTile(this, 24));
+				if(!world.isRemote)
+					IIPacketHandler.sendToClient(new MessageRotaryPowerSync(world, getPos(), 0, rotation));
 			}
 
 			//Hurt entities stepping on sawblade

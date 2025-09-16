@@ -64,7 +64,7 @@ public class OwnerIdentity
 	public OwnerIdentity(EntityLivingBase player)
 	{
 		this(player.getName());
-		this.withPlayer(player, true);
+		this.withMember(player, true);
 
 		this.color = IIColor.fromDye(EnumDyeColor.values()[player.getRNG().nextInt(EnumDyeColor.values().length)]);
 	}
@@ -90,13 +90,18 @@ public class OwnerIdentity
 
 	//--- With ---//
 
-	public OwnerIdentity withPlayer(EntityLivingBase player, boolean owner)
+	public OwnerIdentity withMember(EntityLivingBase member, boolean owner)
+	{
+		return withMember(member.getName(), owner);
+	}
+
+	public OwnerIdentity withMember(String memberName, boolean owner)
 	{
 		invalid = false;
-		if(owner&&!owners.contains(player.getName()))
-			this.owners.add(player.getName());
-		if(!players.contains(player.getName()))
-			this.players.add(player.getName());
+		if(owner&&!owners.contains(memberName))
+			this.owners.add(memberName);
+		if(!players.contains(memberName))
+			this.players.add(memberName);
 		return this;
 	}
 

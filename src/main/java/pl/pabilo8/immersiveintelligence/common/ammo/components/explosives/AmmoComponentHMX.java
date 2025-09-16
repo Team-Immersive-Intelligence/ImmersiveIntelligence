@@ -31,11 +31,10 @@ public class AmmoComponentHMX extends AmmoComponent
 	}
 
 	@Override
-	public void onEffect(World world, Vec3d pos, Vec3d dir, ComponentEffectShape shape, NBTTagCompound tag, float componentAmount, float multiplier, Entity owner)
+	public void onEffect(World world, Vec3d pos, Vec3d dir, ComponentEffectShape shape, NBTTagCompound tag, float componentSize, float multiplier, Entity owner)
 	{
-		float size = (float)Math.floor(12*componentAmount*multiplier);
 		new IIExplosion(world, owner, pos, dir,
-				size, 12, shape, false, componentAmount > 0.125f, false)
+				12*componentSize, 18*multiplier, shape, false, componentSize > 0.125f, false)
 				.doExplosion();
 	}
 }

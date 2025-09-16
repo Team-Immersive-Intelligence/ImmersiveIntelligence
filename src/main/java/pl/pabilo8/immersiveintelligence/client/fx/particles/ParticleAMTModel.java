@@ -24,8 +24,9 @@ import java.util.Arrays;
 public class ParticleAMTModel extends ParticleAbstractModel
 {
 	@Nullable
-	ParticleModelFactory.ParticleModel model = null;
-	TextureAtlasSprite[] textures = new TextureAtlasSprite[0];
+	private ParticleModelFactory.ParticleModel model = null;
+	private TextureAtlasSprite[] textureSprites = new TextureAtlasSprite[0];
+	private ResourceLocation[] textures = new ResourceLocation[0];
 
 	public ParticleAMTModel(World world, Vec3d pos)
 	{
@@ -53,17 +54,13 @@ public class ParticleAMTModel extends ParticleAbstractModel
 		switch(key)
 		{
 			case TEXTURES:
-				if(value instanceof ResourceLocation[])
-				{
-					ResourceLocation[] array = (ResourceLocation[])value;
-					TextureAtlasSprite[] newTextures = new TextureAtlasSprite[textures.length];
-					for(int i = 0; i < textures.length; i++)
-						newTextures[i] = i > array.length?textures[i]: ClientUtils.getSprite(array[i]);
-					this.textures = newTextures;
-				}
-				else if(value instanceof TextureAtlasSprite[])
-					textures = (TextureAtlasSprite[])value;
-				break;
+			{
+				this.textures = (ResourceLocation[])value;
+				this.textureSprites = Arrays.stream(this.textures)
+						.map(ClientUtils::getSprite)
+						.toArray(TextureAtlasSprite[]::new);
+			}
+			break;
 			case TEXTURES_COUNT:
 				break;
 			default:
@@ -78,7 +75,7 @@ public class ParticleAMTModel extends ParticleAbstractModel
 		if(model==null)
 			return;
 		super.preRender(partialTicks, x, xz, z, yz, xy);
-		matrix.scale(size*scale, size*scale, size*scale);
+		matrix.scale(size*scale*stretch.x, size*scale*stretch.y, size*scale*stretch.z);
 	}
 
 	@Override
@@ -86,21 +83,30 @@ public class ParticleAMTModel extends ParticleAbstractModel
 	{
 		this.model = particleModel;
 		if(model!=null)
+		{
 			this.textures = Arrays.copyOf(particleModel.textures, particleModel.textures.length);
+			this.textureSprites = Arrays.copyOf(particleModel.textureSprites, particleModel.textureSprites.length);
+		}
 	}
 
 	@Override
 	public void retexture(int textureID, ResLoc textureLocation)
 	{
-		if(textureID >= 0&&textureID < textures.length)
-			textures[textureID] = ClientUtils.getSprite(textureLocation);
+		if(textureID >= 0&&textureID < textureSprites.length)
+		{
+			textures[textureID] = textureLocation;
+			textureSprites[textureID] = ClientUtils.getSprite(textureLocation);
+		}
 	}
 
 	@Override
 	public <T extends ParticleAbstractModel> void retextureModel(T otherParticle)
 	{
 		if(otherParticle instanceof ParticleAMTModel)
+		{
 			this.textures = ((ParticleAMTModel)otherParticle).textures;
+			this.textureSprites = ((ParticleAMTModel)otherParticle).textureSprites;
+		}
 	}
 
 	@Override
@@ -122,7 +128,7 @@ public class ParticleAMTModel extends ParticleAbstractModel
 		{
 			Vec3d pos = matrix.apply(model.positions[i]);
 			Vec2f uv = model.uv[i];
-			TextureAtlasSprite texture = textures[(model.tex[i]+textureShift)%textures.length];
+			TextureAtlasSprite texture = textureSprites[(model.tex[i]+textureShift)%textureSprites.length];
 
 			buffer.pos(pos.x, pos.y, pos.z)
 					.tex(texture.getInterpolatedU(uv.x*16), texture.getInterpolatedV(16-uv.y*16))

@@ -183,12 +183,17 @@ public class IIParticles
 				try
 				{
 					interval = Integer.parseInt(args[0]);
+					List<ParticleProperties> inheritedProperties = new ArrayList<>();
+					for(int i = 7; i < args.length; i++)
+						inheritedProperties.add(ParticleProperties.valueOf(args[i]));
+
 					offspring = new ParticleOffspring<>(
 							args[1],
 							PositionGenerator.valueOf(args[2].toUpperCase()),
 							Float.parseFloat(args[3]),
 							Integer.parseInt(args[4]),
-							args.length > 5?Integer.parseInt(args[5]): Integer.parseInt(args[4])
+							args.length > 5?Integer.parseInt(args[5]): Integer.parseInt(args[4]),
+							inheritedProperties
 					);
 				} catch(Exception e)
 				{

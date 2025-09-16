@@ -15,6 +15,8 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.ammo.PenetrationRegistry;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseType;
@@ -302,7 +304,7 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 			//Call the effect method on all components
 			for(Tuple<AmmoComponent, NBTTagCompound> component : components)
 				component.getFirst().onEffect(world, pos, dir,
-						coreType.getEffectShape(), component.getSecond(), ammoType.getComponentMultiplier(), multiplier, owner);
+						coreType.getEffectShape(), component.getSecond(), ammoType.getComponentSize(), multiplier, owner);
 			setDead();
 		}
 	}
@@ -315,6 +317,7 @@ public class EntityAmmoProjectile extends EntityAmmoBase<EntityAmmoProjectile>
 //		markVelocityChanged();
 	}
 
+	@SideOnly(Side.CLIENT)
 	protected void spawnTrailParticles()
 	{
 		for(Tuple<AmmoComponent, NBTTagCompound> component : components)

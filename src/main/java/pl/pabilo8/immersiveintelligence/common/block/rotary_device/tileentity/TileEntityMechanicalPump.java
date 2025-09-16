@@ -168,7 +168,7 @@ public class TileEntityMechanicalPump extends TileEntityIEBase implements ITicka
 			IRotaryEnergy cap = te.getCapability(CapabilityRotaryEnergy.ROTARY_ENERGY, facing);
 			if(rotation.handleRotation(cap, facing))
 			{
-				IIPacketHandler.INSTANCE.sendToAllAround(new MessageRotaryPowerSync(rotation, 0, getPos()), IIPacketHandler.targetPointFromTile(this, 24));
+				IIPacketHandler.sendToClient(new MessageRotaryPowerSync(world, getPos(), 0, rotation));
 			}
 		}
 		else
@@ -180,7 +180,7 @@ public class TileEntityMechanicalPump extends TileEntityIEBase implements ITicka
 				{
 					rotation.grow(0, 0, 0.98f);
 				}
-				IIPacketHandler.INSTANCE.sendToAllAround(new MessageRotaryPowerSync(rotation, 0, getPos()), IIPacketHandler.targetPointFromTile(this, 24));
+				IIPacketHandler.sendToClient(new MessageRotaryPowerSync(world, getPos(), 0, rotation));
 			}
 		return b;
 	}

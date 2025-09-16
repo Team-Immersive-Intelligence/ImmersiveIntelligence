@@ -59,9 +59,9 @@ public class ParticleVanillaFactory extends ParticleFactory<ParticleVanilla> imp
 		ParticleVanilla particle = super.create(position, motion, rotation);
 
 		if(compiledTextures.length==0)
-			particle.setTextures(new ResLoc[]{EMPTY_TEXTURE});
+			particle.setTextureSprites(new ResLoc[]{EMPTY_TEXTURE});
 		else
-			particle.setTextures(compiledTextures);
+			particle.setTextureSprites(compiledTextures);
 		return particle;
 	}
 

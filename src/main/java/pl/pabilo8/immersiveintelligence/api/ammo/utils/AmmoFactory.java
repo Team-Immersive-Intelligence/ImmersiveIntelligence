@@ -304,12 +304,12 @@ public class AmmoFactory<E extends EntityAmmoBase<? super E>>
 		CoreType coreType = ammo.getCoreType(stack);
 		ComponentEffectShape effectShape = coreType.getEffectShape();
 
-		float componentMultiplier = this.ammo.getComponentMultiplier();
-		float effectivenessMultiplier = core.getExplosionModifier()*coreType.getComponentEffectivenessMod();
+		float componentSize = this.ammo.getComponentSize();
+		float componentEffectiveness = core.getExplosionModifier()*coreType.getComponentEffectivenessMod();
 
 		for(int i = 0; i < components.length; i++)
 			components[i].onEffect(currentWorld, pos, dir,
-					effectShape, componentsNBT[i], componentMultiplier, effectivenessMultiplier,
+					effectShape, componentsNBT[i], componentSize, componentEffectiveness,
 					owner);
 	}
 }

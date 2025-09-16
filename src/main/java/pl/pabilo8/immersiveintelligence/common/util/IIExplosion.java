@@ -40,7 +40,6 @@ import java.util.*;
  * @ii-approved 0.3.1
  * @since 25.12.2020
  */
-//TODO: 04.04.2024 use blast resistance instead of hardness
 public class IIExplosion extends Explosion
 {
 	/**
@@ -136,7 +135,7 @@ public class IIExplosion extends Explosion
 						double blockDensity = this.world.getBlockDensity(vec3d, entity.getEntityBoundingBox());
 						double reversed = (1.0D-fragment)*blockDensity;
 						entity.attackEntityFrom(DamageSource.causeExplosionDamage(this),
-								(float)((int)((reversed*reversed+reversed)/2.0D*7.0D*(double)diameter+1.0D)));
+								(float)((int)((reversed*reversed+reversed)/2.0D*7.0D*power/2f*(double)diameter+1.0D)));
 						double reversedTmp = reversed;
 
 						if(entity instanceof EntityLivingBase)
@@ -200,7 +199,6 @@ public class IIExplosion extends Explosion
 		float power, pitch, yaw;
 		Vec3d current, direction;
 
-		//REFACTOR: 03.04.2024 use matrix4
 		for(int yawSlices = 0; yawSlices < 2*steps; yawSlices++)
 			for(int pitchSlice = 0; pitchSlice < steps; pitchSlice++)
 			{
@@ -353,17 +351,17 @@ public class IIExplosion extends Explosion
 			return false;
 
 		if(this.damagesTerrain)
-			for(BlockPos blockpos : this.affectedBlockPositions)
+			for(BlockPos pos : this.affectedBlockPositions)
 			{
-				IBlockState iblockstate = this.world.getBlockState(blockpos);
+				IBlockState iblockstate = this.world.getBlockState(pos);
 				Block block = iblockstate.getBlock();
 
 				if(iblockstate.getMaterial()!=Material.AIR)
 				{
 					if(doDrops&&block.canDropFromExplosion(this))
-						block.dropBlockAsItemWithChance(this.world, blockpos, this.world.getBlockState(blockpos), 1.0F/this.size, 0);
+						block.dropBlockAsItemWithChance(this.world, pos, this.world.getBlockState(pos), 1.0F/this.size, 0);
 
-					block.onBlockExploded(this.world, blockpos, this);
+					block.onBlockExploded(this.world, pos, this);
 				}
 			}
 

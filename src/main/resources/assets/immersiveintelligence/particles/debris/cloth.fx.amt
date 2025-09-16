@@ -7,6 +7,7 @@
   "max_lifetime": 50,
   "draw_stage": "custom",
   "aabb": 0.125,
+  "color": "AEAEAE",
   "programs": [
     "gravity(1.0,0.08)",
     "dust_transition",

@@ -29,7 +29,8 @@ public class ParticleVanilla extends AbstractParticle
 	/**
 	 * Texture array
 	 */
-	private TextureAtlasSprite[] textures = new TextureAtlasSprite[0];
+	private TextureAtlasSprite[] textureSprites = new TextureAtlasSprite[0];
+	private ResourceLocation[] textures = new ResourceLocation[0];
 
 	/**
 	 * Extending constructors should be passed as a parameter to {@link ParticleFactory}
@@ -108,7 +109,7 @@ public class ParticleVanilla extends AbstractParticle
 				textureShift = (int)value;
 				break;
 			case TEXTURES:
-				setTextures((ResourceLocation[])value);
+				setTextureSprites((ResourceLocation[])value);
 				break;
 			case TEXTURES_COUNT:
 				break; //do nothing
@@ -157,7 +158,7 @@ public class ParticleVanilla extends AbstractParticle
 
 
 		//Get UV values
-		TextureAtlasSprite texture = textures[textureShift%textures.length];
+		TextureAtlasSprite texture = textureSprites[textureShift%textureSprites.length];
 		float u = texture.getMinU();
 		float v = texture.getMinV();
 		float uu = texture.getMaxU();
@@ -190,11 +191,12 @@ public class ParticleVanilla extends AbstractParticle
 
 	//--- Utils ---//
 
-	public void setTextures(ResourceLocation[] textures)
+	public void setTextureSprites(ResourceLocation[] textureSprites)
 	{
-		this.textures = new TextureAtlasSprite[textures.length];
-		for(int i = 0; i < textures.length; i++)
-			this.textures[i] = ClientUtils.getSprite(textures[i]);
+		this.textures = textureSprites;
+		this.textureSprites = new TextureAtlasSprite[textureSprites.length];
+		for(int i = 0; i < textureSprites.length; i++)
+			this.textureSprites[i] = ClientUtils.getSprite(textureSprites[i]);
 	}
 
 	private int getBrightnessForRender()

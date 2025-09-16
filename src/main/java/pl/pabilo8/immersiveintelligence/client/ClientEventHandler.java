@@ -47,6 +47,7 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.client.resource.IResourceType;
 import net.minecraftforge.client.resource.ISelectiveResourceReloadListener;
 import net.minecraftforge.client.resource.VanillaResourceType;
+import net.minecraftforge.event.GameRuleChangeEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
@@ -56,6 +57,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GLContext;
+import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.api.ammo.penetration.DamageBlockPos;
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.IIAmmoUtils;
@@ -87,16 +89,13 @@ import pl.pabilo8.immersiveintelligence.client.render.item.ISpecificHandRenderer
 import pl.pabilo8.immersiveintelligence.client.render.item.MineDetectorRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.item.PrintedPageRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.CameraHandler;
+import pl.pabilo8.immersiveintelligence.common.*;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Graphics;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools.TripodPeriscope;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Vehicles.FieldHowitzer;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.Mortar;
-import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.IILogger;
-import pl.pabilo8.immersiveintelligence.common.IIPotions;
-import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.BlockIIMetalDevice.IIBlockTypes_MetalDevice;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityMachinegun;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityMortar;
@@ -1435,11 +1434,22 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 	@SubscribeEvent
 	public void onWorldLoad(WorldEvent.Load event)
 	{
+		if(!event.getWorld().isRemote)
+			return;
+
+		//Reset static variables
 		aimingPlayers.clear();
 		gunshotEntities.clear();
 		blockDamageClient.clear();
 
-		ParticleSystem.INSTANCE.reload();
+		//Reload the particle system
+		ImmersiveIntelligence.proxy.reloadParticles();
+	}
+
+	@SubscribeEvent
+	public void onGameRuleChange(GameRuleChangeEvent event)
+	{
+		EventHandler.applyGameRuleValue(event.getRules(), event.getRuleName());
 	}
 
 	@SubscribeEvent
@@ -1447,7 +1457,8 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 	{
 		if(event.phase==Phase.END)
 		{
-			ParticleSystem.INSTANCE.updateParticles();
+			if(ParticleSystem.INSTANCE!=null)
+				ParticleSystem.INSTANCE.updateParticles();
 
 			if(!Weapons.bulletsWhistleSound)
 				return;

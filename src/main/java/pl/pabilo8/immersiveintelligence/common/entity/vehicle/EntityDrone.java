@@ -65,9 +65,7 @@ public class EntityDrone extends EntityFlying implements ISyncNBTEntity<EntityDr
 
 		//Set ammo factory (bomb dropping)
 		this.ammoFactory = new AmmoFactory<>(this);
-		ammoFactory.setStack(IIContent.itemAmmoMortar.getAmmoStack(IIContent.ammoCoreBrass, CoreType.SOFTPOINT, FuseType.CONTACT, IIContent.ammoComponentTNT))
-				.setDirection(new Vec3d(0, -1, 0))
-				.setVelocityModifier(0);
+		ammoFactory.setStack(IIContent.itemAmmoGuidedMissile.getAmmoStack(IIContent.ammoCoreIron, CoreType.CANISTER, FuseType.CONTACT, IIContent.ammoComponentRDX));
 
 		//Set durability and armor
 		durabilityMain = new VehicleDurability(100, 4);
@@ -186,7 +184,12 @@ public class EntityDrone extends EntityFlying implements ISyncNBTEntity<EntityDr
 		{
 			EntityMob mob = mobs.get(0);
 			getLookHelper().setLookPositionWithEntity(mob, 5, 5);
-			moveHelper.setMoveTo(mob.posX, mob.posY+15, mob.posZ, 5);
+			moveHelper.setMoveTo(
+					mob.posX+(this.posX-mob.posX)/mob.getDistance(this)*15,
+					mob.posY,
+					mob.posZ+(this.posZ-mob.posZ)/mob.getDistance(this)*15,
+					5
+			);
 		}
 
 		//setRotation(rotationYaw+1f, rotationPitch);
@@ -198,13 +201,17 @@ public class EntityDrone extends EntityFlying implements ISyncNBTEntity<EntityDr
 		//move(MoverType.SELF, dir.x, dir.y, dir.z);
 		//setRotation(rotationYaw+4f, rotationPitch);
 
-		if(!world.isRemote&&ticksExisted%10==0)
+		if(!world.isRemote&&ticksExisted%40==0)
 		{
-			AxisAlignedBB target = getEntityBoundingBox().offset(0, -height-1, 0).grow(1).expand(0, -40, 0);
-			if(!world.getEntitiesWithinAABB(EntityMob.class, target).isEmpty())
+			AxisAlignedBB target = getEntityBoundingBox().offset(0, -height-1, 0).grow(20).expand(0, -40, 0);
+			List<EntityMob> targets = world.getEntitiesWithinAABB(EntityMob.class, target);
+			if(!targets.isEmpty())
 			{
+				Vec3d weapon = getPositionVector().subtract(0, 1.5, 0);
 				ammoFactory
-						.setPosition(getPositionVector().subtract(0, 1.5, 0))
+						.setPosition(weapon)
+						.setDirection(targets.get(0).getPositionEyes(0).subtract(weapon).normalize())
+						.setOwner(this)
 						.create();
 			}
 		}

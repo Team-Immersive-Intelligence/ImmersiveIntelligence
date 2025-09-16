@@ -62,6 +62,7 @@ import pl.pabilo8.immersiveintelligence.api.upgrade.IUpgradableDevice;
 import pl.pabilo8.immersiveintelligence.api.upgrade.Upgrade;
 import pl.pabilo8.immersiveintelligence.client.fx.IIParticles;
 import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleRegistry;
+import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleSystem;
 import pl.pabilo8.immersiveintelligence.client.gui.block.GuiUpgrade;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualCategory;
@@ -788,6 +789,13 @@ public class ClientProxy extends CommonProxy
 	public void onMechanicalConnectorRemoved(Connection connection)
 	{
 		IIModelRegistry.INSTANCE.removeMotorBeltConnectionModel(connection);
+	}
+
+	@Override
+	public void reloadParticles()
+	{
+		super.reloadParticles();
+		ParticleSystem.reload();
 	}
 
 	//--- Stored GUI Data ---//

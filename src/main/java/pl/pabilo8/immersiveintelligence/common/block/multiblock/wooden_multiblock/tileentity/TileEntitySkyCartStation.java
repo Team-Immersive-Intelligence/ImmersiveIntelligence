@@ -389,41 +389,31 @@ public class TileEntitySkyCartStation extends TileEntityMultiblockConnectable<Ti
 		TileEntity te = world.getTileEntity(rotationPos);
 
 		// Check if there is a valid TileEntity at the specified position.
+		// No valid tile entity found at the specified position.
+		// Check if the TileEntity has the rotary energy capability.
+		// No rotary energy capability found on the tile entity.
 		if(te!=null)
-		{
-			// Check if the TileEntity has the rotary energy capability.
 			if(te.hasCapability(CapabilityRotaryEnergy.ROTARY_ENERGY, mirrored?this.facing.rotateYCCW(): this.facing.rotateY()))
 			{
 				IRotaryEnergy cap = te.getCapability(CapabilityRotaryEnergy.ROTARY_ENERGY, mirrored?this.facing.rotateYCCW(): this.facing.rotateY());
 
 				// Ensure the capability is valid before processing.
+				// Synchronize the rotary power state with the clients.
 				if(cap!=null&&rotation.handleRotation(cap, mirrored?this.facing.rotateYCCW(): this.facing.rotateY()))
-				{
-					// Synchronize the rotary power state with the clients.
-					IIPacketHandler.INSTANCE.sendToAllAround(new MessageRotaryPowerSync(rotation, 0, master().getPos()), IIPacketHandler.targetPointFromTile(master(), 24));
-				}
+					IIPacketHandler.sendToClient(new MessageRotaryPowerSync(world, master().getPos(), 0, rotation));
 			}
 			else
-			{
-				// No rotary energy capability found on the tile entity.
 				hasIssues = true;
-			}
-		}
 		else
-		{
-			// No valid tile entity found at the specified position.
 			hasIssues = true;
-		}
 
 		// If there are issues (missing capability or tile entity), grow rotation values more slowly.
 		if(rotation.getTorque() > 0||rotation.getRotationSpeed() > 0)
 		{
 			if(hasIssues)
-			{
 				rotation.grow(0, 0, 0.98f); // Reduce growth due to issues.
-			}
 			// Always sync rotary power state, even with reduced growth.
-			IIPacketHandler.INSTANCE.sendToAllAround(new MessageRotaryPowerSync(rotation, 0, master().getPos()), IIPacketHandler.targetPointFromTile(master(), 24));
+			IIPacketHandler.sendToClient(new MessageRotaryPowerSync(world, master().getPos(), 0, rotation));
 		}
 	}
 
@@ -819,13 +809,11 @@ public class TileEntitySkyCartStation extends TileEntityMultiblockConnectable<Ti
 	public void updateRotationStorage(float rpm, float torque, int part)
 	{
 		if(world.isRemote)
-		{
 			if(part==0)
 			{
 				rotation.setRotationSpeed(rpm);
 				rotation.setTorque(torque);
 			}
-		}
 	}
 }
 

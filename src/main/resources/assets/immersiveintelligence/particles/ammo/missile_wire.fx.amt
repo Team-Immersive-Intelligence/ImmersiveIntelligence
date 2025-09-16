@@ -1,0 +1,10 @@
+{
+  "type": "ParticleModel",
+  "models": ["ammo/rocket_wire.obj"],
+  "max_lifetime": 200,
+  "draw_stage": "custom",
+  "alpha": 0.05,
+  "programs": [
+    "gravity(0.12,0.05)"
+  ]
+}

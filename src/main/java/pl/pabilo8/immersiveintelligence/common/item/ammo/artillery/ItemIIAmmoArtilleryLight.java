@@ -38,7 +38,7 @@ public class ItemIIAmmoArtilleryLight extends ItemIIAmmoBase<EntityAmmoArtillery
 	}
 
 	@Override
-	public float getComponentMultiplier()
+	public float getComponentSize()
 	{
 		return 0.65f;
 	}

@@ -16,6 +16,7 @@ import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.client.fx.particles.AbstractParticle;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Graphics;
 
+import javax.annotation.Nullable;
 import java.util.*;
 
 /**
@@ -35,7 +36,9 @@ public class ParticleSystem
 	/**
 	 * The instance of the particle system
 	 */
-	public static final ParticleSystem INSTANCE = new ParticleSystem();
+	public static ParticleSystem INSTANCE = null;
+	@Nullable
+	private ParticleSystem predecessor;
 
 	//--- Constants ---//
 	public static final ResourceLocation PARTICLE_TEXTURES = new ResourceLocation("textures/particle/particles.png");
@@ -51,6 +54,15 @@ public class ParticleSystem
 			particleAmount = 0;
 		}
 	};
+
+	//--- Reloading ---//
+
+	public static void reload()
+	{
+		ParticleSystem newSystem = new ParticleSystem();
+		newSystem.predecessor = INSTANCE;
+		INSTANCE = newSystem;
+	}
 
 	//--- Update and Rendering ---//
 
@@ -82,6 +94,13 @@ public class ParticleSystem
 		{
 			particles.clear();
 			return;
+		}
+
+		//Clear particles from the previous system
+		if(predecessor!=null)
+		{
+			predecessor.particles.clear();
+			predecessor = null;
 		}
 
 		synchronized(scheduledParticles)
@@ -163,6 +182,7 @@ public class ParticleSystem
 			GlStateManager.disableCull();
 
 			GlStateManager.depthMask(false);
+			GlStateManager.enableDepth();
 
 			Tessellator tess = Tessellator.getInstance();
 			BufferBuilder buffer = tess.getBuffer();
@@ -182,7 +202,6 @@ public class ParticleSystem
 							particleStage.getKey().clear();
 							break drawParticles;
 						}
-						//TODO: 23.12.2024 should program be executed by particle or here, externally?
 						particle.preRender(partialTicks, x, xz, z, yz, xy);
 						particle.render(buffer, partialTicks, x, xz, z, yz, xy);
 					}
@@ -231,10 +250,5 @@ public class ParticleSystem
 		{
 			scheduledParticles.computeIfAbsent(delay, i -> new ArrayList<>()).add(particle);
 		}
-	}
-
-	public synchronized void reload()
-	{
-		particles.clear();
 	}
 }

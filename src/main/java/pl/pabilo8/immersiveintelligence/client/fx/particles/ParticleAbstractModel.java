@@ -8,6 +8,7 @@ import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 
 import javax.annotation.Nonnull;
+import javax.vecmath.Vector3f;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -16,6 +17,7 @@ import javax.annotation.Nonnull;
  */
 public abstract class ParticleAbstractModel extends AbstractParticle
 {
+	protected final Vector3f stretch;
 	protected float size, scale;
 	protected IIColor color = IIColor.WHITE;
 	int textureShift = 0;
@@ -23,6 +25,7 @@ public abstract class ParticleAbstractModel extends AbstractParticle
 	public ParticleAbstractModel(World world, Vec3d pos)
 	{
 		super(world, pos);
+		this.stretch = new Vector3f(1, 1, 1);
 	}
 
 	@Nonnull
@@ -33,6 +36,8 @@ public abstract class ParticleAbstractModel extends AbstractParticle
 		{
 			case SIZE:
 				return size;
+			case STRETCH:
+				return stretch;
 			case SCALE:
 				return scale;
 			case COLOR:
@@ -62,6 +67,9 @@ public abstract class ParticleAbstractModel extends AbstractParticle
 				break;
 			case SCALE:
 				scale = (float)value;
+				break;
+			case STRETCH:
+				this.stretch.set((Vector3f)value);
 				break;
 
 			case COLOR:

@@ -58,6 +58,7 @@ public class IIPacketHandler
 		registerMessage(MessagePlayIISound.class, true, false);
 		registerMessage(MessageDiplomacySync.class, true, false);
 		registerMessage(MessageDiplomacyAction.class, false, true);
+		registerMessage(MessageIIGameruleUpdate.class, true, false);
 	}
 
 	private static <T extends IIMessage> void registerMessage(Class<T> message, boolean clientSide, boolean serverSide)
@@ -89,6 +90,11 @@ public class IIPacketHandler
 					((IEntityBoundMessage)message).getPacketDistance()));
 		else
 			IILogger.error("Attempt to send a message without a valid position or entity!");
+	}
+
+	public static void sendToClient(EntityPlayer player, IIMessage message)
+	{
+		INSTANCE.sendTo(message, ((EntityPlayerMP)player));
 	}
 
 	public static void sendToClient(BlockPos pos, World world, IIMessage message)

@@ -130,7 +130,7 @@ public class TileEntityTransmissionBox extends TileEntityIEBase implements ITick
 			energy.grow(Math.round(speed), Math.round(torque), 0.98f);
 			if(world.getTotalWorldTime()%20==0)
 			{
-				IIPacketHandler.INSTANCE.sendToAllAround(new MessageRotaryPowerSync(energy, 0, pos), IIPacketHandler.targetPointFromTile(this, 24));
+				IIPacketHandler.sendToClient(new MessageRotaryPowerSync(world, pos, 0, energy));
 			}
 
 		}

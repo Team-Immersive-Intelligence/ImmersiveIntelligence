@@ -142,6 +142,7 @@ public abstract class AbstractParticle implements INBTSerializable<NBTTagCompoun
 			programs.forEach(p -> p.onParticleMovement(this));
 			move();
 
+			this.boundingBox = baseBoundingBox.offset(pos.x, pos.y, pos.z);
 			if(scheduledParticles!=null)
 				for(ParticleOffspring<?> consumer : scheduledParticles.get(this.lifeTime))
 					consumer.spawn(this);
@@ -334,7 +335,7 @@ public abstract class AbstractParticle implements INBTSerializable<NBTTagCompoun
 			case DRAW_STAGE:
 				return drawStage;
 			case AABB:
-				return boundingBox;
+				return baseBoundingBox;
 		}
 		return key.getDefault();
 	}

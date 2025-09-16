@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.common.util.diplomacy;
 
-import blusunrize.immersiveengineering.common.util.FakePlayerUtil;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
@@ -37,7 +36,7 @@ public class DiplomacyUtils
 		//Create the neutral faction
 		if(NEUTRAL==null)
 			NEUTRAL = new OwnerIdentity("Neutral")
-					.withPlayer(FakePlayerUtil.getAnyFakePlayer(), true)
+					.withMember("[ImmersiveEngineering]", true)
 					.withLawForm(LawForm.COMMUNE)
 					.withColor(IIColor.MC_GRAY)
 					.withPermission(PermissionCategory.CONTAINER_ACCESS, PermissionLevel.OTHERS_ALLOW)
@@ -47,7 +46,7 @@ public class DiplomacyUtils
 		//Create the global enemy faction
 		if(GLOBAL_ENEMY==null)
 			GLOBAL_ENEMY = new OwnerIdentity("GlobalEnemy")
-					.withPlayer(FakePlayerUtil.getAnyFakePlayer(), true)
+					.withMember("[ImmersiveEngineering]", true)
 					.withColor(IIColor.MC_BLACK)
 					.withLawForm(LawForm.COMMISARIAT)
 					.withAllPermissions(PermissionLevel.OWNER_ALLOW)

@@ -145,7 +145,7 @@ public class TileEntityGearbox extends TileEntityIEBase implements ITickable, IA
 			}
 
 			//Sync with clients
-			IIPacketHandler.INSTANCE.sendToAllAround(new MessageRotaryPowerSync(rotation, 0, getPos()), IIPacketHandler.targetPointFromTile(this, 32));
+			IIPacketHandler.sendToClient(new MessageRotaryPowerSync(world, getPos(), 0, rotation));
 		}
 	}
 

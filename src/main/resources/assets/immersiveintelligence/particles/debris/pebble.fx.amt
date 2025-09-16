@@ -4,6 +4,7 @@
     "debris/pebble/pebble1.obj", "debris/pebble/pebble2.obj", "debris/pebble/pebble3.obj", "debris/pebble/pebble4.obj",
     "debris/pebble/pebble5.obj"
   ],
+  "color": "AEAEAE",
   "max_lifetime": 50,
   "draw_stage": "custom",
   "aabb": 0.25,

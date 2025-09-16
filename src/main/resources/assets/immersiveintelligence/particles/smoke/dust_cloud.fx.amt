@@ -1,13 +1,12 @@
 {
   "type": "ParticleVanilla",
-  "textures": ["immersiveintelligence:particle/dust/dust_big"],
-  "max_lifetime": 60,
+  "textures": ["immersiveintelligence:particle/smoke/smoke"],
+  "max_lifetime": 50,
   "draw_stage": "custom",
   "aabb": 0.4,
   "color": "373737",
   "programs": [
-    "dust_transition",
-    "emitter(10,smoke/smoke_cloud1,same,0.5,1,2)"
+    "smoke_transition"
   ],
   "size": 0.8
 }
