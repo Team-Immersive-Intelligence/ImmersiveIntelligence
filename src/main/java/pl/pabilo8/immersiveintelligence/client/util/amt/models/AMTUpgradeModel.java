@@ -9,6 +9,8 @@ import pl.pabilo8.immersiveintelligence.api.upgrade.IUpgradableDevice;
 import pl.pabilo8.immersiveintelligence.api.upgrade.Upgrade;
 import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeUtils;
 import pl.pabilo8.immersiveintelligence.client.util.ShaderUtil;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -39,9 +41,9 @@ public class AMTUpgradeModel extends AMTProgressModel<IUpgradableDevice, AMTUpgr
 		if(machine.getCurrentUpgrade()!=upgrade)
 			return machine.isUpgradeInstalled(upgrade)?UpgradeStage.INSTALLED: UpgradeStage.NOT_INSTALLED;
 
-		final int maxProgress = pl.pabilo8.immersiveintelligence.common.IIContent.UPGRADE_INSERTER.getProgressRequired();
+		final int maxProgress = IIContent.UPGRADE_INSERTER.getProgressRequired();
 		double maxClientProgress = UpgradeUtils.getMaxClientProgress(machine.getUpgradeInstallProgress(false), upgrade);
-		double currentProgress = Math.min(machine.getUpgradeInstallProgress(true)+((partialTicks*(pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools.wrenchUpgradeProgress*0.5f))), maxClientProgress);
+		double currentProgress = Math.min(machine.getUpgradeInstallProgress(true)+((partialTicks*(IIConfig.Tools.wrenchUpgradeProgress*0.5f))), maxClientProgress);
 		float install = (float)MathHelper.clamp(currentProgress/maxProgress, 0, 1);
 
 		//draw blueprint

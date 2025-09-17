@@ -22,6 +22,7 @@ import net.minecraft.util.Tuple;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraftforge.items.wrapper.InvWrapper;
 
 import javax.annotation.Nonnull;
 
@@ -48,7 +49,7 @@ public abstract class EntityMinecartCrateBase extends EntityMinecartContainer im
 	protected void entityInit()
 	{
 		super.entityInit();
-		itemHandler = new net.minecraftforge.items.wrapper.InvWrapper(this)
+		itemHandler = new InvWrapper(this)
 		{
 			@Override
 			public boolean isItemValid(int slot, @Nonnull ItemStack stack)

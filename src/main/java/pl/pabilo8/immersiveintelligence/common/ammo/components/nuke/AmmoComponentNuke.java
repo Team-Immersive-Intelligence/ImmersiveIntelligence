@@ -20,6 +20,8 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.world.ChunkWatchEvent.Watch;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.ComponentEffectShape;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.ComponentRole;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
@@ -137,7 +139,7 @@ public class AmmoComponentNuke extends AmmoComponent
 					((EntityPlayerMP)player).connection.sendPacket(packet);
 					//this.playerChunkMap.getWorldServer().getEntityTracker().sendLeashedEntitiesInChunk(entityplayermp, this.chunk);
 					// chunk watch event - delayed to here as the chunk wasn't ready in addPlayer
-					net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.event.world.ChunkWatchEvent.Watch(radiatedChunk, ((EntityPlayerMP)player)));
+					MinecraftForge.EVENT_BUS.post(new Watch(radiatedChunk, ((EntityPlayerMP)player)));
 				}
 			}
 		}

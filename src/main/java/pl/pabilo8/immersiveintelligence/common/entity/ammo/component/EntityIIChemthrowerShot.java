@@ -26,6 +26,8 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fml.common.Optional.Interface;
+import net.minecraftforge.fml.common.Optional.Method;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.common.util.raytracer.FactoryTracer;
@@ -44,7 +46,7 @@ import java.util.Set;
  * @since 08.07.2023
  * @since 15.12.2024
  */
-@net.minecraftforge.fml.common.Optional.Interface(iface = "com.elytradev.mirage.lighting.IEntityLightEventConsumer", modid = "mirage")
+@Interface(iface = "com.elytradev.mirage.lighting.IEntityLightEventConsumer", modid = "mirage")
 public class EntityIIChemthrowerShot extends EntityIEProjectile implements IEntityLightEventConsumer
 {
 	private static final double SIZE = 0.5;
@@ -355,7 +357,7 @@ public class EntityIIChemthrowerShot extends EntityIEProjectile implements IEnti
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	@net.minecraftforge.fml.common.Optional.Method(modid = "mirage")
+	@Method(modid = "mirage")
 	public void gatherLights(GatherLightsEvent gatherLightsEvent, Entity entity)
 	{
 		FluidStack fluidStack = getFluid();

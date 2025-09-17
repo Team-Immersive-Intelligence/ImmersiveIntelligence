@@ -96,9 +96,9 @@ public class EasyNBT extends Constants.NBT
 	/**
 	 * Thus spoke EasyNBT - a parser for all and none
 	 *
-	 * @param elements valid objects such as {@link net.minecraft.nbt.NBTBase}, int, float, double, boolean,
-	 *                 {@link EasyNBT}, {@link BlockPos}, {@link net.minecraft.util.math.Vec3d}, {@link net.minecraft.item.ItemStack},
-	 *                 {@link net.minecraftforge.fluids.FluidStack} and {@link java.util.Collection} or array of the above
+	 * @param elements valid objects such as {@link NBTBase}, int, float, double, boolean,
+	 *                 {@link EasyNBT}, {@link BlockPos}, {@link Vec3d}, {@link ItemStack},
+	 *                 {@link FluidStack} and {@link Collection} or array of the above
 	 * @implNote Accepts only a single type of object, will not work if multiple types are passed
 	 */
 	public static NBTTagList listOf(Object... elements)

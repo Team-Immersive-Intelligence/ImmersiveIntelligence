@@ -3,6 +3,7 @@ package pl.pabilo8.immersiveintelligence.common.commands.ii.dev;
 import blusunrize.immersiveengineering.common.blocks.TileEntityMultiblockPart;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.Entity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.RayTraceResult;
@@ -41,7 +42,7 @@ public class CommandDevGetMb extends CommandIIBase
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
-		net.minecraft.entity.Entity senderEntity = sender.getCommandSenderEntity();
+		Entity senderEntity = sender.getCommandSenderEntity();
 		RayTraceResult traceResult = CommandIIDev.getRayTraceResult(senderEntity, 40f);
 		if(traceResult==null||traceResult.typeOfHit==RayTraceResult.Type.MISS) return;
 		TileEntity te = senderEntity.getEntityWorld().getTileEntity(traceResult.getBlockPos());

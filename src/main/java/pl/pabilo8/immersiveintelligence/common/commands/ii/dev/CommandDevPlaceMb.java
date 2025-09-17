@@ -5,12 +5,18 @@ import blusunrize.immersiveengineering.api.MultiblockHandler.IMultiblock;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.server.command.CommandTreeBase;
 import pl.pabilo8.immersiveintelligence.common.util.CommandIIBase;
+
+import javax.annotation.Nullable;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -38,7 +44,7 @@ public class CommandDevPlaceMb extends CommandIIBase
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
-		net.minecraft.entity.Entity senderEntity = sender.getCommandSenderEntity();
+		Entity senderEntity = sender.getCommandSenderEntity();
 		RayTraceResult traceResult = CommandIIDev.getRayTraceResult(senderEntity, 40f);
 		if(traceResult==null||traceResult.typeOfHit==RayTraceResult.Type.MISS) return;
 		for(IMultiblock mb : MultiblockHandler.getMultiblocks())
@@ -62,12 +68,12 @@ public class CommandDevPlaceMb extends CommandIIBase
 	}
 
 	@Override
-	public java.util.List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @javax.annotation.Nullable net.minecraft.util.math.BlockPos pos)
+	public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos)
 	{
 		if(args.length==1)
 			return getListOfStringsMatchingLastWord(args, MultiblockHandler.getMultiblocks().stream()
 					.map(IMultiblock::getUniqueName)
-					.collect(java.util.stream.Collectors.toList()));
-		return java.util.Collections.emptyList();
+					.collect(Collectors.toList()));
+		return Collections.emptyList();
 	}
 }

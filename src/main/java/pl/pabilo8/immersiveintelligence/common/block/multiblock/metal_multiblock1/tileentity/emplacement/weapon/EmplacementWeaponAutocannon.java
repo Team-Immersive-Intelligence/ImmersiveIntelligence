@@ -242,10 +242,10 @@ public class EmplacementWeaponAutocannon extends EmplacementWeaponGunBase<Entity
 		nbt.setFloat("shootDelay", shootDelay);
 		nbt.setInteger("reloadDelay", reloadDelay);
 
-		nbt.setTag("inventory", blusunrize.immersiveengineering.common.util.Utils.writeInventory(inventory));
-		nbt.setTag("inventoryPlatform", blusunrize.immersiveengineering.common.util.Utils.writeInventory(inventoryPlatform));
+		nbt.setTag("inventory", Utils.writeInventory(inventory));
+		nbt.setTag("inventoryPlatform", Utils.writeInventory(inventoryPlatform));
 		if(!forClient)
-			nbt.setTag("magazine", blusunrize.immersiveengineering.common.util.Utils.writeInventory(magazine));
+			nbt.setTag("magazine", Utils.writeInventory(magazine));
 		nbt.setInteger("magazine_amount", magazine.size());
 
 		nbt.setBoolean("requiresPlatformRefill", requiresPlatformRefill);
@@ -261,9 +261,9 @@ public class EmplacementWeaponAutocannon extends EmplacementWeaponGunBase<Entity
 		shootDelay = tagCompound.getFloat("shootDelay");
 		reloadDelay = tagCompound.getInteger("reloadDelay");
 
-		inventory = blusunrize.immersiveengineering.common.util.Utils.readInventory(tagCompound.getTagList("inventory", 10), inventory.size());
-		inventoryPlatform = blusunrize.immersiveengineering.common.util.Utils.readInventory(tagCompound.getTagList("inventoryPlatform", 10), inventoryPlatform.size());
-		magazine = new ArrayDeque<>(blusunrize.immersiveengineering.common.util.Utils.readInventory(tagCompound.getTagList("magazine", 10), tagCompound.getInteger("magazine_amount")));
+		inventory = Utils.readInventory(tagCompound.getTagList("inventory", 10), inventory.size());
+		inventoryPlatform = Utils.readInventory(tagCompound.getTagList("inventoryPlatform", 10), inventoryPlatform.size());
+		magazine = new ArrayDeque<>(Utils.readInventory(tagCompound.getTagList("magazine", 10), tagCompound.getInteger("magazine_amount")));
 
 		requiresPlatformRefill = tagCompound.getBoolean("requiresPlatformRefill");
 	}

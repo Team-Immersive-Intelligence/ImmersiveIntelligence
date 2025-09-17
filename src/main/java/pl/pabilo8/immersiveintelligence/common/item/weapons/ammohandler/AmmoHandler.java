@@ -15,7 +15,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 /**
- * Internal ammunition storage handler for {@link pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIGunBase}
+ * Internal ammunition storage handler for {@link ItemIIGunBase}
  *
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 20.02.2023

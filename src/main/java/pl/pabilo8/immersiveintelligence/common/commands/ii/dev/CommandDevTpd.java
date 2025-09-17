@@ -4,13 +4,18 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ITeleporter;
 import net.minecraftforge.server.command.CommandTreeBase;
 import pl.pabilo8.immersiveintelligence.common.util.CommandIIBase;
 
+import javax.annotation.Nullable;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -50,7 +55,7 @@ public class CommandDevTpd extends CommandIIBase
 			if(found.isPresent())
 			{
 				senderEntity.changeDimension(found.get().getId(), new IITeleporter());
-				sender.sendMessage(new net.minecraft.util.text.TextComponentString("Preparing to jump!"));
+				sender.sendMessage(new TextComponentString("Preparing to jump!"));
 			}
 			else
 				throw new CommandException("Invalid dimension!");
@@ -58,13 +63,13 @@ public class CommandDevTpd extends CommandIIBase
 	}
 
 	@Override
-	public java.util.List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @javax.annotation.Nullable net.minecraft.util.math.BlockPos pos)
+	public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos)
 	{
 		if(args.length==1)
 			return Arrays.stream(DimensionType.values())
 					.map(DimensionType::getName)
 					.collect(Collectors.toList());
-		return java.util.Collections.emptyList();
+		return Collections.emptyList();
 	}
 
 	public static class IITeleporter implements ITeleporter

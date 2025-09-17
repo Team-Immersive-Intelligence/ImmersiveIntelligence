@@ -4,7 +4,7 @@ import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.util.ResourceLocation;
 
 /**
- * Pattern based, more programmer friendly extension of {@link net.minecraft.util.ResourceLocation}
+ * Pattern based, more programmer friendly extension of {@link ResourceLocation}
  *
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 13.02.2023

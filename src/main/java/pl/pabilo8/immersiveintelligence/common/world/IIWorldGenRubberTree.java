@@ -3,8 +3,10 @@ package pl.pabilo8.immersiveintelligence.common.world;
 import net.minecraft.block.BlockLeaves;
 import net.minecraft.block.BlockLog;
 import net.minecraft.block.BlockLog.EnumAxis;
+import net.minecraft.block.BlockSapling;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenAbstractTree;
@@ -39,7 +41,7 @@ public class IIWorldGenRubberTree extends WorldGenAbstractTree
 
 	public boolean isReplaceable(World world, BlockPos pos)
 	{
-		net.minecraft.block.state.IBlockState state = world.getBlockState(pos);
+		IBlockState state = world.getBlockState(pos);
 		return state.getBlock().isAir(state, world, pos)||state.getBlock().isLeaves(state, world, pos)||state.getBlock().isWood(world, pos)||canGrowInto(state.getBlock())||state.getBlock()==IIContent.blockRubberSapling;
 	}
 
@@ -82,7 +84,7 @@ public class IIWorldGenRubberTree extends WorldGenAbstractTree
 			{
 				BlockPos down = position.down();
 				IBlockState state = worldIn.getBlockState(down);
-				boolean isSoil = state.getBlock().canSustainPlant(state, worldIn, down, net.minecraft.util.EnumFacing.UP, (net.minecraft.block.BlockSapling)Blocks.SAPLING);
+				boolean isSoil = state.getBlock().canSustainPlant(state, worldIn, down, EnumFacing.UP, (BlockSapling)Blocks.SAPLING);
 
 				if(isSoil&&position.getY() < 256-i-1)
 				{

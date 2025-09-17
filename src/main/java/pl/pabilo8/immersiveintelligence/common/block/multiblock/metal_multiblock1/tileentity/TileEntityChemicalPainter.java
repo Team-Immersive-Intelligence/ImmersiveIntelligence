@@ -17,6 +17,7 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fml.common.Optional;
+import net.minecraftforge.fml.common.Optional.Interface;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -52,7 +53,7 @@ import static pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_mul
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 28.06.2019
  */
-@net.minecraftforge.fml.common.Optional.Interface(iface = "com.elytradev.mirage.lighting.ILightEventConsumer", modid = "mirage")
+@Interface(iface = "com.elytradev.mirage.lighting.ILightEventConsumer", modid = "mirage")
 public class TileEntityChemicalPainter extends TileEntityMultiblockProductionSingle<TileEntityChemicalPainter, PaintingRecipe>
 		implements ILightEventConsumer, IPlayerInteraction, IAdvancedTextOverlay
 {

@@ -160,13 +160,13 @@ public class IIUtils
 			{
 				if(tanks[tank].getTankProperties()[0].getContents()==null)
 					return false;
-				emptyContainer = blusunrize.immersiveengineering.common.util.Utils.fillFluidContainer(tanks[tank], inventory.get(bucketInputSlot), inventory.get(bucketOutputSlot), null);
+				emptyContainer = Utils.fillFluidContainer(tanks[tank], inventory.get(bucketInputSlot), inventory.get(bucketOutputSlot), null);
 			}
 			else
 			{
 				if(capability.getTankProperties()[0].getContents()==null)
 					return false;
-				emptyContainer = blusunrize.immersiveengineering.common.util.Utils.drainFluidContainer(tanks[tank], inventory.get(bucketInputSlot), inventory.get(bucketOutputSlot), null);
+				emptyContainer = Utils.drainFluidContainer(tanks[tank], inventory.get(bucketInputSlot), inventory.get(bucketOutputSlot), null);
 			}
 
 			if(amount_prev!=tanks[tank].getFluidAmount())
@@ -197,7 +197,7 @@ public class IIUtils
 				int accepted = output.fill(out, true);
 				if(accepted > 0)
 				{
-					int drained = output.fill(blusunrize.immersiveengineering.common.util.Utils.copyFluidStackWithAmount(out, Math.min(out.amount, accepted), false), true);
+					int drained = output.fill(Utils.copyFluidStackWithAmount(out, Math.min(out.amount, accepted), false), true);
 					tank.drain(drained, true);
 					return true;
 				}
@@ -328,7 +328,7 @@ public class IIUtils
 	public static boolean compareBlockstateOredict(IBlockState state, String oreName)
 	{
 		ItemStack stack = new ItemStack(state.getBlock(), 1, state.getBlock().getMetaFromState(state));
-		return blusunrize.immersiveengineering.common.util.Utils.compareToOreName(stack, oreName);
+		return Utils.compareToOreName(stack, oreName);
 	}
 
 

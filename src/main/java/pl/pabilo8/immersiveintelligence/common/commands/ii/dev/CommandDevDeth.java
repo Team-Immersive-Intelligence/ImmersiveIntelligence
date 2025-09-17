@@ -7,6 +7,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.server.command.CommandTreeBase;
@@ -53,7 +54,7 @@ public class CommandDevDeth extends CommandIIBase
 			if(hit.typeOfHit==RayTraceResult.Type.ENTITY)
 			{
 				hit.entityHit.setDead();
-				sender.sendMessage(new TextComponentString(hit.entityHit.getDisplayName().getFormattedText()+" is dead, no big surprise.").setStyle(new net.minecraft.util.text.Style().setColor(TextFormatting.RED)));
+				sender.sendMessage(new TextComponentString(hit.entityHit.getDisplayName().getFormattedText()+" is dead, no big surprise.").setStyle(new Style().setColor(TextFormatting.RED)));
 				break;
 			}
 		}

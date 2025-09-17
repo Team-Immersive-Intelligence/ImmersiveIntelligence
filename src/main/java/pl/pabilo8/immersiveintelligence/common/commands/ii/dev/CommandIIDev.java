@@ -1,5 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common.commands.ii.dev;
 
+import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
@@ -51,7 +52,7 @@ public class CommandIIDev extends CommandTreeBase
 	}
 
 	@Override
-	public String getUsage(net.minecraft.command.ICommandSender sender)
+	public String getUsage(ICommandSender sender)
 	{
 		return "Executes an Immersive Intelligence dev command, use /ii dev help for info";
 	}

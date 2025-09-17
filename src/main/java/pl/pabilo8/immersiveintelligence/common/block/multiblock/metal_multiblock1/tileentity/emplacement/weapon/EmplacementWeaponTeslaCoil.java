@@ -7,6 +7,7 @@ import blusunrize.immersiveengineering.common.blocks.metal.TileEntityTeslaCoil.L
 import blusunrize.immersiveengineering.common.util.IEDamageSources;
 import blusunrize.immersiveengineering.common.util.IEDamageSources.ElectricDamageSource;
 import blusunrize.immersiveengineering.common.util.IEPotions;
+import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -109,7 +110,7 @@ public class EmplacementWeaponTeslaCoil extends EmplacementWeapon
 			if(!targets.isEmpty())
 			{
 				ElectricDamageSource dmgsrc = IEDamageSources.causeTeslaDamage(IEConfig.Machines.teslacoil_damage*2.5f, false);
-				int randomTarget = blusunrize.immersiveengineering.common.util.Utils.RAND.nextInt(targets.size());
+				int randomTarget = Utils.RAND.nextInt(targets.size());
 				target = (EntityLivingBase)targets.get(randomTarget);
 				if(target!=null)
 				{
@@ -204,7 +205,7 @@ public class EmplacementWeaponTeslaCoil extends EmplacementWeapon
 			else
 				f = dx < 0?EnumFacing.WEST: EnumFacing.EAST;
 
-			double verticalOffset = 1+blusunrize.immersiveengineering.common.util.Utils.RAND.nextDouble()*.25;
+			double verticalOffset = 1+Utils.RAND.nextDouble()*.25;
 			Vec3d coilPos = new Vec3d(pos).addVector(.5, .5, .5);
 			//Vertical offset
 			coilPos = coilPos.addVector(0, verticalOffset, 0);
@@ -212,7 +213,7 @@ public class EmplacementWeaponTeslaCoil extends EmplacementWeapon
 			coilPos = coilPos.addVector(f.getFrontOffsetX()*.375, f.getFrontOffsetY()*.375, f.getFrontOffsetZ()*.375);
 			//random side offset
 			f = f.rotateAround(Axis.Y);
-			double dShift = (blusunrize.immersiveengineering.common.util.Utils.RAND.nextDouble()-.5)*.75;
+			double dShift = (Utils.RAND.nextDouble()-.5)*.75;
 			coilPos = coilPos.addVector(f.getFrontOffsetX()*dShift, f.getFrontOffsetY()*dShift, f.getFrontOffsetZ()*dShift);
 
 			addAnimation(new LightningAnimation(coilPos, (EntityLivingBase)target));

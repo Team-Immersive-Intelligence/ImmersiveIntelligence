@@ -367,7 +367,7 @@ public class EntityFieldHowitzer extends Entity implements IVehicleMultiPart, IE
 				alreadyShoot = false;
 				if(!world.isRemote)
 				{
-					blusunrize.immersiveengineering.common.util.Utils.dropStackAtPos(world, getPosition(), IIContent.itemAmmoLightArtillery.getCasingStack(1));
+					Utils.dropStackAtPos(world, getPosition(), IIContent.itemAmmoLightArtillery.getCasingStack(1));
 					dataManager.set(dataMarkerShell, shell.serializeNBT());
 					dataManager.setDirty(dataMarkerShell);
 				}

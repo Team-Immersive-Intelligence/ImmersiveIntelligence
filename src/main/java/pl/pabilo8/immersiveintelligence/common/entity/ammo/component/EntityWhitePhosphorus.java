@@ -19,6 +19,7 @@ import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
+import net.minecraftforge.fml.common.Optional.Interface;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleProperties;
@@ -33,7 +34,7 @@ import javax.vecmath.Vector2f;
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 26.10.2019
  */
-@net.minecraftforge.fml.common.Optional.Interface(iface = "com.elytradev.mirage.lighting.ILightEventConsumer", modid = "mirage")
+@Interface(iface = "com.elytradev.mirage.lighting.ILightEventConsumer", modid = "mirage")
 public class EntityWhitePhosphorus extends EntityIEProjectile implements ILightEventConsumer
 {
 	public EntityWhitePhosphorus(World world)

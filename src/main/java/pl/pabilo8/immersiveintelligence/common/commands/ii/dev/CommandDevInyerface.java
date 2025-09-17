@@ -5,6 +5,7 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.server.command.CommandTreeBase;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageParticleEffect;
@@ -43,6 +44,6 @@ public class CommandDevInyerface extends CommandIIBase
 		Vec3d pos = entity.getPositionEyes(0f);
 		Vec3d look = entity.getLookVec();
 		IIPacketHandler.sendToClient(new MessageParticleEffect("debris/big_brick", sender.getEntityWorld(), pos, look, 0, 0, null));
-		sender.sendMessage(new net.minecraft.util.text.TextComponentString(String.format("A boulder has been thrown!")));
+		sender.sendMessage(new TextComponentString(String.format("A boulder has been thrown!")));
 	}
 }

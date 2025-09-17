@@ -3,6 +3,7 @@ package pl.pabilo8.immersiveintelligence.common.entity.vehicle;
 import blusunrize.immersiveengineering.api.Lib;
 import blusunrize.immersiveengineering.api.energy.DieselHandler;
 import blusunrize.immersiveengineering.client.ClientUtils;
+import blusunrize.immersiveengineering.common.util.Utils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
@@ -817,7 +818,7 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 	{
 		if(!isPassenger(player)&&(part==partEngine||part==partFuelTank))
 		{
-			if(blusunrize.immersiveengineering.common.util.Utils.isFluidRelatedItemStack(player.getHeldItem(EnumHand.MAIN_HAND)))
+			if(Utils.isFluidRelatedItemStack(player.getHeldItem(EnumHand.MAIN_HAND)))
 			{
 				String s;
 				if(tank.getFluid()!=null)

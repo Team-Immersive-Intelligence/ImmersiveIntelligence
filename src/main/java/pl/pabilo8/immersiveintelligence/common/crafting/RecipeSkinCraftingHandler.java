@@ -8,6 +8,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
+import net.minecraftforge.registries.IForgeRegistryEntry.Impl;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.ISkinnable;
 import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler;
 import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler.IISpecialSkin;
@@ -16,7 +17,7 @@ import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler.IISpecialSkin;
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 07.08.2021
  */
-public class RecipeSkinCraftingHandler extends net.minecraftforge.registries.IForgeRegistryEntry.Impl<IRecipe> implements IRecipe
+public class RecipeSkinCraftingHandler extends Impl<IRecipe> implements IRecipe
 {
 
 	@Override

@@ -5,6 +5,8 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fluids.Fluid;
@@ -14,6 +16,9 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.server.command.CommandTreeBase;
 import pl.pabilo8.immersiveintelligence.common.util.CommandIIBase;
+import pl.pabilo8.immersiveintelligence.common.util.raytracer.MultipleRayTracer;
+
+import java.util.Collections;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -44,10 +49,10 @@ public class CommandDevPower extends CommandIIBase
 		Entity senderEntity = sender.getCommandSenderEntity();
 		if(senderEntity==null) return;
 		float blockReachDistance = 6;
-		net.minecraft.util.math.Vec3d vec3d = senderEntity.getPositionEyes(0);
-		net.minecraft.util.math.Vec3d vec3d1 = senderEntity.getLook(0);
-		net.minecraft.util.math.Vec3d vec3d2 = vec3d.addVector(vec3d1.x*blockReachDistance, vec3d1.y*blockReachDistance, vec3d1.z*blockReachDistance);
-		pl.pabilo8.immersiveintelligence.common.util.raytracer.MultipleRayTracer rayTracer = pl.pabilo8.immersiveintelligence.common.util.raytracer.MultipleRayTracer.volumetricTrace(sender.getEntityWorld(), vec3d, vec3d2, new net.minecraft.util.math.AxisAlignedBB(-0.5, -0.5, -0.5, 0.5, 0.5, 0.5), java.util.Collections.emptyList(), true, java.util.Collections.singletonList(senderEntity), null);
+		Vec3d vec3d = senderEntity.getPositionEyes(0);
+		Vec3d vec3d1 = senderEntity.getLook(0);
+		Vec3d vec3d2 = vec3d.addVector(vec3d1.x*blockReachDistance, vec3d1.y*blockReachDistance, vec3d1.z*blockReachDistance);
+		MultipleRayTracer rayTracer = MultipleRayTracer.volumetricTrace(sender.getEntityWorld(), vec3d, vec3d2, new AxisAlignedBB(-0.5, -0.5, -0.5, 0.5, 0.5, 0.5), Collections.emptyList(), true, Collections.singletonList(senderEntity), null);
 		if(!rayTracer.getHits().isEmpty())
 		{
 			Entity entityHit = rayTracer.getHits().get(0).entityHit;

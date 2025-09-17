@@ -1,5 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.weapon;
 
+import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.item.ItemStack;
@@ -174,7 +175,7 @@ public abstract class EmplacementWeapon implements ITypeNBTSerializable<NBTTagCo
 	public void shoot(TileEntityEmplacement te)
 	{
 		if(entity!=null)
-			blusunrize.immersiveengineering.common.util.Utils.attractEnemies(entity, 24);
+			Utils.attractEnemies(entity, 24);
 	}
 
 	/**

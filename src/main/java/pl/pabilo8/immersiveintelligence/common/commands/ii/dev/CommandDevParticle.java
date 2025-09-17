@@ -2,9 +2,11 @@ package pl.pabilo8.immersiveintelligence.common.commands.ii.dev;
 
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.command.WrongUsageException;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.server.command.CommandTreeBase;
 import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleRegistry;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
@@ -41,7 +43,7 @@ public class CommandDevParticle extends CommandIIBase
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
-		if(args.length < 1) throw new net.minecraft.command.WrongUsageException(getUsage(sender));
+		if(args.length < 1) throw new WrongUsageException(getUsage(sender));
 		Vec3d pos = new Vec3d(args.length >= 4?parseBlockPos(sender, args, 1, true): sender.getPosition());
 		Vec3d motion = Vec3d.ZERO;
 		if(args.length >= 7)
@@ -52,7 +54,7 @@ public class CommandDevParticle extends CommandIIBase
 			motion = new Vec3d(motionX, motionY, motionZ);
 		}
 		IIPacketHandler.sendToClient(new MessageParticleEffect(args[0], sender.getEntityWorld(), pos, motion, 0, 0, null));
-		sender.sendMessage(new net.minecraft.util.text.TextComponentString(String.format("Particle %s created!", args[0])));
+		sender.sendMessage(new TextComponentString(String.format("Particle %s created!", args[0])));
 	}
 
 	@Override

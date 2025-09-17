@@ -12,9 +12,15 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.server.command.CommandTreeBase;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.util.CommandIIBase;
+
+import javax.annotation.Nullable;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -73,15 +79,15 @@ public class CommandDevTestEnemies extends CommandIIBase
 				senderEntity.getEntityWorld().spawnEntity(skeleton);
 				i++;
 			}
-			sender.sendMessage(new net.minecraft.util.text.TextComponentString("Test enemies summoned!"));
+			sender.sendMessage(new TextComponentString("Test enemies summoned!"));
 		}
 	}
 
 	@Override
-	public java.util.List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @javax.annotation.Nullable net.minecraft.util.math.BlockPos pos)
+	public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos)
 	{
 		if(args.length==1)
-			return java.util.Arrays.asList("1", "5", "10", "20", "50");
-		return java.util.Collections.emptyList();
+			return Arrays.asList("1", "5", "10", "20", "50");
+		return Collections.emptyList();
 	}
 }

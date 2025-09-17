@@ -18,7 +18,7 @@ import java.util.function.BiConsumer;
 
 /**
  * <p>
- * This class provides efficient drawing of multiple rects using {@link net.minecraft.client.renderer.BufferBuilder}.<br>
+ * This class provides efficient drawing of multiple rects using {@link BufferBuilder}.<br>
  * When rendering a single rect, use methods from {@link pl.pabilo8.immersiveintelligence.client.IIClientUtils}, {@link net.minecraft.client.gui.Gui} or similar classes.<br>
  * </p>
  *

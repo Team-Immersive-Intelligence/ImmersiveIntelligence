@@ -26,13 +26,19 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.event.HoverEvent;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
+import net.minecraftforge.items.wrapper.CombinedInvWrapper;
+import net.minecraftforge.items.wrapper.EntityArmorInvWrapper;
+import net.minecraftforge.items.wrapper.EntityHandsInvWrapper;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.component.EntityGasCloud;
 import pl.pabilo8.immersiveintelligence.common.entity.hans.HansAnimations;
@@ -83,10 +89,10 @@ public class EntityHans extends EntityCreature implements INpc
 	private static final DataParameter<NBTTagCompound> DATA_MARKER_SPEECH = EntityDataManager.createKey(EntityHans.class, DataSerializers.COMPOUND_TAG);
 	public static boolean INFINITE_AMMO = false;
 	public final NonNullList<ItemStack> mainInventory = NonNullList.withSize(27, ItemStack.EMPTY);
-	private final net.minecraftforge.items.IItemHandlerModifiable handHandler = new net.minecraftforge.items.wrapper.EntityHandsInvWrapper(this);
-	private final net.minecraftforge.items.IItemHandlerModifiable armorHandler = new net.minecraftforge.items.wrapper.EntityArmorInvWrapper(this);
-	private final net.minecraftforge.items.IItemHandlerModifiable invHandler = new ItemStackHandler(this.mainInventory);
-	private final net.minecraftforge.items.IItemHandler joinedHandler = new net.minecraftforge.items.wrapper.CombinedInvWrapper(armorHandler, handHandler, invHandler);
+	private final IItemHandlerModifiable handHandler = new EntityHandsInvWrapper(this);
+	private final IItemHandlerModifiable armorHandler = new EntityArmorInvWrapper(this);
+	private final IItemHandlerModifiable invHandler = new ItemStackHandler(this.mainInventory);
+	private final IItemHandler joinedHandler = new CombinedInvWrapper(armorHandler, handHandler, invHandler);
 	public HansLegAnimation prevLegAnimation = HansLegAnimation.STANDING;
 	public HansLegAnimation legAnimation = HansLegAnimation.STANDING;
 	public int legAnimationTimer = 0;
@@ -609,9 +615,9 @@ public class EntityHans extends EntityCreature implements INpc
 	{
 		ItemStack helmet = getItemStackFromSlot(EntityEquipmentSlot.HEAD);
 		if(helmet.getItem() instanceof ItemIILightEngineerHelmet&&IIContent.itemLightEngineerHelmet.getUpgrades(helmet).hasKey("gasmask"))
-			ChatUtils.sendServerNoSpamMessages(player, new TextComponentTranslation("chat.type.text", this.getDisplayName(), net.minecraftforge.common.ForgeHooks.newChatWithLinks("*Hans Gasmask Noises*")));
+			ChatUtils.sendServerNoSpamMessages(player, new TextComponentTranslation("chat.type.text", this.getDisplayName(), ForgeHooks.newChatWithLinks("*Hans Gasmask Noises*")));
 		else
-			ChatUtils.sendServerNoSpamMessages(player, new TextComponentTranslation("chat.type.text", this.getDisplayName(), net.minecraftforge.common.ForgeHooks.newChatWithLinks(text)));
+			ChatUtils.sendServerNoSpamMessages(player, new TextComponentTranslation("chat.type.text", this.getDisplayName(), ForgeHooks.newChatWithLinks(text)));
 	}
 
 	protected SoundEvent getHurtSound(@Nonnull DamageSource damageSourceIn)

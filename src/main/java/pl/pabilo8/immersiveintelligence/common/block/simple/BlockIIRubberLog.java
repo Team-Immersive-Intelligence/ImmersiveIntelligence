@@ -79,13 +79,13 @@ public class BlockIIRubberLog extends BlockIIBase<RubberLogs>
 	}
 
 	@Override
-	public boolean canSustainLeaves(IBlockState state, net.minecraft.world.IBlockAccess world, BlockPos pos)
+	public boolean canSustainLeaves(IBlockState state, IBlockAccess world, BlockPos pos)
 	{
 		return true;
 	}
 
 	@Override
-	public boolean isWood(net.minecraft.world.IBlockAccess world, BlockPos pos)
+	public boolean isWood(IBlockAccess world, BlockPos pos)
 	{
 		return true;
 	}

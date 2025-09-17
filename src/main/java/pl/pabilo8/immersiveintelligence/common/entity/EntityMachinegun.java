@@ -391,7 +391,7 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 					ItemStack mag2 = magazine.copy();
 					IIContent.itemBulletMagazine.defaultize(mag2);
 					if(!world.isRemote)
-						blusunrize.immersiveengineering.common.util.Utils.dropStackAtPos(world, entity.getPosition(), mag2);
+						Utils.dropStackAtPos(world, entity.getPosition(), mag2);
 					setMagazineToSlot(setTo, ItemStack.EMPTY);
 				}
 				else
@@ -769,7 +769,7 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 				.create();
 
 		ItemStack stack2 = ((IAmmoTypeItem<?, ?>)stack.getItem()).getCasingStack(1);
-		blusunrize.immersiveengineering.common.util.Utils.dropStackAtPos(world, getPosition(), stack2);
+		Utils.dropStackAtPos(world, getPosition(), stack2);
 	}
 
 	public boolean shootFromCrate()
@@ -777,7 +777,7 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 		if(getPassengers().get(0)==null||!(getPassengers().get(0) instanceof EntityLivingBase))
 			return false;
 
-		blusunrize.immersiveengineering.common.util.Utils.attractEnemies((EntityLivingBase)getPassengers().get(0), 36, null);
+		Utils.attractEnemies((EntityLivingBase)getPassengers().get(0), 36, null);
 
 		bulletDelay = bulletDelayMax;
 		recoilYaw += Math.random() > 0.5?maxRecoilYaw*2*Math.random(): -maxRecoilYaw*2*Math.random();
@@ -829,7 +829,7 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 		if(getPassengers().get(0)==null||!(getPassengers().get(0) instanceof EntityLivingBase))
 			return false;
 
-		blusunrize.immersiveengineering.common.util.Utils.attractEnemies((EntityLivingBase)getPassengers().get(0), 36, null);
+		Utils.attractEnemies((EntityLivingBase)getPassengers().get(0), 36, null);
 
 		bulletDelay = bulletDelayMax;
 		recoilYaw += Math.random() > 0.5?maxRecoilYaw*2*Math.random(): -maxRecoilYaw*2*Math.random();
@@ -954,7 +954,7 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 
 		if(!hasSecondMag&&!magazine2.isEmpty()&&!world.isRemote)
 		{
-			blusunrize.immersiveengineering.common.util.Utils.dropStackAtPos(world, getPosition(), stack);
+			Utils.dropStackAtPos(world, getPosition(), stack);
 		}
 
 		if(!magazine1.isEmpty())
@@ -993,7 +993,7 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 						cap.fill(tank.getFluid().copy(), true);
 				}
 			}
-			blusunrize.immersiveengineering.common.util.Utils.dropStackAtPos(world, getPosition(), gun);
+			Utils.dropStackAtPos(world, getPosition(), gun);
 			setDead();
 		}
 	}
@@ -1048,7 +1048,7 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 	@Override
 	public String[] getOverlayText(EntityPlayer player, RayTraceResult mop)
 	{
-		if(blusunrize.immersiveengineering.common.util.Utils.isFluidRelatedItemStack(player.getHeldItem(EnumHand.MAIN_HAND)))
+		if(Utils.isFluidRelatedItemStack(player.getHeldItem(EnumHand.MAIN_HAND)))
 		{
 			String s;
 			if(tank.getFluid()!=null)

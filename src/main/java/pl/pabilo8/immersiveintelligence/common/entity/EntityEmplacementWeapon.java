@@ -3,6 +3,7 @@ package pl.pabilo8.immersiveintelligence.common.entity;
 import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.common.util.IEDamageSources;
 import blusunrize.immersiveengineering.common.util.IEDamageSources.ElectricDamageSource;
+import blusunrize.immersiveengineering.common.util.Utils;
 import it.unimi.dsi.fastutil.doubles.DoubleComparators;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -137,7 +138,7 @@ public class EntityEmplacementWeapon extends EntityLivingBase implements IEntity
 		{
 			DamageSource temp_source = new DamageSource("bullet").setProjectile().setDamageBypassesArmor();
 			//attack random part
-			return attackEntityFromPart(partArray[blusunrize.immersiveengineering.common.util.Utils.RAND.nextInt(partArray.length)], source, amount*0.5f);
+			return attackEntityFromPart(partArray[Utils.RAND.nextInt(partArray.length)], source, amount*0.5f);
 		}
 
 		if(source.isFireDamage()||source.isMagicDamage())

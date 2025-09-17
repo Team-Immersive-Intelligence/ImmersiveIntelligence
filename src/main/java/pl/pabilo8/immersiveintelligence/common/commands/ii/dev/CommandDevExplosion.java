@@ -12,7 +12,10 @@ import pl.pabilo8.immersiveintelligence.api.ammo.enums.ComponentEffectShape;
 import pl.pabilo8.immersiveintelligence.common.util.CommandIIBase;
 import pl.pabilo8.immersiveintelligence.common.util.IIExplosion;
 
+import javax.annotation.Nullable;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -61,7 +64,7 @@ public class CommandDevExplosion extends CommandIIBase
 	}
 
 	@Override
-	public java.util.List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @javax.annotation.Nullable net.minecraft.util.math.BlockPos pos)
+	public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos)
 	{
 		if(args.length==3)
 			return getListOfStringsMatchingLastWord(args,
@@ -70,6 +73,6 @@ public class CommandDevExplosion extends CommandIIBase
 							.map(String::toUpperCase)
 							.collect(Collectors.toList())
 			);
-		return java.util.Collections.emptyList();
+		return Collections.emptyList();
 	}
 }
