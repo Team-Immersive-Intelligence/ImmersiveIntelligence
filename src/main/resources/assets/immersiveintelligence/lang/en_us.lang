@@ -545,7 +545,7 @@ tile.immersiveintelligence.advanced_explosives.white_phosphorus.name=White Phosp
 
 tile.immersiveintelligence.concrete_decoration.concrete_bricks.name=Concrete Bricks
 tile.immersiveintelligence.concrete_decoration_slab.concrete_bricks.name=Concrete Bricks Slab
-tile.immersiveintelligence.concrete_decoration_stairs_concrete_bricks.name=Concrete Bricks Slab
+tile.immersiveintelligence.concrete_decoration_stairs_concrete_bricks.name=Concrete Bricks Stairs
 
 tile.immersiveintelligence.concrete_decoration.sturdy_concrete_bricks.name=Panzerconcrete Bricks
 tile.immersiveintelligence.concrete_decoration_slab.sturdy_concrete_bricks.name=Panzerconcrete Bricks Slab

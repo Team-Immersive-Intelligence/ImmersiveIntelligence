@@ -255,8 +255,8 @@ item.immersiveintelligence.armor_upgrade.gasmask.name=Противогаз
 item.immersiveintelligence.armor_upgrade.infiltrator_gear.name=Инфракрасные очки
 item.immersiveintelligence.armor_upgrade.technician_gear.name=Технические очки
 item.immersiveintelligence.armor_upgrade.engineer_gear.name=Инженерные очки
-item.immersiveintelligence.armor_upgrade.steel_armor_plates.name=Стальная бронеплита
-item.immersiveintelligence.armor_upgrade.composite_armor_plates.name=Композитная бронеплита
+item.immersiveintelligence.armor_upgrade.steel_armor_plates.name=Стальная бронепластина
+item.immersiveintelligence.armor_upgrade.composite_armor_plates.name=Композитная бронепластина
 item.immersiveintelligence.armor_upgrade.hazmat_coating.name=Защитное покрытие
 item.immersiveintelligence.armor_upgrade.heat_resistant_coating.name=Огнестойкое покрытие
 item.immersiveintelligence.armor_upgrade.anti_static_mesh.name=Антистатическая сетка
@@ -333,8 +333,8 @@ desc.immersiveintelligence.toolupgrade.gasmask=Защищает носителя
 desc.immersiveintelligence.toolupgrade.infiltrator_gear=Обеспечивает ночное видение и приближение, для работы требуется энергия.
 desc.immersiveintelligence.toolupgrade.technician_gear=Отображает всплывающие подсказки, когда в руке есть молоток, вольтметр или гаечный ключ, требует энергии.
 desc.immersiveintelligence.toolupgrade.engineer_gear=Объединяет эффекты инфракрасных и технических очков. Энергопотребление повышено.
-desc.immersiveintelligence.toolupgrade.steel_armor_plates=Увеличивает толщину брони. Может отражать стрелы и другие легкие снаряды. На один элемент брони можно установить до 3 бронеплит.
-desc.immersiveintelligence.toolupgrade.composite_armor_plates=Значительно увеличивает толщину брони. Отклоняет снаряды и повреждает оружие ближнего боя противника, если оно не способно нанести достаточного урона владельцу брони. На один элемент брони можно установить до 3 бронеплит.
+desc.immersiveintelligence.toolupgrade.steel_armor_plates=Увеличивает толщину брони. Может отражать стрелы и другие легкие снаряды. На один элемент брони можно установить до 3 бронепластин.
+desc.immersiveintelligence.toolupgrade.composite_armor_plates=Значительно увеличивает толщину брони. Отклоняет снаряды и повреждает оружие ближнего боя противника, если оно не способно нанести достаточного урона владельцу брони. На один элемент брони можно установить до 3 бронепластин.
 desc.immersiveintelligence.toolupgrade.hazmat_coating=Делает броню устойчивой к радиации и коррозии.
 desc.immersiveintelligence.toolupgrade.heat_resistant_coating=В сочетании с усиленными ботинками позволяет плавать в горячих жидкостях.
 desc.immersiveintelligence.toolupgrade.anti_static_mesh=Защищает носителя от поражения электричеством и не позволяет использовать бесконтактные предохранители. Очень чувствителен к урону электричеством под водой.
@@ -1297,7 +1297,7 @@ desc.immersiveintelligence.bullets.components=Компоненты:
 desc.immersiveintelligence.bullets.ballistics=%s - Баллистика
 desc.immersiveintelligence.bullets.performance=Представление:
 desc.immersiveintelligence.bullets.damage_dealt=Нанесенный урон: %s
-desc.immersiveintelligence.bullets.standard_velocity=Стандартная скорость: %s б/т
+desc.immersiveintelligence.bullets.standard_velocity=Стандартная скорость: %s b/t
 desc.immersiveintelligence.bullets.max_artillery_range=Максимальная артиллерийская дальность: %s блоков
 desc.immersiveintelligence.bullets.max_artillery_height=Максимальная достигаемая высота: %s блоков
 desc.immersiveintelligence.bullets.max_direct_range=Максимальный прямой радиус действия: %s блоков
@@ -1347,8 +1347,8 @@ info.immersiveintelligence.gear_ratio=Крутящий момент/скорос
 info.immersiveintelligence.gear_ratio_short=%1$s >> %2$s
 info.immersiveintelligence.charge_with_if=Зарядка с помощью IF
 
-info.immersiveintelligence.yaw=Рыск: %s
-info.immersiveintelligence.pitch=Угол наклона: %s
+info.immersiveintelligence.yaw=Рыскание: %s
+info.immersiveintelligence.pitch=Тангаж: %s
 info.immersiveintelligence.distance=Расстояние: %s
 info.immersiveintelligence.distance_unknown=Неизвестно
 
@@ -1845,7 +1845,7 @@ datasystem.immersiveintelligence.function.item_is_empty.result=Результа�
 datasystem.immersiveintelligence.function.item_is_empty.result.desc=Истина, если стек элементов ItemStack пуст
 
 datasystem.immersiveintelligence.function.item_stacks_with=Можно ли сложить
-datasystem.immersiveintelligence.function.item_stacks_with.desc=Возвращает истину, если входной ItemStack может быть сложен с указанным ItemStack
+datasystem.immersiveintelligence.function.item_stacks_with.desc=Возвращает истину, если входной ItemStack может быть сложен с указанным
 datasystem.immersiveintelligence.function.item_stacks_with.param.stack=Первый
 datasystem.immersiveintelligence.function.item_stacks_with.param.stack.desc=ItemStack для проверки
 datasystem.immersiveintelligence.function.item_stacks_with.param.with=Второй
@@ -1888,1121 +1888,1121 @@ datasystem.immersiveintelligence.function.fluid_get_amount.param.stack.desc=Су
 datasystem.immersiveintelligence.function.fluid_get_amount.result=Количество
 datasystem.immersiveintelligence.function.fluid_get_amount.result.desc=Объем входного FluidStack
 
-datasystem.immersiveintelligence.function.fluid_set_amount=Set Amount
-datasystem.immersiveintelligence.function.fluid_set_amount.desc=Sets the amount of the input FluidStack
+datasystem.immersiveintelligence.function.fluid_set_amount=Установить количество
+datasystem.immersiveintelligence.function.fluid_set_amount.desc=Устанавливает количество входного FluidStack
 datasystem.immersiveintelligence.function.fluid_set_amount.param.stack=FluidStack
-datasystem.immersiveintelligence.function.fluid_set_amount.param.stack.desc=The FluidStack
-datasystem.immersiveintelligence.function.fluid_set_amount.param.amount=Amount
-datasystem.immersiveintelligence.function.fluid_set_amount.param.amount.desc=The amount to set
+datasystem.immersiveintelligence.function.fluid_set_amount.param.stack.desc=Сущность FluidStack
+datasystem.immersiveintelligence.function.fluid_set_amount.param.amount=Количество
+datasystem.immersiveintelligence.function.fluid_set_amount.param.amount.desc=Количество для установки
 datasystem.immersiveintelligence.function.fluid_set_amount.result=FluidStack
-datasystem.immersiveintelligence.function.fluid_set_amount.result.desc=The FluidStack with the new amount
+datasystem.immersiveintelligence.function.fluid_set_amount.result.desc=FluidStack с новым значением
 
-datasystem.immersiveintelligence.function.fluid_get_nbt=Get NBT
-datasystem.immersiveintelligence.function.fluid_get_nbt.desc=Returns the NBT tag of the input FluidStack
+datasystem.immersiveintelligence.function.fluid_get_nbt=Получить NBT
+datasystem.immersiveintelligence.function.fluid_get_nbt.desc=Возвращает тег NBT входного FluidStack
 datasystem.immersiveintelligence.function.fluid_get_nbt.param.stack=FluidStack
-datasystem.immersiveintelligence.function.fluid_get_nbt.param.stack.desc=The FluidStack
+datasystem.immersiveintelligence.function.fluid_get_nbt.param.stack.desc=Сущность FluidStack
 datasystem.immersiveintelligence.function.fluid_get_nbt.result=NBT
-datasystem.immersiveintelligence.function.fluid_get_nbt.result.desc=The NBT tag of the input FluidStack
+datasystem.immersiveintelligence.function.fluid_get_nbt.result.desc=Тег NBT входного FluidStack
 
-datasystem.immersiveintelligence.function.fluid_set_nbt=Set NBT
-datasystem.immersiveintelligence.function.fluid_set_nbt.desc=Sets the NBT tag of the input FluidStack
+datasystem.immersiveintelligence.function.fluid_set_nbt=Установить NBT
+datasystem.immersiveintelligence.function.fluid_set_nbt.desc=Устанавливает тег NBT для входного FluidStack
 datasystem.immersiveintelligence.function.fluid_set_nbt.param.stack=FluidStack
-datasystem.immersiveintelligence.function.fluid_set_nbt.param.stack.desc=The FluidStack
+datasystem.immersiveintelligence.function.fluid_set_nbt.param.stack.desc=Сущность FluidStack
 datasystem.immersiveintelligence.function.fluid_set_nbt.param.nbt=NBT
-datasystem.immersiveintelligence.function.fluid_set_nbt.param.nbt.desc=The NBT tag to set
+datasystem.immersiveintelligence.function.fluid_set_nbt.param.nbt.desc=Тег NBT для установки
 datasystem.immersiveintelligence.function.fluid_set_nbt.result=FluidStack
-datasystem.immersiveintelligence.function.fluid_set_nbt.result.desc=The FluidStack with the new NBT tag
+datasystem.immersiveintelligence.function.fluid_set_nbt.result.desc=FluidStack с новым тегом NBT
 
-datasystem.immersiveintelligence.function.fluid_is_empty=Is Empty
-datasystem.immersiveintelligence.function.fluid_is_empty.desc=Returns true if the input FluidStack is empty
+datasystem.immersiveintelligence.function.fluid_is_empty=Пусто ли
+datasystem.immersiveintelligence.function.fluid_is_empty.desc=Возвращает истину, если входной FluidStack пуст
 datasystem.immersiveintelligence.function.fluid_is_empty.param.stack=FluidStack
-datasystem.immersiveintelligence.function.fluid_is_empty.param.stack.desc=The FluidStack to check
-datasystem.immersiveintelligence.function.fluid_is_empty.result=Result
-datasystem.immersiveintelligence.function.fluid_is_empty.result.desc=True, if the FluidStack is empty
+datasystem.immersiveintelligence.function.fluid_is_empty.param.stack.desc=Проверяемый FluidStack
+datasystem.immersiveintelligence.function.fluid_is_empty.result=Результат
+datasystem.immersiveintelligence.function.fluid_is_empty.result.desc=True, если FluidStack пуст
 
-datasystem.immersiveintelligence.function.fluid_stacks_with=Stacks With
-datasystem.immersiveintelligence.function.fluid_stacks_with.desc=Returns true if the input FluidStack can stack with the specified FluidStack
-datasystem.immersiveintelligence.function.fluid_stacks_with.param.stack=FluidStack
-datasystem.immersiveintelligence.function.fluid_stacks_with.param.stack.desc=The FluidStack to check
-datasystem.immersiveintelligence.function.fluid_stacks_with.param.with=With
-datasystem.immersiveintelligence.function.fluid_stacks_with.param.with.desc=The FluidStack to check against
-datasystem.immersiveintelligence.function.fluid_stacks_with.result=Result
-datasystem.immersiveintelligence.function.fluid_stacks_with.result.desc=Result of the stacking check
+datasystem.immersiveintelligence.function.fluid_stacks_with=Можно ли сложить
+datasystem.immersiveintelligence.function.fluid_stacks_with.desc=Возвращает истину, если входной FluidStack может быть сложен с указанным
+datasystem.immersiveintelligence.function.fluid_stacks_with.param.stack=Первый
+datasystem.immersiveintelligence.function.fluid_stacks_with.param.stack.desc=FluidStack для проверки
+datasystem.immersiveintelligence.function.fluid_stacks_with.param.with=Второй
+datasystem.immersiveintelligence.function.fluid_stacks_with.param.with.desc=Другой FluidStack для проверки
+datasystem.immersiveintelligence.function.fluid_stacks_with.result=Результат
+datasystem.immersiveintelligence.function.fluid_stacks_with.result.desc=Результат проверки сложения FluidStack
 
 # Array
-datasystem.immersiveintelligence.function.array_create=Create Array
-datasystem.immersiveintelligence.function.array_create.desc=Creates a new array
-datasystem.immersiveintelligence.function.array_create.param.first=First Element
+datasystem.immersiveintelligence.function.array_create=Создать массив
+datasystem.immersiveintelligence.function.array_create.desc=Создаёт новый массив
+datasystem.immersiveintelligence.function.array_create.param.first=Первый элемент
 datasystem.immersiveintelligence.function.array_create.param.first.desc=
-datasystem.immersiveintelligence.function.array_create.result=Array
-datasystem.immersiveintelligence.function.array_create.result.desc=The new array
+datasystem.immersiveintelligence.function.array_create.result=Массив
+datasystem.immersiveintelligence.function.array_create.result.desc=Новый массив
 
-datasystem.immersiveintelligence.function.array_get=Get
-datasystem.immersiveintelligence.function.array_get.desc=Returns the value at the specified index in the input array
-datasystem.immersiveintelligence.function.array_get.param.array=Array
-datasystem.immersiveintelligence.function.array_get.param.array.desc=The array to get the value from
-datasystem.immersiveintelligence.function.array_get.param.index=Index
-datasystem.immersiveintelligence.function.array_get.param.index.desc=The index of the value to get
-datasystem.immersiveintelligence.function.array_get.result=Value
-datasystem.immersiveintelligence.function.array_get.result.desc=The value at the specified index
+datasystem.immersiveintelligence.function.array_get=Получить
+datasystem.immersiveintelligence.function.array_get.desc=Возвращает значение по указанному индексу во входном массиве
+datasystem.immersiveintelligence.function.array_get.param.array=Массив
+datasystem.immersiveintelligence.function.array_get.param.array.desc=Массив, из которого нужно получить значение
+datasystem.immersiveintelligence.function.array_get.param.index=Индекс
+datasystem.immersiveintelligence.function.array_get.param.index.desc=Индекс значения, которое нужно получить
+datasystem.immersiveintelligence.function.array_get.result=Значение
+datasystem.immersiveintelligence.function.array_get.result.desc=Значение по указанному индексу
 
-datasystem.immersiveintelligence.function.array_set=Set
-datasystem.immersiveintelligence.function.array_set.desc=Sets the value at the specified index in the input array
-datasystem.immersiveintelligence.function.array_set.param.array=Array
-datasystem.immersiveintelligence.function.array_set.param.array.desc=The array to modify
-datasystem.immersiveintelligence.function.array_set.param.index=Index
-datasystem.immersiveintelligence.function.array_set.param.index.desc=The index of the value to set
-datasystem.immersiveintelligence.function.array_set.param.value=Value
-datasystem.immersiveintelligence.function.array_set.param.value.desc=The value to set
+datasystem.immersiveintelligence.function.array_set=Установить
+datasystem.immersiveintelligence.function.array_set.desc=Устанавливает значение по указанному индексу во входном массиве
+datasystem.immersiveintelligence.function.array_set.param.array=Массив
+datasystem.immersiveintelligence.function.array_set.param.array.desc=Изменяемый массив
+datasystem.immersiveintelligence.function.array_set.param.index=Индекс
+datasystem.immersiveintelligence.function.array_set.param.index.desc=Индекс, куда присваивается значение
+datasystem.immersiveintelligence.function.array_set.param.value=Значение
+datasystem.immersiveintelligence.function.array_set.param.value.desc=Устанавливаемое значение
 
-datasystem.immersiveintelligence.function.array_push=Push
-datasystem.immersiveintelligence.function.array_push.desc=Adds the value to the end of the input array
-datasystem.immersiveintelligence.function.array_push.param.array=Array
-datasystem.immersiveintelligence.function.array_push.param.array.desc=The array to modify
-datasystem.immersiveintelligence.function.array_push.param.inserted=Inserted
-datasystem.immersiveintelligence.function.array_push.param.inserted.desc=The element to add
-datasystem.immersiveintelligence.function.array_push.param.value=Value
-datasystem.immersiveintelligence.function.array_push.param.value.desc=The value to add
+datasystem.immersiveintelligence.function.array_push=Добавить
+datasystem.immersiveintelligence.function.array_push.desc=Добавляет значение в конец входного массива
+datasystem.immersiveintelligence.function.array_push.param.array=Массив
+datasystem.immersiveintelligence.function.array_push.param.array.desc=Массив для изменения
+datasystem.immersiveintelligence.function.array_push.param.inserted=Добавляемое
+datasystem.immersiveintelligence.function.array_push.param.inserted.desc=Добавляемый элемент
+datasystem.immersiveintelligence.function.array_push.param.value=Значение
+datasystem.immersiveintelligence.function.array_push.param.value.desc=Добавляемое значение
 
-datasystem.immersiveintelligence.function.array_pop=Pop
-datasystem.immersiveintelligence.function.array_pop.desc=Removes and returns the last value from the input array
-datasystem.immersiveintelligence.function.array_pop.param.array=Array
-datasystem.immersiveintelligence.function.array_pop.param.array.desc=The array to modify
-datasystem.immersiveintelligence.function.array_pop.result=Removed
-datasystem.immersiveintelligence.function.array_pop.result.desc=The removed value
+datasystem.immersiveintelligence.function.array_pop=Извлечь
+datasystem.immersiveintelligence.function.array_pop.desc=Удаляет и возвращает последнее значение из входного массива
+datasystem.immersiveintelligence.function.array_pop.param.array=Массив
+datasystem.immersiveintelligence.function.array_pop.param.array.desc=Массив для изменения
+datasystem.immersiveintelligence.function.array_pop.result=Удаляемое
+datasystem.immersiveintelligence.function.array_pop.result.desc=Удаленное значение
 
-datasystem.immersiveintelligence.function.array_swap=Swap
-datasystem.immersiveintelligence.function.array_swap.desc=Swaps the values at the specified indices in the input array
-datasystem.immersiveintelligence.function.array_swap.param.array=Array
-datasystem.immersiveintelligence.function.array_swap.param.array.desc=The array to modify
-datasystem.immersiveintelligence.function.array_swap.param.first=First Index
-datasystem.immersiveintelligence.function.array_swap.param.first.desc=The first index to swap
-datasystem.immersiveintelligence.function.array_swap.param.second=Second Index
-datasystem.immersiveintelligence.function.array_swap.param.second.desc=The second index to swap
+datasystem.immersiveintelligence.function.array_swap=Поменять местами
+datasystem.immersiveintelligence.function.array_swap.desc=Меняет местами значения по указанным индексам во входном массиве
+datasystem.immersiveintelligence.function.array_swap.param.array=Массив
+datasystem.immersiveintelligence.function.array_swap.param.array.desc=Изменяемый массив
+datasystem.immersiveintelligence.function.array_swap.param.first=Первый индекс
+datasystem.immersiveintelligence.function.array_swap.param.first.desc=Первый индекс для обмена
+datasystem.immersiveintelligence.function.array_swap.param.second=Второй индекс
+datasystem.immersiveintelligence.function.array_swap.param.second.desc=Второй индекс для обмена
 
 
-datasystem.immersiveintelligence.function.array_length=Get Length
-datasystem.immersiveintelligence.function.array_length.desc=Returns the length of the input array
-datasystem.immersiveintelligence.function.array_length.param.array=Array
-datasystem.immersiveintelligence.function.array_length.param.array.desc=The array to get the length of
-datasystem.immersiveintelligence.function.array_length.result=Length
-datasystem.immersiveintelligence.function.array_length.result.desc=The length of the input array
+datasystem.immersiveintelligence.function.array_length=Получить длину
+datasystem.immersiveintelligence.function.array_length.desc=Возвращает длину входного массива
+datasystem.immersiveintelligence.function.array_length.param.array=Массив
+datasystem.immersiveintelligence.function.array_length.param.array.desc=Массив для получения длины
+datasystem.immersiveintelligence.function.array_length.result=Длина
+datasystem.immersiveintelligence.function.array_length.result.desc=Длина входного массива
 
 # Entity
-datasystem.immersiveintelligence.function.entity_get_id=Get ID
-datasystem.immersiveintelligence.function.entity_get_id.desc=Returns the ID of the input entity
-datasystem.immersiveintelligence.function.entity_get_id.param.entity=Entity
-datasystem.immersiveintelligence.function.entity_get_id.param.entity.desc=The entity to get the ID of
+datasystem.immersiveintelligence.function.entity_get_id=Получить ID
+datasystem.immersiveintelligence.function.entity_get_id.desc=Возвращает идентификатор входной сущности
+datasystem.immersiveintelligence.function.entity_get_id.param.entity=Сущность
+datasystem.immersiveintelligence.function.entity_get_id.param.entity.desc=Сущность, идентификатор которой необходимо получить
 datasystem.immersiveintelligence.function.entity_get_id.result=ID
-datasystem.immersiveintelligence.function.entity_get_id.result.desc=The ID of the input entity
+datasystem.immersiveintelligence.function.entity_get_id.result.desc=Идентификатор входной сущности
 
-datasystem.immersiveintelligence.function.entity_get_type=Get Type
-datasystem.immersiveintelligence.function.entity_get_type.desc=Returns the type of the input entity
-datasystem.immersiveintelligence.function.entity_get_type.param.entity=Entity
-datasystem.immersiveintelligence.function.entity_get_type.param.entity.desc=The entity to get the type of
-datasystem.immersiveintelligence.function.entity_get_type.result=Type
-datasystem.immersiveintelligence.function.entity_get_type.result.desc=The type of the input entity
+datasystem.immersiveintelligence.function.entity_get_type=Получить тип
+datasystem.immersiveintelligence.function.entity_get_type.desc=Возвращает тип входной сущности
+datasystem.immersiveintelligence.function.entity_get_type.param.entity=Сущность
+datasystem.immersiveintelligence.function.entity_get_type.param.entity.desc=Сущность, тип которой требуется получить
+datasystem.immersiveintelligence.function.entity_get_type.result=Тип
+datasystem.immersiveintelligence.function.entity_get_type.result.desc=Тип входной сущности
 
-datasystem.immersiveintelligence.function.entity_get_name=Get Name
-datasystem.immersiveintelligence.function.entity_get_name.desc=Returns the name of the input entity
-datasystem.immersiveintelligence.function.entity_get_name.param.entity=Entity
-datasystem.immersiveintelligence.function.entity_get_name.param.entity.desc=The entity to get the name of
-datasystem.immersiveintelligence.function.entity_get_name.result=Name
-datasystem.immersiveintelligence.function.entity_get_name.result.desc=The name of the input entity
+datasystem.immersiveintelligence.function.entity_get_name=Получить имя
+datasystem.immersiveintelligence.function.entity_get_name.desc=Возвращает имя входной сущности
+datasystem.immersiveintelligence.function.entity_get_name.param.entity=Сущность
+datasystem.immersiveintelligence.function.entity_get_name.param.entity.desc=Сущность, имя которой требуется получить
+datasystem.immersiveintelligence.function.entity_get_name.result=Имя
+datasystem.immersiveintelligence.function.entity_get_name.result.desc=Имя входной сущности
 
-datasystem.immersiveintelligence.function.entity_get_dimension_id=Get Dimension
-datasystem.immersiveintelligence.function.entity_get_dimension_id.desc=Returns the dimension ID of the input entity
-datasystem.immersiveintelligence.function.entity_get_dimension_id.param.entity=Entity
-datasystem.immersiveintelligence.function.entity_get_dimension_id.param.entity.desc=The entity to get the dimension ID of
-datasystem.immersiveintelligence.function.entity_get_dimension_id.result=Dimension ID
-datasystem.immersiveintelligence.function.entity_get_dimension_id.result.desc=The dimension ID of the input entity
+datasystem.immersiveintelligence.function.entity_get_dimension_id=Получить измерение
+datasystem.immersiveintelligence.function.entity_get_dimension_id.desc=Возвращает идентификатор измерения входной сущности
+datasystem.immersiveintelligence.function.entity_get_dimension_id.param.entity=Сущность
+datasystem.immersiveintelligence.function.entity_get_dimension_id.param.entity.desc=Сущность, для которой требуется получить идентификатор измерения
+datasystem.immersiveintelligence.function.entity_get_dimension_id.result=ID измерения
+datasystem.immersiveintelligence.function.entity_get_dimension_id.result.desc=Идентификатор измерения входной сущности
 
-datasystem.immersiveintelligence.function.entity_get_pos=Get Position
-datasystem.immersiveintelligence.function.entity_get_pos.desc=Returns the 3D position of the input entity
-datasystem.immersiveintelligence.function.entity_get_pos.param.entity=Entity
-datasystem.immersiveintelligence.function.entity_get_pos.param.entity.desc=The entity to get the position of
-datasystem.immersiveintelligence.function.entity_get_pos.result=Position
-datasystem.immersiveintelligence.function.entity_get_pos.result.desc=The position of the input entity
+datasystem.immersiveintelligence.function.entity_get_pos=Получить позицию
+datasystem.immersiveintelligence.function.entity_get_pos.desc=Возвращает 3D-позицию входной сущности
+datasystem.immersiveintelligence.function.entity_get_pos.param.entity=Сущность
+datasystem.immersiveintelligence.function.entity_get_pos.param.entity.desc=Сущность, для которой требуется получить позицию
+datasystem.immersiveintelligence.function.entity_get_pos.result=Позиция
+datasystem.immersiveintelligence.function.entity_get_pos.result.desc=Позиция входной сущности
 
-datasystem.immersiveintelligence.function.entity_get_x=Get X
-datasystem.immersiveintelligence.function.entity_get_x.desc=Returns the X coordinate of the input entity
-datasystem.immersiveintelligence.function.entity_get_x.param.entity=Entity
-datasystem.immersiveintelligence.function.entity_get_x.param.entity.desc=The entity to get the X coordinate of
+datasystem.immersiveintelligence.function.entity_get_x=Получить X
+datasystem.immersiveintelligence.function.entity_get_x.desc=Возвращает координату X входной сущности
+datasystem.immersiveintelligence.function.entity_get_x.param.entity=Сущность
+datasystem.immersiveintelligence.function.entity_get_x.param.entity.desc=Сущность, координату X которой нужно получить
 datasystem.immersiveintelligence.function.entity_get_x.result=X
-datasystem.immersiveintelligence.function.entity_get_x.result.desc=The X coordinate of the input entity
+datasystem.immersiveintelligence.function.entity_get_x.result.desc=Координата X входной сущности
 
-datasystem.immersiveintelligence.function.entity_get_y=Get Y
-datasystem.immersiveintelligence.function.entity_get_y.desc=Returns the Y coordinate of the input entity
-datasystem.immersiveintelligence.function.entity_get_y.param.entity=Entity
-datasystem.immersiveintelligence.function.entity_get_y.param.entity.desc=The entity to get the Y coordinate of
+datasystem.immersiveintelligence.function.entity_get_y=Получить Y
+datasystem.immersiveintelligence.function.entity_get_y.desc=Возвращает координату Y входной сущности
+datasystem.immersiveintelligence.function.entity_get_y.param.entity=Сущность
+datasystem.immersiveintelligence.function.entity_get_y.param.entity.desc=Сущность, координату Y которой нужно получить
 datasystem.immersiveintelligence.function.entity_get_y.result=Y
-datasystem.immersiveintelligence.function.entity_get_y.result.desc=The Y coordinate of the input entity
+datasystem.immersiveintelligence.function.entity_get_y.result.desc=Координата Y входной сущности
 
-datasystem.immersiveintelligence.function.entity_get_z=Get Z
-datasystem.immersiveintelligence.function.entity_get_z.desc=Returns the Z coordinate of the input entity
-datasystem.immersiveintelligence.function.entity_get_z.param.entity=Entity
-datasystem.immersiveintelligence.function.entity_get_z.param.entity.desc=The entity to get the Z coordinate of
+datasystem.immersiveintelligence.function.entity_get_z=Получить Z
+datasystem.immersiveintelligence.function.entity_get_z.desc=Возвращает координату Z входной сущности
+datasystem.immersiveintelligence.function.entity_get_z.param.entity=Сущность
+datasystem.immersiveintelligence.function.entity_get_z.param.entity.desc=Сущность, координату Z которой нужно получить
 datasystem.immersiveintelligence.function.entity_get_z.result=Z
-datasystem.immersiveintelligence.function.entity_get_z.result.desc=The Z coordinate of the input entity
+datasystem.immersiveintelligence.function.entity_get_z.result.desc=Координата Z входной сущности
 
 # Document
-datasystem.immersiveintelligence.function.document_read_page=Read Page
-datasystem.immersiveintelligence.function.document_read_page.desc=Returns the content of the specified page in the input document
-datasystem.immersiveintelligence.function.document_read_page.param.document=Document
-datasystem.immersiveintelligence.function.document_read_page.param.document.desc=The document to read from
-datasystem.immersiveintelligence.function.document_read_page.param.page=Page
-datasystem.immersiveintelligence.function.document_read_page.param.page.desc=The page to read
-datasystem.immersiveintelligence.function.document_read_page.result=Content
-datasystem.immersiveintelligence.function.document_read_page.result.desc=The content of the specified page
+datasystem.immersiveintelligence.function.document_read_page=Прочесть страницу
+datasystem.immersiveintelligence.function.document_read_page.desc=Возвращает содержимое указанной страницы входного документа
+datasystem.immersiveintelligence.function.document_read_page.param.document=Документ
+datasystem.immersiveintelligence.function.document_read_page.param.document.desc=Документ для чтения
+datasystem.immersiveintelligence.function.document_read_page.param.page=Страница
+datasystem.immersiveintelligence.function.document_read_page.param.page.desc=Страница для чтения
+datasystem.immersiveintelligence.function.document_read_page.result=Содержание
+datasystem.immersiveintelligence.function.document_read_page.result.desc=Содержание указанной страницы
 
-datasystem.immersiveintelligence.function.document_read_all_pages_array=Read All Pages (Array)
-datasystem.immersiveintelligence.function.document_read_all_pages_array.desc=Returns an array of all pages in the input document
-datasystem.immersiveintelligence.function.document_read_all_pages_array.param.document=Document
-datasystem.immersiveintelligence.function.document_read_all_pages_array.param.document.desc=The document to read from
-datasystem.immersiveintelligence.function.document_read_all_pages_array.result=Pages
-datasystem.immersiveintelligence.function.document_read_all_pages_array.result.desc=Array of all pages in the input document
+datasystem.immersiveintelligence.function.document_read_all_pages_array=Прочитать все страницы (в массив)
+datasystem.immersiveintelligence.function.document_read_all_pages_array.desc=Возвращает массив всех страниц входного документа
+datasystem.immersiveintelligence.function.document_read_all_pages_array.param.document=Документ
+datasystem.immersiveintelligence.function.document_read_all_pages_array.param.document.desc=Документ для чтения
+datasystem.immersiveintelligence.function.document_read_all_pages_array.result=Страницы
+datasystem.immersiveintelligence.function.document_read_all_pages_array.result.desc=Массив всех страниц входного документа
 
-datasystem.immersiveintelligence.function.document_read_all_pages_string=Read All Pages (String)
-datasystem.immersiveintelligence.function.document_read_all_pages_string.desc=Returns a string of all pages in the input document with pages separated by a newline character
-datasystem.immersiveintelligence.function.document_read_all_pages_string.param.document=Document
-datasystem.immersiveintelligence.function.document_read_all_pages_string.param.document.desc=The document to read from
-datasystem.immersiveintelligence.function.document_read_all_pages_string.result=Pages
-datasystem.immersiveintelligence.function.document_read_all_pages_string.result.desc=String of all pages in the input document
+datasystem.immersiveintelligence.function.document_read_all_pages_string=Прочитать все страницы (в строку)
+datasystem.immersiveintelligence.function.document_read_all_pages_string.desc=Возвращает строку со всеми страницами входного документа, разделенными символом новой строки
+datasystem.immersiveintelligence.function.document_read_all_pages_string.param.document=Документ
+datasystem.immersiveintelligence.function.document_read_all_pages_string.param.document.desc=Документ для чтения
+datasystem.immersiveintelligence.function.document_read_all_pages_string.result=Страницы
+datasystem.immersiveintelligence.function.document_read_all_pages_string.result.desc=Строка со всеми страницами входного документа
 
-datasystem.immersiveintelligence.function.document_get_author=Get Author
-datasystem.immersiveintelligence.function.document_get_author.desc=Returns the author of the input document
-datasystem.immersiveintelligence.function.document_get_author.param.document=Document
-datasystem.immersiveintelligence.function.document_get_author.param.document.desc=The document to get the author of
-datasystem.immersiveintelligence.function.document_get_author.result=Author
-datasystem.immersiveintelligence.function.document_get_author.result.desc=The author of the input document
+datasystem.immersiveintelligence.function.document_get_author=Получить автора
+datasystem.immersiveintelligence.function.document_get_author.desc=Возвращает автора входного документа
+datasystem.immersiveintelligence.function.document_get_author.param.document=Документ
+datasystem.immersiveintelligence.function.document_get_author.param.document.desc=Документ, автора которого необходимо получить
+datasystem.immersiveintelligence.function.document_get_author.result=Автор
+datasystem.immersiveintelligence.function.document_get_author.result.desc=Автор входного документа
 
-datasystem.immersiveintelligence.function.document_get_title=Get Title
-datasystem.immersiveintelligence.function.document_get_title.desc=Returns the title of the input document
-datasystem.immersiveintelligence.function.document_get_title.param.document=Document
-datasystem.immersiveintelligence.function.document_get_title.param.document.desc=The document to get the title of
-datasystem.immersiveintelligence.function.document_get_title.result=Title
-datasystem.immersiveintelligence.function.document_get_title.result.desc=The title of the input document
+datasystem.immersiveintelligence.function.document_get_title=Получить заголовок
+datasystem.immersiveintelligence.function.document_get_title.desc=Возвращает заголовок входного документа
+datasystem.immersiveintelligence.function.document_get_title.param.document=Документ
+datasystem.immersiveintelligence.function.document_get_title.param.document.desc=Документ, заголовок которого необходимо получить
+datasystem.immersiveintelligence.function.document_get_title.result=Заголовок
+datasystem.immersiveintelligence.function.document_get_title.result.desc=Заголовок входного документа
 
 # Type Conversion
-datasystem.immersiveintelligence.function.is_null=Is Null
-datasystem.immersiveintelligence.function.is_null.desc=Returns true if the input is null
-datasystem.immersiveintelligence.function.is_null.param.checked=Checked
-datasystem.immersiveintelligence.function.is_null.param.checked.desc=The value to check
-datasystem.immersiveintelligence.function.is_null.result=Result
-datasystem.immersiveintelligence.function.is_null.result.desc=Result of the null check
+datasystem.immersiveintelligence.function.is_null=Пусто ли
+datasystem.immersiveintelligence.function.is_null.desc=Возвращает истину, если входное значение является пустым
+datasystem.immersiveintelligence.function.is_null.param.checked=Проверяемое
+datasystem.immersiveintelligence.function.is_null.param.checked.desc=Значение для проверки
+datasystem.immersiveintelligence.function.is_null.result=Результат
+datasystem.immersiveintelligence.function.is_null.result.desc=Результат проверки на пустоту
 
-datasystem.immersiveintelligence.function.is_same_type=Is Same Type
-datasystem.immersiveintelligence.function.is_same_type.desc=Returns true if the inputs are of the same type
-datasystem.immersiveintelligence.function.is_same_type.param.first=First
-datasystem.immersiveintelligence.function.is_same_type.param.first.desc=The first value to compare
-datasystem.immersiveintelligence.function.is_same_type.param.second=Second
-datasystem.immersiveintelligence.function.is_same_type.param.second.desc=The second value to compare
-datasystem.immersiveintelligence.function.is_same_type.result=Result
-datasystem.immersiveintelligence.function.is_same_type.result.desc=Result of the type check
+datasystem.immersiveintelligence.function.is_same_type=Один и тот же тип
+datasystem.immersiveintelligence.function.is_same_type.desc=Возвращает истину, если входные данные одного типа
+datasystem.immersiveintelligence.function.is_same_type.param.first=Первое
+datasystem.immersiveintelligence.function.is_same_type.param.first.desc=Первое значение для сравнения
+datasystem.immersiveintelligence.function.is_same_type.param.second=Второе
+datasystem.immersiveintelligence.function.is_same_type.param.second.desc=Второе значение для сравнения
+datasystem.immersiveintelligence.function.is_same_type.result=Результат
+datasystem.immersiveintelligence.function.is_same_type.result.desc=Результат проверки на тип
 
-datasystem.immersiveintelligence.function.to_integer=To Integer
-datasystem.immersiveintelligence.function.to_integer.desc=Casts the input to an integer
-datasystem.immersiveintelligence.function.to_integer.param.casted=Casted
-datasystem.immersiveintelligence.function.to_integer.param.casted.desc=The value to cast
-datasystem.immersiveintelligence.function.to_integer.result=Integer
-datasystem.immersiveintelligence.function.to_integer.result.desc=The input casted to an integer
+datasystem.immersiveintelligence.function.to_integer=В целочисленный тип
+datasystem.immersiveintelligence.function.to_integer.desc=Преобразует входные данные в целочисленный тип
+datasystem.immersiveintelligence.function.to_integer.param.casted=Приводимое
+datasystem.immersiveintelligence.function.to_integer.param.casted.desc=Значение для преобразования
+datasystem.immersiveintelligence.function.to_integer.result=Целое число
+datasystem.immersiveintelligence.function.to_integer.result.desc=Входные данные, преобразованные в целочисленный тип
 
-datasystem.immersiveintelligence.function.to_float=To Float
-datasystem.immersiveintelligence.function.to_float.desc=Casts the input to a float
-datasystem.immersiveintelligence.function.to_float.param.casted=Casted
-datasystem.immersiveintelligence.function.to_float.param.casted.desc=The value to cast
-datasystem.immersiveintelligence.function.to_float.result=Float
-datasystem.immersiveintelligence.function.to_float.result.desc=The input casted to a float
+datasystem.immersiveintelligence.function.to_float=В число с плавающей точкой
+datasystem.immersiveintelligence.function.to_float.desc=Приводит входные данные к числу с плавающей точкой
+datasystem.immersiveintelligence.function.to_float.param.casted=Приводимое
+datasystem.immersiveintelligence.function.to_float.param.casted.desc=Приводимое значение
+datasystem.immersiveintelligence.function.to_float.result=В число с плавающей точкой
+datasystem.immersiveintelligence.function.to_float.result.desc=Входные данные, приведенные к числу с плавающей точкой
 
-datasystem.immersiveintelligence.function.to_string=To String
-datasystem.immersiveintelligence.function.to_string.desc=Casts the input to a string
-datasystem.immersiveintelligence.function.to_string.param.casted=Casted
-datasystem.immersiveintelligence.function.to_string.param.casted.desc=The value to cast
-datasystem.immersiveintelligence.function.to_string.result=String
-datasystem.immersiveintelligence.function.to_string.result.desc=The input casted to a string
+datasystem.immersiveintelligence.function.to_string=В строку
+datasystem.immersiveintelligence.function.to_string.desc=Приводит входные данные к строке
+datasystem.immersiveintelligence.function.to_string.param.casted=Приводимое
+datasystem.immersiveintelligence.function.to_string.param.casted.desc=Значение для преобразования
+datasystem.immersiveintelligence.function.to_string.result=Строка
+datasystem.immersiveintelligence.function.to_string.result.desc=Входные данные, преобразованные в строку
 
-datasystem.immersiveintelligence.function.to_boolean=To Boolean
-datasystem.immersiveintelligence.function.to_boolean.desc=Casts the input to a boolean
-datasystem.immersiveintelligence.function.to_boolean.param.casted=Casted
-datasystem.immersiveintelligence.function.to_boolean.param.casted.desc=The value to cast
-datasystem.immersiveintelligence.function.to_boolean.result=Boolean
-datasystem.immersiveintelligence.function.to_boolean.result.desc=The input casted to a boolean
+datasystem.immersiveintelligence.function.to_boolean=В логическому типу
+datasystem.immersiveintelligence.function.to_boolean.desc=Приводит входные данные к логическому типу
+datasystem.immersiveintelligence.function.to_boolean.param.casted=Приводимое
+datasystem.immersiveintelligence.function.to_boolean.param.casted.desc=Значение для преобразования
+datasystem.immersiveintelligence.function.to_boolean.result=Логическое значение
+datasystem.immersiveintelligence.function.to_boolean.result.desc=Входные данные, приведенные к логическому типу
 
-datasystem.immersiveintelligence.function.to_null=To Null
-datasystem.immersiveintelligence.function.to_null.desc=Returns a null value
-datasystem.immersiveintelligence.function.to_null.result=Null
-datasystem.immersiveintelligence.function.to_null.result.desc=Type replaced with null
+datasystem.immersiveintelligence.function.to_null=Вернуть пустое значение
+datasystem.immersiveintelligence.function.to_null.desc=Возвращает пустое значение
+datasystem.immersiveintelligence.function.to_null.result=Пустое значение
+datasystem.immersiveintelligence.function.to_null.result.desc=Тип заменен на пустое значение
 
 # Cryptographer
-datasystem.immersiveintelligence.function.encrypt_text=Encrypt Text
-datasystem.immersiveintelligence.function.encrypt_text.desc=Encrypts the input text
-datasystem.immersiveintelligence.function.encrypt_text.param.text=Text
-datasystem.immersiveintelligence.function.encrypt_text.param.text.desc=The text to encrypt
-datasystem.immersiveintelligence.function.encrypt_text.param.password=Password
-datasystem.immersiveintelligence.function.encrypt_text.param.password.desc=The password to use for encryption
-datasystem.immersiveintelligence.function.encrypt_text.result=Encrypted Text
-datasystem.immersiveintelligence.function.encrypt_text.result.desc=The input text encrypted with the password
+datasystem.immersiveintelligence.function.encrypt_text=Зашифровать текст
+datasystem.immersiveintelligence.function.encrypt_text.desc=Шифрует входной текст
+datasystem.immersiveintelligence.function.encrypt_text.param.text=Текст
+datasystem.immersiveintelligence.function.encrypt_text.param.text.desc=Текст для шифрования
+datasystem.immersiveintelligence.function.encrypt_text.param.password=Пароль
+datasystem.immersiveintelligence.function.encrypt_text.param.password.desc=Пароль для шифрования
+datasystem.immersiveintelligence.function.encrypt_text.result=Зашифрованный текст
+datasystem.immersiveintelligence.function.encrypt_text.result.desc=Входной текст, зашифрованный паролем
 
-datasystem.immersiveintelligence.function.encrypt_number=Encrypt Number
-datasystem.immersiveintelligence.function.encrypt_number.desc=Encrypts the input number
-datasystem.immersiveintelligence.function.encrypt_number.param.number=Number
-datasystem.immersiveintelligence.function.encrypt_number.param.number.desc=The number to encrypt
-datasystem.immersiveintelligence.function.encrypt_number.param.password=Password
-datasystem.immersiveintelligence.function.encrypt_number.param.password.desc=The password to use for encryption
-datasystem.immersiveintelligence.function.encrypt_number.result=Encrypted Number
-datasystem.immersiveintelligence.function.encrypt_number.result.desc=The input number encrypted with the password
+datasystem.immersiveintelligence.function.encrypt_number=Зашифровать число
+datasystem.immersiveintelligence.function.encrypt_number.desc=Шифрует введённое число
+datasystem.immersiveintelligence.function.encrypt_number.param.number=Число
+datasystem.immersiveintelligence.function.encrypt_number.param.number.desc=Число для шифрования
+datasystem.immersiveintelligence.function.encrypt_number.param.password=Пароль
+datasystem.immersiveintelligence.function.encrypt_number.param.password.desc=Пароль для шифрования
+datasystem.immersiveintelligence.function.encrypt_number.result=Зашифрованное число
+datasystem.immersiveintelligence.function.encrypt_number.result.desc=Введённое число, зашифрованное паролем
 
-datasystem.immersiveintelligence.function.encrypt_array=Encrypt Array
-datasystem.immersiveintelligence.function.encrypt_array.desc=Encrypts the input array
-datasystem.immersiveintelligence.function.encrypt_array.param.array=Array
-datasystem.immersiveintelligence.function.encrypt_array.param.array.desc=The array to encrypt
-datasystem.immersiveintelligence.function.encrypt_array.param.password=Password
-datasystem.immersiveintelligence.function.encrypt_array.param.password.desc=The password to use for encryption
-datasystem.immersiveintelligence.function.encrypt_array.result=Encrypted Array
-datasystem.immersiveintelligence.function.encrypt_array.result.desc=The input array encrypted with the password
+datasystem.immersiveintelligence.function.encrypt_array=Зашифровать массив
+datasystem.immersiveintelligence.function.encrypt_array.desc=Шифрует входной массив
+datasystem.immersiveintelligence.function.encrypt_array.param.array=Массив
+datasystem.immersiveintelligence.function.encrypt_array.param.array.desc=Массив для шифрования
+datasystem.immersiveintelligence.function.encrypt_array.param.password=Пароль
+datasystem.immersiveintelligence.function.encrypt_array.param.password.desc=Пароль для шифрования
+datasystem.immersiveintelligence.function.encrypt_array.result=Зашифрованный массив
+datasystem.immersiveintelligence.function.encrypt_array.result.desc=Входной массив, зашифрованный паролем
 
-datasystem.immersiveintelligence.function.decrypt_text=Decrypt Text
-datasystem.immersiveintelligence.function.decrypt_text.desc=Decrypts the input text
-datasystem.immersiveintelligence.function.decrypt_text.param.encrypted=Encrypted Text
-datasystem.immersiveintelligence.function.decrypt_text.param.encrypted.desc=The text to decrypt
-datasystem.immersiveintelligence.function.decrypt_text.param.password=Password
-datasystem.immersiveintelligence.function.decrypt_text.param.password.desc=The password to use for decryption
-datasystem.immersiveintelligence.function.decrypt_text.result=Decrypted Text
-datasystem.immersiveintelligence.function.decrypt_text.result.desc=The input text decrypted with the password
+datasystem.immersiveintelligence.function.decrypt_text=Расшифровать текст
+datasystem.immersiveintelligence.function.decrypt_text.desc=Расшифровывает входной текст
+datasystem.immersiveintelligence.function.decrypt_text.param.encrypted=Зашифрованный текст
+datasystem.immersiveintelligence.function.decrypt_text.param.encrypted.desc=Текст для расшифровки
+datasystem.immersiveintelligence.function.decrypt_text.param.password=Пароль
+datasystem.immersiveintelligence.function.decrypt_text.param.password.desc=Пароль для расшифровки
+datasystem.immersiveintelligence.function.decrypt_text.result=Расшифрованный текст
+datasystem.immersiveintelligence.function.decrypt_text.result.desc=Входной текст, расшифрованный с помощью пароля
 
-datasystem.immersiveintelligence.function.decrypt_number=Decrypt Number
-datasystem.immersiveintelligence.function.decrypt_number.desc=Decrypts the input number
-datasystem.immersiveintelligence.function.decrypt_number.param.encrypted=Encrypted Number
-datasystem.immersiveintelligence.function.decrypt_number.param.encrypted.desc=The number to decrypt
-datasystem.immersiveintelligence.function.decrypt_number.param.password=Password
-datasystem.immersiveintelligence.function.decrypt_number.param.password.desc=The password to use for decryption
-datasystem.immersiveintelligence.function.decrypt_number.result=Decrypted Number
-datasystem.immersiveintelligence.function.decrypt_number.result.desc=The input number decrypted with the password
+datasystem.immersiveintelligence.function.decrypt_number=Расшифровать число
+datasystem.immersiveintelligence.function.decrypt_number.desc=Расшифровывает введённое число
+datasystem.immersiveintelligence.function.decrypt_number.param.encrypted=Зашифрованное число
+datasystem.immersiveintelligence.function.decrypt_number.param.encrypted.desc=Число для расшифровки
+datasystem.immersiveintelligence.function.decrypt_number.param.password=Пароль
+datasystem.immersiveintelligence.function.decrypt_number.param.password.desc=Пароль для расшифровки
+datasystem.immersiveintelligence.function.decrypt_number.result=Расшифрованное число
+datasystem.immersiveintelligence.function.decrypt_number.result.desc=Входное число, расшифрованное с помощью пароля
 
-datasystem.immersiveintelligence.function.decrypt_array=Decrypt Array
-datasystem.immersiveintelligence.function.decrypt_array.desc=Decrypts the input array
-datasystem.immersiveintelligence.function.decrypt_array.param.encrypted=Encrypted Array
-datasystem.immersiveintelligence.function.decrypt_array.param.encrypted.desc=The array to decrypt
-datasystem.immersiveintelligence.function.decrypt_array.param.password=Password
-datasystem.immersiveintelligence.function.decrypt_array.param.password.desc=The password to use for decryption
-datasystem.immersiveintelligence.function.decrypt_array.result=Decrypted Array
-datasystem.immersiveintelligence.function.decrypt_array.result.desc=The input array decrypted with the password
+datasystem.immersiveintelligence.function.decrypt_array=Расшифровать массив
+datasystem.immersiveintelligence.function.decrypt_array.desc=Расшифровывает входной массив
+datasystem.immersiveintelligence.function.decrypt_array.param.encrypted=Зашифрованный массив
+datasystem.immersiveintelligence.function.decrypt_array.param.encrypted.desc=Массив для расшифровки
+datasystem.immersiveintelligence.function.decrypt_array.param.password=Пароль
+datasystem.immersiveintelligence.function.decrypt_array.param.password.desc=Пароль для расшифровки
+datasystem.immersiveintelligence.function.decrypt_array.result=Расшифрованный массив
+datasystem.immersiveintelligence.function.decrypt_array.result.desc=Входной массив, расшифрованный с помощью пароля
 
 # Vector
-datasystem.immersiveintelligence.function.vector_create=Create Vector
-datasystem.immersiveintelligence.function.vector_create.desc=Creates a new vector
+datasystem.immersiveintelligence.function.vector_create=Создать вектор
+datasystem.immersiveintelligence.function.vector_create.desc=Создаёт новый вектор
 datasystem.immersiveintelligence.function.vector_create.param.x=X
-datasystem.immersiveintelligence.function.vector_create.param.x.desc=The X coordinate of the vector
+datasystem.immersiveintelligence.function.vector_create.param.x.desc=Координата X вектора
 datasystem.immersiveintelligence.function.vector_create.param.y=Y
-datasystem.immersiveintelligence.function.vector_create.param.y.desc=The Y coordinate of the vector
+datasystem.immersiveintelligence.function.vector_create.param.y.desc=Координата Y вектора
 datasystem.immersiveintelligence.function.vector_create.param.z=Z
-datasystem.immersiveintelligence.function.vector_create.param.z.desc=The Z coordinate of the vector
-datasystem.immersiveintelligence.function.vector_create.result=Vector
-datasystem.immersiveintelligence.function.vector_create.result.desc=A vector with the specified coordinates
+datasystem.immersiveintelligence.function.vector_create.param.z.desc=Координата Z вектора вектор
+datasystem.immersiveintelligence.function.vector_create.result=Вектор
+datasystem.immersiveintelligence.function.vector_create.result.desc=Вектор с указанными координатами
 
-datasystem.immersiveintelligence.function.vector_create_angle=Create Vector from Angles
-datasystem.immersiveintelligence.function.vector_create_angle.desc=Creates a new vector from the input angles
-datasystem.immersiveintelligence.function.vector_create_angle.param.offset=Offset
-datasystem.immersiveintelligence.function.vector_create_angle.param.offset.desc=The offset of the vector
-datasystem.immersiveintelligence.function.vector_create_angle.param.yaw=Yaw
-datasystem.immersiveintelligence.function.vector_create_angle.param.yaw.desc=The yaw angle of the vector, in degrees from -180 to 180
-datasystem.immersiveintelligence.function.vector_create_angle.param.pitch=Pitch
-datasystem.immersiveintelligence.function.vector_create_angle.param.pitch.desc=The pitch angle of the vector, in degrees from -90 to 90
-datasystem.immersiveintelligence.function.vector_create_angle.result=Vector
-datasystem.immersiveintelligence.function.vector_create_angle.result.desc=A vector of given length angled in the specified direction
+datasystem.immersiveintelligence.function.vector_create_angle=Создать вектор из углов
+datasystem.immersiveintelligence.function.vector_create_angle.desc=Создаёт новый вектор из входных углов
+datasystem.immersiveintelligence.function.vector_create_angle.param.offset=Смещение
+datasystem.immersiveintelligence.function.vector_create_angle.param.offset.desc=Смещение вектора
+datasystem.immersiveintelligence.function.vector_create_angle.param.yaw=Рыскание
+datasystem.immersiveintelligence.function.vector_create_angle.param.yaw.desc=Угол рыскания вектора в градусах от -180 до 180
+datasystem.immersiveintelligence.function.vector_create_angle.param.pitch=Тангаж
+datasystem.immersiveintelligence.function.vector_create_angle.param.pitch.desc=Угол тангажа вектора в градусах от -90 до 90
+datasystem.immersiveintelligence.function.vector_create_angle.result=Вектор
+datasystem.immersiveintelligence.function.vector_create_angle.result.desc=Вектор заданной длины, наклоненный в указанном направлении
 
-datasystem.immersiveintelligence.function.vector_get_x=Get X
-datasystem.immersiveintelligence.function.vector_get_x.desc=Returns the X coordinate of the input vector
-datasystem.immersiveintelligence.function.vector_get_x.param.vector=Vector
-datasystem.immersiveintelligence.function.vector_get_x.param.vector.desc=The vector to get the X coordinate of
+datasystem.immersiveintelligence.function.vector_get_x=Получить X
+datasystem.immersiveintelligence.function.vector_get_x.desc=Возвращает координату X входного вектора
+datasystem.immersiveintelligence.function.vector_get_x.param.vector=Вектор
+datasystem.immersiveintelligence.function.vector_get_x.param.vector.desc=Вектор, координату X которого нужно получить
 datasystem.immersiveintelligence.function.vector_get_x.result=X
-datasystem.immersiveintelligence.function.vector_get_x.result.desc=The X coordinate of the input vector
+datasystem.immersiveintelligence.function.vector_get_x.result.desc=Координата X входного вектора
 
-datasystem.immersiveintelligence.function.vector_get_y=Get Y
-datasystem.immersiveintelligence.function.vector_get_y.desc=Returns the Y coordinate of the input vector
-datasystem.immersiveintelligence.function.vector_get_y.param.vector=Vector
-datasystem.immersiveintelligence.function.vector_get_y.param.vector.desc=The vector to get the Y coordinate of
+datasystem.immersiveintelligence.function.vector_get_y=Получить Y
+datasystem.immersiveintelligence.function.vector_get_y.desc=Возвращает координату Y входного вектора
+datasystem.immersiveintelligence.function.vector_get_y.param.vector=Вектор
+datasystem.immersiveintelligence.function.vector_get_y.param.vector.desc=Вектор, координату Y которого нужно получить
 datasystem.immersiveintelligence.function.vector_get_y.result=Y
-datasystem.immersiveintelligence.function.vector_get_y.result.desc=The Y coordinate of the input vector
+datasystem.immersiveintelligence.function.vector_get_y.result.desc=Координата Y входного вектора
 
-datasystem.immersiveintelligence.function.vector_get_z=Get Z
-datasystem.immersiveintelligence.function.vector_get_z.desc=Returns the Z coordinate of the input vector
-datasystem.immersiveintelligence.function.vector_get_z.param.vector=Vector
-datasystem.immersiveintelligence.function.vector_get_z.param.vector.desc=The vector to get the Z coordinate of
+datasystem.immersiveintelligence.function.vector_get_z=Получить Z
+datasystem.immersiveintelligence.function.vector_get_z.desc=Возвращает координату Z входного вектора
+datasystem.immersiveintelligence.function.vector_get_z.param.vector=Вектор
+datasystem.immersiveintelligence.function.vector_get_z.param.vector.desc=Вектор, координату Z которого нужно получить
 datasystem.immersiveintelligence.function.vector_get_z.result=Z
-datasystem.immersiveintelligence.function.vector_get_z.result.desc=The Z coordinate of the input vector
+datasystem.immersiveintelligence.function.vector_get_z.result.desc=Координата Z входного вектора
 
-datasystem.immersiveintelligence.function.vector_get_pitch=Get Pitch
-datasystem.immersiveintelligence.function.vector_get_pitch.desc=Returns the pitch angle of the input vector
-datasystem.immersiveintelligence.function.vector_get_pitch.param.vector=Vector
-datasystem.immersiveintelligence.function.vector_get_pitch.param.vector.desc=The vector to get the pitch angle of
-datasystem.immersiveintelligence.function.vector_get_pitch.result=Pitch
-datasystem.immersiveintelligence.function.vector_get_pitch.result.desc=The pitch angle of the input vector in degrees from -90 to 90
+datasystem.immersiveintelligence.function.vector_get_pitch=Получить тангаж
+datasystem.immersiveintelligence.function.vector_get_pitch.desc=Возвращает угол тангажа входного вектора
+datasystem.immersiveintelligence.function.vector_get_pitch.param.vector=Вектор
+datasystem.immersiveintelligence.function.vector_get_pitch.param.vector.desc=Вектор для получения угла тангажа
+datasystem.immersiveintelligence.function.vector_get_pitch.result=Тангаж
+datasystem.immersiveintelligence.function.vector_get_pitch.result.desc=Угол тангажа входного вектора в градусах от -90 до 90
 
-datasystem.immersiveintelligence.function.vector_get_yaw=Get Yaw
-datasystem.immersiveintelligence.function.vector_get_yaw.desc=Returns the yaw angle of the input vector
-datasystem.immersiveintelligence.function.vector_get_yaw.param.vector=Vector
-datasystem.immersiveintelligence.function.vector_get_yaw.param.vector.desc=The vector to get the yaw angle of
-datasystem.immersiveintelligence.function.vector_get_yaw.result=Yaw
-datasystem.immersiveintelligence.function.vector_get_yaw.result.desc=The yaw angle of the input vector in degrees from -180 to 180
+datasystem.immersiveintelligence.function.vector_get_yaw=Получить рыскание
+datasystem.immersiveintelligence.function.vector_get_yaw.desc=Возвращает угол рыскания входного вектора
+datasystem.immersiveintelligence.function.vector_get_yaw.param.vector=Вектор
+datasystem.immersiveintelligence.function.vector_get_yaw.param.vector.desc=Вектор для получения угла рыскания
+datasystem.immersiveintelligence.function.vector_get_yaw.result=Рыскание
+datasystem.immersiveintelligence.function.vector_get_yaw.result.desc=Угол рыскания входного вектора в градусах от -180 до 180
 
-datasystem.immersiveintelligence.function.vector_set_x=Set X
-datasystem.immersiveintelligence.function.vector_set_x.desc=Sets the X coordinate of the input vector
-datasystem.immersiveintelligence.function.vector_set_x.param.vector=Vector
-datasystem.immersiveintelligence.function.vector_set_x.param.vector.desc=The vector to modify
+datasystem.immersiveintelligence.function.vector_set_x=Установить X
+datasystem.immersiveintelligence.function.vector_set_x.desc=Устанавливает координату X входного вектора
+datasystem.immersiveintelligence.function.vector_set_x.param.vector=Вектор
+datasystem.immersiveintelligence.function.vector_set_x.param.vector.desc=Вектор для изменения
 datasystem.immersiveintelligence.function.vector_set_x.param.x=X
-datasystem.immersiveintelligence.function.vector_set_x.param.x.desc=The X coordinate to set
-datasystem.immersiveintelligence.function.vector_set_x.result=Vector
-datasystem.immersiveintelligence.function.vector_set_x.result.desc=The vector with the new X coordinate
+datasystem.immersiveintelligence.function.vector_set_x.param.x.desc=Координата X для установки
+datasystem.immersiveintelligence.function.vector_set_x.result=Вектор
+datasystem.immersiveintelligence.function.vector_set_x.result.desc=Вектор с новым значением X координаты
 
-datasystem.immersiveintelligence.function.vector_set_y=Set Y
-datasystem.immersiveintelligence.function.vector_set_y.desc=Sets the Y coordinate of the input vector
-datasystem.immersiveintelligence.function.vector_set_y.param.vector=Vector
-datasystem.immersiveintelligence.function.vector_set_y.param.vector.desc=The vector to modify
+datasystem.immersiveintelligence.function.vector_set_y=Установить Y
+datasystem.immersiveintelligence.function.vector_set_y.desc=Устанавливает координату Y входного вектора
+datasystem.immersiveintelligence.function.vector_set_y.param.vector=Вектор
+datasystem.immersiveintelligence.function.vector_set_y.param.vector.desc=Вектор для изменения
 datasystem.immersiveintelligence.function.vector_set_y.param.y=Y
-datasystem.immersiveintelligence.function.vector_set_y.param.y.desc=The Y coordinate to set
-datasystem.immersiveintelligence.function.vector_set_y.result=Vector
-datasystem.immersiveintelligence.function.vector_set_y.result.desc=The vector with the new Y coordinate
+datasystem.immersiveintelligence.function.vector_set_y.param.y.desc=Координата Y для установки
+datasystem.immersiveintelligence.function.vector_set_y.result=Вектор
+datasystem.immersiveintelligence.function.vector_set_y.result.desc=Вектор с новым значением Y координаты
 
-datasystem.immersiveintelligence.function.vector_set_z=Set Z
-datasystem.immersiveintelligence.function.vector_set_z.desc=Sets the Z coordinate of the input vector
-datasystem.immersiveintelligence.function.vector_set_z.param.vector=Vector
-datasystem.immersiveintelligence.function.vector_set_z.param.vector.desc=The vector to modify
+datasystem.immersiveintelligence.function.vector_set_z=Установить Z
+datasystem.immersiveintelligence.function.vector_set_z.desc=Устанавливает координату Z входного вектора
+datasystem.immersiveintelligence.function.vector_set_z.param.vector=Вектор
+datasystem.immersiveintelligence.function.vector_set_z.param.vector.desc=Вектор для изменения
 datasystem.immersiveintelligence.function.vector_set_z.param.z=Z
-datasystem.immersiveintelligence.function.vector_set_z.param.z.desc=The Z coordinate to set
-datasystem.immersiveintelligence.function.vector_set_z.result=Vector
-datasystem.immersiveintelligence.function.vector_set_z.result.desc=The vector with the new Z coordinate
+datasystem.immersiveintelligence.function.vector_set_z.param.z.desc=Координата Z для установки
+datasystem.immersiveintelligence.function.vector_set_z.result=Вектор
+datasystem.immersiveintelligence.function.vector_set_z.result.desc=Вектор с новым значением Z координаты
 
-datasystem.immersiveintelligence.function.vector_add=Add
-datasystem.immersiveintelligence.function.vector_add.desc=Adds the input vectors together, for example (1,2,3) + (4,5,6) = (5,7,9)
-datasystem.immersiveintelligence.function.vector_add.param.vector=Vector
-datasystem.immersiveintelligence.function.vector_add.param.vector.desc=The vector to add
-datasystem.immersiveintelligence.function.vector_add.result=Result
-datasystem.immersiveintelligence.function.vector_add.result.desc=The sum of the input vectors
+datasystem.immersiveintelligence.function.vector_add=Сложить
+datasystem.immersiveintelligence.function.vector_add.desc=Складывает входные векторы, например (1,2,3) + (4,5,6) = (5,7,9)
+datasystem.immersiveintelligence.function.vector_add.param.vector=Вектор
+datasystem.immersiveintelligence.function.vector_add.param.vector.desc=Вектор для сложения
+datasystem.immersiveintelligence.function.vector_add.result=Результат
+datasystem.immersiveintelligence.function.vector_add.result.desc=Сумма входных векторов
 
-datasystem.immersiveintelligence.function.vector_sub=Subtract
-datasystem.immersiveintelligence.function.vector_sub.desc=Subtracts the second vector from the first vector, for example (1,2,3) - (4,5,6) = (-3,-3,-3)
-datasystem.immersiveintelligence.function.vector_sub.param.first=First Vector
-datasystem.immersiveintelligence.function.vector_sub.param.first.desc=The vector to subtract from
-datasystem.immersiveintelligence.function.vector_sub.param.second=Second Vector
-datasystem.immersiveintelligence.function.vector_sub.param.second.desc=The vector to subtract
-datasystem.immersiveintelligence.function.vector_sub.result=Result
-datasystem.immersiveintelligence.function.vector_sub.result.desc=The difference of the input vectors
+datasystem.immersiveintelligence.function.vector_sub=Вычитание
+datasystem.immersiveintelligence.function.vector_sub.desc=Вычитает второй вектор из первого, например (1,2,3) - (4,5,6) = (-3,-3,-3)
+datasystem.immersiveintelligence.function.vector_sub.param.first=Первый вектор
+datasystem.immersiveintelligence.function.vector_sub.param.first.desc=Вектор, из которого нужно вычесть
+datasystem.immersiveintelligence.function.vector_sub.param.second=Второй вектор
+datasystem.immersiveintelligence.function.vector_sub.param.second.desc=Вектор, который нужно вычесть
+datasystem.immersiveintelligence.function.vector_sub.result=Результат
+datasystem.immersiveintelligence.function.vector_sub.result.desc=Разность входных векторов
 
-datasystem.immersiveintelligence.function.vector_scale=Scale
-datasystem.immersiveintelligence.function.vector_scale.desc=Scales the input vector by the specified scalar, for example (1,2,3) * 2 = (2,4,6)
-datasystem.immersiveintelligence.function.vector_scale.param.vector=Vector
-datasystem.immersiveintelligence.function.vector_scale.param.vector.desc=The vector to multiply
-datasystem.immersiveintelligence.function.vector_scale.param.scalar=Scalar
-datasystem.immersiveintelligence.function.vector_scale.param.scalar.desc=The scalar to multiply by
-datasystem.immersiveintelligence.function.vector_scale.result=Result
-datasystem.immersiveintelligence.function.vector_scale.result.desc=The input vector multiplied by the scalar
+datasystem.immersiveintelligence.function.vector_scale=Масштаб
+datasystem.immersiveintelligence.function.vector_scale.desc=Масштабирует входной вектор по указанному скаляру, например (1,2,3) * 2 = (2,4,6)
+datasystem.immersiveintelligence.function.vector_scale.param.vector=Вектор
+datasystem.immersiveintelligence.function.vector_scale.param.vector.desc=Вектор для масштабирования
+datasystem.immersiveintelligence.function.vector_scale.param.scalar=Скаляр
+datasystem.immersiveintelligence.function.vector_scale.param.scalar.desc=Скаляр для масштабирования
+datasystem.immersiveintelligence.function.vector_scale.result=Результат
+datasystem.immersiveintelligence.function.vector_scale.result.desc=Входной вектор, масштабированный на скаляр
 
-datasystem.immersiveintelligence.function.vector_mul=Multiply
-datasystem.immersiveintelligence.function.vector_mul.desc=Multiplies the input vectors together, for example (1,2,3) * (4,5,6) = (4,10,18)
-datasystem.immersiveintelligence.function.vector_mul.param.vector=Vector
-datasystem.immersiveintelligence.function.vector_mul.param.vector.desc=The vector to multiply
-datasystem.immersiveintelligence.function.vector_mul.result=Result
-datasystem.immersiveintelligence.function.vector_mul.result.desc=The product of the input vectors
+datasystem.immersiveintelligence.function.vector_mul=Умножение
+datasystem.immersiveintelligence.function.vector_mul.desc=Умножает входные векторы, например (1,2,3) * (4,5,6) = (4,10,18)
+datasystem.immersiveintelligence.function.vector_mul.param.vector=Вектор
+datasystem.immersiveintelligence.function.vector_mul.param.vector.desc=Вектор для умножения
+datasystem.immersiveintelligence.function.vector_mul.result=Результат
+datasystem.immersiveintelligence.function.vector_mul.result.desc=Произведение входных векторов
 
-datasystem.immersiveintelligence.function.vector_dot=Dot Product
-datasystem.immersiveintelligence.function.vector_dot.desc=Calculates the dot product of the input vectors.
-datasystem.immersiveintelligence.function.vector_dot.param.first=First Vector
-datasystem.immersiveintelligence.function.vector_dot.param.first.desc=The first vector
-datasystem.immersiveintelligence.function.vector_dot.param.second=Second Vector
-datasystem.immersiveintelligence.function.vector_dot.param.second.desc=The second vector
-datasystem.immersiveintelligence.function.vector_dot.result=Dot Product
-datasystem.immersiveintelligence.function.vector_dot.result.desc=A value measuring how much one vector goes in the direction of another.
+datasystem.immersiveintelligence.function.vector_dot=Скалярное произведение
+datasystem.immersiveintelligence.function.vector_dot.desc=Вычисляет скалярное произведение входных векторов.
+datasystem.immersiveintelligence.function.vector_dot.param.first=Первый вектор
+datasystem.immersiveintelligence.function.vector_dot.param.first.desc=Первый вектор
+datasystem.immersiveintelligence.function.vector_dot.param.second=Второй вектор
+datasystem.immersiveintelligence.function.vector_dot.param.second.desc=Второй вектор
+datasystem.immersiveintelligence.function.vector_dot.result=Скалярное произведение
+datasystem.immersiveintelligence.function.vector_dot.result.desc=Значение, измеряющее, насколько один вектор отклоняется от другого.
 
-datasystem.immersiveintelligence.function.vector_cross=Cross Product
-datasystem.immersiveintelligence.function.vector_cross.desc=Calculates the cross product of the input vectors.
-datasystem.immersiveintelligence.function.vector_cross.param.first=First Vector
-datasystem.immersiveintelligence.function.vector_cross.param.first.desc=The first vector
-datasystem.immersiveintelligence.function.vector_cross.param.second=Second Vector
-datasystem.immersiveintelligence.function.vector_cross.param.second.desc=The second vector
-datasystem.immersiveintelligence.function.vector_cross.result=Cross Product
-datasystem.immersiveintelligence.function.vector_cross.result.desc=A new vector that is perpendicular to both of the original vectors, meaning a point where they cross (meet or intersect) at a right (90 degrees) angle.
+datasystem.immersiveintelligence.function.vector_cross=Векторное произведение
+datasystem.immersiveintelligence.function.vector_cross.desc=Вычисляет векторное произведение входных векторов.
+datasystem.immersiveintelligence.function.vector_cross.param.first=Первый вектор
+datasystem.immersiveintelligence.function.vector_cross.param.first.desc=Первый вектор
+datasystem.immersiveintelligence.function.vector_cross.param.second=Второй вектор
+datasystem.immersiveintelligence.function.vector_cross.param.second.desc=Второй вектор
+datasystem.immersiveintelligence.function.vector_cross.result=Векторное произведение
+datasystem.immersiveintelligence.function.vector_cross.result.desc=Новый вектор, перпендикулярный обоим исходным векторам от точки их пересечения (соприкосновения) под прямым углом (90 градусов).
 
-datasystem.immersiveintelligence.function.vector_length=Length
-datasystem.immersiveintelligence.function.vector_length.desc=Returns the length of the input vector
-datasystem.immersiveintelligence.function.vector_length.param.vector=Vector
-datasystem.immersiveintelligence.function.vector_length.param.vector.desc=The vector to get the length of
-datasystem.immersiveintelligence.function.vector_length.result=Length
-datasystem.immersiveintelligence.function.vector_length.result.desc=The distance from the origin (0,0,0) to the end of the vector
+datasystem.immersiveintelligence.function.vector_length=Длина
+datasystem.immersiveintelligence.function.vector_length.desc=Возвращает длину входного вектора
+datasystem.immersiveintelligence.function.vector_length.param.vector=Вектор
+datasystem.immersiveintelligence.function.vector_length.param.vector.desc=Вектор, длину которого нужно получить
+datasystem.immersiveintelligence.function.vector_length.result=Длина
+datasystem.immersiveintelligence.function.vector_length.result.desc=Расстояние от начала координат (0,0,0) до конца вектора
 
-datasystem.immersiveintelligence.function.vector_normalize=Normalize
-datasystem.immersiveintelligence.function.vector_normalize.desc=Normalizes the input vector
-datasystem.immersiveintelligence.function.vector_normalize.param.vector=Vector
-datasystem.immersiveintelligence.function.vector_normalize.param.vector.desc=The vector to normalize
-datasystem.immersiveintelligence.function.vector_normalize.result=Normalized Vector
-datasystem.immersiveintelligence.function.vector_normalize.result.desc=A vector with the same direction as the input vector, but with a length of 1
+datasystem.immersiveintelligence.function.vector_normalize=Нормализовать
+datasystem.immersiveintelligence.function.vector_normalize.desc=Нормализует входной вектор
+datasystem.immersiveintelligence.function.vector_normalize.param.vector=Вектор
+datasystem.immersiveintelligence.function.vector_normalize.param.vector.desc=Вектор для нормализации
+datasystem.immersiveintelligence.function.vector_normalize.result=Нормализованный вектор
+datasystem.immersiveintelligence.function.vector_normalize.result.desc=Вектор с тем же направлением, что и входной вектор, но длиной 1
 
-datasystem.immersiveintelligence.function.vector_distance=Distance
-datasystem.immersiveintelligence.function.vector_distance.desc=Returns the distance between the two input vectors
-datasystem.immersiveintelligence.function.vector_distance.param.first=First Vector
-datasystem.immersiveintelligence.function.vector_distance.param.first.desc=The first vector
-datasystem.immersiveintelligence.function.vector_distance.param.second=Second Vector
-datasystem.immersiveintelligence.function.vector_distance.param.second.desc=The second vector
-datasystem.immersiveintelligence.function.vector_distance.result=Distance
-datasystem.immersiveintelligence.function.vector_distance.result.desc=The distance between the input vectors
+datasystem.immersiveintelligence.function.vector_distance=Расстояние
+datasystem.immersiveintelligence.function.vector_distance.desc=Возвращает расстояние между двумя входными векторами
+datasystem.immersiveintelligence.function.vector_distance.param.first=Первый вектор
+datasystem.immersiveintelligence.function.vector_distance.param.first.desc=Первый вектор
+datasystem.immersiveintelligence.function.vector_distance.param.second=Второй вектор
+datasystem.immersiveintelligence.function.vector_distance.param.second.desc=Второй вектор
+datasystem.immersiveintelligence.function.vector_distance.result=Расстояние
+datasystem.immersiveintelligence.function.vector_distance.result.desc=Расстояние между входными векторами
 
 # Map
 
-datasystem.immersiveintelligence.function.map_create=Create Map
-datasystem.immersiveintelligence.function.map_create.desc=Creates a new map containing the specified key-value pair
-datasystem.immersiveintelligence.function.map_create.param.key=Key
-datasystem.immersiveintelligence.function.map_create.param.key.desc=The key of the initial pair
-datasystem.immersiveintelligence.function.map_create.param.value=Value
-datasystem.immersiveintelligence.function.map_create.param.value.desc=The value of the initial pair
-datasystem.immersiveintelligence.function.map_create.result=Map
-datasystem.immersiveintelligence.function.map_create.result.desc=The new map
+datasystem.immersiveintelligence.function.map_create=Создать словарь
+datasystem.immersiveintelligence.function.map_create.desc=Создаёт новый словарь, содержащий указанную пару «ключ-значение»
+datasystem.immersiveintelligence.function.map_create.param.key=Ключ
+datasystem.immersiveintelligence.function.map_create.param.key.desc=Ключ исходной пары
+datasystem.immersiveintelligence.function.map_create.param.value=Значение
+datasystem.immersiveintelligence.function.map_create.param.value.desc=Значение исходной пары
+datasystem.immersiveintelligence.function.map_create.result=Словарь
+datasystem.immersiveintelligence.function.map_create.result.desc=Новый словарь
 
-datasystem.immersiveintelligence.function.map_get=Get
-datasystem.immersiveintelligence.function.map_get.desc=Returns the value associated with the specified key in the input map
-datasystem.immersiveintelligence.function.map_get.param.map=Map
-datasystem.immersiveintelligence.function.map_get.param.map.desc=The map to get the value from
-datasystem.immersiveintelligence.function.map_get.param.key=Key
-datasystem.immersiveintelligence.function.map_get.param.key.desc=The key to get the value for
-datasystem.immersiveintelligence.function.map_get.result=Value
-datasystem.immersiveintelligence.function.map_get.result.desc=The value associated with the specified key
+datasystem.immersiveintelligence.function.map_get=Получить
+datasystem.immersiveintelligence.function.map_get.desc=Возвращает значение, связанное с указанным ключом во входном словаре
+datasystem.immersiveintelligence.function.map_get.param.map=Словарь
+datasystem.immersiveintelligence.function.map_get.param.map.desc=Словарь, из которого нужно получить значение
+datasystem.immersiveintelligence.function.map_get.param.key=Ключ
+datasystem.immersiveintelligence.function.map_get.param.key.desc=Ключ, для которого нужно получить значение
+datasystem.immersiveintelligence.function.map_get.result=Значение
+datasystem.immersiveintelligence.function.map_get.result.desc=Значение, связанное с указанным ключом
 
-datasystem.immersiveintelligence.function.map_set=Set
-datasystem.immersiveintelligence.function.map_set.desc=Sets the value associated with the specified key in the input map
-datasystem.immersiveintelligence.function.map_set.param.map=Map
-datasystem.immersiveintelligence.function.map_set.param.map.desc=The map to modify
-datasystem.immersiveintelligence.function.map_set.param.key=Key
-datasystem.immersiveintelligence.function.map_set.param.key.desc=The key to set the value for
-datasystem.immersiveintelligence.function.map_set.param.value=Value
-datasystem.immersiveintelligence.function.map_set.param.value.desc=The value to set
-datasystem.immersiveintelligence.function.map_set.result=Map
-datasystem.immersiveintelligence.function.map_set.result.desc=The map with the new key-value pair
+datasystem.immersiveintelligence.function.map_set=Установить
+datasystem.immersiveintelligence.function.map_set.desc=Устанавливает значение, связанное с указанным ключом во входном словаре
+datasystem.immersiveintelligence.function.map_set.param.map=Словарь
+datasystem.immersiveintelligence.function.map_set.param.map.desc=Словарь для изменения
+datasystem.immersiveintelligence.function.map_set.param.key=Ключ
+datasystem.immersiveintelligence.function.map_set.param.key.desc=Ключ для установки значения
+datasystem.immersiveintelligence.function.map_set.param.value=Значение
+datasystem.immersiveintelligence.function.map_set.param.value.desc=Значение для установки
+datasystem.immersiveintelligence.function.map_set.result=Словарь
+datasystem.immersiveintelligence.function.map_set.result.desc=Словарь с новой парой ключ-значение
 
-datasystem.immersiveintelligence.function.map_remove=Remove
-datasystem.immersiveintelligence.function.map_remove.desc=Removes the value associated with the specified key in the input map
-datasystem.immersiveintelligence.function.map_remove.param.map=Map
-datasystem.immersiveintelligence.function.map_remove.param.map.desc=The map to modify
-datasystem.immersiveintelligence.function.map_remove.param.key=Key
-datasystem.immersiveintelligence.function.map_remove.param.key.desc=The key to remove
-datasystem.immersiveintelligence.function.map_remove.result=Removed
-datasystem.immersiveintelligence.function.map_remove.result.desc=The value removed from the map
+datasystem.immersiveintelligence.function.map_remove=Удалить
+datasystem.immersiveintelligence.function.map_remove.desc=Удаляет значение, связанное с указанным ключом во входном словаре
+datasystem.immersiveintelligence.function.map_remove.param.map=Словарь
+datasystem.immersiveintelligence.function.map_remove.param.map.desc=Словарь для изменения
+datasystem.immersiveintelligence.function.map_remove.param.key=Ключ
+datasystem.immersiveintelligence.function.map_remove.param.key.desc=Ключ для удаления
+datasystem.immersiveintelligence.function.map_remove.result=Удалено
+datasystem.immersiveintelligence.function.map_remove.result.desc=Значение, удаленное из словаря
 
-datasystem.immersiveintelligence.function.map_clear=Clear
-datasystem.immersiveintelligence.function.map_clear.desc=Removes all key-value pairs from the input map
-datasystem.immersiveintelligence.function.map_clear.param.map=Map
-datasystem.immersiveintelligence.function.map_clear.param.map.desc=The map to clear
-datasystem.immersiveintelligence.function.map_clear.result=Map
-datasystem.immersiveintelligence.function.map_clear.result.desc=The map with all key-value pairs removed
+datasystem.immersiveintelligence.function.map_clear=Очистить
+datasystem.immersiveintelligence.function.map_clear.desc=Удаляет все пары «ключ-значение» из входного слваря
+datasystem.immersiveintelligence.function.map_clear.param.map=Словарь
+datasystem.immersiveintelligence.function.map_clear.param.map.desc=Словарь для очистки
+datasystem.immersiveintelligence.function.map_clear.result=Словарь
+datasystem.immersiveintelligence.function.map_clear.result.desc=Словарь со всеми удаленными парами «ключ-значение»
 
-datasystem.immersiveintelligence.function.map_contains=Contains Key
-datasystem.immersiveintelligence.function.map_contains.desc=Returns true if the input map contains the specified key
-datasystem.immersiveintelligence.function.map_contains.param.map=Map
-datasystem.immersiveintelligence.function.map_contains.param.map.desc=The map to check
-datasystem.immersiveintelligence.function.map_contains.param.key=Key
-datasystem.immersiveintelligence.function.map_contains.param.key.desc=The key to check for
-datasystem.immersiveintelligence.function.map_contains.result=Contains
-datasystem.immersiveintelligence.function.map_contains.result.desc=Result of the key check
+datasystem.immersiveintelligence.function.map_contains=Содержание ключа
+datasystem.immersiveintelligence.function.map_contains.desc=Возвращает истину, если входной словарь содержит указанный ключ
+datasystem.immersiveintelligence.function.map_contains.param.map=Словарь
+datasystem.immersiveintelligence.function.map_contains.param.map.desc=Проверяемый словарь
+datasystem.immersiveintelligence.function.map_contains.param.key=Ключ
+datasystem.immersiveintelligence.function.map_contains.param.key.desc=Ключ для проверки
+datasystem.immersiveintelligence.function.map_contains.result=Содержит
+datasystem.immersiveintelligence.function.map_contains.result.desc=Результат проверки ключа
 
-datasystem.immersiveintelligence.function.map_keys=Get Keys
-datasystem.immersiveintelligence.function.map_keys.desc=Returns an array of all keys in the input map
-datasystem.immersiveintelligence.function.map_keys.param.map=Map
-datasystem.immersiveintelligence.function.map_keys.param.map.desc=The map to get the keys from
-datasystem.immersiveintelligence.function.map_keys.result=Keys
-datasystem.immersiveintelligence.function.map_keys.result.desc=Array of all keys in the input map
+datasystem.immersiveintelligence.function.map_keys=Получить ключи
+datasystem.immersiveintelligence.function.map_keys.desc=Возвращает массив всех ключей во входном словаре
+datasystem.immersiveintelligence.function.map_keys.param.map=Словарь
+datasystem.immersiveintelligence.function.map_keys.param.map.desc=Словарь, из которого нужно получить ключи
+datasystem.immersiveintelligence.function.map_keys.result=Ключи
+datasystem.immersiveintelligence.function.map_keys.result.desc=Массив всех ключей во входном словаре
 
-datasystem.immersiveintelligence.function.map_values=Get Values
-datasystem.immersiveintelligence.function.map_values.desc=Returns an array of all values in the input map
-datasystem.immersiveintelligence.function.map_values.param.map=Map
-datasystem.immersiveintelligence.function.map_values.param.map.desc=The map to get the values from
-datasystem.immersiveintelligence.function.map_values.result=Values
-datasystem.immersiveintelligence.function.map_values.result.desc=Array of all values in the input map
+datasystem.immersiveintelligence.function.map_values=Получить значения
+datasystem.immersiveintelligence.function.map_values.desc=Возвращает массив всех значений во входном словаре
+datasystem.immersiveintelligence.function.map_values.param.map=Словарь
+datasystem.immersiveintelligence.function.map_values.param.map.desc=Словарь, из которого нужно получить значения
+datasystem.immersiveintelligence.function.map_values.result=Значения
+datasystem.immersiveintelligence.function.map_values.result.desc=Массив всех значений во входном словаре
 
-datasystem.immersiveintelligence.function.map_size=Get Size
-datasystem.immersiveintelligence.function.map_size.desc=Returns the number of pairs in the input map
-datasystem.immersiveintelligence.function.map_size.param.map=Map
-datasystem.immersiveintelligence.function.map_size.param.map.desc=The map to get the size of
-datasystem.immersiveintelligence.function.map_size.result=Size
-datasystem.immersiveintelligence.function.map_size.result.desc=The number of pairs in the input map
+datasystem.immersiveintelligence.function.map_size=Получить размер
+datasystem.immersiveintelligence.function.map_size.desc=Возвращает количество пар во входном словаре
+datasystem.immersiveintelligence.function.map_size.param.map=Словарь
+datasystem.immersiveintelligence.function.map_size.param.map.desc=Словарь, из которого нужно получить размер
+datasystem.immersiveintelligence.function.map_size.result=Размер
+datasystem.immersiveintelligence.function.map_size.result.desc=Количество пар во входном словаре
 
 
-datasystem.immersiveintelligence.datatype.null=Null
-datasystem.immersiveintelligence.datatype.boolean=Boolean
-datasystem.immersiveintelligence.datatype.integer=Integer
-datasystem.immersiveintelligence.datatype.float=Float
-datasystem.immersiveintelligence.datatype.vector=Vector
-datasystem.immersiveintelligence.datatype.string=String
-datasystem.immersiveintelligence.datatype.expression=Expression
-datasystem.immersiveintelligence.datatype.accessor=Accessor
+datasystem.immersiveintelligence.datatype.null=Пусто
+datasystem.immersiveintelligence.datatype.boolean=Логический тип
+datasystem.immersiveintelligence.datatype.integer=Целочисленный тип
+datasystem.immersiveintelligence.datatype.float=Число с плавающей точкой
+datasystem.immersiveintelligence.datatype.vector=Вектор
+datasystem.immersiveintelligence.datatype.string=Строка
+datasystem.immersiveintelligence.datatype.expression=Выражение
+datasystem.immersiveintelligence.datatype.accessor=Доступ
 datasystem.immersiveintelligence.datatype.itemstack=ItemStack
 datasystem.immersiveintelligence.datatype.fluidstack=FluidStack
-datasystem.immersiveintelligence.datatype.array=Array
-datasystem.immersiveintelligence.datatype.map=Map
-datasystem.immersiveintelligence.datatype.entity=Entity
-datasystem.immersiveintelligence.datatype.encrypted=Encrypted
+datasystem.immersiveintelligence.datatype.array=Массив
+datasystem.immersiveintelligence.datatype.map=Карта
+datasystem.immersiveintelligence.datatype.entity=Сущность
+datasystem.immersiveintelligence.datatype.encrypted=Зашифровано
 
-datasystem.immersiveintelligence.datatype.boolean.true=True
-datasystem.immersiveintelligence.datatype.boolean.false=False
+datasystem.immersiveintelligence.datatype.boolean.true=Истина
+datasystem.immersiveintelligence.datatype.boolean.false=Ложь
 
 #Blueprints
 
-desc.immersiveengineering.info.blueprint.basic_circuits=Basic Circuits
-desc.immersiveengineering.info.blueprint.advanced_circuits=Advanced Circuits
-desc.immersiveengineering.info.blueprint.processors=Processors
-desc.immersiveengineering.info.blueprint.cryptography_circuits=Cryptography Circuits
+desc.immersiveengineering.info.blueprint.basic_circuits=Базовые печатные платы
+desc.immersiveengineering.info.blueprint.advanced_circuits=Продвинутые печатные платы
+desc.immersiveengineering.info.blueprint.processors=Процессоры
+desc.immersiveengineering.info.blueprint.cryptography_circuits=Криптографическые печатные платы
 
-desc.immersiveengineering.info.blueprint.basic_functional_circuits=Basic Function Circuits
-desc.immersiveengineering.info.blueprint.advanced_functional_circuits=Advanced Function Circuits
-desc.immersiveengineering.info.blueprint.processor_functional_circuits=Programmable Processors
-desc.immersiveengineering.info.blueprint.cryptographic_functional_circuits=Cryptographic Processors
+desc.immersiveengineering.info.blueprint.basic_functional_circuits=Базовые функциональные платы
+desc.immersiveengineering.info.blueprint.advanced_functional_circuits=Продвинутые функциональные платы
+desc.immersiveengineering.info.blueprint.processor_functional_circuits=Программируемые процессоры
+desc.immersiveengineering.info.blueprint.cryptographic_functional_circuits=Криптографические процессоры
 
-desc.immersiveengineering.info.blueprint.metal_springs=Springs
-desc.immersiveengineering.info.blueprint.ammo_molds=Ammunition Molds
-desc.immersiveengineering.info.blueprint.vulcanizer_molds=Vulcanizer Molds
-desc.immersiveengineering.info.blueprint.bullet_magazines=Bullet Magazines
+desc.immersiveengineering.info.blueprint.metal_springs=Пружины
+desc.immersiveengineering.info.blueprint.ammo_molds=Формы для боеприпасов
+desc.immersiveengineering.info.blueprint.vulcanizer_molds=Формы вулканизатора
+desc.immersiveengineering.info.blueprint.bullet_magazines=Магазины
 
 #Keybindings
-key.immersiveintelligence.manualReload=Manual Reload
-key.immersiveintelligence.armorHelmet=Toggle Light Engineer Armor Headgear
-key.immersiveintelligence.armorExosuit=Toggle Light Engineer Armor Exoskeleton
+key.immersiveintelligence.manualReload=Ручная перезарядка
+key.immersiveintelligence.armorHelmet=Переключение очков лёгкой брони инженера
+key.immersiveintelligence.armorExosuit=Переключение экзоскелета лёгкой брони инженера
 
-key.immersiveintelligence.mgScope=Zoom / Machinegun Scope
+key.immersiveintelligence.mgScope=Увеличение / прицел для пулемёта
 
-key.immersiveintelligence.engineWorking=Toggle Engine
-key.immersiveintelligence.motorbikeTowing=Tow/Untow
+key.immersiveintelligence.engineWorking=Переключение двигателя
+key.immersiveintelligence.motorbikeTowing=Прикрепить/Открепить
 
 #Advancements
 advancement.immersiveintelligence.root=Immersive Intelligence
-advancement.immersiveintelligence.root.desc=RTFM?
+advancement.immersiveintelligence.root.desc=Учи матчасть?
 
-advancement.immersiveintelligence.connect_belt=Powerful Conveying
-advancement.immersiveintelligence.connect_belt.desc=Link two mechanical wheels with a belt coil
+advancement.immersiveintelligence.connect_belt=Мощная передача
+advancement.immersiveintelligence.connect_belt.desc=Свяжите два механических колеса катушкой ремня.
 
-advancement.immersiveintelligence.craft_gun_barrel_iron=A Gunsmith?
-advancement.immersiveintelligence.craft_gun_barrel_iron.desc=Craft the Iron Gun Barrel, that allows you to construct basic firearms.
+advancement.immersiveintelligence.craft_gun_barrel_iron=Оружейник?
+advancement.immersiveintelligence.craft_gun_barrel_iron.desc=Создайте железный ствол, который позволяет вам создавать базовое огнестрельное оружие.
 
-advancement.immersiveintelligence.craft_gun_barrel_steel=Industrial Gunworks
-advancement.immersiveintelligence.craft_gun_barrel_steel.desc=Craft the Steel Barrel, making your first step into an era of Industrial Warfare.
+advancement.immersiveintelligence.craft_gun_barrel_steel=Промышленные оружейные мастерские
+advancement.immersiveintelligence.craft_gun_barrel_steel.desc=Создайте стальной ствол, делая свой первый шаг в эпоху промышленной войны.
 
-advancement.immersiveintelligence.craft_gun_barrel_tungsten=Why Precision Counts
-advancement.immersiveintelligence.craft_gun_barrel_tungsten.desc=Craft the High-Precision Gun Barrel, introducing new State-Of-The-Art Firearms into your Arsenal.
+advancement.immersiveintelligence.craft_gun_barrel_tungsten=Почему важна точность
+advancement.immersiveintelligence.craft_gun_barrel_tungsten.desc=Создайте высокоточный ствол, пополнив ваш арсенал современным огнестрельным оружием.
 
-advancement.immersiveintelligence.craft_diy=DIY
-advancement.immersiveintelligence.craft_diy.desc=Craft the Handmade Rifle
+advancement.immersiveintelligence.craft_diy=Если хочешь сделать что-то хорошо, сделай это сам
+advancement.immersiveintelligence.craft_diy.desc=Создайте ручную винтовку
 
-advancement.immersiveintelligence.craft_rifle=The People's Gun
-advancement.immersiveintelligence.craft_rifle.desc=Create the mass production Rifle
+advancement.immersiveintelligence.craft_rifle=Вооружённая нация
+advancement.immersiveintelligence.craft_rifle.desc=Создайте первую массовую серию винтовок
 
-advancement.immersiveintelligence.for_the_emperor=For The Emperor!
-advancement.immersiveintelligence.for_the_emperor.desc=Attach a bayonet to the Rifle
+advancement.immersiveintelligence.for_the_emperor=За Императора!
+advancement.immersiveintelligence.for_the_emperor.desc=Прикрепите штык к винтовке
 
-advancement.immersiveintelligence.craft_stg=We should all have Sturmgewehr!
-advancement.immersiveintelligence.craft_stg.desc=Craft the Assault Rifle
+advancement.immersiveintelligence.craft_stg=У нас у всех должен быть Штурмгевер!
+advancement.immersiveintelligence.craft_stg.desc=Создайте Автомат
 
-advancement.immersiveintelligence.weapon_of_war=This... is a weapon of war
-advancement.immersiveintelligence.weapon_of_war.desc=Upgrade the Assault Rifle with a scope and electric firing motor
+advancement.immersiveintelligence.weapon_of_war=Это... оружие войны
+advancement.immersiveintelligence.weapon_of_war.desc=Улучшите автомат оптическим прицелом и электрическим приводом
 
-advancement.immersiveintelligence.the_accelerator=The Accelerator
-advancement.immersiveintelligence.the_accelerator.desc=Upgrade the Assault Rifle with a Grenade Launcher and a Railgun Barrel
+advancement.immersiveintelligence.the_accelerator=Ускоритель
+advancement.immersiveintelligence.the_accelerator.desc=Улучшите автомат подствольным гранотомётом и рельсотронным ускорителем
 
-advancement.immersiveintelligence.special_operations_initiative=Special Operations Initiative
-advancement.immersiveintelligence.special_operations_initiative.desc=Upgrade the Assault Rifle with a rangefinder
+advancement.immersiveintelligence.special_operations_initiative=Инициатива специальных операций
+advancement.immersiveintelligence.special_operations_initiative.desc=Улучшите автомат стереоскопическим дальномером
 
-advancement.immersiveintelligence.craft_smg=Tommy's Toy
-advancement.immersiveintelligence.craft_smg.desc=Craft the Submachinegun
+advancement.immersiveintelligence.craft_smg=Игрушка Томми
+advancement.immersiveintelligence.craft_smg.desc=Создайте пистолет-пулемёт
 
-advancement.immersiveintelligence.infinite_power=Infinite Power
-advancement.immersiveintelligence.infinite_power.desc=Upgrade the Submachinegun with a Bottom Loader and Sturdy Barrel
+advancement.immersiveintelligence.infinite_power=Бесконечная мощь
+advancement.immersiveintelligence.infinite_power.desc=Улучшите пистолет-пулемёт барабанным разьёмом и прочным стволом
 
-advancement.immersiveintelligence.the_silent_unseen=The Silent Unseen
-advancement.immersiveintelligence.the_silent_unseen.desc=Upgrade the Submachinegun with a Folding Stock and Suppressor
+advancement.immersiveintelligence.the_silent_unseen=Тихий невидимка
+advancement.immersiveintelligence.the_silent_unseen.desc=Улучшите пистолет-пулемёт складным прикладом и слушителем
 
-advancement.immersiveintelligence.craft_cpds=The cost of firing for 12 seconds
-advancement.immersiveintelligence.craft_cpds.desc=Craft the CPDS magazine
+advancement.immersiveintelligence.craft_cpds=Стоимость 12 секунд стрельбы
+advancement.immersiveintelligence.craft_cpds.desc=Создайте магазин СПРО
 
 #Reference to Tiger 1 tank memes
-advancement.immersiveintelligence.craft_steel_belt=Hans, ze Transmission Works!
-advancement.immersiveintelligence.craft_steel_belt.desc=Craft a Steel Motor Belt
+advancement.immersiveintelligence.craft_steel_belt=Ганс, трансмиссия работает!
+advancement.immersiveintelligence.craft_steel_belt.desc=Создайте стальной моторный ремень
 
-advancement.immersiveintelligence.secret_connect_wire=Who dares wins
-advancement.immersiveintelligence.secret_connect_wire.desc=You had enough? Now give me a rest.
+advancement.immersiveintelligence.secret_connect_wire=Кто посмеет побеждать
+advancement.immersiveintelligence.secret_connect_wire.desc=Тебе было достаточно? А теперь дай мне отдохнуть.
 
-advancement.immersiveintelligence.advanced_circuit_board=Better, Harder, Faster!
-advancement.immersiveintelligence.advanced_circuit_board.desc=Produce an Advanced Circuit Board
+advancement.immersiveintelligence.advanced_circuit_board=Лучше, сложнее, быстрее!
+advancement.immersiveintelligence.advanced_circuit_board.desc=Изготовьте усовершенствованную печатную плату
 
-advancement.immersiveintelligence.artillery_howitzer=Bertha's Sister
-advancement.immersiveintelligence.artillery_howitzer.desc=Create an Artillery Howitzer
+advancement.immersiveintelligence.artillery_howitzer=Сестра Берты
+advancement.immersiveintelligence.artillery_howitzer.desc=Создайте артиллерийское орудие
 
-advancement.immersiveintelligence.chemical_bath=The Bulbulator
-advancement.immersiveintelligence.chemical_bath.desc=Create a Chemical Bath
+advancement.immersiveintelligence.chemical_bath=Бульбулятор
+advancement.immersiveintelligence.chemical_bath.desc=Создайте химическую ванну
 
-advancement.immersiveintelligence.circuit_board=Beep boop?
-advancement.immersiveintelligence.circuit_board.desc=Produce a Circuit Board
+advancement.immersiveintelligence.circuit_board=Бип-буп?
+advancement.immersiveintelligence.circuit_board.desc=Изготовьте печатную плату
 
 #Ay you, yes you @CrimsonTwilight, we know you want the inserters in IG :D
-advancement.immersiveintelligence.craft_advanced_inserter=The Crimson Inserter
-advancement.immersiveintelligence.craft_advanced_inserter.desc=Craft an upgraded version of the inserter.
+advancement.immersiveintelligence.craft_advanced_inserter=Багровый манипулятор
+advancement.immersiveintelligence.craft_advanced_inserter.desc=Создайте обновленную версию манипулятора.
 
-advancement.immersiveintelligence.craft_binoculars=Tactical Observation
-advancement.immersiveintelligence.craft_binoculars.desc=Craft the binoculars
+advancement.immersiveintelligence.craft_binoculars=Тактическое наблюдение
+advancement.immersiveintelligence.craft_binoculars.desc=Создайте Бинокль
 
-advancement.immersiveintelligence.craft_chemdispenser=A Flame in the Black night
-advancement.immersiveintelligence.craft_chemdispenser.desc=Craft the Chemical Dispenser
+advancement.immersiveintelligence.craft_chemdispenser=Пламя в чёрной ночи
+advancement.immersiveintelligence.craft_chemdispenser.desc=Изготовьте химический раздатчик
 
-advancement.immersiveintelligence.craft_inserter=No yellow ones, sorry!
-advancement.immersiveintelligence.craft_inserter.desc=Craft an Inserter
+advancement.immersiveintelligence.craft_inserter=Никаких жёлтых, извините!
+advancement.immersiveintelligence.craft_inserter.desc=Создайте манипулятор
 
 #Long story short, in Company of Heroes 2 on Wikinger Mod, there is a special unit type - the infiltrators
 #Those guys often have superior firepower and accuracy, German units are using the Sturmgewehrs with infrared sights
 #That's why all the infiltration stuff in II is related to Infrared Vision
-advancement.immersiveintelligence.craft_ir_binoculars=The Infiltrator
-advancement.immersiveintelligence.craft_ir_binoculars.desc=Craft the Infrared Binoculars
+advancement.immersiveintelligence.craft_ir_binoculars=Инфильтратор
+advancement.immersiveintelligence.craft_ir_binoculars.desc=Создайте инфракрасный бинокль
 
 #Reference to Fullmetal Alchemist: Brotherhood (Lust death scene)
-advancement.immersiveintelligence.craft_lighter=Return of the Zippo Guy
-advancement.immersiveintelligence.craft_lighter.desc=Craft a Lighter
+advancement.immersiveintelligence.craft_lighter=Возвращение горячего парня
+advancement.immersiveintelligence.craft_lighter.desc=Создайте зажигалку
 
-advancement.immersiveintelligence.craft_mg=Property of Hans
-advancement.immersiveintelligence.craft_mg.desc=Craft the infamous Machinegun
+advancement.immersiveintelligence.craft_mg=Собственность Ганса
+advancement.immersiveintelligence.craft_mg.desc=Создайте печально известный пулемёт
 
-advancement.immersiveintelligence.craft_mortar=Death from Above
-advancement.immersiveintelligence.craft_mortar.desc=Craft the Mortar
+advancement.immersiveintelligence.craft_mortar=Смерть свыше
+advancement.immersiveintelligence.craft_mortar.desc=Создайте миномёт
 
 #Reference to Industrialcraft2's alarm siren addon
-advancement.immersiveintelligence.craft_siren=Is the reactor OK?
-advancement.immersiveintelligence.craft_siren.desc=Craft an Alarm Siren
+advancement.immersiveintelligence.craft_siren=Реактор в порядке?
+advancement.immersiveintelligence.craft_siren.desc=Создайте сирену
 
 #Reference to a sidenote on one of Choroman's concept drawings
-advancement.immersiveintelligence.craft_speaker=Happy Engineer Noises
-advancement.immersiveintelligence.craft_speaker.desc=Craft a Programmable Speaker
+advancement.immersiveintelligence.craft_speaker=Звуки счастливого инженера
+advancement.immersiveintelligence.craft_speaker.desc=Создайте программируемый динамик
 
-advancement.immersiveintelligence.electrolyzer=Fluid Shock Therapy
-advancement.immersiveintelligence.electrolyzer.desc=Create an Electrolyzer
+advancement.immersiveintelligence.electrolyzer=Водно-шоковая терапия
+advancement.immersiveintelligence.electrolyzer.desc=Создайте электролизер
 
-advancement.immersiveintelligence.hans_9000=Hans 9000
-advancement.immersiveintelligence.hans_9000.desc=Prepare the MG for stationary defense
+advancement.immersiveintelligence.hans_9000=Ганс 9000
+advancement.immersiveintelligence.hans_9000.desc=Подготовьте пулемёт для стационарной защиты
 
 #A reference to the well known engineer and weapon maker Jörg Sprave
-advancement.immersiveintelligence.let_me_show_you_its_features=Let me show you its Features!
-advancement.immersiveintelligence.let_me_show_you_its_features.desc=Upgrade the MG with an Infrared Scope, a Heavy Barrel and a Second Magazine
+advancement.immersiveintelligence.let_me_show_you_its_features=Позвольте мне показать вам его особенности!
+advancement.immersiveintelligence.let_me_show_you_its_features.desc=Улучшите пулемёт с помощью инфракрасного прицела, тяжёлого ствола и второго магазина.
 
 #A JoJo reference
-advancement.immersiveintelligence.make_platinum=Better than the World?
-advancement.immersiveintelligence.make_platinum.desc=Acquire a Platinum Ingot
+advancement.immersiveintelligence.make_platinum=Лучше чем "Завардо"?
+advancement.immersiveintelligence.make_platinum.desc=Получите платиновый слиток
 
 #A Dr. Stone reference
-advancement.immersiveintelligence.make_tungsten=Defeating the Monster with Heat
-advancement.immersiveintelligence.make_tungsten.desc=Acquire a Tungsten Ingot
+advancement.immersiveintelligence.make_tungsten=Победить монстра с помощью тепла
+advancement.immersiveintelligence.make_tungsten.desc=Получите вольфрамовый слиток
 
-advancement.immersiveintelligence.make_tungsten_drillhead=Faster than Dwarves
-advancement.immersiveintelligence.make_tungsten_drillhead.desc=Craft a Tungsten Drill Head
+advancement.immersiveintelligence.make_tungsten_drillhead=Быстрее гномов
+advancement.immersiveintelligence.make_tungsten_drillhead.desc=Изготовьте вольфрамовую сверлильную головку
 
 #Reference to a well known mod
-advancement.immersiveintelligence.make_tungsten_drillhead_diamond=Tinkering with Tools
-advancement.immersiveintelligence.make_tungsten_drillhead_diamond.desc=Craft a Diamond Tipped Tungsten Drill Head
+advancement.immersiveintelligence.make_tungsten_drillhead_diamond=Возимся с инструментами
+advancement.immersiveintelligence.make_tungsten_drillhead_diamond.desc=Изготовьте покрытую алмазами вольфрамовую сверлильную головку
 
-advancement.immersiveintelligence.prec_assembler=Quality: Masterwork
-advancement.immersiveintelligence.prec_assembler.desc=Craft the Precision Assembler
+advancement.immersiveintelligence.prec_assembler=Качество: мастер
+advancement.immersiveintelligence.prec_assembler.desc=Создайте точный сборщик
 
-advancement.immersiveintelligence.printing_press=Low on ink
-advancement.immersiveintelligence.printing_press.desc=Create a Printing Press
+advancement.immersiveintelligence.printing_press=Мало чернил
+advancement.immersiveintelligence.printing_press.desc=Создайте печатный станок
 
 #Ah, the good old Crysis 3
-advancement.immersiveintelligence.processor_circuit_board=Can it run Crysis?
-advancement.immersiveintelligence.processor_circuit_board.desc=Produce a Processor Circuit Board
+advancement.immersiveintelligence.processor_circuit_board=Может ли это запустить Crysis?
+advancement.immersiveintelligence.processor_circuit_board.desc=Изготовьте процессорную печатную плату
 
-advancement.immersiveintelligence.radio_station=Remote Control
-advancement.immersiveintelligence.radio_station.desc=Create a Radio Station
+advancement.immersiveintelligence.radio_station=Удалённый контроль
+advancement.immersiveintelligence.radio_station.desc=Создайте радиостанцию
 
 #Tripod Periscope
-advancement.immersiveintelligence.craft_tripod_periscope=Spectacles on Sticks
-advancement.immersiveintelligence.craft_tripod_periscope.desc=Craft the Tripod Periscope
+advancement.immersiveintelligence.craft_tripod_periscope=Очки на палочках
+advancement.immersiveintelligence.craft_tripod_periscope.desc=Изготовьте перископ
 
 #Reference to a chat with Carver
-advancement.immersiveintelligence.craft_mine_detector=NOT a Vacuum Cleaner
-advancement.immersiveintelligence.craft_mine_detector.desc=Craft the Mine Detector
+advancement.immersiveintelligence.craft_mine_detector=Это НЕ пылесос
+advancement.immersiveintelligence.craft_mine_detector.desc=Изготовьте Миноискатель
 
 #Ground Zero is a centre of a nuclear explosion
-advancement.immersiveintelligence.secret_nuclear_tripmine=Planting seeds on ground zero
-advancement.immersiveintelligence.secret_nuclear_tripmine.desc=Deploy an atomic Tripmine
+advancement.immersiveintelligence.secret_nuclear_tripmine=Посадка семян на месте нулевой отметки
+advancement.immersiveintelligence.secret_nuclear_tripmine.desc=Установите ядерную мину-растяжку
 
 #Reference to C&C
-advancement.immersiveintelligence.rad_cannon=Spreading the doom and eradication
-advancement.immersiveintelligence.rad_cannon.desc=Become a walking affront to the environmental stability
+advancement.immersiveintelligence.rad_cannon=Распространение погибели и искоренения
+advancement.immersiveintelligence.rad_cannon.desc=Станьте ходячим вызовом стабильности окружающей среды
 
 #Reference to an old Polish meme, in which a certain cocoa brand is actually a story-rich book!
 #The cocoa was once put into a shop's shelf, mistaken as a book, that's where it started.
-advancement.immersiveintelligence.secret_cocoa=Stories of Deco Morreno
-advancement.immersiveintelligence.secret_cocoa.desc=The supreme quality has been achieved
+advancement.immersiveintelligence.secret_cocoa=Истории Деко Моррено
+advancement.immersiveintelligence.secret_cocoa.desc=Достигнуто высшее качество
 
 #Reference to Carver and C&C, though I left the mind control feature optional, was kinda op
-advancement.immersiveintelligence.secret_carvers_revenge=Carver's Revenge
-advancement.immersiveintelligence.secret_carvers_revenge.desc=What do you mean, we can't have mind controlled nuke silos?
+advancement.immersiveintelligence.secret_carvers_revenge=Месть Карвера
+advancement.immersiveintelligence.secret_carvers_revenge.desc=Что вы имеете в виду, говоря, что у нас не может быть ядерных установок, управляемых разумом?
 
 #URA! Reference to a youtube video by HRejterzy, check it out ^^
 advancement.immersiveintelligence.create_motorbike=Za vas, za nas, za neft' i gaz!
-advancement.immersiveintelligence.create_motorbike.desc=Construct the motorbike
+advancement.immersiveintelligence.create_motorbike.desc=Создайте Мотоцикл
 
-#Reference to a certain discord chat
-advancement.immersiveintelligence.secret_sorry_for_ceiling=Sorry for your ceiling!
-advancement.immersiveintelligence.secret_sorry_for_ceiling.desc=Experience a howitzer shell breaking a roof to distribute you propaganda.
+#Reference to a certain discord chatS
+advancement.immersiveintelligence.secret_sorry_for_ceiling=Извините за ваш потолок!
+advancement.immersiveintelligence.secret_sorry_for_ceiling.desc=Испытайте, как снаряд из гаубицы пробивает крышу, распространяя вашу пропаганду.
 
 #Reference to the russian II tutorial video by Ocelot
-advancement.immersiveintelligence.emplacement=The Little Turret is also good...
-advancement.immersiveintelligence.emplacement.desc=Construct the Emplacement, a defensive structure that can be equipped with heavy weaponry.
+advancement.immersiveintelligence.emplacement=Маленькая турель также хороша...
+advancement.immersiveintelligence.emplacement.desc=Постройте огневую точку - оборонительное сооружение, которое может быть оснащено тяжёлым вооружением.
 
-advancement.immersiveintelligence.flagpole=Stand for Anthem!
-advancement.immersiveintelligence.flagpole.desc=Construct the Flagpole, a decorative landmark and chunkloader.
+advancement.immersiveintelligence.flagpole=Встаньте, гимн!
+advancement.immersiveintelligence.flagpole.desc=Соорудите флагшток, декоративный ориентир и загрузчик чанков.
 
 
 #Manual Categories
 
-ie.manual.category.ii_data.name=Data and Electronics
-ie.manual.category.ii_warfare.name=Warfare
-ie.manual.category.ii_logistics.name=Logistics
-ie.manual.category.ii_intel.name=Intelligence
-ie.manual.category.ii_motorworks.name=Motorworks
-ie.manual.category.ii_other.name=Other
+ie.manual.category.ii_data.name=Данные и электроника
+ie.manual.category.ii_warfare.name=Военное дело
+ie.manual.category.ii_logistics.name=Логистика
+ie.manual.category.ii_intel.name=Разведка
+ie.manual.category.ii_motorworks.name=Мототехника
+ie.manual.category.ii_other.name=Прочее
 
 
-ie.manual.folder.functions=Function Reference
-ie.manual.folder.computers=Computers
+ie.manual.folder.functions=Ссылка на функцию
+ie.manual.folder.computers=Компьютеры
 
-ie.manual.folder.weaponry=Weaponry
-ie.manual.folder.armortools=Armor and Tools
-ie.manual.folder.staticdefense=Defensive Structures
+ie.manual.folder.weaponry=Оружие
+ie.manual.folder.armortools=Броня и инструменты
+ie.manual.folder.staticdefense=Защитные сооружения
 
-ie.manual.entry.traits.level_beginner=Complexity: Pre-Industrial
-ie.manual.entry.traits.level_early_industrial=Complexity: Early Industrial
-ie.manual.entry.traits.level_industrial=Complexity: Industrial
-ie.manual.entry.traits.level_advanced_industrial=Complexity: Late Industrial
-ie.manual.entry.traits.level_circuits=Complexity: Electronics Era
-ie.manual.entry.traits.level_computer=Complexity: Computer Era
-ie.manual.entry.traits.hammer=Basic Multiblock - form using Engineer's Hammer
-ie.manual.entry.traits.hammer_electric=Advanced Multiblock - form using an Electric Hammer
-ie.manual.entry.traits.upgradable=Upgradable
-ie.manual.entry.traits.repairable=Repairable
-ie.manual.entry.traits.decorations=Can be Decorated
-ie.manual.entry.traits.paintable=Paintable
+ie.manual.entry.traits.level_beginner=Сложность: Доиндустриальная
+ie.manual.entry.traits.level_early_industrial=Сложность: Ранняя индустриальная
+ie.manual.entry.traits.level_industrial=Сложность: Индустриальная
+ie.manual.entry.traits.level_advanced_industrial=Сложность: Поздняя индустриальная
+ie.manual.entry.traits.level_circuits=Сложность: Эра электроники
+ie.manual.entry.traits.level_computer=Сложность: Эра компьютеров
+ie.manual.entry.traits.hammer=Базовый многоблок — сборка с использованием инженерного молотка
+ie.manual.entry.traits.hammer_electric=Продвинутый многоблок — сборка с использованием электрического молотка
+ie.manual.entry.traits.upgradable=Улучшаемый
+ie.manual.entry.traits.repairable=Ремонтируемый
+ie.manual.entry.traits.decorations=Можно декорировать
+ie.manual.entry.traits.paintable=Можно красить
 
-ie.manual.entry.data_operation.inputs=Inputs
-ie.manual.entry.data_operation.output=Output
-ie.manual.entry.data_operation.pol=POL Code Example
-ie.manual.entry.data_operation.tooltip_data=Switch to Data View
-ie.manual.entry.data_operation.tooltip_pol=Switch to POL Implementation
-ie.manual.entry.data_operation.comment.import=importing data operation
-ie.manual.entry.data_operation.comment.import_more=alternatively
-ie.manual.entry.data_operation.comment.example=example use
+ie.manual.entry.data_operation.inputs=Входы
+ie.manual.entry.data_operation.output=Выход
+ie.manual.entry.data_operation.pol=Пример кода POL
+ie.manual.entry.data_operation.tooltip_data=Перейти к представлению данных
+ie.manual.entry.data_operation.tooltip_pol=Перейти к реализации POL
+ie.manual.entry.data_operation.comment.import=операция импорта данных
+ie.manual.entry.data_operation.comment.import_more=альтернативно
+ie.manual.entry.data_operation.comment.example=пример использования
 
-ie.manual.entry.data_variable.allowed_value=Allowed value:
-ie.manual.entry.data_variable.allowed_values=Allowed values:
-ie.manual.entry.data_variable.required_variables=Required variables:
+ie.manual.entry.data_variable.allowed_value=Допустимое значение:
+ie.manual.entry.data_variable.allowed_values=Допустимые значения:
+ie.manual.entry.data_variable.required_variables=Необходимые переменные:
 
 #manual multiblock forming block position text
-ie.manual.entry.multiblock_forming=The %1$s can be formed by using %2$s on the %3$s %4$s
-ie.manual.entry.multiblock_forming_short=It can be formed by using %2$s on the %3$s %4$s
+ie.manual.entry.multiblock_forming=%1$s можно сформировать с использованием %2$s на %3$s %4$s
+ie.manual.entry.multiblock_forming_short=Это может быть сформировано с использованием %2$s на %3$s %4$s
 #y axis
-ie.manual.entry.multiblock_forming.up=upper
-ie.manual.entry.multiblock_forming.middle=middle
-ie.manual.entry.multiblock_forming.down=lower
+ie.manual.entry.multiblock_forming.up=верхний
+ie.manual.entry.multiblock_forming.middle=средний
+ie.manual.entry.multiblock_forming.down=нижний
 #z axis
-ie.manual.entry.multiblock_forming.left=left
-ie.manual.entry.multiblock_forming.center=center
-ie.manual.entry.multiblock_forming.right=right
+ie.manual.entry.multiblock_forming.left=левый
+ie.manual.entry.multiblock_forming.center=центральный
+ie.manual.entry.multiblock_forming.right=правый
 #x axis
-ie.manual.entry.multiblock_forming.front=front
-ie.manual.entry.multiblock_forming.back=back
+ie.manual.entry.multiblock_forming.front=перед
+ie.manual.entry.multiblock_forming.back=зад
 
-ie.manual.entry.immersiveposts.posts_brass=Brass<br><br><br><br><br><br>The Ornamental
-ie.manual.entry.immersiveposts.posts_tungsten=Tungsten<br><br><br><br><br><br>The Tough
-ie.manual.entry.immersiveposts.posts_zinc=Zinc<br><br><br><br><br><br>The Fragile
-ie.manual.entry.immersiveposts.posts_platinum=Platinum<br><br><br><br><br><br>[The World]
-ie.manual.entry.immersiveposts.posts_duraluminium=Duraluminium<br><br><br><br><br><br>The Airborne
+ie.manual.entry.immersiveposts.posts_brass=Латунь<br><br><br><br><br>Декоративная
+ie.manual.entry.immersiveposts.posts_tungsten=Вольфрам<br><br><br><br><br><br>Прочный
+ie.manual.entry.immersiveposts.posts_zinc=Цинк<br><br><br><br><br>Хрупкий
+ie.manual.entry.immersiveposts.posts_platinum=Платина<br><br><br><br><br><br>"Завардо"
+ie.manual.entry.immersiveposts.posts_duraluminium=Дюралюминий<br><br><br><br><br>Лёгкий
 
 #Data and Electronics
 
-ie.manual.entry.def_value=Default Value
-ie.manual.entry.min_value=Minimum Value
-ie.manual.entry.max_value=Maximum Value
-ie.manual.entry.min_index=Lowest Index
-ie.manual.entry.max_index=Highest Index
-ie.manual.entry.empty=Empty
-ie.manual.entry.accepted_values=Accepted Values
-ie.manual.entry.max_length=Maximum Length
-ie.manual.entry.tf=True/False
-ie.manual.entry.false=False
-ie.manual.entry.true=True
+ie.manual.entry.def_value=Значение по умолчанию
+ie.manual.entry.min_value=Минимальное значение
+ie.manual.entry.max_value=Максимальное значение
+ie.manual.entry.min_index=Наименьший индекс
+ie.manual.entry.max_index=Наибольший индекс
+ie.manual.entry.empty=Пусто
+ie.manual.entry.accepted_values=Допустимые значения
+ie.manual.entry.max_length=Максимальная длина
+ie.manual.entry.tf=Истина/Ложь
+ie.manual.entry.false=Ложь
+ie.manual.entry.true=Истина
 
-ie.manual.entry.callback_returns=Returns:
+ie.manual.entry.callback_returns=Возвращает:
 
 #Bullet cores & components
-ie.manual.entry.bullet_cores.name=Bullet Cores
-ie.manual.entry.bullet_cores.subtext=That one bounced!
+ie.manual.entry.bullet_cores.name=Сердечники пуль
+ie.manual.entry.bullet_cores.subtext=Этот отскочил!
 
-ie.manual.entry.bullet_core.core_brass=Brass Core
-ie.manual.entry.bullet_core.core_brass.lore=Make it Steampunk
-ie.manual.entry.bullet_core.core_brass.desc=Brass is a heavy metal with bad penetration capabilities, but it greatly increases the effect of other components.
+ie.manual.entry.bullet_core.core_brass=Латунный сердечник
+ie.manual.entry.bullet_core.core_brass.lore=Сделайте это в стиле стимпанк
+ie.manual.entry.bullet_core.core_brass.desc=Латунь — тяжёлый металл с плохой пробивной способностью, но она значительно усиливает действие других компонентов.
 
-ie.manual.entry.bullet_core.core_copper=Copper Core
-ie.manual.entry.bullet_core.core_copper.lore=Every Penny Counts
-ie.manual.entry.bullet_core.core_copper.desc=Copper is a cheap material for bullets, its penetration ability is worse than one of brass, but its component effect.
+ie.manual.entry.bullet_core.core_copper=Медный сердечник
+ie.manual.entry.bullet_core.core_copper.lore=Каждая копейка на счету
+ie.manual.entry.bullet_core.core_copper.desc=Медь — дешёвый материал для пуль, её пробивная способность хуже, чем у латуни, но усиливает эффект компонентов.
 
-ie.manual.entry.bullet_core.core_lead=Lead Core
-ie.manual.entry.bullet_core.core_lead.lore=Good, bad and ugly
-ie.manual.entry.bullet_core.core_lead.desc=Lead is a good material for cheap bullets with high damage and mediocre penetrating power, however due to its high density limits the maximum range of projectiles made of it.
+ie.manual.entry.bullet_core.core_lead=Свинцовый сердечник
+ie.manual.entry.bullet_core.core_lead.lore=Хороший, плохой и уродливый
+ie.manual.entry.bullet_core.core_lead.desc=Свинец — хороший материал для дешёвых пуль с высоким уроном и посредственной пробивной силой, однако из-за высокой плотности максимальная дальность полёта ограничена.
 
-ie.manual.entry.bullet_core.core_iron=Iron Core
-ie.manual.entry.bullet_core.core_iron.lore=The Middle Class
-ie.manual.entry.bullet_core.core_iron.desc=Iron is a good early material for bullets, it offers above-average penetrating power and range, but has weak component effect and damage.
+ie.manual.entry.bullet_core.core_iron=Железный сердечник
+ie.manual.entry.bullet_core.core_iron.lore=Средний класс
+ie.manual.entry.bullet_core.core_iron.desc=Железо — хороший материал для пуль, он обеспечивает выше среднего пробивную силу и дальность, но имеет слабый эффект компонентов и урон.
 
-ie.manual.entry.bullet_core.core_steel=Steel Core
-ie.manual.entry.bullet_core.core_steel.lore=Full Metal Jacket
-ie.manual.entry.bullet_core.core_steel.desc=Using steel is a non-expensive way to increase the penetration capabilties of the projectiles, only disadvantage is slightly decreased component effect.
+ie.manual.entry.bullet_core.core_steel=Стальной сердечник
+ie.manual.entry.bullet_core.core_steel.lore=Цельнометаллическая оболочка
+ie.manual.entry.bullet_core.core_steel.desc=Использование стали — недорогой способ увеличить пробивную способность снарядов, единственный недостаток — слегка уменьшенный эффект компонентов.
 
-ie.manual.entry.bullet_core.core_tungsten=Tungsten Core
-ie.manual.entry.bullet_core.core_tungsten.lore=Load APCR!
-ie.manual.entry.bullet_core.core_tungsten.desc=Tungsten is a better at penetrating objects than steel, but it decreases the effect of other components
+ie.manual.entry.bullet_core.core_tungsten=Вольфрамовый сердечник
+ie.manual.entry.bullet_core.core_tungsten.lore=Заряжай подкалиберный снаряд!
+ie.manual.entry.bullet_core.core_tungsten.desc=Вольфрам лучше проникает сквозь объекты, чем сталь, но уменьшает эффект других компонентов.
 
-ie.manual.entry.bullet_core.core_uranium=Uranium Core
-ie.manual.entry.bullet_core.core_uranium.lore=What do you mean, ammo is depleted?
-ie.manual.entry.bullet_core.core_uranium.desc=Low weight and hardness make uranium a great penetrator without loosing capability to carry explosive materials. Great, but expensive choice.
+ie.manual.entry.bullet_core.core_uranium=Урановый сердечник
+ie.manual.entry.bullet_core.core_uranium.lore=Что значит «боеприпасы истощены»?
+ie.manual.entry.bullet_core.core_uranium.desc=Малый вес и твёрдость делают уран отличным проникающим снарядом, не теряя при этом способности нести взрывчатые вещества. Отличный, но дорогой выбор.
 
-ie.manual.entry.bullet_components.name=Bullet Components
-ie.manual.entry.bullet_components.subtext=Load APCRHEFSPTSD B-Capped!
-ie.manual.entry.bullet_components.dmg_mod=Damage: %sx
-ie.manual.entry.bullet_components.pen_mod=Penetration: %s vBH
-ie.manual.entry.bullet_components.blast_mod=Blast Radius: %sx
-ie.manual.entry.bullet_components.density=Density: %s
-ie.manual.entry.bullet_components.type=Type: %s
+ie.manual.entry.bullet_components.name=Компоненты пули
+ie.manual.entry.bullet_components.subtext=Загрузка APCRHEFSPTSD ограничена!
+ie.manual.entry.bullet_components.dmg_mod=Урон: %sx
+ie.manual.entry.bullet_components.pen_mod=Пробитие: %s vBH
+ie.manual.entry.bullet_components.blast_mod=Радиус взрыва: %sx
+ie.manual.entry.bullet_components.density=Плотность: %s
+ie.manual.entry.bullet_components.type=Тип: %s
 
 #A quote from World in Conflict
-ie.manual.entry.bullet_component.firework=Fireworks
-ie.manual.entry.bullet_component.firework.lore=And now, free the skies
-ie.manual.entry.bullet_component.firework.desc=Fireworks, while mostly known for their beautiful looks, can be used to suppress and blind enemies.
+ie.manual.entry.bullet_component.firework=Фейерверк
+ie.manual.entry.bullet_component.firework.lore=А теперь освободите небеса
+ie.manual.entry.bullet_component.firework.desc=Фейерверки, которые известны красивым видом, можно использовать для подавления и ослепления врагов.
 
 #Quote from Company of Heroes/Market Garden campaign
-ie.manual.entry.bullet_component.tracer_powder=Tracer Powder
-ie.manual.entry.bullet_component.tracer_powder.lore=Fill the sky with tracers!
-ie.manual.entry.bullet_component.tracer_powder.desc=Tracers are a good way to see which way your bullet flies, this can be used for purely decorative purposes or for correcting a gun's shot angle.
+ie.manual.entry.bullet_component.tracer_powder=Трассирующая рыль
+ie.manual.entry.bullet_component.tracer_powder.lore=Заполните небо трассерами!
+ie.manual.entry.bullet_component.tracer_powder.desc=Трассеры — хороший способ увидеть, куда летит ваша пуля. Их можно использовать в чисто декоративных целях или для корректировки угла выстрела.
 
 #Reference to Codename Panzers: Cold War
-ie.manual.entry.bullet_component.flare_powder=Flare Powder
-ie.manual.entry.bullet_component.flare_powder.lore=Night became Day
-ie.manual.entry.bullet_component.flare_powder.desc=Flares can be used for illuminating or marking positions, this can be useful in directing artillery
+ie.manual.entry.bullet_component.flare_powder=Осветительная пыль
+ie.manual.entry.bullet_component.flare_powder.lore=Ночь сменилась днём
+ie.manual.entry.bullet_component.flare_powder.desc=Осветители можно использовать для освещения или маркировки позиций, что может быть полезно для наведения артиллерии.
 
 #Reference to the book "Thus Spoke Zarathustra"
-ie.manual.entry.bullet_component.propaganda=Propaganda
-ie.manual.entry.bullet_component.propaganda.lore=He who obeys, does not listen to himself!
-ie.manual.entry.bullet_component.propaganda.desc=Propaganda can be used to instill fear in your enemies, that is if they can read, obviously.
+ie.manual.entry.bullet_component.propaganda=Пропаганда
+ie.manual.entry.bullet_component.propaganda.lore=Себя не слушает тот, кто подчиняется!
+ie.manual.entry.bullet_component.propaganda.desc=Пропаганду можно использовать, чтобы внушить страх врагам, если, конечно, они умеют читать.
 
 #Fallout reference
-ie.manual.entry.bullet_component.nuke=Nuke
-ie.manual.entry.bullet_component.nuke.lore=War Never Changes
-ie.manual.entry.bullet_component.nuke.desc=Nuclear Explosives are the most powerful and destructive known to man, only thick layers of reinforced concrete can protect against its force. Moreover, heat caused by it melts down enemies around and even if they survive that, they will die of radiation quickly.
+ie.manual.entry.bullet_component.nuke=Ядерное оружие
+ie.manual.entry.bullet_component.nuke.lore=Война никогда не меняется
+ie.manual.entry.bullet_component.nuke.desc=Ядерная взрывчатка — самая мощная и разрушительная из известных человечеству. Защититься от её мощи могут только толстые слои железобетона. Более того, создаваемое ею тепло расплавляет врагов вокруг, и даже если они выживут, то быстро умрут от радиации.
 
 #Reference to a song
-ie.manual.entry.bullet_component.tnt=TNT
-ie.manual.entry.bullet_component.tnt.lore=Tons of it!
-ie.manual.entry.bullet_component.tnt.desc=TNT is an explosive material with mediocre destructive power. Because of how easy it is to produce, it is a good choice for machinegun bullets and grenades.
+ie.manual.entry.bullet_component.tnt=ТНТ
+ie.manual.entry.bullet_component.tnt.lore=Его там тонны!
+ie.manual.entry.bullet_component.tnt.desc=ТНТ — взрывчатое вещество со средней разрушительной силой. Благодаря простоте производства он хорошо подходит для пулемётных пуль и гранат.
 
 #CoH2 Reference
 ie.manual.entry.bullet_component.rdx=RDX
-ie.manual.entry.bullet_component.rdx.lore=Things go up, things go down!
-ie.manual.entry.bullet_component.rdx.desc=RDX, also known as the §shexogen§r is a powerful high-explosive material. Being twice as powerful as TNT and it's able to destroy even the heaviest emplacements.
+ie.manual.entry.bullet_component.rdx.lore=Всё идёт вверх, всё идёт вниз!
+ie.manual.entry.bullet_component.rdx.desc=RDX, также известный как §гексоген§r, — мощное взрывчатое вещество. Будучи вдвое мощнее ТНТ, он способен уничтожить даже самые мощные огневые точки.
 
 #There are many variants of HMX's full name, one of them is Her Majesty's Explosive
 ie.manual.entry.bullet_component.hmx=HMX
-ie.manual.entry.bullet_component.hmx.lore=Her Majesty's Finest
-ie.manual.entry.bullet_component.hmx.desc=HMX is one of the most powerful conventional explosives, it's three times more powerful than TNT it's capable of breaching trough any fortifications.
+ie.manual.entry.bullet_component.hmx.lore=Лучшее Её Величества
+ie.manual.entry.bullet_component.hmx.desc=HMX — одно из самых мощных общепринятых взрывчатых веществ. Он в три раза мощнее ТНТ и способен пробивать любые укрепления.
 
 #Reference to a song
-ie.manual.entry.bullet_component.white_phosphorus=White Phosphorus
-ie.manual.entry.bullet_component.white_phosphorus.lore=Storm clouds, fire and steel.
-ie.manual.entry.bullet_component.white_phosphorus.desc=White phosphorus is the main ingredient of most incendiary shells. Its high heat makes surrounding enemies more flammable, while the burning hot fragments ignite everything around.
+ie.manual.entry.bullet_component.white_phosphorus=Белый фосфор
+ie.manual.entry.bullet_component.white_phosphorus.lore=Грозовые тучи, огонь и сталь.
+ie.manual.entry.bullet_component.white_phosphorus.desc=Белый фосфор — основной ингредиент большинства зажигательных снарядов. Его высокая температура делает окружающих врагов более огнеопасными, а раскалённые осколки поджигают всё вокруг.
 
 #A reference to struggle between Tesla and Edison
 #similar to how the Finns made a cocktail for Molotov (soviet foreign affairs minister) during the Winter War, a tesla grenade would be a nice one for Edison
-ie.manual.entry.bullet_component.tesla=Discharge Emitters
-ie.manual.entry.bullet_component.tesla.lore=A gift for Edison
-ie.manual.entry.bullet_component.tesla.desc=Discharge emitters create a field which disrupts the flow of electricity. They are useful in disabling industrial equipment, emplacements and sabotaging energy production.
+ie.manual.entry.bullet_component.tesla=Разрядные излучатели
+ie.manual.entry.bullet_component.tesla.lore=Подарок Эдисону
+ie.manual.entry.bullet_component.tesla.desc=Разрядные излучатели создают поле, нарушающее поток электричества. Они полезны для вывода из строя промышленного оборудования, огневых точек и нарушают производство энергии.
 
 
-ie.manual.entry.bullet_component.shrapnel_aluminum=Aluminum Shrapnel
-ie.manual.entry.bullet_component.shrapnel_aluminum.lore=Amelinium, one does not simply paint it
-ie.manual.entry.bullet_component.shrapnel_aluminum.desc=Aluminum is not the best material for shrapnel, but it's cheap enough to be mass used in combat.
+ie.manual.entry.bullet_component.shrapnel_aluminum=Алюминиевая шрапнель
+ie.manual.entry.bullet_component.shrapnel_aluminum.lore=Амелиний, его просто так не покрасишь
+ie.manual.entry.bullet_component.shrapnel_aluminum.desc=Алюминий — не лучший материал для шрапнели, но он достаточно дешёвый, чтобы его можно было массово использовать в бою.
 
-ie.manual.entry.bullet_component.shrapnel_zinc=Zinc Shrapnel
-ie.manual.entry.bullet_component.shrapnel_zinc.lore=Better than tin!
-ie.manual.entry.bullet_component.shrapnel_zinc.desc=Zinc is not a good shrapnel material, but when there are shortages, anything will do.
+ie.manual.entry.bullet_component.shrapnel_zinc=Цинковая шрапнель
+ie.manual.entry.bullet_component.shrapnel_zinc.lore=Лучше олова!
+ie.manual.entry.bullet_component.shrapnel_zinc.desc=Цинк — не лучший материал для шрапнели, но в случае дефицита подойдёт что угодно.
 
 #Reference to Terraria's coin gun
-ie.manual.entry.bullet_component.shrapnel_copper=Copper Shrapnel
-ie.manual.entry.bullet_component.shrapnel_copper.lore=Make coins your ammo
-ie.manual.entry.bullet_component.shrapnel_copper.desc=While throwing copper at the enemies won't bribe them, after a few shots it might make them dead.
+ie.manual.entry.bullet_component.shrapnel_copper=Медная шрапнель
+ie.manual.entry.bullet_component.shrapnel_copper.lore=Превратите монеты в боеприпасы
+ie.manual.entry.bullet_component.shrapnel_copper.desc=Бросание меди во врагов не подкупит их, но после нескольких выстрелов может убить их.
 
 #Reference to JoJo, yes even in the II there has to be one
-ie.manual.entry.bullet_component.shrapnel_platinum=Platinum Shrapnel
-ie.manual.entry.bullet_component.shrapnel_platinum.lore=A Shrapnel User, huh?
-ie.manual.entry.bullet_component.shrapnel_platinum.desc=Choosing Platinum? Yes, definitely, make yourself poor, you want it, not me.
+ie.manual.entry.bullet_component.shrapnel_platinum=Платиновая шрапнель
+ie.manual.entry.bullet_component.shrapnel_platinum.lore=Шрапнельщик, да?
+ie.manual.entry.bullet_component.shrapnel_platinum.desc=Выбираешь платину? Да, конечно, обедняй себя, тебе это нужно, а не мне.
 
 #Murica' fuck yeah
-ie.manual.entry.bullet_component.shrapnel_gold=Gold Shrapnel
-ie.manual.entry.bullet_component.shrapnel_gold.lore=And who cares about Taxpayers?
-ie.manual.entry.bullet_component.shrapnel_gold.desc=Ah yes, the good old way of wasting money - war. While the bullets are somewhat expensive, they don't seem to have much effect on the opponent.
+ie.manual.entry.bullet_component.shrapnel_gold=Золотая шрапнель
+ie.manual.entry.bullet_component.shrapnel_gold.lore=И кого волнуют налогоплательщики?
+ie.manual.entry.bullet_component.shrapnel_gold.desc=Ах да, старый добрый способ тратить деньги — война. Пули, хоть и дорогие, не оказывают особого эффекта на противника.
 
-ie.manual.entry.bullet_component.shrapnel_nickel=Nickel Shrapnel
+ie.manual.entry.bullet_component.shrapnel_nickel=Никелевая шрапнель
 ie.manual.entry.bullet_component.shrapnel_nickel.lore=Nickels and dimes
-ie.manual.entry.bullet_component.shrapnel_nickel.desc=Nickel is a bad choice for shrapnel, it doesn't deal much damage, but in hard times it can save the day.
+ie.manual.entry.bullet_component.shrapnel_nickel.desc=Никель — плохой выбор для осколков, он не наносит большого урона, но в трудные времена может спасти положение.
 
 #Reference to the Netflix's Witcher series
-ie.manual.entry.bullet_component.shrapnel_silver=Silver Shrapnel
-ie.manual.entry.bullet_component.shrapnel_silver.lore=Toss a coin to your gunner
-ie.manual.entry.bullet_component.shrapnel_silver.desc=Silver shrapnel is a good option for combating undead enemies, the shrapnel deals more damage to them and slows them down.
+ie.manual.entry.bullet_component.shrapnel_silver=Серебряная шрапнель
+ie.manual.entry.bullet_component.shrapnel_silver.lore=Стрелку заплатите чеканной монетой
+ie.manual.entry.bullet_component.shrapnel_silver.desc=Серебряная шрапнель — хороший вариант для борьбы с нежитью. Она наносит им больше урона и замедляет их.
 
-ie.manual.entry.bullet_component.shrapnel_electrum=Electrum Shrapnel
-ie.manual.entry.bullet_component.shrapnel_electrum.lore=The Shock Troops have arrived
-ie.manual.entry.bullet_component.shrapnel_electrum.desc=Electrum excels at conducting electricity, while the shapnel won't hurt much, enemies hit will receive more damage from energy weapons, such as tesla coils.
+ie.manual.entry.bullet_component.shrapnel_electrum=Электрумовая шрапнель
+ie.manual.entry.bullet_component.shrapnel_electrum.lore=Шок-войска прибыли
+ie.manual.entry.bullet_component.shrapnel_electrum.desc=Электрум отлично проводит электричество, и хотя шрапнель не нанесёт большого урона, пораженные враги получат больше урона от энергетического оружия, например, катушек Теслы.
 
 #Reference to a post-ww2 poster for inter-country help in Western Europe
-ie.manual.entry.bullet_component.shrapnel_constantan=Constantan Shrapnel
-ie.manual.entry.bullet_component.shrapnel_constantan.lore=<br>Whatever the weather, we kill enemies together.
-ie.manual.entry.bullet_component.shrapnel_constantan.desc=Constantan is well known for its heat conductive properties, enemies hit will be prone to fire damage for some time.
+ie.manual.entry.bullet_component.shrapnel_constantan=Константановая шрапнель
+ie.manual.entry.bullet_component.shrapnel_constantan.lore=<br>Какая бы ни была погода, мы убиваем врагов вместе.
+ie.manual.entry.bullet_component.shrapnel_constantan.desc=Константан хорошо известен своими теплопроводными свойствами. Поражённые враги некоторое время будут подвержены урону от огня.
 
 #Reference to words by Otto von Bismarck
-ie.manual.entry.bullet_component.shrapnel_iron=Iron Shrapnel
-ie.manual.entry.bullet_component.shrapnel_iron.lore=With Blood and Iron!
-ie.manual.entry.bullet_component.shrapnel_iron.desc=Iron is a good choice for shrapnel, it easily penetrates enemies wearing light armor.
+ie.manual.entry.bullet_component.shrapnel_iron=Железная шрапнель
+ie.manual.entry.bullet_component.shrapnel_iron.lore=Железом и кровью!
+ie.manual.entry.bullet_component.shrapnel_iron.desc=Железо — хороший выбор для шрапнели, оно легко пробивает врагов в лёгкой броне.
 
-ie.manual.entry.bullet_component.shrapnel_lead=Lead Shrapnel
-ie.manual.entry.bullet_component.shrapnel_lead.lore=Let the Lead rain!
-ie.manual.entry.bullet_component.shrapnel_lead.desc=Lead is a good shrapnel material, it's heavy and inflicts high damage on unarmored enemies.
+ie.manual.entry.bullet_component.shrapnel_lead=Свинцовая шрапнель
+ie.manual.entry.bullet_component.shrapnel_lead.lore=Да прольётся свинцовый дождь!
+ie.manual.entry.bullet_component.shrapnel_lead.desc=Свинец — хороший материал для шрапнели, он тяжёлый и наносит большой урон небронированным противникам.
 
 #Japanese "hagane" means steel, but the literal translation is "full metal", Hagane no Renkinjutsushi
-ie.manual.entry.bullet_component.shrapnel_steel=Steel Shrapnel
-ie.manual.entry.bullet_component.shrapnel_steel.lore=The fullmetal in all its glory
-ie.manual.entry.bullet_component.shrapnel_steel.desc=Steel is a fine shrapnel material, good damage, scatter and speed make it effective against all opponents.
+ie.manual.entry.bullet_component.shrapnel_steel=Стальная шрапнель
+ie.manual.entry.bullet_component.shrapnel_steel.lore=Стальной металл во всей красе
+ie.manual.entry.bullet_component.shrapnel_steel.desc=Сталь — отличный материал для шрапнели: хороший урон, разброс и скорость делают её эффективной против любых противников.
 
-ie.manual.entry.bullet_component.shrapnel_brass=Brass Shrapnel
-ie.manual.entry.bullet_component.shrapnel_brass.lore=Ornamental Design
-ie.manual.entry.bullet_component.shrapnel_brass.desc=Brass is a bad choice for making shrapnel, although its high weight makes it deal more damage than other weak metals.
+ie.manual.entry.bullet_component.shrapnel_brass=Латунная шрапнель
+ie.manual.entry.bullet_component.shrapnel_brass.lore=Орнаментальный дизайн
+ie.manual.entry.bullet_component.shrapnel_brass.desc=Латунь — плохой выбор для изготовления шрапнели, хотя её большой вес позволяет наносить больше урона, чем другие непрочные металлы.
 
 #A reference to Bear989sr. - a gregtech player, I just love when he says the word "steel", also some nice GT tutorials
-ie.manual.entry.bullet_component.shrapnel_tungsten=Tungsten Shrapnel
-ie.manual.entry.bullet_component.shrapnel_tungsten.lore=And now we make *ekhem* TUNGSTEN-STEEL...
-ie.manual.entry.bullet_component.shrapnel_tungsten.desc=Tungsten is a very good material for shrapnel, its high damage allows to shred enemies to pieces.
+ie.manual.entry.bullet_component.shrapnel_tungsten=Вольфрамовая шрапнель
+ie.manual.entry.bullet_component.shrapnel_tungsten.lore=А теперь мы делаем *кхем* ВОЛЬФРАМОВУЮ СТАЛЬ...
+ie.manual.entry.bullet_component.shrapnel_tungsten.desc=Вольфрам — очень хороший материал для шрапнели, его высокий урон позволяет разрывать врагов на куски.
 
 #Reference to Kuruma saying IEn's thorium railgun rods are the strongest railgun ammo
-ie.manual.entry.bullet_component.shrapnel_thorium=Thorium Shrapnel
-ie.manual.entry.bullet_component.shrapnel_thorium.lore=Make grenades, not rods!
-ie.manual.entry.bullet_component.shrapnel_thorium.desc=Thorium is a good, but costly shrapnel material with high damage and penetration values.
+ie.manual.entry.bullet_component.shrapnel_thorium=Ториевая шрапнель
+ie.manual.entry.bullet_component.shrapnel_thorium.lore=Делайте гранаты, а не стержни!
+ie.manual.entry.bullet_component.shrapnel_thorium.desc=Торий — хороший, но дорогой материал для шрапнели с высоким уроном и пробивной способностью.
 
-ie.manual.entry.bullet_component.shrapnel_HOPGraphite=HOP Graphite Shrapnel
-ie.manual.entry.bullet_component.shrapnel_HOPGraphite.lore=HOP to it!
-ie.manual.entry.bullet_component.shrapnel_HOPGraphite.desc=Graphite is a very good shrapnel material, its low weight and high piercing capabilities make it useful in combat.
+ie.manual.entry.bullet_component.shrapnel_HOPGraphite=Графитовая шрапнель
+ie.manual.entry.bullet_component.shrapnel_HOPGraphite.lore=Убойный карандаш!
+ie.manual.entry.bullet_component.shrapnel_HOPGraphite.desc=Графит — очень хороший материал для осколков. Его малый вес и высокая пробивная способность делают его полезным в бою.
 
-ie.manual.entry.bullet_component.shrapnel_uranium=Uranium Shrapnel
-ie.manual.entry.bullet_component.shrapnel_uranium.lore=Ra-di-o-active
-ie.manual.entry.bullet_component.shrapnel_uranium.desc=Uranium is one of the best materials for shrapnel, the scattering fragments have no problem piercing trough armor and can deal high damage to any target.
+ie.manual.entry.bullet_component.shrapnel_uranium=Урановая шрапнель
+ie.manual.entry.bullet_component.shrapnel_uranium.lore=Ра-ди-о-активный
+ie.manual.entry.bullet_component.shrapnel_uranium.desc=Уран — один из лучших материалов для шрапнели. Разлетающиеся осколки без проблем пробивают броню и могут нанести большой урон любой цели.
 #Death Messages
-death.attack.iiBullet=%1$s was shot by %2$s
-death.attack.iiBulletNoShooter=%1$s was shot
-death.attack.iiBulletHeadShot=%1$s took a %2$s's bullet to their head
-death.attack.iiBulletHeadShotNoShooter=%1$s took a bullet to their head
-death.attack.iiShrapnel=%1$s was torn apart by %2$s's shrapnel
-death.attack.iiShrapnelNoShooter=%1$s was torn apart by shrapnel
-death.attack.iiSawmill=%1$s was sliced by the sawmill
-death.attack.iiPrintingPress=%1$s was squashed by rotating rollers
-death.attack.iiRadiation=%1$s experienced intensive radiation
-death.attack.iiNuclearHeat=%1$s was decimated by a nuclear explosion
-death.attack.iiMotorbike=%1$s was driven over by %2$s
-death.attack.iiMotorbikeNoRider=%1$s was driven over
-death.attack.iiMotorbikeExplicit=%2$s has made %1$s's ass his free parking spot
-death.attack.iiMotorbikeSuicide=%1$s decided to jump off a moving motorcycle
-death.attack.iiPanzer1=%1$s was crushed under the Panzer's threads
-death.attack.iiPanzer2=The indomitable Panzer's threads have pulverized %1$s
+death.attack.iiBullet=%1$s был застрелен %2$s
+death.attack.iiBulletNoShooter=%1$s был застрелен
+death.attack.iiBulletHeadShot=%1$s получил пулю в голову от %2$s
+death.attack.iiBulletHeadShotNoShooter=%1$s получил пулю в голову
+death.attack.iiShrapnel=%1$s был разорван на части шрапнелью %2$s
+death.attack.iiShrapnelNoShooter=%1$s был разорван на части шрапнелью
+death.attack.iiSawmill=%1$s был разрезан циркулярной пилой
+death.attack.iiPrintingPress=%1$s был раздавлен вращающимися роликами
+death.attack.iiRadiation=%1$s подвергся интенсивному воздействию радиация
+death.attack.iiNuclearHeat=%1$s был уничтожен ядерным взрывом
+death.attack.iiMotorbike=%1$s переехал %2$s
+death.attack.iiMotorbikeNoRider=%1$s был сбит
+death.attack.iiMotorbikeExplicit=%2$s сделал %1$s своим парковочным местом
+death.attack.iiMotorbikeSuicide=%1$s решил спрыгнуть с движущегося мотоцикла
+death.attack.iiPanzer1=%1$s был раздавлен нитями «Панцера»
+death.attack.iiPanzer2=Нити неукротимого «Панцера» превратили %1$s в пыль
 
 #Additional stuff for the Config Panel
-ii.config.Graphics=Graphics
-ii.config.Ores=Ores
-ii.config.Machines=Machines
-ii.config.MechanicalDevices=Mechanical Devices
-ii.config.Weapons=Weapons
-ii.config.Wires=Wires
-ii.config.Tools=Tools
-ii.config.Vehicles=Vehicles
-ii.config.EffectCrates=Effect Crates
+ii.config.Graphics=Графика
+ii.config.Ores=Руды
+ii.config.Machines=Машины
+ii.config.MechanicalDevices=Механические устройства
+ii.config.Weapons=Оружие
+ii.config.Wires=Провода
+ii.config.Tools=Инструменты
+ii.config.Vehicles=Транспорт
+ii.config.EffectCrates=Ящики с эффектами
 
 #Weapon Configs
-ii.config.Ammunition=Ammunition
-ii.config.Emplacement_Weapons=Emplacement Weapons
-ii.config.Grenade=Grenade
-ii.config.Mines=Mines
-ii.config.Light_Engineer_Armor=Light Engineer Armor
+ii.config.Ammunition=Боеприпасы
+ii.config.Emplacement_Weapons=Оружие для огневых точек
+ii.config.Grenade=Гранаты
+ii.config.Mines=Мины
+ii.config.Light_Engineer_Armor=Лёгкая инженерная броня
 
 #GUI Labels
-ii.gui.data_input_machine.storage=Punchtape Storage
-ii.gui.data_input_machine.memory=Built-In Memory
-ii.gui.data_input_machine.memory.switch=Switch
-ii.gui.data_input_machine.memory.switch.tooltip=Switch Current Memory Slot
+ii.gui.data_input_machine.storage=Накопитель перфоленты
+ii.gui.data_input_machine.memory=Встроенная память
+ii.gui.data_input_machine.memory.switch=Переключение
+ii.gui.data_input_machine.memory.switch.tooltip=Переключение текущего слота памяти
 
 #GUI HelpBoxes
-ii.gui_help.manual_widget.show=Displays the Immersive Engineering Manual on the side.
+ii.gui_help.manual_widget.show=Отображает руководство инженера сбоку.
 
-ii.gui_help.data_input_machine.programming=These slots allow reading a punchtape into the DIM's memory or writing its contents into an empty one.
-ii.gui_help.data_input_machine.storage=These slots allow storing empty or programmed punchtapes for convenience.
-ii.gui_help.data_input_machine.variables=This list shows variables of the data packet stored inside the machine.
+ii.gui_help.data_input_machine.programming=Эти слоты позволяют считывать перфоленту в память DIM или записывать её содержимое в пустую.
+ii.gui_help.data_input_machine.storage=Эти слоты позволяют хранить пустые или запрограммированные перфоленты для удобства.
+ii.gui_help.data_input_machine.variables=В этом списке отображаются переменные пакета данных, хранящегося в памяти устройства.
 
 #GUI Tooltips
-ii.gui_tooltip.button.add=Add
-ii.gui_tooltip.button.remove=Remove
-ii.gui_tooltip.button.edit=Edit
-ii.gui_tooltip.button.duplicate=Duplicate
-ii.gui_tooltip.button.clear=Clear
+ii.gui_tooltip.button.add=Добавить
+ii.gui_tooltip.button.remove=Удалить
+ii.gui_tooltip.button.edit=Изменить
+ii.gui_tooltip.button.duplicate=Дублировать
+ii.gui_tooltip.button.clear=Очистить
 
-ii.gui_tooltip.widget.manual.show=Show Side Manual
-ii.gui_tooltip.widget.manual.hide=Hide Side Manual
+ii.gui_tooltip.widget.manual.show=Показать стороннее руководство
+ii.gui_tooltip.widget.manual.hide=Скрыть стороннее руководство
 
-ii.gui_tooltip.energy.stored=Energy Stored: %s/%s IF
-ii.gui_tooltip.energy.input=Energy Consumed: %s IF
-ii.gui_tooltip.energy.required=Energy Required: %s IH / t
-ii.gui_tooltip.energy.output=Energy Produced: %s IF
+ii.gui_tooltip.energy.stored=Хранимая энергия: %s/%s IF
+ii.gui_tooltip.energy.input=Потребленная энергия: %s IF
+ii.gui_tooltip.energy.required=Требуемая энергия: %s IH/t
+ii.gui_tooltip.energy.output=Произведенная энергия: %s IF
 
-ii.gui_tooltip.heat.stored=Heat %s/%s IH
-ii.gui_tooltip.heat.input=Heat Consumed: %s IH
-ii.gui_tooltip.heat.required=Heat Required: %s IH /t
-ii.gui_tooltip.heat.output=Heat Produced: %s IH
+ii.gui_tooltip.heat.stored=Нагрев %s/%s IH
+ii.gui_tooltip.heat.input=Потребленное тепло: %s IH
+ii.gui_tooltip.heat.required=Требуемое тепло: %s IH/t
+ii.gui_tooltip.heat.output=Произведённое тепло: %s IH
 
-ii.gui_tooltip.pressure.stored=Pressure: %s/%s IP
-ii.gui_tooltip.pressure.input=Pressure Intake: %s IP
-ii.gui_tooltip.pressure.required=Pressure Required: %s IP /t
-ii.gui_tooltip.pressure.output=Pressure Created: %s IP
+ii.gui_tooltip.pressure.stored=Давление: %s/%s IP
+ii.gui_tooltip.pressure.input=Потребленное давление: %s IP
+ii.gui_tooltip.pressure.required=Требуемое давление: %s IP/t
+ii.gui_tooltip.pressure.output=Произведённое давление: %s IP
 
-ii.gui_tooltip.mech_torque.message.basic=Input: Speed %s D/t | Torque %s IT.
-ii.gui_tooltip.mech_torque.message.advanced=Input: Speed %s D/t | Torque %s IT. Output: Speed %s D/t | Torque %s IT.
-ii.gui_tooltip.mech_torque.stored=Torque: %s/%s IT
-ii.gui_tooltip.mech_torque.input=Torque Input: %s IT
-ii.gui_tooltip.mech_torque.required=Torque Required: %s IT /t
-ii.gui_tooltip.mech_torque.output=Torque Output: %s IT
+ii.gui_tooltip.mech_torque.message.basic=Вход: Скорость %s D/t | Крутящий момент %s IT.
+ii.gui_tooltip.mech_torque.message.advanced=Вход: Скорость %s D/t | Крутящий момент %s IT. Выход: Скорость %s D/t | Крутящий момент %s IT.
+ii.gui_tooltip.mech_torque.stored=Крутящий момент: %s/%s IT
+ii.gui_tooltip.mech_torque.input=Крутящий момент на входе: %s IT
+ii.gui_tooltip.mech_torque.required=Требуемый крутящий момент: %s IT/t
+ii.gui_tooltip.mech_torque.output=Крутящий момент на выходе: %s IT
 
-ii.gui_tooltip.mech_speed.stored=Speed: %s/%s D/t
-ii.gui_tooltip.mech_speed.input=Speed Input: %s D/t
-ii.gui_tooltip.mech_speed.required=Speed Required: %s D/t
-ii.gui_tooltip.mech_speed.output=Speed Output: %s D/t
+ii.gui_tooltip.mech_speed.stored=Скорость: %s/%s D/t
+ii.gui_tooltip.mech_speed.input=Скорость на входе: %s D/t
+ii.gui_tooltip.mech_speed.required=Требуемая скорость: %s D/t
+ii.gui_tooltip.mech_speed.output=Скорость на выходе: %s D/t
 
-ii.gui_tooltip.fluid.stored=%s - %s mB
-ii.gui_tooltip.fluid.input=%s Intake: %s mB
-ii.gui_tooltip.fluid.output=%s Output: %s mB
+ii.gui_tooltip.fluid.stored=%s - %s мВ
+ii.gui_tooltip.fluid.input=%s потребление: %s мВ
+ii.gui_tooltip.fluid.output=%s выход: %s мВ
 
-ii.gui_tooltip.time.stored=Time Remaining: %s/%s t
-ii.gui_tooltip.time.required=Time Required: %s t
+ii.gui_tooltip.time.stored=Оставшееся время: %s/%s t
+ii.gui_tooltip.time.required=Необходимое время: %s t
 
-ii.gui_tooltip.structural_integrity=Structural Integrity: %s/%s Hitpoints
-ii.gui_tooltip.structural_integrity.repair=Repair Threshold: Below %s Hitpoints
-ii.gui_tooltip.structural_integrity.repair.auto_tooltip=The structure will automatically repair itself if it falls below this threshold.
-ii.gui_tooltip.structural_integrity.repair.manual_tooltip=The structure will request repair if it falls below this threshold.
+ii.gui_tooltip.structural_integrity=Структурная целостность: %s/%s очков
+ii.gui_tooltip.structural_integrity.repair=Порог ремонта: ниже %s очков
+ii.gui_tooltip.structural_integrity.repair.auto_tooltip=Если показатель опустится ниже этого порога, конструкция автоматически восстановится.
+ii.gui_tooltip.structural_integrity.repair.manual_tooltip=Если показатели опустятся ниже этого порога, потребуется провести ремонт конструкции.
 
-ii.gui_tooltip.armor_integrity=Armor: %s/%s Hitpoints
-ii.gui_tooltip.reactive_armor_integrity=Reactive Armor: %s/%s Hitpoints
+ii.gui_tooltip.armor_integrity=Броня: %s/%s очков
+ii.gui_tooltip.reactive_armor_integrity=Reactive Armor: %s/%s очков
 
-ii.gui_tooltip.speed=Speed: %s
-ii.gui_tooltip.progress=Progress: %s %
-ii.gui_tooltip.fuel=Fuel: %s/%s mB
-ii.gui_tooltip.soil_fertility=Soil Fertility: %s %
+ii.gui_tooltip.speed=Скорость: %s
+ii.gui_tooltip.progress=Прогресс: %s %
+ii.gui_tooltip.fuel=Топливо: %s/%s мВ
+ii.gui_tooltip.soil_fertility=Плодородие почвы: %s %
