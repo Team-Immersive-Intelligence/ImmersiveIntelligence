@@ -63,16 +63,16 @@ item.immersiveintelligence.binoculars.infrared_binoculars.name=Инфракра�
 
 item.immersiveintelligence.assembly_scheme.name=Сборочная схема
 
-item.immersiveintelligence.press_mold.howitzer.name=Пресс-форма "Гильза тяжёлого артиллерийского заряда"
-item.immersiveintelligence.press_mold.medium_howitzer.name=Пресс-форма "Гильза артиллерийского заряда"
+item.immersiveintelligence.press_mold.howitzer.name=Пресс-форма "Гильза артиллерийского заряда"
+item.immersiveintelligence.press_mold.medium_howitzer.name=Пресс-форма "Гильза среднего артиллерийского заряда"
 item.immersiveintelligence.press_mold.light_howitzer.name=Пресс-форма "Гильза лёгкого артиллерийского заряда"
 item.immersiveintelligence.press_mold.mortar.name=Пресс-форма "Корпус мниномётной мины"
 item.immersiveintelligence.press_mold.light_gun.name=Пресс-форма "Гильза патрона лёгкой пушки"
 item.immersiveintelligence.press_mold.autocannon.name=Пресс-форма "Гильза патрона автоматической пушки"
 item.immersiveintelligence.press_mold.shotgun.name=Пресс-форма "Гильза ружейного патрона"
-item.immersiveintelligence.press_mold.machinegun.name=Пресс-форма "Гильза длинного патрона"
-item.immersiveintelligence.press_mold.assault_rifle.name=Пресс-форма "Гильза среднего патрона"
-item.immersiveintelligence.press_mold.submachinegun.name=Пресс-форма "Гильза короткого патрона"
+item.immersiveintelligence.press_mold.machinegun.name=Пресс-форма "Гильза винтовочного патрона"
+item.immersiveintelligence.press_mold.assault_rifle.name=Пресс-форма "Гильза промежуточного патрона"
+item.immersiveintelligence.press_mold.submachinegun.name=Пресс-форма "Гильза пистолетного патрона"
 item.immersiveintelligence.press_mold.naval_mine.name=Пресс-форма "Морская мина"
 item.immersiveintelligence.press_mold.tripmine.name=Пресс-форма "Мина-растяжка"
 item.immersiveintelligence.press_mold.tellermine.name=Пресс-форма "Наземная мина"
@@ -132,7 +132,7 @@ item.immersiveintelligence.material_gem.fluorite.name=Незерский флю�
 #Based on real-life mineral glauconite, though the word phosphorus is easier to remember
 item.immersiveintelligence.material_gem.phosphorus.name=Незерский фосфор
 
-item.immersiveintelligence.material_boule.silicon.name=Кремниевый шарик
+item.immersiveintelligence.material_boule.silicon.name=Кремниевая буля
 
 item.immersiveintelligence.material_spring.brass.name=Латунная пружина
 item.immersiveintelligence.material_spring.iron.name=Железная пружина
@@ -161,21 +161,21 @@ item.immersiveintelligence.material.natural_rubber.name=Каучук
 item.immersiveintelligence.material.rubber_belt.name=Резиновый ремень
 item.immersiveintelligence.material.rubber_tire.name=Резиновая шина
 
-item.immersiveintelligence.circuit_functional.arithmetic.name=Арифметическая схема
-item.immersiveintelligence.circuit_functional.advanced_arithmetic.name=Продвинутая арифметическая схема
-item.immersiveintelligence.circuit_functional.logic.name=Логическая схема
-item.immersiveintelligence.circuit_functional.comparator.name=Сравнительная схема
-item.immersiveintelligence.circuit_functional.advanced_logic.name=Продвинутая логическая схема
-item.immersiveintelligence.circuit_functional.text.name=Схема текстового процессора
-item.immersiveintelligence.circuit_functional.itemstack.name=Схема операций над предметами
-item.immersiveintelligence.circuit_functional.array.name=Схема операций массива
-item.immersiveintelligence.circuit_functional.entity.name=Схема операций над сущностями
-item.immersiveintelligence.circuit_functional.document.name=Схема документов
-item.immersiveintelligence.circuit_functional.type_conversion.name=Схема преобразования типов переменных
-item.immersiveintelligence.circuit_functional.fluidstack.name=Схема операций над жидкостями
-item.immersiveintelligence.circuit_functional.map.name=Картографическая схема
-item.immersiveintelligence.circuit_functional.vector_arithmetic.name=Векторно-арифметическая схема
-item.immersiveintelligence.circuit_functional.cryptographer.name=Криптографическая схема
+item.immersiveintelligence.circuit_functional.arithmetic.name=Арифметическая плата
+item.immersiveintelligence.circuit_functional.advanced_arithmetic.name=Продвинутая арифметическая плата
+item.immersiveintelligence.circuit_functional.logic.name=Логическая плата
+item.immersiveintelligence.circuit_functional.comparator.name=Сравнительная плата
+item.immersiveintelligence.circuit_functional.advanced_logic.name=Продвинутая логическая плата
+item.immersiveintelligence.circuit_functional.text.name=Плата текстового процессора
+item.immersiveintelligence.circuit_functional.itemstack.name=Плата операций над предметами
+item.immersiveintelligence.circuit_functional.array.name=Плата операций массива
+item.immersiveintelligence.circuit_functional.entity.name=Плата операций над сущностями
+item.immersiveintelligence.circuit_functional.document.name=Плата документов
+item.immersiveintelligence.circuit_functional.type_conversion.name=Плата преобразования типов переменных
+item.immersiveintelligence.circuit_functional.fluidstack.name=Плата операций над жидкостями
+item.immersiveintelligence.circuit_functional.map.name=Картографическая плата
+item.immersiveintelligence.circuit_functional.vector_arithmetic.name=Векторно-арифметическая плата
+item.immersiveintelligence.circuit_functional.cryptographer.name=Криптографическая плата
 
 
 item.immersiveintelligence.minecart.wooden_crate.name=Вагонетка с деревянным ящиком
@@ -193,10 +193,10 @@ item.immersiveintelligence.minecart.barrel_creative.name=Вагонетка с �
 item.immersiveintelligence.minecart.steel_barrel.name=Вагонетка со стальной бочкой
 item.immersiveintelligence.minecart.open_barrel.name=Вагонетка с открытой металлической бочкой
 
-item.immersiveintelligence.light_engineer_armor_helmet.name=Шлем лёгкой брони инженера
-item.immersiveintelligence.light_engineer_armor_chestplate.name=Нагрудник лёгкой брони инженера
-item.immersiveintelligence.light_engineer_armor_leggings.name=Штаны лёгкой брони инженера
-item.immersiveintelligence.light_engineer_armor_boots.name=Ботинки лёгкой брони инженера
+item.immersiveintelligence.light_engineer_armor_helmet.name=Лёгкий шлем инженера
+item.immersiveintelligence.light_engineer_armor_chestplate.name=Лёгкий нагрудник инженера
+item.immersiveintelligence.light_engineer_armor_leggings.name=Лёгкие штаны инженера
+item.immersiveintelligence.light_engineer_armor_boots.name=Лёгкие ботинки инженера
 item.immersiveintelligence.advanced_powerpack.name=Улучшенный конденсаторный рюкзак
 
 item.immersiveintelligence.lighter.name=Зажигалка инженера
@@ -218,10 +218,10 @@ item.immersiveintelligence.rifle.name=Винтовка
 item.immersiveintelligence.rifle_handmade.name=Самодельная винтовка
 
 #Drillheads
-item.immersiveintelligence.drillhead.tungsten.name=Вольфрамовая буровая головка
-item.immersiveintelligence.drillhead.iron_diamond_tip.name=Покрытая алмазом железная буровая головка
-item.immersiveintelligence.drillhead.steel_diamond_tip.name=Покрытая алмазом стальная буровая соловка
-item.immersiveintelligence.drillhead.tungsten_diamond_tip.name=Покрытая алмазом вольфрамовая буровая головка
+item.immersiveintelligence.drillhead.tungsten.name=Вольфрамовое буровое долото
+item.immersiveintelligence.drillhead.iron_diamond_tip.name=Покрытое алмазом железное буровое долото
+item.immersiveintelligence.drillhead.steel_diamond_tip.name=Покрытое алмазом стальное буровое долото
+item.immersiveintelligence.drillhead.tungsten_diamond_tip.name=Покрытое алмазом вольфрамовое буровое долото
 
 item.immersiveintelligence.weapon_upgrade.water_cooling.name=Охлаждаемый водой ствол
 item.immersiveintelligence.weapon_upgrade.heavy_barrel.name=Тяжёлый ствол
@@ -296,10 +296,10 @@ desc.immersiveintelligence.toolupgrade.item.rifle=Винтовка
 desc.immersiveintelligence.filled_casing=Наполнено порохом
 desc.immersiveintelligence.explosives_programmed=Запрограммирован с помощью пакета данных
 
-desc.immersiveintelligence.toolupgrade.item.light_engineer_helmet=Легкий шлем инженера
-desc.immersiveintelligence.toolupgrade.item.light_engineer_chestplate=Легкий нагрудник инженера
-desc.immersiveintelligence.toolupgrade.item.light_engineer_leggings=Легкие штаны инженера
-desc.immersiveintelligence.toolupgrade.item.light_engineer_boots=Легкие ботинки инженера
+desc.immersiveintelligence.toolupgrade.item.light_engineer_helmet=Лёгкий шлем инженера
+desc.immersiveintelligence.toolupgrade.item.light_engineer_chestplate=Лёгкий нагрудник инженера
+desc.immersiveintelligence.toolupgrade.item.light_engineer_leggings=Лёгкие штаны инженера
+desc.immersiveintelligence.toolupgrade.item.light_engineer_boots=Лёгкие ботинки инженера
 
 desc.immersiveintelligence.toolupgrade.water_cooling=Использует воду, чтобы охладить пулемёт. Увеличивает максимальное кол-во тепла, которое можно принять.
 desc.immersiveintelligence.toolupgrade.heavy_barrel=Значительно увеличивает скорострельность, увеличивает отдачу и скорость нагрева.
@@ -378,21 +378,21 @@ item.immersiveintelligence.sawblade.tungsten.name=Вольфрамовое ле�
 
 #bCal - Block-Caliber (1/16 Block = 1 bCal)
 #Casings
-item.immersiveintelligence.ammo_casing.artillery_8bcal.name=Гильза тяжёлого артиллерийского снаряда
-item.immersiveintelligence.artillery_8bcal.core.name=Сердечник тяжёлого артиллерийского снаряда
-item.immersiveintelligence.artillery_8bcal.bullet.name=Тяжелый артиллерийский снаряд
+item.immersiveintelligence.ammo_casing.artillery_8bcal.name=Гильза артиллерийского снаряда 8 bCal
+item.immersiveintelligence.artillery_8bcal.core.name=Сердечник артиллерийского снаряда 8 bCal
+item.immersiveintelligence.artillery_8bcal.bullet.name=Артиллерийский снаряд 8 bCal
 
-item.immersiveintelligence.ammo_casing.medium_artillery_6bcal.name=Гильза артиллерийского снаряда
-item.immersiveintelligence.artillery_6bcal_long.core.name=Сердечник артиллерийского снаряда
-item.immersiveintelligence.artillery_6bcal_long.bullet.name=Артиллерийский снаряд
+item.immersiveintelligence.ammo_casing.medium_artillery_6bcal.name=Гильза среднего артиллерийского снаряда 6 bCal
+item.immersiveintelligence.artillery_6bcal_long.core.name=Сердечник среднего артиллерийского снаряда 6 bCal
+item.immersiveintelligence.artillery_6bcal_long.bullet.name=Средней артиллерийский снаряд 6 bCal
 
-item.immersiveintelligence.ammo_casing.light_artillery_6bcal.name=Гильза лёгкого артиллерийского снаряда
-item.immersiveintelligence.artillery_6bcal.core.name=Сердечник лёгкого артиллерийского снаряда
-item.immersiveintelligence.artillery_6bcal.bullet.name=Лёгкий артиллерийский снаряд
+item.immersiveintelligence.ammo_casing.light_artillery_6bcal.name=Гильза легкого артиллерийского снаряда 6 bCal
+item.immersiveintelligence.artillery_6bcal.core.name=Сердечник легкого артиллерийского снаряда 6 bCal
+item.immersiveintelligence.artillery_6bcal.bullet.name=Легкий артиллерийский снаряд 6 bCal
 
-item.immersiveintelligence.ammo_casing.light_gun_4bcal.name=Гильза снаряда лёгкой пушки
-item.immersiveintelligence.gun_4bcal.core.name=Сердечник снаряда лёгкой пушки
-item.immersiveintelligence.gun_4bcal.bullet.name=Снаряд лёгкой пушки
+item.immersiveintelligence.ammo_casing.light_gun_4bcal.name=Гильза лёгкой пушки 4 bCal
+item.immersiveintelligence.gun_4bcal.core.name=Сердечник лёгкой пушки 4 bCal
+item.immersiveintelligence.gun_4bcal.bullet.name=Снаряд лёгкой пушки 4 bCal
 
 item.immersiveintelligence.ammo_casing.rocket_6bcal.name=Корпус ракеты
 item.immersiveintelligence.rocket_6bcal.core.name=Сердечник ракеты
@@ -406,36 +406,36 @@ item.immersiveintelligence.ammo_casing.guided_missile_6bcal.name=Корпус р
 item.immersiveintelligence.missile_guided_6bcal.core.name=Сердечник ракеты проводного наведения
 item.immersiveintelligence.missile_guided_6bcal.bullet.name=Ракета проводного наведения
 
-item.immersiveintelligence.ammo_casing.mortar_6bcal.name=Корпус миномётной мины
-item.immersiveintelligence.mortar_6bcal.core.name=Сердечник миномётной мины
-item.immersiveintelligence.mortar_6bcal.bullet.name=Миномётная мина
+item.immersiveintelligence.ammo_casing.mortar_6bcal.name=Корпус миномётной мины 6 bCal
+item.immersiveintelligence.mortar_6bcal.core.name=Сердечник миномётной мины 6 bCal
+item.immersiveintelligence.mortar_6bcal.bullet.name=Миномётная мина 6 bCal
 
-item.immersiveintelligence.ammo_casing.mg_2bcal.name=Гильза длинного патрона
-item.immersiveintelligence.mg_2bcal.core.name=Сердечник длинного патрона
-item.immersiveintelligence.mg_2bcal.bullet.name=Длинный патрон
+item.immersiveintelligence.ammo_casing.mg_2bcal.name=Гильза винтовочного патрона
+item.immersiveintelligence.mg_2bcal.core.name=Сердечник винтовочного патрона
+item.immersiveintelligence.mg_2bcal.bullet.name=Винтовочный патрон 2 bCal
 
-item.immersiveintelligence.ammo_casing.stg_1bcal.name=Гильза среднего патрона
-item.immersiveintelligence.stg_1bcal.core.name=Сердечник среднего патрона
-item.immersiveintelligence.stg_1bcal.bullet.name=Средник патрон
+item.immersiveintelligence.ammo_casing.stg_1bcal.name=Гильза промежуточного патрона
+item.immersiveintelligence.stg_1bcal.core.name=Сердечник промежуточного патрона
+item.immersiveintelligence.stg_1bcal.bullet.name=Промежуточный патрон 1 bCal
 
-item.immersiveintelligence.ammo_casing.smg_1bcal.name=Гильза короткого патрона
-item.immersiveintelligence.smg_1bcal.core.name=Сердечник короткого патрона
-item.immersiveintelligence.smg_1bcal.bullet.name=Короткий патрон
+item.immersiveintelligence.ammo_casing.smg_1bcal.name=Гильза пистолетного патрона
+item.immersiveintelligence.smg_1bcal.core.name=Сердечник пистолетного патрона
+item.immersiveintelligence.smg_1bcal.bullet.name=Пистолетный патрон 1 bCal
 
-item.immersiveintelligence.revolver_1bcal.core.name=Револьверная гильза
-item.immersiveintelligence.revolver_1bcal.bullet.name=Револьверная пуля
+item.immersiveintelligence.revolver_1bcal.core.name=Гильза револьвера
+item.immersiveintelligence.revolver_1bcal.bullet.name=Револьверный патрон 1 bCal
 
-item.immersiveintelligence.ammo_casing.autocannon_3bcal.name=Гильза автопушки
-item.immersiveintelligence.autocannon_3bcal.core.name=Сердечник автопушки
-item.immersiveintelligence.autocannon_3bcal.bullet.name=Снаряд автопушки
+item.immersiveintelligence.ammo_casing.autocannon_3bcal.name=Гильза автопушки 3 bCal
+item.immersiveintelligence.autocannon_3bcal.core.name=Сердечник автопушки 3 bCal
+item.immersiveintelligence.autocannon_3bcal.bullet.name=Снаряд автопушки 3 bCal
 
-item.immersiveintelligence.grenade_5bcal.core.name=Сердечник ручной гранаты
-item.immersiveintelligence.grenade_5bcal.bullet.name=Ручная граната
+item.immersiveintelligence.grenade_5bcal.core.name=Сердечник ручной гранаты 5 bCal
+item.immersiveintelligence.grenade_5bcal.bullet.name=Ручная граната 5 bCal
 
 item.immersiveengineering.bullet.empty_casing.name=Гильза револьвера
 item.immersiveengineering.mold.bullet_casing.name=Пресс-форма "Револьверная гильза"
-item.immersiveintelligence.railgun_grenade_4bcal.core.name=Сердечник подствольной рельсотронной гранаты
-item.immersiveintelligence.railgun_grenade_4bcal.bullet.name=Подствольная рельсотронная граната
+item.immersiveintelligence.railgun_grenade_4bcal.core.name=Сердечник подствольной рельсотронной гранаты 4 bCal
+item.immersiveintelligence.railgun_grenade_4bcal.bullet.name=Подствольная рельсотронная граната 4 bCal
 
 #Components
 
@@ -547,25 +547,25 @@ tile.immersiveintelligence.concrete_decoration.concrete_bricks.name=Бетонн
 tile.immersiveintelligence.concrete_decoration_slab.concrete_bricks.name=Плита из бетонных кирпичей
 tile.immersiveintelligence.concrete_decoration_stairs_concrete_bricks.name=Ступеньки из бетонных кирпичей
 
-tile.immersiveintelligence.concrete_decoration.sturdy_concrete_bricks.name=Танко-бетонные кирпичи
-tile.immersiveintelligence.concrete_decoration_slab.sturdy_concrete_bricks.name=Плита из танко-бетонных кирпичей
-tile.immersiveintelligence.concrete_decoration_stairs_sturdy_concrete_bricks.name=Ступеньки из танко-бетонных кирпичей
+tile.immersiveintelligence.concrete_decoration.sturdy_concrete_bricks.name=Panzerconcrete кирпичи
+tile.immersiveintelligence.concrete_decoration_slab.sturdy_concrete_bricks.name=Плита из panzerconcrete кирпичей
+tile.immersiveintelligence.concrete_decoration_stairs_sturdy_concrete_bricks.name=Ступеньки из panzerconcrete кирпичей
 
-tile.immersiveintelligence.concrete_decoration.uberconcrete.name=Сверхбетонные кирпичи
-tile.immersiveintelligence.concrete_decoration_slab.uberconcrete.name=Плита из сверхбетонных кирпичей
-tile.immersiveintelligence.concrete_decoration_stairs_uberconcrete.name=Ступеньки из сверхбетонные кирпичей
+tile.immersiveintelligence.concrete_decoration.uberconcrete.name=Убербетонные кирпичи
+tile.immersiveintelligence.concrete_decoration_slab.uberconcrete.name=Плита из убербетонных кирпичей
+tile.immersiveintelligence.concrete_decoration_stairs_uberconcrete.name=Ступеньки из убербетонные кирпичей
 
 tile.immersiveintelligence.concrete_decoration.concrete_bricks_gray.name=Серые бетонные кирпичи
-tile.immersiveintelligence.concrete_decoration_slab.concrete_bricks_gray.name=Серая плита из бетонных кирпичей
-tile.immersiveintelligence.concrete_decoration_stairs_concrete_bricks_gray.name=Серые ступеньки из бетонных кирпичей
+tile.immersiveintelligence.concrete_decoration_slab.concrete_bricks_gray.name=Плита из серых бетонных кирпичей
+tile.immersiveintelligence.concrete_decoration_stairs_concrete_bricks_gray.name=Ступеньки из серых бетонных кирпичей
 
-tile.immersiveintelligence.concrete_decoration.sturdy_concrete_bricks_gray.name=Серые танко-бетонные кирпичи
-tile.immersiveintelligence.concrete_decoration_slab.sturdy_concrete_bricks_gray.name=Серая плита из танко-бетонных кирпичей
-tile.immersiveintelligence.concrete_decoration_stairs_sturdy_concrete_bricks_gray.name=Серые ступеньки из танко-бетонных кирпичей
+tile.immersiveintelligence.concrete_decoration.sturdy_concrete_bricks_gray.name=Серые panzerconcrete кирпичи
+tile.immersiveintelligence.concrete_decoration_slab.sturdy_concrete_bricks_gray.name=Плита из серых panzerconcrete кирпичей
+tile.immersiveintelligence.concrete_decoration_stairs_sturdy_concrete_bricks_gray.name=Ступеньки из серых panzerconcrete кирпичей
 
-tile.immersiveintelligence.concrete_decoration.uberconcrete_gray.name=Серые сверхбетонные кирпичи
-tile.immersiveintelligence.concrete_decoration_slab.uberconcrete_gray.name=Серая плита из сверхбетонных кирпичей
-tile.immersiveintelligence.concrete_decoration_stairs_uberconcrete_gray.name=Серые ступеньки из сверхбетонные кирпичей
+tile.immersiveintelligence.concrete_decoration.uberconcrete_gray.name=Серые убербетонные кирпичи
+tile.immersiveintelligence.concrete_decoration_slab.uberconcrete_gray.name=Плита из серых убербетонных кирпичей
+tile.immersiveintelligence.concrete_decoration_stairs_uberconcrete_gray.name=Ступеньки из серых убербетонных кирпичей
 
 tile.immersiveintelligence.metal_decoration.electronic_engineering.name=Электронный инженерный блок
 tile.immersiveintelligence.metal_decoration.advanced_electronic_engineering.name=Продвинутый электронный инженерный блок
@@ -673,8 +673,8 @@ tile.immersiveintelligence.data_connector.data_relay.name=Реле данных
 tile.immersiveintelligence.data_connector.data_duplex_connector.name=Дуплексный коннектор данных
 tile.immersiveintelligence.data_connector.chemical_dispenser.name=Химический раздатчик
 
-tile.immersiveintelligence.data_connector.alarm_siren.name=Сирена тревоги
-tile.immersiveintelligence.data_connector.programmable_speaker.name=Программируемый динамик
+tile.immersiveintelligence.data_connector.alarm_siren.name=Сирена
+tile.immersiveintelligence.data_connector.programmable_speaker.name=Программируемая сирена
 
 tile.immersiveintelligence.data_connector.inserter.name=Манипулятор
 tile.immersiveintelligence.data_connector.advanced_inserter.name=Продвинутый манипулятор
@@ -683,9 +683,9 @@ tile.immersiveintelligence.data_connector.advanced_fluid_inserter.name=Прод�
 
 tile.immersiveintelligence.data_connector.data_debugger.name=Отладчик данных
 
-tile.immersiveintelligence.circuit_socket.basic.name=Сокет базовой схемы
-tile.immersiveintelligence.circuit_socket.advanced.name=Сокет продвинутой схемы
-tile.immersiveintelligence.circuit_socket.processor.name=Сокет процессорной схемы
+tile.immersiveintelligence.circuit_socket.basic.name=Разъём базовой схемы
+tile.immersiveintelligence.circuit_socket.advanced.name=Разъём продвинутой схемы
+tile.immersiveintelligence.circuit_socket.processor.name=Разъём процессорной схемы
 
 #Multiblock names
 
@@ -714,7 +714,7 @@ tile.immersiveintelligence.metal_multiblock1.vulcanizer.name=Вулканиза�
 tile.immersiveintelligence.metal_multiblock1.coagulator.name=Коагулятор
 
 tile.immersiveintelligence.metal_multiblock1.fuel_station.name=Автозаправочная станция
-tile.immersiveintelligence.metal_multiblock1.emplacement.name=Позиция
+tile.immersiveintelligence.metal_multiblock1.emplacement.name=Огневая точка
 tile.immersiveintelligence.metal_multiblock1.radar.name=Радар
 
 tile.immersiveintelligence.gate_multiblock.wooden.name=Деревянные ворота
@@ -724,9 +724,9 @@ tile.immersiveintelligence.gate_multiblock.wooden_chain.name=Деревянны�
 tile.immersiveintelligence.gate_multiblock.steel_chain.name=Стальные ворота с сеткой
 tile.immersiveintelligence.gate_multiblock.aluminium_chain.name=Алюминиевые ворота с сеткой
 
-desc.immersiveintelligence.metal_multiblock1.emplacement.storage=Позиция - Хранилище
-desc.immersiveintelligence.metal_multiblock1.emplacement.tasks=Позиция - Задачи
-desc.immersiveintelligence.metal_multiblock1.emplacement.status=Позиция - Статус
+desc.immersiveintelligence.metal_multiblock1.emplacement.storage=Огневая точка - Хранилище
+desc.immersiveintelligence.metal_multiblock1.emplacement.tasks=Огневая точка - Задачи
+desc.immersiveintelligence.metal_multiblock1.emplacement.status=Огневая точка - Статус
 desc.immersiveintelligence.metal_multiblock1.emplacement.base_inventory=Инвентарь базы
 desc.immersiveintelligence.metal_multiblock1.emplacement.weapon=Установлено: %s
 desc.immersiveintelligence.metal_multiblock1.emplacement.weapon_none=Пусто
@@ -1122,7 +1122,7 @@ machineupgrade.immersiveintelligence.cpds=СПРО
 machineupgrade.immersiveintelligence.cpds.desc=Система ПротивоРакетной Обороны (СПРО) - это современное противовоздушное оружие, способное уничтожать летящие артиллерийские снаряды в воздухе.
 
 machineupgrade.immersiveintelligence.autocannon=Автоматическая пушка
-machineupgrade.immersiveintelligence.autocannon.desc=Четыре автоматические пушки 3 б/Кал обеспечивают большую огневую мощь, что делает это оружие универсальным средством защиты от воздушных и наземных целей.
+machineupgrade.immersiveintelligence.autocannon.desc=Четыре автоматические пушки 3 bCal обеспечивают большую огневую мощь, что делает это оружие универсальным средством защиты от воздушных и наземных целей.
 
 machineupgrade.immersiveintelligence.heavy_chemthrower=Тяжёлый жидкомёт
 machineupgrade.immersiveintelligence.heavy_chemthrower.desc=Более тяжелая версия хорошо известного химического жидкомёта с более высоким давлением позволяет атаковать врагов на расстоянии в 4 раза большем, чем у портативного.
@@ -1181,7 +1181,7 @@ desc.immersiveintelligence.radio_configurator_advanced=Модернизиров�
 desc.immersiveintelligence.radio_configurator_frequency=Частота: %s
 desc.immersiveintelligence.radio_configurator_max_frequency=Макс. Частота: %s
 desc.immersiveintelligence.naval_mine_chain_length=Максимальная длина цепи: %s
-desc.immersiveintelligence.measuring_cup_size=Ёмкость: %s / %s мВ
+desc.immersiveintelligence.measuring_cup_size=Ёмкость: %s / %s mB
 desc.immersiveintelligence.measuring_cup_cant_resize=Невозможно изменить размер, когда содержит жидкость.
 desc.immersiveintelligence.functional_circuit_shift=%s - Доступные операции
 desc.immersiveintelligence.functional_circuit_ctrl=%s - Сохраненные операции
@@ -1272,13 +1272,13 @@ desc.immersiveintelligence.bullet_type.emp=ЭМИ
 desc.immersiveintelligence.bullet_type.terrain_denial=По местности
 desc.immersiveintelligence.bullet_type.special=Спец. назначения
 
-desc.immersiveintelligence.bullet_core_type.softpoint=Полуоболочное
-desc.immersiveintelligence.bullet_core_type.shaped=Кумулятивное
-desc.immersiveintelligence.bullet_core_type.shaped_sabot=Оперённое кумулятивное
-desc.immersiveintelligence.bullet_core_type.piercing=Бронебойное
-desc.immersiveintelligence.bullet_core_type.piercing_sabot=Кассетное
-desc.immersiveintelligence.bullet_core_type.canister=Шрапнельное
-desc.immersiveintelligence.bullet_core_type.cluster=Кластерное
+desc.immersiveintelligence.bullet_core_type.softpoint=Полуоболочный
+desc.immersiveintelligence.bullet_core_type.shaped=Кумулятивный
+desc.immersiveintelligence.bullet_core_type.shaped_sabot=Оперённый кумулятивный
+desc.immersiveintelligence.bullet_core_type.piercing=Бронебойный
+desc.immersiveintelligence.bullet_core_type.piercing_sabot=Кассетный
+desc.immersiveintelligence.bullet_core_type.canister=Шрапнельный
+desc.immersiveintelligence.bullet_core_type.cluster=Кластерный
 
 desc.immersiveintelligence.bullet_fuse.contact=Контактный
 desc.immersiveintelligence.bullet_fuse.timed=Хронометрированный
@@ -1291,12 +1291,12 @@ desc.immersiveintelligence.bullets.details=Детали:
 desc.immersiveintelligence.bullets.core=Заполнен с %1$s %2$s ядром
 desc.immersiveintelligence.bullets.fuse=%s взрыватель
 desc.immersiveintelligence.bullets.mass=Масса: %s
-desc.immersiveintelligence.bullets.caliber=Калибр: %s б/Кал
+desc.immersiveintelligence.bullets.caliber=Калибр: %s bCal
 
 desc.immersiveintelligence.bullets.components=Компоненты:
 desc.immersiveintelligence.bullets.ballistics=%s - Баллистика
 desc.immersiveintelligence.bullets.performance=Представление:
-desc.immersiveintelligence.bullets.damage_dealt=Нанесенный урон: %s
+desc.immersiveintelligence.bullets.damage_dealt=Наносимый урон: %s
 desc.immersiveintelligence.bullets.standard_velocity=Стандартная скорость: %s b/t
 desc.immersiveintelligence.bullets.max_artillery_range=Максимальная артиллерийская дальность: %s блоков
 desc.immersiveintelligence.bullets.max_artillery_height=Максимальная достигаемая высота: %s блоков
@@ -2572,7 +2572,7 @@ advancement.immersiveintelligence.craft_siren.desc=Создайте сирену
 
 #Reference to a sidenote on one of Choroman's concept drawings
 advancement.immersiveintelligence.craft_speaker=Звуки счастливого инженера
-advancement.immersiveintelligence.craft_speaker.desc=Создайте программируемый динамик
+advancement.immersiveintelligence.craft_speaker.desc=Создайте программируемую сирену
 
 advancement.immersiveintelligence.electrolyzer=Водно-шоковая терапия
 advancement.immersiveintelligence.electrolyzer.desc=Создайте электролизер
@@ -2916,8 +2916,8 @@ death.attack.iiMotorbike=%1$s переехал %2$s
 death.attack.iiMotorbikeNoRider=%1$s был сбит
 death.attack.iiMotorbikeExplicit=%2$s сделал %1$s своим парковочным местом
 death.attack.iiMotorbikeSuicide=%1$s решил спрыгнуть с движущегося мотоцикла
-death.attack.iiPanzer1=%1$s был раздавлен нитями «Панцера»
-death.attack.iiPanzer2=Нити неукротимого «Панцера» превратили %1$s в пыль
+death.attack.iiPanzer1=%1$s was crushed under the Panzer's threads
+death.attack.iiPanzer2=The indomitable Panzer's threads have pulverized %1$s
 
 #Additional stuff for the Config Panel
 ii.config.Graphics=Графика
@@ -2935,7 +2935,7 @@ ii.config.Ammunition=Боеприпасы
 ii.config.Emplacement_Weapons=Оружие для огневых точек
 ii.config.Grenade=Гранаты
 ii.config.Mines=Мины
-ii.config.Light_Engineer_Armor=Лёгкая инженерная броня
+ii.config.Light_Engineer_Armor=Лёгкая броня инженера
 
 #GUI Labels
 ii.gui.data_input_machine.storage=Накопитель перфоленты
@@ -2987,9 +2987,9 @@ ii.gui_tooltip.mech_speed.input=Скорость на входе: %s D/t
 ii.gui_tooltip.mech_speed.required=Требуемая скорость: %s D/t
 ii.gui_tooltip.mech_speed.output=Скорость на выходе: %s D/t
 
-ii.gui_tooltip.fluid.stored=%s - %s мВ
-ii.gui_tooltip.fluid.input=%s потребление: %s мВ
-ii.gui_tooltip.fluid.output=%s выход: %s мВ
+ii.gui_tooltip.fluid.stored=%s - %s mB
+ii.gui_tooltip.fluid.input=%s потребление: %s mB
+ii.gui_tooltip.fluid.output=%s выход: %s mB
 
 ii.gui_tooltip.time.stored=Оставшееся время: %s/%s t
 ii.gui_tooltip.time.required=Необходимое время: %s t
@@ -3004,5 +3004,5 @@ ii.gui_tooltip.reactive_armor_integrity=Reactive Armor: %s/%s очков
 
 ii.gui_tooltip.speed=Скорость: %s
 ii.gui_tooltip.progress=Прогресс: %s %
-ii.gui_tooltip.fuel=Топливо: %s/%s мВ
+ii.gui_tooltip.fuel=Топливо: %s/%s mB
 ii.gui_tooltip.soil_fertility=Плодородие почвы: %s %
