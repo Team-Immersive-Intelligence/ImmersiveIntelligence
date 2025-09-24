@@ -84,6 +84,35 @@ public class HansUtils
 		setArmor(hans, EntityEquipmentSlot.HEAD, IIContent.itemLightEngineerHelmet, armorUpgrades);
 	}
 
+	public static void setChestplate(EntityHans hans, ArmorUpgrades... armorUpgrades)
+	{
+		setArmor(hans, EntityEquipmentSlot.CHEST, IIContent.itemLightEngineerChestplate, armorUpgrades);
+	}
+
+	public static void setLeggings(EntityHans hans, ArmorUpgrades... armorUpgrades)
+	{
+		setArmor(hans, EntityEquipmentSlot.LEGS, IIContent.itemLightEngineerLeggings, armorUpgrades);
+	}
+
+	public static void setBoots(EntityHans hans, ArmorUpgrades... armorUpgrades)
+	{
+		setArmor(hans, EntityEquipmentSlot.FEET, IIContent.itemLightEngineerBoots, armorUpgrades);
+	}
+
+	public static void setFullArmor(EntityHans hans, ArmorUpgrades... armorUpgrades)
+	{
+		setArmor(hans, EntityEquipmentSlot.HEAD, IIContent.itemLightEngineerHelmet, armorUpgrades);
+		setArmor(hans, EntityEquipmentSlot.CHEST, IIContent.itemLightEngineerChestplate, armorUpgrades);
+		setArmor(hans, EntityEquipmentSlot.LEGS, IIContent.itemLightEngineerLeggings, armorUpgrades);
+		setArmor(hans, EntityEquipmentSlot.FEET, IIContent.itemLightEngineerBoots, armorUpgrades);
+	}
+
+// Attempt at making a shield	
+//	public static void setShield(EntityHans hans)
+//	{
+//		setHandGun(hans, IEContent.ItemIEShield);
+//	}	
+
 	public static void setSubmachinegun(EntityHans hans, ItemStack magazine, WeaponUpgrade... weaponUpgrades)
 	{
 		setHandGun(hans, IIContent.itemSubmachinegun, magazine, weaponUpgrades);
