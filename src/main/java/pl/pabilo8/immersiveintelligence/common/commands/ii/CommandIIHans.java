@@ -187,6 +187,11 @@ public class CommandIIHans extends CommandBase
 						HansUtils.setHelmet(hans);
 						ItemStack stack = new ItemStack(IEContent.itemRevolver);
 						hans.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, stack);
+						
+						ItemStack bullet = IIContent.ItemIIAmmoRevolver.getAmmoStack(IIContent.ammoCoreIron, CoreType.PIERCING, FuseType.CONTACT);
+						bullet.setCount(bullet.getMaxStackSize());
+						for(int i = 0; i < 30; i++)
+							hans.mainInventory.set(i, bullet.copy());
 					}
 				}
 		);
@@ -328,7 +333,163 @@ public class CommandIIHans extends CommandBase
 					}
 				}
 		);
+		
+		squadList.put(new ResourceLocation(ImmersiveIntelligence.MODID, "railgun_sniper_camoflage"),
+				new HansSquadHandWeapon()
+				{
+					@Override
+					public void setItems(EntityHans hans, int id)
+					{
+						HansUtils.setHelmet(hans, ArmorUpgrades.INFILTRATOR_GEAR);
+						
+						HansUtils.setChestplate(hans, ArmorUpgrades.CAMOUFLAGE_MESH);
+						
+						HansUtils.setLeggings(hans);
+						
+						HansUtils.setBoots(hans);
+						
+						ItemStack stack = new ItemStack(IEContent.itemRailgun);
+						ItemIIRailgunOverride itemRailgun = ((ItemIIRailgunOverride)IEContent.itemRailgun);
 
+						NonNullList<ItemStack> upgrades = NonNullList.withSize(itemRailgun.getSlotCount(stack), ItemStack.EMPTY);
+						upgrades.set(0, new ItemStack(IEContent.itemToolUpgrades, 1, ToolUpgrades.RAILGUN_SCOPE.ordinal()));
+
+						itemRailgun.setContainedItems(stack, upgrades);
+						itemRailgun.recalculateUpgrades(stack);
+						itemRailgun.finishUpgradeRecalculation(stack);
+
+						hans.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, stack);
+						ItemStack ammo = new ItemStack(IEContent.itemGraphiteElectrode, 16);
+						hans.mainInventory.set(0, ammo.copy());
+						hans.mainInventory.set(1, ammo.copy());
+						ItemStack backpack = new ItemStack(IIContent.itemAdvancedPowerPack);
+						EnergyHelper.insertFlux(backpack, 9999999, false);
+						hans.setItemStackToSlot(EntityEquipmentSlot.CHEST, backpack);
+
+					}
+				}
+		);
+		
+		squadList.put(new ResourceLocation(ImmersiveIntelligence.MODID, "rifle_camoflage"),
+				new HansSquadHandWeapon()
+				{
+					@Override
+					public void setItems(EntityHans hans, int id)
+					{
+						HansUtils.setHelmet(hans, ArmorUpgrades.INFILTRATOR_GEAR);
+						
+						HansUtils.setChestplate(hans, ArmorUpgrades.CAMOUFLAGE_MESH);
+						
+						HansUtils.setLeggings(hans);
+						
+						HansUtils.setBoots(hans);
+						
+						HansUtils.setRifle(hans, ItemStack.EMPTY);
+
+						ItemStack bullet = IIContent.itemAmmoMachinegun.getAmmoStack(IIContent.ammoCoreTungsten, CoreType.PIERCING, FuseType.CONTACT);
+						bullet.setCount(bullet.getMaxStackSize());
+						for(int i = 0; i < 6; i++)
+							hans.mainInventory.set(i, bullet.copy());
+					}
+				}
+		);
+		
+		squadList.put(new ResourceLocation(ImmersiveIntelligence.MODID, "smg_armor_light"),
+				new HansSquadHandWeapon()
+				{
+					@Override
+					public void setItems(EntityHans hans, int id)
+					{
+						HansUtils.setFullArmor(hans);
+
+						ItemStack magazine = IIContent.itemBulletMagazine.getMagazine(Magazines.SUBMACHINEGUN,
+								IIContent.itemAmmoSubmachinegun.getAmmoStack(IIContent.ammoCoreIron, CoreType.PIERCING, FuseType.CONTACT));
+						HansUtils.setSubmachinegun(hans, magazine);
+						for(int i = 0; i < 6; i++)
+							hans.mainInventory.set(i, magazine.copy());
+					}
+				}
+		);
+		
+		squadList.put(new ResourceLocation(ImmersiveIntelligence.MODID, "smg_scout"),
+				new HansSquadHandWeapon()
+				{
+					@Override
+					public void setItems(EntityHans hans, int id)
+					{
+						HansUtils.setHelmet(hans, ArmorUpgrades.TECHNICIAN_GEAR);
+						
+						HansUtils.setLeggings(hans, ArmorUpgrades.EXOSKELETON, ArmorUpgrades.COMPOSITE_ARMOR_PLATES);
+
+						HansUtils.setBoots(hans, ArmorUpgrades.INTERNAL_SPRINGS, ArmorUpgrades.SNOW_RACKETS);
+
+						ItemStack magazine = IIContent.itemBulletMagazine.getMagazine(Magazines.SUBMACHINEGUN_DRUM,
+								IIContent.itemAmmoSubmachinegun.getAmmoStack(IIContent.ammoCoreSteel, CoreType.PIERCING, FuseType.CONTACT));
+						HansUtils.setSubmachinegun(hans, magazine, WeaponUpgrade.BOTTOM_LOADING);
+						for(int i = 0; i < 4; i++)
+							hans.mainInventory.set(i, magazine.copy());
+						
+						ItemStack backpack = new ItemStack(IIContent.itemAdvancedPowerPack);
+						EnergyHelper.insertFlux(backpack, 9999999, false);
+						hans.func_184201_a(EntityEquipmentSlot.CHEST, backpack);
+					}
+				}
+		);
+		
+		squadList.put(new ResourceLocation(ImmersiveIntelligence.MODID, "smg_armor_heavy"),
+				new HansSquadHandWeapon()
+				{
+					@Override
+					public void setItems(EntityHans hans, int id)
+					{
+						HansUtils.setHelmet(hans, ArmorUpgrades.GASMASK, ArmorUpgrades.HAZMAT_COATING, ArmorUpgrades.STEEL_ARMOR_PLATES);
+						
+						HansUtils.setChestplate(hans, ArmorUpgrades.HEAT_RESISTANT_COATING, ArmorUpgrades.HAZMAT_COATING, ArmorUpgrades.STEEL_ARMOR_PLATES);
+						
+						HansUtils.setLeggings(hans, ArmorUpgrades.HAZMAT_COATING, ArmorUpgrades.STEEL_ARMOR_PLATES);
+						
+						HansUtils.setBoots(hans, ArmorUpgrades.BOOT_REINFORCEMENT);
+
+						ItemStack magazine = IIContent.itemBulletMagazine.getMagazine(Magazines.SUBMACHINEGUN_DRUM,
+								IIContent.itemAmmoSubmachinegun.getAmmoStack(IIContent.ammoCoreSteel, CoreType.PIERCING, FuseType.CONTACT));
+						HansUtils.setSubmachinegun(hans, magazine, WeaponUpgrade.BOTTOM_LOADING, WeaponUpgrades.STURDY_BARREL);
+						ItemNBTHelper.setString(hans.getHeldItemMainhand(), "contributorSkin", "flakmeister");
+						for(int i = 0; i < 4; i++)
+							hans.mainInventory.set(i, magazine.copy());
+						
+						ItemStack backpack = new ItemStack(IIContent.itemAdvancedPowerPack);
+						EnergyHelper.insertFlux(backpack, 9999999, false);
+						hans.func_184201_a(EntityEquipmentSlot.CHEST, backpack);
+					}
+				}
+		);
+		
+		squadList.put(new ResourceLocation(ImmersiveIntelligence.MODID, "stg_armor_elite"),
+				new HansSquadHandWeapon()
+				{
+					@Override
+					public void setItems(EntityHans hans, int id)
+					{
+						HansUtils.setHelmet(hans, ArmorUpgrades.ENGINEER_GEAR, ArmorUpgrades.HAZMAT_COATING, ArmorUpgrades.GASMASK, ArmorUpgrades.COMPOSITE_ARMOR_PLATES);
+						
+						HansUtils.setChestplate(hans, ArmorUpgrades.HEAT_RESISTANT_COATING, ArmorUpgrades.HAZMAT_COATING, ArmorUpgrades.COMPOSITE_ARMOR_PLATES, ArmorUpgrades.SCUBA_TANK);
+						
+						HansUtils.setLeggings(hans, ArmorUpgrades.EXOSKELETON, ArmorUpgrades.COMPOSITE_ARMOR_PLATES, ArmorUpgrades.HAZMAT_COATING);
+						
+						HansUtils.setBoots(hans, ArmorUpgrades.BOOT_REINFORCEMENT, ArmorUpgrades.INTERNAL_SPRINGS, ArmorUpgrades.FLIPPERS);
+
+						ItemStack magazine = IIContent.itemBulletMagazine.getMagazine(Magazines.ASSAULT_RIFLE,
+								IIContent.itemAmmoAssaultRifle.getAmmoStack(IIContent.ammoCoreTungsten, CoreType.PIERCING, FuseType.CONTACT));
+						HansUtils.setAssaultRifle(hans, magazine, WeaponUpgrades.SCOPE, WeaponUpgrades.ELECTRIC_FIRING_MOTOR, WeaponUpgrades.RAILGUN_ASSISTED_CHAMBER);
+						for(int i = 0; i < 6; i++)
+							hans.mainInventory.set(i, magazine.copy());
+						
+						ItemStack backpack = new ItemStack(IIContent.itemAdvancedPowerPack);
+						EnergyHelper.insertFlux(backpack, 9999999, false);
+						hans.func_184201_a(EntityEquipmentSlot.CHEST, backpack);
+					}
+				}
+		);
 	}
 
 	/**
