@@ -7,6 +7,7 @@ dependencies {
 
 	testImplementation 'io.hosuaby:inject-resources-junit-jupiter:0.3.2'
 	testImplementation 'org.reflections:reflections:0.10.2'
+	testImplementation 'net.iiteam:jmeasure:1.0.0'
 
 	//Mockito
 	testImplementation 'org.mockito:mockito-inline:4.3.1'
