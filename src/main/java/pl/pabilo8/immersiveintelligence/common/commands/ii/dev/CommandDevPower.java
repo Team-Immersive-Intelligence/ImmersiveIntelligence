@@ -47,12 +47,15 @@ public class CommandDevPower extends CommandIIBase
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
 		Entity senderEntity = sender.getCommandSenderEntity();
-		if(senderEntity==null) return;
+		if(senderEntity==null)
+			return;
 		float blockReachDistance = 6;
 		Vec3d vec3d = senderEntity.getPositionEyes(0);
 		Vec3d vec3d1 = senderEntity.getLook(0);
 		Vec3d vec3d2 = vec3d.addVector(vec3d1.x*blockReachDistance, vec3d1.y*blockReachDistance, vec3d1.z*blockReachDistance);
-		MultipleRayTracer rayTracer = MultipleRayTracer.volumetricTrace(sender.getEntityWorld(), vec3d, vec3d2, new AxisAlignedBB(-0.5, -0.5, -0.5, 0.5, 0.5, 0.5), Collections.emptyList(), true, Collections.singletonList(senderEntity), null);
+		MultipleRayTracer rayTracer = MultipleRayTracer.volumetricTrace(sender.getEntityWorld(), vec3d, vec3d2,
+				new AxisAlignedBB(-0.5, -0.5, -0.5, 0.5, 0.5, 0.5), Collections.emptyList(), true,
+				Collections.singletonList(senderEntity), null);
 		if(!rayTracer.getHits().isEmpty())
 		{
 			Entity entityHit = rayTracer.getHits().get(0).entityHit;
