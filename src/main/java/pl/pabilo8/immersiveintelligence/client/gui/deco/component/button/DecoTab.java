@@ -1,10 +1,17 @@
 package pl.pabilo8.immersiveintelligence.client.gui.deco.component.button;
 
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoAlignment;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
+import pl.pabilo8.immersiveintelligence.client.util.font.IIFontRenderer;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
+import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
+
+import javax.annotation.Nonnull;
 
 /**
  * A standard inventory tab of the Deco GUI system
@@ -21,16 +28,7 @@ public class DecoTab extends DecoButton
 		withPadding(6, 1, 4, 3);
 	}
 
-	@Deprecated
-	public DecoTab(int buttonId, int x, int y, int w, int h, int u, int v, ResourceLocation texture, String hoverText)
-	{
-		this();
-		this.x = x;
-		this.y = y;
-		withSize(w, h);
-		withIcon(texture);
-		withTranslatedTooltip(hoverText);
-	}
+	//--- DecoTab ---//
 
 	public DecoTab withLink(IIGUI link)
 	{
@@ -46,5 +44,98 @@ public class DecoTab extends DecoButton
 			return true;
 		});
 		return this;
+	}
+
+	//--- Overrides ---//
+
+
+	@Override
+	public DecoTab withIcon(@Nonnull ResourceLocation icon)
+	{
+		return (DecoTab)super.withIcon(icon);
+	}
+
+	@Override
+	public DecoTab withIcon(@Nonnull ResourceLocation icon, int iconSize)
+	{
+		return (DecoTab)super.withIcon(icon, iconSize);
+	}
+
+	@Override
+	public DecoTab withIcon(@Nonnull ItemStack stack)
+	{
+		return (DecoTab)super.withIcon(stack);
+	}
+
+	@Override
+	public DecoTab withIconAlignment(DecoAlignment iconAlignment)
+	{
+		return (DecoTab)super.withIconAlignment(iconAlignment);
+	}
+
+	@Override
+	public DecoTab withPadding(int left, int top, int right, int bottom)
+	{
+		return (DecoTab)super.withPadding(left, top, right, bottom);
+	}
+
+	@Override
+	public DecoTab pack()
+	{
+		return (DecoTab)super.pack();
+	}
+
+	@Override
+	public DecoTab withText(String text)
+	{
+		return (DecoTab)super.withText(text);
+	}
+
+	@Override
+	public DecoTab withRawText(String text)
+	{
+		return (DecoTab)super.withRawText(text);
+	}
+
+	@Override
+	public DecoTab withFontRenderer(IIFontRenderer fontRenderer)
+	{
+		return (DecoTab)super.withFontRenderer(fontRenderer);
+	}
+
+	@Override
+	public DecoTab withBackground(ResLoc backgroundLocation)
+	{
+		return (DecoTab)super.withBackground(backgroundLocation);
+	}
+
+	@Override
+	public DecoTab withBackgroundColor(IIColor color)
+	{
+		return (DecoTab)super.withBackgroundColor(color);
+	}
+
+	@Override
+	public DecoTab withTextColor(IIColor textLabelColor, IIColor textBoxColor)
+	{
+		return (DecoTab)super.withTextColor(textLabelColor, textBoxColor);
+	}
+
+	@Override
+	public DecoTab withTextHoveredColor(IIColor textHoveredColor)
+	{
+		return (DecoTab)super.withTextHoveredColor(textHoveredColor);
+	}
+
+	@Override
+	public DecoTab withTextPressedColor(IIColor textPressedColor)
+	{
+		return (DecoTab)super.withTextPressedColor(textPressedColor);
+	}
+
+	@Override
+	public DecoTab withTextDisabledColor(IIColor textDisabledColor)
+	{
+		return (DecoTab)super.withTextDisabledColor(textDisabledColor);
 	}
 }

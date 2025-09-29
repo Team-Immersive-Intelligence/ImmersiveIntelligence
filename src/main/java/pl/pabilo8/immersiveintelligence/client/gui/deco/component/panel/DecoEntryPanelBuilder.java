@@ -29,6 +29,7 @@ public class DecoEntryPanelBuilder<TYPE> extends DecoEntryPanel<TYPE>
 	{
 	}
 
+	@SuppressWarnings({"rawtypes", "unchecked"})
 	@Override
 	protected void initializeChildren()
 	{
@@ -36,7 +37,7 @@ public class DecoEntryPanelBuilder<TYPE> extends DecoEntryPanel<TYPE>
 		childrenMap.clear();
 
 		components.forEach((name, function) -> {
-			DecoComponent<?> component = function.apply(this);
+			DecoComponent component = function.apply(this);
 			this.addComponent(component);
 			this.childrenMap.put(name, component);
 		});

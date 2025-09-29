@@ -204,13 +204,13 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockProductionSi
 			//Skip the recipe if input is invalid
 			if(!recipe.input.matchesItemStack(inventory.get(SLOT_INPUT)))
 				return true;
-			//Proceed
-			ItemStack output = recipe.operationFrom.apply(inventory.get(SLOT_INPUT), storedData, dataTypes -> storedData = dataTypes);
-			if(outputHandler.insertItem(0, output, false).isEmpty())
-			{
-				inputHandler.extractItem(0, 1, false);
-				return true;
-			}
+
+			//Take a copy of the original item and apply recipe
+			ItemStack output = recipe.operationFrom.apply(inputHandler.extractItem(SLOT_INPUT, 1, true),
+					storedData, dataTypes -> storedData = dataTypes);
+			//Try to output
+			return outputHandler.insertItem(0, output, false).isEmpty()&&
+					!inputHandler.extractItem(0, 1, false).isEmpty();
 		}
 		return false;
 	}

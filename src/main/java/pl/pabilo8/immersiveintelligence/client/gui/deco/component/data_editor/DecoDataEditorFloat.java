@@ -2,7 +2,7 @@ package pl.pabilo8.immersiveintelligence.client.gui.deco.component.data_editor;
 
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeFloat;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.text.DecoTextField;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.text.DecoTextField.TextFilter;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.text.util.TextFilter;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 /**

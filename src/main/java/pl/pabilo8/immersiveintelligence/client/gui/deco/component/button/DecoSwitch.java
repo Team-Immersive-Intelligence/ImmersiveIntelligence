@@ -2,6 +2,7 @@ package pl.pabilo8.immersiveintelligence.client.gui.deco.component.button;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoTextBasedComponent;
@@ -63,7 +64,7 @@ public class DecoSwitch extends DecoTextBasedComponent<DecoSwitch>
 
 	public DecoSwitch withText(String text)
 	{
-		this.text = text;
+		this.text = I18n.format(text);
 		this.setWidth(X_SIZE+2+fontRenderer.getStringWidth(text));
 		return this;
 	}

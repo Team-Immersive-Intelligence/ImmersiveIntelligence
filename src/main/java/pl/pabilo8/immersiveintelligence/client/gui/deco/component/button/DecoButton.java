@@ -70,6 +70,14 @@ public class DecoButton extends DecoTextBasedComponent<DecoButton>
 		return this;
 	}
 
+	public DecoButton pack()
+	{
+		int textWidth = text!=null?fontRenderer.getStringWidth(text): 0;
+		int textHeight = text!=null?fontRenderer.FONT_HEIGHT: 0;
+		int iconSize = (icon!=null||stack!=null)?this.iconSize: 0;
+		return withSize(padding[0]+padding[2]+iconSize+textWidth, padding[1]+padding[3]+Math.max(iconSize, textHeight));
+	}
+
 	@Override
 	public boolean initialize()
 	{

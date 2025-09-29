@@ -4,7 +4,7 @@ import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeItemStack;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoItemStackDisplay;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.text.DecoTextField;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.text.DecoTextField.TextFilter;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.text.util.TextFilter;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 /**

@@ -1179,6 +1179,13 @@ machineupgrade.immersiveintelligence.rs_activation.desc=Attaching a redstone wir
 machineupgrade.immersiveintelligence.razor_wire=Razor Wire
 machineupgrade.immersiveintelligence.razor_wire.desc=Attaches a razor wire on top of the gate, damaging any enemies that dare to try to climb over it.
 
+machineupgrade.immersiveintelligence.press_punchtapes=Punchtape Processor
+machineupgrade.immersiveintelligence.press_punchtapes.desc=Modifies the the Printing Press input feeder to allow processing punchtapes.
+machineupgrade.immersiveintelligence.press_batching=Batching Mechanism
+machineupgrade.immersiveintelligence.press_batching.desc=Adds a hot-air stapler to the Printing Press, allowing it to bind pages and print books and newspapers.
+machineupgrade.immersiveintelligence.press_enveloper=Enveloper
+machineupgrade.immersiveintelligence.press_enveloper.desc=Modifies the internals of the Printing Press, allowing it to fold and envelope single pages into letters.
+
 #Descriptions
 desc.immersiveintelligence.radio_configurator_basic=Allows changing the frequency of basic radio devices.
 desc.immersiveintelligence.radio_configurator_advanced=An upgraded radio tuner, allows setting even higher frequencies.
@@ -1253,15 +1260,15 @@ desc.immersiveintelligence.variable_set=Set
 desc.immersiveintelligence.variable_set_desc=Change the value of a variable
 desc.immersiveintelligence.variable_send_packet=Send Packet
 desc.immersiveintelligence.variable_send_packet_desc=Sends the current packet to data network
-desc.immersiveintelligence.variable_remove=Remove
 desc.immersiveintelligence.variable_remove_desc=Remove a variable
 desc.immersiveintelligence.variable_properties=Properties
-desc.immersiveintelligence.variable_apply=Apply
 desc.immersiveintelligence.variable_value=Value:
 desc.immersiveintelligence.operation=Operation:
 desc.immersiveintelligence.conditional_variable=Conditional Variable:
 desc.immersiveintelligence.no_variable=None
 desc.immersiveintelligence.variable=Variable:
+desc.immersiveintelligence.variable_apply=Apply
+desc.immersiveintelligence.variable_remove=Remove
 
 desc.immersiveintelligence.diplomacy.ownedby=Property of %s
 desc.immersiveintelligence.diplomacy.noowner=Abandoned Property
@@ -3095,6 +3102,8 @@ ii.config.Mines=Mines
 ii.config.Light_Engineer_Armor=Light Engineer Armor
 
 #GUI Labels
+ii.gui.editor.editor_style=Visual/POL Editor
+
 ii.gui.data_input_machine.storage=Punchtape Storage
 ii.gui.data_input_machine.memory=Built-In Memory
 ii.gui.data_input_machine.memory.switch=Switch
@@ -3106,6 +3115,22 @@ ii.gui.arithmetic_logic_machine.storage=Circuit Storage
 ii.gui_help.data_input_machine.programming=These slots allow reading a punchtape into the DIM's memory or writing its contents into an empty one.
 ii.gui_help.data_input_machine.storage=These slots allow storing empty or programmed punchtapes for convenience.
 ii.gui_help.data_input_machine.variables=This list shows variables of the data packet stored inside the machine.
+
+#GUI Actions
+ii.gui.action.copy=Copy
+ii.gui.action.paste=Paste
+ii.gui.action.cut=Cut
+ii.gui.action.undo=Undo
+ii.gui.action.redo=Redo
+ii.gui.action.select_all=Select All
+ii.gui.action.jei_recipe=Show Recipe
+ii.gui.action.jei_uses=Show Uses
+ii.gui.action.jei_bookmark=Bookmark
+
+#GUI Bottom Buttons
+ii.gui.button.apply=Apply
+ii.gui.button.revert=Revert
+ii.gui.button.cancel=Cancel
 
 #GUI Tooltips
 ii.gui_tooltip.button.add=Add

@@ -39,7 +39,7 @@ public class GuiDataInputMachineEdit extends DecoGui<TileEntityDataInputMachine,
 {
 	@SyncNBT
 	public DataVariable variableToEdit;
-	public boolean cancel = false;
+	private boolean cancel = false;
 	public DataPacket packet;
 
 	@Nullable
@@ -58,10 +58,10 @@ public class GuiDataInputMachineEdit extends DecoGui<TileEntityDataInputMachine,
 
 		//Build background
 		startBackground()
-				.withBox(DecoTextures.GUI_BG_STEEL, 0, 0, 176+64, 128+8)
+				.withBox(DecoTextures.GUI_BG_STEEL, 0, 0, 240, 136)
 				.withTitleBar(tile)
-				.withBox(DecoTextures.GUI_BG_STEEL, 32, 128+8, 176+32, 32)
-				.withBox(DecoTextures.GUI_BG_WOODEN, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_ROUND_WOODEN, 32, 128+8+32, 176, 92)
+				.withBox(DecoTextures.GUI_BG_STEEL, 32, 136, 208, 32)
+				.withBox(DecoTextures.GUI_BG_WOODEN, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_ROUND_WOODEN, 32, 168, 176, 92)
 				.withInventoryTitleBar()
 
 				.withNextLayer()
@@ -71,10 +71,10 @@ public class GuiDataInputMachineEdit extends DecoGui<TileEntityDataInputMachine,
 				.withInventorySlots(SlotStyle.IE_OUTPUT, container.dataOutput)
 
 				.withNextLayer()
-				.withBox(DecoTextures.GUI_BG_PAPER, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_PAPER, 32+8-4+4, 48-8-24-4, 176+64-16-32+8-4-8, 24)
+				.withBox(DecoTextures.GUI_BG_PAPER, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_PAPER, 40, 12, 188, 24)
 
 				.withNextLayer()
-				.withBox(DecoTextures.GUI_BG_STEEL, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_ROUND, 32+8-4+4, 48-8, 176+64-16-32+8-8, 128+8-48+32)
+				.withBox(DecoTextures.GUI_BG_STEEL, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_ROUND, 40, 40, 192, 120)
 				.withTitleBar("desc.immersiveintelligence.variable_properties")
 
 				.build();
@@ -83,10 +83,10 @@ public class GuiDataInputMachineEdit extends DecoGui<TileEntityDataInputMachine,
 		addComponents(GuiDataInputMachine.getCommonParts(tile));
 
 		//Editor component specific to the data type
-		editor = DecoDataEditor.getEditorFor(variableToEdit.getValue(), 38+8-3, 46+6-1-8);
+		editor = DecoDataEditor.getEditorFor(variableToEdit.getValue(), 43, 43);
 		if(editor!=null)
 			addComponent(editor)
-					.withSize(128+64-16+3+8-1, 80+1+32+1-8);
+					.withSize(186, 106);
 
 		//A cloned packet without the currently edited variable is required, so the selector knows which variable names are unavailable
 		DataPacket cloned = tile.storedData.clone();
@@ -95,7 +95,7 @@ public class GuiDataInputMachineEdit extends DecoGui<TileEntityDataInputMachine,
 		//Add type/name controls
 		addComponents(
 				//Variable name selector
-				new DecoDropdownDataLetters(32+4+6+1, 4+8+2+1)
+				new DecoDropdownDataLetters(43, 15)
 						.withConstraints(cloned)
 						.withSelectedEntry((Character)variableToEdit.getName())
 						.withTranslatedTooltip("desc.immersiveintelligence.variable_properties")
@@ -104,7 +104,7 @@ public class GuiDataInputMachineEdit extends DecoGui<TileEntityDataInputMachine,
 						.withTextColor(DecoTextures.COLOR_H1, IIColor.fromPackedRGB(0x35322c))
 						.withBackground(DecoTextures.RES_TEXTURES_DECO_COMPONENT_DROPDOWN_DATA_LETTER_PAPER),
 
-				new DecoArrows(32+4+6+1+18+1, 4+8+2+1+2)
+				new DecoArrows(62, 17)
 						.withSize(8, 14)
 						.withBackground(DecoTextures.RES_TEXTURES_DECO_COMPONENT_ARROWS_PAPER)
 						.withOnArrow(arrow -> {
@@ -113,7 +113,7 @@ public class GuiDataInputMachineEdit extends DecoGui<TileEntityDataInputMachine,
 						}),
 
 				//Data Type selector
-				new DecoDropdown<TypeMetaInfo<?>>(32+4+10+32-12+6+1, 4+8+2+1)
+				new DecoDropdown<TypeMetaInfo<?>>(73, 15)
 						.withScrollBarBackground(DecoTextures.RES_TEXTURES_DECO_COMPONENT_SLIDER_PAPER)
 						.withBackground(DecoTextures.RES_TEXTURES_DECO_BUTTON_PAPER)
 						.withListBackground(DecoTextures.RES_TEXTURES_DECO_COMPONENT_TEXT_FIELD)
@@ -123,13 +123,14 @@ public class GuiDataInputMachineEdit extends DecoGui<TileEntityDataInputMachine,
 						.withEntries(DecoDataEditor.getEditorTypes(false))
 						.withSelectedEntry(variableToEdit.getValue().getTypeMeta())
 						.withDisplayFunction(new DecoEntryPanelBuilder<TypeMetaInfo<?>>()
+								.withHeight(18)
 								.withBackground(DecoTextures.GUI_BG_PAPER)
 								.withBackgroundMask(DecoTextures.RES_TEXTURES_DECO_TEMPLATE_PAPER)
 								//Type Icon, Label, and Letter
 								.withComponent("image", new DecoImage(3, 1)
 										.withSize(16, 16))
 								.withLabel("typeLabel",
-										new DecoLabel(fontRenderer, 2+16+2, 1)
+										new DecoLabel(fontRenderer, 20, 1)
 												.withSize(48, 18)
 												.withAlign(DecoAlignment.LEFT)
 												.withText("Integer")
@@ -151,12 +152,12 @@ public class GuiDataInputMachineEdit extends DecoGui<TileEntityDataInputMachine,
 							refreshGUI();
 						}),
 
-				new DecoButton(xSize-48-4-4-4-2, 128+8-16+32-2+3)
+				new DecoButton(xSize-48-4-4-4-2, 153)
 						.withBackground(DecoTextures.RES_TEXTURES_DECO_COMPONENT_BUTTON_ROUND)
 						.withText("Apply")
 						.withSize(48, 12)
 						.withOnPressed((gui, button, mouseX, mouseY) -> changeGUI(IIGUI.DATA_INPUT_MACHINE_VARIABLES)),
-				new DecoButton(xSize-48*2-4-4-4-2, 128+8+32-16-2+3)
+				new DecoButton(xSize-96-4-4-4-2, 153)
 						.withBackground(DecoTextures.RES_TEXTURES_DECO_COMPONENT_BUTTON_ROUND)
 						.withText("Cancel")
 						.withSize(48, 12)
@@ -165,10 +166,10 @@ public class GuiDataInputMachineEdit extends DecoGui<TileEntityDataInputMachine,
 							return changeGUI(IIGUI.DATA_INPUT_MACHINE_VARIABLES);
 						}),
 
-				new DecoButton(162+32-4, 2+8+4+1)
+				new DecoButton(190, 15)
 						.withTemplate(DecoGuiUtils.LIST_BUTTON_DUPLICATE_TEMPLATE)
 						.withSize(18, 18),
-				new DecoButton(162+32-4+1+18, 2+8+4+1)
+				new DecoButton(209, 15)
 						.withTemplate(DecoGuiUtils.LIST_BUTTON_CLEAR_TEMPLATE)
 						.withSize(18, 18)
 		);

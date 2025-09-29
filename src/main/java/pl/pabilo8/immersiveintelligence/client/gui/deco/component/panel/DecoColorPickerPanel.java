@@ -9,7 +9,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoCol
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoDropdown;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoLabel;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.text.DecoTextField;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.text.DecoTextField.TextFilter;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.text.util.TextFilter;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoImage;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoAlignment;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;

@@ -20,6 +20,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoLabe
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoEntryPanelBuilder;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoBar;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoImage;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoImage.ImageAnimationDirection;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.*;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundBuilder.SlotStyle;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
@@ -81,6 +82,11 @@ public class GuiDataInputMachine extends DecoGui<TileEntityDataInputMachine, Con
 						.withSize(20, 52)
 						.withImageLocation(PROGRESS_IMAGE, true)
 						.withUV(64, 0, 0, 20, 52),
+				new DecoImage(4+2, 12+24+8-2-1)
+						.withSize(20, 52)
+						.withImageLocation(PROGRESS_IMAGE, true)
+						.withUV(64, 20, 0, 40, 52)
+						.withAnimation(ImageAnimationDirection.TOP_TO_BOTTOM, DecoGuiUtils.getMultiblockProductionSingleProgress(tile)),
 				new DecoTab()
 						.withLink(IIGUI.DATA_INPUT_MACHINE_STORAGE)
 						.withIcon(ICON_STORAGE)

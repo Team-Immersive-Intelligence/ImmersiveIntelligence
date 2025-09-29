@@ -57,7 +57,21 @@ public class DecoPanel extends DecoComponent<DecoPanel>
 		}
 	}
 
-	public void addComponent(DecoComponent<?> component)
+	protected void removeComponent(@Nullable DecoComponent<?> component)
+	{
+		if(component==null)
+			return;
+		children.remove(component);
+		component.cleanup();
+	}
+
+	protected void removeLabel(@Nullable DecoLabel label)
+	{
+		if(label!=null)
+			labels.remove(label);
+	}
+
+	public <T extends DecoComponent<T>> T addComponent(T component)
 	{
 		children.add(component);
 		if(parentGui!=null)
@@ -68,15 +82,18 @@ public class DecoPanel extends DecoComponent<DecoPanel>
 		}
 		component.x += x+xPadding;
 		component.y += y+yPadding;
+		return component;
 	}
 
-	public void addComponents(DecoComponent<?>... components)
+	@SuppressWarnings({"rawtypes", "unchecked"})
+	public void addComponents(DecoComponent... components)
 	{
-		for(DecoComponent<?> component : components)
+		for(DecoComponent component : components)
 			addComponent(component);
 	}
 
-	public void addComponentsRow(int width, int gap, int height, DecoComponent<?>... components)
+	@SuppressWarnings({"rawtypes", "unchecked"})
+	public void addComponentsRow(int width, int gap, int height, DecoComponent... components)
 	{
 		if(components==null)
 			return;
@@ -85,7 +102,7 @@ public class DecoPanel extends DecoComponent<DecoPanel>
 		int offset = singleWidth+gap;
 		for(int i = 0; i < components.length; i++)
 		{
-			DecoComponent<?> comp = components[i].withSize(singleWidth, height);
+			DecoComponent comp = components[i].withSize(singleWidth, height);
 			comp.x = initialX+i*offset;
 			addComponent(comp);
 		}

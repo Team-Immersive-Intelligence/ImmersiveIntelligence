@@ -29,24 +29,25 @@ public class ContainerArithmeticLogicMachine extends ContainerIIBase<TileEntityA
 	{
 		super(player, tile);
 
-		switch(gui)
+		if(gui==0)
+		{ //Storage
+			boolean circuitUpgrade = tile.isUpgradeInstalled(IIContent.UPGRADE_CIRCUIT_RACKS);
+			this.circuitSlots = addSlotArray(6+2, 26-8-2-1+(circuitUpgrade?0: 18), 0,
+					circuitUpgrade?CIRCUITS_UPGRADED: CIRCUITS_BASE, 1, CircuitSlot::new);
+			this.storageSlots = addSlotArray(32+4, 6+4+32-16, CIRCUITS_UPGRADED, STORAGE_SLOTS, 6, CircuitSlot::new);
+			this.storage = true;
+		}
+		else
 		{
-			case 0: //Storage
-			{
-				boolean circuitUpgrade = tile.isUpgradeInstalled(IIContent.UPGRADE_CIRCUIT_RACKS);
-				this.circuitSlots = addSlotArray(6+2, 26-8-2-1+(circuitUpgrade?0: 18), 0,
-						circuitUpgrade?CIRCUITS_UPGRADED: CIRCUITS_BASE, 1, CircuitSlot::new);
-				this.storageSlots = addSlotArray(32+4, 6+4+32-16, CIRCUITS_UPGRADED, STORAGE_SLOTS, 6, CircuitSlot::new);
-				this.storage = true;
-			}
-			break;
-			default:
-				this.storage = false;
-				this.circuitSlots = storageSlots = new Slot[0];
-				break;
+			this.storage = false;
+			this.circuitSlots = storageSlots = new Slot[0];
 		}
 
-		addPlayerInventory(player.inventory, 8, 141+8);
+		if(gui==2)
+			addPlayerInventory(player.inventory, 8+16+8, 141+8+32+16+8);
+		else
+			addPlayerInventory(player.inventory, 8, 141+8);
+
 	}
 
 	public static class CircuitSlot extends IESlot

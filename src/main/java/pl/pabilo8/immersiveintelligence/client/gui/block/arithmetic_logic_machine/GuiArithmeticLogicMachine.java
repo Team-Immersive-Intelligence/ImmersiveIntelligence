@@ -303,7 +303,7 @@ public class GuiArithmeticLogicMachine extends DecoGui<TileEntityArithmeticLogic
 		if(!currentPacket.has(name)||currentPacket.get(name).getClass()!=initialValue.getClass())
 			currentPacket.set(name, initialValue);
 
-		variableToEdit = new DataVariable(name, initialValue);
+		this.variableToEdit = new DataVariable(name, initialValue);
 		changeGUI(IIGUI.ARITHMETIC_LOGIC_MACHINE_EDIT);
 	}
 }

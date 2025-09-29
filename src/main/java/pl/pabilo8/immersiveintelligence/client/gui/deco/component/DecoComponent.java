@@ -88,6 +88,13 @@ public abstract class DecoComponent<TYPE extends DecoComponent<? super TYPE>> ex
 		children.forEach(child -> child.setParentGUI(parent));
 	}
 
+	public TYPE withPosition(int x, int y)
+	{
+		this.x = x;
+		this.y = y;
+		return (TYPE)this;
+	}
+
 	public TYPE withSize(int width, int height)
 	{
 		this.width = width;
@@ -453,7 +460,8 @@ public abstract class DecoComponent<TYPE extends DecoComponent<? super TYPE>> ex
 		REDO,
 		SELECT_ALL,
 		JEI_RECIPE,
-		JEI_USES
+		JEI_USES,
+		JEI_BOOKMARK
 	}
 
 	public enum MouseButton

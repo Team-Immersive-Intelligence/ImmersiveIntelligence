@@ -154,10 +154,13 @@ public abstract class GuiEmplacement extends GuiIEContainerBase implements ITabb
 	protected void addTab(IIGUI gui, String name)
 	{
 		final int vOffset = TABS.size()*24;
-		DecoTab button = new DecoTab(buttonList.size(), guiLeft-28, guiTop+4+vOffset, 28, 24, thisGui==gui?28: 0, 101+vOffset,
-				TEXTURE_ICONS, I18n.format(IIReference.DESCRIPTION_KEY+name));
-		TABS.put(button, gui);
-		addButton(button);
+		DecoTab tab = (DecoTab)addButton(new DecoTab()
+				.withPosition(guiLeft-28, guiTop+4+vOffset)
+				.withSize(28, 24)
+				.withIcon(TEXTURE_ICONS, 256)
+				.withTranslatedTooltip(I18n.format(IIReference.DESCRIPTION_KEY+name))
+		);
+		TABS.put(tab, gui);
 	}
 
 	protected DecoSwitch addSwitch(int x, int y, int textWidth, IIColor textColor, IIColor color1, IIColor color2, boolean state, String name, boolean firstTime)
