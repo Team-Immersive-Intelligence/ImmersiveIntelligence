@@ -28,7 +28,7 @@ public class MotorBeltNetwork
 	/**
 	 * All connectors in this rotary network
 	 */
-	public List<WeakReference<IMotorBeltConnector>> connectors = new ArrayList<>();
+	public List<WeakReference<IRotaryConnector>> connectors = new ArrayList<>();
 	/**
 	 * ALl links between {@link #connectors} in this rotary network
 	 */
@@ -75,17 +75,17 @@ public class MotorBeltNetwork
 					}
 				}
 
-			if(iic instanceof IMotorBeltConnector)
+			if(iic instanceof IRotaryConnector)
 			{
-				((IMotorBeltConnector)iic).setNetwork(network);
-				network.connectors.add(new WeakReference<>((IMotorBeltConnector)iic));
+				((IRotaryConnector)iic).setNetwork(network);
+				network.connectors.add(new WeakReference<>((IRotaryConnector)iic));
 			}
 
 		}
 		network.updateValues();
 	}
 
-	public MotorBeltNetwork add(IMotorBeltConnector connector)
+	public MotorBeltNetwork add(IRotaryConnector connector)
 	{
 		connectors.add(new WeakReference<>(connector));
 		return this;
@@ -93,15 +93,15 @@ public class MotorBeltNetwork
 
 	public void mergeNetwork(MotorBeltNetwork wireNetwork)
 	{
-		List<WeakReference<IMotorBeltConnector>> conns = null;
+		List<WeakReference<IRotaryConnector>> conns = null;
 		if(connectors.size() > 0)
 			conns = connectors;
 		else if(wireNetwork.connectors.size() > 0)
 			conns = wireNetwork.connectors;
 		if(conns==null)//No connectors to merge
 			return;
-		IMotorBeltConnector start = null;
-		for(WeakReference<IMotorBeltConnector> conn : conns)
+		IRotaryConnector start = null;
+		for(WeakReference<IRotaryConnector> conn : conns)
 			if(conn.get()!=null)
 			{
 				start = conn.get();
@@ -115,14 +115,14 @@ public class MotorBeltNetwork
 		updateValues();
 	}
 
-	public void removeFromNetwork(IMotorBeltConnector removedConnector)
+	public void removeFromNetwork(IRotaryConnector removedConnector)
 	{
-		Iterator<WeakReference<IMotorBeltConnector>> iterator = connectors.iterator();
+		Iterator<WeakReference<IRotaryConnector>> iterator = connectors.iterator();
 		Set<MotorBeltNetwork> knownNets = new HashSet<>();
 		while(iterator.hasNext())
 		{
-			WeakReference<IMotorBeltConnector> conn = iterator.next();
-			IMotorBeltConnector start = conn.get();
+			WeakReference<IRotaryConnector> conn = iterator.next();
+			IRotaryConnector start = conn.get();
 			if(start!=null&&!knownNets.contains(start.getNetwork()))
 			{
 				MotorBeltNetwork newNet = new MotorBeltNetwork();
@@ -136,14 +136,14 @@ public class MotorBeltNetwork
 	public void updateValues()
 	{
 		speed = torque = 0;
-		Set<IMotorBeltConnector> validReferences = connectors.stream().map(Reference::get)
+		Set<IRotaryConnector> validReferences = connectors.stream().map(Reference::get)
 				.filter(Objects::nonNull)
 				.collect(Collectors.toSet());
 
 		//rpm is the average (not counting 0)
 		//torque is the sum
 		validReferences.stream()
-				.map(IMotorBeltConnector::getRotaryStorage)
+				.map(IRotaryConnector::getRotaryStorage)
 				.forEach(storage -> {
 					torque += storage.getTorque();
 					if(storage.speed > speed)
@@ -153,7 +153,7 @@ public class MotorBeltNetwork
 		loss = (float)connections.stream().mapToDouble(Connection::getBaseLoss).sum();
 		speed = Math.max(0, speed-(speed*loss));
 
-		validReferences.forEach(IMotorBeltConnector::onChange);
+		validReferences.forEach(IRotaryConnector::onChange);
 	}
 
 	//Use this when outputting energy with a connector

@@ -9,13 +9,11 @@ import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -30,6 +28,9 @@ import pl.pabilo8.immersiveintelligence.common.entity.EntityEmplacementWeapon;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoArtilleryProjectile;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.drone.AIDroneTarget;
+import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.VehicleBlueprint;
+import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.VehicleDurability;
+import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehiclePart;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.entity.ISyncNBTEntity;
 
@@ -40,23 +41,23 @@ import java.util.List;
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 14.12.2022
  */
-public class EntityDrone extends EntityFlying implements ISyncNBTEntity<EntityDrone>, IVehicleMultiPart, IEntitySpecialRepairable
+public class EntityDrone extends EntityFlying implements ISyncNBTEntity<EntityDrone>, IVehicleMultiPart<EntityDrone>, IEntitySpecialRepairable
 {
 	private final AmmoFactory<EntityAmmoArtilleryProjectile> ammoFactory;
 
 	//--- Parts ---//
-	private final EntityVehiclePart[] partArray;
+	private final EntityVehiclePart<EntityDrone>[] partArray;
 
 	//Sub-entities for colision and hitboxes
-	private EntityVehiclePart partMain, partTankRight1, partTankRight2, partTankLeft1, partTankLeft2, partEngine;
-	private EntityVehiclePart partRotorFrontRight, partRotorFrontLeft, partRotorBackRight, partRotorBackLeft;
-	private EntityVehiclePart exhaust1, exhaust2;
+	private EntityVehiclePart<EntityDrone> partMain, partTankRight1, partTankRight2, partTankLeft1, partTankLeft2, partEngine;
+	private EntityVehiclePart<EntityDrone> partRotorFrontRight, partRotorFrontLeft, partRotorBackRight, partRotorBackLeft;
+	private EntityVehiclePart<EntityDrone> exhaust1, exhaust2;
 
 	//Part durability (health)
 	@SyncNBT
-	private VehicleDurability durabilityMain, durabilityTankLeft, durabilityTankRight, durabilityEngine;
+	public VehicleDurability durabilityMain, durabilityTankLeft, durabilityTankRight, durabilityEngine;
 	@SyncNBT
-	private VehicleDurability durabilityRotorFrontRight, durabilityRotorFrontLeft, durabilityRotorBackRight, durabilityRotorBackLeft;
+	public VehicleDurability durabilityRotorFrontRight, durabilityRotorFrontLeft, durabilityRotorBackRight, durabilityRotorBackLeft;
 
 	public EntityDrone(World world)
 	{
@@ -80,42 +81,42 @@ public class EntityDrone extends EntityFlying implements ISyncNBTEntity<EntityDr
 
 		//Set parts
 		partArray = new EntityVehiclePart[]{
-				partMain = new EntityVehiclePart(this, "main",
+				partMain = new EntityVehiclePart<>(this, "main",
 						Vec3d.ZERO, 0.65, 0.4)
-						.setHitbox(durabilityMain),
-				partEngine = new EntityVehiclePart(this, "engine",
+						.withHitbox(durabilityMain),
+				partEngine = new EntityVehiclePart<>(this, "engine",
 						new Vec3d(0.25, 1, 0), 0.65, 0.25)
-						.setHitbox(durabilityEngine),
+						.withHitbox(durabilityEngine),
 
-				partTankRight1 = new EntityVehiclePart(this, "fuel_tank_r1",
+				partTankRight1 = new EntityVehiclePart<>(this, "fuel_tank_r1",
 						new Vec3d(-0.45, 0.3125, 0.65), 0.45)
-						.setHitbox(durabilityTankRight),
-				partTankRight2 = new EntityVehiclePart(this, "fuel_tank_r2",
+						.withHitbox(durabilityTankRight),
+				partTankRight2 = new EntityVehiclePart<>(this, "fuel_tank_r2",
 						new Vec3d(0.65, 0.3125, 0.65), 0.45)
-						.setHitbox(durabilityTankRight),
-				partTankLeft1 = new EntityVehiclePart(this, "fuel_tank_l1",
+						.withHitbox(durabilityTankRight),
+				partTankLeft1 = new EntityVehiclePart<>(this, "fuel_tank_l1",
 						new Vec3d(-0.45, 0.3125, -0.65), 0.45)
-						.setHitbox(durabilityTankLeft),
-				partTankLeft2 = new EntityVehiclePart(this, "fuel_tank_l2",
+						.withHitbox(durabilityTankLeft),
+				partTankLeft2 = new EntityVehiclePart<>(this, "fuel_tank_l2",
 						new Vec3d(0.65, 0.3125, -0.65), 0.45)
-						.setHitbox(durabilityTankLeft),
+						.withHitbox(durabilityTankLeft),
 
-				partRotorFrontRight = new EntityVehiclePart(this, "rotor_fr",
+				partRotorFrontRight = new EntityVehiclePart<>(this, "rotor_fr",
 						new Vec3d(1.8, 1.125, 1.7), 0.35, 0.4)
-						.setHitbox(durabilityRotorFrontRight),
-				partRotorFrontLeft = new EntityVehiclePart(this, "rotor_fl",
+						.withHitbox(durabilityRotorFrontRight),
+				partRotorFrontLeft = new EntityVehiclePart<>(this, "rotor_fl",
 						new Vec3d(1.8, 1.125, -1.7), 0.35, 0.4)
-						.setHitbox(durabilityRotorFrontLeft),
-				partRotorBackRight = new EntityVehiclePart(this, "rotor_br",
+						.withHitbox(durabilityRotorFrontLeft),
+				partRotorBackRight = new EntityVehiclePart<>(this, "rotor_br",
 						new Vec3d(-1.625, 1.125, 1.7), 0.35, 0.4)
-						.setHitbox(durabilityRotorBackRight),
-				partRotorBackLeft = new EntityVehiclePart(this, "rotor_bl",
+						.withHitbox(durabilityRotorBackRight),
+				partRotorBackLeft = new EntityVehiclePart<>(this, "rotor_bl",
 						new Vec3d(-1.625, 1.125, -1.7), 0.35, 0.4)
-						.setHitbox(durabilityRotorBackLeft),
+						.withHitbox(durabilityRotorBackLeft),
 
-				exhaust1 = new EntityVehiclePart(this, "exhaust1",
+				exhaust1 = new EntityVehiclePart<>(this, "exhaust1",
 						new Vec3d(-0.125, 1.85, -0.8), 0.25),
-				exhaust2 = new EntityVehiclePart(this, "exhaust2",
+				exhaust2 = new EntityVehiclePart<>(this, "exhaust2",
 						new Vec3d(0.25+0.125, 1.85, 0.8), 0.25)
 		};
 
@@ -173,7 +174,7 @@ public class EntityDrone extends EntityFlying implements ISyncNBTEntity<EntityDr
 	public void onEntityUpdate()
 	{
 		super.onEntityUpdate();
-		updateParts(this);
+		updateParts();
 
 		/*List<EntityPlayer> players = world.getEntitiesWithinAABB(EntityPlayer.class, getEntityBoundingBox().grow(30));
 		if(!players.isEmpty())
@@ -241,21 +242,6 @@ public class EntityDrone extends EntityFlying implements ISyncNBTEntity<EntityDr
 		return -0.55f;
 	}
 
-	//--- NBT ---//
-	@Override
-	public void writeEntityToNBT(NBTTagCompound compound)
-	{
-		super.writeEntityToNBT(compound);
-
-	}
-
-	@Override
-	public void readEntityFromNBT(NBTTagCompound compound)
-	{
-		super.readEntityFromNBT(compound);
-
-	}
-
 	//--- Colision ---//
 
 	@Override
@@ -287,7 +273,13 @@ public class EntityDrone extends EntityFlying implements ISyncNBTEntity<EntityDr
 
 	@Nullable
 	@Override
-	public EntityVehiclePart[] getParts()
+	public Entity[] getParts()
+	{
+		return partArray;
+	}
+
+	@Override
+	public EntityVehiclePart<EntityDrone>[] getVehicleParts()
 	{
 		return partArray;
 	}
@@ -341,32 +333,32 @@ public class EntityDrone extends EntityFlying implements ISyncNBTEntity<EntityDr
 	}
 
 	@Override
-	public String[] getOverlayTextOnPart(EntityVehiclePart part, EntityPlayer player, RayTraceResult mop)
-	{
-		return new String[0];
-	}
-
-	@Override
-	public void getSeatRidingPosition(int seatID, Entity passenger)
+	public void getSeatRidingPosition(String seatID, Entity passenger)
 	{
 
 	}
 
 	@Override
-	public void getSeatRidingAngle(int seatID, Entity passenger)
+	public void getSeatRidingAngle(String seatID, Entity passenger)
 	{
 
 	}
 
 	@Override
-	public boolean shouldSeatPassengerSit(int seatID, Entity passenger)
+	public boolean shouldSeatPassengerSit(String seatID, Entity passenger)
 	{
 		return false;
 	}
 
 	@Override
-	public void onSeatDismount(int seatID, Entity passenger)
+	public void onSeatDismount(String seatID, Entity passenger)
 	{
 
+	}
+
+	@Override
+	public VehicleBlueprint getVehicleBlueprint()
+	{
+		return null;
 	}
 }

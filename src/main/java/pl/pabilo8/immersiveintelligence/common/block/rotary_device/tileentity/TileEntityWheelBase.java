@@ -191,7 +191,7 @@ public abstract class TileEntityWheelBase extends TileEntityMechanicalConnectabl
 	 * Only for visuals
 	 */
 	@Override
-	public double getOutputRPM()
+	public double getOutputSpeed()
 	{
 		return getNetwork().getNetworkSpeed();
 	}

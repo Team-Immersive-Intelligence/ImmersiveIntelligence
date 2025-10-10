@@ -12,7 +12,6 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.rotary.IIRotaryMath;
 import pl.pabilo8.immersiveintelligence.api.rotary.IIRotaryUtils;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.MechanicalDevices;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
@@ -123,7 +122,7 @@ public class MysticalMechanicsAPIHelper extends IICompatModule
 
 		private void calculatePower(@Nonnull EnumFacing facing)
 		{
-			float[] st = IIRotaryMath.MMToII(this.power);
+			float[] st = IIRotaryUtils.MMToII(this.power);
 			box.energy.grow(Math.round(st[0]), Math.round(st[1]), 0.98f);
 			if(box.getWorld().getTotalWorldTime()%20==0)
 				IIPacketHandler.sendToClient(new MessageRotaryPowerSync(box.getWorld(), box.getPos(), 0, box.energy));

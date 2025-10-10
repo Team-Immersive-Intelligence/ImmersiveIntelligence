@@ -84,10 +84,7 @@ import pl.pabilo8.immersiveintelligence.client.render.mechanical_device.WheelRen
 import pl.pabilo8.immersiveintelligence.client.render.metal_device.*;
 import pl.pabilo8.immersiveintelligence.client.render.multiblock.metal.*;
 import pl.pabilo8.immersiveintelligence.client.render.multiblock.wooden.*;
-import pl.pabilo8.immersiveintelligence.client.render.vehicle.DroneRenderer;
-import pl.pabilo8.immersiveintelligence.client.render.vehicle.FieldHowitzerRenderer;
-import pl.pabilo8.immersiveintelligence.client.render.vehicle.MortarRenderer;
-import pl.pabilo8.immersiveintelligence.client.render.vehicle.MotorbikeRenderer;
+import pl.pabilo8.immersiveintelligence.client.render.vehicle.*;
 import pl.pabilo8.immersiveintelligence.client.util.IICustomStateMapper;
 import pl.pabilo8.immersiveintelligence.client.util.ShaderUtil;
 import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IIItemRendererAMT;
@@ -132,8 +129,9 @@ import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.naval_mine.Enti
 import pl.pabilo8.immersiveintelligence.common.entity.tactile.EntityAMTTactile;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityDrone;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityMotorbike;
-import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityVehicleSeat;
+import pl.pabilo8.immersiveintelligence.common.entity.vehicle.towable.gun.EntityFieldGun;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.towable.gun.EntityFieldHowitzer;
+import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehicleSeat;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoBase;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIINavalMine;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.gun.ItemIIAmmoRevolver;
@@ -370,14 +368,15 @@ public class ClientProxy extends CommonProxy
 		registerEntityRenderer(EntityMachinegun.class, MachinegunRenderer::new);
 		registerEntityRenderer(EntityMotorbike.class, MotorbikeRenderer::new);
 		registerEntityRenderer(EntityDrone.class, DroneRenderer::new);
+		//Towables
 		registerEntityRenderer(EntityFieldHowitzer.class, FieldHowitzerRenderer::new);
+		registerEntityRenderer(EntityFieldGun.class, FieldGunRenderer::new);
+
 		registerEntityRenderer(EntityTripodPeriscope.class, TripodPeriscopeRenderer::new);
 		registerEntityRenderer(EntityMortar.class, MortarRenderer::new);
-		//Thanks Blu!
 		registerEntityRenderer(EntityCamera.class, EntityRenderNone::new);
 		registerEntityRenderer(EntitySkycrateInternal.class, EntityRenderNone::new);
 		registerEntityRenderer(EntityVehicleSeat.class, EntityRenderNone::new);
-
 
 		registerEntityRenderer(EntityAtomicBoom.class, AtomicBoomRenderer::new);
 		registerEntityRenderer(EntityGasCloud.class, EntityRenderNone::new);
@@ -543,6 +542,7 @@ public class ClientProxy extends CommonProxy
 	{
 		RenderingRegistry.registerEntityRenderingHandler(entityClass, renderFactory);
 		Render<? super T> temp = renderFactory.createRenderFor(null);
+		//Add a temporary registration for loading textures
 		if(temp instanceof IReloadableModelContainer)
 			IIModelRegistry.INSTANCE.addTemporaryModel(((IReloadableModelContainer<?>)temp));
 	}

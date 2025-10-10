@@ -13,9 +13,15 @@ import net.minecraft.util.ResourceLocation;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.client.util.amt.animation.IIAnimationCompiledMap;
 import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMT;
+import pl.pabilo8.immersiveintelligence.common.IILogger;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -25,10 +31,14 @@ public abstract class IIEntityRenderer<E extends Entity> extends Render<E> imple
 {
 	private boolean unCompiled = true;
 
-	protected IIEntityRenderer(RenderManager render, String name)
+	protected IIEntityRenderer(RenderManager render)
 	{
 		super(render);
-		subscribeToList(name);
+		RegisteredEntityRenderer meta = IIUtils.getAnnotation(RegisteredEntityRenderer.class, this);
+		if(meta==null)
+			IILogger.error("RegisteredEntityRenderer not found for %s!", this.getClass().getName());
+		else
+			subscribeToList("entity/"+meta.name());
 	}
 
 	@Override
@@ -96,4 +106,14 @@ public abstract class IIEntityRenderer<E extends Entity> extends Render<E> imple
 	 * Called when cached models, animations should be unloaded/reloaded
 	 */
 	protected abstract void nullifyModels();
+
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target({ElementType.TYPE})
+	public @interface RegisteredEntityRenderer
+	{
+		String name();
+
+		Class<? extends Entity> clazz();
+
+	}
 }

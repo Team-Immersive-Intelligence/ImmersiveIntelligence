@@ -43,6 +43,7 @@ import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.api.crafting.*;
 import pl.pabilo8.immersiveintelligence.api.crafting.PrintingRecipe.PrintFunction;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
+import pl.pabilo8.immersiveintelligence.api.upgrade.Upgrade;
 import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeTechTree;
 import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeUtils.UpgradePurpose;
 import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeUtils.UpgradeTier;
@@ -58,7 +59,7 @@ import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIIConcreteDecor
 import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIIOre.Ores;
 import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIISmallCrate.IIBlockTypes_SmallCrate;
 import pl.pabilo8.immersiveintelligence.common.item.ItemIIMinecart.Minecarts;
-import pl.pabilo8.immersiveintelligence.common.item.ItemIIPrintedPage.SubItems;
+import pl.pabilo8.immersiveintelligence.common.item.ItemIIPrintedPage.PageType;
 import pl.pabilo8.immersiveintelligence.common.item.ItemIITracerPowder;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoBase;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoBase.AmmoParts;
@@ -242,7 +243,7 @@ public class IIRecipes
 			@Override
 			public ItemStack apply(ItemStack input, DataPacket data)
 			{
-				return IIContent.itemPrintedPage.getStack(SubItems.TEXT,
+				return IIContent.itemPrintedPage.getStack(PageType.TEXT,
 						nbt -> nbt.withString("text", data.get('t').toString())
 				);
 			}
@@ -276,6 +277,47 @@ public class IIRecipes
 							.length()*PrintingPress.printInkUsage;
 				}
 				return new int[]{(int)c, (int)m, (int)y, (int)k};
+			}
+		});
+		new PrintingRecipe(new IngredientStack("pageEmpty"), "code", new PrintFunction()
+		{
+			@Override
+			public ItemStack apply(ItemStack input, DataPacket data)
+			{
+				return IIContent.itemPrintedPage.getStack(PageType.TEXT,
+						nbt -> nbt.withString("text", data.get('t').toString())
+				);
+			}
+
+			@Override
+			public int[] getInkTypesRequired(DataPacket data)
+			{
+				String text = data.get('t').toString();
+				return new int[]{0, 0, 0, text.length()*PrintingPress.printInkUsage};
+			}
+		});
+		new PrintingRecipe(new IngredientStack("punchtapeEmpty"), "punchtape", new PrintFunction()
+		{
+			@Override
+			public ItemStack apply(ItemStack input, DataPacket data)
+			{
+				return IIContent.itemPrintedPage.getStack(PageType.TEXT,
+						nbt -> nbt.withString("text", data.get('t').toString())
+				);
+			}
+
+			@Override
+			public int[] getInkTypesRequired(DataPacket data)
+			{
+				String text = data.get('t').toString();
+				return new int[]{0, 0, 0, text.length()*PrintingPress.printInkUsage};
+			}
+
+			@Nullable
+			@Override
+			public Upgrade getUpgradeRequired()
+			{
+				return IIContent.UPGRADE_PRESS_PUNCHTAPES;
 			}
 		});
 	}
@@ -1114,6 +1156,11 @@ public class IIRecipes
 				.withCost(new IngredientStack(new ItemStack(IEContent.blockMetalDecoration0, 2, BlockTypes_MetalDecoration0.LIGHT_ENGINEERING.getMeta())))
 				.withRequiredProgress(32000);
 
+		//Printing Press
+		IIContent.UPGRADE_PRESS_PUNCHTAPES.withRequiredProgress(32000);
+		IIContent.UPGRADE_PRESS_BATCHING.withRequiredProgress(32000);
+		IIContent.UPGRADE_PRESS_ENVELOPER.withRequiredProgress(32000);
+
 		//Packer
 		IIContent.UPGRADE_PACKER_FLUID
 				.withCost(new IngredientStack(new ItemStack(IEContent.blockMetalDevice0, 1, BlockTypes_MetalDevice0.FLUID_PUMP.getMeta())))
@@ -1265,7 +1312,6 @@ public class IIRecipes
 				.addUpgrade(IIContent.UPGRADE_FLAGPOLE_UNIT_POST, UpgradeTier.TIER_1)
 				.addUpgrade(IIContent.UPGRADE_FLAGPOLE_DISTRESS_SIGNAL, UpgradeTier.TIER_1)
 				.addLockOut(IIContent.UPGRADE_FLAGPOLE_UNIT_POST, IIContent.UPGRADE_FLAGPOLE_TASER_LOCKS);
-
 
 	}
 

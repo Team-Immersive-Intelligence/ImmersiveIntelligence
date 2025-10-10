@@ -19,6 +19,7 @@ import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTBullet;
 import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTBullet.BulletState;
 import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTLocator;
 import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IIEntityRenderer;
+import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IIEntityRenderer.RegisteredEntityRenderer;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityDrone;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
@@ -29,6 +30,7 @@ import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 14.12.2022
  */
+@RegisteredEntityRenderer(clazz = EntityDrone.class, name = "drone")
 public class DroneRenderer extends IIEntityRenderer<EntityDrone>
 {
 	private static IIAnimationCompiledMap animationFloat, animationEngine, animationSetup;
@@ -37,7 +39,7 @@ public class DroneRenderer extends IIEntityRenderer<EntityDrone>
 
 	public DroneRenderer(RenderManager render)
 	{
-		super(render, "drone");
+		super(render);
 	}
 
 	@Override

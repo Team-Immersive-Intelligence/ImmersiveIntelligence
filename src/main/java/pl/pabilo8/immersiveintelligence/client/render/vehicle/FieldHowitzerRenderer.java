@@ -73,6 +73,9 @@ public class FieldHowitzerRenderer extends Render<EntityFieldHowitzer> implement
 		else
 		{
 			GlStateManager.rotate(yaw, 0, 1, 0);
+			GlStateManager.rotate(entity.rotationPitch, 1, 0, 0);
+			GlStateManager.rotate(entity.rotationRoll, 0, 0, 1);
+
 			GlStateManager.translate(-0.45, 0.45, 0.5);
 			towing = 1f-((entity.setupTime/(float)FieldHowitzer.setupTime)*1.75f);
 		}
@@ -120,15 +123,15 @@ public class FieldHowitzerRenderer extends Render<EntityFieldHowitzer> implement
 		GlStateManager.rotate(towing*8, 1, 0, 0);
 
 		GlStateManager.pushMatrix();
-		GlStateManager.translate(0, 0, -0.5f);
-		GlStateManager.rotate(entity.partWheelLeft.wheelTraverse+(entity.turnLeft?(f1*1.5f): 0)-(entity.turnRight?(f1*1.5f): 0), 1, 0, 0);
+		GlStateManager.translate(0, entity.partWheelLeft.getSuspensionCompressionPercentage(), -0.5f);
+		GlStateManager.rotate(entity.partWheelLeft.getWheelTraverse()+(entity.turnLeft?(f1*1.5f): 0)-(entity.turnRight?(f1*1.5f): 0), 1, 0, 0);
 		for(ModelRendererTurbo mod : model.leftWheelModel)
 			mod.render(0.0625f);
 		GlStateManager.popMatrix();
 
 		GlStateManager.pushMatrix();
-		GlStateManager.translate(0, 0, -0.5f);
-		GlStateManager.rotate(entity.partWheelRight.wheelTraverse+(entity.turnRight?(f1*1.5f): 0)-(entity.turnLeft?(f1*1.5f): 0), 1, 0, 0);
+		GlStateManager.translate(0, entity.partWheelRight.getSuspensionCompressionPercentage(), -0.5f);
+		GlStateManager.rotate(entity.partWheelRight.getWheelTraverse()+(entity.turnRight?(f1*1.5f): 0)-(entity.turnLeft?(f1*1.5f): 0), 1, 0, 0);
 		for(ModelRendererTurbo mod : model.rightWheelModel)
 			mod.render(0.0625f);
 		GlStateManager.popMatrix();

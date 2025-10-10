@@ -346,22 +346,35 @@ public class IIContent
 	public static final Upgrade UPGRADE_PACKER_NAMING = new Upgrade("packer_naming");
 	//makes packer accept minecarts instead of items
 	public static final Upgrade UPGRADE_PACKER_RAILWAY = new Upgrade("packer_railway");
+
 	//used by effect crates
 	public static final Upgrade UPGRADE_INSERTER = new Upgrade("inserter");
+	//allows to use belt fed upgrade for mg
+	public static final Upgrade UPGRADE_MG_LOADER = new Upgrade("mg_loader");
+
 	//increases machine speed
 	public static final Upgrade UPGRADE_IMPROVED_GEARBOX = new Upgrade("improved_gearbox");
 	//more sawdust for cost of planks
 	public static final Upgrade UPGRADE_SAW_UNREGULATOR = new Upgrade("saw_unregulator");
-	//allows to use belt fed upgrade for mg
-	public static final Upgrade UPGRADE_MG_LOADER = new Upgrade("mg_loader");
+
+	//allows printing punchtapes
+	public static final Upgrade UPGRADE_PRESS_PUNCHTAPES = new Upgrade("press_punchtapes");
+	//allows printing bound pages, books and newspapers
+	public static final Upgrade UPGRADE_PRESS_BATCHING = new Upgrade("press_batching");
+	//allows printing envelopes
+	public static final Upgrade UPGRADE_PRESS_ENVELOPER = new Upgrade("press_enveloper");
+
 	//allows the radar to detect radio signal emitters and send their positions
 	public static final Upgrade UPGRADE_RADIO_LOCATORS = new Upgrade("radio_locators");
+
 	//changes the projectile workshop to *fill* projectiles
 	public static final Upgrade UPGRADE_CORE_FILLER = new Upgrade("core_filler");
+
 	//adds razor wire on top of a gate
 	public static final Upgrade UPGRADE_RAZOR_WIRE = new Upgrade("razor_wire");
 	//allows connecting redstone wire to a gate
 	public static final Upgrade UPGRADE_REDSTONE_ACTIVATION = new Upgrade("rs_activation");
+
 	//data input machine upgrade
 	public static final Upgrade UPGRADE_ADVANCED_DATA = new Upgrade("advanced_data");
 	//arithemtic logic machine upgrade
@@ -395,6 +408,11 @@ public class IIContent
 	public static final Upgrade UPGRADE_FLAGPOLE_TASER_LOCKS = new Upgrade("flagpole/taser_locks");
 	public static final Upgrade UPGRADE_FLAGPOLE_DISTRESS_SIGNAL = new Upgrade("flagpole/distress_signal");
 	public static final Upgrade UPGRADE_FLAGPOLE_UNIT_POST = new Upgrade("flagpole/unit_post");
+
+	public static final Upgrade UPGRADE_VEHICLE_SMALL_STORAGE = new Upgrade("vehicle/small/storage");
+	public static final Upgrade UPGRADE_VEHICLE_SMALL_ADDITIONAL_TANK = new Upgrade("vehicle/small/fluid_tank");
+	public static final Upgrade UPGRADE_VEHICLE_ADDITIONAL_PASSENGER_SEAT = new Upgrade("vehicle/small/passenger_seat");
+	public static final Upgrade UPGRADE_VEHICLE_WOODGAS = new Upgrade("vehicle/woodgas");
 
 	//dummy method, called so that the static fields above get loaded
 	static void init()

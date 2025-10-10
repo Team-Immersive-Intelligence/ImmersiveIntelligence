@@ -8,7 +8,8 @@ import net.minecraft.util.math.Vec3d;
 import javax.annotation.Nonnull;
 
 /**
- * @author GabrielV(gabriel @ iiteam.net)
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @author GabrielV (gabriel@iiteam.net)
  * @since 28.07.2024
  */
 public class IIMath extends MathHelper
@@ -83,6 +84,33 @@ public class IIMath extends MathHelper
 
 		double xx = (MathHelper.sin((float)yaw)*true_offset);
 		double zz = (MathHelper.cos((float)yaw)*true_offset);
+
+		return new Vec3d(xx, yy, zz);
+	}
+
+	public static Vec3d offsetPosDirectionXZ(float xOffset, float zOffset, float rotationYaw, float rotationPitch)
+	{
+		float yaw = (float)Math.toRadians(-rotationYaw);
+		float yawZ = (float)(yaw-1.5707963267948966);
+		float pitch = (float)Math.toRadians(rotationPitch);
+
+		if(xOffset==0&&zOffset==0)
+			return new Vec3d(0, 0, 0);
+
+		double sum = xOffset+zOffset;
+		double sinP = MathHelper.sin(pitch);
+		double cosP = MathHelper.cos(pitch);
+
+		double yy = sinP*sum;
+		double trueOffset = cosP*sum;
+
+		double sinYaw = MathHelper.sin(yaw);
+		double sinYawZ = MathHelper.sin(yawZ);
+		double cosYaw = MathHelper.cos(yaw);
+		double cosYawZ = MathHelper.cos(yawZ);
+
+		double xx = trueOffset*(sinYaw+sinYawZ);
+		double zz = trueOffset*(cosYaw+cosYawZ);
 
 		return new Vec3d(xx, yy, zz);
 	}

@@ -10,7 +10,8 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityVehiclePart;
+import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.VehicleBlueprint;
+import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehiclePart;
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.entity.IIEntityUtils;
 
@@ -20,36 +21,37 @@ import javax.annotation.Nonnull;
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 09.07.2020
  */
-public interface IVehicleMultiPart extends IEntityMultiPart
+public interface IVehicleMultiPart<T extends Entity & IVehicleMultiPart<T>> extends IEntityMultiPart
 {
-	boolean onInteractWithPart(EntityVehiclePart part, EntityPlayer player, EnumHand hand);
+	boolean onInteractWithPart(EntityVehiclePart<T> part, EntityPlayer player, EnumHand hand);
 
-	default boolean useNixieFontOnPart(EntityVehiclePart part, EntityPlayer player, RayTraceResult mop)
+	default String[] getOverlayTextOnPart(EntityVehiclePart<T> part, EntityPlayer player, RayTraceResult mop)
 	{
-		return false;
+		return null;
 	}
 
-	String[] getOverlayTextOnPart(EntityVehiclePart part, EntityPlayer player, RayTraceResult mop);
+	Entity[] getParts();
 
-	EntityVehiclePart[] getParts();
+	EntityVehiclePart<T>[] getVehicleParts();
 
-	void getSeatRidingPosition(int seatID, Entity passenger);
+	void getSeatRidingPosition(String seatID, Entity passenger);
 
-	void getSeatRidingAngle(int seatID, Entity passenger);
+	void getSeatRidingAngle(String seatID, Entity passenger);
 
-	boolean shouldSeatPassengerSit(int seatID, Entity passenger);
+	boolean shouldSeatPassengerSit(String seatID, Entity passenger);
 
-	void onSeatDismount(int seatID, Entity passenger);
+	void onSeatDismount(String seatID, Entity passenger);
 
-	default void updateParts(Entity vehicle)
+	default void updateParts()
 	{
+		Entity vehicle = ((Entity)this);
 		boolean client = vehicle.world.isRemote;
 
 		//create vectors
 		Vec3d vecX = IIMath.offsetPosDirection(1f, Math.toRadians(MathHelper.wrapDegrees(-vehicle.rotationYaw)), 0);
 		Vec3d vecZ = IIMath.offsetPosDirection(1f, Math.toRadians(MathHelper.wrapDegrees(-vehicle.rotationYaw-90)), 0);
 
-		for(EntityVehiclePart part : getParts())
+		for(EntityVehiclePart<T> part : getVehicleParts())
 		{
 			//transform offset using on the rotated vectors
 			Vec3d offsetX = vecX.scale(part.offset.x);
@@ -78,4 +80,11 @@ public interface IVehicleMultiPart extends IEntityMultiPart
 	{
 		return ((Entity)this).getEntityWorld();
 	}
+
+	default double getAngularVelocity()
+	{
+		return 0;
+	}
+
+	VehicleBlueprint getVehicleBlueprint();
 }

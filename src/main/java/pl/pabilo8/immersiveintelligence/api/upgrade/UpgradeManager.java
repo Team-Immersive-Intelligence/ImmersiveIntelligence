@@ -2,7 +2,6 @@ package pl.pabilo8.immersiveintelligence.api.upgrade;
 
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.INBTSerializable;
 import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeUtils.UpgradeOperation;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools;
@@ -17,35 +16,36 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * A class responsible for installation, removal and storing installed upgrades of a machine based on a designated {@link UpgradeTechTree}.
+ * A class responsible for installation, removal and storing installed upgrades of a machine (a {@link net.minecraft.tileentity.TileEntity} or {@link net.minecraft.entity.Entity}( based on a designated {@link UpgradeTechTree}.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 03.12.2023
  */
-public class UpgradeManager<T extends TileEntity & IUpgradableDevice> implements INBTSerializable<NBTTagCompound>
+public class UpgradeManager<T extends IUpgradableDevice> implements INBTSerializable<NBTTagCompound>
 {
-	private final T tile;
+	private final T parent;
+
 	private final ArrayList<Upgrade> upgrades = new ArrayList<>();
 	private final UpgradeTechTree techTree;
 	private Upgrade currentlyInstalled = null;
 	private int upgradeProgress = 0, clientUpgradeProgress = 0;
 	private float maxClientUpgradeProgress = 0;
 
-	public UpgradeManager(T tile)
+	public UpgradeManager(T parent)
 	{
-		this.tile = tile;
-		this.techTree = UpgradeTechTree.getTreeFor(tile);
+		this.parent = parent;
+		this.techTree = UpgradeTechTree.getTreeFor(parent);
 	}
 
-	public UpgradeManager(T tile, UpgradeTechTree techTree)
+	public UpgradeManager(T parent, UpgradeTechTree techTree)
 	{
-		this.tile = tile;
+		this.parent = parent;
 		this.techTree = techTree;
 	}
 
 	public void update()
 	{
-		if(tile.getWorld().isRemote&&clientUpgradeProgress < maxClientUpgradeProgress)
+		if(parent.getWorld().isRemote&&clientUpgradeProgress < maxClientUpgradeProgress)
 			clientUpgradeProgress = (int)Math.min(clientUpgradeProgress+(Tools.wrenchUpgradeProgress/2f), maxClientUpgradeProgress);
 	}
 
@@ -196,7 +196,7 @@ public class UpgradeManager<T extends TileEntity & IUpgradableDevice> implements
 
 	private void sendTileUpdate()
 	{
-		if(tile instanceof TileEntityMultiblockIIBase<?>)
-			((TileEntityMultiblockIIBase<?>)tile).updateTileForEvent(SyncEvents.TILE_UPGRADES_MODIFIED);
+		if(parent instanceof TileEntityMultiblockIIBase<?>)
+			((TileEntityMultiblockIIBase<?>)parent).updateTileForEvent(SyncEvents.TILE_UPGRADES_MODIFIED);
 	}
 }

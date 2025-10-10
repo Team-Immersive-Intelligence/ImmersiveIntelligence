@@ -21,9 +21,10 @@ public class SyncNBTTest
 	@Test
 	public void testSyncNBTFieldsArePublic()
 	{
-		//Scan using Reflections to find the
+		//Scan using Reflections to find the annotated classes
 		Reflections reflections = new Reflections(new ConfigurationBuilder()
 				.setUrls(ClasspathHelper.forPackage("pl.pabilo8.immersiveintelligence"))
+				//Nie wolno, nie można, nie potrzeba nam tego
 				.filterInputsBy(new FilterBuilder().excludePattern(".*com/elytradev/mirage/lighting/ILightEventConsumer.*"))
 				.setScanners(Scanners.FieldsAnnotated));
 		Set<Field> syncNBTFields = reflections.getFieldsAnnotatedWith(SyncNBT.class);

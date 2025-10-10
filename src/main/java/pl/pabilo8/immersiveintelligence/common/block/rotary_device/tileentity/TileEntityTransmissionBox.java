@@ -39,13 +39,13 @@ public class TileEntityTransmissionBox extends TileEntityIEBase implements ITick
 	};
 
 	@Override
-	public void updateRotationStorage(float rpm, float torque, int part)
+	public void updateRotationStorage(float speed, float torque, int partID)
 	{
 		if(world.isRemote)
 		{
-			if(part==0)
+			if(partID==0)
 			{
-				energy.setRotationSpeed(rpm);
+				energy.setRotationSpeed(speed);
 				energy.setTorque(torque);
 			}
 		}

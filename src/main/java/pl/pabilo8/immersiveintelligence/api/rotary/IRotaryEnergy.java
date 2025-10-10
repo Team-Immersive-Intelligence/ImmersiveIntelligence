@@ -6,33 +6,29 @@ import net.minecraft.util.EnumFacing;
 import javax.annotation.Nullable;
 
 /**
- * It's definitely more advanced than the forge energy system, but it reflects at least a bit how it works irl
- * Used multiple sources to make this:
- * -Used physics equations and general info about how rotary energy works from https://www.engineeringtoolbox.com/
- * -Many ideas and implementations from RotaryCraft by Reika Kalseki https://sites.google.com/site/reikasminecraft/rotarycraft
- * -and RotaryCraft Wiki https://rotarycraft.fandom.com/wiki/RotaryCraft_Wiki
- * -General info from Wikipedia
+ * An interface for an Immersive Intelligence rotary powered device. Uses a torque (IT - Immersive Torque) and speed (D/T - Degrees per Tick) value to represent ongoing rotations.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
- * @ii-approved 0.1.0
+ * @ii-approved 0.3.1
+ * @updated 10.10.2025
  * @since 06.01.2020
  */
 public interface IRotaryEnergy
 {
 	/**
-	 * @return Torque in Newton metres
+	 * @return Torque in IT
 	 */
 	float getTorque();
 
 	/**
-	 * @param torque in Newton metres
+	 * @param torque in IT
 	 */
 	void setTorque(float torque);
 
 	/**
 	 * Used by connectors, as they need to have local and network energy
 	 *
-	 * @return output torque
+	 * @return output torque in IT
 	 */
 	default float getOutputTorque()
 	{
@@ -40,16 +36,16 @@ public interface IRotaryEnergy
 	}
 
 	/**
-	 * @return Revelations per minute
+	 * @return Degrees per tick
 	 */
 	float getRotationSpeed();
 
 	/**
-	 * Sets revelations per minute value
+	 * Sets degrees per tick value
 	 *
-	 * @param rpm revelations per minute
+	 * @param speed degrees per tick
 	 */
-	void setRotationSpeed(float rpm);
+	void setRotationSpeed(float speed);
 
 	/**
 	 * Used by connectors, as they need to have local and network energy
@@ -62,8 +58,7 @@ public interface IRotaryEnergy
 	}
 
 	/**
-	 * Energy in Rotary Flux (1 RoF = 1 IF/tick = 0.00134 MHp = 0.25 EU/tick = 0.36 RU)
-	 * Energy can also be measured in Minecraft-Horse Power (746 RoF = 1 MHp)
+	 * Energy in Immersive Flux / Tick (1 IF/tick = 0.00134 MHp = 0.25 EU/tick = 0.36 RU)
 	 * In Gregtech: 1 RU -> 0.6875 EU, the conversion RoF to IF to EU to RU gives result of 0.36,
 	 *
 	 * @return the amount of energy in RoF

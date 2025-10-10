@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.common.entity.vehicle;
+package pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils;
 
 import net.minecraft.nbt.NBTTagInt;
 import net.minecraft.util.DamageSource;
@@ -23,7 +23,25 @@ public class VehicleDurability implements INBTSerializable<NBTTagInt>
 
 	public void attackFrom(DamageSource source, float amount)
 	{
-		this.durability -= MathHelper.clamp(amount-armor, 0, this.durability);
+		this.durability = MathHelper.clamp(durability+(int)amount, 0, maxDurability);
+	}
+
+	public boolean isDead()
+	{
+		return this.durability <= 0;
+	}
+
+	public boolean canRepair()
+	{
+		return durability < maxDurability;
+	}
+
+	public boolean repair(float amount)
+	{
+		if(!canRepair())
+			return false;
+		this.durability = MathHelper.clamp(durability+(int)amount, 0, maxDurability);
+		return true;
 	}
 
 	public double getDamageFactor()

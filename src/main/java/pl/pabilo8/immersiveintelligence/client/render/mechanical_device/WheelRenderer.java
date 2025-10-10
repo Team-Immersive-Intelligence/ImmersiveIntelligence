@@ -57,7 +57,7 @@ public class WheelRenderer extends IITileRenderer<TileEntityWheelBase>
 				continue;
 			AMTChain chain = IIModelRegistry.INSTANCE.getMotorBeltConnectionModel(te, connection);
 			//Apply rotation
-			float rpm = (float)te.getOutputRPM();
+			float rpm = (float)te.getOutputSpeed();
 			if(rpm < 1)
 				chain.setProgress(0);
 			else

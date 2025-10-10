@@ -102,8 +102,9 @@ import pl.pabilo8.immersiveintelligence.common.entity.minecart.crate.EntityMinec
 import pl.pabilo8.immersiveintelligence.common.entity.tactile.EntityAMTTactile;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityDrone;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityMotorbike;
-import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityVehicleSeat;
+import pl.pabilo8.immersiveintelligence.common.entity.vehicle.towable.gun.EntityFieldGun;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.towable.gun.EntityFieldHowitzer;
+import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehicleSeat;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerUpgrade;
 import pl.pabilo8.immersiveintelligence.common.item.ItemIIMinecart.Minecarts;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.material.ItemIIMaterialDust.MaterialsDust;
@@ -683,10 +684,10 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		registerEntity(i++, EntityMachinegun.class, "machinegun", 64, 1, true);
 		registerEntity(i++, EntitySkycrateInternal.class, "skycrate_internal", 64, 1, true);
 
-		registerEntity(i++, EntityMotorbike.class, "motorbike", 64, 20, true);
-		registerEntity(i++, EntityFieldHowitzer.class, "field_howitzer", 64, 20, true);
-//		registerEntity(i++, EntityFieldGun.class, "field_gun", 64, 20, true);
-		registerEntity(i++, EntityVehicleSeat.class, "seat", 64, 1, true);
+		registerEntity(i++, EntityMotorbike.class, "motorbike", 64, 20, false);
+		registerEntity(i++, EntityFieldHowitzer.class, "field_howitzer", 64, 20, false);
+		registerEntity(i++, EntityFieldGun.class, "field_gun", 64, 20, false);
+		registerEntity(i++, EntityVehicleSeat.class, "seat", 64, 1, false);
 
 		registerEntity(i++, EntityTripodPeriscope.class, "tripod_periscope", 64, 1, true);
 		registerEntity(i++, EntityAtomicBoom.class, "atomic_boom", 64, 1, true);

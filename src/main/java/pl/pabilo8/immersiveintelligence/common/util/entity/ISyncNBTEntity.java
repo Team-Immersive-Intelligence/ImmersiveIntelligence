@@ -30,6 +30,18 @@ public interface ISyncNBTEntity<T extends Entity & ISyncNBTEntity<T>>
 		NBTSerialisation.synchroniseFor(tis, (tag, tile) -> tag.deserializeAll(tis, nbt, true));
 	}
 
+	default void readEntityFromNBT(NBTTagCompound compound)
+	{
+		T tis = ((T)this);
+		NBTSerialisation.synchroniseFor(tis, (tag, tile) -> tag.serializeAll(tis, compound));
+	}
+
+	default void writeEntityToNBT(NBTTagCompound compound)
+	{
+		T tis = ((T)this);
+		NBTSerialisation.synchroniseFor(tis, (tag, tile) -> tag.deserializeAll(tis, compound, false));
+	}
+
 	@SuppressWarnings({"unchecked"})
 	default void updateEntityForTime()
 	{
@@ -47,5 +59,13 @@ public interface ISyncNBTEntity<T extends Entity & ISyncNBTEntity<T>>
 		NBTTagCompound nbt = new NBTTagCompound();
 		NBTSerialisation.synchroniseFor(tis, (tag, tile) -> tag.serializeForEvent(tile, nbt, event));
 		IIPacketHandler.sendToClient(new MessageEntityNBTSync(tis, nbt));
+	}
+
+	default void sendServerUpdateForEvent(SyncNBT.SyncEvents event)
+	{
+		T tis = ((T)this);
+		NBTTagCompound nbt = new NBTTagCompound();
+		NBTSerialisation.synchroniseFor(tis, (tag, tile) -> tag.serializeForEvent(tile, nbt, event));
+		IIPacketHandler.sendToServer(new MessageEntityNBTSync(tis, nbt));
 	}
 }

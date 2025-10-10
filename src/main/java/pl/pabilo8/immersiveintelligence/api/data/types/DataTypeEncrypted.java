@@ -7,7 +7,7 @@ import pl.pabilo8.immersiveintelligence.api.data.types.generic.IterableDataType;
 import javax.annotation.Nonnull;
 
 /**
- * @author GabrielV(gabriel @ iiteam.net)
+ * @author GabrielV (gabriel@iiteam.net)
  * Data type used for transferring encrypted data from Cryptographer
  */
 public class DataTypeEncrypted extends IterableDataType

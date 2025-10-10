@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.common.entity.vehicle;
+package pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MultiPartEntityPart;
@@ -12,6 +12,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.IAdvancedTextOverlay;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IVehicleMultiPart;
+import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.VehicleDurability;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -21,7 +22,7 @@ import java.util.Arrays;
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 09.07.2020
  */
-public class EntityVehiclePart extends MultiPartEntityPart implements IAdvancedTextOverlay
+public class EntityVehiclePart<T extends Entity & IVehicleMultiPart<T>> extends MultiPartEntityPart implements IAdvancedTextOverlay, IVehicleComponent
 {
 	/**
 	 * Offset from center of the vehicle
@@ -34,14 +35,14 @@ public class EntityVehiclePart extends MultiPartEntityPart implements IAdvancedT
 	/**
 	 * The parent (vehicle) entity
 	 */
-	public IVehicleMultiPart parentExt;
+	public T parentExt;
 	/**
 	 * The health storage and damage for this part
 	 */
 	@Nullable
-	public VehicleDurability hitbox;
+	public VehicleDurability durability;
 
-	public EntityVehiclePart(IVehicleMultiPart parent, String partName, Vec3d offset, AxisAlignedBB aabb)
+	public EntityVehiclePart(T parent, String partName, Vec3d offset, AxisAlignedBB aabb)
 	{
 		super(parent, partName, (float)aabb.getAverageEdgeLength(), (float)Math.abs(aabb.maxY-aabb.minY));
 		this.parentExt = parent;
@@ -49,19 +50,19 @@ public class EntityVehiclePart extends MultiPartEntityPart implements IAdvancedT
 		this.aabb = aabb;
 	}
 
-	public EntityVehiclePart(IVehicleMultiPart parent, String partName, Vec3d offset, double radius, double height)
+	public EntityVehiclePart(T parent, String partName, Vec3d offset, double radius, double height)
 	{
 		this(parent, partName, offset, new AxisAlignedBB(-radius, -height, -radius, radius, height, radius));
 	}
 
-	public EntityVehiclePart(IVehicleMultiPart parent, String partName, Vec3d offset, double radius)
+	public EntityVehiclePart(T parent, String partName, Vec3d offset, double radius)
 	{
 		this(parent, partName, offset, radius, radius);
 	}
 
-	public EntityVehiclePart setHitbox(@Nonnull VehicleDurability hitbox)
+	public EntityVehiclePart<T> withHitbox(@Nonnull VehicleDurability hitbox)
 	{
-		this.hitbox = hitbox;
+		this.durability = hitbox;
 		return this;
 	}
 
@@ -76,8 +77,8 @@ public class EntityVehiclePart extends MultiPartEntityPart implements IAdvancedT
 	@Override
 	public boolean attackEntityFrom(DamageSource source, float amount)
 	{
-		if(hitbox!=null)
-			hitbox.attackFrom(source, amount);
+		if(durability!=null)
+			durability.attackFrom(source, amount);
 		return false;
 	}
 
@@ -119,5 +120,17 @@ public class EntityVehiclePart extends MultiPartEntityPart implements IAdvancedT
 	{
 		//handled by parent
 		return false;
+	}
+
+	protected Vec3d getWorldPos()
+	{
+		return parentExt.getPositionVector().add(offset);
+	}
+
+	@Nullable
+	@Override
+	public VehicleDurability getDurability()
+	{
+		return durability;
 	}
 }

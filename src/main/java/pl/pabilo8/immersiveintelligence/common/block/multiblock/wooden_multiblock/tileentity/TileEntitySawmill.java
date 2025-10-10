@@ -263,11 +263,11 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 	//--- IRotationalEnergyBlock ---//
 
 	@Override
-	public void updateRotationStorage(float rpm, float torque, int part)
+	public void updateRotationStorage(float speed, float torque, int partID)
 	{
 		if(world.isRemote)
 		{
-			rotation.setRotationSpeed(rpm);
+			rotation.setRotationSpeed(speed);
 			rotation.setTorque(torque);
 		}
 	}

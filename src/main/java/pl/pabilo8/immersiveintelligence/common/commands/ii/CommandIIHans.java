@@ -36,8 +36,8 @@ import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityMachinegun;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityMortar;
 import pl.pabilo8.immersiveintelligence.common.entity.hans.HansUtils;
-import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityVehicleSeat;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.towable.gun.EntityFieldHowitzer;
+import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehicleSeat;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine.Magazines;
 import pl.pabilo8.immersiveintelligence.common.item.armor.ItemIIArmorUpgrade.ArmorUpgrades;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIRailgunOverride;
@@ -799,13 +799,13 @@ public class CommandIIHans extends CommandBase
 
 			if(parachute)
 			{
-				hans1.markCrewman(EntityVehicleSeat.getOrCreateSeat(teamWeapon, 0));
-				hans2.markCrewman(EntityVehicleSeat.getOrCreateSeat(teamWeapon, 1));
+				hans1.markCrewman(EntityVehicleSeat.getOrCreateSeat(teamWeapon, "gunner"));
+				hans2.markCrewman(EntityVehicleSeat.getOrCreateSeat(teamWeapon, "commander"));
 			}
 			else
 			{
-				hans1.startRiding(EntityVehicleSeat.getOrCreateSeat(teamWeapon, 0));
-				hans2.startRiding(EntityVehicleSeat.getOrCreateSeat(teamWeapon, 1));
+				hans1.startRiding(EntityVehicleSeat.getOrCreateSeat(teamWeapon, "gunner"));
+				hans2.startRiding(EntityVehicleSeat.getOrCreateSeat(teamWeapon, "commander"));
 			}
 
 			return hans1;

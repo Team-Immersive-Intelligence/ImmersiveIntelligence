@@ -8,7 +8,7 @@ import java.util.Base64;
 /**
  * This class is used for encrypting data using XOR Cipher.
  *
- * @author GabrielV(gabriel @ iiteam.net)
+ * @author GabrielV (gabriel@iiteam.net)
  * @author Avalon (avalon@iiteam.net)
  * @ii-approved 0.3.1
  * @since 18.09.2024

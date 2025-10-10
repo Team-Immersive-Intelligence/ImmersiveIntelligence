@@ -11,7 +11,7 @@ import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.component.EntityShrapnel;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityMotorbike;
-import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityVehicleSeat;
+import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehicleSeat;
 
 import java.util.Arrays;
 
@@ -28,7 +28,7 @@ public class IIDamageSources
 
 	public static DamageSource causeMotorbikeDamage(EntityMotorbike motorbike)
 	{
-		EntityVehicleSeat seat = EntityVehicleSeat.getOrCreateSeat(motorbike, 0);
+		EntityVehicleSeat seat = EntityVehicleSeat.getOrCreateSeat(motorbike, "rider");
 		Entity rider = seat.getPassengers().get(0);
 		return new IEDamageSource_Indirect(rider!=null?"iiMotorbike": "iiMotorbikeNoRider", motorbike, rider);
 	}

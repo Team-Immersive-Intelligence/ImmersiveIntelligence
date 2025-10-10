@@ -806,12 +806,12 @@ public class TileEntitySkyCartStation extends TileEntityMultiblockConnectable<Ti
 	}
 
 	@Override
-	public void updateRotationStorage(float rpm, float torque, int part)
+	public void updateRotationStorage(float speed, float torque, int partID)
 	{
 		if(world.isRemote)
-			if(part==0)
+			if(partID==0)
 			{
-				rotation.setRotationSpeed(rpm);
+				rotation.setRotationSpeed(speed);
 				rotation.setTorque(torque);
 			}
 	}

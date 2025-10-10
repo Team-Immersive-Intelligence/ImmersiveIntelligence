@@ -51,7 +51,6 @@ import pl.pabilo8.immersiveintelligence.common.entity.hans.tasks.hand_weapon.AIH
 import pl.pabilo8.immersiveintelligence.common.entity.hans.tasks.idle.AIHansKazachok;
 import pl.pabilo8.immersiveintelligence.common.entity.hans.tasks.idle.AIHansSalute;
 import pl.pabilo8.immersiveintelligence.common.entity.hans.tasks.idle.AIHansTimedLookAtEntity;
-import pl.pabilo8.immersiveintelligence.common.entity.vehicle.towable.gun.EntityFieldHowitzer;
 import pl.pabilo8.immersiveintelligence.common.item.armor.ItemIILightEngineerHelmet;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
@@ -373,8 +372,9 @@ public class EntityHans extends EntityCreature implements INpc
 				tasks.addTask(0, vehicleTask = new AIHansMachinegun(this));
 			else if(entity instanceof EntityMortar)
 				tasks.addTask(0, vehicleTask = new AIHansMortar(this));
-			else if(entity.getLowestRidingEntity() instanceof EntityFieldHowitzer)
-				tasks.addTask(0, vehicleTask = new AIHansHowitzer(this));
+			//TODO: 01.10.2025 create an universal vehicle task
+			/*else if(entity.getLowestRidingEntity() instanceof EntityFieldHowitzer)
+				tasks.addTask(0, vehicleTask = new AIHansHowitzer(this));*/
 			return true;
 		}
 		return false;

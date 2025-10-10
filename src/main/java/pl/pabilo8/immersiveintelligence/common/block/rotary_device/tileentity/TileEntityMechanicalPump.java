@@ -394,13 +394,13 @@ public class TileEntityMechanicalPump extends TileEntityIEBase implements ITicka
 
 
 	@Override
-	public void updateRotationStorage(float rpm, float torque, int part)
+	public void updateRotationStorage(float speed, float torque, int partID)
 	{
 		if(world.isRemote&&!isDummy())
 		{
-			if(part==0)
+			if(partID==0)
 			{
-				rotation.setRotationSpeed(rpm);
+				rotation.setRotationSpeed(speed);
 				rotation.setTorque(torque);
 			}
 		}

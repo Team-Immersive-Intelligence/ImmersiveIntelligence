@@ -8,12 +8,12 @@ import blusunrize.immersiveengineering.api.energy.wires.IWireCoil;
 import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler;
 import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler.Connection;
 import blusunrize.immersiveengineering.api.energy.wires.WireType;
-import blusunrize.immersiveengineering.client.ClientUtils;
+import blusunrize.immersiveengineering.common.Config.IEConfig.Machines;
 import blusunrize.immersiveengineering.common.IESaveData;
 import blusunrize.immersiveengineering.common.util.Utils;
 import blusunrize.immersiveengineering.common.util.network.MessageObstructedConnection;
+import mysticalmechanics.tileentity.TileEntityAxle;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -29,8 +29,6 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.MechanicalDevices;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.rotary_device.tileentity.TileEntityMechanicalConnectable;
@@ -44,11 +42,15 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import static pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.MechanicalDevices.rofConversionRatio;
+
 /**
  * Utility for Immersive Intelligence's Mechanical Power System.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @author GabrielV (gabriel@iiteam.net)
  * @updated 01.08.2024
+ * @updated 10.10.2025
  * @ii-approved 0.3.1
  * @since 26.12.2019
  */
@@ -82,15 +84,15 @@ public class IIRotaryUtils
 	public static boolean canConnect(TileEntity start, TileEntity end, WireType wire)
 	{
 		//Better be safe ^^
-		if(!(start instanceof IMotorBeltConnector)||!(end instanceof IMotorBeltConnector))
+		if(!(start instanceof IRotaryConnector)||!(end instanceof IRotaryConnector))
 			return false;
 		if(start.getWorld()!=end.getWorld())
 			return false;
 		if(!(wire instanceof MotorBeltType))
 			return false;
 
-		return canConnectOnX(((TileEntity & IMotorBeltConnector)start), ((TileEntity & IMotorBeltConnector)end))||
-				canConnectOnZ(((TileEntity & IMotorBeltConnector)start), ((TileEntity & IMotorBeltConnector)end));
+		return canConnectOnX(((TileEntity & IRotaryConnector)start), ((TileEntity & IRotaryConnector)end))||
+				canConnectOnZ(((TileEntity & IRotaryConnector)start), ((TileEntity & IRotaryConnector)end));
 	}
 
 	/**
@@ -294,7 +296,7 @@ public class IIRotaryUtils
 	 * @param <T>   motor belt connector tile entity
 	 * @return true, when two rotary endpoints transmit power on X axis and their position doesn't differ on Z axis
 	 */
-	private static <T extends TileEntity & IMotorBeltConnector> boolean canConnectOnX(T start, T end)
+	private static <T extends TileEntity & IRotaryConnector> boolean canConnectOnX(T start, T end)
 	{
 		return start.getPos().getZ()==end.getPos().getZ()
 				&&start.getConnectionAxis()==Axis.X&&end.getConnectionAxis()==Axis.X;
@@ -306,7 +308,7 @@ public class IIRotaryUtils
 	 * @param <T>   motor belt connector tile entity
 	 * @return true, when two rotary endpoints transmit power on Z axis and their position doesn't differ on X axis
 	 */
-	private static <T extends TileEntity & IMotorBeltConnector> boolean canConnectOnZ(T start, T end)
+	private static <T extends TileEntity & IRotaryConnector> boolean canConnectOnZ(T start, T end)
 	{
 		return start.getPos().getX()==end.getPos().getX()
 				&&start.getConnectionAxis()==Axis.Z&&end.getConnectionAxis()==Axis.Z;
@@ -321,58 +323,7 @@ public class IIRotaryUtils
 		return BELT_GENERAL_CATEGORY.equals(wire.getCategory());
 	}
 
-	@SideOnly(Side.CLIENT)
-	@Deprecated
-	public static void renderEnergyTooltip(ArrayList<String> tooltip, int mx, int my, int x, int y, RotaryStorage storage,
-										   int w, int h, int spacing, int iconSize, boolean iconsAbove, boolean tooltipIcons)
-	{
-		if(tooltipIcons)
-		{
-			int xx = (int)((spacing+w+(0.5*spacing))-(iconSize/2));
-			int yy = iconsAbove?(y-iconSize): (y+(2*spacing)+h);
-			int iconHeight = iconsAbove?spacing: -spacing;
-
-			if(mx > xx&&mx < xx+iconSize&&my > yy&&my < yy+iconHeight)
-			{
-				tooltip.add(IIReference.ROTARY_KEY+"mechanical.speed");
-				return;
-			}
-			xx += spacing+(0.5*w);
-			if(mx > xx&&mx < xx+iconSize&&my > yy&&my < yy+iconHeight)
-			{
-				tooltip.add(IIReference.ROTARY_KEY+"mechanical.torque");
-				return;
-			}
-		}
-
-		if(mx >= x+spacing&&mx <= x+spacing+w&&my >= y+spacing&&my <= y+spacing+h)
-			tooltip.add(I18n.format(IIReference.INFO_KEY_SPEED, storage.getRotationSpeed()));
-		if(mx >= x+w+(2*spacing)&&mx <= x+(2*w)+(2*spacing)&&my >= y+spacing&&my <= y+spacing+h)
-			tooltip.add(I18n.format(IIReference.INFO_KEY_TORQUE, storage.getTorque()));
-	}
-
-	@Deprecated
-	public static void renderEnergyTooltip(ArrayList<String> tooltip, int mx, int my, int x, int y,
-										   RotaryStorage storage)
-	{
-		renderEnergyTooltip(tooltip, mx, my, x, y, storage, 7, 48, 2, 8, true, true);
-	}
-
-	@Deprecated
-	public static void renderEnergyBars(int x, int y, int w, int h, int spacing, RotaryStorage storage, float maxRPM,
-										float maxTorque)
-	{
-		int rpm = Math.round(h*Math.min((storage.getRotationSpeed()/maxRPM), 1));
-		int torque = Math.round(h*Math.min((storage.getTorque()/maxTorque), 1));
-		ClientUtils.drawGradientRect(x+spacing, y+spacing+(h-rpm), x+spacing+w, y+spacing+h, 0xffb51500, 0xff600b00);
-		ClientUtils.drawGradientRect(x+(2*spacing)+w, y+spacing+(h-torque), x+(2*w)+(2*spacing), y+spacing+h, 0xff00b521, 0xff003a00);
-
-	}
-
-	public static void renderEnergyBars(int x, int y, RotaryStorage storage, float maxRPM, float maxTorque)
-	{
-		renderEnergyBars(x, y, 7, 48, 2, storage, maxRPM, maxTorque);
-	}
+	//--- Ratios ---//
 
 	public static float getGearEfficiency(NonNullList<ItemStack> inventory)
 	{
@@ -399,21 +350,6 @@ public class IIRotaryUtils
 		return MathHelper.clamp(torque/inventory.size(), 0, 8);
 	}
 
-	/**
-	 * Calculates the torque for a rotary device based on its rotation speed.
-	 *
-	 * @param t        the tile entity of the rotary device
-	 * @param rotation the rotation speed of the rotary device in RPM
-	 * @return the torque for the rotary device, based on its rotation speed and the torque modifiers defined in {@link MechanicalDevices#dynamoDefaultTorque}
-	 */
-	public static float getTorqueForIEDevice(TileEntity t, double rotation)
-	{
-		for(Entry<Predicate<TileEntity>, Function<Float, Float>> e : TORQUE_BLOCKS.entrySet())
-			if(e.getKey().test(t))
-				return e.getValue().apply((float)rotation);
-		return MechanicalDevices.dynamoDefaultTorque;
-	}
-
 	public static float getDisplayRotation(TileEntity te, RotaryStorage rotaryStorage, float partialTicks)
 	{
 		double worldRPT = (te.getWorld().getTotalWorldTime()%getRPMMax()+partialTicks)/getRPMMax();
@@ -435,5 +371,60 @@ public class IIRotaryUtils
 				.filter(wire -> wire instanceof MotorBeltType)
 				.map(wire -> (MotorBeltType)wire)
 				.collect(Collectors.toSet());
+	}
+
+	//--- Conversion Methods ---//
+
+	/**
+	 * Calculates the torque for a rotary device based on its rotation speed.
+	 *
+	 * @param t        the tile entity of the rotary device
+	 * @param rotation the rotation speed of the rotary device in RPM
+	 * @return the torque for the rotary device, based on its rotation speed and the torque modifiers defined in {@link MechanicalDevices#dynamoDefaultTorque}
+	 */
+	public static float getTorqueForIEDevice(TileEntity t, double rotation)
+	{
+		for(Entry<Predicate<TileEntity>, Function<Float, Float>> e : TORQUE_BLOCKS.entrySet())
+			if(e.getKey().test(t))
+				return e.getValue().apply((float)rotation);
+		return MechanicalDevices.dynamoDefaultTorque;
+	}
+
+	/**
+	 * Calculate from IE dynamo output to II's rotary units
+	 *
+	 * @param rotation the rotation value of the IE dynamo
+	 * @param device   the IE device to calculate the torque for
+	 * @return an array containing the speed and torque in II's rotary units
+	 */
+	public static float[] IEToII(double rotation, TileEntity device)
+	{
+		float torque = getTorqueForIEDevice(device, 1);
+		int output = (int)(20*Machines.dynamo_output*rotation*rofConversionRatio);
+		float speed = output/torque;
+		torque = output/speed;
+
+		return new float[]{speed, torque};
+	}
+
+	public static double IIToIE(float energy)
+	{
+		return (energy/rofConversionRatio/Machines.dynamo_output);
+	}
+
+	public static double IEToMM(double rotation)
+	{
+		return rotation*rofConversionRatio;
+	}
+
+	public static double MMToIE(double power)
+	{
+		return power/rofConversionRatio;
+	}
+
+	public static float[] MMToII(double power)
+	{
+		double ii = MMToIE(power);
+		return IEToII(ii, new TileEntityAxle());
 	}
 }

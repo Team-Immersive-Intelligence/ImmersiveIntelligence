@@ -65,9 +65,9 @@ public class RotaryStorage implements IRotaryEnergy, INBTSerializable<NBTTagComp
 	}
 
 	@Override
-	public void setRotationSpeed(float rpm)
+	public void setRotationSpeed(float speed)
 	{
-		this.speed = rpm;
+		this.speed = speed;
 	}
 
 	/**

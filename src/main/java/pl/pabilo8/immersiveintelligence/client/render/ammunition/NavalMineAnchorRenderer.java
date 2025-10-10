@@ -17,6 +17,7 @@ import pl.pabilo8.immersiveintelligence.client.util.amt.AMTLoader;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
 import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTModel;
 import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IIEntityRenderer;
+import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IIEntityRenderer.RegisteredEntityRenderer;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.naval_mine.EntityNavalMine;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.naval_mine.EntityNavalMineAnchor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
@@ -28,6 +29,7 @@ import java.util.List;
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 21.01.2021
  */
+@RegisteredEntityRenderer(clazz = EntityNavalMineAnchor.class, name = "naval_mine_anchor")
 public class NavalMineAnchorRenderer extends IIEntityRenderer<EntityNavalMineAnchor>
 {
 	private static final ResLoc CHAIN = ResLoc.of(IIReference.RES_II, "blocks/fortification/steel_chain_fence");
@@ -35,7 +37,7 @@ public class NavalMineAnchorRenderer extends IIEntityRenderer<EntityNavalMineAnc
 
 	public NavalMineAnchorRenderer(RenderManager render)
 	{
-		super(render, "naval_mine_anchor");
+		super(render);
 	}
 
 	@Override

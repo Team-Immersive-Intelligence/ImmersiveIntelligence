@@ -71,6 +71,7 @@ import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleRegistry;
 import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleSystem;
 import pl.pabilo8.immersiveintelligence.client.gui.GuiWidgetAustralianTabs;
 import pl.pabilo8.immersiveintelligence.client.gui.inworld_overlay.InWorldOverlayBase;
+import pl.pabilo8.immersiveintelligence.client.gui.inworld_overlay.OwnershipOverlay;
 import pl.pabilo8.immersiveintelligence.client.gui.inworld_overlay.WrenchOverlay;
 import pl.pabilo8.immersiveintelligence.client.gui.overlay.GuiOverlayBase;
 import pl.pabilo8.immersiveintelligence.client.gui.overlay.GuiOverlayBase.GuiOverlayLayer;
@@ -103,8 +104,8 @@ import pl.pabilo8.immersiveintelligence.common.entity.EntityParachute;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityTripodPeriscope;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityMotorbike;
-import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityVehicleSeat;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.towable.gun.EntityFieldHowitzer;
+import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehicleSeat;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIGunBase;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIRailgunOverride;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
@@ -174,6 +175,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 		TEXT_OVERLAYS.add(new TextOverlayOwnership());
 
 		IN_WORLD_OVERLAYS.add(new WrenchOverlay());
+		IN_WORLD_OVERLAYS.add(new OwnershipOverlay());
 	}
 
 	@SuppressWarnings("unused")
@@ -398,7 +400,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 
 				if(player.getLowestRidingEntity() instanceof EntityMotorbike)
 				{
-					if(seat.seatID==0)
+					if(seat.seatID.equals("rider"))
 					{
 						model.bipedBody.rotateAngleX += 0.25;
 						model.bipedRightLeg.rotationPointZ = 2;
@@ -447,7 +449,8 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 						//model.bipedBody.rotateAngleY=seat.seatID==0?0.25f:-0.25f;
 						model.bipedBody.rotateAngleX += progress*0.385f;
 						model.isSneak = true;
-						if(seat.seatID==1)
+
+						if(seat.seatID.equals("rider"))
 						{
 							model.bipedRightArm.rotateAngleX = progress*-0.5f;
 							model.bipedRightArm.rotateAngleZ = progress*1.5f;
@@ -485,7 +488,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 					}
 					else if(reloading > 0)
 					{
-						if(seat.seatID==0)
+						if(seat.seatID.equals("rider"))
 						{
 							if(reloading < 0.2)
 								model.bipedLeftArm.rotateAngleZ = (1f-reloading/0.2f)*-1.25f;
@@ -513,7 +516,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 						}
 					}
 					else if(firing > 0)
-						if(seat.seatID==1)
+						if(seat.seatID.equals("passenger"))
 						{
 							float progress = MathHelper.clamp(firing < 0.75?firing/0.2f: 1f-(firing-0.85f)/0.15f, 0, 1);
 							model.isSneak = true;
@@ -563,7 +566,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 							}
 
 						}
-					else if(seat.seatID==0&&(howitzer.gunPitchDown||howitzer.gunPitchUp))
+					else if(seat.seatID.equals("rider")&&(howitzer.gunPitchDown||howitzer.gunPitchUp))
 					{
 						float limbSwing = Math.abs((tt%8-4)/8f);
 						if(howitzer.gunPitchUp)
@@ -1315,25 +1318,6 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 
 				event.setPitch((float)(event.getPitch()-recoilV));
 				event.setYaw((float)(event.getYaw()+recoilH));
-			}
-
-			//--- Camera Roll in Vehicles Handling ---//
-			if(ClientUtils.mc().player.getRidingEntity() instanceof EntityMotorbike)
-			{
-				EntityMotorbike entity = (EntityMotorbike)ClientUtils.mc().player.getRidingEntity();
-				float tilt = entity.tilt;
-				if(entity.turnLeft)
-					tilt -= event.getRenderPartialTicks()*0.1;
-				else if(entity.turnRight)
-					tilt += event.getRenderPartialTicks()*0.1;
-				else if(tilt!=0)
-				{
-					tilt = (float)(tilt < 0?tilt+event.getRenderPartialTicks()*0.1f: tilt-event.getRenderPartialTicks()*0.1f);
-					if(Math.abs(tilt) < 0.01f)
-						tilt = 0;
-				}
-
-				event.setRoll(MathHelper.clamp(tilt, -1f, 1f)*15f);
 			}
 		}
 		if(CameraHandler.isEnabled()&&!ClientUtils.mc().player.isRiding())

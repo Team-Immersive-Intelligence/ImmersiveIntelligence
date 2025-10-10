@@ -16,7 +16,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.api.rotary.IIRotaryUtils;
-import pl.pabilo8.immersiveintelligence.api.rotary.IMotorBeltConnector;
+import pl.pabilo8.immersiveintelligence.api.rotary.IRotaryConnector;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.MechanicalDevices;
 import pl.pabilo8.immersiveintelligence.common.item.mechanical.ItemIIMotorBelt.MotorBelt;
@@ -54,7 +54,7 @@ public class ItemIIMotorBelt extends ItemIISubItemsBase<MotorBelt> implements IW
 	@Override
 	public boolean canConnectCable(ItemStack stack, TileEntity targetEntity)
 	{
-		return targetEntity instanceof IMotorBeltConnector;
+		return targetEntity instanceof IRotaryConnector;
 	}
 
 	@Override

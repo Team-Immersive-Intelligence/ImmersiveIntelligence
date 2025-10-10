@@ -1,13 +1,20 @@
 package pl.pabilo8.immersiveintelligence.api.upgrade;
 
-import net.minecraft.tileentity.TileEntity;
 import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeUtils.UpgradeOperation;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public interface IManagedUpgradableDevice<T extends TileEntity & IUpgradableDevice> extends IUpgradableDevice
+/**
+ * An extension of {@link IUpgradableDevice} that uses an internal {@link UpgradeManager} to handle upgrade installation, removal and storage.
+ *
+ * @param <T> the upgradable device class implementing this interface
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @ii-approved 0.3.1
+ * @since 03.12.2023
+ */
+public interface IManagedUpgradableDevice<T extends IUpgradableDevice> extends IUpgradableDevice
 {
 	@Nonnull
 	UpgradeManager<T> getUpgradeManager();
