@@ -892,13 +892,13 @@ subtitle.immersiveintelligence.rolling=Движение вращающегося
 subtitle.immersiveintelligence.chain=Подъем цепи
 subtitle.immersiveintelligence.lamp=Жужжание лампы
 subtitle.immersiveintelligence.heating=Работа нагревательного элемента
-subtitle.immersiveintelligence.saw=Вращение пильного полотна
-subtitle.immersiveintelligence.saw_idle=Резка пильным полотном
+subtitle.immersiveintelligence.saw=Вращение лезвия циркулярной пилы
+subtitle.immersiveintelligence.saw_idle=Резка лезвием циркулярной пилы
 
 subtitle.immersiveintelligence.electric_motor_forward=Гудение электродвигателя
-subtitle.immersiveintelligence.electric_motor_backward=Реверс электродвигателя
+subtitle.immersiveintelligence.electric_motor_backward=Задний ход электродвигателя
 subtitle.immersiveintelligence.electric_motor_heavy_forward=Гудение тяжёлого электродвигателя
-subtitle.immersiveintelligence.electric_motor_heavy_backward=Реверс тяжёлого электродвигателя
+subtitle.immersiveintelligence.electric_motor_heavy_backward=Задний ход тяжёлого электродвигателя
 subtitle.immersiveintelligence.turntable_forward=Вращение поворотного стола вправо
 subtitle.immersiveintelligence.turntable_backward=Вращение поворотного стола влево
 subtitle.immersiveintelligence.turntable_heavy_forward=Вращение мощного поворотного стола вправо
@@ -2670,10 +2670,10 @@ ie.manual.folder.weaponry=Оружие
 ie.manual.folder.armortools=Броня и инструменты
 ie.manual.folder.staticdefense=Защитные сооружения
 
-ie.manual.entry.traits.level_beginner=Этап развития: Доиндустриальная
-ie.manual.entry.traits.level_early_industrial=Этап развития: Ранняя индустриальная
-ie.manual.entry.traits.level_industrial=Этап развития: Индустриальная
-ie.manual.entry.traits.level_advanced_industrial=Этап развития: Поздняя индустриальная
+ie.manual.entry.traits.level_beginner=Этап развития: Доиндустриальный
+ie.manual.entry.traits.level_early_industrial=Этап развития: Ранний индустриальный
+ie.manual.entry.traits.level_industrial=Этап развития: Индустриальный
+ie.manual.entry.traits.level_advanced_industrial=Этап развития: Поздний индустриальный
 ie.manual.entry.traits.level_circuits=Этап развития: Эра электроники
 ie.manual.entry.traits.level_computer=Этап развития: Эра компьютеров
 ie.manual.entry.traits.hammer=Базовый многоблок — сборка с использованием инженерного молотка
@@ -2684,7 +2684,7 @@ ie.manual.entry.traits.decorations=Можно декорировать
 ie.manual.entry.traits.paintable=Можно красить
 
 ie.manual.entry.data_operation.inputs=Входы
-ie.manual.entry.data_operation.output=Выход
+ie.manual.entry.data_operation.output=Выходы
 ie.manual.entry.data_operation.pol=Пример кода POL
 ie.manual.entry.data_operation.tooltip_data=Перейти к представлению данных
 ie.manual.entry.data_operation.tooltip_pol=Перейти к реализации POL
@@ -2714,7 +2714,7 @@ ie.manual.entry.multiblock_forming.back=зад
 ie.manual.entry.immersiveposts.posts_brass=Латунь<br><br><br><br><br>Декоративная
 ie.manual.entry.immersiveposts.posts_tungsten=Вольфрам<br><br><br><br><br><br>Прочный
 ie.manual.entry.immersiveposts.posts_zinc=Цинк<br><br><br><br><br>Хрупкий
-ie.manual.entry.immersiveposts.posts_platinum=Платина<br><br><br><br><br><br>"Завардо"
+ie.manual.entry.immersiveposts.posts_platinum=Платина<br><br><br><br><br><br>"За вардо"
 ie.manual.entry.immersiveposts.posts_duraluminium=Дюралюминий<br><br><br><br><br>Лёгкий
 
 #Data and Electronics
@@ -2746,7 +2746,7 @@ ie.manual.entry.bullet_core.core_copper.lore=Каждая копейка на с
 ie.manual.entry.bullet_core.core_copper.desc=Медь — дешёвый материал для пуль, её пробивная способность хуже, чем у латуни, но усиливает эффект компонентов.
 
 ie.manual.entry.bullet_core.core_lead=Свинцовый сердечник
-ie.manual.entry.bullet_core.core_lead.lore=Хороший, плохой и уродливый
+ie.manual.entry.bullet_core.core_lead.lore=Хороший, плохой, злой
 ie.manual.entry.bullet_core.core_lead.desc=Свинец — хороший материал для дешёвых пуль с высоким уроном и посредственной пробивной силой, однако из-за высокой плотности максимальная дальность полёта ограничена.
 
 ie.manual.entry.bullet_core.core_iron=Железный сердечник
@@ -2849,8 +2849,8 @@ ie.manual.entry.bullet_component.shrapnel_gold.lore=И кого волнуют �
 ie.manual.entry.bullet_component.shrapnel_gold.desc=Ах да, старый добрый способ тратить деньги — война. Пули, хоть и дорогие, не оказывают особого эффекта на противника.
 
 ie.manual.entry.bullet_component.shrapnel_nickel=Никелевая шрапнель
-ie.manual.entry.bullet_component.shrapnel_nickel.lore=Nickels and dimes
-ie.manual.entry.bullet_component.shrapnel_nickel.desc=Никель — плохой выбор для осколков, он не наносит большого урона, но в трудные времена может спасти положение.
+ie.manual.entry.bullet_component.shrapnel_nickel.lore=Вытрясать последние деньги
+ie.manual.entry.bullet_component.shrapnel_nickel.desc=Никель — плохой выбор для шрапнели, он не наносит большого урона, но в трудные времена может спасти положение.
 
 #Reference to the Netflix's Witcher series
 ie.manual.entry.bullet_component.shrapnel_silver=Серебряная шрапнель
@@ -2877,7 +2877,7 @@ ie.manual.entry.bullet_component.shrapnel_lead.desc=Свинец — хорош�
 
 #Japanese "hagane" means steel, but the literal translation is "full metal", Hagane no Renkinjutsushi
 ie.manual.entry.bullet_component.shrapnel_steel=Стальная шрапнель
-ie.manual.entry.bullet_component.shrapnel_steel.lore=Стальной металл во всей красе
+ie.manual.entry.bullet_component.shrapnel_steel.lore=Стальной алхимик во всей красе
 ie.manual.entry.bullet_component.shrapnel_steel.desc=Сталь — отличный материал для шрапнели: хороший урон, разброс и скорость делают её эффективной против любых противников.
 
 ie.manual.entry.bullet_component.shrapnel_brass=Латунная шрапнель
@@ -2896,7 +2896,7 @@ ie.manual.entry.bullet_component.shrapnel_thorium.desc=Торий — хорош
 
 ie.manual.entry.bullet_component.shrapnel_HOPGraphite=Графитовая шрапнель
 ie.manual.entry.bullet_component.shrapnel_HOPGraphite.lore=Убойный карандаш!
-ie.manual.entry.bullet_component.shrapnel_HOPGraphite.desc=Графит — очень хороший материал для осколков. Его малый вес и высокая пробивная способность делают его полезным в бою.
+ie.manual.entry.bullet_component.shrapnel_HOPGraphite.desc=Графит — очень хороший материал для шрапнели. Его малый вес и высокая пробивная способность делают его полезным в бою.
 
 ie.manual.entry.bullet_component.shrapnel_uranium=Урановая шрапнель
 ie.manual.entry.bullet_component.shrapnel_uranium.lore=Ра-ди-о-активный
@@ -2910,7 +2910,7 @@ death.attack.iiShrapnel=%1$s был разорван на части шрапн�
 death.attack.iiShrapnelNoShooter=%1$s был разорван на части шрапнелью
 death.attack.iiSawmill=%1$s был разрезан циркулярной пилой
 death.attack.iiPrintingPress=%1$s был раздавлен вращающимися роликами
-death.attack.iiRadiation=%1$s подвергся интенсивному воздействию радиация
+death.attack.iiRadiation=%1$s подвергся интенсивному воздействию радиации
 death.attack.iiNuclearHeat=%1$s был уничтожен ядерным взрывом
 death.attack.iiMotorbike=%1$s переехал %2$s
 death.attack.iiMotorbikeNoRider=%1$s был сбит
@@ -2957,21 +2957,21 @@ ii.gui_tooltip.button.edit=Изменить
 ii.gui_tooltip.button.duplicate=Дублировать
 ii.gui_tooltip.button.clear=Очистить
 
-ii.gui_tooltip.widget.manual.show=Показать стороннее руководство
-ii.gui_tooltip.widget.manual.hide=Скрыть стороннее руководство
+ii.gui_tooltip.widget.manual.show=Показать руководство сбоку
+ii.gui_tooltip.widget.manual.hide=Скрыть руководство сбоку
 
 ii.gui_tooltip.energy.stored=Хранимая энергия: %s/%s IF
-ii.gui_tooltip.energy.input=Потребленная энергия: %s IF
+ii.gui_tooltip.energy.input=Потреблённая энергия: %s IF
 ii.gui_tooltip.energy.required=Требуемая энергия: %s IH/t
 ii.gui_tooltip.energy.output=Произведенная энергия: %s IF
 
 ii.gui_tooltip.heat.stored=Нагрев %s/%s IH
-ii.gui_tooltip.heat.input=Потребленное тепло: %s IH
+ii.gui_tooltip.heat.input=Потреблённое тепло: %s IH
 ii.gui_tooltip.heat.required=Требуемое тепло: %s IH/t
 ii.gui_tooltip.heat.output=Произведённое тепло: %s IH
 
 ii.gui_tooltip.pressure.stored=Давление: %s/%s IP
-ii.gui_tooltip.pressure.input=Потребленное давление: %s IP
+ii.gui_tooltip.pressure.input=Потреблённое давление: %s IP
 ii.gui_tooltip.pressure.required=Требуемое давление: %s IP/t
 ii.gui_tooltip.pressure.output=Произведённое давление: %s IP
 
@@ -2994,13 +2994,13 @@ ii.gui_tooltip.fluid.output=%s выход: %s mB
 ii.gui_tooltip.time.stored=Оставшееся время: %s/%s t
 ii.gui_tooltip.time.required=Необходимое время: %s t
 
-ii.gui_tooltip.structural_integrity=Структурная целостность: %s/%s очков
-ii.gui_tooltip.structural_integrity.repair=Порог ремонта: ниже %s очков
+ii.gui_tooltip.structural_integrity=Структурная целостность: %s/%s хитпоинтов
+ii.gui_tooltip.structural_integrity.repair=Порог ремонта: ниже %s хитпоинтов
 ii.gui_tooltip.structural_integrity.repair.auto_tooltip=Если показатель опустится ниже этого порога, конструкция автоматически восстановится.
 ii.gui_tooltip.structural_integrity.repair.manual_tooltip=Если показатели опустятся ниже этого порога, потребуется провести ремонт конструкции.
 
-ii.gui_tooltip.armor_integrity=Броня: %s/%s очков
-ii.gui_tooltip.reactive_armor_integrity=Reactive Armor: %s/%s очков
+ii.gui_tooltip.armor_integrity=Броня: %s/%s хитпоинтов
+ii.gui_tooltip.reactive_armor_integrity=Reactive Armor: %s/%s хитпоинтов
 
 ii.gui_tooltip.speed=Скорость: %s
 ii.gui_tooltip.progress=Прогресс: %s %
