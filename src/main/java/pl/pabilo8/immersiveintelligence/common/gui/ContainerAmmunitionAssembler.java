@@ -22,7 +22,7 @@ public class ContainerAmmunitionAssembler extends ContainerIIBase<TileEntityAmmu
 		inputSlot = addSlot(8, 20, 0);
 		outputSlot = addSlot(8, 60, 1);
 
-		addPlayerInventory(player.inventory, 8, 141);
+		addPlayerInventory(player.inventory, 8, 87);
 
 	}
 }
