@@ -27,10 +27,10 @@ public class ContainerMedicalCrate extends ContainerIIBase<TileEntityMedicalCrat
 		int shift = tile.isUpgradeInstalled(IIContent.UPGRADE_INSERTER)?0: 27;
 
 
-		inputFluidSlot = this.addSlotToContainer(new IESlot.FluidContainer(this, this.inv, 0, 68, 21, 2));
-		outputSlot = this.addSlotToContainer(new IESlot.Output(this, this.inv, 1, 68, 57));
+		inputFluidSlot = this.addSlotToContainer(new IESlot.FluidContainer(this, this.inv, 0, 68, 19, 2));
+		outputSlot = this.addSlotToContainer(new IESlot.Output(this, this.inv, 1, 68, 55));
 
-		inputSlot = this.addSlotToContainer(new IESlot.Output(this, this.inv, 2, 112, 21)
+		inputSlot = this.addSlotToContainer(new IESlot.Output(this, this.inv, 2, 112, 19)
 		{
 			@Override
 			public boolean isItemValid(ItemStack stack)
@@ -39,7 +39,7 @@ public class ContainerMedicalCrate extends ContainerIIBase<TileEntityMedicalCrat
 			}
 		});
 
-		outputSlot2 = this.addSlotToContainer(new IESlot.Output(this, this.inv, 3, 112, 57));
+		outputSlot2 = this.addSlotToContainer(new IESlot.Output(this, this.inv, 3, 112, 55));
 
 		addPlayerInventory(player.inventory, 8, 87);
 	}

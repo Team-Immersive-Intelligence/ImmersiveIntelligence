@@ -43,7 +43,7 @@ public class GuiMedicalCrate extends DecoGui<TileEntityMedicalCrate, ContainerMe
 {
 
 	@DecoResource
-	public static final ResourceLocation TEXTURE = IIReference.RES_II.with("gui/medical_crate");
+	public static final ResourceLocation TEXTURE_MED = IIReference.RES_II.with("gui/medical_crate");
 	public static final ResourceLocation SPEED = IIReference.RES_II.with("deco/icons/icon_speed");
 	public static final ResourceLocation HEAL = IIReference.RES_II.with("deco/icons/icon_progress");
 
@@ -103,7 +103,7 @@ public class GuiMedicalCrate extends DecoGui<TileEntityMedicalCrate, ContainerMe
 
 					new DecoImage(15, 0)
 							.withSize(102, 79)
-							.withImageLocation(TEXTURE, true)
+							.withImageLocation(TEXTURE_MED, false)
 							.withUV(256, 102, 79, 10 ,0),
 
 					new DecoButton(20,20)
@@ -132,23 +132,22 @@ public class GuiMedicalCrate extends DecoGui<TileEntityMedicalCrate, ContainerMe
 				.withInventorySlots(SlotStyle.IE_INPUT, container.inputFluidSlot)
 				.withInventorySlots(SlotStyle.IE_OUTPUT, container.outputSlot)
 				.withInventorySlots(SlotStyle.IE_OUTPUT, container.outputSlot2)
-				.withInventoryTitleBar()
 				.build();
 
 
 		addComponents(
-				new DecoFluidTank(10, 21)
+				new DecoFluidTank(54, 20)
 						.withSize(16, 47)
 						.withFluidTank(tile.tanks[0]),
 
-				new DecoFluidTank(54, 21)
+				new DecoFluidTank(108, 20)
 						.withSize(16, 47)
 						.withFluidTank(tile.tanks[1]),
 
-				new DecoImage(15, 0)
-						.withSize(102, 79)
-						.withImageLocation(TEXTURE, true)
-						.withUV(256, 102, 79, 10 ,0)
+				new DecoImage(36, -2)
+						.withSize(101, 78)
+						.withImageLocation(TEXTURE_MED, false)
+						.withUV(256, 9, 0, 110 ,78)
 		);
 	}
 }
