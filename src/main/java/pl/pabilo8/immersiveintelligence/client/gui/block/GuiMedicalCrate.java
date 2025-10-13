@@ -14,13 +14,11 @@ import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoButton;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoBar;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoFluidTank;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoImage;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.*;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundBuilder.SlotStyle;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoGuiCategory;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoResource;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTemplate;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.EffectCrates;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
@@ -54,6 +52,8 @@ public class GuiMedicalCrate extends DecoGui<TileEntityMedicalCrate, ContainerMe
 		super(player, tile, IIGUI.MEDIC_CRATE);
 	}
 
+
+	/**
 	@Override
 	protected void actionPerformed(GuiButton button)
 	{
@@ -70,7 +70,7 @@ public class GuiMedicalCrate extends DecoGui<TileEntityMedicalCrate, ContainerMe
 			IIPacketHandler.sendToServer(new MessageBooleanAnimatedPartsSync(2, tile.shouldBoost, tile.getPos()));
 		}
 	}
-
+**/
 	boolean upgraded = tile.isUpgradeInstalled(IIContent.UPGRADE_INSERTER);
 
 
@@ -113,6 +113,9 @@ public class GuiMedicalCrate extends DecoGui<TileEntityMedicalCrate, ContainerMe
 					new DecoButton(20, 40)
 							.withIcon(HEAL, 16)
 							.withText("Healing")
+
+					//new DecoBar(161, -4)
+				  			//.withTemplate(DecoGuiUtils.BAR_ELECTRIC_ENERGY.apply(tile.energyStorage))
 
 					//putting notes here becuase storm may kill power while out
 					//need to have the buttons do the thing when pressed
