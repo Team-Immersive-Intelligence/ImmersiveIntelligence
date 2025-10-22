@@ -201,7 +201,7 @@ public enum IIGUI implements ISerializableEnum
 		IIGUI.SMALL_CRATE.setClientDecoGui(GuiSmallCrate::new);
 		//Effect Crates
 		IIGUI.AMMUNITION_CRATE.setClientGui(GuiAmmunitionCrate::new);
-		IIGUI.MEDIC_CRATE.setClientGui(GuiMedicalCrate::new);
+		IIGUI.MEDIC_CRATE.setClientDecoGui(GuiMedicalCrate::new);
 		IIGUI.REPAIR_CRATE.setClientGui(GuiRepairCrate::new);
 		//Skycrate
 		IIGUI.SKYCRATE_STATION.setClientDecoGui(GuiSkycrateStation::new);
