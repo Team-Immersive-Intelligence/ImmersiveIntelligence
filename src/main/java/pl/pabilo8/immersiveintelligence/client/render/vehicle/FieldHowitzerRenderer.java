@@ -29,7 +29,7 @@ public class FieldHowitzerRenderer extends Render<EntityFieldHowitzer> implement
 	 * Renders the desired {@code T} type Entity.
 	 */
 	@Override
-	public void doRender(EntityFieldHowitzer entity, double x, double y, double z, float f0, float f1)
+	public void doRender(EntityFieldHowitzer entity, double x, double y, double z, float entityYaw, float partialTicks)
 	{
 
 		GlStateManager.pushMatrix();
@@ -40,7 +40,7 @@ public class FieldHowitzerRenderer extends Render<EntityFieldHowitzer> implement
 		RenderHelper.enableStandardItemLighting();
 
 		float pitch = -entity.gunPitch;//Math.abs(((tt%120)/120f)-0.5f)*-155f;
-		float firing = (entity.shootingProgress+(entity.shootingProgress > 0?f1: 0))/FieldHowitzer.fireTime;
+		float firing = (entity.shootingProgress+(entity.shootingProgress > 0?partialTicks: 0))/FieldHowitzer.fireTime;
 		float recoil;
 		float gun_recoil = 0;
 		float plate_recoil = 0;
@@ -49,7 +49,7 @@ public class FieldHowitzerRenderer extends Render<EntityFieldHowitzer> implement
 		float trigger = 0;
 		if(entity.reloadProgress > 0)
 		{
-			float reload = (entity.reloadProgress+f1)/FieldHowitzer.reloadTime;
+			float reload = (entity.reloadProgress+partialTicks)/FieldHowitzer.reloadTime;
 			trigger = (reload > 0.1f?(reload < 0.9f?(reload < 0.2f?(reload-0.1f)/0.1f: 1f): 1f-((reload-0.9f)/0.1f)): 0f);
 			plate_recoil = trigger*2f;
 		}
@@ -123,15 +123,13 @@ public class FieldHowitzerRenderer extends Render<EntityFieldHowitzer> implement
 		GlStateManager.rotate(towing*8, 1, 0, 0);
 
 		GlStateManager.pushMatrix();
-		GlStateManager.translate(0, entity.partWheelLeft.getSuspensionCompressionPercentage(), -0.5f);
-		GlStateManager.rotate(entity.partWheelLeft.getWheelTraverse()+(entity.turnLeft?(f1*1.5f): 0)-(entity.turnRight?(f1*1.5f): 0), 1, 0, 0);
+		GlStateManager.translate(0, entity.partWheelLeft.calculateSuspensionCompression(partialTicks), -0.5f);
 		for(ModelRendererTurbo mod : model.leftWheelModel)
 			mod.render(0.0625f);
 		GlStateManager.popMatrix();
 
 		GlStateManager.pushMatrix();
-		GlStateManager.translate(0, entity.partWheelRight.getSuspensionCompressionPercentage(), -0.5f);
-		GlStateManager.rotate(entity.partWheelRight.getWheelTraverse()+(entity.turnRight?(f1*1.5f): 0)-(entity.turnLeft?(f1*1.5f): 0), 1, 0, 0);
+		GlStateManager.translate(0, entity.partWheelRight.calculateSuspensionCompression(partialTicks), -0.5f);
 		for(ModelRendererTurbo mod : model.rightWheelModel)
 			mod.render(0.0625f);
 		GlStateManager.popMatrix();

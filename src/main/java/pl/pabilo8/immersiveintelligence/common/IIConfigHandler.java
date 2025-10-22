@@ -129,6 +129,9 @@ public class IIConfigHandler
 
 		public static class Graphics
 		{
+			@Comment({"Enable vehicle and equipment passenger animations by changing the passengers' entity model part angles."})
+			public static boolean passengerAnimations = true;
+
 			@Comment({"Enable Tactile AMT - dynamic collision boxes for multiblocks that use animations for positioning them."})
 			public static boolean tactileAMT = true;
 

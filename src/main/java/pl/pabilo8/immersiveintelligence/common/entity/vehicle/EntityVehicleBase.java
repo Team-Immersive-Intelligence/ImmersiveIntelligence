@@ -20,6 +20,7 @@ import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.VehicleBluep
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.VehicleDurability;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehiclePart;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehicleSeat;
+import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehicleSeat.SeatInfo;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehicleWheel;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehicleWheel.WheelForces;
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
@@ -45,20 +46,23 @@ import java.util.List;
 public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends Entity implements ISyncNBTEntity<T>, IVehicleMultiPart<T>,
 		IEntitySpecialRepairable, IManagedUpgradableDevice<T>, IStyleCustomizable
 {
-	//--- Physics Constants ---//
+	//--- Constants ---//
 	private static final StyleConstraints DEFAULT_STYLE_CONSTRAINTS = new StyleConstraints("steel",
 			true, Sets.newHashSet("steel"), Collections.emptySet());
+
 	//--- Parts ---//
 	private AxisAlignedBB AABB;
+	protected VehicleBlueprint blueprint;
 	protected EntityVehiclePart<T>[] partArray;
 	protected EntityVehicleWheel<T>[] wheels;
+	protected SeatInfo<?>[] seats;
 
 	//--- Systems ---//
 	@SyncNBT(events = SyncEvents.TILE_UPGRADES_MODIFIED)
 	protected StyleCustomization style;
 	@SyncNBT(events = SyncEvents.TILE_UPGRADES_MODIFIED)
 	protected UpgradeManager<T> upgradeManager;
-	protected VehicleBlueprint blueprint;
+
 	//--- Motion --- //
 	@SyncNBT
 	public VehicleDurability durabilityMain;
@@ -84,6 +88,7 @@ public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends 
 	{
 		//Initialize part collections
 		ArrayList<EntityVehicleWheel<T>> wheelsList = new ArrayList<>();
+		ArrayList<SeatInfo<T>> seatsList = new ArrayList<>();
 
 		VehicleBlueprint meta = IIUtils.getAnnotation(VehicleBlueprint.class, this);
 		if(meta==null)
@@ -126,11 +131,20 @@ public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends 
 			//Collect wheels
 			if(part instanceof EntityVehicleWheel)
 				wheelsList.add(((EntityVehicleWheel<T>)part));
+
+			//Collect seats
+			if(part.assignedSeat!=null)
+				//noinspection unchecked
+				seatsList.add((SeatInfo<T>)part.assignedSeat);
 		}
 
-		//Convert wheels list to array
+		//Simulate drive wheels first
+		wheelsList.sort((o1, o2) -> Boolean.compare(!o1.getType().isDriven(), !o2.getType().isDriven()));
+
+		//Convert wheel and seat lists to arrays
 		//noinspection unchecked
 		this.wheels = wheelsList.toArray(new EntityVehicleWheel[0]);
+		this.seats = seatsList.toArray(new SeatInfo[0]);
 
 		//Set vehicle AABB size
 		setSize((float)(Math.max(maxX-minX, maxZ-minZ))*MathHelper.SQRT_2, (float)(maxY-minY)+1f);
@@ -192,23 +206,22 @@ public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends 
 	{
 		final double mass = this.blueprint.mass();
 		this.prevRotationYaw = this.rotationYaw;
-		//Clamp and normalize lateral friction
-		double maxLateralForce = 1.0/(this.wheels.length*mass/2);
+
+		// Calculate realistic lateral friction based on mass and wheel count
+		double maxLateralForce = calculateRealisticLateralFriction(mass);
 		double torque = 0;
 		int groundedWheels = 0;
-
-		//this.motionX = 0;
-		//this.motionY = 0;
-		//this.motionZ = 0;
 
 		//Simulate individual wheels and gather results
 		for(EntityVehicleWheel<T> wheel : this.wheels)
 		{
+			//Simulate suspension compression for rendering
+			wheel.simulateSuspensionCompression();
+			//Simulate wheel physics
 			WheelForces forces = wheel.calculateForces(maxLateralForce);
 			if(forces.isGrounded)
 			{
-				this.motionX += forces.force.x;
-				this.motionZ += forces.force.z;
+				this.velocity = this.velocity.add(forces.force);
 				torque += forces.torque;
 				groundedWheels++;
 			}
@@ -217,27 +230,40 @@ public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends 
 		// Only apply forces if we have ground contact
 		if(groundedWheels > 0)
 		{
-			this.motionY = 0;
+			this.velocity = new Vec3d(this.velocity.x, 0, this.velocity.z);
+			// Apply rolling resistance when grounded
+			applyRollingResistance(groundedWheels);
 		}
 		//Apply gravity if not grounded
 		else
-			this.motionY -= 0.08;
+			this.velocity = this.velocity.subtract(0, 0.02, 0);
 
-		//Apply damping
-		this.motionX *= blueprint.linearDamping();
-		this.motionZ *= blueprint.linearDamping();
+		// Apply realistic air drag
+		applyAirDrag();
+
+		// Apply enhanced damping based on vehicle state
+		applyRealisticDamping(groundedWheels > 0);
+
 		this.angularVelocity += torque;
-		this.angularVelocity *= blueprint.angularDamping();
+
+		// Enhanced angular damping based on ground contact
+		double angularDamping = groundedWheels > 0?
+				blueprint.angularDamping()*0.7: // More damping when grounded
+				blueprint.angularDamping()*0.9;  // Less damping in air
+		this.angularVelocity *= angularDamping;
 
 		//Update rotation
 		this.rotationYaw = (float)MathHelper.wrapDegrees(this.rotationYaw+Math.toDegrees(this.angularVelocity));
 
-		//Zero tiny velocities
-		if(Math.abs(this.motionX) < 1e-4)
-			this.motionX = 0;
-		if(Math.abs(this.motionZ) < 1e-4)
-			this.motionZ = 0;
-		if(Math.abs(this.angularVelocity) < 1e-4)
+		// Use velocity-based thresholds for zeroing
+		double velocityThreshold = 0.001*mass; // Scale with mass
+		double angularThreshold = 0.0001*mass;
+
+		if(Math.abs(this.velocity.x) < velocityThreshold)
+			this.velocity = new Vec3d(0, this.velocity.y, this.velocity.z);
+		if(Math.abs(this.velocity.z) < velocityThreshold)
+			this.velocity = new Vec3d(this.velocity.x, this.velocity.y, 0);
+		if(Math.abs(this.angularVelocity) < angularThreshold)
 			this.angularVelocity = 0;
 
 		//Handle collisions and get adjusted position
@@ -246,14 +272,115 @@ public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends 
 		this.prevPosY = currentPos.y;
 		this.prevPosZ = currentPos.z;
 
-		//Vec3d nextPos = handleCollisions(currentPos, new Vec3d(motionX, motionY, motionZ));
-		//this.motionX = nextPos.x-currentPos.x;
-		//this.motionY = nextPos.y-currentPos.y;
-		//this.motionZ = nextPos.z-currentPos.z;
+		Vec3d nextPos = handleCollisions(currentPos, velocity);
+		this.motionX = nextPos.x-currentPos.x;
+		this.motionY = nextPos.y-currentPos.y;
+		this.motionZ = nextPos.z-currentPos.z;
+
 		this.velocityChanged = true;
 		this.posX += motionX;
 		this.posY += motionY;
 		this.posZ += motionZ;
+	}
+
+	/**
+	 * Calculates realistic lateral friction based on mass and wheel configuration
+	 */
+	private double calculateRealisticLateralFriction(double mass)
+	{
+		// Base friction coefficient from blueprint
+		double baseFriction = Math.max(blueprint.lateralFrictionDrive(), blueprint.lateralFrictionIdler());
+
+		// Adjust for wheel count - more wheels = more total friction
+		double wheelFactor = Math.sqrt(this.wheels.length)/2.0;
+
+		// Mass affects how much force is needed to overcome friction
+		double massFactor = mass/1000.0; // Normalize to ~1000kg base
+
+		return baseFriction*wheelFactor/(massFactor*this.wheels.length);
+	}
+
+	/**
+	 * Applies realistic air drag based on vehicle speed and size
+	 */
+	private void applyAirDrag()
+	{
+		double speedSquared = this.velocity.x*this.velocity.x+this.velocity.z*this.velocity.z;
+
+		if(speedSquared > 0.001)
+		{
+			double speed = Math.sqrt(speedSquared);
+
+			// Calculate frontal area from bounding box
+			double frontalArea = this.width*this.height*blueprint.frontalAreaFactor();
+
+			// Drag force = 0.5 * density * velocity² * drag coefficient * area
+			double dragForce = 0.5*1.225*speedSquared*blueprint.airDragCoefficient()*frontalArea;
+
+			// Convert to acceleration (F = ma -> a = F/m)
+			double dragDeceleration = dragForce/this.blueprint.mass();
+
+			// Scale by tick time (1/20th of second)
+			dragDeceleration *= 0.05;
+
+			// Apply drag opposite to velocity direction
+			if(speed > 0)
+			{
+				this.velocity.subtract(
+						(this.velocity.x/speed)*dragDeceleration,
+						0,
+						(this.velocity.z/speed)*dragDeceleration
+				);
+			}
+		}
+	}
+
+	/**
+	 * Applies rolling resistance when vehicle is on ground
+	 */
+	private void applyRollingResistance(int groundedWheels)
+	{
+		double speed = this.velocity.x*this.velocity.x+this.velocity.z*this.velocity.z;
+		if(speed > 0.01)
+		{
+			// Rolling resistance from blueprint
+			double rollingResistance = blueprint.rollingResistance();
+
+			// More wheels = more total rolling resistance
+			double wheelFactor = groundedWheels/(double)this.wheels.length;
+
+			double resistance = rollingResistance*wheelFactor*this.blueprint.mass()*0.98; // gravity
+			resistance *= 0.05; // Scale for tick time
+
+			// Apply resistance opposite to velocity direction
+			this.velocity.subtract(
+					(this.velocity.x/Math.sqrt(speed))*resistance,
+					0,
+					(this.velocity.z/Math.sqrt(speed))*resistance
+			);
+		}
+	}
+
+	/**
+	 * Applies realistic damping based on ground contact and speed
+	 */
+	private void applyRealisticDamping(boolean isGrounded)
+	{
+		double speed = this.velocity.x*this.velocity.x+this.velocity.z*this.velocity.z;
+
+		if(isGrounded)
+		{
+			// When grounded, use smaller damping for low speeds, normal for high speeds
+			double speedFactor = Math.min(speed/0.5, 1.0); // 0.5 m/s threshold
+			double effectiveDamping = blueprint.linearDamping()*(0.95+0.05*speedFactor);
+
+			this.velocity = new Vec3d(this.velocity.x*effectiveDamping, this.velocity.y, this.velocity.z*effectiveDamping);
+		}
+		else
+		{
+			// In air, use minimal damping
+			this.velocity = new Vec3d(this.velocity.x*0.995, this.velocity.y, this.velocity.z*0.995);
+		}
 	}
 
 	/**
@@ -262,16 +389,22 @@ public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends 
 	 */
 	private Vec3d handleCollisions(Vec3d currentPos, Vec3d attemptedMove)
 	{
+		Vec3d vecX = IIMath.offsetPosDirection(1f, Math.toRadians(MathHelper.wrapDegrees(-prevRotationYaw)), prevRotationPitch);
+		Vec3d vecZ = IIMath.offsetPosDirection(1f, Math.toRadians(MathHelper.wrapDegrees(-prevRotationYaw-90)), prevRotationPitch);
 		Vec3d adjustedMove = attemptedMove;
+
 		//Check each part for collisions
 		for(EntityVehiclePart<T> part : partArray)
 		{
-
-			AxisAlignedBB partCurrentBB = part.aabb.offset(part.posX, part.posY, part.posZ);
+			AxisAlignedBB partCurrentBB = part.aabb.offset(currentPos
+					.add(vecX.scale(part.offset.x))
+					.add(vecZ.scale(part.offset.z))
+					.addVector(0, part.offset.y, 0)
+			);
 			AxisAlignedBB partNextBB = partCurrentBB.offset(attemptedMove.x, attemptedMove.y, attemptedMove.z);
 
 			//Get block collision boxes
-			List<AxisAlignedBB> collisions = new ArrayList<>(world.getCollisionBoxes(part, partNextBB));
+			List<AxisAlignedBB> collisions = new ArrayList<>(world.getCollisionBoxes(null, partNextBB));
 			for(Entity entity : world.getEntitiesInAABBexcluding(part, partNextBB, e -> e!=this&&e instanceof EntityVehicleBase))
 				collisions.add(entity.getEntityBoundingBox());
 
@@ -305,6 +438,9 @@ public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends 
 							adjustedMove = new Vec3d(adjustedMove.x, adjustedMove.y, zOffset);
 					}
 				}
+
+			if(part instanceof EntityVehicleWheel)
+				((EntityVehicleWheel<T>)part).addWheelTraverse((float)adjustedMove.lengthSquared());
 		}
 
 		return currentPos.add(adjustedMove);
@@ -317,9 +453,24 @@ public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends 
 	}
 
 	@Override
+	public Vec3d getVelocity()
+	{
+		return velocity;
+	}
+
+	@Override
 	public VehicleBlueprint getVehicleBlueprint()
 	{
 		return blueprint;
+	}
+
+	@Override
+	public SeatInfo<?> getSeatInfo(String seatID)
+	{
+		for(SeatInfo<?> seat : this.seats)
+			if(seatID.equals(seat.getSeatID()))
+				return seat;
+		return null;
 	}
 
 	//--- Part Handling ---//
@@ -329,7 +480,7 @@ public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends 
 	{
 		//Create vectors with proper rotation accounting
 		Vec3d vecX = IIMath.offsetPosDirection(1f, Math.toRadians(MathHelper.wrapDegrees(-rotationYaw)), rotationPitch);
-		Vec3d vecZ = IIMath.offsetPosDirection(1f, Math.toRadians(MathHelper.wrapDegrees(-rotationYaw-90+rotationRoll)), rotationPitch);
+		Vec3d vecZ = IIMath.offsetPosDirection(1f, Math.toRadians(MathHelper.wrapDegrees(-rotationYaw-90)), rotationPitch);
 
 		for(EntityVehiclePart<T> part : getVehicleParts())
 		{

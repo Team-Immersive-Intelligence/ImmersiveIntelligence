@@ -1,6 +1,7 @@
 package pl.pabilo8.immersiveintelligence.client.render;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
+import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
@@ -9,6 +10,7 @@ import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
@@ -21,7 +23,7 @@ import pl.pabilo8.immersiveintelligence.common.entity.EntityParachute;
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 21.01.2021
  */
-public class ParachuteRenderer extends Render<EntityParachute> implements IReloadableModelContainer<ParachuteRenderer>
+public class ParachuteRenderer extends Render<EntityParachute> implements IReloadableModelContainer<ParachuteRenderer>, IPassengerAnimationsRenderer<EntityParachute>
 {
 	private static final String TEXTURE = ImmersiveIntelligence.MODID+":textures/entity/parachute.png";
 	private static final ResourceLocation TEXTURE_WHITE = new ResourceLocation("immersiveengineering", "textures/items/white.png");
@@ -127,5 +129,16 @@ public class ParachuteRenderer extends Render<EntityParachute> implements IReloa
 	protected ResourceLocation getEntityTexture(EntityParachute entity)
 	{
 		return null;
+	}
+
+	@Override
+	public boolean handleBipedRotations(ModelBiped model, EntityParachute entity, EntityLivingBase passenger, float partialTicks)
+	{
+		model.bipedLeftArm.rotateAngleX -= 2.75;
+		model.bipedLeftArm.rotateAngleZ += 0.35;
+
+		model.bipedRightArm.rotateAngleX += 3.5;
+		model.bipedRightArm.rotateAngleZ -= 0.35;
+		return true;
 	}
 }

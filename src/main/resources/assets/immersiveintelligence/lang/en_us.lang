@@ -3076,12 +3076,9 @@ death.attack.iiSawmill=%1$s was sliced by the sawmill
 death.attack.iiPrintingPress=%1$s was squashed by rotating rollers
 death.attack.iiRadiation=%1$s experienced intensive radiation
 death.attack.iiNuclearHeat=%1$s was decimated by a nuclear explosion
-death.attack.iiMotorbike=%1$s was driven over by %2$s
-death.attack.iiMotorbikeNoRider=%1$s was driven over
-death.attack.iiMotorbikeExplicit=%2$s has made %1$s's ass his free parking spot
-death.attack.iiMotorbikeSuicide=%1$s decided to jump off a moving motorcycle
-death.attack.iiPanzer1=%1$s was crushed under the Panzer's threads
-death.attack.iiPanzer2=The indomitable Panzer's threads have pulverized %1$s
+death.attack.iiVehicle=%1$s was driven over by %2$s
+death.attack.iiVehiclenoRider=%1$s was driven over
+death.attack.iiVehicleSuicide=%1$s decided to jump off a moving vehicle
 
 #Additional stuff for the Config Panel
 ii.config.Graphics=Graphics

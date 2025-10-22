@@ -12,6 +12,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.VehicleBlueprint;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehiclePart;
+import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehicleSeat.SeatInfo;
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.entity.IIEntityUtils;
 
@@ -34,17 +35,16 @@ public interface IVehicleMultiPart<T extends Entity & IVehicleMultiPart<T>> exte
 
 	EntityVehiclePart<T>[] getVehicleParts();
 
-	void getSeatRidingPosition(String seatID, Entity passenger);
+	VehicleBlueprint getVehicleBlueprint();
 
-	void getSeatRidingAngle(String seatID, Entity passenger);
-
-	boolean shouldSeatPassengerSit(String seatID, Entity passenger);
+	SeatInfo<?> getSeatInfo(String seatID);
 
 	void onSeatDismount(String seatID, Entity passenger);
 
 	default void updateParts()
 	{
-		Entity vehicle = ((Entity)this);
+		//noinspection unchecked
+		T vehicle = ((T)this);
 		boolean client = vehicle.world.isRemote;
 
 		//create vectors
@@ -86,5 +86,5 @@ public interface IVehicleMultiPart<T extends Entity & IVehicleMultiPart<T>> exte
 		return 0;
 	}
 
-	VehicleBlueprint getVehicleBlueprint();
+	Vec3d getVelocity();
 }

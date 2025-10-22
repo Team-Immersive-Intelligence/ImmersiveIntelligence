@@ -236,9 +236,8 @@ class Vehicle
 		double totalForceX = 0;
 		double torque = 0;
 		int numWheels = wheels.size();
-		for(int i = 0; i < wheels.size(); i++)
+		for(Wheel w : wheels)
 		{
-			Wheel w = wheels.get(i);
 			//wheel position in world coordinates
 			double worldWheelX = x+MathHelper.sin((float)angle)*w.localZ+MathHelper.cos((float)angle)*w.localX;
 			double worldWheelZ = z+MathHelper.cos((float)angle)*w.localZ-MathHelper.sin((float)angle)*w.localX;

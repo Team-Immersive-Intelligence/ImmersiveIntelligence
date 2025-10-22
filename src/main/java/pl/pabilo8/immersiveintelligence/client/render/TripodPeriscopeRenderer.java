@@ -1,11 +1,13 @@
 package pl.pabilo8.immersiveintelligence.client.render;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
+import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
@@ -19,7 +21,7 @@ import pl.pabilo8.immersiveintelligence.common.entity.EntityTripodPeriscope;
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 21.01.2021
  */
-public class TripodPeriscopeRenderer extends Render<EntityTripodPeriscope> implements IReloadableModelContainer<TripodPeriscopeRenderer>
+public class TripodPeriscopeRenderer extends Render<EntityTripodPeriscope> implements IReloadableModelContainer<TripodPeriscopeRenderer>, IPassengerAnimationsRenderer<EntityTripodPeriscope>
 {
 	public static final String texture = ImmersiveIntelligence.MODID+":textures/entity/tripod_periscope.png";
 	public static TripodPeriscopeItemstackRenderer instance = new TripodPeriscopeItemstackRenderer();
@@ -140,6 +142,38 @@ public class TripodPeriscopeRenderer extends Render<EntityTripodPeriscope> imple
 	protected ResourceLocation getEntityTexture(EntityTripodPeriscope entity)
 	{
 		return null;
+	}
+
+	@Override
+	public boolean handleBipedRotations(ModelBiped model, EntityTripodPeriscope mg, EntityLivingBase passenger, float partialTicks)
+	{
+		float true_head_angle = MathHelper.wrapDegrees(passenger.prevRotationYawHead);
+		float wtime = Math.abs((mg.getEntityWorld().getTotalWorldTime()+partialTicks)%40/40f-0.5f)/0.5f-0.5f;
+
+		model.bipedRightArm.rotateAngleX = -1.75f;
+		model.bipedRightArm.rotateAngleY = -0.5f;
+
+		model.bipedLeftArm.rotateAngleX = -2.25f;
+		model.bipedLeftArm.rotateAngleY = 0.25f;
+
+		model.bipedHead.rotateAngleX = 0;
+		model.bipedHeadwear.rotateAngleX = 0;
+		model.bipedHead.rotateAngleY = 0;
+		model.bipedHeadwear.rotateAngleY = 0;
+
+
+		if(Math.abs(mg.periscopeYaw-true_head_angle) > 5)
+			if(mg.periscopeYaw < true_head_angle)
+			{
+				model.bipedRightLeg.rotateAngleZ = -(1f-wtime)*0.25f;
+				model.bipedLeftLeg.rotateAngleZ = -wtime*0.25f-0.25f;
+			}
+			else if(mg.periscopeYaw > true_head_angle)
+			{
+				model.bipedRightLeg.rotateAngleZ = (1f-wtime)*0.25f+0.25f;
+				model.bipedLeftLeg.rotateAngleZ = wtime*0.25f;
+			}
+		return true;
 	}
 
 	public static class TripodPeriscopeItemstackRenderer extends TileEntityItemStackRenderer

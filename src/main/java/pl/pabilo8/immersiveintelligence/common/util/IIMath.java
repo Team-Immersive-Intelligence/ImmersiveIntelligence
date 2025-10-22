@@ -74,7 +74,7 @@ public class IIMath extends MathHelper
 	 * Used to calculate 3D vector offset in a direction
 	 * </p>
 	 */
-	public static Vec3d offsetPosDirection(float offset, double yaw, double pitch)
+	public static Vec3d offsetPosDirection(double offset, double yaw, double pitch)
 	{
 		if(offset==0)
 			return new Vec3d(0, 0, 0);
@@ -88,31 +88,17 @@ public class IIMath extends MathHelper
 		return new Vec3d(xx, yy, zz);
 	}
 
-	public static Vec3d offsetPosDirectionXZ(float xOffset, float zOffset, float rotationYaw, float rotationPitch)
+	public static Vec3d offsetPosDirectionXZ(double xOffset, double zOffset, float rotationYaw, float rotationPitch)
 	{
+		//If no offset, return 0 vector
+		if(xOffset==0&&zOffset==0)
+			return new Vec3d(0, 0, 0);
+
 		float yaw = (float)Math.toRadians(-rotationYaw);
 		float yawZ = (float)(yaw-1.5707963267948966);
 		float pitch = (float)Math.toRadians(rotationPitch);
 
-		if(xOffset==0&&zOffset==0)
-			return new Vec3d(0, 0, 0);
-
-		double sum = xOffset+zOffset;
-		double sinP = MathHelper.sin(pitch);
-		double cosP = MathHelper.cos(pitch);
-
-		double yy = sinP*sum;
-		double trueOffset = cosP*sum;
-
-		double sinYaw = MathHelper.sin(yaw);
-		double sinYawZ = MathHelper.sin(yawZ);
-		double cosYaw = MathHelper.cos(yaw);
-		double cosYawZ = MathHelper.cos(yawZ);
-
-		double xx = trueOffset*(sinYaw+sinYawZ);
-		double zz = trueOffset*(cosYaw+cosYawZ);
-
-		return new Vec3d(xx, yy, zz);
+		return offsetPosDirection(xOffset, yaw, pitch).add(offsetPosDirection(zOffset, yawZ, 0));
 	}
 
 	/**

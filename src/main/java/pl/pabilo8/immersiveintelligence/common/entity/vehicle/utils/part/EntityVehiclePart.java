@@ -13,6 +13,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.IAdvancedTextOverlay;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IVehicleMultiPart;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.VehicleDurability;
+import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehicleSeat.SeatInfo;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -41,6 +42,8 @@ public class EntityVehiclePart<T extends Entity & IVehicleMultiPart<T>> extends 
 	 */
 	@Nullable
 	public VehicleDurability durability;
+	@Nullable
+	public SeatInfo<?> assignedSeat;
 
 	public EntityVehiclePart(T parent, String partName, Vec3d offset, AxisAlignedBB aabb)
 	{
@@ -63,6 +66,12 @@ public class EntityVehiclePart<T extends Entity & IVehicleMultiPart<T>> extends 
 	public EntityVehiclePart<T> withHitbox(@Nonnull VehicleDurability hitbox)
 	{
 		this.durability = hitbox;
+		return this;
+	}
+
+	public EntityVehiclePart<T> withSeat(@Nonnull SeatInfo<?> seatInfo)
+	{
+		this.assignedSeat = seatInfo;
 		return this;
 	}
 

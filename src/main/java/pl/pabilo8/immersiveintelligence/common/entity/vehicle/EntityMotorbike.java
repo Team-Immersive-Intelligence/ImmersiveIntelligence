@@ -11,7 +11,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -27,14 +26,15 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.*;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehiclePart;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehicleSeat;
+import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehicleSeat.SeatInfo;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehicleWheel;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehicleWheel.WheelType;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.propulsion.VehicleEngineFuelBased;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.propulsion.VehicleTransmission;
 import pl.pabilo8.immersiveintelligence.common.util.IIDamageSources;
-import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
+import pl.pabilo8.immersiveintelligence.common.util.entity.IIEntityUtils;
 
 import javax.annotation.Nullable;
 
@@ -72,6 +72,7 @@ public class EntityMotorbike extends EntityVehicleBase<EntityMotorbike>
 	public EntityVehicleWheel<EntityMotorbike> partWheelFront, partWheelBack;
 	public EntityVehiclePart<EntityMotorbike> partFuelTank, partEngine;
 	public EntityVehiclePart<EntityMotorbike> partSeat, partUpgradeSeat, partUpgradeCargo;
+	public SeatInfo<EntityMotorbike> seatRider, seatPassenger, seatTowed;
 
 	@SyncNBT
 	public VehicleDurability frontWheelDurability, backWheelDurability, engineDurability, fuelTankDurability;
@@ -85,12 +86,6 @@ public class EntityMotorbike extends EntityVehicleBase<EntityMotorbike>
 	@SyncNBT(events = SyncEvents.ENTITY_VEHICLE_FUEL)
 	public VehicleTransmission<EntityMotorbike> transmission;
 
-	@SyncNBT
-	public float acceleration = 0f, speed = 0f, tilt = 0f, brakeProgress = 0f, engineProgress = 0;
-	public boolean brake = false;
-
-	public int untowingTries = 0;
-
 	public EntityMotorbike(World worldIn)
 	{
 		super(worldIn);
@@ -100,7 +95,6 @@ public class EntityMotorbike extends EntityVehicleBase<EntityMotorbike>
 	@Override
 	protected EntityVehiclePart<EntityMotorbike>[] vehicleInit()
 	{
-
 		//Hitboxes
 		this.frontWheelDurability = new VehicleDurability(Motorbike.wheelDurability, 4);
 		this.backWheelDurability = new VehicleDurability(Motorbike.wheelDurability, 4);
@@ -108,9 +102,15 @@ public class EntityMotorbike extends EntityVehicleBase<EntityMotorbike>
 		this.fuelTankDurability = new VehicleDurability(Motorbike.fuelTankDurability, 4);
 
 		//Seats
-		//this.seatRider = EntityVehicleSeat.getOrCreateSeat(this, "rider");
-		//this.seatPassenger = EntityVehicleSeat.getOrCreateSeat(this, "passenger");
-		//this.seatTow = EntityVehicleSeat.getOrCreateSeat(this, "tow");
+		this.seatRider = new SeatInfo<>(this, "rider")
+				.withSettings(true, new Vec3d(-0.65f, 0.75, 0))
+				.withYawAngleLimits(0, -45, 45);
+		this.seatPassenger = new SeatInfo<>(this, "passenger")
+				.withSettings(true, new Vec3d(0.75f, 0.75, 0))
+				.withYawAngleLimits(0, -90, 90);
+		this.seatTowed = new SeatInfo<>(this, "tow")
+				.withSettings(true, new Vec3d(1f, 0, 0))
+				.withYawAngleLimits(180, -75, 75);
 
 		//Controls
 		if(world.isRemote)
@@ -123,20 +123,18 @@ public class EntityMotorbike extends EntityVehicleBase<EntityMotorbike>
 					.withKeyBinding(settings.keyBindBack, "brake")
 					.withKeyBinding(settings.keyBindLeft, "turnLeft")
 					.withKeyBinding(settings.keyBindRight, "turnRight");
-			//Engine sound
-
 		}
 		else
 			this.driverControls = new VehicleControls()
 					.withStates("engine", "tow", "accelerate", "brake", "turnLeft", "turnRight");
 
 		//Components
-		this.partWheelFront = new EntityVehicleWheel<>(this, "wheel_front", new Vec3d(-1.25, 0, 0), AABB_WHEEL)
-				.withType(WheelType.STEERABLE)
-				.withHitbox(frontWheelDurability);
 		this.partWheelBack = new EntityVehicleWheel<>(this, "wheel_back", new Vec3d(1.5, 0, 0), AABB_WHEEL)
 				.withType(WheelType.DRIVE)
 				.withHitbox(backWheelDurability);
+		this.partWheelFront = new EntityVehicleWheel<>(this, "wheel_front", new Vec3d(-1.25, 0, 0), AABB_WHEEL)
+				.withType(WheelType.STEERABLE)
+				.withHitbox(frontWheelDurability);
 		this.fuelTank = new VehicleFuelTank<>(this, 12000)
 				.withDurability(fuelTankDurability);
 		this.engine = new VehicleEngineFuelBased(fuelTank)
@@ -147,7 +145,7 @@ public class EntityMotorbike extends EntityVehicleBase<EntityMotorbike>
 
 		//Parts
 		return new EntityVehiclePart[]{
-				partWheelFront, partWheelBack,
+				partWheelBack, partWheelFront,
 
 				partFuelTank = new EntityVehiclePart<>(this, "fuel_tank", new Vec3d(0.1, 1.175, 0), AABB_TANK)
 						.withHitbox(fuelTankDurability),
@@ -156,9 +154,11 @@ public class EntityMotorbike extends EntityVehicleBase<EntityMotorbike>
 				partSeat = new EntityVehiclePart<>(this, "seat", new Vec3d(-0.65, 2, 0), AABB_SEAT)
 						.withHitbox(durabilityMain),
 				partUpgradeSeat = new EntityVehiclePart<>(this, "upgrade_seat", new Vec3d(-1.35, 1, 0), AABB_SEAT)
-						.withHitbox(durabilityMain),
+						.withHitbox(durabilityMain)
+						.withSeat(seatRider),
 				partUpgradeCargo = new EntityVehiclePart<>(this, "upgrade_cargo", new Vec3d(-1.35, 1, 0), AABB_STORAGE)
 						.withHitbox(durabilityMain)
+						.withSeat(seatPassenger)
 		};
 	}
 
@@ -170,13 +170,15 @@ public class EntityMotorbike extends EntityVehicleBase<EntityMotorbike>
 		//Update Controls
 		if(world.isRemote)
 		{
-			if(EntityVehicleSeat.isPlayerOnSeat(this, "rider")&&driverControls.clientUpdate())
+			if(seatRider.isClientPlayerOnSeat()&&driverControls.clientUpdate())
 				sendServerUpdateForEvent(SyncEvents.ENTITY_VEHICLE_CONTROLS);
 		}
 
 		//Apply Controls
 		if(driverControls.getKey("accelerate"))
-			partWheelBack.setMovementFactors(1f, 0);
+			partWheelBack.setMovementFactors(1, 0);
+		else if(driverControls.getKey("brake"))
+			partWheelBack.setMovementFactors(-1f, 0);
 		else
 			partWheelBack.setMovementFactors(0f, 0);
 
@@ -192,70 +194,9 @@ public class EntityMotorbike extends EntityVehicleBase<EntityMotorbike>
 	//--- Parts Handling ---//
 
 	@Override
-	public void getSeatRidingPosition(String seatID, Entity passenger)
-	{
-		switch(seatID)
-		{
-			case "rider":
-			{
-				Vec3d pos = IIMath.offsetPosDirectionXZ(-0.65f, 0, rotationYaw, 0);
-				passenger.setPosition(posX+pos.x+motionX, posY+pos.y+1, posZ+pos.z+motionZ);
-			}
-			break;
-			case "passenger":
-			{
-				Vec3d pos = IIMath.offsetPosDirectionXZ(0.75f, 0.4f, rotationYaw, 0);
-				passenger.setPosition(posX+pos.x+motionX, posY+pos.y, posZ+pos.z+motionZ);
-			}
-			break;
-
-			case "tow":
-			{
-				Vec3d pos = IIMath.offsetPosDirectionXZ(0, 0.4f, rotationYaw, 0);
-				passenger.setPositionAndUpdate(posX+pos.x+motionX, posY+motionY, posZ+pos.z+motionZ);
-				passenger.rotationYaw = this.rotationYaw+180;
-			}
-			break;
-		}
-
-	}
-
-	@Override
-	public void getSeatRidingAngle(String seatID, Entity passenger)
-	{
-		switch(seatID)
-		{
-			case "rider":
-			case "passenger":
-			{
-				passenger.setRenderYawOffset(this.rotationYaw);
-
-				float f = MathHelper.wrapDegrees(passenger.rotationYaw-this.rotationYaw);
-				float f1 = MathHelper.clamp(f, -55.0F, 55.0F);
-				passenger.prevRotationYaw += f1-f;
-				passenger.rotationYaw += f1-f;
-				passenger.setRotationYawHead(passenger.rotationYaw);
-			}
-			break;
-			case "tow":
-			{
-				passenger.prevRotationYaw = 180+this.rotationYaw;
-				passenger.rotationYaw = 180+this.rotationYaw;
-			}
-			break;
-		}
-	}
-
-	@Override
-	public boolean shouldSeatPassengerSit(String seatID, Entity passenger)
-	{
-		return true;
-	}
-
-	@Override
 	public void onSeatDismount(String seatID, Entity passenger)
 	{
-		passenger.attackEntityFrom(IIDamageSources.causeMotorbikeDamageGetOut(this), 4.5f*speed);
+		passenger.attackEntityFrom(IIDamageSources.causeVehicleDamageGetOut(this), (float)(4.5f*IIEntityUtils.getEntityMotion(this).lengthSquared()));
 	}
 
 	@Override
@@ -299,9 +240,9 @@ public class EntityMotorbike extends EntityVehicleBase<EntityMotorbike>
 			else if(!world.isRemote)
 			{
 				if(part==partSeat)
-					return player.startRiding(EntityVehicleSeat.getOrCreateSeat(this, "rider"));
+					return player.startRiding(EntityVehicleSeat.getOrCreateSeat(seatRider));
 				else if(part==partUpgradeSeat)
-					return player.startRiding(EntityVehicleSeat.getOrCreateSeat(this, "passenger"));
+					return player.startRiding(EntityVehicleSeat.getOrCreateSeat(seatPassenger));
 			}
 		return false;
 	}

@@ -2,6 +2,8 @@ package pl.pabilo8.immersiveintelligence.client.render;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.Render;
@@ -20,6 +22,7 @@ import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.TmtNamedBoxGroup;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.Machinegun;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.block.metal_device.BlockIIMetalDevice.IIBlockTypes_MetalDevice;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.effect_crate.TileEntityAmmunitionCrate;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityMachinegun;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
@@ -37,7 +40,7 @@ import java.util.Map.Entry;
 import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 
-public class MachinegunRenderer extends Render<EntityMachinegun> implements IReloadableModelContainer<MachinegunRenderer>
+public class MachinegunRenderer extends Render<EntityMachinegun> implements IReloadableModelContainer<MachinegunRenderer>, IPassengerAnimationsRenderer<EntityMachinegun>
 {
 	public static final String texture = "machinegun.png";
 	public static ModelMachinegun model;
@@ -374,5 +377,85 @@ public class MachinegunRenderer extends Render<EntityMachinegun> implements IRel
 
 		skinParts.clear();
 		skinParts.add(model.baubleBox);
+	}
+
+	@Override
+	public boolean handleBipedRotations(ModelBiped model, EntityMachinegun mg, EntityLivingBase passenger, float partialTicks)
+	{
+		float ff = (float)(-1.35f-Math.toRadians(mg.gunPitch)*1.25);
+		float true_head_angle = MathHelper.wrapDegrees(passenger.prevRotationYawHead-mg.setYaw);
+		float wtime;
+
+		mg.applyOrientationToEntity(passenger);
+		model.bipedHead.rotateAngleX *= -0.35f;
+		model.bipedHeadwear.rotateAngleX *= -0.35f;
+		model.bipedLeftArm.rotateAngleY = .08726f+3.14f/6f;
+
+		IBlockState state = passenger.world.getBlockState(passenger.getPosition());
+		if(!mg.tripod&&state.getMaterial().isSolid()&&!(state.getBlock()==IIContent.blockMetalDevice&&state.getValue(IIContent.blockMetalDevice.property)==IIBlockTypes_MetalDevice.AMMUNITION_CRATE))
+		{
+			if(Math.abs(mg.gunYaw-true_head_angle) > 5)
+			{
+				wtime = Math.abs((mg.getEntityWorld().getTotalWorldTime()+partialTicks)%20/20f-0.5f)/0.5f;
+				wtime *= 0.25f;
+
+				if(mg.setupTime > 0)
+					wtime = 0;
+				if(mg.gunYaw < true_head_angle)
+				{
+					model.bipedRightLeg.rotateAngleY = -wtime*2f;
+					model.bipedLeftLeg.rotateAngleY = wtime*2f;
+				}
+				else if(mg.gunYaw > true_head_angle)
+				{
+					model.bipedRightLeg.rotateAngleY = -wtime*2f;
+					model.bipedLeftLeg.rotateAngleY = wtime*2f;
+				}
+			}
+
+			model.bipedBody.rotateAngleX += 1.5f;
+			model.bipedRightLeg.rotateAngleX += 1.5f;
+			model.bipedLeftLeg.rotateAngleX += 1.5f;
+
+			model.bipedRightArm.rotateAngleX += ff-0.5;
+			model.bipedLeftArm.rotateAngleX += ff-0.5;
+
+			model.bipedRightLeg.rotationPointY = 0f;
+			model.bipedLeftLeg.rotationPointY = 0f;
+
+			model.bipedRightLeg.rotationPointZ = 12f;
+			model.bipedLeftLeg.rotationPointZ = 12f;
+
+			float maxRotation = mg.tripod?82.5F: 45.0F;
+
+			model.bipedRightLeg.rotateAngleY += mg.gunYaw/maxRotation;
+			model.bipedLeftLeg.rotateAngleY += mg.gunYaw/maxRotation;
+
+			//model.bipedLeftLeg.rotateAngleY += ff+1f;
+
+		}
+		else
+		{
+			wtime = Math.abs((mg.getEntityWorld().getTotalWorldTime()+partialTicks)%40/40f-0.5f)/0.5f-0.5f;
+			wtime *= 0.65f;
+			if(mg.setupTime > 0)
+				wtime = 0;
+			model.bipedBody.rotateAngleX -= 0.0625f;
+			if(Math.abs(mg.gunYaw-true_head_angle) > 5)
+				if(mg.gunYaw < true_head_angle)
+				{
+					model.bipedRightLeg.rotateAngleX = wtime*2f;
+					model.bipedLeftLeg.rotateAngleX = -wtime*2f;
+				}
+				else if(mg.gunYaw > true_head_angle)
+				{
+					model.bipedRightLeg.rotateAngleX = -wtime*2f;
+					model.bipedLeftLeg.rotateAngleX = wtime*2f;
+				}
+
+			model.bipedRightArm.rotateAngleX = ff;
+			model.bipedLeftArm.rotateAngleX = ff;
+		}
+		return true;
 	}
 }

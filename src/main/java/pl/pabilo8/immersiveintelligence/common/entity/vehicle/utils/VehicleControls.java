@@ -58,10 +58,9 @@ public class VehicleControls implements INBTSerializable<NBTTagCompound>
 		for(Entry<KeyBinding, String> entry : keybinds.entrySet())
 		{
 			KeyBinding keyBinding = entry.getKey();
-			String s = entry.getValue();
-			states.compute(s, (s1, current) -> {
+			states.compute(entry.getValue(), (name, current) -> {
 				boolean keyDown = keyBinding.isKeyDown();
-				if(current!=keyDown)
+				if(keyDown!=current)
 					this.dirty = true;
 				return keyDown;
 			});

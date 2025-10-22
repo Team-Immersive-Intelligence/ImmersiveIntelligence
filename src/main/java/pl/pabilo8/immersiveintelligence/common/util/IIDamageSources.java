@@ -4,13 +4,14 @@ import blusunrize.immersiveengineering.common.util.FakePlayerUtil;
 import blusunrize.immersiveengineering.common.util.IEDamageSources.IEDamageSource_Indirect;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.MultiPartEntityPart;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.component.EntityShrapnel;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
-import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityMotorbike;
+import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityVehicleBase;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehicleSeat;
 
 import java.util.Arrays;
@@ -26,16 +27,25 @@ public class IIDamageSources
 	public static final DamageSource RADIATION_DAMAGE = new DamageSource("iiRadiation").setDamageBypassesArmor().setDamageIsAbsolute();
 	public static final DamageSource NUCLEAR_HEAT_DAMAGE = new DamageSource("iiNuclearHeat").setDamageBypassesArmor().setDamageIsAbsolute();
 
-	public static DamageSource causeMotorbikeDamage(EntityMotorbike motorbike)
+	public static DamageSource causeVehicleDamage(EntityVehicleBase<?> vehicle)
 	{
-		EntityVehicleSeat seat = EntityVehicleSeat.getOrCreateSeat(motorbike, "rider");
-		Entity rider = seat.getPassengers().get(0);
-		return new IEDamageSource_Indirect(rider!=null?"iiMotorbike": "iiMotorbikeNoRider", motorbike, rider);
+		//Find the first seat with an EntityLivingBase passenger
+		for(Entity seat : vehicle.getPassengers())
+			if(seat instanceof EntityVehicleSeat)
+			{
+				if(seat.getPassengers().isEmpty())
+					continue;
+				Entity passenger = seat.getPassengers().get(1);
+				if(passenger instanceof EntityLivingBase)
+					return new IEDamageSource_Indirect("iiVehicleNoRider", vehicle, passenger);
+			}
+		//Return a generic vehicle damage source if no passenger could be found
+		return new IEDamageSource_Indirect("iiVehicle", vehicle, null);
 	}
 
-	public static DamageSource causeMotorbikeDamageGetOut(EntityMotorbike motorbike)
+	public static DamageSource causeVehicleDamageGetOut(EntityVehicleBase<?> vehicle)
 	{
-		return new IEDamageSource_Indirect("iiMotorbikeSuicide", motorbike, null);
+		return new IEDamageSource_Indirect("iiVehicleSuicide", vehicle, null);
 	}
 
 	public static DamageSource causeBulletDamage(EntityAmmoProjectile shot, Entity attacked)

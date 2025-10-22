@@ -1,5 +1,6 @@
 package pl.pabilo8.immersiveintelligence.client.render.vehicle;
 
+import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.Render;
@@ -15,6 +16,7 @@ import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.model.weapon.ModelMortar;
+import pl.pabilo8.immersiveintelligence.client.render.IPassengerAnimationsRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.Mortar;
@@ -25,7 +27,7 @@ import pl.pabilo8.immersiveintelligence.common.entity.EntityMortar;
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 21.01.2021
  */
-public class MortarRenderer extends Render<EntityMortar> implements IReloadableModelContainer<MortarRenderer>
+public class MortarRenderer extends Render<EntityMortar> implements IReloadableModelContainer<MortarRenderer>, IPassengerAnimationsRenderer<EntityMortar>
 {
 	public static final ResourceLocation TEXTURE = new ResourceLocation(ImmersiveIntelligence.MODID+":textures/entity/mortar.png");
 	public static MortarItemstackRenderer instance = new MortarItemstackRenderer();
@@ -254,6 +256,71 @@ public class MortarRenderer extends Render<EntityMortar> implements IReloadableM
 	protected ResourceLocation getEntityTexture(EntityMortar entity)
 	{
 		return null;
+	}
+
+	@Override
+	public boolean handleBipedRotations(ModelBiped model, EntityMortar mortar, EntityLivingBase passenger, float partialTicks)
+	{
+		float ff = 1;
+		if(mortar.shootingProgress > 0)
+		{
+			float v = mortar.shootingProgress/Mortar.shootTime;
+			//rise up
+			if(v < 0.1)
+				ff = 1f-v/0.1f;
+			else if(v < 0.2)
+			{
+				//turn, put shell
+				ff = 0;
+				float firing = (v-0.1f)/0.1f;
+
+				model.bipedLeftArm.rotateAngleY = firing*0.15f;
+				model.bipedRightArm.rotateAngleY = firing*-0.65f;
+				model.bipedRightArm.rotationPointX += 1*firing;
+				model.bipedRightArm.rotationPointZ -= 2*firing;
+
+				model.bipedLeftArm.rotateAngleX = firing*-2.15f;
+				model.bipedRightArm.rotateAngleX = firing*-2.15f;
+			}
+			else if(v < 0.3)
+			{
+				//unturn
+				ff = 0;
+
+				float firing = 1f-(v-0.2f)/0.1f;
+
+				model.bipedLeftArm.rotateAngleY = firing*0.15f;
+				model.bipedRightArm.rotateAngleY = firing*-0.65f;
+				model.bipedRightArm.rotationPointX += 1*firing;
+				model.bipedRightArm.rotationPointZ -= 2*firing;
+
+				model.bipedLeftArm.rotateAngleX = firing*-2.15f;
+				model.bipedRightArm.rotateAngleX = firing*-2.15f;
+			}
+			else //get down
+				if(v < 0.4)
+					ff = (v-0.3f)/0.1f;
+				else
+				{
+					float firing = (v-0.4f)/0.6f;
+					float progress = MathHelper.clamp(firing < 0.75?firing/0.2f: 1f-(firing-0.85f)/0.15f, 0, 1);
+					model.bipedHead.rotateAngleX = Math.min(progress/0.85f, 1f)*0.85f;
+					model.bipedHeadwear.rotateAngleX = Math.min(progress/0.85f, 1f)*0.85f;
+					model.bipedHead.rotateAngleY = 0;
+					model.bipedHeadwear.rotateAngleY = 0;
+
+					model.bipedLeftArm.rotateAngleZ = progress*-0.15f;
+					model.bipedRightArm.rotateAngleZ = progress*0.15f;
+					model.bipedLeftArm.rotateAngleX = progress*-2.55f;
+					model.bipedRightArm.rotateAngleX = progress*-2.55f;
+				}
+		}
+
+		model.bipedLeftLeg.rotateAngleX = 1.45f*ff;
+		model.bipedLeftLeg.rotateAngleY = 0.125f*ff;
+		model.bipedRightLeg.rotateAngleX = 1.45f*ff;
+		model.bipedRightLeg.rotateAngleY = -0.25f*ff;
+		return true;
 	}
 
 	public static class MortarItemstackRenderer extends TileEntityItemStackRenderer

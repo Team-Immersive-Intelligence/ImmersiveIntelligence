@@ -39,28 +39,60 @@ public @interface VehicleBlueprint
 	 */
 	int baseArmor() default 4;
 
-	//--- Wheels ---//
+	//--- Wheels and Physics ---//
 
 	/**
-	 * @return the linear drag factor of this vehicle (0.0-1.0), lower means more drag (slower)
+	 * @return the linear drag factor of this vehicle (0.0-1.0)
 	 */
 	double linearDamping() default 0.98;
 
 	/**
-	 * @return the angular drag factor of this vehicle (0.0-1.0), lower means more drag (slower rotation)
+	 * @return the angular drag factor of this vehicle (0.0-1.0)
 	 */
-	double angularDamping() default 0.94;
+	double angularDamping() default 0.96;
 
 	/**
-	 * @return the yaw response factor of this vehicle (0.0-1.0), higher means more responsive (faster turning)
+	 * @return the lateral friction coefficient for driven wheels (0.0-1.0)
+	 */
+	double lateralFrictionDrive() default 0.05;
+
+	/**
+	 * @return the lateral friction coefficient for idler wheels (0.0-1.0)
+	 */
+	double lateralFrictionIdler() default 0.25;
+
+	/**
+	 * @return the force multiplication factor for engine power
+	 */
+	double forceFactor() default 0.015;
+
+	/**
+	 * @return the torque multiplication factor for turning
 	 */
 	double torqueFactor() default 0.025;
 
-	double lateralFrictionDrive() default 0.05;
+	/**
+	 * @return the air drag coefficient (typical 0.6-1.0 for vehicles)
+	 */
+	double airDragCoefficient() default 0.7;
 
-	double lateralFrictionIdler() default 0.25;
+	/**
+	 * @return the rolling resistance coefficient (typical 0.01-0.03 for rubber on road)
+	 */
+	double rollingResistance() default 0.015;
 
-	double maxLateralForceFactor() default 1.5;
+	/**
+	 * @return the static friction coefficient when stationary
+	 */
+	double staticFriction() default 0.9;
 
-	double forceFactor() default 0.01;
+	/**
+	 * @return the kinetic friction coefficient when moving
+	 */
+	double kineticFriction() default 0.7;
+
+	/**
+	 * @return the frontal area factor for air drag calculation (0.0-1.0)
+	 */
+	double frontalAreaFactor() default 0.85;
 }

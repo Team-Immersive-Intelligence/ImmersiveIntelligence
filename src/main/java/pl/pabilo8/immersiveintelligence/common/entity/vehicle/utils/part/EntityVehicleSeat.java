@@ -4,12 +4,17 @@ import blusunrize.immersiveengineering.api.tool.ZoomHandler;
 import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IVehicleMultiPart;
 import pl.pabilo8.immersiveintelligence.client.util.CameraHandler;
+import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityVehicleBase;
+import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.entity.ISyncNBTEntity;
@@ -30,6 +35,7 @@ public class EntityVehicleSeat extends Entity implements ISyncNBTEntity<EntityVe
 {
 	@SyncNBT(events = SyncEvents.ENTITY_PASSENGER)
 	public String seatID = "";
+	public SeatInfo<?> info;
 
 	public EntityVehicleSeat(World worldIn)
 	{
@@ -40,44 +46,32 @@ public class EntityVehicleSeat extends Entity implements ISyncNBTEntity<EntityVe
 	}
 
 	/**
-	 * @param vehicle that requests the seat
-	 * @param id      of the seat
+	 * Creates or returns an existing vehicle seat
+	 *
+	 * @param seatInfo Seat info
 	 */
-	public static EntityVehicleSeat getOrCreateSeat(Entity vehicle, String id)
+	public static EntityVehicleSeat getOrCreateSeat(SeatInfo<?> seatInfo)
 	{
-		Optional<Entity> probableSeat = vehicle.getPassengers().stream()
-				.filter(entity -> entity instanceof EntityVehicleSeat&&((EntityVehicleSeat)entity).seatID.equals(id))
+		Optional<Entity> probableSeat = seatInfo.vehicle.getPassengers().stream()
+				.filter(entity -> entity instanceof EntityVehicleSeat&&((EntityVehicleSeat)entity).seatID.equals(seatInfo.seatID))
 				.findFirst();
 		if(!probableSeat.isPresent()||!(probableSeat.get() instanceof EntityVehicleSeat))
 		{
-			EntityVehicleSeat seat = new EntityVehicleSeat(vehicle.world);
-			seat.setSeatID(id);
-			seat.setPosition(vehicle.posX, vehicle.posY, vehicle.posZ);
-			vehicle.world.spawnEntity(seat);
-			seat.startRiding(vehicle);
+			EntityVehicleSeat seat = new EntityVehicleSeat(seatInfo.vehicle.world);
+			seat.info = seatInfo;
+			seat.seatID = seatInfo.seatID;
+			seat.setPosition(seatInfo.vehicle.posX, seatInfo.vehicle.posY, seatInfo.vehicle.posZ);
+			seatInfo.vehicle.world.spawnEntity(seat);
+			seat.startRiding(seatInfo.vehicle);
+			seat.updateEntityForEvent(SyncEvents.ENTITY_PASSENGER);
 			return seat;
 		}
 		else
-			return (EntityVehicleSeat)probableSeat.get();
-	}
-
-	/**
-	 * Checks if the player is currently sitting on the specified seat of the specified vehicle
-	 *
-	 * @param vehicle the vehicle
-	 * @param id      the seat id
-	 * @return true if the player is sitting on the seat
-	 */
-	@SideOnly(Side.CLIENT)
-	public static boolean isPlayerOnSeat(Entity vehicle, String id)
-	{
-		EntityPlayerSP player = ClientUtils.mc().player;
-		Entity ridingEntity = player.getRidingEntity();
-		if(!(ridingEntity instanceof EntityVehicleSeat))
-			return false;
-		if(!((EntityVehicleSeat)ridingEntity).seatID.equals(id))
-			return false;
-		return vehicle.getPassengers().contains(ridingEntity);
+		{
+			EntityVehicleSeat seat = (EntityVehicleSeat)probableSeat.get();
+			seat.info = seatInfo;
+			return seat;
+		}
 	}
 
 	@Override
@@ -87,64 +81,94 @@ public class EntityVehicleSeat extends Entity implements ISyncNBTEntity<EntityVe
 	}
 
 	@Override
+	public void onUpdate()
+	{
+		if(world.isRemote)
+		{
+			//Try to find seat info on client
+			if(!seatID.isEmpty()&&info==null&&getRidingEntity() instanceof IVehicleMultiPart)
+			{
+				IVehicleMultiPart<?> vehicle = (IVehicleMultiPart<?>)getRidingEntity();
+				this.info = vehicle.getSeatInfo(seatID);
+			}
+		}
+		else if(this.ticksExisted > 20&&!this.isRiding())
+			setDead();
+
+		super.onUpdate();
+	}
+
+	@Override
 	public boolean canRenderOnFire()
 	{
 		return false;
 	}
 
-	public void setSeatID(String seatID)
-	{
-		this.seatID = seatID;
-		updateEntityForEvent(SyncEvents.ENTITY_PASSENGER);
-	}
-
 	@Override
 	public boolean shouldRiderSit()
 	{
-		if(getRidingEntity() instanceof IVehicleMultiPart&&!this.getPassengers().isEmpty())
-			return ((IVehicleMultiPart<?>)getRidingEntity()).shouldSeatPassengerSit(seatID, this.getPassengers().get(0));
+		if(info!=null&&getRidingEntity()==info.vehicle)
+			return info.shouldSeatPassengerSit;
 		return super.shouldRiderSit();
 	}
 
 	@Override
 	public void applyOrientationToEntity(@Nonnull Entity passenger)
 	{
-		if(getRidingEntity() instanceof IVehicleMultiPart)
+		Entity riding = getRidingEntity();
+		if(info==null||riding!=info.vehicle)
+			return;
+		EntityVehicleBase<?> vehicle = info.vehicle;
+
+		//Apply yaw angle restrictions
+		passenger.setRenderYawOffset(vehicle.rotationYaw+info.yawAngleOffset);
+		float f = MathHelper.wrapDegrees(passenger.rotationYaw-(vehicle.rotationYaw+info.yawAngleOffset));
+		float f1 = MathHelper.clamp(f, info.minYawAngle, info.maxYawAngle);
+		passenger.prevRotationYaw += f1-f;
+		passenger.rotationYaw += f1-f;
+		passenger.setRotationYawHead(passenger.rotationYaw);
+
+		//Fix player cape
+		if(passenger instanceof EntityPlayer)
 		{
-			((IVehicleMultiPart<?>)getRidingEntity()).getSeatRidingAngle(seatID, passenger);
+			EntityPlayer player = (EntityPlayer)passenger;
+			player.prevRenderYawOffset = player.renderYawOffset;
 		}
-		else
-			super.applyOrientationToEntity(passenger);
 	}
 
 	@Override
 	public void updatePassenger(@Nonnull Entity passenger)
 	{
-		if(getRidingEntity() instanceof IVehicleMultiPart)
-		{
-			((IVehicleMultiPart<?>)getRidingEntity()).getSeatRidingPosition(seatID, passenger);
-			((IVehicleMultiPart<?>)getRidingEntity()).getSeatRidingAngle(seatID, passenger);
+		Entity riding = getRidingEntity();
+		if(info==null||riding!=info.vehicle)
+			return;
+		EntityVehicleBase<?> vehicle = info.vehicle;
 
-		}
-		else
-			super.updatePassenger(passenger);
+		//Set position
+		Vec3d pos = IIMath.offsetPosDirectionXZ(info.offset.x, info.offset.z, vehicle.rotationYaw, vehicle.rotationPitch);
+		passenger.setPosition(vehicle.posX+pos.x+vehicle.motionX, vehicle.posY+pos.y+info.offset.y+vehicle.motionY, vehicle.posZ+pos.z+vehicle.motionZ);
+
+		//Set angle
+		applyOrientationToEntity(passenger);
 	}
 
 	@Override
 	public void dismountRidingEntity()
 	{
-
+		this.setDead();
 	}
 
 	@Override
 	protected void removePassenger(@Nonnull Entity passenger)
 	{
+		//Reset camera system
 		if(world.isRemote&&passenger instanceof EntityPlayerSP)
 		{
 			CameraHandler.setEnabled(false);
 			ZoomHandler.isZooming = false;
 		}
 		super.removePassenger(passenger);
+		//Notify vehicle (apply damage if exiting when the vehicle is moving, etc.)
 		if(getRidingEntity() instanceof IVehicleMultiPart)
 			((IVehicleMultiPart<?>)getRidingEntity()).onSeatDismount(seatID, passenger);
 		updateEntityForEvent(SyncEvents.ENTITY_PASSENGER);
@@ -160,5 +184,57 @@ public class EntityVehicleSeat extends Entity implements ISyncNBTEntity<EntityVe
 	public void writeEntityToNBT(@Nonnull NBTTagCompound compound)
 	{
 		ISyncNBTEntity.super.writeEntityToNBT(compound);
+	}
+
+	public static class SeatInfo<T extends EntityVehicleBase<T>>
+	{
+		private String seatID;
+		private EntityVehicleBase<T> vehicle;
+		private boolean shouldSeatPassengerSit = true;
+		private Vec3d offset = Vec3d.ZERO;
+		private float yawAngleOffset = 0, minYawAngle = -180, maxYawAngle = 180;
+
+		public SeatInfo(EntityVehicleBase<T> vehicle, String seatID)
+		{
+			this.seatID = seatID;
+			this.vehicle = vehicle;
+		}
+
+		public SeatInfo<T> withSettings(boolean shouldSeatPassengerSit, Vec3d offset)
+		{
+			this.shouldSeatPassengerSit = shouldSeatPassengerSit;
+			this.offset = offset;
+			return this;
+		}
+
+		public SeatInfo<T> withYawAngleLimits(float yawAngleOffset, float minYawAngle, float maxYawAngle)
+		{
+			this.yawAngleOffset = yawAngleOffset;
+			this.minYawAngle = minYawAngle;
+			this.maxYawAngle = maxYawAngle;
+			return this;
+		}
+
+		public String getSeatID()
+		{
+			return seatID;
+		}
+
+		/**
+		 * Checks if the client-side player is currently sitting on this seat
+		 *
+		 * @return true if the player is sitting on the seat
+		 */
+		@SideOnly(Side.CLIENT)
+		public boolean isClientPlayerOnSeat()
+		{
+			EntityPlayerSP player = ClientUtils.mc().player;
+			Entity ridingEntity = player.getRidingEntity();
+			if(!(ridingEntity instanceof EntityVehicleSeat))
+				return false;
+			if(!((EntityVehicleSeat)ridingEntity).seatID.equals(seatID))
+				return false;
+			return vehicle.getPassengers().contains(ridingEntity);
+		}
 	}
 }

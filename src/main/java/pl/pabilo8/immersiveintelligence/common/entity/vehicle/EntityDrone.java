@@ -31,6 +31,7 @@ import pl.pabilo8.immersiveintelligence.common.entity.vehicle.drone.AIDroneTarge
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.VehicleBlueprint;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.VehicleDurability;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehiclePart;
+import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehicleSeat.SeatInfo;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.entity.ISyncNBTEntity;
 
@@ -333,31 +334,25 @@ public class EntityDrone extends EntityFlying implements ISyncNBTEntity<EntityDr
 	}
 
 	@Override
-	public void getSeatRidingPosition(String seatID, Entity passenger)
-	{
-
-	}
-
-	@Override
-	public void getSeatRidingAngle(String seatID, Entity passenger)
-	{
-
-	}
-
-	@Override
-	public boolean shouldSeatPassengerSit(String seatID, Entity passenger)
-	{
-		return false;
-	}
-
-	@Override
 	public void onSeatDismount(String seatID, Entity passenger)
 	{
 
 	}
 
 	@Override
+	public Vec3d getVelocity()
+	{
+		return Vec3d.ZERO;
+	}
+
+	@Override
 	public VehicleBlueprint getVehicleBlueprint()
+	{
+		return null;
+	}
+
+	@Override
+	public SeatInfo<?> getSeatInfo(String seatID)
 	{
 		return null;
 	}

@@ -53,7 +53,6 @@ public class IIPacketHandler
 		registerMessage(MessageExplosion.class, true, false);
 		registerMessage(MessageParticleEffect.class, true, false);
 		registerMessage(MessageBeginMachineUpgrade.class, true, true);
-		registerMessage(MessageParticleGunfire.class, true, false);
 		registerMessage(MessageManualClose.class, false, true);
 		registerMessage(MessagePlayIISound.class, true, false);
 		registerMessage(MessageDiplomacySync.class, true, false);
