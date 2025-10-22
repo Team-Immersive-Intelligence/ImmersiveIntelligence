@@ -17,7 +17,7 @@ import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIBase;
 public class ContainerMedicalCrate extends ContainerIIBase<TileEntityMedicalCrate>
 {
 
-	public Slot inputSlot, inputFluidSlot, outputSlot, outputSlo2;
+	public Slot inputSlot, inputFluidSlot, outputSlot, outputSlot2;
 
 	public ContainerMedicalCrate(EntityPlayer player, TileEntityMedicalCrate tile)
 	{
@@ -27,10 +27,10 @@ public class ContainerMedicalCrate extends ContainerIIBase<TileEntityMedicalCrat
 		int shift = tile.isUpgradeInstalled(IIContent.UPGRADE_INSERTER)?0: 27;
 
 
-		inputFluidSlot = this.addSlotToContainer(new IESlot.FluidContainer(this, this.inv, 0, 41, 21, 2));
-		outputSlot = this.addSlotToContainer(new IESlot.Output(this, this.inv, 1, 41, 57));
+		inputFluidSlot = this.addSlotToContainer(new IESlot.FluidContainer(this, this.inv, 0, 68, 19, 2));
+		outputSlot = this.addSlotToContainer(new IESlot.Output(this, this.inv, 1, 68, 55));
 
-		inputSlot = this.addSlotToContainer(new IESlot.Output(this, this.inv, 2, 85, 21)
+		inputSlot = this.addSlotToContainer(new IESlot.Output(this, this.inv, 2, 112, 19)
 		{
 			@Override
 			public boolean isItemValid(ItemStack stack)
@@ -39,8 +39,8 @@ public class ContainerMedicalCrate extends ContainerIIBase<TileEntityMedicalCrat
 			}
 		});
 
-		outputSlo2 = this.addSlotToContainer(new IESlot.Output(this, this.inv, 3, 85, 57));
+		outputSlot2 = this.addSlotToContainer(new IESlot.Output(this, this.inv, 3, 112, 55));
 
-		addPlayerInventory(player.inventory, 8, 141);
+		addPlayerInventory(player.inventory, 8, 87);
 	}
 }

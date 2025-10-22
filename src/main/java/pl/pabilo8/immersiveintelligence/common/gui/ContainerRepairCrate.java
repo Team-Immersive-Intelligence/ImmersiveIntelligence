@@ -36,6 +36,6 @@ public class ContainerRepairCrate extends ContainerIIBase<TileEntityRepairCrate>
 				}
 			});
 
-		addPlayerInventory(player.inventory, 8, 141);
+		addPlayerInventory(player.inventory, 8, 87);
 	}
 }

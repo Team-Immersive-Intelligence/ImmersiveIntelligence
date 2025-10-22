@@ -3,16 +3,28 @@ package pl.pabilo8.immersiveintelligence.client.gui.block;
 import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.client.gui.GuiIEContainerBase;
 import blusunrize.immersiveengineering.client.gui.elements.GuiButtonState;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoButton;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoBar;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoFluidTank;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoImage;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.*;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundBuilder.SlotStyle;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.EffectCrates;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.effect_crate.TileEntityMedicalCrate;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityFiller;
+import pl.pabilo8.immersiveintelligence.common.gui.ContainerFiller;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerMedicalCrate;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
@@ -25,38 +37,30 @@ import java.util.ArrayList;
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 17.05.2019
  */
-public class GuiMedicalCrate extends GuiIEContainerBase
+
+@DecoTemplate(name = "medicalcrate", category = DecoGuiCategory.GENERIC_TILE)
+public class GuiMedicalCrate extends DecoGui<TileEntityMedicalCrate, ContainerMedicalCrate>
 {
-	private static final String TEXTURE = ImmersiveIntelligence.MODID+":textures/gui/medical_crate.png";
-	private final TileEntityMedicalCrate tile;
-	GuiButtonState buttonHealing = null, buttonBoost = null;
+
+	@DecoResource
+	public static final ResourceLocation TEXTURE_MED = IIReference.RES_II.with("gui/medical_crate");
+	public static final ResourceLocation SPEED = IIReference.RES_II.with("deco/icons/icon_speed");
+	public static final ResourceLocation HEAL = IIReference.RES_II.with("deco/icons/icon_progress");
 
 	public GuiMedicalCrate(EntityPlayer player, TileEntityMedicalCrate tile)
 	{
-		super(new ContainerMedicalCrate(player, tile));
-		this.tile = tile;
-		this.ySize = 168;
+		super(player, tile, IIGUI.MEDIC_CRATE);
 	}
 
-	@Override
-	public void initGui()
-	{
-		super.initGui();
-		addButton(buttonHealing = new GuiButtonState(0, guiLeft+111, guiTop+2, 28, 24, "", tile.shouldHeal, TEXTURE, 176, 75, 0));
-		addButton(buttonBoost = new GuiButtonState(1, guiLeft+111, guiTop+24, 28, 24, "", tile.shouldBoost, TEXTURE, 176, 51, 0));
 
-		boolean upgraded = tile.isUpgradeInstalled(IIContent.UPGRADE_INSERTER);
-		buttonHealing.visible = upgraded;
-		buttonBoost.visible = upgraded;
-	}
-
+	/**
 	@Override
 	protected void actionPerformed(GuiButton button)
 	{
 		if(button==buttonHealing)
 		{
 			tile.shouldHeal = !tile.shouldHeal;
-			buttonHealing.state = tile.shouldHeal;
+			buttonHealing.state =   tile.shouldHeal;
 			IIPacketHandler.sendToServer(new MessageBooleanAnimatedPartsSync(1, tile.shouldHeal, tile.getPos()));
 		}
 		else if(button==buttonBoost)
@@ -66,54 +70,84 @@ public class GuiMedicalCrate extends GuiIEContainerBase
 			IIPacketHandler.sendToServer(new MessageBooleanAnimatedPartsSync(2, tile.shouldBoost, tile.getPos()));
 		}
 	}
+**/
+	boolean upgraded = tile.isUpgradeInstalled(IIContent.UPGRADE_INSERTER);
+
 
 	@Override
-	public void drawScreen(int mouseX, int mouseY, float partialTicks)
+	public void onInit()
 	{
-		super.drawScreen(mouseX, mouseY, partialTicks);
-		boolean upgraded = tile.isUpgradeInstalled(IIContent.UPGRADE_INSERTER);
-		int ww = upgraded?9: 36;
 
-		ArrayList<String> tooltip = new ArrayList<>();
+		if (upgraded) {
 
-		if(upgraded)
-		{
-			if(IIMath.isPointInRectangle(buttonHealing.x, buttonHealing.y, buttonHealing.x+buttonHealing.width, buttonHealing.y+buttonHealing.height, mouseX, mouseY))
-				tooltip.add(I18n.format(IIReference.DESCRIPTION_KEY+"medical_crate.heal"));
-			else if(IIMath.isPointInRectangle(buttonBoost.x, buttonBoost.y, buttonBoost.x+buttonBoost.width, buttonBoost.y+buttonBoost.height, mouseX, mouseY))
-				tooltip.add(I18n.format(IIReference.DESCRIPTION_KEY+"medical_crate.boost"));
+			startBackground()
+					.withBox(null, 0, 0, 176, 76)
+					.withBox(DecoTextures.GUI_BG_WOODEN, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_ROUND_WOODEN, 0, 76, 176, 92)
+					.withInventorySlots(SlotStyle.VANILLA, container.playerInventory)
+					.withInventorySlots(SlotStyle.IE_INPUT, container.inputSlot)
+					.withInventorySlots(SlotStyle.IE_INPUT, container.inputFluidSlot)
+					.withInventorySlots(SlotStyle.IE_OUTPUT, container.outputSlot)
+					.withInventorySlots(SlotStyle.IE_OUTPUT, container.outputSlot2)
+					.withInventoryTitleBar()
+					.build();
+
+
+			addComponents(
+					new DecoFluidTank(10, 21)
+							.withSize(16, 47)
+							.withFluidTank(tile.tanks[0]),
+
+					new DecoFluidTank(54, 21)
+							.withSize(16, 47)
+							.withFluidTank(tile.tanks[1]),
+
+					new DecoImage(15, 0)
+							.withSize(102, 79)
+							.withImageLocation(TEXTURE_MED, false)
+							.withUV(256, 102, 79, 10 ,0),
+
+					new DecoButton(20,20)
+							.withIcon(SPEED, 16)
+							.withText("Speed Boost"),
+
+					new DecoButton(20, 40)
+							.withIcon(HEAL, 16)
+							.withText("Healing")
+
+					//new DecoBar(161, -4)
+				  			//.withTemplate(DecoGuiUtils.BAR_ELECTRIC_ENERGY.apply(tile.energyStorage))
+
+					//putting notes here becuase storm may kill power while out
+					//need to have the buttons do the thing when pressed
+					//power bar for the upgrade (Do this for the ammo and repair crate (upgrade thing) if it works
+			);
+
 		}
 
-		ClientUtils.handleGuiTank(tile.tanks[0], guiLeft+ww+10, guiTop+21, 16, 47, 177, 0, 20, 51, mouseX, mouseY, TEXTURE, tooltip);
-		ClientUtils.handleGuiTank(tile.tanks[1], guiLeft+ww+54, guiTop+21, 16, 47, 177, 0, 20, 51, mouseX, mouseY, TEXTURE, tooltip);
+		startBackground()
+				.withBox(null, 0, 0, 176, 76)
+				.withBox(DecoTextures.GUI_BG_WOODEN, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_ROUND_WOODEN, 0, 76, 176, 92)
+				.withInventorySlots(SlotStyle.VANILLA, container.playerInventory)
+				.withInventorySlots(SlotStyle.IE_INPUT, container.inputSlot)
+				.withInventorySlots(SlotStyle.IE_INPUT, container.inputFluidSlot)
+				.withInventorySlots(SlotStyle.IE_OUTPUT, container.outputSlot)
+				.withInventorySlots(SlotStyle.IE_OUTPUT, container.outputSlot2)
+				.build();
 
-		if(upgraded&&IIMath.isPointInRectangle(guiLeft+153, guiTop+24, guiLeft+153+7, guiTop+24+47, mouseX, mouseY))
-			tooltip.add(tile.energyStorage+"/"+EffectCrates.maxEnergyStored+" IF");
 
-		if(!tooltip.isEmpty())
-		{
-			ClientUtils.drawHoveringText(tooltip, mouseX, mouseY, fontRenderer, guiLeft+xSize, -1);
-			RenderHelper.enableGUIStandardItemLighting();
-		}
-	}
+		addComponents(
+				new DecoFluidTank(54, 20)
+						.withSize(16, 47)
+						.withFluidTank(tile.tanks[0]),
 
-	/**
-	 * Draws the background layer of this container (behind the items).
-	 */
-	@Override
-	protected void drawGuiContainerBackgroundLayer(float f, int mx, int my)
-	{
-		boolean upgraded = tile.isUpgradeInstalled(IIContent.UPGRADE_INSERTER);
-		int ww = upgraded?9: 36;
+				new DecoFluidTank(108, 20)
+						.withSize(16, 47)
+						.withFluidTank(tile.tanks[1]),
 
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		ClientUtils.bindTexture(TEXTURE);
-		this.drawTexturedModalRect(guiLeft, guiTop+79, 0, 79, xSize, ySize-79);
-		this.drawTexturedModalRect(guiLeft+ww, guiTop, 9, 0, upgraded?167: 102, 79);
-
-		IIClientUtils.drawPowerBar(guiLeft+153, guiTop+24, 7, 47, tile.energyStorage/(float)EffectCrates.maxEnergyStored);
-
-		ClientUtils.handleGuiTank(tile.tanks[0], guiLeft+ww+10, guiTop+21, 16, 47, 177, 0, 20, 51, 0, 0, TEXTURE, null);
-		ClientUtils.handleGuiTank(tile.tanks[1], guiLeft+ww+54, guiTop+21, 16, 47, 177, 0, 20, 51, 0, 0, TEXTURE, null);
+				new DecoImage(36, -2)
+						.withSize(101, 78)
+						.withImageLocation(TEXTURE_MED, false)
+						.withUV(256, 9, 0, 110 ,78)
+		);
 	}
 }
