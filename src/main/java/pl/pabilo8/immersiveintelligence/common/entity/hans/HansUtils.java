@@ -2,6 +2,7 @@ package pl.pabilo8.immersiveintelligence.common.entity.hans;
 
 import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.items.ItemUpgradeableTool;
+import blusunrize.immersiveengineering.common.util.EnergyHelper;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import net.minecraft.block.BlockDoor;
 import net.minecraft.block.BlockFenceGate;
@@ -20,6 +21,7 @@ import pl.pabilo8.immersiveintelligence.common.entity.EntityParachute;
 import pl.pabilo8.immersiveintelligence.common.entity.hans.tasks.hand_weapon.*;
 import pl.pabilo8.immersiveintelligence.common.item.armor.ItemIIArmorUpgrade.ArmorUpgrades;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIWeaponUpgrade.WeaponUpgrade;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIUpgradeableArmor;
 
 import javax.annotation.Nullable;
@@ -105,6 +107,22 @@ public class HansUtils
 		setArmor(hans, EntityEquipmentSlot.CHEST, IIContent.itemLightEngineerChestplate, armorUpgrades);
 		setArmor(hans, EntityEquipmentSlot.LEGS, IIContent.itemLightEngineerLeggings, armorUpgrades);
 		setArmor(hans, EntityEquipmentSlot.FEET, IIContent.itemLightEngineerBoots, armorUpgrades);
+	}
+
+	public static void setEnergyBackpack(EntityHans hans)
+	{
+		ItemStack backpack = new ItemStack(IIContent.itemAdvancedPowerPack);
+		EnergyHelper.insertFlux(backpack, 9999999, false);
+
+		ItemStack currentArmor = hans.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
+		if(currentArmor.isEmpty())
+			hans.setItemStackToSlot(EntityEquipmentSlot.CHEST, backpack);
+		else
+		{
+			EasyNBT.wrapNBT(currentArmor)
+					.withItemStack(IIContent.NBT_AdvancedPowerpack, backpack);
+			hans.setItemStackToSlot(EntityEquipmentSlot.CHEST, currentArmor);
+		}
 	}
 
 // Attempt at making a shield	

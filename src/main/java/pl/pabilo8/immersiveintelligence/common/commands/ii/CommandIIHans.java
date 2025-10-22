@@ -2,7 +2,6 @@ package pl.pabilo8.immersiveintelligence.common.commands.ii;
 
 import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.items.ItemToolUpgrade.ToolUpgrades;
-import blusunrize.immersiveengineering.common.util.EnergyHelper;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.command.CommandBase;
@@ -77,7 +76,6 @@ public class CommandIIHans extends CommandBase
 	static
 	{
 		squadList.clear();
-
 		squadList.put(new ResourceLocation(ImmersiveIntelligence.MODID, "rifle"),
 				new HansSquadHandWeapon()
 				{
@@ -209,9 +207,7 @@ public class CommandIIHans extends CommandBase
 						ammo.setCount(8);
 						hans.mainInventory.set(0, ammo.copy());
 						hans.mainInventory.set(1, ammo.copy());
-						ItemStack backpack = new ItemStack(IIContent.itemAdvancedPowerPack);
-						EnergyHelper.insertFlux(backpack, 9999999, false);
-						hans.setItemStackToSlot(EntityEquipmentSlot.CHEST, backpack);
+						HansUtils.setEnergyBackpack(hans);
 					}
 				}
 		);
@@ -237,9 +233,7 @@ public class CommandIIHans extends CommandBase
 						ItemStack ammo = new ItemStack(IEContent.itemGraphiteElectrode, 16);
 						hans.mainInventory.set(0, ammo.copy());
 						hans.mainInventory.set(1, ammo.copy());
-						ItemStack backpack = new ItemStack(IIContent.itemAdvancedPowerPack);
-						EnergyHelper.insertFlux(backpack, 9999999, false);
-						hans.setItemStackToSlot(EntityEquipmentSlot.CHEST, backpack);
+						HansUtils.setEnergyBackpack(hans);
 
 					}
 				}
@@ -341,11 +335,8 @@ public class CommandIIHans extends CommandBase
 					public void setItems(EntityHans hans, int id)
 					{
 						HansUtils.setHelmet(hans, ArmorUpgrades.INFILTRATOR_GEAR);
-
 						HansUtils.setChestplate(hans, ArmorUpgrades.CAMOUFLAGE_MESH);
-
 						HansUtils.setLeggings(hans);
-
 						HansUtils.setBoots(hans);
 
 						ItemStack stack = new ItemStack(IEContent.itemRailgun);
@@ -362,9 +353,7 @@ public class CommandIIHans extends CommandBase
 						ItemStack ammo = new ItemStack(IEContent.itemGraphiteElectrode, 16);
 						hans.mainInventory.set(0, ammo.copy());
 						hans.mainInventory.set(1, ammo.copy());
-						ItemStack backpack = new ItemStack(IIContent.itemAdvancedPowerPack);
-						EnergyHelper.insertFlux(backpack, 9999999, false);
-						hans.setItemStackToSlot(EntityEquipmentSlot.CHEST, backpack);
+						HansUtils.setEnergyBackpack(hans);
 
 					}
 				}
@@ -377,11 +366,8 @@ public class CommandIIHans extends CommandBase
 					public void setItems(EntityHans hans, int id)
 					{
 						HansUtils.setHelmet(hans, ArmorUpgrades.INFILTRATOR_GEAR);
-
 						HansUtils.setChestplate(hans, ArmorUpgrades.CAMOUFLAGE_MESH);
-
 						HansUtils.setLeggings(hans);
-
 						HansUtils.setBoots(hans);
 
 						HansUtils.setRifle(hans, ItemStack.EMPTY);
@@ -418,9 +404,7 @@ public class CommandIIHans extends CommandBase
 					public void setItems(EntityHans hans, int id)
 					{
 						HansUtils.setHelmet(hans, ArmorUpgrades.TECHNICIAN_GEAR);
-
 						HansUtils.setLeggings(hans, ArmorUpgrades.EXOSKELETON, ArmorUpgrades.COMPOSITE_ARMOR_PLATES);
-
 						HansUtils.setBoots(hans, ArmorUpgrades.INTERNAL_SPRINGS, ArmorUpgrades.SNOW_RACKETS);
 
 						ItemStack magazine = IIContent.itemBulletMagazine.getMagazine(Magazines.SUBMACHINEGUN_DRUM,
@@ -429,9 +413,7 @@ public class CommandIIHans extends CommandBase
 						for(int i = 0; i < 4; i++)
 							hans.mainInventory.set(i, magazine.copy());
 
-						ItemStack backpack = new ItemStack(IIContent.itemAdvancedPowerPack);
-						EnergyHelper.insertFlux(backpack, 9999999, false);
-						hans.setItemStackToSlot(EntityEquipmentSlot.CHEST, backpack);
+						HansUtils.setEnergyBackpack(hans);
 					}
 				}
 		);
@@ -443,11 +425,8 @@ public class CommandIIHans extends CommandBase
 					public void setItems(EntityHans hans, int id)
 					{
 						HansUtils.setHelmet(hans, ArmorUpgrades.GASMASK, ArmorUpgrades.HAZMAT_COATING, ArmorUpgrades.STEEL_ARMOR_PLATES);
-
 						HansUtils.setChestplate(hans, ArmorUpgrades.HEAT_RESISTANT_COATING, ArmorUpgrades.HAZMAT_COATING, ArmorUpgrades.STEEL_ARMOR_PLATES);
-
 						HansUtils.setLeggings(hans, ArmorUpgrades.HAZMAT_COATING, ArmorUpgrades.STEEL_ARMOR_PLATES);
-
 						HansUtils.setBoots(hans, ArmorUpgrades.BOOT_REINFORCEMENT);
 
 						ItemStack magazine = IIContent.itemBulletMagazine.getMagazine(Magazines.SUBMACHINEGUN_DRUM,
@@ -457,9 +436,8 @@ public class CommandIIHans extends CommandBase
 						for(int i = 0; i < 4; i++)
 							hans.mainInventory.set(i, magazine.copy());
 
-						ItemStack backpack = new ItemStack(IIContent.itemAdvancedPowerPack);
-						EnergyHelper.insertFlux(backpack, 9999999, false);
-						hans.setItemStackToSlot(EntityEquipmentSlot.CHEST, backpack);
+						HansUtils.setEnergyBackpack(hans);
+
 					}
 				}
 		);
@@ -484,9 +462,7 @@ public class CommandIIHans extends CommandBase
 						for(int i = 0; i < 6; i++)
 							hans.mainInventory.set(i, magazine.copy());
 
-						ItemStack backpack = new ItemStack(IIContent.itemAdvancedPowerPack);
-						EnergyHelper.insertFlux(backpack, 9999999, false);
-						hans.setItemStackToSlot(EntityEquipmentSlot.CHEST, backpack);
+						HansUtils.setEnergyBackpack(hans);
 					}
 				}
 		);
@@ -799,13 +775,13 @@ public class CommandIIHans extends CommandBase
 
 			if(parachute)
 			{
-				hans1.markCrewman(EntityVehicleSeat.getOrCreateSeat(teamWeapon, "gunner"));
-				hans2.markCrewman(EntityVehicleSeat.getOrCreateSeat(teamWeapon, "commander"));
+				hans1.markCrewman(EntityVehicleSeat.getOrCreateSeat(teamWeapon.seatGunner));
+				hans2.markCrewman(EntityVehicleSeat.getOrCreateSeat(teamWeapon.seatCommander));
 			}
 			else
 			{
-				hans1.startRiding(EntityVehicleSeat.getOrCreateSeat(teamWeapon, "gunner"));
-				hans2.startRiding(EntityVehicleSeat.getOrCreateSeat(teamWeapon, "commander"));
+				hans1.startRiding(EntityVehicleSeat.getOrCreateSeat(teamWeapon.seatGunner));
+				hans2.startRiding(EntityVehicleSeat.getOrCreateSeat(teamWeapon.seatCommander));
 			}
 
 			return hans1;
