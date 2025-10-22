@@ -65,14 +65,14 @@ public class GuiEmplacementPageStatus extends GuiEmplacement
 				I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.emplacement.data_control"));
 		switchSendTarget = addSwitch(112,
 				28+2*fontRenderer.FONT_HEIGHT,
-				80, DecoTextures.COLOR_H1, COLOR_IN, COLOR_OUT, tile.sendAttackSignal,
+				80, DecoTextures.COLOR_H1, COLOR_IN, COLOR_OUT, tile.sendData,
 				I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.emplacement.send_attack_signal"));
 
-		sliderRepair = addSlider(116,
+		/*sliderRepair = addSlider(116,
 				28+3*fontRenderer.FONT_HEIGHT
 						+fontRenderer.getWordWrappedHeight(I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.emplacement.auto_repair_threshold"), 70),
 				80, DecoTextures.COLOR_H1, tile.autoRepairAmount,
-				I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.emplacement.auto_repair_threshold"));
+				I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.emplacement.auto_repair_threshold"));*/
 
 	}
 

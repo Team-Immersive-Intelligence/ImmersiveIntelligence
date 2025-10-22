@@ -9,6 +9,7 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.data_device.BlockIIDataDevice.IIBlockTypes_Connector;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.BlockIIMetalDevice.IIBlockTypes_MetalDevice;
 import pl.pabilo8.immersiveintelligence.common.crafting.IIRecipes;
+import pl.pabilo8.immersiveintelligence.common.item.ItemIIPrintedPage.PageType;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.ItemIIMaterial.Materials;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.ItemIIPrecisionTool.PrecisionTools;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.material.ItemIIMaterialDust.MaterialsDust;
@@ -165,7 +166,8 @@ public class IIManualCategoryData extends IIManualCategory
 				.addSource("basic_radio_tuner", getSourceForItem(IIContent.itemRadioTuner.getStack(1)))
 				.addSource("advanced_radio_tuner", getSourceForItem(new ItemStack(IIContent.itemRadioTuner, 1, 1)
 				));
-		addEntry("printing_press");
+		addEntry("printing_press")
+				.addSource("paper_page", getSourceForItem(IIContent.itemPrintedPage.getStack(PageType.BLANK)));
 		addEntry("scanning_conveyor");
 		addEntry("programmable_speaker")
 				.addSource("programmable_spkr", getSourceForItem(IIContent.blockDataConnector.getStack(IIBlockTypes_Connector.PROGRAMMABLE_SPEAKER)

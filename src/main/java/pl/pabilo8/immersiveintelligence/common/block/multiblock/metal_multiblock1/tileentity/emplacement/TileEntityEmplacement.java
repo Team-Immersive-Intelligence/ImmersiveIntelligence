@@ -3,7 +3,6 @@ package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multibloc
 import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorageAdvanced;
 import com.elytradev.mirage.event.GatherLightsEvent;
 import com.elytradev.mirage.lighting.ILightEventConsumer;
-import com.elytradev.mirage.lighting.Light;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -76,19 +75,12 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 	@SyncNBT(nullable = true)
 	public EmplacementWeapon currentWeapon;
 	@SyncNBT
-	public boolean isShooting = false, sendAttackSignal = false;
-
-	@SyncNBT
-	public MultiblockInteractablePart door;
-	@SyncNBT
-	public int repairTick = Emplacement.repairDelay;
-	@SyncNBT
-	public boolean forcedRepair = false, firstRepairTick = true;
-	@SyncNBT
-	public float autoRepairAmount = 0.25f;
+	public boolean sendData = false;
 
 	@SyncNBT(events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_CLIENT_MESSAGE})
 	public boolean redstoneControl = true, dataControl = true;
+	@SyncNBT
+	public MultiblockInteractablePart door;
 
 	public TileEntityEmplacement()
 	{
@@ -363,15 +355,16 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 				case "reload":
 					break;
 				case "stop":
-					this.forcedRepair = false;
+					//TODO: 14.09.2025 stop repair
 					this.taskManager.stopTask(true);
 					break;
 				case "repair":
 					if(this.currentWeapon!=null)
 					{
-						this.forcedRepair = this.currentWeapon.getHealth()!=this.currentWeapon.getMaxHealth();
-						if(this.forcedRepair)
-							this.firstRepairTick = true;
+						//TODO: 14.09.2025 stop repair
+						//this.forcedRepair = this.currentWeapon.getHealth()!=this.currentWeapon.getMaxHealth();
+//						if(this.forcedRepair)
+//							this.firstRepairTick = true;
 					}
 					break;
 				case "target":
@@ -493,7 +486,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 		if(isDummy())
 			return;
 
-		if(currentWeapon!=null&&forcedRepair)
+		/*if(currentWeapon!=null&&forcedRepair)
 		{
 			BlockPos pp = getBlockPosForPos(31);
 			float f = Math.abs(((world.getTotalWorldTime()%6)/6f)-0.5f)*2f;
@@ -505,7 +498,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 					.build()
 			);
 
-		}
+		}*/
 	}
 
 	public Vec3d getWeaponCenter()

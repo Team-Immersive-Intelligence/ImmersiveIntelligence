@@ -81,6 +81,7 @@ public class IIManualDataCallback extends IIManualObject
 		manual.fontRenderer.setUnicodeFlag(true);
 		drawString(manual.fontRenderer, name, x+18, y+2, manual.getTextColour());
 		manual.fontRenderer.setUnicodeFlag(unicodeFlag);
+		GlStateManager.popMatrix();
 	}
 
 	@Override

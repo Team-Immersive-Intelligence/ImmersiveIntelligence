@@ -143,7 +143,7 @@ public abstract class EmplacementWeapon implements ITypeNBTSerializable<NBTTagCo
 			this.health = getMaxHealth();
 			this.nextPitch = this.pitch = -90;
 			this.nextYaw = this.yaw = te.facing.getHorizontalAngle();
-			te.sendAttackSignal = false;
+			te.sendData = false;
 
 
 			if(!te.getWorld().isRemote)

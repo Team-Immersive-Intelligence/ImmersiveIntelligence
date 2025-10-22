@@ -76,23 +76,6 @@ public class GuiPrintedPage extends GuiScreen
 		super.drawScreen(mouseX, mouseY, partialTicks);
 		drawDefaultBackground();
 		drawPage();
-
-		/*GlStateManager.pushMatrix();
-		GlStateManager.translate(i+8, j+24, 0);
-		GlStateManager.scale(2f, 2f, 1f);
-		IIClientUtils.fontKaiser.drawSplitString(TextFormatting.UNDERLINE+"Minecraft at War!", 0, 0, pageImageWidth-8, IILib.COLOR_H1);
-		GlStateManager.popMatrix();
-
-		GlStateManager.pushMatrix();
-		GlStateManager.translate(i+8, j+44, 0);
-		GlStateManager.scale(1.25f, 1.25f, 1f);
-		IIClientUtils.fontNormung.drawSplitString("Engineers' Ministry of War announces: \nTHERE IS NO STEP BACK.", 0, 0, pageImageWidth-18, IILib.COLOR_H1);
-		GlStateManager.popMatrix();
-
-		GlStateManager.pushMatrix();
-		GlStateManager.translate(i+8, j+76, 0);
-		IIClientUtils.fontEngineerTimes.drawSplitString("Hanses unwarned attack at the "+TextFormatting.ITALIC+"Vanilla Compound"+TextFormatting.RESET+". Unknown armored vehicles broke through the main defence line. Vanilla High Command flees to allied Bedrock Republic.", 0, 0, pageImageWidth-18, IILib.COLOR_H1);
-		GlStateManager.popMatrix();*/
 	}
 
 	public void drawPage()

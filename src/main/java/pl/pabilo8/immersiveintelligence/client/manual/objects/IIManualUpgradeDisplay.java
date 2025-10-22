@@ -8,6 +8,7 @@ import net.minecraft.util.text.TextFormatting;
 import pl.pabilo8.immersiveintelligence.api.upgrade.Upgrade;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualObject;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualPage;
+import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import java.util.Collections;
@@ -32,7 +33,7 @@ public class IIManualUpgradeDisplay extends IIManualObject
 		super.postInit(page);
 
 		//set the upgrade
-		upgrade = Upgrade.getUpgradeByID(dataSource.getString("upgrade"));
+		upgrade = Upgrade.getUpgradeByID(ResLoc.of(dataSource.getString("upgrade")));
 		if(upgrade==null)
 			height = 0;
 	}
@@ -74,7 +75,6 @@ public class IIManualUpgradeDisplay extends IIManualObject
 	@Override
 	public List<String> getTooltip(Minecraft mc, int mx, int my)
 	{
-		// TODO: 01.12.2022 link
 		if(hovered)
 			return Collections.singletonList("");
 		return null;

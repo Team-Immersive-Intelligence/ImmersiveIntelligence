@@ -24,7 +24,6 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 
 /**
@@ -46,20 +45,11 @@ public abstract class TileEntityMultiblockProductionBase<T extends TileEntityMul
 
 
 	//--- Production-related Utilities ---//
-
 	protected static <RECIPE extends IIMultiblockRecipe> IIMultiblockProcess<RECIPE> findRecipeFromList(Class<RECIPE> klass, String name)
-	{
-		return findRecipeFromList(klass, IIMultiblockProcess::new, name);
-	}
-
-	//--- Production Abstracts ---//
-
-	protected static <RECIPE extends IIMultiblockRecipe, PROCESS extends IIMultiblockProcess<RECIPE>> PROCESS
-	findRecipeFromList(Class<RECIPE> klass, Function<RECIPE, PROCESS> constructor, String name)
 	{
 		RECIPE recipe = IIMultiblockRecipe.getRecipe(klass, name);
 		if(recipe!=null)
-			return constructor.apply(recipe);
+			return new IIMultiblockProcess<>(recipe);
 		return null;
 	}
 

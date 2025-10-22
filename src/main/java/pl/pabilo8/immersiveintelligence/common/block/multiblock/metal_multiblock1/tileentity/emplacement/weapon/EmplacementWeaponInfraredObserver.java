@@ -109,7 +109,7 @@ public class EmplacementWeaponInfraredObserver extends EmplacementWeapon
 				.expand(vv.getX()*InfraredObserver.detectionRadius, 0, vv.getZ()*InfraredObserver.detectionRadius)
 				.grow(vv2.getX()*InfraredObserver.detectionRadius, InfraredObserver.detectionRadius, vv2.getZ()*InfraredObserver.detectionRadius);
 		if(firstTime)
-			te.sendAttackSignal = true;
+			te.sendData = true;
 	}
 
 	@Nonnull

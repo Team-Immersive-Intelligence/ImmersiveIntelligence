@@ -3,8 +3,11 @@ package pl.pabilo8.immersiveintelligence.api.crafting;
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
+import pl.pabilo8.immersiveintelligence.api.upgrade.Upgrade;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.PrintingPress;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.IIMultiblockRecipe;
+
+import javax.annotation.Nullable;
 
 /**
  * Data of a singular print order
@@ -62,5 +65,11 @@ public class PrintingRecipe extends IIMultiblockRecipe
 		 * @return an array of cyan, magenta, yellow and black (in this order) ink types required for this recipe
 		 */
 		int[] getInkTypesRequired(DataPacket data);
+
+		@Nullable
+		default Upgrade getUpgradeRequired()
+		{
+			return null;
+		}
 	}
 }

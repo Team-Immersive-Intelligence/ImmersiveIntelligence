@@ -1,14 +1,16 @@
 # meta
 Punchtapes
 Rewind, Stop, Fast-Forward!
+
 # main
 Punchtapes are [portable data storage media] that can be read and written with a variety of compatible devices, such as the [Punchtape Reader](#punchtape_reader), [Punchtape Writer](data_input_machine.md#punchtapes), [Data Input Machine](data_input_machine) and [Printing Press](printing_press.md).<br>
 |[crafting]{source:"punchtape"}|
 They allow easy [exchange of information] and [backups] of data device configuration.
 # punchtape_reader
-The **Punchtape Reader
+The *
+*Punchtape
+Reader
 ** is a device used to read [punchtapes] based on a received [data packet](data_main.md#packetsbasics).
-<br>
 |[crafting]{source:"reader"}|
 # punchtape_reader2
 The **Punchtape Reader** has 3 modes of reaction to redstone:

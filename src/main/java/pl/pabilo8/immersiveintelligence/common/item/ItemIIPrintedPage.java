@@ -12,7 +12,7 @@ import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler.IGuiItem;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
-import pl.pabilo8.immersiveintelligence.common.item.ItemIIPrintedPage.SubItems;
+import pl.pabilo8.immersiveintelligence.common.item.ItemIIPrintedPage.PageType;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
 import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
@@ -30,11 +30,11 @@ import java.util.List;
  * @since 09.07.2019
  */
 @IIItemProperties(category = IICategory.ELECTRONICS)
-public class ItemIIPrintedPage extends ItemIISubItemsBase<SubItems> implements IGuiItem
+public class ItemIIPrintedPage extends ItemIISubItemsBase<PageType> implements IGuiItem
 {
 	public ItemIIPrintedPage()
 	{
-		super("printed_page", 64, SubItems.values());
+		super("printed_page", 64, PageType.values());
 	}
 
 	@Override
@@ -52,7 +52,7 @@ public class ItemIIPrintedPage extends ItemIISubItemsBase<SubItems> implements I
 	@Override
 	public IIGUI getGUI(ItemStack stack)
 	{
-		return stackToSub(stack).guiPage;
+		return stackToSub(stack).gui;
 	}
 
 	/**
@@ -68,7 +68,7 @@ public class ItemIIPrintedPage extends ItemIISubItemsBase<SubItems> implements I
 	}
 
 	@GeneratedItemModels(itemName = "printed_page")
-	public enum SubItems implements IIItemEnum
+	public enum PageType implements IIItemEnum
 	{
 		@IIItemProperties(oreDict = "pageEmpty")
 		BLANK(IIGUI.PRINTED_PAGE_BLANK),
@@ -88,12 +88,12 @@ public class ItemIIPrintedPage extends ItemIISubItemsBase<SubItems> implements I
 		@IIItemProperties(oreDict = {"pageLetter", "letter"})
 		LETTER(IIGUI.PRINTED_PAGE_BLANK);
 
-		private final IIGUI guiPage;
+		private final IIGUI gui;
 		private final String tooltip;
 
-		SubItems(IIGUI guiPage)
+		PageType(IIGUI gui)
 		{
-			this.guiPage = guiPage;
+			this.gui = gui;
 			tooltip = IIReference.DESCRIPTION_KEY+"printed_page."+getName();
 		}
 	}

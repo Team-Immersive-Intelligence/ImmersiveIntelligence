@@ -59,7 +59,7 @@ public class AdvancedSounds
 		 */
 		public MultiSound(SoundEvent sound)
 		{
-			this(ResLoc.of(sound.getSoundName()+"_loop"), null, sound, null);
+			this(ResLoc.of(sound.getRegistryName()+"_loop"), null, sound, null);
 		}
 
 		@Nullable

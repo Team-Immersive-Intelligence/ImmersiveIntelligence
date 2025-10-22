@@ -84,7 +84,7 @@ public abstract class EmplacementTaskEntities extends EmplacementTask
 	public void updateTargets(TileEntityEmplacement emplacement)
 	{
 		spottedEntities = emplacement.getWorld().getEntitiesWithinAABB(Entity.class, emplacement.currentWeapon.getVisionAABB(), input -> predicate.test(input)&&emplacement.currentWeapon.canSeeEntity(input)).stream().sorted((o1, o2) -> (int)((o1.width*o1.height)-(o2.width*o2.height))*10).toArray(Entity[]::new);
-		if(!emplacement.getWorld().isRemote&&emplacement.sendAttackSignal)
+		if(!emplacement.getWorld().isRemote&&emplacement.sendData)
 			emplacement.handleSendingEnemyPos(spottedEntities);
 	}
 }
