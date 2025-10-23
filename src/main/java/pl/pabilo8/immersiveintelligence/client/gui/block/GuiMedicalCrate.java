@@ -102,6 +102,8 @@ public class GuiMedicalCrate extends DecoGui<TileEntityMedicalCrate, ContainerMe
 
 					//new DecoBar(161, -4)
 					//.withTemplate(DecoGuiUtils.BAR_ELECTRIC_ENERGY.apply(tile.energyStorage))
+					//upgrade to check for in order to toggle alternative GUI
+					//public static final Upgrade UPGRADE_INSERTER = new Upgrade("inserter");
 
 					//putting notes here becuase storm may kill power while out
 					//need to have the buttons do the thing when pressed
