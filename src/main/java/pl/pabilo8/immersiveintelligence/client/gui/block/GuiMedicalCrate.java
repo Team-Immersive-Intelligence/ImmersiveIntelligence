@@ -92,11 +92,11 @@ public class GuiMedicalCrate extends DecoGui<TileEntityMedicalCrate, ContainerMe
 							.withIcon(HEAL, 16)
 							.withText("Healing"),
 
-					new DecoFluidTank(10, 21)
+					new DecoFluidTank(46, 19)
 							.withSize(16, 47)
 							.withFluidTank(tile.tanks[0]),
 
-					new DecoFluidTank(54+40, 21)
+					new DecoFluidTank(90, 19)
 							.withSize(16, 47)
 							.withFluidTank(tile.tanks[1])
 
@@ -129,12 +129,11 @@ public class GuiMedicalCrate extends DecoGui<TileEntityMedicalCrate, ContainerMe
 							.withImageLocation(TEXTURE_MED, true)
 							.withUV(256, 9, 0, 110, 78),
 
-
-					new DecoFluidTank(54, 20)
+					new DecoFluidTank(46, 19)
 							.withSize(16, 47)
 							.withFluidTank(tile.tanks[0]),
 
-					new DecoFluidTank(108, 20)
+					new DecoFluidTank(90, 19)
 							.withSize(16, 47)
 							.withFluidTank(tile.tanks[1])
 			);
