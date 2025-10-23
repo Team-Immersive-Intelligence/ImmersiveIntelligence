@@ -80,7 +80,7 @@ public class ContainerAmmunitionCrate extends ContainerIIBase<TileEntityAmmuniti
 		}
 
 		// Player inventory
-		addPlayerInventory(player.inventory, 8, 100);
+		addPlayerInventory(player.inventory, 8, 98);
 	}
 
 	public static class GhostFilteredBullet extends IESlot.Ghost

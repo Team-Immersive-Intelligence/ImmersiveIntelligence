@@ -36,7 +36,7 @@ public class GuiAmmunitionCrate extends DecoGui<TileEntityAmmunitionCrate, Conta
 	{
 		startBackground()
 				.withBox(null, 0, 0, 176, 76)
-				.withBox(DecoTextures.GUI_BG_WOODEN, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_ROUND_WOODEN, 0, 89, 176, 92)
+				.withBox(DecoTextures.GUI_BG_WOODEN, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_ROUND_WOODEN, 0, 87, 176, 92)
 				.withInventorySlots(SlotStyle.VANILLA, container.playerInventory)
 				.withInventorySlots(SlotStyle.IE_CUSTOM1, container.slotsInputrevolver)
 				.withInventorySlots(SlotStyle.IE_CUSTOM1, container.slotsInputbullet)
