@@ -19,7 +19,7 @@
 - **Logistics** – great storage and crafting system based on multiblocks, data transmission,
   and drones, it will be customizable while staying as immersive as possible. Includes skycrates!
 
-- **Warfare** – weapons of all sorts – machine guns, submachine guns, autocannons, railguns, chemthrowers, combat drones, howitzers, mines, missiles, and much more
+- **Warfare** – weapons of all sorts – machine guns, submachine guns, autocannons, railguns, chemthrowers, combat drones, howitzers, mines, missiles, and much more, often controlled by data-based devices
 
 - **Intelligence** – espionage – infiltration – sabotage – this category contains surveillance devices,
   such as the Infrared Observer and Tripod Periscope, which allow you to spy on other players and monitor the world
@@ -67,6 +67,7 @@ Check [contributing.md](./contributing.md) for detailed setup instructions.
 - [@Kingcavespider1](https://github.com/kingcavespider1) - first community contribution to mod's GitHub
 - [@H-QueerCoded](https://github.com/H-QueerCoded) - for helpful pull requests and releasing the 0.2.1H build
 - [@BananaFructa](https://github.com/Flaxbeard) - for making the first mod with II compatibility
+- [@Max](#) - for reporting plenty bugs and fixing many of them on his own
 
 
 - [@Choroman](https://github.com/Choroman) - Retired Concept Artist, multiblock sketch and blueprint creator, modeler
