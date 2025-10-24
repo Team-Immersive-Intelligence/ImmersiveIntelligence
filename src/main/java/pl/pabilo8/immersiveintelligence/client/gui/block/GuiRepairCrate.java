@@ -7,12 +7,23 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoImage;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundBuilder.SlotStyle;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoGuiCategory;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoResource;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTemplate;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.EffectCrates;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.IIGUI;
+import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.effect_crate.TileEntityMedicalCrate;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.effect_crate.TileEntityRepairCrate;
+import pl.pabilo8.immersiveintelligence.common.gui.ContainerMedicalCrate;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerRepairCrate;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
@@ -23,21 +34,45 @@ import java.util.ArrayList;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @author Avalon (avalon@iiteam.net)
  * @since 17.05.2019
+ * @since 24.10.2025
  */
-public class GuiRepairCrate extends GuiIEContainerBase
+@DecoTemplate(name = "repaircrate", category = DecoGuiCategory.GENERIC_TILE)
+public class GuiRepairCrate extends DecoGui<TileEntityRepairCrate, ContainerRepairCrate>
 {
-	private static final String TEXTURE = ImmersiveIntelligence.MODID+":textures/gui/repair_crate.png";
-	private final TileEntityRepairCrate tile;
-	GuiButtonState buttonHealing = null, buttonBoost = null;
+
+	@DecoResource
+	public static final ResourceLocation TEXTURE_REP = IIReference.RES_II.with("gui/repair_crate");
 
 	public GuiRepairCrate(EntityPlayer player, TileEntityRepairCrate tile)
 	{
-		super(new ContainerRepairCrate(player, tile));
-		this.tile = tile;
-		this.ySize = 168;
+		super(player, tile, IIGUI.REPAIR_CRATE);
 	}
 
+
+	@Override
+	public void onInit()
+	{
+		startBackground()
+				.withBox(null, 0, 0, 176, 76)
+				.withBox(DecoTextures.GUI_BG_WOODEN, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_ROUND_WOODEN, 0, 87, 176, 92)
+				.withInventorySlots(SlotStyle.VANILLA, container.playerInventory)
+				.withInventorySlots(SlotStyle.IE_CUSTOM1, container.inputSlot)
+				.withInventoryTitleBar()
+				.build();
+
+
+		addComponents(
+
+				new DecoImage(40, 10)
+						.withSize(101, 78)
+						.withImageLocation(TEXTURE_REP, true)
+						.withUV(256, 9, 0, 110, 78)
+		);
+	}
+}
+/**
 	@Override
 	public void initGui()
 	{
@@ -95,9 +130,7 @@ public class GuiRepairCrate extends GuiIEContainerBase
 
 	}
 
-	/**
-	 * Draws the background layer of this container (behind the items).
-	 */
+
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float f, int mx, int my)
 	{
@@ -111,4 +144,5 @@ public class GuiRepairCrate extends GuiIEContainerBase
 
 		IIClientUtils.drawPowerBar(guiLeft+153, guiTop+24, 7, 47, tile.energyStorage/(float)EffectCrates.maxEnergyStored);
 	}
-}
+	**/
+
