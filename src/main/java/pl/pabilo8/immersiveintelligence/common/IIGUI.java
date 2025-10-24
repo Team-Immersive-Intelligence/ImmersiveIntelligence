@@ -193,7 +193,7 @@ public enum IIGUI implements ISerializableEnum
 		IIGUI.PRINTING_PRESS.setClientDecoGui(GuiPrintingPress::new);
 		IIGUI.CHEMICAL_BATH.setClientGui(GuiChemicalBath::new);
 		IIGUI.ELECTROLYZER.setClientDecoGui(GuiElectrolyzer::new);
-		IIGUI.PRECISION_ASSEMBLER.setClientGui(GuiPrecisionAssembler::new);
+		IIGUI.PRECISION_ASSEMBLER.setClientDecoGui(GuiPrecisionAssembler::new);
 		IIGUI.FUEL_STATION.setClientDecoGui(GuiFuelStation::new);
 		IIGUI.DATA_MERGER.setClientGui(GuiDataMerger::new);
 		//Crates

@@ -46,7 +46,7 @@ public class ContainerPrecisionAssembler extends ContainerIIBase<TileEntityPreci
 		});
 
 		//ingredient slots
-		this.ingredientSlot = addSlotToContainer(new Slot(this.inv, 4, 27, 39));
+		this.ingredientSlot = addSlotToContainer(new Slot(this.inv, 4, 30, 39));
 
 		this.ingredientSlot = addSlotToContainer(new Slot(this.inv, 5, 9, 19));
 		this.ingredientSlot = addSlotToContainer(new Slot(this.inv, 6, 9, 39));
