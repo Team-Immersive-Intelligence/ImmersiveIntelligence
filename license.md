@@ -1,7 +1,6 @@
 # Team Immersive Intelligence License
-=====================================
 
-Copyright ©️ Team Immersive Intelligence 2025
+Copyright © Team Immersive Intelligence 2025
 
 ## Preamble
 
@@ -51,7 +50,7 @@ used by [Immersive Engineering](https://github.com/BluSunrize/ImmersiveEngineeri
 
 ### Credit Guidelines:
 
-* A **visible and clear** credit must be present.
+- A **visible and clear** credit must be present.
 
 ### In-Game Cosmetics
 
@@ -65,14 +64,13 @@ used by [Immersive Engineering](https://github.com/BluSunrize/ImmersiveEngineeri
 ### Contributing to the project:
 
 - The original author keeps copyright of their contributed code and/or resources.
-- Team Immersive Intelligence is given rights for usage and modification of the contributed code and/or resources. Those rights **cannot
-  ** be revoked - a contributed asset effectively becomes a fork of the original asset and is from then on regulated by this license.
+- Team Immersive Intelligence is given rights for usage and modification of the contributed code and/or resources.
+- Those rights **cannot** be revoked - a contributed asset effectively becomes a fork of the original asset and is from then on regulated by this license.
 - Any code and/or resource submitted **must** be licensed under this license.
 
 ## Summary
 
 Look at the code and learn from it (where possible). Draw inspiration, be creative, enjoy yourself. Should you find issues, point them out. Have an idea how to fix them? Make a contribution.
-
 In case of questions to this license, or to obtain redistribution license/permission please contact Team Immersive Intelligence via email: [license@iiteam.net](mailto:license@iiteam.net).
-
-The project is provided "as-is" without warranty of any kind, including but not limited to the warranties of merchantability, fitness for a particular purpose, or non–infringement. The authors or copyright holders are not liable for any claim, damages, or other liability, whether in actions of contract, tort, or other, arising from, out of or in connection to this project, its use, or related projects.
+The project is provided "as-is" without warranty of any kind, including but not limited to the warranties of merchantability, fitness for a particular purpose, or non–infringement.
+The authors or copyright holders are not liable for any claim, damages, or other liability, whether in actions of contract, tort, or other, arising from, out of or in connection to this project, its use, or related projects.
