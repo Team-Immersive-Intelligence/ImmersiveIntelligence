@@ -50,6 +50,7 @@ public class EntityFieldHowitzer extends EntityVehicleTowable<EntityFieldHowitze
 
 	@SyncNBT
 	public VehicleDurability durabilityRightWheel, durabilityLeftWheel, durabilityGun, durabilityShield;
+	public VehicleControls commanderControls, gunnerControls;
 
 	@SyncNBT
 	public boolean alreadyShot = false;
@@ -84,23 +85,18 @@ public class EntityFieldHowitzer extends EntityVehicleTowable<EntityFieldHowitze
 		this.durabilityGun = new VehicleDurability(FieldHowitzer.gunDurability, 14);
 		this.durabilityShield = new VehicleDurability(FieldHowitzer.shieldDurability, 32);
 
-		//Seats
-		this.seatCommander = new SeatInfo<>(this, "commander")
-				.withSettings(false, new Vec3d(-0.25, 0, 0.75));
-		this.seatGunner = new SeatInfo<>(this, "gunner")
-				.withSettings(false, new Vec3d(-0.25, 0, -0.75));
-
-		VehicleControls commanderControls = new VehicleControls().withStates("forward", "backwards", "turnLeft", "turnRight");
-		VehicleControls gunnerControls = new VehicleControls().withStates("up", "down", "fire", "reload");
+		//Controls
+		this.commanderControls = new VehicleControls().withStates("forward", "backwards", "turnLeft", "turnRight");
+		this.gunnerControls = new VehicleControls().withStates("up", "down", "fire", "reload");
 		if(world.isRemote)
 		{
 			GameSettings settings = ClientUtils.mc().gameSettings;
-			commanderControls
+			this.commanderControls
 					.withKeyBinding(settings.keyBindForward, "forward")
 					.withKeyBinding(settings.keyBindBack, "backwards")
 					.withKeyBinding(settings.keyBindLeft, "turnLeft")
 					.withKeyBinding(settings.keyBindRight, "turnRight");
-			gunnerControls
+			this.gunnerControls
 					.withKeyBinding(settings.keyBindForward, "up")
 					.withKeyBinding(settings.keyBindBack, "down")
 					.withKeyBinding(settings.keyBindJump, "fire")
@@ -108,9 +104,16 @@ public class EntityFieldHowitzer extends EntityVehicleTowable<EntityFieldHowitze
 					.withKeyBinding(ClientProxy.keybind_manualReload, "reload");
 		}
 
+		//Seats
+		this.seatCommander = new SeatInfo<>(this, "commander")
+				.withSettings(false, new Vec3d(-0.25, 0, 0.75))
+				.withControls(this.commanderControls);
+		this.seatGunner = new SeatInfo<>(this, "gunner")
+				.withSettings(false, new Vec3d(-0.25, 0, -0.75))
+				.withControls(this.gunnerControls);
+
 		//Parts
 		return new EntityVehiclePart[]{
-
 				partWheelRight = new EntityVehicleWheel<>(this, "wheel_right", new Vec3d(0, 0, 0.75), AABB_WHEEL)
 						.withHitbox(durabilityRightWheel)
 						.withType(WheelType.STEERABLE_DRIVE),
@@ -137,10 +140,26 @@ public class EntityFieldHowitzer extends EntityVehicleTowable<EntityFieldHowitze
 	@Override
 	protected void onVehicleUpdate()
 	{
-		partWheelLeft.setMovementFactors(0f, 0);
-		partWheelLeft.setSteeringAngle(0);
-		partWheelRight.setMovementFactors(1f, 0);
-		partWheelRight.setSteeringAngle(0);
+		boolean backwards = this.commanderControls.getKey("backwards");
+		float right = 0, left = 0;
+
+		if(this.commanderControls.getKey("turnLeft"))
+			right += 0.25f;
+		else if(this.commanderControls.getKey("turnRight"))
+			left += 0.25f;
+		if(this.commanderControls.getKey("forward")||backwards)
+		{
+			left = 0.25f;
+			right = 0.25f;
+			if(backwards)
+			{
+				left *= -1;
+				right *= -1;
+			}
+		}
+
+		partWheelLeft.setMovementFactors(left, 0);
+		partWheelRight.setMovementFactors(right, 0);
 	}
 
 

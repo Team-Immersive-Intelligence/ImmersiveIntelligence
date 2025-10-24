@@ -70,6 +70,7 @@ import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleSystem;
 import pl.pabilo8.immersiveintelligence.client.gui.GuiWidgetAustralianTabs;
 import pl.pabilo8.immersiveintelligence.client.gui.inworld_overlay.InWorldOverlayBase;
 import pl.pabilo8.immersiveintelligence.client.gui.inworld_overlay.OwnershipOverlay;
+import pl.pabilo8.immersiveintelligence.client.gui.inworld_overlay.VehicleDebugOverlay;
 import pl.pabilo8.immersiveintelligence.client.gui.inworld_overlay.WrenchOverlay;
 import pl.pabilo8.immersiveintelligence.client.gui.overlay.GuiOverlayBase;
 import pl.pabilo8.immersiveintelligence.client.gui.overlay.GuiOverlayBase.GuiOverlayLayer;
@@ -166,6 +167,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 		TEXT_OVERLAYS.add(new TextOverlayOwnership());
 
 		IN_WORLD_OVERLAYS.add(new WrenchOverlay());
+		IN_WORLD_OVERLAYS.add(new VehicleDebugOverlay());
 		IN_WORLD_OVERLAYS.add(new OwnershipOverlay());
 	}
 

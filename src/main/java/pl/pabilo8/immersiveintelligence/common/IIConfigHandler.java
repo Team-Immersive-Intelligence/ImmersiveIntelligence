@@ -132,6 +132,9 @@ public class IIConfigHandler
 			@Comment({"Enable vehicle and equipment passenger animations by changing the passengers' entity model part angles."})
 			public static boolean passengerAnimations = true;
 
+			@Comment({"Enable vehicle debug overlay, showing hitboxes, motion vector arrows and individual part names."})
+			public static boolean vehicleDebugOverlay = false;
+
 			@Comment({"Enable Tactile AMT - dynamic collision boxes for multiblocks that use animations for positioning them."})
 			public static boolean tactileAMT = true;
 
