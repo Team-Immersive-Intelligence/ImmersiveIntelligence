@@ -1,5 +1,7 @@
 package pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part;
 
+import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -10,6 +12,7 @@ import pl.pabilo8.immersiveintelligence.api.rotary.IRotaryEnergy;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IVehicleMultiPart;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.VehicleBlueprint;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.VehicleDurability;
+import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -153,42 +156,49 @@ public class EntityVehicleWheel<T extends Entity & IVehicleMultiPart<T>> extends
 
 		//Ground detection
 		boolean grounded = checkForGround();
-		double terrainFrictionMultiplier = getTerrainFrictionMultiplier();
 
 		//Calculate efficiency modifier and drive force
-		this.efficiencyModifier = this.durability==null?1f: (this.durability.getDamageFactor() > 0.3?1f: 0.5f);
+		this.efficiencyModifier = this.durability==null?1f: this.durability.getDamageFactor() > 0.3?1f: 0.5f;
 		double driveForce = this.powerFactor*(1f-brakeFactor)*efficiencyModifier;
 		double angularVel = this.parentExt.getAngularVelocity();
-		float parentAngle = (float)Math.toRadians(MathHelper.wrapDegrees(parentExt.rotationYaw));
 
 		//Wheel position in world coordinates
-		double worldWheelX = parentExt.posX+MathHelper.sin(parentAngle)*offset.z+MathHelper.cos(parentAngle)*offset.x;
-		double worldWheelZ = parentExt.posZ+MathHelper.cos(parentAngle)*offset.z-MathHelper.sin(parentAngle)*offset.x;
+		Vec3d wheelPos = parentExt.getPositionVector().add(IIMath.offsetPosDirectionXZ(offset.x, offset.z, parentExt.rotationYaw, 0));
 
 		//Wheel orientation in the world
 		double wheelAngle = Math.toRadians(MathHelper.wrapDegrees(parentExt.rotationYaw+this.steeringAngle));
-		double sinA = MathHelper.sin((float)wheelAngle);
+
+		//Forward direction is (sinA, cosA) which is (-sin(wheelAngle), cos(wheelAngle))
+		//Lateral (right) direction is (cosA, -sinA) which is (cos(wheelAngle), sin(wheelAngle))
+		double sinA = -MathHelper.sin((float)wheelAngle);
 		double cosA = MathHelper.cos((float)wheelAngle);
 
-		//Velocity at wheel position (vehicle velocity + rotational component)
-		double relX = worldWheelX-parentExt.posX;
-		double relZ = worldWheelZ-parentExt.posZ;
-		double wheelVz = (parentExt.motionZ-angularVel*relX);
-		double wheelVx = (parentExt.motionX+angularVel*relZ);
+		//Velocity at wheel position
+		double relX = wheelPos.x-parentExt.posX;
+		double relZ = wheelPos.z-parentExt.posZ;
+		Vec3d velocity = parentExt.getVelocity();
+		//Rotational velocity components
+		double wheelVx = velocity.x-angularVel*relZ;
+		double wheelVz = velocity.z+angularVel*relX;
 
 		//Project velocity onto wheel axes
-		double vLat = -wheelVz*sinA+wheelVx*cosA;
+		double vLat = wheelVx*cosA-wheelVz*sinA;
 
-		//Enhanced friction calculation with terrain awareness
-		double latFriction = computeFriction(vLat, maxLateralForce, terrainFrictionMultiplier);
+		//Lateral friction (all wheels)
+		double latFrictionCoef = this.type.isDriven()?0.05: 0.7;
+		//Additional steering friction
+		if(Math.abs(this.steeringAngle) > 0.1)
+			latFrictionCoef *= 4.0;
+		double latFriction = -vLat*latFrictionCoef;
 
 		//Total force in wheel's local axes
-		double fx = -sinA*driveForce-cosA*latFriction;
-		double fz = cosA*driveForce-sinA*latFriction;
-		Vec3d force = new Vec3d(fx*blueprint.forceFactor(), 0, fz*blueprint.forceFactor());
-		double torque = (relX*fx-relZ*fz)*blueprint.torqueFactor();
+		double fx = driveForce*sinA+latFriction*cosA;
+		double fz = driveForce*cosA-latFriction*sinA;
 
 		//Compile and return forces
+		Vec3d force = new Vec3d(fx*blueprint.forceFactor(), 0, fz*blueprint.forceFactor());
+		double torque = (relX*fz-relZ*fx)*blueprint.torqueFactor();
+		addWheelTraverse((float)force.lengthVector());
 		return this.lastForces = new WheelForces(force, torque, grounded);
 	}
 
@@ -244,33 +254,33 @@ public class EntityVehicleWheel<T extends Entity & IVehicleMultiPart<T>> extends
 		if(!world.isAirBlock(new BlockPos(x, y, z)))
 		{
 			//Get block state and material for terrain-based friction
-			net.minecraft.block.state.IBlockState state = world.getBlockState(new net.minecraft.util.math.BlockPos(x, y, z));
-			net.minecraft.block.material.Material material = state.getMaterial();
+			IBlockState state = world.getBlockState(new BlockPos(x, y, z));
+			Material material = state.getMaterial();
 
 			//Terrain friction multipliers based on block material
-			if(material==net.minecraft.block.material.Material.ICE||
-					material==net.minecraft.block.material.Material.PACKED_ICE)
+			if(material==Material.ICE||
+					material==Material.PACKED_ICE)
 				return 0.3; //Very low friction on ice
 
-			else if(material==net.minecraft.block.material.Material.GRASS||
-					material==net.minecraft.block.material.Material.PLANTS||
-					material==net.minecraft.block.material.Material.LEAVES)
+			else if(material==Material.GRASS||
+					material==Material.PLANTS||
+					material==Material.LEAVES)
 				return 0.7; //Reduced friction on grass/vegetation
 
-			else if(material==net.minecraft.block.material.Material.SAND||
-					material==net.minecraft.block.material.Material.CLAY||
-					material==net.minecraft.block.material.Material.GROUND)
+			else if(material==Material.SAND||
+					material==Material.CLAY||
+					material==Material.GROUND)
 				return 0.8; //Somewhat reduced friction on loose surfaces
 
-			else if(material==net.minecraft.block.material.Material.SNOW)
+			else if(material==Material.SNOW)
 				return 0.5; //Low friction on snow
 
-			else if(material==net.minecraft.block.material.Material.WATER)
+			else if(material==Material.WATER)
 				return 0.2; //Very low friction in water (hydroplaning effect)
 
-			else if(material==net.minecraft.block.material.Material.ROCK||
-					material==net.minecraft.block.material.Material.IRON||
-					material==net.minecraft.block.material.Material.ANVIL)
+			else if(material==Material.ROCK||
+					material==Material.IRON||
+					material==Material.ANVIL)
 				return 1.2; //Increased friction on hard surfaces
 		}
 
@@ -360,7 +370,7 @@ public class EntityVehicleWheel<T extends Entity & IVehicleMultiPart<T>> extends
 		//Detect rapid downward movement (falling or hitting bumps)
 		double verticalVelocity = this.prevPosY-this.posY; //Positive = moving downward
 		//Scale impact by velocity squared (like kinetic energy)
-		if(verticalVelocity > 0.05) //Significant downward movement
+		if(verticalVelocity > 0.05)
 			impact = Math.min(verticalVelocity*verticalVelocity*10.0, 0.3);
 
 		return impact;
@@ -400,7 +410,7 @@ public class EntityVehicleWheel<T extends Entity & IVehicleMultiPart<T>> extends
 	 */
 	public void addWheelTraverse(float distance)
 	{
-		this.wheelTraverse += distance*2f;
+		this.wheelTraverse += distance*(float)getWheelRadius()*90f;
 	}
 
 	//--- Properties ---
@@ -410,12 +420,14 @@ public class EntityVehicleWheel<T extends Entity & IVehicleMultiPart<T>> extends
 		return type;
 	}
 
-	/**
-	 * @return the current steering angle for steerable wheels
-	 */
 	public float getSteeringAngle()
 	{
 		return this.steeringAngle;
+	}
+
+	public WheelForces getLastForces()
+	{
+		return lastForces;
 	}
 
 	public float getWheelTraverse()

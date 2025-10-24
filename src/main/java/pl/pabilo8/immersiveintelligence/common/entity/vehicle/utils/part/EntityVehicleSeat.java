@@ -14,12 +14,15 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IVehicleMultiPart;
 import pl.pabilo8.immersiveintelligence.client.util.CameraHandler;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityVehicleBase;
+import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.VehicleControls;
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.entity.ISyncNBTEntity;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Optional;
 
 /**
@@ -90,6 +93,12 @@ public class EntityVehicleSeat extends Entity implements ISyncNBTEntity<EntityVe
 			{
 				IVehicleMultiPart<?> vehicle = (IVehicleMultiPart<?>)getRidingEntity();
 				this.info = vehicle.getSeatInfo(seatID);
+			}
+			else if(info!=null)
+			{
+				//Update Controls
+				if(this.info.controls!=null&&this.info.isClientPlayerOnSeat()&&this.info.controls.clientUpdate())
+					this.info.vehicle.sendServerUpdateForEvent(SyncEvents.ENTITY_VEHICLE_CONTROLS);
 			}
 		}
 		else if(this.ticksExisted > 20&&!this.isRiding())
@@ -186,6 +195,7 @@ public class EntityVehicleSeat extends Entity implements ISyncNBTEntity<EntityVe
 		ISyncNBTEntity.super.writeEntityToNBT(compound);
 	}
 
+	@ParametersAreNonnullByDefault
 	public static class SeatInfo<T extends EntityVehicleBase<T>>
 	{
 		private String seatID;
@@ -193,6 +203,8 @@ public class EntityVehicleSeat extends Entity implements ISyncNBTEntity<EntityVe
 		private boolean shouldSeatPassengerSit = true;
 		private Vec3d offset = Vec3d.ZERO;
 		private float yawAngleOffset = 0, minYawAngle = -180, maxYawAngle = 180;
+		@Nullable
+		private VehicleControls controls;
 
 		public SeatInfo(EntityVehicleBase<T> vehicle, String seatID)
 		{
@@ -212,6 +224,12 @@ public class EntityVehicleSeat extends Entity implements ISyncNBTEntity<EntityVe
 			this.yawAngleOffset = yawAngleOffset;
 			this.minYawAngle = minYawAngle;
 			this.maxYawAngle = maxYawAngle;
+			return this;
+		}
+
+		public SeatInfo<T> withControls(VehicleControls controls)
+		{
+			this.controls = controls;
 			return this;
 		}
 

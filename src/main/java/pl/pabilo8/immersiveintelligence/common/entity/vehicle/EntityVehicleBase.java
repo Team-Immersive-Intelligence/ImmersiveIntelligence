@@ -207,8 +207,9 @@ public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends 
 		final double mass = this.blueprint.mass();
 		this.prevRotationYaw = this.rotationYaw;
 
-		// Calculate realistic lateral friction based on mass and wheel count
+		//Calculate realistic lateral friction based on mass and wheel count
 		double maxLateralForce = calculateRealisticLateralFriction(mass);
+		Vec3d collectedForce = Vec3d.ZERO;
 		double torque = 0;
 		int groundedWheels = 0;
 
@@ -221,42 +222,26 @@ public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends 
 			WheelForces forces = wheel.calculateForces(maxLateralForce);
 			if(forces.isGrounded)
 			{
-				this.velocity = this.velocity.add(forces.force);
+
+				collectedForce = collectedForce.add(forces.force);
 				torque += forces.torque;
 				groundedWheels++;
 			}
 		}
+		this.velocity = this.velocity.add(collectedForce);
 
-		// Only apply forces if we have ground contact
-		if(groundedWheels > 0)
-		{
-			this.velocity = new Vec3d(this.velocity.x, 0, this.velocity.z);
-			// Apply rolling resistance when grounded
-			applyRollingResistance(groundedWheels);
-		}
 		//Apply gravity if not grounded
-		else
-			this.velocity = this.velocity.subtract(0, 0.02, 0);
+		this.velocity = groundedWheels > 0?new Vec3d(this.velocity.x, 0, this.velocity.z): this.velocity.subtract(0, 0.02, 0);
 
-		// Apply realistic air drag
-		applyAirDrag();
-
-		// Apply enhanced damping based on vehicle state
-		applyRealisticDamping(groundedWheels > 0);
-
-		this.angularVelocity += torque;
-
-		// Enhanced angular damping based on ground contact
-		double angularDamping = groundedWheels > 0?
-				blueprint.angularDamping()*0.7: // More damping when grounded
-				blueprint.angularDamping()*0.9;  // Less damping in air
-		this.angularVelocity *= angularDamping;
+		//Apply motion damping
+		applyMotionDamping(groundedWheels);
 
 		//Update rotation
+		this.angularVelocity += torque;
 		this.rotationYaw = (float)MathHelper.wrapDegrees(this.rotationYaw+Math.toDegrees(this.angularVelocity));
 
-		// Use velocity-based thresholds for zeroing
-		double velocityThreshold = 0.001*mass; // Scale with mass
+		//Use velocity-based thresholds for zeroing
+		double velocityThreshold = 0.001*mass; //Scale with mass
 		double angularThreshold = 0.0001*mass;
 
 		if(Math.abs(this.velocity.x) < velocityThreshold)
@@ -288,99 +273,89 @@ public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends 
 	 */
 	private double calculateRealisticLateralFriction(double mass)
 	{
-		// Base friction coefficient from blueprint
+		//Base friction coefficient from blueprint
 		double baseFriction = Math.max(blueprint.lateralFrictionDrive(), blueprint.lateralFrictionIdler());
-
-		// Adjust for wheel count - more wheels = more total friction
+		//Adjust for wheel count - more wheels = more total friction
 		double wheelFactor = Math.sqrt(this.wheels.length)/2.0;
-
-		// Mass affects how much force is needed to overcome friction
-		double massFactor = mass/1000.0; // Normalize to ~1000kg base
-
-		return baseFriction*wheelFactor/(massFactor*this.wheels.length);
+		//Mass affects how much force is needed to overcome friction
+		return baseFriction*wheelFactor/(mass/50f*this.wheels.length);
 	}
 
 	/**
-	 * Applies realistic air drag based on vehicle speed and size
+	 * Consolidated motion damping for air drag, rolling resistance, linear and angular damping.
 	 */
-	private void applyAirDrag()
+	private void applyMotionDamping(int groundedWheels)
 	{
-		double speedSquared = this.velocity.x*this.velocity.x+this.velocity.z*this.velocity.z;
+		double tick = 0.05; //1/20s tick
+		double mass = this.blueprint.mass();
 
-		if(speedSquared > 0.001)
+		double vx = this.velocity.x;
+		double vz = this.velocity.z;
+		double speedSq = vx*vx+vz*vz;
+		double speed = Math.sqrt(speedSq);
+
+		//Air drag
+		if(speedSq > 0.001)
 		{
-			double speed = Math.sqrt(speedSquared);
-
-			// Calculate frontal area from bounding box
+			//Calculate frontal area from bounding box
 			double frontalArea = this.width*this.height*blueprint.frontalAreaFactor();
 
-			// Drag force = 0.5 * density * velocity² * drag coefficient * area
-			double dragForce = 0.5*1.225*speedSquared*blueprint.airDragCoefficient()*frontalArea;
+			//Drag force = 0.5 * density * velocity² * drag coefficient * area
+			double dragForce = 0.5*1.225*speedSq*blueprint.airDragCoefficient()*frontalArea;
 
-			// Convert to acceleration (F = ma -> a = F/m)
-			double dragDeceleration = dragForce/this.blueprint.mass();
+			//Convert to acceleration (F = ma -> a = F/m) and scale by tick
+			double dragDeceleration = (dragForce/mass)*tick;
 
-			// Scale by tick time (1/20th of second)
-			dragDeceleration *= 0.05;
-
-			// Apply drag opposite to velocity direction
-			if(speed > 0)
+			//Clamp deceleration so we don't overshoot and reverse direction
+			double decel = Math.min(dragDeceleration, speed);
+			if(speed > 0&&decel > 0)
 			{
-				this.velocity.subtract(
-						(this.velocity.x/speed)*dragDeceleration,
-						0,
-						(this.velocity.z/speed)*dragDeceleration
-				);
+				vx -= (vx/speed)*decel;
+				vz -= (vz/speed)*decel;
 			}
 		}
-	}
 
-	/**
-	 * Applies rolling resistance when vehicle is on ground
-	 */
-	private void applyRollingResistance(int groundedWheels)
-	{
-		double speed = this.velocity.x*this.velocity.x+this.velocity.z*this.velocity.z;
-		if(speed > 0.01)
+		//Rolling resistance (when grounded)
+		if(groundedWheels > 0&&speedSq > 0.01)
 		{
-			// Rolling resistance from blueprint
 			double rollingResistance = blueprint.rollingResistance();
-
-			// More wheels = more total rolling resistance
 			double wheelFactor = groundedWheels/(double)this.wheels.length;
 
-			double resistance = rollingResistance*wheelFactor*this.blueprint.mass()*0.98; // gravity
-			resistance *= 0.05; // Scale for tick time
+			double resistance = rollingResistance*wheelFactor*mass*0.98; //gravity
+			resistance *= tick; //scale for tick time
 
-			// Apply resistance opposite to velocity direction
-			this.velocity.subtract(
-					(this.velocity.x/Math.sqrt(speed))*resistance,
-					0,
-					(this.velocity.z/Math.sqrt(speed))*resistance
-			);
+			//Clamp so we don't overshoot
+			double resDelta = Math.min(resistance, speed);
+			if(speed > 0&&resDelta > 0)
+			{
+				vx -= (vx/speed)*resDelta;
+				vz -= (vz/speed)*resDelta;
+			}
 		}
-	}
 
-	/**
-	 * Applies realistic damping based on ground contact and speed
-	 */
-	private void applyRealisticDamping(boolean isGrounded)
-	{
-		double speed = this.velocity.x*this.velocity.x+this.velocity.z*this.velocity.z;
-
-		if(isGrounded)
+		//Linear damping
+		if(groundedWheels > 0)
 		{
-			// When grounded, use smaller damping for low speeds, normal for high speeds
-			double speedFactor = Math.min(speed/0.5, 1.0); // 0.5 m/s threshold
+			double speedFactor = Math.min(speedSq/0.5, 1.0); //0.5 m/s threshold (squared applied)
 			double effectiveDamping = blueprint.linearDamping()*(0.95+0.05*speedFactor);
-
-			this.velocity = new Vec3d(this.velocity.x*effectiveDamping, this.velocity.y, this.velocity.z*effectiveDamping);
+			vx *= effectiveDamping;
+			vz *= effectiveDamping;
 		}
 		else
 		{
-			// In air, use minimal damping
-			this.velocity = new Vec3d(this.velocity.x*0.995, this.velocity.y, this.velocity.z*0.995);
+			//In air, use minimal damping
+			vx *= 0.995;
+			vz *= 0.995;
 		}
+
+		//Commit velocity change preserving Y component
+		this.velocity = new Vec3d(vx, this.velocity.y, vz);
+
+		//Angular damping
+		double angularDamping = groundedWheels > 0?
+				blueprint.angularDamping()*0.7: //More damping when grounded
+				blueprint.angularDamping()*0.9;  //Less damping in air
+		this.angularVelocity *= angularDamping;
 	}
 
 	/**
@@ -479,15 +454,10 @@ public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends 
 	public void updateParts()
 	{
 		//Create vectors with proper rotation accounting
-		Vec3d vecX = IIMath.offsetPosDirection(1f, Math.toRadians(MathHelper.wrapDegrees(-rotationYaw)), rotationPitch);
-		Vec3d vecZ = IIMath.offsetPosDirection(1f, Math.toRadians(MathHelper.wrapDegrees(-rotationYaw-90)), rotationPitch);
-
 		for(EntityVehiclePart<T> part : getVehicleParts())
 		{
 			//Transform offset using the rotated vectors
-			Vec3d offsetX = vecX.scale(part.offset.x);
-			Vec3d offsetZ = vecZ.scale(part.offset.z);
-			Vec3d newPos = offsetX.add(offsetZ).addVector(posX, posY, posZ);
+			Vec3d newPos = this.getPositionVector().add(IIMath.offsetPosDirectionXZ(part.offset.x, part.offset.z, this.rotationYaw, 0));
 			float yawAngle = this.rotationYaw;
 			if(part instanceof EntityVehicleWheel)
 			{
@@ -552,7 +522,7 @@ public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends 
 	@Override
 	public boolean canBeCollidedWith()
 	{
-		return false;
+		return true;
 	}
 
 	@Override
