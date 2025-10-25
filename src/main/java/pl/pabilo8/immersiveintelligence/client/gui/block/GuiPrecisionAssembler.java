@@ -59,9 +59,13 @@ public class GuiPrecisionAssembler extends DecoGui<TileEntityPrecisionAssembler,
 						.withUV(256, 0, 0, 175, 78),
 				new DecoBar(161-4, 5)
 						.withTemplate(DecoGuiUtils.BAR_ELECTRIC_ENERGY.apply(tile.energyStorage))
-
-
-
+				/**,
+				new DecoImage(13-4+16+10, 39-8-1)
+						.withSize(83, 18)
+						.withImageLocation(TEXTURE_PRE, true)
+						.withUV(64, 0, 168, 83, 185)
+						.withAnimation(ImageAnimationDirection.LEFT_TO_RIGHT, DecoGuiUtils.getMultiblockProductionSingleProgress(tile))
+				**/
 		);
 	}
 
