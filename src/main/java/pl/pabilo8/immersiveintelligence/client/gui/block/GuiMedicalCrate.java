@@ -92,16 +92,18 @@ public class GuiMedicalCrate extends DecoGui<TileEntityMedicalCrate, ContainerMe
 							.withIcon(HEAL, 16)
 							.withText("Healing"),
 
-					new DecoFluidTank(10, 21)
+					new DecoFluidTank(46, 19)
 							.withSize(16, 47)
 							.withFluidTank(tile.tanks[0]),
 
-					new DecoFluidTank(54+40, 21)
+					new DecoFluidTank(90, 19)
 							.withSize(16, 47)
 							.withFluidTank(tile.tanks[1])
 
 					//new DecoBar(161, -4)
 					//.withTemplate(DecoGuiUtils.BAR_ELECTRIC_ENERGY.apply(tile.energyStorage))
+					//upgrade to check for in order to toggle alternative GUI
+					//public static final Upgrade UPGRADE_INSERTER = new Upgrade("inserter");
 
 					//putting notes here becuase storm may kill power while out
 					//need to have the buttons do the thing when pressed
@@ -129,12 +131,11 @@ public class GuiMedicalCrate extends DecoGui<TileEntityMedicalCrate, ContainerMe
 							.withImageLocation(TEXTURE_MED, true)
 							.withUV(256, 9, 0, 110, 78),
 
-
-					new DecoFluidTank(54, 20)
+					new DecoFluidTank(46, 19)
 							.withSize(16, 47)
 							.withFluidTank(tile.tanks[0]),
 
-					new DecoFluidTank(108, 20)
+					new DecoFluidTank(90, 19)
 							.withSize(16, 47)
 							.withFluidTank(tile.tanks[1])
 			);

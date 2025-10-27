@@ -193,16 +193,16 @@ public enum IIGUI implements ISerializableEnum
 		IIGUI.PRINTING_PRESS.setClientDecoGui(GuiPrintingPress::new);
 		IIGUI.CHEMICAL_BATH.setClientGui(GuiChemicalBath::new);
 		IIGUI.ELECTROLYZER.setClientDecoGui(GuiElectrolyzer::new);
-		IIGUI.PRECISION_ASSEMBLER.setClientGui(GuiPrecisionAssembler::new);
+		IIGUI.PRECISION_ASSEMBLER.setClientDecoGui(GuiPrecisionAssembler::new);
 		IIGUI.FUEL_STATION.setClientDecoGui(GuiFuelStation::new);
 		IIGUI.DATA_MERGER.setClientGui(GuiDataMerger::new);
 		//Crates
 		IIGUI.METAL_CRATE.setClientDecoGui(GuiMetalCrate::new);
 		IIGUI.SMALL_CRATE.setClientDecoGui(GuiSmallCrate::new);
 		//Effect Crates
-		IIGUI.AMMUNITION_CRATE.setClientGui(GuiAmmunitionCrate::new);
+		IIGUI.AMMUNITION_CRATE.setClientDecoGui(GuiAmmunitionCrate::new);
 		IIGUI.MEDIC_CRATE.setClientDecoGui(GuiMedicalCrate::new);
-		IIGUI.REPAIR_CRATE.setClientGui(GuiRepairCrate::new);
+		IIGUI.REPAIR_CRATE.setClientDecoGui(GuiRepairCrate::new);
 		//Skycrate
 		IIGUI.SKYCRATE_STATION.setClientDecoGui(GuiSkycrateStation::new);
 		IIGUI.SKYCART_STATION.setClientDecoGui(GuiSkycartStation::new);

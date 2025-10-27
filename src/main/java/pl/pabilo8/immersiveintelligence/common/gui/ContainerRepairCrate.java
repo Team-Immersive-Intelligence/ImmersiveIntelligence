@@ -27,7 +27,7 @@ public class ContainerRepairCrate extends ContainerIIBase<TileEntityRepairCrate>
 		int shift = tile.isUpgradeInstalled(IIContent.UPGRADE_INSERTER)?0: 27;
 		for(int i = 0; i < tile.getInventory().size(); i++)
 
-			inputSlot = this.addSlotToContainer(new Slot(this.inv, i, shift+16+(i%4)*21, 7+(i/4)*18)
+			inputSlot = this.addSlotToContainer(new Slot(this.inv, i, shift+20+(i%4)*21, 17+(i/4)*18)
 			{
 				@Override
 				public boolean isItemValid(ItemStack stack)
@@ -36,6 +36,6 @@ public class ContainerRepairCrate extends ContainerIIBase<TileEntityRepairCrate>
 				}
 			});
 
-		addPlayerInventory(player.inventory, 8, 87);
+		addPlayerInventory(player.inventory, 8, 100);
 	}
 }
