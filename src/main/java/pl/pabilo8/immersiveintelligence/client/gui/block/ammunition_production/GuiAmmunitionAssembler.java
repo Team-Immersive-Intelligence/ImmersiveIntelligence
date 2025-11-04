@@ -9,14 +9,25 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag.TooltipFlags;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ResourceLocation;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseType;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoBar;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoImage;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.*;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundBuilder.SlotStyle;
+import pl.pabilo8.immersiveintelligence.common.IIGUI;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityPrintingPress;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityAmmunitionAssembler;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityChemicalPainter;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerAmmunitionAssembler;
+import pl.pabilo8.immersiveintelligence.common.gui.ContainerPrintingPress;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import java.io.IOException;
@@ -25,18 +36,50 @@ import java.util.HashMap;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @author Avalon (avalon@iiteam.net)
  * @since 10.07.2019
+ * @since 29.10.2025
  */
-public class GuiAmmunitionAssembler extends GuiAmmunitionBase<TileEntityAmmunitionAssembler>
+
+@DecoTemplate(name = "ammunition_assembler", category = DecoGuiCategory.PRODUCTION_TILE)
+public class GuiAmmunitionAssembler extends DecoGui<TileEntityAmmunitionAssembler, ContainerAmmunitionAssembler>
 {
+
+	@DecoResource
+	public static ResourceLocation TEXTURE_AMMOASS = ResLoc.of(IIReference.RES_II, "gui/ammunition_assembler");
+
 	HashMap<GuiButtonState, FuseType> fuseButtons = new HashMap<>();
 	private GuiTextField valueEdit;
 
-	public GuiAmmunitionAssembler(EntityPlayer player, TileEntityAmmunitionAssembler tile)
+	public GuiAmmunitionAssembler(EntityPlayer player, TileEntityAmmunitionAssembler)
 	{
-		super(player, tile, ContainerAmmunitionAssembler::new);
-		IIPacketHandler.sendToServer(new MessageBooleanAnimatedPartsSync(0, true, tile.getPos()));
+		super(player, tile, IIGUI.AMMUNITION_ASSEMBLER);
 	}
+
+
+	@Override
+	public void onInit()
+	{
+		startBackground()
+				.withBox(DecoTextures.GUI_BG_STEEL_ROUGH, 0, 0, 176, 76)
+				.withTitleBar(tile)
+				.withInventorySlots(SlotStyle.IE_INPUT, container.inputSlot)
+				.withInventorySlots(SlotStyle.IE_OUTPUT, container.outputSlot)
+				.withBox(DecoTextures.GUI_BG_WOODEN, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_ROUND_WOODEN, 0, 76, 176, 92)
+				.withInventorySlots(SlotStyle.VANILLA, container.playerInventory)
+				.withInventoryTitleBar()
+				.build();
+
+		addComponents(
+				new DecoBar(168, 0)
+						.withTemplate(DecoGuiUtils.BAR_ELECTRIC_ENERGY.apply(tile.energyStorage)),
+				new DecoImage(13-4+16+10, 39-8-1)
+						.withSize(51, 18)
+						.withImageLocation(TEXTURE_AMMOASS, true)
+						.withUV(64, 0, 0, 219, 80)
+		);
+	}
+
 
 	@Override
 	public void initGui()
@@ -78,6 +121,7 @@ public class GuiAmmunitionAssembler extends GuiAmmunitionBase<TileEntityAmmuniti
 		addLabel(guiLeft+122, guiTop+5+5, DecoTextures.COLOR_H1, "Fuse:");
 		addLabel(guiLeft+122, guiTop+5+5+32, DecoTextures.COLOR_H1, "Parameters:");
 	}
+
 
 	@Override
 	public void keyTyped(char typedChar, int keyCode) throws IOException
