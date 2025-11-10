@@ -15,6 +15,7 @@ import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoButton;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoBar;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.text.DecoTextField;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoImage;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoImage.ImageAnimationDirection;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.*;
@@ -28,6 +29,7 @@ import pl.pabilo8.immersiveintelligence.common.gui.ContainerPrintingPress;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
@@ -35,6 +37,8 @@ import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import static pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures.*;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -48,7 +52,10 @@ public class GuiAmmunitionAssembler extends DecoGui<TileEntityAmmunitionAssemble
 {
 
 	@DecoResource
-	public static final ResourceLocation TEXTURE_AMMOASS = IIReference.RES_II.with("gui/ammunition_assembler");
+	public static ResourceLocation TEXTURE_AMMOAS = ResLoc.of(IIReference.RES_II.with("gui/ammunition_assembler"));
+
+	private DecoButton btnProximity, btnContact, btnTime;
+	private DecoTextField fuseTextField;
 
 	public GuiAmmunitionAssembler(EntityPlayer player, TileEntityAmmunitionAssembler tile)
 	{
@@ -66,7 +73,7 @@ public class GuiAmmunitionAssembler extends DecoGui<TileEntityAmmunitionAssemble
 				.withInventorySlots(SlotStyle.IE_OUTPUT, container.outputSlot)
 				.withBox(DecoTextures.GUI_BG_WOODEN, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_ROUND_WOODEN, 0, 76, 176, 92)
 				.withInventoryTitleBar()
-				.withBox(DecoTextures.GUI_BG_PAPER, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_PAPER, 100, 0, 76, 70)
+				.withBox(DecoTextures.GUI_BG_BLUEPRINT, 100, 0, 76, 70)
 				.withInventorySlots(SlotStyle.VANILLA, container.playerInventory)
 				.build();
 
@@ -75,28 +82,36 @@ public class GuiAmmunitionAssembler extends DecoGui<TileEntityAmmunitionAssemble
 						.withTemplate(DecoGuiUtils.BAR_ELECTRIC_ENERGY.apply(tile.energyStorage)),
 
 				new DecoButton(100,10)
-						.withIcon(ResLoc.of(IIReference.RES_II,"gui/deco/icons/icon_proximity"))
+						.withIcon(RES_ICON_PROXIMITY)
 						.withTranslatedTooltip("PROXIMITY"),
 
 				new DecoButton(120,10)
-						.withIcon(ResLoc.of(IIReference.RES_II,"gui/deco/icons/icon_contact"))
+						.withIcon(RES_ICON_CONTACT)
 						.withTranslatedTooltip("CONTACT"),
 
 				new DecoButton(140,10)
-						.withIcon(ResLoc.of(IIReference.RES_II,"gui/deco/icons/icon_time"))
+						.withIcon(RES_ICON_TIME)
 						.withTranslatedTooltip("TIMED"),
 
+				new DecoTextField(96, 40)
+						.withSize(65,18)
+						.withTextColor(IIColor.WHITE)
+						.withText("Fuze Time")
+
+/**
 
 				new DecoImage(20, 20)
 						.withSize(118, 33)
-						.withImageLocation(TEXTURE_AMMOASS, false)
+						.withImageLocation(TEXTURE_AMMOAS, false)
 						.withUV(256, 127, 177, 122, 209),
 
 				new DecoImage(20, 20)
 						.withSize(118, 33)
-						.withImageLocation(TEXTURE_AMMOASS, false)
+						.withImageLocation(TEXTURE_AMMOAS, false)
 						.withUV(256, 0, 177, 245, 209)
 						.withAnimation(ImageAnimationDirection.LEFT_TO_RIGHT, DecoGuiUtils.getMultiblockProductionMultiProgress(tile))
+**/
 		);
 	}
+
 }
