@@ -276,7 +276,7 @@ item.immersiveintelligence.tracer_powder.flare_powder.name=Осветитель�
 item.immersiveintelligence.skycrate_mount.mechanical.name=Фуникулёр
 item.immersiveintelligence.skycrate_mount.electric.name=Электрический фуникулёр
 
-desc.immersiveintelligence.electric_hammer=Поворачивает блоки, переключает порты машин, формирует мультиблоки.
+desc.immersiveintelligence.electric_hammer=Поворачивает блоки, переключает порты машины, формирует мультиблоки.
 desc.immersiveintelligence.electric_wirecutter=Режет провода и моторные ремни, работает как ножницы.
 desc.immersiveintelligence.trench_shovel=Быстрее закапывает мины, укрепляет блоки.
 desc.immersiveintelligence.wrench=Устанавливает обновления на совместимые машины.
@@ -301,26 +301,26 @@ desc.immersiveintelligence.toolupgrade.item.light_engineer_chestplate=Лёгки
 desc.immersiveintelligence.toolupgrade.item.light_engineer_leggings=Лёгкие штаны инженера
 desc.immersiveintelligence.toolupgrade.item.light_engineer_boots=Лёгкие ботинки инженера
 
-desc.immersiveintelligence.toolupgrade.water_cooling=Использует воду, чтобы охладить пулемёт. Увеличивает максимальное кол-во тепла, которое можно принять.
+desc.immersiveintelligence.toolupgrade.water_cooling=Использует воду, чтобы охладить пулемёт. Увеличивает максимальный порог перегрева.
 desc.immersiveintelligence.toolupgrade.heavy_barrel=Значительно увеличивает скорострельность, увеличивает отдачу и скорость нагрева.
 desc.immersiveintelligence.toolupgrade.second_magazine=Позволяет использовать боеприпасы из двух магазинов, перезарядка отдельная.
 desc.immersiveintelligence.toolupgrade.belt_fed_loader=Позволяет брать боеприпасы из ящика с боеприпасами под игроком. Увеличивает время перезарядки.
 desc.immersiveintelligence.toolupgrade.precise_bipod=Увеличивает время перезарядки, уменьшает отдачу.
 desc.immersiveintelligence.toolupgrade.hasty_bipod=Уменьшает время перезарядки, увеличивает отдачу.
-desc.immersiveintelligence.toolupgrade.scope=Позволяет прицеливаться вдаль.
+desc.immersiveintelligence.toolupgrade.scope=Позволяет точно прицеливаться на большое расстояние.
 desc.immersiveintelligence.toolupgrade.infrared_scope=Обеспечивает ночное видение, требует источника питания, такого как конденсаторный рюкзак.
 desc.immersiveintelligence.toolupgrade.shield=Отклоняет снаряды и защищает стрелка от повреждений в ближнем бою. Увеличивает время перезарядки.
-desc.immersiveintelligence.toolupgrade.tripod=Практически исключается отдача, увеличивается максимальный угол наклона и время перезарядки.
+desc.immersiveintelligence.toolupgrade.tripod=Практически исключает отдачу, увеличивается максимальный угол наклона и время перезарядки.
 
 desc.immersiveintelligence.toolupgrade.sturdy_barrel=Увеличивает скорость пули и пробивную способность за счет скорострельности.
 desc.immersiveintelligence.toolupgrade.suppressor=Глушит звук выстрела, позволяя действовать быстро и незаметно.
-desc.immersiveintelligence.toolupgrade.bottom_loading=Заменяет рукоятку, позволяя заряжать оружие снизу. Позволяет заряжать барабанные магазины.
+desc.immersiveintelligence.toolupgrade.bottom_loading=Убирает рукоятку, позволяя заряжать ПП снизу и снаряжать барабанные магазины.
 desc.immersiveintelligence.toolupgrade.folding_stock=Уменьшает время перезарядки и прицеливания. Снижает точность стрельбы в движении.
 
 desc.immersiveintelligence.toolupgrade.heavy_springbox=Увеличивает скорость пули, придавая ей более высокую проникающую способность. Увеличивает время между выстрелами.
 
 desc.immersiveintelligence.toolupgrade.rifle_grenade_launcher=Позволяет стрелять рельсотронными гранатами. Дальность стрельбы значительно ниже, чем у стандартного рельсотрона.
-desc.immersiveintelligence.toolupgrade.stereoscopic_rangefinder=Показывает расстояние до текущей цели. В сочетании с радиомаркером позволяет передавать данные о местоположении противника.
+desc.immersiveintelligence.toolupgrade.stereoscopic_rangefinder=Показывает расстояние до цели. В сочетании с радиомаркером позволяет передавать данные о местоположении противника.
 desc.immersiveintelligence.toolupgrade.gyroscopic_stabilizer=Автоматически стабилизирует оружие после выстрела, уменьшает отдачу во всех режимах стрельбы. Требует энергии.
 desc.immersiveintelligence.toolupgrade.electric_firing_motor=Увеличивает скорострельность оружия в автоматическом режиме. Требует энергии.
 desc.immersiveintelligence.toolupgrade.railgun_assisted_chamber=Увеличивает скорость пуль, выпущенных в ручном режиме стрельбы. Требует энергии.
@@ -328,16 +328,16 @@ desc.immersiveintelligence.toolupgrade.railgun_assisted_chamber=Увеличив
 desc.immersiveintelligence.toolupgrade.semi_automatic=Позволяет заряжать боеприпасы из магазинов, что увеличивет скорострельность.
 desc.immersiveintelligence.toolupgrade.extended_barrel=Увеличивает скорость пуль, выпущенных в ручном режиме стрельбы. Уменьшает скорострельность.
 
-desc.immersiveintelligence.toolupgrade.gasmask=Защищает носителя от опасных газов.
+desc.immersiveintelligence.toolupgrade.gasmask=Защищает носителя от отравляющих газов.
 
 desc.immersiveintelligence.toolupgrade.infiltrator_gear=Обеспечивает ночное видение и приближение, для работы требуется энергия.
-desc.immersiveintelligence.toolupgrade.technician_gear=Отображает всплывающие подсказки, когда в руке есть молоток, вольтметр или гаечный ключ, требует энергии.
-desc.immersiveintelligence.toolupgrade.engineer_gear=Объединяет эффекты инфракрасных и технических очков. Энергопотребление повышено.
+desc.immersiveintelligence.toolupgrade.technician_gear=Отображает дополнительную информацию о машинах, требует энергии.
+desc.immersiveintelligence.toolupgrade.engineer_gear=Объединяет инфракрасные и технические очки, требует больше энергии.
 desc.immersiveintelligence.toolupgrade.steel_armor_plates=Увеличивает толщину брони. Может отражать стрелы и другие легкие снаряды. На один элемент брони можно установить до 3 бронепластин.
 desc.immersiveintelligence.toolupgrade.composite_armor_plates=Значительно увеличивает толщину брони. Отклоняет снаряды и повреждает оружие ближнего боя противника, если оно не способно нанести достаточного урона владельцу брони. На один элемент брони можно установить до 3 бронепластин.
 desc.immersiveintelligence.toolupgrade.hazmat_coating=Делает броню устойчивой к радиации и коррозии.
 desc.immersiveintelligence.toolupgrade.heat_resistant_coating=В сочетании с усиленными ботинками позволяет плавать в горячих жидкостях.
-desc.immersiveintelligence.toolupgrade.anti_static_mesh=Защищает носителя от поражения электричеством и не позволяет использовать бесконтактные предохранители. Очень чувствителен к урону электричеством под водой.
+desc.immersiveintelligence.toolupgrade.anti_static_mesh=Защищает носителя от поражения электричеством, не позволяет использовать бесконтактные предохранители. Повышает чувствительность к электричеству в воде.
 desc.immersiveintelligence.toolupgrade.camouflage_mesh=Делает носителя невидимым, когда он крадется сквозь листву. Чувствителен к огню.
 desc.immersiveintelligence.toolupgrade.infrared_absorbing_mesh=Делает пользователя невидимым для инфракрасных устройств. Чувствителен к электромагнитному излучению.
 desc.immersiveintelligence.toolupgrade.scuba_tank=Может быть заполнен кислородом для дыхания под водой. Для работы требуется противогаз.
