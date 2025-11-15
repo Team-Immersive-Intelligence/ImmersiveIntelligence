@@ -233,7 +233,7 @@ public enum IIGUI implements ISerializableEnum
 		IIGUI.FILLER.setClientDecoGui(GuiFiller::new);
 		IIGUI.CHEMICAL_PAINTER.setClientDecoGui(GuiChemicalPainter::new);
 
-		IIGUI.AMMUNITION_ASSEMBLER.setClientGui(GuiAmmunitionAssembler::new);
+		IIGUI.AMMUNITION_ASSEMBLER.setClientDecoGui(GuiAmmunitionAssembler::new);
 		IIGUI.PROJECTILE_WORKSHOP.setClientDecoGui(GuiProjectileWorkshop::new);
 
 		IIGUI.RADAR.setClientGui(GuiRadar::new);

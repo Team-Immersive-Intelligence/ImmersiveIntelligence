@@ -112,6 +112,8 @@ public class DecoTextures
 	public static final ResLoc RES_ICON_ENERGY_OUTPUT = ResLoc.of(RES_TEXTURES_DECO_ICON, "icon_energy_output");
 	public static final ResLoc RES_ICON_ENERGY_INPUT = ResLoc.of(RES_TEXTURES_DECO_ICON, "icon_energy_input");
 	public static final ResLoc RES_ICON_ENERGY = ResLoc.of(RES_TEXTURES_DECO_ICON, "icon_energy");
+	public static final ResLoc RES_ICON_CONTACT = ResLoc.of(RES_TEXTURES_DECO_ICON, "icon_contact");
+	public static final ResLoc RES_ICON_PROXIMITY = ResLoc.of(RES_TEXTURES_DECO_ICON, "icon_proximity");
 
 	//--- Deco Bar Icons ---//
 	public static final ResLoc RES_TEXTURES_DECO_ICON_ACTION_DUPLICATE = ResLoc.of(RES_TEXTURES_DECO_ICON, "action_duplicate");

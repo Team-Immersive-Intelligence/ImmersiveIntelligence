@@ -9,168 +9,109 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag.TooltipFlags;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ResourceLocation;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseType;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoButton;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoBar;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.text.DecoTextField;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoImage;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoImage.ImageAnimationDirection;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.*;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundBuilder.SlotStyle;
+import pl.pabilo8.immersiveintelligence.common.IIGUI;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityPrintingPress;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityAmmunitionAssembler;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityChemicalPainter;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerAmmunitionAssembler;
+import pl.pabilo8.immersiveintelligence.common.gui.ContainerPrintingPress;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import static pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures.*;
+
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @author Avalon (avalon@iiteam.net)
  * @since 10.07.2019
+ * @since 29.10.2025
  */
-public class GuiAmmunitionAssembler extends GuiAmmunitionBase<TileEntityAmmunitionAssembler>
+
+@DecoTemplate(name = "ammunition_assembler", category = DecoGuiCategory.PRODUCTION_TILE)
+public class GuiAmmunitionAssembler extends DecoGui<TileEntityAmmunitionAssembler, ContainerAmmunitionAssembler>
 {
-	HashMap<GuiButtonState, FuseType> fuseButtons = new HashMap<>();
-	private GuiTextField valueEdit;
+
+	@DecoResource
+	public static ResourceLocation TEXTURE_AMMOAS = ResLoc.of(IIReference.RES_II.with("gui/ammunition_assembler"));
+
+	private DecoButton btnProximity, btnContact, btnTime;
+	private DecoTextField fuseTextField;
 
 	public GuiAmmunitionAssembler(EntityPlayer player, TileEntityAmmunitionAssembler tile)
 	{
-		super(player, tile, ContainerAmmunitionAssembler::new);
-		IIPacketHandler.sendToServer(new MessageBooleanAnimatedPartsSync(0, true, tile.getPos()));
+		super(player, tile, IIGUI.AMMUNITION_ASSEMBLER);
 	}
+
 
 	@Override
-	public void initGui()
+	public void onInit()
 	{
-		super.initGui();
-		labelList.clear();
-		buttonList.clear();
-		fuseButtons.clear();
+		startBackground()
+				.withBox(DecoTextures.GUI_BG_STEEL_ROUGH, 0, 0, 176, 76)
+				.withTitleBar(tile)
+				.withInventorySlots(SlotStyle.IE_INPUT, container.inputSlot)
+				.withInventorySlots(SlotStyle.IE_OUTPUT, container.outputSlot)
+				.withBox(DecoTextures.GUI_BG_WOODEN, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_ROUND_WOODEN, 0, 76, 176, 92)
+				.withInventoryTitleBar()
+				.withBox(DecoTextures.GUI_BG_BLUEPRINT, 100, 0, 76, 70)
+				.withInventorySlots(SlotStyle.VANILLA, container.playerInventory)
+				.build();
 
-		addLabel(guiLeft+1, guiTop+8, 118, 0, DecoTextures.COLOR_H1, I18n.format("tile.immersiveintelligence.metal_multiblock1.ammunition_assembler.name")).setCentered();
+		addComponents(
+				new DecoBar(150+11, 0)
+						.withTemplate(DecoGuiUtils.BAR_ELECTRIC_ENERGY.apply(tile.energyStorage)),
 
-		int i = 0;
-		for(FuseType fuse : FuseType.values())
-		{
-			fuseButtons.put(
-					addButton(new GuiButtonState(buttonList.size(),
-							guiLeft+122+(i%3)*21, guiTop+5+5+4+(int)(Math.floor(i/3f)*20), 20, 20,
-							"", tile.fuse==fuse, TEXTURE.toString(), 220, 46, 1)),
-					fuse);
-			i++;
-		}
+				new DecoButton(100,10)
+						.withIcon(RES_ICON_PROXIMITY)
+						.withTranslatedTooltip("PROXIMITY"),
 
-		switch(tile.fuse)
-		{
-			case TIMED:
-			case PROXIMITY:
-			{
-				this.valueEdit = new GuiTextField(buttonList.size(), fontRenderer, guiLeft+122, guiTop+20+32-8-7+11, 72, 12);
-				this.valueEdit.setFocused(false);
-				this.valueEdit.setText(String.valueOf(tile.fuseConfig));
-				this.valueEdit.updateCursorCounter();
-			}
-			break;
-			case CONTACT:
-				this.valueEdit = null;
-				break;
-		}
+				new DecoButton(120,10)
+						.withIcon(RES_ICON_CONTACT)
+						.withTranslatedTooltip("CONTACT"),
 
-		addLabel(guiLeft+122, guiTop+5+5, DecoTextures.COLOR_H1, "Fuse:");
-		addLabel(guiLeft+122, guiTop+5+5+32, DecoTextures.COLOR_H1, "Parameters:");
+				new DecoButton(140,10)
+						.withIcon(RES_ICON_TIME)
+						.withTranslatedTooltip("TIMED"),
+
+				new DecoTextField(96, 40)
+						.withSize(65,18)
+						.withTextColor(IIColor.WHITE)
+						.withText("Fuze Time")
+
+/**
+
+				new DecoImage(20, 20)
+						.withSize(118, 33)
+						.withImageLocation(TEXTURE_AMMOAS, false)
+						.withUV(256, 127, 177, 122, 209),
+
+				new DecoImage(20, 20)
+						.withSize(118, 33)
+						.withImageLocation(TEXTURE_AMMOAS, false)
+						.withUV(256, 0, 177, 245, 209)
+						.withAnimation(ImageAnimationDirection.LEFT_TO_RIGHT, DecoGuiUtils.getMultiblockProductionMultiProgress(tile))
+**/
+		);
 	}
 
-	@Override
-	public void keyTyped(char typedChar, int keyCode) throws IOException
-	{
-		if(this.valueEdit==null||!this.valueEdit.textboxKeyTyped(typedChar, keyCode))
-			super.keyTyped(typedChar, keyCode);
-	}
-
-	@Override
-	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException
-	{
-		if(this.valueEdit==null||!this.valueEdit.mouseClicked(mouseX, mouseY, mouseButton))
-			super.mouseClicked(mouseX, mouseY, mouseButton);
-	}
-
-	@Override
-	protected void actionPerformed(GuiButton button) throws IOException
-	{
-		super.actionPerformed(button);
-		if(button instanceof GuiButtonState)
-		{
-			tile.fuse = fuseButtons.get(button);
-			initGui();
-		}
-	}
-
-	/**
-	 * Draws the background layer of this container (behind the items).
-	 */
-	@Override
-	protected void drawGuiContainerBackgroundLayer(float f, int mx, int my)
-	{
-		super.drawGuiContainerBackgroundLayer(f, mx, my);
-		IIClientUtils.bindTexture(TEXTURE);
-		drawTexturedModalRect(guiLeft+6, guiTop+9+6, 224, 0, 20, 23); //in top
-		drawTexturedModalRect(guiLeft+6, guiTop+9+38+2+6, 224, 0, 20, 23); //in bottom
-		drawTexturedModalRect(guiLeft+6+64+21, guiTop+29+6, 224, 23, 20, 23); //out
-
-		drawTexturedModalRect(guiLeft+6+22, guiTop+9+16+6, 185, 176, 61, 34); //progress back
-
-		if(!tile.processQueue.isEmpty())
-			drawTexturedModalRect(guiLeft+6+22, guiTop+9+16+6, 62, 176,
-					(int)(61*tile.getProductionProgress(tile.processQueue.get(0), f)), 34); //progress top
-
-		RenderHelper.enableGUIStandardItemLighting();
-		itemRender.renderItemIntoGUI(tile.getProductionResult(0), guiLeft+6+64+21+2, guiTop+29+6+4);
-		RenderHelper.disableStandardItemLighting();
-
-		if(valueEdit!=null)
-			valueEdit.drawTextBox();
-	}
-
-	@Override
-	public void drawScreen(int mx, int my, float partial)
-	{
-		super.drawScreen(mx, my, partial);
-	}
-
-	@Override
-	ArrayList<String> drawTooltip(int mx, int my, ArrayList<String> tooltip)
-	{
-		IIClientUtils.bindTexture(TEXTURE);
-
-		GlStateManager.color(1f, 1f, 1f, 1f);
-		RenderHelper.disableStandardItemLighting();
-		for(int i = 0; i < FuseType.values().length; i++)
-			drawTexturedModalRect(guiLeft+122+2+(i%3)*21, guiTop+5+5+4+2+(int)Math.floor(i/20f), 221+(i%2)*16, 86+(int)(Math.floor(i/2f)*16), 16, 16);
-
-		if(!tile.processQueue.isEmpty())
-		{
-			if(isPointInRegion(6+64+21+2, 29+6+4, 16, 16, mx, my))
-				tooltip.addAll(tile.getProductionResult(0).getTooltip(ClientUtils.mc().player, mc.gameSettings.advancedItemTooltips?TooltipFlags.ADVANCED: TooltipFlags.NORMAL));
-		}
-		fuseButtons.forEach((button, enumFuseTypes) -> {
-			if(button.isMouseOver())
-				tooltip.add(enumFuseTypes.name());
-		});
-
-		return super.drawTooltip(mx, my, tooltip);
-	}
-
-	@Override
-	public void onGuiClosed()
-	{
-		super.onGuiClosed();
-
-		if(valueEdit!=null)
-			valueEdit.setText(String.valueOf(tile.fuseConfig));
-
-		IIPacketHandler.sendToServer(new MessageIITileSync(tile, EasyNBT.newNBT()
-				.withString("fuse", tile.fuse.getName())
-				.conditionally(valueEdit!=null, e -> e.withInt("fuse_config", Integer.parseInt(valueEdit.getText())))
-		));
-		IIPacketHandler.sendToServer(new MessageBooleanAnimatedPartsSync(0, false, tile.getPos()));
-	}
 }

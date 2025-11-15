@@ -19,8 +19,8 @@ public class ContainerAmmunitionAssembler extends ContainerIIBase<TileEntityAmmu
 	{
 		super(player, tile);
 
-		inputSlot = addSlot(8, 20, 0);
-		outputSlot = addSlot(8, 60, 1);
+		inputSlot = addSlot(8, 20-10, 0);
+		outputSlot = addSlot(8, 60-10, 1);
 
 		addPlayerInventory(player.inventory, 8, 87);
 
