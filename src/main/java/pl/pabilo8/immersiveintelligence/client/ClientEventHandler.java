@@ -1,7 +1,7 @@
 package pl.pabilo8.immersiveintelligence.client;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
-import blusunrize.immersiveengineering.common.Config;
+import blusunrize.immersiveengineering.common.Config.IEConfig;
 import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import blusunrize.immersiveengineering.common.util.Utils;
@@ -41,15 +41,21 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.*;
+import net.minecraftforge.client.event.EntityViewRenderEvent.CameraSetup;
 import net.minecraftforge.client.event.EntityViewRenderEvent.FOVModifier;
+import net.minecraftforge.client.event.EntityViewRenderEvent.FogColors;
+import net.minecraftforge.client.event.EntityViewRenderEvent.RenderFogEvent;
 import net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
+import net.minecraftforge.client.event.RenderGameOverlayEvent.Post;
+import net.minecraftforge.client.event.RenderGameOverlayEvent.Pre;
+import net.minecraftforge.client.event.RenderTooltipEvent.PostText;
 import net.minecraftforge.client.resource.IResourceType;
 import net.minecraftforge.client.resource.ISelectiveResourceReloadListener;
 import net.minecraftforge.client.resource.VanillaResourceType;
 import net.minecraftforge.event.GameRuleChangeEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
-import net.minecraftforge.event.world.WorldEvent;
+import net.minecraftforge.event.world.WorldEvent.Load;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
@@ -216,7 +222,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 		}
 
 		//Item holding animations
-		if(Config.IEConfig.fancyItemHolding)
+		if(IEConfig.fancyItemHolding)
 			for(EnumHand hand : EnumHand.values())
 			{
 				ItemStack heldItem = living.getHeldItem(hand);
@@ -372,7 +378,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 	}
 
 	@SubscribeEvent()
-	public void onFogUpdate(EntityViewRenderEvent.RenderFogEvent event)
+	public void onFogUpdate(RenderFogEvent event)
 	{
 		Entity entity = event.getEntity();
 		World world = entity.getEntityWorld();
@@ -424,7 +430,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 	}
 
 	@SubscribeEvent()
-	public void onFogColorUpdate(EntityViewRenderEvent.FogColors event)
+	public void onFogColorUpdate(FogColors event)
 	{
 		Entity entity = event.getEntity();
 		World world = entity.getEntityWorld();
@@ -512,12 +518,12 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 	}
 
 	@SubscribeEvent
-	public void onRenderOverlayPost(RenderGameOverlayEvent.Post event)
+	public void onRenderOverlayPost(Post event)
 	{
 		RayTraceResult mop = ClientUtils.mc().objectMouseOver;
 		EntityPlayer player = ClientUtils.mc().player;
 
-		if(ClientUtils.mc().player==null||event.getType()!=RenderGameOverlayEvent.ElementType.TEXT)
+		if(ClientUtils.mc().player==null||event.getType()!=ElementType.TEXT)
 			return;
 
 		//check for light engineer armor upgrade
@@ -586,7 +592,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 	}
 
 	@SubscribeEvent(priority = EventPriority.HIGH)
-	public void onRenderOverlayPre(RenderGameOverlayEvent.Pre event)
+	public void onRenderOverlayPre(Pre event)
 	{
 		if(ClientUtils.mc().player==null||event.getType()!=ElementType.CROSSHAIRS)
 			return;
@@ -784,14 +790,21 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 			}
 		}
 
-		//Rightclick
-		if(event.getButton()==1)
-			if(ClientUtils.mc().player.getRidingEntity() instanceof EntityMachinegun)
+		Entity ridingEntity = ClientUtils.mc().player.getRidingEntity();
+		if(ridingEntity instanceof EntityVehicleSeat)
+		{
+			EntityVehicleSeat riding = (EntityVehicleSeat)ridingEntity;
+			if(riding.info!=null&&riding.info.passMouseButtonEvent(event))
+				event.setCanceled(true);
+		}
+		else if(ridingEntity instanceof EntityMachinegun)
+			if(event.getButton()==1)
 			{
 				NBTTagCompound tag = new NBTTagCompound();
 				tag.setBoolean("clientMessage", true);
 				tag.setBoolean("shoot", event.isButtonstate());
-				IIPacketHandler.sendToServer(new MessageEntityNBTSync(ClientUtils.mc().player.getRidingEntity(), tag));
+				IIPacketHandler.sendToServer(new MessageEntityNBTSync(ridingEntity, tag));
+				event.setCanceled(true);
 			}
 	}
 
@@ -799,7 +812,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 	 * Draws an advanced item tooltip that can include images in text
 	 */
 	@SubscribeEvent()
-	public void onRenderTooltip(RenderTooltipEvent.PostText event)
+	public void onRenderTooltip(PostText event)
 	{
 		//Check whether the item can draw an Advanced Tooltip
 		ItemStack stack = event.getStack();
@@ -816,8 +829,9 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 	}
 
 	@SubscribeEvent
-	public void cameraSetup(EntityViewRenderEvent.CameraSetup event)
+	public void cameraSetup(CameraSetup event)
 	{
+		EntityPlayer player = ClientUtils.mc().player;
 		double partialTicks = event.getRenderPartialTicks();
 
 		//--- ScreenShake Handling ---//
@@ -840,11 +854,35 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 			SCREEN_SHAKE_EFFECTS.removeIf(screenShake -> screenShake.tick(partialTicks));
 		}
 
-		if(Minecraft.getMinecraft().gameSettings.thirdPersonView==0)
+		//TODO: 15.11.2025 revisit, fix camera bug at -180/180 degrees
+		/*if(player.getRidingEntity() instanceof EntityVehicleSeat)
+		{
+			EntityVehicleSeat seat = (EntityVehicleSeat)player.getRidingEntity();
+			Entity vehicle = seat.getRidingEntity();
+
+			if(vehicle!=null)
+			{
+				// Smoothly rotate camera's yaw towards vehicle yaw
+				float vehicleYaw = vehicle.prevRotationYaw+(vehicle.rotationYaw-vehicle.prevRotationYaw)*(float)partialTicks;
+				if(Float.isNaN(vehicleYaw))
+					vehicleYaw = 0;
+				float playerYaw = player.prevRotationYaw+(player.rotationYaw-player.prevRotationYaw)*(float)partialTicks;
+				if(Float.isNaN(playerYaw))
+					playerYaw = 0;
+				float yawDiff = (vehicleYaw-playerYaw);
+				if(Float.isNaN(yawDiff))
+					yawDiff = 0;
+
+				event.setYaw((float)MathHelper.wrapDegrees(event.getYaw()+yawDiff));
+			}
+		}*/
+
+		//Gun recoil
+		if(ClientUtils.mc().gameSettings.thirdPersonView==0)
 		{
 			//--- Gun Recoil Handling ---//
 
-			ItemStack stack = ClientUtils.mc().player.getHeldItemMainhand();
+			ItemStack stack = player.getHeldItemMainhand();
 			if(stack.getItem() instanceof ItemIIGunBase&&Graphics.cameraRecoil)
 			{
 				//Prepare variables
@@ -868,7 +906,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 				event.setYaw((float)(event.getYaw()+recoilH));
 			}
 		}
-		if(CameraHandler.isEnabled()&&!ClientUtils.mc().player.isRiding())
+		if(CameraHandler.isEnabled()&&!player.isRiding())
 			CameraHandler.setEnabled(false);
 
 		if(Graphics.cameraRoll&&CameraHandler.isEnabled())
@@ -972,7 +1010,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 	}
 
 	@SubscribeEvent
-	public void onWorldLoad(WorldEvent.Load event)
+	public void onWorldLoad(Load event)
 	{
 		if(!event.getWorld().isRemote)
 			return;

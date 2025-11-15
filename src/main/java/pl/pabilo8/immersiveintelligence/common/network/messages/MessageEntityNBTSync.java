@@ -12,6 +12,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityMachinegun;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityMortar;
 import pl.pabilo8.immersiveintelligence.common.network.IIMessage;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.entity.ISyncNBTEntity;
 
 /**
@@ -32,6 +33,11 @@ public class MessageEntityNBTSync extends IIMessage implements IEntityBoundMessa
 		this.entity = entity;
 		this.entityID = entity.getEntityId();
 		this.nbt = nbt;
+	}
+
+	public MessageEntityNBTSync(Entity entity, EasyNBT nbt)
+	{
+		this(entity, nbt.unwrap());
 	}
 
 	public MessageEntityNBTSync()
@@ -57,9 +63,14 @@ public class MessageEntityNBTSync extends IIMessage implements IEntityBoundMessa
 	protected void onClientReceive(WorldClient world, NetHandlerPlayClient handler)
 	{
 		Entity entity = world.getEntityByID(entityID);
+		if(!(entity instanceof ISyncNBTEntity))
+			return;
+		ISyncNBTEntity<?> synced = (ISyncNBTEntity<?>)entity;
 
-		if(entity instanceof ISyncNBTEntity)
-			((ISyncNBTEntity<?>)entity).receiveNBTMessageClient(nbt);
+		if(nbt.hasKey("pos"))
+			synced.receivePositionMotionUpdate(nbt);
+		else
+			synced.receiveNBTMessageClient(nbt);
 	}
 
 	@Override

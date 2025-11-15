@@ -2628,10 +2628,32 @@ key.immersiveintelligence.manualReload=Manual Reload
 key.immersiveintelligence.armorHelmet=Toggle Light Engineer Armor Headgear
 key.immersiveintelligence.armorExosuit=Toggle Light Engineer Armor Exoskeleton
 
-key.immersiveintelligence.mgScope=Zoom / Machinegun Scope
+key.immersiveintelligence.mgScope=Zoom / Look through Scope
 
-key.immersiveintelligence.engineWorking=Toggle Engine
-key.immersiveintelligence.motorbikeTowing=Tow/Untow
+key.immersiveintelligence.vehicle.engine.toggle=Toggle Engine
+key.immersiveintelligence.vehicle.engine.start=Start Engine
+key.immersiveintelligence.vehicle.engine.stop=Stop Engine
+
+key.immersiveintelligence.vehicle.gear.up=Gear Up
+key.immersiveintelligence.vehicle.gear.down=Gear Down
+key.immersiveintelligence.vehicle.gear.overdrive=Secondary Gearbox - Overdrive
+key.immersiveintelligence.vehicle.gear.reduction=Secondary Gearbox - Reduction
+
+key.immersiveintelligence.vehicle.brake=Brake
+
+key.immersiveintelligence.vehicle.hatch.open=Open Hatch
+key.immersiveintelligence.vehicle.hatch.close=Close Hatch
+key.immersiveintelligence.vehicle.door.open=Open Door
+key.immersiveintelligence.vehicle.door.close=Close Door
+
+key.immersiveintelligence.vehicle.seat.inventory=Toggle to Inventory
+key.immersiveintelligence.vehicle.seat.vehicle=Toggle to Vehicle Control
+
+key.immersiveintelligence.vehicle.interact.inventory=Open Vehicle Storage
+
+key.immersiveintelligence.vehicle.tow.toggle=Tow/Untow
+key.immersiveintelligence.vehicle.tow.start=Tow
+key.immersiveintelligence.vehicle.tow.stop=Untow
 
 #Advancements
 advancement.immersiveintelligence.root=Immersive Intelligence

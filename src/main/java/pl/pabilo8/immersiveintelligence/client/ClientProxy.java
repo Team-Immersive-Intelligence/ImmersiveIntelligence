@@ -164,6 +164,7 @@ import java.util.Map.Entry;
 public class ClientProxy extends CommonProxy
 {
 	public static KeyBinding keybind_manualReload, keybind_armorHelmet, keybind_armorExosuit, keybind_zoom, keybind_motorbikeEngine, keybind_motorbikeTowing;
+	public static KeyBinding keybind_gearUp, keybind_gearDown, keybind_gearReductionSwitch;
 	private EasyNBT storedGuiData = EasyNBT.newNBT();
 
 	private HashMap<Class<? extends TileEntityItemStackRenderer>, Block> TEISRRegistryQueue = new HashMap<>();
@@ -656,10 +657,21 @@ public class ClientProxy extends CommonProxy
 		keybind_motorbikeTowing = new KeyBinding("key."+ImmersiveIntelligence.MODID+".motorbikeTowing", Keyboard.KEY_Z, "key.categories.gameplay");
 		keybind_motorbikeTowing.setKeyConflictContext(passenger_action);
 
+		keybind_gearUp = new KeyBinding("key."+ImmersiveIntelligence.MODID+".vehicleGearUp", Keyboard.KEY_Y, "key.categories.gameplay");
+		keybind_gearUp.setKeyConflictContext(passenger_action);
+		keybind_gearDown = new KeyBinding("key."+ImmersiveIntelligence.MODID+".vehicleGearDown", Keyboard.KEY_H, "key.categories.gameplay");
+		keybind_gearDown.setKeyConflictContext(passenger_action);
+		keybind_gearReductionSwitch = new KeyBinding("key."+ImmersiveIntelligence.MODID+".vehicleReductionSwitch", Keyboard.KEY_G, "key.categories.gameplay");
+		keybind_gearReductionSwitch.setKeyConflictContext(passenger_action);
+
 		ClientRegistry.registerKeyBinding(keybind_manualReload);
 		ClientRegistry.registerKeyBinding(keybind_zoom);
 		ClientRegistry.registerKeyBinding(keybind_motorbikeEngine);
 		ClientRegistry.registerKeyBinding(keybind_motorbikeTowing);
+
+		ClientRegistry.registerKeyBinding(keybind_gearUp);
+		ClientRegistry.registerKeyBinding(keybind_gearDown);
+		ClientRegistry.registerKeyBinding(keybind_gearReductionSwitch);
 
 		ClientRegistry.registerKeyBinding(keybind_armorHelmet);
 		ClientRegistry.registerKeyBinding(keybind_armorExosuit);

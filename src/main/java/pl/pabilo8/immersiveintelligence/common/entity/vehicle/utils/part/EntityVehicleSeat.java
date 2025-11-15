@@ -9,6 +9,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IVehicleMultiPart;
@@ -154,8 +155,12 @@ public class EntityVehicleSeat extends Entity implements ISyncNBTEntity<EntityVe
 		EntityVehicleBase<?> vehicle = info.vehicle;
 
 		//Set position
-		Vec3d pos = IIMath.offsetPosDirectionXZ(info.offset.x, info.offset.z, vehicle.rotationYaw, vehicle.rotationPitch);
-		passenger.setPosition(vehicle.posX+pos.x+vehicle.motionX, vehicle.posY+pos.y+info.offset.y+vehicle.motionY, vehicle.posZ+pos.z+vehicle.motionZ);
+		Vec3d pos = IIMath.offsetPosDirectionXYZ(info.offset, vehicle.rotationYaw, vehicle.rotationPitch, vehicle.rotationRoll)
+				.addVector(vehicle.posX, vehicle.posY, vehicle.posZ);
+		passenger.setPosition(pos.x, pos.y, pos.z);
+		passenger.motionX = vehicle.motionX;
+		passenger.motionY = vehicle.motionY;
+		passenger.motionZ = vehicle.motionZ;
 
 		//Set angle
 		applyOrientationToEntity(passenger);
@@ -179,7 +184,10 @@ public class EntityVehicleSeat extends Entity implements ISyncNBTEntity<EntityVe
 		super.removePassenger(passenger);
 		//Notify vehicle (apply damage if exiting when the vehicle is moving, etc.)
 		if(getRidingEntity() instanceof IVehicleMultiPart)
+		{
+			updatePassenger(passenger);
 			((IVehicleMultiPart<?>)getRidingEntity()).onSeatDismount(seatID, passenger);
+		}
 		updateEntityForEvent(SyncEvents.ENTITY_PASSENGER);
 	}
 
@@ -202,6 +210,7 @@ public class EntityVehicleSeat extends Entity implements ISyncNBTEntity<EntityVe
 		private EntityVehicleBase<T> vehicle;
 		private boolean shouldSeatPassengerSit = true;
 		private Vec3d offset = Vec3d.ZERO;
+
 		private float yawAngleOffset = 0, minYawAngle = -180, maxYawAngle = 180;
 		@Nullable
 		private VehicleControls controls;
@@ -211,6 +220,8 @@ public class EntityVehicleSeat extends Entity implements ISyncNBTEntity<EntityVe
 			this.seatID = seatID;
 			this.vehicle = vehicle;
 		}
+
+		//--- Setters ---//
 
 		public SeatInfo<T> withSettings(boolean shouldSeatPassengerSit, Vec3d offset)
 		{
@@ -233,9 +244,32 @@ public class EntityVehicleSeat extends Entity implements ISyncNBTEntity<EntityVe
 			return this;
 		}
 
+		//--- Getters ---//
+
 		public String getSeatID()
 		{
 			return seatID;
+		}
+
+		public float getYawAngleOffset()
+		{
+			return yawAngleOffset;
+		}
+
+		public float getMinYawAngle()
+		{
+			return minYawAngle;
+		}
+
+		public float getMaxYawAngle()
+		{
+			return maxYawAngle;
+		}
+
+		@Nullable
+		public VehicleControls getControls()
+		{
+			return controls;
 		}
 
 		/**
@@ -254,5 +288,42 @@ public class EntityVehicleSeat extends Entity implements ISyncNBTEntity<EntityVe
 				return false;
 			return vehicle.getPassengers().contains(ridingEntity);
 		}
+
+		@SideOnly(Side.CLIENT)
+		public boolean passMouseButtonEvent(MouseEvent event)
+		{
+			if(controls==null)
+				return false;
+
+			if(event.getDwheel()!=0)
+				controls.setKey(event.getDwheel() > 0?"mouse_wheelup": "mouse_wheeldown", true);
+			switch(event.getButton())
+			{
+				//Mouse main
+				case 0:
+					controls.setKey("mouse_left", event.isButtonstate());
+					break;
+				case 1:
+					controls.setKey("mouse_right", event.isButtonstate());
+					break;
+				case 2:
+					controls.setKey("mouse_middle", event.isButtonstate());
+					break;
+				//Mouse extra buttons
+				case 3:
+					controls.setKey("mouse_next", event.isButtonstate());
+					break;
+				case 4:
+					controls.setKey("mouse_prev", event.isButtonstate());
+					break;
+			}
+			return true;
+		}
+	}
+
+	@Override
+	public boolean canBeCollidedWith()
+	{
+		return false;
 	}
 }

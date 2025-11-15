@@ -87,4 +87,9 @@ public interface IVehicleMultiPart<T extends Entity & IVehicleMultiPart<T>> exte
 	}
 
 	Vec3d getVelocity();
+
+	default float getRotationRoll()
+	{
+		return 0;
+	}
 }

@@ -77,7 +77,7 @@ public class IIMath extends MathHelper
 	public static Vec3d offsetPosDirection(double offset, double yaw, double pitch)
 	{
 		if(offset==0)
-			return new Vec3d(0, 0, 0);
+			return Vec3d.ZERO;
 
 		double yy = (MathHelper.sin((float)pitch)*offset);
 		double true_offset = (MathHelper.cos((float)pitch)*offset);
@@ -92,13 +92,29 @@ public class IIMath extends MathHelper
 	{
 		//If no offset, return 0 vector
 		if(xOffset==0&&zOffset==0)
-			return new Vec3d(0, 0, 0);
+			return Vec3d.ZERO;
 
 		float yaw = (float)Math.toRadians(-rotationYaw);
 		float yawZ = (float)(yaw-1.5707963267948966);
 		float pitch = (float)Math.toRadians(rotationPitch);
 
 		return offsetPosDirection(xOffset, yaw, pitch).add(offsetPosDirection(zOffset, yawZ, 0));
+	}
+
+	public static Vec3d offsetPosDirectionXYZ(Vec3d offset, float rotationYaw, float rotationPitch, float rotationRoll)
+	{
+		//If no offset, return 0 vector
+		if(offset.x==0&&offset.y==0&&offset.z==0)
+			return Vec3d.ZERO;
+
+		float yaw = (float)Math.toRadians(-rotationYaw);
+		float yawZ = (float)(yaw-1.5707963267948966);
+		float pitch = (float)Math.toRadians(rotationPitch);
+		float pitchY = (float)(pitch+1.5707963267948966);
+
+		return offsetPosDirection(offset.x, yaw, pitch)
+				.add(offsetPosDirection(offset.y, yaw, pitchY))
+				.add(offsetPosDirection(offset.z, yawZ, 0));
 	}
 
 	/**

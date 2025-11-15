@@ -52,6 +52,9 @@ import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Sawmill;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.BlockIIMetalDevice.IIBlockTypes_MetalDevice;
+import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.effect_crate.TileEntityAmmunitionCrate;
+import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.effect_crate.TileEntityMedicalCrate;
+import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.effect_crate.TileEntityRepairCrate;
 import pl.pabilo8.immersiveintelligence.common.block.mines.BlockIIMine.IIBlockTypes_Mine;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityFlagpole;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
@@ -1272,6 +1275,15 @@ public class IIRecipes
 				.withCost(new IngredientStack("blockSteel", 3))
 				.withCost(new IngredientStack("circuitProcessor", 6))
 				.withRequiredProgress(300000);
+
+		UpgradeTechTree.getTreeFor(TileEntityRepairCrate.class)
+				.addUpgrade(IIContent.UPGRADE_INSERTER, UpgradeTier.TIER_1);
+		UpgradeTechTree.getTreeFor(TileEntityMedicalCrate.class)
+				.addUpgrade(IIContent.UPGRADE_INSERTER, UpgradeTier.TIER_1);
+		UpgradeTechTree.getTreeFor(TileEntityAmmunitionCrate.class)
+				.addUpgrade(IIContent.UPGRADE_INSERTER, UpgradeTier.TIER_1)
+				.addUpgrade(IIContent.UPGRADE_MG_LOADER, UpgradeTier.TIER_2)
+				.addDependency(IIContent.UPGRADE_INSERTER, IIContent.UPGRADE_MG_LOADER);
 
 		UpgradeTechTree.getTreeFor(TileEntityEmplacement.class)
 				//Generic Upgrades

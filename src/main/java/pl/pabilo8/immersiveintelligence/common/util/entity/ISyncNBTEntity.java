@@ -2,10 +2,12 @@ package pl.pabilo8.immersiveintelligence.common.util.entity;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageEntityNBTSync;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.NBTSerialisation;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 
@@ -67,5 +69,33 @@ public interface ISyncNBTEntity<T extends Entity & ISyncNBTEntity<T>>
 		NBTTagCompound nbt = new NBTTagCompound();
 		NBTSerialisation.synchroniseFor(tis, (tag, tile) -> tag.serializeForEvent(tile, nbt, event));
 		IIPacketHandler.sendToServer(new MessageEntityNBTSync(tis, nbt));
+	}
+
+	default void sendServerPositionMotionUpdate()
+	{
+		T tis = ((T)this);
+		IIPacketHandler.sendToClient(new MessageEntityNBTSync(tis, EasyNBT.newNBT()
+				.withVec3d("pos", tis.posX, tis.posY, tis.posZ)
+				.withVec3d("motion", tis.motionX, tis.motionY, tis.motionZ)
+				.withFloat("rotationYaw", tis.rotationYaw)
+				.withFloat("rotationPitch", tis.rotationPitch)
+		));
+	}
+
+	default void receivePositionMotionUpdate(NBTTagCompound nbt)
+	{
+		T tis = ((T)this);
+		EasyNBT enbt = EasyNBT.wrapNBT(nbt);
+		//Pos
+		Vec3d pos = enbt.getVec3d("pos");
+		tis.setPosition(pos.x, pos.y, pos.z);
+		//Motion
+		Vec3d motion = enbt.getVec3d("motion");
+		tis.motionX = motion.x;
+		tis.motionY = motion.y;
+		tis.motionZ = motion.z;
+		//Rotation
+		tis.rotationYaw = enbt.getFloat("rotationYaw");
+		tis.rotationPitch = enbt.getFloat("rotationPitch");
 	}
 }

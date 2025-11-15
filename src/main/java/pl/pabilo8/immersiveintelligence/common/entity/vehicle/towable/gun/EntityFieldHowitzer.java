@@ -28,8 +28,9 @@ import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityV
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehicleSeat;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehicleSeat.SeatInfo;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehicleWheel;
-import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehicleWheel.WheelType;
+import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.WheelType;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -48,7 +49,7 @@ public class EntityFieldHowitzer extends EntityVehicleTowable<EntityFieldHowitze
 	private AmmoFactory<EntityAmmoArtilleryProjectile> ammoFactory;
 	public SeatInfo<EntityFieldHowitzer> seatCommander, seatGunner;
 
-	@SyncNBT
+	@SyncNBT(events = SyncEvents.ENTITY_DAMAGED)
 	public VehicleDurability durabilityRightWheel, durabilityLeftWheel, durabilityGun, durabilityShield;
 	public VehicleControls commanderControls, gunnerControls;
 
@@ -82,8 +83,10 @@ public class EntityFieldHowitzer extends EntityVehicleTowable<EntityFieldHowitze
 		//Hitboxes
 		this.durabilityRightWheel = new VehicleDurability(FieldHowitzer.wheelDurability, 4);
 		this.durabilityLeftWheel = new VehicleDurability(FieldHowitzer.wheelDurability, 4);
-		this.durabilityGun = new VehicleDurability(FieldHowitzer.gunDurability, 14);
-		this.durabilityShield = new VehicleDurability(FieldHowitzer.shieldDurability, 32);
+		this.durabilityGun = new VehicleDurability(FieldHowitzer.gunDurability, 14)
+				.withParent(this.durabilityMain);
+		this.durabilityShield = new VehicleDurability(FieldHowitzer.shieldDurability, 32)
+				.withParent(this.durabilityMain);
 
 		//Controls
 		this.commanderControls = new VehicleControls().withStates("forward", "backwards", "turnLeft", "turnRight");
@@ -143,6 +146,7 @@ public class EntityFieldHowitzer extends EntityVehicleTowable<EntityFieldHowitze
 		boolean backwards = this.commanderControls.getKey("backwards");
 		float right = 0, left = 0;
 
+		//
 		if(this.commanderControls.getKey("turnLeft"))
 			right += 0.25f;
 		else if(this.commanderControls.getKey("turnRight"))
@@ -157,6 +161,12 @@ public class EntityFieldHowitzer extends EntityVehicleTowable<EntityFieldHowitze
 				right *= -1;
 			}
 		}
+
+		//Gun elevation
+		if(this.gunnerControls.getKey("up"))
+			gunPitch = Math.min(gunPitch+1f, 76.5f);
+		else if(this.gunnerControls.getKey("down"))
+			gunPitch = Math.max(gunPitch-1f, -12.5f-12.5f);
 
 		partWheelLeft.setMovementFactors(left, 0);
 		partWheelRight.setMovementFactors(right, 0);

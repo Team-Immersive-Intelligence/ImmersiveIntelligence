@@ -134,7 +134,22 @@ public class FactoryTracer
 				while(iterator.hasNext())
 				{
 					Entity entity = iterator.next();
-					if(entity.getEntityBoundingBox().intersects(aabb))
+					Entity[] parts = entity.getParts();
+
+					//Handle child colision boxes
+					if(parts!=null)
+						for(Entity part : parts)
+						{
+							if(part.getEntityBoundingBox().intersects(aabb))
+							{
+								Vec3d hitVec = part.getPositionVector().subtract(getAABBCenter(this.aabb));
+								RayTraceResult trace = new RayTraceResult(part, hitVec);
+								if(onHit.test(trace))
+									return trace;
+								iterator.remove();
+							}
+						}
+					else if(entity.getEntityBoundingBox().intersects(aabb))
 					{
 						Vec3d hitVec = entity.getPositionVector().subtract(getAABBCenter(this.aabb));
 						RayTraceResult trace = new RayTraceResult(entity, hitVec);

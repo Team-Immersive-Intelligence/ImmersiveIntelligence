@@ -28,7 +28,7 @@ import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityV
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehicleSeat;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehicleSeat.SeatInfo;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehicleWheel;
-import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehicleWheel.WheelType;
+import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.WheelType;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.propulsion.VehicleEngineFuelBased;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.propulsion.VehicleTransmission;
 import pl.pabilo8.immersiveintelligence.common.util.IIDamageSources;
@@ -74,7 +74,7 @@ public class EntityMotorbike extends EntityVehicleBase<EntityMotorbike>
 	public EntityVehiclePart<EntityMotorbike> partSeat, partUpgradeSeat, partUpgradeCargo;
 	public SeatInfo<EntityMotorbike> seatRider, seatPassenger, seatTowed;
 
-	@SyncNBT
+	@SyncNBT(events = SyncEvents.ENTITY_DAMAGED)
 	public VehicleDurability frontWheelDurability, backWheelDurability, engineDurability, fuelTankDurability;
 
 	@SyncNBT(events = SyncEvents.ENTITY_VEHICLE_FUEL, time = 40)
@@ -98,12 +98,14 @@ public class EntityMotorbike extends EntityVehicleBase<EntityMotorbike>
 		//Hitboxes
 		this.frontWheelDurability = new VehicleDurability(Motorbike.wheelDurability, 0);
 		this.backWheelDurability = new VehicleDurability(Motorbike.wheelDurability, 0);
-		this.engineDurability = new VehicleDurability(Motorbike.engineDurability, 7);
-		this.fuelTankDurability = new VehicleDurability(Motorbike.fuelTankDurability, 4);
+		this.engineDurability = new VehicleDurability(Motorbike.engineDurability, 7)
+				.withParent(this.durabilityMain);
+		this.fuelTankDurability = new VehicleDurability(Motorbike.fuelTankDurability, 4)
+				.withParent(this.durabilityMain);
 
 		//Controls
 		this.driverControls = new VehicleControls()
-				.withStates("engine", "tow", "accelerate", "brake", "turnLeft", "turnRight");
+				.withStates("engine", "tow", "accelerate", "brake", "turnLeft", "turnRight", "gearUp", "gearDown", "honk");
 		if(world.isRemote)
 		{
 			GameSettings settings = ClientUtils.mc().gameSettings;
@@ -113,7 +115,9 @@ public class EntityMotorbike extends EntityVehicleBase<EntityMotorbike>
 					.withKeyBinding(settings.keyBindForward, "accelerate")
 					.withKeyBinding(settings.keyBindBack, "brake")
 					.withKeyBinding(settings.keyBindLeft, "turnLeft")
-					.withKeyBinding(settings.keyBindRight, "turnRight");
+					.withKeyBinding(settings.keyBindRight, "turnRight")
+					.withKeyBinding(ClientProxy.keybind_gearUp, "gearUp")
+					.withKeyBinding(ClientProxy.keybind_gearDown, "gearDown");
 		}
 
 		//Seats
@@ -131,10 +135,12 @@ public class EntityMotorbike extends EntityVehicleBase<EntityMotorbike>
 		//Components
 		this.partWheelBack = new EntityVehicleWheel<>(this, "wheel_back", new Vec3d(-1.5, 0, 0), AABB_WHEEL)
 				.withType(WheelType.DRIVE)
-				.withHitbox(backWheelDurability);
+				.withHitbox(backWheelDurability)
+				.withWeightShare(0.6);
 		this.partWheelFront = new EntityVehicleWheel<>(this, "wheel_front", new Vec3d(1.25, 0, 0), AABB_WHEEL)
 				.withType(WheelType.STEERABLE)
-				.withHitbox(frontWheelDurability);
+				.withHitbox(frontWheelDurability)
+				.withWeightShare(0.4);
 		this.fuelTank = new VehicleFuelTank<>(this, 12000)
 				.withDurability(fuelTankDurability);
 		this.engine = new VehicleEngineFuelBased(fuelTank)
@@ -149,7 +155,7 @@ public class EntityMotorbike extends EntityVehicleBase<EntityMotorbike>
 
 				partFuelTank = new EntityVehiclePart<>(this, "fuel_tank", new Vec3d(0.1, 1.175, 0), AABB_TANK)
 						.withHitbox(fuelTankDurability),
-				partEngine = new EntityVehiclePart<>(this, "engine", Vec3d.ZERO, AABB_ENGINE)
+				partEngine = new EntityVehiclePart<>(this, "engine", new Vec3d(0, 0.5, 0), AABB_ENGINE)
 						.withHitbox(engineDurability),
 				partSeat = new EntityVehiclePart<>(this, "seat", new Vec3d(-0.65, 1.5, 0), AABB_SEAT)
 						.withHitbox(durabilityMain)
@@ -183,6 +189,11 @@ public class EntityMotorbike extends EntityVehicleBase<EntityMotorbike>
 			partWheelFront.setSteeringAngle(45);
 		else
 			partWheelFront.setSteeringAngle(0);
+
+		if(driverControls.getKey("gearUp"))
+			transmission.shiftUp();
+		else if(driverControls.getKey("gearDown"))
+			transmission.shiftDown();
 
 	}
 

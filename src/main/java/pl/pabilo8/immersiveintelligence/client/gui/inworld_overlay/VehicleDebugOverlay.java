@@ -19,6 +19,7 @@ import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.VehicleDurab
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehiclePart;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehicleWheel;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
+import pl.pabilo8.immersiveintelligence.common.util.entity.IIEntityUtils;
 
 import java.util.List;
 
@@ -55,6 +56,7 @@ public class VehicleDebugOverlay extends InWorldOverlayBase
 		List<EntityVehicleBase> vehicles = world.getEntities(EntityVehicleBase.class, input -> true);
 		for(EntityVehicleBase vehicle : vehicles)
 		{
+			Vec3d motionOffset = IIEntityUtils.getEntityMotion(vehicle).scale(partialTicks);
 			for(EntityVehiclePart<?> part : vehicle.getVehicleParts())
 			{
 				GlStateManager.pushMatrix();
@@ -80,7 +82,7 @@ public class VehicleDebugOverlay extends InWorldOverlayBase
 					color = IIColor.MC_DARK_GREEN;
 
 				//Draw part bounds
-				GlStateManager.translate(part.posX-posX, part.posY-posY, part.posZ-posZ);
+				GlStateManager.translate(part.posX+motionOffset.x-posX, part.posY+motionOffset.y-posY, part.posZ+motionOffset.z-posZ);
 				RenderGlobal.drawSelectionBoundingBox(part.aabb.grow(0.002D),
 						color.red/255f, color.green/255f, color.blue/255f, 1.0F);
 				//Draw part name

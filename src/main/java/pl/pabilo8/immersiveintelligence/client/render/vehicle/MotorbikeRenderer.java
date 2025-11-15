@@ -50,10 +50,8 @@ public class MotorbikeRenderer extends Render<EntityMotorbike> implements IReloa
 
 		boolean isTowing = entity.getRecursivePassengers().stream().anyMatch(entity1 -> entity1 instanceof ITowable);
 
-		float stepAngle = (float)((frontWheel.posY-backWheel.posY)*12.5f);
-
-		GlStateManager.rotate(stepAngle, 1, 0, 0);
 		GlStateManager.rotate(-entityYaw, 0, 1, 0);
+		GlStateManager.rotate(-entity.rotationPitch, 1, 0, 0);
 		GlStateManager.translate(-0.55, 0.5, 0);
 
 

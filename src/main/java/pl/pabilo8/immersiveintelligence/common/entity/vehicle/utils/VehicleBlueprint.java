@@ -39,17 +39,7 @@ public @interface VehicleBlueprint
 	 */
 	int baseArmor() default 4;
 
-	//--- Wheels and Physics ---//
-
-	/**
-	 * @return the linear drag factor of this vehicle (0.0-1.0)
-	 */
-	double linearDamping() default 0.98;
-
-	/**
-	 * @return the angular drag factor of this vehicle (0.0-1.0)
-	 */
-	double angularDamping() default 0.96;
+	//--- Wheels ---//
 
 	/**
 	 * @return the lateral friction coefficient for driven wheels (0.0-1.0)
@@ -59,7 +49,13 @@ public @interface VehicleBlueprint
 	/**
 	 * @return the lateral friction coefficient for idler wheels (0.0-1.0)
 	 */
-	double lateralFrictionIdler() default 0.25;
+	double lateralFrictionIdler() default 0.7;
+
+	/**
+	 * @return the multiplier for lateral friction of  steering wheels
+	 * @apiNote multiplies lateralFrictionIdler
+	 */
+	double steeringFrictionMultiplier() default 4;
 
 	/**
 	 * @return the force multiplication factor for engine power
@@ -72,6 +68,23 @@ public @interface VehicleBlueprint
 	double torqueFactor() default 0.025;
 
 	/**
+	 * @return the energy loss factor when the suspension bounces
+	 */
+	double suspensionDamping() default 0.7;
+
+	//--- Physics ---//
+
+	/**
+	 * @return the linear drag factor of this vehicle (0.0-1.0)
+	 */
+	double linearDamping() default 0.98;
+
+	/**
+	 * @return the angular drag factor of this vehicle (0.0-1.0)
+	 */
+	double angularDamping() default 0.96;
+
+	/**
 	 * @return the air drag coefficient (typical 0.6-1.0 for vehicles)
 	 */
 	double airDragCoefficient() default 0.7;
@@ -82,17 +95,23 @@ public @interface VehicleBlueprint
 	double rollingResistance() default 0.015;
 
 	/**
-	 * @return the static friction coefficient when stationary
+	 * Maximum pitch angle in degrees for vehicle orientation
+	 *
+	 * @return maximum pitch angle
 	 */
-	double staticFriction() default 0.9;
+	double maxPitchAngle() default 30.0;
 
 	/**
-	 * @return the kinetic friction coefficient when moving
+	 * Maximum roll angle in degrees for vehicle orientation
+	 *
+	 * @return maximum roll angle
 	 */
-	double kineticFriction() default 0.7;
+	double maxRollAngle() default 25.0;
 
 	/**
-	 * @return the frontal area factor for air drag calculation (0.0-1.0)
+	 * Frontal area factor for air drag calculation
+	 *
+	 * @return frontal area factor (0.0-1.0)
 	 */
-	double frontalAreaFactor() default 0.85;
+	double frontalAreaFactor() default 0.8;
 }

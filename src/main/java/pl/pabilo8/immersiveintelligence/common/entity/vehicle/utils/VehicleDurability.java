@@ -5,12 +5,16 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.util.INBTSerializable;
 
+import javax.annotation.Nullable;
+
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 23.12.2022
  */
 public class VehicleDurability implements INBTSerializable<NBTTagInt>
 {
+	@Nullable
+	private VehicleDurability parent;
 	public final int maxDurability, armor;
 	private int durability;
 
@@ -21,9 +25,19 @@ public class VehicleDurability implements INBTSerializable<NBTTagInt>
 		this.armor = armor;
 	}
 
+	public VehicleDurability withParent(VehicleDurability parent)
+	{
+		this.parent = parent;
+		return this;
+	}
+
 	public void attackFrom(DamageSource source, float amount)
 	{
-		this.durability = MathHelper.clamp(durability+(int)amount, 0, maxDurability);
+		int damage = (int)Math.max(0, amount-(this.isDead()?this.armor*0.25: this.armor));
+		if(durability==0&&this.parent!=null)
+			this.parent.attackFrom(source, damage);
+		else
+			this.durability = MathHelper.clamp(durability-damage, 0, maxDurability);
 	}
 
 	public boolean isDead()

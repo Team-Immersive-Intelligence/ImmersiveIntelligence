@@ -10,10 +10,14 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.pabilo8.immersiveintelligence.api.utils.IEntitySpecialRepairable;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.IAdvancedTextOverlay;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IVehicleMultiPart;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.VehicleDurability;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehicleSeat.SeatInfo;
+import pl.pabilo8.immersiveintelligence.common.util.IIMath;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
+import pl.pabilo8.immersiveintelligence.common.util.entity.ISyncNBTEntity;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -23,7 +27,7 @@ import java.util.Arrays;
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 09.07.2020
  */
-public class EntityVehiclePart<T extends Entity & IVehicleMultiPart<T>> extends MultiPartEntityPart implements IAdvancedTextOverlay, IVehicleComponent
+public class EntityVehiclePart<T extends Entity & IVehicleMultiPart<T>> extends MultiPartEntityPart implements IAdvancedTextOverlay, IVehicleComponent, IEntitySpecialRepairable
 {
 	/**
 	 * Offset from center of the vehicle
@@ -87,8 +91,20 @@ public class EntityVehiclePart<T extends Entity & IVehicleMultiPart<T>> extends 
 	public boolean attackEntityFrom(DamageSource source, float amount)
 	{
 		if(durability!=null)
+		{
 			durability.attackFrom(source, amount);
+			if(parentExt instanceof ISyncNBTEntity)
+				((ISyncNBTEntity<?>)parentExt).updateEntityForEvent(SyncEvents.ENTITY_DAMAGED);
+		}
 		return false;
+	}
+
+	@Override
+	public AxisAlignedBB getEntityBoundingBox()
+	{
+		if(aabb==null)
+			return super.getEntityBoundingBox();
+		return aabb.offset(posX, posY, posZ);
 	}
 
 	@Override
@@ -133,7 +149,8 @@ public class EntityVehiclePart<T extends Entity & IVehicleMultiPart<T>> extends 
 
 	protected Vec3d getWorldPos()
 	{
-		return parentExt.getPositionVector().add(offset);
+		return parentExt.getPositionVector().add(IIMath.offsetPosDirectionXYZ(offset,
+				parentExt.rotationYaw, parentExt.rotationPitch, parentExt.getRotationRoll()));
 	}
 
 	@Nullable
@@ -141,5 +158,25 @@ public class EntityVehiclePart<T extends Entity & IVehicleMultiPart<T>> extends 
 	public VehicleDurability getDurability()
 	{
 		return durability;
+	}
+
+	@Override
+	public boolean canRepair()
+	{
+		return durability!=null&&durability.canRepair();
+	}
+
+	@Override
+	public boolean repair(int repairPoints)
+	{
+		assert durability!=null;
+		return durability.repair(repairPoints);
+	}
+
+	@Override
+	public int getRepairCost()
+	{
+		assert durability!=null;
+		return durability.armor;
 	}
 }

@@ -2,6 +2,7 @@ package pl.pabilo8.immersiveintelligence.common.entity.vehicle;
 
 import com.google.common.collect.Sets;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.IEntityMultiPart;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -22,7 +23,7 @@ import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityV
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehicleSeat;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehicleSeat.SeatInfo;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehicleWheel;
-import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehicleWheel.WheelForces;
+import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.WheelForces;
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.MissingAnnotationException;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
@@ -64,14 +65,15 @@ public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends 
 	protected UpgradeManager<T> upgradeManager;
 
 	//--- Motion --- //
-	@SyncNBT
+	@SyncNBT(events = SyncEvents.ENTITY_DAMAGED)
 	public VehicleDurability durabilityMain;
 	@SyncNBT
 	public Vec3d velocity = Vec3d.ZERO;
 	@SyncNBT(events = {SyncEvents.ENTITY_VEHICLE_CONTROLS, SyncEvents.ENTITY_PASSENGER, SyncEvents.ENTITY_COLLISION})
-	public float rotationRoll = 0;
+	public float prevRotationRoll = 0, rotationRoll = 0;
 	@SyncNBT
 	public double angularVelocity = 0.0;
+	public boolean hasCollidedBefore = false;
 
 	/**
 	 * Constructs a new towable vehicle entity.
@@ -179,17 +181,28 @@ public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends 
 		super.onUpdate();
 
 		//Check for main damage
+		hasCollidedBefore = collidedHorizontally;
 		if(!world.isRemote&&durabilityMain.isDead())
 		{
 			setDead();
 			return;
 		}
-
+		//Perform child class' abstract update method
 		onVehicleUpdate();
 
 		//Handle movement and update parts based on result
 		handleMovement();
+		//Fix vehicle being stuck in blocks and prevent it from levitating
+		fixPositionErrors();
+		//Update parts
 		updateParts();
+
+		//Send an update to the clients after a colision, client has some errors in collision handling
+		if(!this.world.isRemote&&!hasCollidedBefore&&collidedHorizontally)
+		{
+			hasCollidedBefore = true;
+			sendServerPositionMotionUpdate();
+		}
 	}
 
 	/**
@@ -205,10 +218,11 @@ public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends 
 	public void handleMovement()
 	{
 		final double mass = this.blueprint.mass();
+		//Update rotation values
 		this.prevRotationYaw = this.rotationYaw;
+		this.prevRotationPitch = this.rotationPitch;
+		this.prevRotationRoll = this.rotationRoll;
 
-		//Calculate realistic lateral friction based on mass and wheel count
-		double maxLateralForce = calculateRealisticLateralFriction(mass);
 		Vec3d collectedForce = Vec3d.ZERO;
 		double torque = 0;
 		int groundedWheels = 0;
@@ -219,7 +233,7 @@ public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends 
 			//Simulate suspension compression for rendering
 			wheel.simulateSuspensionCompression();
 			//Simulate wheel physics
-			WheelForces forces = wheel.calculateForces(maxLateralForce);
+			WheelForces forces = wheel.calculateForces();
 			if(forces.isGrounded)
 			{
 
@@ -238,7 +252,11 @@ public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends 
 
 		//Update rotation
 		this.angularVelocity += torque;
-		this.rotationYaw = (float)MathHelper.wrapDegrees(this.rotationYaw+Math.toDegrees(this.angularVelocity));
+		float newYaw = (float)MathHelper.wrapDegrees(this.rotationYaw+Math.toDegrees(this.angularVelocity));
+		if(isRotationSafe(newYaw))
+			this.rotationYaw = newYaw;
+		else
+			this.angularVelocity *= 0.6;
 
 		//Use velocity-based thresholds for zeroing
 		double velocityThreshold = 0.001*mass; //Scale with mass
@@ -262,23 +280,10 @@ public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends 
 		this.motionY = nextPos.y-currentPos.y;
 		this.motionZ = nextPos.z-currentPos.z;
 
-		this.velocityChanged = true;
+		//this.velocityChanged = true;
 		this.posX += motionX;
 		this.posY += motionY;
 		this.posZ += motionZ;
-	}
-
-	/**
-	 * Calculates realistic lateral friction based on mass and wheel configuration
-	 */
-	private double calculateRealisticLateralFriction(double mass)
-	{
-		//Base friction coefficient from blueprint
-		double baseFriction = Math.max(blueprint.lateralFrictionDrive(), blueprint.lateralFrictionIdler());
-		//Adjust for wheel count - more wheels = more total friction
-		double wheelFactor = Math.sqrt(this.wheels.length)/2.0;
-		//Mass affects how much force is needed to overcome friction
-		return baseFriction*wheelFactor/(mass/50f*this.wheels.length);
 	}
 
 	/**
@@ -286,7 +291,7 @@ public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends 
 	 */
 	private void applyMotionDamping(int groundedWheels)
 	{
-		double tick = 0.05; //1/20s tick
+		double tick = 0.05;
 		double mass = this.blueprint.mass();
 
 		double vx = this.velocity.x;
@@ -360,66 +365,286 @@ public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends 
 
 	/**
 	 * Handles collision detection and response for all vehicle parts.
-	 * Keeps the existing Y-axis collision handling while adapting X-Z collisions.
 	 */
 	private Vec3d handleCollisions(Vec3d currentPos, Vec3d attemptedMove)
 	{
-		Vec3d vecX = IIMath.offsetPosDirection(1f, Math.toRadians(MathHelper.wrapDegrees(-prevRotationYaw)), prevRotationPitch);
-		Vec3d vecZ = IIMath.offsetPosDirection(1f, Math.toRadians(MathHelper.wrapDegrees(-prevRotationYaw-90)), prevRotationPitch);
-		Vec3d adjustedMove = attemptedMove;
+		//Do not calculate collision no motion is performed
+		if(attemptedMove.equals(Vec3d.ZERO))
+			return currentPos;
 
+		Vec3d adjustedMove = attemptedMove;
 		//Check each part for collisions
 		for(EntityVehiclePart<T> part : partArray)
 		{
-			AxisAlignedBB partCurrentBB = part.aabb.offset(currentPos
-					.add(vecX.scale(part.offset.x))
-					.add(vecZ.scale(part.offset.z))
-					.addVector(0, part.offset.y, 0)
-			);
-			AxisAlignedBB partNextBB = partCurrentBB.offset(attemptedMove.x, attemptedMove.y, attemptedMove.z);
+			Vec3d partPos = this.getPositionVector().add(IIMath.offsetPosDirectionXYZ(part.offset, this.rotationYaw, this.rotationPitch, this.rotationRoll));
+			AxisAlignedBB partCurrentBB = part.aabb.offset(partPos);
+			AxisAlignedBB partNextBB = partCurrentBB.expand(attemptedMove.x, attemptedMove.y, attemptedMove.z);
 
 			//Get block collision boxes
 			List<AxisAlignedBB> collisions = new ArrayList<>(world.getCollisionBoxes(null, partNextBB));
+			//TODO: 15.11.2025 driving over/ramming entities + mutually damaging vehicles by collision (also with blocks)
 			for(Entity entity : world.getEntitiesInAABBexcluding(part, partNextBB, e -> e!=this&&e instanceof EntityVehicleBase))
-				collisions.add(entity.getEntityBoundingBox());
+			{
+				if(entity instanceof IEntityMultiPart&&entity.getParts()!=null)
+					for(Entity entityPart : entity.getParts())
+						collisions.add(entityPart.getCollisionBoundingBox());
+				else
+					collisions.add(entity.getEntityBoundingBox());
+			}
 
 			if(!collisions.isEmpty())
+			{
+				Vec3d partAdjustedMove = attemptedMove;
 				for(AxisAlignedBB collisionBox : collisions)
 				{
-					//Handle Y-axis collisions (vertical) - keep existing behavior
-					if(attemptedMove.y!=0)
+					//IILogger.info(partPos.toString()+" collided with "+collisionBox.toString());
+					//Handle Y-axis collisions
+					if(partAdjustedMove.y!=0)
 					{
-						double yOffset = collisionBox.calculateYOffset(partCurrentBB, attemptedMove.y);
-						if(yOffset!=attemptedMove.y)
+						double yOffset = collisionBox.calculateYOffset(partCurrentBB, partAdjustedMove.y);
+						if(yOffset!=partAdjustedMove.y)
 						{
-							adjustedMove = new Vec3d(adjustedMove.x, yOffset, adjustedMove.z);
-							if(attemptedMove.y < 0) this.onGround = true;
+							partAdjustedMove = new Vec3d(partAdjustedMove.x, yOffset, partAdjustedMove.z);
+							//update current bounding box to reflect the applied Y offset
+							partCurrentBB = partCurrentBB.offset(0.0D, yOffset, 0.0D);
+							if(partAdjustedMove.y < 0) this.onGround = true;
+							collided = collidedVertically = true;
+						}
+					}
+					//handle X using updated bounding box
+					if(partAdjustedMove.x!=0)
+					{
+						double xOffset = collisionBox.calculateXOffset(partCurrentBB, partAdjustedMove.x);
+						if(xOffset!=partAdjustedMove.x)
+						{
+							partAdjustedMove = new Vec3d(xOffset, partAdjustedMove.y, partAdjustedMove.z);
+							partCurrentBB = partCurrentBB.offset(xOffset, 0.0D, 0.0D);
+							collided = collidedHorizontally = true;
+						}
+					}
+					//handle Z using updated bounding box
+					if(partAdjustedMove.z!=0)
+					{
+						double zOffset = collisionBox.calculateZOffset(partCurrentBB, partAdjustedMove.z);
+						if(zOffset!=partAdjustedMove.z)
+						{
+							partAdjustedMove = new Vec3d(partAdjustedMove.x, partAdjustedMove.y, zOffset);
+							partCurrentBB = partCurrentBB.offset(0.0D, 0.0D, zOffset);
+							collided = collidedHorizontally = true;
 						}
 					}
 
-					//Handle X-axis collisions with reduced bounce
-					if(attemptedMove.x!=0)
-					{
-						double xOffset = collisionBox.calculateXOffset(partCurrentBB, attemptedMove.x);
-						if(xOffset!=attemptedMove.x)
-							adjustedMove = new Vec3d(xOffset, adjustedMove.y, adjustedMove.z);
-					}
-
-					//Handle Z-axis collisions with reduced bounce
-					if(attemptedMove.z!=0)
-					{
-						double zOffset = collisionBox.calculateZOffset(partCurrentBB, attemptedMove.z);
-						if(zOffset!=attemptedMove.z)
-							adjustedMove = new Vec3d(adjustedMove.x, adjustedMove.y, zOffset);
-					}
 				}
 
+				//Take the most restrictive movement across all parts
+				adjustedMove = new Vec3d(
+						Math.abs(partAdjustedMove.x) <= Math.abs(adjustedMove.x)?partAdjustedMove.x: adjustedMove.x,
+						Math.abs(partAdjustedMove.y) <= Math.abs(adjustedMove.y)?partAdjustedMove.y: adjustedMove.y,
+						Math.abs(partAdjustedMove.z) <= Math.abs(adjustedMove.z)?partAdjustedMove.z: adjustedMove.z
+				);
+			}
+
+			//Turn the <s>tables</s> wheels
 			if(part instanceof EntityVehicleWheel)
 				((EntityVehicleWheel<T>)part).addWheelTraverse((float)adjustedMove.lengthSquared());
 		}
 
 		return currentPos.add(adjustedMove);
 	}
+
+	/**
+	 * Tests whether the vehicle rotated to a given yaw would collide with the world.
+	 */
+	private boolean isRotationSafe(float testYaw)
+	{
+		//For each part (wheels + hull)
+		for(EntityVehiclePart<T> part : partArray)
+		{
+			//Compute rotated part position for the *test* yaw
+			Vec3d rotatedPos = this.getPositionVector().add(
+					IIMath.offsetPosDirectionXYZ(
+							part.offset,
+							testYaw,
+							this.rotationPitch,
+							this.rotationRoll
+					)
+			);
+
+			AxisAlignedBB futureBB = part.aabb.offset(rotatedPos);
+
+			//Query block collisions
+			List<AxisAlignedBB> boxes = world.getCollisionBoxes(null, futureBB);
+
+			if(!boxes.isEmpty())
+				return false; //rotation causes intersection -> not safe
+
+			//Also test entity collisions (other vehicles)
+			for(Entity e : world.getEntitiesInAABBexcluding(this, futureBB,
+					ent -> ent instanceof EntityVehicleBase))
+			{
+				EntityVehicleBase<?> other = (EntityVehicleBase<?>)e;
+				for(EntityVehiclePart<?> vehiclePart : other.getVehicleParts())
+					if(vehiclePart.getEntityBoundingBox().intersects(futureBB))
+						return false;
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * Attempts to resolve very small penetrations (< 0.125 blocks) by nudging the entire vehicle out of block intersections.
+	 * Performs a ground-snap to resolve cases where downward motion was clipped early, leaving the vehicle hovering fractions of a block above the ground.
+	 */
+	public void fixPositionErrors()
+	{
+		//threshold for inside-block correction
+		final double INSIDE_THRESHOLD = 0.125;
+		//max downward correction allowed
+		final double SNAP_MAX = 0.25;
+		//depth to scan for ground
+		final double PROBE = 0.3;
+
+		Vec3d accumulatedCorrection = Vec3d.ZERO;
+		boolean anyWheelOnGround = false;
+
+		//Phase 1: Fix micro-penetrations
+		for(EntityVehiclePart<T> part : partArray)
+		{
+			//Collect wheels for phase two
+			if(part instanceof EntityVehicleWheel)
+				if(part.onGround)
+					anyWheelOnGround = true;
+
+			//Simulate final offset
+			Vec3d partPos = this.getPositionVector().add(
+					IIMath.offsetPosDirectionXYZ(
+							part.offset,
+							this.rotationYaw,
+							this.rotationPitch,
+							this.rotationRoll
+					)
+			);
+
+			AxisAlignedBB partBB = part.aabb.offset(partPos);
+			List<AxisAlignedBB> blockBoxes = world.getCollisionBoxes(null, partBB);
+			//Check for intersections inside threshold
+			for(AxisAlignedBB block : blockBoxes)
+			{
+				AxisAlignedBB inter = partBB.intersect(block);
+				double dx = (inter.maxX-inter.minX)/2.0;
+				double dy = (inter.maxY-inter.minY)/2.0;
+				double dz = (inter.maxZ-inter.minZ)/2.0;
+
+				if(dx < INSIDE_THRESHOLD||dy < INSIDE_THRESHOLD||dz < INSIDE_THRESHOLD)
+				{
+					//Push out any intersections
+					Vec3d direction = partBB.getCenter().subtract(block.getCenter()).normalize();
+					double depth = Math.min(dx, Math.min(dy, dz));
+					Vec3d push = direction.scale(depth);
+
+					accumulatedCorrection = accumulatedCorrection.add(push);
+				}
+			}
+		}
+
+		//Apply correction for phase 1
+		if(!accumulatedCorrection.equals(Vec3d.ZERO))
+		{
+			Vec3d finalCorrection = accumulatedCorrection.normalize()
+					.scale(Math.min(INSIDE_THRESHOLD*0.5, accumulatedCorrection.lengthVector()));
+			if(isMicroCorrectionSafe(finalCorrection))
+			{
+				this.posX += finalCorrection.x;
+				this.posY += finalCorrection.y;
+				this.posZ += finalCorrection.z;
+			}
+		}
+
+		//Phase 2: Ground snapping
+		if(collidedVertically&&!anyWheelOnGround)
+		{
+			double minGap = Double.MAX_VALUE;
+			boolean hasGroundBelow = false;
+
+			//Try to lower each wheel until it hits the ground
+			for(EntityVehicleWheel<T> part : wheels)
+			{
+				Vec3d partPos = this.getPositionVector().add(
+						IIMath.offsetPosDirectionXYZ(
+								part.offset,
+								this.rotationYaw,
+								this.rotationPitch,
+								this.rotationRoll
+						)
+				);
+				AxisAlignedBB wheelBB = part.aabb.offset(partPos);
+				AxisAlignedBB probeBB = wheelBB.offset(0, -PROBE, 0);
+
+				//Get blocks below the wheel
+				List<AxisAlignedBB> blocksBelow = world.getCollisionBoxes(null, probeBB);
+				for(AxisAlignedBB block : blocksBelow)
+				{
+					double gap = wheelBB.minY-block.maxY;
+					if(gap >= 0&&gap < minGap)
+					{
+						minGap = gap;
+						hasGroundBelow = true;
+					}
+				}
+			}
+
+			//If ground found below within snap range, snap down
+			if(hasGroundBelow&&minGap < SNAP_MAX)
+			{
+				Vec3d snap = new Vec3d(0, -minGap, 0);
+
+				if(isMicroCorrectionSafe(snap))
+				{
+					this.posY -= minGap;
+					this.prevPosY -= minGap;
+				}
+			}
+		}
+
+
+	}
+
+	/**
+	 * Tests if shifting the entire vehicle by the given offset causes
+	 * any new collisions. Used by fixMicroPositioning().
+	 */
+	private boolean isMicroCorrectionSafe(Vec3d shift)
+	{
+		if(shift.equals(Vec3d.ZERO))
+			return false;
+
+		for(EntityVehiclePart<T> part : partArray)
+		{
+			Vec3d newPos = this.getPositionVector().add(shift).add(
+					IIMath.offsetPosDirectionXYZ(
+							part.offset,
+							this.rotationYaw,
+							this.rotationPitch,
+							this.rotationRoll
+					)
+			);
+
+			AxisAlignedBB newBB = part.aabb.offset(newPos);
+
+			//If part is now inside a block, correction is unsafe
+			if(!world.getCollisionBoxes(null, newBB).isEmpty())
+				return false;
+
+			//If part collides with other entities
+			List<Entity> hits = world.getEntitiesInAABBexcluding(this, newBB, e -> e!=this);
+			if(!hits.isEmpty())
+				return false;
+		}
+
+		return true;
+	}
+
 
 	@Override
 	public double getAngularVelocity()
@@ -457,7 +682,8 @@ public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends 
 		for(EntityVehiclePart<T> part : getVehicleParts())
 		{
 			//Transform offset using the rotated vectors
-			Vec3d newPos = this.getPositionVector().add(IIMath.offsetPosDirectionXZ(part.offset.x, part.offset.z, this.rotationYaw, 0));
+			Vec3d newPos = this.getPositionVector().add(IIMath.offsetPosDirectionXYZ(part.offset, this.rotationYaw, this.rotationPitch, this.rotationRoll));
+
 			float yawAngle = this.rotationYaw;
 			if(part instanceof EntityVehicleWheel)
 			{
@@ -465,7 +691,7 @@ public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends 
 				yawAngle = wheel.rotationYaw;
 				wheel.addWheelTraverse((float)part.getPositionVector().distanceTo(newPos));
 			}
-			part.setLocationAndAngles(newPos.x, posY+part.offset.y, newPos.z, yawAngle, 0);
+			part.setLocationAndAngles(newPos.x, newPos.y, newPos.z, yawAngle, 0);
 			part.onUpdate();
 		}
 	}
