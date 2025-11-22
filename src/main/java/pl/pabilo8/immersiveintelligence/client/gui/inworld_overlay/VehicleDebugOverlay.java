@@ -18,6 +18,7 @@ import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityVehicleBase;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.VehicleDurability;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehiclePart;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehicleWheel;
+import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.VerticalForces;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.entity.IIEntityUtils;
 
@@ -75,6 +76,20 @@ public class VehicleDebugOverlay extends InWorldOverlayBase
 					drawArrow(yaw, cx, cy, cz, 1, IIColor.MC_BLUE);
 					Vec3d force = wheel.getLastForces().force.normalize();
 					drawArrow(force.x, force.z, cx, cy, cz, 1f, IIColor.MC_RED);
+
+					//Climbing
+					VerticalForces verticalForces = wheel.getLastVerticalForces();
+					if(verticalForces.canClimb)
+					{
+						GlStateManager.pushMatrix();
+						GlStateManager.translate(motionOffset.x-posX, motionOffset.y-posY, motionOffset.z-posZ);
+						RenderGlobal.drawSelectionBoundingBox(verticalForces.climbedBox.grow(0.002D),
+								IIColor.MC_YELLOW.red/255f, IIColor.MC_YELLOW.green/255f, IIColor.MC_YELLOW.blue/255f, 1.0F);
+						Vec3d center = verticalForces.climbedBox.getCenter();
+						drawArrow(verticalForces.obstacleNormal.x, verticalForces.obstacleNormal.z, center.x, center.y, center.z,
+								(float)verticalForces.climbedBox.getAverageEdgeLength()*0.5f, IIColor.MC_YELLOW);
+						GlStateManager.popMatrix();
+					}
 				}
 				else if(part.partName.contains("seat"))
 					color = IIColor.MC_GOLD;
@@ -111,6 +126,7 @@ public class VehicleDebugOverlay extends InWorldOverlayBase
 				GlStateManager.popMatrix();
 			}
 
+			//Velocity
 			AxisAlignedBB bbWorld = vehicle.getRenderBoundingBox();
 			double cx = (bbWorld.minX+bbWorld.maxX)*0.5-posX;
 			double cy = (bbWorld.minY+bbWorld.maxY)*0.5-posY;

@@ -15,19 +15,11 @@ public class WheelForces
 	public final Vec3d force;
 	public final double torque;
 	public final boolean isGrounded;
-	public final double normalForce;
 
-	public WheelForces(Vec3d force, double torque, boolean isGrounded, double normalForce)
+	public WheelForces(Vec3d force, double torque, boolean isGrounded)
 	{
 		this.force = force;
 		this.torque = torque;
 		this.isGrounded = isGrounded;
-		this.normalForce = normalForce;
-	}
-
-	// Backwards compatibility constructor
-	public WheelForces(Vec3d force, double torque, boolean isGrounded)
-	{
-		this(force, torque, isGrounded, 0.0);
 	}
 }

@@ -41,7 +41,7 @@ public class IIEntityUtils
 	}
 
 	/**
-	 * Sets an entity's motion vector, because {@link Entity#setVelocity(double, double, double)} is client side only.
+	 * Sets an entity's motion vector.
 	 *
 	 * @param entity  entity to set motion to
 	 * @param motionX motion on X axis

@@ -1,18 +1,21 @@
 package pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.IEntityMultiPart;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import pl.pabilo8.immersiveintelligence.api.rotary.IRotaryEnergy;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IVehicleMultiPart;
+import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityVehicleBase;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.VehicleBlueprint;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.VehicleDurability;
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -70,19 +73,26 @@ public class EntityVehicleWheel<T extends Entity & IVehicleMultiPart<T>> extends
 	 */
 	private double weightShare = 1.0;
 
-	//--- Climbing ---//
+	//--- Enhanced Force System ---//
 	/**
-	 * Max wall height this wheel can climb in blocks
+	 * Max vertical force this wheel can exert (both positive and negative)
 	 */
-	private double maxClimbHeight = 1.125;
+	private double maxVerticalForce = 1.0;
 	/**
-	 * Climbing height per tick
+	 * Current vertical force balance (positive = upward, negative = downward)
 	 */
-	private double climbPerTick = 0.125;
+	private double verticalForceBalance = 0.0;
 	/**
-	 * Current climb height, grows when climbing until it hits maxClimbHeight
+	 * Current climb height based on force balance
 	 */
-	private float currentClimbOffset = 0f;
+	private double currentClimbHeight = 0.0;
+	/**
+	 * Grip factor based on vertical force balance and contact quality
+	 */
+	private double gripFactor = 1.0;
+
+	//--- Force Calculation ---//
+	private VerticalForces lastVerticalForces = new VerticalForces(false, 0, Vec3d.ZERO, null, 0, 0, 0, false);
 
 	//--- Last Computed Outputs ---//
 	private WheelForces lastForces = new WheelForces(Vec3d.ZERO, 0, false);
@@ -113,16 +123,14 @@ public class EntityVehicleWheel<T extends Entity & IVehicleMultiPart<T>> extends
 	}
 
 	/**
-	 * Configures the wheel's climbing capabilities.
+	 * Configures the wheel's force capabilities.
 	 *
-	 * @param maxClimbHeight maximum height the wheel can climb in blocks
-	 * @param climbPerTick   climbing speed per tick
+	 * @param maxVerticalForce maximum vertical force the wheel can exert
 	 * @return this wheel for method chaining
 	 */
-	public EntityVehicleWheel<T> withClimbingAbilities(double maxClimbHeight, double climbPerTick)
+	public EntityVehicleWheel<T> withForceCapabilities(double maxVerticalForce)
 	{
-		this.maxClimbHeight = maxClimbHeight;
-		this.climbPerTick = climbPerTick;
+		this.maxVerticalForce = maxVerticalForce;
 		return this;
 	}
 
@@ -162,12 +170,16 @@ public class EntityVehicleWheel<T extends Entity & IVehicleMultiPart<T>> extends
 			return this.lastForces = new WheelForces(Vec3d.ZERO, 0.0, false);
 		VehicleBlueprint blueprint = parentExt.getVehicleBlueprint();
 
-		//Ground detection
-		boolean grounded = checkForGround();
+		//Calculate vertical forces first (gravity and climbing)
+		VerticalForces verticalForces = calculateVerticalForces();
+		this.lastVerticalForces = verticalForces;
 
-		//Calculate efficiency modifier and drive force
-		this.efficiencyModifier = this.durability==null?1f: this.durability.getDamageFactor() > 0.3?1f: 0.15f;
-		double driveForce = this.powerFactor*(1f-brakeFactor)*efficiencyModifier;
+		//Update grip based on vertical force balance
+		updateGripFactor();
+
+		//Calculate efficiency
+		this.efficiencyModifier = calculateEffectiveEfficiency();
+		double driveForce = this.powerFactor*(1f-brakeFactor)*efficiencyModifier*gripFactor;
 		double angularVel = this.parentExt.getAngularVelocity();
 
 		//Wheel position in world coordinates
@@ -204,10 +216,153 @@ public class EntityVehicleWheel<T extends Entity & IVehicleMultiPart<T>> extends
 		double fz = driveForce*cosA-latFriction*sinA;
 
 		//Compile and return forces
-		Vec3d force = new Vec3d(fx*blueprint.forceFactor()*2, 0, fz*blueprint.forceFactor()*2);
+		Vec3d force = new Vec3d(fx*blueprint.forceFactor(), verticalForces.verticalSum, fz*blueprint.forceFactor());
 		double torque = (relX*fz-relZ*fx)*blueprint.torqueFactor();
 		addWheelTraverse((float)force.lengthVector());
-		return this.lastForces = new WheelForces(force, torque, grounded);
+
+		boolean effectivelyGrounded = verticalForces.isGrounded||(verticalForces.verticalSum > 0&&verticalForces.canClimb);
+		return this.lastForces = new WheelForces(force, torque, effectivelyGrounded);
+	}
+
+	/**
+	 * Calculates vertical forces (gravity, wall climbing) acting on this wheel using integration for gradual movement
+	 */
+	private VerticalForces calculateVerticalForces()
+	{
+		boolean isGrounded = checkForGround();
+		double targetForce = 0.0;
+		double climbForce = 0.0;
+
+		//Calculate target forces based on conditions
+		ClimbDetectionResult climbResult = checkClimbObstacle();
+		boolean shouldClimb = climbResult.canClimb&&isMovingTowardObstacle(climbResult);
+
+		if(shouldClimb)
+		{
+			//More aggressive climb force calculation
+			double requiredForce = climbResult.climbHeight*0.0625; //Increased from 0.1 to 0.3
+			targetForce = Math.min(requiredForce, maxVerticalForce)*gripFactor;
+
+			//Override gravity when actively climbing
+			climbForce = targetForce;
+		}
+		//Gravity
+		else if(!isGrounded)
+			targetForce = -0.04*weightShare;
+
+		//Integration: gradually approach target force
+		double forceChangeRate;
+		if(shouldClimb)
+			forceChangeRate = 0.8;
+		else if(isGrounded)
+			forceChangeRate = 0.3;
+		else
+			forceChangeRate = 0.2;
+
+		double newForceBalance = verticalForceBalance+(targetForce-verticalForceBalance)*forceChangeRate;
+
+		//Remove the grounded damping that was killing climb forces
+		//Only apply strong damping when we're grounded AND not trying to climb
+		if(isGrounded&&!shouldClimb&&Math.abs(targetForce) < 0.001)
+			newForceBalance *= 0.3;
+
+		//Apply limits
+		newForceBalance = MathHelper.clamp(newForceBalance, -maxVerticalForce, maxVerticalForce);
+
+		//Update climb height based on integrated force balance
+		double heightChange = newForceBalance*0.1;
+		currentClimbHeight = MathHelper.clamp(currentClimbHeight+heightChange, 0, maxVerticalForce*2);
+
+		verticalForceBalance = newForceBalance;
+
+		return new VerticalForces(climbResult.canClimb, climbResult.climbHeight,
+				climbResult.obstacleNormal, climbResult.climbedBox,
+				targetForce, climbForce, verticalForceBalance, isGrounded);
+	}
+
+	/**
+	 * Checks for climbable obstacles in the wheel's path
+	 */
+	private ClimbDetectionResult checkClimbObstacle()
+	{
+		Vec3d wheelWorldPos = getPositionVector();
+		//Use vehicle velocity direction for more natural climbing
+		Vec3d climbDirection = parentExt.getVelocity().normalize();
+		//Cut out the Y component, climbing check should be horizontal
+		climbDirection = new Vec3d(climbDirection.x, 0, climbDirection.z);
+		//Use wheel's forward vector, if vehicle does not move
+		if(climbDirection.lengthSquared() < 0.1)
+			climbDirection = getForwardVector();
+
+		double checkDistance = 0.5+this.maxVerticalForce*0.5;
+		Vec3d start = new Vec3d(wheelWorldPos.x, wheelWorldPos.y, wheelWorldPos.z);
+		AxisAlignedBB partCurrentBB = aabb.offset(start);
+		AxisAlignedBB partNextBB = partCurrentBB.expand(climbDirection.x*checkDistance, 0, climbDirection.z*checkDistance);
+
+		//Get block collision boxes
+		List<AxisAlignedBB> collisions = new ArrayList<>(world.getCollisionBoxes(null, partNextBB));
+		//Get other vehicle collision boxes, useful in case of f.e. tanks driving over cars, bridge-deploying vehicles
+		for(Entity entity : world.getEntitiesInAABBexcluding(this.parentExt, partNextBB, e -> e!=this.parentExt&&e instanceof EntityVehicleBase))
+			if(entity instanceof IEntityMultiPart&&entity.getParts()!=null)
+				for(Entity entityPart : entity.getParts())
+					collisions.add(entityPart.getCollisionBoundingBox());
+			else
+				collisions.add(entity.getEntityBoundingBox());
+
+		//Sort from highest to lowest Y
+		collisions.sort((bb1, bb2) -> Double.compare(bb2.maxY, bb1.maxY));
+
+		//Process collisions
+		for(AxisAlignedBB collisionBoundingBox : collisions)
+		{
+			double obstacleTop = collisionBoundingBox.maxY;
+			double heightDifference = obstacleTop-wheelWorldPos.y;
+
+			if(heightDifference > 0&&heightDifference <= this.maxVerticalForce*2) //Scale with force capability
+				return new ClimbDetectionResult(true, heightDifference+0.125,
+						collisionBoundingBox.getCenter().subtract(start).normalize().scale(-1), collisionBoundingBox);
+		}
+
+		return new ClimbDetectionResult(false, 0, Vec3d.ZERO, null);
+	}
+
+	/**
+	 * Determines if the wheel is moving toward the detected obstacle
+	 */
+	private boolean isMovingTowardObstacle(ClimbDetectionResult climbResult)
+	{
+		if(parentExt==null) return false;
+
+		Vec3d velocity = parentExt.getVelocity();
+		if(velocity.lengthSquared() < 0.01) return false; //Not moving
+
+		//double dotProduct = new Vec3d(velocity.x, 0, velocity.z).normalize().dotProduct(climbResult.obstacleNormal);
+		return true; //dotProduct < -0.3; //Moving toward obstacle
+	}
+
+	/**
+	 * Updates grip factor based on vertical force balance
+	 */
+	private void updateGripFactor()
+	{
+		//Grip reduces when vertical forces are imbalanced (climbing or falling)
+		double forceImbalance = Math.abs(verticalForceBalance);
+		double stability = 1.0-(forceImbalance/maxVerticalForce)*0.7;
+
+		//Additional grip reduction when climbing high
+		if(verticalForceBalance > 0&&currentClimbHeight > maxVerticalForce)
+			stability *= 0.8;
+
+		gripFactor = Math.max(0.3, stability);
+	}
+
+	/**
+	 * Calculates effective efficiency considering damage
+	 */
+	private float calculateEffectiveEfficiency()
+	{
+		return this.durability==null?1f:
+				this.durability.getDamageFactor() > 0.3?1f: 0.15f;
 	}
 
 	/**
@@ -216,19 +371,27 @@ public class EntityVehicleWheel<T extends Entity & IVehicleMultiPart<T>> extends
 	 */
 	private boolean checkForGround()
 	{
-		// Get wheel world-space bounding box
+		//Get wheel world-space bounding box
 		AxisAlignedBB bb = aabb.offset(this.posX, this.posY, this.posZ);
 
-		// Expand downward by a small epsilon to catch "almost touching" situations
+		//Expand downward by a small epsilon to catch "almost touching" situations
 		final double epsilon = 0.05;
 		AxisAlignedBB probeBB = bb.offset(0, -epsilon, 0);
 
-		// Query collisions with blocks only (exactly like move logic)
+		//Query collisions with blocks only (exactly like move logic)
 		List<AxisAlignedBB> collisions = world.getCollisionBoxes(null, probeBB);
 
 		return !collisions.isEmpty();
 	}
 
+	/**
+	 * Gets the wheel's forward direction vector
+	 */
+	private Vec3d getForwardVector()
+	{
+		double wheelAngle = Math.toRadians(MathHelper.wrapDegrees(parentExt.rotationYaw+this.steeringAngle));
+		return new Vec3d(-Math.sin(wheelAngle), 0, Math.cos(wheelAngle));
+	}
 
 	//--- Suspension ---//
 
@@ -252,57 +415,20 @@ public class EntityVehicleWheel<T extends Entity & IVehicleMultiPart<T>> extends
 	{
 		//Store previous value for interpolation
 		this.lastSuspensionCompression = this.suspensionCompression;
-		boolean grounded = checkForGround();
-		double newCompression;
 
-		//No compression when in air
-		if(grounded)
-		{
-			//Base compression when on ground
-			newCompression = 0.2;
-			//Add compression from vertical impacts (falling, bumps)
-			double verticalImpact = calculateVerticalImpact();
-			newCompression += verticalImpact;
+		//Base compression based on vertical forces
+		double forceCompression = Math.abs(verticalForceBalance)*0.1;
 
-			//Small oscillation during movement
-			if(parentExt!=null)
-			{
-				double speed = Math.sqrt(parentExt.motionX*parentExt.motionX+parentExt.motionZ*parentExt.motionZ);
-				if(speed > 0.1)
-				{
-					double oscillation = Math.sin(world.getTotalWorldTime()*0.3+this.hashCode()*0.1)*0.05;
-					newCompression += Math.abs(oscillation);
-				}
-			}
-		}
-		else
-			newCompression = 0.0;
+		//Additional compression when grounded
+		if(lastVerticalForces.isGrounded)
+			forceCompression += 0.2;
 
 		//Smoothly transition to new compression value
-		double smoothing = 0.4; //Higher = faster response
-		this.suspensionCompression += (newCompression-this.suspensionCompression)*smoothing;
+		double smoothing = 0.4;
+		this.suspensionCompression += (forceCompression-this.suspensionCompression)*smoothing;
+
 		//Clamp to valid range
 		this.suspensionCompression = MathHelper.clamp(this.suspensionCompression, 0.0, maxSuspensionCompression);
-		//Update last Y position for next tick's impact calculation
-		this.prevPosY = this.posY;
-	}
-
-	/**
-	 * Calculates compression from vertical impacts (falling, hitting bumps)
-	 */
-	private double calculateVerticalImpact()
-	{
-		if(parentExt==null)
-			return 0.0;
-		double impact = 0.0;
-
-		//Detect rapid downward movement (falling or hitting bumps)
-		double verticalVelocity = this.prevPosY-this.posY; //Positive = moving downward
-		//Scale impact by velocity squared (like kinetic energy)
-		if(verticalVelocity > 0.05)
-			impact = Math.min(verticalVelocity*verticalVelocity*10.0, 0.3);
-
-		return impact;
 	}
 
 	//--- Control Methods ---
@@ -359,6 +485,11 @@ public class EntityVehicleWheel<T extends Entity & IVehicleMultiPart<T>> extends
 		return lastForces;
 	}
 
+	public VerticalForces getLastVerticalForces()
+	{
+		return lastVerticalForces;
+	}
+
 	public float getWheelTraverse()
 	{
 		return wheelTraverse;
@@ -379,24 +510,34 @@ public class EntityVehicleWheel<T extends Entity & IVehicleMultiPart<T>> extends
 		return efficiencyModifier;
 	}
 
-	public double getMaxClimbHeight()
+	public double getVerticalForceBalance()
 	{
-		return maxClimbHeight;
+		return verticalForceBalance;
 	}
 
-	public double getClimbPerTick()
+	public double getCurrentClimbHeight()
 	{
-		return climbPerTick;
+		return currentClimbHeight;
 	}
 
-	public float getCurrentClimbOffset()
+	public double getMaxVerticalForce()
 	{
-		return currentClimbOffset;
+		return maxVerticalForce;
+	}
+
+	public double getGripFactor()
+	{
+		return gripFactor;
 	}
 
 	public double getWheelRadius()
 	{
 		return height/2;
+	}
+
+	public double getWeightShare()
+	{
+		return weightShare;
 	}
 
 	//--- IRotaryEnergy ---//
@@ -429,5 +570,22 @@ public class EntityVehicleWheel<T extends Entity & IVehicleMultiPart<T>> extends
 	public RotationSide getSide(@Nullable EnumFacing facing)
 	{
 		return null;
+	}
+
+	//--- Helper class for climb detection ---//
+	private static class ClimbDetectionResult
+	{
+		public final boolean canClimb;
+		public final double climbHeight;
+		public final Vec3d obstacleNormal;
+		public final AxisAlignedBB climbedBox;
+
+		public ClimbDetectionResult(boolean canClimb, double climbHeight, Vec3d obstacleNormal, AxisAlignedBB climbedBox)
+		{
+			this.canClimb = canClimb;
+			this.climbHeight = climbHeight;
+			this.obstacleNormal = obstacleNormal;
+			this.climbedBox = climbedBox;
+		}
 	}
 }

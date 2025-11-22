@@ -95,7 +95,7 @@ public interface ISyncNBTEntity<T extends Entity & ISyncNBTEntity<T>>
 		tis.motionY = motion.y;
 		tis.motionZ = motion.z;
 		//Rotation
-		tis.rotationYaw = enbt.getFloat("rotationYaw");
-		tis.rotationPitch = enbt.getFloat("rotationPitch");
+		tis.rotationYaw = tis.prevRotationYaw = enbt.getFloat("rotationYaw");
+		tis.rotationPitch = tis.prevRotationPitch = enbt.getFloat("rotationPitch");
 	}
 }
