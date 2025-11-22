@@ -1,11 +1,13 @@
 package pl.pabilo8.immersiveintelligence.common.util.easynbt;
 
+import org.apache.logging.log4j.LogManager;
 import org.junit.jupiter.api.Test;
 import org.reflections.Reflections;
 import org.reflections.scanners.Scanners;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 import org.reflections.util.FilterBuilder;
+import pl.pabilo8.immersiveintelligence.common.IILogger;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -20,6 +22,7 @@ public class NBTSerialisationTest
 	public void testSerializerCorrectTypes() throws Exception
 	{
 		//Create reflections scanner to find annotated fields
+		IILogger.logger = LogManager.getLogger("immersiveintelligence-test");
 		Reflections reflections = new Reflections(new ConfigurationBuilder()
 				.setUrls(ClasspathHelper.forPackage("pl.pabilo8.immersiveintelligence"))
 				.filterInputsBy(new FilterBuilder().excludePattern(".*com/elytradev/mirage/lighting/ILightEventConsumer.*"))
