@@ -341,8 +341,8 @@ desc.immersiveintelligence.toolupgrade.anti_static_mesh=Защищает нос�
 desc.immersiveintelligence.toolupgrade.camouflage_mesh=Делает носителя невидимым, когда он крадется сквозь листву. Чувствителен к огню.
 desc.immersiveintelligence.toolupgrade.infrared_absorbing_mesh=Делает пользователя невидимым для инфракрасных устройств. Чувствителен к электромагнитному излучению.
 desc.immersiveintelligence.toolupgrade.scuba_tank=Может быть заполнен кислородом для дыхания под водой. Для работы требуется противогаз.
-desc.immersiveintelligence.toolupgrade.helipack=Обеспечивает медленный, но стабильный полет. Требует бензин.
-desc.immersiveintelligence.toolupgrade.exoskeleton=Обеспечивает более быстрое движение. Для работы требуется энергия.
+desc.immersiveintelligence.toolupgrade.helipack=Обеспечивает медленный, но стабильный полет. Требует жидкое топливо.
+desc.immersiveintelligence.toolupgrade.exoskeleton=Обеспечивает более быстрое передвижение. Для работы требуется энергия.
 desc.immersiveintelligence.toolupgrade.boot_reinforcement=Защищает носителя от огня. В сочетании с огнестойким покрытием позволяет плавать в горячих жидкостях.
 desc.immersiveintelligence.toolupgrade.snow_rackets=Увеличивает скорость ходьбы по снегу и устойчивость на льду.
 desc.immersiveintelligence.toolupgrade.flippers=Позволяет быстрее передвигаться в воде.
@@ -354,11 +354,11 @@ item.immersiveintelligence.trip_wire.name=Проволока мины-растя
 
 item.immersiveintelligence.small_wirecoil.data.name=Катушка малого кабеля данных
 item.immersiveintelligence.small_wirecoil.redstone.name=Катушка малого редстоун кабеля
-desc.immersiveintelligence.small_wirecoil=Используется для соединения точной электроники, такой как встроенные платы.
+desc.immersiveintelligence.small_wirecoil=Используется для соединения электроники, такой как печатные платы.
 
 item.immersiveintelligence.printed_page.blank.name=Пустая страница
 item.immersiveintelligence.printed_page.text.name=Печатный текст
-item.immersiveintelligence.printed_page.code.name=Печатный код
+item.immersiveintelligence.printed_page.code.name=Напечатанный исходный код
 item.immersiveintelligence.printed_page.blueprint.name=Печатная схема конструкции
 item.immersiveintelligence.printed_page.bound_pages.name=Связанные страницы
 item.immersiveintelligence.printed_page.newspaper.name=Газета
@@ -533,8 +533,8 @@ tile.immersiveintelligence.fence_platinum.name=Платиновый Забор
 tile.immersiveintelligence.fence_duraluminium.name=Дюралюминиевый Забор
 
 tile.immersiveintelligence.rubber_log.raw.name=Бревно гевеи
-tile.immersiveintelligence.rubber_log.rebbur.name=Отверстие для извлечения каучука
-tile.immersiveintelligence.rubber_log.stripped.name=Очищенная точка для извлечения каучука
+tile.immersiveintelligence.rubber_log.rebbur.name=Место для полостчитого разреза
+tile.immersiveintelligence.rubber_log.stripped.name=Отверстие для извлечения каучука
 tile.immersiveintelligence.rubber_leaves.rubber.name=Листья гевеи
 tile.immersiveintelligence.rubber_sapling.rubber.name=Саженец гевеи
 tile.immersiveintelligence.charred_log.main.name=Обугленное бревно
@@ -597,24 +597,24 @@ tile.immersiveengineering.conveyor.immersiveintelligence:rubber_extractcovered.n
 #due to how IE's base classes are designed, I had to use a "main" as only value in IIBlockTypes_Mine
 #redundant? yes, works? yes
 tile.immersiveintelligence.tripmine.main.name=Мина-растяжка
-tile.immersiveintelligence.tripmine.core.name=Ядро мины-растяжки
+tile.immersiveintelligence.tripmine.core.name=Заряд мины-растяжки
 #Same as above (for the landmine and explosives), this is due to how the projectile workshop gets the translation
-item.immersiveintelligence.tripmine.core.name=Ядро мины-растяжки
+item.immersiveintelligence.tripmine.core.name=Заряд мины-растяжки
 item.immersiveintelligence.ammo_casing.tripmine.name=Корпус мины-растяжки
 tile.immersiveintelligence.tripwire_connector.main.name=Крепёж мины-растяжки
 
 tile.immersiveintelligence.tellermine.main.name=Наземная мина
-tile.immersiveintelligence.tellermine.core.name=Ядро наземной мины
-item.immersiveintelligence.tellermine.core.name=Ядро наземной мины
+tile.immersiveintelligence.tellermine.core.name=Заряд наземной мины
+item.immersiveintelligence.tellermine.core.name=Заряд наземной мины
 item.immersiveintelligence.ammo_casing.tellermine.name=Корпус наземной мины
 
 tile.immersiveintelligence.radio_explosives.main.name=Радиобомба
-tile.immersiveintelligence.radio_explosives.core.name=Ядро радиобомбы
-item.immersiveintelligence.radio_explosives.core.name=Ядро радиобомбы
+tile.immersiveintelligence.radio_explosives.core.name=Заряд радиобомбы
+item.immersiveintelligence.radio_explosives.core.name=Заряд радиобомбы
 item.immersiveintelligence.ammo_casing.radio_explosives.name=Сумка радиобомбы
 
 item.immersiveintelligence.naval_mine.bullet.name=Морская мина
-item.immersiveintelligence.naval_mine.core.name=Ядро морской мины
+item.immersiveintelligence.naval_mine.core.name=Заряд морской мины
 item.immersiveintelligence.ammo_casing.naval_mine.name=Корпус морской мины
 
 tile.immersiveintelligence.stone_decoration.sandbags.name=Мешки с песком
@@ -881,7 +881,7 @@ dust.gravel=Гравий
 #Sounds
 
 subtitle.immersiveintelligence.siren=Вой сирены
-subtitle.immersiveintelligence.punchtape_reader=Операция перфоленты
+subtitle.immersiveintelligence.punchtape_reader=Шелест перфоленты
 subtitle.immersiveintelligence.paper_eject=Падение бумаги
 
 subtitle.immersiveintelligence.radio_beep=Короткие радиосигналы
@@ -987,7 +987,7 @@ subtitle.immersiveintelligence.mortar_shot=Миномёт стреляет
 subtitle.immersiveintelligence.mortar_load=Миномёт заряжается
 
 subtitle.immersiveintelligence.mine_detector=Миноискатель пищит
-subtitle.immersiveintelligence.construction=Строительство молотком
+subtitle.immersiveintelligence.construction=Сборка молотком
 
 subtitle.immersiveintelligence.gate_open=Открытие ворот
 subtitle.immersiveintelligence.gate_close=Закрытие ворот
@@ -1023,10 +1023,10 @@ entity.mortar.name=Миномёт
 entity.motorbike.name=Мотоцикл
 entity.wheel.name=Колесо
 entity.seat.name=Сиденье
-entity.field_howitzer.name=Пехотная Мортира
+entity.field_howitzer.name=Пехотная мортира
 entity.tripod_periscope.name=Перископ
 
-entity.hans.name=Hans
+entity.hans.name=Ганс
 
 #Skins
 skin.immersiveintelligence.anno_1880.name=Anno 1880
@@ -1083,7 +1083,7 @@ skin.immersiveintelligence.wyrms.text=Скин, подаренный Modrome, а
 
 skin.immersiveintelligence.old_glory.name=Былая слава
 skin.immersiveintelligence.old_glory.desc=Слава героям
-skin.immersiveintelligence.old_glory.text=Скин в польской тематике, предоставленный в качестве награды за вклад.
+skin.immersiveintelligence.old_glory.text=Скин в польской тематике, предоставленный в качестве награды за помощь.
 
 skin.immersiveintelligence.pershing.name=Першинг
 skin.immersiveintelligence.pershing.desc=Либералы прибыли
@@ -1110,10 +1110,10 @@ machineupgrade.immersiveintelligence.saw_unregulator=Регулятор хода
 machineupgrade.immersiveintelligence.saw_unregulator.desc=Нерегулируемая работа пилы приводит к увеличению выхода опилок по сравнению с основным объемом производства.
 
 machineupgrade.immersiveintelligence.emplacement_grenades=Аварийные дымовые шашки
-machineupgrade.immersiveintelligence.emplacement_grenades.desc=Когда огневое оружие сильно повреждено, для обеспечения прикрытия будет выпущен дым.
+machineupgrade.immersiveintelligence.emplacement_grenades.desc=Когда орудие сильно повреждено, выпускает дым для обеспечения прикрытия.
 
 machineupgrade.immersiveintelligence.emplacement_bearings=Прочные подшипники
-machineupgrade.immersiveintelligence.emplacement_bearings.desc=Подшипники более высокого качества увеличивают максимальную скорость вращения оружия, для работы на полную мощность требуется смазка
+machineupgrade.immersiveintelligence.emplacement_bearings.desc=Подшипники более высокого качества увеличивают максимальную скорость вращения оружия, для работы на полную мощность требуется смазка.
 
 machineupgrade.immersiveintelligence.infrared_observer=Инфракрасный наблюдатель
 machineupgrade.immersiveintelligence.infrared_observer.desc=Инфракрасный наблюдатель позволяет вести наблюдение за удаленными врагами и передавать их координаты по кабелям передачи данных.
@@ -1152,15 +1152,15 @@ machineupgrade.immersiveintelligence.tesla=Башня Теслы
 machineupgrade.immersiveintelligence.tesla.desc=Башня Тесла использует высокое напряжение для уничтожения врагов в радиусе своего действия, она особенно эффективна против электроники.
 
 machineupgrade.immersiveintelligence.core_filler=Наполнитель снарядов
-machineupgrade.immersiveintelligence.core_filler.desc=Оснащение снарядной мастерской установочным устройством позволяет точно наполнять снаряды необходимыми компонентами.
+machineupgrade.immersiveintelligence.core_filler.desc=Оснащение снарядной мастерской установочным устройством позволяет наполнять снаряды необходимым составом.
 
-machineupgrade.immersiveintelligence.packer_fluid=Загрузчик жидкости
+machineupgrade.immersiveintelligence.packer_fluid=Жидкостный наполнитель
 machineupgrade.immersiveintelligence.packer_fluid.desc=Установка контейнера для жидкости и некоторых трубопроводов позволяет заполнять и сливать жидкости из контейнеров. Из соображений безопасности упаковщик может работать как с предметами, так и с жидкостями или энергией.
 
-machineupgrade.immersiveintelligence.packer_energy=Загрузчик энергии
+machineupgrade.immersiveintelligence.packer_energy=Зарядное устройство
 machineupgrade.immersiveintelligence.packer_energy.desc=Установка контейнера для жидкости и некоторых трубопроводов позволяет заполнять и сливать жидкости из контейнеров. Из соображений безопасности упаковщик может работать как с предметами, так и с жидкостями или энергией.
 
-machineupgrade.immersiveintelligence.packer_railway=Переоборудование железных дорог
+machineupgrade.immersiveintelligence.packer_railway=ЖД конверсия
 machineupgrade.immersiveintelligence.packer_railway.desc=Заменяет конвейерную ленту упаковщика железнодорожными путями, что позволяет загружать и разгружать вагонетки.
 
 machineupgrade.immersiveintelligence.packer_naming=Именной штамп
@@ -1169,7 +1169,7 @@ machineupgrade.immersiveintelligence.packer_naming.desc=Позволяет уп�
 machineupgrade.immersiveintelligence.radio_locators=Радиолокаторы
 machineupgrade.immersiveintelligence.radio_locators.desc=Позволяет радару обнаруживать радиосигналы и вычислять точки их происхождения. Увеличивает количество энергии, требуемой для работы.
 
-machineupgrade.immersiveintelligence.rs_activation=Редстоун активация
+machineupgrade.immersiveintelligence.rs_activation=Редстоун замок
 machineupgrade.immersiveintelligence.rs_activation.desc=Подключение проводного редстоун разъема и пары приводов позволяет открывать ворота по редстоун сигналу.
 
 machineupgrade.immersiveintelligence.razor_wire=Колючая проволока
@@ -1194,7 +1194,7 @@ desc.immersiveintelligence.cost=Материалы:
 
 desc.immersiveintelligence.printed_page.blank=Пустая страница, готовая к печати.
 desc.immersiveintelligence.printed_page.text=Страница с текстом.
-desc.immersiveintelligence.printed_page.code=Страница, содержащая некоторый код, написанный на языке программирования.
+desc.immersiveintelligence.printed_page.code=Страница, содержащая код, написанный на языке программирования.
 desc.immersiveintelligence.printed_page.blueprint=Страница с информацией о том, как построить конструкцию.
 desc.immersiveintelligence.printed_page.bound_pages=Разные страницы, переплетенные вместе.
 desc.immersiveintelligence.printed_page.newspaper=Несколько страниц, переплетенных в газету.
@@ -2708,8 +2708,8 @@ ie.manual.entry.multiblock_forming.left=левый
 ie.manual.entry.multiblock_forming.center=центральный
 ie.manual.entry.multiblock_forming.right=правый
 #x axis
-ie.manual.entry.multiblock_forming.front=перед
-ie.manual.entry.multiblock_forming.back=зад
+ie.manual.entry.multiblock_forming.front=лицевой
+ie.manual.entry.multiblock_forming.back=тыльный
 
 ie.manual.entry.immersiveposts.posts_brass=Латунь<br><br><br><br><br>Декоративная
 ie.manual.entry.immersiveposts.posts_tungsten=Вольфрам<br><br><br><br><br><br>Прочный
