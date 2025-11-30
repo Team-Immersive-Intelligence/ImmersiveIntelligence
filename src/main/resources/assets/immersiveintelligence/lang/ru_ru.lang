@@ -654,12 +654,12 @@ tile.immersiveintelligence.small_crate.reinforced_crate_box.name=Маленьк�
 tile.immersiveintelligence.small_crate.reinforced_crate_cube.name=Маленький усиленный ящик (куб)
 tile.immersiveintelligence.small_crate.reinforced_crate_wide.name=Маленький усиленный ящик (широкий)
 
-tile.immersiveintelligence.metal_fortification.steel_chain_fence.name=Забор со стальной сеткой
-tile.immersiveintelligence.metal_fortification.brass_chain_fence.name=Забор с латунной сеткой
+tile.immersiveintelligence.metal_fortification.steel_chain_fence.name=Забор из стальной сетки
+tile.immersiveintelligence.metal_fortification.brass_chain_fence.name=Забор из латунной сетки
 tile.immersiveintelligence.metal_fortification.aluminium_chain_fence.name=Забор с алюминиевой сеткой
 
-tile.immersiveintelligence.wooden_fortification.wooden_steel_chain_fence.name=Деревянный забор со стальной сеткой
-tile.immersiveintelligence.wooden_fortification.wooden_brass_chain_fence.name=Деревянный забор с латунной сеткой
+tile.immersiveintelligence.wooden_fortification.wooden_steel_chain_fence.name=Деревянный забор из стальной сетки
+tile.immersiveintelligence.wooden_fortification.wooden_brass_chain_fence.name=Деревянный забор из латунной сетки
 
 tile.immersiveintelligence.metal_fortification1.tank_trap.name=Противотанковый ёж
 
@@ -1093,7 +1093,7 @@ skin.immersiveintelligence.zvezda.name=Zvezda
 skin.immersiveintelligence.zvezda.desc=Nu... Poehali!
 skin.immersiveintelligence.zvezda.text=Советский тематический скин, выдаваемый за вклад в перевод и международное продвижение мода.
 
-skin.immersiveintelligence.vaterland.name=Vaterland
+skin.immersiveintelligence.vaterland.name=Фатерлянд
 skin.immersiveintelligence.vaterland.desc=Железный крест
 skin.immersiveintelligence.vaterland.text=Скин на тему Германии.
 #Machine Upgrades
