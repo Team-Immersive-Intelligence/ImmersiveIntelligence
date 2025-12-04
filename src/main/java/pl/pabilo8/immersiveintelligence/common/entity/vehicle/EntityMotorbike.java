@@ -48,9 +48,7 @@ public class EntityMotorbike extends EntityVehicleBase<EntityMotorbike>
 	//--- AABBs ---//
 	private static final AxisAlignedBB AABB_WHEEL = new AxisAlignedBB(-0.5, 0d, 0.5, 0.5, 1d, -0.5);
 	private static final AxisAlignedBB AABB_TANK = new AxisAlignedBB(-0.35, 0d, 0.35, 0.35, 0.55d, -0.35);
-	private static final AxisAlignedBB AABB_STORAGE = new AxisAlignedBB(-0.35, 0d, 0.35, 0.35, 0.55d, -0.35);
 	private static final AxisAlignedBB AABB_ENGINE = new AxisAlignedBB(-0.5, 0d, 0.5, 0.5, 1d, -0.5);
-	private static final AxisAlignedBB AABB_WOODGAS = new AxisAlignedBB(-0.5, 0d, 0.5, 0.5, 1d, -0.5);
 	private static final AxisAlignedBB AABB_SEAT = new AxisAlignedBB(-0.3, -0.25d, 0.3, 0.3, 0.25d, -0.3);
 
 	static
@@ -110,14 +108,14 @@ public class EntityMotorbike extends EntityVehicleBase<EntityMotorbike>
 		{
 			GameSettings settings = ClientUtils.mc().gameSettings;
 			this.driverControls
-					.withKeyBinding(ClientProxy.keybind_motorbikeEngine, "engine")
-					.withKeyBinding(ClientProxy.keybind_motorbikeTowing, "tow")
+					.withKeyBinding(ClientProxy.keybindVehicleEngine, "engine")
+					.withKeyBinding(ClientProxy.keybindVehicleTowing, "tow")
 					.withKeyBinding(settings.keyBindForward, "accelerate")
 					.withKeyBinding(settings.keyBindBack, "brake")
 					.withKeyBinding(settings.keyBindLeft, "turnLeft")
 					.withKeyBinding(settings.keyBindRight, "turnRight")
-					.withKeyBinding(ClientProxy.keybind_gearUp, "gearUp")
-					.withKeyBinding(ClientProxy.keybind_gearDown, "gearDown");
+					.withKeyBinding(ClientProxy.keybindVehicleGearUp, "gearUp")
+					.withKeyBinding(ClientProxy.keybindVehicleGearDown, "gearDown");
 		}
 
 		//Seats
@@ -145,9 +143,10 @@ public class EntityMotorbike extends EntityVehicleBase<EntityMotorbike>
 				.withDurability(fuelTankDurability);
 		this.engine = new VehicleEngineFuelBased(fuelTank)
 				.withDurability(engineDurability);
-		this.transmission = new VehicleTransmission<EntityMotorbike>(this.engine, this.partWheelBack)
+		this.transmission = new VehicleTransmission<EntityMotorbike>(this.engine)
 				.withDurability(engineDurability)
-				.withRatios(20, -0.25, 0.5, 1);
+				.withRatios(20, -0.25, 0.5, 1)
+				.withReceivers(this.partWheelBack);
 
 		//Parts
 		return new EntityVehiclePart[]{
@@ -160,12 +159,6 @@ public class EntityMotorbike extends EntityVehicleBase<EntityMotorbike>
 				partSeat = new EntityVehiclePart<>(this, "seat", new Vec3d(-0.65, 1.5, 0), AABB_SEAT)
 						.withHitbox(durabilityMain)
 						.withSeat(seatRider)
-				/*partUpgradeSeat = new EntityVehiclePart<>(this, "upgrade_seat", new Vec3d(-1.35, 1, 0), AABB_SEAT)
-						.withHitbox(durabilityMain)
-						.withSeat(seatPassenger),
-				partUpgradeCargo = new EntityVehiclePart<>(this, "upgrade_cargo", new Vec3d(-1.35, 1, 0), AABB_STORAGE)
-						.withHitbox(durabilityMain)
-						.withSeat(seatPassenger)*/
 		};
 	}
 
@@ -175,12 +168,13 @@ public class EntityMotorbike extends EntityVehicleBase<EntityMotorbike>
 	protected void onVehicleUpdate()
 	{
 		//Apply Controls
-		if(driverControls.getKey("accelerate"))
+		//TODO: 03.12.2025 gearbox operation
+		/*if(driverControls.getKey("accelerate"))
 			partWheelBack.setMovementFactors(2, 0);
 		else if(driverControls.getKey("brake"))
 			partWheelBack.setMovementFactors(-1f, 0);
 		else
-			partWheelBack.setMovementFactors(0f, 0);
+			partWheelBack.setMovementFactors(0f, 0);*/
 
 		partWheelBack.setSteeringAngle(0);
 		if(driverControls.getKey("turnLeft"))
@@ -254,7 +248,7 @@ public class EntityMotorbike extends EntityVehicleBase<EntityMotorbike>
 	}
 
 	@Override
-	public String[] getOverlayTextOnPart(EntityVehiclePart part, EntityPlayer player, RayTraceResult mop)
+	public String[] getOverlayTextOnPart(EntityVehiclePart<EntityMotorbike> part, EntityPlayer player, RayTraceResult mop)
 	{
 		if(!isPassenger(player)&&(part==partEngine||part==partFuelTank))
 			if(Utils.isFluidRelatedItemStack(player.getHeldItem(EnumHand.MAIN_HAND)))

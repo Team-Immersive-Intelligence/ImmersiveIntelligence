@@ -40,7 +40,6 @@ import net.minecraftforge.client.event.TextureStitchEvent.Pre;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.client.model.obj.OBJLoader;
-import net.minecraftforge.client.settings.IKeyConflictContext;
 import net.minecraftforge.client.settings.KeyConflictContext;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.Fluid;
@@ -68,6 +67,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualCategory;
 import pl.pabilo8.immersiveintelligence.client.manual.categories.*;
 import pl.pabilo8.immersiveintelligence.client.model.IIModelRegistry;
+import pl.pabilo8.immersiveintelligence.client.model.TextureRecoloringRegistry;
 import pl.pabilo8.immersiveintelligence.client.model.builtin.FluidStateMapper;
 import pl.pabilo8.immersiveintelligence.client.model.item.ModelMeasuringCup;
 import pl.pabilo8.immersiveintelligence.client.model.item.ModelMeasuringCup.MeasuringCupModelLoader;
@@ -86,6 +86,7 @@ import pl.pabilo8.immersiveintelligence.client.render.multiblock.metal.*;
 import pl.pabilo8.immersiveintelligence.client.render.multiblock.wooden.*;
 import pl.pabilo8.immersiveintelligence.client.render.vehicle.*;
 import pl.pabilo8.immersiveintelligence.client.util.IICustomStateMapper;
+import pl.pabilo8.immersiveintelligence.client.util.IIKeybind;
 import pl.pabilo8.immersiveintelligence.client.util.ShaderUtil;
 import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IIItemRendererAMT;
 import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IIItemRendererAMT.RegisteredItemRenderer;
@@ -129,6 +130,7 @@ import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.naval_mine.Enti
 import pl.pabilo8.immersiveintelligence.common.entity.tactile.EntityAMTTactile;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityDrone;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityMotorbike;
+import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityTrackedMotorbike;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.towable.gun.EntityFieldGun;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.towable.gun.EntityFieldHowitzer;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehicleSeat;
@@ -163,8 +165,9 @@ import java.util.Map.Entry;
 @EventBusSubscriber(value = Side.CLIENT, modid = ImmersiveIntelligence.MODID)
 public class ClientProxy extends CommonProxy
 {
-	public static KeyBinding keybind_manualReload, keybind_armorHelmet, keybind_armorExosuit, keybind_zoom, keybind_motorbikeEngine, keybind_motorbikeTowing;
-	public static KeyBinding keybind_gearUp, keybind_gearDown, keybind_gearReductionSwitch;
+	public static KeyBinding keybindManualReload, keybindArmorHelmet, keybindArmorExosuit, keybindZoom;
+	public static KeyBinding keybindVehicleEngine, keybindVehicleClutch, keybindVehicleTowing;
+	public static KeyBinding keybindVehicleGearUp, keybindVehicleGearDown, keybindVehicleReductionSwitch;
 	private EasyNBT storedGuiData = EasyNBT.newNBT();
 
 	private HashMap<Class<? extends TileEntityItemStackRenderer>, Block> TEISRRegistryQueue = new HashMap<>();
@@ -368,6 +371,7 @@ public class ClientProxy extends CommonProxy
 		registerEntityRenderer(EntityWhitePhosphorus.class, EntityRenderNone::new);
 		registerEntityRenderer(EntityMachinegun.class, MachinegunRenderer::new);
 		registerEntityRenderer(EntityMotorbike.class, MotorbikeRenderer::new);
+		registerEntityRenderer(EntityTrackedMotorbike.class, TrackedMotorbikeRenderer::new);
 		registerEntityRenderer(EntityDrone.class, DroneRenderer::new);
 		//Towables
 		registerEntityRenderer(EntityFieldHowitzer.class, FieldHowitzerRenderer::new);
@@ -610,6 +614,9 @@ public class ClientProxy extends CommonProxy
 		//GUIs
 		DecoTextures.registerAllTextures(event.getMap());
 
+		//Recolored textures
+		TextureRecoloringRegistry.onTextureStitch(event);
+
 	}
 
 	@Override
@@ -629,52 +636,31 @@ public class ClientProxy extends CommonProxy
 		IIClientUtils.fontTinkerer = new IIFontRendererCustomGlyphs(new ResourceLocation(ImmersiveIntelligence.MODID, "textures/font/tinkerer.png"));
 
 		//Register Keybindings
-		IKeyConflictContext passenger_action = new IKeyConflictContext()
-		{
-			@Override
-			public boolean isActive()
-			{
-				return KeyConflictContext.IN_GAME.isActive();
-			}
+		keybindManualReload = new IIKeybind("manualReload", Keyboard.KEY_R, IIKeybind.CATEGORY_GAMEPLAY)
+				.withContext(KeyConflictContext.IN_GAME).register();
 
-			@Override
-			public boolean conflicts(IKeyConflictContext other)
-			{
-				return other==KeyConflictContext.IN_GAME&&other!=this;
-			}
-		};
+		keybindArmorHelmet = new IIKeybind("armorHelmet", Keyboard.KEY_V, IIKeybind.CATEGORY_GAMEPLAY)
+				.withContext(KeyConflictContext.IN_GAME).register();
+		keybindArmorExosuit = new IIKeybind("armorExosuit", Keyboard.KEY_G, IIKeybind.CATEGORY_GAMEPLAY)
+				.withContext(KeyConflictContext.IN_GAME).register();
+		keybindZoom = new IIKeybind("mgScope", Keyboard.KEY_Z, IIKeybind.CATEGORY_GAMEPLAY)
+				.withContext(KeyConflictContext.IN_GAME).register();
 
-		keybind_manualReload = new KeyBinding("key."+ImmersiveIntelligence.MODID+".manualReload", Keyboard.KEY_R, "key.categories.gameplay");
-		keybind_manualReload.setKeyConflictContext(passenger_action);
+		//Vehicle Keybinds
+		keybindVehicleEngine = new IIKeybind("vehicle.engine.toggle", Keyboard.KEY_R, IIKeybind.CATEGORY_VEHICLES)
+				.withContext(IIKeybind.VEHICLE_KEY_CONTEXT).register();
+		keybindVehicleTowing = new IIKeybind("vehicle.tow.toggle", Keyboard.KEY_Z, IIKeybind.CATEGORY_VEHICLES)
+				.withContext(IIKeybind.VEHICLE_KEY_CONTEXT).register();
 
-		keybind_armorHelmet = new KeyBinding("key."+ImmersiveIntelligence.MODID+".armorHelmet", Keyboard.KEY_V, "key.categories.gameplay");
-		keybind_armorExosuit = new KeyBinding("key."+ImmersiveIntelligence.MODID+".armorExosuit", Keyboard.KEY_G, "key.categories.gameplay");
-		keybind_zoom = new KeyBinding("key."+ImmersiveIntelligence.MODID+".mgScope", Keyboard.KEY_Z, "key.categories.gameplay");
-		keybind_zoom.setKeyConflictContext(passenger_action);
-
-		keybind_motorbikeEngine = new KeyBinding("key."+ImmersiveIntelligence.MODID+".motorbikeEngine", Keyboard.KEY_R, "key.categories.gameplay");
-		keybind_motorbikeEngine.setKeyConflictContext(passenger_action);
-		keybind_motorbikeTowing = new KeyBinding("key."+ImmersiveIntelligence.MODID+".motorbikeTowing", Keyboard.KEY_Z, "key.categories.gameplay");
-		keybind_motorbikeTowing.setKeyConflictContext(passenger_action);
-
-		keybind_gearUp = new KeyBinding("key."+ImmersiveIntelligence.MODID+".vehicleGearUp", Keyboard.KEY_Y, "key.categories.gameplay");
-		keybind_gearUp.setKeyConflictContext(passenger_action);
-		keybind_gearDown = new KeyBinding("key."+ImmersiveIntelligence.MODID+".vehicleGearDown", Keyboard.KEY_H, "key.categories.gameplay");
-		keybind_gearDown.setKeyConflictContext(passenger_action);
-		keybind_gearReductionSwitch = new KeyBinding("key."+ImmersiveIntelligence.MODID+".vehicleReductionSwitch", Keyboard.KEY_G, "key.categories.gameplay");
-		keybind_gearReductionSwitch.setKeyConflictContext(passenger_action);
-
-		ClientRegistry.registerKeyBinding(keybind_manualReload);
-		ClientRegistry.registerKeyBinding(keybind_zoom);
-		ClientRegistry.registerKeyBinding(keybind_motorbikeEngine);
-		ClientRegistry.registerKeyBinding(keybind_motorbikeTowing);
-
-		ClientRegistry.registerKeyBinding(keybind_gearUp);
-		ClientRegistry.registerKeyBinding(keybind_gearDown);
-		ClientRegistry.registerKeyBinding(keybind_gearReductionSwitch);
-
-		ClientRegistry.registerKeyBinding(keybind_armorHelmet);
-		ClientRegistry.registerKeyBinding(keybind_armorExosuit);
+		//Vehicle Gearbox Keybinds
+		keybindVehicleClutch = new IIKeybind("vehicle.clutch", Keyboard.KEY_C, IIKeybind.CATEGORY_VEHICLES)
+				.withContext(IIKeybind.VEHICLE_KEY_CONTEXT).register();
+		keybindVehicleGearUp = new IIKeybind("vehicle.gear.up", Keyboard.KEY_Y, IIKeybind.CATEGORY_VEHICLES)
+				.withContext(IIKeybind.VEHICLE_KEY_CONTEXT).register();
+		keybindVehicleGearDown = new IIKeybind("vehicle.gear.down", Keyboard.KEY_H, IIKeybind.CATEGORY_VEHICLES)
+				.withContext(IIKeybind.VEHICLE_KEY_CONTEXT).register();
+		keybindVehicleReductionSwitch = new IIKeybind("vehicle.gear2.toggle", Keyboard.KEY_G, IIKeybind.CATEGORY_VEHICLES)
+				.withContext(IIKeybind.VEHICLE_KEY_CONTEXT).register();
 
 		//Register shaders
 		ShaderUtil.init();

@@ -87,7 +87,7 @@ public class ItemIILightEngineerHelmet extends ItemIILightEngineerArmorBase impl
 
 		if(world.isRemote)
 		{
-			if(hasIR&&ClientProxy.keybind_armorHelmet.isPressed())
+			if(hasIR&&ClientProxy.keybindArmorHelmet.isPressed())
 				IIPacketHandler.sendToServer(new MessageItemKeybind(MessageItemKeybind.KEYBIND_HEADGEAR));
 		}
 		else if((hasIR||hasTech)&&world.getTotalWorldTime()%20==0&&ItemNBTHelper.getBoolean(stack, "headgearActive"))

@@ -12,10 +12,14 @@ import net.minecraft.util.math.Vec3d;
 import pl.pabilo8.immersiveintelligence.api.rotary.MotorBeltType;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.render.mechanical_device.BeltModelStorage;
+import pl.pabilo8.immersiveintelligence.client.util.amt.AMTLoader;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
 import pl.pabilo8.immersiveintelligence.common.block.rotary_device.tileentity.TileEntityMechanicalConnectable;
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
+import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.util.amt.AMTModelHeader;
+import pl.pabilo8.immersiveintelligence.common.util.amt.IIAnimation;
+import pl.pabilo8.immersiveintelligence.common.util.amt.IIAnimation.IIAnimationGroup;
 import pl.pabilo8.immersiveintelligence.common.util.amt.IIAnimation.IIVectorLine;
 
 import java.util.ArrayList;
@@ -144,11 +148,19 @@ public class AMTChain extends AMT
 		return this;
 	}
 
-	public AMTChain withWheels(double x, double y, double radius1, double x2, double y2, double radius2)
+	public AMTChain withNodesFromAnimation(ResLoc animationLoc)
 	{
-//		nodes.add(new Vec3d());
+		IIAnimation animation = AMTLoader.loadAnimation(animationLoc);
+		IIAnimationGroup leadingGroup = animation.getLeadingGroup();
+		IIVectorLine positions = leadingGroup.position;
+		IIVectorLine rotations = leadingGroup.rotation;
+		if(positions!=null&&rotations!=null)
+		{
+			int iterations = Math.min(positions.values.length, rotations.values.length)-1;
+			for(int i = 0; i < positions.values.length; i++)
+				withNode(positions.values[i].z, positions.values[i].y, 180-rotations.values[Math.min(iterations, i)].x);
+		}
 
-		disposeOf();
 		return this;
 	}
 
@@ -234,6 +246,4 @@ public class AMTChain extends AMT
 		AMTUtils.disposeOf(segment);
 		compiled = false;
 	}
-
-
 }

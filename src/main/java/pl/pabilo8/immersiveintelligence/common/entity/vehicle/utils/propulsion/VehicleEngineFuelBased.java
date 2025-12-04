@@ -19,12 +19,16 @@ public class VehicleEngineFuelBased extends VehicleEngineBase<VehicleEngineFuelB
 	@Override
 	protected boolean canBeStarted()
 	{
-		return false;
+		//TODO: 02.12.2025 fuel condition
+		return true;
 	}
 
 	@Override
 	public void onUpdate()
 	{
-
+		super.onUpdate();
+		float newSpeed = acceleration*200;
+		float newTorque = acceleration*30f;
+		this.rotaryStorage.grow(newSpeed, newTorque, 0.15f);
 	}
 }

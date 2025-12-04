@@ -264,7 +264,7 @@ public abstract class ItemIIGunBase extends ItemIIUpgradableTool implements ISki
 
 		//Handle reloading request
 		if(world.isRemote)
-			if(!shouldReload&&ClientProxy.keybind_manualReload.isKeyDown())
+			if(!shouldReload&&ClientProxy.keybindManualReload.isKeyDown())
 				IIPacketHandler.sendToServer(new MessageItemKeybind(MessageItemKeybind.KEYBIND_GUN_RELOAD));
 
 		//handle reloading

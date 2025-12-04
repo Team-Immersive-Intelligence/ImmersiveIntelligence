@@ -8,6 +8,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import pl.pabilo8.immersiveintelligence.api.rotary.IRotaryEnergy;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IVehicleMultiPart;
+import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityVehicleBase;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.VehicleBlueprint;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.VehicleDurability;
@@ -35,9 +36,13 @@ public class EntityVehicleWheel<T extends Entity & IVehicleMultiPart<T>> extends
 	 */
 	private WheelType type;
 	/**
-	 * Power factor -1 to 1
+	 * Rotation speed in Degrees/tick
 	 */
-	private float powerFactor = 0;
+	private float speedValue = 0;
+	/**
+	 * Torque value in IT
+	 */
+	private float torqueValue = 0;
 	/**
 	 * Braking factor 0-1
 	 */
@@ -169,6 +174,10 @@ public class EntityVehicleWheel<T extends Entity & IVehicleMultiPart<T>> extends
 		if(parentExt==null)
 			return this.lastForces = new WheelForces(Vec3d.ZERO, 0.0, false);
 		VehicleBlueprint blueprint = parentExt.getVehicleBlueprint();
+		float powerFactor = Math.abs(speedValue/360f);
+
+		if(powerFactor > 0)
+			IILogger.info(partName+" | torque: "+torqueValue+" | speed: "+speedValue+"| powerFactor: "+powerFactor);
 
 		//Calculate vertical forces first (gravity and climbing)
 		VerticalForces verticalForces = calculateVerticalForces();
@@ -179,7 +188,7 @@ public class EntityVehicleWheel<T extends Entity & IVehicleMultiPart<T>> extends
 
 		//Calculate efficiency
 		this.efficiencyModifier = calculateEffectiveEfficiency();
-		double driveForce = this.powerFactor*(1f-brakeFactor)*efficiencyModifier*gripFactor;
+		double driveForce = powerFactor*(1f-brakeFactor)*efficiencyModifier*gripFactor;
 		double angularVel = this.parentExt.getAngularVelocity();
 
 		//Wheel position in world coordinates
@@ -248,7 +257,7 @@ public class EntityVehicleWheel<T extends Entity & IVehicleMultiPart<T>> extends
 		}
 		//Gravity
 		else if(!isGrounded)
-			targetForce = -0.04*weightShare;
+			targetForce = -0.04*weightShare; //*parentExt.getVehicleBlueprint().mass()
 
 		//Integration: gradually approach target force
 		double forceChangeRate;
@@ -353,7 +362,8 @@ public class EntityVehicleWheel<T extends Entity & IVehicleMultiPart<T>> extends
 		if(verticalForceBalance > 0&&currentClimbHeight > maxVerticalForce)
 			stability *= 0.8;
 
-		gripFactor = Math.max(0.3, stability);
+		//Factor in torque value for dynamic grip adjustment
+		gripFactor = MathHelper.clamp(Math.max(0.3, stability)*(torqueValue/20), 0.3, 1);
 	}
 
 	/**
@@ -447,18 +457,6 @@ public class EntityVehicleWheel<T extends Entity & IVehicleMultiPart<T>> extends
 	//--- Public Moving Methods ---
 
 	/**
-	 * Sets the movement control factors for this wheel.
-	 *
-	 * @param powerFactor the power factor (0..1) for driving force
-	 * @param brakeFactor the brake factor (0..1) for braking force
-	 */
-	public void setMovementFactors(float powerFactor, float brakeFactor)
-	{
-		this.powerFactor = powerFactor;
-		this.brakeFactor = brakeFactor;
-	}
-
-	/**
 	 * Updates wheel rotation and traverse for visual effects.
 	 *
 	 * @param distance how much has the wheel moved
@@ -466,6 +464,16 @@ public class EntityVehicleWheel<T extends Entity & IVehicleMultiPart<T>> extends
 	public void addWheelTraverse(float distance)
 	{
 		this.wheelTraverse += distance*(float)getWheelRadius()*90f;
+	}
+
+	/**
+	 * Sets the brake value for this wheel.
+	 *
+	 * @param brakeFactor brake factor 0-1
+	 */
+	public void setBrakeFactor(float brakeFactor)
+	{
+		this.brakeFactor = MathHelper.clamp(brakeFactor, 0f, 1f);
 	}
 
 	//--- Properties ---
@@ -493,11 +501,6 @@ public class EntityVehicleWheel<T extends Entity & IVehicleMultiPart<T>> extends
 	public float getWheelTraverse()
 	{
 		return wheelTraverse;
-	}
-
-	public float getPowerFactor()
-	{
-		return powerFactor;
 	}
 
 	public float getBrakeFactor()
@@ -545,31 +548,31 @@ public class EntityVehicleWheel<T extends Entity & IVehicleMultiPart<T>> extends
 	@Override
 	public float getTorque()
 	{
-		return 0;
+		return torqueValue;
 	}
 
 	@Override
 	public void setTorque(float torque)
 	{
-
+		this.torqueValue = torque;
 	}
 
 	@Override
 	public float getRotationSpeed()
 	{
-		return 0;
+		return speedValue;
 	}
 
 	@Override
 	public void setRotationSpeed(float speed)
 	{
-
+		this.speedValue = speed;
 	}
 
 	@Override
 	public RotationSide getSide(@Nullable EnumFacing facing)
 	{
-		return null;
+		return RotationSide.INPUT;
 	}
 
 	//--- Helper class for climb detection ---//

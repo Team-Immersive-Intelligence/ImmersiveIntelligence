@@ -51,6 +51,7 @@ public class EntityFieldHowitzer extends EntityVehicleTowable<EntityFieldHowitze
 
 	@SyncNBT(events = SyncEvents.ENTITY_DAMAGED)
 	public VehicleDurability durabilityRightWheel, durabilityLeftWheel, durabilityGun, durabilityShield;
+	@SyncNBT(events = SyncEvents.ENTITY_VEHICLE_CONTROLS)
 	public VehicleControls commanderControls, gunnerControls;
 
 	@SyncNBT
@@ -103,8 +104,8 @@ public class EntityFieldHowitzer extends EntityVehicleTowable<EntityFieldHowitze
 					.withKeyBinding(settings.keyBindForward, "up")
 					.withKeyBinding(settings.keyBindBack, "down")
 					.withKeyBinding(settings.keyBindJump, "fire")
-					.withKeyBinding(ClientProxy.keybind_zoom, "scope")
-					.withKeyBinding(ClientProxy.keybind_manualReload, "reload");
+					.withKeyBinding(ClientProxy.keybindZoom, "scope")
+					.withKeyBinding(ClientProxy.keybindManualReload, "reload");
 		}
 
 		//Seats
@@ -123,10 +124,12 @@ public class EntityFieldHowitzer extends EntityVehicleTowable<EntityFieldHowitze
 				partWheelLeft = new EntityVehicleWheel<>(this, "wheel_left", new Vec3d(0, 0, -0.75), AABB_WHEEL)
 						.withHitbox(durabilityLeftWheel)
 						.withType(WheelType.STEERABLE_DRIVE),
-				partMain = new EntityVehiclePart<>(this, "main", Vec3d.ZERO, AABB_MAIN)
+				partMain = new EntityVehiclePart<>(this, "main", new Vec3d(0, 0.5, 0),
+						new AxisAlignedBB(-0.5, -0.25, -0.5, 0.5, 0.25, 0.5))
 						.withHitbox(durabilityMain)
 						.withSeat(seatCommander),
-				partMain2 = new EntityVehiclePart<>(this, "main2", new Vec3d(-0.75, 0, 0), AABB_MAIN)
+				partMain2 = new EntityVehiclePart<>(this, "main2", new Vec3d(-0.75, 0.5, 0),
+						new AxisAlignedBB(-0.5, -0.125, -0.5, 0.5, 0.125, 0.5))
 						.withHitbox(durabilityMain)
 						.withSeat(seatGunner),
 				partGun = new EntityVehiclePart<>(this, "gun", new Vec3d(0.5, 0.65, 0), AABB_GUN)
@@ -168,8 +171,9 @@ public class EntityFieldHowitzer extends EntityVehicleTowable<EntityFieldHowitze
 		else if(this.gunnerControls.getKey("down"))
 			gunPitch = Math.max(gunPitch-1f, -12.5f-12.5f);
 
-		partWheelLeft.setMovementFactors(left, 0);
-		partWheelRight.setMovementFactors(right, 0);
+		//TODO: 03.12.2025 moving
+		/*partWheelLeft.setMovementFactors(left, 0);
+		partWheelRight.setMovementFactors(right, 0);*/
 	}
 
 

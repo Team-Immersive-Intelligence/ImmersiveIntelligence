@@ -74,30 +74,9 @@ public interface IRotaryEnergy
 	 */
 	RotationSide getSide(@Nullable EnumFacing facing);
 
-	/**
-	 * Checks if RMP is equal, so the torque can be merged
-	 *
-	 * @param other device with which you want to merge torque
-	 * @return RPM is equal
-	 */
-	default boolean canBeMerged(IRotaryEnergy other)
-	{
-		return other.getOutputRotationSpeed()==getRotationSpeed();
-	}
 
 	/**
-	 * A harsh system, which will force player to maintain the machines
-	 *
-	 * @param other device with which you want to merge torque
-	 * @return Summed torque if RPM is equal or lowest of the torques
-	 */
-	default float getCombinedTorque(IRotaryEnergy other)
-	{
-		return canBeMerged(other)?(getTorque()+other.getOutputTorque()): (Math.min(getTorque(), other.getOutputTorque()));
-	}
-
-	/**
-	 * RPM and Torque cannot exceed 0.98f of the other's speed
+	 * D/t and Torque cannot exceed 0.98f of the other's speed
 	 *
 	 * @param other   rotary device's energy storage
 	 * @param percent of growth
@@ -122,7 +101,7 @@ public interface IRotaryEnergy
 	/**
 	 * @param other  rotational energy storage
 	 * @param facing of the other storage being accessed
-	 * @return whether the rpm/torque has changed
+	 * @return whether the D/t/torque has changed
 	 */
 	default boolean handleRotation(IRotaryEnergy other, EnumFacing facing)
 	{

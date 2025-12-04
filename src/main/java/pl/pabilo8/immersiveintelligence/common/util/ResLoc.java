@@ -72,6 +72,11 @@ public class ResLoc extends ResourceLocation
 		return of(new ResourceLocation(resString));
 	}
 
+	public static ResLoc root(ResourceLocation res)
+	{
+		return root(res.getResourceDomain());
+	}
+
 	/**
 	 * @return file type extension of this {@link ResLoc}
 	 */

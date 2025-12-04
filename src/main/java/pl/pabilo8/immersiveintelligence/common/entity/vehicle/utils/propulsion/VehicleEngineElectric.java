@@ -16,6 +16,6 @@ public class VehicleEngineElectric extends VehicleEngineBase<VehicleEngineElectr
 	@Override
 	public void onUpdate()
 	{
-
+		super.onUpdate();
 	}
 }

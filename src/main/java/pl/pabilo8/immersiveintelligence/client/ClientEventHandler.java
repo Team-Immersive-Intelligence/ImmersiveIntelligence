@@ -15,8 +15,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainerCreative;
+import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelBiped.ArmPose;
+import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.GlStateManager.FogMode;
@@ -47,7 +49,6 @@ import net.minecraftforge.client.event.EntityViewRenderEvent.FogColors;
 import net.minecraftforge.client.event.EntityViewRenderEvent.RenderFogEvent;
 import net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
-import net.minecraftforge.client.event.RenderGameOverlayEvent.Post;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.Pre;
 import net.minecraftforge.client.event.RenderTooltipEvent.PostText;
 import net.minecraftforge.client.resource.IResourceType;
@@ -96,6 +97,7 @@ import pl.pabilo8.immersiveintelligence.client.render.item.ISpecificHandRenderer
 import pl.pabilo8.immersiveintelligence.client.render.item.MineDetectorRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.item.PrintedPageRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.CameraHandler;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTBipedAdapter;
 import pl.pabilo8.immersiveintelligence.common.*;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Graphics;
@@ -330,6 +332,33 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 	}
 
 	/**
+	 * Called by ASM for post-AMT animation player model angle defaulting.
+	 *
+	 * @param model  the biped model
+	 * @param entity the entity that was rendered
+	 */
+	@SuppressWarnings("unused")
+	public static void resetBipedRotations(ModelBiped model, Entity entity, boolean finalCall)
+	{
+		//Prevent calling earlier from a player model
+		if(model instanceof ModelPlayer&&!finalCall)
+			return;
+		//Get the default model
+		ModelBiped biped = AMTBipedAdapter.getPreviousBipedModel();
+		if(biped==null)
+			return;
+
+		//Restore previous angles
+		ModelBase.copyModelAngles(biped.bipedHead, model.bipedHead);
+		ModelBase.copyModelAngles(biped.bipedHeadwear, model.bipedHeadwear);
+		ModelBase.copyModelAngles(biped.bipedBody, model.bipedBody);
+		ModelBase.copyModelAngles(biped.bipedLeftArm, model.bipedLeftArm);
+		ModelBase.copyModelAngles(biped.bipedRightArm, model.bipedRightArm);
+		ModelBase.copyModelAngles(biped.bipedLeftLeg, model.bipedLeftLeg);
+		ModelBase.copyModelAngles(biped.bipedRightLeg, model.bipedRightLeg);
+	}
+
+	/**
 	 * @param pos      position of the explosion / screenshake source
 	 * @param strength strength of the shake
 	 * @param duration duration of the shake in ticks
@@ -440,7 +469,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 			EntityLivingBase living = (EntityLivingBase)entity;
 
 			//Nuke/Wasteland
-			if((living).getActivePotionEffect(IIPotions.nuclearHeat)!=null)
+			if(living.getActivePotionEffect(IIPotions.nuclearHeat)!=null)
 			{
 				float v = event.getEntity().getEntityWorld().provider.getSunBrightnessFactor(0);
 				//float min = Math.min(Math.min(event.getRed(), event.getGreen()), event.getBlue());
@@ -459,7 +488,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 			}
 
 			//Suppression
-			if((living).getActivePotionEffect(IIPotions.suppression)!=null)
+			if(living.getActivePotionEffect(IIPotions.suppression)!=null)
 			{
 				event.setRed(0);
 				event.setGreen(0);
@@ -467,10 +496,10 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 			}
 
 			//Infrared Vision Potion Effect
-			if((living).isPotionActive(IIPotions.infraredVision))
+			if(living.isPotionActive(IIPotions.infraredVision))
 			{
 				float r = event.getRed(), g = event.getGreen(), b = event.getBlue();
-				float f15 = Math.min(Objects.requireNonNull((living).getActivePotionEffect(IIPotions.infraredVision)).getAmplifier(), 4)/4f;
+				float f15 = Math.min(Objects.requireNonNull(living.getActivePotionEffect(IIPotions.infraredVision)).getAmplifier(), 4)/4f;
 				float f6 = 1.0F/event.getRed();
 
 				if(f6 > 1.0F/event.getGreen())
@@ -518,14 +547,27 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 	}
 
 	@SubscribeEvent
-	public void onRenderOverlayPost(Post event)
+	public void onRenderOverlayPost(Pre event)
 	{
 		RayTraceResult mop = ClientUtils.mc().objectMouseOver;
 		EntityPlayer player = ClientUtils.mc().player;
-
-		if(ClientUtils.mc().player==null||event.getType()!=ElementType.TEXT)
+		if(player==null)
 			return;
 
+		switch(event.getType())
+		{
+			case HOTBAR:
+				onRenderHotbar(event, player, mop);
+				break;
+			case TEXT:
+				onRenderTextOverlay(event, player, mop);
+				break;
+		}
+
+	}
+
+	private void onRenderTextOverlay(Pre event, EntityPlayer player, RayTraceResult mouseOver)
+	{
 		//check for light engineer armor upgrade
 		gotTheDrip = ItemIIUpgradeableArmor.isArmorWithUpgrade(player.getItemStackFromSlot(EntityEquipmentSlot.HEAD),
 				"technician_gear", "engineer_gear");
@@ -533,16 +575,16 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 		//--- Tooltip Text ---//
 
 		//can only display when looking at an object
-		if(mop!=null&&mop.typeOfHit!=Type.MISS)
+		if(mouseOver!=null&&mouseOver.typeOfHit!=Type.MISS)
 		{
-			TileEntity te = mop.typeOfHit==Type.BLOCK?player.world.getTileEntity(mop.getBlockPos()): null;
-			Entity entityHit = mop.entityHit;
+			TileEntity te = mouseOver.typeOfHit==Type.BLOCK?player.world.getTileEntity(mouseOver.getBlockPos()): null;
+			Entity entityHit = mouseOver.entityHit;
 
 			for(TextOverlayBase hud : TEXT_OVERLAYS)
-				if(hud.shouldDraw(player, mop, te, entityHit))
+				if(hud.shouldDraw(player, mouseOver, te, entityHit))
 				{
 					//get parameters
-					final String[] text = hud.getText(player, mop, te, entityHit);
+					final String[] text = hud.getText(player, mouseOver, te, entityHit);
 					final FontRenderer font = hud.getFontRenderer();
 					final int defaultColor = hud.getDefaultFontColor().getPackedARGB();
 
@@ -568,12 +610,20 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 		//Iterate HUDs
 		for(GuiOverlayLayer key : HUDs.keys())
 			for(GuiOverlayBase hud : HUDs.get(key))
-				if(hud.shouldDraw(player, mop))
+				if(hud.shouldDraw(player, mouseOver))
 				{
 					hud.bindHUDTexture();
-					hud.draw(player, mop, event.getResolution().getScaledWidth(), event.getResolution().getScaledHeight());
+					hud.draw(player, mouseOver, event.getResolution().getScaledWidth(), event.getResolution().getScaledHeight());
 					break;
 				}
+	}
+
+	private void onRenderHotbar(Pre event, EntityPlayer player, RayTraceResult mouseOver)
+	{
+		if(!(player.getRidingEntity() instanceof EntityVehicleSeat))
+			return;
+
+		event.setCanceled(true);
 	}
 
 	@SubscribeEvent
@@ -628,7 +678,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 
 		if(lowestRidden instanceof IEntityZoomProvider)
 		{
-			boolean pressed = ClientProxy.keybind_zoom.isKeyDown();
+			boolean pressed = ClientProxy.keybindZoom.isKeyDown();
 			if(pressed^mgAiming&&ridden instanceof EntityMachinegun)
 			{
 				NBTTagCompound tag = new NBTTagCompound();
@@ -746,7 +796,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 		}*/
 
 		if(stack.getItem() instanceof IAmmoTypeItem)
-			IIAmmoUtils.createAmmoTooltip(((IAmmoTypeItem<?, ?>)stack.getItem()), stack, event.getEntity().world, event.getToolTip());
+			IIAmmoUtils.createAmmoTooltip((IAmmoTypeItem<?, ?>)stack.getItem(), stack, event.getEntity().world, event.getToolTip());
 		else if(ItemNBTHelper.hasKey(stack, IIContent.NBT_AdvancedPowerpack))
 		{
 			ItemStack powerpack = ItemNBTHelper.getItemStack(stack, IIContent.NBT_AdvancedPowerpack);
@@ -886,7 +936,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 			if(stack.getItem() instanceof ItemIIGunBase&&Graphics.cameraRecoil)
 			{
 				//Prepare variables
-				ItemIIGunBase item = ((ItemIIGunBase)stack.getItem());
+				ItemIIGunBase item = (ItemIIGunBase)stack.getItem();
 				EasyNBT upgrades = EasyNBT.wrapNBT(item.getUpgrades(stack));
 
 				boolean isAimed = ItemNBTHelper.getInt(stack, ItemIIGunBase.AIMING) > item.getAimingTime(stack, upgrades);
@@ -896,10 +946,10 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 
 				//Calculate recoil decrease
 				if(recoilH!=0)
-					recoilH = item.getActualRecoil((float)Math.max(recoilH-(recoilDecay*partialTicks), 0),
+					recoilH = item.getActualRecoil((float)Math.max(recoilH-recoilDecay*partialTicks, 0),
 							item.getHorizontalRecoil(stack, upgrades, isAimed));
 				if(recoilV!=0)
-					recoilV = item.getActualRecoil((float)Math.max(recoilV-(recoilDecay*partialTicks), 0),
+					recoilV = item.getActualRecoil((float)Math.max(recoilV-recoilDecay*partialTicks, 0),
 							item.getVerticalRecoil(stack, upgrades, isAimed));
 
 				event.setPitch((float)(event.getPitch()-recoilV));

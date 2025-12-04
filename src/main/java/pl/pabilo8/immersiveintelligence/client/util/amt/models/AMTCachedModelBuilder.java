@@ -3,6 +3,7 @@ package pl.pabilo8.immersiveintelligence.client.util.amt.models;
 import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
@@ -45,6 +46,13 @@ public final class AMTCachedModelBuilder<T>
 	public static AMTCachedModelBuilder<ItemStack> startItemModel()
 	{
 		return new AMTCachedModelBuilder<>(() -> ItemStack.EMPTY);
+	}
+
+	public static <T extends Entity> AMTCachedModelBuilder<T> startEntityModel(Class<T> klass)
+	{
+		AMTCachedModelBuilder<T> builder = new AMTCachedModelBuilder<>(() -> null);
+		builder.isBlock = false;
+		return builder;
 	}
 
 	public static AMTCachedModelBuilder<IBlockState> startBlockModel()

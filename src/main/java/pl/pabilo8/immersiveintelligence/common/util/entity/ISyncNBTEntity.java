@@ -71,6 +71,22 @@ public interface ISyncNBTEntity<T extends Entity & ISyncNBTEntity<T>>
 		IIPacketHandler.sendToServer(new MessageEntityNBTSync(tis, nbt));
 	}
 
+	default boolean reloadEntity()
+	{
+		T tis = ((T)this);
+		if(!tis.world.isRemote)
+			sendServerReInitUpdate();
+		return true;
+	}
+
+	default void sendServerReInitUpdate()
+	{
+		T tis = ((T)this);
+		IIPacketHandler.sendToClient(new MessageEntityNBTSync(tis, EasyNBT.newNBT()
+				.withBoolean("re_init", true)
+		));
+	}
+
 	default void sendServerPositionMotionUpdate()
 	{
 		T tis = ((T)this);

@@ -16,6 +16,6 @@ public class VehicleEngineSteam extends VehicleEngineBase<VehicleEngineSteam>
 	@Override
 	public void onUpdate()
 	{
-
+		super.onUpdate();
 	}
 }

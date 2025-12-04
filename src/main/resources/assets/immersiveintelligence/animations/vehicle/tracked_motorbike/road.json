@@ -1,0 +1,177 @@
+{
+  "comment": "Made by Pabilo8 with Blockbench",
+  "groups": {
+    "wheel": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 1,
+          "transform": [-360, 0, 0]
+        }
+      ]
+    },
+    "gear_change": {
+      "position": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "RightWheelRear2": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 1,
+          "transform": [-360, 0, 0]
+        }
+      ]
+    },
+    "LeftWheelLead1": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 1,
+          "transform": [-360, 0, 0]
+        }
+      ]
+    },
+    "RightWheelRear1": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 1,
+          "transform": [-360, 0, 0]
+        }
+      ]
+    },
+    "LeftWheelLead2": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 1,
+          "transform": [-360, 0, 0]
+        }
+      ]
+    },
+    "wheel_right1": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 1,
+          "transform": [-360, 0, 0]
+        }
+      ]
+    },
+    "wheel_left1": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 1,
+          "transform": [-360, 0, 0]
+        }
+      ]
+    },
+    "wheel_right2": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 1,
+          "transform": [-360, 0, 0]
+        }
+      ]
+    },
+    "wheel_left2": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 1,
+          "transform": [-360, 0, 0]
+        }
+      ]
+    },
+    "smoll_whell": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 1,
+          "transform": [-360, 0, 0]
+        }
+      ]
+    },
+    "smoll_whell2": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 1,
+          "transform": [-360, 0, 0]
+        }
+      ]
+    },
+    "smoll_whell4": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 1,
+          "transform": [-360, 0, 0]
+        }
+      ]
+    },
+    "smoll_whell3": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 1,
+          "transform": [-360, 0, 0]
+        }
+      ]
+    },
+    "steering_wheel": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        }
+      ]
+    }
+  }
+}

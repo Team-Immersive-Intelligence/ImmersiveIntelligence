@@ -50,17 +50,38 @@ public class EntityVehicleSeat extends Entity implements ISyncNBTEntity<EntityVe
 	}
 
 	/**
+	 * Makes the player attempt to enter the seat
+	 *
+	 * @param player the player
+	 * @param info   seat info
+	 * @return true if the player successfully entered the seat
+	 */
+	public static boolean enterSeat(EntityPlayer player, SeatInfo<?> info)
+	{
+		EntityVehicleSeat seat = getOrCreateSeat(info);
+		if(seat==null)
+			return false;
+		return player.startRiding(seat);
+	}
+
+	/**
 	 * Creates or returns an existing vehicle seat
 	 *
 	 * @param seatInfo Seat info
 	 */
+	@Nullable
 	public static EntityVehicleSeat getOrCreateSeat(SeatInfo<?> seatInfo)
 	{
+		//Try to find existing seat
 		Optional<Entity> probableSeat = seatInfo.vehicle.getPassengers().stream()
 				.filter(entity -> entity instanceof EntityVehicleSeat&&((EntityVehicleSeat)entity).seatID.equals(seatInfo.seatID))
 				.findFirst();
 		if(!probableSeat.isPresent()||!(probableSeat.get() instanceof EntityVehicleSeat))
 		{
+			//Do not create seats on client side
+			if(seatInfo.vehicle.world.isRemote)
+				return null;
+			//Create a new seat
 			EntityVehicleSeat seat = new EntityVehicleSeat(seatInfo.vehicle.world);
 			seat.info = seatInfo;
 			seat.seatID = seatInfo.seatID;
@@ -72,6 +93,7 @@ public class EntityVehicleSeat extends Entity implements ISyncNBTEntity<EntityVe
 		}
 		else
 		{
+			//Return existing seat
 			EntityVehicleSeat seat = (EntityVehicleSeat)probableSeat.get();
 			seat.info = seatInfo;
 			return seat;

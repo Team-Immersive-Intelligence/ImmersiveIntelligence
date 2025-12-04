@@ -2,6 +2,7 @@ package pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.propulsion;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumFacing.AxisDirection;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.util.INBTSerializable;
 import pl.pabilo8.immersiveintelligence.api.rotary.IRotaryEnergy;
@@ -27,7 +28,7 @@ public class VehicleTransmission<T extends EntityVehicleBase<T>> implements IVeh
 	@Nonnull
 	protected final IRotaryEnergy[] sources;
 	@Nonnull
-	protected final IRotaryEnergy[] receivers;
+	protected IRotaryEnergy[] receivers = new IRotaryEnergy[0];
 
 	private VehicleDurability durability;
 	private double[] ratios = new double[0];
@@ -36,19 +37,22 @@ public class VehicleTransmission<T extends EntityVehicleBase<T>> implements IVeh
 	private RotaryStorage rotaryStorage = new RotaryStorage(0, 0);
 
 	@ParametersAreNonnullByDefault
-	public VehicleTransmission(IRotaryEnergy[] sources, IRotaryEnergy[] receivers)
+	public VehicleTransmission(IRotaryEnergy[] sources)
 	{
 		this.sources = sources;
-		this.receivers = receivers;
 	}
 
 	@ParametersAreNonnullByDefault
-	public VehicleTransmission(IRotaryEnergy source, IRotaryEnergy... receivers)
+	public VehicleTransmission(IRotaryEnergy source)
 	{
 		this.sources = new IRotaryEnergy[]{source};
-		this.receivers = receivers;
 	}
 
+	public VehicleTransmission<T> withReceivers(@Nonnull IRotaryEnergy... receivers)
+	{
+		this.receivers = receivers;
+		return this;
+	}
 
 	public VehicleTransmission<T> withDurability(VehicleDurability durability)
 	{
@@ -61,6 +65,13 @@ public class VehicleTransmission<T extends EntityVehicleBase<T>> implements IVeh
 		this.ratios = ratios;
 		this.maxGearShiftTime = shiftTime;
 		this.currentGear = MathHelper.clamp(this.currentGear, 0, ratios.length-1);
+		this.nextGear = MathHelper.clamp(this.nextGear, 0, ratios.length-1);
+		return this;
+	}
+
+	public VehicleTransmission<T> withCurrentGear(int currentGear)
+	{
+		this.nextGear = this.currentGear = MathHelper.clamp(currentGear, 0, ratios.length-1);
 		return this;
 	}
 
@@ -68,20 +79,74 @@ public class VehicleTransmission<T extends EntityVehicleBase<T>> implements IVeh
 
 	public void onUpdate()
 	{
+		//Update gear shifting
+		if(gearShiftDelay > 0)
+		{
+			gearShiftDelay--;
+			if(gearShiftDelay==0)
+				currentGear = nextGear;
+		}
 
+		//Update input rotary energy
+		float totalInputTorque = 0;
+		float totalInputSpeed = 0;
+		for(IRotaryEnergy source : sources)
+		{
+			totalInputTorque += source.getOutputTorque();
+			totalInputSpeed += source.getOutputRotationSpeed();
+		}
+		float currentRatio = ratios.length==0?1: (float)ratios[currentGear];
+		rotaryStorage.setTorque(totalInputTorque/currentRatio);
+		rotaryStorage.setRotationSpeed(totalInputSpeed*currentRatio);
+
+		//Update output rotary energy
+		float outputTorque = getOutputTorque();
+		float outputSpeed = getOutputRotationSpeed();
+		for(IRotaryEnergy receiver : receivers)
+		{
+			receiver.setTorque(outputTorque/receivers.length);
+			receiver.setRotationSpeed(outputSpeed);
+		}
 	}
 
 	public boolean shiftUp()
 	{
+		if(currentGear < ratios.length-1&&gearShiftDelay==0)
+		{
+			nextGear = currentGear+1;
+			gearShiftDelay = maxGearShiftTime;
+			return true;
+		}
 		return false;
 	}
 
 	public boolean shiftDown()
 	{
+		if(currentGear > 0&&gearShiftDelay==0)
+		{
+			nextGear = currentGear-1;
+			gearShiftDelay = maxGearShiftTime;
+			return true;
+		}
 		return false;
 	}
 
 	//--- Getters ---//
+
+	@Nullable
+	public AxisDirection getDirection()
+	{
+		if(currentGear < 0||currentGear >= ratios.length||ratios[currentGear]==0)
+			return null;
+		return ratios[currentGear] > 0?AxisDirection.POSITIVE: AxisDirection.NEGATIVE;
+	}
+
+	public double getCurrentGearRatio()
+	{
+		if(currentGear < 0||currentGear >= ratios.length)
+			return 0;
+		return ratios[currentGear];
+	}
 
 	public int getCurrentGear()
 	{
@@ -95,7 +160,9 @@ public class VehicleTransmission<T extends EntityVehicleBase<T>> implements IVeh
 
 	public float getShiftingProgress(float partialTicks)
 	{
-		return currentGear==nextGear?0: Math.min(1f, (gearShiftDelay+partialTicks)/maxGearShiftTime);
+		if(currentGear==nextGear)
+			return 0;
+		return (gearShiftDelay+partialTicks)/(float)maxGearShiftTime;
 	}
 
 	public float getTotalShiftingProgress(float partialTicks)
@@ -104,10 +171,10 @@ public class VehicleTransmission<T extends EntityVehicleBase<T>> implements IVeh
 			return 0;
 
 		if(currentGear==nextGear)
-			return currentGear/(float)ratios.length;
+			return currentGear/((float)ratios.length-1);
 
 		if(currentGear > nextGear)
-			return (currentGear-1+Math.min(1f, (gearShiftDelay+partialTicks)/maxGearShiftTime))/(float)ratios.length;
+			return (currentGear-Math.min(1f, (gearShiftDelay+partialTicks)/maxGearShiftTime))/(float)ratios.length;
 		else
 			return (currentGear+Math.min(1f, (gearShiftDelay+partialTicks)/maxGearShiftTime))/(float)ratios.length;
 	}
@@ -118,13 +185,17 @@ public class VehicleTransmission<T extends EntityVehicleBase<T>> implements IVeh
 	@Override
 	public NBTTagCompound serializeNBT()
 	{
-		return new NBTTagCompound();
+		NBTTagCompound nbt = new NBTTagCompound();
+		nbt.setInteger("currentGear", currentGear);
+		nbt.setInteger("nextGear", nextGear);
+		return nbt;
 	}
 
 	@Override
 	public void deserializeNBT(NBTTagCompound nbt)
 	{
-
+		currentGear = nbt.getInteger("currentGear");
+		nextGear = nbt.getInteger("nextGear");
 	}
 
 	//--- INBTSerializable ---//
@@ -163,20 +234,8 @@ public class VehicleTransmission<T extends EntityVehicleBase<T>> implements IVeh
 	}
 
 	@Override
-	public float getOutputTorque()
-	{
-		return rotaryStorage.getTorque()*(ratios.length==0?1: (float)ratios[currentGear]);
-	}
-
-	@Override
-	public float getOutputRotationSpeed()
-	{
-		return rotaryStorage.getRotationSpeed()/(ratios.length==0?1: (float)ratios[currentGear]);
-	}
-
-	@Override
 	public RotationSide getSide(@Nullable EnumFacing facing)
 	{
-		return null;
+		return RotationSide.BOTH;
 	}
 }

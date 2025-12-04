@@ -1,0 +1,185 @@
+{
+  "comment": "Made by Pabilo8 with Blockbench",
+  "groups": {
+    "gear_change": {
+      "position": [
+        {
+          "time": 0.25,
+          "transform": [0, 0, 2]
+        },
+        {
+          "time": 0.4,
+          "transform": [1, 0, 2]
+        },
+        {
+          "time": 0.6,
+          "transform": [1, 0, 0]
+        },
+        {
+          "time": 0.75,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "cluch": {
+      "rotation": [
+        {
+          "time": 0.25,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.5,
+          "transform": [0, -17.5, 0]
+        },
+        {
+          "time": 0.75,
+          "transform": [0, -17.5, 0]
+        },
+        {
+          "time": 1,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "hans_driver": {
+      "position": [
+        {
+          "time": 1,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "hans_driver_body": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [-5, 0, 0]
+        },
+        {
+          "time": 0.25,
+          "transform": [5, 0, 0]
+        },
+        {
+          "time": 0.4,
+          "transform": [5, 0, 0]
+        },
+        {
+          "time": 0.75,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 1,
+          "transform": [-5, 0, 0]
+        }
+      ]
+    },
+    "hans_driver_left_arm": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [87.44563, -27.49757, -0.1229]
+        },
+        {
+          "time": 0.25,
+          "transform": [80.27387, -23.55695, 0.63832]
+        },
+        {
+          "time": 0.4,
+          "transform": [80.27387, -23.55695, 0.63832]
+        },
+        {
+          "time": 1,
+          "transform": [87.44563, -27.49757, -0.1229]
+        }
+      ],
+      "position": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.25,
+          "transform": [-0.92021, -0.17423, -1.76716]
+        },
+        {
+          "time": 0.4,
+          "transform": [-0.92021, -0.17423, -1.76716]
+        },
+        {
+          "time": 1,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "hans_driver_right_arm": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [84.49812, 29.95259, 1.69342]
+        },
+        {
+          "time": 0.25,
+          "transform": [67.34669, -22.35109, -3.02417]
+        },
+        {
+          "time": 0.4,
+          "transform": [57.95939, -35.12298, -11.92133]
+        },
+        {
+          "time": 0.6,
+          "transform": [63.86513, -36.03153, -10.10486]
+        },
+        {
+          "time": 0.75,
+          "transform": [65.90659, -29.23773, -6.32695]
+        },
+        {
+          "time": 1,
+          "transform": [84.49812, 29.95259, 1.69342]
+        }
+      ],
+      "position": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.25,
+          "transform": [0, 0.08716, 2.99619]
+        },
+        {
+          "time": 0.4,
+          "transform": [0, 0.08716, 0.99619]
+        },
+        {
+          "time": 0.6,
+          "transform": [0, 0, 1]
+        },
+        {
+          "time": 0.75,
+          "transform": [0, 0, 1]
+        },
+        {
+          "time": 1,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "hans_driver_right_leg": {
+      "rotation": [
+        {
+          "time": 1,
+          "transform": [82.5, 17.5, 0]
+        }
+      ]
+    },
+    "hans_driver_left_leg": {
+      "rotation": [
+        {
+          "time": 1,
+          "transform": [80, -22.5, 0]
+        }
+      ]
+    }
+  }
+}

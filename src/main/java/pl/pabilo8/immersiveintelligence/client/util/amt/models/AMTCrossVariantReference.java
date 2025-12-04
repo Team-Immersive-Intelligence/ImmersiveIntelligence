@@ -36,7 +36,7 @@ public class AMTCrossVariantReference<T extends AMT>
 
 		//Search and add to map if not
 		@SuppressWarnings("unchecked")
-		T part = (T)last.getPart(name);
+		T part = (T)last.getPartRecursive(name);
 		references.put(last, part);
 		return part;
 	}

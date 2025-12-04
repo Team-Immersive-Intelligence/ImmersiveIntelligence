@@ -2630,14 +2630,17 @@ key.immersiveintelligence.armorExosuit=Toggle Light Engineer Armor Exoskeleton
 
 key.immersiveintelligence.mgScope=Zoom / Look through Scope
 
+key.categories.iivehicle=Vehicles (Immersive Intelligence)
 key.immersiveintelligence.vehicle.engine.toggle=Toggle Engine
 key.immersiveintelligence.vehicle.engine.start=Start Engine
 key.immersiveintelligence.vehicle.engine.stop=Stop Engine
+key.immersiveintelligence.vehicle.clutch=Engage Clutch
 
 key.immersiveintelligence.vehicle.gear.up=Gear Up
 key.immersiveintelligence.vehicle.gear.down=Gear Down
-key.immersiveintelligence.vehicle.gear.overdrive=Secondary Gearbox - Overdrive
-key.immersiveintelligence.vehicle.gear.reduction=Secondary Gearbox - Reduction
+key.immersiveintelligence.vehicle.gear2.toggle=Toggle Secondary Gear
+key.immersiveintelligence.vehicle.gear2.overdrive=Secondary Gearbox - Overdrive
+key.immersiveintelligence.vehicle.gear2.reduction=Secondary Gearbox - Reduction
 
 key.immersiveintelligence.vehicle.brake=Brake
 

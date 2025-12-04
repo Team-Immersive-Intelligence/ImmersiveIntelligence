@@ -40,6 +40,8 @@ public class VehicleDebugOverlay extends InWorldOverlayBase
 		double posX = player.lastTickPosX+(player.posX-player.lastTickPosX)*(double)partialTicks;
 		double posY = player.lastTickPosY+(player.posY-player.lastTickPosY)*(double)partialTicks;
 		double posZ = player.lastTickPosZ+(player.posZ-player.lastTickPosZ)*(double)partialTicks;
+		boolean displayWheelBoxes = true;
+		boolean displayNames = true;
 
 		if(!Graphics.vehicleDebugOverlay)
 			return;
@@ -60,6 +62,8 @@ public class VehicleDebugOverlay extends InWorldOverlayBase
 			Vec3d motionOffset = IIEntityUtils.getEntityMotion(vehicle).scale(partialTicks);
 			for(EntityVehiclePart<?> part : vehicle.getVehicleParts())
 			{
+				if(!displayWheelBoxes&&part instanceof EntityVehicleWheel)
+					continue;
 				GlStateManager.pushMatrix();
 				IIColor color = IIColor.MC_GRAY;
 				if(part instanceof EntityVehicleWheel)
@@ -100,29 +104,33 @@ public class VehicleDebugOverlay extends InWorldOverlayBase
 				GlStateManager.translate(part.posX+motionOffset.x-posX, part.posY+motionOffset.y-posY, part.posZ+motionOffset.z-posZ);
 				RenderGlobal.drawSelectionBoundingBox(part.aabb.grow(0.002D),
 						color.red/255f, color.green/255f, color.blue/255f, 1.0F);
-				//Draw part name
-				GlStateManager.enableTexture2D();
-				GlStateManager.translate(0, (part.aabb.maxY-part.aabb.minY)/2, 0);
-				GlStateManager.rotate(180-player.rotationYaw, 0, 1, 0);
-				GlStateManager.rotate(-player.rotationPitch, 1, 0, 0);
-				GlStateManager.scale(0.0625f/2, -0.0625f/2, 0.0625f/2);
 
-				VehicleDurability durability = part.getDurability();
-				String[] lines;
-				if(durability!=null)
-					lines = new String[]{
-							part.partName,
-							(int)(durability.maxDurability*durability.getDamageFactor())+" / "+durability.maxDurability+" @ "+durability.armor
-					};
-				else
-					lines = new String[]{part.partName};
+				if(displayNames)
+				{
+					//Draw part name
+					GlStateManager.enableTexture2D();
+					GlStateManager.translate(0, (part.aabb.maxY-part.aabb.minY)/2, 0);
+					GlStateManager.rotate(180-player.rotationYaw, 0, 1, 0);
+					GlStateManager.rotate(-player.rotationPitch, 1, 0, 0);
+					GlStateManager.scale(0.0625f/2, -0.0625f/2, 0.0625f/2);
 
-				for(int i = 0; i < lines.length; i++)
-					IIClientUtils.fontRegular.drawString(lines[i],
-							(int)(-IIClientUtils.fontRegular.getStringWidth(lines[i])/2f), -((lines.length-i)*11)/2,
-							color.getPackedRGB()
-					);
-				GlStateManager.disableTexture2D();
+					VehicleDurability durability = part.getDurability();
+					String[] lines;
+					if(durability!=null)
+						lines = new String[]{
+								part.partName,
+								(int)(durability.maxDurability*durability.getDamageFactor())+" / "+durability.maxDurability+" @ "+durability.armor
+						};
+					else
+						lines = new String[]{part.partName};
+
+					for(int i = 0; i < lines.length; i++)
+						IIClientUtils.fontRegular.drawString(lines[i],
+								(int)(-IIClientUtils.fontRegular.getStringWidth(lines[i])/2f), -((lines.length-i)*11)/2,
+								color.getPackedRGB()
+						);
+					GlStateManager.disableTexture2D();
+				}
 				GlStateManager.popMatrix();
 			}
 

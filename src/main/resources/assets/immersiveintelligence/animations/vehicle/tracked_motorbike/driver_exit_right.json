@@ -1,0 +1,437 @@
+{
+  "comment": "Made by Pabilo8 with Blockbench",
+  "groups": {
+    "hans_driver": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.2917,
+          "transform": [0, 75, 0]
+        },
+        {
+          "time": 0.5,
+          "transform": [0, 75, 0]
+        },
+        {
+          "time": 0.8333,
+          "transform": [0, 90, 0]
+        }
+      ],
+      "position": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.2917,
+          "transform": [0, 9, 0]
+        },
+        {
+          "time": 0.5,
+          "transform": [12.55704, 11, -3.36465]
+        },
+        {
+          "time": 0.625,
+          "transform": [19.57329, 5.38, -3.55579]
+        },
+        {
+          "time": 0.8333,
+          "transform": [26, -4, -3]
+        }
+      ]
+    },
+    "hans_driver_body": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [-5, 0, 0]
+        },
+        {
+          "time": 0.2917,
+          "transform": [-17.5, 0, 0]
+        },
+        {
+          "time": 0.875,
+          "transform": [0, 0, 0]
+        }
+      ],
+      "position": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.2917,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.875,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "hans_driver_left_arm": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [87.44563, -27.49757, -0.1229]
+        },
+        {
+          "time": 0.2917,
+          "transform": [50.38709, -0.85831, -3.3208]
+        },
+        {
+          "time": 0.4583,
+          "transform": [0.38709, -0.85831, -3.3208]
+        },
+        {
+          "time": 0.7083,
+          "transform": [-24.4072, 4.94234, -12.47431]
+        },
+        {
+          "time": 0.8333,
+          "transform": [0, 0, 0]
+        }
+      ],
+      "position": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.2917,
+          "transform": [-0.19382, -2.54343, -3.08113]
+        },
+        {
+          "time": 0.4583,
+          "transform": [-0.2188, -3.78351, -0.19088]
+        },
+        {
+          "time": 0.8333,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "hans_driver_right_arm": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [84.49812, 29.95259, 1.69342]
+        },
+        {
+          "time": 0.2917,
+          "transform": [49.94563, 27.49757, 0.1229]
+        },
+        {
+          "time": 0.4583,
+          "transform": [-16.95431, 19.77928, 23.24668]
+        },
+        {
+          "time": 0.7083,
+          "transform": [-25.65144, 6.59309, 7.74889]
+        },
+        {
+          "time": 0.8333,
+          "transform": [0, 0, 0]
+        }
+      ],
+      "position": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.2917,
+          "transform": [0.19382, -2.54343, -3.08113]
+        },
+        {
+          "time": 0.4583,
+          "transform": [0.14832, -3.79712, 1.12268]
+        },
+        {
+          "time": 0.8333,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "hans_driver_right_leg": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [82.5, 17.5, 0]
+        },
+        {
+          "time": 0.2917,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.375,
+          "transform": [80, 0, 0]
+        },
+        {
+          "time": 0.4583,
+          "transform": [90, 0, 0]
+        },
+        {
+          "time": 0.8333,
+          "transform": [0, 0, 0]
+        }
+      ],
+      "position": [
+        {
+          "time": 0.2917,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.3333,
+          "transform": [0, 1.55604, 1.84279]
+        },
+        {
+          "time": 0.375,
+          "transform": [0, 1.58786, 2.39902]
+        },
+        {
+          "time": 0.4583,
+          "transform": [0, 0.41, 1.41]
+        },
+        {
+          "time": 0.8333,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "hans_driver_left_leg": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [80, -22.5, 0]
+        },
+        {
+          "time": 0.2917,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.375,
+          "transform": [72.5, 0, 0]
+        },
+        {
+          "time": 0.4583,
+          "transform": [90, 0, 0]
+        },
+        {
+          "time": 0.8333,
+          "transform": [0, 0, 0]
+        }
+      ],
+      "position": [
+        {
+          "time": 0.2917,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.3333,
+          "transform": [0, 1.66644, 1.77131]
+        },
+        {
+          "time": 0.375,
+          "transform": [0, 1.71492, 2.36793]
+        },
+        {
+          "time": 0.4583,
+          "transform": [0, 0.41, 1.41]
+        },
+        {
+          "time": 0.8333,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "steering_wheel": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.2917,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.4167,
+          "transform": [0, 0, -2]
+        },
+        {
+          "time": 0.5833,
+          "transform": [0, 0, -2]
+        },
+        {
+          "time": 0.75,
+          "transform": [0, 0, 1]
+        },
+        {
+          "time": 0.875,
+          "transform": [0, 0, 0]
+        }
+      ],
+      "position": [
+        {
+          "time": 0.125,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.2917,
+          "transform": [0, -0.3, -0.1]
+        },
+        {
+          "time": 0.4167,
+          "transform": [0.09994, -0.30349, -0.1]
+        },
+        {
+          "time": 0.5833,
+          "transform": [0.09994, -0.30349, -0.1]
+        },
+        {
+          "time": 0.7083,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "suspension_wheel": {
+      "position": [
+        {
+          "time": 0.125,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.2917,
+          "transform": [0, 0.4, 0]
+        },
+        {
+          "time": 0.5833,
+          "transform": [0, 0.4, 0]
+        },
+        {
+          "time": 0.7083,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.75,
+          "transform": [0, 0.1, 0]
+        },
+        {
+          "time": 0.875,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "hull": {
+      "rotation": [
+        {
+          "time": 0.2917,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.4167,
+          "transform": [0, 0, -2]
+        },
+        {
+          "time": 0.5833,
+          "transform": [0, 0, -2]
+        },
+        {
+          "time": 0.75,
+          "transform": [0, 0, 1]
+        },
+        {
+          "time": 0.875,
+          "transform": [0, 0, 0]
+        }
+      ],
+      "position": [
+        {
+          "time": 0.125,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.2917,
+          "transform": [0, -0.4, 0]
+        },
+        {
+          "time": 0.5833,
+          "transform": [0, -0.4, 0]
+        },
+        {
+          "time": 0.7083,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "armor_right": {
+      "rotation": [
+        {
+          "time": 0.125,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.25,
+          "transform": [0, 0, 5]
+        },
+        {
+          "time": 0.4167,
+          "transform": [0, 0, 2.5]
+        },
+        {
+          "time": 0.5833,
+          "transform": [0, 0, 2.5]
+        },
+        {
+          "time": 0.75,
+          "transform": [0, 0, 3]
+        },
+        {
+          "time": 0.875,
+          "transform": [0, 0, -1]
+        },
+        {
+          "time": 1,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "armor_left": {
+      "rotation": [
+        {
+          "time": 0.125,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.25,
+          "transform": [0, 0, -5]
+        },
+        {
+          "time": 0.4167,
+          "transform": [0, 0, 2.5]
+        },
+        {
+          "time": 0.5833,
+          "transform": [0, 0, 2.5]
+        },
+        {
+          "time": 0.75,
+          "transform": [0, 0, -4.5]
+        },
+        {
+          "time": 0.875,
+          "transform": [0, 0, 1.5]
+        },
+        {
+          "time": 1,
+          "transform": [0, 0, 0]
+        }
+      ]
+    }
+  }
+}

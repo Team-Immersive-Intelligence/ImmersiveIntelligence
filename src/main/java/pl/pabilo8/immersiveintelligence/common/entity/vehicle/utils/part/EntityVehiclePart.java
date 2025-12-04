@@ -48,6 +48,7 @@ public class EntityVehiclePart<T extends Entity & IVehicleMultiPart<T>> extends 
 	public VehicleDurability durability;
 	@Nullable
 	public SeatInfo<?> assignedSeat;
+	protected boolean collidable = true;
 
 	public EntityVehiclePart(T parent, String partName, Vec3d offset, AxisAlignedBB aabb)
 	{
@@ -69,7 +70,13 @@ public class EntityVehiclePart<T extends Entity & IVehicleMultiPart<T>> extends 
 
 	public EntityVehiclePart<T> withHitbox(@Nonnull VehicleDurability hitbox)
 	{
+		return withHitbox(hitbox, true);
+	}
+
+	public EntityVehiclePart<T> withHitbox(@Nonnull VehicleDurability hitbox, boolean collidable)
+	{
 		this.durability = hitbox;
+		this.collidable = collidable;
 		return this;
 	}
 

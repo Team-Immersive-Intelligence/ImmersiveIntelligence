@@ -133,6 +133,7 @@ public abstract class AMTCachedModel<T> extends HashMap<Integer, AMTModel> imple
 		//Apply hierarchy from header file
 		if(header!=null)
 			header.applyHierarchy(collected);
+		collected.removeIf(AMT::isChild);
 
 		return new AMTModel(collected);
 	}

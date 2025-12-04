@@ -71,6 +71,8 @@ public class MessageEntityNBTSync extends IIMessage implements IEntityBoundMessa
 			synced.receivePositionMotionUpdate(nbt);
 		else
 			synced.receiveNBTMessageClient(nbt);
+		if(nbt.hasKey("re_init"))
+			synced.reloadEntity();
 	}
 
 	@Override

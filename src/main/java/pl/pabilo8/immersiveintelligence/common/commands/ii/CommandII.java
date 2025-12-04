@@ -43,6 +43,7 @@ public class CommandII extends CommandTreeBase
 		addSubcommand(new CommandReloadManual());
 		addSubcommand(new CommandReloadMultiblock());
 		addSubcommand(new CommandReloadParticles());
+		addSubcommand(new CommandReloadVehicles());
 
 		addSubcommand(new CommandTreeHelp(this));
 	}

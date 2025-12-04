@@ -14,6 +14,7 @@ import net.minecraftforge.client.model.obj.OBJModel;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.pabilo8.immersiveintelligence.client.model.TextureRecoloringRegistry;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.util.amt.AMTModelHeader;
@@ -212,6 +213,12 @@ public class AMTLoader
 	@SideOnly(Side.CLIENT)
 	public static void preloadTexturesFromMTL(@Nonnull ResourceLocation mtl, TextureMap map)
 	{
-		loadMTL(mtl).values().forEach(res -> ApiUtils.getRegisterSprite(map, res));
+		loadMTL(mtl).values().forEach(res -> {
+			ApiUtils.getRegisterSprite(map, res);
+			//Register paintable textures
+			if(res.getResourcePath().contains("_painted"))
+				TextureRecoloringRegistry.registerRecolorableTexture(res);
+
+		});
 	}
 }

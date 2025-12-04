@@ -181,6 +181,9 @@ public class IIConfigHandler
 			})
 			@RangeInt(min = 0, max = 3)
 			public static int explosionParticlesStyle = 3;
+
+			@RangeInt(min = 8, max = 256)
+			public static int dynamiclyColoredTextureVariants = 64;
 		}
 
 		public static class Ores
@@ -1770,6 +1773,12 @@ public class IIConfigHandler
 			@SubConfig
 			@Comment("Config for the Field Howitzer, allows for changes to durability and fire rate")
 			public static FieldHowitzer fieldHowitzer;
+
+			@Comment({"When enabled, clutch will not be engaged automatically during gear shift by its own."})
+			public static boolean manualClutch = false;
+
+			@Comment({"When disabled, gearbox will shift gears automatically based on speed."})
+			public static boolean manualGearbox = true;
 
 
 			public static class Motorbike

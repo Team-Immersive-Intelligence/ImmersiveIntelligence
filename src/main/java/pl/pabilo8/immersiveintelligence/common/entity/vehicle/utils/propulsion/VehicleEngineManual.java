@@ -16,6 +16,6 @@ public class VehicleEngineManual extends VehicleEngineBase<VehicleEngineManual>
 	@Override
 	public void onUpdate()
 	{
-
+		super.onUpdate();
 	}
 }

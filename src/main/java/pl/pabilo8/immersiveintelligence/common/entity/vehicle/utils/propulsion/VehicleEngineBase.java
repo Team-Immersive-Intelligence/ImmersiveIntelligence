@@ -2,6 +2,7 @@ package pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.propulsion;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.util.INBTSerializable;
 import pl.pabilo8.immersiveintelligence.api.rotary.IRotaryEnergy;
 import pl.pabilo8.immersiveintelligence.api.rotary.RotaryStorage;
@@ -21,7 +22,8 @@ public abstract class VehicleEngineBase<T extends VehicleEngineBase<T>> implemen
 {
 	@Nullable
 	protected VehicleDurability durability;
-	protected boolean active;
+	protected boolean nextState, active;
+	protected int activeTicks, activationTicks = 40, animationTicks = 8;
 	protected float acceleration = 0f;
 	protected RotaryStorage rotaryStorage = new RotaryStorage(0, 0);
 
@@ -29,14 +31,24 @@ public abstract class VehicleEngineBase<T extends VehicleEngineBase<T>> implemen
 	{
 		if(active)
 			return false;
-		return active = canBeStarted();
+		return nextState = canBeStarted();
 	}
 
 	public boolean stop()
 	{
 		if(!active)
 			return false;
-		return active = canBeStopped();
+		return nextState = active^canBeStopped();
+	}
+
+	public boolean toggle()
+	{
+		return active?stop(): start();
+	}
+
+	public float getStartingProgress(float partialTicks)
+	{
+		return MathHelper.clamp((activeTicks+(nextState?partialTicks: -partialTicks))/activationTicks, 0f, 1f);
 	}
 
 	protected abstract boolean canBeStarted();
@@ -46,7 +58,13 @@ public abstract class VehicleEngineBase<T extends VehicleEngineBase<T>> implemen
 		return true;
 	}
 
-	public abstract void onUpdate();
+	public void onUpdate()
+	{
+		if(!active)
+			acceleration = 0;
+		activeTicks = MathHelper.clamp(activeTicks+(nextState?1: -1), 0, activationTicks);
+		active = activeTicks==activationTicks;
+	}
 
 	//--- Setters ---//
 
@@ -57,11 +75,26 @@ public abstract class VehicleEngineBase<T extends VehicleEngineBase<T>> implemen
 		return (T)this;
 	}
 
+	public void accelerate(boolean accelerate)
+	{
+		this.acceleration = MathHelper.clamp(this.acceleration+(accelerate?0.05f: -0.1f), 0f, 1f);
+	}
+
 	//--- Getters ---//
 
 	public boolean isActive()
 	{
 		return active;
+	}
+
+	public boolean isStarting()
+	{
+		return nextState&&!active;
+	}
+
+	public int getAnimationTicks()
+	{
+		return animationTicks;
 	}
 
 	public float getAcceleration()
@@ -96,7 +129,7 @@ public abstract class VehicleEngineBase<T extends VehicleEngineBase<T>> implemen
 	@Override
 	public RotationSide getSide(@Nullable EnumFacing facing)
 	{
-		return null;
+		return RotationSide.OUTPUT;
 	}
 
 	//--- IVehicleComponent ---//
@@ -113,12 +146,20 @@ public abstract class VehicleEngineBase<T extends VehicleEngineBase<T>> implemen
 	@Override
 	public NBTTagCompound serializeNBT()
 	{
-		return new NBTTagCompound();
+		NBTTagCompound nbt = new NBTTagCompound();
+		nbt.setBoolean("active", active);
+		nbt.setBoolean("nextState", nextState);
+		nbt.setInteger("activeTicks", activeTicks);
+		nbt.setFloat("acceleration", acceleration);
+		return nbt;
 	}
 
 	@Override
 	public void deserializeNBT(NBTTagCompound nbt)
 	{
-
+		active = nbt.getBoolean("active");
+		nextState = nbt.getBoolean("nextState");
+		activeTicks = nbt.getInteger("activeTicks");
+		acceleration = nbt.getFloat("acceleration");
 	}
 }

@@ -1,0 +1,21 @@
+{
+  "comment": "Made by Pabilo8 with Blockbench",
+  "groups": {
+    "gas": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.5,
+          "transform": [65, 0, 0]
+        },
+        {
+          "time": 1,
+          "transform": [0, 0, 0]
+        }
+      ]
+    }
+  }
+}

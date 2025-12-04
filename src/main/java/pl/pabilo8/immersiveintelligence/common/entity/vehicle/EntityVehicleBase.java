@@ -26,6 +26,7 @@ import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityV
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehicleSeat.SeatInfo;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehicleWheel;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.WheelForces;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.MissingAnnotationException;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
@@ -106,6 +107,7 @@ public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends 
 		//noinspection unchecked
 		this.upgradeManager = ((UpgradeManager<T>)new UpgradeManager<>(this));
 		this.style = new StyleCustomization(getVehicleStyleConstraints());
+		this.style.withColor(IIColor.fromHSV(14/64f, 0.35f, 0.85f));
 
 		//Calculate vehicle size and collect wheels
 		double minX = Integer.MAX_VALUE, minY = Integer.MAX_VALUE, minZ = Integer.MAX_VALUE;
@@ -386,7 +388,7 @@ public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends 
 			//Normalize force difference and convert to angle
 			double forceDifference = (leftForce-rightForce)/Math.max(1.0, Math.abs(avgForce));
 			double rollRad = Math.atan2(forceDifference*zLength*0.5, zLength);
-			targetRoll = (float)Math.toDegrees(rollRad)*2.0f; //Increased sensitivity for climbing
+			targetRoll = (float)Math.toDegrees(rollRad)*70; //Increased sensitivity for climbing
 		}
 
 		//Apply safe transformation
@@ -1051,6 +1053,16 @@ public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends 
 	public void writeEntityToNBT(@Nonnull NBTTagCompound compound)
 	{
 		ISyncNBTEntity.super.writeEntityToNBT(compound);
+	}
+
+	@Override
+	public boolean reloadEntity()
+	{
+		NBTTagCompound nbt = new NBTTagCompound();
+		this.writeEntityToNBT(nbt);
+		this.entityInit();
+		this.readEntityFromNBT(nbt);
+		return ISyncNBTEntity.super.reloadEntity();
 	}
 
 	//--- IEntitySpecialRepairable ---//

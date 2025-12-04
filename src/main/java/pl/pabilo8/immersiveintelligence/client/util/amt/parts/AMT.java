@@ -193,7 +193,13 @@ public abstract class AMT implements AMTRenderable
 		return children;
 	}
 
-	public final void setChildren(AMT[] children)
+	protected AMT withChildren(AMT... children)
+	{
+		setChildren(children);
+		return this;
+	}
+
+	public final void setChildren(AMT... children)
 	{
 		this.children = children;
 	}
@@ -204,8 +210,9 @@ public abstract class AMT implements AMTRenderable
 	private ArrayList<AMT> getChildrenRecursive(@Nonnull ArrayList<AMT> list)
 	{
 		list.add(this);
-		if(children!=null)
-			for(AMT child : children)
+		AMT[] amts = getChildren();
+		if(amts!=null)
+			for(AMT child : amts)
 				child.getChildrenRecursive(list);
 
 		return list;
@@ -289,5 +296,4 @@ public abstract class AMT implements AMTRenderable
 	{
 		this.scale = this.scale==null?scale: this.scale.add(scale);
 	}
-
 }
