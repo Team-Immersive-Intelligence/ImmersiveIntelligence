@@ -6,7 +6,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.ISkycrateMount;
-import pl.pabilo8.immersiveintelligence.client.render.SkyCrateRenderer;
+import pl.pabilo8.immersiveintelligence.client.render.entity.SkyCrateRenderer;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler;
 import pl.pabilo8.immersiveintelligence.common.item.ItemIISkycrateMount.SkycrateMounts;
 import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;

@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.client.render.vehicle;
+package pl.pabilo8.immersiveintelligence.client.render.entity.weapon;
 
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.GlStateManager;

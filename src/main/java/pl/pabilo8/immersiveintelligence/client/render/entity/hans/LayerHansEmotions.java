@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.client.render.hans;
+package pl.pabilo8.immersiveintelligence.client.render.entity.hans;
 
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelRenderer;

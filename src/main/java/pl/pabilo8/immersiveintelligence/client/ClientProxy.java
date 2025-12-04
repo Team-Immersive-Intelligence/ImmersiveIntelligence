@@ -71,10 +71,18 @@ import pl.pabilo8.immersiveintelligence.client.model.TextureRecoloringRegistry;
 import pl.pabilo8.immersiveintelligence.client.model.builtin.FluidStateMapper;
 import pl.pabilo8.immersiveintelligence.client.model.item.ModelMeasuringCup;
 import pl.pabilo8.immersiveintelligence.client.model.item.ModelMeasuringCup.MeasuringCupModelLoader;
-import pl.pabilo8.immersiveintelligence.client.render.*;
+import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.client.render.ammunition.*;
 import pl.pabilo8.immersiveintelligence.client.render.ammunition.NavalMineRenderer.NavalMineItemstackRenderer;
-import pl.pabilo8.immersiveintelligence.client.render.hans.HansRenderer;
+import pl.pabilo8.immersiveintelligence.client.render.entity.*;
+import pl.pabilo8.immersiveintelligence.client.render.entity.hans.HansRenderer;
+import pl.pabilo8.immersiveintelligence.client.render.entity.vehicle.FieldGunRenderer;
+import pl.pabilo8.immersiveintelligence.client.render.entity.vehicle.FieldHowitzerRenderer;
+import pl.pabilo8.immersiveintelligence.client.render.entity.vehicle.MotorbikeRenderer;
+import pl.pabilo8.immersiveintelligence.client.render.entity.vehicle.TrackedMotorbikeRenderer;
+import pl.pabilo8.immersiveintelligence.client.render.entity.weapon.MachinegunRenderer;
+import pl.pabilo8.immersiveintelligence.client.render.entity.weapon.MortarRenderer;
+import pl.pabilo8.immersiveintelligence.client.render.entity.weapon.TripodPeriscopeRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.inserter.AdvancedInserterRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.inserter.InserterRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.item.*;
@@ -84,7 +92,6 @@ import pl.pabilo8.immersiveintelligence.client.render.mechanical_device.WheelRen
 import pl.pabilo8.immersiveintelligence.client.render.metal_device.*;
 import pl.pabilo8.immersiveintelligence.client.render.multiblock.metal.*;
 import pl.pabilo8.immersiveintelligence.client.render.multiblock.wooden.*;
-import pl.pabilo8.immersiveintelligence.client.render.vehicle.*;
 import pl.pabilo8.immersiveintelligence.client.util.IICustomStateMapper;
 import pl.pabilo8.immersiveintelligence.client.util.IIKeybind;
 import pl.pabilo8.immersiveintelligence.client.util.ShaderUtil;
@@ -685,9 +692,9 @@ public class ClientProxy extends CommonProxy
 		//Render Layers
 		Map<String, RenderPlayer> skinMap = Minecraft.getMinecraft().getRenderManager().getSkinMap();
 		RenderPlayer render = skinMap.get("default");
-		render.addLayer(new IIBipedLayerRenderer());
+		render.addLayer(new IIBipedWearableLayerRenderer());
 		render = skinMap.get("slim");
-		render.addLayer(new IIBipedLayerRenderer());
+		render.addLayer(new IIBipedWearableLayerRenderer());
 
 		//Load Manual Pages
 		IILogger.info("Registering II Manual Pages.");

@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.client.render;
+package pl.pabilo8.immersiveintelligence.client.render.entity;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
@@ -19,7 +19,7 @@ import java.util.UUID;
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 15.04.2021
  */
-public class IIBipedLayerRenderer implements LayerRenderer<EntityLivingBase>
+public class IIBipedWearableLayerRenderer implements LayerRenderer<EntityLivingBase>
 {
 	public static boolean rendersAssigned = false;
 	public static Map<UUID, Pair<ItemStack, Integer>> ADVANCED_POWERPACK_PLAYERS = new HashMap<>();

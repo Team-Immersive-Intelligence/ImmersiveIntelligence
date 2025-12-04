@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.client.render.hans;
+package pl.pabilo8.immersiveintelligence.client.render.entity.hans;
 
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.scoreboard.Team;

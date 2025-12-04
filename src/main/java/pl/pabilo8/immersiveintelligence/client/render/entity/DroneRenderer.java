@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.client.render.vehicle;
+package pl.pabilo8.immersiveintelligence.client.render.entity;
 
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;

@@ -4,7 +4,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
 import net.minecraft.item.ItemStack;
-import pl.pabilo8.immersiveintelligence.client.render.MachinegunRenderer;
+import pl.pabilo8.immersiveintelligence.client.render.entity.weapon.MachinegunRenderer;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)

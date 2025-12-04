@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.client.render;
+package pl.pabilo8.immersiveintelligence.client.render.entity;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.model.ModelBiped;
@@ -16,6 +16,8 @@ import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.model.misc.ModelParachute;
+import pl.pabilo8.immersiveintelligence.client.render.IPassengerAnimationsRenderer;
+import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityParachute;
 
