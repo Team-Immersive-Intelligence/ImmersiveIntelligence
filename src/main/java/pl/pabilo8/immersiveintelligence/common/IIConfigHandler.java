@@ -285,6 +285,9 @@ public class IIConfigHandler
 			@Comment("Config for the Tripod Periscope, allows for changes to zoom, movement speed and setup time")
 			public static TripodPeriscope tripodPeriscope;
 
+			@Comment({"When enabled, drill heads will offset the dig area center when digging horizontally."})
+			public static boolean drillHeadsOffset = true;
+
 			@Comment({"A modifier to apply to the ammunition resupply time of the Ammunition Crate (weapons reload)."})
 			public static float ammunitionCrateResupplyTime = 1.0f;
 

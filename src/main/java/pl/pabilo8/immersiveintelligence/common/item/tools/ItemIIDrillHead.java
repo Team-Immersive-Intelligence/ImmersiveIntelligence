@@ -27,6 +27,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.common.item.tools.ItemIIDrillHead.DrillHeads;
 import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
@@ -202,6 +203,11 @@ public class ItemIIDrillHead extends ItemIISubItemsBase<DrillHeads> implements I
 		{
 			startPos = startPos.add(-(side.getAxis()==Axis.X?0: diameter/2), -(side.getAxis()==Axis.Y?0: diameter/2), -(side.getAxis()==Axis.Z?0: diameter/2));
 		}
+
+		//If player is digging horizontally, shift center upwards
+		if(Tools.drillHeadsOffset&&side.getAxis().isHorizontal())
+			startPos = startPos.add(0, (head.size/2)-1, 0);
+
 		Builder<BlockPos> b = ImmutableList.builder();
 		for(int dd = 0; dd < depth; dd++)
 			for(int dw = 0; dw < diameter; dw++)
