@@ -19,7 +19,7 @@ public class VehicleControls implements INBTSerializable<NBTTagCompound>
 {
 	private final Map<String, Boolean> states = new HashMap<>();
 	@SideOnly(Side.CLIENT)
-	private final Map<KeyBinding, String> keybinds = new HashMap<>();
+	private Map<KeyBinding, String> keybinds;
 	private boolean dirty = false;
 
 	public VehicleControls()
@@ -46,6 +46,8 @@ public class VehicleControls implements INBTSerializable<NBTTagCompound>
 	public VehicleControls withKeyBinding(KeyBinding key, String name)
 	{
 		states.put(name, false);
+		if(keybinds==null)
+			keybinds = new HashMap<>();
 		keybinds.put(key, name);
 		this.dirty = true;
 		return this;
@@ -55,17 +57,18 @@ public class VehicleControls implements INBTSerializable<NBTTagCompound>
 	public boolean clientUpdate()
 	{
 		this.dirty = false;
-		for(Entry<KeyBinding, String> entry : keybinds.entrySet())
-		{
-			KeyBinding keyBinding = entry.getKey();
-			states.compute(entry.getValue(), (name, current) -> {
-				boolean keyDown = keyBinding.isKeyDown();
-				if(keyDown!=current)
-					this.dirty = true;
-				return keyDown;
-			});
+		if(keybinds!=null)
+			for(Entry<KeyBinding, String> entry : keybinds.entrySet())
+			{
+				KeyBinding keyBinding = entry.getKey();
+				states.compute(entry.getValue(), (name, current) -> {
+					boolean keyDown = keyBinding.isKeyDown();
+					if(keyDown!=current)
+						this.dirty = true;
+					return keyDown;
+				});
 
-		}
+			}
 		return isDirty();
 	}
 

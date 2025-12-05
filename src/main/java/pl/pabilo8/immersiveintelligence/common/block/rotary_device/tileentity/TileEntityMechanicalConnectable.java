@@ -140,7 +140,7 @@ public abstract class TileEntityMechanicalConnectable extends TileEntityImmersiv
 				}
 			}
 
-			if(!refreshBeltNetwork)
+			if(!refreshBeltNetwork&&world.getTotalWorldTime()%10==0)
 			{
 				refreshBeltNetwork = true;
 				beltNetwork.removeFromNetwork(null);

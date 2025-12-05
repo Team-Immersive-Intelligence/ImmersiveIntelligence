@@ -711,7 +711,7 @@ public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends 
 				if(dx < INSIDE_THRESHOLD||dy < INSIDE_THRESHOLD||dz < INSIDE_THRESHOLD)
 				{
 					//Push out any intersections
-					Vec3d direction = partBB.getCenter().subtract(block.getCenter()).normalize();
+					Vec3d direction = IIMath.getAABBCenter(partBB).subtract(IIMath.getAABBCenter(block)).normalize();
 					double depth = Math.min(dx, Math.min(dy, dz));
 					Vec3d push = direction.scale(depth);
 

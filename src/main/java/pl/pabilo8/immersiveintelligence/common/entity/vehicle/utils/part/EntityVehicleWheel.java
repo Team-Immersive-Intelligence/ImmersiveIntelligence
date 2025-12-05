@@ -329,7 +329,7 @@ public class EntityVehicleWheel<T extends Entity & IVehicleMultiPart<T>> extends
 
 			if(heightDifference > 0&&heightDifference <= this.maxVerticalForce*2) //Scale with force capability
 				return new ClimbDetectionResult(true, heightDifference+0.125,
-						collisionBoundingBox.getCenter().subtract(start).normalize().scale(-1), collisionBoundingBox);
+						IIMath.getAABBCenter(collisionBoundingBox).subtract(start).normalize().scale(-1), collisionBoundingBox);
 		}
 
 		return new ClimbDetectionResult(false, 0, Vec3d.ZERO, null);

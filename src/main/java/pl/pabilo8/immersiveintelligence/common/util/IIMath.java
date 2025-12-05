@@ -143,6 +143,11 @@ public class IIMath extends MathHelper
 				&&comp2.contains(c4)&&comp2.contains(c5)&&comp2.contains(c6)&&comp2.contains(c7);
 	}
 
+	public static Vec3d getAABBCenter(@Nonnull AxisAlignedBB aabb)
+	{
+		return new Vec3d(aabb.minX+(aabb.maxX-aabb.minX)*0.5D, aabb.minY+(aabb.maxY-aabb.minY)*0.5D, aabb.minZ+(aabb.maxZ-aabb.minZ)*0.5D);
+	}
+
 	/**
 	 * Creates a Vec3 using the pitch and yaw of the entities rotation.
 	 */
