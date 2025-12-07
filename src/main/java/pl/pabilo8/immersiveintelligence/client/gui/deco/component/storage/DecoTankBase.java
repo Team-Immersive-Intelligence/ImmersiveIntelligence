@@ -1,6 +1,7 @@
 package pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
@@ -9,6 +10,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoComponent;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
+import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 
 import javax.annotation.Nonnull;
@@ -94,6 +96,8 @@ public abstract class DecoTankBase<TYPE extends DecoTankBase<TYPE, RESOURCE>, RE
 		bindAtlas();
 		//Draw background
 		IIDrawUtils draw = IIDrawUtils.startTexturedColored();
+		GlStateManager.enableAlpha();
+		GlStateManager.enableBlend();
 		draw.drawConnectedTexColorRect(x, y, width, height, IIColor.WHITE, tankBackgroundLocation, 64, 64, 8, 8);
 		//Draw color marker (useful for f.e. ink fluid tanks)
 		if(colorMarker!=null)
@@ -135,6 +139,11 @@ public abstract class DecoTankBase<TYPE extends DecoTankBase<TYPE, RESOURCE>, RE
 				yOffset -= resourceHeight;
 				draw.drawRepeatedTexColorRect(x+borderSize, yOffset, fullWidth, resourceHeight, getResourceColor(resource),
 						getResourceTexture(resource), 16);
+
+				//Draw white overlay for hovered fluid
+				if(IIMath.isPointInRectangle(x+borderSize, yOffset, x+borderSize+fullWidth, yOffset+resourceHeight, mouseX, mouseY))
+					draw.drawRepeatedTexColorRect(x+borderSize, yOffset, fullWidth, resourceHeight, IIColor.WHITE.withAlpha(0.85f),
+							DecoTextures.TEXTURE_WHITE, 16);
 			}
 		}
 

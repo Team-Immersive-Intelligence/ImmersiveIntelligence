@@ -132,6 +132,9 @@ public class DecoTextures
 	public static final ResLoc RES_TEXTURES_DECO_COMPONENT_DROPDOWN_DATA_LETTER_PAPER = ResLoc.of(RES_TEXTURES_DECO, "component/data_letter_dropdown_paper");
 	public static final ResLoc RES_TEXTURES_DECO_COMPONENT_DROPDOWN_SYMBOL_PAPER = ResLoc.of(RES_TEXTURES_DECO, "component/dropdown_paper");
 
+	//--- Special Textures ---//
+	public static final ResLoc TEXTURE_WHITE = IIReference.RES_IE.with("items/white");
+
 	//--- Colors ---//
 	public static final IIColor COLOR_POWERBAR1 = IIColor.fromPackedRGB(0xb51500);
 	public static final IIColor COLOR_POWERBAR2 = IIColor.fromPackedRGB(0x600b00);
