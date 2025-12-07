@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.common.commands.reload;
 
-import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
@@ -10,7 +9,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.EntityEntry;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistryEntry.Impl;
+import net.minecraftforge.server.command.CommandTreeBase;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityVehicleBase;
+import pl.pabilo8.immersiveintelligence.common.util.CommandIIBase;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -23,24 +24,23 @@ import java.util.stream.Collectors;
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 23.06.2020
  */
-public class CommandReloadVehicles extends CommandBase
+public class CommandReloadVehicles extends CommandIIBase
 {
-	/**
-	 * Gets the name of the command
-	 */
-	@Nonnull
-	@Override
-	public String getName()
+	public CommandReloadVehicles(CommandTreeBase parent)
 	{
-		return "relveh";
+		super(parent, "vehicle");
 	}
 
-	/**
-	 * Gets the usage string for the command.
-	 */
-	@Nonnull
+	@Nullable
 	@Override
-	public String getUsage(@Nonnull ICommandSender sender)
+	public String getSyntax()
+	{
+		return "[resource_location]";
+	}
+
+	@Nullable
+	@Override
+	public String getDescription(ICommandSender sender)
 	{
 		return "Reload all registered II Vehicles";
 	}

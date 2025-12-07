@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.common.commands.ii.dev;
+package pl.pabilo8.immersiveintelligence.common.commands.dev;
 
 import blusunrize.immersiveengineering.api.MultiblockHandler;
 import blusunrize.immersiveengineering.api.MultiblockHandler.IMultiblock;

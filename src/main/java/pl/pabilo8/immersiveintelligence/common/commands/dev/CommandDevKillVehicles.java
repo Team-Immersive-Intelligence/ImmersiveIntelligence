@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.common.commands.ii.dev;
+package pl.pabilo8.immersiveintelligence.common.commands.dev;
 
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -6,18 +6,18 @@ import net.minecraft.entity.Entity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.server.command.CommandTreeBase;
-import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityAmmoBase;
+import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IVehicleMultiPart;
 import pl.pabilo8.immersiveintelligence.common.util.CommandIIBase;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 14.09.2025
  */
-public class CommandDevKillBullets extends CommandIIBase
+public class CommandDevKillVehicles extends CommandIIBase
 {
-	public CommandDevKillBullets(CommandTreeBase parent)
+	public CommandDevKillVehicles(CommandTreeBase parent)
 	{
-		super(parent, "killbullets");
+		super(parent, "killvehicles");
 	}
 
 	@Override
@@ -29,13 +29,16 @@ public class CommandDevKillBullets extends CommandIIBase
 	@Override
 	public String getDescription(ICommandSender sender)
 	{
-		return "Removes all bullets in 20 block radius";
+		return "Removes all vehicles (II multipart entities) in 20 block radius";
 	}
 
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
-		sender.getEntityWorld().getEntities(EntityAmmoBase.class, input -> true).forEach(Entity::setDead);
-		sender.sendMessage(new TextComponentString("All bullets killed!"));
+		sender.getEntityWorld().getEntities(Entity.class,
+						input -> (input instanceof IVehicleMultiPart?input.getPositionVector().distanceTo(sender.getPositionVector()): 25) < 25f)
+				.forEach(Entity::setDead);
+		sender.sendMessage(new TextComponentString("Vehicles Killed!"));
 	}
 }
+

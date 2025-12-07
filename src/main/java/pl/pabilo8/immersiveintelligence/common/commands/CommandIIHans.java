@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.common.commands.ii;
+package pl.pabilo8.immersiveintelligence.common.commands;
 
 import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.items.ItemToolUpgrade.ToolUpgrades;

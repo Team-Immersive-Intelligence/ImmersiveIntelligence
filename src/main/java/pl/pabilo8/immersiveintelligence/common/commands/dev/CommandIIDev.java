@@ -1,10 +1,11 @@
-package pl.pabilo8.immersiveintelligence.common.commands.ii.dev;
+package pl.pabilo8.immersiveintelligence.common.commands.dev;
 
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.server.command.CommandTreeBase;
+import pl.pabilo8.immersiveintelligence.common.commands.CommandIIHelp;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -14,7 +15,6 @@ public class CommandIIDev extends CommandTreeBase
 {
 	public CommandIIDev()
 	{
-		addSubcommand(new CommandDevHelp(this));
 		addSubcommand(new CommandDevDeth(this));
 		addSubcommand(new CommandDevTree(this));
 		addSubcommand(new CommandDevSlowmo(this));
@@ -34,6 +34,7 @@ public class CommandIIDev extends CommandTreeBase
 		addSubcommand(new CommandDevPlaceMb(this));
 		addSubcommand(new CommandDevParticle(this));
 		addSubcommand(new CommandDevInyerface(this));
+		addSubcommand(new CommandIIHelp(this, "dev"));
 	}
 
 	public static RayTraceResult getRayTraceResult(Entity entity, float traceDistance)

@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.common.commands.ii.item;
+package pl.pabilo8.immersiveintelligence.common.commands.item;
 
 import com.google.common.collect.Lists;
 import net.minecraft.command.CommandBase;

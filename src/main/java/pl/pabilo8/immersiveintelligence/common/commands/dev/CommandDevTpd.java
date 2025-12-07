@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.common.commands.ii.dev;
+package pl.pabilo8.immersiveintelligence.common.commands.dev;
 
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;

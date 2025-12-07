@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.common.commands.ii.dev;
+package pl.pabilo8.immersiveintelligence.common.commands;
 
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
@@ -17,11 +17,14 @@ import pl.pabilo8.immersiveintelligence.common.util.CommandIIBase;
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 14.09.2025
  */
-public class CommandDevHelp extends CommandIIBase
+public class CommandIIHelp extends CommandIIBase
 {
-	public CommandDevHelp(CommandTreeBase parent)
+	private final String fullPath;
+
+	public CommandIIHelp(CommandTreeBase parent, String fullPath)
 	{
 		super(parent, "help");
+		this.fullPath = fullPath;
 	}
 
 	@Override
@@ -33,7 +36,7 @@ public class CommandDevHelp extends CommandIIBase
 	@Override
 	public String getDescription(ICommandSender sender)
 	{
-		return "Shows dev subcommands help";
+		return "Shows subcommands help for the "+TextFormatting.GOLD+"/ii "+(fullPath.isEmpty()?"": (fullPath+" "))+TextFormatting.RESET+"command";
 	}
 
 	@Override
@@ -42,24 +45,24 @@ public class CommandDevHelp extends CommandIIBase
 		if(sender==null)
 			throw new CommandException("Sender cannot be null!");
 
-		sender.sendMessage(new TextComponentString("Executes an Immersive Intelligence command, usage /ii dev <option>").setStyle(new Style().setColor(TextFormatting.GOLD)));
-		for(ICommand subCommand : parent.getSubCommands())
+		sender.sendMessage(new TextComponentString("Executes an Immersive Intelligence command, usage: /ii "+fullPath+" <option>").setStyle(new Style().setColor(TextFormatting.GOLD)));
+		for(ICommand subCommand : parent.getSortedCommandList())
 			if(subCommand instanceof CommandIIBase)
 			{
 				CommandIIBase command = (CommandIIBase)subCommand;
 				sender.sendMessage(getMessageForCommand(command.getName(), command.getDescription(sender), command.getSyntax()));
 			}
-	}
-
-	private ITextComponent getMessageForCommand(String subcommand, String description)
-	{
-		return getMessageForCommand(subcommand, description, "");
+			else
+				sender.sendMessage(getMessageForCommand(subCommand.getName(), subCommand.getUsage(sender), null));
 	}
 
 	private ITextComponent getMessageForCommand(String subcommand, String description, String arguments)
 	{
-		return new TextComponentString("/ii dev ").appendText(subcommand).appendText((arguments==null||arguments.isEmpty())?"": " "+arguments)
-				.setStyle(new Style().setColor(TextFormatting.GOLD).setClickEvent(new ClickEvent(Action.SUGGEST_COMMAND, "/ii dev "+subcommand)))
+		String commandPath = "/ii "+(fullPath.isEmpty()?"": fullPath+" ");
+		return new TextComponentString(commandPath)
+				.appendText(subcommand)
+				.appendText(arguments==null||arguments.isEmpty()?"": " "+arguments)
+				.setStyle(new Style().setColor(TextFormatting.GOLD).setClickEvent(new ClickEvent(Action.SUGGEST_COMMAND, commandPath+subcommand)))
 				.appendSibling(new TextComponentString(" - ").appendText(description).setStyle(new Style().setColor(TextFormatting.RESET)));
 	}
 }
