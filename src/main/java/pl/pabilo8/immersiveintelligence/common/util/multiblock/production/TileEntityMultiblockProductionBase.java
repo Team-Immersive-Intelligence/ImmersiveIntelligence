@@ -13,6 +13,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
+import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIMultiblockRecipe;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IIIGuiMultiblockTile;

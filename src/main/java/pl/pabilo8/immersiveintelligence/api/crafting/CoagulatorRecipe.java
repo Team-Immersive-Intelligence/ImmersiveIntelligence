@@ -1,16 +1,18 @@
 package pl.pabilo8.immersiveintelligence.api.crafting;
 
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
-import blusunrize.immersiveengineering.api.crafting.MultiblockRecipe;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.NonNullList;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
+import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIMultiblockRecipe;
+import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIRecipeLayout;
+import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIRecipeLayoutBuilder;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Coagulator;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.*;
 import java.util.Map.Entry;
 
@@ -18,28 +20,20 @@ import java.util.Map.Entry;
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 08.08.2019
  */
-public class CoagulatorRecipe extends MultiblockRecipe
+public class CoagulatorRecipe extends IIMultiblockRecipe
 {
 	public static LinkedList<CoagulatorRecipe> recipeList = new LinkedList<>();
 	public static HashMap<ItemStack, Integer> dryingMap = new HashMap<>();
 	public final FluidStack fluidInput, coagulantInput;
 	public final ItemStack itemOutput;
-	int totalProcessTime;
-	int totalProcessEnergy;
 
 	public CoagulatorRecipe(ItemStack itemOutput, FluidStack fluidInput, FluidStack coagulantInput, int energy, int mixingTime)
 	{
+		super(itemOutput, fluidInput, coagulantInput);
 		this.itemOutput = itemOutput;
 		this.fluidInput = fluidInput;
 		this.coagulantInput = coagulantInput;
-		this.totalProcessEnergy = (int)Math.floor((float)energy);
-		this.totalProcessTime = (int)Math.floor((float)mixingTime);
-
-		this.fluidInputList = new ArrayList<>();
-		this.fluidInputList.add(this.fluidInput);
-		this.fluidInputList.add(this.coagulantInput);
-
-		this.outputList = NonNullList.from(ItemStack.EMPTY, itemOutput);
+		setTimeAndEnergy(mixingTime, energy);
 	}
 
 	public static CoagulatorRecipe addRecipe(ItemStack itemOutput, FluidStack fluidInput, FluidStack coagulantInput, int energy, int mixingTime, int dryingTime)
@@ -91,7 +85,7 @@ public class CoagulatorRecipe extends MultiblockRecipe
 
 	public static CoagulatorRecipe loadFromNBT(NBTTagCompound nbt)
 	{
-		IngredientStack item_input = IngredientStack.readFromNBT(nbt.getCompoundTag("item_input"));
+		IngredientStack itemInput = IngredientStack.readFromNBT(nbt.getCompoundTag("item_input"));
 		FluidStack fluidInput = FluidStack.loadFluidStackFromNBT(nbt.getCompoundTag("fluid_input"));
 		FluidStack coagulantInput = FluidStack.loadFluidStackFromNBT(nbt.getCompoundTag("coagulant_input"));
 
@@ -105,10 +99,18 @@ public class CoagulatorRecipe extends MultiblockRecipe
 				.map(Entry::getValue).findFirst().orElse(Coagulator.bucketTime);
 	}
 
+	@Nullable
 	@Override
-	public int getMultipleProcessTicks()
+	protected IIRecipeLayout initRecipeLayout()
 	{
-		return 0;
+		return new IIRecipeLayoutBuilder(144, 64)
+				.withFluidTank(4, 2, fluidInput)
+				.withFluidTank(4+22, 2, coagulantInput)
+				.withOutputSlot(144-22, (64-16)/2-9, itemOutput)
+				.withMultiblockModel(32+8, 0)
+				.withTimeInfo()
+				.withPowerInfo()
+				.build();
 	}
 
 	@Override
@@ -117,16 +119,6 @@ public class CoagulatorRecipe extends MultiblockRecipe
 		nbt.setTag("fluid_input", fluidInput.writeToNBT(new NBTTagCompound()));
 		nbt.setTag("coagulant_input", coagulantInput.writeToNBT(new NBTTagCompound()));
 		return nbt;
-	}
-
-	public int getTotalProcessTime()
-	{
-		return this.totalProcessTime;
-	}
-
-	public int getTotalProcessEnergy()
-	{
-		return this.totalProcessEnergy;
 	}
 
 }

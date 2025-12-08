@@ -55,6 +55,7 @@ import pl.pabilo8.immersiveintelligence.api.ShrapnelHandler;
 import pl.pabilo8.immersiveintelligence.api.ShrapnelHandler.Shrapnel;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
+import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIMultiblockRecipe;
 import pl.pabilo8.immersiveintelligence.api.data.IIDataTypeUtils;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType.TypeMetaInfo;
 import pl.pabilo8.immersiveintelligence.api.upgrade.IUpgradableDevice;
@@ -157,7 +158,6 @@ import pl.pabilo8.immersiveintelligence.common.util.item.IIIItemTextureOverride;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIBase;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.IIMultiblockRecipe;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

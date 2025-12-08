@@ -15,11 +15,11 @@ import java.util.List;
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 24.03.2021
  */
-public class JeiDecoGuiHandler<GUI extends DecoGui<T, C>, T extends TileEntityIEBase & IIEInventory, C extends ContainerIIBase<T>> implements IAdvancedGuiHandler<GUI>
+public class DecoGuiJEIHandler<GUI extends DecoGui<T, C>, T extends TileEntityIEBase & IIEInventory, C extends ContainerIIBase<T>> implements IAdvancedGuiHandler<GUI>
 {
 	Class<GUI> wrappedClass;
 
-	public JeiDecoGuiHandler(IIGUI gui)
+	public DecoGuiJEIHandler(IIGUI gui)
 	{
 		this.wrappedClass = (Class<GUI>)gui.guiClass;
 	}

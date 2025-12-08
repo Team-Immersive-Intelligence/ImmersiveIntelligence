@@ -220,7 +220,7 @@ public abstract class EntityAmmoBase<T extends EntityAmmoBase<? super T>> extend
 						.withString("component", t.getFirst().getName())
 						.withTag("nbt", t.getSecond())
 						.unwrap()
-		).collect(new NBTTagCollector()));
+		).collect(NBTTagCollector.collect()));
 		compound.setInteger("owner", owner==null?-1: owner.getEntityId());
 
 	}

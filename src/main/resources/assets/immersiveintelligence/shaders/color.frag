@@ -1,6 +1,6 @@
 #version 130
 
-//Author: Pabilo8
+//Author: Pabilo8 (pabilo@iiteam.net)
 //RGB color shader
 uniform vec3 color;// Passed in by callback
 uniform sampler2D bgl_RenderedTexture;

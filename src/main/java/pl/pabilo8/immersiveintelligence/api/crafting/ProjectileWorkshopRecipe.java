@@ -4,8 +4,11 @@ import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoCore;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
+import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIMultiblockRecipe;
+import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIRecipeLayout;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.ProjectileWorkshop;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.IIMultiblockRecipe;
+
+import javax.annotation.Nullable;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -58,5 +61,12 @@ public class ProjectileWorkshopRecipe extends IIMultiblockRecipe
 	public ItemStack getEffect()
 	{
 		return effect;
+	}
+
+	@Nullable
+	@Override
+	protected IIRecipeLayout initRecipeLayout()
+	{
+		return null;
 	}
 }

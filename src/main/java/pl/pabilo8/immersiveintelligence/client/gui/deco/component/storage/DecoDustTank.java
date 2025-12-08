@@ -1,6 +1,7 @@
 package pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage;
 
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextFormatting;
 import pl.pabilo8.immersiveintelligence.api.DustTank;
 import pl.pabilo8.immersiveintelligence.api.crafting.DustStack;
 import pl.pabilo8.immersiveintelligence.api.crafting.DustUtils;
@@ -70,6 +71,6 @@ public class DecoDustTank extends DecoTankBase<DecoDustTank, DustStack>
 	protected void addResourceTooltip(List<String> tooltip, DustStack dustStack, int tankCapacity)
 	{
 		tooltip.add(DustUtils.getDustName(dustStack));
-		tooltip.add(dustStack.amount+" mB");
+		tooltip.add(TextFormatting.GRAY+""+dustStack.amount+" mB");
 	}
 }

@@ -18,6 +18,7 @@ public class CommandIIReload extends CommandTreeBase
 		addSubcommand(new CommandReloadMultiblock(this));
 		addSubcommand(new CommandReloadParticles(this));
 		addSubcommand(new CommandReloadVehicles(this));
+		addSubcommand(new CommandReloadRecipeLayouts(this));
 		addSubcommand(new CommandIIHelp(this, "reload"));
 	}
 

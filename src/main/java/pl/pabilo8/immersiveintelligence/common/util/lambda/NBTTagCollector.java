@@ -17,6 +17,16 @@ import java.util.stream.Collector;
  */
 public class NBTTagCollector implements Collector<NBTBase, NBTTagList, NBTTagList>
 {
+	private NBTTagCollector()
+	{
+
+	}
+
+	public static NBTTagCollector collect()
+	{
+		return new NBTTagCollector();
+	}
+
 	@Override
 	public Supplier<NBTTagList> supplier()
 	{

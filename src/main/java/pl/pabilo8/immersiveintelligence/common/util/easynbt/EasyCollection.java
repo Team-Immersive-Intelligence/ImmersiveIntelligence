@@ -174,7 +174,7 @@ public class EasyCollection<T extends INBTSerializable<NBT>, NBT extends NBTBase
 	{
 		return collection.stream()
 				.map(INBTSerializable::serializeNBT)
-				.collect(new NBTTagCollector());
+				.collect(NBTTagCollector.collect());
 	}
 
 	@Override

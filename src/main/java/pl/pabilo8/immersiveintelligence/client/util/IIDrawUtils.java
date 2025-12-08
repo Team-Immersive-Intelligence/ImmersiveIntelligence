@@ -127,6 +127,13 @@ public class IIDrawUtils
 
 	//--- Draw Methods ---//
 
+	public IIDrawUtils drawTexSprite(float x, float y, float w, float h, ResourceLocation texture)
+	{
+		TextureAtlasSprite sprite = ClientUtils.getSprite(texture);
+		drawTexRect(x, y, w, h, sprite.getMinU(), sprite.getMaxU(), sprite.getMinV(), sprite.getMaxV());
+		return this;
+	}
+
 	public IIDrawUtils drawTexRect(float x, float y, float w, float h, float... uv)
 	{
 		buf.pos(offX+x, offY+y+h, 0)
@@ -192,6 +199,15 @@ public class IIDrawUtils
 		buf.pos(offX+x, offY+y, 0)
 				.color(colorNW.red, colorNW.green, colorNW.blue, colorNW.alpha)
 				.endVertex();
+		return this;
+	}
+
+	public IIDrawUtils drawTexColorSprite(float x, float y, float w, float h, IIColor color, ResourceLocation texture)
+	{
+		TextureAtlasSprite sprite = ClientUtils.getSprite(texture);
+		drawTexColorRect(x, y, w, h, color,
+				sprite.getMinU(), sprite.getMaxU(), sprite.getMinV(), sprite.getMaxV()
+		);
 		return this;
 	}
 

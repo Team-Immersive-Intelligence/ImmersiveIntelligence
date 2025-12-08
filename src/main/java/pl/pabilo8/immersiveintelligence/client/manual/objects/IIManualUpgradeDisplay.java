@@ -76,7 +76,7 @@ public class IIManualUpgradeDisplay extends IIManualObject
 	public List<String> getTooltip(Minecraft mc, int mx, int my)
 	{
 		if(hovered)
-			return Collections.singletonList("");
+			return Collections.singletonList(upgrade.getLocalizedName());
 		return null;
 	}
 }

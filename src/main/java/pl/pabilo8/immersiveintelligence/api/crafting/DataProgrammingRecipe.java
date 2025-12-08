@@ -2,9 +2,10 @@ package pl.pabilo8.immersiveintelligence.api.crafting;
 
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import net.minecraft.item.ItemStack;
+import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIMultiblockRecipe;
+import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIRecipeLayout;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.DataInputMachine;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.IIMultiblockRecipe;
 
 import javax.annotation.Nullable;
 import java.util.function.Consumer;
@@ -29,6 +30,13 @@ public class DataProgrammingRecipe extends IIMultiblockRecipe
 				DataInputMachine.timePunchtapeProduction,
 				DataInputMachine.energyUsagePunchtape
 		);
+	}
+
+	@Nullable
+	@Override
+	protected IIRecipeLayout initRecipeLayout()
+	{
+		return null;
 	}
 
 	public interface DataProgrammingFunction

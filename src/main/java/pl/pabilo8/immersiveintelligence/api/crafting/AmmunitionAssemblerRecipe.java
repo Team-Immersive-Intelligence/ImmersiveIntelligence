@@ -7,9 +7,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.NonNullList;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
+import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIMultiblockRecipe;
+import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIRecipeLayout;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityAmmunitionAssembler;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.IIMultiblockRecipe;
 
+import javax.annotation.Nullable;
 import java.util.function.BiFunction;
 
 /**
@@ -52,5 +54,12 @@ public class AmmunitionAssemblerRecipe extends IIMultiblockRecipe
 		if(te instanceof TileEntityAmmunitionAssembler)
 			return NonNullList.from(ItemStack.EMPTY, process.apply(((TileEntityAmmunitionAssembler)te).inventory.get(0), ((TileEntityAmmunitionAssembler)te).inventory.get(1).copy()));
 		return NonNullList.from(ItemStack.EMPTY);
+	}
+
+	@Nullable
+	@Override
+	protected IIRecipeLayout initRecipeLayout()
+	{
+		return null;
 	}
 }

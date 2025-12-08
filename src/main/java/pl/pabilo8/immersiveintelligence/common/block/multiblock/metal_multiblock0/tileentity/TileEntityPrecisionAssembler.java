@@ -205,7 +205,6 @@ public class TileEntityPrecisionAssembler extends TileEntityMultiblockMetal<Tile
 				toolOrder = new String[]{t0, t1, t2};
 				animationOrder = recipe.animations;
 				effect = recipe.output;
-				float timeMod = recipe.timeModifier;
 				beginning = true;
 			}
 		}
@@ -248,7 +247,6 @@ public class TileEntityPrecisionAssembler extends TileEntityMultiblockMetal<Tile
 					.withItemStack("output", effect)
 					.withList("toolOrder", (Object[])toolOrder)
 					.withList("animationOrder", (Object[])animationOrder)
-					.withFloat("animationTimeMod", this.processQueue.size() > 0?this.processQueue.get(0).recipe.timeModifier: 1)
 					.conditionally(beginning, easyNBT -> easyNBT.withBoolean("beginning", true))
 			));
 

@@ -2,39 +2,41 @@
 Emplacement Weapons
 A Show of Force
 # intro
-An [emplacement], like most weapons developed by the Engineering Department, can be augmented to fill different niches.
+An [Emplacement] does not have any weapon installed by default. Instead, the weapon is assembled on the emplacement using the [Wrench](electric_tools.md#wrench).
 Several weapons with numerous strengths and weaknesses can be installed to create an incredibly versatile defense system.
 # mg0
-**Machinegun**<br>
-This Emplacement is the most basic and
-*cheapest* of all the Emplacements available. It is a reliable choice for dealing with soft ground targets or light vehicles, when using [armor-piercing long bullets] for ammunition.
+**Machinegun**
+|[upgrade_display]{upgrade:"immersiveintelligence:emplacement/machinegun"}|  
+This weapon is the most basic and *cheapest* of all available for the Emplacement. It is a reliable choice for dealing with soft ground targets or light vehicles, when using [armor-piercing long bullets] for ammunition.
 # mg1
-The **Machinegun
-** Emplacement comes in 3 variants: [Default], [Heavy Barreled], and [Water-Cooled], which are identical in function to those present in the [infantry version](machinegun.md) of the Machinegun.
+The **Machinegun** Emplacement comes in 3 variants: [Default], [Heavy Barreled], and [Water-Cooled], which are identical in function to those present in the [infantry version](machinegun.md).
+|[upgrade_display]{upgrade:"immersiveintelligence:emplacement/mg_heavy_barrel"}|
+|[upgrade_display]{upgrade:"immersiveintelligence:emplacement/mg_watercooled"}|
 Take note, this weapon does not use [magazines](magazines.md). [Loose bullets have to be provided through the emplacement input port]. Due to its limited pitch, the MG Emplacement is a poor choice for firing at air targets.
 # chem0
-**Heavy Chemthrower**<br>
+**Heavy Chemthrower**
+|[upgrade_display]{upgrade:"immersiveintelligence:emplacement/heavy_chemthrower"}|
 This Emplacement designed for [close-range] engagements against masses of enemies. Similarly to regular [Chemthrower](chemthrower), the heavy variant can be filled with various liquids from the liquid tanks.
 # chem1
-Normally, it ignites the fluid, but this can be toggled using a data packet. **The Heavy Chemthrower
-** Emplacement has the [lowest range] among all of the Emplacements, and is incredibly poor at targeting airborne targets.
+Normally, it ignites the fluid, but this can be toggled using a data packet. **The Heavy Chemthrower** Emplacement has the [lowest range] among all of the Emplacements, and is incredibly poor at targeting airborne targets.
 # flak0
-**Autocannon**<br>
+**Autocannon**
+|[upgrade_display]{upgrade:"immersiveintelligence:emplacement/autocannon"}|
 This Emplacement is a [standard, all-rounder option] for dealing with soft targets, vehicles and air targets. Depending on the ammo, it can serve as a great standard option for base protection against all sorts of threats.
 # flak1
-Due to its high velocity and diverse pitch and yaw ranges, the **Autocannon
-** is [especially effective against airborne targets].
+Due to its high velocity and diverse pitch and yaw ranges, the **Autocannon** is especially effective against [airborne targets].
 Its drawbacks are a slower rate of fire compared to the Machinegun and it's [relatively low magazine size](magazines.md), forcing it to reload very often. It is best to combine it with other emplacements.
 # railgun0
-**Heavy Railgun**<br>
+**Heavy Railgun**
+|[upgrade_display]{upgrade:"immersiveintelligence:emplacement/heavy_railgun"}|
 This Emplacement is used in [precision-dependent long range combat]. It is best used against [vehicles] and [single targets with high durability]. Damage is dependent on the metal out of which the rod is made, or composition of the [railgun grenade](grenades.md#1).
 # railgun1
 Due to the very low fire rate, turn rate, and low inventory space, it is a poor choice for engaging many targets. It is required to be paired with other emplacements for better protection.
-Fortunately, the **Heavy Railgun
-** possesses a high armor-piercing capability, so it is best utilized on armored targets, vehicles and targets behind steel walls.
+Fortunately, the **Heavy Railgun** possesses a high armor-piercing capability, so it is best utilized on armored targets, vehicles and targets behind steel walls.
 *No armor is too tough!*
 # cpds0
-**Counter-Projectile Defense System**<br>
+**Counter-Projectile Defense System**
+|[upgrade_display]{upgrade:"immersiveintelligence:emplacement/cpds"}|
 A pinnacle of computer technology, mechanical skill and sophisticated targeting software, this Emplacement is the worst enemy of anything that can fly, walk, or swim. It uses [long bullets].
 # cpds1
 Due to the astounding rate of fire, as well as fast tracking and response abilities, it is almost [impossible for targets to evade].
@@ -42,12 +44,14 @@ Thanks to its advanced targeting system, it is the [best weapon for anti-project
 # cpds2
 The only drawback it comes with is its enormous maintenance cost, due to its high rate of fire. If you're struggling with providing it with sufficient amounts of ammunition, consider using it as a [special, last resort] weapon for countering projectiles.
 # tesla0
-**Tesla Coil Emplacement**<br>
+**Tesla Coil Emplacement**
+|[upgrade_display]{upgrade:"immersiveintelligence:emplacement/tesla"}|
 This Emplacement is the bigger and more refined variant of the [Tesla Coil](teslaCoil) and deals [higher damage in expanded range]. The weapon is a good choice against [soft targets], who happened to come too close. Thanks to its advanced control systems, the weapon can differentiate between friend and foe.
 # tesla1
 Due to being energy-powered, [it does not require ammunition] - only a constant supply of electricity. Its drawbacks are a low range of attack and high energy consumption.
 # ir_observer0
-**Infrared Observer**<br>
+**Infrared Observer**
+|[upgrade_display]{upgrade:"immersiveintelligence:emplacement/infrared_observer"}|
 This Emplacement is a [surveillance device] used to detect enemies from afar and share their coordinates with other emplacements. It is considered one of the most, [if not the most important] emplacement weapon.
 # ir_observer1
 Using an [Observer] can dramatically extend the operational range of the other Emplacements. [Observers] reveal and communicate enemy positions coordinates via [Data](data_main.md) on extremely long distances and can coordinate a network of connected Emplacements to perform [precision focus fire on one target from afar], boosting the overall potential of defense system.

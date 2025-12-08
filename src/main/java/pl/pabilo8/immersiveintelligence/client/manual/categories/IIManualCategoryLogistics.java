@@ -1,6 +1,8 @@
 package pl.pabilo8.immersiveintelligence.client.manual.categories;
 
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
+import pl.pabilo8.immersiveintelligence.api.crafting.SawmillRecipe;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualCategory;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.data_device.BlockIIDataDevice.IIBlockTypes_Connector;
@@ -13,6 +15,7 @@ import pl.pabilo8.immersiveintelligence.common.block.rotary_device.BlockIIMechan
 import pl.pabilo8.immersiveintelligence.common.block.rotary_device.BlockIIMechanicalDevice1.IIBlockTypes_MechanicalDevice1;
 import pl.pabilo8.immersiveintelligence.common.item.ItemIIMinecart.Minecarts;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.ItemIISawBlade.SawBlades;
+import pl.pabilo8.immersiveintelligence.common.item.mechanical.ItemIIMotorBelt.MotorBelt;
 import pl.pabilo8.immersiveintelligence.common.item.mechanical.ItemIIMotorGear.MotorGear;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
@@ -87,6 +90,9 @@ public class IIManualCategoryLogistics extends IIManualCategory
 
 				.addSource("belt", getSourceForItem(
 						new ItemStack(IIContent.itemMotorBelt)))
+				.addSource("belt_cloth", getSourceForItem(IIContent.itemMotorBelt.getStack(MotorBelt.CLOTH)))
+				.addSource("belt_steel", getSourceForItem(IIContent.itemMotorBelt.getStack(MotorBelt.STEEL)))
+				.addSource("belt_rubber", getSourceForItem(IIContent.itemMotorBelt.getStack(MotorBelt.RUBBER)))
 				.addSource("gears", getSourceForItems(
 						IIContent.itemMotorGear.getStack(MotorGear.COPPER),
 						IIContent.itemMotorGear.getStack(MotorGear.BRASS),
@@ -119,7 +125,9 @@ public class IIManualCategoryLogistics extends IIManualCategory
 						IIContent.itemSawblade.getStack(SawBlades.IRON),
 						IIContent.itemSawblade.getStack(SawBlades.STEEL),
 						IIContent.itemSawblade.getStack(SawBlades.TUNGSTEN)
-				));
+				))
+				.addSource("recipe_planks", getSourceForRecipe(SawmillRecipe.class, new ItemStack(Blocks.LOG)))
+				.addSource("recipe_sticks", getSourceForRecipe(SawmillRecipe.class, new ItemStack(Blocks.PLANKS)));
 		addEntry("chemical_bath");
 		addEntry("chemical_painter");
 		addEntry("electrolyzer");

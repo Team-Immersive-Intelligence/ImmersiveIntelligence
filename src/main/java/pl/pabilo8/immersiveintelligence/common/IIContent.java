@@ -384,7 +384,7 @@ public class IIContent
 	public static final Upgrade UPGRADE_EMPLACEMENT_WEAPON_MACHINEGUN = new UpgradeEmplacementWeapon<>("machinegun", EmplacementWeaponMachinegun::new);
 	public static final Upgrade UPGRADE_EMPLACEMENT_WEAPON_IROBSERVER = new UpgradeEmplacementWeapon<>("infrared_observer", EmplacementWeaponInfraredObserver::new);
 	public static final Upgrade UPGRADE_EMPLACEMENT_WEAPON_AUTOCANNON = new UpgradeEmplacementWeapon<>("autocannon", EmplacementWeaponAutocannon::new);
-	public static final Upgrade UPGRADE_EMPLACEMENT_WEAPON_HEAVY_CHEMTHROWER = new UpgradeEmplacementWeapon<>("chemthrower", EmplacementWeaponHeavyChemthrower::new);
+	public static final Upgrade UPGRADE_EMPLACEMENT_WEAPON_HEAVY_CHEMTHROWER = new UpgradeEmplacementWeapon<>("heavy_chemthrower", EmplacementWeaponHeavyChemthrower::new);
 	public static final Upgrade UPGRADE_EMPLACEMENT_WEAPON_HEAVY_RAILGUN = new UpgradeEmplacementWeapon<>("heavy_railgun", EmplacementWeaponHeavyRailgun::new);
 	public static final Upgrade UPGRADE_EMPLACEMENT_SEARCHLIGHT = new UpgradeEmplacementWeapon<>("searchlight", EmplacementWeaponMachinegun::new);
 	public static final Upgrade UPGRADE_EMPLACEMENT_SPOTLIGHT_TOWER = new UpgradeEmplacementWeapon<>("spotlight_tower", EmplacementWeaponMachinegun::new);

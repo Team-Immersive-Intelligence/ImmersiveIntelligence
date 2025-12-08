@@ -36,6 +36,7 @@ public class ShaderUtil
 		createShader(BLUEPRINT, null, "blueprint");
 		createShader(COLOR, null, "color");
 		createShader(NOISE, null, "noise");
+		createShader(GRAYSCALE, null, "grayscale");
 	}
 
 	/**
@@ -74,6 +75,9 @@ public class ShaderUtil
 				break;
 			case NOISE:
 				shader.setFloat("time", parameters[0]);
+				break;
+			case GRAYSCALE:
+				shader.setFloat("darkness", parameters[0]);
 				break;
 		}
 		return true;
@@ -215,7 +219,8 @@ public class ShaderUtil
 		ALPHA,
 		BLUEPRINT,
 		COLOR,
-		NOISE;
+		NOISE,
+		GRAYSCALE;
 
 		private int programID, fragID, vertID;
 

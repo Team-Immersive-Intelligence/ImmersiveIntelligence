@@ -41,7 +41,7 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multibloc
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.tileentity.TileEntitySkyCrateStation;
 import pl.pabilo8.immersiveintelligence.common.block.rotary_device.tileentity.TileEntityGearbox;
 import pl.pabilo8.immersiveintelligence.common.block.simple.tileentity.TileEntitySmallCrate;
-import pl.pabilo8.immersiveintelligence.common.compat.jei.gui_handlers.JeiDecoGuiHandler;
+import pl.pabilo8.immersiveintelligence.common.compat.jei.gui_handlers.DecoGuiJEIHandler;
 import pl.pabilo8.immersiveintelligence.common.gui.*;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerEmplacement.ContainerEmplacementStorage;
 import pl.pabilo8.immersiveintelligence.common.util.ISerializableEnum;
@@ -245,7 +245,7 @@ public enum IIGUI implements ISerializableEnum
 	{
 		for(IIGUI gui : values())
 			if(gui.guiClass!=null)
-				registry.addAdvancedGuiHandlers(new JeiDecoGuiHandler<>(gui));
+				registry.addAdvancedGuiHandlers(new DecoGuiJEIHandler<>(gui));
 	}
 
 	@SideOnly(Side.CLIENT)

@@ -11,7 +11,7 @@ import crafttweaker.api.minecraft.CraftTweakerMC;
 import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.crafting.PaintingRecipe;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.IIMultiblockRecipe;
+import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIMultiblockRecipe;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 

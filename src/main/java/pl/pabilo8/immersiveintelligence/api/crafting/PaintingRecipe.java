@@ -7,11 +7,14 @@ import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
+import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIMultiblockRecipe;
+import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIRecipeLayout;
+import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIRecipeLayoutBuilder;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.IIMultiblockRecipe;
 import pl.pabilo8.immersiveintelligence.common.util.sound.IISoundAnimation;
 
+import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.Set;
 import java.util.function.BiFunction;
@@ -71,6 +74,19 @@ public class PaintingRecipe extends IIMultiblockRecipe
 	{
 		this.productionAnimation = new IISoundAnimation(IIReference.RES_II.with("chemical_painter/production_sounds"))
 				.compile(this.getTotalProcessTime());
+	}
+
+	@Nullable
+	@Override
+	protected IIRecipeLayout initRecipeLayout()
+	{
+		return new IIRecipeLayoutBuilder(144, 68)
+				.withInputSlot(2, 26, itemInput)
+				.withOutputSlot(144-20, 26, new IngredientStack(getExampleColoredItems()))
+				.withMultiblockModel(32+8-4, -10)
+				.withTimeInfo()
+				.withPowerInfo()
+				.build();
 	}
 
 	public int getCyanAmount(IIColor color)

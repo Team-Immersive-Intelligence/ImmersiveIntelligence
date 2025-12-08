@@ -2,10 +2,11 @@ package pl.pabilo8.immersiveintelligence.api.crafting;
 
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import net.minecraft.item.ItemStack;
+import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIMultiblockRecipe;
+import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIRecipeLayout;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.upgrade.Upgrade;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.PrintingPress;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.IIMultiblockRecipe;
 
 import javax.annotation.Nullable;
 
@@ -45,6 +46,13 @@ public class PrintingRecipe extends IIMultiblockRecipe
 	public PrintFunction getFunction()
 	{
 		return function;
+	}
+
+	@Nullable
+	@Override
+	protected IIRecipeLayout initRecipeLayout()
+	{
+		return null;
 	}
 
 	/**

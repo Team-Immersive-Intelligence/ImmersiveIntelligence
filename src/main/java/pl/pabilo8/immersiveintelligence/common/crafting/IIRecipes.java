@@ -938,14 +938,15 @@ public class IIRecipes
 				new DustStack("sand", 50),
 				100,
 				2000
-		);
+		).setName("sandbag");
 		new FillerRecipe(
 				IIContent.itemMaterial.getStack(Materials.SANDBAG),
 				new IngredientStack("fabricHemp"),
 				new DustStack("gravel", 40),
 				80,
 				2500
-		);
+		).setName("sandbag_gravel");
+		;
 	}
 
 	public static void addChemicalBathCleaningRecipes()
@@ -1504,7 +1505,7 @@ public class IIRecipes
 				new IngredientStack("dustVulcanizationCompound", 3),
 				new IngredientStack("dustSulfur", 2),
 				24000
-		);
+		).setName("rubber_belts");
 
 		VulcanizerRecipe.addRecipe(IIContent.itemMaterial.getStack(Materials.RUBBER_TIRE, 3),
 				IIContent.itemVulcanizerMold.getComparableStack(VulcanizerMolds.TIRE),
@@ -1512,7 +1513,7 @@ public class IIRecipes
 				new IngredientStack("dustVulcanizationCompound", 8),
 				new IngredientStack("dustSulfur", 3),
 				32000
-		);
+		).setName("rubber_tires");
 
 		//Rubber is a slow pace industry ^^
 		//Unless you build lots of coagulators, that is
@@ -1523,7 +1524,7 @@ public class IIRecipes
 				24000,
 				400,
 				2400
-		);
+		).setName("rubber");
 
 	}
 

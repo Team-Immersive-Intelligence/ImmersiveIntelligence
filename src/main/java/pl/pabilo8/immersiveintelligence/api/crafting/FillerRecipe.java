@@ -3,12 +3,13 @@ package pl.pabilo8.immersiveintelligence.api.crafting;
 import blusunrize.immersiveengineering.api.ApiUtils;
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
-import blusunrize.immersiveengineering.common.util.ListUtils;
-import com.google.common.collect.Lists;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.IIMultiblockRecipe;
+import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIMultiblockRecipe;
+import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIRecipeLayout;
+import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIRecipeLayout.IOType;
+import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIRecipeLayoutBuilder;
 
 import javax.annotation.Nullable;
 
@@ -32,15 +33,12 @@ public class FillerRecipe extends IIMultiblockRecipe
 		super(ApiUtils.createIngredientStack(itemInput), dust);
 		this.itemOutput = itemOutput;
 		this.itemInput = ApiUtils.createIngredientStack(itemInput);
-
-		this.inputList = Lists.newArrayList(this.itemInput);
-		this.outputList = ListUtils.fromItem(this.itemOutput);
+		this.dust = dust;
 
 		if(itemOutput.getItem() instanceof IAmmoTypeItem)
 			bullet = ((IAmmoTypeItem<?, ?>)itemOutput.getItem());
 
 		this.setTimeAndEnergy(time, energy);
-		this.dust = dust;
 	}
 
 
@@ -70,4 +68,17 @@ public class FillerRecipe extends IIMultiblockRecipe
 		return this.bullet;
 	}
 
+	@Nullable
+	@Override
+	protected IIRecipeLayout initRecipeLayout()
+	{
+		return new IIRecipeLayoutBuilder(156, 68)
+				.withInputSlot(2, 20, itemInput)
+				.withDustTank(2+22, 4, dust, IOType.INPUT)
+				.withOutputSlot(135, 20, itemOutput)
+				.withMultiblockModel(32+8, 0)
+				.withTimeInfo()
+				.withPowerInfo()
+				.build();
+	}
 }

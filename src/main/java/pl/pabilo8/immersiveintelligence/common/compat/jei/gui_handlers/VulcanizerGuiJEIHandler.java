@@ -13,9 +13,9 @@ import java.util.List;
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 24.03.2021
  */
-public class VulcanizerGuiHandler implements IAdvancedGuiHandler<GuiVulcanizer>
+public class VulcanizerGuiJEIHandler implements IAdvancedGuiHandler<GuiVulcanizer>
 {
-	public VulcanizerGuiHandler()
+	public VulcanizerGuiJEIHandler()
 	{
 
 	}

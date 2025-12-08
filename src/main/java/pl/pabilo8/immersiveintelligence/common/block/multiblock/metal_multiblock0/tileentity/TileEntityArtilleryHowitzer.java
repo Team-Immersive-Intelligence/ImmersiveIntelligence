@@ -416,7 +416,7 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 							tag.setFloat("yaw", order.yaw);
 							return tag;
 						})
-						.collect(new NBTTagCollector())
+						.collect(NBTTagCollector.collect())
 		);
 
 	}
