@@ -1111,16 +1111,22 @@ machineupgrade.immersiveintelligence.saw_unregulator=Saw Unregulator
 machineupgrade.immersiveintelligence.saw_unregulator.desc=Unregulating the saw leads to higher sawdust output in cost of main output amount.
 
 machineupgrade.immersiveintelligence.emplacement_grenades=Emergency Smoke Dischargers
-machineupgrade.immersiveintelligence.emplacement_grenades.desc=When emplacement's weapon is heavily damaged, smoke will be discharged to provide cover.
+machineupgrade.immersiveintelligence.emplacement_grenades.desc=When the Emplacement's weapon is heavily damaged, smoke will be discharged to provide cover.
 
 machineupgrade.immersiveintelligence.emplacement_bearings=Sturdy Bearings
 machineupgrade.immersiveintelligence.emplacement_bearings.desc=Higher quality bearings increase the maximum weapon rotation speed, to work at full capacity lubrication is required
 
 machineupgrade.immersiveintelligence.emplacement_targetting=Enhanced Targetting Systems
-machineupgrade.immersiveintelligence.emplacement_targetting.desc=Improved optics and fire control systems allow for better target acquisition and tracking, increasing accuracy.
+machineupgrade.immersiveintelligence.emplacement_targetting.desc=Improved fire control systems allow for better target acquisition and tracking, increasing accuracy.
 
 machineupgrade.immersiveintelligence.infrared_observer=Infrared Observer
 machineupgrade.immersiveintelligence.infrared_observer.desc=The Infrared Observer allows surveillance of distant enemies and sending their coordinates via data cables.
+
+machineupgrade.immersiveintelligence.spotlight_tower=Spotlight Tower
+machineupgrade.immersiveintelligence.spotlight_tower.desc=The Spotlight Tower allows illumination of hostile units, disorienting them and increasing accuracy of allied units.
+
+machineupgrade.immersiveintelligence.searchlight=Searchlight
+machineupgrade.immersiveintelligence.searchlight.desc=Searchlights work in coordination with Radars, Infrared Observers or Spotlight Towers, disorienting hostile units and increasing accuracy of allied fire.
 
 machineupgrade.immersiveintelligence.cpds=CPDS
 machineupgrade.immersiveintelligence.cpds.desc=The Counter-Projectile Defense System is an advanced anti-air weapon, capable of destroying incoming artillery shells in mid-air.
@@ -1138,7 +1144,7 @@ machineupgrade.immersiveintelligence.machinegun=Machinegun Nest
 machineupgrade.immersiveintelligence.machinegun.desc=The Machinegun Nest can provide suppressive automatic fire, allowing crowd control. Due to its construction, it is unable to fight airborne enemies.
 
 machineupgrade.immersiveintelligence.mg_heavy_barrel=Heavy Barrel
-machineupgrade.immersiveintelligence.mg_heavy_barrel.desc=The heavy barrels allow for much faster firing rate and slightly increase the maximum permitted overheat.
+machineupgrade.immersiveintelligence.mg_heavy_barrel.desc=Heavy barrels allow for much faster firing rate and slightly increase the maximum permitted overheat.
 
 machineupgrade.immersiveintelligence.mg_watercooled=Water Cooled Barrel
 machineupgrade.immersiveintelligence.mg_watercooled.desc=A replacement for the stock barrels. When mounted, barrels do not overheat when a coolant is provided.
@@ -1151,6 +1157,14 @@ machineupgrade.immersiveintelligence.mortar.desc=Mortar provides indirect fire s
 
 machineupgrade.immersiveintelligence.light_howitzer=Light Howitzer
 machineupgrade.immersiveintelligence.light_howitzer.desc=Light Howitzer provides indirect fire support on medium range, its mobility allows for quick and precise barrage of enemy positions
+
+machineupgrade.immersiveintelligence.mlrs=Rocket Launcher
+machineupgrade.immersiveintelligence.mlrs.desc=The Multiple Launch Rocket System provides devastating area bombardment using up to 6 unguided rockets, excellent for attacking fortified positions.
+
+machineupgrade.immersiveintelligence.guided_missile_launcher=Wire-Guided Missile Launcher
+machineupgrade.immersiveintelligence.guided_missile_launcher.desc=The Wire-Guided Missile Launcher provides long-range precision strikes, especially effective against moving targets.
+
+
 
 machineupgrade.immersiveintelligence.tesla=Tesla Tower
 machineupgrade.immersiveintelligence.tesla.desc=The Tesla Tower uses high voltage to decimate enemies in its radius, it's especially effective against electronics
@@ -2871,6 +2885,9 @@ ie.manual.entry.traits.upgradable=Upgradable
 ie.manual.entry.traits.repairable=Repairable
 ie.manual.entry.traits.decorations=Can be Decorated
 ie.manual.entry.traits.paintable=Paintable
+
+ie.manual.entry.wip_warning0=Warning! Work-in-Progress Content.
+ie.manual.entry.wip_warning1=The Engineering Department is working hard to bring it to the front!
 
 ie.manual.entry.data_operation.inputs=Inputs
 ie.manual.entry.data_operation.output=Output
