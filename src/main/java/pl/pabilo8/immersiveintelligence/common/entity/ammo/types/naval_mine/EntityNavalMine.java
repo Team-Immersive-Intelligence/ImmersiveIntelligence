@@ -9,11 +9,15 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.util.Tuple;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.Mines;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoMine;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIINavalMine;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
@@ -170,5 +174,17 @@ public class EntityNavalMine extends EntityAmmoMine
 		if(isNotRiding)
 			return false;
 		return super.isRiding();
+	}
+
+	@Override
+	public ItemStack getPickedResult(RayTraceResult target)
+	{
+		AmmoComponent[] components = this.components.stream().map(Tuple::getFirst).toArray(AmmoComponent[]::new);
+		NBTTagCompound[] componentTags = this.components.stream().map(Tuple::getSecond).toArray(NBTTagCompound[]::new);
+
+		ItemStack ammoStack = IIContent.itemNavalMine.getAmmoStack(this.core, this.coreType, this.fuseType, components);
+		IIContent.itemNavalMine.setComponentNBT(ammoStack, componentTags);
+
+		return ammoStack;
 	}
 }
