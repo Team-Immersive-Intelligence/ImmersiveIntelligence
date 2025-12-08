@@ -58,7 +58,7 @@ public class MysticalMechanicsAPIHelper extends IICompatModule
 	public void postInit()
 	{
 		IIRotaryUtils.TORQUE_BLOCKS.put(tileEntity -> tileEntity instanceof TileEntityAxle,
-				aFloat -> aFloat*MechanicalDevices.dynamoAxleTorque);
+				aFloat -> aFloat*MechanicalDevices.dynamoMMAxleTorque);
 	}
 
 	@SubscribeEvent

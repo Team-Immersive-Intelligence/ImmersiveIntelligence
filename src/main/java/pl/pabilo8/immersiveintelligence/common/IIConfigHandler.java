@@ -1862,7 +1862,10 @@ public class IIConfigHandler
 			public static float dynamoWatermillTorque = 24f;
 
 			@Comment({"Torque multiplier for the axle from MysticalMechanics."})
-			public static float dynamoAxleTorque = 18f;
+			public static float dynamoMMAxleTorque = 18f;
+
+			@Comment({"Torque multiplier for the axle from MysticalMechanics."})
+			public static float dynamoBWMAxleTorque = 18f;
 		}
 	}
 }

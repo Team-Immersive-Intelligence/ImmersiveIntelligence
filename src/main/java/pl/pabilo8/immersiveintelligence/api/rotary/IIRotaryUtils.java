@@ -32,12 +32,14 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.MechanicalDevices;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.rotary_device.tileentity.TileEntityMechanicalConnectable;
+import pl.pabilo8.immersiveintelligence.common.block.rotary_device.tileentity.TileEntityTransmissionBox;
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -72,6 +74,7 @@ public class IIRotaryUtils
 	 * Map of blocks providing a constant torque (by their existence) to a rotary system
 	 */
 	public static final Map<Predicate<TileEntity>, Function<Float, Float>> TORQUE_BLOCKS = new HashMap<>();
+	public static final Map<Predicate<TileEntity>, BiConsumer<TileEntityTransmissionBox, TileEntity>> TORQUE_TILES = new HashMap<>();
 	private static final String ADVANCEMENT_DUMB_BELT_TRYING = "main/secret_connect_wire";
 	private static final String NBT_LINKPOS = "linkingPos", NBT_TARGETTING_INFO = "targettingInfo", NBT_TRIES = "tries";
 

@@ -44,6 +44,7 @@ public abstract class IICompatModule
 		moduleClasses.put("toughasnails", TANHelper.class);
 		moduleClasses.put("mysticalmechanics", MysticalMechanicsAPIHelper.class);
 		moduleClasses.put("tfc", TerrafirmaHelper.class);
+		moduleClasses.put("betterwithmods", BetterWithModsHelper.class);
 	}
 
 	public static void doModulesPreInit()
