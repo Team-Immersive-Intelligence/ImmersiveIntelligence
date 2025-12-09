@@ -4,6 +4,7 @@ import blusunrize.immersiveengineering.api.IEProperties;
 import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -108,7 +109,12 @@ public class FenceGateRenderer<T extends TileEntityGateBase<T>> extends IIMultib
 	@Override
 	public void drawSimple(BufferBuilder buf, float partialTicks, Tessellator tes)
 	{
-
+		GlStateManager.translate(-7, 0, 0);
+		model.defaultize();
+		open.apply(0);
+		redstone.apply(0);
+		razor.apply(0);
+		model.render(tes, buf);
 	}
 
 	@Override

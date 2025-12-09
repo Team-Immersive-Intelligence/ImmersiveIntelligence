@@ -22,7 +22,7 @@ import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMT;
 import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTItem;
 import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTLocator;
 import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTQuads;
-import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IITileRenderer;
+import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IIMultiblockRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IITileRenderer.RegisteredTileRenderer;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.multiblock.MultiblockSawmill;
@@ -37,7 +37,7 @@ import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
  */
 @SideOnly(Side.CLIENT)
 @RegisteredTileRenderer(name = "multiblock/sawmill", clazz = TileEntitySawmill.class)
-public class SawmillRenderer extends IITileRenderer<TileEntitySawmill>
+public class SawmillRenderer extends IIMultiblockRenderer<TileEntitySawmill>
 {
 	private AMTCachedModel<TileEntitySawmill> model;
 	private IIAnimationCachedMap animationRotate, animationDustPile, animationInteract;
@@ -53,7 +53,7 @@ public class SawmillRenderer extends IITileRenderer<TileEntitySawmill>
 	}
 
 	@Override
-	public void draw(TileEntitySawmill te, BufferBuilder buf, float partialTicks, Tessellator tes)
+	public void drawAnimated(TileEntitySawmill te, BufferBuilder buf, float partialTicks, Tessellator tes)
 	{
 		//Prepare variables
 		ItemStack sawBlade = te.inventory.get(MultiblockSawmill.SLOT_SAWBLADE);
@@ -116,6 +116,16 @@ public class SawmillRenderer extends IITileRenderer<TileEntitySawmill>
 
 		//Revert
 		if(!te.mirrored) unMirrorRender();
+	}
+
+	@Override
+	public void drawSimple(BufferBuilder buf, float partialTicks, Tessellator tes)
+	{
+		model.getVariant(null);
+		model.defaultize();
+		animationRotate.apply(0f);
+		animationInteract.apply(0f);
+		model.render(tes, buf);
 	}
 
 	@Override
