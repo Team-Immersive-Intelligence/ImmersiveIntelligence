@@ -1587,6 +1587,15 @@ public class IIRecipes
 						return IEApi.isAllowedInCrate(stack);
 					}
 
+					@Nonnull
+					@Override
+					public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate)
+					{
+						if(!isItemValid(slot, stack))
+							return stack;
+						return super.insertItem(slot, stack, simulate);
+					}
+
 					@Override
 					protected void onContentsChanged(int slot)
 					{
@@ -1626,6 +1635,15 @@ public class IIRecipes
 						return !(Block.getBlockFromItem(stack.getItem()) instanceof BlockShulkerBox);
 					}
 
+					@Nonnull
+					@Override
+					public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate)
+					{
+						if(!isItemValid(slot, stack))
+							return stack;
+						return super.insertItem(slot, stack, simulate);
+					}
+
 					@Override
 					protected void onContentsChanged(int slot)
 					{
@@ -1649,6 +1667,15 @@ public class IIRecipes
 						Item item = stack.getItem();
 						return item==IIContent.itemBulletMagazine.stackToSub(ss).ammo
 								&&!((IAmmoTypeItem<?, ?>)item).isBulletCore(stack);
+					}
+
+					@Nonnull
+					@Override
+					public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate)
+					{
+						if(!isItemValid(slot, stack))
+							return stack;
+						return super.insertItem(slot, stack, simulate);
 					}
 
 					@Override
