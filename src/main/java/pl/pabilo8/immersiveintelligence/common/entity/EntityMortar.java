@@ -154,8 +154,8 @@ public class EntityMortar extends Entity implements IEntityAdditionalSpawnData, 
 								if(!world.isRemote)
 								{
 									//Calculate angles
-									double yawAngle = Math.toRadians((MathHelper.wrapDegrees(-rotationYaw+180)));
-									double pitchAngle = Math.toRadians(rotationPitch);
+									double yawAngle = Math.toRadians((MathHelper.wrapDegrees(-rotationYaw)));
+									double pitchAngle = Math.toRadians(-rotationPitch);
 									Vec3d gunEnd = IIMath.offsetPosDirection(2f, yawAngle, pitchAngle);
 
 									//Play firing sound
@@ -163,7 +163,7 @@ public class EntityMortar extends Entity implements IEntityAdditionalSpawnData, 
 
 									//Create the ammo piece
 									ammoFactory.setPosition(getPositionVector().add(gunEnd))
-											.setDirection(gunEnd.scale(-1).normalize())
+											.setDirection(gunEnd.normalize())
 											.setStack(Utils.copyStackWithAmount(heldItem, 1))
 											.setShooterAndGun(getPassengers().get(0), this)
 											.create();
