@@ -75,7 +75,7 @@ public class IIRecipeJEICategory<T extends IIMultiblockRecipe> implements IRecip
 
 	public IIRecipeJEICategory(Class<T> recipeClass, ItemStack machineStack)
 	{
-		this(recipeClass, machineStack, recipeClass.getSimpleName().toLowerCase().replace("recipe", ""));
+		this(recipeClass, machineStack, IIMultiblockRecipe.getRecipeClassName(recipeClass));
 	}
 
 	public IIRecipeJEICategory(Class<T> recipeClass, ItemStack machineStack, String recipeName)
