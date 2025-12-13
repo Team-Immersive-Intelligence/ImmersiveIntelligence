@@ -6,8 +6,7 @@ The Skycrate system is a different approach on delivering items. Its speed surpa
 # warning
 **Letter of notice from the Engineering Department:**<br>
 The Engineering Department has spent countless hours and funds attempting to implement advanced techniques into the aging Skycrate system, but tragically, have not been fruitful.
-<br>All Engineers wishing to develop a Skycrate system shall ensure that **all chunks between start and end stations are
-loaded**.
+<br>All Engineers wishing to develop a Skycrate system shall ensure that **all chunks between start and end stations are loaded**.
 # warning2
 The Engineering Department is not responsible for loss of goods along unloaded ziplines. Sign below to confirm you have [read and understood this warning.]<br>
 X
@@ -21,8 +20,7 @@ The amount of gears increase its efficiency, similar how it works with [Gearboxe
 The station uses [mounts](#frames) to put crates into the delivery system. The mounts are taken from a [user-supplied crate] placed behind the inserter on the rear of the machine. Transport crates are inserted and outputted on the conveyor. A crate can be forced out of the station by applying a redstone signal.
 # skycart
 |[multiblock]{mb:"II:SkycartStation"}|
-The Sky*cart* station is similar to the Sky
-*crate* station, using minecarts and rails instead of crates and conveyors. To form it, use a [hammer](introduction#introductionHammer) on the scaffolding in the middle.
+The Sky*cart* station is similar to the Sky*crate* station, using minecarts and rails instead of crates and conveyors. To form it, use a [hammer](introduction#introductionHammer) on the scaffolding in the middle.
 # details_cart
 Like its Skycrate counterpart, the station uses [mounts](#frames) to put the contents of the carts into the delivery system. Minecarts can only enter the station when the railway barrier is up. A minecart can be forced out of the station by applying a redstone signal. The station will automatically expel minecarts after a loading/unloading operation.
 # skycrate_post

@@ -2,8 +2,7 @@
 Weapon Upgrades
 Not broken? Not enough features
 # 0
-[Versatility] and [adaptability] is most crucial in an ever-changing conflict. With this information kept in mind, the clever engineers who have designed and perfected the modern arsenal have left room for modifying and personalizing weapons. It is important to note that some modifications are
-**mutually exclusive**.
+[Versatility] and [adaptability] is most crucial in an ever-changing conflict. With this information kept in mind, the clever engineers who have designed and perfected the modern arsenal have left room for modifying and personalizing weapons. It is important to note that some modifications are **mutually exclusive**.
 # 1
 |[crafting]{source:"heavy_barrel"}|
 The [heavy barrel] allows the [weapon](machinegun.md) to shoot at a [faster fire rate] at the cost of [lower accuracy].
