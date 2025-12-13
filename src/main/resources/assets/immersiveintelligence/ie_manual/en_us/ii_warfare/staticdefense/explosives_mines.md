@@ -2,8 +2,7 @@
 Explosives and Mines
 Ka-boom?
 # radio_satchel0
-When your operations require a stealthy, precise approach, [radio](radio_station.md)[-detonated satchel] charges are the right choice. Be it
-mining operations, demolition of buildings, or sabotage of train bridges, satchel charges are universal in their role and are beloved by both combat engineers and saboteurs.
+When your operations require a stealthy, precise approach, [radio](radio_station.md)[-detonated satchel] charges are the right choice. Be it mining operations, demolition of buildings, or sabotage of train bridges, satchel charges are universal in their role and are beloved by both combat engineers and saboteurs.
 # radio_satchel1
 The primary way to detonate the explosive devices is by using a [radio signal](radio_station). To do that, the explosives must first be programmed with a data packet in a [DIM](data_input_machine).
 
@@ -17,8 +16,7 @@ Unlike other explosive casings, the [radio-equipped satchel] needs to be crafted
 # mines
 [Mines] are commonly used as a static defensive measure. Their main use cases are denying the enemy access to an area, slowing their advance, or (in case they aren't very bright), marking where their graves will be.
 
-Keep in mind landmines do not differentiate between their targets. **It is very important to keep a track of your own
-minefields** and use plans instead of placing them randomly.
+Keep in mind landmines do not differentiate between their targets. **It is very important to keep a track of your own minefields** and use plans instead of placing them randomly.
 # landmine0
 **Landmines**<br>
 Classic, reliable and cheap to produce: this type of landmine is the most widely used one. The way it works is very straightforward:

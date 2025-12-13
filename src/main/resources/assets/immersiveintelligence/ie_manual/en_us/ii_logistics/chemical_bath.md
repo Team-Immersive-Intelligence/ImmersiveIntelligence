@@ -10,8 +10,7 @@ The **Chemical Bath** is a machine consisting of an industrial-sized bathtub and
 [Input] and [output ports] for bathed items are located at the front.
 [Fluid input] and [energy input] are located at the rear.
 When supplied with materials, the machine will automatically start production.
-**Caution
-** is advised when close to a bath filled with corrosive elements, as there are no barriers protecting one from falling into it.
+**Caution** is advised when close to a bath filled with corrosive elements, as there are no barriers protecting one from falling into it.
 # etching
 The primary use of the [Chemical Bath] is etching [raw circuit boards](electronic_components.md) in acid.
 |[recipe]{source:etched_basic_circuit_board}|
@@ -21,7 +20,7 @@ The primary use of the [Chemical Bath] is etching [raw circuit boards](electroni
 The machine can also be used for a more efficient production of [Treated Wood Planks].
 |[recipe]{source:treated_wood}|
 # chemical_washing
-While not the main purpose, the Chemical Bath can also be used to chemically wash colored items.
+The Chemical Bath is also used to chemically wash Quartz dust and colored items.
 |[recipe]{source:quartz_dust}|
 |[recipe]{source:concrete_bricks}|
 |[recipe]{source:glass}|

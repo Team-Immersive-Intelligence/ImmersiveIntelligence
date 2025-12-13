@@ -3,15 +3,12 @@ Data Types
 Results May Vary
 # strong_typing
 A [Data Packet](data_main.md) can contain multiple **Types** of variables.  
-Each **Type** excels in [storing] and [representing] a different kind of information: f.e. a **Number Type
-**, like [Integer](#integer) specializes in storing numbers, and thus mathematical expressions can be performed on it much more straight-forward than, i.e. on a [String](#string) - a
-**Text Type**.
+Each **Type** excels in [storing] and [representing] a different kind of information: f.e. a **Number Type**, like [Integer](#integer) specializes in storing numbers, and thus mathematical expressions can be performed on it much more straight-forward than, i.e. on a [String](#string) - a **Text Type**.
 
 This way of storing information is called **Strong Typing** and gives each **Type** a unique purpose.
 # default_value
 Each **Type** has its [default value], which is assigned to it on initialization.
-If a [non-existing] or [incompatible type] variable is referenced and [casted] to a **Type
-**, it returns a [defaultized] variable of that **Type** instead.
+If a [non-existing] or [incompatible type] variable is referenced and [casted] to a **Type**, it returns a [defaultized] variable of that **Type** instead.
 For example, if in a packet:  
 |[data_packet]{data:{a:{Type:"string",Value:"Hello, World!"}}}|  
 'a' - a [String](#string) is requested as [Integer](#integer), a new [defaultized] (with the type's default value: 0) [Integer](#integer) will be returned instead.
@@ -21,8 +18,7 @@ The same would happen in a packet with numbers stored as a string:
 Despite that for a human the *text* "123" seems identical to the
 *number* 123, a data machine sees it very different. A text type [can't be converted] to a number type, thus it too returns a [defaultized Integer], or simply put: 0.
 # default_value3
-The only case where such conversion would occur properly, is between two **Compatible Types
-** - two types storing a similar kind of information: f.e. when converting [Float](#float) to [Integer](#integer)  
+The only case where such conversion would occur properly, is between two **Compatible Types** - two types storing a similar kind of information: f.e. when converting [Float](#float) to [Integer](#integer)  
 |[data_packet]{data:{a:{Type:"float",Value:123}}}|  
 This mechanism is also one of the core concepts of **Strong Typing**
 # data_overflow
@@ -32,12 +28,10 @@ This however doesn't fully prevent [Data Overflows] - they can still happen when
 How would a data machine react in such situation? It simply wouldn't pass the broken packet further.
 # types
 Types are separated into two groups:
-**Basic Types
-** - used to store and represent a [simple], [basic], [singular form of information], such as a number or text  
+**Basic Types** - used to store and represent a [simple], [basic], [singular form of information], such as a number or text  
 These are: [Null](#null), [Integer](#integer), [Float](#float), [Boolean](#boolean) and [String](#string).
 
-**Compound Types** - consisting of [multiple] **Basic Types
-** and [joining them into one object], for representing a more sophisticated information.
+**Compound Types** - consisting of [multiple] **Basic Types** and [joining them into one object], for representing a more sophisticated information.
 These include [ItemStack](#itemstack), [Array](#array), [FluidStack](#fluidstack), [Vector](#vector), [Entity](#entity) and [Map](#map).
 # null
 |[datatype]{type:"%SECTION%",x:52}|
@@ -92,7 +86,6 @@ It is often used to represent a structure with named fields, using [Strings](#st
 It performs a pre-programmed function on [input parameters] in form of values or their [Accessors](#accessor) and returns a value.
 # accessor
 |[datatype]{type:"%SECTION%",x:52}|
-[Accessor] is a [reference] data type used to get the value of **another
-** variable in a packet by referencing its [letter].
+[Accessor] is a [reference] data type used to get the value of **another** variable in a packet by referencing its [letter].
 Accessors are mostly used inside [Expressions](#expression) to get a value dynamically from a **Packet**.
 They, too, are an integral part of the [Arithmetic-Logic Machine](arithmetic_logic_machine).

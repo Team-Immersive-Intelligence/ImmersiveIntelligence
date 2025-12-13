@@ -7,10 +7,7 @@ Punchtapes are [portable data storage media] that can be read and written with a
 |[crafting]{source:"punchtape"}|
 They allow easy [exchange of information] and [backups] of data device configuration.
 # punchtape_reader
-The *
-*Punchtape
-Reader
-** is a device used to read [punchtapes] based on a received [data packet](data_main.md#packetsbasics).
+The **Punchtape Reader** is a device used to read [punchtapes] based on a received [data packet](data_main.md#packetsbasics).
 |[crafting]{source:"reader"}|
 # punchtape_reader2
 The **Punchtape Reader** has 3 modes of reaction to redstone:
