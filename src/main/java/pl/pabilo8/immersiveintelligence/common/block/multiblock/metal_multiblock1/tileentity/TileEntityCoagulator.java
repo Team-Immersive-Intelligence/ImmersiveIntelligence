@@ -19,6 +19,8 @@ import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockCoagulator;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -33,6 +35,9 @@ public class TileEntityCoagulator extends TileEntityMultiblockMetal<TileEntityCo
 			new FluidTank(Coagulator.fluidCapacity),
 			new FluidTank(Coagulator.fluidCapacity)
 	};
+
+	@SyncNBT(time = 40, events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_RECIPE_CHANGED})
+
 	//This stores the "crafting" effect
 	public NonNullList<ItemStack> effect = NonNullList.withSize(1, ItemStack.EMPTY);
 	public int[] bucketProgress = new int[]{0, 0, 0, 0, 0, 0};
@@ -345,6 +350,7 @@ public class TileEntityCoagulator extends TileEntityMultiblockMetal<TileEntityCo
 
 	}
 
+
 	@Override
 	public int getMaxProcessPerTick()
 	{
@@ -429,6 +435,11 @@ public class TileEntityCoagulator extends TileEntityMultiblockMetal<TileEntityCo
 		this.markContainingBlockForUpdate(null);
 	}
 
+	public IIGUI getGUI()
+	{
+		return IIGUI.COAGULATOR;
+	}
+
 	@Override
 	public boolean shoudlPlaySound(@Nonnull String sound)
 	{
@@ -467,7 +478,8 @@ public class TileEntityCoagulator extends TileEntityMultiblockMetal<TileEntityCo
 	@Override
 	public boolean canOpenGui()
 	{
-		return false;//formed;
+		// allow GUI when multiblock is formed and this is the master tile (not a dummy)
+		return formed && !isDummy();
 	}
 
 	// TODO: 31.10.2021 gui
