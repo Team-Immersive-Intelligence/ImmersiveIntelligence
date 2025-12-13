@@ -9,7 +9,7 @@ dependencies {
 	deobfCompile "blusunrize:ImmersiveEngineering:0.12-92-+"
 
 	deobfCompile "CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-4.1.11.505"
-	deobfCompile "com.mod-buildcraft:buildcraft:7.99.12"
+	//deobfCompile "com.mod-buildcraft:buildcraft:7.99.12"
 
 	//Lighting mod formerly called Albedo
 	provided "com.elytradev:mirage:2.0.3-rc3-SNAPSHOT"
@@ -98,10 +98,13 @@ repositories {
 		url "https://www.cursemaven.com"
 	}
 
+
+	/*
 	maven {
 		name "BuildCraft"
 		url "https://mod-buildcraft.com/maven"
 	}
+	*/
 
 	maven {
 		name "CurseForge"
