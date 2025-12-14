@@ -13,9 +13,7 @@ There are four kinds of **Circuits**, described on the following page.
 [Processor Circuits](#processor_general) - the most sophisticated circuit, made mainly of silicon in a [complicated assembly process](precision_assembler).
 # blueprints
 All types of circuit boards require a specialized blueprint to create them.
-
 |[crafting]{source:"circuit_blueprints"}|
-
 *The blueprint should be designed to* [*match*] *the electronic components that are going to be used in them.*
 # basic_general
 |[item_display]{source:"basic_general"}|

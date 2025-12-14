@@ -128,7 +128,8 @@ public class IIManualCategoryData extends IIManualCategory
 						)
 				)
 				.addSource("wireless_connection", EasyNBT.newNBT());
-		addEntry("data_callback");
+		addEntry("data_callback")
+				.addSource("data_callback_scenario", EasyNBT.newNBT());
 
 		addEntry("data_input_machine")
 				.addSource("punchtape", getSourceForItem(IIContent.itemPunchtape.getStack(1)))
@@ -136,7 +137,8 @@ public class IIManualCategoryData extends IIManualCategory
 		addEntry("punchtapes")
 				.addSource("punchtape", getSourceForItem(IIContent.itemMaterial.getStack(Materials.PUNCHTAPE_EMPTY)))
 				.addSource("reader", getSourceForItem(IIContent.blockMetalDevice.getStack(IIBlockTypes_MetalDevice.PUNCHTAPE_READER)))
-				.addSource("writer", getSourceForItem(IIContent.blockMetalDevice.getStack(IIBlockTypes_MetalDevice.PUNCHTAPE_READER)));
+				.addSource("writer", getSourceForItem(IIContent.blockMetalDevice.getStack(IIBlockTypes_MetalDevice.PUNCHTAPE_READER)))
+				.addSource("punchtape_scenario", EasyNBT.newNBT());
 		addEntry("arithmetic_logic_machine");
 		IIManualEntry functionalCircuits = addEntry("functions/_functional_circuits")
 				.addSource("circuit_blueprints", getSourceForItems(

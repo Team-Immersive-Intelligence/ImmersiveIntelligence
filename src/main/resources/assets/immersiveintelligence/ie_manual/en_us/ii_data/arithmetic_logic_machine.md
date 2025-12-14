@@ -17,8 +17,7 @@ An [Expression] will **overwrite the variable value** with its result.
 If there is no expression for a variable, it will **pass without being changed**.
 # expression
 Each circuit provides its own set of expressions, some, like the [Advanced Arithmetic Circuit](_functional_circuits.md#advanced_arithmetic), which has all the expressions of an [Arithmetic Circuit](_functional_circuits.md#arithmetic) along with some new ones.   
-The expression can also have a *Conditional
-Variable*, an [Accessor](data_types.md#accessor) of a [Boolean](data_types.md#boolean) variable, which will not execute the expression in case the value is [TRUE].
+The expression can also have a *Conditional Variable*, an [Accessor](data_types.md#accessor) of a [Boolean](data_types.md#boolean) variable, which will not execute the expression in case the value is [TRUE].
 # accessor
 The machine also offers a non-standard datatype, the [Accessor](data_types.md#accessor), which doesn't hold any value of its own, but can get the value most recently assigned to the variable from the received packet.
 

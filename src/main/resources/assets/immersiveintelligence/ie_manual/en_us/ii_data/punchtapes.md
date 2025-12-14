@@ -16,4 +16,4 @@ The **Punchtape Reader** has 3 modes of reaction to redstone:
 [Redstone on Send] - the machine will emit a redstone signal when it receives a packet
 # example_password_door
 A very common example for using a punchtape is building a "password door", a kind of security system combining a [Punchtape Reader] and a door connected through a [Redstone-Data Interface].
-|[scenario]{}|
+|[scenario]{source:"punchtape_scenario"}|

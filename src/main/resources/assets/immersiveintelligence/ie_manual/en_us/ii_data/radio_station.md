@@ -8,7 +8,7 @@ The **Radio Station** is a device for sending, receiving and relaying [Data Pack
 # details
 A **Radio Station** can send [Packets](data_main.md#packetsbasics) to compatible radio devices up to [<config;i;radio_station_range>] blocks distance.
 Poor weather conditions such as [rain] or [snow] will [decrease this range], so while planning construction of a radio network, an engineer should use ranges negating this effect.
-|[scenario]{}|
+|[scenario]{source:"wireless_connection"}|
 # tuner
 The **Radio Station**'s frequency can be set by using a **Radio Tuner**.
 There are 2 versions of the **Radio Tuner** with different [frequency ranges] avaliable. The aspiring engineer will typically begin with the basic radio tuner:

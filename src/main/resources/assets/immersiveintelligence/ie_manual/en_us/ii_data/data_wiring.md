@@ -13,7 +13,7 @@ The **Wired** data system relies on **Connectors** - the end points of it, **Rel
 The **Data Cable** is a transmission medium created from multiple twisted-pair copper wires coated in a white insulating material.  
 It allows fast, reliable and relatively long-distance, lossless transmission of [Data Packets](data_main.md).
 # connector
-|[crafting]{source:"%SECTION%"}|  
+|[crafting]{source:"%SECTION%"}|
 The **Data Connector** serves as an endpoint of a **Data Network**. It is placed on a side of a **Data Device** to allow it sending and/or receiving **Packets**.
 In a similar manner to its [Electrical Counterparts](wiring), only one wire can be connected to a Data Connector. To extend the network, use a [Data Relay](#relay).
 # connector_colors
