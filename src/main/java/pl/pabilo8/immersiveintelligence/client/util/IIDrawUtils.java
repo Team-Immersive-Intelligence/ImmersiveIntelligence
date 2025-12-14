@@ -234,10 +234,10 @@ public class IIDrawUtils
 
 	public IIDrawUtils drawRepeatedTexColorRect(int x, int y, int width, int height, IIColor color, ResourceLocation texture, int tileSize)
 	{
+		TextureAtlasSprite sprite = ClientUtils.getSprite(texture);
 		for(int yy = 0; yy < height; yy += tileSize)
 			for(int xx = 0; xx < width; xx += tileSize)
 			{
-				TextureAtlasSprite sprite = ClientUtils.getSprite(texture);
 				drawTexColorRect(x+xx, y+yy,
 						MathHelper.clamp(width-xx, 0, tileSize),
 						MathHelper.clamp(height-yy, 0, tileSize),
@@ -249,14 +249,12 @@ public class IIDrawUtils
 		return this;
 	}
 
-	public IIDrawUtils drawRepeatedTexColorRect(int x, int y, int width, int height, IIColor color, ResourceLocation texture,
-												int tWidth, int tHeight, float... uv)
+	public IIDrawUtils drawRepeatedTexColorRect(int x, int y, int width, int height, IIColor color, int tWidth, int tHeight, float... uv)
 	{
-		TextureAtlasSprite sprite = ClientUtils.getSprite(texture);
-		float u = sprite.getInterpolatedU(uv[0]);
-		float uu = sprite.getInterpolatedU(uv[1])-u;
-		float v = sprite.getInterpolatedV(uv[2]);
-		float vv = sprite.getInterpolatedV(uv[3])-v;
+		float u = uv[0];
+		float uu = uv[1]-u;
+		float v = uv[2];
+		float vv = uv[3]-v;
 
 		for(int yy = 0; yy < height; yy += tHeight)
 			for(int xx = 0; xx < width; xx += tWidth)
@@ -265,8 +263,8 @@ public class IIDrawUtils
 						MathHelper.clamp(width-xx, 0, tWidth),
 						MathHelper.clamp(height-yy, 0, tHeight),
 						color,
-						u, u+uu*(Math.min(width-xx, tWidth)/2f/16f),
-						v, v+vv*(Math.min(height-yy, tHeight)/2f/16f)
+						u, u+uu*(Math.min(width-xx, tWidth)/(float)tWidth),
+						v, v+vv*(Math.min(height-yy, tHeight)/(float)tHeight)
 				);
 			}
 		return this;

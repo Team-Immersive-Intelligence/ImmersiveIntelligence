@@ -28,7 +28,7 @@ public class VehicleEngineFuelBased extends VehicleEngineBase<VehicleEngineFuelB
 	{
 		super.onUpdate();
 		float newSpeed = acceleration*200;
-		float newTorque = acceleration*30f;
+		float newTorque = acceleration*50f;
 		this.rotaryStorage.grow(newSpeed, newTorque, 0.15f);
 	}
 }

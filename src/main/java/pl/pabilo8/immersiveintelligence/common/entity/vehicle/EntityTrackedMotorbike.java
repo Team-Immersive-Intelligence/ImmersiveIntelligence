@@ -30,6 +30,7 @@ import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityV
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.WheelType;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.propulsion.VehicleEngineFuelBased;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.propulsion.VehicleTransmission;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIDamageSources;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
@@ -180,6 +181,8 @@ public class EntityTrackedMotorbike extends EntityVehicleBase<EntityTrackedMotor
 		);
 
 		AxisAlignedBB SIDEBOX_AABB = new AxisAlignedBB(-0.3225, -0.25, -0.3225, 0.3225, 0.25, 0.3225);
+
+		this.style.withColor(IIColor.fromHSV(19/64f, 0.35f, 0.85f));
 
 		//Parts
 		return new EntityVehiclePart[]{

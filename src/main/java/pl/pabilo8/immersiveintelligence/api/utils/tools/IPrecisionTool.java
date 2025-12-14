@@ -1,30 +1,23 @@
 package pl.pabilo8.immersiveintelligence.api.utils.tools;
 
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 
 import javax.annotation.Nonnull;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @ii-approved 0.3.1
+ * @updated 11.12.2025
  * @since 19.08.2019
  */
-public interface IPrecisionTool
+public interface IPrecisionTool extends IMachineTool
 {
-	String getPrecisionToolType(ItemStack stack);
-
-	void damagePrecisionTool(ItemStack stack, int amount);
-
-	int getPrecisionToolDamage(ItemStack stack);
-
-	int getPrecisionToolMaxDamage(ItemStack stack);
-
-	int getWorkTime(String tool_name);
+	int getWorkTime(String toolName);
 
 	@Nonnull
-	ItemStack getToolPresentationStack(String tool_name);
+	ItemStack getToolPresentationStack(String toolName);
 
-	@SideOnly(Side.CLIENT)
-	void renderInMachine(ItemStack stack, float progress, float angle, float maxProgress, ItemStack renderedStack);
+	@Nonnull
+	ResLoc getToolModelRes(String toolName);
 }

@@ -7,14 +7,12 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.crafting.PrecisionAssemblerRecipe;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.IPrecisionTool;
-import pl.pabilo8.immersiveintelligence.client.render.multiblock.metal.PrecisionAssemblerRenderer;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.ItemIIPrecisionTool.PrecisionTools;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
@@ -37,7 +35,6 @@ public class ItemIIPrecisionTool extends ItemIISubItemsBase<PrecisionTools> impl
 	{
 		super("precission_tool", 1, PrecisionTools.values());
 
-		// TODO: 01.09.2022 convert to capabilities
 		for(PrecisionTools e : getSubItems())
 			PrecisionAssemblerRecipe.registerToolType(e.getName(), this);
 	}
@@ -47,35 +44,35 @@ public class ItemIIPrecisionTool extends ItemIISubItemsBase<PrecisionTools> impl
 	public void onCreated(ItemStack stack, World worldIn, EntityPlayer playerIn)
 	{
 		super.onCreated(stack, worldIn, playerIn);
-		ItemNBTHelper.setInt(stack, "damage", getPrecisionToolMaxDamage(stack));
+		ItemNBTHelper.setInt(stack, "damage", getToolMaxDamage(stack));
 	}
 
 	@Override
-	public String getPrecisionToolType(ItemStack stack)
+	public String getToolID(ItemStack stack)
 	{
 		return getSubNames()[stackToSub(stack).ordinal()];
 	}
 
 	@Override
-	public void damagePrecisionTool(ItemStack stack, int amount)
+	public void damageTool(ItemStack stack, int amount)
 	{
 		if(!ItemNBTHelper.hasKey(stack, "damage"))
-			ItemNBTHelper.setInt(stack, "damage", getPrecisionToolMaxDamage(stack));
+			ItemNBTHelper.setInt(stack, "damage", getToolMaxDamage(stack));
 
-		ItemNBTHelper.setInt(stack, "damage", getPrecisionToolDamage(stack)-amount);
+		ItemNBTHelper.setInt(stack, "damage", getToolDamage(stack)-amount);
 
-		if(getPrecisionToolDamage(stack) < 0)
+		if(getToolDamage(stack) < 0)
 			stack.setCount(0);
 	}
 
 	@Override
-	public int getPrecisionToolDamage(ItemStack stack)
+	public int getToolDamage(ItemStack stack)
 	{
-		return ItemNBTHelper.hasKey(stack, "damage")?ItemNBTHelper.getInt(stack, "damage"): getPrecisionToolMaxDamage(stack);
+		return ItemNBTHelper.hasKey(stack, "damage")?ItemNBTHelper.getInt(stack, "damage"): getToolMaxDamage(stack);
 	}
 
 	@Override
-	public int getPrecisionToolMaxDamage(ItemStack stack)
+	public int getToolMaxDamage(ItemStack stack)
 	{
 		return stackToSub(stack).durability;
 	}
@@ -85,25 +82,25 @@ public class ItemIIPrecisionTool extends ItemIISubItemsBase<PrecisionTools> impl
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn)
 	{
 		super.addInformation(stack, worldIn, tooltip, flagIn);
-		tooltip.add(I18n.format(IIReference.INFO_KEY_TOOL_DURABILITY, TextFormatting.GOLD.toString()+getPrecisionToolDamage(stack)+TextFormatting.GRAY, TextFormatting.GOLD.toString()+getPrecisionToolMaxDamage(stack)+TextFormatting.GRAY));
+		tooltip.add(I18n.format(IIReference.INFO_KEY_TOOL_DURABILITY, TextFormatting.GOLD.toString()+getToolDamage(stack)+TextFormatting.GRAY, TextFormatting.GOLD.toString()+getToolMaxDamage(stack)+TextFormatting.GRAY));
 	}
 
 	@Override
 	public boolean showDurabilityBar(@Nonnull ItemStack stack)
 	{
-		return ItemNBTHelper.hasKey(stack, "damage")&&((double)getPrecisionToolDamage(stack)/(double)getPrecisionToolMaxDamage(stack))!=1f;
+		return ItemNBTHelper.hasKey(stack, "damage")&&((double)getToolDamage(stack)/(double)getToolMaxDamage(stack))!=1f;
 	}
 
 	@Override
 	public double getDurabilityForDisplay(@Nonnull ItemStack stack)
 	{
-		return 1d-((double)getPrecisionToolDamage(stack)/(double)getPrecisionToolMaxDamage(stack));
+		return 1d-((double)getToolDamage(stack)/(double)getToolMaxDamage(stack));
 	}
 
 	@Override
-	public int getWorkTime(String tool_name)
+	public int getWorkTime(String toolName)
 	{
-		return nameToSub(tool_name).usageTime;
+		return nameToSub(toolName).usageTime;
 	}
 
 	@Override
@@ -113,33 +110,11 @@ public class ItemIIPrecisionTool extends ItemIISubItemsBase<PrecisionTools> impl
 		return getStack(nameToSub(toolName), 1);
 	}
 
+	@Nonnull
 	@Override
-	@SideOnly(Side.CLIENT)
-	@ParametersAreNonnullByDefault
-	// TODO: 01.09.2022 replace with OBJ models
-	public void renderInMachine(ItemStack stack, float progress, float angle, float maxProgress, ItemStack renderedStack)
+	public ResLoc getToolModelRes(String toolName)
 	{
-		switch(stackToSub(stack))
-		{
-			case BUZZSAW:
-				PrecisionAssemblerRenderer.modelBuzzsaw.renderProgress(progress, angle, maxProgress);
-				break;
-			case DRILL:
-				PrecisionAssemblerRenderer.modelDrill.renderProgress(progress, angle, maxProgress);
-				break;
-			case INSERTER:
-				PrecisionAssemblerRenderer.modelInserter.renderProgress(progress, angle, maxProgress, renderedStack);
-				break;
-			case SOLDERER:
-				PrecisionAssemblerRenderer.modelSolderer.renderProgress(progress, angle, maxProgress);
-				break;
-			case WELDER:
-				PrecisionAssemblerRenderer.modelWelder.renderProgress(progress, angle, maxProgress);
-				break;
-			case HAMMER:
-				PrecisionAssemblerRenderer.modelHammer.renderProgress(progress, angle, maxProgress);
-				break;
-		}
+		return IIReference.RES_BLOCK_MODEL.with("multiblock/precision_assembler/tools/", toolName, ResLoc.EXT_OBJ);
 	}
 
 	@GeneratedItemModels(itemName = "precission_tool", texturePath = "precision_tool")

@@ -23,12 +23,12 @@ import pl.pabilo8.immersiveintelligence.api.DustTank;
 import pl.pabilo8.immersiveintelligence.api.crafting.DustStack;
 import pl.pabilo8.immersiveintelligence.api.crafting.DustUtils;
 import pl.pabilo8.immersiveintelligence.api.crafting.FillerRecipe;
+import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIMultiblockRecipe;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Filler;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockFiller;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionBase;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionMulti;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
@@ -239,7 +239,8 @@ public class TileEntityFiller extends TileEntityMultiblockProductionMulti<TileEn
 	@Override
 	protected IIMultiblockProcess<FillerRecipe> getProcessByName(String name)
 	{
-		return TileEntityMultiblockProductionBase.findRecipeFromList(FillerRecipe.class, name);
+		FillerRecipe recipe = IIMultiblockRecipe.getRecipe(FillerRecipe.class, name);
+		return recipe==null?null: new IIMultiblockProcess<>(recipe);
 	}
 
 	@Override

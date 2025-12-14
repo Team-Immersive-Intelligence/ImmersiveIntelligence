@@ -1,0 +1,93 @@
+{
+  "bounds": {
+    "full": [
+      0, 0, 0,
+      16, 16, 16
+    ],
+    "slab": [
+      0, 0, 0,
+      16, 4, 16
+    ],
+    "slope": [
+      0, 7, 4,
+      16, 11, 16
+    ],
+    "rod1": [
+      0, 11, 1,
+      16, 13, 3
+    ],
+    "rod2": [
+      0, 11, 8,
+      16, 13, 10
+    ],
+    "bath_bottom": [
+      0, 0, 0,
+      16, 5, 16
+    ],
+    "bath_bottom_front": [
+      0, 4, 0,
+      16, 5, 10
+    ],
+    "bath_front_wall": [
+      0, 11, 16,
+      16, 20, 15
+    ],
+    "bath_front_wall_lower": [
+      0, 5, 16,
+      16, 11, 11
+    ],
+    "bath_bottom_back": [
+      0, 4, 6,
+      16, 5, 16
+    ],
+    "bath_back_wall": [
+      0, 11, 0,
+      16, 20, 1
+    ],
+    "bath_back_wall_lower": [
+      0, 5, 1,
+      16, 11, 5
+    ],
+    "bath_left_wall": [
+      15, 5, 0,
+      16, 20, 16
+    ],
+    "bath_right_wall": [
+      0, 5, 0,
+      1, 20, 16
+    ],
+    "rod_block_left": [
+      12, 10, 0,
+      16, 14, 12
+    ],
+    "rod_block_right": [
+      0, 10, 0,
+      4, 14, 12
+    ]
+  },
+  "positions": {
+    "5,9": ["slab", "slope"],
+    "20,21,22,23,24": ["rod1", "rod2"],
+    "24": "rod_block_left",
+    "20": "rod_block_right",
+    "6,7,8": "bath_bottom",
+    "1,2,3": ["bath_bottom_front", "bath_front_wall", "bath_front_wall_lower"],
+    "11,12,13": ["bath_bottom_back", "bath_back_wall", "bath_back_wall_lower"],
+    "3,8,13": "bath_left_wall",
+    "1,6,11": "bath_right_wall"
+  },
+  "poi": {
+    "fluid": 14,
+    "redstone": 29,
+    "energy": 25,
+    "item_in": 0,
+    "item_out": 4,
+    "tank_bucket": [1, 2, 3, 6, 7, 8, 11, 12, 13],
+    "bath_center": 7
+  },
+  "rotations": {
+    "item_input": "none",
+    "fluid_input": "none",
+    "item_output": "clockwise_180"
+  }
+}

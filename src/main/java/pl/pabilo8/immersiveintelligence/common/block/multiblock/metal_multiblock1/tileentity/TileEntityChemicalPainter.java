@@ -40,7 +40,6 @@ import pl.pabilo8.immersiveintelligence.common.util.FilteredFluidTank;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionBase;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionSingle;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 import pl.pabilo8.immersiveintelligence.common.util.sound.SoundHandler;
@@ -252,7 +251,8 @@ public class TileEntityChemicalPainter extends TileEntityMultiblockProductionSin
 	@Override
 	protected IIMultiblockProcess<PaintingRecipe> getProcessByName(String name)
 	{
-		return TileEntityMultiblockProductionBase.findRecipeFromList(PaintingRecipe.class, name);
+		PaintingRecipe recipe = IIMultiblockRecipe.getRecipe(PaintingRecipe.class, name);
+		return recipe==null?null: new IIMultiblockProcess<>(recipe);
 	}
 
 	@Override

@@ -2,7 +2,6 @@ package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multibloc
 
 import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorageAdvanced;
 import blusunrize.immersiveengineering.common.util.Utils;
-import blusunrize.immersiveengineering.common.util.inventory.IEInventoryHandler;
 import blusunrize.immersiveengineering.common.util.inventory.MultiFluidTank;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
@@ -19,6 +18,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import pl.pabilo8.immersiveintelligence.api.crafting.PrintingRecipe;
 import pl.pabilo8.immersiveintelligence.api.crafting.PrintingRecipe.PrintFunction;
+import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIMultiblockRecipe;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IIDataHandlingUtils;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
@@ -35,7 +35,6 @@ import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyCollection;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionBase;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionMulti;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
@@ -56,8 +55,8 @@ public class TileEntityPrintingPress extends TileEntityMultiblockProductionMulti
 	@SyncNBT(time = 40, events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_RECIPE_CHANGED})
 	public MultiFluidTank tank;
 
-	private IItemHandler inputHandler = new IEInventoryHandler(1, this, SLOT_PAPER, true, true);
-	private IItemHandler outputHandler = new IEInventoryHandler(1, this, SLOT_OUTPUT, true, true);
+	private IItemHandler inputHandler = getSingleInventoryHandler(SLOT_PAPER, true, true);
+	private IItemHandler outputHandler = getSingleInventoryHandler(SLOT_OUTPUT, true, true);
 	private TactileManager tactileManager = null;
 
 	private EasyCollection<PrintingRequest, NBTTagCompound> printRequestsQueue;
@@ -252,7 +251,8 @@ public class TileEntityPrintingPress extends TileEntityMultiblockProductionMulti
 	@Override
 	protected IIMultiblockProcess<PrintingRecipe> getProcessByName(String name)
 	{
-		return TileEntityMultiblockProductionBase.findRecipeFromList(PrintingRecipe.class, name);
+		PrintingRecipe recipe = IIMultiblockRecipe.getRecipe(PrintingRecipe.class, name);
+		return recipe==null?null: new IIMultiblockProcess<>(recipe);
 	}
 
 	@Override

@@ -7,6 +7,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
 import pl.pabilo8.immersiveintelligence.api.crafting.DataProgrammingRecipe;
+import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIMultiblockRecipe;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.upgrade.IManagedUpgradableDevice;
 import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeManager;
@@ -20,7 +21,6 @@ import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionBase;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionSingle;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockInteractablePart;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
@@ -183,7 +183,8 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockProductionSi
 	@Override
 	protected IIMultiblockProcess<DataProgrammingRecipe> getProcessByName(String name)
 	{
-		return TileEntityMultiblockProductionBase.findRecipeFromList(DataProgrammingRecipe.class, name);
+		DataProgrammingRecipe recipe = IIMultiblockRecipe.getRecipe(DataProgrammingRecipe.class, name);
+		return recipe==null?null: new IIMultiblockProcess<>(recipe);
 	}
 
 	@Override

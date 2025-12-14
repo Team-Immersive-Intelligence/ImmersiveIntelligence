@@ -17,6 +17,7 @@ import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.api.crafting.BulletComponentStack;
 import pl.pabilo8.immersiveintelligence.api.crafting.ProjectileWorkshopRecipe;
+import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIMultiblockRecipe;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
 import pl.pabilo8.immersiveintelligence.api.upgrade.IManagedUpgradableDevice;
@@ -32,7 +33,6 @@ import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionBase;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionSingle;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockInteractablePart;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
@@ -275,7 +275,8 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockProduction
 	@Override
 	protected IIMultiblockProcess<ProjectileWorkshopRecipe> getProcessByName(String name)
 	{
-		return TileEntityMultiblockProductionBase.findRecipeFromList(ProjectileWorkshopRecipe.class, name);
+		ProjectileWorkshopRecipe recipe = IIMultiblockRecipe.getRecipe(ProjectileWorkshopRecipe.class, name);
+		return recipe==null?null: new IIMultiblockProcess<>(recipe);
 	}
 
 	@Override

@@ -3,6 +3,7 @@ package pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage;
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.util.ITooltipFlag.TooltipFlags;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
@@ -115,7 +116,10 @@ public class DecoItemStackDisplay extends DecoComponent<DecoItemStackDisplay>
 		GlStateManager.scale(16/(float)iconSize, 16/(float)iconSize, 1);
 		GlStateManager.enableDepth();
 		GlStateManager.enableRescaleNormal();
+		GlStateManager.color(1.0F, 1.0F, 1.0F);
+		RenderHelper.enableGUIStandardItemLighting();
 		ClientUtils.mc().getRenderItem().renderItemAndEffectIntoGUI(getCurrentlyDisplayedStack(), 0, 0);
+		RenderHelper.disableStandardItemLighting();
 		GlStateManager.disableRescaleNormal();
 		GlStateManager.disableDepth();
 		GlStateManager.popMatrix();

@@ -1,0 +1,92 @@
+{
+  "bounds": {
+    "full": [
+      0, 0, 0,
+      16, 16, 16
+    ],
+    "empty": [
+      0, 0, 0,
+      0, 0, 0
+    ],
+    "energy_box": [
+      3, 7, 3,
+      13, 16, 13
+    ],
+    "energy_box_bottom": [
+      0, 0, 0,
+      16, 7, 16
+    ],
+    "crate1": [
+      0, 0, 6,
+      16, 8, 14
+    ],
+    "crate2": [
+      2, 0, 4,
+      14, 12, 18
+    ],
+    "cable_back": [
+      15, -2, 2,
+      16, 5, 16
+    ],
+    "cable1": [
+      11, -2, 10,
+      15, 4, 14
+    ],
+    "cable2": [
+      11, -2, 4,
+      15, 4, 8
+    ],
+    "energy_bottom": [
+      0, 0, 0,
+      16, 14, 16
+    ],
+    "case_back": [
+      0, 0, 0,
+      16, 7, 16
+    ],
+    "case_front": [
+      0, 0, 0,
+      16, 7, 20
+    ],
+    "case_front_lower": [
+      0, 0, 0,
+      16, 16, 20
+    ],
+    "case_side": [
+      0, 0, 0,
+      12, 7, 20
+    ],
+    "case_side_lower": [
+      0, 0, 0,
+      12, 16, 20
+    ]
+  },
+  "positions": {
+    "44": ["energy_box", "energy_box_bottom"],
+    "19": "crate1",
+    "18": "crate2",
+    "15,16,35": "empty",
+    "40": ["cable1", "cable2", "cable_back"],
+    "25": "energy_bottom",
+    "41,42,43": "case_back",
+    "36,37,38": "case_front",
+    "21,22,23": "case_front_lower",
+    "24": "case_side_lower",
+    "39": "case_side"
+  },
+  "poi": {
+    "energy": 44,
+    "all_item_inputs": [9, 11, 12, 13],
+    "item_in": 9,
+    "item_out": 5,
+    "redstone": 25,
+    "tool1": 11,
+    "tool2": 12,
+    "tool3": 13
+  },
+  "rotations": {
+    "item_input": "none",
+    "fluid_input": "none",
+    "item_output": "clockwise_180"
+  }
+}

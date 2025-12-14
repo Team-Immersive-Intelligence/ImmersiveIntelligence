@@ -13,7 +13,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
-import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIMultiblockRecipe;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IIIGuiMultiblockTile;
@@ -46,13 +45,6 @@ public abstract class TileEntityMultiblockProductionBase<T extends TileEntityMul
 
 
 	//--- Production-related Utilities ---//
-	protected static <RECIPE extends IIMultiblockRecipe> IIMultiblockProcess<RECIPE> findRecipeFromList(Class<RECIPE> klass, String name)
-	{
-		RECIPE recipe = IIMultiblockRecipe.getRecipe(klass, name);
-		if(recipe!=null)
-			return new IIMultiblockProcess<>(recipe);
-		return null;
-	}
 
 	public void outputOrDrop(ItemStack output, @Nullable IItemHandler itemHandler, EnumFacing facing, int... outputPos)
 	{

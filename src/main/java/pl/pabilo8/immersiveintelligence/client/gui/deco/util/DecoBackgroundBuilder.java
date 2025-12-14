@@ -421,7 +421,7 @@ public class DecoBackgroundBuilder<T extends TileEntityIEBase & IIEInventory, C 
 				{
 					TextureAtlasSprite sprite = ClientUtils.getSprite(slot.style.markerLocation);
 					int offset = (slot.style.markerOffset*4)%16;
-					int vOffset = (int)(Math.floor(offset/16f)*3);
+					int vOffset = (int)(Math.floor(slot.style.markerOffset/4f)*3);
 
 					draw.drawTexColorRect(slot.x+slot.width/2f-2f, slot.y-off-3, 4, 3,
 							IIColor.WHITE,

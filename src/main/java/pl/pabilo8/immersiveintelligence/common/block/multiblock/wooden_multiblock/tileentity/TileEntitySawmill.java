@@ -14,6 +14,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import pl.pabilo8.immersiveintelligence.api.crafting.SawmillRecipe;
+import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIMultiblockRecipe;
 import pl.pabilo8.immersiveintelligence.api.rotary.CapabilityRotaryEnergy;
 import pl.pabilo8.immersiveintelligence.api.rotary.IRotaryEnergy;
 import pl.pabilo8.immersiveintelligence.api.rotary.IRotationalEnergyBlock;
@@ -29,7 +30,6 @@ import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAn
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageRotaryPowerSync;
 import pl.pabilo8.immersiveintelligence.common.util.IIDamageSources;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionBase;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionSingle;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockInteractablePart;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
@@ -223,7 +223,8 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 	@Override
 	protected IIMultiblockProcess<SawmillRecipe> getProcessByName(String name)
 	{
-		return TileEntityMultiblockProductionBase.findRecipeFromList(SawmillRecipe.class, name);
+		SawmillRecipe recipe = IIMultiblockRecipe.getRecipe(SawmillRecipe.class, name);
+		return recipe==null?null: new IIMultiblockProcess<>(recipe);
 	}
 
 	@Override
@@ -243,7 +244,6 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 
 		outputOrDrop(output, outputHandler, facing, getPOI("item_output"));
 		outputOrDrop(sawdust, sawdustOutputHandler, EnumFacing.DOWN, getPOI("sawdust"));
-
 		return true;
 	}
 
@@ -252,7 +252,7 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 	{
 		ItemStack sawblade = inventory.get(SLOT_SAWBLADE);
 		if(sawblade.getItem() instanceof ISawblade)
-			((ISawblade)sawblade.getItem()).damageSawblade(sawblade, process.recipe.getHardness());
+			((ISawblade)sawblade.getItem()).damageTool(sawblade, process.recipe.getHardness());
 	}
 
 	private void selfDestruct()

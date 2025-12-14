@@ -427,12 +427,15 @@ public class IIRecipes
 		}
 
 		//Circuits
-		BathingRecipe.addRecipe(IIContent.itemMaterial.getStack(Materials.BASIC_CIRCUIT_BOARD_ETCHED), new IngredientStack("circuitBasicRaw"), FluidRegistry.getFluidStack("etching_acid", 500), 15000, 360);
-		BathingRecipe.addRecipe(IIContent.itemMaterial.getStack(Materials.ADVANCED_CIRCUIT_BOARD_ETCHED), new IngredientStack("circuitAdvancedRaw"), FluidRegistry.getFluidStack("etching_acid", 1000), 150000, 560);
-		BathingRecipe.addRecipe(IIContent.itemMaterial.getStack(Materials.PROCESSOR_CIRCUIT_BOARD_ETCHED), new IngredientStack("circuitProcessorRaw"), FluidRegistry.getFluidStack("etching_acid", 2000), 1500000, 720);
+		new BathingRecipe(IIContent.itemMaterial.getStack(Materials.BASIC_CIRCUIT_BOARD_ETCHED), new IngredientStack("circuitBasicRaw"),
+				FluidRegistry.getFluidStack("etching_acid", 500), 15000, 360, false);
+		new BathingRecipe(IIContent.itemMaterial.getStack(Materials.ADVANCED_CIRCUIT_BOARD_ETCHED), new IngredientStack("circuitAdvancedRaw"),
+				FluidRegistry.getFluidStack("etching_acid", 1000), 150000, 560, false);
+		new BathingRecipe(IIContent.itemMaterial.getStack(Materials.PROCESSOR_CIRCUIT_BOARD_ETCHED), new IngredientStack("circuitProcessorRaw"),
+				FluidRegistry.getFluidStack("etching_acid", 2000), 1500000, 720, false);
 
 //4x Vacuum tube + 1 x copper nugget = 2 x copper wire, 1 x iron plate, 1 x glass block
-		PrecisionAssemblerRecipe.addRecipe(
+		new PrecisionAssemblerRecipe(
 				new ItemStack(IEContent.itemMaterial, 4, 26),
 				new ItemStack(IEContent.itemMetal, 1, 20),
 
@@ -446,7 +449,7 @@ public class IIRecipes
 		);
 
 		//1x Basic Electronic Component =  2x vacuum tube + nickel plate + 4 x redstone dust
-		PrecisionAssemblerRecipe.addRecipe(
+		new PrecisionAssemblerRecipe(
 				IIContent.itemMaterial.getStack(Materials.BASIC_ELECTRONIC_ELEMENT),
 				ItemStack.EMPTY,
 
@@ -459,7 +462,7 @@ public class IIRecipes
 				1.0f
 		);
 
-		PrecisionAssemblerRecipe.addRecipe(
+		new PrecisionAssemblerRecipe(
 				IIContent.itemMaterial.getStack(Materials.ADVANCED_ELECTRON_TUBE),
 				ItemStack.EMPTY,
 
@@ -472,7 +475,7 @@ public class IIRecipes
 				1.25f
 		);
 
-		PrecisionAssemblerRecipe.addRecipe(
+		new PrecisionAssemblerRecipe(
 				IIContent.itemMaterial.getStack(Materials.ADVANCED_ELECTRONIC_ELEMENT),
 				ItemStack.EMPTY,
 
@@ -485,7 +488,7 @@ public class IIRecipes
 				1.25f
 		);
 
-		PrecisionAssemblerRecipe.addRecipe(
+		new PrecisionAssemblerRecipe(
 				IIContent.itemMaterial.getStack(Materials.TRANSISTOR, 4),
 				ItemStack.EMPTY,
 
@@ -498,7 +501,7 @@ public class IIRecipes
 				0.9f
 		);
 
-		PrecisionAssemblerRecipe.addRecipe(
+		new PrecisionAssemblerRecipe(
 				IIContent.itemMaterial.getStack(Materials.PROCESSOR_ELECTRONIC_ELEMENT),
 				IIContent.itemMaterialNugget.getStack(MaterialsNugget.SILICON),
 
@@ -514,7 +517,7 @@ public class IIRecipes
 
 	public static void addSiliconProcessingRecipes()
 	{
-		PrecisionAssemblerRecipe.addRecipe(
+		new PrecisionAssemblerRecipe(
 				IIContent.itemMaterialPlate.getStack(MaterialsPlate.SILICON),
 				ItemStack.EMPTY,
 
@@ -527,7 +530,7 @@ public class IIRecipes
 				3f
 		);
 
-		PrecisionAssemblerRecipe.addRecipe(
+		new PrecisionAssemblerRecipe(
 				IIContent.itemMaterialIngot.getStack(MaterialsIngot.SILICON),
 				ItemStack.EMPTY,
 
@@ -548,11 +551,11 @@ public class IIRecipes
 				3200
 		);
 
-		BathingRecipe.addRecipe(
+		new BathingRecipe(
 				IIContent.itemMaterialDust.getStack(MaterialsDust.QUARTZ),
 				new IngredientStack("dustQuartzDirty"),
 				new FluidStack(IIContent.fluidHydrofluoricAcid, 1000),
-				4200, 240
+				4200, 240, false
 		);
 
 		ArcFurnaceRecipe.addRecipe(
@@ -705,7 +708,7 @@ public class IIRecipes
 		}
 
 		//Crafting Components
-		PrecisionAssemblerRecipe.addRecipe(
+		new PrecisionAssemblerRecipe(
 				IIContent.itemMaterial.getStack(Materials.TUNGSTEN_GUN_BARREL),
 				ItemStack.EMPTY,
 				new IngredientStack[]{
@@ -722,7 +725,7 @@ public class IIRecipes
 		);
 
 		//Industrial Rifle
-		PrecisionAssemblerRecipe.addRecipe(
+		new PrecisionAssemblerRecipe(
 				new ItemStack(IIContent.itemRifle),
 				ItemStack.EMPTY,
 				new IngredientStack[]{
@@ -745,10 +748,10 @@ public class IIRecipes
 	public static void addMiscIERecipes()
 	{
 		//Cheaper treated planks
-		BathingRecipe.addRecipe(new ItemStack(IEContent.blockTreatedWood, 12),
+		new BathingRecipe(new ItemStack(IEContent.blockTreatedWood, 12),
 				new IngredientStack("plankWood", 8),
 				new FluidStack(IEContent.fluidCreosote, 1000),
-				3200, 120
+				3200, 120, false
 		);
 
 		MetalPressRecipe.addRecipe(new ItemStack(IIContent.itemPrintedPage, 1, 0), new IngredientStack("paper"), new ItemStack(IEContent.itemMold, 1, 0), 600);
@@ -914,9 +917,9 @@ public class IIRecipes
 	public static void addConcreteRecipes()
 	{
 		//Concrete Bricks / Volksbeton
-		BathingRecipe.addRecipe(IIContent.blockConcreteDecoration.getStack(ConcreteDecorations.CONCRETE_BRICKS),
+		new BathingRecipe(IIContent.blockConcreteDecoration.getStack(ConcreteDecorations.CONCRETE_BRICKS),
 				new IngredientStack(new ItemStack(Blocks.BRICK_BLOCK)),
-				new FluidStack(FluidRegistry.getFluid("concrete"), 500), 1600, 120);
+				new FluidStack(FluidRegistry.getFluid("concrete"), 500), 1600, 120, false);
 		//Panzerconcrete / Panzerbeton
 		ArcFurnaceRecipe.addRecipe(IIContent.blockConcreteDecoration.getStack(ConcreteDecorations.STURDY_CONCRETE_BRICKS),
 				IIContent.blockConcreteDecoration.getStack(ConcreteDecorations.CONCRETE_BRICKS), ItemStack.EMPTY, 200, 2400,
@@ -1124,11 +1127,11 @@ public class IIRecipes
 	private static void addBathingCleaningRecipe(ItemStack out, IngredientStack in, int amount, int energy, int time, boolean allowWater, boolean allowSulfuric, boolean allowHFl)
 	{
 		if(allowWater)
-			BathingRecipe.addWashingRecipe(out, in, new FluidStack(FluidRegistry.WATER, amount), energy, time);
+			new BathingRecipe(out, in, new FluidStack(FluidRegistry.WATER, amount), energy, time, true);
 		if(allowSulfuric)
-			BathingRecipe.addWashingRecipe(out, in, new FluidStack(IIContent.fluidSulfuricAcid, allowWater?amount/2: amount), allowWater?energy/2: energy, allowWater?time/2: time);
+			new BathingRecipe(out, in, new FluidStack(IIContent.fluidSulfuricAcid, allowWater?amount/2: amount), allowWater?energy/2: energy, allowWater?time/2: time, true);
 		if(allowHFl)
-			BathingRecipe.addWashingRecipe(out, in, new FluidStack(IIContent.fluidHydrofluoricAcid, amount/2), allowWater?energy/4: energy/2, allowWater?time/4: time/2);
+			new BathingRecipe(out, in, new FluidStack(IIContent.fluidHydrofluoricAcid, amount/2), allowWater?energy/4: energy/2, allowWater?time/4: time/2, true);
 	}
 
 	public static void addUpgradeRecipes()

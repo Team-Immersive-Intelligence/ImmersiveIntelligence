@@ -38,7 +38,6 @@ import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityProjectileWorkshop;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerProjectileWorkshop;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
-import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockInteractablePart;
 
@@ -56,7 +55,7 @@ import java.util.stream.Collectors;
 public class GuiProjectileWorkshop extends DecoGui<TileEntityProjectileWorkshop, ContainerProjectileWorkshop>
 {
 	@DecoResource
-	public static ResourceLocation PROGRESS_BAR = ResLoc.of(IIReference.RES_II, "gui/projectile_workshop");
+	public static ResourceLocation PROGRESS_BAR = IIReference.RES_II.with("gui/projectile_workshop");
 	@DecoResource
 	public static ResourceLocation ARTILLERY_RANGE = IIReference.RES_II.with("gui/ammo_icons/artillery_range");
 	@DecoResource

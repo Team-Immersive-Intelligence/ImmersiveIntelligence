@@ -154,6 +154,8 @@ public abstract class IIMultiblockRecipe extends MultiblockRecipe implements III
 	@Nonnull
 	public static <T extends IIMultiblockRecipe> Stream<T> streamRecipes(Class<T> recipeClass)
 	{
+		if(!registries.containsKey(recipeClass))
+			return Stream.empty();
 		return (Stream<T>)registries.get(recipeClass).recipesList.stream();
 	}
 

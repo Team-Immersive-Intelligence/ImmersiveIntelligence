@@ -48,7 +48,7 @@ public class ItemIISawBlade extends ItemIISubItemsBase<SawBlades> implements ISa
 	public void onCreated(@Nonnull ItemStack stack, @Nonnull World worldIn, @Nonnull EntityPlayer playerIn)
 	{
 		super.onCreated(stack, worldIn, playerIn);
-		ItemNBTHelper.setInt(stack, NBT_DAMAGE, getSawbladeMaxDamage(stack));
+		ItemNBTHelper.setInt(stack, NBT_DAMAGE, getToolMaxDamage(stack));
 	}
 
 	@Override
@@ -56,37 +56,37 @@ public class ItemIISawBlade extends ItemIISubItemsBase<SawBlades> implements ISa
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn)
 	{
 		super.addInformation(stack, worldIn, tooltip, flagIn);
-		tooltip.add(I18n.format(IIReference.INFO_KEY_TOOL_DURABILITY, TextFormatting.GOLD.toString()+getSawbladeDamage(stack)+TextFormatting.GRAY, TextFormatting.GOLD.toString()+getSawbladeMaxDamage(stack)+TextFormatting.GRAY));
+		tooltip.add(I18n.format(IIReference.INFO_KEY_TOOL_DURABILITY, TextFormatting.GOLD.toString()+getToolDamage(stack)+TextFormatting.GRAY, TextFormatting.GOLD.toString()+getToolMaxDamage(stack)+TextFormatting.GRAY));
 	}
 
 	@Override
-	public String getMaterialName(ItemStack stack)
+	public String getToolID(ItemStack stack)
 	{
 		return stackToSub(stack).getName();
 	}
 
 	@Override
-	public void damageSawblade(ItemStack stack, int amount)
+	public void damageTool(ItemStack stack, int amount)
 	{
 		if(!ItemNBTHelper.hasKey(stack, NBT_DAMAGE))
-			ItemNBTHelper.setInt(stack, NBT_DAMAGE, getSawbladeMaxDamage(stack));
+			ItemNBTHelper.setInt(stack, NBT_DAMAGE, getToolMaxDamage(stack));
 
-		ItemNBTHelper.setInt(stack, NBT_DAMAGE, getSawbladeDamage(stack)-amount);
+		ItemNBTHelper.setInt(stack, NBT_DAMAGE, getToolDamage(stack)-amount);
 
-		if(getSawbladeDamage(stack) < 0)
+		if(getToolDamage(stack) < 0)
 			stack.setCount(0);
 	}
 
 	@Override
-	public int getSawbladeDamage(ItemStack stack)
+	public int getToolDamage(ItemStack stack)
 	{
 		if(!ItemNBTHelper.hasKey(stack, NBT_DAMAGE))
-			return getSawbladeMaxDamage(stack);
+			return getToolMaxDamage(stack);
 		return ItemNBTHelper.getInt(stack, NBT_DAMAGE);
 	}
 
 	@Override
-	public int getSawbladeMaxDamage(ItemStack stack)
+	public int getToolMaxDamage(ItemStack stack)
 	{
 		return stackToSub(stack).durability;
 	}
@@ -100,13 +100,13 @@ public class ItemIISawBlade extends ItemIISubItemsBase<SawBlades> implements ISa
 	@Override
 	public boolean showDurabilityBar(@Nonnull ItemStack stack)
 	{
-		return getSawbladeDamage(stack)!=getSawbladeMaxDamage(stack);
+		return getToolDamage(stack)!=getToolMaxDamage(stack);
 	}
 
 	@Override
 	public double getDurabilityForDisplay(@Nonnull ItemStack stack)
 	{
-		return 1d-((double)getSawbladeDamage(stack)/(double)getSawbladeDamage(stack));
+		return 1d-((double)getToolDamage(stack)/(double)getToolDamage(stack));
 	}
 
 	@Nonnull

@@ -22,7 +22,6 @@ import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 @DecoTemplate(name = "ammunitioncrate", category = DecoGuiCategory.GENERIC_TILE)
 public class GuiAmmunitionCrate extends DecoGui<TileEntityAmmunitionCrate, ContainerAmmunitionCrate>
 {
-
 	@DecoResource
 	public static final ResourceLocation TEXTURE_AMMO = IIReference.RES_II.with("gui/ammunition_crate");
 

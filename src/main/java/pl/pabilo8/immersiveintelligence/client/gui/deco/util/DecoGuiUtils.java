@@ -278,18 +278,55 @@ public class DecoGuiUtils
 
 	public static void drawFrame(IIDrawUtils draw, int x, int y, int width, int height, ResLoc style, boolean[] sides, int frameThickness)
 	{
-		IIColor color = IIColor.WHITE;
-		x -= frameThickness/2;
-		y -= frameThickness/2;
-		width += frameThickness;
-		height += frameThickness;
+		TextureAtlasSprite sprite = ClientUtils.getSprite(style);
+		//x -= frameThickness/2;
+		//y -= frameThickness/2;
+//		width += frameThickness;
+//		height += frameThickness;
 
-		//Top side
+		//Top-Left mappings
+		float minU = sprite.getMinU();
+		float minUU = sprite.getInterpolatedU(frameThickness/2f);
+		float minV = sprite.getMinV();
+		float minVV = sprite.getInterpolatedV(frameThickness/2f);
+		//Bottom-Right mappings
+		float maxU = sprite.getInterpolatedU(16-frameThickness/2f);
+		float maxUU = sprite.getInterpolatedU(16);
+		float maxV = sprite.getInterpolatedV(16-frameThickness/2f);
+		float maxVV = sprite.getInterpolatedV(16);
+
+		//Draw main frame
+
+		//Top
 		if(sides[0])
-			draw.drawRepeatedTexColorRect(x, y, width, frameThickness, color, style, 20, frameThickness, 3/16f, 13/16f, 0, frameThickness/32f);
+			draw.drawRepeatedTexColorRect(x+frameThickness, y, width-frameThickness*2, frameThickness, IIColor.WHITE,
+					32-2*frameThickness, frameThickness, minUU, maxU, minV, minVV);
+		//Bottom
+		if(sides[1])
+			draw.drawRepeatedTexColorRect(x+frameThickness, y+height-frameThickness, width-frameThickness*2, frameThickness, IIColor.WHITE,
+					32-2*frameThickness, frameThickness, minUU, maxU, maxV, maxVV);
+		//Left
+		if(sides[2])
+			draw.drawRepeatedTexColorRect(x, y+frameThickness, frameThickness, height-frameThickness*2, IIColor.WHITE,
+					frameThickness, 32-2*frameThickness, minU, minUU, minVV, maxV);
+		//Right
+		if(sides[3])
+			draw.drawRepeatedTexColorRect(x+width-frameThickness, y+frameThickness, frameThickness, height-frameThickness*2, IIColor.WHITE,
+					frameThickness, 32-2*frameThickness, maxU, maxUU, minVV, maxV);
 
-		//Draw corners on top of the frame
-		drawFrameCorners(draw, x, y, width, height, style, sides);
+		//Draw squares on frame edges
+		if(sides[0]||sides[3])
+			draw.drawTexColorRect(x, y, frameThickness, frameThickness, IIColor.WHITE,
+					minU, minUU, minV, minVV);
+		if(sides[0]||sides[1])
+			draw.drawTexColorRect(x+width-frameThickness, y, frameThickness, frameThickness, IIColor.WHITE,
+					maxU, maxUU, minV, minVV);
+		if(sides[2]||sides[3])
+			draw.drawTexColorRect(x, y+height-frameThickness, frameThickness, frameThickness, IIColor.WHITE,
+					minU, minUU, maxV, maxVV);
+		if(sides[2]||sides[1])
+			draw.drawTexColorRect(x+width-frameThickness, y+height-frameThickness, frameThickness, frameThickness, IIColor.WHITE,
+					maxU, maxUU, maxV, maxVV);
 	}
 
 
@@ -341,6 +378,18 @@ public class DecoGuiUtils
 		};
 	}
 
+	public static <T extends TileEntityMultiblockProductionMulti<T, R>, R extends IIIMultiblockRecipe> Function<Float, Float>
+	getMultiblockMultiProgress(TileEntityMultiblockProductionMulti<T, R> tile, float startFraction, float endFraction)
+	{
+		final float duration = endFraction-startFraction;
+		return partialTicks -> {
+			if(tile.processQueue.isEmpty())
+				return 0f;
+			float progress = tile.getProductionProgress(tile.processQueue.get(0), partialTicks);
+			return MathHelper.clamp((progress-startFraction)/duration, 0, 1);
+		};
+	}
+
 	public static <T extends TileEntityMultiblockProductionSingle<T, R>, R extends IIIMultiblockRecipe> Function<Float, Float>
 	getMultiblockProductionSingleProgress(TileEntityMultiblockProductionSingle<T, R> tile)
 	{
@@ -348,6 +397,18 @@ public class DecoGuiUtils
 			if(tile.currentProcess==null)
 				return 0f;
 			return tile.getProductionProgress(tile.currentProcess, partialTicks);
+		};
+	}
+
+	public static <T extends TileEntityMultiblockProductionSingle<T, R>, R extends IIIMultiblockRecipe> Function<Float, Float>
+	getMultiblockProductionSingleProgress(TileEntityMultiblockProductionSingle<T, R> tile, float startFraction, float endFraction)
+	{
+		final float duration = endFraction-startFraction;
+		return partialTicks -> {
+			if(tile.currentProcess==null)
+				return 0f;
+			float progress = tile.getProductionProgress(tile.currentProcess, partialTicks);
+			return MathHelper.clamp((progress-startFraction)/duration, 0, 1);
 		};
 	}
 }

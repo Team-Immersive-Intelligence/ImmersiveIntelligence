@@ -15,7 +15,9 @@ import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.api.crafting.DataProgrammingRecipe;
 import pl.pabilo8.immersiveintelligence.api.rotary.IMotorGear;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.function.Predicate;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -73,53 +75,76 @@ public class ContainerIIBase<T extends TileEntityIEBase & IIEInventory> extends 
 		SLOT construct(Container container, IInventory inv, int id, int x, int y);
 	}
 
-	public class DefaultInputSlot extends IESlot
+	public static class IISlot extends IESlot
 	{
-		public DefaultInputSlot(Container container, IInventory inv, int id, int x, int y)
+		@Nullable
+		private Predicate<ItemStack> filter = null;
+		@Nullable
+		private Runnable onChanged = null;
+
+		public IISlot(Container container, IInventory inv, int id, int x, int y)
 		{
 			super(container, inv, id, x, y);
 		}
 
-		@Override
-		public boolean isItemValid(ItemStack itemStack)
+		public IISlot withFilter(@Nullable Predicate<ItemStack> filter)
 		{
-			return tile.isStackValid(getSlotIndex(), itemStack);
+			this.filter = filter;
+			return this;
 		}
-	}
 
-	public static class FilteredDataInput extends IESlot
-	{
-		public FilteredDataInput(Container container, IInventory inv, int id, int x, int y)
+		public IISlot withOnChanged(@Nullable Runnable onChanged)
 		{
-			super(container, inv, id, x, y);
+			this.onChanged = onChanged;
+			return this;
 		}
 
 		@Override
 		public boolean isItemValid(ItemStack stack)
 		{
-			return DataProgrammingRecipe.streamRecipes(DataProgrammingRecipe.class)
-					.anyMatch(r -> r.input.matchesItemStackIgnoringSize(stack));
+			return filter==null||filter.test(stack);
+		}
+
+		@Override
+		public void onSlotChanged()
+		{
+			super.onSlotChanged();
+			if(onChanged!=null)
+				onChanged.run();
 		}
 	}
 
-	public static class MotorGearSlot extends IESlot
+	public class DefaultInputSlot extends IISlot
+	{
+		public DefaultInputSlot(Container container, IInventory inv, int id, int x, int y)
+		{
+			super(container, inv, id, x, y);
+			withFilter(stack -> tile.isStackValid(getSlotIndex(), stack));
+		}
+	}
+
+	public static class FilteredDataInput extends IISlot
+	{
+		public FilteredDataInput(Container container, IInventory inv, int id, int x, int y)
+		{
+			super(container, inv, id, x, y);
+			withFilter(stack -> DataProgrammingRecipe.streamRecipes(DataProgrammingRecipe.class)
+					.anyMatch(r -> r.input.matchesItemStackIgnoringSize(stack)));
+		}
+	}
+
+	public static class MotorGearSlot extends IISlot
 	{
 		public MotorGearSlot(Container container, IInventory inv, int id, int x, int y)
 		{
 			super(container, inv, id, x, y);
+			withFilter(stack -> stack.getItem() instanceof IMotorGear);
 		}
 
 		@Override
 		public int getSlotStackLimit()
 		{
 			return 1;
-		}
-
-		@Override
-		public boolean isItemValid(ItemStack stack)
-		{
-			//TODO: 18.06.2025 capabilities
-			return stack.getItem() instanceof IMotorGear;
 		}
 	}
 

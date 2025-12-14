@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.common.util.multiblock.production;
 
-import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IGuiTile;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
@@ -20,7 +19,6 @@ import java.util.Iterator;
 
 public abstract class TileEntityMultiblockProductionMulti<T extends TileEntityMultiblockProductionMulti<T, R>, R extends IIIMultiblockRecipe>
 		extends TileEntityMultiblockProductionBase<T, R>
-		implements IGuiTile
 {
 	/**
 	 * List of all current processes

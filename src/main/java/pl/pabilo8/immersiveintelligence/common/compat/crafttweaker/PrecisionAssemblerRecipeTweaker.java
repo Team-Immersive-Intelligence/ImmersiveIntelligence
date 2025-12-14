@@ -9,6 +9,7 @@ import crafttweaker.api.item.IItemStack;
 import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.crafting.PrecisionAssemblerRecipe;
+import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIMultiblockRecipe;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
@@ -49,8 +50,7 @@ public class PrecisionAssemblerRecipeTweaker
 			return;
 		}
 
-		PrecisionAssemblerRecipe r = new PrecisionAssemblerRecipe(CraftTweakerHelper.toStack(itemOutput), CraftTweakerHelper.toStack(trash), adds, tools, animations, energy, timeMultiplier);
-		CraftTweakerAPI.apply(new Add(r));
+		CraftTweakerAPI.apply(new Add(CraftTweakerHelper.toStack(itemOutput), CraftTweakerHelper.toStack(trash), adds, tools, animations, energy, timeMultiplier));
 	}
 
 	@ZenMethod
@@ -61,46 +61,60 @@ public class PrecisionAssemblerRecipeTweaker
 
 	private static class Add implements IAction
 	{
-		private final PrecisionAssemblerRecipe recipe;
+		private ItemStack itemOutput;
+		private ItemStack trash;
+		private Object[] itemInputs;
+		private String[] tools;
+		private String[] animations;
+		private int energy;
+		private float timeMultiplier;
 
-		public Add(PrecisionAssemblerRecipe recipe)
+		public Add(ItemStack itemOutput, ItemStack trash, Object[] itemInputs, String[] tools, String[] animations, int energy, float timeMultiplier)
 		{
-			this.recipe = recipe;
+			this.itemOutput = itemOutput;
+			this.trash = trash;
+			this.itemInputs = itemInputs;
+			this.tools = tools;
+			this.animations = animations;
+			this.energy = energy;
+			this.timeMultiplier = timeMultiplier;
 		}
 
 		@Override
 		public void apply()
 		{
-			PrecisionAssemblerRecipe.recipeList.add(recipe);
+			new PrecisionAssemblerRecipe(itemOutput, trash, itemInputs, tools, animations, energy, timeMultiplier);
 		}
 
 		@Override
 		public String describe()
 		{
-			return "Adding precision Assembler Recipe for "+recipe.output.getUnlocalizedName();
+			return "Adding precision Assembler Recipe for "+itemOutput.getUnlocalizedName();
 		}
 	}
 
 	private static class Remove implements IAction
 	{
 		List<PrecisionAssemblerRecipe> removedRecipes;
-		ItemStack f1;
+		ItemStack searched;
 
 		public Remove(ItemStack stack)
 		{
-			this.f1 = stack;
+			this.searched = stack;
 		}
 
 		@Override
 		public void apply()
 		{
-			removedRecipes = PrecisionAssemblerRecipe.removeRecipesForOutput(f1);
+			removedRecipes = IIMultiblockRecipe.removeRecipesByFilter(PrecisionAssemblerRecipe.class, recipe ->
+					recipe.output.isItemEqual(searched)
+			);
 		}
 
 		@Override
 		public String describe()
 		{
-			return "Removing precision Assembler Recipe for "+f1.getUnlocalizedName();
+			return "Removing precision Assembler Recipe for "+searched.getUnlocalizedName();
 		}
 	}
 

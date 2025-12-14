@@ -62,7 +62,7 @@ public class SawmillRenderer extends IIMultiblockRenderer<TileEntitySawmill>
 
 		//Get model variant, defaultize
 		applyStandardRotation(te.facing);
-		model.getVariant(te, sawBlade.isEmpty()?"": ((ISawblade)sawBlade.getItem()).getMaterialName(sawBlade));
+		model.getVariant(te, sawBlade.isEmpty()?"": ((ISawblade)sawBlade.getItem()).getToolID(sawBlade));
 		model.defaultize();
 
 		//Set item display

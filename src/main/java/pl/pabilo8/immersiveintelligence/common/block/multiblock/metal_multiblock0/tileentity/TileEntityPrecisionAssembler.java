@@ -1,44 +1,26 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity;
 
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
-import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IGuiTile;
-import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.ISoundTile;
-import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
-import blusunrize.immersiveengineering.common.util.Utils;
+import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorageAdvanced;
 import blusunrize.immersiveengineering.common.util.inventory.IEInventoryHandler;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.nbt.NBTTagString;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.Tuple;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.Constants.NBT;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.IFluidTank;
-import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandler;
-import org.apache.commons.lang3.ArrayUtils;
 import pl.pabilo8.immersiveintelligence.api.crafting.PrecisionAssemblerRecipe;
+import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIMultiblockRecipe;
 import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.IPrecisionTool;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.PrecisionAssembler;
-import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.MultiblockPrecisionAssembler;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.ItemIIAssemblyScheme;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
-import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
-import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionSingle;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockInteractablePart;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -47,496 +29,207 @@ import java.util.ArrayList;
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 28.06.2019
  */
-public class TileEntityPrecisionAssembler extends TileEntityMultiblockMetal<TileEntityPrecisionAssembler, PrecisionAssemblerRecipe> implements IGuiTile, ISoundTile, IBooleanAnimatedPartsBlock
+public class TileEntityPrecisionAssembler extends TileEntityMultiblockProductionSingle<TileEntityPrecisionAssembler, PrecisionAssemblerRecipe> implements IBooleanAnimatedPartsBlock
 {
-	//3 x tool slots, 1x scheme slot, 1x main component slot, 3 x secondary component slots, 1 x output slot, 1 x trash output slot
-	//0 1 2, 3, 4, 5 6 7, 8, 9
-	public NonNullList<ItemStack> inventory = NonNullList.withSize(10, ItemStack.EMPTY);
-	public int processTime, processTimeMax;
-	public String[] animationOrder = new String[]{};
-	public String[] toolOrder = new String[]{};
-	public ArrayList<Tuple<Integer, String>> animationPrepared = new ArrayList<>();
-	public boolean stack1Visible, stack2Visible, stack3Visible;
-	public ItemStack stackPicked1, stackPicked2, stackPicked3;
-	public ItemStack effect;
-	public boolean active = false;
-	public boolean[] isDrawerOpened = {false, false};
-	public float[] drawerAngle = {0, 0};
-	IItemHandler insertionHandler = new IEInventoryHandler(5, this, 4, true, false);
-	private boolean update = false;
+	@SyncNBT
+	public MultiblockInteractablePart drawer1, drawer2;
+	@SyncNBT
+	public String toolHash = "";
+	private IEInventoryHandler outputMainHandler = getSingleInventoryHandler(MultiblockPrecisionAssembler.SLOT_OUTPUT, true, true);
+	private IEInventoryHandler outputSecondaryHandler = getSingleInventoryHandler(MultiblockPrecisionAssembler.SLOT_OUTPUT_TRASH, true, true);
 
 	public TileEntityPrecisionAssembler()
 	{
-		super(MultiblockPrecisionAssembler.INSTANCE, new int[]{3, 3, 5}, PrecisionAssembler.energyCapacity, true);
+		super(MultiblockPrecisionAssembler.INSTANCE);
+		this.inventory = NonNullList.withSize(10, ItemStack.EMPTY);
+		this.energyStorage = new FluxStorageAdvanced(PrecisionAssembler.energyCapacity);
+		this.drawer1 = new MultiblockInteractablePart(5, 0.4f, 0.5f);
+		this.drawer2 = new MultiblockInteractablePart(5, 0.4f, 0.5f);
 	}
 
 	@Override
-	public void readCustomNBT(NBTTagCompound nbt, boolean descPacket)
+	protected void dummyCleanup()
 	{
-		super.readCustomNBT(nbt, descPacket);
-		if(!descPacket)
-			inventory = Utils.readInventory(nbt.getTagList("inventory", 10), 10);
+		super.dummyCleanup();
+		this.drawer1 = this.drawer2 = null;
+		this.outputMainHandler = this.outputSecondaryHandler = null;
 	}
 
 	@Override
-	public void writeCustomNBT(NBTTagCompound nbt, boolean descPacket)
+	protected void onUpdate()
 	{
-		super.writeCustomNBT(nbt, descPacket);
+		super.onUpdate();
 
-		if(!descPacket)
-			nbt.setTag("inventory", Utils.writeInventory(inventory));
+		//Handle drawer animations
+		this.drawer1.update();
+		this.drawer2.update();
 	}
 
 	@Override
-	public void receiveMessageFromServer(NBTTagCompound message)
+	protected int[] listAllPOI(MultiblockPOI poi)
 	{
-		super.receiveMessageFromServer(message);
-		if(message.hasKey("processTime"))
-			this.processTime = message.getInteger("processTime");
-		if(message.hasKey("processTimeMax"))
-			this.processTimeMax = message.getInteger("processTimeMax");
-		if(message.hasKey("active"))
-			this.active = message.getBoolean("active");
-		if(message.hasKey("inventory"))
-			inventory = Utils.readInventory(message.getTagList("inventory", 10), 10);
-		if(message.hasKey("output"))
-			effect = new ItemStack(message.getCompoundTag("output"));
-		if(message.hasKey("toolOrder"))
+		switch(poi)
 		{
-			NBTTagList list = message.getTagList("toolOrder", NBT.TAG_STRING);
-			toolOrder = new String[]{};
-			ArrayList<String> l2 = new ArrayList<>();
-			for(int i = 0; i < list.tagCount(); i += 1)
-			{
-				NBTBase base = list.get(i);
-				NBTTagString string = (NBTTagString)base;
-				l2.add(string.getString());
-			}
-			toolOrder = new String[l2.size()];
-			for(int i = 0; i < l2.size(); i += 1)
-			{
-				toolOrder[i] = l2.get(i);
-			}
+			case ENERGY_INPUT:
+				return getPOI("energy");
+			case ITEM_INPUT:
+				return getPOI("all_item_inputs");
+			case ITEM_OUTPUT:
+				return getPOI("item_out");
+			case REDSTONE:
+				return getPOI("redstone");
+			default:
+				return new int[0];
 		}
-		if(message.hasKey("animationOrder"))
-		{
-			NBTTagList list = message.getTagList("animationOrder", NBT.TAG_STRING);
-			float modifier = 1f;
-			if(message.hasKey("animationTimeMod"))
-				modifier = message.getFloat("animationTimeMod");
-
-			animationOrder = new String[]{};
-			animationPrepared.clear();
-			for(int i = 0; i < list.tagCount(); i += 1)
-			{
-				NBTBase base = list.get(i);
-				NBTTagString string = (NBTTagString)base;
-				ArrayUtils.add(animationOrder, string.getString());
-				int duration = (int)(PrecisionAssemblerRecipe.toolMap.get(string.getString().split(" ")[0]).getWorkTime(string.getString().split(" ")[0])*modifier);
-				Tuple<Integer, String> tuple = new Tuple<>(duration, string.getString());
-				animationPrepared.add(tuple);
-
-
-			}
-		}
-
-		if(message.hasKey("beginning"))
-		{
-			stackPicked1 = ItemStack.EMPTY;
-			stackPicked2 = ItemStack.EMPTY;
-			stackPicked3 = ItemStack.EMPTY;
-
-			stack1Visible = true;
-			stack2Visible = true;
-			stack3Visible = true;
-		}
-	}
-
-	/**
-	 * Like the old updateEntity(), except more generic.
-	 */
-	@Override
-	public void update()
-	{
-		super.update();
-		if(isDummy())
-			return;
-
-		if(world.isRemote)
-		{
-			for(int i = 0; i < 2; i++)
-				drawerAngle[i] = MathHelper.clamp(drawerAngle[i]+(isDrawerOpened[i]?0.4f: -0.5f), 0f, 5f);
-
-			if(active&&processTime < processTimeMax)
-				processTime += 1;
-			return;
-		}
-
-		boolean wasActive = active;
-
-		boolean beginning = false;
-
-		if(energyStorage.getEnergyStored() > 0&&processQueue.size() < this.getProcessQueueMaxLength())
-		{
-			//Lots of stuffs happening(s)
-			PrecisionAssemblerRecipe recipe = PrecisionAssemblerRecipe.findRecipe(new ItemStack[]{inventory.get(4), inventory.get(5), inventory.get(6), inventory.get(7)}, inventory.get(3), new ItemStack[]{inventory.get(0), inventory.get(1), inventory.get(2)});
-			if(recipe!=null)
-			{
-				MultiblockProcessInMachine<PrecisionAssemblerRecipe> process = new MultiblockProcessInMachine<>(recipe, 4, 5, 6, 7);
-				this.addProcessToQueue(process, false);
-				update = true;
-				processTime = 0;
-				processTimeMax = recipe.getTotalProcessTime();
-
-				String t0 = "", t1 = "", t2 = "";
-				if(!inventory.get(0).isEmpty()&&inventory.get(0).getItem() instanceof IPrecisionTool)
-				{
-					t0 = ((IPrecisionTool)inventory.get(0).getItem()).getPrecisionToolType(inventory.get(0));
-				}
-				if(!inventory.get(1).isEmpty()&&inventory.get(1).getItem() instanceof IPrecisionTool)
-				{
-					t1 = ((IPrecisionTool)inventory.get(1).getItem()).getPrecisionToolType(inventory.get(1));
-				}
-				if(!inventory.get(2).isEmpty()&&inventory.get(2).getItem() instanceof IPrecisionTool)
-				{
-					t2 = ((IPrecisionTool)inventory.get(2).getItem()).getPrecisionToolType(inventory.get(2));
-				}
-
-				toolOrder = new String[]{t0, t1, t2};
-				animationOrder = recipe.animations;
-				effect = recipe.output;
-				beginning = true;
-			}
-		}
-
-		if(world.getTotalWorldTime()%20==0)
-		{
-			EnumFacing ff = mirrored?facing.rotateY(): facing.rotateYCCW();
-			BlockPos pos = getBlockPosForPos(5).offset(ff, 1);
-			ItemStack output = inventory.get(8);
-			TileEntity inventoryTile = this.world.getTileEntity(pos);
-			if(inventoryTile!=null)
-				output = Utils.insertStackIntoInventory(inventoryTile, output, ff.getOpposite());
-			inventory.set(8, output);
-
-			output = inventory.get(9);
-			if(inventoryTile!=null)
-				output = Utils.insertStackIntoInventory(inventoryTile, output, facing.rotateY());
-			inventory.set(9, output);
-		}
-
-		active = shouldRenderAsActive();
-
-		if(wasActive!=active)
-			update = true;
-
-		if(update)
-		{
-			if(effect==null)
-			{
-				this.processQueue.clear();
-				return;
-			}
-
-			// TODO: 23.09.2022 rework needed
-			IIPacketHandler.sendToClient(this, new MessageIITileSync(this, EasyNBT.newNBT()
-					.withInt("processTime", processTime)
-					.withInt("processTimeMax", processTimeMax)
-					.withBoolean("active", this.active)
-					.withTag("inventory", Utils.writeInventory(inventory))
-					.withItemStack("output", effect)
-					.withList("toolOrder", (Object[])toolOrder)
-					.withList("animationOrder", (Object[])animationOrder)
-					.conditionally(beginning, easyNBT -> easyNBT.withBoolean("beginning", true))
-			));
-
-			update = false;
-		}
-	}
-
-	@Override
-	public float[] getBlockBounds()
-	{
-		return new float[]{0, 0, 0, 1, 1, 1};
-	}
-
-	@Override
-	public int[] getEnergyPos()
-	{
-		return new int[]{44};
-	}
-
-	@Override
-	public int[] getRedstonePos()
-	{
-		return new int[]{25};
-	}
-
-	@Override
-	public boolean isInWorldProcessingMachine()
-	{
-		return true;
-	}
-
-	@Override
-	public boolean additionalCanProcessCheck(MultiblockProcess<PrecisionAssemblerRecipe> process)
-	{
-		boolean check = true;
-		//Finally found ye ^^
-		test:
-		{
-			if(!(!inventory.get(3).isEmpty()&&(inventory.get(3).getItem() instanceof ItemIIAssemblyScheme)&&(((ItemIIAssemblyScheme)inventory.get(3).getItem()).getRecipeForStack(inventory.get(3)).equals(process.recipe))))
-			{
-				check = false;
-				break test;
-			}
-
-			if(!toolOrder[0].isEmpty())
-			{
-				if(inventory.get(0).isEmpty())
-				{
-					check = false;
-					break test;
-				}
-				if(!((IPrecisionTool)inventory.get(0).getItem()).getPrecisionToolType(inventory.get(0)).equals(toolOrder[0]))
-				{
-					check = false;
-					break test;
-				}
-			}
-
-			if(!toolOrder[1].isEmpty())
-			{
-				if(inventory.get(1).isEmpty())
-				{
-					check = false;
-					break test;
-				}
-				if(!((IPrecisionTool)inventory.get(1).getItem()).getPrecisionToolType(inventory.get(1)).equals(toolOrder[1]))
-				{
-					check = false;
-					break test;
-				}
-			}
-
-			if(!toolOrder[2].isEmpty())
-			{
-				if(inventory.get(2).isEmpty())
-				{
-					check = false;
-					break test;
-				}
-				if(!((IPrecisionTool)inventory.get(2).getItem()).getPrecisionToolType(inventory.get(2)).equals(toolOrder[2]))
-				{
-					check = false;
-				}
-			}
-		}
-
-		if(!check)
-		{
-			processQueue.clear();
-			update = true;
-		}
-
-		return check;
-	}
-
-	@Override
-	public void doProcessOutput(ItemStack output)
-	{
-
-	}
-
-	@Override
-	public void doProcessFluidOutput(FluidStack output)
-	{
-	}
-
-	@Override
-	public void onProcessFinish(MultiblockProcess<PrecisionAssemblerRecipe> process)
-	{
-		if(((IPrecisionTool)inventory.get(0).getItem()).getPrecisionToolType(inventory.get(0)).equals(toolOrder[0]))
-			((IPrecisionTool)inventory.get(0).getItem()).damagePrecisionTool(inventory.get(0), 1);
-		if(((IPrecisionTool)inventory.get(0).getItem()).getPrecisionToolType(inventory.get(0)).equals(toolOrder[1]))
-			((IPrecisionTool)inventory.get(1).getItem()).damagePrecisionTool(inventory.get(1), 1);
-		if(((IPrecisionTool)inventory.get(0).getItem()).getPrecisionToolType(inventory.get(0)).equals(toolOrder[2]))
-			((IPrecisionTool)inventory.get(2).getItem()).damagePrecisionTool(inventory.get(2), 1);
-
-		((ItemIIAssemblyScheme)inventory.get(3).getItem()).increaseCreatedItems(inventory.get(3), process.recipe.output.getCount());
-
-	}
-
-	@Override
-	public int getMaxProcessPerTick()
-	{
-		return 1;
-	}
-
-	@Override
-	public int getProcessQueueMaxLength()
-	{
-		return 1;
-	}
-
-	@Override
-	public float getMinProcessDistance(MultiblockProcess<PrecisionAssemblerRecipe> process)
-	{
-		return 0;
-	}
-
-
-	@Override
-	public NonNullList<ItemStack> getInventory()
-	{
-		return inventory;
 	}
 
 	@Override
 	public boolean isStackValid(int slot, ItemStack stack)
 	{
-		if(slot==0||slot==1||slot==2)
+		if(slot <= MultiblockPrecisionAssembler.SLOT_TOOL3)
 			return stack.getItem() instanceof IPrecisionTool;
-		if(slot==3)
+		else if(slot==MultiblockPrecisionAssembler.SLOT_SCHEME)
 			return stack.getItem() instanceof ItemIIAssemblyScheme;
-		if(slot >= 4&&slot <= 7)
+		else if(slot <= MultiblockPrecisionAssembler.SLOT_INGREDIENT4)
 		{
-			if(inventory.get(3).getItem() instanceof ItemIIAssemblyScheme)
+			ItemStack scheme = inventory.get(MultiblockPrecisionAssembler.SLOT_SCHEME);
+			if(scheme.getItem() instanceof ItemIIAssemblyScheme)
 			{
-				IngredientStack[] stacks = IIContent.itemAssemblyScheme.getRecipeForStack(inventory.get(3)).inputs;
+				PrecisionAssemblerRecipe recipe = ((ItemIIAssemblyScheme)scheme.getItem()).getSchemeRecipe(scheme);
+				if(recipe==null)
+					return false;
+				IngredientStack[] stacks = recipe.inputs;
 				return stacks.length > slot-4&&stacks[slot-4].matchesItemStack(stack);
 			}
-			else
-				return false;
+		}
+		return true;
+	}
+
+	@Override
+	protected IIMultiblockProcess<PrecisionAssemblerRecipe> findNewProductionProcess()
+	{
+		//Check for assembly scheme in item slot
+		ItemStack schemeStack = inventory.get(MultiblockPrecisionAssembler.SLOT_SCHEME);
+		if(!(schemeStack.getItem() instanceof ItemIIAssemblyScheme))
+			return null;
+
+		//Get the recipe from the assembly scheme
+		PrecisionAssemblerRecipe recipe = ((ItemIIAssemblyScheme)schemeStack.getItem()).getSchemeRecipe(schemeStack);
+		if(recipe==null)
+			return null;
+
+		//Check tools
+		if(!this.toolHash.contains(recipe.toolHash))
+			return null;
+
+		//Check ingredients
+		for(int i = 0; i < recipe.inputs.length; i++)
+		{
+			IngredientStack ingredient = recipe.inputs[i];
+			ItemStack inputStack = inventory.get(MultiblockPrecisionAssembler.SLOT_INGREDIENT1+i);
+			if(!ingredient.matchesItemStack(inputStack))
+				return null;
 		}
 
-		return slot < 8;
+		//Shrink ingredient stacks
+		for(int i = 0; i < recipe.inputs.length; i++)
+		{
+			IngredientStack ingredient = recipe.inputs[i];
+			inventory.get(MultiblockPrecisionAssembler.SLOT_INGREDIENT1+i).shrink(ingredient.inputSize);
+		}
+
+		return new IIMultiblockProcess<>(recipe);
 	}
 
 	@Override
-	public int getSlotLimit(int slot)
+	protected IIMultiblockProcess<PrecisionAssemblerRecipe> getProcessByName(String name)
 	{
-		return 64;
+		PrecisionAssemblerRecipe recipe = IIMultiblockRecipe.getRecipe(PrecisionAssemblerRecipe.class, name);
+		return recipe==null?null: new IIMultiblockProcess<>(recipe);
 	}
 
 	@Override
-	public int[] getOutputSlots()
+	public float getProductionStep(IIMultiblockProcess<PrecisionAssemblerRecipe> process, boolean simulate)
 	{
-		return new int[]{8, 9};
+		if(energyStorage.extractEnergy(process.recipe.getEnergyPerTick(), true) < process.recipe.getEnergyPerTick())
+			return 0;
+		if(!this.toolHash.contains(process.recipe.toolHash))
+			return 0;
+
+		energyStorage.extractEnergy(process.recipe.getEnergyPerTick(), simulate);
+		return 1f;
 	}
 
 	@Override
-	public int[] getOutputTanks()
+	protected boolean attemptProductionOutput(IIMultiblockProcess<PrecisionAssemblerRecipe> process)
 	{
-		return new int[]{};
+		//Attempt output
+		return outputMainHandler.insertItem(0, process.recipe.output, true).isEmpty()&&
+				outputSecondaryHandler.insertItem(0, process.recipe.trashOutput, true).isEmpty();
 	}
 
 	@Override
-	public IFluidTank[] getInternalTanks()
+	protected void onProductionFinish(IIMultiblockProcess<PrecisionAssemblerRecipe> process)
 	{
-		return new FluidTank[0];
-	}
+		//Actually output items
+		outputMainHandler.insertItem(0, process.recipe.output, false);
+		outputSecondaryHandler.insertItem(0, process.recipe.trashOutput, false);
 
-	@Override
-	protected IFluidTank[] getAccessibleFluidTanks(EnumFacing side)
-	{
-		return new FluidTank[0];
-	}
+		//Bump up produced items count in scheme
+		ItemStack schemeStack = inventory.get(MultiblockPrecisionAssembler.SLOT_SCHEME);
+		((ItemIIAssemblyScheme)schemeStack.getItem()).increaseCreatedItems(schemeStack, process.recipe.trashOutput.getCount());
 
-	@Override
-	protected boolean canFillTankFrom(int iTank, EnumFacing side, FluidStack resource)
-	{
-		return false;
-	}
-
-	@Override
-	protected boolean canDrainTankFrom(int iTank, EnumFacing side)
-	{
-		return (pos==14&&side==facing);
+		//Damage tools
+		for(int i = MultiblockPrecisionAssembler.SLOT_TOOL1; i <= MultiblockPrecisionAssembler.SLOT_TOOL3; i++)
+		{
+			ItemStack toolStack = inventory.get(i);
+			if(toolStack.getItem() instanceof IPrecisionTool)
+			{
+				IPrecisionTool tool = (IPrecisionTool)toolStack.getItem();
+				if(process.recipe.toolHash.contains(tool.getToolID(toolStack)))
+					tool.damageTool(toolStack, 1);
+			}
+		}
 	}
 
 	@Override
 	public void doGraphicalUpdates(int slot)
 	{
-		this.markDirty();
-		this.markContainingBlockForUpdate(null);
+		if(slot >= MultiblockPrecisionAssembler.SLOT_TOOL1&&slot <= MultiblockPrecisionAssembler.SLOT_TOOL3)
+		{
+			//Rebuild tool hash
+			ArrayList<String> toolList = new ArrayList<>();
+			for(int i = MultiblockPrecisionAssembler.SLOT_TOOL1; i <= MultiblockPrecisionAssembler.SLOT_TOOL3; i++)
+			{
+				ItemStack toolStack = inventory.get(i);
+				if(toolStack.getItem() instanceof IPrecisionTool)
+					toolList.add(((IPrecisionTool)toolStack.getItem()).getToolID(toolStack));
+			}
+			this.toolHash = PrecisionAssemblerRecipe.buildToolHash(toolList.toArray(new String[0]));
+		}
 	}
 
+	@Nullable
 	@Override
-	public PrecisionAssemblerRecipe findRecipeForInsertion(ItemStack inserting)
+	public IIGUI getGUI()
 	{
-		return null;
-	}
-
-	@Override
-	protected PrecisionAssemblerRecipe readRecipeFromNBT(NBTTagCompound tag)
-	{
-		processQueue.clear();
-		update = true;
-		return PrecisionAssemblerRecipe.loadFromNBT(tag);
-	}
-
-	@Override
-	public boolean canOpenGui()
-	{
-		return formed;
-	}
-
-	@Override
-	public int getGuiID()
-	{
-		return IIGUI.PRECISION_ASSEMBLER.ordinal();
-	}
-
-	@Override
-	public TileEntity getGuiMaster()
-	{
-		return master();
-	}
-
-	@Override
-	public boolean shoudlPlaySound(String sound)
-	{
-		return false;
+		return IIGUI.PRECISION_ASSEMBLER;
 	}
 
 	@Override
 	public void onAnimationChangeClient(boolean state, int part)
 	{
-		isDrawerOpened[part] = state;
+		MultiblockInteractablePart.setStates(state, part, drawer1, drawer2);
 	}
 
 	@Override
 	public void onAnimationChangeServer(boolean state, int part)
 	{
-		if(part >= 2)
+		MultiblockInteractablePart changed = MultiblockInteractablePart.setStates(state, part, drawer1, drawer2);
+		if(changed==null)
 			return;
-		if(state!=isDrawerOpened[part])
-			world.playSound(null, getPos(), state?IISounds.drawerOpen: IISounds.drawerClose, SoundCategory.BLOCKS, 0.25F, 1f);
 
-		isDrawerOpened[part] = state;
-
-		for(int i = 0; i < 2; i++)
-			IIPacketHandler.INSTANCE.sendToAllAround(new MessageBooleanAnimatedPartsSync(i, isDrawerOpened[i], getPos()), IIPacketHandler.targetPointFromPos(this.getPos(), this.world, 32));
-	}
-
-	@Override
-	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing)
-	{
-		if(pos==9&&capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
-			return true;
-		return super.hasCapability(capability, facing);
-	}
-
-	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing)
-	{
-		if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY&&pos==9)
-		{
-			TileEntityPrecisionAssembler master = master();
-			return (T)master.insertionHandler;
-		}
-
-		return super.getCapability(capability, facing);
+		world.playSound(null, getPos(), state?IISounds.drawerOpen: IISounds.drawerClose, SoundCategory.BLOCKS, 0.25F, 1f);
+		IIPacketHandler.sendToClient(this, new MessageBooleanAnimatedPartsSync(changed, this));
 	}
 }

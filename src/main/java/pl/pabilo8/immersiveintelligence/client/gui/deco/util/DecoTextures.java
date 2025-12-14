@@ -36,6 +36,7 @@ public class DecoTextures
 	public static final ResLoc GUI_FRAME_CORNERS_SILVER = ResLoc.of(RES_TEXTURES_DECO_FRAME, "corners_silver");
 	public static final ResLoc GUI_FRAME_CORNERS_BRASS = ResLoc.of(RES_TEXTURES_DECO_FRAME, "corners_brass");
 	public static final ResLoc GUI_FRAME_STEEL_THIN = ResLoc.of(RES_TEXTURES_DECO_FRAME, "steel_thin");
+	public static final ResLoc GUI_FRAME_STEEL = ResLoc.of(RES_TEXTURES_DECO_FRAME, "steel");
 	public static final ResLoc GUI_FRAME_WOODEN_THIN = ResLoc.of(RES_TEXTURES_DECO_FRAME, "wooden_thin");
 
 	//--- Templates ---//
