@@ -19,6 +19,8 @@ import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockCoagulator;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -29,12 +31,16 @@ import javax.annotation.Nullable;
  */
 public class TileEntityCoagulator extends TileEntityMultiblockMetal<TileEntityCoagulator, CoagulatorRecipe> implements ISoundTile, IGuiTile
 {
+	// inventory: slot 0 = effect/input, 1 = output, 2 = bucket_in, 3 = bucket_out
+	public NonNullList<ItemStack> inventory = NonNullList.withSize(4, ItemStack.EMPTY);
+
 	public FluidTank[] tanks = new FluidTank[]{
 			new FluidTank(Coagulator.fluidCapacity),
 			new FluidTank(Coagulator.fluidCapacity)
 	};
-	//This stores the "crafting" effect
-	public NonNullList<ItemStack> effect = NonNullList.withSize(1, ItemStack.EMPTY);
+
+	@SyncNBT(time = 40, events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_RECIPE_CHANGED})
+
 	public int[] bucketProgress = new int[]{0, 0, 0, 0, 0, 0};
 	public NonNullList<ItemStack> bucketStacks = NonNullList.withSize(6, ItemStack.EMPTY);
 
@@ -44,6 +50,13 @@ public class TileEntityCoagulator extends TileEntityMultiblockMetal<TileEntityCo
 	public TileEntityCoagulator()
 	{
 		super(MultiblockCoagulator.INSTANCE, MultiblockCoagulator.INSTANCE.getSize(), Coagulator.energyCapacity, true);
+	}
+
+	// Ensure inventory exists and has expected size (4 slots). Called before accessing inventory[0].
+	private void ensureInventory()
+	{
+		if(this.inventory==null || this.inventory.size() < 4)
+			this.inventory = NonNullList.withSize(4, ItemStack.EMPTY);
 	}
 
 	@Override
@@ -95,10 +108,12 @@ public class TileEntityCoagulator extends TileEntityMultiblockMetal<TileEntityCo
 						//Eto Konets )))
 						if(!world.isRemote)
 						{
-							bucketProgress[craneBucket] = CoagulatorRecipe.getBucketProgressForStack(this.effect.get(0));
-							bucketStacks.set(craneBucket, this.effect.get(0).copy());
+							ensureInventory();
+							ItemStack eff = this.inventory.get(0);
+							bucketProgress[craneBucket] = CoagulatorRecipe.getBucketProgressForStack(eff);
+							bucketStacks.set(craneBucket, eff.copy());
 							bucketStacks.get(craneBucket).setCount(1);
-							this.effect.get(0).shrink(1);
+							eff.shrink(1);
 
 							markDirty();
 							markContainingBlockForUpdate(null);
@@ -147,10 +162,11 @@ public class TileEntityCoagulator extends TileEntityMultiblockMetal<TileEntityCo
 			return;
 		}
 
-		if(processQueue.isEmpty()&&tanks[0].getFluidAmount() > 0&&tanks[1].getFluidAmount() > 0)
+		if(!processQueue.isEmpty()&&tanks[0].getFluidAmount() > 0&&tanks[1].getFluidAmount() > 0)
 		{
 			CoagulatorRecipe recipe = CoagulatorRecipe.findRecipe(tanks[0].getFluid(), tanks[1].getFluid());
-			if(recipe!=null&&(this.effect.get(0).isEmpty()||OreDictionary.itemMatches(this.effect.get(0), recipe.itemOutput, false)))
+			ensureInventory();
+			if(recipe!=null&&(this.inventory.get(0).isEmpty()||OreDictionary.itemMatches(this.inventory.get(0), recipe.itemOutput, false)))
 			{
 				MultiblockProcessInMachine<CoagulatorRecipe> process = new MultiblockProcessInMachine<>(recipe);
 				process.setInputTanks(0, 1);
@@ -176,7 +192,7 @@ public class TileEntityCoagulator extends TileEntityMultiblockMetal<TileEntityCo
 			}
 		}
 
-		if(!effect.get(0).isEmpty()&&craneAnimation==CraneAnimation.NONE&&craneBucket==-1)
+		if(craneAnimation==CraneAnimation.NONE&&craneBucket==-1)
 		{
 			for(int i = 0; i < bucketStacks.size(); i++)
 				if(bucketStacks.get(i).isEmpty())
@@ -203,7 +219,11 @@ public class TileEntityCoagulator extends TileEntityMultiblockMetal<TileEntityCo
 		tanks[1] = tanks[1].readFromNBT(nbt.getCompoundTag("tank1"));
 
 
-		effect = Utils.readInventory(nbt.getTagList("effect", 10), 1);
+		if(nbt.hasKey("effect"))
+		{
+			NonNullList<ItemStack> eff = Utils.readInventory(nbt.getTagList("effect", 10), 1);
+			this.inventory.set(0, eff.get(0));
+		}
 		bucketStacks = Utils.readInventory(nbt.getTagList("bucketStacks", 10), 6);
 
 		bucketProgress = nbt.getIntArray("bucketProgress");
@@ -213,7 +233,8 @@ public class TileEntityCoagulator extends TileEntityMultiblockMetal<TileEntityCo
 		cranePosition = nbt.getInteger("cranePosition");
 		craneBucket = nbt.getInteger("craneBucket");
 		craneProgress = nbt.getInteger("craneProgress");
-		craneAnimation = CraneAnimation.values()[MathHelper.clamp(nbt.getInteger("craneAnimation"), 0, CraneAnimation.values().length)];
+		int animIdx = MathHelper.clamp(nbt.getInteger("craneAnimation"), 0, CraneAnimation.values().length-1);
+		craneAnimation = CraneAnimation.values()[animIdx];
 
 	}
 
@@ -228,7 +249,11 @@ public class TileEntityCoagulator extends TileEntityMultiblockMetal<TileEntityCo
 		nbt.setTag("tank0", tanks[0].writeToNBT(new NBTTagCompound()));
 		nbt.setTag("tank1", tanks[1].writeToNBT(new NBTTagCompound()));
 
-		nbt.setTag("effect", Utils.writeInventory(effect));
+		// write only the single effect slot under the same "effect" tag for compatibility
+		NonNullList<ItemStack> effOut = NonNullList.withSize(1, ItemStack.EMPTY);
+		effOut.set(0, this.inventory.get(0));
+		nbt.setTag("effect", Utils.writeInventory(effOut));
+
 		nbt.setTag("bucketStacks", Utils.writeInventory(bucketStacks));
 		nbt.setIntArray("bucketProgress", bucketProgress);
 
@@ -251,7 +276,12 @@ public class TileEntityCoagulator extends TileEntityMultiblockMetal<TileEntityCo
 		if(message.hasKey("tank1"))
 			tanks[1] = tanks[1].readFromNBT(message.getCompoundTag("tank1"));
 		if(message.hasKey("effect"))
-			effect = Utils.readInventory(message.getTagList("effect", 10), 1);
+		{
+			ensureInventory();
+			NonNullList<ItemStack> effMsg = Utils.readInventory(message.getTagList("effect", 10), 1);
+			if(effMsg.size()>0)
+				this.inventory.set(0, effMsg.get(0));
+		}
 		if(message.hasKey("bucketStacks"))
 			bucketStacks = Utils.readInventory(message.getTagList("bucketStacks", 10), 6);
 		if(message.hasKey("bucketProgress"))
@@ -265,7 +295,8 @@ public class TileEntityCoagulator extends TileEntityMultiblockMetal<TileEntityCo
 			cranePosition = message.getInteger("cranePosition");
 			craneBucket = message.getInteger("craneBucket");
 			craneProgress = message.getInteger("craneProgress");
-			craneAnimation = CraneAnimation.values()[MathHelper.clamp(message.getInteger("craneAnimation"), 0, CraneAnimation.values().length)];
+			int animIdxMsg = MathHelper.clamp(message.getInteger("craneAnimation"), 0, CraneAnimation.values().length-1);
+			craneAnimation = CraneAnimation.values()[animIdxMsg];
 		}
 	}
 
@@ -345,6 +376,7 @@ public class TileEntityCoagulator extends TileEntityMultiblockMetal<TileEntityCo
 
 	}
 
+
 	@Override
 	public int getMaxProcessPerTick()
 	{
@@ -407,7 +439,7 @@ public class TileEntityCoagulator extends TileEntityMultiblockMetal<TileEntityCo
 	@Override
 	public NonNullList<ItemStack> getInventory()
 	{
-		return effect;
+		return this.inventory;
 	}
 
 	@Override
@@ -427,6 +459,11 @@ public class TileEntityCoagulator extends TileEntityMultiblockMetal<TileEntityCo
 	{
 		this.markDirty();
 		this.markContainingBlockForUpdate(null);
+	}
+
+	public IIGUI getGUI()
+	{
+		return IIGUI.COAGULATOR;
 	}
 
 	@Override
@@ -467,7 +504,8 @@ public class TileEntityCoagulator extends TileEntityMultiblockMetal<TileEntityCo
 	@Override
 	public boolean canOpenGui()
 	{
-		return false;//formed;
+		// allow GUI when multiblock is formed and this is the master tile (not a dummy)
+		return formed && !isDummy();
 	}
 
 	// TODO: 31.10.2021 gui

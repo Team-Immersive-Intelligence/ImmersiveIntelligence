@@ -237,6 +237,7 @@ public enum IIGUI implements ISerializableEnum
 		IIGUI.PROJECTILE_WORKSHOP.setClientDecoGui(GuiProjectileWorkshop::new);
 
 		IIGUI.RADAR.setClientGui(GuiRadar::new);
+		IIGUI.COAGULATOR.setClientDecoGui(GuiCoagulator::new);
 	}
 
 	@SideOnly(Side.CLIENT)
