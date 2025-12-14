@@ -14,6 +14,8 @@ import pl.pabilo8.immersiveintelligence.api.upgrade.IUpgradableDevice;
 import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 
 /**
@@ -23,7 +25,7 @@ import java.util.ArrayList;
 public class WrenchOverlay extends InWorldOverlayBase
 {
 	@Override
-	public void draw(EntityPlayer player, World world, RayTraceResult mouseOver, float partialTicks)
+	public void draw(@Nonnull EntityPlayer player, @Nonnull World world, @Nullable RayTraceResult mouseOver, float partialTicks)
 	{
 		ItemStack stack = player.getHeldItemMainhand();
 		if(!stack.getItem().getToolClasses(stack).contains(IIReference.TOOL_WRENCH))

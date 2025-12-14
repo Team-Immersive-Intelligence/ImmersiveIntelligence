@@ -46,7 +46,7 @@ public class TextOverlayUpgrade extends TextOverlayBase
 			return null;
 		//Return upgrade name and progress
 		return new String[]{
-				tile.getCurrentUpgrade().getLocalizedName(),
+				I18n.format(IIReference.INFO_KEY+"machineupgrade.name", tile.getCurrentUpgrade().getLocalizedName()),
 				I18n.format(IIReference.INFO_KEY+"machineupgrade.progress",
 						tile.getUpgradeInstallProgress(false),
 						tile.getCurrentUpgrade().getProgressRequired())

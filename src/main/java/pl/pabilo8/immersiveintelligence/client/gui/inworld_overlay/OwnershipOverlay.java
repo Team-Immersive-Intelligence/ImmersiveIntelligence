@@ -11,6 +11,9 @@ import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.IOwnableProperty;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 29.05.2023
@@ -18,11 +21,9 @@ import pl.pabilo8.immersiveintelligence.common.util.diplomacy.IOwnableProperty;
 public class OwnershipOverlay extends InWorldOverlayBase
 {
 	@Override
-	public void draw(EntityPlayer player, World world, RayTraceResult mouseOver, float partialTicks)
+	public void draw(@Nonnull EntityPlayer player, @Nonnull World world, @Nullable RayTraceResult mouseOver, float partialTicks)
 	{
-
-
-		if(mouseOver.typeOfHit!=Type.BLOCK)
+		if(mouseOver==null||mouseOver.typeOfHit!=Type.BLOCK)
 			return;
 		TileEntity te = world.getTileEntity(mouseOver.getBlockPos());
 		if(!(te instanceof IOwnableProperty))

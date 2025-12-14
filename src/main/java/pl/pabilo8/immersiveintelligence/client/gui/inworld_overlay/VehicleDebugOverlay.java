@@ -22,6 +22,7 @@ import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.Vertica
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.entity.IIEntityUtils;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -34,7 +35,7 @@ public class VehicleDebugOverlay extends InWorldOverlayBase
 {
 	@Override
 	@SuppressWarnings("rawtypes")
-	public void draw(EntityPlayer player, World world, RayTraceResult mouseOver, float partialTicks)
+	public void draw(@Nonnull EntityPlayer player, @Nonnull World world, RayTraceResult mouseOver, float partialTicks)
 	{
 		//get rendering centre position
 		double posX = player.lastTickPosX+(player.posX-player.lastTickPosX)*(double)partialTicks;

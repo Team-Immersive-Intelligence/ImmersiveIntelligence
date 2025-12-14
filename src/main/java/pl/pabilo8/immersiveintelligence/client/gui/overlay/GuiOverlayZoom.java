@@ -10,6 +10,9 @@ import pl.pabilo8.immersiveintelligence.client.util.CameraHandler;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 13.09.2022
@@ -17,13 +20,13 @@ import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 public class GuiOverlayZoom extends GuiOverlayBase
 {
 	@Override
-	public boolean shouldDraw(EntityPlayer player, RayTraceResult mouseOver)
+	public boolean shouldDraw(@Nonnull EntityPlayer player, @Nullable RayTraceResult mouseOver)
 	{
 		return CameraHandler.zoom!=null;
 	}
 
 	@Override
-	public void draw(EntityPlayer player, RayTraceResult mouseOver, int width, int height)
+	public void draw(@Nonnull EntityPlayer player, @Nullable RayTraceResult mouseOver, int width, int height)
 	{
 		//Begin drawing
 		GlStateManager.pushMatrix();

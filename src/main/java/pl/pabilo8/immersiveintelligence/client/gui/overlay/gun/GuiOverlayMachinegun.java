@@ -10,6 +10,9 @@ import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.
 import pl.pabilo8.immersiveintelligence.common.entity.EntityMachinegun;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 13.09.2022
@@ -19,13 +22,13 @@ public class GuiOverlayMachinegun extends GuiOverlayGunBase
 	private IIColor colorFrom = IIColor.fromPackedRGB(0xdf9916), colorTo = IIColor.fromPackedRGB(0xba0f0f);
 
 	@Override
-	public boolean shouldDraw(EntityPlayer player, RayTraceResult mouseOver)
+	public boolean shouldDraw(@Nonnull EntityPlayer player, @Nullable RayTraceResult mouseOver)
 	{
 		return player.getRidingEntity() instanceof EntityMachinegun;
 	}
 
 	@Override
-	public void draw(EntityPlayer player, RayTraceResult mouseOver, int width, int height)
+	public void draw(@Nonnull EntityPlayer player, @Nullable RayTraceResult mouseOver, int width, int height)
 	{
 		final EntityMachinegun mg = (EntityMachinegun)player.getRidingEntity();
 		assert mg!=null;
