@@ -20,9 +20,11 @@ import javax.annotation.Nonnull;
 public class ContainerCoagulator extends ContainerIIBase<TileEntityCoagulator>
 {
 
-	public Slot slotInput, slotOutput;
-	public Slot slotBucketIn1, slotBucketOut1;
-	public Slot slotBucketIn2, slotBucketOut2;
+	public Slot slotOutput;
+	public Slot slotBucketIn, slotBucketOut;
+;
+
+	//no Input slot, liquid latex is the crafting recipe input
 
 	public ContainerCoagulator(EntityPlayer player, TileEntityCoagulator tile)
 	{
@@ -30,7 +32,7 @@ public class ContainerCoagulator extends ContainerIIBase<TileEntityCoagulator>
 		{
 
 			//Recipe item input (empty pages) slot
-			this.slotInput = addSlotToContainer(new Slot(this.inv, 0, 13-4+6, 39-8)
+			this.slotOutput = addSlotToContainer(new Slot(this.inv, 0, 13+80+20, 39-8)
 			{
 				@Override
 				public boolean isItemValid(@Nonnull ItemStack stack)
@@ -40,15 +42,9 @@ public class ContainerCoagulator extends ContainerIIBase<TileEntityCoagulator>
 				}
 			});
 
-			//Output slot
-			this.slotOutput = addSlotToContainer(new IESlot.Output(this, this.inv, 1, 88+8-6, 39-8));
-
 			//Fluid Container Slots
-			this.slotBucketIn1 = addSlotToContainer(new IESlot.FluidContainer(this, this.inv, 2, 147, 21-8, 0));
-			this.slotBucketOut1 = addSlotToContainer(new IESlot.FluidContainer(this, this.inv, 3, 147, 57-8, 0));
-
-			this.slotBucketIn2 = addSlotToContainer(new IESlot.FluidContainer(this, this.inv, 2, 147, 21-8-10, 0));
-			this.slotBucketOut2 = addSlotToContainer(new IESlot.FluidContainer(this, this.inv, 3, 147, 57-8-10, 0));
+			this.slotBucketIn = addSlotToContainer(new IESlot.FluidContainer(this, this.inv, 2, 147-20-40, 21-8, 0));
+			this.slotBucketOut = addSlotToContainer(new IESlot.FluidContainer(this, this.inv, 3, 147-20-40, 57-8, 0));
 
 			addPlayerInventory(player.inventory, 8, 86);
 		}

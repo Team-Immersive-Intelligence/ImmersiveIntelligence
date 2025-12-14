@@ -77,8 +77,16 @@ public class CoagulatorRenderer extends TileEntitySpecialRenderer<TileEntityCoag
 
 				mixerProgress = p > 0.65?f: 0;
 			}
-			if(te.effect.get(0).getCount() > 0)
-				mixerProgress = f;
+			// safe access to effect slot (inventory index 0)
+			ItemStack _tempEffect = ItemStack.EMPTY;
+			try
+			{
+				if(te.getInventory()!=null && te.getInventory().size()>0)
+					_tempEffect = te.getInventory().get(0);
+			}catch(Throwable ignored){}
+			final ItemStack effectStack = _tempEffect;
+             if(effectStack.getCount() > 0)
+                 mixerProgress = f;
 
 			switch(te.craneAnimation)
 			{
@@ -238,7 +246,7 @@ public class CoagulatorRenderer extends TileEntitySpecialRenderer<TileEntityCoag
 									GlStateManager.translate(-0.5, 0.5625f, 0.09375);
 									GlStateManager.rotate(90, 1f, 0f, 0f);
 									GlStateManager.scale(0.0625, 0.0625, 0.0625);
-									ClientUtils.drawRepeatedFluidSprite(CoagulatorRecipe.getFluidForOutputStack(te.effect.get(0)), 4.5f, 5.5f, 8, 8);
+									ClientUtils.drawRepeatedFluidSprite(CoagulatorRecipe.getFluidForOutputStack(effectStack), 4.5f, 5.5f, 8, 8);
 								}
 
 							}
@@ -251,8 +259,8 @@ public class CoagulatorRenderer extends TileEntitySpecialRenderer<TileEntityCoag
 
 			GlStateManager.popMatrix();
 
-			ItemStack effect = te.effect.get(0);
-			if(!effect.isEmpty())
+			// use previously read effectStack
+			if(!effectStack.isEmpty())
 			{
 				GlStateManager.pushMatrix();
 
@@ -260,11 +268,11 @@ public class CoagulatorRenderer extends TileEntitySpecialRenderer<TileEntityCoag
 				GlStateManager.translate(te.mirrored?2: -5, -4, 0);
 				GlStateManager.scale(0.0625, 0.0625, 0.0625);
 
-				float tfluid = (((float)effect.getCount())/effect.getMaxStackSize());
+				float tfluid = (((float)effectStack.getCount())/effectStack.getMaxStackSize());
 
 				GlStateManager.translate(0, 0f, -1-tfluid*24f);
 
-				ClientUtils.drawRepeatedFluidSprite(CoagulatorRecipe.getFluidForOutputStack(effect),
+				ClientUtils.drawRepeatedFluidSprite(CoagulatorRecipe.getFluidForOutputStack(effectStack),
 						2, 2, 44, 44
 				);
 				GlStateManager.popMatrix();
@@ -292,7 +300,7 @@ public class CoagulatorRenderer extends TileEntitySpecialRenderer<TileEntityCoag
 						GlStateManager.translate(-2.5f, 3f, -9.5f);
 					}
 
-					ClientUtils.drawRepeatedFluidSprite(CoagulatorRecipe.getFluidForOutputStack(b?te.effect.get(0): te.bucketStacks.get(i)), 4.5f, 5.5f, 8, 8);
+					ClientUtils.drawRepeatedFluidSprite(CoagulatorRecipe.getFluidForOutputStack(b?effectStack: te.bucketStacks.get(i)), 4.5f, 5.5f, 8, 8);
 					GlStateManager.popMatrix();
 				}
 
