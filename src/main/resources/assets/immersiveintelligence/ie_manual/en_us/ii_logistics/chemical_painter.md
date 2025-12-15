@@ -13,7 +13,7 @@ The [Chemical Painter] eliminates this problem.
 Cyan, Magenta, Yellow and Black Ink have to be provided to four fluid input slots on the back of the device.
 Electricity has to be provided to the top input port. Items can be inserted manually or through the inward facing conveyor.
 # uses
-In addition to coloring items like wool or carpet, the chemical painter can be used to paint markings on bullets to make them easier to identify visually.
+In addition to coloring items like wool or carpet, the chemical painter can be used to paint markings on bullets to make them easier to identify visually, or to paint [armor](light_engineer_armor.md) and [backpacks](improved_capacitor_backpack.md).
 Most painted items can be later cleaned using the [Chemical Bath](chemical_bath) to regain their original color.
 # interface
 Color is set through the interface or with the data system. In the interface there are 3 buttons to switch the color model:  

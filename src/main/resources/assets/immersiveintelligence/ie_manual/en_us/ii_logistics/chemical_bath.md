@@ -8,7 +8,7 @@ The **Chemical Bath** is a machine consisting of an industrial-sized bathtub and
 |[text]{mb:"II:ChemicalBath"}|
 # details
 [Input] and [output ports] for bathed items are located at the front.
-[Fluid input] and [energy input] are located at the rear.
+[Fluid input], [energy input], and [redstone control] are located at the rear.
 When supplied with materials, the machine will automatically start production.
 **Caution** is advised when close to a bath filled with corrosive elements, as there are no barriers protecting one from falling into it.
 # etching

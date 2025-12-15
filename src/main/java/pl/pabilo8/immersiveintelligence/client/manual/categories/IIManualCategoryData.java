@@ -168,6 +168,7 @@ public class IIManualCategoryData extends IIManualCategory
 				.addSource("basic_radio_tuner", getSourceForItem(IIContent.itemRadioTuner.getStack(1)))
 				.addSource("advanced_radio_tuner", getSourceForItem(new ItemStack(IIContent.itemRadioTuner, 1, 1)
 				));
+		addEntry("radio_backpack");
 		addEntry("printing_press")
 				.addSource("paper_page", getSourceForItem(IIContent.itemPrintedPage.getStack(PageType.BLANK)));
 		addEntry("scanning_conveyor");

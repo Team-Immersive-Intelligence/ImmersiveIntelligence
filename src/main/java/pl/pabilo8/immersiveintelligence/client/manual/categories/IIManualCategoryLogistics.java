@@ -110,7 +110,19 @@ public class IIManualCategoryLogistics extends IIManualCategory
 				.addSource("repair", getSourceForItem(
 						IIContent.blockMetalDevice.getStack(IIBlockTypes_MetalDevice.REPAIR_CRATE))
 				);
-
+		addEntry("engineers_crates")
+				.addSource("metalbox", getSourceForItem(IIContent.blockMetalDevice.getStack(IIBlockTypes_MetalDevice.METAL_CRATE)))
+				.addSource("multicrates", getSourceForItems(
+						IIContent.blockSmallCrate.getStack(IIBlockTypes_SmallCrate.WOODEN_CRATE_BOX),
+						IIContent.blockSmallCrate.getStack(IIBlockTypes_SmallCrate.WOODEN_CRATE_CUBE),
+						IIContent.blockSmallCrate.getStack(IIBlockTypes_SmallCrate.WOODEN_CRATE_WIDE),
+						IIContent.blockSmallCrate.getStack(IIBlockTypes_SmallCrate.REINFORCED_CRATE_BOX),
+						IIContent.blockSmallCrate.getStack(IIBlockTypes_SmallCrate.REINFORCED_CRATE_CUBE),
+						IIContent.blockSmallCrate.getStack(IIBlockTypes_SmallCrate.REINFORCED_CRATE_WIDE),
+						IIContent.blockSmallCrate.getStack(IIBlockTypes_SmallCrate.METAL_CRATE_BOX),
+						IIContent.blockSmallCrate.getStack(IIBlockTypes_SmallCrate.METAL_CRATE_CUBE),
+						IIContent.blockSmallCrate.getStack(IIBlockTypes_SmallCrate.METAL_CRATE_WIDE)
+				));
 		addEntry("improved_capacitor_backpack")
 				.addSource("improved_capacitor", getSourceForItem(
 						new ItemStack(IIContent.itemAdvancedPowerPack))
