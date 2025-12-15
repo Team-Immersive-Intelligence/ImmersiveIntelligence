@@ -3,7 +3,7 @@ Ammunition Crate
 Colored green, not Blu
 # main
 @upgradable
-|[crafting]{source:"crafting"}|
+|[crafting]{source:"ammo_crate"}|
 The [Ammunition Crate] is a portable storage for all the bullets. It can be used to load a [revolver](revolver), by creating a load pattern and putting the [cartridges] inside.
 To open the crate, shift right-click with an empty hand, from there reload both the [revolver] or the [speedloader] with one right-click.
 # info0

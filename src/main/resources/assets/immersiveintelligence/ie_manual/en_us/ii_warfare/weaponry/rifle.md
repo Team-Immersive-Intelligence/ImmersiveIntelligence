@@ -2,7 +2,7 @@
 Rifle
 This is my rifle.
 # 0
-|[item_display]{source:""}|
+|[item_display]{source:"rifle"}|
 The rifle is the warring Engineer's best friend. There are many like it, but this one is yours.
 Rifles use [long bullets]. An unmodified rifle does not use a magazine, rather, it is [fed loose bullets, one at a time]. It supports a limited set of [modifications](#3).
 # 1

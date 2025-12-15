@@ -10,15 +10,17 @@ Several weapons with numerous strengths and weaknesses can be installed to creat
 This weapon is the most basic and *cheapest* of all available for the Emplacement. It is a reliable choice for dealing with soft ground targets or light vehicles, when using [armor-piercing long bullets] for ammunition.
 # mg1
 The **Machinegun** Emplacement comes in 3 variants: [Default], [Heavy Barreled], and [Water-Cooled], which are identical in function to those present in the [infantry version](machinegun.md).
-|[upgrade_display]{upgrade:"immersiveintelligence:emplacement/mg_heavy_barrel"}|
-|[upgrade_display]{upgrade:"immersiveintelligence:emplacement/mg_watercooled"}|
+|[upgrade_display]{upgrade:"immersiveintelligence:emplacement/machinegun/heavy_barrel"}|
+|[upgrade_display]{upgrade:"immersiveintelligence:emplacement/machinegun/water_cooled_barrel"}|
 Take note, this weapon does not use [magazines](magazines.md). [Loose bullets have to be provided through the emplacement input port]. Due to its limited pitch, the MG Emplacement is a poor choice for firing at air targets.
+#mg2
+The **Machinegun** Emplacement can also be [fortified] to increase survivability in the field.
+|[upgrade_display]{upgrade:"immersiveintelligence:emplacement/machinegun/additional_fortifications"}|
 # chem0
 **Heavy Chemthrower**
 |[upgrade_display]{upgrade:"immersiveintelligence:emplacement/heavy_chemthrower"}|
 This Emplacement designed for [close-range] engagements against masses of enemies. Similarly to regular [Chemthrower](chemthrower), the heavy variant can be filled with various liquids from the liquid tanks.
-# chem1
-Normally, it ignites the fluid, but this can be toggled using a data packet. **The Heavy Chemthrower** Emplacement has the [lowest range] among all of the Emplacements, and is incredibly poor at targeting airborne targets.
+**The Heavy Chemthrower** Emplacement has the [lowest range] among all of the Emplacements, and is incredibly poor at targeting airborne targets.
 # flak0
 **Autocannon**
 |[upgrade_display]{upgrade:"immersiveintelligence:emplacement/autocannon"}|
@@ -40,7 +42,7 @@ Fortunately, the **Heavy Railgun** possesses a high armor-piercing capability, s
 A pinnacle of computer technology, mechanical skill and sophisticated targeting software, this Emplacement is the worst enemy of anything that can fly, walk, or swim. It uses [long bullets].
 # cpds1
 Due to the astounding rate of fire, as well as fast tracking and response abilities, it is almost [impossible for targets to evade].
-Thanks to its advanced targeting system, it is the [best weapon for anti-projectile defense purposes], with the capability to [shoot down artillery projectiles in mid air]. In order to do that, it needs to be linked to a [Radar](radar.md) or [Observers](#ir_observer0) in order to maximize the chances of successful interception.
+Thanks to its advanced targeting system, it is the [best weapon for anti-projectile defense purposes], with the capability to [shoot down artillery projectiles in mid-air]. In order to do that, it needs to be linked to a [Radar](radar.md) or [Observers](#ir_observer0) in order to maximize the chances of successful interception.
 # cpds2
 The only drawback it comes with is its enormous maintenance cost, due to its high rate of fire. If you're struggling with providing it with sufficient amounts of ammunition, consider using it as a [special, last resort] weapon for countering projectiles.
 # tesla0
@@ -48,7 +50,7 @@ The only drawback it comes with is its enormous maintenance cost, due to its hig
 |[upgrade_display]{upgrade:"immersiveintelligence:emplacement/tesla"}|
 This Emplacement is the bigger and more refined variant of the [Tesla Coil](teslaCoil) and deals [higher damage in expanded range]. The weapon is a good choice against [soft targets], who happened to come too close. Thanks to its advanced control systems, the weapon can differentiate between friend and foe.
 # tesla1
-Due to being energy-powered, [it does not require ammunition] - only a constant supply of electricity. Its drawbacks are a low range of attack and high energy consumption.
+Due to being energy-powered, [it does not require ammunition] - only a constant supply of electricity. Its drawbacks are a low range of attack and high energy consumption. It is most effective in waterlogged areas, as the wet environment will prevent use of the [anti-static mesh](light_engineer_armor#10) that completely negates it.
 # ir_observer0
 **Infrared Observer**
 |[upgrade_display]{upgrade:"immersiveintelligence:emplacement/infrared_observer"}|

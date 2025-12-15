@@ -61,8 +61,7 @@ The [Rifle Grenade Launcher] allows your [assault rifle](assault_rifle.md) to sh
 The [Stereoscopic Range Finder] uses advanced electronic circuitry to calculate the distance of the aimed-at block, to a maximum distance of [60 meters]. It can also be used with [Radio Markers] to send positions through [data](data_main.md). The rangefinder requires energy to operate.
 # 17
 |[crafting]{source:"gyroscopic_stabilizer"}|
-The [Gyroscopic Stabilizer] uses advanced circuitry and *Physics(
-TM)* to greatly reduce the recoil of the [assault rifle](assault_rifle.md). The [Stabilizer] requires energy to operate, using about [20 Flux] per fired bullet.
+The [Gyroscopic Stabilizer] uses advanced circuitry and *Physics(TM)* to greatly reduce the recoil of the [assault rifle](assault_rifle.md). The [Stabilizer] requires energy to operate, using about [20 Flux] per fired bullet.
 # 18
 |[crafting]{source:"electric_firing_motor"}|
 The [Electric Firing Motor] increases the firerate of your [assault rifle](assault_rifle.md) in [automatic] mode. The [Motor] requires energy to operate, using about [10 Flux] per fired bullet.

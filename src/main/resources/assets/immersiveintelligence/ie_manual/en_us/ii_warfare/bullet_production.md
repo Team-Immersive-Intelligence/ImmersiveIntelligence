@@ -48,7 +48,7 @@ Ensure that bullet casings are fed to the close conveyor, and bullet cores are f
 Finally, bullets may be loaded into [magazines](magazines.md) with the help of the [Packer](packer.md).
 # ammunition_assembler_data
 **Input Variables:**
-|[data_variable]{type:"string", direction:"in", letter:"f", name:"Fuse", description:"Fuse properties. Defined by key strings 'fuse' and 'fuse_config.'"}|
+|[data_variable]{type:"string", direction:"in", letter:"f", name:"Fuse", description:"Fuse properties. Defined by key strings 'fuse' and 'fuse_config'."}|
 # heavy_ammuniton_assembler
 |[multiblock]{mb:"II:HeavyAmmunitionAssembler"}|
 This device is formed by using a [hammer](introduction#introductionHammer) on the heavy engineering block between the wooden scaffolding.

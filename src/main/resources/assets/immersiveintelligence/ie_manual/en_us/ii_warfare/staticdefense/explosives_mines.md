@@ -4,15 +4,17 @@ Ka-boom?
 # radio_satchel0
 When your operations require a stealthy, precise approach, [radio](radio_station.md)[-detonated satchel] charges are the right choice. Be it mining operations, demolition of buildings, or sabotage of train bridges, satchel charges are universal in their role and are beloved by both combat engineers and saboteurs.
 # radio_satchel1
+|[crafting]{source:"crafting_radio_equipped_satchel"}|
+Unlike other explosive casings, the [radio-equipped satchel] needs to be crafted. Using leather, a [basic circuit](electronic_components.md#basic_general), and iron, the paragon of sabotage is born.
+
+# radio_satchel2
 The primary way to detonate the explosive devices is by using a [radio signal](radio_station). To do that, the explosives must first be programmed with a data packet in a [DIM](data_input_machine).
 
 Explosives will only detonate when they receive a data packet [identical] to the programmed one through radio.
 Additionally, explosives can receive [data through cable] on the exact same conditions and work as a data relay.
-# radio_satchel2
+# radio_satchel3
 Explosives can also be detonated using [redstone]. Similar to other [redstone connectors](redstoneWires), they can receive signal on one of the 16 channels. To change the channel sneak-use a hammer on a placed satchel.
-# radio_satchel4
-|[crafting]{source:"crafting_radio_equipped_satchel"}|
-Unlike other explosive casings, the [radio-equipped satchel] needs to be crafted. Using leather, a [basic circuit](electronic_components.md#basic_general), and iron, the paragon of sabotage is born.
+
 # mines
 [Mines] are commonly used as a static defensive measure. Their main use cases are denying the enemy access to an area, slowing their advance, or (in case they aren't very bright), marking where their graves will be.
 
