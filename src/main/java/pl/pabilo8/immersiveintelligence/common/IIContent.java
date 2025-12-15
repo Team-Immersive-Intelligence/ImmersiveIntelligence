@@ -358,11 +358,11 @@ public class IIContent
 	public static final Upgrade UPGRADE_SAW_UNREGULATOR = new Upgrade("saw_unregulator");
 
 	//allows printing punchtapes
-	public static final Upgrade UPGRADE_PRESS_PUNCHTAPES = new Upgrade("press_punchtapes");
+	public static final Upgrade UPGRADE_PRESS_PUNCHTAPES = new Upgrade("printing_press/punchtape_processor");
 	//allows printing bound pages, books and newspapers
-	public static final Upgrade UPGRADE_PRESS_BATCHING = new Upgrade("press_batching");
+	public static final Upgrade UPGRADE_PRESS_BATCHING = new Upgrade("printing_press/batching_mechanism");
 	//allows printing envelopes
-	public static final Upgrade UPGRADE_PRESS_ENVELOPER = new Upgrade("press_enveloper");
+	public static final Upgrade UPGRADE_PRESS_ENVELOPER = new Upgrade("printing_press/enveloper");
 
 	//allows the radar to detect radio signal emitters and send their positions
 	public static final Upgrade UPGRADE_RADIO_LOCATORS = new Upgrade("radio_locators");

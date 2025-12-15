@@ -25,17 +25,17 @@ The printing press can also be [upgraded] to extend its functionality.
 |[data_variable]{type:"integer", direction:"in", letter:"a", name:"Amount of copies", description:"How many pages will be printed"}|
 |[data_variable]{type:"string", direction:"in", letter:"t", name:"Text to print", description:"Text content that will be printed", requirements:{m:"text/code"}}|
 # punchtapes_upgrade
-|[upgrade_display]{upgrade:"immersiveintelligence:press_punchtapes"}|
+|[upgrade_display]{upgrade:"immersiveintelligence:printing_press/punchtape_processor"}|
 The [Punchtape Processor] upgrade allows printing [Punchtapes](punchtapes.md) with all the variables of the received packets, except "a" and "m".  
 **Instead of empty page, supply an [Empty Punchtape].**
 |[data_variable]{type:"string", direction:"in", letter:"m", name:"Output mode", description:"The type of document that will be printed", values:[["punchtape","A punchtape with variables of the received packet, except this one printed. Doesn't use any ink."]]}|
 # batching_upgrade
-|[upgrade_display]{upgrade:"immersiveintelligence:press_batching"}|
+|[upgrade_display]{upgrade:"immersiveintelligence:printing_press/batching_mechanism"}|
 The [Batching Mechanism] upgrade allows printing documents consisting of multiple pages.
 Within variable **t**, the escape code [/newpage] will signify to the printer to begin printing on the next page.
-|[data_variable]{type:"string", direction:"in", letter:"m", name:"Output mode", description:"The type of document that will be printed", values:[["batched","Notifies the printing press that this is a multi-page data packet."]]}|
+|[data_variable]{type:"string", direction:"in", letter:"m", name:"Output mode", description:"The type of document that will be printed", values:[["pages, book, or newspaper","Notifies the printing press that this is a multi-page data packet and sets the type of paged document."]]}|
 # envelopes_upgrade
-|[upgrade_display]{upgrade:"immersiveintelligence:press_enveloper"}|
+|[upgrade_display]{upgrade:"immersiveintelligence:printing_press/enveloper"}|
 The [Enveloper] upgrade allows to print envelopes, which can then be used for mailing purposes.
 |[data_variable]{type:"string", direction:"in", letter:"m", name:"Output mode", description:"The type of document that will be printed", values:[["envelope","Prints an envelope with the provided information in the below variables."]]}|
 |[data_variable]{type:"string", direction:"in", letter:"r", name:"Recipient", description:"The identification of the letter recipient", values:[["Example: Hans No. 613","This variable is required."]]}||
