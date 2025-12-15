@@ -5,6 +5,7 @@ Computer Revolution
 @level_computer
 POL is a programming language used by [Mainframe]
 [Computers] to create sets of executable instructions called **Programs**.
+|[wip_notice]|
 # code_compilation0
 code compilation pt. 1
 # code_compilation1

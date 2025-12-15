@@ -1,6 +1,6 @@
 # meta
 Map Functions
-Type Storage Associate
+Strategic Command!
 # map_create
 |[data_operation]{id:"map_create"}|
 # map_set

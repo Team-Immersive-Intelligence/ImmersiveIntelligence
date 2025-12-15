@@ -6,7 +6,6 @@ Data can be transmitted in two ways: [wired] and [wireless].
 In both cases there is no delay between sending and receiving **Data Packets**. This means the entire system is synchronised all the times and __there is no case where a packet might have arrived too late or too early__.
 # wired
 The **Wired** data system relies on **Connectors** - the end points of it, **Relays** - which allow connecting multiple wires to form and extend a [Data Network] and **Data Devices**, which send and/or receive data.
-
 |[scenario]{source:"wired_connection"}|
 # data_cable
 |[crafting]{source:"%SECTION%"}|
@@ -40,9 +39,9 @@ In the [Transmitter] mode, the **Debugger** will transmit a test package when pr
 The [Transceiver] mode combines functions of both.
 # wireless1
 **Wireless** data transfer is an extension over the **Wired** one.
-It uses radio-capable devices, such as the [Radio Station](radio_station), [Radio Backpack](radio_station) and [Radio Explosives](radio_station).  
+It uses radio-capable devices, such as the [Radio Station](radio_station), [Radio Backpack](radio_backpack) and [Radio Explosives](explosives_mines#radio_satchel0).  
 For a **Packet** to be transmitted **wirelessly**, the [transmitter] and [receiver] have to use the same [frequency] and the [receiver] has to be in range of the [transmitter] or a [relay] of its signal.
 # wireless2
 Any radio device of the same frequency will also act as [relays], extending your wireless network.  
 When designing radio networks, keep in mind that every device has a [limited maximum transmission range], which changes depending on [weather].  
-
+Refer to the [Radio Station](radio_station) for detailed information on the operation of wireless networks.
