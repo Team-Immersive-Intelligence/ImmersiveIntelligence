@@ -84,10 +84,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.overlay.GuiOverlayBase.GuiOve
 import pl.pabilo8.immersiveintelligence.client.gui.overlay.GuiOverlayMotorbike;
 import pl.pabilo8.immersiveintelligence.client.gui.overlay.GuiOverlayTripodPeriscope;
 import pl.pabilo8.immersiveintelligence.client.gui.overlay.GuiOverlayZoom;
-import pl.pabilo8.immersiveintelligence.client.gui.overlay.gun.GuiOverlayAssaultRifle;
-import pl.pabilo8.immersiveintelligence.client.gui.overlay.gun.GuiOverlayMachinegun;
-import pl.pabilo8.immersiveintelligence.client.gui.overlay.gun.GuiOverlayRifle;
-import pl.pabilo8.immersiveintelligence.client.gui.overlay.gun.GuiOverlaySubmachinegun;
+import pl.pabilo8.immersiveintelligence.client.gui.overlay.gun.*;
 import pl.pabilo8.immersiveintelligence.client.gui.tooltip.*;
 import pl.pabilo8.immersiveintelligence.client.manual.pages.IIManualPageContributorSkin;
 import pl.pabilo8.immersiveintelligence.client.model.IIModelRegistry;
@@ -159,6 +156,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 		HUDs.put(GuiOverlayLayer.ITEM, new GuiOverlaySubmachinegun());
 		HUDs.put(GuiOverlayLayer.ITEM, new GuiOverlayAssaultRifle());
 		HUDs.put(GuiOverlayLayer.ITEM, new GuiOverlayRifle());
+		HUDs.put(GuiOverlayLayer.ITEM, new GuiOverlayMineDetector());
 		//Entities
 		HUDs.put(GuiOverlayLayer.VEHICLE, new GuiOverlayTripodPeriscope());
 		HUDs.put(GuiOverlayLayer.VEHICLE, new GuiOverlayMotorbike());
@@ -608,12 +606,16 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 
 		//Iterate HUD Layers
 		//Iterate HUDs
+		int width = event.getResolution().getScaledWidth();
+		int height = event.getResolution().getScaledHeight();
+		if(ClientUtils.mc().gameSettings.showSubtitles)
+			height -= 40;
 		for(GuiOverlayLayer key : HUDs.keys())
 			for(GuiOverlayBase hud : HUDs.get(key))
 				if(hud.shouldDraw(player, mouseOver))
 				{
 					hud.bindHUDTexture();
-					hud.draw(player, mouseOver, event.getResolution().getScaledWidth(), event.getResolution().getScaledHeight());
+					hud.draw(player, mouseOver, width, height);
 					break;
 				}
 	}

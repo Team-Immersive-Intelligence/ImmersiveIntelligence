@@ -47,7 +47,7 @@ public abstract class IITileRenderer<T extends TileEntity> extends TileEntitySpe
 			if(model==ACCEPTABLE||model.getSecond() instanceof OBJBakedModel)
 			{
 				nullifyModels();
-				compileModels(model.getFirst(), ((OBJBakedModel)model.getSecond()).getModel());
+				compileModels(model.getFirst(), model==ACCEPTABLE?null: ((OBJBakedModel)model.getSecond()).getModel());
 				unCompiled = false;
 			}
 			else

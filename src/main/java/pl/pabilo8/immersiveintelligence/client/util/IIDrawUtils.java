@@ -46,6 +46,11 @@ public class IIDrawUtils
 	private float offX, offY, rotation;
 	private int listID = -1;
 
+	private IIDrawUtils()
+	{
+
+	}
+
 	//--- Begin Methods ---//
 	private static IIDrawUtils start(BufferBuilder buf, VertexFormat format)
 	{

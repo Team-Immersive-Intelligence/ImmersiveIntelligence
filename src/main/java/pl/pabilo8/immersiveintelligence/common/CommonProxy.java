@@ -721,6 +721,7 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 	public void postInit()
 	{
 		IICompatModule.doModulesPostInit();
+		IIConfigHandler.onConfigUpdate();
 		//Init Hans Weapons
 		HansUtils.init();
 

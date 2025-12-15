@@ -1,9 +1,11 @@
 package pl.pabilo8.immersiveintelligence.common;
 
+import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import blusunrize.immersiveengineering.common.Config;
 import blusunrize.immersiveengineering.common.Config.Mapped;
 import blusunrize.immersiveengineering.common.Config.SubConfig;
 import com.google.common.collect.Maps;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.config.Config.*;
 import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
@@ -11,7 +13,10 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.RadioStation;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.common.compat.IICompatModule;
+import pl.pabilo8.immersiveintelligence.common.item.tools.ItemIIMineDetector;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.world.IIWorldGen;
 
 import java.util.Map;
@@ -34,7 +39,28 @@ public class IIConfigHandler
 		putConfigValues();
 
 		if(ev.getModID().equals(ImmersiveIntelligence.MODID))
+		{
 			ConfigManager.sync(ImmersiveIntelligence.MODID, Type.INSTANCE);
+			onConfigUpdate();
+		}
+	}
+
+	public static void onConfigUpdate()
+	{
+		ItemIIMineDetector.detectableBlocks.clear();
+		for(String s : Tools.mineDetectorWhitelist)
+			if(s.startsWith("oreDict:"))
+				ItemIIMineDetector.detectableBlocks.add(new IngredientStack(s.replace("oreDict:", "")));
+			else
+			{
+				String[] args = s.split(":");
+				ItemStack stack = new ItemStack(EasyNBT.newNBT()
+						.withString("id", args[0]+":"+args[1])
+						.withInt("Count", 1)
+						.conditionally(args.length > 2, nbt -> nbt.withInt("Damage", Integer.parseInt(args[2])))
+						.unwrap());
+				ItemIIMineDetector.detectableBlocks.add(new IngredientStack(stack));
+			}
 	}
 
 	public static void putConfigValues()
@@ -359,6 +385,30 @@ public class IIConfigHandler
 			@Comment({"The energy usage of advanced binoculars (when using Infrared Sight)."})
 			@RequiresMcRestart
 			public static int advancedBinocularsEnergyUsage = 150;
+
+			@Comment({"A list of blocks that the Mine Detector will detect (in addition to mines).",
+					"Use the format 'modid:blockname:meta', e.g. 'minecraft:diamond_ore:0', or oreDict:ore_name for ore dictionary entries.",
+					"Leave empty to disable."})
+			public static String[] mineDetectorWhitelist = new String[]{
+					"immersiveintelligence:tellermine",
+					"immersiveintelligence:tripmine",
+					"minecraft:iron_door",
+					"minecraft:iron_trapdoor",
+					"oreDict:blockIron",
+					"oreDict:blockSheetmetalIron",
+					"oreDict:slabSheetmetalIron",
+					"oreDict:blockSteel",
+					"oreDict:blockSheetmetalSteel",
+					"oreDict:slabSheetmetalSteel",
+					"oreDict:scaffoldingSteel",
+					"immersiveintelligence:metal_device:0",
+					"immersiveintelligence:small_crate:3",
+					"immersiveintelligence:small_crate:4",
+					"immersiveintelligence:small_crate:5"
+			};
+
+			@Comment({"The detection radius (technically a square) of the Mine Detector (in blocks)."})
+			public static int mineDetectorRadius = 4;
 
 			//Durability
 
