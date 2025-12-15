@@ -40,16 +40,12 @@ public class IIManualEntry extends ManualEntry
 	{
 		super(name.contains("/")?name.substring(name.lastIndexOf("/")+1): name, category);
 		this.fullFilePath = name;
-		if(FMLCommonHandler.instance().getSide()==Side.CLIENT && ClientUtils.mc()!=null && ClientUtils.mc().getLanguageManager()!=null)
-			loadTexts(true);
+		loadTexts(true);
 	}
 
 	@SideOnly(Side.CLIENT)
 	public void loadTexts(boolean updateMeta)
 	{
-		// Defensive checks: during early mod loading the client/language manager may not be available
-		if(ClientUtils.mc()==null || ClientUtils.mc().getLanguageManager()==null || ClientUtils.mc().getLanguageManager().getCurrentLanguage()==null)
-			return;
 		Language lang = ClientUtils.mc().getLanguageManager().getCurrentLanguage();
 		boolean nonEnglish = !lang.getLanguageCode().equalsIgnoreCase("en_us");
 
@@ -156,8 +152,7 @@ public class IIManualEntry extends ManualEntry
 
 	public String fetchPage(String text)
 	{
-		if(FMLCommonHandler.instance().getSide()==Side.CLIENT && ClientUtils.mc()!=null && ClientUtils.mc().getLanguageManager()!=null)
-			loadTexts(false);
+		loadTexts(false);
 		return texts.getOrDefault(text, null);
 	}
 
