@@ -30,6 +30,7 @@ The core is produced in the **Projectile Workshop** using various metal nuggets.
 Different rounds calls for different cores - a submachine gun can't fire artillery shells! The different cores can hold different amounts of components.
 Filling with [components](bullet_components.md) is [optional] and may be [repeated multiple times] with the [same or different components].
 # projectile_workshop2
+|[upgrade_display]{upgrade:"immersiveintelligence:core_filler"}|
 The Projectile Workshop can be upgraded to become a [Projectile Filler]. This changes the role to filling [cores] produced by other Projectile Workshops using [Bullet Components](bullet_components.md).
 An amount of components can be specified using the interface or through the [data system](data_main.md). The max amount is determined by the core type.
 # projectile_ws_data

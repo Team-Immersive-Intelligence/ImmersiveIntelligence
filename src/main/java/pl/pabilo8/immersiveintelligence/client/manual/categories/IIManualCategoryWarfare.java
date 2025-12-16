@@ -104,8 +104,13 @@ public class IIManualCategoryWarfare extends IIManualCategory
 				))
 				.addSource("magazine_blueprint", getSourceForItem(BlueprintCraftingRecipe.getTypedBlueprint("bullet_magazines")));
 		addEntry("weaponry/machinegun")
-				.addSource("machinegun", getSourceForItem(new ItemStack(IIContent.itemMachinegun)));
+				.addSource("machinegun", getSourceForItems(new ItemStack(IIContent.itemMachinegun)));
 		addEntry("weaponry/rifle")
+				.addSource("rifles", getSourceForItems(
+						new ItemStack(IIContent.itemRifle),
+						new ItemStack(IIContent.itemRifle)
+				))
+				.addSource("hmrifle", getSourceForItem(new ItemStack(IIContent.itemRifle)))
 				.addSource("rifle", getSourceForItem(new ItemStack(IIContent.itemRifle)));
 		addEntry("weaponry/assault_rifle")
 				.addSource("assaultrifle", getSourceForItem(new ItemStack(IIContent.itemAssaultRifle)));

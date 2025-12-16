@@ -380,7 +380,7 @@ public class IIContent
 	//arithemtic logic machine upgrade
 	public static final Upgrade UPGRADE_MEMORY = new Upgrade("memory");
 	public static final Upgrade UPGRADE_CIRCUIT_RACKS = new Upgrade("circuit_racks");
-
+	//emplacement weapons
 	public static final Upgrade UPGRADE_EMPLACEMENT_WEAPON_MACHINEGUN = new UpgradeEmplacementWeapon<>("machinegun", EmplacementWeaponMachinegun::new);
 	public static final Upgrade UPGRADE_EMPLACEMENT_WEAPON_IROBSERVER = new UpgradeEmplacementWeapon<>("infrared_observer", EmplacementWeaponInfraredObserver::new);
 	public static final Upgrade UPGRADE_EMPLACEMENT_WEAPON_AUTOCANNON = new UpgradeEmplacementWeapon<>("autocannon", EmplacementWeaponAutocannon::new);
@@ -394,21 +394,21 @@ public class IIContent
 	public static final Upgrade UPGRADE_EMPLACEMENT_WEAPON_LIGHT_HOWITZER = new UpgradeEmplacementWeapon<>("light_howitzer", EmplacementWeaponMachinegun::new);
 	public static final Upgrade UPGRADE_EMPLACEMENT_WEAPON_MLRS = new UpgradeEmplacementWeapon<>("mlrs", EmplacementWeaponMachinegun::new);
 	public static final Upgrade UPGRADE_EMPLACEMENT_WEAPON_GUIDED_MISSILE_LAUNCHER = new UpgradeEmplacementWeapon<>("guided_missile_launcher", EmplacementWeaponMachinegun::new);
-
+	//generic emplacement upgrades
 	public static final Upgrade UPGRADE_SOVEREIGNTY = new Upgrade("sovereignty");
 
-	public static final Upgrade UPGRADE_EMPLACEMENT_FALLBACK_GRENADES = new Upgrade("emplacement/grenades");
-	public static final Upgrade UPGRADE_EMPLACEMENT_STURDY_BEARINGS = new Upgrade("emplacement/bearings");
-
+	public static final Upgrade UPGRADE_EMPLACEMENT_FALLBACK_GRENADES = new Upgrade("emplacement/emergency_smoke");
+	public static final Upgrade UPGRADE_EMPLACEMENT_STURDY_BEARINGS = new Upgrade("emplacement/sturdy_bearings");
+	//MG emplacement upgrades
 	public static final Upgrade UPGRADE_EMPLACEMENT_MACHINEGUN_HEAVYBARREL = new Upgrade("emplacement/machinegun/heavy_barrel");
 	public static final Upgrade UPGRADE_EMPLACEMENT_MACHINEGUN_WATERCOOLED = new Upgrade("emplacement/machinegun/water_cooled_barrel");
 	public static final Upgrade UPGRADE_EMPLACEMENT_MACHINEGUN_BUNKER = new Upgrade("emplacement/machinegun/additional_fortifications");
-
+	//flagpole upgrades
 	public static final Upgrade UPGRADE_FLAGPOLE_CAPTURE_DEFIANCE = new Upgrade("flagpole/capture_defiance");
 	public static final Upgrade UPGRADE_FLAGPOLE_TASER_LOCKS = new Upgrade("flagpole/taser_locks");
 	public static final Upgrade UPGRADE_FLAGPOLE_DISTRESS_SIGNAL = new Upgrade("flagpole/distress_signal");
 	public static final Upgrade UPGRADE_FLAGPOLE_UNIT_POST = new Upgrade("flagpole/unit_post");
-
+	//vehicle upgrades
 	public static final Upgrade UPGRADE_VEHICLE_SMALL_STORAGE = new Upgrade("vehicle/small/storage");
 	public static final Upgrade UPGRADE_VEHICLE_SMALL_ADDITIONAL_TANK = new Upgrade("vehicle/small/fluid_tank");
 	public static final Upgrade UPGRADE_VEHICLE_ADDITIONAL_PASSENGER_SEAT = new Upgrade("vehicle/small/passenger_seat");

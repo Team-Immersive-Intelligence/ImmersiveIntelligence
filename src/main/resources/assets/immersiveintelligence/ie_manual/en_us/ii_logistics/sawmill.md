@@ -13,3 +13,8 @@ The machine requires a constant supply of [rotary power](rotary_power.md) to it'
 The **Sawmill** can be used to process various wooden logs into planks, and planks into sticks.
 ||[machine_recipe]{source:"recipe_planks"}||
 ||[machine_recipe]{source:"recipe_sticks"}||
+# upgrades
+|[upgrade_display]{upgrade:"immersiveintelligence:improved_gearbox"}|
+The sawmill can be upgraded with an [Improved Gearbox] to increase its working speed.<br>
+|[upgrade_display]{upgrade:"immersiveintelligence:saw_unregulator"}|
+Remove the [regulator] from the saw blade to increase the amount of sawdust produced, though some planks will be lost in the process.

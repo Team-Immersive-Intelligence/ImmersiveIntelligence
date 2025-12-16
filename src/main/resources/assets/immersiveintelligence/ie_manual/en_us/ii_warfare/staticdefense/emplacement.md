@@ -7,6 +7,7 @@ Locked and Loaded!
 # 1
 An **Emplacement** can defend a vast amount of area depending on what [module](emplacement_weapons) that is installed.
 Emplacements do not have a weapon installed by default. Instead, the weapon is assembled on the emplacement using the [Wrench].
+The base emplacement structure can also recieve common upgrades that apply to all weapon modules. Refer to [Emplacement Upgrades](#upgrades).
 # 1_1
 When interacting with a wrench, you have a selection of modules to install, each requiring their own resources to be built. Upon selecting the weapon, you need to assemble it by interacting with the emplacement using the [Electric Wrench](electric_tools.md#wrench) and have all the items.
 # 2
@@ -22,3 +23,8 @@ Emplacements allow storing up to [4 target filtering tasks]. Each task has [3 ba
 *Sign below to confirm you have read and understood this warning.*<br>
 X
 ------------------------------
+# upgrades0
+|[upgrade_display]{upgrade:"immersiveintelligence:emplacement/emergency_smoke"}|
+When the Emplacement's weapon is heavily damaged, smoke will be discharged to provide cover and reduce the enemy's accuracy.
+|[upgrade_display]{upgrade:"immersiveintelligence:emplacement/sturdy_bearings"}|
+Higher quality bearings increase the maximum weapon rotation speed. However, the emplacement needs a supply of lubricant to benefit from the upgrade.

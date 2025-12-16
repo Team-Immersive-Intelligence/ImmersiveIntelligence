@@ -13,9 +13,9 @@ For packing orders, the machine uses a [Task System](task_system.md). Tasks can 
 The ["Pack"] task is used to load items into the provided container. By default, the packer can take any item (the * symbol) and the maximum possible amount of it.
 This can be changed by selecting a different mode. You can choose between taking in a select number of inventory slots, or number of items. The amount can be specified in the interface, in the input field below.
 # details_3
-The ["Use OreDict"] switch determines whether items with the same Ore Dictionary key will be matched. The ["NBT Sensitive"] switch determines weather the item has to have the same NBT tag as the one provided. This is disabled by default.
+The ["Use OreDict"] switch determines whether items with the same Ore Dictionary key will be matched. The ["NBT Sensitive"] switch determines whether the item has to have the same NBT tag as the one provided. This is disabled by default.
 # details_4
-The ["Unpack"], ["Fill"], ["Unfill"], ["Charge"] and ["Discharge"] tasks work in a similar way as the ["Pack"] task. For fluids, ["Slots"] are tanks and the amount is the fluid amount in mB. For energy, only the amount is taken into consideration.
+The ["Unpack"], ["Fill"], ["Unfill"], ["Charge"] and ["Discharge"] tasks work in a similar way as the ["Pack"] task. For fluids, ["Slots"] are tanks and the amount is the fluid amount in mB. For energy, only the amount is taken into consideration. Refer to [Upgrades](#upgrades) for details on what can be installed.
 # data_1
 |[data_variable]{type:"string", direction:"in", letter:"c", name:"Command", description:"Possible values: add, remove, clear."}|
 |[data_variable]{type:"string", direction:"in", letter:"a", name:"Action", description:"Possible Values: item, fluid, energy."}|
@@ -23,3 +23,15 @@ The ["Unpack"], ["Fill"], ["Unfill"], ["Charge"] and ["Discharge"] tasks work in
 # data_2
 |[data_variable]{type:"string", direction:"in", letter:"m", name:"Mode", description:"Possible values: amount, slot, all_possible. Optional, by default all_possible."}|
 |[data_variable]{type:"integer", direction:"in", letter:"e", name:"Expire After", description:"Optional. After how many cycles should the task end."}|
+# upgrades1
+|[upgrade_display]{upgrade:"immersiveintelligence:packer_fluid"}|
+The [Fluid Loader] transforms the Packer's item storage into fluid storage and changes the loading mechanism to fill fluid containers like barrels. A souped-up [Bottling Machine](bottlingMachine)!
+# upgrades2
+|[upgrade_display]{upgrade:"immersiveintelligence:packer_energy"}|
+The [Energy Loader] converts the Packer's item storage into energy storage. The loading mechanism is replaced with a set of electrical terminals to rapidly charge capacitors or equipment.
+# upgrades3
+|[upgrade_display]{upgrade:"immersiveintelligence:packer_naming"}|
+The [Naming Stamp] adds a label maker to the Packer and allows it to set the name of the packed item. This upgrade can be combined with other upgrades.
+# upgrades4
+|[upgrade_display]{upgrade:"immersiveintelligence:packer_railway"}|
+The [Railway Upgrade] transforms the Packer's loading conveyor into a set of rails. This allows the Packer to fill [storage Minecarts](skycrate_system.md#minecarts). This upgrade can be combined with other upgrades.

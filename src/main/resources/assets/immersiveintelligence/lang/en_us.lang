@@ -1110,65 +1110,66 @@ machineupgrade.immersiveintelligence.improved_gearbox.desc=Replacing the stock g
 machineupgrade.immersiveintelligence.saw_unregulator=Saw Unregulator
 machineupgrade.immersiveintelligence.saw_unregulator.desc=Unregulating the saw leads to higher sawdust output in cost of main output amount.
 
-machineupgrade.immersiveintelligence.emplacement_grenades=Emergency Smoke Dischargers
-machineupgrade.immersiveintelligence.emplacement_grenades.desc=When the Emplacement's weapon is heavily damaged, smoke will be discharged to provide cover.
+machineupgrade.immersiveintelligence.emplacement/emergency_smoke=Emergency Smoke Dischargers
+machineupgrade.immersiveintelligence.emplacement/emergency_smoke.desc=When the Emplacement's weapon is heavily damaged, smoke will be discharged to provide cover.
 
-machineupgrade.immersiveintelligence.emplacement_bearings=Sturdy Bearings
-machineupgrade.immersiveintelligence.emplacement_bearings.desc=Higher quality bearings increase the maximum weapon rotation speed, to work at full capacity lubrication is required
+machineupgrade.immersiveintelligence.emplacement/sturdy_bearings=Sturdy Bearings
+machineupgrade.immersiveintelligence.emplacement/sturdy_bearings.desc=Higher quality bearings increase the maximum weapon rotation speed, to work at full capacity lubrication is required
 
-machineupgrade.immersiveintelligence.emplacement_targetting=Enhanced Targetting Systems
-machineupgrade.immersiveintelligence.emplacement_targetting.desc=Improved fire control systems allow for better target acquisition and tracking, increasing accuracy.
+machineupgrade.immersiveintelligence.emplacement/enhanced_targeting=Enhanced Targeting Systems
+machineupgrade.immersiveintelligence.emplacement/enhanced_targeting.desc=Improved fire control systems allow for better target acquisition and tracking, increasing accuracy.
 
-machineupgrade.immersiveintelligence.infrared_observer=Infrared Observer
-machineupgrade.immersiveintelligence.infrared_observer.desc=The Infrared Observer allows surveillance of distant enemies and sending their coordinates via data cables.
+#Emplacement Weapons
 
-machineupgrade.immersiveintelligence.spotlight_tower=Spotlight Tower
-machineupgrade.immersiveintelligence.spotlight_tower.desc=The Spotlight Tower allows illumination of hostile units, disorienting them and increasing accuracy of allied units.
+machineupgrade.immersiveintelligence.emplacement/machinegun=Machinegun Nest
+machineupgrade.immersiveintelligence.emplacement/machinegun.desc=The Machinegun Nest can provide suppressive automatic fire, allowing crowd control. Due to its construction, it is unable to fight airborne enemies.
+#MG upgrades
+machineupgrade.immersiveintelligence.emplacement/machinegun/heavy_barrel=Heavy Barrel
+machineupgrade.immersiveintelligence.emplacement/machinegun/heavy_barrel.desc=Heavy barrels allow for much faster firing rate and slightly increase the maximum permitted overheat.
 
-machineupgrade.immersiveintelligence.searchlight=Searchlight
-machineupgrade.immersiveintelligence.searchlight.desc=Searchlights work in coordination with Radars, Infrared Observers or Spotlight Towers, disorienting hostile units and increasing accuracy of allied fire.
+machineupgrade.immersiveintelligence.emplacement/machinegun/water_cooled_barrel=Water Cooled Barrel
+machineupgrade.immersiveintelligence.emplacement/machinegun/water_cooled_barrel.desc=A replacement for the stock barrels. When mounted, barrels do not overheat when a coolant is provided.
 
-machineupgrade.immersiveintelligence.cpds=CPDS
-machineupgrade.immersiveintelligence.cpds.desc=The Counter-Projectile Defense System is an advanced anti-air weapon, capable of destroying incoming artillery shells in mid-air.
+machineupgrade.immersiveintelligence.emplacement/machinegun/additional_fortifications=Additional Fortifications
+machineupgrade.immersiveintelligence.emplacement/machinegun/additional_fortifications.desc=Placing additional sandbags around the machinegun nest gives it additional armor and increases its durability.
 
-machineupgrade.immersiveintelligence.autocannon=Autocannon
-machineupgrade.immersiveintelligence.autocannon.desc=Four 3bCal Automatic Cannons provide lots of firepower making the weapon a universal defense against air and ground targets.
+machineupgrade.immersiveintelligence.emplacement/heavy_chemthrower=Heavy Chemthrower
+machineupgrade.immersiveintelligence.emplacement/heavy_chemthrower.desc=A heavier version of the well known Chemthrower, higher pressure allows for attacking enemies at ranges 4 times longer than the portable one.
 
-machineupgrade.immersiveintelligence.heavy_chemthrower=Heavy Chemthrower
-machineupgrade.immersiveintelligence.heavy_chemthrower.desc=A heavier version of the well known Chemthrower, higher pressure allows for attacking enemies at ranges 4 times longer than the portable one.
+machineupgrade.immersiveintelligence.emplacement/infrared_observer=Infrared Observer
+machineupgrade.immersiveintelligence.emplacement/infrared_observer.desc=The Infrared Observer allows surveillance of distant enemies and sending their coordinates via data cables.
 
-machineupgrade.immersiveintelligence.heavy_railgun=Heavy Railgun
-machineupgrade.immersiveintelligence.heavy_railgun.desc=Heavy Railgun provides direct fire support. It can launch metal rods or grenades with high velocity, allowing piercing of enemies and materiel.
+machineupgrade.immersiveintelligence.emplacement/spotlight_tower=Spotlight Tower
+machineupgrade.immersiveintelligence.emplacement/spotlight_tower.desc=The Spotlight Tower allows illumination of hostile units, disorienting them and increasing accuracy of allied units.
 
-machineupgrade.immersiveintelligence.machinegun=Machinegun Nest
-machineupgrade.immersiveintelligence.machinegun.desc=The Machinegun Nest can provide suppressive automatic fire, allowing crowd control. Due to its construction, it is unable to fight airborne enemies.
+machineupgrade.immersiveintelligence.emplacement/searchlight=Searchlight
+machineupgrade.immersiveintelligence.emplacement/searchlight.desc=Searchlights work in coordination with Radars, Infrared Observers or Spotlight Towers, disorienting hostile units and increasing accuracy of allied fire.
 
-machineupgrade.immersiveintelligence.mg_heavy_barrel=Heavy Barrel
-machineupgrade.immersiveintelligence.mg_heavy_barrel.desc=Heavy barrels allow for much faster firing rate and slightly increase the maximum permitted overheat.
+machineupgrade.immersiveintelligence.emplacement/cpds=CPDS
+machineupgrade.immersiveintelligence.emplacement/cpds.desc=The Counter-Projectile Defense System is an advanced anti-air weapon, capable of destroying incoming artillery shells in mid-air.
 
-machineupgrade.immersiveintelligence.mg_watercooled=Water Cooled Barrel
-machineupgrade.immersiveintelligence.mg_watercooled.desc=A replacement for the stock barrels. When mounted, barrels do not overheat when a coolant is provided.
+machineupgrade.immersiveintelligence.emplacement/autocannon=Autocannon
+machineupgrade.immersiveintelligence.emplacement/autocannon.desc=Four 3bCal Automatic Cannons provide lots of firepower making the weapon a universal defense against air and ground targets.
 
-machineupgrade.immersiveintelligence.mg_bunker=Additional Fortifications
-machineupgrade.immersiveintelligence.mg_bunker.desc=Placing additional sandbags around the machinegun nest gives it additional armor and increases its durability.
+machineupgrade.immersiveintelligence.emplacement/heavy_railgun=Heavy Railgun
+machineupgrade.immersiveintelligence.emplacement/heavy_railgun.desc=Heavy Railgun provides direct fire support. It can launch metal rods or grenades with high velocity, allowing piercing of enemies and materiel.
 
-machineupgrade.immersiveintelligence.mortar=Mortar
-machineupgrade.immersiveintelligence.mortar.desc=Mortar provides indirect fire support on close range, the vertical firing angle and high shell caliber allow it to pierce trough roofs and decimate enemies from above
+machineupgrade.immersiveintelligence.emplacement/mortar=Mortar
+machineupgrade.immersiveintelligence.emplacement/mortar.desc=Mortar provides indirect fire support on close range, the vertical firing angle and high shell caliber allow it to pierce trough roofs and decimate enemies from above
 
-machineupgrade.immersiveintelligence.light_howitzer=Light Howitzer
-machineupgrade.immersiveintelligence.light_howitzer.desc=Light Howitzer provides indirect fire support on medium range, its mobility allows for quick and precise barrage of enemy positions
+machineupgrade.immersiveintelligence.emplacement/light_howitzer=Light Howitzer
+machineupgrade.immersiveintelligence.emplacement/light_howitzer.desc=Light Howitzer provides indirect fire support on medium range, its mobility allows for quick and precise barrage of enemy positions
 
-machineupgrade.immersiveintelligence.mlrs=Rocket Launcher
-machineupgrade.immersiveintelligence.mlrs.desc=The Multiple Launch Rocket System provides devastating area bombardment using up to 6 unguided rockets, excellent for attacking fortified positions.
+machineupgrade.immersiveintelligence.emplacement/mlrs=Rocket Launcher
+machineupgrade.immersiveintelligence.emplacement/mlrs.desc=The Multiple Launch Rocket System provides devastating area bombardment using up to 6 unguided rockets, excellent for attacking fortified positions.
 
-machineupgrade.immersiveintelligence.guided_missile_launcher=Wire-Guided Missile Launcher
-machineupgrade.immersiveintelligence.guided_missile_launcher.desc=The Wire-Guided Missile Launcher provides long-range precision strikes, especially effective against moving targets.
+machineupgrade.immersiveintelligence.emplacement/guided_missile_launcher=Wire-Guided Missile Launcher
+machineupgrade.immersiveintelligence.emplacement/guided_missile_launcher.desc=The Wire-Guided Missile Launcher provides long-range precision strikes, especially effective against moving targets.
 
+machineupgrade.immersiveintelligence.emplacement/tesla=Tesla Tower
+machineupgrade.immersiveintelligence.emplacement/tesla.desc=The Tesla Tower uses high voltage to decimate enemies in its radius, it's especially effective against electronics
 
-
-machineupgrade.immersiveintelligence.tesla=Tesla Tower
-machineupgrade.immersiveintelligence.tesla.desc=The Tesla Tower uses high voltage to decimate enemies in its radius, it's especially effective against electronics
-
+#other upgrades
 machineupgrade.immersiveintelligence.core_filler=Projectile Filler
 machineupgrade.immersiveintelligence.core_filler.desc=Equipping the Projectile Workshop with an inserter allows precise filling of the projectiles with desired components.
 
@@ -2952,7 +2953,7 @@ ie.manual.entry.bullet_core.core_copper.lore=Every Penny Counts
 ie.manual.entry.bullet_core.core_copper.desc=Copper is a cheap material for bullets, its penetration ability is worse than one of brass, but its component effect.
 
 ie.manual.entry.bullet_core.core_lead=Lead Core
-ie.manual.entry.bullet_core.core_lead.lore=Good, bad and ugly
+ie.manual.entry.bullet_core.core_lead.lore=Good, bad, and ugly
 ie.manual.entry.bullet_core.core_lead.desc=Lead is a good material for cheap bullets with high damage and mediocre penetrating power, however due to its high density limits the maximum range of projectiles made of it.
 
 ie.manual.entry.bullet_core.core_iron=Iron Core
@@ -2970,6 +2971,10 @@ ie.manual.entry.bullet_core.core_tungsten.desc=Tungsten is a better at penetrati
 ie.manual.entry.bullet_core.core_uranium=Uranium Core
 ie.manual.entry.bullet_core.core_uranium.lore=What do you mean, ammo is depleted?
 ie.manual.entry.bullet_core.core_uranium.desc=Low weight and hardness make uranium a great penetrator without loosing capability to carry explosive materials. Great, but expensive choice.
+
+ie.manual.entry.bullet_core.core_rubber=Rubber Core
+ie.manual.entry.bullet_core.core_rubber.lore=Absolutely stunning!
+ie.manual.entry.bullet_core.core_rubber.desc=Rubber cores are less lethal than their metal alternatives, but pack increased knockback and can stun targets.
 
 ie.manual.entry.bullet_components.name=Bullet Components
 ie.manual.entry.bullet_components.subtext=Load APCRHEFSPTSD B-Capped!

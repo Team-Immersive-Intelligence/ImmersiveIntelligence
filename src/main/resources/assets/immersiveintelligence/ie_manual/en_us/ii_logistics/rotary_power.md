@@ -20,13 +20,13 @@ The [wheel] is used to transfer mechanical (rotary) power between devices. After
 The [motor belts] are the main transmission element of every rotary power network. They differ with the amount of torque and speed they can transfer. If the torque is too high for the belt, it will detach and fall onto the ground.
 # belt_materials1
 |[item_display]{source:"belt_cloth"}|
-**Cloth belts** are fabricated from tough fabric and leather. They have the lowest torque tolerance and shortest length, but are [cheap] and fairly efficient at transferring torque.
+<br>**Cloth belts** are fabricated from tough fabric and leather. They have the lowest torque tolerance and shortest length, but are [cheap] and fairly efficient at transferring torque.
 # belt_materials2
 |[item_display]{source:"belt_steel"}|
-**Steel tracks** are fabricated from steel plates. They have the [highest torque tolerance] and can be twice the length of cloth belts, but lose a lot of torque compared to other types.
+<br>**Steel tracks** are fabricated from steel plates. They have the [highest torque tolerance] and can be twice the length of cloth belts, but lose a lot of torque compared to other types.
 # belt_materials3
 |[item_display]{source:"belt_rubber"}|
-**Rubber belts** are fabricated from [vulcanized](vulcanizer.md) rubber. They have a fair torque tolerance and can be twice the length of cloth belts, and are the most efficient at transferring torque. However, the [industrial requirements](vulcanizer.md) for fabrication are much more than other types.
+<br>**Rubber belts** are fabricated from [vulcanized](vulcanizer.md) rubber. They have a fair torque tolerance and can be twice the length of cloth belts, and are the most efficient at transferring torque. However, the [industrial requirements](vulcanizer.md) for fabrication are much more than other types.
 # gears
 |[item_display]{source:"gears"}|
 Gears can be used to change the ratio for Torque and Speed for [Gearboxes](rotary_power.md#gearboxes).

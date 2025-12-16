@@ -6,6 +6,7 @@ Three Meters and Growing!
 The chain fence can serve as a stylish, industrial looking barrier between factory zones. They offer low amounts of protection against a full scale invasion, but are enough to deter unwanted guests from your base. Available in several flavors!
 # multiblock_gates
 If standard size fence gates are too small for your needs, the **Engineering Department** offers large-scale fencing deployments fit for any industrial or military installation.<br>
+# upgrades
 Fence gates can be upgraded to add [razor wire] on the top, and/or to offer [redstone wire](redstoneWires) connections, allowing remote control.
 |[upgrade_display]{upgrade:"immersiveintelligence:razor_wire"}|
 |[upgrade_display]{upgrade:"immersiveintelligence:rs_activation"}|

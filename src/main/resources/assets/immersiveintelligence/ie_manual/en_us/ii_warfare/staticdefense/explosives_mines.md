@@ -20,7 +20,8 @@ Explosives can also be detonated using [redstone]. Similar to other [redstone co
 
 Keep in mind landmines do not differentiate between their targets. **It is very important to keep a track of your own minefields** and use plans instead of placing them randomly.
 # landmine0
-**Landmines**<br>
+**Landmines**
+|[item_display]{source:""}|
 Classic, reliable and cheap to produce: this type of landmine is the most widely used one. The way it works is very straightforward:
 it explodes after an [enemy steps onto it], causing serious damage. However, dropped items and lightweight critters like chickens will not cause a detonation.
 # landmine1
@@ -29,11 +30,13 @@ A prominent feature of the landmine is the ability to dig it into any soft block
 In order to dig the landmine into the ground, use a [shovel] on it. Although any shovel would suffice, the [trench shovel](trench_shovel.md) does that job much faster.
 Additionally, you can place [grass] on top of the landmine to [fully conceal it].
 # tripmine
-**Tripmine**<br>
+**Tripmine**
+|[item_display]{source:""}|
 Sometimes called the [jumping landmine], the [Tripmine] is an explosive device, activated not by weight pressure, but by pulling the wire on the top.
 After being triggered, the mine will jump out of its casing and explode. In order to be set up, the mine requires linking with another mine or a [tripwire connector].
 # naval_mine0
-**Naval Mine**<br>
+**Naval Mine**
+|[item_display]{source:""}|
 Naval Mines are mines deployed in water, which prevent boats and water creatures from reaching an area, effectively killing them on contact.
 Naval Mines carry a higher amount of components inside, meaning the explosion is greater than one of a landmine and deadly in most cases.
 # naval_mine1

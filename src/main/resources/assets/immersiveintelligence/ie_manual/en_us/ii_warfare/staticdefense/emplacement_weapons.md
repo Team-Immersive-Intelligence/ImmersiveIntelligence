@@ -8,12 +8,13 @@ Several weapons with numerous strengths and weaknesses can be installed to creat
 **Machinegun**
 |[upgrade_display]{upgrade:"immersiveintelligence:emplacement/machinegun"}|  
 This weapon is the most basic and *cheapest* of all available for the Emplacement. It is a reliable choice for dealing with soft ground targets or light vehicles, when using [armor-piercing long bullets] for ammunition.
+# mg00
+Take note, this weapon does not use [magazines](magazines.md). [Loose bullets have to be provided through the emplacement input port]. Due to its limited pitch, the MG Emplacement is a poor choice for firing at air targets.
 # mg1
-The **Machinegun** Emplacement comes in 3 variants: [Default], [Heavy Barreled], and [Water-Cooled], which are identical in function to those present in the [infantry version](machinegun.md).
+The **Machinegun** Emplacement comes in 3 variants: [Default], [Heavy Barreled], and [Water-Cooled], which are identical in function to those present in the [infantry version](machinegun.md).<br>
 |[upgrade_display]{upgrade:"immersiveintelligence:emplacement/machinegun/heavy_barrel"}|
 |[upgrade_display]{upgrade:"immersiveintelligence:emplacement/machinegun/water_cooled_barrel"}|
-Take note, this weapon does not use [magazines](magazines.md). [Loose bullets have to be provided through the emplacement input port]. Due to its limited pitch, the MG Emplacement is a poor choice for firing at air targets.
-#mg2
+# mg2
 The **Machinegun** Emplacement can also be [fortified] to increase survivability in the field.
 |[upgrade_display]{upgrade:"immersiveintelligence:emplacement/machinegun/additional_fortifications"}|
 # chem0
@@ -51,6 +52,14 @@ The only drawback it comes with is its enormous maintenance cost, due to its hig
 This Emplacement is the bigger and more refined variant of the [Tesla Coil](teslaCoil) and deals [higher damage in expanded range]. The weapon is a good choice against [soft targets], who happened to come too close. Thanks to its advanced control systems, the weapon can differentiate between friend and foe.
 # tesla1
 Due to being energy-powered, [it does not require ammunition] - only a constant supply of electricity. Its drawbacks are a low range of attack and high energy consumption. It is most effective in waterlogged areas, as the wet environment will prevent use of the [anti-static mesh](light_engineer_armor#10) that completely negates it.
+# mortar
+**Mortar**
+|[upgrade_display]{upgrade:"immersiveintelligence:emplacement/mortar"}|
+A beefed-up [Field Mortar](mortar.md), the [Mortar] emplacement provides powerful artillery coverage, and is especially effective at piercing through roofs.
+# light_howitzer
+**Light Howitzer**
+|[upgrade_display]{upgrade:"immersiveintelligence:emplacement/light_howitzer"}|
+A scaled-down version of the [Artillery Howitzer](artillery_howitzer.md), the [Light Howitzer] provides medium-range support and its mobility allows for quick and precise barrage of enemy positions.
 # ir_observer0
 **Infrared Observer**
 |[upgrade_display]{upgrade:"immersiveintelligence:emplacement/infrared_observer"}|
@@ -60,3 +69,11 @@ Using an [Observer] can dramatically extend the operational range of the other E
 # ir_observer2
 It is worth noting the [Observer] can also detect [Flares](bullet_components) and send their coordinates, which can be used for directly guided precise artillery bombardment.
 [Observers] have a limited field of view of [180 degrees], with no ability to turn around once set up. This means [one Observer] can only cover [one direction]. Observers can turn when a proper data packet is sent to it, but take note this requires disassembly and hiding into the emplacement.
+# spotlight0
+**Spotlight Tower**
+|[upgrade_display]{upgrade:"immersiveintelligence:emplacement/spotlight_tower"}|
+A rustic emplacement, the [Spotlight Tower] provides a covered vantage point with a built-in spotlight, similar to the Floodlight which can be used to track enemies in darkness.
+# searchlight0
+**Searchlight**
+|[upgrade_display]{upgrade:"immersiveintelligence:emplacement/searchlight"}|
+Similar to the Spotlight Tower, the [Searchlight] removes the vantage point and permits a larger light installation for greater coverage, as well as increasing accuracy of allied fire. Works best when connected to a [Radar](radar.md).
