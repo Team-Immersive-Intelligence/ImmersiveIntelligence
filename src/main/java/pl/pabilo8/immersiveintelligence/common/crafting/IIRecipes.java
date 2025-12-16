@@ -742,7 +742,7 @@ public class IIRecipes
 				},
 				32000,
 				1.2f
-		);
+		).setName("precision_rifle");
 	}
 
 	public static void addMiscIERecipes()
