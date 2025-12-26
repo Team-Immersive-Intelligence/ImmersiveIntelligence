@@ -5,8 +5,6 @@ import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.GlStateManager.DestFactor;
-import net.minecraft.client.renderer.GlStateManager.SourceFactor;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.item.ItemStack;
@@ -183,6 +181,7 @@ public class IIManualMachineRecipe extends IIManualObject
 		int y = component.getY();
 
 		GlStateManager.pushMatrix();
+		GlStateManager.enableBlend();
 		GlStateManager.color(1f, 1f, 1f);
 
 		switch(component.getType())
@@ -200,16 +199,7 @@ public class IIManualMachineRecipe extends IIManualObject
 				drawFluidTank(mc, x, y, component);
 				break;
 			case MULTIBLOCK_MODEL:
-			{
-				GlStateManager.pushMatrix();
-				GlStateManager.color(1f, 1f, 1f, 1f);
-				GlStateManager.translate(x+component.getWidth()/2f, y+component.getHeight()/2f, 0);
-
-				//TODO: 08.12.2025 multiblock rendering
-
-				GlStateManager.popMatrix();
-			}
-			break;
+				break;
 			default:
 				break;
 		}
@@ -225,9 +215,14 @@ public class IIManualMachineRecipe extends IIManualObject
 
 		//Draw slot background
 		GlStateManager.enableBlend();
-		GlStateManager.blendFunc(SourceFactor.DST_COLOR, DestFactor.SRC_COLOR);
+		/*GlStateManager.blendFunc(SourceFactor.DST_COLOR, DestFactor.SRC_COLOR);
 		ClientUtils.drawSlot(x+1, y+1, width, height, 128);
-		GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
+		GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);*/
+
+		IIDrawUtils.startTexturedColored()
+				.drawConnectedTexColorRect(x-1, y-1, width+2, height+2, IIColor.WHITE, DecoTextures.RES_TEXTURES_DECO_MANUAL_SLOT,
+						32, 32, 8, 8)
+				.finish();
 
 		//If this is a labeled slot (with frame subtype)
 		if(subtype.contains("frame"))
@@ -263,7 +258,7 @@ public class IIManualMachineRecipe extends IIManualObject
 		subtype = subtype.replace("frame", "").replace("_", "");
 
 		ClientUtils.bindAtlas();
-		TextureAtlasSprite label = ClientUtils.getSprite(DecoTextures.RES_TEXTURES_DECO_IE_SLOT_MARKER);
+		TextureAtlasSprite label = ClientUtils.getSprite(DecoTextures.RES_TEXTURES_DECO_MANUAL_SLOT_MARKER);
 
 		int labelI = getLabelIndex(subtype, component.getIoType());
 
@@ -383,9 +378,7 @@ public class IIManualMachineRecipe extends IIManualObject
 
 		//Draw tank frame
 		ClientUtils.bindAtlas();
-		IIDrawUtils draw = IIDrawUtils.startTexturedColored()
-				.drawConnectedTexColorRect(x-1, y-1, width+2, height+2, IIColor.WHITE,
-						DecoTextures.GUI_BG_DARK_TANK, 64, 64, 8, 8);
+		IIDrawUtils draw = IIDrawUtils.startTexturedColored();
 
 		//Draw dust fill if data is available
 		Object data = component.getData();
@@ -396,7 +389,7 @@ public class IIManualMachineRecipe extends IIManualObject
 					DecoTextures.RES_TEXTURES_DECO_COMPONENT_TANK_DUST, 16);
 		}
 		draw.drawConnectedTexColorRect(x-1, y-1, width+2, height+2, IIColor.WHITE,
-				DecoTextures.RES_TEXTURES_DECO_COMPONENT_TANK, 64, 64, 8, 8).finish();
+				DecoTextures.RES_TEXTURES_DECO_COMPONENT_TANK_MANUAL, 32, 32, 8, 8).finish();
 	}
 
 	private void drawFluidTank(Minecraft mc, int x, int y, LayoutComponent component)
@@ -406,9 +399,7 @@ public class IIManualMachineRecipe extends IIManualObject
 
 		//Draw tank frame
 		ClientUtils.bindAtlas();
-		IIDrawUtils draw = IIDrawUtils.startTexturedColored()
-				.drawConnectedTexColorRect(x-1, y-1, width+2, height+2, IIColor.WHITE,
-						DecoTextures.GUI_BG_DARK_TANK, 64, 64, 8, 8);
+		IIDrawUtils draw = IIDrawUtils.startTexturedColored();
 
 		Object data = component.getData();
 		if(data instanceof FluidStack)
@@ -419,7 +410,7 @@ public class IIManualMachineRecipe extends IIManualObject
 					IIColor.fromPackedRGB(fluid.getColor(fs)), fluid.getStill(fs), 16);
 		}
 		draw.drawConnectedTexColorRect(x-1, y-1, width+2, height+2, IIColor.WHITE,
-						DecoTextures.RES_TEXTURES_DECO_COMPONENT_TANK, 64, 64, 8, 8)
+						DecoTextures.RES_TEXTURES_DECO_COMPONENT_TANK_MANUAL, 32, 32, 8, 8)
 				.finish();
 	}
 

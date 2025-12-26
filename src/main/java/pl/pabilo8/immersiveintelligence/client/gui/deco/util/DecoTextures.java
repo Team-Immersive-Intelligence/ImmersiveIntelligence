@@ -38,6 +38,7 @@ public class DecoTextures
 	public static final ResLoc GUI_FRAME_STEEL_THIN = ResLoc.of(RES_TEXTURES_DECO_FRAME, "steel_thin");
 	public static final ResLoc GUI_FRAME_STEEL = ResLoc.of(RES_TEXTURES_DECO_FRAME, "steel");
 	public static final ResLoc GUI_FRAME_WOODEN_THIN = ResLoc.of(RES_TEXTURES_DECO_FRAME, "wooden_thin");
+	public static final ResLoc GUI_FRAME_MANUAL = ResLoc.of(RES_TEXTURES_DECO_FRAME, "manual");
 
 	//--- Templates ---//
 	public static final ResLoc RES_TEXTURES_DECO_TEMPLATE_ROUND = ResLoc.of(RES_TEXTURES_DECO, "template/round");
@@ -52,6 +53,8 @@ public class DecoTextures
 	public static final ResLoc RES_TEXTURES_DECO_IE_SLOT_MARKER = ResLoc.of(RES_TEXTURES_DECO, "slot/steel_marker");
 	public static final ResLoc RES_TEXTURES_DECO_IE_BRASS_SLOT = ResLoc.of(RES_TEXTURES_DECO, "slot/brass");
 	public static final ResLoc RES_TEXTURES_DECO_IE_BRASS_SLOT_MARKER = ResLoc.of(RES_TEXTURES_DECO, "slot/brass_marker");
+	public static final ResLoc RES_TEXTURES_DECO_MANUAL_SLOT = ResLoc.of(RES_TEXTURES_DECO, "slot/manual");
+	public static final ResLoc RES_TEXTURES_DECO_MANUAL_SLOT_MARKER = ResLoc.of(RES_TEXTURES_DECO, "slot/manual_marker");
 
 	//--- Label Backgrounds ---//
 	public static final ResLoc GUI_LABEL_WOODEN = ResLoc.of(RES_TEXTURES_DECO, "label/label_wooden");
@@ -81,6 +84,7 @@ public class DecoTextures
 	public static final ResLoc RES_TEXTURES_DECO_COMPONENT_TANK = ResLoc.of(RES_TEXTURES_DECO, "component/tank");
 	public static final ResLoc RES_TEXTURES_DECO_COMPONENT_TANK_MARKER = ResLoc.of(RES_TEXTURES_DECO, "component/tank_marker");
 	public static final ResLoc RES_TEXTURES_DECO_COMPONENT_TANK_DUST = ResLoc.of(RES_TEXTURES_DECO, "component/dust");
+	public static final ResLoc RES_TEXTURES_DECO_COMPONENT_TANK_MANUAL = ResLoc.of(RES_TEXTURES_DECO, "component/tank_manual");
 	public static final ResLoc RES_TEXTURES_DECO_COMPONENT_COLOR = ResLoc.of(RES_TEXTURES_DECO, "component/color");
 
 	//--- Standard Deco Tab Icons ---//
