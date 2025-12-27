@@ -10,15 +10,15 @@
     }
   },
   "variants": {
-    "inventory,type=chemical_painter": [
+    "inventory,type=coagulator": [
       {
-        "model": "immersiveintelligence:multiblock/chemical_painter/chemical_painter_inv.obj",
+        "model": "immersiveintelligence:multiblock/coagulator/coagulator_inv.obj",
         "transform": {
-          "scale": 0.165,
+          "scale": 0.135,
           "translation": [
             -0.5,
-            -0.125,
-            -0.25
+            -0.25,
+            0
           ],
           "rotation": [
             {
@@ -32,7 +32,7 @@
       }
     ],
     "type": {
-      "chemical_painter": {}
+      "coagulator": {}
     },
     "facing": {
       "north": {
@@ -66,10 +66,10 @@
     },
     "boolean0": {
       "false": {
-        "model": "immersiveintelligence:multiblock/chemical_painter/chemical_painter_base.obj"
+        "model": "immersiveintelligence:multiblock/coagulator/coagulator_base.obj"
       },
       "true": {
-        "model": "immersiveintelligence:multiblock/chemical_painter/chemical_painter_flipped.obj"
+        "model": "immersiveintelligence:multiblock/coagulator/coagulator_flipped.obj"
       }
     },
     "boolean1": {
@@ -85,7 +85,7 @@
     "_1dynamicrender": {
       "false": {},
       "true": {
-        "model": "immersiveintelligence:multiblock/chemical_painter/chemical_painter.obj.ie"
+        "model": "immersiveintelligence:multiblock/coagulator/coagulator.obj.ie"
       }
     }
   }

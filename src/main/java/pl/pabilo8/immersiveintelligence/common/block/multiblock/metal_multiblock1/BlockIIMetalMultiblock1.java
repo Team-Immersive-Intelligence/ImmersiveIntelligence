@@ -34,8 +34,10 @@ public class BlockIIMetalMultiblock1 extends BlockIIMultiblock<MetalMultiblocks1
 		setHardness(3.0F);
 		setResistance(15.0F);
 
-		addToTESRMap(MetalMultiblocks1.FUEL_STATION, MetalMultiblocks1.VEHICLE_WORKSHOP, MetalMultiblocks1.VULCANIZER, MetalMultiblocks1.COAGULATOR);
+		addToTESRMap(MetalMultiblocks1.FUEL_STATION, MetalMultiblocks1.VEHICLE_WORKSHOP, MetalMultiblocks1.VULCANIZER);
 
+		setSubBlockLayer(MetalMultiblocks1.COAGULATOR, BlockRenderLayer.CUTOUT);
+		setSubBlockLayer(MetalMultiblocks1.FILLER, BlockRenderLayer.CUTOUT);
 		setSubBlockLayer(MetalMultiblocks1.RADAR, BlockRenderLayer.CUTOUT);
 		setSubBlockLayer(MetalMultiblocks1.FLAGPOLE, BlockRenderLayer.CUTOUT);
 		setSubBlockLayer(MetalMultiblocks1.EMPLACEMENT, BlockRenderLayer.CUTOUT);
@@ -50,7 +52,6 @@ public class BlockIIMetalMultiblock1 extends BlockIIMultiblock<MetalMultiblocks1
 	{
 		switch(state.getValue(property))
 		{
-			case COAGULATOR:
 			case FUEL_STATION:
 			case VEHICLE_WORKSHOP:
 			case STRATEGIC_COMMAND_TABLE:
@@ -71,6 +72,7 @@ public class BlockIIMetalMultiblock1 extends BlockIIMultiblock<MetalMultiblocks1
 		@EnumMultiblockProvider(multiblock = MultiblockFiller.class, tile = TileEntityFiller.class)
 		FILLER,
 
+		@IIBlockProperties(needsCustomState = true)
 		@EnumMultiblockProvider(multiblock = MultiblockCoagulator.class, tile = TileEntityCoagulator.class)
 		COAGULATOR,
 
@@ -85,8 +87,8 @@ public class BlockIIMetalMultiblock1 extends BlockIIMultiblock<MetalMultiblocks1
 		@EnumMultiblockProvider(multiblock = MultiblockFuelStation.class, tile = TileEntityFuelStation.class)
 		FUEL_STATION,
 
-		@EnumMultiblockProvider(multiblock = MultiblockVehicleWorkshop.class, tile = TileEntityVehicleWorkshop.class)
 		@IIBlockProperties(hidden = TernaryValue.TRUE)
+		@EnumMultiblockProvider(multiblock = MultiblockVehicleWorkshop.class, tile = TileEntityVehicleWorkshop.class)
 		VEHICLE_WORKSHOP,
 		@IIBlockProperties(needsCustomState = true)
 		@EnumMultiblockProvider(multiblock = MultiblockFlagpole.class, tile = TileEntityFlagpole.class)

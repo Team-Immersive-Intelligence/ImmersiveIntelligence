@@ -2,8 +2,14 @@ package pl.pabilo8.immersiveintelligence.common.util;
 
 import net.minecraft.util.text.TextFormatting;
 
+import java.util.Arrays;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
+
 /**
  * @author GabrielV (gabriel@iiteam.net)
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @ii-approved 0.3.1
  * @since 28.07.2024
  */
 public class IIStringUtil
@@ -34,4 +40,23 @@ public class IIStringUtil
 		return result.toString();
 	}
 
+	public static Integer[] parseNumberListString(String listString)
+	{
+		//Comma separated values
+		return Arrays.stream(listString.replace(" ", "").split(","))
+				.map(String::trim)
+				.filter(s -> !s.isEmpty())
+				.flatMap(s -> {
+					String[] subSplit = s.split(":");
+					if(subSplit.length==2)
+					{
+						int start = Integer.parseInt(subSplit[0]);
+						int end = Integer.parseInt(subSplit[1]);
+						return IntStream.rangeClosed(Math.min(start, end), Math.max(start, end)).boxed();
+					}
+					else
+						return Stream.of(Integer.parseInt(subSplit[0]));
+				})
+				.toArray(Integer[]::new);
+	}
 }

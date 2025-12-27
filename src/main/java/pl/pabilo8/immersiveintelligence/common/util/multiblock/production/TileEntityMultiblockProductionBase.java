@@ -68,6 +68,8 @@ public abstract class TileEntityMultiblockProductionBase<T extends TileEntityMul
 
 	public void attemptStackOutput(IItemHandler itemHandler, EnumFacing facing, int... outputPos)
 	{
+		if(facing==null)
+			facing = this.facing;
 		for(int p : outputPos)
 		{
 			BlockPos pos = getBlockPosForPos(p).offset(facing.getOpposite());

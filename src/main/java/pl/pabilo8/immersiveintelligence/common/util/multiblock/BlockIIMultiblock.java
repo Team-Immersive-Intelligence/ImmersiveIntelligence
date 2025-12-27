@@ -60,6 +60,7 @@ public abstract class BlockIIMultiblock<E extends Enum<E> & IITileMultiblockEnum
 		setFullCube(false);
 		setBlockLayer(BlockRenderLayer.CUTOUT_MIPPED, BlockRenderLayer.SOLID);
 		setToolTypes(IIReference.TOOL_HAMMER);
+		Arrays.fill(description, IIReference.DESCRIPTION_KEY+"multiblock_item");
 	}
 
 	//--- Other Methods ---//

@@ -1,15 +1,11 @@
 package pl.pabilo8.immersiveintelligence.common.gui;
 
-import blusunrize.immersiveengineering.common.gui.ContainerIEBase;
-import blusunrize.immersiveengineering.common.gui.IESlot;
+import blusunrize.immersiveengineering.api.IEEnums.SideConfig;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemStack;
-import pl.pabilo8.immersiveintelligence.api.crafting.PrintingRecipe;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockCoagulator;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityCoagulator;
 import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIBase;
-
-import javax.annotation.Nonnull;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -19,34 +15,22 @@ import javax.annotation.Nonnull;
  */
 public class ContainerCoagulator extends ContainerIIBase<TileEntityCoagulator>
 {
-
-	public Slot slotOutput;
-	public Slot slotBucketIn, slotBucketOut;
-;
-
-	//no Input slot, liquid latex is the crafting recipe input
+	public Slot[] slotBucketIn, slotBucketOut;
 
 	public ContainerCoagulator(EntityPlayer player, TileEntityCoagulator tile)
 	{
 		super(player, tile);
 		{
-
-			//Recipe item input (empty pages) slot
-			this.slotOutput = addSlotToContainer(new Slot(this.inv, 0, 13+80+20-20, 39-8)
-			{
-				@Override
-				public boolean isItemValid(@Nonnull ItemStack stack)
-				{
-					return PrintingRecipe.streamRecipes(PrintingRecipe.class)
-							.anyMatch(recipe -> recipe.getInput().matchesItemStackIgnoringSize(stack));
-				}
-			});
-
 			//Fluid Container Slots
-			this.slotBucketIn = addSlotToContainer(new IESlot.FluidContainer(this, this.inv, 2, 147-20-40+3-20, 21-8, 0));
-			this.slotBucketOut = addSlotToContainer(new IESlot.FluidContainer(this, this.inv, 3, 147-20-40+3-20, 57-8, 0));
-
-			addPlayerInventory(player.inventory, 8, 86);
+			this.slotBucketIn = new Slot[]{
+					addSlot(176-32-12-64-16, 21-8, MultiblockCoagulator.SLOT_INPUT1, getFluidContainerSlot(SideConfig.INPUT)),
+					addSlot(176-32-12, 21-8, MultiblockCoagulator.SLOT_INPUT2, getFluidContainerSlot(SideConfig.INPUT))
+			};
+			this.slotBucketOut = new Slot[]{
+					addSlot(176-32-12-64-16, 57-8, MultiblockCoagulator.SLOT_OUTPUT1, getFluidContainerSlot(SideConfig.OUTPUT)),
+					addSlot(176-32-12, 57-8, MultiblockCoagulator.SLOT_OUTPUT2, getFluidContainerSlot(SideConfig.OUTPUT))
+			};
+			addPlayerInventory(player.inventory, 8, 86+24);
 		}
 	}
 }

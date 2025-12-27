@@ -4,8 +4,11 @@ import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorageAdvanced;
 import blusunrize.immersiveengineering.common.util.inventory.IEInventoryHandler;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.items.CapabilityItemHandler;
 import pl.pabilo8.immersiveintelligence.api.crafting.PrecisionAssemblerRecipe;
 import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIMultiblockRecipe;
 import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
@@ -22,6 +25,7 @@ import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEn
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockInteractablePart;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 
@@ -35,8 +39,8 @@ public class TileEntityPrecisionAssembler extends TileEntityMultiblockProduction
 	public MultiblockInteractablePart drawer1, drawer2;
 	@SyncNBT
 	public String toolHash = "";
-	private IEInventoryHandler outputMainHandler = getSingleInventoryHandler(MultiblockPrecisionAssembler.SLOT_OUTPUT, true, true);
-	private IEInventoryHandler outputSecondaryHandler = getSingleInventoryHandler(MultiblockPrecisionAssembler.SLOT_OUTPUT_TRASH, true, true);
+	private IEInventoryHandler outputMainHandler, outputSecondaryHandler, inputHandler;
+	private IEInventoryHandler[] toolInputHandlers;
 
 	public TileEntityPrecisionAssembler()
 	{
@@ -45,6 +49,14 @@ public class TileEntityPrecisionAssembler extends TileEntityMultiblockProduction
 		this.energyStorage = new FluxStorageAdvanced(PrecisionAssembler.energyCapacity);
 		this.drawer1 = new MultiblockInteractablePart(5, 0.4f, 0.5f);
 		this.drawer2 = new MultiblockInteractablePart(5, 0.4f, 0.5f);
+
+		this.outputMainHandler = getSingleInventoryHandler(MultiblockPrecisionAssembler.SLOT_OUTPUT, true, true);
+		this.outputSecondaryHandler = getSingleInventoryHandler(MultiblockPrecisionAssembler.SLOT_OUTPUT_TRASH, true, true);
+		this.inputHandler = new IEInventoryHandler(4, this, MultiblockPrecisionAssembler.SLOT_INGREDIENT1, true, false);
+		this.toolInputHandlers = new IEInventoryHandler[3];
+		this.toolInputHandlers[0] = getSingleInventoryHandler(MultiblockPrecisionAssembler.SLOT_TOOL1, true, true);
+		this.toolInputHandlers[1] = getSingleInventoryHandler(MultiblockPrecisionAssembler.SLOT_TOOL2, true, true);
+		this.toolInputHandlers[2] = getSingleInventoryHandler(MultiblockPrecisionAssembler.SLOT_TOOL3, true, true);
 	}
 
 	@Override
@@ -52,7 +64,8 @@ public class TileEntityPrecisionAssembler extends TileEntityMultiblockProduction
 	{
 		super.dummyCleanup();
 		this.drawer1 = this.drawer2 = null;
-		this.outputMainHandler = this.outputSecondaryHandler = null;
+		this.outputMainHandler = this.outputSecondaryHandler = this.inputHandler = null;
+		this.toolInputHandlers = null;
 	}
 
 	@Override
@@ -63,6 +76,13 @@ public class TileEntityPrecisionAssembler extends TileEntityMultiblockProduction
 		//Handle drawer animations
 		this.drawer1.update();
 		this.drawer2.update();
+
+		//Handle output
+		if(!world.isRemote)
+		{
+			attemptStackOutput(outputMainHandler, getDirection("item_output"), getPOI(MultiblockPOI.ITEM_OUTPUT));
+			attemptStackOutput(outputSecondaryHandler, getDirection("item_output"), getPOI(MultiblockPOI.ITEM_OUTPUT));
+		}
 	}
 
 	@Override
@@ -207,6 +227,27 @@ public class TileEntityPrecisionAssembler extends TileEntityMultiblockProduction
 			}
 			this.toolHash = PrecisionAssemblerRecipe.buildToolHash(toolList.toArray(new String[0]));
 		}
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing)
+	{
+		if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+		{
+			TileEntityPrecisionAssembler master = master();
+			assert master!=null;
+			if(isPOI("item_in"))
+				return (T)(master.inputHandler);
+			else if(isPOI("tool1"))
+				return (T)master.toolInputHandlers[0];
+			else if(isPOI("tool2"))
+				return (T)master.toolInputHandlers[1];
+			else if(isPOI("tool3"))
+				return (T)master.toolInputHandlers[2];
+
+		}
+		return super.getCapability(capability, facing);
 	}
 
 	@Nullable

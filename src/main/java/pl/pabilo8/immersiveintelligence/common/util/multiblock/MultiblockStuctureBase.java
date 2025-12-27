@@ -216,13 +216,10 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 		//Map JSON positions
 		JsonObject positionsJSON = file.get("positions").getAsJsonObject();
 		HashMap<Integer, ArrayList<AxisAlignedFacingBB>> mapped = new HashMap<>();
-
 		for(Entry<String, JsonElement> entry : positionsJSON.entrySet())
 		{
 			//Get position IDs
-			Integer[] IDs = Arrays.stream(entry.getKey().split(","))
-					.map(Integer::parseInt)
-					.toArray(Integer[]::new);
+			Integer[] IDs = IIStringUtil.parseNumberListString(entry.getKey());
 
 			//Gather all bounding boxes
 			ArrayList<AxisAlignedFacingBB> group = new ArrayList<>();

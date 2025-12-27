@@ -11,9 +11,11 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import pl.pabilo8.immersiveintelligence.api.crafting.BathingRecipe;
 import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIMultiblockRecipe;
@@ -157,6 +159,15 @@ public class TileEntityChemicalBath extends TileEntityMultiblockProductionSingle
 			default:
 				return new int[0];
 		}
+	}
+
+	@Override
+	public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing)
+	{
+		if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+			//noinspection unchecked,DataFlowIssue
+			return (T)master().inputHandler;
+		return super.getCapability(capability, facing);
 	}
 
 	@Nullable

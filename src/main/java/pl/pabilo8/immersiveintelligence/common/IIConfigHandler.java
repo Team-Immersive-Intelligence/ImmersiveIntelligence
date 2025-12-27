@@ -1113,7 +1113,7 @@ public class IIConfigHandler
 				public static int fluidCapacity = 16000;
 
 				@Comment({"Default bucket wait time for a coagulator process, when not specified in recipe (in ticks)."})
-				public static int bucketTime = 400;
+				public static int bucketTime = 2400;
 
 				@Comment({"How long does it take to move a crane 1 block (in ticks)."})
 				public static int craneMoveTime = 20;

@@ -219,7 +219,7 @@ public class IIRecipeJEICategory<T extends IIMultiblockRecipe> implements IRecip
 			{
 				int tankIndex = getFluidTankIndex(true, fluidInputIndex, ingredients);
 				fluidStacks.init(tankIndex, true, x+1, y+1,
-						width-2, height-2, 1000, true, null);
+						width-2, height-1, 1000, true, null);
 				fluidStacks.set(tankIndex, ingredients.getInputs(VanillaTypes.FLUID).get(fluidInputIndex));
 			}
 		}
@@ -229,7 +229,7 @@ public class IIRecipeJEICategory<T extends IIMultiblockRecipe> implements IRecip
 				{
 					int tankIndex = getFluidTankIndex(false, fluidOutputIndex, ingredients);
 					fluidStacks.init(tankIndex, false, x+1, y+1,
-							width-2, height-2, 1000, true, null);
+							width-2, height-1, 1000, true, null);
 					fluidStacks.set(tankIndex, ingredients.getOutputs(VanillaTypes.FLUID).get(fluidOutputIndex));
 				}
 	}

@@ -1,0 +1,16 @@
+# Made by Pabilo8 with Blockbench
+
+newmtl coagulator
+map_Kd immersiveintelligence:blocks/multiblock/coagulator
+newmtl coagulator2
+map_Kd immersiveintelligence:blocks/multiblock/coagulator2
+newmtl common_thingies
+map_Kd immersiveintelligence:blocks/common/common_thingies
+newmtl common_bottom
+map_Kd immersiveintelligence:blocks/common/common_bottom
+newmtl common_steel
+map_Kd immersiveintelligence:blocks/common/common_steel
+newmtl common_machinebase
+map_Kd immersiveintelligence:blocks/common/common_machinebase
+newmtl crane_gray
+map_Kd immersiveintelligence:blocks/metal_device/crane/crane_gray

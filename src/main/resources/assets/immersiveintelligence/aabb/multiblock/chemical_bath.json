@@ -87,7 +87,7 @@
   },
   "rotations": {
     "item_input": "none",
-    "fluid_input": "none",
-    "item_output": "clockwise_180"
+    "fluid_input": "clockwise_180",
+    "item_output": "none"
   }
 }

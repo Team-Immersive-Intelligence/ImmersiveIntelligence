@@ -275,8 +275,8 @@ public class ArtilleryHowitzerRenderer extends IIMultiblockRenderer<TileEntityAr
 		animationQueueIn = AMTLoader.loadAnimation(new ResourceLocation(ImmersiveIntelligence.MODID, "artillery_howitzer/artillery_howitzer_queue_in")).getLeadingGroup();
 		animationQueueOut = AMTLoader.loadAnimation(new ResourceLocation(ImmersiveIntelligence.MODID, "artillery_howitzer/artillery_howitzer_queue_out")).getLeadingGroup();
 
-		gunYaw = this.model.getPart("turret");
-		gunPitch = this.model.getPart("gun");
+		gunYaw = this.model.getPartRecursive("turret");
+		gunPitch = this.model.getPartRecursive("gun");
 	}
 
 	@Override

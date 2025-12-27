@@ -106,7 +106,7 @@ public class ItemIISawBlade extends ItemIISubItemsBase<SawBlades> implements ISa
 	@Override
 	public double getDurabilityForDisplay(@Nonnull ItemStack stack)
 	{
-		return 1d-((double)getToolDamage(stack)/(double)getToolDamage(stack));
+		return 1d-((double)getToolDamage(stack)/(double)getToolMaxDamage(stack));
 	}
 
 	@Nonnull

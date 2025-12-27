@@ -169,12 +169,13 @@ public class EntityMotorbike extends EntityVehicleBase<EntityMotorbike>
 	{
 		//Apply Controls
 		//TODO: 03.12.2025 gearbox operation
-		/*if(driverControls.getKey("accelerate"))
-			partWheelBack.setMovementFactors(2, 0);
+		partWheelBack.setBrakeFactor(0);
+		if(driverControls.getKey("accelerate"))
+			partWheelBack.setRotationSpeed(4000);
 		else if(driverControls.getKey("brake"))
-			partWheelBack.setMovementFactors(-1f, 0);
+			partWheelBack.setRotationSpeed(-2000);
 		else
-			partWheelBack.setMovementFactors(0f, 0);*/
+			partWheelBack.setBrakeFactor(1);
 
 		partWheelBack.setSteeringAngle(0);
 		if(driverControls.getKey("turnLeft"))

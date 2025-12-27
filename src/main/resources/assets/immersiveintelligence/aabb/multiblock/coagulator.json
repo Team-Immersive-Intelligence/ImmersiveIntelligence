@@ -3,10 +3,172 @@
     "full": [
       0, 0, 0,
       16, 16, 16
+    ],
+    "empty": [
+      -48, -48, -48,
+      -48, -48, -48
+    ],
+    "slab": [
+      0, 0, 0,
+      16, 8, 16
+    ],
+    "concrete_slab": [
+      0, 0, 0,
+      16, 11, 16
+    ],
+    "slab_rail_top": [
+      5.5, 11, 0,
+      10.5, 13, 16
+    ],
+    "slab_rail_front": [
+      5.5, 3, 0,
+      10.5, 13, -2
+    ],
+    "slab_rail_clock_base": [
+      5.5, 11, 0,
+      0, 13, 2
+    ],
+    "slab_rail_clock": [
+      2.5, 15, 4.5,
+      0.5, 21.5, -2.5
+    ],
+    "rail1": [
+      0, 0, 3,
+      16, 2, 8
+    ],
+    "rail1_left": [
+      0, 2, 3,
+      16, 4, 4
+    ],
+    "rail1_right": [
+      0, 2, 7,
+      16, 4, 8
+    ],
+    "rail2": [
+      0, 0, 9,
+      16, 2, 14
+    ],
+    "rail2_left": [
+      0, 2, 9,
+      16, 4, 10
+    ],
+    "rail2_right": [
+      0, 2, 13,
+      16, 4, 14
+    ],
+    "mixer_arm_start": [
+      1, 0, 2,
+      16, 16, 14
+    ],
+    "mixer_arm": [
+      0, 0, 2,
+      16, 16, 14
+    ],
+    "mixer_arm_end": [
+      0, 0, 2,
+      15, 16, 14
+    ],
+    "mixer_tip": [
+      2.5, 1, 4,
+      13.5, 15, 15
+    ],
+    "mixer_tip_bottom": [
+      4, -3, 4,
+      12, 1, 15
+    ],
+    "mixer_tip_back": [
+      3.5, 1.75, -2,
+      12.5, 14.25, 6
+    ],
+    "energy_box": [
+      1, 0, 2,
+      12, 14, 14
+    ],
+    "energy_box_plug": [
+      12, 3, 3,
+      15, 13, 13
+    ],
+    "switch_desk": [
+      0, 0, 0,
+      16, 6, 16
+    ],
+    "switch_desk_books": [
+      -2, 6, 0,
+      5, 10, 10
+    ],
+    "switch_desk_buttons": [
+      5, 6, 0,
+      11, 8, 16
+    ],
+    "bath_top_front": [
+      0, -2, 0,
+      16, 12, 2
+    ],
+    "bath_top_back": [
+      0, -2, 14,
+      16, 12, 16
+    ],
+    "bath_top_left": [
+      0, -2, 2,
+      2, 12, 14
+    ],
+    "bath_top_right": [
+      14, -2, 2,
+      16, 12, 14
+    ],
+    "bath_floor": [
+      0, 2, 0,
+      16, 4, 16
+    ],
+    "bath_floor_front": [
+      0, 2, 5,
+      16, 4, 16
+    ],
+    "bath_floor_back": [
+      0, 2, 0,
+      16, 4, 11
+    ],
+    "bath_floor_front_upper": [
+      0, 4, 0,
+      16, 12, 7
+    ],
+    "bath_floor_back_upper": [
+      0, 4, 9,
+      16, 12, 16
     ]
   },
   "positions": {
+    "63:68,91,126,161,168": "empty",
+    "33:28": ["concrete_slab", "slab_rail_top", "slab_rail_front", "slab_rail_clock_base", "slab_rail_clock"],
+    "56:61": ["rail1", "rail2", "rail1_left", "rail1_right", "rail2_left", "rail2_right"],
+    "49, 70, 71, 77, 78, 75, 76, 83, 82, 90": "slab",
+    "157": "mixer_arm_start",
+    "158": "mixer_arm",
+    "159": "mixer_arm_end",
+    "150": ["mixer_tip", "mixer_tip_bottom", "mixer_tip_back"],
+    "115,80": "empty",
+    "97": ["energy_box", "energy_box_plug"],
+    "86:88": "bath_top_front",
+    "72:74": "bath_top_back",
+    "86,79,72": "bath_top_left",
+    "88,81,74": "bath_top_right",
+    "44": "bath_top_left",
+    "46": "bath_top_right",
+    "46:44": "bath_floor",
+    "53:51": ["bath_floor_front", "bath_floor_front_upper"],
+    "39:37": ["bath_floor_back", "bath_floor_back_upper"],
+    "69": ["switch_desk", "switch_desk_books", "switch_desk_buttons"]
   },
   "poi": {
+    "energy": 97,
+    "redstone": 27,
+    "fluid_inputs": [140, 146],
+    "tank_coagulant": 140,
+    "tank_input": 146,
+    "item_outputs": [33, 32, 31, 30, 29, 28],
+    "control_panel": 69
+  },
+  "rotations": {
+    "item_outputs": "clockwise_180"
   }
 }

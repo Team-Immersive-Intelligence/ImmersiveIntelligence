@@ -1520,7 +1520,7 @@ public class IIRecipes
 
 		//Rubber is a slow pace industry ^^
 		//Unless you build lots of coagulators, that is
-		CoagulatorRecipe.addRecipe(
+		new CoagulatorRecipe(
 				IIContent.itemMaterial.getStack(Materials.NATURAL_RUBBER, 8),
 				new FluidStack(IIContent.fluidLatex, 5500),
 				new FluidStack(IIContent.fluidFormicAcid, 500),

@@ -524,7 +524,7 @@ public class ClientProxy extends CommonProxy
 
 		//Rubber processing machines renderers
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityVulcanizer.class, new VulcanizerRenderer().subscribeToList("multiblock/vulcanizer"));
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCoagulator.class, new CoagulatorRenderer().subscribeToList("multiblock/coagulator"));
+		registerTileRenderer(CoagulatorRenderer.class);
 
 
 		//Gate renderers

@@ -161,7 +161,10 @@ public class TileEntityElectrolyzer extends TileEntityMultiblockProductionSingle
 	@Override
 	public float getProductionStep(IIMultiblockProcess<ElectrolyzerRecipe> process, boolean simulate)
 	{
-		return energyStorage.extractEnergy(process.recipe.getEnergyPerTick(), simulate)/(float)process.recipe.getEnergyPerTick();
+		if(energyStorage.extractEnergy(process.recipe.getEnergyPerTick(), true)!=process.recipe.getEnergyPerTick())
+			return 0;
+		energyStorage.extractEnergy(process.recipe.getEnergyPerTick(), simulate);
+		return 1f;
 	}
 
 	@Override

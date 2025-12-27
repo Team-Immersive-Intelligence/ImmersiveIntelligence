@@ -1,528 +1,303 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity;
 
-import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IGuiTile;
-import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.ISoundTile;
-import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
-import blusunrize.immersiveengineering.common.util.Utils;
+import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorageAdvanced;
+import blusunrize.immersiveengineering.common.util.inventory.IEInventoryHandler;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.IFluidTank;
-import net.minecraftforge.oredict.OreDictionary;
 import pl.pabilo8.immersiveintelligence.api.crafting.CoagulatorRecipe;
+import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIMultiblockRecipe;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Coagulator;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockCoagulator;
+import pl.pabilo8.immersiveintelligence.common.util.FilteredFluidTank;
+import pl.pabilo8.immersiveintelligence.common.util.ISerializableEnum;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionSingle;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 22.12.2025
+ * @ii-approved 0.3.1
  * @since 04.03.2021
  */
-public class TileEntityCoagulator extends TileEntityMultiblockMetal<TileEntityCoagulator, CoagulatorRecipe> implements ISoundTile, IGuiTile
+public class TileEntityCoagulator extends TileEntityMultiblockProductionSingle<TileEntityCoagulator, CoagulatorRecipe>
 {
-	// inventory: slot 0 = effect/input, 1 = output, 2 = bucket_in, 3 = bucket_out
-	public NonNullList<ItemStack> inventory = NonNullList.withSize(4, ItemStack.EMPTY);
-
-	public FluidTank[] tanks = new FluidTank[]{
-			new FluidTank(Coagulator.fluidCapacity),
-			new FluidTank(Coagulator.fluidCapacity)
-	};
-
-	@SyncNBT(time = 40, events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_RECIPE_CHANGED})
-
-	public int[] bucketProgress = new int[]{0, 0, 0, 0, 0, 0};
-	public NonNullList<ItemStack> bucketStacks = NonNullList.withSize(6, ItemStack.EMPTY);
-
-	public int cranePosition = 0, craneBucket = -1, craneProgress = 0;
+	@SyncNBT(events = {SyncEvents.TILE_CUSTOM1, SyncEvents.TILE_RECIPE_CHANGED})
+	public FluidTank tankCoagulant;
+	@SyncNBT(events = {SyncEvents.TILE_CUSTOM2, SyncEvents.TILE_RECIPE_CHANGED})
+	public FluidTank tankInput;
+	@SyncNBT(events = {SyncEvents.TILE_CUSTOM2, SyncEvents.TILE_RECIPE_CHANGED})
+	public NonNullList<ItemStack> bucketStacks;
+	@SyncNBT(events = SyncEvents.TILE_RECIPE_CHANGED)
 	public CraneAnimation craneAnimation = CraneAnimation.NONE;
+	@SyncNBT(events = SyncEvents.TILE_RECIPE_CHANGED)
+	public int[] bucketProgress;
+	@SyncNBT(events = SyncEvents.TILE_RECIPE_CHANGED)
+	public int cranePosition = 0, craneCurrentBucket = -1, craneAnimationProgress = 0;
+	private IEInventoryHandler outputHandler;
 
 	public TileEntityCoagulator()
 	{
-		super(MultiblockCoagulator.INSTANCE, MultiblockCoagulator.INSTANCE.getSize(), Coagulator.energyCapacity, true);
-	}
-
-	// Ensure inventory exists and has expected size (4 slots). Called before accessing inventory[0].
-	private void ensureInventory()
-	{
-		if(this.inventory==null || this.inventory.size() < 4)
-			this.inventory = NonNullList.withSize(4, ItemStack.EMPTY);
+		super(MultiblockCoagulator.INSTANCE);
+		this.inventory = NonNullList.withSize(5, ItemStack.EMPTY);
+		this.bucketStacks = NonNullList.withSize(6, ItemStack.EMPTY);
+		this.bucketProgress = new int[]{0, 0, 0, 0, 0, 0};
+		this.energyStorage = new FluxStorageAdvanced(Coagulator.energyCapacity);
+		this.tankInput = new FilteredFluidTank(Coagulator.fluidCapacity)
+				.withInputFilter(fluidStack -> IIMultiblockRecipe.streamRecipes(CoagulatorRecipe.class)
+						.anyMatch(recipe -> recipe.fluidInput.isFluidEqual(fluidStack)));
+		this.tankCoagulant = new FilteredFluidTank(Coagulator.fluidCapacity)
+				.withInputFilter(fluidStack -> IIMultiblockRecipe.streamRecipes(CoagulatorRecipe.class)
+						.anyMatch(recipe -> recipe.coagulantInput.isFluidEqual(fluidStack)));
+		this.outputHandler = getSingleInventoryHandler(MultiblockCoagulator.SLOT_OUTPUT, true, true);
 	}
 
 	@Override
-	public void update()
+	protected void dummyCleanup()
 	{
-		super.update();
+		super.dummyCleanup();
+		this.bucketStacks = null;
+		this.bucketProgress = null;
+		this.tankInput = this.tankCoagulant = null;
+	}
 
-		if(isDummy()||isRSDisabled())
-			return;
-
-		if(craneBucket!=-1)
+	@Override
+	protected void onUpdate()
+	{
+		//Handle tank interaction
+		if(!world.isRemote)
 		{
-			if(craneProgress > 0)
-				craneProgress--;
-			else
-			{
-				//set new animation
-				switch(craneAnimation)
-				{
-					case MOVE_BUCKET:
-					case MOVE_BACK:
-					{
-						cranePosition += Integer.compare(craneBucket, cranePosition);
-						if(cranePosition==craneBucket)
-							craneAnimation = IIUtils.cycleEnum(true, CraneAnimation.class, craneAnimation);
-					}
-					break;
-					case MOVE_MIXER:
-					{
-						cranePosition += Integer.compare(2, cranePosition);
-						if(cranePosition==2)
-							craneAnimation = IIUtils.cycleEnum(true, CraneAnimation.class, craneAnimation);
-					}
-					break;
+			//Left tank
+			if(IIUtils.handleBucketTankInteraction(tankCoagulant, inventory,
+					MultiblockCoagulator.SLOT_INPUT1, MultiblockCoagulator.SLOT_OUTPUT1, true))
+				updateTileForEvent(SyncEvents.TILE_CUSTOM1);
+			//Right tank
+			if(IIUtils.handleBucketTankInteraction(tankInput, inventory,
+					MultiblockCoagulator.SLOT_INPUT2, MultiblockCoagulator.SLOT_OUTPUT2, true))
+				updateTileForEvent(SyncEvents.TILE_CUSTOM2);
+		}
 
-					default:
-					case NONE:
-					case PICK:
-					case PUT:
-					case PULL:
-					case ROTATE_IN:
-					case ROTATE_OUT:
-					case REACH:
-					case PLACE:
-						craneAnimation = IIUtils.cycleEnum(true, CraneAnimation.class, craneAnimation);
-						break;
-					case RETURN:
+		//Handle coagulate production logic
+		super.onUpdate();
+
+		//Handle drying
+		for(int i = 0; i < bucketProgress.length; i++)
+		{
+			bucketProgress[i] = Math.max(0, bucketProgress[i]-1);
+			//Drying output
+			if(!world.isRemote&&bucketProgress[i]==0&&!bucketStacks.get(i).isEmpty())
+			{
+				bucketProgress[i] = 0;
+				outputOrDrop(bucketStacks.get(i), null, getDirection("item_outputs"), getPOI(MultiblockPOI.ITEM_OUTPUT)[i]);
+				bucketStacks.set(i, ItemStack.EMPTY);
+			}
+
+		}
+
+		//Handle crane logic
+		if(!inventory.get(MultiblockCoagulator.SLOT_OUTPUT).isEmpty())
+		{
+			//Set crane target
+			if(craneAnimation==CraneAnimation.NONE&&craneCurrentBucket==-1)
+				for(int i = 0; i < bucketStacks.size(); i++)
+					if(bucketStacks.get(i).isEmpty())
 					{
-						//Eto Konets )))
-						if(!world.isRemote)
+						craneCurrentBucket = i;
+						craneAnimationProgress = 0;
+						updateTileForEvent(SyncEvents.TILE_RECIPE_CHANGED);
+						break;
+					}
+
+			if(craneCurrentBucket!=-1)
+			{
+				if(craneAnimationProgress > 0)
+					craneAnimationProgress--;
+				else
+				{
+					//Progress the animation
+					switch(craneAnimation)
+					{
+						case MOVE_BUCKET:
+						case MOVE_BACK:
 						{
-							ensureInventory();
-							ItemStack eff = this.inventory.get(0);
-							bucketProgress[craneBucket] = CoagulatorRecipe.getBucketProgressForStack(eff);
-							bucketStacks.set(craneBucket, eff.copy());
-							bucketStacks.get(craneBucket).setCount(1);
-							eff.shrink(1);
-
-							markDirty();
-							markContainingBlockForUpdate(null);
+							cranePosition += Integer.compare(craneCurrentBucket, cranePosition);
+							if(cranePosition==craneCurrentBucket)
+								craneAnimation = IIUtils.cycleEnum(true, CraneAnimation.class, craneAnimation);
 						}
+						break;
+						case MOVE_MIXER:
+						{
+							cranePosition += Integer.compare(2, cranePosition);
+							if(cranePosition==2)
+								craneAnimation = IIUtils.cycleEnum(true, CraneAnimation.class, craneAnimation);
+						}
+						break;
+						case RETURN:
+						{
+							//Place down the bucket and begin its drying process
+							if(!world.isRemote)
+							{
+								ItemStack eff = outputHandler.extractItem(0, 1, false);
+								bucketProgress[craneCurrentBucket] = CoagulatorRecipe.getDryingTimeFor(eff);
+								bucketStacks.set(craneCurrentBucket, eff);
+								updateTileForEvent(SyncEvents.TILE_RECIPE_CHANGED);
+							}
 
-						this.craneBucket = -1;
-						this.craneProgress = 0;
-						this.craneAnimation = CraneAnimation.NONE;
+							this.craneCurrentBucket = -1;
+							this.craneAnimationProgress = 0;
+							this.craneAnimation = CraneAnimation.NONE;
+						}
+						break;
+						//Cycle animation forward
+						default:
+							craneAnimation = IIUtils.cycleEnum(true, CraneAnimation.class, craneAnimation);
+							break;
 					}
-					break;
-				}
-				//set time after change
-				switch(craneAnimation)
-				{
-					default:
-					case NONE:
-						break;
-					case MOVE_BUCKET:
-					case MOVE_BACK:
-						craneProgress = (cranePosition==craneBucket)?0: Coagulator.craneMoveTime;
-						break;
-					case MOVE_MIXER:
-						craneProgress = (cranePosition==2)?0: Coagulator.craneMoveTime;
-						break;
-					case ROTATE_IN:
-					case ROTATE_OUT:
-						craneProgress = Coagulator.craneMoveTime;
-						break;
-					case PICK:
-					case PUT:
-					case PULL:
-					case PLACE:
-					case REACH:
-					case RETURN:
-						craneProgress = Coagulator.craneGrabTime;
-						break;
-				}
+					//set time after change
+					switch(craneAnimation)
+					{
+						case NONE:
+							break;
+						case MOVE_BUCKET:
+						case MOVE_BACK:
+							craneAnimationProgress = (cranePosition==craneCurrentBucket)?0: Coagulator.craneMoveTime;
+							break;
+						case MOVE_MIXER:
+							craneAnimationProgress = (cranePosition==2)?0: Coagulator.craneMoveTime;
+							break;
+						case ROTATE_IN:
+						case ROTATE_OUT:
+							craneAnimationProgress = Coagulator.craneMoveTime;
+							break;
+						default:
+							craneAnimationProgress = Coagulator.craneGrabTime;
+							break;
+					}
 
-			}
-		}
-
-		if(world.isRemote)
-		{
-			for(int i = 0; i < bucketProgress.length; i++)
-				bucketProgress[i] = Math.max(0, bucketProgress[i]-1);
-			return;
-		}
-
-		if(!processQueue.isEmpty()&&tanks[0].getFluidAmount() > 0&&tanks[1].getFluidAmount() > 0)
-		{
-			CoagulatorRecipe recipe = CoagulatorRecipe.findRecipe(tanks[0].getFluid(), tanks[1].getFluid());
-			ensureInventory();
-			if(recipe!=null&&(this.inventory.get(0).isEmpty()||OreDictionary.itemMatches(this.inventory.get(0), recipe.itemOutput, false)))
-			{
-				MultiblockProcessInMachine<CoagulatorRecipe> process = new MultiblockProcessInMachine<>(recipe);
-				process.setInputTanks(0, 1);
-				this.addProcessToQueue(process, false);
-				this.markDirty();
-				this.markContainingBlockForUpdate(null);
-			}
-		}
-
-		for(int i = 0; i < bucketStacks.size(); i++)
-		{
-			if(!bucketStacks.get(i).isEmpty())
-			{
-				if(--bucketProgress[i] <= 0)
-				{
-					bucketProgress[i] = 0;
-					ItemStack copy = bucketStacks.get(i);
-					bucketStacks.set(i, ItemStack.EMPTY);
-					Utils.dropStackAtPos(world, getBlockPosForPos(28+i).offset(facing), copy, null);
-					this.markDirty();
-					this.markContainingBlockForUpdate(null);
 				}
 			}
 		}
+	}
 
-		if(craneAnimation==CraneAnimation.NONE&&craneBucket==-1)
+	@Override
+	protected int[] listAllPOI(MultiblockPOI poi)
+	{
+		switch(poi)
 		{
-			for(int i = 0; i < bucketStacks.size(); i++)
-				if(bucketStacks.get(i).isEmpty())
-				{
-					craneBucket = i;
-					craneProgress = 0;
-
-					markDirty();
-					markContainingBlockForUpdate(null);
-					break;
-				}
+			case FLUID_INPUT:
+				return getPOI("fluid_inputs");
+			case ITEM_OUTPUT:
+				return getPOI("item_outputs");
+			case ENERGY_INPUT:
+				return getPOI("energy");
+			case REDSTONE_INPUT:
+				return getPOI("redstone");
+			case MISC_CONTROL_PANEL:
+				return getPOI("control_panel");
+			default:
+				return new int[0];
 		}
 	}
 
 	@Override
-	public void readCustomNBT(@Nonnull NBTTagCompound nbt, boolean descPacket)
+	protected IIMultiblockProcess<CoagulatorRecipe> findNewProductionProcess()
 	{
-		super.readCustomNBT(nbt, descPacket);
+		//Both tanks must have some fluid
+		if(tankInput.getFluidAmount()==0||tankCoagulant.getFluidAmount()==0)
+			return null;
+		//Do not overfill the tank
+		if(inventory.get(MultiblockCoagulator.SLOT_OUTPUT).getCount() >= 64)
+			return null;
 
-		if(isDummy())
-			return;
-
-		tanks[0] = tanks[0].readFromNBT(nbt.getCompoundTag("tank0"));
-		tanks[1] = tanks[1].readFromNBT(nbt.getCompoundTag("tank1"));
-
-
-		if(nbt.hasKey("effect"))
-		{
-			NonNullList<ItemStack> eff = Utils.readInventory(nbt.getTagList("effect", 10), 1);
-			this.inventory.set(0, eff.get(0));
-		}
-		bucketStacks = Utils.readInventory(nbt.getTagList("bucketStacks", 10), 6);
-
-		bucketProgress = nbt.getIntArray("bucketProgress");
-		if(bucketProgress.length!=6)
-			bucketProgress = new int[]{0, 0, 0, 0, 0, 0};
-
-		cranePosition = nbt.getInteger("cranePosition");
-		craneBucket = nbt.getInteger("craneBucket");
-		craneProgress = nbt.getInteger("craneProgress");
-		int animIdx = MathHelper.clamp(nbt.getInteger("craneAnimation"), 0, CraneAnimation.values().length-1);
-		craneAnimation = CraneAnimation.values()[animIdx];
-
+		return IIMultiblockRecipe.streamRecipes(CoagulatorRecipe.class)
+				.filter(recipe -> recipe.fluidInput.isFluidStackIdentical(tankInput.drain(recipe.fluidInput, false)))
+				.filter(recipe -> recipe.coagulantInput.isFluidStackIdentical(tankCoagulant.drain(recipe.coagulantInput, false)))
+				.findFirst()
+				.map(IIMultiblockProcess::new).orElse(null);
 	}
 
 	@Override
-	public void writeCustomNBT(@Nonnull NBTTagCompound nbt, boolean descPacket)
+	protected IIMultiblockProcess<CoagulatorRecipe> getProcessByName(String name)
 	{
-		super.writeCustomNBT(nbt, descPacket);
-
-		if(isDummy())
-			return;
-
-		nbt.setTag("tank0", tanks[0].writeToNBT(new NBTTagCompound()));
-		nbt.setTag("tank1", tanks[1].writeToNBT(new NBTTagCompound()));
-
-		// write only the single effect slot under the same "effect" tag for compatibility
-		NonNullList<ItemStack> effOut = NonNullList.withSize(1, ItemStack.EMPTY);
-		effOut.set(0, this.inventory.get(0));
-		nbt.setTag("effect", Utils.writeInventory(effOut));
-
-		nbt.setTag("bucketStacks", Utils.writeInventory(bucketStacks));
-		nbt.setIntArray("bucketProgress", bucketProgress);
-
-		nbt.setInteger("cranePosition", cranePosition);
-		nbt.setInteger("craneBucket", craneBucket);
-		nbt.setInteger("craneProgress", craneProgress);
-		nbt.setInteger("craneAnimation", craneAnimation.ordinal());
+		CoagulatorRecipe recipe = IIMultiblockRecipe.getRecipe(CoagulatorRecipe.class, name);
+		return recipe==null?null: new IIMultiblockProcess<>(recipe);
 	}
 
 	@Override
-	public void receiveMessageFromServer(@Nonnull NBTTagCompound message)
+	public float getProductionStep(IIMultiblockProcess<CoagulatorRecipe> process, boolean simulate)
 	{
-		super.receiveMessageFromServer(message);
-
-		if(isDummy())
-			return;
-
-		if(message.hasKey("tank0"))
-			tanks[0] = tanks[0].readFromNBT(message.getCompoundTag("tank0"));
-		if(message.hasKey("tank1"))
-			tanks[1] = tanks[1].readFromNBT(message.getCompoundTag("tank1"));
-		if(message.hasKey("effect"))
-		{
-			ensureInventory();
-			NonNullList<ItemStack> effMsg = Utils.readInventory(message.getTagList("effect", 10), 1);
-			if(effMsg.size()>0)
-				this.inventory.set(0, effMsg.get(0));
-		}
-		if(message.hasKey("bucketStacks"))
-			bucketStacks = Utils.readInventory(message.getTagList("bucketStacks", 10), 6);
-		if(message.hasKey("bucketProgress"))
-		{
-			bucketProgress = message.getIntArray("bucketProgress");
-			if(bucketProgress.length!=6)
-				bucketProgress = new int[]{0, 0, 0, 0, 0, 0};
-		}
-		if(message.hasKey("craneAnimation"))
-		{
-			cranePosition = message.getInteger("cranePosition");
-			craneBucket = message.getInteger("craneBucket");
-			craneProgress = message.getInteger("craneProgress");
-			int animIdxMsg = MathHelper.clamp(message.getInteger("craneAnimation"), 0, CraneAnimation.values().length-1);
-			craneAnimation = CraneAnimation.values()[animIdxMsg];
-		}
-	}
-
-	// TODO: 31.10.2021 recipe
-	@Nonnull
-	@Override
-	protected CoagulatorRecipe readRecipeFromNBT(@Nonnull NBTTagCompound tag)
-	{
-		return CoagulatorRecipe.loadFromNBT(tag);
-	}
-
-	@Nonnull
-	@Override
-	public int[] getEnergyPos()
-	{
-		return new int[]{97};
-	}
-
-	@Nonnull
-	@Override
-	public int[] getRedstonePos()
-	{
-		return new int[]{77};
-	}
-
-	@Nonnull
-	@Override
-	public IFluidTank[] getInternalTanks()
-	{
-		return tanks;
-	}
-
-	@Nonnull
-	@SuppressWarnings("MethodsReturnNonNullByDefault")
-	@Override
-	public CoagulatorRecipe findRecipeForInsertion(@Nonnull ItemStack inserting)
-	{
-		return null;
-	}
-
-	@Nonnull
-	@Override
-	public int[] getOutputSlots()
-	{
-		return new int[]{0};
-	}
-
-	@Nonnull
-	@Override
-	public int[] getOutputTanks()
-	{
-		return new int[0];
-	}
-
-	// TODO: 31.10.2021 investigate
-	@Override
-	public boolean additionalCanProcessCheck(@Nonnull MultiblockProcess<CoagulatorRecipe> process)
-	{
-		return true;
+		if(energyStorage.extractEnergy(process.recipe.getEnergyPerTick(), true)!=process.recipe.getEnergyPerTick())
+			return 0;
+		energyStorage.extractEnergy(process.recipe.getEnergyPerTick(), simulate);
+		return 1f;
 	}
 
 	@Override
-	public void doProcessOutput(@Nonnull ItemStack output)
+	protected boolean attemptProductionOutput(IIMultiblockProcess<CoagulatorRecipe> process)
 	{
-
+		return outputHandler.insertItem(0, process.recipe.itemOutput, true).isEmpty();
 	}
 
 	@Override
-	public void doProcessFluidOutput(@Nonnull FluidStack output)
+	protected void onProductionFinish(IIMultiblockProcess<CoagulatorRecipe> process)
 	{
+		outputHandler.insertItem(0, process.recipe.itemOutput, false);
+	}
 
+	public float getDryingProgressForSlot(int slotID)
+	{
+		if(bucketStacks.get(slotID).isEmpty())
+			return 0;
+		int totalTime = CoagulatorRecipe.getDryingTimeFor(bucketStacks.get(slotID));
+		if(totalTime <= 0)
+			return 0;
+		return 1f-(float)bucketProgress[slotID]/(float)totalTime;
 	}
 
 	@Override
-	public void onProcessFinish(@Nonnull MultiblockProcess<CoagulatorRecipe> process)
+	protected IFluidTank[] getFluidTanks(int pos, EnumFacing side)
 	{
-
-	}
-
-
-	@Override
-	public int getMaxProcessPerTick()
-	{
-		return 1;
-	}
-
-	@Override
-	public int getProcessQueueMaxLength()
-	{
-		return 1;
-	}
-
-	@Override
-	public float getMinProcessDistance(@Nonnull MultiblockProcess<CoagulatorRecipe> process)
-	{
-		return 0.84f;
-	}
-
-	@Override
-	public boolean isInWorldProcessingMachine()
-	{
-		return true;
-	}
-
-	@Nonnull
-	@Override
-	protected IFluidTank[] getAccessibleFluidTanks(@Nonnull EnumFacing enumFacing)
-	{
-		if(pos==146||pos==140)
-		{
-			TileEntityCoagulator master = master();
-			if(master!=null)
-			{
-				return new IFluidTank[]{pos==146?master.tanks[0]: master.tanks[1]};
-			}
-		}
-
+		if(pos==multiblock.getPointOfInterest("tank_coagulant"))
+			return new IFluidTank[]{tankCoagulant};
+		else if(pos==multiblock.getPointOfInterest("tank_input"))
+			return new IFluidTank[]{tankInput};
 		return new IFluidTank[0];
 	}
 
+	@Nullable
 	@Override
-	protected boolean canFillTankFrom(int i, @Nonnull EnumFacing enumFacing, @Nonnull FluidStack fluidStack)
-	{
-		return true;
-	}
-
-	@Override
-	protected boolean canDrainTankFrom(int i, @Nonnull EnumFacing enumFacing)
-	{
-		return false;
-	}
-
-	@Nonnull
-	@Override
-	public float[] getBlockBounds()
-	{
-		return new float[]{0, 0, 0, 1, 1, 1};
-	}
-
-	@Override
-	public NonNullList<ItemStack> getInventory()
-	{
-		return this.inventory;
-	}
-
-	@Override
-	public boolean isStackValid(int i, ItemStack itemStack)
-	{
-		return true;
-	}
-
-	@Override
-	public int getSlotLimit(int i)
-	{
-		return 64;
-	}
-
-	@Override
-	public void doGraphicalUpdates(int i)
-	{
-		this.markDirty();
-		this.markContainingBlockForUpdate(null);
-	}
-
 	public IIGUI getGUI()
 	{
 		return IIGUI.COAGULATOR;
 	}
 
 	@Override
-	public boolean shoudlPlaySound(@Nonnull String sound)
+	public boolean isStackValid(int slot, ItemStack stack)
 	{
-		TileEntityCoagulator master = master();
-		// TODO: 31.10.2021 sounds
-		/*
-		if(master!=null&&master.processQueue.size() > 0)
-		{
-			MultiblockProcess<VulcanizerRecipe> process = master.processQueue.get(0);
-			switch(sound)
-			{
-				case "immersiveintelligence:printing_press":
-				{
-					if(master.processQueue.size() > 1)
-					{
-						if(pl.pabilo8.immersiveintelligence.common.Utils.inRange(master.processQueue.get(1).processTick, master.processQueue.get(1).maxTicks, 0, 0.16))
-							return true;
-					}
-					return pl.pabilo8.immersiveintelligence.common.Utils.inRange(process.processTick, process.maxTicks, 0, 0.165);
-				}
-				case "immersiveintelligence:vulcanizer_heating":
-					return pl.pabilo8.immersiveintelligence.common.Utils.inRange(process.processTick, process.maxTicks, 0.2, 0.8);
-				case "immersiveintelligence:howitzer_rotation_h":
-					return pl.pabilo8.immersiveintelligence.common.Utils.inRange(process.processTick, process.maxTicks, 0.78, 0.84);
-				case "immersiveintelligence:inserter_forward":
-					return pl.pabilo8.immersiveintelligence.common.Utils.inRange(process.processTick, process.maxTicks, 0.93, 0.96);
-				case "immersiveintelligence:inserter_backward":
-					return pl.pabilo8.immersiveintelligence.common.Utils.inRange(process.processTick, process.maxTicks, 0.85, 0.86);
-			}
-		}
-		 */
-
-		return false;
+		return true;
 	}
 
 	@Override
-	public boolean canOpenGui()
+	public NonNullList<ItemStack> getDroppedItems()
 	{
-		// allow GUI when multiblock is formed and this is the master tile (not a dummy)
-		return formed && !isDummy();
+		if(this.isDummy())
+			return super.getDroppedItems();
+		NonNullList<ItemStack> drops = NonNullList.withSize(inventory.size(), ItemStack.EMPTY);
+		for(int i = 0; i < inventory.size(); i++)
+			if(i!=MultiblockCoagulator.SLOT_OUTPUT)
+				drops.set(i, inventory.get(i));
+		return drops;
 	}
 
-	// TODO: 31.10.2021 gui
-	@Override
-	public int getGuiID()
-	{
-		return IIGUI.COAGULATOR.ordinal();
-	}
-
-	@Nullable
-	@Override
-	public TileEntity getGuiMaster()
-	{
-		return master();
-	}
-
-	public enum CraneAnimation
+	public enum CraneAnimation implements ISerializableEnum
 	{
 		NONE,
 		MOVE_BUCKET,
