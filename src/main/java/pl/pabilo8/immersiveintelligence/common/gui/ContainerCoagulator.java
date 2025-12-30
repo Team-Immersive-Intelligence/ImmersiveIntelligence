@@ -20,17 +20,16 @@ public class ContainerCoagulator extends ContainerIIBase<TileEntityCoagulator>
 	public ContainerCoagulator(EntityPlayer player, TileEntityCoagulator tile)
 	{
 		super(player, tile);
-		{
-			//Fluid Container Slots
-			this.slotBucketIn = new Slot[]{
-					addSlot(176-32-12-64-16, 21-8, MultiblockCoagulator.SLOT_INPUT1, getFluidContainerSlot(SideConfig.INPUT)),
-					addSlot(176-32-12, 21-8, MultiblockCoagulator.SLOT_INPUT2, getFluidContainerSlot(SideConfig.INPUT))
-			};
-			this.slotBucketOut = new Slot[]{
-					addSlot(176-32-12-64-16, 57-8, MultiblockCoagulator.SLOT_OUTPUT1, getFluidContainerSlot(SideConfig.OUTPUT)),
-					addSlot(176-32-12, 57-8, MultiblockCoagulator.SLOT_OUTPUT2, getFluidContainerSlot(SideConfig.OUTPUT))
-			};
-			addPlayerInventory(player.inventory, 8, 86+24);
-		}
+
+		//Fluid Container Slots
+		this.slotBucketIn = new Slot[]{
+				addSlot(176-32-12-64-16, 21-8, MultiblockCoagulator.SLOT_INPUT1, getFluidContainerSlot(SideConfig.INPUT)),
+				addSlot(176-32-12, 21-8, MultiblockCoagulator.SLOT_INPUT2, getFluidContainerSlot(SideConfig.INPUT))
+		};
+		this.slotBucketOut = new Slot[]{
+				addSlot(176-32-12-64-16, 57-8, MultiblockCoagulator.SLOT_OUTPUT1, getFluidContainerSlot(SideConfig.OUTPUT)),
+				addSlot(176-32-12, 57-8, MultiblockCoagulator.SLOT_OUTPUT2, getFluidContainerSlot(SideConfig.OUTPUT))
+		};
+		addPlayerInventory(player.inventory, 8, 86+24);
 	}
 }

@@ -58,6 +58,8 @@ public class IIPacketHandler
 		registerMessage(MessageDiplomacySync.class, true, false);
 		registerMessage(MessageDiplomacyAction.class, false, true);
 		registerMessage(MessageIIGameruleUpdate.class, true, false);
+		registerMessage(MessageIIChunkClaimData.class, true, false);
+		registerMessage(MessageIIRequestChunkClaimData.class, false, true);
 	}
 
 	private static <T extends IIMessage> void registerMessage(Class<T> message, boolean clientSide, boolean serverSide)

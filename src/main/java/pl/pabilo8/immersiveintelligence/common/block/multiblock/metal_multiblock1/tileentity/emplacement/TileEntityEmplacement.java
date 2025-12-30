@@ -19,10 +19,8 @@ import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeEntity;
 import pl.pabilo8.immersiveintelligence.api.style.IStyleCustomizable;
 import pl.pabilo8.immersiveintelligence.api.style.StyleCustomization;
 import pl.pabilo8.immersiveintelligence.api.upgrade.IManagedUpgradableDevice;
-import pl.pabilo8.immersiveintelligence.api.upgrade.Upgrade;
 import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeManager;
 import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeUtils.DeviceTier;
-import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeUtils.UpgradeOperation;
 import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Emplacement;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
@@ -33,7 +31,6 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.task.EmplacementTaskPosition;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.task.EmplacementTaskShells;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.weapon.EmplacementWeapon;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.weapon.UpgradeEmplacementWeapon;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
@@ -444,10 +441,8 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 		return DeviceTier.STEEL;
 	}
 
-	@Override
-	public boolean addUpgrade(Upgrade upgrade, UpgradeOperation operation)
-	{
-		if(operation==UpgradeOperation.FORCE_ADD&&upgrade instanceof UpgradeEmplacementWeapon)
+	//TODO: 30.12.2025 on upgrade install event
+	/*if(operation==UpgradeOperation.FORCE_ADD&&upgrade instanceof UpgradeEmplacementWeapon)
 			if(currentWeapon==null)
 			{
 				currentWeapon = UpgradeEmplacementWeapon.getWeaponFromName(upgrade.getName());
@@ -455,9 +450,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 				if(!world.isRemote)
 					currentWeapon.syncWithClient(this);
 				return true;
-			}
-		return false;
-	}
+			}*/
 
 	@Override
 	public boolean canOpenGui()
@@ -526,6 +519,12 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 	{
 		this.ownerIdentity = ownerIdentity;
 		updateTileForEvent(SyncEvents.TILE_OWNERSHIP_MODIFIED);
+	}
+
+	@Override
+	public int getChunkOwnershipRadius()
+	{
+		return Emplacement.chunkClaimRadius;
 	}
 
 	//--- IStyleCustomizable ---//

@@ -3,6 +3,7 @@ package pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection;
 import net.minecraft.client.renderer.GlStateManager;
 import pl.pabilo8.immersiveintelligence.client.util.font.IIFontRenderer;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
+import pl.pabilo8.immersiveintelligence.common.util.ILocalizedEnum;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -27,7 +28,10 @@ public class DecoElementDisplays
 	{
 		return (t, width, font, mouseX, mouseY, partialTicks, heightProbe) -> {
 			if(!heightProbe)
-				font.drawString(t.toString(), 2, 2, IIColor.fromHex("afafaf").getPackedRGB());
+			{
+				String displayed = t instanceof ILocalizedEnum?((ILocalizedEnum)t).getLocalizedName(): t.toString();
+				font.drawString(displayed, 2, 2, IIColor.fromHex("afafaf").getPackedRGB());
+			}
 			return font.FONT_HEIGHT;
 		};
 	}

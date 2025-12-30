@@ -967,6 +967,19 @@ public class IIConfigHandler
 
 				@Comment({"Energy usage of the radar per tick (in IF)."})
 				public static int energyUsage = 2048;
+
+				@Comment({"Radar target detection radius (in blocks)."})
+				public static int detectionRadius = 72;
+			}
+
+			public static class Flagpole
+			{
+				@Comment({"Radius for chunks to be claimed (not loaded) around this multiblock"})
+				public static int chunkClaimRadius = 2;
+
+				@Comment({"Maximum allowed radius for chunks to be loaded around this multiblock."})
+				@RangeInt(min = 0, max = 12)
+				public static int maxChunksLoadedRadius = 3;
 			}
 
 			public static class Emplacement
@@ -976,6 +989,9 @@ public class IIConfigHandler
 
 				@Comment({"Time for the multiblock to open/close the lid (in ticks)."})
 				public static int lidTime = 240;
+
+				@Comment({"Radius for chunks to be claimed (not loaded) around this multiblock"})
+				public static int chunkClaimRadius = 1;
 
 				@Comment({"Interval for the multiblock weapon to update sighted targets (in ticks)."})
 				public static int sightUpdateTime = 10;

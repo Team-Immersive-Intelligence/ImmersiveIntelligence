@@ -36,7 +36,7 @@ public class TileEntityRadioStation extends TileEntityMultiblockIIGeneric<TileEn
 	{
 		super(MultiblockRadioStation.INSTANCE);
 		this.energyStorage = new FluxStorageAdvanced(RadioStation.energyCapacity);
-		this.construction = new MultiblockConstructionManager(RadioStation.constructionEnergy);
+		this.construction = new MultiblockConstructionManager(this, RadioStation.constructionEnergy);
 	}
 
 	@Override

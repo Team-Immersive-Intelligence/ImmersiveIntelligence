@@ -5,6 +5,7 @@ import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import pl.pabilo8.immersiveintelligence.api.style.IStyleCustomizable;
@@ -12,6 +13,8 @@ import pl.pabilo8.immersiveintelligence.api.style.StyleCustomization;
 import pl.pabilo8.immersiveintelligence.api.upgrade.IManagedUpgradableDevice;
 import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeManager;
 import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeUtils.DeviceTier;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Flagpole;
+import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockFlagpole;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyUtils;
@@ -19,10 +22,12 @@ import pl.pabilo8.immersiveintelligence.common.util.diplomacy.IOwnableProperty;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.OwnerIdentity;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultiblockIIGeneric;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IIIGuiMultiblockTile;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultiblockIIBase;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 
 /**
@@ -31,8 +36,8 @@ import java.util.ArrayList;
  * @ii-approved 0.3.1
  * @since 04.03.2021
  */
-public class TileEntityFlagpole extends TileEntityMultiblockIIGeneric<TileEntityFlagpole> implements IPlayerInteraction, IManagedUpgradableDevice<TileEntityFlagpole>,
-		IStyleCustomizable, IOwnableProperty
+public class TileEntityFlagpole extends TileEntityMultiblockIIBase<TileEntityFlagpole> implements IPlayerInteraction, IManagedUpgradableDevice<TileEntityFlagpole>,
+		IStyleCustomizable, IOwnableProperty, IIIGuiMultiblockTile
 {
 	@SyncNBT(events = SyncEvents.TILE_CUSTOM1, nullable = true)
 	public ItemStack flag = ItemStack.EMPTY;
@@ -55,7 +60,6 @@ public class TileEntityFlagpole extends TileEntityMultiblockIIGeneric<TileEntity
 	@Override
 	protected void dummyCleanup()
 	{
-		super.dummyCleanup();
 		this.flag = ItemStack.EMPTY;
 		this.upgradeManager = null;
 		this.ownerIdentity = null;
@@ -65,6 +69,10 @@ public class TileEntityFlagpole extends TileEntityMultiblockIIGeneric<TileEntity
 	@Override
 	protected void onUpdate()
 	{
+		//Claim neighbouring chunks
+		if(!world.isRemote&&world.getTotalWorldTime()%240==0)
+			DiplomacyUtils.claimChunks(this);
+
 		/*if(!world.isRemote&&ownerIdentity!=DiplomacyUtils.NEUTRAL)
 			IILogger.info("Owner Identity for "+uuid+" : "+ownerIdentity);*/
 		/*if(!world.isRemote)
@@ -140,6 +148,18 @@ public class TileEntityFlagpole extends TileEntityMultiblockIIGeneric<TileEntity
 		return false;
 	}
 
+	@Override
+	public int getSlotLimit(int slot)
+	{
+		return 1;
+	}
+
+	@Override
+	public void doGraphicalUpdates(int slot)
+	{
+
+	}
+
 	//--- IManagedUpgradableDevice ---//
 
 	@Nonnull
@@ -171,11 +191,38 @@ public class TileEntityFlagpole extends TileEntityMultiblockIIGeneric<TileEntity
 		IILogger.info("Owner Identity for "+uuid+" : "+ownerIdentity+" / world is "+(world.isRemote?"remote": "local"));
 	}
 
+	@Override
+	public int getChunkOwnershipRadius()
+	{
+		return Flagpole.chunkClaimRadius;
+	}
+
 	//--- IStyleCustomizable ---//
 
 	@Override
 	public StyleCustomization getStyle()
 	{
 		return style;
+	}
+
+	//--- IIIGuiMultiblockTile ---//
+
+	@Override
+	public boolean canOpenGui()
+	{
+		return true;
+	}
+
+	@Nullable
+	@Override
+	public TileEntity getGuiMaster()
+	{
+		return master();
+	}
+
+	@Override
+	public IIGUI getGUI()
+	{
+		return IIGUI.FLAGPOLE;
 	}
 }

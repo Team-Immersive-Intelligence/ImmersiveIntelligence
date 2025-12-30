@@ -20,6 +20,9 @@ import pl.pabilo8.immersiveintelligence.api.CorrosionHandler;
 import pl.pabilo8.immersiveintelligence.api.utils.armor.IRadiationProtectionEquipment;
 import pl.pabilo8.immersiveintelligence.common.util.IIDamageSources;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 03.03.2020
@@ -28,21 +31,21 @@ public class IIPotions
 {
 	public static Potion suppression, brokenArmor, corrosion, infraredVision, ironWill, wellSupplied, concealed;
 	public static Potion exposed, medicalTreatment, undergoingRepairs, radiation, nuclearHeat, movementAssist;
-	public static Potion foreignShores, enemySoil, enemysNest, homeShores, homeland, heartland;
+	public static Potion homeShores, homeland, heartland, foreignShores, enemySoil, enemysNest;
 
 	public static void init()
 	{
-		suppression = new IIPotion("suppression", true, 0xe3bb19, 0, false, 0, true, true);
+		suppression = new IIPotion("suppression", true, 0xe3bb19);
 		suppression.registerPotionAttributeModifier(SharedMonsterAttributes.MOVEMENT_SPEED, Utils.generateNewUUID().toString(), -0.003921569f, 2);
 		suppression.registerPotionAttributeModifier(SharedMonsterAttributes.LUCK, Utils.generateNewUUID().toString(), -0.007843138f, 2);
 		suppression.registerPotionAttributeModifier(SharedMonsterAttributes.FOLLOW_RANGE, Utils.generateNewUUID().toString(), -0.007843138f, 2);
 		suppression.registerPotionAttributeModifier(SharedMonsterAttributes.FLYING_SPEED, Utils.generateNewUUID().toString(), -0.125, 2);
 		suppression.registerPotionAttributeModifier(SharedMonsterAttributes.ATTACK_SPEED, Utils.generateNewUUID().toString(), -0.003921569f, 2);
 
-		brokenArmor = new IIPotion("broken_armor", true, 0x755959, 0, false, 1, true, true);
+		brokenArmor = new IIPotion("broken_armor", true, 0x755959);
 		brokenArmor.registerPotionAttributeModifier(SharedMonsterAttributes.ARMOR_TOUGHNESS, Utils.generateNewUUID().toString(), -0.003921569f, 2);
 
-		corrosion = new IIPotion("corrosion", true, 0x567b46, 0, false, 2, true, true)
+		corrosion = new IIPotion("corrosion", true, 0x567b46)
 		{
 			@Override
 			public void performEffect(EntityLivingBase living, int amplifier)
@@ -55,48 +58,15 @@ public class IIPotions
 		};
 		corrosion.registerPotionAttributeModifier(SharedMonsterAttributes.ARMOR_TOUGHNESS, Utils.generateNewUUID().toString(), -0.003921569f, 2);
 
-		infraredVision = new IIPotion("infrared_vision", false, 0x7b0000, 0, false, 3, true, true);
+		infraredVision = new IIPotion("infrared_vision", false, 0x7b0000);
 
-		ironWill = new IIPotion("iron_will", false, 0xe2c809, 0, false, 4, true, true);
+		ironWill = new IIPotion("iron_will", false, 0xe2c809);
 		ironWill.registerPotionAttributeModifier(SharedMonsterAttributes.MOVEMENT_SPEED, Utils.generateNewUUID().toString(), 0.003921569f, 1);
 		ironWill.registerPotionAttributeModifier(SharedMonsterAttributes.LUCK, Utils.generateNewUUID().toString(), 0.007843138f, 2);
 
-		wellSupplied = new IIPotion("well_supplied", false, 0xa49e66, 0, false, 5, true, true);
+		wellSupplied = new IIPotion("well_supplied", false, 0xa49e66);
 
-		concealed = new IIPotion("concealed", false, 0x558858, 0, false, 6, true, true)
-		{
-			@Override
-			public void performEffect(EntityLivingBase living, int amplifier)
-			{
-
-				if(!living.isPotionActive(IIPotions.concealed))
-					living.setInvisible(true);
-			}
-		};
-		exposed = new IIPotion("exposed", true, 0x558858, 0, false, 12, true, true)
-		{
-			@Override
-			public void performEffect(EntityLivingBase living, int amplifier)
-			{
-				living.setGlowing(true);
-				living.setInvisible(false);
-				living.removePotionEffect(MobEffects.INVISIBILITY);
-				living.removePotionEffect(IIPotions.concealed);
-			}
-
-			@Override
-			public void removeAttributesModifiersFromEntity(EntityLivingBase entityLivingBaseIn, AbstractAttributeMap attributeMapIn, int amplifier)
-			{
-				super.removeAttributesModifiersFromEntity(entityLivingBaseIn, attributeMapIn, amplifier);
-				entityLivingBaseIn.setGlowing(false);
-			}
-		};
-		exposed.registerPotionAttributeModifier(SharedMonsterAttributes.MOVEMENT_SPEED, Utils.generateNewUUID().toString(), -0.05f, 1);
-		exposed.registerPotionAttributeModifier(SharedMonsterAttributes.LUCK, Utils.generateNewUUID().toString(), -1f, 1);
-		suppression.registerPotionAttributeModifier(SharedMonsterAttributes.FOLLOW_RANGE, Utils.generateNewUUID().toString(), -0.007843138f, 2);
-
-
-		medicalTreatment = new IIPotion("medical_treatment", false, 0xe13eb8, 0, false, 7, true, true)
+		medicalTreatment = new IIPotion("medical_treatment", false, 0xe13eb8)
 		{
 			@Override
 			public boolean isReady(int duration, int amplifier)
@@ -111,7 +81,7 @@ public class IIPotions
 					living.heal((amplifier+1)/4f);
 			}
 		};
-		undergoingRepairs = new IIPotion("undergoing_repairs", false, 0xc0c0c0, 0, false, 8, true, true)
+		undergoingRepairs = new IIPotion("undergoing_repairs", false, 0xc0c0c0)
 		{
 			@Override
 			public boolean isReady(int duration, int amplifier)
@@ -140,7 +110,40 @@ public class IIPotions
 
 		};
 
-		radiation = new IIPotion("radiation", true, 0xd2a846, 0, false, 9, true, true)
+		concealed = new IIPotion("concealed", false, 0x558858)
+		{
+			@Override
+			public void performEffect(EntityLivingBase living, int amplifier)
+			{
+
+				if(!living.isPotionActive(IIPotions.concealed))
+					living.setInvisible(true);
+			}
+		};
+		exposed = new IIPotion("exposed", true, 0x558858)
+		{
+			@Override
+			public void performEffect(EntityLivingBase living, int amplifier)
+			{
+				living.setGlowing(true);
+				living.setInvisible(false);
+				living.removePotionEffect(MobEffects.INVISIBILITY);
+				living.removePotionEffect(IIPotions.concealed);
+			}
+
+			@Override
+			public void removeAttributesModifiersFromEntity(EntityLivingBase entityLivingBaseIn, AbstractAttributeMap attributeMapIn, int amplifier)
+			{
+				super.removeAttributesModifiersFromEntity(entityLivingBaseIn, attributeMapIn, amplifier);
+				entityLivingBaseIn.setGlowing(false);
+			}
+		};
+		exposed.registerPotionAttributeModifier(SharedMonsterAttributes.MOVEMENT_SPEED, Utils.generateNewUUID().toString(), -0.05f, 1);
+		exposed.registerPotionAttributeModifier(SharedMonsterAttributes.LUCK, Utils.generateNewUUID().toString(), -1f, 1);
+		exposed.registerPotionAttributeModifier(SharedMonsterAttributes.FOLLOW_RANGE, Utils.generateNewUUID().toString(), -0.007843138f, 2);
+
+
+		radiation = new IIPotion("radiation", true, 0xd2a846)
 		{
 			@Override
 			public void performEffect(EntityLivingBase living, int amplifier)
@@ -161,12 +164,18 @@ public class IIPotions
 					living.attackEntityFrom(IIDamageSources.RADIATION_DAMAGE, 2);
 				}
 			}
+
+			@Override
+			public List<ItemStack> getCurativeItems()
+			{
+				return new ArrayList<>();
+			}
 		};
 		radiation.registerPotionAttributeModifier(SharedMonsterAttributes.MOVEMENT_SPEED, Utils.generateNewUUID().toString(), -0.003921569f, 2);
 		radiation.registerPotionAttributeModifier(SharedMonsterAttributes.FOLLOW_RANGE, Utils.generateNewUUID().toString(), -0.003921569f, 2);
 		radiation.registerPotionAttributeModifier(SharedMonsterAttributes.FLYING_SPEED, Utils.generateNewUUID().toString(), -0.003921569f, 2);
 
-		nuclearHeat = new IIPotion("nuclear_heat", true, 0x9d5919, 0, false, 10, true, true)
+		nuclearHeat = new IIPotion("nuclear_heat", true, 0x9d5919)
 		{
 			@Override
 			public void performEffect(EntityLivingBase living, int amplifier)
@@ -175,25 +184,44 @@ public class IIPotions
 				living.getArmorInventoryList().forEach(stack -> stack.damageItem(stack.getMaxDamage(), living));
 				living.attackEntityFrom(IIDamageSources.NUCLEAR_HEAT_DAMAGE, 2000);
 			}
+
+			@Override
+			public List<ItemStack> getCurativeItems()
+			{
+				return new ArrayList<>();
+			}
 		};
 		nuclearHeat.registerPotionAttributeModifier(SharedMonsterAttributes.MOVEMENT_SPEED, Utils.generateNewUUID().toString(), -1, 2);
 		nuclearHeat.registerPotionAttributeModifier(SharedMonsterAttributes.FOLLOW_RANGE, Utils.generateNewUUID().toString(), -1, 2);
 		nuclearHeat.registerPotionAttributeModifier(SharedMonsterAttributes.FLYING_SPEED, Utils.generateNewUUID().toString(), -1, 2);
 
-		movementAssist = new IIPotion("movement_assist", false, 0x9d5919, 0, false, 13, true, true);
+		movementAssist = new IIPotion("movement_assist", false, 0x9d5919);
 		movementAssist.registerPotionAttributeModifier(SharedMonsterAttributes.MOVEMENT_SPEED, Utils.generateNewUUID().toString(), 0.5, 1);
 		movementAssist.registerPotionAttributeModifier(SharedMonsterAttributes.MOVEMENT_SPEED, Utils.generateNewUUID().toString(), 0.5, 1);
 
+		IIPotion.iconID = 16;
+		homeShores = new IIPotion("home_shores", true, 0x9d5919);
+		homeland = new IIPotion("homeland", true, 0x9d5919);
+		heartland = new IIPotion("heartland", true, 0x9d5919);
+		foreignShores = new IIPotion("foreign_shores", true, 0x9d5919);
+		enemySoil = new IIPotion("enemy_soil", true, 0x9d5919);
+		enemysNest = new IIPotion("enemys_nest", true, 0x9d5919);
 	}
 
 
 	public static class IIPotion extends IEPotion
 	{
 		static ResourceLocation tex = new ResourceLocation(ImmersiveIntelligence.MODID, "textures/gui/potioneffects.png");
+		static int iconID = 0;
 
-		public IIPotion(String name, boolean isBad, int colour, int tick, boolean halveTick, int icon, boolean showInInventory, boolean showInHud)
+		public IIPotion(String name, boolean isBad, int colour)
 		{
-			super(new ResourceLocation(ImmersiveIntelligence.MODID, name), isBad, colour, tick, halveTick, icon, showInInventory, showInHud);
+			this(name, isBad, colour, 0, false, true, true);
+		}
+
+		public IIPotion(String name, boolean isBad, int colour, int tick, boolean halveTick, boolean showInInventory, boolean showInHud)
+		{
+			super(new ResourceLocation(ImmersiveIntelligence.MODID, name), isBad, colour, tick, halveTick, iconID++, showInInventory, showInHud);
 			this.setPotionName(name);
 		}
 
@@ -211,6 +239,7 @@ public class IIPotions
 			Minecraft.getMinecraft().getTextureManager().bindTexture(tex);
 			return iconindex;
 		}
+
 
 		@Override
 		public void renderHUDEffect(PotionEffect effect, Gui gui, int x, int y, float z, float alpha)

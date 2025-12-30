@@ -21,10 +21,13 @@ import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.entity.tactile.TactileManager;
 import pl.pabilo8.immersiveintelligence.common.entity.tactile.TactileManager.ITactileListener;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyUtils;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.IOwnableProperty;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.NBTSerialisation;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IAdvancedBounds;
@@ -35,6 +38,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 import java.util.function.Consumer;
 
 /**
@@ -57,6 +61,10 @@ public abstract class TileEntityMultiblockIIBase<T extends TileEntityMultiblockI
 	private T master = null;
 	//Contrary to what forge's javadoc says, this has to be done; during onLoad, the NBT data is not properly loaded yet
 	private boolean firstTick = true;
+	@SyncNBT
+	protected long timestamp = 0;
+	@SyncNBT(nullable = true)
+	public UUID uuid = null;
 
 	protected TileEntityMultiblockIIBase(MultiblockStuctureBase<T> multiblock)
 	{
@@ -73,6 +81,7 @@ public abstract class TileEntityMultiblockIIBase<T extends TileEntityMultiblockI
 		if(!getWorld().isRemote&&isDummy())
 		{
 			EventHandler.REMOVE_FROM_TICKING.add(this);
+			uuid = null;
 			dummyCleanup();
 			return;
 		}
@@ -80,6 +89,7 @@ public abstract class TileEntityMultiblockIIBase<T extends TileEntityMultiblockI
 		//First Tick
 		if(firstTick)
 		{
+			timestamp = world.getTotalWorldTime();
 			onBeforeFirstTick();
 			firstTick = false;
 		}
@@ -92,7 +102,8 @@ public abstract class TileEntityMultiblockIIBase<T extends TileEntityMultiblockI
 	 */
 	public void onBeforeFirstTick()
 	{
-
+		if(!world.isRemote&&this instanceof IOwnableProperty)
+			DiplomacyUtils.validateProperty(((IOwnableProperty)this));
 	}
 
 	/**
@@ -104,6 +115,8 @@ public abstract class TileEntityMultiblockIIBase<T extends TileEntityMultiblockI
 	public void invalidate()
 	{
 		super.invalidate();
+		if(!world.isRemote&&this instanceof IOwnableProperty&&!isDummy())
+			DiplomacyUtils.invalidateProperty(((IOwnableProperty)this));
 		forceReCacheAABB();
 	}
 
@@ -477,5 +490,17 @@ public abstract class TileEntityMultiblockIIBase<T extends TileEntityMultiblockI
 		if(rot==Rotation.COUNTERCLOCKWISE_90)
 			return Rotation.CLOCKWISE_90;
 		return rot;
+	}
+
+	public UUID getUUID()
+	{
+		if(isDummy())
+			return master().getUUID();
+		return this.uuid==null?this.uuid = IIUtils.getBlockPosUUID(getPos()): this.uuid;
+	}
+
+	public long getTicksExisted()
+	{
+		return world.getTotalWorldTime()-timestamp;
 	}
 }

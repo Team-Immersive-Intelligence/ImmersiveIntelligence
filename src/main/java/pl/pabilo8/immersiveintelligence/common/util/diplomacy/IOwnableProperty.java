@@ -1,6 +1,9 @@
 package pl.pabilo8.immersiveintelligence.common.util.diplomacy;
 
 
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+
 import java.util.UUID;
 
 /**
@@ -17,4 +20,15 @@ public interface IOwnableProperty
 	UUID getUUID();
 
 	void setOwnerIdentity(OwnerIdentity ownerIdentity);
+
+	BlockPos getPos();
+
+	World getWorld();
+
+	long getTicksExisted();
+
+	default int getChunkOwnershipRadius()
+	{
+		return 0;
+	}
 }

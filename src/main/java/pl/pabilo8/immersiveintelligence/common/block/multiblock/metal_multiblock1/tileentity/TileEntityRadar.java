@@ -4,6 +4,7 @@ import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorageAdvan
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
@@ -14,14 +15,17 @@ import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeManager;
 import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeUtils.DeviceTier;
 import pl.pabilo8.immersiveintelligence.api.utils.MultiblockConstructionManager;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Radar;
+import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockRadar;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IConstructionRequiringDevice;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IIIGuiMultiblockTile;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultiblockIIGeneric;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -31,7 +35,7 @@ import java.util.List;
  * @since 04.03.2021
  */
 public class TileEntityRadar extends TileEntityMultiblockIIGeneric<TileEntityRadar> implements
-		IConstructionRequiringDevice, IManagedUpgradableDevice<TileEntityRadar>
+		IConstructionRequiringDevice, IManagedUpgradableDevice<TileEntityRadar>, IIIGuiMultiblockTile
 {
 	@SyncNBT
 	public int dishRotation = 0;
@@ -47,7 +51,7 @@ public class TileEntityRadar extends TileEntityMultiblockIIGeneric<TileEntityRad
 		super(MultiblockRadar.INSTANCE);
 		this.energyStorage = new FluxStorageAdvanced(Radar.energyCapacity);
 		this.upgrades = new UpgradeManager<>(this);
-		this.construction = new MultiblockConstructionManager(Radar.constructionEnergy);
+		this.construction = new MultiblockConstructionManager(this, Radar.constructionEnergy);
 	}
 
 	@Override
@@ -124,5 +128,24 @@ public class TileEntityRadar extends TileEntityMultiblockIIGeneric<TileEntityRad
 	public boolean isStackValid(int slot, ItemStack stack)
 	{
 		return false;
+	}
+
+	@Override
+	public boolean canOpenGui()
+	{
+		return construction.isConstructionFinished();
+	}
+
+	@Nullable
+	@Override
+	public TileEntity getGuiMaster()
+	{
+		return master();
+	}
+
+	@Override
+	public IIGUI getGUI()
+	{
+		return IIGUI.RADAR;
 	}
 }

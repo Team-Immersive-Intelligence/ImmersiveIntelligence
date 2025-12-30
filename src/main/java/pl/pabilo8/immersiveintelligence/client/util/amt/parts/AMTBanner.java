@@ -4,8 +4,12 @@ import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.Vec3d;
 import pl.pabilo8.immersiveintelligence.common.util.amt.AMTModelHeader;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -13,6 +17,9 @@ import pl.pabilo8.immersiveintelligence.common.util.amt.AMTModelHeader;
  */
 public class AMTBanner extends AMT
 {
+	@Nonnull
+	private ItemStack banner = ItemStack.EMPTY;
+
 	public AMTBanner(String name, AMTModelHeader header)
 	{
 		super(name, header);
@@ -21,6 +28,11 @@ public class AMTBanner extends AMT
 	public AMTBanner(String name, Vec3d originPos)
 	{
 		super(name, originPos);
+	}
+
+	public void setBanner(ItemStack banner)
+	{
+		this.banner = banner;
 	}
 
 	@Override
@@ -75,10 +87,15 @@ public class AMTBanner extends AMT
 	}
 
 	@Override
+	public void applyProperties(EasyNBT nbt)
+	{
+		super.applyProperties(nbt);
+		nbt.checkSetItemStack("banner", this::setBanner);
+	}
+
+	@Override
 	public void disposeOf()
 	{
 
 	}
-
-
 }

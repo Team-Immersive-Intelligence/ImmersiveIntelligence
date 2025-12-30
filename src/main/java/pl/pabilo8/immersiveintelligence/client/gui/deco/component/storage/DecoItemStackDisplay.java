@@ -161,8 +161,8 @@ public class DecoItemStackDisplay extends DecoComponent<DecoItemStackDisplay>
 			float progress = MathHelper.clamp(progressBarValue.get(), 0, 1);
 			IIDrawUtils.startColored()
 					.drawColorGradient(
-							x+width-padding[0]-padding[2]+2, y-padding[1]-padding[3]+height-(int)((height)*progress),
-							2, (int)((height)*progress),
+							x+width-padding[0]-padding[2]+2, y-padding[1]-padding[3]+height-(int)((height-4)*progress),
+							2, (int)((height-4)*progress),
 							barGradientColor1, barGradientColor2
 					)
 					.finish();

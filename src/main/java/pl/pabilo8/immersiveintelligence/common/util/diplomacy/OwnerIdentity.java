@@ -217,9 +217,16 @@ public class OwnerIdentity
 		return getRelationTowards(entity).atLeast(DiplomaticStatus.ALLIED);
 	}
 
+	@Nonnull
 	public DiplomaticStatus getRelationTowards(@Nonnull EntityLivingBase entity)
 	{
 		OwnerIdentity other = DiplomacyUtils.getOwnerIdentityForEntity(entity);
+		return getRelationTowards(other);
+	}
+
+	@Nonnull
+	public DiplomaticStatus getRelationTowards(@Nonnull OwnerIdentity other)
+	{
 		if(other.equals(this))
 			return DiplomaticStatus.MEMBER;
 		return relations.getOrDefault(other, DiplomaticStatus.NEUTRAL);

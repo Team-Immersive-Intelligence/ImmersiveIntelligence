@@ -137,6 +137,17 @@ public class DecoTextures
 	public static final ResLoc RES_TEXTURES_DECO_COMPONENT_DROPDOWN_DATA_LETTER_PAPER = ResLoc.of(RES_TEXTURES_DECO, "component/data_letter_dropdown_paper");
 	public static final ResLoc RES_TEXTURES_DECO_COMPONENT_DROPDOWN_SYMBOL_PAPER = ResLoc.of(RES_TEXTURES_DECO, "component/dropdown_paper");
 
+	public static final ResLoc MAP_MARKER_ENTITY = ResLoc.of(RES_TEXTURES_DECO, "map/marker/entity");
+	public static final ResLoc MAP_MARKER_VEHICLE = ResLoc.of(RES_TEXTURES_DECO, "map/marker/vehicle");
+	public static final ResLoc MAP_MARKER_AIRCRAFT = ResLoc.of(RES_TEXTURES_DECO, "map/marker/aircraft");
+	public static final ResLoc MAP_MARKER_BULLET = ResLoc.of(RES_TEXTURES_DECO, "map/marker/bullet");
+	public static final ResLoc MAP_MARKER_MISSILE = ResLoc.of(RES_TEXTURES_DECO, "map/marker/missile");
+
+	public static final ResLoc MAP_MARKER_FLAGPOLE = ResLoc.of(RES_TEXTURES_DECO, "map/marker/flagpole");
+	public static final ResLoc MAP_MARKER_EMPLACEMENT = ResLoc.of(RES_TEXTURES_DECO, "map/marker/emplacement");
+	public static final ResLoc MAP_MARKER_RADAR = ResLoc.of(RES_TEXTURES_DECO, "map/marker/radar");
+	public static final ResLoc MAP_MARKER_RADIO_STATION = ResLoc.of(RES_TEXTURES_DECO, "map/marker/radio_station");
+
 	//--- Special Textures ---//
 	public static final ResLoc TEXTURE_WHITE = IIReference.RES_IE.with("items/white");
 

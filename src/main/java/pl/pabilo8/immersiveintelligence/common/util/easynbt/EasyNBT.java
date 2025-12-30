@@ -196,6 +196,17 @@ public class EasyNBT extends Constants.NBT
 	}
 
 	/**
+	 * Appends a long integer
+	 *
+	 * @param key name of this tag
+	 */
+	public EasyNBT withLong(String key, long value)
+	{
+		wrapped.setLong(key, value);
+		return this;
+	}
+
+	/**
 	 * Appends a byte
 	 *
 	 * @param key name of this tag
@@ -695,6 +706,16 @@ public class EasyNBT extends Constants.NBT
 	}
 
 	/**
+	 * Gets a long integer
+	 *
+	 * @param key name of this tag
+	 */
+	public long getLong(String key)
+	{
+		return wrapped.getLong(key);
+	}
+
+	/**
 	 * Gets a byte
 	 *
 	 * @param key name of this tag
@@ -1014,6 +1035,22 @@ public class EasyNBT extends Constants.NBT
 	{
 		if(wrapped.hasKey(key))
 			ifPresent.accept(wrapped.getInteger(key));
+		return this;
+	}
+
+	public EasyNBT checkSetLong(String key, Consumer<Long> ifPresent, long ifNot)
+	{
+		if(wrapped.hasKey(key))
+			ifPresent.accept(wrapped.getLong(key));
+		else
+			ifPresent.accept(ifNot);
+		return this;
+	}
+
+	public EasyNBT checkSetLong(String key, Consumer<Long> ifPresent)
+	{
+		if(wrapped.hasKey(key))
+			ifPresent.accept(wrapped.getLong(key));
 		return this;
 	}
 

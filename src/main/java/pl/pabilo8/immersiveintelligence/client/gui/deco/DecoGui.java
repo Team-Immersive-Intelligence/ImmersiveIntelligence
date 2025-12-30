@@ -508,6 +508,7 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 			GlStateManager.pushMatrix();
 			GlStateManager.translate(-(1f-progress)*currentWidget.getWidgetWidth(), 0, 0);
 			currentWidget.drawButton(mc, mouseX, mouseY, partialTicks);
+			currentWidget.drawButtonUpperLayer(mc, mouseX, mouseY, partialTicks);
 			GlStateManager.popMatrix();
 		}
 
@@ -610,28 +611,32 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 
 		//Widgets are not a part of the button list, so we need to check them separately
 		boolean anyPressed = false;
-		if(currentWidget!=null&&currentWidget.decoMousePressed(this.mc, mouseX, mouseY, mouseButtonEnum))
-		{
-			anyPressed = true;
-			Pre event = new Pre(this, currentWidget, this.buttonList);
-			if(MinecraftForge.EVENT_BUS.post(event))
-				return;
-			this.selectedButton = currentWidget;
-			if(this.equals(this.mc.currentScreen))
-				MinecraftForge.EVENT_BUS.post(new Post(this, event.getButton(), this.buttonList));
-		}
 
 		if(focusedElement!=null)
-			anyPressed = focusedElement.decoMousePressed(this.mc, mouseX, mouseY, mouseButtonEnum)||anyPressed;
-
-		for(GuiButton guiButton : this.buttonList)
+			anyPressed = focusedElement.decoMousePressed(this.mc, mouseX, mouseY, mouseButtonEnum);
+		else
 		{
-			if(guiButton==focusedElement)
-				continue;
-			if(guiButton instanceof DecoComponent)
-				anyPressed = ((DecoComponent<?>)guiButton).decoMousePressed(this.mc, mouseX, mouseY, mouseButtonEnum)||anyPressed;
-			else if(mouseButtonEnum==MouseButton.LEFT)
-				anyPressed = guiButton.mousePressed(this.mc, mouseX, mouseY)||anyPressed;
+			if(currentWidget!=null&&currentWidget.decoMousePressed(this.mc, mouseX, mouseY, mouseButtonEnum))
+			{
+				anyPressed = true;
+				Pre event = new Pre(this, currentWidget, this.buttonList);
+				if(MinecraftForge.EVENT_BUS.post(event))
+					return;
+				this.selectedButton = currentWidget;
+				if(this.equals(this.mc.currentScreen))
+					MinecraftForge.EVENT_BUS.post(new Post(this, event.getButton(), this.buttonList));
+			}
+
+			if(!anyPressed)
+				for(GuiButton guiButton : this.buttonList)
+				{
+					if(guiButton==focusedElement)
+						continue;
+					if(guiButton instanceof DecoComponent)
+						anyPressed = ((DecoComponent<?>)guiButton).decoMousePressed(this.mc, mouseX, mouseY, mouseButtonEnum)||anyPressed;
+					else if(mouseButtonEnum==MouseButton.LEFT)
+						anyPressed = guiButton.mousePressed(this.mc, mouseX, mouseY)||anyPressed;
+				}
 		}
 
 		if(!anyPressed)

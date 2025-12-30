@@ -1,5 +1,6 @@
 package pl.pabilo8.immersiveintelligence.client.gui.deco.component.widget;
 
+import blusunrize.immersiveengineering.common.blocks.TileEntityIEBase;
 import net.minecraft.client.resources.I18n;
 import pl.pabilo8.immersiveintelligence.api.style.IStyleCustomizable;
 import pl.pabilo8.immersiveintelligence.api.style.StyleCustomization;
@@ -7,8 +8,11 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoTab
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoDropdown;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoAlignment;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
+import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -37,12 +41,21 @@ public class DecoStyleWidget extends DecoComponentWidgetBase<DecoStyleWidget>
 		{
 			withTitleLabel(I18n.format(IIReference.GUI_TOOLTIP_KEY+"widget.style"), DecoAlignment.TOP);
 			addLabel("Style", 2, 8+2);
-			addComponent(new DecoDropdown<>(32, 8)
+			addComponent(new DecoDropdown<String>(32, 8)
 					.withWidth(width-32-4)
-					.withEntries(style.getConstraints().getStyles().toArray(new String[0]))
+					.withDropdownWidth(width-32-4)
+					.withMaxDropHeight(128)
+					.withEntries(style.getConstraints().getStyles())
 					.withSelectedEntry(style.getStyle())
+					.withScrollBarBackground(DecoTextures.RES_TEXTURES_DECO_COMPONENT_SLIDER_PAPER)
 					.withBackground(DecoTextures.RES_TEXTURES_DECO_BUTTON_PAPER)
 					.withDropdownSymbol(DecoTextures.RES_TEXTURES_DECO_COMPONENT_DROPDOWN_SYMBOL_PAPER)
+					.withOnSelectedEntry((oldStyle, newStyle) -> {
+						tile.getStyle().withStyle(newStyle);
+						IIPacketHandler.sendToServer(new MessageIITileSync((TileEntityIEBase)tile, EasyNBT.newNBT()
+								.withTag("style", tile.getStyle().serializeNBT()).unwrap()
+						));
+					})
 			);
 			return true;
 		}

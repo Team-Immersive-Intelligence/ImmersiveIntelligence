@@ -1,15 +1,26 @@
 package pl.pabilo8.immersiveintelligence.common.util.diplomacy;
 
+import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+import net.minecraft.world.chunk.Chunk;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.IISaveData;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageDiplomacySync;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIIChunkClaimData;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.chunk.CapabilityChunkOwnership;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.chunk.ChunkClaimData;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.chunk.IChunkOwnership;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -90,6 +101,7 @@ public class DiplomacyUtils
 		UUID uuid = property.getUUID();
 		IILogger.debug("Validating IOwnableProperty: "+uuid);
 		PROPERTIES.put(uuid, property);
+		claimChunks(property);
 	}
 
 	public static void invalidateProperty(IOwnableProperty property)
@@ -99,7 +111,63 @@ public class DiplomacyUtils
 		PROPERTIES.remove(uuid);
 	}
 
+	public static void claimChunks(IOwnableProperty property)
+	{
+		IILogger.debug("Claiming chunks for property: "+property.getUUID());
+		World world = property.getWorld();
+		BlockPos pos = property.getPos();
+		int ownedChunksRadius = property.getChunkOwnershipRadius();
+
+		// center chunk coordinates
+		int centerChunkX = pos.getX()>>4;
+		int centerChunkZ = pos.getZ()>>4;
+
+		// iterate over a square of chunks around the property
+		for(int cx = centerChunkX-ownedChunksRadius; cx <= centerChunkX+ownedChunksRadius; cx++)
+			for(int cz = centerChunkZ-ownedChunksRadius; cz <= centerChunkZ+ownedChunksRadius; cz++)
+			{
+				Chunk chunk = world.getChunkFromChunkCoords(cx, cz);
+				IChunkOwnership ownership = getChunkOwnership(chunk);
+				if(ownership==null)
+				{
+					IILogger.error("Could not claim chunk at "+cx+", "+cz+" for property "+property.getUUID()+", missing IChunkOwnership capability!");
+					break;
+				}
+
+				ChunkClaimData claimData = ownership.getClaimData();
+				if(claimData!=null&&ownership.getOwner()!=NEUTRAL)
+				{
+					//Already claimed chunk
+					long existingClaimTime = claimData.getClaimTime();
+					//Preferm older claims
+					if(existingClaimTime > property.getTicksExisted())
+					{
+						ChunkClaimData chunkClaimData = new ChunkClaimData(property);
+						ownership.setOwner(property.getOwnerIdentity());
+						ownership.setClaimData(chunkClaimData);
+						if(!world.isRemote)
+							IIPacketHandler.sendToClient(new MessageIIChunkClaimData(world, pos, property.getOwnerIdentity(), chunkClaimData));
+					}
+				}
+				else
+				{
+					ChunkClaimData chunkClaimData = new ChunkClaimData(property);
+					ownership.setOwner(property.getOwnerIdentity());
+					ownership.setClaimData(chunkClaimData);
+					if(!world.isRemote)
+						IIPacketHandler.sendToClient(new MessageIIChunkClaimData(world, pos, property.getOwnerIdentity(), chunkClaimData));
+				}
+			}
+	}
+
 	//--- Getters ---//
+
+	@Nonnull
+	@SideOnly(Side.CLIENT)
+	public static OwnerIdentity getLocalPlayerIdentity()
+	{
+		return getOwnerIdentityForEntity(ClientUtils.mc().player);
+	}
 
 	@Nonnull
 	public static OwnerIdentity getIdentityByName(String name)
@@ -136,6 +204,14 @@ public class DiplomacyUtils
 	public static IOwnableProperty getPropertyByUUID(UUID uuid)
 	{
 		return PROPERTIES.get(uuid);
+	}
+
+	@Nullable
+	public static IChunkOwnership getChunkOwnership(Chunk chunk)
+	{
+		if(chunk.hasCapability(CapabilityChunkOwnership.CHUNK_OWNERSHIP_CAP, null))
+			return chunk.getCapability(CapabilityChunkOwnership.CHUNK_OWNERSHIP_CAP, null);
+		return null;
 	}
 
 	//--- Utilities ---//

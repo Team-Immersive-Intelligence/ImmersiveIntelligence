@@ -9,6 +9,8 @@ import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 
+import java.util.function.Consumer;
+
 /**
  * A standard checkbox of the Deco GUI system.<br>
  * Similar to {@link DecoSwitch}, but used for selecting options in a list instead of an on/off toggle.
@@ -22,6 +24,7 @@ public class DecoCheckbox extends DecoTextBasedComponent<DecoCheckbox>
 {
 	private static int BOX_SIZE = 9;
 	private boolean checked = false;
+	private Consumer<Boolean> onToggle;
 
 	public DecoCheckbox(int x, int y)
 	{
@@ -32,6 +35,8 @@ public class DecoCheckbox extends DecoTextBasedComponent<DecoCheckbox>
 			if(mouseButton==MouseButton.LEFT)
 			{
 				checked = !checked;
+				if(onToggle!=null)
+					onToggle.accept(checked);
 				return true;
 			}
 			return false;
@@ -52,6 +57,12 @@ public class DecoCheckbox extends DecoTextBasedComponent<DecoCheckbox>
 	public DecoCheckbox withChecked(boolean checked)
 	{
 		this.checked = checked;
+		return this;
+	}
+
+	public DecoCheckbox withOnToggle(Consumer<Boolean> onToggle)
+	{
+		this.onToggle = onToggle;
 		return this;
 	}
 

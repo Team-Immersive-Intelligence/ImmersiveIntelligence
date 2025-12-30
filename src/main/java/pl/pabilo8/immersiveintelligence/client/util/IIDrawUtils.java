@@ -1,6 +1,7 @@
 package pl.pabilo8.immersiveintelligence.client.util;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -12,6 +13,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
+import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
 import java.util.function.BiConsumer;
@@ -19,7 +21,7 @@ import java.util.function.BiConsumer;
 /**
  * <p>
  * This class provides efficient drawing of multiple rects using {@link BufferBuilder}.<br>
- * When rendering a single rect, use methods from {@link pl.pabilo8.immersiveintelligence.client.IIClientUtils}, {@link net.minecraft.client.gui.Gui} or similar classes.<br>
+ * When rendering a single rect, use methods from {@link IIClientUtils}, {@link Gui} or similar classes.<br>
  * </p>
  *
  * <pre> {@code
@@ -52,7 +54,7 @@ public class IIDrawUtils
 	}
 
 	//--- Begin Methods ---//
-	private static IIDrawUtils start(BufferBuilder buf, VertexFormat format)
+	private static IIDrawUtils start(BufferBuilder buf, VertexFormat format, int glMode)
 	{
 		INSTANCE.format = format;
 		INSTANCE.offX = 0;
@@ -60,8 +62,13 @@ public class IIDrawUtils
 		INSTANCE.rotation = 0;
 		INSTANCE.buf = buf;
 		INSTANCE.tes = Tessellator.getInstance();
-		INSTANCE.buf.begin(GL11.GL_QUADS, format);
+		INSTANCE.buf.begin(glMode, format);
 		return INSTANCE;
+	}
+
+	private static IIDrawUtils start(BufferBuilder buf, VertexFormat format)
+	{
+		return start(buf, format, GL11.GL_QUADS);
 	}
 
 	/**
@@ -100,6 +107,15 @@ public class IIDrawUtils
 	public static IIDrawUtils startColored()
 	{
 		return startColored(Tessellator.getInstance().getBuffer());
+	}
+
+	/**
+	 * Used for drawing colored rects<br>
+	 * Uses the {@link Tessellator}'s buffer
+	 */
+	public static IIDrawUtils startColoredLines()
+	{
+		return start(Tessellator.getInstance().getBuffer(), DefaultVertexFormats.POSITION_COLOR, GL11.GL_LINES);
 	}
 
 	/**
@@ -173,7 +189,18 @@ public class IIDrawUtils
 		return this;
 	}
 
-	public IIDrawUtils drawColorGradient(int x, float y, int w, int h, IIColor colorBottom, IIColor colorTop)
+	public IIDrawUtils drawColorLine(float xBegin, float yBegin, float xEnd, float yEnd, IIColor color)
+	{
+		buf.pos(offX+xBegin, offY+yBegin, 0)
+				.color(color.red, color.green, color.blue, color.alpha)
+				.endVertex();
+		buf.pos(offX+xEnd, offY+yEnd, 0)
+				.color(color.red, color.green, color.blue, color.alpha)
+				.endVertex();
+		return this;
+	}
+
+	public IIDrawUtils drawColorGradient(float x, float y, float w, float h, IIColor colorBottom, IIColor colorTop)
 	{
 		buf.pos(offX+x, offY+y+h, 0)
 				.color(colorBottom.red, colorBottom.green, colorBottom.blue, colorBottom.alpha)
@@ -190,7 +217,7 @@ public class IIDrawUtils
 		return this;
 	}
 
-	public IIDrawUtils drawColorGradient(int x, float y, int w, int h, IIColor colorNW, IIColor colorNE, IIColor colorSW, IIColor colorSE)
+	public IIDrawUtils drawColorGradient(float x, float y, float w, float h, IIColor colorNW, IIColor colorNE, IIColor colorSW, IIColor colorSE)
 	{
 		buf.pos(offX+x, offY+y+h, 0)
 				.color(colorSW.red, colorSW.green, colorSW.blue, colorSW.alpha)

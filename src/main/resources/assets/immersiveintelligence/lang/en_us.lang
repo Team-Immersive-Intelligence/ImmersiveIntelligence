@@ -1265,6 +1265,9 @@ desc.immersiveintelligence.data_to_redstone_module=Data to Redstone
 desc.immersiveintelligence.redstone_to_data_module=Redstone to Data
 desc.immersiveintelligence.tasks_module=Tasks
 desc.immersiveintelligence.status_module=Status
+desc.immersiveintelligence.map_module=Map
+desc.immersiveintelligence.faction_module=Faction Management
+desc.immersiveintelligence.radar_module=Radar
 
 desc.immersiveintelligence.tooltip.armor=Armor %f%%
 
@@ -1504,7 +1507,6 @@ desc.immersiveintelligence.repair_crate.repair_vehicles=Repair Vehicles
 desc.immersiveintelligence.jei.washing_recipe=Chemical Washing
 
 #Potion effects
-
 potion.immersiveintelligence.suppression=Suppressed
 potion.immersiveintelligence.broken_armor=Penetrated Armor
 potion.immersiveintelligence.corrosion=Corrosion
@@ -1518,6 +1520,12 @@ potion.immersiveintelligence.undergoing_repairs=Undergoing Repairs
 potion.immersiveintelligence.radiation=Radiation
 potion.immersiveintelligence.nuclear_heat=Nuclear Heat
 potion.immersiveintelligence.movement_assist=Motion Assist
+potion.immersiveintelligence.foreign_shores=Foreign Shores
+potion.immersiveintelligence.enemy_soil=Enemy Soil
+potion.immersiveintelligence.enemys_nest=Enemy's Nest
+potion.immersiveintelligence.home_shores=Home Shores
+potion.immersiveintelligence.homeland=Homeland
+potion.immersiveintelligence.heartland=Heartland
 
 #Chat info / debug
 info.immersiveintelligence.frequency_set=Radio frequency has been set to %s
@@ -3159,6 +3167,44 @@ ii.gui.data_input_machine.memory.switch=Switch
 ii.gui.data_input_machine.memory.switch.tooltip=Switch Current Memory Slot
 
 ii.gui.arithmetic_logic_machine.storage=Circuit Storage
+
+ii.gui.packer.tasks=Tasks
+ii.gui.packer.labeling=Label Rules
+
+ii.gui.flagpole.map=Map
+ii.gui.flagpole.faction=Faction Management
+
+ii.gui.radar.map=Radar Display
+ii.gui.radar.configuration=Configuration
+ii.gui.radar.targets=Targets
+
+ii.gui.emplacement.storage=Storage
+ii.gui.emplacement.configuration=Configuration
+ii.gui.emplacement.targets=Targets
+ii.gui.emplacement.tasks=Fire Missions
+
+ii.gui.map_display.color_mapper.terrain=Terrain
+ii.gui.map_display.color_mapper.grayscale=Grayscale
+ii.gui.map_display.color_mapper.topographic=Topographic
+ii.gui.map_display.color_mapper.light=Light
+ii.gui.map_display.color_mapper.factions=Factions
+ii.gui.map_display.color_mapper.alliances=Alliances
+
+ii.gui.map_display.marker.flagpoles=Flagpoles
+ii.gui.map_display.marker.weapons=Weapons
+ii.gui.map_display.marker.logistics=Logistics
+ii.gui.map_display.marker.intelligence=Intelligence
+ii.gui.map_display.marker.wire_networks=Wire Networks
+
+ii.gui.map_display.marker.items=Items
+ii.gui.map_display.marker.players=Players
+ii.gui.map_display.marker.mobs=Mobs
+ii.gui.map_display.marker.animals=Animals
+ii.gui.map_display.marker.aircraft=Aircraft
+ii.gui.map_display.marker.vehicles=Vehicles
+ii.gui.map_display.marker.missiles=Missiles
+ii.gui.map_display.marker.artillery=Artillery
+ii.gui.map_display.marker.bullets=Bullets
 
 #GUI HelpBoxes
 ii.gui_help.data_input_machine.programming=These slots allow reading a punchtape into the DIM's memory or writing its contents into an empty one.

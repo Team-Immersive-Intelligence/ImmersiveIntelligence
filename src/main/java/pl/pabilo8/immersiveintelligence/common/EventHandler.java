@@ -16,6 +16,10 @@ import net.minecraft.util.EntityDamageSourceIndirect;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.GameRules.ValueType;
+import net.minecraft.world.World;
+import net.minecraft.world.biome.Biome;
+import net.minecraft.world.chunk.Chunk;
+import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.GameRuleChangeEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
@@ -56,9 +60,13 @@ import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBlockDamageSync;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageDiplomacySync;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIIGameruleUpdate;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIIRequestChunkClaimData;
 import pl.pabilo8.immersiveintelligence.common.util.IIExplosion;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyUtils;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.chunk.CapabilityChunkOwnership;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.chunk.ChunkOwnership;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.chunk.IChunkOwnership;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemUtils;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIUpgradeableArmor;
 
@@ -160,6 +168,17 @@ public class EventHandler
 		//Sync Diplomacy data
 		IIPacketHandler.sendToClient(player, new MessageDiplomacySync(
 				true, null, false, DiplomacyUtils.saveAllToNBT()));
+	}
+
+	@SubscribeEvent
+	public void attachCapability(AttachCapabilitiesEvent<Chunk> event)
+	{
+		if(event.getObject()!=null)
+		{
+			event.addCapability(IIReference.RES_II.with("chunk_ownership"), new CapabilityChunkOwnership(new ChunkOwnership(event.getObject())));
+			if(event.getObject().getWorld().isRemote)
+				IIPacketHandler.sendToServer(new MessageIIRequestChunkClaimData(event.getObject()));
+		}
 	}
 
 
@@ -287,14 +306,53 @@ public class EventHandler
 	@SubscribeEvent(priority = EventPriority.LOW)
 	public void onLivingUpdate(LivingUpdateEvent event)
 	{
-		if(!(event.getEntityLiving() instanceof EntityPlayer&&((EntityPlayer)event.getEntityLiving()).isCreative())&&event.getEntityLiving().world.getTotalWorldTime()%20==0&&event.getEntityLiving().world.getBiome(event.getEntityLiving().getPosition())==IIContent.biomeWasteland)
-			event.getEntityLiving().addPotionEffect(new PotionEffect(IIPotions.radiation, 2000, 0, false, false));
-		if(event.getEntityLiving() instanceof EntityPlayer&&!event.getEntityLiving().getItemStackFromSlot(EntityEquipmentSlot.CHEST).isEmpty()&&ItemNBTHelper.hasKey(event.getEntityLiving().getItemStackFromSlot(EntityEquipmentSlot.CHEST), IIContent.NBT_AdvancedPowerpack))
+		EntityLivingBase living = event.getEntityLiving();
+		World world = living.world;
+		Biome biome = world.getBiome(living.getPosition());
+		if(living instanceof EntityPlayer)
 		{
-			ItemStack powerpack = ItemNBTHelper.getItemStack(event.getEntityLiving().getItemStackFromSlot(EntityEquipmentSlot.CHEST), IIContent.NBT_AdvancedPowerpack);
-			if(!powerpack.isEmpty())
-				powerpack.getItem().onArmorTick(event.getEntityLiving().getEntityWorld(), (EntityPlayer)event.getEntityLiving(), powerpack);
+			EntityPlayer player = (EntityPlayer)living;
+
+			//Potion effects
+			if(world.getTotalWorldTime()%20==0)
+			{
+				//Apply radiation
+				if(!player.isCreative()&&biome==IIContent.biomeWasteland)
+					living.addPotionEffect(new PotionEffect(IIPotions.radiation, 2000, 0, false, false));
+
+				//Apply faction chunk status effects
+				Chunk chunk = player.world.getChunkFromBlockCoords(player.getPosition());
+				if(chunk.hasCapability(CapabilityChunkOwnership.CHUNK_OWNERSHIP_CAP, null))
+				{
+					IChunkOwnership cap = chunk.getCapability(CapabilityChunkOwnership.CHUNK_OWNERSHIP_CAP, null);
+					assert cap!=null;
+					switch(cap.getOwner().getRelationTowards(player))
+					{
+						case ENEMY:
+							player.addPotionEffect(new PotionEffect(IIPotions.enemySoil, 40, 0, false, false));
+							break;
+						case MEMBER:
+						case ALLIED:
+							player.addPotionEffect(new PotionEffect(IIPotions.homeland, 40, 0, false, false));
+							break;
+						default:
+							break;
+					}
+				}
+			}
+
+			//Handle powerpack crafted with armor
+			if(!living.getItemStackFromSlot(EntityEquipmentSlot.CHEST).isEmpty()
+					&&ItemNBTHelper.hasKey(living.getItemStackFromSlot(EntityEquipmentSlot.CHEST), IIContent.NBT_AdvancedPowerpack))
+			{
+				ItemStack powerpack = ItemNBTHelper.getItemStack(living.getItemStackFromSlot(EntityEquipmentSlot.CHEST), IIContent.NBT_AdvancedPowerpack);
+				if(!powerpack.isEmpty())
+					powerpack.getItem().onArmorTick(living.getEntityWorld(), player, powerpack);
+			}
 		}
+		else if(world.getTotalWorldTime()%20==0&&biome==IIContent.biomeWasteland)
+			living.addPotionEffect(new PotionEffect(IIPotions.radiation, 2000, 0, false, false));
+
 	}
 
 	//--- Armor ---//

@@ -117,6 +117,7 @@ public enum IIGUI implements ISerializableEnum
 	),
 	VULCANIZER(TileEntityVulcanizer.class, ContainerVulcanizer::new),
 
+	FLAGPOLE(TileEntityFlagpole.class, ContainerFlagpole::new),
 	EMPLACEMENT_STORAGE(TileEntityEmplacement.class, ContainerEmplacementStorage::new),
 	EMPLACEMENT_TASKS(TileEntityEmplacement.class, ContainerEmplacement::new),
 	EMPLACEMENT_STATUS(TileEntityEmplacement.class, ContainerEmplacement::new),
@@ -129,8 +130,6 @@ public enum IIGUI implements ISerializableEnum
 	AMMUNITION_ASSEMBLER(TileEntityAmmunitionAssembler.class, ContainerAmmunitionAssembler::new),
 
 	RADAR(TileEntityRadar.class, ContainerRadar::new);
-
-	//GUI_PERISCOPE,
 
 	public final Class<? extends TileEntity> teClass;
 	public final BiFunction<EntityPlayer, TileEntity, Container> containerFromTile;
@@ -225,7 +224,7 @@ public enum IIGUI implements ISerializableEnum
 		//noinspection rawtypes,unchecked
 		IIGUI.UPGRADE.setClientDecoGui((player, tile) -> new GuiUpgrade(player, tile));
 
-		IIGUI.VULCANIZER.setClientGui(GuiVulcanizer::new);
+		IIGUI.FLAGPOLE.setClientDecoGui(GuiFlagpole::new);
 		IIGUI.EMPLACEMENT_STORAGE.setClientGui(GuiEmplacementPageStorage::new);
 		IIGUI.EMPLACEMENT_TASKS.setClientGui(GuiEmplacementPageTasks::new);
 		IIGUI.EMPLACEMENT_STATUS.setClientGui(GuiEmplacementPageStatus::new);
@@ -236,8 +235,9 @@ public enum IIGUI implements ISerializableEnum
 		IIGUI.AMMUNITION_ASSEMBLER.setClientDecoGui(GuiAmmunitionAssembler::new);
 		IIGUI.PROJECTILE_WORKSHOP.setClientDecoGui(GuiProjectileWorkshop::new);
 
-		IIGUI.RADAR.setClientGui(GuiRadar::new);
+		IIGUI.RADAR.setClientDecoGui(GuiRadar::new);
 		IIGUI.COAGULATOR.setClientDecoGui(GuiCoagulator::new);
+		IIGUI.VULCANIZER.setClientGui(GuiVulcanizer::new);
 	}
 
 	@SideOnly(Side.CLIENT)

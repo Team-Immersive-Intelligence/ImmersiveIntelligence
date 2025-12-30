@@ -3,9 +3,14 @@ package pl.pabilo8.immersiveintelligence.client.render.multiblock.metal;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.model.obj.OBJModel;
+import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
 import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTCachedModel;
 import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTCachedModelBuilder;
+import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTCrossVariantReference;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMT;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTBanner;
 import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IIMultiblockRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IITileRenderer.RegisteredTileRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IITileRenderer.RegisteredUpgradeRenderer;
@@ -22,18 +27,24 @@ import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 public class FlagpoleRenderer extends IIMultiblockRenderer<TileEntityFlagpole>
 {
 	private AMTCachedModel<TileEntityFlagpole> model;
+	private AMTCrossVariantReference<AMTBanner> flag;
 
 	@Override
 	public void drawAnimated(TileEntityFlagpole te, BufferBuilder buf, float partialTicks, Tessellator tes)
 	{
 		applyStandardMirroring(te, true);
 		model.getVariant(te, te.style);
+		AMTBanner banner = flag.get();
+		banner.setProperty(AMTUtils.getDebugProgress(100, partialTicks));
+		banner.setBanner(te.flag);
 		model.render(tes, buf);
 	}
 
 	@Override
 	public void drawSimple(BufferBuilder buf, float partialTicks, Tessellator tes)
 	{
+		model.defaultize();
+		flag.get().setBanner(ItemStack.EMPTY);
 		model.render(tes, buf);
 	}
 
@@ -53,6 +64,9 @@ public class FlagpoleRenderer extends IIMultiblockRenderer<TileEntityFlagpole>
 						IIReference.RES_BLOCK_MODEL.with("multiblock/flagpole/variant_wooden.obj"))
 				.withModel(te -> te!=null&&te.style.getStyle().equals("steel"),
 						IIReference.RES_BLOCK_MODEL.with("multiblock/flagpole/variant_steel.obj"))
+				.withModelProvider((te, header) -> new AMT[]{new AMTBanner("flag", header)})
 				.build();
+
+		this.flag = new AMTCrossVariantReference<>("flag", this.model);
 	}
 }

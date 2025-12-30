@@ -117,6 +117,7 @@ import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IIBl
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IIBlockProperties;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.IOwnableProperty;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.PermissionCategory;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.chunk.CapabilityChunkOwnership;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIBase;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
@@ -448,6 +449,7 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		IIDataWireType.init();
 		IIPacketHandler.preInit();
 		CapabilityRotaryEnergy.register();
+		CapabilityChunkOwnership.register();
 		IEApi.prefixToIngotMap.put("spring", new Integer[]{2, 1});
 
 		IIContent.init();

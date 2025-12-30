@@ -4,6 +4,10 @@ import net.minecraft.nbt.NBTTagInt;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.util.INBTSerializable;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultiblockIIBase;
+
+import javax.annotation.Nonnull;
 
 /**
  * Stores and handles construction progress for {@link IAdvancedMultiblock Advanced Multiblocks}.
@@ -14,11 +18,14 @@ import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools;
  */
 public class MultiblockConstructionManager implements INBTSerializable<NBTTagInt>
 {
+	@Nonnull
+	private final TileEntityMultiblockIIBase<?> tile;
 	private final int constructionCost;
 	private int construction = 0, clientConstruction = 0;
 
-	public MultiblockConstructionManager(int constructionCost)
+	public MultiblockConstructionManager(@Nonnull TileEntityMultiblockIIBase<?> tile, int constructionCost)
 	{
+		this.tile = tile;
 		this.constructionCost = constructionCost;
 	}
 
@@ -35,13 +42,19 @@ public class MultiblockConstructionManager implements INBTSerializable<NBTTagInt
 	public void progressConstruction(int construction)
 	{
 		this.construction = MathHelper.clamp(this.construction+construction, 0, constructionCost);
+		this.tile.updateTileForEvent(SyncEvents.TILE_CONSTRUCTION);
 	}
 
 	public boolean update()
 	{
 		if(clientConstruction < constructionCost)
 			clientConstruction = (int)Math.min(clientConstruction+(Tools.electricHammerEnergyPerUseConstruction/4.25f), constructionCost);
-		return isConstructionFinished();
+		if(isConstructionFinished())
+		{
+			clientConstruction = construction = constructionCost;
+			return true;
+		}
+		return false;
 	}
 
 	public boolean isConstructionFinished()
