@@ -740,6 +740,10 @@ desc.immersiveintelligence.metal_multiblock1.emplacement.selector_preset=Selecto
 desc.immersiveintelligence.metal_multiblock1.emplacement.filter=Filter
 desc.immersiveintelligence.metal_multiblock1.emplacement.task_enabled=Enabled
 desc.immersiveintelligence.metal_multiblock1.emplacement.task_negation=Negation
+desc.immersiveintelligence.metal_multiblock1.emplacement.add=Add Task
+desc.immersiveintelligence.metal_multiblock1.emplacement.remove=Remove Task
+desc.immersiveintelligence.metal_multiblock1.emplacement.duplicate=Duplicate Task
+desc.immersiveintelligence.metal_multiblock1.emplacement.clear=Clear ALL Tasks (Caution!)
 
 desc.immersiveintelligence.metal_multiblock1.packer.task.pack=Pack
 desc.immersiveintelligence.metal_multiblock1.packer.task.unpack=Unpack
