@@ -47,7 +47,7 @@ Thanks to its advanced targeting system, it is the [best weapon for anti-project
 # cpds2
 The only drawback it comes with is its enormous maintenance cost, due to its high rate of fire. If you're struggling with providing it with sufficient amounts of ammunition, consider using it as a [special, last resort] weapon for countering projectiles.
 # tesla0
-**Tesla Coil Emplacement**
+**Tesla Tower**
 |[upgrade_display]{upgrade:"immersiveintelligence:emplacement/tesla"}|
 This Emplacement is the bigger and more refined variant of the [Tesla Coil](teslaCoil) and deals [higher damage in expanded range]. The weapon is a good choice against [soft targets], who happened to come too close. Thanks to its advanced control systems, the weapon can differentiate between friend and foe.
 # tesla1
@@ -60,6 +60,14 @@ A beefed-up [Field Mortar](mortar.md), the [Mortar] emplacement provides powerfu
 **Light Howitzer**
 |[upgrade_display]{upgrade:"immersiveintelligence:emplacement/light_howitzer"}|
 A scaled-down version of the [Artillery Howitzer](artillery_howitzer.md), the [Light Howitzer] provides medium-range support and its mobility allows for quick and precise barrage of enemy positions.
+# mlrs
+**Rocket Launcher (MLRS)**
+|[upgrade_display]{upgrade:"immersiveintelligence:emplacement/mlrs"}|
+The [Multiple Launch Rocket System (MLRS)], or simply, the [Rocket Launcher], launches multiple unguided [rockets](bullet_production.md#heavy_ammuniton_assembler) at a specified target. Rockets are slow compared to bullets, so complex targeting in conjunction with the [Infrared Observer](#ir_observer0) may be required for maximum efficiency on moving targets.
+# guided_launcher0
+**Guided Rocket Launcher**
+|[upgrade_display]{upgrade:"immersiveintelligence:emplacement/guided_launcher"}|
+Instead of multiple dumbfire rockets, the [Guided Rocket Launcher] fires a single, smart rocket that is steered toward the target. It is easier to hit moving targets compared to the dumbfire MLRS.
 # ir_observer0
 **Infrared Observer**
 |[upgrade_display]{upgrade:"immersiveintelligence:emplacement/infrared_observer"}|
@@ -72,8 +80,8 @@ It is worth noting the [Observer] can also detect [Flares](bullet_components) an
 # spotlight0
 **Spotlight Tower**
 |[upgrade_display]{upgrade:"immersiveintelligence:emplacement/spotlight_tower"}|
-A rustic emplacement, the [Spotlight Tower] provides a covered vantage point with a built-in spotlight, similar to the Floodlight which can be used to track enemies in darkness.
+A rustic emplacement, the [Spotlight Tower] provides a covered vantage point with a built-in spotlight, similar to the Floodlight which can be used to track enemies in darkness. Shining the light on an enemy will expose them and cause them to freeze in fear!
 # searchlight0
 **Searchlight**
 |[upgrade_display]{upgrade:"immersiveintelligence:emplacement/searchlight"}|
-Similar to the Spotlight Tower, the [Searchlight] removes the vantage point and permits a larger light installation for greater coverage, as well as increasing accuracy of allied fire. Works best when connected to a [Radar](radar.md).
+Similar to the Spotlight Tower, the [Searchlight] removes the vantage point and permits a larger light installation for greater vertical coverage, as well as increasing accuracy of allied fire. Works best when connected to a [Radar](radar.md). Note that horizontal range is reduced compared to the Tower.

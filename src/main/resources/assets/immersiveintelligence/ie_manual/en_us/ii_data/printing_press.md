@@ -17,7 +17,7 @@ Printed pages should be removed as soon as possible from the printing press, as 
 The printing press is controlled with the [Data System](data_main); required variables are described on the following page.
 In addition to [Printing Paper], a printing press requires liquid ink to print text onto a page. The amount of ink used depends on the color of currently printed character.
 Ink is created in a [mixer](mixer) by mixing water and the respective dye to create black, cyan, magenta, or yellow ink.
-The printing press can also be [upgraded] to extend its functionality.
+The printing press can also be [upgraded](#punchtapes_upgrade) to extend its functionality.
 
 # data_inputs
 **Data Inputs:**
@@ -29,17 +29,6 @@ The printing press can also be [upgraded] to extend its functionality.
 The [Punchtape Processor] upgrade allows printing [Punchtapes](punchtapes.md) with all the variables of the received packets, except "a" and "m".  
 **Instead of empty page, supply an [Empty Punchtape].**
 |[data_variable]{type:"string", direction:"in", letter:"m", name:"Output mode", description:"The type of document that will be printed", values:[["punchtape","A punchtape with variables of the received packet, except this one printed. Doesn't use any ink."]]}|
-# batching_upgrade
-|[upgrade_display]{upgrade:"immersiveintelligence:printing_press/batching_mechanism"}|
-The [Batching Mechanism] upgrade allows printing documents consisting of multiple pages.
-Within variable **t**, the escape code [/newpage] will signify to the printer to begin printing on the next page.
-|[data_variable]{type:"string", direction:"in", letter:"m", name:"Output mode", description:"The type of document that will be printed", values:[["pages, book, or newspaper","Notifies the printing press that this is a multi-page data packet and sets the type of paged document."]]}|
-# envelopes_upgrade
-|[upgrade_display]{upgrade:"immersiveintelligence:printing_press/enveloper"}|
-The [Enveloper] upgrade allows to print envelopes, which can then be used for mailing purposes.
-|[data_variable]{type:"string", direction:"in", letter:"m", name:"Output mode", description:"The type of document that will be printed", values:[["envelope","Prints an envelope with the provided information in the below variables."]]}|
-|[data_variable]{type:"string", direction:"in", letter:"r", name:"Recipient", description:"The identification of the letter recipient", values:[["Example: Hans No. 613","This variable is required."]]}||
-|[data_variable]{type:"string", direction:"in", letter:"s", name:"Sender", description:"The identification of the letter sender", values:[["Example: Hans No. 125","This variable is optional."]]}|
 
 # data_callback
 |[text]{text:"Data Callback",bold:1b}|

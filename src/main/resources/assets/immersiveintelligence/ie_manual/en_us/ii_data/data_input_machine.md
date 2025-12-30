@@ -19,7 +19,4 @@ When editing a variable, you can change its letter by using the up and down arro
 # punchtapes
 The **Data Input Machine** is capable of reading a **Packet** from a [written punchtape] and writing the currently stored **Packet** to [a blank one].
 Both operations can be performed by inserting a [Punchtape] into the *upper slot*. After processing, the [Punchtape] will be outputted into the *lower slot*.
-# circuit_interface_upgrade
-The **Circuit Interface Upgrade** allows the **DIM** to instantaneously save and read data on [Memory Circuits]. It adds 3 additional *slots* to the *interface*.
-Circuits inserted into the slot marked with a *red dot* will be written to, while ones inserted into the *green dot* slot will be read.
-After reading, the circuit will be transferred into the *lower slot*.
+

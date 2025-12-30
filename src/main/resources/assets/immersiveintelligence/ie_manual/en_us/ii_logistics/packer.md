@@ -6,16 +6,18 @@ Even more Pipes and Tunnels!
 The Packer is a machine used to batch load items into containers, such as crates or bullet magazines.
 To form it, use a [hammer](introduction#introductionHammer) on the [vertical conveyor].
 # details
-By default, the packer offers 54 storage slots for items. They can be inserted through a single conveyor on the rear of the machine.
+By default, the packer offers 54 input storage slots for items. They can be inserted through a single conveyor on the rear of the machine.
 To operation the machine, it requires electricity and a container to be provided on the 3 block long conveyor.
 For packing orders, the machine uses a [Task System](task_system.md). Tasks can be added, removed and tweaked through its interface, or the [data system](data_main.md).
 # details_2
 The ["Pack"] task is used to load items into the provided container. By default, the packer can take any item (the * symbol) and the maximum possible amount of it.
 This can be changed by selecting a different mode. You can choose between taking in a select number of inventory slots, or number of items. The amount can be specified in the interface, in the input field below.
+# details_20
+The Packer can also ["Unpack"] items from filled containers. Simply switch the mode with the button on the top of the GUI. Items will be unpacked into the 54 output storage slots and will output to the marked slot on the side of the machine.
 # details_3
 The ["Use OreDict"] switch determines whether items with the same Ore Dictionary key will be matched. The ["NBT Sensitive"] switch determines whether the item has to have the same NBT tag as the one provided. This is disabled by default.
 # details_4
-The ["Unpack"], ["Fill"], ["Unfill"], ["Charge"] and ["Discharge"] tasks work in a similar way as the ["Pack"] task. For fluids, ["Slots"] are tanks and the amount is the fluid amount in mB. For energy, only the amount is taken into consideration. Refer to [Upgrades](#upgrades) for details on what can be installed.
+The ["Fill"], ["Unfill"], ["Charge"] and ["Discharge"] tasks work in a similar way as the ["Pack"] and ["Unpack"] tasks. For fluids, ["Slots"] are tanks and the amount is the fluid amount in mB. For energy, only the amount is taken into consideration. Refer to [Upgrades](#upgrades1) for details on what can be installed.
 # data_1
 |[data_variable]{type:"string", direction:"in", letter:"c", name:"Command", description:"Possible values: add, remove, clear."}|
 |[data_variable]{type:"string", direction:"in", letter:"a", name:"Action", description:"Possible Values: item, fluid, energy."}|
@@ -25,10 +27,10 @@ The ["Unpack"], ["Fill"], ["Unfill"], ["Charge"] and ["Discharge"] tasks work in
 |[data_variable]{type:"integer", direction:"in", letter:"e", name:"Expire After", description:"Optional. After how many cycles should the task end."}|
 # upgrades1
 |[upgrade_display]{upgrade:"immersiveintelligence:packer_fluid"}|
-The [Fluid Loader] transforms the Packer's item storage into fluid storage and changes the loading mechanism to fill fluid containers like barrels. A souped-up [Bottling Machine](bottlingMachine)!
+The [Fluid Loader] transforms the Packer's item storage into [96 buckets] of fluid storage and changes the loading mechanism to fill fluid containers like barrels. A souped-up [Bottling Machine](bottlingMachine)!
 # upgrades2
 |[upgrade_display]{upgrade:"immersiveintelligence:packer_energy"}|
-The [Energy Loader] converts the Packer's item storage into energy storage. The loading mechanism is replaced with a set of electrical terminals to rapidly charge capacitors or equipment.
+The [Energy Loader] converts the Packer's item storage into [16 million] IF of energy storage. The loading mechanism is replaced with a set of electrical terminals to rapidly charge capacitors or equipment.
 # upgrades3
 |[upgrade_display]{upgrade:"immersiveintelligence:packer_naming"}|
 The [Naming Stamp] adds a label maker to the Packer and allows it to set the name of the packed item. This upgrade can be combined with other upgrades.

@@ -31,4 +31,4 @@ The Skycrate Post is the relay between two points in the skycrate network. Only 
 Crate carts are a safe way to transport items via rail. They can be crafted by putting a crate into a minecart. Items inside said crates will not be lost. When disassembled, the minecart will split into the cart and the crate
 # frames
 |[crafting]{source:"mount"}|
-The Skycrate mounts are used to transport crates via the zipline. There are two models: The basic ones and the electric ones, which use energy provided on the way via nearby [Tesla Coils](teslaCoil). 
+The Skycrate mounts are used to transport crates via the zipline. There are two models: The basic ones, which are slow, and the fast electric ones, which use energy provided on the way via nearby [Tesla Coils](teslaCoil) to rapidly traverse the line. 
