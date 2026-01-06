@@ -55,12 +55,12 @@ public class EntityMotorbike extends EntityVehicleBase<EntityMotorbike>
 	{
 		//Init upgrade tech tree
 		UpgradeTechTree.getTreeFor(EntityMotorbike.class)
-				.addUpgrade(IIContent.UPGRADE_VEHICLE_SMALL_STORAGE, UpgradeTier.TIER_1)
-				.addUpgrade(IIContent.UPGRADE_VEHICLE_ADDITIONAL_PASSENGER_SEAT, UpgradeTier.TIER_1)
-				.addUpgrade(IIContent.UPGRADE_VEHICLE_SMALL_ADDITIONAL_TANK, UpgradeTier.TIER_1)
-				.addUpgrade(IIContent.UPGRADE_VEHICLE_WOODGAS, UpgradeTier.TIER_2)
+				.withUpgrade(IIContent.UPGRADE_VEHICLE_SMALL_STORAGE, UpgradeTier.TIER_1)
+				.withUpgrade(IIContent.UPGRADE_VEHICLE_ADDITIONAL_PASSENGER_SEAT, UpgradeTier.TIER_1)
+				.withUpgrade(IIContent.UPGRADE_VEHICLE_SMALL_ADDITIONAL_TANK, UpgradeTier.TIER_1)
+				.withUpgrade(IIContent.UPGRADE_VEHICLE_WOODGAS, UpgradeTier.TIER_2)
 
-				.addLockOut(IIContent.UPGRADE_VEHICLE_SMALL_STORAGE,
+				.withLockOut(IIContent.UPGRADE_VEHICLE_SMALL_STORAGE,
 						IIContent.UPGRADE_VEHICLE_ADDITIONAL_PASSENGER_SEAT,
 						IIContent.UPGRADE_VEHICLE_SMALL_ADDITIONAL_TANK,
 						IIContent.UPGRADE_VEHICLE_WOODGAS

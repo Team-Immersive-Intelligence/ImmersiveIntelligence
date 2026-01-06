@@ -125,6 +125,7 @@ import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctur
 import pl.pabilo8.immersiveintelligence.common.wire.IIDataWireType;
 import pl.pabilo8.immersiveintelligence.common.world.IIWorldGen;
 import pl.pabilo8.immersiveintelligence.common.world.IIWorldGen.EnumOreType;
+import pl.pabilo8.immersiveintelligence.common.world.IIWorldGenRubberTree;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Field;
@@ -636,6 +637,9 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		addConfiguredWorldgen(IIContent.blockOre.getStateFromMeta(Ores.SALT.getMeta()), "salt", IIConfig.Ores.oreSalt, EnumOreType.OVERWORLD);
 		addConfiguredWorldgen(IIContent.blockOre.getStateFromMeta(Ores.FLUORITE.getMeta()), "fluorite", IIConfig.Ores.oreFluorite, EnumOreType.NETHER);
 		addConfiguredWorldgen(IIContent.blockOre.getStateFromMeta(Ores.PHOSPHORUS.getMeta()), "phosphorus", IIConfig.Ores.orePhosphorus, EnumOreType.NETHER);
+
+		IILogger.info("Adding rubber tree generation");
+		IIWorldGen.worldGenRubberTree = new IIWorldGenRubberTree();
 
 
 		//Disallow crates in crates

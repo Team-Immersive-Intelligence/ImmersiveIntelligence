@@ -6,6 +6,8 @@ import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -17,25 +19,28 @@ import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockIn
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 26.05.2019
  */
-public class MessageBooleanAnimatedPartsSync extends IIMessage
+public class MessageBooleanAnimatedPartsSync extends IIMessage implements IPositionBoundMessage
 {
 	//Allows to animate parts in a block (only two states - open and closed)
 	private boolean open;
 	private int id; //The number of the opened / closed component
 	private BlockPos pos;
+	private World world;
 
-	public MessageBooleanAnimatedPartsSync(int id, boolean open, BlockPos pos)
+	public MessageBooleanAnimatedPartsSync(int id, boolean open, TileEntity te)
 	{
 		this.open = open;
 		this.id = id;
-		this.pos = pos;
+		this.pos = te.getPos();
+		this.world = te.getWorld();
 	}
 
-	public MessageBooleanAnimatedPartsSync(MultiblockInteractablePart part, TileEntity tile)
+	public MessageBooleanAnimatedPartsSync(MultiblockInteractablePart part, TileEntity te)
 	{
 		this.open = part.getState();
 		this.id = part.getID();
-		this.pos = tile.getPos();
+		this.pos = te.getPos();
+		this.world = te.getWorld();
 	}
 
 	public MessageBooleanAnimatedPartsSync()
@@ -80,5 +85,17 @@ public class MessageBooleanAnimatedPartsSync extends IIMessage
 			if(te instanceof IBooleanAnimatedPartsBlock)
 				((IBooleanAnimatedPartsBlock)te).onAnimationChangeClient(open, id);
 		}
+	}
+
+	@Override
+	public World getWorld()
+	{
+		return world;
+	}
+
+	@Override
+	public Vec3d getPosition()
+	{
+		return new Vec3d(pos);
 	}
 }

@@ -134,6 +134,7 @@ public class DecoLabel extends GuiLabel
 	public DecoLabel withWrapping(boolean wrap)
 	{
 		this.wrap = wrap;
+		recalculateHeight();
 		return this;
 	}
 

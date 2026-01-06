@@ -128,8 +128,7 @@ public class Upgrade
 
 	public String getLocalizedName()
 	{
-		return I18n.format(IIReference.INFO_KEY+"machineupgrade.name",
-				I18n.format("machineupgrade.immersiveintelligence."+id.getResourcePath()));
+		return I18n.format(String.format("machineupgrade.%s.%s", id.getResourceDomain(), id.getResourcePath().replace("/", ".")));
 	}
 
 	public List<String> getLocalizedBenefitNames()

@@ -136,8 +136,7 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 		{
 			isDoorOpened = rs;
 			if(!world.isRemote)
-				IIPacketHandler.INSTANCE.sendToAllAround(new MessageBooleanAnimatedPartsSync(0, isDoorOpened, this.getPos()),
-						IIPacketHandler.targetPointFromTile(this, 48));
+				IIPacketHandler.sendToClient(new MessageBooleanAnimatedPartsSync(0, isDoorOpened, this));
 		}
 
 		//operate only if energy is sufficient
@@ -694,7 +693,7 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 	{
 		if(part==0)
 			isDoorOpened = state;
-		IIPacketHandler.INSTANCE.sendToAllAround(new MessageBooleanAnimatedPartsSync(1, isDoorOpened, getPos()), IIPacketHandler.targetPointFromPos(this.getPos(), this.world, 32));
+		IIPacketHandler.sendToClient(new MessageBooleanAnimatedPartsSync(1, isDoorOpened, this));
 	}
 
 	@Override

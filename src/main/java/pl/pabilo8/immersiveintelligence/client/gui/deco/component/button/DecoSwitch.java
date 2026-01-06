@@ -136,7 +136,7 @@ public class DecoSwitch extends DecoTextBasedComponent<DecoSwitch>
 		//Draw the moving part of the switch
 		int movingPartX = alignX+(int)(timer*(X_SIZE-SWITCH_X_SIZE)/(float)MAX_SWITCH_TICKS);
 		draw.drawTexColorRect(movingPartX, alignY, SWITCH_X_SIZE, Y_SIZE,
-				state?colorRight: colorOff,
+				colorOff.mixedWith(colorRight, timer/(float)MAX_SWITCH_TICKS),
 				spriteMovingPart.getMinU(), spriteMovingPart.getInterpolatedU(SWITCH_X_SIZE),
 				spriteMovingPart.getMinV(), spriteMovingPart.getInterpolatedV(Y_SIZE)
 		).finish();

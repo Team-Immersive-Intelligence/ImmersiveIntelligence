@@ -5,6 +5,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3i;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.style.StyleConstraints;
+import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeTechTree;
+import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeUtils.UpgradeTier;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.BlockIIMetalMultiblock1.MetalMultiblocks1;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityFlagpole;
@@ -27,6 +29,14 @@ public class MultiblockFlagpole extends MultiblockStuctureBase<TileEntityFlagpol
 				Sets.newHashSet("sandbags", "wooden", "steel", "bricks", "concrete"),
 				Collections.emptySet()
 		);
+
+		UpgradeTechTree.getTreeFor(TileEntityFlagpole.class)
+				.reset()
+				.withUpgrade(IIContent.UPGRADE_FLAGPOLE_CAPTURE_DEFIANCE, UpgradeTier.TIER_1)
+				.withUpgrade(IIContent.UPGRADE_FLAGPOLE_TASER_LOCKS, UpgradeTier.TIER_1)
+				.withUpgrade(IIContent.UPGRADE_FLAGPOLE_UNIT_POST, UpgradeTier.TIER_1)
+				.withUpgrade(IIContent.UPGRADE_FLAGPOLE_DISTRESS_SIGNAL, UpgradeTier.TIER_1)
+				.withLockOut(IIContent.UPGRADE_FLAGPOLE_UNIT_POST, IIContent.UPGRADE_FLAGPOLE_TASER_LOCKS);
 	}
 
 	@Override

@@ -11,6 +11,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.CustomM
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoMapDisplay;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.map.layers.MapLayerBuilder;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultiblockIIBase;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -57,12 +58,28 @@ public class BlockTypeScanner extends MapScanner
 	}
 
 	/**
-	 * Filter by block instance.
+	 * Filter by tile entity instance.
 	 */
 	public BlockTypeScanner withTileEntityFilter(Predicate<TileEntity> filter)
 	{
 		tileFilters.add(filter);
 		return this;
+	}
+
+	/**
+	 * Filter by multiblock master block - only the master block of the multiblock will be marked.
+	 */
+	public <T extends TileEntityMultiblockIIBase<T>> BlockTypeScanner withMultiblockFilter(Class<T> klass)
+	{
+		return withTileEntityFilter(te -> {
+			if(klass.isInstance(te))
+			{
+				TileEntityMultiblockIIBase<?> mb = (TileEntityMultiblockIIBase<?>)te;
+				//Check if it's the top block over master()
+				return mb.offset[0]==0&&mb.offset[2]==0;
+			}
+			return false;
+		});
 	}
 
 	/**
@@ -78,8 +95,8 @@ public class BlockTypeScanner extends MapScanner
 	protected void scanArea(DecoMapDisplay mapDisplay, World world, CustomMapData mapData,
 							MapLayerBuilder layer, int minX, int maxX, int minZ, int maxZ)
 	{
-
-		if(blockFilters.isEmpty()) return;
+		if(blockFilters.isEmpty()&&tileFilters.isEmpty())
+			return;
 
 		//Scan each chunk in the area
 		int minChunkX = minX>>4;

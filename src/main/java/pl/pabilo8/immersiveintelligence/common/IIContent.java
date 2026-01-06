@@ -18,6 +18,7 @@ import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoCore;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoPropellant;
 import pl.pabilo8.immersiveintelligence.api.upgrade.Upgrade;
+import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeUtils.UpgradePurpose;
 import pl.pabilo8.immersiveintelligence.common.ammo.components.*;
 import pl.pabilo8.immersiveintelligence.common.ammo.components.explosives.AmmoComponentHMX;
 import pl.pabilo8.immersiveintelligence.common.ammo.components.explosives.AmmoComponentRDX;
@@ -98,6 +99,127 @@ public class IIContent
 	public static final List<IMultiblock> MULTIBLOCKS = new ArrayList<>();
 
 	public static final IICreativeTab II_CREATIVE_TAB = new IICreativeTab(MODID);
+
+	//--- Upgrades ---//
+	//allows filling items with fluids
+	public static final Upgrade UPGRADE_PACKER_FLUID = new Upgrade("packer_fluid")
+			.withType(UpgradePurpose.FULL_CONVERSION);
+	//allows charging items with IF
+	public static final Upgrade UPGRADE_PACKER_ENERGY = new Upgrade("packer_energy")
+			.withType(UpgradePurpose.FULL_CONVERSION);
+	//allows (re)naming items on conveyor
+	public static final Upgrade UPGRADE_PACKER_NAMING = new Upgrade("packer_naming")
+			.withType(UpgradePurpose.SPECIAL);
+	//makes packer accept minecarts instead of items
+	public static final Upgrade UPGRADE_PACKER_RAILWAY = new Upgrade("packer_railway")
+			.withType(UpgradePurpose.FULL_CONVERSION);
+
+	//used by effect crates
+	public static final Upgrade UPGRADE_INSERTER = new Upgrade("inserter")
+			.withType(UpgradePurpose.SPECIAL);
+	//allows to use belt fed upgrade for mg
+	public static final Upgrade UPGRADE_MG_LOADER = new Upgrade("mg_loader")
+			.withType(UpgradePurpose.SPECIAL);
+
+	//increases machine speed
+	public static final Upgrade UPGRADE_IMPROVED_GEARBOX = new Upgrade("improved_gearbox")
+			.withType(UpgradePurpose.SPEED);
+	//more sawdust for cost of planks
+	public static final Upgrade UPGRADE_SAW_UNREGULATOR = new Upgrade("saw_unregulator")
+			.withType(UpgradePurpose.EFFICIENCY);
+
+	//allows printing punchtapes
+	public static final Upgrade UPGRADE_PRESS_PUNCHTAPES = new Upgrade("printing_press/punchtapes")
+			.withType(UpgradePurpose.SPECIAL);
+	//allows printing bound pages, books and newspapers
+	public static final Upgrade UPGRADE_PRESS_BATCHING = new Upgrade("printing_press/batching")
+			.withType(UpgradePurpose.SPECIAL);
+	//allows printing envelopes
+	public static final Upgrade UPGRADE_PRESS_ENVELOPER = new Upgrade("printing_press/enveloper")
+			.withType(UpgradePurpose.SPECIAL);
+
+	//allows the radar to detect radio signal emitters and send their positions
+	public static final Upgrade UPGRADE_RADIO_LOCATORS = new Upgrade("radio_locators");
+
+	//changes the projectile workshop to *fill* projectiles
+	public static final Upgrade UPGRADE_CORE_FILLER = new Upgrade("core_filler")
+			.withType(UpgradePurpose.FULL_CONVERSION);
+
+	//adds razor wire on top of a gate
+	public static final Upgrade UPGRADE_RAZOR_WIRE = new Upgrade("razor_wire")
+			.withType(UpgradePurpose.DEFENSE_SYSTEM);
+	//allows connecting redstone wire to a gate
+	public static final Upgrade UPGRADE_REDSTONE_ACTIVATION = new Upgrade("rs_activation")
+			.withType(UpgradePurpose.SPECIAL);
+
+	//data input machine upgrade
+	public static final Upgrade UPGRADE_ADVANCED_DATA = new Upgrade("advanced_data")
+			.withType(UpgradePurpose.DATA);
+	//arithemtic logic machine upgrade
+	public static final Upgrade UPGRADE_MEMORY = new Upgrade("memory")
+			.withType(UpgradePurpose.DATA);
+	public static final Upgrade UPGRADE_CIRCUIT_RACKS = new Upgrade("circuit_racks")
+			.withType(UpgradePurpose.CAPACITY);
+
+	public static final Upgrade UPGRADE_EMPLACEMENT_WEAPON_MACHINEGUN =
+			new UpgradeEmplacementWeapon<>("machinegun", EmplacementWeaponMachinegun::new);
+	public static final Upgrade UPGRADE_EMPLACEMENT_WEAPON_IROBSERVER =
+			new UpgradeEmplacementWeapon<>("infrared_observer", EmplacementWeaponInfraredObserver::new);
+	public static final Upgrade UPGRADE_EMPLACEMENT_WEAPON_AUTOCANNON =
+			new UpgradeEmplacementWeapon<>("autocannon", EmplacementWeaponAutocannon::new);
+	public static final Upgrade UPGRADE_EMPLACEMENT_WEAPON_HEAVY_CHEMTHROWER =
+			new UpgradeEmplacementWeapon<>("heavy_chemthrower", EmplacementWeaponHeavyChemthrower::new);
+	public static final Upgrade UPGRADE_EMPLACEMENT_WEAPON_HEAVY_RAILGUN =
+			new UpgradeEmplacementWeapon<>("heavy_railgun", EmplacementWeaponHeavyRailgun::new);
+	public static final Upgrade UPGRADE_EMPLACEMENT_SEARCHLIGHT =
+			new UpgradeEmplacementWeapon<>("searchlight", EmplacementWeaponMachinegun::new);
+	public static final Upgrade UPGRADE_EMPLACEMENT_SPOTLIGHT_TOWER =
+			new UpgradeEmplacementWeapon<>("spotlight_tower", EmplacementWeaponMachinegun::new);
+	public static final Upgrade UPGRADE_EMPLACEMENT_WEAPON_TESLA =
+			new UpgradeEmplacementWeapon<>("tesla", EmplacementWeaponTeslaCoil::new);
+	public static final Upgrade UPGRADE_EMPLACEMENT_WEAPON_CPDS =
+			new UpgradeEmplacementWeapon<>("cpds", EmplacementWeaponCPDS::new);
+	public static final Upgrade UPGRADE_EMPLACEMENT_WEAPON_MORTAR =
+			new UpgradeEmplacementWeapon<>("mortar", EmplacementWeaponMachinegun::new);
+	public static final Upgrade UPGRADE_EMPLACEMENT_WEAPON_LIGHT_HOWITZER =
+			new UpgradeEmplacementWeapon<>("light_howitzer", EmplacementWeaponMachinegun::new);
+	public static final Upgrade UPGRADE_EMPLACEMENT_WEAPON_MLRS =
+			new UpgradeEmplacementWeapon<>("mlrs", EmplacementWeaponMachinegun::new);
+	public static final Upgrade UPGRADE_EMPLACEMENT_WEAPON_GUIDED_MISSILE_LAUNCHER =
+			new UpgradeEmplacementWeapon<>("guided_missile_launcher", EmplacementWeaponMachinegun::new);
+
+	public static final Upgrade UPGRADE_SOVEREIGNTY = new Upgrade("sovereignty")
+			.withType(UpgradePurpose.DEFENSE_SYSTEM);
+
+	public static final Upgrade UPGRADE_EMPLACEMENT_FALLBACK_GRENADES = new Upgrade("emplacement/grenades")
+			.withType(UpgradePurpose.DEFENSE_SYSTEM);
+	public static final Upgrade UPGRADE_EMPLACEMENT_STURDY_BEARINGS = new Upgrade("emplacement/bearings")
+			.withType(UpgradePurpose.EFFICIENCY);
+
+	public static final Upgrade UPGRADE_EMPLACEMENT_MACHINEGUN_HEAVYBARREL = new Upgrade("emplacement/mg_heavy_barrel")
+			.withType(UpgradePurpose.SPEED);
+	public static final Upgrade UPGRADE_EMPLACEMENT_MACHINEGUN_WATERCOOLED = new Upgrade("emplacement/mg_watercooled")
+			.withType(UpgradePurpose.EFFICIENCY);
+	public static final Upgrade UPGRADE_EMPLACEMENT_MACHINEGUN_BUNKER = new Upgrade("emplacement/mg_bunker")
+			.withType(UpgradePurpose.ARMOR);
+
+	public static final Upgrade UPGRADE_FLAGPOLE_CAPTURE_DEFIANCE = new Upgrade("flagpole/capture_defiance")
+			.withType(UpgradePurpose.DEFENSE_SYSTEM);
+	public static final Upgrade UPGRADE_FLAGPOLE_TASER_LOCKS = new Upgrade("flagpole/taser_locks")
+			.withType(UpgradePurpose.DEFENSE_SYSTEM);
+	public static final Upgrade UPGRADE_FLAGPOLE_DISTRESS_SIGNAL = new Upgrade("flagpole/distress_signal")
+			.withType(UpgradePurpose.DEFENSE_SYSTEM);
+	public static final Upgrade UPGRADE_FLAGPOLE_UNIT_POST = new Upgrade("flagpole/unit_post")
+			.withType(UpgradePurpose.FULL_CONVERSION);
+
+	public static final Upgrade UPGRADE_VEHICLE_SMALL_STORAGE = new Upgrade("vehicle/small/storage")
+			.withType(UpgradePurpose.CAPACITY);
+	public static final Upgrade UPGRADE_VEHICLE_SMALL_ADDITIONAL_TANK = new Upgrade("vehicle/small/fluid_tank")
+			.withType(UpgradePurpose.CAPACITY);
+	public static final Upgrade UPGRADE_VEHICLE_ADDITIONAL_PASSENGER_SEAT = new Upgrade("vehicle/small/passenger_seat")
+			.withType(UpgradePurpose.CAPACITY);
+	public static final Upgrade UPGRADE_VEHICLE_WOODGAS = new Upgrade("vehicle/woodgas")
+			.withType(UpgradePurpose.SPECIAL);
 
 	//--- Items ---//
 	//materials
@@ -336,83 +458,6 @@ public class IIContent
 		IIContent.blockGasMustardGas = new BlockIIFluid("mustard_gas", IIContent.gasMustardGas, Material.WATER)
 				.setPotionEffects(new PotionEffect(MobEffects.POISON, 60, 0));
 	}
-
-	//--- Upgrades ---//
-	//allows filling items with fluids
-	public static final Upgrade UPGRADE_PACKER_FLUID = new Upgrade("packer_fluid");
-	//allows charging items with IF
-	public static final Upgrade UPGRADE_PACKER_ENERGY = new Upgrade("packer_energy");
-	//allows (re)naming items on conveyor
-	public static final Upgrade UPGRADE_PACKER_NAMING = new Upgrade("packer_naming");
-	//makes packer accept minecarts instead of items
-	public static final Upgrade UPGRADE_PACKER_RAILWAY = new Upgrade("packer_railway");
-
-	//used by effect crates
-	public static final Upgrade UPGRADE_INSERTER = new Upgrade("inserter");
-	//allows to use belt fed upgrade for mg
-	public static final Upgrade UPGRADE_MG_LOADER = new Upgrade("mg_loader");
-
-	//increases machine speed
-	public static final Upgrade UPGRADE_IMPROVED_GEARBOX = new Upgrade("improved_gearbox");
-	//more sawdust for cost of planks
-	public static final Upgrade UPGRADE_SAW_UNREGULATOR = new Upgrade("saw_unregulator");
-
-	//allows printing punchtapes
-	public static final Upgrade UPGRADE_PRESS_PUNCHTAPES = new Upgrade("printing_press/punchtape_processor");
-	//allows printing bound pages, books and newspapers
-	public static final Upgrade UPGRADE_PRESS_BATCHING = new Upgrade("printing_press/batching_mechanism");
-	//allows printing envelopes
-	public static final Upgrade UPGRADE_PRESS_ENVELOPER = new Upgrade("printing_press/enveloper");
-
-	//allows the radar to detect radio signal emitters and send their positions
-	public static final Upgrade UPGRADE_RADIO_LOCATORS = new Upgrade("radio_locators");
-
-	//changes the projectile workshop to *fill* projectiles
-	public static final Upgrade UPGRADE_CORE_FILLER = new Upgrade("core_filler");
-
-	//adds razor wire on top of a gate
-	public static final Upgrade UPGRADE_RAZOR_WIRE = new Upgrade("razor_wire");
-	//allows connecting redstone wire to a gate
-	public static final Upgrade UPGRADE_REDSTONE_ACTIVATION = new Upgrade("rs_activation");
-
-	//data input machine upgrade
-	public static final Upgrade UPGRADE_ADVANCED_DATA = new Upgrade("advanced_data");
-	//arithemtic logic machine upgrade
-	public static final Upgrade UPGRADE_MEMORY = new Upgrade("memory");
-	public static final Upgrade UPGRADE_CIRCUIT_RACKS = new Upgrade("circuit_racks");
-	//emplacement weapons
-	public static final Upgrade UPGRADE_EMPLACEMENT_WEAPON_MACHINEGUN = new UpgradeEmplacementWeapon<>("machinegun", EmplacementWeaponMachinegun::new);
-	public static final Upgrade UPGRADE_EMPLACEMENT_WEAPON_IROBSERVER = new UpgradeEmplacementWeapon<>("infrared_observer", EmplacementWeaponInfraredObserver::new);
-	public static final Upgrade UPGRADE_EMPLACEMENT_WEAPON_AUTOCANNON = new UpgradeEmplacementWeapon<>("autocannon", EmplacementWeaponAutocannon::new);
-	public static final Upgrade UPGRADE_EMPLACEMENT_WEAPON_HEAVY_CHEMTHROWER = new UpgradeEmplacementWeapon<>("heavy_chemthrower", EmplacementWeaponHeavyChemthrower::new);
-	public static final Upgrade UPGRADE_EMPLACEMENT_WEAPON_HEAVY_RAILGUN = new UpgradeEmplacementWeapon<>("heavy_railgun", EmplacementWeaponHeavyRailgun::new);
-	public static final Upgrade UPGRADE_EMPLACEMENT_SEARCHLIGHT = new UpgradeEmplacementWeapon<>("searchlight", EmplacementWeaponMachinegun::new);
-	public static final Upgrade UPGRADE_EMPLACEMENT_SPOTLIGHT_TOWER = new UpgradeEmplacementWeapon<>("spotlight_tower", EmplacementWeaponMachinegun::new);
-	public static final Upgrade UPGRADE_EMPLACEMENT_WEAPON_TESLA = new UpgradeEmplacementWeapon<>("tesla", EmplacementWeaponTeslaCoil::new);
-	public static final Upgrade UPGRADE_EMPLACEMENT_WEAPON_CPDS = new UpgradeEmplacementWeapon<>("cpds", EmplacementWeaponCPDS::new);
-	public static final Upgrade UPGRADE_EMPLACEMENT_WEAPON_MORTAR = new UpgradeEmplacementWeapon<>("mortar", EmplacementWeaponMachinegun::new);
-	public static final Upgrade UPGRADE_EMPLACEMENT_WEAPON_LIGHT_HOWITZER = new UpgradeEmplacementWeapon<>("light_howitzer", EmplacementWeaponMachinegun::new);
-	public static final Upgrade UPGRADE_EMPLACEMENT_WEAPON_MLRS = new UpgradeEmplacementWeapon<>("mlrs", EmplacementWeaponMachinegun::new);
-	public static final Upgrade UPGRADE_EMPLACEMENT_WEAPON_GUIDED_MISSILE_LAUNCHER = new UpgradeEmplacementWeapon<>("guided_missile_launcher", EmplacementWeaponMachinegun::new);
-	//generic emplacement upgrades
-	public static final Upgrade UPGRADE_SOVEREIGNTY = new Upgrade("sovereignty");
-
-	public static final Upgrade UPGRADE_EMPLACEMENT_FALLBACK_GRENADES = new Upgrade("emplacement/emergency_smoke");
-	public static final Upgrade UPGRADE_EMPLACEMENT_STURDY_BEARINGS = new Upgrade("emplacement/sturdy_bearings");
-	//MG emplacement upgrades
-	public static final Upgrade UPGRADE_EMPLACEMENT_MACHINEGUN_HEAVYBARREL = new Upgrade("emplacement/machinegun/heavy_barrel");
-	public static final Upgrade UPGRADE_EMPLACEMENT_MACHINEGUN_WATERCOOLED = new Upgrade("emplacement/machinegun/water_cooled_barrel");
-	public static final Upgrade UPGRADE_EMPLACEMENT_MACHINEGUN_BUNKER = new Upgrade("emplacement/machinegun/additional_fortifications");
-	//flagpole upgrades
-	public static final Upgrade UPGRADE_FLAGPOLE_CAPTURE_DEFIANCE = new Upgrade("flagpole/capture_defiance");
-	public static final Upgrade UPGRADE_FLAGPOLE_TASER_LOCKS = new Upgrade("flagpole/taser_locks");
-	public static final Upgrade UPGRADE_FLAGPOLE_DISTRESS_SIGNAL = new Upgrade("flagpole/distress_signal");
-	public static final Upgrade UPGRADE_FLAGPOLE_UNIT_POST = new Upgrade("flagpole/unit_post");
-	//vehicle upgrades
-	public static final Upgrade UPGRADE_VEHICLE_SMALL_STORAGE = new Upgrade("vehicle/small/storage");
-	public static final Upgrade UPGRADE_VEHICLE_SMALL_ADDITIONAL_TANK = new Upgrade("vehicle/small/fluid_tank");
-	public static final Upgrade UPGRADE_VEHICLE_ADDITIONAL_PASSENGER_SEAT = new Upgrade("vehicle/small/passenger_seat");
-	public static final Upgrade UPGRADE_VEHICLE_WOODGAS = new Upgrade("vehicle/woodgas");
 
 	//dummy method, called so that the static fields above get loaded
 	static void init()

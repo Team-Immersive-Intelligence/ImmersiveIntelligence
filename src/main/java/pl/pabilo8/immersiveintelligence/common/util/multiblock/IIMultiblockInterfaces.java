@@ -7,8 +7,11 @@ import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IGuiTile;
 import blusunrize.immersiveengineering.common.util.Utils;
 import blusunrize.immersiveengineering.common.util.inventory.IIEInventory;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagFloat;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraftforge.common.util.INBTSerializable;
 import pl.pabilo8.immersiveintelligence.api.utils.MultiblockConstructionManager;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 
@@ -30,6 +33,76 @@ public class IIMultiblockInterfaces
 	public interface IExplosionResistantMultiblock
 	{
 		float getExplosionResistance();
+	}
+
+	public interface IDamageResistantMultiblock extends IExplosionResistantMultiblock
+	{
+		float getHealth();
+
+		/**
+		 * Method called when a {@link pl.pabilo8.immersiveintelligence.common.util.diplomacy.OwnerIdentity non-owner} entity or an explosion attempts to break the block of this multiblock.
+		 *
+		 * @param damage damage to be applied
+		 * @return whether the multiblock can be broken
+		 */
+		boolean damageHealth(float damage);
+	}
+
+	public interface IManagedDamageResistantMultiblock extends IDamageResistantMultiblock
+	{
+		MultiblockHealth getHealthManager();
+
+		@Override
+		default float getHealth()
+		{
+			return getHealthManager().getHealth();
+		}
+
+		@Override
+		default boolean damageHealth(float damage)
+		{
+			return getHealthManager().getHealth()-damage <= 0;
+		}
+	}
+
+	public static abstract class MultiblockHealth implements INBTSerializable<NBTTagFloat>
+	{
+		private float health;
+		private final float maxHealth;
+
+		public MultiblockHealth(float maxHealth)
+		{
+			this.maxHealth = maxHealth;
+			this.health = maxHealth;
+		}
+
+		public float getHealth()
+		{
+			return health;
+		}
+
+		public float getMaxHealth()
+		{
+			return maxHealth;
+		}
+
+		public boolean damageHealth(float damage)
+		{
+			health = MathHelper.clamp(health+damage, 0, maxHealth);
+			return health <= 0;
+		}
+
+		@Override
+		public NBTTagFloat serializeNBT()
+		{
+			return new NBTTagFloat(health);
+		}
+
+		@Override
+		public void deserializeNBT(NBTTagFloat nbt)
+		{
+			health = nbt.getFloat();
+		}
 	}
 
 	/**

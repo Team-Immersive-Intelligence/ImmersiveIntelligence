@@ -221,7 +221,7 @@ public class TileEntityAmmunitionAssembler extends TileEntityMultiblockProductio
 		if(hatch.setState(state))
 		{
 			world.playSound(null, getPOIPos("lid"), state?IISounds.metalSlideOpen: IISounds.metalSlideClose, SoundCategory.BLOCKS, 1f, 1f);
-			IIPacketHandler.sendToClient(getPos(), getWorld(), new MessageBooleanAnimatedPartsSync(part, state, getPos()));
+			IIPacketHandler.sendToClient(new MessageBooleanAnimatedPartsSync(part, state, this));
 		}
 	}
 }

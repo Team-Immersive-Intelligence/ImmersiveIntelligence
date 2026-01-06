@@ -1330,7 +1330,10 @@ public class IIConfigHandler
 					public static int maxHealth = 200;
 
 					@Comment({"Enemy detection range (in blocks)"})
-					public static float detectionRadius = 24;
+					public static float detectionRadius = 32;
+
+					@Comment({"Enemy detection range (in blocks)"})
+					public static float attackRadius = 40;
 
 					@Comment({"Base energy usage per tick (in IF)."})
 					public static int energyUpkeepCost = 2048;
@@ -1359,6 +1362,9 @@ public class IIConfigHandler
 					@Comment({"Enemy detection range (in blocks)"})
 					public static float detectionRadius = 24;
 
+					@Comment({"Enemy attack range (in blocks)"})
+					public static float attackRadius = 32;
+
 					@Comment({"Base energy usage per tick (in IF)."})
 					public static int energyUpkeepCost = 1024;
 				}
@@ -1381,7 +1387,7 @@ public class IIConfigHandler
 					public static int maxHealth = 200;
 
 					@Comment({"Enemy detection range (in blocks)"})
-					public static float detectionRadius = 0;
+					public static float detectionRadius = 16;
 
 					@Comment({"Enemy attack range (in blocks)"})
 					public static float attackRadius = 16;
@@ -1391,9 +1397,6 @@ public class IIConfigHandler
 				{
 					@Comment({"Pitch rotation speed (degrees/tick)"})
 					public static float pitchRotateSpeed = 2;
-
-					@Comment({"Yaw rotation speed (degrees/tick, rotates only if sent a data packet, requires lowering the platform)"})
-					public static int yawRotateTime = 1;
 
 					@Comment({"Starting/max health of the turret (in half-hearts)"})
 					public static int maxHealth = 100;
@@ -1421,7 +1424,10 @@ public class IIConfigHandler
 					public static int maxHealth = 350;
 
 					@Comment({"Enemy detection range (in blocks)"})
-					public static float detectionRadius = 16;
+					public static float detectionRadius = 24;
+
+					@Comment({"Enemy attack range (in blocks)"})
+					public static float attackRadius = 48;
 
 					@Comment({"Base energy usage per tick (in IF)."})
 					public static int energyUpkeepCost = 4096;
@@ -1453,6 +1459,9 @@ public class IIConfigHandler
 					@Comment({"Enemy detection range (in blocks)"})
 					public static float detectionRadius = 16;
 
+					@Comment({"Enemy attack range (in blocks)"})
+					public static float attackRadius = 32;
+
 					@Comment({"Base energy usage per tick (in IF)."})
 					public static int energyUpkeepCost = 2048;
 				}
@@ -1463,10 +1472,10 @@ public class IIConfigHandler
 					public static int shotFireTime = 40;
 
 					@Comment({"Time required for loading a single projectile."})
-					public static int reloadConveyorTime = 20;
+					public static int reloadTime = 20;
 
-					@Comment({"Time required for replacing the ammo box."})
-					public static int reloadAmmoBoxTime = 100;
+					@Comment({"Time required for setting up the emplacement."})
+					public static int setupTime = 100;
 
 					@Comment({"Starting/max health of the turret (in half-hearts)"})
 					public static int maxHealth = 350;
@@ -1479,6 +1488,9 @@ public class IIConfigHandler
 
 					@Comment({"Enemy detection range (in blocks)"})
 					public static float detectionRadius = 16;
+
+					@Comment({"Enemy attack range (in blocks)"})
+					public static float attackRadius = 64;
 
 					@Comment({"Base energy usage per tick (in IF)."})
 					public static int energyUpkeepCost = 2048;

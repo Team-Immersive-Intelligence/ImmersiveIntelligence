@@ -17,6 +17,8 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeTechTree;
+import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeUtils.UpgradeTier;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
@@ -33,6 +35,14 @@ import static pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.M
  */
 public class TileEntityAmmunitionCrate extends TileEntityEffectCrate
 {
+	static
+	{
+		UpgradeTechTree.getTreeFor(TileEntityAmmunitionCrate.class)
+				.withUpgrade(IIContent.UPGRADE_INSERTER, UpgradeTier.TIER_1)
+				.withUpgrade(IIContent.UPGRADE_MG_LOADER, UpgradeTier.TIER_2)
+				.withDependency(IIContent.UPGRADE_INSERTER, IIContent.UPGRADE_MG_LOADER);
+	}
+
 	public TileEntityAmmunitionCrate()
 	{
 		inventory = NonNullList.withSize(50, ItemStack.EMPTY);
@@ -65,7 +75,7 @@ public class TileEntityAmmunitionCrate extends TileEntityEffectCrate
 	{
 		if(player.isSneaking())
 		{
-			IIPacketHandler.INSTANCE.sendToDimension(new MessageBooleanAnimatedPartsSync(0, open = !open, this.pos), this.world.provider.getDimension());
+			IIPacketHandler.sendToClient(new MessageBooleanAnimatedPartsSync(0, open = !open, this));
 			return true;
 		}
 		else if(open)

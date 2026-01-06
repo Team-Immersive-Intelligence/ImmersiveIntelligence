@@ -1,11 +1,13 @@
 package pl.pabilo8.immersiveintelligence.common.util.diplomacy;
 
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagString;
+import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
@@ -230,6 +232,27 @@ public class OwnerIdentity
 		if(other.equals(this))
 			return DiplomaticStatus.MEMBER;
 		return relations.getOrDefault(other, DiplomaticStatus.NEUTRAL);
+	}
+
+	@Nullable
+	public EntityLivingBase getFirstResponsibleMember(World world)
+	{
+		//TODO: 03.01.2026 factions without a player entity?
+		//First check for owners
+		for(String owner : owners)
+		{
+			EntityPlayer player = world.getPlayerEntityByName(owner);
+			if(player!=null)
+				return player;
+		}
+		//Then for normal members
+		for(String playerName : players)
+		{
+			EntityPlayer player = world.getPlayerEntityByName(playerName);
+			if(player!=null)
+				return player;
+		}
+		return null;
 	}
 
 

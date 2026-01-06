@@ -242,7 +242,7 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 	 */
 	protected void onInitStandardAddons()
 	{
-		if(category==DecoGuiCategory.DATA_TILE||category==DecoGuiCategory.PRODUCTION_TILE)
+		if(category==DecoGuiCategory.DATA_TILE||category==DecoGuiCategory.PRODUCTION_TILE||category==DecoGuiCategory.TERRITORY_CONTROL_TILE)
 			addWidget(new DecoManualWidget());
 		if(tile instanceof IOwnableProperty)
 			addWidget(new DecoOwnershipWidget(((IOwnableProperty)tile)));
@@ -867,7 +867,7 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 
 	public void syncAnimatedParts(MultiblockInteractablePart part, boolean state)
 	{
-		IIPacketHandler.sendToServer(new MessageBooleanAnimatedPartsSync(part.getID(), state, tile.getPos()));
+		IIPacketHandler.sendToServer(new MessageBooleanAnimatedPartsSync(part.getID(), state, tile));
 	}
 
 	public final boolean refreshGUI()

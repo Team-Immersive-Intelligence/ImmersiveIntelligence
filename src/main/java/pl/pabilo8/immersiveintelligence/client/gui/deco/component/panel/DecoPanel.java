@@ -7,6 +7,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.GlStateManager.DestFactor;
 import net.minecraft.client.renderer.GlStateManager.SourceFactor;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.I18n;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
@@ -147,6 +148,7 @@ public class DecoPanel extends DecoComponent<DecoPanel>
 
 	public DecoPanel withTitleLabel(String title, DecoAlignment alignment)
 	{
+		title = I18n.format(title);
 		int stringWidth = Math.min(this.width, IIClientUtils.fontRegular.getStringWidth(title));
 		int stringHeight = IIClientUtils.fontRegular.getWordWrappedHeight(title, stringWidth);
 

@@ -312,4 +312,15 @@ public class AmmoFactory<E extends EntityAmmoBase<? super E>>
 					effectShape, componentsNBT[i], componentSize, componentEffectiveness,
 					owner);
 	}
+
+	public float[] getAnglePrediction(Vec3d shooterPos, Vec3d shooterMotion, Vec3d targetPos, Vec3d targetMotion)
+	{
+		//Base it on ammo
+		if(ammo==null)
+			return new float[]{0, 0};
+
+		return IIAmmoUtils.getInterceptionAngles(
+				shooterPos, shooterMotion, targetPos, targetMotion, ammo.getVelocity(), ammo.getMass(stack)
+		);
+	}
 }

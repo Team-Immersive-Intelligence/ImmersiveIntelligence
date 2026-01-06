@@ -312,7 +312,7 @@ public class EntityEmplacementWeapon extends EntityLivingBase implements IEntity
 		if(parent==null)
 			return false;
 
-		int maxAmount = MathHelper.clamp(repairPoints, 0, parent.getMaxHealth()-parent.getHealth());
+		float maxAmount = MathHelper.clamp(repairPoints, 0, parent.getMaxHealth()-parent.getHealth());
 		parent.applyDamage(-maxAmount);
 		return true;
 	}

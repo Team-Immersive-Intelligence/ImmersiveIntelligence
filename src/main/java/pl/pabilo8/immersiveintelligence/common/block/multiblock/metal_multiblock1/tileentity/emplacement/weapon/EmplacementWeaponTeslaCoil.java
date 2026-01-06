@@ -1,45 +1,29 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.weapon;
 
-import blusunrize.immersiveengineering.api.tool.IElectricEquipment;
-import blusunrize.immersiveengineering.api.tool.IElectricEquipment.ElectricSource;
-import blusunrize.immersiveengineering.common.Config.IEConfig;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityTeslaCoil.LightningAnimation;
-import blusunrize.immersiveengineering.common.util.IEDamageSources;
-import blusunrize.immersiveengineering.common.util.IEDamageSources.ElectricDamageSource;
-import blusunrize.immersiveengineering.common.util.IEPotions;
 import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Axis;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import pl.pabilo8.immersiveintelligence.client.gui.block.emplacement.GuiEmplacementPageStorage;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.EmplacementWeapons.TeslaCoil;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement.EmplacementStateNeeds;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityEmplacementWeapon;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityEmplacementWeapon.EmplacementHitboxEntity;
-import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
-import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
-import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
-import java.util.List;
 
 public class EmplacementWeaponTeslaCoil extends EmplacementWeapon
 {
 	private final ArrayList<Integer> targetedEntities = new ArrayList<>();
 	private final ArrayList<LightningAnimation> effects = new ArrayList<>();
-	private AxisAlignedBB vision;
-	private AxisAlignedBB attack;
 
 	public EmplacementWeaponTeslaCoil()
 	{
@@ -53,53 +37,25 @@ public class EmplacementWeaponTeslaCoil extends EmplacementWeapon
 	}
 
 	@Override
-	public float getYawTurnSpeed()
+	public void onInit(TileEntityEmplacement te)
 	{
-		return 360;
+		super.onInit(te);
+		this.visionAABB = this.visionAABB.grow(TeslaCoil.detectionRadius);
+		this.attackAABB = this.attackAABB.grow(TeslaCoil.attackRadius);
 	}
 
 	@Override
-	public float getPitchTurnSpeed()
+	public EmplacementStateNeeds onUpdate(TileEntityEmplacement te)
 	{
-		return 360;
-	}
-
-	@Override
-	public boolean isAimedAt(float yaw, float pitch)
-	{
-		return true;
-	}
-
-	@Override
-	public float[] getAnglePrediction(Vec3d posTurret, Vec3d posTarget, Vec3d motion)
-	{
-		return new float[]{0, 0};
-	}
-
-	@Override
-	public void init(TileEntityEmplacement te, boolean firstTime)
-	{
-		super.init(te, firstTime);
-		//vision = new AxisAlignedBB(te.getPos()).offset(-0.5, 0, -0.5).grow(TeslaCoil.detectionRadius);
-		vision = new AxisAlignedBB(te.getPos()).offset(-0.5, 0, -0.5).grow(16);
-		attack = new AxisAlignedBB(te.getPos()).offset(-0.5, 0, -0.5).grow(TeslaCoil.attackRadius);
-	}
-
-	@Override
-	public void tick(TileEntityEmplacement te, boolean active)
-	{
-		if(!active)
-			return;
-
 		for(Integer targetedEntity : targetedEntities)
-		{
 			addEntityToAnimation(targetedEntity, te.getWorld(), te.getBlockPosForPos(49).up());
-		}
 		targetedEntities.clear();
 		effects.removeIf(LightningAnimation::tick);
+
+		return super.onUpdate(te);
 	}
 
-	@Override
+	/*@Override
 	public void shoot(TileEntityEmplacement te)
 	{
 		super.shoot(te);
@@ -132,54 +88,15 @@ public class EmplacementWeaponTeslaCoil extends EmplacementWeapon
 
 			for(Entity e : targets)
 				if(e!=target)
-				{
 					if(e instanceof EntityLivingBase)
 						IElectricEquipment.applyToEntity((EntityLivingBase)e, null, new ElectricSource(3f));
-				}
 		}
 
-	}
+	}*/
 
 	private void addAnimation(LightningAnimation ani)
 	{
 		Minecraft.getMinecraft().addScheduledTask(() -> effects.add(ani));
-	}
-
-	@Override
-	public void aimAt(float yaw, float pitch)
-	{
-		super.aimAt(yaw, pitch);
-
-	}
-
-	@Override
-	public boolean isSetUp(boolean door)
-	{
-		return true;
-	}
-
-	@Override
-	public boolean requiresPlatformRefill()
-	{
-		return false;
-	}
-
-	@Nonnull
-	@Override
-	public NBTTagCompound saveToNBT(boolean forClient)
-	{
-		return super.saveToNBT(forClient);
-	}
-
-	@Override
-	public void readFromNBT(NBTTagCompound tagCompound)
-	{
-		if(tagCompound.hasKey("targetEntity"))
-		{
-			targetedEntities.add(tagCompound.getInteger("targetEntity"));
-		}
-		else
-			super.readFromNBT(tagCompound);
 	}
 
 	@Override
@@ -218,31 +135,6 @@ public class EmplacementWeaponTeslaCoil extends EmplacementWeapon
 
 			addAnimation(new LightningAnimation(coilPos, (EntityLivingBase)target));
 		}
-	}
-
-	public void syncAttackedEntity(TileEntityEmplacement te, Entity e)
-	{
-		if(!te.getWorld().isRemote)
-		{
-			IIPacketHandler.sendToClient(te, new MessageIITileSync(te, EasyNBT.newNBT()
-					.withString("weaponName", getName())
-					.withTag("currentWeapon", EasyNBT.newNBT()
-							.withInt("targetEntity", e.getEntityId())
-					)
-			));
-		}
-	}
-
-	@Override
-	public boolean canShoot(TileEntityEmplacement te)
-	{
-		return true;
-	}
-
-	@Override
-	public AxisAlignedBB getVisionAABB()
-	{
-		return vision;
 	}
 
 	@Override
@@ -296,24 +188,6 @@ public class EmplacementWeaponTeslaCoil extends EmplacementWeapon
 	}
 
 	@Override
-	public NonNullList<ItemStack> getBaseInventory()
-	{
-		return NonNullList.create();
-	}
-
-	@Override
-	public void renderStorageInventory(GuiEmplacementPageStorage gui, int mx, int my, float partialTicks, boolean first)
-	{
-
-	}
-
-	@Override
-	public void performPlatformRefill(TileEntityEmplacement te)
-	{
-
-	}
-
-	@Override
 	public int getEnergyUpkeepCost()
 	{
 		return TeslaCoil.energyUpkeepCost;
@@ -325,4 +199,17 @@ public class EmplacementWeaponTeslaCoil extends EmplacementWeapon
 		return TeslaCoil.maxHealth;
 	}
 
+	@Override
+	public NBTTagCompound serializeNBT()
+	{
+		return super.serializeNBT();
+	}
+
+	@Override
+	public void deserializeNBT(NBTTagCompound nbt)
+	{
+		super.deserializeNBT(nbt);
+		if(nbt.hasKey("targetEntity"))
+			targetedEntities.add(nbt.getInteger("targetEntity"));
+	}
 }

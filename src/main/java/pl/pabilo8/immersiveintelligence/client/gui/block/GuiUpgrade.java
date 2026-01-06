@@ -7,11 +7,15 @@ import net.minecraft.entity.player.EntityPlayer;
 import pl.pabilo8.immersiveintelligence.api.upgrade.IUpgradableDevice;
 import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeTechTree;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoButton;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoTreeDisplay;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoPanel;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoScenarioDisplay;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoAlignment;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.tree.DecoTreeNodeRenderer;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.tree.upgrade.UpgradeTechTreeWrapper;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundBuilder.SlotStyle;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoGuiCategory;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoSprite;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTemplate;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
 import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTModel;
@@ -49,33 +53,46 @@ public class GuiUpgrade<T extends TileEntityIEBase & IIEInventory & IUpgradableD
 		}
 
 		startBackground()
-				.withBox(style, 0, 0, 240, 136)
+				.withBox(style, 0, 0, 256, 152+8)
 				.withTitleBar("desc.immersiveintelligence.upgrade_gui.title")
 				.withNextLayer()
-				.withBox(DecoTextures.GUI_BG_WOODEN, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_ROUND_WOODEN, 32, 136, 176, 92)
+				.withBox(DecoTextures.GUI_BG_WOODEN, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_ROUND_WOODEN, 40, 136+24, 176, 92)
+				.withFrame(DecoTextures.GUI_FRAME_WOODEN_THIN, 4, false, new boolean[]{true, false, false, false})
 				.withInventorySlots(SlotStyle.VANILLA, container.inventorySlots)
 				.withInventoryTitleBar()
-				.withNextLayer()
-				.withBox(style, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_SQUARE, 4, 112-4, 128-16, 24)
 				.build();
 
 		UpgradeTechTree techTree = UpgradeTechTree.getTreeFor(tile);
 		//Upgrade
 		addComponents(
-				new DecoScenarioDisplay(7, 16-4)
-						.withSize(106, 96)
-						.withBackgroundColor(IIColor.BLACK)
+				new DecoPanel(4, 4)
+						.withSize(108, 152)
+						.withBackground(DecoTextures.GUI_BG_PAPER)
+						.withBackgroundMask(DecoTextures.RES_TEXTURES_DECO_TEMPLATE_SQUARE),
+				new DecoScenarioDisplay(4+2, 4+2)
+						.withSize(108-4, 96)
+						.withBackgroundColor(IIColor.BLACK.withAlpha(32))
 						.withScale(0.125f)
 						.withRotation(-12.5f, 5)
 						.withModel(false, new AMTModel(DefaultVertexFormats.ITEM, IIReference.RES_BLOCK_MODEL.with("multiblock/emplacement/upgrade_preview_base.obj")))
-						.withRotationAnimation(100, 0),
-				new DecoTreeDisplay(118, 16)
-						.withSize(116, 112)
-						.withBackground(DecoTextures.GUI_BG_PAPER)
-						.withBackgroundMask(DecoTextures.RES_TEXTURES_DECO_TEMPLATE_PAPER)
+						.withRotationAnimation(240, 0),
+
+				new DecoButton(118-4, 16-8-4+14-14)
+						.withSize(69, 14)
+						.withBackground(DecoTextures.RES_TEXTURES_DECO_COMPONENT_TAB_VERTICAL)
+						.withRawText("Tech Tree"),
+				new DecoButton(118-4+69, 16-8-4+14-14)
+						.withSize(69, 14)
+						.withBackground(DecoTextures.RES_TEXTURES_DECO_COMPONENT_TAB_VERTICAL)
+						.withRawText("Information"),
+				new DecoTreeDisplay(118-4, 16-8-4+14)
+						.withTree(new UpgradeTechTreeWrapper(techTree, tile))
+						.withNodeRenderer(new DecoTreeNodeRenderer())
+						.withSize(146-8, 146-8)
+						.withBackground(DecoSprite.atlasSprite(DecoTextures.GUI_BG_DARK, 64))
 		);
-		addLabel("Available Upgrades", 118, 8)
+		/*addLabel("Available Upgrades", 118, 8)
 				.withSize(116, 8)
-				.withAlign(DecoAlignment.CENTER);
+				.withAlign(DecoAlignment.CENTER);*/
 	}
 }

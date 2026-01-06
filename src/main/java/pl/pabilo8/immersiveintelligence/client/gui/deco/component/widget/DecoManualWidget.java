@@ -6,7 +6,6 @@ import blusunrize.lib.manual.gui.GuiManual;
 import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoTab;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoAlignment;
@@ -100,7 +99,7 @@ public class DecoManualWidget extends DecoComponentWidgetBase<DecoManualWidget>
 			wrapper.initGui();
 			withBackground(DecoTextures.GUI_BG_PAPER);
 			this.width -= 24;
-			withTitleLabel(I18n.format(IIReference.GUI_TOOLTIP_KEY+"widget.manual"), DecoAlignment.TOP);
+			withTitleLabel(IIReference.GUI_TOOLTIP_KEY+"widget.manual", DecoAlignment.TOP);
 			this.width += 24;
 			withBackground(null);
 			return true;

@@ -19,9 +19,10 @@ import pl.pabilo8.immersiveintelligence.client.gui.block.arithmetic_logic_machin
 import pl.pabilo8.immersiveintelligence.client.gui.block.arithmetic_logic_machine.GuiArithmeticLogicMachineEdit;
 import pl.pabilo8.immersiveintelligence.client.gui.block.data_input_machine.GuiDataInputMachine;
 import pl.pabilo8.immersiveintelligence.client.gui.block.data_input_machine.GuiDataInputMachineEdit;
-import pl.pabilo8.immersiveintelligence.client.gui.block.emplacement.GuiEmplacementPageStatus;
+import pl.pabilo8.immersiveintelligence.client.gui.block.emplacement.GuiEmplacementPageConfig;
+import pl.pabilo8.immersiveintelligence.client.gui.block.emplacement.GuiEmplacementPageFireMissions;
 import pl.pabilo8.immersiveintelligence.client.gui.block.emplacement.GuiEmplacementPageStorage;
-import pl.pabilo8.immersiveintelligence.client.gui.block.emplacement.GuiEmplacementPageTasks;
+import pl.pabilo8.immersiveintelligence.client.gui.block.emplacement.GuiEmplacementPageTargetFilters;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui.DecoResourcesLoader;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoResource;
@@ -43,7 +44,6 @@ import pl.pabilo8.immersiveintelligence.common.block.rotary_device.tileentity.Ti
 import pl.pabilo8.immersiveintelligence.common.block.simple.tileentity.TileEntitySmallCrate;
 import pl.pabilo8.immersiveintelligence.common.compat.jei.gui_handlers.DecoGuiJEIHandler;
 import pl.pabilo8.immersiveintelligence.common.gui.*;
-import pl.pabilo8.immersiveintelligence.common.gui.ContainerEmplacement.ContainerEmplacementStorage;
 import pl.pabilo8.immersiveintelligence.common.util.ISerializableEnum;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIBase;
@@ -118,9 +118,10 @@ public enum IIGUI implements ISerializableEnum
 	VULCANIZER(TileEntityVulcanizer.class, ContainerVulcanizer::new),
 
 	FLAGPOLE(TileEntityFlagpole.class, ContainerFlagpole::new),
-	EMPLACEMENT_STORAGE(TileEntityEmplacement.class, ContainerEmplacementStorage::new),
-	EMPLACEMENT_TASKS(TileEntityEmplacement.class, ContainerEmplacement::new),
-	EMPLACEMENT_STATUS(TileEntityEmplacement.class, ContainerEmplacement::new),
+	EMPLACEMENT_STORAGE(TileEntityEmplacement.class, ContainerEmplacement::getContainerForStoragePage),
+	EMPLACEMENT_CONFIG(TileEntityEmplacement.class, ContainerEmplacement::new),
+	EMPLACEMENT_TARGET_FILTERS(TileEntityEmplacement.class, ContainerEmplacement::new),
+	EMPLACEMENT_FIRE_MISSIONS(TileEntityEmplacement.class, ContainerEmplacement::new),
 
 	FILLER(TileEntityFiller.class, ContainerFiller::new),
 	CHEMICAL_PAINTER(TileEntityChemicalPainter.class, ContainerChemicalPainter::new),
@@ -225,9 +226,10 @@ public enum IIGUI implements ISerializableEnum
 		IIGUI.UPGRADE.setClientDecoGui((player, tile) -> new GuiUpgrade(player, tile));
 
 		IIGUI.FLAGPOLE.setClientDecoGui(GuiFlagpole::new);
-		IIGUI.EMPLACEMENT_STORAGE.setClientGui(GuiEmplacementPageStorage::new);
-		IIGUI.EMPLACEMENT_TASKS.setClientGui(GuiEmplacementPageTasks::new);
-		IIGUI.EMPLACEMENT_STATUS.setClientGui(GuiEmplacementPageStatus::new);
+		IIGUI.EMPLACEMENT_STORAGE.setClientDecoGui(GuiEmplacementPageStorage::new);
+		IIGUI.EMPLACEMENT_CONFIG.setClientDecoGui(GuiEmplacementPageConfig::new);
+		IIGUI.EMPLACEMENT_TARGET_FILTERS.setClientDecoGui(GuiEmplacementPageTargetFilters::new);
+		IIGUI.EMPLACEMENT_FIRE_MISSIONS.setClientDecoGui(GuiEmplacementPageFireMissions::new);
 
 		IIGUI.FILLER.setClientDecoGui(GuiFiller::new);
 		IIGUI.CHEMICAL_PAINTER.setClientDecoGui(GuiChemicalPainter::new);

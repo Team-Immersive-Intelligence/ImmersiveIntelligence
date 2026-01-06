@@ -1,6 +1,7 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.weapon;
 
 import pl.pabilo8.immersiveintelligence.api.upgrade.Upgrade;
+import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeUtils.UpgradePurpose;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 import java.util.HashMap;
@@ -20,6 +21,7 @@ public class UpgradeEmplacementWeapon<W extends EmplacementWeapon> extends Upgra
 	{
 		super(IIReference.RES_II.with("emplacement/"+name));
 		this.weaponSupplier = weaponSupplier;
+		this.withType(UpgradePurpose.PRIMARY_WEAPON);
 	}
 
 	public static EmplacementWeapon getWeaponFromName(String weaponName)

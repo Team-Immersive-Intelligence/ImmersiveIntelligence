@@ -2,10 +2,12 @@ package pl.pabilo8.immersiveintelligence.client.gui.deco.component.widget;
 
 import blusunrize.immersiveengineering.common.blocks.TileEntityIEBase;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.text.TextFormatting;
 import pl.pabilo8.immersiveintelligence.api.style.IStyleCustomizable;
 import pl.pabilo8.immersiveintelligence.api.style.StyleCustomization;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoTab;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoDropdown;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoLabel;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoAlignment;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
@@ -39,9 +41,13 @@ public class DecoStyleWidget extends DecoComponentWidgetBase<DecoStyleWidget>
 	{
 		if(super.initialize())
 		{
-			withTitleLabel(I18n.format(IIReference.GUI_TOOLTIP_KEY+"widget.style"), DecoAlignment.TOP);
-			addLabel("Style", 2, 8+2);
-			addComponent(new DecoDropdown<String>(32, 8)
+			withTitleLabel(IIReference.GUI_TOOLTIP_KEY+"widget.style", DecoAlignment.TOP);
+			DecoLabel headInfo = addLabel(TextFormatting.ITALIC+I18n.format(IIReference.GUI_TOOLTIP_KEY+"widget.style.desc"), 4, 2+4)
+					.withSize(width-4-4, 32)
+					.withWrapping(true);
+
+			addLabel(IIReference.GUI_TOOLTIP_KEY+"widget.style.style", 2, 10+2+headInfo.getTotalHeight());
+			addComponent(new DecoDropdown<String>(32, 10+headInfo.getTotalHeight())
 					.withWidth(width-32-4)
 					.withDropdownWidth(width-32-4)
 					.withMaxDropHeight(128)

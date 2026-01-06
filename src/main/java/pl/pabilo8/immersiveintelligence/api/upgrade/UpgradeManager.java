@@ -1,11 +1,12 @@
 package pl.pabilo8.immersiveintelligence.api.upgrade;
 
-import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagString;
 import net.minecraftforge.common.util.INBTSerializable;
 import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeUtils.UpgradeOperation;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultiblockIIBase;
 
@@ -53,39 +54,32 @@ public class UpgradeManager<T extends IUpgradableDevice> implements INBTSerializ
 
 	public NBTTagCompound serializeNBT()
 	{
-		NBTTagCompound tag = new NBTTagCompound();
-		//New
-		tag.setString("currentlyInstalled", currentlyInstalled==null?"": currentlyInstalled.toString());
-		tag.setInteger("upgradeProgress", upgradeProgress);
-		tag.setInteger("clientUpgradeProgress", clientUpgradeProgress);
-
-		return tag;
+		return EasyNBT.newNBT()
+				.conditionally(currentlyInstalled!=null,
+						nbt -> nbt.withString("currently_installed", currentlyInstalled.getId().toString()))
+				.withInt("upgrade_progress", upgradeProgress)
+				.withInt("client_upgrade_progress", clientUpgradeProgress)
+				.withList("upgrades", upgrade -> new NBTTagString(upgrade.getId().toString()), upgrades)
+				.unwrap();
 	}
 
 	public void deserializeNBT(NBTTagCompound tag)
 	{
-		upgrades.clear();
+		this.upgrades.clear();
+		this.currentlyInstalled = null;
+		EasyNBT enbt = EasyNBT.wrapNBT(tag);
 
-		//New
-		tag.getTagList("upgrades", 8).tagList
-				.stream()
-				.map(NBTBase::toString)
+		enbt.streamList(NBTTagString.class, "upgrades")
+				.map(NBTTagString::getString)
 				.map(ResLoc::of)
 				.map(Upgrade::getUpgradeByID)
 				.filter(Objects::nonNull)
 				.forEach(upgrades::add);
-
-		String currentId = tag.getString("currentlyInstalled");
-		this.currentlyInstalled = currentId.isEmpty()?null: Upgrade.getUpgradeByID(ResLoc.of(currentId));
-		this.upgradeProgress = tag.getInteger("upgradeProgress");
-		this.clientUpgradeProgress = tag.getInteger("clientUpgradeProgress");
+		enbt.checkSetString("currently_installed", s ->
+				this.currentlyInstalled = Upgrade.getUpgradeByID(ResLoc.of(s)));
+		this.upgradeProgress = enbt.getInt("upgradeProgress");
+		this.clientUpgradeProgress = enbt.getInt("clientUpgradeProgress");
 		this.maxClientUpgradeProgress = UpgradeUtils.getMaxClientProgress(upgradeProgress, currentlyInstalled);
-
-		//Legacy
-		tag.getKeySet().stream()
-				.map(Upgrade::getUpgradeByID)
-				.filter(Objects::nonNull)
-				.forEach(upgrades::add);
 	}
 
 	//--- Upgrade Handling ---//

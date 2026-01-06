@@ -50,7 +50,6 @@ public class NBTSerialisation
 	 * Registry of all serializers for a class
 	 */
 	private static final HashMap<Class<?>, NBTSerializer<?>> serializers = new HashMap<>();
-
 	/**
 	 * Polymorphic type registry for ITypeNBTSerializable implementations.
 	 */

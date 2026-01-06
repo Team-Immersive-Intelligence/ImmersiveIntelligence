@@ -138,7 +138,7 @@ public abstract class TileEntityGateBase<T extends TileEntityGateBase<T>> extend
 		if(gate.setState(state))
 		{
 			world.playSound(null, getPos(), state?getOpeningSound(): getClosingSound(), SoundCategory.BLOCKS, 1, 1);
-			IIPacketHandler.INSTANCE.sendToAllAround(new MessageBooleanAnimatedPartsSync(0, state, getPos()), IIPacketHandler.targetPointFromPos(this.getPos(), this.world, 32));
+			IIPacketHandler.sendToClient(new MessageBooleanAnimatedPartsSync(0, state, this));
 		}
 	}
 

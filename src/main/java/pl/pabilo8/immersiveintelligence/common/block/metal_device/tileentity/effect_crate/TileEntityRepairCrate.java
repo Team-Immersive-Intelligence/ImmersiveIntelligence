@@ -12,6 +12,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
+import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeTechTree;
+import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeUtils.UpgradeTier;
 import pl.pabilo8.immersiveintelligence.api.utils.IEntitySpecialRepairable;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
@@ -26,6 +28,12 @@ import static pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.M
  */
 public class TileEntityRepairCrate extends TileEntityEffectCrate implements ISoundTile
 {
+	static
+	{
+		UpgradeTechTree.getTreeFor(TileEntityRepairCrate.class)
+				.withUpgrade(IIContent.UPGRADE_INSERTER, UpgradeTier.TIER_1);
+	}
+
 	public boolean repaired = false;
 	public boolean shouldRepairArmor = true;
 	public boolean shouldRepairVehicles = true;

@@ -333,7 +333,7 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 		if(isUpgradeInstalled(IIContent.UPGRADE_INSERTER))
 		{
 			if(open)
-				IIPacketHandler.INSTANCE.sendToDimension(new MessageBooleanAnimatedPartsSync(0, open = false, this.pos), this.world.provider.getDimension());
+				IIPacketHandler.sendToClient(new MessageBooleanAnimatedPartsSync(0, open = false, this));
 
 			return false;
 		}
@@ -341,7 +341,7 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 		if(player.isSneaking())
 		{
 			open = !open;
-			IIPacketHandler.INSTANCE.sendToDimension(new MessageBooleanAnimatedPartsSync(0, open, this.pos), this.world.provider.getDimension());
+			IIPacketHandler.sendToClient(new MessageBooleanAnimatedPartsSync(0, open, this));
 			return true;
 		}
 		else if(open&&isSupplied())

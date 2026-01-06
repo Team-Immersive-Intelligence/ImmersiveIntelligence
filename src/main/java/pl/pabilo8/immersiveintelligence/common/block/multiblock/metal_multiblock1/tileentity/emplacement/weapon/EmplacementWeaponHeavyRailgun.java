@@ -1,74 +1,38 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.weapon;
 
-import blusunrize.immersiveengineering.api.tool.RailgunHandler;
-import blusunrize.immersiveengineering.api.tool.RailgunHandler.RailgunProjectileProperties;
-import blusunrize.immersiveengineering.common.entities.EntityRailgunShot;
-import blusunrize.immersiveengineering.common.util.IESounds;
-import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemStackHandler;
-import pl.pabilo8.immersiveintelligence.api.ammo.utils.IIAmmoUtils;
-import pl.pabilo8.immersiveintelligence.client.gui.block.emplacement.GuiEmplacementPageStorage;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.EmplacementWeapons.HeavyRailgun;
-import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
-import pl.pabilo8.immersiveintelligence.common.entity.EntityEmplacementWeapon;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityEmplacementWeapon.EmplacementHitboxEntity;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIRailgunOverride;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.FilteredItemHandler;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 
+/**
+ * To Blu:
+ * I do as I promised, I promised to not add a railgun turret
+ * so I added a Heavy Railgun emplacement
+ */
 public class EmplacementWeaponHeavyRailgun extends EmplacementWeaponGunBase<EntityAmmoProjectile>
 {
-	float shootDelay = HeavyRailgun.shotFireTime;
-	int reloadDelay = 0;
-	/**
-	 * To Blu:
-	 * I do as I promised, I promised to not add a railgun turret
-	 * so I added a Heavy Railgun emplacement
-	 */
-	private AxisAlignedBB vision;
-	private Vec3d vv;
-
-	private NonNullList<ItemStack> inventory = NonNullList.withSize(3, ItemStack.EMPTY);
-	private final IItemHandler inventoryHandler = new ItemStackHandler(inventory)
-	{
-		@Override
-		public boolean isItemValid(int slot, @Nonnull ItemStack stack)
-		{
-			if(!ItemIIRailgunOverride.isAmmo(stack))
-				return false;
-			return super.isItemValid(slot, stack);
-		}
-
-		@Nonnull
-		@Override
-		public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate)
-		{
-			if(!isItemValid(slot, stack))
-				return stack;
-			ItemStack itemStack = super.insertItem(slot, stack, simulate);
-			inventory.set(slot, stacks.get(slot));
-			return itemStack;
-		}
-	};
-	private NonNullList<ItemStack> inventoryPlatform = NonNullList.withSize(6, ItemStack.EMPTY);
-	private boolean requiresPlatformRefill = false;
-	private ArrayDeque<ItemStack> magazine = new ArrayDeque<>();
-	private ItemStack s2 = ItemStack.EMPTY;
-
 	public EmplacementWeaponHeavyRailgun()
 	{
+		this.inventoryBase = NonNullList.withSize(18, ItemStack.EMPTY);
+		this.inventoryPlatform = NonNullList.withSize(6, ItemStack.EMPTY);
+		this.inventoryBaseHandler = new FilteredItemHandler(inventoryBase)
+				.withFilter(ItemIIRailgunOverride::isAmmo);
+	}
+
+	@Override
+	public void onInit(TileEntityEmplacement te)
+	{
+		super.onInit(te);
+		this.visionAABB = this.visionAABB.grow(HeavyRailgun.detectionRadius);
+		this.attackAABB = this.attackAABB.grow(HeavyRailgun.attackRadius);
 
 	}
 
@@ -91,195 +55,21 @@ public class EmplacementWeaponHeavyRailgun extends EmplacementWeaponGunBase<Enti
 	}
 
 	@Override
-	public void shoot(TileEntityEmplacement te)
+	public float getShotDelay()
 	{
-		super.shoot(te);
-
-		if(!te.getWorld().isRemote)
-		{
-			s2 = !magazine.isEmpty()?magazine.removeFirst(): ItemStack.EMPTY;
-			if(!s2.isEmpty())
-			{
-				te.getWorld().playSound(null, te.getPos().getX(), te.getPos().getY(), te.getPos().getZ(), IESounds.railgunFire, SoundCategory.PLAYERS, 1.5f, 0f);
-				if(s2.getItem()==IIContent.itemRailgunGrenade)
-				{
-					ammoFactory.setStack(s2)
-							.setPosition(te.getWeaponCenter())
-							.setDirection(vv.scale(-1))
-							.create();
-				}
-				else
-				{
-					Vec3d weaponCenter = te.getWeaponCenter();
-					Vec3d scale = vv.scale(-1f).normalize();
-					float speed = 20;
-					EntityRailgunShot shot = new EntityRailgunShot(te.getWorld(), entity,
-							scale.x*speed, scale.y*speed, scale.z*speed, s2.copy());
-					shot.setPosition(weaponCenter.x, weaponCenter.y, weaponCenter.z);
-					te.getWorld().spawnEntity(shot);
-				}
-			}
-		}
-		else if(!magazine.isEmpty())
-			magazine.removeFirst();
-
-		shootDelay = HeavyRailgun.shotFireTime;
-	}
-
-	public boolean isSetUp(boolean door)
-	{
-		return true;
+		return HeavyRailgun.shotFireTime;
 	}
 
 	@Override
-	public boolean requiresPlatformRefill()
+	public float getReloadDelay()
 	{
-		return requiresPlatformRefill;
+		return HeavyRailgun.reloadTime;
 	}
 
 	@Override
-	public float[] getAnglePrediction(Vec3d posTurret, Vec3d posTarget, Vec3d motion)
+	public float getSetupDelay()
 	{
-		double force = 20, mass = 5;
-		if(s2.getItem()==IIContent.itemRailgunGrenade)
-		{
-			force = IIContent.itemRailgunGrenade.getVelocity()*3;
-			mass = s2.isEmpty()?0: IIContent.itemRailgunGrenade.getMass(s2);
-		}
-		else
-		{
-			RailgunProjectileProperties p = RailgunHandler.getProjectileProperties(s2);
-			if(p!=null)
-				mass = (float)p.gravity;
-		}
-
-		vv = posTurret.subtract(posTarget).normalize();
-		return IIAmmoUtils.getInterceptionAngles(
-				posTurret, Vec3d.ZERO,
-				posTarget, motion,
-				force, mass
-		);
-	}
-
-	@Override
-	public void aimAt(float yaw, float pitch)
-	{
-		if(reloadDelay==0)
-		{
-			super.aimAt(yaw, pitch);
-		}
-		else
-			super.aimAt(yaw, 0);
-	}
-
-	@Override
-	public void init(TileEntityEmplacement te, boolean firstTime)
-	{
-		super.init(te, firstTime);
-		this.vision = new AxisAlignedBB(te.getPos()).offset(-0.5, 0, -0.5).grow(HeavyRailgun.detectionRadius);
-
-	}
-
-	@Override
-	public void tick(TileEntityEmplacement te, boolean active)
-	{
-		if(active&&magazine.isEmpty())
-		{
-			if(reloadDelay==0)
-			{
-				if(inventoryPlatform.stream().anyMatch(ItemIIRailgunOverride::isAmmo))
-					reloadDelay = 1;
-				else
-					requiresPlatformRefill = true;
-			}
-			else if(pitch==0)
-			{
-				reloadDelay++;
-			}
-
-			if(reloadDelay >= HeavyRailgun.reloadAmmoBoxTime)
-			{
-
-				for(ItemStack stack : inventoryPlatform)
-				{
-					if(magazine.size() >= 8) //shouldn't be more, but who knows
-						break;
-
-					while(!stack.isEmpty()&&magazine.size() < 8)
-					{
-						ItemStack copy = stack.copy();
-						copy.setCount(1);
-						magazine.addLast(copy);
-						stack.shrink(1);
-					}
-				}
-
-				reloadDelay = 0;
-				syncWithClient(te);
-			}
-		}
-
-		if(shootDelay > 0)
-			shootDelay--;
-	}
-
-	@Nonnull
-	@Override
-	public NBTTagCompound saveToNBT(boolean forClient)
-	{
-		NBTTagCompound nbt = super.saveToNBT(forClient);
-		nbt.setFloat("shootDelay", shootDelay);
-		nbt.setInteger("reloadDelay", reloadDelay);
-
-		nbt.setTag("inventory", Utils.writeInventory(inventory));
-		nbt.setTag("inventoryPlatform", Utils.writeInventory(inventoryPlatform));
-		if(!forClient)
-			nbt.setTag("magazine", Utils.writeInventory(magazine));
-		nbt.setInteger("magazine_amount", magazine.size());
-
-		nbt.setBoolean("requiresPlatformRefill", requiresPlatformRefill);
-		return nbt;
-	}
-
-	@Override
-	public void readFromNBT(NBTTagCompound tagCompound)
-	{
-		super.readFromNBT(tagCompound);
-
-		shootDelay = tagCompound.getFloat("shootDelay");
-		reloadDelay = tagCompound.getInteger("reloadDelay");
-
-		inventory = Utils.readInventory(tagCompound.getTagList("inventory", 10), inventory.size());
-		inventoryPlatform = Utils.readInventory(tagCompound.getTagList("inventoryPlatform", 10), inventoryPlatform.size());
-		magazine = new ArrayDeque<>(Utils.readInventory(tagCompound.getTagList("magazine", 10), tagCompound.getInteger("magazine_amount")));
-
-		requiresPlatformRefill = tagCompound.getBoolean("requiresPlatformRefill");
-	}
-
-	@Override
-	public boolean canShoot(TileEntityEmplacement te)
-	{
-		if(shootDelay > 0)
-		{
-			if(shootDelay==HeavyRailgun.shotFireTime)
-				te.getWorld().playSound(null, te.getPos().getX(), te.getPos().getY(), te.getPos().getZ(), IESounds.chargeSlow, SoundCategory.PLAYERS, 1.5f, 0f);
-			shootDelay--;
-		}
-		return vv!=null&&shootDelay==0&&!magazine.isEmpty();
-	}
-
-	@Override
-	public AxisAlignedBB getVisionAABB()
-	{
-		return vision;
-	}
-
-	@Override
-	public void syncWithEntity(EntityEmplacementWeapon entity)
-	{
-		super.syncWithEntity(entity);
-		if(entity==this.entity)
-			entity.aabb = new AxisAlignedBB(-3, 0, -3, 3, 3, 3);
+		return HeavyRailgun.setupTime;
 	}
 
 	@Override
@@ -313,48 +103,6 @@ public class EmplacementWeaponHeavyRailgun extends EmplacementWeaponGunBase<Enti
 	}
 
 	@Override
-	public NonNullList<ItemStack> getBaseInventory()
-	{
-		return inventory;
-	}
-
-	@Override
-	public void renderStorageInventory(GuiEmplacementPageStorage gui, int mx, int my, float partialTicks, boolean first)
-	{
-
-	}
-
-	@Override
-	public void performPlatformRefill(TileEntityEmplacement te)
-	{
-		for(int i = 0; i < inventoryPlatform.size(); i++)
-		{
-			//te.doProcessOutput(inventoryPlatform.get(i));
-			inventoryPlatform.set(i, ItemStack.EMPTY);
-		}
-		int moved = 0;
-		for(int i = 0; i < inventory.size(); i++)
-		{
-			if(moved >= inventoryPlatform.size())
-				break;
-
-			ItemStack s = inventory.get(i);
-			if(!s.isEmpty())
-			{
-				inventoryPlatform.set(moved, s);
-				inventory.set(i, ItemStack.EMPTY);
-				moved++;
-			}
-		}
-
-		if(inventoryPlatform.stream().anyMatch(stack -> !stack.isEmpty()))
-		{
-			requiresPlatformRefill = false;
-			syncWithClient(te);
-		}
-	}
-
-	@Override
 	public int getEnergyUpkeepCost()
 	{
 		return HeavyRailgun.energyUpkeepCost;
@@ -364,12 +112,5 @@ public class EmplacementWeaponHeavyRailgun extends EmplacementWeaponGunBase<Enti
 	public int getMaxHealth()
 	{
 		return HeavyRailgun.maxHealth;
-	}
-
-	@Nullable
-	@Override
-	public IItemHandler getItemHandler(boolean in)
-	{
-		return in?inventoryHandler: super.getItemHandler(in);
 	}
 }

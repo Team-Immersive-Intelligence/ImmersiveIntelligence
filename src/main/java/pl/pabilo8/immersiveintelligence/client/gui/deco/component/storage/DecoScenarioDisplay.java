@@ -3,12 +3,11 @@ package pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoComponent;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoGuiUtils;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoSprite;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
 import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTModel;
@@ -39,7 +38,7 @@ public class DecoScenarioDisplay extends DecoComponent<DecoScenarioDisplay>
 
 	//Optional background texture
 	@Nullable
-	private ResourceLocation backgroundLocation;
+	private DecoSprite background;
 	@Nullable
 	private IIColor backgroundColor;
 
@@ -119,9 +118,9 @@ public class DecoScenarioDisplay extends DecoComponent<DecoScenarioDisplay>
 	/**
 	 * Sets a background texture for the scenario display
 	 */
-	public DecoScenarioDisplay withBackground(@Nullable ResourceLocation background)
+	public DecoScenarioDisplay withBackground(@Nullable DecoSprite background)
 	{
-		this.backgroundLocation = background;
+		this.background = background;
 		return this;
 	}
 
@@ -156,12 +155,14 @@ public class DecoScenarioDisplay extends DecoComponent<DecoScenarioDisplay>
 	protected void draw(int mouseX, int mouseY, float partialTicks)
 	{
 		bindAtlas();
+		GlStateManager.enableBlend();
 		//Draw textured background if set
-		if(backgroundLocation!=null)
+		if(background!=null)
 		{
 			IIDrawUtils draw = IIDrawUtils.startTexturedColored();
-			DecoGuiUtils.drawRepeatedRect(draw, x, y, width, height,
-					backgroundLocation, backgroundColor==null?IIColor.WHITE: backgroundColor, 32, 8);
+			draw.drawConnectedTexColorRect(x, y, width, height, backgroundColor==null?IIColor.WHITE: backgroundColor,
+					background.getSizeX(), background.getSizeY(), background.getSizeX()/4, background.getSizeY()/4,
+					background.getMapUV());
 			draw.finish();
 		}
 		//Draw color only

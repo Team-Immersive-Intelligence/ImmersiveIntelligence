@@ -283,8 +283,7 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 	{
 		if(vise.setState(state))
 			world.playSound(null, getPos(), state?IISounds.viseOpen: IISounds.viseClose, SoundCategory.BLOCKS, 1f, 1f);
-		IIPacketHandler.INSTANCE.sendToAllAround(new MessageBooleanAnimatedPartsSync(part, state, getPos()),
-				IIPacketHandler.targetPointFromTile(this, 32));
+		IIPacketHandler.sendToClient(new MessageBooleanAnimatedPartsSync(part, state, this));
 	}
 }
 

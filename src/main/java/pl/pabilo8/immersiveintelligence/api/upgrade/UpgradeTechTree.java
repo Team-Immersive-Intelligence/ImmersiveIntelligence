@@ -29,13 +29,19 @@ public class UpgradeTechTree
 		return UPGRADE_TECH_TREES.computeIfAbsent(klass, c -> new UpgradeTechTree());
 	}
 
-	public UpgradeTechTree addUpgrade(Upgrade upgrade, UpgradeTier tier)
+	public UpgradeTechTree reset()
+	{
+		nodes.clear();
+		return this;
+	}
+
+	public UpgradeTechTree withUpgrade(Upgrade upgrade, UpgradeTier tier)
 	{
 		nodes.add(new UpgradeTreeNode(upgrade, tier));
 		return this;
 	}
 
-	public UpgradeTechTree addDependency(Upgrade from, Upgrade to)
+	public UpgradeTechTree withDependency(Upgrade from, Upgrade to)
 	{
 		//Get from node
 		UpgradeTreeNode fromNode = getUpgradeNodeFor(from);
@@ -52,7 +58,7 @@ public class UpgradeTechTree
 		return this;
 	}
 
-	public UpgradeTechTree addLockOut(Upgrade... between)
+	public UpgradeTechTree withLockOut(Upgrade... between)
 	{
 		//Get all upgrade nodes
 		List<UpgradeTreeNode> lockOutNodes = Arrays.stream(between)
@@ -69,7 +75,7 @@ public class UpgradeTechTree
 		return this;
 	}
 
-	public UpgradeTechTree addLockOut(UpgradePurpose purpose)
+	public UpgradeTechTree withLockOut(UpgradePurpose purpose)
 	{
 		//Get all upgrade nodes
 		List<UpgradeTreeNode> lockOutNodes = nodes.stream()

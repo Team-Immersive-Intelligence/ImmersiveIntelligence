@@ -49,13 +49,14 @@ public class GuiFlagpole extends DecoGui<TileEntityFlagpole, ContainerFlagpole>
 	public void onInit()
 	{
 		startBackground()
-				.withBox(DecoTextures.GUI_BG_PAPER, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_PAPER, 0, 0, 152+96, 152)
+				.withBox(DecoTextures.GUI_BG_STEEL, 0, 0, 152+96, 152)
 				.withTitleBar(tile)
 				.withBox(DecoTextures.GUI_BG_WOODEN, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_ROUND_WOODEN, 32, 152, 176, 92)
 				.withInventorySlots(SlotStyle.VANILLA, container.inventorySlots)
 				.withInventoryTitleBar()
 				.withFrame(DecoTextures.GUI_FRAME_WOODEN_THIN, 4, false, new boolean[]{true, false, false, false})
 				.withNextLayer()
+				.withBox(DecoTextures.GUI_BG_PAPER, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_PAPER, 0, 0, 152+96, 152)
 				.withBox(DecoTextures.GUI_BG_STEEL, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_SQUARE, 152, 0, 64+32, 152)
 				.build();
 
@@ -86,45 +87,46 @@ public class GuiFlagpole extends DecoGui<TileEntityFlagpole, ContainerFlagpole>
 						.withPanning(true)
 						.withZoomScrolling(1, 4)
 						.withScanner(new BlockTypeScanner("flagpoles")
-								.withTileEntityFilter(tileEntity -> tileEntity instanceof TileEntityFlagpole&&
-										!((TileEntityFlagpole)tileEntity).isDummy())
+								.withMultiblockFilter(TileEntityFlagpole.class)
 								.withUpdateCondition(() -> this.filterFlagpoles)
-								.withMarkerStyle(DecoTextures.MAP_MARKER_FLAGPOLE, 8, IIColor.WHITE)
+								.withMarkerStyle(DecoTextures.MAP_MARKER_FLAGPOLE, 4, IIColor.WHITE)
 						)
 						.withScanner(new BlockTypeScanner("weapons")
-								.withTileEntityFilter(tileEntity -> tileEntity instanceof TileEntityEmplacement&&
-										!((TileEntityEmplacement)tileEntity).isDummy())
-								.withTileEntityFilter(tileEntity -> tileEntity instanceof TileEntityArtilleryHowitzer&&
-										!((TileEntityArtilleryHowitzer)tileEntity).isDummy())
+								.withMultiblockFilter(TileEntityEmplacement.class)
+								.withMultiblockFilter(TileEntityArtilleryHowitzer.class)
 								.withUpdateCondition(() -> this.filterWeapons)
-								.withMarkerStyle(DecoTextures.MAP_MARKER_EMPLACEMENT, 8, IIColor.WHITE)
+								.withMarkerStyle(DecoTextures.MAP_MARKER_EMPLACEMENT, 4, IIColor.WHITE)
 						)
 						.withScanner(new BlockTypeScanner("intelligence")
-								.withTileEntityFilter(tileEntity -> tileEntity instanceof TileEntityRadar&&
-										!((TileEntityRadar)tileEntity).isDummy())
+								.withMultiblockFilter(TileEntityRadar.class)
 								.withUpdateCondition(() -> this.filterFlagpoles)
-								.withMarkerStyle(DecoTextures.MAP_MARKER_RADAR, 8, IIColor.WHITE)
+								.withMarkerStyle(DecoTextures.MAP_MARKER_RADAR, 4, IIColor.WHITE)
 						),
 
 				new DecoCheckbox(152+4, 12)
 						.withSize(96-8, 12)
 						.withText(IIReference.GUI_LABEL_KEY+"map_display.marker.flagpoles")
+						.withChecked(this.filterFlagpoles)
 						.withOnToggle(newValue -> this.filterFlagpoles = newValue),
 				new DecoCheckbox(152+4, 12+12)
 						.withSize(96-8, 12)
 						.withText(IIReference.GUI_LABEL_KEY+"map_display.marker.weapons")
+						.withChecked(this.filterWeapons)
 						.withOnToggle(newValue -> this.filterWeapons = newValue),
 				new DecoCheckbox(152+4, 12+12*2)
 						.withSize(96-8, 12)
 						.withText(IIReference.GUI_LABEL_KEY+"map_display.marker.logistics")
+						.withChecked(this.filterLogistics)
 						.withOnToggle(newValue -> this.filterLogistics = newValue),
 				new DecoCheckbox(152+4, 12+12*3)
 						.withSize(96-8, 12)
 						.withText(IIReference.GUI_LABEL_KEY+"map_display.marker.intelligence")
+						.withChecked(this.filterIntelligence)
 						.withOnToggle(newValue -> this.filterIntelligence = newValue),
 				new DecoCheckbox(152+4, 12+12*4)
 						.withSize(96-8, 12)
 						.withText(IIReference.GUI_LABEL_KEY+"map_display.marker.wire_networks")
+						.withChecked(this.filterWireNetworks)
 						.withOnToggle(newValue -> this.filterWireNetworks = newValue),
 
 				new DecoDropdown<IDecoMapColorMapper>(152+4, 4+10+12*5+10)

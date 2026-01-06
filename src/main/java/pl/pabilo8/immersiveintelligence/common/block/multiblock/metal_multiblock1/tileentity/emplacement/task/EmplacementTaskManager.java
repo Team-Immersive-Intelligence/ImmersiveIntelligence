@@ -2,82 +2,71 @@ package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multibloc
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.util.INBTSerializable;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.NBTSerialisation;
+
+import javax.annotation.Nullable;
+import java.util.ArrayList;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
  * @ii-approved 0.3.1
  * @since 14.09.2025
  */
-public class EmplacementTaskManager implements INBTSerializable<NBTTagCompound>
+public class EmplacementTaskManager implements INBTSerializable<NBTTagList>
 {
-	public EmplacementTask[] tasks = new EmplacementTask[]{
-			new EmplacementTaskCustom(createDefaultTask()),
-			new EmplacementTaskCustom(createDefaultTask()),
-			new EmplacementTaskCustom(createDefaultTask()),
-			new EmplacementTaskCustom(createDefaultTask())
-	};
-	public EmplacementTask temporaryTask = null;
-	public int currentTask = 0, defaultTask = 0;
+	public ArrayList<EmplacementFireMission> tasks = new ArrayList<>();
 	public boolean paused = false;
 
-	public void setCurrentTask(EmplacementTask task)
+	static
 	{
-		temporaryTask = task;
-		currentTask = 4;
+		NBTSerialisation.registerTypeClass(EmplacementFireMission.class);
+	}
+
+	public void addTask(EmplacementFireMission task)
+	{
+		this.tasks.add(task);
 		paused = false;
 	}
 
-	public void setCurrentTask(int taskID)
+	public void skipTask(int taskID)
 	{
-		currentTask = MathHelper.clamp(taskID, 0, tasks.length-1);
+		tasks.remove(taskID);
 		paused = false;
 	}
 
-	public EmplacementTask getCurrentTask()
+	@Nullable
+	public EmplacementFireMission getCurrentTask()
 	{
-		return tasks[defaultTask];
+		return tasks.get(0);
 	}
 
 	public void stopTask(boolean switchToDefault)
 	{
 		paused = true;
-		if(switchToDefault)
-			currentTask = defaultTask;
 	}
 
 	public void resumeTask(boolean switchToDefault)
 	{
 		paused = false;
-		if(switchToDefault)
-			currentTask = defaultTask;
-	}
-
-	private NBTTagCompound createDefaultTask()
-	{
-		NBTTagCompound compound = new NBTTagCompound();
-		NBTTagList list = new NBTTagList();
-		NBTTagCompound taskCompound = new NBTTagCompound();
-
-		taskCompound.setString("type", "mobs");
-		taskCompound.setBoolean("negation", false);
-
-		list.appendTag(taskCompound);
-		compound.setTag("filters", list);
-		return compound;
-	}
-
-	//TODO: 14.09.2025 implement
-
-	@Override
-	public NBTTagCompound serializeNBT()
-	{
-		return new NBTTagCompound();
 	}
 
 	@Override
-	public void deserializeNBT(NBTTagCompound nbt)
+	public NBTTagList serializeNBT()
+	{
+		NBTTagList nbt = new NBTTagList();
+		for(EmplacementFireMission task : tasks)
+		{
+			NBTTagCompound tag = new NBTTagCompound();
+			//noinspection unchecked
+			NBTSerialisation.synchroniseFor(task, (nbtSerializer, emplacementFireMission) -> nbtSerializer.serializeAll(emplacementFireMission, tag));
+			nbt.appendTag(tag);
+		}
+		return nbt;
+	}
+
+	@Override
+	public void deserializeNBT(NBTTagList nbt)
 	{
 
 	}

@@ -40,7 +40,7 @@ public class DecoOwnershipWidget extends DecoComponentWidgetBase<DecoOwnershipWi
 			OwnerIdentity identity = property.getOwnerIdentity();
 			OwnerIdentity playerIdentity = DiplomacyUtils.getOwnerIdentityForEntity(ClientUtils.mc().player);
 
-			withTitleLabel(I18n.format(IIReference.GUI_TOOLTIP_KEY+"widget.ownership"), DecoAlignment.TOP);
+			withTitleLabel(IIReference.GUI_TOOLTIP_KEY+"widget.ownership", DecoAlignment.TOP);
 
 			if(identity==null||identity==DiplomacyUtils.NEUTRAL)
 			{

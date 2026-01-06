@@ -22,6 +22,8 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.FluidTankProperties;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
+import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeTechTree;
+import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeUtils.UpgradeTier;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IIPotions;
@@ -42,6 +44,13 @@ public class TileEntityMedicalCrate extends TileEntityEffectCrate implements ITi
 	public static final Predicate<FluidStack> HEALTH_POTION = resource -> resource.getFluid()==IEContent.fluidPotion&&resource.tag!=null&&resource.tag.getString("Potion").equals("minecraft:regeneration");
 	public static final Predicate<FluidStack> BOOST_POTION = resource -> resource.getFluid()==IEContent.fluidPotion&&resource.tag!=null&&resource.tag.getString("Potion").equals("minecraft:absorption");
 	public static final Predicate<ItemStack> BOOST_POTION_ITEM = resource -> resource.getItem()==Items.GOLDEN_APPLE;
+
+	static
+	{
+		UpgradeTechTree.getTreeFor(TileEntityMedicalCrate.class)
+				.withUpgrade(IIContent.UPGRADE_INSERTER, UpgradeTier.TIER_1);
+	}
+
 	public FluidTank[] tanks = new FluidTank[]{
 			new FluidTank(mediCrateTankSize),
 			new FluidTank(mediCrateTankSize)

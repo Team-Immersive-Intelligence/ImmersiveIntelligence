@@ -44,20 +44,12 @@ import pl.pabilo8.immersiveintelligence.api.crafting.*;
 import pl.pabilo8.immersiveintelligence.api.crafting.PrintingRecipe.PrintFunction;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.upgrade.Upgrade;
-import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeTechTree;
-import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeUtils.UpgradePurpose;
-import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeUtils.UpgradeTier;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.PrintingPress;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Sawmill;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.BlockIIMetalDevice.IIBlockTypes_MetalDevice;
-import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.effect_crate.TileEntityAmmunitionCrate;
-import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.effect_crate.TileEntityMedicalCrate;
-import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.effect_crate.TileEntityRepairCrate;
 import pl.pabilo8.immersiveintelligence.common.block.mines.BlockIIMine.IIBlockTypes_Mine;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityFlagpole;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIIConcreteDecoration.ConcreteDecorations;
 import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIIOre.Ores;
 import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIISmallCrate.IIBlockTypes_SmallCrate;
@@ -1279,55 +1271,6 @@ public class IIRecipes
 				.withCost(new IngredientStack("blockSteel", 3))
 				.withCost(new IngredientStack("circuitProcessor", 6))
 				.withRequiredProgress(300000);
-
-		UpgradeTechTree.getTreeFor(TileEntityRepairCrate.class)
-				.addUpgrade(IIContent.UPGRADE_INSERTER, UpgradeTier.TIER_1);
-		UpgradeTechTree.getTreeFor(TileEntityMedicalCrate.class)
-				.addUpgrade(IIContent.UPGRADE_INSERTER, UpgradeTier.TIER_1);
-		UpgradeTechTree.getTreeFor(TileEntityAmmunitionCrate.class)
-				.addUpgrade(IIContent.UPGRADE_INSERTER, UpgradeTier.TIER_1)
-				.addUpgrade(IIContent.UPGRADE_MG_LOADER, UpgradeTier.TIER_2)
-				.addDependency(IIContent.UPGRADE_INSERTER, IIContent.UPGRADE_MG_LOADER);
-
-		UpgradeTechTree.getTreeFor(TileEntityEmplacement.class)
-				//Generic Upgrades
-				.addUpgrade(IIContent.UPGRADE_EMPLACEMENT_STURDY_BEARINGS, UpgradeTier.TIER_1)
-				.addUpgrade(IIContent.UPGRADE_EMPLACEMENT_FALLBACK_GRENADES, UpgradeTier.TIER_1)
-				.addUpgrade(IIContent.UPGRADE_SOVEREIGNTY, UpgradeTier.TIER_2)
-
-				//Machinegun
-				.addUpgrade(IIContent.UPGRADE_EMPLACEMENT_WEAPON_MACHINEGUN, UpgradeTier.TIER_1)
-				.addUpgrade(IIContent.UPGRADE_EMPLACEMENT_MACHINEGUN_HEAVYBARREL, UpgradeTier.TIER_1)
-				.addDependency(IIContent.UPGRADE_EMPLACEMENT_MACHINEGUN_HEAVYBARREL, IIContent.UPGRADE_EMPLACEMENT_WEAPON_MACHINEGUN)
-				.addUpgrade(IIContent.UPGRADE_EMPLACEMENT_MACHINEGUN_WATERCOOLED, UpgradeTier.TIER_1)
-				.addDependency(IIContent.UPGRADE_EMPLACEMENT_MACHINEGUN_WATERCOOLED, IIContent.UPGRADE_EMPLACEMENT_WEAPON_MACHINEGUN)
-				.addDependency(IIContent.UPGRADE_EMPLACEMENT_MACHINEGUN_BUNKER, IIContent.UPGRADE_EMPLACEMENT_WEAPON_MACHINEGUN)
-
-				//Other Weapons
-				.addUpgrade(IIContent.UPGRADE_EMPLACEMENT_WEAPON_IROBSERVER, UpgradeTier.TIER_2)
-				.addUpgrade(IIContent.UPGRADE_EMPLACEMENT_WEAPON_AUTOCANNON, UpgradeTier.TIER_2)
-				.addUpgrade(IIContent.UPGRADE_EMPLACEMENT_WEAPON_HEAVY_CHEMTHROWER, UpgradeTier.TIER_2)
-				.addUpgrade(IIContent.UPGRADE_EMPLACEMENT_WEAPON_HEAVY_RAILGUN, UpgradeTier.TIER_2)
-				.addUpgrade(IIContent.UPGRADE_EMPLACEMENT_SEARCHLIGHT, UpgradeTier.TIER_2)
-				.addUpgrade(IIContent.UPGRADE_EMPLACEMENT_WEAPON_TESLA, UpgradeTier.TIER_2)
-				.addUpgrade(IIContent.UPGRADE_EMPLACEMENT_WEAPON_MORTAR, UpgradeTier.TIER_2)
-
-				.addUpgrade(IIContent.UPGRADE_EMPLACEMENT_SPOTLIGHT_TOWER, UpgradeTier.TIER_3)
-				.addUpgrade(IIContent.UPGRADE_EMPLACEMENT_WEAPON_LIGHT_HOWITZER, UpgradeTier.TIER_3)
-				.addUpgrade(IIContent.UPGRADE_EMPLACEMENT_WEAPON_MLRS, UpgradeTier.TIER_3)
-
-				.addUpgrade(IIContent.UPGRADE_EMPLACEMENT_WEAPON_CPDS, UpgradeTier.TIER_4)
-				.addUpgrade(IIContent.UPGRADE_EMPLACEMENT_WEAPON_GUIDED_MISSILE_LAUNCHER, UpgradeTier.TIER_3)
-
-				//Weapons lockout
-				.addLockOut(UpgradePurpose.PRIMARY_WEAPON);
-
-		UpgradeTechTree.getTreeFor(TileEntityFlagpole.class)
-				.addUpgrade(IIContent.UPGRADE_FLAGPOLE_CAPTURE_DEFIANCE, UpgradeTier.TIER_1)
-				.addUpgrade(IIContent.UPGRADE_FLAGPOLE_TASER_LOCKS, UpgradeTier.TIER_1)
-				.addUpgrade(IIContent.UPGRADE_FLAGPOLE_UNIT_POST, UpgradeTier.TIER_1)
-				.addUpgrade(IIContent.UPGRADE_FLAGPOLE_DISTRESS_SIGNAL, UpgradeTier.TIER_1)
-				.addLockOut(IIContent.UPGRADE_FLAGPOLE_UNIT_POST, IIContent.UPGRADE_FLAGPOLE_TASER_LOCKS);
 
 	}
 

@@ -3,6 +3,8 @@ package pl.pabilo8.immersiveintelligence.api.upgrade;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.ILocalizedEnum;
 
 import javax.annotation.Nullable;
 
@@ -32,7 +34,7 @@ public class UpgradeUtils
 	/**
 	 * The purpose of an upgrade, used for categorization and limiting certain upgrades to certain slots.
 	 */
-	public enum UpgradePurpose
+	public enum UpgradePurpose implements ILocalizedEnum
 	{
 		SPEED,
 		EFFICIENCY,
@@ -44,19 +46,31 @@ public class UpgradeUtils
 		SECONDARY_WEAPON,
 		ARMOR,
 		DEFENSE_SYSTEM,
-		SPECIAL
+		SPECIAL;
+
+		@Override
+		public String geLocaleKey()
+		{
+			return IIReference.INFO_KEY+"machineupgrade.purpose.";
+		}
 	}
 
 	/**
 	 * The tier of the upgrade inside of a tech tree, used for display organisation.
 	 */
-	public enum UpgradeTier
+	public enum UpgradeTier implements ILocalizedEnum
 	{
 		CORE,
 		TIER_1,
 		TIER_2,
 		TIER_3,
-		TIER_4
+		TIER_4;
+
+		@Override
+		public String geLocaleKey()
+		{
+			return IIReference.INFO_KEY+"machineupgrade.tier.";
+		}
 	}
 
 	/**

@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.common.gui;
 
-import blusunrize.immersiveengineering.common.gui.ContainerIEBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
@@ -15,45 +14,25 @@ import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIBase;
  */
 public class ContainerEmplacement extends ContainerIIBase<TileEntityEmplacement>
 {
-
-	public Slot[] slotsEmplacement;
+	public Slot[] slotsEmplacementStorage;
 
 	public ContainerEmplacement(EntityPlayer player, TileEntityEmplacement tile)
 	{
 		super(player, tile);
-
-		this.slotCount = 0;
-
-		this.slotsEmplacement = addPlayerInventory(player.inventory, 8, 86);
-
+		addPlayerInventory(player.inventory, 8+32, 86+64+16+8);
 	}
 
-	public static class ContainerEmplacementStorage extends ContainerIIBase<TileEntityEmplacement>
+	public static ContainerEmplacement getContainerForStoragePage(EntityPlayer player, TileEntityEmplacement tile)
 	{
-
-		public Slot slotsEmplacementStorage;
-
-		public ContainerEmplacementStorage(EntityPlayer player, TileEntityEmplacement tile)
+		ContainerEmplacement container = new ContainerEmplacement(player, tile);
+		if(tile.currentWeapon!=null)
 		{
-			super(player, tile);
-			this.tile = tile;
-			if(tile.currentWeapon!=null)
-			{
-				final IItemHandler handler = tile.currentWeapon.getItemHandler(true);
-
-
-				for(int i = 0; i < tile.getInventory().size(); i++)
-					addSlotToContainer(
-							handler==null?
-									this.slotsEmplacementStorage = addSlotToContainer(new Slot(this.inv, i, 8+((i%9)*18), 32+((int)Math.floor(i/(float)9)*18))):
-									new FilteredEmplacementSlot(this.inv, handler, i, 8+((i%9)*18), 32+((int)Math.floor(i/(float)9)*18))
-
-					);
-			}
-
-			this.addPlayerInventory(player.inventory, 8, 86);
-
+			final IItemHandler handler = tile.currentWeapon.getBaseItemHandler();
+			container.slotsEmplacementStorage = new Slot[0];
+			/*this.slotsEmplacementStorage = addSlotArray(8,32,  0, handler.getSlots(), 9,
+					(container, inv1, id, x, y) -> new FilteredEmplacementSlot());*/
 		}
+		return container;
 	}
 
 	public static class FilteredEmplacementSlot extends Slot

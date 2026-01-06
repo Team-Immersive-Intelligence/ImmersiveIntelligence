@@ -1,43 +1,26 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.weapon;
 
-import blusunrize.immersiveengineering.api.tool.ChemthrowerHandler;
-import blusunrize.immersiveengineering.client.ClientUtils;
-import blusunrize.immersiveengineering.common.IEContent;
-import blusunrize.immersiveengineering.common.util.Utils;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
-import pl.pabilo8.immersiveintelligence.client.gui.block.emplacement.GuiEmplacementPageStorage;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.EmplacementWeapons.Autocannon;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.EmplacementWeapons.HeavyChemthrower;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement.EmplacementStateNeeds;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityEmplacementWeapon;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityEmplacementWeapon.EmplacementHitboxEntity;
-import pl.pabilo8.immersiveintelligence.common.entity.ammo.component.EntityIIChemthrowerShot;
-import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.List;
 
-public class EmplacementWeaponHeavyChemthrower extends EmplacementWeapon
+public class EmplacementWeaponHeavyChemthrower extends EmplacementWeaponTurretBase
 {
-	int setupDelay = 0;
-	float shootDelay = HeavyChemthrower.sprayTime;
 	boolean shouldIgnite = false;
 	FluidTank tank = new FluidTank(HeavyChemthrower.tankCapacity);
 	SidedFluidHandler fluidHandler = new SidedFluidHandler(this);
-	private AxisAlignedBB vision;
-	private Vec3d vv;
 
 	public EmplacementWeaponHeavyChemthrower()
 	{
@@ -45,9 +28,32 @@ public class EmplacementWeaponHeavyChemthrower extends EmplacementWeapon
 	}
 
 	@Override
+	public void onInit(TileEntityEmplacement te)
+	{
+		super.onInit(te);
+		this.visionAABB = this.visionAABB.grow(HeavyChemthrower.detectionRadius);
+		this.attackAABB = this.attackAABB.grow(HeavyChemthrower.attackRadius);
+	}
+
+	@Override
 	public String getName()
 	{
 		return "heavy_chemthrower";
+	}
+
+	@Override
+	public EmplacementStateNeeds onUpdate(TileEntityEmplacement te)
+	{
+		if(shootDelay > 0)
+			shootDelay--;
+
+		return super.onUpdate(te);
+	}
+
+	@Override
+	public boolean canShoot(TileEntityEmplacement te)
+	{
+		return false;
 	}
 
 	@Override
@@ -63,172 +69,28 @@ public class EmplacementWeaponHeavyChemthrower extends EmplacementWeapon
 	}
 
 	@Override
-	public void aimAt(float yaw, float pitch)
+	public float getShotDelay()
 	{
-		super.aimAt(yaw, pitch);
-	}
-
-	public boolean isSetUp(boolean door)
-	{
-		return setupDelay==(door?HeavyChemthrower.setupTime: 0);
+		return HeavyChemthrower.sprayTime;
 	}
 
 	@Override
-	public void doSetUp(boolean door)
+	public float getReloadDelay()
 	{
-		if(door)
-		{
-			if(setupDelay < HeavyChemthrower.setupTime)
-				setupDelay += 1;
-		}
-		else
-		{
-			if(!isAimedAt(0, -90))
-			{
-				aimAt(0, -90);
-				return;
-			}
-			if(setupDelay > 0)
-				setupDelay -= 1;
-		}
+		return 0;
 	}
 
 	@Override
-	public boolean requiresPlatformRefill()
+	public float getSetupDelay()
 	{
-		return false;
-	}
-
-	@Override
-	public float[] getAnglePrediction(Vec3d posTurret, Vec3d posTarget, Vec3d motion)
-	{
-		shouldIgnite = true;
-		float force = 4f;
-
-		vv = posTurret.subtract(posTarget.add(motion));
-
-		double dist = vv.distanceTo(new Vec3d(0, vv.y, 0));
-
-		double gravity = 0;
-		FluidStack fluid = tank.getFluid();
-		if(fluid!=null)
-		{
-			boolean isGas = fluid.getFluid().isGaseous()||ChemthrowerHandler.isGas(fluid.getFluid());
-			gravity = (isGas?.025f: .05F)*(fluid.getFluid().getDensity(fluid) < 0?-1: 1);
-		}
-		double initialY = vv.normalize().y, motionY = initialY;
-		while(dist > 0)
-		{
-			dist -= force;
-			force *= 0.99;
-			motionY *= 0.99;
-			motionY -= gravity;
-		}
-
-		vv = vv.addVector(0, motionY-initialY, 0).normalize();
-
-		float yy = (float)((Math.atan2(vv.x, vv.z)*180D)/3.1415927410125732D);
-		float pp = (float)Math.toDegrees((Math.atan2(vv.y, vv.distanceTo(new Vec3d(0, vv.y, 0)))));
-
-		return new float[]{yy, pp};
-	}
-
-	@Override
-	public void init(TileEntityEmplacement te, boolean firstTime)
-	{
-		super.init(te, firstTime);
-		vision = new AxisAlignedBB(te.getPos()).offset(-0.5, 0, -0.5).grow(HeavyChemthrower.detectionRadius);
-	}
-
-	@Override
-	public void tick(TileEntityEmplacement te, boolean active)
-	{
-		if(shootDelay > 0)
-			shootDelay--;
-	}
-
-	@Override
-	public void shoot(TileEntityEmplacement te)
-	{
-		super.shoot(te);
-
-		Vec3d gun = te.getWeaponCenter().add(vv.scale(-3.5));
-		super.shoot(te);
-		float range = 4;
-
-		float scatter = 0.025f;
-		//4mB per shot
-		int split = Math.min(tank.getFluidAmount()/4, 6);
-
-		if(tank.getFluid()==null)
-			tank.fill(new FluidStack(IEContent.fluidCreosote, 1000), true);
-		else if(!te.getWorld().isRemote)
-		{
-			Vec3d g1 = gun.add(vv.rotateYaw(90).scale(0.25f));
-			Vec3d g2 = gun.add(vv.rotateYaw(-90).scale(0.25f));
-			List<BlockPos> allBlocks = te.getAllBlocks();
-
-			for(int i = 0; i < split; i++)
-			{
-				Vec3d vecDir = vv.scale(-1.0f).normalize().scale(range).add(new Vec3d(Utils.RAND.nextGaussian()*scatter, Utils.RAND.nextGaussian()*scatter, Utils.RAND.nextGaussian()*scatter));
-
-				EntityIIChemthrowerShot chem = new EntityIIChemthrowerShot(te.getWorld(), g1.x, g1.y, g1.z, vecDir.x, vecDir.y, vecDir.z, tank.getFluid())
-						.withShooters(allBlocks)
-						.withMotion(vecDir);
-				EntityIIChemthrowerShot chem2 = new EntityIIChemthrowerShot(te.getWorld(), g2.x, g2.y, g2.z, vecDir.x, vecDir.y, vecDir.z, tank.getFluid())
-						.withShooters(allBlocks)
-						.withMotion(vecDir);
-
-				if(shouldIgnite)
-				{
-					chem.setFire(10);
-					chem2.setFire(10);
-				}
-
-				te.getWorld().spawnEntity(chem);
-				te.getWorld().spawnEntity(chem2);
-			}
-			tank.drain(4*split, true);
-		}
-		shootDelay = Autocannon.bulletFireTime;
-		//bulletsShot++;
-	}
-
-	@Nonnull
-	@Override
-	public NBTTagCompound saveToNBT(boolean forClient)
-	{
-		NBTTagCompound tag = super.saveToNBT(forClient);
-		tag.setInteger("setupDelay", setupDelay);
-		tag.setTag("tank", tank.writeToNBT(new NBTTagCompound()));
-		return tag;
-	}
-
-	@Override
-	public void readFromNBT(NBTTagCompound tagCompound)
-	{
-		super.readFromNBT(tagCompound);
-		setupDelay = tagCompound.getInteger("setupDelay");
-		tank.readFromNBT(tagCompound.getCompoundTag("tank"));
-	}
-
-	@Override
-	public boolean canShoot(TileEntityEmplacement te)
-	{
-		return vv!=null&&shootDelay <= 0&&tank.getFluidAmount() > 0;
+		return HeavyChemthrower.setupTime;
 	}
 
 	@Nullable
 	@Override
-	public IFluidHandler getFluidHandler(boolean in)
+	public IFluidHandler getBaseFluidHandler()
 	{
-		return in?fluidHandler: null;
-	}
-
-	@Override
-	public AxisAlignedBB getVisionAABB()
-	{
-		return vision;
+		return fluidHandler;
 	}
 
 	@Override
@@ -295,46 +157,6 @@ public class EmplacementWeaponHeavyChemthrower extends EmplacementWeapon
 	}
 
 	@Override
-	public NonNullList<ItemStack> getBaseInventory()
-	{
-		return NonNullList.create();
-	}
-
-	@Override
-	public void renderStorageInventory(GuiEmplacementPageStorage gui, int mx, int my, float partialTicks, boolean first)
-	{
-		//gui.drawString(gui.mc.fontRenderer, "turururu", gui.getGuiLeft(), gui.getGuiTop(), 0);
-		if(first)
-		{
-			gui.bindIcons();
-			gui.drawTexturedModalRect(gui.getGuiLeft()+4, gui.getGuiTop()+18, 0, 0, 20, 50);
-			ClientUtils.handleGuiTank(tank, gui.getGuiLeft()+6, gui.getGuiTop()+20,
-					16, 46, 20, 0, 20, 50,
-					mx, my, gui.TEXTURE_ICONS.toString(), null);
-		}
-		else
-		{
-			ArrayList<String> tooltip = new ArrayList<>();
-			if(IIMath.isPointInRectangle(gui.getGuiLeft()+6, gui.getGuiTop()+20, gui.getGuiLeft()+6+20, gui.getGuiTop()+20+50, mx, my))
-				ClientUtils.handleGuiTank(tank, gui.getGuiLeft()+6, gui.getGuiTop()+20,
-						16, 46, 20, 0, 20, 50,
-						mx, my, gui.TEXTURE_ICONS.toString(), tooltip);
-
-			if(!tooltip.isEmpty())
-			{
-				ClientUtils.drawHoveringText(tooltip, mx-gui.getGuiLeft(), my-gui.getGuiTop(), gui.mc.fontRenderer, gui.getGuiLeft()+gui.getXSize(), -1);
-				RenderHelper.enableGUIStandardItemLighting();
-			}
-		}
-	}
-
-	@Override
-	public void performPlatformRefill(TileEntityEmplacement te)
-	{
-
-	}
-
-	@Override
 	public int getEnergyUpkeepCost()
 	{
 		return HeavyChemthrower.energyUpkeepCost;
@@ -390,5 +212,24 @@ public class EmplacementWeaponHeavyChemthrower extends EmplacementWeapon
 		{
 			return barrel.tank.getTankProperties();
 		}
+	}
+
+	//--- NBT ---//
+
+	@Override
+	public NBTTagCompound serializeNBT()
+	{
+		NBTTagCompound nbt = super.serializeNBT();
+		nbt.setInteger("setupDelay", setupDelay);
+		nbt.setTag("tank", tank.writeToNBT(new NBTTagCompound()));
+		return nbt;
+	}
+
+	@Override
+	public void deserializeNBT(NBTTagCompound nbt)
+	{
+		super.deserializeNBT(nbt);
+		setupDelay = nbt.getInteger("setupDelay");
+		tank.readFromNBT(nbt.getCompoundTag("tank"));
 	}
 }

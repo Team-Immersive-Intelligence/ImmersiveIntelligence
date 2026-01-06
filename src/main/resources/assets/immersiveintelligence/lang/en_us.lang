@@ -724,27 +724,6 @@ tile.immersiveintelligence.gate_multiblock.wooden_chain.name=Wooden Chain Fence 
 tile.immersiveintelligence.gate_multiblock.steel_chain.name=Steel Chain Fence Gate
 tile.immersiveintelligence.gate_multiblock.aluminium_chain.name=Aluminium Chain Fence Gate
 
-desc.immersiveintelligence.metal_multiblock1.emplacement.storage=Emplacement - Storage
-desc.immersiveintelligence.metal_multiblock1.emplacement.tasks=Emplacement - Tasks
-desc.immersiveintelligence.metal_multiblock1.emplacement.status=Emplacement - Status
-desc.immersiveintelligence.metal_multiblock1.emplacement.base_inventory=Base Inventory
-desc.immersiveintelligence.metal_multiblock1.emplacement.weapon=Mounted: %s
-desc.immersiveintelligence.metal_multiblock1.emplacement.weapon_none=None
-desc.immersiveintelligence.metal_multiblock1.emplacement.upgrades=Installed Upgrades
-desc.immersiveintelligence.metal_multiblock1.emplacement.settings=Settings
-desc.immersiveintelligence.metal_multiblock1.emplacement.redstone_control=Redstone Controlled
-desc.immersiveintelligence.metal_multiblock1.emplacement.data_control=Data Controlled
-desc.immersiveintelligence.metal_multiblock1.emplacement.send_attack_signal=Output target(s) trough data
-desc.immersiveintelligence.metal_multiblock1.emplacement.auto_repair_threshold=Repair when health is below:
-desc.immersiveintelligence.metal_multiblock1.emplacement.selector_preset=Selector Preset
-desc.immersiveintelligence.metal_multiblock1.emplacement.filter=Filter
-desc.immersiveintelligence.metal_multiblock1.emplacement.task_enabled=Enabled
-desc.immersiveintelligence.metal_multiblock1.emplacement.task_negation=Negation
-desc.immersiveintelligence.metal_multiblock1.emplacement.add=Add Task
-desc.immersiveintelligence.metal_multiblock1.emplacement.remove=Remove Task
-desc.immersiveintelligence.metal_multiblock1.emplacement.duplicate=Duplicate Task
-desc.immersiveintelligence.metal_multiblock1.emplacement.clear=Clear ALL Tasks (Caution!)
-
 desc.immersiveintelligence.metal_multiblock1.packer.task.pack=Pack
 desc.immersiveintelligence.metal_multiblock1.packer.task.unpack=Unpack
 desc.immersiveintelligence.metal_multiblock1.packer.task.charge=Charge
@@ -763,15 +742,6 @@ desc.immersiveintelligence.metal_multiblock1.packer.side_output=Items taken from
 desc.immersiveintelligence.metal_multiblock1.packer.switch_direction=Switch Task Direction
 desc.immersiveintelligence.metal_multiblock1.packer.mode_single=Single-Time Packing
 desc.immersiveintelligence.metal_multiblock1.packer.mode_iteration=Repeated Packing
-
-desc.immersiveintelligence.metal_multiblock1.emplacement.target.mobs=Mobs
-desc.immersiveintelligence.metal_multiblock1.emplacement.target.animals=Animals
-desc.immersiveintelligence.metal_multiblock1.emplacement.target.players=Players
-desc.immersiveintelligence.metal_multiblock1.emplacement.target.npcs=NPCs
-desc.immersiveintelligence.metal_multiblock1.emplacement.target.vehicles=Vehicles
-desc.immersiveintelligence.metal_multiblock1.emplacement.target.shells=Shells
-desc.immersiveintelligence.metal_multiblock1.emplacement.target.team=Team
-desc.immersiveintelligence.metal_multiblock1.emplacement.target.name=Name
 
 tile.immersiveintelligence.metal_multiblock1.flagpole.name=Flagpole
 
@@ -1114,61 +1084,61 @@ machineupgrade.immersiveintelligence.improved_gearbox.desc=Replacing the stock g
 machineupgrade.immersiveintelligence.saw_unregulator=Saw Unregulator
 machineupgrade.immersiveintelligence.saw_unregulator.desc=Unregulating the saw leads to higher sawdust output in cost of main output amount.
 
-machineupgrade.immersiveintelligence.emplacement/emergency_smoke=Emergency Smoke Dischargers
-machineupgrade.immersiveintelligence.emplacement/emergency_smoke.desc=When the Emplacement's weapon is heavily damaged, smoke will be discharged to provide cover.
+machineupgrade.immersiveintelligence.emplacement.grenades=Emergency Smoke Dischargers
+machineupgrade.immersiveintelligence.emplacement.grenades.desc=When the Emplacement's weapon is heavily damaged, smoke will be discharged to provide cover.
 
-machineupgrade.immersiveintelligence.emplacement/sturdy_bearings=Sturdy Bearings
-machineupgrade.immersiveintelligence.emplacement/sturdy_bearings.desc=Higher quality bearings increase the maximum weapon rotation speed, to work at full capacity lubrication is required
+machineupgrade.immersiveintelligence.emplacement.bearings=Sturdy Bearings
+machineupgrade.immersiveintelligence.emplacement.bearings.desc=Higher quality bearings increase the maximum weapon rotation speed, to work at full capacity lubrication is required
 
-machineupgrade.immersiveintelligence.emplacement/enhanced_targeting=Enhanced Targeting Systems
-machineupgrade.immersiveintelligence.emplacement/enhanced_targeting.desc=Improved fire control systems allow for better target acquisition and tracking, increasing accuracy.
+machineupgrade.immersiveintelligence.emplacement.targetting=Enhanced Targetting Systems
+machineupgrade.immersiveintelligence.emplacement.targetting.desc=Improved fire control systems allow for better target acquisition and tracking, increasing accuracy.
 
 #Emplacement Weapons
 
-machineupgrade.immersiveintelligence.emplacement/machinegun=Machinegun Nest
-machineupgrade.immersiveintelligence.emplacement/machinegun.desc=The Machinegun Nest can provide suppressive automatic fire, allowing crowd control. Due to its construction, it is unable to fight airborne enemies.
-#MG upgrades
-machineupgrade.immersiveintelligence.emplacement/machinegun/heavy_barrel=Heavy Barrel
-machineupgrade.immersiveintelligence.emplacement/machinegun/heavy_barrel.desc=Heavy barrels allow for much faster firing rate and slightly increase the maximum permitted overheat.
+machineupgrade.immersiveintelligence.emplacement.infrared_observer=Infrared Observer
+machineupgrade.immersiveintelligence.emplacement.infrared_observer.desc=The Infrared Observer allows surveillance of distant enemies and sending their coordinates via data cables.
 
-machineupgrade.immersiveintelligence.emplacement/machinegun/water_cooled_barrel=Water Cooled Barrel
-machineupgrade.immersiveintelligence.emplacement/machinegun/water_cooled_barrel.desc=A replacement for the stock barrels. When mounted, barrels do not overheat when a coolant is provided.
+machineupgrade.immersiveintelligence.emplacement.spotlight_tower=Spotlight Tower
+machineupgrade.immersiveintelligence.emplacement.spotlight_tower.desc=The Spotlight Tower allows illumination of hostile units, disorienting them and increasing accuracy of allied units.
 
-machineupgrade.immersiveintelligence.emplacement/machinegun/additional_fortifications=Additional Fortifications
-machineupgrade.immersiveintelligence.emplacement/machinegun/additional_fortifications.desc=Placing additional sandbags around the machinegun nest gives it additional armor and increases its durability.
+machineupgrade.immersiveintelligence.emplacement.searchlight=Searchlight
+machineupgrade.immersiveintelligence.emplacement.searchlight.desc=Searchlights work in coordination with Radars, Infrared Observers or Spotlight Towers, disorienting hostile units and increasing accuracy of allied fire.
 
-machineupgrade.immersiveintelligence.emplacement/heavy_chemthrower=Heavy Chemthrower
-machineupgrade.immersiveintelligence.emplacement/heavy_chemthrower.desc=A heavier version of the well known Chemthrower, higher pressure allows for attacking enemies at ranges 4 times longer than the portable one.
+machineupgrade.immersiveintelligence.emplacement.cpds=CPDS
+machineupgrade.immersiveintelligence.emplacement.cpds.desc=The Counter-Projectile Defense System is an advanced anti-air weapon, capable of destroying incoming artillery shells in mid-air.
 
-machineupgrade.immersiveintelligence.emplacement/infrared_observer=Infrared Observer
-machineupgrade.immersiveintelligence.emplacement/infrared_observer.desc=The Infrared Observer allows surveillance of distant enemies and sending their coordinates via data cables.
+machineupgrade.immersiveintelligence.emplacement.autocannon=Autocannon
+machineupgrade.immersiveintelligence.emplacement.autocannon.desc=Four 3bCal Automatic Cannons provide lots of firepower making the weapon a universal defense against air and ground targets.
 
-machineupgrade.immersiveintelligence.emplacement/spotlight_tower=Spotlight Tower
-machineupgrade.immersiveintelligence.emplacement/spotlight_tower.desc=The Spotlight Tower allows illumination of hostile units, disorienting them and increasing accuracy of allied units.
+machineupgrade.immersiveintelligence.emplacement.heavy_chemthrower=Heavy Chemthrower
+machineupgrade.immersiveintelligence.emplacement.heavy_chemthrower.desc=A heavier version of the well known Chemthrower, higher pressure allows for attacking enemies at ranges 4 times longer than the portable one.
 
-machineupgrade.immersiveintelligence.emplacement/searchlight=Searchlight
-machineupgrade.immersiveintelligence.emplacement/searchlight.desc=Searchlights work in coordination with Radars, Infrared Observers or Spotlight Towers, disorienting hostile units and increasing accuracy of allied fire.
+machineupgrade.immersiveintelligence.emplacement.heavy_railgun=Heavy Railgun
+machineupgrade.immersiveintelligence.emplacement.heavy_railgun.desc=Heavy Railgun provides direct fire support. It can launch metal rods or grenades with high velocity, allowing piercing of enemies and materiel.
 
-machineupgrade.immersiveintelligence.emplacement/cpds=CPDS
-machineupgrade.immersiveintelligence.emplacement/cpds.desc=The Counter-Projectile Defense System is an advanced anti-air weapon, capable of destroying incoming artillery shells in mid-air.
+machineupgrade.immersiveintelligence.emplacement.machinegun=Machinegun Nest
+machineupgrade.immersiveintelligence.emplacement.machinegun.desc=The Machinegun Nest can provide suppressive automatic fire, allowing crowd control. Due to its construction, it is unable to fight airborne enemies.
 
-machineupgrade.immersiveintelligence.emplacement/autocannon=Autocannon
-machineupgrade.immersiveintelligence.emplacement/autocannon.desc=Four 3bCal Automatic Cannons provide lots of firepower making the weapon a universal defense against air and ground targets.
+machineupgrade.immersiveintelligence.emplacement.mg_heavy_barrel=Heavy Barrel
+machineupgrade.immersiveintelligence.emplacement.mg_heavy_barrel.desc=Heavy barrels allow for much faster firing rate and slightly increase the maximum permitted overheat.
 
-machineupgrade.immersiveintelligence.emplacement/heavy_railgun=Heavy Railgun
-machineupgrade.immersiveintelligence.emplacement/heavy_railgun.desc=Heavy Railgun provides direct fire support. It can launch metal rods or grenades with high velocity, allowing piercing of enemies and materiel.
+machineupgrade.immersiveintelligence.emplacement.mg_watercooled=Water Cooled Barrel
+machineupgrade.immersiveintelligence.emplacement.mg_watercooled.desc=A replacement for the stock barrels. When mounted, barrels do not overheat when a coolant is provided.
 
-machineupgrade.immersiveintelligence.emplacement/mortar=Mortar
-machineupgrade.immersiveintelligence.emplacement/mortar.desc=Mortar provides indirect fire support on close range, the vertical firing angle and high shell caliber allow it to pierce trough roofs and decimate enemies from above
+machineupgrade.immersiveintelligence.emplacement.mg_bunker=Additional Fortifications
+machineupgrade.immersiveintelligence.emplacement.mg_bunker.desc=Placing additional sandbags around the machinegun nest gives it additional armor and increases its durability.
 
-machineupgrade.immersiveintelligence.emplacement/light_howitzer=Light Howitzer
-machineupgrade.immersiveintelligence.emplacement/light_howitzer.desc=Light Howitzer provides indirect fire support on medium range, its mobility allows for quick and precise barrage of enemy positions
+machineupgrade.immersiveintelligence.emplacement.mortar=Mortar
+machineupgrade.immersiveintelligence.emplacement.mortar.desc=Mortar provides indirect fire support on close range, the vertical firing angle and high shell caliber allow it to pierce trough roofs and decimate enemies from above
 
-machineupgrade.immersiveintelligence.emplacement/mlrs=Rocket Launcher
-machineupgrade.immersiveintelligence.emplacement/mlrs.desc=The Multiple Launch Rocket System provides devastating area bombardment using up to 6 unguided rockets, excellent for attacking fortified positions.
+machineupgrade.immersiveintelligence.emplacement.light_howitzer=Light Howitzer
+machineupgrade.immersiveintelligence.emplacement.light_howitzer.desc=Light Howitzer provides indirect fire support on medium range, its mobility allows for quick and precise barrage of enemy positions
 
-machineupgrade.immersiveintelligence.emplacement/guided_missile_launcher=Wire-Guided Missile Launcher
-machineupgrade.immersiveintelligence.emplacement/guided_missile_launcher.desc=The Wire-Guided Missile Launcher provides long-range precision strikes, especially effective against moving targets.
+machineupgrade.immersiveintelligence.emplacement.mlrs=Rocket Launcher
+machineupgrade.immersiveintelligence.emplacement.mlrs.desc=The Multiple Launch Rocket System provides devastating area bombardment using up to 6 unguided rockets, excellent for attacking fortified positions.
+
+machineupgrade.immersiveintelligence.emplacement.guided_missile_launcher=Wire-Guided Missile Launcher
+machineupgrade.immersiveintelligence.emplacement.guided_missile_launcher.desc=The Wire-Guided Missile Launcher provides long-range precision strikes, especially effective against moving targets.
 
 machineupgrade.immersiveintelligence.emplacement.tesla=Tesla Tower
 machineupgrade.immersiveintelligence.emplacement.tesla.desc=The Tesla Tower uses high voltage to decimate enemies in its radius, it's especially effective against electronics
@@ -1198,12 +1168,12 @@ machineupgrade.immersiveintelligence.rs_activation.desc=Attaching a redstone wir
 machineupgrade.immersiveintelligence.razor_wire=Razor Wire
 machineupgrade.immersiveintelligence.razor_wire.desc=Attaches a razor wire on top of the gate, damaging any enemies that dare to try to climb over it.
 
-machineupgrade.immersiveintelligence.press_punchtapes=Punchtape Processor
-machineupgrade.immersiveintelligence.press_punchtapes.desc=Modifies the the Printing Press input feeder to allow processing punchtapes.
-machineupgrade.immersiveintelligence.press_batching=Batching Mechanism
-machineupgrade.immersiveintelligence.press_batching.desc=Adds a hot-air stapler to the Printing Press, allowing it to bind pages and print books and newspapers.
-machineupgrade.immersiveintelligence.press_enveloper=Enveloper
-machineupgrade.immersiveintelligence.press_enveloper.desc=Modifies the internals of the Printing Press, allowing it to fold and envelope single pages into letters.
+machineupgrade.immersiveintelligence.printing_press.punchtapes=Punchtape Processor
+machineupgrade.immersiveintelligence.printing_press.punchtapes.desc=Modifies the the Printing Press input feeder to allow processing punchtapes.
+machineupgrade.immersiveintelligence.printing_press.batching=Batching Mechanism
+machineupgrade.immersiveintelligence.printing_press.batching.desc=Adds a hot-air stapler to the Printing Press, allowing it to bind pages and print books and newspapers.
+machineupgrade.immersiveintelligence.printing_press.enveloper=Enveloper
+machineupgrade.immersiveintelligence.printing_press.enveloper.desc=Modifies the internals of the Printing Press, allowing it to fold and envelope single pages into letters.
 
 #Descriptions
 desc.immersiveintelligence.multiblock_item=Check Engineer's Manual on how to build.
@@ -1265,9 +1235,14 @@ desc.immersiveintelligence.data_to_redstone_module=Data to Redstone
 desc.immersiveintelligence.redstone_to_data_module=Redstone to Data
 desc.immersiveintelligence.tasks_module=Tasks
 desc.immersiveintelligence.status_module=Status
+
 desc.immersiveintelligence.map_module=Map
-desc.immersiveintelligence.faction_module=Faction Management
 desc.immersiveintelligence.radar_module=Radar
+desc.immersiveintelligence.faction_module=Faction Management
+
+desc.immersiveintelligence.configuration_module=Configuration
+desc.immersiveintelligence.targets_module=Targets
+desc.immersiveintelligence.fire_missions_module=Fire Missions
 
 desc.immersiveintelligence.tooltip.armor=Armor %f%%
 
@@ -1560,6 +1535,29 @@ info.immersiveintelligence.redstone_buffer_mode.signal=On Signal
 
 info.immersiveintelligence.machineupgrade.name=Installing: %s
 info.immersiveintelligence.machineupgrade.progress=Progress: %1$s / %2$s IF
+
+desc.immersiveintelligence.upgrade.dependencies_hold=%s - Required Dependencies
+desc.immersiveintelligence.upgrade.incompatible_hold=%s - Incompatible Upgrades
+desc.immersiveintelligence.upgrade.dependencies=Required Dependencies:
+desc.immersiveintelligence.upgrade.incompatible=Incompatible Upgrades:
+
+info.immersiveintelligence.machineupgrade.purpose.efficiency=Efficiency Upgrade
+info.immersiveintelligence.machineupgrade.purpose.speed=Speed Upgrade
+info.immersiveintelligence.machineupgrade.purpose.capacity=Capacity Upgrade
+info.immersiveintelligence.machineupgrade.purpose.quality=Quality Upgrade
+info.immersiveintelligence.machineupgrade.purpose.data=Data Capabilities Upgrade
+info.immersiveintelligence.machineupgrade.purpose.full_conversion=Full Conversion
+info.immersiveintelligence.machineupgrade.purpose.primary_weapon=Primary Weapon
+info.immersiveintelligence.machineupgrade.purpose.secondary_weapon=Secondary Weapon
+info.immersiveintelligence.machineupgrade.purpose.armor=Armor Upgrade
+info.immersiveintelligence.machineupgrade.purpose.defense_system=Defense Upgrade
+info.immersiveintelligence.machineupgrade.purpose.special=Special Upgrade
+
+info.immersiveintelligence.machineupgrade.tier.core=Core Functionality
+info.immersiveintelligence.machineupgrade.tier.tier_1=Basic Upgrade
+info.immersiveintelligence.machineupgrade.tier.tier_2=Refined Upgrade
+info.immersiveintelligence.machineupgrade.tier.tier_3=Advanced Upgrade
+info.immersiveintelligence.machineupgrade.tier.tier_4=Masterwork Upgrade
 
 info.immersiveintelligence.exoskeleton.0=Exoskeleton: §4Off§r
 info.immersiveintelligence.exoskeleton.1=Exoskeleton: §aMotion Assist§r
@@ -3178,10 +3176,34 @@ ii.gui.radar.map=Radar Display
 ii.gui.radar.configuration=Configuration
 ii.gui.radar.targets=Targets
 
-ii.gui.emplacement.storage=Storage
-ii.gui.emplacement.configuration=Configuration
-ii.gui.emplacement.targets=Targets
-ii.gui.emplacement.tasks=Fire Missions
+ii.gui.emplacement.platform_inventory=Platform Inventory
+ii.gui.emplacement.base_inventory=Base Inventory
+
+ii.gui.emplacement.weapon=Mounted: %s
+ii.gui.emplacement.weapon_none=None
+ii.gui.emplacement.upgrades=Installed Upgrades
+ii.gui.emplacement.settings=Settings
+ii.gui.emplacement.redstone_control=Redstone Controlled
+ii.gui.emplacement.data_control=Data Controlled
+ii.gui.emplacement.send_attack_signal=Output target(s) trough data
+ii.gui.emplacement.auto_repair_threshold=Repair when health is below:
+ii.gui.emplacement.selector_preset=Selector Preset
+ii.gui.emplacement.filter=Filter
+ii.gui.emplacement.task_enabled=Enabled
+ii.gui.emplacement.task_negation=Negation
+ii.gui.emplacement.add=Add Task
+ii.gui.emplacement.remove=Remove Task
+ii.gui.emplacement.duplicate=Duplicate Task
+ii.gui.emplacement.clear=Clear ALL Tasks (Caution!)
+
+ii.gui.emplacement.target.mobs=Mobs
+ii.gui.emplacement.target.animals=Animals
+ii.gui.emplacement.target.players=Players
+ii.gui.emplacement.target.npcs=NPCs
+ii.gui.emplacement.target.vehicles=Vehicles
+ii.gui.emplacement.target.shells=Shells
+ii.gui.emplacement.target.team=Team
+ii.gui.emplacement.target.name=Name
 
 ii.gui.map_display.color_mapper.terrain=Terrain
 ii.gui.map_display.color_mapper.grayscale=Grayscale
@@ -3238,6 +3260,9 @@ ii.gui_tooltip.button.clear=Clear
 ii.gui_tooltip.widget.style.show=Show Style Customization
 ii.gui_tooltip.widget.style.hide=Hide Style Customization
 ii.gui_tooltip.widget.style=Customization
+ii.gui_tooltip.widget.style.desc=This multiblock allows customization of style and color.
+ii.gui_tooltip.widget.style.style=Style
+ii.gui_tooltip.widget.style.color=Color
 ii.gui_tooltip.widget.ownership.show=Show Ownership Data
 ii.gui_tooltip.widget.ownership.hide=Hide Ownership Data
 ii.gui_tooltip.widget.ownership=Ownership

@@ -26,10 +26,10 @@ import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockEmplacement;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockFlagpole;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.task.EmplacementTaskEntity;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.task.EmplacementFireMissionEntity;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.task.EmplacementFireMissionPosition;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.task.EmplacementFireMissionShells;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.task.EmplacementTaskManager;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.task.EmplacementTaskPosition;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.task.EmplacementTaskShells;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.weapon.EmplacementWeapon;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
@@ -69,7 +69,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 
 	@SyncNBT(name = "tasks", events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_CUSTOM1})
 	public EmplacementTaskManager taskManager = new EmplacementTaskManager();
-	@SyncNBT(nullable = true)
+	@SyncNBT(nullable = true, events = SyncEvents.ENTITY_CUSTOM2)
 	public EmplacementWeapon currentWeapon;
 	@SyncNBT
 	public boolean sendData = false;
@@ -104,155 +104,8 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 	@Override
 	protected void onUpdate()
 	{
+		door.setState(getRedstoneAtPos(0));
 		door.update();
-
-		if(door.setState(getRedstoneAtPos(0)))
-			forceTileUpdate();
-
-		/*boolean wasDoorOpened = isDoorOpened;
-		if(upgradeManager.getCurrentUpgrade()!=null)
-			isDoorOpened = true;
-		else if(currentWeapon!=null&&((forcedRepair&&currentWeapon.getHealth()!=currentWeapon.getMaxHealth())||currentWeapon.requiresPlatformRefill()))
-			isDoorOpened = false;
-		else if(currentWeapon!=null&&(currentWeapon.getHealth()/(float)currentWeapon.getMaxHealth() <= autoRepairAmount))
-		{
-			forcedRepair = true;
-			isDoorOpened = false;
-		}
-		else if(!world.isRemote&&redstoneControl)
-			if(isDoorOpened^getRedstoneAtPos(0))
-				isDoorOpened = getRedstoneAtPos(0);
-
-		if(!world.isRemote&&wasDoorOpened^isDoorOpened)
-			IIPacketHandler.INSTANCE.sendToAllAround(new MessageBooleanAnimatedPartsSync(0, isDoorOpened, this.getPos()), IIPacketHandler.targetPointFromTile(this, 48));
-
-		if(currentWeapon!=null)
-		{
-			if(forcedRepair)
-				forcedRepair = currentWeapon.getHealth()!=currentWeapon.getMaxHealth();
-
-			if(!world.isRemote&&world.getTotalWorldTime()%60==0)
-				currentWeapon.syncWeaponHealth(this);
-			if(currentWeapon.isDead())
-			{
-				if(world.isRemote)
-					currentWeapon.spawnDebrisExplosion(this);
-				else
-					currentWeapon.syncWeaponHealth(this);
-
-				if(currentWeapon.entity!=null)
-					currentWeapon.entity.setDead();
-				currentWeapon = null;
-			}
-		}
-
-		*//*if(world.isRemote)
-			handleSounds(master());*//*
-
-		if(isDoorOpened)
-			if(progress < Emplacement.lidTime)
-				progress++;
-			else if(currentWeapon!=null&&energyStorage.extractEnergy(currentWeapon.getEnergyUpkeepCost(), true) >= currentWeapon.getEnergyUpkeepCost())
-			{
-				if(!world.isRemote)
-					energyStorage.modifyEnergyStored(-currentWeapon.getEnergyUpkeepCost());
-
-				if(currentWeapon.isSetUp(true))
-				{
-					currentWeapon.tick(this, true);
-					if(this.currentTask!=null)
-					{
-
-						if(world.getTotalWorldTime()%Emplacement.sightUpdateTime==0)
-							this.currentTask.updateTargets(this);
-						target = this.currentTask.getPositionVector(this);
-
-						if(target!=null)
-						{
-							target[0] = MathHelper.wrapDegrees(target[0]);
-							target[1] = MathHelper.wrapDegrees(target[1]);
-
-							currentWeapon.aimAt(target[0], target[1]);
-
-							if(currentWeapon.isAimedAt(target[0], target[1]))
-								if(currentWeapon.canShoot(this))
-								{
-									isShooting = true;
-									currentWeapon.shoot(this);
-									currentTask.onShot();
-								}
-								else
-									isShooting = false;
-							else
-								isShooting = false;
-						}
-						else
-						{
-							isShooting = false;
-							currentWeapon.aimAt(currentWeapon.yaw, currentWeapon.pitch);
-						}
-					}
-					if(currentTask==null||!currentTask.shouldContinue())
-						if(defaultTargetMode==-1)
-							currentTask = null;
-						else
-							currentTask = new EmplacementTaskCustom(defaultTaskNBT[defaultTargetMode]);
-				}
-				else
-					currentWeapon.doSetUp(true);
-			}
-			else if(currentWeapon!=null)
-			{
-				currentWeapon.tick(this, false);
-				if(progress==0&&!forcedRepair&&currentWeapon.requiresPlatformRefill())
-				{
-					if(!world.isRemote)
-						currentWeapon.performPlatformRefill(this);
-				}
-				else if(currentWeapon.health!=currentWeapon.getMaxHealth())
-					if(progress==0)
-					{
-						if(firstRepairTick)
-						{
-							BlockPos repairPos = getBlockPosForPos(31);
-							if(!world.isRemote)
-								world.playSound(null, repairPos.getX(), repairPos.getY()+1, repairPos.getZ(), IISounds.weldingStart, SoundCategory.BLOCKS, 4f, 1f);
-							firstRepairTick = false;
-						}
-						if(repairTick > 0)
-							repairTick--;
-						else if(energyStorage.getEnergyStored() >= Emplacement.repairCost)
-						{
-							energyStorage.extractEnergy(Emplacement.repairCost, false);
-							currentWeapon.health = Math.min(currentWeapon.health+Emplacement.repairAmount, currentWeapon.getMaxHealth());
-							repairTick = Emplacement.repairDelay;
-						}
-
-						if(currentWeapon.health==currentWeapon.getMaxHealth())
-						{
-							BlockPos repairPos = getBlockPosForPos(31);
-							if(!world.isRemote)
-								world.playSound(null, repairPos.getX(), repairPos.getY()+1, repairPos.getZ(), IISounds.weldingEnd, SoundCategory.BLOCKS, 4f, 1f);
-							forcedRepair = false;
-							firstRepairTick = true;
-						}
-					}
-
-				if(currentWeapon.isSetUp(false))
-				{
-					if(progress > 0)
-						progress--;
-					//machine gun yaw is limited, use special method
-					if(currentWeapon instanceof EmplacementWeaponMachinegun)
-						((EmplacementWeaponMachinegun)currentWeapon).aimAtUnrestricted(facing.getHorizontalAngle(), -90);
-					else
-						currentWeapon.aimAt(facing.getHorizontalAngle(), -90);
-				}
-				else
-					currentWeapon.doSetUp(false);
-			}
-			else if(progress > 0)
-				progress--;*/
 	}
 
 	public List<BlockPos> getAllBlocks()
@@ -305,19 +158,6 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 	}
 
 	@Override
-	public void onAnimationChangeClient(boolean state, int part)
-	{
-		door.setState(state);
-	}
-
-	@Override
-	public void onAnimationChangeServer(boolean state, int part)
-	{
-		if(door.setState(state))
-			IIPacketHandler.sendToClient(this, new MessageBooleanAnimatedPartsSync(door, this));
-	}
-
-	@Override
 	public void receiveData(DataPacket packet, int pos)
 	{
 		if(!this.dataControl)
@@ -333,14 +173,14 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 			{
 				//Door control
 				case "opendoor":
-					IIPacketHandler.sendToClient(this, new MessageBooleanAnimatedPartsSync(0, door.setState(true), this.getPos()));
+					IIPacketHandler.sendToClient(new MessageBooleanAnimatedPartsSync(0, door.setState(true), this));
 					break;
 				case "closedoor":
-					IIPacketHandler.sendToClient(this, new MessageBooleanAnimatedPartsSync(0, door.setState(false), this.getPos()));
+					IIPacketHandler.sendToClient(new MessageBooleanAnimatedPartsSync(0, door.setState(false), this));
 					break;
 				case "door":
 					if(IIDataHandlingUtils.asBoolean('b', packet))
-						IIPacketHandler.sendToClient(this, new MessageBooleanAnimatedPartsSync(0, door.setState(true), this.getPos()));
+						IIPacketHandler.sendToClient(new MessageBooleanAnimatedPartsSync(0, door.setState(true), this));
 					break;
 
 				//Settings
@@ -352,29 +192,22 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 				case "reload":
 					break;
 				case "stop":
-					//TODO: 14.09.2025 stop repair
 					this.taskManager.stopTask(true);
 					break;
 				case "repair":
-					if(this.currentWeapon!=null)
-					{
-						//TODO: 14.09.2025 stop repair
-						//this.forcedRepair = this.currentWeapon.getHealth()!=this.currentWeapon.getMaxHealth();
-//						if(this.forcedRepair)
-//							this.firstRepairTick = true;
-					}
+					//TODO: 01.01.2026 repairing
 					break;
 				case "target":
 				case "targetreset":
 					//Set the default task id
 					if(command.equals("target"))
-						this.taskManager.setCurrentTask(IIDataHandlingUtils.optionalInt('i', packet).orElse(0));
+						this.taskManager.skipTask(IIDataHandlingUtils.optionalInt('i', packet).orElse(0));
 					//Reset the current task to the default task
 					this.taskManager.resumeTask(true);
 					updateTileForEvent(SyncEvents.TILE_CUSTOM1);
 					break;
 				case "targetshells":
-					this.taskManager.setCurrentTask(new EmplacementTaskShells());
+					this.taskManager.addTask(new EmplacementFireMissionShells());
 					updateTileForEvent(SyncEvents.TILE_CUSTOM1);
 					break;
 				case "fire":
@@ -384,7 +217,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 					{
 						Entity entityByID = world.getEntityByID(e.get().entityID);
 						if(entityByID!=null)
-							this.taskManager.setCurrentTask(new EmplacementTaskEntity(entityByID));
+							this.taskManager.addTask(new EmplacementFireMissionEntity(entityByID));
 						updateTileForEvent(SyncEvents.TILE_CUSTOM1);
 					}
 					else
@@ -392,7 +225,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 						int amount = IIDataHandlingUtils.optionalInt('a', packet).orElse(1);
 						IIDataHandlingUtils.expectingVectorParam(packet, vec -> {
 									//Block/Vector based
-									this.taskManager.setCurrentTask(new EmplacementTaskPosition(new BlockPos(vec).add(getPOIPos("weapon")), amount));
+									this.taskManager.addTask(new EmplacementFireMissionPosition(new BlockPos(vec).add(getPOIPos("weapon")), amount));
 								},
 								angle -> {
 									//Yaw+Pitch based
@@ -400,7 +233,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 									double true_angle2 = Math.toRadians(angle.y);
 									int distance = IIDataHandlingUtils.optionalInt('d', packet).orElse(40);
 
-									this.taskManager.setCurrentTask(new EmplacementTaskPosition(new BlockPos(IIMath.offsetPosDirection(distance,
+									this.taskManager.addTask(new EmplacementFireMissionPosition(new BlockPos(IIMath.offsetPosDirection(distance,
 											true_angle, true_angle2)).add(getPOIPos("weapon")), amount));
 								});
 					}
@@ -479,19 +312,8 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 		if(isDummy())
 			return;
 
-		/*if(currentWeapon!=null&&forcedRepair)
-		{
-			BlockPos pp = getBlockPosForPos(31);
-			float f = Math.abs(((world.getTotalWorldTime()%6)/6f)-0.5f)*2f;
-
-			gatherLightsEvent.add(Light.builder()
-					.pos(pp)
-					.color((159+f*40)/255f, (213+f*40)/255f, (215+f*40)/255f, 1f)
-					.intensity(3f)
-					.build()
-			);
-
-		}*/
+		if(currentWeapon!=null)
+			currentWeapon.gatherLights(gatherLightsEvent);
 	}
 
 	public Vec3d getWeaponCenter()
@@ -533,5 +355,75 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 	public StyleCustomization getStyle()
 	{
 		return style;
+	}
+
+
+	//--- IBooleanAnimatedPartsBlock ---//
+
+	@Override
+	public void onAnimationChangeClient(boolean state, int part)
+	{
+		door.setState(state);
+	}
+
+	@Override
+	public void onAnimationChangeServer(boolean state, int part)
+	{
+		if(door.setState(state))
+			IIPacketHandler.sendToClient(this, new MessageBooleanAnimatedPartsSync(door, this));
+	}
+
+	public enum EmplacementState
+	{
+		SURFACED,
+		SURFACING,
+		HIDING,
+		HIDDEN;
+
+		public EmplacementState getNextState()
+		{
+			switch(this)
+			{
+				case SURFACED:
+					return HIDING;
+				case SURFACING:
+					return SURFACED;
+				case HIDING:
+					return HIDDEN;
+				case HIDDEN:
+					return SURFACING;
+				default:
+					return this;
+			}
+		}
+	}
+
+	public enum EmplacementStateNeeds
+	{
+		WANTS_SURFACE,
+		WANTS_HIDE,
+		MUST_HIDE;
+	}
+
+	private EmplacementState getNextState(EmplacementState currentState, EmplacementStateNeeds baseNeeds, @Nullable EmplacementStateNeeds weaponNeeds)
+	{
+		switch(currentState)
+		{
+			case SURFACED:
+			{
+				boolean wantHide = baseNeeds==EmplacementStateNeeds.WANTS_HIDE&&
+						(weaponNeeds==null||weaponNeeds==EmplacementStateNeeds.WANTS_HIDE);
+				boolean mustHide = baseNeeds==EmplacementStateNeeds.MUST_HIDE||weaponNeeds==EmplacementStateNeeds.MUST_HIDE;
+				return (wantHide||mustHide)?currentState.getNextState(): currentState;
+			}
+			case HIDDEN:
+			{
+				boolean wantsSurface = baseNeeds==EmplacementStateNeeds.WANTS_SURFACE&&
+						(weaponNeeds==null||weaponNeeds==EmplacementStateNeeds.WANTS_SURFACE);
+				return wantsSurface?currentState.getNextState(): currentState;
+			}
+			default:
+				return currentState.getNextState();
+		}
 	}
 }
