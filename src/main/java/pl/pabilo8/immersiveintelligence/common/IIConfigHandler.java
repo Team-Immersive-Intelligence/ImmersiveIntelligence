@@ -1567,6 +1567,49 @@ public class IIConfigHandler
 
 			}
 
+			public static class AmmoMagazines
+			{
+				@Comment({"Bullet capacity of the Machinegun magazine."})
+				public static int machinegunCapacity = 48;
+				@Comment({"Time required to load a single bullet into the Machinegun magazine (in ticks)."})
+				public static int machinegunReloadTime = 20;
+
+				@Comment({"Bullet capacity of the Submachinegun magazine."})
+				public static int submachinegunCapacity = 24;
+				@Comment({"Time required to load a single bullet into the Submachinegun magazine (in ticks)."})
+				public static int submachinegunReloadTime = 20;
+
+				@Comment({"Bullet capacity of the Rifle magazine."})
+				public static int rifleCapacity = 12;
+				@Comment({"Time required to load a single bullet into the Rifle magazine (in ticks)."})
+				public static int rifleReloadTime = 20;
+
+				@Comment({"Bullet capacity of the Submachinegun drum magazine."})
+				public static int submachinegunDrumCapacity = 64;
+				@Comment({"Time required to load a single bullet into the Submachinegun drum (in ticks)."})
+				public static int submachinegunDrumReloadTime = 20;
+
+				@Comment({"Bullet capacity of the Assault Rifle magazine."})
+				public static int assaultRifleCapacity = 32;
+				@Comment({"Time required to load a single bullet into the Assault Rifle magazine (in ticks)."})
+				public static int assaultRifleReloadTime = 20;
+
+				@Comment({"Bullet capacity of the Autocannon magazine."})
+				public static int autocannonCapacity = 16;
+				@Comment({"Time required to load a single shell into the Autocannon (in ticks)."})
+				public static int autocannonReloadTime = 20;
+
+				@Comment({"Bullet capacity of the CPDS drum magazine."})
+				public static int cpdsDrumCapacity = 128;
+				@Comment({"Time required to load a single bullet into the CPDS drum (in ticks)."})
+				public static int cpdsDrumReloadTime = 20;
+
+				@Comment({"Bullet capacity of the Pistol magazine."})
+				public static int pistolCapacity = 16;
+				@Comment({"Time required to load a single bullet into the Pistol magazine (in ticks)."})
+				public static int pistolReloadTime = 20;
+			}
+
 			public static class Rifle
 			{
 				@Comment({"Time required to reload a stick magazine in SMG. (in ticks)"})

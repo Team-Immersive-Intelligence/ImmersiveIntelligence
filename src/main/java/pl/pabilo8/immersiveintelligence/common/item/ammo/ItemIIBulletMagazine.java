@@ -5,6 +5,9 @@ import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
@@ -12,22 +15,30 @@ import net.minecraft.nbt.NBTTagInt;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler;
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler.IAdvancedTooltipItem;
+import pl.pabilo8.immersiveintelligence.client.ClientProxy;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.AmmoMagazines;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine.Magazines;
+import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageItemKeybind;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
-import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIIItemTextureOverride;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
@@ -49,6 +60,9 @@ import java.util.Optional;
 @IIItemProperties(category = IICategory.WARFARE)
 public class ItemIIBulletMagazine extends ItemIISubItemsBase<Magazines> implements IIIItemTextureOverride, IAdvancedTooltipItem
 {
+	public static final String SHOULD_RELOAD = "shouldReload";
+	public static final String RELOADING = "reloading";
+
 	//--- Textures ---//
 	private final ResLoc magazineTexture = ResLoc.of(IIReference.RES_II, "items/bullets/magazines/");
 	private final ResLoc bulletTexture = ResLoc.of(IIReference.RES_II, "items/bullets/magazines/common/bullet");
@@ -102,6 +116,109 @@ public class ItemIIBulletMagazine extends ItemIISubItemsBase<Magazines> implemen
 			}
 	}
 
+	@Override
+	public void onUpdate(ItemStack stack, World world, Entity entity, int itemSlot, boolean isSelected)
+	{
+		EasyNBT nbt = EasyNBT.wrapNBT(stack);
+		if(isSelected)
+		{
+			boolean shouldReload = nbt.getBoolean(SHOULD_RELOAD);
+			int reloading = nbt.getInt(RELOADING);
+
+			//handle reloading
+			if(shouldReload)
+			{
+				reloading = reload(stack, stackToSub(stack), entity, reloading);
+				if(reloading==0)
+					shouldReload = false;
+			}
+			else
+				reloading = 0;
+
+			if(world.isRemote)
+				if(!shouldReload&&ClientProxy.keybindManualReload.isKeyDown())
+					IIPacketHandler.sendToServer(new MessageItemKeybind(MessageItemKeybind.KEYBIND_GUN_RELOAD));
+
+			nbt.withBoolean(SHOULD_RELOAD, shouldReload);
+			nbt.withInt(RELOADING, reloading);
+		}
+		else if(nbt.hasKey(SHOULD_RELOAD))
+			nbt.without(SHOULD_RELOAD, RELOADING);
+
+		super.onUpdate(stack, world, entity, itemSlot, isSelected);
+	}
+
+	private int reload(ItemStack stack, Magazines magazine, Entity user, int reloading)
+	{
+		//Out of capacity
+		int bulletCount = getRemainingBulletCount(stack);
+		if(bulletCount >= magazine.capacity)
+			return 0;
+
+		//Return 0 if there is no ammunition to be loaded
+		ItemStack found;
+		if((found = findAmmo(magazine, user, stack)).isEmpty())
+			return 0;
+
+		final int reloadTime = magazine.manualReloadTime;
+		if(reloading==reloadTime/3)
+			user.playSound(IISounds.magazineLoad, 1f, 1f);
+		reloading++;
+
+		if(user instanceof EntityPlayer)
+			((EntityPlayer)user).sendStatusMessage(new TextComponentTranslation(IIReference.INFO_KEY+"magazine.loading", +bulletCount, magazine.capacity), true);
+
+		//Reloading
+		if(reloading >= reloadTime)
+		{
+			//Load bullet into the first free slot
+			NonNullList<ItemStack> inventory = readInventory(stack);
+			ItemStack loadedBullet = found.copy();
+			loadedBullet.setCount(1);
+			inventory.set(bulletCount, loadedBullet);
+
+			//Take away the item from inventory
+			found.shrink(1);
+			writeInventory(stack, inventory);
+
+			//Continue loading, until there's no space
+			if(bulletCount+1 < magazine.capacity)
+				return 1;
+
+			//Stop loading
+			if(user instanceof EntityPlayer)
+				((EntityPlayer)user).sendStatusMessage(new TextComponentTranslation(IIReference.INFO_KEY+"magazine.loaded"), true);
+			return 0;
+		}
+		return reloading;
+	}
+
+	/**
+	 * @param magazine the magazine sub item
+	 * @param entity   entity holding the magazine
+	 * @param stack    the magazine itemstack
+	 * @return valid ammo or {@link ItemStack#EMPTY}
+	 */
+	private ItemStack findAmmo(Magazines magazine, Entity entity, ItemStack stack)
+	{
+		if(!(entity instanceof EntityLivingBase))
+			return ItemStack.EMPTY;
+
+		if(entity.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null))
+		{
+			final IItemHandler capability = entity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+			if(capability==null)
+				return ItemStack.EMPTY;
+			for(int i = 0; i < capability.getSlots(); i++)
+			{
+				ItemStack ammo = capability.getStackInSlot(i);
+				if(!ammo.isEmpty()&&ammo.getItem()==magazine.ammo)
+					return ammo;
+			}
+		}
+		return ItemStack.EMPTY;
+	}
+
 	@SideOnly(Side.CLIENT)
 	@Override
 	@ParametersAreNonnullByDefault
@@ -110,7 +227,8 @@ public class ItemIIBulletMagazine extends ItemIISubItemsBase<Magazines> implemen
 		super.addInformation(stack, worldIn, tooltip, flagIn);
 		int bullets = getRemainingBulletCount(stack);
 
-		tooltip.add(IIStringUtil.getItalicString(I18n.format(IIReference.DESCRIPTION_KEY+(bullets==0?"bullet_magazine.empty": "bullet_magazine.remaining"), bullets)));
+		tooltip.add(I18n.format(IIReference.DESCRIPTION_KEY+(bullets==0?"bullet_magazine.empty": "bullet_magazine.remaining"),
+				TextFormatting.GOLD.toString()+bullets));
 		NBTTagList listDict = ItemNBTHelper.getTagCompound(stack, "bullets").getTagList("dictionary", NBT.TAG_COMPOUND);
 
 		if(ItemNBTHelper.getTag(stack).hasKey("bullet0"))
@@ -367,30 +485,32 @@ public class ItemIIBulletMagazine extends ItemIISubItemsBase<Magazines> implemen
 	@GeneratedItemModels(itemName = "bullet_magazine", type = ItemModelType.ITEM_SIMPLE_AUTOREPLACED)
 	public enum Magazines implements IIItemEnum
 	{
-		MACHINEGUN(48, IIContent.itemAmmoMachinegun),
-		SUBMACHINEGUN(24, IIContent.itemAmmoSubmachinegun, true),
-		RIFLE(12, IIContent.itemAmmoMachinegun),
-		SUBMACHINEGUN_DRUM(64, IIContent.itemAmmoSubmachinegun),
-		ASSAULT_RIFLE(32, IIContent.itemAmmoAssaultRifle, true),
-		AUTOCANNON(16, IIContent.itemAmmoAutocannon),
-		CPDS_DRUM(128, IIContent.itemAmmoMachinegun),
+		MACHINEGUN(AmmoMagazines.machinegunCapacity, IIContent.itemAmmoMachinegun, AmmoMagazines.machinegunReloadTime),
+		SUBMACHINEGUN(AmmoMagazines.submachinegunCapacity, IIContent.itemAmmoSubmachinegun, true, AmmoMagazines.submachinegunReloadTime),
+		RIFLE(AmmoMagazines.rifleCapacity, IIContent.itemAmmoMachinegun, AmmoMagazines.rifleReloadTime),
+		SUBMACHINEGUN_DRUM(AmmoMagazines.submachinegunDrumCapacity, IIContent.itemAmmoSubmachinegun, AmmoMagazines.submachinegunDrumReloadTime),
+		ASSAULT_RIFLE(AmmoMagazines.assaultRifleCapacity, IIContent.itemAmmoAssaultRifle, true, AmmoMagazines.assaultRifleReloadTime),
+		AUTOCANNON(AmmoMagazines.autocannonCapacity, IIContent.itemAmmoAutocannon, AmmoMagazines.autocannonReloadTime),
+		CPDS_DRUM(AmmoMagazines.cpdsDrumCapacity, IIContent.itemAmmoMachinegun, AmmoMagazines.cpdsDrumReloadTime),
 		@IIItemProperties(hidden = true)
-		AUTOMATIC_REVOLVER(16, IIContent.itemAmmoRevolver);
+		PISTOL(AmmoMagazines.pistolCapacity, IIContent.itemAmmoRevolver, AmmoMagazines.pistolReloadTime);
 
 		public final int capacity;
 		public final IAmmoTypeItem<?, ?> ammo;
 		public final boolean hasDisplayTexture;
+		public final int manualReloadTime;
 
-		Magazines(int capacity, IAmmoTypeItem<?, ?> ammo)
+		Magazines(int capacity, IAmmoTypeItem<?, ?> ammo, int manualReloadTime)
 		{
-			this(capacity, ammo, false);
+			this(capacity, ammo, false, manualReloadTime);
 		}
 
-		Magazines(int capacity, IAmmoTypeItem<?, ?> ammo, boolean hasDisplayTexture)
+		Magazines(int capacity, IAmmoTypeItem<?, ?> ammo, boolean hasDisplayTexture, int manualReloadTime)
 		{
 			this.capacity = capacity;
 			this.ammo = ammo;
 			this.hasDisplayTexture = hasDisplayTexture;
+			this.manualReloadTime = manualReloadTime;
 		}
 	}
 }

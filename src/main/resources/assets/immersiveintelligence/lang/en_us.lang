@@ -912,6 +912,8 @@ subtitle.immersiveintelligence.rifle_load=Rifle Reloading
 subtitle.immersiveintelligence.rifle_load_magazine=Rifle Magazine Reloading
 subtitle.immersiveintelligence.rifle_unload_magazine=Rifle Magazine Discarded
 
+subtitle.immersiveintelligence.magazine_load=Ammo Magazine Reloading
+
 subtitle.immersiveintelligence.howitzer_shot=Howitzer Firing
 subtitle.immersiveintelligence.howitzer_shot_distant=Howitzer Firing in Distance
 subtitle.immersiveintelligence.howitzer_shell_pick=Artillery Shell Picked
@@ -1513,6 +1515,9 @@ info.immersiveintelligence.tool_durability=Durability: %1$s / %2$s
 info.immersiveintelligence.gear_ratio=Torque/Speed Ratio: %1$s >> %2$s
 info.immersiveintelligence.gear_ratio_short=%1$s >> %2$s
 info.immersiveintelligence.charge_with_if=Charge with IF
+
+info.immersiveintelligence.magazine.loading=Loading... %s/%s
+info.immersiveintelligence.magazine.loaded=Loaded
 
 info.immersiveintelligence.yaw=Yaw: %s
 info.immersiveintelligence.pitch=Pitch: %s

@@ -387,6 +387,9 @@ public class IISounds
 
 	);
 
+	@ModSound(sounds = {"weapons/rifle/load{0..2}"}, subtitle = "*")
+	public static SoundEvent magazineLoad = registerSound("magazine_load");
+
 	//Artillery Howitzer
 	@ModSound(name = "howitzer_shot", sounds = {"weapons/howitzer/howitzer{0..2}"}, subtitle = "howitzer_shot")
 	@ModSound(name = "howitzer_shot_muffled", sounds = {"weapons/howitzer/howitzer_muffled{0..2}"}, subtitle = "howitzer_shot_distant")
