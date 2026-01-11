@@ -24,6 +24,18 @@ public class BlockIISlab<E extends Enum<E> & IIBlockEnum> extends BlockIIBase<E>
 	public BlockIISlab(BlockIIBase<E> base)
 	{
 		super(base.name+"_slab", base.property, base.materials[0], ItemBlockIISlabs::new, prop_SlabType);
+
+		//Copy properties from base block
+		System.arraycopy(base.hidden, 0, this.hidden, 0, base.enumValues.length);
+		System.arraycopy(base.fullCubes, 0, this.fullCubes, 0, base.enumValues.length);
+		System.arraycopy(base.category, 0, this.category, 0, base.enumValues.length);
+		System.arraycopy(base.stackAmounts, 0, this.stackAmounts, 0, base.enumValues.length);
+		System.arraycopy(base.opaqueness, 0, this.opaqueness, 0, base.enumValues.length);
+		System.arraycopy(base.hardness, 0, this.hardness, 0, base.enumValues.length);
+		System.arraycopy(base.blastResistance, 0, this.blastResistance, 0, base.enumValues.length);
+		System.arraycopy(base.description, 0, this.description, 0, base.enumValues.length);
+		System.arraycopy(base.materials, 0, this.materials, 0, base.enumValues.length);
+		System.arraycopy(base.soundTypes, 0, this.soundTypes, 0, base.enumValues.length);
 	}
 
 	/**

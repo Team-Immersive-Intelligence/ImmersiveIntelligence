@@ -138,6 +138,10 @@ public class IIConfigHandler
 		@RequiresMcRestart
 		public static boolean smeltableAEA = false;
 
+		@Comment({"Whether Immersive Engineering liquid concrete behavior should be replaced by II."})
+		@RequiresMcRestart
+		public static boolean concreteOverride = true;
+
 		@Comment({"A list of all entities for which a fakeplayer should be used when shooter is not a player"})
 		public static String[] bulletFakeplayerWhitelist = new String[]{
 				"minecraft:ender_dragon"
