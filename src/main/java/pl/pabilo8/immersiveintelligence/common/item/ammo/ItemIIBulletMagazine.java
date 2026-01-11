@@ -212,7 +212,7 @@ public class ItemIIBulletMagazine extends ItemIISubItemsBase<Magazines> implemen
 			for(int i = 0; i < capability.getSlots(); i++)
 			{
 				ItemStack ammo = capability.getStackInSlot(i);
-				if(!ammo.isEmpty()&&ammo.getItem()==magazine.ammo)
+				if(!ammo.isEmpty()&&ammo.getItem()==magazine.ammo&&!magazine.ammo.isBulletCore(ammo))
 					return ammo;
 			}
 		}

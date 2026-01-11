@@ -41,7 +41,7 @@ public abstract class AmmoHandlerSingle extends AmmoHandler
 	@Override
 	public boolean isValidAmmo(ItemStack weapon, ItemStack ammo)
 	{
-		return ammo.getItem()==validAmmo;
+		return ammo.getItem()==validAmmo&&!validAmmo.isBulletCore(ammo);
 	}
 
 	@Override
