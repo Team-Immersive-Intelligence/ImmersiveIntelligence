@@ -7,3 +7,7 @@ More boolet per boolet!
 # 1
 |[crafting]{source:"magazine_blueprint"}|
 [Magazines] are crafted with a blueprint in the [Engineer's Workbench](workbench) or its [automated](autoworkbench) counterpart. It is important to note that magazines **do not stack.** Ensure you have enough storage space available prior to farbicating munitions for war.
+# filling
+Magazines may be filled in two ways. The first method is the classic manual [hand-loading]. Simply hold the magazine in your hand, then press and hold the [Reload] key.
+Bullets in your hotbar will be loaded first. When those are used up, any bullets in your inventory will fill the magazine next.
+<br>To industrialize and hasten the process, consider using the [Packer](packer.md).
