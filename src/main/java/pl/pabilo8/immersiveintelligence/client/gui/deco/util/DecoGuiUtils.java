@@ -4,7 +4,9 @@ import blusunrize.immersiveengineering.api.energy.immersiveflux.IFluxStorage;
 import blusunrize.immersiveengineering.client.ClientUtils;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
@@ -19,10 +21,15 @@ import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionBase.IIIMultiblockRecipe;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionMulti;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionSingle;
 
+import java.awt.*;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.StringSelection;
+import java.awt.datatransfer.Transferable;
 import java.util.Collection;
 import java.util.function.Function;
 
@@ -123,12 +130,12 @@ public class DecoGuiUtils
 			.withValueTooltip("structural_integrity", BarTooltipFormat.VALUE_TO_MAX, TextFormatting.GOLD)
 			.withSmoothAnimation();
 	//--- Energy Bar ---//
-	private static final DecoComponentTemplate<DecoBar> BAR_ELECTRIC_ENERGY_BASE = component -> component
+	public static final DecoComponentTemplate<DecoBar> BAR_ELECTRIC_ENERGY_BASE = component -> component
 			.withColors(IIColor.fromPackedRGB(0xb37e28), IIColor.fromPackedRGB(0x663f26))
+			.withValueTooltip("energy.stored", BarTooltipFormat.VALUE_TO_MAX, TextFormatting.GOLD)
 			.withIconLocation(DecoTextures.RES_ICON_ENERGY);
 	public static final Function<IFluxStorage, DecoComponentTemplate<DecoBar>> BAR_ELECTRIC_ENERGY = energyStorage -> component -> component
 			.withTemplate(BAR_ELECTRIC_ENERGY_BASE)
-			.withValueTooltip("energy.stored", BarTooltipFormat.VALUE_TO_MAX, TextFormatting.GOLD)
 			.withLimits(0, energyStorage.getMaxEnergyStored(), energyStorage::getEnergyStored);
 	public static final DecoComponentTemplate<DecoBar> BAR_ELECTRIC_ENERGY_INPUT = component -> component
 			.withTemplate(BAR_ELECTRIC_ENERGY_BASE)
@@ -365,6 +372,92 @@ public class DecoGuiUtils
 						sprite.getInterpolatedV(texY), sprite.getInterpolatedV(texY+(drawHeight/(float)texSize)*16)
 				);
 			}
+		}
+	}
+
+	/**
+	 * Sets the system clipboard string, with a fallback to Minecraft's clipboard handling
+	 *
+	 * @param string String to set
+	 */
+	public static void setClipboardString(String string)
+	{
+		try
+		{
+			Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(string), null);
+		} catch(Exception ignored)
+		{
+			GuiScreen.setClipboardString(string);
+		}
+	}
+
+	/**
+	 * Sets NBT to the system clipboard, with a fallback to Minecraft's clipboard handling
+	 *
+	 * @param compound NBT to set
+	 */
+	public static void setClipboardNBT(NBTTagCompound compound)
+	{
+		setClipboardString(compound.toString());
+	}
+
+	/**
+	 * Sets EasyNBT to the system clipboard, with a fallback to Minecraft's clipboard handling
+	 *
+	 * @param nbt EasyNBT to set
+	 */
+	public static void setClipboardEasyNBT(EasyNBT nbt)
+	{
+		setClipboardNBT(nbt.unwrap());
+	}
+
+	/**
+	 * Reads a string from the system clipboard, with a fallback to Minecraft's clipboard handling
+	 *
+	 * @return Clipboard string
+	 */
+	public static String getClipboardString()
+	{
+		try
+		{
+			Transferable t = Toolkit.getDefaultToolkit().getSystemClipboard().getContents(null);
+			if(t!=null&&t.isDataFlavorSupported(DataFlavor.stringFlavor))
+				return (String)t.getTransferData(DataFlavor.stringFlavor);
+		} catch(Exception ignored) {}
+		return GuiScreen.getClipboardString();
+	}
+
+	/**
+	 * Reads NBT from the system clipboard, with a fallback to Minecraft's clipboard handling
+	 *
+	 * @return Clipboard NBT
+	 */
+	public static NBTTagCompound getClipboardNBT()
+	{
+		String clipboardString = getClipboardString();
+		try
+		{
+			return EasyNBT.parseNBT(clipboardString);
+		} catch(Exception e)
+		{
+			return new NBTTagCompound();
+		}
+	}
+
+	/**
+	 * Reads EasyNBT from the system clipboard, with a fallback to Minecraft's clipboard handling
+	 *
+	 * @return Clipboard EasyNBT
+	 */
+	public static EasyNBT getClipboardEasyNBT()
+	{
+		String clipboardString = getClipboardString();
+		try
+		{
+			return EasyNBT.parseEasyNBT(clipboardString);
+		} catch(Exception e)
+		{
+			return EasyNBT.newNBT();
 		}
 	}
 

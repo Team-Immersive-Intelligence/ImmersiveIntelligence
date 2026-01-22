@@ -92,7 +92,9 @@ public class ItemBlockIIBase extends ItemBlock
 	@Override
 	public void addInformation(@Nonnull ItemStack stack, @Nullable World world, @Nonnull List<String> tooltip, @Nonnull ITooltipFlag tooltipFlag)
 	{
-		if(!block.description[stack.getMetadata()].isEmpty())
+		if(stack.getMetadata() > block.description.length)
+			return;
+		if(!block.description[stack.getMetadata()%block.description.length].isEmpty())
 			tooltip.add(TextFormatting.GRAY+block.description[stack.getMetadata()]);
 
 		super.addInformation(stack, world, tooltip, tooltipFlag);

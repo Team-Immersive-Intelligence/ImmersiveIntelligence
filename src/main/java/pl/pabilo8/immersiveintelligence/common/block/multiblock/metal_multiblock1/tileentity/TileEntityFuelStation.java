@@ -49,7 +49,7 @@ public class TileEntityFuelStation extends TileEntityMultiblockIIGeneric<TileEnt
 	float inserterDistance = 0f;
 
 	@SyncNBT(events = SyncEvents.TILE_RECIPE_CHANGED)
-	EntityReference<Entity> focusedEntity;
+	public EntityReference<Entity> focusedEntity;
 
 	@SideOnly(Side.CLIENT)
 	private ConditionCompoundSound<TileEntityFuelStation> fuellingSound;

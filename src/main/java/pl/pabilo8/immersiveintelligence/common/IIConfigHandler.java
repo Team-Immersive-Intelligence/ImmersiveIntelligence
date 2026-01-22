@@ -16,6 +16,7 @@ import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.common.compat.IICompatModule;
 import pl.pabilo8.immersiveintelligence.common.item.tools.ItemIIMineDetector;
+import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.world.IIWorldGen;
 
@@ -57,7 +58,7 @@ public class IIConfigHandler
 				ItemStack stack = new ItemStack(EasyNBT.newNBT()
 						.withString("id", args[0]+":"+args[1])
 						.withInt("Count", 1)
-						.conditionally(args.length > 2, nbt -> nbt.withInt("Damage", Integer.parseInt(args[2])))
+						.conditionally(args.length > 2, nbt -> nbt.withInt("Damage", IIStringUtil.parseInt(args[2])))
 						.unwrap());
 				ItemIIMineDetector.detectableBlocks.add(new IngredientStack(stack));
 			}
@@ -1041,10 +1042,10 @@ public class IIConfigHandler
 				public static int energyCapacity = 2048;
 				@Comment({"Energy usage of the inserter per item taken."})
 				public static int energyUsage = 128;
-
-				@Comment({"Max fluid output (in milibuckets per tick)"})
-				public static int maxOutput = 500;
-
+				@Comment({"How long does it take for the inserter to perform a task (in ticks)"})
+				public static int taskTime = 20;
+				@Comment({"How much fluid can the inserter take per a single task (in milibuckets)"})
+				public static int maxTake = 4000;
 			}
 
 			public static class AdvancedFluidInserter
@@ -1053,9 +1054,10 @@ public class IIConfigHandler
 				public static int energyCapacity = 4096;
 				@Comment({"Energy usage of the inserter per item taken."})
 				public static int energyUsage = 256;
-
-				@Comment({"Max fluid output (in milibuckets per tick)"})
-				public static int maxOutput = 240;
+				@Comment({"How long does it take for the inserter to perform a task (in ticks)"})
+				public static int taskTime = 20;
+				@Comment({"How much fluid can the inserter take per a single task (in milibuckets)"})
+				public static int maxTake = 4000;
 
 			}
 

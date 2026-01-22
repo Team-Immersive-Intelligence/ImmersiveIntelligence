@@ -23,6 +23,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.property.Properties;
 import pl.pabilo8.immersiveintelligence.common.block.data_device.BlockIIDataDevice.IIBlockTypes_Connector;
 import pl.pabilo8.immersiveintelligence.common.block.data_device.tileentity.*;
+import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.TileEntityAdvancedFluidInserter;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.TileEntityChemicalDispenser;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.TileEntityFluidInserter;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.inserter.TileEntityAdvancedInserter;
@@ -32,7 +33,6 @@ import pl.pabilo8.immersiveintelligence.common.util.block.BlockIITileProvider;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.EnumTileProvider;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IIBlockProperties;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IITileProviderEnum;
-import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.TernaryValue;
 import pl.pabilo8.immersiveintelligence.common.util.block.ItemBlockIIBase;
 import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 
@@ -52,8 +52,6 @@ public class BlockIIDataDevice extends BlockIITileProvider<IIBlockTypes_Connecto
 		setResistance(15.0F);
 		setLightOpacity(0);
 		setToolTypes(IIReference.TOOL_HAMMER);
-
-		addToTESRMap(IIBlockTypes_Connector.FLUID_INSERTER);
 	}
 
 	@Override
@@ -61,24 +59,12 @@ public class BlockIIDataDevice extends BlockIITileProvider<IIBlockTypes_Connecto
 	{
 		switch(enumValues[meta])
 		{
-			default:
-				return null;
-
 			case DATA_CONNECTOR:
 			case DATA_RELAY:
 			case DATA_DUPLEX_CONNECTOR:
 				return "plug";
-
-			case INSERTER:
-				return "inserter";
-			case ADVANCED_INSERTER:
-				return "advanced_inserter";
-
-			case DATA_DEBUGGER:
-				return "data_debugger";
-
-			case CHEMICAL_DISPENSER:
-				return "chemical_dispenser";
+			default:
+				return super.getMappingsExtension(meta, itemBlock);
 		}
 	}
 
@@ -204,29 +190,36 @@ public class BlockIIDataDevice extends BlockIITileProvider<IIBlockTypes_Connecto
 		@IIBlockProperties(category = IICategory.ELECTRONICS)
 		@EnumTileProvider(tile = TileEntityDataRelay.class)
 		DATA_RELAY,
+
 		@IIBlockProperties(category = IICategory.ELECTRONICS)
 		@EnumTileProvider(tile = TileEntityAlarmSiren.class)
 		ALARM_SIREN,
-		@IIBlockProperties(category = IICategory.LOGISTICS)
+
+		@IIBlockProperties(category = IICategory.LOGISTICS, needsCustomState = true)
 		@EnumTileProvider(tile = TileEntityInserter.class)
 		INSERTER,
-		@IIBlockProperties(category = IICategory.LOGISTICS)
+		@IIBlockProperties(category = IICategory.LOGISTICS, needsCustomState = true)
 		@EnumTileProvider(tile = TileEntityFluidInserter.class)
 		FLUID_INSERTER,
-		@IIBlockProperties(category = IICategory.LOGISTICS)
+		@IIBlockProperties(category = IICategory.LOGISTICS, needsCustomState = true)
 		@EnumTileProvider(tile = TileEntityAdvancedInserter.class)
 		ADVANCED_INSERTER,
-		@IIBlockProperties(hidden = TernaryValue.TRUE, category = IICategory.LOGISTICS)
+		@IIBlockProperties(category = IICategory.LOGISTICS, needsCustomState = true)
+		@EnumTileProvider(tile = TileEntityAdvancedFluidInserter.class)
 		ADVANCED_FLUID_INSERTER,
-		@IIBlockProperties(category = IICategory.ELECTRONICS)
+
+		@IIBlockProperties(category = IICategory.ELECTRONICS, needsCustomState = true)
 		@EnumTileProvider(tile = TileEntityChemicalDispenser.class)
 		CHEMICAL_DISPENSER,
+
 		@IIBlockProperties(category = IICategory.ELECTRONICS)
 		@EnumTileProvider(tile = TileEntityProgrammableSpeaker.class)
 		PROGRAMMABLE_SPEAKER,
-		@IIBlockProperties(category = IICategory.ELECTRONICS)
+
+		@IIBlockProperties(category = IICategory.ELECTRONICS, needsCustomState = true)
 		@EnumTileProvider(tile = TileEntityDataDebugger.class)
 		DATA_DEBUGGER,
+
 		@IIBlockProperties(category = IICategory.ELECTRONICS)
 		@EnumTileProvider(tile = TileEntityDataCallbackConnector.class)
 		DATA_DUPLEX_CONNECTOR

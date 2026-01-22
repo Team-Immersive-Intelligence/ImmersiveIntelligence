@@ -118,22 +118,6 @@ public class DecoBackgroundBuilder<T extends TileEntityIEBase & IIEInventory, C 
 	}
 
 	/**
-	 * Adds an image box to the current background layer
-	 *
-	 * @param imageLocation location of the image to display
-	 * @param x             x position of the box
-	 * @param y             y position of the box
-	 * @param width         width of the box in pixels
-	 * @param height        height of the box in pixels
-	 * @return this
-	 */
-	public DecoBackgroundBuilder<T, C> withImageBox(ResLoc imageLocation, int x, int y, int width, int height)
-	{
-		backgroundTiles.get(backgroundTiles.size()-1).add(new DecoBackgroundImage(x, y, width, height, imageLocation));
-		return this;
-	}
-
-	/**
 	 * Sets the frame of the most recently added background tile
 	 *
 	 * @param imageLocation location of the frame texture
@@ -340,7 +324,6 @@ public class DecoBackgroundBuilder<T extends TileEntityIEBase & IIEInventory, C 
 
 				List<DecoBackgroundTile> tiles = layer.stream()
 						.filter(decoBackgroundTile -> decoBackgroundTile.style!=null)
-						.filter(tile -> !(tile instanceof DecoBackgroundImage))
 						.collect(Collectors.toList());
 
 				int minXOffset = 0, minYOffset = 0;
@@ -389,19 +372,8 @@ public class DecoBackgroundBuilder<T extends TileEntityIEBase & IIEInventory, C 
 			//Background images
 			for(List<DecoBackgroundTile> layer : backgroundTiles)
 				for(DecoBackgroundTile tile : layer)
-				{
-					if(tile instanceof DecoBackgroundImage)
-					{
-						DecoBackgroundImage image = (DecoBackgroundImage)tile;
-						draw.drawTexColorRect(image.x, image.y, image.width, image.height,
-								image.color,
-								ClientUtils.getSprite(image.style).getMinU(), ClientUtils.getSprite(image.style).getMaxU(),
-								ClientUtils.getSprite(image.style).getMinV(), ClientUtils.getSprite(image.style).getMaxV()
-						);
-					}
 					if(tile.frame!=null)
 						handleFrameDrawing(draw, tile);
-				}
 
 			//Standalone Frames
 			for(DecoBackgroundTile backgroundFrame : backgroundFrames)

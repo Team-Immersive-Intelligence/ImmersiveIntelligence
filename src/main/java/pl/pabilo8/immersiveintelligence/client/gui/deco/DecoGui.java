@@ -5,6 +5,7 @@ import blusunrize.immersiveengineering.api.DimensionBlockPos;
 import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.common.blocks.TileEntityIEBase;
 import blusunrize.immersiveengineering.common.util.inventory.IIEInventory;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiLabel;
 import net.minecraft.client.gui.ScaledResolution;
@@ -15,6 +16,7 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.shader.Framebuffer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -955,6 +957,15 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 	public void scissorEnd()
 	{
 		GL11.glDisable(GL11.GL_SCISSOR_TEST);
+	}
+
+	/**
+	 * @return the itemstack currently being held by the player's cursor
+	 */
+	@Nonnull
+	public ItemStack getMouseHeldItemStack()
+	{
+		return Minecraft.getMinecraft().player==null?ItemStack.EMPTY: Minecraft.getMinecraft().player.inventory.getItemStack();
 	}
 
 	private void exportCurrentGui()

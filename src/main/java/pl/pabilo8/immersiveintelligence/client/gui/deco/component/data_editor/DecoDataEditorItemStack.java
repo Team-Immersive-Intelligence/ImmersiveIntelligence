@@ -6,6 +6,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoIt
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.text.DecoTextField;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.text.util.TextFilter;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -50,8 +51,8 @@ public class DecoDataEditorItemStack extends DecoDataEditor<DataTypeItemStack>
 	public DataTypeItemStack outputType()
 	{
 		dataType.value = scanned.copy();
-		dataType.value.setItemDamage(Integer.parseInt(metaEdit.getText()));
-		dataType.value.setCount(Integer.parseInt(countEdit.getText()));
+		dataType.value.setItemDamage(IIStringUtil.parseInt(metaEdit.getText()));
+		dataType.value.setCount(IIStringUtil.parseInt(countEdit.getText()));
 		return dataType;
 	}
 }

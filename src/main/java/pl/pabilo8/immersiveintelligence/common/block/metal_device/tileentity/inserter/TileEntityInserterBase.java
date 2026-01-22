@@ -22,6 +22,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.NonNullList;
@@ -38,11 +39,13 @@ import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.device.DataWireNetwork;
 import pl.pabilo8.immersiveintelligence.api.data.device.IDataConnector;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Inserter;
+import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.block.data_device.BlockIIDataDevice.IIBlockTypes_Connector;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IIIGuiMultiblockTile;
 import pl.pabilo8.immersiveintelligence.common.wire.IIDataWireType;
 
 import javax.annotation.Nonnull;
@@ -57,7 +60,7 @@ import java.util.function.Function;
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 28.09.2020
  */
-public abstract class TileEntityInserterBase extends TileEntityImmersiveConnectable implements IIEInventory, ITileDrop, IComparatorOverride, IHammerInteraction, ITickable, IBlockBounds, IDataConnector
+public abstract class TileEntityInserterBase extends TileEntityImmersiveConnectable implements IIEInventory, ITileDrop, IComparatorOverride, IHammerInteraction, ITickable, IBlockBounds, IDataConnector, IIIGuiMultiblockTile
 {
 	public int energyStorage = 0;
 	public int pickProgress = 0;
@@ -73,8 +76,8 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 	public IItemHandler insertionHandler = new IEInventoryHandler(1, this);
 	public boolean nextTaskAfterFinish = true;
 	protected DataWireNetwork wireNetwork = new DataWireNetwork().add(this);
-	ArrayList<InserterTask> tasks = new ArrayList<>();
-	NonNullList<ItemStack> inventory = NonNullList.withSize(1, ItemStack.EMPTY); //The currently held item
+	protected ArrayList<InserterTask> tasks = new ArrayList<>();
+	protected NonNullList<ItemStack> inventory = NonNullList.withSize(1, ItemStack.EMPTY); //The currently held item
 	private boolean refreshWireNetwork = false;
 	private WireType secondCable;
 
@@ -139,13 +142,9 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 			return false;
 
 		if(conn==0)
-		{
 			return attachCat.equals(IIDataWireType.DATA_CATEGORY)&&limitType==null;
-		}
 		else if(conn==1)
-		{
 			return getAcceptedPowerWires().contains(attachCat)&&secondCable==null;
-		}
 
 		return false;
 	}
@@ -226,12 +225,19 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 	public int getTargetedConnector(TargetingInfo target)
 	{
 		if(target.hitX < 1&&target.hitX > 0.75&&target.hitZ < 1&&target.hitZ > 0.75)
-		{
 			return 0;
-		}
 		else
-		{
 			return 1;
+	}
+
+	@Override
+	public void receiveMessageFromClient(NBTTagCompound message)
+	{
+		super.receiveMessageFromClient(message);
+		if(message.hasKey("tasks"))
+		{
+			readTasks(message.getTagList("tasks", 10));
+			sendUpdate();
 		}
 	}
 
@@ -319,11 +325,7 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 	{
 		NBTTagList tagTasks = new NBTTagList();
 		for(InserterTask task : tasks)
-		{
-			NBTTagCompound tag = task.toNBT();
-			tag.setString("name", task.getName());
-			tagTasks.appendTag(tag);
-		}
+			tagTasks.appendTag(task.toNBT());
 		return tagTasks;
 	}
 
@@ -331,7 +333,6 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 	{
 		tasks.clear();
 		for(NBTBase task : tagTasks)
-		{
 			if(task instanceof NBTTagCompound)
 			{
 				NBTTagCompound tag = (NBTTagCompound)task;
@@ -339,7 +340,6 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 				if(name!=null)
 					tasks.add(name.apply(tag));
 			}
-		}
 	}
 
 	@Override
@@ -364,7 +364,6 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 			return;
 
 		if(this.current==null)
-		{
 			for(InserterTask task : tasks)
 			{
 				EnumFacing facingIn = task.facingIn==null?defaultInputFacing: task.facingIn;
@@ -383,7 +382,6 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 					sendUpdate();
 				break;
 			}
-		}
 		//you should be, but who knows ^^
 		if(this.current!=null)
 		{
@@ -396,8 +394,8 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 			int maxProgress = (int)(getPickupSpeed()*(1+current.getTimeModifier()));
 
 
+			//better check
 			if(pickProgress==0)
-			{
 				if(!world.isRemote)
 				{
 					if(current.canExecute(this, world, posIn, posOut, facingIn, facingOut, true))
@@ -411,10 +409,6 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 				}
 				else
 					pickProgress++;
-
-				//better check
-
-			}
 			else if(pickProgress==maxProgress)
 			{
 				if(!world.isRemote)
@@ -430,9 +424,7 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 					}
 				}
 				else if(this.current.canExecute(this, world, posIn, posOut, facingIn, facingOut, false))
-				{
 					pickProgress = 0;
-				}
 
 			}
 			else if(pickProgress < maxProgress)
@@ -539,7 +531,6 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 
 
 		if(hitside!=null)
-		{
 			if(player.isSneaking())
 			{
 				if(defaultInputFacing==hitside)
@@ -552,7 +543,6 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 					defaultOutputFacing = EnumFacing.UP;
 				defaultInputFacing = hitside;
 			}
-		}
 
 		IIPacketHandler.sendToClient(this, new MessageIITileSync(this, EasyNBT.newNBT()
 				.withInt("inputFacing", defaultInputFacing.ordinal())
@@ -619,7 +609,16 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 		return stack;
 	}
 
-	//Abstract variables
+	/**
+	 * @return all tasks assigned to this inserter
+	 */
+	@Nonnull
+	public final ArrayList<InserterTask> getTasks()
+	{
+		return tasks;
+	}
+
+	//--- Abstract variables ---//
 
 	/**
 	 * @return names of all power wires able to connect to this inserter
@@ -651,7 +650,7 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 	 * @return all available tasks for this inserter
 	 */
 	@Nonnull
-	protected abstract HashMap<String, Function<NBTTagCompound, InserterTask>> getAvailableTasks();
+	public abstract HashMap<String, Function<NBTTagCompound, InserterTask>> getAvailableTasks();
 
 	/**
 	 * Control the sounds played here.
@@ -667,6 +666,27 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 	public final EnumFacing getCurrentOutputFacing()
 	{
 		return current==null||current.facingOut==null?defaultOutputFacing: current.facingOut;
+	}
+
+	//--- IIIGuiMultiblockTile ---//
+
+	@Override
+	public boolean canOpenGui()
+	{
+		return true;
+	}
+
+	@Nullable
+	@Override
+	public TileEntity getGuiMaster()
+	{
+		return this;
+	}
+
+	@Override
+	public IIGUI getGUI()
+	{
+		return IIGUI.INSERTER;
 	}
 
 	@ParametersAreNonnullByDefault
@@ -692,11 +712,11 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 		/**
 		 * Inserter will only take the item if the item matches this
 		 **/
-		IngredientStack stack = new IngredientStack("*");
+		public IngredientStack stack = new IngredientStack("*");
 		/**
 		 * Whether the task shouldn't end after items are taken
 		 **/
-		boolean isJob = true;
+		public boolean isJob = true;
 
 		public InserterTask(@Nullable EnumFacing facingIn, @Nullable EnumFacing facingOut)
 		{
@@ -718,7 +738,8 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 				if(nbt.hasKey("distanceOut"))
 					distanceOut = nbt.getInteger("distanceOut");
 			}
-			nbt.setTag("stack", stack.writeToNBT(new NBTTagCompound()));
+			if(nbt.hasKey("stack"))
+				stack = IngredientStack.readFromNBT(nbt.getCompoundTag("stack"));
 			if(nbt.hasKey("isJob"))
 				isJob = nbt.getBoolean("isJob");
 			if(nbt.hasKey("strictAmount"))
@@ -730,11 +751,12 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 		public NBTTagCompound toNBT()
 		{
 			NBTTagCompound nbt = new NBTTagCompound();
+			nbt.setString("name", getName());
 			if(facingIn!=null)
 			{
 				nbt.setInteger("facingIn", facingIn.getIndex());
 				if(distanceIn!=-1)
-					nbt.setInteger("distanceOut", distanceIn);
+					nbt.setInteger("distanceIn", distanceIn); // FIX: was distanceOut
 			}
 			if(facingOut!=null)
 			{
@@ -742,7 +764,7 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 				if(distanceOut!=-1)
 					nbt.setInteger("distanceOut", distanceOut);
 			}
-			IngredientStack.readFromNBT(nbt.getCompoundTag("stack"));
+			nbt.setTag("stack", stack.writeToNBT(new NBTTagCompound()));
 
 			nbt.setBoolean("isJob", isJob);
 			nbt.setBoolean("strictAmount", strictAmount);
@@ -750,6 +772,25 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 				nbt.setInteger("overrideTakeAmount", overrideTakeAmount);
 
 			return nbt;
+		}
+
+		/**
+		 * Creates a deep copy of the task, used by the GUI editor.
+		 */
+		public InserterTask copy(TileEntityInserterBase tile, String newType)
+		{
+			NBTTagCompound tag = this.toNBT();
+			tag.setString("name", newType);
+			Function<NBTTagCompound, InserterTask> factory = tile.getAvailableTasks().get(newType);
+			return factory!=null?factory.apply(tag): this;
+		}
+
+		/**
+		 * Creates a deep copy of the task, used by the GUI editor.
+		 */
+		public InserterTask copy(TileEntityInserterBase tile)
+		{
+			return copy(tile, this.getName());
 		}
 
 		/**
@@ -767,9 +808,25 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 
 		public abstract boolean execute(TileEntityInserterBase tile, World world, BlockPos posIn, BlockPos posOut, EnumFacing facingIn, EnumFacing facingOut, boolean in);
 
-		abstract String getName();
+		public abstract String getName();
 
 		public abstract float getTimeModifier();
+
+		/**
+		 * GUI/support accessor
+		 */
+		public final boolean isJob()
+		{
+			return isJob;
+		}
+
+		/**
+		 * GUI/support accessor
+		 */
+		public final IngredientStack getIngredient()
+		{
+			return stack;
+		}
 	}
 }
 

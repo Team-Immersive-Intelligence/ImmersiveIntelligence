@@ -1,0 +1,24 @@
+{
+  "origins": {
+    "turntable": [8, 4, 8],
+    "lower": [8, 8, 8],
+    "upper": [8, 21.5, 8],
+    "base": [8, 0, 8],
+    "output": [8, 0, 8],
+    "input": [8, 0, 8],
+    "tank_inside": [8, 21.5, 8],
+    "camera": [8, 23.5, 4],
+    "fluid_tank1": [12, 24.5, 8],
+    "fluid_syringe": [8, 37, 8],
+    "fluid_tank2": [4, 24.5, 8]
+  },
+  "hierarchy": {
+    "lower": "turntable",
+    "upper": "lower",
+    "tank_inside": "upper",
+    "camera": "upper",
+    "fluid_tank1": "upper",
+    "fluid_syringe": "upper",
+    "fluid_tank2": "upper"
+  }
+}

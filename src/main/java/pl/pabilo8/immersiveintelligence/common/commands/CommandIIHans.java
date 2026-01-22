@@ -41,6 +41,7 @@ import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine.Ma
 import pl.pabilo8.immersiveintelligence.common.item.armor.ItemIIArmorUpgrade.ArmorUpgrades;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIRailgunOverride;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIWeaponUpgrade.WeaponUpgrade;
+import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -504,7 +505,7 @@ public class CommandIIHans extends CommandBase
 			Entity commandSenderEntity = sender.getCommandSenderEntity();
 			Vec3d spawnPosition = getSpawnPosition(sender);
 			HansSquad squad = squadList.get(new ResourceLocation(args[0]));
-			int amount = args.length > 1?Integer.parseInt(args[1]): 1;
+			int amount = args.length > 1?IIStringUtil.parseInt(args[1]): 1;
 			Team team = args.length > 2?world.getScoreboard().getTeam(args[2]): null;
 			boolean parachute = args.length > 3&&Boolean.parseBoolean(args[3]);
 			float yaw = 0, pitch = 0;

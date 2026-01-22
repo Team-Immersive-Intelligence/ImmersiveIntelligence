@@ -117,6 +117,20 @@ public class IIDataHandlingUtils
 	}
 
 	/**
+	 * @param variable  variable index in packet
+	 * @param packet    packet
+	 * @param ifPresent performed if variable exists in packet and matches type
+	 * @return whether ifPresent was performed
+	 */
+	public static boolean expectingIntegerParam(char variable, DataPacket packet, Consumer<Integer> ifPresent)
+	{
+		boolean present = packet.get(variable) instanceof NumericDataType;
+		if(present)
+			ifPresent.accept(((NumericDataType)packet.get(variable)).intValue());
+		return present;
+	}
+
+	/**
 	 * Checks for a vector parameter in the packet, either as a single vector variable, three separate numeric variables, or yaw+pitch variables.
 	 *
 	 * @param packet   the packet to check

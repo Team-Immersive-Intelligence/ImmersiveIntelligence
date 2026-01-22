@@ -2,7 +2,10 @@ package pl.pabilo8.immersiveintelligence.api.data.operations.type_conversion;
 
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.operations.DataOperation;
-import pl.pabilo8.immersiveintelligence.api.data.types.*;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeBoolean;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeExpression;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 
 import javax.annotation.Nonnull;
@@ -18,12 +21,7 @@ public class DataOperationToBoolean extends DataOperation
 	@Override
 	public DataType execute(DataPacket packet, DataTypeExpression data)
 	{
-		DataType type;
-		if(data.getArgument(0) instanceof DataTypeAccessor)
-			type = ((DataTypeAccessor)data.getArgument(0)).getRealValue(packet);
-		else
-			type = data.getArgument(0);
-
+		DataType type = packet.evaluateVariable(data.getArgument(0), false);
 		if(type instanceof DataTypeBoolean)
 			return type;
 		else if(type instanceof DataTypeString)

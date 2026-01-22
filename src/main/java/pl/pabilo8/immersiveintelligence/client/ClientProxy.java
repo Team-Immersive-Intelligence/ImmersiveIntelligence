@@ -84,7 +84,9 @@ import pl.pabilo8.immersiveintelligence.client.render.entity.vehicle.TrackedMoto
 import pl.pabilo8.immersiveintelligence.client.render.entity.weapon.MachinegunRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.entity.weapon.MortarRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.entity.weapon.TripodPeriscopeRenderer;
+import pl.pabilo8.immersiveintelligence.client.render.inserter.AdvancedFluidInserterRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.inserter.AdvancedInserterRenderer;
+import pl.pabilo8.immersiveintelligence.client.render.inserter.FluidInserterRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.inserter.InserterRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.item.*;
 import pl.pabilo8.immersiveintelligence.client.render.mechanical_device.BeltModelStorage;
@@ -451,8 +453,8 @@ public class ClientProxy extends CommonProxy
 
 		registerTileRenderer(InserterRenderer.class);
 		registerTileRenderer(AdvancedInserterRenderer.class);
-		//TODO: 29.12.2023 fluid inserter
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityFluidInserter.class, new FluidInserterRenderer().subscribeToList("device/inserter/fluid_inserter"));
+		registerTileRenderer(FluidInserterRenderer.class);
+		registerTileRenderer(AdvancedFluidInserterRenderer.class);
 
 		//TODO: 29.12.2023 data devices (0.4.0)
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityTimedBuffer.class, new TimedBufferRenderer());

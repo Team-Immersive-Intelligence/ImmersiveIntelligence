@@ -13,6 +13,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.text.util.Move
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.text.util.TextCaret;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.text.util.TextFilter;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.text.util.TextHistoryState;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoGuiUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
 import pl.pabilo8.immersiveintelligence.client.util.font.IIFontRenderer;
@@ -22,12 +23,8 @@ import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 
 import javax.annotation.Nullable;
-import java.awt.*;
-import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.StringSelection;
-import java.awt.datatransfer.Transferable;
 import java.util.*;
-import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 /**
@@ -44,6 +41,7 @@ public class DecoTextField extends DecoComponent<DecoTextField>
 	private boolean multiLine = false;
 	private TextFilter filter = TextFilter.NONE;
 	private Predicate<String> customFilter = (s) -> true;
+	private Consumer<String> onTextChanged = null;
 
 	//Config
 	private IIFontRenderer fontRenderer = IIClientUtils.fontRegular;
@@ -83,6 +81,155 @@ public class DecoTextField extends DecoComponent<DecoTextField>
 		withOnScroll(this::onMouseScroll);
 	}
 
+	//--- Setters ---//
+
+	public DecoTextField withMultiLine(boolean multiline)
+	{
+		this.multiLine = multiline;
+		calculateMaxScroll();
+		return this;
+	}
+
+	public DecoTextField withFilter(TextFilter f)
+	{
+		this.filter = f;
+		return this;
+	}
+
+	public DecoTextField withCustomFilter(Predicate<String> filter)
+	{
+		this.customFilter = filter;
+		return this;
+	}
+
+	public DecoTextField withOnTextChanged(Consumer<String> onTextChanged)
+	{
+		this.onTextChanged = onTextChanged;
+		return this;
+	}
+
+	public DecoTextField withMaxStringLength(int length)
+	{
+		this.maxStringLength = length;
+		return this;
+	}
+
+	public DecoTextField withBackgroundLocation(@Nullable ResLoc backgroundLocation)
+	{
+		this.backgroundLocation = backgroundLocation;
+		return this;
+	}
+
+	public DecoTextField withTextColor(IIColor color)
+	{
+		this.textColor = color;
+		return this;
+	}
+
+	public DecoTextField withCursorColor(IIColor color)
+	{
+		this.cursorColor = color;
+		return this;
+	}
+
+	public DecoTextField withSelectionColor(IIColor color)
+	{
+		this.selectionColor = color;
+		return this;
+	}
+
+	public DecoTextField withPadding(int padding)
+	{
+		this.padding = padding;
+		return this;
+	}
+
+	public DecoTextField withHighlighter(TextHighlighter highlighter)
+	{
+		this.highlighter = highlighter;
+		return this;
+	}
+
+	public DecoTextField withText(Object object)
+	{
+		if(object==null)
+			return this;
+
+		if(object instanceof String)
+			return withText((String)object);
+		else if(object instanceof Integer)
+			return withText(String.valueOf(object));
+		else if(object instanceof Float)
+			return withText(String.valueOf(object));
+		else if(object instanceof Double)
+			return withText(String.valueOf(object));
+		else if(object instanceof Long)
+			return withText(String.valueOf(object));
+		else if(object instanceof Boolean)
+			return withText(String.valueOf(object));
+		else if(object instanceof Character)
+			return withText(String.valueOf(object));
+		else if(object instanceof Enum)
+			return withText(String.valueOf(object));
+		else if(object instanceof String[])
+			return withText(String.join("\n", ((String[])object)));
+		else
+			return withText(object.toString());
+	}
+
+	private DecoTextField withText(String t)
+	{
+		if(t==null) t = "";
+		lines.clear();
+		if(!multiLine)
+		{
+			lines.add(t.replace('\r', ' ').replace('\n', ' ').replace('\t', ' '));
+			clearToSingleCaret(0, lines.get(0).length());
+		}
+		else
+		{
+			Collections.addAll(lines, t.split("\n", -1));
+			if(lines.isEmpty()) lines.add("");
+			clearToSingleCaret(0, 0);
+		}
+		calculateMaxScroll();
+		return this;
+	}
+
+	//--- Setters ---//
+
+
+	public TextHighlighter getHighlighter()
+	{
+		return highlighter;
+	}
+
+	public int getCursorPosition()
+	{
+		return primary().pos;
+	}
+
+	public void setCursorPosition(int p)
+	{
+		TextCaret c = primary();
+		c.pos = MathHelper.clamp(p, 0, lines.get(c.line).length());
+		c.anchorLine = c.line;
+		c.anchorPos = c.pos;
+		ensureCursorVisible();
+	}
+
+	public int getCurrentLineIndex()
+	{
+		return primary().line;
+	}
+
+	public int getLineCount()
+	{
+		return lines.size();
+	}
+
+	//--- Drawing ---//
+
 	@Override
 	protected boolean initialize()
 	{
@@ -91,24 +238,6 @@ public class DecoTextField extends DecoComponent<DecoTextField>
 		return true;
 	}
 
-	// Clipboard helpers
-	private void setClipboard(String s)
-	{
-		try {Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(s), null);} catch(Exception ignored) {}
-		GuiScreen.setClipboardString(s);
-	}
-
-	private String getClipboard()
-	{
-		try
-		{
-			Transferable t = Toolkit.getDefaultToolkit().getSystemClipboard().getContents(null);
-			if(t!=null&&t.isDataFlavorSupported(DataFlavor.stringFlavor)) return (String)t.getTransferData(DataFlavor.stringFlavor);
-		} catch(Exception ignored) {}
-		return GuiScreen.getClipboardString();
-	}
-
-	// Drawing
 	@Override
 	protected void draw(int mouseX, int mouseY, float partialTicks)
 	{
@@ -226,6 +355,7 @@ public class DecoTextField extends DecoComponent<DecoTextField>
 	@Override
 	public void cleanup()
 	{
+
 	}
 
 	// Public text insertion
@@ -240,7 +370,11 @@ public class DecoTextField extends DecoComponent<DecoTextField>
 		deleteSelections();
 		List<TextCaret> ordered = new ArrayList<>(carets);
 		ordered.sort((a, b) -> (a.line==b.line?Integer.compare(b.pos, a.pos): Integer.compare(a.line, b.line)));
-		for(TextCaret c : ordered) insertMultilineAtCaret(c, filtered);
+		for(TextCaret c : ordered)
+			insertMultilineAtCaret(c, filtered);
+		if(onTextChanged!=null)
+			onTextChanged.accept(getText());
+
 		calculateMaxScroll();
 		normalizeCarets();
 		ensureCursorVisible();
@@ -603,19 +737,19 @@ public class DecoTextField extends DecoComponent<DecoTextField>
 		switch(event)
 		{
 			case COPY:
-				setClipboard(buildCopyString());
+				DecoGuiUtils.setClipboardString(buildCopyString());
 				break;
 			case CUT:
 				if(anySelection())
 				{
 					pushHistory();
-					setClipboard(buildCopyString());
+					DecoGuiUtils.setClipboardString(buildCopyString());
 					deleteSelections();
 					postEdit();
 				}
 				break;
 			case PASTE:
-				pasteString(getClipboard());
+				pasteString(DecoGuiUtils.getClipboardString());
 				break;
 			case UNDO:
 			{
@@ -661,14 +795,14 @@ public class DecoTextField extends DecoComponent<DecoTextField>
 	// Selection & caret utilities
 	private TextCaret primary()
 	{
-		if(carets.isEmpty()) carets.add(new TextCaret(0, 0));
+		if(carets.isEmpty())
+			carets.add(new TextCaret(0, 0));
 		return carets.get(0);
 	}
 
 	private boolean anySelection()
 	{
-		for(TextCaret c : carets) if(c.hasSelection()) return true;
-		return false;
+		return carets.stream().anyMatch(TextCaret::hasSelection);
 	}
 
 	private void normalizeCarets()
@@ -683,7 +817,8 @@ public class DecoTextField extends DecoComponent<DecoTextField>
 		}
 		carets.clear();
 		carets.addAll(uniq);
-		if(carets.isEmpty()) carets.add(new TextCaret(0, 0));
+		if(carets.isEmpty())
+			carets.add(new TextCaret(0, 0));
 	}
 
 	private void ensureCaretsInBounds()
@@ -759,60 +894,16 @@ public class DecoTextField extends DecoComponent<DecoTextField>
 
 	public String getText()
 	{
-		if(!multiLine) return lines.get(0);
+		if(!multiLine)
+			return lines.get(0);
 		StringBuilder sb = new StringBuilder();
 		for(int i = 0; i < lines.size(); i++)
 		{
 			sb.append(lines.get(i));
-			if(i < lines.size()-1) sb.append('\n');
+			if(i < lines.size()-1)
+				sb.append('\n');
 		}
 		return sb.toString();
-	}
-
-	public DecoTextField withText(Object object)
-	{
-		if(object==null)
-			return this;
-
-		if(object instanceof String)
-			return withText((String)object);
-		else if(object instanceof Integer)
-			return withText(String.valueOf(object));
-		else if(object instanceof Float)
-			return withText(String.valueOf(object));
-		else if(object instanceof Double)
-			return withText(String.valueOf(object));
-		else if(object instanceof Long)
-			return withText(String.valueOf(object));
-		else if(object instanceof Boolean)
-			return withText(String.valueOf(object));
-		else if(object instanceof Character)
-			return withText(String.valueOf(object));
-		else if(object instanceof Enum)
-			return withText(String.valueOf(object));
-		else if(object instanceof String[])
-			return withText(String.join("\n", ((String[])object)));
-		else
-			return withText(object.toString());
-	}
-
-	private DecoTextField withText(String t)
-	{
-		if(t==null) t = "";
-		lines.clear();
-		if(!multiLine)
-		{
-			lines.add(t.replace('\r', ' ').replace('\n', ' ').replace('\t', ' '));
-			clearToSingleCaret(0, lines.get(0).length());
-		}
-		else
-		{
-			Collections.addAll(lines, t.split("\n", -1));
-			if(lines.isEmpty()) lines.add("");
-			clearToSingleCaret(0, 0);
-		}
-		calculateMaxScroll();
-		return this;
 	}
 
 	private void clearToSingleCaret(int line, int pos)
@@ -822,96 +913,6 @@ public class DecoTextField extends DecoComponent<DecoTextField>
 		String ln = lines.get(line);
 		pos = MathHelper.clamp(pos, 0, ln.length());
 		carets.add(new TextCaret(line, pos));
-	}
-
-	public DecoTextField withMultiLine(boolean multiline)
-	{
-		this.multiLine = multiline;
-		calculateMaxScroll();
-		return this;
-	}
-
-	public DecoTextField withFilter(TextFilter f)
-	{
-		this.filter = f;
-		return this;
-	}
-
-	public DecoTextField withCustomFilter(Predicate<String> filter)
-	{
-		this.customFilter = filter;
-		return this;
-	}
-
-	public DecoTextField withMaxStringLength(int length)
-	{
-		this.maxStringLength = length;
-		return this;
-	}
-
-	public DecoTextField withBackgroundLocation(@Nullable ResLoc backgroundLocation)
-	{
-		this.backgroundLocation = backgroundLocation;
-		return this;
-	}
-
-	public DecoTextField withTextColor(IIColor color)
-	{
-		this.textColor = color;
-		return this;
-	}
-
-	public DecoTextField withCursorColor(IIColor color)
-	{
-		this.cursorColor = color;
-		return this;
-	}
-
-	public DecoTextField withSelectionColor(IIColor color)
-	{
-		this.selectionColor = color;
-		return this;
-	}
-
-	public DecoTextField withPadding(int padding)
-	{
-		this.padding = padding;
-		return this;
-	}
-
-	public DecoTextField withHighlighter(TextHighlighter highlighter)
-	{
-		this.highlighter = highlighter;
-		return this;
-	}
-
-	public TextHighlighter getHighlighter()
-	{
-		return highlighter;
-	}
-
-	public int getCursorPosition()
-	{
-		return primary().pos;
-	}
-
-	public void setCursorPosition(int p)
-	{
-		TextCaret c = primary();
-		c.pos = MathHelper.clamp(p, 0, lines.get(c.line).length());
-		c.anchorLine = c.line;
-		c.anchorPos = c.pos;
-		ensureCursorVisible();
-	}
-
-	public int getCurrentLineIndex()
-	{
-		return primary().line;
-	}
-
-	public int getLineCount()
-	{
-		return lines.size();
 	}
 
 	public void ensureCursorVisible()
@@ -939,6 +940,7 @@ public class DecoTextField extends DecoComponent<DecoTextField>
 	@Override
 	public void playPressSound(SoundHandler soundHandlerIn)
 	{
+
 	}
 
 	// === Clipboard (multi-caret) === //

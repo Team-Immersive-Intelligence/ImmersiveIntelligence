@@ -8,6 +8,7 @@ import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.NumericDataType;
+import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
 
 import javax.annotation.Nonnull;
 import java.nio.charset.StandardCharsets;
@@ -30,6 +31,6 @@ public class DataOperationDecryptNumber extends DataOperation
 		DataType t2 = packet.getVarInType(DataTypeString.class, data.getArgument(1));
 		String password = t2.toString();
 		String decrypted = Cryptographer.decryptToString(encrypted, password.getBytes(StandardCharsets.UTF_8));
-		return new DataTypeInteger(Integer.parseInt(decrypted));
+		return new DataTypeInteger(IIStringUtil.parseInt(decrypted));
 	}
 }

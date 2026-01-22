@@ -8,6 +8,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoEntr
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -17,6 +18,9 @@ import java.util.stream.Stream;
  **/
 public class DecoList<T> extends DecoScrolledCollection<DecoList<T>, T>
 {
+	protected Consumer<T> onEntryClicked = null;
+	private T lastHoveredEntry = null;
+
 	public DecoList(int x, int y)
 	{
 		super(x, y);
@@ -24,8 +28,21 @@ public class DecoList<T> extends DecoScrolledCollection<DecoList<T>, T>
 		//Mouse
 		withOnPressed((gui, mouseButton, mouseX, mouseY) ->
 				getHoveredPanel(mouseX, mouseY).map(pair ->
-						pair.getKey().decoMousePressed(ClientUtils.mc(), mouseX-gui.x, mouseY-pair.getValue(), mouseButton)
-				).orElse(false));
+						{
+							if(pair.getKey().decoMousePressed(ClientUtils.mc(), mouseX-gui.x, mouseY-pair.getValue(), mouseButton))
+								return true;
+							if(this.onEntryClicked!=null)
+							{
+								this.onEntryClicked.accept(lastHoveredEntry);
+								return true;
+							}
+							return false;
+						}
+				).orElseGet(() -> {
+					if(this.onEntryClicked!=null)
+						this.onEntryClicked.accept(lastHoveredEntry = null);
+					return false;
+				}));
 		withOnReleased((gui, mouseButton, mouseX, mouseY) ->
 				getHoveredPanel(mouseX, mouseY).map(pair ->
 						{
@@ -33,6 +50,13 @@ public class DecoList<T> extends DecoScrolledCollection<DecoList<T>, T>
 							return true;
 						}
 				).orElse(false));
+	}
+
+
+	public DecoList<T> withOnEntryClicked(Consumer<T> onClicked)
+	{
+		this.onEntryClicked = onClicked;
+		return this;
 	}
 
 	@Override
@@ -133,7 +157,7 @@ public class DecoList<T> extends DecoScrolledCollection<DecoList<T>, T>
 			Integer index = clicked.getFirst();
 			Integer heightOffset = clicked.getSecond();
 			//Apply the list element representation to the panel, so actions can affect it
-			panel.applyElement(entries.get(index));
+			panel.applyElement(this.lastHoveredEntry = entries.get(index));
 			return Optional.of(Pair.of(panel, heightOffset));
 		}
 		return Optional.empty();

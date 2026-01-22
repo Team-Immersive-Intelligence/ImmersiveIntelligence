@@ -60,7 +60,7 @@ public class TileEntityAdvancedInserter extends TileEntityInserter
 
 	@Nonnull
 	@Override
-	protected HashMap<String, Function<NBTTagCompound, InserterTask>> getAvailableTasks()
+	public HashMap<String, Function<NBTTagCompound, InserterTask>> getAvailableTasks()
 	{
 		return TASKS;
 	}

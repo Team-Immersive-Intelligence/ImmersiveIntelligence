@@ -56,6 +56,7 @@ public class DecoItemStackDisplay extends DecoComponent<DecoItemStackDisplay>
 	public DecoItemStackDisplay withStack(ItemStack stack)
 	{
 		this.stack = new IngredientStack(stack);
+		this.stackList = null;
 		this.initialized = false;
 		return this;
 	}
@@ -63,6 +64,7 @@ public class DecoItemStackDisplay extends DecoComponent<DecoItemStackDisplay>
 	public DecoItemStackDisplay withStack(IngredientStack stack)
 	{
 		this.stack = stack;
+		this.stackList = null;
 		this.initialized = false;
 		return this;
 	}
@@ -118,8 +120,8 @@ public class DecoItemStackDisplay extends DecoComponent<DecoItemStackDisplay>
 	{
 		int xPadding = padding[0]+padding[2];
 		int yPadding = padding[1]+padding[3];
-		this.cachedIconX = iconAlignment.getAlignX(x+padding[0], width, width-xPadding);
-		this.cachedIconY = iconAlignment.getAlignY(y+padding[1], height, height-yPadding);
+		this.cachedIconX = iconAlignment.getAlignX(x+padding[0], iconSize, width-xPadding);
+		this.cachedIconY = iconAlignment.getAlignY(y+padding[1], iconSize, height-yPadding);
 
 		this.stackList = stack.getStackList().isEmpty()?
 				Collections.singletonList(ItemStack.EMPTY):
@@ -169,7 +171,7 @@ public class DecoItemStackDisplay extends DecoComponent<DecoItemStackDisplay>
 		}
 
 		GlStateManager.translate(cachedIconX, cachedIconY, 0);
-		GlStateManager.scale(16/(float)iconSize, 16/(float)iconSize, 1);
+		GlStateManager.scale(iconSize*0.0625f, iconSize*0.0625f, 1);
 		GlStateManager.enableDepth();
 		GlStateManager.enableRescaleNormal();
 		GlStateManager.color(1.0F, 1.0F, 1.0F);

@@ -6,6 +6,8 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.Tuple;
 import net.minecraft.util.math.MathHelper;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoTextBasedComponent;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoElementDisplays.DecoElementDisplay;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoElementDisplays.DecoElementSorter;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
@@ -36,8 +38,8 @@ public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? 
 	protected int scroll = 0, maxScroll = 0, scrollStep = fontRenderer.FONT_HEIGHT;
 	protected int entriesInGrid = 1;
 	protected int entryMaxWidth;
-	protected DecoElementDisplays.DecoElementDisplay<T> display = DecoElementDisplays.getDefaultDisplay();
-	protected DecoElementDisplays.DecoElementSorter<T> sorter = DecoElementDisplays.getDefaultSorter();
+	protected DecoElementDisplay<T> display = DecoElementDisplays.getDefaultDisplay();
+	protected DecoElementSorter<T> sorter = DecoElementDisplays.getDefaultSorter();
 
 	public DecoScrolledCollection(int x, int y)
 	{
@@ -61,6 +63,7 @@ public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? 
 	public E withListBackground(ResLoc listBackgroundLocation)
 	{
 		this.listBackgroundLocation = listBackgroundLocation;
+		//noinspection unchecked
 		return (E)this;
 	}
 
@@ -73,6 +76,7 @@ public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? 
 	public E withScrollBarBackground(ResLoc scrollBarLocation)
 	{
 		this.scrollBarLocation = scrollBarLocation;
+		//noinspection unchecked
 		return (E)this;
 	}
 
@@ -82,10 +86,11 @@ public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? 
 	 * @param display The display function
 	 * @return this
 	 */
-	public E withDisplayFunction(DecoElementDisplays.DecoElementDisplay<T> display)
+	public E withDisplayFunction(DecoElementDisplay<T> display)
 	{
 		this.display = display;
 		display.bindCollection(this);
+		//noinspection unchecked
 		return (E)this;
 	}
 
@@ -95,9 +100,10 @@ public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? 
 	 * @param sorter The sort function
 	 * @return this
 	 */
-	public E withSortFunction(DecoElementDisplays.DecoElementSorter<T> sorter)
+	public E withSortFunction(DecoElementSorter<T> sorter)
 	{
 		this.sorter = sorter;
+		//noinspection unchecked
 		return (E)this;
 	}
 
@@ -112,6 +118,7 @@ public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? 
 		this.entries = new ArrayList<>(entries);
 		this.entries = sorter.sort(this.entries);
 		calculateSlideLength();
+		//noinspection unchecked
 		return (E)this;
 	}
 
@@ -138,6 +145,7 @@ public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? 
 	{
 		this.entriesInGrid = entriesInGrid;
 		calculateSlideLength();
+		//noinspection unchecked
 		return (E)this;
 	}
 
@@ -150,6 +158,7 @@ public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? 
 	public E withCreateAction(Supplier<T> onCreate)
 	{
 		this.onCreate = () -> addEntry(onCreate.get());
+		//noinspection unchecked
 		return (E)this;
 	}
 
@@ -163,6 +172,7 @@ public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? 
 	public E withCreateLaterAction(Runnable onCreate)
 	{
 		this.onCreate = onCreate;
+		//noinspection unchecked
 		return (E)this;
 	}
 
@@ -197,6 +207,7 @@ public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? 
 	public E withScroll(int scroll)
 	{
 		this.scroll = scroll;
+		//noinspection unchecked
 		return (E)this;
 	}
 

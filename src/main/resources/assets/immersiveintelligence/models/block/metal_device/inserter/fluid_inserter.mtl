@@ -1,0 +1,16 @@
+# Made in Blockbench 4.2.5
+newmtl inserter_fluid
+map_Kd immersiveintelligence:blocks/metal_device/inserter/inserter_fluid
+newmtl tool_blue
+map_Kd immersiveintelligence:blocks/metal_device/inserter/tool_blue
+newmtl connector_connector_lv
+map_Kd immersiveengineering:blocks/connector_connector_lv
+newmtl common_copper_cable
+map_Kd immersiveintelligence:blocks/common/common_copper_cable
+newmtl data_connector
+map_Kd immersiveintelligence:blocks/data_connector
+newmtl inserter_base1
+map_Kd immersiveintelligence:blocks/metal_device/inserter/inserter_base1
+newmtl inserter_base2
+map_Kd immersiveintelligence:blocks/metal_device/inserter/inserter_base2
+newmtl none

@@ -50,13 +50,48 @@ public class IIStringUtil
 					String[] subSplit = s.split(":");
 					if(subSplit.length==2)
 					{
-						int start = Integer.parseInt(subSplit[0]);
-						int end = Integer.parseInt(subSplit[1]);
+						int start = parseInt(subSplit[0]);
+						int end = parseInt(subSplit[1]);
 						return IntStream.rangeClosed(Math.min(start, end), Math.max(start, end)).boxed();
 					}
 					else
-						return Stream.of(Integer.parseInt(subSplit[0]));
+						return Stream.of(parseInt(subSplit[0]));
 				})
 				.toArray(Integer[]::new);
+	}
+
+	public static TextComponentString getItemStackTextComponent(ItemStack stack)
+	{
+		TextComponentString stackText = new TextComponentString(stack.getDisplayName());
+		stackText.getStyle().setHoverEvent(
+				new HoverEvent(
+						HoverEvent.Action.SHOW_ITEM,
+						new TextComponentString(stack.serializeNBT().toString())
+				)
+		);
+		stackText.getStyle().setColor(TextFormatting.GOLD);
+		return stackText;
+	}
+
+	public static int parseInt(String string)
+	{
+		try
+		{
+			return Integer.parseInt(string);
+		} catch(NumberFormatException e)
+		{
+			return 0;
+		}
+	}
+
+	public static float parseFloat(String string)
+	{
+		try
+		{
+			return Float.parseFloat(string);
+		} catch(NumberFormatException e)
+		{
+			return 0;
+		}
 	}
 }
