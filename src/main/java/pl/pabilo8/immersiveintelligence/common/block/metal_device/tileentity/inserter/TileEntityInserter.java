@@ -97,7 +97,6 @@ public class TileEntityInserter extends TileEntityInserterBase
 		return TASKS;
 	}
 
-	// TODO: 21.12.2021 sounds
 	@SideOnly(Side.CLIENT)
 	@Override
 	protected void handleSounds()
@@ -279,11 +278,9 @@ public class TileEntityInserter extends TileEntityInserterBase
 			if(cap!=null)
 				if(in)
 				{
-					//take: overridden amount if specified
-					//else : if isn't job - inserter take amount,
-					//else: the most you can, either ins. take amount or items left
-					int toBeTaken = overrideTakeAmount!=-1?overrideTakeAmount: Math.min(tile.takeAmount, isJob?stack.inputSize: tile.takeAmount);
-
+					int toBeTaken = getAmountToBeTaken(tile);
+					if(toBeTaken <= 0)
+						return false;
 					//iterate all the slots,
 					for(int slot = 0; slot < cap.getSlots(); slot++)
 					{
@@ -332,10 +329,10 @@ public class TileEntityInserter extends TileEntityInserterBase
 			if(cap!=null)
 				if(in)
 				{
-					//take: overridden amount if specified
-					//else : if isn't a job - inserter take amount,
-					//else: the most you can, either ins. take amount or items left
-					int toBeTaken = overrideTakeAmount!=-1?overrideTakeAmount: Math.min(tile.takeAmount, !isJob?stack.inputSize: tile.takeAmount);
+					//Don't allow taking more than remaining amount for expiring tasks
+					int toBeTaken = getAmountToBeTaken(tile);
+					if(toBeTaken <= 0)
+						return false;
 
 					//iterate all the slots,
 					for(int slot = 0; slot < cap.getSlots(); slot++)
@@ -372,18 +369,6 @@ public class TileEntityInserter extends TileEntityInserterBase
 		}
 
 		@Override
-		public boolean shouldContinue()
-		{
-			return stack.inputSize > 0;
-		}
-
-		@Override
-		public NBTTagCompound toNBT()
-		{
-			return super.toNBT();
-		}
-
-		@Override
 		public String getName()
 		{
 			return "item";
@@ -410,7 +395,12 @@ public class TileEntityInserter extends TileEntityInserterBase
 		public boolean canExecute(TileEntityInserterBase tile, World world, BlockPos posIn, BlockPos posOut, EnumFacing facingIn, EnumFacing facingOut, boolean in)
 		{
 			if(!in)
+			{
+				// if expiring task already finished, don't place extra
+				if(!isJob&&this.stack.inputSize <= 0)
+					return false;
 				return true;
+			}
 			return super.canExecute(tile, world, posIn, posOut, facingIn, facingOut, in);
 		}
 
@@ -419,6 +409,10 @@ public class TileEntityInserter extends TileEntityInserterBase
 		{
 			if(!in)
 			{
+				// if expiring task already finished, don't place extra
+				if(!isJob&&this.stack.inputSize <= 0)
+					return false;
+
 				ItemStack stack = tile.inventory.get(0);
 				if(stack.isEmpty()||!(stack.getItem() instanceof ItemBlock))
 					return false;
@@ -479,6 +473,10 @@ public class TileEntityInserter extends TileEntityInserterBase
 		{
 			if(in)
 			{
+				// if expiring task already finished, don't pickup extra carts
+				if(!isJob&&this.stack.inputSize <= 0)
+					return false;
+
 				Optional<EntityMinecart> first = world.getEntitiesWithinAABB(EntityMinecart.class, new AxisAlignedBB(posIn), entity -> entity instanceof IMinecartBlockPickable)
 						.stream()
 						.findFirst();
@@ -493,6 +491,10 @@ public class TileEntityInserter extends TileEntityInserterBase
 		{
 			if(in)
 			{
+				// if expiring task already finished, don't pickup extra carts
+				if(!isJob&&this.stack.inputSize <= 0)
+					return false;
+
 				Optional<EntityMinecart> first = world.getEntitiesWithinAABB(EntityMinecart.class, new AxisAlignedBB(posIn), entity -> entity instanceof IMinecartBlockPickable)
 						.stream()
 						.findFirst();
@@ -546,9 +548,15 @@ public class TileEntityInserter extends TileEntityInserterBase
 		public boolean canExecute(TileEntityInserterBase tile, World world, BlockPos posIn, BlockPos posOut, EnumFacing facingIn, EnumFacing facingOut, boolean in)
 		{
 			if(!in)
+			{
+				// if expiring task already finished, don't load extra carts
+				if(!isJob&&this.stack.inputSize <= 0)
+					return false;
+
 				return world.getEntitiesWithinAABB(EntityMinecartEmpty.class, new AxisAlignedBB(posOut))
 						.stream()
 						.findFirst().isPresent();
+			}
 			return super.canExecute(tile, world, posIn, posOut, facingIn, facingOut, in);
 		}
 
@@ -557,6 +565,10 @@ public class TileEntityInserter extends TileEntityInserterBase
 		{
 			if(!in)
 			{
+				// if expiring task already finished, don't load extra carts
+				if(!isJob&&this.stack.inputSize <= 0)
+					return false;
+
 				Optional<EntityMinecartEmpty> first = world.getEntitiesWithinAABB(EntityMinecartEmpty.class, new AxisAlignedBB(posOut))
 						.stream()
 						.findFirst();

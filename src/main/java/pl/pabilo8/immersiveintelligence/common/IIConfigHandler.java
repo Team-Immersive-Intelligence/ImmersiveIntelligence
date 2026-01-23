@@ -1043,9 +1043,11 @@ public class IIConfigHandler
 				@Comment({"Energy usage of the inserter per item taken."})
 				public static int energyUsage = 128;
 				@Comment({"How long does it take for the inserter to perform a task (in ticks)"})
-				public static int taskTime = 20;
+				public static int taskTime = 40;
 				@Comment({"How much fluid can the inserter take per a single task (in milibuckets)"})
-				public static int maxTake = 4000;
+				public static int maxTake = 500;
+				@Comment({"How much milk should the inserter extract during the cow milking task (in milibuckets)"})
+				public static int cowMilkAmount = 100;
 			}
 
 			public static class AdvancedFluidInserter
@@ -1057,7 +1059,9 @@ public class IIConfigHandler
 				@Comment({"How long does it take for the inserter to perform a task (in ticks)"})
 				public static int taskTime = 20;
 				@Comment({"How much fluid can the inserter take per a single task (in milibuckets)"})
-				public static int maxTake = 4000;
+				public static int maxTake = 1000;
+				@Comment({"How much milk should the inserter extract during the cow milking task (in milibuckets)"})
+				public static int cowMilkAmount = 200;
 
 			}
 

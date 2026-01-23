@@ -43,7 +43,7 @@ public class TileEntityLatexCollector extends TileEntityIEBase implements IPlaye
 		bucket = new ItemStack(nbt.getCompoundTag("bucket"));
 		if(nbt.hasKey("noSetup"))
 			bucketTime = 0;
-		nbt.setFloat("timer", timer);
+		this.timer = nbt.getFloat("timer"); // FIX: was writing into NBT, should read from it
 	}
 
 	@Override
@@ -53,7 +53,47 @@ public class TileEntityLatexCollector extends TileEntityIEBase implements IPlaye
 		nbt.setTag("bucket", bucket.serializeNBT());
 		if(bucketTime < 10)
 			nbt.setBoolean("noSetup", true);
-		timer = nbt.getFloat("timer");
+		nbt.setFloat("timer", timer); // FIX: was reading from NBT, should write into it
+	}
+
+	/**
+	 * @return available latex based on current progress fraction, in mB (0..1000).
+	 * Fraction: floor((timer/collectTime)*1000).
+	 */
+	public int getAvailableLatexMilliBuckets()
+	{
+		if(LatexCollector.collectTime <= 0)
+			return 0;
+		float frac = Math.max(0f, Math.min(1f, timer/LatexCollector.collectTime));
+		return (int)Math.floor(frac*1000f);
+	}
+
+	/**
+	 * Drains a partial amount of latex by reducing internal progress accordingly.
+	 *
+	 * @param amountMb requested mB
+	 * @param doDrain  whether to actually drain
+	 * @return drained mB
+	 */
+	public int drainLatexMilliBuckets(int amountMb, boolean doDrain)
+	{
+		if(world==null||world.isRemote)
+			return 0;
+
+		int available = getAvailableLatexMilliBuckets();
+		int drained = Math.max(0, Math.min(amountMb, available));
+		if(drained <= 0)
+			return 0;
+
+		if(doDrain)
+		{
+			float deltaTimer = (drained/1000f)*LatexCollector.collectTime;
+			timer = Math.max(0f, timer-deltaTimer);
+			markDirty();
+			world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 3);
+		}
+
+		return drained;
 	}
 
 	@Override
@@ -108,11 +148,8 @@ public class TileEntityLatexCollector extends TileEntityIEBase implements IPlaye
 				return;
 
 			if(capability.fill(new FluidStack(IIContent.fluidLatex, 1000), false)==1000&&timer < LatexCollector.collectTime&&isNextToTree())
-			{
 				timer = Math.min(timer+getIncomeModifier(), LatexCollector.collectTime);
-			}
 			else if(timer==LatexCollector.collectTime)
-			{
 				if(capability.fill(new FluidStack(IIContent.fluidLatex, 1000), true)==1000)
 				{
 					this.timer = 0;
@@ -122,8 +159,6 @@ public class TileEntityLatexCollector extends TileEntityIEBase implements IPlaye
 						updateBucket();
 					}
 				}
-
-			}
 		}
 
 

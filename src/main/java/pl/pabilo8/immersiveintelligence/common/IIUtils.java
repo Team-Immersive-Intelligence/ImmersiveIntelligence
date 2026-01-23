@@ -29,6 +29,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidUtil;
@@ -476,5 +477,14 @@ public class IIUtils
 		buffer.putInt(pos.getY());
 		buffer.putInt(pos.getZ());
 		return UUID.nameUUIDFromBytes(buffer.array());
+	}
+
+	@Nullable
+	public static <T> T getTileCapability(World world, BlockPos posIn, Capability<T> capability, EnumFacing facing)
+	{
+		TileEntity te = world.getTileEntity(posIn);
+		if(te==null||!te.hasCapability(capability, facing))
+			return null;
+		return te.getCapability(capability, facing);
 	}
 }

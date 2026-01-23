@@ -38,6 +38,14 @@ public class DecoBar extends DecoComponent<DecoBar>
 	private int minValue = 0, interpolatedValue = 0, maxValue = 2;
 	private Supplier<Integer> valueSupplier = () -> 1;
 	private boolean smoothAnimation = false;
+	/**
+	 * If true, bar fills left->right. If false, fills bottom->top.
+	 */
+	private boolean horizontalMode = false;
+	/**
+	 * If true, do not auto-detect mode from dimensions.
+	 */
+	private boolean horizontalModeExplicit = false;
 
 	public DecoBar(int x, int y)
 	{
@@ -56,6 +64,40 @@ public class DecoBar extends DecoComponent<DecoBar>
 	}
 
 	//--- Setters ---//
+
+	/**
+	 * Forces horizontal/vertical rendering mode.
+	 * If you want automatic mode based on dimensions, don't call this.
+	 */
+	public DecoBar withHorizontalMode(boolean horizontal)
+	{
+		this.horizontalMode = horizontal;
+		this.horizontalModeExplicit = true;
+		return this;
+	}
+
+	@Override
+	public DecoBar withWidth(int width)
+	{
+		super.withWidth(width);
+		autoDetectHorizontalMode();
+		return this;
+	}
+
+	@Override
+	public DecoBar withHeight(int height)
+	{
+		super.withHeight(height);
+		autoDetectHorizontalMode();
+		return this;
+	}
+
+	private void autoDetectHorizontalMode()
+	{
+		if(horizontalModeExplicit)
+			return;
+		this.horizontalMode = this.width > this.height;
+	}
 
 	public DecoBar withBackgroundLocation(ResLoc backgroundLocation, ResLoc iconBackgroundLocation)
 	{
@@ -195,27 +237,53 @@ public class DecoBar extends DecoComponent<DecoBar>
 	void drawBarBackground(IIDrawUtils draw)
 	{
 		TextureAtlasSprite bgSprite = ClientUtils.getSprite(backgroundLocation);
-		draw.drawConnectedTexColorRect(
-				x, y+8, width, (((height&1)==0)?height: height+1)-8,
-				IIColor.WHITE, 64, 64, 8, 8,
-				bgSprite.getMinU(), bgSprite.getMaxU(),
-				bgSprite.getMinV(), bgSprite.getMaxV()
-		);
+
+		if(!horizontalMode)
+		{
+			draw.drawConnectedTexColorRect(
+					x, y+8, width, (((height&1)==0)?height: height+1)-8,
+					IIColor.WHITE, 64, 64, 8, 8,
+					bgSprite.getMinU(), bgSprite.getMaxU(),
+					bgSprite.getMinV(), bgSprite.getMaxV()
+			);
+		}
+		else
+		{
+			draw.drawConnectedTexColorRect(
+					x, y, (((width&1)==0)?width: width+1)-8-9, height,
+					IIColor.WHITE, 64, 64, 8, 8,
+					bgSprite.getMinU(), bgSprite.getMaxU(),
+					bgSprite.getMinV(), bgSprite.getMaxV()
+			);
+		}
 	}
 
 	void drawBarGradient(IIDrawUtils draw)
 	{
-		int totalHeight = (((height&1)==0)?height: height+1)-4-8;
-
 		//Interpolate the value, if smooth animation is enabled
 		if(smoothAnimation)
 			interpolatedValue = (int)Math.ceil(interpolatedValue+(getCurrentValue()-interpolatedValue)*0.1f);
 		else
 			interpolatedValue = getCurrentValue();
 
-		//Draw the bar, don't draw outside of bounds
-		float barHeight = totalHeight*MathHelper.clamp((interpolatedValue-minValue)/(float)(maxValue-minValue), 0f, 1f);
-		draw.drawColorGradient(x+2, y+8+2+totalHeight-barHeight, width-4, (int)barHeight, colorBottom, colorTop);
+		if(!horizontalMode)
+		{
+			int totalHeight = (((height&1)==0)?height: height+1)-4-8;
+			float barHeight = totalHeight*MathHelper.clamp((interpolatedValue-minValue)/(float)(maxValue-minValue), 0f, 1f);
+			draw.drawColorGradient(
+					x+2, y+8+2+totalHeight-barHeight, width-4, (int)barHeight,
+					colorTop, colorTop, colorBottom, colorBottom
+			);
+		}
+		else
+		{
+			int totalWidth = (((width&1)==0)?width: width+1)-4-8-9;
+			float barWidth = totalWidth*MathHelper.clamp((interpolatedValue-minValue)/(float)(maxValue-minValue), 0f, 1f);
+			draw.drawColorGradient(
+					x+2, y+2, (int)barWidth, height-4,
+					colorBottom, colorTop, colorBottom, colorTop
+			);
+		}
 	}
 
 	void drawIcon(IIDrawUtils draw, boolean drawBackground)
@@ -223,21 +291,47 @@ public class DecoBar extends DecoComponent<DecoBar>
 		if(iconLocation==null)
 			return;
 
-		//Draw the icon background
+		if(!horizontalMode)
+		{
+			//Draw the icon background
+			if(drawBackground)
+			{
+				TextureAtlasSprite iconBgSprite = ClientUtils.getSprite(iconBackgroundLocation);
+				draw.drawConnectedTexColorRect(
+						x+(width*0.5f)-9, y-9, 18, 18, IIColor.WHITE,
+						32, 32, 4, 4,
+						iconBgSprite.getMinU(), iconBgSprite.getMaxU(),
+						iconBgSprite.getMinV(), iconBgSprite.getMaxV()
+				);
+			}
+			//and the icon
+			TextureAtlasSprite iconSprite = ClientUtils.getSprite(iconLocation);
+			draw.drawTexColorRect(
+					x+(width*0.5f)-8, y-8, 16, 16, IIColor.WHITE,
+					iconSprite.getMinU(), iconSprite.getMaxU(),
+					iconSprite.getMinV(), iconSprite.getMaxV()
+			);
+			return;
+		}
+
+		// Horizontal mode: draw icon on the right side of the bar, centered vertically
+		float iconCX = x+width-9;
+		float iconCY = y+(height*0.5f);
+
 		if(drawBackground)
 		{
 			TextureAtlasSprite iconBgSprite = ClientUtils.getSprite(iconBackgroundLocation);
 			draw.drawConnectedTexColorRect(
-					x+(width*0.5f)-9, y-9, 18, 18, IIColor.WHITE,
+					iconCX-9, iconCY-9, 18, 18, IIColor.WHITE,
 					32, 32, 4, 4,
 					iconBgSprite.getMinU(), iconBgSprite.getMaxU(),
 					iconBgSprite.getMinV(), iconBgSprite.getMaxV()
 			);
 		}
-		//and the icon
+
 		TextureAtlasSprite iconSprite = ClientUtils.getSprite(iconLocation);
 		draw.drawTexColorRect(
-				x+(width*0.5f)-8, y-8, 16, 16, IIColor.WHITE,
+				iconCX-8, iconCY-8, 16, 16, IIColor.WHITE,
 				iconSprite.getMinU(), iconSprite.getMaxU(),
 				iconSprite.getMinV(), iconSprite.getMaxV()
 		);

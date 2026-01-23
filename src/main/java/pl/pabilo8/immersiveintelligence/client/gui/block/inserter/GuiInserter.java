@@ -24,6 +24,7 @@ import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.ins
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.inserter.TileEntityInserterBase.InserterTask;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerInserter;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
@@ -41,6 +42,7 @@ import java.util.stream.Collectors;
 @DecoTemplate(name = "inserter", category = DecoGuiCategory.DATA_TILE)
 public class GuiInserter extends DecoGui<TileEntityInserterBase, ContainerInserter>
 {
+	private static final String TRANSLATION_KEY = IIReference.GUI_LABEL_KEY+"inserter.";
 	private ListMode mode = ListMode.TASKS;
 	private DecoList<InserterTask> list;
 	private DecoPanel panelDetails;
@@ -85,8 +87,8 @@ public class GuiInserter extends DecoGui<TileEntityInserterBase, ContainerInsert
 				new DecoButton(0, 8)
 						.withSize(54, 18)
 						.withBackground(DecoTextures.RES_TEXTURES_DECO_COMPONENT_TAB_VERTICAL)
-						.withText("Tasks")
-						.withTranslatedTooltip("Tasks are inserter assignments that are discarded from memory once executed.")
+						.withText(TRANSLATION_KEY+"tasks")
+						.withTranslatedTooltip(TRANSLATION_KEY+"tasks.tooltip")
 						.withOnLMBPressed(() -> {
 							mode = ListMode.TASKS;
 							refreshListEntries();
@@ -94,8 +96,8 @@ public class GuiInserter extends DecoGui<TileEntityInserterBase, ContainerInsert
 				new DecoButton(54, 8)
 						.withSize(54, 18)
 						.withBackground(DecoTextures.RES_TEXTURES_DECO_COMPONENT_TAB_VERTICAL)
-						.withText("Jobs")
-						.withTranslatedTooltip("Jobs are inserter assignments that are kept in memory and repeated indefinitely.")
+						.withText(TRANSLATION_KEY+"jobs")
+						.withTranslatedTooltip(TRANSLATION_KEY+"jobs.tooltip")
 						.withOnLMBPressed(() -> {
 							mode = ListMode.JOBS;
 							refreshListEntries();
@@ -166,7 +168,9 @@ public class GuiInserter extends DecoGui<TileEntityInserterBase, ContainerInsert
 						.withBackgroundColor(IIColor.fromHex("efefef"))
 						.withSize(25, 14)
 						.withOnLMBPressed(this::onClearPressed),
-				new DecoBar(0, 0)
+				new DecoBar(128-16-8+2, 128+32-8+2+2)
+						.withSize(96, 12)
+						.withHorizontalMode(true)
 						.withTemplate(DecoGuiUtils.BAR_ELECTRIC_ENERGY_BASE)
 						.withLimits(0, tile.getEnergyCapacity(), () -> tile.energyStorage)
 		);
@@ -196,11 +200,11 @@ public class GuiInserter extends DecoGui<TileEntityInserterBase, ContainerInsert
 			return;
 		final InserterTask thisTask = selected;
 
-		panelDetails.addLabel("Task Editor", 4, 4)
+		panelDetails.addLabel(TRANSLATION_KEY+"task_editor", 4, 4)
 				.withSize(panelDetails.width-8, 10)
 				.withAlign(DecoAlignment.CENTER);
 
-		panelDetails.addLabel("Type:", 6, 20-2);
+		panelDetails.addLabel(TRANSLATION_KEY+"type", 6, 20-2);
 		panelDetails.addComponent(new DecoDropdown<String>(42-4, 20-8+2))
 				.withSize(panelDetails.width-42, 16)
 				.withEntries(tile.getAvailableTasks().keySet())
@@ -213,7 +217,7 @@ public class GuiInserter extends DecoGui<TileEntityInserterBase, ContainerInsert
 					this.refreshDetails();
 				});
 
-		panelDetails.addLabel("Input:", 6, 34)
+		panelDetails.addLabel(TRANSLATION_KEY+"input", 6, 34)
 				.withSize(42, 16)
 				.withAlign(DecoAlignment.LEFT);
 		panelDetails.addComponents(
@@ -221,17 +225,17 @@ public class GuiInserter extends DecoGui<TileEntityInserterBase, ContainerInsert
 						.withSize(64, 16)
 						.withEntries(EnumFacing.NORTH, EnumFacing.SOUTH, EnumFacing.EAST, EnumFacing.WEST)
 						.withSelectedEntry(thisTask.facingIn==null?tile.defaultInputFacing: thisTask.facingIn)
-						.withOnSelectedEntry((oldV, newV) -> thisTask.facingIn = (newV==tile.defaultInputFacing)?null: newV)
-						.withTranslatedTooltip("In which direction should the inserter reach."),
+						.withOnSelectedEntry((oldV, newV) -> thisTask.facingIn = newV)
+						.withTranslatedTooltip(TRANSLATION_KEY+"input.facing.tooltip"),
 				new DecoTextField(74+42, 34)
 						.withSize(16, 16)
 						.withFilter(TextFilter.DECIMAL)
 						.withText(thisTask.distanceIn==-1?String.valueOf(tile.defaultInputDistance): String.valueOf(thisTask.distanceIn))
 						.withOnTextChanged(string -> thisTask.distanceIn = IIStringUtil.parseInt(string))
-						.withTranslatedTooltip("How far should the inserter reach (blocks).")
+						.withTranslatedTooltip(TRANSLATION_KEY+"input.distance.tooltip")
 		);
 
-		panelDetails.addLabel("Output:", 6, 34+18)
+		panelDetails.addLabel(TRANSLATION_KEY+"output", 6, 34+18)
 				.withSize(42, 16)
 				.withAlign(DecoAlignment.LEFT);
 		panelDetails.addComponents(
@@ -239,17 +243,17 @@ public class GuiInserter extends DecoGui<TileEntityInserterBase, ContainerInsert
 						.withSize(64, 16)
 						.withEntries(EnumFacing.NORTH, EnumFacing.SOUTH, EnumFacing.EAST, EnumFacing.WEST)
 						.withSelectedEntry(thisTask.facingOut==null?tile.defaultOutputFacing: thisTask.facingOut)
-						.withOnSelectedEntry((oldV, newV) -> thisTask.facingOut = (newV==tile.defaultOutputFacing)?null: newV)
-						.withTranslatedTooltip("In which direction should the inserter reach."),
+						.withOnSelectedEntry((oldV, newV) -> thisTask.facingOut = newV)
+						.withTranslatedTooltip(TRANSLATION_KEY+"output.facing.tooltip"),
 				new DecoTextField(74+42, 34+18)
 						.withSize(16, 16)
 						.withFilter(TextFilter.DECIMAL)
 						.withText(thisTask.distanceOut==-1?String.valueOf(tile.defaultOutputDistance): String.valueOf(thisTask.distanceOut))
-						.withOnTextChanged(string -> thisTask.distanceIn = IIStringUtil.parseInt(string))
-						.withTranslatedTooltip("How far should the inserter reach (blocks).")
+						.withOnTextChanged(string -> thisTask.distanceOut = IIStringUtil.parseInt(string))
+						.withTranslatedTooltip(TRANSLATION_KEY+"output.distance.tooltip")
 		);
 
-		panelDetails.addLabel("Items/Step:", 6, 34+18+18)
+		panelDetails.addLabel(TRANSLATION_KEY+"items_per_step", 6, 34+18+18)
 				.withSize(64, 16)
 				.withAlign(DecoAlignment.LEFT);
 		panelDetails.addComponents(
@@ -257,13 +261,17 @@ public class GuiInserter extends DecoGui<TileEntityInserterBase, ContainerInsert
 						.withSize(panelDetails.width-6-64-4, 16)
 						.withText(thisTask.overrideTakeAmount==-1?String.valueOf(tile.takeAmount): String.valueOf(thisTask.overrideTakeAmount))
 						.withOnTextChanged(string -> thisTask.overrideTakeAmount = IIStringUtil.parseInt(string))
-						.withTranslatedTooltip("Amount of items taken with each pick action of the inserter."),
+						.withTranslatedTooltip(TRANSLATION_KEY+"items_per_step.tooltip")
+						.withDisabled(!thisTask.areDetailsEditable()),
 				new DecoIngredientStackPickerPanel(6-2, 34+18+18+18)
+						.withFluidMode(thisTask.getName().contains("fluid"))
+						.withIngredientStack(thisTask.stack)
 						.withOnStackChanged(stack -> {
 							thisTask.stack = stack;
 							refreshListEntries();
 						})
 						.withSize(panelDetails.width-6-2, 56)
+						.withDisabled(!thisTask.areDetailsEditable())
 		);
 
 	}
@@ -316,23 +324,13 @@ public class GuiInserter extends DecoGui<TileEntityInserterBase, ContainerInsert
 
 	private void onClearPressed()
 	{
-		localTasks.clear();
+		localTasks.removeIf(inserterTask -> inserterTask.isJob==(mode==ListMode.JOBS));
 		selected = null;
 		refreshListEntries();
 		refreshDetails();
 	}
 
 	//--- Task helpers ---
-
-	private static IngredientStack getTaskIngredient(InserterTask task)
-	{
-		// Now safe: toNBT correctly includes "stack"
-		NBTTagCompound tag = task.toNBT();
-		IngredientStack ing = new IngredientStack("*");
-		if(tag.hasKey("stack"))
-			IngredientStack.readFromNBT(tag.getCompoundTag("stack"));
-		return ing;
-	}
 
 	private static boolean isWildcard(IngredientStack ing)
 	{

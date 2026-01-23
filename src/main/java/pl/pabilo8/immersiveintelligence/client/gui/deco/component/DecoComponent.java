@@ -413,6 +413,12 @@ public abstract class DecoComponent<TYPE extends DecoComponent<? super TYPE>> ex
 			onGuiSave.accept(((TYPE)this));
 	}
 
+	public TYPE withDisabled(boolean disabled)
+	{
+		this.enabled = !disabled;
+		return (TYPE)this;
+	}
+
 	/**
 	 * Provides an ingredient that can be used by JEI compat.
 	 *

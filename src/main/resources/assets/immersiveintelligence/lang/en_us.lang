@@ -3164,6 +3164,30 @@ ii.config.Light_Engineer_Armor=Light Engineer Armor
 #GUI Labels
 ii.gui.editor.editor_style=Visual/POL Editor
 
+ii.gui.inserter.task_editor=Task Editor
+ii.gui.inserter.tasks=Tasks
+ii.gui.inserter.tasks.tooltip=Tasks are inserter assignments that are discarded from memory, after a set amount of resource is transfered.
+ii.gui.inserter.jobs=Jobs
+ii.gui.inserter.jobs.tooltip=Jobs are inserter assignments that are repeated indefinitely.
+ii.gui.inserter.type=Type:
+ii.gui.inserter.input=Input:
+ii.gui.inserter.input.facing.tooltip=In which direction should the inserter reach.
+ii.gui.inserter.input.distance.tooltip=How far should the inserter reach (blocks).
+ii.gui.inserter.output=Output:
+ii.gui.inserter.output.facing.tooltip=In which direction should the inserter reach.
+ii.gui.inserter.output.distance.tooltip=How far should the inserter reach (blocks).
+ii.gui.inserter.items_per_step=Amount/Turn:
+ii.gui.inserter.items_per_step.tooltip=Amount taken and inserted with each turn of the inserter.
+
+ii.gui.itemstack_editor.count=Count:
+ii.gui.itemstack_editor.count.tooltip=The amount of items in the stack
+ii.gui.itemstack_editor.damage=Damage:
+ii.gui.itemstack_editor.damage.tooltip=The damage value of the item (leave empty for wildcard)
+ii.gui.itemstack_editor.nbt=NBT
+ii.gui.itemstack_editor.nbt.tooltip=When active, the item is matched by its NBT data
+ii.gui.itemstack_editor.oredict=OreDict
+ii.gui.itemstack_editor.oredict.tooltip=When active, the item is matched by its OreDictionary name
+
 ii.gui.data_input_machine.storage=Punchtape Storage
 ii.gui.data_input_machine.memory=Built-In Memory
 ii.gui.data_input_machine.memory.switch=Switch

@@ -64,7 +64,7 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 {
 	public int energyStorage = 0;
 	public int pickProgress = 0;
-	public int takeAmount = 64;
+	public int takeAmount = getMaxTakeAmount();
 
 	public EnumFacing defaultOutputFacing = EnumFacing.NORTH;
 	public EnumFacing defaultInputFacing = EnumFacing.SOUTH;
@@ -360,7 +360,7 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 
 	protected void performTasks()
 	{
-		if(tasks.size()==0)
+		if(tasks.isEmpty())
 			return;
 
 		if(this.current==null)
@@ -418,7 +418,7 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 						int id = tasks.indexOf(current);
 						if(!current.shouldContinue())
 							tasks.remove(current);
-						current = (tasks.size() > 0)?tasks.get((id+(nextTaskAfterFinish?1: 0))%tasks.size()): null;
+						current = (!tasks.isEmpty())?tasks.get((id+(nextTaskAfterFinish?1: 0))%tasks.size()): null;
 						pickProgress = 0;
 						sendUpdate();
 					}
@@ -739,7 +739,11 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 					distanceOut = nbt.getInteger("distanceOut");
 			}
 			if(nbt.hasKey("stack"))
+			{
 				stack = IngredientStack.readFromNBT(nbt.getCompoundTag("stack"));
+				if(stack.fluid!=null)
+					stack.inputSize = stack.fluid.amount;
+			}
 			if(nbt.hasKey("isJob"))
 				isJob = nbt.getBoolean("isJob");
 			if(nbt.hasKey("strictAmount"))
@@ -756,7 +760,7 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 			{
 				nbt.setInteger("facingIn", facingIn.getIndex());
 				if(distanceIn!=-1)
-					nbt.setInteger("distanceIn", distanceIn); // FIX: was distanceOut
+					nbt.setInteger("distanceIn", distanceIn);
 			}
 			if(facingOut!=null)
 			{
@@ -798,7 +802,7 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 		 */
 		public boolean shouldContinue()
 		{
-			return true;
+			return stack.inputSize > 0;
 		}
 
 		/**
@@ -821,11 +825,25 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 		}
 
 		/**
+		 * Whether things like stack, overrideTakeAmount and strictAmount are editable in the GUI
+		 */
+		public boolean areDetailsEditable()
+		{
+			return true;
+		}
+
+		/**
 		 * GUI/support accessor
 		 */
 		public final IngredientStack getIngredient()
 		{
 			return stack;
+		}
+
+		protected int getAmountToBeTaken(TileEntityInserterBase tile)
+		{
+			int perOp = Math.min(overrideTakeAmount!=-1?overrideTakeAmount: tile.takeAmount, tile.getMaxTakeAmount());
+			return isJob?perOp: Math.min(perOp, stack.inputSize);
 		}
 	}
 }
