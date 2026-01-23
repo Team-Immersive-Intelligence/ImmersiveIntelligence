@@ -63,12 +63,8 @@ public class ArtilleryHowitzerRenderer extends IIMultiblockRenderer<TileEntityAr
 		boolean canOperateActive = canOperatePassive&&te.energyStorage.getEnergyStored() >= ArtilleryHowitzer.energyUsagePassive+ArtilleryHowitzer.energyUsageActive;
 
 		//platform and door animation
-		float doorAnim = AMTUtils.getAnimationProgress(te.doorTime, ArtilleryHowitzer.doorTime,
-				canOperatePassive, !te.isDoorOpened, 1f, 2f, partialTicks);
-		float platformAnim = AMTUtils.getAnimationProgress(te.platformTime, ArtilleryHowitzer.platformTime,
-				canOperatePassive, !te.platformPosition, 1f, 1f, partialTicks);
-		animationOpen.apply(doorAnim);
-		animationPlatform.apply(platformAnim);
+		animationOpen.apply(te.door.getProgress(partialTicks));
+		animationPlatform.apply(te.platform.getProgress(partialTicks));
 
 		//gun pitch and yaw
 		//calculated before animations, so animations can modify it

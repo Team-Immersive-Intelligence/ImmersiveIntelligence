@@ -1,6 +1,7 @@
 package pl.pabilo8.immersiveintelligence.common.entity.tactile;
 
 import blusunrize.immersiveengineering.common.util.chickenbones.Matrix4;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.MoverType;
@@ -12,6 +13,8 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
+import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 
 import javax.annotation.Nullable;
 
@@ -21,7 +24,7 @@ import javax.annotation.Nullable;
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 07.10.2023
  */
-public class EntityAMTTactile extends Entity
+public class EntityAMTTactile extends Entity implements IEntityAdditionalSpawnData
 {
 	private static final AxisAlignedBB EMPTY = new AxisAlignedBB(0, 0, 0, 0, 0, 0);
 	/**
@@ -98,57 +101,61 @@ public class EntityAMTTactile extends Entity
 	@Override
 	public void onEntityUpdate()
 	{
-		if(manager==null||!manager.getEntities().contains(this))
+		if(!world.isRemote)
 		{
-			setDead();
-			return;
-		}
+			if(manager==null||!manager.getEntities().contains(this))
+			{
+				setDead();
+				return;
+			}
 
-		//To calculate motion from previous position
-		this.prevPosX = posX;
-		this.prevPosY = posY;
-		this.prevPosZ = posZ;
+			//To calculate motion from previous position
+			this.prevPosX = posX;
+			this.prevPosY = posY;
+			this.prevPosZ = posZ;
 
-		//Is one of root elements
-		if(parent==null)
-		{
-			BlockPos handlerPos = manager.getPos();
-			this.posX = handlerPos.getX()+offset.x+translation.x;
-			this.posY = handlerPos.getY()+offset.y+translation.y;
-			this.posZ = handlerPos.getZ()-0.5+offset.z+translation.z;
+			//Is one of root elements
+			if(parent==null)
+			{
+				BlockPos handlerPos = manager.getPos();
+				this.posX = handlerPos.getX()+offset.x+translation.x;
+				this.posY = handlerPos.getY()+offset.y+translation.y;
+				this.posZ = handlerPos.getZ()-0.5+offset.z+translation.z;
 //			setRotation((float)rotation.y, (float)rotation.x);
-			rotationPitch = (float)rotation.x;
-			rotationYaw = (float)rotation.y;
-			rotationRoll = (float)rotation.z;
-		}
-		//Belongs to another element
-		else
-		{
-			//TODO: 20.12.2023 previous position caching
-			Vec3d relativeOffset = offset.subtract(parent.offset);
-			this.rotationYaw = (float)(parent.rotationYaw+rotation.y);
-			this.rotationPitch = (float)(parent.rotationPitch+rotation.x);
-			this.rotationRoll = (float)(parent.rotationRoll+rotation.z);
+				rotationPitch = (float)rotation.x;
+				rotationYaw = (float)rotation.y;
+				rotationRoll = (float)rotation.z;
+			}
+			//Belongs to another element
+			else
+			{
+				//TODO: 20.12.2023 previous position caching
+				Vec3d relativeOffset = offset.subtract(parent.offset);
+				this.rotationYaw = (float)(parent.rotationYaw+rotation.y);
+				this.rotationPitch = (float)(parent.rotationPitch+rotation.x);
+				this.rotationRoll = (float)(parent.rotationRoll+rotation.z);
 
-			Vec3d angle = new Matrix4().setIdentity()
-					.rotate(Math.toRadians(rotationYaw), 0, 1, 0)
-					.rotate(Math.toRadians(-rotationRoll), 0, 0, 1)
-					.rotate(Math.toRadians(-rotationPitch), 1, 0, 0)
-					.apply(relativeOffset.add(translation));
+				Vec3d angle = new Matrix4().setIdentity()
+						.rotate(Math.toRadians(rotationYaw), 0, 1, 0)
+						.rotate(Math.toRadians(-rotationRoll), 0, 0, 1)
+						.rotate(Math.toRadians(-rotationPitch), 1, 0, 0)
+						.apply(relativeOffset.add(translation));
 
-			this.posX = parent.posX+angle.x;
-			this.posY = parent.posY+angle.y;
-			this.posZ = parent.posZ+angle.z;
-		}
+				this.posX = parent.posX+angle.x;
+				this.posY = parent.posY+angle.y;
+				this.posZ = parent.posZ+angle.z;
+			}
 
-		this.motionX = posX-prevPosX;
-		this.motionY = posY-prevPosY;
-		this.motionZ = posZ-prevPosZ;
+			this.motionX = posX-prevPosX;
+			this.motionY = posY-prevPosY;
+			this.motionZ = posZ-prevPosZ;
 
-		if(!visibility)
-		{
-			setEntityBoundingBox(EMPTY);
-			return;
+			if(!visibility)
+			{
+				setEntityBoundingBox(EMPTY);
+				return;
+			}
+			world.updateEntityWithOptionalForce(this, false);
 		}
 
 		AxisAlignedBB newAABB = aabb.offset(posX, posY, posZ);
@@ -160,7 +167,10 @@ public class EntityAMTTactile extends Entity
 			newAABB.grow(xLength*xzScale, yLength*xzScale, xLength*xzScale);
 		}
 		setEntityBoundingBox(newAABB);
-		world.getEntitiesWithinAABB(EntityLivingBase.class, newAABB).forEach(this::applyEntityCollision);
+
+		if(!world.isRemote)
+			world.getEntitiesWithinAABB(EntityLivingBase.class, newAABB).forEach(this::applyEntityCollision);
+
 	}
 
 	@Override
@@ -252,5 +262,31 @@ public class EntityAMTTactile extends Entity
 	{
 		this.translation = this.rotation = this.scale = Vec3d.ZERO;
 		this.visibility = true;
+	}
+
+	@Override
+	public void writeSpawnData(ByteBuf buffer)
+	{
+		ByteBufUtils.writeUTF8String(buffer, this.name);
+		buffer.writeDouble(this.aabb.minX);
+		buffer.writeDouble(this.aabb.minY);
+		buffer.writeDouble(this.aabb.minZ);
+		buffer.writeDouble(this.aabb.maxX);
+		buffer.writeDouble(this.aabb.maxY);
+		buffer.writeDouble(this.aabb.maxZ);
+	}
+
+	@Override
+	public void readSpawnData(ByteBuf additionalData)
+	{
+		this.name = ByteBufUtils.readUTF8String(additionalData);
+		this.aabb = new AxisAlignedBB(
+				additionalData.readDouble(),
+				additionalData.readDouble(),
+				additionalData.readDouble(),
+				additionalData.readDouble(),
+				additionalData.readDouble(),
+				additionalData.readDouble()
+		);
 	}
 }

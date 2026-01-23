@@ -936,6 +936,9 @@ public class IIConfigHandler
 
 				@Comment({"How long does it take for the howitzer to move the shell by one item slot using conveyor (in ticks)"})
 				public static int conveyorTime = 40;
+
+				@Comment({"How much explosion and block breaking damage the multiblock can take (in half-hearts)."})
+				public static int baseHealth = 3600;
 			}
 
 			public static class BallisticComputer

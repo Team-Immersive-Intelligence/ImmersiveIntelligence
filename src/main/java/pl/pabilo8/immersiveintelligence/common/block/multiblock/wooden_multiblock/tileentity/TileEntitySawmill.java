@@ -71,7 +71,14 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 		energyStorage = new FluxStorageAdvanced(0);
 		inventory = NonNullList.withSize(4, ItemStack.EMPTY);
 		vise = new MultiblockInteractablePart(22);
-		sounds = new SoundHandler(this);
+	}
+
+	@Override
+	public void onBeforeFirstTick()
+	{
+		super.onBeforeFirstTick();
+		if(world.isRemote)
+			sounds = new SoundHandler(this);
 	}
 
 	@Override
@@ -81,7 +88,6 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 		outputHandler = sawdustOutputHandler = null;
 		insertionHandler = dustExtractionHandler = null;
 		rotation = null;
-		sounds = null;
 		vise = null;
 	}
 

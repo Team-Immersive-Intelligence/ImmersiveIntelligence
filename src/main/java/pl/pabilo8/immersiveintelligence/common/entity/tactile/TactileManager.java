@@ -115,11 +115,9 @@ public class TactileManager
 	private boolean init()
 	{
 		//:(
-		if(!Graphics.tactileAMT)
+		if(worldSupplier.get().isRemote)
 			return false;
-
-		//BUG: 12.08.2024 fix AMTTactile
-		if(true)
+		if(!Graphics.tactileAMT)
 			return false;
 
 		//Loading is not possible
@@ -348,7 +346,11 @@ public class TactileManager
 	public void defaultize()
 	{
 		//Must be initialized before applying animation
-		if(!initialized&&!(initialized = init()))
+		if(worldSupplier.get().isRemote)
+			return;
+		if(!initialized)
+			initialized = init();
+		if(!initialized)
 			return;
 
 		entities.forEach(EntityAMTTactile::defaultizeAnimation);
@@ -360,6 +362,8 @@ public class TactileManager
 	 */
 	public void update(@Nullable ResLoc animation, float time)
 	{
+		if(worldSupplier.get().isRemote)
+			return;
 		//Must be initialized before applying animation
 		if(!initialized&&!(initialized = init()))
 			return;

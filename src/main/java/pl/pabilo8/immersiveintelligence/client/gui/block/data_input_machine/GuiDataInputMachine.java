@@ -53,8 +53,6 @@ public class GuiDataInputMachine extends DecoGui<TileEntityDataInputMachine, Con
 	@DecoResource
 	public static ResourceLocation PROGRESS_IMAGE = ResLoc.of(IIReference.RES_II, "gui/data_input_machine");
 	@SyncNBT
-	public boolean soundPlayed;
-	@SyncNBT
 	public int scroll;
 	@SyncNBT
 	public DataVariable variableToEdit = new DataVariable('a', new DataTypeNull());
@@ -117,11 +115,10 @@ public class GuiDataInputMachine extends DecoGui<TileEntityDataInputMachine, Con
 	{
 		//Set animation for the machine hatches
 		boolean isStorage = container.hasStorage;
-		if(!soundPlayed)
+		if(!refreshGUIFlag)
 		{
 			syncAnimatedParts(tile.drawer, isStorage);
 			syncAnimatedParts(tile.hatch, !isStorage);
-			soundPlayed = true;
 		}
 
 		//Build background
@@ -243,7 +240,7 @@ public class GuiDataInputMachine extends DecoGui<TileEntityDataInputMachine, Con
 	public void onGuiClosed()
 	{
 		//Close the hatches
-		if(!changeGUIFlag)
+		if(!refreshGUIFlag)
 		{
 			syncAnimatedParts(tile.drawer, false);
 			syncAnimatedParts(tile.hatch, false);

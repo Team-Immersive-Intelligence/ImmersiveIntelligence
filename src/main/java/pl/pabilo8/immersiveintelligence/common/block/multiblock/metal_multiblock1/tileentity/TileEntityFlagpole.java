@@ -12,7 +12,7 @@ import pl.pabilo8.immersiveintelligence.api.style.IStyleCustomizable;
 import pl.pabilo8.immersiveintelligence.api.style.StyleCustomization;
 import pl.pabilo8.immersiveintelligence.api.upgrade.IManagedUpgradableDevice;
 import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeManager;
-import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeUtils.DeviceTier;
+import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeUtils.MachineStyle;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Flagpole;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IILogger;

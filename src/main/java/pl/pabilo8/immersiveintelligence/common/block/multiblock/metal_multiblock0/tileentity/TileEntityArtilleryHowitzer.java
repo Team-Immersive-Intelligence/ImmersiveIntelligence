@@ -43,9 +43,11 @@ import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.ISerializableEnum;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.lambda.NBTTagCollector;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IExplosionResistantMultiblock;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.ILadderMultiblock;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IManagedDamageResistantMultiblock;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.MultiblockHealth;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultiblockIIGeneric;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockInteractablePart;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 import pl.pabilo8.immersiveintelligence.common.util.sound.IISoundAnimation;
 import pl.pabilo8.immersiveintelligence.common.util.sound.SoundHandler;
@@ -63,7 +65,7 @@ import java.util.function.Supplier;
  * @since 28.06.2019
  */
 public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<TileEntityArtilleryHowitzer>
-		implements IBooleanAnimatedPartsBlock, IConveyorAttachable, ILadderMultiblock, IExplosionResistantMultiblock, ITactileListener
+		implements IBooleanAnimatedPartsBlock, IConveyorAttachable, ILadderMultiblock, IManagedDamageResistantMultiblock, ITactileListener
 {
 	//--- Variables ---//
 
@@ -71,14 +73,13 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 	@SyncNBT
 	public ArtilleryHowitzerAction action = ArtilleryHowitzerAction.STOP;
 	public ArrayList<HowitzerOrder> orderList = new ArrayList<>();
-
+	@SyncNBT
+	public MultiblockInteractablePart door, platform;
+	@SyncNBT
+	public MultiblockHealth health;
 	//animation related variables
 	@SyncNBT
 	public int animationTime = 0, animationTimeMax = 0, shellConveyorTime = 0;
-	@SyncNBT
-	public boolean isDoorOpened = false, platformPosition = false;
-	@SyncNBT
-	public int platformTime = 0, doorTime = 0;
 	@SyncNBT
 	public float turretYaw = 0, turretPitch = 0, plannedYaw = 0, plannedPitch = 0;
 
@@ -89,7 +90,6 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 
 	@SideOnly(Side.CLIENT)
 	private ConditionCompoundSound<TileEntityArtilleryHowitzer> soundRotationV, soundRotationH, soundDoorOpen, soundDoorClose;
-
 	@SideOnly(Side.CLIENT)
 	private SoundHandler sounds;
 
@@ -98,7 +98,6 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 	public TileEntityArtilleryHowitzer()
 	{
 		super(MultiblockArtilleryHowitzer.INSTANCE);
-
 		this.energyStorage = new FluxStorageAdvanced(ArtilleryHowitzer.energyCapacity);
 
 		//shell queue: 0-5 in, 5-11 out
@@ -106,7 +105,17 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 		loadedShells = NonNullList.withSize(4, ItemStack.EMPTY);
 		inventoryHandler = new IEInventoryHandler(inventory.size(), this, 0, true, true);
 		insertionHandler = new IEInventoryHandler(1, this, 0, true, false);
-		sounds = new SoundHandler(this);
+		health = new MultiblockHealth(this, ArtilleryHowitzer.baseHealth);
+		door = new MultiblockInteractablePart(0, ArtilleryHowitzer.doorTime, 1);
+		platform = new MultiblockInteractablePart(1, ArtilleryHowitzer.platformTime, 1);
+	}
+
+	@Override
+	public void onBeforeFirstTick()
+	{
+		super.onBeforeFirstTick();
+		if(world.isRemote)
+			sounds = new SoundHandler(this);
 	}
 
 	@Override
@@ -115,7 +124,8 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 		super.dummyCleanup();
 		loadedShells = null;
 		inventoryHandler = insertionHandler = null;
-		sounds = null;
+		door = platform = null;
+		health = null;
 	}
 
 	@Override
@@ -130,30 +140,22 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 			tactileManager = new TactileManager(multiblock, this);
 		tactileManager.defaultize();
 
-
 		boolean rs = getRedstoneAtPos(0);
-		if(isDoorOpened^rs)
-		{
-			isDoorOpened = rs;
-			if(!world.isRemote)
-				IIPacketHandler.sendToClient(new MessageBooleanAnimatedPartsSync(0, isDoorOpened, this));
-		}
+		if(door.setState(rs)&&!world.isRemote)
+			IIPacketHandler.sendToClient(new MessageBooleanAnimatedPartsSync(door, this));
 
 		//operate only if energy is sufficient
 		if(energyStorage.getEnergyStored() < ArtilleryHowitzer.energyUsagePassive)
 			return;
-		energyStorage.extractEnergy(ArtilleryHowitzer.energyUsagePassive, false);
+		//Update door and platform
+		door.update();
+		platform.update();
+		tactileManager.update(MultiblockArtilleryHowitzer.INSTANCE.animationOpen, door.getProgress(0));
+		tactileManager.update(MultiblockArtilleryHowitzer.INSTANCE.animationPlatform, platform.getProgress(0));
 
-		//howitzer door movement
-		doorTime = MathHelper.clamp(doorTime+(isDoorOpened?1: -2), 0, ArtilleryHowitzer.doorTime);
-		tactileManager.update(MultiblockArtilleryHowitzer.INSTANCE.animationOpen, (float)doorTime/ArtilleryHowitzer.doorTime);
-
-		//howitzer platform movement
-		platformTime = MathHelper.clamp(platformTime+(platformPosition?1: -1), 0, ArtilleryHowitzer.platformTime);
-		tactileManager.update(MultiblockArtilleryHowitzer.INSTANCE.animationPlatform, (float)platformTime/ArtilleryHowitzer.platformTime);
 
 		//hide howitzer if door is closed
-		if(!isDoorOpened)
+		if(!door.getState())
 			action = ArtilleryHowitzerAction.HIDE;
 
 		//shell conveyor action
@@ -233,17 +235,16 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 				break;
 			case LOADING: //platform lowered, gun yaw,pitch=0
 			{
-				platformPosition = false;
+				platform.setState(false);
 				plannedYaw = facing.getHorizontalAngle();
 				plannedPitch = 0;
-
-				canContinue = platformTime==0;
+				canContinue = platform.isFullyClosed();
 			}
 			break;
 			case ON_TARGET: //platform up, gun aimed
 			{
-				platformPosition = true;
-				canContinue = platformTime==ArtilleryHowitzer.platformTime&&isAimed();
+				platform.setState(true);
+				canContinue = platform.isFullyOpened()&&isAimed();
 			}
 			break;
 		}
@@ -256,7 +257,7 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 		{
 			if(animationTime < animationTimeMax)
 				animationTime++;
-			else
+			else if(action!=ArtilleryHowitzerAction.STOP)
 			{
 				action = ArtilleryHowitzerAction.STOP;
 				animationTimeMax = 0;
@@ -330,6 +331,7 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 
 		//in case an animation overrides the gun yaw and pitch or of an early return
 		animateGunTactiles();
+		energyStorage.extractEnergy(ArtilleryHowitzer.energyUsagePassive, false);
 	}
 
 	private void animateGunTactiles()
@@ -490,17 +492,17 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 
 		Supplier<Boolean> hasEnergy = () -> energyStorage.getEnergyStored() >= ArtilleryHowitzer.energyUsagePassive;
 		Supplier<Boolean> hasActiveEnergy = () -> energyStorage.getEnergyStored() >= ArtilleryHowitzer.energyUsagePassive+ArtilleryHowitzer.energyUsageActive;
-		Supplier<Boolean> platformOK = () -> action==ArtilleryHowitzerAction.STOP||platformTime==(platformPosition?ArtilleryHowitzer.platformTime: 0);
+		Supplier<Boolean> platformOK = () -> !platform.isFullyClosed()&&!platform.isFullyOpened();
 		Supplier<Boolean> yawOK = () -> turretYaw==MathHelper.wrapDegrees(plannedYaw);
 		Supplier<Boolean> pitchOK = () -> turretPitch==plannedPitch;
 
 		Vec3d posDoor = new Vec3d(getBlockPosForPos(525));
 
 		soundDoorOpen = new ConditionCompoundSound<>(IISounds.slidingDoorOpenLoop, posDoor, this,
-				te -> hasEnergy.get()&&isDoorOpened&&doorTime < ArtilleryHowitzer.doorTime);
+				te -> hasEnergy.get()&&door.getState()&&!door.isFullyOpened());
 
 		soundDoorClose = new ConditionCompoundSound<>(IISounds.slidingDoorCloseLoop, posDoor, this,
-				te -> hasEnergy.get()&&!isDoorOpened&&doorTime > 0);
+				te -> hasEnergy.get()&&!door.getState()&&!door.isFullyClosed());
 
 		soundRotationH = new ConditionCompoundSound<>(IISounds.turntableHeavyForwardLoop, posDoor, this,
 				te -> hasActiveEnergy.get()&&platformOK.get()&&!yawOK.get());
@@ -603,14 +605,14 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 								case "get_planned_pitch":
 									return new DataTypeFloat(plannedPitch);
 								case "get_platform_height":
-									return new DataTypeFloat(platformTime/(float)ArtilleryHowitzer.platformTime);
+									return new DataTypeFloat(platform.getProgress(0));
 
 								case "get_door_opened":
-									return new DataTypeBoolean(isDoorOpened&&doorTime==ArtilleryHowitzer.doorTime);
+									return new DataTypeBoolean(platform.isFullyOpened());
 								case "get_door_closed":
-									return new DataTypeBoolean(!isDoorOpened&&doorTime==0);
+									return new DataTypeBoolean(door.isFullyClosed());
 								case "get_door_opening":
-									return new DataTypeBoolean(doorTime!=0&&doorTime!=ArtilleryHowitzer.doorTime);
+									return new DataTypeBoolean(door.isFullyOpened()==door.isFullyClosed());
 
 								case "get_loaded_shell":
 								{
@@ -684,16 +686,15 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 	@Override
 	public void onAnimationChangeClient(boolean state, int part)
 	{
-		if(part==0)
-			isDoorOpened = state;
+		MultiblockInteractablePart.setStates(state, part, door, platform);
 	}
 
 	@Override
 	public void onAnimationChangeServer(boolean state, int part)
 	{
-		if(part==0)
-			isDoorOpened = state;
-		IIPacketHandler.sendToClient(new MessageBooleanAnimatedPartsSync(1, isDoorOpened, this));
+		MultiblockInteractablePart changed = MultiblockInteractablePart.setStates(state, part, door, platform);
+		if(changed!=null)
+			IIPacketHandler.sendToClient(new MessageBooleanAnimatedPartsSync(changed, this));
 	}
 
 	@Override
@@ -756,10 +757,16 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 		return tactileManager;
 	}
 
+	@Override
+	public MultiblockHealth getHealthManager()
+	{
+		return health;
+	}
+
 	public enum ArtilleryHowitzerAction implements ISerializableEnum
 	{
 		STOP(false, false, GunPosition.NEUTRAL, t -> true, t -> false, 0, null, 1f), //stops current action
-		HIDE(false, false, GunPosition.LOADING, t -> true, t -> t.platformTime==0, 0, null, 1f), //makes howitzer go down
+		HIDE(false, false, GunPosition.LOADING, t -> true, t -> t.platform.isFullyClosed(), 0, null, 1f), //makes howitzer go down
 
 		LOAD1(true, false, GunPosition.LOADING, t -> t.loadedShells.get(0).isEmpty()&&!t.inventory.get(5).isEmpty(),
 				t -> !t.loadedShells.get(0).isEmpty(),

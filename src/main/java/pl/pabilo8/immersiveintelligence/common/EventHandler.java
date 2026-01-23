@@ -147,7 +147,7 @@ public class EventHandler
 		//After how many ticks ammunition despawns
 		initGamerule(IIReference.GAMERULE_AMMO_DECAY, rules, ValueType.NUMERICAL_VALUE, EntityAmmoProjectile.MAX_TICKS);
 		//The speed multiplier for ammo movement (0 - 100)
-		initGamerule(IIReference.GAMERULE_AMMO_SLOWMO, rules, ValueType.NUMERICAL_VALUE, EntityAmmoProjectile.SLOWMO*100);
+		initGamerule(IIReference.GAMERULE_AMMO_SLOWMO, rules, ValueType.NUMERICAL_VALUE, 100);
 		//Whether Hanses have infinite ammo
 		initGamerule(IIReference.GAMERULE_HANS_INFINITE_AMMO, rules, ValueType.BOOLEAN_VALUE, EntityHans.INFINITE_AMMO);
 	}
