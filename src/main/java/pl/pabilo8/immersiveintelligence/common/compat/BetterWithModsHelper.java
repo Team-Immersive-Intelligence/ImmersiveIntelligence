@@ -85,7 +85,7 @@ public class BetterWithModsHelper extends IICompatModule
 				event.addCapability(CAPABILITY_RES, new BWMTransmissionBoxHandler((TileEntityTransmissionBox)event.getObject()));
 	}
 
-	static class BWMTransmissionBoxHandler implements IMechanicalPower, ICapabilityProvider
+	private static class BWMTransmissionBoxHandler implements IMechanicalPower, ICapabilityProvider
 	{
 		TileEntityTransmissionBox box;
 

@@ -12,7 +12,6 @@ import blusunrize.immersiveengineering.common.Config.IEConfig.Machines;
 import blusunrize.immersiveengineering.common.IESaveData;
 import blusunrize.immersiveengineering.common.util.Utils;
 import blusunrize.immersiveengineering.common.util.network.MessageObstructedConnection;
-import mysticalmechanics.tileentity.TileEntityAxle;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -408,26 +407,5 @@ public class IIRotaryUtils
 		torque = output/speed;
 
 		return new float[]{speed, torque};
-	}
-
-	public static double IIToIE(float energy)
-	{
-		return (energy/rofConversionRatio/Machines.dynamo_output);
-	}
-
-	public static double IEToMM(double rotation)
-	{
-		return rotation*rofConversionRatio;
-	}
-
-	public static double MMToIE(double power)
-	{
-		return power/rofConversionRatio;
-	}
-
-	public static float[] MMToII(double power)
-	{
-		double ii = MMToIE(power);
-		return IEToII(ii, new TileEntityAxle());
 	}
 }

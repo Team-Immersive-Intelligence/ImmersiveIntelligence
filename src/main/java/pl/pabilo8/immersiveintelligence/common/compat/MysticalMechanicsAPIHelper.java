@@ -1,5 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common.compat;
 
+import blusunrize.immersiveengineering.common.Config.IEConfig.Machines;
 import mysticalmechanics.api.IMechCapability;
 import mysticalmechanics.tileentity.TileEntityAxle;
 import net.minecraft.nbt.NBTTagCompound;
@@ -23,6 +24,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import static mysticalmechanics.api.MysticalMechanicsAPI.MECH_CAPABILITY;
+import static pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.MechanicalDevices.rofConversionRatio;
 
 /**
  * @author GabrielV (gabriel@iiteam.net)
@@ -69,7 +71,7 @@ public class MysticalMechanicsAPIHelper extends IICompatModule
 				event.addCapability(CAPABILITY_RES, new MMTransmissionBoxHandler((TileEntityTransmissionBox)event.getObject()));
 	}
 
-	static class MMTransmissionBoxHandler implements IMechCapability, ICapabilityProvider
+	private static class MMTransmissionBoxHandler implements IMechCapability, ICapabilityProvider
 	{
 		TileEntityTransmissionBox box;
 		double power = 0.0;
@@ -122,7 +124,7 @@ public class MysticalMechanicsAPIHelper extends IICompatModule
 
 		private void calculatePower(@Nonnull EnumFacing facing)
 		{
-			float[] st = IIRotaryUtils.MMToII(this.power);
+			float[] st = MMToII(this.power);
 			box.energy.grow(Math.round(st[0]), Math.round(st[1]), 0.98f);
 			if(box.getWorld().getTotalWorldTime()%20==0)
 				IIPacketHandler.sendToClient(new MessageRotaryPowerSync(box.getWorld(), box.getPos(), 0, box.energy));
@@ -142,5 +144,26 @@ public class MysticalMechanicsAPIHelper extends IICompatModule
 		public void onPowerChange()
 		{
 		}
+	}
+
+	private static double IIToIE(float energy)
+	{
+		return (energy/rofConversionRatio/Machines.dynamo_output);
+	}
+
+	private static double IEToMM(double rotation)
+	{
+		return rotation*rofConversionRatio;
+	}
+
+	private static double MMToIE(double power)
+	{
+		return power/rofConversionRatio;
+	}
+
+	private static float[] MMToII(double power)
+	{
+		double ii = MMToIE(power);
+		return IIRotaryUtils.IEToII(ii, new TileEntityAxle());
 	}
 }
