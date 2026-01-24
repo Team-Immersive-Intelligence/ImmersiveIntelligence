@@ -1,5 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.weapon;
 
+import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorageAdvanced;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityTeslaCoil.LightningAnimation;
 import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.client.Minecraft;
@@ -12,6 +13,11 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoPanel;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoBar;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoGuiUtils;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.EmplacementWeapons.TeslaCoil;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement.EmplacementStateNeeds;
@@ -22,12 +28,13 @@ import java.util.ArrayList;
 
 public class EmplacementWeaponTeslaCoil extends EmplacementWeapon
 {
+	private final FluxStorageAdvanced energy;
 	private final ArrayList<Integer> targetedEntities = new ArrayList<>();
 	private final ArrayList<LightningAnimation> effects = new ArrayList<>();
 
 	public EmplacementWeaponTeslaCoil()
 	{
-
+		this.energy = new FluxStorageAdvanced(TeslaCoil.energyStorage);
 	}
 
 	@Override
@@ -191,6 +198,17 @@ public class EmplacementWeaponTeslaCoil extends EmplacementWeapon
 	public int getEnergyUpkeepCost()
 	{
 		return TeslaCoil.energyUpkeepCost;
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void initializeGUI(DecoPanel panelPlatform)
+	{
+		panelPlatform.addComponent(
+				new DecoBar(4, 4+2)
+						.withTemplate(DecoGuiUtils.BAR_ELECTRIC_ENERGY.apply(energy))
+						.withHeight(panelPlatform.height-8)
+		);
 	}
 
 	@Override

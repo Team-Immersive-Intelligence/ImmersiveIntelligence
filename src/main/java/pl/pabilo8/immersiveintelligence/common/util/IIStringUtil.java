@@ -1,6 +1,9 @@
 package pl.pabilo8.immersiveintelligence.common.util;
 
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.event.HoverEvent;
 
 import java.util.Arrays;
 import java.util.stream.IntStream;

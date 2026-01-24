@@ -191,16 +191,16 @@ public class IIContent
 	public static final Upgrade UPGRADE_SOVEREIGNTY = new Upgrade("sovereignty")
 			.withType(UpgradePurpose.DEFENSE_SYSTEM);
 
-	public static final Upgrade UPGRADE_EMPLACEMENT_FALLBACK_GRENADES = new Upgrade("emplacement/grenades")
+	public static final Upgrade UPGRADE_EMPLACEMENT_FALLBACK_GRENADES = new Upgrade("emplacement/emergency_smoke")
 			.withType(UpgradePurpose.DEFENSE_SYSTEM);
-	public static final Upgrade UPGRADE_EMPLACEMENT_STURDY_BEARINGS = new Upgrade("emplacement/bearings")
+	public static final Upgrade UPGRADE_EMPLACEMENT_STURDY_BEARINGS = new Upgrade("emplacement/sturdy_bearings")
 			.withType(UpgradePurpose.EFFICIENCY);
 
-	public static final Upgrade UPGRADE_EMPLACEMENT_MACHINEGUN_HEAVYBARREL = new Upgrade("emplacement/mg_heavy_barrel")
+	public static final Upgrade UPGRADE_EMPLACEMENT_MACHINEGUN_HEAVYBARREL = new Upgrade("emplacement/machinegun/heavy_barrel")
 			.withType(UpgradePurpose.SPEED);
-	public static final Upgrade UPGRADE_EMPLACEMENT_MACHINEGUN_WATERCOOLED = new Upgrade("emplacement/mg_watercooled")
+	public static final Upgrade UPGRADE_EMPLACEMENT_MACHINEGUN_WATERCOOLED = new Upgrade("emplacement/machinegun/watercooled")
 			.withType(UpgradePurpose.EFFICIENCY);
-	public static final Upgrade UPGRADE_EMPLACEMENT_MACHINEGUN_BUNKER = new Upgrade("emplacement/mg_bunker")
+	public static final Upgrade UPGRADE_EMPLACEMENT_MACHINEGUN_BUNKER = new Upgrade("emplacement/machinegun/additional_fortifications")
 			.withType(UpgradePurpose.ARMOR);
 
 	public static final Upgrade UPGRADE_FLAGPOLE_CAPTURE_DEFIANCE = new Upgrade("flagpole/capture_defiance")

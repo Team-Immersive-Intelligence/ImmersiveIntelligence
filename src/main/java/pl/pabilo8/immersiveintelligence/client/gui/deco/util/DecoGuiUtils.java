@@ -22,6 +22,7 @@ import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IDamageResistantMultiblock;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionBase.IIIMultiblockRecipe;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionMulti;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionSingle;
@@ -124,11 +125,15 @@ public class DecoGuiUtils
 			.withIconLocation(DecoTextures.RES_ICON_ARMOR_INTEGRITY)
 			.withValueTooltip("reactive_armor_integrity", BarTooltipFormat.VALUE_TO_MAX, TextFormatting.GOLD)
 			.withSmoothAnimation();
-	public static final DecoComponentTemplate<DecoBar> BAR_STRUCTURAL_INTEGRITY = component -> component
+	public static final DecoComponentTemplate<DecoBar> BAR_STRUCTURAL_INTEGRITY_BASE = component -> component
 			.withColors(IIColor.fromPackedRGB(0x79675a), IIColor.fromPackedRGB(0x4a3035))
 			.withIconLocation(DecoTextures.RES_ICON_STRUCTURAL_INTEGRITY)
 			.withValueTooltip("structural_integrity", BarTooltipFormat.VALUE_TO_MAX, TextFormatting.GOLD)
 			.withSmoothAnimation();
+	public static final Function<IDamageResistantMultiblock, DecoComponentTemplate<DecoBar>> BAR_STRUCTURAL_INTEGRITY = mb -> component -> component
+			.withTemplate(BAR_STRUCTURAL_INTEGRITY_BASE)
+			.withLimits(0, (int)mb.getMaxHealth(), () -> ((int)mb.getHealth()));
+
 	//--- Energy Bar ---//
 	public static final DecoComponentTemplate<DecoBar> BAR_ELECTRIC_ENERGY_BASE = component -> component
 			.withColors(IIColor.fromPackedRGB(0xb37e28), IIColor.fromPackedRGB(0x663f26))

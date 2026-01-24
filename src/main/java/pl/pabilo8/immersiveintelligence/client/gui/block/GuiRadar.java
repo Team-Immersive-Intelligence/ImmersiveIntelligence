@@ -10,6 +10,7 @@ import net.minecraft.util.math.BlockPos;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoCheckbox;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoTab;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoBar;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoMapDisplay;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.map.DecoMapDefaultColorMapper;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.map.scanners.EntityScanner;
@@ -45,7 +46,7 @@ public class GuiRadar extends DecoGui<TileEntityRadar, ContainerRadar>
 
 	private EntityScanner scanner;
 	@SyncNBT
-	private boolean filterPlayers = true, filterMobs = true, filterAnimals = true, filterItems = true, filterVehicles = true, filterAircraft = true, filterMissiles = true, filterArtillery = true, filterBullets = true;
+	public boolean filterPlayers = true, filterMobs = true, filterAnimals = true, filterItems = true, filterVehicles = true, filterAircraft = true, filterMissiles = true, filterArtillery = true, filterBullets = true;
 
 
 	public GuiRadar(EntityPlayer player, TileEntityRadar tile)
@@ -73,11 +74,11 @@ public class GuiRadar extends DecoGui<TileEntityRadar, ContainerRadar>
 						.withIcon(ICON_RADAR)
 						.withTranslatedTooltip(IIReference.DESCRIPTION_KEY+"radar_module"),
 				new DecoTab()
-						.withLink(IIGUI.RADAR)
+						.withLink(IIGUI.RADAR_STATUS)
 						.withIcon(ICON_CONFIG)
 						.withTranslatedTooltip(IIReference.DESCRIPTION_KEY+"status_module"),
 				new DecoTab()
-						.withLink(IIGUI.RADAR)
+						.withLink(IIGUI.RADAR_TASKS)
 						.withIcon(ICON_TARGETS)
 						.withTranslatedTooltip(IIReference.DESCRIPTION_KEY+"tasks_module"),
 
@@ -174,6 +175,17 @@ public class GuiRadar extends DecoGui<TileEntityRadar, ContainerRadar>
 							registerFilters();
 						})
 		);
+
+		addComponents(
+				new DecoBar(152+4, 108+12+16)
+						.withSize(96-8, 12)
+						.withHorizontalMode(true)
+						.withTemplate(DecoGuiUtils.BAR_STRUCTURAL_INTEGRITY.apply(tile)),
+				new DecoBar(152+4, 108+12)
+						.withSize(96-8, 12)
+						.withHorizontalMode(true)
+						.withTemplate(DecoGuiUtils.BAR_ELECTRIC_ENERGY.apply(tile.energyStorage))
+		);
 	}
 
 	private void registerFilters()
@@ -188,7 +200,7 @@ public class GuiRadar extends DecoGui<TileEntityRadar, ContainerRadar>
 		if(filterAnimals)
 			scanner.withFilter(entity -> entity instanceof EntityAnimal, DecoTextures.MAP_MARKER_ENTITY, IIReference.COLOR_IMMERSIVE_ORANGE, 1f);
 		if(filterAircraft)
-			scanner.withFilter(entity -> entity instanceof EntityDrone, DecoTextures.MAP_MARKER_AIRCRAFT, IIReference.COLOR_IMMERSIVE_ORANGE, 2f);
+			scanner.withFilter(entity -> entity instanceof EntityDrone, DecoTextures.MAP_MARKER_DRONE, IIReference.COLOR_IMMERSIVE_ORANGE, 2f);
 		if(filterVehicles)
 			scanner.withFilter(entity -> entity instanceof EntityVehicleBase, DecoTextures.MAP_MARKER_VEHICLE, IIReference.COLOR_IMMERSIVE_ORANGE, 3f);
 		if(filterMissiles)

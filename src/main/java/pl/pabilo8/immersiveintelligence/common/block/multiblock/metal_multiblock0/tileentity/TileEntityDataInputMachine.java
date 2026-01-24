@@ -11,7 +11,7 @@ import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIMultiblockRecipe;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.upgrade.IManagedUpgradableDevice;
 import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeManager;
-import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeUtils.DeviceTier;
+import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeUtils.MachineStyle;
 import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.DataInputMachine;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
@@ -230,8 +230,8 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockProductionSi
 	}
 
 	@Override
-	public DeviceTier getUpgradableMachineTier()
+	public MachineStyle getUpgradableMachineStyle()
 	{
-		return DeviceTier.STEEL;
+		return MachineStyle.STEEL;
 	}
 }

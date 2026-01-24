@@ -48,5 +48,9 @@ public enum PermissionCategory implements ISerializableEnum
 	/**
 	 * Allows opening containers owned by this identity
 	 */
-	CONTAINER_ACCESS
+	CONTAINER_ACCESS,
+	/**
+	 * Allows breaking blocks that are marked as owned by this identity
+	 */
+	BREAKING_STRUCTURES
 }

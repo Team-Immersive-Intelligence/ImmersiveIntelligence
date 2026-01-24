@@ -54,10 +54,13 @@ public class GuiEmplacementPageConfig extends GuiEmplacement
 								.withMultiblockFilter(TileEntityFlagpole.class)
 								.withMarkerStyle(DecoTextures.MAP_MARKER_FLAGPOLE, 8, IIColor.WHITE)
 						)
-						.withScanner(new BlockTypeScanner("weapons")
+						.withScanner(new BlockTypeScanner("emplacement")
 								.withMultiblockFilter(TileEntityEmplacement.class)
-								.withMultiblockFilter(TileEntityArtilleryHowitzer.class)
 								.withMarkerStyle(DecoTextures.MAP_MARKER_EMPLACEMENT, 8, IIColor.WHITE)
+						)
+						.withScanner(new BlockTypeScanner("howitzer")
+								.withMultiblockFilter(TileEntityArtilleryHowitzer.class)
+								.withMarkerStyle(DecoTextures.MAP_MARKER_ARTILLERY_HOWITZER, 8, IIColor.WHITE)
 						),
 
 				//

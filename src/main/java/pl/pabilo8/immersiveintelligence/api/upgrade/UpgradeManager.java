@@ -77,8 +77,8 @@ public class UpgradeManager<T extends IUpgradableDevice> implements INBTSerializ
 				.forEach(upgrades::add);
 		enbt.checkSetString("currently_installed", s ->
 				this.currentlyInstalled = Upgrade.getUpgradeByID(ResLoc.of(s)));
-		this.upgradeProgress = enbt.getInt("upgradeProgress");
-		this.clientUpgradeProgress = enbt.getInt("clientUpgradeProgress");
+		this.upgradeProgress = enbt.getInt("upgrade_progress");
+		this.clientUpgradeProgress = enbt.getInt("client_upgrade_progress");
 		this.maxClientUpgradeProgress = UpgradeUtils.getMaxClientProgress(upgradeProgress, currentlyInstalled);
 	}
 
@@ -110,7 +110,10 @@ public class UpgradeManager<T extends IUpgradableDevice> implements INBTSerializ
 
 		upgradeProgress += toAdd;
 		if(upgradeProgress >= currentlyInstalled.getProgressRequired())
-			add(currentlyInstalled, UpgradeOperation.FORCE_ADD);
+		{
+			parent.addUpgrade(currentlyInstalled, UpgradeOperation.FORCE_ADD);
+			sendTileUpdate();
+		}
 		return true;
 	}
 

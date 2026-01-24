@@ -3,24 +3,33 @@ package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multibloc
 import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorageAdvanced;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.IMob;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeArray;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeEntity;
 import pl.pabilo8.immersiveintelligence.api.upgrade.IManagedUpgradableDevice;
 import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeManager;
-import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeUtils.DeviceTier;
+import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeUtils.MachineStyle;
 import pl.pabilo8.immersiveintelligence.api.utils.MultiblockConstructionManager;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Radar;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockRadar;
+import pl.pabilo8.immersiveintelligence.common.entity.tactile.EntityAMTTactile;
+import pl.pabilo8.immersiveintelligence.common.entity.tactile.TactileManager;
+import pl.pabilo8.immersiveintelligence.common.entity.tactile.TactileManager.ITactileListener;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IConstructionRequiringDevice;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IIIGuiMultiblockTile;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IManagedDamageResistantMultiblock;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.MultiblockHealth;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultiblockIIGeneric;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
@@ -35,7 +44,7 @@ import java.util.List;
  * @since 04.03.2021
  */
 public class TileEntityRadar extends TileEntityMultiblockIIGeneric<TileEntityRadar> implements
-		IConstructionRequiringDevice, IManagedUpgradableDevice<TileEntityRadar>, IIIGuiMultiblockTile
+		IConstructionRequiringDevice, IManagedUpgradableDevice<TileEntityRadar>, IIIGuiMultiblockTile, ITactileListener, IManagedDamageResistantMultiblock
 {
 	@SyncNBT
 	public int dishRotation = 0;
@@ -45,6 +54,9 @@ public class TileEntityRadar extends TileEntityMultiblockIIGeneric<TileEntityRad
 	public UpgradeManager<TileEntityRadar> upgrades;
 	@SyncNBT(events = SyncEvents.TILE_CONSTRUCTION)
 	public MultiblockConstructionManager construction;
+	@SyncNBT(events = SyncEvents.TILE_DAMAGED)
+	public MultiblockHealth health;
+	private TactileManager tactileManager;
 
 	public TileEntityRadar()
 	{
@@ -52,6 +64,7 @@ public class TileEntityRadar extends TileEntityMultiblockIIGeneric<TileEntityRad
 		this.energyStorage = new FluxStorageAdvanced(Radar.energyCapacity);
 		this.upgrades = new UpgradeManager<>(this);
 		this.construction = new MultiblockConstructionManager(this, Radar.constructionEnergy);
+		this.health = new MultiblockHealth(this, Radar.baseHealth);
 	}
 
 	@Override
@@ -60,6 +73,15 @@ public class TileEntityRadar extends TileEntityMultiblockIIGeneric<TileEntityRad
 		super.dummyCleanup();
 		this.construction = null;
 		this.upgrades = null;
+		this.health = null;
+	}
+
+	@Override
+	public void onBeforeFirstTick()
+	{
+		super.onBeforeFirstTick();
+		if(!this.world.isRemote)
+			this.tactileManager = new TactileManager(multiblock, this);
 	}
 
 	@Override
@@ -76,16 +98,18 @@ public class TileEntityRadar extends TileEntityMultiblockIIGeneric<TileEntityRad
 		//Scan for entities
 		if(!world.isRemote)
 		{
-			if(!active||world.getTotalWorldTime()%20!=0)
-				return;
-			final BlockPos center = this.getBlockPosForPos(272);
-			final AxisAlignedBB aabb = new AxisAlignedBB(center).offset(0, -8, 0).grow(90, 0, 90).expand(0, 50, 0);
-			List<EntityLivingBase> hostiles = world.getEntitiesWithinAABB(EntityLivingBase.class, aabb, input -> input instanceof IMob);
+			if(active&&world.getTotalWorldTime()%20!=0)
+			{
+				final BlockPos center = getPOIPos("radar");
+				final AxisAlignedBB aabb = new AxisAlignedBB(center).grow(Radar.detectionRadius, 0, Radar.detectionRadius).expand(0, Radar.detectionRadius, 0);
+				List<EntityLivingBase> hostiles = world.getEntitiesWithinAABB(EntityLivingBase.class, aabb, input -> input instanceof IMob);
 
-			DataPacket packet = new DataPacket()
-					.with('e', new DataTypeArray(
-							hostiles.stream().map(entity -> new DataTypeEntity(entity, center)).toArray(DataTypeEntity[]::new)));
-			sendData(packet, getDirection("data"), getPOI(MultiblockPOI.DATA_OUTPUT)[0]);
+				DataPacket packet = new DataPacket()
+						.with('e', new DataTypeArray(
+								hostiles.stream().map(entity -> new DataTypeEntity(entity, center)).toArray(DataTypeEntity[]::new)));
+				sendData(packet, getDirection("data"), getPOI(MultiblockPOI.DATA_OUTPUT)[0]);
+			}
+			this.tactileManager.update(MultiblockRadar.INSTANCE.animationDish, dishRotation/360f);
 		}
 
 	}
@@ -119,9 +143,9 @@ public class TileEntityRadar extends TileEntityMultiblockIIGeneric<TileEntityRad
 	}
 
 	@Override
-	public DeviceTier getUpgradableMachineTier()
+	public MachineStyle getUpgradableMachineStyle()
 	{
-		return DeviceTier.STEEL;
+		return MachineStyle.STEEL;
 	}
 
 	@Override
@@ -147,5 +171,42 @@ public class TileEntityRadar extends TileEntityMultiblockIIGeneric<TileEntityRad
 	public IIGUI getGUI()
 	{
 		return IIGUI.RADAR;
+	}
+
+	//--- ITactileListener ---//
+
+	@Nullable
+	@Override
+	public TactileManager getTactileHandler()
+	{
+		return tactileManager;
+	}
+
+	@Override
+	public boolean onTactileDamage(EntityAMTTactile tactile, DamageSource source, float amount)
+	{
+		return health.damageHealth(amount*2f);
+	}
+
+	@Override
+	public boolean onTactileInteract(EntityAMTTactile tactile, EntityPlayer player, EnumHand hand)
+	{
+		player.openGui(ImmersiveIntelligence.INSTANCE, getGuiID(), getWorld(),
+				getPos().getX(), getPos().getY(), getPos().getZ());
+		return true;
+	}
+
+	//--- IManagedDamageResistantMultiblock ---//
+
+	@Override
+	public MultiblockHealth getHealthManager()
+	{
+		return health;
+	}
+
+	@Override
+	public float getExplosionResistance()
+	{
+		return 2;
 	}
 }

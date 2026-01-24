@@ -107,6 +107,10 @@ public class IIConfigHandler
 		@LangKey("ii.config.Vehicles")
 		@Comment("Customize II's vehicles, such as durability, speed, resource consumption and fire rate.")
 		public static Vehicles vehicles;
+		@SubConfig
+		@LangKey("ii.config.Factions")
+		@Comment("Customize II's multiplayer factions and property ownership system.")
+		public static Factions factions;
 
 		@Comment({"A list of all mods that II has integrated compatability for", "Setting any of these to false disables the respective compat"})
 		public static Map<String, Boolean> compat = Maps.newHashMap(Maps.toMap(IICompatModule.moduleClasses.keySet(), (s) -> Boolean.TRUE));
@@ -361,19 +365,19 @@ public class IIConfigHandler
 
 			@Comment({"The energy usage of the electric wrench (when destroying blocks / upgrading)."})
 			@RequiresMcRestart
-			public static int electricWrenchEnergyPerUse = 1000;
+			public static int electricWrenchEnergyPerUse = 4000;
 
 			@Comment({"The upgrade progress added per use of the engineer's wrench (default 1IF=1 Point of Progress™)."})
 			@RequiresMcRestart
-			public static int electricWrenchUpgradeProgress = 1000;
+			public static int electricWrenchUpgradeProgress = 4000;
 
 			@Comment({"The durability of the engineer's wrench."})
 			@RequiresMcRestart
-			public static int wrenchDurability = 256;
+			public static int wrenchDurability = 128;
 
 			@Comment({"The upgrade progress added per use of the engineer's wrench."})
 			@RequiresMcRestart
-			public static int wrenchUpgradeProgress = 350;
+			public static int wrenchUpgradeProgress = 1000;
 
 			@Comment({"Max zoom of the binoculars (in Blu's Unit of Magnification Measurement™)."})
 			@RequiresMcRestart
@@ -978,6 +982,9 @@ public class IIConfigHandler
 
 				@Comment({"Radar target detection radius (in blocks)."})
 				public static int detectionRadius = 72;
+
+				@Comment({"How much explosion and block breaking damage the multiblock can take (in half-hearts)."})
+				public static int baseHealth = 600;
 			}
 
 			public static class Flagpole
@@ -988,6 +995,9 @@ public class IIConfigHandler
 				@Comment({"Maximum allowed radius for chunks to be loaded around this multiblock."})
 				@RangeInt(min = 0, max = 12)
 				public static int maxChunksLoadedRadius = 3;
+
+				@Comment({"How much explosion and block breaking damage the multiblock can take (in half-hearts)."})
+				public static int baseHealth = 800;
 			}
 
 			public static class Emplacement
@@ -1012,6 +1022,9 @@ public class IIConfigHandler
 
 				@Comment({"Amount of turret health restored during single repair action (in half-hearts)."})
 				public static int repairAmount = 4;
+
+				@Comment({"How much explosion and block breaking damage the multiblock can take (in half-hearts)."})
+				public static int baseHealth = 600;
 			}
 
 			public static class Inserter
@@ -1395,6 +1408,9 @@ public class IIConfigHandler
 
 					@Comment({"Energy used per shot (in IF)"})
 					public static int energyUsage = 2048;
+
+					@Comment({"Energy stored inside the weapon platform (in IF)"})
+					public static int energyStorage = 32000000;
 
 					@Comment({"Starting/max health of the turret (in half-hearts)"})
 					public static int maxHealth = 200;
@@ -1967,6 +1983,12 @@ public class IIConfigHandler
 				@Comment({"Time required to fire a single shell using the field howitzer."})
 				public static int fireTime = 50;
 			}
+		}
+
+		public static class Factions
+		{
+			@Comment({"When enabled, players not belonging to a faction cannot access containers on chunks belonging to other factions."})
+			public static boolean preventContainerAccess = true;
 		}
 
 		public static class MechanicalDevices

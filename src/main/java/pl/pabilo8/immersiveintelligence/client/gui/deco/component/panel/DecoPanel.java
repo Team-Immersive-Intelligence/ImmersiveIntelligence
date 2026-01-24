@@ -235,6 +235,7 @@ public class DecoPanel extends DecoComponent<DecoPanel>
 		children.forEach(DecoComponent::cleanup);
 		children.clear();
 		labels.clear();
+		initialized = false;
 		if(vbo!=-1)
 		{
 			GlStateManager.glDeleteLists(vbo, 1);
@@ -246,6 +247,16 @@ public class DecoPanel extends DecoComponent<DecoPanel>
 	{
 		this.xPadding = xPadding;
 		this.yPadding = yPadding;
+		return null;
+	}
+
+	@Nullable
+	@Override
+	public Object getProvidedIngredient()
+	{
+		for(DecoComponent<?> child : children)
+			if(child.isMouseOver())
+				return child.getProvidedIngredient();
 		return null;
 	}
 }

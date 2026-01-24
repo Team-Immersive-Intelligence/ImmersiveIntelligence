@@ -110,7 +110,6 @@ public class DecoButton extends DecoTextBasedComponent<DecoButton>
 	{
 		bindAtlas();
 		IIDrawUtils draw = IIDrawUtils.startTexturedColored();
-
 		DecoGuiUtils.drawRepeatedRect(draw, x, y, width, height, backgroundLocation, getBackgroundColor(), 32, 8);
 		if(icon!=null)
 		{

@@ -39,6 +39,8 @@ public class IIMultiblockInterfaces
 	{
 		float getHealth();
 
+		float getMaxHealth();
+
 		/**
 		 * Method called when a {@link pl.pabilo8.immersiveintelligence.common.util.diplomacy.OwnerIdentity non-owner} entity or an explosion attempts to break the block of this multiblock.
 		 *
@@ -59,19 +61,28 @@ public class IIMultiblockInterfaces
 		}
 
 		@Override
+		default float getMaxHealth()
+		{
+			return getHealthManager().getMaxHealth();
+		}
+
+		@Override
 		default boolean damageHealth(float damage)
 		{
-			return getHealthManager().getHealth()-damage <= 0;
+			return getHealthManager().damageHealth(damage);
 		}
 	}
 
-	public static abstract class MultiblockHealth implements INBTSerializable<NBTTagFloat>
+	public static class MultiblockHealth implements INBTSerializable<NBTTagFloat>
 	{
 		private float health;
 		private final float maxHealth;
+		private final TileEntityMultiblockIIBase<?> tile;
+		private long lastDamaged = 0;
 
-		public MultiblockHealth(float maxHealth)
+		public MultiblockHealth(TileEntityMultiblockIIBase<?> tile, float maxHealth)
 		{
+			this.tile = tile;
 			this.maxHealth = maxHealth;
 			this.health = maxHealth;
 		}
@@ -88,7 +99,13 @@ public class IIMultiblockInterfaces
 
 		public boolean damageHealth(float damage)
 		{
-			health = MathHelper.clamp(health+damage, 0, maxHealth);
+			//I-Frames
+			if(tile.getWorld().getTotalWorldTime() <= lastDamaged)
+				return false;
+			lastDamaged = tile.getWorld().getTotalWorldTime();
+
+			//Apply damage
+			health = MathHelper.clamp(health-damage, 0, maxHealth);
 			return health <= 0;
 		}
 

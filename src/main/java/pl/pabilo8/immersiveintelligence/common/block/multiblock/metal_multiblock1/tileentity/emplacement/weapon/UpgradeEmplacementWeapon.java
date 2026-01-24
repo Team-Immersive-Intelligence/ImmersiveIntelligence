@@ -24,12 +24,8 @@ public class UpgradeEmplacementWeapon<W extends EmplacementWeapon> extends Upgra
 		this.withType(UpgradePurpose.PRIMARY_WEAPON);
 	}
 
-	public static EmplacementWeapon getWeaponFromName(String weaponName)
+	public W createWeapon()
 	{
-		if(weaponName==null)
-			return null;
-		if(WEAPONS.containsKey(weaponName))
-			return WEAPONS.get(weaponName).get();
-		return null;
+		return weaponSupplier.get();
 	}
 }

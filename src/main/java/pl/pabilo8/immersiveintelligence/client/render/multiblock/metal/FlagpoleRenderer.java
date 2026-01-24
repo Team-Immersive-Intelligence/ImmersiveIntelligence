@@ -13,7 +13,6 @@ import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMT;
 import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTBanner;
 import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IIMultiblockRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IITileRenderer.RegisteredTileRenderer;
-import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IITileRenderer.RegisteredUpgradeRenderer;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityFlagpole;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
@@ -23,7 +22,6 @@ import pl.pabilo8.immersiveintelligence.common.util.IIReference;
  * @since 06.09.2025
  */
 @RegisteredTileRenderer(name = "multiblock/flagpole", clazz = TileEntityFlagpole.class)
-@RegisteredUpgradeRenderer(clazz = TileEntityFlagpole.class)
 public class FlagpoleRenderer extends IIMultiblockRenderer<TileEntityFlagpole>
 {
 	private AMTCachedModel<TileEntityFlagpole> model;
@@ -35,7 +33,7 @@ public class FlagpoleRenderer extends IIMultiblockRenderer<TileEntityFlagpole>
 		applyStandardMirroring(te, true);
 		model.getVariant(te, te.style);
 		AMTBanner banner = flag.get();
-		banner.setProperty(AMTUtils.getDebugProgress(100, partialTicks));
+		banner.setProperty(AMTUtils.getDebugProgress(200, partialTicks));
 		banner.setBanner(te.flag);
 		model.render(tes, buf);
 	}
@@ -53,6 +51,7 @@ public class FlagpoleRenderer extends IIMultiblockRenderer<TileEntityFlagpole>
 	{
 		this.model = AMTCachedModelBuilder.startTileEntityModel(TileEntityFlagpole.class)
 				.withModel(model)
+				.withHeader(IIReference.RES_BLOCK_MODEL.with("multiblock/flagpole/flagpole.obj.amt"))
 				//Style Variants
 				.withModel(te -> te==null||te.style.getStyle().equals("sandbags"),
 						IIReference.RES_BLOCK_MODEL.with("multiblock/flagpole/variant_sandbags.obj"))

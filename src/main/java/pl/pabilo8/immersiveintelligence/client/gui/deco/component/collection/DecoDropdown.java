@@ -258,7 +258,7 @@ public class DecoDropdown<T> extends DecoScrolledCollection<DecoDropdown<T>, T>
 	{
 		bindAtlas();
 		IIDrawUtils draw = IIDrawUtils.startTexturedColored();
-		IIColor buttonColor = enabled?(pressed?BACKGROUND_PRESSED: (hovered?BACKGROUND_HOVERED: BACKGROUND)): BACKGROUND_DISABLED;
+		IIColor buttonColor = getBackgroundColor();
 
 		//Blinking search text cursor
 		blinkTime = (blinkTime+1)%40;

@@ -214,6 +214,12 @@ public class DiplomacyUtils
 		return null;
 	}
 
+	public static IChunkOwnership getPositionOwnership(World world, BlockPos pos)
+	{
+		Chunk chunk = world.getChunkFromBlockCoords(pos);
+		return getChunkOwnership(chunk);
+	}
+
 	//--- Utilities ---//
 
 	public static void claimProperty(OwnerIdentity identity, IOwnableProperty property)

@@ -1086,11 +1086,14 @@ machineupgrade.immersiveintelligence.improved_gearbox.desc=Replacing the stock g
 machineupgrade.immersiveintelligence.saw_unregulator=Saw Unregulator
 machineupgrade.immersiveintelligence.saw_unregulator.desc=Unregulating the saw leads to higher sawdust output in cost of main output amount.
 
-machineupgrade.immersiveintelligence.emplacement.grenades=Emergency Smoke Dischargers
-machineupgrade.immersiveintelligence.emplacement.grenades.desc=When the Emplacement's weapon is heavily damaged, smoke will be discharged to provide cover.
+machineupgrade.immersiveintelligence.sovereignty=Sovereignty
+machineupgrade.immersiveintelligence.sovereignty.desc=Allows the structure to seize terrain around it for the owner's faction.
 
-machineupgrade.immersiveintelligence.emplacement.bearings=Sturdy Bearings
-machineupgrade.immersiveintelligence.emplacement.bearings.desc=Higher quality bearings increase the maximum weapon rotation speed, to work at full capacity lubrication is required
+machineupgrade.immersiveintelligence.emplacement.emergency_smoke=Emergency Smoke Dischargers
+machineupgrade.immersiveintelligence.emplacement.emergency_smoke.desc=When the Emplacement's weapon is heavily damaged, smoke will be discharged to provide cover.
+
+machineupgrade.immersiveintelligence.emplacement.sturdy_bearings=Sturdy Bearings
+machineupgrade.immersiveintelligence.emplacement.sturdy_bearings.desc=Higher quality bearings increase the maximum weapon rotation speed.
 
 machineupgrade.immersiveintelligence.emplacement.targetting=Enhanced Targetting Systems
 machineupgrade.immersiveintelligence.emplacement.targetting.desc=Improved fire control systems allow for better target acquisition and tracking, increasing accuracy.
@@ -1121,14 +1124,14 @@ machineupgrade.immersiveintelligence.emplacement.heavy_railgun.desc=Heavy Railgu
 machineupgrade.immersiveintelligence.emplacement.machinegun=Machinegun Nest
 machineupgrade.immersiveintelligence.emplacement.machinegun.desc=The Machinegun Nest can provide suppressive automatic fire, allowing crowd control. Due to its construction, it is unable to fight airborne enemies.
 
-machineupgrade.immersiveintelligence.emplacement.mg_heavy_barrel=Heavy Barrel
-machineupgrade.immersiveintelligence.emplacement.mg_heavy_barrel.desc=Heavy barrels allow for much faster firing rate and slightly increase the maximum permitted overheat.
+machineupgrade.immersiveintelligence.emplacement.machinegun.heavy_barrel=Heavy Barrel
+machineupgrade.immersiveintelligence.emplacement.machinegun.heavy_barrel.desc=Heavy barrels allow for much faster firing rate and slightly increase the maximum permitted overheat.
 
-machineupgrade.immersiveintelligence.emplacement.mg_watercooled=Water Cooled Barrel
-machineupgrade.immersiveintelligence.emplacement.mg_watercooled.desc=A replacement for the stock barrels. When mounted, barrels do not overheat when a coolant is provided.
+machineupgrade.immersiveintelligence.emplacement.machinegun.watercooled=Water Cooled Barrel
+machineupgrade.immersiveintelligence.emplacement.machinegun.watercooled.desc=A replacement for the stock barrels. When mounted, barrels do not overheat when a coolant is provided.
 
-machineupgrade.immersiveintelligence.emplacement.mg_bunker=Additional Fortifications
-machineupgrade.immersiveintelligence.emplacement.mg_bunker.desc=Placing additional sandbags around the machinegun nest gives it additional armor and increases its durability.
+machineupgrade.immersiveintelligence.emplacement.machinegun.bunker=Additional Fortifications
+machineupgrade.immersiveintelligence.emplacement.machinegun.bunker.desc=Placing additional sandbags around the machinegun nest gives it additional armor and increases its durability.
 
 machineupgrade.immersiveintelligence.emplacement.mortar=Mortar
 machineupgrade.immersiveintelligence.emplacement.mortar.desc=Mortar provides indirect fire support on close range, the vertical firing angle and high shell caliber allow it to pierce trough roofs and decimate enemies from above
@@ -1249,10 +1252,10 @@ desc.immersiveintelligence.fire_missions_module=Fire Missions
 desc.immersiveintelligence.tooltip.armor=Armor %f%%
 
 desc.immersiveintelligence.upgrade_gui.title=Upgrade Machine
-desc.immersiveintelligence.upgrade_gui.info=Info
-desc.immersiveintelligence.upgrade_gui.install=Install
-desc.immersiveintelligence.upgrade_gui.remove=Remove
-desc.immersiveintelligence.upgrade_gui.back=Back
+desc.immersiveintelligence.upgrade_gui.tech_tree=Tech Tree
+desc.immersiveintelligence.upgrade_gui.info=Information
+desc.immersiveintelligence.upgrade_gui.install=Install Upgrade
+desc.immersiveintelligence.upgrade_gui.remove=Remove Upgrade
 
 desc.immersiveintelligence.variable_type=Type:
 desc.immersiveintelligence.variable_add_desc=Add a new variable
@@ -1301,6 +1304,8 @@ desc.immersiveintelligence.diplomacy.ownership.comparison.stronger=This faction 
 desc.immersiveintelligence.diplomacy.ownership.comparison.equal=This faction matches your strength.
 desc.immersiveintelligence.diplomacy.ownership.comparison.weaker=This faction falls short of your strength.
 desc.immersiveintelligence.diplomacy.ownership.comparison.far_weaker=This faction is vastly outclassed by yours.
+
+info.immersiveintelligence.diplomacy.ownership.container_cannot_open=You cannot access a structure on foreign territory.
 
 # Company
 desc.immersiveintelligence.diplomacy.law_form.company=Company
@@ -1509,7 +1514,7 @@ info.immersiveintelligence.frequency_set=Radio frequency has been set to %s
 info.immersiveintelligence.frequency_invalid=Invalid frequency, basic devices can use frequencies up to %s!
 info.immersiveintelligence.current_frequency=Current frequency: %s
 
-info.immersiveintelligence.requires_advanced_hammer=Advanced engineering requires advanced tools... you need an Electric Hammer to build this machine!
+info.immersiveintelligence.requires_advanced_hammer=Advanced engineering requires advanced tools... you need an %s to build this machine!
 
 info.immersiveintelligence.tool_durability=Durability: %1$s / %2$s
 info.immersiveintelligence.gear_ratio=Torque/Speed Ratio: %1$s >> %2$s

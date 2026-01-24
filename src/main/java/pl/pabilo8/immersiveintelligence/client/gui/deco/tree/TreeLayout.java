@@ -9,7 +9,7 @@ import java.util.*;
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 09.12.2025
  */
-public class TreeLayout
+public class TreeLayout<T>
 {
 	public enum Orientation
 	{
@@ -26,11 +26,11 @@ public class TreeLayout
 	private int nodeSameLevelSpacing = 4;
 	private boolean alignChildrenToParent = true;
 
-	public final IDecoTree tree;
-	private final Map<IDecoTreeNode, NodeLayoutInfo> nodeInfo = new HashMap<>();
+	public final IDecoTree<T> tree;
+	private final Map<IDecoTreeNode<T>, NodeLayoutInfo> nodeInfo = new HashMap<>();
 	private NodeLayoutInfo rootInfo = null;
 
-	public TreeLayout(@Nonnull IDecoTree tree)
+	public TreeLayout(@Nonnull IDecoTree<T> tree)
 	{
 		this.tree = tree;
 	}
@@ -43,9 +43,9 @@ public class TreeLayout
 		nodeInfo.clear();
 
 		//Build parent-child relationships
-		Map<IDecoTreeNode, List<IDecoTreeNode>> childrenMap = buildChildrenMap();
+		Map<IDecoTreeNode<T>, List<IDecoTreeNode<T>>> childrenMap = buildChildrenMap();
 		//Group nodes by level
-		Map<Integer, List<IDecoTreeNode>> levels = calculateLevels();
+		Map<Integer, List<IDecoTreeNode<T>>> levels = calculateLevels();
 		//Calculate positions for each level
 		switch(orientation)
 		{
@@ -71,12 +71,12 @@ public class TreeLayout
 	/**
 	 * Builds a map of parent -> children relationships.
 	 */
-	private Map<IDecoTreeNode, List<IDecoTreeNode>> buildChildrenMap()
+	private Map<IDecoTreeNode<T>, List<IDecoTreeNode<T>>> buildChildrenMap()
 	{
-		Map<IDecoTreeNode, List<IDecoTreeNode>> childrenMap = new HashMap<>();
+		Map<IDecoTreeNode<T>, List<IDecoTreeNode<T>>> childrenMap = new HashMap<>();
 
-		for(IDecoTreeNode node : tree.getAllNodes())
-			for(IDecoTreeNode dependency : node.getDependencies())
+		for(IDecoTreeNode<T> node : tree.getAllNodes())
+			for(IDecoTreeNode<T> dependency : node.getDependencies())
 				childrenMap.computeIfAbsent(dependency, k -> new ArrayList<>()).add(node);
 
 		return childrenMap;
@@ -85,14 +85,14 @@ public class TreeLayout
 	/**
 	 * Groups nodes by their level in the tree (distance from root).
 	 */
-	private Map<Integer, List<IDecoTreeNode>> calculateLevels()
+	private Map<Integer, List<IDecoTreeNode<T>>> calculateLevels()
 	{
-		Map<IDecoTreeNode, Integer> nodeLevels = new HashMap<>();
-		Map<Integer, List<IDecoTreeNode>> levels = new TreeMap<>();
+		Map<IDecoTreeNode<T>, Integer> nodeLevels = new HashMap<>();
+		Map<Integer, List<IDecoTreeNode<T>>> levels = new TreeMap<>();
 
 		//Start with root nodes
-		Queue<IDecoTreeNode> queue = new LinkedList<>(tree.getRootNodes());
-		for(IDecoTreeNode root : tree.getRootNodes())
+		Queue<IDecoTreeNode<T>> queue = new LinkedList<>(tree.getRootNodes());
+		for(IDecoTreeNode<T> root : tree.getRootNodes())
 		{
 			nodeLevels.put(root, 0);
 			levels.computeIfAbsent(0, k -> new ArrayList<>()).add(root);
@@ -101,11 +101,11 @@ public class TreeLayout
 		//BFS to assign levels
 		while(!queue.isEmpty())
 		{
-			IDecoTreeNode current = queue.poll();
+			IDecoTreeNode<T> current = queue.poll();
 			int currentLevel = nodeLevels.get(current);
 
 			//Find children
-			for(IDecoTreeNode node : tree.getAllNodes())
+			for(IDecoTreeNode<T> node : tree.getAllNodes())
 				if(node.getDependencies().contains(current)&&!nodeLevels.containsKey(node))
 				{
 					int newLevel = currentLevel+1;
@@ -116,11 +116,11 @@ public class TreeLayout
 		}
 
 		//Handle orphaned nodes
-		for(IDecoTreeNode node : tree.getAllNodes())
+		for(IDecoTreeNode<T> node : tree.getAllNodes())
 			if(!nodeLevels.containsKey(node))
 			{
 				int minLevel = 0;
-				for(IDecoTreeNode dep : node.getDependencies())
+				for(IDecoTreeNode<T> dep : node.getDependencies())
 				{
 					Integer depLevel = nodeLevels.get(dep);
 					if(depLevel!=null&&depLevel >= minLevel)
@@ -136,7 +136,7 @@ public class TreeLayout
 	/**
 	 * Calculates positions for horizontal layout.
 	 */
-	private void calculateHorizontalLayout(Map<Integer, List<IDecoTreeNode>> levels, int availableWidth, int availableHeight, boolean reverse)
+	private void calculateHorizontalLayout(Map<Integer, List<IDecoTreeNode<T>>> levels, int availableWidth, int availableHeight, boolean reverse)
 	{
 		int levelWidth = nodeWidth+nodeLevelSpacing;
 		//Position virtual root
@@ -172,7 +172,7 @@ public class TreeLayout
 			//Position each node
 			for(int i = 0; i < nodes.size(); i++)
 			{
-				IDecoTreeNode node = nodes.get(i);
+				IDecoTreeNode<T> node = nodes.get(i);
 				int nodeY = startY+i*(nodeHeight+nodeSameLevelSpacing);
 
 				NodeLayoutInfo info = new NodeLayoutInfo();
@@ -192,7 +192,7 @@ public class TreeLayout
 	/**
 	 * Calculates positions for vertical layout.
 	 */
-	private void calculateVerticalLayout(Map<Integer, List<IDecoTreeNode>> levels, int availableWidth, int availableHeight, boolean reverse)
+	private void calculateVerticalLayout(Map<Integer, List<IDecoTreeNode<T>>> levels, int availableWidth, int availableHeight, boolean reverse)
 	{
 		int levelHeight = nodeHeight+nodeLevelSpacing;
 		//Position virtual root
@@ -225,7 +225,7 @@ public class TreeLayout
 			//Position each node
 			for(int i = 0; i < nodes.size(); i++)
 			{
-				IDecoTreeNode node = nodes.get(i);
+				IDecoTreeNode<T> node = nodes.get(i);
 				int nodeX = startX+i*(nodeWidth+nodeSameLevelSpacing);
 
 				NodeLayoutInfo info = new NodeLayoutInfo();
@@ -245,14 +245,14 @@ public class TreeLayout
 	/**
 	 * Adjusts children positions to be closer to their parents on the Y-axis.
 	 */
-	private void adjustChildrenPositions(Map<IDecoTreeNode, List<IDecoTreeNode>> childrenMap)
+	private void adjustChildrenPositions(Map<IDecoTreeNode<T>, List<IDecoTreeNode<T>>> childrenMap)
 	{
 		boolean yAxis = orientation==Orientation.HORIZONTAL_LEFT_TO_RIGHT||orientation==Orientation.HORIZONTAL_RIGHT_TO_LEFT;
 
-		for(Map.Entry<IDecoTreeNode, List<IDecoTreeNode>> entry : childrenMap.entrySet())
+		for(Map.Entry<IDecoTreeNode<T>, List<IDecoTreeNode<T>>> entry : childrenMap.entrySet())
 		{
-			IDecoTreeNode parent = entry.getKey();
-			List<IDecoTreeNode> children = entry.getValue();
+			IDecoTreeNode<T> parent = entry.getKey();
+			List<IDecoTreeNode<T>> children = entry.getValue();
 			int total = children.size()*(yAxis?nodeHeight: nodeWidth)+(children.size()-1)*nodeSameLevelSpacing;
 			for(int i = 0; i < children.size(); i++)
 			{
@@ -268,7 +268,7 @@ public class TreeLayout
 	/**
 	 * Gets layout information for a specific node.
 	 */
-	public NodeLayoutInfo getNodeInfo(IDecoTreeNode node)
+	public NodeLayoutInfo getNodeInfo(IDecoTreeNode<T> node)
 	{
 		return nodeInfo.get(node);
 	}
@@ -288,27 +288,27 @@ public class TreeLayout
 
 	//--- Setters ---//
 
-	public TreeLayout withOrientation(Orientation orientation)
+	public TreeLayout<T> withOrientation(Orientation orientation)
 	{
 		this.orientation = orientation;
 		return this;
 	}
 
-	public TreeLayout withNodeSize(int width, int height)
+	public TreeLayout<T> withNodeSize(int width, int height)
 	{
 		this.nodeWidth = width;
 		this.nodeHeight = height;
 		return this;
 	}
 
-	public TreeLayout withSpacing(int levelSpacing, int sameLevelSpacing)
+	public TreeLayout<T> withSpacing(int levelSpacing, int sameLevelSpacing)
 	{
 		this.nodeLevelSpacing = levelSpacing;
 		this.nodeSameLevelSpacing = sameLevelSpacing;
 		return this;
 	}
 
-	public TreeLayout withParentAlignment(boolean align)
+	public TreeLayout<T> withParentAlignment(boolean align)
 	{
 		this.alignChildrenToParent = align;
 		return this;

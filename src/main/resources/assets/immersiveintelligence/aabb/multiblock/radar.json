@@ -3,16 +3,333 @@
     "full": [
       0, 0, 0,
       16, 16, 16
+    ],
+    "empty": [
+      -48, -48, -48,
+      -48, -48, -48
+    ],
+    "slab": [
+      0, 0, 0,
+      16, 8, 16
+    ],
+    "cable1": [
+      8, 0, 0,
+      11, 3, 16
+    ],
+    "cable2": [
+      4.5, 0, 0,
+      8, 3, 16
+    ],
+    "mainframe_top": [
+      0, 0, 0,
+      16, 8, 16
+    ],
+    "mainframe_top_half": [
+      0, 8, 8,
+      15, 14, 16
+    ],
+    "books": [
+      2, 8, 2,
+      12, 12, 12
+    ],
+    "table_top": [
+      0, 11, 0,
+      16, 14, 16
+    ],
+    "table_leg1": [
+      1, 0, 1,
+      4, 11, 4
+    ],
+    "table_leg2": [
+      1, 0, 12,
+      4, 11, 15
+    ],
+    "table_leg3": [
+      12, 0, 1,
+      15, 11, 4
+    ],
+    "table_leg4": [
+      12, 0, 12,
+      15, 11, 15
+    ],
+    "port": [
+      14, 4, 2,
+      16, 16, 14
+    ],
+    "port_base": [
+      0, 0, 0,
+      16, 4, 16
+    ],
+    "port_back": [
+      2, 6, 4,
+      14, 14, 12
+    ],
+    "tower_base_br": [
+      4, 0, 1,
+      14, 8, 10
+    ],
+    "tower_base_bl": [
+      3, 0, 1,
+      11, 8, 10
+    ],
+    "tower_base_fr": [
+      4, 0, 4,
+      14, 8, 13
+    ],
+    "cable_box": [
+      4, 0, -2,
+      12, 6, 16
+    ],
+    "rod0_br": [
+      9, 8, 0,
+      15, 16, 7
+    ],
+    "rod0_fl": [
+      2, 8, 7,
+      8, 16, 14
+    ],
+    "rod0_fr": [
+      7, 8, 6,
+      14, 16, 12
+    ],
+    "rod0_bl": [
+      2, 8, 0,
+      8, 16, 7
+    ],
+    "rod1_br": [
+      13, 0, -4,
+      19, 16, 3
+    ],
+    "rod1_fl": [
+      -2, 0, 11,
+      4, 16, 18
+    ],
+    "rod1_fr": [
+      11, 0, 10,
+      18, 16, 16
+    ],
+    "rod1_bl": [
+      -2, 0, -4,
+      4, 16, 3
+    ],
+    "rod2_br": [
+      17, 0, -8,
+      23, 16, -1
+    ],
+    "rod2_fl": [
+      -6, 0, 15,
+      0, 16, 22
+    ],
+    "rod2_bl": [
+      15, 0, 14,
+      22, 16, 20
+    ],
+    "rod2_fr": [
+      -6, 0, -8,
+      0, 16, -1
+    ],
+    "rod3_br": [
+      9, -16, 0,
+      15, 0, 7
+    ],
+    "rod3_fl": [
+      2, -16, 7,
+      8, 0, 14
+    ],
+    "rod3_fr": [
+      7, -16, 6,
+      14, 0, 12
+    ],
+    "rod3_bl": [
+      2, -16, 0,
+      8, 0, 7
+    ],
+    "mesh_fence1": [
+      0, 0, 1,
+      16, 16, 2
+    ],
+    "mesh_fence2": [
+      3, 0, 2,
+      16, 16, 3
+    ],
+    "mesh_fence3": [
+      2, 0, 4,
+      3, 16, 16
+    ],
+    "mesh_fence4": [
+      2, 0, 0,
+      3, 16, 16
+    ],
+    "mesh_fence5": [
+      3, 0, 0,
+      4, 16, 12
+    ],
+    "mesh_fence6": [
+      5, 0, 12,
+      16, 16, 13
+    ],
+    "mesh_fence7": [
+      0, 0, 11,
+      12, 16, 12
+    ],
+    "mesh_fence_pole1": [
+      12, 0, 9,
+      14, 16, 11
+    ],
+    "mesh_fence_pole2": [
+      3, 0, 12,
+      5, 16, 14
+    ],
+    "mesh_fence_pole3": [
+      1, 0, 2,
+      3, 16, 4
+    ],
+    "mesh_fence_pole4": [
+      2, 0, 0.25,
+      4, 16, 2.25
+    ],
+    "tactile_radar_dish": [
+      0, 0, -4,
+      8, 96, 4
+    ],
+    "tactile_radar_base": [
+      -12, 4, -12,
+      12, 16, 12
+    ],
+    "tactile_radar_rod1": [
+      -8, 8, -8,
+      8, 0, 8
     ]
   },
   "positions": {
+    "6:8,11,12,18,24,17,23,30,36:40": "slab",
+    "57": ["cable1", "cable2"],
+    "51,52": "mainframe_top",
+    "51": "mainframe_top_half",
+    "52": "books",
+    "3,4": "table_top",
+    "3": ["table_leg1", "table_leg2"],
+    "4": ["table_leg3", "table_leg4"],
+    "71,77,83": ["port", "port_base", "port_back"],
+    "272:459": "empty",
+    "55": ["tower_base_br", "rod0_br", "mesh_fence5", "mesh_fence6", "mesh_fence_pole2"],
+    "73": ["tower_base_fr", "rod0_fr", "mesh_fence2", "mesh_fence3", "mesh_fence_pole3"],
+    "76": ["tower_base_fl", "rod0_fl", "mesh_fence_pole4"],
+    "58": ["tower_base_bl", "rod0_bl"],
+    "97": "rod1_br",
+    "100": "rod1_bl",
+    "115": "rod1_fr",
+    "118": "rod1_fl",
+    "139": "rod2_br",
+    "157": "rod2_bl",
+    "142": "rod2_fr",
+    "160": "rod2_fl",
+    "231,237,236,230": "full",
+    "230": "rod3_br",
+    "231": "rod3_bl",
+    "236": "rod3_fr",
+    "237": "rod3_fl",
+    "187,193,200,201,196,190,183,182": "empty",
+    "62,68,69": "empty",
+    "63": "cable_box",
+    "74,75": "mesh_fence1",
+    "67,61": "mesh_fence4",
+    "56": ["mesh_fence7", "mesh_fence_pole1"]
   },
   "poi": {
     "energy": 71,
+    "data": 77,
     "redstone": 83,
-    "data": 272
+    "radar": 272
   },
   "rotations": {
     "data": "counterclockwise_90"
+  },
+  "tactile_offset": [0, 0, 0],
+  "tactile": {
+    "_schema": "immersiveintelligence:models/block/multiblock/radar/radar.obj.amt",
+    "rotato": [
+      {
+        "offset": [-12, -8, 0],
+        "type": "tactile_radar_dish"
+      },
+      {
+        "type": "tactile_radar_dish"
+      },
+      {
+        "offset": [0, 0, 8],
+        "type": "tactile_radar_dish"
+      },
+      {
+        "offset": [0, 0, 16],
+        "type": "tactile_radar_dish"
+      },
+      {
+        "offset": [0, 0, 24],
+        "type": "tactile_radar_dish"
+      },
+      {
+        "offset": [0, 0, 32],
+        "type": "tactile_radar_dish"
+      },
+      {
+        "offset": [3, 0, 40],
+        "type": "tactile_radar_dish"
+      },
+      {
+        "offset": [6, 0, 48],
+        "type": "tactile_radar_dish"
+      },
+      {
+        "offset": [9, 0, 56],
+        "type": "tactile_radar_dish"
+      }, {
+        "offset": [0, 0, -8],
+        "type": "tactile_radar_dish"
+      },
+      {
+        "offset": [0, 0, -16],
+        "type": "tactile_radar_dish"
+      },
+      {
+        "offset": [0, 0, -24],
+        "type": "tactile_radar_dish"
+      },
+      {
+        "offset": [0, 0, -32],
+        "type": "tactile_radar_dish"
+      },
+      {
+        "offset": [3, 0, -40],
+        "type": "tactile_radar_dish"
+      },
+      {
+        "offset": [6, 0, -48],
+        "type": "tactile_radar_dish"
+      },
+      {
+        "offset": [9, 0, -56],
+        "type": "tactile_radar_dish"
+      },
+      {
+        "type": "tactile_radar_base"
+      },
+      {
+        "offset": [16, 4, 0],
+        "type": "tactile_radar_rod1"
+      },
+      {
+        "offset": [32, 8, 0],
+        "type": "tactile_radar_rod1"
+      },
+      {
+        "offset": [48, 12, 0],
+        "type": "tactile_radar_rod1"
+      },
+      {
+        "offset": [56, 16, 0],
+        "type": "tactile_radar_rod1"
+      }
+    ]
   }
 }

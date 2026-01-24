@@ -49,5 +49,16 @@ public class EntityAmmoMissile extends EntityAmmoProjectile
 				.withProperty(ParticleProperties.SIZE, ammoType.getCaliber()/12f);
 	}
 
+	@Override
+	protected void onHitRicochet(RayTraceResult hit, IPenetrationHandler handler)
+	{
+		//Set the position to the hit position
+		this.posX = hit.hitVec.x;
+		this.posY = hit.hitVec.y;
+		this.posZ = hit.hitVec.z;
+
+		detonate();
+	}
+
 
 }

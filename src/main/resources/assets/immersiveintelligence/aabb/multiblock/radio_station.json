@@ -3,9 +3,209 @@
     "full": [
       0, 0, 0,
       16, 16, 16
+    ],
+    "slab": [
+      0, 0, 0,
+      16, 8, 16
+    ],
+    "cable1": [
+      6, 8, 0,
+      10, 12, 12
+    ],
+    "cable2": [
+      0, 8, 12,
+      10, 12, 16
+    ],
+    "cable3": [
+      10, 8, 12,
+      16, 12, 16
+    ],
+    "cable4": [
+      6, 8, 12,
+      10, 16, 16
+    ],
+    "cable5": [
+      6, 0, -4,
+      10, 13, 0
+    ],
+    "bottom_brick_br": [
+      2, 8, 2,
+      8, 16, 8
+    ],
+    "bottom_brick_tr": [
+      8, 8, 2,
+      14, 16, 8
+    ],
+    "bottom_brick_tl": [
+      8, 8, 8,
+      14, 16, 14
+    ],
+    "rod1_br": [
+      4, 0, 4,
+      10, 16, 10
+    ],
+    "rod1_tr": [
+      7, 0, 3,
+      13, 16, 9
+    ],
+    "rod1_bl": [
+      7, 0, 7,
+      13, 16, 13
+    ],
+    "rod2_br": [
+      6, 0, 6,
+      13, 16, 13
+    ],
+    "rod2_tr": [
+      3, 0, 7,
+      10, 16, 14
+    ],
+    "rod2_tl": [
+      3, 0, 3,
+      10, 16, 10
+    ],
+    "rod2_bl": [
+      7, 4, 5,
+      11, 16, 9
+    ],
+    "rod2_bl_node": [
+      3, 0, 3,
+      13, 4, 13
+    ],
+    "rod3_br": [
+      8, 0, 8,
+      14, 16, 14
+    ],
+    "rod3_tr": [
+      1, 0, 8,
+      8, 16, 14
+    ],
+    "rod3_tl": [
+      1, 0, 2,
+      8, 16, 8
+    ],
+    "rod3_bl": [
+      8, 0, 2,
+      14, 16, 8
+    ],
+    "beam_horizontal_front": [
+      8, -3, -6,
+      11, 0, 24
+    ],
+    "beam_horizontal_back": [
+      5, -3, -6,
+      8, 0, 24
+    ],
+    "beam_horizontal_left": [
+      -6, -3, 5,
+      24, 0, 8
+    ],
+    "beam_horizontal_right": [
+      -6, -3, 8,
+      24, 0, 11
+    ],
+    "rod4_br": [
+      11, 0, 11,
+      16, 16, 16
+    ],
+    "rod4_tr": [
+      0, 0, 11,
+      5, 16, 16
+    ],
+    "rod4_tl": [
+      0, 0, 0,
+      5, 16, 5
+    ],
+    "rod4_bl": [
+      11, 0, 0,
+      16, 16, 5
+    ],
+    "rod5_br": [
+      13, 0, 13,
+      19, 16, 19
+    ],
+    "rod5_tr": [
+      -2, 0, 13,
+      4, 16, 19
+    ],
+    "rod5_tl": [
+      -2, 0, -2,
+      4, 16, 4
+    ],
+    "rod5_bl": [
+      13, 0, -2,
+      19, 16, 4
+    ],
+    "top_ball": [
+      4, 9, 4,
+      12, 17, 12
+    ],
+    "top_rod_br": [
+      2, 0, 2,
+      6, 10, 6
+    ],
+    "top_rod_tr": [
+      10, 0, 2,
+      14, 10, 6
+    ],
+    "top_rod_tl": [
+      10, 0, 10,
+      14, 10, 14
+    ],
+    "top_rod_bl": [
+      2, 0, 10,
+      6, 10, 14
+    ],
+    "almost_top_rod_br": [
+      0, 0, 0,
+      5, 16, 5
+    ],
+    "almost_top_rod_tr": [
+      11, 0, 0,
+      16, 16, 5
+    ],
+    "almost_top_rod_tl": [
+      11, 0, 11,
+      16, 16, 16
+    ],
+    "almost_top_rod_bl": [
+      0, 0, 11,
+      5, 16, 16
     ]
   },
   "positions": {
+    "1,2,3:5,6,8": "slab",
+    "4": ["cable1", "cable2"],
+    "3": ["cable3", "cable4"],
+    "9": ["full", "cable5"],
+    "2": "bottom_brick_tl",
+    "8": "bottom_brick_tr",
+    "6": "bottom_brick_br",
+    "15": "rod1_br",
+    "17": "rod1_tr",
+    "11": "rod1_bl",
+    "24": "rod2_br",
+    "26": "rod2_tr",
+    "20": "rod2_tl",
+    "18": ["rod2_bl", "rod2_bl_node"],
+    "33": "rod3_br",
+    "35": "rod3_tr",
+    "29": "rod3_tl",
+    "27": "rod3_bl",
+    "30": "beam_horizontal_front",
+    "32": "beam_horizontal_back",
+    "28": "beam_horizontal_left",
+    "34": "beam_horizontal_right",
+    "42": "rod4_br",
+    "44": "rod4_tr",
+    "38": "rod4_tl",
+    "36": "rod4_bl",
+    "51": "rod5_br",
+    "53": "rod5_tr",
+    "47": "rod5_tl",
+    "45": "rod5_bl",
+    "58": ["almost_top_rod_br", "almost_top_rod_tr", "almost_top_rod_tl", "almost_top_rod_bl"],
+    "67": ["top_ball", "top_rod_br", "top_rod_tr", "top_rod_tl", "top_rod_bl"]
   },
   "poi": {
     "energy": 7,

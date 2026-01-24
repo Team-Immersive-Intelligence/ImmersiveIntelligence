@@ -38,7 +38,7 @@ public class GuiFlagpole extends DecoGui<TileEntityFlagpole, ContainerFlagpole>
 	@DecoResource
 	public static ResourceLocation ICON_FACTION_CONFIG = ResLoc.of(IIReference.RES_II, "gui/tab_icons/faction_management");
 	@SyncNBT
-	private boolean filterFlagpoles = true, filterWeapons = true, filterLogistics = true, filterIntelligence = true, filterWireNetworks = true;
+	public boolean filterFlagpoles = true, filterWeapons = true, filterLogistics = true, filterIntelligence = true, filterWireNetworks = true;
 
 	public GuiFlagpole(EntityPlayer player, TileEntityFlagpole tile)
 	{
@@ -66,7 +66,7 @@ public class GuiFlagpole extends DecoGui<TileEntityFlagpole, ContainerFlagpole>
 						.withIcon(ICON_MAP)
 						.withTranslatedTooltip(IIReference.DESCRIPTION_KEY+"map_module"),
 				new DecoTab()
-						.withLink(IIGUI.FLAGPOLE)
+						.withLink(IIGUI.FLAGPOLE_FACTION)
 						.withIcon(ICON_FACTION_CONFIG)
 						.withTranslatedTooltip(IIReference.DESCRIPTION_KEY+"faction_module")
 		);
@@ -91,16 +91,20 @@ public class GuiFlagpole extends DecoGui<TileEntityFlagpole, ContainerFlagpole>
 								.withUpdateCondition(() -> this.filterFlagpoles)
 								.withMarkerStyle(DecoTextures.MAP_MARKER_FLAGPOLE, 4, IIColor.WHITE)
 						)
-						.withScanner(new BlockTypeScanner("weapons")
+						.withScanner(new BlockTypeScanner("emplacement")
 								.withMultiblockFilter(TileEntityEmplacement.class)
-								.withMultiblockFilter(TileEntityArtilleryHowitzer.class)
 								.withUpdateCondition(() -> this.filterWeapons)
 								.withMarkerStyle(DecoTextures.MAP_MARKER_EMPLACEMENT, 4, IIColor.WHITE)
+						)
+						.withScanner(new BlockTypeScanner("artillery_howitzer")
+								.withMultiblockFilter(TileEntityArtilleryHowitzer.class)
+								.withUpdateCondition(() -> this.filterWeapons)
+								.withMarkerStyle(DecoTextures.MAP_MARKER_EMPLACEMENT, 6, IIColor.WHITE)
 						)
 						.withScanner(new BlockTypeScanner("intelligence")
 								.withMultiblockFilter(TileEntityRadar.class)
 								.withUpdateCondition(() -> this.filterFlagpoles)
-								.withMarkerStyle(DecoTextures.MAP_MARKER_RADAR, 4, IIColor.WHITE)
+								.withMarkerStyle(DecoTextures.MAP_MARKER_RADAR, 6, IIColor.WHITE)
 						),
 
 				new DecoCheckbox(152+4, 12)

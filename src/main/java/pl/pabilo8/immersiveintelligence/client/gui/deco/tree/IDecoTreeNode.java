@@ -1,17 +1,19 @@
 package pl.pabilo8.immersiveintelligence.client.gui.deco.tree;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Set;
 
 /**
  * Interface for a node in a tree structure that can be displayed by DecoTreeDisplay.
+ * <p>
+ * Node is responsible for tree-logic related properties (deps, lockouts, active/available and layout position).
+ * Visual representation (name, tooltip, rendering) is handled by IDecoTreeNodeRenderer.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 09.12.2025
  */
-public interface IDecoTreeNode
+public interface IDecoTreeNode<T>
 {
 	/**
 	 * @return Unique identifier for this node (used for equality checks)
@@ -20,28 +22,16 @@ public interface IDecoTreeNode
 	String getId();
 
 	/**
-	 * @return Display name for this node
-	 */
-	@Nonnull
-	String getDisplayName();
-
-	/**
 	 * @return Nodes that must be unlocked/acquired before this node
 	 */
 	@Nonnull
-	Set<IDecoTreeNode> getDependencies();
+	Set<IDecoTreeNode<T>> getDependencies();
 
 	/**
 	 * @return Nodes that are incompatible with this node (mutual exclusion)
 	 */
 	@Nonnull
-	Set<IDecoTreeNode> getLockOuts();
-
-	/**
-	 * @return Optional tooltip text for this node
-	 */
-	@Nullable
-	Collection<String> getTooltip();
+	Set<IDecoTreeNode<T>> getLockOuts();
 
 	/**
 	 * @return X position for rendering (set by layout algorithm)
@@ -76,11 +66,11 @@ public interface IDecoTreeNode
 	/**
 	 * @return Whether this node is available (all dependencies met, no lockouts)
 	 */
-	boolean isAvailable(@Nonnull Collection<IDecoTreeNode> activeNodes);
+	boolean isAvailable(@Nonnull Collection<IDecoTreeNode<T>> activeNodes);
 
 	/**
 	 * @return User data associated with this node
 	 */
-	@Nullable
-	Object getUserData();
+	@Nonnull
+	T getUserData();
 }

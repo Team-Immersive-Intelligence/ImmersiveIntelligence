@@ -47,7 +47,7 @@ import net.minecraftforge.client.event.EntityViewRenderEvent.CameraSetup;
 import net.minecraftforge.client.event.EntityViewRenderEvent.FOVModifier;
 import net.minecraftforge.client.event.EntityViewRenderEvent.FogColors;
 import net.minecraftforge.client.event.EntityViewRenderEvent.RenderFogEvent;
-import net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent;
+import net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent.Post;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.Pre;
 import net.minecraftforge.client.event.RenderTooltipEvent.PostText;
@@ -1045,7 +1045,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 	}
 
 	@SubscribeEvent
-	public void onInitGuiPost(InitGuiEvent.Post event)
+	public void onInitGuiPost(Post event)
 	{
 		//Add creative menu subtabs
 		if(event.getGui() instanceof GuiContainerCreative&&IIConfig.australianCreativeTabs)

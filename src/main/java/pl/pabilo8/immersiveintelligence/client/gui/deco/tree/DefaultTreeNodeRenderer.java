@@ -11,13 +11,13 @@ import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import javax.annotation.Nonnull;
 
 /**
- * Default implementation of IDecoTreeNodeRenderer.
- * Renders nodes as simple boxes with text and connection lines.
+ * Object-type renderer: renders nodes as simple boxes with text (String.valueOf(userData))
+ * and connection lines.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 09.12.2025
  */
-public class DecoTreeNodeRenderer implements IDecoTreeNodeRenderer
+public class DefaultTreeNodeRenderer implements IDecoTreeNodeRenderer<Object>
 {
 	public static final int NODE_WIDTH = 20;
 	public static final int NODE_HEIGHT = 20;
@@ -33,7 +33,7 @@ public class DecoTreeNodeRenderer implements IDecoTreeNodeRenderer
 	public final IIColor connectionActiveColor = IIColor.fromHex("497d49");
 
 	@Override
-	public void render(@Nonnull IDecoTreeNode node, int x, int y, boolean isHovered, boolean isActive, boolean isAvailable)
+	public void renderNode(@Nonnull IDecoTreeNode<Object> node, int x, int y, boolean isHovered, boolean isActive, boolean isAvailable)
 	{
 		// Determine color based on state
 		IIColor color;
@@ -53,12 +53,11 @@ public class DecoTreeNodeRenderer implements IDecoTreeNodeRenderer
 		draw.finish();
 
 		// Draw node text (centered)
-		String text = node.getDisplayName();
+		String text = getDisplayName(node);
 		if(!text.isEmpty())
 		{
 			FontRenderer font = getFontRenderer();
 
-			// Truncate text if too long
 			if(font.getStringWidth(text) > NODE_WIDTH-4)
 				text = font.trimStringToWidth(text, NODE_WIDTH-6)+"...";
 
@@ -67,10 +66,18 @@ public class DecoTreeNodeRenderer implements IDecoTreeNodeRenderer
 			int textY = y+(NODE_HEIGHT-font.FONT_HEIGHT)/2;
 
 			GlStateManager.pushMatrix();
-			GlStateManager.translate(0, 0, 1); // Ensure text is above background
+			GlStateManager.translate(0, 0, 1);
 			font.drawString(text, textX, textY, 0xFFFFFF);
 			GlStateManager.popMatrix();
 		}
+	}
+
+	@Override
+	@Nonnull
+	public String getDisplayName(@Nonnull IDecoTreeNode<Object> node)
+	{
+		Object data = node.getUserData();
+		return data!=null?String.valueOf(data): "";
 	}
 
 	@Override

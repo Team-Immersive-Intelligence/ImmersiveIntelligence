@@ -745,9 +745,9 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 		if(multiblock.isPointOfInterest(pos, "bunker_door"))
 		{
 			TileEntityArtilleryHowitzer master = master();
-			return master!=null&&master.doorTime > 1?2000.0F: -1;
+			return master!=null&&master.door.isFullyClosed()?2000.0F: 0;
 		}
-		return -1;
+		return 0;
 	}
 
 	@Override

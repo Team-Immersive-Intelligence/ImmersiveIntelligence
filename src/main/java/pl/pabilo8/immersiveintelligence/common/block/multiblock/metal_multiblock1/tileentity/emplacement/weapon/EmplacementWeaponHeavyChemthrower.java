@@ -7,6 +7,10 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoPanel;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoFluidTank;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.EmplacementWeapons.HeavyChemthrower;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement.EmplacementStateNeeds;
@@ -160,6 +164,17 @@ public class EmplacementWeaponHeavyChemthrower extends EmplacementWeaponTurretBa
 	public int getEnergyUpkeepCost()
 	{
 		return HeavyChemthrower.energyUpkeepCost;
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void initializeGUI(DecoPanel panelPlatform)
+	{
+		panelPlatform.addComponent(
+				new DecoFluidTank(4, 4+2)
+						.withFluidTank(tank)
+						.withHeight(panelPlatform.height-8)
+		);
 	}
 
 	@Override

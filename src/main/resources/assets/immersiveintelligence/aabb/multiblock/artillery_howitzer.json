@@ -331,11 +331,6 @@
   "tactile_offset": [0, 0, -0.5],
   "tactile": {
     "_schema": "immersiveintelligence:models/block/multiblock/artillery_howitzer.obj.amt",
-    "_unoriented": [
-      "roller1",
-      "roller2",
-      "roller3"
-    ],
     "turret": [
       {
         "type": "tactile_gun"

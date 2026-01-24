@@ -184,15 +184,4 @@ public abstract class IITileRenderer<T extends TileEntity> extends TileEntitySpe
 	{
 		RegisteredTileRenderer[] value();
 	}
-
-	/**
-	 * Used for automatic registration of upgrade renderers based on class
-	 */
-	@Retention(RetentionPolicy.RUNTIME)
-	@Target({ElementType.TYPE})
-	public @interface RegisteredUpgradeRenderer
-	{
-		Class<? extends TileEntity> clazz();
-	}
-
 }

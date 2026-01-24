@@ -28,6 +28,9 @@ public class DecoTextures
 	public static final ResLoc GUI_BG_ALUMINIUM = ResLoc.of(RES_TEXTURES_DECO_BACKGROUND, "aluminium");
 	public static final ResLoc GUI_BG_PAPER = ResLoc.of(RES_TEXTURES_DECO_BACKGROUND, "paper");
 	public static final ResLoc GUI_BG_BLUEPRINT = ResLoc.of(RES_TEXTURES_DECO_BACKGROUND, "blueprint");
+	public static final ResLoc GUI_BG_BRICKS = ResLoc.of(RES_TEXTURES_DECO_BACKGROUND, "bricks");
+	public static final ResLoc GUI_BG_CONCRETE = ResLoc.of(RES_TEXTURES_DECO_BACKGROUND, "concrete");
+	public static final ResLoc GUI_BG_SANDBAGS = ResLoc.of(RES_TEXTURES_DECO_BACKGROUND, "sandbags");
 	public static final ResLoc GUI_BG_DARK = ResLoc.of(RES_TEXTURES_DECO_BACKGROUND, "dark");
 	public static final ResLoc GUI_BG_DARK_TANK = ResLoc.of(RES_TEXTURES_DECO_BACKGROUND, "dark_tank");
 
@@ -139,12 +142,18 @@ public class DecoTextures
 
 	public static final ResLoc MAP_MARKER_ENTITY = ResLoc.of(RES_TEXTURES_DECO, "map/marker/entity");
 	public static final ResLoc MAP_MARKER_VEHICLE = ResLoc.of(RES_TEXTURES_DECO, "map/marker/vehicle");
+	public static final ResLoc MAP_MARKER_TRAINCAR = ResLoc.of(RES_TEXTURES_DECO, "map/marker/traincar");
 	public static final ResLoc MAP_MARKER_AIRCRAFT = ResLoc.of(RES_TEXTURES_DECO, "map/marker/aircraft");
+	public static final ResLoc MAP_MARKER_DRONE = ResLoc.of(RES_TEXTURES_DECO, "map/marker/drone");
 	public static final ResLoc MAP_MARKER_BULLET = ResLoc.of(RES_TEXTURES_DECO, "map/marker/bullet");
 	public static final ResLoc MAP_MARKER_MISSILE = ResLoc.of(RES_TEXTURES_DECO, "map/marker/missile");
+	public static final ResLoc MAP_MARKER_DRAGON = ResLoc.of(RES_TEXTURES_DECO, "map/marker/dragon");
+	public static final ResLoc MAP_MARKER_WYRM = ResLoc.of(RES_TEXTURES_DECO, "map/marker/wyrm");
 
 	public static final ResLoc MAP_MARKER_FLAGPOLE = ResLoc.of(RES_TEXTURES_DECO, "map/marker/flagpole");
 	public static final ResLoc MAP_MARKER_EMPLACEMENT = ResLoc.of(RES_TEXTURES_DECO, "map/marker/emplacement");
+	public static final ResLoc MAP_MARKER_ARTILLERY_HOWITZER = ResLoc.of(RES_TEXTURES_DECO, "map/marker/artillery_howitzer");
+	public static final ResLoc MAP_MARKER_MISSILE_SILO = ResLoc.of(RES_TEXTURES_DECO, "map/marker/missile_silo");
 	public static final ResLoc MAP_MARKER_RADAR = ResLoc.of(RES_TEXTURES_DECO, "map/marker/radar");
 	public static final ResLoc MAP_MARKER_RADIO_STATION = ResLoc.of(RES_TEXTURES_DECO, "map/marker/radio_station");
 

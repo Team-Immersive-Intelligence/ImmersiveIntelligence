@@ -491,7 +491,7 @@ info.immersiveintelligence.frequency_set=Częstotliwość została ustawiona na 
 info.immersiveintelligence.frequency_invalid=Nieprawidłowa częstotliwość, podstawowe urządzenia mogą używać częstotliwości do %s!
 info.immersiveintelligence.current_frequency=Obecna Częstotliwość: %s
 
-info.immersiveintelligence.requires_advanced_hammer=Zaawansowana inżynieria wymaga zaawansowanych narzędzi... potrzebujesz Elektrycznego Młotka by zbudować tą maszynę!
+info.immersiveintelligence.requires_advanced_hammer=Zaawansowana inżynieria wymaga zaawansowanych narzędzi... potrzebujesz %s aby zbudować tą maszynę!
 
 info.immersiveintelligence.tool_durability=Wytrzymałośc: %1$s / %2$s
 

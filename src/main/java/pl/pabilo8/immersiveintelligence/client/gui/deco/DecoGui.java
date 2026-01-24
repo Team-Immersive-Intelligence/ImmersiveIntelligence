@@ -616,7 +616,7 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 
 		if(focusedElement!=null)
 			anyPressed = focusedElement.decoMousePressed(this.mc, mouseX, mouseY, mouseButtonEnum);
-		else
+		if(!anyPressed)
 		{
 			if(currentWidget!=null&&currentWidget.decoMousePressed(this.mc, mouseX, mouseY, mouseButtonEnum))
 			{
@@ -878,11 +878,19 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 	}
 
 	/**
+	 * Closes the current GUI, ensuring data is saved and sent to the server.
+	 */
+	public final boolean closeGUI()
+	{
+		return changeGUI(null);
+	}
+
+	/**
 	 * Changes the GUI to the specified one, ensuring data is saved and sent to the server
 	 *
-	 * @param newGUI the new GUI to change to
+	 * @param newGUI the new GUI to change to, null will close the current GUI
 	 */
-	public final boolean changeGUI(@Nonnull IIGUI newGUI)
+	public final boolean changeGUI(@Nullable IIGUI newGUI)
 	{
 		return changeGUI(newGUI, null, null);
 	}
@@ -890,11 +898,11 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 	/**
 	 * Changes the GUI to the specified one, ensuring data is saved and sent to the server
 	 *
-	 * @param newGUI   the new GUI to change to
+	 * @param newGUI   the new GUI to change to, null will close the current GUI
 	 * @param guiData  additional data to save for the GUI
 	 * @param tileData additional data to save for the tile entity
 	 */
-	public final boolean changeGUI(@Nonnull IIGUI newGUI, @Nullable EasyNBT guiData, @Nullable EasyNBT tileData)
+	public final boolean changeGUI(@Nullable IIGUI newGUI, @Nullable EasyNBT guiData, @Nullable EasyNBT tileData)
 	{
 		//Switch the Change GUI flag to prevent double saving
 		this.changeGUIFlag = true;
@@ -908,7 +916,9 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 		saveGuiData().conditionally(guiData!=null, e -> e.mergeWith(guiData));
 
 		//Send change GUI message
-		if(newGUI!=gui)
+		if(newGUI==null)
+			IIPacketHandler.sendToServer(MessageGuiNBT.closeGuiMessage());
+		else if(newGUI!=gui)
 			IIPacketHandler.sendToServer(new MessageGuiNBT(newGUI, tile));
 		else
 			refreshGUIFlag = true;

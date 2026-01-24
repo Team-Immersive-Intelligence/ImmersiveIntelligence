@@ -76,10 +76,13 @@ public class UpgradeUtils
 	/**
 	 * The tier of the device, purely cosmetic, changes the style of the upgrade GUI.
 	 */
-	public enum DeviceTier
+	public enum MachineStyle
 	{
 		WOODEN,
-		STEEL
+		STEEL,
+		BRICKS,
+		CONCRETE,
+		SANDBAGS
 	}
 
 	public enum UpgradeOperation

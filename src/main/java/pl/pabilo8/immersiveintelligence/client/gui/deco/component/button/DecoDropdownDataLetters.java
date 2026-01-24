@@ -73,13 +73,11 @@ public class DecoDropdownDataLetters extends DecoDropdown<Character> implements 
 		bindAtlas();
 
 		IIDrawUtils draw = IIDrawUtils.startTexturedColored();
-		IIColor buttonColor = enabled?(pressed?BACKGROUND_PRESSED: (hovered?BACKGROUND_HOVERED: BACKGROUND)): BACKGROUND_DISABLED;
-
 		//Blinking search text cursor
 		blinkTime = (blinkTime+1)%40;
 
 		//Background
-		DecoGuiUtils.drawRepeatedRect(draw, x, y, width, height, backgroundLocation, buttonColor, 32, 8);
+		DecoGuiUtils.drawRepeatedRect(draw, x, y, width, height, backgroundLocation, getBackgroundColor(), 32, 8);
 		draw.finish();
 
 		//Selected entry or search text

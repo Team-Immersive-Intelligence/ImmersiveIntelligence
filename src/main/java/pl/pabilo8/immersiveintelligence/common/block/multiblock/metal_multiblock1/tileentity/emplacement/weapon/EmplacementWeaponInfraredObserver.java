@@ -6,8 +6,11 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.utils.armor.IInfraredProtectionEquipment;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoPanel;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.EmplacementWeapons.InfraredObserver;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement.EmplacementStateNeeds;
@@ -115,6 +118,13 @@ public class EmplacementWeaponInfraredObserver extends EmplacementWeapon
 	public int getEnergyUpkeepCost()
 	{
 		return InfraredObserver.energyUpkeepCost;
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void initializeGUI(DecoPanel panelPlatform)
+	{
+
 	}
 
 	@Override

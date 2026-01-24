@@ -45,7 +45,7 @@ public class NBTSerialisation
 	/**
 	 * Registry of all serializers for field types
 	 */
-	private static final HashMap<Class<?>, BiFunction<Field, SyncNBT, FieldSerializer<?, ?>>> serializerRegistry = new HashMap<>();
+	private static final HashMap<Class<?>, BiFunction<Field, SyncNBT, FieldSerializer<?, ?>>> serializerRegistry = new LinkedHashMap<>();
 	/**
 	 * Registry of all serializers for a class
 	 */
@@ -138,6 +138,8 @@ public class NBTSerialisation
 					return list;
 				}
 		);
+
+		registerSerializer(ItemStack.class, NBTTagCompound.class, ItemStack::serializeNBT, nbt -> new ItemStack(nbt));
 
 		registerSerializer(ITypeNBTSerializable.class, NBTTagCompound.class,
 				type -> {

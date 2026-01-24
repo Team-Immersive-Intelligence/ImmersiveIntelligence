@@ -1,7 +1,7 @@
 package pl.pabilo8.immersiveintelligence.api.upgrade;
 
 import net.minecraft.world.World;
-import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeUtils.DeviceTier;
+import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeUtils.MachineStyle;
 import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeUtils.UpgradeOperation;
 
 import javax.annotation.Nullable;
@@ -32,9 +32,9 @@ public interface IUpgradableDevice
 	 *
 	 * @return the device tier
 	 */
-	default DeviceTier getUpgradableMachineTier()
+	default MachineStyle getUpgradableMachineStyle()
 	{
-		return UpgradeUtils.DeviceTier.WOODEN;
+		return MachineStyle.WOODEN;
 	}
 
 	/**

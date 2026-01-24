@@ -136,9 +136,9 @@ public class EntityAMTTactile extends Entity implements IEntityAdditionalSpawnDa
 				this.rotationRoll = (float)(parent.rotationRoll+rotation.z);
 
 				Vec3d angle = new Matrix4().setIdentity()
-						.rotate(Math.toRadians(rotationYaw), 0, 1, 0)
-						.rotate(Math.toRadians(-rotationRoll), 0, 0, 1)
-						.rotate(Math.toRadians(-rotationPitch), 1, 0, 0)
+						.rotate(Math.toRadians(-rotationYaw), 0, 1, 0)
+						.rotate(Math.toRadians(rotationRoll), 0, 0, 1)
+						.rotate(Math.toRadians(rotationPitch), 1, 0, 0)
 						.apply(relativeOffset.add(translation));
 
 				this.posX = parent.posX+angle.x;
@@ -186,14 +186,17 @@ public class EntityAMTTactile extends Entity implements IEntityAdditionalSpawnDa
 		if(!(entity instanceof EntityAMTTactile))
 		{
 			entity.move(MoverType.PISTON, motionX, motionY, motionZ);
-			manager.onCollide(this, entity);
+			if(!world.isRemote&&manager!=null)
+				manager.onCollide(this, entity);
 		}
 	}
 
 	@Override
 	public boolean attackEntityFrom(DamageSource source, float amount)
 	{
-		return manager.onAttacked(this, source, amount);
+		if(!world.isRemote&&manager!=null)
+			return manager.onAttacked(this, source, amount);
+		return false;
 	}
 
 	@Override
@@ -235,7 +238,9 @@ public class EntityAMTTactile extends Entity implements IEntityAdditionalSpawnDa
 	@Override
 	public boolean processInitialInteract(EntityPlayer player, EnumHand hand)
 	{
-		return manager.onInteract(this, player, hand);
+		if(!world.isRemote&&manager!=null)
+			return manager.onInteract(this, player, hand);
+		return false;
 	}
 
 	@Override

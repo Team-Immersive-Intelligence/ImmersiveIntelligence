@@ -17,6 +17,6 @@ public class ContainerUpgrade<T extends TileEntityIEBase & IIEInventory & IUpgra
 		super(player, tile);
 		//Input/Output Slots
 
-		addPlayerInventory(player.inventory, 9+32+16-8, 18+32+32+8-4+76-16+4+24);
+		addPlayerInventory(player.inventory, 9+32+16-8, 18+32+32+8-4+76-16+4+24+8);
 	}
 }

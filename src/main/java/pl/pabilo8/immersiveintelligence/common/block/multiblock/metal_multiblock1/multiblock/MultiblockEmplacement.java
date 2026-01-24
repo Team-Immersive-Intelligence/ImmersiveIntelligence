@@ -36,7 +36,6 @@ public class MultiblockEmplacement extends MultiblockStuctureBase<TileEntityEmpl
 				//Generic Upgrades
 				.withUpgrade(IIContent.UPGRADE_EMPLACEMENT_STURDY_BEARINGS, UpgradeTier.TIER_1)
 				.withUpgrade(IIContent.UPGRADE_EMPLACEMENT_FALLBACK_GRENADES, UpgradeTier.TIER_1)
-				.withUpgrade(IIContent.UPGRADE_SOVEREIGNTY, UpgradeTier.TIER_2)
 
 				//Machinegun
 				.withUpgrade(IIContent.UPGRADE_EMPLACEMENT_WEAPON_MACHINEGUN, UpgradeTier.TIER_1)

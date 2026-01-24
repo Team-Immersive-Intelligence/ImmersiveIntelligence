@@ -1,21 +1,11 @@
 package pl.pabilo8.immersiveintelligence.client.gui.deco.tree.upgrade;
 
-import blusunrize.immersiveengineering.client.ClientUtils;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.text.TextFormatting;
-import org.lwjgl.input.Keyboard;
 import pl.pabilo8.immersiveintelligence.api.upgrade.IUpgradableDevice;
 import pl.pabilo8.immersiveintelligence.api.upgrade.Upgrade;
 import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeTechTree;
-import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler;
-import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.tree.DecoTreeNodeRenderer;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.tree.DefaultTreeNodeRenderer;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.tree.IDecoTree;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.tree.IDecoTreeNode;
-import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
-import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBeginMachineUpgrade;
-import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -30,9 +20,8 @@ import static pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeTechTree.Upgra
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 09.12.2025
  */
-public class UpgradeTechTreeWrapper implements IDecoTree
+public abstract class UpgradeTechTreeWrapper implements IDecoTree<Upgrade>
 {
-	private static final String KEY_TOOLTIP = IIReference.DESCRIPTION_KEY+"upgrade.";
 	private final UpgradeTechTree techTree;
 	private final IUpgradableDevice device;
 	private final Map<UpgradeTreeNode, UpgradeTreeNodeWrapper> wrapperMap = new HashMap<>();
@@ -64,14 +53,14 @@ public class UpgradeTechTreeWrapper implements IDecoTree
 
 	@Nonnull
 	@Override
-	public Collection<IDecoTreeNode> getAllNodes()
+	public Collection<IDecoTreeNode<Upgrade>> getAllNodes()
 	{
 		return new ArrayList<>(wrapperMap.values());
 	}
 
 	@Nonnull
 	@Override
-	public Collection<IDecoTreeNode> getRootNodes()
+	public Collection<IDecoTreeNode<Upgrade>> getRootNodes()
 	{
 		return wrapperMap.entrySet().stream()
 				.filter(entry -> entry.getKey().getDependencies().isEmpty())
@@ -80,7 +69,7 @@ public class UpgradeTechTreeWrapper implements IDecoTree
 
 	@Nonnull
 	@Override
-	public Collection<IDecoTreeNode> getActiveNodes()
+	public Collection<IDecoTreeNode<Upgrade>> getActiveNodes()
 	{
 		List<Upgrade> installedUpgrades = device.getAllInstalledUpgrades();
 		return wrapperMap.entrySet().stream()
@@ -91,36 +80,22 @@ public class UpgradeTechTreeWrapper implements IDecoTree
 
 	@Nullable
 	@Override
-	public IDecoTreeNode getHoveredNode()
+	public IDecoTreeNode<Upgrade> getHoveredNode()
 	{
 		return hoveredNode;
 	}
 
 	@Override
-	public void setHoveredNode(@Nullable IDecoTreeNode node)
+	public void setHoveredNode(@Nullable IDecoTreeNode<Upgrade> node)
 	{
 		this.hoveredNode = (UpgradeTreeNodeWrapper)node;
 	}
 
-	@Override
-	public void onNodeClicked(@Nonnull IDecoTreeNode node)
-	{
-		UpgradeTreeNodeWrapper wrapper = (UpgradeTreeNodeWrapper)node;
-		Upgrade upgrade = wrapper.original.getUpgrade();
-		//Install if not installed, else uninstall
-		IIPacketHandler.sendToServer(new MessageBeginMachineUpgrade((TileEntity)device, upgrade, ClientUtils.mc().player,
-				!device.isUpgradeInstalled(upgrade)
-		));
-	}
-
-	/**
-	 * Wrapper class for UpgradeTechTree.UpgradeTreeNode
-	 */
-	private class UpgradeTreeNodeWrapper implements IDecoTreeNode
+	private class UpgradeTreeNodeWrapper implements IDecoTreeNode<Upgrade>
 	{
 		private final UpgradeTreeNode original;
-		final Set<IDecoTreeNode> dependencies = new HashSet<>();
-		final Set<IDecoTreeNode> lockOuts = new HashSet<>();
+		final Set<IDecoTreeNode<Upgrade>> dependencies = new HashSet<>();
+		final Set<IDecoTreeNode<Upgrade>> lockOuts = new HashSet<>();
 		private int x = 0;
 		private int y = 0;
 
@@ -138,62 +113,16 @@ public class UpgradeTechTreeWrapper implements IDecoTree
 
 		@Nonnull
 		@Override
-		public String getDisplayName()
-		{
-			return original.getUpgrade().getLocalizedName();
-		}
-
-		@Nonnull
-		@Override
-		public Set<IDecoTreeNode> getDependencies()
+		public Set<IDecoTreeNode<Upgrade>> getDependencies()
 		{
 			return dependencies;
 		}
 
 		@Nonnull
 		@Override
-		public Set<IDecoTreeNode> getLockOuts()
+		public Set<IDecoTreeNode<Upgrade>> getLockOuts()
 		{
 			return lockOuts;
-		}
-
-		@Nullable
-		@Override
-		public Collection<String> getTooltip()
-		{
-			Upgrade upgrade = original.getUpgrade();
-			List<String> tooltip = new ArrayList<>();
-			//Name
-			tooltip.add(upgrade.getLocalizedName());
-
-			//Description
-			List<String> description = IIClientUtils.fontRegular.listFormattedStringToWidth(I18n.format(String.format("machineupgrade.%s.%s.desc",
-					upgrade.getId().getResourceDomain(), upgrade.getId().getResourcePath().replace("/", "."))), 200);
-			for(String line : description)
-				tooltip.add(TextFormatting.GRAY+""+TextFormatting.ITALIC+line);
-
-			//Parameters
-			tooltip.add(IIReference.COLOR_IMMERSIVE_ORANGE.getHexCol(upgrade.getPurpose().getLocalizedName()));
-			tooltip.add(IIReference.COLOR_IMMERSIVE_ORANGE.withBrightness(0.5f)
-					.getHexCol(original.getTier().getLocalizedName()));
-			tooltip.addAll(upgrade.getLocalizedBenefitNames());
-			//Dependencies and lockouts
-			if(!dependencies.isEmpty())
-				if(ItemTooltipHandler.addExpandableTooltip(Keyboard.KEY_LSHIFT, KEY_TOOLTIP+"dependencies_hold", tooltip))
-				{
-					tooltip.add(I18n.format(KEY_TOOLTIP+"dependencies"));
-					for(IDecoTreeNode dep : dependencies)
-						tooltip.add("- "+dep.getDisplayName());
-				}
-			if(!lockOuts.isEmpty())
-				if(ItemTooltipHandler.addExpandableTooltip(Keyboard.KEY_LCONTROL, KEY_TOOLTIP+"incompatible_hold", tooltip))
-				{
-					tooltip.add(I18n.format(KEY_TOOLTIP+"incompatible"));
-					for(IDecoTreeNode lock : lockOuts)
-						tooltip.add("- "+lock.getDisplayName());
-				}
-
-			return tooltip;
 		}
 
 		@Override
@@ -218,13 +147,13 @@ public class UpgradeTechTreeWrapper implements IDecoTree
 		@Override
 		public int getWidth()
 		{
-			return DecoTreeNodeRenderer.NODE_WIDTH;
+			return DefaultTreeNodeRenderer.NODE_WIDTH;
 		}
 
 		@Override
 		public int getHeight()
 		{
-			return DecoTreeNodeRenderer.NODE_HEIGHT;
+			return DefaultTreeNodeRenderer.NODE_HEIGHT;
 		}
 
 		@Override
@@ -234,24 +163,24 @@ public class UpgradeTechTreeWrapper implements IDecoTree
 		}
 
 		@Override
-		public boolean isAvailable(@Nonnull Collection<IDecoTreeNode> activeNodes)
+		public boolean isAvailable(@Nonnull Collection<IDecoTreeNode<Upgrade>> activeNodes)
 		{
 			//Check if all dependencies are active
-			for(IDecoTreeNode dep : dependencies)
+			for(IDecoTreeNode<Upgrade> dep : dependencies)
 				if(!activeNodes.contains(dep))
 					return false;
 
 			//Check if no lockouts are active
-			for(IDecoTreeNode lock : lockOuts)
+			for(IDecoTreeNode<Upgrade> lock : lockOuts)
 				if(activeNodes.contains(lock))
 					return false;
 
 			return true;
 		}
 
-		@Nullable
+		@Nonnull
 		@Override
-		public Object getUserData()
+		public Upgrade getUserData()
 		{
 			return original.getUpgrade();
 		}

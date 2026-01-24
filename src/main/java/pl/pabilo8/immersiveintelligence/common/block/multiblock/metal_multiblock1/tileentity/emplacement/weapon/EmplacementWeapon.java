@@ -13,6 +13,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.IItemHandler;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoPanel;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement.EmplacementStateNeeds;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityEmplacementWeapon;
@@ -117,6 +118,11 @@ public abstract class EmplacementWeapon implements ITypeNBTSerializable<NBTTagCo
 	}
 
 	public abstract int getEnergyUpkeepCost();
+
+	//--- GUI ---//
+
+	@SideOnly(Side.CLIENT)
+	public abstract void initializeGUI(DecoPanel panelPlatform);
 
 	//--- Damage ---//
 

@@ -4,53 +4,45 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 
 import javax.annotation.Nonnull;
+import java.util.Collection;
+import java.util.Collections;
 
 import static pl.pabilo8.immersiveintelligence.client.gui.deco.tree.TreeLayout.NodeLayoutInfo;
 import static pl.pabilo8.immersiveintelligence.client.gui.deco.tree.TreeLayout.Orientation;
 
 /**
  * Interface for rendering tree nodes in DecoTreeDisplay.
+ * <p>
+ * Renderer is responsible for all visuals: nodes, connections, root node, display name, tooltip, etc.
  *
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 09.12.2025
  */
-public interface IDecoTreeNodeRenderer
+public interface IDecoTreeNodeRenderer<T>
 {
-	/**
-	 * Renders a tree node.
-	 *
-	 * @param node        The node to render
-	 * @param x           X position
-	 * @param y           Y position
-	 * @param isHovered   Whether the node is currently hovered
-	 * @param isActive    Whether the node is active/selected
-	 * @param isAvailable Whether the node is available (dependencies met)
-	 */
-	void render(@Nonnull IDecoTreeNode node, int x, int y, boolean isHovered, boolean isActive, boolean isAvailable);
+	void renderNode(@Nonnull IDecoTreeNode<T> node, int x, int y, boolean isHovered, boolean isActive, boolean isAvailable);
 
-	/**
-	 * Renders a virtual root node that is not a part of the tree structure.
-	 *
-	 * @param x the x position
-	 * @param y the y position
-	 */
 	default void renderRootNode(int x, int y)
 	{
-
 	}
 
-	/**
-	 * Renders a connection between two nodes using the specified layout orientation.
-	 * Default implementation does nothing - renderers that support connections should override this.
-	 */
 	default void renderConnection(NodeLayoutInfo parentInfo, NodeLayoutInfo childInfo, Orientation orientation, boolean isActive)
 	{
-
 	}
 
-	/**
-	 * Utility method to get the default FontRenderer.
-	 */
+	@Nonnull
+	default String getDisplayName(@Nonnull IDecoTreeNode<T> node)
+	{
+		T data = node.getUserData();
+		return data!=null?String.valueOf(data): "";
+	}
+
+	@Nonnull
+	default Collection<String> getTooltip(@Nonnull IDecoTreeNode<T> node)
+	{
+		return Collections.emptyList();
+	}
+
 	default FontRenderer getFontRenderer()
 	{
 		return Minecraft.getMinecraft().fontRenderer;

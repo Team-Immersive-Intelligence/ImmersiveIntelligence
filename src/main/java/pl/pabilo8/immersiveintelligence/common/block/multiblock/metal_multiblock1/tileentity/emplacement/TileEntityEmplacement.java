@@ -8,8 +8,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.Optional.Interface;
+import net.minecraftforge.fml.common.Optional.Method;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
@@ -19,8 +19,10 @@ import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeEntity;
 import pl.pabilo8.immersiveintelligence.api.style.IStyleCustomizable;
 import pl.pabilo8.immersiveintelligence.api.style.StyleCustomization;
 import pl.pabilo8.immersiveintelligence.api.upgrade.IManagedUpgradableDevice;
+import pl.pabilo8.immersiveintelligence.api.upgrade.Upgrade;
 import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeManager;
-import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeUtils.DeviceTier;
+import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeUtils.MachineStyle;
+import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeUtils.UpgradeOperation;
 import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Emplacement;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
@@ -31,6 +33,7 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.task.EmplacementFireMissionShells;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.task.EmplacementTaskManager;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.weapon.EmplacementWeapon;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.weapon.UpgradeEmplacementWeapon;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
@@ -40,6 +43,8 @@ import pl.pabilo8.immersiveintelligence.common.util.diplomacy.OwnerIdentity;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IIIGuiMultiblockTile;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IManagedDamageResistantMultiblock;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.MultiblockHealth;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultiblockIIGeneric;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockInteractablePart;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
@@ -49,6 +54,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -58,7 +64,7 @@ import java.util.List;
  */
 @Interface(iface = "com.elytradev.mirage.lighting.ILightEventConsumer", modid = "mirage")
 public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEntityEmplacement> implements IBooleanAnimatedPartsBlock,
-		IManagedUpgradableDevice<TileEntityEmplacement>, IOwnableProperty, IStyleCustomizable, IIIGuiMultiblockTile, ILightEventConsumer
+		IManagedUpgradableDevice<TileEntityEmplacement>, IOwnableProperty, IStyleCustomizable, IIIGuiMultiblockTile, IManagedDamageResistantMultiblock, ILightEventConsumer
 {
 	@SyncNBT(events = SyncEvents.TILE_OWNERSHIP_MODIFIED)
 	public OwnerIdentity ownerIdentity;
@@ -71,6 +77,8 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 	public EmplacementTaskManager taskManager = new EmplacementTaskManager();
 	@SyncNBT(nullable = true, events = SyncEvents.ENTITY_CUSTOM2)
 	public EmplacementWeapon currentWeapon;
+	@SyncNBT(events = SyncEvents.TILE_DAMAGED)
+	public MultiblockHealth baseHealth;
 	@SyncNBT
 	public boolean sendData = false;
 
@@ -86,6 +94,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 		this.door = new MultiblockInteractablePart(Emplacement.lidTime);
 		this.upgradeManager = new UpgradeManager<>(this);
 		this.style = new StyleCustomization(MultiblockFlagpole.STYLE_CONSTRAINTS);
+		this.baseHealth = new MultiblockHealth(this, Emplacement.baseHealth);
 		this.ownerIdentity = DiplomacyUtils.NEUTRAL;
 		this.currentWeapon = null;
 	}
@@ -99,6 +108,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 		this.style = null;
 		this.ownerIdentity = null;
 		this.taskManager = null;
+		this.baseHealth = null;
 	}
 
 	@Override
@@ -211,7 +221,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 					updateTileForEvent(SyncEvents.TILE_CUSTOM1);
 					break;
 				case "fire":
-					java.util.Optional<DataTypeEntity> e = IIDataHandlingUtils.optionalEntity('e', packet);
+					Optional<DataTypeEntity> e = IIDataHandlingUtils.optionalEntity('e', packet);
 
 					if(e.isPresent())
 					{
@@ -269,21 +279,50 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 	}
 
 	@Override
-	public DeviceTier getUpgradableMachineTier()
+	public MachineStyle getUpgradableMachineStyle()
 	{
-		return DeviceTier.STEEL;
+		switch(style.getStyle())
+		{
+			case "sandbags":
+				return MachineStyle.SANDBAGS;
+			case "wooden":
+				return MachineStyle.WOODEN;
+			case "steel":
+				return MachineStyle.STEEL;
+			case "bricks":
+				return MachineStyle.BRICKS;
+			case "concrete":
+				return MachineStyle.CONCRETE;
+		}
+		return MachineStyle.STEEL;
 	}
 
-	//TODO: 30.12.2025 on upgrade install event
-	/*if(operation==UpgradeOperation.FORCE_ADD&&upgrade instanceof UpgradeEmplacementWeapon)
-			if(currentWeapon==null)
-			{
-				currentWeapon = UpgradeEmplacementWeapon.getWeaponFromName(upgrade.getName());
-				currentWeapon.init(this, true);
-				if(!world.isRemote)
-					currentWeapon.syncWithClient(this);
-				return true;
-			}*/
+	@Override
+	public boolean addUpgrade(Upgrade upgrade, UpgradeOperation operation)
+	{
+		boolean added = IManagedUpgradableDevice.super.addUpgrade(upgrade, operation);
+		if(!world.isRemote&&operation==UpgradeOperation.FORCE_ADD&&added&&upgrade instanceof UpgradeEmplacementWeapon)
+		{
+			assert currentWeapon==null;
+			this.currentWeapon = ((UpgradeEmplacementWeapon<?>)upgrade).createWeapon();
+			this.currentWeapon.onInit(this);
+			updateTileForEvent(SyncEvents.TILE_CUSTOM2);
+		}
+		return added;
+	}
+
+	@Override
+	public boolean removeUpgrade(Upgrade upgrade)
+	{
+		boolean removed = IManagedUpgradableDevice.super.removeUpgrade(upgrade);
+		//Removing the weapon
+		if(!world.isRemote&&removed&&upgrade instanceof UpgradeEmplacementWeapon)
+		{
+			this.currentWeapon = null;
+			updateTileForEvent(SyncEvents.TILE_CUSTOM2);
+		}
+		return removed;
+	}
 
 	@Override
 	public boolean canOpenGui()
@@ -306,7 +345,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	@Optional.Method(modid = "mirage")
+	@Method(modid = "mirage")
 	public void gatherLights(GatherLightsEvent gatherLightsEvent)
 	{
 		if(isDummy())
@@ -355,6 +394,20 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 	public StyleCustomization getStyle()
 	{
 		return style;
+	}
+
+	//--- IManagedDamageResistantMultiblock ---//
+
+	@Override
+	public MultiblockHealth getHealthManager()
+	{
+		return baseHealth;
+	}
+
+	@Override
+	public float getExplosionResistance()
+	{
+		return 3;
 	}
 
 

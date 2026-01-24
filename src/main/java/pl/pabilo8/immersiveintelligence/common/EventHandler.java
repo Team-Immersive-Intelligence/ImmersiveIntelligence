@@ -1,6 +1,7 @@
 package pl.pabilo8.immersiveintelligence.common;
 
 import blusunrize.immersiveengineering.api.MultiblockHandler.MultiblockFormEvent.Post;
+import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IGuiTile;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
@@ -11,9 +12,12 @@ import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSourceIndirect;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.GameRules.ValueType;
 import net.minecraft.world.World;
@@ -47,6 +51,7 @@ import pl.pabilo8.immersiveintelligence.api.ammo.utils.IIAmmoUtils;
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.PenetrationCache;
 import pl.pabilo8.immersiveintelligence.api.utils.IAdvancedMultiblock;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Ammunition;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Factions;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons;
 import pl.pabilo8.immersiveintelligence.common.compat.BaublesHelper;
 import pl.pabilo8.immersiveintelligence.common.compat.IICompatModule;
@@ -63,7 +68,11 @@ import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIIGamerul
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIIRequestChunkClaimData;
 import pl.pabilo8.immersiveintelligence.common.util.IIExplosion;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyUtils;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.IOwnableProperty;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.OwnerIdentity;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.PermissionCategory;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.chunk.CapabilityChunkOwnership;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.chunk.ChunkOwnership;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.chunk.IChunkOwnership;
@@ -242,18 +251,50 @@ public class EventHandler
 			if(!IIItemUtils.isAdvancedHammer(event.getHammer()))
 			{
 				if(!event.getEntityPlayer().getEntityWorld().isRemote)
-					IIPacketHandler.sendChatTranslation(event.getEntityPlayer(), "info.immersiveintelligence.requires_advanced_hammer");
+					IIPacketHandler.sendChatTranslation(event.getEntityPlayer(), "info.immersiveintelligence.requires_advanced_hammer",
+							IIStringUtil.getItemStackTextComponent(IIContent.itemHammer.getStack(1)));
 				event.setCanceled(true);
 			}
 		}
 	}
 
-	//TODO: 11.03.2024 include vehicles and crewed weapons
 	//Cancel when using a machinegun
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public void onItemUse(RightClickBlock event)
 	{
-		if(event.getEntity().isRiding()&&event.getEntity().getRidingEntity() instanceof EntityMachinegun)
+		EntityLivingBase living = event.getEntityLiving();
+		TileEntity tile = event.getWorld().getTileEntity(event.getPos());
+		//Prevent accessing GUI
+		if(Factions.preventContainerAccess&&tile instanceof IGuiTile)
+		{
+			TileEntity master = ((IGuiTile)tile).getGuiMaster();
+			if(master!=null)
+			{
+				//The property itself has an owner, check it
+				OwnerIdentity owner = DiplomacyUtils.NEUTRAL;
+				if(master instanceof IOwnableProperty)
+					owner = ((IOwnableProperty)master).getOwnerIdentity();
+				else
+				{
+					//Check for the chunk the property is on
+					IChunkOwnership ownership = DiplomacyUtils.getPositionOwnership(master.getWorld(), master.getPos());
+					if(ownership!=null)
+						owner = ownership.getOwner();
+				}
+
+				//Deny container access when on an enemy chunk
+				if(!owner.isPermitted(living, PermissionCategory.CONTAINER_ACCESS))
+				{
+					TextComponentTranslation text = new TextComponentTranslation(IIReference.INFO_KEY+"diplomacy.ownership.container_cannot_open");
+					text.getStyle().setColor(TextFormatting.RED);
+
+					event.getEntityPlayer().sendStatusMessage(text, true);
+					event.setResult(Result.DENY);
+					event.setCanceled(true);
+				}
+			}
+		}
+		if(living.isRiding()&&living.getRidingEntity() instanceof EntityMachinegun)
 		{
 			event.setResult(Result.DENY);
 			event.setCanceled(true);
@@ -264,6 +305,7 @@ public class EventHandler
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public void onBlockUse(RightClickItem event)
 	{
+		//Machinegun
 		if(event.getEntity().isRiding()&&event.getEntity().getRidingEntity() instanceof EntityMachinegun)
 		{
 			event.setResult(Result.DENY);

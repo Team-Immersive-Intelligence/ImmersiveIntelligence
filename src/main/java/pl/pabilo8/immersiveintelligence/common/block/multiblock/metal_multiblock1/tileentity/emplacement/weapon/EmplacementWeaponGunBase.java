@@ -5,9 +5,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.Vec3d;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.AmmoFactory;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoPanel;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityAmmoBase;
 
@@ -60,6 +63,12 @@ public abstract class EmplacementWeaponGunBase<A extends EntityAmmoBase<A>> exte
 		return inventoryBaseHandler;
 	}
 
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void initializeGUI(DecoPanel panelPlatform)
+	{
+
+	}
 
 	@Override
 	public float[] getAnglePrediction(Vec3d posTurret, Vec3d posTarget, Vec3d motion)

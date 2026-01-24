@@ -446,8 +446,14 @@ public class DecoBackgroundBuilder<T extends TileEntityIEBase & IIEInventory, C 
 		int titleBarX = data.barAlignment.getAlignX(data.barRectangle.x+8, stringWidth, data.barRectangle.width-16);
 		int titleBarY = data.barAlignment.getAlignY(data.barRectangle.y-2, stringHeight, data.barRectangle.height+4);
 
+		//Fallback to steel label background if there is no custom texture
+		ResLoc backgroundLocation = data.barRectangle.style.replace("background/", "label/label_");
+		TextureAtlasSprite labelBackground = ClientUtils.getSprite(backgroundLocation);
+		if(labelBackground==ClientUtils.mc().getTextureMapBlocks().getMissingSprite())
+			backgroundLocation = DecoTextures.GUI_LABEL_STEEL;
+
 		DecoLabel decoLabel = new DecoTitleLabel(IIClientUtils.fontRegular, titleBarX, titleBarY)
-				.withBackgroundLocation(data.barRectangle.style.replace("background/", "label/label_"))
+				.withBackgroundLocation(backgroundLocation)
 				.withAlign(data.barAlignment)
 				.withSize(stringWidth, stringHeight)
 				.withRawText(data.barTitle);

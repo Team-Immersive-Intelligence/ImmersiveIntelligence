@@ -1,8 +1,11 @@
 package pl.pabilo8.immersiveintelligence.api.upgrade;
 
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeUtils.UpgradePurpose;
 import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeUtils.UpgradeTier;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
+import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -18,6 +21,9 @@ public class UpgradeTechTree
 {
 	private static final Map<Class<? extends IUpgradableDevice>, UpgradeTechTree> UPGRADE_TECH_TREES = new HashMap<>();
 	private final List<UpgradeTreeNode> nodes = new ArrayList<>();
+
+	@Nullable
+	private ResLoc modelLocation = null;
 
 	public static UpgradeTechTree getTreeFor(IUpgradableDevice machine)
 	{
@@ -91,6 +97,22 @@ public class UpgradeTechTree
 		return this;
 	}
 
+	public UpgradeTechTree withBaseModelLocation(@Nonnull ResLoc modelLocation)
+	{
+		this.modelLocation = modelLocation;
+		return this;
+	}
+
+	public UpgradeTechTree withUpgradeModelLocation(@Nonnull Upgrade upgrade, @Nonnull ResLoc modelLocation)
+	{
+		UpgradeTreeNode node = getUpgradeNodeFor(upgrade);
+		if(node==null)
+			IILogger.error("[Upgrade System] Attempting to set model location for upgrade "+upgrade.getLocalizedName()+" which is not present in the tech tree!");
+		else
+			node.withModelLocation(modelLocation);
+		return this;
+	}
+
 	private UpgradeTreeNode getUpgradeNodeFor(Upgrade upgrade)
 	{
 		return nodes.stream().filter(n -> n.upgrade==upgrade).findFirst().orElse(null);
@@ -152,6 +174,16 @@ public class UpgradeTechTree
 	}
 
 	/**
+	 * @return the 3D model location to render in the upgrade GUI, or null for no model
+	 */
+	@Nullable
+	@SideOnly(Side.CLIENT)
+	public ResLoc getModelLocation()
+	{
+		return modelLocation;
+	}
+
+	/**
 	 * Represents a node in the upgrade tech tree of a machine. Can be connected to other nodes via a dependency or lock relationship.
 	 */
 	public static class UpgradeTreeNode
@@ -160,11 +192,19 @@ public class UpgradeTechTree
 		private final UpgradeTier tier;
 		private final Set<UpgradeTreeNode> dependencies = new HashSet<>();
 		private final Set<UpgradeTreeNode> locksOut = new HashSet<>();
+		@Nullable
+		private ResLoc modelLocation = null;
 
 		public UpgradeTreeNode(Upgrade upgrade, UpgradeTier tier)
 		{
 			this.upgrade = upgrade;
 			this.tier = tier;
+		}
+
+		public UpgradeTreeNode withModelLocation(@Nullable ResLoc modelLocation)
+		{
+			this.modelLocation = modelLocation;
+			return this;
 		}
 
 		public Upgrade getUpgrade()
@@ -185,6 +225,16 @@ public class UpgradeTechTree
 		public Set<UpgradeTreeNode> getLocksOut()
 		{
 			return locksOut;
+		}
+
+		/**
+		 * @return the 3D model location to render in the upgrade GUI, or null for no model
+		 */
+		@Nullable
+		@SideOnly(Side.CLIENT)
+		public ResLoc getModelLocation()
+		{
+			return modelLocation;
 		}
 	}
 }

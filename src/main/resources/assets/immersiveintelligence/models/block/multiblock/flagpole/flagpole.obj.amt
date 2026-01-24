@@ -1,7 +1,7 @@
 {
   "origins": {
     "main": [-23, 0, 23],
-    "flag": [-3, 120, 0],
+    "flag": [6.5, 64, 23.5],
     "variant_sandbags": [0, 0, 0],
     "variant_wooden": [0, 0, 0],
     "variant_steel": [0, 0, 0]

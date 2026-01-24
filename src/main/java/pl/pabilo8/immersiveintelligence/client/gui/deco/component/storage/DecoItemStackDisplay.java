@@ -9,6 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
+import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoComponent;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoAlignment;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
@@ -152,6 +153,7 @@ public class DecoItemStackDisplay extends DecoComponent<DecoItemStackDisplay>
 
 		if(backgroundTexture!=null)
 		{
+			bindAtlas();
 			IIDrawUtils draw = IIDrawUtils.startTexturedColored();
 			if(progressBarValue!=null)
 				draw.drawConnectedTexColorRect(x+width-padding[0]-padding[2], y-padding[1], 6, height, IIColor.WHITE, backgroundTexture, 32, 32, 2, 2);
@@ -177,6 +179,7 @@ public class DecoItemStackDisplay extends DecoComponent<DecoItemStackDisplay>
 		GlStateManager.color(1.0F, 1.0F, 1.0F);
 		RenderHelper.enableGUIStandardItemLighting();
 		ClientUtils.mc().getRenderItem().renderItemAndEffectIntoGUI(getCurrentlyDisplayedStack(), 0, 0);
+		ClientUtils.mc().getRenderItem().renderItemOverlayIntoGUI(IIClientUtils.fontRegular, getCurrentlyDisplayedStack(), 0, 0, null);
 		RenderHelper.disableStandardItemLighting();
 		GlStateManager.disableRescaleNormal();
 		GlStateManager.disableDepth();

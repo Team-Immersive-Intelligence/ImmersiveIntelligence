@@ -23,12 +23,13 @@ import pl.pabilo8.immersiveintelligence.common.util.diplomacy.OwnerIdentity;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IIIGuiMultiblockTile;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IManagedDamageResistantMultiblock;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.MultiblockHealth;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultiblockIIBase;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -37,14 +38,16 @@ import java.util.ArrayList;
  * @since 04.03.2021
  */
 public class TileEntityFlagpole extends TileEntityMultiblockIIBase<TileEntityFlagpole> implements IPlayerInteraction, IManagedUpgradableDevice<TileEntityFlagpole>,
-		IStyleCustomizable, IOwnableProperty, IIIGuiMultiblockTile
+		IStyleCustomizable, IOwnableProperty, IIIGuiMultiblockTile, IManagedDamageResistantMultiblock
 {
-	@SyncNBT(events = SyncEvents.TILE_CUSTOM1, nullable = true)
+	@SyncNBT(events = SyncEvents.TILE_CUSTOM1)
 	public ItemStack flag = ItemStack.EMPTY;
 	@SyncNBT(name = "upgrades", events = SyncEvents.TILE_UPGRADES_MODIFIED)
 	public UpgradeManager<TileEntityFlagpole> upgradeManager;
 	@SyncNBT(events = {SyncEvents.TILE_UPGRADES_MODIFIED, SyncEvents.TILE_CLIENT_MESSAGE})
 	public StyleCustomization style;
+	@SyncNBT(events = SyncEvents.TILE_DAMAGED)
+	public MultiblockHealth health;
 	//private Ticket ticket = null;
 	@SyncNBT(events = SyncEvents.TILE_OWNERSHIP_MODIFIED)
 	public OwnerIdentity ownerIdentity;
@@ -53,17 +56,19 @@ public class TileEntityFlagpole extends TileEntityMultiblockIIBase<TileEntityFla
 	{
 		super(MultiblockFlagpole.INSTANCE);
 		this.upgradeManager = new UpgradeManager<>(this);
-		this.style = new StyleCustomization(MultiblockFlagpole.STYLE_CONSTRAINTS);
 		this.ownerIdentity = DiplomacyUtils.NEUTRAL;
+		this.style = new StyleCustomization(MultiblockFlagpole.STYLE_CONSTRAINTS);
+		this.health = new MultiblockHealth(this, Flagpole.baseHealth);
 	}
 
 	@Override
 	protected void dummyCleanup()
 	{
-		this.flag = ItemStack.EMPTY;
+		this.flag = null;
 		this.upgradeManager = null;
 		this.ownerIdentity = null;
 		this.style = null;
+		this.health = null;
 	}
 
 	@Override
@@ -101,21 +106,13 @@ public class TileEntityFlagpole extends TileEntityMultiblockIIBase<TileEntityFla
 		TileEntityFlagpole master = master();
 		if(!world.isRemote&&master!=null&&isPOI("pole"))
 		{
-			if(player.isSneaking())
-			{
-				ArrayList<String> styles = new ArrayList<>(MultiblockFlagpole.STYLE_CONSTRAINTS.getStyles());
-				String nextStyle = styles.get((styles.indexOf(master.style.getStyle())+1)%styles.size());
-				master.style.withStyle(nextStyle);
-				master.updateTileForEvent(SyncEvents.TILE_UPGRADES_MODIFIED);
-				return true;
-			}
-
 			if(master.flag.isEmpty()&&heldItem.getItem()==Items.BANNER)
 			{
 				master.flag = heldItem.copy();
 				master.flag.setCount(1);
 				heldItem.shrink(1);
 				master.updateTileForEvent(SyncEvents.TILE_CUSTOM1);
+				//forceTileUpdate();
 				return true;
 			}
 			else if(!master.flag.isEmpty()&&Utils.isWirecutter(heldItem))
@@ -123,6 +120,7 @@ public class TileEntityFlagpole extends TileEntityMultiblockIIBase<TileEntityFla
 				player.inventory.addItemStackToInventory(master.flag.copy());
 				master.flag = ItemStack.EMPTY;
 				master.updateTileForEvent(SyncEvents.TILE_CUSTOM1);
+				//forceTileUpdate();
 				return true;
 			}
 		}
@@ -170,9 +168,22 @@ public class TileEntityFlagpole extends TileEntityMultiblockIIBase<TileEntityFla
 	}
 
 	@Override
-	public DeviceTier getUpgradableMachineTier()
+	public MachineStyle getUpgradableMachineStyle()
 	{
-		return DeviceTier.STEEL;
+		switch(style.getStyle())
+		{
+			case "sandbags":
+				return MachineStyle.SANDBAGS;
+			case "wooden":
+				return MachineStyle.WOODEN;
+			case "steel":
+				return MachineStyle.STEEL;
+			case "bricks":
+				return MachineStyle.BRICKS;
+			case "concrete":
+				return MachineStyle.CONCRETE;
+		}
+		return MachineStyle.STEEL;
 	}
 
 	//--- IOwnableProperty ---//
@@ -203,6 +214,20 @@ public class TileEntityFlagpole extends TileEntityMultiblockIIBase<TileEntityFla
 	public StyleCustomization getStyle()
 	{
 		return style;
+	}
+
+	//--- IManagedDamageResistantMultiblock ---//
+
+	@Override
+	public MultiblockHealth getHealthManager()
+	{
+		return health;
+	}
+
+	@Override
+	public float getExplosionResistance()
+	{
+		return 3;
 	}
 
 	//--- IIIGuiMultiblockTile ---//

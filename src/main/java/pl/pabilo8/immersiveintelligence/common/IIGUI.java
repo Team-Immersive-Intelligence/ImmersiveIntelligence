@@ -123,6 +123,7 @@ public enum IIGUI implements ISerializableEnum
 	VULCANIZER(TileEntityVulcanizer.class, ContainerVulcanizer::new),
 
 	FLAGPOLE(TileEntityFlagpole.class, ContainerFlagpole::new),
+	FLAGPOLE_FACTION(TileEntityFlagpole.class, ContainerFlagpole::new),
 	EMPLACEMENT_STORAGE(TileEntityEmplacement.class, ContainerEmplacement::getContainerForStoragePage),
 	EMPLACEMENT_CONFIG(TileEntityEmplacement.class, ContainerEmplacement::new),
 	EMPLACEMENT_TARGET_FILTERS(TileEntityEmplacement.class, ContainerEmplacement::new),
@@ -135,7 +136,9 @@ public enum IIGUI implements ISerializableEnum
 	PROJECTILE_WORKSHOP(TileEntityProjectileWorkshop.class, ContainerProjectileWorkshop::new),
 	AMMUNITION_ASSEMBLER(TileEntityAmmunitionAssembler.class, ContainerAmmunitionAssembler::new),
 
-	RADAR(TileEntityRadar.class, ContainerRadar::new);
+	RADAR(TileEntityRadar.class, ContainerRadar::new),
+	RADAR_STATUS(TileEntityRadar.class, ContainerRadar::new),
+	RADAR_TASKS(TileEntityRadar.class, ContainerRadar::new);
 
 	public final Class<? extends TileEntity> teClass;
 	public final BiFunction<EntityPlayer, TileEntity, Container> containerFromTile;
@@ -232,6 +235,7 @@ public enum IIGUI implements ISerializableEnum
 		IIGUI.UPGRADE.setClientDecoGui((player, tile) -> new GuiUpgrade(player, tile));
 
 		IIGUI.FLAGPOLE.setClientDecoGui(GuiFlagpole::new);
+		IIGUI.FLAGPOLE_FACTION.setClientDecoGui(GuiFlagpoleFaction::new);
 		IIGUI.EMPLACEMENT_STORAGE.setClientDecoGui(GuiEmplacementPageStorage::new);
 		IIGUI.EMPLACEMENT_CONFIG.setClientDecoGui(GuiEmplacementPageConfig::new);
 		IIGUI.EMPLACEMENT_TARGET_FILTERS.setClientDecoGui(GuiEmplacementPageTargetFilters::new);
@@ -244,6 +248,8 @@ public enum IIGUI implements ISerializableEnum
 		IIGUI.PROJECTILE_WORKSHOP.setClientDecoGui(GuiProjectileWorkshop::new);
 
 		IIGUI.RADAR.setClientDecoGui(GuiRadar::new);
+		IIGUI.RADAR_STATUS.setClientDecoGui(GuiRadarStatus::new);
+		IIGUI.RADAR_TASKS.setClientDecoGui(GuiRadarTasks::new);
 		IIGUI.COAGULATOR.setClientDecoGui(GuiCoagulator::new);
 		IIGUI.VULCANIZER.setClientGui(GuiVulcanizer::new);
 	}
