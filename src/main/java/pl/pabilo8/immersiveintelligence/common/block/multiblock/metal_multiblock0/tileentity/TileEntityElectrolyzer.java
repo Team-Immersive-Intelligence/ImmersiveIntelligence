@@ -188,6 +188,8 @@ public class TileEntityElectrolyzer extends TileEntityMultiblockProductionSingle
 		tankOutput2.fill(recipe.fluidOutputs[1], true);
 	}
 
+	//--- IPlayerInteraction ---//
+
 	@Override
 	public boolean interact(EnumFacing side, EntityPlayer player, EnumHand hand, ItemStack heldItem, float hitX, float hitY, float hitZ)
 	{
@@ -198,6 +200,8 @@ public class TileEntityElectrolyzer extends TileEntityMultiblockProductionSingle
 		}
 		return false;
 	}
+
+	//--- IAdvancedTextOverlay ---//
 
 	@SideOnly(Side.CLIENT)
 	@Override

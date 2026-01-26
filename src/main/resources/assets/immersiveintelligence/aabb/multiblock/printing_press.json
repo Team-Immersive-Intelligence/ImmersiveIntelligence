@@ -154,7 +154,8 @@
     "data": 6,
     "paper_input": 27,
     "fluid_input": 29,
-    "output": 2
+    "output": 2,
+    "fluid_tank": [28, 29]
   },
   "tactile": {
     "_schema": "immersiveintelligence:models/block/multiblock/printing_press/printing_press.obj.amt",

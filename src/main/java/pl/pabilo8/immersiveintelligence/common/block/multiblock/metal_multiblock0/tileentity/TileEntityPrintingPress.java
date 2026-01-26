@@ -1,19 +1,26 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity;
 
 import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorageAdvanced;
+import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IPlayerInteraction;
 import blusunrize.immersiveengineering.common.util.Utils;
 import blusunrize.immersiveengineering.common.util.inventory.MultiFluidTank;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import pl.pabilo8.immersiveintelligence.api.crafting.PrintingRecipe;
@@ -22,6 +29,7 @@ import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIMultiblockRecipe;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IIDataHandlingUtils;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
+import pl.pabilo8.immersiveintelligence.api.utils.tools.IAdvancedTextOverlay;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.PrintingPress;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
@@ -45,7 +53,7 @@ import javax.annotation.Nullable;
  * @updated 13.12.2023
  * @since 28.06.2019
  */
-public class TileEntityPrintingPress extends TileEntityMultiblockProductionMulti<TileEntityPrintingPress, PrintingRecipe> implements ITactileListener
+public class TileEntityPrintingPress extends TileEntityMultiblockProductionMulti<TileEntityPrintingPress, PrintingRecipe> implements ITactileListener, IPlayerInteraction, IAdvancedTextOverlay
 {
 	/**
 	 * Inventory slots IDs
@@ -347,6 +355,34 @@ public class TileEntityPrintingPress extends TileEntityMultiblockProductionMulti
 	{
 		entity.attackEntityFrom(IIDamageSources.PRINTING_PRESS_DAMAGE, 1.5f);
 		return false;
+	}
+
+	//--- IPlayerInteraction ---//
+
+	@Override
+	public boolean interact(EnumFacing side, EntityPlayer player, EnumHand hand, ItemStack heldItem, float hitX, float hitY, float hitZ)
+	{
+		if(isPOI("fluid_tank"))
+		{
+			TileEntityPrintingPress master = master();
+			return master!=null&&FluidUtil.interactWithFluidHandler(player, hand, master.tank);
+		}
+		return false;
+	}
+
+	//--- IAdvancedTextOverlay ---//
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public String[] getOverlayText(EntityPlayer player, RayTraceResult mop)
+	{
+		if(!Utils.isFluidRelatedItemStack(player.getHeldItem(EnumHand.MAIN_HAND)))
+			return new String[0];
+
+		TileEntityPrintingPress master = master();
+		if(master!=null&&isPOI("fluid_tank"))
+			return new String[]{IIUtils.getFluidNameOverlayText(master.tank.getFluid())};
+		return new String[0];
 	}
 
 	//--- Utilities ---//
