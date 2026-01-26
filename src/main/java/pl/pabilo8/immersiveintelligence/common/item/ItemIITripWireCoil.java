@@ -23,6 +23,7 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIBase;
+import pl.pabilo8.modworks.annotations.item.GeneratedItemModels;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -33,10 +34,12 @@ import java.util.List;
  * @since 31.05.2019
  */
 @IIItemProperties(category = IICategory.WARFARE)
+@GeneratedItemModels(itemName = "trip_wire", texturePath = "tripwire_coil")
 public class ItemIITripWireCoil extends ItemIIBase implements IWireCoil
 {
 	public static final String TRIPWIRE_CATEGORY = "TRIPWIRE";
 	public static IITripWireType TRIPWIRE = new IITripWireType();
+
 	public ItemIITripWireCoil()
 	{
 		super("trip_wire", 64);

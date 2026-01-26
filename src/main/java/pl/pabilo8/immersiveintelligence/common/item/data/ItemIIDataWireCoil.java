@@ -17,6 +17,7 @@ import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIBase;
 import pl.pabilo8.immersiveintelligence.common.wire.IIDataWireType;
+import pl.pabilo8.modworks.annotations.item.GeneratedItemModels;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -27,6 +28,7 @@ import java.util.List;
  * @since 31.05.2019
  */
 @IIItemProperties(category = IICategory.ELECTRONICS)
+@GeneratedItemModels(itemName = "data_wire", texturePath = "wirecoil_data")
 public class ItemIIDataWireCoil extends ItemIIBase implements IWireCoil
 {
 	public ItemIIDataWireCoil()

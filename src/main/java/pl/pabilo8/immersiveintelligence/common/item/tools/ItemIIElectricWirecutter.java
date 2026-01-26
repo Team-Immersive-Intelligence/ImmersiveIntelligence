@@ -41,6 +41,8 @@ import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
 import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIBase;
+import pl.pabilo8.modworks.annotations.item.GeneratedItemModels;
+import pl.pabilo8.modworks.annotations.item.ItemModelType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -54,6 +56,7 @@ import static blusunrize.immersiveengineering.api.Lib.TOOL_WIRECUTTER;
  * @since 07.06.2019
  */
 @IIItemProperties(category = IICategory.TOOLS)
+@GeneratedItemModels(itemName = "electric_wirecutter", type = ItemModelType.ITEM_SIMPLE_TOOL, texturePath = "tools/electric_wirecutter")
 public class ItemIIElectricWirecutter extends ItemIIBase implements ITool, IIEEnergyItem
 {
 	public ItemIIElectricWirecutter()

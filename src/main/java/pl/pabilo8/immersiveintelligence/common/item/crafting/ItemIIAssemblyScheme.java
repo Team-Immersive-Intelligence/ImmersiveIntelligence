@@ -22,6 +22,7 @@ import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIBase;
+import pl.pabilo8.modworks.annotations.item.GeneratedItemModels;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -35,6 +36,7 @@ import java.util.stream.Collectors;
  * @since 25.06.2019
  */
 @IIItemProperties(category = IICategory.RESOURCES)
+@GeneratedItemModels(itemName = "assembly_scheme")
 public class ItemIIAssemblyScheme extends ItemIIBase implements IAdvancedTooltipItem
 {
 	private static final String descriptionKey = IIReference.DESCRIPTION_KEY+"assembly_scheme.";

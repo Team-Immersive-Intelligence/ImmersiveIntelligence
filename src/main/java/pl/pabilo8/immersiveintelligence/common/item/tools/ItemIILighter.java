@@ -36,6 +36,8 @@ import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIBase;
+import pl.pabilo8.modworks.annotations.item.GeneratedItemModels;
+import pl.pabilo8.modworks.annotations.item.ItemModelType;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -46,6 +48,7 @@ import java.util.List;
  * @since 23.05.2019
  */
 @IIItemProperties(category = IICategory.TOOLS)
+@GeneratedItemModels(itemName = "lighter", type = ItemModelType.ITEM_SIMPLE_TOOL)
 public class ItemIILighter extends ItemIIBase implements ITool
 {
 	private final List<IIILighterAction> blockActions = new ArrayList<>();

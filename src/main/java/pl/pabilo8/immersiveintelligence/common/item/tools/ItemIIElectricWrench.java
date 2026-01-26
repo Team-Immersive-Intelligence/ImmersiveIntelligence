@@ -38,6 +38,8 @@ import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
 import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIBase;
+import pl.pabilo8.modworks.annotations.item.GeneratedItemModels;
+import pl.pabilo8.modworks.annotations.item.ItemModelType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -49,6 +51,7 @@ import java.util.Set;
  * @since 30.05.2019
  */
 @IIItemProperties(category = IICategory.TOOLS)
+@GeneratedItemModels(itemName = "electric_wrench", type = ItemModelType.ITEM_SIMPLE_TOOL, texturePath = "tools/electric_wrench")
 public class ItemIIElectricWrench extends ItemIIBase implements ITool, IIEEnergyItem, IWrench
 {
 	public ItemIIElectricWrench()
