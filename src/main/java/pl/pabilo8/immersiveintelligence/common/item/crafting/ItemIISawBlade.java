@@ -31,7 +31,7 @@ import java.util.Optional;
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 19.08.2019
  */
-@IIItemProperties(category = IICategory.RESOURCES)
+@IIItemProperties(category = IICategory.TOOLS)
 public class ItemIISawBlade extends ItemIISubItemsBase<SawBlades> implements ISawblade
 {
 	private final static String NBT_DAMAGE = "damage";

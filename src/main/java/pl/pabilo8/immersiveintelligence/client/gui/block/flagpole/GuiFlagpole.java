@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.client.gui.block;
+package pl.pabilo8.immersiveintelligence.client.gui.block.flagpole;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;

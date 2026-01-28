@@ -13,6 +13,7 @@ import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctur
 
 public class MultiblockPacker extends MultiblockStuctureBase<TileEntityPacker>
 {
+	public static final int SLOT_CRATE = 0;
 	public static MultiblockPacker INSTANCE;
 
 	public MultiblockPacker()

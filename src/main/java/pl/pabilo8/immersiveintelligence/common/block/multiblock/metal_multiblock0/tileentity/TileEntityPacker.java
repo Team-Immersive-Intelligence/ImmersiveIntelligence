@@ -12,46 +12,46 @@ import blusunrize.immersiveengineering.common.util.inventory.MultiFluidTank;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import pl.pabilo8.immersiveintelligence.api.PackerHandler;
+import pl.pabilo8.immersiveintelligence.api.PackerHandler.LabelingTask;
 import pl.pabilo8.immersiveintelligence.api.PackerHandler.PackerActionType;
 import pl.pabilo8.immersiveintelligence.api.PackerHandler.PackerPutMode;
 import pl.pabilo8.immersiveintelligence.api.PackerHandler.PackerTask;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IIDataHandlingUtils;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeItemStack;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
-import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 import pl.pabilo8.immersiveintelligence.api.upgrade.IManagedUpgradableDevice;
 import pl.pabilo8.immersiveintelligence.api.upgrade.Upgrade;
 import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeManager;
 import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeUtils.MachineStyle;
+import pl.pabilo8.immersiveintelligence.api.utils.tools.IAdvancedTextOverlay;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Packer;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.MultiblockPacker;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyCollection;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IIIGuiMultiblockTile;
@@ -60,7 +60,6 @@ import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPO
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.function.Function;
@@ -70,21 +69,22 @@ import java.util.function.Predicate;
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 28.06.2019
  */
-//TODO: 30.08.2025 rebase onto TileEntityMultiblockProductionSingle
 public class TileEntityPacker extends TileEntityMultiblockIIGeneric<TileEntityPacker>
-		implements IConveyorAttachable, IManagedUpgradableDevice<TileEntityPacker>, IPlayerInteraction, IIIGuiMultiblockTile
+		implements IConveyorAttachable, IManagedUpgradableDevice<TileEntityPacker>, IPlayerInteraction, IAdvancedTextOverlay, IIIGuiMultiblockTile
 {
 	@SyncNBT(name = "upgrades", events = SyncEvents.TILE_UPGRADES_MODIFIED)
 	public UpgradeManager<TileEntityPacker> upgradeManager;
-	@SyncNBT
+	@SyncNBT(events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_CLIENT_MESSAGE})
 	public boolean repeatActions = false;
-	@SyncNBT
+	@SyncNBT(events = SyncEvents.TILE_RECIPE_CHANGED)
 	public int processTime = 0;
-	public ArrayList<PackerTask> tasks = new ArrayList<>();
-
-	@SyncNBT
-	public MultiFluidTank fluidTank;
-	@SyncNBT
+	@SyncNBT(events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_CLIENT_MESSAGE})
+	public EasyCollection<PackerTask, NBTTagCompound> tasks;
+	@SyncNBT(events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_CLIENT_MESSAGE})
+	public EasyCollection<LabelingTask, NBTTagCompound> labels;
+	@SyncNBT(events = {SyncEvents.TILE_RECIPE_CHANGED, SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_UPGRADES_MODIFIED})
+	public MultiFluidTank fluidTankUpgrade;
+	@SyncNBT(events = {SyncEvents.TILE_RECIPE_CHANGED, SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_UPGRADES_MODIFIED})
 	public FluxStorageAdvanced energyStorageUpgrade;
 
 	private final IItemHandler containerHandler = new IEInventoryHandler(1, this, 0, true, true);
@@ -96,11 +96,24 @@ public class TileEntityPacker extends TileEntityMultiblockIIGeneric<TileEntityPa
 		super(MultiblockPacker.INSTANCE);
 
 		this.energyStorage = new FluxStorageAdvanced(Packer.energyCapacity);
-		this.inventory = NonNullList.withSize(109, ItemStack.EMPTY);
+		this.inventory = NonNullList.withSize(1+108, ItemStack.EMPTY);
 		this.upgradeManager = new UpgradeManager<>(this);
+		this.tasks = new EasyCollection<>(PackerTask::new);
+		this.labels = new EasyCollection<>(LabelingTask::new);
 
 		this.energyStorageUpgrade = new FluxStorageAdvanced(Packer.energyCapacityUpgrade);
-		this.fluidTank = new MultiFluidTank(Packer.fluidCapacityUpgrade);
+		this.fluidTankUpgrade = new MultiFluidTank(Packer.fluidCapacityUpgrade);
+	}
+
+	@Override
+	protected void dummyCleanup()
+	{
+		super.dummyCleanup();
+		this.tasks = null;
+		this.labels = null;
+		this.upgradeManager = null;
+		this.energyStorageUpgrade = null;
+		this.fluidTankUpgrade = null;
 	}
 
 	@Override
@@ -122,9 +135,6 @@ public class TileEntityPacker extends TileEntityMultiblockIIGeneric<TileEntityPa
 					if(!packedItem.isEmpty()&&energyStorage.getEnergyStored() >= Packer.energyUsage)
 					{
 						energyStorage.extractEnergy(Packer.energyUsage, false);
-
-//						boolean unpacker = hasUpgrade(IIContent.UPGRADE_UNPACKER_CONVERSION);
-
 						boolean repeat = true;
 						int repeats = 0;
 						while(repeat)
@@ -208,7 +218,7 @@ public class TileEntityPacker extends TileEntityMultiblockIIGeneric<TileEntityPa
 											if(fs!=null&&("*".equals(task.stack.oreName)||fs.isFluidEqual(task.stack.fluid)))
 											{
 												//check how much fluid was transferred, then subtract to get what's left and put it back in machine tank
-												int accepted = fluidTank.fill(fs.copy(), true);
+												int accepted = fluidTankUpgrade.fill(fs.copy(), true);
 												fs.amount -= accepted;
 												handler.fill(fs, true);
 											}
@@ -216,17 +226,17 @@ public class TileEntityPacker extends TileEntityMultiblockIIGeneric<TileEntityPa
 										}
 										else
 										{
-											for(FluidStack fluid : fluidTank.fluids)
+											for(FluidStack fluid : fluidTankUpgrade.fluids)
 											{
 												if("*".equals(task.stack.oreName)||fluid.isFluidEqual(task.stack.fluid))
 												{
-													FluidStack fs = fluidTank.drain(amount, true);
+													FluidStack fs = fluidTankUpgrade.drain(amount, true);
 													assert fs!=null;
 
 													//check how much fluid was transferred, then subtract to get what's left and put it back in machine tank
 													int accepted = handler.fill(fs.copy(), true);
 													fs.amount -= accepted;
-													fluidTank.fill(fs, true);
+													fluidTankUpgrade.fill(fs, true);
 												}
 											}
 										}
@@ -296,13 +306,13 @@ public class TileEntityPacker extends TileEntityMultiblockIIGeneric<TileEntityPa
 						IFluidHandler cap = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, outputFacing);
 						assert cap!=null;
 
-						for(FluidStack fluid : fluidTank.fluids)
+						for(FluidStack fluid : fluidTankUpgrade.fluids)
 						{
-							FluidStack fs = fluidTank.drain(fluid.copy(), false);
+							FluidStack fs = fluidTankUpgrade.drain(fluid.copy(), false);
 							assert fs!=null;
 
 							fs.amount -= cap.fill(fs, false);
-							fluidTank.fill(fs, false);
+							fluidTankUpgrade.fill(fs, false);
 						}
 					}
 				}
@@ -338,106 +348,41 @@ public class TileEntityPacker extends TileEntityMultiblockIIGeneric<TileEntityPa
 			forceTileUpdate();
 	}
 
-	//--- NBT ---//
-
 	@Override
-	public void readCustomNBT(@Nonnull NBTTagCompound nbt, boolean descPacket)
+	public void onEntityCollision(World world, Entity entity)
 	{
-		super.readCustomNBT(nbt, descPacket);
-		if(isDummy())
-			return;
-
-		repeatActions = nbt.getBoolean("repeatActions");
-
-		processTime = nbt.getInteger("process_time");
-
-		if(isUpgradeInstalled(IIContent.UPGRADE_PACKER_ENERGY))
-			energyStorage.readFromNBT(nbt.getCompoundTag("energy_upgrade"));
-		else if(isUpgradeInstalled(IIContent.UPGRADE_PACKER_FLUID))
-			fluidTank.readFromNBT(nbt.getCompoundTag("fluid_tank"));
-
-		readTasks(nbt.getTagList("tasks", 10));
-	}
-
-	@Override
-	public void writeCustomNBT(@Nonnull NBTTagCompound nbt, boolean descPacket)
-	{
-		super.writeCustomNBT(nbt, descPacket);
-		if(isDummy())
-			return;
-
-		nbt.setBoolean("repeatActions", repeatActions);
-
-		nbt.setInteger("process_time", processTime);
-
-		if(isUpgradeInstalled(IIContent.UPGRADE_PACKER_ENERGY))
-			nbt.setTag("energy_upgrade", energyStorage.writeToNBT(new NBTTagCompound()));
-		else if(isUpgradeInstalled(IIContent.UPGRADE_PACKER_FLUID))
-			nbt.setTag("fluid_tank", fluidTank.writeToNBT(new NBTTagCompound()));
-
-		nbt.setTag("tasks", writeTasks());
-	}
-
-	@Override
-	public void receiveMessageFromServer(@Nonnull NBTTagCompound message)
-	{
-		super.receiveMessageFromServer(message);
-		if(message.hasKey("inventory"))
-			inventory = Utils.readInventory(message.getTagList("inventory", 10), inventory.size());
-		if(message.hasKey("repeatActions"))
-			repeatActions = message.getBoolean("repeatActions");
-		if(message.hasKey("tasks"))
-			readTasks(message.getTagList("tasks", 10));
-
-		if(message.hasKey("energy_upgrade"))
-			processTime = message.getInteger("process_time");
-
-		if(message.hasKey("energy_upgrade"))
-			energyStorage.readFromNBT(message.getCompoundTag("energy_upgrade"));
-		else if(message.hasKey("fluid_tank"))
-			fluidTank.readFromNBT(message.getCompoundTag("fluid_tank"));
-	}
-
-	@Override
-	public void receiveMessageFromClient(@Nonnull NBTTagCompound message)
-	{
-		super.receiveMessageFromServer(message);
-		if(message.hasKey("repeatActions"))
-			repeatActions = message.getBoolean("repeatActions");
-		if(message.hasKey("tasks"))
-			readTasks(message.getTagList("tasks", 10));
-	}
-
-	public NBTTagList writeTasks()
-	{
-		NBTTagList tagTasks = new NBTTagList();
-		for(PackerTask task : tasks)
-			tagTasks.appendTag(task.toNBT());
-		return tagTasks;
-	}
-
-	private void readTasks(NBTTagList tagTasks)
-	{
-		tasks.clear();
-		for(NBTBase task : tagTasks)
-			if(task instanceof NBTTagCompound)
-				tasks.add(new PackerTask(((NBTTagCompound)task)));
+		//Accept containers (crates, barrels, etc.) lying on the conveyor
+		TileEntityPacker master = master();
+		if(master!=null)
+			handleItemEntityInput(entity, stack -> {
+				if(isPOI("conveyor_in"))
+					return master.containerHandler.insertItem(0, stack, false);
+				return ItemStack.EMPTY;
+			});
 	}
 
 	@Override
 	protected int[] listAllPOI(MultiblockPOI poi)
 	{
+		TileEntityPacker master = master();
+		assert master!=null;
+		boolean fluid = master.isUpgradeInstalled(IIContent.UPGRADE_PACKER_FLUID);
+		boolean energy = master.isUpgradeInstalled(IIContent.UPGRADE_PACKER_ENERGY);
+
 		switch(poi)
 		{
 			case ENERGY_INPUT:
-				return getPOI("energy");
+				return energy?getPOI("all_energy_input"): getPOI("energy");
 			case ITEM_INPUT:
+				return !fluid&&!energy?getPOI("inputs_items"): getPOI("conveyor_in");
 			case FLUID_INPUT:
-				return getPOI("input");
+				return fluid?getPOI("input"): new int[0];
 			case ITEM_OUTPUT:
+				return !fluid&&!energy?getPOI("outputs_items"): getPOI("conveyor_out");
 			case FLUID_OUTPUT:
+				return fluid?getPOI("output"): new int[0];
 			case ENERGY_OUTPUT:
-				return getPOI("output");
+				return energy?getPOI("output"): new int[0];
 			case REDSTONE_INPUT:
 				return getPOI("redstone");
 			case DATA_INPUT:
@@ -455,44 +400,14 @@ public class TileEntityPacker extends TileEntityMultiblockIIGeneric<TileEntityPa
 	@Override
 	public int getSlotLimit(int slot)
 	{
-		return slot==0?1: 64;
+		return slot==MultiblockPacker.SLOT_CRATE?1: 64;
 	}
-
-	// TODO: 19.08.2022 fluidTank
 
 	@Nonnull
 	@Override
-	protected IFluidTank[] getAccessibleFluidTanks(@Nonnull EnumFacing side)
+	protected IFluidTank[] getFluidTanks(int pos, EnumFacing side)
 	{
-		if(pos==23||pos==15)
-		{
-			TileEntityPacker master = master();
-			if(master!=null&&master.isUpgradeInstalled(IIContent.UPGRADE_PACKER_FLUID))
-				return new IFluidTank[]{master.fluidTank};
-		}
-		return new FluidTank[0];
-	}
-
-	@Override
-	protected boolean canFillTankFrom(int iTank, @Nonnull EnumFacing side, @Nonnull FluidStack resource)
-	{
-		if(pos==23)
-		{
-			TileEntityPacker master = master();
-			return master!=null&&master.isUpgradeInstalled(IIContent.UPGRADE_PACKER_FLUID);
-		}
-		return super.canFillTankFrom(iTank, side, resource);
-	}
-
-	@Override
-	protected boolean canDrainTankFrom(int iTank, @Nonnull EnumFacing side)
-	{
-		if(pos==15)
-		{
-			TileEntityPacker master = master();
-			return master!=null&&master.isUpgradeInstalled(IIContent.UPGRADE_PACKER_FLUID);
-		}
-		return super.canDrainTankFrom(iTank, side);
+		return new IFluidTank[]{fluidTankUpgrade};
 	}
 
 	//--- Data ---//
@@ -502,76 +417,58 @@ public class TileEntityPacker extends TileEntityMultiblockIIGeneric<TileEntityPa
 	{
 			/*
 			c: command: add/remove/clear
-			a: action: pack/unpack/fill/drain/charge/discharge
+			a: action: item/fluid/energy
 			m: mode: amount, slot, all_possible
 			e: (optional) expires after @e items/MBs
 			s: (optional) {stack} or string
+			u: unload true/false
 			*/
-		DataType a = packet.get('a');
-		DataType m = packet.get('m');
-		DataType e = packet.get('e');
-		DataType s = packet.get('s');
-		DataType c = packet.get('c');
+		IngredientStack stack = IIDataHandlingUtils.asIngredient('s', packet);
+		PackerActionType action = IIDataHandlingUtils.asEnum('a', packet, PackerActionType.class);
+		PackerPutMode mode = IIDataHandlingUtils.asEnum('m', packet, PackerPutMode.class);
+		boolean unpack = IIDataHandlingUtils.asBoolean('u', packet);
 
-		switch(c.toString())
-		{
-			case "add":
+		IIDataHandlingUtils.expectingStringParam('c', packet, command -> {
+			switch(command)
 			{
-				PackerPutMode mode = PackerHandler.PackerPutMode.fromName(m.toString());
-				PackerActionType action = PackerHandler.PackerActionType.fromName(a.toString());
-				IngredientStack stack = IIDataHandlingUtils.ingredientFromData(s);
-				PackerTask packerTask = new PackerTask(mode, action, stack);
-				if(packet.has('e'))
-					packerTask.expirationAmount = packet.getVarInType(DataTypeInteger.class, e).value;
-				tasks.add(packerTask);
-
-			}
-			break;
-			case "remove":
-			{
-					/*uses action, but parameter is optional
-					{
-					 by stack
-					 by ore
-					}
-					by id (int)
-					*/
-				if(a instanceof DataTypeInteger)
-					tasks.remove(((DataTypeInteger)a).value);
-				else
+				case "add":
 				{
-					Predicate<PackerTask> p;
-					if(s instanceof DataTypeString)
-						p = packerTask -> packerTask.stack.oreName.equals(s.toString());
-					else if(s instanceof DataTypeItemStack)
-						p = packerTask -> packerTask.stack.equals(IIDataHandlingUtils.ingredientFromData(s));
-					else
-						p = packerTask -> true;
+					if(mode==null||action==null)
+						return;
+					PackerTask packerTask = new PackerTask(mode, action, stack);
+					packerTask.unpack = unpack;
+					if(packet.has('e'))
+						packerTask.expirationAmount = IIDataHandlingUtils.asInt('e', packet);
+					tasks.add(packerTask);
 
-					if(packet.has('m'))
-						p = p.and(packerTask -> packerTask.mode==PackerHandler.PackerPutMode.fromName(m.toString()));
-					if(packet.has('a'))
-						p = p.and(packerTask -> packerTask.actionType==PackerHandler.PackerActionType.fromName(a.toString()));
-					tasks.removeIf(p);
 				}
-			}
-			break;
-			case "clear":
-				tasks.clear();
 				break;
-		}
+				case "remove":
+				{
+					Optional<Integer> pid = IIDataHandlingUtils.optionalInt('a', packet);
+					if(pid.isPresent())
+						tasks.remove((int)pid.get());
+					else
+					{
+						Predicate<PackerTask> p = "*".equals(stack.oreName)?(packerTask -> true):
+								(packerTask -> packerTask.stack.matches(stack));
+						if(packet.has('m'))
+							p = p.and(packerTask -> packerTask.mode==mode);
+						if(packet.has('a'))
+							p = p.and(packerTask -> packerTask.actionType==action);
+						tasks.removeIf(p);
+					}
+				}
+				break;
+				case "clear":
+					tasks.clear();
+					break;
+			}
+		});
 
 	}
 
 	//--- Colision ---//
-
-	@Override
-	public boolean hasCapability(@Nonnull Capability<?> capability, EnumFacing facing)
-	{
-		if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
-			return master()!=null&&(pos==23||pos==0);
-		return super.hasCapability(capability, facing);
-	}
 
 	@Override
 	public <T> T getCapability(@Nonnull Capability<T> capability, EnumFacing facing)
@@ -579,49 +476,23 @@ public class TileEntityPacker extends TileEntityMultiblockIIGeneric<TileEntityPa
 		TileEntityPacker master = master();
 		if(master!=null)
 		{
-			if(pos==0&&capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
-				return (T)master.containerHandler;
-
-			if(isUpgradeInstalled(IIContent.UPGRADE_PACKER_ENERGY))
+			if(isPOI("input"))
 			{
-				/*if(pos==23)
-					return */
+				if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+					return (T)master.inventoryInHandler;
+				else if(capability==CapabilityEnergy.ENERGY)
+					return (T)this.getCapabilityWrapper(facing);
 			}
-			else if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+			else if(isPOI("output"))
 			{
-				if(!isUpgradeInstalled(IIContent.UPGRADE_PACKER_ENERGY)&&!isUpgradeInstalled(IIContent.UPGRADE_PACKER_FLUID))
-				{
-					if(pos==23)
-						return (T)master.inventoryInHandler;
-					if(pos==15)
-						return (T)master.inventoryOutHandler;
-				}
+				if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+					return (T)master.inventoryOutHandler;
+				else if(capability==CapabilityEnergy.ENERGY)
+					return (T)this.getCapabilityWrapper(facing);
 			}
 		}
 
 		return super.getCapability(capability, facing);
-	}
-
-	@Override
-	public boolean interact(EnumFacing side, EntityPlayer player, EnumHand hand, ItemStack heldItem, float hitX, float hitY, float hitZ)
-	{
-		if(world.isRemote)
-			return false;
-
-		TileEntityPacker master = master();
-		if(master!=null&&(pos==18||pos==21||pos==22||(pos > 29&&pos < 35)||(pos > 41&&pos < 47))&&master.isUpgradeInstalled(IIContent.UPGRADE_PACKER_FLUID))
-		{
-			if(heldItem.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null))
-			{
-				if(FluidUtil.interactWithFluidHandler(player, hand, master.fluidTank))
-				{
-					forceTileUpdate();
-					return true;
-				}
-			}
-		}
-
-		return false;
 	}
 
 	@Override
@@ -634,26 +505,6 @@ public class TileEntityPacker extends TileEntityMultiblockIIGeneric<TileEntityPa
 		else if(pos==0)
 			return new EnumFacing[]{facing.rotateY()}; //3x conveyors
 		return new EnumFacing[0];
-	}
-
-	// TODO: 19.08.2022 add
-	@Override
-	public void onEntityCollision(@Nonnull World world, @Nonnull Entity entity)
-	{
-		/*if(pos==1&&!world.isRemote&&entity!=null&&!entity.isDead&&entity instanceof EntityItem&&!((EntityItem)entity).getItem().isEmpty() &&IIUtils.getDistanceBetweenPos(entity.getPosition(),this.getPos().offset(facing.getOpposite()),false)==0f)
-		{
-			ItemStack stack = ((EntityItem)entity).getItem();
-			if(stack.isEmpty())
-				return;
-			if(inventory.get(0).isEmpty() && inventoryHandler.insertItem(0, stack, false).isEmpty())
-			{
-				((EntityItem)entity).setItem(ItemStack.EMPTY);
-				entity.setDead();
-				processTime=0;
-				animation=60;
-			}
-
-		}*/
 	}
 
 	//--- IManagedUpgradableDevice ---//
@@ -708,5 +559,32 @@ public class TileEntityPacker extends TileEntityMultiblockIIGeneric<TileEntityPa
 	public IIGUI getGUI()
 	{
 		return IIGUI.PACKER;
+	}
+
+	//--- IPlayerInteraction ---//
+
+	@Override
+	public boolean interact(EnumFacing side, EntityPlayer player, EnumHand hand, ItemStack heldItem, float hitX, float hitY, float hitZ)
+	{
+		if(isPOI("container"))
+		{
+			TileEntityPacker master = master();
+			return master!=null&&master.isUpgradeInstalled(IIContent.UPGRADE_PACKER_FLUID)&&FluidUtil.interactWithFluidHandler(player, hand, master.fluidTankUpgrade);
+		}
+		return false;
+	}
+
+	//--- IAdvancedTextOverlay ---//
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public String[] getOverlayText(EntityPlayer player, RayTraceResult mop)
+	{
+		if(!Utils.isFluidRelatedItemStack(player.getHeldItem(EnumHand.MAIN_HAND)))
+			return new String[0];
+		TileEntityPacker master = master();
+		if(master!=null&&master.isUpgradeInstalled(IIContent.UPGRADE_PACKER_FLUID)&&isPOI("container"))
+			return new String[]{IIUtils.getFluidNameOverlayText(master.fluidTankUpgrade.getFluid())};
+		return new String[0];
 	}
 }

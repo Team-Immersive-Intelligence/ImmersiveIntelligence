@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 25.06.2019
  */
-@IIItemProperties(category = IICategory.RESOURCES)
+@IIItemProperties(category = IICategory.TOOLS)
 @GeneratedItemModels(itemName = "assembly_scheme")
 public class ItemIIAssemblyScheme extends ItemIIBase implements IAdvancedTooltipItem
 {

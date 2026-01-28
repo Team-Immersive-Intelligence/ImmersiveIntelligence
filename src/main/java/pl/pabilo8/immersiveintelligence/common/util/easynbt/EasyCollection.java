@@ -14,7 +14,7 @@ import java.util.function.Supplier;
  * @ii-approved 0.3.1
  * @since 17.09.2025
  */
-public class EasyCollection<T extends INBTSerializable<NBT>, NBT extends NBTBase> implements List<T>, INBTSerializable<NBTTagList>
+public class EasyCollection<T extends INBTSerializable<NBT>, NBT extends NBTBase> implements List<T>, INBTSerializable<NBTTagList>, Cloneable
 {
 	private final ArrayList<T> collection = new ArrayList<>();
 	private final Supplier<T> constructor;
@@ -188,5 +188,16 @@ public class EasyCollection<T extends INBTSerializable<NBT>, NBT extends NBTBase
 			t.deserializeNBT((NBT)nbtBase);
 			collection.add(t);
 		}
+	}
+
+	//--- Cloneable ---//
+
+	@SuppressWarnings({"MethodDoesntCallSuperMethod"})
+	@Override
+	public EasyCollection<T, NBT> clone()
+	{
+		EasyCollection<T, NBT> collection = new EasyCollection<>(constructor);
+		collection.deserializeNBT(this.serializeNBT());
+		return collection;
 	}
 }

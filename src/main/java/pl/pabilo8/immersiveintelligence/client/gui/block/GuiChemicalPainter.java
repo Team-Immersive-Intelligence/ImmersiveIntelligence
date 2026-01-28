@@ -33,7 +33,7 @@ public class GuiChemicalPainter extends DecoGui<TileEntityChemicalPainter, Conta
 	public static final ResourceLocation TEXTURE = IIReference.RES_II.with("gui/chemical_painter");
 	private DecoImage imageProgress1, imageProgress2;
 
-	@SyncNBT(events = SyncEvents.DECO_TILE_DATA)
+	@SyncNBT(events = SyncEvents.TILE_CLIENT_MESSAGE)
 	public IIColor color;
 
 	public GuiChemicalPainter(EntityPlayer player, TileEntityChemicalPainter tile)

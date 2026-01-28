@@ -741,24 +741,24 @@ desc.immersiveintelligence.metal_multiblock1.emplacement.filter=Filter
 desc.immersiveintelligence.metal_multiblock1.emplacement.task_enabled=Aktiviert
 desc.immersiveintelligence.metal_multiblock1.emplacement.task_negation=Negation
 
-desc.immersiveintelligence.metal_multiblock1.packer.task.pack=Verpacken
-desc.immersiveintelligence.metal_multiblock1.packer.task.unpack=Entpacken
-desc.immersiveintelligence.metal_multiblock1.packer.task.charge=Aufladen
-desc.immersiveintelligence.metal_multiblock1.packer.task.discharge=Entladen
-desc.immersiveintelligence.metal_multiblock1.packer.task.fill=Füllen
-desc.immersiveintelligence.metal_multiblock1.packer.task.drain=Leeren
+ii.gui.packer.task.item.out=Verpacken
+ii.gui.packer.task.item.in=Entpacken
+ii.gui.packer.task.fluid.out=Aufladen
+ii.gui.packer.task.fluid.in=Entladen
+ii.gui.packer.task.energy.out=Füllen
+ii.gui.packer.task.energy.in=Leeren
 
-desc.immersiveintelligence.metal_multiblock1.packer.mode.amount=Menge
-desc.immersiveintelligence.metal_multiblock1.packer.mode.slot=Slot
-desc.immersiveintelligence.metal_multiblock1.packer.mode.all_possible=Alle möglich
-desc.immersiveintelligence.metal_multiblock1.packer.mode.at_most_container=Maximal im Container
-desc.immersiveintelligence.metal_multiblock1.packer.mode.at_least_packer=Minimal im Verpacker
+ii.gui.packer.mode.amount=Menge
+ii.gui.packer.mode.slot=Slot
+ii.gui.packer.mode.all_possible=Alle möglich
+ii.gui.packer.mode.at_most_container=Maximal im Container
+ii.gui.packer.mode.at_least_packer=Minimal im Verpacker
 
-desc.immersiveintelligence.metal_multiblock1.packer.side_input=Gegenstände zum laden in Container
-desc.immersiveintelligence.metal_multiblock1.packer.side_output=Gegenstände aus Container entnommen
-desc.immersiveintelligence.metal_multiblock1.packer.switch_direction=Wechsel Aufgaben Richtung
-desc.immersiveintelligence.metal_multiblock1.packer.mode_single=Einmal-Verpacken
-desc.immersiveintelligence.metal_multiblock1.packer.mode_iteration=Wiederholtes Verpacken
+ii.gui.packer.side_input=Gegenstände zum laden in Container
+ii.gui.packer.side_output=Gegenstände aus Container entnommen
+ii.gui.packer.switch_direction=Wechsel Aufgaben Richtung
+ii.gui.packer.mode_single=Einmal-Verpacken
+ii.gui.packer.mode_iteration=Wiederholtes Verpacken
 
 desc.immersiveintelligence.metal_multiblock1.emplacement.target.mobs=Mobs
 desc.immersiveintelligence.metal_multiblock1.emplacement.target.animals=Tiere

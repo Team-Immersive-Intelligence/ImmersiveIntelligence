@@ -970,7 +970,8 @@ public class EasyNBT extends Constants.NBT
 	 */
 	public IngredientStack getIngredientStack(String key)
 	{
-		return IngredientStack.readFromNBT(getCompound(key));
+		IngredientStack stack = IngredientStack.readFromNBT(getCompound(key));
+		return stack==null?new IngredientStack("*"): stack;
 	}
 
 	/**

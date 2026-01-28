@@ -245,9 +245,9 @@ public class NBTSerialisation
 					//noinspection unchecked
 					invoke = (FIELD)getter.invoke(obj);
 					return deserialize.apply(nbt, invoke);
-				} catch(Throwable ignored)
+				} catch(Throwable e)
 				{
-
+					IILogger.error("NBT Deserialization error: "+e);
 				}
 				return invoke;
 			}

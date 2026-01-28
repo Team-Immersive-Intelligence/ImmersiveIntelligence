@@ -33,6 +33,7 @@ import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.ins
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
@@ -47,7 +48,7 @@ import java.util.function.Function;
  */
 public class TileEntityFluidInserter extends TileEntityInserterBase
 {
-	public static final HashMap<String, Function<NBTTagCompound, InserterTask>> TASKS = new HashMap<>();
+	public static final HashMap<String, Function<NBTTagCompound, InserterTask>> TASKS = new LinkedHashMap<>();
 	private static final Set<String> WIRES = ImmutableSet.of(WireType.LV_CATEGORY, WireType.MV_CATEGORY);
 
 	static

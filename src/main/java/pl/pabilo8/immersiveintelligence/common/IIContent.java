@@ -89,6 +89,7 @@ import static pl.pabilo8.immersiveintelligence.common.CommonProxy.makeFluid;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @ii-approved 0.3.1
  * @since 08.12.2020
  */
 public class IIContent
@@ -301,6 +302,7 @@ public class IIContent
 	@IBatchOredictRegister(oreDict = "punchtape")
 	public static final ItemIIPunchtape itemPunchtape = new ItemIIPunchtape();
 	public static final ItemIIPrintedPage itemPrintedPage = new ItemIIPrintedPage();
+	public static final ItemIILogisticTag itemLogisticTag = new ItemIILogisticTag();
 	public static final ItemIITracerPowder itemTracerPowder = new ItemIITracerPowder();
 	//rubber
 	public static final BlockIIRubberLog blockRubberLog = new BlockIIRubberLog();

@@ -866,6 +866,9 @@ public class IIConfigHandler
 
 				@Comment({"Ink used per character printed (mB)."})
 				public static int printInkUsage = 2;
+
+				@Comment({"Ink used to print a Logistics Tag (mB)."})
+				public static int printInkUsageLogiTag = 512;
 			}
 
 			public static class ChemicalBath

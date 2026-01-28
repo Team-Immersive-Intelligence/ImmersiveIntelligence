@@ -2,7 +2,6 @@ package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multibloc
 
 import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorageAdvanced;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
@@ -197,16 +196,15 @@ public class TileEntityAmmunitionAssembler extends TileEntityMultiblockProductio
 	@Override
 	public void onEntityCollision(World world, Entity entity)
 	{
-		if(!world.isRemote&&entity instanceof EntityItem)
-		{
-			ItemStack stack = ((EntityItem)entity).getItem();
-			if(stack.isEmpty()) return;
-
-			if(isPOI("input_core"))
-				((EntityItem)entity).setItem(master().coreInputHandler.insertItem(0, stack, false));
-			else if(isPOI("input_casing"))
-				((EntityItem)entity).setItem(master().casingInputHandler.insertItem(0, stack, false));
-		}
+		TileEntityAmmunitionAssembler master = master();
+		if(master!=null)
+			handleItemEntityInput(entity, stack -> {
+				if(isPOI("input_core"))
+					return master.coreInputHandler.insertItem(0, stack, false);
+				else if(isPOI("input_casing"))
+					return master.casingInputHandler.insertItem(0, stack, false);
+				return ItemStack.EMPTY;
+			});
 	}
 
 	@Override

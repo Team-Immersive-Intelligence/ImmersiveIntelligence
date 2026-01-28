@@ -742,24 +742,24 @@ desc.immersiveintelligence.metal_multiblock1.emplacement.remove=Видалити
 desc.immersiveintelligence.metal_multiblock1.emplacement.duplicate=Дублікат
 desc.immersiveintelligence.metal_multiblock1.emplacement.clear=Очистити
 
-desc.immersiveintelligence.metal_multiblock1.packer.task.pack=Пакет
-desc.immersiveintelligence.metal_multiblock1.packer.task.unpack=Розпакувати
-desc.immersiveintelligence.metal_multiblock1.packer.task.charge=Заряд
-desc.immersiveintelligence.metal_multiblock1.packer.task.discharge=Розряд
-desc.immersiveintelligence.metal_multiblock1.packer.task.fill=Заповнити
-desc.immersiveintelligence.metal_multiblock1.packer.task.drain=Злив
+ii.gui.packer.task.item.out=Пакет
+ii.gui.packer.task.item.in=Розпакувати
+ii.gui.packer.task.fluid.out=Заряд
+ii.gui.packer.task.fluid.in=Розряд
+ii.gui.packer.task.energy.out=Заповнити
+ii.gui.packer.task.energy.in=Злив
 
-desc.immersiveintelligence.metal_multiblock1.packer.mode.amount=Сума
-desc.immersiveintelligence.metal_multiblock1.packer.mode.slot=Слот
-desc.immersiveintelligence.metal_multiblock1.packer.mode.all_possible=Всі можливі
-desc.immersiveintelligence.metal_multiblock1.packer.mode.at_most_container=Не більше в контейнері
-desc.immersiveintelligence.metal_multiblock1.packer.mode.at_least_packer=Принаймні в пакувальнику
+ii.gui.packer.mode.amount=Сума
+ii.gui.packer.mode.slot=Слот
+ii.gui.packer.mode.all_possible=Всі можливі
+ii.gui.packer.mode.at_most_container=Не більше в контейнері
+ii.gui.packer.mode.at_least_packer=Принаймні в пакувальнику
 
-desc.immersiveintelligence.metal_multiblock1.packer.side_input=Елементи, які потрібно помістити в контейнер
-desc.immersiveintelligence.metal_multiblock1.packer.side_output=Елементи, взяті з контейнера
-desc.immersiveintelligence.metal_multiblock1.packer.switch_direction=Змінити напрямок завдання
-desc.immersiveintelligence.metal_multiblock1.packer.mode_single=Одноразове пакування
-desc.immersiveintelligence.metal_multiblock1.packer.mode_iteration=Повторне пакування
+ii.gui.packer.side_input=Елементи, які потрібно помістити в контейнер
+ii.gui.packer.side_output=Елементи, взяті з контейнера
+ii.gui.packer.switch_direction=Змінити напрямок завдання
+ii.gui.packer.mode_single=Одноразове пакування
+ii.gui.packer.mode_iteration=Повторне пакування
 
 desc.immersiveintelligence.metal_multiblock1.emplacement.target.mobs=Моби
 desc.immersiveintelligence.metal_multiblock1.emplacement.target.animals=Тварини

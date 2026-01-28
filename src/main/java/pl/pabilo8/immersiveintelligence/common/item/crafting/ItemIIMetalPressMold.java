@@ -11,7 +11,7 @@ import pl.pabilo8.modworks.annotations.item.GeneratedItemModels;
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 11.05.2019
  */
-@IIItemProperties(category = IICategory.RESOURCES)
+@IIItemProperties(category = IICategory.TOOLS)
 public class ItemIIMetalPressMold extends ItemIISubItemsBase<PressMolds>
 {
 	public ItemIIMetalPressMold()

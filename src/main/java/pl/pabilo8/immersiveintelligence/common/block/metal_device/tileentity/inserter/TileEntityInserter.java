@@ -35,10 +35,7 @@ import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -48,7 +45,7 @@ import java.util.function.Predicate;
  */
 public class TileEntityInserter extends TileEntityInserterBase
 {
-	public static final HashMap<String, Function<NBTTagCompound, InserterTask>> TASKS = new HashMap<>();
+	public static final HashMap<String, Function<NBTTagCompound, InserterTask>> TASKS = new LinkedHashMap<>();
 	private static final Set<String> WIRES = ImmutableSet.of(WireType.LV_CATEGORY, WireType.MV_CATEGORY);
 
 	static

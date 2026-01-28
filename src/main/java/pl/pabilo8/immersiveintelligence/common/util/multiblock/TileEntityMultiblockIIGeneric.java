@@ -14,6 +14,8 @@ import blusunrize.immersiveengineering.common.util.EnergyHelper.IIEInternalFluxH
 import blusunrize.immersiveengineering.common.util.Utils;
 import blusunrize.immersiveengineering.common.util.inventory.IEInventoryHandler;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -34,6 +36,7 @@ import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPO
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.function.Function;
 
 /**
  * A standard II "medium-high tier" multiblock.<br>
@@ -216,6 +219,22 @@ public abstract class TileEntityMultiblockIIGeneric<T extends TileEntityMultiblo
 			T master = master();
 			if(master!=null&&world.getTotalWorldTime()%8==0)
 				master.sendNBTMessageClient(master.energyStorage.writeToNBT(new NBTTagCompound()));
+		}
+	}
+
+	public void handleItemEntityInput(Entity entity, Function<ItemStack, ItemStack> func)
+	{
+		if(!world.isRemote&&entity instanceof EntityItem)
+		{
+			ItemStack stack = ((EntityItem)entity).getItem();
+			if(stack.isEmpty())
+				return;
+
+			if(func!=null)
+			{
+				stack = func.apply(stack);
+				((EntityItem)entity).setItem(stack);
+			}
 		}
 	}
 

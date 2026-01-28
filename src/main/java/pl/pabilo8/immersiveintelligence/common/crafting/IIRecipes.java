@@ -35,6 +35,7 @@ import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.IForgeRegistryModifiable;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.api.LogisticTag;
 import pl.pabilo8.immersiveintelligence.api.PackerHandler;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
@@ -178,7 +179,7 @@ public class IIRecipes
 		MixerRecipe.addRecipe(new FluidStack(IIContent.fluidBrine, 750),
 				new FluidStack(FluidRegistry.WATER, 750), new Object[]{"dustSalt"}, 3200);
 
-
+		recipeRegistry.register(new RecipeLogisticTagCraftingHandler().setRegistryName(ImmersiveIntelligence.MODID, "logi_tag_applying"));
 	}
 
 	/**
@@ -291,6 +292,7 @@ public class IIRecipes
 				return new int[]{0, 0, 0, text.length()*PrintingPress.printInkUsage};
 			}
 		});
+		//Data to Punchtape printing
 		new PrintingRecipe(new IngredientStack("punchtapeEmpty"), "punchtape", new PrintFunction()
 		{
 			@Override
@@ -313,6 +315,22 @@ public class IIRecipes
 			public Upgrade getUpgradeRequired()
 			{
 				return IIContent.UPGRADE_PRESS_PUNCHTAPES;
+			}
+		});
+		//Logistic tag printing
+		new PrintingRecipe(new IngredientStack("pageEmpty"), "logi_tag", new PrintFunction()
+		{
+			@Override
+			public ItemStack apply(ItemStack input, DataPacket data)
+			{
+				LogisticTag logiTag = new LogisticTag(data);
+				return IIContent.itemLogisticTag.getStack(logiTag, 1);
+			}
+
+			@Override
+			public int[] getInkTypesRequired(DataPacket data)
+			{
+				return new int[]{0, 0, 0, PrintingPress.printInkUsageLogiTag};
 			}
 		});
 	}

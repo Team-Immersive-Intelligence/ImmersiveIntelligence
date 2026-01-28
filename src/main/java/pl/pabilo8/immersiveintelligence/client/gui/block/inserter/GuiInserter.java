@@ -1,6 +1,7 @@
 package pl.pabilo8.immersiveintelligence.client.gui.block.inserter;
 
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -8,6 +9,7 @@ import net.minecraft.util.EnumFacing;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoButton;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoDropdown;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoElementDisplays;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoList;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoLabel;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoEntryPanelBuilder;
@@ -42,7 +44,8 @@ import java.util.stream.Collectors;
 @DecoTemplate(name = "inserter", category = DecoGuiCategory.DATA_TILE)
 public class GuiInserter extends DecoGui<TileEntityInserterBase, ContainerInserter>
 {
-	private static final String TRANSLATION_KEY = IIReference.GUI_LABEL_KEY+"inserter.";
+	private static final String TASK_EDITOR_KEY = IIReference.GUI_LABEL_KEY+"task_editor.";
+	private static final String INSERTER_KEY = IIReference.GUI_LABEL_KEY+"inserter.";
 	private ListMode mode = ListMode.TASKS;
 	private DecoList<InserterTask> list;
 	private DecoPanel panelDetails;
@@ -87,8 +90,8 @@ public class GuiInserter extends DecoGui<TileEntityInserterBase, ContainerInsert
 				new DecoButton(0, 8)
 						.withSize(54, 18)
 						.withBackground(DecoTextures.RES_TEXTURES_DECO_COMPONENT_TAB_VERTICAL)
-						.withText(TRANSLATION_KEY+"tasks")
-						.withTranslatedTooltip(TRANSLATION_KEY+"tasks.tooltip")
+						.withText(TASK_EDITOR_KEY+"tasks")
+						.withTranslatedTooltip(TASK_EDITOR_KEY+"tasks.tooltip")
 						.withOnLMBPressed(() -> {
 							mode = ListMode.TASKS;
 							refreshListEntries();
@@ -96,8 +99,8 @@ public class GuiInserter extends DecoGui<TileEntityInserterBase, ContainerInsert
 				new DecoButton(54, 8)
 						.withSize(54, 18)
 						.withBackground(DecoTextures.RES_TEXTURES_DECO_COMPONENT_TAB_VERTICAL)
-						.withText(TRANSLATION_KEY+"jobs")
-						.withTranslatedTooltip(TRANSLATION_KEY+"jobs.tooltip")
+						.withText(TASK_EDITOR_KEY+"jobs")
+						.withTranslatedTooltip(TASK_EDITOR_KEY+"jobs.tooltip")
 						.withOnLMBPressed(() -> {
 							mode = ListMode.JOBS;
 							refreshListEntries();
@@ -115,14 +118,17 @@ public class GuiInserter extends DecoGui<TileEntityInserterBase, ContainerInsert
 								.withLabel("wild", new DecoLabel(fontRenderer, 3, 2)
 										.withSize(16, 16)
 										.withAlign(DecoAlignment.CENTER)
-										.withRawText("*"))
+										.withRawText("*")
+										.withTextColor(IIReference.COLOR_IMMERSIVE_ORANGE)
+								)
 								.withLabel("type", new DecoLabel(fontRenderer, 3+16+4, 2)
 										.withSize(96-3-16-6, 16)
 										.withAlign(DecoAlignment.LEFT)
-										.withRawText("task"))
+										.withRawText("task")
+								)
 								.withElementApplyMethod((task, panel) -> {
 									IngredientStack stack = task.stack;
-									panel.label("type").withRawText(task.getName());
+									panel.label("type").withText(INSERTER_KEY+"tasks."+task.getName());
 
 									boolean wildcard = isWildcard(stack);
 									panel.label("wild").visible = wildcard;
@@ -200,15 +206,17 @@ public class GuiInserter extends DecoGui<TileEntityInserterBase, ContainerInsert
 			return;
 		final InserterTask thisTask = selected;
 
-		panelDetails.addLabel(TRANSLATION_KEY+"task_editor", 4, 4)
+		panelDetails.addLabel(INSERTER_KEY+"task_editor", 4, 4)
 				.withSize(panelDetails.width-8, 10)
 				.withAlign(DecoAlignment.CENTER);
 
-		panelDetails.addLabel(TRANSLATION_KEY+"type", 6, 20-2);
+		panelDetails.addLabel(INSERTER_KEY+"type", 6, 20-2);
 		panelDetails.addComponent(new DecoDropdown<String>(42-4, 20-8+2))
 				.withSize(panelDetails.width-42, 16)
 				.withEntries(tile.getAvailableTasks().keySet())
 				.withSelectedEntry(thisTask.getName())
+				.withDisplayFunction(DecoElementDisplays.getSimpleTextDisplay(taskName ->
+						I18n.format(INSERTER_KEY+"tasks."+taskName)))
 				.withOnSelectedEntry((oldType, newType) -> {
 					int index = this.localTasks.indexOf(thisTask);
 					this.localTasks.remove(thisTask);
@@ -217,7 +225,7 @@ public class GuiInserter extends DecoGui<TileEntityInserterBase, ContainerInsert
 					this.refreshDetails();
 				});
 
-		panelDetails.addLabel(TRANSLATION_KEY+"input", 6, 34)
+		panelDetails.addLabel(INSERTER_KEY+"input", 6, 34)
 				.withSize(42, 16)
 				.withAlign(DecoAlignment.LEFT);
 		panelDetails.addComponents(
@@ -226,16 +234,16 @@ public class GuiInserter extends DecoGui<TileEntityInserterBase, ContainerInsert
 						.withEntries(EnumFacing.NORTH, EnumFacing.SOUTH, EnumFacing.EAST, EnumFacing.WEST)
 						.withSelectedEntry(thisTask.facingIn==null?tile.defaultInputFacing: thisTask.facingIn)
 						.withOnSelectedEntry((oldV, newV) -> thisTask.facingIn = newV)
-						.withTranslatedTooltip(TRANSLATION_KEY+"input.facing.tooltip"),
+						.withTranslatedTooltip(INSERTER_KEY+"input.facing.tooltip"),
 				new DecoTextField(74+42, 34)
 						.withSize(16, 16)
 						.withFilter(TextFilter.DECIMAL)
 						.withText(thisTask.distanceIn==-1?String.valueOf(tile.defaultInputDistance): String.valueOf(thisTask.distanceIn))
 						.withOnTextChanged(string -> thisTask.distanceIn = IIStringUtil.parseInt(string))
-						.withTranslatedTooltip(TRANSLATION_KEY+"input.distance.tooltip")
+						.withTranslatedTooltip(INSERTER_KEY+"input.distance.tooltip")
 		);
 
-		panelDetails.addLabel(TRANSLATION_KEY+"output", 6, 34+18)
+		panelDetails.addLabel(INSERTER_KEY+"output", 6, 34+18)
 				.withSize(42, 16)
 				.withAlign(DecoAlignment.LEFT);
 		panelDetails.addComponents(
@@ -244,16 +252,16 @@ public class GuiInserter extends DecoGui<TileEntityInserterBase, ContainerInsert
 						.withEntries(EnumFacing.NORTH, EnumFacing.SOUTH, EnumFacing.EAST, EnumFacing.WEST)
 						.withSelectedEntry(thisTask.facingOut==null?tile.defaultOutputFacing: thisTask.facingOut)
 						.withOnSelectedEntry((oldV, newV) -> thisTask.facingOut = newV)
-						.withTranslatedTooltip(TRANSLATION_KEY+"output.facing.tooltip"),
+						.withTranslatedTooltip(INSERTER_KEY+"output.facing.tooltip"),
 				new DecoTextField(74+42, 34+18)
 						.withSize(16, 16)
 						.withFilter(TextFilter.DECIMAL)
 						.withText(thisTask.distanceOut==-1?String.valueOf(tile.defaultOutputDistance): String.valueOf(thisTask.distanceOut))
 						.withOnTextChanged(string -> thisTask.distanceOut = IIStringUtil.parseInt(string))
-						.withTranslatedTooltip(TRANSLATION_KEY+"output.distance.tooltip")
+						.withTranslatedTooltip(INSERTER_KEY+"output.distance.tooltip")
 		);
 
-		panelDetails.addLabel(TRANSLATION_KEY+"items_per_step", 6, 34+18+18)
+		panelDetails.addLabel(INSERTER_KEY+"items_per_step", 6, 34+18+18)
 				.withSize(64, 16)
 				.withAlign(DecoAlignment.LEFT);
 		panelDetails.addComponents(
@@ -261,15 +269,16 @@ public class GuiInserter extends DecoGui<TileEntityInserterBase, ContainerInsert
 						.withSize(panelDetails.width-6-64-4, 16)
 						.withText(thisTask.overrideTakeAmount==-1?String.valueOf(tile.takeAmount): String.valueOf(thisTask.overrideTakeAmount))
 						.withOnTextChanged(string -> thisTask.overrideTakeAmount = IIStringUtil.parseInt(string))
-						.withTranslatedTooltip(TRANSLATION_KEY+"items_per_step.tooltip")
+						.withTranslatedTooltip(INSERTER_KEY+"items_per_step.tooltip")
 						.withDisabled(!thisTask.areDetailsEditable()),
 				new DecoIngredientStackPickerPanel(6-2, 34+18+18+18)
 						.withFluidMode(thisTask.getName().contains("fluid"))
-						.withIngredientStack(thisTask.stack)
+						.withLogisticTagMode(true)
 						.withOnStackChanged(stack -> {
 							thisTask.stack = stack;
 							refreshListEntries();
 						})
+						.withIngredientStack(thisTask.stack)
 						.withSize(panelDetails.width-6-2, 56)
 						.withDisabled(!thisTask.areDetailsEditable())
 		);

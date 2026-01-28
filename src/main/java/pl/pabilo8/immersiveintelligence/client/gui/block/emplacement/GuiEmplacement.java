@@ -3,7 +3,6 @@ package pl.pabilo8.immersiveintelligence.client.gui.block.emplacement;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoTab;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundBuilder.SlotStyle;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoResource;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
@@ -46,23 +45,9 @@ public abstract class GuiEmplacement extends DecoGui<TileEntityEmplacement, Cont
 				.withInventoryTitleBar()
 				.build();
 
-		addComponents(
-				new DecoTab()
-						.withLink(IIGUI.EMPLACEMENT_STORAGE)
-						.withIcon(ICON_STORAGE)
-						.withTranslatedTooltip(IIReference.DESCRIPTION_KEY+"storage_module"),
-				new DecoTab()
-						.withLink(IIGUI.EMPLACEMENT_CONFIG)
-						.withIcon(ICON_CONFIG)
-						.withTranslatedTooltip(IIReference.DESCRIPTION_KEY+"configuration_module"),
-				new DecoTab()
-						.withLink(IIGUI.EMPLACEMENT_TARGET_FILTERS)
-						.withIcon(ICON_TARGETS)
-						.withTranslatedTooltip(IIReference.DESCRIPTION_KEY+"targets_module"),
-				new DecoTab()
-						.withLink(IIGUI.EMPLACEMENT_FIRE_MISSIONS)
-						.withIcon(ICON_TASKS)
-						.withTranslatedTooltip(IIReference.DESCRIPTION_KEY+"fire_missions_module")
-		);
+		addLinkTab(IIGUI.EMPLACEMENT_STORAGE, ICON_STORAGE, "storage_module");
+		addLinkTab(IIGUI.EMPLACEMENT_CONFIG, ICON_CONFIG, "configuration_module");
+		addLinkTab(IIGUI.EMPLACEMENT_TARGET_FILTERS, ICON_TARGETS, "targets_module");
+		addLinkTab(IIGUI.EMPLACEMENT_FIRE_MISSIONS, ICON_TASKS, "fire_missions_module");
 	}
 }

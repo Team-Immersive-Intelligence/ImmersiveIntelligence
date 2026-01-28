@@ -65,6 +65,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GLContext;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.api.LogisticTag;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.api.ammo.penetration.DamageBlockPos;
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.IIAmmoUtils;
@@ -781,21 +782,12 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 		if(stack==null||event.getEntity()==null)
 			return;
 
+		LogisticTag logiTag = LogisticTag.getLogisticsTagFromStack(stack);
+		if(logiTag!=null)
+			logiTag.addLogisticsTooltip(event.getToolTip());
 
 		if(ItemNBTHelper.hasKey(stack, "ii_FilledCasing"))
 			event.getToolTip().add(TextFormatting.DARK_GRAY+I18n.format(IIReference.DESCRIPTION_KEY+"filled_casing"));
-
-		/*if(stack.getItem()==IEContent.itemToolUpgrades)
-		{
-			Set<String> types = ((IUpgrade)IEContent.itemToolUpgrades).getUpgradeTypes(stack);
-			for(String type : types)
-			{
-				WeaponTypes weaponType = Arrays.stream(WeaponTypes.values()).filter(w -> w.getName().equalsIgnoreCase(type)).findFirst().orElse(null);
-
-				if(weaponType!=null)
-					event.getToolTip().add(IIUtils.getHexCol(weaponType.color, weaponType.symbol+" "+I18n.format(IILib.DESC_TOOLUPGRADE+"item."+weaponType.getName())));
-			}
-		}*/
 
 		if(stack.getItem() instanceof IAmmoTypeItem)
 			IIAmmoUtils.createAmmoTooltip((IAmmoTypeItem<?, ?>)stack.getItem(), stack, event.getEntity().world, event.getToolTip());

@@ -81,10 +81,16 @@
     "19,22": "container_rail_right"
   },
   "poi": {
+    "all_energy_input": [25, 23],
     "energy": 25,
-    "input": 15,
-    "output": 23,
+    "input": 23,
+    "output": 15,
+    "conveyor_in": 0,
+    "conveyor_out": 2,
+    "inputs_items": [0, 23],
+    "outputs_items": [2, 15],
     "redstone": 10,
-    "data": 9
+    "data": 9,
+    "container": [42, 43, 45, 46, 18, 19, 21, 22]
   }
 }

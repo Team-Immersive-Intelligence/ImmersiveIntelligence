@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.client.gui.block;
+package pl.pabilo8.immersiveintelligence.client.gui.block.radar;
 
 import blusunrize.immersiveengineering.common.entities.EntityRailgunShot;
 import net.minecraft.entity.item.EntityItem;

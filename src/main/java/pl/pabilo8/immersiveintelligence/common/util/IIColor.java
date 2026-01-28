@@ -7,6 +7,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Optional;
@@ -258,8 +259,10 @@ public class IIColor implements Comparable<IIColor>, ToIntFunction<IIColor>
 	 * @param dyeColor dye color enum
 	 * @return A new IIColor object with the dye's color values
 	 */
-	public static IIColor fromDye(EnumDyeColor dyeColor)
+	public static IIColor fromDye(@Nullable EnumDyeColor dyeColor)
 	{
+		if(dyeColor==null)
+			return MC_WHITE;
 		return fromFloatRGB(dyeColor.getColorComponentValues());
 	}
 
@@ -267,11 +270,11 @@ public class IIColor implements Comparable<IIColor>, ToIntFunction<IIColor>
 	 * @param formatting text formatting enum
 	 * @return A new IIColor object with the text formatting's color values
 	 */
-	public static IIColor fromTextFormatting(TextFormatting formatting)
+	public static IIColor fromTextFormatting(@Nullable TextFormatting formatting)
 	{
-		if(!formatting.isColor())
+		if(formatting==null||!formatting.isColor())
 			return MC_WHITE;
-		return fromRGB(formatting.getColorIndex());
+		return MC_COLORS[formatting.getColorIndex()%MC_COLORS.length];
 	}
 
 	/**

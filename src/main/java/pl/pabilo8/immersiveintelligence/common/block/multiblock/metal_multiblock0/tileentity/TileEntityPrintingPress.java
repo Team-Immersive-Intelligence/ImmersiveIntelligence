@@ -158,7 +158,7 @@ public class TileEntityPrintingPress extends TileEntityMultiblockProductionMulti
 		}
 		else
 		{
-			int amount = IIDataHandlingUtils.asInt('a', packet);
+			int amount = IIDataHandlingUtils.optionalInt('a', packet).orElse(1);
 			if(amount <= 0)
 				return;
 

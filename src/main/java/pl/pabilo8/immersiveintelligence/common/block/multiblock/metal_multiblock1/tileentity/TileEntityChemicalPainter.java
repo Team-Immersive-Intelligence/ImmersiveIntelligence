@@ -10,7 +10,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidTank;
@@ -29,7 +28,6 @@ import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IIDataHandlingUtils;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeFloat;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.IAdvancedTextOverlay;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.ChemicalPainter;
@@ -172,10 +170,8 @@ public class TileEntityChemicalPainter extends TileEntityMultiblockProductionSin
 			});
 			sendData(callback, mirrored?facing.rotateY(): facing.rotateYCCW(), getPOI(MultiblockPOI.DATA_INPUT)[0]);
 		}
-		else if(p instanceof DataTypeInteger)
-			color = IIColor.fromPackedRGB(MathHelper.clamp(((DataTypeInteger)p).value, 0, 0xffffff));
-		else if(p instanceof DataTypeString)
-			color = IIColor.fromHex(((DataTypeString)p).value);
+		else
+			color = IIDataHandlingUtils.optionalColor('p', packet).orElse(color);
 	}
 
 	@Override

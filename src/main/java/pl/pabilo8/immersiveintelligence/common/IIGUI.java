@@ -23,7 +23,15 @@ import pl.pabilo8.immersiveintelligence.client.gui.block.emplacement.GuiEmplacem
 import pl.pabilo8.immersiveintelligence.client.gui.block.emplacement.GuiEmplacementPageFireMissions;
 import pl.pabilo8.immersiveintelligence.client.gui.block.emplacement.GuiEmplacementPageStorage;
 import pl.pabilo8.immersiveintelligence.client.gui.block.emplacement.GuiEmplacementPageTargetFilters;
+import pl.pabilo8.immersiveintelligence.client.gui.block.flagpole.GuiFlagpole;
+import pl.pabilo8.immersiveintelligence.client.gui.block.flagpole.GuiFlagpoleFaction;
 import pl.pabilo8.immersiveintelligence.client.gui.block.inserter.GuiInserter;
+import pl.pabilo8.immersiveintelligence.client.gui.block.packer.GuiPacker;
+import pl.pabilo8.immersiveintelligence.client.gui.block.packer.GuiPackerLabeler;
+import pl.pabilo8.immersiveintelligence.client.gui.block.radar.GuiRadar;
+import pl.pabilo8.immersiveintelligence.client.gui.block.radar.GuiRadarStatus;
+import pl.pabilo8.immersiveintelligence.client.gui.block.radar.GuiRadarTasks;
+import pl.pabilo8.immersiveintelligence.client.gui.block.radar.GuiRepairCrate;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui.DecoResourcesLoader;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoResource;
@@ -98,6 +106,7 @@ public enum IIGUI implements ISerializableEnum
 	PRINTED_PAGE_TEXT(),
 	PRINTED_PAGE_CODE(),
 	PRINTED_PAGE_BLUEPRINT(),
+	PRINTED_PAGE_LOGISTIC_TAG(),
 
 	CASING_POUCH(ContainerCasingPouch::new),
 
@@ -114,6 +123,7 @@ public enum IIGUI implements ISerializableEnum
 
 	GEARBOX(TileEntityGearbox.class, ContainerGearbox::new),
 	PACKER(TileEntityPacker.class, ContainerPacker::new),
+	PACKER_LABELER(TileEntityPacker.class, ContainerPacker::new),
 	SAWMILL(TileEntitySawmill.class, ContainerSawmill::new),
 
 	@SuppressWarnings({"rawtypes", "unchecked"})
@@ -190,7 +200,8 @@ public enum IIGUI implements ISerializableEnum
 	public static void initClientGUIs()
 	{
 		IIGUI.SAWMILL.setClientDecoGui(GuiSawmill::new);
-		IIGUI.PACKER.setClientGui(GuiPacker::new);
+		IIGUI.PACKER.setClientDecoGui(GuiPacker::new);
+		IIGUI.PACKER_LABELER.setClientDecoGui(GuiPackerLabeler::new);
 		IIGUI.GEARBOX.setClientDecoGui(GuiGearbox::new);
 
 		IIGUI.DATA_REDSTONE_INTERFACE_DATA

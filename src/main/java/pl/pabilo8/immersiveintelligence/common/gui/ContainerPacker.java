@@ -75,7 +75,7 @@ public class ContainerPacker extends ContainerIIBase<TileEntityPacker>
 			this.slotCount = tile.getInventory().size();
 		}
 
-		this.addPlayerInventory(player.inventory, 8+64+32-16, 86+32+12);
+		this.addPlayerInventory(player.inventory, 8+64+32-16+16+8-2, 86+32+12+32+12);
 
 	}
 

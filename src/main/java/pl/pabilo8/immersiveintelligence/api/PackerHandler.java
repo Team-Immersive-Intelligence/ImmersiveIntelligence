@@ -3,13 +3,14 @@ package pl.pabilo8.immersiveintelligence.api;
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.IStringSerializable;
+import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.items.IItemHandler;
+import pl.pabilo8.immersiveintelligence.common.util.ILocalizedEnum;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
-import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.function.Function;
@@ -51,7 +52,7 @@ public class PackerHandler
 		return fluidHandleMap.entrySet().stream();
 	}
 
-	public enum PackerPutMode implements IStringSerializable
+	public enum PackerPutMode implements ILocalizedEnum
 	{
 		//all possible
 		ALL_POSSIBLE,
@@ -64,73 +65,45 @@ public class PackerHandler
 		//fill until x is inside packer
 		AT_LEAST_PACKER;
 
-		public static PackerPutMode fromName(String name)
-		{
-			String ss = name.toUpperCase();
-			return Arrays.stream(values())
-					.filter(e -> e.name().equals(ss))
-					.findFirst()
-					.orElse(ALL_POSSIBLE);
-		}
-
-		@Nonnull
 		@Override
-		public String getName()
+		public String geLocaleKey()
 		{
-			return this.toString().toLowerCase();
+			return "ii.gui.packer.mode.";
 		}
 	}
 
-	public enum PackerActionType
+	public enum PackerActionType implements ILocalizedEnum
 	{
 		ITEM,
 		FLUID,
 		ENERGY;
 
-		public static PackerActionType fromName(String name)
+		@Override
+		public String geLocaleKey()
 		{
-			switch(name.toLowerCase())
-			{
-				default:
-				case "item":
-					return ITEM;
-				case "fluid":
-					return FLUID;
-				case "energy":
-					return ENERGY;
-			}
-		}
-
-		public String getActionName(boolean unpacker)
-		{
-			switch(this)
-			{
-				default:
-				case ITEM:
-					return unpacker?"unpack": "pack";
-				case FLUID:
-					return unpacker?"drain": "fill";
-				case ENERGY:
-					return unpacker?"discharge": "charge";
-			}
+			return "ii.gui.packer.task.";
 		}
 	}
 
 	@ParametersAreNonnullByDefault
-	public static class PackerTask
+	public static class PackerTask implements INBTSerializable<NBTTagCompound>
 	{
 		/**
 		 * How much should be inserted
 		 */
-		public PackerPutMode mode;
+		public PackerPutMode mode = PackerPutMode.ALL_POSSIBLE;
 		/**
 		 * Item, Fluid or Energy
 		 */
-		public PackerActionType actionType;
+		public PackerActionType actionType = PackerActionType.ITEM;
 		/**
 		 * Filter for item and fluid tasks
 		 */
-		public IngredientStack stack;
+		public IngredientStack stack = new IngredientStack("*");
+		/**
+		 * Filter for the container to be packed
+		 */
+		public IngredientStack containerFilter = new IngredientStack("*");
 		/**
 		 * Amount of items/fluid/energy transferred after which this task expires<br>
 		 * -1 Means task will never expire
@@ -140,37 +113,100 @@ public class PackerHandler
 		 * Whether the task is reversed
 		 */
 		public boolean unpack = false;
+		/**
+		 * Logistic tag, acting as a filter for the container
+		 */
+		@Nullable
+		public LogisticTag logiTag = null;
+
+		public PackerTask()
+		{
+
+		}
 
 		public PackerTask(PackerPutMode mode, PackerActionType actionType, IngredientStack stack)
 		{
-			this.actionType = actionType;
 			this.mode = mode;
+			this.actionType = actionType;
 			this.stack = stack;
 		}
 
 		public PackerTask(NBTTagCompound nbt)
 		{
-			this(
-					PackerPutMode.valueOf(nbt.getString("mode").toUpperCase()),
-					PackerActionType.valueOf(nbt.getString("action_type").toUpperCase()),
-					IngredientStack.readFromNBT(nbt.getCompoundTag("stack"))
-			);
-
-			if(nbt.hasKey("expiration_amount"))
-				expirationAmount = nbt.getInteger("expiration_amount");
-			unpack = nbt.getBoolean("unpack");
+			deserializeNBT(nbt);
 		}
 
-		public NBTTagCompound toNBT()
+		@Override
+		public NBTTagCompound serializeNBT()
 		{
-			NBTTagCompound nbt = new NBTTagCompound();
-			nbt.setString("mode", mode.getName());
-			nbt.setString("action_type", actionType.name().toLowerCase());
-			nbt.setTag("stack", stack.writeToNBT(new NBTTagCompound()));
-			if(expirationAmount!=-1)
-				nbt.setInteger("expiration_amount", expirationAmount);
-			nbt.setBoolean("unpack", unpack);
-			return nbt;
+			return EasyNBT.newNBT()
+					.withEnum("mode", mode)
+					.withEnum("action_type", actionType)
+					.withIngredientStack("stack", stack)
+					.withIngredientStack("container_filter", containerFilter)
+					.withInt("expiration_amount", expirationAmount)
+					.withBoolean("unpack", unpack)
+					.conditionally(logiTag!=null, e -> e.withSerializable("logi_tag", logiTag))
+					.unwrap();
+		}
+
+		@Override
+		public void deserializeNBT(NBTTagCompound nbt)
+		{
+			EasyNBT enbt = EasyNBT.wrapNBT(nbt);
+			this.mode = enbt.getEnum("mode", PackerPutMode.class);
+			this.actionType = enbt.getEnum("action_type", PackerActionType.class);
+			this.stack = enbt.getIngredientStack("stack");
+			this.containerFilter = enbt.getIngredientStack("container_filter");
+			this.expirationAmount = enbt.getInt("expiration_amount");
+			this.unpack = enbt.getBoolean("unpack");
+			this.logiTag = enbt.hasKey("logi_tag")?new LogisticTag(enbt.getCompound("logi_tag")): null;
+		}
+	}
+
+	public static class LabelingTask implements INBTSerializable<NBTTagCompound>
+	{
+		public IngredientStack stack = new IngredientStack("*");
+		public IngredientStack containerFilter = new IngredientStack("*");
+		public int expirationAmount = -1;
+		public int serialBatchStart = 0;
+		@Nullable
+		public LogisticTag logiTagIn = null;
+		public LogisticTag logiTagOut = new LogisticTag();
+
+		public LabelingTask()
+		{
+
+		}
+
+		public LabelingTask(NBTTagCompound nbt)
+		{
+			deserializeNBT(nbt);
+		}
+
+		@Override
+		public NBTTagCompound serializeNBT()
+		{
+			return EasyNBT.newNBT()
+					.withIngredientStack("stack", stack)
+					.withIngredientStack("container_filter", containerFilter)
+					.withInt("expiration_amount", expirationAmount)
+					.withInt("serial_batch_start", serialBatchStart)
+					.conditionally(logiTagIn!=null, e -> e.withSerializable("logi_tag", logiTagIn))
+					.withSerializable("logi_tag_out", logiTagOut)
+					.unwrap();
+		}
+
+		@Override
+		public void deserializeNBT(NBTTagCompound nbt)
+		{
+			EasyNBT enbt = EasyNBT.wrapNBT(nbt);
+			this.stack = enbt.getIngredientStack("stack");
+			this.containerFilter = enbt.getIngredientStack("container_filter");
+			this.expirationAmount = enbt.getInt("expiration_amount");
+			this.serialBatchStart = enbt.getInt("serial_batch_start");
+			this.logiTagIn = enbt.hasKey("logi_tag")?new LogisticTag(enbt.getCompound("logi_tag")): null;
+			this.logiTagOut = new LogisticTag(enbt.getCompound("logi_tag_out"));
 		}
 	}
 }

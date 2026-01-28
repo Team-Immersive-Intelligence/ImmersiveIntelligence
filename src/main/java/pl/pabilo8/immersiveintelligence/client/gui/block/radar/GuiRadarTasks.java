@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.client.gui.block;
+package pl.pabilo8.immersiveintelligence.client.gui.block.radar;
 
 import net.minecraft.entity.player.EntityPlayer;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
@@ -16,12 +16,12 @@ import pl.pabilo8.immersiveintelligence.common.util.IIReference;
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 28.04.2023
  */
-@DecoTemplate(name = "radar_targets", category = DecoGuiCategory.TERRITORY_CONTROL_TILE)
-public class GuiRadarStatus extends DecoGui<TileEntityRadar, ContainerRadar>
+@DecoTemplate(name = "radar_tasks", category = DecoGuiCategory.TERRITORY_CONTROL_TILE)
+public class GuiRadarTasks extends DecoGui<TileEntityRadar, ContainerRadar>
 {
-	public GuiRadarStatus(EntityPlayer player, TileEntityRadar tile)
+	public GuiRadarTasks(EntityPlayer player, TileEntityRadar tile)
 	{
-		super(player, tile, IIGUI.RADAR_STATUS);
+		super(player, tile, IIGUI.RADAR_TASKS);
 	}
 
 	@Override
@@ -33,6 +33,8 @@ public class GuiRadarStatus extends DecoGui<TileEntityRadar, ContainerRadar>
 				.withBox(DecoTextures.GUI_BG_WOODEN, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_ROUND_WOODEN, 32, 152, 176, 92)
 				.withInventorySlots(SlotStyle.VANILLA, container.inventorySlots)
 				.withInventoryTitleBar()
+				.withNextLayer()
+				.withBox(DecoTextures.GUI_BG_STEEL, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_SQUARE, 152-4, 0, 96+8, 152)
 				.build();
 
 		addComponents(

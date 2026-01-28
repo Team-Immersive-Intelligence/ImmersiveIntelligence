@@ -2,8 +2,10 @@ package pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.util.Tuple;
+import net.minecraft.util.math.MathHelper;
 import org.apache.commons.lang3.tuple.Pair;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoEntryPanel;
+import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,10 +41,23 @@ public class DecoList<T> extends DecoScrolledCollection<DecoList<T>, T>
 							return false;
 						}
 				).orElseGet(() -> {
+					//Click on scrollbar
+					if(maxScroll > 0&&IIMath.isPointInRectangle(gui.x+gui.width-8, gui.y, gui.x+gui.width, gui.y+gui.height, mouseX, mouseY))
+						return true;
+
 					if(this.onEntryClicked!=null)
 						this.onEntryClicked.accept(lastHoveredEntry = null);
 					return false;
 				}));
+		withOnDragged((gui, button, mouseX, mouseY) -> {
+			//Click on scrollbar
+			if(maxScroll > 0&&IIMath.isPointInRectangle(gui.x+gui.width-8, gui.y, gui.x+gui.width, gui.y+gui.height, mouseX, mouseY))
+			{
+				this.scroll = (int)MathHelper.clamp((float)(mouseY-gui.y-7)/(float)(gui.height-14)*(float)maxScroll, 0, maxScroll);
+				return true;
+			}
+			return false;
+		});
 		withOnReleased((gui, mouseButton, mouseX, mouseY) ->
 				getHoveredPanel(mouseX, mouseY).map(pair ->
 						{

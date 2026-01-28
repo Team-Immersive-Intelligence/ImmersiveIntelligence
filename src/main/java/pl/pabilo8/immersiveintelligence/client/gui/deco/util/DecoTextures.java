@@ -168,6 +168,9 @@ public class DecoTextures
 	public static final IIColor COLOR_H1 = IIColor.fromPackedRGB(0x0a0a0a);
 	public static final IIColor COLOR_H2 = IIColor.fromPackedRGB(0x1a1a1a);
 
+	private final static IIColor COLOR_IN = IIColor.fromPackedRGB(0x4c7bb1);
+	private final static IIColor COLOR_OUT = IIColor.fromPackedRGB(0xffb515);
+
 	public static void registerAllTextures(TextureMap map)
 	{
 		for(Field field : DecoTextures.class.getDeclaredFields())

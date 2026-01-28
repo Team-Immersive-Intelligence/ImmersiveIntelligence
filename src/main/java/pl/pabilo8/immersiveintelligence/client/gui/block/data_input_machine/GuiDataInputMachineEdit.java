@@ -156,7 +156,10 @@ public class GuiDataInputMachineEdit extends DecoGui<TileEntityDataInputMachine,
 						.withBackground(DecoTextures.RES_TEXTURES_DECO_COMPONENT_BUTTON_ROUND)
 						.withText("Apply")
 						.withSize(48, 12)
-						.withOnPressed((gui, button, mouseX, mouseY) -> changeGUI(IIGUI.DATA_INPUT_MACHINE_VARIABLES)),
+						.withOnPressed((gui, button, mouseX, mouseY) -> {
+							cancel = false;
+							return changeGUI(IIGUI.DATA_INPUT_MACHINE_VARIABLES);
+						}),
 				new DecoButton(xSize-96-4-4-4-2, 153)
 						.withBackground(DecoTextures.RES_TEXTURES_DECO_COMPONENT_BUTTON_ROUND)
 						.withText("Cancel")

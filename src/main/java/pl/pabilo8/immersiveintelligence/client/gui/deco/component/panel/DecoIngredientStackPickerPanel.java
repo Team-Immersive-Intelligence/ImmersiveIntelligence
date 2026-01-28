@@ -7,6 +7,8 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.oredict.OreDictionary;
+import org.lwjgl.input.Keyboard;
+import pl.pabilo8.immersiveintelligence.api.LogisticTag;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoSwitch;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoFluidTank;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoItemStackDisplay;
@@ -15,6 +17,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.text.util.Text
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoAlignment;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoGuiUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
 
@@ -35,6 +38,7 @@ public class DecoIngredientStackPickerPanel extends DecoPanel
 	@Nonnull
 	protected IngredientStack stack = new IngredientStack(ItemStack.EMPTY);
 	protected boolean isFluidMode = false;
+	protected boolean isLogisticTagMode = false;
 	protected DecoItemStackDisplay stackDisplay;
 	protected DecoFluidTank fluidDisplay;
 	protected DecoTextField countField, damageField;
@@ -113,6 +117,12 @@ public class DecoIngredientStackPickerPanel extends DecoPanel
 		return this;
 	}
 
+	public DecoIngredientStackPickerPanel withLogisticTagMode(boolean logisticTagMode)
+	{
+		isLogisticTagMode = logisticTagMode;
+		return this;
+	}
+
 	@Override
 	protected boolean initialize()
 	{
@@ -125,6 +135,13 @@ public class DecoIngredientStackPickerPanel extends DecoPanel
 					fluidDisplay = new DecoFluidTank(4, 4)
 							.withSize(32, 32)
 							.withOnPressed((gui, button, mouseX, mouseY) -> {
+								//Reset stack
+								if(button==MouseButton.RIGHT||(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)&&button==MouseButton.LEFT))
+								{
+									stack.fluid = null;
+									applyToUI();
+									return true;
+								}
 								if(button!=MouseButton.LEFT||parentGui==null)
 									return false;
 
@@ -155,6 +172,14 @@ public class DecoIngredientStackPickerPanel extends DecoPanel
 							.withBackgroundTexture(DecoTextures.GUI_BG_DARK)
 							.withIconAlignment(DecoAlignment.CENTER)
 							.withOnPressed((gui, button, mouseX, mouseY) -> {
+								//Reset stack
+								if(button==MouseButton.RIGHT||(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)&&button==MouseButton.LEFT))
+								{
+									withIngredientStack(new IngredientStack(ItemStack.EMPTY));
+									applyToUI();
+									return true;
+								}
+
 								if(button!=MouseButton.LEFT||parentGui==null)
 									return false;
 
@@ -212,6 +237,10 @@ public class DecoIngredientStackPickerPanel extends DecoPanel
 	{
 		if(!initialized)
 			return;
+		boolean fieldsHidden = isLogisticTagMode&&getLogisticTag()!=null;
+		damageField.visible = !fieldsHidden;
+		toggleOre.visible = !fieldsHidden;
+		toggleNBT.visible = !fieldsHidden;
 
 		if(isFluidMode)
 		{
@@ -239,6 +268,13 @@ public class DecoIngredientStackPickerPanel extends DecoPanel
 	public IngredientStack getIngredientStack()
 	{
 		return stack;
+	}
+
+	public LogisticTag getLogisticTag()
+	{
+		if(isLogisticTagMode&&stack.getExampleStack().getItem()==IIContent.itemLogisticTag)
+			return LogisticTag.getLogisticsTagFromStack(getItemStack());
+		return null;
 	}
 
 	@Nullable

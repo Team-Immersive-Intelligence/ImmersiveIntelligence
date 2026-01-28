@@ -372,8 +372,6 @@ public class DecoTextField extends DecoComponent<DecoTextField>
 		ordered.sort((a, b) -> (a.line==b.line?Integer.compare(b.pos, a.pos): Integer.compare(a.line, b.line)));
 		for(TextCaret c : ordered)
 			insertMultilineAtCaret(c, filtered);
-		if(onTextChanged!=null)
-			onTextChanged.accept(getText());
 
 		calculateMaxScroll();
 		normalizeCarets();
@@ -682,15 +680,21 @@ public class DecoTextField extends DecoComponent<DecoTextField>
 				if(!multiLine)
 				{
 					parentGui.requestFocus(null);
+					if(onTextChanged!=null)
+						onTextChanged.accept(getText());
 					return true;
 				}
 				newlineAtCarets();
 				return true;
 			case Keyboard.KEY_BACK:
 				deleteCarets(ctrl?MoveUnit.WORD: MoveUnit.CHAR, -1);
+				if(onTextChanged!=null)
+					onTextChanged.accept(getText());
 				return true;
 			case Keyboard.KEY_DELETE:
 				deleteCarets(ctrl?MoveUnit.WORD: MoveUnit.CHAR, 1);
+				if(onTextChanged!=null)
+					onTextChanged.accept(getText());
 				return true;
 			case Keyboard.KEY_LEFT:
 				unit = ctrl?MoveUnit.WORD: MoveUnit.CHAR;
@@ -724,6 +728,8 @@ public class DecoTextField extends DecoComponent<DecoTextField>
 				if(ChatAllowedCharacters.isAllowedCharacter(ch))
 				{
 					writeText(Character.toString(ch));
+					if(onTextChanged!=null)
+						onTextChanged.accept(getText());
 					return true;
 				}
 		}

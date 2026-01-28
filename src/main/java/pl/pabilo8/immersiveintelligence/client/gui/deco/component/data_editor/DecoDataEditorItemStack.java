@@ -2,11 +2,8 @@ package pl.pabilo8.immersiveintelligence.client.gui.deco.component.data_editor;
 
 import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeItemStack;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoItemStackDisplay;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.text.DecoTextField;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.text.util.TextFilter;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoIngredientStackPickerPanel;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
-import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -14,7 +11,6 @@ import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
  */
 public class DecoDataEditorItemStack extends DecoDataEditor<DataTypeItemStack>
 {
-	private DecoTextField metaEdit, countEdit;
 	private ItemStack scanned;
 
 	public DecoDataEditorItemStack(int x, int y, DataTypeItemStack dataType)
@@ -26,23 +22,10 @@ public class DecoDataEditorItemStack extends DecoDataEditor<DataTypeItemStack>
 	@Override
 	protected boolean initialize()
 	{
-		//TODO: 10.07.2025 translations!
 		addLabel(IIReference.DESCRIPTION_KEY+"variable_value", 2, 2);
-		addLabel("Item:", 2, 12);
-		addLabel("Meta:", 2, 2+20+12);
-		addLabel("Count:", 2, 2+20+12+18);
-
-		addComponents(
-				metaEdit = new DecoTextField(40, 2+20+12)
-						.withSize(width-42, 16)
-						.withFilter(TextFilter.DECIMAL)
-						.withText(scanned.getMetadata()),
-				countEdit = new DecoTextField(40, 2+20+12+18)
-						.withSize(width-42, 16)
-						.withFilter(TextFilter.DECIMAL)
-						.withText(scanned.getCount()),
-				new DecoItemStackDisplay((width/2)-8, 8)
-						.withStack(scanned)
+		addComponent(new DecoIngredientStackPickerPanel(0, 2+12)
+				.withOnStackChanged(ingredientStack -> scanned = ingredientStack.getExampleStack())
+				.withSize(width, height)
 		);
 		return super.initialize();
 	}
@@ -51,8 +34,6 @@ public class DecoDataEditorItemStack extends DecoDataEditor<DataTypeItemStack>
 	public DataTypeItemStack outputType()
 	{
 		dataType.value = scanned.copy();
-		dataType.value.setItemDamage(IIStringUtil.parseInt(metaEdit.getText()));
-		dataType.value.setCount(IIStringUtil.parseInt(countEdit.getText()));
 		return dataType;
 	}
 }

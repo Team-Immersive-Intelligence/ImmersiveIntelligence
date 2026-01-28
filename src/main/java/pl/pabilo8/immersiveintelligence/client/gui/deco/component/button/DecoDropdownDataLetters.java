@@ -32,6 +32,7 @@ public class DecoDropdownDataLetters extends DecoDropdown<Character> implements 
 				.mapToObj(i -> (Character)(char)i)
 				.toArray(Character[]::new)
 		);
+		withMaxDropHeight((int)(ENTRY_SIZE*Math.ceil(entries.size()/6f)));
 
 		withDisplayFunction(this);
 		withOnKeyTyped((gui, typedChar, keyCode) -> {

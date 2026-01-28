@@ -46,6 +46,13 @@ public class DecoDropdown<T> extends DecoScrolledCollection<DecoDropdown<T>, T>
 			{
 				if(dropped&&!IIMath.isPointInRectangle(x, y, x+width, y+height, mouseX, mouseY))
 				{
+					//Click on scrollbar
+					if((shouldAlwaysHaveScrollbar()||maxScroll > 0)&&IIMath.isPointInRectangle(x+width-8, y, 8, height, mouseX, mouseY))
+					{
+						this.scroll = (int)MathHelper.clamp((float)(mouseY-y-7)/(float)(height-14)*(float)maxScroll, 0, maxScroll);
+						return true;
+					}
+
 					Tuple<Integer, Integer> clicked = getClickedEntryIndex(gui.x+2, gui.y-scroll+height+2, mouseX, mouseY);
 					if(clicked!=null)
 					{

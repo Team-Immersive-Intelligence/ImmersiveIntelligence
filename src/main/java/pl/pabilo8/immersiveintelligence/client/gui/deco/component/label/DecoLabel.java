@@ -228,6 +228,9 @@ public class DecoLabel extends GuiLabel
 	public void drawLabel(@Nonnull Minecraft mc, int mouseX, int mouseY)
 	{
 		this.hovered = false;
+		//Don't draw if not visible
+		if(!visible)
+			return;
 		//Draw a highlight background for the text
 		if(bgColor.alpha > 0)
 			IIDrawUtils.startColored().drawColorRect(x, y, x+width, y+height, bgColor).finish();

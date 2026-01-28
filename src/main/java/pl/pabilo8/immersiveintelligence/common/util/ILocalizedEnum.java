@@ -17,12 +17,17 @@ public interface ILocalizedEnum extends ISerializableEnum
 	 */
 	String geLocaleKey();
 
+	default String getFullLocaleKey()
+	{
+		return geLocaleKey()+getName();
+	}
+
 	/**
 	 * @return a localized name for this enum value
 	 */
 	@SideOnly(Side.CLIENT)
 	default String getLocalizedName()
 	{
-		return I18n.format(geLocaleKey()+getName());
+		return I18n.format(getFullLocaleKey());
 	}
 }

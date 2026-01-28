@@ -17,6 +17,7 @@ import net.minecraft.client.shader.Framebuffer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -53,6 +54,7 @@ import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageGuiNBT;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.IOwnableProperty;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
@@ -296,6 +298,15 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 		}
 
 		return component;
+	}
+
+	protected final DecoTab addLinkTab(IIGUI gui, ResourceLocation tabIcon, String moduleName)
+	{
+		return (DecoTab)addComponent(new DecoTab()
+				.withLink(gui)
+				.withIcon(tabIcon)
+				.withTranslatedTooltip(IIReference.DESCRIPTION_KEY+moduleName)
+		);
 	}
 
 	/**
@@ -790,7 +801,7 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 	protected EasyNBT onSaveTileData()
 	{
 		EasyNBT nbt = EasyNBT.newNBT();
-		NBTSerialisation.synchroniseFor(this, (tag, gui) -> tag.serializeForEvent(gui, nbt.unwrap(), SyncEvents.DECO_TILE_DATA));
+		NBTSerialisation.synchroniseFor(this, (tag, gui) -> tag.serializeForEvent(gui, nbt.unwrap(), SyncEvents.TILE_CLIENT_MESSAGE));
 		return nbt;
 	}
 

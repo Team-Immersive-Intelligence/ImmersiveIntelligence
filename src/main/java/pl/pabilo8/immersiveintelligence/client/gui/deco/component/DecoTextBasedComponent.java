@@ -19,7 +19,7 @@ public abstract class DecoTextBasedComponent<TYPE extends DecoTextBasedComponent
 	protected static final IIColor BACKGROUND = IIColor.fromHex("efefef");
 	protected static final IIColor BACKGROUND_HOVERED = IIColor.WHITE;
 	protected static final IIColor BACKGROUND_PRESSED = IIColor.MC_GRAY;
-	protected static final IIColor BACKGROUND_DISABLED = IIColor.fromHex("404040");
+	protected static final IIColor BACKGROUND_DISABLED = IIColor.MC_GRAY;
 
 	protected IIColor backgroundColor = BACKGROUND;
 	protected IIColor backgroundColorHovered = BACKGROUND_HOVERED;
@@ -69,7 +69,7 @@ public abstract class DecoTextBasedComponent<TYPE extends DecoTextBasedComponent
 	public TYPE withBackgroundColor(IIColor color)
 	{
 		this.backgroundColor = color;
-		this.backgroundColorDisabled = color.withBrightness(0.25f);
+		this.backgroundColorDisabled = color.withBrightness(0.5f);
 		this.backgroundColorHovered = color.withBrightness(0.75f);
 		this.backgroundColorPressed = color.withBrightness(1f);
 

@@ -28,7 +28,7 @@ import java.util.List;
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 19.08.2019
  */
-@IIItemProperties(category = IICategory.RESOURCES)
+@IIItemProperties(category = IICategory.TOOLS)
 public class ItemIIPrecisionTool extends ItemIISubItemsBase<PrecisionTools> implements IPrecisionTool
 {
 	public ItemIIPrecisionTool()

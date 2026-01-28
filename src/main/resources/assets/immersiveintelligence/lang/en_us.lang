@@ -365,6 +365,8 @@ item.immersiveintelligence.printed_page.newspaper.name=Newspaper
 item.immersiveintelligence.printed_page.book.name=Book
 item.immersiveintelligence.printed_page.letter.name=Letter
 
+item.immersiveintelligence.logistic_tag.name=Logistic Manifest
+
 item.immersiveintelligence.precission_tool.buzzsaw.name=Precision Buzzsaw
 item.immersiveintelligence.precission_tool.drill.name=Precision Drill
 item.immersiveintelligence.precission_tool.inserter.name=Precision Inserter
@@ -723,25 +725,6 @@ tile.immersiveintelligence.gate_multiblock.aluminium.name=Aluminium Fence Gate
 tile.immersiveintelligence.gate_multiblock.wooden_chain.name=Wooden Chain Fence Gate
 tile.immersiveintelligence.gate_multiblock.steel_chain.name=Steel Chain Fence Gate
 tile.immersiveintelligence.gate_multiblock.aluminium_chain.name=Aluminium Chain Fence Gate
-
-desc.immersiveintelligence.metal_multiblock1.packer.task.pack=Pack
-desc.immersiveintelligence.metal_multiblock1.packer.task.unpack=Unpack
-desc.immersiveintelligence.metal_multiblock1.packer.task.charge=Charge
-desc.immersiveintelligence.metal_multiblock1.packer.task.discharge=Discharge
-desc.immersiveintelligence.metal_multiblock1.packer.task.fill=Fill
-desc.immersiveintelligence.metal_multiblock1.packer.task.drain=Drain
-
-desc.immersiveintelligence.metal_multiblock1.packer.mode.amount=Amount
-desc.immersiveintelligence.metal_multiblock1.packer.mode.slot=Slot
-desc.immersiveintelligence.metal_multiblock1.packer.mode.all_possible=All possible
-desc.immersiveintelligence.metal_multiblock1.packer.mode.at_most_container=At most in container
-desc.immersiveintelligence.metal_multiblock1.packer.mode.at_least_packer=At least in packer
-
-desc.immersiveintelligence.metal_multiblock1.packer.side_input=Items to be put in a container
-desc.immersiveintelligence.metal_multiblock1.packer.side_output=Items taken from a container
-desc.immersiveintelligence.metal_multiblock1.packer.switch_direction=Switch Task Direction
-desc.immersiveintelligence.metal_multiblock1.packer.mode_single=Single-Time Packing
-desc.immersiveintelligence.metal_multiblock1.packer.mode_iteration=Repeated Packing
 
 tile.immersiveintelligence.metal_multiblock1.flagpole.name=Flagpole
 
@@ -1207,6 +1190,19 @@ desc.immersiveintelligence.printed_page.newspaper=Multiple pages bound into a ne
 desc.immersiveintelligence.printed_page.book=Multiple pages bound into a book.
 desc.immersiveintelligence.printed_page.letter=A page packed into an envelope to be sent to someone.
 
+desc.immersiveintelligence.logistic_tag.none=No logistic data written
+desc.immersiveintelligence.logistic_tag.info.hold=%s - Logistic Manifest
+desc.immersiveintelligence.logistic_tag.info.main=Logistic Manifest:
+desc.immersiveintelligence.logistic_tag.info.name=Name: %s
+desc.immersiveintelligence.logistic_tag.info.name.none=Name: <None>
+desc.immersiveintelligence.logistic_tag.info.description=Description: %s
+desc.immersiveintelligence.logistic_tag.info.description.none=Description: <None>
+desc.immersiveintelligence.logistic_tag.info.owner=Owner: %s
+desc.immersiveintelligence.logistic_tag.info.origin=Origin: %s
+desc.immersiveintelligence.logistic_tag.info.destination=Destination: %s
+desc.immersiveintelligence.logistic_tag.info.color=Color: %s
+desc.immersiveintelligence.logistic_tag.info.color.none=No color specified
+
 desc.immersiveintelligence.punchtape.empty=No variables written
 desc.immersiveintelligence.punchtape.written=Written
 
@@ -1240,6 +1236,7 @@ desc.immersiveintelligence.data_to_redstone_module=Data to Redstone
 desc.immersiveintelligence.redstone_to_data_module=Redstone to Data
 desc.immersiveintelligence.tasks_module=Tasks
 desc.immersiveintelligence.status_module=Status
+desc.immersiveintelligence.labeler_module=Labels
 
 desc.immersiveintelligence.map_module=Map
 desc.immersiveintelligence.radar_module=Radar
@@ -2632,6 +2629,7 @@ datasystem.immersiveintelligence.datatype.vector=Vector
 datasystem.immersiveintelligence.datatype.string=String
 datasystem.immersiveintelligence.datatype.expression=Expression
 datasystem.immersiveintelligence.datatype.accessor=Accessor
+datasystem.immersiveintelligence.datatype.logitag=Logistic Tag
 datasystem.immersiveintelligence.datatype.itemstack=ItemStack
 datasystem.immersiveintelligence.datatype.fluidstack=FluidStack
 datasystem.immersiveintelligence.datatype.array=Array
@@ -3169,11 +3167,12 @@ ii.config.Light_Engineer_Armor=Light Engineer Armor
 #GUI Labels
 ii.gui.editor.editor_style=Visual/POL Editor
 
+ii.gui.task_editor.tasks=Tasks
+ii.gui.task_editor.tasks.tooltip=Tasks are assignments, that are repeated indefinitely.
+ii.gui.task_editor.jobs=Jobs
+ii.gui.task_editor.jobs.tooltip=Jobs are assignments, that are discarded from memory, after a set amount of resource is transfered.
+
 ii.gui.inserter.task_editor=Task Editor
-ii.gui.inserter.tasks=Tasks
-ii.gui.inserter.tasks.tooltip=Tasks are inserter assignments that are discarded from memory, after a set amount of resource is transfered.
-ii.gui.inserter.jobs=Jobs
-ii.gui.inserter.jobs.tooltip=Jobs are inserter assignments that are repeated indefinitely.
 ii.gui.inserter.type=Type:
 ii.gui.inserter.input=Input:
 ii.gui.inserter.input.facing.tooltip=In which direction should the inserter reach.
@@ -3184,6 +3183,46 @@ ii.gui.inserter.output.distance.tooltip=How far should the inserter reach (block
 ii.gui.inserter.items_per_step=Amount/Turn:
 ii.gui.inserter.items_per_step.tooltip=Amount taken and inserted with each turn of the inserter.
 
+ii.gui.inserter.tasks.item=Items
+ii.gui.inserter.tasks.place_block=Place Block
+ii.gui.inserter.tasks.from_minecart=From Minecart
+ii.gui.inserter.tasks.into_minecart=Into Minecart
+ii.gui.inserter.tasks.fluid=Fluid
+ii.gui.inserter.tasks.fluid_milk_cow=Milk Cow
+ii.gui.inserter.tasks.fluid_latex_collector=Collect Latex
+
+ii.gui.packer.task_editor=Task Editor
+
+ii.gui.packer.task=Transfer:
+ii.gui.packer.task.item=Items
+ii.gui.packer.task.item.out=Pack
+ii.gui.packer.task.item.in=Unpack
+ii.gui.packer.task.fluid=Fluid
+ii.gui.packer.task.fluid.out=Charge
+ii.gui.packer.task.fluid.in=Discharge
+ii.gui.packer.task.energy=Energy
+ii.gui.packer.task.energy.out=Fill
+ii.gui.packer.task.energy.in=Drain
+
+ii.gui.packer.direction=from
+ii.gui.packer.direction.pack=Packer to Container
+ii.gui.packer.direction.unpack=Container to Packer
+
+ii.gui.packer.mode=in amount
+ii.gui.packer.mode.amount=Units
+ii.gui.packer.mode.slot=Slots
+ii.gui.packer.mode.all_possible=All possible
+ii.gui.packer.mode.at_most_container=At most in container
+ii.gui.packer.mode.at_least_packer=At least in packer
+
+ii.gui.packer.expires=and expire after
+
+ii.gui.packer.switch_direction=Switch Task Direction
+ii.gui.packer.mode_single=Single-Time Packing
+ii.gui.packer.mode_iteration=Repeated Packing
+
+ii.gui.packer.labeling_tasks=Labeling Tasks
+
 ii.gui.itemstack_editor.count=Count:
 ii.gui.itemstack_editor.count.tooltip=The amount of items in the stack
 ii.gui.itemstack_editor.damage=Damage:
@@ -3192,6 +3231,18 @@ ii.gui.itemstack_editor.nbt=NBT
 ii.gui.itemstack_editor.nbt.tooltip=When active, the item is matched by its NBT data
 ii.gui.itemstack_editor.oredict=OreDict
 ii.gui.itemstack_editor.oredict.tooltip=When active, the item is matched by its OreDictionary name
+
+ii.gui.data_editor.logistics_tag.name=Name
+ii.gui.data_editor.logistics_tag.name.tooltip=Sets the tag's name.
+ii.gui.data_editor.logistics_tag.description=Description
+ii.gui.data_editor.logistics_tag.description.tooltip=Sets the tag's description.
+ii.gui.data_editor.logistics_tag.owner=Owner
+ii.gui.data_editor.logistics_tag.owner.tooltip=Sets the tag's owner.
+ii.gui.data_editor.logistics_tag.origin=Origin
+ii.gui.data_editor.logistics_tag.origin.tooltip=Sets the tag's origin.
+ii.gui.data_editor.logistics_tag.destination=Destination
+ii.gui.data_editor.logistics_tag.destination.tooltip=Sets the tag's destination.
+ii.gui.data_editor.logistics_tag.color=Color
 
 ii.gui.data_input_machine.storage=Punchtape Storage
 ii.gui.data_input_machine.memory=Built-In Memory
