@@ -42,8 +42,6 @@ public class TextOverlayMechanical extends TextOverlayBase
 	public String[] getText(EntityPlayer player, RayTraceResult mouseOver, @Nullable TileEntity te, @Nullable Entity entityHit)
 	{
 		assert te!=null;
-
-		//TODO: 03.08.2024 expose capability on all sides
 		IRotaryEnergy energy = te.getCapability(CapabilityRotaryEnergy.ROTARY_ENERGY, mouseOver.sideHit.getOpposite());
 		assert energy!=null;
 
@@ -61,8 +59,8 @@ public class TextOverlayMechanical extends TextOverlayBase
 			};
 		else
 			return new String[]{
-					IIReference.CHARICON_TORQUE+I18n.format(IIReference.GUI_TOOLTIP_KEY+"mech_torque.stored", intTorque),
-					IIReference.CHARICON_SPEED+I18n.format(IIReference.GUI_TOOLTIP_KEY+"mech_speed.stored", intSpeed)
+					IIReference.CHARICON_TORQUE+I18n.format(IIReference.GUI_TOOLTIP_KEY+"mech_torque.stored", intTorque, extTorque),
+					IIReference.CHARICON_SPEED+I18n.format(IIReference.GUI_TOOLTIP_KEY+"mech_speed.stored", intSpeed, intSpeed)
 			};
 	}
 
