@@ -1,0 +1,18 @@
+► Title - 
+	Encode
+♦ [Version] Date/Hour - 
+	[2.41.2] 01/29/2026 20:57:37
+▬ Message - 
+	The process cannot access the file 'C:\Users\Dobrodziej\Desktop\multiblock_health.mp4' because it is being used by another process.
+○ Type - 
+	System.IO.IOException
+▲ Source - 
+	System.Private.CoreLib
+▼ TargetSite - 
+	Void DeleteFile(System.String)
+♠ StackTrace - 
+   at System.IO.FileSystem.DeleteFile(String fullPath)
+   at ScreenToGif.Util.EncodingManager.Encode(ExportProject project, ExportPreset preset, Int32 id, CancellationTokenSource tokenSource) in R:\Source\ScreenToGif\ScreenToGif\Util\EncodingManager.cs:line 1124
+
+----------------------------------
+

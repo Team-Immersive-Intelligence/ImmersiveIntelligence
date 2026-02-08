@@ -25,15 +25,25 @@ The ["Fill"], ["Unfill"], ["Charge"] and ["Discharge"] tasks work in a similar w
 # data_2
 |[data_variable]{type:"string", direction:"in", letter:"m", name:"Mode", description:"Possible values: amount, slot, all_possible. Optional, by default all_possible."}|
 |[data_variable]{type:"integer", direction:"in", letter:"e", name:"Expire After", description:"Optional. After how many cycles should the task end."}|
-# upgrades1
+|[data_variable]{type:"boolean", direction:"in", letter:"r", name:"Repeat", description:"Optional. Whether the task should be repeated multiple times in one cycle."}|
+# upgrades_fluid
 |[upgrade_display]{upgrade:"immersiveintelligence:packer_fluid"}|
 The [Fluid Loader] transforms the Packer's item storage into [96 buckets] of fluid storage and changes the loading mechanism to fill fluid containers like barrels. A souped-up [Bottling Machine](bottlingMachine)!
-# upgrades2
+# upgrades_energy
 |[upgrade_display]{upgrade:"immersiveintelligence:packer_energy"}|
 The [Energy Loader] converts the Packer's item storage into [16 million] IF of energy storage. The loading mechanism is replaced with a set of electrical terminals to rapidly charge capacitors or equipment.
-# upgrades3
-|[upgrade_display]{upgrade:"immersiveintelligence:packer_naming"}|
-The [Naming Stamp] adds a label maker to the Packer and allows it to set the name of the packed item. This upgrade can be combined with other upgrades.
-# upgrades4
+# upgrades_railway
 |[upgrade_display]{upgrade:"immersiveintelligence:packer_railway"}|
 The [Railway Upgrade] transforms the Packer's loading conveyor into a set of rails. This allows the Packer to fill [storage Minecarts](skycrate_system.md#minecarts). This upgrade can be combined with other upgrades.
+# upgrades_labeler
+|[upgrade_display]{upgrade:"immersiveintelligence:packer_naming"}|
+The [Naming Stamp] adds a label maker to the Packer and allows it to set the name of the packed item. This upgrade can be combined with other upgrades.
+# data_labeling
+|[data_variable]{type:"itemstack", direction:"in", letter:"f", name:"Label Filter", description:"Optional. Container filter for labeling. ItemStack or OreDict String."}|
+|[data_variable]{type:"integer", direction:"in", letter:"b", name:"Serial Batch Start", description:"Optional. Starting serial number for labeling; also sets current serial to this value."}|
+|[data_variable]{type:"logistic_tag", direction:"in", letter:"i", name:"LogiTag Input", description:"Optional. Only label containers matching this incoming tag."}|
+|[data_variable]{type:"logistic_tag", direction:"in", letter:"o", name:"LogiTag Output", description:"Tag applied to labeled containers."}|
+|[data_variable]{type:"itemstack", direction:"in", letter:"t", name:"LogiTag In (as ItemStack)", description:"Optional alternative to 'i'. Provide an ItemStack carrying a Logistic Tag."}|
+|[data_variable]{type:"itemstack", direction:"in", letter:"T", name:"LogiTag Out (as ItemStack)", description:"Optional alternative to 'o'. Provide an ItemStack carrying a Logistic Tag."}|
+|[data_variable]{type:"integer", direction:"in", letter:"x", name:"Index", description:"Optional. Index for remove/remove_label."}|
+

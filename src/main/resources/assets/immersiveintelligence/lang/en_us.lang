@@ -1197,6 +1197,7 @@ desc.immersiveintelligence.logistic_tag.info.name=Name: %s
 desc.immersiveintelligence.logistic_tag.info.name.none=Name: <None>
 desc.immersiveintelligence.logistic_tag.info.description=Description: %s
 desc.immersiveintelligence.logistic_tag.info.description.none=Description: <None>
+desc.immersiveintelligence.logistic_tag.info.batch_number=Batch Number: %s
 desc.immersiveintelligence.logistic_tag.info.owner=Owner: %s
 desc.immersiveintelligence.logistic_tag.info.origin=Origin: %s
 desc.immersiveintelligence.logistic_tag.info.destination=Destination: %s
@@ -3191,22 +3192,25 @@ ii.gui.inserter.tasks.fluid=Fluid
 ii.gui.inserter.tasks.fluid_milk_cow=Milk Cow
 ii.gui.inserter.tasks.fluid_latex_collector=Collect Latex
 
-ii.gui.packer.task_editor=Task Editor
-
 ii.gui.packer.task=Transfer:
 ii.gui.packer.task.item=Items
 ii.gui.packer.task.item.out=Pack
 ii.gui.packer.task.item.in=Unpack
 ii.gui.packer.task.fluid=Fluid
-ii.gui.packer.task.fluid.out=Charge
-ii.gui.packer.task.fluid.in=Discharge
+ii.gui.packer.task.fluid.out=Fill
+ii.gui.packer.task.fluid.in=Drain
 ii.gui.packer.task.energy=Energy
-ii.gui.packer.task.energy.out=Fill
-ii.gui.packer.task.energy.in=Drain
+ii.gui.packer.task.energy.out=Charge
+ii.gui.packer.task.energy.in=Discharge
 
 ii.gui.packer.direction=from
 ii.gui.packer.direction.pack=Packer to Container
 ii.gui.packer.direction.unpack=Container to Packer
+
+ii.gui.packer.item.input=Input
+ii.gui.packer.item.input.tooltip=Items to be inserted into containers by the Packer
+ii.gui.packer.item.output=Output
+ii.gui.packer.item.output.tooltip=Items taken from the containers to be output from the Packer
 
 ii.gui.packer.mode=in amount
 ii.gui.packer.mode.amount=Units
@@ -3214,12 +3218,19 @@ ii.gui.packer.mode.slot=Slots
 ii.gui.packer.mode.all_possible=All possible
 ii.gui.packer.mode.at_most_container=At most in container
 ii.gui.packer.mode.at_least_packer=At least in packer
-
+ii.gui.packer.repeat=repeated until impossible
 ii.gui.packer.expires=and expire after
 
-ii.gui.packer.switch_direction=Switch Task Direction
-ii.gui.packer.mode_single=Single-Time Packing
-ii.gui.packer.mode_iteration=Repeated Packing
+ii.gui.packer.labeler.header=Apply label to container
+ii.gui.packer.labeler.serial_start=batched, start from
+ii.gui.packer.labeler.serial_start.tooltip=If checked, the containers Logistic Tag (and name) will include an incrementing batch number, starting from the specified one
+
+ii.gui.packer.picker.container=Container
+ii.gui.packer.picker.container.tooltip=Filter for what type of container is allowed for this task
+ii.gui.packer.picker.stack=Resource
+ii.gui.packer.picker.stack.tooltip=Filter for the resource operated on.
+ii.gui.packer.picker.logitag=Logistic Tag
+ii.gui.packer.picker.logitag.tooltip=Logistic tag to be applied to the container.
 
 ii.gui.packer.labeling_tasks=Labeling Tasks
 
@@ -3228,9 +3239,12 @@ ii.gui.itemstack_editor.count.tooltip=The amount of items in the stack
 ii.gui.itemstack_editor.damage=Damage:
 ii.gui.itemstack_editor.damage.tooltip=The damage value of the item (leave empty for wildcard)
 ii.gui.itemstack_editor.nbt=NBT
-ii.gui.itemstack_editor.nbt.tooltip=When active, the item is matched by its NBT data
+ii.gui.itemstack_editor.nbt.item.tooltip=When active, the item is matched by its NBT data
+ii.gui.itemstack_editor.nbt.fluid.tooltip=When active, the fluid is matched by its NBT data
 ii.gui.itemstack_editor.oredict=OreDict
 ii.gui.itemstack_editor.oredict.tooltip=When active, the item is matched by its OreDictionary name
+ii.gui.itemstack_editor.energy=Immersive Flux
+ii.gui.itemstack_editor.energy.tooltip=Energy in Immersive Flux (IF)
 
 ii.gui.data_editor.logistics_tag.name=Name
 ii.gui.data_editor.logistics_tag.name.tooltip=Sets the tag's name.
@@ -3356,25 +3370,25 @@ ii.gui_tooltip.widget.manual.hide=Hide Side Manual
 ii.gui_tooltip.widget.manual=Engineer's Manual
 
 ii.gui_tooltip.energy.stored=Energy Stored: %s/%s IF
-ii.gui_tooltip.energy.input=Energy Consumed: %s IF
-ii.gui_tooltip.energy.required=Energy Required: %s IH / t
-ii.gui_tooltip.energy.output=Energy Produced: %s IF
+ii.gui_tooltip.energy.input=Energy Consumed: %s IF/t
+ii.gui_tooltip.energy.required=Energy Required: %s IH/t
+ii.gui_tooltip.energy.output=Energy Output: %s IF/t
 
 ii.gui_tooltip.heat.stored=Heat %s/%s IH
-ii.gui_tooltip.heat.input=Heat Consumed: %s IH
+ii.gui_tooltip.heat.input=Heat Consumed: %s IH/t
 ii.gui_tooltip.heat.required=Heat Required: %s IH /t
-ii.gui_tooltip.heat.output=Heat Produced: %s IH
+ii.gui_tooltip.heat.output=Heat Output: %s IH/t
 
 ii.gui_tooltip.pressure.stored=Pressure: %s/%s IP
 ii.gui_tooltip.pressure.input=Pressure Intake: %s IP
 ii.gui_tooltip.pressure.required=Pressure Required: %s IP /t
-ii.gui_tooltip.pressure.output=Pressure Created: %s IP
+ii.gui_tooltip.pressure.output=Pressure Output: %s IP
 
 ii.gui_tooltip.mech_torque.message.basic=Input: Speed %s D/t | Torque %s IT.
 ii.gui_tooltip.mech_torque.message.advanced=Input: Speed %s D/t | Torque %s IT. Output: Speed %s D/t | Torque %s IT.
 ii.gui_tooltip.mech_torque.stored=Torque: %s/%s IT
 ii.gui_tooltip.mech_torque.input=Torque Input: %s IT
-ii.gui_tooltip.mech_torque.required=Torque Required: %s IT /t
+ii.gui_tooltip.mech_torque.required=Torque Required: %s IT/t
 ii.gui_tooltip.mech_torque.output=Torque Output: %s IT
 
 ii.gui_tooltip.mech_speed.stored=Speed: %s/%s D/t

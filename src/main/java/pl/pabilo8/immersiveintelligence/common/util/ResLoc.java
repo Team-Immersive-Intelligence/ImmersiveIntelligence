@@ -13,6 +13,7 @@ public class ResLoc extends ResourceLocation
 {
 	//--- Extensions ---//
 	public static final String EXT_OBJ = ".obj";
+	public static final String EXT_OBJ_IE = ".obj.ie";
 	public static final String EXT_MTL = ".mtl";
 	public static final String EXT_OBJAMT = ".obj.amt";
 	public static final String EXT_JSON = ".json";

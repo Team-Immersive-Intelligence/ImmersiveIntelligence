@@ -6,6 +6,7 @@ import blusunrize.immersiveengineering.common.util.inventory.IIEInventory;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextFormatting;
 import pl.pabilo8.immersiveintelligence.api.upgrade.IUpgradableDevice;
 import pl.pabilo8.immersiveintelligence.api.upgrade.Upgrade;
@@ -35,7 +36,9 @@ import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -44,15 +47,18 @@ import java.util.List;
 @DecoTemplate(name = "upgrade", category = DecoGuiCategory.PRODUCTION_TILE)
 public class GuiUpgrade<T extends TileEntityIEBase & IIEInventory & IUpgradableDevice> extends DecoGui<T, ContainerUpgrade<T>>
 {
+	private final UpgradeTechTree techTree;
 	private DecoTreeDisplay<Upgrade> techTreeDisplay;
 	private DecoPanel panelInfo;
 
 	@SyncNBT(nullable = true)
 	public String lastUpgrade;
+	private DecoScenarioDisplay scenario;
 
 	public GuiUpgrade(EntityPlayer player, T tile)
 	{
 		super(player, tile, IIGUI.UPGRADE);
+		this.techTree = tile!=null?UpgradeTechTree.getTreeFor(tile): null;
 	}
 
 	@Override
@@ -88,21 +94,19 @@ public class GuiUpgrade<T extends TileEntityIEBase & IIEInventory & IUpgradableD
 				.withInventoryTitleBar()
 				.build();
 
-		UpgradeTechTree techTree = UpgradeTechTree.getTreeFor(tile);
 		//Upgrade
 		addComponents(
 				new DecoPanel(4, 4+8)
 						.withSize(108, 152)
 						.withBackground(DecoTextures.GUI_BG_PAPER)
 						.withBackgroundMask(DecoTextures.RES_TEXTURES_DECO_TEMPLATE_SQUARE),
-				new DecoScenarioDisplay(4+2, 4+2+8)
+				scenario = new DecoScenarioDisplay(4+2, 4+2+8)
 						.withSize(108-4, 96)
 						.withBackgroundColor(IIColor.BLACK.withAlpha(32))
 						.withScale(0.125f)
 						.withRotation(-12.5f, 5)
-						.withModel(false, new AMTModel(DefaultVertexFormats.ITEM, IIReference.RES_BLOCK_MODEL.with("multiblock/emplacement/upgrade_preview_base.obj")))
-						.withRotationAnimation(240, 0),
-
+						.withRotationAnimation(240, 0)
+						.withInteractionAllowed(true),
 				new DecoButton(118-4, 16-8-4+14-14+8)
 						.withSize(69, 14)
 						.withBackground(DecoTextures.RES_TEXTURES_DECO_COMPONENT_TAB_VERTICAL)
@@ -110,6 +114,7 @@ public class GuiUpgrade<T extends TileEntityIEBase & IIEInventory & IUpgradableD
 						.withOnLMBPressed(() -> {
 							panelInfo.visible = panelInfo.enabled = false;
 							techTreeDisplay.visible = techTreeDisplay.enabled = true;
+							refreshModelPreview(null);
 						}),
 				new DecoButton(118-4+69, 16-8-4+14-14+8)
 						.withSize(69, 14)
@@ -118,6 +123,8 @@ public class GuiUpgrade<T extends TileEntityIEBase & IIEInventory & IUpgradableD
 						.withOnLMBPressed(() -> {
 							panelInfo.visible = panelInfo.enabled = true;
 							techTreeDisplay.visible = techTreeDisplay.enabled = false;
+							if(lastUpgrade!=null&&!lastUpgrade.isEmpty())
+								refreshModelPreview(Upgrade.getUpgradeByID(ResLoc.of(lastUpgrade)));
 						}),
 				panelInfo = new DecoPanel(118-4, 16-8-4+14+8)
 						.withSize(146-8, 146-8)
@@ -132,16 +139,25 @@ public class GuiUpgrade<T extends TileEntityIEBase & IIEInventory & IUpgradableD
 								panelInfo.visible = panelInfo.enabled = true;
 								techTreeDisplay.visible = techTreeDisplay.enabled = false;
 								showUpgrade(node.getUserData());
+								refreshModelPreview(node.getUserData());
 							}
 						})
 						.withNodeRenderer(new UpgradeTreeNodeRenderer())
 						.withSize(146-8, 146-8)
 						.withBackground(DecoSprite.atlasSprite(DecoTextures.GUI_BG_DARK, 64))
 		);
+
 		if(lastUpgrade==null)
+		{
 			showUpgrade(null);
+			refreshModelPreview(null);
+		}
 		else
-			showUpgrade(Upgrade.getUpgradeByID(ResLoc.of(lastUpgrade)));
+		{
+			Upgrade current = Upgrade.getUpgradeByID(ResLoc.of(lastUpgrade));
+			showUpgrade(current);
+			refreshModelPreview(current);
+		}
 	}
 
 	private void showUpgrade(Upgrade upgrade)
@@ -189,5 +205,38 @@ public class GuiUpgrade<T extends TileEntityIEBase & IIEInventory & IUpgradableD
 			if(shouldInstall&&!canInstall)
 				button.enabled = false;
 		}
+	}
+
+	private void refreshModelPreview(Upgrade upgrade)
+	{
+		ArrayList<AMTModel> builder = new ArrayList<>();
+
+		//Add base model
+		ResLoc baseRes = techTree.getModelLocation();
+		if(baseRes!=null)
+			builder.add(new AMTModel(DefaultVertexFormats.ITEM, baseRes));
+
+		//Collect all installed upgrades
+		ArrayList<Upgrade> upgrades = new ArrayList<>(tile.getAllInstalledUpgrades());
+		//Remove incompatible from preview and add requirements
+		if(upgrade!=null)
+		{
+			upgrades.removeAll(techTree.getAllIncompatibleUpgrades(upgrade));
+			upgrades.addAll(techTree.getAllRequiredUpgrades(upgrade.getPurpose()));
+			upgrades.add(upgrade);
+		}
+
+		//Add all installed upgrades
+		upgrades.stream().distinct()
+				.map(techTree::getUpgradeModelLocation)
+				.filter(Objects::nonNull)
+				.map(upgradeRes -> new AMTModel(DefaultVertexFormats.ITEM, upgradeRes))
+				.forEach(builder::add);
+
+		//Build
+		AMTModel built = new AMTModel(builder.toArray(new AMTModel[0]));
+		Vec3d center = built.findActualModelCenter();
+		scenario.withModel(false, built);
+		scenario.withTranslation(-center.x, -center.y, -center.z);
 	}
 }

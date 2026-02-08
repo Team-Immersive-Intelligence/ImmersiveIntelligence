@@ -46,6 +46,7 @@ public class LogisticTag implements INBTSerializable<NBTTagCompound>, Cloneable
 	private String origin = "";
 	private String destination = "";
 	private EnumDyeColor color = null;
+	private int batchNumber = 0;
 
 	public LogisticTag()
 	{
@@ -85,6 +86,9 @@ public class LogisticTag implements INBTSerializable<NBTTagCompound>, Cloneable
 					.ifPresent(string -> this.name = string);
 			IIDataHandlingUtils.optionalString('d', packet)
 					.ifPresent(string -> this.description = string);
+			//Batch number
+			IIDataHandlingUtils.optionalInt('b', packet)
+					.ifPresent(integer -> this.batchNumber = integer);
 			//From/To
 			IIDataHandlingUtils.optionalString('f', packet)
 					.ifPresent(string -> this.origin = string);
@@ -148,6 +152,11 @@ public class LogisticTag implements INBTSerializable<NBTTagCompound>, Cloneable
 		return this;
 	}
 
+	public LogisticTag withBatchNumber(int batchNumber)
+	{
+		this.batchNumber = batchNumber;
+		return this;
+	}
 
 	//--- Getters ---//
 
@@ -181,6 +190,10 @@ public class LogisticTag implements INBTSerializable<NBTTagCompound>, Cloneable
 		return color;
 	}
 
+	public int getBatchNumber()
+	{
+		return batchNumber;
+	}
 
 	//--- NBT Serialization ---//
 
@@ -194,6 +207,7 @@ public class LogisticTag implements INBTSerializable<NBTTagCompound>, Cloneable
 				.withString("destination", destination)
 				.withColor("color", IIColor.fromDye(color))
 				.withString("owner", owner.getDisplayName())
+				.withInt("batch_number", batchNumber)
 				.unwrap();
 	}
 
@@ -205,6 +219,7 @@ public class LogisticTag implements INBTSerializable<NBTTagCompound>, Cloneable
 		description = enbt.getString("description");
 		origin = enbt.getString("origin");
 		destination = enbt.getString("destination");
+		batchNumber = enbt.getInt("batch_number");
 		//Color
 		color = null;
 		enbt.checkSetColor("color", found -> color = found.getDyeColor());
@@ -250,6 +265,9 @@ public class LogisticTag implements INBTSerializable<NBTTagCompound>, Cloneable
 				tooltip.add(I18n.format(TRANSLATION_KEY+"description.none"));
 			else
 				tooltip.add(I18n.format(TRANSLATION_KEY+"description", TextFormatting.WHITE+description));
+			//Batch Number
+			if(batchNumber!=0)
+				tooltip.add(I18n.format(TRANSLATION_KEY+"batch_number", TextFormatting.WHITE+""+batchNumber));
 
 			//Owner
 			if(owner!=DiplomacyUtils.NEUTRAL)
@@ -277,6 +295,12 @@ public class LogisticTag implements INBTSerializable<NBTTagCompound>, Cloneable
 	 */
 	public ItemStack applyToStack(ItemStack stack)
 	{
+		//Set name
+		if(this.name.isEmpty())
+			stack.clearCustomName();
+		else
+			stack.setStackDisplayName(this.name);
+		//Set logistics tag
 		ItemNBTHelper.setTagCompound(stack, NBT_KEY, this.serializeNBT());
 		return stack;
 	}

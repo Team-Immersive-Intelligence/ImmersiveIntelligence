@@ -272,8 +272,8 @@ public class GuiInserter extends DecoGui<TileEntityInserterBase, ContainerInsert
 						.withTranslatedTooltip(INSERTER_KEY+"items_per_step.tooltip")
 						.withDisabled(!thisTask.areDetailsEditable()),
 				new DecoIngredientStackPickerPanel(6-2, 34+18+18+18)
-						.withFluidMode(thisTask.getName().contains("fluid"))
 						.withLogisticTagMode(true)
+						.withFluidMode(thisTask.getName().contains("fluid"))
 						.withOnStackChanged(stack -> {
 							thisTask.stack = stack;
 							refreshListEntries();

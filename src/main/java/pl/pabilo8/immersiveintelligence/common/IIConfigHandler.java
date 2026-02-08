@@ -724,6 +724,9 @@ public class IIConfigHandler
 				@Comment({"Additional energy capacity of the packer when the charging module upgrade is present."})
 				public static int energyCapacityUpgrade = 16000000;
 
+				@Comment({"Maximum possible energy transfer per one charge action, when the charging module upgrade is present."})
+				public static int energyCapacityUpgradeMaxTransfer = 4000000;
+
 				@Comment({"Additional fluid capacity of the packer when the pump module upgrade is present."})
 				public static int fluidCapacityUpgrade = 96000;
 

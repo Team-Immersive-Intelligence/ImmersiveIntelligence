@@ -6,14 +6,17 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.obj.OBJModel;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeTechTree;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
 import pl.pabilo8.immersiveintelligence.client.util.amt.animation.IIAnimationCompiledMap;
 import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTConstructionModel;
 import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTModel;
 import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IIMultiblockRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IITileRenderer.RegisteredTileRenderer;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityRadar;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -55,11 +58,17 @@ public class RadarRenderer extends IIMultiblockRenderer<TileEntityRadar>
 	public void compileModels(IBlockState state, OBJModel model)
 	{
 		this.model = new AMTModel(state, model);
+		ResLoc modelDir = IIReference.RES_BLOCK_MODEL.with("multiblock/radar/");
 		this.constructionModel = new AMTConstructionModel(
-				new ResourceLocation(ImmersiveIntelligence.MODID, "models/block/multiblock/radar/radar_construction.obj.ie"),
+				modelDir.with("radar_construction.obj.ie"),
 				new ResourceLocation(ImmersiveIntelligence.MODID, "radar/construction")
 		);
 
 		this.animationDish = IIAnimationCompiledMap.create(this.model, IIReference.RES_II.with("radar/dish"));
+
+		UpgradeTechTree.getTreeFor(TileEntityRadar.class)
+				.withBaseModelLocation(modelDir.with("upgrade_triangulators.obj.ie"))
+				.withUpgradeModelLocation(IIContent.UPGRADE_EMPLACEMENT_WEAPON_MACHINEGUN, modelDir.with("radar.obj.ie"));
+
 	}
 }

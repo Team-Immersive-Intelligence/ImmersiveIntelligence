@@ -91,6 +91,11 @@
     "outputs_items": [2, 15],
     "redstone": 10,
     "data": 9,
-    "container": [42, 43, 45, 46, 18, 19, 21, 22]
+    "container": [42, 43, 45, 46, 18, 19, 21, 22],
+    "energy_container": [23, 15]
+  },
+  "rotations": {
+    "output": "counterclockwise_90",
+    "input": "none"
   }
 }

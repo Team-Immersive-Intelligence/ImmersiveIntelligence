@@ -223,7 +223,8 @@ public class DecoBackgroundBuilder<T extends TileEntityIEBase & IIEInventory, C 
 	public DecoBackgroundBuilder<T, C> withInventorySlots(SlotStyle style, Slot... slots)
 	{
 		for(Slot slot : slots)
-			inventorySlots.add(new DecoSlot(slot.xPos, slot.yPos, 16, 16, style));
+			if(slot!=null)
+				inventorySlots.add(new DecoSlot(slot.xPos, slot.yPos, 16, 16, style));
 		return this;
 	}
 

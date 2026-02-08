@@ -2,9 +2,11 @@ package pl.pabilo8.immersiveintelligence.client.gui.deco.component.button;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
+import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoTextBasedComponent;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
@@ -22,33 +24,49 @@ import java.util.function.Consumer;
  */
 public class DecoSlider extends DecoTextBasedComponent<DecoSlider>
 {
-	private ResourceLocation sliderTop = DecoTextures.RES_TEXTURES_DECO_COMPONENT_SLIDER;
+	private ResourceLocation sliderTop = DecoTextures.RES_TEXTURES_DECO_COMPONENT_SWITCH_MOVING;
 	private Consumer<Float> onValueChanged;
 	protected float value = 0.5f, minValue = 0.0f, maxValue = 1.0f;
 	//Whether the slider should only allow integer values
 	private boolean integersOnly = false;
 	//Whether it's a horizontal or vertical slider
 	private boolean horizontal = true;
+	private IIColor barLeft = null, barRight = null;
 
 	public DecoSlider(int x, int y)
 	{
 		super(x, y);
 		withSize(120, 12);
-		withBackground(DecoTextures.RES_TEXTURES_DECO_COMPONENT_SLIDER_BAR);
-		this.withOnLMBPressed(() -> setFocused(true));
+		withBackground(DecoTextures.RES_TEXTURES_DECO_COMPONENT_TEXT_FIELD);
+		this.withOnPressed((gui, button, mouseX, mouseY) -> {
+			handleMouse(gui, mouseX, mouseY);
+			setFocused(true);
+			return true;
+		});
 		this.withOnReleased((gui, button, mouseX, mouseY) -> {
+			handleMouse(gui, mouseX, mouseY);
 			setFocused(false);
 			return true;
 		});
 		this.withOnDragged((gui, button, mouseX, mouseY) -> {
-			gui.value = ((mouseX-(gui.x+4))/(float)(gui.width-8))*(gui.maxValue-gui.minValue)+gui.minValue;
-			gui.value = MathHelper.clamp(gui.integersOnly?Math.round(gui.value): gui.value, gui.minValue, gui.maxValue);
-
-			if(onValueChanged!=null)
-				onValueChanged.accept(gui.value);
+			handleMouse(gui, mouseX, mouseY);
 			return true;
 		});
 	}
+
+	private void handleMouse(DecoSlider gui, int mouseX, int mouseY)
+	{
+		if(horizontal)
+			gui.value = ((mouseX-(gui.x+4))/(float)(gui.width-8))*(gui.maxValue-gui.minValue)+gui.minValue;
+		else
+			gui.value = ((mouseY-(gui.y+4))/(float)(gui.height-8))*(gui.maxValue-gui.minValue)+gui.minValue;
+		gui.value = MathHelper.clamp(gui.integersOnly?Math.round(gui.value): gui.value, gui.minValue, gui.maxValue);
+
+		if(onValueChanged!=null)
+			onValueChanged.accept(gui.value);
+	}
+
+	//--- Setters ---//
 
 	@Override
 	public DecoSlider withSize(int width, int height)
@@ -82,10 +100,21 @@ public class DecoSlider extends DecoTextBasedComponent<DecoSlider>
 		return this;
 	}
 
+	public DecoSlider withBarColors(IIColor barLeft, IIColor barRight)
+	{
+		this.barLeft = barLeft;
+		this.barRight = barRight;
+		return this;
+	}
+
+	//--- Getters ---//
+
 	public float getValue()
 	{
 		return value;
 	}
+
+	//--- Drawing ---//
 
 	@Override
 	protected boolean initialize()
@@ -96,7 +125,7 @@ public class DecoSlider extends DecoTextBasedComponent<DecoSlider>
 	@Override
 	protected void draw(int mouseX, int mouseY, float partialTicks)
 	{
-		TextureAtlasSprite slider = ClientUtils.getSprite(DecoTextures.RES_TEXTURES_DECO_COMPONENT_SLIDER);
+		TextureAtlasSprite slider = ClientUtils.getSprite(sliderTop);
 		bindAtlas();
 
 		float percentage = value/maxValue;
@@ -105,15 +134,32 @@ public class DecoSlider extends DecoTextBasedComponent<DecoSlider>
 				.drawConnectedTexColorRect(x, y, width, height,
 						IIColor.WHITE, backgroundLocation, 32, 32, 8, 8)
 				//Slider handle
-				.drawTexColorRect(x+2+(int)(percentage*(width-4)), y, 2, height,
-						IIColor.WHITE, slider.getMinU(), slider.getInterpolatedU(2),
+				.drawTexColorRect(x+2+(int)(percentage*(width-8)), y, 4, height,
+						IIColor.WHITE, slider.getMinU(), slider.getInterpolatedU(4),
 						slider.getMinV(), slider.getInterpolatedV(9))
 				.finish();
 
+		//Draw percentage gradient
+		if(barLeft!=null&&barRight!=null)
+		{
+			//Disable textures
+			GlStateManager.disableTexture2D();
+			GlStateManager.disableAlpha();
+			GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
+			GlStateManager.shadeModel(GL11.GL_SMOOTH);
 
-		//IIColor textColor = getTextColor(true);
-		//fontRenderer.drawString(text, x+(width/2), y-fontRenderer.FONT_HEIGHT-2, textColor.getPackedRGB());
-		//fontRenderer.drawString(String.format("%.2f", value), x+(width/2), y+height+2, textColor.getPackedRGB());
+			IIColor colorRight = barLeft.mixedWith(barRight, percentage);
+			IIDrawUtils.startColored()
+					.drawColorGradient(x+2, y+2, (int)(percentage*(width-8)), height-4,
+							barLeft, colorRight, barLeft, colorRight)
+					.finish();
+
+			//Re-enable textures
+			GlStateManager.enableTexture2D();
+			GlStateManager.shadeModel(GL11.GL_FLAT);
+			GlStateManager.disableBlend();
+			GlStateManager.enableAlpha();
+		}
 	}
 
 	@Override

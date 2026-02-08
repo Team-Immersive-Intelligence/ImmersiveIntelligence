@@ -204,6 +204,8 @@ public class DecoTreeDisplay<T> extends DecoComponent<DecoTreeDisplay<T>>
 	protected boolean initialize()
 	{
 		layoutTree();
+		this.offsetX = -width/2-8;
+		this.offsetY -= 16;
 		return true;
 	}
 

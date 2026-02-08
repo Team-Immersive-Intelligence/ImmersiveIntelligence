@@ -147,12 +147,20 @@ public abstract class DecoComponent<TYPE extends DecoComponent<? super TYPE>> ex
 	public final void drawButtonUpperLayer(Minecraft mc, int mouseX, int mouseY, float partialTicks)
 	{
 		if(!initialized||!visible)
+		{
+			updateInvisibleComponent();
 			return;
+		}
 
 		drawUpperLayer(mouseX, mouseY, partialTicks);
 
 		for(DecoComponent<?> child : children)
 			child.drawButtonUpperLayer(mc, mouseX, mouseY, partialTicks);
+	}
+
+	protected void updateInvisibleComponent()
+	{
+
 	}
 
 	public void drawUpperLayer(int mouseX, int mouseY, float partialTicks)

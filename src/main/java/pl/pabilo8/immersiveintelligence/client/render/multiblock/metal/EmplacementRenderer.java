@@ -5,15 +5,17 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraftforge.client.model.obj.OBJModel;
-import pl.pabilo8.immersiveintelligence.api.upgrade.Upgrade;
+import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeTechTree;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMTLoader;
 import pl.pabilo8.immersiveintelligence.client.util.amt.animation.IIAnimationCachedMap;
 import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTCachedModel;
 import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTCachedModelBuilder;
 import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IIMultiblockRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IITileRenderer.RegisteredTileRenderer;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -47,36 +49,49 @@ public class EmplacementRenderer extends IIMultiblockRenderer<TileEntityEmplacem
 	@Override
 	public void compileModels(IBlockState state, OBJModel model)
 	{
+		ResLoc modelDir = IIReference.RES_BLOCK_MODEL.with("multiblock/emplacement/");
 		this.model = AMTCachedModelBuilder.startTileEntityModel(TileEntityEmplacement.class)
 				.withModel(model)
-				.withHeader(IIReference.RES_BLOCK_MODEL.with("multiblock/emplacement/emplacement.obj.amt"))
+				.withHeader(modelDir.with("emplacement.obj.amt"))
 				//Style Variants
 				.withModel(te -> te==null||te.style.getStyle().equals("sandbags"),
-						IIReference.RES_BLOCK_MODEL.with("multiblock/emplacement/variant_sandbags.obj"))
+						modelDir.with("variant_sandbags.obj"))
 				.withModel(te -> te!=null&&te.style.getStyle().equals("bricks"),
-						IIReference.RES_BLOCK_MODEL.with("multiblock/emplacement/variant_bricks.obj"))
+						modelDir.with("variant_bricks.obj"))
 				.withModel(te -> te!=null&&te.style.getStyle().equals("concrete"),
-						IIReference.RES_BLOCK_MODEL.with("multiblock/emplacement/variant_concrete.obj"))
+						modelDir.with("variant_concrete.obj"))
 				.withModel(te -> te!=null&&te.style.getStyle().equals("wooden"),
-						IIReference.RES_BLOCK_MODEL.with("multiblock/emplacement/variant_wooden.obj"))
+						modelDir.with("variant_wooden.obj"))
 				.withModel(te -> te!=null&&te.style.getStyle().equals("steel"),
-						IIReference.RES_BLOCK_MODEL.with("multiblock/emplacement/variant_steel.obj"))
-				.withModel(IIReference.RES_BLOCK_MODEL.with("multiblock/emplacement/weapon/light_howitzer.obj"))
-				.withHeader(IIReference.RES_BLOCK_MODEL.with("multiblock/emplacement/weapon/light_howitzer.obj.amt"))
+						modelDir.with("variant_steel.obj"))
+				.withModel(modelDir.with("weapon/light_howitzer.obj"))
+				.withHeader(modelDir.with("weapon/light_howitzer.obj.amt"))
 				.build();
 
 		this.animationOpen = IIAnimationCachedMap.create(this.model, IIReference.RES_II.with("emplacement/open"));
+
+		UpgradeTechTree.getTreeFor(TileEntityEmplacement.class)
+				.withBaseModelLocation(modelDir.with("upgrade_preview_base.obj"))
+				.withUpgradeModelLocation(IIContent.UPGRADE_EMPLACEMENT_WEAPON_MACHINEGUN, modelDir.with("weapon/machinegun.obj"))
+				.withUpgradeModelLocation(IIContent.UPGRADE_EMPLACEMENT_WEAPON_IROBSERVER, modelDir.with("weapon/infrared_observer.obj"))
+				.withUpgradeModelLocation(IIContent.UPGRADE_EMPLACEMENT_WEAPON_AUTOCANNON, modelDir.with("weapon/autocannon.obj"))
+				.withUpgradeModelLocation(IIContent.UPGRADE_EMPLACEMENT_WEAPON_HEAVY_CHEMTHROWER, modelDir.with("weapon/heavy_chemthrower.obj"))
+				.withUpgradeModelLocation(IIContent.UPGRADE_EMPLACEMENT_WEAPON_HEAVY_RAILGUN, modelDir.with("weapon/heavy_railgun.obj"))
+				.withUpgradeModelLocation(IIContent.UPGRADE_EMPLACEMENT_SEARCHLIGHT, modelDir.with("weapon/searchlight.obj"))
+				.withUpgradeModelLocation(IIContent.UPGRADE_EMPLACEMENT_SPOTLIGHT_TOWER, modelDir.with("weapon/spotlight_tower.obj"))
+				.withUpgradeModelLocation(IIContent.UPGRADE_EMPLACEMENT_WEAPON_TESLA, modelDir.with("weapon/tesla.obj"))
+				.withUpgradeModelLocation(IIContent.UPGRADE_EMPLACEMENT_WEAPON_CPDS, modelDir.with("weapon/cpds.obj"))
+				.withUpgradeModelLocation(IIContent.UPGRADE_EMPLACEMENT_WEAPON_MORTAR, modelDir.with("weapon/mortar.obj"))
+				.withUpgradeModelLocation(IIContent.UPGRADE_EMPLACEMENT_WEAPON_LIGHT_HOWITZER, modelDir.with("weapon/light_howitzer.obj"))
+				.withUpgradeModelLocation(IIContent.UPGRADE_EMPLACEMENT_WEAPON_MLRS, modelDir.with("weapon/mlrs.obj"))
+				.withUpgradeModelLocation(IIContent.UPGRADE_EMPLACEMENT_WEAPON_GUIDED_MISSILE_LAUNCHER, modelDir.with("weapon/guided_missile_launcher.obj"))
+		;
 	}
 
 	@Override
 	public void registerSprites(TextureMap map)
 	{
 		super.registerSprites(map);
-		for(Upgrade upgrade : Upgrade.getAllUpgrades())
-		{
-//			if(upgrade instanceof UpgradeEmplacementWeapon)
-
-		}
 
 		AMTLoader.preloadTexturesFromOBJ(IIReference.RES_BLOCK_MODEL.with("multiblock/emplacement/weapon/light_howitzer.obj"), map);
 	}

@@ -158,6 +158,32 @@ public class UpgradeTechTree
 	}
 
 	/**
+	 * @param upgrade upgrade to check for
+	 * @return all upgrades incompatible with the given upgrade
+	 */
+	public List<Upgrade> getAllIncompatibleUpgrades(Upgrade upgrade)
+	{
+		UpgradeTreeNode node = getUpgradeNodeFor(upgrade);
+		if(node==null)
+			return Collections.emptyList();
+		return node.locksOut.stream().map(n -> n.upgrade).collect(Collectors.toList());
+	}
+
+	/**
+	 * @param upgrade upgrade to check for
+	 * @return all upgrades required to install the given upgrade
+	 */
+	public List<Upgrade> getAllRequiredUpgrades(UpgradePurpose upgrade)
+	{
+		return nodes.stream()
+				.filter(n -> n.upgrade.getPurpose()==upgrade)
+				.flatMap(n -> n.dependencies.stream())
+				.map(n -> n.upgrade)
+				.distinct()
+				.collect(Collectors.toList());
+	}
+
+	/**
 	 * @return all upgrades in this tech tree
 	 */
 	public List<UpgradeTreeNode> getAllUpgrades()
@@ -181,6 +207,19 @@ public class UpgradeTechTree
 	public ResLoc getModelLocation()
 	{
 		return modelLocation;
+	}
+
+	/**
+	 * @return the 3D model location of an upgrade model
+	 */
+	@Nullable
+	@SideOnly(Side.CLIENT)
+	public ResLoc getUpgradeModelLocation(Upgrade upgrade)
+	{
+		UpgradeTreeNode node = getUpgradeNodeFor(upgrade);
+		if(node!=null)
+			return node.getModelLocation();
+		return null;
 	}
 
 	/**

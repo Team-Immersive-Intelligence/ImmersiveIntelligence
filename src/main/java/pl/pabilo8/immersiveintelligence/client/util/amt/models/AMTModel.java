@@ -362,4 +362,41 @@ public class AMTModel implements Iterable<AMT>, AMTRenderable
 		for(AMT amt : model)
 			amt.setProperty(property);
 	}
+
+	//--- Utils ---//
+
+	public Vec3d findActualModelCenter()
+	{
+		Vec3d min = new Vec3d(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
+		Vec3d max = new Vec3d(-Double.MAX_VALUE, -Double.MAX_VALUE, -Double.MAX_VALUE);
+
+		//Find the min and max points of each quad
+		for(AMT amt : getChildrenRecursive())
+			if(amt instanceof AMTQuads)
+				for(BakedQuad quad : ((AMTQuads)amt).getQuads())
+					for(int i = 0; i < 4; i++)
+					{
+						int vertexIndex = i*DefaultVertexFormats.BLOCK.getIntegerSize();
+						double x = Float.intBitsToFloat(quad.getVertexData()[vertexIndex]);
+						double y = Float.intBitsToFloat(quad.getVertexData()[vertexIndex+1]);
+						double z = Float.intBitsToFloat(quad.getVertexData()[vertexIndex+2]);
+
+						min = new Vec3d(
+								Math.min(min.x, x),
+								Math.min(min.y, y),
+								Math.min(min.z, z)
+						);
+						max = new Vec3d(
+								Math.max(max.x, x),
+								Math.max(max.y, y),
+								Math.max(max.z, z)
+						);
+					}
+
+		return new Vec3d(
+				(min.x+max.x)/2,
+				(min.y+max.y)/2,
+				(min.z+max.z)/2
+		);
+	}
 }

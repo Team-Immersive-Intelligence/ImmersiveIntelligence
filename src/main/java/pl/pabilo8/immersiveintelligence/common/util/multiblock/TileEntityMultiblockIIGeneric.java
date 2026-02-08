@@ -186,7 +186,7 @@ public abstract class TileEntityMultiblockIIGeneric<T extends TileEntityMultiblo
 
 	@Nonnull
 	@Override
-	public final FluxStorage getFluxStorage()
+	public FluxStorage getFluxStorage()
 	{
 		T master = this.master();
 		if(master!=null)

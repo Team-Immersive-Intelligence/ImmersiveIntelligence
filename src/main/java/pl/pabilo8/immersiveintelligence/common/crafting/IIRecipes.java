@@ -3,6 +3,7 @@ package pl.pabilo8.immersiveintelligence.common.crafting;
 import blusunrize.immersiveengineering.api.ApiUtils;
 import blusunrize.immersiveengineering.api.IEApi;
 import blusunrize.immersiveengineering.api.crafting.*;
+import blusunrize.immersiveengineering.common.Config.IEConfig.Machines;
 import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.blocks.metal.BlockTypes_MetalDecoration0;
 import blusunrize.immersiveengineering.common.blocks.metal.BlockTypes_MetalDecoration2;
@@ -11,6 +12,7 @@ import blusunrize.immersiveengineering.common.blocks.metal.BlockTypes_MetalDevic
 import blusunrize.immersiveengineering.common.blocks.stone.BlockTypes_StoneDecoration;
 import blusunrize.immersiveengineering.common.blocks.wooden.BlockTypes_WoodenDevice0;
 import blusunrize.immersiveengineering.common.crafting.RecipeRGBColouration;
+import blusunrize.immersiveengineering.common.util.EnergyHelper;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.block.Block;
@@ -25,6 +27,7 @@ import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
+import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -37,6 +40,7 @@ import net.minecraftforge.registries.IForgeRegistryModifiable;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.LogisticTag;
 import pl.pabilo8.immersiveintelligence.api.PackerHandler;
+import pl.pabilo8.immersiveintelligence.api.PackerHandler.CapacitorChargeHandler;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseType;
@@ -1706,6 +1710,75 @@ public class IIRecipes
 		PackerHandler.registerFluid(
 				stack -> stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null),
 				stack -> stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null)
+		);
+
+		final ItemStack[] capacitors = new ItemStack[]{
+				new ItemStack(IEContent.blockMetalDevice0, 1, BlockTypes_MetalDevice0.CAPACITOR_LV.getMeta()),
+				new ItemStack(IEContent.blockMetalDevice0, 1, BlockTypes_MetalDevice0.CAPACITOR_MV.getMeta()),
+				new ItemStack(IEContent.blockMetalDevice0, 1, BlockTypes_MetalDevice0.CAPACITOR_HV.getMeta()),
+				new ItemStack(IEContent.blockMetalDevice0, 1, BlockTypes_MetalDevice0.CAPACITOR_CREATIVE.getMeta())
+		};
+
+		PackerHandler.registerEnergy(
+				stack -> capacitors[0].isItemEqual(stack),
+				stack -> new CapacitorChargeHandler(stack, Machines.capacitorLV_storage)
+		);
+
+		PackerHandler.registerEnergy(
+				stack -> capacitors[1].isItemEqual(stack),
+				stack -> new CapacitorChargeHandler(stack, Machines.capacitorMV_storage)
+		);
+
+		PackerHandler.registerEnergy(
+				stack -> capacitors[2].isItemEqual(stack),
+				stack -> new CapacitorChargeHandler(stack, Machines.capacitorHV_storage)
+		);
+
+		PackerHandler.registerEnergy(
+				stack -> capacitors[3].isItemEqual(stack),
+				stack -> new CapacitorChargeHandler(stack, Integer.MAX_VALUE, true)
+		);
+
+		PackerHandler.registerEnergy(
+				EnergyHelper::isFluxItem,
+				stack -> new IEnergyStorage()
+				{
+					@Override
+					public int receiveEnergy(int maxReceive, boolean simulate)
+					{
+						return EnergyHelper.insertFlux(stack, maxReceive, simulate);
+					}
+
+					@Override
+					public int extractEnergy(int maxExtract, boolean simulate)
+					{
+						return EnergyHelper.extractFlux(stack, maxExtract, simulate);
+					}
+
+					@Override
+					public int getEnergyStored()
+					{
+						return EnergyHelper.getEnergyStored(stack);
+					}
+
+					@Override
+					public int getMaxEnergyStored()
+					{
+						return EnergyHelper.getMaxEnergyStored(stack);
+					}
+
+					@Override
+					public boolean canExtract()
+					{
+						return true;
+					}
+
+					@Override
+					public boolean canReceive()
+					{
+						return true;
+					}
+				}
 		);
 	}
 

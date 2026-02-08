@@ -10,6 +10,7 @@ import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import pl.pabilo8.immersiveintelligence.api.LogisticTag;
 import pl.pabilo8.immersiveintelligence.api.data.device.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.device.IDataDevice;
 import pl.pabilo8.immersiveintelligence.api.data.types.*;
@@ -147,6 +148,14 @@ public class IIDataHandlingUtils
 			//Otherwise treat it as a hex color
 			return Optional.of(IIColor.fromHex(string));
 		}
+		return Optional.empty();
+	}
+
+	public static Optional<LogisticTag> optionalLogisticTag(char variable, DataPacket packet)
+	{
+		DataType data = packet.get(variable);
+		if(data instanceof DataTypeLogisticTag)
+			return Optional.of(((DataTypeLogisticTag)data).value);
 		return Optional.empty();
 	}
 

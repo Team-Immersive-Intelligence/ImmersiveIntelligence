@@ -1,5 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common.util.gui;
 
+import blusunrize.immersiveengineering.api.IEApi;
 import blusunrize.immersiveengineering.api.IEEnums.SideConfig;
 import blusunrize.immersiveengineering.common.blocks.TileEntityIEBase;
 import blusunrize.immersiveengineering.common.gui.ContainerIEBase;
@@ -64,6 +65,14 @@ public class ContainerIIBase<T extends TileEntityIEBase & IIEInventory> extends 
 		return slots.toArray(new Slot[0]);
 	}
 
+	protected <SLOT extends Slot> Slot[] addVirtualSlots(int startIndex, int totalSlots, SlotConstructor<SLOT> aNew)
+	{
+		ArrayList<SLOT> slots = new ArrayList<>();
+		for(int i = 0; i < totalSlots; i++)
+			slots.add(this.addSlot(-32, -32, i+startIndex, aNew));
+		return slots.toArray(new Slot[0]);
+	}
+
 	/**
 	 * Functional interface for {@link Slot} constructors to create them in batch.
 	 *
@@ -120,6 +129,15 @@ public class ContainerIIBase<T extends TileEntityIEBase & IIEInventory> extends 
 		{
 			super(container, inv, id, x, y);
 			withFilter(stack -> tile.isStackValid(getSlotIndex(), stack));
+		}
+	}
+
+	public class CrateSlot extends IISlot
+	{
+		public CrateSlot(Container container, IInventory inv, int id, int x, int y)
+		{
+			super(container, inv, id, x, y);
+			withFilter(IEApi::isAllowedInCrate);
 		}
 	}
 

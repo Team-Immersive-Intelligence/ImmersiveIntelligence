@@ -198,7 +198,7 @@ public abstract class DecoTankBase<TYPE extends DecoTankBase<TYPE, RESOURCE>, RE
 		if(!maskDrawingMode)
 		{
 			//Draw overlay
-			draw.drawConnectedTexColorRect(x, y, width, height, IIColor.WHITE, tankOverlayLocation, textureSize, textureSize, 8, 8).finish();
+			draw.drawConnectedTexColorRect(x, y, width, height, IIColor.WHITE, tankOverlayLocation, textureSize, textureSize, 16, 16).finish();
 		}
 		else
 		{

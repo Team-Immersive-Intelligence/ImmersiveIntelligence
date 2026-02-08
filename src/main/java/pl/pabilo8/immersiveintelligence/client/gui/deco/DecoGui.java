@@ -320,7 +320,7 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 	{
 		//Add the widget tab
 		DecoTab tab = widget.provideTab();
-		buttonList.add(tab);
+		buttonList.add(0, tab);
 		tab.id = buttonList.size();
 		tab.withSize(32, 18);
 		tab.withOnPressed((gui, mouseButton, mouseX, mouseY) -> setCurrentWidget(widget));

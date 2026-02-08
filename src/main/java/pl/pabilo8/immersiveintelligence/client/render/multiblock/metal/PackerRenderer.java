@@ -4,9 +4,8 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.obj.OBJModel;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeTechTree;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
 import pl.pabilo8.immersiveintelligence.client.util.amt.animation.IIAnimationCompiledMap;
 import pl.pabilo8.immersiveintelligence.client.util.amt.animation.IIBooleanAnimation;
@@ -21,6 +20,8 @@ import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IITileRenderer.
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Packer;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityPacker;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -125,11 +126,12 @@ public class PackerRenderer extends IIMultiblockRenderer<TileEntityPacker>
 		);
 
 		//progress animation
-		animationWork = IIAnimationCompiledMap.create(this.model, new ResourceLocation(ImmersiveIntelligence.MODID, "packer/work"));
+		animationWork = IIAnimationCompiledMap.create(this.model, IIReference.RES_II.with("packer/work"));
 
 		//upgrade models
+		ResLoc modelDir = IIReference.RES_BLOCK_MODEL.with("multiblock/packer/");
 		this.upgradeParts = new AMTModel(DefaultVertexFormats.BLOCK,
-				new ResourceLocation(ImmersiveIntelligence.MODID, "models/block/multiblock/packer_construction.obj.ie"),
+				modelDir.with("packer_construction").withExtension(ResLoc.EXT_OBJ_IE),
 				header -> new AMT[]{
 						new AMTLocator("item", header),
 						new AMTLocator("fluid", header),
@@ -137,17 +139,25 @@ public class PackerRenderer extends IIMultiblockRenderer<TileEntityPacker>
 						new AMTLocator("railway", header)
 				}
 		);
-		animationDefault = IIAnimationCompiledMap.create(upgradeParts, new ResourceLocation(ImmersiveIntelligence.MODID, "packer/default"));
+		animationDefault = IIAnimationCompiledMap.create(upgradeParts, IIReference.RES_II.with("packer/default"));
 
 		railwayUpgrade = new AMTUpgradeModel(IIContent.UPGRADE_PACKER_RAILWAY, upgradeParts,
-				new ResourceLocation(ImmersiveIntelligence.MODID, "packer/upgrade_railway"));
+				IIReference.RES_II.with("packer/upgrade_railway"));
 		namingUpgrade = new AMTUpgradeModel(IIContent.UPGRADE_PACKER_NAMING, upgradeParts,
-				new ResourceLocation(ImmersiveIntelligence.MODID, "packer/upgrade_naming"));
+				IIReference.RES_II.with("packer/upgrade_naming"));
 
 		fluidUpgrade = new AMTUpgradeModel(IIContent.UPGRADE_PACKER_FLUID, upgradeParts,
-				new ResourceLocation(ImmersiveIntelligence.MODID, "packer/upgrade_fluid"));
+				IIReference.RES_II.with("packer/upgrade_fluid"));
 		energyUpgrade = new AMTUpgradeModel(IIContent.UPGRADE_PACKER_ENERGY, upgradeParts,
-				new ResourceLocation(ImmersiveIntelligence.MODID, "packer/upgrade_energy"));
+				IIReference.RES_II.with("packer/upgrade_energy"));
+
+
+		UpgradeTechTree.getTreeFor(TileEntityPacker.class)
+				.withBaseModelLocation(modelDir.with("packer_base", ResLoc.EXT_OBJ))
+				//.withUpgradeModelLocation(IIContent.UPGRADE_PACKER_FLUID, modelDir.with("upgrade_item", ResLoc.EXT_OBJ))
+				.withUpgradeModelLocation(IIContent.UPGRADE_PACKER_FLUID, modelDir.with("upgrade_fluid", ResLoc.EXT_OBJ))
+				.withUpgradeModelLocation(IIContent.UPGRADE_PACKER_ENERGY, modelDir.with("upgrade_energy", ResLoc.EXT_OBJ))
+				.withUpgradeModelLocation(IIContent.UPGRADE_PACKER_RAILWAY, modelDir.with("upgrade_railway", ResLoc.EXT_OBJ));
 	}
 
 	@Override

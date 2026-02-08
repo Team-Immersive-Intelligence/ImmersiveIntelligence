@@ -32,7 +32,7 @@ public class DecoScenarioDisplay extends DecoComponent<DecoScenarioDisplay>
 	private Vec3d translation = new Vec3d(0, 0, 0);
 
 	//--- Interaction state ---//
-	private boolean interactionAllowed = true;
+	private boolean interactionAllowed = true, zoomAllowed = false;
 	private int lastMouseX;
 	private int lastMouseY;
 
@@ -79,11 +79,20 @@ public class DecoScenarioDisplay extends DecoComponent<DecoScenarioDisplay>
 	}
 
 	/**
-	 * Sets whether the model can be interacted with (rotated and zoomed)
+	 * Sets whether the model can be rotated using mouse
 	 */
 	public DecoScenarioDisplay withInteractionAllowed(boolean interactionAllowed)
 	{
 		this.interactionAllowed = interactionAllowed;
+		return this;
+	}
+
+	/**
+	 * Sets whether zooming using mouse scroll is allowed
+	 */
+	public DecoScenarioDisplay withZoomAllowed(boolean zoomAllowed)
+	{
+		this.zoomAllowed = zoomAllowed;
 		return this;
 	}
 
@@ -223,7 +232,7 @@ public class DecoScenarioDisplay extends DecoComponent<DecoScenarioDisplay>
 
 	private boolean handleMouseScroll(DecoScenarioDisplay gui, int mouseScroll, int mouseX, int mouseY)
 	{
-		if(interactionAllowed)
+		if(zoomAllowed)
 			scale = MathHelper.clamp(scale+Math.signum(mouseScroll)*0.05f, 0.5f, 2f);
 		return false;
 	}

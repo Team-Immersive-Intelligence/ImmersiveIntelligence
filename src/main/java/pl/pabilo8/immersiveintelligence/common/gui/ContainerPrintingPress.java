@@ -1,5 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common.gui;
 
+import blusunrize.immersiveengineering.api.IEEnums.SideConfig;
 import blusunrize.immersiveengineering.common.gui.IESlot;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
@@ -39,8 +40,8 @@ public class ContainerPrintingPress extends ContainerIIBase<TileEntityPrintingPr
 		this.slotOutput = addSlotToContainer(new IESlot.Output(this, this.inv, 1, 88+8-6, 39-8));
 
 		//Fluid Container Slots
-		this.slotBucketIn = addSlotToContainer(new IESlot.FluidContainer(this, this.inv, 2, 147, 21-8, 0));
-		this.slotBucketOut = addSlotToContainer(new IESlot.FluidContainer(this, this.inv, 3, 147, 57-8, 0));
+		this.slotBucketIn = addSlot(147, 21-8, 2, getFluidContainerSlot(SideConfig.INPUT));
+		this.slotBucketOut = addSlot(147, 57-8, 3, getFluidContainerSlot(SideConfig.INPUT));
 
 		addPlayerInventory(player.inventory, 8, 86);
 	}
