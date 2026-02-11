@@ -49,6 +49,10 @@ public class NBTSerializationTypesTest
 		Collection<Appender> appenders = logger.getAppenders().values();
 		appenders.forEach(logger::removeAppender);
 		logger.addAppender(listAppender);
+
+		//Initialize serializers
+		NBTSerialisation.preInit();
+		NBTSerialisation.postInit();
 	}
 
 	public void serializeFor(TriConsumer<NBTTagCompound, NBTSerializer, TestClass> action)

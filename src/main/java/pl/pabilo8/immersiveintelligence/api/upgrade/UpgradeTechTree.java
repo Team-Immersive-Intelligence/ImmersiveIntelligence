@@ -166,7 +166,21 @@ public class UpgradeTechTree
 		UpgradeTreeNode node = getUpgradeNodeFor(upgrade);
 		if(node==null)
 			return Collections.emptyList();
-		return node.locksOut.stream().map(n -> n.upgrade).collect(Collectors.toList());
+
+		//Include direct lockouts + all their dependent (child) nodes
+		Set<UpgradeTreeNode> lockedRoots = new HashSet<>(node.locksOut);
+		Set<UpgradeTreeNode> resultNodes = new HashSet<>(lockedRoots);
+
+		Deque<UpgradeTreeNode> queue = new ArrayDeque<>(lockedRoots);
+		while(!queue.isEmpty())
+		{
+			UpgradeTreeNode current = queue.removeFirst();
+			for(UpgradeTreeNode candidate : nodes)
+				if(candidate.dependencies.contains(current)&&resultNodes.add(candidate))
+					queue.addLast(candidate);
+		}
+
+		return resultNodes.stream().map(n -> n.upgrade).distinct().collect(Collectors.toList());
 	}
 
 	/**

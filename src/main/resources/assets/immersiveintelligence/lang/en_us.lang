@@ -3232,8 +3232,6 @@ ii.gui.packer.picker.stack.tooltip=Filter for the resource operated on.
 ii.gui.packer.picker.logitag=Logistic Tag
 ii.gui.packer.picker.logitag.tooltip=Logistic tag to be applied to the container.
 
-ii.gui.packer.labeling_tasks=Labeling Tasks
-
 ii.gui.itemstack_editor.count=Count:
 ii.gui.itemstack_editor.count.tooltip=The amount of items in the stack
 ii.gui.itemstack_editor.damage=Damage:

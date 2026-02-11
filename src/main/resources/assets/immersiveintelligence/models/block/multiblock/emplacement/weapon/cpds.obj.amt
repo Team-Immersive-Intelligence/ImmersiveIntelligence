@@ -1,0 +1,28 @@
+{
+  "origins": {
+    "weapon": [3, 3, -3],
+    "gun": [3.01581, 19.48142, -8.47668],
+    "gun_mount": [3, 18, -42.45],
+    "ir_camera": [14, 31.5, -1.4],
+    "platform": [3, 4.83333, 5],
+    "pillar3": [12, 10, 5],
+    "pillar2": [10, 6.75, 8.25],
+    "pillar1": [7.5, 6.75, 8.25],
+    "door": [-3.5, 10.5, 4.5],
+    "magazine": [2.92857, 9.5, -10],
+    "fire": [8, -23.6, -20]
+  },
+  "hierarchy": {
+    "weapon": "platform6",
+    "gun": "weapon",
+    "gun_mount": "gun",
+    "ir_camera": "weapon",
+    "platform": "weapon",
+    "pillar3": "pillar2",
+    "pillar2": "pillar1",
+    "pillar1": "weapon",
+    "door": "weapon",
+    "magazine": "gun",
+    "fire": "gun"
+  }
+}

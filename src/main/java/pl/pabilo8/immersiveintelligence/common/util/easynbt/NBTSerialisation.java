@@ -11,6 +11,13 @@ import net.minecraftforge.fluids.FluidTank;
 import pl.pabilo8.immersiveintelligence.api.data.DataVariable;
 import pl.pabilo8.immersiveintelligence.api.data.IIDataTypeUtils;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
+import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.TileEntityFluidInserter.InserterTaskFluid;
+import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.TileEntityFluidInserter.InserterTaskLatexCollectorDrain;
+import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.TileEntityFluidInserter.InserterTaskMilkCow;
+import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.inserter.TileEntityInserter.InserterTaskFromMinecart;
+import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.inserter.TileEntityInserter.InserterTaskIntoMinecart;
+import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.inserter.TileEntityInserter.InserterTaskItem;
+import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.inserter.TileEntityInserter.InserterTaskPlaceBlock;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyUtils;
@@ -53,14 +60,16 @@ public class NBTSerialisation
 	/**
 	 * Polymorphic type registry for ITypeNBTSerializable implementations.
 	 */
-	private static final HashMap<String, Supplier<ITypeNBTSerializable>> typeRegistry = new HashMap<>();
+	private static final HashMap<Class<? extends ITypeNBTSerializable>, TypeSerializationData> typeSerializers = new HashMap<>();
 	/**
-	 * Reverse lookup for typeRegistry
+	 * Reference to polymorphic type serialization data by subtype names.
 	 */
-	private static final HashMap<Class<? extends ITypeNBTSerializable>, String> typeIdLookup = new HashMap<>();
-	private static final List<Class<? extends ITypeNBTSerializable>> mainTypeRegistry = new ArrayList<>();
+	private static final HashMap<String, TypeSerializationData> nameToSerializers = new HashMap<>();
 
-	static
+	/**
+	 * Basic, implementation-independent functionality.
+	 */
+	public static void preInit()
 	{
 		//Register serializers for all primitive types
 		registerSerializer(String.class, NBTTagString.class, NBTTagString::new, NBTTagString::getString);
@@ -81,7 +90,6 @@ public class NBTSerialisation
 
 		//Register serializers for all primitive array types
 		registerSerializer(int[].class, NBTTagIntArray.class, NBTTagIntArray::new, NBTTagIntArray::getIntArray);
-//		registerSerializer(boolean[].class, NBTTagByteArray.class, NBTTagByteArray::new, NBTTagByteArray::getByteArray);
 
 		//Register serializers for vanilla types
 		registerSerializer(Vec3d.class, NBTTagList.class,
@@ -145,30 +153,15 @@ public class NBTSerialisation
 				type -> {
 					if(type==null)
 						return new NBTTagCompound();
-
-					NBTTagCompound nbt = new NBTTagCompound();
-					nbt.setString("type", typeIdLookup.getOrDefault(type.getClass(), "null"));
-					nbt.setTag("value", type.serializeNBT());
-					return nbt;
+					TypeSerializationData data = typeSerializers.get(type.getClass());
+					//noinspection unchecked
+					return data!=null?data.serialize(type): new NBTTagCompound();
 				},
 				(nbtTagCompound, type) -> {
-					if(nbtTagCompound.hasNoTags())
+					TypeSerializationData data = nameToSerializers.get(nbtTagCompound.getString("type"));
+					if(data==null)
 						return null;
-					String typeId = nbtTagCompound.getString("type");
-					if(typeId.equals("null"))
-						return null;
-
-					NBTBase value = nbtTagCompound.getTag("value");
-					if(type==null||!type.getClass().getName().equals(typeId))
-					{
-						Supplier<ITypeNBTSerializable> supplier = typeRegistry.get(typeId);
-						if(supplier==null)
-							return null;
-						type = supplier.get();
-					}
-					//noinspection unchecked
-					type.deserializeNBT(value);
-					return type;
+					return data.deserialize(nbtTagCompound);
 				});
 
 		registerSerializer(
@@ -180,7 +173,13 @@ public class NBTSerialisation
 					return field;
 				}
 		);
+	}
 
+	/**
+	 * Additional, mod-specific functionality.
+	 */
+	public static void postInit()
+	{
 		registerSerializer(IIColor.class, NBTTagInt.class, color -> new NBTTagInt(color.getPackedRGB()), nbt -> IIColor.fromPackedRGB(nbt.getInt()));
 
 		registerSerializer(
@@ -198,16 +197,27 @@ public class NBTSerialisation
 				}
 		);
 
+		registerSerializer(UUID.class, NBTTagString.class,
+				uuid -> new NBTTagString(uuid.toString()),
+				nbt -> UUID.fromString(nbt.getString())
+		);
+
 		registerSerializer(
 				OwnerIdentity.class, NBTTagString.class,
 				ownerIdentity -> new NBTTagString(ownerIdentity.getDisplayName()),
 				nbt -> DiplomacyUtils.getIdentityByName(nbt.getString())
 		);
 
-		registerSerializer(UUID.class, NBTTagString.class,
-				uuid -> new NBTTagString(uuid.toString()),
-				nbt -> UUID.fromString(nbt.getString())
-		);
+		//Inserter tasks
+		NBTSerialisation.registerPolimorphicTypeClass(InserterTaskItem.class);
+		NBTSerialisation.registerPolimorphicTypeClass(InserterTaskPlaceBlock.class);
+		NBTSerialisation.registerPolimorphicTypeClass(InserterTaskFromMinecart.class);
+		NBTSerialisation.registerPolimorphicTypeClass(InserterTaskIntoMinecart.class);
+		NBTSerialisation.registerPolimorphicTypeClass(InserterTaskFluid.class);
+		NBTSerialisation.registerPolimorphicTypeClass(InserterTaskLatexCollectorDrain.class);
+		NBTSerialisation.registerPolimorphicTypeClass(InserterTaskMilkCow.class);
+
+
 	}
 
 	public static <FIELD, NBT extends NBTBase> void registerSerializer(Class<FIELD> dataClass, Class<NBT> nbtClass,
@@ -272,58 +282,33 @@ public class NBTSerialisation
 	 *
 	 * @param clazz The class to register. It and its extending classes have a public no-arg constructor.
 	 */
-	public static void registerTypeClass(Class<? extends ITypeNBTSerializable> clazz)
+	public static <T extends ITypeNBTSerializable> void registerPolimorphicTypeClass(@Nonnull Class<T> clazz)
 	{
-		if(mainTypeRegistry.contains(clazz))
-			return;
+		Class<? extends ITypeNBTSerializable> parent = clazz;
+		//Find the topmost parent class that implements ITypeNBTSerializable, to ensure the type is registered under the correct name
+		for(Class<?> c = clazz; c!=null&&ITypeNBTSerializable.class.isAssignableFrom(c); c = c.getSuperclass())
+			//noinspection unchecked
+			parent = (Class<? extends ITypeNBTSerializable>)c;
 
-		mainTypeRegistry.add(clazz);
-		for(Class<?> declaredClass : clazz.getDeclaredClasses())
-		{
-			if(declaredClass.isEnum()||declaredClass.isInterface())
-				continue;
-			try
-			{
-				//Get the constructor
-				@SuppressWarnings("unchecked")
-				Class<ITypeNBTSerializable> type = (Class<ITypeNBTSerializable>)declaredClass;
-				Constructor<ITypeNBTSerializable> constructor = type.getDeclaredConstructor();
-				constructor.setAccessible(true);
+		//Get serializer data for parent type (stores data for this and other sub-types)
+		TypeSerializationData data = typeSerializers.computeIfAbsent(parent, TypeSerializationData::new);
+		//Add link to serializer for this exact type
+		typeSerializers.put(clazz, data);
 
-				//Turn the public no-arg constructor into a Supplier
-				Supplier<ITypeNBTSerializable> supplier = () -> {
-					try
-					{
-						return constructor.newInstance();
-					} catch(Exception ignored)
-					{
-						return null;
-					}
-				};
-				try
-				{
-					//Ensure it works
-					supplier.get();
-					//Register the type
-					String name = declaredClass.getSimpleName();
-					typeRegistry.put(name, supplier);
-					typeIdLookup.put(type, name);
-					IILogger.debug("Registered NBT polymorphic type \""+name+"\" -> "+clazz.getName());
-				} catch(Throwable e)
-				{
-					throw new RuntimeException("Could not instantiate type \""+declaredClass.getName()+"\"");
-				}
-			} catch(Exception e)
-			{
-				IILogger.error("Could not find no-arg constructor for type \""+clazz.getName()+"\"", e);
-			}
-		}
+		//Add the class and a supplier to the registry
+		//noinspection unchecked
+		data.addSubType(clazz);
 	}
 
 	public static <T> void synchroniseFor(T obj, BiConsumer<NBTSerializer, T> action)
 	{
 		NBTSerializer<?> serializer = serializers.computeIfAbsent(obj.getClass(), NBTSerializer::new);
 		action.accept(serializer, obj);
+	}
+
+	public static ITypeNBTSerializable deserializePolymorphic(@Nonnull NBTTagCompound current)
+	{
+		return nameToSerializers.get(current.getString("type")).deserialize(current);
 	}
 
 	/**
@@ -363,16 +348,6 @@ public class NBTSerialisation
 						IILogger.error("Field "+field.getName()+" in "+clazz.getName()+" is not serializable!");
 						continue;
 					}
-
-					//Register type
-					if(ITypeNBTSerializable.class.isAssignableFrom(field.getType()))
-					{
-						//noinspection unchecked
-						registerTypeClass((Class<? extends ITypeNBTSerializable>)field.getType());
-					}
-
-					//Add to all matching lists
-
 					//All fields
 					this.fields.add(serializer);
 					//Fields synced on event
@@ -553,5 +528,103 @@ public class NBTSerialisation
 		protected abstract FIELD fromNBT(NBT nbt);
 
 		protected abstract NBT toNBT(FIELD field);
+	}
+
+	public static class TypeSerializationData<T extends ITypeNBTSerializable>
+	{
+		private final Class<T> baseType;
+		private HashMap<String, Supplier<T>> suppliersFromName = new HashMap<>();
+		private HashMap<Class<? extends T>, String> nameFromClass = new HashMap<>();
+
+		public TypeSerializationData(Class<T> baseType)
+		{
+			this.baseType = baseType;
+			nameToSerializers.put(baseType.getSimpleName(), this);
+		}
+
+		@SuppressWarnings("unchecked")
+		public void addSubType(Class<T> clazz)
+		{
+			try
+			{
+				//Get the constructor
+				Class<ITypeNBTSerializable> type = (Class<ITypeNBTSerializable>)clazz;
+				Constructor<ITypeNBTSerializable> constructor = type.getDeclaredConstructor();
+				constructor.setAccessible(true);
+
+				//Turn the public no-arg constructor into a Supplier
+				Supplier<ITypeNBTSerializable> supplier = () -> {
+					try
+					{
+						return constructor.newInstance();
+					} catch(Exception ignored)
+					{
+						return null;
+					}
+				};
+				try
+				{
+					//Ensure it works
+					supplier.get();
+
+					//Register the type
+					String name = clazz.getSimpleName();
+					nameFromClass.put(clazz, name);
+					suppliersFromName.put(name, (Supplier<T>)supplier);
+					nameToSerializers.put(name, this);
+					IILogger.debug("Registered NBT polymorphic type \""+name+"\" -> "+clazz.getName());
+				} catch(Throwable e)
+				{
+					throw new RuntimeException("Could not instantiate type \""+clazz.getName()+"\"");
+				}
+			} catch(Exception e)
+			{
+				IILogger.error("Could not find no-arg constructor for type \""+clazz.getName()+"\"", e);
+			}
+		}
+
+		@Nonnull
+		public NBTTagCompound serialize(T type)
+		{
+			if(type==null)
+				return new NBTTagCompound();
+
+			NBTTagCompound nbt = new NBTTagCompound();
+			String typeId = nameFromClass.get(type.getClass());
+			if(typeId==null)
+			{
+				IILogger.error("Unrecognized NBT polymorphic type \""+type.getClass().getName()+"\"");
+				return nbt;
+			}
+
+			nbt.setString("type", typeId);
+			nbt.setTag("value", type.serializeNBT());
+			return nbt;
+		}
+
+		@Nullable
+		public T deserialize(NBTTagCompound from)
+		{
+			String typeId = from.getString("type");
+			if(typeId.isEmpty()||"null".equals(typeId))
+				return null;
+			Supplier<T> supplier = suppliersFromName.get(typeId);
+			if(supplier==null)
+			{
+				IILogger.error("Unknown ITypeNBTSerializable type \""+typeId+"\".");
+				return null;
+			}
+
+			T instance = supplier.get();
+			if(instance==null)
+			{
+				IILogger.error("Failed to instantiate ITypeNBTSerializable type \""+typeId+"\".");
+				return null;
+			}
+
+			NBTTagCompound value = from.getCompoundTag("value");
+			instance.deserializeNBT(value);
+			return instance;
+		}
 	}
 }

@@ -49,7 +49,7 @@ public class AmmoComponentTracerPowder extends AmmoComponent
 	{
 		IIColor color = nbt.hasKey(ItemIITracerPowder.NBT_TRACER_COLOUR)?IIColor.fromPackedRGB(nbt.getInteger(ItemIITracerPowder.NBT_TRACER_COLOUR)): IIColor.WHITE;
 		ParticleRegistry.spawnParticle("ammo/tracer", ammo.getPositionVector(), IIEntityUtils.getEntityMotion(ammo),
-						new Vector2f((float)Math.toRadians(ammo.rotationYaw), (float)Math.toRadians(ammo.rotationPitch-90)))
+						new Vector2f((float)Math.toRadians(ammo.rotationYaw), (float)Math.toRadians(ammo.rotationPitch+90)))
 				.withProperty(ParticleProperties.COLOR, color)
 				.withProperty(ParticleProperties.SIZE, ammo.getAmmoType().getCaliber()/8f)
 				.withProperty(ParticleProperties.MAX_LIFETIME, 20);

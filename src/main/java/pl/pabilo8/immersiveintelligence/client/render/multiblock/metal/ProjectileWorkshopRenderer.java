@@ -5,6 +5,7 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraftforge.client.model.obj.OBJModel;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
+import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeTechTree;
 import pl.pabilo8.immersiveintelligence.client.util.amt.animation.IIAnimationCompiledMap;
 import pl.pabilo8.immersiveintelligence.client.util.amt.animation.IIBooleanAnimation;
 import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTModel;
@@ -96,5 +97,8 @@ public class ProjectileWorkshopRenderer extends IIMultiblockRenderer<TileEntityP
 
 		coreWorkshop = IIAnimationCompiledMap.create(this.model, ResLoc.of(IIReference.RES_II, "projectile_workshop/production_core"));
 		coreFiller = IIAnimationCompiledMap.create(this.model, ResLoc.of(IIReference.RES_II, "projectile_workshop/production_filling"));
+
+		UpgradeTechTree.getTreeFor(TileEntityProjectileWorkshop.class)
+				.withBaseModelLocation(IIReference.RES_BLOCK_MODEL.with("multiblock/projectile_workshop/projectile_workshop.obj"));
 	}
 }

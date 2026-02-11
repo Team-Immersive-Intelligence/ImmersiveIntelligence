@@ -2,13 +2,12 @@ package pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.in
 
 import blusunrize.immersiveengineering.api.energy.wires.WireType;
 import com.google.common.collect.ImmutableSet;
-import net.minecraft.nbt.NBTTagCompound;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.AdvancedInserter;
 
 import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Set;
-import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -16,7 +15,7 @@ import java.util.function.Function;
  */
 public class TileEntityAdvancedInserter extends TileEntityInserter
 {
-	public static final HashMap<String, Function<NBTTagCompound, InserterTask>> TASKS = new HashMap<>();
+	public static final HashMap<String, Supplier<InserterTask>> TASKS = new HashMap<>();
 	private static final Set<String> WIRES = ImmutableSet.of(WireType.LV_CATEGORY, WireType.MV_CATEGORY);
 
 	static
@@ -60,7 +59,7 @@ public class TileEntityAdvancedInserter extends TileEntityInserter
 
 	@Nonnull
 	@Override
-	public HashMap<String, Function<NBTTagCompound, InserterTask>> getAvailableTasks()
+	public HashMap<String, Supplier<InserterTask>> getAvailableTasks()
 	{
 		return TASKS;
 	}

@@ -1,6 +1,7 @@
 package pl.pabilo8.immersiveintelligence.client.gui.block.emplacement;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoPanel;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoMapDisplay;
@@ -33,6 +34,13 @@ public class GuiEmplacementPageConfig extends GuiEmplacement
 		super.onInit();
 
 		BlockPos pos = new BlockPos(tile.getWeaponCenter());
+		AxisAlignedBB sightRange = new AxisAlignedBB(pos), fireRange = new AxisAlignedBB(pos);
+		if(tile.currentWeapon!=null)
+		{
+			sightRange = tile.currentWeapon.getDetectionRangeBB();
+			fireRange = tile.currentWeapon.getAttackRangeBB();
+		}
+
 		addComponents(
 				new DecoPanel(0, 8)
 						.withSize(128, 128)
@@ -50,6 +58,15 @@ public class GuiEmplacementPageConfig extends GuiEmplacement
 						.withColorMapper(DecoMapDefaultColorMapper.TERRAIN)
 						.withPanning(false)
 						.withZoomScrolling(0.5, 2)
+						//Sight Range
+						.withLayer("sight")
+						.addRectangle((int)sightRange.minX, (int)sightRange.minZ, (int)sightRange.maxX, (int)sightRange.maxZ, IIColor.MC_BLUE)
+						.build()
+						//Fire Range
+						.withLayer("fire")
+						.addRectangle((int)fireRange.minX, (int)fireRange.minZ, (int)fireRange.maxX, (int)fireRange.maxZ, IIColor.MC_RED)
+						.build()
+						//Markers
 						.withScanner(new BlockTypeScanner("flagpoles")
 								.withMultiblockFilter(TileEntityFlagpole.class)
 								.withMarkerStyle(DecoTextures.MAP_MARKER_FLAGPOLE, 8, IIColor.WHITE)

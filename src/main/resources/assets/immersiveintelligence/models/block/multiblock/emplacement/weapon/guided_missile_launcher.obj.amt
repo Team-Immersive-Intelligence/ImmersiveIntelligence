@@ -1,0 +1,40 @@
+{
+  "origins": {
+    "weapon": [8, -28, 24],
+    "platform3": [18, -38, 24],
+    "platform2": [17.5, -30, 23.5],
+    "platform": [17, -23.75, 23],
+    "gun": [19.50002, -20.17097, 23.04164],
+    "rocket": [17.00026, -17.05162, 27.99974],
+    "coil": [12.75677, -20.91763, 32],
+    "turen": [0.85, -24.4, 20.13333],
+    "turntable": [5, -41, 36],
+    "lower": [5, -37, 36],
+    "upper": [5, -23.5, 36],
+    "pickerLeft": [7, -13, 36],
+    "pickerLeft2": [7, -10, 36],
+    "pickerRight": [3, -13, 36],
+    "pickerRight2": [3, -10, 36],
+    "door2": [12.07143, -28.5, 23.71429],
+    "door1": [22.07143, -28.5, 23.71429]
+  },
+  "hierarchy": {
+    "weapon": "platform6",
+    "platform3": "weapon",
+    "platform2": "platform3",
+    "platform": "platform2",
+    "gun": "platform",
+    "rocket": "gun",
+    "coil": "gun",
+    "turen": "weapon",
+    "turntable": "weapon",
+    "lower": "turntable",
+    "upper": "lower",
+    "pickerLeft": "upper",
+    "pickerLeft2": "pickerLeft",
+    "pickerRight": "upper",
+    "pickerRight2": "pickerRight",
+    "door2": "weapon",
+    "door1": "weapon"
+  }
+}

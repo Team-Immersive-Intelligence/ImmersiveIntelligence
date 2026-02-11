@@ -12,12 +12,13 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoButton;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoCheckbox;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoDropdown;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoList;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoLabel;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoEntryPanelBuilder;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoIngredientStackPickerPanel;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoIngredientStackPickerPanel.PickerPanelMode;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoPanel;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoTaskJobList;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoTaskJobList.ListMode;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoBar;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoFluidTank;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoItemStackDisplay;
@@ -31,14 +32,16 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityPacker;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerPacker;
-import pl.pabilo8.immersiveintelligence.common.util.*;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
+import pl.pabilo8.immersiveintelligence.common.util.ILocalizedEnum;
+import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyCollection;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 
 import javax.annotation.Nullable;
-import java.util.stream.Collectors;
 
 import static pl.pabilo8.immersiveintelligence.common.util.IIReference.GUI_LABEL_KEY;
 import static pl.pabilo8.immersiveintelligence.common.util.IIReference.RES_II;
@@ -56,13 +59,14 @@ public class GuiPacker extends DecoGui<TileEntityPacker, ContainerPacker>
 	public static ResourceLocation ICON_TASKS = ResLoc.of(RES_II, "gui/tab_icons/tasks");
 	@DecoResource
 	public static ResourceLocation ICON_LABELER = ResLoc.of(RES_II, "gui/upgrade/packer_naming");
+
 	@SyncNBT(events = SyncEvents.TILE_CLIENT_MESSAGE)
 	public EasyCollection<PackerTask, NBTTagCompound> tasks;
 	@SyncNBT
 	public ListMode mode = ListMode.TASKS;
-	private PackerActionType actionType;
 
-	private DecoList<PackerTask> list;
+	private PackerActionType actionType;
+	private DecoTaskJobList<PackerTask> taskJobList;
 	private DecoPanel panelDetails, panelResources;
 	private DecoCheckbox expiresCheckbox;
 	private DecoTextField expiresTextField;
@@ -114,93 +118,47 @@ public class GuiPacker extends DecoGui<TileEntityPacker, ContainerPacker>
 			addLinkTab(IIGUI.PACKER_LABELER, ICON_LABELER, "labeler_module");
 		}
 
-		//Mode tabs
-		addComponents(
-				new DecoButton(0, 4)
-						.withSize(54, 18)
-						.withBackground(DecoTextures.RES_TEXTURES_DECO_COMPONENT_TAB_VERTICAL)
-						.withText(GUI_LABEL_KEY+"task_editor.tasks")
-						.withTranslatedTooltip(GUI_LABEL_KEY+"task_editor.tasks.tooltip")
-						.withOnLMBPressed(() -> {
-							mode = ListMode.TASKS;
-							refreshListEntries();
-						}),
-				new DecoButton(54, 4)
-						.withSize(54, 18)
-						.withBackground(DecoTextures.RES_TEXTURES_DECO_COMPONENT_TAB_VERTICAL)
-						.withText(GUI_LABEL_KEY+"task_editor.jobs")
-						.withTranslatedTooltip(GUI_LABEL_KEY+"task_editor.jobs.tooltip")
-						.withOnLMBPressed(() -> {
-							mode = ListMode.JOBS;
-							refreshListEntries();
-						})
-		);
-
-		//Task list (moved down to make room for mode tabs)
-		list = addComponent(
-				new DecoList<PackerTask>(0, 8+18-4)
-						.withSize(108, 116+12-8)
-						.withEntries(tasks)
-						.withDisplayFunction(new DecoEntryPanelBuilder<PackerTask>()
-								.withBackground(DecoTextures.GUI_BG_PAPER)
-								.withBackgroundMask(DecoTextures.RES_TEXTURES_DECO_TEMPLATE_TICKET)
-								.withComponent("icon", new DecoItemStackDisplay(3, 2).withSize(16, 16))
-								.withLabel("wild", new DecoLabel(fontRenderer, 3, 2)
-										.withSize(16, 16)
-										.withAlign(DecoAlignment.CENTER)
-										.withRawText("*")
-										.withTextColor(IIReference.COLOR_IMMERSIVE_ORANGE)
-								)
-								.withLabel("type", new DecoLabel(fontRenderer, 23, 2)
-										.withSize(59, 16)
-										.withAlign(DecoAlignment.LEFT)
-								)
-								.withElementApplyMethod((task, panel) -> {
-									panel.label("type").withText(task.actionType.getFullLocaleKey()+(task.unpack?".in": ".out"));
-
-									IngredientStack ing = task.stack;
-									boolean wildcard = ing==null||"*".equals(ing.oreName);
-									panel.label("wild").visible = wildcard;
-
-									DecoItemStackDisplay icon = panel.component("icon", DecoItemStackDisplay.class);
-									icon.visible = icon.enabled = !wildcard;
-									icon.withStack(!wildcard?ing.getExampleStack(): ItemStack.EMPTY);
-								})
+		// Replace mode tabs + list + action buttons with a single component
+		addComponent((taskJobList = new DecoTaskJobList<>(0, 0))
+				.withSize(108, 116+12-8)
+				.withEntries(tasks)
+				.withIsJobPredicate(t -> t.expirationAmount!=-1)
+				.withModeHandling(mode, m -> mode = m)
+				.withBlankTaskSupplier(() -> {
+					PackerTask created = new PackerTask(PackerHandler.PackerPutMode.ALL_POSSIBLE, actionType, new IngredientStack("*"));
+					created.expirationAmount = (taskJobList.getMode()==ListMode.TASKS)?-1: 1;
+					return created;
+				})
+				.withOnSelectedChanged(task -> {
+					selected = task;
+					refreshDetails();
+				})
+				.withDisplayFunction(new DecoEntryPanelBuilder<PackerTask>()
+						.withBackground(DecoTextures.GUI_BG_PAPER)
+						.withBackgroundMask(DecoTextures.RES_TEXTURES_DECO_TEMPLATE_TICKET)
+						.withComponent("icon", new DecoItemStackDisplay(3, 2).withSize(16, 16))
+						.withLabel("wild", new DecoLabel(fontRenderer, 3, 2)
+								.withSize(16, 16)
+								.withAlign(DecoAlignment.CENTER)
+								.withRawText("*")
+								.withTextColor(IIReference.COLOR_IMMERSIVE_ORANGE)
 						)
-						.withOnEntryClicked(task -> {
-							selected = task;
-							refreshDetails();
-						})
-		);
-		//Apply mode filtering
-		refreshListEntries();
+						.withLabel("type", new DecoLabel(fontRenderer, 23, 2)
+								.withSize(59, 16)
+								.withAlign(DecoAlignment.LEFT)
+						)
+						.withElementApplyMethod((task, panel) -> {
+							panel.label("type").withText(task.actionType.getFullLocaleKey()+(task.unpack?".in": ".out"));
 
-		//Action buttons
-		addComponents(
-				new DecoButton(24-21, 20+116+4+3)
-						.withTemplate(DecoGuiUtils.LIST_BUTTON_ADD_TEMPLATE)
-						.withBackground(DecoTextures.RES_TEXTURES_DECO_COMPONENT_BUTTON)
-						.withBackgroundColor(IIColor.fromHex("efefef"))
-						.withSize(25, 14)
-						.withOnLMBPressed(this::onAddPressed),
-				new DecoButton(24+25+1-21, 20+116+4+3)
-						.withTemplate(DecoGuiUtils.LIST_BUTTON_REMOVE_TEMPLATE)
-						.withBackground(DecoTextures.RES_TEXTURES_DECO_COMPONENT_BUTTON)
-						.withBackgroundColor(IIColor.fromHex("efefef"))
-						.withSize(25, 14)
-						.withOnLMBPressed(this::onRemovePressed),
-				new DecoButton(24+2*(25+1)-21, 20+116+4+3)
-						.withTemplate(DecoGuiUtils.LIST_BUTTON_DUPLICATE_TEMPLATE)
-						.withBackground(DecoTextures.RES_TEXTURES_DECO_COMPONENT_BUTTON)
-						.withBackgroundColor(IIColor.fromHex("efefef"))
-						.withSize(25, 14)
-						.withOnLMBPressed(this::onDuplicatePressed),
-				new DecoButton(24+3*(25+1)-21, 20+116+4+3)
-						.withTemplate(DecoGuiUtils.LIST_BUTTON_CLEAR_TEMPLATE)
-						.withBackground(DecoTextures.RES_TEXTURES_DECO_COMPONENT_BUTTON)
-						.withBackgroundColor(IIColor.fromHex("efefef"))
-						.withSize(25, 14)
-						.withOnLMBPressed(this::onClearPressed)
+							IngredientStack ing = task.stack;
+							boolean wildcard = ing==null||"*".equals(ing.oreName);
+							panel.label("wild").visible = wildcard;
+
+							DecoItemStackDisplay icon = panel.component("icon", DecoItemStackDisplay.class);
+							icon.visible = icon.enabled = !wildcard;
+							icon.withStack(!wildcard?ing.getExampleStack(): ItemStack.EMPTY);
+						})
+				)
 		);
 
 		//Details panel
@@ -290,23 +248,6 @@ public class GuiPacker extends DecoGui<TileEntityPacker, ContainerPacker>
 						});
 			}
 			break;
-		}
-	}
-
-	private void refreshListEntries()
-	{
-		//tasks: expirationAmount == -1
-		list.withEntries(tasks.stream()
-				.filter(t -> (mode==ListMode.TASKS)==(t.expirationAmount==-1))
-				.collect(Collectors.toList())
-		);
-
-		//if selection moved out of current view, clear it
-		if(selected!=null)
-		{
-			boolean inView = (mode==ListMode.TASKS)==(selected.expirationAmount==-1);
-			if(!inView)
-				selected = null;
 		}
 	}
 
@@ -441,8 +382,6 @@ public class GuiPacker extends DecoGui<TileEntityPacker, ContainerPacker>
 
 		panelContainerFilterPicker.visible = panelContainerFilterPicker.enabled = false;
 		panelStackFilterPicker.visible = panelStackFilterPicker.enabled = true;
-
-		refreshListEntries();
 	}
 
 	private void updateExpiresFields()
@@ -454,59 +393,6 @@ public class GuiPacker extends DecoGui<TileEntityPacker, ContainerPacker>
 		if(expiresTextField!=null)
 			expiresTextField.withText(selected.expirationAmount==-1?"": String.valueOf(selected.expirationAmount));
 
-	}
-
-	// --- Buttons ---
-
-	private void onAddPressed()
-	{
-		PackerTask created = new PackerTask(PackerHandler.PackerPutMode.ALL_POSSIBLE, actionType, new IngredientStack("*"));
-		//set new jobs default to be expirable (1 time) depending on mode
-		created.expirationAmount = (mode==ListMode.TASKS)?-1: 1;
-		tasks.add(created);
-		selected = created;
-		refreshListEntries();
-		refreshDetails();
-	}
-
-	private void onRemovePressed()
-	{
-		if(selected==null)
-			return;
-		tasks.remove(selected);
-		selected = null;
-		list.withEntries(tasks);
-		refreshListEntries();
-		refreshDetails();
-	}
-
-	private void onDuplicatePressed()
-	{
-		if(selected==null)
-			return;
-		PackerTask copy = new PackerTask(selected.serializeNBT());
-		tasks.add(selected = copy);
-
-		//Ensure duplicate is visible in current mode, otherwise switch mode to match it
-		mode = (copy.expirationAmount==-1)?ListMode.TASKS: ListMode.JOBS;
-
-		refreshListEntries();
-		refreshDetails();
-	}
-
-	private void onClearPressed()
-	{
-		//Clear only current mode
-		tasks.removeIf(t -> (mode==ListMode.TASKS)==(t.expirationAmount==-1));
-		selected = null;
-		refreshListEntries();
-		refreshDetails();
-	}
-
-	public enum ListMode implements ISerializableEnum
-	{
-		TASKS,
-		JOBS;
 	}
 
 	public enum PackingDirection implements ILocalizedEnum

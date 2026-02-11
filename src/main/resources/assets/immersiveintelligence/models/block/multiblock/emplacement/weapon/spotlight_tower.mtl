@@ -1,0 +1,14 @@
+# Made by Pabilo8 with Blockbench
+
+newmtl common_concrete_volks
+map_Kd immersiveintelligence:blocks/common/common_concrete_volks
+newmtl common_steel
+map_Kd immersiveintelligence:blocks/common/common_steel
+newmtl common_rough_steel
+map_Kd immersiveintelligence:blocks/common/common_rough_steel
+newmtl common_cable_and_pipe
+map_Kd immersiveintelligence:blocks/common/common_cable_and_pipe
+newmtl common_thingies
+map_Kd immersiveintelligence:blocks/common/common_thingies
+newmtl weapon_spotlight_tower
+map_Kd immersiveintelligence:blocks/multiblock/fortification/weapon_spotlight_tower

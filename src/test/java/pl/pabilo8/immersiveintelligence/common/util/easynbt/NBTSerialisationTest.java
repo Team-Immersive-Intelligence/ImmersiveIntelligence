@@ -30,6 +30,8 @@ public class NBTSerialisationTest
 
 		//Find all fields annotated with @SyncNBT
 		Set<Field> syncNBTFields = reflections.getFieldsAnnotatedWith(SyncNBT.class);
+		NBTSerialisation.preInit();
+		NBTSerialisation.postInit();
 
 		//Get access to the serializerRegistry field using reflection
 		Field serializerRegistryField = NBTSerialisation.class.getDeclaredField("serializerRegistry");

@@ -1,6 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common.util.easynbt;
 
-import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.INBTSerializable;
 
 /**
@@ -12,7 +12,7 @@ import net.minecraftforge.common.util.INBTSerializable;
  * @implNote The interface intentionally does NOT require a factory method (value can be null), all instantiation responsibility is handled by NBTSerialisation's registry.
  * @since 14.09.2025
  */
-public interface ITypeNBTSerializable<NBT extends NBTBase> extends INBTSerializable<NBT>
+public interface ITypeNBTSerializable extends INBTSerializable<NBTTagCompound>
 {
 
 }

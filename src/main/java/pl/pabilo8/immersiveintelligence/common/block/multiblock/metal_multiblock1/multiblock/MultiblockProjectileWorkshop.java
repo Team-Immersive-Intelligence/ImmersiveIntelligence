@@ -3,6 +3,8 @@ package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multibloc
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3i;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeTechTree;
+import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeUtils.UpgradeTier;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.BlockIIMetalMultiblock1.MetalMultiblocks1;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityProjectileWorkshop;
@@ -18,6 +20,8 @@ public class MultiblockProjectileWorkshop extends MultiblockStuctureBase<TileEnt
 		super(new ResourceLocation(ImmersiveIntelligence.MODID, "multiblocks/projectile_workshop"));
 		offset = new Vec3i(2, 1, 0);
 		INSTANCE = this;
+		UpgradeTechTree.getTreeFor(TileEntityProjectileWorkshop.class)
+				.withUpgrade(IIContent.UPGRADE_CORE_FILLER, UpgradeTier.TIER_1);
 	}
 
 	@Override

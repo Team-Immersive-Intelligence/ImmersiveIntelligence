@@ -9,7 +9,6 @@ import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.entity.item.EntityMinecartEmpty;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.Tuple;
@@ -36,8 +35,8 @@ import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.*;
-import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -45,7 +44,7 @@ import java.util.function.Predicate;
  */
 public class TileEntityInserter extends TileEntityInserterBase
 {
-	public static final HashMap<String, Function<NBTTagCompound, InserterTask>> TASKS = new LinkedHashMap<>();
+	public static final HashMap<String, Supplier<InserterTask>> TASKS = new LinkedHashMap<>();
 	private static final Set<String> WIRES = ImmutableSet.of(WireType.LV_CATEGORY, WireType.MV_CATEGORY);
 
 	static
@@ -89,7 +88,7 @@ public class TileEntityInserter extends TileEntityInserterBase
 
 	@Nonnull
 	@Override
-	public HashMap<String, Function<NBTTagCompound, InserterTask>> getAvailableTasks()
+	public HashMap<String, Supplier<InserterTask>> getAvailableTasks()
 	{
 		return TASKS;
 	}
@@ -133,8 +132,8 @@ public class TileEntityInserter extends TileEntityInserterBase
 				{
 					if(packet.has('a')&&TASKS.containsKey(a.toString()))
 					{
-						Function<NBTTagCompound, InserterTask> fun = TASKS.get(a.toString());
-						InserterTask task = fun.apply(new NBTTagCompound());
+						Supplier<InserterTask> supplier = TASKS.get(a.toString());
+						InserterTask task = supplier.get();
 
 						//input facing, default null
 						if(packet.has('i'))
@@ -245,9 +244,9 @@ public class TileEntityInserter extends TileEntityInserterBase
 	 */
 	public static class InserterTaskItem extends InserterTask
 	{
-		public InserterTaskItem(NBTTagCompound nbt)
+		public InserterTaskItem()
 		{
-			super(nbt);
+			super();
 		}
 
 		@Override
@@ -383,9 +382,9 @@ public class TileEntityInserter extends TileEntityInserterBase
 	 */
 	public static class InserterTaskPlaceBlock extends InserterTaskItem
 	{
-		public InserterTaskPlaceBlock(NBTTagCompound nbt)
+		public InserterTaskPlaceBlock()
 		{
-			super(nbt);
+			super();
 		}
 
 		@Override
@@ -460,9 +459,9 @@ public class TileEntityInserter extends TileEntityInserterBase
 	 */
 	public static class InserterTaskFromMinecart extends InserterTaskItem
 	{
-		public InserterTaskFromMinecart(NBTTagCompound nbt)
+		public InserterTaskFromMinecart()
 		{
-			super(nbt);
+			super();
 		}
 
 		@Override
@@ -536,9 +535,9 @@ public class TileEntityInserter extends TileEntityInserterBase
 	 */
 	public static class InserterTaskIntoMinecart extends InserterTaskItem
 	{
-		public InserterTaskIntoMinecart(NBTTagCompound nbt)
+		public InserterTaskIntoMinecart()
 		{
-			super(nbt);
+			super();
 		}
 
 		@Override

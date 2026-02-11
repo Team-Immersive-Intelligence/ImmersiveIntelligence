@@ -11,6 +11,8 @@ import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeUtils.UpgradeTier;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.BlockIIMetalMultiblock1.MetalMultiblocks1;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.task.*;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.NBTSerialisation;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
 
@@ -65,6 +67,13 @@ public class MultiblockEmplacement extends MultiblockStuctureBase<TileEntityEmpl
 
 				//Weapons lockout
 				.withLockOut(UpgradePurpose.PRIMARY_WEAPON);
+
+		//Register fire mission classes for serialization
+		NBTSerialisation.registerPolimorphicTypeClass(EmplacementFireMissionCustom.class);
+		NBTSerialisation.registerPolimorphicTypeClass(EmplacementFireMissionEntities.class);
+		NBTSerialisation.registerPolimorphicTypeClass(EmplacementFireMissionEntity.class);
+		NBTSerialisation.registerPolimorphicTypeClass(EmplacementFireMissionPosition.class);
+		NBTSerialisation.registerPolimorphicTypeClass(EmplacementFireMissionShells.class);
 	}
 
 	@Override

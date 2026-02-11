@@ -75,7 +75,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 
 	@SyncNBT(name = "tasks", events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_CUSTOM1})
 	public EmplacementTaskManager taskManager = new EmplacementTaskManager();
-	@SyncNBT(nullable = true, events = SyncEvents.ENTITY_CUSTOM2)
+	@SyncNBT(nullable = true, events = SyncEvents.TILE_CUSTOM2)
 	public EmplacementWeapon currentWeapon;
 	@SyncNBT(events = SyncEvents.TILE_DAMAGED)
 	public MultiblockHealth baseHealth;
@@ -116,6 +116,12 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 	{
 		door.setState(getRedstoneAtPos(0));
 		door.update();
+
+		//Handle targeting
+
+		//Handle weapon
+		if(currentWeapon!=null)
+			this.currentWeapon.onUpdate(this);
 	}
 
 	public List<BlockPos> getAllBlocks()

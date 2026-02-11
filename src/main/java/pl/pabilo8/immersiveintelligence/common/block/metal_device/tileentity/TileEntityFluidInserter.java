@@ -36,7 +36,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * Fluid variant of the inserter.
@@ -48,7 +48,7 @@ import java.util.function.Function;
  */
 public class TileEntityFluidInserter extends TileEntityInserterBase
 {
-	public static final HashMap<String, Function<NBTTagCompound, InserterTask>> TASKS = new LinkedHashMap<>();
+	public static final HashMap<String, Supplier<InserterTask>> TASKS = new LinkedHashMap<>();
 	private static final Set<String> WIRES = ImmutableSet.of(WireType.LV_CATEGORY, WireType.MV_CATEGORY);
 
 	static
@@ -96,7 +96,7 @@ public class TileEntityFluidInserter extends TileEntityInserterBase
 
 	@Nonnull
 	@Override
-	public HashMap<String, Function<NBTTagCompound, InserterTask>> getAvailableTasks()
+	public HashMap<String, Supplier<InserterTask>> getAvailableTasks()
 	{
 		return TASKS;
 	}
@@ -178,7 +178,7 @@ public class TileEntityFluidInserter extends TileEntityInserterBase
 				case "add":
 				{
 					if(packet.has('a')&&"fluid".equals(a.toString()))
-						tasks.add(new InserterTaskFluid(new NBTTagCompound()));
+						tasks.add(new InserterTaskFluid());
 				}
 				break;
 				case "remove":
@@ -217,9 +217,9 @@ public class TileEntityFluidInserter extends TileEntityInserterBase
 	 */
 	public static class InserterTaskFluid extends InserterTask
 	{
-		public InserterTaskFluid(NBTTagCompound nbt)
+		public InserterTaskFluid()
 		{
-			super(nbt);
+			super();
 		}
 
 		@Override
@@ -252,10 +252,10 @@ public class TileEntityFluidInserter extends TileEntityInserterBase
 				return false;
 
 			//Perform the action
+			int toMove = getAmountToBeTaken(self);
 			if(in)
 			{
 				//Any fluid
-				int toMove = getAmountToBeTaken(self);
 				FluidStack drained;
 				if("*".equals(stack.oreName))
 					drained = handler.drain(toMove, false);
@@ -269,10 +269,11 @@ public class TileEntityFluidInserter extends TileEntityInserterBase
 			}
 			else
 			{
-				FluidStack offer = this.stack.fluid.copy();
-				offer.amount = getAmountToBeTaken(self);
+				FluidStack offer = this.stack.fluid==null?null: this.stack.fluid.copy();
+				if(offer!=null)
+					offer.amount = toMove;
 				int filled = handler.fill(offer, false);
-				return filled > 0&&(!this.strictAmount||filled==offer.amount);
+				return filled > 0&&(!this.strictAmount||filled==toMove);
 			}
 		}
 
@@ -363,9 +364,15 @@ public class TileEntityFluidInserter extends TileEntityInserterBase
 	 */
 	public static class InserterTaskMilkCow extends InserterTaskFluid
 	{
-		public InserterTaskMilkCow(NBTTagCompound nbt)
+		public InserterTaskMilkCow()
 		{
-			super(nbt);
+			super();
+		}
+
+		@Override
+		public void deserializeNBT(NBTTagCompound nbt)
+		{
+			super.deserializeNBT(nbt);
 			this.stack = new IngredientStack(FluidRegistry.getFluidStack("milk", FluidInserter.cowMilkAmount));
 			this.stack.inputSize = FluidInserter.cowMilkAmount;
 		}
@@ -421,9 +428,15 @@ public class TileEntityFluidInserter extends TileEntityInserterBase
 	 */
 	public static class InserterTaskLatexCollectorDrain extends InserterTaskFluid
 	{
-		public InserterTaskLatexCollectorDrain(NBTTagCompound nbt)
+		public InserterTaskLatexCollectorDrain()
 		{
-			super(nbt);
+			super();
+		}
+
+		@Override
+		public void deserializeNBT(NBTTagCompound nbt)
+		{
+			super.deserializeNBT(nbt);
 			this.stack = new IngredientStack(new FluidStack(IIContent.fluidLatex, 10));
 			this.stack.inputSize = 10;
 		}

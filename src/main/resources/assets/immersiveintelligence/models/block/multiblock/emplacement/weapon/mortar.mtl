@@ -1,0 +1,16 @@
+# Made by Pabilo8 with Blockbench
+
+newmtl common_rough_steel
+map_Kd immersiveintelligence:blocks/common/common_rough_steel
+newmtl common_thingies
+map_Kd immersiveintelligence:blocks/common/common_thingies
+newmtl common_steel_norivets
+map_Kd immersiveintelligence:blocks/common/common_steel_norivets
+newmtl common_steel
+map_Kd immersiveintelligence:blocks/common/common_steel
+newmtl weapon_mortar
+map_Kd immersiveintelligence:blocks/multiblock/fortification/weapon_mortar
+newmtl common_copper_cable
+map_Kd immersiveintelligence:blocks/common/common_copper_cable
+newmtl metal
+map_Kd immersiveintelligence:blocks/small_crate/metal

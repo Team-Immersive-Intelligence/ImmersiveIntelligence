@@ -1,0 +1,15 @@
+{
+  "origins": {
+    "chemthrower": [8, -44, 24],
+    "gun": [8, -29.5, 17.5],
+    "stage2": [8, -29.5, 2.5],
+    "stage3": [8, -29.5, -13.25],
+    "base": [24, -68, 8]
+  },
+  "hierarchy": {
+    "chemthrower": "base",
+    "gun": "chemthrower",
+    "stage2": "gun",
+    "stage3": "stage2"
+  }
+}

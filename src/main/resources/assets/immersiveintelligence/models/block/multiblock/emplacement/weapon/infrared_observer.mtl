@@ -1,0 +1,14 @@
+# Made by Pabilo8 with Blockbench
+
+newmtl infrared_observer
+map_Kd immersiveintelligence:blocks/multiblock/fortification/weapon_infrared_observer
+newmtl common_copper_cable
+map_Kd immersiveintelligence:blocks/common/common_copper_cable
+newmtl common_rough_steel
+map_Kd immersiveintelligence:blocks/common/common_rough_steel
+newmtl common_steel
+map_Kd immersiveintelligence:blocks/common/common_steel
+newmtl common_steel_norivets
+map_Kd immersiveintelligence:blocks/common/common_steel_norivets
+newmtl inserter_gray
+map_Kd immersiveintelligence:blocks/metal_device/inserter/inserter_gray

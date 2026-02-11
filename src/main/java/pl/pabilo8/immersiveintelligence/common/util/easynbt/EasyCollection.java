@@ -200,4 +200,11 @@ public class EasyCollection<T extends INBTSerializable<NBT>, NBT extends NBTBase
 		collection.deserializeNBT(this.serializeNBT());
 		return collection;
 	}
+
+	public T copyEntry(@Nonnull T existing)
+	{
+		T t = constructor.get();
+		t.deserializeNBT(existing.serializeNBT());
+		return t;
+	}
 }

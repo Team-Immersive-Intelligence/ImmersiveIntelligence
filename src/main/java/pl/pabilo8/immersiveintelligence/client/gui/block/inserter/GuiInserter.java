@@ -4,17 +4,16 @@ import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoButton;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoDropdown;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoElementDisplays;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoList;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoLabel;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoEntryPanelBuilder;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoIngredientStackPickerPanel;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoPanel;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoTaskJobList;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoTaskJobList.ListMode;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoBar;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoItemStackDisplay;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.text.DecoTextField;
@@ -25,16 +24,16 @@ import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.inserter.TileEntityInserterBase;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.inserter.TileEntityInserterBase.InserterTask;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerInserter;
-import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyMultiTypeCollection;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.Optional;
-import java.util.function.Function;
-import java.util.stream.Collectors;
+import java.util.function.Supplier;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -44,17 +43,12 @@ import java.util.stream.Collectors;
 @DecoTemplate(name = "inserter", category = DecoGuiCategory.DATA_TILE)
 public class GuiInserter extends DecoGui<TileEntityInserterBase, ContainerInserter>
 {
-	private static final String TASK_EDITOR_KEY = IIReference.GUI_LABEL_KEY+"task_editor.";
 	private static final String INSERTER_KEY = IIReference.GUI_LABEL_KEY+"inserter.";
 	private ListMode mode = ListMode.TASKS;
-	private DecoList<InserterTask> list;
+	private DecoTaskJobList<InserterTask> taskJobList;
 	private DecoPanel panelDetails;
-
-	/**
-	 * Local, editable copy of tasks (copied from tile on init).
-	 */
-	private final ArrayList<InserterTask> localTasks = new ArrayList<>();
-
+	@SyncNBT(events = SyncEvents.TILE_CLIENT_MESSAGE)
+	private EasyMultiTypeCollection<InserterTask> tasks;
 	@Nullable
 	private InserterTask selected;
 
@@ -62,12 +56,7 @@ public class GuiInserter extends DecoGui<TileEntityInserterBase, ContainerInsert
 	{
 		super(player, tile, IIGUI.INSERTER);
 		if(tile!=null)
-		{
-			//Deep copy tasks from tile to a local editable list
-			localTasks.clear();
-			for(InserterTask t : tile.getTasks())
-				localTasks.add(t.copy(tile));
-		}
+			tasks = tile.getTasks().clone();
 	}
 
 	@Override
@@ -85,100 +74,50 @@ public class GuiInserter extends DecoGui<TileEntityInserterBase, ContainerInsert
 				.withBox(DecoTextures.GUI_BG_STEEL, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_SQUARE, 108, 8+3, 120+16, 130+16-2)
 				.build();
 
-		//Mode tabs
-		addComponents(
-				new DecoButton(0, 8)
-						.withSize(54, 18)
-						.withBackground(DecoTextures.RES_TEXTURES_DECO_COMPONENT_TAB_VERTICAL)
-						.withText(TASK_EDITOR_KEY+"tasks")
-						.withTranslatedTooltip(TASK_EDITOR_KEY+"tasks.tooltip")
-						.withOnLMBPressed(() -> {
-							mode = ListMode.TASKS;
-							refreshListEntries();
-						}),
-				new DecoButton(54, 8)
-						.withSize(54, 18)
-						.withBackground(DecoTextures.RES_TEXTURES_DECO_COMPONENT_TAB_VERTICAL)
-						.withText(TASK_EDITOR_KEY+"jobs")
-						.withTranslatedTooltip(TASK_EDITOR_KEY+"jobs.tooltip")
-						.withOnLMBPressed(() -> {
-							mode = ListMode.JOBS;
-							refreshListEntries();
-						})
-		);
-
-		//Task list
-		list = addComponent(
-				new DecoList<InserterTask>(0, 8+18)
-						.withSize(108, 116)
-						.withDisplayFunction(new DecoEntryPanelBuilder<InserterTask>()
-								.withBackground(DecoTextures.GUI_BG_PAPER)
-								.withBackgroundMask(DecoTextures.RES_TEXTURES_DECO_TEMPLATE_TICKET)
-								.withComponent("icon", new DecoItemStackDisplay(3, 2).withSize(16, 16))
-								.withLabel("wild", new DecoLabel(fontRenderer, 3, 2)
-										.withSize(16, 16)
-										.withAlign(DecoAlignment.CENTER)
-										.withRawText("*")
-										.withTextColor(IIReference.COLOR_IMMERSIVE_ORANGE)
-								)
-								.withLabel("type", new DecoLabel(fontRenderer, 3+16+4, 2)
-										.withSize(96-3-16-6, 16)
-										.withAlign(DecoAlignment.LEFT)
-										.withRawText("task")
-								)
-								.withElementApplyMethod((task, panel) -> {
-									IngredientStack stack = task.stack;
-									panel.label("type").withText(INSERTER_KEY+"tasks."+task.getName());
-
-									boolean wildcard = isWildcard(stack);
-									panel.label("wild").visible = wildcard;
-
-									panel.component("icon", DecoItemStackDisplay.class).visible = panel.component("icon", DecoItemStackDisplay.class).enabled = !wildcard;
-									if(!wildcard)
-										panel.component("icon", DecoItemStackDisplay.class).withStack(stack.getExampleStack());
-									else
-										panel.component("icon", DecoItemStackDisplay.class).withStack(ItemStack.EMPTY);
-								})
+		addComponent((taskJobList = new DecoTaskJobList<>(0, 2))
+				.withSize(108, 116)
+				.withEntries(tasks)
+				.withIsJobPredicate(InserterTask::isJob)
+				.withModeHandling(mode, m -> mode = m)
+				.withBlankTaskSupplier(() -> {
+					Optional<Supplier<InserterTask>> taskSupplier = tile.getAvailableTasks().values().stream().findFirst();
+					if(!taskSupplier.isPresent())
+						return null;
+					InserterTask created = taskSupplier.get().get();
+					created.isJob = (taskJobList.getMode()==ListMode.JOBS);
+					return created;
+				})
+				.withOnSelectedChanged(task -> {
+					selected = task;
+					refreshDetails();
+				})
+				.withDisplayFunction(new DecoEntryPanelBuilder<InserterTask>()
+						.withBackground(DecoTextures.GUI_BG_PAPER)
+						.withBackgroundMask(DecoTextures.RES_TEXTURES_DECO_TEMPLATE_TICKET)
+						.withComponent("icon", new DecoItemStackDisplay(3, 2).withSize(16, 16))
+						.withLabel("wild", new DecoLabel(fontRenderer, 3, 2)
+								.withSize(16, 16)
+								.withAlign(DecoAlignment.CENTER)
+								.withRawText("*")
+								.withTextColor(IIReference.COLOR_IMMERSIVE_ORANGE)
 						)
-						.withOnEntryClicked(task -> {
-							selected = task;
-							refreshDetails();
-						})
-		);
-		//Add filtered list entries
-		refreshListEntries();
+						.withLabel("type", new DecoLabel(fontRenderer, 3+16+4, 2)
+								.withSize(96-3-16-6, 16)
+								.withAlign(DecoAlignment.LEFT)
+								.withRawText("task")
+						)
+						.withElementApplyMethod((task, panel) -> {
+							IngredientStack stack = task.stack;
+							panel.label("type").withText(INSERTER_KEY+"tasks."+task.getName());
 
-		//Action buttons
-		addComponents(
-				new DecoButton(24-21, 20+116+4+3)
-						.withTemplate(DecoGuiUtils.LIST_BUTTON_ADD_TEMPLATE)
-						.withBackground(DecoTextures.RES_TEXTURES_DECO_COMPONENT_BUTTON)
-						.withBackgroundColor(IIColor.fromHex("efefef"))
-						.withSize(25, 14)
-						.withOnLMBPressed(this::onAddPressed),
-				new DecoButton(24+25+1-21, 20+116+4+3)
-						.withTemplate(DecoGuiUtils.LIST_BUTTON_REMOVE_TEMPLATE)
-						.withBackground(DecoTextures.RES_TEXTURES_DECO_COMPONENT_BUTTON)
-						.withBackgroundColor(IIColor.fromHex("efefef"))
-						.withSize(25, 14)
-						.withOnLMBPressed(this::onRemovePressed),
-				new DecoButton(24+2*(25+1)-21, 20+116+4+3)
-						.withTemplate(DecoGuiUtils.LIST_BUTTON_DUPLICATE_TEMPLATE)
-						.withBackground(DecoTextures.RES_TEXTURES_DECO_COMPONENT_BUTTON)
-						.withBackgroundColor(IIColor.fromHex("efefef"))
-						.withSize(25, 14)
-						.withOnLMBPressed(this::onDuplicatePressed),
-				new DecoButton(24+3*(25+1)-21, 20+116+4+3)
-						.withTemplate(DecoGuiUtils.LIST_BUTTON_CLEAR_TEMPLATE)
-						.withBackground(DecoTextures.RES_TEXTURES_DECO_COMPONENT_BUTTON)
-						.withBackgroundColor(IIColor.fromHex("efefef"))
-						.withSize(25, 14)
-						.withOnLMBPressed(this::onClearPressed),
-				new DecoBar(128-16-8+2, 128+32-8+2+2)
-						.withSize(96, 12)
-						.withHorizontalMode(true)
-						.withTemplate(DecoGuiUtils.BAR_ELECTRIC_ENERGY_BASE)
-						.withLimits(0, tile.getEnergyCapacity(), () -> tile.energyStorage)
+							boolean wildcard = isWildcard(stack);
+							panel.label("wild").visible = wildcard;
+
+							DecoItemStackDisplay icon = panel.component("icon", DecoItemStackDisplay.class);
+							icon.visible = icon.enabled = !wildcard;
+							icon.withStack(!wildcard?stack.getExampleStack(): ItemStack.EMPTY);
+						})
+				)
 		);
 
 		//Details panel, hidden at first
@@ -186,16 +125,15 @@ public class GuiInserter extends DecoGui<TileEntityInserterBase, ContainerInsert
 				.withSize(120+16, 130+16+2)
 				.withBackground(DecoTextures.GUI_BG_PAPER)
 				.withBackgroundMask(DecoTextures.RES_TEXTURES_DECO_TEMPLATE_PAPER);
-		refreshDetails();
-	}
 
-	private void refreshListEntries()
-	{
-		//Only show tasks/jobs depending on mode
-		list.withEntries(localTasks.stream()
-				.filter(t -> mode==ListMode.TASKS^t.isJob())
-				.collect(Collectors.toList())
+		// Keep existing helper methods working
+		addComponent(new DecoBar(128-16-8+2, 128+32-8+2+2)
+				.withSize(96, 12)
+				.withHorizontalMode(true)
+				.withTemplate(DecoGuiUtils.BAR_ELECTRIC_ENERGY_BASE)
+				.withLimits(0, tile.getEnergyCapacity(), () -> tile.energyStorage)
 		);
+		refreshDetails();
 	}
 
 	private void refreshDetails()
@@ -218,10 +156,11 @@ public class GuiInserter extends DecoGui<TileEntityInserterBase, ContainerInsert
 				.withDisplayFunction(DecoElementDisplays.getSimpleTextDisplay(taskName ->
 						I18n.format(INSERTER_KEY+"tasks."+taskName)))
 				.withOnSelectedEntry((oldType, newType) -> {
-					int index = this.localTasks.indexOf(thisTask);
-					this.localTasks.remove(thisTask);
-					this.localTasks.add(index, this.selected = thisTask.copy(tile, newType));
-					this.refreshListEntries();
+					int index = this.tasks.indexOf(thisTask);
+					this.tasks.remove(thisTask);
+					this.selected = tile.getAvailableTasks().get(newType).get();
+					this.selected.deserializeNBT(thisTask.serializeNBT());
+					this.tasks.add(index, this.selected);
 					this.refreshDetails();
 				});
 
@@ -276,7 +215,7 @@ public class GuiInserter extends DecoGui<TileEntityInserterBase, ContainerInsert
 						.withFluidMode(thisTask.getName().contains("fluid"))
 						.withOnStackChanged(stack -> {
 							thisTask.stack = stack;
-							refreshListEntries();
+							//refreshDetails();
 						})
 						.withIngredientStack(thisTask.stack)
 						.withSize(panelDetails.width-6-2, 56)
@@ -289,54 +228,7 @@ public class GuiInserter extends DecoGui<TileEntityInserterBase, ContainerInsert
 	protected EasyNBT onSaveTileData()
 	{
 		return super.onSaveTileData()
-				.withList("tasks", InserterTask::toNBT, localTasks);
-	}
-
-	//--- Buttons ---
-
-	private void onAddPressed()
-	{
-		//Pick first available task type as default
-		Optional<Function<NBTTagCompound, InserterTask>> function =
-				tile.getAvailableTasks().values().stream().findFirst();
-
-		if(!function.isPresent())
-			return;
-		//Create the task
-		InserterTask created = function.get().apply(new NBTTagCompound());
-		created.isJob = mode==ListMode.JOBS;
-		localTasks.add(created);
-		selected = created;
-
-		refreshListEntries();
-		refreshDetails();
-	}
-
-	private void onRemovePressed()
-	{
-		if(selected==null)
-			return;
-		localTasks.remove(selected);
-		selected = null;
-		refreshListEntries();
-		refreshDetails();
-	}
-
-	private void onDuplicatePressed()
-	{
-		if(selected==null)
-			return;
-		localTasks.add(selected = selected.copy(tile));
-		refreshListEntries();
-		refreshDetails();
-	}
-
-	private void onClearPressed()
-	{
-		localTasks.removeIf(inserterTask -> inserterTask.isJob==(mode==ListMode.JOBS));
-		selected = null;
-		refreshListEntries();
-		refreshDetails();
+				.withSerializable("tasks", tasks);
 	}
 
 	//--- Task helpers ---
@@ -345,11 +237,5 @@ public class GuiInserter extends DecoGui<TileEntityInserterBase, ContainerInsert
 	{
 		ItemStack ex = ing.getExampleStack();
 		return ex==null||ex.isEmpty();
-	}
-
-	private enum ListMode
-	{
-		TASKS,
-		JOBS
 	}
 }

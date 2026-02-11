@@ -1,0 +1,8 @@
+# Made by Pabilo8 with Blockbench
+
+newmtl weapon_machinegun
+map_Kd immersiveintelligence:blocks/multiblock/fortification/weapon_machinegun
+newmtl common_copper_cable
+map_Kd immersiveintelligence:blocks/common/common_copper_cable
+newmtl inserter
+map_Kd immersiveintelligence:blocks/metal_device/inserter/inserter

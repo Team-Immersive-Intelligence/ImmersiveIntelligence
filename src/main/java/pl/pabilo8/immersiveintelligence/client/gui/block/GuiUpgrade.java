@@ -236,7 +236,12 @@ public class GuiUpgrade<T extends TileEntityIEBase & IIEInventory & IUpgradableD
 		//Build
 		AMTModel built = new AMTModel(builder.toArray(new AMTModel[0]));
 		Vec3d center = built.findActualModelCenter();
+		Vec3d size = built.findModelSize();
+		float maxEdge = (float)Math.max(size.x, Math.max(size.y, size.z));
+
 		scenario.withModel(false, built);
+		scenario.withOrigin(center.x, center.y, center.z);
 		scenario.withTranslation(-center.x, -center.y, -center.z);
+		scenario.withScale(Math.min(maxEdge==0?0.125f: (0.125f/(maxEdge/6f)), 0.325f));
 	}
 }

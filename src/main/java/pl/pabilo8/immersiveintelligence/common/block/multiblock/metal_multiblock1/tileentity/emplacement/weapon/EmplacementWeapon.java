@@ -27,7 +27,7 @@ import javax.annotation.Nullable;
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 15.02.2024
  */
-public abstract class EmplacementWeapon implements ITypeNBTSerializable<NBTTagCompound>
+public abstract class EmplacementWeapon implements ITypeNBTSerializable
 {
 	/**
 	 * Acts as a hitbox container for the weapon
@@ -35,6 +35,7 @@ public abstract class EmplacementWeapon implements ITypeNBTSerializable<NBTTagCo
 	public EntityEmplacementWeapon entity = null;
 	public float health = getMaxHealth();
 	protected AxisAlignedBB visionAABB, attackAABB;
+	protected boolean initialized = false;
 
 	/**
 	 * Called after the weapon is installed or loaded from NBT
@@ -42,6 +43,7 @@ public abstract class EmplacementWeapon implements ITypeNBTSerializable<NBTTagCo
 	 */
 	public void onInit(TileEntityEmplacement te)
 	{
+		this.initialized = true;
 		this.health = getMaxHealth();
 		this.visionAABB = new AxisAlignedBB(new BlockPos(te.getWeaponCenter()));
 		this.attackAABB = new AxisAlignedBB(new BlockPos(te.getWeaponCenter()));
@@ -70,6 +72,8 @@ public abstract class EmplacementWeapon implements ITypeNBTSerializable<NBTTagCo
 	 */
 	public EmplacementStateNeeds onUpdate(TileEntityEmplacement te)
 	{
+		if(!initialized)
+			this.onInit(te);
 		return EmplacementStateNeeds.WANTS_SURFACE;
 	}
 
@@ -175,6 +179,7 @@ public abstract class EmplacementWeapon implements ITypeNBTSerializable<NBTTagCo
 	{
 
 	}
+
 
 	//--- NBT ---//
 

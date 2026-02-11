@@ -72,16 +72,18 @@ public class EmplacementRenderer extends IIMultiblockRenderer<TileEntityEmplacem
 
 		UpgradeTechTree.getTreeFor(TileEntityEmplacement.class)
 				.withBaseModelLocation(modelDir.with("upgrade_preview_base.obj"))
-				.withUpgradeModelLocation(IIContent.UPGRADE_EMPLACEMENT_WEAPON_MACHINEGUN, modelDir.with("weapon/machinegun.obj"))
-				.withUpgradeModelLocation(IIContent.UPGRADE_EMPLACEMENT_WEAPON_IROBSERVER, modelDir.with("weapon/infrared_observer.obj"))
+				.withUpgradeModelLocation(IIContent.UPGRADE_EMPLACEMENT_WEAPON_MACHINEGUN, modelDir.with("weapon/machinegun_preview.obj"))
+				.withUpgradeModelLocation(IIContent.UPGRADE_EMPLACEMENT_MACHINEGUN_WATERCOOLED, modelDir.with("weapon/machinegun_watercooled.obj"))
+				.withUpgradeModelLocation(IIContent.UPGRADE_EMPLACEMENT_MACHINEGUN_HEAVYBARREL, modelDir.with("weapon/machinegun_heavy_barrel.obj"))
+				.withUpgradeModelLocation(IIContent.UPGRADE_EMPLACEMENT_WEAPON_IROBSERVER, modelDir.with("weapon/infrared_observer_preview.obj"))
 				.withUpgradeModelLocation(IIContent.UPGRADE_EMPLACEMENT_WEAPON_AUTOCANNON, modelDir.with("weapon/autocannon.obj"))
 				.withUpgradeModelLocation(IIContent.UPGRADE_EMPLACEMENT_WEAPON_HEAVY_CHEMTHROWER, modelDir.with("weapon/heavy_chemthrower.obj"))
 				.withUpgradeModelLocation(IIContent.UPGRADE_EMPLACEMENT_WEAPON_HEAVY_RAILGUN, modelDir.with("weapon/heavy_railgun.obj"))
 				.withUpgradeModelLocation(IIContent.UPGRADE_EMPLACEMENT_SEARCHLIGHT, modelDir.with("weapon/searchlight.obj"))
-				.withUpgradeModelLocation(IIContent.UPGRADE_EMPLACEMENT_SPOTLIGHT_TOWER, modelDir.with("weapon/spotlight_tower.obj"))
+				.withUpgradeModelLocation(IIContent.UPGRADE_EMPLACEMENT_SPOTLIGHT_TOWER, modelDir.with("weapon/spotlight_tower_preview.obj"))
 				.withUpgradeModelLocation(IIContent.UPGRADE_EMPLACEMENT_WEAPON_TESLA, modelDir.with("weapon/tesla.obj"))
 				.withUpgradeModelLocation(IIContent.UPGRADE_EMPLACEMENT_WEAPON_CPDS, modelDir.with("weapon/cpds.obj"))
-				.withUpgradeModelLocation(IIContent.UPGRADE_EMPLACEMENT_WEAPON_MORTAR, modelDir.with("weapon/mortar.obj"))
+				.withUpgradeModelLocation(IIContent.UPGRADE_EMPLACEMENT_WEAPON_MORTAR, modelDir.with("weapon/mortar_preview.obj"))
 				.withUpgradeModelLocation(IIContent.UPGRADE_EMPLACEMENT_WEAPON_LIGHT_HOWITZER, modelDir.with("weapon/light_howitzer.obj"))
 				.withUpgradeModelLocation(IIContent.UPGRADE_EMPLACEMENT_WEAPON_MLRS, modelDir.with("weapon/mlrs.obj"))
 				.withUpgradeModelLocation(IIContent.UPGRADE_EMPLACEMENT_WEAPON_GUIDED_MISSILE_LAUNCHER, modelDir.with("weapon/guided_missile_launcher.obj"))
@@ -93,6 +95,20 @@ public class EmplacementRenderer extends IIMultiblockRenderer<TileEntityEmplacem
 	{
 		super.registerSprites(map);
 
-		AMTLoader.preloadTexturesFromOBJ(IIReference.RES_BLOCK_MODEL.with("multiblock/emplacement/weapon/light_howitzer.obj"), map);
+		ResLoc modelDir = IIReference.RES_BLOCK_MODEL.with("multiblock/emplacement/weapon/");
+
+		AMTLoader.preloadTexturesFromOBJ(modelDir.with("machinegun.obj"), map);
+		AMTLoader.preloadTexturesFromOBJ(modelDir.with("infrared_observer.obj"), map);
+		AMTLoader.preloadTexturesFromOBJ(modelDir.with("autocannon.obj"), map);
+		AMTLoader.preloadTexturesFromOBJ(modelDir.with("heavy_chemthrower.obj"), map);
+		AMTLoader.preloadTexturesFromOBJ(modelDir.with("heavy_railgun.obj"), map);
+		AMTLoader.preloadTexturesFromOBJ(modelDir.with("searchlight.obj"), map);
+		AMTLoader.preloadTexturesFromOBJ(modelDir.with("spotlight_tower.obj"), map);
+		AMTLoader.preloadTexturesFromOBJ(modelDir.with("tesla.obj"), map);
+		AMTLoader.preloadTexturesFromOBJ(modelDir.with("cpds.obj"), map);
+		AMTLoader.preloadTexturesFromOBJ(modelDir.with("mortar.obj"), map);
+		AMTLoader.preloadTexturesFromOBJ(modelDir.with("light_howitzer.obj"), map);
+		AMTLoader.preloadTexturesFromOBJ(modelDir.with("mlrs.obj"), map);
+		AMTLoader.preloadTexturesFromOBJ(modelDir.with("guided_missile_launcher.obj"), map);
 	}
 }

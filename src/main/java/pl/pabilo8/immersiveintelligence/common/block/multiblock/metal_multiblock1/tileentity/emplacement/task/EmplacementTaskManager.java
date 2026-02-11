@@ -20,7 +20,7 @@ public class EmplacementTaskManager implements INBTSerializable<NBTTagList>
 
 	static
 	{
-		NBTSerialisation.registerTypeClass(EmplacementFireMission.class);
+		NBTSerialisation.registerPolimorphicTypeClass(EmplacementFireMission.class);
 	}
 
 	public void addTask(EmplacementFireMission task)

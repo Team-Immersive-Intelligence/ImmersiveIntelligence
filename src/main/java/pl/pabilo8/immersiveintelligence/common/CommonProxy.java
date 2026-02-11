@@ -118,6 +118,7 @@ import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IIBl
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.IOwnableProperty;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.PermissionCategory;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.chunk.CapabilityChunkOwnership;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.NBTSerialisation;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIBase;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
@@ -449,6 +450,8 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 	{
 		IIDataWireType.init();
 		IIPacketHandler.preInit();
+		NBTSerialisation.preInit();
+
 		CapabilityRotaryEnergy.register();
 		CapabilityChunkOwnership.register();
 		IEApi.prefixToIngotMap.put("spring", new Integer[]{2, 1});
@@ -728,6 +731,7 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 	{
 		IICompatModule.doModulesPostInit();
 		IIConfigHandler.onConfigUpdate();
+		NBTSerialisation.postInit();
 		//Init Hans Weapons
 		HansUtils.init();
 

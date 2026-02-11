@@ -1,0 +1,27 @@
+{
+  "origins": {
+    "base": [8, -45, 24],
+    "gun": [12, -23, 21],
+    "hatch": [3, -23, 38.99],
+    "shell_hatch": [7.5, -23.5, 26.85],
+    "shell": [21.5, -35.5, 18.85],
+    "shell2": [17.5, -35.5, 18.85],
+    "turen": [19.95, -31.98437, 35.9918],
+    "hand": [20, -9.11111, 48.88889],
+    "Head": [20, -18.56175, 58.5],
+    "rod": [20, -14, 58.5],
+    "shell_Head": [20.5, -23.5, 60.85]
+  },
+  "hierarchy": {
+    "gun": "base",
+    "hatch": "gun",
+    "shell_hatch": "gun",
+    "shell": "base",
+    "shell2": "base",
+    "turen": "base",
+    "hand": "turen",
+    "Head": "hand",
+    "rod": "Head",
+    "shell_Head": "Head"
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "origins": {
+    "turen": [17.5, -21.5, 20.5],
+    "door": [6.5, -31, 29.5],
+    "filter": [2.5, -17, -2.55556],
+    "turntable": [2.5, -25.7, 26.4],
+    "lower": [2.5, -25.7, 22.4],
+    "upper": [2.5, -12.2, 22.4],
+    "pickerLeft": [4.5, -1.7, 22.4],
+    "pickerLeft2": [4.5, 1.3, 22.4],
+    "pickerRight": [0.5, -1.7, 22.4],
+    "pickerRight2": [0.5, 1.3, 22.4],
+    "base": [21, -38, 10.5]
+  },
+  "hierarchy": {
+    "turen": "base",
+    "door": "turen",
+    "filter": "turen",
+    "turntable": "turen",
+    "lower": "turntable",
+    "upper": "lower",
+    "pickerLeft": "upper",
+    "pickerLeft2": "pickerLeft",
+    "pickerRight": "upper",
+    "pickerRight2": "pickerRight"
+  }
+}

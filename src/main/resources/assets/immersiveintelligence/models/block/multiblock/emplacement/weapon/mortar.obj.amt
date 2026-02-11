@@ -1,0 +1,24 @@
+{
+  "origins": {
+    "Mortar_turret": [8, -43, 24],
+    "Mortar_frame": [8, -37, 14.5],
+    "Mortar_move_mechanism": [8, -38, 14.5],
+    "Mortar_move_fastener": [8, -25, 14.5],
+    "Mortar": [15.325, -31, 25],
+    "Mortar_gun": [7.97105, -19.50839, 24.8217],
+    "Trigger_level": [3.77893, -23.96713, 29.35],
+    "shell2": [7.99212, -19.1703, 24.85],
+    "piston": [8, -64, 15],
+    "shell1": [8.01479, -54.18833, 16],
+    "main": [-4, -47, 19]
+  },
+  "hierarchy": {
+    "Mortar_frame": "Mortar_turret",
+    "Mortar_move_mechanism": "Mortar_frame",
+    "Mortar_move_fastener": "Mortar_move_mechanism",
+    "Mortar": "Mortar_turret",
+    "Mortar_gun": "Mortar",
+    "Trigger_level": "Mortar_gun",
+    "shell2": "Mortar_gun"
+  }
+}

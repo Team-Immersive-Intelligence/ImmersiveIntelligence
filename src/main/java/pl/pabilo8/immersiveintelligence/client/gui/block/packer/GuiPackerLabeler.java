@@ -9,22 +9,24 @@ import pl.pabilo8.immersiveintelligence.api.PackerHandler.LabelingTask;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoButton;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoCheckbox;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoList;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoLabel;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoEntryPanelBuilder;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoIngredientStackPickerPanel;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoIngredientStackPickerPanel.PickerPanelMode;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoPanel;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoTaskJobList;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoItemStackDisplay;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.text.DecoTextField;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.text.util.TextFilter;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.*;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoAlignment;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundBuilder.SlotStyle;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoGuiCategory;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTemplate;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityPacker;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerPacker;
-import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyCollection;
@@ -48,7 +50,7 @@ public class GuiPackerLabeler extends DecoGui<TileEntityPacker, ContainerPacker>
 	@SyncNBT(events = SyncEvents.TILE_CLIENT_MESSAGE)
 	public EasyCollection<LabelingTask, NBTTagCompound> labels;
 
-	private DecoList<LabelingTask> list;
+	private DecoTaskJobList<LabelingTask> taskList;
 	private DecoPanel panelDetails;
 	private DecoCheckbox expiresCheckbox, serialStartCheckbox;
 	private DecoTextField expiresTextField, serialStartTextField;
@@ -91,78 +93,53 @@ public class GuiPackerLabeler extends DecoGui<TileEntityPacker, ContainerPacker>
 				});
 
 		//Title label above list
-		addLabel(IIReference.GUI_LABEL_KEY+"packer.labeling_tasks", 0, 6)
-				.withSize(108, 10)
-				.withAlign(DecoAlignment.CENTER);
-
 		addLinkTab(IIGUI.PACKER, GuiPacker.ICON_TASKS, "tasks_module");
 		addLinkTab(IIGUI.PACKER_LABELER, GuiPacker.ICON_LABELER, "labeler_module");
 
-		//Task list
-		list = addComponent(
-				new DecoList<LabelingTask>(0, 8+18-4)
-						.withSize(108, 116+12-8)
-						.withEntries(labels)
-						.withDisplayFunction(new DecoEntryPanelBuilder<LabelingTask>()
-								.withBackground(DecoTextures.GUI_BG_PAPER)
-								.withBackgroundMask(DecoTextures.RES_TEXTURES_DECO_TEMPLATE_TICKET)
-								.withComponent("icon", new DecoItemStackDisplay(3, 2).withSize(16, 16))
-								.withLabel("type", new DecoLabel(fontRenderer, 23, 2)
-										.withSize(59, 16)
-										.withAlign(DecoAlignment.LEFT)
-								)
-								.withLabel("expires", new DecoLabel(fontRenderer, 23, 12)
-										.withSize(82, 8)
-										.withAlign(DecoAlignment.LEFT)
-										.withTextColor(IIReference.COLOR_IMMERSIVE_ORANGE)
-								)
-								.withElementApplyMethod((task, panel) -> {
-									IngredientStack ing = task.filter;
-									boolean wildcard = ing==null||"*".equals(ing.oreName);
-
-									DecoItemStackDisplay icon = panel.component("icon", DecoItemStackDisplay.class);
-									icon.visible = icon.enabled = !wildcard;
-									icon.withStack(!wildcard?ing.getExampleStack(): ItemStack.EMPTY);
-
-									panel.label("type").withText(GUI_LABEL_KEY+"packer.labeler.task");
-
-									String exp = task.expirationAmount==-1?GUI_LABEL_KEY+"packer.expires.never"
-											: (GUI_LABEL_KEY+"packer.expires.after"+" "+task.expirationAmount);
-									panel.label("expires").withText(exp);
-								})
+		// Replace list + action buttons with a standardized component (no Jobs tab here)
+		addComponent((taskList = new DecoTaskJobList<>(0, 0))
+				.withSize(108, 116+12-8)
+				.withEntries(labels)
+				.withIsJobPredicate(t -> false)
+				.withBlankTaskSupplier(() -> {
+					LabelingTask created = new LabelingTask();
+					created.filter = new IngredientStack("*");
+					created.expirationAmount = -1;
+					created.serialBatch = 0;
+					return created;
+				})
+				.withOnSelectedChanged(task -> {
+					selected = task;
+					refreshDetails();
+				})
+				.withDisplayFunction(new DecoEntryPanelBuilder<LabelingTask>()
+						.withBackground(DecoTextures.GUI_BG_PAPER)
+						.withBackgroundMask(DecoTextures.RES_TEXTURES_DECO_TEMPLATE_TICKET)
+						.withComponent("icon", new DecoItemStackDisplay(3, 2).withSize(16, 16))
+						.withLabel("type", new DecoLabel(fontRenderer, 23, 2)
+								.withSize(59, 16)
+								.withAlign(DecoAlignment.LEFT)
 						)
-						.withOnEntryClicked(task -> {
-							selected = task;
-							refreshDetails();
-						})
-		);
+						.withLabel("expires", new DecoLabel(fontRenderer, 23, 12)
+								.withSize(82, 8)
+								.withAlign(DecoAlignment.LEFT)
+								.withTextColor(IIReference.COLOR_IMMERSIVE_ORANGE)
+						)
+						.withElementApplyMethod((task, panel) -> {
+							IngredientStack ing = task.filter;
+							boolean wildcard = ing==null||"*".equals(ing.oreName);
 
-		//Action buttons
-		addComponents(
-				new DecoButton(24-21, 20+116+4+3)
-						.withTemplate(DecoGuiUtils.LIST_BUTTON_ADD_TEMPLATE)
-						.withBackground(DecoTextures.RES_TEXTURES_DECO_COMPONENT_BUTTON)
-						.withBackgroundColor(IIColor.fromHex("efefef"))
-						.withSize(25, 14)
-						.withOnLMBPressed(this::onAddPressed),
-				new DecoButton(24+25+1-21, 20+116+4+3)
-						.withTemplate(DecoGuiUtils.LIST_BUTTON_REMOVE_TEMPLATE)
-						.withBackground(DecoTextures.RES_TEXTURES_DECO_COMPONENT_BUTTON)
-						.withBackgroundColor(IIColor.fromHex("efefef"))
-						.withSize(25, 14)
-						.withOnLMBPressed(this::onRemovePressed),
-				new DecoButton(24+2*(25+1)-21, 20+116+4+3)
-						.withTemplate(DecoGuiUtils.LIST_BUTTON_DUPLICATE_TEMPLATE)
-						.withBackground(DecoTextures.RES_TEXTURES_DECO_COMPONENT_BUTTON)
-						.withBackgroundColor(IIColor.fromHex("efefef"))
-						.withSize(25, 14)
-						.withOnLMBPressed(this::onDuplicatePressed),
-				new DecoButton(24+3*(25+1)-21, 20+116+4+3)
-						.withTemplate(DecoGuiUtils.LIST_BUTTON_CLEAR_TEMPLATE)
-						.withBackground(DecoTextures.RES_TEXTURES_DECO_COMPONENT_BUTTON)
-						.withBackgroundColor(IIColor.fromHex("efefef"))
-						.withSize(25, 14)
-						.withOnLMBPressed(this::onClearPressed)
+							DecoItemStackDisplay icon = panel.component("icon", DecoItemStackDisplay.class);
+							icon.visible = icon.enabled = !wildcard;
+							icon.withStack(!wildcard?ing.getExampleStack(): ItemStack.EMPTY);
+
+							panel.label("type").withText(GUI_LABEL_KEY+"packer.labeler.task");
+
+							String exp = task.expirationAmount==-1?GUI_LABEL_KEY+"packer.expires.never"
+									: (GUI_LABEL_KEY+"packer.expires.after"+" "+task.expirationAmount);
+							panel.label("expires").withText(exp);
+						})
+				)
 		);
 
 		//Details panel
@@ -301,9 +278,6 @@ public class GuiPackerLabeler extends DecoGui<TileEntityPacker, ContainerPacker>
 
 		panelFilterPicker.visible = panelFilterPicker.enabled = false;
 		panelOutputPicker.visible = panelOutputPicker.enabled = true;
-
-		//Keep list text/icon in sync
-		list.withEntries(labels);
 	}
 
 	private void updateSerialBatching()
@@ -324,49 +298,6 @@ public class GuiPackerLabeler extends DecoGui<TileEntityPacker, ContainerPacker>
 			expiresCheckbox.withChecked(selected.expirationAmount!=-1);
 		if(expiresTextField!=null)
 			expiresTextField.withText(selected.expirationAmount==-1?"": String.valueOf(selected.expirationAmount));
-	}
-
-	// --- Buttons ---
-
-	private void onAddPressed()
-	{
-		LabelingTask created = new LabelingTask();
-		created.filter = new IngredientStack("*");
-		created.expirationAmount = -1;
-		created.serialBatch = 0;
-
-		labels.add(created);
-		selected = created;
-		list.withEntries(labels);
-		refreshDetails();
-	}
-
-	private void onRemovePressed()
-	{
-		if(selected==null)
-			return;
-		labels.remove(selected);
-		selected = null;
-		list.withEntries(labels);
-		refreshDetails();
-	}
-
-	private void onDuplicatePressed()
-	{
-		if(selected==null)
-			return;
-		LabelingTask copy = new LabelingTask(selected.serializeNBT());
-		labels.add(selected = copy);
-		list.withEntries(labels);
-		refreshDetails();
-	}
-
-	private void onClearPressed()
-	{
-		labels.clear();
-		selected = null;
-		list.withEntries(labels);
-		refreshDetails();
 	}
 
 	@Override

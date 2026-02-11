@@ -29,7 +29,7 @@ public class DecoScenarioDisplay extends DecoComponent<DecoScenarioDisplay>
 	private float scale = 1;
 	private float rotationPitch = 0, rotationYaw = 0;
 	private float pitchRotationTicks = 0, yawRotationTicks = 0;
-	private Vec3d translation = new Vec3d(0, 0, 0);
+	private Vec3d origin = Vec3d.ZERO, translation = Vec3d.ZERO;
 
 	//--- Interaction state ---//
 	private boolean interactionAllowed = true, zoomAllowed = false;
@@ -112,6 +112,15 @@ public class DecoScenarioDisplay extends DecoComponent<DecoScenarioDisplay>
 	public DecoScenarioDisplay withScale(float scale)
 	{
 		this.scale = scale;
+		return this;
+	}
+
+	/**
+	 * Sets the origin point for rotation
+	 */
+	public DecoScenarioDisplay withOrigin(double x, double y, double z)
+	{
+		this.origin = new Vec3d(x, y, z);
 		return this;
 	}
 
@@ -206,14 +215,17 @@ public class DecoScenarioDisplay extends DecoComponent<DecoScenarioDisplay>
 		GlStateManager.scale(-scale, -scale, -scale);
 
 		//Apply rotation and translation
-		GlStateManager.rotate(rotationPitch, 1, 0, 0);
-		GlStateManager.rotate(rotationYaw, 0, 1, 0);
 		GlStateManager.translate(translation.x, translation.y, translation.z);
 
-		if(yawRotationTicks > 0)
-			GlStateManager.rotate((float)(AMTUtils.getDebugProgress(yawRotationTicks, partialTicks)*360d), 0, 1, 0);
+		GlStateManager.translate(origin.x, origin.y, origin.z);
+		GlStateManager.rotate(rotationPitch, 1, 0, 0);
 		if(pitchRotationTicks > 0)
 			GlStateManager.rotate((float)(AMTUtils.getDebugProgress(pitchRotationTicks, partialTicks)*360d), 1, 0, 0);
+		GlStateManager.rotate(rotationYaw, 0, 1, 0);
+		if(yawRotationTicks > 0)
+			GlStateManager.rotate((float)(AMTUtils.getDebugProgress(yawRotationTicks, partialTicks)*360d), 0, 1, 0);
+
+		GlStateManager.translate(-origin.x, -origin.y, -origin.z);
 
 		//Set up lighting
 		RenderHelper.enableStandardItemLighting();

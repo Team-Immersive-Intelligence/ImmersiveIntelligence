@@ -4,6 +4,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraftforge.client.model.obj.OBJModel;
+import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeTechTree;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
 import pl.pabilo8.immersiveintelligence.client.util.amt.animation.IIAnimationCompiledMap;
 import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTModel;
@@ -65,6 +66,9 @@ public class DataInputMachineRenderer extends IIMultiblockRenderer<TileEntityDat
 		animationDrawer = IIAnimationCompiledMap.create(this.model, ResLoc.of(IIReference.RES_II, "data_input_machine/drawer"));
 		animationHatch = IIAnimationCompiledMap.create(this.model, ResLoc.of(IIReference.RES_II, "data_input_machine/hatch"));
 		animationProgrammingStart = IIAnimationCompiledMap.create(this.model, ResLoc.of(IIReference.RES_II, "data_input_machine/programming_start"));
+
+		UpgradeTechTree.getTreeFor(TileEntityDataInputMachine.class)
+				.withBaseModelLocation(IIReference.RES_BLOCK_MODEL.with("multiblock/data_input_machine/data_input_machine.obj"));
 	}
 
 	@Override

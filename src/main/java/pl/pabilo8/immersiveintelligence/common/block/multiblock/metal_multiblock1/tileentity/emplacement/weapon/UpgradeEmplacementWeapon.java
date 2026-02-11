@@ -3,8 +3,8 @@ package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multibloc
 import pl.pabilo8.immersiveintelligence.api.upgrade.Upgrade;
 import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeUtils.UpgradePurpose;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.NBTSerialisation;
 
-import java.util.HashMap;
 import java.util.function.Supplier;
 
 /**
@@ -14,7 +14,6 @@ import java.util.function.Supplier;
  */
 public class UpgradeEmplacementWeapon<W extends EmplacementWeapon> extends Upgrade
 {
-	public static final HashMap<String, Supplier<EmplacementWeapon>> WEAPONS = new HashMap<>();
 	private final Supplier<W> weaponSupplier;
 
 	public UpgradeEmplacementWeapon(String name, Supplier<W> weaponSupplier)
@@ -22,6 +21,9 @@ public class UpgradeEmplacementWeapon<W extends EmplacementWeapon> extends Upgra
 		super(IIReference.RES_II.with("emplacement/"+name));
 		this.weaponSupplier = weaponSupplier;
 		this.withType(UpgradePurpose.PRIMARY_WEAPON);
+
+		//Instantianize to register type for synchronization
+		NBTSerialisation.registerPolimorphicTypeClass(weaponSupplier.get().getClass());
 	}
 
 	public W createWeapon()

@@ -19,9 +19,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
@@ -44,17 +42,19 @@ import pl.pabilo8.immersiveintelligence.common.block.data_device.BlockIIDataDevi
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyMultiTypeCollection;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.ITypeNBTSerializable;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.NBTSerialisation;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IIIGuiMultiblockTile;
 import pl.pabilo8.immersiveintelligence.common.wire.IIDataWireType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
-import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -76,7 +76,7 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 	public IItemHandler insertionHandler = new IEInventoryHandler(1, this);
 	public boolean nextTaskAfterFinish = true;
 	protected DataWireNetwork wireNetwork = new DataWireNetwork().add(this);
-	protected ArrayList<InserterTask> tasks = new ArrayList<>();
+	protected EasyMultiTypeCollection<InserterTask> tasks = new EasyMultiTypeCollection<>(InserterTask.class);
 	protected NonNullList<ItemStack> inventory = NonNullList.withSize(1, ItemStack.EMPTY); //The currently held item
 	private boolean refreshWireNetwork = false;
 	private WireType secondCable;
@@ -236,7 +236,7 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 		super.receiveMessageFromClient(message);
 		if(message.hasKey("tasks"))
 		{
-			readTasks(message.getTagList("tasks", 10));
+			tasks.deserializeNBT(message.getTagList("tasks", 10));
 			sendUpdate();
 		}
 	}
@@ -264,13 +264,12 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 			inventory = Utils.readInventory(message.getTagList("inventory", 10), 1);
 
 		if(message.hasKey("tasks"))
-			readTasks(message.getTagList("tasks", 10));
+			tasks.deserializeNBT(message.getTagList("tasks", 10));
 		if(message.hasKey("current"))
 		{
-			NBTTagCompound tag = message.getCompoundTag("current");
-			Function<NBTTagCompound, InserterTask> name = getAvailableTasks().get(tag.getString("name"));
-			if(name!=null)
-				current = name.apply(tag);
+			ITypeNBTSerializable task = NBTSerialisation.deserializePolymorphic(message.getCompoundTag("current"));
+			if(task instanceof InserterTask)
+				current = ((InserterTask)task);
 		}
 		else current = null;
 
@@ -300,7 +299,7 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 			energyStorage = nbt.getInteger("energyStorage");
 
 		if(nbt.hasKey("tasks"))
-			readTasks(nbt.getTagList("tasks", 10));
+			tasks.deserializeNBT(nbt.getTagList("tasks", 10));
 	}
 
 	@Override
@@ -316,30 +315,9 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 		nbt.setInteger("inputFacing", defaultInputFacing.ordinal());
 		if(secondCable!=null)
 			nbt.setString("secondCable", secondCable.getUniqueName());
-		nbt.setTag("tasks", writeTasks());
+		nbt.setTag("tasks", tasks.serializeNBT());
 
 		nbt.setInteger("energyStorage", energyStorage);
-	}
-
-	public NBTTagList writeTasks()
-	{
-		NBTTagList tagTasks = new NBTTagList();
-		for(InserterTask task : tasks)
-			tagTasks.appendTag(task.toNBT());
-		return tagTasks;
-	}
-
-	private void readTasks(NBTTagList tagTasks)
-	{
-		tasks.clear();
-		for(NBTBase task : tagTasks)
-			if(task instanceof NBTTagCompound)
-			{
-				NBTTagCompound tag = (NBTTagCompound)task;
-				Function<NBTTagCompound, InserterTask> name = getAvailableTasks().get(tag.getString("name"));
-				if(name!=null)
-					tasks.add(name.apply(tag));
-			}
 	}
 
 	@Override
@@ -442,11 +420,11 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 				.withBoolean("nextTaskAfterFinish", nextTaskAfterFinish)
 				.withInt("outputFacing", defaultOutputFacing.ordinal())
 				.withInt("inputFacing", defaultInputFacing.ordinal())
-				.withTag("tasks", writeTasks())
+				.withTag("tasks", tasks.serializeNBT())
 				.withInt("energyStorage", energyStorage)
 				.conditionally(current!=null, e -> e.withTag("current",
-						EasyNBT.wrapNBT(current.toNBT())
-								.withString("name", current.getName())
+						EasyNBT.wrapNBT(current.serializeNBT())
+								.withString("type", current.getClass().getSimpleName())
 				))
 		));
 	}
@@ -613,7 +591,7 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 	 * @return all tasks assigned to this inserter
 	 */
 	@Nonnull
-	public final ArrayList<InserterTask> getTasks()
+	public final EasyMultiTypeCollection<InserterTask> getTasks()
 	{
 		return tasks;
 	}
@@ -650,7 +628,7 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 	 * @return all available tasks for this inserter
 	 */
 	@Nonnull
-	public abstract HashMap<String, Function<NBTTagCompound, InserterTask>> getAvailableTasks();
+	public abstract HashMap<String, Supplier<InserterTask>> getAvailableTasks();
 
 	/**
 	 * Control the sounds played here.
@@ -690,7 +668,7 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 	}
 
 	@ParametersAreNonnullByDefault
-	public static abstract class InserterTask
+	public static abstract class InserterTask implements ITypeNBTSerializable
 	{
 		/**
 		 * Overrides facing if different from null
@@ -718,41 +696,13 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 		 **/
 		public boolean isJob = true;
 
-		public InserterTask(@Nullable EnumFacing facingIn, @Nullable EnumFacing facingOut)
+		public InserterTask()
 		{
-			this.facingIn = facingIn;
-			this.facingOut = facingOut;
+
 		}
 
-		public InserterTask(NBTTagCompound nbt)
-		{
-			if(nbt.hasKey("facingIn"))
-			{
-				facingIn = EnumFacing.getFront(nbt.getInteger("facingIn"));
-				if(nbt.hasKey("distanceIn"))
-					distanceIn = nbt.getInteger("distanceIn");
-			}
-			if(nbt.hasKey("facingOut"))
-			{
-				facingOut = EnumFacing.getFront(nbt.getInteger("facingOut"));
-				if(nbt.hasKey("distanceOut"))
-					distanceOut = nbt.getInteger("distanceOut");
-			}
-			if(nbt.hasKey("stack"))
-			{
-				stack = IngredientStack.readFromNBT(nbt.getCompoundTag("stack"));
-				if(stack.fluid!=null)
-					stack.inputSize = stack.fluid.amount;
-			}
-			if(nbt.hasKey("isJob"))
-				isJob = nbt.getBoolean("isJob");
-			if(nbt.hasKey("strictAmount"))
-				strictAmount = nbt.getBoolean("strictAmount");
-			if(nbt.hasKey("overrideTakeAmount"))
-				overrideTakeAmount = nbt.getInteger("overrideTakeAmount");
-		}
-
-		public NBTTagCompound toNBT()
+		@Override
+		public NBTTagCompound serializeNBT()
 		{
 			NBTTagCompound nbt = new NBTTagCompound();
 			nbt.setString("name", getName());
@@ -778,23 +728,33 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 			return nbt;
 		}
 
-		/**
-		 * Creates a deep copy of the task, used by the GUI editor.
-		 */
-		public InserterTask copy(TileEntityInserterBase tile, String newType)
+		@Override
+		public void deserializeNBT(NBTTagCompound nbt)
 		{
-			NBTTagCompound tag = this.toNBT();
-			tag.setString("name", newType);
-			Function<NBTTagCompound, InserterTask> factory = tile.getAvailableTasks().get(newType);
-			return factory!=null?factory.apply(tag): this;
-		}
-
-		/**
-		 * Creates a deep copy of the task, used by the GUI editor.
-		 */
-		public InserterTask copy(TileEntityInserterBase tile)
-		{
-			return copy(tile, this.getName());
+			if(nbt.hasKey("facingIn"))
+			{
+				facingIn = EnumFacing.getFront(nbt.getInteger("facingIn"));
+				if(nbt.hasKey("distanceIn"))
+					distanceIn = nbt.getInteger("distanceIn");
+			}
+			if(nbt.hasKey("facingOut"))
+			{
+				facingOut = EnumFacing.getFront(nbt.getInteger("facingOut"));
+				if(nbt.hasKey("distanceOut"))
+					distanceOut = nbt.getInteger("distanceOut");
+			}
+			if(nbt.hasKey("stack"))
+			{
+				stack = IngredientStack.readFromNBT(nbt.getCompoundTag("stack"));
+				if(stack.fluid!=null)
+					stack.inputSize = stack.fluid.amount;
+			}
+			if(nbt.hasKey("isJob"))
+				isJob = nbt.getBoolean("isJob");
+			if(nbt.hasKey("strictAmount"))
+				strictAmount = nbt.getBoolean("strictAmount");
+			if(nbt.hasKey("overrideTakeAmount"))
+				overrideTakeAmount = nbt.getInteger("overrideTakeAmount");
 		}
 
 		/**

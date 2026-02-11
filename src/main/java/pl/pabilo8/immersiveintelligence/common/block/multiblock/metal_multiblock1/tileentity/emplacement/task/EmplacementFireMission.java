@@ -8,7 +8,7 @@ import pl.pabilo8.immersiveintelligence.common.util.easynbt.ITypeNBTSerializable
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 15.02.2024
  */
-public abstract class EmplacementFireMission implements ITypeNBTSerializable<NBTTagCompound>
+public abstract class EmplacementFireMission implements ITypeNBTSerializable
 {
 	/**
 	 * @return whether the task should continue execution, should be always true if it is a permanent detection task like {@link EmplacementFireMissionEntities}
