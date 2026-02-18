@@ -64,7 +64,7 @@ public class DecoDustTank extends DecoTankBase<DecoDustTank, DustStack>
 	@Override
 	public ResourceLocation getResourceTexture(@Nonnull DustStack dustStack)
 	{
-		return DecoTextures.RES_TEXTURES_DECO_COMPONENT_TANK_DUST;
+		return DecoTextures.COMPONENT_TANK_DUST;
 	}
 
 	@Override

@@ -26,7 +26,7 @@ public class DecoBarGroup extends DecoComponent<DecoBarGroup>
 	public DecoBarGroup(int x, int y)
 	{
 		super(x, y);
-		withBackgroundLocation(DecoTextures.RES_TEXTURES_DECO_COMPONENT_FRAME, DecoTextures.RES_TEXTURES_DECO_BAR_ICON_BACKGROUND);
+		withBackgroundLocation(DecoTextures.COMPONENT_FRAME, DecoTextures.BAR_ICON_BACKGROUND);
 	}
 
 	public DecoBarGroup withBackgroundLocation(ResLoc backgroundLocation, ResLoc iconBackgroundLocation)

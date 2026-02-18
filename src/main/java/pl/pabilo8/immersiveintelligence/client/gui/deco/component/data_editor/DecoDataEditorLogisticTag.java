@@ -90,11 +90,11 @@ public class DecoDataEditorLogisticTag extends DecoDataEditor<DataTypeLogisticTa
 				.withDropdownWidth(width-fieldX-2)
 				.withEntries(EnumDyeColor.values())
 				.withDisplayFunction(new DecoEntryPanelBuilder<EnumDyeColor>()
-						.withBackground(DecoTextures.GUI_BG_STEEL)
+						.withBackground(DecoTextures.BG_STEEL)
 						.withHeight(12)
 						.withComponent("icon", new DecoImage(2, 1)
 								.withSize(8, 8)
-								.withImageLocation(DecoTextures.RES_TEXTURES_DECO_COMPONENT_COLOR, true)
+								.withImageLocation(DecoTextures.COMPONENT_COLOR, true)
 								.withUV(16, 4, 4, 12, 12)
 						)
 						.withLabel("label",

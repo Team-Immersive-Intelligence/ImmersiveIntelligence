@@ -36,10 +36,10 @@ public class GuiChemicalBath extends DecoGui<TileEntityChemicalBath, ContainerCh
 	public void onInit()
 	{
 		startBackground()
-				.withBox(DecoTextures.GUI_BG_STEEL_ROUGH, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_SQUARE, 0, 0, 176, 76)
-				.withFrame(DecoTextures.GUI_FRAME_STEEL, 6, false)
+				.withBox(DecoTextures.BG_STEEL_ROUGH, DecoTextures.TEMPLATE_SQUARE, 0, 0, 176, 76)
+				.withFrame(DecoTextures.FRAME_STEEL, 6, false)
 				.withTitleBar(tile)
-				.withBox(DecoTextures.GUI_BG_WOODEN, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_ROUND_WOODEN, 0, 76, 176, 92)
+				.withBox(DecoTextures.BG_WOODEN, DecoTextures.TEMPLATE_ROUND_WOODEN, 0, 76, 176, 92)
 				.withInventorySlots(SlotStyle.IE_INPUT, container.slotInput, container.slotBucketInput)
 				.withInventorySlots(SlotStyle.IE_OUTPUT, container.slotOutput, container.slotBucketOutput)
 				.withInventorySlots(SlotStyle.VANILLA, container.playerInventory)
@@ -48,7 +48,7 @@ public class GuiChemicalBath extends DecoGui<TileEntityChemicalBath, ContainerCh
 
 		addComponents(
 				new DecoBar(176-8-8-2, -2)
-						.withTemplate(DecoGuiUtils.BAR_ELECTRIC_ENERGY.apply(tile.energyStorage)),
+						.withTemplate(DecoTemplates.BAR_ELECTRIC_ENERGY.apply(tile.energyStorage)),
 
 				imageProgress1 = new DecoImage(20-4, 5+18-4+24+2+2)
 						.withSize(19, 12)

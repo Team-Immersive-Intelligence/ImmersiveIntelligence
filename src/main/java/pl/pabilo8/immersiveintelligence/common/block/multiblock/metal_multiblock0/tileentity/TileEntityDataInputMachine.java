@@ -3,7 +3,6 @@ package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multibloc
 import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorageAdvanced;
 import blusunrize.immersiveengineering.common.util.inventory.IEInventoryHandler;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
 import pl.pabilo8.immersiveintelligence.api.crafting.DataProgrammingRecipe;
@@ -37,8 +36,6 @@ import java.util.Optional;
 public class TileEntityDataInputMachine extends TileEntityMultiblockProductionSingle<TileEntityDataInputMachine, DataProgrammingRecipe>
 		implements IBooleanAnimatedPartsBlock, IManagedUpgradableDevice<TileEntityDataInputMachine>
 {
-	private static final int SLOT_INPUT = 0, SLOT_OUTPUT = 1;
-
 	/**
 	 * Used for GUI animations
 	 */
@@ -48,14 +45,15 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockProductionSi
 	/**
 	 * Will send stored packet if true, then switch back to false
 	 */
-	public boolean sendPacketToggle = false;
+	@SyncNBT(events = {SyncEvents.TILE_CLIENT_MESSAGE})
+	public boolean sendPacket = false;
 	/**
 	 * Stored data packet
 	 */
 	@SyncNBT(name = "variables", events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_RECIPE_CHANGED, SyncEvents.TILE_CLIENT_MESSAGE})
 	public DataPacket storedData = new DataPacket();
 	@SyncNBT(events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_CLIENT_MESSAGE})
-	public int selectedDataSlot;
+	public int selectedDataSlot = 0;
 
 	@SyncNBT(name = "upgrades", events = SyncEvents.TILE_UPGRADES_MODIFIED)
 	public UpgradeManager<TileEntityDataInputMachine> upgradeManager;
@@ -74,8 +72,8 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockProductionSi
 		//Init animated parts
 		this.drawer = new MultiblockInteractablePart(0, 15, 0.85f);
 		this.hatch = new MultiblockInteractablePart(1, 24, 1.25f);
-		this.inputHandler = getSingleInventoryHandler(SLOT_INPUT);
-		this.outputHandler = getSingleInventoryHandler(SLOT_OUTPUT);
+		this.inputHandler = getSingleInventoryHandler(MultiblockDataInputMachine.SLOT_INPUT);
+		this.outputHandler = getSingleInventoryHandler(MultiblockDataInputMachine.SLOT_OUTPUT);
 
 	}
 
@@ -90,14 +88,6 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockProductionSi
 	}
 
 	@Override
-	public void receiveMessageFromClient(NBTTagCompound message)
-	{
-		super.receiveMessageFromClient(message);
-		if(message.hasKey("send_packet"))
-			this.sendData(storedData, getDirection("data"), getPOI(MultiblockPOI.DATA_OUTPUT)[0]);
-	}
-
-	@Override
 	protected void onUpdate()
 	{
 		super.onUpdate();
@@ -109,15 +99,15 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockProductionSi
 			return;
 
 		//Send packet on redstone
-		if(sendPacketToggle^getRedstoneAtPos(0))
+		if(sendPacket^getRedstoneAtPos(0))
 		{
-			sendPacketToggle = !sendPacketToggle;
+			sendPacket = !sendPacket;
 			//Finally!
-			if(sendPacketToggle)
+			if(sendPacket)
 				this.sendData(storedData, getDirection("data"), getPOI(MultiblockPOI.DATA_OUTPUT)[0]);
 		}
 		//Check for item being taken out
-		if(currentProcess!=null&&!currentProcess.recipe.input.matchesItemStack(inventory.get(SLOT_INPUT)))
+		if(currentProcess!=null&&!currentProcess.recipe.input.matchesItemStack(inventory.get(MultiblockDataInputMachine.SLOT_INPUT)))
 			this.currentProcess.ticks = this.currentProcess.maxTicks;
 	}
 
@@ -175,7 +165,7 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockProductionSi
 	protected IIMultiblockProcess<DataProgrammingRecipe> findNewProductionProcess()
 	{
 		Optional<DataProgrammingRecipe> found = DataProgrammingRecipe.streamRecipes(DataProgrammingRecipe.class)
-				.filter(recipe -> recipe.input.matchesItemStack(inventory.get(SLOT_INPUT)))
+				.filter(recipe -> recipe.input.matchesItemStack(inventory.get(MultiblockDataInputMachine.SLOT_INPUT)))
 				.findFirst();
 		return found.map(IIMultiblockProcess::new).orElse(null);
 	}
@@ -203,11 +193,11 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockProductionSi
 		{
 			DataProgrammingRecipe recipe = process.recipe;
 			//Skip the recipe if input is invalid
-			if(!recipe.input.matchesItemStack(inventory.get(SLOT_INPUT)))
+			if(!recipe.input.matchesItemStack(inventory.get(MultiblockDataInputMachine.SLOT_INPUT)))
 				return true;
 
 			//Take a copy of the original item and apply recipe
-			ItemStack output = recipe.operationFrom.apply(inputHandler.extractItem(SLOT_INPUT, 1, true),
+			ItemStack output = recipe.operationFrom.apply(inputHandler.extractItem(MultiblockDataInputMachine.SLOT_INPUT, 1, true),
 					storedData, dataTypes -> storedData = dataTypes);
 			//Try to output
 			return outputHandler.insertItem(0, output, false).isEmpty()&&

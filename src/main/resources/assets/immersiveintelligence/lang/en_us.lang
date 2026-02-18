@@ -1117,10 +1117,10 @@ machineupgrade.immersiveintelligence.emplacement.machinegun.bunker=Additional Fo
 machineupgrade.immersiveintelligence.emplacement.machinegun.bunker.desc=Placing additional sandbags around the machinegun nest gives it additional armor and increases its durability.
 
 machineupgrade.immersiveintelligence.emplacement.mortar=Mortar
-machineupgrade.immersiveintelligence.emplacement.mortar.desc=Mortar provides indirect fire support on close range, the vertical firing angle and high shell caliber allow it to pierce trough roofs and decimate enemies from above
+machineupgrade.immersiveintelligence.emplacement.mortar.desc=Mortar provides indirect fire support on close range, bombarding enemies at an almost vertical angle.
 
 machineupgrade.immersiveintelligence.emplacement.light_howitzer=Light Howitzer
-machineupgrade.immersiveintelligence.emplacement.light_howitzer.desc=Light Howitzer provides indirect fire support on medium range, its mobility allows for quick and precise barrage of enemy positions
+machineupgrade.immersiveintelligence.emplacement.light_howitzer.desc=Light Howitzer provides indirect fire support on medium range through quick and precise barrage of enemy positions.
 
 machineupgrade.immersiveintelligence.emplacement.mlrs=Rocket Launcher
 machineupgrade.immersiveintelligence.emplacement.mlrs.desc=The Multiple Launch Rocket System provides devastating area bombardment using up to 6 unguided rockets, excellent for attacking fortified positions.

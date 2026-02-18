@@ -45,10 +45,6 @@ import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 public class GuiDataInputMachine extends DecoGui<TileEntityDataInputMachine, ContainerDataInputMachine> implements IDataMachineGui
 {
 	@DecoResource
-	public static ResourceLocation ICON_STORAGE = ResLoc.of(IIReference.RES_II, "gui/tab_icons/storage");
-	@DecoResource
-	public static ResourceLocation ICON_VARIABLES = ResLoc.of(IIReference.RES_II, "gui/tab_icons/variables");
-	@DecoResource
 	public static ResourceLocation ICON_SEND_PACKET = ResLoc.of(IIReference.RES_II, "gui/tab_icons/send_packet");
 	@DecoResource
 	public static ResourceLocation PROGRESS_IMAGE = ResLoc.of(IIReference.RES_II, "gui/data_input_machine");
@@ -87,11 +83,11 @@ public class GuiDataInputMachine extends DecoGui<TileEntityDataInputMachine, Con
 						.withAnimation(ImageAnimationDirection.TOP_TO_BOTTOM, DecoGuiUtils.getMultiblockProductionSingleProgress(tile)),
 				new DecoTab()
 						.withLink(IIGUI.DATA_INPUT_MACHINE_STORAGE)
-						.withIcon(ICON_STORAGE)
+						.withIcon(DecoTextures.ICON_STORAGE)
 						.withTranslatedTooltip(IIReference.DESCRIPTION_KEY+"storage_module"),
 				new DecoTab()
 						.withLink(IIGUI.DATA_INPUT_MACHINE_VARIABLES)
-						.withIcon(ICON_VARIABLES)
+						.withIcon(DecoTextures.ICON_VARIABLES)
 						.withTranslatedTooltip(IIReference.DESCRIPTION_KEY+"variables_module"),
 
 				new DecoTab()
@@ -123,16 +119,16 @@ public class GuiDataInputMachine extends DecoGui<TileEntityDataInputMachine, Con
 
 		//Build background
 		startBackground()
-				.withBox(DecoTextures.GUI_BG_STEEL, 0, 0, 176, 128+8)
+				.withBox(DecoTextures.BG_STEEL, 0, 0, 176, 128+8)
 				.withTitleBar(tile)
-				.withBox(DecoTextures.GUI_BG_WOODEN, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_ROUND_WOODEN, 0, 128+8, 176, 92)
+				.withBox(DecoTextures.BG_WOODEN, DecoTextures.TEMPLATE_ROUND_WOODEN, 0, 128+8, 176, 92)
 				.withInventoryTitleBar()
 
 				.withNextLayer()
-				.withBox(DecoTextures.GUI_BG_STEEL, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_SQUARE, 0, 8, 32, 120)
+				.withBox(DecoTextures.BG_STEEL, DecoTextures.TEMPLATE_SQUARE, 0, 8, 32, 120)
 				.conditionally(isStorage,
 						b -> b
-								.withBox(DecoTextures.GUI_BG_STEEL, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_ROUND, 128-32+16+32, 8, 32, 120)
+								.withBox(DecoTextures.BG_STEEL, DecoTextures.TEMPLATE_ROUND, 128-32+16+32, 8, 32, 120)
 								.withInventorySlots(SlotStyle.VANILLA, container.punchtapeStorage)
 				)
 				.withInventorySlots(SlotStyle.VANILLA, container.playerInventory)
@@ -159,7 +155,7 @@ public class GuiDataInputMachine extends DecoGui<TileEntityDataInputMachine, Con
 			);
 			addComponent(new DecoBar(128+32-8+2, 24)
 					.withHeight(95)
-					.withTemplate(DecoGuiUtils.BAR_ELECTRIC_ENERGY.apply(tile.energyStorage))
+					.withTemplate(DecoTemplates.BAR_ELECTRIC_ENERGY.apply(tile.energyStorage))
 			);
 		}
 		else //List the variables in the packet
@@ -172,12 +168,12 @@ public class GuiDataInputMachine extends DecoGui<TileEntityDataInputMachine, Con
 							.withGuiSaveAction(gui -> this.scroll = gui.getScroll())
 							//Display
 							.withDisplayFunction(new DecoEntryPanelBuilder<DataVariable>()
-									.withBackground(DecoTextures.GUI_BG_PAPER)
-									.withBackgroundMask(DecoTextures.RES_TEXTURES_DECO_TEMPLATE_TICKET)
+									.withBackground(DecoTextures.BG_PAPER)
+									.withBackgroundMask(DecoTextures.TEMPLATE_TICKET)
 
 									//Duplicate / Edit / Remove Buttons
 									.withComponent(p -> new DecoButton(p.width-17-16-14+3, 2)
-											.withTemplate(DecoGuiUtils.LIST_BUTTON_DUPLICATE_TEMPLATE)
+											.withTemplate(DecoTemplates.ACTION_BUTTON_DUPLICATE)
 											.withOnLMBPressed(() -> {
 												DataVariable current = p.getCurrentElement();
 												char name = findNextFreeVariableName();
@@ -187,13 +183,13 @@ public class GuiDataInputMachine extends DecoGui<TileEntityDataInputMachine, Con
 											})
 									)
 									.withComponent(p -> new DecoButton(p.width-17-16+3, 2)
-											.withTemplate(DecoGuiUtils.LIST_BUTTON_EDIT_TEMPLATE)
+											.withTemplate(DecoTemplates.ACTION_BUTTON_EDIT)
 											.withOnLMBPressed(() -> {
 												editVariable(p.getCurrentElement());
 											})
 									)
 									.withComponent(p -> new DecoButton(p.width-17+1, 2)
-											.withTemplate(DecoGuiUtils.LIST_BUTTON_REMOVE_TEMPLATE)
+											.withTemplate(DecoTemplates.ACTION_BUTTON_REMOVE)
 											.withOnLMBPressed(() -> {
 												p.getCurrentList().removeEntry(p.getCurrentElement());
 												IIPacketHandler.sendToServer(new MessageIITileSync(tile, onSaveTileData()));

@@ -52,7 +52,7 @@ public class DecoBar extends DecoComponent<DecoBar>
 		super(x, y);
 		withSize(12, 64+7);
 		withColors(IIColor.BLACK, IIColor.WHITE);
-		withBackgroundLocation(DecoTextures.RES_TEXTURES_DECO_COMPONENT_FRAME, DecoTextures.RES_TEXTURES_DECO_BAR_ICON_BACKGROUND);
+		withBackgroundLocation(DecoTextures.COMPONENT_FRAME, DecoTextures.BAR_ICON_BACKGROUND);
 	}
 
 	@Deprecated

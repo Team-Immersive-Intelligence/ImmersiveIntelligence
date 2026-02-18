@@ -62,13 +62,13 @@ public class IIRecipeJEICategory<T extends IIMultiblockRecipe> implements IRecip
 			IIRecipeLayout layout = recipes.get(0).getRecipeLayout();
 			if(layout!=null)
 				this.background = new MostExcellentDrawableImplementation(layout.getGridWidth(), layout.getGridHeight(),
-						layout.isEarlyGame()?DecoTextures.GUI_BG_WOODEN: DecoTextures.GUI_BG_STEEL,
-						layout.isEarlyGame()?DecoTextures.RES_TEXTURES_DECO_TEMPLATE_ROUND_WOODEN: DecoTextures.RES_TEXTURES_DECO_TEMPLATE_ROUND
+						layout.isEarlyGame()?DecoTextures.BG_WOODEN: DecoTextures.BG_STEEL,
+						layout.isEarlyGame()?DecoTextures.TEMPLATE_ROUND_WOODEN: DecoTextures.TEMPLATE_ROUND
 				);
 		}
 		if(this.background==null)
 			this.background = new MostExcellentDrawableImplementation(150, 60,
-					DecoTextures.GUI_BG_PAPER, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_PAPER);
+					DecoTextures.BG_PAPER, DecoTextures.TEMPLATE_PAPER);
 
 		this.displayStacks = new ItemStack[0];
 	}

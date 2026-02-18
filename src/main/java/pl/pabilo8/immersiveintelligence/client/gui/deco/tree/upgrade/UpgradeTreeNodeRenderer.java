@@ -52,7 +52,7 @@ public class UpgradeTreeNodeRenderer extends AbstractTreeNodeRenderer<Upgrade>
 		Upgrade upgrade = node.getUserData();
 		ClientUtils.bindAtlas();
 		IIDrawUtils.startTexturedColored()
-				.drawConnectedTexColorRect(x, y, 20, 20, bg, DecoTextures.RES_TEXTURES_DECO_IE_SLOT, 32, 32, 8, 8)
+				.drawConnectedTexColorRect(x, y, 20, 20, bg, DecoTextures.SLOT_IE, 32, 32, 8, 8)
 				.drawTexColorSprite(x+2, y+2, 16, 16, !isAvailable?IIColor.MC_DARK_GRAY: IIColor.WHITE, upgrade.getIcon())
 				.finish();
 	}

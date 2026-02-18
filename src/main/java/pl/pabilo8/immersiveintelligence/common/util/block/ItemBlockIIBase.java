@@ -90,12 +90,13 @@ public class ItemBlockIIBase extends ItemBlock
 	 * allows items to add custom lines of information to the mouseover description
 	 */
 	@Override
+	@SideOnly(Side.CLIENT)
 	public void addInformation(@Nonnull ItemStack stack, @Nullable World world, @Nonnull List<String> tooltip, @Nonnull ITooltipFlag tooltipFlag)
 	{
 		if(stack.getMetadata() > block.description.length)
 			return;
 		if(!block.description[stack.getMetadata()%block.description.length].isEmpty())
-			tooltip.add(TextFormatting.GRAY+block.description[stack.getMetadata()]);
+			tooltip.add(TextFormatting.GRAY+I18n.format(block.description[stack.getMetadata()]));
 
 		super.addInformation(stack, world, tooltip, tooltipFlag);
 		if(ItemNBTHelper.hasKey(stack, "energyStorage"))

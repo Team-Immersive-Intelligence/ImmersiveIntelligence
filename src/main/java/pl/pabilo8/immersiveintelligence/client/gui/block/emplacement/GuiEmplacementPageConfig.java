@@ -44,12 +44,12 @@ public class GuiEmplacementPageConfig extends GuiEmplacement
 		addComponents(
 				new DecoPanel(0, 8)
 						.withSize(128, 128)
-						.withBackground(DecoTextures.GUI_BG_PAPER)
-						.withBackgroundMask(DecoTextures.RES_TEXTURES_DECO_TEMPLATE_PAPER),
+						.withBackground(DecoTextures.BG_PAPER)
+						.withBackgroundMask(DecoTextures.TEMPLATE_PAPER),
 				new DecoPanel(0, 128+8)
 						.withSize(128, 24)
-						.withBackground(DecoTextures.GUI_BG_STEEL)
-						.withBackgroundMask(DecoTextures.RES_TEXTURES_DECO_TEMPLATE_SQUARE),
+						.withBackground(DecoTextures.BG_STEEL)
+						.withBackgroundMask(DecoTextures.TEMPLATE_SQUARE),
 
 				new DecoMapDisplay(4, 4+8)
 						.withSize(120, 120)
@@ -60,11 +60,11 @@ public class GuiEmplacementPageConfig extends GuiEmplacement
 						.withZoomScrolling(0.5, 2)
 						//Sight Range
 						.withLayer("sight")
-						.addRectangle((int)sightRange.minX, (int)sightRange.minZ, (int)sightRange.maxX, (int)sightRange.maxZ, IIColor.MC_BLUE)
+						.addRectangle((int)sightRange.minX, (int)sightRange.minZ, (int)sightRange.maxX, (int)sightRange.maxZ, IIColor.MC_BLUE.withAlpha(127f))
 						.build()
 						//Fire Range
 						.withLayer("fire")
-						.addRectangle((int)fireRange.minX, (int)fireRange.minZ, (int)fireRange.maxX, (int)fireRange.maxZ, IIColor.MC_RED)
+						.addRectangle((int)fireRange.minX, (int)fireRange.minZ, (int)fireRange.maxX, (int)fireRange.maxZ, IIColor.MC_RED.withAlpha(127f))
 						.build()
 						//Markers
 						.withScanner(new BlockTypeScanner("flagpoles")
@@ -83,8 +83,8 @@ public class GuiEmplacementPageConfig extends GuiEmplacement
 				//
 				new DecoPanel(128, 8)
 						.withSize(120-4, 152-8+4)
-						.withBackground(DecoTextures.GUI_BG_PAPER)
-						.withBackgroundMask(DecoTextures.RES_TEXTURES_DECO_TEMPLATE_PAPER)
+						.withBackground(DecoTextures.BG_PAPER)
+						.withBackgroundMask(DecoTextures.TEMPLATE_PAPER)
 		);
 	}
 }

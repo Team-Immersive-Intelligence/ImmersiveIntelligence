@@ -24,7 +24,7 @@ import java.util.function.Consumer;
  */
 public class DecoSlider extends DecoTextBasedComponent<DecoSlider>
 {
-	private ResourceLocation sliderTop = DecoTextures.RES_TEXTURES_DECO_COMPONENT_SWITCH_MOVING;
+	private ResourceLocation sliderTop = DecoTextures.COMPONENT_SWITCH_MOVING;
 	private Consumer<Float> onValueChanged;
 	protected float value = 0.5f, minValue = 0.0f, maxValue = 1.0f;
 	//Whether the slider should only allow integer values
@@ -37,7 +37,7 @@ public class DecoSlider extends DecoTextBasedComponent<DecoSlider>
 	{
 		super(x, y);
 		withSize(120, 12);
-		withBackground(DecoTextures.RES_TEXTURES_DECO_COMPONENT_TEXT_FIELD);
+		withBackground(DecoTextures.COMPONENT_TEXT_FIELD);
 		this.withOnPressed((gui, button, mouseX, mouseY) -> {
 			handleMouse(gui, mouseX, mouseY);
 			setFocused(true);

@@ -47,23 +47,23 @@ public class GuiChemicalPainter extends DecoGui<TileEntityChemicalPainter, Conta
 		this.color = tile.color;
 		startBackground()
 				//Machine GUI
-				.withBox(DecoTextures.GUI_BG_STEEL, 0, 0, 176, 128)
+				.withBox(DecoTextures.BG_STEEL, 0, 0, 176, 128)
 				.withTitleBar(tile)
 				.withInventorySlots(SlotStyle.IE_INPUT, container.inputSlot, container.inputFluidSlot)
 				.withInventorySlots(SlotStyle.IE_OUTPUT, container.outputSlot, container.outputFluidSlot)
 				//Player inventory
-				.withBox(DecoTextures.GUI_BG_WOODEN, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_ROUND_WOODEN, 0, 128, 176, 92)
+				.withBox(DecoTextures.BG_WOODEN, DecoTextures.TEMPLATE_ROUND_WOODEN, 0, 128, 176, 92)
 				.withInventorySlots(SlotStyle.VANILLA, container.playerInventory)
 				.withInventoryTitleBar()
 				//Color panel
 				.withNextLayer()
-				.withBox(DecoTextures.GUI_BG_STEEL, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_SQUARE, 0, 80, 176, 48)
+				.withBox(DecoTextures.BG_STEEL, DecoTextures.TEMPLATE_SQUARE, 0, 80, 176, 48)
 				.build();
 
 		addComponents(
 				//Energy Bar
 				new DecoBar(168, 0)
-						.withTemplate(DecoGuiUtils.BAR_ELECTRIC_ENERGY.apply(tile.energyStorage)),
+						.withTemplate(DecoTemplates.BAR_ELECTRIC_ENERGY.apply(tile.energyStorage)),
 				//Ink Tanks
 				new DecoFluidTank(25, 12)
 						.withFluidTank(tile.tankCyan)

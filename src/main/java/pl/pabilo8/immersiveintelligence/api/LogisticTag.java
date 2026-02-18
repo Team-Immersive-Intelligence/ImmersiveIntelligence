@@ -23,6 +23,7 @@ import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyUtils;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.OwnerIdentity;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Objects;
@@ -128,7 +129,7 @@ public class LogisticTag implements INBTSerializable<NBTTagCompound>, Cloneable
 		return this;
 	}
 
-	public LogisticTag withOwner(OwnerIdentity owner)
+	public LogisticTag withOwner(@Nonnull OwnerIdentity owner)
 	{
 		this.owner = owner;
 		return this;
@@ -206,7 +207,7 @@ public class LogisticTag implements INBTSerializable<NBTTagCompound>, Cloneable
 				.withString("origin", origin)
 				.withString("destination", destination)
 				.withColor("color", IIColor.fromDye(color))
-				.withString("owner", owner.getDisplayName())
+				.withString("owner", (owner==null?DiplomacyUtils.NEUTRAL: owner).getDisplayName())
 				.withInt("batch_number", batchNumber)
 				.unwrap();
 	}

@@ -37,12 +37,12 @@ public class GuiElectrolyzer extends DecoGui<TileEntityElectrolyzer, ContainerEl
 	public void onInit()
 	{
 		startBackground()
-				.withBox(DecoTextures.GUI_BG_STEEL_ROUGH, 0, 0, 176, 76)
+				.withBox(DecoTextures.BG_STEEL_ROUGH, 0, 0, 176, 76)
 				.withTitleBar(tile)
 				.withInventorySlots(SlotStyle.IE_INPUT, container.slotsInput)
 				.withInventorySlots(SlotStyle.IE_OUTPUT, container.slotsOutput)
 
-				.withBox(DecoTextures.GUI_BG_WOODEN, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_ROUND_WOODEN, 0, 76, 176, 92)
+				.withBox(DecoTextures.BG_WOODEN, DecoTextures.TEMPLATE_ROUND_WOODEN, 0, 76, 176, 92)
 				.withInventorySlots(SlotStyle.VANILLA, container.playerInventory)
 				.withInventoryTitleBar()
 				.build();
@@ -60,7 +60,7 @@ public class GuiElectrolyzer extends DecoGui<TileEntityElectrolyzer, ContainerEl
 						.withFluidTank(tile.tankOutput2),
 				//Energy bar
 				new DecoBar(168, 0)
-						.withTemplate(DecoGuiUtils.BAR_ELECTRIC_ENERGY.apply(tile.energyStorage)),
+						.withTemplate(DecoTemplates.BAR_ELECTRIC_ENERGY.apply(tile.energyStorage)),
 				//Production progress
 				this.imageProgress = new DecoImage(66-10-1, 42-8)
 						.withSize(60, 12)

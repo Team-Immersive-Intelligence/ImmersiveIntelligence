@@ -36,10 +36,10 @@ public class GuiSawmill extends DecoGui<TileEntitySawmill, ContainerSawmill>
 	{
 		syncAnimatedParts(tile.vise, true);
 		startBackground()
-				.withBox(DecoTextures.GUI_BG_WOODEN, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_ROUND_WOODEN, 8, 0, 176-24, 76)
-				.withStandaloneFrame(6+8, 12, 128+4-2, 64-8, DecoTextures.GUI_FRAME_CORNERS_BRASS, 4, true)
+				.withBox(DecoTextures.BG_WOODEN, DecoTextures.TEMPLATE_ROUND_WOODEN, 8, 0, 176-24, 76)
+				.withStandaloneFrame(6+8, 12, 128+4-2, 64-8, DecoTextures.FRAME_CORNERS_BRASS, 4, true)
 				.withTitleBar(tile)
-				.withBox(DecoTextures.GUI_BG_WOODEN, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_ROUND_WOODEN, 0, 76, 176, 92)
+				.withBox(DecoTextures.BG_WOODEN, DecoTextures.TEMPLATE_ROUND_WOODEN, 0, 76, 176, 92)
 				.withInventorySlots(SlotStyle.IE_INPUT, container.slotInput)
 				.withInventorySlots(SlotStyle.VANILLA, container.slotSaw)
 				.withInventorySlots(SlotStyle.IE_OUTPUT, container.slotOutput)
@@ -50,8 +50,8 @@ public class GuiSawmill extends DecoGui<TileEntitySawmill, ContainerSawmill>
 
 		addComponents(
 				new DecoBarGroup(128+28-16+8, 0)
-						.withBar(b -> b.withTemplate(DecoGuiUtils.BAR_MECH_TORQUE_INPUT.apply(tile.rotation)))
-						.withBar(b -> b.withTemplate(DecoGuiUtils.BAR_MECH_SPEED_INPUT.apply(tile.rotation))),
+						.withBar(b -> b.withTemplate(DecoTemplates.BAR_MECH_TORQUE_INPUT.apply(tile.rotation)))
+						.withBar(b -> b.withTemplate(DecoTemplates.BAR_MECH_SPEED_INPUT.apply(tile.rotation))),
 
 				new DecoImage(66-10-1-14, 42-4)
 						.withSize(49, 12)

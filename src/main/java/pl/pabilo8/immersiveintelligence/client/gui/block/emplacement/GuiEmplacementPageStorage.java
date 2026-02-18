@@ -30,26 +30,26 @@ public class GuiEmplacementPageStorage extends GuiEmplacement
 		addComponents(
 				panelPlatform = new DecoPanel(4, 8+8)
 						.withSize(152+96-8, 76-8)
-						.withBackground(DecoTextures.GUI_BG_STEEL)
-						.withBackgroundMask(DecoTextures.RES_TEXTURES_DECO_TEMPLATE_SQUARE)
+						.withBackground(DecoTextures.BG_STEEL)
+						.withBackgroundMask(DecoTextures.TEMPLATE_SQUARE)
 						.withTitleLabel(IIReference.GUI_LABEL_KEY+"emplacement.platform_inventory", DecoAlignment.TOP_LEFT),
 
 				panelBase = new DecoPanel(4, 76+4+8)
 						.withSize(152+96-8, 76-8)
-						.withBackground(DecoTextures.GUI_BG_STEEL)
-						.withBackgroundMask(DecoTextures.RES_TEXTURES_DECO_TEMPLATE_SQUARE)
+						.withBackground(DecoTextures.BG_STEEL)
+						.withBackgroundMask(DecoTextures.TEMPLATE_SQUARE)
 						.withTitleLabel(IIReference.GUI_LABEL_KEY+"emplacement.base_inventory", DecoAlignment.TOP_LEFT)
 		);
 
 		panelBase.addComponents(
 				new DecoBarGroup(panelBase.width-8-24+4, 4+2)
 						.withBar(decoBar -> decoBar
-								.withTemplate(DecoGuiUtils.BAR_STRUCTURAL_INTEGRITY_BASE)
+								.withTemplate(DecoTemplates.BAR_STRUCTURAL_INTEGRITY_BASE)
 								.withLimits(0, Emplacement.baseHealth, () -> (int)tile.baseHealth.getHealth())
 								.withHeight(panelBase.height-8)
 						)
 						.withBar(decoBar -> decoBar
-								.withTemplate(DecoGuiUtils.BAR_ELECTRIC_ENERGY.apply(tile.energyStorage))
+								.withTemplate(DecoTemplates.BAR_ELECTRIC_ENERGY.apply(tile.energyStorage))
 								.withHeight(panelBase.height-8)
 						)
 		);
@@ -58,7 +58,7 @@ public class GuiEmplacementPageStorage extends GuiEmplacement
 		{
 			panelPlatform.addComponent(
 					new DecoBar(panelPlatform.width-8-12+4, 4+2)
-							.withTemplate(DecoGuiUtils.BAR_ARMOR_INTEGRITY)
+							.withTemplate(DecoTemplates.BAR_ARMOR_INTEGRITY)
 							.withLimits(0, tile.currentWeapon.getMaxHealth(), () -> (int)tile.currentWeapon.getHealth())
 							.withHeight(panelPlatform.height-8)
 			);

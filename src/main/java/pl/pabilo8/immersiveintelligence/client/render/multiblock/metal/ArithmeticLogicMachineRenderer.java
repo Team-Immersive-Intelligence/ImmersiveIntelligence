@@ -16,6 +16,7 @@ import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTUpgradeCachedM
 import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IIMultiblockRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IITileRenderer.RegisteredTileRenderer;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.MultiblockArithmeticLogicMachine;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityArithmeticLogicMachine;
 import pl.pabilo8.immersiveintelligence.common.item.data.ItemIIFunctionalCircuit;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
@@ -42,7 +43,7 @@ public class ArithmeticLogicMachineRenderer extends IIMultiblockRenderer<TileEnt
 	{
 		//Get model from cache
 		StringBuilder cacheKey = new StringBuilder();
-		for(int i = 0; i < TileEntityArithmeticLogicMachine.CIRCUITS_UPGRADED; i++)
+		for(int i = 0; i < MultiblockArithmeticLogicMachine.CIRCUITS_UPGRADED; i++)
 		{
 			ItemStack stack = te.inventory.get(i);
 			cacheKey.append(stack.isEmpty()?"_": IIContent.itemCircuit.stackToSub(te.inventory.get(i)).ordinal());

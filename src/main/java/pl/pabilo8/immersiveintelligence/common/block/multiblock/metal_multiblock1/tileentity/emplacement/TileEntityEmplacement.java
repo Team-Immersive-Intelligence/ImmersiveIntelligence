@@ -5,7 +5,6 @@ import com.elytradev.mirage.event.GatherLightsEvent;
 import com.elytradev.mirage.lighting.ILightEventConsumer;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.common.Optional.Interface;
@@ -340,13 +339,6 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 	public IIGUI getGUI()
 	{
 		return IIGUI.EMPLACEMENT_STORAGE;
-	}
-
-	@Nullable
-	@Override
-	public TileEntity getGuiMaster()
-	{
-		return master();
 	}
 
 	@Override

@@ -29,9 +29,8 @@ import pl.pabilo8.immersiveintelligence.client.gui.block.inserter.GuiInserter;
 import pl.pabilo8.immersiveintelligence.client.gui.block.packer.GuiPacker;
 import pl.pabilo8.immersiveintelligence.client.gui.block.packer.GuiPackerLabeler;
 import pl.pabilo8.immersiveintelligence.client.gui.block.radar.GuiRadar;
-import pl.pabilo8.immersiveintelligence.client.gui.block.radar.GuiRadarStatus;
-import pl.pabilo8.immersiveintelligence.client.gui.block.radar.GuiRadarTasks;
-import pl.pabilo8.immersiveintelligence.client.gui.block.radar.GuiRepairCrate;
+import pl.pabilo8.immersiveintelligence.client.gui.block.radar.GuiRadarConfig;
+import pl.pabilo8.immersiveintelligence.client.gui.block.radar.GuiRadarTargets;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui.DecoResourcesLoader;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoResource;
@@ -147,8 +146,8 @@ public enum IIGUI implements ISerializableEnum
 	AMMUNITION_ASSEMBLER(TileEntityAmmunitionAssembler.class, ContainerAmmunitionAssembler::new),
 
 	RADAR(TileEntityRadar.class, ContainerRadar::new),
-	RADAR_STATUS(TileEntityRadar.class, ContainerRadar::new),
-	RADAR_TASKS(TileEntityRadar.class, ContainerRadar::new);
+	RADAR_CONFIG(TileEntityRadar.class, ContainerRadar::new),
+	RADAR_TARGETS(TileEntityRadar.class, ContainerRadar::new);
 
 	public final Class<? extends TileEntity> teClass;
 	public final BiFunction<EntityPlayer, TileEntity, Container> containerFromTile;
@@ -259,8 +258,8 @@ public enum IIGUI implements ISerializableEnum
 		IIGUI.PROJECTILE_WORKSHOP.setClientDecoGui(GuiProjectileWorkshop::new);
 
 		IIGUI.RADAR.setClientDecoGui(GuiRadar::new);
-		IIGUI.RADAR_STATUS.setClientDecoGui(GuiRadarStatus::new);
-		IIGUI.RADAR_TASKS.setClientDecoGui(GuiRadarTasks::new);
+		IIGUI.RADAR_CONFIG.setClientDecoGui(GuiRadarConfig::new);
+		IIGUI.RADAR_TARGETS.setClientDecoGui(GuiRadarTargets::new);
 		IIGUI.COAGULATOR.setClientDecoGui(GuiCoagulator::new);
 		IIGUI.VULCANIZER.setClientGui(GuiVulcanizer::new);
 	}

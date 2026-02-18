@@ -37,7 +37,7 @@ public class DecoButton extends DecoTextBasedComponent<DecoButton>
 	public DecoButton(int x, int y)
 	{
 		super(x, y);
-		this.backgroundLocation = DecoTextures.RES_TEXTURES_DECO_COMPONENT_BUTTON;
+		this.backgroundLocation = DecoTextures.COMPONENT_BUTTON;
 	}
 
 	public DecoButton withIcon(@Nonnull ResourceLocation icon)

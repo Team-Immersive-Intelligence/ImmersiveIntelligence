@@ -4,7 +4,6 @@ import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorageAdvan
 import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
 import org.apache.commons.lang3.ArrayUtils;
@@ -33,7 +32,6 @@ import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockIn
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -44,11 +42,6 @@ import javax.annotation.Nullable;
 public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockIIGeneric<TileEntityArithmeticLogicMachine>
 		implements IIIGuiMultiblockTile, IBooleanAnimatedPartsBlock, IManagedUpgradableDevice<TileEntityArithmeticLogicMachine>
 {
-	/**
-	 * ALM has 4 circuits by default, 6 with upgrade<br>
-	 * and 16 storage slots for additional circuits
-	 */
-	public static final int CIRCUITS_BASE = 4, CIRCUITS_UPGRADED = 6, STORAGE_SLOTS = 18;
 	/**
 	 * Used for GUI animations
 	 */
@@ -64,7 +57,7 @@ public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockIIGene
 		super(MultiblockArithmeticLogicMachine.INSTANCE);
 		//basic machine properties
 		this.energyStorage = new FluxStorageAdvanced(ArithmeticLogicMachine.energyCapacity);
-		this.inventory = NonNullList.withSize(CIRCUITS_UPGRADED+STORAGE_SLOTS, ItemStack.EMPTY);
+		this.inventory = NonNullList.withSize(MultiblockArithmeticLogicMachine.CIRCUITS_UPGRADED+MultiblockArithmeticLogicMachine.STORAGE_SLOTS, ItemStack.EMPTY);
 		this.upgradeManager = new UpgradeManager<>(this);
 		this.memory = new DataPacket();
 
@@ -139,7 +132,7 @@ public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockIIGene
 		DataPacket newPacket = packet.clone();
 
 		//Process received packet with circuits
-		int circuitsAmount = isUpgradeInstalled(IIContent.UPGRADE_CIRCUIT_RACKS)?CIRCUITS_UPGRADED: CIRCUITS_BASE;
+		int circuitsAmount = isUpgradeInstalled(IIContent.UPGRADE_CIRCUIT_RACKS)?MultiblockArithmeticLogicMachine.CIRCUITS_UPGRADED: MultiblockArithmeticLogicMachine.CIRCUITS_BASE;
 		boolean[] circuit = new boolean[circuitsAmount];
 		DataPacket[] cPacket = new DataPacket[circuitsAmount];
 
@@ -188,13 +181,6 @@ public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockIIGene
 	public boolean canOpenGui()
 	{
 		return true;
-	}
-
-	@Nullable
-	@Override
-	public TileEntity getGuiMaster()
-	{
-		return master();
 	}
 
 	@Override
@@ -251,7 +237,7 @@ public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockIIGene
 		{
 			if(upgrade==IIContent.UPGRADE_CIRCUIT_RACKS)
 			{
-				for(int i = CIRCUITS_BASE; i < CIRCUITS_UPGRADED; i++)
+				for(int i = MultiblockArithmeticLogicMachine.CIRCUITS_BASE; i < MultiblockArithmeticLogicMachine.CIRCUITS_UPGRADED; i++)
 					if(!inventory.get(i).isEmpty())
 					{
 						ItemStack stack = inventory.get(i);

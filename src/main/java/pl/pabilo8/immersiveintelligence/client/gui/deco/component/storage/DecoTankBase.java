@@ -33,9 +33,9 @@ public abstract class DecoTankBase<TYPE extends DecoTankBase<TYPE, RESOURCE>, RE
 	private final String STRING_TANK_EMPTY = I18n.format("gui.immersiveengineering.empty");
 	private final Map<RESOURCE, Float> displayedAmounts = new HashMap<>();
 
-	protected ResLoc tankBackgroundLocation = DecoTextures.GUI_BG_DARK_TANK;
-	protected ResLoc tankOverlayLocation = DecoTextures.RES_TEXTURES_DECO_COMPONENT_TANK;
-	protected ResLoc tankColorMarkerLocation = DecoTextures.RES_TEXTURES_DECO_COMPONENT_TANK_MARKER;
+	protected ResLoc tankBackgroundLocation = DecoTextures.BG_DARK_TANK;
+	protected ResLoc tankOverlayLocation = DecoTextures.COMPONENT_TANK;
+	protected ResLoc tankColorMarkerLocation = DecoTextures.COMPONENT_TANK_MARKER;
 	@Nullable
 	protected IIColor colorMarker;
 	protected int textureSize = 64;

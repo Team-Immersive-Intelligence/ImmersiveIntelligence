@@ -3,6 +3,8 @@ package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multibloc
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3i;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeTechTree;
+import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeUtils.UpgradeTier;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.BlockIIMetalMultiblock0.MetalMultiblocks0;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityDataInputMachine;
@@ -15,6 +17,8 @@ import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctur
  */
 public class MultiblockDataInputMachine extends MultiblockStuctureBase<TileEntityDataInputMachine>
 {
+	public static final int SLOT_INPUT = 0;
+	public static final int SLOT_OUTPUT = 1;
 	public static MultiblockDataInputMachine INSTANCE;
 
 	public MultiblockDataInputMachine()
@@ -22,6 +26,11 @@ public class MultiblockDataInputMachine extends MultiblockStuctureBase<TileEntit
 		super(new ResourceLocation(ImmersiveIntelligence.MODID, "multiblocks/data_input_machine"));
 		offset = new Vec3i(0, 1, 0);
 		INSTANCE = this;
+
+		//Init Tech Tree
+		UpgradeTechTree.getTreeFor(TileEntityDataInputMachine.class)
+				.reset()
+				.withUpgrade(IIContent.UPGRADE_ADVANCED_DATA, UpgradeTier.TIER_1);
 	}
 
 	@Override

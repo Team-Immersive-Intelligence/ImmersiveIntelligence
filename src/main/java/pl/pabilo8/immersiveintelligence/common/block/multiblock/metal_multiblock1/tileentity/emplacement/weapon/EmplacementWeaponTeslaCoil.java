@@ -17,7 +17,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoPanel;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoBar;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoGuiUtils;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTemplates;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.EmplacementWeapons.TeslaCoil;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement.EmplacementStateNeeds;
@@ -206,7 +206,7 @@ public class EmplacementWeaponTeslaCoil extends EmplacementWeapon
 	{
 		panelPlatform.addComponent(
 				new DecoBar(4, 4+2)
-						.withTemplate(DecoGuiUtils.BAR_ELECTRIC_ENERGY.apply(energy))
+						.withTemplate(DecoTemplates.BAR_ELECTRIC_ENERGY.apply(energy))
 						.withHeight(panelPlatform.height-8)
 		);
 	}

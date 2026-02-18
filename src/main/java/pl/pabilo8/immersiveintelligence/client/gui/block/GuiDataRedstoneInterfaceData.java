@@ -46,13 +46,13 @@ public class GuiDataRedstoneInterfaceData extends DecoGui<TileEntityRedstoneInte
 	{
 		//Create background
 		startBackground()
-				.withBox(DecoTextures.GUI_BG_STEEL, 0, 0, 176, 128+8)
+				.withBox(DecoTextures.BG_STEEL, 0, 0, 176, 128+8)
 				.withTitleBar("desc.immersiveintelligence.data_to_redstone_module")
-				.withBox(DecoTextures.GUI_BG_WOODEN, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_ROUND_WOODEN, 0, 128+8, 176, 92)
+				.withBox(DecoTextures.BG_WOODEN, DecoTextures.TEMPLATE_ROUND_WOODEN, 0, 128+8, 176, 92)
 				.withInventoryTitleBar()
 
 				.withNextLayer()
-				.withBox(DecoTextures.GUI_BG_STEEL, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_SQUARE, 0, 8, 32, 120)
+				.withBox(DecoTextures.BG_STEEL, DecoTextures.TEMPLATE_SQUARE, 0, 8, 32, 120)
 
 				.withInventorySlots(SlotStyle.VANILLA, container.playerInventory)
 				.withInventorySlots(SlotStyle.IE_INPUT, container.dataInput)
@@ -90,7 +90,7 @@ public class GuiDataRedstoneInterfaceData extends DecoGui<TileEntityRedstoneInte
 								//Edit / Remove Buttons
 								.withComponent(
 										p -> new DecoButton(p.width-17-16+3, 2)
-												.withTemplate(DecoGuiUtils.LIST_BUTTON_EDIT_TEMPLATE)
+												.withTemplate(DecoTemplates.ACTION_BUTTON_EDIT)
 												.withOnPressed((gui, mouseButton, mouseX, mouseY) -> {
 													if(mouseButton==MouseButton.LEFT)
 													{
@@ -101,7 +101,7 @@ public class GuiDataRedstoneInterfaceData extends DecoGui<TileEntityRedstoneInte
 												})
 								)
 								.withComponent(p -> new DecoButton(p.width-17+1, 2)
-										.withTemplate(DecoGuiUtils.LIST_BUTTON_REMOVE_TEMPLATE)
+										.withTemplate(DecoTemplates.ACTION_BUTTON_REMOVE)
 										.withOnPressed((gui, mouseButton, mouseX, mouseY) -> {
 											if(mouseButton==MouseButton.LEFT)
 											{

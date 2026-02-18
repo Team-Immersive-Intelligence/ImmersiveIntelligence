@@ -10,7 +10,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.text.TextFormatting;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoColors;
 import pl.pabilo8.immersiveintelligence.client.util.font.IIFontRenderer;
 
 import java.util.Arrays;
@@ -90,7 +90,7 @@ public class GuiPrintedPage extends GuiScreen
 			GlStateManager.pushMatrix();
 			GlStateManager.translate(guiLeft+8, guiTop+y, 0);
 			GlStateManager.scale(line.size, line.size, line.size);
-			line.font.drawSplitString(line.text, 0, 0, (int)(141/line.size), DecoTextures.COLOR_H1.getPackedRGB());
+			line.font.drawSplitString(line.text, 0, 0, (int)(141/line.size), DecoColors.H1.getPackedRGB());
 			y += (line.font.getWordWrappedHeight(line.text, (int)(141/line.size)))*line.size;
 			GlStateManager.popMatrix();
 		}

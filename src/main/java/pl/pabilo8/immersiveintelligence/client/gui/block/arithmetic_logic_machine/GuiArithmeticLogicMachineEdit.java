@@ -89,17 +89,17 @@ public class GuiArithmeticLogicMachineEdit extends DecoGui<TileEntityArithmeticL
 
 		//Build background
 		startBackground()
-				.withBox(DecoTextures.GUI_BG_STEEL, 0, 0, 176+64-16, 128+8+32+16+4)
+				.withBox(DecoTextures.BG_STEEL, 0, 0, 176+64-16, 128+8+32+16+4)
 				.withTitleBar(tile)
-				.withBox(DecoTextures.GUI_BG_WOODEN, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_ROUND_WOODEN, 16+8, 128+8+32+20+4, 176, 92)
+				.withBox(DecoTextures.BG_WOODEN, DecoTextures.TEMPLATE_ROUND_WOODEN, 16+8, 128+8+32+20+4, 176, 92)
 				.withInventorySlots(SlotStyle.VANILLA, container.playerInventory)
 				.withInventoryTitleBar()
 
 				.withNextLayer()
-				.withBox(DecoTextures.GUI_BG_PAPER, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_PAPER, 16+8-4+4-16, 48-8-24-4, 176+64-16-32+8-4-8+16, 24)
+				.withBox(DecoTextures.BG_PAPER, DecoTextures.TEMPLATE_PAPER, 16+8-4+4-16, 48-8-24-4, 176+64-16-32+8-4-8+16, 24)
 
 				.withNextLayer()
-				.withBox(DecoTextures.GUI_BG_STEEL, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_ROUND, 16+8-4+4-8-8, 48-8+24-20+4, 176+64-16-32+8-8+16, 128+8-48+32+16)
+				.withBox(DecoTextures.BG_STEEL, DecoTextures.TEMPLATE_ROUND, 16+8-4+4-8-8, 48-8+24-20+4, 176+64-16-32+8-8+16, 128+8-48+32+16)
 				.withTitleBar("desc.immersiveintelligence.variable_properties")
 
 				.build();
@@ -113,13 +113,13 @@ public class GuiArithmeticLogicMachineEdit extends DecoGui<TileEntityArithmeticL
 						.withTranslatedTooltip("desc.immersiveintelligence.variable_properties")
 						.withOnSelectedEntry((oldChar, newChar) -> {
 						})//changeVariableName(newChar))
-						.withTextColor(DecoTextures.COLOR_H1, IIColor.fromPackedRGB(0x35322c))
-						.withBackground(DecoTextures.RES_TEXTURES_DECO_COMPONENT_DROPDOWN_DATA_LETTER_PAPER)
-						.withDropdownSymbol(DecoTextures.RES_TEXTURES_DECO_COMPONENT_DROPDOWN_SYMBOL_PAPER),
+						.withTextColor(DecoColors.H1, IIColor.fromPackedRGB(0x35322c))
+						.withBackground(DecoTextures.COMPONENT_DROPDOWN_DATA_LETTER_PAPER)
+						.withDropdownSymbol(DecoTextures.COMPONENT_DROPDOWN_SYMBOL_PAPER),
 
 				new DecoArrows(32+4+6+1+18+1-32, 4+8+2+1+2)
 						.withSize(8, 14)
-						.withBackground(DecoTextures.RES_TEXTURES_DECO_COMPONENT_ARROWS_PAPER)
+						.withBackground(DecoTextures.COMPONENT_ARROWS_PAPER)
 						.withOnArrow(arrow -> {
 							//char cycled = IIUtils.cycleDataPacketCharsAvoiding(variableToEdit.getName(), arrow, false, cloned);
 							//changeVariableName(cycled);
@@ -127,10 +127,10 @@ public class GuiArithmeticLogicMachineEdit extends DecoGui<TileEntityArithmeticL
 
 				//Operation selector
 				new DecoDropdown<DataOperationMeta>(16+4+10+32-12+6+1-24+8, 4+8+2+1)
-						.withScrollBarBackground(DecoTextures.RES_TEXTURES_DECO_COMPONENT_SLIDER_PAPER)
-						.withBackground(DecoTextures.RES_TEXTURES_DECO_BUTTON_PAPER)
-						.withListBackground(DecoTextures.RES_TEXTURES_DECO_COMPONENT_TEXT_FIELD)
-						.withDropdownSymbol(DecoTextures.RES_TEXTURES_DECO_COMPONENT_DROPDOWN_SYMBOL_PAPER)
+						.withScrollBarBackground(DecoTextures.COMPONENT_SLIDER_PAPER)
+						.withBackground(DecoTextures.COMPONENT_BUTTON_PAPER)
+						.withListBackground(DecoTextures.COMPONENT_TEXT_FIELD)
+						.withDropdownSymbol(DecoTextures.COMPONENT_DROPDOWN_SYMBOL_PAPER)
 						.withSize(116+24-8, 18)
 						.withDropdownWidth(116+24)
 						.withMaxDropHeight(128)
@@ -145,10 +145,10 @@ public class GuiArithmeticLogicMachineEdit extends DecoGui<TileEntityArithmeticL
 						}),
 
 				new DecoButton(162+16-4, 2+8+4+1)
-						.withTemplate(DecoGuiUtils.LIST_BUTTON_DUPLICATE_TEMPLATE)
+						.withTemplate(DecoTemplates.ACTION_BUTTON_DUPLICATE)
 						.withSize(18, 18),
 				new DecoButton(162+16-4+1+18, 2+8+4+1)
-						.withTemplate(DecoGuiUtils.LIST_BUTTON_CLEAR_TEMPLATE)
+						.withTemplate(DecoTemplates.ACTION_BUTTON_CLEAR)
 						.withSize(18, 18)
 		);
 
@@ -167,12 +167,12 @@ public class GuiArithmeticLogicMachineEdit extends DecoGui<TileEntityArithmeticL
 
 		addComponents(
 				new DecoButton(xSize-48-4-4-4-2, 128+8-16+32-2+3+16+2+4)
-						.withBackground(DecoTextures.RES_TEXTURES_DECO_COMPONENT_BUTTON_ROUND)
+						.withBackground(DecoTextures.COMPONENT_BUTTON_ROUND)
 						.withText("desc.immersiveintelligence.variable_apply")
 						.withSize(48, 12)
 						.withOnPressed((gui, button, mouseX, mouseY) -> changeGUI(IIGUI.ARITHMETIC_LOGIC_MACHINE_VARIABLES)),
 				new DecoButton(xSize-48*2-4-4-4-2, 128+8+32-16-2+3+16+2+4)
-						.withBackground(DecoTextures.RES_TEXTURES_DECO_COMPONENT_BUTTON_ROUND)
+						.withBackground(DecoTextures.COMPONENT_BUTTON_ROUND)
 						.withText("Cancel")
 						.withSize(48, 12)
 						.withOnPressed((gui, button, mouseX, mouseY) -> {
@@ -186,8 +186,8 @@ public class GuiArithmeticLogicMachineEdit extends DecoGui<TileEntityArithmeticL
 	{
 		return new DecoEntryPanelBuilder<DataOperationMeta>()
 				.withHeight(18)
-				.withBackground(DecoTextures.GUI_BG_PAPER)
-				.withBackgroundMask(DecoTextures.RES_TEXTURES_DECO_TEMPLATE_PAPER)
+				.withBackground(DecoTextures.BG_PAPER)
+				.withBackgroundMask(DecoTextures.TEMPLATE_PAPER)
 				//Type Icon, Label, and Letter
 				.withComponent("image", new DecoImage(3, 1)
 						.withSize(16, 16))

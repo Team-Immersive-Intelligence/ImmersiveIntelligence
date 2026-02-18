@@ -46,7 +46,7 @@ public class DecoTextField extends DecoComponent<DecoTextField>
 	//Config
 	private IIFontRenderer fontRenderer = IIClientUtils.fontRegular;
 	private int maxStringLength = 32767;
-	private ResLoc backgroundLocation = DecoTextures.RES_TEXTURES_DECO_COMPONENT_TEXT_FIELD;
+	private ResLoc backgroundLocation = DecoTextures.COMPONENT_TEXT_FIELD;
 	private IIColor textColor = IIColor.WHITE;
 	private IIColor cursorColor = IIReference.COLOR_IMMERSIVE_ORANGE;
 	private IIColor selectionColor = IIReference.COLOR_IMMERSIVE_ORANGE.withBrightness(0.35f).withAlpha(0.60f);

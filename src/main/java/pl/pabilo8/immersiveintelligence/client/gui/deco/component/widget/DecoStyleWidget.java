@@ -32,8 +32,8 @@ public class DecoStyleWidget extends DecoComponentWidgetBase<DecoStyleWidget>
 		this.tile = tile;
 		this.style = tile.getStyle();
 		withSize(128, 128+32);
-		withBackground(DecoTextures.GUI_BG_PAPER);
-		withBackgroundMask(DecoTextures.RES_TEXTURES_DECO_TEMPLATE_PAPER);
+		withBackground(DecoTextures.BG_PAPER);
+		withBackgroundMask(DecoTextures.TEMPLATE_PAPER);
 	}
 
 	@Override
@@ -53,9 +53,9 @@ public class DecoStyleWidget extends DecoComponentWidgetBase<DecoStyleWidget>
 					.withMaxDropHeight(128)
 					.withEntries(style.getConstraints().getStyles())
 					.withSelectedEntry(style.getStyle())
-					.withScrollBarBackground(DecoTextures.RES_TEXTURES_DECO_COMPONENT_SLIDER_PAPER)
-					.withBackground(DecoTextures.RES_TEXTURES_DECO_BUTTON_PAPER)
-					.withDropdownSymbol(DecoTextures.RES_TEXTURES_DECO_COMPONENT_DROPDOWN_SYMBOL_PAPER)
+					.withScrollBarBackground(DecoTextures.COMPONENT_SLIDER_PAPER)
+					.withBackground(DecoTextures.COMPONENT_BUTTON_PAPER)
+					.withDropdownSymbol(DecoTextures.COMPONENT_DROPDOWN_SYMBOL_PAPER)
 					.withOnSelectedEntry((oldStyle, newStyle) -> {
 						tile.getStyle().withStyle(newStyle);
 						IIPacketHandler.sendToServer(new MessageIITileSync((TileEntityIEBase)tile, EasyNBT.newNBT()
@@ -79,12 +79,12 @@ public class DecoStyleWidget extends DecoComponentWidgetBase<DecoStyleWidget>
 	public DecoTab provideTab()
 	{
 		return (DecoTab)new DecoTab()
-				.withBackground(DecoTextures.RES_TEXTURES_DECO_COMPONENT_TAB_WIDGET)
+				.withBackground(DecoTextures.COMPONENT_TAB_WIDGET)
 				.withBackgroundColor(IIColor.fromPackedRGB(0x3c5e49))
 				.withPadding(6, 2, 2, 2)
 				.withIconAlignment(DecoAlignment.CENTER)
 				//Engineer's Manual
-				.withIcon(DecoTextures.RES_ICON_STYLE)
+				.withIcon(DecoTextures.ICON_STYLE)
 				.withTranslatedTooltip(IIReference.GUI_TOOLTIP_KEY+"widget.style.show");
 	}
 }

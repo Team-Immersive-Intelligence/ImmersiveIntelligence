@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.client.gui.block.radar;
+package pl.pabilo8.immersiveintelligence.client.gui.block;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
@@ -38,7 +38,7 @@ public class GuiRepairCrate extends DecoGui<TileEntityRepairCrate, ContainerRepa
 	{
 		startBackground()
 				.withBox(null, 0, 0, 176, 76)
-				.withBox(DecoTextures.GUI_BG_WOODEN, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_ROUND_WOODEN, 0, 87, 176, 92)
+				.withBox(DecoTextures.BG_WOODEN, DecoTextures.TEMPLATE_ROUND_WOODEN, 0, 87, 176, 92)
 				.withInventorySlots(SlotStyle.VANILLA, container.playerInventory)
 				.withInventorySlots(SlotStyle.IE_CUSTOM1, container.inputSlot)
 				.withInventoryTitleBar()

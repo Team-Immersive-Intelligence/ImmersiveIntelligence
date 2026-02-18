@@ -26,9 +26,9 @@ public class GuiSmallCrate extends DecoGui<TileEntitySmallCrate, ContainerIICrat
 	public void onInit()
 	{
 		startBackground()
-				.withBox(tile.isWooden()?DecoTextures.GUI_BG_WOODEN: DecoTextures.GUI_BG_STEEL, 0, 0, 176, 76)
+				.withBox(tile.isWooden()?DecoTextures.BG_WOODEN: DecoTextures.BG_STEEL, 0, 0, 176, 76)
 				.withTitleBar(tile)
-				.withBox(DecoTextures.GUI_BG_WOODEN, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_ROUND_WOODEN, 0, 76, 176, 92)
+				.withBox(DecoTextures.BG_WOODEN, DecoTextures.TEMPLATE_ROUND_WOODEN, 0, 76, 176, 92)
 				.withInventorySlots(SlotStyle.VANILLA, container.inventorySlots)
 				.withInventoryTitleBar()
 				.build();

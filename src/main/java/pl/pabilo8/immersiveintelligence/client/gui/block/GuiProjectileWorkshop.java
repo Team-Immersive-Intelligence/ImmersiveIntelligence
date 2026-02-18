@@ -113,27 +113,27 @@ public class GuiProjectileWorkshop extends DecoGui<TileEntityProjectileWorkshop,
 
 		//Add background
 		startBackground()
-				.withBox(DecoTextures.GUI_BG_STEEL_ROUGH, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_SQUARE, 0, 0, 256, 130)
+				.withBox(DecoTextures.BG_STEEL_ROUGH, DecoTextures.TEMPLATE_SQUARE, 0, 0, 256, 130)
 				.withTitleBar(tile)
 				.withNextLayer()
-				.withBox(DecoTextures.GUI_BG_WOODEN, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_ROUND_WOODEN, 44, 136, 176, 92)
+				.withBox(DecoTextures.BG_WOODEN, DecoTextures.TEMPLATE_ROUND_WOODEN, 44, 136, 176, 92)
 				.withInventorySlots(SlotStyle.VANILLA, container.playerInventory)
 				.withInventoryTitleBar()
 
 				.conditionally(!hasFillerUpgrade, builder -> builder
 						.withNextLayer()
-						.withBox(DecoTextures.GUI_BG_STEEL_ROUGH, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_SQUARE, 0, 0, 144, 130)
+						.withBox(DecoTextures.BG_STEEL_ROUGH, DecoTextures.TEMPLATE_SQUARE, 0, 0, 144, 130)
 						.withInventorySlots(SlotStyle.IE_INPUT, container.inputSlot)
 
 						.withNextLayer()
-						.withBox(DecoTextures.GUI_BG_PAPER, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_PAPER, 144, 0, 120, 130)
+						.withBox(DecoTextures.BG_PAPER, DecoTextures.TEMPLATE_PAPER, 144, 0, 120, 130)
 
 						.withNextLayer()
-						.withBox(DecoTextures.GUI_BG_BLUEPRINT, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_PAPER, 0, 86, 144, 44)
-						.withBox(DecoTextures.GUI_BG_BLUEPRINT, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_PAPER, 0, 14, 144, 72)
+						.withBox(DecoTextures.BG_BLUEPRINT, DecoTextures.TEMPLATE_PAPER, 0, 86, 144, 44)
+						.withBox(DecoTextures.BG_BLUEPRINT, DecoTextures.TEMPLATE_PAPER, 0, 14, 144, 72)
 
 						.withNextLayer()
-						.withBox(DecoTextures.GUI_BG_PAPER, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_TICKET, 44, 18, 96, 72)
+						.withBox(DecoTextures.BG_PAPER, DecoTextures.TEMPLATE_TICKET, 44, 18, 96, 72)
 				)
 				.build();
 
@@ -160,15 +160,15 @@ public class GuiProjectileWorkshop extends DecoGui<TileEntityProjectileWorkshop,
 						.withSize(144, 20)
 						.withDropdownWidth(144)
 						.withMaxDropHeight(80)
-						.withScrollBarBackground(DecoTextures.RES_TEXTURES_DECO_COMPONENT_SLIDER_PAPER)
-						.withBackground(DecoTextures.RES_TEXTURES_DECO_BUTTON_PAPER)
-						.withListBackground(DecoTextures.RES_TEXTURES_DECO_COMPONENT_TEXT_FIELD)
+						.withScrollBarBackground(DecoTextures.COMPONENT_SLIDER_PAPER)
+						.withBackground(DecoTextures.COMPONENT_BUTTON_PAPER)
+						.withListBackground(DecoTextures.COMPONENT_TEXT_FIELD)
 						.withEntries(CoreType.values())
 						.withSelectedEntry(coreType)
 						.withOnSelectedEntry((oldType, newType) -> this.coreType = newType)
 						.withDisplayFunction(new DecoEntryPanelBuilder<CoreType>()
-								.withBackground(DecoTextures.GUI_BG_PAPER)
-								.withBackgroundMask(DecoTextures.RES_TEXTURES_DECO_TEMPLATE_PAPER)
+								.withBackground(DecoTextures.BG_PAPER)
+								.withBackgroundMask(DecoTextures.TEMPLATE_PAPER)
 								//Type Icon, Label, and Letter
 								.withComponent("icon", new DecoItemStackDisplay(2, 2)
 										.withSize(16, 18)
@@ -188,15 +188,15 @@ public class GuiProjectileWorkshop extends DecoGui<TileEntityProjectileWorkshop,
 						.withSize(144, 20)
 						.withDropdownWidth(144)
 						.withMaxDropHeight(80)
-						.withScrollBarBackground(DecoTextures.RES_TEXTURES_DECO_COMPONENT_SLIDER_PAPER)
-						.withBackground(DecoTextures.RES_TEXTURES_DECO_BUTTON_PAPER)
-						.withListBackground(DecoTextures.RES_TEXTURES_DECO_COMPONENT_TEXT_FIELD)
+						.withScrollBarBackground(DecoTextures.COMPONENT_SLIDER_PAPER)
+						.withBackground(DecoTextures.COMPONENT_BUTTON_PAPER)
+						.withListBackground(DecoTextures.COMPONENT_TEXT_FIELD)
 						.withEntries(AmmoRegistry.getAllAmmoItems())
 						.withSelectedEntry(ammoType)
 						.withOnSelectedEntry((oldType, newType) -> this.ammoType = newType)
 						.withDisplayFunction(new DecoEntryPanelBuilder<IAmmoTypeItem<?, ?>>()
-								.withBackground(DecoTextures.GUI_BG_PAPER)
-								.withBackgroundMask(DecoTextures.RES_TEXTURES_DECO_TEMPLATE_PAPER)
+								.withBackground(DecoTextures.BG_PAPER)
+								.withBackgroundMask(DecoTextures.TEMPLATE_PAPER)
 								//Type Icon, Label, and Letter
 								.withComponent("icon", new DecoItemStackDisplay(2, 2)
 										.withSize(16, 18)
@@ -229,7 +229,7 @@ public class GuiProjectileWorkshop extends DecoGui<TileEntityProjectileWorkshop,
 				//Energy bar
 				new DecoBar(126, 18)
 						.withSize(12, 69)
-						.withTemplate(DecoGuiUtils.BAR_ELECTRIC_ENERGY.apply(tile.energyStorage)),
+						.withTemplate(DecoTemplates.BAR_ELECTRIC_ENERGY.apply(tile.energyStorage)),
 
 				//Progress bar
 				new DecoImage(8, 28)
@@ -293,12 +293,12 @@ public class GuiProjectileWorkshop extends DecoGui<TileEntityProjectileWorkshop,
 						.withEntries(AmmoRegistry.getAllCores().stream().filter(AmmoPart::showInManual).collect(Collectors.toList()))
 						.withSelectedEntry(ammoCore)
 						.withMaxDropHeight(80)
-						.withScrollBarBackground(DecoTextures.RES_TEXTURES_DECO_COMPONENT_SLIDER_PAPER)
-						.withBackground(DecoTextures.RES_TEXTURES_DECO_BUTTON_PAPER)
-						.withListBackground(DecoTextures.RES_TEXTURES_DECO_COMPONENT_TEXT_FIELD)
+						.withScrollBarBackground(DecoTextures.COMPONENT_SLIDER_PAPER)
+						.withBackground(DecoTextures.COMPONENT_BUTTON_PAPER)
+						.withListBackground(DecoTextures.COMPONENT_TEXT_FIELD)
 						.withDisplayFunction(new DecoEntryPanelBuilder<AmmoCore>()
-								.withBackground(DecoTextures.GUI_BG_PAPER)
-								.withBackgroundMask(DecoTextures.RES_TEXTURES_DECO_TEMPLATE_PAPER)
+								.withBackground(DecoTextures.BG_PAPER)
+								.withBackgroundMask(DecoTextures.TEMPLATE_PAPER)
 								//Type Icon, Label, and Letter
 								.withComponent("icon", new DecoItemStackDisplay(2, 1)
 										.withSize(16, 16)

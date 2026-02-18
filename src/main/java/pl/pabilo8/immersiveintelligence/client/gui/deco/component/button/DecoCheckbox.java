@@ -29,7 +29,7 @@ public class DecoCheckbox extends DecoTextBasedComponent<DecoCheckbox>
 	public DecoCheckbox(int x, int y)
 	{
 		super(x, y);
-		backgroundLocation = DecoTextures.RES_TEXTURES_DECO_COMPONENT_CHECKBOX;
+		backgroundLocation = DecoTextures.COMPONENT_CHECKBOX;
 		withSize(120, 11);
 		withOnPressed((gui, mouseButton, mouseX, mouseY) -> {
 			if(mouseButton==MouseButton.LEFT)

@@ -1,11 +1,16 @@
 {
   "origins": {
     "main": [-23, 0, 23],
-    "flag": [6.5, 64, 23.5],
+    "flag": [6.5, 70, 23.5],
     "variant_sandbags": [0, 0, 0],
     "variant_wooden": [0, 0, 0],
     "variant_steel": [0, 0, 0]
   },
   "hierarchy": {
+  },
+  "properties": {
+    "flag": {
+      "rotation": [0.0, 180.0, 0.0]
+    }
   }
 }

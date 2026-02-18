@@ -67,7 +67,7 @@ public class GuiMedicalCrate extends DecoGui<TileEntityMedicalCrate, ContainerMe
 
 			startBackground()
 					.withBox(null, 0, 0, 176, 76)
-					.withBox(DecoTextures.GUI_BG_WOODEN, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_ROUND_WOODEN, 0, 76, 176, 92)
+					.withBox(DecoTextures.BG_WOODEN, DecoTextures.TEMPLATE_ROUND_WOODEN, 0, 76, 176, 92)
 					.withInventorySlots(SlotStyle.VANILLA, container.playerInventory)
 					.withInventorySlots(SlotStyle.IE_INPUT, container.inputSlot)
 					.withInventorySlots(SlotStyle.IE_INPUT, container.inputFluidSlot)
@@ -115,7 +115,7 @@ public class GuiMedicalCrate extends DecoGui<TileEntityMedicalCrate, ContainerMe
 		{
 			startBackground()
 					.withBox(null, 0, 0, 176, 76)
-					.withBox(DecoTextures.GUI_BG_WOODEN, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_ROUND_WOODEN, 0, 76, 176, 92)
+					.withBox(DecoTextures.BG_WOODEN, DecoTextures.TEMPLATE_ROUND_WOODEN, 0, 76, 176, 92)
 					.withInventorySlots(SlotStyle.VANILLA, container.playerInventory)
 					.withInventorySlots(SlotStyle.IE_INPUT, container.inputSlot)
 					.withInventorySlots(SlotStyle.IE_INPUT, container.inputFluidSlot)

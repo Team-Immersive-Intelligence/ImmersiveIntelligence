@@ -6,7 +6,6 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.DataVariable;
@@ -35,7 +34,6 @@ import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
-import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 
 import javax.annotation.Nullable;
@@ -49,11 +47,6 @@ import javax.annotation.Nullable;
 @DecoTemplate(name = "arithmetic_logic_machine", category = DecoGuiCategory.DATA_TILE)
 public class GuiArithmeticLogicMachine extends DecoGui<TileEntityArithmeticLogicMachine, ContainerArithmeticLogicMachine> implements IDataMachineGui
 {
-	@DecoResource
-	public static ResourceLocation ICON_STORAGE = ResLoc.of(IIReference.RES_II, "gui/tab_icons/storage");
-	@DecoResource
-	public static ResourceLocation ICON_MEMORY = ResLoc.of(IIReference.RES_II, "gui/tab_icons/memory");
-
 	@SyncNBT
 	public int editedCircuit = 0;
 	@SyncNBT
@@ -96,24 +89,24 @@ public class GuiArithmeticLogicMachine extends DecoGui<TileEntityArithmeticLogic
 
 		//Build background
 		startBackground()
-				.withBox(DecoTextures.GUI_BG_STEEL, 0, 0, 176, 128+8)
+				.withBox(DecoTextures.BG_STEEL, 0, 0, 176, 128+8)
 				.withTitleBar(tile)
-				.withBox(DecoTextures.GUI_BG_WOODEN, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_ROUND_WOODEN, 0, 128+8, 176, 92)
+				.withBox(DecoTextures.BG_WOODEN, DecoTextures.TEMPLATE_ROUND_WOODEN, 0, 128+8, 176, 92)
 				.withInventorySlots(SlotStyle.VANILLA, container.playerInventory)
 				.withInventoryTitleBar()
 
 				.withNextLayer()
 				.conditionally(isStorage, b -> b
 						//Circuit slots background box
-						.withBox(DecoTextures.GUI_BG_STEEL, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_SQUARE, 0, 8, 32, 120)
+						.withBox(DecoTextures.BG_STEEL, DecoTextures.TEMPLATE_SQUARE, 0, 8, 32, 120)
 						.withInventorySlots(SlotStyle.IE, container.circuitSlots)
 						//Energy bar background box
-						.withBox(DecoTextures.GUI_BG_STEEL, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_ROUND, 128-32+16+32, 8, 32, 120)
+						.withBox(DecoTextures.BG_STEEL, DecoTextures.TEMPLATE_ROUND, 128-32+16+32, 8, 32, 120)
 						//Circuit storage slots
 						.withInventorySlots(SlotStyle.VANILLA, container.storageSlots)
 				)
 				.conditionally(!isStorage, b -> b
-						.withBox(DecoTextures.GUI_BG_PAPER, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_PAPER, 4+2, 8, 170-16, 16)
+						.withBox(DecoTextures.BG_PAPER, DecoTextures.TEMPLATE_PAPER, 4+2, 8, 170-16, 16)
 				)
 				.build();
 
@@ -125,7 +118,7 @@ public class GuiArithmeticLogicMachine extends DecoGui<TileEntityArithmeticLogic
 					.withAlign(DecoAlignment.TOP);
 			addComponent(new DecoBar(128+32-8+2, 24)
 					.withHeight(95)
-					.withTemplate(DecoGuiUtils.BAR_ELECTRIC_ENERGY.apply(tile.energyStorage))
+					.withTemplate(DecoTemplates.BAR_ELECTRIC_ENERGY.apply(tile.energyStorage))
 			);
 		}
 		else if(tile.inventory.size() > editedCircuit)
@@ -134,11 +127,11 @@ public class GuiArithmeticLogicMachine extends DecoGui<TileEntityArithmeticLogic
 			DataPacket storedData = IIContent.itemCircuit.getStoredData(stack);
 
 			addLabel(stack.getDisplayName(), 4+2+16, 8)
-					.withTextColor(DecoTextures.COLOR_H2)
+					.withTextColor(DecoColors.H2)
 					.withSize(170-16-16, 16)
 					.withAlign(DecoAlignment.CENTER);
 			addComponent(new DecoButton(4+2, 8)
-					.withBackground(DecoTextures.RES_TEXTURES_DECO_BUTTON_PAPER)
+					.withBackground(DecoTextures.COMPONENT_BUTTON_PAPER)
 					.withBackgroundColor(IIColor.fromPackedRGB(0xb37f46))
 					.withIcon(null, 16)
 					.withText(String.valueOf(editedCircuit))
@@ -154,12 +147,12 @@ public class GuiArithmeticLogicMachine extends DecoGui<TileEntityArithmeticLogic
 							.withGuiSaveAction(gui -> this.scroll = gui.getScroll())
 							//Display
 							.withDisplayFunction(new DecoEntryPanelBuilder<DataVariable>()
-									.withBackground(DecoTextures.GUI_BG_PAPER)
-									.withBackgroundMask(DecoTextures.RES_TEXTURES_DECO_TEMPLATE_TICKET)
+									.withBackground(DecoTextures.BG_PAPER)
+									.withBackgroundMask(DecoTextures.TEMPLATE_TICKET)
 
 									//Duplicate / Edit / Remove Buttons
 									.withComponent(p -> new DecoButton(p.width-17-16-14+3, 2)
-											.withTemplate(DecoGuiUtils.LIST_BUTTON_DUPLICATE_TEMPLATE)
+											.withTemplate(DecoTemplates.ACTION_BUTTON_DUPLICATE)
 											.withOnLMBPressed(() -> {
 												DataVariable current = p.getCurrentElement();
 												char name = findNextFreeVariableName();
@@ -169,13 +162,13 @@ public class GuiArithmeticLogicMachine extends DecoGui<TileEntityArithmeticLogic
 											})
 									)
 									.withComponent(p -> new DecoButton(p.width-17-16+3, 2)
-											.withTemplate(DecoGuiUtils.LIST_BUTTON_EDIT_TEMPLATE)
+											.withTemplate(DecoTemplates.ACTION_BUTTON_EDIT)
 											.withOnLMBPressed(() -> {
 												editVariable(p.getCurrentElement());
 											})
 									)
 									.withComponent(p -> new DecoButton(p.width-17+1, 2)
-											.withTemplate(DecoGuiUtils.LIST_BUTTON_REMOVE_TEMPLATE)
+											.withTemplate(DecoTemplates.ACTION_BUTTON_REMOVE)
 											.withOnLMBPressed(() -> {
 												p.getCurrentList().removeEntry(p.getCurrentElement());
 												IIPacketHandler.sendToServer(new MessageIITileSync(tile, onSaveTileData()));
@@ -217,14 +210,14 @@ public class GuiArithmeticLogicMachine extends DecoGui<TileEntityArithmeticLogic
 		//Storage page tab
 		addComponent(new DecoTab()
 				.withLink(IIGUI.ARITHMETIC_LOGIC_MACHINE_STORAGE)
-				.withIcon(ICON_STORAGE)
+				.withIcon(DecoTextures.ICON_STORAGE)
 				.withTranslatedTooltip(IIReference.DESCRIPTION_KEY+"storage_module")
 		);
 
 		if(tile.isUpgradeInstalled(IIContent.UPGRADE_MEMORY))
 			addComponent(new DecoTab()
 					.withLink(IIGUI.ARITHMETIC_LOGIC_MACHINE_STORAGE)
-					.withIcon(ICON_MEMORY)
+					.withIcon(DecoTextures.ICON_MEMORY)
 					.withTranslatedTooltip(IIReference.DESCRIPTION_KEY+"memory_in_module")
 			);
 
@@ -251,7 +244,7 @@ public class GuiArithmeticLogicMachine extends DecoGui<TileEntityArithmeticLogic
 		if(tile.isUpgradeInstalled(IIContent.UPGRADE_MEMORY))
 			addComponent(new DecoTab()
 					.withLink(IIGUI.ARITHMETIC_LOGIC_MACHINE_STORAGE)
-					.withIcon(ICON_MEMORY)
+					.withIcon(DecoTextures.ICON_MEMORY)
 					.withTranslatedTooltip(IIReference.DESCRIPTION_KEY+"memory_out_module")
 			);
 	}

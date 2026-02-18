@@ -1,42 +1,19 @@
 package pl.pabilo8.immersiveintelligence.client.gui.block.ammunition_production;
 
-import blusunrize.immersiveengineering.client.ClientUtils;
-import blusunrize.immersiveengineering.client.gui.elements.GuiButtonState;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.client.util.ITooltipFlag.TooltipFlags;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
-import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseType;
-import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoButton;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoBar;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.text.DecoTextField;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoImage;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoImage.ImageAnimationDirection;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.*;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundBuilder.SlotStyle;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.*;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityPrintingPress;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityAmmunitionAssembler;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityChemicalPainter;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerAmmunitionAssembler;
-import pl.pabilo8.immersiveintelligence.common.gui.ContainerPrintingPress;
-import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
-import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
-import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
-import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
 
 import static pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures.*;
 
@@ -67,50 +44,50 @@ public class GuiAmmunitionAssembler extends DecoGui<TileEntityAmmunitionAssemble
 	public void onInit()
 	{
 		startBackground()
-				.withBox(DecoTextures.GUI_BG_STEEL_ROUGH, 0, 0, 176, 76)
+				.withBox(DecoTextures.BG_STEEL_ROUGH, 0, 0, 176, 76)
 				.withTitleBar(tile)
 				.withInventorySlots(SlotStyle.IE_INPUT, container.inputSlot)
 				.withInventorySlots(SlotStyle.IE_OUTPUT, container.outputSlot)
-				.withBox(DecoTextures.GUI_BG_WOODEN, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_ROUND_WOODEN, 0, 76, 176, 92)
+				.withBox(DecoTextures.BG_WOODEN, DecoTextures.TEMPLATE_ROUND_WOODEN, 0, 76, 176, 92)
 				.withInventoryTitleBar()
-				.withBox(DecoTextures.GUI_BG_BLUEPRINT, 100, 0, 76, 70)
+				.withBox(DecoTextures.BG_BLUEPRINT, 100, 0, 76, 70)
 				.withInventorySlots(SlotStyle.VANILLA, container.playerInventory)
 				.build();
 
 		addComponents(
 				new DecoBar(150+11, 0)
-						.withTemplate(DecoGuiUtils.BAR_ELECTRIC_ENERGY.apply(tile.energyStorage)),
+						.withTemplate(DecoTemplates.BAR_ELECTRIC_ENERGY.apply(tile.energyStorage)),
 
-				new DecoButton(100,10)
-						.withIcon(RES_ICON_PROXIMITY)
+				new DecoButton(100, 10)
+						.withIcon(ICON_PROXIMITY)
 						.withTranslatedTooltip("PROXIMITY"),
 
-				new DecoButton(120,10)
-						.withIcon(RES_ICON_CONTACT)
+				new DecoButton(120, 10)
+						.withIcon(ICON_CONTACT)
 						.withTranslatedTooltip("CONTACT"),
 
-				new DecoButton(140,10)
-						.withIcon(RES_ICON_TIME)
+				new DecoButton(140, 10)
+						.withIcon(ICON_TIME)
 						.withTranslatedTooltip("TIMED"),
 
 				new DecoTextField(96, 40)
-						.withSize(65,18)
+						.withSize(65, 18)
 						.withTextColor(IIColor.WHITE)
 						.withText("Fuze Time")
 
 /**
 
-				new DecoImage(20, 20)
-						.withSize(118, 33)
-						.withImageLocation(TEXTURE_AMMOAS, false)
-						.withUV(256, 127, 177, 122, 209),
+ new DecoImage(20, 20)
+ .withSize(118, 33)
+ .withImageLocation(TEXTURE_AMMOAS, false)
+ .withUV(256, 127, 177, 122, 209),
 
-				new DecoImage(20, 20)
-						.withSize(118, 33)
-						.withImageLocation(TEXTURE_AMMOAS, false)
-						.withUV(256, 0, 177, 245, 209)
-						.withAnimation(ImageAnimationDirection.LEFT_TO_RIGHT, DecoGuiUtils.getMultiblockProductionMultiProgress(tile))
-**/
+ new DecoImage(20, 20)
+ .withSize(118, 33)
+ .withImageLocation(TEXTURE_AMMOAS, false)
+ .withUV(256, 0, 177, 245, 209)
+ .withAnimation(ImageAnimationDirection.LEFT_TO_RIGHT, DecoGuiUtils.getMultiblockProductionMultiProgress(tile))
+ **/
 		);
 	}
 

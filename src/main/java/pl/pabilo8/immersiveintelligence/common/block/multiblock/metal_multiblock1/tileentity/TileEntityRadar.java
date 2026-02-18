@@ -5,7 +5,6 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -158,13 +157,6 @@ public class TileEntityRadar extends TileEntityMultiblockIIGeneric<TileEntityRad
 	public boolean canOpenGui()
 	{
 		return construction.isConstructionFinished();
-	}
-
-	@Nullable
-	@Override
-	public TileEntity getGuiMaster()
-	{
-		return master();
 	}
 
 	@Override

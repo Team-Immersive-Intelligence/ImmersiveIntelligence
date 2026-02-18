@@ -52,15 +52,15 @@ public class TextOverlayMechanical extends TextOverlayBase
 
 		if(intTorque!=extTorque&&intSpeed!=extSpeed)
 			return new String[]{
-					IIReference.COLOR_ENGINEERS_BLUE.getHexCol("\u2296 "+I18n.format(IIReference.GUI_TOOLTIP_KEY+"mech_torque.input", intTorque)),
-					IIReference.COLOR_ENGINEERS_BLUE.getHexCol("\u29c1 "+I18n.format(IIReference.GUI_TOOLTIP_KEY+"mech_speed.input", intSpeed)),
-					IIReference.CHARICON_TORQUE+I18n.format(IIReference.GUI_TOOLTIP_KEY+"mech_torque.output", extTorque),
-					IIReference.CHARICON_SPEED+I18n.format(IIReference.GUI_TOOLTIP_KEY+"mech_speed.output", extSpeed)
+					IIReference.COLOR_ENGINEERS_BLUE.getHexCol(IIReference.CHARICON_TORQUE+" "+I18n.format(IIReference.INFO_KEY_TORQUE_IN, intTorque)),
+					IIReference.COLOR_ENGINEERS_BLUE.getHexCol(IIReference.CHARICON_SPEED+" "+I18n.format(IIReference.INFO_KEY_SPEED_IN, intSpeed)),
+					IIReference.COLOR_ENGINEERS_BLUE.getHexCol(IIReference.CHARICON_TORQUE+" "+I18n.format(IIReference.INFO_KEY_TORQUE_OUT, extTorque)),
+					IIReference.COLOR_ENGINEERS_BLUE.getHexCol(IIReference.CHARICON_SPEED+" "+I18n.format(IIReference.INFO_KEY_SPEED_OUT, extSpeed)),
 			};
 		else
 			return new String[]{
-					IIReference.CHARICON_TORQUE+I18n.format(IIReference.GUI_TOOLTIP_KEY+"mech_torque.stored", intTorque, extTorque),
-					IIReference.CHARICON_SPEED+I18n.format(IIReference.GUI_TOOLTIP_KEY+"mech_speed.stored", intSpeed, intSpeed)
+					IIReference.CHARICON_TORQUE+" "+I18n.format(IIReference.INFO_KEY_TORQUE_BOTH, intTorque, extTorque),
+					IIReference.CHARICON_SPEED+" "+I18n.format(IIReference.INFO_KEY_SPEED_BOTH, intSpeed, intSpeed)
 			};
 	}
 

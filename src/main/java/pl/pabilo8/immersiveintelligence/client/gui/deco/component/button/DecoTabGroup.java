@@ -21,7 +21,7 @@ import java.util.List;
 public class DecoTabGroup extends DecoComponent<DecoTabGroup>
 {
 	private final List<DecoTab> tabs = new ArrayList<>();
-	private ResourceLocation background = DecoTextures.RES_TEXTURES_DECO_COMPONENT_TAB;
+	private ResourceLocation background = DecoTextures.COMPONENT_TAB;
 	private boolean horizontal;
 	private int spacing = 0;
 
@@ -33,8 +33,8 @@ public class DecoTabGroup extends DecoComponent<DecoTabGroup>
 	public DecoTabGroup withHorizontalAlignment(boolean horizontal)
 	{
 		this.horizontal = horizontal;
-		if(this.background==DecoTextures.RES_TEXTURES_DECO_COMPONENT_TAB)
-			this.background = DecoTextures.RES_TEXTURES_DECO_COMPONENT_TAB_VERTICAL;
+		if(this.background==DecoTextures.COMPONENT_TAB)
+			this.background = DecoTextures.COMPONENT_TAB_VERTICAL;
 		return this;
 	}
 

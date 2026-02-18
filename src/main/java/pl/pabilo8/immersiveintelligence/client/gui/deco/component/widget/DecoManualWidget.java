@@ -97,7 +97,7 @@ public class DecoManualWidget extends DecoComponentWidgetBase<DecoManualWidget>
 		if(super.initialize())
 		{
 			wrapper.initGui();
-			withBackground(DecoTextures.GUI_BG_PAPER);
+			withBackground(DecoTextures.BG_PAPER);
 			this.width -= 24;
 			withTitleLabel(IIReference.GUI_TOOLTIP_KEY+"widget.manual", DecoAlignment.TOP);
 			this.width += 24;
@@ -146,7 +146,7 @@ public class DecoManualWidget extends DecoComponentWidgetBase<DecoManualWidget>
 	public DecoTab provideTab()
 	{
 		return (DecoTab)new DecoTab()
-				.withBackground(DecoTextures.RES_TEXTURES_DECO_COMPONENT_TAB_WIDGET)
+				.withBackground(DecoTextures.COMPONENT_TAB_WIDGET)
 				.withBackgroundColor(IIColor.fromPackedRGB(0x3C3C5F))
 				.withPadding(6, 2, 2, 2)
 				.withIconAlignment(DecoAlignment.CENTER)

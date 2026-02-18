@@ -654,9 +654,8 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 		return true;
 	}
 
-	@Nullable
 	@Override
-	public TileEntity getGuiMaster()
+	public TileEntity master()
 	{
 		return this;
 	}

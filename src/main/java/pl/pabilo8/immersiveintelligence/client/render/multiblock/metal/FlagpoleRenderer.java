@@ -32,9 +32,9 @@ public class FlagpoleRenderer extends IIMultiblockRenderer<TileEntityFlagpole>
 	{
 		applyStandardMirroring(te, true);
 		model.getVariant(te, te.style);
-		AMTBanner banner = flag.get();
-		banner.setProperty(AMTUtils.getDebugProgress(200, partialTicks));
-		banner.setBanner(te.flag);
+		flag.get().setBanner(te.flag)
+				.setIsFlag(true)
+				.setProperty(AMTUtils.getDebugProgress(100, partialTicks));
 		model.render(tes, buf);
 	}
 
@@ -42,7 +42,7 @@ public class FlagpoleRenderer extends IIMultiblockRenderer<TileEntityFlagpole>
 	public void drawSimple(BufferBuilder buf, float partialTicks, Tessellator tes)
 	{
 		model.defaultize();
-		flag.get().setBanner(ItemStack.EMPTY);
+		flag.get().setBanner(ItemStack.EMPTY).setIsFlag(true);
 		model.render(tes, buf);
 	}
 

@@ -27,8 +27,8 @@ import java.util.function.Supplier;
 public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? super E, T>, T> extends DecoTextBasedComponent<E>
 {
 	protected static final int ON_CREATE_OPTION = -10;
-	protected ResLoc listBackgroundLocation = DecoTextures.GUI_BG_DARK;
-	protected ResLoc scrollBarLocation = DecoTextures.RES_TEXTURES_DECO_COMPONENT_SLIDER;
+	protected ResLoc listBackgroundLocation = DecoTextures.BG_DARK;
+	protected ResLoc scrollBarLocation = DecoTextures.COMPONENT_SLIDER;
 
 	protected Queue<T> toBeAdded = new ArrayDeque<>();
 	protected Queue<T> toBeRemoved = new ArrayDeque<>();

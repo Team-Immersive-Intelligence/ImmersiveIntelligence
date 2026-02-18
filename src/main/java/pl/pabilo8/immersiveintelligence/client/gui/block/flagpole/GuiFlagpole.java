@@ -1,19 +1,20 @@
 package pl.pabilo8.immersiveintelligence.client.gui.block.flagpole;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoCheckbox;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoSwitch;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoTab;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoDropdown;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoMapDisplay;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.map.DecoMapDefaultColorMapper;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.map.IDecoMapColorMapper;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.map.scanners.BlockTypeScanner;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.*;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoAlignment;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundBuilder.SlotStyle;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoGuiCategory;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTemplate;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityArtilleryHowitzer;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityFlagpole;
@@ -22,7 +23,6 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerFlagpole;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
-import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 
 /**
@@ -33,10 +33,6 @@ import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 @DecoTemplate(name = "flagpole", category = DecoGuiCategory.TERRITORY_CONTROL_TILE)
 public class GuiFlagpole extends DecoGui<TileEntityFlagpole, ContainerFlagpole>
 {
-	@DecoResource
-	public static ResourceLocation ICON_MAP = ResLoc.of(IIReference.RES_II, "gui/tab_icons/map");
-	@DecoResource
-	public static ResourceLocation ICON_FACTION_CONFIG = ResLoc.of(IIReference.RES_II, "gui/tab_icons/faction_management");
 	@SyncNBT
 	public boolean filterFlagpoles = true, filterWeapons = true, filterLogistics = true, filterIntelligence = true, filterWireNetworks = true;
 
@@ -49,27 +45,20 @@ public class GuiFlagpole extends DecoGui<TileEntityFlagpole, ContainerFlagpole>
 	public void onInit()
 	{
 		startBackground()
-				.withBox(DecoTextures.GUI_BG_STEEL, 0, 0, 152+96, 152)
+				.withBox(DecoTextures.BG_STEEL, 0, 0, 152+96, 152)
 				.withTitleBar(tile)
-				.withBox(DecoTextures.GUI_BG_WOODEN, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_ROUND_WOODEN, 32, 152, 176, 92)
+				.withBox(DecoTextures.BG_WOODEN, DecoTextures.TEMPLATE_ROUND_WOODEN, 32, 152, 176, 92)
 				.withInventorySlots(SlotStyle.VANILLA, container.inventorySlots)
 				.withInventoryTitleBar()
-				.withFrame(DecoTextures.GUI_FRAME_WOODEN_THIN, 4, false, new boolean[]{true, false, false, false})
+				.withFrame(DecoTextures.FRAME_WOODEN_THIN, 4, false, new boolean[]{true, false, false, false})
 				.withNextLayer()
-				.withBox(DecoTextures.GUI_BG_PAPER, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_PAPER, 0, 0, 152+96, 152)
-				.withBox(DecoTextures.GUI_BG_STEEL, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_SQUARE, 152, 0, 64+32, 152)
+				.withBox(DecoTextures.BG_PAPER, DecoTextures.TEMPLATE_PAPER, 0, 0, 152+96, 152)
+				.withBox(DecoTextures.BG_STEEL, DecoTextures.TEMPLATE_SQUARE, 152, 0, 64+32, 152)
 				.build();
 
-		addComponents(
-				new DecoTab()
-						.withLink(IIGUI.FLAGPOLE)
-						.withIcon(ICON_MAP)
-						.withTranslatedTooltip(IIReference.DESCRIPTION_KEY+"map_module"),
-				new DecoTab()
-						.withLink(IIGUI.FLAGPOLE_FACTION)
-						.withIcon(ICON_FACTION_CONFIG)
-						.withTranslatedTooltip(IIReference.DESCRIPTION_KEY+"faction_module")
-		);
+		//Tabs
+		addLinkTab(IIGUI.FLAGPOLE, DecoTextures.ICON_MAP, "map_module");
+		addLinkTab(IIGUI.FLAGPOLE_FACTION, DecoTextures.ICON_FACTION_CONFIG, "faction_module");
 
 		BlockPos pos = tile.getPos();
 		addLabel("Shown Markers", 152+4, 4)

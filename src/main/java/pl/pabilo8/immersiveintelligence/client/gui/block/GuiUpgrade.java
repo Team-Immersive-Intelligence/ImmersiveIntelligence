@@ -17,6 +17,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoBut
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoTreeDisplay;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoLabel;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoPanel;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoBar;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoItemStackDisplay;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoScenarioDisplay;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoImage;
@@ -64,20 +65,20 @@ public class GuiUpgrade<T extends TileEntityIEBase & IIEInventory & IUpgradableD
 	@Override
 	public void onInit()
 	{
-		ResLoc style = DecoTextures.GUI_BG_STEEL;
+		ResLoc style = DecoTextures.BG_STEEL;
 		switch(tile.getUpgradableMachineStyle())
 		{
 			case WOODEN:
-				style = DecoTextures.GUI_BG_WOODEN;
+				style = DecoTextures.BG_WOODEN;
 				break;
 			case BRICKS:
-				style = DecoTextures.GUI_BG_BRICKS;
+				style = DecoTextures.BG_BRICKS;
 				break;
 			case CONCRETE:
-				style = DecoTextures.GUI_BG_CONCRETE;
+				style = DecoTextures.BG_CONCRETE;
 				break;
 			case SANDBAGS:
-				style = DecoTextures.GUI_BG_SANDBAGS;
+				style = DecoTextures.BG_SANDBAGS;
 				break;
 			case STEEL:
 			default:
@@ -88,8 +89,8 @@ public class GuiUpgrade<T extends TileEntityIEBase & IIEInventory & IUpgradableD
 				.withBox(style, 0, 0, 256, 152+8+8)
 				.withTitleBar("desc.immersiveintelligence.upgrade_gui.title")
 				.withNextLayer()
-				.withBox(DecoTextures.GUI_BG_WOODEN, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_ROUND_WOODEN, 40, 136+24+8, 176, 92)
-				.withFrame(DecoTextures.GUI_FRAME_WOODEN_THIN, 4, false, new boolean[]{true, false, false, false})
+				.withBox(DecoTextures.BG_WOODEN, DecoTextures.TEMPLATE_ROUND_WOODEN, 40, 136+24+8, 176, 92)
+				.withFrame(DecoTextures.FRAME_WOODEN_THIN, 4, false, new boolean[]{true, false, false, false})
 				.withInventorySlots(SlotStyle.VANILLA, container.inventorySlots)
 				.withInventoryTitleBar()
 				.build();
@@ -98,8 +99,8 @@ public class GuiUpgrade<T extends TileEntityIEBase & IIEInventory & IUpgradableD
 		addComponents(
 				new DecoPanel(4, 4+8)
 						.withSize(108, 152)
-						.withBackground(DecoTextures.GUI_BG_PAPER)
-						.withBackgroundMask(DecoTextures.RES_TEXTURES_DECO_TEMPLATE_SQUARE),
+						.withBackground(DecoTextures.BG_PAPER)
+						.withBackgroundMask(DecoTextures.TEMPLATE_SQUARE),
 				scenario = new DecoScenarioDisplay(4+2, 4+2+8)
 						.withSize(108-4, 96)
 						.withBackgroundColor(IIColor.BLACK.withAlpha(32))
@@ -109,7 +110,7 @@ public class GuiUpgrade<T extends TileEntityIEBase & IIEInventory & IUpgradableD
 						.withInteractionAllowed(true),
 				new DecoButton(118-4, 16-8-4+14-14+8)
 						.withSize(69, 14)
-						.withBackground(DecoTextures.RES_TEXTURES_DECO_COMPONENT_TAB_VERTICAL)
+						.withBackground(DecoTextures.COMPONENT_TAB_VERTICAL)
 						.withText(IIReference.DESCRIPTION_KEY+"upgrade_gui.tech_tree")
 						.withOnLMBPressed(() -> {
 							panelInfo.visible = panelInfo.enabled = false;
@@ -118,7 +119,7 @@ public class GuiUpgrade<T extends TileEntityIEBase & IIEInventory & IUpgradableD
 						}),
 				new DecoButton(118-4+69, 16-8-4+14-14+8)
 						.withSize(69, 14)
-						.withBackground(DecoTextures.RES_TEXTURES_DECO_COMPONENT_TAB_VERTICAL)
+						.withBackground(DecoTextures.COMPONENT_TAB_VERTICAL)
 						.withText(IIReference.DESCRIPTION_KEY+"upgrade_gui.info")
 						.withOnLMBPressed(() -> {
 							panelInfo.visible = panelInfo.enabled = true;
@@ -128,8 +129,8 @@ public class GuiUpgrade<T extends TileEntityIEBase & IIEInventory & IUpgradableD
 						}),
 				panelInfo = new DecoPanel(118-4, 16-8-4+14+8)
 						.withSize(146-8, 146-8)
-						.withBackground(DecoTextures.GUI_BG_STEEL)
-						.withBackgroundMask(DecoTextures.RES_TEXTURES_DECO_TEMPLATE_SQUARE),
+						.withBackground(DecoTextures.BG_STEEL)
+						.withBackgroundMask(DecoTextures.TEMPLATE_SQUARE),
 				techTreeDisplay = new DecoTreeDisplay<Upgrade>(118-4, 16-8-4+14+8)
 						.withTree(new UpgradeTechTreeWrapper(techTree, tile)
 						{
@@ -144,7 +145,7 @@ public class GuiUpgrade<T extends TileEntityIEBase & IIEInventory & IUpgradableD
 						})
 						.withNodeRenderer(new UpgradeTreeNodeRenderer())
 						.withSize(146-8, 146-8)
-						.withBackground(DecoSprite.atlasSprite(DecoTextures.GUI_BG_DARK, 64))
+						.withBackground(DecoSprite.atlasSprite(DecoTextures.BG_DARK, 64))
 		);
 
 		if(lastUpgrade==null)
@@ -190,6 +191,14 @@ public class GuiUpgrade<T extends TileEntityIEBase & IIEInventory & IUpgradableD
 						.withSize(18, 18)
 						.withStack(requiredStacks.get(i));
 			}
+
+			//Required energy
+			int energyRequired = (int)(upgrade.getProgressRequired()*0.75f);
+			panelInfo.addComponent(new DecoBar(4, 22+64+28-16))
+					.withTemplate(DecoTemplates.BAR_ELECTRIC_ENERGY_INPUT)
+					.withLimits(0, energyRequired, upgrade::getProgressRequired)
+					.withSize(panelInfo.width-4-4, 12)
+					.withHorizontalMode(true);
 
 			//Install button
 			final boolean shouldInstall = !tile.isUpgradeInstalled(upgrade);

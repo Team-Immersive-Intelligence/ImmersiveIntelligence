@@ -8,6 +8,7 @@ import blusunrize.immersiveengineering.common.util.Utils;
 import blusunrize.immersiveengineering.common.util.inventory.IIEInventory;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagFloat;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
@@ -15,6 +16,7 @@ import net.minecraftforge.common.util.INBTSerializable;
 import pl.pabilo8.immersiveintelligence.api.utils.MultiblockConstructionManager;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -246,6 +248,13 @@ public class IIMultiblockInterfaces
 
 	public interface IIIGuiMultiblockTile extends IGuiTile
 	{
+		@Nullable
+		@Override
+		default TileEntity getGuiMaster()
+		{
+			return master();
+		}
+
 		@Override
 		default int getGuiID()
 		{
@@ -253,5 +262,7 @@ public class IIMultiblockInterfaces
 		}
 
 		IIGUI getGUI();
+
+		TileEntity master();
 	}
 }

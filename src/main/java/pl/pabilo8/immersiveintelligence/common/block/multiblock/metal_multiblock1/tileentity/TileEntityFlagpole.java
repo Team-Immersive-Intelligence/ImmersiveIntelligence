@@ -5,7 +5,6 @@ import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import pl.pabilo8.immersiveintelligence.api.style.IStyleCustomizable;
@@ -29,7 +28,6 @@ import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultibl
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -236,13 +234,6 @@ public class TileEntityFlagpole extends TileEntityMultiblockIIBase<TileEntityFla
 	public boolean canOpenGui()
 	{
 		return true;
-	}
-
-	@Nullable
-	@Override
-	public TileEntity getGuiMaster()
-	{
-		return master();
 	}
 
 	@Override

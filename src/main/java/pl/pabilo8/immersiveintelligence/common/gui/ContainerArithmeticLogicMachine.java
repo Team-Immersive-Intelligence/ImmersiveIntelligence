@@ -7,11 +7,10 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.MultiblockArithmeticLogicMachine;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityArithmeticLogicMachine;
 import pl.pabilo8.immersiveintelligence.common.item.data.ItemIIFunctionalCircuit;
 import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIBase;
-
-import static pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityArithmeticLogicMachine.*;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -33,8 +32,8 @@ public class ContainerArithmeticLogicMachine extends ContainerIIBase<TileEntityA
 		{ //Storage
 			boolean circuitUpgrade = tile.isUpgradeInstalled(IIContent.UPGRADE_CIRCUIT_RACKS);
 			this.circuitSlots = addSlotArray(6+2, 26-8-2-1+(circuitUpgrade?0: 18), 0,
-					circuitUpgrade?CIRCUITS_UPGRADED: CIRCUITS_BASE, 1, CircuitSlot::new);
-			this.storageSlots = addSlotArray(32+4, 6+4+32-16, CIRCUITS_UPGRADED, STORAGE_SLOTS, 6, CircuitSlot::new);
+					circuitUpgrade?MultiblockArithmeticLogicMachine.CIRCUITS_UPGRADED: MultiblockArithmeticLogicMachine.CIRCUITS_BASE, 1, CircuitSlot::new);
+			this.storageSlots = addSlotArray(32+4, 6+4+32-16, MultiblockArithmeticLogicMachine.CIRCUITS_UPGRADED, MultiblockArithmeticLogicMachine.STORAGE_SLOTS, 6, CircuitSlot::new);
 			this.storage = true;
 		}
 		else

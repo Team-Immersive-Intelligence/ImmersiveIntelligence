@@ -32,7 +32,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.api.ammo.penetration.DamageBlockPos;
 import pl.pabilo8.immersiveintelligence.api.upgrade.Upgrade;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoColors;
 import pl.pabilo8.immersiveintelligence.client.model.ModelIIBase;
 import pl.pabilo8.immersiveintelligence.client.util.font.IIFontRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.font.IIFontRendererCustomGlyphs;
@@ -174,13 +174,13 @@ public class IIClientUtils
 	@Deprecated
 	public static void drawArmorBar(int x, int y, int w, int h, float progress)
 	{
-		drawGradientBar(x, y, w, h, DecoTextures.COLOR_ARMORBAR1, DecoTextures.COLOR_ARMORBAR2, progress);
+		drawGradientBar(x, y, w, h, DecoColors.ARMOR_INTEGRITY_1, DecoColors.ARMOR_INTEGRITY_2, progress);
 	}
 
 	@Deprecated
 	public static void drawPowerBar(int x, int y, int w, int h, float progress)
 	{
-		drawGradientBar(x, y, w, h, DecoTextures.COLOR_POWERBAR1, DecoTextures.COLOR_POWERBAR2, progress);
+		drawGradientBar(x, y, w, h, DecoColors.POWER1, DecoColors.POWER2, progress);
 	}
 
 	@Deprecated

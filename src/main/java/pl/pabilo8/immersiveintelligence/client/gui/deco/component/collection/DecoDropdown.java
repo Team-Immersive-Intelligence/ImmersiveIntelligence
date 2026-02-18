@@ -34,12 +34,12 @@ public class DecoDropdown<T> extends DecoScrolledCollection<DecoDropdown<T>, T>
 	protected int dropdownWidth;
 	protected boolean dropped = false;
 	protected BiConsumer<T, T> onSelectedEntry;
-	private ResLoc dropdownSymbolLocation = DecoTextures.RES_TEXTURES_DECO_COMPONENT_DROPDOWN_SYMBOL;
+	private ResLoc dropdownSymbolLocation = DecoTextures.COMPONENT_DROPDOWN_SYMBOL;
 
 	public DecoDropdown(int x, int y)
 	{
 		super(x, y);
-		this.backgroundLocation = DecoTextures.RES_TEXTURES_DECO_COMPONENT_BUTTON;
+		this.backgroundLocation = DecoTextures.COMPONENT_BUTTON;
 		withSize(120, 12);
 		withOnPressed((gui, mouseButton, mouseX, mouseY) -> {
 			if(mouseButton==MouseButton.LEFT)

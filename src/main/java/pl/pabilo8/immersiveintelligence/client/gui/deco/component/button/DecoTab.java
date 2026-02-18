@@ -24,7 +24,7 @@ public class DecoTab extends DecoButton
 	public DecoTab()
 	{
 		super(0, 0);
-		withBackground(DecoTextures.RES_TEXTURES_DECO_COMPONENT_TAB);
+		withBackground(DecoTextures.COMPONENT_TAB);
 		withPadding(6, 1, 4, 3);
 	}
 

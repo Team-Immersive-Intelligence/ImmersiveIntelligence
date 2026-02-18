@@ -30,17 +30,17 @@ public class GuiEmplacementPageTargetFilters extends GuiEmplacement
 		DecoPanel topBar;
 		addComponents(
 				topBar = new DecoPanel(2, 2+8)
-						.withBackground(DecoTextures.GUI_BG_PAPER)
-						.withBackgroundMask(DecoTextures.RES_TEXTURES_DECO_TEMPLATE_PAPER)
+						.withBackground(DecoTextures.BG_PAPER)
+						.withBackgroundMask(DecoTextures.TEMPLATE_PAPER)
 						.withSize(152+96-4, 18),
 
 				new DecoPanel(2, 2+19+8)
-						.withBackground(DecoTextures.GUI_BG_STEEL)
-						.withBackgroundMask(DecoTextures.RES_TEXTURES_DECO_TEMPLATE_PAPER)
+						.withBackground(DecoTextures.BG_STEEL)
+						.withBackgroundMask(DecoTextures.TEMPLATE_PAPER)
 						.withSize(122-1, 152-24),
 				new DecoPanel(2+122+1, 2+19+8)
-						.withBackground(DecoTextures.GUI_BG_PAPER)
-						.withBackgroundMask(DecoTextures.RES_TEXTURES_DECO_TEMPLATE_PAPER)
+						.withBackground(DecoTextures.BG_PAPER)
+						.withBackgroundMask(DecoTextures.TEMPLATE_PAPER)
 						.withSize(122-1, 152-24)
 		);
 

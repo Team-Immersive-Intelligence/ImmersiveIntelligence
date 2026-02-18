@@ -87,11 +87,11 @@ public class DecoColorPickerPanel extends DecoPanel
 						.withDropdownWidth(remainingWidth)
 						.withEntries(EnumDyeColor.values())
 						.withDisplayFunction(new DecoEntryPanelBuilder<EnumDyeColor>()
-								.withBackground(DecoTextures.GUI_BG_STEEL)
+								.withBackground(DecoTextures.BG_STEEL)
 								.withHeight(12)
 								.withComponent("icon", new DecoImage(2, 1)
 										.withSize(8, 8)
-										.withImageLocation(DecoTextures.RES_TEXTURES_DECO_COMPONENT_COLOR, true)
+										.withImageLocation(DecoTextures.COMPONENT_COLOR, true)
 										.withUV(16, 4, 4, 12, 12)
 								)
 								.withLabel("label",
@@ -108,7 +108,7 @@ public class DecoColorPickerPanel extends DecoPanel
 						}),
 				colorDisplay = new DecoButton(rgb.x+rgb.width+2, rgb.y+1+2)
 						.withSize(10, 10)
-						.withBackground(DecoTextures.RES_TEXTURES_DECO_COMPONENT_COLOR)
+						.withBackground(DecoTextures.COMPONENT_COLOR)
 						.withOnPressed((gui, button, mouseX, mouseY) -> {
 							this.onGuiEvent(DecoGuiEvent.COPY);
 							return true;
@@ -148,7 +148,7 @@ public class DecoColorPickerPanel extends DecoPanel
 		bindAtlas();
 		IIDrawUtils.startTexturedColored()
 				.drawConnectedTexColorRect(colorDisplay.x-2, colorDisplay.y-2, colorDisplay.width+4, colorDisplay.height+4,
-						IIColor.WHITE, DecoTextures.RES_TEXTURES_DECO_COMPONENT_TEXT_FIELD, 32, 32, 8, 8)
+						IIColor.WHITE, DecoTextures.COMPONENT_TEXT_FIELD, 32, 32, 8, 8)
 				.finish();
 		GlStateManager.disableBlend();
 		GlStateManager.popMatrix();

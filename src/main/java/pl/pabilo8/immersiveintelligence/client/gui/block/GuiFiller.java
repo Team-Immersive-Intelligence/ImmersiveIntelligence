@@ -39,9 +39,9 @@ public class GuiFiller extends DecoGui<TileEntityFiller, ContainerFiller>
 	{
 		startBackground()
 				.withBox(null, 0, 0, 176, 76)
-				.withBox(DecoTextures.GUI_BG_STEEL, 152, 0, 24, 76)
+				.withBox(DecoTextures.BG_STEEL, 152, 0, 24, 76)
 				//.withTitleBar(tile)
-				.withBox(DecoTextures.GUI_BG_WOODEN, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_ROUND_WOODEN, 0, 76, 176, 92)
+				.withBox(DecoTextures.BG_WOODEN, DecoTextures.TEMPLATE_ROUND_WOODEN, 0, 76, 176, 92)
 				.withInventorySlots(SlotStyle.VANILLA, container.playerInventory)
 				.withInventorySlots(SlotStyle.IE_INPUT, container.inputSlot)
 				.withInventoryTitleBar()
@@ -62,7 +62,7 @@ public class GuiFiller extends DecoGui<TileEntityFiller, ContainerFiller>
 						.withUV(64, 0, 15, 22, 37),
 
 				new DecoBar(161-4, -4)
-						.withTemplate(DecoGuiUtils.BAR_ELECTRIC_ENERGY.apply(tile.energyStorage))
+						.withTemplate(DecoTemplates.BAR_ELECTRIC_ENERGY.apply(tile.energyStorage))
 
 		);
 	}

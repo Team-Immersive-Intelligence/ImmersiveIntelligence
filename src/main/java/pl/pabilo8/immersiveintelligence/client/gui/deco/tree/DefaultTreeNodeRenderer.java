@@ -49,7 +49,7 @@ public class DefaultTreeNodeRenderer implements IDecoTreeNodeRenderer<Object>
 		// Draw node background
 		ClientUtils.bindAtlas();
 		IIDrawUtils draw = IIDrawUtils.startTexturedColored();
-		draw.drawConnectedTexColorRect(x, y, NODE_WIDTH, NODE_HEIGHT, color, DecoTextures.RES_TEXTURES_DECO_IE_SLOT, 32, 32, 4, 4);
+		draw.drawConnectedTexColorRect(x, y, NODE_WIDTH, NODE_HEIGHT, color, DecoTextures.SLOT_IE, 32, 32, 4, 4);
 		draw.finish();
 
 		// Draw node text (centered)

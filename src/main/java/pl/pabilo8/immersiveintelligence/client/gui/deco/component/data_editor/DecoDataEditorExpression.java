@@ -75,8 +75,8 @@ public class DecoDataEditorExpression extends DecoDataEditor<DataTypeExpression>
 
 			DecoPanel typePanel = addComponent(new DecoPanel(0, 16)
 					.withSize(width, 20)
-					.withBackground(DecoTextures.GUI_BG_PAPER)
-					.withBackgroundMask(DecoTextures.RES_TEXTURES_DECO_TEMPLATE_PAPER)
+					.withBackground(DecoTextures.BG_PAPER)
+					.withBackgroundMask(DecoTextures.TEMPLATE_PAPER)
 			);
 
 			typePanel.addLabel("Type", 4, 2)
@@ -85,23 +85,23 @@ public class DecoDataEditorExpression extends DecoDataEditor<DataTypeExpression>
 			typePanel.addComponents(new DecoDropdown<TypeMetaInfo<?>>(34, 2)
 							.withSize(width-32-2-16-2-2, 16)
 							.withDropdownWidth(width-16)
-							.withBackground(DecoTextures.RES_TEXTURES_DECO_BUTTON_PAPER)
-							.withDropdownSymbol(DecoTextures.RES_TEXTURES_DECO_COMPONENT_DROPDOWN_SYMBOL_PAPER)
+							.withBackground(DecoTextures.COMPONENT_BUTTON_PAPER)
+							.withDropdownSymbol(DecoTextures.COMPONENT_DROPDOWN_SYMBOL_PAPER)
 							.withEntries(IIDataTypeUtils.metaTypesByClass.get(DataTypeAccessor.class),
 									IIDataTypeUtils.metaTypesByClass.get(meta.allowedTypes()[page-1])
 							),
 					new DecoButton(width-17-2, 2)
 							.withText("@")
 							.withSize(16, 16)
-							.withBackground(DecoTextures.RES_TEXTURES_DECO_BUTTON_PAPER)
+							.withBackground(DecoTextures.COMPONENT_BUTTON_PAPER)
 			);
 
 			//Get editor
 			this.editor = DecoDataEditor.getEditorFor(argument, 0, 36);
 			if(editor!=null)
 				addComponent(editor.withSize(this.width, this.height-36)
-						.withBackground(DecoTextures.GUI_BG_STEEL)
-						.withBackgroundMask(DecoTextures.RES_TEXTURES_DECO_TEMPLATE_PAPER)
+						.withBackground(DecoTextures.BG_STEEL)
+						.withBackgroundMask(DecoTextures.TEMPLATE_PAPER)
 				);
 		}
 		return true;

@@ -21,6 +21,7 @@ import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIRecipeLayout.IOTyp
 import pl.pabilo8.immersiveintelligence.api.crafting.recipe.LayoutComponent;
 import pl.pabilo8.immersiveintelligence.api.crafting.recipe.RotaryMachineRecipe;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoColors;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
@@ -156,7 +157,7 @@ public class IIRecipeJEIWrapper<T extends IIMultiblockRecipe> implements IRecipe
 		GlStateManager.pushMatrix();
 		GlStateManager.enableBlend();
 		TextureAtlasSprite label = mc.getTextureMapBlocks()
-				.getAtlasSprite((recipe.getRecipeLayout().isEarlyGame()?DecoTextures.GUI_LABEL_WOODEN: DecoTextures.GUI_LABEL_STEEL).toString());
+				.getAtlasSprite((recipe.getRecipeLayout().isEarlyGame()?DecoTextures.LABEL_WOODEN: DecoTextures.LABEL_STEEL).toString());
 		IIDrawUtils.startTexturedColored()
 				.drawConnectedTexColorRect(-4, recipeHeight+2-16+1, recipeWidth+8, 16, IIColor.WHITE,
 						32, 16, 8, 4, label.getMinU(), label.getMaxU(), label.getMinV(), label.getInterpolatedV(8))
@@ -211,7 +212,7 @@ public class IIRecipeJEIWrapper<T extends IIMultiblockRecipe> implements IRecipe
 		//Draw an IE styled slot
 		ClientUtils.bindAtlas();
 		TextureAtlasSprite label = mc.getTextureMapBlocks()
-				.getAtlasSprite(DecoTextures.RES_TEXTURES_DECO_IE_SLOT_MARKER.toString());
+				.getAtlasSprite(DecoTextures.SLOT_IE_MARKER.toString());
 		int labelI = 0;
 		switch(subtype)
 		{
@@ -270,7 +271,7 @@ public class IIRecipeJEIWrapper<T extends IIMultiblockRecipe> implements IRecipe
 		//noinspection IntegerDivisionInFloatingPointContext
 		float labelV = label.getInterpolatedV((labelI/4)*3), labelVV = label.getInterpolatedV((labelI/4)*3+3);
 		IIDrawUtils.startTexturedColored()
-				.drawConnectedTexColorRect(x-1, y-1, width+2, height+2, IIColor.WHITE, DecoTextures.RES_TEXTURES_DECO_IE_SLOT, 32, 32, 4, 4)
+				.drawConnectedTexColorRect(x-1, y-1, width+2, height+2, IIColor.WHITE, DecoTextures.SLOT_IE, 32, 32, 4, 4)
 				.drawTexColorRect(x-2+width*0.5f, y-1-2, 4, 3, IIColor.WHITE, labelU, labelUU, labelV, labelVV)
 				.finish();
 	}
@@ -317,12 +318,12 @@ public class IIRecipeJEIWrapper<T extends IIMultiblockRecipe> implements IRecipe
 		//Draw time icon
 		ClientUtils.bindAtlas();
 		IIDrawUtils.startTextured()
-				.drawTexSprite(x-2, y-2, 16, 16, DecoTextures.RES_ICON_TIME)
+				.drawTexSprite(x-2, y-2, 16, 16, DecoTextures.ICON_TIME)
 				.finish();
 
 		//Draw time text
 		String timeStr = GuiScreen.isShiftKeyDown()?"1 t": recipe.getTotalProcessTime()+" t";
-		ClientUtils.mc().fontRenderer.drawString(timeStr, x+14, y+3, DecoTextures.COLOR_H1.getPackedRGB());
+		ClientUtils.mc().fontRenderer.drawString(timeStr, x+14, y+3, DecoColors.H1.getPackedRGB());
 	}
 
 	private void drawPowerInfo(int x, int y)
@@ -330,25 +331,25 @@ public class IIRecipeJEIWrapper<T extends IIMultiblockRecipe> implements IRecipe
 		//Draw power icon
 		ClientUtils.bindAtlas();
 		IIDrawUtils.startTextured()
-				.drawTexSprite(x-2, y-2, 16, 16, DecoTextures.RES_ICON_ENERGY_INPUT)
+				.drawTexSprite(x-2, y-2, 16, 16, DecoTextures.ICON_ENERGY_INPUT)
 				.finish();
 
 		//Draw power text
 		String powerStr = GuiScreen.isShiftKeyDown()?recipe.getTotalProcessEnergy()+" IF": String.format("%d IF/t", recipe.getEnergyPerTick());
-		ClientUtils.mc().fontRenderer.drawString(powerStr, x+14, y+3, DecoTextures.COLOR_H1.getPackedRGB());
+		ClientUtils.mc().fontRenderer.drawString(powerStr, x+14, y+3, DecoColors.H1.getPackedRGB());
 	}
 
 	private void drawMechanicalPowerInfo(int x, int y, RotaryMachineRecipe recipe)
 	{
 		ClientUtils.bindAtlas();
 		IIDrawUtils.startTextured()
-				.drawTexSprite(x-2, y-1, 16, 16, DecoTextures.RES_ICON_MECH_TORQUE_INPUT)
-				.drawTexSprite(x-2+54, y-1, 16, 16, DecoTextures.RES_ICON_MECH_SPEED_INPUT)
+				.drawTexSprite(x-2, y-1, 16, 16, DecoTextures.ICON_MECH_TORQUE_INPUT)
+				.drawTexSprite(x-2+54, y-1, 16, 16, DecoTextures.ICON_MECH_SPEED_INPUT)
 				.finish();
 
-		IIClientUtils.fontRegular.drawString(recipe.getTorque()+" IT", x+16, y+3, DecoTextures.COLOR_H1.getPackedRGB());
+		IIClientUtils.fontRegular.drawString(recipe.getTorque()+" IT", x+16, y+3, DecoColors.H1.getPackedRGB());
 		IIClientUtils.fontRegular.drawString((GuiScreen.isShiftKeyDown()?recipe.getMaxSpeed(): recipe.getMinSpeed())+" D/t", x+16+54, y+3,
-				DecoTextures.COLOR_H1.getPackedRGB());
+				DecoColors.H1.getPackedRGB());
 	}
 
 	private void drawTank(int x, int y, int width, int height)
@@ -357,9 +358,9 @@ public class IIRecipeJEIWrapper<T extends IIMultiblockRecipe> implements IRecipe
 		ClientUtils.bindAtlas();
 		IIDrawUtils.startTexturedColored()
 				.drawConnectedTexColorRect(x-1, y-1, width+2, height+2, IIColor.WHITE,
-						DecoTextures.GUI_BG_DARK_TANK, 64, 64, 8, 8)
+						DecoTextures.BG_DARK_TANK, 64, 64, 8, 8)
 				.drawConnectedTexColorRect(x-1, y-1, width+2, height+2, IIColor.WHITE,
-						DecoTextures.RES_TEXTURES_DECO_COMPONENT_TANK, 64, 64, 16, 16)
+						DecoTextures.COMPONENT_TANK, 64, 64, 16, 16)
 				.finish();
 	}
 }

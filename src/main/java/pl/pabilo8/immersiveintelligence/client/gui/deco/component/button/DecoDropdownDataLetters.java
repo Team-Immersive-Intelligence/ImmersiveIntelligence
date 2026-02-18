@@ -25,7 +25,7 @@ public class DecoDropdownDataLetters extends DecoDropdown<Character> implements 
 	{
 		super(x, y);
 		withSize(18, 18);
-		withBackground(DecoTextures.RES_TEXTURES_DECO_COMPONENT_TEXT_FIELD);
+		withBackground(DecoTextures.COMPONENT_TEXT_FIELD);
 		withEntriesInGrid(6);
 		withEntries(new String(DataPacket.VARIABLE_NAMES)
 				.chars()

@@ -34,7 +34,7 @@ public class DecoScrollableItemSlots extends DecoComponent<DecoScrollableItemSlo
 	private final List<Slot> slots = new ArrayList<>();
 	private final Map<Slot, int[]> originalPos = new IdentityHashMap<>();
 
-	private ResourceLocation scrollbarSprite = DecoTextures.RES_TEXTURES_DECO_COMPONENT_SLIDER;
+	private ResourceLocation scrollbarSprite = DecoTextures.COMPONENT_SLIDER;
 
 	private int columns = 1;
 	private int scrollRows = 0;

@@ -63,15 +63,15 @@ public class GuiInserter extends DecoGui<TileEntityInserterBase, ContainerInsert
 	public void onInit()
 	{
 		startBackground()
-				.withBox(DecoTextures.GUI_BG_STEEL, 0, 0, 152+96, 152+8)
+				.withBox(DecoTextures.BG_STEEL, 0, 0, 152+96, 152+8)
 				.withTitleBar(tile)
 				.withNextLayer()
-				.withBox(DecoTextures.GUI_BG_WOODEN, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_ROUND_WOODEN, 32, 152+8, 176, 92)
-				.withFrame(DecoTextures.GUI_FRAME_WOODEN_THIN, 4, false, new boolean[]{true, false, false, false})
+				.withBox(DecoTextures.BG_WOODEN, DecoTextures.TEMPLATE_ROUND_WOODEN, 32, 152+8, 176, 92)
+				.withFrame(DecoTextures.FRAME_WOODEN_THIN, 4, false, new boolean[]{true, false, false, false})
 				.withInventorySlots(SlotStyle.VANILLA, container.inventorySlots)
 				.withInventoryTitleBar()
 				.withNextLayer()
-				.withBox(DecoTextures.GUI_BG_STEEL, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_SQUARE, 108, 8+3, 120+16, 130+16-2)
+				.withBox(DecoTextures.BG_STEEL, DecoTextures.TEMPLATE_SQUARE, 108, 8+3, 120+16, 130+16-2)
 				.build();
 
 		addComponent((taskJobList = new DecoTaskJobList<>(0, 2))
@@ -92,8 +92,8 @@ public class GuiInserter extends DecoGui<TileEntityInserterBase, ContainerInsert
 					refreshDetails();
 				})
 				.withDisplayFunction(new DecoEntryPanelBuilder<InserterTask>()
-						.withBackground(DecoTextures.GUI_BG_PAPER)
-						.withBackgroundMask(DecoTextures.RES_TEXTURES_DECO_TEMPLATE_TICKET)
+						.withBackground(DecoTextures.BG_PAPER)
+						.withBackgroundMask(DecoTextures.TEMPLATE_TICKET)
 						.withComponent("icon", new DecoItemStackDisplay(3, 2).withSize(16, 16))
 						.withLabel("wild", new DecoLabel(fontRenderer, 3, 2)
 								.withSize(16, 16)
@@ -123,14 +123,14 @@ public class GuiInserter extends DecoGui<TileEntityInserterBase, ContainerInsert
 		//Details panel, hidden at first
 		panelDetails = addComponent(new DecoPanel(108, 8))
 				.withSize(120+16, 130+16+2)
-				.withBackground(DecoTextures.GUI_BG_PAPER)
-				.withBackgroundMask(DecoTextures.RES_TEXTURES_DECO_TEMPLATE_PAPER);
+				.withBackground(DecoTextures.BG_PAPER)
+				.withBackgroundMask(DecoTextures.TEMPLATE_PAPER);
 
 		// Keep existing helper methods working
 		addComponent(new DecoBar(128-16-8+2, 128+32-8+2+2)
 				.withSize(96, 12)
 				.withHorizontalMode(true)
-				.withTemplate(DecoGuiUtils.BAR_ELECTRIC_ENERGY_BASE)
+				.withTemplate(DecoTemplates.BAR_ELECTRIC_ENERGY_BASE)
 				.withLimits(0, tile.getEnergyCapacity(), () -> tile.energyStorage)
 		);
 		refreshDetails();

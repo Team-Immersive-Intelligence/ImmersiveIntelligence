@@ -29,7 +29,7 @@ public class DecoSwitch extends DecoTextBasedComponent<DecoSwitch>
 {
 	private static final int X_SIZE = 16, SWITCH_X_SIZE = 8, Y_SIZE = 9;
 	private static final int MAX_SWITCH_TICKS = 20;
-	private ResLoc movingPartLocation = DecoTextures.RES_TEXTURES_DECO_COMPONENT_SWITCH_MOVING;
+	private ResLoc movingPartLocation = DecoTextures.COMPONENT_SWITCH_MOVING;
 	private IIColor colorOff = IIReference.COLOR_SWITCH_OFF;
 	private IIColor colorRight = IIReference.COLOR_SWITCH_ON;
 	private Consumer<Boolean> onToggle;
@@ -40,7 +40,7 @@ public class DecoSwitch extends DecoTextBasedComponent<DecoSwitch>
 	public DecoSwitch(int x, int y)
 	{
 		super(x, y);
-		backgroundLocation = DecoTextures.RES_TEXTURES_DECO_COMPONENT_SWITCH;
+		backgroundLocation = DecoTextures.COMPONENT_SWITCH;
 		withSize(120, 11);
 		withOnPressed((gui, mouseButton, mx, my) -> {
 			if(mouseButton==MouseButton.LEFT)

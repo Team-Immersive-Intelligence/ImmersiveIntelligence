@@ -58,23 +58,23 @@ public class GuiDataInputMachineEdit extends DecoGui<TileEntityDataInputMachine,
 
 		//Build background
 		startBackground()
-				.withBox(DecoTextures.GUI_BG_STEEL, 0, 0, 240, 136)
+				.withBox(DecoTextures.BG_STEEL, 0, 0, 240, 136)
 				.withTitleBar(tile)
-				.withBox(DecoTextures.GUI_BG_STEEL, 32, 136, 208, 32)
-				.withBox(DecoTextures.GUI_BG_WOODEN, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_ROUND_WOODEN, 32, 168, 176, 92)
+				.withBox(DecoTextures.BG_STEEL, 32, 136, 208, 32)
+				.withBox(DecoTextures.BG_WOODEN, DecoTextures.TEMPLATE_ROUND_WOODEN, 32, 168, 176, 92)
 				.withInventoryTitleBar()
 
 				.withNextLayer()
-				.withBox(DecoTextures.GUI_BG_STEEL, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_SQUARE, 0, 8, 32, 120)
+				.withBox(DecoTextures.BG_STEEL, DecoTextures.TEMPLATE_SQUARE, 0, 8, 32, 120)
 				.withInventorySlots(SlotStyle.VANILLA, container.playerInventory)
 				.withInventorySlots(SlotStyle.IE_INPUT, container.dataInput)
 				.withInventorySlots(SlotStyle.IE_OUTPUT, container.dataOutput)
 
 				.withNextLayer()
-				.withBox(DecoTextures.GUI_BG_PAPER, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_PAPER, 40, 12, 188, 24)
+				.withBox(DecoTextures.BG_PAPER, DecoTextures.TEMPLATE_PAPER, 40, 12, 188, 24)
 
 				.withNextLayer()
-				.withBox(DecoTextures.GUI_BG_STEEL, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_ROUND, 40, 40, 192, 120)
+				.withBox(DecoTextures.BG_STEEL, DecoTextures.TEMPLATE_ROUND, 40, 40, 192, 120)
 				.withTitleBar("desc.immersiveintelligence.variable_properties")
 
 				.build();
@@ -100,13 +100,13 @@ public class GuiDataInputMachineEdit extends DecoGui<TileEntityDataInputMachine,
 						.withSelectedEntry((Character)variableToEdit.getName())
 						.withTranslatedTooltip("desc.immersiveintelligence.variable_properties")
 						.withOnSelectedEntry((oldChar, newChar) -> changeVariableName(newChar))
-						.withDropdownSymbol(DecoTextures.RES_TEXTURES_DECO_COMPONENT_DROPDOWN_SYMBOL_PAPER)
-						.withTextColor(DecoTextures.COLOR_H1, IIColor.fromPackedRGB(0x35322c))
-						.withBackground(DecoTextures.RES_TEXTURES_DECO_COMPONENT_DROPDOWN_DATA_LETTER_PAPER),
+						.withDropdownSymbol(DecoTextures.COMPONENT_DROPDOWN_SYMBOL_PAPER)
+						.withTextColor(DecoColors.H1, IIColor.fromPackedRGB(0x35322c))
+						.withBackground(DecoTextures.COMPONENT_DROPDOWN_DATA_LETTER_PAPER),
 
 				new DecoArrows(62, 17)
 						.withSize(8, 14)
-						.withBackground(DecoTextures.RES_TEXTURES_DECO_COMPONENT_ARROWS_PAPER)
+						.withBackground(DecoTextures.COMPONENT_ARROWS_PAPER)
 						.withOnArrow(arrow -> {
 							char cycled = IIUtils.cycleDataPacketCharsAvoiding(variableToEdit.getName(), arrow, false, cloned);
 							changeVariableName(cycled);
@@ -114,9 +114,9 @@ public class GuiDataInputMachineEdit extends DecoGui<TileEntityDataInputMachine,
 
 				//Data Type selector
 				new DecoDropdown<TypeMetaInfo<?>>(73, 15)
-						.withScrollBarBackground(DecoTextures.RES_TEXTURES_DECO_COMPONENT_SLIDER_PAPER)
-						.withBackground(DecoTextures.RES_TEXTURES_DECO_BUTTON_PAPER)
-						.withListBackground(DecoTextures.RES_TEXTURES_DECO_COMPONENT_TEXT_FIELD)
+						.withScrollBarBackground(DecoTextures.COMPONENT_SLIDER_PAPER)
+						.withBackground(DecoTextures.COMPONENT_BUTTON_PAPER)
+						.withListBackground(DecoTextures.COMPONENT_TEXT_FIELD)
 						.withSize(116, 18)
 						.withDropdownWidth(116)
 						.withMaxDropHeight(128)
@@ -124,8 +124,8 @@ public class GuiDataInputMachineEdit extends DecoGui<TileEntityDataInputMachine,
 						.withSelectedEntry(variableToEdit.getValue().getTypeMeta())
 						.withDisplayFunction(new DecoEntryPanelBuilder<TypeMetaInfo<?>>()
 								.withHeight(18)
-								.withBackground(DecoTextures.GUI_BG_PAPER)
-								.withBackgroundMask(DecoTextures.RES_TEXTURES_DECO_TEMPLATE_PAPER)
+								.withBackground(DecoTextures.BG_PAPER)
+								.withBackgroundMask(DecoTextures.TEMPLATE_PAPER)
 								//Type Icon, Label, and Letter
 								.withComponent("image", new DecoImage(3, 1)
 										.withSize(16, 16))
@@ -153,7 +153,7 @@ public class GuiDataInputMachineEdit extends DecoGui<TileEntityDataInputMachine,
 						}),
 
 				new DecoButton(xSize-48-4-4-4-2, 153)
-						.withBackground(DecoTextures.RES_TEXTURES_DECO_COMPONENT_BUTTON_ROUND)
+						.withBackground(DecoTextures.COMPONENT_BUTTON_ROUND)
 						.withText("Apply")
 						.withSize(48, 12)
 						.withOnPressed((gui, button, mouseX, mouseY) -> {
@@ -161,7 +161,7 @@ public class GuiDataInputMachineEdit extends DecoGui<TileEntityDataInputMachine,
 							return changeGUI(IIGUI.DATA_INPUT_MACHINE_VARIABLES);
 						}),
 				new DecoButton(xSize-96-4-4-4-2, 153)
-						.withBackground(DecoTextures.RES_TEXTURES_DECO_COMPONENT_BUTTON_ROUND)
+						.withBackground(DecoTextures.COMPONENT_BUTTON_ROUND)
 						.withText("Cancel")
 						.withSize(48, 12)
 						.withOnPressed((gui, button, mouseX, mouseY) -> {
@@ -170,10 +170,10 @@ public class GuiDataInputMachineEdit extends DecoGui<TileEntityDataInputMachine,
 						}),
 
 				new DecoButton(190, 15)
-						.withTemplate(DecoGuiUtils.LIST_BUTTON_DUPLICATE_TEMPLATE)
+						.withTemplate(DecoTemplates.ACTION_BUTTON_DUPLICATE)
 						.withSize(18, 18),
 				new DecoButton(209, 15)
-						.withTemplate(DecoGuiUtils.LIST_BUTTON_CLEAR_TEMPLATE)
+						.withTemplate(DecoTemplates.ACTION_BUTTON_CLEAR)
 						.withSize(18, 18)
 		);
 	}

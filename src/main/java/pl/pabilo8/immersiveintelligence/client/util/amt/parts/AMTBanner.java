@@ -8,7 +8,11 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntityBanner;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3d;
+import pl.pabilo8.immersiveintelligence.client.util.amt.animation.IIAnimationCompiledMap;
+import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTModel;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.amt.AMTModelHeader;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
@@ -24,31 +28,54 @@ public class AMTBanner extends AMT
 	private ItemStack banner = ItemStack.EMPTY;
 	private final TileEntityBanner virtualTile = new TileEntityBanner();
 	private ResourceLocation bannerRes = null;
+	private final AMTModel bannerModel;
+	private IIAnimationCompiledMap animation;
+
 	private boolean isFlag = true;
 
 	public AMTBanner(String name, AMTModelHeader header)
 	{
-		super(name, header);
+		this(name, header.getOffset(name));
 	}
 
 	public AMTBanner(String name, Vec3d originPos)
 	{
 		super(name, originPos);
+
+		//Create banner model
+		AMTQuads[] parts = new AMTQuads[4];
+		for(int i = 0; i < 4; i++)
+		{
+			Vec3d basePos = new Vec3d(0, -10*i, 0);
+			//Create banner/flag segment
+			parts[i] = new AMTQuadsBuilder(null).withBox(
+					basePos.addVector(-10, -10, -0.5), basePos.addVector(10, 0, 0.5),
+					new Vec2f(0, i*10), new Vec2f(20, (i+1)*10), 64, 64
+			).build("banner"+i, new Vec3d(0, -i*10*0.0625f, 0));
+			//Add it as a child of the previous segment, so they rotate together
+			if(i > 0)
+				parts[i-1].withChildren(parts[i]);
+		}
+		this.bannerModel = new AMTModel(parts[0]);
+
+		//Load banner waving animation
+		this.animation = IIAnimationCompiledMap.create(this.bannerModel, IIReference.RES_II.with("banner_wave"));
 	}
 
-	public void setBanner(@Nonnull ItemStack banner)
+	public AMTBanner setBanner(@Nonnull ItemStack banner)
 	{
 		if(banner.isItemEqual(this.banner))
-			return;
+			return this;
 		this.banner = banner;
 		if(banner.isEmpty())
 		{
 			this.bannerRes = null;
-			return;
+			return this;
 		}
 		this.virtualTile.setItemValues(this.banner, false);
 		this.bannerRes = BannerTextures.BANNER_DESIGNS.getResourceLocation(
 				virtualTile.getPatternResourceLocation(), virtualTile.getPatternList(), virtualTile.getColorList());
+		return this;
 	}
 
 	public AMTBanner setIsFlag(boolean isFlag)
@@ -60,37 +87,18 @@ public class AMTBanner extends AMT
 	@Override
 	protected void draw(Tessellator tes, BufferBuilder buf)
 	{
-		if(bannerRes==null)
+		if(bannerRes==null||bannerModel==null||animation==null)
 			return;
+
 		ClientUtils.mc().getTextureManager().bindTexture(bannerRes);
 		GlStateManager.translate(originPos.x, originPos.y, originPos.z);
-		GlStateManager.rotate(90, 0, 0, 1);
-		drawFlag(3, Math.abs(1f-(property*2)));
-	}
+		//Flags are banners, just sideways
+		if(isFlag)
+			GlStateManager.rotate(90, 0, 0, 1);
 
-	private void drawFlag(int n, double rot)
-	{
-		float length = 40/(float)n;
-		for(int i = 0; i < n; i++)
-		{
-			GlStateManager.rotate((float)(rot*6.5f*n*(n%2==0?1: -1)), 1, 0, 0);
-			ClientUtils.drawTexturedRect(0f, 0f, 1f, length/21f, 0.015625f, 21/64f, 0.015625f+(i*length/64f), (length*(i+1))/64f);
-			GlStateManager.translate(0f, 0f, 0.0625f);
-			ClientUtils.drawTexturedRect(0f, length/21f, 1f, -length/21f, 0.015625f, 21/64f, 0.015625f+((i+1)*length/64f), (length*i)/64f);
-			GlStateManager.pushMatrix();
-			GlStateManager.rotate(90, 0, 1, 0);
-			ClientUtils.drawTexturedRect(0f, 0f, 0.0625f, length/21f, 0.015625f, 0.015625f, 0.015625f+(i*length/64f), (length*(i+1))/64f);
-			GlStateManager.translate(0f, 0f, 1f);
-			ClientUtils.drawTexturedRect(0f, length/21f, 0.0625f, -length/21f, 0.328125f, 0.328125f, 0.015625f+((i+1)*length/64f), (length*i)/64f);
-
-			GlStateManager.popMatrix();
-			GlStateManager.translate(0f, length/24f, -0.0625f);
-		}
-		//GlStateManager.rotate(90,0,0,1);
-		GlStateManager.rotate(90, 1, 0, 0);
-		GlStateManager.translate(0f, 0f, -0.0625f);
-		ClientUtils.drawTexturedRect(0f, 0f, 1f, 1.5f/21f, 0.015625f, 0.015625f, 0.625f, 0.625f);
-
+		//Render banner model
+		animation.apply(property);
+		bannerModel.render(tes, buf);
 	}
 
 	@Override

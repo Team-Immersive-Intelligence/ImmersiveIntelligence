@@ -19,6 +19,7 @@ import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIRecipeLayout.IOTyp
 import pl.pabilo8.immersiveintelligence.api.crafting.recipe.LayoutComponent;
 import pl.pabilo8.immersiveintelligence.api.crafting.recipe.RotaryMachineRecipe;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoColors;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualObject;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualPage;
@@ -220,7 +221,7 @@ public class IIManualMachineRecipe extends IIManualObject
 		GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);*/
 
 		IIDrawUtils.startTexturedColored()
-				.drawConnectedTexColorRect(x-1, y-1, width+2, height+2, IIColor.WHITE, DecoTextures.RES_TEXTURES_DECO_MANUAL_SLOT,
+				.drawConnectedTexColorRect(x-1, y-1, width+2, height+2, IIColor.WHITE, DecoTextures.SLOT_IE_MANUAL,
 						32, 32, 8, 8)
 				.finish();
 
@@ -258,7 +259,7 @@ public class IIManualMachineRecipe extends IIManualObject
 		subtype = subtype.replace("frame", "").replace("_", "");
 
 		ClientUtils.bindAtlas();
-		TextureAtlasSprite label = ClientUtils.getSprite(DecoTextures.RES_TEXTURES_DECO_MANUAL_SLOT_MARKER);
+		TextureAtlasSprite label = ClientUtils.getSprite(DecoTextures.SLOT_IE_MANUAL_MARKER);
 
 		int labelI = getLabelIndex(subtype, component.getIoType());
 
@@ -337,12 +338,12 @@ public class IIManualMachineRecipe extends IIManualObject
 		//Draw time icon
 		ClientUtils.bindAtlas();
 		IIDrawUtils.startTextured()
-				.drawTexSprite(x-2, y-2, 16, 16, DecoTextures.RES_ICON_TIME)
+				.drawTexSprite(x-2, y-2, 16, 16, DecoTextures.ICON_TIME)
 				.finish();
 
 		//Draw time text
 		String timeStr = recipe.getTotalProcessTime()+" t";
-		mc.fontRenderer.drawString(timeStr, x+14, y+3, DecoTextures.COLOR_H1.getPackedRGB());
+		mc.fontRenderer.drawString(timeStr, x+14, y+3, DecoColors.H1.getPackedRGB());
 	}
 
 	private void drawPowerInfo(Minecraft mc, int x, int y)
@@ -350,25 +351,25 @@ public class IIManualMachineRecipe extends IIManualObject
 		//Draw power icon
 		ClientUtils.bindAtlas();
 		IIDrawUtils.startTextured()
-				.drawTexSprite(x-2, y-2, 16, 16, DecoTextures.RES_ICON_ENERGY_INPUT)
+				.drawTexSprite(x-2, y-2, 16, 16, DecoTextures.ICON_ENERGY_INPUT)
 				.finish();
 
 		//Draw power text
 		String powerStr = recipe.getTotalProcessEnergy()+" IF";
-		mc.fontRenderer.drawString(powerStr, x+14, y+3, DecoTextures.COLOR_H1.getPackedRGB());
+		mc.fontRenderer.drawString(powerStr, x+14, y+3, DecoColors.H1.getPackedRGB());
 	}
 
 	private void drawMechanicalPowerInfo(Minecraft mc, int x, int y, RotaryMachineRecipe recipe)
 	{
 		ClientUtils.bindAtlas();
 		IIDrawUtils.startTextured()
-				.drawTexSprite(x-2, y-1, 16, 16, DecoTextures.RES_ICON_MECH_TORQUE_INPUT)
-				.drawTexSprite(x-2+54, y-1, 16, 16, DecoTextures.RES_ICON_MECH_SPEED_INPUT)
+				.drawTexSprite(x-2, y-1, 16, 16, DecoTextures.ICON_MECH_TORQUE_INPUT)
+				.drawTexSprite(x-2+54, y-1, 16, 16, DecoTextures.ICON_MECH_SPEED_INPUT)
 				.finish();
 
-		IIClientUtils.fontRegular.drawString(recipe.getTorque()+" IT", x+16, y+3, DecoTextures.COLOR_H1.getPackedRGB());
+		IIClientUtils.fontRegular.drawString(recipe.getTorque()+" IT", x+16, y+3, DecoColors.H1.getPackedRGB());
 		IIClientUtils.fontRegular.drawString(recipe.getMinSpeed()+" D/t", x+16+54, y+3,
-				DecoTextures.COLOR_H1.getPackedRGB());
+				DecoColors.H1.getPackedRGB());
 	}
 
 	private void drawDustTank(Minecraft mc, int x, int y, LayoutComponent component)
@@ -386,10 +387,10 @@ public class IIManualMachineRecipe extends IIManualObject
 		{
 			DustStack dust = (DustStack)data;
 			draw.drawRepeatedTexColorRect(x, (int)(y+(height*0.5f)), width, (int)(height*0.5f), DustUtils.getColor(dust),
-					DecoTextures.RES_TEXTURES_DECO_COMPONENT_TANK_DUST, 16);
+					DecoTextures.COMPONENT_TANK_DUST, 16);
 		}
 		draw.drawConnectedTexColorRect(x-1, y-1, width+2, height+2, IIColor.WHITE,
-				DecoTextures.RES_TEXTURES_DECO_COMPONENT_TANK_MANUAL, 32, 32, 8, 8).finish();
+				DecoTextures.COMPONENT_TANK_PAPER, 32, 32, 8, 8).finish();
 	}
 
 	private void drawFluidTank(Minecraft mc, int x, int y, LayoutComponent component)
@@ -410,7 +411,7 @@ public class IIManualMachineRecipe extends IIManualObject
 					IIColor.fromPackedRGB(fluid.getColor(fs)), fluid.getStill(fs), 16);
 		}
 		draw.drawConnectedTexColorRect(x-1, y-1, width+2, height+2, IIColor.WHITE,
-						DecoTextures.RES_TEXTURES_DECO_COMPONENT_TANK_MANUAL, 32, 32, 8, 8)
+						DecoTextures.COMPONENT_TANK_PAPER, 32, 32, 8, 8)
 				.finish();
 	}
 

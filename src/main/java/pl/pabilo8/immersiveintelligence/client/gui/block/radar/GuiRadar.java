@@ -9,7 +9,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoCheckbox;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoTab;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoBar;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoMapDisplay;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.map.DecoMapDefaultColorMapper;
@@ -39,10 +38,6 @@ public class GuiRadar extends DecoGui<TileEntityRadar, ContainerRadar>
 {
 	@DecoResource
 	public static ResourceLocation ICON_RADAR = ResLoc.of(IIReference.RES_II, "gui/tab_icons/radar");
-	@DecoResource
-	public static ResourceLocation ICON_CONFIG = ResLoc.of(IIReference.RES_II, "gui/tab_icons/status");
-	@DecoResource
-	public static ResourceLocation ICON_TARGETS = ResLoc.of(IIReference.RES_II, "gui/tab_icons/tasks");
 
 	private EntityScanner scanner;
 	@SyncNBT
@@ -58,30 +53,22 @@ public class GuiRadar extends DecoGui<TileEntityRadar, ContainerRadar>
 	public void onInit()
 	{
 		startBackground()
-				.withBox(DecoTextures.GUI_BG_STEEL, 0, 0, 152+96, 152)
+				.withBox(DecoTextures.BG_STEEL, 0, 0, 152+96, 152)
 				.withTitleBar(tile)
-				.withBox(DecoTextures.GUI_BG_WOODEN, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_ROUND_WOODEN, 32, 152, 176, 92)
+				.withBox(DecoTextures.BG_WOODEN, DecoTextures.TEMPLATE_ROUND_WOODEN, 32, 152, 176, 92)
 				.withInventorySlots(SlotStyle.VANILLA, container.inventorySlots)
 				.withInventoryTitleBar()
 				.withNextLayer()
-				.withBox(DecoTextures.GUI_BG_STEEL, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_SQUARE, 152-4, 0, 96+8, 152)
+				.withBox(DecoTextures.BG_STEEL, DecoTextures.TEMPLATE_SQUARE, 152-4, 0, 96+8, 152)
 				.build();
+
+		//Tabs
+		addLinkTab(IIGUI.RADAR, GuiRadar.ICON_RADAR, "radar_module");
+		addLinkTab(IIGUI.RADAR_CONFIG, DecoTextures.ICON_CONFIG, "config_module");
+		addLinkTab(IIGUI.RADAR_TARGETS, DecoTextures.ICON_TARGETS, "targets_module");
 
 		BlockPos pos = tile.getPos();
 		addComponents(
-				new DecoTab()
-						.withLink(IIGUI.RADAR)
-						.withIcon(ICON_RADAR)
-						.withTranslatedTooltip(IIReference.DESCRIPTION_KEY+"radar_module"),
-				new DecoTab()
-						.withLink(IIGUI.RADAR_STATUS)
-						.withIcon(ICON_CONFIG)
-						.withTranslatedTooltip(IIReference.DESCRIPTION_KEY+"status_module"),
-				new DecoTab()
-						.withLink(IIGUI.RADAR_TASKS)
-						.withIcon(ICON_TARGETS)
-						.withTranslatedTooltip(IIReference.DESCRIPTION_KEY+"tasks_module"),
-
 				new DecoMapDisplay(4, 4)
 						.withSize(152-8, 152-8)
 						.withRegion(pos.getX(), pos.getZ(), 128)
@@ -180,11 +167,11 @@ public class GuiRadar extends DecoGui<TileEntityRadar, ContainerRadar>
 				new DecoBar(152+4, 108+12+16)
 						.withSize(96-8, 12)
 						.withHorizontalMode(true)
-						.withTemplate(DecoGuiUtils.BAR_STRUCTURAL_INTEGRITY.apply(tile)),
+						.withTemplate(DecoTemplates.BAR_STRUCTURAL_INTEGRITY.apply(tile)),
 				new DecoBar(152+4, 108+12)
 						.withSize(96-8, 12)
 						.withHorizontalMode(true)
-						.withTemplate(DecoGuiUtils.BAR_ELECTRIC_ENERGY.apply(tile.energyStorage))
+						.withTemplate(DecoTemplates.BAR_ELECTRIC_ENERGY.apply(tile.energyStorage))
 		);
 	}
 

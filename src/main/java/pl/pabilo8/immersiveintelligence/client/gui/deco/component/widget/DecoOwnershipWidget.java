@@ -27,8 +27,8 @@ public class DecoOwnershipWidget extends DecoComponentWidgetBase<DecoOwnershipWi
 	{
 		super();
 		withSize(128, 128+32);
-		withBackground(DecoTextures.GUI_BG_PAPER);
-		withBackgroundMask(DecoTextures.RES_TEXTURES_DECO_TEMPLATE_PAPER);
+		withBackground(DecoTextures.BG_PAPER);
+		withBackgroundMask(DecoTextures.TEMPLATE_PAPER);
 		this.property = property;
 	}
 
@@ -53,9 +53,9 @@ public class DecoOwnershipWidget extends DecoComponentWidgetBase<DecoOwnershipWi
 
 				addComponent(new DecoButton(3, 8+10+label.getTotalHeight()+24+2)
 						.withWidth(width-6)
-						.withBackground(DecoTextures.RES_TEXTURES_DECO_BUTTON_PAPER)
+						.withBackground(DecoTextures.COMPONENT_BUTTON_PAPER)
 						.withBackgroundColor(IIColor.MC_RED)
-						.withIcon(DecoTextures.RES_ICON_OWNERSHIP)
+						.withIcon(DecoTextures.ICON_OWNERSHIP)
 						.withText("desc.immersiveintelligence.diplomacy.ownership.claim")
 						.withOnLMBPressed(() -> {
 							IIPacketHandler.sendToServer(new MessageDiplomacyAction(DiplomaticAction.CLAIM, property));
@@ -91,12 +91,12 @@ public class DecoOwnershipWidget extends DecoComponentWidgetBase<DecoOwnershipWi
 	public DecoTab provideTab()
 	{
 		return (DecoTab)new DecoTab()
-				.withBackground(DecoTextures.RES_TEXTURES_DECO_COMPONENT_TAB_WIDGET)
+				.withBackground(DecoTextures.COMPONENT_TAB_WIDGET)
 				.withBackgroundColor(IIColor.fromPackedRGB(0x5e3c3c))
 				.withPadding(6, 2, 2, 2)
 				.withIconAlignment(DecoAlignment.CENTER)
 				//Engineer's Manual
-				.withIcon(DecoTextures.RES_ICON_OWNERSHIP)
+				.withIcon(DecoTextures.ICON_OWNERSHIP)
 				.withTranslatedTooltip(IIReference.GUI_TOOLTIP_KEY+"widget.ownership.show");
 	}
 }

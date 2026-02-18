@@ -28,22 +28,22 @@ public class GuiGearbox extends DecoGui<TileEntityGearbox, ContainerGearbox>
 	public void onInit()
 	{
 		startBackground()
-				.withBox(DecoTextures.GUI_BG_WOODEN, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_ROUND_WOODEN, 0, 0, 176, 76)
-				.withStandaloneFrame(24, 12, 128, 64-8, DecoTextures.GUI_FRAME_CORNERS_BRASS, 4, true)
+				.withBox(DecoTextures.BG_WOODEN, DecoTextures.TEMPLATE_ROUND_WOODEN, 0, 0, 176, 76)
+				.withStandaloneFrame(24, 12, 128, 64-8, DecoTextures.FRAME_CORNERS_BRASS, 4, true)
 				.withTitleBar(tile)
-				.withBox(DecoTextures.GUI_BG_WOODEN, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_ROUND_WOODEN, 0, 76, 176, 92)
+				.withBox(DecoTextures.BG_WOODEN, DecoTextures.TEMPLATE_ROUND_WOODEN, 0, 76, 176, 92)
 				.withInventorySlots(SlotStyle.VANILLA, container.inventorySlots)
 				.withInventoryTitleBar()
 				.build();
 
 		addComponents(
 				new DecoBarGroup(-4, 0)
-						.withBar(b -> b.withTemplate(DecoGuiUtils.BAR_MECH_TORQUE_INPUT.apply(tile.rotation)))
-						.withBar(b -> b.withTemplate(DecoGuiUtils.BAR_MECH_SPEED_INPUT.apply(tile.rotation))),
+						.withBar(b -> b.withTemplate(DecoTemplates.BAR_MECH_TORQUE_INPUT.apply(tile.rotation)))
+						.withBar(b -> b.withTemplate(DecoTemplates.BAR_MECH_SPEED_INPUT.apply(tile.rotation))),
 
 				new DecoBarGroup(128+28, 0)
-						.withBar(b -> b.withTemplate(DecoGuiUtils.BAR_MECH_TORQUE_OUTPUT.apply(tile.rotation)))
-						.withBar(b -> b.withTemplate(DecoGuiUtils.BAR_MECH_SPEED_OUTPUT.apply(tile.rotation)))
+						.withBar(b -> b.withTemplate(DecoTemplates.BAR_MECH_TORQUE_OUTPUT.apply(tile.rotation)))
+						.withBar(b -> b.withTemplate(DecoTemplates.BAR_MECH_SPEED_OUTPUT.apply(tile.rotation)))
 		);
 
 		addLabel(IIReference.INFO_KEY+"gear_ratio_short", this::getRatio, 24, 48)

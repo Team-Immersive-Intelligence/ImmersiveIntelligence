@@ -28,7 +28,7 @@ public class DecoTreeDisplay<T> extends DecoComponent<DecoTreeDisplay<T>>
 	private IDecoTreeNodeRenderer<T> nodeRenderer = (IDecoTreeNodeRenderer<T>)new DefaultTreeNodeRenderer();
 	private TreeLayout treeLayout;
 	private Orientation layoutOrientation = Orientation.HORIZONTAL_LEFT_TO_RIGHT;
-	protected DecoSprite background = DecoSprite.atlasSprite(DecoTextures.GUI_BG_DARK, 64, true);
+	protected DecoSprite background = DecoSprite.atlasSprite(DecoTextures.BG_DARK, 64, true);
 
 	private float zoom = 1.0f;
 	private int offsetX = 0;

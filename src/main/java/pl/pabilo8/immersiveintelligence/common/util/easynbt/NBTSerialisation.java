@@ -151,11 +151,15 @@ public class NBTSerialisation
 
 		registerSerializer(ITypeNBTSerializable.class, NBTTagCompound.class,
 				type -> {
+					NBTTagCompound nbt = new NBTTagCompound();
 					if(type==null)
-						return new NBTTagCompound();
+					{
+						nbt.setString("type", "null");
+						return nbt;
+					}
 					TypeSerializationData data = typeSerializers.get(type.getClass());
 					//noinspection unchecked
-					return data!=null?data.serialize(type): new NBTTagCompound();
+					return data!=null?data.serialize(type): nbt;
 				},
 				(nbtTagCompound, type) -> {
 					TypeSerializationData data = nameToSerializers.get(nbtTagCompound.getString("type"));
@@ -484,7 +488,10 @@ public class NBTSerialisation
 			{
 				FIELD value = (FIELD)getter.invoke(obj);
 				if(value==null&&canBeNull)
+				{
+					into.setTag(nbtName, new NBTTagCompound());
 					return;
+				}
 				NBT nbt = toNBT(value);
 				into.setTag(nbtName, nbt);
 			} catch(Throwable e)

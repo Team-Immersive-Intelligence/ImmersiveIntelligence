@@ -37,12 +37,12 @@ public class GuiCoagulator extends DecoGui<TileEntityCoagulator, ContainerCoagul
 	public void onInit()
 	{
 		startBackground()
-				.withBox(DecoTextures.GUI_BG_STEEL, 176-24, 0, 24, 76+24)
-				.withBox(DecoTextures.GUI_BG_STEEL, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_SQUARE, 0, 76, 176-24, 24)
+				.withBox(DecoTextures.BG_STEEL, 176-24, 0, 24, 76+24)
+				.withBox(DecoTextures.BG_STEEL, DecoTextures.TEMPLATE_SQUARE, 0, 76, 176-24, 24)
 				.withInventorySlots(SlotStyle.IE_INPUT, container.slotBucketIn)
 				.withInventorySlots(SlotStyle.IE_OUTPUT, container.slotBucketOut)
 
-				.withBox(DecoTextures.GUI_BG_WOODEN, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_ROUND_WOODEN, 0, 76+24, 176, 92)
+				.withBox(DecoTextures.BG_WOODEN, DecoTextures.TEMPLATE_ROUND_WOODEN, 0, 76+24, 176, 92)
 				.withInventorySlots(SlotStyle.VANILLA, container.playerInventory)
 				.withInventoryTitleBar()
 				.build();
@@ -50,7 +50,7 @@ public class GuiCoagulator extends DecoGui<TileEntityCoagulator, ContainerCoagul
 		addComponents(
 				//Energy bar
 				new DecoBar(145+5+8, 0)
-						.withTemplate(DecoGuiUtils.BAR_ELECTRIC_ENERGY.apply(tile.energyStorage))
+						.withTemplate(DecoTemplates.BAR_ELECTRIC_ENERGY.apply(tile.energyStorage))
 						.withHeight(76+20-4+2),
 
 				//Tank bottom
@@ -86,7 +86,7 @@ public class GuiCoagulator extends DecoGui<TileEntityCoagulator, ContainerCoagul
 		{
 			int slotIndex = i;
 			final DecoItemStackDisplay stackDisplay = addComponent(new DecoItemStackDisplay(10-4-2+i*26, 20+40+16+2-2))
-					.withBackgroundTexture(DecoTextures.RES_TEXTURES_DECO_IE_SLOT)
+					.withBackgroundTexture(DecoTextures.SLOT_IE)
 					.withStack(IIContent.itemMaterial.getStack(Materials.NATURAL_RUBBER))
 					.withProgressBar(() -> tile.getDryingProgressForSlot(slotIndex), IIReference.COLOR_GUI_BRASS, IIReference.COLOR_IMMERSIVE_ORANGE);
 			addValueListener(() -> tile.bucketStacks.get(slotIndex))

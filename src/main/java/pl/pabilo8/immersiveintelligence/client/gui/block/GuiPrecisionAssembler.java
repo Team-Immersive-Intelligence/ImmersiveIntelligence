@@ -47,11 +47,11 @@ public class GuiPrecisionAssembler extends DecoGui<TileEntityPrecisionAssembler,
 	public void onInit()
 	{
 		startBackground()
-				.withBox(DecoTextures.GUI_BG_STEEL_ROUGH, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_SQUARE, 0, 0, 176, 78)
-				.withFrame(DecoTextures.GUI_FRAME_STEEL, 6, false)
+				.withBox(DecoTextures.BG_STEEL_ROUGH, DecoTextures.TEMPLATE_SQUARE, 0, 0, 176, 78)
+				.withFrame(DecoTextures.FRAME_STEEL, 6, false)
 				.withTitleBar(tile)
 				.withNextLayer()
-				.withBox(DecoTextures.GUI_BG_WOODEN, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_ROUND_WOODEN, 0, 78, 176, 92-4)
+				.withBox(DecoTextures.BG_WOODEN, DecoTextures.TEMPLATE_ROUND_WOODEN, 0, 78, 176, 92-4)
 				.withInventorySlots(SlotStyle.VANILLA, container.playerInventory)
 				.withInventoryTitleBar()
 				.withInventorySlots(SlotStyle.IE_INPUT, container.ingredientSlots[0])
@@ -68,7 +68,7 @@ public class GuiPrecisionAssembler extends DecoGui<TileEntityPrecisionAssembler,
 
 		addComponents(
 				new DecoBar(161-4, 5-6)
-						.withTemplate(DecoGuiUtils.BAR_ELECTRIC_ENERGY.apply(tile.energyStorage)),
+						.withTemplate(DecoTemplates.BAR_ELECTRIC_ENERGY.apply(tile.energyStorage)),
 				new DecoImage(48+16-1, 8+4+2)
 						.withSize(48, 25)
 						.withImageLocation(TEXTURE_PRE, true)

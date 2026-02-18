@@ -21,7 +21,7 @@ public class DecoArrows extends DecoTextBasedComponent<DecoArrows>
 	{
 		super(x, y);
 		withSize(8, 16);
-		withBackground(DecoTextures.RES_TEXTURES_DECO_COMPONENT_ARROWS);
+		withBackground(DecoTextures.COMPONENT_ARROWS);
 		withOnPressed(this::onArrowsPressed);
 	}
 

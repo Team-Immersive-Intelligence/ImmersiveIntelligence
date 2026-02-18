@@ -199,7 +199,7 @@ public class DecoIngredientStackPickerPanel extends DecoPanel
 
 				addComponents(
 						new DecoImage(4, 2)
-								.withImageLocation(DecoTextures.RES_ICON_ENERGY, true)
+								.withImageLocation(DecoTextures.ICON_ENERGY, true)
 								.withSize(16, 16),
 						energyField = new DecoTextField(4, 2+16)
 								.withSize(width-4-4, 16)
@@ -294,7 +294,7 @@ public class DecoIngredientStackPickerPanel extends DecoPanel
 								.withSize(32, 32)
 								.withPadding(new int[]{0, 0, 0, 0})
 								.withIconSize(24)
-								.withBackgroundTexture(DecoTextures.GUI_BG_DARK)
+								.withBackgroundTexture(DecoTextures.BG_DARK)
 								.withIconAlignment(DecoAlignment.CENTER)
 								.withOnPressed((gui, button, mouseX, mouseY) -> {
 									//Reset stack

@@ -37,8 +37,8 @@ public class DecoPanel extends DecoComponent<DecoPanel>
 	int vbo = -1;
 	@Nullable
 	private DecoFrame frame = null;
-	private ResLoc background = DecoTextures.GUI_BG_STEEL;
-	private ResLoc backgroundMask = DecoTextures.RES_TEXTURES_DECO_TEMPLATE_SQUARE;
+	private ResLoc background = DecoTextures.BG_STEEL;
+	private ResLoc backgroundMask = DecoTextures.TEMPLATE_SQUARE;
 	private int xPadding = 0;
 	private int yPadding = 0;
 

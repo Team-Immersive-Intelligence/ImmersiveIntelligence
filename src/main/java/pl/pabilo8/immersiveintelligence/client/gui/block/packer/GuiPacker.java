@@ -56,8 +56,6 @@ import static pl.pabilo8.immersiveintelligence.common.util.IIReference.RES_II;
 public class GuiPacker extends DecoGui<TileEntityPacker, ContainerPacker>
 {
 	@DecoResource
-	public static ResourceLocation ICON_TASKS = ResLoc.of(RES_II, "gui/tab_icons/tasks");
-	@DecoResource
 	public static ResourceLocation ICON_LABELER = ResLoc.of(RES_II, "gui/upgrade/packer_naming");
 
 	@SyncNBT(events = SyncEvents.TILE_CLIENT_MESSAGE)
@@ -93,17 +91,17 @@ public class GuiPacker extends DecoGui<TileEntityPacker, ContainerPacker>
 	public void onInit()
 	{
 		startBackground()
-				.withBox(DecoTextures.GUI_BG_STEEL, 0, 0, 2*108+160+6+4, 144+16)
+				.withBox(DecoTextures.BG_STEEL, 0, 0, 2*108+160+6+4, 144+16)
 				.withTitleBar(tile)
 				.withNextLayer()
 
 				//Task background
-				.withBox(DecoTextures.GUI_BG_STEEL, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_PAPER, 104+6, 8-4, 160, 132+16)
+				.withBox(DecoTextures.BG_STEEL, DecoTextures.TEMPLATE_PAPER, 104+6, 8-4, 160, 132+16)
 				.withNextLayer()
-				.withBox(DecoTextures.GUI_BG_STEEL, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_SQUARE, 108+160+6-4, 8-4, 108+4+4, 132+16)
+				.withBox(DecoTextures.BG_STEEL, DecoTextures.TEMPLATE_SQUARE, 108+160+6-4, 8-4, 108+4+4, 132+16)
 				.withNextLayer()
 
-				.withBox(DecoTextures.GUI_BG_WOODEN, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_ROUND_WOODEN, 104+6-8, 144+16, 160+16, 92)
+				.withBox(DecoTextures.BG_WOODEN, DecoTextures.TEMPLATE_ROUND_WOODEN, 104+6-8, 144+16, 160+16, 92)
 				.withInventorySlots(SlotStyle.VANILLA, container.playerInventory)
 				.conditionally(actionType!=PackerActionType.ITEM, builder -> builder
 						.withInventorySlots(SlotStyle.IE_INPUT, container.slotsInput)
@@ -114,7 +112,7 @@ public class GuiPacker extends DecoGui<TileEntityPacker, ContainerPacker>
 
 		if(tile.isUpgradeInstalled(IIContent.UPGRADE_PACKER_NAMING))
 		{
-			addLinkTab(IIGUI.PACKER, ICON_TASKS, "tasks_module");
+			addLinkTab(IIGUI.PACKER, DecoTextures.ICON_TASKS, "tasks_module");
 			addLinkTab(IIGUI.PACKER_LABELER, ICON_LABELER, "labeler_module");
 		}
 
@@ -134,8 +132,8 @@ public class GuiPacker extends DecoGui<TileEntityPacker, ContainerPacker>
 					refreshDetails();
 				})
 				.withDisplayFunction(new DecoEntryPanelBuilder<PackerTask>()
-						.withBackground(DecoTextures.GUI_BG_PAPER)
-						.withBackgroundMask(DecoTextures.RES_TEXTURES_DECO_TEMPLATE_TICKET)
+						.withBackground(DecoTextures.BG_PAPER)
+						.withBackgroundMask(DecoTextures.TEMPLATE_TICKET)
 						.withComponent("icon", new DecoItemStackDisplay(3, 2).withSize(16, 16))
 						.withLabel("wild", new DecoLabel(fontRenderer, 3, 2)
 								.withSize(16, 16)
@@ -164,8 +162,8 @@ public class GuiPacker extends DecoGui<TileEntityPacker, ContainerPacker>
 		//Details panel
 		panelDetails = addComponent(new DecoPanel(104+4+2, 8-4))
 				.withSize(160, 132+12+8)
-				.withBackground(DecoTextures.GUI_BG_PAPER)
-				.withBackgroundMask(DecoTextures.RES_TEXTURES_DECO_TEMPLATE_PAPER);
+				.withBackground(DecoTextures.BG_PAPER)
+				.withBackgroundMask(DecoTextures.TEMPLATE_PAPER);
 
 		//Resources (items, fluid or energy storage in container)
 		panelResources = addComponent(new DecoPanel(108+160+6-4, 8-4))
@@ -183,21 +181,21 @@ public class GuiPacker extends DecoGui<TileEntityPacker, ContainerPacker>
 				new DecoBar(4+4, 128+32-8+2+2-16-8+2)
 						.withSize(panelResources.width-16, 12)
 						.withHorizontalMode(true)
-						.withTemplate(DecoGuiUtils.BAR_ELECTRIC_ENERGY.apply(tile.energyStorage))
+						.withTemplate(DecoTemplates.BAR_ELECTRIC_ENERGY.apply(tile.energyStorage))
 		);
 		switch(actionType)
 		{
 			case ENERGY:
 			{
 				panelResources.addComponent(new DecoBar(4+4, 4+8+4+8+8+4+2))
-						.withTemplate(DecoGuiUtils.BAR_ELECTRIC_ENERGY.apply(tile.energyStorageUpgrade))
+						.withTemplate(DecoTemplates.BAR_ELECTRIC_ENERGY.apply(tile.energyStorageUpgrade))
 						.withSize(14*2-4, panelResources.height-32-8-32-8-4);
 				panelResources.addComponent(new DecoBar(4+32+2+4, 4+8+4))
-						.withTemplate(DecoGuiUtils.BAR_ELECTRIC_ENERGY_INPUT)
+						.withTemplate(DecoTemplates.BAR_ELECTRIC_ENERGY_INPUT)
 						.withLimits(0, tile.energyStorageUpgrade.getLimitReceive(), () -> tile.energyStorageUpgrade.getAverageInsertion())
 						.withSize(14, panelResources.height-32-8);
 				panelResources.addComponent(new DecoBar(4+32+2+32, 4+8+4))
-						.withTemplate(DecoGuiUtils.BAR_ELECTRIC_ENERGY_OUTPUT)
+						.withTemplate(DecoTemplates.BAR_ELECTRIC_ENERGY_OUTPUT)
 						.withLimits(0, tile.energyStorageUpgrade.getLimitExtract(), () -> tile.energyStorageUpgrade.getAverageExtraction())
 						.withSize(14, panelResources.height-32-8);
 			}
@@ -230,7 +228,7 @@ public class GuiPacker extends DecoGui<TileEntityPacker, ContainerPacker>
 				//Add
 				panelResources.addComponent(new DecoButton(0, -2+4))
 						.withSize(panelResources.width/2, 16)
-						.withBackground(DecoTextures.RES_TEXTURES_DECO_COMPONENT_TAB_VERTICAL)
+						.withBackground(DecoTextures.COMPONENT_TAB_VERTICAL)
 						.withText(GUI_LABEL_KEY+"packer.item.input")
 						.withTranslatedTooltip(GUI_LABEL_KEY+"packer.item.input.tooltip")
 						.withOnLMBPressed(() -> {
@@ -239,7 +237,7 @@ public class GuiPacker extends DecoGui<TileEntityPacker, ContainerPacker>
 						});
 				panelResources.addComponent(new DecoButton(panelResources.width/2, -2+4))
 						.withSize(panelResources.width/2, 16)
-						.withBackground(DecoTextures.RES_TEXTURES_DECO_COMPONENT_TAB_VERTICAL)
+						.withBackground(DecoTextures.COMPONENT_TAB_VERTICAL)
 						.withText(GUI_LABEL_KEY+"packer.item.output")
 						.withTranslatedTooltip(GUI_LABEL_KEY+"packer.item.output.tooltip")
 						.withOnLMBPressed(() -> {
@@ -362,7 +360,7 @@ public class GuiPacker extends DecoGui<TileEntityPacker, ContainerPacker>
 		panelDetails.addComponents(
 				new DecoButton(4, panelDetails.height-56-4-14)
 						.withSize((panelDetails.width-8)/2, 16)
-						.withBackground(DecoTextures.RES_TEXTURES_DECO_COMPONENT_TAB_VERTICAL)
+						.withBackground(DecoTextures.COMPONENT_TAB_VERTICAL)
 						.withText(GUI_LABEL_KEY+"packer.picker.container")
 						.withTranslatedTooltip(GUI_LABEL_KEY+"packer.picker.container.tooltip")
 						.withOnLMBPressed(() -> {
@@ -371,7 +369,7 @@ public class GuiPacker extends DecoGui<TileEntityPacker, ContainerPacker>
 						}),
 				new DecoButton(4+(panelDetails.width-8)/2, panelDetails.height-56-4-14)
 						.withSize((panelDetails.width-8)/2, 16)
-						.withBackground(DecoTextures.RES_TEXTURES_DECO_COMPONENT_TAB_VERTICAL)
+						.withBackground(DecoTextures.COMPONENT_TAB_VERTICAL)
 						.withText(GUI_LABEL_KEY+"packer.picker.stack")
 						.withTranslatedTooltip(GUI_LABEL_KEY+"packer.picker.stack.tooltip")
 						.withOnLMBPressed(() -> {

@@ -26,7 +26,7 @@ public class DecoColorPicker extends DecoComponent<DecoColorPicker>
 	private static final int BRIGHTNESS_WIDTH = 8;
 	private static final int GAP = 2;
 
-	private ResourceLocation background = DecoTextures.RES_TEXTURES_DECO_COMPONENT_SLIDER_BAR;
+	private ResourceLocation background = DecoTextures.COMPONENT_SLIDER_BAR;
 
 	private float hue = 0.0f;
 	private float saturation = 0.99f;
@@ -198,9 +198,9 @@ public class DecoColorPicker extends DecoComponent<DecoColorPicker>
 		bindAtlas();
 		IIDrawUtils.startTexturedColored()
 				//Draw color box frame
-				.drawConnectedTexColorRect(x, y, width-BRIGHTNESS_WIDTH-GAP, height, IIColor.WHITE, DecoTextures.RES_TEXTURES_DECO_COMPONENT_TEXT_FIELD, 32, 32, 8, 8)
+				.drawConnectedTexColorRect(x, y, width-BRIGHTNESS_WIDTH-GAP, height, IIColor.WHITE, DecoTextures.COMPONENT_TEXT_FIELD, 32, 32, 8, 8)
 				//Draw brightness slider frame
-				.drawConnectedTexColorRect(x+width-BRIGHTNESS_WIDTH, y, BRIGHTNESS_WIDTH, height, IIColor.WHITE, DecoTextures.RES_TEXTURES_DECO_COMPONENT_TEXT_FIELD, 32, 32, 8, 8)
+				.drawConnectedTexColorRect(x+width-BRIGHTNESS_WIDTH, y, BRIGHTNESS_WIDTH, height, IIColor.WHITE, DecoTextures.COMPONENT_TEXT_FIELD, 32, 32, 8, 8)
 				.finish();
 
 		//Disable textures for drawing the bar
@@ -227,7 +227,7 @@ public class DecoColorPicker extends DecoComponent<DecoColorPicker>
 
 	private void drawSelectionIndicators()
 	{
-		TextureAtlasSprite crosshair = ClientUtils.getSprite(DecoTextures.RES_TEXTURES_DECO_COMPONENT_SWITCH);
+		TextureAtlasSprite crosshair = ClientUtils.getSprite(DecoTextures.COMPONENT_SWITCH);
 		bindAtlas();
 
 		IIDrawUtils draw = IIDrawUtils.startTexturedColored();

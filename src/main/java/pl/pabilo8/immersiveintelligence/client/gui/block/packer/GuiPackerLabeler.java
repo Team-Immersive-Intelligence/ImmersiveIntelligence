@@ -70,17 +70,17 @@ public class GuiPackerLabeler extends DecoGui<TileEntityPacker, ContainerPacker>
 	public void onInit()
 	{
 		startBackground()
-				.withBox(DecoTextures.GUI_BG_STEEL, 0, 0, 2*108+160+6+4, 144+16)
+				.withBox(DecoTextures.BG_STEEL, 0, 0, 2*108+160+6+4, 144+16)
 				.withTitleBar(tile)
 				.withNextLayer()
 
 				//Task background
-				.withBox(DecoTextures.GUI_BG_STEEL, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_PAPER, 104+6, 8-4, 160, 132+16)
+				.withBox(DecoTextures.BG_STEEL, DecoTextures.TEMPLATE_PAPER, 104+6, 8-4, 160, 132+16)
 				.withNextLayer()
-				.withBox(DecoTextures.GUI_BG_STEEL, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_SQUARE, 108+160+6-4, 8-4, 108+4+4, 132+16)
+				.withBox(DecoTextures.BG_STEEL, DecoTextures.TEMPLATE_SQUARE, 108+160+6-4, 8-4, 108+4+4, 132+16)
 				.withNextLayer()
 
-				.withBox(DecoTextures.GUI_BG_WOODEN, DecoTextures.RES_TEXTURES_DECO_TEMPLATE_ROUND_WOODEN, 104+6-8, 144+16, 160+16, 92)
+				.withBox(DecoTextures.BG_WOODEN, DecoTextures.TEMPLATE_ROUND_WOODEN, 104+6-8, 144+16, 160+16, 92)
 				.withInventorySlots(SlotStyle.VANILLA, container.playerInventory)
 				.withInventoryTitleBar()
 				.build();
@@ -93,7 +93,7 @@ public class GuiPackerLabeler extends DecoGui<TileEntityPacker, ContainerPacker>
 				});
 
 		//Title label above list
-		addLinkTab(IIGUI.PACKER, GuiPacker.ICON_TASKS, "tasks_module");
+		addLinkTab(IIGUI.PACKER, DecoTextures.ICON_TASKS, "tasks_module");
 		addLinkTab(IIGUI.PACKER_LABELER, GuiPacker.ICON_LABELER, "labeler_module");
 
 		// Replace list + action buttons with a standardized component (no Jobs tab here)
@@ -113,8 +113,8 @@ public class GuiPackerLabeler extends DecoGui<TileEntityPacker, ContainerPacker>
 					refreshDetails();
 				})
 				.withDisplayFunction(new DecoEntryPanelBuilder<LabelingTask>()
-						.withBackground(DecoTextures.GUI_BG_PAPER)
-						.withBackgroundMask(DecoTextures.RES_TEXTURES_DECO_TEMPLATE_TICKET)
+						.withBackground(DecoTextures.BG_PAPER)
+						.withBackgroundMask(DecoTextures.TEMPLATE_TICKET)
 						.withComponent("icon", new DecoItemStackDisplay(3, 2).withSize(16, 16))
 						.withLabel("type", new DecoLabel(fontRenderer, 23, 2)
 								.withSize(59, 16)
@@ -145,8 +145,8 @@ public class GuiPackerLabeler extends DecoGui<TileEntityPacker, ContainerPacker>
 		//Details panel
 		panelDetails = addComponent(new DecoPanel(104+4+2, 8-4))
 				.withSize(160, 132+12+8)
-				.withBackground(DecoTextures.GUI_BG_PAPER)
-				.withBackgroundMask(DecoTextures.RES_TEXTURES_DECO_TEMPLATE_PAPER);
+				.withBackground(DecoTextures.BG_PAPER)
+				.withBackgroundMask(DecoTextures.TEMPLATE_PAPER);
 
 		refreshDetails();
 	}
@@ -258,7 +258,7 @@ public class GuiPackerLabeler extends DecoGui<TileEntityPacker, ContainerPacker>
 		panelDetails.addComponents(
 				new DecoButton(4, panelDetails.height-56-4-14)
 						.withSize((panelDetails.width-8)/2, 16)
-						.withBackground(DecoTextures.RES_TEXTURES_DECO_COMPONENT_TAB_VERTICAL)
+						.withBackground(DecoTextures.COMPONENT_TAB_VERTICAL)
 						.withText(GUI_LABEL_KEY+"packer.picker.container")
 						.withTranslatedTooltip(GUI_LABEL_KEY+"packer.picker.container.tooltip")
 						.withOnLMBPressed(() -> {
@@ -267,7 +267,7 @@ public class GuiPackerLabeler extends DecoGui<TileEntityPacker, ContainerPacker>
 						}),
 				new DecoButton(4+(panelDetails.width-8)/2, panelDetails.height-56-4-14)
 						.withSize((panelDetails.width-8)/2, 16)
-						.withBackground(DecoTextures.RES_TEXTURES_DECO_COMPONENT_TAB_VERTICAL)
+						.withBackground(DecoTextures.COMPONENT_TAB_VERTICAL)
 						.withText(GUI_LABEL_KEY+"packer.picker.logitag")
 						.withTranslatedTooltip(GUI_LABEL_KEY+"packer.picker.logitag.tooltip")
 						.withOnLMBPressed(() -> {

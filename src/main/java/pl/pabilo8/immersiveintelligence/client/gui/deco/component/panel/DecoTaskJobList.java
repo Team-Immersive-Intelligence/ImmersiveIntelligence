@@ -4,7 +4,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.INBTSerializable;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoButton;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoList;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoGuiUtils;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTemplates;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.ISerializableEnum;
@@ -193,14 +193,14 @@ public class DecoTaskJobList<T extends INBTSerializable<NBTTagCompound>> extends
 		//Mode tabs
 		DecoButton tabTasks = new DecoButton(0, 4)
 				.withSize(listWidth/2, TAB_H)
-				.withBackground(DecoTextures.RES_TEXTURES_DECO_COMPONENT_TAB_VERTICAL)
+				.withBackground(DecoTextures.COMPONENT_TAB_VERTICAL)
 				.withText(GUI_LABEL_KEY+"task_editor.tasks")
 				.withTranslatedTooltip(GUI_LABEL_KEY+"task_editor.tasks.tooltip")
 				.withOnLMBPressed(() -> setMode(ListMode.TASKS));
 
 		DecoButton tabJobs = new DecoButton(listWidth/2, 4)
 				.withSize(listWidth/2, TAB_H)
-				.withBackground(DecoTextures.RES_TEXTURES_DECO_COMPONENT_TAB_VERTICAL)
+				.withBackground(DecoTextures.COMPONENT_TAB_VERTICAL)
 				.withText(GUI_LABEL_KEY+"task_editor.jobs")
 				.withTranslatedTooltip(GUI_LABEL_KEY+"task_editor.jobs.tooltip")
 				.withOnLMBPressed(() -> setMode(ListMode.JOBS));
@@ -231,26 +231,26 @@ public class DecoTaskJobList<T extends INBTSerializable<NBTTagCompound>> extends
 		IIColor buttonGray = IIColor.fromHex("efefef");
 		addComponents(
 				new DecoButton(firstX, btnY)
-						.withTemplate(DecoGuiUtils.LIST_BUTTON_ADD_TEMPLATE)
-						.withBackground(DecoTextures.RES_TEXTURES_DECO_COMPONENT_BUTTON)
+						.withTemplate(DecoTemplates.ACTION_BUTTON_ADD)
+						.withBackground(DecoTextures.COMPONENT_BUTTON)
 						.withSize(btnWidth, BTN_H)
 						.withBackgroundColor(buttonGray)
 						.withOnLMBPressed(this::onAddPressed),
 				new DecoButton(firstX+(btnWidth+BTN_GAP), btnY)
-						.withTemplate(DecoGuiUtils.LIST_BUTTON_REMOVE_TEMPLATE)
-						.withBackground(DecoTextures.RES_TEXTURES_DECO_COMPONENT_BUTTON)
+						.withTemplate(DecoTemplates.ACTION_BUTTON_REMOVE)
+						.withBackground(DecoTextures.COMPONENT_BUTTON)
 						.withSize(btnWidth, BTN_H)
 						.withBackgroundColor(buttonGray)
 						.withOnLMBPressed(this::onRemovePressed),
 				new DecoButton(firstX+2*(btnWidth+BTN_GAP), btnY)
-						.withTemplate(DecoGuiUtils.LIST_BUTTON_DUPLICATE_TEMPLATE)
-						.withBackground(DecoTextures.RES_TEXTURES_DECO_COMPONENT_BUTTON)
+						.withTemplate(DecoTemplates.ACTION_BUTTON_DUPLICATE)
+						.withBackground(DecoTextures.COMPONENT_BUTTON)
 						.withSize(btnWidth, BTN_H)
 						.withBackgroundColor(buttonGray)
 						.withOnLMBPressed(this::onDuplicatePressed),
 				new DecoButton(firstX+3*(btnWidth+BTN_GAP), btnY)
-						.withTemplate(DecoGuiUtils.LIST_BUTTON_CLEAR_TEMPLATE)
-						.withBackground(DecoTextures.RES_TEXTURES_DECO_COMPONENT_BUTTON)
+						.withTemplate(DecoTemplates.ACTION_BUTTON_CLEAR)
+						.withBackground(DecoTextures.COMPONENT_BUTTON)
 						.withSize(btnWidth, BTN_H)
 						.withBackgroundColor(buttonGray)
 						.withOnLMBPressed(this::onClearPressed)

@@ -28,13 +28,13 @@ public abstract class DecoEntryPanel<T> extends DecoPanel implements DecoElement
 	public DecoEntryPanel()
 	{
 		super(0, 0);
-		withBackgroundMask(DecoTextures.RES_TEXTURES_DECO_TEMPLATE_PAPER);
-		withBackground(DecoTextures.GUI_BG_PAPER);
+		withBackgroundMask(DecoTextures.TEMPLATE_PAPER);
+		withBackground(DecoTextures.BG_PAPER);
 		addButton = new DecoButton(0, 0)
 				.withSize(16, 16)
 				.withPadding(0, 0, 0, 0)
-				.withIcon(DecoTextures.RES_TEXTURES_DECO_ICON_ACTION_ADD)
-				.withBackground(DecoTextures.RES_TEXTURES_DECO_BUTTON_HANGING)
+				.withIcon(DecoTextures.ICON_ACTION_ADD)
+				.withBackground(DecoTextures.COMPONENT_BUTTON_HANGING)
 		;
 	}
 

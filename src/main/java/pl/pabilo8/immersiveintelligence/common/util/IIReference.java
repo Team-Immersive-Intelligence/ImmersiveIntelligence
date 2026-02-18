@@ -32,9 +32,13 @@ public class IIReference
 	public static final String GUI_TOOLTIP_KEY = "ii.gui_tooltip.";
 	public static final String GUI_HELPBOX_LABEL_KEY = "ii.gui_help.";
 
-	//TODO: 09.08.2024 add energy and fluid I18n
-	public static final String INFO_KEY_SPEED = INFO_KEY+"tachometer.torque";
-	public static final String INFO_KEY_TORQUE = INFO_KEY+"tachometer.speed";
+	public static final String INFO_KEY_SPEED_IN = GUI_TOOLTIP_KEY+"mech_speed.input";
+	public static final String INFO_KEY_SPEED_OUT = GUI_TOOLTIP_KEY+"mech_speed.output";
+	public static final String INFO_KEY_SPEED_BOTH = GUI_TOOLTIP_KEY+"mech_speed.stored";
+
+	public static final String INFO_KEY_TORQUE_IN = GUI_TOOLTIP_KEY+"mech_torque.input";
+	public static final String INFO_KEY_TORQUE_OUT = GUI_TOOLTIP_KEY+"mech_torque.output";
+	public static final String INFO_KEY_TORQUE_BOTH = GUI_TOOLTIP_KEY+"mech_torque.stored";
 
 	public static final String INFO_KEY_TOOL_DURABILITY = INFO_KEY+"tool_durability";
 	public static final String DESC_TOOLUPGRADE = DESCRIPTION_KEY+"toolupgrade.";
@@ -93,13 +97,12 @@ public class IIReference
 
 	//Textures
 	public static final ResLoc RES_TEXTURES = ResLoc.of(RES_II, "textures/");
-	public static final ResLoc RES_TEXTURES_GUI = ResLoc.of(RES_TEXTURES, "gui/");
-	public static final ResLoc RES_TEXTURES_GUI_TABS = ResLoc.of(RES_TEXTURES_GUI, "tabs/");
-	public static final ResLoc RES_TEXTURES_CREATIVE = ResLoc.of(RES_TEXTURES_GUI, "creative_gui/");
-	public static final ResLoc RES_TEXTURES_MANUAL = ResLoc.of(RES_TEXTURES_GUI, "manual/");
-	public static final ResLoc RES_TEXTURES_SKIN = ResLoc.of(RES_TEXTURES, "skins/");
-	public static final ResLoc RES_TEXTURES_ITEM = ResLoc.of(RES_TEXTURES, "items/");
-	public static final ResLoc RES_TEXTURES_BLOCK = ResLoc.of(RES_TEXTURES, "blocks/");
+	public static final ResLoc RES_TEXTURES_GUI = RES_TEXTURES.with("gui/");
+	public static final ResLoc RES_TEXTURES_CREATIVE = RES_TEXTURES_GUI.with("creative_gui/");
+	public static final ResLoc RES_TEXTURES_MANUAL = RES_TEXTURES_GUI.with("manual/");
+	public static final ResLoc RES_TEXTURES_SKIN = RES_TEXTURES.with("skins/");
+	public static final ResLoc RES_TEXTURES_ITEM = RES_TEXTURES.with("items/");
+	public static final ResLoc RES_TEXTURES_BLOCK = RES_TEXTURES.with("blocks/");
 	@Deprecated
 	public static final String SKIN_LOCATION = "immersiveintelligence:textures/skins/";
 

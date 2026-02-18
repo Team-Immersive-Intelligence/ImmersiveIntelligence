@@ -131,12 +131,6 @@ public abstract class TileEntityMultiblockProductionBase<T extends TileEntityMul
 	 */
 	protected abstract void onProductionFinish(IIMultiblockProcess<R> process);
 
-	@Override
-	public final T getGuiMaster()
-	{
-		return master();
-	}
-
 	/**
 	 * Not sure why overload a one parameter method...
 	 */

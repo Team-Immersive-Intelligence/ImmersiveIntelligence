@@ -839,13 +839,6 @@ public class TileEntityPacker extends TileEntityMultiblockIIGeneric<TileEntityPa
 		return true;
 	}
 
-	@Nullable
-	@Override
-	public TileEntity getGuiMaster()
-	{
-		return master();
-	}
-
 	@Override
 	public IIGUI getGUI()
 	{

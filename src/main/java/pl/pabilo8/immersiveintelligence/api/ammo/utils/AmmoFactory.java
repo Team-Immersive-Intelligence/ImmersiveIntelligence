@@ -19,6 +19,7 @@ import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProje
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -209,10 +210,10 @@ public class AmmoFactory<E extends EntityAmmoBase<? super E>>
 	 * @param gun     The gun entity
 	 * @return The factory
 	 */
-	public AmmoFactory<E> setShooterAndGun(Entity shooter, Entity gun)
+	public AmmoFactory<E> setShooterAndGun(Entity shooter, @Nullable Entity gun)
 	{
 		this.owner = shooter;
-		this.ignoredEntities = new ArrayList<>(gun.getRecursivePassengers());
+		this.ignoredEntities = gun==null?Collections.emptyList(): new ArrayList<>(gun.getRecursivePassengers());
 		return this;
 	}
 
