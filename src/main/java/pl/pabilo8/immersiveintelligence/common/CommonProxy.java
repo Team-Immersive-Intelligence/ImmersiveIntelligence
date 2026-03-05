@@ -80,6 +80,7 @@ import pl.pabilo8.immersiveintelligence.common.block.data_device.BlockIIDataDevi
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.conveyors.*;
 import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIIOre.Ores;
 import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIISmallCrate;
+import pl.pabilo8.immersiveintelligence.common.compat.CratesFeltBlueHelper;
 import pl.pabilo8.immersiveintelligence.common.compat.IICompatModule;
 import pl.pabilo8.immersiveintelligence.common.crafting.IIRecipes;
 import pl.pabilo8.immersiveintelligence.common.crafting.RecipePowerpackAdvanced;
@@ -143,6 +144,9 @@ import static blusunrize.immersiveengineering.api.energy.wires.WireApi.registerF
  * why? i don't know why it was here in the first place
  * for how long? ask github
  * how did you not notice that? ... that was really unexpected, didn't even consider such a thing being there
+ * @edited Avalon (avalon@iiteam.net)
+ * @since 03.03.2026
+ * added compat for cfb
  */
 @EventBusSubscriber(modid = ImmersiveIntelligence.MODID)
 public class CommonProxy implements IGuiHandler, LoadingCallback
@@ -598,6 +602,7 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		ConveyorHandler.registerConveyorHandler(new ResourceLocation(ImmersiveIntelligence.MODID, "rubber_extractcovered"), ConveyorRubberCoveredExtract.class, (tileEntity) -> new ConveyorRubberCoveredExtract(tileEntity instanceof IConveyorTile?((IConveyorTile)tileEntity).getFacing(): EnumFacing.NORTH));
 
 		IICompatModule.doModulesPreInit();
+		CratesFeltBlueHelper.init();
 	}
 
 	public void init()
