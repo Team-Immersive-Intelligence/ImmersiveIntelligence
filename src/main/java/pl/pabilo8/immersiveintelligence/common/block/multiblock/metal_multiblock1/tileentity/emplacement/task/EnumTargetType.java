@@ -16,11 +16,10 @@ import java.util.function.Supplier;
  * @author Pabilo8 (pabilo@iiteam.net)
  * @ii-approved 0.3.1
  * @since 14.09.2025
- */ //Yes, this had to be done
-//Else I'd have to do ATs on internal classes and get it somehow
-public enum EnumTaskType implements IStringSerializable
+ */
+public enum EnumTargetType implements IStringSerializable
 {
-	MOBS(() ->
+	MOB(() ->
 			ArrayUtils.add(
 					GameData.getEntityClassMap().values().stream()
 							.filter(entityEntry -> IMob.class.isAssignableFrom(entityEntry.getEntityClass()))
@@ -32,7 +31,7 @@ public enum EnumTaskType implements IStringSerializable
 			)
 
 	),
-	ANIMALS(() ->
+	ANIMAL(() ->
 			ArrayUtils.add(
 					GameData.getEntityClassMap().values().stream()
 							.filter(entityEntry -> EntityAnimal.class.isAssignableFrom(entityEntry.getEntityClass()))
@@ -43,8 +42,8 @@ public enum EnumTaskType implements IStringSerializable
 					""
 			)
 	),
-	PLAYERS,
-	NPCS(() ->
+	PLAYER,
+	NPC(() ->
 			ArrayUtils.add(
 					GameData.getEntityClassMap().values().stream()
 							.filter(entityEntry -> INpc.class.isAssignableFrom(entityEntry.getEntityClass()))
@@ -55,19 +54,19 @@ public enum EnumTaskType implements IStringSerializable
 					""
 			)
 	),
-	VEHICLES,
-	SHELLS,
+	VEHICLE,
+	ARTILLERY_PROJECTILE,
 	TEAM,
 	NAME;
 
 	private final Supplier<String[]> entries;
 
-	EnumTaskType()
+	EnumTargetType()
 	{
 		this(() -> new String[0]);
 	}
 
-	EnumTaskType(Supplier<String[]> entries)
+	EnumTargetType(Supplier<String[]> entries)
 	{
 		this.entries = entries;
 	}

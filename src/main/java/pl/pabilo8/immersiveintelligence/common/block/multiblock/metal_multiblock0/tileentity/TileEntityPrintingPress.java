@@ -79,6 +79,14 @@ public class TileEntityPrintingPress extends TileEntityMultiblockProductionMulti
 	}
 
 	@Override
+	public void onBeforeFirstTick()
+	{
+		super.onBeforeFirstTick();
+		if(!world.isRemote)
+			tactileManager = new TactileManager(multiblock, this);
+	}
+
+	@Override
 	protected void dummyCleanup()
 	{
 		super.dummyCleanup();
@@ -93,9 +101,8 @@ public class TileEntityPrintingPress extends TileEntityMultiblockProductionMulti
 	{
 		super.onUpdate();
 
-		if(tactileManager==null)
-			tactileManager = new TactileManager(multiblock, this);
-		tactileManager.defaultize();
+		if(!world.isRemote)
+			tactileManager.defaultize();
 
 		if(IIUtils.handleBucketTankInteraction(tank, inventory, SLOT_BUCKET_IN, SLOT_BUCKET_OUT, true,
 				fs -> IIContent.fluidInkBlack.equals(fs.getFluid())||

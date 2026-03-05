@@ -212,13 +212,13 @@ public class EntityAMTTactile extends Entity implements IEntityAdditionalSpawnDa
 	}
 
 	@Override
-	protected void readEntityFromNBT(NBTTagCompound compound)
+	public void readEntityFromNBT(NBTTagCompound compound)
 	{
 
 	}
 
 	@Override
-	protected void writeEntityToNBT(NBTTagCompound compound)
+	public void writeEntityToNBT(NBTTagCompound compound)
 	{
 
 	}

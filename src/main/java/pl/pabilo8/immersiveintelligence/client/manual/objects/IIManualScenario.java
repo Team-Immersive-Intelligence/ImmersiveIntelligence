@@ -63,7 +63,7 @@ public class IIManualScenario extends IIManualObject
 				.map(HoverBox::new)
 				.toArray(HoverBox[]::new);
 
-		this.joined = new AMTModel(new AMTModel(this.objects, this.overlay));
+		this.joined = new AMTModel(this.objects, this.overlay);
 		this.animation = IIAnimationCompiledMap.create(this.joined, new ResourceLocation(dataSource.getString("animation")));
 		this.maxAnimationTime = dataSource.getInt("duration");
 

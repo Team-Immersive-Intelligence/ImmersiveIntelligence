@@ -94,6 +94,7 @@ import pl.pabilo8.immersiveintelligence.client.render.mechanical_device.Mechanic
 import pl.pabilo8.immersiveintelligence.client.render.mechanical_device.WheelRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.metal_device.*;
 import pl.pabilo8.immersiveintelligence.client.render.multiblock.metal.*;
+import pl.pabilo8.immersiveintelligence.client.render.multiblock.metal.emplacementweapon.*;
 import pl.pabilo8.immersiveintelligence.client.render.multiblock.wooden.*;
 import pl.pabilo8.immersiveintelligence.client.util.IICustomStateMapper;
 import pl.pabilo8.immersiveintelligence.client.util.IIKeybind;
@@ -398,7 +399,6 @@ public class ClientProxy extends CommonProxy
 
 		registerEntityRenderer(EntityHans.class, HansRenderer::new);
 		registerEntityRenderer(EntityParachute.class, ParachuteRenderer::new);
-		registerEntityRenderer(EntityEmplacementWeapon.class, EntityRenderNone::new);
 		registerEntityRenderer(EntityAMTTactile.class, EntityRenderNone::new);
 
 		//Hand Weapons
@@ -518,6 +518,20 @@ public class ClientProxy extends CommonProxy
 		registerTileRenderer(FlagpoleRenderer.class);
 		registerTileRenderer(RadarRenderer.class);
 
+		//Emplacement weapon renderers
+		new EWRMachinegun();
+		new EWRHeavyChemthrower();
+		new EWRCPDS();
+		new EWRGuidedMissileLauncher();
+		new EWRAutocannon();
+		new EWRHeavyRailgun();
+		new EWRInfraredObserver();
+		new EWRTeslaCoil();
+		new EWRLightHowitzer();
+		new EWRMortar();
+		new EWRSearchlight();
+		new EWRSpotlightTower();
+		new EWRRocketLauncher();
 
 		//Vehicle multiblocks renderers
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityFuelStation.class, new FuelStationRenderer().subscribeToList("multiblock/fuel_station"));

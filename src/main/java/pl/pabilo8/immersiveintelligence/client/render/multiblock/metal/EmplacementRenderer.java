@@ -3,19 +3,23 @@ package pl.pabilo8.immersiveintelligence.client.render.multiblock.metal;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraftforge.client.model.obj.OBJModel;
 import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeTechTree;
-import pl.pabilo8.immersiveintelligence.client.util.amt.AMTLoader;
+import pl.pabilo8.immersiveintelligence.client.render.multiblock.metal.emplacementweapon.EmplacementWeaponRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.amt.animation.IIAnimationCachedMap;
 import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTCachedModel;
 import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTCachedModelBuilder;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMT;
 import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IIMultiblockRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IITileRenderer.RegisteredTileRenderer;
-import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.weapon.EmplacementWeapon;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -25,17 +29,33 @@ import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 @RegisteredTileRenderer(name = "multiblock/emplacement", clazz = TileEntityEmplacement.class)
 public class EmplacementRenderer extends IIMultiblockRenderer<TileEntityEmplacement>
 {
+	private static final Map<Class<? extends EmplacementWeapon>, EmplacementWeaponRenderer<?>> weaponRenderers = new HashMap<>();
 	private AMTCachedModel<TileEntityEmplacement> model;
 	private IIAnimationCachedMap animationOpen;
+
 
 	@Override
 	public void drawAnimated(TileEntityEmplacement te, BufferBuilder buf, float partialTicks, Tessellator tes)
 	{
 		//Apply mirroring and style customization (variant)
 		applyStandardMirroring(te, true);
-		model.getVariant(te, te.style);
+		model.getVariant(te, te.style, te.currentWeapon==null?"": te.currentWeapon.getName(), te.upgradeManager);
+
 		//Apply platform and door animation
 		animationOpen.apply(te.door.getProgress(partialTicks));
+
+		//Apply weapon animations
+		if(te.currentWeapon!=null)
+		{
+			//noinspection rawtypes
+			EmplacementWeaponRenderer r = weaponRenderers.get(te.currentWeapon.getClass());
+			if(r!=null)
+				//noinspection unchecked
+				r.apply(te.currentWeapon, model, buf, tes, partialTicks);
+			else
+				IILogger.error("No renderer found for emplacement weapon "+te.currentWeapon.getClass().getName());
+		}
+
 		//Render the model
 		model.render(tes, buf);
 	}
@@ -64,51 +84,28 @@ public class EmplacementRenderer extends IIMultiblockRenderer<TileEntityEmplacem
 						modelDir.with("variant_wooden.obj"))
 				.withModel(te -> te!=null&&te.style.getStyle().equals("steel"),
 						modelDir.with("variant_steel.obj"))
-				.withModel(modelDir.with("weapon/light_howitzer.obj"))
-				.withHeader(modelDir.with("weapon/light_howitzer.obj.amt"))
+				//Weapon
+				.withHeaderProvider(te -> {
+					if(te!=null&&te.currentWeapon!=null)
+						return weaponRenderers.get(te.currentWeapon.getClass()).provideHeader();
+					return null;
+				})
+				.withModelProvider((te, header) -> {
+					if(te!=null&&te.currentWeapon!=null)
+						return weaponRenderers.get(te.currentWeapon.getClass()).provideModel(header, te.style.getStyle(), te.upgradeManager.getAllInstalled()).getParts();
+					return new AMT[0];
+				})
 				.build();
 
 		this.animationOpen = IIAnimationCachedMap.create(this.model, IIReference.RES_II.with("emplacement/open"));
-
 		UpgradeTechTree.getTreeFor(TileEntityEmplacement.class)
-				.withBaseModelLocation(modelDir.with("upgrade_preview_base.obj"))
-				.withUpgradeModelLocation(IIContent.UPGRADE_EMPLACEMENT_WEAPON_MACHINEGUN, modelDir.with("weapon/machinegun_preview.obj"))
-				.withUpgradeModelLocation(IIContent.UPGRADE_EMPLACEMENT_MACHINEGUN_WATERCOOLED, modelDir.with("weapon/machinegun_watercooled.obj"))
-				.withUpgradeModelLocation(IIContent.UPGRADE_EMPLACEMENT_MACHINEGUN_HEAVYBARREL, modelDir.with("weapon/machinegun_heavy_barrel.obj"))
-				.withUpgradeModelLocation(IIContent.UPGRADE_EMPLACEMENT_WEAPON_IROBSERVER, modelDir.with("weapon/infrared_observer_preview.obj"))
-				.withUpgradeModelLocation(IIContent.UPGRADE_EMPLACEMENT_WEAPON_AUTOCANNON, modelDir.with("weapon/autocannon.obj"))
-				.withUpgradeModelLocation(IIContent.UPGRADE_EMPLACEMENT_WEAPON_HEAVY_CHEMTHROWER, modelDir.with("weapon/heavy_chemthrower.obj"))
-				.withUpgradeModelLocation(IIContent.UPGRADE_EMPLACEMENT_WEAPON_HEAVY_RAILGUN, modelDir.with("weapon/heavy_railgun.obj"))
-				.withUpgradeModelLocation(IIContent.UPGRADE_EMPLACEMENT_SEARCHLIGHT, modelDir.with("weapon/searchlight.obj"))
-				.withUpgradeModelLocation(IIContent.UPGRADE_EMPLACEMENT_SPOTLIGHT_TOWER, modelDir.with("weapon/spotlight_tower_preview.obj"))
-				.withUpgradeModelLocation(IIContent.UPGRADE_EMPLACEMENT_WEAPON_TESLA, modelDir.with("weapon/tesla.obj"))
-				.withUpgradeModelLocation(IIContent.UPGRADE_EMPLACEMENT_WEAPON_CPDS, modelDir.with("weapon/cpds.obj"))
-				.withUpgradeModelLocation(IIContent.UPGRADE_EMPLACEMENT_WEAPON_MORTAR, modelDir.with("weapon/mortar_preview.obj"))
-				.withUpgradeModelLocation(IIContent.UPGRADE_EMPLACEMENT_WEAPON_LIGHT_HOWITZER, modelDir.with("weapon/light_howitzer.obj"))
-				.withUpgradeModelLocation(IIContent.UPGRADE_EMPLACEMENT_WEAPON_MLRS, modelDir.with("weapon/mlrs.obj"))
-				.withUpgradeModelLocation(IIContent.UPGRADE_EMPLACEMENT_WEAPON_GUIDED_MISSILE_LAUNCHER, modelDir.with("weapon/guided_missile_launcher.obj"))
-		;
+				.withBaseModelLocation(modelDir.with("upgrade_preview_base.obj"));
+		for(EmplacementWeaponRenderer<?> weaponRenderer : weaponRenderers.values())
+			weaponRenderer.loadAnimations(this.model);
 	}
 
-	@Override
-	public void registerSprites(TextureMap map)
+	public static void registerWeaponRenderer(Class<? extends EmplacementWeapon> weaponClass, EmplacementWeaponRenderer<?> renderer)
 	{
-		super.registerSprites(map);
-
-		ResLoc modelDir = IIReference.RES_BLOCK_MODEL.with("multiblock/emplacement/weapon/");
-
-		AMTLoader.preloadTexturesFromOBJ(modelDir.with("machinegun.obj"), map);
-		AMTLoader.preloadTexturesFromOBJ(modelDir.with("infrared_observer.obj"), map);
-		AMTLoader.preloadTexturesFromOBJ(modelDir.with("autocannon.obj"), map);
-		AMTLoader.preloadTexturesFromOBJ(modelDir.with("heavy_chemthrower.obj"), map);
-		AMTLoader.preloadTexturesFromOBJ(modelDir.with("heavy_railgun.obj"), map);
-		AMTLoader.preloadTexturesFromOBJ(modelDir.with("searchlight.obj"), map);
-		AMTLoader.preloadTexturesFromOBJ(modelDir.with("spotlight_tower.obj"), map);
-		AMTLoader.preloadTexturesFromOBJ(modelDir.with("tesla.obj"), map);
-		AMTLoader.preloadTexturesFromOBJ(modelDir.with("cpds.obj"), map);
-		AMTLoader.preloadTexturesFromOBJ(modelDir.with("mortar.obj"), map);
-		AMTLoader.preloadTexturesFromOBJ(modelDir.with("light_howitzer.obj"), map);
-		AMTLoader.preloadTexturesFromOBJ(modelDir.with("mlrs.obj"), map);
-		AMTLoader.preloadTexturesFromOBJ(modelDir.with("guided_missile_launcher.obj"), map);
+		weaponRenderers.put(weaponClass, renderer);
 	}
 }

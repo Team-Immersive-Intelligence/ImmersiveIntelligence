@@ -4,7 +4,6 @@ import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.IItemHandler;
@@ -15,7 +14,7 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityAmmoBase;
 
 import javax.annotation.Nullable;
-import java.util.Arrays;
+import java.util.Collections;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -23,7 +22,7 @@ import java.util.Arrays;
  * @updated 30.12.2025
  * @since 04.09.2025
  */
-public abstract class EmplacementWeaponGunBase<A extends EntityAmmoBase<A>> extends EmplacementWeaponTurretBase implements IAimedEmplacementWeapon
+public abstract class EmplacementWeaponGunBase<A extends EntityAmmoBase<A>> extends EmplacementWeaponTurretBase
 {
 	/**
 	 * Used to fire ammo for the weapon
@@ -46,14 +45,16 @@ public abstract class EmplacementWeaponGunBase<A extends EntityAmmoBase<A>> exte
 	 * Called after the weapon is installed or loaded from NBT
 	 * Initialize sight AABB here
 	 */
-	public void onInit(TileEntityEmplacement te)
+	protected void onInit(TileEntityEmplacement te)
 	{
 		super.onInit(te);
-		this.ammoFactory = new AmmoFactory<A>(te.getWorld())
-				.setIgnoredBlocks(te.getAllBlocks())
-				.setShooterAndGun(te.getOwnerIdentity().getFirstResponsibleMember(te.getWorld()), entity);
-		if(!te.getWorld().isRemote&&entity!=null)
-			ammoFactory.setIgnoredEntities(Arrays.asList(entity.partArray));
+
+		this.ammoFactory = new AmmoFactory<A>(te.getWorld()).setIgnoredBlocks(te.getMultiblockBlocks());
+		if(!te.getWorld().isRemote&&te.tactileHandler!=null)
+			ammoFactory.setShooterAndGun(te.getOwnerIdentity().getFirstResponsibleMember(te.getWorld()), baseEntity)
+					.setIgnoredEntities(te.tactileHandler.getEntities());
+
+		this.aim.withAimCorrectionFunction(ammoFactory::getAnglePrediction);
 	}
 
 	@Nullable
@@ -65,16 +66,9 @@ public abstract class EmplacementWeaponGunBase<A extends EntityAmmoBase<A>> exte
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public void initializeGUI(DecoPanel panelPlatform)
+	public void initializeGUI(DecoPanel panelBase, DecoPanel panelPlatform)
 	{
-
-	}
-
-	@Override
-	public float[] getAnglePrediction(Vec3d posTurret, Vec3d posTarget, Vec3d motion)
-	{
-		aimVector = posTurret.subtract(posTarget).normalize();
-		return ammoFactory.getAnglePrediction(posTurret, Vec3d.ZERO, posTarget, motion);
+		//panelBase.addComponent(new DecoItemStackListDisplay());
 	}
 
 	@Override
@@ -83,6 +77,14 @@ public abstract class EmplacementWeaponGunBase<A extends EntityAmmoBase<A>> exte
 		return false;
 	}
 
+	@Override
+	public void setDead()
+	{
+		super.setDead();
+		this.ammoFactory
+				.setShooterAndGun(null, null)
+				.setIgnoredEntities(Collections.emptyList());
+	}
 
 	//--- NBT ---//
 

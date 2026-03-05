@@ -7,7 +7,7 @@
     "variant_concrete": [8, -64, 24],
     "variant_steel": [17, -60, 1],
     "door1": [8, 16, 3],
-    "door2": [7.96667, 16, 46.06667],
+    "door2": [8, 16, 46.06667],
     "platform": [7, 24, 27],
     "platform1": [7, 8, 27],
     "platform2": [8, -49, 24],
@@ -19,8 +19,7 @@
     "launcher1": [33.90577, 11.375, 49.04398],
     "upgrade_fortified": [8, -64, 24],
     "upgrade_sovereignty": [8, -64, 24],
-    "upgrade_energy_efficiency": [8, -64, 24],
-    "upgrade_preview_base": [7, -55, 27]
+    "upgrade_energy_efficiency": [8, -64, 24]
   },
   "hierarchy": {
     "platform1": "platform",
@@ -29,6 +28,7 @@
     "platform4": "platform3",
     "platform5": "platform4",
     "platform6": "platform5",
+    "base": "platform6",
     "launcher1": "upgrade_grenade_launchers"
   }
 }

@@ -37,6 +37,10 @@ public class DecoTreeDisplay<T> extends DecoComponent<DecoTreeDisplay<T>>
 	private int dragStartX, dragStartY;
 	private int offsetXStart, offsetYStart;
 
+	private static final int MARGIN = 20;
+
+	private int dragMinX, dragMaxX, dragMinY, dragMaxY;
+
 	public DecoTreeDisplay(int x, int y)
 	{
 		super(x, y);
@@ -107,8 +111,55 @@ public class DecoTreeDisplay<T> extends DecoComponent<DecoTreeDisplay<T>>
 					.withOrientation(layoutOrientation)
 					.withNodeSize(DefaultTreeNodeRenderer.NODE_WIDTH, DefaultTreeNodeRenderer.NODE_HEIGHT);
 
-		//Calculate layout within our component bounds (with margins)
 		this.treeLayout.calculateLayout(this.width-8, this.height-8);
+		updateDragBounds();
+		clampOffsets();
+	}
+
+	private void updateDragBounds()
+	{
+		if(treeLayout==null)
+			return;
+
+		TreeLayout.LayoutBounds bounds = treeLayout.getBounds();
+		int viewW = Math.max(1, width-MARGIN*2);
+		int viewH = Math.max(1, height-MARGIN*2);
+
+		float minX = bounds.minX;
+		float maxX = bounds.maxX;
+		float minY = bounds.minY;
+		float maxY = bounds.maxY;
+
+		float scaledContentW = treeLayout.getContentWidth()*zoom;
+		float scaledContentH = treeLayout.getContentHeight()*zoom;
+
+		if(scaledContentW >= viewW)
+		{
+			dragMinX = (int)Math.floor(viewW-maxX*zoom);
+			dragMaxX = (int)Math.ceil(-minX*zoom);
+		}
+		else
+		{
+			dragMinX = (int)Math.floor(-minX*zoom);
+			dragMaxX = (int)Math.ceil(viewW-maxX*zoom);
+		}
+
+		if(scaledContentH >= viewH)
+		{
+			dragMinY = (int)Math.floor(viewH-maxY*zoom);
+			dragMaxY = (int)Math.ceil(-minY*zoom);
+		}
+		else
+		{
+			dragMinY = (int)Math.floor(-minY*zoom);
+			dragMaxY = (int)Math.ceil(viewH-maxY*zoom);
+		}
+	}
+
+	private void clampOffsets()
+	{
+		offsetX = Math.min(dragMaxX, Math.max(dragMinX, offsetX));
+		offsetY = Math.min(dragMaxY, Math.max(dragMinY, offsetY));
 	}
 
 	private boolean handleScrolling(DecoTreeDisplay<T> gui, int mouseScroll, int mouseX, int mouseY)
@@ -119,6 +170,8 @@ public class DecoTreeDisplay<T> extends DecoComponent<DecoTreeDisplay<T>>
 		else if(mouseScroll < 0)
 			zoom /= zoomFactor;
 		zoom = Math.max(0.5f, Math.min(2.0f, zoom));
+		updateDragBounds();
+		clampOffsets();
 		return true;
 	}
 
@@ -152,6 +205,7 @@ public class DecoTreeDisplay<T> extends DecoComponent<DecoTreeDisplay<T>>
 		{
 			offsetX = offsetXStart+(mouseX-dragStartX);
 			offsetY = offsetYStart+(mouseY-dragStartY);
+			clampOffsets();
 			return true;
 		}
 		return false;
@@ -172,8 +226,8 @@ public class DecoTreeDisplay<T> extends DecoComponent<DecoTreeDisplay<T>>
 		if(tree==null||treeLayout==null) return;
 
 		//Transform mouse coordinates to component-relative coordinates
-		float transformedX = (mouseX-x-20-offsetX)/zoom;
-		float transformedY = (mouseY-y-20-offsetY)/zoom;
+		float transformedX = (mouseX-x-MARGIN-offsetX)/zoom;
+		float transformedY = (mouseY-y-MARGIN-offsetY)/zoom;
 
 		IDecoTreeNode<T> hovered = null;
 		for(IDecoTreeNode<T> node : tree.getAllNodes())
@@ -206,6 +260,8 @@ public class DecoTreeDisplay<T> extends DecoComponent<DecoTreeDisplay<T>>
 		layoutTree();
 		this.offsetX = -width/2-8;
 		this.offsetY -= 16;
+		updateDragBounds();
+		clampOffsets();
 		return true;
 	}
 
@@ -232,7 +288,7 @@ public class DecoTreeDisplay<T> extends DecoComponent<DecoTreeDisplay<T>>
 			parentGui.scissorStart(x, y, width, height);
 		//Apply component-relative transformations
 		GlStateManager.pushMatrix();
-		GlStateManager.translate(x+20, y+20, 0); //Apply margin
+		GlStateManager.translate(x+MARGIN, y+MARGIN, 0); //Apply margin
 
 		//Apply zoom and pan transformations
 		GlStateManager.translate(offsetX, offsetY, 0);

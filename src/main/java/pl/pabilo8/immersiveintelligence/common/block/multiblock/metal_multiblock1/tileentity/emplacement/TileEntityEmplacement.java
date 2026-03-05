@@ -4,17 +4,20 @@ import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorageAdvan
 import com.elytradev.mirage.event.GatherLightsEvent;
 import com.elytradev.mirage.lighting.ILightEventConsumer;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.common.Optional.Interface;
 import net.minecraftforge.fml.common.Optional.Method;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IIDataHandlingUtils;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeArray;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeEntity;
+import pl.pabilo8.immersiveintelligence.api.data.types.*;
 import pl.pabilo8.immersiveintelligence.api.style.IStyleCustomizable;
 import pl.pabilo8.immersiveintelligence.api.style.StyleCustomization;
 import pl.pabilo8.immersiveintelligence.api.upgrade.IManagedUpgradableDevice;
@@ -27,15 +30,15 @@ import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockEmplacement;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockFlagpole;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.task.EmplacementFireMissionEntity;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.task.EmplacementFireMissionPosition;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.task.EmplacementFireMissionShells;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.task.EmplacementTaskManager;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.task.EmplacementTarget;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.task.EmplacementTargetManager;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.weapon.EmplacementWeapon;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.weapon.UpgradeEmplacementWeapon;
+import pl.pabilo8.immersiveintelligence.common.entity.tactile.EntityAMTTactile;
+import pl.pabilo8.immersiveintelligence.common.entity.tactile.TactileManager;
+import pl.pabilo8.immersiveintelligence.common.entity.tactile.TactileManager.ITactileListener;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
-import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyUtils;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.IOwnableProperty;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.OwnerIdentity;
@@ -50,9 +53,7 @@ import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPO
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -63,7 +64,7 @@ import java.util.Optional;
  */
 @Interface(iface = "com.elytradev.mirage.lighting.ILightEventConsumer", modid = "mirage")
 public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEntityEmplacement> implements IBooleanAnimatedPartsBlock,
-		IManagedUpgradableDevice<TileEntityEmplacement>, IOwnableProperty, IStyleCustomizable, IIIGuiMultiblockTile, IManagedDamageResistantMultiblock, ILightEventConsumer
+		IManagedUpgradableDevice<TileEntityEmplacement>, IOwnableProperty, IStyleCustomizable, IIIGuiMultiblockTile, IManagedDamageResistantMultiblock, ITactileListener, ILightEventConsumer
 {
 	@SyncNBT(events = SyncEvents.TILE_OWNERSHIP_MODIFIED)
 	public OwnerIdentity ownerIdentity;
@@ -71,15 +72,17 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 	public UpgradeManager<TileEntityEmplacement> upgradeManager;
 	@SyncNBT(events = {SyncEvents.TILE_UPGRADES_MODIFIED, SyncEvents.TILE_CLIENT_MESSAGE})
 	public StyleCustomization style;
+	public TactileManager tactileHandler;
 
 	@SyncNBT(name = "tasks", events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_CUSTOM1})
-	public EmplacementTaskManager taskManager = new EmplacementTaskManager();
+	public EmplacementTargetManager taskManager = new EmplacementTargetManager();
+	@SyncNBT(nullable = true)
+	public EmplacementTarget currentTarget = null;
+
 	@SyncNBT(nullable = true, events = SyncEvents.TILE_CUSTOM2)
 	public EmplacementWeapon currentWeapon;
 	@SyncNBT(events = SyncEvents.TILE_DAMAGED)
 	public MultiblockHealth baseHealth;
-	@SyncNBT
-	public boolean sendData = false;
 
 	@SyncNBT(events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_CLIENT_MESSAGE})
 	public boolean redstoneControl = true, dataControl = true;
@@ -108,6 +111,15 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 		this.ownerIdentity = null;
 		this.taskManager = null;
 		this.baseHealth = null;
+		this.tactileHandler = null;
+	}
+
+	@Override
+	public void onBeforeFirstTick()
+	{
+		super.onBeforeFirstTick();
+		if(!world.isRemote)
+			this.tactileHandler = new TactileManager(this.multiblock, this);
 	}
 
 	@Override
@@ -116,33 +128,63 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 		door.setState(getRedstoneAtPos(0));
 		door.update();
 
-		//Handle targeting
+		//Initialize the weapon even if not powered
+		if(this.currentWeapon!=null)
+			this.currentWeapon.init(this);
 
-		//Handle weapon
-		if(currentWeapon!=null)
-			this.currentWeapon.onUpdate(this);
+		//Extract energy for merely existing
+		/*if(energyStorage.extractEnergy(Emplacement.baseEnergyUsage, !world.isRemote)==Emplacement.baseEnergyUsage)
+		{
+			//Handle targeting
+			if(currentTarget==null)
+				currentTarget = taskManager.provideNextTask();
+
+			//Handle the base behavior (without redstone control, it can be only changed through data)
+			EmplacementStateNeeds baseNeeds = EmplacementStateNeeds.WANTS_HIDE;
+			if(redstoneControl)
+				baseNeeds = getRedstoneAtPos(0)?EmplacementStateNeeds.WANTS_SURFACE: EmplacementStateNeeds.MUST_HIDE;
+			//When no task at hand, emplacement could use the time to reload and repair
+			if(currentTarget==null&&baseNeeds==EmplacementStateNeeds.WANTS_SURFACE)
+				baseNeeds = EmplacementStateNeeds.WANTS_HIDE;
+
+			//Handle the weapon, weapons need additional energy to operate
+			EmplacementStateNeeds weaponNeeds = EmplacementStateNeeds.WANTS_HIDE;
+			if(currentWeapon!=null&&energyStorage.extractEnergy(currentWeapon.getEnergyUpkeepCost(), !world.isRemote)==currentWeapon.getEnergyUpkeepCost())
+				weaponNeeds = this.currentWeapon.onUpdate(this, currentTarget);
+
+			//Handle the door/platform
+			door.setState(getNextState(baseNeeds, weaponNeeds));
+			door.update();
+		}*/
+		if(!this.world.isRemote)
+			this.tactileHandler.update(MultiblockEmplacement.animationPlatform, door.getProgress(0));
 	}
 
-	public List<BlockPos> getAllBlocks()
+	private boolean getNextState(EmplacementStateNeeds baseNeeds, @Nullable EmplacementStateNeeds weaponNeeds)
 	{
-		TileEntityEmplacement master = master();
-		if(master==this||master==null)
+		if(door.isFullyOpened())
 		{
-			ArrayList<BlockPos> blocks = new ArrayList<>();
-			for(int i = 0; i < structureDimensions[0]*structureDimensions[1]*structureDimensions[2]; i++)
-				blocks.add(getBlockPosForPos(i));
-			return blocks;
+			boolean wantHide = baseNeeds==EmplacementStateNeeds.WANTS_HIDE&&
+					(weaponNeeds==null||weaponNeeds==EmplacementStateNeeds.WANTS_HIDE);
+			boolean mustHide = baseNeeds==EmplacementStateNeeds.MUST_HIDE||weaponNeeds==EmplacementStateNeeds.MUST_HIDE;
+			return !wantHide&&!mustHide;
 		}
-		else
-			return master.getAllBlocks();
+		else if(door.isFullyClosed())
+		{
+			boolean wantsSurface = baseNeeds==EmplacementStateNeeds.WANTS_SURFACE&&
+					(weaponNeeds==null||weaponNeeds==EmplacementStateNeeds.WANTS_SURFACE);
+			return !wantsSurface;
+		}
+		//Else progress to the desired state
+		return door.getState();
 	}
 
 	@Override
 	public void disassemble()
 	{
 		super.disassemble();
-		if(!isDummy()&&currentWeapon!=null&&currentWeapon.entity!=null)
-			currentWeapon.entity.setDead();
+		if(!isDummy()&&currentWeapon!=null)
+			currentWeapon.setDead();
 		currentWeapon = null;
 	}
 
@@ -180,7 +222,33 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 
 		//Let the weapon handle the data packet too
 		if(this.currentWeapon!=null)
-			this.currentWeapon.handleDataPacket(packet.clone());
+			if(this.currentWeapon.handleDataCommand(packet.clone()))
+				return;
+
+		//Handle callback
+		if(IIDataHandlingUtils.isCallbackPacket(packet))
+		{
+			DataPacket callbackPacket = IIDataHandlingUtils.handleCallback(packet, string -> {
+				switch(string)
+				{
+					case "door":
+						return new DataTypeBoolean(door.getState());
+					case "door_closed":
+						return new DataTypeBoolean(door.isFullyClosed());
+					case "door_open":
+						return new DataTypeBoolean(door.isFullyOpened());
+					case "energy":
+						return new DataTypeInteger(energyStorage.getEnergyStored());
+					case "data_control":
+						return new DataTypeBoolean(dataControl);
+					default:
+						return (currentWeapon!=null)?currentWeapon.getDataCallback(string): new DataTypeNull();
+				}
+			});
+			if(callbackPacket!=null)
+				sendData(callbackPacket, getDirection("data"), pos);
+			return;
+		}
 
 		//Handle the command
 		IIDataHandlingUtils.expectingStringParam('c', packet, command -> {
@@ -222,13 +290,13 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 					updateTileForEvent(SyncEvents.TILE_CUSTOM1);
 					break;
 				case "targetshells":
-					this.taskManager.addTask(new EmplacementFireMissionShells());
+//					this.taskManager.addTask(new EmplacementFireMissionShells());
 					updateTileForEvent(SyncEvents.TILE_CUSTOM1);
 					break;
 				case "fire":
 					Optional<DataTypeEntity> e = IIDataHandlingUtils.optionalEntity('e', packet);
 
-					if(e.isPresent())
+					/*if(e.isPresent())
 					{
 						Entity entityByID = world.getEntityByID(e.get().entityID);
 						if(entityByID!=null)
@@ -251,7 +319,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 									this.taskManager.addTask(new EmplacementFireMissionPosition(new BlockPos(IIMath.offsetPosDirection(distance,
 											true_angle, true_angle2)).add(getPOIPos("weapon")), amount));
 								});
-					}
+					}*/
 					//Synchronize the task
 					updateTileForEvent(SyncEvents.TILE_CUSTOM1);
 					break;
@@ -310,7 +378,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 		{
 			assert currentWeapon==null;
 			this.currentWeapon = ((UpgradeEmplacementWeapon<?>)upgrade).createWeapon();
-			this.currentWeapon.onInit(this);
+			this.currentWeapon.init(this);
 			updateTileForEvent(SyncEvents.TILE_CUSTOM2);
 		}
 		return added;
@@ -323,7 +391,10 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 		//Removing the weapon
 		if(!world.isRemote&&removed&&upgrade instanceof UpgradeEmplacementWeapon)
 		{
+			if(this.currentWeapon!=null)
+				this.currentWeapon.setDead();
 			this.currentWeapon = null;
+			if(this.tactileHandler!=null) this.tactileHandler.setAdditionalModel("weapon", null);
 			updateTileForEvent(SyncEvents.TILE_CUSTOM2);
 		}
 		return removed;
@@ -424,29 +495,33 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 			IIPacketHandler.sendToClient(this, new MessageBooleanAnimatedPartsSync(door, this));
 	}
 
-	public enum EmplacementState
-	{
-		SURFACED,
-		SURFACING,
-		HIDING,
-		HIDDEN;
+	//--- ITactileListener ---//
 
-		public EmplacementState getNextState()
-		{
-			switch(this)
-			{
-				case SURFACED:
-					return HIDING;
-				case SURFACING:
-					return SURFACED;
-				case HIDING:
-					return HIDDEN;
-				case HIDDEN:
-					return SURFACING;
-				default:
-					return this;
-			}
-		}
+	@Nullable
+	@Override
+	public TactileManager getTactileHandler()
+	{
+		return tactileHandler;
+	}
+
+	@Override
+	public boolean onTactileInteract(EntityAMTTactile tactile, EntityPlayer player, EnumHand hand)
+	{
+		BlockPos pos = this.getPos();
+		player.openGui(ImmersiveIntelligence.INSTANCE, IIGUI.EMPLACEMENT_STORAGE.ordinal(),
+				getWorld(), pos.getX(), pos.getY(), pos.getZ());
+		return true;
+	}
+
+	@Override
+	public boolean onTactileDamage(EntityAMTTactile tactile, DamageSource source, float amount)
+	{
+		if(tactile.name.equals("door1")||tactile.name.equals("door2"))
+			return damageHealth(amount*0.5f);
+		if(currentWeapon!=null)
+			return currentWeapon.applyDamage(tactile, source, amount);
+
+		return ITactileListener.super.onTactileDamage(tactile, source, amount);
 	}
 
 	public enum EmplacementStateNeeds
@@ -454,27 +529,5 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 		WANTS_SURFACE,
 		WANTS_HIDE,
 		MUST_HIDE;
-	}
-
-	private EmplacementState getNextState(EmplacementState currentState, EmplacementStateNeeds baseNeeds, @Nullable EmplacementStateNeeds weaponNeeds)
-	{
-		switch(currentState)
-		{
-			case SURFACED:
-			{
-				boolean wantHide = baseNeeds==EmplacementStateNeeds.WANTS_HIDE&&
-						(weaponNeeds==null||weaponNeeds==EmplacementStateNeeds.WANTS_HIDE);
-				boolean mustHide = baseNeeds==EmplacementStateNeeds.MUST_HIDE||weaponNeeds==EmplacementStateNeeds.MUST_HIDE;
-				return (wantHide||mustHide)?currentState.getNextState(): currentState;
-			}
-			case HIDDEN:
-			{
-				boolean wantsSurface = baseNeeds==EmplacementStateNeeds.WANTS_SURFACE&&
-						(weaponNeeds==null||weaponNeeds==EmplacementStateNeeds.WANTS_SURFACE);
-				return wantsSurface?currentState.getNextState(): currentState;
-			}
-			default:
-				return currentState.getNextState();
-		}
 	}
 }

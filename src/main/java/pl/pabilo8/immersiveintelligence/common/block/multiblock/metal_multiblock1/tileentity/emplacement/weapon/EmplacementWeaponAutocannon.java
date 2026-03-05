@@ -2,35 +2,34 @@ package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multibloc
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.oredict.OreDictionary;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.EmplacementWeapons.Autocannon;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
-import pl.pabilo8.immersiveintelligence.common.entity.EntityEmplacementWeapon.EmplacementHitboxEntity;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine.Magazines;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.FilteredItemHandler;
-
-import java.util.ArrayList;
 
 public class EmplacementWeaponAutocannon extends EmplacementWeaponGunBase<EntityAmmoProjectile>
 {
 	public EmplacementWeaponAutocannon()
 	{
+		super();
 		this.inventoryBase = NonNullList.withSize(18, ItemStack.EMPTY);
 		this.inventoryPlatform = NonNullList.withSize(8, ItemStack.EMPTY);
-		this.inventoryBaseHandler = new FilteredItemHandler(inventoryBase)
-				.withFilter(stack -> OreDictionary.itemMatches(stack,
-						IIContent.itemBulletMagazine.getMagazine(Magazines.AUTOCANNON), false));
 	}
 
 	@Override
-	public void onInit(TileEntityEmplacement te)
+	protected void onInit(TileEntityEmplacement te)
 	{
 		super.onInit(te);
 		this.visionAABB = this.visionAABB.grow(Autocannon.detectionRadius);
 		this.attackAABB = this.attackAABB.grow(Autocannon.attackRadius);
+		this.aim.withAimSpeed(Autocannon.yawRotateSpeed, Autocannon.pitchRotateSpeed);
+
+		this.inventoryBaseHandler = new FilteredItemHandler(inventoryBase)
+				.withFilter(stack -> OreDictionary.itemMatches(stack,
+						IIContent.itemBulletMagazine.getMagazine(Magazines.AUTOCANNON), false));
 	}
 
 	@Override
@@ -40,36 +39,18 @@ public class EmplacementWeaponAutocannon extends EmplacementWeaponGunBase<Entity
 	}
 
 	@Override
-	public float getYawTurnSpeed()
-	{
-		return Autocannon.yawRotateSpeed;
-	}
-
-	@Override
-	public float getPitchTurnSpeed()
-	{
-		return Autocannon.pitchRotateSpeed;
-	}
-
-	@Override
-	public float getShotDelay()
+	public int getShotDelay()
 	{
 		return Autocannon.bulletFireTime;
 	}
 
 	@Override
-	public float getReloadDelay()
+	public int getReloadDelay()
 	{
 		return Autocannon.reloadTime;
 	}
 
-	@Override
-	public float getSetupDelay()
-	{
-		return 0;
-	}
-
-	@Override
+	/*@Override
 	public EmplacementHitboxEntity[] getCollisionBoxes()
 	{
 		if(entity==null)
@@ -98,7 +79,7 @@ public class EmplacementWeaponAutocannon extends EmplacementWeaponGunBase<Entity
 				new Vec3d(-0.5, 1, 0.625), new Vec3d(-1, 0, 0), 12));
 
 		return list.toArray(new EmplacementHitboxEntity[0]);
-	}
+	}*/
 
 	@Override
 	public int getEnergyUpkeepCost()

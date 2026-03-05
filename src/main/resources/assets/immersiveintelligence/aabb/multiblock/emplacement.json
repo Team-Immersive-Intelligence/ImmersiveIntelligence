@@ -55,6 +55,26 @@
     "wall_right": [
       0, 0, 12,
       16, 16, 16
+    ],
+    "platform_rod": [
+      -5, 0, -5,
+      5, 16, 5
+    ],
+    "platform_rod1": [
+      -7, 0, -11,
+      5, 10, 1
+    ],
+    "platform_rod2": [
+      -4, 0, -4,
+      4, 16, 4
+    ],
+    "platform": [
+      -16, 1, -16,
+      16, 0, 16
+    ],
+    "door": [
+      -19, -1, -2,
+      19, 1, 2
     ]
   },
   "positions": {
@@ -81,5 +101,86 @@
     "weapon": 49,
     "hatch": [45, 46, 47, 48, 49, 50, 51, 52, 53],
     "armor": [27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44]
+  },
+  "rotations": {
+    "data": "none"
+  },
+  "tactile_offset": [0, 0, 0],
+  "tactile": {
+    "_schema": "immersiveintelligence:models/block/multiblock/emplacement/emplacement.obj.amt",
+    "platform": [
+      {
+        "offset": [0, -82, -8],
+        "type": "platform_rod1"
+      }
+    ],
+    "platform1": [
+      {
+        "offset": [1, -72, -3],
+        "type": "platform_rod"
+      }
+    ],
+    "platform2": [
+      {
+        "offset": [0, -15, 0],
+        "type": "platform_rod"
+      }
+    ],
+    "platform3": [
+      {
+        "offset": [0, -15, 0],
+        "type": "platform_rod2"
+      }
+    ],
+    "platform4": [
+      {
+        "offset": [1, -17, -3],
+        "type": "platform_rod2"
+      }
+    ],
+    "platform5": [
+      {
+        "offset": [1, -17, -3],
+        "type": "platform_rod2"
+      }
+    ],
+    "platform6": [
+      {
+        "offset": [1, 10, -3],
+        "type": "platform"
+      },
+      {
+        "offset": [1, -6, -3],
+        "type": "platform_rod2"
+      }
+    ],
+    "door1": [
+      {
+        "offset": [0, -2, 8],
+        "type": "door"
+      },
+      {
+        "offset": [0, -2, 12],
+        "type": "door"
+      },
+      {
+        "offset": [0, -2, 18],
+        "type": "door"
+      }
+    ],
+    "door2": [
+      {
+        "offset": [0, -2, -8],
+        "type": "door"
+      },
+      {
+        "offset": [0, -2, -12],
+        "type": "door"
+      },
+      {
+        "offset": [0, -2, -18],
+        "type": "door"
+      }
+    ]
   }
 }

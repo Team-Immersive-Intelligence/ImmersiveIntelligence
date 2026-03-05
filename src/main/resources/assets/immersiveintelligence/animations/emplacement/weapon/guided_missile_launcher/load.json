@@ -1,0 +1,337 @@
+{
+  "comment": "Made by Pabilo8 with Blockbench",
+  "groups": {
+    "turen": {
+      "rotation": [
+        {
+          "time": 0.03764,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "launcher": {
+      "position": [
+        {
+          "time": 0.12903,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.23119,
+          "transform": [0, -12, 0]
+        },
+        {
+          "time": 0.2957,
+          "transform": [0, -12, 0]
+        },
+        {
+          "time": 0.35484,
+          "transform": [0, -12, 0]
+        },
+        {
+          "time": 0.41935,
+          "transform": [0, -12, 0]
+        },
+        {
+          "time": 0.52151,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "missile_door1": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.06452,
+          "transform": [0, 0, -95]
+        },
+        {
+          "time": 0.23119,
+          "transform": [0, 0, -95]
+        },
+        {
+          "time": 0.2957,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.35484,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.41935,
+          "transform": [0, 0, -95]
+        },
+        {
+          "time": 0.58603,
+          "transform": [0, 0, -95]
+        },
+        {
+          "time": 0.65054,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "missile_door2": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.06452,
+          "transform": [0, 0, 95]
+        },
+        {
+          "time": 0.23119,
+          "transform": [0, 0, 95]
+        },
+        {
+          "time": 0.2957,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.35484,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.41935,
+          "transform": [0, 0, 95]
+        },
+        {
+          "time": 0.58603,
+          "transform": [0, 0, 95]
+        },
+        {
+          "time": 0.65054,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "turntable": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.65054,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.77419,
+          "transform": [0, -95, 0]
+        },
+        {
+          "time": 0.80645,
+          "transform": [0, -95, 0]
+        },
+        {
+          "time": 0.87097,
+          "transform": [0, -110, 0]
+        },
+        {
+          "time": 0.89785,
+          "transform": [0, -110, 0]
+        },
+        {
+          "time": 1,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "lower": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.65054,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.77419,
+          "transform": [-37.5, 0, 0]
+        },
+        {
+          "time": 0.80645,
+          "transform": [-37.5, 0, 0]
+        },
+        {
+          "time": 0.87097,
+          "transform": [-25, 0, 0]
+        },
+        {
+          "time": 0.91935,
+          "transform": [-28.12, 0, 0]
+        },
+        {
+          "time": 1,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "upper": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [165, 0, 0]
+        },
+        {
+          "time": 0.2957,
+          "transform": [165, 0, 0]
+        },
+        {
+          "time": 0.35484,
+          "transform": [165, 0, 0]
+        },
+        {
+          "time": 0.65054,
+          "transform": [165, 0, 0]
+        },
+        {
+          "time": 0.71506,
+          "transform": [113.8, 0, 0]
+        },
+        {
+          "time": 0.77419,
+          "transform": [110, 0, 0]
+        },
+        {
+          "time": 0.80645,
+          "transform": [109.17, 0, 0]
+        },
+        {
+          "time": 0.87097,
+          "transform": [87.5, 0, 0]
+        },
+        {
+          "time": 0.90323,
+          "transform": [76.88, 0, 0]
+        },
+        {
+          "time": 0.91935,
+          "transform": [81.57, 0, 0]
+        },
+        {
+          "time": 1,
+          "transform": [165, 0, 0]
+        }
+      ]
+    },
+    "pickerLeft": {
+      "rotation": [
+        {
+          "time": 0.77419,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.80645,
+          "transform": [0, 0, 10]
+        },
+        {
+          "time": 0.83871,
+          "transform": [0, 0, 10]
+        },
+        {
+          "time": 0.87097,
+          "transform": [0, 0, 10]
+        },
+        {
+          "time": 0.89785,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "pickerRight": {
+      "rotation": [
+        {
+          "time": 0.77419,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.80645,
+          "transform": [0, 0, -10]
+        },
+        {
+          "time": 0.83871,
+          "transform": [0, 0, -10]
+        },
+        {
+          "time": 0.87097,
+          "transform": [0, 0, -10]
+        },
+        {
+          "time": 0.89785,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "launcher2": {
+      "position": [
+        {
+          "time": 0.06452,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.12903,
+          "transform": [0, -5, 0]
+        },
+        {
+          "time": 0.2957,
+          "transform": [0, -5, 0]
+        },
+        {
+          "time": 0.35484,
+          "transform": [0, -5, 0]
+        },
+        {
+          "time": 0.52151,
+          "transform": [0, -5, 0]
+        },
+        {
+          "time": 0.58603,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "coil": {
+      "rotation": [
+        {
+          "time": 0.00538,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.02151,
+          "transform": [0, 0, 65]
+        },
+        {
+          "time": 0.03764,
+          "transform": [0, 0, 65]
+        },
+        {
+          "time": 0.06452,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.58603,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.6129,
+          "transform": [0, 0, 65]
+        },
+        {
+          "time": 0.62903,
+          "transform": [0, 0, 65]
+        },
+        {
+          "time": 0.64516,
+          "transform": [0, 0, 0]
+        }
+      ]
+    }
+  }
+}

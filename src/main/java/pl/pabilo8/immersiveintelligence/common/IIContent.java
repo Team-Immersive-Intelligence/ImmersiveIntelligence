@@ -173,21 +173,21 @@ public class IIContent
 	public static final Upgrade UPGRADE_EMPLACEMENT_WEAPON_HEAVY_RAILGUN =
 			new UpgradeEmplacementWeapon<>("heavy_railgun", EmplacementWeaponHeavyRailgun::new);
 	public static final Upgrade UPGRADE_EMPLACEMENT_SEARCHLIGHT =
-			new UpgradeEmplacementWeapon<>("searchlight", EmplacementWeaponMachinegun::new);
+			new UpgradeEmplacementWeapon<>("searchlight", EmplacementWeaponSearchlight::new);
 	public static final Upgrade UPGRADE_EMPLACEMENT_SPOTLIGHT_TOWER =
-			new UpgradeEmplacementWeapon<>("spotlight_tower", EmplacementWeaponMachinegun::new);
+			new UpgradeEmplacementWeapon<>("spotlight_tower", EmplacementWeaponSpotlightTower::new);
 	public static final Upgrade UPGRADE_EMPLACEMENT_WEAPON_TESLA =
 			new UpgradeEmplacementWeapon<>("tesla", EmplacementWeaponTeslaCoil::new);
 	public static final Upgrade UPGRADE_EMPLACEMENT_WEAPON_CPDS =
 			new UpgradeEmplacementWeapon<>("cpds", EmplacementWeaponCPDS::new);
 	public static final Upgrade UPGRADE_EMPLACEMENT_WEAPON_MORTAR =
-			new UpgradeEmplacementWeapon<>("mortar", EmplacementWeaponMachinegun::new);
+			new UpgradeEmplacementWeapon<>("mortar", EmplacementWeaponMortar::new);
 	public static final Upgrade UPGRADE_EMPLACEMENT_WEAPON_LIGHT_HOWITZER =
-			new UpgradeEmplacementWeapon<>("light_howitzer", EmplacementWeaponMachinegun::new);
+			new UpgradeEmplacementWeapon<>("light_howitzer", EmplacementWeaponLightHowitzer::new);
 	public static final Upgrade UPGRADE_EMPLACEMENT_WEAPON_MLRS =
-			new UpgradeEmplacementWeapon<>("mlrs", EmplacementWeaponMachinegun::new);
+			new UpgradeEmplacementWeapon<>("rocket_launcher", EmplacementWeaponRocketLauncher::new);
 	public static final Upgrade UPGRADE_EMPLACEMENT_WEAPON_GUIDED_MISSILE_LAUNCHER =
-			new UpgradeEmplacementWeapon<>("guided_missile_launcher", EmplacementWeaponMachinegun::new);
+			new UpgradeEmplacementWeapon<>("guided_missile_launcher", EmplacementWeaponGuidedMissileLauncher::new);
 
 	public static final Upgrade UPGRADE_SOVEREIGNTY = new Upgrade("sovereignty")
 			.withType(UpgradePurpose.DEFENSE_SYSTEM);

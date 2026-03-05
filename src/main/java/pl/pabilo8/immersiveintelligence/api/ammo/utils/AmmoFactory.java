@@ -12,10 +12,12 @@ import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoCore;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoType;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityAmmoBase;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -223,7 +225,7 @@ public class AmmoFactory<E extends EntityAmmoBase<? super E>>
 	 * @param ignoredBlocks The list of blocks a projectile should ignore
 	 * @return The factory
 	 */
-	public AmmoFactory<E> setIgnoredBlocks(Collection<BlockPos> ignoredBlocks)
+	public AmmoFactory<E> setIgnoredBlocks(@Nonnull Collection<BlockPos> ignoredBlocks)
 	{
 		this.ignoredBlocks = new ArrayList<>(ignoredBlocks);
 		return this;
@@ -236,7 +238,7 @@ public class AmmoFactory<E extends EntityAmmoBase<? super E>>
 	 * @param ignoredEntities The list of entities a projectile should ignore
 	 * @return The factory
 	 */
-	public <I extends Entity> AmmoFactory<E> setIgnoredEntities(Collection<I> ignoredEntities)
+	public <I extends Entity> AmmoFactory<E> setIgnoredEntities(@Nonnull Collection<I> ignoredEntities)
 	{
 		this.ignoredEntities = new ArrayList<>(ignoredEntities);
 		return this;
@@ -323,5 +325,15 @@ public class AmmoFactory<E extends EntityAmmoBase<? super E>>
 		return IIAmmoUtils.getInterceptionAngles(
 				shooterPos, shooterMotion, targetPos, targetMotion, ammo.getVelocity(), ammo.getMass(stack)
 		);
+	}
+
+	/**
+	 * @return True if the stack is a valid ammo stack for this factory, false otherwise
+	 */
+	public boolean isValidAmmo(ItemStack stack)
+	{
+		if(!(ammo instanceof IAmmoTypeItem))
+			return false;
+		return stack.getItem()==ammo&&!((IAmmoTypeItem<?, ?>)ammo).isBulletCore(stack);
 	}
 }

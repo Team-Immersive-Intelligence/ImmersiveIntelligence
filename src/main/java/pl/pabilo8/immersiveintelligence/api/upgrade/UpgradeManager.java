@@ -189,6 +189,14 @@ public class UpgradeManager<T extends IUpgradableDevice> implements INBTSerializ
 		}
 	}
 
+	//--- HashCode ---//
+
+	@Override
+	public int hashCode()
+	{
+		return upgrades.hashCode();
+	}
+
 	//--- Utils ---//
 
 	private void sendTileUpdate()

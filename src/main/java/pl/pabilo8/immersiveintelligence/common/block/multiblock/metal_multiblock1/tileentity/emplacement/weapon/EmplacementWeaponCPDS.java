@@ -2,17 +2,13 @@ package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multibloc
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.oredict.OreDictionary;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.EmplacementWeapons.CPDS;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
-import pl.pabilo8.immersiveintelligence.common.entity.EntityEmplacementWeapon.EmplacementHitboxEntity;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine.Magazines;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.FilteredItemHandler;
-
-import java.util.ArrayList;
 
 /**
  * CPDS Q&A
@@ -38,17 +34,18 @@ public class EmplacementWeaponCPDS extends EmplacementWeaponGunBase<EntityAmmoPr
 	{
 		this.inventoryPlatform = NonNullList.withSize(3, ItemStack.EMPTY);
 		this.inventoryBase = NonNullList.withSize(8, ItemStack.EMPTY);
-		this.inventoryBaseHandler = new FilteredItemHandler(inventoryBase)
-				.withFilter(stack -> OreDictionary.itemMatches(stack,
-						IIContent.itemBulletMagazine.getMagazine(Magazines.CPDS_DRUM), false));
 	}
 
 	@Override
-	public void onInit(TileEntityEmplacement te)
+	protected void onInit(TileEntityEmplacement te)
 	{
 		super.onInit(te);
 		this.visionAABB = this.visionAABB.grow(CPDS.detectionRadius);
 		this.attackAABB = this.attackAABB.grow(CPDS.attackRadius);
+		this.inventoryBaseHandler = new FilteredItemHandler(inventoryBase)
+				.withFilter(stack -> OreDictionary.itemMatches(stack,
+						IIContent.itemBulletMagazine.getMagazine(Magazines.CPDS_DRUM), false));
+		this.aim.withAimSpeed(CPDS.yawRotateSpeed, CPDS.pitchRotateSpeed);
 	}
 
 	@Override
@@ -58,36 +55,18 @@ public class EmplacementWeaponCPDS extends EmplacementWeaponGunBase<EntityAmmoPr
 	}
 
 	@Override
-	public float getYawTurnSpeed()
-	{
-		return CPDS.yawRotateSpeed;
-	}
-
-	@Override
-	public float getPitchTurnSpeed()
-	{
-		return CPDS.pitchRotateSpeed;
-	}
-
-	@Override
-	public float getShotDelay()
+	public int getShotDelay()
 	{
 		return 0;
 	}
 
 	@Override
-	public float getReloadDelay()
+	public int getReloadDelay()
 	{
 		return CPDS.reloadTime;
 	}
 
-	@Override
-	public float getSetupDelay()
-	{
-		return 0;
-	}
-
-	@Override
+	/*@Override
 	public EmplacementHitboxEntity[] getCollisionBoxes()
 	{
 		if(entity==null)
@@ -111,7 +90,7 @@ public class EmplacementWeaponCPDS extends EmplacementWeaponGunBase<EntityAmmoPr
 
 
 		return list.toArray(new EmplacementHitboxEntity[0]);
-	}
+	}*/
 
 	@Override
 	public int getEnergyUpkeepCost()

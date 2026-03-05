@@ -1,9 +1,13 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.weapon;
 
+import blusunrize.immersiveengineering.common.util.IEDamageSources;
+import blusunrize.immersiveengineering.common.util.IEDamageSources.ElectricDamageSource;
 import com.elytradev.mirage.event.GatherLightsEvent;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -13,14 +17,20 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.IItemHandler;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeNull;
+import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoPanel;
+import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement.EmplacementStateNeeds;
-import pl.pabilo8.immersiveintelligence.common.entity.EntityEmplacementWeapon;
-import pl.pabilo8.immersiveintelligence.common.entity.EntityEmplacementWeapon.EmplacementHitboxEntity;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.task.EmplacementTarget;
+import pl.pabilo8.immersiveintelligence.common.entity.tactile.EntityAMTTactile;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.ITypeNBTSerializable;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -29,34 +39,37 @@ import javax.annotation.Nullable;
  */
 public abstract class EmplacementWeapon implements ITypeNBTSerializable
 {
-	/**
-	 * Acts as a hitbox container for the weapon
-	 */
-	public EntityEmplacementWeapon entity = null;
 	public float health = getMaxHealth();
 	protected AxisAlignedBB visionAABB, attackAABB;
 	protected boolean initialized = false;
+	@Nullable
+	protected EntityLivingBase baseEntity;
 
 	/**
 	 * Called after the weapon is installed or loaded from NBT
 	 * Initialize sight AABB here
 	 */
-	public void onInit(TileEntityEmplacement te)
+	protected void onInit(TileEntityEmplacement te)
 	{
 		this.initialized = true;
 		this.health = getMaxHealth();
 		this.visionAABB = new AxisAlignedBB(new BlockPos(te.getWeaponCenter()));
 		this.attackAABB = new AxisAlignedBB(new BlockPos(te.getWeaponCenter()));
-		te.sendData = false;
 
-		//Setup entity
+		//Setup entity (AMT Tactiles)
 		if(!te.getWorld().isRemote)
 		{
-			Vec3d vv = te.getWeaponCenter().subtract(0, 1, 0);
-			this.entity = new EntityEmplacementWeapon(te.getWorld());
-			this.entity.setPosition(vv.x, vv.y, vv.z);
-			te.getWorld().spawnEntity(this.entity);
+			te.tactileHandler.setAdditionalModel("weapon", IIReference.RES_II.with("aabb/emplacement_weapon/"+getName())
+					.withExtension(ResLoc.EXT_JSON)
+			);
+			this.baseEntity = null;
 		}
+	}
+
+	public final void init(TileEntityEmplacement te)
+	{
+		if(!initialized)
+			onInit(te);
 	}
 
 	/**
@@ -67,10 +80,11 @@ public abstract class EmplacementWeapon implements ITypeNBTSerializable
 	/**
 	 * Used to update the weapon every tick.
 	 *
-	 * @param te the emplacement tile entity
+	 * @param te            the emplacement tile entity
+	 * @param currentTarget
 	 * @return
 	 */
-	public EmplacementStateNeeds onUpdate(TileEntityEmplacement te)
+	public EmplacementStateNeeds onUpdate(TileEntityEmplacement te, @Nullable EmplacementTarget currentTarget)
 	{
 		if(!initialized)
 			this.onInit(te);
@@ -88,24 +102,16 @@ public abstract class EmplacementWeapon implements ITypeNBTSerializable
 	}
 
 
-	public void handleDataPacket(DataPacket packet)
+	public boolean handleDataCommand(DataPacket packet)
 	{
-
+		return false;
 	}
 
-	public void syncWithEntity(EntityEmplacementWeapon entity)
+	@Nonnull
+	public DataType getDataCallback(String string)
 	{
-		if(this.entity==null)
-			this.entity = entity;
-		if(this.entity!=entity)
-			return;
-
-		entity.setHealth(health);
-		entity.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(getMaxHealth());
-
+		return new DataTypeNull();
 	}
-
-	public abstract EmplacementHitboxEntity[] getCollisionBoxes();
 
 	//--- Inventory ---//
 
@@ -126,7 +132,7 @@ public abstract class EmplacementWeapon implements ITypeNBTSerializable
 	//--- GUI ---//
 
 	@SideOnly(Side.CLIENT)
-	public abstract void initializeGUI(DecoPanel panelPlatform);
+	public abstract void initializeGUI(DecoPanel panelBase, DecoPanel panelPlatform);
 
 	//--- Damage ---//
 
@@ -137,15 +143,49 @@ public abstract class EmplacementWeapon implements ITypeNBTSerializable
 		return health;
 	}
 
-	public final void applyDamage(float damage)
+	public int getArmorForPart(String partName)
 	{
-		this.health -= damage;
-
+		return 0;
 	}
 
 	public final boolean isDead()
 	{
 		return health <= 0;
+	}
+
+	public void setDead()
+	{
+		this.health = 0;
+	}
+
+	public boolean applyDamage(EntityAMTTactile tactile, DamageSource source, float amount)
+	{
+		//Immersive Vehicles(tm) compat
+		if(source.damageType.equals("bullet"))
+			source = new DamageSource("bullet").setProjectile();
+
+		//Resistant to fire and magic damage by default
+		if(source.isFireDamage()||source.isMagicDamage())
+			return false;
+		//Resistant to shrapnel by default
+		if(source.damageType.equals("iiShrapnel")||source.damageType.equals("iiShrapnelNoShooter"))
+			return false;
+
+		int armor = getArmorForPart(tactile.getName());
+		//EMP and acid damage bypass armor
+		if((source instanceof ElectricDamageSource||source==IEDamageSources.acid))
+			armor = 0;
+
+		//Damage or ricochet
+		if(armor-amount > 0)
+		{
+			tactile.world.playSound(null, tactile.getPosition(), IISounds.hitMetal.getImpactSound(), SoundCategory.BLOCKS, 1.5f, armor/amount*0.95f);
+			return true;
+		}
+
+		this.health -= amount-armor;
+		tactile.world.playSound(null, tactile.getPosition(), IISounds.hitMetal.getImpactSound(), SoundCategory.BLOCKS, 1.5f, 0.95f);
+		return false;
 	}
 
 	//--- Range ---//
@@ -179,7 +219,6 @@ public abstract class EmplacementWeapon implements ITypeNBTSerializable
 	{
 
 	}
-
 
 	//--- NBT ---//
 

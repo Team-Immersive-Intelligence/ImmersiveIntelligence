@@ -4,38 +4,50 @@ import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.Vec3d;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
-import pl.pabilo8.immersiveintelligence.common.entity.EntityEmplacementWeapon;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement.EmplacementStateNeeds;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.task.EmplacementTarget;
+import pl.pabilo8.immersiveintelligence.common.util.GunAimCoordinate;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockInteractablePart;
+
+import javax.annotation.Nullable;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
  * @ii-approved 0.3.1
  * @since 01.01.2026
  */
-public abstract class EmplacementWeaponTurretBase extends EmplacementWeapon implements IAimedEmplacementWeapon
+public abstract class EmplacementWeaponTurretBase extends EmplacementWeapon
 {
-	public float pitch = 0, yaw = 0;
-	protected float nextPitch = 0, nextYaw = 0;
-	protected Vec3d aimVector = Vec3d.ZERO;
-
-	protected int shootDelay = 0, reloadDelay = 0, setupDelay = 0;
+	public GunAimCoordinate aim = new GunAimCoordinate();
+	@Nullable
+	public MultiblockInteractablePart setup = null;
+	public int shootDelay = 0, reloadDelay = 0;
 
 	/**
 	 * Called after the weapon is installed or loaded from NBT
 	 * Initialize sight AABB here
 	 */
-	public void onInit(TileEntityEmplacement te)
+	protected void onInit(TileEntityEmplacement te)
 	{
 		super.onInit(te);
-		this.nextPitch = this.pitch = -90;
-		this.nextYaw = this.yaw = te.facing.getHorizontalAngle();
+		this.aim.withCurrentAngles(te.facing.getHorizontalAngle(), 0);
 	}
 
 	@Override
-	public void syncWithEntity(EntityEmplacementWeapon entity)
+	public EmplacementStateNeeds onUpdate(TileEntityEmplacement te, @Nullable EmplacementTarget currentTarget)
 	{
-		super.syncWithEntity(entity);
-		entity.rotationYaw = yaw;
-		entity.rotationPitch = pitch;
+		if(currentTarget!=null)
+			this.aim.setTarget(te.getWeaponCenter(), Vec3d.ZERO,
+					currentTarget.supplyCoordinates(), Vec3d.ZERO);
+		this.aim.update();
+
+		if(this.setup!=null)
+		{
+			this.setup.setState(true);
+			this.setup.update();
+		}
+
+		return super.onUpdate(te, currentTarget);
 	}
 
 	public abstract boolean canShoot(TileEntityEmplacement te);
@@ -45,34 +57,9 @@ public abstract class EmplacementWeaponTurretBase extends EmplacementWeapon impl
 	 */
 	public void shoot(TileEntityEmplacement te)
 	{
-		if(entity!=null)
-			Utils.attractEnemies(entity, 24);
-	}
-
-	@Override
-	public float getYaw()
-	{
-		return yaw;
-	}
-
-	@Override
-	public float getPitch()
-	{
-		return pitch;
-	}
-
-	public abstract float getYawTurnSpeed();
-
-	public abstract float getPitchTurnSpeed();
-
-	public float getPitchUpperLimit()
-	{
-		return 90;
-	}
-
-	public float getPitchLowerLimit()
-	{
-		return -45;
+		if(baseEntity!=null)
+			Utils.attractEnemies(baseEntity, 24);
+		this.shootDelay = getShotDelay();
 	}
 
 	public boolean requiresZeroingBeforeReload()
@@ -80,18 +67,17 @@ public abstract class EmplacementWeaponTurretBase extends EmplacementWeapon impl
 		return true;
 	}
 
-	public abstract float getShotDelay();
+	public abstract int getShotDelay();
 
-	public abstract float getReloadDelay();
-
-	public abstract float getSetupDelay();
+	public abstract int getReloadDelay();
 
 	@Override
 	public NBTTagCompound serializeNBT()
 	{
 		NBTTagCompound nbt = super.serializeNBT();
-		nbt.setFloat("pitch", pitch);
-		nbt.setFloat("yaw", yaw);
+		nbt.setTag("aim", aim.serializeNBT());
+		if(setup!=null)
+			nbt.setTag("setup", setup.serializeNBT());
 		return nbt;
 	}
 
@@ -99,7 +85,8 @@ public abstract class EmplacementWeaponTurretBase extends EmplacementWeapon impl
 	public void deserializeNBT(NBTTagCompound nbt)
 	{
 		super.deserializeNBT(nbt);
-		pitch = nbt.getFloat("pitch");
-		yaw = nbt.getFloat("yaw");
+		aim.deserializeNBT(nbt.getCompoundTag("aim"));
+		if(setup!=null)
+			setup.deserializeNBT(nbt.getCompoundTag("setup"));
 	}
 }

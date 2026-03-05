@@ -612,7 +612,7 @@ public class EntityHans extends EntityCreature implements INpc
 
 	public boolean isValidTarget(Entity entity)
 	{
-		return entity instanceof IMob||((entity instanceof EntityPlayer||entity instanceof EntityHans||entity instanceof EntityEmplacementWeapon||entity instanceof EntityIronGolem)&&entity.getTeam()!=this.getTeam());
+		return entity instanceof IMob||((entity instanceof EntityPlayer||entity instanceof EntityHans||entity instanceof EntityIronGolem)&&entity.getTeam()!=this.getTeam());
 	}
 
 	public void sendPlayerMessage(EntityPlayer player, String text)

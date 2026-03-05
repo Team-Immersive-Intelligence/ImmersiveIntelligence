@@ -30,6 +30,8 @@ public class TreeLayout<T>
 	private final Map<IDecoTreeNode<T>, NodeLayoutInfo> nodeInfo = new HashMap<>();
 	private NodeLayoutInfo rootInfo = null;
 
+	private LayoutBounds bounds = new LayoutBounds(0, 0, 0, 0);
+
 	public TreeLayout(@Nonnull IDecoTree<T> tree)
 	{
 		this.tree = tree;
@@ -66,6 +68,8 @@ public class TreeLayout<T>
 		//Adjust children to be closer to their parents
 		if(alignChildrenToParent)
 			adjustChildrenPositions(childrenMap);
+
+		updateBounds();
 	}
 
 	/**
@@ -286,6 +290,43 @@ public class TreeLayout<T>
 		return rootInfo;
 	}
 
+	private void updateBounds()
+	{
+		if(nodeInfo.isEmpty())
+		{
+			bounds = new LayoutBounds(0, 0, 0, 0);
+			return;
+		}
+
+		int minX = Integer.MAX_VALUE, minY = Integer.MAX_VALUE;
+		int maxX = Integer.MIN_VALUE, maxY = Integer.MIN_VALUE;
+
+		for(NodeLayoutInfo info : nodeInfo.values())
+		{
+			minX = Math.min(minX, info.x);
+			minY = Math.min(minY, info.y);
+			maxX = Math.max(maxX, info.getRight());
+			maxY = Math.max(maxY, info.getBottom());
+		}
+
+		bounds = new LayoutBounds(minX, minY, maxX, maxY);
+	}
+
+	public LayoutBounds getBounds()
+	{
+		return bounds;
+	}
+
+	public int getContentWidth()
+	{
+		return bounds.getWidth();
+	}
+
+	public int getContentHeight()
+	{
+		return bounds.getHeight();
+	}
+
 	//--- Setters ---//
 
 	public TreeLayout<T> withOrientation(Orientation orientation)
@@ -344,6 +385,29 @@ public class TreeLayout<T>
 		public int getBottom()
 		{
 			return y+height;
+		}
+	}
+
+	public static class LayoutBounds
+	{
+		public final int minX, minY, maxX, maxY;
+
+		public LayoutBounds(int minX, int minY, int maxX, int maxY)
+		{
+			this.minX = minX;
+			this.minY = minY;
+			this.maxX = maxX;
+			this.maxY = maxY;
+		}
+
+		public int getWidth()
+		{
+			return maxX-minX;
+		}
+
+		public int getHeight()
+		{
+			return maxY-minY;
 		}
 	}
 }

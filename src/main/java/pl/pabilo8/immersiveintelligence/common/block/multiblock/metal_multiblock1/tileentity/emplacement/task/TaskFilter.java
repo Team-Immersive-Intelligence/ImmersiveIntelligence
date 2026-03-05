@@ -9,11 +9,11 @@ import net.minecraft.nbt.NBTTagCompound;
  */
 public class TaskFilter
 {
-	public EnumTaskType type;
+	public EnumTargetType type;
 	public boolean negation;
 	public String filter;
 
-	public TaskFilter(EnumTaskType type, boolean negation, String filter)
+	public TaskFilter(EnumTargetType type, boolean negation, String filter)
 	{
 		this.type = type;
 		this.negation = negation;
@@ -22,6 +22,6 @@ public class TaskFilter
 
 	public TaskFilter(NBTTagCompound tag)
 	{
-		this(EnumTaskType.valueOf(tag.getString("type").toUpperCase()), tag.getBoolean("negation"), tag.getString("filter"));
+		this(EnumTargetType.valueOf(tag.getString("type").toUpperCase()), tag.getBoolean("negation"), tag.getString("filter"));
 	}
 }

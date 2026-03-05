@@ -1011,6 +1011,9 @@ public class IIConfigHandler
 				@Comment({"Energy capacity of the emplacement (in IF)."})
 				public static int energyCapacity = 32000;
 
+				@Comment({"Idle energy usage per tick, regardless whether a weapon is installed or not (in IF)."})
+				public static int baseEnergyUsage = 512;
+
 				@Comment({"Time for the multiblock to open/close the lid (in ticks)."})
 				public static int lidTime = 240;
 

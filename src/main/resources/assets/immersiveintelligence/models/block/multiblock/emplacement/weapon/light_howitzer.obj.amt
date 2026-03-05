@@ -12,7 +12,6 @@
     "base": [-5.89474, 28.40789, 22.81579]
   },
   "hierarchy": {
-    "base": "platform6",
     "turret": "base",
     "cartridge_piston": "turret",
     "barrel": "turret",

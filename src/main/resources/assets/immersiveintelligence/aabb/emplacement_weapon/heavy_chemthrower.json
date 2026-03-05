@@ -1,0 +1,102 @@
+{
+  "bounds": {
+    "base_box": [
+      -9, 0, -9,
+      9, 18, 9
+    ],
+    "barrel": [
+      -4, 0, -4,
+      4, 16, 4
+    ],
+    "gun_barrel": [
+      -2.5, -2.5, -2.5,
+      2.5, 2.5, 2.5
+    ],
+    "gun_barrel2": [
+      -2, -2, -2,
+      2, 2, 2
+    ]
+  },
+  "tactile_offset": [0, 0, -0.5],
+  "tactile": {
+    "_schema": "immersiveintelligence:models/block/multiblock/emplacement/weapon/heavy_chemthrower.obj.amt",
+    "base": [
+      {
+        "type": "base_box",
+        "offset": [0, 0, 8]
+      }
+    ],
+    "chemthrower": [
+      {
+        "type": "barrel",
+        "offset": [8, 5, 20]
+      },
+      {
+        "type": "barrel",
+        "offset": [-8, 5, 20]
+      }
+    ],
+    "gun": [
+      {
+        "type": "gun_barrel",
+        "offset": [4.5, 0, 4.5]
+      },
+      {
+        "type": "gun_barrel",
+        "offset": [4.5, 0, 0]
+      },
+      {
+        "type": "gun_barrel",
+        "offset": [-4.5, 0, 4.5]
+      },
+      {
+        "type": "gun_barrel",
+        "offset": [-4.5, 0, 0]
+      }
+    ],
+    "stage2": [
+      {
+        "type": "gun_barrel2",
+        "offset": [4.5, 0, 10]
+      },
+      {
+        "type": "gun_barrel2",
+        "offset": [4.5, 0, 6]
+      },
+      {
+        "type": "gun_barrel2",
+        "offset": [-4.5, 0, 10]
+      },
+      {
+        "type": "gun_barrel2",
+        "offset": [-4.5, 0, 6]
+      }
+    ],
+    "stage3": [
+      {
+        "type": "gun_barrel2",
+        "offset": [4.5, 0, 17]
+      },
+      {
+        "type": "gun_barrel2",
+        "offset": [4.5, 0, 13]
+      },
+      {
+        "type": "gun_barrel",
+        "offset": [4.5, 0, 8]
+      },
+      {
+        "type": "gun_barrel2",
+        "offset": [-4.5, 0, 17]
+      },
+      {
+        "type": "gun_barrel2",
+        "offset": [-4.5, 0, 13]
+      },
+      {
+        "type": "gun_barrel",
+        "offset": [-4.5, 0, 8]
+      }
+    ]
+  }
+}

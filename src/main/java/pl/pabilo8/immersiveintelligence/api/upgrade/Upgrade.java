@@ -157,4 +157,10 @@ public class Upgrade
 	{
 		return new ArrayList<>(UPGRADE_REGISTRY.values());
 	}
+
+	@Override
+	public int hashCode()
+	{
+		return id.hashCode();
+	}
 }

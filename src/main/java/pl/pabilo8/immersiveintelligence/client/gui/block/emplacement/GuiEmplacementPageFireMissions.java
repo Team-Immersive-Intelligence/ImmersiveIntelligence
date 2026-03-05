@@ -26,6 +26,7 @@ public class GuiEmplacementPageFireMissions extends GuiEmplacement
 		addComponents(
 				new DecoTaskJobList<>(0, 0)
 						.withSize(96, 152-32)
+						.withShowJobsTab(false)
 		);
 	}
 }

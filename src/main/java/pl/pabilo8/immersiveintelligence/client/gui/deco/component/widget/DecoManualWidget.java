@@ -97,11 +97,6 @@ public class DecoManualWidget extends DecoComponentWidgetBase<DecoManualWidget>
 		if(super.initialize())
 		{
 			wrapper.initGui();
-			withBackground(DecoTextures.BG_PAPER);
-			this.width -= 24;
-			withTitleLabel(IIReference.GUI_TOOLTIP_KEY+"widget.manual", DecoAlignment.TOP);
-			this.width += 24;
-			withBackground(null);
 			return true;
 		}
 		return false;

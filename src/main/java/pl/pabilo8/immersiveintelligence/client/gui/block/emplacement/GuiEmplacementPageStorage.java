@@ -62,7 +62,7 @@ public class GuiEmplacementPageStorage extends GuiEmplacement
 							.withLimits(0, tile.currentWeapon.getMaxHealth(), () -> (int)tile.currentWeapon.getHealth())
 							.withHeight(panelPlatform.height-8)
 			);
-			tile.currentWeapon.initializeGUI(panelPlatform);
+			tile.currentWeapon.initializeGUI(panelBase, panelPlatform);
 		}
 
 	}

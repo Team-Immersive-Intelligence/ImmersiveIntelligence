@@ -24,7 +24,6 @@ import pl.pabilo8.immersiveintelligence.api.ammo.utils.AmmoFactory;
 import pl.pabilo8.immersiveintelligence.api.utils.IEntitySpecialRepairable;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IVehicleMultiPart;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.entity.EntityEmplacementWeapon;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoArtilleryProjectile;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.drone.AIDroneTarget;
@@ -152,10 +151,9 @@ public class EntityDrone extends EntityFlying implements ISyncNBTEntity<EntityDr
 		//this.tasks.addTask(1, new <>());
 	}
 
-	// TODO: 19.12.2022 expand
 	public boolean isValidTarget(Entity entity)
 	{
-		return entity instanceof IMob||((entity instanceof EntityPlayer||entity instanceof EntityHans||entity instanceof EntityEmplacementWeapon||entity instanceof EntityIronGolem)&&entity.getTeam()!=this.getTeam());
+		return entity instanceof IMob||((entity instanceof EntityPlayer||entity instanceof EntityHans||entity instanceof EntityIronGolem)&&entity.getTeam()!=this.getTeam());
 	}
 
 	@Override

@@ -2,15 +2,11 @@ package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multibloc
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.Vec3d;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.EmplacementWeapons.Machinegun;
-import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
-import pl.pabilo8.immersiveintelligence.common.entity.EntityEmplacementWeapon.EmplacementHitboxEntity;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.FilteredItemHandler;
-
-import java.util.ArrayList;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockInteractablePart;
 
 /**
  * *reloads the gun* [H] E A V Y  M A C H I N E G U N<br>
@@ -23,16 +19,20 @@ public class EmplacementWeaponMachinegun extends EmplacementWeaponGunBase<Entity
 		super();
 		this.inventoryBase = NonNullList.withSize(36, ItemStack.EMPTY);
 		this.inventoryPlatform = NonNullList.withSize(12, ItemStack.EMPTY);
-		this.inventoryPlatformHandler = new FilteredItemHandler(inventoryPlatform)
-				.withFilter(stack -> stack.getItem()==IIContent.itemAmmoMachinegun);
+		this.setup = new MultiblockInteractablePart(Machinegun.setupTime);
 	}
 
 	@Override
-	public void onInit(TileEntityEmplacement te)
+	protected void onInit(TileEntityEmplacement te)
 	{
 		super.onInit(te);
 		this.visionAABB = this.visionAABB.grow(Machinegun.detectionRadius);
 		this.attackAABB = this.attackAABB.grow(Machinegun.attackRadius);
+
+		this.inventoryPlatformHandler = new FilteredItemHandler(inventoryPlatform)
+				.withFilter(this.ammoFactory::isValidAmmo);
+		this.aim.withAimSpeed(Machinegun.yawRotateSpeed, Machinegun.pitchRotateSpeed)
+				.withPitchLimit(-35, 65);
 	}
 
 	@Override
@@ -42,48 +42,18 @@ public class EmplacementWeaponMachinegun extends EmplacementWeaponGunBase<Entity
 	}
 
 	@Override
-	public float getYawTurnSpeed()
-	{
-		return Machinegun.yawRotateSpeed;
-	}
-
-	@Override
-	public float getPitchTurnSpeed()
-	{
-		return Machinegun.pitchRotateSpeed;
-	}
-
-	@Override
-	public float getPitchUpperLimit()
-	{
-		return 65;
-	}
-
-	@Override
-	public float getPitchLowerLimit()
-	{
-		return -35;
-	}
-
-	@Override
-	public float getShotDelay()
+	public int getShotDelay()
 	{
 		return 2;
 	}
 
 	@Override
-	public float getReloadDelay()
+	public int getReloadDelay()
 	{
 		return Machinegun.reloadTime;
 	}
 
-	@Override
-	public float getSetupDelay()
-	{
-		return Machinegun.setupTime;
-	}
-
-	@Override
+	/*@Override
 	public EmplacementHitboxEntity[] getCollisionBoxes()
 	{
 		if(entity==null)
@@ -120,7 +90,7 @@ public class EmplacementWeaponMachinegun extends EmplacementWeaponGunBase<Entity
 				new Vec3d(-0.5, 1, 0), new Vec3d(-1.25, 0, 0), 12));
 
 		return list.toArray(new EmplacementHitboxEntity[0]);
-	}
+	}*/
 
 	@Override
 	public int getEnergyUpkeepCost()

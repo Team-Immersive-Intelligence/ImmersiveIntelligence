@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
@@ -35,6 +36,7 @@ public final class AMTCachedModelBuilder<T>
 	private List<AMTModelHeader> headers = new ArrayList<>();
 	private BiFunction<ResourceLocation, T, TextureAtlasSprite> textureProvider = (res, t) -> ClientUtils.getSprite(res);
 	private BiFunction<T, AMTModelHeader, AMT[]> modelProvider = (t, h) -> new AMT[0];
+	private Function<T, AMTModelHeader> headerProvider = t -> null;
 	private boolean isBlock = false;
 	private AMTCachedModel<T> buildResult;
 
@@ -125,6 +127,12 @@ public final class AMTCachedModelBuilder<T>
 		return this;
 	}
 
+	public AMTCachedModelBuilder<T> withHeaderProvider(Function<T, AMTModelHeader> modelProvider)
+	{
+		this.headerProvider = modelProvider;
+		return this;
+	}
+
 	public AMTCachedModel<T> build()
 	{
 		//noinspection unchecked
@@ -134,6 +142,7 @@ public final class AMTCachedModelBuilder<T>
 				textureProvider,
 				headers.toArray(new AMTModelHeader[0]),
 				modelProvider,
+				headerProvider,
 				isBlock)
 		{
 			@Override

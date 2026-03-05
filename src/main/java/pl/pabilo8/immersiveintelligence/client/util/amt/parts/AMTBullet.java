@@ -33,6 +33,7 @@ public class AMTBullet extends AMT
 	@Nullable
 	private IAmmoModel<?, ?> model;
 	private BulletState state = BulletState.BULLET_UNUSED;
+	private Vec3d baseRotation = Vec3d.ZERO;
 
 	public AMTBullet(String name, Vec3d originPos, @Nullable IAmmoModel<?, ?> model)
 	{
@@ -49,10 +50,10 @@ public class AMTBullet extends AMT
 	@Override
 	protected void preDraw()
 	{
-		GlStateManager.translate(originPos.x, originPos.y, originPos.z);
-
 		if(off!=null)
 			GlStateManager.translate(-off.x, off.y, off.z);
+
+		GlStateManager.translate(originPos.x, originPos.y, originPos.z);
 
 		if(rot!=null)
 		{
@@ -65,6 +66,17 @@ public class AMTBullet extends AMT
 	@Override
 	protected void draw(Tessellator tes, BufferBuilder buf)
 	{
+		GlStateManager.pushMatrix();
+
+		if(scale!=null)
+			GlStateManager.scale(scale.x, scale.y, scale.z);
+		if(baseRotation!=null)
+		{
+			GlStateManager.rotate((float)baseRotation.y, 0, 1, 0);
+			GlStateManager.rotate((float)baseRotation.z, 0, 0, 1);
+			GlStateManager.rotate((float)-baseRotation.x, 1, 0, 0);
+		}
+
 		if(model!=null)
 		{
 			switch(state)
@@ -83,6 +95,10 @@ public class AMTBullet extends AMT
 					break;
 			}
 		}
+
+		GlStateManager.popMatrix();
+
+		GlStateManager.translate(-originPos.x, -originPos.y, -originPos.z);
 	}
 
 	@Override
@@ -106,6 +122,7 @@ public class AMTBullet extends AMT
 				this.setModel(AmmoRegistry.getGenericModel(item));
 		});
 		nbt.checkSetEnum("state", BulletState.class, this::withState);
+		nbt.checkSetVec3D("base_rotation", this::withBaseRotation);
 
 	}
 
@@ -149,6 +166,12 @@ public class AMTBullet extends AMT
 		this.state = BulletState.CASING;
 		this.gunpowderPercentage = gunpowderPercentage;
 
+		return this;
+	}
+
+	public AMTBullet withBaseRotation(Vec3d baseRotation)
+	{
+		this.baseRotation = baseRotation;
 		return this;
 	}
 

@@ -2,15 +2,12 @@ package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multibloc
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.Vec3d;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.EmplacementWeapons.HeavyRailgun;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
-import pl.pabilo8.immersiveintelligence.common.entity.EntityEmplacementWeapon.EmplacementHitboxEntity;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIRailgunOverride;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.FilteredItemHandler;
-
-import java.util.ArrayList;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockInteractablePart;
 
 /**
  * To Blu:
@@ -23,17 +20,18 @@ public class EmplacementWeaponHeavyRailgun extends EmplacementWeaponGunBase<Enti
 	{
 		this.inventoryBase = NonNullList.withSize(18, ItemStack.EMPTY);
 		this.inventoryPlatform = NonNullList.withSize(6, ItemStack.EMPTY);
-		this.inventoryBaseHandler = new FilteredItemHandler(inventoryBase)
-				.withFilter(ItemIIRailgunOverride::isAmmo);
+		this.setup = new MultiblockInteractablePart(HeavyRailgun.setupTime);
 	}
 
 	@Override
-	public void onInit(TileEntityEmplacement te)
+	protected void onInit(TileEntityEmplacement te)
 	{
 		super.onInit(te);
 		this.visionAABB = this.visionAABB.grow(HeavyRailgun.detectionRadius);
 		this.attackAABB = this.attackAABB.grow(HeavyRailgun.attackRadius);
-
+		this.inventoryBaseHandler = new FilteredItemHandler(inventoryBase)
+				.withFilter(ItemIIRailgunOverride::isAmmo);
+		this.aim.withAimSpeed(HeavyRailgun.yawRotateSpeed, HeavyRailgun.pitchRotateSpeed);
 	}
 
 	@Override
@@ -43,36 +41,18 @@ public class EmplacementWeaponHeavyRailgun extends EmplacementWeaponGunBase<Enti
 	}
 
 	@Override
-	public float getYawTurnSpeed()
-	{
-		return HeavyRailgun.yawRotateSpeed;
-	}
-
-	@Override
-	public float getPitchTurnSpeed()
-	{
-		return HeavyRailgun.pitchRotateSpeed;
-	}
-
-	@Override
-	public float getShotDelay()
+	public int getShotDelay()
 	{
 		return HeavyRailgun.shotFireTime;
 	}
 
 	@Override
-	public float getReloadDelay()
+	public int getReloadDelay()
 	{
 		return HeavyRailgun.reloadTime;
 	}
 
-	@Override
-	public float getSetupDelay()
-	{
-		return HeavyRailgun.setupTime;
-	}
-
-	@Override
+	/*@Override
 	public EmplacementHitboxEntity[] getCollisionBoxes()
 	{
 		if(entity==null)
@@ -100,7 +80,7 @@ public class EmplacementWeaponHeavyRailgun extends EmplacementWeaponGunBase<Enti
 				new Vec3d(-0.5, 1.5, 0), new Vec3d(-1.875, 0, 0), 12));
 
 		return list.toArray(new EmplacementHitboxEntity[0]);
-	}
+	}*/
 
 	@Override
 	public int getEnergyUpkeepCost()

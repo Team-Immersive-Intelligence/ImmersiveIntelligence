@@ -32,10 +32,17 @@ public abstract class GuiEmplacement extends DecoGui<TileEntityEmplacement, Cont
 				.withInventoryTitleBar()
 				.build();
 
+		//Refresh GUI on weapon change
+		addValueListener(() -> tile.currentWeapon)
+				.withObserver(emplacementWeapon -> this.refreshGUI());
+
 		//Tabs
 		addLinkTab(IIGUI.EMPLACEMENT_STORAGE, DecoTextures.ICON_STORAGE, "storage_module");
 		addLinkTab(IIGUI.EMPLACEMENT_CONFIG, DecoTextures.ICON_CONFIG, "configuration_module");
 		addLinkTab(IIGUI.EMPLACEMENT_TARGET_FILTERS, DecoTextures.ICON_TARGETS, "targets_module");
 		addLinkTab(IIGUI.EMPLACEMENT_FIRE_MISSIONS, DecoTextures.ICON_FIRE_MISSIONS, "fire_missions_module");
+
+		if(tile.currentWeapon!=null)
+			tile.currentWeapon.init(tile);
 	}
 }

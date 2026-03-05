@@ -9,7 +9,6 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Axis;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -21,9 +20,9 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTemplates;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.EmplacementWeapons.TeslaCoil;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement.EmplacementStateNeeds;
-import pl.pabilo8.immersiveintelligence.common.entity.EntityEmplacementWeapon;
-import pl.pabilo8.immersiveintelligence.common.entity.EntityEmplacementWeapon.EmplacementHitboxEntity;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.task.EmplacementTarget;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 
 public class EmplacementWeaponTeslaCoil extends EmplacementWeapon
@@ -44,7 +43,7 @@ public class EmplacementWeaponTeslaCoil extends EmplacementWeapon
 	}
 
 	@Override
-	public void onInit(TileEntityEmplacement te)
+	protected void onInit(TileEntityEmplacement te)
 	{
 		super.onInit(te);
 		this.visionAABB = this.visionAABB.grow(TeslaCoil.detectionRadius);
@@ -52,14 +51,14 @@ public class EmplacementWeaponTeslaCoil extends EmplacementWeapon
 	}
 
 	@Override
-	public EmplacementStateNeeds onUpdate(TileEntityEmplacement te)
+	public EmplacementStateNeeds onUpdate(TileEntityEmplacement te, @Nullable EmplacementTarget currentTarget)
 	{
 		for(Integer targetedEntity : targetedEntities)
-			addEntityToAnimation(targetedEntity, te.getWorld(), te.getBlockPosForPos(49).up());
+			addEntityToAnimation(targetedEntity, te.getWorld(), new BlockPos(te.getWeaponCenter()));
 		targetedEntities.clear();
 		effects.removeIf(LightningAnimation::tick);
 
-		return super.onUpdate(te);
+		return super.onUpdate(te, currentTarget);
 	}
 
 	/*@Override
@@ -106,14 +105,6 @@ public class EmplacementWeaponTeslaCoil extends EmplacementWeapon
 		Minecraft.getMinecraft().addScheduledTask(() -> effects.add(ani));
 	}
 
-	@Override
-	public void syncWithEntity(EntityEmplacementWeapon entity)
-	{
-		super.syncWithEntity(entity);
-		if(entity==this.entity)
-			entity.aabb = new AxisAlignedBB(-1, 0, -1, 1, 3.75, 1);
-	}
-
 	private void addEntityToAnimation(int id, World world, BlockPos pos)
 	{
 		Entity target = world.getEntityByID(id);
@@ -144,7 +135,7 @@ public class EmplacementWeaponTeslaCoil extends EmplacementWeapon
 		}
 	}
 
-	@Override
+	/*@Override
 	public EmplacementHitboxEntity[] getCollisionBoxes()
 	{
 		if(entity==null)
@@ -192,7 +183,7 @@ public class EmplacementWeaponTeslaCoil extends EmplacementWeapon
 				new Vec3d(0.6, 0.35f, -0.5), Vec3d.ZERO, 4));
 
 		return list.toArray(new EmplacementHitboxEntity[0]);
-	}
+	}*/
 
 	@Override
 	public int getEnergyUpkeepCost()
@@ -202,7 +193,7 @@ public class EmplacementWeaponTeslaCoil extends EmplacementWeapon
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public void initializeGUI(DecoPanel panelPlatform)
+	public void initializeGUI(DecoPanel panelBase, DecoPanel panelPlatform)
 	{
 		panelPlatform.addComponent(
 				new DecoBar(4, 4+2)

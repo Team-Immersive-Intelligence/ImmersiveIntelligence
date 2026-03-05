@@ -15,6 +15,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -34,6 +35,7 @@ public abstract class AMTCachedModel<T> extends HashMap<Integer, AMTModel> imple
 	private final AMTModelHeader header;
 	@Nonnull
 	private final BiFunction<T, AMTModelHeader, AMT[]> modelProvider;
+	private final Function<T, AMTModelHeader> headerProvider;
 	/**
 	 * Whether the {@link net.minecraft.client.renderer.vertex.VertexFormat} should be BLOCK or ITEM
 	 */
@@ -49,7 +51,7 @@ public abstract class AMTCachedModel<T> extends HashMap<Integer, AMTModel> imple
 	private AMTModel lastPicked = null;
 
 	public AMTCachedModel(@Nonnull OBJModel[] models, @Nonnull Tuple<Predicate<T>, OBJModel>[] conditionalModels, @Nonnull BiFunction<ResourceLocation, T, TextureAtlasSprite> textureProvider,
-						  @Nullable AMTModelHeader[] headers, @Nonnull BiFunction<T, AMTModelHeader, AMT[]> modelProvider, boolean isBlock)
+						  @Nullable AMTModelHeader[] headers, @Nonnull BiFunction<T, AMTModelHeader, AMT[]> modelProvider, Function<T, AMTModelHeader> headerProvider, boolean isBlock)
 	{
 		super();
 		this.models = models;
@@ -58,6 +60,7 @@ public abstract class AMTCachedModel<T> extends HashMap<Integer, AMTModel> imple
 
 		this.header = new AMTModelHeader(headers);
 		this.modelProvider = modelProvider;
+		this.headerProvider = headerProvider;
 
 		this.base = getVariant(getDefaultParameter(), "");
 		this.isBlock = isBlock;
@@ -118,6 +121,10 @@ public abstract class AMTCachedModel<T> extends HashMap<Integer, AMTModel> imple
 				.map(Tuple::getSecond)
 				.collect(Collectors.toList()));
 
+		//Compile a header from the static and dynamic part
+		AMTModelHeader secondHeader = headerProvider.apply(parameter);
+		final AMTModelHeader header = secondHeader!=null?new AMTModelHeader(this.header, secondHeader): this.header;
+
 		//Compile all AMT quads from the models
 		List<AMT> collected = models.stream()
 				.map(model -> new AMTModel(isBlock?DefaultVertexFormats.BLOCK: DefaultVertexFormats.ITEM,
@@ -129,6 +136,11 @@ public abstract class AMTCachedModel<T> extends HashMap<Integer, AMTModel> imple
 
 		//Add dynamic AMT from the model provider
 		Collections.addAll(collected, modelProvider.apply(parameter, header));
+		collected = collected.stream()
+				.map(AMT::getChildrenRecursive)
+				.flatMap(Collection::stream)
+				.distinct()
+				.collect(Collectors.toList());
 
 		//Apply hierarchy from header file
 		if(header!=null)

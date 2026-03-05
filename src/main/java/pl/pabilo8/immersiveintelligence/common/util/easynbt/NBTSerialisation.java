@@ -630,7 +630,14 @@ public class NBTSerialisation
 			}
 
 			NBTTagCompound value = from.getCompoundTag("value");
-			instance.deserializeNBT(value);
+			try
+			{
+				instance.deserializeNBT(value);
+			} catch(Exception e)
+			{
+				IILogger.error("Error deserializing ITypeNBTSerializable type \""+typeId+"\".", e);
+				return instance;
+			}
 			return instance;
 		}
 	}

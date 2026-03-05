@@ -90,6 +90,7 @@ public abstract class TileEntityMultiblockIIBase<T extends TileEntityMultiblockI
 		if(firstTick)
 		{
 			timestamp = world.getTotalWorldTime();
+			getUUID();
 			onBeforeFirstTick();
 			firstTick = false;
 		}

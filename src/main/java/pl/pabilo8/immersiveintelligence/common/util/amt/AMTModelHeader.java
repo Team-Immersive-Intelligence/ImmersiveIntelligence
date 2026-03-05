@@ -15,9 +15,9 @@ import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 
@@ -184,7 +184,7 @@ public class AMTModelHeader
 
 	}
 
-	public void applyHierarchy(ArrayList<EntityAMTTactile> amts)
+	public void applyHierarchy(List<EntityAMTTactile> amts)
 	{
 		for(EntityAMTTactile amt : amts)
 		{

@@ -3,8 +3,6 @@ package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multibloc
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -14,26 +12,29 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoPane
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.EmplacementWeapons.InfraredObserver;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement.EmplacementStateNeeds;
-import pl.pabilo8.immersiveintelligence.common.entity.EntityEmplacementWeapon.EmplacementHitboxEntity;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.task.EmplacementTarget;
+import pl.pabilo8.immersiveintelligence.common.util.GunAimCoordinate;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockInteractablePart;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
+import javax.annotation.Nullable;
 import java.util.stream.StreamSupport;
 
 public class EmplacementWeaponInfraredObserver extends EmplacementWeapon
 {
-	private int setupDelay = 0;
 	@Nonnull
-	private EnumFacing facing = EnumFacing.NORTH, plannedFacing = EnumFacing.NORTH;
-	private float pitch, nextPitch;
+	private EnumFacing facing, plannedFacing;
+	public GunAimCoordinate aim = new GunAimCoordinate();
+	public MultiblockInteractablePart setup;
 
 	public EmplacementWeaponInfraredObserver()
 	{
-
+		this.facing = this.plannedFacing = EnumFacing.NORTH;
+		this.setup = new MultiblockInteractablePart(InfraredObserver.setupTime);
 	}
 
 	@Override
-	public void onInit(TileEntityEmplacement te)
+	protected void onInit(TileEntityEmplacement te)
 	{
 		super.onInit(te);
 		this.facing = this.plannedFacing = te.facing;
@@ -43,13 +44,18 @@ public class EmplacementWeaponInfraredObserver extends EmplacementWeapon
 		this.attackAABB = this.visionAABB = this.visionAABB
 				.expand(viewFront.getX()*InfraredObserver.detectionRadius, 0, viewFront.getZ()*InfraredObserver.detectionRadius)
 				.grow(viewSides.getX()*InfraredObserver.detectionRadius, InfraredObserver.detectionRadius, viewSides.getZ()*InfraredObserver.detectionRadius);
-		te.sendData = true;
+
+		this.aim.withAimSpeed(360, InfraredObserver.pitchRotateSpeed)
+				.withYawLimit(facing.getHorizontalAngle(), facing.getHorizontalAngle());
 	}
 
 	@Override
-	public EmplacementStateNeeds onUpdate(TileEntityEmplacement te)
+	public EmplacementStateNeeds onUpdate(TileEntityEmplacement te, @Nullable EmplacementTarget currentTarget)
 	{
-		return super.onUpdate(te);
+		if(plannedFacing!=facing)
+			return EmplacementStateNeeds.MUST_HIDE;
+
+		return super.onUpdate(te, currentTarget);
 	}
 
 	@Override
@@ -58,19 +64,9 @@ public class EmplacementWeaponInfraredObserver extends EmplacementWeapon
 		return "infrared_observer";
 	}
 
-	public void aimAt(float yaw, float pitch)
-	{
-		//Only pitch, no yaw rotation
-		nextPitch = pitch;
-		float p = pitch-this.pitch;
-		this.pitch += Math.signum(p)*MathHelper.clamp(Math.abs(p), 0, InfraredObserver.pitchRotateSpeed);
-		this.pitch = this.pitch%180;
-	}
-
 	@Override
-	public void handleDataPacket(DataPacket packet)
+	public boolean handleDataCommand(DataPacket packet)
 	{
-		super.handleDataPacket(packet);
 		/*String c = packet.get('c').toString();
 		if(c.equals("facing"))
 		{
@@ -89,9 +85,10 @@ public class EmplacementWeaponInfraredObserver extends EmplacementWeapon
 			if(nextYaw!=yaw)
 				requiresPlatformRefill = true;
 		}*/
+		return super.handleDataCommand(packet);
 	}
 
-	@Override
+	/*@Override
 	public EmplacementHitboxEntity[] getCollisionBoxes()
 	{
 		if(entity==null)
@@ -112,7 +109,7 @@ public class EmplacementWeaponInfraredObserver extends EmplacementWeapon
 				new Vec3d(-0.25, 1.5, 0), new Vec3d(-1.325, 0, -0.25), 4));
 
 		return list.toArray(new EmplacementHitboxEntity[0]);
-	}
+	}*/
 
 	@Override
 	public int getEnergyUpkeepCost()
@@ -122,7 +119,7 @@ public class EmplacementWeaponInfraredObserver extends EmplacementWeapon
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public void initializeGUI(DecoPanel panelPlatform)
+	public void initializeGUI(DecoPanel panelBase, DecoPanel panelPlatform)
 	{
 
 	}
@@ -137,7 +134,8 @@ public class EmplacementWeaponInfraredObserver extends EmplacementWeapon
 	public boolean canSeeEntity(Entity entity)
 	{
 		return StreamSupport.stream(entity.getArmorInventoryList().spliterator(), false)
-				.noneMatch(stack -> stack.getItem() instanceof IInfraredProtectionEquipment&&((IInfraredProtectionEquipment)stack.getItem()).invisibleToInfrared(stack));
+				.noneMatch(stack -> stack.getItem() instanceof IInfraredProtectionEquipment
+						&&((IInfraredProtectionEquipment)stack.getItem()).invisibleToInfrared(stack));
 	}
 
 	@Override

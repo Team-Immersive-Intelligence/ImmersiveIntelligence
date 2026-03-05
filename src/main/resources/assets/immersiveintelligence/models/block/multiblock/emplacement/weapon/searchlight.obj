@@ -3,7 +3,7 @@
 mtllib searchlight.mtl
 
 
-o weapon
+o base
 v 1.4375 -2.5625 2.4375
 v 1.4375 -2.5625 0.5625
 v 1.4375 -2.75 2.4375

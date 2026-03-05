@@ -1,0 +1,205 @@
+{
+  "comment": "Made by Pabilo8 with Blockbench",
+  "groups": {
+    "turen": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [90, 0, 0]
+        },
+        {
+          "time": 0.25834,
+          "transform": [90, 0, 0]
+        },
+        {
+          "time": 0.4,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "launcher": {
+      "position": [
+        {
+          "time": 0,
+          "transform": [0, -12, 0]
+        },
+        {
+          "time": 0.1,
+          "transform": [0, -12, 0]
+        },
+        {
+          "time": 0.25834,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "missile_door1": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.1,
+          "transform": [0, 0, -95]
+        },
+        {
+          "time": 0.35834,
+          "transform": [0, 0, -95]
+        },
+        {
+          "time": 0.45834,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "missile_door2": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.1,
+          "transform": [0, 0, 95]
+        },
+        {
+          "time": 0.35834,
+          "transform": [0, 0, 95]
+        },
+        {
+          "time": 0.45834,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "turntable": {
+      "rotation": [
+        {
+          "time": 0.45834,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.65,
+          "transform": [0, -225, 0]
+        },
+        {
+          "time": 0.7,
+          "transform": [0, -225, 0]
+        },
+        {
+          "time": 0.8,
+          "transform": [0, -202.5, 0]
+        },
+        {
+          "time": 1,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "lower": {
+      "rotation": [
+        {
+          "time": 0.45834,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.65,
+          "transform": [-30, 0, 0]
+        },
+        {
+          "time": 0.7,
+          "transform": [-25, 0, 0]
+        },
+        {
+          "time": 0.8,
+          "transform": [-17.5, 0, 0]
+        },
+        {
+          "time": 1,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "upper": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [165, 0, 0]
+        },
+        {
+          "time": 0.45834,
+          "transform": [165, 0, 0]
+        },
+        {
+          "time": 0.65,
+          "transform": [110, 0, 0]
+        },
+        {
+          "time": 0.8,
+          "transform": [77.5, 0, 0]
+        },
+        {
+          "time": 1,
+          "transform": [165, 0, 0]
+        }
+      ]
+    },
+    "pickerLeft": {
+      "rotation": [
+        {
+          "time": 0.65,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.7,
+          "transform": [0, 0, 10]
+        },
+        {
+          "time": 0.75,
+          "transform": [0, 0, 10]
+        },
+        {
+          "time": 0.8,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "pickerRight": {
+      "rotation": [
+        {
+          "time": 0.65,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.7,
+          "transform": [0, 0, -10]
+        },
+        {
+          "time": 0.75,
+          "transform": [0, 0, -10]
+        },
+        {
+          "time": 0.8,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "launcher2": {
+      "position": [
+        {
+          "time": 0,
+          "transform": [0, -5, 0]
+        },
+        {
+          "time": 0.25834,
+          "transform": [0, -5, 0]
+        },
+        {
+          "time": 0.35834,
+          "transform": [0, 0, 0]
+        }
+      ]
+    }
+  }
+}

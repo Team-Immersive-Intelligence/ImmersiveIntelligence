@@ -1,0 +1,75 @@
+{
+  "bounds": {
+    "base_box": [
+      -7, 0, -7,
+      7, 16, 7
+    ],
+    "observer_box": [
+      -6, 0, -6,
+      6, 28, 6
+    ],
+    "back_box": [
+      -6, 0, -6,
+      6, 8, 6
+    ],
+    "rocket": [
+      -4, -4, -4,
+      4, 4, 4
+    ],
+    "none": [
+      0, 0, 0,
+      0, 0, 0
+    ]
+  },
+  "tactile_offset": [0, 0, -0.5],
+  "tactile": {
+    "_schema": "immersiveintelligence:models/block/multiblock/emplacement/weapon/guided_missile_launcher.obj.amt",
+    "base": [
+      {
+        "type": "base_box",
+        "offset": [9, -16, 0]
+      },
+      {
+        "type": "base_box",
+        "offset": [9, -16, 14]
+      },
+      {
+        "type": "observer_box",
+        "offset": [-7, -16, 0]
+      },
+      {
+        "type": "back_box",
+        "offset": [-7, -16, 14]
+      }
+    ],
+    "launcher3": [
+      {
+        "type": "none"
+      }
+    ],
+    "launcher2": [
+      {
+        "type": "none"
+      }
+    ],
+    "launcher": [
+      {
+        "type": "none"
+      }
+    ],
+    "gun": [
+      {
+        "type": "rocket",
+        "offset": [-2, 0, 0]
+      },
+      {
+        "type": "rocket",
+        "offset": [-2, 0, 8]
+      },
+      {
+        "type": "rocket",
+        "offset": [-2, 0, 16]
+      }
+    ]
+  }
+}

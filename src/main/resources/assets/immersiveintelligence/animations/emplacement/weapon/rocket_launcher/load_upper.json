@@ -1,0 +1,619 @@
+{
+  "comment": "Made by Pabilo8 with Blockbench",
+  "groups": {
+    "tray_upper": {
+      "rotation": [
+        {
+          "time": 0.1,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.175,
+          "transform": [-2.5, 0, 0]
+        },
+        {
+          "time": 0.21625,
+          "transform": [1.25, 0, 0]
+        },
+        {
+          "time": 0.25125,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.255,
+          "transform": [0.75, 0, 0]
+        },
+        {
+          "time": 0.26,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.3,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.355,
+          "transform": [-2.5, 0, 0]
+        },
+        {
+          "time": 0.375,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.3775,
+          "transform": [1.5, 0, 0]
+        },
+        {
+          "time": 0.3825,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.41625,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.425,
+          "transform": [1.5, 0, 0]
+        },
+        {
+          "time": 0.4625,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.53125,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.58375,
+          "transform": [1.5, 0, 0]
+        },
+        {
+          "time": 0.5875,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.67625,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.67875,
+          "transform": [0.5, 0, 0]
+        },
+        {
+          "time": 0.68125,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.745,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.75125,
+          "transform": [-2.5, 0, 0]
+        },
+        {
+          "time": 0.76,
+          "transform": [0, 0, 0]
+        }
+      ],
+      "position": [
+        {
+          "time": 0.1,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.175,
+          "transform": [0, -1.25, 22]
+        },
+        {
+          "time": 0.18875,
+          "transform": [0, -1.25, 24.89]
+        },
+        {
+          "time": 0.21625,
+          "transform": [0, -1.25, 30.66]
+        },
+        {
+          "time": 0.25125,
+          "transform": [0, -1.25, 38]
+        },
+        {
+          "time": 0.255,
+          "transform": [0, -1.25, 38.525]
+        },
+        {
+          "time": 0.26,
+          "transform": [0, -1.25, 38]
+        },
+        {
+          "time": 0.3,
+          "transform": [0, -1.25, 38]
+        },
+        {
+          "time": 0.375,
+          "transform": [0, -34.25, 38]
+        },
+        {
+          "time": 0.3775,
+          "transform": [0, -34.25, 38]
+        },
+        {
+          "time": 0.3825,
+          "transform": [0, -34.25, 38]
+        },
+        {
+          "time": 0.425,
+          "transform": [0, -34.25, 30]
+        },
+        {
+          "time": 0.4625,
+          "transform": [0, -34.25, 9]
+        },
+        {
+          "time": 0.53125,
+          "transform": [0, -34.25, 9]
+        },
+        {
+          "time": 0.5875,
+          "transform": [0, -34.25, 31]
+        },
+        {
+          "time": 0.67625,
+          "transform": [0, 0, 31]
+        },
+        {
+          "time": 0.67875,
+          "transform": [0, 0.5, 31]
+        },
+        {
+          "time": 0.68125,
+          "transform": [0, 0, 31]
+        },
+        {
+          "time": 0.6875,
+          "transform": [0, 0, 31]
+        },
+        {
+          "time": 0.75125,
+          "transform": [0, 0, 22]
+        },
+        {
+          "time": 0.9,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "rocket1": {
+      "position": [
+        {
+          "time": 0.48875,
+          "transform": [0, 0, -20]
+        },
+        {
+          "time": 0.525,
+          "transform": [0, 0, 0]
+        }
+      ],
+      "scale": [
+        {
+          "time": 0.4875,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.48875,
+          "transform": [1, 1, 1]
+        }
+      ]
+    },
+    "rocket2": {
+      "position": [
+        {
+          "time": 0.48875,
+          "transform": [0, 0, -20]
+        },
+        {
+          "time": 0.52375,
+          "transform": [0, 0, 0]
+        }
+      ],
+      "scale": [
+        {
+          "time": 0.4875,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.48875,
+          "transform": [1, 1, 1]
+        }
+      ]
+    },
+    "rocket3": {
+      "position": [
+        {
+          "time": 0.48875,
+          "transform": [0, 0, -20]
+        },
+        {
+          "time": 0.525,
+          "transform": [0, 0, 0]
+        }
+      ],
+      "scale": [
+        {
+          "time": 0.4875,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.48875,
+          "transform": [1, 1, 1]
+        }
+      ]
+    },
+    "rocket4": {
+      "position": [
+        {
+          "time": 0.48875,
+          "transform": [0, 0, -20]
+        },
+        {
+          "time": 0.52625,
+          "transform": [0, 0, 0]
+        }
+      ],
+      "scale": [
+        {
+          "time": 0.4875,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.48875,
+          "transform": [1, 1, 1]
+        }
+      ]
+    },
+    "loader_crane": {
+      "position": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.075,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.08125,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.0875,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.175,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.25125,
+          "transform": [0, 0, 16]
+        },
+        {
+          "time": 0.255,
+          "transform": [0, 0, 16.5]
+        },
+        {
+          "time": 0.26,
+          "transform": [0, 0, 16]
+        },
+        {
+          "time": 0.3,
+          "transform": [0, 0, 16]
+        },
+        {
+          "time": 0.3825,
+          "transform": [0, 0, 16]
+        },
+        {
+          "time": 0.425,
+          "transform": [0, 0, 9]
+        },
+        {
+          "time": 0.53125,
+          "transform": [0, 0, 9]
+        },
+        {
+          "time": 0.5875,
+          "transform": [0, 0, 9]
+        },
+        {
+          "time": 0.6875,
+          "transform": [0, 0, 9]
+        },
+        {
+          "time": 0.75125,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "loader_crane2": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        }
+      ],
+      "position": [
+        {
+          "time": 0.0875,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.1,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.175,
+          "transform": [0, 0, 22]
+        },
+        {
+          "time": 0.3825,
+          "transform": [0, 0, 22]
+        },
+        {
+          "time": 0.425,
+          "transform": [0, 0, 22]
+        },
+        {
+          "time": 0.4625,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.53125,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.5875,
+          "transform": [0, 0, 22]
+        },
+        {
+          "time": 0.6875,
+          "transform": [0, 0, 22]
+        },
+        {
+          "time": 0.75125,
+          "transform": [0, 0, 22]
+        },
+        {
+          "time": 0.9,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "loader_winch1": {
+      "position": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.075,
+          "transform": [0, -10, 0]
+        },
+        {
+          "time": 0.08125,
+          "transform": [0, -10.5, 0]
+        },
+        {
+          "time": 0.0875,
+          "transform": [0, -10, 0]
+        },
+        {
+          "time": 0.175,
+          "transform": [0, -11, 0]
+        },
+        {
+          "time": 0.3,
+          "transform": [0, -11, 0]
+        },
+        {
+          "time": 0.375,
+          "transform": [0, -44, 0]
+        },
+        {
+          "time": 0.3825,
+          "transform": [0, -44, 0]
+        },
+        {
+          "time": 0.5875,
+          "transform": [0, -44, 0]
+        },
+        {
+          "time": 0.67625,
+          "transform": [0, -10, 0]
+        },
+        {
+          "time": 0.67875,
+          "transform": [0, -9.5, 0]
+        },
+        {
+          "time": 0.68125,
+          "transform": [0, -10, 0]
+        },
+        {
+          "time": 0.6875,
+          "transform": [0, -10, 0]
+        },
+        {
+          "time": 0.9,
+          "transform": [0, -10, 0]
+        },
+        {
+          "time": 1,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "loader_rope_coil": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.075,
+          "transform": [-360, 0, 0]
+        },
+        {
+          "time": 0.08125,
+          "transform": [-365, 0, 0]
+        },
+        {
+          "time": 0.0875,
+          "transform": [-360, 0, 0]
+        },
+        {
+          "time": 0.175,
+          "transform": [-370, 0, 0]
+        },
+        {
+          "time": 0.3,
+          "transform": [-370, 0, 0]
+        },
+        {
+          "time": 0.375,
+          "transform": [-730, 0, 0]
+        },
+        {
+          "time": 0.3775,
+          "transform": [-740, 0, 0]
+        },
+        {
+          "time": 0.3825,
+          "transform": [-730, 0, 0]
+        },
+        {
+          "time": 0.5875,
+          "transform": [-730, 0, 0]
+        },
+        {
+          "time": 0.67625,
+          "transform": [-360, 0, 0]
+        },
+        {
+          "time": 0.67875,
+          "transform": [-370, 0, 0]
+        },
+        {
+          "time": 0.68125,
+          "transform": [-360, 0, 0]
+        },
+        {
+          "time": 0.9,
+          "transform": [-360, 0, 0]
+        },
+        {
+          "time": 1,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "loader_winch2": {
+      "rotation": [
+        {
+          "time": 0.175,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.18875,
+          "transform": [20, 0, 0]
+        },
+        {
+          "time": 0.21625,
+          "transform": [0, 0, 0]
+        }
+      ],
+      "position": [
+        {
+          "time": 0.175,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.18875,
+          "transform": [0, -4, 0]
+        },
+        {
+          "time": 0.21625,
+          "transform": [0, -5, 0]
+        },
+        {
+          "time": 0.25125,
+          "transform": [0, -4, 0]
+        },
+        {
+          "time": 0.255,
+          "transform": [0, -4.375, 0]
+        },
+        {
+          "time": 0.26,
+          "transform": [0, -4, 0]
+        },
+        {
+          "time": 0.3,
+          "transform": [0, -4, 0]
+        },
+        {
+          "time": 0.355,
+          "transform": [0, -27, 0]
+        },
+        {
+          "time": 0.375,
+          "transform": [0, -37, 0]
+        },
+        {
+          "time": 0.3775,
+          "transform": [0, -37, 0]
+        },
+        {
+          "time": 0.3825,
+          "transform": [0, -37, 0]
+        },
+        {
+          "time": 0.41375,
+          "transform": [0, -37, -0.74]
+        },
+        {
+          "time": 0.43375,
+          "transform": [0, -32, 3]
+        },
+        {
+          "time": 0.4625,
+          "transform": [0, -15.27, 1.43]
+        },
+        {
+          "time": 0.525,
+          "transform": [0, -15.27, 1.43]
+        },
+        {
+          "time": 0.5875,
+          "transform": [0, -37, 0]
+        },
+        {
+          "time": 0.67625,
+          "transform": [0, -3, 0]
+        },
+        {
+          "time": 0.67875,
+          "transform": [0, -3, 0]
+        },
+        {
+          "time": 0.68125,
+          "transform": [0, -3, 0]
+        },
+        {
+          "time": 0.7125,
+          "transform": [0, 0, 0]
+        }
+      ]
+    }
+  }
+}

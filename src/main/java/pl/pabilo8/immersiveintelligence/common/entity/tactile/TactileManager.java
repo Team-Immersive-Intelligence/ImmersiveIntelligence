@@ -23,10 +23,7 @@ import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctur
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -43,19 +40,19 @@ public class TactileManager
 	//--- Animation Cache ---//
 	private static HashMap<ResLoc, AMTModelHeader> HEADERS = new HashMap<>();
 	private static HashMap<ResLoc, IIAnimation> ANIMATIONS = new HashMap<>();
+	private static HashMap<ResLoc, SourceData> SOURCE_CACHE = new HashMap<>();
+
+	private static final String CATEGORY_BASE = "base";
 
 	//Final values
-	private final ResLoc aabbLoc;
+	private final ResLoc baseAabbLoc;
+	private final Map<String, ResLoc> aabbLocations;
 	private final ITactileListener listener;
 	private final ArrayList<EntityAMTTactile> entities;
 	private final HashMap<ResLoc, IIAnimationCollisionMap> animations;
-	private ResLoc headerLoc;
 
 	//Reloadable values
 	private boolean initialized = false;
-	private AMTModelHeader header;
-	private Vec3d globalOffset = Vec3d.ZERO;
-
 	private final Supplier<World> worldSupplier;
 	private final Supplier<BlockPos> posSupplier;
 	private final Supplier<EnumFacing> facingSupplier;
@@ -67,7 +64,9 @@ public class TactileManager
 	public TactileManager(ResLoc aabbLoc, ITactileListener listener, Supplier<World> worldSupplier, Supplier<BlockPos> posSupplier,
 						  Supplier<EnumFacing> facingSupplier, Supplier<Boolean> mirroredSupplier)
 	{
-		this.aabbLoc = aabbLoc;
+		this.baseAabbLoc = aabbLoc;
+		this.aabbLocations = new LinkedHashMap<>();
+		this.aabbLocations.put(CATEGORY_BASE, baseAabbLoc);
 		this.listener = listener;
 
 		this.worldSupplier = worldSupplier;
@@ -87,7 +86,9 @@ public class TactileManager
 	 */
 	public <T extends TileEntityMultiblockPart<T> & ITactileListener> TactileManager(MultiblockStuctureBase<T> multiblock, T listener)
 	{
-		this.aabbLoc = multiblock.getAABBFileLocation();
+		this.baseAabbLoc = multiblock.getAABBFileLocation();
+		this.aabbLocations = new LinkedHashMap<>();
+		this.aabbLocations.put(CATEGORY_BASE, baseAabbLoc);
 		this.listener = listener;
 
 		this.worldSupplier = listener::getWorld;
@@ -107,6 +108,19 @@ public class TactileManager
 	}
 
 	/**
+	 * Add or override an additional AABB/header source.
+	 * Passing null marks the category as "do not load".
+	 */
+	public void setAdditionalModel(@Nullable String category, @Nullable ResLoc location)
+	{
+		if(category==null||category.isEmpty())
+			return;
+
+		aabbLocations.put(category, location);
+		forceReload();
+	}
+
+	/**
 	 * Load the header file.<br>
 	 * Animations are loaded and cached dynamically by {@link #update(ResLoc, float)}.
 	 *
@@ -120,15 +134,55 @@ public class TactileManager
 		if(!Graphics.tactileAMT)
 			return false;
 
-		//Loading is not possible
-		if(aabbLoc==null)
-			return false;
 		BlockPos mainPos = getPos();
 
-		//Load the header json
-		JsonObject jsonObject = AMTLoader.readServerFileToJson(aabbLoc, "animation");
-		if(jsonObject.size()==0)
+		List<SourceData> sources = new ArrayList<>();
+		List<AMTModelHeader> headers = new ArrayList<>();
+
+		for(Entry<String, ResLoc> entry : aabbLocations.entrySet())
+		{
+			ResLoc loc = entry.getValue();
+			if(loc==null)
+				continue;
+
+			SourceData data = loadSource(loc);
+			if(data!=null)
+			{
+				sources.add(data);
+				headers.add(data.header);
+			}
+		}
+
+		if(sources.isEmpty())
 			return false;
+
+		AMTModelHeader mergedHeader = headers.size()==1?headers.get(0): new AMTModelHeader(headers.toArray(new AMTModelHeader[0]));
+
+		List<EntityAMTTactile> addedAll = new ArrayList<>();
+		for(SourceData data : sources)
+		{
+			ArrayList<EntityAMTTactile> tempEntities = parseTactiles(data.tactile, data.allBounds, mergedHeader, data.globalOffset);
+			addedAll.addAll(processTactiles(tempEntities, mainPos, mergedHeader, data.globalOffset));
+		}
+
+		mergedHeader.applyHierarchy(addedAll);
+		addedAll.forEach(e -> e.setPosition(mainPos.getX(), mainPos.getY(), mainPos.getZ()));
+		addedAll.forEach(getWorld()::spawnEntity);
+
+		return true;
+	}
+
+	@Nullable
+	private SourceData loadSource(ResLoc sourceLoc)
+	{
+		SourceData cached = SOURCE_CACHE.get(sourceLoc);
+		if(cached!=null)
+			return cached;
+
+		//Load the header json
+		JsonObject jsonObject = AMTLoader.readServerFileToJson(sourceLoc, "animation");
+		if(jsonObject.size()==0)
+			return null;
 
 		//Collect AABB dictionary
 		Map<String, AxisAlignedBB> allBounds = jsonObject.get("bounds").getAsJsonObject()
@@ -141,7 +195,9 @@ public class TactileManager
 				.collect(Collectors.toMap(Tuple::getFirst, Tuple::getSecond));
 
 		if(!jsonObject.has("tactile"))
-			return false;
+			return null;
+
+		Vec3d globalOffset = Vec3d.ZERO;
 		if(jsonObject.has("tactile_offset"))
 		{
 			JsonArray array = jsonObject.get("tactile_offset").getAsJsonArray();
@@ -155,29 +211,39 @@ public class TactileManager
 		JsonObject tactile = jsonObject.get("tactile").getAsJsonObject();
 
 		//Read header
+		ResLoc headerLoc = null;
 		if(tactile.has("_schema"))
-			headerLoc = ResLoc.of(new ResourceLocation(tactile.remove("_schema").getAsString()));
+			headerLoc = ResLoc.of(new ResourceLocation(tactile.get("_schema").getAsString()));
 
 		//Header absent, can't continue loading
 		if(headerLoc==null)
-			return false;
-		header = HEADERS.computeIfAbsent(headerLoc, AMTLoader::loadHeaderServer);
+			return null;
 
-		//Parse and process tactiles
-		ArrayList<EntityAMTTactile> tempEntities = parseTactiles(tactile, allBounds);
-		processTactiles(tempEntities, mainPos);
+		AMTModelHeader header = HEADERS.computeIfAbsent(headerLoc, AMTLoader::loadHeaderServer);
+		SourceData data = new SourceData(header, tactile, allBounds, globalOffset);
+		SOURCE_CACHE.put(sourceLoc, data);
+		return data;
+	}
 
-		//Add post fixes
-		header.applyHierarchy(entities);
-		entities.forEach(e -> e.setPosition(mainPos.getX(), mainPos.getY(), mainPos.getZ()));
-		entities.forEach(getWorld()::spawnEntity);
+	private static class SourceData
+	{
+		private final AMTModelHeader header;
+		private final JsonObject tactile;
+		private final Map<String, AxisAlignedBB> allBounds;
+		private final Vec3d globalOffset;
 
-
-		return true;
+		private SourceData(AMTModelHeader header, JsonObject tactile, Map<String, AxisAlignedBB> allBounds, Vec3d globalOffset)
+		{
+			this.header = header;
+			this.tactile = tactile;
+			this.allBounds = allBounds;
+			this.globalOffset = globalOffset;
+		}
 	}
 
 	@Nonnull
-	private ArrayList<EntityAMTTactile> parseTactiles(JsonObject tactile, Map<String, AxisAlignedBB> allBounds)
+	private ArrayList<EntityAMTTactile> parseTactiles(JsonObject tactile, Map<String, AxisAlignedBB> allBounds,
+													  AMTModelHeader header, Vec3d globalOffset)
 	{
 		//Load entities
 		ArrayList<EntityAMTTactile> tempEntities = new ArrayList<>();
@@ -218,7 +284,7 @@ public class TactileManager
 
 					//Add entity to the list and create it in the world
 					tempEntities.add(new EntityAMTTactile(this, entries.getKey(),
-							processOffset(header, entries.getKey(), offset), aabb)
+							processOffset(header, globalOffset, entries.getKey(), offset), aabb)
 					);
 
 				}
@@ -227,7 +293,7 @@ public class TactileManager
 		return tempEntities;
 	}
 
-	private Vec3d processOffset(AMTModelHeader header, String key, Vec3d offset)
+	private Vec3d processOffset(AMTModelHeader header, Vec3d globalOffset, String key, Vec3d offset)
 	{
 		//.add(new Vec3d(0, 0, -0.5))
 		Vec3d total = header.getOffset(key)
@@ -255,22 +321,6 @@ public class TactileManager
 				apply = apply.addVector(-0.5, 0, -0.5);
 				break;
 		}
-
-		/*switch(listener.getFacing())
-		{
-			case NORTH:
-				total = new Vec3d((listener.getIsMirrored()?total.x: -total.x+1), total.y, -total.z+2);
-				break;
-			case SOUTH:
-				break;
-			case EAST:
-				total = new Vec3d(total.z-1, total.y, (listener.getIsMirrored()?total.x+0.5: -total.x+1.5));
-				break;
-			case WEST:
-				total = new Vec3d(-total.z, total.y, -total.x);
-				break;
-		}*/
-
 		return apply;
 	}
 
@@ -280,30 +330,36 @@ public class TactileManager
 	 * If no -> the object is a Main Object, it will be a part of animation
 	 * In both cases, the Main Object may have a parent, which it will base its position on
 	 **/
-	private void processTactiles(ArrayList<EntityAMTTactile> tempEntities, BlockPos mainPos)
+	private List<EntityAMTTactile> processTactiles(ArrayList<EntityAMTTactile> tempEntities, BlockPos mainPos,
+												   AMTModelHeader header, Vec3d globalOffset)
 	{
+		List<EntityAMTTactile> added = new ArrayList<>();
 		while(!tempEntities.isEmpty())
 		{
 			EntityAMTTactile amt = tempEntities.remove(0);
 			List<EntityAMTTactile> matching = tempEntities.stream().filter(e -> e.name.equals(amt.name)).collect(Collectors.toList());
 
 			if(matching.isEmpty())
+			{
 				entities.add(amt);
+				added.add(amt);
+			}
 			else
 			{
 				//Add parent entity with empty AABB
-				EntityAMTTactile parent = new EntityAMTTactile(this, amt.name, processOffset(header, amt.name, Vec3d.ZERO), new AxisAlignedBB(0, 0, 0, 0, 0, 0));
+				EntityAMTTactile parent = new EntityAMTTactile(this, amt.name,
+						processOffset(header, globalOffset, amt.name, Vec3d.ZERO),
+						new AxisAlignedBB(0, 0, 0, 0, 0, 0));
 				entities.add(parent);
+				added.add(parent);
 
 				//Rename child objects to OBJ_child[n]
 				matching.add(0, amt);
 				for(int i = 0; i < matching.size(); i++)
 				{
 					matching.get(i).name += "_child"+i;
-					//matching.get(i).offset = matching.get(i).offset.subtract(parent.offset);
 					matching.get(i).setParent(parent);
-					matching.get(i).setPosition(mainPos.getX(), mainPos.getY(), mainPos.getZ());
-					getWorld().spawnEntity(matching.get(i));
+					added.add(matching.get(i));
 				}
 
 				//Continue iteration
@@ -311,6 +367,7 @@ public class TactileManager
 				entities.addAll(matching);
 			}
 		}
+		return added;
 	}
 
 	@Nonnull
@@ -423,6 +480,10 @@ public class TactileManager
 		this.entities.forEach(Entity::setDead);
 		this.entities.clear();
 		this.animations.clear();
+
+		SOURCE_CACHE.clear();
+		HEADERS.clear();
+		ANIMATIONS.clear();
 	}
 
 	//--- Tactile Handling ---//

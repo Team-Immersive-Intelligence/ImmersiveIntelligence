@@ -72,6 +72,13 @@ public class AMTModel implements Iterable<AMT>, AMTRenderable
 		this.model = modelList.toArray(new AMT[0]);
 	}
 
+	public AMTModel(AMTModel base, AMT... models)
+	{
+		ArrayList<AMT> modelList = new ArrayList<>(Arrays.asList(base.model));
+		modelList.addAll(Arrays.asList(models));
+		this.model = modelList.toArray(new AMT[0]);
+	}
+
 	//--- AMTModel with VertexFormats.BLOCK from existing OBJ Model ---//
 
 	//Baked Model

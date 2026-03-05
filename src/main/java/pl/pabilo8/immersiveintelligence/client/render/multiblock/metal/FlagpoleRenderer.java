@@ -5,6 +5,7 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.model.obj.OBJModel;
+import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeTechTree;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
 import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTCachedModel;
 import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTCachedModelBuilder;
@@ -15,6 +16,7 @@ import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IIMultiblockRen
 import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IITileRenderer.RegisteredTileRenderer;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityFlagpole;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -49,23 +51,26 @@ public class FlagpoleRenderer extends IIMultiblockRenderer<TileEntityFlagpole>
 	@Override
 	public void compileModels(IBlockState state, OBJModel model)
 	{
+		ResLoc modelDir = IIReference.RES_BLOCK_MODEL.with("multiblock/flagpole/");
 		this.model = AMTCachedModelBuilder.startTileEntityModel(TileEntityFlagpole.class)
 				.withModel(model)
 				.withHeader(IIReference.RES_BLOCK_MODEL.with("multiblock/flagpole/flagpole.obj.amt"))
 				//Style Variants
 				.withModel(te -> te==null||te.style.getStyle().equals("sandbags"),
-						IIReference.RES_BLOCK_MODEL.with("multiblock/flagpole/variant_sandbags.obj"))
+						modelDir.with("variant_sandbags.obj"))
 				.withModel(te -> te!=null&&te.style.getStyle().equals("bricks"),
-						IIReference.RES_BLOCK_MODEL.with("multiblock/flagpole/variant_bricks.obj"))
+						modelDir.with("variant_bricks.obj"))
 				.withModel(te -> te!=null&&te.style.getStyle().equals("concrete"),
-						IIReference.RES_BLOCK_MODEL.with("multiblock/flagpole/variant_concrete.obj"))
+						modelDir.with("variant_concrete.obj"))
 				.withModel(te -> te!=null&&te.style.getStyle().equals("wooden"),
-						IIReference.RES_BLOCK_MODEL.with("multiblock/flagpole/variant_wooden.obj"))
+						modelDir.with("variant_wooden.obj"))
 				.withModel(te -> te!=null&&te.style.getStyle().equals("steel"),
-						IIReference.RES_BLOCK_MODEL.with("multiblock/flagpole/variant_steel.obj"))
+						modelDir.with("variant_steel.obj"))
 				.withModelProvider((te, header) -> new AMT[]{new AMTBanner("flag", header)})
 				.build();
 
 		this.flag = new AMTCrossVariantReference<>("flag", this.model);
+		UpgradeTechTree.getTreeFor(TileEntityFlagpole.class)
+				.withBaseModelLocation(modelDir.with("flagpole_base.obj"));
 	}
 }

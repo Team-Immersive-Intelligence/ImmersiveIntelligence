@@ -707,7 +707,6 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 
 		registerEntity(i++, EntityFlare.class, "flare", 64, 4, true);
 		registerEntity(i++, EntityParachute.class, "parachute", 64, 4, true);
-		registerEntity(i++, EntityEmplacementWeapon.class, "emplacement_weapon", 64, 4, false);
 		registerEntity(i++, EntityMortar.class, "mortar", 64, 1, false);
 
 		registerEntity(i++, EntityMinecartCapacitorLV.class, "minecart_capacitor_lv", 64, 1, true);

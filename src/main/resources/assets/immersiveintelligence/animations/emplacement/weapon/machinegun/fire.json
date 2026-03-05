@@ -1,0 +1,233 @@
+{
+  "comment": "Made by Pabilo8 with Blockbench",
+  "groups": {
+    "turntable": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [90, 0, 270]
+        }
+      ]
+    },
+    "lower": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [-82.5, 0, 0]
+        }
+      ]
+    },
+    "upper": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [167.5, 0, 0]
+        }
+      ]
+    },
+    "lid1": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [0, 0, -195]
+        }
+      ]
+    },
+    "lid2": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [0, 0, 202.5]
+        }
+      ]
+    },
+    "shell_r1": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [0, -7.5, 0]
+        },
+        {
+          "time": 1,
+          "transform": [-1.63219, -7.32123, -12.60443]
+        }
+      ],
+      "position": [
+        {
+          "time": 0,
+          "transform": [0, 5, 0]
+        }
+      ]
+    },
+    "shell_r2": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [-2.5, -2.5, -47.5]
+        }
+      ]
+    },
+    "shell_r3": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [-2.5, 0, -40]
+        }
+      ]
+    },
+    "shell_r4": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [-5.1042, -11.51801, -41.24054]
+        }
+      ],
+      "position": [
+        {
+          "time": 0,
+          "transform": [0.00223, 0.04674, -0.19445]
+        }
+      ]
+    },
+    "shell_r5": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [5.99741, -11.09842, -47.67591]
+        }
+      ],
+      "position": [
+        {
+          "time": 0,
+          "transform": [-0.05518, 0.08088, -0.28357]
+        }
+      ]
+    },
+    "shell_l1": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [-6.00191, 13.60167, 35.84853]
+        },
+        {
+          "time": 1,
+          "transform": [-7.74438, 12.70277, 43.49542]
+        }
+      ],
+      "position": [
+        {
+          "time": 0,
+          "transform": [0.4, 5, 0.1]
+        }
+      ]
+    },
+    "shell_l2": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [-2.88419, 6.92618, 22.67458]
+        }
+      ]
+    },
+    "shell_l3": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [-5.03837, 8.64917, 30.38126]
+        }
+      ]
+    },
+    "shell_l4": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [10.00933, -2.462, 47.93439]
+        }
+      ]
+    },
+    "shell_l5": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [2.5, 10, 52.5]
+        }
+      ]
+    },
+    "fire1": {
+      "visibility": [
+        {
+          "time": 0.0,
+          "visibility": false
+        },
+        {
+          "time": 0.265,
+          "visibility": true
+        },
+        {
+          "time": 0.76,
+          "visibility": false
+        },
+        {
+          "time": 1.0,
+          "visibility": false
+        }
+      ],
+      "property": [
+        {
+          "time": 0.26667,
+          "property": 0.0
+        },
+        {
+          "time": 0.73333,
+          "property": 1.0
+        },
+        {
+          "time": 0.75,
+          "property": 1.0
+        },
+        {
+          "time": 1.0,
+          "property": 0.0
+        }
+      ]
+    },
+    "fire2": {
+      "visibility": [
+        {
+          "time": 0.0,
+          "visibility": false
+        },
+        {
+          "time": 0.265,
+          "visibility": true
+        },
+        {
+          "time": 0.76,
+          "visibility": false
+        },
+        {
+          "time": 1.0,
+          "visibility": false
+        }
+      ],
+      "property": [
+        {
+          "time": 0.26667,
+          "property": 0.0
+        },
+        {
+          "time": 0.73333,
+          "property": 1.0
+        },
+        {
+          "time": 0.75,
+          "property": 1.0
+        },
+        {
+          "time": 1.0,
+          "property": 0.0
+        }
+      ]
+    }
+  }
+}

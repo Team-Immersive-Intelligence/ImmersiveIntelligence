@@ -1122,8 +1122,8 @@ machineupgrade.immersiveintelligence.emplacement.mortar.desc=Mortar provides ind
 machineupgrade.immersiveintelligence.emplacement.light_howitzer=Light Howitzer
 machineupgrade.immersiveintelligence.emplacement.light_howitzer.desc=Light Howitzer provides indirect fire support on medium range through quick and precise barrage of enemy positions.
 
-machineupgrade.immersiveintelligence.emplacement.mlrs=Rocket Launcher
-machineupgrade.immersiveintelligence.emplacement.mlrs.desc=The Multiple Launch Rocket System provides devastating area bombardment using up to 6 unguided rockets, excellent for attacking fortified positions.
+machineupgrade.immersiveintelligence.emplacement.rocket_launcher=Rocket Projector
+machineupgrade.immersiveintelligence.emplacement.rocket_launcher.desc=The Rocket Projector provides devastating area bombardment using up to 6 unguided rockets, excellent for attacking fortified positions.
 
 machineupgrade.immersiveintelligence.emplacement.guided_missile_launcher=Wire-Guided Missile Launcher
 machineupgrade.immersiveintelligence.emplacement.guided_missile_launcher.desc=The Wire-Guided Missile Launcher provides long-range precision strikes, especially effective against moving targets.

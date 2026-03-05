@@ -3,7 +3,6 @@ package pl.pabilo8.immersiveintelligence.common.util.diplomacy;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
-import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagString;
@@ -67,8 +66,7 @@ public class OwnerIdentity
 	{
 		this(player.getName());
 		this.withMember(player, true);
-
-		this.color = IIColor.fromDye(EnumDyeColor.values()[player.getRNG().nextInt(EnumDyeColor.values().length)]);
+		this.color = IIColor.fromHSV(player.getRNG().nextFloat(), 0.35f, 0.85f);
 	}
 
 	public OwnerIdentity(OwnerIdentity a, OwnerIdentity b)

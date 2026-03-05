@@ -1,8 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.weapon;
 
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -13,30 +11,29 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoPane
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoFluidTank;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.EmplacementWeapons.HeavyChemthrower;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement.EmplacementStateNeeds;
-import pl.pabilo8.immersiveintelligence.common.entity.EntityEmplacementWeapon;
-import pl.pabilo8.immersiveintelligence.common.entity.EntityEmplacementWeapon.EmplacementHitboxEntity;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockInteractablePart;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 
 public class EmplacementWeaponHeavyChemthrower extends EmplacementWeaponTurretBase
 {
-	boolean shouldIgnite = false;
-	FluidTank tank = new FluidTank(HeavyChemthrower.tankCapacity);
-	SidedFluidHandler fluidHandler = new SidedFluidHandler(this);
+	private FluidTank tank = new FluidTank(HeavyChemthrower.tankCapacity);
+	private SidedFluidHandler fluidHandler = new SidedFluidHandler(this);
+	private boolean shouldIgnite = false;
 
 	public EmplacementWeaponHeavyChemthrower()
 	{
-
+		this.setup = new MultiblockInteractablePart(HeavyChemthrower.setupTime);
 	}
 
 	@Override
-	public void onInit(TileEntityEmplacement te)
+	protected void onInit(TileEntityEmplacement te)
 	{
 		super.onInit(te);
 		this.visionAABB = this.visionAABB.grow(HeavyChemthrower.detectionRadius);
 		this.attackAABB = this.attackAABB.grow(HeavyChemthrower.attackRadius);
+		this.aim.withAimSpeed(HeavyChemthrower.yawRotateSpeed, HeavyChemthrower.pitchRotateSpeed);
+		this.setup = new MultiblockInteractablePart(HeavyChemthrower.setupTime);
 	}
 
 	@Override
@@ -46,48 +43,21 @@ public class EmplacementWeaponHeavyChemthrower extends EmplacementWeaponTurretBa
 	}
 
 	@Override
-	public EmplacementStateNeeds onUpdate(TileEntityEmplacement te)
-	{
-		if(shootDelay > 0)
-			shootDelay--;
-
-		return super.onUpdate(te);
-	}
-
-	@Override
 	public boolean canShoot(TileEntityEmplacement te)
 	{
 		return false;
 	}
 
 	@Override
-	public float getYawTurnSpeed()
-	{
-		return HeavyChemthrower.yawRotateSpeed;
-	}
-
-	@Override
-	public float getPitchTurnSpeed()
-	{
-		return HeavyChemthrower.pitchRotateSpeed;
-	}
-
-	@Override
-	public float getShotDelay()
+	public int getShotDelay()
 	{
 		return HeavyChemthrower.sprayTime;
 	}
 
 	@Override
-	public float getReloadDelay()
+	public int getReloadDelay()
 	{
 		return 0;
-	}
-
-	@Override
-	public float getSetupDelay()
-	{
-		return HeavyChemthrower.setupTime;
 	}
 
 	@Nullable
@@ -97,21 +67,7 @@ public class EmplacementWeaponHeavyChemthrower extends EmplacementWeaponTurretBa
 		return fluidHandler;
 	}
 
-	@Override
-	public void syncWithEntity(EntityEmplacementWeapon entity)
-	{
-		super.syncWithEntity(entity);
-		if(entity==this.entity)
-		{
-			entity.aabb = new AxisAlignedBB(-3, 0, -3, 3, 3, 3);
-			if((setupDelay!=0&&setupDelay!=HeavyChemthrower.setupTime)&&entity.ticksExisted%20==0)
-			{
-				entity.partArray = getCollisionBoxes();
-			}
-		}
-	}
-
-	@Override
+	/*@Override
 	public EmplacementHitboxEntity[] getCollisionBoxes()
 	{
 		if(entity==null)
@@ -158,7 +114,7 @@ public class EmplacementWeaponHeavyChemthrower extends EmplacementWeaponTurretBa
 		}
 
 		return list.toArray(new EmplacementHitboxEntity[0]);
-	}
+	}*/
 
 	@Override
 	public int getEnergyUpkeepCost()
@@ -168,8 +124,10 @@ public class EmplacementWeaponHeavyChemthrower extends EmplacementWeaponTurretBa
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public void initializeGUI(DecoPanel panelPlatform)
+	public void initializeGUI(DecoPanel panelBase, DecoPanel panelPlatform)
 	{
+
+
 		panelPlatform.addComponent(
 				new DecoFluidTank(4, 4+2)
 						.withFluidTank(tank)
@@ -235,7 +193,6 @@ public class EmplacementWeaponHeavyChemthrower extends EmplacementWeaponTurretBa
 	public NBTTagCompound serializeNBT()
 	{
 		NBTTagCompound nbt = super.serializeNBT();
-		nbt.setInteger("setupDelay", setupDelay);
 		nbt.setTag("tank", tank.writeToNBT(new NBTTagCompound()));
 		return nbt;
 	}
@@ -244,7 +201,6 @@ public class EmplacementWeaponHeavyChemthrower extends EmplacementWeaponTurretBa
 	public void deserializeNBT(NBTTagCompound nbt)
 	{
 		super.deserializeNBT(nbt);
-		setupDelay = nbt.getInteger("setupDelay");
 		tank.readFromNBT(nbt.getCompoundTag("tank"));
 	}
 }
