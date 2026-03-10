@@ -16,7 +16,7 @@ public class ChunkClaimData
 
 	public ChunkClaimData(IOwnableProperty owner)
 	{
-		this(owner.getPos(), owner.getTicksExisted());
+		this(owner.getIIPos(), owner.getTicksExisted());
 	}
 
 	public ChunkClaimData(BlockPos claimBlockPos, long claimTime)

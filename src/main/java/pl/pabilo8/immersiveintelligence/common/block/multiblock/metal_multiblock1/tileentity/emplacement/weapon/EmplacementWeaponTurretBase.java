@@ -5,8 +5,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.Vec3d;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement.EmplacementStateNeeds;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.task.EmplacementTarget;
 import pl.pabilo8.immersiveintelligence.common.util.GunAimCoordinate;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.TargetCoordinateReference;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockInteractablePart;
 
 import javax.annotation.Nullable;
@@ -34,11 +34,12 @@ public abstract class EmplacementWeaponTurretBase extends EmplacementWeapon
 	}
 
 	@Override
-	public EmplacementStateNeeds onUpdate(TileEntityEmplacement te, @Nullable EmplacementTarget currentTarget)
+	public EmplacementStateNeeds onUpdate(TileEntityEmplacement te, EmplacementStateNeeds baseNeeds, TargetCoordinateReference currentTarget)
 	{
-		if(currentTarget!=null)
+		Vec3d target = currentTarget.supplyCoordinates();
+		if(target!=null)
 			this.aim.setTarget(te.getWeaponCenter(), Vec3d.ZERO,
-					currentTarget.supplyCoordinates(), Vec3d.ZERO);
+					target, Vec3d.ZERO);
 		this.aim.update();
 
 		if(this.setup!=null)
@@ -47,7 +48,7 @@ public abstract class EmplacementWeaponTurretBase extends EmplacementWeapon
 			this.setup.update();
 		}
 
-		return super.onUpdate(te, currentTarget);
+		return super.onUpdate(te, baseNeeds, currentTarget);
 	}
 
 	public abstract boolean canShoot(TileEntityEmplacement te);

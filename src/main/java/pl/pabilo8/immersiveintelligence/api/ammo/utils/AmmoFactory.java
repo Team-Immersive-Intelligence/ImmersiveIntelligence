@@ -5,6 +5,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.ComponentEffectShape;
@@ -70,6 +71,7 @@ public class AmmoFactory<E extends EntityAmmoBase<? super E>>
 	 * the owner is always ignored and doesn't have to be added to this list
 	 */
 	private List<Entity> ignoredEntities;
+	private boolean useArtilleryAngles = false;
 
 //--- Constructor ---//
 
@@ -244,6 +246,12 @@ public class AmmoFactory<E extends EntityAmmoBase<? super E>>
 		return this;
 	}
 
+	public AmmoFactory<E> setUseArtilleryAngles(boolean useArtilleryAngles)
+	{
+		this.useArtilleryAngles = useArtilleryAngles;
+		return this;
+	}
+
 	/**
 	 * Builds the ammo based on passed data and spawns it in the world.
 	 *
@@ -321,6 +329,18 @@ public class AmmoFactory<E extends EntityAmmoBase<? super E>>
 		//Base it on ammo
 		if(ammo==null)
 			return new float[]{0, 0};
+
+		if(useArtilleryAngles)
+		{
+			Vec3d dist = shooterPos.subtract(targetPos.add(targetMotion));
+			Vec3d norm = dist.normalize();
+
+			float yy = (float)((Math.atan2(norm.x, norm.z)*180D)/3.1415927410125732D);
+			float pp = IIAmmoUtils.calculateBallisticAngle(
+					shooterPos.add(shooterMotion), targetPos.add(targetMotion), stack, 0.01f
+			);
+			return new float[]{MathHelper.wrapDegrees(180-yy), 90-pp};
+		}
 
 		return IIAmmoUtils.getInterceptionAngles(
 				shooterPos, shooterMotion, targetPos, targetMotion, ammo.getVelocity(), ammo.getMass(stack)

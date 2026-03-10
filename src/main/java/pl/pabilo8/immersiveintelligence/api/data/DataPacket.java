@@ -140,7 +140,7 @@ public class DataPacket implements Iterable<DataVariable>, INBTSerializable<NBTT
 	 */
 	public boolean isEmpty()
 	{
-		return !variableMap.isEmpty();
+		return variableMap.isEmpty();
 	}
 
 	/**

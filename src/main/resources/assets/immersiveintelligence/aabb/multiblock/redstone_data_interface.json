@@ -1,0 +1,17 @@
+{
+  "bounds": {
+    "full": [
+      0, 0, 0,
+      16, 16, 16
+    ]
+  },
+  "positions": {
+  },
+  "poi": {
+    "redstone": 4,
+    "data": 0
+  },
+  "rotations": {
+    "data": "none"
+  }
+}

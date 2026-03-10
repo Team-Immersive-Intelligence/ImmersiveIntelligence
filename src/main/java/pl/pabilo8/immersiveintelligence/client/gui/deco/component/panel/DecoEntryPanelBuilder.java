@@ -38,6 +38,8 @@ public class DecoEntryPanelBuilder<TYPE> extends DecoEntryPanel<TYPE>
 
 		components.forEach((name, function) -> {
 			DecoComponent component = function.apply(this);
+			if(this.parentGui!=null)
+				component.setParentGUI(this.parentGui);
 			this.addComponent(component);
 			this.childrenMap.put(name, component);
 		});

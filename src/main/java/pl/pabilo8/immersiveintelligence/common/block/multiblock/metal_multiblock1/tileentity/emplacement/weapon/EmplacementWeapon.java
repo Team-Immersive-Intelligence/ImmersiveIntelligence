@@ -23,12 +23,12 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoPane
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement.EmplacementStateNeeds;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.task.EmplacementTarget;
 import pl.pabilo8.immersiveintelligence.common.entity.tactile.EntityAMTTactile;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.ITypeNBTSerializable;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.TargetCoordinateReference;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -81,14 +81,15 @@ public abstract class EmplacementWeapon implements ITypeNBTSerializable
 	 * Used to update the weapon every tick.
 	 *
 	 * @param te            the emplacement tile entity
+	 * @param baseNeeds
 	 * @param currentTarget
 	 * @return
 	 */
-	public EmplacementStateNeeds onUpdate(TileEntityEmplacement te, @Nullable EmplacementTarget currentTarget)
+	public EmplacementStateNeeds onUpdate(TileEntityEmplacement te, EmplacementStateNeeds baseNeeds, TargetCoordinateReference currentTarget)
 	{
 		if(!initialized)
 			this.onInit(te);
-		return EmplacementStateNeeds.WANTS_SURFACE;
+		return baseNeeds;
 	}
 
 	/**

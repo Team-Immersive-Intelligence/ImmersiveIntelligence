@@ -64,6 +64,8 @@ public class TileEntityLatexCollector extends TileEntityIEBase implements IPlaye
 	{
 		if(LatexCollector.collectTime <= 0)
 			return 0;
+		if(!world.getBiome(pos).isHighHumidity())
+			return 0;
 		float frac = Math.max(0f, Math.min(1f, timer/LatexCollector.collectTime));
 		return (int)Math.floor(frac*1000f);
 	}

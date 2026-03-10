@@ -345,7 +345,7 @@ public class IIDataHandlingUtils
 		});
 
 		//If there are no callback variables, return null
-		return sent.isEmpty()?sent: null;
+		return sent.isEmpty()?null: sent;
 	}
 
 	//--- Sending ---//

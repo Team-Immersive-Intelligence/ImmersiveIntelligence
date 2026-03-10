@@ -3325,6 +3325,15 @@ ii.gui.map_display.marker.missiles=Missiles
 ii.gui.map_display.marker.artillery=Artillery
 ii.gui.map_display.marker.bullets=Bullets
 
+ii.gui.redstone_data_interface.from=From:
+ii.gui.redstone_data_interface.to=Into:
+ii.gui.redstone_data_interface.mode.boolean=Boolean
+ii.gui.redstone_data_interface.mode.integer_15=Integer 0-15
+ii.gui.redstone_data_interface.mode.integer_255=Integer 0-255
+ii.gui.redstone_data_interface.mode.integer_100=Integer 0-100
+ii.gui.redstone_data_interface.mode.float=Float 0-1
+ii.gui.redstone_data_interface.mode.string=String
+
 #GUI HelpBoxes
 ii.gui_help.data_input_machine.programming=These slots allow reading a punchtape into the DIM's memory or writing its contents into an empty one.
 ii.gui_help.data_input_machine.storage=These slots allow storing empty or programmed punchtapes for convenience.

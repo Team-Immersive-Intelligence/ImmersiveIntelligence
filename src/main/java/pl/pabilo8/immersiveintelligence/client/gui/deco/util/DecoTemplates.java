@@ -1,14 +1,21 @@
 package pl.pabilo8.immersiveintelligence.client.gui.deco.util;
 
 import blusunrize.immersiveengineering.api.energy.immersiveflux.IFluxStorage;
+import net.minecraft.item.EnumDyeColor;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.rotary.IRotaryEnergy;
+import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoComponent.DecoComponentTemplate;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoButton;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoDropdown;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoLabel;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoEntryPanelBuilder;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoBar;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoBar.BarTooltipFormat;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoImage;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IDamageResistantMultiblock;
 
@@ -135,4 +142,27 @@ public class DecoTemplates
 	public static final Function<IFluxStorage, DecoComponentTemplate<DecoBar>> BAR_ELECTRIC_ENERGY = energyStorage -> component -> component
 			.withTemplate(BAR_ELECTRIC_ENERGY_BASE)
 			.withLimits(0, energyStorage.getMaxEnergyStored(), energyStorage::getEnergyStored);
+
+	public static final DecoComponentTemplate<DecoDropdown<EnumDyeColor>> DYE_COLOR_DROPDOWN = component -> component
+			.withEntries(EnumDyeColor.values())
+			.withDisplayFunction(new DecoEntryPanelBuilder<EnumDyeColor>()
+					.withBackground(DecoTextures.BG_STEEL)
+					.withHeight(12)
+					.withComponent("icon", new DecoImage(2, 1)
+							.withSize(8, 8)
+							.withImageLocation(DecoTextures.COMPONENT_COLOR, true)
+							.withUV(16, 4, 4, 12, 12)
+					)
+					.withLabel("label",
+							new DecoLabel(IIClientUtils.fontRegular, 12, 1)
+									.withSize(48, 12)
+									.withAlign(DecoAlignment.LEFT)
+									.withText("Core")
+					)
+					.withElementApplyMethod((dye, builder) -> {
+						builder.component("icon", DecoImage.class).withColor(IIColor.fromDye(dye));
+						builder.label("label").withText("item.fireworksCharge."+dye.getUnlocalizedName());
+					})
+			);
+
 }

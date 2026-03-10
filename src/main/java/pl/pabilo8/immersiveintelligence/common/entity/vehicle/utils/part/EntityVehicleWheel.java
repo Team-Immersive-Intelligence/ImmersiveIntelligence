@@ -8,7 +8,6 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import pl.pabilo8.immersiveintelligence.api.rotary.IRotaryEnergy;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IVehicleMultiPart;
-import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityVehicleBase;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.VehicleBlueprint;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.VehicleDurability;
@@ -176,8 +175,8 @@ public class EntityVehicleWheel<T extends Entity & IVehicleMultiPart<T>> extends
 		VehicleBlueprint blueprint = parentExt.getVehicleBlueprint();
 		float powerFactor = Math.abs(speedValue/360f);
 
-		if(powerFactor > 0)
-			IILogger.info(partName+" | torque: "+torqueValue+" | speed: "+speedValue+"| powerFactor: "+powerFactor);
+		/*if(powerFactor > 0)
+			IILogger.info(partName+" | torque: "+torqueValue+" | speed: "+speedValue+"| powerFactor: "+powerFactor);*/
 
 		//Calculate vertical forces first (gravity and climbing)
 		VerticalForces verticalForces = calculateVerticalForces();

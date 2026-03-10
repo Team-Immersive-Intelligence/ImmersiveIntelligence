@@ -26,8 +26,6 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.items.CapabilityItemHandler;
-import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
-import pl.pabilo8.immersiveintelligence.api.data.IIDataHandlingUtils;
 import pl.pabilo8.immersiveintelligence.api.data.device.IDataDevice;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
@@ -114,37 +112,6 @@ public abstract class TileEntityMultiblockIIGeneric<T extends TileEntityMultiblo
 	public int getStrongRSOutput(@Nonnull IBlockState state, @Nonnull EnumFacing side)
 	{
 		return 0;
-	}
-
-	//--- Data ---//
-
-	@Override
-	public final void onReceive(DataPacket packet, @Nullable EnumFacing side)
-	{
-		T master = master();
-		if(master!=null&&isPOI(MultiblockPOI.DATA_INPUT))
-			master.receiveData(packet, pos);
-	}
-
-
-	/**
-	 * Called on master when the TE receives data.
-	 *
-	 * @param packet data received
-	 */
-	public void receiveData(DataPacket packet, int pos)
-	{
-
-	}
-
-	/**
-	 * Used to send data easily.
-	 *
-	 * @param packet data received
-	 */
-	public void sendData(DataPacket packet, EnumFacing facing, int pos)
-	{
-		IIDataHandlingUtils.sendPacketAdjacently(packet, world, getBlockPosForPos(pos), facing);
 	}
 
 	//--- Inventory ---//

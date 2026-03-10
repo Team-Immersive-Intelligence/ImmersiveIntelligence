@@ -16,13 +16,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3i;
+import net.minecraft.util.math.*;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.storage.loot.ILootContainer;
 import net.minecraft.world.storage.loot.LootContext;
@@ -54,7 +52,9 @@ import static pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.M
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 06.07.2020
  */
-public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectable implements IDirectionalTile, IBooleanAnimatedPartsBlock, ITickable, IManagedUpgradableDevice<TileEntityEffectCrate>, IPlayerInteraction, IBlockBounds, IIEInventory, IGuiTile, ITileDrop, IComparatorOverride, ILootContainer
+public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectable implements
+		IDirectionalTile, IBooleanAnimatedPartsBlock, ITickable, IManagedUpgradableDevice<TileEntityEffectCrate>, IPlayerInteraction,
+		IBlockBounds, IIEInventory, IGuiTile, ITileDrop, IComparatorOverride, ILootContainer
 {
 	public ResourceLocation lootTable;
 	public EnumFacing facing = EnumFacing.NORTH;
@@ -530,5 +530,17 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 	public ResourceLocation getLootTable()
 	{
 		return this.lootTable;
+	}
+
+	@Override
+	public BlockPos getIIPos()
+	{
+		return getPos();
+	}
+
+	@Override
+	public World getIIWorld()
+	{
+		return getWorld();
 	}
 }

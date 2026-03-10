@@ -1,8 +1,8 @@
 package pl.pabilo8.immersiveintelligence.api.upgrade;
 
-import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeUtils.MachineStyle;
 import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeUtils.UpgradeOperation;
+import pl.pabilo8.immersiveintelligence.common.util.IWorldPosProvider;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -11,15 +11,8 @@ import java.util.List;
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 06.07.2020
  */
-public interface IUpgradableDevice
+public interface IUpgradableDevice extends IWorldPosProvider
 {
-	/**
-	 * Returns the world this tile entity is in
-	 *
-	 * @return the world
-	 */
-	World getWorld();
-
 	/**
 	 * Returns the master tile entity of this multiblock, or itself if not a part of a multiblock.
 	 *

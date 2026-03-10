@@ -3,15 +3,12 @@ package pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.EnumDyeColor;
-import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoButton;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoColorPicker;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoDropdown;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoLabel;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.text.DecoTextField;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.text.util.TextFilter;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoImage;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoAlignment;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTemplates;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
@@ -85,23 +82,7 @@ public class DecoColorPickerPanel extends DecoPanel
 				dyeColor = new DecoDropdown<EnumDyeColor>(startingX+24, startingY+16+16)
 						.withSize(remainingWidth, 12)
 						.withDropdownWidth(remainingWidth)
-						.withEntries(EnumDyeColor.values())
-						.withDisplayFunction(new DecoEntryPanelBuilder<EnumDyeColor>()
-								.withBackground(DecoTextures.BG_STEEL)
-								.withHeight(12)
-								.withComponent("icon", new DecoImage(2, 1)
-										.withSize(8, 8)
-										.withImageLocation(DecoTextures.COMPONENT_COLOR, true)
-										.withUV(16, 4, 4, 12, 12)
-								)
-								.withLabel("label",
-										new DecoLabel(IIClientUtils.fontRegular, 12, 1)
-												.withSize(48, 12)
-												.withAlign(DecoAlignment.LEFT)
-												.withText("Core")
-								)
-								.withElementApplyMethod(this::drawColorEntry)
-						)
+						.withTemplate(DecoTemplates.DYE_COLOR_DROPDOWN)
 						.withOnSelectedEntry((enumDyeColor, enumDyeColor2) -> {
 							if(color.getDyeColor()!=enumDyeColor2)
 								withColor(IIColor.fromDye(enumDyeColor2));
@@ -129,12 +110,6 @@ public class DecoColorPickerPanel extends DecoPanel
 
 		setSubComponentsColor();
 		return true;
-	}
-
-	private void drawColorEntry(EnumDyeColor dye, DecoEntryPanelBuilder<EnumDyeColor> builder)
-	{
-		builder.component("icon", DecoImage.class).withColor(IIColor.fromDye(dye));
-		builder.label("label").withText("item.fireworksCharge."+dye.getUnlocalizedName());
 	}
 
 	@Override

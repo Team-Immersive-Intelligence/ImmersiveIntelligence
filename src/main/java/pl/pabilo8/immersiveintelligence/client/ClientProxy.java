@@ -493,7 +493,6 @@ public class ClientProxy extends CommonProxy
 		registerTileRenderer(ArithmeticLogicMachineRenderer.class);
 		registerTileRenderer(PrintingPressRenderer.class);
 		registerTileRenderer(BallisticComputerRenderer.class);
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRedstoneInterface.class, new RedstoneInterfaceRenderer().subscribeToList("multiblock/redstone_data_interface"));
 
 		//Logistics multiblocks renderers
 		registerTileRenderer(PackerRenderer.class);

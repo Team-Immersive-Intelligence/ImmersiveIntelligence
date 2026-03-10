@@ -1,0 +1,92 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "transform": "forge:default-block",
+    "custom": {
+      "flip-v": true
+    },
+    "textures": {
+      "particle": "immersiveengineering:blocks/storage_steel"
+    }
+  },
+  "variants": {
+    "inventory,type=redstone_data_interface": [
+      {
+        "model": "immersiveintelligence:multiblock/redstone_data_interface/redstone_data_interface.obj",
+        "transform": {
+          "scale": 0.5,
+          "translation": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            {
+              "x": 20
+            },
+            {
+              "y": -225
+            }
+          ]
+        }
+      }
+    ],
+    "type": {
+      "redstone_data_interface": {}
+    },
+    "facing": {
+      "north": {
+        "transform": {
+          "rotation": {
+            "y": 180
+          }
+        }
+      },
+      "south": {
+        "transform": {
+          "rotation": {
+            "y": 0
+          }
+        }
+      },
+      "west": {
+        "transform": {
+          "rotation": {
+            "y": -90
+          }
+        }
+      },
+      "east": {
+        "transform": {
+          "rotation": {
+            "y": 90
+          }
+        }
+      }
+    },
+    "_0multiblockslave": {
+      "false": {},
+      "true": {
+        "model": "immersiveintelligence:smartmodel/conn_empty"
+      }
+    },
+    "_1dynamicrender": {
+      "false": {
+      },
+      "true": {
+      }
+    },
+    "boolean0": {
+      "false": {
+        "model": "immersiveintelligence:multiblock/redstone_data_interface/redstone_data_interface.obj"
+      },
+      "true": {
+        "model": "immersiveintelligence:multiblock/redstone_data_interface/redstone_data_interface_flipped.obj"
+      }
+    },
+    "boolean1": {
+      "false": {},
+      "true": {}
+    }
+  }
+}

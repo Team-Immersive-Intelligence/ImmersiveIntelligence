@@ -12,12 +12,11 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoPane
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.EmplacementWeapons.InfraredObserver;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.TileEntityEmplacement.EmplacementStateNeeds;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.task.EmplacementTarget;
 import pl.pabilo8.immersiveintelligence.common.util.GunAimCoordinate;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.TargetCoordinateReference;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockInteractablePart;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.stream.StreamSupport;
 
 public class EmplacementWeaponInfraredObserver extends EmplacementWeapon
@@ -50,12 +49,12 @@ public class EmplacementWeaponInfraredObserver extends EmplacementWeapon
 	}
 
 	@Override
-	public EmplacementStateNeeds onUpdate(TileEntityEmplacement te, @Nullable EmplacementTarget currentTarget)
+	public EmplacementStateNeeds onUpdate(TileEntityEmplacement te, EmplacementStateNeeds baseNeeds, TargetCoordinateReference currentTarget)
 	{
 		if(plannedFacing!=facing)
 			return EmplacementStateNeeds.MUST_HIDE;
 
-		return super.onUpdate(te, currentTarget);
+		return super.onUpdate(te, baseNeeds, currentTarget);
 	}
 
 	@Override

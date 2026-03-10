@@ -65,7 +65,7 @@ public class BlockIIMetalMultiblock1 extends BlockIIMultiblock<MetalMultiblocks1
 	public enum MetalMultiblocks1 implements IITileMultiblockEnum
 	{
 		@IIBlockProperties(needsCustomState = true)
-		@EnumMultiblockProvider(multiblock = MultiblockRedstoneInterface.class, tile = TileEntityRedstoneInterface.class)
+		@EnumMultiblockProvider(multiblock = MultiblockRedstoneInterface.class, tile = TileEntityRedstoneDataInterface.class)
 		REDSTONE_DATA_INTERFACE,
 
 		@IIBlockProperties(needsCustomState = true)

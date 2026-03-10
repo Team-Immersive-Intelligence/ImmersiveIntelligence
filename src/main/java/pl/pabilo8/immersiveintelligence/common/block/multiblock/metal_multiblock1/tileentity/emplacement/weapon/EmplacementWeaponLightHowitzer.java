@@ -26,6 +26,7 @@ public class EmplacementWeaponLightHowitzer extends EmplacementWeaponGunBase<Ent
 		this.inventoryBaseHandler = new FilteredItemHandler(inventoryBase)
 				.withFilter(this.ammoFactory::isValidAmmo);
 		this.aim.withAimSpeed(CPDS.yawRotateSpeed, CPDS.pitchRotateSpeed);
+		this.ammoFactory.setUseArtilleryAngles(true);
 	}
 
 	@Override

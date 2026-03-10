@@ -40,7 +40,7 @@ public class ItemIIPunchtape extends ItemIIBase implements IDataStorageItem
 	{
 		super.addInformation(stack, worldIn, tooltip, flagIn);
 		DataPacket packet = getStoredData(stack);
-		if(packet.isEmpty())
+		if(!packet.isEmpty())
 		{
 			if(ItemTooltipHandler.addExpandableTooltip(Keyboard.KEY_LSHIFT, IIReference.DESCRIPTION_KEY+"data_storage_shift", tooltip))
 			{

@@ -305,8 +305,6 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 			if(rotation.getValue() instanceof JsonPrimitive)
 			{
 				String rot = rotation.getValue().getAsString();
-				if(rot.equalsIgnoreCase("none"))
-					continue;
 				try
 				{
 					rotations.put(rotation.getKey(), Rotation.valueOf(rot.toUpperCase(Locale.ROOT)));

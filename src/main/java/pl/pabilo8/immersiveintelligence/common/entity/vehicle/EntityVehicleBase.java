@@ -6,6 +6,7 @@ import net.minecraft.entity.IEntityMultiPart;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -981,9 +982,15 @@ public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends 
 	//--- Collision ---//
 
 	@Override
-	public World getWorld()
+	public World getIIWorld()
 	{
 		return getEntityWorld();
+	}
+
+	@Override
+	public BlockPos getIIPos()
+	{
+		return getPosition();
 	}
 
 	@Override
@@ -1100,6 +1107,7 @@ public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends 
 		//noinspection unchecked
 		return ((T)this);
 	}
+
 
 	//--- StyleCustomization ---//
 

@@ -309,6 +309,15 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 		);
 	}
 
+	protected final DecoTab addLinkTab(IIGUI gui, ItemStack tabIcon, String moduleName)
+	{
+		return (DecoTab)addComponent(new DecoTab()
+				.withLink(gui)
+				.withIcon(tabIcon)
+				.withTranslatedTooltip(IIReference.DESCRIPTION_KEY+moduleName)
+		);
+	}
+
 	/**
 	 * Adds a {@link DecoComponentWidgetBase} to the GUI and returns it
 	 *

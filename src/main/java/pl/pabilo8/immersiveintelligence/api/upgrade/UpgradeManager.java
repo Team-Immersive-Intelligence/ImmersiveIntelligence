@@ -46,7 +46,7 @@ public class UpgradeManager<T extends IUpgradableDevice> implements INBTSerializ
 
 	public void update()
 	{
-		if(parent.getWorld().isRemote&&clientUpgradeProgress < maxClientUpgradeProgress)
+		if(parent.getIIWorld().isRemote&&clientUpgradeProgress < maxClientUpgradeProgress)
 			clientUpgradeProgress = (int)Math.min(clientUpgradeProgress+(Tools.wrenchUpgradeProgress/2f), maxClientUpgradeProgress);
 	}
 

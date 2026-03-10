@@ -30,7 +30,6 @@ import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockEmplacement;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockFlagpole;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.task.EmplacementTarget;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.task.EmplacementTargetManager;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.weapon.EmplacementWeapon;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.emplacement.weapon.UpgradeEmplacementWeapon;
@@ -44,6 +43,7 @@ import pl.pabilo8.immersiveintelligence.common.util.diplomacy.IOwnableProperty;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.OwnerIdentity;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.TargetCoordinateReference;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IIIGuiMultiblockTile;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IManagedDamageResistantMultiblock;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.MultiblockHealth;
@@ -76,8 +76,8 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 
 	@SyncNBT(name = "tasks", events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_CUSTOM1})
 	public EmplacementTargetManager taskManager = new EmplacementTargetManager();
-	@SyncNBT(nullable = true)
-	public EmplacementTarget currentTarget = null;
+	@SyncNBT
+	public TargetCoordinateReference currentTarget;
 
 	@SyncNBT(nullable = true, events = SyncEvents.TILE_CUSTOM2)
 	public EmplacementWeapon currentWeapon;
@@ -85,7 +85,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 	public MultiblockHealth baseHealth;
 
 	@SyncNBT(events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_CLIENT_MESSAGE})
-	public boolean redstoneControl = true, dataControl = true;
+	public boolean redstoneControlEnabled = true, dataControlEnabled = true;
 	@SyncNBT
 	public MultiblockInteractablePart door;
 
@@ -98,6 +98,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 		this.style = new StyleCustomization(MultiblockFlagpole.STYLE_CONSTRAINTS);
 		this.baseHealth = new MultiblockHealth(this, Emplacement.baseHealth);
 		this.ownerIdentity = DiplomacyUtils.NEUTRAL;
+		this.currentTarget = new TargetCoordinateReference(this.world);
 		this.currentWeapon = null;
 	}
 
@@ -125,15 +126,12 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 	@Override
 	protected void onUpdate()
 	{
-		door.setState(getRedstoneAtPos(0));
-		door.update();
-
 		//Initialize the weapon even if not powered
 		if(this.currentWeapon!=null)
 			this.currentWeapon.init(this);
 
 		//Extract energy for merely existing
-		/*if(energyStorage.extractEnergy(Emplacement.baseEnergyUsage, !world.isRemote)==Emplacement.baseEnergyUsage)
+		if(energyStorage.extractEnergy(Emplacement.baseEnergyUsage, false)==Emplacement.baseEnergyUsage)
 		{
 			//Handle targeting
 			if(currentTarget==null)
@@ -141,42 +139,33 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 
 			//Handle the base behavior (without redstone control, it can be only changed through data)
 			EmplacementStateNeeds baseNeeds = EmplacementStateNeeds.WANTS_HIDE;
-			if(redstoneControl)
+			if(redstoneControlEnabled)
 				baseNeeds = getRedstoneAtPos(0)?EmplacementStateNeeds.WANTS_SURFACE: EmplacementStateNeeds.MUST_HIDE;
+
 			//When no task at hand, emplacement could use the time to reload and repair
 			if(currentTarget==null&&baseNeeds==EmplacementStateNeeds.WANTS_SURFACE)
 				baseNeeds = EmplacementStateNeeds.WANTS_HIDE;
 
 			//Handle the weapon, weapons need additional energy to operate
-			EmplacementStateNeeds weaponNeeds = EmplacementStateNeeds.WANTS_HIDE;
-			if(currentWeapon!=null&&energyStorage.extractEnergy(currentWeapon.getEnergyUpkeepCost(), !world.isRemote)==currentWeapon.getEnergyUpkeepCost())
-				weaponNeeds = this.currentWeapon.onUpdate(this, currentTarget);
+			EmplacementStateNeeds weaponNeeds = baseNeeds;
+			if(currentWeapon!=null&&energyStorage.extractEnergy(currentWeapon.getEnergyUpkeepCost(), false)==currentWeapon.getEnergyUpkeepCost())
+				weaponNeeds = this.currentWeapon.onUpdate(this, baseNeeds, currentTarget);
 
 			//Handle the door/platform
-			door.setState(getNextState(baseNeeds, weaponNeeds));
+			door.setState(combineNeeds(baseNeeds, weaponNeeds)==EmplacementStateNeeds.WANTS_SURFACE);
 			door.update();
-		}*/
+		}
 		if(!this.world.isRemote)
 			this.tactileHandler.update(MultiblockEmplacement.animationPlatform, door.getProgress(0));
 	}
 
-	private boolean getNextState(EmplacementStateNeeds baseNeeds, @Nullable EmplacementStateNeeds weaponNeeds)
+	private EmplacementStateNeeds combineNeeds(EmplacementStateNeeds base, EmplacementStateNeeds weapon)
 	{
-		if(door.isFullyOpened())
-		{
-			boolean wantHide = baseNeeds==EmplacementStateNeeds.WANTS_HIDE&&
-					(weaponNeeds==null||weaponNeeds==EmplacementStateNeeds.WANTS_HIDE);
-			boolean mustHide = baseNeeds==EmplacementStateNeeds.MUST_HIDE||weaponNeeds==EmplacementStateNeeds.MUST_HIDE;
-			return !wantHide&&!mustHide;
-		}
-		else if(door.isFullyClosed())
-		{
-			boolean wantsSurface = baseNeeds==EmplacementStateNeeds.WANTS_SURFACE&&
-					(weaponNeeds==null||weaponNeeds==EmplacementStateNeeds.WANTS_SURFACE);
-			return !wantsSurface;
-		}
-		//Else progress to the desired state
-		return door.getState();
+		if(base==EmplacementStateNeeds.WANTS_SURFACE||weapon==EmplacementStateNeeds.WANTS_SURFACE)
+			return EmplacementStateNeeds.WANTS_SURFACE;
+		if(base==EmplacementStateNeeds.MUST_HIDE||weapon==EmplacementStateNeeds.MUST_HIDE)
+			return EmplacementStateNeeds.MUST_HIDE;
+		return EmplacementStateNeeds.WANTS_HIDE;
 	}
 
 	@Override
@@ -217,7 +206,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 	@Override
 	public void receiveData(DataPacket packet, int pos)
 	{
-		if(!this.dataControl)
+		if(!this.dataControlEnabled)
 			return;
 
 		//Let the weapon handle the data packet too
@@ -240,7 +229,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 					case "energy":
 						return new DataTypeInteger(energyStorage.getEnergyStored());
 					case "data_control":
-						return new DataTypeBoolean(dataControl);
+						return new DataTypeBoolean(dataControlEnabled);
 					default:
 						return (currentWeapon!=null)?currentWeapon.getDataCallback(string): new DataTypeNull();
 				}
@@ -268,7 +257,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 
 				//Settings
 				case "rscontrol":
-					IIDataHandlingUtils.optionalBoolean('b', packet).ifPresent(b -> this.redstoneControl = b);
+					IIDataHandlingUtils.optionalBoolean('b', packet).ifPresent(b -> this.redstoneControlEnabled = b);
 					break;
 
 				//Gun Action

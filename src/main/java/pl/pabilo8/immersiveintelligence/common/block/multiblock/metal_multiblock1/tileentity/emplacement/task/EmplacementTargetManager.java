@@ -2,6 +2,7 @@ package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multibloc
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.INBTSerializable;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.TargetCoordinateReference;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -27,7 +28,7 @@ public class EmplacementTargetManager implements INBTSerializable<NBTTagCompound
 		paused = false;
 	}
 
-	public EmplacementTarget provideNextTask()
+	public TargetCoordinateReference provideNextTask()
 	{
 		return null;
 	}

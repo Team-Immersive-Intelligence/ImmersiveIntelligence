@@ -13,6 +13,7 @@ import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyCollection;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -115,7 +116,10 @@ public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? 
 	 */
 	public E withEntries(Collection<T> entries)
 	{
-		this.entries = new ArrayList<>(entries);
+		if(entries instanceof EasyCollection)
+			this.entries = (List<T>)entries;
+		else
+			this.entries = new ArrayList<>(entries);
 		this.entries = sorter.sort(this.entries);
 		calculateSlideLength();
 		//noinspection unchecked
@@ -311,8 +315,8 @@ public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? 
 
 		//Draw only a cutout of the elements
 		GlStateManager.pushMatrix();
-		assert parentGui!=null;
-		parentGui.scissorStart(x, y, listWidth, listHeight);
+		if(parentGui!=null)
+			parentGui.scissorStart(x, y, listWidth, listHeight);
 		GlStateManager.translate(0, -scroll, 0);
 
 		//Filter entries based on search input
@@ -342,8 +346,8 @@ public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? 
 			display.drawCreateOption(entryMaxWidth, getAddButtonHeight(), fontRenderer, mouseX-x, mouseY+scroll-y-alreadyDrawnHeight);
 			GlStateManager.popMatrix();
 		}
-
-		parentGui.scissorEnd();
+		if(parentGui!=null)
+			parentGui.scissorEnd();
 		GlStateManager.popMatrix();
 	}
 

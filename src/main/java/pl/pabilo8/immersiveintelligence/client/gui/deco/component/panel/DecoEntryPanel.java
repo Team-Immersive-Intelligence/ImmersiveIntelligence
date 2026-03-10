@@ -1,6 +1,7 @@
 package pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoComponent;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoButton;
@@ -102,7 +103,9 @@ public abstract class DecoEntryPanel<T> extends DecoPanel implements DecoElement
 
 		//Apply the element to the panel and draw it
 		applyElement(t);
-		drawButton(ClientUtils.mc(), mouseX, mouseY, partialTicks);
+		Minecraft mc = ClientUtils.mc();
+		drawButton(mc, mouseX, mouseY, partialTicks);
+		drawButtonUpperLayer(mc, mouseX, mouseY, partialTicks);
 		return displayedHeight;
 	}
 

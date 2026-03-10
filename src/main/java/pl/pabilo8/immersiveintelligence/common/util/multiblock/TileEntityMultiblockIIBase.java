@@ -16,16 +16,20 @@ import net.minecraft.util.Rotation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
+import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
+import pl.pabilo8.immersiveintelligence.api.data.IIDataHandlingUtils;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.entity.tactile.TactileManager;
 import pl.pabilo8.immersiveintelligence.common.entity.tactile.TactileManager.ITactileListener;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
+import pl.pabilo8.immersiveintelligence.common.util.IWorldPosProvider;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyUtils;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.IOwnableProperty;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.NBTSerialisation;
@@ -48,7 +52,8 @@ import java.util.function.Consumer;
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 04.08.2022
  */
-public abstract class TileEntityMultiblockIIBase<T extends TileEntityMultiblockIIBase<T>> extends TileEntityMultiblockPart<T> implements IMirrorAble, IIEInventory, IAdvancedBounds
+public abstract class TileEntityMultiblockIIBase<T extends TileEntityMultiblockIIBase<T>> extends TileEntityMultiblockPart<T>
+		implements IMirrorAble, IIEInventory, IAdvancedBounds, IWorldPosProvider
 {
 	public static final String KEY_SYNC_AABB = "_sync_aabb";
 	public static final String KEY_SYNC_ALL_VALUES = "_sync_all_values";
@@ -496,12 +501,59 @@ public abstract class TileEntityMultiblockIIBase<T extends TileEntityMultiblockI
 	public UUID getUUID()
 	{
 		if(isDummy())
-			return master().getUUID();
+		{
+			T master = master();
+			return master==null?IIUtils.getBlockPosUUID(getPos()): master.getUUID();
+		}
 		return this.uuid==null?this.uuid = IIUtils.getBlockPosUUID(getPos()): this.uuid;
 	}
 
 	public long getTicksExisted()
 	{
 		return world.getTotalWorldTime()-timestamp;
+	}
+
+	//--- IWorldPosProvider ---//
+
+	@Override
+	public World getIIWorld()
+	{
+		return getWorld();
+	}
+
+	@Override
+	public BlockPos getIIPos()
+	{
+		return getPos();
+	}
+
+
+	//--- Data ---//
+
+	public final void onReceive(DataPacket packet, @Nullable EnumFacing side)
+	{
+		T master = master();
+		if(master!=null&&isPOI(MultiblockPOI.DATA_INPUT))
+			master.receiveData(packet, pos);
+	}
+
+	/**
+	 * Called on master when the TE receives data.
+	 *
+	 * @param packet data received
+	 */
+	public void receiveData(DataPacket packet, int pos)
+	{
+
+	}
+
+	/**
+	 * Used to send data easily.
+	 *
+	 * @param packet data received
+	 */
+	public void sendData(DataPacket packet, EnumFacing facing, int pos)
+	{
+		IIDataHandlingUtils.sendPacketAdjacently(packet, world, getBlockPosForPos(pos), facing);
 	}
 }

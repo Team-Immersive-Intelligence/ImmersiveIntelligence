@@ -109,8 +109,8 @@ public enum IIGUI implements ISerializableEnum
 
 	CASING_POUCH(ContainerCasingPouch::new),
 
-	DATA_REDSTONE_INTERFACE_DATA(TileEntityRedstoneInterface.class, ContainerRedstoneDataInterface::new),
-	DATA_REDSTONE_INTERFACE_REDSTONE(TileEntityRedstoneInterface.class, ContainerRedstoneDataInterface::new),
+	DATA_REDSTONE_INTERFACE_DATA(TileEntityRedstoneDataInterface.class, ContainerRedstoneDataInterface::getDataGUI),
+	DATA_REDSTONE_INTERFACE_REDSTONE(TileEntityRedstoneDataInterface.class, ContainerRedstoneDataInterface::getRedstoneGUI),
 	PRINTING_PRESS(TileEntityPrintingPress.class, ContainerPrintingPress::new),
 	CHEMICAL_BATH(TileEntityChemicalBath.class, ContainerChemicalBath::new),
 	ELECTROLYZER(TileEntityElectrolyzer.class, ContainerElectrolyzer::new),
@@ -206,7 +206,7 @@ public enum IIGUI implements ISerializableEnum
 		IIGUI.DATA_REDSTONE_INTERFACE_DATA
 				.setClientDecoGui(GuiDataRedstoneInterfaceData::new);
 		IIGUI.DATA_REDSTONE_INTERFACE_REDSTONE
-				.setClientGui(GuiDataRedstoneInterfaceRedstone::new);
+				.setClientDecoGui(GuiDataRedstoneInterfaceRedstone::new);
 
 		IIGUI.PRINTING_PRESS.setClientDecoGui(GuiPrintingPress::new);
 		IIGUI.CHEMICAL_BATH.setClientDecoGui(GuiChemicalBath::new);

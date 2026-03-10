@@ -114,8 +114,8 @@ public class DiplomacyUtils
 	public static void claimChunks(IOwnableProperty property)
 	{
 		IILogger.debug("Claiming chunks for property: "+property.getUUID());
-		World world = property.getWorld();
-		BlockPos pos = property.getPos();
+		World world = property.getIIWorld();
+		BlockPos pos = property.getIIPos();
 		int ownedChunksRadius = property.getChunkOwnershipRadius();
 
 		// center chunk coordinates

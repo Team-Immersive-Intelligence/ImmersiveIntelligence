@@ -1,0 +1,18 @@
+# Made by Pabilo8 with Blockbench
+
+newmtl common_thingies
+map_Kd immersiveintelligence:blocks/common/common_thingies
+newmtl common_steel
+map_Kd immersiveintelligence:blocks/common/common_steel
+newmtl common_wood_and_steel
+map_Kd immersiveintelligence:blocks/common/common_wooden_base_heavy
+newmtl common_machinebase
+map_Kd immersiveintelligence:blocks/common/common_machinebase
+newmtl common_cable_and_pipe
+map_Kd immersiveintelligence:blocks/common/common_cable_and_pipe
+newmtl common_steel_norivets
+map_Kd immersiveintelligence:blocks/common/common_steel_norivets
+newmtl redstone_interface
+map_Kd immersiveintelligence:blocks/multiblock/redstone_interface
+newmtl connector_connector_redstone
+map_Kd immersiveengineering:blocks/connector_connector_redstone

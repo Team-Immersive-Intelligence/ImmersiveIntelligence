@@ -32,6 +32,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -56,15 +57,15 @@ public class NBTSerialisation
 	/**
 	 * Registry of all serializers for a class
 	 */
-	private static final HashMap<Class<?>, NBTSerializer<?>> serializers = new HashMap<>();
+	private static final ConcurrentHashMap<Class<?>, NBTSerializer<?>> serializers = new ConcurrentHashMap<>();
 	/**
 	 * Polymorphic type registry for ITypeNBTSerializable implementations.
 	 */
-	private static final HashMap<Class<? extends ITypeNBTSerializable>, TypeSerializationData> typeSerializers = new HashMap<>();
+	private static final ConcurrentHashMap<Class<? extends ITypeNBTSerializable>, TypeSerializationData> typeSerializers = new ConcurrentHashMap<>();
 	/**
 	 * Reference to polymorphic type serialization data by subtype names.
 	 */
-	private static final HashMap<String, TypeSerializationData> nameToSerializers = new HashMap<>();
+	private static final ConcurrentHashMap<String, TypeSerializationData> nameToSerializers = new ConcurrentHashMap<>();
 
 	/**
 	 * Basic, implementation-independent functionality.
@@ -84,8 +85,8 @@ public class NBTSerialisation
 		);
 		//noinspection unchecked,AccessStaticViaInstance
 		registerSerializer(Enum.class, NBTTagString.class,
-				e -> new NBTTagString(e.name()),
-				(nbt, en) -> en.valueOf(en.getDeclaringClass(), nbt.getString())
+				e -> new NBTTagString(e.name().toLowerCase()),
+				(nbt, en) -> en.valueOf(en.getDeclaringClass(), nbt.getString().toUpperCase())
 		);
 
 		//Register serializers for all primitive array types
@@ -203,7 +204,7 @@ public class NBTSerialisation
 
 		registerSerializer(UUID.class, NBTTagString.class,
 				uuid -> new NBTTagString(uuid.toString()),
-				nbt -> UUID.fromString(nbt.getString())
+				nbt -> nbt.getString().isEmpty()?null: UUID.fromString(nbt.getString())
 		);
 
 		registerSerializer(
@@ -261,7 +262,7 @@ public class NBTSerialisation
 					return deserialize.apply(nbt, invoke);
 				} catch(Throwable e)
 				{
-					IILogger.error("NBT Deserialization error: "+e);
+					IILogger.error("NBT Deserialization error for field "+field.getName()+": "+e+", NBT: "+nbt.toString());
 				}
 				return invoke;
 			}
@@ -298,7 +299,6 @@ public class NBTSerialisation
 		TypeSerializationData data = typeSerializers.computeIfAbsent(parent, TypeSerializationData::new);
 		//Add link to serializer for this exact type
 		typeSerializers.put(clazz, data);
-
 		//Add the class and a supplier to the registry
 		//noinspection unchecked
 		data.addSubType(clazz);
@@ -326,7 +326,6 @@ public class NBTSerialisation
 
 		NBTSerializer(Class<T> clazz)
 		{
-			serializers.put(clazz, this);
 			fields = new ArrayList<>();
 			timeFields = new HashMap<>();
 			eventFields = new HashMap<>();
@@ -506,7 +505,12 @@ public class NBTSerialisation
 			try
 			{
 				if(from.hasKey(nbtName))
-					setter.invoke(obj, fromNBT(obj, (NBT)from.getTag(nbtName)));
+				{
+					if(canBeNull&&from.getTag(nbtName).hasNoTags())
+						setter.invoke(obj, null);
+					else
+						setter.invoke(obj, fromNBT(obj, (NBT)from.getTag(nbtName)));
+				}
 				else
 				{
 					if(canSkip)
@@ -516,7 +520,7 @@ public class NBTSerialisation
 				}
 			} catch(Throwable e)
 			{
-				IILogger.error("Error deserializing field "+fieldName+" in "+obj.getClass().getName());
+				IILogger.error("Error deserializing field "+fieldName+" in "+obj.getClass().getName()+", "+e);
 			}
 		}
 
