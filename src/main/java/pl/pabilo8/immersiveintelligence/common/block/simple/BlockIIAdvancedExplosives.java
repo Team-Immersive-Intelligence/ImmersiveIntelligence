@@ -57,7 +57,6 @@ public class BlockIIAdvancedExplosives extends BlockIIBase<HMX_Explosives>
 			if(heldItem.getItem()==Items.FLINT_AND_STEEL||heldItem.getItem()==Items.FIRE_CHARGE)
 			{
 				world.setBlockToAir(pos); //Remove the block
-				explode(world, pos, player); //Trigger the explosion
 				explode(world, pos, state, player); //Trigger the explosion
 				return true;
 			}
