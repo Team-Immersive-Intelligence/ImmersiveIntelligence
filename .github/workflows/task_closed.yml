@@ -12,13 +12,22 @@ jobs:
           echo 'ISSUE ID: ${{ github.event.issue.id }}'
           echo 'PROJECT ITEM ID: ${{ github.event.issue.number }}'
 
-      - name: Notify Internal Discord
+      - name: Notify Internal Discord (Completed)
+        if: ${{ github.event.issue.state_reason != 'not_planned' }}
         uses: sebastianpopp/discord-action@releases/v2
         with:
           webhook: ${{ secrets.WH_TASK_COMPLETE_PRIVATE }}
           message: "Task [${{ github.event.issue.title }}](<https://github.com/${{ github.repository }}/issues/${{ github.event.issue.number }}>) has been marked as completed."
 
+      - name: Notify Internal Discord (Unplanned)
+        if: ${{ github.event.issue.state_reason == 'not_planned' }}
+        uses: sebastianpopp/discord-action@releases/v2
+        with:
+          webhook: ${{ secrets.WH_TASK_WONTFIX_PRIVATE }}
+          message: "Task [${{ github.event.issue.title }}](<https://github.com/${{ github.repository }}/issues/${{ github.event.issue.number }}>) was marked as unplanned."
+
       - name: Notify Public Discord
+        if: ${{ github.event.issue.state_reason != 'not_planned' }}
         uses: sebastianpopp/discord-action@releases/v2
         with:
           webhook: ${{ secrets.WH_TASK_COMPLETE_PUBLIC }}
