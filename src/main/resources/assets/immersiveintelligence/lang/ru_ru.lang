@@ -1069,28 +1069,28 @@ machineupgrade.immersiveintelligence.improved_gearbox.desc=Замена стан
 machineupgrade.immersiveintelligence.saw_unregulator=Регулятор хода пилы
 machineupgrade.immersiveintelligence.saw_unregulator.desc=Нерегулируемая работа пилы приводит к увеличению выхода опилок по сравнению с основным объемом производства.
 
-machineupgrade.immersiveintelligence.sovereignty=Sovereignty
-machineupgrade.immersiveintelligence.sovereignty.desc=Allows the structure to seize terrain around it for the owner's faction.
+machineupgrade.immersiveintelligence.sovereignty=Проектор суверенитета
+machineupgrade.immersiveintelligence.sovereignty.desc=Позволяет сооружению захватывать территорию вокруг себя для фракции владельца.
 
 machineupgrade.immersiveintelligence.emplacement.emergency_smoke=Аварийные дымовые шашки
 machineupgrade.immersiveintelligence.emplacement.emergency_smoke.desc=Когда орудие сильно повреждено, выпускает дым для обеспечения прикрытия.
 
-machineupgrade.immersiveintelligence.emplacement.sturdy_bearings=Sturdy Bearings
-machineupgrade.immersiveintelligence.emplacement.sturdy_bearings.desc=Higher quality bearings increase the maximum weapon rotation speed.
+machineupgrade.immersiveintelligence.emplacement.sturdy_bearings=Прочные подшипники
+machineupgrade.immersiveintelligence.emplacement.sturdy_bearings.desc=Подшипники более высокого качества увеличивают максимальную скорость вращения оружия.
 
-machineupgrade.immersiveintelligence.emplacement.targetting=Enhanced Targetting Systems
-machineupgrade.immersiveintelligence.emplacement.targetting.desc=Improved fire control systems allow for better target acquisition and tracking, increasing accuracy.
+machineupgrade.immersiveintelligence.emplacement.targetting=Усовершенствованные системы наведения
+machineupgrade.immersiveintelligence.emplacement.targetting.desc=Усовершенствованные системы наведения позволяют лучше обнаруживать цели, повышая точность стрельбы.
 
 #Emplacement Weapons
 
 machineupgrade.immersiveintelligence.emplacement.infrared_observer=Инфракрасный наблюдатель
 machineupgrade.immersiveintelligence.emplacement.infrared_observer.desc=Инфракрасный наблюдатель позволяет вести наблюдение за удаленными врагами и передавать их координаты по кабелям передачи данных.
 
-machineupgrade.immersiveintelligence.emplacement.spotlight_tower=Spotlight Tower
-machineupgrade.immersiveintelligence.emplacement.spotlight_tower.desc=The Spotlight Tower allows illumination of hostile units, disorienting them and increasing accuracy of allied units.
+machineupgrade.immersiveintelligence.emplacement.spotlight_tower=Прожекторная башня
+machineupgrade.immersiveintelligence.emplacement.spotlight_tower.desc=Прожекторная башня позволяет освещать вражеские подразделения, дезориентируя их и повышая точность стрельбы союзных подразделений.
 
-machineupgrade.immersiveintelligence.emplacement.searchlight=Searchlight
-machineupgrade.immersiveintelligence.emplacement.searchlight.desc=Searchlights work in coordination with Radars, Infrared Observers or Spotlight Towers, disorienting hostile units and increasing accuracy of allied fire.
+machineupgrade.immersiveintelligence.emplacement.searchlight=Прожектор
+machineupgrade.immersiveintelligence.emplacement.searchlight.desc=Прожекторы работают в координации с радарами, инфракрасными наблюдателями или прожекторными вышками, дезориентируя вражеские подразделения и повышая точность огня союзников.
 
 machineupgrade.immersiveintelligence.emplacement.cpds=СПСО
 machineupgrade.immersiveintelligence.emplacement.cpds.desc=Система ПротивоСнарядной Обороны (СПСО) - это современное противовоздушное оружие, способное уничтожать летящие артиллерийские снаряды в воздухе.
@@ -1122,11 +1122,11 @@ machineupgrade.immersiveintelligence.emplacement.mortar.desc=Миномет об
 machineupgrade.immersiveintelligence.emplacement.light_howitzer=Легкая гаубица
 machineupgrade.immersiveintelligence.emplacement.light_howitzer.desc=Легкая гаубица обеспечивает непрямую огневую поддержку на средней дистанции, ее мобильность позволяет быстро и точно обстреливать позиции противника.
 
-machineupgrade.immersiveintelligence.emplacement.rocket_launcher=Rocket Projector
-machineupgrade.immersiveintelligence.emplacement.rocket_launcher.desc=The Rocket Projector provides devastating area bombardment using up to 6 unguided rockets, excellent for attacking fortified positions.
+machineupgrade.immersiveintelligence.emplacement.rocket_launcher=Ракетная установка
+machineupgrade.immersiveintelligence.emplacement.rocket_launcher.desc=Ракетная установка обеспечивает разрушительную бомбардировку местности с использованием до 6 неуправляемых ракет, что отлично подходит для атаки укрепленных позиций.
 
-machineupgrade.immersiveintelligence.emplacement.guided_missile_launcher=Wire-Guided Missile Launcher
-machineupgrade.immersiveintelligence.emplacement.guided_missile_launcher.desc=The Wire-Guided Missile Launcher provides long-range precision strikes, especially effective against moving targets.
+machineupgrade.immersiveintelligence.emplacement.guided_missile_launcher=Пусковая установка для ракет с проводным наведением (ПТУР)
+machineupgrade.immersiveintelligence.emplacement.guided_missile_launcher.desc=Пусковая установка для ракет с проводным наведением (ПТУР) обеспечивает высокоточные удары на большой дистанции, особенно эффективные по движущимся целям.
 
 machineupgrade.immersiveintelligence.emplacement.tesla=Башня Теслы
 machineupgrade.immersiveintelligence.emplacement.tesla.desc=Башня Тесла использует высокое напряжение для уничтожения врагов в радиусе своего действия, она особенно эффективна против электроники.
@@ -1271,22 +1271,22 @@ desc.immersiveintelligence.variable=Переменная:
 desc.immersiveintelligence.variable_apply=Применить
 desc.immersiveintelligence.variable_remove=Удалить
 #11.03.2026 это пока не переводим, этого в моде нет
-desc.immersiveintelligence.diplomacy.ownedby=Property of %s
-desc.immersiveintelligence.diplomacy.noowner=Abandoned Property
-desc.immersiveintelligence.diplomacy.noowner_long=This property has no owner. It lies open to claim.
-desc.immersiveintelligence.diplomacy.noowner_long.company=This property has no owner. Its assets await acquisition.
-desc.immersiveintelligence.diplomacy.noowner_long.republic=This property is unrepresented. It awaits a new voice of governance.
-desc.immersiveintelligence.diplomacy.noowner_long.commune=This property lies fallow, awaiting the hands of workers and peasants.
-desc.immersiveintelligence.diplomacy.noowner_long.commisariat=This property is left without oversight. It yearns for a new order.
-desc.immersiveintelligence.diplomacy.noowner_long.free_city=No charter protects this property. Its markets and streets lie empty of law.
-desc.immersiveintelligence.diplomacy.noowner_long.dynasty=No ruler has claimed this property. It awaits for our banner to rise over it.
+desc.immersiveintelligence.diplomacy.ownedby=Собственность %s
+desc.immersiveintelligence.diplomacy.noowner=Заброшенная собственность
+desc.immersiveintelligence.diplomacy.noowner_long=У этого объекта недвижимости нет владельца. На него можно претендовать.
+desc.immersiveintelligence.diplomacy.noowner_long.company=У этого объекта собственности нет владельца. Его активы ожидают приобретения.
+desc.immersiveintelligence.diplomacy.noowner_long.republic=Этот объект собственности не представлен. Он ожидает нового представителя власти.
+desc.immersiveintelligence.diplomacy.noowner_long.commune=Эта собственность оставлено, ожидая передачи в руки рабочих и крестьян.
+desc.immersiveintelligence.diplomacy.noowner_long.commisariat=Эта собственность оставлено без присмотра. Оно жаждет нашего нового порядка.
+desc.immersiveintelligence.diplomacy.noowner_long.free_city=Никакая хартия не защищает эту собственность. На рынках и улицах нет закона.
+desc.immersiveintelligence.diplomacy.noowner_long.dynasty=Ни один правитель не претендовал на эту собственность. Оно ждет, когда над ним поднимется наше знамя.
 
 desc.immersiveintelligence.diplomacy.status.member=Участник
 desc.immersiveintelligence.diplomacy.status.member_long=Вы принадлежите к этой фракции.
 desc.immersiveintelligence.diplomacy.status.ally=Союзная
-desc.immersiveintelligence.diplomacy.status.ally_long=Связанная доверием и сотрудничеством, эта фракция стоит плечом к плечу.
+desc.immersiveintelligence.diplomacy.status.ally_long=Связанная доверием и сотрудничеством, эта фракция стоит с вами плечом к плечу.
 desc.immersiveintelligence.diplomacy.status.neutral=Нейтральная
-desc.immersiveintelligence.diplomacy.status.neutral_long=No strong ties bind you to this faction. Relations are balanced and uncertain.
+desc.immersiveintelligence.diplomacy.status.neutral_long=Вас не связывают прочные узы с этой фракцией. Отношения сбалансированы и неопределенны.
 desc.immersiveintelligence.diplomacy.status.hostile=Враждебная
 desc.immersiveintelligence.diplomacy.status.hostile_long=Эта фракция считает вас врагом. Конфликт неизбежен.
 
@@ -1307,101 +1307,101 @@ info.immersiveintelligence.diplomacy.ownership.container_cannot_open=Вы не �
 
 # Company Импереалисты
 desc.immersiveintelligence.diplomacy.law_form.company=Компания
-desc.immersiveintelligence.diplomacy.law_form.company.tier1=Venture
-desc.immersiveintelligence.diplomacy.law_form.company.tier1_long=A fledgling venture with modest assets and limited reach.
-desc.immersiveintelligence.diplomacy.law_form.company.tier2=Firm
-desc.immersiveintelligence.diplomacy.law_form.company.tier2_long=A growing business with factories and employees under its banner.
-desc.immersiveintelligence.diplomacy.law_form.company.tier3=Corporation
-desc.immersiveintelligence.diplomacy.law_form.company.tier3_long=A powerful corporate body with vast holdings and organized management.
-desc.immersiveintelligence.diplomacy.law_form.company.tier4=Conglomerate
-desc.immersiveintelligence.diplomacy.law_form.company.tier4_long=A sprawling empire of industries, armed forces, and strategic resources.
-desc.immersiveintelligence.diplomacy.law_form.company.tier5=Trust
-desc.immersiveintelligence.diplomacy.law_form.company.tier5_long=A monopolistic titan controlling entire sectors of production.
-#Republic Дерьмократы
+desc.immersiveintelligence.diplomacy.law_form.company.tier1=Предприятие
+desc.immersiveintelligence.diplomacy.law_form.company.tier1_long=Начинающее предприятие со скромными активами и ограниченным охватом.
+desc.immersiveintelligence.diplomacy.law_form.company.tier2=Фирма
+desc.immersiveintelligence.diplomacy.law_form.company.tier2_long=Растущий бизнес с фабриками и сотрудниками под своим флагом.
+desc.immersiveintelligence.diplomacy.law_form.company.tier3=Корпорация
+desc.immersiveintelligence.diplomacy.law_form.company.tier3_long=Мощная корпоративная структура с обширными активами и организованным управлением.
+desc.immersiveintelligence.diplomacy.law_form.company.tier4=Конгломерат
+desc.immersiveintelligence.diplomacy.law_form.company.tier4_long=Обширная империя промышленности, вооруженных сил и стратегических ресурсов.
+desc.immersiveintelligence.diplomacy.law_form.company.tier5=Трест
+desc.immersiveintelligence.diplomacy.law_form.company.tier5_long=Титан-монополист, контролирующий целые отрасли производства.
+#Republic Дерьмократы (выборы)
 desc.immersiveintelligence.diplomacy.law_form.republic=Республика
-desc.immersiveintelligence.diplomacy.law_form.republic.tier1=Town Council
-desc.immersiveintelligence.diplomacy.law_form.republic.tier1_long=A small assembly of elected voices governing a handful of citizens.
-desc.immersiveintelligence.diplomacy.law_form.republic.tier2=Republic
-desc.immersiveintelligence.diplomacy.law_form.republic.tier2_long=An organized state with elections and a growing populace.
-desc.immersiveintelligence.diplomacy.law_form.republic.tier3=Federal Republic
-desc.immersiveintelligence.diplomacy.law_form.republic.tier3_long=A union of regions united under a shared banner of representation.
-desc.immersiveintelligence.diplomacy.law_form.republic.tier4=Commonwealth
-desc.immersiveintelligence.diplomacy.law_form.republic.tier4_long=A vast and influential republic commanding armies and infrastructure.
-desc.immersiveintelligence.diplomacy.law_form.republic.tier5=Great Commonwealth
-desc.immersiveintelligence.diplomacy.law_form.republic.tier5_long=A grand alliance of states, joined in common governance and defense.
-#Commune Коммуняки
-desc.immersiveintelligence.diplomacy.law_form.commune=Commune
-desc.immersiveintelligence.diplomacy.law_form.commune.tier1=Collective
-desc.immersiveintelligence.diplomacy.law_form.commune.tier1_long=A handful of people working together with shared property.
-desc.immersiveintelligence.diplomacy.law_form.commune.tier2=Commune
-desc.immersiveintelligence.diplomacy.law_form.commune.tier2_long=A larger group pooling land, tools, and production for the common good.
-desc.immersiveintelligence.diplomacy.law_form.commune.tier3=Federated Commune
-desc.immersiveintelligence.diplomacy.law_form.commune.tier3_long=Multiple collectives joined in solidarity and mutual support.
-desc.immersiveintelligence.diplomacy.law_form.commune.tier4=Regional Commune
-desc.immersiveintelligence.diplomacy.law_form.commune.tier4_long=A wide communal network operating diverse industries together.
-desc.immersiveintelligence.diplomacy.law_form.commune.tier5=Union of People’s Communes
-desc.immersiveintelligence.diplomacy.law_form.commune.tier5_long=A sprawling society bound entirely by collective ownership and decision.
+desc.immersiveintelligence.diplomacy.law_form.republic.tier1=Городской совет
+desc.immersiveintelligence.diplomacy.law_form.republic.tier1_long=Небольшое собрание избранных людей, управляющих горсткой граждан.
+desc.immersiveintelligence.diplomacy.law_form.republic.tier2=Республика
+desc.immersiveintelligence.diplomacy.law_form.republic.tier2_long=Организованное государство с выборами и растущим населением.
+desc.immersiveintelligence.diplomacy.law_form.republic.tier3=Федеральная республика
+desc.immersiveintelligence.diplomacy.law_form.republic.tier3_long=Союз регионов, объединенных под общим знаменем представительства.
+desc.immersiveintelligence.diplomacy.law_form.republic.tier4=Содружество
+desc.immersiveintelligence.diplomacy.law_form.republic.tier4_long=Огромная и влиятельная республики, располагающая армиями и инфраструктурой.
+desc.immersiveintelligence.diplomacy.law_form.republic.tier5=Объединенные нации
+desc.immersiveintelligence.diplomacy.law_form.republic.tier5_long=Великий союз государств, объединенных общим управлением и обороной.
+#Commune Коммуняки (не совки)
+desc.immersiveintelligence.diplomacy.law_form.commune=Коммуна
+desc.immersiveintelligence.diplomacy.law_form.commune.tier1=Коллектив
+desc.immersiveintelligence.diplomacy.law_form.commune.tier1_long=Горстка людей, работающих вместе и владеющих общей собственностью.
+desc.immersiveintelligence.diplomacy.law_form.commune.tier2=Коммуна
+desc.immersiveintelligence.diplomacy.law_form.commune.tier2_long=Более крупная группа, объединяющая землю, инструменты и производство для общего блага.
+desc.immersiveintelligence.diplomacy.law_form.commune.tier3=Союз коммун
+desc.immersiveintelligence.diplomacy.law_form.commune.tier3_long=Многочисленные коллективы объединились в знак солидарности и взаимной поддержки.
+desc.immersiveintelligence.diplomacy.law_form.commune.tier4=Союз народных коммун
+desc.immersiveintelligence.diplomacy.law_form.commune.tier4_long=Широкая сеть коммун, объединяющая различные отрасли промышленности.
+desc.immersiveintelligence.diplomacy.law_form.commune.tier5=Коминтерн
+desc.immersiveintelligence.diplomacy.law_form.commune.tier5_long=Растущее общество, полностью основанное на коллективной собственности и принятии решений.
 #Commissariat Фашисты
-desc.immersiveintelligence.diplomacy.law_form.commisariat=Commissariat
-desc.immersiveintelligence.diplomacy.law_form.commisariat.tier1=Cell
-desc.immersiveintelligence.diplomacy.law_form.commisariat.tier1_long=A small cadre loyal to a commissar, enforcing order through ideology.
-desc.immersiveintelligence.diplomacy.law_form.commisariat.tier2=Bureau
-desc.immersiveintelligence.diplomacy.law_form.commisariat.tier2_long=An administrative office directing policy and propaganda.
-desc.immersiveintelligence.diplomacy.law_form.commisariat.tier3=Regional Commissariat
-desc.immersiveintelligence.diplomacy.law_form.commisariat.tier3_long=A strong authority ruling multiple regions with loyal armed forces.
-desc.immersiveintelligence.diplomacy.law_form.commisariat.tier4=High Commissariat
-desc.immersiveintelligence.diplomacy.law_form.commisariat.tier4_long=A commanding power with centralized control of production and war.
-desc.immersiveintelligence.diplomacy.law_form.commisariat.tier5=Supreme Commissariat
-desc.immersiveintelligence.diplomacy.law_form.commisariat.tier5_long=A totalitarian regime, enforcing absolute order and unquestioned loyalty.
+desc.immersiveintelligence.diplomacy.law_form.commisariat=Комиссариат
+desc.immersiveintelligence.diplomacy.law_form.commisariat.tier1=Ячейка
+desc.immersiveintelligence.diplomacy.law_form.commisariat.tier1_long=Небольшой отряд, лояльный комиссару, поддерживающий порядок с помощью идеологии.
+desc.immersiveintelligence.diplomacy.law_form.commisariat.tier2=Бюро
+desc.immersiveintelligence.diplomacy.law_form.commisariat.tier2_long=Административное учреждение, руководящее политикой и пропагандой.
+desc.immersiveintelligence.diplomacy.law_form.commisariat.tier3=Комиссариат
+desc.immersiveintelligence.diplomacy.law_form.commisariat.tier3_long=Сильная власть, управляющая несколькими регионами, с лояльными вооруженными силами.
+desc.immersiveintelligence.diplomacy.law_form.commisariat.tier4=Гросскоомиссариат
+desc.immersiveintelligence.diplomacy.law_form.commisariat.tier4_long=Господствующая держава с централизованным контролем над производством и войной.
+desc.immersiveintelligence.diplomacy.law_form.commisariat.tier5=Верховный комиссариат
+desc.immersiveintelligence.diplomacy.law_form.commisariat.tier5_long=Тоталитарный режим, насаждающий абсолютный порядок и беспрекословную лояльность.
 #Free City Жиды-Одеситы?
-desc.immersiveintelligence.diplomacy.law_form.free_city=Free City
-desc.immersiveintelligence.diplomacy.law_form.free_city.tier1=Hamlet
-desc.immersiveintelligence.diplomacy.law_form.free_city.tier1_long=A small autonomous village with its own local governance.
-desc.immersiveintelligence.diplomacy.law_form.free_city.tier2=Village
-desc.immersiveintelligence.diplomacy.law_form.free_city.tier2_long=A community organized around trade and exchange.
-desc.immersiveintelligence.diplomacy.law_form.free_city.tier3=Town
-desc.immersiveintelligence.diplomacy.law_form.free_city.tier3_long=A prosperous city enriched by commerce and external trade.
-desc.immersiveintelligence.diplomacy.law_form.free_city.tier4=City
-desc.immersiveintelligence.diplomacy.law_form.free_city.tier4_long=A hub of commerce and diplomacy, commanding regional markets.
-desc.immersiveintelligence.diplomacy.law_form.free_city.tier5=Metropolis
-desc.immersiveintelligence.diplomacy.law_form.free_city.tier5_long=A dominant city-state whose wealth and trade shape entire regions.
+desc.immersiveintelligence.diplomacy.law_form.free_city=Вольный город
+desc.immersiveintelligence.diplomacy.law_form.free_city.tier1=Деревня
+desc.immersiveintelligence.diplomacy.law_form.free_city.tier1_long=Небольшая автономная деревня со своим собственным местным управлением.
+desc.immersiveintelligence.diplomacy.law_form.free_city.tier2=Село
+desc.immersiveintelligence.diplomacy.law_form.free_city.tier2_long=Сообщество, организованное вокруг торговли и обмена.
+desc.immersiveintelligence.diplomacy.law_form.free_city.tier3=ПТГ
+desc.immersiveintelligence.diplomacy.law_form.free_city.tier3_long=Процветающий город, обогащенный коммерцией и внешней торговлей.
+desc.immersiveintelligence.diplomacy.law_form.free_city.tier4=Город
+desc.immersiveintelligence.diplomacy.law_form.free_city.tier4_long=Центр торговли и дипломатии, господствующий на региональных рынках.
+desc.immersiveintelligence.diplomacy.law_form.free_city.tier5=Мегаполис
+desc.immersiveintelligence.diplomacy.law_form.free_city.tier5_long=Доминирующий город-государство, чье богатство и торговля формируют целые регионы.
 #Dynasty Чёрносотенцы
-desc.immersiveintelligence.diplomacy.law_form.dynasty=Dynasty
-desc.immersiveintelligence.diplomacy.law_form.dynasty.tier1=House
-desc.immersiveintelligence.diplomacy.law_form.dynasty.tier1_long=A family line holding a modest estate and its crest.
-desc.immersiveintelligence.diplomacy.law_form.dynasty.tier2=Clan
-desc.immersiveintelligence.diplomacy.law_form.dynasty.tier2_long=A broader kinship, with vassals and sworn allies under its banner.
-desc.immersiveintelligence.diplomacy.law_form.dynasty.tier3=Noble House
-desc.immersiveintelligence.diplomacy.law_form.dynasty.tier3_long=A fortified noble line wielding armies and strongholds.
-desc.immersiveintelligence.diplomacy.law_form.dynasty.tier4=Royal Dynasty
-desc.immersiveintelligence.diplomacy.law_form.dynasty.tier4_long=A ruling bloodline commanding vast lands and multiple heirs.
-desc.immersiveintelligence.diplomacy.law_form.dynasty.tier5=Imperial Dynasty
-desc.immersiveintelligence.diplomacy.law_form.dynasty.tier5_long=A lineage of emperors, wielding unmatched dominion and legacy.
+desc.immersiveintelligence.diplomacy.law_form.dynasty=Династия
+desc.immersiveintelligence.diplomacy.law_form.dynasty.tier1=Дом
+desc.immersiveintelligence.diplomacy.law_form.dynasty.tier1_long= Семейная линия, владеющая скромным поместьем и своим гербом.
+desc.immersiveintelligence.diplomacy.law_form.dynasty.tier2=Клан
+desc.immersiveintelligence.diplomacy.law_form.dynasty.tier2_long=Более широкое родство, объединяющее вассалов и заклятых союзников под своим знаменем.
+desc.immersiveintelligence.diplomacy.law_form.dynasty.tier3=Благородный дом
+desc.immersiveintelligence.diplomacy.law_form.dynasty.tier3_long=Укрепленный дворянский род, владеющий армиями и твердынями.
+desc.immersiveintelligence.diplomacy.law_form.dynasty.tier4=Королевская династия
+desc.immersiveintelligence.diplomacy.law_form.dynasty.tier4_long=Правящая родословная, владеющая обширными землями и имеющая многочисленных наследников.
+desc.immersiveintelligence.diplomacy.law_form.dynasty.tier5=Императорская династия
+desc.immersiveintelligence.diplomacy.law_form.dynasty.tier5_long=Династия императоров, обладающих непревзойденным могуществом и наследием.
 
 desc.immersiveintelligence.diplomacy.action.disband=Disband
 desc.immersiveintelligence.diplomacy.action.merge=Merge
-desc.immersiveintelligence.diplomacy.action.add_members=Add Members
-desc.immersiveintelligence.diplomacy.action.propose=Propose
-desc.immersiveintelligence.diplomacy.action.demand=Demand
-desc.immersiveintelligence.diplomacy.action.declare_war=Declare War
-desc.immersiveintelligence.diplomacy.action.declare_alliance=Declare Alliance
+desc.immersiveintelligence.diplomacy.action.add_members=Добавить участников
+desc.immersiveintelligence.diplomacy.action.propose=Предложить
+desc.immersiveintelligence.diplomacy.action.demand=Потребовать
+desc.immersiveintelligence.diplomacy.action.declare_war=Объявить войну
+desc.immersiveintelligence.diplomacy.action.declare_alliance=Заключить союз
 
 desc.immersiveintelligence.diplomacy.permission.disband=Disband
 desc.immersiveintelligence.diplomacy.permission.merge=Merge
-desc.immersiveintelligence.diplomacy.permission.add_members=Add Members
-desc.immersiveintelligence.diplomacy.permission.remove_members=Remove Members
-desc.immersiveintelligence.diplomacy.permission.military_aid=Military Aid
-desc.immersiveintelligence.diplomacy.permission.transit=Transit
-desc.immersiveintelligence.diplomacy.permission.trade=Trade
-desc.immersiveintelligence.diplomacy.permission.research=Research
-desc.immersiveintelligence.diplomacy.permission.logistics=Logistics
-desc.immersiveintelligence.diplomacy.permission.container_access=Container Access
+desc.immersiveintelligence.diplomacy.permission.add_members=Добавить участников
+desc.immersiveintelligence.diplomacy.permission.remove_members=Репресировать участников
+desc.immersiveintelligence.diplomacy.permission.military_aid=Военная поиощь
+desc.immersiveintelligence.diplomacy.permission.transit=Транзит
+desc.immersiveintelligence.diplomacy.permission.trade=Торговля
+desc.immersiveintelligence.diplomacy.permission.research=Исследования
+desc.immersiveintelligence.diplomacy.permission.logistics=Логистика
+desc.immersiveintelligence.diplomacy.permission.container_access=Доступ к складу
 
-desc.immersiveintelligence.diplomacy.permission_level.owner_allow=Owners
-desc.immersiveintelligence.diplomacy.permission_level.member_allow=Members
-desc.immersiveintelligence.diplomacy.permission_level.allies_allow=Allies
-desc.immersiveintelligence.diplomacy.permission_level.others_allow=Others
-desc.immersiveintelligence.diplomacy.permission_level.enemy_allow=Enemies
+desc.immersiveintelligence.diplomacy.permission_level.owner_allow=Владельцы
+desc.immersiveintelligence.diplomacy.permission_level.member_allow=Участники
+desc.immersiveintelligence.diplomacy.permission_level.allies_allow=Союзники
+desc.immersiveintelligence.diplomacy.permission_level.others_allow=Другие
+desc.immersiveintelligence.diplomacy.permission_level.enemy_allow=Враги
 
 #Bullets
 
@@ -1549,17 +1549,17 @@ desc.immersiveintelligence.upgrade.incompatible_hold=%s - Несовместим
 desc.immersiveintelligence.upgrade.dependencies=Required Dependencies:
 desc.immersiveintelligence.upgrade.incompatible=Несовместимые улучшения:
 
-info.immersiveintelligence.machineupgrade.purpose.efficiency=Efficiency Upgrade
-info.immersiveintelligence.machineupgrade.purpose.speed=Speed Upgrade
-info.immersiveintelligence.machineupgrade.purpose.capacity=Capacity Upgrade
-info.immersiveintelligence.machineupgrade.purpose.quality=Quality Upgrade
-info.immersiveintelligence.machineupgrade.purpose.data=Data Capabilities Upgrade
-info.immersiveintelligence.machineupgrade.purpose.full_conversion=Full Conversion
-info.immersiveintelligence.machineupgrade.purpose.primary_weapon=Primary Weapon
-info.immersiveintelligence.machineupgrade.purpose.secondary_weapon=Secondary Weapon
-info.immersiveintelligence.machineupgrade.purpose.armor=Armor Upgrade
-info.immersiveintelligence.machineupgrade.purpose.defense_system=Defense Upgrade
-info.immersiveintelligence.machineupgrade.purpose.special=Special Upgrade
+info.immersiveintelligence.machineupgrade.purpose.efficiency=Улучшение эффективности
+info.immersiveintelligence.machineupgrade.purpose.speed=Улучшение скорости
+info.immersiveintelligence.machineupgrade.purpose.capacity=Улучшение пропускной способности
+info.immersiveintelligence.machineupgrade.purpose.quality=Улучшение качества
+info.immersiveintelligence.machineupgrade.purpose.data=Улучшение возможностей передачи данных
+info.immersiveintelligence.machineupgrade.purpose.full_conversion=Полное преобразование
+info.immersiveintelligence.machineupgrade.purpose.primary_weapon=Основное оружие
+info.immersiveintelligence.machineupgrade.purpose.secondary_weapon=Второстепенное оружие
+info.immersiveintelligence.machineupgrade.purpose.armor=Улучшение брони
+info.immersiveintelligence.machineupgrade.purpose.defense_system=Улучшение зашиты
+info.immersiveintelligence.machineupgrade.purpose.special=Специальные улучшение
 
 info.immersiveintelligence.machineupgrade.tier.core=Базовая функциональность
 info.immersiveintelligence.machineupgrade.tier.tier_1=Базовое улучшение
@@ -3166,7 +3166,7 @@ ii.config.Mines=Мины
 ii.config.Light_Engineer_Armor=Лёгкая броня инженера
 
 #GUI Labels
-ii.gui.editor.editor_style=Visual/POL Editor
+ii.gui.editor.editor_style=Визуальный/POL редактор
 
 ii.gui.task_editor.tasks=Задачи
 ii.gui.task_editor.tasks.tooltip=Задачи - это задания, которые повторяются бесконечно.
@@ -3176,52 +3176,52 @@ ii.gui.task_editor.jobs.tooltip=Задания - это назначения, к
 ii.gui.inserter.task_editor=Редактор задач
 ii.gui.inserter.type=Тип:
 ii.gui.inserter.input=Вход:
-ii.gui.inserter.input.facing.tooltip=In which direction should the inserter reach.
-ii.gui.inserter.input.distance.tooltip=How far should the inserter reach (blocks).
+ii.gui.inserter.input.facing.tooltip=Из какого направлении осуществиться взятие.
+ii.gui.inserter.input.distance.tooltip=Дальность взятия (блоки).
 ii.gui.inserter.output=Выход:
-ii.gui.inserter.output.facing.tooltip=In which direction should the inserter reach.
-ii.gui.inserter.output.distance.tooltip=How far should the inserter reach (blocks).
-ii.gui.inserter.items_per_step=Amount/Turn:
-ii.gui.inserter.items_per_step.tooltip=Amount taken and inserted with each turn of the inserter.
+ii.gui.inserter.output.facing.tooltip=В каком направлении осуществиться вставки.
+ii.gui.inserter.output.distance.tooltip=Дальность вставки (блоки).
+ii.gui.inserter.items_per_step=Количество/Оборот:
+ii.gui.inserter.items_per_step.tooltip=Количество за 1 оборот.
 
 ii.gui.inserter.tasks.item=Предметы
-ii.gui.inserter.tasks.place_block=Place Block
-ii.gui.inserter.tasks.from_minecart=From Minecart
-ii.gui.inserter.tasks.into_minecart=Into Minecart
-ii.gui.inserter.tasks.fluid=Fluid
-ii.gui.inserter.tasks.fluid_milk_cow=Milk Cow
-ii.gui.inserter.tasks.fluid_latex_collector=Collect Latex
+ii.gui.inserter.tasks.place_block=Разместить блок
+ii.gui.inserter.tasks.from_minecart=Из вагонетки
+ii.gui.inserter.tasks.into_minecart=В вагонетку
+ii.gui.inserter.tasks.fluid=Жидкость
+ii.gui.inserter.tasks.fluid_milk_cow=Доить корову
+ii.gui.inserter.tasks.fluid_latex_collector=Собрать латекс
 
-ii.gui.packer.task=Transfer:
+ii.gui.packer.task=Перемещение:
 ii.gui.packer.task.item=Предметы
-ii.gui.packer.task.item.out=Pack
-ii.gui.packer.task.item.in=Unpack
+ii.gui.packer.task.item.out=Упаковать
+ii.gui.packer.task.item.in=Разпаковать
 ii.gui.packer.task.fluid=Жидкость
-ii.gui.packer.task.fluid.out=Fill
-ii.gui.packer.task.fluid.in=Drain
+ii.gui.packer.task.fluid.out=Заполнить
+ii.gui.packer.task.fluid.in=Опустощить
 ii.gui.packer.task.energy=Энергия
-ii.gui.packer.task.energy.out=Charge
-ii.gui.packer.task.energy.in=Discharge
+ii.gui.packer.task.energy.out=Зарядить
+ii.gui.packer.task.energy.in=Разрядить
 
-ii.gui.packer.direction=from
-ii.gui.packer.direction.pack=Packer to Container
-ii.gui.packer.direction.unpack=Container to Packer
+ii.gui.packer.direction=Из
+ii.gui.packer.direction.pack=Упаковка в контейнер
+ii.gui.packer.direction.unpack=Разпаковка из контейнера
 
 ii.gui.packer.item.input=Вход
-ii.gui.packer.item.input.tooltip=Items to be inserted into containers by the Packer
-ii.gui.packer.item.output=Output
-ii.gui.packer.item.output.tooltip=Items taken from the containers to be output from the Packer
+ii.gui.packer.item.input.tooltip=Предметы, которые упаковщик должен поместить в контейнеры
+ii.gui.packer.item.output=Выход
+ii.gui.packer.item.output.tooltip=Предметы, извлеченные из контейнеров для выгрузки из упаковщика
 
-ii.gui.packer.mode=in amount
-ii.gui.packer.mode.amount=Units
-ii.gui.packer.mode.slot=Slots
-ii.gui.packer.mode.all_possible=All possible
+ii.gui.packer.mode=В количестве
+ii.gui.packer.mode.amount=Единиц
+ii.gui.packer.mode.slot=Слотов
+ii.gui.packer.mode.all_possible=Всё возможное
 ii.gui.packer.mode.at_most_container=At most in container
 ii.gui.packer.mode.at_least_packer=At least in packer
 ii.gui.packer.repeat=repeated until impossible
 ii.gui.packer.expires=and expire after
 
-ii.gui.packer.labeler.header=Apply label to container
+ii.gui.packer.labeler.header=Добавить метку на контейнер
 ii.gui.packer.labeler.serial_start=batched, start from
 ii.gui.packer.labeler.serial_start.tooltip=If checked, the containers Logistic Tag (and name) will include an incrementing batch number, starting from the specified one
 
@@ -3232,23 +3232,23 @@ ii.gui.packer.picker.stack.tooltip=Filter for the resource operated on.
 ii.gui.packer.picker.logitag=Logistic Tag
 ii.gui.packer.picker.logitag.tooltip=Logistic tag to be applied to the container.
 
-ii.gui.itemstack_editor.count=Count:
-ii.gui.itemstack_editor.count.tooltip=The amount of items in the stack
-ii.gui.itemstack_editor.damage=Damage:
-ii.gui.itemstack_editor.damage.tooltip=The damage value of the item (leave empty for wildcard)
+ii.gui.itemstack_editor.count=Количество:
+ii.gui.itemstack_editor.count.tooltip=Количество предметов в слоте
+ii.gui.itemstack_editor.damage=Повреждение:
+ii.gui.itemstack_editor.damage.tooltip=Значение повреждения предмета (оставьте пустым для подстановочного знака)
 ii.gui.itemstack_editor.nbt=NBT
 ii.gui.itemstack_editor.nbt.item.tooltip=When active, the item is matched by its NBT data
 ii.gui.itemstack_editor.nbt.fluid.tooltip=When active, the fluid is matched by its NBT data
 ii.gui.itemstack_editor.oredict=OreDict
 ii.gui.itemstack_editor.oredict.tooltip=When active, the item is matched by its OreDictionary name
-ii.gui.itemstack_editor.energy=Immersive Flux
-ii.gui.itemstack_editor.energy.tooltip=Energy in Immersive Flux (IF)
+ii.gui.itemstack_editor.energy=IF
+ii.gui.itemstack_editor.energy.tooltip=Энергия в Immersive Flux (IF)
 
 ii.gui.data_editor.logistics_tag.name=Имя
-ii.gui.data_editor.logistics_tag.name.tooltip=Sets the tag's name.
+ii.gui.data_editor.logistics_tag.name.tooltip=Задает имя тега.
 ii.gui.data_editor.logistics_tag.description=Description
 ii.gui.data_editor.logistics_tag.description.tooltip=Sets the tag's description.
-ii.gui.data_editor.logistics_tag.owner=Owner
+ii.gui.data_editor.logistics_tag.owner=Владелец
 ii.gui.data_editor.logistics_tag.owner.tooltip=Sets the tag's owner.
 ii.gui.data_editor.logistics_tag.origin=Origin
 ii.gui.data_editor.logistics_tag.origin.tooltip=Sets the tag's origin.
@@ -3261,13 +3261,13 @@ ii.gui.data_input_machine.memory=Встроенная память
 ii.gui.data_input_machine.memory.switch=Переключение
 ii.gui.data_input_machine.memory.switch.tooltip=Переключение текущего слота памяти
 
-ii.gui.arithmetic_logic_machine.storage=Circuit Storage
+ii.gui.arithmetic_logic_machine.storage=Хранилище печатных плат
 
 ii.gui.packer.tasks=Задачи
 ii.gui.packer.labeling=Правила меток
 
 ii.gui.flagpole.map=Карта
-ii.gui.flagpole.faction=Faction Management
+ii.gui.flagpole.faction=Управление фракциями
 
 ii.gui.radar.map=Дисплей радара
 ii.gui.radar.configuration=Конфигурация
@@ -3296,7 +3296,7 @@ ii.gui.emplacement.clear=ОЧИСТИТЬ ВСЕ ЗАДАЧИ (ОСТОРОЖН�
 ii.gui.emplacement.target.mobs=Мобы
 ii.gui.emplacement.target.animals=Животные
 ii.gui.emplacement.target.players=Игроки
-ii.gui.emplacement.target.npcs=НИПы
+ii.gui.emplacement.target.npcs=НПСи
 ii.gui.emplacement.target.vehicles=Техника
 ii.gui.emplacement.target.shells=Shells
 ii.gui.emplacement.target.team=Фракция
@@ -3315,18 +3315,18 @@ ii.gui.map_display.marker.logistics=Логистика
 ii.gui.map_display.marker.intelligence=Разведка
 ii.gui.map_display.marker.wire_networks=Проводные сети
 
-ii.gui.map_display.marker.items=Предмета
-ii.gui.map_display.marker.players=Players
-ii.gui.map_display.marker.mobs=Mobs
-ii.gui.map_display.marker.animals=Animals
-ii.gui.map_display.marker.aircraft=Aircraft
-ii.gui.map_display.marker.vehicles=Vehicles
-ii.gui.map_display.marker.missiles=Missiles
-ii.gui.map_display.marker.artillery=Artillery
-ii.gui.map_display.marker.bullets=Bullets
+ii.gui.map_display.marker.items=Предметы
+ii.gui.map_display.marker.players=Игроки
+ii.gui.map_display.marker.mobs=Мобы
+ii.gui.map_display.marker.animals=Животные
+ii.gui.map_display.marker.aircraft=Самолеты
+ii.gui.map_display.marker.vehicles=Техника
+ii.gui.map_display.marker.missiles=Ракеты
+ii.gui.map_display.marker.artillery=Артиллерия
+ii.gui.map_display.marker.bullets=Пули
 
-ii.gui.redstone_data_interface.from=From:
-ii.gui.redstone_data_interface.to=Into:
+ii.gui.redstone_data_interface.from=Из:
+ii.gui.redstone_data_interface.to=В:
 ii.gui.redstone_data_interface.mode.boolean=Boolean
 ii.gui.redstone_data_interface.mode.integer_15=Integer 0-15
 ii.gui.redstone_data_interface.mode.integer_255=Integer 0-255
@@ -3340,20 +3340,20 @@ ii.gui_help.data_input_machine.storage=Эти слоты позволяют хр
 ii.gui_help.data_input_machine.variables=В этом списке отображаются переменные пакета данных, хранящегося в памяти машины.
 
 #GUI Actions
-ii.gui.action.copy=Copy
-ii.gui.action.paste=Paste
-ii.gui.action.cut=Cut
-ii.gui.action.undo=Undo
-ii.gui.action.redo=Redo
-ii.gui.action.select_all=Select All
-ii.gui.action.jei_recipe=Show Recipe
-ii.gui.action.jei_uses=Show Uses
-ii.gui.action.jei_bookmark=Bookmark
+ii.gui.action.copy=Копировать
+ii.gui.action.paste=Вставить
+ii.gui.action.cut=Вырезать
+ii.gui.action.undo=Назад
+ii.gui.action.redo=Вперёд
+ii.gui.action.select_all=Выбрать всё
+ii.gui.action.jei_recipe=Показать рецепты
+ii.gui.action.jei_uses=Показать применения
+ii.gui.action.jei_bookmark=Закладки
 
 #GUI Bottom Buttons
-ii.gui.button.apply=Apply
-ii.gui.button.revert=Revert
-ii.gui.button.cancel=Cancel
+ii.gui.button.apply=Подтвердить
+ii.gui.button.revert=Вернутся
+ii.gui.button.cancel=Отмена
 
 #GUI Tooltips
 ii.gui_tooltip.button.add=Добавить
@@ -3363,18 +3363,18 @@ ii.gui_tooltip.button.duplicate=Дублировать
 ii.gui_tooltip.button.clear=Очистить
 
 #GUI Widgets
-ii.gui_tooltip.widget.style.show=Show Style Customization
-ii.gui_tooltip.widget.style.hide=Hide Style Customization
-ii.gui_tooltip.widget.style=Customization
-ii.gui_tooltip.widget.style.desc=This multiblock allows customization of style and color.
-ii.gui_tooltip.widget.style.style=Style
-ii.gui_tooltip.widget.style.color=Color
-ii.gui_tooltip.widget.ownership.show=Show Ownership Data
-ii.gui_tooltip.widget.ownership.hide=Hide Ownership Data
-ii.gui_tooltip.widget.ownership=Ownership
+ii.gui_tooltip.widget.style.show=Показывать кастомизацию
+ii.gui_tooltip.widget.style.hide=Скрыть кастомизацию
+ii.gui_tooltip.widget.style=Кастомизация
+ii.gui_tooltip.widget.style.desc=Этот мультиблок позволяет настраивать стиль и цвет.
+ii.gui_tooltip.widget.style.style=Стиль
+ii.gui_tooltip.widget.style.color=Цвет
+ii.gui_tooltip.widget.ownership.show=Показывать данные о владельце
+ii.gui_tooltip.widget.ownership.hide=Скрыть данные о владельце
+ii.gui_tooltip.widget.ownership=Владение
 ii.gui_tooltip.widget.manual.show=Показать руководство сбоку
 ii.gui_tooltip.widget.manual.hide=Скрыть руководство сбоку
-ii.gui_tooltip.widget.manual=Engineer's Manual
+ii.gui_tooltip.widget.manual=Руководство инженера
 
 ii.gui_tooltip.energy.stored=Хранимая энергия: %s/%s IF
 ii.gui_tooltip.energy.input=Потреблённая энергия: %s IF
