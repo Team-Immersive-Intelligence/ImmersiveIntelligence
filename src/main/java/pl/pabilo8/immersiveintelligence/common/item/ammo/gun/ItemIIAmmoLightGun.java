@@ -38,7 +38,7 @@ public class ItemIIAmmoLightGun extends ItemIIAmmoBase<EntityAmmoProjectile>
 	}
 
 	@Override
-	public float getComponentMultiplier()
+	public float getComponentSize()
 	{
 		return 0.35f;
 	}
@@ -58,7 +58,7 @@ public class ItemIIAmmoLightGun extends ItemIIAmmoBase<EntityAmmoProjectile>
 	@Override
 	public int getCoreMaterialNeeded()
 	{
-		return 3;
+		return 12;
 	}
 
 	@Override

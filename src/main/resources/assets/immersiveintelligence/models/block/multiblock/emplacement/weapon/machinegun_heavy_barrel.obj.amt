@@ -1,0 +1,41 @@
+{
+  "origins": {
+    "base": [-6, -37.93482, 24.25502],
+    "turen": [8, -30.3, 22],
+    "cannon": [9.89227, -28.85256, 21.04103],
+    "gun2": [11, -29.125, -0.75],
+    "water_cooling2": [13.5, -29, 2],
+    "heavy_barrel2": [11, -29, 4.75],
+    "gun1": [5, -29.125, -0.75],
+    "water_cooling1": [2.5, -29, 2],
+    "heavy_barrel1": [5, -29, 4.75],
+    "turntable": [9, -28, 29],
+    "lower": [9, -24, 29],
+    "upper": [9, -10.5, 29],
+    "pickerLeft": [11, 0, 29],
+    "pickerLeft2": [11, 3, 29],
+    "pickerRight": [7, 0, 29],
+    "pickerRight2": [7, 3, 29],
+    "door1": [18, -25, 24],
+    "door2": [-2, -25, 24]
+  },
+  "hierarchy": {
+    "turen": "base",
+    "cannon": "turen",
+    "gun2": "cannon",
+    "water_cooling2": "gun2",
+    "heavy_barrel2": "gun2",
+    "gun1": "cannon",
+    "water_cooling1": "gun1",
+    "heavy_barrel1": "gun1",
+    "turntable": "cannon",
+    "lower": "turntable",
+    "upper": "lower",
+    "pickerLeft": "upper",
+    "pickerLeft2": "pickerLeft",
+    "pickerRight": "upper",
+    "pickerRight2": "pickerRight",
+    "door1": "cannon",
+    "door2": "cannon"
+  }
+}

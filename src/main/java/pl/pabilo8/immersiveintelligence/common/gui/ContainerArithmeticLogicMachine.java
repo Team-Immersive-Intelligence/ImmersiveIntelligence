@@ -6,6 +6,8 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.MultiblockArithmeticLogicMachine;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityArithmeticLogicMachine;
 import pl.pabilo8.immersiveintelligence.common.item.data.ItemIIFunctionalCircuit;
 import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIBase;
@@ -20,30 +22,31 @@ public class ContainerArithmeticLogicMachine extends ContainerIIBase<TileEntityA
 {
 	public final boolean storage;
 	public final Slot[] circuitSlots;
+	public final Slot[] storageSlots;
 
 	public ContainerArithmeticLogicMachine(EntityPlayer player, TileEntityArithmeticLogicMachine tile, int gui)
 	{
 		super(player, tile);
 
-		switch(gui)
+		if(gui==0)
+		{ //Storage
+			boolean circuitUpgrade = tile.isUpgradeInstalled(IIContent.UPGRADE_CIRCUIT_RACKS);
+			this.circuitSlots = addSlotArray(6+2, 26-8-2-1+(circuitUpgrade?0: 18), 0,
+					circuitUpgrade?MultiblockArithmeticLogicMachine.CIRCUITS_UPGRADED: MultiblockArithmeticLogicMachine.CIRCUITS_BASE, 1, CircuitSlot::new);
+			this.storageSlots = addSlotArray(32+4, 6+4+32-16, MultiblockArithmeticLogicMachine.CIRCUITS_UPGRADED, MultiblockArithmeticLogicMachine.STORAGE_SLOTS, 6, CircuitSlot::new);
+			this.storage = true;
+		}
+		else
 		{
-			case 0: //Storage
-			{
-				this.circuitSlots = new Slot[4];
-				this.circuitSlots[0] = addSlotToContainer(new CircuitSlot(this, this.inv, 0, 6, 26));
-				this.circuitSlots[1] = addSlotToContainer(new CircuitSlot(this, this.inv, 1, 6, 53));
-				this.circuitSlots[2] = addSlotToContainer(new CircuitSlot(this, this.inv, 2, 6, 79));
-				this.circuitSlots[3] = addSlotToContainer(new CircuitSlot(this, this.inv, 3, 6, 105));
-				this.storage = true;
-			}
-			break;
-			default:
-				this.storage = false;
-				this.circuitSlots = new Slot[0];
-				break;
+			this.storage = false;
+			this.circuitSlots = storageSlots = new Slot[0];
 		}
 
-		addPlayerInventory(player.inventory, 8, 141+8);
+		if(gui==2)
+			addPlayerInventory(player.inventory, 8+16+8, 141+8+32+16+8);
+		else
+			addPlayerInventory(player.inventory, 8, 141+8);
+
 	}
 
 	public static class CircuitSlot extends IESlot

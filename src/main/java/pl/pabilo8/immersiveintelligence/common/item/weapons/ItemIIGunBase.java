@@ -35,15 +35,15 @@ import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler.IAdvancedTo
 import pl.pabilo8.immersiveintelligence.api.utils.tools.ISkinnable;
 import pl.pabilo8.immersiveintelligence.client.ClientProxy;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
-import pl.pabilo8.immersiveintelligence.client.util.amt.IIUpgradableItemRendererAMT;
+import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IIUpgradableItemRendererAMT;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ammohandler.AmmoHandler;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageItemKeybind;
-import pl.pabilo8.immersiveintelligence.common.util.AdvancedSounds.RangedSound;
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIUpgradableTool;
+import pl.pabilo8.immersiveintelligence.common.util.sound.AdvancedSounds.RangedSound;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -264,7 +264,7 @@ public abstract class ItemIIGunBase extends ItemIIUpgradableTool implements ISki
 
 		//Handle reloading request
 		if(world.isRemote)
-			if(!shouldReload&&ClientProxy.keybind_manualReload.isKeyDown())
+			if(!shouldReload&&ClientProxy.keybindManualReload.isKeyDown())
 				IIPacketHandler.sendToServer(new MessageItemKeybind(MessageItemKeybind.KEYBIND_GUN_RELOAD));
 
 		//handle reloading

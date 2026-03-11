@@ -3,7 +3,6 @@ package pl.pabilo8.immersiveintelligence.api.crafting;
 import blusunrize.immersiveengineering.api.ApiUtils;
 import blusunrize.immersiveengineering.api.ComparableItemStack;
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
-import blusunrize.immersiveengineering.api.crafting.MultiblockRecipe;
 import blusunrize.immersiveengineering.common.util.ListUtils;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Lists;
@@ -12,7 +11,12 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.oredict.OreDictionary;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIMultiblockRecipe;
+import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIRecipeLayout;
+import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIRecipeLayout.IOType;
+import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIRecipeLayoutBuilder;
 
+import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Function;
 
@@ -22,12 +26,11 @@ import java.util.function.Function;
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 20.06.2021
  */
-public class VulcanizerRecipe extends MultiblockRecipe
+//REFACTOR: 06.12.2025 move to new system fully
+public class VulcanizerRecipe extends IIMultiblockRecipe
 {
 	public static final ResourceLocation TEXTURE_LATEX = new ResourceLocation(ImmersiveIntelligence.MODID, "textures/blocks/multiblock/vulcanizer/latex_strip.png");
 	public static final ResourceLocation TEXTURE_RUBBER = new ResourceLocation(ImmersiveIntelligence.MODID, "textures/blocks/multiblock/vulcanizer/rubber_strip.png");
-	public static float energyModifier = 1;
-	public static float timeModifier = 1;
 	public static ArrayListMultimap<ComparableItemStack, VulcanizerRecipe> recipeList = ArrayListMultimap.create();
 	public static HashMap<String, Function<NBTTagCompound, VulcanizerRecipe>> deserializers = new HashMap<>();
 	public final IngredientStack input;
@@ -36,19 +39,16 @@ public class VulcanizerRecipe extends MultiblockRecipe
 	public final ComparableItemStack mold;
 	public final ItemStack output;
 	public final ResourceLocation resIn, resOut;
-	int totalProcessTime;
-	int totalProcessEnergy;
 
 	public VulcanizerRecipe(ItemStack output, ComparableItemStack mold, IngredientStack mainInput, IngredientStack compoundInput, IngredientStack sulfurInput, int energy, ResourceLocation resIn, ResourceLocation resOut)
 	{
+		super(mold.stack, mainInput);
 		this.output = output;
 		this.mold = mold;
 		this.input = ApiUtils.createIngredientStack(mainInput);
 		this.compoundInput = ApiUtils.createIngredientStack(compoundInput);
 		this.sulfurInput = ApiUtils.createIngredientStack(sulfurInput);
-
-		this.totalProcessEnergy = (int)Math.floor(energy*energyModifier);
-		this.totalProcessTime = (int)Math.floor(1000*timeModifier);
+		setTimeAndEnergy(1000, energy);
 
 		this.inputList = Lists.newArrayList(this.input, this.compoundInput, this.sulfurInput, new IngredientStack(this.mold.stack));
 		this.outputList = ListUtils.fromItem(this.output);
@@ -137,10 +137,20 @@ public class VulcanizerRecipe extends MultiblockRecipe
 		return this;
 	}
 
+	@Nullable
 	@Override
-	public int getMultipleProcessTicks()
+	protected IIRecipeLayout initRecipeLayout()
 	{
-		return 0;
+		return new IIRecipeLayoutBuilder(156, 74+4)
+				.withSlot(4, 4, input, IOType.INPUT, "frame")
+				.withSlot(4, 24, compoundInput, IOType.INPUT, "frame_none")
+				.withSlot(4, 44, sulfurInput, IOType.INPUT, "frame_none")
+				.withSlot(156/2-9, 44, mold.stack.copy(), IOType.INPUT)
+				.withSlot(138-4, 24, output, IOType.OUTPUT, "frame")
+				.withMultiblockModel(32+8, -8, 80, 80, "")
+				.withTimeInfo()
+				.withPowerInfo()
+				.build();
 	}
 
 	@Override
@@ -149,17 +159,5 @@ public class VulcanizerRecipe extends MultiblockRecipe
 		nbt.setTag("mold", mold.writeToNBT(new NBTTagCompound()));
 		nbt.setTag("input", input.writeToNBT(new NBTTagCompound()));
 		return nbt;
-	}
-
-	@Override
-	public int getTotalProcessTime()
-	{
-		return this.totalProcessTime;
-	}
-
-	@Override
-	public int getTotalProcessEnergy()
-	{
-		return this.totalProcessEnergy;
 	}
 }

@@ -1,0 +1,13 @@
+{
+  "origins": {
+    "base": [0, 32, 0],
+    "stage2": [0, -49, 0],
+    "stage3lamp": [-15.5, 84.55061, 15.4993],
+    "lamp": [-10.5, 73.5, 15.5]
+  },
+  "hierarchy": {
+    "stage2": "base",
+    "stage3lamp": "stage2",
+    "lamp": "stage3lamp"
+  }
+}

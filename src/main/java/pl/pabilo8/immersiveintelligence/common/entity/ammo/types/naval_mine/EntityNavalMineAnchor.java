@@ -1,9 +1,17 @@
 package pl.pabilo8.immersiveintelligence.common.entity.ammo.types.naval_mine;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MoverType;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.List;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -14,7 +22,7 @@ public class EntityNavalMineAnchor extends Entity
 	public EntityNavalMineAnchor(World worldIn)
 	{
 		super(worldIn);
-		setSize(0.5f, 0.5f);
+		setSize(1f, 1f-0.25f);
 	}
 
 	@Override
@@ -24,13 +32,13 @@ public class EntityNavalMineAnchor extends Entity
 	}
 
 	@Override
-	protected void readEntityFromNBT(NBTTagCompound compound)
+	protected void readEntityFromNBT(@Nonnull NBTTagCompound compound)
 	{
 
 	}
 
 	@Override
-	protected void writeEntityToNBT(NBTTagCompound compound)
+	protected void writeEntityToNBT(@Nonnull NBTTagCompound compound)
 	{
 
 	}
@@ -39,13 +47,37 @@ public class EntityNavalMineAnchor extends Entity
 	public void onUpdate()
 	{
 		handleWaterMovement();
-		move(MoverType.SELF, 0, -0.0625f, 0);
+		IBlockState state = world.getBlockState(getPosition());
+		float fallSpeed = 0.2f;
+		if(state.getMaterial().isLiquid())
+			fallSpeed = 0.0625f;
+		move(MoverType.SELF, 0, -fallSpeed, 0);
 
-		if(ticksExisted > 400&&getPassengers().size()==0)
+		if(ticksExisted > 400&&getPassengers().isEmpty())
 			setDead();
 	}
 
-	public void updatePassenger(Entity passenger)
+	@Nullable
+	@Override
+	public AxisAlignedBB getCollisionBoundingBox()
+	{
+		return getEntityBoundingBox();
+	}
+
+	@Nonnull
+	@SideOnly(Side.CLIENT)
+	@Override
+	public AxisAlignedBB getRenderBoundingBox()
+	{
+		List<Entity> passengers = this.getPassengers();
+		if(passengers.isEmpty())
+			return super.getRenderBoundingBox();
+
+		return this.getEntityBoundingBox().grow(0, passengers.get(0).posY-this.posY, 0);
+	}
+
+	@Override
+	public void updatePassenger(@Nonnull Entity passenger)
 	{
 		if(this.isPassenger(passenger))
 		{

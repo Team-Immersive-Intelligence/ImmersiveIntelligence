@@ -5,6 +5,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.ComponentEffectShape;
@@ -12,13 +13,16 @@ import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoCore;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoType;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityAmmoBase;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -67,6 +71,7 @@ public class AmmoFactory<E extends EntityAmmoBase<? super E>>
 	 * the owner is always ignored and doesn't have to be added to this list
 	 */
 	private List<Entity> ignoredEntities;
+	private boolean useArtilleryAngles = false;
 
 //--- Constructor ---//
 
@@ -209,10 +214,10 @@ public class AmmoFactory<E extends EntityAmmoBase<? super E>>
 	 * @param gun     The gun entity
 	 * @return The factory
 	 */
-	public AmmoFactory<E> setShooterAndGun(Entity shooter, Entity gun)
+	public AmmoFactory<E> setShooterAndGun(Entity shooter, @Nullable Entity gun)
 	{
 		this.owner = shooter;
-		this.ignoredEntities = new ArrayList<>(gun.getRecursivePassengers());
+		this.ignoredEntities = gun==null?Collections.emptyList(): new ArrayList<>(gun.getRecursivePassengers());
 		return this;
 	}
 
@@ -222,7 +227,7 @@ public class AmmoFactory<E extends EntityAmmoBase<? super E>>
 	 * @param ignoredBlocks The list of blocks a projectile should ignore
 	 * @return The factory
 	 */
-	public AmmoFactory<E> setIgnoredBlocks(Collection<BlockPos> ignoredBlocks)
+	public AmmoFactory<E> setIgnoredBlocks(@Nonnull Collection<BlockPos> ignoredBlocks)
 	{
 		this.ignoredBlocks = new ArrayList<>(ignoredBlocks);
 		return this;
@@ -235,9 +240,15 @@ public class AmmoFactory<E extends EntityAmmoBase<? super E>>
 	 * @param ignoredEntities The list of entities a projectile should ignore
 	 * @return The factory
 	 */
-	public <I extends Entity> AmmoFactory<E> setIgnoredEntities(Collection<I> ignoredEntities)
+	public <I extends Entity> AmmoFactory<E> setIgnoredEntities(@Nonnull Collection<I> ignoredEntities)
 	{
 		this.ignoredEntities = new ArrayList<>(ignoredEntities);
+		return this;
+	}
+
+	public AmmoFactory<E> setUseArtilleryAngles(boolean useArtilleryAngles)
+	{
+		this.useArtilleryAngles = useArtilleryAngles;
 		return this;
 	}
 
@@ -304,12 +315,45 @@ public class AmmoFactory<E extends EntityAmmoBase<? super E>>
 		CoreType coreType = ammo.getCoreType(stack);
 		ComponentEffectShape effectShape = coreType.getEffectShape();
 
-		float componentMultiplier = this.ammo.getComponentMultiplier();
-		float effectivenessMultiplier = core.getExplosionModifier()*coreType.getComponentEffectivenessMod();
+		float componentSize = this.ammo.getComponentSize();
+		float componentEffectiveness = core.getExplosionModifier()*coreType.getComponentEffectivenessMod();
 
 		for(int i = 0; i < components.length; i++)
 			components[i].onEffect(currentWorld, pos, dir,
-					effectShape, componentsNBT[i], componentMultiplier, effectivenessMultiplier,
+					effectShape, componentsNBT[i], componentSize, componentEffectiveness,
 					owner);
+	}
+
+	public float[] getAnglePrediction(Vec3d shooterPos, Vec3d shooterMotion, Vec3d targetPos, Vec3d targetMotion)
+	{
+		//Base it on ammo
+		if(ammo==null)
+			return new float[]{0, 0};
+
+		if(useArtilleryAngles)
+		{
+			Vec3d dist = shooterPos.subtract(targetPos.add(targetMotion));
+			Vec3d norm = dist.normalize();
+
+			float yy = (float)((Math.atan2(norm.x, norm.z)*180D)/3.1415927410125732D);
+			float pp = IIAmmoUtils.calculateBallisticAngle(
+					shooterPos.add(shooterMotion), targetPos.add(targetMotion), stack, 0.01f
+			);
+			return new float[]{MathHelper.wrapDegrees(180-yy), 90-pp};
+		}
+
+		return IIAmmoUtils.getInterceptionAngles(
+				shooterPos, shooterMotion, targetPos, targetMotion, ammo.getVelocity(), ammo.getMass(stack)
+		);
+	}
+
+	/**
+	 * @return True if the stack is a valid ammo stack for this factory, false otherwise
+	 */
+	public boolean isValidAmmo(ItemStack stack)
+	{
+		if(!(ammo instanceof IAmmoTypeItem))
+			return false;
+		return stack.getItem()==ammo&&!((IAmmoTypeItem<?, ?>)ammo).isBulletCore(stack);
 	}
 }

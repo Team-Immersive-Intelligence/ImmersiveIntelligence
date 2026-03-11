@@ -3,13 +3,19 @@ package pl.pabilo8.immersiveintelligence.client.render.multiblock.metal;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.block.model.IBakedModel;
-import net.minecraft.util.Tuple;
+import net.minecraftforge.client.model.obj.OBJModel;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
-import pl.pabilo8.immersiveintelligence.client.render.IIMultiblockRenderer;
-import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer.RegisteredTileRenderer;
-import pl.pabilo8.immersiveintelligence.client.util.amt.*;
-import pl.pabilo8.immersiveintelligence.client.util.amt.AMTBullet.BulletState;
+import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeTechTree;
+import pl.pabilo8.immersiveintelligence.client.util.amt.animation.IIAnimationCompiledMap;
+import pl.pabilo8.immersiveintelligence.client.util.amt.animation.IIBooleanAnimation;
+import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTModel;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMT;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTBullet;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTBullet.BulletState;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTItem;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTLocator;
+import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IIMultiblockRenderer;
+import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IITileRenderer.RegisteredTileRenderer;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityProjectileWorkshop;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
@@ -24,11 +30,11 @@ import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 @RegisteredTileRenderer(name = "multiblock/projectile_workshop", clazz = TileEntityProjectileWorkshop.class)
 public class ProjectileWorkshopRenderer extends IIMultiblockRenderer<TileEntityProjectileWorkshop>
 {
-	AMT[] model;
-	IIBooleanAnimation active, mode;
-	AMTItem item;
-	AMTBullet bullet;
-	IIAnimationCompiledMap lid1, lid2, coreWorkshop, coreFiller;
+	private AMTModel model;
+	private IIBooleanAnimation active, mode;
+	private AMTItem item;
+	private AMTBullet bullet;
+	private IIAnimationCompiledMap lid1, lid2, coreWorkshop, coreFiller;
 
 	@Override
 	public void drawAnimated(TileEntityProjectileWorkshop te, BufferBuilder buf, float partialTicks, Tessellator tes)
@@ -39,7 +45,7 @@ public class ProjectileWorkshopRenderer extends IIMultiblockRenderer<TileEntityP
 
 		//Get parameters from TE
 		active.apply(!te.getRedstoneAtPos(0));
-		boolean upgradeFiller = te.hasUpgrade(IIContent.UPGRADE_CORE_FILLER);
+		boolean upgradeFiller = te.isUpgradeInstalled(IIContent.UPGRADE_CORE_FILLER);
 
 		//Apply mode visibility and animation
 		mode.apply(upgradeFiller);
@@ -58,8 +64,7 @@ public class ProjectileWorkshopRenderer extends IIMultiblockRenderer<TileEntityP
 
 		//Render
 		applyStandardMirroring(te, true);
-		for(AMT amt : model)
-			amt.render(tes, buf);
+		model.render(tes, buf);
 
 	}
 
@@ -70,9 +75,9 @@ public class ProjectileWorkshopRenderer extends IIMultiblockRenderer<TileEntityP
 	}
 
 	@Override
-	public void compileModels(Tuple<IBlockState, IBakedModel> sModel)
+	public void compileModels(IBlockState state, OBJModel model)
 	{
-		model = IIAnimationUtils.getAMT(sModel, IIAnimationLoader.loadHeader(sModel.getSecond()), header -> new AMT[]{
+		this.model = new AMTModel(state, model, header -> new AMT[]{
 				new AMTLocator("core_workshop", header),
 				new AMTLocator("core_filler", header),
 				item = new AMTItem("item", header),
@@ -80,17 +85,20 @@ public class ProjectileWorkshopRenderer extends IIMultiblockRenderer<TileEntityP
 						.withState(BulletState.CORE)
 		});
 		active = new IIBooleanAnimation(
-				IIAnimationUtils.getPart(model, "conveyor"),
-				IIAnimationUtils.getPart(model, "conveyor_off")
+				this.model.getPart("conveyor"),
+				this.model.getPart("conveyor_off")
 		);
 		mode = new IIBooleanAnimation(
-				IIAnimationUtils.getPart(model, "core_filler"),
-				IIAnimationUtils.getPart(model, "core_workshop")
+				this.model.getPart("core_filler"),
+				this.model.getPart("core_workshop")
 		);
-		lid1 = IIAnimationCompiledMap.create(model, ResLoc.of(IIReference.RES_II, "projectile_workshop/left_door"));
-		lid2 = IIAnimationCompiledMap.create(model, ResLoc.of(IIReference.RES_II, "projectile_workshop/right_door"));
+		lid1 = IIAnimationCompiledMap.create(this.model, ResLoc.of(IIReference.RES_II, "projectile_workshop/left_door"));
+		lid2 = IIAnimationCompiledMap.create(this.model, ResLoc.of(IIReference.RES_II, "projectile_workshop/right_door"));
 
-		coreWorkshop = IIAnimationCompiledMap.create(model, ResLoc.of(IIReference.RES_II, "projectile_workshop/production_core"));
-		coreFiller = IIAnimationCompiledMap.create(model, ResLoc.of(IIReference.RES_II, "projectile_workshop/production_filling"));
+		coreWorkshop = IIAnimationCompiledMap.create(this.model, ResLoc.of(IIReference.RES_II, "projectile_workshop/production_core"));
+		coreFiller = IIAnimationCompiledMap.create(this.model, ResLoc.of(IIReference.RES_II, "projectile_workshop/production_filling"));
+
+		UpgradeTechTree.getTreeFor(TileEntityProjectileWorkshop.class)
+				.withBaseModelLocation(IIReference.RES_BLOCK_MODEL.with("multiblock/projectile_workshop/projectile_workshop.obj"));
 	}
 }

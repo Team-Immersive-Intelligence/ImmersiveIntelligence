@@ -293,11 +293,10 @@ public class IIAmmoUtils
 		return (float)Math.toDegrees((Math.atan2(toTarget.y, toTarget.distanceTo(new Vec3d(0, toTarget.y, 0)))));
 	}
 
-	//TODO: 15.02.2024 implement on emplacements
 	public static float[] getInterceptionAngles(Vec3d shooterPos, Vec3d shooterVel, Vec3d targetPos, Vec3d targetVel, double projectileSpeed, double mass)
 	{
 		Vec3d vv = shooterPos.subtract(shooterVel).subtract(targetPos).add(targetVel).normalize();
-		float yy = (float)((Math.atan2(vv.x, vv.z)*180D)/3.1415927410125732D);
+		float yy = (float)((Math.atan2(vv.x, vv.z)*180D)/Math.PI);
 		float pp = (float)Math.toDegrees((Math.atan2(vv.y, vv.distanceTo(new Vec3d(0, vv.y, 0)))))
 				+getDirectFireAngle(projectileSpeed, mass, shooterPos.subtract(targetPos));
 
@@ -339,6 +338,8 @@ public class IIAmmoUtils
 					IIStringUtil.getItalicString(I18n.format(IIReference.DESCRIPTION_KEY+"bullet_core_type."+coreType.getName())),
 					core.getColor().getHexCol(I18n.format("item."+ImmersiveIntelligence.MODID+".bullet.component."+core.getName()+".name"))
 			);
+
+			//TODO: 20.08.2025 propellant
 
 			//fuse
 			if(ammo.getAllowedFuseTypes().length > 0)

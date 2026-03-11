@@ -6,38 +6,26 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.api.rotary.IMotorGear;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.tileentity.TileEntitySkyCartStation;
+import pl.pabilo8.immersiveintelligence.common.block.rotary_device.tileentity.TileEntityGearbox;
+import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIBase;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @author Avalon (avalon@iiteam.net)
  * @since 17.05.2019
+ * @since 08.14.2025
  */
-public class ContainerSkycartStation extends ContainerIEBase<TileEntitySkyCartStation>
+public class ContainerSkycartStation extends ContainerIIBase<TileEntitySkyCartStation>
 {
+
+	public Slot inputSlot;
+
 	public ContainerSkycartStation(EntityPlayer player, TileEntitySkyCartStation tile)
 	{
-		super(player.inventory, tile);
-		for(int i = 0; i < tile.getInventory().size(); i++)
-			this.addSlotToContainer(new Slot(this.inv, i, 52+(i%9)*18, 29+(i/9)*18)
-			{
-				@Override
-				public int getSlotStackLimit()
-				{
-					return 1;
-				}
+		super(player, tile);
+		this.addSlotArray(52+12-2, 32, 0, TileEntitySkyCartStation.GEAR_SLOTS, 5, MotorGearSlot::new);
 
-				@Override
-				public boolean isItemValid(ItemStack stack)
-				{
-					return stack.getItem() instanceof IMotorGear;
-				}
-			});
-		this.slotCount = tile.getInventory().size();
-		this.tile = tile;
+		this.addPlayerInventory(player.inventory, 8, 87);
 
-		for(int i = 0; i < 3; i++)
-			for(int j = 0; j < 9; j++)
-				addSlotToContainer(new Slot(player.inventory, j+i*9+9, 8+j*18, 87+i*18));
-		for(int i = 0; i < 9; i++)
-			addSlotToContainer(new Slot(player.inventory, i, 8+i*18, 145));
 	}
 }

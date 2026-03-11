@@ -27,7 +27,7 @@ import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler;
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler.IAdvancedTooltipItem;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
-import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationUtils;
+import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.item.data.ItemIIFunctionalCircuit.Circuits;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
@@ -168,7 +168,7 @@ public class ItemIIFunctionalCircuit extends ItemIISubItemsBase<Circuits> implem
 	@SideOnly(Side.CLIENT)
 	private <T> T getArrayElementForTime(T[] parameters)
 	{
-		float progress = IIAnimationUtils.getDebugProgress(parameters.length*20, 0);
+		float progress = AMTUtils.getDebugProgress(parameters.length*20, 0);
 		if(parameters.length==1)
 			return parameters[0];
 		else

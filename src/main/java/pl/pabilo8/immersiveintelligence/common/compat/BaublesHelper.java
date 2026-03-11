@@ -17,7 +17,7 @@ import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
-import pl.pabilo8.immersiveintelligence.client.render.IIBipedLayerRenderer;
+import pl.pabilo8.immersiveintelligence.client.render.entity.IIBipedWearableLayerRenderer;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 
 import javax.annotation.Nonnull;
@@ -41,7 +41,7 @@ public class BaublesHelper extends IICompatModule
 		public void onWornTick(ItemStack itemstack, EntityLivingBase player)
 		{
 			if(FMLCommonHandler.instance().getEffectiveSide()==Side.CLIENT)
-				IIBipedLayerRenderer.addWornAdvancedPowerpack(player, itemstack);
+				IIBipedWearableLayerRenderer.addWornAdvancedPowerpack(player, itemstack);
 			if(player instanceof EntityPlayer)
 				IIContent.itemAdvancedPowerPack.onArmorTick(player.world, (EntityPlayer)player, itemstack);
 		}

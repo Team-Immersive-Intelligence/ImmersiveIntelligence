@@ -1,0 +1,22 @@
+# Made by Pabilo8 with Blockbench
+
+newmtl emplacement
+map_Kd immersiveintelligence:blocks/multiblock/fortification/emplacement
+newmtl base_steel
+map_Kd immersiveintelligence:blocks/multiblock/fortification/base_steel
+newmtl base_concrete
+map_Kd immersiveintelligence:blocks/multiblock/fortification/base_concrete
+newmtl base_bricks
+map_Kd immersiveintelligence:blocks/multiblock/fortification/base_bricks
+newmtl base_wooden
+map_Kd immersiveintelligence:blocks/multiblock/fortification/base_wooden
+newmtl base_sandbags
+map_Kd immersiveintelligence:blocks/multiblock/fortification/base_sandbags
+newmtl common_thingies
+map_Kd immersiveintelligence:blocks/common/common_thingies
+newmtl common_rough_steel
+map_Kd immersiveintelligence:blocks/common/common_rough_steel
+newmtl common_steel
+map_Kd immersiveintelligence:blocks/common/common_steel
+newmtl common_bottom
+map_Kd immersiveintelligence:blocks/common/common_bottom

@@ -23,7 +23,9 @@ tasks.register('coreJar', Jar) {
 def libPrefix = 'META-INF/libraries'
 
 jar {
-    manifest {
+	dependsOn coreJar
+
+	manifest {
         attributes 'ContainedDeps': libPrefix + '/' + coreJar.archivePath.name
         attributes "FMLAT": modATPath
         attributes 'Maven-Artifact': modGroup + ':' + modName + ':' + modVersion

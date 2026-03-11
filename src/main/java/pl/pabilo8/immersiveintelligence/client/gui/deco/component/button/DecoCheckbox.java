@@ -2,12 +2,14 @@ package pl.pabilo8.immersiveintelligence.client.gui.deco.component.button;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiComponentDecoTextBase;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoTextBasedComponent;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoAlignment;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
-import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+
+import java.util.function.Consumer;
 
 /**
  * A standard checkbox of the Deco GUI system.<br>
@@ -18,20 +20,23 @@ import pl.pabilo8.immersiveintelligence.common.util.IIReference;
  * @ii-approved 0.3.1
  * @since 18.07.2021
  */
-public class DecoCheckbox extends GuiComponentDecoTextBase<DecoCheckbox>
+public class DecoCheckbox extends DecoTextBasedComponent<DecoCheckbox>
 {
 	private static int BOX_SIZE = 9;
 	private boolean checked = false;
+	private Consumer<Boolean> onToggle;
 
 	public DecoCheckbox(int x, int y)
 	{
 		super(x, y);
-		backgroundLocation = IIReference.RES_TEXTURES_DECO_COMPONENT_CHECKBOX;
+		backgroundLocation = DecoTextures.COMPONENT_CHECKBOX;
 		withSize(120, 11);
 		withOnPressed((gui, mouseButton, mouseX, mouseY) -> {
 			if(mouseButton==MouseButton.LEFT)
 			{
 				checked = !checked;
+				if(onToggle!=null)
+					onToggle.accept(checked);
 				return true;
 			}
 			return false;
@@ -52,6 +57,12 @@ public class DecoCheckbox extends GuiComponentDecoTextBase<DecoCheckbox>
 	public DecoCheckbox withChecked(boolean checked)
 	{
 		this.checked = checked;
+		return this;
+	}
+
+	public DecoCheckbox withOnToggle(Consumer<Boolean> onToggle)
+	{
+		this.onToggle = onToggle;
 		return this;
 	}
 

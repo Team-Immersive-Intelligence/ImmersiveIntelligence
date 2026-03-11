@@ -7,9 +7,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoBa
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoImage;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoImage.ImageAnimationDirection;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundBuilder.SlotStyle;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoGuiUtils;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoResource;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTemplate;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.*;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.tileentity.TileEntitySawmill;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerSawmill;
@@ -22,7 +20,7 @@ import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
  * @ii-approved 0.3.1
  * @since 10.07.2019
  */
-@DecoTemplate(name = "wooden_gearbox")
+@DecoTemplate(name = "wooden_gearbox", category = DecoGuiCategory.PRODUCTION_TILE)
 public class GuiSawmill extends DecoGui<TileEntitySawmill, ContainerSawmill>
 {
 	@DecoResource
@@ -38,10 +36,10 @@ public class GuiSawmill extends DecoGui<TileEntitySawmill, ContainerSawmill>
 	{
 		syncAnimatedParts(tile.vise, true);
 		startBackground()
-				.withBox(IIReference.GUI_BG_WOODEN, 8, 0, 176-24, 76)
-				.withStandaloneFrame(6+8, 12, 128+4-2, 64-8, IIReference.GUI_FRAME_CORNERS_BRASS, 4, true)
+				.withBox(DecoTextures.BG_WOODEN, DecoTextures.TEMPLATE_ROUND_WOODEN, 8, 0, 176-24, 76)
+				.withStandaloneFrame(6+8, 12, 128+4-2, 64-8, DecoTextures.FRAME_CORNERS_BRASS, 4, true)
 				.withTitleBar(tile)
-				.withBox(IIReference.GUI_BG_WOODEN, 0, 76, 176, 92)
+				.withBox(DecoTextures.BG_WOODEN, DecoTextures.TEMPLATE_ROUND_WOODEN, 0, 76, 176, 92)
 				.withInventorySlots(SlotStyle.IE_INPUT, container.slotInput)
 				.withInventorySlots(SlotStyle.VANILLA, container.slotSaw)
 				.withInventorySlots(SlotStyle.IE_OUTPUT, container.slotOutput)
@@ -52,8 +50,8 @@ public class GuiSawmill extends DecoGui<TileEntitySawmill, ContainerSawmill>
 
 		addComponents(
 				new DecoBarGroup(128+28-16+8, 0)
-						.withBar(b -> b.withTemplate(DecoGuiUtils.BAR_MECH_TORQUE_INPUT.apply(tile.rotation)))
-						.withBar(b -> b.withTemplate(DecoGuiUtils.BAR_MECH_SPEED_INPUT.apply(tile.rotation))),
+						.withBar(b -> b.withTemplate(DecoTemplates.BAR_MECH_TORQUE_INPUT.apply(tile.rotation)))
+						.withBar(b -> b.withTemplate(DecoTemplates.BAR_MECH_SPEED_INPUT.apply(tile.rotation))),
 
 				new DecoImage(66-10-1-14, 42-4)
 						.withSize(49, 12)

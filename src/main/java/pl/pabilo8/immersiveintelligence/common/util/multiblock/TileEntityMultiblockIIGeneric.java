@@ -14,6 +14,8 @@ import blusunrize.immersiveengineering.common.util.EnergyHelper.IIEInternalFluxH
 import blusunrize.immersiveengineering.common.util.Utils;
 import blusunrize.immersiveengineering.common.util.inventory.IEInventoryHandler;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -24,10 +26,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.items.CapabilityItemHandler;
-import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
-import pl.pabilo8.immersiveintelligence.api.data.IIDataHandlingUtils;
 import pl.pabilo8.immersiveintelligence.api.data.device.IDataDevice;
-import pl.pabilo8.immersiveintelligence.common.util.easynbt.NBTSerialisation;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IIIInventory;
@@ -35,6 +34,7 @@ import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPO
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.function.Function;
 
 /**
  * A standard II "medium-high tier" multiblock.<br>
@@ -49,14 +49,13 @@ import javax.annotation.Nullable;
 public abstract class TileEntityMultiblockIIGeneric<T extends TileEntityMultiblockIIGeneric<T>> extends TileEntityMultiblockIIBase<T>
 		implements IIIInventory, IIEInternalFluxHandler, IHammerInteraction, IRedstoneOutput, IDataDevice, IComparatorOverride
 {
-	@SyncNBT(name = "inventory", events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_GUI_CLOSED, SyncEvents.TILE_RECIPE_CHANGED})
+	@SyncNBT(name = "inventory", events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_RECIPE_CHANGED})
 	public NonNullList<ItemStack> inventory;
 	@SyncNBT(name = "ifluxEnergy")
 	public FluxStorageAdvanced energyStorage;
 	@SyncNBT(name = "redstone_control")
-	protected boolean redstoneControlInverted = false;
+	public boolean redstoneControlInverted = false;
 	private IEForgeEnergyWrapper wrapper = new IEForgeEnergyWrapper(this, null);
-
 
 	//--- Constructor, Initialization ---//
 
@@ -73,53 +72,6 @@ public abstract class TileEntityMultiblockIIGeneric<T extends TileEntityMultiblo
 		inventory = null;
 		energyStorage = null;
 		wrapper = null;
-	}
-
-	//--- NBT ---//
-
-	@Override
-	public void readCustomNBT(@Nonnull NBTTagCompound nbt, boolean descPacket)
-	{
-		super.readCustomNBT(nbt, descPacket);
-		if(isDummy())
-			return;
-
-		NBTSerialisation.synchroniseFor(this, (tag, tile) -> tag.deserializeAll(tile, nbt, false));
-	}
-
-	@Override
-	public void writeCustomNBT(@Nonnull NBTTagCompound nbt, boolean descPacket)
-	{
-		super.writeCustomNBT(nbt, descPacket);
-		if(isDummy())
-			return;
-
-		NBTSerialisation.synchroniseFor(this, (tag, tile) -> tag.serializeAll(tile, nbt));
-	}
-
-	@Override
-	public void receiveMessageFromServer(@Nonnull NBTTagCompound message)
-	{
-		super.receiveMessageFromServer(message);
-
-		if(isDummy()||isFullSyncMessage(message))
-			return;
-
-		NBTSerialisation.synchroniseFor(this, (tag, tile) -> tag.deserializeAll(tile, message, true));
-	}
-
-	protected void updateTileForTime()
-	{
-		NBTTagCompound nbt = new NBTTagCompound();
-		NBTSerialisation.synchroniseFor(this, (tag, tile) -> tag.serializeForTime(tile, nbt, (int)(world.getTotalWorldTime()%1000)));
-		sendNBTMessageClient(nbt);
-	}
-
-	protected void updateTileForEvent(SyncNBT.SyncEvents event)
-	{
-		NBTTagCompound nbt = new NBTTagCompound();
-		NBTSerialisation.synchroniseFor(this, (tag, tile) -> tag.serializeForEvent(tile, nbt, event));
-		sendNBTMessageClient(nbt);
 	}
 
 	//--- Redstone ---//
@@ -162,37 +114,6 @@ public abstract class TileEntityMultiblockIIGeneric<T extends TileEntityMultiblo
 		return 0;
 	}
 
-	//--- Data ---//
-
-	@Override
-	public final void onReceive(DataPacket packet, @Nullable EnumFacing side)
-	{
-		T master = master();
-		if(master!=null&&isPOI(MultiblockPOI.DATA_INPUT))
-			master.receiveData(packet, pos);
-	}
-
-
-	/**
-	 * Called on master when the TE receives data.
-	 *
-	 * @param packet data received
-	 */
-	public void receiveData(DataPacket packet, int pos)
-	{
-
-	}
-
-	/**
-	 * Used to send data easily.
-	 *
-	 * @param packet data received
-	 */
-	public void sendData(DataPacket packet, EnumFacing facing, int pos)
-	{
-		IIDataHandlingUtils.sendPacketAdjacently(packet, world, getBlockPosForPos(pos), facing);
-	}
-
 	//--- Inventory ---//
 	@Nonnull
 	@Override
@@ -232,7 +153,7 @@ public abstract class TileEntityMultiblockIIGeneric<T extends TileEntityMultiblo
 
 	@Nonnull
 	@Override
-	public final FluxStorage getFluxStorage()
+	public FluxStorage getFluxStorage()
 	{
 		T master = this.master();
 		if(master!=null)
@@ -265,6 +186,22 @@ public abstract class TileEntityMultiblockIIGeneric<T extends TileEntityMultiblo
 			T master = master();
 			if(master!=null&&world.getTotalWorldTime()%8==0)
 				master.sendNBTMessageClient(master.energyStorage.writeToNBT(new NBTTagCompound()));
+		}
+	}
+
+	public void handleItemEntityInput(Entity entity, Function<ItemStack, ItemStack> func)
+	{
+		if(!world.isRemote&&entity instanceof EntityItem)
+		{
+			ItemStack stack = ((EntityItem)entity).getItem();
+			if(stack.isEmpty())
+				return;
+
+			if(func!=null)
+			{
+				stack = func.apply(stack);
+				((EntityItem)entity).setItem(stack);
+			}
 		}
 	}
 
@@ -312,6 +249,6 @@ public abstract class TileEntityMultiblockIIGeneric<T extends TileEntityMultiblo
 
 	protected boolean isTankAvailable(int pos, int tank)
 	{
-		return false;
+		return true;
 	}
 }

@@ -42,7 +42,7 @@ public class IIWorldGen implements IWorldGenerator
 	public static HashMap<String, Boolean> retrogenMap = new HashMap<>();
 	public static ArrayListMultimap<Integer, ChunkPos> retrogenChunks = ArrayListMultimap.create();
 
-	public static IIWorldGenRubberTree worldGenRubberTree = new IIWorldGenRubberTree();
+	public static IIWorldGenRubberTree worldGenRubberTree;
 
 	public static OreGen addOreGen(String name, IBlockState state, int maxVeinSize, int minY, int maxY, int chunkOccurence, int weight, EnumOreType type)
 	{

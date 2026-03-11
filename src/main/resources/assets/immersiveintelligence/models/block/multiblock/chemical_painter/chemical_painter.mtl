@@ -1,0 +1,20 @@
+# Made by Pabilo8 with Blockbench
+
+newmtl chemical_painter
+map_Kd immersiveintelligence:blocks/multiblock/chemical_painter
+newmtl common_copper_cable
+map_Kd immersiveintelligence:blocks/common/common_copper_cable
+newmtl common_thingies
+map_Kd immersiveintelligence:blocks/common/common_thingies
+newmtl common_bottom
+map_Kd immersiveintelligence:blocks/common/common_bottom
+newmtl common_machinebase
+map_Kd immersiveintelligence:blocks/common/common_machinebase
+newmtl conveyor_off
+map_Kd immersiveengineering:blocks/conveyor_off
+newmtl conveyor
+map_Kd immersiveengineering:blocks/conveyor
+newmtl paint
+map_Kd immersiveintelligence:particle/paint
+newmtl vision
+map_Kd immersiveintelligence:particle/vision

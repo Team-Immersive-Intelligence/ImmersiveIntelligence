@@ -34,6 +34,8 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.rotary.CapabilityRotaryEnergy;
 import pl.pabilo8.immersiveintelligence.api.rotary.IRotaryEnergy;
 import pl.pabilo8.immersiveintelligence.api.rotary.IRotationalEnergyBlock;
@@ -166,7 +168,7 @@ public class TileEntityMechanicalPump extends TileEntityIEBase implements ITicka
 			IRotaryEnergy cap = te.getCapability(CapabilityRotaryEnergy.ROTARY_ENERGY, facing);
 			if(rotation.handleRotation(cap, facing))
 			{
-				IIPacketHandler.INSTANCE.sendToAllAround(new MessageRotaryPowerSync(rotation, 0, getPos()), IIPacketHandler.targetPointFromTile(this, 24));
+				IIPacketHandler.sendToClient(new MessageRotaryPowerSync(world, getPos(), 0, rotation));
 			}
 		}
 		else
@@ -178,7 +180,7 @@ public class TileEntityMechanicalPump extends TileEntityIEBase implements ITicka
 				{
 					rotation.grow(0, 0, 0.98f);
 				}
-				IIPacketHandler.INSTANCE.sendToAllAround(new MessageRotaryPowerSync(rotation, 0, getPos()), IIPacketHandler.targetPointFromTile(this, 24));
+				IIPacketHandler.sendToClient(new MessageRotaryPowerSync(world, getPos(), 0, rotation));
 			}
 		return b;
 	}
@@ -372,6 +374,7 @@ public class TileEntityMechanicalPump extends TileEntityIEBase implements ITicka
 		return super.getCapability(capability, facing);
 	}
 
+	@SideOnly(Side.CLIENT)
 	@Override
 	public String[] getOverlayText(EntityPlayer player, RayTraceResult mop)
 	{
@@ -391,13 +394,13 @@ public class TileEntityMechanicalPump extends TileEntityIEBase implements ITicka
 
 
 	@Override
-	public void updateRotationStorage(float rpm, float torque, int part)
+	public void updateRotationStorage(float speed, float torque, int partID)
 	{
 		if(world.isRemote&&!isDummy())
 		{
-			if(part==0)
+			if(partID==0)
 			{
-				rotation.setRotationSpeed(rpm);
+				rotation.setRotationSpeed(speed);
 				rotation.setTorque(torque);
 			}
 		}

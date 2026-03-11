@@ -38,7 +38,7 @@ public class ItemIIAmmoAutocannon extends ItemIIAmmoBase<EntityAmmoProjectile>
 	}
 
 	@Override
-	public float getComponentMultiplier()
+	public float getComponentSize()
 	{
 		return 0.125f;
 	}
@@ -65,13 +65,13 @@ public class ItemIIAmmoAutocannon extends ItemIIAmmoBase<EntityAmmoProjectile>
 	@Override
 	public int getCoreMaterialNeeded()
 	{
-		return 6;
+		return 4;
 	}
 
 	@Override
 	public float getCasingMass()
 	{
-		return 0.185f;
+		return 0.0625f;
 	}
 
 	@Override
@@ -96,7 +96,7 @@ public class ItemIIAmmoAutocannon extends ItemIIAmmoBase<EntityAmmoProjectile>
 	@Override
 	public float getDamage()
 	{
-		return 10;
+		return 12;
 	}
 
 	@Override

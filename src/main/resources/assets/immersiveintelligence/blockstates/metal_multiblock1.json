@@ -10,8 +10,6 @@
   },
   "variants": {
     "type": {
-      "redstone_data_interface": {
-      }
     },
     "facing": {
       "north": {

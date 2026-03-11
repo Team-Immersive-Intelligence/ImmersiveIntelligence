@@ -135,7 +135,7 @@ public abstract class EntityAmmoBase<T extends EntityAmmoBase<? super T>> extend
 		this.fuseType = fuseType;
 		this.fuseParameter = fuseParameter;
 		this.components = components;
-		this.height = this.width = ammoType.getCaliber()/16f;
+		this.height = this.width = Math.max(0.25f, (ammoType.getCaliber()/16f));
 		float fraction = height/2f;
 		this.setEntityBoundingBox(this.aabb = new AxisAlignedBB(-fraction, -fraction, -fraction, fraction, fraction, fraction));
 	}
@@ -173,7 +173,7 @@ public abstract class EntityAmmoBase<T extends EntityAmmoBase<? super T>> extend
 			//Call the effect method on all components
 			for(Tuple<AmmoComponent, NBTTagCompound> component : components)
 				component.getFirst().onEffect(world, pos, dir,
-						coreType.getEffectShape(), tag, ammoType.getComponentMultiplier(), multiplier, owner);
+						coreType.getEffectShape(), tag, ammoType.getComponentSize(), multiplier, owner);
 			setDead();
 		}
 	}
@@ -220,7 +220,7 @@ public abstract class EntityAmmoBase<T extends EntityAmmoBase<? super T>> extend
 						.withString("component", t.getFirst().getName())
 						.withTag("nbt", t.getSecond())
 						.unwrap()
-		).collect(new NBTTagCollector()));
+		).collect(NBTTagCollector.collect()));
 		compound.setInteger("owner", owner==null?-1: owner.getEntityId());
 
 	}
@@ -324,7 +324,7 @@ public abstract class EntityAmmoBase<T extends EntityAmmoBase<? super T>> extend
 		components.stream().filter(component -> component.getFirst().isGlowing())
 				.map(component -> component.getFirst().getColor(component.getSecond()))
 				.map(color -> Light.builder().pos(this)
-						.radius(ammoType.getComponentMultiplier()*16f)
+						.radius(ammoType.getComponentSize()*16f)
 						.color(color.red/255f, color.green/255f, color.red/255f, color.alpha/255f)
 						.build()
 				).forEach(evt::add);

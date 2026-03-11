@@ -11,7 +11,7 @@ import javax.annotation.Nonnull;
 import java.nio.charset.StandardCharsets;
 
 /**
- * @author GabrielV(gabriel @ iiteam.net)
+ * @author GabrielV (gabriel@iiteam.net)
  * @ii-approved 0.3.1
  * @since 18.09.2024
  */

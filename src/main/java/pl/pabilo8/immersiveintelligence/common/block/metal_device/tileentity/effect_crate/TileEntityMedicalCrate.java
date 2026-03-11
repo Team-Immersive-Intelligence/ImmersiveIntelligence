@@ -22,10 +22,8 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.FluidTankProperties;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
-import pl.pabilo8.immersiveintelligence.client.render.metal_device.MedicalCrateRenderer;
+import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeTechTree;
+import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeUtils.UpgradeTier;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IIPotions;
@@ -46,6 +44,13 @@ public class TileEntityMedicalCrate extends TileEntityEffectCrate implements ITi
 	public static final Predicate<FluidStack> HEALTH_POTION = resource -> resource.getFluid()==IEContent.fluidPotion&&resource.tag!=null&&resource.tag.getString("Potion").equals("minecraft:regeneration");
 	public static final Predicate<FluidStack> BOOST_POTION = resource -> resource.getFluid()==IEContent.fluidPotion&&resource.tag!=null&&resource.tag.getString("Potion").equals("minecraft:absorption");
 	public static final Predicate<ItemStack> BOOST_POTION_ITEM = resource -> resource.getItem()==Items.GOLDEN_APPLE;
+
+	static
+	{
+		UpgradeTechTree.getTreeFor(TileEntityMedicalCrate.class)
+				.withUpgrade(IIContent.UPGRADE_INSERTER, UpgradeTier.TIER_1);
+	}
+
 	public FluidTank[] tanks = new FluidTank[]{
 			new FluidTank(mediCrateTankSize),
 			new FluidTank(mediCrateTankSize)
@@ -175,17 +180,10 @@ public class TileEntityMedicalCrate extends TileEntityEffectCrate implements ITi
 		return true;
 	}
 
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void renderWithUpgrades(MachineUpgrade... upgrades)
-	{
-		MedicalCrateRenderer.renderWithUpgrade(upgrades);
-	}
-
 	@Override
 	public boolean hasCapability(Capability<?> capability, EnumFacing facing)
 	{
-		if(hasUpgrade(IIContent.UPGRADE_INSERTER)&&facing==this.facing.getOpposite()&&capability==CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
+		if(isUpgradeInstalled(IIContent.UPGRADE_INSERTER)&&facing==this.facing.getOpposite()&&capability==CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
 			return true;
 		return super.hasCapability(capability, facing);
 	}
@@ -193,7 +191,7 @@ public class TileEntityMedicalCrate extends TileEntityEffectCrate implements ITi
 	@Override
 	public <T> T getCapability(Capability<T> capability, EnumFacing facing)
 	{
-		if(hasUpgrade(IIContent.UPGRADE_INSERTER)&&facing==this.facing.getOpposite()&&capability==CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
+		if(isUpgradeInstalled(IIContent.UPGRADE_INSERTER)&&facing==this.facing.getOpposite()&&capability==CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
 			return (T)fluidWrapper;
 		return super.getCapability(capability, facing);
 	}

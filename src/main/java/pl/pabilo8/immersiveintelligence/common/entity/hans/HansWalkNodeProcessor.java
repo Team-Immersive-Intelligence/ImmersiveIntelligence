@@ -1,6 +1,7 @@
 package pl.pabilo8.immersiveintelligence.common.entity.hans;
 
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityConveyorBelt;
+import blusunrize.immersiveengineering.common.blocks.metal.TileEntityConveyorVertical;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityCrusher;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityRazorWire;
 import com.google.common.collect.Lists;
@@ -327,6 +328,8 @@ public class HansWalkNodeProcessor extends WalkNodeProcessor
 			return PathNodeType.DAMAGE_CACTUS;
 
 		else if(te instanceof TileEntityConveyorBelt)
+			return PathNodeType.DANGER_OTHER;
+		else if(te instanceof TileEntityConveyorVertical)
 			return PathNodeType.DANGER_OTHER;
 		else if(te instanceof TileEntityCrusher)
 			return PathNodeType.DANGER_OTHER;

@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.inserter;
 
-import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import blusunrize.immersiveengineering.api.energy.wires.WireType;
 import blusunrize.immersiveengineering.common.util.FakePlayerUtil;
 import com.google.common.collect.ImmutableSet;
@@ -10,7 +9,6 @@ import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.entity.item.EntityMinecartEmpty;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.Tuple;
@@ -25,6 +23,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
+import pl.pabilo8.immersiveintelligence.api.data.IIDataHandlingUtils;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeItemStack;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
@@ -32,17 +31,12 @@ import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 import pl.pabilo8.immersiveintelligence.api.utils.MinecartBlockHelper;
 import pl.pabilo8.immersiveintelligence.api.utils.minecart.IMinecartBlockPickable;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Inserter;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Optional;
-import java.util.Set;
-import java.util.function.Function;
+import java.util.*;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -50,7 +44,7 @@ import java.util.function.Predicate;
  */
 public class TileEntityInserter extends TileEntityInserterBase
 {
-	public static final HashMap<String, Function<NBTTagCompound, InserterTask>> TASKS = new HashMap<>();
+	public static final HashMap<String, Supplier<InserterTask>> TASKS = new LinkedHashMap<>();
 	private static final Set<String> WIRES = ImmutableSet.of(WireType.LV_CATEGORY, WireType.MV_CATEGORY);
 
 	static
@@ -94,12 +88,11 @@ public class TileEntityInserter extends TileEntityInserterBase
 
 	@Nonnull
 	@Override
-	protected HashMap<String, Function<NBTTagCompound, InserterTask>> getAvailableTasks()
+	public HashMap<String, Supplier<InserterTask>> getAvailableTasks()
 	{
 		return TASKS;
 	}
 
-	// TODO: 21.12.2021 sounds
 	@SideOnly(Side.CLIENT)
 	@Override
 	protected void handleSounds()
@@ -117,64 +110,30 @@ public class TileEntityInserter extends TileEntityInserterBase
 		}*/
 	}
 
-	// TODO: 21.12.2021 compat
 	@Override
 	public void onPacketReceive(DataPacket packet)
 	{
 		super.onPacketReceive(packet);
 
-		DataType c = packet.get('c');
-		DataType m = packet.get('m');
-		DataType s = packet.get('s');
-		DataType a = packet.get('a');
+		IIDataHandlingUtils.expectingStringParam('c', packet, command -> {
+			DataType m = packet.get('m');
+			//(optional) {stack} or string
+			DataType s = packet.get('s');
+			//action: item, place_block, minecart_in, minecart_out, etc.
+			DataType a = packet.get('a');
+			//(optional) input distance - int
+			DataType i = packet.get('i');
+			//(optional) output distance - int
+			DataType o = packet.get('o');
 
-		DataType i = packet.get('i');
-		DataType o = packet.get('o');
-
-		//old inserter compat
-		if(m.toString().equals("set")||m.toString().equals("add"))
-		{
-			DataTypeInteger count = packet.getVarInType(DataTypeInteger.class, c);
-			IngredientStack ss;
-			if(packet.has('s'))
-			{
-				ss = new IngredientStack(packet.getVarInType(DataTypeItemStack.class, s).value);
-				ss.inputSize = count.value;
-			}
-			else
-				ss = new IngredientStack("*", count.value);
-
-
-			InserterTaskItem task = new InserterTaskItem(ss, null, null);
-			task.overrideTakeAmount = 1;
-			task.isJob = false;
-			tasks.add(task);
-		}
-		//new inserter
-		else
-		{
-			/*
-			c: command: add/remove/clear
-			a: action: item, place_block, minecart_in, minecart_out, etc.
-			s: (optional) {stack} or string
-			e: (optional) expires after @e items/MBs
-			t: (optional) override take amount
-
-			i: (optional) input direction - string or int
-			o: (optional) output direction - string or int
-
-			1: (optional) input distance - int
-			0: (optional) output distance - int
-
-			*/
-			switch(c.toString())
+			switch(command)
 			{
 				case "add":
 				{
 					if(packet.has('a')&&TASKS.containsKey(a.toString()))
 					{
-						Function<NBTTagCompound, InserterTask> fun = TASKS.get(a.toString());
-						InserterTask task = fun.apply(new NBTTagCompound());
+						Supplier<InserterTask> supplier = TASKS.get(a.toString());
+						InserterTask task = supplier.get();
 
 						//input facing, default null
 						if(packet.has('i'))
@@ -206,16 +165,16 @@ public class TileEntityInserter extends TileEntityInserterBase
 								task.facingOut = f;
 						}
 
-						//1 resembles I, and 0 resembles O
-						if(packet.get('1') instanceof DataTypeInteger)
-							task.distanceIn = MathHelper.clamp(((DataTypeInteger)packet.get('1')).value, -1, 2);
-						if(packet.get('0') instanceof DataTypeInteger)
-							task.distanceOut = MathHelper.clamp(((DataTypeInteger)packet.get('0')).value, -1, 2);
+						//1 resembles I, and 0 resembles O - set input and output distance
+						IIDataHandlingUtils.expectingIntegerParam('1', packet,
+								integer -> task.distanceIn = MathHelper.clamp(integer, -1, 2));
+						IIDataHandlingUtils.expectingIntegerParam('0', packet,
+								integer -> task.distanceOut = MathHelper.clamp(integer, -1, 2));
 
 						if(packet.has('s'))
-							task.stack = IIUtils.ingredientFromData(packet.get('s'));
+							task.stack = IIDataHandlingUtils.ingredientFromData(packet.get('s'));
 
-						//expires (requests - tasks ending after r amount of items)
+						//expires (requests - tasks expires after r amount of items)
 						if(packet.has('e'))
 						{
 
@@ -248,16 +207,14 @@ public class TileEntityInserter extends TileEntityInserterBase
 					if 'a', check if task name matches
 					*/
 					if(a instanceof DataTypeInteger)
-					{
 						tasks.remove(((DataTypeInteger)a).value);
-					}
 					else
 					{
 						Predicate<InserterTask> p;
 						if(s instanceof DataTypeString)
 							p = packerTask -> packerTask.stack.oreName.equals(s.toString());
 						else if(s instanceof DataTypeItemStack)
-							p = packerTask -> packerTask.stack.equals(IIUtils.ingredientFromData(s));
+							p = packerTask -> packerTask.stack.equals(IIDataHandlingUtils.ingredientFromData(s));
 						else
 							p = packerTask -> true;
 
@@ -273,11 +230,11 @@ public class TileEntityInserter extends TileEntityInserterBase
 					current = null;
 				}
 				break;
-
 			}
+		});
 
-			sendUpdate();
-		}
+
+		sendUpdate();
 
 	}
 
@@ -287,16 +244,9 @@ public class TileEntityInserter extends TileEntityInserterBase
 	 */
 	public static class InserterTaskItem extends InserterTask
 	{
-		public InserterTaskItem(IngredientStack stack, @Nullable EnumFacing facingIn, @Nullable EnumFacing facingOut)
+		public InserterTaskItem()
 		{
-			super(facingIn, facingOut);
-			this.stack = stack;
-		}
-
-		public InserterTaskItem(NBTTagCompound nbt)
-		{
-			super(nbt);
-			this.stack = IngredientStack.readFromNBT(((NBTTagCompound)nbt.getTag("stack")));
+			super();
 		}
 
 		@Override
@@ -322,14 +272,11 @@ public class TileEntityInserter extends TileEntityInserterBase
 			}
 
 			if(cap!=null)
-			{
 				if(in)
 				{
-					//take: overridden amount if specified
-					//else : if isn't job - inserter take amount,
-					//else: the most you can, either ins. take amount or items left
-					int toBeTaken = overrideTakeAmount!=-1?overrideTakeAmount: Math.min(tile.takeAmount, isJob?stack.inputSize: tile.takeAmount);
-
+					int toBeTaken = getAmountToBeTaken(tile);
+					if(toBeTaken <= 0)
+						return false;
 					//iterate all the slots,
 					for(int slot = 0; slot < cap.getSlots(); slot++)
 					{
@@ -351,7 +298,6 @@ public class TileEntityInserter extends TileEntityInserterBase
 				}
 				else
 					return ItemHandlerHelper.insertItem(cap, tile.inventory.get(0), true).isEmpty();
-			}
 			return false;
 		}
 
@@ -377,13 +323,12 @@ public class TileEntityInserter extends TileEntityInserterBase
 			}
 
 			if(cap!=null)
-			{
 				if(in)
 				{
-					//take: overridden amount if specified
-					//else : if isn't a job - inserter take amount,
-					//else: the most you can, either ins. take amount or items left
-					int toBeTaken = overrideTakeAmount!=-1?overrideTakeAmount: Math.min(tile.takeAmount, !isJob?stack.inputSize: tile.takeAmount);
+					//Don't allow taking more than remaining amount for expiring tasks
+					int toBeTaken = getAmountToBeTaken(tile);
+					if(toBeTaken <= 0)
+						return false;
 
 					//iterate all the slots,
 					for(int slot = 0; slot < cap.getSlots(); slot++)
@@ -415,27 +360,12 @@ public class TileEntityInserter extends TileEntityInserterBase
 					tile.inventory.set(0, ItemHandlerHelper.insertItem(cap, tile.inventory.get(0), false));
 					return tile.inventory.get(0).isEmpty();
 				}
-			}
 
 			return false;
 		}
 
 		@Override
-		public boolean shouldContinue()
-		{
-			return stack.inputSize > 0;
-		}
-
-		@Override
-		public NBTTagCompound toNBT()
-		{
-			NBTTagCompound nbt = super.toNBT();
-			nbt.setTag("stack", stack.writeToNBT(new NBTTagCompound()));
-			return nbt;
-		}
-
-		@Override
-		String getName()
+		public String getName()
 		{
 			return "item";
 		}
@@ -452,9 +382,9 @@ public class TileEntityInserter extends TileEntityInserterBase
 	 */
 	public static class InserterTaskPlaceBlock extends InserterTaskItem
 	{
-		public InserterTaskPlaceBlock(NBTTagCompound nbt)
+		public InserterTaskPlaceBlock()
 		{
-			super(nbt);
+			super();
 		}
 
 		@Override
@@ -462,6 +392,9 @@ public class TileEntityInserter extends TileEntityInserterBase
 		{
 			if(!in)
 			{
+				// if expiring task already finished, don't place extra
+				if(!isJob&&this.stack.inputSize <= 0)
+					return false;
 				return true;
 			}
 			return super.canExecute(tile, world, posIn, posOut, facingIn, facingOut, in);
@@ -472,6 +405,10 @@ public class TileEntityInserter extends TileEntityInserterBase
 		{
 			if(!in)
 			{
+				// if expiring task already finished, don't place extra
+				if(!isJob&&this.stack.inputSize <= 0)
+					return false;
+
 				ItemStack stack = tile.inventory.get(0);
 				if(stack.isEmpty()||!(stack.getItem() instanceof ItemBlock))
 					return false;
@@ -505,7 +442,7 @@ public class TileEntityInserter extends TileEntityInserterBase
 		}
 
 		@Override
-		String getName()
+		public String getName()
 		{
 			return "place_block";
 		}
@@ -522,9 +459,9 @@ public class TileEntityInserter extends TileEntityInserterBase
 	 */
 	public static class InserterTaskFromMinecart extends InserterTaskItem
 	{
-		public InserterTaskFromMinecart(NBTTagCompound nbt)
+		public InserterTaskFromMinecart()
 		{
-			super(nbt);
+			super();
 		}
 
 		@Override
@@ -532,6 +469,10 @@ public class TileEntityInserter extends TileEntityInserterBase
 		{
 			if(in)
 			{
+				// if expiring task already finished, don't pickup extra carts
+				if(!isJob&&this.stack.inputSize <= 0)
+					return false;
+
 				Optional<EntityMinecart> first = world.getEntitiesWithinAABB(EntityMinecart.class, new AxisAlignedBB(posIn), entity -> entity instanceof IMinecartBlockPickable)
 						.stream()
 						.findFirst();
@@ -546,6 +487,10 @@ public class TileEntityInserter extends TileEntityInserterBase
 		{
 			if(in)
 			{
+				// if expiring task already finished, don't pickup extra carts
+				if(!isJob&&this.stack.inputSize <= 0)
+					return false;
+
 				Optional<EntityMinecart> first = world.getEntitiesWithinAABB(EntityMinecart.class, new AxisAlignedBB(posIn), entity -> entity instanceof IMinecartBlockPickable)
 						.stream()
 						.findFirst();
@@ -573,7 +518,7 @@ public class TileEntityInserter extends TileEntityInserterBase
 		}
 
 		@Override
-		String getName()
+		public String getName()
 		{
 			return "from_minecart";
 		}
@@ -590,9 +535,9 @@ public class TileEntityInserter extends TileEntityInserterBase
 	 */
 	public static class InserterTaskIntoMinecart extends InserterTaskItem
 	{
-		public InserterTaskIntoMinecart(NBTTagCompound nbt)
+		public InserterTaskIntoMinecart()
 		{
-			super(nbt);
+			super();
 		}
 
 		@Override
@@ -600,6 +545,10 @@ public class TileEntityInserter extends TileEntityInserterBase
 		{
 			if(!in)
 			{
+				// if expiring task already finished, don't load extra carts
+				if(!isJob&&this.stack.inputSize <= 0)
+					return false;
+
 				return world.getEntitiesWithinAABB(EntityMinecartEmpty.class, new AxisAlignedBB(posOut))
 						.stream()
 						.findFirst().isPresent();
@@ -612,6 +561,10 @@ public class TileEntityInserter extends TileEntityInserterBase
 		{
 			if(!in)
 			{
+				// if expiring task already finished, don't load extra carts
+				if(!isJob&&this.stack.inputSize <= 0)
+					return false;
+
 				Optional<EntityMinecartEmpty> first = world.getEntitiesWithinAABB(EntityMinecartEmpty.class, new AxisAlignedBB(posOut))
 						.stream()
 						.findFirst();
@@ -638,7 +591,7 @@ public class TileEntityInserter extends TileEntityInserterBase
 		}
 
 		@Override
-		String getName()
+		public String getName()
 		{
 			return "into_minecart";
 		}

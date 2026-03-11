@@ -5,14 +5,16 @@ import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler.Conn
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.util.EnumFacing.Axis;
-import net.minecraft.util.Tuple;
+import net.minecraftforge.client.model.obj.OBJModel;
 import pl.pabilo8.immersiveintelligence.api.rotary.IIRotaryUtils;
 import pl.pabilo8.immersiveintelligence.client.model.IIModelRegistry;
-import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer;
-import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer.RegisteredTileRenderer;
-import pl.pabilo8.immersiveintelligence.client.util.amt.*;
+import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
+import pl.pabilo8.immersiveintelligence.client.util.amt.animation.IIAnimationCompiledMap;
+import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTModel;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTChain;
+import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IITileRenderer;
+import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IITileRenderer.RegisteredTileRenderer;
 import pl.pabilo8.immersiveintelligence.common.block.rotary_device.tileentity.TileEntityWheelBase;
 import pl.pabilo8.immersiveintelligence.common.block.rotary_device.tileentity.TileEntityWheelIron;
 import pl.pabilo8.immersiveintelligence.common.block.rotary_device.tileentity.TileEntityWheelSteel;
@@ -30,7 +32,7 @@ import java.util.Set;
 @RegisteredTileRenderer(name = "mechanical/steel_wheel", clazz = TileEntityWheelSteel.class)
 public class WheelRenderer extends IITileRenderer<TileEntityWheelBase>
 {
-	AMT[] models;
+	private AMTModel model;
 	private IIAnimationCompiledMap rotationClockwise, rotationCounterCw;
 
 	@Override
@@ -43,8 +45,7 @@ public class WheelRenderer extends IITileRenderer<TileEntityWheelBase>
 		(clockwise?rotationClockwise: rotationCounterCw).apply(
 				IIRotaryUtils.getDisplayRotation(te, te.getNetwork().getEnergyStorage(), partialTicks));
 
-		for(AMT amt : models)
-			amt.render(tes, buf);
+		model.render(tes, buf);
 
 		Set<Connection> outputs = ImmersiveNetHandler.INSTANCE.getConnections(te.getWorld(), te.getPos());
 		//Make or get the connection model
@@ -56,12 +57,12 @@ public class WheelRenderer extends IITileRenderer<TileEntityWheelBase>
 				continue;
 			AMTChain chain = IIModelRegistry.INSTANCE.getMotorBeltConnectionModel(te, connection);
 			//Apply rotation
-			float rpm = (float)te.getOutputRPM();
-			if(rpm==0)
+			float rpm = (float)te.getOutputSpeed();
+			if(rpm < 1)
 				chain.setProgress(0);
 			else
 			{
-				float progress = IIAnimationUtils.getDebugProgress(rpm, partialTicks);
+				float progress = AMTUtils.getDebugProgress(rpm, partialTicks);
 				chain.setProgress(clockwise?(1f-progress): progress);
 			}
 			chain.render(tes, buf);
@@ -78,16 +79,16 @@ public class WheelRenderer extends IITileRenderer<TileEntityWheelBase>
 	}
 
 	@Override
-	public void compileModels(Tuple<IBlockState, IBakedModel> sModel)
+	public void compileModels(IBlockState state, OBJModel model)
 	{
-		models = IIAnimationUtils.getAMT(sModel, IIAnimationLoader.loadHeader(sModel.getSecond()));
-		rotationClockwise = IIAnimationCompiledMap.create(models, IIReference.RES_II.with("wheel/rotate_cw"));
-		rotationCounterCw = IIAnimationCompiledMap.create(models, IIReference.RES_II.with("wheel/rotate_ccw"));
+		this.model = new AMTModel(state, model);
+		rotationClockwise = IIAnimationCompiledMap.create(this.model, IIReference.RES_II.with("wheel/rotate_cw"));
+		rotationCounterCw = IIAnimationCompiledMap.create(this.model, IIReference.RES_II.with("wheel/rotate_ccw"));
 	}
 
 	@Override
 	protected void nullifyModels()
 	{
-		IIAnimationUtils.disposeOf(models);
+		AMTUtils.disposeOf(model);
 	}
 }

@@ -10,9 +10,9 @@ import pl.pabilo8.immersiveintelligence.api.rotary.MotorBeltType;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.item.mechanical.ItemIIMotorBelt.MotorBelt;
-import pl.pabilo8.immersiveintelligence.common.util.AdvancedSounds.MultiSound;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
+import pl.pabilo8.immersiveintelligence.common.util.sound.AdvancedSounds.MultiSound;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -75,7 +75,7 @@ public class IIMotorBeltType extends MotorBeltType
 	@Override
 	public MultiSound getLoopSound()
 	{
-		return getBeltCategory().equals(IIRotaryUtils.BELT_CATEGORY)?IISounds.motorBeltRunning: IISounds.trackRunning;
+		return getBeltCategory().equals(IIRotaryUtils.BELT_CATEGORY)?IISounds.motorBeltLoop: IISounds.trackLoop;
 	}
 
 	@Override

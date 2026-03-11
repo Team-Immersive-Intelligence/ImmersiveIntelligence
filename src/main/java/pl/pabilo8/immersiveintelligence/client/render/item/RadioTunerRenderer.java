@@ -7,18 +7,25 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraftforge.client.model.obj.OBJModel;
-import pl.pabilo8.immersiveintelligence.client.util.amt.*;
-import pl.pabilo8.immersiveintelligence.client.util.amt.IIItemRendererAMT.RegisteredItemRenderer;
+import pl.pabilo8.immersiveintelligence.client.util.amt.AMTLoader;
+import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
+import pl.pabilo8.immersiveintelligence.client.util.amt.animation.IIAnimationCompiledMap;
+import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTModel;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMT;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTHand;
+import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IIItemRendererAMT;
+import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IIItemRendererAMT.RegisteredItemRenderer;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.item.tools.ItemIIRadioTuner;
 import pl.pabilo8.immersiveintelligence.common.item.tools.ItemIIRadioTuner.RadioTuners;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
-import pl.pabilo8.immersiveintelligence.common.util.amt.IIModelHeader;
+import pl.pabilo8.immersiveintelligence.common.util.amt.AMTModelHeader;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 /**
@@ -31,7 +38,7 @@ public class RadioTunerRenderer extends IIItemRendererAMT<ItemIIRadioTuner>
 {
 	private static final ResLoc RES_ADVANCED_TUNER = ResLoc.of(IIReference.RES_ITEM_MODEL, "tools/advanced_radio_tuner").withExtension(ResLoc.EXT_OBJ);
 
-	AMT[] amtBasic, amtAdvanced;
+	AMTModel amtBasic, amtAdvanced;
 	IIAnimationCompiledMap handBasic, handAdvanced, gaugeBasic1, gaugeBasic2, gaugeAdvanced1, gaugeAdvanced2, gaugeAdvanced3;
 
 	public RadioTunerRenderer()
@@ -92,9 +99,7 @@ public class RadioTunerRenderer extends IIItemRendererAMT<ItemIIRadioTuner>
 	{
 		gaugeBasic1.apply((frequency%6)/6f);
 		gaugeBasic2.apply((float)Math.floor(frequency/((float)IIConfig.radioBasicMaxFrequency/6f))/6f);
-
-		for(AMT amt : amtBasic)
-			amt.render(tes, buf);
+		amtBasic.render(tes, buf);
 	}
 
 	private void renderAdvanced(float frequency, BufferBuilder buf, Tessellator tes)
@@ -103,24 +108,22 @@ public class RadioTunerRenderer extends IIItemRendererAMT<ItemIIRadioTuner>
 		gaugeAdvanced3.apply((frequency%8)/8f);
 		gaugeAdvanced2.apply((frequency%64)/64f);
 		gaugeAdvanced1.apply((float)Math.floor(frequency/((float)IIConfig.radioAdvancedMaxFrequency/64f))/64f);
-
-		for(AMT amt : amtAdvanced)
-			amt.render(tes, buf);
+		amtAdvanced.render(tes, buf);
 	}
 
 	@Override
-	public void compileModels(OBJModel model, IIModelHeader header)
+	public void compileModels(OBJModel model, AMTModelHeader header)
 	{
 		//Basic radio tuner
-		this.amtBasic = IIAnimationUtils.getAMTItemModel(model, header, header1 -> new AMT[]{
+		this.amtBasic = new AMTModel(DefaultVertexFormats.ITEM, model, header, header1 -> new AMT[]{
 				new AMTHand("hand", header, EnumHand.MAIN_HAND)
 		});
 		this.gaugeBasic1 = IIAnimationCompiledMap.create(this.amtBasic, ResLoc.of(IIReference.RES_II, "tools/basic_tuner/gauge1"));
 		this.gaugeBasic2 = IIAnimationCompiledMap.create(this.amtBasic, ResLoc.of(IIReference.RES_II, "tools/basic_tuner/gauge2"));
 
 		//Advanced radio tuner
-		this.amtAdvanced = IIAnimationUtils.getAMTItemModel(IIAnimationUtils.modelFromRes(RES_ADVANCED_TUNER),
-				IIAnimationLoader.loadHeader(RES_ADVANCED_TUNER.withExtension(ResLoc.EXT_OBJAMT)),
+		this.amtAdvanced = new AMTModel(DefaultVertexFormats.ITEM, RES_ADVANCED_TUNER,
+				AMTLoader.loadHeader(RES_ADVANCED_TUNER.withExtension(ResLoc.EXT_OBJAMT)),
 				header1 -> new AMT[]{
 						new AMTHand("hand", header, EnumHand.MAIN_HAND)
 				});
@@ -135,8 +138,8 @@ public class RadioTunerRenderer extends IIItemRendererAMT<ItemIIRadioTuner>
 	@Override
 	protected void nullifyModels()
 	{
-		IIAnimationUtils.disposeOf(this.amtBasic);
-		IIAnimationUtils.disposeOf(this.amtAdvanced);
+		AMTUtils.disposeOf(this.amtBasic);
+		AMTUtils.disposeOf(this.amtAdvanced);
 	}
 
 	@Override
@@ -144,6 +147,6 @@ public class RadioTunerRenderer extends IIItemRendererAMT<ItemIIRadioTuner>
 	{
 		super.registerSprites(map);
 //		IIAnimationLoader.preloadTexturesFromMTL(headerRes.withExtension(ResLoc.EXT_MTL), map);
-		IIAnimationLoader.preloadTexturesFromMTL(RES_ADVANCED_TUNER.withExtension(ResLoc.EXT_MTL), map);
+		AMTLoader.preloadTexturesFromMTL(RES_ADVANCED_TUNER.withExtension(ResLoc.EXT_MTL), map);
 	}
 }

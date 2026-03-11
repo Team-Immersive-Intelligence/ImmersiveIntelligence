@@ -11,6 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.crafting.CoagulatorRecipe;
+import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIMultiblockRecipe;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
@@ -37,8 +38,7 @@ public class CoagulatorTweaker
 			return;
 		}
 
-		CoagulatorRecipe r = new CoagulatorRecipe(stack, f1, f2, energy, mixingTime);
-		CraftTweakerAPI.apply(new Add(r));
+		CraftTweakerAPI.apply(new Add(stack, f1, f2, energy, mixingTime));
 	}
 
 	@ZenMethod
@@ -49,23 +49,31 @@ public class CoagulatorTweaker
 
 	private static class Add implements IAction
 	{
-		private final CoagulatorRecipe recipe;
+		private ItemStack itemOutput;
+		private FluidStack fluidInput;
+		private FluidStack coagulantInput;
+		private int energy;
+		private int mixingTime;
 
-		public Add(CoagulatorRecipe recipe)
+		public Add(ItemStack itemOutput, FluidStack fluidInput, FluidStack coagulantInput, int energy, int mixingTime)
 		{
-			this.recipe = recipe;
+			this.itemOutput = itemOutput;
+			this.fluidInput = fluidInput;
+			this.coagulantInput = coagulantInput;
+			this.energy = energy;
+			this.mixingTime = mixingTime;
 		}
 
 		@Override
 		public void apply()
 		{
-			CoagulatorRecipe.recipeList.add(recipe);
+			new CoagulatorRecipe(itemOutput, fluidInput, coagulantInput, energy, mixingTime);
 		}
 
 		@Override
 		public String describe()
 		{
-			return "Adding Coagulator Recipe for "+recipe.itemOutput.getDisplayName();
+			return "Adding Coagulator Recipe for "+itemOutput.getDisplayName();
 		}
 	}
 
@@ -82,7 +90,7 @@ public class CoagulatorTweaker
 		@Override
 		public void apply()
 		{
-			removedRecipes = CoagulatorRecipe.removeRecipesForOutput(output);
+			this.removedRecipes = IIMultiblockRecipe.removeRecipesByFilter(CoagulatorRecipe.class, recipe -> recipe.itemOutput.isItemEqual(output));
 		}
 
 		@Override

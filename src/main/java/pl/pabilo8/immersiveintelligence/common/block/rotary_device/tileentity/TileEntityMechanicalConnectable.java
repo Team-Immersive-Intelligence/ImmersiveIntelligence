@@ -36,7 +36,7 @@ import static blusunrize.immersiveengineering.api.energy.wires.WireApi.canMix;
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 29.12.2019
  */
-public abstract class TileEntityMechanicalConnectable extends TileEntityImmersiveConnectable implements IMotorBeltConnector, ITickable, IDirectionalTile, IHammerInteraction, IBlockBounds, IOBJModelCallback<IBlockState>, IRotationalEnergyBlock
+public abstract class TileEntityMechanicalConnectable extends TileEntityImmersiveConnectable implements IRotaryConnector, ITickable, IDirectionalTile, IHammerInteraction, IBlockBounds, IOBJModelCallback<IBlockState>, IRotationalEnergyBlock
 {
 	@Nonnull
 	protected MotorBeltNetwork beltNetwork = new MotorBeltNetwork().add(this);
@@ -63,16 +63,16 @@ public abstract class TileEntityMechanicalConnectable extends TileEntityImmersiv
 	protected boolean refreshBeltNetwork = false;
 
 	@Override
-	public void updateRotationStorage(float rpm, float torque, int part)
+	public void updateRotationStorage(float speed, float torque, int partID)
 	{
 		if(world.isRemote)
-			if(part==0)
+			if(partID==0)
 			{
-				energy.setRotationSpeed(rpm);
+				energy.setRotationSpeed(speed);
 				energy.setTorque(torque);
 			}
-			else if(part==1)
-				getNetwork().setClient(rpm, torque);
+			else if(partID==1)
+				getNetwork().setClient(speed, torque);
 	}
 
 	@Override
@@ -140,7 +140,7 @@ public abstract class TileEntityMechanicalConnectable extends TileEntityImmersiv
 				}
 			}
 
-			if(!refreshBeltNetwork)
+			if(!refreshBeltNetwork&&world.getTotalWorldTime()%10==0)
 			{
 				refreshBeltNetwork = true;
 				beltNetwork.removeFromNetwork(null);
@@ -169,8 +169,8 @@ public abstract class TileEntityMechanicalConnectable extends TileEntityImmersiv
 		markContainingBlockForUpdate(stateHere);
 		markBlockForUpdate(getConnectionPos(), stateHere);
 
-		//IIPacketHandler.INSTANCE.sendToAllAround(new MessageRotaryPowerSync(energy, 0, getPos()), Utils.targetPointFromTile(this, 32));
-		IIPacketHandler.INSTANCE.sendToAllAround(new MessageRotaryPowerSync(getNetwork().getEnergyStorage(), 1, getPos()), IIPacketHandler.targetPointFromTile(this, 32));
+		//IIPacketHandler.sendToClient(new MessageRotaryPowerSync(energy, 0, getPos()), Utils.targetPointFromTile(this, 32));
+		IIPacketHandler.sendToClient(new MessageRotaryPowerSync(world, getPos(), 1, getNetwork().getEnergyStorage()));
 
 	}
 

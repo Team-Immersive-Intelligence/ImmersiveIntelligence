@@ -1,0 +1,93 @@
+{
+  "comment": "Made by Pabilo8 with Blockbench",
+  "groups": {
+    "turen": {
+      "rotation": [
+        {
+          "time": 0.12729,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.43636,
+          "transform": [90, 0, 0]
+        },
+        {
+          "time": 1.00001,
+          "transform": [90, 0, 0]
+        }
+      ]
+    },
+    "launcher": {
+      "position": [
+        {
+          "time": 0.43636,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.78183,
+          "transform": [0, -12, 0]
+        },
+        {
+          "time": 1.00001,
+          "transform": [0, -12, 0]
+        }
+      ]
+    },
+    "missile_door1": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.21818,
+          "transform": [0, 0, -95]
+        },
+        {
+          "time": 0.78183,
+          "transform": [0, 0, -95]
+        },
+        {
+          "time": 1.00001,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "missile_door2": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.21818,
+          "transform": [0, 0, 95]
+        },
+        {
+          "time": 0.78183,
+          "transform": [0, 0, 95]
+        },
+        {
+          "time": 1.00001,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "launcher2": {
+      "position": [
+        {
+          "time": 0.21818,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.43636,
+          "transform": [0, -5, 0]
+        },
+        {
+          "time": 1.00001,
+          "transform": [0, -5, 0]
+        }
+      ]
+    }
+  }
+}

@@ -1,117 +1,90 @@
 package pl.pabilo8.immersiveintelligence.client.gui.block;
 
-import blusunrize.immersiveengineering.client.ClientUtils;
-import blusunrize.immersiveengineering.client.gui.GuiIEContainerBase;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.fluids.FluidStack;
-import org.lwjgl.opengl.GL11;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.ChemicalBath;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import net.minecraftforge.fml.common.Optional.Method;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoBar;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoFluidTank;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoImage;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoImage.ImageAnimationDirection;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundBuilder.SlotStyle;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.*;
+import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityChemicalBath;
+import pl.pabilo8.immersiveintelligence.common.compat.jei.JEIHelper;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerChemicalBath;
-import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
-
-import java.util.ArrayList;
+import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 10.07.2019
  */
-public class GuiChemicalBath extends GuiIEContainerBase
+@DecoTemplate(name = "chemical_bath", category = DecoGuiCategory.PRODUCTION_TILE)
+public class GuiChemicalBath extends DecoGui<TileEntityChemicalBath, ContainerChemicalBath>
 {
-	public static final String texture_chemical_bath = ImmersiveIntelligence.MODID+":textures/gui/chemical_bath.png";
-	TileEntityChemicalBath tile;
+	@DecoResource
+	public static ResLoc TEXTURE = IIReference.RES_II.with("gui/chemical_bath");
+	private DecoImage imageProgress1, imageProgress2;
 
 	public GuiChemicalBath(EntityPlayer player, TileEntityChemicalBath tile)
 	{
-		super(new ContainerChemicalBath(player, tile));
-		this.ySize = 168;
-		this.tile = tile;
-	}
-
-	/**
-	 * Draw the foreground layer for the GuiContainer (everything in front of the items)
-	 */
-	@Override
-	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
-	{
-		this.fontRenderer.drawString(I18n.format("tile."+ImmersiveIntelligence.MODID+".metal_multiblock.chemical_bath.name"), 8, 8, IIReference.COLOR_H1.getPackedRGB());
-	}
-
-	/**
-	 * Draws the background layer of this container (behind the items).
-	 */
-	@Override
-	protected void drawGuiContainerBackgroundLayer(float f, int mx, int my)
-	{
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		ClientUtils.bindTexture(texture_chemical_bath);
-
-		//Draw the tank background
-
-		this.drawTexturedModalRect(guiLeft+32, guiTop+39, 0, 168, 102, 32);
-
-		FluidStack fluid = tile.tanks[0].getFluid();
-		if(fluid!=null&&fluid.amount > 0)
-		{
-			//Draw fluid inside the tank
-			float tfluid = 1f-(fluid.amount/(float)tile.tanks[0].getCapacity());
-			ClientUtils.drawRepeatedFluidSprite(fluid, guiLeft+32, guiTop+39+(32*tfluid), 102, 32f*(1f-tfluid));
-		}
-
-		ClientUtils.bindTexture(texture_chemical_bath);
-
-		//Draw normal background
-
-		this.drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
-
-		IIClientUtils.drawPowerBar(guiLeft+161, guiTop+24, 7, 47, tile.getEnergyStored(null)/(float)tile.getMaxEnergyStored(null));
-
-		if(tile.active)
-		{
-			float progress5 = Math.min(1f, tile.processTime/(tile.processTimeMax*0.5f));
-			float progress10 = progress5==1?(((tile.processTime/((float)tile.processTimeMax))-0.5f)/0.5f): 0f;
-			this.drawTexturedModalRect(guiLeft+16, guiTop+58, 0, 200, Math.round(19f*progress5), 12);
-			this.drawTexturedModalRect(guiLeft+131, guiTop+57, 19, 200, Math.round(21f*progress10), 12);
-
-		}
+		super(player, tile, IIGUI.CHEMICAL_BATH);
 	}
 
 	@Override
-	public void drawScreen(int mx, int my, float partial)
+	public void onInit()
 	{
-		super.drawScreen(mx, my, partial);
-		this.renderHoveredToolTip(mx, my);
+		startBackground()
+				.withBox(DecoTextures.BG_STEEL_ROUGH, DecoTextures.TEMPLATE_SQUARE, 0, 0, 176, 76)
+				.withFrame(DecoTextures.FRAME_STEEL, 6, false)
+				.withTitleBar(tile)
+				.withBox(DecoTextures.BG_WOODEN, DecoTextures.TEMPLATE_ROUND_WOODEN, 0, 76, 176, 92)
+				.withInventorySlots(SlotStyle.IE_INPUT, container.slotInput, container.slotBucketInput)
+				.withInventorySlots(SlotStyle.IE_OUTPUT, container.slotOutput, container.slotBucketOutput)
+				.withInventorySlots(SlotStyle.VANILLA, container.playerInventory)
+				.withInventoryTitleBar()
+				.build();
 
-		//Thanks Flaxbeard!
-		ArrayList<String> tooltip = new ArrayList<>();
+		addComponents(
+				new DecoBar(176-8-8-2, -2)
+						.withTemplate(DecoTemplates.BAR_ELECTRIC_ENERGY.apply(tile.energyStorage)),
 
+				imageProgress1 = new DecoImage(20-4, 5+18-4+24+2+2)
+						.withSize(19, 12)
+						.withImageLocation(TEXTURE, true)
+						.withUV(128, 0, 80, 19, 80+12),
+				imageProgress2 = new DecoImage(120-4+18-2-1, 5+18-4+24+2+2)
+						.withSize(21, 12)
+						.withImageLocation(TEXTURE, true)
+						.withUV(128, 19, 80, 19+21, 80+12),
+				new DecoImage(20-4, 5+18-4+24+2+2)
+						.withSize(19, 12)
+						.withImageLocation(TEXTURE, true)
+						.withUV(128, 0, 80-12, 19, 80-12+12)
+						.withAnimation(ImageAnimationDirection.LEFT_TO_RIGHT, DecoGuiUtils.getMultiblockProductionSingleProgress(tile, 0f, 0.5f)),
+				new DecoImage(120-4+18-2-1, 5+18-4+24+2+2)
+						.withSize(21, 12)
+						.withImageLocation(TEXTURE, true)
+						.withUV(128, 19, 80-12, 19+21, 80-12+12)
+						.withAnimation(ImageAnimationDirection.LEFT_TO_RIGHT, DecoGuiUtils.getMultiblockProductionSingleProgress(tile, 0.5f, 1f)),
 
-		if(isPointInRegion(161, 24, 7, 47, mx, my))
-			tooltip.add(IIUtils.getPowerLevelString(tile));
+				new DecoFluidTank(32, 39-10)
+						.withFluidTank(tile.tank)
+						.withTankMask(TEXTURE, 102, 32, 128, new int[]{0, 102, 0, 32}),
+				new DecoImage(32-2, 39-10-2)
+						.withSize(106, 36)
+						.withImageLocation(TEXTURE, true)
+						.withUV(128, 0, 32, 106, 32+36)
 
-		FluidStack fluid = tile.tanks[0].getFluid();
-		if(fluid!=null&&fluid.amount > 0)
-		{
-			float tfluid = 1f-(fluid.amount/(float)tile.tanks[0].getCapacity());
-			if(isPointInRegion(32, 39+(int)(32*tfluid), 102, (int)(32*(1f-tfluid)), mx, my))
-			{
-				if(!(
-						IIMath.isPointInTriangle(30, 57, 30, 70, 43, 70, mx-guiLeft, my-guiTop)||
-								IIMath.isPointInTriangle(122, 70, 135, 70, 135, 57, mx-guiLeft, my-guiTop)))
-					ClientUtils.addFluidTooltip(fluid, tooltip, ChemicalBath.fluidCapacity);
-			}
-		}
+		);
+	}
 
-		if(!tooltip.isEmpty())
-		{
-			ClientUtils.drawHoveringText(tooltip, mx, my, fontRenderer, guiLeft+xSize, -1);
-			RenderHelper.enableGUIStandardItemLighting();
-		}
+	@Override
+	@Method(modid = "jei")
+	public void onInitJEICompat()
+	{
+		JEIHelper.addRecipesDecoGuiLink(this.imageProgress1, "ii.bathing");
+		JEIHelper.addRecipesDecoGuiLink(this.imageProgress2, "ii.bathing");
 	}
 }

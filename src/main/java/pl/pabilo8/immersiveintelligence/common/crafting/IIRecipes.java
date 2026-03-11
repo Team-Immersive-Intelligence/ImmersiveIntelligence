@@ -3,6 +3,7 @@ package pl.pabilo8.immersiveintelligence.common.crafting;
 import blusunrize.immersiveengineering.api.ApiUtils;
 import blusunrize.immersiveengineering.api.IEApi;
 import blusunrize.immersiveengineering.api.crafting.*;
+import blusunrize.immersiveengineering.common.Config.IEConfig.Machines;
 import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.blocks.metal.BlockTypes_MetalDecoration0;
 import blusunrize.immersiveengineering.common.blocks.metal.BlockTypes_MetalDecoration2;
@@ -11,6 +12,7 @@ import blusunrize.immersiveengineering.common.blocks.metal.BlockTypes_MetalDevic
 import blusunrize.immersiveengineering.common.blocks.stone.BlockTypes_StoneDecoration;
 import blusunrize.immersiveengineering.common.blocks.wooden.BlockTypes_WoodenDevice0;
 import blusunrize.immersiveengineering.common.crafting.RecipeRGBColouration;
+import blusunrize.immersiveengineering.common.util.EnergyHelper;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.block.Block;
@@ -25,6 +27,7 @@ import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
+import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -35,7 +38,9 @@ import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.IForgeRegistryModifiable;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.api.LogisticTag;
 import pl.pabilo8.immersiveintelligence.api.PackerHandler;
+import pl.pabilo8.immersiveintelligence.api.PackerHandler.CapacitorChargeHandler;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseType;
@@ -43,6 +48,7 @@ import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.api.crafting.*;
 import pl.pabilo8.immersiveintelligence.api.crafting.PrintingRecipe.PrintFunction;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
+import pl.pabilo8.immersiveintelligence.api.upgrade.Upgrade;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.PrintingPress;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Sawmill;
@@ -53,7 +59,7 @@ import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIIConcreteDecor
 import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIIOre.Ores;
 import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIISmallCrate.IIBlockTypes_SmallCrate;
 import pl.pabilo8.immersiveintelligence.common.item.ItemIIMinecart.Minecarts;
-import pl.pabilo8.immersiveintelligence.common.item.ItemIIPrintedPage.SubItems;
+import pl.pabilo8.immersiveintelligence.common.item.ItemIIPrintedPage.PageType;
 import pl.pabilo8.immersiveintelligence.common.item.ItemIITracerPowder;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoBase;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoBase.AmmoParts;
@@ -177,7 +183,7 @@ public class IIRecipes
 		MixerRecipe.addRecipe(new FluidStack(IIContent.fluidBrine, 750),
 				new FluidStack(FluidRegistry.WATER, 750), new Object[]{"dustSalt"}, 3200);
 
-
+		recipeRegistry.register(new RecipeLogisticTagCraftingHandler().setRegistryName(ImmersiveIntelligence.MODID, "logi_tag_applying"));
 	}
 
 	/**
@@ -237,7 +243,7 @@ public class IIRecipes
 			@Override
 			public ItemStack apply(ItemStack input, DataPacket data)
 			{
-				return IIContent.itemPrintedPage.getStack(SubItems.TEXT,
+				return IIContent.itemPrintedPage.getStack(PageType.TEXT,
 						nbt -> nbt.withString("text", data.get('t').toString())
 				);
 			}
@@ -271,6 +277,64 @@ public class IIRecipes
 							.length()*PrintingPress.printInkUsage;
 				}
 				return new int[]{(int)c, (int)m, (int)y, (int)k};
+			}
+		});
+		new PrintingRecipe(new IngredientStack("pageEmpty"), "code", new PrintFunction()
+		{
+			@Override
+			public ItemStack apply(ItemStack input, DataPacket data)
+			{
+				return IIContent.itemPrintedPage.getStack(PageType.TEXT,
+						nbt -> nbt.withString("text", data.get('t').toString())
+				);
+			}
+
+			@Override
+			public int[] getInkTypesRequired(DataPacket data)
+			{
+				String text = data.get('t').toString();
+				return new int[]{0, 0, 0, text.length()*PrintingPress.printInkUsage};
+			}
+		});
+		//Data to Punchtape printing
+		new PrintingRecipe(new IngredientStack("punchtapeEmpty"), "punchtape", new PrintFunction()
+		{
+			@Override
+			public ItemStack apply(ItemStack input, DataPacket data)
+			{
+				return IIContent.itemPrintedPage.getStack(PageType.TEXT,
+						nbt -> nbt.withString("text", data.get('t').toString())
+				);
+			}
+
+			@Override
+			public int[] getInkTypesRequired(DataPacket data)
+			{
+				String text = data.get('t').toString();
+				return new int[]{0, 0, 0, text.length()*PrintingPress.printInkUsage};
+			}
+
+			@Nullable
+			@Override
+			public Upgrade getUpgradeRequired()
+			{
+				return IIContent.UPGRADE_PRESS_PUNCHTAPES;
+			}
+		});
+		//Logistic tag printing
+		new PrintingRecipe(new IngredientStack("pageEmpty"), "logi_tag", new PrintFunction()
+		{
+			@Override
+			public ItemStack apply(ItemStack input, DataPacket data)
+			{
+				LogisticTag logiTag = new LogisticTag(data);
+				return IIContent.itemLogisticTag.getStack(logiTag, 1);
+			}
+
+			@Override
+			public int[] getInkTypesRequired(DataPacket data)
+			{
+				return new int[]{0, 0, 0, PrintingPress.printInkUsageLogiTag};
 			}
 		});
 	}
@@ -377,12 +441,15 @@ public class IIRecipes
 		}
 
 		//Circuits
-		BathingRecipe.addRecipe(IIContent.itemMaterial.getStack(Materials.BASIC_CIRCUIT_BOARD_ETCHED), new IngredientStack("circuitBasicRaw"), FluidRegistry.getFluidStack("etching_acid", 500), 15000, 360);
-		BathingRecipe.addRecipe(IIContent.itemMaterial.getStack(Materials.ADVANCED_CIRCUIT_BOARD_ETCHED), new IngredientStack("circuitAdvancedRaw"), FluidRegistry.getFluidStack("etching_acid", 1000), 150000, 560);
-		BathingRecipe.addRecipe(IIContent.itemMaterial.getStack(Materials.PROCESSOR_CIRCUIT_BOARD_ETCHED), new IngredientStack("circuitProcessorRaw"), FluidRegistry.getFluidStack("etching_acid", 2000), 1500000, 720);
+		new BathingRecipe(IIContent.itemMaterial.getStack(Materials.BASIC_CIRCUIT_BOARD_ETCHED), new IngredientStack("circuitBasicRaw"),
+				FluidRegistry.getFluidStack("etching_acid", 500), 15000, 360, false);
+		new BathingRecipe(IIContent.itemMaterial.getStack(Materials.ADVANCED_CIRCUIT_BOARD_ETCHED), new IngredientStack("circuitAdvancedRaw"),
+				FluidRegistry.getFluidStack("etching_acid", 1000), 150000, 560, false);
+		new BathingRecipe(IIContent.itemMaterial.getStack(Materials.PROCESSOR_CIRCUIT_BOARD_ETCHED), new IngredientStack("circuitProcessorRaw"),
+				FluidRegistry.getFluidStack("etching_acid", 2000), 1500000, 720, false);
 
 //4x Vacuum tube + 1 x copper nugget = 2 x copper wire, 1 x iron plate, 1 x glass block
-		PrecisionAssemblerRecipe.addRecipe(
+		new PrecisionAssemblerRecipe(
 				new ItemStack(IEContent.itemMaterial, 4, 26),
 				new ItemStack(IEContent.itemMetal, 1, 20),
 
@@ -396,7 +463,7 @@ public class IIRecipes
 		);
 
 		//1x Basic Electronic Component =  2x vacuum tube + nickel plate + 4 x redstone dust
-		PrecisionAssemblerRecipe.addRecipe(
+		new PrecisionAssemblerRecipe(
 				IIContent.itemMaterial.getStack(Materials.BASIC_ELECTRONIC_ELEMENT),
 				ItemStack.EMPTY,
 
@@ -409,7 +476,7 @@ public class IIRecipes
 				1.0f
 		);
 
-		PrecisionAssemblerRecipe.addRecipe(
+		new PrecisionAssemblerRecipe(
 				IIContent.itemMaterial.getStack(Materials.ADVANCED_ELECTRON_TUBE),
 				ItemStack.EMPTY,
 
@@ -422,7 +489,7 @@ public class IIRecipes
 				1.25f
 		);
 
-		PrecisionAssemblerRecipe.addRecipe(
+		new PrecisionAssemblerRecipe(
 				IIContent.itemMaterial.getStack(Materials.ADVANCED_ELECTRONIC_ELEMENT),
 				ItemStack.EMPTY,
 
@@ -435,7 +502,7 @@ public class IIRecipes
 				1.25f
 		);
 
-		PrecisionAssemblerRecipe.addRecipe(
+		new PrecisionAssemblerRecipe(
 				IIContent.itemMaterial.getStack(Materials.TRANSISTOR, 4),
 				ItemStack.EMPTY,
 
@@ -448,7 +515,7 @@ public class IIRecipes
 				0.9f
 		);
 
-		PrecisionAssemblerRecipe.addRecipe(
+		new PrecisionAssemblerRecipe(
 				IIContent.itemMaterial.getStack(Materials.PROCESSOR_ELECTRONIC_ELEMENT),
 				IIContent.itemMaterialNugget.getStack(MaterialsNugget.SILICON),
 
@@ -464,7 +531,7 @@ public class IIRecipes
 
 	public static void addSiliconProcessingRecipes()
 	{
-		PrecisionAssemblerRecipe.addRecipe(
+		new PrecisionAssemblerRecipe(
 				IIContent.itemMaterialPlate.getStack(MaterialsPlate.SILICON),
 				ItemStack.EMPTY,
 
@@ -477,7 +544,7 @@ public class IIRecipes
 				3f
 		);
 
-		PrecisionAssemblerRecipe.addRecipe(
+		new PrecisionAssemblerRecipe(
 				IIContent.itemMaterialIngot.getStack(MaterialsIngot.SILICON),
 				ItemStack.EMPTY,
 
@@ -498,11 +565,11 @@ public class IIRecipes
 				3200
 		);
 
-		BathingRecipe.addRecipe(
+		new BathingRecipe(
 				IIContent.itemMaterialDust.getStack(MaterialsDust.QUARTZ),
 				new IngredientStack("dustQuartzDirty"),
 				new FluidStack(IIContent.fluidHydrofluoricAcid, 1000),
-				4200, 240
+				4200, 240, false
 		);
 
 		ArcFurnaceRecipe.addRecipe(
@@ -655,7 +722,7 @@ public class IIRecipes
 		}
 
 		//Crafting Components
-		PrecisionAssemblerRecipe.addRecipe(
+		new PrecisionAssemblerRecipe(
 				IIContent.itemMaterial.getStack(Materials.TUNGSTEN_GUN_BARREL),
 				ItemStack.EMPTY,
 				new IngredientStack[]{
@@ -672,7 +739,7 @@ public class IIRecipes
 		);
 
 		//Industrial Rifle
-		PrecisionAssemblerRecipe.addRecipe(
+		new PrecisionAssemblerRecipe(
 				new ItemStack(IIContent.itemRifle),
 				ItemStack.EMPTY,
 				new IngredientStack[]{
@@ -689,16 +756,16 @@ public class IIRecipes
 				},
 				32000,
 				1.2f
-		);
+		).setName("precision_rifle");
 	}
 
 	public static void addMiscIERecipes()
 	{
 		//Cheaper treated planks
-		BathingRecipe.addRecipe(new ItemStack(IEContent.blockTreatedWood, 12),
+		new BathingRecipe(new ItemStack(IEContent.blockTreatedWood, 12),
 				new IngredientStack("plankWood", 8),
 				new FluidStack(IEContent.fluidCreosote, 1000),
-				3200, 120
+				3200, 120, false
 		);
 
 		MetalPressRecipe.addRecipe(new ItemStack(IIContent.itemPrintedPage, 1, 0), new IngredientStack("paper"), new ItemStack(IEContent.itemMold, 1, 0), 600);
@@ -864,9 +931,9 @@ public class IIRecipes
 	public static void addConcreteRecipes()
 	{
 		//Concrete Bricks / Volksbeton
-		BathingRecipe.addRecipe(IIContent.blockConcreteDecoration.getStack(ConcreteDecorations.CONCRETE_BRICKS),
+		new BathingRecipe(IIContent.blockConcreteDecoration.getStack(ConcreteDecorations.CONCRETE_BRICKS),
 				new IngredientStack(new ItemStack(Blocks.BRICK_BLOCK)),
-				new FluidStack(FluidRegistry.getFluid("concrete"), 500), 1600, 120);
+				new FluidStack(FluidRegistry.getFluid("concrete"), 500), 1600, 120, false);
 		//Panzerconcrete / Panzerbeton
 		ArcFurnaceRecipe.addRecipe(IIContent.blockConcreteDecoration.getStack(ConcreteDecorations.STURDY_CONCRETE_BRICKS),
 				IIContent.blockConcreteDecoration.getStack(ConcreteDecorations.CONCRETE_BRICKS), ItemStack.EMPTY, 200, 2400,
@@ -888,14 +955,15 @@ public class IIRecipes
 				new DustStack("sand", 50),
 				100,
 				2000
-		);
+		).setName("sandbag");
 		new FillerRecipe(
 				IIContent.itemMaterial.getStack(Materials.SANDBAG),
 				new IngredientStack("fabricHemp"),
 				new DustStack("gravel", 40),
 				80,
 				2500
-		);
+		).setName("sandbag_gravel");
+		;
 	}
 
 	public static void addChemicalBathCleaningRecipes()
@@ -995,48 +1063,44 @@ public class IIRecipes
 
 	public static void addChemicalPainterRecipes()
 	{
-		// TODO: 14.10.2021 colored crates
-		// TODO: 14.10.2021 banners
-
 		//Vanilla Blocks
-
-		PaintingRecipe.addRecipe((rgb, stack) -> {
+		new PaintingRecipe((rgb, stack) -> {
 			//get closest approximated dye
 			return new ItemStack(Blocks.WOOL, 1, rgb.getDyeColor().getMetadata());
 		}, new IngredientStack(new ItemStack(Blocks.WOOL)), 512, 240, 125);
 
-		PaintingRecipe.addRecipe((rgb, stack) -> {
+		new PaintingRecipe((rgb, stack) -> {
 			//get closest approximated dye
 			return new ItemStack(Blocks.CARPET, 1, rgb.getDyeColor().getMetadata());
 		}, new IngredientStack(new ItemStack(Blocks.CARPET)), 512, 240, 50);
 
-		PaintingRecipe.addRecipe((rgb, stack) -> {
+		new PaintingRecipe((rgb, stack) -> {
 			//get closest approximated dye
 			return new ItemStack(Blocks.STAINED_GLASS, 1, rgb.getDyeColor().getMetadata());
 		}, new IngredientStack(new ItemStack(Blocks.GLASS)), 512, 240, 125);
 
-		PaintingRecipe.addRecipe((rgb, stack) -> {
+		new PaintingRecipe((rgb, stack) -> {
 			//get closest approximated dye
 			return new ItemStack(Blocks.STAINED_GLASS_PANE, 1, rgb.getDyeColor().getMetadata());
 		}, new IngredientStack(new ItemStack(Blocks.GLASS_PANE)), 512, 240, 125);
 
-		PaintingRecipe.addRecipe((rgb, stack) -> {
+		new PaintingRecipe((rgb, stack) -> {
 			//get closest approximated dye
 			return new ItemStack(Blocks.STAINED_HARDENED_CLAY, 1, rgb.getDyeColor().getMetadata());
 		}, new IngredientStack(new ItemStack(Blocks.HARDENED_CLAY)), 512, 240, 125);
 
-		PaintingRecipe.addRecipe((rgb, stack) -> {
+		new PaintingRecipe((rgb, stack) -> {
 			//get closest approximated dye
 			return new ItemStack(Items.BED, 1, rgb.getDyeColor().getMetadata());
 		}, new IngredientStack(new ItemStack(Items.BED)), 512, 240, 200);
 
 		//II / IE items
-		PaintingRecipe.addRecipe((rgb, stack) -> {
+		new PaintingRecipe((rgb, stack) -> {
 			IIContent.itemAdvancedPowerPack.setColor(stack, rgb.getPackedRGB());
 			return stack;
 		}, new IngredientStack(new ItemStack(IIContent.itemAdvancedPowerPack)), 8192, 340, 2000);
 
-		PaintingRecipe.addRecipe((rgb, stack) -> {
+		new PaintingRecipe((rgb, stack) -> {
 			Items.LEATHER_HELMET.setColor(stack, rgb.getPackedRGB());
 			return stack;
 		}, new IngredientStack(NonNullList.from(ItemStack.EMPTY,
@@ -1046,9 +1110,8 @@ public class IIRecipes
 				new ItemStack(Items.LEATHER_BOOTS)
 		)), 8192, 340, 2000);
 
-		//TODO: 15.10.2021 dyable LE armor
-		PaintingRecipe.addRecipe((rgb, stack) -> {
-			//IIContent.itemLightEngineerChestplate.setColor(stack,rgb);
+		new PaintingRecipe((rgb, stack) -> {
+			IIContent.itemLightEngineerChestplate.setColor(stack, rgb.getPackedRGB());
 			return stack;
 		}, new IngredientStack(NonNullList.from(ItemStack.EMPTY,
 				new ItemStack(IIContent.itemLightEngineerHelmet),
@@ -1062,7 +1125,7 @@ public class IIRecipes
 			ItemStack bulletStack = bullet.getAmmoStack(AmmoRegistry.MISSING_CORE, CoreType.SOFTPOINT, FuseType.CONTACT);
 			//clear nbt
 			bulletStack.setTagCompound(new NBTTagCompound());
-			PaintingRecipe.addRecipe((rgb, stack) -> {
+			new PaintingRecipe((rgb, stack) -> {
 				ItemStack ret = bullet.setPaintColor(stack, rgb);
 				ret.setCount(1);
 				return ret;
@@ -1078,166 +1141,163 @@ public class IIRecipes
 	private static void addBathingCleaningRecipe(ItemStack out, IngredientStack in, int amount, int energy, int time, boolean allowWater, boolean allowSulfuric, boolean allowHFl)
 	{
 		if(allowWater)
-			BathingRecipe.addWashingRecipe(out, in, new FluidStack(FluidRegistry.WATER, amount), energy, time);
+			new BathingRecipe(out, in, new FluidStack(FluidRegistry.WATER, amount), energy, time, true);
 		if(allowSulfuric)
-			BathingRecipe.addWashingRecipe(out, in, new FluidStack(IIContent.fluidSulfuricAcid, allowWater?amount/2: amount), allowWater?energy/2: energy, allowWater?time/2: time);
+			new BathingRecipe(out, in, new FluidStack(IIContent.fluidSulfuricAcid, allowWater?amount/2: amount), allowWater?energy/2: energy, allowWater?time/2: time, true);
 		if(allowHFl)
-			BathingRecipe.addWashingRecipe(out, in, new FluidStack(IIContent.fluidHydrofluoricAcid, amount/2), allowWater?energy/4: energy/2, allowWater?time/4: time/2);
+			new BathingRecipe(out, in, new FluidStack(IIContent.fluidHydrofluoricAcid, amount/2), allowWater?energy/4: energy/2, allowWater?time/4: time/2, true);
 	}
 
 	public static void addUpgradeRecipes()
 	{
 		//Effect Crates
-
 		IIContent.UPGRADE_INSERTER
-				.addStack(new IngredientStack(IIContent.itemPrecisionTool.getStack(PrecisionTools.INSERTER)))
-				.addStack(new IngredientStack("scaffoldingSteel"))
-				.setRequiredProgress(20000)
-				.setRequiredSteps(12);
+				.withCost(new IngredientStack(IIContent.itemPrecisionTool.getStack(PrecisionTools.INSERTER)))
+				.withCost(new IngredientStack("scaffoldingSteel"))
+				.withRequiredProgress(20000)
+				.withProgressStages(12);
 
 		IIContent.UPGRADE_MG_LOADER
-				.addStack(new IngredientStack("plateSteel", 8))
-				.setRequiredProgress(20000)
-				.setRequiredSteps(10);
+				.withCost(new IngredientStack("plateSteel", 8))
+				.withRequiredProgress(20000)
+				.withProgressStages(10);
 
 		//Sawmill
-
 		IIContent.UPGRADE_SAW_UNREGULATOR
-				.addStack(new IngredientStack(IIContent.itemMotorGear.getStack(MotorGear.STEEL)))
-				.addStack(new IngredientStack(new ItemStack(IEContent.itemMaterial, 1, 8)))
-				.addStack(new IngredientStack("stickSteel", 2))
-				.setRequiredProgress(32000);
+				.withCost(
+						new IngredientStack(IIContent.itemMotorGear.getStack(MotorGear.STEEL)),
+						new IngredientStack(new ItemStack(IEContent.itemMaterial, 1, 8)),
+						new IngredientStack("stickSteel", 2)
+				)
+				.withRequiredProgress(32000);
 
 		IIContent.UPGRADE_IMPROVED_GEARBOX
-				.addStack(new IngredientStack(IIContent.itemMotorGear.getStack(MotorGear.TUNGSTEN, 2)))
-				.addStack(new IngredientStack(new ItemStack(IEContent.itemMaterial, 1, 9)))
-				.addStack(new IngredientStack(new ItemStack(IEContent.blockMetalDecoration0, 2, BlockTypes_MetalDecoration0.LIGHT_ENGINEERING.getMeta())))
-				.setRequiredProgress(32000);
+				.withCost(new IngredientStack(IIContent.itemMotorGear.getStack(MotorGear.TUNGSTEN, 2)))
+				.withCost(new IngredientStack(new ItemStack(IEContent.itemMaterial, 1, 9)))
+				.withCost(new IngredientStack(new ItemStack(IEContent.blockMetalDecoration0, 2, BlockTypes_MetalDecoration0.LIGHT_ENGINEERING.getMeta())))
+				.withRequiredProgress(32000);
+
+		//Printing Press
+		IIContent.UPGRADE_PRESS_PUNCHTAPES.withRequiredProgress(32000);
+		IIContent.UPGRADE_PRESS_BATCHING.withRequiredProgress(32000);
+		IIContent.UPGRADE_PRESS_ENVELOPER.withRequiredProgress(32000);
 
 		//Packer
-
 		IIContent.UPGRADE_PACKER_FLUID
-				.addStack(new IngredientStack(new ItemStack(IEContent.blockMetalDevice0, 1, BlockTypes_MetalDevice0.FLUID_PUMP.getMeta())))
-				.addStack(new IngredientStack(new ItemStack(IEContent.blockMetalDevice0, 2, BlockTypes_MetalDevice0.BARREL.getMeta())))
-				.setRequiredProgress(20000);
+				.withCost(new IngredientStack(new ItemStack(IEContent.blockMetalDevice0, 1, BlockTypes_MetalDevice0.FLUID_PUMP.getMeta())))
+				.withCost(new IngredientStack(new ItemStack(IEContent.blockMetalDevice0, 2, BlockTypes_MetalDevice0.BARREL.getMeta())))
+				.withRequiredProgress(20000);
 
 		IIContent.UPGRADE_PACKER_ENERGY
-				.addStack(new IngredientStack(new ItemStack(IEContent.blockMetalDevice1, 1, BlockTypes_MetalDevice1.TESLA_COIL.getMeta())))
-				.addStack(new IngredientStack(new ItemStack(IEContent.blockMetalDevice0, 2, BlockTypes_MetalDevice0.CAPACITOR_MV.getMeta())))
-				.setRequiredProgress(20000);
+				.withCost(new IngredientStack(new ItemStack(IEContent.blockMetalDevice1, 1, BlockTypes_MetalDevice1.TESLA_COIL.getMeta())))
+				.withCost(new IngredientStack(new ItemStack(IEContent.blockMetalDevice0, 2, BlockTypes_MetalDevice0.CAPACITOR_MV.getMeta())))
+				.withRequiredProgress(20000);
 
 		IIContent.UPGRADE_PACKER_RAILWAY
-				.addStack(new IngredientStack("gravel", 3))
-				.addStack(new IngredientStack("rail", 3))
-				.setRequiredProgress(40000);
+				.withCost(new IngredientStack("gravel", 3))
+				.withCost(new IngredientStack("rail", 3))
+				.withRequiredProgress(40000);
 
 		IIContent.UPGRADE_PACKER_NAMING
-				.addStack(new IngredientStack("circuitBasic", 2))
-				.setRequiredProgress(20000);
+				.withCost(new IngredientStack("circuitBasic", 2))
+				.withRequiredProgress(20000);
 
 		//Radar
-
 		IIContent.UPGRADE_RADIO_LOCATORS
-				.addStack(new IngredientStack("plateSteel", 4))
-				.addStack(new IngredientStack(new ItemStack(IIContent.itemRadioTuner, 2, 1)))
-				.addStack(new IngredientStack(new ItemStack(IIContent.itemDataWireCoil, 10, 0)))
-				.setRequiredProgress(250000)
-				.setRequiredSteps(1);
+				.withCost(new IngredientStack("plateSteel", 4))
+				.withCost(new IngredientStack(new ItemStack(IIContent.itemRadioTuner, 2, 1)))
+				.withCost(new IngredientStack(new ItemStack(IIContent.itemDataWireCoil, 10, 0)))
+				.withRequiredProgress(250000);
 
 		//Gates
 		IIContent.UPGRADE_REDSTONE_ACTIVATION
-				.addStack(new IngredientStack(new ItemStack(IEContent.blockMetalDecoration0, 4, BlockTypes_MetalDecoration0.LIGHT_ENGINEERING.getMeta())))
-				.addStack(new IngredientStack(new ItemStack(IEContent.blockMetalDecoration0, 2, BlockTypes_MetalDecoration0.RS_ENGINEERING.getMeta())))
-				.setRequiredProgress(20000);
+				.withCost(new IngredientStack(new ItemStack(IEContent.blockMetalDecoration0, 4, BlockTypes_MetalDecoration0.LIGHT_ENGINEERING.getMeta())))
+				.withCost(new IngredientStack(new ItemStack(IEContent.blockMetalDecoration0, 2, BlockTypes_MetalDecoration0.RS_ENGINEERING.getMeta())))
+				.withRequiredProgress(20000);
 		IIContent.UPGRADE_RAZOR_WIRE
-				.addStack(new IngredientStack(new ItemStack(IEContent.blockMetalDecoration2, 6, BlockTypes_MetalDecoration2.RAZOR_WIRE.getMeta())))
-				.setRequiredProgress(20000);
+				.withCost(new IngredientStack(new ItemStack(IEContent.blockMetalDecoration2, 6, BlockTypes_MetalDecoration2.RAZOR_WIRE.getMeta())))
+				.withRequiredProgress(20000);
 
 		//Weapons - Basic Tier
-
 		IIContent.UPGRADE_EMPLACEMENT_WEAPON_MACHINEGUN
-				.addStack(new IngredientStack(new ItemStack(IIContent.blockSandbags, 4))) //Sandbags
-				.addStack(new IngredientStack(new ItemStack(IIContent.itemMachinegun, 2)))
-				.addStack(new IngredientStack(new ItemStack(IIContent.blockMetalDevice, 2, IIBlockTypes_MetalDevice.AMMUNITION_CRATE.getMeta())))
-				.addStack(new IngredientStack("circuitBasic", 4))
-				.setRequiredProgress(40000);
+				.withCost(new IngredientStack(new ItemStack(IIContent.blockSandbags, 4))) //Sandbags
+				.withCost(new IngredientStack(new ItemStack(IIContent.itemMachinegun, 2)))
+				.withCost(new IngredientStack(new ItemStack(IIContent.blockMetalDevice, 2, IIBlockTypes_MetalDevice.AMMUNITION_CRATE.getMeta())))
+				.withCost(new IngredientStack("circuitBasic", 4))
+				.withRequiredProgress(40000);
 
 		IIContent.UPGRADE_EMPLACEMENT_WEAPON_IROBSERVER
-				.addStack(new IngredientStack("blockGlassRed", 1))
-				.addStack(new IngredientStack("blockGlass", 1))
-				.addStack(new IngredientStack("blockSteel", 2))
-				.addStack(new IngredientStack(new ItemStack(IEContent.blockMetalDecoration0, 2, BlockTypes_MetalDecoration0.LIGHT_ENGINEERING.getMeta())))
-				.addStack(new IngredientStack("circuitBasic", 6))
-				.setRequiredProgress(40000);
+				.withCost(new IngredientStack("blockGlassRed", 1))
+				.withCost(new IngredientStack("blockGlass", 1))
+				.withCost(new IngredientStack("blockSteel", 2))
+				.withCost(new IngredientStack(new ItemStack(IEContent.blockMetalDecoration0, 2, BlockTypes_MetalDecoration0.LIGHT_ENGINEERING.getMeta())))
+				.withCost(new IngredientStack("circuitBasic", 6))
+				.withRequiredProgress(40000);
 
 		//Weapons - Advanced Tier
-
-		//TODO: 17.07.2024 change costs when reworking emplacements
 		IIContent.UPGRADE_EMPLACEMENT_WEAPON_AUTOCANNON
-				.addStack(new IngredientStack(new ItemStack(IEContent.itemMaterial, 4, 14)))
-				.addStack(new IngredientStack("blockSteel", 2))
-				.addStack(new IngredientStack(new ItemStack(IEContent.itemMaterial, 3, 9)))
-				.addStack(new IngredientStack(new ItemStack(IIContent.blockMetalDevice, 1, IIBlockTypes_MetalDevice.AMMUNITION_CRATE.getMeta())))
-				.addStack(new IngredientStack("circuitAdvanced", 6))
-				.setRequiredProgress(80000);
+				.withCost(new IngredientStack(new ItemStack(IEContent.itemMaterial, 4, 14)))
+				.withCost(new IngredientStack("blockSteel", 2))
+				.withCost(new IngredientStack(new ItemStack(IEContent.itemMaterial, 3, 9)))
+				.withCost(new IngredientStack(new ItemStack(IIContent.blockMetalDevice, 1, IIBlockTypes_MetalDevice.AMMUNITION_CRATE.getMeta())))
+				.withCost(new IngredientStack("circuitAdvanced", 6))
+				.withRequiredProgress(80000);
 
 		IIContent.UPGRADE_EMPLACEMENT_WEAPON_HEAVY_CHEMTHROWER
-				.addStack(new IngredientStack(new ItemStack(IEContent.blockMetalDevice0, 2, BlockTypes_MetalDevice0.FLUID_PLACER.getMeta())))
-				.addStack(new IngredientStack(new ItemStack(IEContent.blockMetalDevice1, 4, BlockTypes_MetalDevice1.FLUID_PIPE.getMeta())))
-				.addStack(new IngredientStack(new ItemStack(IEContent.itemMaterial, 2, 14)))
-				.addStack(new IngredientStack("blockSteel", 1))
-				.addStack(new IngredientStack("circuitAdvanced", 6))
-				.setRequiredProgress(80000);
+				.withCost(new IngredientStack(new ItemStack(IEContent.blockMetalDevice0, 2, BlockTypes_MetalDevice0.FLUID_PLACER.getMeta())))
+				.withCost(new IngredientStack(new ItemStack(IEContent.blockMetalDevice1, 4, BlockTypes_MetalDevice1.FLUID_PIPE.getMeta())))
+				.withCost(new IngredientStack(new ItemStack(IEContent.itemMaterial, 2, 14)))
+				.withCost(new IngredientStack("blockSteel", 1))
+				.withCost(new IngredientStack("circuitAdvanced", 6))
+				.withRequiredProgress(80000);
 
 		IIContent.UPGRADE_EMPLACEMENT_WEAPON_HEAVY_RAILGUN
-				.addStack(new IngredientStack(new ItemStack(IEContent.blockMetalDevice0, 2, BlockTypes_MetalDevice0.CAPACITOR_HV.getMeta())))
-				.addStack(new IngredientStack(new ItemStack(IEContent.blockMetalDecoration0, 1, BlockTypes_MetalDecoration0.COIL_HV.getMeta())))
-				.addStack(new IngredientStack("blockSteel", 1))
-				.addStack(new IngredientStack(new ItemStack(IEContent.itemMaterial, 2, 9)))
-				.addStack(new IngredientStack(new ItemStack(IIContent.blockMetalDevice, 1, IIBlockTypes_MetalDevice.AMMUNITION_CRATE.getMeta())))
-				.addStack(new IngredientStack("circuitAdvanced", 6))
-				.setRequiredProgress(80000);
+				.withCost(new IngredientStack(new ItemStack(IEContent.blockMetalDevice0, 2, BlockTypes_MetalDevice0.CAPACITOR_HV.getMeta())))
+				.withCost(new IngredientStack(new ItemStack(IEContent.blockMetalDecoration0, 1, BlockTypes_MetalDecoration0.COIL_HV.getMeta())))
+				.withCost(new IngredientStack("blockSteel", 1))
+				.withCost(new IngredientStack(new ItemStack(IEContent.itemMaterial, 2, 9)))
+				.withCost(new IngredientStack(new ItemStack(IIContent.blockMetalDevice, 1, IIBlockTypes_MetalDevice.AMMUNITION_CRATE.getMeta())))
+				.withCost(new IngredientStack("circuitAdvanced", 6))
+				.withRequiredProgress(80000);
 
 		IIContent.UPGRADE_EMPLACEMENT_WEAPON_TESLA
-				.addStack(new IngredientStack(new ItemStack(IEContent.blockMetalDevice0, 8, BlockTypes_MetalDevice0.CAPACITOR_HV.getMeta())))
-				.addStack(new IngredientStack(new ItemStack(IEContent.blockMetalDecoration0, 8, BlockTypes_MetalDecoration0.COIL_HV.getMeta())))
-				.addStack(new IngredientStack("circuitAdvanced", 6))
-				.setRequiredProgress(120000);
+				.withCost(new IngredientStack(new ItemStack(IEContent.blockMetalDevice0, 8, BlockTypes_MetalDevice0.CAPACITOR_HV.getMeta())))
+				.withCost(new IngredientStack(new ItemStack(IEContent.blockMetalDecoration0, 8, BlockTypes_MetalDecoration0.COIL_HV.getMeta())))
+				.withCost(new IngredientStack("circuitAdvanced", 6))
+				.withRequiredProgress(120000);
 
-		/*
 		IIContent.UPGRADE_EMPLACEMENT_SPOTLIGHT_TOWER
-				.addStack(new IngredientStack(new ItemStack(IEContent.blockMetalDevice0, 2, BlockTypes_MetalDevice0.CAPACITOR_MV.getMeta())))
-				.setRequiredProgress(80000);
+				.withCost(new IngredientStack(new ItemStack(IEContent.blockMetalDevice0, 2, BlockTypes_MetalDevice0.CAPACITOR_MV.getMeta())))
+				.withRequiredProgress(80000);
 
 		IIContent.UPGRADE_EMPLACEMENT_WEAPON_MORTAR
-				.addStack(new IngredientStack((new ItemStack(IEContent.blockMetalDevice1, 2, BlockTypes_MetalDevice1.FLUID_PIPE.getMeta()))))
-				.setRequiredProgress(160000);
+				.withCost(new IngredientStack((new ItemStack(IEContent.blockMetalDevice1, 2, BlockTypes_MetalDevice1.FLUID_PIPE.getMeta()))))
+				.withRequiredProgress(160000);
 
 		IIContent.UPGRADE_EMPLACEMENT_WEAPON_LIGHT_HOWITZER
-				.addStack(new IngredientStack((new ItemStack(IEContent.blockMetalDevice1, 2, BlockTypes_MetalDevice1.FLUID_PIPE.getMeta()))))
-				.setRequiredProgress(160000);
+				.withCost(new IngredientStack((new ItemStack(IEContent.blockMetalDevice1, 2, BlockTypes_MetalDevice1.FLUID_PIPE.getMeta()))))
+				.withRequiredProgress(160000);
 
 		IIContent.UPGRADE_EMPLACEMENT_WEAPON_MLRS
-				.addStack(new IngredientStack((new ItemStack(IEContent.blockMetalDevice1, 2, BlockTypes_MetalDevice1.FLUID_PIPE.getMeta()))))
-				.setRequiredProgress(160000);
+				.withCost(new IngredientStack((new ItemStack(IEContent.blockMetalDevice1, 2, BlockTypes_MetalDevice1.FLUID_PIPE.getMeta()))))
+				.withRequiredProgress(160000);
 
-		IIContent.UPGRADE_EMPLACEMENT_WEAPON_GUIDED_MISSILE
-				.addStack(new IngredientStack((new ItemStack(IEContent.blockMetalDevice1, 2, BlockTypes_MetalDevice1.FLUID_PIPE.getMeta()))))
-				.setRequiredProgress(160000);
-		 */
+		IIContent.UPGRADE_EMPLACEMENT_WEAPON_GUIDED_MISSILE_LAUNCHER
+				.withCost(new IngredientStack((new ItemStack(IEContent.blockMetalDevice1, 2, BlockTypes_MetalDevice1.FLUID_PIPE.getMeta()))))
+				.withRequiredProgress(160000);
 
 		//Weapons - Processor Tier
 		IIContent.UPGRADE_EMPLACEMENT_WEAPON_CPDS
-				.addStack(new IngredientStack(new ItemStack(IEContent.itemMaterial, 8, 14)))
-				.addStack(new IngredientStack(new ItemStack(IEContent.itemMaterial, 2, 9)))
-				.addStack(new IngredientStack("blockSteel", 3))
-				.addStack(new IngredientStack("circuitProcessor", 6))
-				.setRequiredProgress(300000);
+				.withCost(new IngredientStack(new ItemStack(IEContent.itemMaterial, 8, 14)))
+				.withCost(new IngredientStack(new ItemStack(IEContent.itemMaterial, 2, 9)))
+				.withCost(new IngredientStack("blockSteel", 3))
+				.withCost(new IngredientStack("circuitProcessor", 6))
+				.withRequiredProgress(300000);
+
 	}
 
 	public static void addSmeltingRecipes()
 	{
-
 		FurnaceRecipes.instance().addSmeltingRecipe(
 				IIContent.blockOre.getStack(Ores.ZINC),
 				IIContent.itemMaterialIngot.getStack(MaterialsIngot.ZINC),
@@ -1413,7 +1473,7 @@ public class IIRecipes
 				new IngredientStack("dustVulcanizationCompound", 3),
 				new IngredientStack("dustSulfur", 2),
 				24000
-		);
+		).setName("rubber_belts");
 
 		VulcanizerRecipe.addRecipe(IIContent.itemMaterial.getStack(Materials.RUBBER_TIRE, 3),
 				IIContent.itemVulcanizerMold.getComparableStack(VulcanizerMolds.TIRE),
@@ -1421,18 +1481,18 @@ public class IIRecipes
 				new IngredientStack("dustVulcanizationCompound", 8),
 				new IngredientStack("dustSulfur", 3),
 				32000
-		);
+		).setName("rubber_tires");
 
 		//Rubber is a slow pace industry ^^
 		//Unless you build lots of coagulators, that is
-		CoagulatorRecipe.addRecipe(
+		new CoagulatorRecipe(
 				IIContent.itemMaterial.getStack(Materials.NATURAL_RUBBER, 8),
 				new FluidStack(IIContent.fluidLatex, 5500),
 				new FluidStack(IIContent.fluidFormicAcid, 500),
 				24000,
 				400,
 				2400
-		);
+		).setName("rubber");
 
 	}
 
@@ -1495,6 +1555,15 @@ public class IIRecipes
 						return IEApi.isAllowedInCrate(stack);
 					}
 
+					@Nonnull
+					@Override
+					public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate)
+					{
+						if(!isItemValid(slot, stack))
+							return stack;
+						return super.insertItem(slot, stack, simulate);
+					}
+
 					@Override
 					protected void onContentsChanged(int slot)
 					{
@@ -1534,6 +1603,15 @@ public class IIRecipes
 						return !(Block.getBlockFromItem(stack.getItem()) instanceof BlockShulkerBox);
 					}
 
+					@Nonnull
+					@Override
+					public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate)
+					{
+						if(!isItemValid(slot, stack))
+							return stack;
+						return super.insertItem(slot, stack, simulate);
+					}
+
 					@Override
 					protected void onContentsChanged(int slot)
 					{
@@ -1557,6 +1635,15 @@ public class IIRecipes
 						Item item = stack.getItem();
 						return item==IIContent.itemBulletMagazine.stackToSub(ss).ammo
 								&&!((IAmmoTypeItem<?, ?>)item).isBulletCore(stack);
+					}
+
+					@Nonnull
+					@Override
+					public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate)
+					{
+						if(!isItemValid(slot, stack))
+							return stack;
+						return super.insertItem(slot, stack, simulate);
 					}
 
 					@Override
@@ -1623,6 +1710,75 @@ public class IIRecipes
 		PackerHandler.registerFluid(
 				stack -> stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null),
 				stack -> stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null)
+		);
+
+		final ItemStack[] capacitors = new ItemStack[]{
+				new ItemStack(IEContent.blockMetalDevice0, 1, BlockTypes_MetalDevice0.CAPACITOR_LV.getMeta()),
+				new ItemStack(IEContent.blockMetalDevice0, 1, BlockTypes_MetalDevice0.CAPACITOR_MV.getMeta()),
+				new ItemStack(IEContent.blockMetalDevice0, 1, BlockTypes_MetalDevice0.CAPACITOR_HV.getMeta()),
+				new ItemStack(IEContent.blockMetalDevice0, 1, BlockTypes_MetalDevice0.CAPACITOR_CREATIVE.getMeta())
+		};
+
+		PackerHandler.registerEnergy(
+				stack -> capacitors[0].isItemEqual(stack),
+				stack -> new CapacitorChargeHandler(stack, Machines.capacitorLV_storage)
+		);
+
+		PackerHandler.registerEnergy(
+				stack -> capacitors[1].isItemEqual(stack),
+				stack -> new CapacitorChargeHandler(stack, Machines.capacitorMV_storage)
+		);
+
+		PackerHandler.registerEnergy(
+				stack -> capacitors[2].isItemEqual(stack),
+				stack -> new CapacitorChargeHandler(stack, Machines.capacitorHV_storage)
+		);
+
+		PackerHandler.registerEnergy(
+				stack -> capacitors[3].isItemEqual(stack),
+				stack -> new CapacitorChargeHandler(stack, Integer.MAX_VALUE, true)
+		);
+
+		PackerHandler.registerEnergy(
+				EnergyHelper::isFluxItem,
+				stack -> new IEnergyStorage()
+				{
+					@Override
+					public int receiveEnergy(int maxReceive, boolean simulate)
+					{
+						return EnergyHelper.insertFlux(stack, maxReceive, simulate);
+					}
+
+					@Override
+					public int extractEnergy(int maxExtract, boolean simulate)
+					{
+						return EnergyHelper.extractFlux(stack, maxExtract, simulate);
+					}
+
+					@Override
+					public int getEnergyStored()
+					{
+						return EnergyHelper.getEnergyStored(stack);
+					}
+
+					@Override
+					public int getMaxEnergyStored()
+					{
+						return EnergyHelper.getMaxEnergyStored(stack);
+					}
+
+					@Override
+					public boolean canExtract()
+					{
+						return true;
+					}
+
+					@Override
+					public boolean canReceive()
+					{
+						return true;
+					}
+				}
 		);
 	}
 

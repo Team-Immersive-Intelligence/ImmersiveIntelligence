@@ -12,13 +12,14 @@ import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Tuple;
+import net.minecraftforge.client.model.obj.OBJModel;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.client.model.builtin.IAmmoModel;
-import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer;
-import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer.RegisteredTileRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.ammunition.TripmineRenderer.TripmineItemStackRenderer;
-import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationUtils;
+import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
+import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IITileRenderer;
+import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IITileRenderer.RegisteredTileRenderer;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.mines.BlockIIMine.ItemBlockMineBase;
 import pl.pabilo8.immersiveintelligence.common.block.mines.tileentity.TileEntityTripMine;
@@ -51,7 +52,7 @@ public class TripmineRenderer extends IITileRenderer<TileEntityTripMine>
 			GlStateManager.enableBlend();
 			GlStateManager.blendFunc(SourceFactor.ONE, DestFactor.ZERO);
 
-			IIAnimationUtils.getBRD().getBlockModelRenderer().renderModelBrightnessColor(
+			AMTUtils.getBRD().getBlockModelRenderer().renderModelBrightnessColor(
 					ClientUtils.mc().getBlockRendererDispatcher().getModelForState(Blocks.TALLGRASS.getStateFromMeta(1)), 1f,
 					colors[0], colors[1], colors[2]);
 			GlStateManager.enableLighting();
@@ -69,9 +70,9 @@ public class TripmineRenderer extends IITileRenderer<TileEntityTripMine>
 	}
 
 	@Override
-	public void compileModels(Tuple<IBlockState, IBakedModel> sModel)
+	public void compileModels(IBlockState state, OBJModel model)
 	{
-		model = AmmoRegistry.getModel((ItemBlockMineBase)IIContent.blockTripmine.itemBlock);
+		this.model = AmmoRegistry.getModel((ItemBlockMineBase)IIContent.blockTripmine.itemBlock);
 	}
 
 	@Override

@@ -119,14 +119,13 @@ body:
       label: Immersive Intelligence Version
       description: Select Immersive Intelligence version.
       options:
-        - 0.4.0
-        - 0.3.2
         - 0.3.1
+        - 0.3.1-dev3-test1
         - 0.3.1-dev2
         - 0.3.1-dev1
         - 0.3.0
         - 0.2.2 and older
-      default: 3
+      default: 2
     validations:
       required: true
 

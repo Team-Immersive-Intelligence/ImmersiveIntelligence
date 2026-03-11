@@ -34,11 +34,14 @@ public class BlockIIMetalMultiblock1 extends BlockIIMultiblock<MetalMultiblocks1
 		setHardness(3.0F);
 		setResistance(15.0F);
 
-		addToTESRMap(MetalMultiblocks1.EMPLACEMENT, MetalMultiblocks1.FLAGPOLE, MetalMultiblocks1.FUEL_STATION,
-				MetalMultiblocks1.VEHICLE_WORKSHOP, MetalMultiblocks1.RADAR,
-				MetalMultiblocks1.VULCANIZER, MetalMultiblocks1.CHEMICAL_PAINTER, MetalMultiblocks1.COAGULATOR
-		);
+		addToTESRMap(MetalMultiblocks1.FUEL_STATION, MetalMultiblocks1.VEHICLE_WORKSHOP, MetalMultiblocks1.VULCANIZER);
 
+		setSubBlockLayer(MetalMultiblocks1.COAGULATOR, BlockRenderLayer.CUTOUT);
+		setSubBlockLayer(MetalMultiblocks1.FILLER, BlockRenderLayer.CUTOUT);
+		setSubBlockLayer(MetalMultiblocks1.RADAR, BlockRenderLayer.CUTOUT);
+		setSubBlockLayer(MetalMultiblocks1.FLAGPOLE, BlockRenderLayer.CUTOUT);
+		setSubBlockLayer(MetalMultiblocks1.EMPLACEMENT, BlockRenderLayer.CUTOUT);
+		setSubBlockLayer(MetalMultiblocks1.CHEMICAL_PAINTER, BlockRenderLayer.CUTOUT);
 		setSubBlockLayer(MetalMultiblocks1.PROJECTILE_WORKSHOP, BlockRenderLayer.CUTOUT);
 		setSubBlockLayer(MetalMultiblocks1.AMMUNITION_ASSEMBLER, BlockRenderLayer.CUTOUT);
 		setSubBlockLayer(MetalMultiblocks1.HEAVY_AMMUNITION_ASSEMBLER, BlockRenderLayer.CUTOUT);
@@ -49,26 +52,27 @@ public class BlockIIMetalMultiblock1 extends BlockIIMultiblock<MetalMultiblocks1
 	{
 		switch(state.getValue(property))
 		{
-			case PROJECTILE_WORKSHOP:
-			case AMMUNITION_ASSEMBLER:
-			case HEAVY_AMMUNITION_ASSEMBLER:
-			case REDSTONE_DATA_INTERFACE:
-			case FILLER:
-				return EnumBlockRenderType.MODEL;
-			default:
+			case FUEL_STATION:
+			case VEHICLE_WORKSHOP:
+			case STRATEGIC_COMMAND_TABLE:
+			case VULCANIZER:
 				return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
+			default:
+				return EnumBlockRenderType.MODEL;
 		}
 	}
 
 	public enum MetalMultiblocks1 implements IITileMultiblockEnum
 	{
-		@EnumMultiblockProvider(multiblock = MultiblockRedstoneInterface.class, tile = TileEntityRedstoneInterface.class)
+		@IIBlockProperties(needsCustomState = true)
+		@EnumMultiblockProvider(multiblock = MultiblockRedstoneInterface.class, tile = TileEntityRedstoneDataInterface.class)
 		REDSTONE_DATA_INTERFACE,
 
 		@IIBlockProperties(needsCustomState = true)
 		@EnumMultiblockProvider(multiblock = MultiblockFiller.class, tile = TileEntityFiller.class)
 		FILLER,
 
+		@IIBlockProperties(needsCustomState = true)
 		@EnumMultiblockProvider(multiblock = MultiblockCoagulator.class, tile = TileEntityCoagulator.class)
 		COAGULATOR,
 
@@ -79,21 +83,26 @@ public class BlockIIMetalMultiblock1 extends BlockIIMultiblock<MetalMultiblocks1
 		@EnumMultiblockProvider(multiblock = MultiblockAmmunitionAssembler.class, tile = TileEntityAmmunitionAssembler.class)
 		AMMUNITION_ASSEMBLER,
 
+		@IIBlockProperties(needsCustomState = true)
 		@EnumMultiblockProvider(multiblock = MultiblockFuelStation.class, tile = TileEntityFuelStation.class)
 		FUEL_STATION,
-		@EnumMultiblockProvider(multiblock = MultiblockVehicleWorkshop.class, tile = TileEntityVehicleWorkshop.class)
-		@IIBlockProperties(hidden = TernaryValue.TRUE)
-		VEHICLE_WORKSHOP,
 
+		@IIBlockProperties(hidden = TernaryValue.TRUE)
+		@EnumMultiblockProvider(multiblock = MultiblockVehicleWorkshop.class, tile = TileEntityVehicleWorkshop.class)
+		VEHICLE_WORKSHOP,
+		@IIBlockProperties(needsCustomState = true)
 		@EnumMultiblockProvider(multiblock = MultiblockFlagpole.class, tile = TileEntityFlagpole.class)
 		FLAGPOLE,
+		@IIBlockProperties(needsCustomState = true)
 		@EnumMultiblockProvider(multiblock = MultiblockRadar.class, tile = TileEntityRadar.class)
 		RADAR,
+		@IIBlockProperties(needsCustomState = true)
 		@EnumMultiblockProvider(multiblock = MultiblockEmplacement.class, tile = TileEntityEmplacement.class)
 		EMPLACEMENT,
 		@IIBlockProperties(hidden = TernaryValue.TRUE)
 		STRATEGIC_COMMAND_TABLE, //not implemented
 
+		@IIBlockProperties(needsCustomState = true)
 		@EnumMultiblockProvider(multiblock = MultiblockChemicalPainter.class, tile = TileEntityChemicalPainter.class)
 		CHEMICAL_PAINTER,
 		@EnumMultiblockProvider(multiblock = MultiblockVulcanizer.class, tile = TileEntityVulcanizer.class)

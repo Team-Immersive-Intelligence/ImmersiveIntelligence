@@ -6,13 +6,10 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.IItemHandler;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
@@ -20,11 +17,13 @@ import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.api.crafting.BulletComponentStack;
 import pl.pabilo8.immersiveintelligence.api.crafting.ProjectileWorkshopRecipe;
+import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIMultiblockRecipe;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
+import pl.pabilo8.immersiveintelligence.api.upgrade.IManagedUpgradableDevice;
+import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeManager;
+import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeUtils.MachineStyle;
 import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
-import pl.pabilo8.immersiveintelligence.api.utils.IUpgradableMachine;
-import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.ProjectileWorkshop;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
@@ -33,12 +32,10 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionBase;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionSingle;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockInteractablePart;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
-import pl.pabilo8.immersiveintelligence.common.util.upgrade_system.IUpgradeStorageMachine;
-import pl.pabilo8.immersiveintelligence.common.util.upgrade_system.UpgradeStorage;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
@@ -51,18 +48,22 @@ import java.util.Optional;
  * @since 04.03.2021
  */
 public class TileEntityProjectileWorkshop extends TileEntityMultiblockProductionSingle<TileEntityProjectileWorkshop, ProjectileWorkshopRecipe>
-		implements IUpgradeStorageMachine<TileEntityProjectileWorkshop>, IBooleanAnimatedPartsBlock
+		implements IManagedUpgradableDevice<TileEntityProjectileWorkshop>, IBooleanAnimatedPartsBlock
 {
 	public static final int SLOT_INPUT = 0, SLOT_COMPONENT_INPUT = 1, SLOT_OUTPUT = 2;
 
 	//for core production
 	@Nonnull
 	public IAmmoTypeItem<?, ?> producedAmmo = IIContent.itemAmmoHeavyArtillery;
+
 	@Nonnull
+	@SyncNBT(events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_CLIENT_MESSAGE})
 	public CoreType coreType = producedAmmo.getAllowedCoreTypes()[0];
+
 	//how many slots to fill
 	@SyncNBT
 	public int fillAmount = 1;
+	@SyncNBT
 	public BulletComponentStack componentInside = new BulletComponentStack();
 
 	/**
@@ -70,17 +71,23 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockProduction
 	 */
 	@SyncNBT
 	public FluidTank tanksFiller = new FluidTank(ProjectileWorkshop.componentTankCapacity);
-	public MultiblockInteractablePart lid1 = new MultiblockInteractablePart(14), lid2 = new MultiblockInteractablePart(16);
-	public UpgradeStorage<TileEntityProjectileWorkshop> upgradeStorage;
-	IItemHandler inputHandler = new IEInventoryHandler(1, this, 0, true, false); //pos 15
-	IItemHandler componentInputHandler = new IEInventoryHandler(1, this, 1, true, false); //pos 22
+	@SyncNBT
+	public MultiblockInteractablePart lid1, lid2;
+	@SyncNBT(name = "upgrades", events = SyncEvents.TILE_UPGRADES_MODIFIED)
+	public UpgradeManager<TileEntityProjectileWorkshop> upgrades;
+
+	IItemHandler inputHandler = new IEInventoryHandler(1, this, 0, true, false);
+	IItemHandler componentInputHandler = new IEInventoryHandler(1, this, 1, true, false);
 
 	public TileEntityProjectileWorkshop()
 	{
 		super(MultiblockProjectileWorkshop.INSTANCE);
-		energyStorage = new FluxStorageAdvanced(ProjectileWorkshop.energyCapacity);
-		inventory = NonNullList.withSize(3, ItemStack.EMPTY); //input, componentInput
-		upgradeStorage = new UpgradeStorage<>(this);
+		this.energyStorage = new FluxStorageAdvanced(ProjectileWorkshop.energyCapacity);
+		this.inventory = NonNullList.withSize(3, ItemStack.EMPTY);
+		this.upgrades = new UpgradeManager<>(this);
+
+		this.lid1 = new MultiblockInteractablePart(14);
+		this.lid2 = new MultiblockInteractablePart(16);
 	}
 
 	@Override
@@ -89,7 +96,7 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockProduction
 		super.dummyCleanup();
 		lid1 = lid2 = null;
 		tanksFiller = null;
-		upgradeStorage = null;
+		upgrades = null;
 		componentInside = null;
 	}
 
@@ -99,9 +106,10 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockProduction
 		//Update breadbox lid animations
 		lid1.update();
 		lid2.update();
+		upgrades.update();
 
 		//fill component tank
-		if(hasUpgrade(IIContent.UPGRADE_CORE_FILLER)&&!world.isRemote)
+		if(isUpgradeInstalled(IIContent.UPGRADE_CORE_FILLER)&&!world.isRemote)
 		{
 			if(!componentInputHandler.getStackInSlot(0).isEmpty())
 			{
@@ -136,10 +144,8 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockProduction
 
 		if(isDummy())
 			return;
-
-		componentInside.deserializeNBT(nbt.getCompoundTag("component_inside"));
-		coreType = CoreType.v(nbt.getString("core_type"));
-		upgradeStorage.getUpgradesFromNBT(nbt.getCompoundTag("upgrades"));
+		IAmmoTypeItem<?, ?> bb = AmmoRegistry.getAmmoItem(nbt.getString("produced_bullet"));
+		producedAmmo = bb==null?IIContent.itemAmmoHeavyArtillery: bb;
 	}
 
 	@Override
@@ -149,12 +155,7 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockProduction
 
 		if(isDummy())
 			return;
-
-		nbt.setTag("component_inside", componentInside.serializeNBT());
 		nbt.setString("produced_bullet", producedAmmo.getName());
-		nbt.setString("core_type", coreType.getName());
-		nbt.setTag("upgrades", upgradeStorage.saveUpgradesToNBT());
-
 	}
 
 	@Override
@@ -164,27 +165,20 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockProduction
 
 		if(isDummy())
 			return;
-
-		if(message.hasKey("component_inside"))
-			componentInside.deserializeNBT(message.getCompoundTag("component_inside"));
 		if(message.hasKey("produced_bullet"))
 		{
-			IAmmoTypeItem bb = AmmoRegistry.getAmmoItem(message.getString("produced_bullet"));
+			IAmmoTypeItem<?, ?> bb = AmmoRegistry.getAmmoItem(message.getString("produced_bullet"));
 			producedAmmo = bb==null?IIContent.itemAmmoHeavyArtillery: bb;
 		}
-		if(message.hasKey("core_type"))
-			coreType = CoreType.v(message.getString("core_type"));
 	}
 
 	@Override
 	public void receiveMessageFromClient(NBTTagCompound message)
 	{
 		super.receiveMessageFromClient(message);
-		if(message.hasKey("core_type"))
-			coreType = CoreType.v(message.getString("core_type"));
 		if(message.hasKey("produced_bullet"))
 		{
-			IAmmoTypeItem bb = AmmoRegistry.getAmmoItem(message.getString("produced_bullet"));
+			IAmmoTypeItem<?, ?> bb = AmmoRegistry.getAmmoItem(message.getString("produced_bullet"));
 			producedAmmo = bb==null?IIContent.itemAmmoHeavyArtillery: bb;
 		}
 	}
@@ -211,11 +205,11 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockProduction
 	@Override
 	public boolean isStackValid(int slot, ItemStack stack)
 	{
-		if(slot==SLOT_COMPONENT_INPUT&&hasUpgrade(IIContent.UPGRADE_CORE_FILLER))
+		if(slot==SLOT_COMPONENT_INPUT&&isUpgradeInstalled(IIContent.UPGRADE_CORE_FILLER))
 			return AmmoRegistry.getAllComponents().stream().anyMatch(comp -> comp.getMaterial().matchesItemStackIgnoringSize(stack));
 		else if(slot==SLOT_INPUT)
 		{
-			if(hasUpgrade(IIContent.UPGRADE_CORE_FILLER))
+			if(isUpgradeInstalled(IIContent.UPGRADE_CORE_FILLER))
 				return stack.getItem() instanceof IAmmoTypeItem&&((IAmmoTypeItem<?, ?>)stack.getItem()).isBulletCore(stack);
 			else
 				return AmmoRegistry.getAllCores().stream().anyMatch(core -> core.getMaterial().matchesItemStackIgnoringSize(stack));
@@ -281,7 +275,8 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockProduction
 	@Override
 	protected IIMultiblockProcess<ProjectileWorkshopRecipe> getProcessByName(String name)
 	{
-		return TileEntityMultiblockProductionBase.findRecipeFromList(ProjectileWorkshopRecipe.class, name);
+		ProjectileWorkshopRecipe recipe = IIMultiblockRecipe.getRecipe(ProjectileWorkshopRecipe.class, name);
+		return recipe==null?null: new IIMultiblockProcess<>(recipe);
 	}
 
 	@Override
@@ -314,25 +309,18 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockProduction
 	@Override
 	public void onAnimationChangeClient(boolean state, int part)
 	{
-		if(part==0)
-			lid1.setState(state);
-		else
-			lid2.setState(state);
+		MultiblockInteractablePart.setStates(state, part, lid1, lid2);
 	}
 
 	@Override
 	public void onAnimationChangeServer(boolean state, int part)
 	{
-		if(part==0)
-			lid1.setState(state);
-		else
-			lid2.setState(state);
-
-		if((part==0?lid1: lid2).setState(state))
+		MultiblockInteractablePart changed = MultiblockInteractablePart.setStates(state, part, lid1, lid2);
+		if(changed!=null)
+		{
 			world.playSound(null, getPos(), state?IISounds.metalBreadboxOpen: IISounds.metalBreadboxClose, SoundCategory.BLOCKS, 0.5F, 1f);
-
-		IIPacketHandler.INSTANCE.sendToAllAround(new MessageBooleanAnimatedPartsSync(part, state, getPos()),
-				IIPacketHandler.targetPointFromPos(this.getPos(), this.world, 32));
+			IIPacketHandler.sendToClient(this, new MessageBooleanAnimatedPartsSync(changed, this));
+		}
 	}
 
 	@Override
@@ -380,49 +368,16 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockProduction
 
 	//--- IUpgradeStorageMachine ---//
 
+	@Nonnull
 	@Override
-	public UpgradeStorage<TileEntityProjectileWorkshop> getUpgradeStorage()
+	public UpgradeManager<TileEntityProjectileWorkshop> getUpgradeManager()
 	{
-		return upgradeStorage;
-	}
-
-	@Override
-	public boolean upgradeMatches(MachineUpgrade upgrade)
-	{
-		return upgrade==IIContent.UPGRADE_CORE_FILLER;
+		return upgrades;
 	}
 
 	@Override
-	public <T extends TileEntity & IUpgradableMachine> T getUpgradeMaster()
+	public MachineStyle getUpgradableMachineStyle()
 	{
-		return (T)master();
+		return MachineStyle.STEEL;
 	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void renderWithUpgrades(MachineUpgrade... upgrades)
-	{
-
-	}
-
-	public static class ProjectileWorkshopCoreMakingProcess extends IIMultiblockProcess<ProjectileWorkshopRecipe>
-	{
-		public ItemStack effect;
-
-		public ProjectileWorkshopCoreMakingProcess(ProjectileWorkshopRecipe recipe)
-		{
-			super(recipe);
-		}
-	}
-
-	public static class ProjectileWorkshopCoreFillingProcess extends IIMultiblockProcess<ProjectileWorkshopRecipe>
-	{
-		public ItemStack effect;
-
-		public ProjectileWorkshopCoreFillingProcess(ProjectileWorkshopRecipe recipe)
-		{
-			super(recipe);
-		}
-	}
-
 }

@@ -44,10 +44,7 @@ public abstract class BlockIIMine extends BlockIITileProvider<IIBlockTypes_Mine>
 		setHardness(0.25F);
 		setResistance(1.0F);
 		setLightOpacity(0);
-
 		IIContent.TILE_ENTITIES.add(tileClass);
-
-		addToTESRMap(IIBlockTypes_Mine.MAIN, IIBlockTypes_Mine.CORE);
 	}
 
 	@Override

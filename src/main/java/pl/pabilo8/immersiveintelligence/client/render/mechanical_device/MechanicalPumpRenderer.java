@@ -4,17 +4,15 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.block.model.IBakedModel;
-import net.minecraft.util.Tuple;
+import net.minecraftforge.client.model.obj.OBJModel;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.rotary.IIRotaryUtils;
-import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer;
-import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer.RegisteredTileRenderer;
-import pl.pabilo8.immersiveintelligence.client.util.amt.AMT;
-import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationCompiledMap;
-import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationLoader;
-import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationUtils;
+import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
+import pl.pabilo8.immersiveintelligence.client.util.amt.animation.IIAnimationCompiledMap;
+import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTModel;
+import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IITileRenderer;
+import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IITileRenderer.RegisteredTileRenderer;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.MechanicalPump;
 import pl.pabilo8.immersiveintelligence.common.block.rotary_device.tileentity.TileEntityMechanicalPump;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
@@ -28,8 +26,8 @@ import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 @RegisteredTileRenderer(name = "mechanical/pump", clazz = TileEntityMechanicalPump.class)
 public class MechanicalPumpRenderer extends IITileRenderer<TileEntityMechanicalPump>
 {
-	private static IIAnimationCompiledMap rotation, pumping;
-	private static AMT[] models = null;
+	private IIAnimationCompiledMap rotation, pumping;
+	private AMTModel model;
 
 	@Override
 	public void draw(TileEntityMechanicalPump te, BufferBuilder buf, float partialTicks, Tessellator tes)
@@ -54,24 +52,23 @@ public class MechanicalPumpRenderer extends IITileRenderer<TileEntityMechanicalP
 		applyStandardRotation(te.getFacing());
 
 		//render
-		for(AMT mod : models)
-			mod.render(tes, buf);
+		model.render(tes, buf);
 
 	}
 
 	@Override
-	public void compileModels(Tuple<IBlockState, IBakedModel> sModel)
+	public void compileModels(IBlockState state, OBJModel model)
 	{
-		models = IIAnimationUtils.getAMT(sModel, IIAnimationLoader.loadHeader(sModel.getSecond()));
+		this.model = new AMTModel(state, model);
 
-		rotation = IIAnimationCompiledMap.create(models, ResLoc.of(IIReference.RES_II, "mechanical_pump/rotation"));
-		pumping = IIAnimationCompiledMap.create(models, ResLoc.of(IIReference.RES_II, "mechanical_pump/pumping"));
+		this.rotation = IIAnimationCompiledMap.create(this.model, ResLoc.of(IIReference.RES_II, "mechanical_pump/rotation"));
+		this.pumping = IIAnimationCompiledMap.create(this.model, ResLoc.of(IIReference.RES_II, "mechanical_pump/pumping"));
 	}
 
 	@Override
 	protected void nullifyModels()
 	{
 		rotation = pumping = null;
-		models = IIAnimationUtils.disposeOf(models);
+		this.model = AMTUtils.disposeOf(this.model);
 	}
 }

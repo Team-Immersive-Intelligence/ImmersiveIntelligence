@@ -2,10 +2,12 @@ package pl.pabilo8.immersiveintelligence.client.gui.deco.component.button;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiComponentDecoTextBase;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoTextBasedComponent;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoAlignment;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
@@ -23,11 +25,11 @@ import java.util.function.Consumer;
  * @ii-approved 0.3.1
  * @since 18.07.2021
  */
-public class DecoSwitch extends GuiComponentDecoTextBase<DecoSwitch>
+public class DecoSwitch extends DecoTextBasedComponent<DecoSwitch>
 {
 	private static final int X_SIZE = 16, SWITCH_X_SIZE = 8, Y_SIZE = 9;
 	private static final int MAX_SWITCH_TICKS = 20;
-	private ResLoc movingPartLocation = IIReference.RES_TEXTURES_DECO_COMPONENT_SWITCH_MOVING;
+	private ResLoc movingPartLocation = DecoTextures.COMPONENT_SWITCH_MOVING;
 	private IIColor colorOff = IIReference.COLOR_SWITCH_OFF;
 	private IIColor colorRight = IIReference.COLOR_SWITCH_ON;
 	private Consumer<Boolean> onToggle;
@@ -38,7 +40,7 @@ public class DecoSwitch extends GuiComponentDecoTextBase<DecoSwitch>
 	public DecoSwitch(int x, int y)
 	{
 		super(x, y);
-		backgroundLocation = IIReference.RES_TEXTURES_DECO_COMPONENT_SWITCH;
+		backgroundLocation = DecoTextures.COMPONENT_SWITCH;
 		withSize(120, 11);
 		withOnPressed((gui, mouseButton, mx, my) -> {
 			if(mouseButton==MouseButton.LEFT)
@@ -62,7 +64,7 @@ public class DecoSwitch extends GuiComponentDecoTextBase<DecoSwitch>
 
 	public DecoSwitch withText(String text)
 	{
-		this.text = text;
+		this.text = I18n.format(text);
 		this.setWidth(X_SIZE+2+fontRenderer.getStringWidth(text));
 		return this;
 	}
@@ -134,7 +136,7 @@ public class DecoSwitch extends GuiComponentDecoTextBase<DecoSwitch>
 		//Draw the moving part of the switch
 		int movingPartX = alignX+(int)(timer*(X_SIZE-SWITCH_X_SIZE)/(float)MAX_SWITCH_TICKS);
 		draw.drawTexColorRect(movingPartX, alignY, SWITCH_X_SIZE, Y_SIZE,
-				state?colorRight: colorOff,
+				colorOff.mixedWith(colorRight, timer/(float)MAX_SWITCH_TICKS),
 				spriteMovingPart.getMinU(), spriteMovingPart.getInterpolatedU(SWITCH_X_SIZE),
 				spriteMovingPart.getMinV(), spriteMovingPart.getInterpolatedV(Y_SIZE)
 		).finish();

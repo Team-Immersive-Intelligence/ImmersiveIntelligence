@@ -17,6 +17,9 @@ public class MultiblockSawmill extends MultiblockStuctureBase<TileEntitySawmill>
 {
 	public static MultiblockSawmill INSTANCE;
 
+	//Inventory Slots
+	public static final int SLOT_INPUT = 0, SLOT_SAWBLADE = 1, SLOT_OUTPUT = 2, SLOT_SAWDUST = 3;
+
 	public MultiblockSawmill()
 	{
 		super(new ResourceLocation(ImmersiveIntelligence.MODID, "multiblocks/sawmill"));

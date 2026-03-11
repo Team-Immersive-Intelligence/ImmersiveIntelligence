@@ -1,0 +1,186 @@
+{
+  "bounds": {
+    "full": [
+      0, 0, 0,
+      16, 16, 16
+    ],
+    "empty": [
+      -64, -64, -64,
+      -64, -64, -64
+    ],
+    "corner_back": [
+      0, -16, 0,
+      4, 2, 16
+    ],
+    "corner_front": [
+      12, -16, 0,
+      16, 2, 16
+    ],
+    "corner_left": [
+      0, -16, 0,
+      16, 2, 4
+    ],
+    "corner_right": [
+      0, -16, 12,
+      16, 2, 16
+    ],
+    "top_back": [
+      0, 0, 0,
+      4, 18, 16
+    ],
+    "top_front": [
+      12, 0, 0,
+      16, 18, 16
+    ],
+    "top_left": [
+      0, 0, 0,
+      16, 18, 4
+    ],
+    "top_right": [
+      0, 0, 12,
+      16, 18, 16
+    ],
+    "wall_back": [
+      0, 0, 0,
+      4, 16, 16
+    ],
+    "wall_front": [
+      12, 0, 0,
+      16, 16, 16
+    ],
+    "wall_left": [
+      0, 0, 0,
+      16, 16, 4
+    ],
+    "wall_right": [
+      0, 0, 12,
+      16, 16, 16
+    ],
+    "platform_rod": [
+      -5, 0, -5,
+      5, 16, 5
+    ],
+    "platform_rod1": [
+      -7, 0, -11,
+      5, 10, 1
+    ],
+    "platform_rod2": [
+      -4, 0, -4,
+      4, 16, 4
+    ],
+    "platform": [
+      -16, 1, -16,
+      16, 0, 16
+    ],
+    "door": [
+      -19, -1, -2,
+      19, 1, 2
+    ]
+  },
+  "positions": {
+    "53,50,47": "corner_front",
+    "53,52,51": "corner_left",
+    "51,48,45": "corner_back",
+    "47,46,45": "corner_right",
+    "35,32,29,20,23,26,11,14,17": "wall_front",
+    "33,30,27,24,21,18,15,12,9": "wall_back",
+    "27,28,29,18,19,20,9,10,11": "wall_right",
+    "33,34,35,24,25,26,15,16,17": "wall_left",
+    "38,41,44": "top_front",
+    "42,39,36": "top_back",
+    "36,37,38": "top_right",
+    "42,43,44": "top_left",
+    "49,40,31,22,13": "empty"
+  },
+  "poi": {
+    "input": 6,
+    "output": 0,
+    "energy": 7,
+    "redstone": 2,
+    "data": 0,
+    "weapon": 49,
+    "hatch": [45, 46, 47, 48, 49, 50, 51, 52, 53],
+    "armor": [27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44]
+  },
+  "rotations": {
+    "data": "none"
+  },
+  "tactile_offset": [0, 0, 0],
+  "tactile": {
+    "_schema": "immersiveintelligence:models/block/multiblock/emplacement/emplacement.obj.amt",
+    "platform": [
+      {
+        "offset": [0, -82, -8],
+        "type": "platform_rod1"
+      }
+    ],
+    "platform1": [
+      {
+        "offset": [1, -72, -3],
+        "type": "platform_rod"
+      }
+    ],
+    "platform2": [
+      {
+        "offset": [0, -15, 0],
+        "type": "platform_rod"
+      }
+    ],
+    "platform3": [
+      {
+        "offset": [0, -15, 0],
+        "type": "platform_rod2"
+      }
+    ],
+    "platform4": [
+      {
+        "offset": [1, -17, -3],
+        "type": "platform_rod2"
+      }
+    ],
+    "platform5": [
+      {
+        "offset": [1, -17, -3],
+        "type": "platform_rod2"
+      }
+    ],
+    "platform6": [
+      {
+        "offset": [1, 10, -3],
+        "type": "platform"
+      },
+      {
+        "offset": [1, -6, -3],
+        "type": "platform_rod2"
+      }
+    ],
+    "door1": [
+      {
+        "offset": [0, -2, 8],
+        "type": "door"
+      },
+      {
+        "offset": [0, -2, 12],
+        "type": "door"
+      },
+      {
+        "offset": [0, -2, 18],
+        "type": "door"
+      }
+    ],
+    "door2": [
+      {
+        "offset": [0, -2, -8],
+        "type": "door"
+      },
+      {
+        "offset": [0, -2, -12],
+        "type": "door"
+      },
+      {
+        "offset": [0, -2, -18],
+        "type": "door"
+      }
+    ]
+  }
+}

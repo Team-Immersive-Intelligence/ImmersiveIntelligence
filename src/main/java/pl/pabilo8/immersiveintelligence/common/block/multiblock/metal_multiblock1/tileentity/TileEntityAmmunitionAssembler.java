@@ -2,9 +2,7 @@ package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multibloc
 
 import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorageAdvanced;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
@@ -15,6 +13,7 @@ import net.minecraftforge.items.IItemHandler;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseType;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.api.crafting.AmmunitionAssemblerRecipe;
+import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIMultiblockRecipe;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.AmmunitionAssembler;
@@ -24,12 +23,11 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionBase;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionMulti;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockInteractablePart;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -43,11 +41,13 @@ public class TileEntityAmmunitionAssembler extends TileEntityMultiblockProductio
 	public static final int SLOT_CORE = 0, SLOT_CASING = 1, SLOT_OUTPUT = 2;
 	public static final String NBT_KEY_EFFECT = "effect";
 
+	@SyncNBT(events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_CLIENT_MESSAGE})
 	public FuseType fuse = FuseType.CONTACT;
-	@SyncNBT
+	@SyncNBT(events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_CLIENT_MESSAGE})
 	public int fuseConfig = 0; //depends on fuse type: time for timed fuse, distance for proximity fuse
 	@SyncNBT
 	public MultiblockInteractablePart hatch;
+
 	//inventory: core, casing
 	IItemHandler coreInputHandler = getSingleInventoryHandler(SLOT_CORE, true, false);
 	IItemHandler casingInputHandler = getSingleInventoryHandler(SLOT_CASING, true, false);
@@ -151,7 +151,8 @@ public class TileEntityAmmunitionAssembler extends TileEntityMultiblockProductio
 	@Override
 	protected IIMultiblockProcess<AmmunitionAssemblerRecipe> getProcessByName(String name)
 	{
-		return TileEntityMultiblockProductionBase.findRecipeFromList(AmmunitionAssemblerRecipe.class, name);
+		AmmunitionAssemblerRecipe recipe = IIMultiblockRecipe.getRecipe(AmmunitionAssemblerRecipe.class, name);
+		return recipe==null?null: new IIMultiblockProcess<>(recipe);
 	}
 
 	@Override
@@ -184,34 +185,6 @@ public class TileEntityAmmunitionAssembler extends TileEntityMultiblockProductio
 			fuse = FuseType.v(packet.get('f').toString());
 	}
 
-	@Override
-	public void receiveMessageFromServer(@Nonnull NBTTagCompound message)
-	{
-		super.receiveMessageFromServer(message);
-
-		if(isDummy())
-			return;
-
-		if(message.hasKey("fuse"))
-			this.fuse = FuseType.v(message.getString("fuse"));
-		if(message.hasKey("fuse_config"))
-			this.fuseConfig = message.getInteger("fuse_config");
-	}
-
-	@Override
-	public void receiveMessageFromClient(NBTTagCompound message)
-	{
-		super.receiveMessageFromClient(message);
-
-		if(isDummy())
-			return;
-
-		if(message.hasKey("fuse"))
-			this.fuse = FuseType.v(message.getString("fuse"));
-		if(message.hasKey("fuse_config"))
-			this.fuseConfig = message.getInteger("fuse_config");
-	}
-
 	public ItemStack getProductionResult(int processID)
 	{
 		if(processQueue.size() <= processID)
@@ -223,16 +196,15 @@ public class TileEntityAmmunitionAssembler extends TileEntityMultiblockProductio
 	@Override
 	public void onEntityCollision(World world, Entity entity)
 	{
-		if(!world.isRemote&&entity instanceof EntityItem)
-		{
-			ItemStack stack = ((EntityItem)entity).getItem();
-			if(stack.isEmpty()) return;
-
-			if(isPOI("input_core"))
-				((EntityItem)entity).setItem(master().coreInputHandler.insertItem(0, stack, false));
-			else if(isPOI("input_casing"))
-				((EntityItem)entity).setItem(master().casingInputHandler.insertItem(0, stack, false));
-		}
+		TileEntityAmmunitionAssembler master = master();
+		if(master!=null)
+			handleItemEntityInput(entity, stack -> {
+				if(isPOI("input_core"))
+					return master.coreInputHandler.insertItem(0, stack, false);
+				else if(isPOI("input_casing"))
+					return master.casingInputHandler.insertItem(0, stack, false);
+				return ItemStack.EMPTY;
+			});
 	}
 
 	@Override
@@ -247,7 +219,7 @@ public class TileEntityAmmunitionAssembler extends TileEntityMultiblockProductio
 		if(hatch.setState(state))
 		{
 			world.playSound(null, getPOIPos("lid"), state?IISounds.metalSlideOpen: IISounds.metalSlideClose, SoundCategory.BLOCKS, 1f, 1f);
-			IIPacketHandler.sendToClient(getPos(), getWorld(), new MessageBooleanAnimatedPartsSync(part, state, getPos()));
+			IIPacketHandler.sendToClient(new MessageBooleanAnimatedPartsSync(part, state, this));
 		}
 	}
 }

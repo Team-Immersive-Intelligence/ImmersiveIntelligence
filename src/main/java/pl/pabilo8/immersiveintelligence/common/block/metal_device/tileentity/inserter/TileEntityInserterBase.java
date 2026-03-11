@@ -19,9 +19,8 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.NonNullList;
@@ -38,30 +37,34 @@ import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.device.DataWireNetwork;
 import pl.pabilo8.immersiveintelligence.api.data.device.IDataConnector;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Inserter;
+import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.block.data_device.BlockIIDataDevice.IIBlockTypes_Connector;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyMultiTypeCollection;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.ITypeNBTSerializable;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.NBTSerialisation;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IIIGuiMultiblockTile;
 import pl.pabilo8.immersiveintelligence.common.wire.IIDataWireType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
-import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 28.09.2020
  */
-public abstract class TileEntityInserterBase extends TileEntityImmersiveConnectable implements IIEInventory, ITileDrop, IComparatorOverride, IHammerInteraction, ITickable, IBlockBounds, IDataConnector
+public abstract class TileEntityInserterBase extends TileEntityImmersiveConnectable implements IIEInventory, ITileDrop, IComparatorOverride, IHammerInteraction, ITickable, IBlockBounds, IDataConnector, IIIGuiMultiblockTile
 {
 	public int energyStorage = 0;
 	public int pickProgress = 0;
-	public int takeAmount = 64;
+	public int takeAmount = getMaxTakeAmount();
 
 	public EnumFacing defaultOutputFacing = EnumFacing.NORTH;
 	public EnumFacing defaultInputFacing = EnumFacing.SOUTH;
@@ -73,8 +76,8 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 	public IItemHandler insertionHandler = new IEInventoryHandler(1, this);
 	public boolean nextTaskAfterFinish = true;
 	protected DataWireNetwork wireNetwork = new DataWireNetwork().add(this);
-	ArrayList<InserterTask> tasks = new ArrayList<>();
-	NonNullList<ItemStack> inventory = NonNullList.withSize(1, ItemStack.EMPTY); //The currently held item
+	protected EasyMultiTypeCollection<InserterTask> tasks = new EasyMultiTypeCollection<>(InserterTask.class);
+	protected NonNullList<ItemStack> inventory = NonNullList.withSize(1, ItemStack.EMPTY); //The currently held item
 	private boolean refreshWireNetwork = false;
 	private WireType secondCable;
 
@@ -139,13 +142,9 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 			return false;
 
 		if(conn==0)
-		{
 			return attachCat.equals(IIDataWireType.DATA_CATEGORY)&&limitType==null;
-		}
 		else if(conn==1)
-		{
 			return getAcceptedPowerWires().contains(attachCat)&&secondCable==null;
-		}
 
 		return false;
 	}
@@ -226,12 +225,19 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 	public int getTargetedConnector(TargetingInfo target)
 	{
 		if(target.hitX < 1&&target.hitX > 0.75&&target.hitZ < 1&&target.hitZ > 0.75)
-		{
 			return 0;
-		}
 		else
-		{
 			return 1;
+	}
+
+	@Override
+	public void receiveMessageFromClient(NBTTagCompound message)
+	{
+		super.receiveMessageFromClient(message);
+		if(message.hasKey("tasks"))
+		{
+			tasks.deserializeNBT(message.getTagList("tasks", 10));
+			sendUpdate();
 		}
 	}
 
@@ -258,13 +264,12 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 			inventory = Utils.readInventory(message.getTagList("inventory", 10), 1);
 
 		if(message.hasKey("tasks"))
-			readTasks(message.getTagList("tasks", 10));
+			tasks.deserializeNBT(message.getTagList("tasks", 10));
 		if(message.hasKey("current"))
 		{
-			NBTTagCompound tag = message.getCompoundTag("current");
-			Function<NBTTagCompound, InserterTask> name = getAvailableTasks().get(tag.getString("name"));
-			if(name!=null)
-				current = name.apply(tag);
+			ITypeNBTSerializable task = NBTSerialisation.deserializePolymorphic(message.getCompoundTag("current"));
+			if(task instanceof InserterTask)
+				current = ((InserterTask)task);
 		}
 		else current = null;
 
@@ -294,7 +299,7 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 			energyStorage = nbt.getInteger("energyStorage");
 
 		if(nbt.hasKey("tasks"))
-			readTasks(nbt.getTagList("tasks", 10));
+			tasks.deserializeNBT(nbt.getTagList("tasks", 10));
 	}
 
 	@Override
@@ -310,36 +315,9 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 		nbt.setInteger("inputFacing", defaultInputFacing.ordinal());
 		if(secondCable!=null)
 			nbt.setString("secondCable", secondCable.getUniqueName());
-		nbt.setTag("tasks", writeTasks());
+		nbt.setTag("tasks", tasks.serializeNBT());
 
 		nbt.setInteger("energyStorage", energyStorage);
-	}
-
-	public NBTTagList writeTasks()
-	{
-		NBTTagList tagTasks = new NBTTagList();
-		for(InserterTask task : tasks)
-		{
-			NBTTagCompound tag = task.toNBT();
-			tag.setString("name", task.getName());
-			tagTasks.appendTag(tag);
-		}
-		return tagTasks;
-	}
-
-	private void readTasks(NBTTagList tagTasks)
-	{
-		tasks.clear();
-		for(NBTBase task : tagTasks)
-		{
-			if(task instanceof NBTTagCompound)
-			{
-				NBTTagCompound tag = (NBTTagCompound)task;
-				Function<NBTTagCompound, InserterTask> name = getAvailableTasks().get(tag.getString("name"));
-				if(name!=null)
-					tasks.add(name.apply(tag));
-			}
-		}
 	}
 
 	@Override
@@ -360,11 +338,10 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 
 	protected void performTasks()
 	{
-		if(tasks.size()==0)
+		if(tasks.isEmpty())
 			return;
 
 		if(this.current==null)
-		{
 			for(InserterTask task : tasks)
 			{
 				EnumFacing facingIn = task.facingIn==null?defaultInputFacing: task.facingIn;
@@ -383,7 +360,6 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 					sendUpdate();
 				break;
 			}
-		}
 		//you should be, but who knows ^^
 		if(this.current!=null)
 		{
@@ -396,8 +372,8 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 			int maxProgress = (int)(getPickupSpeed()*(1+current.getTimeModifier()));
 
 
+			//better check
 			if(pickProgress==0)
-			{
 				if(!world.isRemote)
 				{
 					if(current.canExecute(this, world, posIn, posOut, facingIn, facingOut, true))
@@ -411,10 +387,6 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 				}
 				else
 					pickProgress++;
-
-				//better check
-
-			}
 			else if(pickProgress==maxProgress)
 			{
 				if(!world.isRemote)
@@ -424,15 +396,13 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 						int id = tasks.indexOf(current);
 						if(!current.shouldContinue())
 							tasks.remove(current);
-						current = (tasks.size() > 0)?tasks.get((id+(nextTaskAfterFinish?1: 0))%tasks.size()): null;
+						current = (!tasks.isEmpty())?tasks.get((id+(nextTaskAfterFinish?1: 0))%tasks.size()): null;
 						pickProgress = 0;
 						sendUpdate();
 					}
 				}
 				else if(this.current.canExecute(this, world, posIn, posOut, facingIn, facingOut, false))
-				{
 					pickProgress = 0;
-				}
 
 			}
 			else if(pickProgress < maxProgress)
@@ -450,11 +420,11 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 				.withBoolean("nextTaskAfterFinish", nextTaskAfterFinish)
 				.withInt("outputFacing", defaultOutputFacing.ordinal())
 				.withInt("inputFacing", defaultInputFacing.ordinal())
-				.withTag("tasks", writeTasks())
+				.withTag("tasks", tasks.serializeNBT())
 				.withInt("energyStorage", energyStorage)
 				.conditionally(current!=null, e -> e.withTag("current",
-						EasyNBT.wrapNBT(current.toNBT())
-								.withString("name", current.getName())
+						EasyNBT.wrapNBT(current.serializeNBT())
+								.withString("type", current.getClass().getSimpleName())
 				))
 		));
 	}
@@ -539,7 +509,6 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 
 
 		if(hitside!=null)
-		{
 			if(player.isSneaking())
 			{
 				if(defaultInputFacing==hitside)
@@ -552,7 +521,6 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 					defaultOutputFacing = EnumFacing.UP;
 				defaultInputFacing = hitside;
 			}
-		}
 
 		IIPacketHandler.sendToClient(this, new MessageIITileSync(this, EasyNBT.newNBT()
 				.withInt("inputFacing", defaultInputFacing.ordinal())
@@ -619,7 +587,16 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 		return stack;
 	}
 
-	//Abstract variables
+	/**
+	 * @return all tasks assigned to this inserter
+	 */
+	@Nonnull
+	public final EasyMultiTypeCollection<InserterTask> getTasks()
+	{
+		return tasks;
+	}
+
+	//--- Abstract variables ---//
 
 	/**
 	 * @return names of all power wires able to connect to this inserter
@@ -651,7 +628,7 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 	 * @return all available tasks for this inserter
 	 */
 	@Nonnull
-	protected abstract HashMap<String, Function<NBTTagCompound, InserterTask>> getAvailableTasks();
+	public abstract HashMap<String, Supplier<InserterTask>> getAvailableTasks();
 
 	/**
 	 * Control the sounds played here.
@@ -669,8 +646,28 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 		return current==null||current.facingOut==null?defaultOutputFacing: current.facingOut;
 	}
 
+	//--- IIIGuiMultiblockTile ---//
+
+	@Override
+	public boolean canOpenGui()
+	{
+		return true;
+	}
+
+	@Override
+	public TileEntity master()
+	{
+		return this;
+	}
+
+	@Override
+	public IIGUI getGUI()
+	{
+		return IIGUI.INSERTER;
+	}
+
 	@ParametersAreNonnullByDefault
-	public static abstract class InserterTask
+	public static abstract class InserterTask implements ITypeNBTSerializable
 	{
 		/**
 		 * Overrides facing if different from null
@@ -692,19 +689,46 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 		/**
 		 * Inserter will only take the item if the item matches this
 		 **/
-		IngredientStack stack = new IngredientStack("*");
+		public IngredientStack stack = new IngredientStack("*");
 		/**
 		 * Whether the task shouldn't end after items are taken
 		 **/
-		boolean isJob = true;
+		public boolean isJob = true;
 
-		public InserterTask(@Nullable EnumFacing facingIn, @Nullable EnumFacing facingOut)
+		public InserterTask()
 		{
-			this.facingIn = facingIn;
-			this.facingOut = facingOut;
+
 		}
 
-		public InserterTask(NBTTagCompound nbt)
+		@Override
+		public NBTTagCompound serializeNBT()
+		{
+			NBTTagCompound nbt = new NBTTagCompound();
+			nbt.setString("name", getName());
+			if(facingIn!=null)
+			{
+				nbt.setInteger("facingIn", facingIn.getIndex());
+				if(distanceIn!=-1)
+					nbt.setInteger("distanceIn", distanceIn);
+			}
+			if(facingOut!=null)
+			{
+				nbt.setInteger("facingOut", facingOut.getIndex());
+				if(distanceOut!=-1)
+					nbt.setInteger("distanceOut", distanceOut);
+			}
+			nbt.setTag("stack", stack.writeToNBT(new NBTTagCompound()));
+
+			nbt.setBoolean("isJob", isJob);
+			nbt.setBoolean("strictAmount", strictAmount);
+			if(overrideTakeAmount!=-1)
+				nbt.setInteger("overrideTakeAmount", overrideTakeAmount);
+
+			return nbt;
+		}
+
+		@Override
+		public void deserializeNBT(NBTTagCompound nbt)
 		{
 			if(nbt.hasKey("facingIn"))
 			{
@@ -718,7 +742,12 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 				if(nbt.hasKey("distanceOut"))
 					distanceOut = nbt.getInteger("distanceOut");
 			}
-			nbt.setTag("stack", stack.writeToNBT(new NBTTagCompound()));
+			if(nbt.hasKey("stack"))
+			{
+				stack = IngredientStack.readFromNBT(nbt.getCompoundTag("stack"));
+				if(stack.fluid!=null)
+					stack.inputSize = stack.fluid.amount;
+			}
 			if(nbt.hasKey("isJob"))
 				isJob = nbt.getBoolean("isJob");
 			if(nbt.hasKey("strictAmount"))
@@ -727,37 +756,12 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 				overrideTakeAmount = nbt.getInteger("overrideTakeAmount");
 		}
 
-		public NBTTagCompound toNBT()
-		{
-			NBTTagCompound nbt = new NBTTagCompound();
-			if(facingIn!=null)
-			{
-				nbt.setInteger("facingIn", facingIn.getIndex());
-				if(distanceIn!=-1)
-					nbt.setInteger("distanceOut", distanceIn);
-			}
-			if(facingOut!=null)
-			{
-				nbt.setInteger("facingOut", facingOut.getIndex());
-				if(distanceOut!=-1)
-					nbt.setInteger("distanceOut", distanceOut);
-			}
-			IngredientStack.readFromNBT(nbt.getCompoundTag("stack"));
-
-			nbt.setBoolean("isJob", isJob);
-			nbt.setBoolean("strictAmount", strictAmount);
-			if(overrideTakeAmount!=-1)
-				nbt.setInteger("overrideTakeAmount", overrideTakeAmount);
-
-			return nbt;
-		}
-
 		/**
 		 * @return whether the task shouldn't be removed from task list, default true
 		 */
 		public boolean shouldContinue()
 		{
-			return true;
+			return stack.inputSize > 0;
 		}
 
 		/**
@@ -767,9 +771,39 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 
 		public abstract boolean execute(TileEntityInserterBase tile, World world, BlockPos posIn, BlockPos posOut, EnumFacing facingIn, EnumFacing facingOut, boolean in);
 
-		abstract String getName();
+		public abstract String getName();
 
 		public abstract float getTimeModifier();
+
+		/**
+		 * GUI/support accessor
+		 */
+		public final boolean isJob()
+		{
+			return isJob;
+		}
+
+		/**
+		 * Whether things like stack, overrideTakeAmount and strictAmount are editable in the GUI
+		 */
+		public boolean areDetailsEditable()
+		{
+			return true;
+		}
+
+		/**
+		 * GUI/support accessor
+		 */
+		public final IngredientStack getIngredient()
+		{
+			return stack;
+		}
+
+		protected int getAmountToBeTaken(TileEntityInserterBase tile)
+		{
+			int perOp = Math.min(overrideTakeAmount!=-1?overrideTakeAmount: tile.takeAmount, tile.getMaxTakeAmount());
+			return isJob?perOp: Math.min(perOp, stack.inputSize);
+		}
 	}
 }
 

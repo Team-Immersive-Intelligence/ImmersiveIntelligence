@@ -12,6 +12,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.crafting.BathingRecipe;
+import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIMultiblockRecipe;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
@@ -36,10 +37,7 @@ public class ChemicalBathTweaker
 		}
 
 		FluidStack mcFluidInputStack = CraftTweakerMC.getLiquidStack(fluidInput);
-
-		BathingRecipe r = new BathingRecipe(CraftTweakerHelper.toStack(itemOutput), oItemInput, mcFluidInputStack, energy, time, true);
-
-		CraftTweakerAPI.apply(new Add(r));
+		CraftTweakerAPI.apply(new Add(CraftTweakerHelper.toStack(itemOutput), oItemInput, mcFluidInputStack, energy, time, true));
 	}
 
 	@ZenMethod
@@ -54,10 +52,7 @@ public class ChemicalBathTweaker
 		}
 
 		FluidStack mcFluidInputStack = CraftTweakerMC.getLiquidStack(fluidInput);
-
-		BathingRecipe r = new BathingRecipe(CraftTweakerHelper.toStack(itemOutput), oItemInput, mcFluidInputStack, energy, time, false);
-
-		CraftTweakerAPI.apply(new Add(r));
+		CraftTweakerAPI.apply(new Add(CraftTweakerHelper.toStack(itemOutput), oItemInput, mcFluidInputStack, energy, time, false));
 	}
 
 	@ZenMethod
@@ -68,23 +63,33 @@ public class ChemicalBathTweaker
 
 	private static class Add implements IAction
 	{
-		private final BathingRecipe recipe;
+		private final ItemStack itemOutput;
+		private final Object itemInput;
+		private final FluidStack fluidInputStack;
+		private final int energy;
+		private final int time;
+		private final boolean washing;
 
-		public Add(BathingRecipe recipe)
+		public Add(ItemStack itemOutput, Object itemInput, FluidStack fluidInputStack, int energy, int time, boolean washing)
 		{
-			this.recipe = recipe;
+			this.itemOutput = itemOutput;
+			this.itemInput = itemInput;
+			this.fluidInputStack = fluidInputStack;
+			this.energy = energy;
+			this.time = time;
+			this.washing = washing;
 		}
 
 		@Override
 		public void apply()
 		{
-			BathingRecipe.recipeList.add(recipe);
+			new BathingRecipe(itemOutput, itemInput, fluidInputStack, energy, time, washing);
 		}
 
 		@Override
 		public String describe()
 		{
-			return "Adding Chemical Bath Recipe for "+recipe.itemOutput.getDisplayName();
+			return "Adding Chemical Bath Recipe for "+itemOutput.getDisplayName();
 		}
 	}
 
@@ -101,7 +106,7 @@ public class ChemicalBathTweaker
 		@Override
 		public void apply()
 		{
-			removedRecipes = BathingRecipe.removeRecipesForOutput(output);
+			removedRecipes = IIMultiblockRecipe.removeRecipesByFilter(BathingRecipe.class, bathingRecipe -> bathingRecipe.itemOutput.isItemEqual(output));
 		}
 
 		@Override

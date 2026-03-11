@@ -7,14 +7,20 @@ import net.minecraft.util.math.MathHelper;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoCore;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoType;
-import pl.pabilo8.immersiveintelligence.client.util.amt.*;
+import pl.pabilo8.immersiveintelligence.client.util.amt.AMTLoader;
+import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
+import pl.pabilo8.immersiveintelligence.client.util.amt.animation.IIAnimationCompiledMap;
+import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTModel;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMT;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTLocator;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTQuads;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoGrenade;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
+import pl.pabilo8.immersiveintelligence.common.util.amt.AMTModelHeader;
 import pl.pabilo8.immersiveintelligence.common.util.amt.IIAnimation;
-import pl.pabilo8.immersiveintelligence.common.util.amt.IIModelHeader;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -105,12 +111,12 @@ public class ModelAmmoProjectile<T extends IAmmoType<T, E>, E extends EntityAmmo
 	@Override
 	public void reloadModels()
 	{
-		IIAnimationUtils.disposeOf(new AMT[]{modelCasingFilling});
+		AMTUtils.disposeOf(new AMT[]{modelCasingFilling});
 		super.reloadModels();
 	}
 
 	@Override
-	protected AMT[] getExtraModelParts(IIModelHeader header)
+	protected AMT[] getExtraModelParts(AMTModelHeader header)
 	{
 		ArrayList<AMT> extraParts = new ArrayList<>();
 		for(CoreType coreType : ammo.getAllowedCoreTypes())
@@ -121,12 +127,12 @@ public class ModelAmmoProjectile<T extends IAmmoType<T, E>, E extends EntityAmmo
 	}
 
 	@Override
-	protected void loadModels(AMT[] amt)
+	protected void loadModels(AMTModel amt)
 	{
 		super.loadModels(amt);
 
 		//load propellant filling animation
-		modelCasingFilling = IIAnimationUtils.getPart(amt, "casing_filling");
+		modelCasingFilling = amt.getPart("casing_filling");
 		casingFilling = IIAnimationCompiledMap.create(amt, ResLoc.of(IIReference.RES_II, "ammo/"+this.ammo.getName()+"/filling"));
 
 		//load special core animations
@@ -163,11 +169,11 @@ public class ModelAmmoProjectile<T extends IAmmoType<T, E>, E extends EntityAmmo
 			return;
 
 		//load the unbaked animation
-		IIAnimation unbaked = IIAnimationLoader.loadAnimation(ResLoc.of(IIReference.RES_II, "ammo/"+this.ammo.getName()+"/"+animationName));
+		IIAnimation unbaked = AMTLoader.loadAnimation(ResLoc.of(IIReference.RES_II, "ammo/"+this.ammo.getName()+"/"+animationName));
 
 		//apply the animation to the core types
 		for(Entry<AmmoCore, AMT> entry : coreMap.entrySet())
-			animationMap.put(entry.getKey(), IIAnimationCompiledMap.create(new AMT[]{entry.getValue()}, unbaked));
+			animationMap.put(entry.getKey(), IIAnimationCompiledMap.create(new AMTModel(entry.getValue()), unbaked));
 	}
 
 	@Override
@@ -208,7 +214,7 @@ public class ModelAmmoProjectile<T extends IAmmoType<T, E>, E extends EntityAmmo
 		else
 		{
 			//rotation animation for rifled guns
-			float rotationProgress = IIAnimationUtils.getDebugProgress((float)(4*MathHelper.fastInvSqrt(EntityAmmoProjectile.SLOWMO)), partialTicks);
+			float rotationProgress = AMTUtils.getDebugProgress((float)(4*MathHelper.fastInvSqrt(EntityAmmoProjectile.SLOWMO)), partialTicks);
 			GlStateManager.rotate(rotationProgress*360, 0, 1, 0);
 		}
 
@@ -219,7 +225,7 @@ public class ModelAmmoProjectile<T extends IAmmoType<T, E>, E extends EntityAmmo
 			case SHAPED_SABOT:
 			case CLUSTER:
 			{
-				float progress = IIAnimationUtils.getAnimationOffsetProgress(entity.ticksExisted, 10, 30, partialTicks);
+				float progress = AMTUtils.getAnimationOffsetProgress(entity.ticksExisted, 10, 30, partialTicks);
 				switch(entity.getCoreType())
 				{
 					case PIERCING_SABOT:

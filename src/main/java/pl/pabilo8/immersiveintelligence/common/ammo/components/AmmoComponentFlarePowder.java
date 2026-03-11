@@ -40,7 +40,7 @@ public class AmmoComponentFlarePowder extends AmmoComponentTracerPowder
 	}
 
 	@Override
-	public void onEffect(World world, Vec3d pos, Vec3d dir, ComponentEffectShape shape, NBTTagCompound tag, float componentAmount, float multiplier, Entity owner)
+	public void onEffect(World world, Vec3d pos, Vec3d dir, ComponentEffectShape shape, NBTTagCompound tag, float size, float multiplier, Entity owner)
 	{
 		if(world.isRemote)
 			return;

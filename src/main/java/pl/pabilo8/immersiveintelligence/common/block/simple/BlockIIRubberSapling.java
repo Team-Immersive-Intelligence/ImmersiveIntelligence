@@ -18,6 +18,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.EnumPlantType;
 import net.minecraftforge.common.IPlantable;
+import net.minecraftforge.event.terraingen.TerrainGen;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIIRubberLeaves.RubberStuff;
 import pl.pabilo8.immersiveintelligence.common.util.block.BlockIIBase;
@@ -121,7 +122,7 @@ public class BlockIIRubberSapling extends BlockIIBase<RubberStuff> implements IG
 
 	public void generateTree(World worldIn, BlockPos pos, IBlockState state, Random rand)
 	{
-		if(!net.minecraftforge.event.terraingen.TerrainGen.saplingGrowTree(worldIn, rand, pos)) return;
+		if(!TerrainGen.saplingGrowTree(worldIn, rand, pos)) return;
 		{
 			IIWorldGen.worldGenRubberTree.generate(worldIn, rand, pos);
 			worldIn.setBlockState(pos, IIContent.blockRubberLog.getDefaultState().withProperty(BlockLog.LOG_AXIS, EnumAxis.Y), 1);
@@ -147,7 +148,7 @@ public class BlockIIRubberSapling extends BlockIIBase<RubberStuff> implements IG
 	public boolean canPlaceBlockAt(World worldIn, BlockPos pos)
 	{
 		IBlockState soil = worldIn.getBlockState(pos.down());
-		return super.canPlaceBlockAt(worldIn, pos)&&soil.getBlock().canSustainPlant(soil, worldIn, pos.down(), net.minecraft.util.EnumFacing.UP, this);
+		return super.canPlaceBlockAt(worldIn, pos)&&soil.getBlock().canSustainPlant(soil, worldIn, pos.down(), EnumFacing.UP, this);
 	}
 
 	/**
@@ -184,7 +185,7 @@ public class BlockIIRubberSapling extends BlockIIBase<RubberStuff> implements IG
 		if(state.getBlock()==this) //Forge: This function is called during world gen and placement, before this block is set, so if we are not 'here' then assume it's the pre-check.
 		{
 			IBlockState soil = worldIn.getBlockState(pos.down());
-			return soil.getBlock().canSustainPlant(soil, worldIn, pos.down(), net.minecraft.util.EnumFacing.UP, this);
+			return soil.getBlock().canSustainPlant(soil, worldIn, pos.down(), EnumFacing.UP, this);
 		}
 		return this.canSustainBush(worldIn.getBlockState(pos.down()));
 	}
@@ -196,7 +197,7 @@ public class BlockIIRubberSapling extends BlockIIBase<RubberStuff> implements IG
 	}
 
 	@Override
-	public IBlockState getPlant(net.minecraft.world.IBlockAccess world, BlockPos pos)
+	public IBlockState getPlant(IBlockAccess world, BlockPos pos)
 	{
 		IBlockState state = world.getBlockState(pos);
 		if(state.getBlock()!=this) return getDefaultState();

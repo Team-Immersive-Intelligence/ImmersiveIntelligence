@@ -22,7 +22,6 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoLabe
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoTitleLabel;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
-import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIBase;
 
@@ -66,7 +65,7 @@ public class DecoBackgroundBuilder<T extends TileEntityIEBase & IIEInventory, C 
 	 */
 	public DecoBackgroundBuilder<T, C> withBox(int x, int y, int width, int height)
 	{
-		return withBox(IIReference.GUI_BG_STEEL, x, y, width, height);
+		return withBox(DecoTextures.BG_STEEL, x, y, width, height);
 	}
 
 	/**
@@ -81,7 +80,7 @@ public class DecoBackgroundBuilder<T extends TileEntityIEBase & IIEInventory, C 
 	 */
 	public DecoBackgroundBuilder<T, C> withBox(ResLoc style, int x, int y, int width, int height)
 	{
-		return withBox(style, IIReference.RES_TEXTURES_DECO_TEMPLATE_ROUND, x, y, width, height);
+		return withBox(style, DecoTextures.TEMPLATE_ROUND, x, y, width, height);
 	}
 
 	/**
@@ -115,22 +114,6 @@ public class DecoBackgroundBuilder<T extends TileEntityIEBase & IIEInventory, C 
 	public DecoBackgroundBuilder<T, C> withBox(ResLoc style, ResLoc mask, int x, int y, int width, int height, IIColor color)
 	{
 		backgroundTiles.get(backgroundTiles.size()-1).add(new DecoBackgroundTile(x, y, width, height, color, style, mask));
-		return this;
-	}
-
-	/**
-	 * Adds an image box to the current background layer
-	 *
-	 * @param imageLocation location of the image to display
-	 * @param x             x position of the box
-	 * @param y             y position of the box
-	 * @param width         width of the box in pixels
-	 * @param height        height of the box in pixels
-	 * @return this
-	 */
-	public DecoBackgroundBuilder<T, C> withImageBox(ResLoc imageLocation, int x, int y, int width, int height)
-	{
-		backgroundTiles.get(backgroundTiles.size()-1).add(new DecoBackgroundImage(x, y, width, height, imageLocation));
 		return this;
 	}
 
@@ -181,7 +164,7 @@ public class DecoBackgroundBuilder<T extends TileEntityIEBase & IIEInventory, C 
 	 */
 	public DecoBackgroundBuilder<T, C> withStandaloneFrame(int x, int y, int width, int height, ResLoc imageLocation, int thickness, boolean cornersOnly, boolean[] frame)
 	{
-		DecoBackgroundTile tile = new DecoBackgroundTile(x, y, width, height, IIColor.WHITE, imageLocation, IIReference.RES_TEXTURES_DECO_TEMPLATE_ROUND);
+		DecoBackgroundTile tile = new DecoBackgroundTile(x, y, width, height, IIColor.WHITE, imageLocation, DecoTextures.TEMPLATE_ROUND);
 		tile.frame = new DecoFrame(imageLocation, cornersOnly, thickness)
 				.withSides(frame[0], frame[1], frame[2], frame[3]);
 
@@ -240,7 +223,8 @@ public class DecoBackgroundBuilder<T extends TileEntityIEBase & IIEInventory, C 
 	public DecoBackgroundBuilder<T, C> withInventorySlots(SlotStyle style, Slot... slots)
 	{
 		for(Slot slot : slots)
-			inventorySlots.add(new DecoSlot(slot.xPos, slot.yPos, 16, 16, style));
+			if(slot!=null)
+				inventorySlots.add(new DecoSlot(slot.xPos, slot.yPos, 16, 16, style));
 		return this;
 	}
 
@@ -340,7 +324,7 @@ public class DecoBackgroundBuilder<T extends TileEntityIEBase & IIEInventory, C 
 				GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
 
 				List<DecoBackgroundTile> tiles = layer.stream()
-						.filter(tile -> !(tile instanceof DecoBackgroundImage))
+						.filter(decoBackgroundTile -> decoBackgroundTile.style!=null)
 						.collect(Collectors.toList());
 
 				int minXOffset = 0, minYOffset = 0;
@@ -389,19 +373,8 @@ public class DecoBackgroundBuilder<T extends TileEntityIEBase & IIEInventory, C 
 			//Background images
 			for(List<DecoBackgroundTile> layer : backgroundTiles)
 				for(DecoBackgroundTile tile : layer)
-				{
-					if(tile instanceof DecoBackgroundImage)
-					{
-						DecoBackgroundImage image = (DecoBackgroundImage)tile;
-						draw.drawTexColorRect(image.x, image.y, image.width, image.height,
-								image.color,
-								ClientUtils.getSprite(image.style).getMinU(), ClientUtils.getSprite(image.style).getMaxU(),
-								ClientUtils.getSprite(image.style).getMinV(), ClientUtils.getSprite(image.style).getMaxV()
-						);
-					}
 					if(tile.frame!=null)
 						handleFrameDrawing(draw, tile);
-				}
 
 			//Standalone Frames
 			for(DecoBackgroundTile backgroundFrame : backgroundFrames)
@@ -421,7 +394,7 @@ public class DecoBackgroundBuilder<T extends TileEntityIEBase & IIEInventory, C 
 				{
 					TextureAtlasSprite sprite = ClientUtils.getSprite(slot.style.markerLocation);
 					int offset = (slot.style.markerOffset*4)%16;
-					int vOffset = (int)(Math.floor(offset/16f)*3);
+					int vOffset = (int)(Math.floor(slot.style.markerOffset/4f)*3);
 
 					draw.drawTexColorRect(slot.x+slot.width/2f-2f, slot.y-off-3, 4, 3,
 							IIColor.WHITE,
@@ -474,8 +447,14 @@ public class DecoBackgroundBuilder<T extends TileEntityIEBase & IIEInventory, C 
 		int titleBarX = data.barAlignment.getAlignX(data.barRectangle.x+8, stringWidth, data.barRectangle.width-16);
 		int titleBarY = data.barAlignment.getAlignY(data.barRectangle.y-2, stringHeight, data.barRectangle.height+4);
 
+		//Fallback to steel label background if there is no custom texture
+		ResLoc backgroundLocation = data.barRectangle.style.replace("background/", "label/label_");
+		TextureAtlasSprite labelBackground = ClientUtils.getSprite(backgroundLocation);
+		if(labelBackground==ClientUtils.mc().getTextureMapBlocks().getMissingSprite())
+			backgroundLocation = DecoTextures.LABEL_STEEL;
+
 		DecoLabel decoLabel = new DecoTitleLabel(IIClientUtils.fontRegular, titleBarX, titleBarY)
-				.withBackgroundLocation(data.barRectangle.style.replace("background/", "label/label_"))
+				.withBackgroundLocation(backgroundLocation)
 				.withAlign(data.barAlignment)
 				.withSize(stringWidth, stringHeight)
 				.withRawText(data.barTitle);
@@ -507,9 +486,9 @@ public class DecoBackgroundBuilder<T extends TileEntityIEBase & IIEInventory, C 
 	public enum SlotStyle
 	{
 		//Vanilla MC bevel mask inventory slot
-		VANILLA(IIReference.RES_TEXTURES_DECO_INVENTORY_SLOT, true, 1),
+		VANILLA(DecoTextures.SLOT_VANILLA, true, 1),
 		//Immersive Engineering style inventory slot
-		IE(IIReference.RES_TEXTURES_DECO_IE_SLOT, IIReference.RES_TEXTURES_DECO_IE_SLOT_MARKER, 2),
+		IE(DecoTextures.SLOT_IE, DecoTextures.SLOT_IE_MARKER, 2),
 		IE_INPUT(IE, 2),
 		IE_OUTPUT(IE, 3),
 		IE_CUSTOM1(IE, 4),
@@ -517,7 +496,7 @@ public class DecoBackgroundBuilder<T extends TileEntityIEBase & IIEInventory, C 
 		IE_CUSTOM3(IE, 6),
 		IE_CUSTOM4(IE, 7),
 		//Brass Frame IE style Inventory slot
-		IE_BRASS(IIReference.RES_TEXTURES_DECO_IE_BRASS_SLOT, IIReference.RES_TEXTURES_DECO_IE_BRASS_SLOT_MARKER, 2),
+		IE_BRASS(DecoTextures.SLOT_IE_BRASS, DecoTextures.SLOT_IE_BRASS_MARKER, 2),
 		IE_BRASS_INPUT(IE_BRASS, 2),
 		IE_BRASS_OUTPUT(IE_BRASS, 3),
 		IE_BRASS_CUSTOM1(IE_BRASS, 4),

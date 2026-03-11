@@ -3,7 +3,8 @@ Programmable Speaker
 Happy Engineer Noises
 # intro
 |[crafting]{source:"programmable_spkr"}|
-The Programmable Speaker is a device, which emits a sound when provided a redstone signal. Redstone and data wire can be attached from any side. Data can be used to set the sound and its pitch, while redstone sets the volume.
+The Programmable Speaker is a device which emits a sound when provided a redstone signal. Redstone and data wire can be attached from any side.
+A data signal can be used to set the sound, pitch, volume, and repeat mode. Alternatively, a redstone signal also sets the volume.
 # data
 **Data inputs:**<br>
 |[data_variable]{type:"boolean", direction:"out", letter:"o", name:"Play Once", description:"If true, sound is played once, regardless of redstone signal"}|

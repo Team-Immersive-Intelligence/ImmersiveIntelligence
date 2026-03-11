@@ -8,7 +8,8 @@ import net.minecraft.util.math.Vec3d;
 import javax.annotation.Nonnull;
 
 /**
- * @author GabrielV(gabriel @ iiteam.net)
+ * @author Pabilo8 (pabilo@iiteam.net)
+ * @author GabrielV (gabriel@iiteam.net)
  * @since 28.07.2024
  */
 public class IIMath extends MathHelper
@@ -73,10 +74,10 @@ public class IIMath extends MathHelper
 	 * Used to calculate 3D vector offset in a direction
 	 * </p>
 	 */
-	public static Vec3d offsetPosDirection(float offset, double yaw, double pitch)
+	public static Vec3d offsetPosDirection(double offset, double yaw, double pitch)
 	{
 		if(offset==0)
-			return new Vec3d(0, 0, 0);
+			return Vec3d.ZERO;
 
 		double yy = (MathHelper.sin((float)pitch)*offset);
 		double true_offset = (MathHelper.cos((float)pitch)*offset);
@@ -85,6 +86,35 @@ public class IIMath extends MathHelper
 		double zz = (MathHelper.cos((float)yaw)*true_offset);
 
 		return new Vec3d(xx, yy, zz);
+	}
+
+	public static Vec3d offsetPosDirectionXZ(double xOffset, double zOffset, float rotationYaw, float rotationPitch)
+	{
+		//If no offset, return 0 vector
+		if(xOffset==0&&zOffset==0)
+			return Vec3d.ZERO;
+
+		float yaw = (float)Math.toRadians(-rotationYaw);
+		float yawZ = (float)(yaw-1.5707963267948966);
+		float pitch = (float)Math.toRadians(rotationPitch);
+
+		return offsetPosDirection(xOffset, yaw, pitch).add(offsetPosDirection(zOffset, yawZ, 0));
+	}
+
+	public static Vec3d offsetPosDirectionXYZ(Vec3d offset, float rotationYaw, float rotationPitch, float rotationRoll)
+	{
+		//If no offset, return 0 vector
+		if(offset.x==0&&offset.y==0&&offset.z==0)
+			return Vec3d.ZERO;
+
+		float yaw = (float)Math.toRadians(-rotationYaw);
+		float yawZ = (float)(yaw-1.5707963267948966);
+		float pitch = (float)Math.toRadians(rotationPitch);
+		float pitchY = (float)(pitch+1.5707963267948966);
+
+		return offsetPosDirection(offset.x, yaw, pitch)
+				.add(offsetPosDirection(offset.y, yaw, pitchY))
+				.add(offsetPosDirection(offset.z, yawZ, 0));
 	}
 
 	/**
@@ -111,6 +141,11 @@ public class IIMath extends MathHelper
 
 		return comp2.contains(c0)&&comp2.contains(c1)&&comp2.contains(c2)&&comp2.contains(c3)
 				&&comp2.contains(c4)&&comp2.contains(c5)&&comp2.contains(c6)&&comp2.contains(c7);
+	}
+
+	public static Vec3d getAABBCenter(@Nonnull AxisAlignedBB aabb)
+	{
+		return new Vec3d(aabb.minX+(aabb.maxX-aabb.minX)*0.5D, aabb.minY+(aabb.maxY-aabb.minY)*0.5D, aabb.minZ+(aabb.maxZ-aabb.minZ)*0.5D);
 	}
 
 	/**

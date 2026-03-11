@@ -16,6 +16,10 @@ import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctur
 public class MultiblockChemicalBath extends MultiblockStuctureBase<TileEntityChemicalBath>
 {
 	public static MultiblockChemicalBath INSTANCE;
+	public static final int ITEM_IN = 0;
+	public static final int ITEM_OUT = 1;
+	public static final int BUCKET_IN = 2;
+	public static final int BUCKET_OUT = 3;
 
 	public MultiblockChemicalBath()
 	{

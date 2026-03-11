@@ -46,16 +46,16 @@ public abstract class AmmoComponent extends AmmoPart
 	/**
 	 * Called when the ammo explodes
 	 *
-	 * @param world           the world
-	 * @param pos             the position of the bullet
-	 * @param dir             the direction of the explosion
-	 * @param shape           the core type
-	 * @param tag             the NBT tag of the bullet
-	 * @param componentAmount the fraction (0.0-1.0) of this component being contents of this bullet
-	 * @param multiplier      the component effect multiplier
-	 * @param owner           the owner of the bullet
+	 * @param world      the world
+	 * @param pos        the position of the bullet
+	 * @param dir        the direction of the explosion
+	 * @param shape      the core type
+	 * @param tag        the NBT tag of the bullet
+	 * @param size       the size of the component in the projectile
+	 * @param multiplier the component effect multiplier
+	 * @param owner      the owner of the bullet
 	 */
-	public abstract void onEffect(World world, Vec3d pos, Vec3d dir, ComponentEffectShape shape, NBTTagCompound tag, float componentAmount, float multiplier, @Nullable Entity owner);
+	public abstract void onEffect(World world, Vec3d pos, Vec3d dir, ComponentEffectShape shape, NBTTagCompound tag, float size, float multiplier, @Nullable Entity owner);
 
 	/**
 	 * @return the component role

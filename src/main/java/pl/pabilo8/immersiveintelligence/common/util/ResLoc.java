@@ -4,7 +4,7 @@ import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.util.ResourceLocation;
 
 /**
- * Pattern based, more programmer friendly extension of {@link net.minecraft.util.ResourceLocation}
+ * Pattern based, more programmer friendly extension of {@link ResourceLocation}
  *
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 13.02.2023
@@ -13,6 +13,7 @@ public class ResLoc extends ResourceLocation
 {
 	//--- Extensions ---//
 	public static final String EXT_OBJ = ".obj";
+	public static final String EXT_OBJ_IE = ".obj.ie";
 	public static final String EXT_MTL = ".mtl";
 	public static final String EXT_OBJAMT = ".obj.amt";
 	public static final String EXT_JSON = ".json";
@@ -72,6 +73,11 @@ public class ResLoc extends ResourceLocation
 		return of(new ResourceLocation(resString));
 	}
 
+	public static ResLoc root(ResourceLocation res)
+	{
+		return root(res.getResourceDomain());
+	}
+
 	/**
 	 * @return file type extension of this {@link ResLoc}
 	 */
@@ -95,6 +101,11 @@ public class ResLoc extends ResourceLocation
 		if(i==-1)
 			return this;
 		return new ResLoc(this.resourceDomain, this.resourcePath.substring(0, i)+"/");
+	}
+
+	public boolean isDirectory()
+	{
+		return this.resourcePath.endsWith("/")||this.resourcePath.isEmpty();
 	}
 
 	/**

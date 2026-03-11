@@ -8,8 +8,9 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.RayTraceResult.Type;
-import pl.pabilo8.immersiveintelligence.api.utils.IUpgradableMachine;
+import pl.pabilo8.immersiveintelligence.api.upgrade.IUpgradableDevice;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemUtils;
@@ -28,11 +29,9 @@ public class TextOverlayUpgrade extends TextOverlayBase
 	@Override
 	public boolean shouldDraw(EntityPlayer player, RayTraceResult mouseOver, @Nullable TileEntity te, @Nullable Entity entityHit)
 	{
-		if(mouseOver.typeOfHit!=Type.BLOCK)
-			return false;
+		return mouseOver.typeOfHit==Type.BLOCK&&te instanceof IUpgradableDevice
+				&&IIItemUtils.isWrench(player.getHeldItem(EnumHand.MAIN_HAND));
 
-		return te instanceof IUpgradableMachine&&
-				IIItemUtils.isWrench(player.getHeldItem(EnumHand.MAIN_HAND));
 	}
 
 	@ParametersAreNonnullByDefault
@@ -40,16 +39,18 @@ public class TextOverlayUpgrade extends TextOverlayBase
 	@Override
 	public String[] getText(EntityPlayer player, RayTraceResult mouseOver, @Nullable TileEntity te, @Nullable Entity entityHit)
 	{
-		assert te!=null;
-		IUpgradableMachine teU = (IUpgradableMachine)te;
+		IUpgradableDevice tile = IIUtils.requireMaster(((IUpgradableDevice)te), IUpgradableDevice::master);
 
-		teU = teU.getUpgradeMaster();
-		if(teU!=null&&teU.getCurrentlyInstalled()!=null)
-			return new String[]{
-					I18n.format(IIReference.INFO_KEY+"machineupgrade.name", I18n.format("machineupgrade.immersiveintelligence."+teU.getCurrentlyInstalled().getName())),
-					I18n.format(IIReference.INFO_KEY+"machineupgrade.progress", teU.getInstallProgress(), teU.getCurrentlyInstalled().getProgressRequired())
-			};
-		return null;
+		//Return null if no upgrade is being installed
+		if(tile==null||tile.getCurrentUpgrade()==null)
+			return null;
+		//Return upgrade name and progress
+		return new String[]{
+				I18n.format(IIReference.INFO_KEY+"machineupgrade.name", tile.getCurrentUpgrade().getLocalizedName()),
+				I18n.format(IIReference.INFO_KEY+"machineupgrade.progress",
+						tile.getUpgradeInstallProgress(false),
+						tile.getCurrentUpgrade().getProgressRequired())
+		};
 	}
 
 	@Override

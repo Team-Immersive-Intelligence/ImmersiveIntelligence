@@ -5,7 +5,7 @@
     "data": 5
   },
   "pattern": [
-    "rr ",
+    "rrv",
     " ec",
     "pcp"
   ],
@@ -25,6 +25,10 @@
     "e": {
       "type": "forge:ore_dict",
       "ore": "engineElectricSmallAdvanced"
+    },
+	"v": {
+      "type": "forge:ore_dict",
+      "ore": "cameraBasic"
     }
   }
 }

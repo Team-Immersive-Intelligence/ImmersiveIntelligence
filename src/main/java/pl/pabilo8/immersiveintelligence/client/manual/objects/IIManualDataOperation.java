@@ -20,7 +20,7 @@ import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualObject;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualPage;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
-import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationUtils;
+import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
 import pl.pabilo8.immersiveintelligence.common.item.data.ItemIIFunctionalCircuit.Circuits;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
@@ -171,7 +171,7 @@ public class IIManualDataOperation extends IIManualObject
 
 	<T> T getArrayElementForTime(T[] parameters)
 	{
-		float progress = IIAnimationUtils.getDebugProgress(parameters.length*20, 0);
+		float progress = AMTUtils.getDebugProgress(parameters.length*20, 0);
 		if(parameters.length==1)
 			return parameters[0];
 		else

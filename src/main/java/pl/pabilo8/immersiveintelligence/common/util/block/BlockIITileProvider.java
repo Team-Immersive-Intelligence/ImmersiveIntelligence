@@ -7,7 +7,6 @@ import blusunrize.immersiveengineering.api.energy.wires.IImmersiveConnectable;
 import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler;
 import blusunrize.immersiveengineering.api.shader.CapabilityShader;
 import blusunrize.immersiveengineering.client.models.IOBJModelCallback;
-import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.*;
 import blusunrize.immersiveengineering.common.blocks.TileEntityIEBase;
 import blusunrize.immersiveengineering.common.blocks.TileEntityMultiblockPart;
@@ -40,6 +39,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.obj.OBJModel.OBJState;
@@ -48,16 +48,19 @@ import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.common.property.Properties;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
+import net.minecraftforge.fml.common.gameevent.TickEvent.ServerTickEvent;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.utils.IUpgradableMachine;
+import pl.pabilo8.immersiveintelligence.api.upgrade.IUpgradableDevice;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IITileProviderEnum;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemUtils;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IDamageResistantMultiblock;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IExplosionResistantMultiblock;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.ILadderMultiblock;
 
 import javax.annotation.Nullable;
@@ -101,9 +104,9 @@ public abstract class BlockIITileProvider<E extends Enum<E> & IITileProviderEnum
 	//--- Other Methods ---//
 
 	@SubscribeEvent
-	public static void onTick(TickEvent.ServerTickEvent ev)
+	public static void onTick(ServerTickEvent ev)
 	{
-		if(ev.phase==TickEvent.Phase.END)
+		if(ev.phase==Phase.END)
 			tempTile.clear();
 	}
 
@@ -276,6 +279,31 @@ public abstract class BlockIITileProvider<E extends Enum<E> & IITileProviderEnum
 		if(tile instanceof IEntityProof)
 			return ((IEntityProof)tile).canEntityDestroy(entity);
 		return super.canEntityDestroy(state, world, pos, entity);
+	}
+
+	@Override
+	public float getExplosionResistance(World world, BlockPos pos, Entity exploder, Explosion explosion)
+	{
+		TileEntity te = world.getTileEntity(pos);
+		if(te instanceof IDamageResistantMultiblock)
+		{
+			IDamageResistantMultiblock mb = (IDamageResistantMultiblock)te;
+			if(te instanceof TileEntityMultiblockPart)
+				mb = (IDamageResistantMultiblock)((TileEntityMultiblockPart<?>)te).master();
+			assert mb!=null;
+			//float damageDealt = explosion instanceof IIExplosion?(float)(((IIExplosion)explosion).getPower()/3f): explosion.size;
+			boolean dead = mb.damageHealth(Math.max(explosion.size-mb.getExplosionResistance(), 0));
+			return dead?0: Float.MAX_VALUE;
+
+		}
+		if(te instanceof IExplosionResistantMultiblock)
+		{
+			float v = ((IExplosionResistantMultiblock)te).getExplosionResistance();
+			if(v!=-1)
+				return v;
+		}
+
+		return super.getExplosionResistance(world, pos, exploder, explosion);
 	}
 
 	@Override
@@ -502,10 +530,10 @@ public abstract class BlockIITileProvider<E extends Enum<E> & IITileProviderEnum
 			if(b)
 				return b;
 		}
-		if(tile instanceof IUpgradableMachine&&IIItemUtils.isWrench(heldItem))
+		if(tile instanceof IUpgradableDevice&&IIItemUtils.isWrench(heldItem))
 		{
-			IUpgradableMachine u = ((IUpgradableMachine)tile).getUpgradeMaster();
-			if(u!=null&&u.getInstallProgress()==0)
+			IUpgradableDevice u = ((IUpgradableDevice)tile).master();
+			if(u!=null&&u.getUpgradeInstallProgress(false)==0&&!player.isSneaking())
 			{
 				TileEntity master = (TileEntity)u;
 				player.openGui(ImmersiveIntelligence.INSTANCE, IIGUI.UPGRADE.ordinal(), master.getWorld(), master.getPos().getX(),
@@ -703,8 +731,8 @@ public abstract class BlockIITileProvider<E extends Enum<E> & IITileProviderEnum
 	public int getComparatorInputOverride(IBlockState state, World world, BlockPos pos)
 	{
 		TileEntity te = world.getTileEntity(pos);
-		if(te instanceof IEBlockInterfaces.IComparatorOverride)
-			return ((IEBlockInterfaces.IComparatorOverride)te).getComparatorInputOverride();
+		if(te instanceof IComparatorOverride)
+			return ((IComparatorOverride)te).getComparatorInputOverride();
 		return 0;
 	}
 
@@ -713,8 +741,8 @@ public abstract class BlockIITileProvider<E extends Enum<E> & IITileProviderEnum
 	public int getWeakPower(IBlockState blockState, IBlockAccess world, BlockPos pos, EnumFacing side)
 	{
 		TileEntity te = world.getTileEntity(pos);
-		if(te instanceof IEBlockInterfaces.IRedstoneOutput)
-			return ((IEBlockInterfaces.IRedstoneOutput)te).getWeakRSOutput(blockState, side);
+		if(te instanceof IRedstoneOutput)
+			return ((IRedstoneOutput)te).getWeakRSOutput(blockState, side);
 		return 0;
 	}
 
@@ -722,8 +750,8 @@ public abstract class BlockIITileProvider<E extends Enum<E> & IITileProviderEnum
 	public int getStrongPower(IBlockState blockState, IBlockAccess world, BlockPos pos, EnumFacing side)
 	{
 		TileEntity te = world.getTileEntity(pos);
-		if(te instanceof IEBlockInterfaces.IRedstoneOutput)
-			return ((IEBlockInterfaces.IRedstoneOutput)te).getStrongRSOutput(blockState, side);
+		if(te instanceof IRedstoneOutput)
+			return ((IRedstoneOutput)te).getStrongRSOutput(blockState, side);
 		return 0;
 	}
 
@@ -740,8 +768,8 @@ public abstract class BlockIITileProvider<E extends Enum<E> & IITileProviderEnum
 	public boolean canConnectRedstone(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side)
 	{
 		TileEntity te = world.getTileEntity(pos);
-		if(te instanceof IEBlockInterfaces.IRedstoneOutput)
-			return ((IEBlockInterfaces.IRedstoneOutput)te).canConnectRedstone(state, side);
+		if(te instanceof IRedstoneOutput)
+			return ((IRedstoneOutput)te).canConnectRedstone(state, side);
 		return false;
 	}
 

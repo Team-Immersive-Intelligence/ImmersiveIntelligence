@@ -1,27 +1,30 @@
 package pl.pabilo8.immersiveintelligence.common.gui;
 
-import blusunrize.immersiveengineering.common.gui.ContainerIEBase;
-import blusunrize.immersiveengineering.common.gui.IESlot;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityProjectileWorkshop;
+import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIBase;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @author Avalon (avalon@iiteam.net)
  * @since 10.07.2019
+ * @since 08.13.2025
  */
-public class ContainerProjectileWorkshop extends ContainerIEBase<TileEntityProjectileWorkshop>
+public class ContainerProjectileWorkshop extends ContainerIIBase<TileEntityProjectileWorkshop>
 {
+	public Slot inputSlot, outputSlot;
+
 	public ContainerProjectileWorkshop(EntityPlayer player, TileEntityProjectileWorkshop tile)
 	{
-		super(player.inventory, tile);
-		//Input/Output Slots
+		super(player, tile);
 
-		if(tile.hasUpgrade(IIContent.UPGRADE_CORE_FILLER))
+
+		if(tile.isUpgradeInstalled(IIContent.UPGRADE_CORE_FILLER))
 		{
-			this.addSlotToContainer(new IESlot(this, this.inv, 0, 8, 14+32)
+			inputSlot = this.addSlotToContainer(new Slot(this.inv, 0, 8, 46)
 			{
 				@Override
 				public boolean isItemValid(ItemStack itemStack)
@@ -29,7 +32,7 @@ public class ContainerProjectileWorkshop extends ContainerIEBase<TileEntityProje
 					return tile.isStackValid(0, itemStack);
 				}
 			});
-			this.addSlotToContainer(new IESlot(this, this.inv, 1, 8+48-8, 20)
+			outputSlot = this.addSlotToContainer(new Slot(this.inv, 1, 48, 20)
 			{
 				@Override
 				public boolean isItemValid(ItemStack itemStack)
@@ -39,7 +42,7 @@ public class ContainerProjectileWorkshop extends ContainerIEBase<TileEntityProje
 			});
 		}
 		else
-			this.addSlotToContainer(new IESlot(this, this.inv, 0, 8, 14+20+6)
+			inputSlot = this.addSlotToContainer(new Slot(this.inv, 0, 8, 8+2)
 			{
 				@Override
 				public boolean isItemValid(ItemStack itemStack)
@@ -48,13 +51,6 @@ public class ContainerProjectileWorkshop extends ContainerIEBase<TileEntityProje
 				}
 			});
 
-		this.slotCount = tile.getInventory().size();
-		this.tile = tile;
-
-		for(int i = 0; i < 3; i++)
-			for(int j = 0; j < 9; j++)
-				addSlotToContainer(new Slot(player.inventory, j+i*9+9, 30+j*18, 95+i*18));
-		for(int i = 0; i < 9; i++)
-			addSlotToContainer(new Slot(player.inventory, i, 30+i*18, 165-27+15));
+		addPlayerInventory(player.inventory, 8+32+8+4, 141+8);
 	}
 }

@@ -1,20 +1,23 @@
 package pl.pabilo8.immersiveintelligence.api.data;
 
+import blusunrize.immersiveengineering.api.crafting.IngredientStack;
+import net.minecraft.item.EnumDyeColor;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import pl.pabilo8.immersiveintelligence.api.LogisticTag;
 import pl.pabilo8.immersiveintelligence.api.data.device.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.device.IDataDevice;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeBoolean;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeEntity;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeVector;
+import pl.pabilo8.immersiveintelligence.api.data.types.*;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType.TypeMetaInfo;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.NumericDataType;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.ISerializableEnum;
 
 import javax.annotation.Nonnull;
@@ -60,6 +63,29 @@ public class IIDataHandlingUtils
 		return packet.get(variable).toString();
 	}
 
+	@Nullable
+	public static <T extends Enum<T> & ISerializableEnum> T asEnum(char variable, DataPacket packet, Class<T> e)
+	{
+		boolean present = packet.get(variable) instanceof DataTypeString;
+		if(present)
+		{
+			String name = ((DataTypeString)packet.get(variable)).value;
+			try
+			{
+				return T.valueOf(e, name.toUpperCase());
+			} catch(IllegalArgumentException|NullPointerException exception)
+			{
+				return null;
+			}
+		}
+		return null;
+	}
+
+	public static IngredientStack asIngredient(char variable, DataPacket packet)
+	{
+		return ingredientFromData(packet.get(variable));
+	}
+
 	//--- Optional ---//
 
 	public static Optional<Boolean> optionalBoolean(char variable, DataPacket packet)
@@ -102,6 +128,37 @@ public class IIDataHandlingUtils
 		return Optional.empty();
 	}
 
+	public static Optional<IIColor> optionalColor(char variable, DataPacket packet)
+	{
+		DataType colorData = packet.get(variable);
+		if(colorData instanceof DataTypeInteger)
+			return Optional.of(IIColor.fromPackedRGB(MathHelper.clamp(
+					asInt(variable, packet), 0, 0xffffff)));
+		else if(colorData instanceof DataTypeString)
+		{
+			String string = asString(variable, packet).toLowerCase();
+			//Try to match TextFormatting first
+			for(TextFormatting tf : TextFormatting.values())
+				if(tf.getFriendlyName().equals(string))
+					return Optional.of(IIColor.fromTextFormatting(tf));
+			//Or dye color
+			for(EnumDyeColor dye : EnumDyeColor.values())
+				if(dye.getUnlocalizedName().equals(string))
+					return Optional.of(IIColor.fromDye(dye));
+			//Otherwise treat it as a hex color
+			return Optional.of(IIColor.fromHex(string));
+		}
+		return Optional.empty();
+	}
+
+	public static Optional<LogisticTag> optionalLogisticTag(char variable, DataPacket packet)
+	{
+		DataType data = packet.get(variable);
+		if(data instanceof DataTypeLogisticTag)
+			return Optional.of(((DataTypeLogisticTag)data).value);
+		return Optional.empty();
+	}
+
 	//--- IfPresent Parameters ---//
 
 	/**
@@ -115,6 +172,20 @@ public class IIDataHandlingUtils
 		boolean present = packet.get(variable) instanceof NumericDataType;
 		if(present)
 			ifPresent.accept(((NumericDataType)packet.get(variable)).floatValue());
+		return present;
+	}
+
+	/**
+	 * @param variable  variable index in packet
+	 * @param packet    packet
+	 * @param ifPresent performed if variable exists in packet and matches type
+	 * @return whether ifPresent was performed
+	 */
+	public static boolean expectingIntegerParam(char variable, DataPacket packet, Consumer<Integer> ifPresent)
+	{
+		boolean present = packet.get(variable) instanceof NumericDataType;
+		if(present)
+			ifPresent.accept(((NumericDataType)packet.get(variable)).intValue());
 		return present;
 	}
 
@@ -254,6 +325,11 @@ public class IIDataHandlingUtils
 
 	//--- Callback ---//
 
+	public static boolean isCallbackPacket(DataPacket packet)
+	{
+		return packet.get('c').toString().equals("callback");
+	}
+
 	@Nullable
 	public static DataPacket handleCallback(DataPacket packet, Function<String, DataType> mapper)
 	{
@@ -269,7 +345,7 @@ public class IIDataHandlingUtils
 		});
 
 		//If there are no callback variables, return null
-		return sent.isEmpty()?sent: null;
+		return sent.isEmpty()?null: sent;
 	}
 
 	//--- Sending ---//
@@ -303,5 +379,15 @@ public class IIDataHandlingUtils
 			return true;
 		}
 		return false;
+	}
+
+	public static IngredientStack ingredientFromData(DataType dataType)
+	{
+		if(dataType instanceof DataTypeItemStack)
+			return new IngredientStack((((DataTypeItemStack)dataType).value.copy()));
+		else if(dataType instanceof DataTypeString)
+			return new IngredientStack(dataType.toString());
+		else
+			return new IngredientStack("*");
 	}
 }

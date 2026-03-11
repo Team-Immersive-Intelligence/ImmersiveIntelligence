@@ -1,6 +1,6 @@
 package pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel;
 
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiComponentDecoBase;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoComponent;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoLabel;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoFrame;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
@@ -19,8 +19,8 @@ import java.util.function.Function;
  **/
 public class DecoEntryPanelBuilder<TYPE> extends DecoEntryPanel<TYPE>
 {
-	private final Map<String, Function<DecoEntryPanelBuilder<TYPE>, GuiComponentDecoBase<?>>> components = new HashMap<>();
-	private final Map<String, GuiComponentDecoBase<?>> childrenMap = new HashMap<>();
+	private final Map<String, Function<DecoEntryPanelBuilder<TYPE>, DecoComponent<?>>> components = new HashMap<>();
+	private final Map<String, DecoComponent<?>> childrenMap = new HashMap<>();
 	private final Map<String, DecoLabel> labels = new HashMap<>();
 	private int paddingX, paddingY;
 	private BiConsumer<TYPE, DecoEntryPanelBuilder<TYPE>> elementApplyMethod;
@@ -29,6 +29,7 @@ public class DecoEntryPanelBuilder<TYPE> extends DecoEntryPanel<TYPE>
 	{
 	}
 
+	@SuppressWarnings({"rawtypes", "unchecked"})
 	@Override
 	protected void initializeChildren()
 	{
@@ -36,7 +37,9 @@ public class DecoEntryPanelBuilder<TYPE> extends DecoEntryPanel<TYPE>
 		childrenMap.clear();
 
 		components.forEach((name, function) -> {
-			GuiComponentDecoBase<?> component = function.apply(this);
+			DecoComponent component = function.apply(this);
+			if(this.parentGui!=null)
+				component.setParentGUI(this.parentGui);
 			this.addComponent(component);
 			this.childrenMap.put(name, component);
 		});
@@ -59,6 +62,34 @@ public class DecoEntryPanelBuilder<TYPE> extends DecoEntryPanel<TYPE>
 	}
 
 	//--- Settings ---//
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public DecoEntryPanelBuilder<TYPE> withSize(int width, int height)
+	{
+		return (DecoEntryPanelBuilder<TYPE>)super.withSize(width, height);
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public DecoEntryPanelBuilder<TYPE> withWidth(int width)
+	{
+		return (DecoEntryPanelBuilder<TYPE>)super.withWidth(width);
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public DecoEntryPanelBuilder<TYPE> withHeight(int height)
+	{
+		return (DecoEntryPanelBuilder<TYPE>)super.withHeight(height);
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public DecoEntryPanelBuilder<TYPE> withTemplate(DecoComponentTemplate<DecoPanel> template)
+	{
+		return (DecoEntryPanelBuilder<TYPE>)super.withTemplate(template);
+	}
 
 	@Override
 	public DecoEntryPanelBuilder<TYPE> withPadding(int x, int y)
@@ -91,22 +122,17 @@ public class DecoEntryPanelBuilder<TYPE> extends DecoEntryPanel<TYPE>
 
 	//--- Components ---//
 
-	public DecoEntryPanelBuilder<TYPE> withComponent(String name, GuiComponentDecoBase<?> component)
+	public DecoEntryPanelBuilder<TYPE> withComponent(String name, DecoComponent<?> component)
 	{
 		return withComponent(name, p -> component);
 	}
 
-	public DecoEntryPanelBuilder<TYPE> withComponent(GuiComponentDecoBase<?> component)
+	public DecoEntryPanelBuilder<TYPE> withComponent(Function<DecoEntryPanelBuilder<TYPE>, DecoComponent<?>> component)
 	{
 		return withComponent(getGenericComponentName(), component);
 	}
 
-	public DecoEntryPanelBuilder<TYPE> withComponent(Function<DecoEntryPanelBuilder<TYPE>, GuiComponentDecoBase<?>> component)
-	{
-		return withComponent(getGenericComponentName(), component);
-	}
-
-	public DecoEntryPanelBuilder<TYPE> withComponent(String name, Function<DecoEntryPanelBuilder<TYPE>, GuiComponentDecoBase<?>> component)
+	public DecoEntryPanelBuilder<TYPE> withComponent(String name, Function<DecoEntryPanelBuilder<TYPE>, DecoComponent<?>> component)
 	{
 		this.components.put(name, component);
 		return this;
@@ -128,7 +154,8 @@ public class DecoEntryPanelBuilder<TYPE> extends DecoEntryPanel<TYPE>
 		return this;
 	}
 
-	public <T extends GuiComponentDecoBase<? super T>> T component(String name, Class<T> klass)
+	@SuppressWarnings("unchecked")
+	public <T extends DecoComponent<? super T>> T component(String name, @SuppressWarnings("unused") Class<T> klass)
 	{
 		return (T)this.childrenMap.getOrDefault(name, null);
 	}

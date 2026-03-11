@@ -22,7 +22,7 @@ public class DataPacketTest
 	public void setUp()
 	{
 		dataPacket = new DataPacket();
-		assertFalse(dataPacket.isEmpty());
+		assertTrue(dataPacket.isEmpty());
 		IIDataTypeUtils.registerDataTypes();
 		IIDataOperationUtils.registerDataOperations();
 	}

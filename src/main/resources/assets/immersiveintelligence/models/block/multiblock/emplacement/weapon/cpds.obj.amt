@@ -1,0 +1,35 @@
+{
+  "origins": {
+    "base": [8, -50, 24],
+    "gun": [8.01581, -25.51858, 18.52332],
+    "gun_mount": [8, -26, -11.45],
+    "ir_camera": [19, -12.5, 25.5],
+    "ammo_platform": [3, 4.83333, 5],
+    "pillar3": [12, 10, 5],
+    "pillar2": [10, 6.75, 8.25],
+    "pillar1": [7.5, 6.75, 8.25],
+    "door": [1.5, -33.5, 31.5],
+    "magazine": [7.9, -34.5, 17],
+    "gun_lamp": [19, -68, 26],
+    "fire": [8, -23.6, -20]
+  },
+  "hierarchy": {
+    "gun": "base",
+    "gun_mount": "gun",
+    "ir_camera": "base",
+    "ammo_platform": "base",
+    "pillar3": "pillar2",
+    "pillar2": "pillar1",
+    "pillar1": "base",
+    "door": "base",
+    "magazine": "gun",
+    "gun_lamp": "gun",
+    "fire": "gun"
+  },
+  "properties": {
+    "fire": {
+      "rotation": [180.0, 0.0, 0.0],
+      "position": [0.0, 0.0, -0.5]
+    }
+  }
+}

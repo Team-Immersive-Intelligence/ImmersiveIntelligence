@@ -1,0 +1,55 @@
+{
+  "comment": "Made by Pabilo8 with Blockbench",
+  "groups": {
+    "gun_mount": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 1,
+          "transform": [0, 0, 45]
+        }
+      ]
+    },
+    "fire": {
+      "visibility": [
+        {
+          "time": 0.0,
+          "visibility": false
+        },
+        {
+          "time": 0.265,
+          "visibility": true
+        },
+        {
+          "time": 0.76,
+          "visibility": false
+        },
+        {
+          "time": 1.0,
+          "visibility": false
+        }
+      ],
+      "property": [
+        {
+          "time": 0.26667,
+          "property": 0.0
+        },
+        {
+          "time": 0.73333,
+          "property": 1.0
+        },
+        {
+          "time": 0.75,
+          "property": 1.0
+        },
+        {
+          "time": 1.0,
+          "property": 0.0
+        }
+      ]
+    }
+  }
+}

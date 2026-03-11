@@ -10,7 +10,7 @@ import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 01.05.2021
  */
-@IIItemProperties(category = IICategory.RESOURCES)
+@IIItemProperties(category = IICategory.TOOLS)
 public class ItemIIVulcanizerMold extends ItemIISubItemsBase<VulcanizerMolds>
 {
 	public ItemIIVulcanizerMold()

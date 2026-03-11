@@ -8,7 +8,7 @@ import net.minecraft.util.Tuple;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.common.util.AdvancedSounds.RangedSound;
+import pl.pabilo8.immersiveintelligence.common.util.sound.AdvancedSounds.RangedSound;
 
 import java.util.Comparator;
 

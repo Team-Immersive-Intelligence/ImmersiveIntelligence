@@ -10,6 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
+import net.minecraftforge.registries.IForgeRegistryEntry.Impl;
 
 import java.util.ArrayList;
 
@@ -18,7 +19,7 @@ import java.util.ArrayList;
  * @since 23.04.2020
  */
 @Optional.Interface(iface = "mezz.jei.api.recipe.wrapper.IShapedCraftingRecipeWrapper", modid = "jei")
-public class RecipeMinecart extends net.minecraftforge.registries.IForgeRegistryEntry.Impl<IRecipe> implements IRecipe, IShapedCraftingRecipeWrapper
+public class RecipeMinecart extends Impl<IRecipe> implements IRecipe, IShapedCraftingRecipeWrapper
 {
 	public static ArrayList<RecipeMinecart> listAllRecipes = new ArrayList<>();
 	private final ItemStack outputMinecart;

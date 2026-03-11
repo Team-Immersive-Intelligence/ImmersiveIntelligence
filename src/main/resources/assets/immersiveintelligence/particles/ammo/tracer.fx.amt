@@ -1,18 +1,16 @@
 {
   "type": "ParticleModel",
-  "models": ["gunfire.obj"],
-  "max_lifetime": 3,
+  "models": ["ammo/tracer_mid.obj"],
+  "max_lifetime": 2,
   "draw_stage": "custom_additive",
-  "programs": [
-    "lifetime_retexture"
-  ],
-  "scheduled": [
+  "chained": [
     {
       "time": 1,
       "generator": "same",
-      "distance": 0.5,
+      "distance": 0,
       "amount": 1,
-      "type": "smoke/smoke_cloud1"
+      "inherited_properties": ["size", "color", "motion", "position", "rotation"],
+      "type": "ammo/tracer_mid"
     }
   ]
 }

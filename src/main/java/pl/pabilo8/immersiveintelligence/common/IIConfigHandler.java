@@ -1,9 +1,11 @@
 package pl.pabilo8.immersiveintelligence.common;
 
+import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import blusunrize.immersiveengineering.common.Config;
 import blusunrize.immersiveengineering.common.Config.Mapped;
 import blusunrize.immersiveengineering.common.Config.SubConfig;
 import com.google.common.collect.Maps;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.config.Config.*;
 import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
@@ -11,7 +13,11 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.RadioStation;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.common.compat.IICompatModule;
+import pl.pabilo8.immersiveintelligence.common.item.tools.ItemIIMineDetector;
+import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.world.IIWorldGen;
 
 import java.util.Map;
@@ -34,7 +40,28 @@ public class IIConfigHandler
 		putConfigValues();
 
 		if(ev.getModID().equals(ImmersiveIntelligence.MODID))
+		{
 			ConfigManager.sync(ImmersiveIntelligence.MODID, Type.INSTANCE);
+			onConfigUpdate();
+		}
+	}
+
+	public static void onConfigUpdate()
+	{
+		ItemIIMineDetector.detectableBlocks.clear();
+		for(String s : Tools.mineDetectorWhitelist)
+			if(s.startsWith("oreDict:"))
+				ItemIIMineDetector.detectableBlocks.add(new IngredientStack(s.replace("oreDict:", "")));
+			else
+			{
+				String[] args = s.split(":");
+				ItemStack stack = new ItemStack(EasyNBT.newNBT()
+						.withString("id", args[0]+":"+args[1])
+						.withInt("Count", 1)
+						.conditionally(args.length > 2, nbt -> nbt.withInt("Damage", IIStringUtil.parseInt(args[2])))
+						.unwrap());
+				ItemIIMineDetector.detectableBlocks.add(new IngredientStack(stack));
+			}
 	}
 
 	public static void putConfigValues()
@@ -80,6 +107,10 @@ public class IIConfigHandler
 		@LangKey("ii.config.Vehicles")
 		@Comment("Customize II's vehicles, such as durability, speed, resource consumption and fire rate.")
 		public static Vehicles vehicles;
+		@SubConfig
+		@LangKey("ii.config.Factions")
+		@Comment("Customize II's multiplayer factions and property ownership system.")
+		public static Factions factions;
 
 		@Comment({"A list of all mods that II has integrated compatability for", "Setting any of these to false disables the respective compat"})
 		public static Map<String, Boolean> compat = Maps.newHashMap(Maps.toMap(IICompatModule.moduleClasses.keySet(), (s) -> Boolean.TRUE));
@@ -112,6 +143,10 @@ public class IIConfigHandler
 		@RequiresMcRestart
 		public static boolean smeltableAEA = false;
 
+		@Comment({"Whether Immersive Engineering liquid concrete behavior should be replaced by II."})
+		@RequiresMcRestart
+		public static boolean concreteOverride = true;
+
 		@Comment({"A list of all entities for which a fakeplayer should be used when shooter is not a player"})
 		public static String[] bulletFakeplayerWhitelist = new String[]{
 				"minecraft:ender_dragon"
@@ -129,6 +164,12 @@ public class IIConfigHandler
 
 		public static class Graphics
 		{
+			@Comment({"Enable vehicle and equipment passenger animations by changing the passengers' entity model part angles."})
+			public static boolean passengerAnimations = true;
+
+			@Comment({"Enable vehicle debug overlay, showing hitboxes, motion vector arrows and individual part names."})
+			public static boolean vehicleDebugOverlay = false;
+
 			@Comment({"Enable Tactile AMT - dynamic collision boxes for multiblocks that use animations for positioning them."})
 			public static boolean tactileAMT = true;
 
@@ -175,6 +216,9 @@ public class IIConfigHandler
 			})
 			@RangeInt(min = 0, max = 3)
 			public static int explosionParticlesStyle = 3;
+
+			@RangeInt(min = 8, max = 256)
+			public static int dynamiclyColoredTextureVariants = 64;
 		}
 
 		public static class Ores
@@ -276,6 +320,9 @@ public class IIConfigHandler
 			@Comment("Config for the Tripod Periscope, allows for changes to zoom, movement speed and setup time")
 			public static TripodPeriscope tripodPeriscope;
 
+			@Comment({"When enabled, drill heads will offset the dig area center when digging horizontally."})
+			public static boolean drillHeadsOffset = true;
+
 			@Comment({"A modifier to apply to the ammunition resupply time of the Ammunition Crate (weapons reload)."})
 			public static float ammunitionCrateResupplyTime = 1.0f;
 
@@ -318,19 +365,19 @@ public class IIConfigHandler
 
 			@Comment({"The energy usage of the electric wrench (when destroying blocks / upgrading)."})
 			@RequiresMcRestart
-			public static int electricWrenchEnergyPerUse = 1000;
+			public static int electricWrenchEnergyPerUse = 4000;
 
 			@Comment({"The upgrade progress added per use of the engineer's wrench (default 1IF=1 Point of Progress™)."})
 			@RequiresMcRestart
-			public static int electricWrenchUpgradeProgress = 1000;
+			public static int electricWrenchUpgradeProgress = 4000;
 
 			@Comment({"The durability of the engineer's wrench."})
 			@RequiresMcRestart
-			public static int wrenchDurability = 256;
+			public static int wrenchDurability = 128;
 
 			@Comment({"The upgrade progress added per use of the engineer's wrench."})
 			@RequiresMcRestart
-			public static int wrenchUpgradeProgress = 350;
+			public static int wrenchUpgradeProgress = 1000;
 
 			@Comment({"Max zoom of the binoculars (in Blu's Unit of Magnification Measurement™)."})
 			@RequiresMcRestart
@@ -347,6 +394,30 @@ public class IIConfigHandler
 			@Comment({"The energy usage of advanced binoculars (when using Infrared Sight)."})
 			@RequiresMcRestart
 			public static int advancedBinocularsEnergyUsage = 150;
+
+			@Comment({"A list of blocks that the Mine Detector will detect (in addition to mines).",
+					"Use the format 'modid:blockname:meta', e.g. 'minecraft:diamond_ore:0', or oreDict:ore_name for ore dictionary entries.",
+					"Leave empty to disable."})
+			public static String[] mineDetectorWhitelist = new String[]{
+					"immersiveintelligence:tellermine",
+					"immersiveintelligence:tripmine",
+					"minecraft:iron_door",
+					"minecraft:iron_trapdoor",
+					"oreDict:blockIron",
+					"oreDict:blockSheetmetalIron",
+					"oreDict:slabSheetmetalIron",
+					"oreDict:blockSteel",
+					"oreDict:blockSheetmetalSteel",
+					"oreDict:slabSheetmetalSteel",
+					"oreDict:scaffoldingSteel",
+					"immersiveintelligence:metal_device:0",
+					"immersiveintelligence:small_crate:3",
+					"immersiveintelligence:small_crate:4",
+					"immersiveintelligence:small_crate:5"
+			};
+
+			@Comment({"The detection radius (technically a square) of the Mine Detector (in blocks)."})
+			public static int mineDetectorRadius = 4;
 
 			//Durability
 
@@ -653,6 +724,9 @@ public class IIConfigHandler
 				@Comment({"Additional energy capacity of the packer when the charging module upgrade is present."})
 				public static int energyCapacityUpgrade = 16000000;
 
+				@Comment({"Maximum possible energy transfer per one charge action, when the charging module upgrade is present."})
+				public static int energyCapacityUpgradeMaxTransfer = 4000000;
+
 				@Comment({"Additional fluid capacity of the packer when the pump module upgrade is present."})
 				public static int fluidCapacityUpgrade = 96000;
 
@@ -779,7 +853,7 @@ public class IIConfigHandler
 				public static int energyCapacity = 24000;
 
 				@Comment({"Energy usage of the arithmetic-logic machine per circuit."})
-				public static int energyUsage = 2048;
+				public static int energyUsage = 1536;
 			}
 
 			public static class PrintingPress
@@ -795,6 +869,9 @@ public class IIConfigHandler
 
 				@Comment({"Ink used per character printed (mB)."})
 				public static int printInkUsage = 2;
+
+				@Comment({"Ink used to print a Logistics Tag (mB)."})
+				public static int printInkUsageLogiTag = 512;
 			}
 
 			public static class ChemicalBath
@@ -869,6 +946,9 @@ public class IIConfigHandler
 
 				@Comment({"How long does it take for the howitzer to move the shell by one item slot using conveyor (in ticks)"})
 				public static int conveyorTime = 40;
+
+				@Comment({"How much explosion and block breaking damage the multiblock can take (in half-hearts)."})
+				public static int baseHealth = 3600;
 			}
 
 			public static class BallisticComputer
@@ -905,6 +985,25 @@ public class IIConfigHandler
 
 				@Comment({"Energy usage of the radar per tick (in IF)."})
 				public static int energyUsage = 2048;
+
+				@Comment({"Radar target detection radius (in blocks)."})
+				public static int detectionRadius = 72;
+
+				@Comment({"How much explosion and block breaking damage the multiblock can take (in half-hearts)."})
+				public static int baseHealth = 600;
+			}
+
+			public static class Flagpole
+			{
+				@Comment({"Radius for chunks to be claimed (not loaded) around this multiblock"})
+				public static int chunkClaimRadius = 2;
+
+				@Comment({"Maximum allowed radius for chunks to be loaded around this multiblock."})
+				@RangeInt(min = 0, max = 12)
+				public static int maxChunksLoadedRadius = 3;
+
+				@Comment({"How much explosion and block breaking damage the multiblock can take (in half-hearts)."})
+				public static int baseHealth = 800;
 			}
 
 			public static class Emplacement
@@ -912,8 +1011,14 @@ public class IIConfigHandler
 				@Comment({"Energy capacity of the emplacement (in IF)."})
 				public static int energyCapacity = 32000;
 
+				@Comment({"Idle energy usage per tick, regardless whether a weapon is installed or not (in IF)."})
+				public static int baseEnergyUsage = 512;
+
 				@Comment({"Time for the multiblock to open/close the lid (in ticks)."})
 				public static int lidTime = 240;
+
+				@Comment({"Radius for chunks to be claimed (not loaded) around this multiblock"})
+				public static int chunkClaimRadius = 1;
 
 				@Comment({"Interval for the multiblock weapon to update sighted targets (in ticks)."})
 				public static int sightUpdateTime = 10;
@@ -926,6 +1031,9 @@ public class IIConfigHandler
 
 				@Comment({"Amount of turret health restored during single repair action (in half-hearts)."})
 				public static int repairAmount = 4;
+
+				@Comment({"How much explosion and block breaking damage the multiblock can take (in half-hearts)."})
+				public static int baseHealth = 600;
 			}
 
 			public static class Inserter
@@ -959,10 +1067,12 @@ public class IIConfigHandler
 				public static int energyCapacity = 2048;
 				@Comment({"Energy usage of the inserter per item taken."})
 				public static int energyUsage = 128;
-
-				@Comment({"Max fluid output (in milibuckets per tick)"})
-				public static int maxOutput = 500;
-
+				@Comment({"How long does it take for the inserter to perform a task (in ticks)"})
+				public static int taskTime = 40;
+				@Comment({"How much fluid can the inserter take per a single task (in milibuckets)"})
+				public static int maxTake = 500;
+				@Comment({"How much milk should the inserter extract during the cow milking task (in milibuckets)"})
+				public static int cowMilkAmount = 100;
 			}
 
 			public static class AdvancedFluidInserter
@@ -971,9 +1081,12 @@ public class IIConfigHandler
 				public static int energyCapacity = 4096;
 				@Comment({"Energy usage of the inserter per item taken."})
 				public static int energyUsage = 256;
-
-				@Comment({"Max fluid output (in milibuckets per tick)"})
-				public static int maxOutput = 240;
+				@Comment({"How long does it take for the inserter to perform a task (in ticks)"})
+				public static int taskTime = 20;
+				@Comment({"How much fluid can the inserter take per a single task (in milibuckets)"})
+				public static int maxTake = 1000;
+				@Comment({"How much milk should the inserter extract during the cow milking task (in milibuckets)"})
+				public static int cowMilkAmount = 200;
 
 			}
 
@@ -1051,7 +1164,7 @@ public class IIConfigHandler
 				public static int fluidCapacity = 16000;
 
 				@Comment({"Default bucket wait time for a coagulator process, when not specified in recipe (in ticks)."})
-				public static int bucketTime = 400;
+				public static int bucketTime = 2400;
 
 				@Comment({"How long does it take to move a crane 1 block (in ticks)."})
 				public static int craneMoveTime = 20;
@@ -1252,7 +1365,10 @@ public class IIConfigHandler
 					public static int maxHealth = 200;
 
 					@Comment({"Enemy detection range (in blocks)"})
-					public static float detectionRadius = 24;
+					public static float detectionRadius = 32;
+
+					@Comment({"Enemy detection range (in blocks)"})
+					public static float attackRadius = 40;
 
 					@Comment({"Base energy usage per tick (in IF)."})
 					public static int energyUpkeepCost = 2048;
@@ -1281,6 +1397,9 @@ public class IIConfigHandler
 					@Comment({"Enemy detection range (in blocks)"})
 					public static float detectionRadius = 24;
 
+					@Comment({"Enemy attack range (in blocks)"})
+					public static float attackRadius = 32;
+
 					@Comment({"Base energy usage per tick (in IF)."})
 					public static int energyUpkeepCost = 1024;
 				}
@@ -1299,11 +1418,14 @@ public class IIConfigHandler
 					@Comment({"Energy used per shot (in IF)"})
 					public static int energyUsage = 2048;
 
+					@Comment({"Energy stored inside the weapon platform (in IF)"})
+					public static int energyStorage = 32000000;
+
 					@Comment({"Starting/max health of the turret (in half-hearts)"})
 					public static int maxHealth = 200;
 
 					@Comment({"Enemy detection range (in blocks)"})
-					public static float detectionRadius = 0;
+					public static float detectionRadius = 16;
 
 					@Comment({"Enemy attack range (in blocks)"})
 					public static float attackRadius = 16;
@@ -1313,9 +1435,6 @@ public class IIConfigHandler
 				{
 					@Comment({"Pitch rotation speed (degrees/tick)"})
 					public static float pitchRotateSpeed = 2;
-
-					@Comment({"Yaw rotation speed (degrees/tick, rotates only if sent a data packet, requires lowering the platform)"})
-					public static int yawRotateTime = 1;
 
 					@Comment({"Starting/max health of the turret (in half-hearts)"})
 					public static int maxHealth = 100;
@@ -1343,7 +1462,10 @@ public class IIConfigHandler
 					public static int maxHealth = 350;
 
 					@Comment({"Enemy detection range (in blocks)"})
-					public static float detectionRadius = 16;
+					public static float detectionRadius = 24;
+
+					@Comment({"Enemy attack range (in blocks)"})
+					public static float attackRadius = 48;
 
 					@Comment({"Base energy usage per tick (in IF)."})
 					public static int energyUpkeepCost = 4096;
@@ -1375,6 +1497,9 @@ public class IIConfigHandler
 					@Comment({"Enemy detection range (in blocks)"})
 					public static float detectionRadius = 16;
 
+					@Comment({"Enemy attack range (in blocks)"})
+					public static float attackRadius = 32;
+
 					@Comment({"Base energy usage per tick (in IF)."})
 					public static int energyUpkeepCost = 2048;
 				}
@@ -1385,10 +1510,10 @@ public class IIConfigHandler
 					public static int shotFireTime = 40;
 
 					@Comment({"Time required for loading a single projectile."})
-					public static int reloadConveyorTime = 20;
+					public static int reloadTime = 20;
 
-					@Comment({"Time required for replacing the ammo box."})
-					public static int reloadAmmoBoxTime = 100;
+					@Comment({"Time required for setting up the emplacement."})
+					public static int setupTime = 100;
 
 					@Comment({"Starting/max health of the turret (in half-hearts)"})
 					public static int maxHealth = 350;
@@ -1401,6 +1526,9 @@ public class IIConfigHandler
 
 					@Comment({"Enemy detection range (in blocks)"})
 					public static float detectionRadius = 16;
+
+					@Comment({"Enemy attack range (in blocks)"})
+					public static float attackRadius = 64;
 
 					@Comment({"Base energy usage per tick (in IF)."})
 					public static int energyUpkeepCost = 2048;
@@ -1475,6 +1603,49 @@ public class IIConfigHandler
 						"immersiveintelligence:endermite"
 				};
 
+			}
+
+			public static class AmmoMagazines
+			{
+				@Comment({"Bullet capacity of the Machinegun magazine."})
+				public static int machinegunCapacity = 48;
+				@Comment({"Time required to load a single bullet into the Machinegun magazine (in ticks)."})
+				public static int machinegunReloadTime = 20;
+
+				@Comment({"Bullet capacity of the Submachinegun magazine."})
+				public static int submachinegunCapacity = 24;
+				@Comment({"Time required to load a single bullet into the Submachinegun magazine (in ticks)."})
+				public static int submachinegunReloadTime = 20;
+
+				@Comment({"Bullet capacity of the Rifle magazine."})
+				public static int rifleCapacity = 12;
+				@Comment({"Time required to load a single bullet into the Rifle magazine (in ticks)."})
+				public static int rifleReloadTime = 20;
+
+				@Comment({"Bullet capacity of the Submachinegun drum magazine."})
+				public static int submachinegunDrumCapacity = 64;
+				@Comment({"Time required to load a single bullet into the Submachinegun drum (in ticks)."})
+				public static int submachinegunDrumReloadTime = 20;
+
+				@Comment({"Bullet capacity of the Assault Rifle magazine."})
+				public static int assaultRifleCapacity = 32;
+				@Comment({"Time required to load a single bullet into the Assault Rifle magazine (in ticks)."})
+				public static int assaultRifleReloadTime = 20;
+
+				@Comment({"Bullet capacity of the Autocannon magazine."})
+				public static int autocannonCapacity = 16;
+				@Comment({"Time required to load a single shell into the Autocannon (in ticks)."})
+				public static int autocannonReloadTime = 20;
+
+				@Comment({"Bullet capacity of the CPDS drum magazine."})
+				public static int cpdsDrumCapacity = 128;
+				@Comment({"Time required to load a single bullet into the CPDS drum (in ticks)."})
+				public static int cpdsDrumReloadTime = 20;
+
+				@Comment({"Bullet capacity of the Pistol magazine."})
+				public static int pistolCapacity = 16;
+				@Comment({"Time required to load a single bullet into the Pistol magazine (in ticks)."})
+				public static int pistolReloadTime = 20;
 			}
 
 			public static class Rifle
@@ -1765,6 +1936,12 @@ public class IIConfigHandler
 			@Comment("Config for the Field Howitzer, allows for changes to durability and fire rate")
 			public static FieldHowitzer fieldHowitzer;
 
+			@Comment({"When enabled, clutch will not be engaged automatically during gear shift by its own."})
+			public static boolean manualClutch = false;
+
+			@Comment({"When disabled, gearbox will shift gears automatically based on speed."})
+			public static boolean manualGearbox = true;
+
 
 			public static class Motorbike
 			{
@@ -1817,6 +1994,12 @@ public class IIConfigHandler
 			}
 		}
 
+		public static class Factions
+		{
+			@Comment({"When enabled, players not belonging to a faction cannot access containers on chunks belonging to other factions."})
+			public static boolean preventContainerAccess = true;
+		}
+
 		public static class MechanicalDevices
 		{
 			@Comment({"The modifier of internal torque of a machine using this gear.", GEARS})
@@ -1844,7 +2027,10 @@ public class IIConfigHandler
 			public static float dynamoWatermillTorque = 24f;
 
 			@Comment({"Torque multiplier for the axle from MysticalMechanics."})
-			public static float dynamoAxleTorque = 18f;
+			public static float dynamoMMAxleTorque = 18f;
+
+			@Comment({"Torque multiplier for the axle from MysticalMechanics."})
+			public static float dynamoBWMAxleTorque = 18f;
 		}
 	}
 }

@@ -1,11 +1,19 @@
 package pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage;
 
+import blusunrize.immersiveengineering.client.ClientUtils;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.GlStateManager.DestFactor;
+import net.minecraft.client.renderer.GlStateManager.SourceFactor;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiComponentDecoBase;
+import net.minecraftforge.fluids.FluidStack;
+import org.lwjgl.opengl.GL11;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoComponent;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
-import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 
 import javax.annotation.Nonnull;
@@ -17,15 +25,22 @@ import java.util.Map;
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
  * @ii-approved 0.3.1
+ * @implNote RESOURCE must implement {@link #hashCode()} method properly, see {@link FluidStack#hashCode()}
  * @since 16.06.2025
  */
-public abstract class DecoTankBase<TYPE extends DecoTankBase<TYPE, RESOURCE>, RESOURCE> extends GuiComponentDecoBase<TYPE>
+public abstract class DecoTankBase<TYPE extends DecoTankBase<TYPE, RESOURCE>, RESOURCE> extends DecoComponent<TYPE>
 {
 	private final String STRING_TANK_EMPTY = I18n.format("gui.immersiveengineering.empty");
 	private final Map<RESOURCE, Float> displayedAmounts = new HashMap<>();
 
-	protected ResLoc tankBackgroundLocation = IIReference.GUI_BG_DARK;
-	protected ResLoc tankOverlayLocation = IIReference.RES_TEXTURES_DECO_COMPONENT_TANK;
+	protected ResLoc tankBackgroundLocation = DecoTextures.BG_DARK_TANK;
+	protected ResLoc tankOverlayLocation = DecoTextures.COMPONENT_TANK;
+	protected ResLoc tankColorMarkerLocation = DecoTextures.COMPONENT_TANK_MARKER;
+	@Nullable
+	protected IIColor colorMarker;
+	protected int textureSize = 64;
+	protected boolean maskDrawingMode = false;
+	protected float[] maskModeUV = new float[0];
 
 	protected int lastMouseY = 0;
 	protected int borderSize = 0;
@@ -39,6 +54,51 @@ public abstract class DecoTankBase<TYPE extends DecoTankBase<TYPE, RESOURCE>, RE
 	public TYPE withBorderSize(int borderSize)
 	{
 		this.borderSize = borderSize;
+		//noinspection unchecked
+		return (TYPE)this;
+	}
+
+	public TYPE withTankBackgroundLocation(ResLoc tankBackgroundLocation)
+	{
+		this.tankBackgroundLocation = tankBackgroundLocation;
+		//noinspection unchecked
+		return (TYPE)this;
+	}
+
+	public TYPE withTankOverlayLocation(ResLoc tankOverlayLocation)
+	{
+		this.tankOverlayLocation = tankOverlayLocation;
+		//noinspection unchecked
+		return (TYPE)this;
+	}
+
+	public TYPE withTankMask(ResLoc backgroundTexture, int width, int height, int textureSize, int[] uv)
+	{
+		withTankBackgroundLocation(null);
+		withSize(width, height);
+		this.maskDrawingMode = true;
+		TextureAtlasSprite marker = ClientUtils.getSprite(backgroundTexture);
+		float texScale = (float)16/textureSize;
+		this.maskModeUV = new float[]{
+				marker.getInterpolatedU(texScale*uv[0]), marker.getInterpolatedU(texScale*(uv[0]+uv[1])),
+				marker.getInterpolatedV(texScale*uv[2]), marker.getInterpolatedV(texScale*(uv[2]+uv[3]))
+		};
+
+		//noinspection unchecked
+		return (TYPE)this;
+	}
+
+	public TYPE withTankColorMarkerLocation(ResLoc tankColorMarkerLocation)
+	{
+		this.tankColorMarkerLocation = tankColorMarkerLocation;
+		//noinspection unchecked
+		return (TYPE)this;
+	}
+
+	public TYPE withColorMarker(@Nullable IIColor colorMarker)
+	{
+		this.colorMarker = colorMarker;
+		//noinspection unchecked
 		return (TYPE)this;
 	}
 
@@ -58,7 +118,44 @@ public abstract class DecoTankBase<TYPE extends DecoTankBase<TYPE, RESOURCE>, RE
 		bindAtlas();
 		//Draw background
 		IIDrawUtils draw = IIDrawUtils.startTexturedColored();
-		draw.drawConnectedColorRect(x, y, width, height, IIColor.WHITE, tankBackgroundLocation, 64, 64, 8, 8);
+		GlStateManager.enableAlpha();
+		GlStateManager.enableBlend();
+
+		//Draw a regular, rectangle shaped tank
+		if(!maskDrawingMode)
+		{
+			draw.drawConnectedTexColorRect(x, y, width, height, IIColor.WHITE, tankBackgroundLocation,
+					textureSize, textureSize, 8, 8);
+			//Draw color marker (useful for f.e. ink fluid tanks)
+			if(colorMarker!=null)
+			{
+				TextureAtlasSprite marker = ClientUtils.getSprite(tankColorMarkerLocation);
+				draw.drawTexColorRect(x+width/2f-3, y-4, 6, 4, IIColor.WHITE,
+						marker.getMinU(), marker.getInterpolatedU(6), marker.getMinV(), marker.getInterpolatedV(4));
+				draw.drawTexColorRect(x+width/2f-3, y-4, 6, 4, colorMarker,
+						marker.getInterpolatedU(6), marker.getInterpolatedU(12), marker.getMinV(), marker.getInterpolatedV(4));
+			}
+		}
+		else
+		{
+			//Draw background
+			draw.drawTexColorRect(x, y, width, height, IIColor.WHITE, maskModeUV).finish();
+
+			//Enable stencil and draw a mask
+
+			GlStateManager.color(1f, 1f, 1f, 1f);
+			GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
+			GL11.glEnable(GL11.GL_STENCIL_TEST);
+			GL11.glClear(GL11.GL_STENCIL_BUFFER_BIT);
+			GL11.glStencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_REPLACE);
+			GL11.glStencilFunc(GL11.GL_ALWAYS, 1, 0xFF);
+			IIDrawUtils.startTexturedColored().drawTexColorRect(x, y, width, height, IIColor.WHITE, maskModeUV).finish();
+
+			//Switch stencil for drawing the contents
+			draw = IIDrawUtils.startTexturedColored();
+			GL11.glStencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_KEEP);
+			GL11.glStencilFunc(GL11.GL_EQUAL, 1, 0xFF);
+		}
 
 		//Draw contents
 		List<RESOURCE> contents = getContents();
@@ -88,14 +185,28 @@ public abstract class DecoTankBase<TYPE extends DecoTankBase<TYPE, RESOURCE>, RE
 
 				//Draw the layer, offset upwards by the height of it
 				yOffset -= resourceHeight;
-				draw.drawRepeatedColorRect(x+borderSize, yOffset, fullWidth, resourceHeight, getResourceColor(resource),
+				draw.drawRepeatedTexColorRect(x+borderSize, yOffset, fullWidth, resourceHeight, getResourceColor(resource),
 						getResourceTexture(resource), 16);
+
+				//Draw white overlay for hovered fluid
+				if(IIMath.isPointInRectangle(x+borderSize, yOffset, x+borderSize+fullWidth, yOffset+resourceHeight, mouseX, mouseY))
+					draw.drawRepeatedTexColorRect(x+borderSize, yOffset, fullWidth, resourceHeight, IIColor.WHITE.withAlpha(0.85f),
+							DecoTextures.TEXTURE_WHITE, 16);
 			}
 		}
 
-		//Draw overlay
-		draw.drawConnectedColorRect(x, y, width, height, IIColor.WHITE, tankOverlayLocation, 64, 64, 8, 8)
-				.finish();
+		if(!maskDrawingMode)
+		{
+			//Draw overlay
+			draw.drawConnectedTexColorRect(x, y, width, height, IIColor.WHITE, tankOverlayLocation, textureSize, textureSize, 16, 16).finish();
+		}
+		else
+		{
+			//Disable stencil
+			draw.finish();
+			GL11.glDisable(GL11.GL_STENCIL_TEST);
+			GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
+		}
 	}
 
 	@Override

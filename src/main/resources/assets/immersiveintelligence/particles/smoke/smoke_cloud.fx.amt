@@ -1,0 +1,24 @@
+{
+  "type": "ParticleVanilla",
+  "textures": ["immersiveintelligence:particle/smoke/smoke"],
+  "max_lifetime": 20,
+  "draw_stage": "custom_smoke_noise_shader",
+  "aabb": 0.3,
+  "color": "474747",
+  "programs": [
+    "smoke_transition",
+    "gravity(1.0,-0.005)"
+  ],
+  "size": 0.6,
+  "scheduled": [
+    {
+      "time": 19,
+      "generator": "same",
+      "distance": 0.125,
+      "min_amount": 1,
+      "max_amount": 2,
+      "type": "smoke/smoke_cloud_post",
+      "inherited_properties": ["motion", "size", "color"]
+    }
+  ]
+}

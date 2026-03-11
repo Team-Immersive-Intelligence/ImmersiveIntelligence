@@ -7,18 +7,12 @@ import javax.annotation.Nonnull;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @ii-approved 0.3.1
+ * @updated 11.12.2025
  * @since 19.08.2019
  */
-public interface ISawblade
+public interface ISawblade extends IMachineTool
 {
-	String getMaterialName(ItemStack stack);
-
-	void damageSawblade(ItemStack stack, int amount);
-
-	int getSawbladeDamage(ItemStack stack);
-
-	int getSawbladeMaxDamage(ItemStack stack);
-
 	int getHardness(ItemStack stack);
 
 	@Nonnull

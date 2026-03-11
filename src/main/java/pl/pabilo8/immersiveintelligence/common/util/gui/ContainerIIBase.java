@@ -1,8 +1,11 @@
 package pl.pabilo8.immersiveintelligence.common.util.gui;
 
+import blusunrize.immersiveengineering.api.IEApi;
+import blusunrize.immersiveengineering.api.IEEnums.SideConfig;
 import blusunrize.immersiveengineering.common.blocks.TileEntityIEBase;
 import blusunrize.immersiveengineering.common.gui.ContainerIEBase;
 import blusunrize.immersiveengineering.common.gui.IESlot;
+import blusunrize.immersiveengineering.common.gui.IESlot.FluidContainer;
 import blusunrize.immersiveengineering.common.util.inventory.IIEInventory;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -13,7 +16,9 @@ import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.api.crafting.DataProgrammingRecipe;
 import pl.pabilo8.immersiveintelligence.api.rotary.IMotorGear;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.function.Predicate;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -41,6 +46,11 @@ public class ContainerIIBase<T extends TileEntityIEBase & IIEInventory> extends 
 		return playerInventory;
 	}
 
+	protected DefaultInputSlot addSlot(int x, int y, int index)
+	{
+		return addSlot(x, y, index, DefaultInputSlot::new);
+	}
+
 	@SuppressWarnings("unchecked")
 	protected <SLOT extends Slot> SLOT addSlot(int x, int y, int index, SlotConstructor<SLOT> aNew)
 	{
@@ -55,6 +65,14 @@ public class ContainerIIBase<T extends TileEntityIEBase & IIEInventory> extends 
 		return slots.toArray(new Slot[0]);
 	}
 
+	protected <SLOT extends Slot> Slot[] addVirtualSlots(int startIndex, int totalSlots, SlotConstructor<SLOT> aNew)
+	{
+		ArrayList<SLOT> slots = new ArrayList<>();
+		for(int i = 0; i < totalSlots; i++)
+			slots.add(this.addSlot(-32, -32, i+startIndex, aNew));
+		return slots.toArray(new Slot[0]);
+	}
+
 	/**
 	 * Functional interface for {@link Slot} constructors to create them in batch.
 	 *
@@ -66,26 +84,79 @@ public class ContainerIIBase<T extends TileEntityIEBase & IIEInventory> extends 
 		SLOT construct(Container container, IInventory inv, int id, int x, int y);
 	}
 
-	public static class FilteredDataInput extends IESlot
+	public static class IISlot extends IESlot
 	{
-		public FilteredDataInput(Container container, IInventory inv, int id, int x, int y)
+		@Nullable
+		private Predicate<ItemStack> filter = null;
+		@Nullable
+		private Runnable onChanged = null;
+
+		public IISlot(Container container, IInventory inv, int id, int x, int y)
 		{
 			super(container, inv, id, x, y);
+		}
+
+		public IISlot withFilter(@Nullable Predicate<ItemStack> filter)
+		{
+			this.filter = filter;
+			return this;
+		}
+
+		public IISlot withOnChanged(@Nullable Runnable onChanged)
+		{
+			this.onChanged = onChanged;
+			return this;
 		}
 
 		@Override
 		public boolean isItemValid(ItemStack stack)
 		{
-			return DataProgrammingRecipe.streamRecipes(DataProgrammingRecipe.class)
-					.anyMatch(r -> r.input.matchesItemStackIgnoringSize(stack));
+			return filter==null||filter.test(stack);
+		}
+
+		@Override
+		public void onSlotChanged()
+		{
+			super.onSlotChanged();
+			if(onChanged!=null)
+				onChanged.run();
 		}
 	}
 
-	public static class MotorGearSlot extends IESlot
+	public class DefaultInputSlot extends IISlot
+	{
+		public DefaultInputSlot(Container container, IInventory inv, int id, int x, int y)
+		{
+			super(container, inv, id, x, y);
+			withFilter(stack -> tile.isStackValid(getSlotIndex(), stack));
+		}
+	}
+
+	public class CrateSlot extends IISlot
+	{
+		public CrateSlot(Container container, IInventory inv, int id, int x, int y)
+		{
+			super(container, inv, id, x, y);
+			withFilter(IEApi::isAllowedInCrate);
+		}
+	}
+
+	public static class FilteredDataInput extends IISlot
+	{
+		public FilteredDataInput(Container container, IInventory inv, int id, int x, int y)
+		{
+			super(container, inv, id, x, y);
+			withFilter(stack -> DataProgrammingRecipe.streamRecipes(DataProgrammingRecipe.class)
+					.anyMatch(r -> r.input.matchesItemStackIgnoringSize(stack)));
+		}
+	}
+
+	public static class MotorGearSlot extends IISlot
 	{
 		public MotorGearSlot(Container container, IInventory inv, int id, int x, int y)
 		{
 			super(container, inv, id, x, y);
+			withFilter(stack -> stack.getItem() instanceof IMotorGear);
 		}
 
 		@Override
@@ -93,12 +164,13 @@ public class ContainerIIBase<T extends TileEntityIEBase & IIEInventory> extends 
 		{
 			return 1;
 		}
+	}
 
-		@Override
-		public boolean isItemValid(ItemStack stack)
-		{
-			//TODO: 18.06.2025 capabilities
-			return stack.getItem() instanceof IMotorGear;
-		}
+	public static SlotConstructor<FluidContainer> getFluidContainerSlot(SideConfig mode)
+	{
+		//Because fuck logic, that's why
+		//-Blusunrize, allegedly
+		int filter = mode==SideConfig.NONE?0: (mode==SideConfig.INPUT?2: 1);
+		return (container, inv1, id, x, y) -> new FluidContainer(container, inv1, id, x, y, filter);
 	}
 }

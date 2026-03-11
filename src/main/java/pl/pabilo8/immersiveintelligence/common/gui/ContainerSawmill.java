@@ -6,10 +6,11 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.DamageSource;
 import pl.pabilo8.immersiveintelligence.api.crafting.SawmillRecipe;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.ISawblade;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.multiblock.MultiblockSawmill;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.tileentity.TileEntitySawmill;
+import pl.pabilo8.immersiveintelligence.common.util.IIDamageSources;
 import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIBase;
 
 /**
@@ -26,11 +27,11 @@ public class ContainerSawmill extends ContainerIIBase<TileEntitySawmill>
 	{
 		super(player, tile);
 
-		this.slotInput = addSlotToContainer(new SawmillInputSlot(this, this.inv, 0, 13+8, 36));
-		this.slotSaw = addSlotToContainer(new SawSlot(tile, this, this.inv, 1, 48+8, 23));
+		this.slotInput = addSlotToContainer(new SawmillInputSlot(this, this.inv, MultiblockSawmill.SLOT_INPUT, 13+8, 36));
+		this.slotSaw = addSlotToContainer(new SawSlot(tile, this, this.inv, MultiblockSawmill.SLOT_SAWBLADE, 48+8, 23));
 
-		this.slotOutput = addSlotToContainer(new IESlot.Output(this, this.inv, 2, 86+8, 36));
-		this.slotOutputTrash = addSlotToContainer(new IESlot.Output(this, this.inv, 3, 108+8, 36));
+		this.slotOutput = addSlotToContainer(new IESlot.Output(this, this.inv, MultiblockSawmill.SLOT_OUTPUT, 86+8, 36));
+		this.slotOutputTrash = addSlotToContainer(new IESlot.Output(this, this.inv, MultiblockSawmill.SLOT_SAWDUST, 108+8, 36));
 
 		addPlayerInventory(player.inventory, 8, 86);
 	}
@@ -67,13 +68,11 @@ public class ContainerSawmill extends ContainerIIBase<TileEntitySawmill>
 		}
 
 		@Override
-		public ItemStack onTake(EntityPlayer thePlayer, ItemStack stack)
+		public ItemStack onTake(EntityPlayer player, ItemStack stack)
 		{
 			if(tile!=null&&tile.rotation.getRotationSpeed() > 0)
-			{
-				thePlayer.attackEntityFrom(DamageSource.GENERIC, tile.rotation.getTorque()/2.5f);
-			}
-			return super.onTake(thePlayer, stack);
+				player.attackEntityFrom(IIDamageSources.SAWMILL_DAMAGE, tile.rotation.getTorque()/2.5f);
+			return super.onTake(player, stack);
 		}
 	}
 }

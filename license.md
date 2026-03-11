@@ -1,69 +1,76 @@
-Pabilo's Immersive Engineering Addon License
-====================================
+# Team Immersive Intelligence License
 
-### VERSION 1.1.1
+Copyright © Team Immersive Intelligence 2025
 
-To solve a problem with licensing my work on IE addons (for now only Immersive Intelligence) I introduce this license.
-With the moment of publishing this license until I clearly state its deprecation, it is the only document that states any rights to elements of this project.
-This license is based on Blu's License of Common Sense by BluSunrize, used in Immersive Engineering.
+## Preamble
 
-### Terms and Definitions
+The Team Immersive Intelligence License (Team II License) has been created to satisfy our needs of how we want to share and distribute our projects to the public.
+This license is based upon a modified version of
+[Pabilo's Immersive Engineering Addon License Version 1.1.1](https://github.com/Team-Immersive-Intelligence/ImmersiveIntelligence/blob/c67ab5e58c61f61309ae810e72fdb897ccd89aec/license.md),
+a derivative of [Blu's License of Common Sense by BluSunrize](https://github.com/BluSunrize/ImmersiveEngineering/blob/master/LICENSE),
+used by [Immersive Engineering](https://github.com/BluSunrize/ImmersiveEngineering/).
 
-**Project Author** – the original creator and license holder of this project, Pabilo8
-**Internal Contributors
-** – people officially contributing code and/or resources to the project under the lead of the Project Author – Team Immersive Intelligence
-**Foreign Contributor** – all people contributing code and/or resources to the project
+## Terms and Definitions
 
-#### What you *can* do:
+**Owner** - The founder and owner of Team Immersive Intelligence (later addressed as Team II), [Pabilo8](https://github.com/Pabilo8).
 
-- Look at the code, draw inspiration, copy bits of it to use in your own projects
-- Fork this repository and modify its code
-- Submit Pull Requests to this repository
-- Write other projects that base on this project and its API (Which means other addons and IE itself can integrate amd take code and art assets out of this project)
+**Infrastructure Engineer** - Team II Member appointed by the Owner with permission of performing his duties on his behalf as well as managing and handling all license-related duties, [VDeltaGabriel](https://github.com/VDeltaGabriel).
 
-#### What you *can not* do:
+**The Project** - Project (also addressed as: repository, mod, site and/or other resource) that is under this license.
 
-- Claim any of this code to be your property
-- Redistribute this project (source or compiled) without explicit permission of the Project Author
-- Copy large sections of this code (classes, complex methods) without giving credit
-- Monetize any of this project. This means selling the code, compiled projects and also forbids the use of paywalls or "donations" to restrict access to any part of the project's content.
+**Internal Contributors** - People officially contributing code and/or resources to the project (also addressed as Team II Members, team members).
 
-#### What you *have to* abide by:
+**Foreign Contributors** - People unofficially contributing code and/or resources to the project.
 
-- If you have used any code from this project (except the API classes), that project must also be visible source. This allows others to learn from your work.
-- Give proper credit where it is due when copying portions of the code (see above)
+**Licenser(s)** - Team II Member(s) appointed by the Owner with permission of managing licenses and handling license related inquiries.
 
-#### On the topic of *resources*:
+### What you *can* do:
 
-- Always give credit to original artists/creators
-- Always ask for permission before copying assets
+- Look at the code, draw inspiration, copy bits of it to use in your own projects.
+- Fork the project and modify its code.
+- Submit contributions to the project.
+- Create projects that base on the project and its API (other IE Addons and Immersive Intelligence itself can integrate and take code and/or art assets out of the project).
 
-#### On the topic of *ingame skins*
+### What you *cannot* do:
 
-- Providing skins for contributors and patrons is limited to the Project Author
-- The skins must not give any in-game benefits other than a distinct look.
-- Once given, skins once given cannot be revoken; this applies to both contributors and patrons
-- Received Patreon skins are clearly stated in rewards for each donation tier
-- Contributor skins are custom and can be given according to the will of the project author, treat these as a reward, not as a payment
-- It is not possible to trade skins for other skins, currencies, or goods; they are bound to user's UUID
+- Claim any of the code and/or other resources from the project to be your property.
+- Redistribute the project (source or compiled) without explicit permission from the Owner or Infrastructure Engineer.
+- Copy large sections of the code (classes, complex methods) and/or other resources from the project without giving credit.
+- Monetize any part of the project. That is: selling the project's code and/or resources, compiled project versions as well as using paywalls or "donations" in order to restrict access to any parts of the project's content.
 
-#### Contributing to this repository:
+### What you *have to* abide by:
 
-- The original author keeps copyright of their contibuted code and resources
-- The Project Author is given rights to usage and modification of the contributed code or resource. Those rights cannot be revoken.
-- Any code or resource submitted must be licensed to this project with this license
+- If your project uses any code and/or resources from the project (API classes excluded), that project **must** also be visible source. This allows others to learn from your work.
+- Give proper credit (see below) where it is due when copying portions of the code (see above).
 
-#### In summary:
+### Resources Guidelines:
 
-Look at the code and learn from it (where possible).
-Draw inspiration, be creative, enjoy yourself.
-Should you find issues, point them out.
-Have an idea how to fix it? Submit a PR.
+- **Always** give credit to original artists/creators.
+- **Always** ask for permission before copying assets (see above).
 
-In case of questions to this license, ask the Project Author on the official Team Immersive Geology discord server.
+### Credit Guidelines:
 
-This project is provided "as is" without warranty of any kind, including but not limited to the warranties of merchantability, fitness for a particular purpose, or non–infringement.
+- A **visible and clear** credit must be present.
+
+### In-Game Cosmetics
+
+- Providing cosmetics for contributors and patrons is limited to the project author and/or Infrastructure Engineer.
+- The skins **must not** give any in-game benefits other than distinct look.
+- Once given, cosmetics cannot be revoked; this applies to both contributors and patrons.
+- Received Patreon cosmetics are clearly stated in rewards for each donation tier.
+- Contributor cosmetics are custom and can be given according to the will of the project author and/or Infrastructure Engineer. Treat these as a reward, not as a payment.
+- It is **not possible** to trade cosmetics for other cosmetics, currencies and/or goods; they are bound to owner's UUID.
+
+### Contributing to the project:
+
+- The original author keeps copyright of their contributed code and/or resources.
+- Team Immersive Intelligence is given rights for usage and modification of the contributed code and/or resources.
+- Those rights **cannot** be revoked - a contributed asset effectively becomes a fork of the original asset and is from then on regulated by this license.
+- Any code and/or resource submitted **must** be licensed under this license.
+
+## Summary
+
+Look at the code and learn from it (where possible). Draw inspiration, be creative, enjoy yourself. Should you find issues, point them out. Have an idea how to fix them? Make a contribution.
+In case of questions to this license, or to obtain redistribution license/permission please contact Team Immersive Intelligence via email: [license@iiteam.net](mailto:license@iiteam.net).
+The project is provided "as-is" without warranty of any kind, including but not limited to the warranties of merchantability, fitness for a particular purpose, or non–infringement.
 The authors or copyright holders are not liable for any claim, damages, or other liability, whether in actions of contract, tort, or other, arising from, out of or in connection to this project, its use, or related projects.
-
-©2019 Pabilo8
-Updated 2023

@@ -1,0 +1,39 @@
+{
+  "comment": "Made by Pabilo8 with Blockbench",
+  "groups": {
+    "hood": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 1,
+          "transform": [0, 0, 40]
+        }
+      ]
+    },
+    "rod": {
+      "rotation": [
+        {
+          "time": 0.4,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 1,
+          "transform": [0, 0, 42.5]
+        }
+      ],
+      "position": [
+        {
+          "time": 0.4,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 1,
+          "transform": [0, 0, 0]
+        }
+      ]
+    }
+  }
+}

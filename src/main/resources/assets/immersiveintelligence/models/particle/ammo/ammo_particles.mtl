@@ -1,0 +1,14 @@
+# Made by Pabilo8 with Blockbench
+
+newmtl air_cone
+map_Kd immersiveintelligence:particle/tracer/air_cone
+newmtl coil_data_side
+map_Kd immersiveintelligence:blocks/metal_decoration/coil_data_side
+newmtl tracer_circle
+map_Kd immersiveintelligence:particle/tracer/tracer_circle
+newmtl tracer_start
+map_Kd immersiveintelligence:particle/tracer/tracer_start
+newmtl tracer_mid
+map_Kd immersiveintelligence:particle/tracer/tracer_mid
+newmtl tracer_end
+map_Kd immersiveintelligence:particle/tracer/tracer_end

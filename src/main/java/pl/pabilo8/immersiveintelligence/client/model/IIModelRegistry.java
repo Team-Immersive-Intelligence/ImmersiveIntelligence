@@ -24,7 +24,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
-import pl.pabilo8.immersiveintelligence.client.util.amt.AMTChain;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTChain;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.block.rotary_device.tileentity.TileEntityMechanicalConnectable;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
@@ -239,7 +239,7 @@ public class IIModelRegistry extends ImmersiveModelRegistry
 	public void removeMotorBeltConnectionModel(Connection connection)
 	{
 		AMTChain remove = motorBeltConnections.remove(connection);
-		if(remove!=null)
-			remove.disposeOf();
+		/*if(remove!=null)
+			remove.disposeOf();*/
 	}
 }

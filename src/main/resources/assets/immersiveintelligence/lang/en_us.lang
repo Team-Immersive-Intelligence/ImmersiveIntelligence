@@ -365,6 +365,8 @@ item.immersiveintelligence.printed_page.newspaper.name=Newspaper
 item.immersiveintelligence.printed_page.book.name=Book
 item.immersiveintelligence.printed_page.letter.name=Letter
 
+item.immersiveintelligence.logistic_tag.name=Logistic Manifest
+
 item.immersiveintelligence.precission_tool.buzzsaw.name=Precision Buzzsaw
 item.immersiveintelligence.precission_tool.drill.name=Precision Drill
 item.immersiveintelligence.precission_tool.inserter.name=Precision Inserter
@@ -422,8 +424,8 @@ item.immersiveintelligence.ammo_casing.smg_1bcal.name=Short Bullet Casing
 item.immersiveintelligence.smg_1bcal.core.name=Short Bullet Core
 item.immersiveintelligence.smg_1bcal.bullet.name=Short Bullet
 
-item.immersiveintelligence.revolver_1bcal.core.name=Revolver Bullet Core
-item.immersiveintelligence.revolver_1bcal.bullet.name=Revolver Bullet
+item.immersiveintelligence.revolver_1bcal.core.name=Revolver Cartridge Core
+item.immersiveintelligence.revolver_1bcal.bullet.name=Revolver Cartridge
 
 item.immersiveintelligence.ammo_casing.autocannon_3bcal.name=Autocannon Shell Casing
 item.immersiveintelligence.autocannon_3bcal.core.name=Autocannon Shell Core
@@ -545,7 +547,7 @@ tile.immersiveintelligence.advanced_explosives.white_phosphorus.name=White Phosp
 
 tile.immersiveintelligence.concrete_decoration.concrete_bricks.name=Concrete Bricks
 tile.immersiveintelligence.concrete_decoration_slab.concrete_bricks.name=Concrete Bricks Slab
-tile.immersiveintelligence.concrete_decoration_stairs_concrete_bricks.name=Concrete Bricks Stairs
+tile.immersiveintelligence.concrete_decoration_stairs_concrete_bricks.name=Concrete Bricks Slab
 
 tile.immersiveintelligence.concrete_decoration.sturdy_concrete_bricks.name=Panzerconcrete Bricks
 tile.immersiveintelligence.concrete_decoration_slab.sturdy_concrete_bricks.name=Panzerconcrete Bricks Slab
@@ -724,51 +726,6 @@ tile.immersiveintelligence.gate_multiblock.wooden_chain.name=Wooden Chain Fence 
 tile.immersiveintelligence.gate_multiblock.steel_chain.name=Steel Chain Fence Gate
 tile.immersiveintelligence.gate_multiblock.aluminium_chain.name=Aluminium Chain Fence Gate
 
-desc.immersiveintelligence.metal_multiblock1.emplacement.storage=Emplacement - Storage
-desc.immersiveintelligence.metal_multiblock1.emplacement.tasks=Emplacement - Tasks
-desc.immersiveintelligence.metal_multiblock1.emplacement.status=Emplacement - Status
-desc.immersiveintelligence.metal_multiblock1.emplacement.base_inventory=Base Inventory
-desc.immersiveintelligence.metal_multiblock1.emplacement.weapon=Mounted: %s
-desc.immersiveintelligence.metal_multiblock1.emplacement.weapon_none=None
-desc.immersiveintelligence.metal_multiblock1.emplacement.upgrades=Installed Upgrades
-desc.immersiveintelligence.metal_multiblock1.emplacement.settings=Settings
-desc.immersiveintelligence.metal_multiblock1.emplacement.redstone_control=Redstone Controlled
-desc.immersiveintelligence.metal_multiblock1.emplacement.data_control=Data Controlled
-desc.immersiveintelligence.metal_multiblock1.emplacement.send_attack_signal=Output target(s) trough data
-desc.immersiveintelligence.metal_multiblock1.emplacement.auto_repair_threshold=Repair when health is below:
-desc.immersiveintelligence.metal_multiblock1.emplacement.selector_preset=Selector Preset
-desc.immersiveintelligence.metal_multiblock1.emplacement.filter=Filter
-desc.immersiveintelligence.metal_multiblock1.emplacement.task_enabled=Enabled
-desc.immersiveintelligence.metal_multiblock1.emplacement.task_negation=Negation
-
-desc.immersiveintelligence.metal_multiblock1.packer.task.pack=Pack
-desc.immersiveintelligence.metal_multiblock1.packer.task.unpack=Unpack
-desc.immersiveintelligence.metal_multiblock1.packer.task.charge=Charge
-desc.immersiveintelligence.metal_multiblock1.packer.task.discharge=Discharge
-desc.immersiveintelligence.metal_multiblock1.packer.task.fill=Fill
-desc.immersiveintelligence.metal_multiblock1.packer.task.drain=Drain
-
-desc.immersiveintelligence.metal_multiblock1.packer.mode.amount=Amount
-desc.immersiveintelligence.metal_multiblock1.packer.mode.slot=Slot
-desc.immersiveintelligence.metal_multiblock1.packer.mode.all_possible=All possible
-desc.immersiveintelligence.metal_multiblock1.packer.mode.at_most_container=At most in container
-desc.immersiveintelligence.metal_multiblock1.packer.mode.at_least_packer=At least in packer
-
-desc.immersiveintelligence.metal_multiblock1.packer.side_input=Items to be put in a container
-desc.immersiveintelligence.metal_multiblock1.packer.side_output=Items taken from a container
-desc.immersiveintelligence.metal_multiblock1.packer.switch_direction=Switch Task Direction
-desc.immersiveintelligence.metal_multiblock1.packer.mode_single=Single-Time Packing
-desc.immersiveintelligence.metal_multiblock1.packer.mode_iteration=Repeated Packing
-
-desc.immersiveintelligence.metal_multiblock1.emplacement.target.mobs=Mobs
-desc.immersiveintelligence.metal_multiblock1.emplacement.target.animals=Animals
-desc.immersiveintelligence.metal_multiblock1.emplacement.target.players=Players
-desc.immersiveintelligence.metal_multiblock1.emplacement.target.npcs=NPCs
-desc.immersiveintelligence.metal_multiblock1.emplacement.target.vehicles=Vehicles
-desc.immersiveintelligence.metal_multiblock1.emplacement.target.shells=Shells
-desc.immersiveintelligence.metal_multiblock1.emplacement.target.team=Team
-desc.immersiveintelligence.metal_multiblock1.emplacement.target.name=Name
-
 tile.immersiveintelligence.metal_multiblock1.flagpole.name=Flagpole
 
 tile.immersiveintelligence.gate_multiblock.wooden_fence_gate.name=Wooden Fence Gate
@@ -930,12 +887,15 @@ subtitle.immersiveintelligence.assault_rifle_shot_distant=Assault Rifle Firing i
 subtitle.immersiveintelligence.assault_rifle_reload=Assault Rifle Reloading
 subtitle.immersiveintelligence.assault_rifle_unload=Assault Rifle Magazine Discarded
 subtitle.immersiveintelligence.assault_rifle_mode_change=Fire Selector Flipping
+subtitle.immersiveintelligence.assault_rifle_load_grenade=Rifle Grenade Loading
 
 subtitle.immersiveintelligence.rifle_shot=Rifle Firing
 subtitle.immersiveintelligence.rifle_shot_distant=Rifle Firing in Distance
 subtitle.immersiveintelligence.rifle_load=Rifle Reloading
 subtitle.immersiveintelligence.rifle_load_magazine=Rifle Magazine Reloading
 subtitle.immersiveintelligence.rifle_unload_magazine=Rifle Magazine Discarded
+
+subtitle.immersiveintelligence.magazine_load=Ammo Magazine Reloading
 
 subtitle.immersiveintelligence.howitzer_shot=Howitzer Firing
 subtitle.immersiveintelligence.howitzer_shot_distant=Howitzer Firing in Distance
@@ -1109,48 +1069,69 @@ machineupgrade.immersiveintelligence.improved_gearbox.desc=Replacing the stock g
 machineupgrade.immersiveintelligence.saw_unregulator=Saw Unregulator
 machineupgrade.immersiveintelligence.saw_unregulator.desc=Unregulating the saw leads to higher sawdust output in cost of main output amount.
 
-machineupgrade.immersiveintelligence.emplacement_grenades=Emergency Smoke Dischargers
-machineupgrade.immersiveintelligence.emplacement_grenades.desc=When emplacement's weapon is heavily damaged, smoke will be discharged to provide cover.
+machineupgrade.immersiveintelligence.sovereignty=Sovereignty
+machineupgrade.immersiveintelligence.sovereignty.desc=Allows the structure to seize terrain around it for the owner's faction.
 
-machineupgrade.immersiveintelligence.emplacement_bearings=Sturdy Bearings
-machineupgrade.immersiveintelligence.emplacement_bearings.desc=Higher quality bearings increase the maximum weapon rotation speed, to work at full capacity lubrication is required
+machineupgrade.immersiveintelligence.emplacement.emergency_smoke=Emergency Smoke Dischargers
+machineupgrade.immersiveintelligence.emplacement.emergency_smoke.desc=When the Emplacement's weapon is heavily damaged, smoke will be discharged to provide cover.
 
-machineupgrade.immersiveintelligence.infrared_observer=Infrared Observer
-machineupgrade.immersiveintelligence.infrared_observer.desc=The Infrared Observer allows surveillance of distant enemies and sending their coordinates via data cables.
+machineupgrade.immersiveintelligence.emplacement.sturdy_bearings=Sturdy Bearings
+machineupgrade.immersiveintelligence.emplacement.sturdy_bearings.desc=Higher quality bearings increase the maximum weapon rotation speed.
 
-machineupgrade.immersiveintelligence.cpds=CPDS
-machineupgrade.immersiveintelligence.cpds.desc=The Counter-Projectile Defense System is an advanced anti-air weapon, capable of destroying incoming artillery shells in mid-air.
+machineupgrade.immersiveintelligence.emplacement.targetting=Enhanced Targetting Systems
+machineupgrade.immersiveintelligence.emplacement.targetting.desc=Improved fire control systems allow for better target acquisition and tracking, increasing accuracy.
 
-machineupgrade.immersiveintelligence.autocannon=Autocannon
-machineupgrade.immersiveintelligence.autocannon.desc=Four 3bCal Automatic Cannons provide lots of firepower making the weapon a universal defense against air and ground targets.
+#Emplacement Weapons
 
-machineupgrade.immersiveintelligence.heavy_chemthrower=Heavy Chemthrower
-machineupgrade.immersiveintelligence.heavy_chemthrower.desc=A heavier version of the well known Chemthrower, higher pressure allows for attacking enemies at ranges 4 times longer than the portable one.
+machineupgrade.immersiveintelligence.emplacement.infrared_observer=Infrared Observer
+machineupgrade.immersiveintelligence.emplacement.infrared_observer.desc=The Infrared Observer allows surveillance of distant enemies and sending their coordinates via data cables.
 
-machineupgrade.immersiveintelligence.heavy_railgun=Heavy Railgun
-machineupgrade.immersiveintelligence.heavy_railgun.desc=Heavy Railgun provides direct fire support. It can launch metal rods or grenades with high velocity, allowing piercing of enemies and materiel.
+machineupgrade.immersiveintelligence.emplacement.spotlight_tower=Spotlight Tower
+machineupgrade.immersiveintelligence.emplacement.spotlight_tower.desc=The Spotlight Tower allows illumination of hostile units, disorienting them and increasing accuracy of allied units.
 
-machineupgrade.immersiveintelligence.machinegun=Machinegun Nest
-machineupgrade.immersiveintelligence.machinegun.desc=The Machinegun Nest can provide suppressive automatic fire, allowing crowd control. Due to its construction, it is unable to fight airborne enemies.
+machineupgrade.immersiveintelligence.emplacement.searchlight=Searchlight
+machineupgrade.immersiveintelligence.emplacement.searchlight.desc=Searchlights work in coordination with Radars, Infrared Observers or Spotlight Towers, disorienting hostile units and increasing accuracy of allied fire.
 
-machineupgrade.immersiveintelligence.mg_heavy_barrel=Heavy Barrel
-machineupgrade.immersiveintelligence.mg_heavy_barrel.desc=The heavy barrels allow for much faster firing rate and slightly increase the maximum permitted overheat.
+machineupgrade.immersiveintelligence.emplacement.cpds=CPDS
+machineupgrade.immersiveintelligence.emplacement.cpds.desc=The Counter-Projectile Defense System is an advanced anti-air weapon, capable of destroying incoming artillery shells in mid-air.
 
-machineupgrade.immersiveintelligence.mg_watercooled=Water Cooled Barrel
-machineupgrade.immersiveintelligence.mg_watercooled.desc=A replacement for the stock barrels. When mounted, barrels do not overheat when a coolant is provided.
+machineupgrade.immersiveintelligence.emplacement.autocannon=Autocannon
+machineupgrade.immersiveintelligence.emplacement.autocannon.desc=Four 3bCal Automatic Cannons provide lots of firepower making the weapon a universal defense against air and ground targets.
 
-machineupgrade.immersiveintelligence.mg_bunker=Additional Fortifications
-machineupgrade.immersiveintelligence.mg_bunker.desc=Placing additional sandbags around the machinegun nest gives it additional armor and increases its durability.
+machineupgrade.immersiveintelligence.emplacement.heavy_chemthrower=Heavy Chemthrower
+machineupgrade.immersiveintelligence.emplacement.heavy_chemthrower.desc=A heavier version of the well known Chemthrower, higher pressure allows for attacking enemies at ranges 4 times longer than the portable one.
 
-machineupgrade.immersiveintelligence.mortar=Mortar
-machineupgrade.immersiveintelligence.mortar.desc=Mortar provides indirect fire support on close range, the vertical firing angle and high shell caliber allow it to pierce trough roofs and decimate enemies from above
+machineupgrade.immersiveintelligence.emplacement.heavy_railgun=Heavy Railgun
+machineupgrade.immersiveintelligence.emplacement.heavy_railgun.desc=Heavy Railgun provides direct fire support. It can launch metal rods or grenades with high velocity, allowing piercing of enemies and materiel.
 
-machineupgrade.immersiveintelligence.light_howitzer=Light Howitzer
-machineupgrade.immersiveintelligence.light_howitzer.desc=Light Howitzer provides indirect fire support on medium range, its mobility allows for quick and precise barrage of enemy positions
+machineupgrade.immersiveintelligence.emplacement.machinegun=Machinegun Nest
+machineupgrade.immersiveintelligence.emplacement.machinegun.desc=The Machinegun Nest can provide suppressive automatic fire, allowing crowd control. Due to its construction, it is unable to fight airborne enemies.
 
-machineupgrade.immersiveintelligence.tesla=Tesla Tower
-machineupgrade.immersiveintelligence.tesla.desc=The Tesla Tower uses high voltage to decimate enemies in its radius, it's especially effective against electronics
+machineupgrade.immersiveintelligence.emplacement.machinegun.heavy_barrel=Heavy Barrel
+machineupgrade.immersiveintelligence.emplacement.machinegun.heavy_barrel.desc=Heavy barrels allow for much faster firing rate and slightly increase the maximum permitted overheat.
 
+machineupgrade.immersiveintelligence.emplacement.machinegun.watercooled=Water Cooled Barrel
+machineupgrade.immersiveintelligence.emplacement.machinegun.watercooled.desc=A replacement for the stock barrels. When mounted, barrels do not overheat when a coolant is provided.
+
+machineupgrade.immersiveintelligence.emplacement.machinegun.bunker=Additional Fortifications
+machineupgrade.immersiveintelligence.emplacement.machinegun.bunker.desc=Placing additional sandbags around the machinegun nest gives it additional armor and increases its durability.
+
+machineupgrade.immersiveintelligence.emplacement.mortar=Mortar
+machineupgrade.immersiveintelligence.emplacement.mortar.desc=Mortar provides indirect fire support on close range, bombarding enemies at an almost vertical angle.
+
+machineupgrade.immersiveintelligence.emplacement.light_howitzer=Light Howitzer
+machineupgrade.immersiveintelligence.emplacement.light_howitzer.desc=Light Howitzer provides indirect fire support on medium range through quick and precise barrage of enemy positions.
+
+machineupgrade.immersiveintelligence.emplacement.rocket_launcher=Rocket Projector
+machineupgrade.immersiveintelligence.emplacement.rocket_launcher.desc=The Rocket Projector provides devastating area bombardment using up to 6 unguided rockets, excellent for attacking fortified positions.
+
+machineupgrade.immersiveintelligence.emplacement.guided_missile_launcher=Wire-Guided Missile Launcher
+machineupgrade.immersiveintelligence.emplacement.guided_missile_launcher.desc=The Wire-Guided Missile Launcher provides long-range precision strikes, especially effective against moving targets.
+
+machineupgrade.immersiveintelligence.emplacement.tesla=Tesla Tower
+machineupgrade.immersiveintelligence.emplacement.tesla.desc=The Tesla Tower uses high voltage to decimate enemies in its radius, it's especially effective against electronics
+
+#Other upgrades
 machineupgrade.immersiveintelligence.core_filler=Projectile Filler
 machineupgrade.immersiveintelligence.core_filler.desc=Equipping the Projectile Workshop with an inserter allows precise filling of the projectiles with desired components.
 
@@ -1175,7 +1156,15 @@ machineupgrade.immersiveintelligence.rs_activation.desc=Attaching a redstone wir
 machineupgrade.immersiveintelligence.razor_wire=Razor Wire
 machineupgrade.immersiveintelligence.razor_wire.desc=Attaches a razor wire on top of the gate, damaging any enemies that dare to try to climb over it.
 
+machineupgrade.immersiveintelligence.printing_press.punchtapes=Punchtape Processor
+machineupgrade.immersiveintelligence.printing_press.punchtapes.desc=Modifies the the Printing Press input feeder to allow processing punchtapes.
+machineupgrade.immersiveintelligence.printing_press.batching=Batching Mechanism
+machineupgrade.immersiveintelligence.printing_press.batching.desc=Adds a hot-air stapler to the Printing Press, allowing it to bind pages and print books and newspapers.
+machineupgrade.immersiveintelligence.printing_press.enveloper=Enveloper
+machineupgrade.immersiveintelligence.printing_press.enveloper.desc=Modifies the internals of the Printing Press, allowing it to fold and envelope single pages into letters.
+
 #Descriptions
+desc.immersiveintelligence.multiblock_item=Check Engineer's Manual on how to build.
 desc.immersiveintelligence.radio_configurator_basic=Allows changing the frequency of basic radio devices.
 desc.immersiveintelligence.radio_configurator_advanced=An upgraded radio tuner, allows setting even higher frequencies.
 desc.immersiveintelligence.radio_configurator_frequency=Frequency: %s
@@ -1200,6 +1189,20 @@ desc.immersiveintelligence.printed_page.bound_pages=Various pages bound together
 desc.immersiveintelligence.printed_page.newspaper=Multiple pages bound into a newspaper.
 desc.immersiveintelligence.printed_page.book=Multiple pages bound into a book.
 desc.immersiveintelligence.printed_page.letter=A page packed into an envelope to be sent to someone.
+
+desc.immersiveintelligence.logistic_tag.none=No logistic data written
+desc.immersiveintelligence.logistic_tag.info.hold=%s - Logistic Manifest
+desc.immersiveintelligence.logistic_tag.info.main=Logistic Manifest:
+desc.immersiveintelligence.logistic_tag.info.name=Name: %s
+desc.immersiveintelligence.logistic_tag.info.name.none=Name: <None>
+desc.immersiveintelligence.logistic_tag.info.description=Description: %s
+desc.immersiveintelligence.logistic_tag.info.description.none=Description: <None>
+desc.immersiveintelligence.logistic_tag.info.batch_number=Batch Number: %s
+desc.immersiveintelligence.logistic_tag.info.owner=Owner: %s
+desc.immersiveintelligence.logistic_tag.info.origin=Origin: %s
+desc.immersiveintelligence.logistic_tag.info.destination=Destination: %s
+desc.immersiveintelligence.logistic_tag.info.color=Color: %s
+desc.immersiveintelligence.logistic_tag.info.color.none=No color specified
 
 desc.immersiveintelligence.punchtape.empty=No variables written
 desc.immersiveintelligence.punchtape.written=Written
@@ -1226,20 +1229,31 @@ desc.immersiveintelligence.weapon.magazine2=%s - Magazine #2
 
 desc.immersiveintelligence.storage_module=Storage
 desc.immersiveintelligence.variables_module=Variables
+desc.immersiveintelligence.memory_in_module=Input Memory
+desc.immersiveintelligence.memory_out_module=Output Memory
 desc.immersiveintelligence.data_module=Data
 desc.immersiveintelligence.redstone_module=Redstone
 desc.immersiveintelligence.data_to_redstone_module=Data to Redstone
 desc.immersiveintelligence.redstone_to_data_module=Redstone to Data
 desc.immersiveintelligence.tasks_module=Tasks
 desc.immersiveintelligence.status_module=Status
+desc.immersiveintelligence.labeler_module=Labels
+
+desc.immersiveintelligence.map_module=Map
+desc.immersiveintelligence.radar_module=Radar
+desc.immersiveintelligence.faction_module=Faction Management
+
+desc.immersiveintelligence.configuration_module=Configuration
+desc.immersiveintelligence.targets_module=Targets
+desc.immersiveintelligence.fire_missions_module=Fire Missions
 
 desc.immersiveintelligence.tooltip.armor=Armor %f%%
 
 desc.immersiveintelligence.upgrade_gui.title=Upgrade Machine
-desc.immersiveintelligence.upgrade_gui.info=Info
-desc.immersiveintelligence.upgrade_gui.install=Install
-desc.immersiveintelligence.upgrade_gui.remove=Remove
-desc.immersiveintelligence.upgrade_gui.back=Back
+desc.immersiveintelligence.upgrade_gui.tech_tree=Tech Tree
+desc.immersiveintelligence.upgrade_gui.info=Information
+desc.immersiveintelligence.upgrade_gui.install=Install Upgrade
+desc.immersiveintelligence.upgrade_gui.remove=Remove Upgrade
 
 desc.immersiveintelligence.variable_type=Type:
 desc.immersiveintelligence.variable_add_desc=Add a new variable
@@ -1247,15 +1261,147 @@ desc.immersiveintelligence.variable_set=Set
 desc.immersiveintelligence.variable_set_desc=Change the value of a variable
 desc.immersiveintelligence.variable_send_packet=Send Packet
 desc.immersiveintelligence.variable_send_packet_desc=Sends the current packet to data network
-desc.immersiveintelligence.variable_remove=Remove
 desc.immersiveintelligence.variable_remove_desc=Remove a variable
 desc.immersiveintelligence.variable_properties=Properties
-desc.immersiveintelligence.variable_apply=Apply
 desc.immersiveintelligence.variable_value=Value:
 desc.immersiveintelligence.operation=Operation:
 desc.immersiveintelligence.conditional_variable=Conditional Variable:
 desc.immersiveintelligence.no_variable=None
 desc.immersiveintelligence.variable=Variable:
+desc.immersiveintelligence.variable_apply=Apply
+desc.immersiveintelligence.variable_remove=Remove
+
+desc.immersiveintelligence.diplomacy.ownedby=Property of %s
+desc.immersiveintelligence.diplomacy.noowner=Abandoned Property
+desc.immersiveintelligence.diplomacy.noowner_long=This property has no owner. It lies open to claim.
+desc.immersiveintelligence.diplomacy.noowner_long.company=This property has no owner. Its assets await acquisition.
+desc.immersiveintelligence.diplomacy.noowner_long.republic=This property is unrepresented. It awaits a new voice of governance.
+desc.immersiveintelligence.diplomacy.noowner_long.commune=This property lies fallow, awaiting the hands of workers and peasants.
+desc.immersiveintelligence.diplomacy.noowner_long.commisariat=This property is left without oversight. It yearns for a new order.
+desc.immersiveintelligence.diplomacy.noowner_long.free_city=No charter protects this property. Its markets and streets lie empty of law.
+desc.immersiveintelligence.diplomacy.noowner_long.dynasty=No ruler has claimed this property. It awaits for our banner to rise over it.
+
+desc.immersiveintelligence.diplomacy.status.member=Member
+desc.immersiveintelligence.diplomacy.status.member_long=You belong to this faction.
+desc.immersiveintelligence.diplomacy.status.ally=Ally
+desc.immersiveintelligence.diplomacy.status.ally_long=Bound by trust and cooperation, this faction stands beside you.
+desc.immersiveintelligence.diplomacy.status.neutral=Neutral
+desc.immersiveintelligence.diplomacy.status.neutral_long=No strong ties bind you to this faction. Relations are balanced and uncertain.
+desc.immersiveintelligence.diplomacy.status.hostile=Hostile
+desc.immersiveintelligence.diplomacy.status.hostile_long=This faction regards you as an enemy. Conflict is to be expected.
+
+desc.immersiveintelligence.diplomacy.ownership.claim=Claim Property
+desc.immersiveintelligence.diplomacy.ownership.start_capture=Seize Property
+desc.immersiveintelligence.diplomacy.ownership.owned_chunks=Chunks Controlled: %s
+desc.immersiveintelligence.diplomacy.ownership.flagpoles=Flagpoles Placed: %s
+desc.immersiveintelligence.diplomacy.ownership.law_form=Law Form: %s
+desc.immersiveintelligence.diplomacy.ownership.members=Members: %s
+
+desc.immersiveintelligence.diplomacy.ownership.comparison.far_stronger=This faction dwarfs your strength and influence.
+desc.immersiveintelligence.diplomacy.ownership.comparison.stronger=This faction holds advantage over yours.
+desc.immersiveintelligence.diplomacy.ownership.comparison.equal=This faction matches your strength.
+desc.immersiveintelligence.diplomacy.ownership.comparison.weaker=This faction falls short of your strength.
+desc.immersiveintelligence.diplomacy.ownership.comparison.far_weaker=This faction is vastly outclassed by yours.
+
+info.immersiveintelligence.diplomacy.ownership.container_cannot_open=You cannot access a structure on foreign territory.
+
+# Company
+desc.immersiveintelligence.diplomacy.law_form.company=Company
+desc.immersiveintelligence.diplomacy.law_form.company.tier1=Venture
+desc.immersiveintelligence.diplomacy.law_form.company.tier1_long=A fledgling venture with modest assets and limited reach.
+desc.immersiveintelligence.diplomacy.law_form.company.tier2=Firm
+desc.immersiveintelligence.diplomacy.law_form.company.tier2_long=A growing business with factories and employees under its banner.
+desc.immersiveintelligence.diplomacy.law_form.company.tier3=Corporation
+desc.immersiveintelligence.diplomacy.law_form.company.tier3_long=A powerful corporate body with vast holdings and organized management.
+desc.immersiveintelligence.diplomacy.law_form.company.tier4=Conglomerate
+desc.immersiveintelligence.diplomacy.law_form.company.tier4_long=A sprawling empire of industries, armed forces, and strategic resources.
+desc.immersiveintelligence.diplomacy.law_form.company.tier5=Trust
+desc.immersiveintelligence.diplomacy.law_form.company.tier5_long=A monopolistic titan controlling entire sectors of production.
+#Republic
+desc.immersiveintelligence.diplomacy.law_form.republic=Republic
+desc.immersiveintelligence.diplomacy.law_form.republic.tier1=Town Council
+desc.immersiveintelligence.diplomacy.law_form.republic.tier1_long=A small assembly of elected voices governing a handful of citizens.
+desc.immersiveintelligence.diplomacy.law_form.republic.tier2=Republic
+desc.immersiveintelligence.diplomacy.law_form.republic.tier2_long=An organized state with elections and a growing populace.
+desc.immersiveintelligence.diplomacy.law_form.republic.tier3=Federal Republic
+desc.immersiveintelligence.diplomacy.law_form.republic.tier3_long=A union of regions united under a shared banner of representation.
+desc.immersiveintelligence.diplomacy.law_form.republic.tier4=Commonwealth
+desc.immersiveintelligence.diplomacy.law_form.republic.tier4_long=A vast and influential republic commanding armies and infrastructure.
+desc.immersiveintelligence.diplomacy.law_form.republic.tier5=Great Commonwealth
+desc.immersiveintelligence.diplomacy.law_form.republic.tier5_long=A grand alliance of states, joined in common governance and defense.
+#Commune
+desc.immersiveintelligence.diplomacy.law_form.commune=Commune
+desc.immersiveintelligence.diplomacy.law_form.commune.tier1=Collective
+desc.immersiveintelligence.diplomacy.law_form.commune.tier1_long=A handful of people working together with shared property.
+desc.immersiveintelligence.diplomacy.law_form.commune.tier2=Commune
+desc.immersiveintelligence.diplomacy.law_form.commune.tier2_long=A larger group pooling land, tools, and production for the common good.
+desc.immersiveintelligence.diplomacy.law_form.commune.tier3=Federated Commune
+desc.immersiveintelligence.diplomacy.law_form.commune.tier3_long=Multiple collectives joined in solidarity and mutual support.
+desc.immersiveintelligence.diplomacy.law_form.commune.tier4=Regional Commune
+desc.immersiveintelligence.diplomacy.law_form.commune.tier4_long=A wide communal network operating diverse industries together.
+desc.immersiveintelligence.diplomacy.law_form.commune.tier5=Union of People’s Communes
+desc.immersiveintelligence.diplomacy.law_form.commune.tier5_long=A sprawling society bound entirely by collective ownership and decision.
+#Commissariat
+desc.immersiveintelligence.diplomacy.law_form.commisariat=Commissariat
+desc.immersiveintelligence.diplomacy.law_form.commisariat.tier1=Cell
+desc.immersiveintelligence.diplomacy.law_form.commisariat.tier1_long=A small cadre loyal to a commissar, enforcing order through ideology.
+desc.immersiveintelligence.diplomacy.law_form.commisariat.tier2=Bureau
+desc.immersiveintelligence.diplomacy.law_form.commisariat.tier2_long=An administrative office directing policy and propaganda.
+desc.immersiveintelligence.diplomacy.law_form.commisariat.tier3=Regional Commissariat
+desc.immersiveintelligence.diplomacy.law_form.commisariat.tier3_long=A strong authority ruling multiple regions with loyal armed forces.
+desc.immersiveintelligence.diplomacy.law_form.commisariat.tier4=High Commissariat
+desc.immersiveintelligence.diplomacy.law_form.commisariat.tier4_long=A commanding power with centralized control of production and war.
+desc.immersiveintelligence.diplomacy.law_form.commisariat.tier5=Supreme Commissariat
+desc.immersiveintelligence.diplomacy.law_form.commisariat.tier5_long=A totalitarian regime, enforcing absolute order and unquestioned loyalty.
+#Free City
+desc.immersiveintelligence.diplomacy.law_form.free_city=Free City
+desc.immersiveintelligence.diplomacy.law_form.free_city.tier1=Hamlet
+desc.immersiveintelligence.diplomacy.law_form.free_city.tier1_long=A small autonomous village with its own local governance.
+desc.immersiveintelligence.diplomacy.law_form.free_city.tier2=Village
+desc.immersiveintelligence.diplomacy.law_form.free_city.tier2_long=A community organized around trade and exchange.
+desc.immersiveintelligence.diplomacy.law_form.free_city.tier3=Town
+desc.immersiveintelligence.diplomacy.law_form.free_city.tier3_long=A prosperous city enriched by commerce and external trade.
+desc.immersiveintelligence.diplomacy.law_form.free_city.tier4=City
+desc.immersiveintelligence.diplomacy.law_form.free_city.tier4_long=A hub of commerce and diplomacy, commanding regional markets.
+desc.immersiveintelligence.diplomacy.law_form.free_city.tier5=Metropolis
+desc.immersiveintelligence.diplomacy.law_form.free_city.tier5_long=A dominant city-state whose wealth and trade shape entire regions.
+#Dynasty
+desc.immersiveintelligence.diplomacy.law_form.dynasty=Dynasty
+desc.immersiveintelligence.diplomacy.law_form.dynasty.tier1=House
+desc.immersiveintelligence.diplomacy.law_form.dynasty.tier1_long=A family line holding a modest estate and its crest.
+desc.immersiveintelligence.diplomacy.law_form.dynasty.tier2=Clan
+desc.immersiveintelligence.diplomacy.law_form.dynasty.tier2_long=A broader kinship, with vassals and sworn allies under its banner.
+desc.immersiveintelligence.diplomacy.law_form.dynasty.tier3=Noble House
+desc.immersiveintelligence.diplomacy.law_form.dynasty.tier3_long=A fortified noble line wielding armies and strongholds.
+desc.immersiveintelligence.diplomacy.law_form.dynasty.tier4=Royal Dynasty
+desc.immersiveintelligence.diplomacy.law_form.dynasty.tier4_long=A ruling bloodline commanding vast lands and multiple heirs.
+desc.immersiveintelligence.diplomacy.law_form.dynasty.tier5=Imperial Dynasty
+desc.immersiveintelligence.diplomacy.law_form.dynasty.tier5_long=A lineage of emperors, wielding unmatched dominion and legacy.
+
+desc.immersiveintelligence.diplomacy.action.disband=Disband
+desc.immersiveintelligence.diplomacy.action.merge=Merge
+desc.immersiveintelligence.diplomacy.action.add_members=Add Members
+desc.immersiveintelligence.diplomacy.action.propose=Propose
+desc.immersiveintelligence.diplomacy.action.demand=Demand
+desc.immersiveintelligence.diplomacy.action.declare_war=Declare War
+desc.immersiveintelligence.diplomacy.action.declare_alliance=Declare Alliance
+
+desc.immersiveintelligence.diplomacy.permission.disband=Disband
+desc.immersiveintelligence.diplomacy.permission.merge=Merge
+desc.immersiveintelligence.diplomacy.permission.add_members=Add Members
+desc.immersiveintelligence.diplomacy.permission.remove_members=Remove Members
+desc.immersiveintelligence.diplomacy.permission.military_aid=Military Aid
+desc.immersiveintelligence.diplomacy.permission.transit=Transit
+desc.immersiveintelligence.diplomacy.permission.trade=Trade
+desc.immersiveintelligence.diplomacy.permission.research=Research
+desc.immersiveintelligence.diplomacy.permission.logistics=Logistics
+desc.immersiveintelligence.diplomacy.permission.container_access=Container Access
+
+desc.immersiveintelligence.diplomacy.permission_level.owner_allow=Owners
+desc.immersiveintelligence.diplomacy.permission_level.member_allow=Members
+desc.immersiveintelligence.diplomacy.permission_level.allies_allow=Allies
+desc.immersiveintelligence.diplomacy.permission_level.others_allow=Others
+desc.immersiveintelligence.diplomacy.permission_level.enemy_allow=Enemies
 
 #Bullets
 
@@ -1279,6 +1425,27 @@ desc.immersiveintelligence.bullet_core_type.piercing=Armor-Piercing
 desc.immersiveintelligence.bullet_core_type.piercing_sabot=Sabot
 desc.immersiveintelligence.bullet_core_type.canister=Canister
 desc.immersiveintelligence.bullet_core_type.cluster=Cluster
+
+desc.immersiveintelligence.effect_shape.star=Star
+desc.immersiveintelligence.effect_shape.orb=Orb
+desc.immersiveintelligence.effect_shape.line=Line
+desc.immersiveintelligence.effect_shape.cone=Cone
+
+desc.immersiveintelligence.penetration_hardness.foliage=Foliage
+desc.immersiveintelligence.penetration_hardness.fragile=Fragiles
+desc.immersiveintelligence.penetration_hardness.ground=Ground
+desc.immersiveintelligence.penetration_hardness.wood=Wood
+desc.immersiveintelligence.penetration_hardness.weak_metal=Brittle Metals
+desc.immersiveintelligence.penetration_hardness.rock=Rock
+desc.immersiveintelligence.penetration_hardness.bricks=Bricks
+desc.immersiveintelligence.penetration_hardness.iron=Iron
+desc.immersiveintelligence.penetration_hardness.concrete=Concrete
+desc.immersiveintelligence.penetration_hardness.steel=Steel
+desc.immersiveintelligence.penetration_hardness.panzerconcrete=Panzerconcrete
+desc.immersiveintelligence.penetration_hardness.tungsten=Tungsten
+desc.immersiveintelligence.penetration_hardness.uberconcrete=Überconcrete
+desc.immersiveintelligence.penetration_hardness.pabilium=Pabilium
+desc.immersiveintelligence.penetration_hardness.bedrock=Bedrock
 
 desc.immersiveintelligence.bullet_fuse.contact=Contact
 desc.immersiveintelligence.bullet_fuse.timed=Timed
@@ -1320,7 +1487,6 @@ desc.immersiveintelligence.repair_crate.repair_vehicles=Repair Vehicles
 desc.immersiveintelligence.jei.washing_recipe=Chemical Washing
 
 #Potion effects
-
 potion.immersiveintelligence.suppression=Suppressed
 potion.immersiveintelligence.broken_armor=Penetrated Armor
 potion.immersiveintelligence.corrosion=Corrosion
@@ -1334,18 +1500,27 @@ potion.immersiveintelligence.undergoing_repairs=Undergoing Repairs
 potion.immersiveintelligence.radiation=Radiation
 potion.immersiveintelligence.nuclear_heat=Nuclear Heat
 potion.immersiveintelligence.movement_assist=Motion Assist
+potion.immersiveintelligence.foreign_shores=Foreign Shores
+potion.immersiveintelligence.enemy_soil=Enemy Soil
+potion.immersiveintelligence.enemys_nest=Enemy's Nest
+potion.immersiveintelligence.home_shores=Home Shores
+potion.immersiveintelligence.homeland=Homeland
+potion.immersiveintelligence.heartland=Heartland
 
 #Chat info / debug
 info.immersiveintelligence.frequency_set=Radio frequency has been set to %s
 info.immersiveintelligence.frequency_invalid=Invalid frequency, basic devices can use frequencies up to %s!
 info.immersiveintelligence.current_frequency=Current frequency: %s
 
-info.immersiveintelligence.requires_advanced_hammer=Advanced engineering requires advanced tools... you need an Electric Hammer to build this machine!
+info.immersiveintelligence.requires_advanced_hammer=Advanced engineering requires advanced tools... you need an %s to build this machine!
 
 info.immersiveintelligence.tool_durability=Durability: %1$s / %2$s
 info.immersiveintelligence.gear_ratio=Torque/Speed Ratio: %1$s >> %2$s
 info.immersiveintelligence.gear_ratio_short=%1$s >> %2$s
 info.immersiveintelligence.charge_with_if=Charge with IF
+
+info.immersiveintelligence.magazine.loading=Loading... %s/%s
+info.immersiveintelligence.magazine.loaded=Loaded
 
 info.immersiveintelligence.yaw=Yaw: %s
 info.immersiveintelligence.pitch=Pitch: %s
@@ -1368,6 +1543,29 @@ info.immersiveintelligence.redstone_buffer_mode.signal=On Signal
 
 info.immersiveintelligence.machineupgrade.name=Installing: %s
 info.immersiveintelligence.machineupgrade.progress=Progress: %1$s / %2$s IF
+
+desc.immersiveintelligence.upgrade.dependencies_hold=%s - Required Dependencies
+desc.immersiveintelligence.upgrade.incompatible_hold=%s - Incompatible Upgrades
+desc.immersiveintelligence.upgrade.dependencies=Required Dependencies:
+desc.immersiveintelligence.upgrade.incompatible=Incompatible Upgrades:
+
+info.immersiveintelligence.machineupgrade.purpose.efficiency=Efficiency Upgrade
+info.immersiveintelligence.machineupgrade.purpose.speed=Speed Upgrade
+info.immersiveintelligence.machineupgrade.purpose.capacity=Capacity Upgrade
+info.immersiveintelligence.machineupgrade.purpose.quality=Quality Upgrade
+info.immersiveintelligence.machineupgrade.purpose.data=Data Capabilities Upgrade
+info.immersiveintelligence.machineupgrade.purpose.full_conversion=Full Conversion
+info.immersiveintelligence.machineupgrade.purpose.primary_weapon=Primary Weapon
+info.immersiveintelligence.machineupgrade.purpose.secondary_weapon=Secondary Weapon
+info.immersiveintelligence.machineupgrade.purpose.armor=Armor Upgrade
+info.immersiveintelligence.machineupgrade.purpose.defense_system=Defense Upgrade
+info.immersiveintelligence.machineupgrade.purpose.special=Special Upgrade
+
+info.immersiveintelligence.machineupgrade.tier.core=Core Functionality
+info.immersiveintelligence.machineupgrade.tier.tier_1=Basic Upgrade
+info.immersiveintelligence.machineupgrade.tier.tier_2=Refined Upgrade
+info.immersiveintelligence.machineupgrade.tier.tier_3=Advanced Upgrade
+info.immersiveintelligence.machineupgrade.tier.tier_4=Masterwork Upgrade
 
 info.immersiveintelligence.exoskeleton.0=Exoskeleton: §4Off§r
 info.immersiveintelligence.exoskeleton.1=Exoskeleton: §aMotion Assist§r
@@ -2432,6 +2630,7 @@ datasystem.immersiveintelligence.datatype.vector=Vector
 datasystem.immersiveintelligence.datatype.string=String
 datasystem.immersiveintelligence.datatype.expression=Expression
 datasystem.immersiveintelligence.datatype.accessor=Accessor
+datasystem.immersiveintelligence.datatype.logitag=Logistic Tag
 datasystem.immersiveintelligence.datatype.itemstack=ItemStack
 datasystem.immersiveintelligence.datatype.fluidstack=FluidStack
 datasystem.immersiveintelligence.datatype.array=Array
@@ -2464,10 +2663,35 @@ key.immersiveintelligence.manualReload=Manual Reload
 key.immersiveintelligence.armorHelmet=Toggle Light Engineer Armor Headgear
 key.immersiveintelligence.armorExosuit=Toggle Light Engineer Armor Exoskeleton
 
-key.immersiveintelligence.mgScope=Zoom/Machinegun Scope
+key.immersiveintelligence.mgScope=Zoom / Look through Scope
 
-key.immersiveintelligence.engineWorking=Toggle Engine
-key.immersiveintelligence.motorbikeTowing=Tow/Untow
+key.categories.iivehicle=Vehicles (Immersive Intelligence)
+key.immersiveintelligence.vehicle.engine.toggle=Toggle Engine
+key.immersiveintelligence.vehicle.engine.start=Start Engine
+key.immersiveintelligence.vehicle.engine.stop=Stop Engine
+key.immersiveintelligence.vehicle.clutch=Engage Clutch
+
+key.immersiveintelligence.vehicle.gear.up=Gear Up
+key.immersiveintelligence.vehicle.gear.down=Gear Down
+key.immersiveintelligence.vehicle.gear2.toggle=Toggle Secondary Gear
+key.immersiveintelligence.vehicle.gear2.overdrive=Secondary Gearbox - Overdrive
+key.immersiveintelligence.vehicle.gear2.reduction=Secondary Gearbox - Reduction
+
+key.immersiveintelligence.vehicle.brake=Brake
+
+key.immersiveintelligence.vehicle.hatch.open=Open Hatch
+key.immersiveintelligence.vehicle.hatch.close=Close Hatch
+key.immersiveintelligence.vehicle.door.open=Open Door
+key.immersiveintelligence.vehicle.door.close=Close Door
+
+key.immersiveintelligence.vehicle.seat.inventory=Toggle to Inventory
+key.immersiveintelligence.vehicle.seat.vehicle=Toggle to Vehicle Control
+
+key.immersiveintelligence.vehicle.interact.inventory=Open Vehicle Storage
+
+key.immersiveintelligence.vehicle.tow.toggle=Tow/Untow
+key.immersiveintelligence.vehicle.tow.start=Tow
+key.immersiveintelligence.vehicle.tow.stop=Untow
 
 #Advancements
 advancement.immersiveintelligence.root=Immersive Intelligence
@@ -2683,6 +2907,9 @@ ie.manual.entry.traits.repairable=Repairable
 ie.manual.entry.traits.decorations=Can be Decorated
 ie.manual.entry.traits.paintable=Paintable
 
+ie.manual.entry.wip_warning0=Warning! Work-in-Progress Content.
+ie.manual.entry.wip_warning1=The Engineering Department is working hard to bring it to the front!
+
 ie.manual.entry.data_operation.inputs=Inputs
 ie.manual.entry.data_operation.output=Output
 ie.manual.entry.data_operation.pol=POL Code Example
@@ -2746,7 +2973,7 @@ ie.manual.entry.bullet_core.core_copper.lore=Every Penny Counts
 ie.manual.entry.bullet_core.core_copper.desc=Copper is a cheap material for bullets, its penetration ability is worse than one of brass, but its component effect.
 
 ie.manual.entry.bullet_core.core_lead=Lead Core
-ie.manual.entry.bullet_core.core_lead.lore=Good, bad and ugly
+ie.manual.entry.bullet_core.core_lead.lore=Good, bad, and ugly
 ie.manual.entry.bullet_core.core_lead.desc=Lead is a good material for cheap bullets with high damage and mediocre penetrating power, however due to its high density limits the maximum range of projectiles made of it.
 
 ie.manual.entry.bullet_core.core_iron=Iron Core
@@ -2764,6 +2991,10 @@ ie.manual.entry.bullet_core.core_tungsten.desc=Tungsten is a better at penetrati
 ie.manual.entry.bullet_core.core_uranium=Uranium Core
 ie.manual.entry.bullet_core.core_uranium.lore=What do you mean, ammo is depleted?
 ie.manual.entry.bullet_core.core_uranium.desc=Low weight and hardness make uranium a great penetrator without loosing capability to carry explosive materials. Great, but expensive choice.
+
+ie.manual.entry.bullet_core.core_rubber=Rubber Core
+ie.manual.entry.bullet_core.core_rubber.lore=Absolutely stunning!
+ie.manual.entry.bullet_core.core_rubber.desc=Rubber cores are less lethal than their metal alternatives, but pack increased knockback and can stun targets.
 
 ie.manual.entry.bullet_components.name=Bullet Components
 ie.manual.entry.bullet_components.subtext=Load APCRHEFSPTSD B-Capped!
@@ -2912,12 +3143,9 @@ death.attack.iiSawmill=%1$s was sliced by the sawmill
 death.attack.iiPrintingPress=%1$s was squashed by rotating rollers
 death.attack.iiRadiation=%1$s experienced intensive radiation
 death.attack.iiNuclearHeat=%1$s was decimated by a nuclear explosion
-death.attack.iiMotorbike=%1$s was driven over by %2$s
-death.attack.iiMotorbikeNoRider=%1$s was driven over
-death.attack.iiMotorbikeExplicit=%2$s has made %1$s's ass his free parking spot
-death.attack.iiMotorbikeSuicide=%1$s decided to jump off a moving motorcycle
-death.attack.iiPanzer1=%1$s was crushed under the Panzer's threads
-death.attack.iiPanzer2=The indomitable Panzer's threads have pulverized %1$s
+death.attack.iiVehicle=%1$s was driven over by %2$s
+death.attack.iiVehiclenoRider=%1$s was driven over
+death.attack.iiVehicleSuicide=%1$s decided to jump off a moving vehicle
 
 #Additional stuff for the Config Panel
 ii.config.Graphics=Graphics
@@ -2938,17 +3166,194 @@ ii.config.Mines=Mines
 ii.config.Light_Engineer_Armor=Light Engineer Armor
 
 #GUI Labels
+ii.gui.editor.editor_style=Visual/POL Editor
+
+ii.gui.task_editor.tasks=Tasks
+ii.gui.task_editor.tasks.tooltip=Tasks are assignments, that are repeated indefinitely.
+ii.gui.task_editor.jobs=Jobs
+ii.gui.task_editor.jobs.tooltip=Jobs are assignments, that are discarded from memory, after a set amount of resource is transfered.
+
+ii.gui.inserter.task_editor=Task Editor
+ii.gui.inserter.type=Type:
+ii.gui.inserter.input=Input:
+ii.gui.inserter.input.facing.tooltip=In which direction should the inserter reach.
+ii.gui.inserter.input.distance.tooltip=How far should the inserter reach (blocks).
+ii.gui.inserter.output=Output:
+ii.gui.inserter.output.facing.tooltip=In which direction should the inserter reach.
+ii.gui.inserter.output.distance.tooltip=How far should the inserter reach (blocks).
+ii.gui.inserter.items_per_step=Amount/Turn:
+ii.gui.inserter.items_per_step.tooltip=Amount taken and inserted with each turn of the inserter.
+
+ii.gui.inserter.tasks.item=Items
+ii.gui.inserter.tasks.place_block=Place Block
+ii.gui.inserter.tasks.from_minecart=From Minecart
+ii.gui.inserter.tasks.into_minecart=Into Minecart
+ii.gui.inserter.tasks.fluid=Fluid
+ii.gui.inserter.tasks.fluid_milk_cow=Milk Cow
+ii.gui.inserter.tasks.fluid_latex_collector=Collect Latex
+
+ii.gui.packer.task=Transfer:
+ii.gui.packer.task.item=Items
+ii.gui.packer.task.item.out=Pack
+ii.gui.packer.task.item.in=Unpack
+ii.gui.packer.task.fluid=Fluid
+ii.gui.packer.task.fluid.out=Fill
+ii.gui.packer.task.fluid.in=Drain
+ii.gui.packer.task.energy=Energy
+ii.gui.packer.task.energy.out=Charge
+ii.gui.packer.task.energy.in=Discharge
+
+ii.gui.packer.direction=from
+ii.gui.packer.direction.pack=Packer to Container
+ii.gui.packer.direction.unpack=Container to Packer
+
+ii.gui.packer.item.input=Input
+ii.gui.packer.item.input.tooltip=Items to be inserted into containers by the Packer
+ii.gui.packer.item.output=Output
+ii.gui.packer.item.output.tooltip=Items taken from the containers to be output from the Packer
+
+ii.gui.packer.mode=in amount
+ii.gui.packer.mode.amount=Units
+ii.gui.packer.mode.slot=Slots
+ii.gui.packer.mode.all_possible=All possible
+ii.gui.packer.mode.at_most_container=At most in container
+ii.gui.packer.mode.at_least_packer=At least in packer
+ii.gui.packer.repeat=repeated until impossible
+ii.gui.packer.expires=and expire after
+
+ii.gui.packer.labeler.header=Apply label to container
+ii.gui.packer.labeler.serial_start=batched, start from
+ii.gui.packer.labeler.serial_start.tooltip=If checked, the containers Logistic Tag (and name) will include an incrementing batch number, starting from the specified one
+
+ii.gui.packer.picker.container=Container
+ii.gui.packer.picker.container.tooltip=Filter for what type of container is allowed for this task
+ii.gui.packer.picker.stack=Resource
+ii.gui.packer.picker.stack.tooltip=Filter for the resource operated on.
+ii.gui.packer.picker.logitag=Logistic Tag
+ii.gui.packer.picker.logitag.tooltip=Logistic tag to be applied to the container.
+
+ii.gui.itemstack_editor.count=Count:
+ii.gui.itemstack_editor.count.tooltip=The amount of items in the stack
+ii.gui.itemstack_editor.damage=Damage:
+ii.gui.itemstack_editor.damage.tooltip=The damage value of the item (leave empty for wildcard)
+ii.gui.itemstack_editor.nbt=NBT
+ii.gui.itemstack_editor.nbt.item.tooltip=When active, the item is matched by its NBT data
+ii.gui.itemstack_editor.nbt.fluid.tooltip=When active, the fluid is matched by its NBT data
+ii.gui.itemstack_editor.oredict=OreDict
+ii.gui.itemstack_editor.oredict.tooltip=When active, the item is matched by its OreDictionary name
+ii.gui.itemstack_editor.energy=Immersive Flux
+ii.gui.itemstack_editor.energy.tooltip=Energy in Immersive Flux (IF)
+
+ii.gui.data_editor.logistics_tag.name=Name
+ii.gui.data_editor.logistics_tag.name.tooltip=Sets the tag's name.
+ii.gui.data_editor.logistics_tag.description=Description
+ii.gui.data_editor.logistics_tag.description.tooltip=Sets the tag's description.
+ii.gui.data_editor.logistics_tag.owner=Owner
+ii.gui.data_editor.logistics_tag.owner.tooltip=Sets the tag's owner.
+ii.gui.data_editor.logistics_tag.origin=Origin
+ii.gui.data_editor.logistics_tag.origin.tooltip=Sets the tag's origin.
+ii.gui.data_editor.logistics_tag.destination=Destination
+ii.gui.data_editor.logistics_tag.destination.tooltip=Sets the tag's destination.
+ii.gui.data_editor.logistics_tag.color=Color
+
 ii.gui.data_input_machine.storage=Punchtape Storage
 ii.gui.data_input_machine.memory=Built-In Memory
 ii.gui.data_input_machine.memory.switch=Switch
 ii.gui.data_input_machine.memory.switch.tooltip=Switch Current Memory Slot
 
-#GUI HelpBoxes
-ii.gui_help.manual_widget.show=Displays the Immersive Engineering Manual on the side.
+ii.gui.arithmetic_logic_machine.storage=Circuit Storage
 
+ii.gui.packer.tasks=Tasks
+ii.gui.packer.labeling=Label Rules
+
+ii.gui.flagpole.map=Map
+ii.gui.flagpole.faction=Faction Management
+
+ii.gui.radar.map=Radar Display
+ii.gui.radar.configuration=Configuration
+ii.gui.radar.targets=Targets
+
+ii.gui.emplacement.platform_inventory=Platform Inventory
+ii.gui.emplacement.base_inventory=Base Inventory
+
+ii.gui.emplacement.weapon=Mounted: %s
+ii.gui.emplacement.weapon_none=None
+ii.gui.emplacement.upgrades=Installed Upgrades
+ii.gui.emplacement.settings=Settings
+ii.gui.emplacement.redstone_control=Redstone Controlled
+ii.gui.emplacement.data_control=Data Controlled
+ii.gui.emplacement.send_attack_signal=Output target(s) trough data
+ii.gui.emplacement.auto_repair_threshold=Repair when health is below:
+ii.gui.emplacement.selector_preset=Selector Preset
+ii.gui.emplacement.filter=Filter
+ii.gui.emplacement.task_enabled=Enabled
+ii.gui.emplacement.task_negation=Negation
+ii.gui.emplacement.add=Add Task
+ii.gui.emplacement.remove=Remove Task
+ii.gui.emplacement.duplicate=Duplicate Task
+ii.gui.emplacement.clear=Clear ALL Tasks (Caution!)
+
+ii.gui.emplacement.target.mobs=Mobs
+ii.gui.emplacement.target.animals=Animals
+ii.gui.emplacement.target.players=Players
+ii.gui.emplacement.target.npcs=NPCs
+ii.gui.emplacement.target.vehicles=Vehicles
+ii.gui.emplacement.target.shells=Shells
+ii.gui.emplacement.target.team=Team
+ii.gui.emplacement.target.name=Name
+
+ii.gui.map_display.color_mapper.terrain=Terrain
+ii.gui.map_display.color_mapper.grayscale=Grayscale
+ii.gui.map_display.color_mapper.topographic=Topographic
+ii.gui.map_display.color_mapper.light=Light
+ii.gui.map_display.color_mapper.factions=Factions
+ii.gui.map_display.color_mapper.alliances=Alliances
+
+ii.gui.map_display.marker.flagpoles=Flagpoles
+ii.gui.map_display.marker.weapons=Weapons
+ii.gui.map_display.marker.logistics=Logistics
+ii.gui.map_display.marker.intelligence=Intelligence
+ii.gui.map_display.marker.wire_networks=Wire Networks
+
+ii.gui.map_display.marker.items=Items
+ii.gui.map_display.marker.players=Players
+ii.gui.map_display.marker.mobs=Mobs
+ii.gui.map_display.marker.animals=Animals
+ii.gui.map_display.marker.aircraft=Aircraft
+ii.gui.map_display.marker.vehicles=Vehicles
+ii.gui.map_display.marker.missiles=Missiles
+ii.gui.map_display.marker.artillery=Artillery
+ii.gui.map_display.marker.bullets=Bullets
+
+ii.gui.redstone_data_interface.from=From:
+ii.gui.redstone_data_interface.to=Into:
+ii.gui.redstone_data_interface.mode.boolean=Boolean
+ii.gui.redstone_data_interface.mode.integer_15=Integer 0-15
+ii.gui.redstone_data_interface.mode.integer_255=Integer 0-255
+ii.gui.redstone_data_interface.mode.integer_100=Integer 0-100
+ii.gui.redstone_data_interface.mode.float=Float 0-1
+ii.gui.redstone_data_interface.mode.string=String
+
+#GUI HelpBoxes
 ii.gui_help.data_input_machine.programming=These slots allow reading a punchtape into the DIM's memory or writing its contents into an empty one.
 ii.gui_help.data_input_machine.storage=These slots allow storing empty or programmed punchtapes for convenience.
 ii.gui_help.data_input_machine.variables=This list shows variables of the data packet stored inside the machine.
+
+#GUI Actions
+ii.gui.action.copy=Copy
+ii.gui.action.paste=Paste
+ii.gui.action.cut=Cut
+ii.gui.action.undo=Undo
+ii.gui.action.redo=Redo
+ii.gui.action.select_all=Select All
+ii.gui.action.jei_recipe=Show Recipe
+ii.gui.action.jei_uses=Show Uses
+ii.gui.action.jei_bookmark=Bookmark
+
+#GUI Bottom Buttons
+ii.gui.button.apply=Apply
+ii.gui.button.revert=Revert
+ii.gui.button.cancel=Cancel
 
 #GUI Tooltips
 ii.gui_tooltip.button.add=Add
@@ -2957,29 +3362,40 @@ ii.gui_tooltip.button.edit=Edit
 ii.gui_tooltip.button.duplicate=Duplicate
 ii.gui_tooltip.button.clear=Clear
 
+#GUI Widgets
+ii.gui_tooltip.widget.style.show=Show Style Customization
+ii.gui_tooltip.widget.style.hide=Hide Style Customization
+ii.gui_tooltip.widget.style=Customization
+ii.gui_tooltip.widget.style.desc=This multiblock allows customization of style and color.
+ii.gui_tooltip.widget.style.style=Style
+ii.gui_tooltip.widget.style.color=Color
+ii.gui_tooltip.widget.ownership.show=Show Ownership Data
+ii.gui_tooltip.widget.ownership.hide=Hide Ownership Data
+ii.gui_tooltip.widget.ownership=Ownership
 ii.gui_tooltip.widget.manual.show=Show Side Manual
 ii.gui_tooltip.widget.manual.hide=Hide Side Manual
+ii.gui_tooltip.widget.manual=Engineer's Manual
 
 ii.gui_tooltip.energy.stored=Energy Stored: %s/%s IF
-ii.gui_tooltip.energy.input=Energy Consumed: %s IF
-ii.gui_tooltip.energy.required=Energy Required: %s IH / t
-ii.gui_tooltip.energy.output=Energy Produced: %s IF
+ii.gui_tooltip.energy.input=Energy Consumed: %s IF/t
+ii.gui_tooltip.energy.required=Energy Required: %s IH/t
+ii.gui_tooltip.energy.output=Energy Output: %s IF/t
 
 ii.gui_tooltip.heat.stored=Heat %s/%s IH
-ii.gui_tooltip.heat.input=Heat Consumed: %s IH
+ii.gui_tooltip.heat.input=Heat Consumed: %s IH/t
 ii.gui_tooltip.heat.required=Heat Required: %s IH /t
-ii.gui_tooltip.heat.output=Heat Produced: %s IH
+ii.gui_tooltip.heat.output=Heat Output: %s IH/t
 
 ii.gui_tooltip.pressure.stored=Pressure: %s/%s IP
 ii.gui_tooltip.pressure.input=Pressure Intake: %s IP
 ii.gui_tooltip.pressure.required=Pressure Required: %s IP /t
-ii.gui_tooltip.pressure.output=Pressure Created: %s IP
+ii.gui_tooltip.pressure.output=Pressure Output: %s IP
 
 ii.gui_tooltip.mech_torque.message.basic=Input: Speed %s D/t | Torque %s IT.
 ii.gui_tooltip.mech_torque.message.advanced=Input: Speed %s D/t | Torque %s IT. Output: Speed %s D/t | Torque %s IT.
 ii.gui_tooltip.mech_torque.stored=Torque: %s/%s IT
 ii.gui_tooltip.mech_torque.input=Torque Input: %s IT
-ii.gui_tooltip.mech_torque.required=Torque Required: %s IT /t
+ii.gui_tooltip.mech_torque.required=Torque Required: %s IT/t
 ii.gui_tooltip.mech_torque.output=Torque Output: %s IT
 
 ii.gui_tooltip.mech_speed.stored=Speed: %s/%s D/t

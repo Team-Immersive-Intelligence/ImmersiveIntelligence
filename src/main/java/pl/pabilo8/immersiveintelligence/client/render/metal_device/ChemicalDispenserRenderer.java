@@ -4,14 +4,14 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.Tuple;
-import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer;
-import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer.RegisteredTileRenderer;
-import pl.pabilo8.immersiveintelligence.client.util.amt.AMT;
-import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationLoader;
-import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationUtils;
+import net.minecraft.util.math.Vec3d;
+import net.minecraftforge.client.model.obj.OBJModel;
+import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
+import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTModel;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMT;
+import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IITileRenderer;
+import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IITileRenderer.RegisteredTileRenderer;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.TileEntityChemicalDispenser;
 
 /**
@@ -21,33 +21,33 @@ import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.Til
 @RegisteredTileRenderer(name = "block/device/chemical_dispenser", clazz = TileEntityChemicalDispenser.class)
 public class ChemicalDispenserRenderer extends IITileRenderer<TileEntityChemicalDispenser>
 {
-	private static AMT[] models = null;
+	private static AMTModel model = null;
 
 	@Override
 	public void draw(TileEntityChemicalDispenser te, BufferBuilder buf, float partialTicks, Tessellator tes)
 	{
 		//apply animation
-		for(AMT model : models)
-			IIAnimationUtils.setModelRotation(model, te.pitch, 0, te.yaw);
+		Vec3d rotation = new Vec3d(te.pitch, 0, te.yaw);
+		for(AMT model : model)
+			model.setRotation(rotation);
 
 		//apply rotation for block facing
 		applyStandardRotation(te.facing);
 
 		//render
-		for(AMT mod : models)
-			mod.render(tes, buf);
+		model.render(tes, buf);
 	}
 
 	@Override
-	public void compileModels(Tuple<IBlockState, IBakedModel> sModel)
+	public void compileModels(IBlockState state, OBJModel model)
 	{
-		models = IIAnimationUtils.getAMT(sModel, IIAnimationLoader.loadHeader(sModel.getSecond()));
+		ChemicalDispenserRenderer.model = new AMTModel(state, model);
 	}
 
 	@Override
 	protected void nullifyModels()
 	{
-		models = IIAnimationUtils.disposeOf(models);
+		model = AMTUtils.disposeOf(model);
 	}
 
 	@Override

@@ -5,13 +5,22 @@ import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import blusunrize.immersiveengineering.common.util.ListUtils;
 import com.google.common.collect.Lists;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.Tuple;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIMultiblockRecipe;
+import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIRecipeLayout;
+import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIRecipeLayout.IOType;
+import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIRecipeLayoutBuilder;
+import pl.pabilo8.immersiveintelligence.api.crafting.recipe.RotaryMachineRecipe;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.ISawblade;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Sawmill;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
-import pl.pabilo8.immersiveintelligence.common.util.IISoundAnimation;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.IIMultiblockRecipe;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.RotaryMachineRecipe;
+import pl.pabilo8.immersiveintelligence.common.util.lambda.IngredientStackCollector;
+import pl.pabilo8.immersiveintelligence.common.util.sound.IISoundAnimation;
 
+import javax.annotation.Nullable;
 import java.util.HashMap;
 
 /**
@@ -22,7 +31,7 @@ import java.util.HashMap;
  */
 public class SawmillRecipe extends IIMultiblockRecipe implements RotaryMachineRecipe
 {
-	private static final IIColor DEFAULT_COLOR = IIColor.fromFloatRGB(0.22392157f, 0.21372549019607842f, 0.15176470588235294f);
+	private static final IIColor DEFAULT_COLOR = IIColor.fromHex("605d46");
 	public static HashMap<String, ISawblade> toolMap = new HashMap<>();
 	public final IngredientStack itemInput;
 	public final ItemStack itemOutput, itemSecondaryOutput;
@@ -30,6 +39,7 @@ public class SawmillRecipe extends IIMultiblockRecipe implements RotaryMachineRe
 	//The tier of the saw required, 1 for cutting wood (bronze), 2 iron, 3 steel, 4 tungsten
 	private final int hardness;
 	private final IIColor dustColor;
+	private final IngredientStack validSaws;
 	IISoundAnimation soundAnimation;
 
 	public SawmillRecipe(ItemStack itemOutput, Object itemInput, ItemStack itemSecondaryOutput, int torque, int time, int hardness, IIColor dustColor)
@@ -46,11 +56,29 @@ public class SawmillRecipe extends IIMultiblockRecipe implements RotaryMachineRe
 		this.outputList = ListUtils.fromItems(this.itemOutput, this.itemSecondaryOutput);
 		this.dustColor = dustColor;
 
+		//Collect sawblades that can perform this recipe
+		this.validSaws = SawmillRecipe.toolMap.entrySet().stream()
+				.map(e -> new Tuple<>(e.getValue(), e.getValue().getToolPresentationStack(e.getKey())))
+				.filter(e -> e.getFirst().getHardness(e.getSecond()) >= hardness)
+				.map(Tuple::getSecond)
+				.collect(IngredientStackCollector.collect());
+	}
+
+	public SawmillRecipe(ItemStack itemOutput, Object itemInput, ItemStack itemSecondaryOutput, int torque, int time, int hardness)
+	{
+		this(itemOutput, itemInput, itemSecondaryOutput, torque, time, hardness, DEFAULT_COLOR);
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	protected void loadClientSideContent()
+	{
 		//0 - 0.1 - grabbing sound
 		//0.1 - 1 - cutting,
 		//sections each through 0.4/3-1.5/3
 		//rolling each 1.5/3 - 2.5/3, landing 3/3
 
+		int time = getTotalProcessTime();
 		double cuttingTimeStart = time*0.1;
 		double cuttingSection = (time*0.9)/itemOutput.getCount();
 
@@ -61,7 +89,7 @@ public class SawmillRecipe extends IIMultiblockRecipe implements RotaryMachineRe
 			this.soundAnimation
 					.withSound(cuttingTimeStart+cuttingSection*i, IISounds.sawmillInserterStart)
 					.withRepeatedSound(cuttingTimeStart+cuttingSection*(i+0.13),
-							cuttingTimeStart+cuttingSection*(i+0.5), IISounds.sawmillRunning)
+							cuttingTimeStart+cuttingSection*(i+0.5), IISounds.sawmillLoop)
 					.withSound(cuttingTimeStart+cuttingSection*(i+0.76), IISounds.sawmillWoodTumble)
 					.withSound(cuttingTimeStart+cuttingSection*(i+0.83), IISounds.sawmillWoodTumble)
 					.withSound(cuttingTimeStart+cuttingSection*(i+0.85), IISounds.sawmillInserterEnd)
@@ -69,9 +97,19 @@ public class SawmillRecipe extends IIMultiblockRecipe implements RotaryMachineRe
 		this.soundAnimation.compile(time);
 	}
 
-	public SawmillRecipe(ItemStack itemOutput, Object itemInput, ItemStack itemSecondaryOutput, int torque, int time, int hardness)
+	@Nullable
+	@Override
+	protected IIRecipeLayout initRecipeLayout()
 	{
-		this(itemOutput, itemInput, itemSecondaryOutput, torque, time, hardness, DEFAULT_COLOR);
+		return new IIRecipeLayoutBuilder(156, 60, true)
+				.withSlot(2, 20-8, itemInput, IOType.INPUT, "frame")
+				.withSlot(114+2, 20-8, itemOutput, IOType.OUTPUT, "frame")
+				.withSlot(134+2, 20-8, itemSecondaryOutput, IOType.OUTPUT, "frame_red")
+				.withSlot(64+2, 20-12-4, validSaws, IOType.INPUT)
+				.withMultiblockModel(32+8+4-8-2, -16, 80, 80, "")
+				.withMechanicalPowerInfo()
+				.withTimeInfo()
+				.build();
 	}
 
 	public static void registerSawblade(String name, ISawblade blade)
@@ -87,6 +125,18 @@ public class SawmillRecipe extends IIMultiblockRecipe implements RotaryMachineRe
 	public int getTorque()
 	{
 		return torque;
+	}
+
+	@Override
+	public int getMinSpeed()
+	{
+		return Sawmill.rpmMin;
+	}
+
+	@Override
+	public int getMaxSpeed()
+	{
+		return Sawmill.rpmBreakingMax;
 	}
 
 	public int getHardness()

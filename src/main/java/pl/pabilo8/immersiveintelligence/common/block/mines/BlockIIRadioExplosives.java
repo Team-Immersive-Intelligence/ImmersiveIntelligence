@@ -64,7 +64,7 @@ public class BlockIIRadioExplosives extends BlockIIMine
 		}
 
 		@Override
-		public float getComponentMultiplier()
+		public float getComponentSize()
 		{
 			return 0.45f;
 		}

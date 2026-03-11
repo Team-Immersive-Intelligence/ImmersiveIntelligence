@@ -1,20 +1,29 @@
 package pl.pabilo8.immersiveintelligence.common;
 
-import blusunrize.immersiveengineering.api.MultiblockHandler.MultiblockFormEvent;
+import blusunrize.immersiveengineering.api.MultiblockHandler.MultiblockFormEvent.Post;
+import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IGuiTile;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSourceIndirect;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.GameRules.ValueType;
+import net.minecraft.world.World;
+import net.minecraft.world.biome.Biome;
+import net.minecraft.world.chunk.Chunk;
+import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.GameRuleChangeEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
@@ -22,12 +31,17 @@ import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickEmpty;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickItem;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
-import net.minecraftforge.event.world.WorldEvent;
+import net.minecraftforge.event.world.WorldEvent.Load;
+import net.minecraftforge.event.world.WorldEvent.Save;
+import net.minecraftforge.event.world.WorldEvent.Unload;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.WorldTickEvent;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -37,6 +51,7 @@ import pl.pabilo8.immersiveintelligence.api.ammo.utils.IIAmmoUtils;
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.PenetrationCache;
 import pl.pabilo8.immersiveintelligence.api.utils.IAdvancedMultiblock;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Ammunition;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Factions;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons;
 import pl.pabilo8.immersiveintelligence.common.compat.BaublesHelper;
 import pl.pabilo8.immersiveintelligence.common.compat.IICompatModule;
@@ -48,8 +63,19 @@ import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine;
 import pl.pabilo8.immersiveintelligence.common.item.armor.ItemIILightEngineerBoots;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBlockDamageSync;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageDiplomacySync;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIIGameruleUpdate;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIIRequestChunkClaimData;
 import pl.pabilo8.immersiveintelligence.common.util.IIExplosion;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyUtils;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.IOwnableProperty;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.OwnerIdentity;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.PermissionCategory;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.chunk.CapabilityChunkOwnership;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.chunk.ChunkOwnership;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.chunk.IChunkOwnership;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemUtils;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIUpgradeableArmor;
 
@@ -64,15 +90,16 @@ import java.util.ArrayList;
 public class EventHandler
 {
 	public static ArrayList<IIExplosion> pendingExplosions = new ArrayList<>();
+	private static ArrayList<String> registeredGameRules = new ArrayList<>();
 
 	@SubscribeEvent
-	public static void onSave(WorldEvent.Save event)
+	public static void onSave(Save event)
 	{
 		IISaveData.setDirty(event.getWorld().provider.getDimension());
 	}
 
 	@SubscribeEvent
-	public static void onUnload(WorldEvent.Unload event)
+	public static void onUnload(Unload event)
 	{
 		IISaveData.setDirty(event.getWorld().provider.getDimension());
 	}
@@ -109,7 +136,7 @@ public class EventHandler
 
 	//--- World Load Handling ---//
 	@SubscribeEvent
-	public void onWorldLoad(WorldEvent.Load event)
+	public void onWorldLoad(Load event)
 	{
 		//Apply default config
 		IIAmmoUtils.ammoBreaksBlocks = Weapons.blockDamage;
@@ -121,62 +148,87 @@ public class EventHandler
 
 		GameRules rules = event.getWorld().getGameRules();
 		//Whether ammo can break blocks
-		if(!rules.hasRule(IIReference.GAMERULE_AMMO_BREAKS_BLOCKS))
-			rules.addGameRule(IIReference.GAMERULE_AMMO_BREAKS_BLOCKS,
-					Boolean.toString(IIAmmoUtils.ammoBreaksBlocks),
-					ValueType.BOOLEAN_VALUE);
-		else
-			IIAmmoUtils.ammoBreaksBlocks = rules.getBoolean(IIReference.GAMERULE_AMMO_BREAKS_BLOCKS);
+		initGamerule(IIReference.GAMERULE_AMMO_BREAKS_BLOCKS, rules, ValueType.BOOLEAN_VALUE, IIAmmoUtils.ammoBreaksBlocks);
 		//Whether ammo components can explode blocks
-		if(!rules.hasRule(IIReference.GAMERULE_AMMO_EXPLODES_BLOCKS))
-			rules.addGameRule(IIReference.GAMERULE_AMMO_EXPLODES_BLOCKS,
-					Boolean.toString(IIAmmoUtils.ammoBreaksBlocks),
-					ValueType.BOOLEAN_VALUE);
-		else
-			IIAmmoUtils.ammoExplodesBlocks = rules.getBoolean(IIReference.GAMERULE_AMMO_EXPLODES_BLOCKS);
-		//Whether ammo can ricochet
-		if(!rules.hasRule(IIReference.GAMERULE_AMMO_RICOCHETS))
-			rules.addGameRule(IIReference.GAMERULE_AMMO_RICOCHETS,
-					Boolean.toString(IIAmmoUtils.ammoRicochets),
-					ValueType.BOOLEAN_VALUE);
-		else
-			IIAmmoUtils.ammoRicochets = rules.getBoolean(IIReference.GAMERULE_AMMO_RICOCHETS);
-		//Ticks until ammo decay
-		if(!rules.hasRule(IIReference.GAMERULE_AMMO_DECAY))
-			rules.addGameRule(IIReference.GAMERULE_AMMO_DECAY, Integer.toString(EntityAmmoProjectile.MAX_TICKS), ValueType.NUMERICAL_VALUE);
-		else
-			EntityAmmoProjectile.MAX_TICKS = rules.getInt(IIReference.GAMERULE_AMMO_DECAY);
-		//Slowmo multiplier for projectile motion
-		if(!rules.hasRule(IIReference.GAMERULE_AMMO_SLOWMO))
-			rules.addGameRule(IIReference.GAMERULE_AMMO_SLOWMO, Float.toString(EntityAmmoProjectile.SLOWMO*100), ValueType.NUMERICAL_VALUE);
-		else
-			EntityAmmoProjectile.setSlowmo(rules.getInt(IIReference.GAMERULE_AMMO_SLOWMO)/100f);
+		initGamerule(IIReference.GAMERULE_AMMO_EXPLODES_BLOCKS, rules, ValueType.BOOLEAN_VALUE, IIAmmoUtils.ammoExplodesBlocks);
+		//Whether the ammo can ricochet
+		initGamerule(IIReference.GAMERULE_AMMO_RICOCHETS, rules, ValueType.BOOLEAN_VALUE, IIAmmoUtils.ammoRicochets);
+		//After how many ticks ammunition despawns
+		initGamerule(IIReference.GAMERULE_AMMO_DECAY, rules, ValueType.NUMERICAL_VALUE, EntityAmmoProjectile.MAX_TICKS);
+		//The speed multiplier for ammo movement (0 - 100)
+		initGamerule(IIReference.GAMERULE_AMMO_SLOWMO, rules, ValueType.NUMERICAL_VALUE, 100);
+		//Whether Hanses have infinite ammo
+		initGamerule(IIReference.GAMERULE_HANS_INFINITE_AMMO, rules, ValueType.BOOLEAN_VALUE, EntityHans.INFINITE_AMMO);
+	}
 
-		//Hans infinite ammo
-		if(!rules.hasRule(IIReference.GAMERULE_HANS_INFINITE_AMMO))
-			rules.addGameRule(IIReference.GAMERULE_HANS_INFINITE_AMMO, Boolean.toString(EntityHans.INFINITE_AMMO), ValueType.BOOLEAN_VALUE);
-		else
-			EntityHans.INFINITE_AMMO = rules.getBoolean(IIReference.GAMERULE_HANS_INFINITE_AMMO);
+	@SubscribeEvent
+	public void onPlayerLoggedIn(PlayerLoggedInEvent event)
+	{
+		EntityPlayer player = event.player;
+		//Execute only on server
+		if(event.player.world.isRemote||!(player instanceof EntityPlayerMP))
+			return;
+
+		//Sync GameRules
+		GameRules rules = event.player.world.getGameRules();
+		for(String gamerule : registeredGameRules)
+			IIPacketHandler.sendToClient(player, new MessageIIGameruleUpdate(gamerule, rules));
+
+		//Sync Diplomacy data
+		IIPacketHandler.sendToClient(player, new MessageDiplomacySync(
+				true, null, false, DiplomacyUtils.saveAllToNBT()));
+	}
+
+	@SubscribeEvent
+	public void attachCapability(AttachCapabilitiesEvent<Chunk> event)
+	{
+		if(event.getObject()!=null)
+		{
+			event.addCapability(IIReference.RES_II.with("chunk_ownership"), new CapabilityChunkOwnership(new ChunkOwnership(event.getObject())));
+			if(event.getObject().getWorld().isRemote)
+				IIPacketHandler.sendToServer(new MessageIIRequestChunkClaimData(event.getObject()));
+		}
+	}
+
+
+	private void initGamerule(String ruleName, GameRules rules, ValueType valueType, Object defaultValue)
+	{
+		if(!rules.hasRule(ruleName))
+			rules.addGameRule(ruleName, String.valueOf(defaultValue), valueType);
+		if(!registeredGameRules.contains(ruleName))
+			registeredGameRules.add(ruleName);
+		applyGameRuleValue(rules, ruleName);
+	}
+
+	public static void applyGameRuleValue(GameRules rules, String ruleName)
+	{
+		switch(ruleName)
+		{
+			case IIReference.GAMERULE_AMMO_BREAKS_BLOCKS:
+				IIAmmoUtils.ammoBreaksBlocks = rules.getBoolean(IIReference.GAMERULE_AMMO_BREAKS_BLOCKS);
+				break;
+			case IIReference.GAMERULE_AMMO_EXPLODES_BLOCKS:
+				IIAmmoUtils.ammoExplodesBlocks = rules.getBoolean(IIReference.GAMERULE_AMMO_EXPLODES_BLOCKS);
+				break;
+			case IIReference.GAMERULE_AMMO_DECAY:
+				EntityAmmoProjectile.MAX_TICKS = rules.getInt(IIReference.GAMERULE_AMMO_DECAY);
+				break;
+			case IIReference.GAMERULE_AMMO_SLOWMO:
+				EntityAmmoProjectile.setSlowmo(rules.getInt(IIReference.GAMERULE_AMMO_SLOWMO)/100f);
+				break;
+			case IIReference.GAMERULE_AMMO_RICOCHETS:
+				IIAmmoUtils.ammoRicochets = rules.getBoolean(IIReference.GAMERULE_AMMO_RICOCHETS);
+				break;
+		}
 	}
 
 	@SubscribeEvent
 	public void onGameRuleChange(GameRuleChangeEvent event)
 	{
-		switch(event.getRuleName())
-		{
-			case IIReference.GAMERULE_AMMO_BREAKS_BLOCKS:
-				IIAmmoUtils.ammoBreaksBlocks = event.getRules().getBoolean(IIReference.GAMERULE_AMMO_BREAKS_BLOCKS);
-				break;
-			case IIReference.GAMERULE_AMMO_EXPLODES_BLOCKS:
-				IIAmmoUtils.ammoExplodesBlocks = event.getRules().getBoolean(IIReference.GAMERULE_AMMO_EXPLODES_BLOCKS);
-				break;
-			case IIReference.GAMERULE_AMMO_DECAY:
-				EntityAmmoProjectile.MAX_TICKS = event.getRules().getInt(IIReference.GAMERULE_AMMO_DECAY);
-				break;
-			case IIReference.GAMERULE_AMMO_SLOWMO:
-				EntityAmmoProjectile.setSlowmo(event.getRules().getInt(IIReference.GAMERULE_AMMO_SLOWMO)/100f);
-				break;
-		}
+		applyGameRuleValue(event.getRules(), event.getRuleName());
+		//Sync to players
+		IIPacketHandler.sendToAllClients(new MessageIIGameruleUpdate(event.getRuleName(),
+				event.getRules().getString(event.getRuleName())));
 	}
 
 
@@ -191,7 +243,7 @@ public class EventHandler
 	//--- Vehicle or Gun Mounts ---//
 
 	@SubscribeEvent
-	public void onMultiblockForm(MultiblockFormEvent.Post event)
+	public void onMultiblockForm(Post event)
 	{
 		if(event.isCancelable()&&!event.isCanceled()&&event.getMultiblock().getClass().isAnnotationPresent(IAdvancedMultiblock.class))
 		{
@@ -199,18 +251,50 @@ public class EventHandler
 			if(!IIItemUtils.isAdvancedHammer(event.getHammer()))
 			{
 				if(!event.getEntityPlayer().getEntityWorld().isRemote)
-					IIPacketHandler.sendChatTranslation(event.getEntityPlayer(), "info.immersiveintelligence.requires_advanced_hammer");
+					IIPacketHandler.sendChatTranslation(event.getEntityPlayer(), "info.immersiveintelligence.requires_advanced_hammer",
+							IIStringUtil.getItemStackTextComponent(IIContent.itemHammer.getStack(1)));
 				event.setCanceled(true);
 			}
 		}
 	}
 
-	//TODO: 11.03.2024 include vehicles and crewed weapons
 	//Cancel when using a machinegun
 	@SubscribeEvent(priority = EventPriority.HIGH)
-	public void onItemUse(PlayerInteractEvent.RightClickBlock event)
+	public void onItemUse(RightClickBlock event)
 	{
-		if(event.getEntity().isRiding()&&event.getEntity().getRidingEntity() instanceof EntityMachinegun)
+		EntityLivingBase living = event.getEntityLiving();
+		TileEntity tile = event.getWorld().getTileEntity(event.getPos());
+		//Prevent accessing GUI
+		if(Factions.preventContainerAccess&&tile instanceof IGuiTile)
+		{
+			TileEntity master = ((IGuiTile)tile).getGuiMaster();
+			if(master!=null)
+			{
+				//The property itself has an owner, check it
+				OwnerIdentity owner = DiplomacyUtils.NEUTRAL;
+				if(master instanceof IOwnableProperty)
+					owner = ((IOwnableProperty)master).getOwnerIdentity();
+				else
+				{
+					//Check for the chunk the property is on
+					IChunkOwnership ownership = DiplomacyUtils.getPositionOwnership(master.getWorld(), master.getPos());
+					if(ownership!=null)
+						owner = ownership.getOwner();
+				}
+
+				//Deny container access when on an enemy chunk
+				if(!owner.isPermitted(living, PermissionCategory.CONTAINER_ACCESS))
+				{
+					TextComponentTranslation text = new TextComponentTranslation(IIReference.INFO_KEY+"diplomacy.ownership.container_cannot_open");
+					text.getStyle().setColor(TextFormatting.RED);
+
+					event.getEntityPlayer().sendStatusMessage(text, true);
+					event.setResult(Result.DENY);
+					event.setCanceled(true);
+				}
+			}
+		}
+		if(living.isRiding()&&living.getRidingEntity() instanceof EntityMachinegun)
 		{
 			event.setResult(Result.DENY);
 			event.setCanceled(true);
@@ -219,8 +303,9 @@ public class EventHandler
 
 	//Cancel when using a machinegun
 	@SubscribeEvent(priority = EventPriority.HIGH)
-	public void onBlockUse(PlayerInteractEvent.RightClickItem event)
+	public void onBlockUse(RightClickItem event)
 	{
+		//Machinegun
 		if(event.getEntity().isRiding()&&event.getEntity().getRidingEntity() instanceof EntityMachinegun)
 		{
 			event.setResult(Result.DENY);
@@ -230,7 +315,7 @@ public class EventHandler
 
 	//Shooting
 	@SubscribeEvent(priority = EventPriority.HIGH)
-	public void onEmptyRightclick(PlayerInteractEvent.RightClickEmpty event)
+	public void onEmptyRightclick(RightClickEmpty event)
 	{
 		if(event.getEntity().isRiding()&&event.getEntity().getRidingEntity() instanceof EntityMachinegun)
 		{
@@ -263,14 +348,53 @@ public class EventHandler
 	@SubscribeEvent(priority = EventPriority.LOW)
 	public void onLivingUpdate(LivingUpdateEvent event)
 	{
-		if(!(event.getEntityLiving() instanceof EntityPlayer&&((EntityPlayer)event.getEntityLiving()).isCreative())&&event.getEntityLiving().world.getTotalWorldTime()%20==0&&event.getEntityLiving().world.getBiome(event.getEntityLiving().getPosition())==IIContent.biomeWasteland)
-			event.getEntityLiving().addPotionEffect(new PotionEffect(IIPotions.radiation, 2000, 0, false, false));
-		if(event.getEntityLiving() instanceof EntityPlayer&&!event.getEntityLiving().getItemStackFromSlot(EntityEquipmentSlot.CHEST).isEmpty()&&ItemNBTHelper.hasKey(event.getEntityLiving().getItemStackFromSlot(EntityEquipmentSlot.CHEST), IIContent.NBT_AdvancedPowerpack))
+		EntityLivingBase living = event.getEntityLiving();
+		World world = living.world;
+		Biome biome = world.getBiome(living.getPosition());
+		if(living instanceof EntityPlayer)
 		{
-			ItemStack powerpack = ItemNBTHelper.getItemStack(event.getEntityLiving().getItemStackFromSlot(EntityEquipmentSlot.CHEST), IIContent.NBT_AdvancedPowerpack);
-			if(!powerpack.isEmpty())
-				powerpack.getItem().onArmorTick(event.getEntityLiving().getEntityWorld(), (EntityPlayer)event.getEntityLiving(), powerpack);
+			EntityPlayer player = (EntityPlayer)living;
+
+			//Potion effects
+			if(world.getTotalWorldTime()%20==0)
+			{
+				//Apply radiation
+				if(!player.isCreative()&&biome==IIContent.biomeWasteland)
+					living.addPotionEffect(new PotionEffect(IIPotions.radiation, 2000, 0, false, false));
+
+				//Apply faction chunk status effects
+				Chunk chunk = player.world.getChunkFromBlockCoords(player.getPosition());
+				if(chunk.hasCapability(CapabilityChunkOwnership.CHUNK_OWNERSHIP_CAP, null))
+				{
+					IChunkOwnership cap = chunk.getCapability(CapabilityChunkOwnership.CHUNK_OWNERSHIP_CAP, null);
+					assert cap!=null;
+					switch(cap.getOwner().getRelationTowards(player))
+					{
+						case ENEMY:
+							player.addPotionEffect(new PotionEffect(IIPotions.enemySoil, 40, 0, false, false));
+							break;
+						case MEMBER:
+						case ALLIED:
+							player.addPotionEffect(new PotionEffect(IIPotions.homeland, 40, 0, false, false));
+							break;
+						default:
+							break;
+					}
+				}
+			}
+
+			//Handle powerpack crafted with armor
+			if(!living.getItemStackFromSlot(EntityEquipmentSlot.CHEST).isEmpty()
+					&&ItemNBTHelper.hasKey(living.getItemStackFromSlot(EntityEquipmentSlot.CHEST), IIContent.NBT_AdvancedPowerpack))
+			{
+				ItemStack powerpack = ItemNBTHelper.getItemStack(living.getItemStackFromSlot(EntityEquipmentSlot.CHEST), IIContent.NBT_AdvancedPowerpack);
+				if(!powerpack.isEmpty())
+					powerpack.getItem().onArmorTick(living.getEntityWorld(), player, powerpack);
+			}
 		}
+		else if(world.getTotalWorldTime()%20==0&&biome==IIContent.biomeWasteland)
+			living.addPotionEffect(new PotionEffect(IIPotions.radiation, 2000, 0, false, false));
+
 	}
 
 	//--- Armor ---//
@@ -375,7 +499,7 @@ public class EventHandler
 
 	}
 
-	public ItemStack storeInPouch(ItemStack pouchStack, ItemStack stack)
+	public static ItemStack storeInPouch(ItemStack pouchStack, ItemStack stack)
 	{
 		if(!pouchStack.getItem().equals(IIContent.itemCasingPouch))
 			return stack;

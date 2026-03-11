@@ -5,11 +5,11 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiComponentDecoTextBase;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoTextBasedComponent;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoAlignment;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoGuiUtils;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
-import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -20,7 +20,7 @@ import javax.annotation.Nullable;
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 10.01.2025
  */
-public class DecoButton extends GuiComponentDecoTextBase<DecoButton>
+public class DecoButton extends DecoTextBasedComponent<DecoButton>
 {
 	protected int[] padding = new int[]{2, 2, 2, 2};
 	private DecoAlignment iconAlignment = DecoAlignment.CENTER;
@@ -37,7 +37,7 @@ public class DecoButton extends GuiComponentDecoTextBase<DecoButton>
 	public DecoButton(int x, int y)
 	{
 		super(x, y);
-		this.backgroundLocation = IIReference.RES_TEXTURES_DECO_COMPONENT_BUTTON;
+		this.backgroundLocation = DecoTextures.COMPONENT_BUTTON;
 	}
 
 	public DecoButton withIcon(@Nonnull ResourceLocation icon)
@@ -68,6 +68,14 @@ public class DecoButton extends GuiComponentDecoTextBase<DecoButton>
 	{
 		this.padding = new int[]{left, top, right, bottom};
 		return this;
+	}
+
+	public DecoButton pack()
+	{
+		int textWidth = text!=null?fontRenderer.getStringWidth(text): 0;
+		int textHeight = text!=null?fontRenderer.FONT_HEIGHT: 0;
+		int iconSize = (icon!=null||stack!=null)?this.iconSize: 0;
+		return withSize(padding[0]+padding[2]+iconSize+textWidth, padding[1]+padding[3]+Math.max(iconSize, textHeight));
 	}
 
 	@Override
@@ -102,7 +110,6 @@ public class DecoButton extends GuiComponentDecoTextBase<DecoButton>
 	{
 		bindAtlas();
 		IIDrawUtils draw = IIDrawUtils.startTexturedColored();
-
 		DecoGuiUtils.drawRepeatedRect(draw, x, y, width, height, backgroundLocation, getBackgroundColor(), 32, 8);
 		if(icon!=null)
 		{

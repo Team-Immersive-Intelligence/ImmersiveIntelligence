@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import org.lwjgl.opengl.GL11;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMT;
 
 import java.util.*;
 
@@ -23,7 +24,7 @@ import java.util.*;
  * And so, when time came, I decided to use it in my own mod Immersive Intelligence, and it was a great choice, at least for the time.
  * <br><br>
  * But as time went on, I realized the flaws and low performance of it compared to what could have been possible, then the final nail to the coffin – SMP Toolbox stopped working on modern systems.
- * This leaded me to create my own rendering system, which is now called {@link pl.pabilo8.immersiveintelligence.client.util.amt.AMT}.
+ * This leaded me to create my own rendering system, which is now called {@link AMT}.
  * <br><br>
  * However, many models in Immersive Intelligence still use this system, and despite the efforts, it will take some time to convert them all to the new system.
  * </p>

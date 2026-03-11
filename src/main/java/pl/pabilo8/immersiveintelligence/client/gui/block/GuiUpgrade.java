@@ -1,309 +1,256 @@
 package pl.pabilo8.immersiveintelligence.client.gui.block;
 
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
-import blusunrize.immersiveengineering.client.ClientUtils;
-import blusunrize.immersiveengineering.client.gui.GuiIEContainerBase;
-import blusunrize.immersiveengineering.client.gui.elements.GuiButtonIE;
-import blusunrize.lib.manual.ManualUtils;
-import net.minecraft.client.audio.PositionedSoundRecord;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
+import blusunrize.immersiveengineering.common.blocks.TileEntityIEBase;
+import blusunrize.immersiveengineering.common.util.inventory.IIEInventory;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.client.util.ITooltipFlag.TooltipFlags;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import org.lwjgl.opengl.GL11;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.utils.IUpgradableMachine;
-import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
-import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.TextFormatting;
+import pl.pabilo8.immersiveintelligence.api.upgrade.IUpgradableDevice;
+import pl.pabilo8.immersiveintelligence.api.upgrade.Upgrade;
+import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeTechTree;
+import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeUtils.UpgradeOperation;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoButton;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoTreeDisplay;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoLabel;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoPanel;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoBar;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoItemStackDisplay;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoScenarioDisplay;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoImage;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.tree.IDecoTreeNode;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.tree.upgrade.UpgradeTechTreeWrapper;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.tree.upgrade.UpgradeTreeNodeRenderer;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.*;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundBuilder.SlotStyle;
+import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTModel;
+import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerUpgrade;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBeginMachineUpgrade;
-import pl.pabilo8.immersiveintelligence.common.util.IIMath;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 
-import javax.annotation.Nullable;
-import java.io.IOException;
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 10.07.2019
  */
-public class GuiUpgrade extends GuiIEContainerBase
+@DecoTemplate(name = "upgrade", category = DecoGuiCategory.PRODUCTION_TILE)
+public class GuiUpgrade<T extends TileEntityIEBase & IIEInventory & IUpgradableDevice> extends DecoGui<T, ContainerUpgrade<T>>
 {
-	public static final String TEXTURE = ImmersiveIntelligence.MODID+":textures/gui/upgrade_lowtier.png";
-	public boolean info = false;
-	public boolean previewInstalled = false;
-	IUpgradableMachine upgradableMachine;
-	TileEntity tileEntity;
-	List<MachineUpgrade> upgrades;
-	MachineUpgrade previewed = null;
-	GuiButtonIE buttonInfo = null, buttonUpgrade = null, buttonQuit = null;
-	private String textUpgradeMachine, textInfo, textUpgrade, textRemove, textBack;
+	private final UpgradeTechTree techTree;
+	private DecoTreeDisplay<Upgrade> techTreeDisplay;
+	private DecoPanel panelInfo;
 
-	public <T extends TileEntity & IUpgradableMachine> GuiUpgrade(EntityPlayer player, T tile)
+	@SyncNBT(nullable = true)
+	public String lastUpgrade;
+	private DecoScenarioDisplay scenario;
+
+	public GuiUpgrade(EntityPlayer player, T tile)
 	{
-		super(new ContainerUpgrade(player, tile));
-		this.ySize = 168;
-		this.upgradableMachine = tile;
-		this.tileEntity = tile;
-		upgrades = MachineUpgrade.getMatchingUpgrades(upgradableMachine);
-		for(MachineUpgrade upgrade : upgradableMachine.getUpgrades())
-			if(!upgrades.contains(upgrade))
-				upgrades.add(upgrade);
-	}
-
-	public void initGui()
-	{
-		super.initGui();
-		boolean g = buttonInfo!=null&&buttonInfo.visible;
-		boolean h = buttonUpgrade!=null&&buttonUpgrade.visible;
-		boolean j = buttonQuit!=null&&buttonQuit.visible;
-
-		textUpgradeMachine = I18n.format(IIReference.DESCRIPTION_KEY+"upgrade_gui.title");
-		textInfo = I18n.format(IIReference.DESCRIPTION_KEY+"upgrade_gui.info");
-		textUpgrade = I18n.format(IIReference.DESCRIPTION_KEY+"upgrade_gui.install");
-		textRemove = I18n.format(IIReference.DESCRIPTION_KEY+"upgrade_gui.remove");
-		textBack = I18n.format(IIReference.DESCRIPTION_KEY+"upgrade_gui.back");
-
-		addButton(buttonInfo = new GuiButtonIE(0, guiLeft+106, guiTop+23, 52, 12, textInfo, TEXTURE, 49, 168));
-		addButton(buttonUpgrade = new GuiButtonIE(1, guiLeft+106, guiTop+38, 52, 12, textUpgrade, TEXTURE, 49, 180));
-		addButton(buttonQuit = new GuiButtonIE(2, guiLeft+106, guiTop+53, 52, 12, textBack, TEXTURE, 49, 192));
-
-		buttonInfo.visible = g;
-		buttonUpgrade.visible = h;
-		buttonQuit.visible = j;
-
-		if(upgradableMachine.getInstallProgress() > 0)
-		{
-			previewed = upgradableMachine.getCurrentlyInstalled();
-			buttonList.forEach(guiButton -> guiButton.visible = false);
-		}
-	}
-
-	/**
-	 * Draw the foreground layer for the GuiContainer (everything in front of the items)
-	 */
-	@Override
-	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
-	{
-		IIClientUtils.drawStringCentered(fontRenderer, textUpgradeMachine, 0, -14, getXSize()+4, 6, 0xd99747);
-		//fontRenderer.drawString((RotaryUtils.getGearEffectiveness(tile.getInventory(), tile.getEfficiencyMultiplier(), 3)*100)+"%", 76, 47, 0xd99747);
+		super(player, tile, IIGUI.UPGRADE);
+		this.techTree = tile!=null?UpgradeTechTree.getTreeFor(tile): null;
 	}
 
 	@Override
-	protected void actionPerformed(GuiButton button) throws IOException
+	public void onInit()
 	{
-		if(button.id==0)
-			info ^= true;
-		else if(button.id==1)
+		ResLoc style = DecoTextures.BG_STEEL;
+		switch(tile.getUpgradableMachineStyle())
 		{
-			IIPacketHandler.sendToServer(new MessageBeginMachineUpgrade(tileEntity, previewed.getName(), mc.player, !previewInstalled));
-			mc.player.closeScreen();
-		}
-		else if(button.id==2)
-		{
-			previewed = null;
-			info = false;
-			buttonList.forEach(guiButton -> guiButton.visible = false);
-		}
-	}
-
-	/**
-	 * Draws the background layer of this container (behind the items).
-	 */
-	@Override
-	protected void drawGuiContainerBackgroundLayer(float f, int mx, int my)
-	{
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		ClientUtils.bindTexture(TEXTURE);
-		this.drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
-		int ww = ((fontRenderer.getStringWidth(textUpgradeMachine)-4)/2);
-		this.drawTexturedModalRect(guiLeft+(xSize/2-ww)-4, guiTop-11, 0, 168, 12, 11);
-		for(int w = 11; w < ww*2; w += 12)
-			this.drawTexturedModalRect(guiLeft+(xSize/2-ww)+w-4, guiTop-11, 12, 168, Math.min(12, (ww*2)-w), 11);
-		this.drawTexturedModalRect(guiLeft+(xSize/2+ww)-4, guiTop-11, 37, 168, 12, 11);
-
-		if(this.previewed!=null&&info)
-		{
-			this.drawTexturedModalRect(guiLeft+xSize, guiTop+4, 176, 36, 80, 128);
+			case WOODEN:
+				style = DecoTextures.BG_WOODEN;
+				break;
+			case BRICKS:
+				style = DecoTextures.BG_BRICKS;
+				break;
+			case CONCRETE:
+				style = DecoTextures.BG_CONCRETE;
+				break;
+			case SANDBAGS:
+				style = DecoTextures.BG_SANDBAGS;
+				break;
+			case STEEL:
+			default:
+				break;
 		}
 
-	}
+		startBackground()
+				.withBox(style, 0, 0, 256, 152+8+8)
+				.withTitleBar("desc.immersiveintelligence.upgrade_gui.title")
+				.withNextLayer()
+				.withBox(DecoTextures.BG_WOODEN, DecoTextures.TEMPLATE_ROUND_WOODEN, 40, 136+24+8, 176, 92)
+				.withFrame(DecoTextures.FRAME_WOODEN_THIN, 4, false, new boolean[]{true, false, false, false})
+				.withInventorySlots(SlotStyle.VANILLA, container.inventorySlots)
+				.withInventoryTitleBar()
+				.build();
 
-	@Override
-	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException
-	{
-		if(mouseButton==0&&previewed==null&&IIMath.isPointInRectangle(guiLeft+99, guiTop+8, guiLeft+99+66, guiTop+8+56, mouseX, mouseY))
+		//Upgrade
+		addComponents(
+				new DecoPanel(4, 4+8)
+						.withSize(108, 152)
+						.withBackground(DecoTextures.BG_PAPER)
+						.withBackgroundMask(DecoTextures.TEMPLATE_SQUARE),
+				scenario = new DecoScenarioDisplay(4+2, 4+2+8)
+						.withSize(108-4, 96)
+						.withBackgroundColor(IIColor.BLACK.withAlpha(32))
+						.withScale(0.125f)
+						.withRotation(-12.5f, 5)
+						.withRotationAnimation(240, 0)
+						.withInteractionAllowed(true),
+				new DecoButton(118-4, 16-8-4+14-14+8)
+						.withSize(69, 14)
+						.withBackground(DecoTextures.COMPONENT_TAB_VERTICAL)
+						.withText(IIReference.DESCRIPTION_KEY+"upgrade_gui.tech_tree")
+						.withOnLMBPressed(() -> {
+							panelInfo.visible = panelInfo.enabled = false;
+							techTreeDisplay.visible = techTreeDisplay.enabled = true;
+							refreshModelPreview(null);
+						}),
+				new DecoButton(118-4+69, 16-8-4+14-14+8)
+						.withSize(69, 14)
+						.withBackground(DecoTextures.COMPONENT_TAB_VERTICAL)
+						.withText(IIReference.DESCRIPTION_KEY+"upgrade_gui.info")
+						.withOnLMBPressed(() -> {
+							panelInfo.visible = panelInfo.enabled = true;
+							techTreeDisplay.visible = techTreeDisplay.enabled = false;
+							if(lastUpgrade!=null&&!lastUpgrade.isEmpty())
+								refreshModelPreview(Upgrade.getUpgradeByID(ResLoc.of(lastUpgrade)));
+						}),
+				panelInfo = new DecoPanel(118-4, 16-8-4+14+8)
+						.withSize(146-8, 146-8)
+						.withBackground(DecoTextures.BG_STEEL)
+						.withBackgroundMask(DecoTextures.TEMPLATE_SQUARE),
+				techTreeDisplay = new DecoTreeDisplay<Upgrade>(118-4, 16-8-4+14+8)
+						.withTree(new UpgradeTechTreeWrapper(techTree, tile)
+						{
+							@Override
+							public void onNodeClicked(@Nonnull IDecoTreeNode<Upgrade> node)
+							{
+								panelInfo.visible = panelInfo.enabled = true;
+								techTreeDisplay.visible = techTreeDisplay.enabled = false;
+								showUpgrade(node.getUserData());
+								refreshModelPreview(node.getUserData());
+							}
+						})
+						.withNodeRenderer(new UpgradeTreeNodeRenderer())
+						.withSize(146-8, 146-8)
+						.withBackground(DecoSprite.atlasSprite(DecoTextures.BG_DARK, 64))
+		);
+
+		if(lastUpgrade==null)
 		{
-			int xx = mouseX-(guiLeft+100);
-			int yy = mouseY-(guiTop+9);
-			int id = (int)(Math.floor(xx/20f)+(3*Math.floor(yy/20f)));
-			if(id > -1&&id < upgrades.size())
-			{
-				mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
-				previewed = upgrades.get(id);
-				previewInstalled = upgradableMachine.hasUpgrade(previewed);
-				buttonUpgrade.displayString = previewInstalled?textRemove: textUpgrade;
-			}
-		}
-		else
-			super.mouseClicked(mouseX, mouseY, mouseButton);
-
-		buttonList.forEach(guiButton -> guiButton.visible = (previewed!=null));
-		buttonUpgrade.enabled = hasItemsForUpgrade(previewed);
-	}
-
-	@Override
-	public void drawScreen(int mx, int my, float partial)
-	{
-		super.drawScreen(mx, my, partial);
-		//this.renderHoveredToolTip(mx, my);
-
-		GlStateManager.pushMatrix();
-		GlStateManager.color(1f, 1f, 1f, 1f);
-		//GuiInventory.drawEntityOnScreen(guiLeft+40,guiTop+40,32,mx,my, mc.player);
-		GlStateManager.translate(guiLeft+51, guiTop+70, 0);
-		GlStateManager.rotate(-15, 1, 0, 0);
-		GlStateManager.scale(-24, -24, -1);
-		GlStateManager.rotate(360*(((mc.world.getTotalWorldTime()%120)+partial)/120f), 0, 1, 0);
-		ArrayList<MachineUpgrade> upgrades = new ArrayList<>(upgradableMachine.getUpgrades());
-		if(previewed!=null&&!upgrades.contains(previewed))
-			upgrades.add(previewed);
-		upgradableMachine.renderWithUpgrades(upgrades.toArray(new MachineUpgrade[0]));
-		GlStateManager.disableLighting();
-		GlStateManager.popMatrix();
-
-		ArrayList<String> tooltip = new ArrayList<>();
-		if(previewed==null)
-		{
-			int i = 0;
-			for(MachineUpgrade upgrade : this.upgrades)
-			{
-				int xx = (i%3)*20, yy = (int)Math.floor(i/3f)*20;
-				ClientUtils.bindTexture(TEXTURE);
-				drawTexturedModalRect(guiLeft+100+xx, guiTop+9+yy, upgradableMachine.hasUpgrade(upgrade)?121: 101, 168, 20, 20);
-				if(IIMath.isPointInRectangle(guiLeft+100+xx, guiTop+9+yy, guiLeft+100+xx+16, guiTop+9+yy+16, mx, my))
-					tooltip.add(getUpgradeNameTranslation(upgrade));
-				i++;
-			}
-			i = 0;
-			for(MachineUpgrade upgrade : this.upgrades)
-			{
-				int xx = (i%3)*20, yy = (int)Math.floor(i/3f)*20;
-				GlStateManager.color(1f, 1f, 1f, 1f);
-				mc.getTextureManager().bindTexture(upgrade.getIcon());
-				ClientUtils.drawTexturedRect(guiLeft+102+xx, guiTop+11+yy, 16, 16, 0d, 1d, 0d, 1d);
-				i++;
-			}
-
+			showUpgrade(null);
+			refreshModelPreview(null);
 		}
 		else
 		{
-			drawRect(guiLeft+99, guiTop+8, guiLeft+99+66, guiTop+8+56, 0xdf0e1c34);
-			IIClientUtils.drawStringCentered(fontRenderer, getUpgradeNameTranslation(previewed), guiLeft+99, guiTop+8, 66, 1, 0xffffff);
+			Upgrade current = Upgrade.getUpgradeByID(ResLoc.of(lastUpgrade));
+			showUpgrade(current);
+			refreshModelPreview(current);
 		}
+	}
 
-		//RotaryUtils.renderEnergyTooltip(tooltip, mx, my, guiLeft+148, guiTop+20, tile.rotation);
-
-		ClientUtils.bindTexture(TEXTURE);
-		this.drawTexturedModalRect(guiLeft+8, guiTop+5, 176, 0, 15, 15);
-		this.drawTexturedModalRect(guiLeft+79, guiTop+5, 191, 0, 15, 15);
-		this.drawTexturedModalRect(guiLeft+8, guiTop+66, 176, 15, 15, 15);
-		this.drawTexturedModalRect(guiLeft+79, guiTop+66, 191, 15, 15, 15);
-
-		drawTexturedModalRect(guiLeft+152, guiTop+1, 0, 179, 16, 11);
-
-		if(info)
+	private void showUpgrade(Upgrade upgrade)
+	{
+		panelInfo.cleanup();
+		if(upgrade!=null)
 		{
-			RenderHelper.enableGUIStandardItemLighting();
-			int yy = (int)(Math.floor(previewed.getRequiredStacks().size()/4f)*18);
-			for(int i = 0; i < previewed.getRequiredStacks().size(); i++)
+			//Name and descriptionm
+			panelInfo.addLabel(upgrade.getLocalizedName(), 2+20, 2)
+					.withSize(panelInfo.width-4-20, 20)
+					.withWrapping(true)
+					.withAlign(DecoAlignment.CENTER);
+			DecoLabel descLabel = panelInfo.addLabel(TextFormatting.ITALIC+I18n.format(String.format("machineupgrade.%s.%s.desc",
+									upgrade.getId().getResourceDomain(),
+									upgrade.getId().getResourcePath().replace("/", "."))),
+							4, 22)
+					.withSize(panelInfo.width-8, 20)
+					.withWrapping(true)
+					.withAlign(DecoAlignment.TOP_LEFT);
+
+			//Icon
+			panelInfo.addComponent(new DecoImage(4, 4))
+					.withSize(16, 16)
+					.withImageLocation(upgrade.getIcon(), true);
+			//Required stacks
+			List<IngredientStack> requiredStacks = upgrade.getRequiredStacks();
+			for(int i = 0; i < requiredStacks.size(); i++)
 			{
-				int x = (i%4)*18;
-				int y = (int)(Math.floor(i/4f)*18);
-				ItemStack stack = previewed.getRequiredStacks().get(i).getExampleStack();
-				stack.setCount(previewed.getRequiredStacks().get(i).inputSize);
-				//drawString(fontRenderer,stack.getDisplayName(),guiLeft+xSize+x, guiTop+4-yy+y,0xffffff);
-				mc.getRenderItem().renderItemAndEffectIntoGUI(stack, guiLeft+xSize+x+2, guiTop+112-yy+y);
-				mc.getRenderItem().renderItemOverlayIntoGUI(fontRenderer, stack, guiLeft+xSize+x+2, guiTop+112-yy+y, null);
-				if(IIMath.isPointInRectangle(guiLeft+xSize+x+2, guiTop+112-yy+y, guiLeft+xSize+x+18, guiTop+128-yy+y, mx, my))
-					tooltip.addAll(stack.getTooltip(mc.player, mc.gameSettings.advancedItemTooltips?TooltipFlags.ADVANCED: TooltipFlags.NORMAL));
+				panelInfo.addComponent(new DecoItemStackDisplay(2+(i%7*20), 22+2+descLabel.getTotalHeight()+(i/7)))
+						.withSize(18, 18)
+						.withStack(requiredStacks.get(i));
 			}
 
-			boolean uni = fontRenderer.getUnicodeFlag();
-			fontRenderer.setUnicodeFlag(true);
-			fontRenderer.drawSplitString(getUpgradeDescTranslation(previewed), guiLeft+xSize+2, guiTop+8, 76, IIReference.COLOR_H1.getPackedRGB());
-			fontRenderer.setUnicodeFlag(uni);
-		}
+			//Required energy
+			int energyRequired = (int)(upgrade.getProgressRequired()*0.75f);
+			panelInfo.addComponent(new DecoBar(4, 22+64+28-16))
+					.withTemplate(DecoTemplates.BAR_ELECTRIC_ENERGY_INPUT)
+					.withLimits(0, energyRequired, upgrade::getProgressRequired)
+					.withSize(panelInfo.width-4-4, 12)
+					.withHorizontalMode(true);
 
-		for(GuiButton guiButton : buttonList)
-		{
-			guiButton.drawButton(mc, mx, my, partial);
-		}
+			//Install button
+			final boolean shouldInstall = !tile.isUpgradeInstalled(upgrade);
+			final boolean canInstall = tile.addUpgrade(upgrade, UpgradeOperation.PROBE);
+			DecoButton button = panelInfo.addComponent(new DecoButton(4, 22+64+28))
+					.withWidth(panelInfo.width-8)
+					.withText(IIReference.DESCRIPTION_KEY+(shouldInstall?"upgrade_gui.install": "upgrade_gui.remove"))
+					.withOnLMBPressed(() -> {
+						IIPacketHandler.sendToServer(new MessageBeginMachineUpgrade(tile, upgrade, this.mc.player, shouldInstall));
+						closeGUI();
+					});
 
-		if(!tooltip.isEmpty())
-		{
-			ClientUtils.drawHoveringText(tooltip, mx, my, fontRenderer, guiLeft+xSize, -1);
-			RenderHelper.enableGUIStandardItemLighting();
+			if(shouldInstall&&!canInstall)
+				button.enabled = false;
 		}
 	}
 
-	private String getUpgradeNameTranslation(MachineUpgrade upgrade)
+	private void refreshModelPreview(Upgrade upgrade)
 	{
-		return I18n.format("machineupgrade.immersiveintelligence."+upgrade.getName());
-	}
+		ArrayList<AMTModel> builder = new ArrayList<>();
 
-	private String getUpgradeDescTranslation(MachineUpgrade upgrade)
-	{
-		return I18n.format("machineupgrade.immersiveintelligence."+upgrade.getName()+".desc");
-	}
+		//Add base model
+		ResLoc baseRes = techTree.getModelLocation();
+		if(baseRes!=null)
+			builder.add(new AMTModel(DefaultVertexFormats.ITEM, baseRes));
 
-	public boolean hasItemsForUpgrade(MachineUpgrade upgrade)
-	{
-		if(upgrade==null)
-			return false;
-
-		if(mc.player.isCreative())
-			return true;
-
-		for(IngredientStack requiredStack : upgrade.getRequiredStacks())
+		//Collect all installed upgrades
+		ArrayList<Upgrade> upgrades = new ArrayList<>(tile.getAllInstalledUpgrades());
+		//Remove incompatible from preview and add requirements
+		if(upgrade!=null)
 		{
-			int reqSize = requiredStack.inputSize;
-			for(int slot = 0; slot < ManualUtils.mc().player.inventory.getSizeInventory(); slot++)
-			{
-				ItemStack inSlot = ManualUtils.mc().player.inventory.getStackInSlot(slot);
-				if(!inSlot.isEmpty()&&requiredStack.matchesItemStackIgnoringSize(inSlot))
-					if((reqSize -= inSlot.getCount()) <= 0)
-						break;
-			}
-
-			if(reqSize > 0)
-				return false;
+			upgrades.removeAll(techTree.getAllIncompatibleUpgrades(upgrade));
+			upgrades.addAll(techTree.getAllRequiredUpgrades(upgrade.getPurpose()));
+			upgrades.add(upgrade);
 		}
-		return true;
-	}
 
-	@Nullable
-	public ItemStack getPreviewedItem(int mouseX, int mouseY)
-	{
-		if(previewed!=null&&info)
-		{
-			int yy = (int)(Math.floor(previewed.getRequiredStacks().size()/4f)*18);
-			for(int i = 0; i < previewed.getRequiredStacks().size(); i++)
-			{
-				int x = (i%4)*18;
-				int y = (int)(Math.floor(i/4f)*18);
-				if(IIMath.isPointInRectangle(guiLeft+xSize+x+2, guiTop+112-yy+y, guiLeft+xSize+x+18, guiTop+128-yy+y, mouseX, mouseY))
-					return previewed.getRequiredStacks().get(i).getExampleStack();
-			}
-		}
-		return null;
+		//Add all installed upgrades
+		upgrades.stream().distinct()
+				.map(techTree::getUpgradeModelLocation)
+				.filter(Objects::nonNull)
+				.map(upgradeRes -> new AMTModel(DefaultVertexFormats.ITEM, upgradeRes))
+				.forEach(builder::add);
+
+		//Build
+		AMTModel built = new AMTModel(builder.toArray(new AMTModel[0]));
+		Vec3d center = built.findActualModelCenter();
+		Vec3d size = built.findModelSize();
+		float maxEdge = (float)Math.max(size.x, Math.max(size.y, size.z));
+
+		scenario.withModel(false, built);
+		scenario.withOrigin(center.x, center.y, center.z);
+		scenario.withTranslation(-center.x, -center.y, -center.z);
+		scenario.withScale(Math.min(maxEdge==0?0.125f: (0.125f/(maxEdge/6f)), 0.325f));
 	}
 }

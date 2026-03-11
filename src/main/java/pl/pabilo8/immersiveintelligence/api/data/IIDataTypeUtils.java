@@ -57,6 +57,7 @@ public class IIDataTypeUtils
 		registerType("itemstack", DataTypeItemStack.class, DataTypeItemStack::new, IIColor.fromPackedRGB(0x121031), false);
 		registerType("fluidstack", DataTypeFluidStack.class, DataTypeFluidStack::new, IIColor.fromPackedRGB(0x082730), false);
 		registerType("entity", DataTypeEntity.class, DataTypeEntity::new, IIColor.fromPackedRGB(0x435e46), true);
+		registerType("logitag", DataTypeLogisticTag.class, DataTypeLogisticTag::new, IIColor.fromPackedRGB(0x5c5b3f), true);
 
 		//cryptographic types
 		registerType("encrypted", DataTypeEncrypted.class, DataTypeEncrypted::new, IIColor.fromPackedRGB(0x5a0d75), true);

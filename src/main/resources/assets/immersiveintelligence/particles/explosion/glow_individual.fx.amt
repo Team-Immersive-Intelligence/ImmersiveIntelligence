@@ -1,7 +1,6 @@
 {
   "type": "ParticleVanilla",
-  "textures": ["immersiveintelligence:particle/dust/dust_medium"],
-  "color": "ab5900",
+  "textures": ["immersiveintelligence:particle/smoke/explosion_smoke"],
   "max_lifetime": 4,
   "draw_stage": "custom_additive",
   "size": 1.0,

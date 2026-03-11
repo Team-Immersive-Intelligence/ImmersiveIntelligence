@@ -4,6 +4,7 @@ import blusunrize.immersiveengineering.api.ApiUtils;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.client.model.obj.OBJModel;
@@ -15,16 +16,17 @@ import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoCore;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoType;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
-import pl.pabilo8.immersiveintelligence.client.util.amt.AMT;
-import pl.pabilo8.immersiveintelligence.client.util.amt.AMTLocator;
-import pl.pabilo8.immersiveintelligence.client.util.amt.AMTQuads;
-import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationUtils;
+import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
+import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTModel;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMT;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTLocator;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTQuads;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityAmmoBase;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoMine;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
-import pl.pabilo8.immersiveintelligence.common.util.amt.IIModelHeader;
+import pl.pabilo8.immersiveintelligence.common.util.amt.AMTModelHeader;
 
 import javax.annotation.Nullable;
 import java.util.EnumMap;
@@ -143,26 +145,26 @@ public class ModelAmmo<T extends IAmmoType<T, E>, E extends EntityAmmoBase<? sup
 		modelCore.clear();
 		modelCoreSimple.clear();
 		modelPaint.clear();
-		IIAnimationUtils.disposeOf(new AMT[]{modelCasing, modelCasingSimple, modelPaintBase});
+		AMTUtils.disposeOf(modelCasing, modelCasingSimple, modelPaintBase);
 
 		//Load new models
-		AMT[] amt = IIAnimationUtils.getAMTFromRes(modelLocation, modelLocation.withExtension(ResLoc.EXT_OBJAMT), this::getExtraModelParts);
+		AMTModel amt = new AMTModel(DefaultVertexFormats.BLOCK, modelLocation, this::getExtraModelParts);
 		//Either a proper model or no model at all
-		if(!(loaded = amt.length > 0))
+		if(!(loaded = !amt.isEmpty()))
 			return;
 
 		loadModels(amt);
 	}
 
-	protected AMT[] getExtraModelParts(IIModelHeader header)
+	protected AMT[] getExtraModelParts(AMTModelHeader header)
 	{
 		return new AMT[0];
 	}
 
-	protected void loadModels(AMT[] amt)
+	protected void loadModels(AMTModel amt)
 	{
-		modelCasing = IIAnimationUtils.getPart(amt, "casing");
-		modelCasingSimple = IIAnimationUtils.getPart(amt, "casing_simple");
+		modelCasing = amt.getPart("casing");
+		modelCasingSimple = amt.getPart("casing_simple");
 		if(modelCasingSimple==null)
 			modelCasingSimple = modelCasing;
 
@@ -172,11 +174,11 @@ public class ModelAmmo<T extends IAmmoType<T, E>, E extends EntityAmmoBase<? sup
 			HashMap<AmmoCore, AMT> modelMap = new HashMap<>();
 			HashMap<AmmoCore, AMT> modelSimpleMap = new HashMap<>();
 
-			AMT coreModel = IIAnimationUtils.getPart(amt, "core_"+coreType.getName());
+			AMT coreModel = amt.getPart("core_"+coreType.getName());
 			if(coreModel==null)
 				continue;
 			//Simple model variant is optional
-			AMTQuads coreSimpleModel = (AMTQuads)IIAnimationUtils.getPart(amt, "core_"+coreType.getName()+"_simple");
+			AMTQuads coreSimpleModel = (AMTQuads)amt.getPart("core_"+coreType.getName()+"_simple");
 
 			for(AmmoCore core : AmmoRegistry.getAllCores())
 			{
@@ -204,7 +206,7 @@ public class ModelAmmo<T extends IAmmoType<T, E>, E extends EntityAmmoBase<? sup
 		}
 
 		//Load a paint model, variants will be assigned dynamically
-		modelPaintBase = IIAnimationUtils.getPart(amt, "paint");
+		modelPaintBase = amt.getPart("paint");
 	}
 
 	@Override

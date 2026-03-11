@@ -4,7 +4,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.common.util.AdvancedSounds.MultiSound;
+import pl.pabilo8.immersiveintelligence.common.util.sound.AdvancedSounds.MultiSound;
 
 /**
  * A repeated sound with a beginning and end which plays for a set amount of ticks

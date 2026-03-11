@@ -16,13 +16,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3i;
+import net.minecraft.util.math.*;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.storage.loot.ILootContainer;
 import net.minecraft.world.storage.loot.LootContext;
@@ -31,10 +29,10 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.api.upgrade.IManagedUpgradableDevice;
+import pl.pabilo8.immersiveintelligence.api.upgrade.IUpgradableDevice;
+import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeManager;
 import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
-import pl.pabilo8.immersiveintelligence.api.utils.IUpgradableMachine;
-import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
@@ -43,7 +41,6 @@ import pl.pabilo8.immersiveintelligence.common.util.entity.IIEntityUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
@@ -55,25 +52,26 @@ import static pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.M
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 06.07.2020
  */
-public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectable implements IDirectionalTile, IBooleanAnimatedPartsBlock, ITickable, IUpgradableMachine, IPlayerInteraction, IBlockBounds, IIEInventory, IGuiTile, ITileDrop, IComparatorOverride, ILootContainer
+public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectable implements
+		IDirectionalTile, IBooleanAnimatedPartsBlock, ITickable, IManagedUpgradableDevice<TileEntityEffectCrate>, IPlayerInteraction,
+		IBlockBounds, IIEInventory, IGuiTile, ITileDrop, IComparatorOverride, ILootContainer
 {
 	public ResourceLocation lootTable;
 	public EnumFacing facing = EnumFacing.NORTH;
 	public String name;
 	public boolean open = false;
 	public float lidAngle = 0;
-	public int clientUpgradeProgress = 0;
 	public int energyStorage = 0;
 	@Nonnull
 	public IItemHandler insertionHandler;
-	protected ArrayList<MachineUpgrade> upgrades = new ArrayList<>();
-	MachineUpgrade currentlyInstalled = null;
-	int upgradeProgress = 0;
+	public UpgradeManager<TileEntityEffectCrate> upgradeManager = new UpgradeManager<>(this);
+
 	//Client only
 	float inserterAnimation = 0f;
 	float inserterHeight = 0f;
 	float inserterAngle = 0f;
 	Entity focusedEntity = null;
+
 	@Nonnull
 	NonNullList<ItemStack> inventory;
 
@@ -179,7 +177,7 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 			open = nbt.getBoolean("open");
 		if(nbt.hasKey("facing"))
 			setFacing(EnumFacing.getFront(nbt.getInteger("facing")));
-		getUpgradesFromNBT(nbt);
+
 		energyStorage = nbt.getInteger("energyStorage");
 		if(!descPacket)
 		{
@@ -198,7 +196,6 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 			nbt.setString("name", name);
 		nbt.setBoolean("open", open);
 		nbt.setInteger("facing", facing.getIndex());
-		saveUpgradesToNBT(nbt);
 		nbt.setInteger("energyStorage", energyStorage);
 		if(!descPacket)
 		{
@@ -243,16 +240,14 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 		//TODO: 23.05.2023 animation
 		if(world.isRemote)
 		{
-			if(energyStorage > 0&&hasUpgrade(IIContent.UPGRADE_INSERTER))
+			if(energyStorage > 0&&isUpgradeInstalled(IIContent.UPGRADE_INSERTER))
 			{
 				inserterAnimation = calculateInserterAnimation(0);
 				inserterHeight = calculateInserterHeight(0);
 				inserterAngle = calculateInserterAngle(0);
 			}
-			else if(clientUpgradeProgress < getMaxClientProgress())
-				clientUpgradeProgress = (int)Math.min(clientUpgradeProgress+(Tools.wrenchUpgradeProgress/2f), getMaxClientProgress());
 		}
-		else if(energyStorage > energyDrain&&hasUpgrade(IIContent.UPGRADE_INSERTER)&&isSupplied()&&world.getTotalWorldTime()%getEffectTime()==0)
+		else if(energyStorage > energyDrain&&isUpgradeInstalled(IIContent.UPGRADE_INSERTER)&&isSupplied()&&world.getTotalWorldTime()%getEffectTime()==0)
 		{
 			//get all in range
 			//effect
@@ -335,10 +330,10 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 	@Override
 	public boolean interact(EnumFacing side, EntityPlayer player, EnumHand hand, ItemStack heldItem, float hitX, float hitY, float hitZ)
 	{
-		if(hasUpgrade(IIContent.UPGRADE_INSERTER))
+		if(isUpgradeInstalled(IIContent.UPGRADE_INSERTER))
 		{
 			if(open)
-				IIPacketHandler.INSTANCE.sendToDimension(new MessageBooleanAnimatedPartsSync(0, open = false, this.pos), this.world.provider.getDimension());
+				IIPacketHandler.sendToClient(new MessageBooleanAnimatedPartsSync(0, open = false, this));
 
 			return false;
 		}
@@ -346,7 +341,7 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 		if(player.isSneaking())
 		{
 			open = !open;
-			IIPacketHandler.INSTANCE.sendToDimension(new MessageBooleanAnimatedPartsSync(0, open, this.pos), this.world.provider.getDimension());
+			IIPacketHandler.sendToClient(new MessageBooleanAnimatedPartsSync(0, open, this));
 			return true;
 		}
 		else if(open&&isSupplied())
@@ -360,102 +355,16 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 	}
 
 	@Override
-	public boolean addUpgrade(MachineUpgrade upgrade, boolean test)
+	public IUpgradableDevice master()
 	{
-		boolean b = !hasUpgrade(upgrade)&&upgrade.equals(IIContent.UPGRADE_INSERTER);
-		if(!test&&b)
-			upgrades.add(upgrade);
-		return b;
+		return this;
 	}
 
+	@Nonnull
 	@Override
-	public boolean hasUpgrade(MachineUpgrade upgrade)
+	public UpgradeManager<TileEntityEffectCrate> getUpgradeManager()
 	{
-		return upgrades.stream().anyMatch(machineUpgrade -> machineUpgrade.getName().equals(upgrade.getName()));
-	}
-
-	@Override
-	public boolean upgradeMatches(MachineUpgrade upgrade)
-	{
-		return upgrade==IIContent.UPGRADE_INSERTER;
-	}
-
-	@Override
-	public <T extends TileEntity & IUpgradableMachine> T getUpgradeMaster()
-	{
-		return (T)this;
-	}
-
-	@Override
-	public void saveUpgradesToNBT(NBTTagCompound tag)
-	{
-		for(MachineUpgrade upgrade : upgrades)
-			tag.setBoolean(upgrade.getName(), true);
-	}
-
-	@Override
-	public void getUpgradesFromNBT(NBTTagCompound tag)
-	{
-		upgrades.clear();
-		upgrades.addAll(MachineUpgrade.getUpgradesFromNBT(tag));
-	}
-
-	public ArrayList<MachineUpgrade> getUpgrades()
-	{
-		return upgrades;
-	}
-
-	@Nullable
-	@Override
-	public MachineUpgrade getCurrentlyInstalled()
-	{
-		return currentlyInstalled;
-	}
-
-	@Override
-	public int getInstallProgress()
-	{
-		return upgradeProgress;
-	}
-
-	@Override
-	public int getClientInstallProgress()
-	{
-		return clientUpgradeProgress;
-	}
-
-	@Override
-	public boolean addUpgradeInstallProgress(int toAdd)
-	{
-		upgradeProgress += toAdd;
-		return true;
-	}
-
-	@Override
-	public boolean resetInstallProgress()
-	{
-		currentlyInstalled = null;
-		if(upgradeProgress > 0)
-		{
-			upgradeProgress = 0;
-			clientUpgradeProgress = 0;
-			return true;
-		}
-		return false;
-	}
-
-	@Override
-	public void startUpgrade(@Nonnull MachineUpgrade upgrade)
-	{
-		currentlyInstalled = upgrade;
-		upgradeProgress = 0;
-		clientUpgradeProgress = 0;
-	}
-
-	@Override
-	public void removeUpgrade(MachineUpgrade upgrade)
-	{
-		upgrades.remove(upgrade);
+		return upgradeManager;
 	}
 
 	@Override
@@ -479,7 +388,7 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 	@Override
 	public boolean canConnectCable(WireType cableType, TargetingInfo target, Vec3i offset)
 	{
-		return hasUpgrade(IIContent.UPGRADE_INSERTER)&&super.canConnectCable(cableType, target, offset);
+		return isUpgradeInstalled(IIContent.UPGRADE_INSERTER)&&super.canConnectCable(cableType, target, offset);
 	}
 
 	@Override
@@ -544,7 +453,7 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 	@Override
 	public float[] getBlockBounds()
 	{
-		if(hasUpgrade(IIContent.UPGRADE_INSERTER))
+		if(isUpgradeInstalled(IIContent.UPGRADE_INSERTER))
 			return new float[]{0f, 0f, 0f, 1f, 0.8125f, 1f};
 		if(facing==EnumFacing.NORTH||facing==EnumFacing.SOUTH)
 			return new float[]{0f, 0f, .25f, 1f, .58f, .75f};
@@ -621,5 +530,17 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 	public ResourceLocation getLootTable()
 	{
 		return this.lootTable;
+	}
+
+	@Override
+	public BlockPos getIIPos()
+	{
+		return getPos();
+	}
+
+	@Override
+	public World getIIWorld()
+	{
+		return getWorld();
 	}
 }

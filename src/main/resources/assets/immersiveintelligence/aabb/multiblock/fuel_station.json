@@ -1,0 +1,142 @@
+{
+  "bounds": {
+    "full": [
+      0, 0, 0,
+      16, 16, 16
+    ],
+    "table_top": [
+      0, 12, 0,
+      16, 15, 16
+    ],
+    "table_leg1": [
+      1, 0, 1,
+      4, 12, 4
+    ],
+    "table_leg2": [
+      1, 0, 12,
+      4, 12, 15
+    ],
+    "table_leg3": [
+      12, 0, 1,
+      15, 12, 4
+    ],
+    "table_leg4": [
+      12, 0, 12,
+      15, 12, 15
+    ],
+    "inserter_bottom1": [
+      2, 15, 2,
+      14, 18, 14
+    ],
+    "inserter_bottom2": [
+      2, -1, 2,
+      14, 2, 14
+    ],
+    "inserter": [
+      4, 2, 4,
+      12, 16, 12
+    ],
+    "concrete_base": [
+      0, 0, 0,
+      16, 4, 16
+    ],
+    "tank1": [
+      0, 0, 0,
+      13, 16, 13
+    ],
+    "tank2": [
+      0, 0, 1,
+      13, 16, 16
+    ],
+    "tank3": [
+      1, 0, 1,
+      16, 16, 16
+    ],
+    "tank4": [
+      1, 0, 0,
+      13, 16, 13
+    ],
+    "tank1_bottom": [
+      0, 10, 0,
+      13, 16, 13
+    ],
+    "tank2_bottom": [
+      0, 10, 1,
+      13, 16, 16
+    ],
+    "tank3_bottom": [
+      1, 10, 1,
+      16, 16, 16
+    ],
+    "tank4_bottom": [
+      1, 10, 0,
+      13, 16, 13
+    ],
+    "tank1_top": [
+      0, 0, 0,
+      13, 14, 13
+    ],
+    "tank2_top": [
+      0, 0, 1,
+      13, 14, 16
+    ],
+    "tank3_top": [
+      1, 0, 1,
+      16, 14, 16
+    ],
+    "tank4_top": [
+      1, 0, 0,
+      13, 14, 13
+    ],
+    "tank1_leg": [
+      10, 4, 10,
+      12, 10, 12
+    ],
+    "tank2_leg": [
+      10, 0, 2,
+      12, 10, 4
+    ],
+    "tank3_leg": [
+      2, 0, 2,
+      4, 10, 4
+    ],
+    "tank4_leg": [
+      2, 0, 10,
+      4, 10, 12
+    ],
+    "energy_box": [
+      4, -1, 4,
+      12, 16, 12
+    ],
+    "energy_taboret": [
+      2, 4, 2,
+      14, 6, 14
+    ]
+  },
+  "positions": {
+    "0,1": "table_top",
+    "0": ["table_leg1", "table_leg2"],
+    "1": ["table_leg3", "table_leg4", "inserter_bottom1"],
+    "7": ["inserter", "inserter_bottom2"],
+    "2,3,4,5": ["concrete_base"],
+    "8": "tank4",
+    "9": "tank1",
+    "10": "tank3",
+    "11": "tank2",
+    "2": ["tank4_bottom", "tank4_leg"],
+    "3": ["tank1_bottom", "tank1_leg"],
+    "4": ["tank3_bottom", "tank3_leg"],
+    "5": ["tank2_bottom", "tank2_leg"],
+    "14": "tank4_top",
+    "15": "tank1_top",
+    "16": "tank3_top",
+    "17": "tank2_top",
+    "6": ["energy_box", "energy_taboret"]
+  },
+  "poi": {
+    "fluid_input": 10,
+    "energy_input": 6,
+    "redstone": 9,
+    "table": [0, 1]
+  }
+}

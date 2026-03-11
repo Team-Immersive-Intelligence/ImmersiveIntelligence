@@ -7,11 +7,16 @@ import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IGuiTile;
 import blusunrize.immersiveengineering.common.util.Utils;
 import blusunrize.immersiveengineering.common.util.inventory.IIEInventory;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagFloat;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraftforge.common.util.INBTSerializable;
+import pl.pabilo8.immersiveintelligence.api.utils.MultiblockConstructionManager;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +35,93 @@ public class IIMultiblockInterfaces
 	public interface IExplosionResistantMultiblock
 	{
 		float getExplosionResistance();
+	}
+
+	public interface IDamageResistantMultiblock extends IExplosionResistantMultiblock
+	{
+		float getHealth();
+
+		float getMaxHealth();
+
+		/**
+		 * Method called when a {@link pl.pabilo8.immersiveintelligence.common.util.diplomacy.OwnerIdentity non-owner} entity or an explosion attempts to break the block of this multiblock.
+		 *
+		 * @param damage damage to be applied
+		 * @return whether the multiblock can be broken
+		 */
+		boolean damageHealth(float damage);
+	}
+
+	public interface IManagedDamageResistantMultiblock extends IDamageResistantMultiblock
+	{
+		MultiblockHealth getHealthManager();
+
+		@Override
+		default float getHealth()
+		{
+			return getHealthManager().getHealth();
+		}
+
+		@Override
+		default float getMaxHealth()
+		{
+			return getHealthManager().getMaxHealth();
+		}
+
+		@Override
+		default boolean damageHealth(float damage)
+		{
+			return getHealthManager().damageHealth(damage);
+		}
+	}
+
+	public static class MultiblockHealth implements INBTSerializable<NBTTagFloat>
+	{
+		private float health;
+		private final float maxHealth;
+		private final TileEntityMultiblockIIBase<?> tile;
+		private long lastDamaged = 0;
+
+		public MultiblockHealth(TileEntityMultiblockIIBase<?> tile, float maxHealth)
+		{
+			this.tile = tile;
+			this.maxHealth = maxHealth;
+			this.health = maxHealth;
+		}
+
+		public float getHealth()
+		{
+			return health;
+		}
+
+		public float getMaxHealth()
+		{
+			return maxHealth;
+		}
+
+		public boolean damageHealth(float damage)
+		{
+			//I-Frames
+			if(tile.getWorld().getTotalWorldTime() <= lastDamaged)
+				return false;
+			lastDamaged = tile.getWorld().getTotalWorldTime();
+
+			//Apply damage
+			health = MathHelper.clamp(health-damage, 0, maxHealth);
+			return health <= 0;
+		}
+
+		@Override
+		public NBTTagFloat serializeNBT()
+		{
+			return new NBTTagFloat(health);
+		}
+
+		@Override
+		public void deserializeNBT(NBTTagFloat nbt)
+		{
+			health = nbt.getFloat();
+		}
 	}
 
 	/**
@@ -103,34 +195,66 @@ public class IIMultiblockInterfaces
 		}
 	}
 
-	public interface IAdvancedMultiblockTileEntity
+	/**
+	 * A {@link net.minecraft.tileentity.TileEntity} that requires construction (transferring IF through player's hammer action) in order to be fully usable.
+	 */
+	public interface IConstructionRequiringDevice
 	{
-		int getConstructionCost();
+		/**
+		 * @return The master block, in case this device is a multiblock dummy. Otherwise, return this.
+		 */
+		IConstructionRequiringDevice master();
 
-		int getCurrentConstruction();
+		/**
+		 * @return The {@link MultiblockConstructionManager} instance that handles construction progress
+		 */
+		MultiblockConstructionManager getConstructionManager();
 
-		void setCurrentConstruction(int construction);
+		/**
+		 * @return Cost of construction in IF
+		 */
+		default int getConstructionCost()
+		{
+			return getConstructionManager().getConstructionCost();
+		}
 
-		void onConstructionFinish();
+		/**
+		 * @param client Whether to get the client or server progress
+		 * @return Current construction progress in IF
+		 */
+		default int getCurrentConstruction(boolean client)
+		{
+			return getConstructionManager().getCurrentConstruction(client);
+		}
 
+		/**
+		 * Progresses construction by the specified amount of IF
+		 *
+		 * @param construction Amount of IF to progress construction by
+		 */
+		default void progressConstruction(int construction)
+		{
+			getConstructionManager().progressConstruction(construction);
+		}
+
+		/**
+		 * @return true if construction is finished
+		 */
 		default boolean isConstructionFinished()
 		{
-			return getCurrentConstruction() >= getConstructionCost();
-		}
-
-		default void setConstructionNBT(NBTTagCompound nbt)
-		{
-			nbt.setInteger("construction", getCurrentConstruction());
-		}
-
-		default void getConstructionNBT(NBTTagCompound nbt)
-		{
-			setCurrentConstruction(nbt.getInteger("construction"));
+			return getConstructionManager().isConstructionFinished();
 		}
 	}
 
 	public interface IIIGuiMultiblockTile extends IGuiTile
 	{
+		@Nullable
+		@Override
+		default TileEntity getGuiMaster()
+		{
+			return master();
+		}
+
 		@Override
 		default int getGuiID()
 		{
@@ -138,5 +262,7 @@ public class IIMultiblockInterfaces
 		}
 
 		IIGUI getGUI();
+
+		TileEntity master();
 	}
 }

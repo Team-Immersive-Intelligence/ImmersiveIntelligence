@@ -1,6 +1,10 @@
-# Made by Pabilo8 in Blockbench 4.2.5
-newmtl m_0
+# Made by Pabilo8 with Blockbench
+
+newmtl chemical_dispenser
 map_Kd immersiveintelligence:blocks/metal_device/chemical_dispenser
-newmtl m_1
+newmtl common_thingies
 map_Kd immersiveintelligence:blocks/common/common_thingies
-newmtl none
+newmtl data_connector
+map_Kd immersiveintelligence:blocks/data_connector
+newmtl connector_connector_lv
+map_Kd immersiveengineering:blocks/connector_connector_lv

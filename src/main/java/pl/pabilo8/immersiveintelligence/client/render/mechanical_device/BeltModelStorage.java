@@ -1,13 +1,14 @@
 package pl.pabilo8.immersiveintelligence.client.render.mechanical_device;
 
 import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import pl.pabilo8.immersiveintelligence.api.rotary.IIRotaryUtils;
 import pl.pabilo8.immersiveintelligence.api.rotary.MotorBeltType;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
-import pl.pabilo8.immersiveintelligence.client.util.amt.AMT;
-import pl.pabilo8.immersiveintelligence.client.util.amt.AMTQuads;
-import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationLoader;
-import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationUtils;
+import pl.pabilo8.immersiveintelligence.client.util.amt.AMTLoader;
+import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTModel;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMT;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTQuads;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 
 import java.util.HashMap;
@@ -32,7 +33,7 @@ public class BeltModelStorage implements IReloadableModelContainer<BeltModelStor
 		for(MotorBeltType value : IIRotaryUtils.getAllMotorBelts())
 			try
 			{
-				beltModels.put(value, (AMTQuads)IIAnimationUtils.getAMTFromRes(value.getModelPath(), null)[0]);
+				beltModels.put(value, (AMTQuads)new AMTModel(DefaultVertexFormats.BLOCK, value.getModelPath()).batch("belt"));
 			} catch(ArrayIndexOutOfBoundsException e)
 			{
 				IILogger.error("No AMT found for motor belt \""+value.getUniqueName()+"\". Is the model missing?");
@@ -43,6 +44,6 @@ public class BeltModelStorage implements IReloadableModelContainer<BeltModelStor
 	public void registerSprites(TextureMap map)
 	{
 		IIRotaryUtils.getAllMotorBelts().forEach(m ->
-				IIAnimationLoader.preloadTexturesFromOBJ(m.getModelPath(), map));
+				AMTLoader.preloadTexturesFromOBJ(m.getModelPath(), map));
 	}
 }

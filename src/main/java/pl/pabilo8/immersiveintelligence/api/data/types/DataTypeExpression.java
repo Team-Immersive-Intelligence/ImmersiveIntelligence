@@ -36,6 +36,8 @@ public class DataTypeExpression extends DataType
 
 	}
 
+	//--- Getters ---//
+
 	public DataType getArgument(int index)
 	{
 		return data[index%data.length];
@@ -45,6 +47,23 @@ public class DataTypeExpression extends DataType
 	{
 		return operation;
 	}
+
+	public DataOperationMeta getMeta()
+	{
+		return meta;
+	}
+
+	public char getRequiredVariable()
+	{
+		return requiredVariable;
+	}
+
+	public DataType getValue(DataPacket packet)
+	{
+		return operation.execute(packet, this);
+	}
+
+	//--- Setters ---//
 
 	public void setOperation(@Nonnull DataOperation operation)
 	{
@@ -69,25 +88,12 @@ public class DataTypeExpression extends DataType
 		this.data = newData;
 	}
 
-	public DataOperationMeta getMeta()
-	{
-		return meta;
-	}
-
-	public char getRequiredVariable()
-	{
-		return requiredVariable;
-	}
-
 	public void setRequiredVariable(char requiredVariable)
 	{
 		this.requiredVariable = requiredVariable;
 	}
 
-	public DataType getValue(DataPacket packet)
-	{
-		return operation.execute(packet, this);
-	}
+	//--- NBT ---//
 
 	@Override
 	public void valueFromNBT(NBTTagCompound nbt)
@@ -132,8 +138,9 @@ public class DataTypeExpression extends DataType
 	public String toString()
 	{
 		String symbol = operation.getMeta().expression();
-		if(!symbol.isEmpty())
-			return String.format(symbol, Arrays.stream(data).map(DataType::toString).toArray());
-		return operation.getMeta().name();
+		StringBuilder sb = new StringBuilder();
+		sb.append(symbol.isEmpty()?operation.getMeta().name(): symbol);
+		Arrays.stream(data).map(DataType::toString).forEach(str -> sb.append(" ").append(str));
+		return sb.toString();
 	}
 }

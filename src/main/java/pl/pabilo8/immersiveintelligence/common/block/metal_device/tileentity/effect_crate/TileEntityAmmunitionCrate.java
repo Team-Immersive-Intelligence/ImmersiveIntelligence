@@ -15,12 +15,10 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
-import pl.pabilo8.immersiveintelligence.client.render.metal_device.AmmunitionCrateRenderer;
+import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeTechTree;
+import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeUtils.UpgradeTier;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
@@ -37,6 +35,14 @@ import static pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.M
  */
 public class TileEntityAmmunitionCrate extends TileEntityEffectCrate
 {
+	static
+	{
+		UpgradeTechTree.getTreeFor(TileEntityAmmunitionCrate.class)
+				.withUpgrade(IIContent.UPGRADE_INSERTER, UpgradeTier.TIER_1)
+				.withUpgrade(IIContent.UPGRADE_MG_LOADER, UpgradeTier.TIER_2)
+				.withDependency(IIContent.UPGRADE_INSERTER, IIContent.UPGRADE_MG_LOADER);
+	}
+
 	public TileEntityAmmunitionCrate()
 	{
 		inventory = NonNullList.withSize(50, ItemStack.EMPTY);
@@ -61,7 +67,7 @@ public class TileEntityAmmunitionCrate extends TileEntityEffectCrate
 		if(slot==37)
 			return stack.getItem() instanceof ItemRevolver||stack.getItem() instanceof ItemSpeedloader;
 
-		return hasUpgrade(IIContent.UPGRADE_MG_LOADER)&&stack.getItem() instanceof ItemIIAmmoMachinegun;
+		return isUpgradeInstalled(IIContent.UPGRADE_MG_LOADER)&&stack.getItem() instanceof ItemIIAmmoMachinegun;
 	}
 
 	@Override
@@ -69,7 +75,7 @@ public class TileEntityAmmunitionCrate extends TileEntityEffectCrate
 	{
 		if(player.isSneaking())
 		{
-			IIPacketHandler.INSTANCE.sendToDimension(new MessageBooleanAnimatedPartsSync(0, open = !open, this.pos), this.world.provider.getDimension());
+			IIPacketHandler.sendToClient(new MessageBooleanAnimatedPartsSync(0, open = !open, this));
 			return true;
 		}
 		else if(open)
@@ -170,35 +176,5 @@ public class TileEntityAmmunitionCrate extends TileEntityEffectCrate
 			}
 		}
 
-	}
-
-	@Override
-	public boolean addUpgrade(MachineUpgrade upgrade, boolean test)
-	{
-		boolean b = !hasUpgrade(upgrade)&&(upgrade.equals(IIContent.UPGRADE_INSERTER)||upgrade.equals(IIContent.UPGRADE_MG_LOADER));
-		if(!test&&b)
-			upgrades.add(upgrade);
-		return b;
-	}
-
-	@Override
-	public boolean upgradeMatches(MachineUpgrade upgrade)
-	{
-		return upgrade==IIContent.UPGRADE_INSERTER||upgrade==IIContent.UPGRADE_MG_LOADER;
-	}
-
-
-	@Override
-	public void update()
-	{
-		// TODO: 06.09.2020
-		super.update();
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void renderWithUpgrades(MachineUpgrade... upgrades)
-	{
-		AmmunitionCrateRenderer.renderWithUpgrade(upgrades);
 	}
 }

@@ -39,6 +39,57 @@ public class IIClassTransformer implements IClassTransformer
 							methodNode.instructions.insertBefore(anode, newInstructions);
 						}
 					}
+				}),
+				//Call resetBipedRotations for cleanup after render
+				new MethodTransformer("render", "func_78088_a", "(Lnet/minecraft/entity/Entity;FFFFFF)V", methodNode ->
+				{
+					Iterator<AbstractInsnNode> iterator = methodNode.instructions.iterator();
+					while(iterator.hasNext())
+					{
+						AbstractInsnNode anode = iterator.next();
+						if(anode.getOpcode()==Opcodes.RETURN)
+						{
+							InsnList newInstructions = new InsnList();
+							//Load ModelBiped (this) and Entity parameters onto the stack
+							newInstructions.add(new VarInsnNode(Opcodes.ALOAD, 0)); //this (ModelBiped)
+							newInstructions.add(new VarInsnNode(Opcodes.ALOAD, 1)); //Entity
+							newInstructions.add(new InsnNode(Opcodes.ICONST_0)); //false for finalCall
+							//Call the reset method in ClientEventHandler
+							newInstructions.add(new MethodInsnNode(Opcodes.INVOKESTATIC,
+									"pl/pabilo8/immersiveintelligence/client/ClientEventHandler",
+									"resetBipedRotations",
+									"(Lnet/minecraft/client/model/ModelBiped;Lnet/minecraft/entity/Entity;Z)V",
+									false));
+							methodNode.instructions.insertBefore(anode, newInstructions);
+						}
+					}
+				})
+		});
+
+		//Call resetBipedRotations for cleanup after render (separate call due to additional parts)
+		transformerMap.put("net.minecraft.client.model.ModelPlayer", new MethodTransformer[]{
+				new MethodTransformer("render", "func_78088_a", "(Lnet/minecraft/entity/Entity;FFFFFF)V", methodNode ->
+				{
+					Iterator<AbstractInsnNode> iterator = methodNode.instructions.iterator();
+					while(iterator.hasNext())
+					{
+						AbstractInsnNode anode = iterator.next();
+						if(anode.getOpcode()==Opcodes.RETURN)
+						{
+							InsnList newInstructions = new InsnList();
+							//Load ModelPlayer (this) and Entity parameters onto the stack
+							newInstructions.add(new VarInsnNode(Opcodes.ALOAD, 0)); //this (ModelPlayer)
+							newInstructions.add(new VarInsnNode(Opcodes.ALOAD, 1)); //Entity
+							newInstructions.add(new InsnNode(Opcodes.ICONST_1)); //true for finalCall
+							//Call the reset method in ClientEventHandler
+							newInstructions.add(new MethodInsnNode(Opcodes.INVOKESTATIC,
+									"pl/pabilo8/immersiveintelligence/client/ClientEventHandler",
+									"resetBipedRotations",
+									"(Lnet/minecraft/client/model/ModelBiped;Lnet/minecraft/entity/Entity;Z)V",
+									false));
+							methodNode.instructions.insertBefore(anode, newInstructions);
+						}
+					}
 				})
 		});
 

@@ -1,12 +1,12 @@
 package pl.pabilo8.immersiveintelligence.api.crafting;
 
 import net.minecraftforge.fluids.FluidStack;
+import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIMultiblockRecipe;
+import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIRecipeLayout;
+import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIRecipeLayoutBuilder;
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.IIMultiblockRecipe;
 
 import javax.annotation.Nullable;
-import java.util.Arrays;
-import java.util.Collections;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -36,8 +36,19 @@ public class ElectrolyzerRecipe extends IIMultiblockRecipe
 				time/gcd,
 				energy/gcd
 		);
+	}
 
-		this.fluidInputList = Collections.singletonList(this.fluidInput);
-		this.fluidOutputList = Arrays.asList(fluidOutputs);
+	@Nullable
+	@Override
+	protected IIRecipeLayout initRecipeLayout()
+	{
+		return new IIRecipeLayoutBuilder(152, 64)
+				.withInputFluidTank(4, 3, fluidInput)
+				.withOutputFluidTank(96+8+4, 3, fluidOutputs[0])
+				.withOutputFluidTank(118+8+4, 3, fluidOutputs[1])
+				.withMultiblockModel(32-8-2, -8)
+				.withTimeInfo()
+				.withPowerInfo()
+				.build();
 	}
 }

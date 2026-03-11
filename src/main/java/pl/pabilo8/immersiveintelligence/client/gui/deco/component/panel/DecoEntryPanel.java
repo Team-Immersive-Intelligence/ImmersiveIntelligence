@@ -1,14 +1,15 @@
 package pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiComponentDecoBase;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoComponent;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoButton;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoElementDisplays.DecoElementDisplay;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoScrolledCollection;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoAlignment;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
 import pl.pabilo8.immersiveintelligence.client.util.font.IIFontRenderer;
-import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 import java.util.Collections;
 import java.util.function.Function;
@@ -20,6 +21,7 @@ import java.util.function.Function;
  **/
 public abstract class DecoEntryPanel<T> extends DecoPanel implements DecoElementDisplay<T>
 {
+	private int displayedHeight;
 	private DecoButton addButton;
 	private DecoScrolledCollection<?, T> list;
 	private T element;
@@ -27,13 +29,13 @@ public abstract class DecoEntryPanel<T> extends DecoPanel implements DecoElement
 	public DecoEntryPanel()
 	{
 		super(0, 0);
-		withBackgroundMask(IIReference.RES_TEXTURES_DECO_TEMPLATE_PAPER);
-		withBackground(IIReference.GUI_BG_PAPER);
+		withBackgroundMask(DecoTextures.TEMPLATE_PAPER);
+		withBackground(DecoTextures.BG_PAPER);
 		addButton = new DecoButton(0, 0)
 				.withSize(16, 16)
 				.withPadding(0, 0, 0, 0)
-				.withIcon(IIReference.RES_TEXTURES_DECO_ICON_ACTION_ADD)
-				.withBackground(IIReference.RES_TEXTURES_DECO_BUTTON_HANGING)
+				.withIcon(DecoTextures.ICON_ACTION_ADD)
+				.withBackground(DecoTextures.COMPONENT_BUTTON_HANGING)
 		;
 	}
 
@@ -44,6 +46,7 @@ public abstract class DecoEntryPanel<T> extends DecoPanel implements DecoElement
 		{
 			cleanup();
 			initializeChildren();
+			this.displayedHeight = height;
 		}
 		return super.initialize();
 	}
@@ -86,22 +89,24 @@ public abstract class DecoEntryPanel<T> extends DecoPanel implements DecoElement
 
 			//Readjust the height
 			int minY = Integer.MAX_VALUE, maxY = Integer.MIN_VALUE;
-			for(GuiComponentDecoBase<?> child : children)
+			for(DecoComponent<?> child : children)
 			{
 				minY = Math.min(minY, child.y);
 				maxY = Math.max(maxY, child.y+child.height);
 			}
-			this.height = 2+maxY-minY;
+			this.displayedHeight = Math.max(2+maxY-minY, height);
 		}
 
 		//If the height is being probed, return the height
 		if(heightProbe)
-			return height;
+			return displayedHeight;
 
 		//Apply the element to the panel and draw it
 		applyElement(t);
-		drawButton(ClientUtils.mc(), mouseX, mouseY, partialTicks);
-		return height;
+		Minecraft mc = ClientUtils.mc();
+		drawButton(mc, mouseX, mouseY, partialTicks);
+		drawButtonUpperLayer(mc, mouseX, mouseY, partialTicks);
+		return displayedHeight;
 	}
 
 	@Override

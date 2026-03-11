@@ -17,6 +17,11 @@ public class MultiblockPrecisionAssembler extends MultiblockStuctureBase<TileEnt
 {
 	public static MultiblockPrecisionAssembler INSTANCE;
 
+	public static int SLOT_TOOL1 = 0, SLOT_TOOL2 = 1, SLOT_TOOL3 = 2;
+	public static int SLOT_SCHEME = 3;
+	public static int SLOT_INGREDIENT1 = 4, SLOT_INGREDIENT2 = 5, SLOT_INGREDIENT3 = 6, SLOT_INGREDIENT4 = 7;
+	public static int SLOT_OUTPUT = 8, SLOT_OUTPUT_TRASH = 9;
+
 	public MultiblockPrecisionAssembler()
 	{
 		super(new ResourceLocation(ImmersiveIntelligence.MODID, "multiblocks/precision_assembler"));

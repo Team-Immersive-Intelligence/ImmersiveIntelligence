@@ -16,6 +16,7 @@ import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIBase;
+import pl.pabilo8.modworks.annotations.item.GeneratedItemModels;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -25,6 +26,7 @@ import java.util.List;
  * @since 25.06.2019
  */
 @IIItemProperties(category = IICategory.ELECTRONICS)
+@GeneratedItemModels(itemName = "punchtape")
 public class ItemIIPunchtape extends ItemIIBase implements IDataStorageItem
 {
 	public ItemIIPunchtape()
@@ -38,7 +40,7 @@ public class ItemIIPunchtape extends ItemIIBase implements IDataStorageItem
 	{
 		super.addInformation(stack, worldIn, tooltip, flagIn);
 		DataPacket packet = getStoredData(stack);
-		if(packet.isEmpty())
+		if(!packet.isEmpty())
 		{
 			if(ItemTooltipHandler.addExpandableTooltip(Keyboard.KEY_LSHIFT, IIReference.DESCRIPTION_KEY+"data_storage_shift", tooltip))
 			{

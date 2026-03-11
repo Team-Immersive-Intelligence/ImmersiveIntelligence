@@ -1,6 +1,7 @@
 package pl.pabilo8.immersiveintelligence.common;
 
 import blusunrize.immersiveengineering.api.IEApi;
+import blusunrize.immersiveengineering.api.Lib;
 import blusunrize.immersiveengineering.api.MultiblockHandler;
 import blusunrize.immersiveengineering.api.MultiblockHandler.IMultiblock;
 import blusunrize.immersiveengineering.api.crafting.CrusherRecipe;
@@ -14,10 +15,12 @@ import blusunrize.immersiveengineering.api.tool.ExcavatorHandler.MineralMix;
 import blusunrize.immersiveengineering.common.Config.IEConfig.Tools;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IGuiTile;
 import blusunrize.immersiveengineering.common.blocks.ItemBlockIEBase;
+import blusunrize.immersiveengineering.common.blocks.TileEntityIEBase;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityChargingStation;
 import blusunrize.immersiveengineering.common.blocks.wooden.TileEntityWatermill;
 import blusunrize.immersiveengineering.common.blocks.wooden.TileEntityWindmill;
 import blusunrize.immersiveengineering.common.items.IEItemInterfaces.IGuiItem;
+import blusunrize.immersiveengineering.common.util.ChatUtils;
 import blusunrize.immersiveengineering.common.util.IEPotions;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockTNT;
@@ -40,6 +43,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.ForgeChunkManager;
@@ -67,8 +71,7 @@ import pl.pabilo8.immersiveintelligence.api.data.IIDataOperationUtils;
 import pl.pabilo8.immersiveintelligence.api.data.IIDataTypeUtils;
 import pl.pabilo8.immersiveintelligence.api.rotary.CapabilityRotaryEnergy;
 import pl.pabilo8.immersiveintelligence.api.rotary.IIRotaryUtils;
-import pl.pabilo8.immersiveintelligence.api.utils.IUpgradableMachine;
-import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
+import pl.pabilo8.immersiveintelligence.api.upgrade.IUpgradableDevice;
 import pl.pabilo8.immersiveintelligence.api.utils.MinecartBlockHelper;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.MechanicalDevices;
@@ -77,6 +80,7 @@ import pl.pabilo8.immersiveintelligence.common.block.data_device.BlockIIDataDevi
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.conveyors.*;
 import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIIOre.Ores;
 import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIISmallCrate;
+import pl.pabilo8.immersiveintelligence.common.compat.CratesFeltBlueHelper;
 import pl.pabilo8.immersiveintelligence.common.compat.IICompatModule;
 import pl.pabilo8.immersiveintelligence.common.crafting.IIRecipes;
 import pl.pabilo8.immersiveintelligence.common.crafting.RecipePowerpackAdvanced;
@@ -99,8 +103,10 @@ import pl.pabilo8.immersiveintelligence.common.entity.minecart.crate.EntityMinec
 import pl.pabilo8.immersiveintelligence.common.entity.tactile.EntityAMTTactile;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityDrone;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityMotorbike;
-import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityVehicleSeat;
+import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityTrackedMotorbike;
+import pl.pabilo8.immersiveintelligence.common.entity.vehicle.towable.gun.EntityFieldGun;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.towable.gun.EntityFieldHowitzer;
+import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehicleSeat;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerUpgrade;
 import pl.pabilo8.immersiveintelligence.common.item.ItemIIMinecart.Minecarts;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.material.ItemIIMaterialDust.MaterialsDust;
@@ -110,6 +116,10 @@ import pl.pabilo8.immersiveintelligence.common.util.block.BlockIIBase;
 import pl.pabilo8.immersiveintelligence.common.util.block.BlockIIFluid;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IIBlockEnum;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IIBlockProperties;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.IOwnableProperty;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.PermissionCategory;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.chunk.CapabilityChunkOwnership;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.NBTSerialisation;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIBase;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
@@ -117,6 +127,7 @@ import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctur
 import pl.pabilo8.immersiveintelligence.common.wire.IIDataWireType;
 import pl.pabilo8.immersiveintelligence.common.world.IIWorldGen;
 import pl.pabilo8.immersiveintelligence.common.world.IIWorldGen.EnumOreType;
+import pl.pabilo8.immersiveintelligence.common.world.IIWorldGenRubberTree;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Field;
@@ -133,6 +144,9 @@ import static blusunrize.immersiveengineering.api.energy.wires.WireApi.registerF
  * why? i don't know why it was here in the first place
  * for how long? ask github
  * how did you not notice that? ... that was really unexpected, didn't even consider such a thing being there
+ * @edited Avalon (avalon@iiteam.net)
+ * @since 03.03.2026
+ * added compat for cfb
  */
 @EventBusSubscriber(modid = ImmersiveIntelligence.MODID)
 public class CommonProxy implements IGuiHandler, LoadingCallback
@@ -364,11 +378,6 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		return new ResourceLocation(unlocalized);
 	}
 
-	public static MachineUpgrade createMachineUpgrade(String name)
-	{
-		return new MachineUpgrade(name, new ResourceLocation(ImmersiveIntelligence.MODID, "textures/gui/upgrade/"+name+".png"));
-	}
-
 	public static void openGuiForItem(@Nonnull EntityPlayer player, @Nonnull EnumHand hand)
 	{
 		ItemStack stack = player.getItemStackFromSlot(hand==EnumHand.MAIN_HAND?EntityEquipmentSlot.MAINHAND: EntityEquipmentSlot.OFFHAND);
@@ -434,13 +443,21 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		return fl;
 	}
 
+	public static void refreshFluidReferences()
+	{
+		IIContent.refreshFluidReferences();
+	}
+
 	//--- Utils ---//
 
 	public void preInit()
 	{
 		IIDataWireType.init();
 		IIPacketHandler.preInit();
+		NBTSerialisation.preInit();
+
 		CapabilityRotaryEnergy.register();
+		CapabilityChunkOwnership.register();
 		IEApi.prefixToIngotMap.put("spring", new Integer[]{2, 1});
 
 		IIContent.init();
@@ -453,21 +470,21 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		AmmoRegistry.registerAmmoType(IIContent.itemAmmoHeavyArtillery);
 		AmmoRegistry.registerAmmoType(IIContent.itemAmmoMediumArtillery);
 		AmmoRegistry.registerAmmoType(IIContent.itemAmmoLightArtillery);
+		AmmoRegistry.registerAmmoType(IIContent.itemAmmoLightGun);
+
 		AmmoRegistry.registerAmmoType(IIContent.itemAmmoMortar);
 
 		AmmoRegistry.registerAmmoType(IIContent.itemAmmoGuidedMissile);
 		AmmoRegistry.registerAmmoType(IIContent.itemAmmoRocketHeavy);
 		AmmoRegistry.registerAmmoType(IIContent.itemAmmoRocketLight);
 
-		AmmoRegistry.registerAmmoType(IIContent.itemAmmoLightGun);
 		AmmoRegistry.registerAmmoType(IIContent.itemRailgunGrenade);
-		AmmoRegistry.registerAmmoType(IIContent.itemAmmoAutocannon);
-
 		AmmoRegistry.registerAmmoType(IIContent.itemGrenade);
 
+		AmmoRegistry.registerAmmoType(IIContent.itemAmmoAutocannon);
 		AmmoRegistry.registerAmmoType(IIContent.itemAmmoMachinegun);
-		AmmoRegistry.registerAmmoType(IIContent.itemAmmoSubmachinegun);
 		AmmoRegistry.registerAmmoType(IIContent.itemAmmoAssaultRifle);
+		AmmoRegistry.registerAmmoType(IIContent.itemAmmoSubmachinegun);
 		AmmoRegistry.registerAmmoType(IIContent.itemAmmoRevolver);
 
 		if(IIContent.blockTripmine.itemBlock!=null)
@@ -585,6 +602,7 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		ConveyorHandler.registerConveyorHandler(new ResourceLocation(ImmersiveIntelligence.MODID, "rubber_extractcovered"), ConveyorRubberCoveredExtract.class, (tileEntity) -> new ConveyorRubberCoveredExtract(tileEntity instanceof IConveyorTile?((IConveyorTile)tileEntity).getFacing(): EnumFacing.NORTH));
 
 		IICompatModule.doModulesPreInit();
+		CratesFeltBlueHelper.init();
 	}
 
 	public void init()
@@ -627,6 +645,9 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		addConfiguredWorldgen(IIContent.blockOre.getStateFromMeta(Ores.SALT.getMeta()), "salt", IIConfig.Ores.oreSalt, EnumOreType.OVERWORLD);
 		addConfiguredWorldgen(IIContent.blockOre.getStateFromMeta(Ores.FLUORITE.getMeta()), "fluorite", IIConfig.Ores.oreFluorite, EnumOreType.NETHER);
 		addConfiguredWorldgen(IIContent.blockOre.getStateFromMeta(Ores.PHOSPHORUS.getMeta()), "phosphorus", IIConfig.Ores.orePhosphorus, EnumOreType.NETHER);
+
+		IILogger.info("Adding rubber tree generation");
+		IIWorldGen.worldGenRubberTree = new IIWorldGenRubberTree();
 
 
 		//Disallow crates in crates
@@ -671,17 +692,17 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		registerEntity(i++, EntityAmmoGuidedMissile.class, "guided_missile", 32, 1, true);
 		registerEntity(i++, EntityNavalMine.class, "naval_mine", 64, 1, true);
 		registerEntity(i++, EntityNavalMineAnchor.class, "naval_mine_anchor", 64, 1, true);
-
 		registerEntity(i++, EntityShrapnel.class, "shrapnel", 16, 1, true);
 		registerEntity(i++, EntityWhitePhosphorus.class, "white_phosphorus", 16, 1, true);
 
 		registerEntity(i++, EntityMachinegun.class, "machinegun", 64, 1, true);
 		registerEntity(i++, EntitySkycrateInternal.class, "skycrate_internal", 64, 1, true);
 
-		registerEntity(i++, EntityMotorbike.class, "motorbike", 64, 20, true);
-		registerEntity(i++, EntityFieldHowitzer.class, "field_howitzer", 64, 20, true);
-//		registerEntity(i++, EntityFieldGun.class, "field_gun", 64, 20, true);
-		registerEntity(i++, EntityVehicleSeat.class, "seat", 64, 1, true);
+		registerEntity(i++, EntityVehicleSeat.class, "seat", 64, 1, false);
+		registerEntity(i++, EntityMotorbike.class, "motorbike", 64, 1, false);
+		registerEntity(i++, EntityTrackedMotorbike.class, "tracked_motorbike", 64, 1, false);
+		registerEntity(i++, EntityFieldHowitzer.class, "field_howitzer", 64, 1, false);
+		registerEntity(i++, EntityFieldGun.class, "field_gun", 64, 1, false);
 
 		registerEntity(i++, EntityTripodPeriscope.class, "tripod_periscope", 64, 1, true);
 		registerEntity(i++, EntityAtomicBoom.class, "atomic_boom", 64, 1, true);
@@ -691,7 +712,6 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 
 		registerEntity(i++, EntityFlare.class, "flare", 64, 4, true);
 		registerEntity(i++, EntityParachute.class, "parachute", 64, 4, true);
-		registerEntity(i++, EntityEmplacementWeapon.class, "emplacement_weapon", 64, 4, false);
 		registerEntity(i++, EntityMortar.class, "mortar", 64, 1, false);
 
 		registerEntity(i++, EntityMinecartCapacitorLV.class, "minecart_capacitor_lv", 64, 1, true);
@@ -714,6 +734,8 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 	public void postInit()
 	{
 		IICompatModule.doModulesPostInit();
+		IIConfigHandler.onConfigUpdate();
+		NBTSerialisation.postInit();
 		//Init Hans Weapons
 		HansUtils.init();
 
@@ -748,11 +770,11 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		TileEntity te = world.getTileEntity(new BlockPos(x, y, z));
 		ItemStack stack = player.getHeldItem(hand = (player.getHeldItem(EnumHand.MAIN_HAND).getItem() instanceof IGuiItem?EnumHand.MAIN_HAND: EnumHand.OFF_HAND));
 
-		if(ID==IIGUI.UPGRADE.ordinal()&&te instanceof IUpgradableMachine)
+		if(ID==IIGUI.UPGRADE.ordinal()&&te instanceof IUpgradableDevice)
 		{
-			TileEntity upgradeMaster = ((IUpgradableMachine)te).getUpgradeMaster();
+			IUpgradableDevice upgradeMaster = ((IUpgradableDevice)te).master();
 			if(upgradeMaster!=null)
-				return new ContainerUpgrade(player, (TileEntity & IUpgradableMachine)upgradeMaster);
+				return new ContainerUpgrade(player, (TileEntityIEBase & IUpgradableDevice)upgradeMaster);
 		}
 
 		if(IIGUI.values().length > ID)
@@ -790,14 +812,26 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		if(!(tile instanceof IGuiTile))
 			return;
 		IGuiTile guiTile = (IGuiTile)tile;
-
-		//I like casting things
 		TileEntity guiMaster = guiTile.getGuiMaster();
-		IGuiTile te = ((IGuiTile)guiMaster);
+		IGuiTile te = (IGuiTile)guiMaster;
+
+		assert te!=null;
+		//Deny container access
+		if(te instanceof IOwnableProperty&&!((IOwnableProperty)te).getOwnerIdentity().isPermitted(player, PermissionCategory.CONTAINER_ACCESS))
+		{
+			ChatUtils.sendServerNoSpamMessages(player, new TextComponentTranslation(Lib.CHAT_INFO+"notOwner", ((IOwnableProperty)te).getOwnerIdentity()));
+			return;
+		}
 
 		if(!((TileEntity)te).getWorld().isRemote&&te.canOpenGui(player))
-			player.openGui(ImmersiveIntelligence.INSTANCE, gui, tile.getWorld(), tile.getPos().getX(),
-					tile.getPos().getY(), tile.getPos().getZ());
+			player.openGui(
+					ImmersiveIntelligence.INSTANCE,
+					gui,
+					tile.getWorld(),
+					tile.getPos().getX(),
+					tile.getPos().getY(),
+					tile.getPos().getZ()
+			);
 	}
 
 	public void reloadModels()
@@ -827,6 +861,11 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 	}
 
 	public void onMechanicalConnectorRemoved(Connection connection)
+	{
+
+	}
+
+	public void reloadParticles()
 	{
 
 	}

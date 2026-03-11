@@ -6,8 +6,9 @@ import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoCore;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoType;
-import pl.pabilo8.immersiveintelligence.client.util.amt.AMT;
-import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationUtils;
+import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
+import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTModel;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMT;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.naval_mine.EntityNavalMine;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
@@ -42,15 +43,15 @@ public class ModelAmmoNavalMine<T extends IAmmoType<T, E>, E extends EntityNaval
 	@Override
 	public void reloadModels()
 	{
-		IIAnimationUtils.disposeOf(modelLid);
+		AMTUtils.disposeOf(modelLid);
 		super.reloadModels();
 	}
 
 	@Override
-	protected void loadModels(AMT[] amt)
+	protected void loadModels(AMTModel amt)
 	{
 		super.loadModels(amt);
-		modelLid = IIAnimationUtils.getPart(amt, "casing_lid");
+		modelLid = amt.getPart("casing_lid");
 	}
 
 	@Override

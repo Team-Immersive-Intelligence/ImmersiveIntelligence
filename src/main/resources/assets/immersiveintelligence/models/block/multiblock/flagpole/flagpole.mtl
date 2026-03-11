@@ -1,0 +1,36 @@
+# Made by Pabilo8 with Blockbench
+
+newmtl flagpole
+map_Kd immersiveintelligence:blocks/multiblock/fortification/flagpole
+newmtl base_steel
+map_Kd immersiveintelligence:blocks/multiblock/fortification/base_steel
+newmtl base_concrete
+map_Kd immersiveintelligence:blocks/multiblock/fortification/base_concrete
+newmtl base_bricks
+map_Kd immersiveintelligence:blocks/multiblock/fortification/base_bricks
+newmtl base_wooden
+map_Kd immersiveintelligence:blocks/multiblock/fortification/base_wooden
+newmtl base_sandbags
+map_Kd immersiveintelligence:blocks/multiblock/fortification/base_sandbags
+newmtl common_steel
+map_Kd immersiveintelligence:blocks/common/common_steel
+newmtl common_concrete_volks
+map_Kd immersiveintelligence:blocks/common/common_concrete_volks
+newmtl common_table
+map_Kd immersiveintelligence:blocks/common/common_table
+newmtl metal_decoration2_razor_wire
+map_Kd immersiveengineering:blocks/metal_decoration2_razor_wire
+newmtl wooden_chain_fence
+map_Kd immersiveintelligence:blocks/fortification/wooden_chain_fence
+newmtl metal_device0_barrel_up_none
+map_Kd immersiveengineering:blocks/metal_device0_barrel_up_none
+newmtl metal_device0_barrel_side
+map_Kd immersiveengineering:blocks/metal_device0_barrel_side
+newmtl metal
+map_Kd immersiveintelligence:blocks/small_crate/metal
+newmtl common_copper_cable
+map_Kd immersiveintelligence:blocks/common/common_copper_cable
+newmtl coil_rope_side
+map_Kd immersiveintelligence:blocks/cloth_decoration/coil_rope_side
+newmtl vision
+map_Kd immersiveintelligence:particle/vision

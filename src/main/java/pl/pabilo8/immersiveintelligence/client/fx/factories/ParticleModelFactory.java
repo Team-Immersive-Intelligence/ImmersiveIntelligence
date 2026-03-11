@@ -5,6 +5,7 @@ import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.nbt.NBTTagString;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -14,8 +15,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.client.fx.particles.ParticleAbstractModel;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
-import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationLoader;
-import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationUtils;
+import pl.pabilo8.immersiveintelligence.client.util.amt.AMTLoader;
+import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
@@ -192,7 +193,7 @@ public class ParticleModelFactory<T extends ParticleAbstractModel> extends Parti
 		for(ResLoc modelLocation : modelLocations)
 		{
 			//load a raw obj model
-			OBJModel objModel = IIAnimationUtils.modelFromRes(modelLocation);
+			OBJModel objModel = AMTUtils.modelFromRes(modelLocation);
 			if(objModel==null)
 				continue;
 
@@ -223,7 +224,7 @@ public class ParticleModelFactory<T extends ParticleAbstractModel> extends Parti
 	{
 		//load textures from MTL referenced by OBJ
 		for(ResLoc modelLocation : modelLocations)
-			IIAnimationLoader.preloadTexturesFromOBJ(modelLocation, map);
+			AMTLoader.preloadTexturesFromOBJ(modelLocation, map);
 	}
 
 	//--- Supporting Classes ---//
@@ -242,18 +243,21 @@ public class ParticleModelFactory<T extends ParticleAbstractModel> extends Parti
 		public final Vec2f[] uv;
 		public final byte[] tex;
 
-		public TextureAtlasSprite[] textures;
+		public ResourceLocation[] textures;
+		public TextureAtlasSprite[] textureSprites;
 
 		public ParticleModel(Face[] faces, Material[] materials)
 		{
-			elementsCount = faces.length*4;
-			positions = new Vec3d[elementsCount];
-			normals = new Vec3d[elementsCount];
-			uv = new Vec2f[elementsCount];
-			tex = new byte[elementsCount];
+			this.elementsCount = faces.length*4;
+			this.positions = new Vec3d[elementsCount];
+			this.normals = new Vec3d[elementsCount];
+			this.uv = new Vec2f[elementsCount];
+			this.tex = new byte[elementsCount];
 
 			this.textures = Arrays.stream(materials)
 					.map(s -> s.getTexture().getTextureLocation())
+					.toArray(ResourceLocation[]::new);
+			this.textureSprites = Arrays.stream(textures)
 					.map(ClientUtils::getSprite)
 					.toArray(TextureAtlasSprite[]::new);
 
@@ -268,12 +272,12 @@ public class ParticleModelFactory<T extends ParticleAbstractModel> extends Parti
 				for(int j = 0; j < 4; j++)
 				{
 					Vertex vertex = face.getVertices()[j];
-					positions[i*4+j] = new Vec3d(vertex.getPos().x, vertex.getPos().y, vertex.getPos().z);
-					normals[i*4+j] = new Vec3d(vertex.getNormal().x, vertex.getNormal().y, vertex.getNormal().z);
-					uv[i*4+j] = new Vec2f(vertex.getTextureCoordinate().u, vertex.getTextureCoordinate().v);
+					this.positions[i*4+j] = new Vec3d(vertex.getPos().x, vertex.getPos().y, vertex.getPos().z);
+					this.normals[i*4+j] = new Vec3d(vertex.getNormal().x, vertex.getNormal().y, vertex.getNormal().z);
+					this.uv[i*4+j] = new Vec2f(vertex.getTextureCoordinate().u, vertex.getTextureCoordinate().v);
 
 					Integer texID = textureMap.get(vertex.getMaterial());
-					tex[i*4+j] = texID==null?0: texID.byteValue();
+					this.tex[i*4+j] = texID==null?0: texID.byteValue();
 				}
 			}
 		}

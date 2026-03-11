@@ -1,101 +1,104 @@
 package pl.pabilo8.immersiveintelligence.client.gui.block;
 
-import blusunrize.immersiveengineering.client.ClientUtils;
-import blusunrize.immersiveengineering.client.gui.GuiIEContainerBase;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.resources.I18n;
+import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.entity.player.EntityPlayer;
-import org.lwjgl.opengl.GL11;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import net.minecraft.util.ResourceLocation;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoBar;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoImage;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoImage.ImageAnimationDirection;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundBuilder.SlotStyle;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.*;
+import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityPrecisionAssembler;
+import pl.pabilo8.immersiveintelligence.common.compat.jei.JEIHelper;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerPrecisionAssembler;
-import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
-import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockInteractablePart;
 
-import java.util.ArrayList;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @author Avalon (avalon@iiteam.net)
+ * @updated 30.80.2025
  * @since 10.07.2019
  */
-public class GuiPrecisionAssembler extends GuiIEContainerBase
+
+@DecoTemplate(name = "precision_assembler", category = DecoGuiCategory.PRODUCTION_TILE)
+public class GuiPrecisionAssembler extends DecoGui<TileEntityPrecisionAssembler, ContainerPrecisionAssembler>
 {
-	public static final String texture_precision_assembler = ImmersiveIntelligence.MODID+":textures/gui/precision_assembler.png";
-	TileEntityPrecisionAssembler tile;
-	boolean first_opened;
+	@DecoResource
+	public static final ResourceLocation TEXTURE_PRE = IIReference.RES_II.with("gui/precision_assembler");
+	private MultiblockInteractablePart openedDrawer;
+	private DecoImage recipeLink;
 
 	public GuiPrecisionAssembler(EntityPlayer player, TileEntityPrecisionAssembler tile)
 	{
-		super(new ContainerPrecisionAssembler(player, tile));
-		this.ySize = 168;
-		this.tile = tile;
+		super(player, tile, IIGUI.PRECISION_ASSEMBLER);
 
-		first_opened = Math.random() < 0.5d;
+		if(tile!=null)
+		{
+			openedDrawer = Utils.RAND.nextBoolean()?tile.drawer1: tile.drawer2;
+			openedDrawer.setState(true);
+		}
+	}
 
-		if(first_opened)
-			IIPacketHandler.sendToServer(new MessageBooleanAnimatedPartsSync(0, true, tile.getPos()));
-		else
-			IIPacketHandler.sendToServer(new MessageBooleanAnimatedPartsSync(1, true, tile.getPos()));
+	@Override
+	public void onInit()
+	{
+		startBackground()
+				.withBox(DecoTextures.BG_STEEL_ROUGH, DecoTextures.TEMPLATE_SQUARE, 0, 0, 176, 78)
+				.withFrame(DecoTextures.FRAME_STEEL, 6, false)
+				.withTitleBar(tile)
+				.withNextLayer()
+				.withBox(DecoTextures.BG_WOODEN, DecoTextures.TEMPLATE_ROUND_WOODEN, 0, 78, 176, 92-4)
+				.withInventorySlots(SlotStyle.VANILLA, container.playerInventory)
+				.withInventoryTitleBar()
+				.withInventorySlots(SlotStyle.IE_INPUT, container.ingredientSlots[0])
+				.withInventorySlots(SlotStyle.IE, container.ingredientSlots[1], container.ingredientSlots[2], container.ingredientSlots[3])
+				.withInventorySlots(SlotStyle.VANILLA, container.schemeSlot)
+				.withInventorySlots(SlotStyle.IE_CUSTOM1, container.toolSlots[0])
+				.withInventorySlots(SlotStyle.IE_CUSTOM2, container.toolSlots[1])
+				.withInventorySlots(SlotStyle.IE_CUSTOM3, container.toolSlots[2])
 
+				.withInventorySlots(SlotStyle.IE_OUTPUT, container.outputSlots[0])
+				.withInventorySlots(SlotStyle.IE, container.outputSlots[1])
+
+				.build();
+
+		addComponents(
+				new DecoBar(161-4, 5-6)
+						.withTemplate(DecoTemplates.BAR_ELECTRIC_ENERGY.apply(tile.energyStorage)),
+				new DecoImage(48+16-1, 8+4+2)
+						.withSize(48, 25)
+						.withImageLocation(TEXTURE_PRE, true)
+						.withUV(128, 14, 0, 48+14, 25),
+				this.recipeLink = new DecoImage(48+16-1-4-10, 8+4+2+10+10)
+						.withSize(85, 17-3)
+						.withImageLocation(TEXTURE_PRE, true)
+						.withUV(128, 0, 25, 85, 17+25-3),
+				new DecoImage(48+16-1-4-10, 8+4+2+10+10)
+						.withSize(85, 17-3)
+						.withImageLocation(TEXTURE_PRE, true)
+						.withUV(128, 0, 42, 85, 17+42-3)
+						.withAnimation(ImageAnimationDirection.LEFT_TO_RIGHT, DecoGuiUtils.getMultiblockProductionSingleProgress(this.tile))
+		);
+	}
+
+	@Override
+	public void onInitJEICompat()
+	{
+		super.onInitJEICompat();
+		JEIHelper.addRecipesDecoGuiLink(this.recipeLink, "ii.precision_assembler");
 	}
 
 	@Override
 	public void onGuiClosed()
 	{
-		if(first_opened)
-			IIPacketHandler.sendToServer(new MessageBooleanAnimatedPartsSync(0, false, tile.getPos()));
-		else
-			IIPacketHandler.sendToServer(new MessageBooleanAnimatedPartsSync(1, false, tile.getPos()));
 		super.onGuiClosed();
+		if(openedDrawer!=null)
+			syncAnimatedParts(openedDrawer, false);
 	}
 
-	/**
-	 * Draw the foreground layer for the GuiContainer (everything in front of the items)
-	 */
-	@Override
-	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
-	{
-		this.fontRenderer.drawString(I18n.format("tile."+ImmersiveIntelligence.MODID+".metal_multiblock.precision_assembler.name"), 8, 6, IIReference.COLOR_H1.getPackedRGB());
-	}
-
-	/**
-	 * Draws the background layer of this container (behind the items).
-	 */
-	@Override
-	protected void drawGuiContainerBackgroundLayer(float f, int mx, int my)
-	{
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		ClientUtils.bindTexture(texture_precision_assembler);
-		this.drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
-
-		int stored = (int)(47*(tile.getEnergyStored(null)/(float)tile.getMaxEnergyStored(null)));
-		IIClientUtils.drawPowerBar(guiLeft+159, guiTop+22, 7, 47, tile.getEnergyStored(null)/(float)tile.getMaxEnergyStored(null));
-
-		if(tile.active&&tile.processTimeMax!=0)
-		{
-			float progress = Math.min(1f, (float)tile.processTime/(float)tile.processTimeMax);
-			this.drawTexturedModalRect(guiLeft+49, guiTop+40, 0, 168, Math.round(85*progress), 17);
-		}
-	}
-
-	@Override
-	public void drawScreen(int mx, int my, float partial)
-	{
-		super.drawScreen(mx, my, partial);
-		this.renderHoveredToolTip(mx, my);
-
-		ArrayList<String> tooltip = new ArrayList<>();
-
-		if(mx > guiLeft+161&&mx < guiLeft+168&&my > guiTop+24&&my < guiTop+71)
-			tooltip.add(IIUtils.getPowerLevelString(tile));
-
-		if(!tooltip.isEmpty())
-		{
-			ClientUtils.drawHoveringText(tooltip, mx, my, fontRenderer, guiLeft+xSize, -1);
-			RenderHelper.enableGUIStandardItemLighting();
-		}
-	}
 }
+

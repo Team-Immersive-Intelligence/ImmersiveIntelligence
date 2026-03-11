@@ -36,6 +36,7 @@ import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Ammuniti
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoBase.AmmoParts;
+import pl.pabilo8.immersiveintelligence.common.util.ISerializableEnum;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.entity.IIEntityUtils;
 import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
@@ -60,9 +61,6 @@ import java.util.function.Function;
 public class ItemIIAmmoRevolver extends ItemBullet implements IAmmoTypeItem<ItemIIAmmoRevolver, EntityAmmoProjectile>, BulletHandler.IBullet, IIIItemTextureOverride
 {
 	//I hope Blu starts designing things that are extendable, unlike this excuse of a bullet system
-	public static final int UNUSED = 0;
-	public static final int CORE = 1;
-	public static final int BULLET = 2;
 	public final String NAME = "revolver_1bCal";
 
 	public ItemIIAmmoRevolver()
@@ -101,16 +99,7 @@ public class ItemIIAmmoRevolver extends ItemBullet implements IAmmoTypeItem<Item
 	@SideOnly(Side.CLIENT)
 	public String getItemStackDisplayName(ItemStack stack)
 	{
-		switch(stack.getMetadata())
-		{
-			case BULLET:
-				return I18n.format("item.immersiveintelligence."+NAME+".bullet.name");
-			case UNUSED:
-				return I18n.format("item.immersiveintelligence."+NAME+".casing.name");
-			case CORE:
-				return I18n.format("item.immersiveintelligence."+NAME+".core.name");
-		}
-		return "DO NOT USE, MAY CRASH";
+		return I18n.format("item.immersiveintelligence."+NAME.toLowerCase()+"."+getEnumPart(stack).getName()+".name");
 	}
 
 	@Override
@@ -124,7 +113,7 @@ public class ItemIIAmmoRevolver extends ItemBullet implements IAmmoTypeItem<Item
 	@SideOnly(Side.CLIENT)
 	public int getColourForIEItem(ItemStack stack, int pass)
 	{
-		switch(stack.getMetadata())
+		switch(getEnumPart(stack))
 		{
 			case BULLET:
 			{
@@ -147,7 +136,7 @@ public class ItemIIAmmoRevolver extends ItemBullet implements IAmmoTypeItem<Item
 	@Override
 	public boolean isBulletCore(ItemStack stack)
 	{
-		return stack.getMetadata()==CORE;
+		return getEnumPart(stack)==RevolverAmmoPart.CORE;
 	}
 
 	@Override
@@ -159,7 +148,7 @@ public class ItemIIAmmoRevolver extends ItemBullet implements IAmmoTypeItem<Item
 	@Override
 	public ItemStack getAmmoStack(AmmoCore core, CoreType coreType, FuseType fuse, AmmoComponent... components)
 	{
-		ItemStack stack = new ItemStack(this, 1, BULLET);
+		ItemStack stack = new ItemStack(this, 1, RevolverAmmoPart.BULLET.ordinal());
 		EasyNBT.wrapNBT(stack)
 				.withString(NBT_CORE, core.getName())
 				.withString(NBT_CORE_TYPE, coreType.getName())
@@ -173,7 +162,7 @@ public class ItemIIAmmoRevolver extends ItemBullet implements IAmmoTypeItem<Item
 	@Override
 	public ItemStack getAmmoCoreStack(AmmoCore core, CoreType coreType)
 	{
-		ItemStack stack = new ItemStack(this, 1, CORE);
+		ItemStack stack = new ItemStack(this, 1, RevolverAmmoPart.CORE.ordinal());
 		EasyNBT.wrapNBT(stack)
 				.withString(NBT_CORE, core.getName())
 				.withString(NBT_CORE_TYPE, coreType.getName());
@@ -203,7 +192,7 @@ public class ItemIIAmmoRevolver extends ItemBullet implements IAmmoTypeItem<Item
 	@Override
 	public String getModelCacheKey(ItemStack stack)
 	{
-		return String.format("%s%s_%s%s", stack.getMetadata()==CORE?"core": "bullet", NAME,
+		return String.format("%s%s_%s%s", getEnumPart(stack).getName(), NAME,
 				getPaintColor(stack)==null?"no_": "paint_", getCoreType(stack).getName());
 	}
 
@@ -212,24 +201,29 @@ public class ItemIIAmmoRevolver extends ItemBullet implements IAmmoTypeItem<Item
 	public List<ResourceLocation> getTextures(ItemStack stack, String key)
 	{
 		ArrayList<ResourceLocation> a = new ArrayList<>();
-		if(stack.getMetadata()==BULLET)
+		switch(getEnumPart(stack))
 		{
-			a.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/ammo/"+NAME.toLowerCase()+"/base"));
-			a.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/ammo/"+NAME.toLowerCase()+"/"+getCoreType(stack).getName()));
-			if(getPaintColor(stack)!=null)
-				a.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/ammo/"+NAME.toLowerCase()+"/paint"));
+			case BULLET:
+			{
+				a.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/ammo/"+NAME.toLowerCase()+"/base"));
+				a.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/ammo/"+NAME.toLowerCase()+"/"+getCoreType(stack).getName()));
+				if(getPaintColor(stack)!=null)
+					a.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/ammo/"+NAME.toLowerCase()+"/paint"));
 
-		}
-		else if(stack.getMetadata()==CORE)
-		{
-			a.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/ammo/"+NAME.toLowerCase()+"/core"));
-			a.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/ammo/"+NAME.toLowerCase()+"/"+getCoreType(stack).getName()));
+			}
+			break;
+			case CORE:
+			{
+				a.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/ammo/"+NAME.toLowerCase()+"/core"));
+				a.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/ammo/"+NAME.toLowerCase()+"/"+getCoreType(stack).getName()));
+			}
+			break;
 		}
 		return a;
 	}
 
 	@Override
-	public float getComponentMultiplier()
+	public float getComponentSize()
 	{
 		return 0.125f;
 	}
@@ -294,7 +288,7 @@ public class ItemIIAmmoRevolver extends ItemBullet implements IAmmoTypeItem<Item
 	@Override
 	public float getDamage()
 	{
-		return 8;
+		return 10;
 	}
 
 	@Override
@@ -349,5 +343,25 @@ public class ItemIIAmmoRevolver extends ItemBullet implements IAmmoTypeItem<Item
 	public int getColour(ItemStack stack, int layer)
 	{
 		return 0;
+	}
+
+	private RevolverAmmoPart getEnumPart(ItemStack stack)
+	{
+		switch(stack.getMetadata())
+		{
+			case 1:
+				return RevolverAmmoPart.CORE;
+			case 2:
+				return RevolverAmmoPart.BULLET;
+			default:
+				return RevolverAmmoPart.UNUSED;
+		}
+	}
+
+	public enum RevolverAmmoPart implements ISerializableEnum
+	{
+		UNUSED,
+		CORE,
+		BULLET
 	}
 }

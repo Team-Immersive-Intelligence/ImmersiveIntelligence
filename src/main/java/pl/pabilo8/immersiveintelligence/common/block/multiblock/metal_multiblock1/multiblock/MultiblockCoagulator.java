@@ -12,12 +12,18 @@ import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctur
 public class MultiblockCoagulator extends MultiblockStuctureBase<TileEntityCoagulator>
 {
 	public static MultiblockCoagulator INSTANCE;
+	public static int SLOT_INPUT1, SLOT_INPUT2, SLOT_OUTPUT1, SLOT_OUTPUT2, SLOT_OUTPUT;
 
 	public MultiblockCoagulator()
 	{
 		super(new ResourceLocation(ImmersiveIntelligence.MODID, "multiblocks/coagulator"));
 		offset = new Vec3i(3, 1, 0);
 		INSTANCE = this;
+		SLOT_INPUT1 = 0;
+		SLOT_INPUT2 = 1;
+		SLOT_OUTPUT1 = 2;
+		SLOT_OUTPUT2 = 3;
+		SLOT_OUTPUT = 4;
 	}
 
 	@Override

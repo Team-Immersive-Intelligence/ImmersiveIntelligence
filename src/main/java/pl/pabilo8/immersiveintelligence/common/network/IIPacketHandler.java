@@ -18,8 +18,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.network.IIMessage.IIMessageHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.*;
-import pl.pabilo8.immersiveintelligence.common.util.AdvancedSounds.MultiSound;
-import pl.pabilo8.immersiveintelligence.common.util.AdvancedSounds.RangedSound;
+import pl.pabilo8.immersiveintelligence.common.util.sound.AdvancedSounds.MultiSound;
+import pl.pabilo8.immersiveintelligence.common.util.sound.AdvancedSounds.RangedSound;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -53,9 +53,13 @@ public class IIPacketHandler
 		registerMessage(MessageExplosion.class, true, false);
 		registerMessage(MessageParticleEffect.class, true, false);
 		registerMessage(MessageBeginMachineUpgrade.class, true, true);
-		registerMessage(MessageParticleGunfire.class, true, false);
 		registerMessage(MessageManualClose.class, false, true);
 		registerMessage(MessagePlayIISound.class, true, false);
+		registerMessage(MessageDiplomacySync.class, true, false);
+		registerMessage(MessageDiplomacyAction.class, false, true);
+		registerMessage(MessageIIGameruleUpdate.class, true, false);
+		registerMessage(MessageIIChunkClaimData.class, true, false);
+		registerMessage(MessageIIRequestChunkClaimData.class, false, true);
 	}
 
 	private static <T extends IIMessage> void registerMessage(Class<T> message, boolean clientSide, boolean serverSide)
@@ -89,6 +93,11 @@ public class IIPacketHandler
 			IILogger.error("Attempt to send a message without a valid position or entity!");
 	}
 
+	public static void sendToClient(EntityPlayer player, IIMessage message)
+	{
+		INSTANCE.sendTo(message, ((EntityPlayerMP)player));
+	}
+
 	public static void sendToClient(BlockPos pos, World world, IIMessage message)
 	{
 		INSTANCE.sendToAllTracking(message, targetPointFromPos(pos, world, DEFAULT_RANGE));
@@ -107,6 +116,11 @@ public class IIPacketHandler
 	public static void sendToClient(TileEntity tile, IIMessage message)
 	{
 		INSTANCE.sendToAllTracking(message, targetPointFromTile(tile, DEFAULT_RANGE));
+	}
+
+	public static void sendToAllClients(IIMessage message)
+	{
+		INSTANCE.sendToAll(message);
 	}
 
 	public static void sendChatInfo(EntityPlayer player, ITextComponent... components)

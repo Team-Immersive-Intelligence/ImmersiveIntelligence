@@ -160,7 +160,8 @@
       "steel": {
         "model": "immersiveintelligence:multiblock/fence_gate.obj.ie",
         "textures": {
-          "#wooden_gate": "immersiveintelligence:blocks/multiblock/steel_gate"
+          "#wooden_gate": "immersiveintelligence:blocks/multiblock/steel_gate",
+          "#wooden_chain_fence": "immersiveintelligence:blocks/fortification/steel_chain_fence"
         }
       },
       "steel_chain": {
@@ -173,7 +174,8 @@
       "aluminium": {
         "model": "immersiveintelligence:multiblock/fence_gate.obj.ie",
         "textures": {
-          "#wooden_gate": "immersiveintelligence:blocks/multiblock/aluminium_gate"
+          "#wooden_gate": "immersiveintelligence:blocks/multiblock/aluminium_gate",
+          "#wooden_chain_fence": "immersiveintelligence:blocks/fortification/aluminium_chain_fence"
         }
       },
       "aluminium_chain": {

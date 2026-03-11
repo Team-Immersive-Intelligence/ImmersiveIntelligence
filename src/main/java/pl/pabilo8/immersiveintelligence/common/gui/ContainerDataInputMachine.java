@@ -14,21 +14,20 @@ import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIBase;
  */
 public class ContainerDataInputMachine extends ContainerIIBase<TileEntityDataInputMachine>
 {
-	public Slot dataInput, dataOutput;
-	public Slot[] punchtapeStorage;
-	public boolean hasStorage;
+	public final Slot dataInput, dataOutput;
+	public final Slot[] punchtapeStorage;
+	public final boolean hasStorage;
 
 	public ContainerDataInputMachine(EntityPlayer player, TileEntityDataInputMachine tile, boolean hasStorage)
 	{
 		super(player, tile);
 		this.hasStorage = hasStorage;
 
-		dataInput = this.addSlotToContainer(new FilteredDataInput(this, this.inv, 0, 8, 21));
-		dataOutput = this.addSlotToContainer(new Output(this, this.inv, 1, 8, 100));
+		dataInput = addSlot(8, 21, 0, FilteredDataInput::new);
+		dataOutput = addSlot(8, 100, 1, Output::new);
 
-		if(hasStorage)
-			punchtapeStorage = addSlotArray(32+2+1, 11+11, 2, 24, 6, FilteredDataInput::new);
+		punchtapeStorage = hasStorage?addSlotArray(35, 22, 2, 24, 6, FilteredDataInput::new): null;
 
-		addPlayerInventory(player.inventory, 8, 141+8);
+		addPlayerInventory(player.inventory, 8, 149);
 	}
 }

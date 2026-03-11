@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoTab;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoAlignment;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.widget.GuiWidgetManualWrapper;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
@@ -32,9 +32,13 @@ public class DecoManualWidget extends DecoComponentWidgetBase<DecoManualWidget>
 	{
 		super();
 
+		//Do not draw a background box
+		withBackground(null);
+		withBackgroundMask(null);
+
 		//Initialize the default manual, if it wasn't already
 		GuiManual trueManual = ManualHelper.getManual().getGui();
-		if(trueManual==null||trueManual instanceof GuiWidgetManualWrapper)
+		if(trueManual==null)
 			trueManual = new GuiManual(ManualHelper.getManual(), ManualHelper.getManual().texture);
 		this.ieManualGUI = trueManual;
 
@@ -77,6 +81,8 @@ public class DecoManualWidget extends DecoComponentWidgetBase<DecoManualWidget>
 		//Cleanup
 		RenderHelper.disableStandardItemLighting();
 		GlStateManager.color(1, 1, 1, 1);
+
+		super.draw(mouseX, mouseY, partialTicks);
 	}
 
 	@Override
@@ -88,8 +94,12 @@ public class DecoManualWidget extends DecoComponentWidgetBase<DecoManualWidget>
 	@Override
 	protected boolean initialize()
 	{
-		wrapper.initGui();
-		return true;
+		if(super.initialize())
+		{
+			wrapper.initGui();
+			return true;
+		}
+		return false;
 	}
 
 	@Override
@@ -131,7 +141,7 @@ public class DecoManualWidget extends DecoComponentWidgetBase<DecoManualWidget>
 	public DecoTab provideTab()
 	{
 		return (DecoTab)new DecoTab()
-				.withBackground(IIReference.RES_TEXTURES_DECO_COMPONENT_TAB_WIDGET)
+				.withBackground(DecoTextures.COMPONENT_TAB_WIDGET)
 				.withBackgroundColor(IIColor.fromPackedRGB(0x3C3C5F))
 				.withPadding(6, 2, 2, 2)
 				.withIconAlignment(DecoAlignment.CENTER)

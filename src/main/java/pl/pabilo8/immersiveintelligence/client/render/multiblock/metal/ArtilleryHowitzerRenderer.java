@@ -4,24 +4,30 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Tuple;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
+import net.minecraftforge.client.model.obj.OBJModel;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.client.fx.IIParticles;
-import pl.pabilo8.immersiveintelligence.client.render.IIMultiblockRenderer;
-import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer.RegisteredTileRenderer;
-import pl.pabilo8.immersiveintelligence.client.util.amt.*;
-import pl.pabilo8.immersiveintelligence.client.util.amt.AMTBullet.BulletState;
+import pl.pabilo8.immersiveintelligence.client.util.amt.AMTLoader;
+import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
+import pl.pabilo8.immersiveintelligence.client.util.amt.animation.IIAnimationCompiledMap;
+import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTModel;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMT;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTBullet;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTBullet.BulletState;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTParticle;
+import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IIMultiblockRenderer;
+import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IITileRenderer.RegisteredTileRenderer;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.ArtilleryHowitzer;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityArtilleryHowitzer;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityArtilleryHowitzer.ArtilleryHowitzerAnimation;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityArtilleryHowitzer.ArtilleryHowitzerAction;
+import pl.pabilo8.immersiveintelligence.common.util.amt.AMTModelHeader;
 import pl.pabilo8.immersiveintelligence.common.util.amt.IIAnimation.IIAnimationGroup;
-import pl.pabilo8.immersiveintelligence.common.util.amt.IIModelHeader;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -30,7 +36,7 @@ import pl.pabilo8.immersiveintelligence.common.util.amt.IIModelHeader;
 @RegisteredTileRenderer(name = "multiblock/artillery_howitzer", clazz = TileEntityArtilleryHowitzer.class)
 public class ArtilleryHowitzerRenderer extends IIMultiblockRenderer<TileEntityArtilleryHowitzer>
 {
-	private AMT[] model = null, allParts = null;
+	private AMTModel model = null;
 	//animations
 	private IIAnimationCompiledMap animationDefault, animationOpen, animationPlatform;
 	private IIAnimationCompiledMap[] animationFire, animationLoading, animationUnloading;
@@ -48,8 +54,7 @@ public class ArtilleryHowitzerRenderer extends IIMultiblockRenderer<TileEntityAr
 	public void drawAnimated(TileEntityArtilleryHowitzer te, BufferBuilder buf, float partialTicks, Tessellator tes)
 	{
 		//defaultize
-		for(AMT mod : allParts)
-			mod.defaultize();
+		model.defaultize();
 		//apply default animation (for inserter angle)
 		animationDefault.apply(0);
 
@@ -58,12 +63,8 @@ public class ArtilleryHowitzerRenderer extends IIMultiblockRenderer<TileEntityAr
 		boolean canOperateActive = canOperatePassive&&te.energyStorage.getEnergyStored() >= ArtilleryHowitzer.energyUsagePassive+ArtilleryHowitzer.energyUsageActive;
 
 		//platform and door animation
-		float doorAnim = IIAnimationUtils.getAnimationProgress(te.doorTime, ArtilleryHowitzer.doorTime,
-				canOperatePassive, !te.isDoorOpened, 1f, 2f, partialTicks);
-		float platformAnim = IIAnimationUtils.getAnimationProgress(te.platformTime, ArtilleryHowitzer.platformTime,
-				canOperatePassive, !te.platformPosition, 1f, 1f, partialTicks);
-		animationOpen.apply(doorAnim);
-		animationPlatform.apply(platformAnim);
+		animationOpen.apply(te.door.getProgress(partialTicks));
+		animationPlatform.apply(te.platform.getProgress(partialTicks));
 
 		//gun pitch and yaw
 		//calculated before animations, so animations can modify it
@@ -72,7 +73,7 @@ public class ArtilleryHowitzerRenderer extends IIMultiblockRenderer<TileEntityAr
 		float turretPitch = te.turretPitch+Math.signum(pDiff)*MathHelper.clamp(Math.abs(yDiff)*partialTicks, 0, ArtilleryHowitzer.rotateSpeed);
 
 		//conveyor animation
-		float conveyorAnim = IIAnimationUtils.getAnimationProgress(te.shellConveyorTime, ArtilleryHowitzer.conveyorTime,
+		float conveyorAnim = AMTUtils.getAnimationProgress(te.shellConveyorTime, ArtilleryHowitzer.conveyorTime,
 				canOperatePassive, false, 1f, 0f, partialTicks);
 
 		//apply conveyor animation directly to shells
@@ -88,17 +89,17 @@ public class ArtilleryHowitzerRenderer extends IIMultiblockRenderer<TileEntityAr
 		//shell rack display
 		for(int i = 0; i < 4; i++)
 		{
-			IIAnimationUtils.setModelVisibility(shellsStorage[i], true);
+			shellsStorage[i].setVisible(true);
 			shellsStorage[i].withStack(te.loadedShells.get(i),
 					te.loadedShells.get(i).getItem()==IIContent.itemAmmoHeavyArtillery?BulletState.BULLET_UNUSED: BulletState.CASING);
 		}
-		IIAnimationUtils.setModelVisibility(shellHeld, false);
-		IIAnimationUtils.setModelVisibility(shellEjected, false);
-		IIAnimationUtils.setModelVisibility(shellLoaded, false);
+		shellHeld.setVisible(false);
+		shellEjected.setVisible(false);
+		shellLoaded.setVisible(false);
 
-		float animationProgress = IIAnimationUtils.getAnimationProgress(te.animationTime, te.animationTimeMax,
-				canOperateActive&&te.animation!=ArtilleryHowitzerAnimation.STOP, false, 1f, 0f, partialTicks);
-		switch(te.animation)
+		float animationProgress = AMTUtils.getAnimationProgress(te.animationTime, te.animationTimeMax,
+				canOperateActive&&te.action!=ArtilleryHowitzerAction.STOP, false, 1f, 0f, partialTicks);
+		switch(te.action)
 		{
 			case LOAD1:
 			case LOAD2:
@@ -106,7 +107,7 @@ public class ArtilleryHowitzerRenderer extends IIMultiblockRenderer<TileEntityAr
 			case LOAD4:
 			{
 				//loading animation
-				int slot = te.animation.ordinal()-ArtilleryHowitzerAnimation.LOAD1.ordinal();
+				int slot = te.action.ordinal()-ArtilleryHowitzerAction.LOAD1.ordinal();
 				setupShellDisplay(te, BulletState.BULLET_UNUSED, slot);
 				animationLoading[slot].apply(animationProgress);
 			}
@@ -117,7 +118,7 @@ public class ArtilleryHowitzerRenderer extends IIMultiblockRenderer<TileEntityAr
 			case UNLOAD4:
 			{
 				//unloading animation
-				int slot = te.animation.ordinal()-ArtilleryHowitzerAnimation.UNLOAD1.ordinal();
+				int slot = te.action.ordinal()-ArtilleryHowitzerAction.UNLOAD1.ordinal();
 				setupShellDisplay(te, shellsStorage[slot].getState(), slot);
 				animationUnloading[slot].apply(animationProgress);
 			}
@@ -128,7 +129,7 @@ public class ArtilleryHowitzerRenderer extends IIMultiblockRenderer<TileEntityAr
 			case FIRE4:
 			{
 				//loading from rack / firing animation
-				int slot = te.animation.ordinal()-ArtilleryHowitzerAnimation.FIRE1.ordinal();
+				int slot = te.action.ordinal()-ArtilleryHowitzerAction.FIRE1.ordinal();
 				BulletState firingState = animationProgress > ArtilleryHowitzer.gunFireMoment?BulletState.CASING: BulletState.BULLET_UNUSED;
 				setupShellDisplay(te, firingState, slot);
 				animationFire[slot].apply(animationProgress);
@@ -161,9 +162,8 @@ public class ArtilleryHowitzerRenderer extends IIMultiblockRenderer<TileEntityAr
 		}
 
 		//set gun pitch and yaw
-
-		IIAnimationUtils.setModelRotation(gunYaw, 0, (te.mirrored?-1: 1)*(te.facing.getHorizontalAngle()-turretYaw), 0);
-		IIAnimationUtils.setModelRotation(gunPitch, -turretPitch, 0, 0);
+		gunYaw.setRotation(new Vec3d(0, (te.mirrored?-1: 1)*(te.facing.getHorizontalAngle()-turretYaw), 0));
+		gunPitch.setRotation(new Vec3d(-turretPitch, 0, 0));
 
 		//flipping
 		applyStandardRotation(te.facing);
@@ -172,8 +172,7 @@ public class ArtilleryHowitzerRenderer extends IIMultiblockRenderer<TileEntityAr
 			mirrorRender();
 
 		//render
-		for(AMT mod : model)
-			mod.render(tes, buf);
+		model.render(tes, buf);
 
 		if(te.mirrored)
 			unMirrorRender();
@@ -183,17 +182,14 @@ public class ArtilleryHowitzerRenderer extends IIMultiblockRenderer<TileEntityAr
 	public void drawSimple(BufferBuilder buf, float partialTicks, Tessellator tes)
 	{
 		GlStateManager.translate(0, 0, -0.5);
-
 		//defaultize
-		for(AMT mod : allParts)
-			mod.defaultize();
+		model.defaultize();
 
 		//apply default animation (for inserter angle)
 		animationDefault.apply(0);
 
 		//render
-		for(AMT mod : model)
-			mod.render(tes, buf);
+		model.render(tes, buf);
 	}
 
 	private void setupShellDisplay(TileEntityArtilleryHowitzer te, BulletState state, int slot)
@@ -212,11 +208,11 @@ public class ArtilleryHowitzerRenderer extends IIMultiblockRenderer<TileEntityAr
 		boolean here = !te.inventory.get(i).isEmpty();
 		float shellTime = 0.16666667f*((i-startFrom)+(next?conveyorAnim: 0f));
 
-		IIAnimationUtils.setModelVisibility(shells[i], here);
+		shells[i].setVisible(here);
 		if(here)
 		{
 			shells[i].withStack(te.inventory.get(i), bulletUnused);
-			IIAnimationUtils.setModelAnimations(shells[i], animationQueueIn, shellTime);
+			AMTUtils.setModelAnimations(shells[i], animationQueueIn, shellTime);
 		}
 		else
 			next = true;
@@ -224,12 +220,12 @@ public class ArtilleryHowitzerRenderer extends IIMultiblockRenderer<TileEntityAr
 	}
 
 	@Override
-	public void compileModels(Tuple<IBlockState, IBakedModel> sModel)
+	public void compileModels(IBlockState state, OBJModel model)
 	{
 		shells = new AMTBullet[12];
 		shellsStorage = new AMTBullet[4];
 
-		model = IIAnimationUtils.getAMT(sModel, IIAnimationLoader.loadHeader(sModel.getSecond()),
+		this.model = new AMTModel(state, model,
 				header -> new AMT[]{
 						//add shell models to placeholders
 						createShellQueueAMT(true, 0, header),
@@ -257,10 +253,9 @@ public class ArtilleryHowitzerRenderer extends IIMultiblockRenderer<TileEntityAr
 						new AMTParticle("muzzle_flash", header).setParticle(IIParticles.PARTICLE_GUNFIRE)
 				}
 		);
-		allParts = IIAnimationUtils.getChildrenRecursive(model);
-		animationDefault = IIAnimationCompiledMap.create(model, new ResourceLocation(ImmersiveIntelligence.MODID, "artillery_howitzer/artillery_howitzer_default"));
-		animationOpen = IIAnimationCompiledMap.create(model, new ResourceLocation(ImmersiveIntelligence.MODID, "artillery_howitzer/artillery_howitzer_door"));
-		animationPlatform = IIAnimationCompiledMap.create(model, new ResourceLocation(ImmersiveIntelligence.MODID, "artillery_howitzer/artillery_howitzer_platform"));
+		animationDefault = IIAnimationCompiledMap.create(this.model, new ResourceLocation(ImmersiveIntelligence.MODID, "artillery_howitzer/artillery_howitzer_default"));
+		animationOpen = IIAnimationCompiledMap.create(this.model, new ResourceLocation(ImmersiveIntelligence.MODID, "artillery_howitzer/artillery_howitzer_door"));
+		animationPlatform = IIAnimationCompiledMap.create(this.model, new ResourceLocation(ImmersiveIntelligence.MODID, "artillery_howitzer/artillery_howitzer_platform"));
 
 		//firing and loading animations, for each ammo rack shell
 		animationLoading = new IIAnimationCompiledMap[4];
@@ -268,23 +263,23 @@ public class ArtilleryHowitzerRenderer extends IIMultiblockRenderer<TileEntityAr
 		animationFire = new IIAnimationCompiledMap[4];
 		for(int i = 0; i < 4; i++)
 		{
-			animationLoading[i] = IIAnimationCompiledMap.create(model, new ResourceLocation(ImmersiveIntelligence.MODID, "artillery_howitzer/artillery_howitzer_loading"+(i+1)));
-			animationUnloading[i] = IIAnimationCompiledMap.create(model, new ResourceLocation(ImmersiveIntelligence.MODID, "artillery_howitzer/artillery_howitzer_unloading"+(i+1)));
-			animationFire[i] = IIAnimationCompiledMap.create(model, new ResourceLocation(ImmersiveIntelligence.MODID, "artillery_howitzer/artillery_howitzer_fire"+(i+1)));
+			animationLoading[i] = IIAnimationCompiledMap.create(this.model, new ResourceLocation(ImmersiveIntelligence.MODID, "artillery_howitzer/artillery_howitzer_loading"+(i+1)));
+			animationUnloading[i] = IIAnimationCompiledMap.create(this.model, new ResourceLocation(ImmersiveIntelligence.MODID, "artillery_howitzer/artillery_howitzer_unloading"+(i+1)));
+			animationFire[i] = IIAnimationCompiledMap.create(this.model, new ResourceLocation(ImmersiveIntelligence.MODID, "artillery_howitzer/artillery_howitzer_fire"+(i+1)));
 		}
 
-		animationQueueIn = IIAnimationLoader.loadAnimation(new ResourceLocation(ImmersiveIntelligence.MODID, "artillery_howitzer/artillery_howitzer_queue_in")).getLeadingGroup();
-		animationQueueOut = IIAnimationLoader.loadAnimation(new ResourceLocation(ImmersiveIntelligence.MODID, "artillery_howitzer/artillery_howitzer_queue_out")).getLeadingGroup();
+		animationQueueIn = AMTLoader.loadAnimation(new ResourceLocation(ImmersiveIntelligence.MODID, "artillery_howitzer/artillery_howitzer_queue_in")).getLeadingGroup();
+		animationQueueOut = AMTLoader.loadAnimation(new ResourceLocation(ImmersiveIntelligence.MODID, "artillery_howitzer/artillery_howitzer_queue_out")).getLeadingGroup();
 
-		gunYaw = IIAnimationUtils.getPart(model, "turret");
-		gunPitch = IIAnimationUtils.getPart(model, "gun");
+		gunYaw = this.model.getPartRecursive("turret");
+		gunPitch = this.model.getPartRecursive("gun");
 	}
 
 	@Override
 	protected void nullifyModels()
 	{
 		super.nullifyModels();
-		model = IIAnimationUtils.disposeOf(model);
+		model = AMTUtils.disposeOf(model);
 		animationOpen = animationPlatform = null;
 		animationFire = animationLoading = null;
 		gunYaw = gunPitch = null;
@@ -292,17 +287,17 @@ public class ArtilleryHowitzerRenderer extends IIMultiblockRenderer<TileEntityAr
 
 	//--- Internal Methods ---//
 
-	private AMTBullet createDefaultShellAMT(IIModelHeader header, String name)
+	private AMTBullet createDefaultShellAMT(AMTModelHeader header, String name)
 	{
 		return createDefaultShellAMT(header, name, name);
 	}
 
-	private AMTBullet createDefaultShellAMT(IIModelHeader header, String name, String originName)
+	private AMTBullet createDefaultShellAMT(AMTModelHeader header, String name, String originName)
 	{
 		return new AMTBullet(name, header.getOffset(originName), AmmoRegistry.getModel(IIContent.itemAmmoHeavyArtillery));
 	}
 
-	private AMTBullet createShellQueueAMT(boolean in, int id, IIModelHeader header)
+	private AMTBullet createShellQueueAMT(boolean in, int id, AMTModelHeader header)
 	{
 		String name = in?"shell_in": "shell_out";
 		AMTBullet mod = createDefaultShellAMT(header, name+id, name)

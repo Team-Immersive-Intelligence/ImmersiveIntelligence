@@ -7,15 +7,18 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.GlStateManager.DestFactor;
 import net.minecraft.client.renderer.GlStateManager.SourceFactor;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.I18n;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiComponentDecoBase;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoComponent;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoLabel;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoTitleLabel;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoAlignment;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoFrame;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
-import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIBase;
 
@@ -28,14 +31,14 @@ import java.util.List;
  * @ii-approved 0.3.1
  * @since 10.02.2025
  **/
-public class DecoPanel extends GuiComponentDecoBase<DecoPanel>
+public class DecoPanel extends DecoComponent<DecoPanel>
 {
-	private final List<DecoLabel> labels = new ArrayList<>();
+	protected final List<DecoLabel> labels = new ArrayList<>();
 	int vbo = -1;
 	@Nullable
 	private DecoFrame frame = null;
-	private ResLoc background = IIReference.GUI_BG_STEEL;
-	private ResLoc backgroundMask = IIReference.RES_TEXTURES_DECO_TEMPLATE_SQUARE;
+	private ResLoc background = DecoTextures.BG_STEEL;
+	private ResLoc backgroundMask = DecoTextures.TEMPLATE_SQUARE;
 	private int xPadding = 0;
 	private int yPadding = 0;
 
@@ -55,7 +58,21 @@ public class DecoPanel extends GuiComponentDecoBase<DecoPanel>
 		}
 	}
 
-	public void addComponent(GuiComponentDecoBase<?> component)
+	protected void removeComponent(@Nullable DecoComponent<?> component)
+	{
+		if(component==null)
+			return;
+		children.remove(component);
+		component.cleanup();
+	}
+
+	protected void removeLabel(@Nullable DecoLabel label)
+	{
+		if(label!=null)
+			labels.remove(label);
+	}
+
+	public <T extends DecoComponent<T>> T addComponent(T component)
 	{
 		children.add(component);
 		if(parentGui!=null)
@@ -66,24 +83,43 @@ public class DecoPanel extends GuiComponentDecoBase<DecoPanel>
 		}
 		component.x += x+xPadding;
 		component.y += y+yPadding;
+		return component;
 	}
 
-	public void addComponents(GuiComponentDecoBase<?>... components)
+	@SuppressWarnings({"rawtypes", "unchecked"})
+	public void addComponents(DecoComponent... components)
 	{
-		for(GuiComponentDecoBase<?> component : components)
+		for(DecoComponent component : components)
 			addComponent(component);
 	}
 
-	public void addLabel(String text, int x, int y)
+	@SuppressWarnings({"rawtypes", "unchecked"})
+	public void addComponentsRow(int width, int gap, int height, DecoComponent... components)
 	{
-		addLabel(new DecoLabel(IIClientUtils.fontRegular, x, y).withText(text));
+		if(components==null)
+			return;
+		int initialX = components[0].x;
+		int singleWidth = (width-Math.max(0, gap*(components.length-1)))/components.length;
+		int offset = singleWidth+gap;
+		for(int i = 0; i < components.length; i++)
+		{
+			DecoComponent comp = components[i].withSize(singleWidth, height);
+			comp.x = initialX+i*offset;
+			addComponent(comp);
+		}
 	}
 
-	public void addLabel(DecoLabel label)
+	public DecoLabel addLabel(String text, int x, int y)
+	{
+		return addLabel(new DecoLabel(IIClientUtils.fontRegular, x, y).withText(text));
+	}
+
+	public DecoLabel addLabel(DecoLabel label)
 	{
 		labels.add(label);
 		label.x += x+xPadding;
 		label.y += y+yPadding;
+		return label;
 	}
 
 	public void addLabels(DecoLabel... labels)
@@ -110,6 +146,24 @@ public class DecoPanel extends GuiComponentDecoBase<DecoPanel>
 		return this;
 	}
 
+	public DecoPanel withTitleLabel(String title, DecoAlignment alignment)
+	{
+		title = I18n.format(title);
+		int stringWidth = Math.min(this.width, IIClientUtils.fontRegular.getStringWidth(title));
+		int stringHeight = IIClientUtils.fontRegular.getWordWrappedHeight(title, stringWidth);
+
+		int titleBarX = alignment.getAlignX(-2, stringWidth, this.width+4);
+		int titleBarY = alignment.getAlignY(-2, stringHeight, this.height+4);
+
+		addLabel(new DecoTitleLabel(IIClientUtils.fontRegular, titleBarX, titleBarY)
+				.withBackgroundLocation(this.background.replace("background/", "label/label_"))
+				.withAlign(alignment)
+				.withSize(stringWidth, stringHeight)
+				.withRawText(title)
+		);
+		return this;
+	}
+
 	@Override
 	protected boolean initialize()
 	{
@@ -129,7 +183,7 @@ public class DecoPanel extends GuiComponentDecoBase<DecoPanel>
 		GL11.glClear(GL11.GL_STENCIL_BUFFER_BIT);
 		GL11.glStencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_REPLACE);
 		GL11.glStencilFunc(GL11.GL_ALWAYS, 1, 0xFF);
-		draw.drawConnectedColorRect(x, y, width, height, IIColor.WHITE, 32, 32, 4, 4,
+		draw.drawConnectedTexColorRect(x, y, width, height, IIColor.WHITE, 32, 32, 4, 4,
 				maskSprite.getMinU(), maskSprite.getInterpolatedU(8), maskSprite.getMinV(), maskSprite.getInterpolatedV(8)
 		);
 		draw.finish();
@@ -138,7 +192,7 @@ public class DecoPanel extends GuiComponentDecoBase<DecoPanel>
 		draw = IIDrawUtils.startTexturedColored();
 		GL11.glStencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_KEEP);
 		GL11.glStencilFunc(GL11.GL_EQUAL, 1, 0xFF);
-		draw.drawConnectedColorRect(x, y, width, height, IIColor.WHITE, background, 32, 32, 0, 0);
+		draw.drawConnectedTexColorRect(x, y, width, height, IIColor.WHITE, background, 32, 32, 0, 0);
 		draw.finish();
 
 		//Overlay
@@ -146,7 +200,7 @@ public class DecoPanel extends GuiComponentDecoBase<DecoPanel>
 		GL11.glDisable(GL11.GL_STENCIL_TEST);
 		GlStateManager.enableBlend();
 		GlStateManager.blendFunc(SourceFactor.DST_COLOR, DestFactor.SRC_COLOR);
-		draw.drawConnectedColorRect(x, y, width, height, IIColor.WHITE, 32, 32, 4, 4,
+		draw.drawConnectedTexColorRect(x, y, width, height, IIColor.WHITE, 32, 32, 4, 4,
 				maskSprite.getMinU(), maskSprite.getInterpolatedU(8), maskSprite.getMinV(), maskSprite.getInterpolatedV(8)
 		);
 		draw.finish();
@@ -178,8 +232,10 @@ public class DecoPanel extends GuiComponentDecoBase<DecoPanel>
 	@Override
 	public void cleanup()
 	{
+		children.forEach(DecoComponent::cleanup);
 		children.clear();
 		labels.clear();
+		initialized = false;
 		if(vbo!=-1)
 		{
 			GlStateManager.glDeleteLists(vbo, 1);
@@ -191,6 +247,16 @@ public class DecoPanel extends GuiComponentDecoBase<DecoPanel>
 	{
 		this.xPadding = xPadding;
 		this.yPadding = yPadding;
+		return null;
+	}
+
+	@Nullable
+	@Override
+	public Object getProvidedIngredient()
+	{
+		for(DecoComponent<?> child : children)
+			if(child.isMouseOver())
+				return child.getProvidedIngredient();
 		return null;
 	}
 }

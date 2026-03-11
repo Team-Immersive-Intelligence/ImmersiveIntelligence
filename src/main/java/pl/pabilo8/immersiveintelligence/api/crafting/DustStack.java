@@ -58,16 +58,6 @@ public class DustStack implements INBTSerializable<NBTTagCompound>
 	}
 
 	@Override
-	public boolean equals(Object o)
-	{
-		if(this==o) return true;
-		if(!(o instanceof DustStack))
-			return false;
-		DustStack dustStack = (DustStack)o;
-		return amount==dustStack.amount&&name.equals(dustStack.name);
-	}
-
-	@Override
 	public NBTTagCompound serializeNBT()
 	{
 		NBTTagCompound nbt = new NBTTagCompound();
@@ -81,5 +71,21 @@ public class DustStack implements INBTSerializable<NBTTagCompound>
 	{
 		name = nbt.getString("name");
 		amount = nbt.getInteger("amount");
+	}
+
+	@Override
+	public int hashCode()
+	{
+		return name.hashCode();
+	}
+
+	@Override
+	public boolean equals(Object o)
+	{
+		if(this==o) return true;
+		if(!(o instanceof DustStack))
+			return false;
+		DustStack dustStack = (DustStack)o;
+		return name.equals(dustStack.name);
 	}
 }

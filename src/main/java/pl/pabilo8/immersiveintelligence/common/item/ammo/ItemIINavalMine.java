@@ -53,6 +53,8 @@ import java.util.function.Function;
 @IIItemProperties(category = IICategory.WARFARE)
 public class ItemIINavalMine extends ItemIIAmmoBase<EntityNavalMine> implements IItemScrollable
 {
+	public static final String NBT_CHAIN_LENGTH = "length";
+
 	public ItemIINavalMine()
 	{
 		super("naval_mine", "naval_mine", Casing.NAVAL_MINE);
@@ -60,7 +62,7 @@ public class ItemIINavalMine extends ItemIIAmmoBase<EntityNavalMine> implements 
 	}
 
 	@Override
-	public float getComponentMultiplier()
+	public float getComponentSize()
 	{
 		return 0.55f;
 	}
@@ -152,7 +154,7 @@ public class ItemIINavalMine extends ItemIIAmmoBase<EntityNavalMine> implements 
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn)
 	{
 		super.addInformation(stack, worldIn, tooltip, flagIn);
-		int length = ItemNBTHelper.hasKey(stack, "length")?ItemNBTHelper.getInt(stack, "length"): 5;
+		int length = ItemNBTHelper.hasKey(stack, NBT_CHAIN_LENGTH)?ItemNBTHelper.getInt(stack, NBT_CHAIN_LENGTH): 5;
 		tooltip.add(I18n.format(IIReference.DESCRIPTION_KEY+"naval_mine_chain_length",
 				TextFormatting.GOLD+Integer.toString(length)));
 	}
@@ -230,7 +232,7 @@ public class ItemIINavalMine extends ItemIIAmmoBase<EntityNavalMine> implements 
 
 					EntityNavalMineAnchor anchor = new EntityNavalMineAnchor(world);
 					anchor.setPosition(raytraceresult.hitVec.x, raytraceresult.hitVec.y-liquidHeight, raytraceresult.hitVec.z);
-					mine.setMaxLength(ItemNBTHelper.hasKey(stack, "length")?ItemNBTHelper.getInt(stack, "length"): 5);
+					mine.setMaxLength(ItemNBTHelper.hasKey(stack, NBT_CHAIN_LENGTH)?ItemNBTHelper.getInt(stack, NBT_CHAIN_LENGTH): 5);
 					world.spawnEntity(anchor);
 					mine.setPosition(anchor.posX, anchor.posY+0.5-liquidHeight, anchor.posZ);
 					world.spawnEntity(mine);
@@ -253,10 +255,10 @@ public class ItemIINavalMine extends ItemIIAmmoBase<EntityNavalMine> implements 
 	@Override
 	public void onScroll(ItemStack stack, boolean forward, EntityPlayerMP player)
 	{
-		if(!ItemNBTHelper.hasKey(stack, "length"))
-			ItemNBTHelper.setInt(stack, "length", 5);
-		ItemNBTHelper.setInt(stack, "length", MathHelper.clamp(ItemNBTHelper.getInt(stack, "length")+(forward?1: -1), 0, 16));
-		SPacketTitle packet = new SPacketTitle(Type.ACTIONBAR, new TextComponentTranslation(IIReference.DESCRIPTION_KEY+"naval_mine_chain_length", ItemNBTHelper.getInt(stack, "length")), 0, 20, 0);
+		if(!ItemNBTHelper.hasKey(stack, NBT_CHAIN_LENGTH))
+			ItemNBTHelper.setInt(stack, NBT_CHAIN_LENGTH, 5);
+		ItemNBTHelper.setInt(stack, NBT_CHAIN_LENGTH, MathHelper.clamp(ItemNBTHelper.getInt(stack, NBT_CHAIN_LENGTH)+(forward?1: -1), 0, 16));
+		SPacketTitle packet = new SPacketTitle(Type.ACTIONBAR, new TextComponentTranslation(IIReference.DESCRIPTION_KEY+"naval_mine_chain_length", ItemNBTHelper.getInt(stack, NBT_CHAIN_LENGTH)), 0, 20, 0);
 		player.connection.sendPacket(packet);
 	}
 

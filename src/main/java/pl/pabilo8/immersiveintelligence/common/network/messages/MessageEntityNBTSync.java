@@ -11,9 +11,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityMachinegun;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityMortar;
-import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityMotorbike;
-import pl.pabilo8.immersiveintelligence.common.entity.vehicle.towable.gun.EntityFieldHowitzer;
 import pl.pabilo8.immersiveintelligence.common.network.IIMessage;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.entity.ISyncNBTEntity;
 
 /**
@@ -36,6 +35,11 @@ public class MessageEntityNBTSync extends IIMessage implements IEntityBoundMessa
 		this.nbt = nbt;
 	}
 
+	public MessageEntityNBTSync(Entity entity, EasyNBT nbt)
+	{
+		this(entity, nbt.unwrap());
+	}
+
 	public MessageEntityNBTSync()
 	{
 	}
@@ -47,14 +51,9 @@ public class MessageEntityNBTSync extends IIMessage implements IEntityBoundMessa
 
 		if(entity instanceof ISyncNBTEntity)
 			((ISyncNBTEntity<?>)entity).receiveNBTMessageServer(nbt);
-
-			//TODO: 09.07.2024 rework
+			//TODO: 09.07.2024 get rid of ones below
 		else if(entity instanceof EntityMachinegun)
 			((EntityMachinegun)entity).readEntityFromNBT(nbt);
-		else if(entity instanceof EntityMotorbike)
-			((EntityMotorbike)entity).syncKeyPress(nbt);
-		else if(entity instanceof EntityFieldHowitzer)
-			((EntityFieldHowitzer)entity).syncKeyPress(nbt);
 		else if(entity instanceof EntityMortar)
 			((EntityMortar)entity).syncKeyPress(nbt);
 	}
@@ -64,16 +63,16 @@ public class MessageEntityNBTSync extends IIMessage implements IEntityBoundMessa
 	protected void onClientReceive(WorldClient world, NetHandlerPlayClient handler)
 	{
 		Entity entity = world.getEntityByID(entityID);
+		if(!(entity instanceof ISyncNBTEntity))
+			return;
+		ISyncNBTEntity<?> synced = (ISyncNBTEntity<?>)entity;
 
-		if(entity instanceof ISyncNBTEntity)
-			((ISyncNBTEntity<?>)entity).receiveNBTMessageClient(nbt);
-
-		//TODO: 06.06.2024 reimplement
-
-		/*if(entity instanceof EntityAmmoBase)
-			((EntityAmmoBase)entity).readEntityFromNBT(nbt);
-		else if(entity instanceof EntityMachinegun)
-			((EntityMachinegun)entity).readEntityFromNBT(nbt);*/
+		if(nbt.hasKey("pos"))
+			synced.receivePositionMotionUpdate(nbt);
+		else
+			synced.receiveNBTMessageClient(nbt);
+		if(nbt.hasKey("re_init"))
+			synced.reloadEntity();
 	}
 
 	@Override

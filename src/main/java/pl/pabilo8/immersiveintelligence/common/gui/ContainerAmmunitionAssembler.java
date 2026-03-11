@@ -1,47 +1,28 @@
 package pl.pabilo8.immersiveintelligence.common.gui;
 
-import blusunrize.immersiveengineering.common.gui.ContainerIEBase;
-import blusunrize.immersiveengineering.common.gui.IESlot;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityAmmunitionAssembler;
+import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIBase;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @author Avalon (avalon@iiteam.net)
  * @since 10.07.2019
+ * @since 08.13.2025
  */
-public class ContainerAmmunitionAssembler extends ContainerIEBase<TileEntityAmmunitionAssembler>
+public class ContainerAmmunitionAssembler extends ContainerIIBase<TileEntityAmmunitionAssembler>
 {
+	public Slot inputSlot, outputSlot;
+
 	public ContainerAmmunitionAssembler(EntityPlayer player, TileEntityAmmunitionAssembler tile)
 	{
-		super(player.inventory, tile);
-		//Input/Output Slots
+		super(player, tile);
 
-		this.addSlotToContainer(new IESlot(this, this.inv, 0, 8, 14+6)
-		{
-			@Override
-			public boolean isItemValid(ItemStack itemStack)
-			{
-				return tile.isStackValid(0, itemStack);
-			}
-		});
-		this.addSlotToContainer(new IESlot(this, this.inv, 1, 8, 54+6)
-		{
-			@Override
-			public boolean isItemValid(ItemStack itemStack)
-			{
-				return tile.isStackValid(1, itemStack);
-			}
-		});
+		inputSlot = addSlot(8, 20-10, 0);
+		outputSlot = addSlot(8, 60-10, 1);
 
-		this.slotCount = tile.getInventory().size();
-		this.tile = tile;
+		addPlayerInventory(player.inventory, 8, 87);
 
-		for(int i = 0; i < 3; i++)
-			for(int j = 0; j < 9; j++)
-				addSlotToContainer(new Slot(player.inventory, j+i*9+9, 30+j*18, 95+i*18));
-		for(int i = 0; i < 9; i++)
-			addSlotToContainer(new Slot(player.inventory, i, 30+i*18, 165-27+15));
 	}
 }

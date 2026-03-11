@@ -33,6 +33,8 @@ import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.MachinegunCoolantHandler;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
@@ -52,8 +54,8 @@ import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageEntityNBTSync;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessagePlayerAimAnimationSync;
-import pl.pabilo8.immersiveintelligence.common.util.AdvancedSounds.RangedSound;
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
+import pl.pabilo8.immersiveintelligence.common.util.sound.AdvancedSounds.RangedSound;
 
 import javax.annotation.Nullable;
 
@@ -389,7 +391,7 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 					ItemStack mag2 = magazine.copy();
 					IIContent.itemBulletMagazine.defaultize(mag2);
 					if(!world.isRemote)
-						blusunrize.immersiveengineering.common.util.Utils.dropStackAtPos(world, entity.getPosition(), mag2);
+						Utils.dropStackAtPos(world, entity.getPosition(), mag2);
 					setMagazineToSlot(setTo, ItemStack.EMPTY);
 				}
 				else
@@ -767,7 +769,7 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 				.create();
 
 		ItemStack stack2 = ((IAmmoTypeItem<?, ?>)stack.getItem()).getCasingStack(1);
-		blusunrize.immersiveengineering.common.util.Utils.dropStackAtPos(world, getPosition(), stack2);
+		Utils.dropStackAtPos(world, getPosition(), stack2);
 	}
 
 	public boolean shootFromCrate()
@@ -775,7 +777,7 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 		if(getPassengers().get(0)==null||!(getPassengers().get(0) instanceof EntityLivingBase))
 			return false;
 
-		blusunrize.immersiveengineering.common.util.Utils.attractEnemies((EntityLivingBase)getPassengers().get(0), 36, null);
+		Utils.attractEnemies((EntityLivingBase)getPassengers().get(0), 36, null);
 
 		bulletDelay = bulletDelayMax;
 		recoilYaw += Math.random() > 0.5?maxRecoilYaw*2*Math.random(): -maxRecoilYaw*2*Math.random();
@@ -803,7 +805,7 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 			if(!crate.open)
 				return false;
 
-			if(crate.hasUpgrade(IIContent.UPGRADE_MG_LOADER))
+			if(crate.isUpgradeInstalled(IIContent.UPGRADE_MG_LOADER))
 			{
 				for(int i = 38; i < 50; i++)
 				{
@@ -827,7 +829,7 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 		if(getPassengers().get(0)==null||!(getPassengers().get(0) instanceof EntityLivingBase))
 			return false;
 
-		blusunrize.immersiveengineering.common.util.Utils.attractEnemies((EntityLivingBase)getPassengers().get(0), 36, null);
+		Utils.attractEnemies((EntityLivingBase)getPassengers().get(0), 36, null);
 
 		bulletDelay = bulletDelayMax;
 		recoilYaw += Math.random() > 0.5?maxRecoilYaw*2*Math.random(): -maxRecoilYaw*2*Math.random();
@@ -952,7 +954,7 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 
 		if(!hasSecondMag&&!magazine2.isEmpty()&&!world.isRemote)
 		{
-			blusunrize.immersiveengineering.common.util.Utils.dropStackAtPos(world, getPosition(), stack);
+			Utils.dropStackAtPos(world, getPosition(), stack);
 		}
 
 		if(!magazine1.isEmpty())
@@ -991,7 +993,7 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 						cap.fill(tank.getFluid().copy(), true);
 				}
 			}
-			blusunrize.immersiveengineering.common.util.Utils.dropStackAtPos(world, getPosition(), gun);
+			Utils.dropStackAtPos(world, getPosition(), gun);
 			setDead();
 		}
 	}
@@ -1042,10 +1044,11 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 		return super.getCapability(capability, facing);
 	}
 
+	@SideOnly(Side.CLIENT)
 	@Override
 	public String[] getOverlayText(EntityPlayer player, RayTraceResult mop)
 	{
-		if(blusunrize.immersiveengineering.common.util.Utils.isFluidRelatedItemStack(player.getHeldItem(EnumHand.MAIN_HAND)))
+		if(Utils.isFluidRelatedItemStack(player.getHeldItem(EnumHand.MAIN_HAND)))
 		{
 			String s;
 			if(tank.getFluid()!=null)

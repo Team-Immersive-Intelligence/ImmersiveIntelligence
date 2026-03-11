@@ -2,44 +2,52 @@ package pl.pabilo8.immersiveintelligence.client.gui.block;
 
 import blusunrize.immersiveengineering.common.IEContent;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
-import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
-import pl.pabilo8.immersiveintelligence.api.data.DataVariable;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
-import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType.TypeMetaInfo;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
+import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiComponentDecoBase.MouseButton;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoComponent.MouseButton;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoArrows;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoButton;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoTab;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoList;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoLabel;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoEntryPanelBuilder;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoImage;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoAlignment;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.*;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundBuilder.SlotStyle;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoGuiUtils;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTemplate;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityRedstoneInterface;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityRedstoneDataInterface;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityRedstoneDataInterface.ConversionMode;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityRedstoneDataInterface.ConversionSetting;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerRedstoneDataInterface;
+import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
-import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
+import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyCollection;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
  * @updated 02.02.2024
  * @since 09.02.2020
  */
-@DecoTemplate(name = "data_redstone_interface")
-public class GuiDataRedstoneInterfaceData extends DecoGui<TileEntityRedstoneInterface, ContainerRedstoneDataInterface>
+@DecoTemplate(name = "data_redstone_interface_data", category = DecoGuiCategory.DATA_TILE)
+public class GuiDataRedstoneInterfaceData extends DecoGui<TileEntityRedstoneDataInterface, ContainerRedstoneDataInterface>
 {
+	@DecoResource
+	public static ResourceLocation PROGRESS_IMAGE = ResLoc.of(IIReference.RES_II, "gui/data_input_machine");
+
 	@SyncNBT
 	public int scroll = 0;
-	private DecoList<DataVariable> list;
+	@SyncNBT(events = SyncEvents.TILE_CLIENT_MESSAGE)
+	public EasyCollection<ConversionSetting, NBTTagCompound> dataSettings;
 
-	public GuiDataRedstoneInterfaceData(EntityPlayer player, TileEntityRedstoneInterface tile)
+	public GuiDataRedstoneInterfaceData(EntityPlayer player, TileEntityRedstoneDataInterface tile)
 	{
 		super(player, tile, IIGUI.DATA_REDSTONE_INTERFACE_DATA);
 	}
@@ -47,64 +55,93 @@ public class GuiDataRedstoneInterfaceData extends DecoGui<TileEntityRedstoneInte
 	@Override
 	public void onInit()
 	{
+		this.dataSettings = tile.dataSettings;
 		//Create background
 		startBackground()
-				.withBox(IIReference.GUI_BG_STEEL, 0, 0, 176, 128+8)
+				.withBox(DecoTextures.BG_STEEL, 0, 0, 176, 128+8)
 				.withTitleBar("desc.immersiveintelligence.data_to_redstone_module")
-				.withBox(IIReference.GUI_BG_WOODEN, 0, 128+8, 176, 92)
+				.withBox(DecoTextures.BG_WOODEN, DecoTextures.TEMPLATE_ROUND_WOODEN, 0, 128+8, 176, 92)
 				.withInventoryTitleBar()
 
 				.withNextLayer()
-				.withBox(IIReference.GUI_BG_STEEL, IIReference.RES_TEXTURES_DECO_TEMPLATE_SQUARE, 0, 8, 32, 120)
+				.withBox(DecoTextures.BG_STEEL, DecoTextures.TEMPLATE_SQUARE, 0, 8, 32, 120)
 
 				.withInventorySlots(SlotStyle.VANILLA, container.playerInventory)
-				.withInventorySlots(SlotStyle.IE_INPUT, container.dataInput)
-				.withInventorySlots(SlotStyle.IE_OUTPUT, container.dataOutput)
+				.withInventorySlots(SlotStyle.IE_INPUT, container.punchtapeInput)
+				.withInventorySlots(SlotStyle.IE_OUTPUT, container.punchtapeOutput)
 				.build();
 
-		DataPacket packet = new DataPacket();
-		packet.set('a', new DataTypeString("test"));
-		packet.set('b', new DataTypeString("test2"));
-		packet.set('e', new DataTypeString("test3"));
-		packet.set('f', new DataTypeString("test4"));
-		packet.set('g', new DataTypeString("test5"));
-		packet.set('h', new DataTypeString("test6"));
-		packet.set('i', new DataTypeString("test7"));
-		packet.set('j', new DataTypeString("test8"));
+		addLinkTab(IIGUI.DATA_REDSTONE_INTERFACE_REDSTONE, new ItemStack(IEContent.itemWireCoil, 1, 5), "redstone_to_data_module");
+		addLinkTab(IIGUI.DATA_REDSTONE_INTERFACE_DATA, IIContent.itemDataWireCoil.getStack(1), "data_to_redstone_module");
 
 		//Add components
 		addComponents(
-				new DecoTab()
-						.withLink(IIGUI.DATA_REDSTONE_INTERFACE_DATA)
-						.withIcon(IIContent.itemDataWireCoil.getStack(1))
-						.withTranslatedTooltip("desc.immersiveintelligence.data_to_redstone_module"),
-				new DecoTab()
-						.withLink(IIGUI.DATA_REDSTONE_INTERFACE_REDSTONE)
-						.withIcon(new ItemStack(IEContent.itemWireCoil, 1, 5))
-						.withTranslatedTooltip("desc.immersiveintelligence.redstone_to_data_module"),
+				new DecoImage(4+2, 12+24+8-2-1)
+						.withSize(20, 52)
+						.withImageLocation(PROGRESS_IMAGE, true)
+						.withUV(64, 0, 0, 20, 52),
+				new DecoImage(4+2, 12+24+8-2-1)
+						.withSize(20, 52)
+						.withImageLocation(PROGRESS_IMAGE, true)
+						.withUV(64, 20, 0, 40, 52),
 
-				list = new DecoList<DataVariable>(32, 8)
+				new DecoList<ConversionSetting>(32, 8)
 						.withSize(136, 120)
-						.withEntries(packet.getAllVariables())
-						.withCreateLaterAction(() -> changeGUI(IIGUI.DATA_REDSTONE_INTERFACE_REDSTONE))
+						.withEntries(dataSettings)
+						.withCreateAction(ConversionSetting::new)
+						.withScroll(scroll)
 						.withGuiSaveAction(gui -> this.scroll = gui.getScroll())
-						.withDisplayFunction(new DecoEntryPanelBuilder<DataVariable>()
-								.withPadding(1, 1)
-								//Edit / Remove Buttons
-								.withComponent(
-										p -> new DecoButton(p.width-17-16+3, 2)
-												.withTemplate(DecoGuiUtils.LIST_BUTTON_EDIT_TEMPLATE)
-												.withOnPressed((gui, mouseButton, mouseX, mouseY) -> {
-													if(mouseButton==MouseButton.LEFT)
-													{
-														changeGUI(IIGUI.DATA_REDSTONE_INTERFACE_REDSTONE);
-														return true;
-													}
-													return false;
-												})
+						.withDisplayFunction(new DecoEntryPanelBuilder<ConversionSetting>()
+								.withHeight(32)
+								.withLabel("from", new DecoLabel(this.fontRenderer, 4, 4)
+										.withText(IIReference.GUI_LABEL_KEY+"redstone_data_interface.from"))
+								.withLabel("to", new DecoLabel(this.fontRenderer, 4, 16+1)
+										.withText(IIReference.GUI_LABEL_KEY+"redstone_data_interface.to"))
+
+								//Color
+								.withComponent("color_icon", new DecoImage(32, 4)
+										.withSize(8, 8)
+										.withImageLocation(DecoTextures.COMPONENT_COLOR, true)
+										.withUV(16, 4, 4, 12, 12)
 								)
-								.withComponent(p -> new DecoButton(p.width-17+1, 2)
-										.withTemplate(DecoGuiUtils.LIST_BUTTON_REMOVE_TEMPLATE)
+								.withLabel("color_label",
+										new DecoLabel(IIClientUtils.fontRegular, 32+8+2, 4)
+												.withSize(48, 12)
+												.withAlign(DecoAlignment.LEFT)
+												.withText("Dye")
+								)
+								.withComponent("color_arrows", builder -> new DecoArrows(32+48+16, 2)
+										.withSize(12, 12)
+										.withOnArrow(arrow -> builder.getCurrentElement()
+												.setColor(IIUtils.cycleEnum(arrow, EnumDyeColor.class, builder.getCurrentElement().getColor())))
+								)
+								//Mode
+								.withLabel("mode_label",
+										new DecoLabel(IIClientUtils.fontRegular, 32, 16)
+												.withSize(48, 12)
+												.withAlign(DecoAlignment.LEFT)
+												.withText("Mode")
+								)
+								.withComponent("mode_arrows", builder -> new DecoArrows(32+32+16+8-12, 16)
+										.withSize(12, 12)
+										.withOnArrow(arrow -> builder.getCurrentElement()
+												.setMode(IIUtils.cycleEnum(arrow, ConversionMode.class, builder.getCurrentElement().getMode())))
+								)
+								//Variable
+								.withLabel("variable_label",
+										new DecoLabel(IIClientUtils.fontRegular, 32+32+16+8, 16)
+												.withSize(12, 12)
+												.withAlign(DecoAlignment.LEFT)
+												.withText("a")
+								)
+								.withComponent("variable_arrows", builder -> new DecoArrows(32+32+16+24-8, 16)
+										.withSize(12, 12)
+										.withOnArrow(arrow -> builder.getCurrentElement()
+												.setVariable(IIUtils.cycleDataPacketChars(builder.getCurrentElement().getVariable(), arrow, false)))
+								)
+								//Edit / Remove Buttons
+								.withComponent(p -> new DecoButton(p.width-17+1, 8)
+										.withTemplate(DecoTemplates.ACTION_BUTTON_REMOVE)
 										.withOnPressed((gui, mouseButton, mouseX, mouseY) -> {
 											if(mouseButton==MouseButton.LEFT)
 											{
@@ -114,42 +151,17 @@ public class GuiDataRedstoneInterfaceData extends DecoGui<TileEntityRedstoneInte
 											return false;
 										})
 								)
-								//Type Icon, Label, and Letter
-								.withComponent("image", new DecoImage(2+12, 1)
-										.withSize(16, 16))
-								.withLabel("typeLabel",
-										new DecoLabel(fontRenderer, 2+12+16+2, 2)
-												.withSize(48, 16)
-												.withAlign(DecoAlignment.LEFT)
-												.withText("Integer")
-								)
-								.withLabel("letterLabel",
-										new DecoLabel(fontRenderer, 2, 2)
-												.withSize(12, 16)
-												.withAlign(DecoAlignment.CENTER)
-								)
 								.withElementApplyMethod((entry, panel) -> {
-									TypeMetaInfo<?> typeMeta = entry.getValue().getTypeMeta();
-
-									//letter label (f.e. a)
-									panel.label("letterLabel")
-											.withRawText(String.valueOf(entry.getName()));
-									//type label (f.e. integer)
-									panel.label("typeLabel")
-											.withText(typeMeta.getTranslatedName())
-											.withTextColor(typeMeta.color.withBrightness(0.5f));
-									//type icon
-									panel.component("image", DecoImage.class)
-											.withImageLocation(entry.getValue().getTextureLocation());
+									//Set dye
+									EnumDyeColor dye = entry.getColor();
+									panel.component("color_icon", DecoImage.class).withColor(IIColor.fromDye(dye));
+									panel.label("color_label").withText("item.fireworksCharge."+dye.getUnlocalizedName());
+									//Set mode
+									panel.label("mode_label").withText(entry.getMode().getFullLocaleKey());
+									//Set variable name
+									panel.label("variable_label").withRawText(String.valueOf(entry.getVariable()));
 								})
 						)
-						.withScroll(scroll)
 		);
-	}
-
-	protected EasyNBT onSaveTileData()
-	{
-		//TODO: 23.02.2025 entry saving
-		return super.onSaveTileData();
 	}
 }

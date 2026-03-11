@@ -36,6 +36,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -47,7 +48,9 @@ import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
 import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIBase;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IAdvancedMultiblockTileEntity;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IConstructionRequiringDevice;
+import pl.pabilo8.modworks.annotations.item.GeneratedItemModels;
+import pl.pabilo8.modworks.annotations.item.ItemModelType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -61,6 +64,7 @@ import static blusunrize.immersiveengineering.api.Lib.TOOL_HAMMER;
  * @since 30.05.2019
  */
 @IIItemProperties(category = IICategory.TOOLS)
+@GeneratedItemModels(itemName = "electric_hammer", type = ItemModelType.ITEM_SIMPLE_TOOL, texturePath = "tools/electric_hammer")
 public class ItemIIElectricHammer extends ItemIIBase implements ITool, IIEEnergyItem
 {
 	public ItemIIElectricHammer()
@@ -198,27 +202,25 @@ public class ItemIIElectricHammer extends ItemIIBase implements ITool, IIEEnergy
 	@Override
 	public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
-		TileEntity tileEntity = world.getTileEntity(pos);
-		if(tileEntity instanceof IAdvancedMultiblockTileEntity)
+		TileEntity te = world.getTileEntity(pos);
+		if(!player.getHeldItem(hand).hasCapability(CapabilityEnergy.ENERGY, null))
+			return EnumActionResult.FAIL;
+		IEnergyStorage cap = player.getHeldItem(hand).getCapability(CapabilityEnergy.ENERGY, null);
+		assert cap!=null;
+
+		if(!(te instanceof IConstructionRequiringDevice))
+			return EnumActionResult.PASS;
+		IConstructionRequiringDevice mb = ((IConstructionRequiringDevice)te).master();
+		int energy = player.isCreative()?999999: cap.extractEnergy(Tools.electricHammerEnergyPerUseConstruction, false);
+
+		if(mb!=null&&!mb.isConstructionFinished()&&energy > 0)
 		{
-			IAdvancedMultiblockTileEntity mb = (IAdvancedMultiblockTileEntity)tileEntity;
-			if(!mb.isConstructionFinished())
-			{
-				int energy;
-				if(player.isCreative())
-					energy = 999999;
-				else
-					energy = player.getHeldItem(hand).getCapability(CapabilityEnergy.ENERGY, null).extractEnergy(Tools.electricHammerEnergyPerUseConstruction, false);
-				if(energy > 0)
-				{
-					mb.setCurrentConstruction(mb.getCurrentConstruction()+energy);
-					world.playSound(null, pos, IISounds.constructionHammer, SoundCategory.PLAYERS, 0.5f, 1);
-					return doAction(player, hand);
-				}
-				else
-					return EnumActionResult.PASS;
-			}
+			if(!player.isCreative())
+				cap.extractEnergy(Tools.electricHammerEnergyPerUseConstruction, false);
+			mb.progressConstruction(energy);
+			world.playSound(null, pos, IISounds.constructionHammer, SoundCategory.PLAYERS, 0.5f, 1);
 		}
+
 		return EnumActionResult.PASS;
 
 	}

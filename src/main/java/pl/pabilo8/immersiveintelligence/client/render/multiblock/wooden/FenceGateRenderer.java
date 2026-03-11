@@ -4,19 +4,23 @@ import blusunrize.immersiveengineering.api.IEProperties;
 import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Tuple;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.client.model.obj.OBJModel;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.client.render.IIMultiblockRenderer;
-import pl.pabilo8.immersiveintelligence.client.util.amt.*;
-import pl.pabilo8.immersiveintelligence.client.util.amt.IIMachineUpgradeModel.UpgradeStage;
+import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
+import pl.pabilo8.immersiveintelligence.client.util.amt.animation.IIAnimationCompiledMap;
+import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTModel;
+import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTUpgradeModel;
+import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTUpgradeModel.UpgradeStage;
+import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IIMultiblockRenderer;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.gate_multiblock.tileentity.TileEntityGateBase;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
@@ -28,8 +32,8 @@ import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
  */
 public class FenceGateRenderer<T extends TileEntityGateBase<T>> extends IIMultiblockRenderer<T>
 {
-	IIMachineUpgradeModel redstoneUpgrade, razorUpgrade;
-	private AMT[] model;
+	AMTUpgradeModel redstoneUpgrade, razorUpgrade;
+	private AMTModel model;
 	private IIAnimationCompiledMap open, redstone, razor;
 
 	public FenceGateRenderer(String name)
@@ -49,11 +53,10 @@ public class FenceGateRenderer<T extends TileEntityGateBase<T>> extends IIMultib
 		open.apply(te.gate.getProgress(partialTicks));
 
 		//Apply upgrade or their construction animations
-		redstone.apply((redstoneUpgrade.renderConstruction(te, tes, buf, partialTicks)==UpgradeStage.INSTALLED)?1: 0);
-		razor.apply((razorUpgrade.renderConstruction(te, tes, buf, partialTicks)==UpgradeStage.INSTALLED)?1: 0);
+		redstone.apply((redstoneUpgrade.renderProgress(te, tes, buf, partialTicks)==UpgradeStage.INSTALLED)?1: 0);
+		razor.apply((razorUpgrade.renderProgress(te, tes, buf, partialTicks)==UpgradeStage.INSTALLED)?1: 0);
 
-		for(AMT amt : model)
-			amt.render(tes, buf);
+		model.render(tes, buf);
 
 		drawConnectedFences(te, buf, tes);
 
@@ -76,7 +79,7 @@ public class FenceGateRenderer<T extends TileEntityGateBase<T>> extends IIMultib
 		IBlockState fenceStateR = te.getFenceState(EnumFacing.WEST);
 		IBlockState fenceStateL = te.getFenceState(EnumFacing.EAST);
 
-		IBakedModel modelFence = IIAnimationUtils.getBRD().getBlockModelShapes().getModelForState(fenceState);
+		IBakedModel modelFence = AMTUtils.getBRD().getBlockModelShapes().getModelForState(fenceState);
 
 		for(int i = 0; i < 4; i++)
 		{
@@ -91,10 +94,10 @@ public class FenceGateRenderer<T extends TileEntityGateBase<T>> extends IIMultib
 		buf.color(255, 255, 255, 255);
 		for(int i = 0; i < 4; i++)
 		{
-			IIAnimationUtils.getBRD().getBlockModelRenderer().renderModel(te.getWorld(), modelFence,
+			AMTUtils.getBRD().getBlockModelRenderer().renderModel(te.getWorld(), modelFence,
 					connections[te.facing.getAxis()==Axis.X?(i+4): i]?fenceStateR: fenceState,
 					new BlockPos(0, i, 0), buf, true);
-			IIAnimationUtils.getBRD().getBlockModelRenderer().renderModel(te.getWorld(), modelFence,
+			AMTUtils.getBRD().getBlockModelRenderer().renderModel(te.getWorld(), modelFence,
 					connections[te.facing.getAxis()==Axis.X?i: (i+4)]?fenceStateL: fenceState,
 					new BlockPos(7, i, 0), buf, true);
 		}
@@ -106,26 +109,29 @@ public class FenceGateRenderer<T extends TileEntityGateBase<T>> extends IIMultib
 	@Override
 	public void drawSimple(BufferBuilder buf, float partialTicks, Tessellator tes)
 	{
-
+		GlStateManager.translate(-7, 0, 0);
+		model.defaultize();
+		open.apply(0);
+		redstone.apply(0);
+		razor.apply(0);
+		model.render(tes, buf);
 	}
 
 	@Override
-	public void compileModels(Tuple<IBlockState, IBakedModel> sModel)
+	public void compileModels(IBlockState state, OBJModel model)
 	{
-		model = IIAnimationUtils.getAMT(sModel, IIAnimationLoader.loadHeader(sModel.getSecond()));
-		open = IIAnimationCompiledMap.create(model, ResLoc.of(IIReference.RES_II, "gate/open"));
+		this.model = new AMTModel(state, model);
+		open = IIAnimationCompiledMap.create(this.model, ResLoc.of(IIReference.RES_II, "gate/open"));
 
-		AMT[] modelUpgrades = IIAnimationUtils.getAMTFromRes(
-				new ResourceLocation(ImmersiveIntelligence.MODID, "models/block/multiblock/gate_construction.obj.ie"),
-				new ResourceLocation(ImmersiveIntelligence.MODID, "models/block/multiblock/gate_construction.obj.amt")
-		);
+		AMTModel modelUpgrades = new AMTModel(DefaultVertexFormats.BLOCK,
+				IIReference.RES_II.with("models/block/multiblock/gate_construction.obj.ie"));
 
-		redstone = IIAnimationCompiledMap.create(model, ResLoc.of(IIReference.RES_II, "gate/redstone"));
-		razor = IIAnimationCompiledMap.create(model, ResLoc.of(IIReference.RES_II, "gate/razor"));
+		redstone = IIAnimationCompiledMap.create(this.model, ResLoc.of(IIReference.RES_II, "gate/redstone"));
+		razor = IIAnimationCompiledMap.create(this.model, ResLoc.of(IIReference.RES_II, "gate/razor"));
 
-		redstoneUpgrade = new IIMachineUpgradeModel(IIContent.UPGRADE_REDSTONE_ACTIVATION, modelUpgrades,
+		redstoneUpgrade = new AMTUpgradeModel(IIContent.UPGRADE_REDSTONE_ACTIVATION, modelUpgrades,
 				new ResourceLocation(ImmersiveIntelligence.MODID, "gate/upgrade_redstone"));
-		razorUpgrade = new IIMachineUpgradeModel(IIContent.UPGRADE_RAZOR_WIRE, modelUpgrades,
+		razorUpgrade = new AMTUpgradeModel(IIContent.UPGRADE_RAZOR_WIRE, modelUpgrades,
 				new ResourceLocation(ImmersiveIntelligence.MODID, "gate/upgrade_razor"));
 	}
 
@@ -133,6 +139,6 @@ public class FenceGateRenderer<T extends TileEntityGateBase<T>> extends IIMultib
 	protected void nullifyModels()
 	{
 		super.nullifyModels();
-		model = IIAnimationUtils.disposeOf(model);
+		model = AMTUtils.disposeOf(model);
 	}
 }

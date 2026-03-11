@@ -59,7 +59,7 @@ public class ItemIILightEngineerLeggings extends ItemIILightEngineerArmorBase im
 
 			if(world.isRemote)
 			{
-				if(ClientProxy.keybind_armorExosuit.isPressed())
+				if(ClientProxy.keybindArmorExosuit.isPressed())
 					IIPacketHandler.sendToServer(new MessageItemKeybind(MessageItemKeybind.KEYBIND_EXOSKELETON));
 			}
 

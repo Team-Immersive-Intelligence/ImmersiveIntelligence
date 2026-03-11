@@ -6,13 +6,16 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualObject;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualPage;
-import pl.pabilo8.immersiveintelligence.client.util.amt.*;
+import pl.pabilo8.immersiveintelligence.client.util.amt.animation.IIAnimationCompiledMap;
+import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTModel;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.*;
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
@@ -32,7 +35,8 @@ public class IIManualScenario extends IIManualObject
 	private int animationTime = 0, maxAnimationTime;
 	private float displayScale;
 	private float ww, hh;
-	private AMT[] objects, overlay;
+	private AMTModel objects, overlay;
+	private AMTModel joined;
 	private IIAnimationCompiledMap animation;
 	private HoverBox[] hovers;
 
@@ -48,32 +52,25 @@ public class IIManualScenario extends IIManualObject
 	{
 		super.postInit(page);
 
-		this.objects = dataSource.getList("elements", 10).tagList.stream()
+		this.objects = new AMTModel(dataSource.getList("elements", 10).tagList.stream()
 				.map(this::createAMT)
-				.toArray(AMT[]::new);
-		this.overlay = dataSource.getList("overlay", 10).tagList.stream()
+				.toArray(AMT[]::new));
+		this.overlay = new AMTModel(dataSource.getList("overlay", 10).tagList.stream()
 				.map(this::createAMT)
-				.toArray(AMT[]::new);
+				.toArray(AMT[]::new));
 		this.hovers = dataSource.getList("hovers", 10).tagList.stream()
 				.map(n -> EasyNBT.wrapNBT((NBTTagCompound)n))
 				.map(HoverBox::new)
 				.toArray(HoverBox[]::new);
 
-		this.animation = IIAnimationCompiledMap.create(joinElements(), new ResourceLocation(dataSource.getString("animation")));
+		this.joined = new AMTModel(this.objects, this.overlay);
+		this.animation = IIAnimationCompiledMap.create(this.joined, new ResourceLocation(dataSource.getString("animation")));
 		this.maxAnimationTime = dataSource.getInt("duration");
 
 		ww = width/2f;
 		hh = height/2f;
 		dataSource.checkSetFloat("scale", f -> displayScale = 20*f, 1f);
 
-	}
-
-	private AMT[] joinElements()
-	{
-		AMT[] amt = new AMT[this.objects.length+this.overlay.length];
-		System.arraycopy(this.objects, 0, amt, 0, this.objects.length);
-		System.arraycopy(this.overlay, 0, amt, this.objects.length, this.overlay.length);
-		return amt;
 	}
 
 	@Nonnull
@@ -103,7 +100,7 @@ public class IIManualScenario extends IIManualObject
 				amt = new AMTWire(nbt.getString("name"), Vec3d.ZERO,
 						nbt.getVec3d("start"),
 						nbt.getVec3d("end"),
-						nbt.getInt("color"),
+						nbt.getColor("color"),
 						nbt.getFloat("diameter")
 				);
 				break;
@@ -111,15 +108,15 @@ public class IIManualScenario extends IIManualObject
 			case "model":
 			{
 				amt = new AMTLocator(nbt.getString("name"), Vec3d.ZERO);
+				AMTModel model = new AMTModel(DefaultVertexFormats.BLOCK, new ResourceLocation(nbt.getString("model")));
 				//load the model and add the parts as main node's children
-				amt.setChildren(IIAnimationUtils.getAMTFromRes(new ResourceLocation(nbt.getString("model")), null));
+				amt.setChildren(model.getParts());
 			}
 			break;
 		}
 
-		IIAnimationUtils.setModelTranslation(amt, nbt.getVec3d("pos"));
-		IIAnimationUtils.setModelRotation(amt, nbt.getVec3d("rot"));
-
+		amt.setPosition(nbt.getVec3d("pos"));
+		amt.setRotation(nbt.getVec3d("rot"));
 		return amt;
 	}
 
@@ -180,8 +177,7 @@ public class IIManualScenario extends IIManualObject
 		GlStateManager.translate(-0.5, 0, -0.5);
 
 		//draw the scene
-		for(AMT mod : this.objects)
-			mod.render(tes, buf);
+		this.objects.render(tes, buf);
 
 		RenderHelper.disableStandardItemLighting();
 		GlStateManager.disableRescaleNormal();
@@ -194,8 +190,7 @@ public class IIManualScenario extends IIManualObject
 		GlStateManager.translate(x+8, y+8, 0);
 		GlStateManager.scale(-16, 16, -16);
 		GlStateManager.rotate(180, 0, 1, 0);
-		for(AMT mod : this.overlay)
-			mod.render(tes, buf);
+		this.overlay.render(tes, buf);
 		GlStateManager.popMatrix();
 
 		this.hoveredText = null;

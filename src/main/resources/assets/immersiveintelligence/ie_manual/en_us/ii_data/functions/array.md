@@ -1,6 +1,6 @@
 # meta
 Array Functions
-Catch them all
+Catch 'em all!
 # array_create
 |[data_operation]{id:"array_create"}|
 # array_get

@@ -1,0 +1,20 @@
+{
+  "type": "ParticleVanilla",
+  "textures": ["immersiveintelligence:particle/rocket/rocket_smoke"],
+  "max_lifetime": 4,
+  "draw_stage": "custom_additive",
+  "programs": [
+    "lifetime_retexture",
+    "shockwave_transition"
+  ],
+  "scheduled": [
+    {
+      "time": 1,
+      "generator": "same",
+      "distance": 0.125,
+      "amount": 1,
+      "type": "smoke/smoke_cloud",
+      "inherited_properties": ["size", "rotation", "motion"]
+    }
+  ]
+}

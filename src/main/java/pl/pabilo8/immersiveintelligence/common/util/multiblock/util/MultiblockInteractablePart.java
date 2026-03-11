@@ -99,6 +99,22 @@ public class MultiblockInteractablePart implements INBTSerializable<NBTTagCompou
 	}
 
 	/**
+	 * @return true if the part is fully closed
+	 */
+	public boolean isFullyClosed()
+	{
+		return !opened&&progress==0;
+	}
+
+	/**
+	 * @return true if the part is fully opened
+	 */
+	public boolean isFullyOpened()
+	{
+		return opened&&progress==maxProgress;
+	}
+
+	/**
 	 * Reads the state from NBT
 	 *
 	 * @param nbt the NBT to read from

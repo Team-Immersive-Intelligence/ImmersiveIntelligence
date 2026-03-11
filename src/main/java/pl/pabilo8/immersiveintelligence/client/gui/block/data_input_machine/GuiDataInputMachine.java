@@ -9,10 +9,9 @@ import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeNull;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType.TypeMetaInfo;
-import pl.pabilo8.immersiveintelligence.client.gui.ITabbedGui;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiComponentDecoBase;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiComponentDecoBase.MouseButton;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoComponent;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoComponent.MouseButton;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoButton;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoTab;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoDropdown;
@@ -21,12 +20,9 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoLabe
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoEntryPanelBuilder;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoBar;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoImage;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.widget.DecoManualWidget;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoAlignment;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoImage.ImageAnimationDirection;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.*;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundBuilder.SlotStyle;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoGuiUtils;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoResource;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTemplate;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityDataInputMachine;
@@ -45,19 +41,13 @@ import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
  * @ii-approved 0.3.1
  * @since 30.06.2019
  */
-@DecoTemplate(name = "data_input_machine")
-public class GuiDataInputMachine extends DecoGui<TileEntityDataInputMachine, ContainerDataInputMachine> implements ITabbedGui, IDataMachineGui
+@DecoTemplate(name = "data_input_machine", category = DecoGuiCategory.DATA_TILE)
+public class GuiDataInputMachine extends DecoGui<TileEntityDataInputMachine, ContainerDataInputMachine> implements IDataMachineGui
 {
-	@DecoResource
-	public static ResourceLocation ICON_STORAGE = ResLoc.of(IIReference.RES_II, "gui/tab_icons/storage");
-	@DecoResource
-	public static ResourceLocation ICON_VARIABLES = ResLoc.of(IIReference.RES_II, "gui/tab_icons/variables");
 	@DecoResource
 	public static ResourceLocation ICON_SEND_PACKET = ResLoc.of(IIReference.RES_II, "gui/tab_icons/send_packet");
 	@DecoResource
 	public static ResourceLocation PROGRESS_IMAGE = ResLoc.of(IIReference.RES_II, "gui/data_input_machine");
-	@SyncNBT
-	public boolean soundPlayed;
 	@SyncNBT
 	public int scroll;
 	@SyncNBT
@@ -79,20 +69,25 @@ public class GuiDataInputMachine extends DecoGui<TileEntityDataInputMachine, Con
 		return new GuiDataInputMachine(player, tile, IIGUI.DATA_INPUT_MACHINE_VARIABLES);
 	}
 
-	public static GuiComponentDecoBase<?>[] getCommonParts(TileEntityDataInputMachine tile)
+	public static DecoComponent<?>[] getCommonParts(TileEntityDataInputMachine tile)
 	{
-		return new GuiComponentDecoBase[]{
+		return new DecoComponent[]{
 				new DecoImage(4+2, 12+24+8-2-1)
 						.withSize(20, 52)
 						.withImageLocation(PROGRESS_IMAGE, true)
 						.withUV(64, 0, 0, 20, 52),
+				new DecoImage(4+2, 12+24+8-2-1)
+						.withSize(20, 52)
+						.withImageLocation(PROGRESS_IMAGE, true)
+						.withUV(64, 20, 0, 40, 52)
+						.withAnimation(ImageAnimationDirection.TOP_TO_BOTTOM, DecoGuiUtils.getMultiblockProductionSingleProgress(tile)),
 				new DecoTab()
 						.withLink(IIGUI.DATA_INPUT_MACHINE_STORAGE)
-						.withIcon(ICON_STORAGE)
+						.withIcon(DecoTextures.ICON_STORAGE)
 						.withTranslatedTooltip(IIReference.DESCRIPTION_KEY+"storage_module"),
 				new DecoTab()
 						.withLink(IIGUI.DATA_INPUT_MACHINE_VARIABLES)
-						.withIcon(ICON_VARIABLES)
+						.withIcon(DecoTextures.ICON_VARIABLES)
 						.withTranslatedTooltip(IIReference.DESCRIPTION_KEY+"variables_module"),
 
 				new DecoTab()
@@ -116,25 +111,24 @@ public class GuiDataInputMachine extends DecoGui<TileEntityDataInputMachine, Con
 	{
 		//Set animation for the machine hatches
 		boolean isStorage = container.hasStorage;
-		if(!soundPlayed)
+		if(!refreshGUIFlag)
 		{
 			syncAnimatedParts(tile.drawer, isStorage);
 			syncAnimatedParts(tile.hatch, !isStorage);
-			soundPlayed = true;
 		}
 
 		//Build background
 		startBackground()
-				.withBox(IIReference.GUI_BG_STEEL, 0, 0, 176, 128+8)
+				.withBox(DecoTextures.BG_STEEL, 0, 0, 176, 128+8)
 				.withTitleBar(tile)
-				.withBox(IIReference.GUI_BG_WOODEN, 0, 128+8, 176, 92)
+				.withBox(DecoTextures.BG_WOODEN, DecoTextures.TEMPLATE_ROUND_WOODEN, 0, 128+8, 176, 92)
 				.withInventoryTitleBar()
 
 				.withNextLayer()
-				.withBox(IIReference.GUI_BG_STEEL, IIReference.RES_TEXTURES_DECO_TEMPLATE_SQUARE, 0, 8, 32, 120)
+				.withBox(DecoTextures.BG_STEEL, DecoTextures.TEMPLATE_SQUARE, 0, 8, 32, 120)
 				.conditionally(isStorage,
 						b -> b
-								.withBox(IIReference.GUI_BG_STEEL, IIReference.RES_TEXTURES_DECO_TEMPLATE_ROUND, 128-32+16+32, 8, 32, 120)
+								.withBox(DecoTextures.BG_STEEL, DecoTextures.TEMPLATE_ROUND, 128-32+16+32, 8, 32, 120)
 								.withInventorySlots(SlotStyle.VANILLA, container.punchtapeStorage)
 				)
 				.withInventorySlots(SlotStyle.VANILLA, container.playerInventory)
@@ -144,8 +138,6 @@ public class GuiDataInputMachine extends DecoGui<TileEntityDataInputMachine, Con
 
 		//Add tabs and energy bars
 		addComponents(getCommonParts(tile));
-
-		addWidget(new DecoManualWidget());
 
 		//Add storage display and bars or the variable list, if in the "variables" tab
 		if(isStorage)
@@ -163,7 +155,7 @@ public class GuiDataInputMachine extends DecoGui<TileEntityDataInputMachine, Con
 			);
 			addComponent(new DecoBar(128+32-8+2, 24)
 					.withHeight(95)
-					.withTemplate(DecoGuiUtils.BAR_ELECTRIC_ENERGY.apply(tile.energyStorage))
+					.withTemplate(DecoTemplates.BAR_ELECTRIC_ENERGY.apply(tile.energyStorage))
 			);
 		}
 		else //List the variables in the packet
@@ -176,12 +168,12 @@ public class GuiDataInputMachine extends DecoGui<TileEntityDataInputMachine, Con
 							.withGuiSaveAction(gui -> this.scroll = gui.getScroll())
 							//Display
 							.withDisplayFunction(new DecoEntryPanelBuilder<DataVariable>()
-									.withBackground(IIReference.GUI_BG_PAPER)
-									.withBackgroundMask(IIReference.RES_TEXTURES_DECO_TEMPLATE_TICKET)
+									.withBackground(DecoTextures.BG_PAPER)
+									.withBackgroundMask(DecoTextures.TEMPLATE_TICKET)
 
 									//Duplicate / Edit / Remove Buttons
 									.withComponent(p -> new DecoButton(p.width-17-16-14+3, 2)
-											.withTemplate(DecoGuiUtils.LIST_BUTTON_DUPLICATE_TEMPLATE)
+											.withTemplate(DecoTemplates.ACTION_BUTTON_DUPLICATE)
 											.withOnLMBPressed(() -> {
 												DataVariable current = p.getCurrentElement();
 												char name = findNextFreeVariableName();
@@ -191,13 +183,13 @@ public class GuiDataInputMachine extends DecoGui<TileEntityDataInputMachine, Con
 											})
 									)
 									.withComponent(p -> new DecoButton(p.width-17-16+3, 2)
-											.withTemplate(DecoGuiUtils.LIST_BUTTON_EDIT_TEMPLATE)
+											.withTemplate(DecoTemplates.ACTION_BUTTON_EDIT)
 											.withOnLMBPressed(() -> {
 												editVariable(p.getCurrentElement());
 											})
 									)
 									.withComponent(p -> new DecoButton(p.width-17+1, 2)
-											.withTemplate(DecoGuiUtils.LIST_BUTTON_REMOVE_TEMPLATE)
+											.withTemplate(DecoTemplates.ACTION_BUTTON_REMOVE)
 											.withOnLMBPressed(() -> {
 												p.getCurrentList().removeEntry(p.getCurrentElement());
 												IIPacketHandler.sendToServer(new MessageIITileSync(tile, onSaveTileData()));
@@ -244,7 +236,7 @@ public class GuiDataInputMachine extends DecoGui<TileEntityDataInputMachine, Con
 	public void onGuiClosed()
 	{
 		//Close the hatches
-		if(!changeGUIFlag)
+		if(!refreshGUIFlag)
 		{
 			syncAnimatedParts(tile.drawer, false);
 			syncAnimatedParts(tile.hatch, false);

@@ -7,6 +7,8 @@ import pl.pabilo8.immersiveintelligence.api.utils.IAdvancedMultiblock;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.BlockIIMetalMultiblock1.MetalMultiblocks1;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityRadar;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
 
@@ -14,12 +16,15 @@ import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctur
 public class MultiblockRadar extends MultiblockStuctureBase<TileEntityRadar>
 {
 	public static MultiblockRadar INSTANCE;
+	public final ResLoc animationDish;
 
 	public MultiblockRadar()
 	{
 		super(new ResourceLocation(ImmersiveIntelligence.MODID, "multiblocks/radar"));
 		offset = new Vec3i(4, 0, 0);
 		INSTANCE = this;
+
+		animationDish = ResLoc.of(IIReference.RES_II, "radar/dish");
 	}
 
 	@Override

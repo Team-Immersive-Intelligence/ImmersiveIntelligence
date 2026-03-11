@@ -1,8 +1,11 @@
 package pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage;
 
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextFormatting;
+import pl.pabilo8.immersiveintelligence.api.DustTank;
 import pl.pabilo8.immersiveintelligence.api.crafting.DustStack;
 import pl.pabilo8.immersiveintelligence.api.crafting.DustUtils;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
 import javax.annotation.Nonnull;
@@ -17,7 +20,7 @@ import java.util.List;
  **/
 public class DecoDustTank extends DecoTankBase<DecoDustTank, DustStack>
 {
-	private DustStack dustStack = null;
+	private DustTank tank = null;
 	private int capacity = 1;
 
 	public DecoDustTank(int x, int y)
@@ -25,9 +28,9 @@ public class DecoDustTank extends DecoTankBase<DecoDustTank, DustStack>
 		super(x, y);
 	}
 
-	public DecoDustTank withDustTank(DustStack dustStack, int capacity)
+	public DecoDustTank withDustTank(DustTank tank, int capacity)
 	{
-		this.dustStack = dustStack;
+		this.tank = tank;
 		this.capacity = capacity;
 		return this;
 	}
@@ -42,7 +45,7 @@ public class DecoDustTank extends DecoTankBase<DecoDustTank, DustStack>
 	@Override
 	protected List<DustStack> getContents()
 	{
-		return dustStack==null||dustStack.amount==0?null: Collections.singletonList(dustStack);
+		return tank==null?null: Collections.singletonList(tank.getDustStack());
 	}
 
 	@Override
@@ -61,13 +64,13 @@ public class DecoDustTank extends DecoTankBase<DecoDustTank, DustStack>
 	@Override
 	public ResourceLocation getResourceTexture(@Nonnull DustStack dustStack)
 	{
-		return new ResourceLocation("minecraft:textures/blocks/sand");
+		return DecoTextures.COMPONENT_TANK_DUST;
 	}
 
 	@Override
 	protected void addResourceTooltip(List<String> tooltip, DustStack dustStack, int tankCapacity)
 	{
 		tooltip.add(DustUtils.getDustName(dustStack));
-		tooltip.add(dustStack.amount+" mB");
+		tooltip.add(TextFormatting.GRAY+""+dustStack.amount+" mB");
 	}
 }

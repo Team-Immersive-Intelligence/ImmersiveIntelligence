@@ -26,15 +26,22 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.event.HoverEvent;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
+import net.minecraftforge.items.wrapper.CombinedInvWrapper;
+import net.minecraftforge.items.wrapper.EntityArmorInvWrapper;
+import net.minecraftforge.items.wrapper.EntityHandsInvWrapper;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.component.EntityGasCloud;
+import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoProjectile;
 import pl.pabilo8.immersiveintelligence.common.entity.hans.HansAnimations;
 import pl.pabilo8.immersiveintelligence.common.entity.hans.HansAnimations.*;
 import pl.pabilo8.immersiveintelligence.common.entity.hans.HansPathNavigate;
@@ -44,7 +51,6 @@ import pl.pabilo8.immersiveintelligence.common.entity.hans.tasks.hand_weapon.AIH
 import pl.pabilo8.immersiveintelligence.common.entity.hans.tasks.idle.AIHansKazachok;
 import pl.pabilo8.immersiveintelligence.common.entity.hans.tasks.idle.AIHansSalute;
 import pl.pabilo8.immersiveintelligence.common.entity.hans.tasks.idle.AIHansTimedLookAtEntity;
-import pl.pabilo8.immersiveintelligence.common.entity.vehicle.towable.gun.EntityFieldHowitzer;
 import pl.pabilo8.immersiveintelligence.common.item.armor.ItemIILightEngineerHelmet;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
@@ -83,10 +89,10 @@ public class EntityHans extends EntityCreature implements INpc
 	private static final DataParameter<NBTTagCompound> DATA_MARKER_SPEECH = EntityDataManager.createKey(EntityHans.class, DataSerializers.COMPOUND_TAG);
 	public static boolean INFINITE_AMMO = false;
 	public final NonNullList<ItemStack> mainInventory = NonNullList.withSize(27, ItemStack.EMPTY);
-	private final net.minecraftforge.items.IItemHandlerModifiable handHandler = new net.minecraftforge.items.wrapper.EntityHandsInvWrapper(this);
-	private final net.minecraftforge.items.IItemHandlerModifiable armorHandler = new net.minecraftforge.items.wrapper.EntityArmorInvWrapper(this);
-	private final net.minecraftforge.items.IItemHandlerModifiable invHandler = new ItemStackHandler(this.mainInventory);
-	private final net.minecraftforge.items.IItemHandler joinedHandler = new net.minecraftforge.items.wrapper.CombinedInvWrapper(armorHandler, handHandler, invHandler);
+	private final IItemHandlerModifiable handHandler = new EntityHandsInvWrapper(this);
+	private final IItemHandlerModifiable armorHandler = new EntityArmorInvWrapper(this);
+	private final IItemHandlerModifiable invHandler = new ItemStackHandler(this.mainInventory);
+	private final IItemHandler joinedHandler = new CombinedInvWrapper(armorHandler, handHandler, invHandler);
 	public HansLegAnimation prevLegAnimation = HansLegAnimation.STANDING;
 	public HansLegAnimation legAnimation = HansLegAnimation.STANDING;
 	public int legAnimationTimer = 0;
@@ -324,10 +330,13 @@ public class EntityHans extends EntityCreature implements INpc
 		//Call other hanses for help when attacked
 		this.targetTasks.addTask(2, new AIHansAlertOthers(this, true));
 
-		this.tasks.addTask(2, new AIHansHolsterWeapon(this));
+		this.tasks.addTask(3, new AIHansHolsterWeapon(this));
 		updateWeaponTasks();
 
+		//this.tasks.addTask(4, new EntityAIAvoidEntity<>(this, EntityAmmoGrenade.class, 8.0F, 0.6f, 0.7f));
+
 		this.tasks.addTask(5, new EntityAIAvoidEntity<>(this, EntityGasCloud.class, 8.0F, 0.6f, 0.7f));
+		this.tasks.addTask(5, new EntityAIAvoidEntity<>(this, EntityAmmoProjectile.class, 8.0F, 0.6f, 0.7f));
 		//this.tasks.addTask(6, new AIHansIdle(this));
 		//this.tasks.addTask(7, new EntityAIWatchClosest(this, EntityLiving.class, 6.0F));
 
@@ -363,8 +372,9 @@ public class EntityHans extends EntityCreature implements INpc
 				tasks.addTask(0, vehicleTask = new AIHansMachinegun(this));
 			else if(entity instanceof EntityMortar)
 				tasks.addTask(0, vehicleTask = new AIHansMortar(this));
-			else if(entity.getLowestRidingEntity() instanceof EntityFieldHowitzer)
-				tasks.addTask(0, vehicleTask = new AIHansHowitzer(this));
+			//TODO: 01.10.2025 create an universal vehicle task
+			/*else if(entity.getLowestRidingEntity() instanceof EntityFieldHowitzer)
+				tasks.addTask(0, vehicleTask = new AIHansHowitzer(this));*/
 			return true;
 		}
 		return false;
@@ -602,16 +612,16 @@ public class EntityHans extends EntityCreature implements INpc
 
 	public boolean isValidTarget(Entity entity)
 	{
-		return entity instanceof IMob||((entity instanceof EntityPlayer||entity instanceof EntityHans||entity instanceof EntityEmplacementWeapon||entity instanceof EntityIronGolem)&&entity.getTeam()!=this.getTeam());
+		return entity instanceof IMob||((entity instanceof EntityPlayer||entity instanceof EntityHans||entity instanceof EntityIronGolem)&&entity.getTeam()!=this.getTeam());
 	}
 
 	public void sendPlayerMessage(EntityPlayer player, String text)
 	{
 		ItemStack helmet = getItemStackFromSlot(EntityEquipmentSlot.HEAD);
 		if(helmet.getItem() instanceof ItemIILightEngineerHelmet&&IIContent.itemLightEngineerHelmet.getUpgrades(helmet).hasKey("gasmask"))
-			ChatUtils.sendServerNoSpamMessages(player, new TextComponentTranslation("chat.type.text", this.getDisplayName(), net.minecraftforge.common.ForgeHooks.newChatWithLinks("*Hans Gasmask Noises*")));
+			ChatUtils.sendServerNoSpamMessages(player, new TextComponentTranslation("chat.type.text", this.getDisplayName(), ForgeHooks.newChatWithLinks("*Hans Gasmask Noises*")));
 		else
-			ChatUtils.sendServerNoSpamMessages(player, new TextComponentTranslation("chat.type.text", this.getDisplayName(), net.minecraftforge.common.ForgeHooks.newChatWithLinks(text)));
+			ChatUtils.sendServerNoSpamMessages(player, new TextComponentTranslation("chat.type.text", this.getDisplayName(), ForgeHooks.newChatWithLinks(text)));
 	}
 
 	protected SoundEvent getHurtSound(@Nonnull DamageSource damageSourceIn)

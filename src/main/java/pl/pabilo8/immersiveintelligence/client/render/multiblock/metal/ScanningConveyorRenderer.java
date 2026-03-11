@@ -3,11 +3,13 @@ package pl.pabilo8.immersiveintelligence.client.render.multiblock.metal;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.block.model.IBakedModel;
-import net.minecraft.util.Tuple;
-import pl.pabilo8.immersiveintelligence.client.render.IIMultiblockRenderer;
-import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer.RegisteredTileRenderer;
-import pl.pabilo8.immersiveintelligence.client.util.amt.*;
+import net.minecraftforge.client.model.obj.OBJModel;
+import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
+import pl.pabilo8.immersiveintelligence.client.util.amt.animation.IIAnimationCompiledMap;
+import pl.pabilo8.immersiveintelligence.client.util.amt.animation.IIBooleanAnimation;
+import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTModel;
+import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IIMultiblockRenderer;
+import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IITileRenderer.RegisteredTileRenderer;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityScanningConveyor;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
@@ -20,26 +22,26 @@ import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 @RegisteredTileRenderer(name = "multiblock/scanning_conveyor", clazz = TileEntityScanningConveyor.class)
 public class ScanningConveyorRenderer extends IIMultiblockRenderer<TileEntityScanningConveyor>
 {
-	AMT[] model;
+	AMTModel model;
 	private IIBooleanAnimation active;
 	private IIAnimationCompiledMap photo;
 
 	@Override
-	public void compileModels(Tuple<IBlockState, IBakedModel> sModel)
+	public void compileModels(IBlockState state, OBJModel model)
 	{
-		model = IIAnimationUtils.getAMT(sModel, IIAnimationLoader.loadHeader(sModel.getSecond()));
+		this.model = new AMTModel(state, model);
 		active = new IIBooleanAnimation(
-				IIAnimationUtils.getPart(model, "conveyor_on"),
-				IIAnimationUtils.getPart(model, "conveyor_off")
+				this.model.getPart("conveyor_on"),
+				this.model.getPart("conveyor_off")
 		);
-		photo = IIAnimationCompiledMap.create(model, ResLoc.of(IIReference.RES_II, "scanning_conveyor/photo"));
+		photo = IIAnimationCompiledMap.create(this.model, ResLoc.of(IIReference.RES_II, "scanning_conveyor/photo"));
 	}
 
 	@Override
 	protected void nullifyModels()
 	{
 		super.nullifyModels();
-		model = IIAnimationUtils.disposeOf(model);
+		model = AMTUtils.disposeOf(model);
 	}
 
 	@Override
@@ -58,8 +60,7 @@ public class ScanningConveyorRenderer extends IIMultiblockRenderer<TileEntitySca
 					break;
 				}
 
-		for(AMT amt : model)
-			amt.render(tes, buf);
+		model.render(tes, buf);
 
 
 	}
@@ -69,7 +70,6 @@ public class ScanningConveyorRenderer extends IIMultiblockRenderer<TileEntitySca
 	{
 		active.apply(false);
 		photo.apply(0);
-		for(AMT amt : model)
-			amt.render(tes, buf);
+		model.render(tes, buf);
 	}
 }

@@ -1,7 +1,7 @@
 package pl.pabilo8.immersiveintelligence.common;
 
 import blusunrize.immersiveengineering.api.ApiUtils;
-import blusunrize.immersiveengineering.api.crafting.IngredientStack;
+import blusunrize.immersiveengineering.api.Lib;
 import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorage;
 import blusunrize.immersiveengineering.api.energy.wires.IImmersiveConnectable;
 import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler;
@@ -14,6 +14,7 @@ import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementManager;
 import net.minecraft.advancements.PlayerAdvancements;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -28,6 +29,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidUtil;
@@ -42,9 +44,6 @@ import net.minecraftforge.oredict.OreDictionary;
 import org.apache.commons.lang3.ArrayUtils;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeItemStack;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
-import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 import pl.pabilo8.immersiveintelligence.common.compat.BaublesHelper;
 import pl.pabilo8.immersiveintelligence.common.compat.IICompatModule;
 import pl.pabilo8.immersiveintelligence.common.util.ISerializableEnum;
@@ -53,8 +52,11 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.nio.ByteBuffer;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 /**
@@ -159,13 +161,13 @@ public class IIUtils
 			{
 				if(tanks[tank].getTankProperties()[0].getContents()==null)
 					return false;
-				emptyContainer = blusunrize.immersiveengineering.common.util.Utils.fillFluidContainer(tanks[tank], inventory.get(bucketInputSlot), inventory.get(bucketOutputSlot), null);
+				emptyContainer = Utils.fillFluidContainer(tanks[tank], inventory.get(bucketInputSlot), inventory.get(bucketOutputSlot), null);
 			}
 			else
 			{
 				if(capability.getTankProperties()[0].getContents()==null)
 					return false;
-				emptyContainer = blusunrize.immersiveengineering.common.util.Utils.drainFluidContainer(tanks[tank], inventory.get(bucketInputSlot), inventory.get(bucketOutputSlot), null);
+				emptyContainer = Utils.drainFluidContainer(tanks[tank], inventory.get(bucketInputSlot), inventory.get(bucketOutputSlot), null);
 			}
 
 			if(amount_prev!=tanks[tank].getFluidAmount())
@@ -196,13 +198,19 @@ public class IIUtils
 				int accepted = output.fill(out, true);
 				if(accepted > 0)
 				{
-					int drained = output.fill(blusunrize.immersiveengineering.common.util.Utils.copyFluidStackWithAmount(out, Math.min(out.amount, accepted), false), true);
+					int drained = output.fill(Utils.copyFluidStackWithAmount(out, Math.min(out.amount, accepted), false), true);
 					tank.drain(drained, true);
 					return true;
 				}
 			}
 		}
 		return false;
+	}
+
+	public static String getFluidNameOverlayText(@Nullable FluidStack stack)
+	{
+		return (stack==null||stack.amount <= 0)?I18n.format(Lib.GUI+"empty"):
+				(stack.getLocalizedName()+": "+stack.amount);
 	}
 
 	public static char cycleDataPacketChars(char current, boolean forward, boolean hasEmpty)
@@ -321,13 +329,7 @@ public class IIUtils
 	public static boolean compareBlockstateOredict(IBlockState state, String oreName)
 	{
 		ItemStack stack = new ItemStack(state.getBlock(), 1, state.getBlock().getMetaFromState(state));
-		return blusunrize.immersiveengineering.common.util.Utils.compareToOreName(stack, oreName);
-	}
-
-
-	public static float getMaxClientProgress(float current, float required, int parts)
-	{
-		return current-(current%(required/parts));
+		return Utils.compareToOreName(stack, oreName);
 	}
 
 
@@ -345,23 +347,6 @@ public class IIUtils
 	public static String getPowerLevelString(int min, int max)
 	{
 		return String.format("%s/%s IF", min, max);
-	}
-
-	public static IngredientStack ingredientFromData(DataType dataType)
-	{
-		if(dataType instanceof DataTypeItemStack)
-			return new IngredientStack((((DataTypeItemStack)dataType).value.copy()));
-		else if(dataType instanceof DataTypeString)
-			return new IngredientStack(dataType.toString());
-		else
-			return new IngredientStack("*");
-	}
-
-	public static DataPacket getSimpleCallbackMessage(DataPacket packet, String parameter, DataType value)
-	{
-		packet.set('c', new DataTypeString(parameter));
-		packet.set('g', value);
-		return packet;
 	}
 
 	public static void giveOrDropCasingStack(@Nonnull Entity entity, ItemStack stack)
@@ -414,6 +399,14 @@ public class IIUtils
 			Utils.dropStackAtPos(entity.world, entity.getPosition(), stack);
 	}
 
+	@Nullable
+	public static <T> T requireMaster(@Nullable T object, @Nonnull Function<T, T> master)
+	{
+		if(object==null)
+			return null;
+		return master.apply(object);
+	}
+
 	/**
 	 * <i>Trust me, I'm an Engineer!</i><br>
 	 * Returns a value of an annotation for an enum extending {@link ISerializableEnum}<br>
@@ -443,8 +436,6 @@ public class IIUtils
 			return o.getClass().getAnnotation(annotationClass);
 		return null;
 	}
-
-	//REFACTOR: 27.03.2024 replace lambda variant of this in project
 
 	/**
 	 * @param en   enum class
@@ -478,4 +469,22 @@ public class IIUtils
 		player.sendStatusMessage(new TextComponentTranslation(messageFormat, args), true);
 	}
 
+	public static UUID getBlockPosUUID(BlockPos pos)
+	{
+		ByteBuffer buffer = ByteBuffer.allocate(16);
+		buffer.putInt(1234); //Tile Entity
+		buffer.putInt(pos.getX());
+		buffer.putInt(pos.getY());
+		buffer.putInt(pos.getZ());
+		return UUID.nameUUIDFromBytes(buffer.array());
+	}
+
+	@Nullable
+	public static <T> T getTileCapability(World world, BlockPos posIn, Capability<T> capability, EnumFacing facing)
+	{
+		TileEntity te = world.getTileEntity(posIn);
+		if(te==null||!te.hasCapability(capability, facing))
+			return null;
+		return te.getCapability(capability, facing);
+	}
 }

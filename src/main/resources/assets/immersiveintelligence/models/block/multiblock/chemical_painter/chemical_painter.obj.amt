@@ -1,0 +1,16 @@
+{
+  "origins": {
+    "glass": [7, 29.50462, 1.26072],
+    "lamp": [6.5, 42.5, 9],
+    "platform": [7, 14.6, 8],
+    "atomizer": [7, 39, 21.66667],
+    "atomizer_paint": [7, 39, 13],
+    "item": [-33, 18, 8],
+    "item_paint": [7, 17, 8],
+    "paint_big": [-4, 35, -10],
+    "paint_small": [21, 35, -9]
+  },
+  "hierarchy": {
+    "atomizer_paint": "atomizer"
+  }
+}

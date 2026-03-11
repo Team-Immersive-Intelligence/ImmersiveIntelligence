@@ -2,7 +2,7 @@
   "type": "forge:ore_shaped",
   "pattern": [
     " A ",
-    "AAA",
+    "APA",
     "BA "
   ],
   "key": {
@@ -13,6 +13,10 @@
     "B": {
       "item": "immersiveengineering:tool",
       "data": 0
+    },
+    "P": {
+      "type": "forge:ore_dict",
+      "ore": "dustPhosphorus"
     }
   },
   "result": {

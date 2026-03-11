@@ -1,9 +1,9 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity;
 
 import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorageAdvanced;
+import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
 import org.apache.commons.lang3.ArrayUtils;
@@ -11,8 +11,13 @@ import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IIDataHandlingUtils;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeExpression;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
+import pl.pabilo8.immersiveintelligence.api.upgrade.IManagedUpgradableDevice;
+import pl.pabilo8.immersiveintelligence.api.upgrade.Upgrade;
+import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeManager;
+import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeUtils.MachineStyle;
 import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.ArithmeticLogicMachine;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.MultiblockArithmeticLogicMachine;
@@ -27,7 +32,6 @@ import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockIn
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -35,13 +39,9 @@ import javax.annotation.Nullable;
  * @ii-approved 0.3.1
  * @since 28.06.2019
  */
-public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockIIGeneric<TileEntityArithmeticLogicMachine> implements IIIGuiMultiblockTile, IBooleanAnimatedPartsBlock
+public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockIIGeneric<TileEntityArithmeticLogicMachine>
+		implements IIIGuiMultiblockTile, IBooleanAnimatedPartsBlock, IManagedUpgradableDevice<TileEntityArithmeticLogicMachine>
 {
-	/**
-	 * ALM has 4 circuits by default, 6 with upgrade<br>
-	 * and 16 storage slots for additional circuits
-	 */
-	public static final int CIRCUITS_BASE = 4, CIRCUITS_UPGRADED = 6, STORAGE_SLOTS = 16;
 	/**
 	 * Used for GUI animations
 	 */
@@ -49,19 +49,22 @@ public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockIIGene
 	public MultiblockInteractablePart door, keyboard, drawer;
 	@SyncNBT
 	public DataPacket memory;
+	@SyncNBT(name = "upgrades", events = SyncEvents.TILE_UPGRADES_MODIFIED)
+	public UpgradeManager<TileEntityArithmeticLogicMachine> upgradeManager;
 
 	public TileEntityArithmeticLogicMachine()
 	{
 		super(MultiblockArithmeticLogicMachine.INSTANCE);
 		//basic machine properties
-		energyStorage = new FluxStorageAdvanced(ArithmeticLogicMachine.energyCapacity);
-		inventory = NonNullList.withSize(CIRCUITS_UPGRADED+STORAGE_SLOTS, ItemStack.EMPTY);
-		memory = new DataPacket();
+		this.energyStorage = new FluxStorageAdvanced(ArithmeticLogicMachine.energyCapacity);
+		this.inventory = NonNullList.withSize(MultiblockArithmeticLogicMachine.CIRCUITS_UPGRADED+MultiblockArithmeticLogicMachine.STORAGE_SLOTS, ItemStack.EMPTY);
+		this.upgradeManager = new UpgradeManager<>(this);
+		this.memory = new DataPacket();
 
 		//interactable parts
-		door = new MultiblockInteractablePart(0, 30, 1);
-		keyboard = new MultiblockInteractablePart(1, 10, 1);
-		drawer = new MultiblockInteractablePart(2, 20, 1);
+		this.door = new MultiblockInteractablePart(0, 30, 1);
+		this.keyboard = new MultiblockInteractablePart(1, 10, 1);
+		this.drawer = new MultiblockInteractablePart(2, 20, 1);
 	}
 
 	@Override
@@ -71,6 +74,7 @@ public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockIIGene
 		door = null;
 		memory = null;
 		keyboard = null;
+		upgradeManager = null;
 	}
 
 	@Override
@@ -98,6 +102,7 @@ public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockIIGene
 		door.update();
 		drawer.update();
 		keyboard.update();
+		upgradeManager.update();
 	}
 
 	@Override
@@ -127,7 +132,7 @@ public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockIIGene
 		DataPacket newPacket = packet.clone();
 
 		//Process received packet with circuits
-		int circuitsAmount = CIRCUITS_BASE; //TODO: 08.01.2024 6 circuits with upgrade
+		int circuitsAmount = isUpgradeInstalled(IIContent.UPGRADE_CIRCUIT_RACKS)?MultiblockArithmeticLogicMachine.CIRCUITS_UPGRADED: MultiblockArithmeticLogicMachine.CIRCUITS_BASE;
 		boolean[] circuit = new boolean[circuitsAmount];
 		DataPacket[] cPacket = new DataPacket[circuitsAmount];
 
@@ -178,13 +183,6 @@ public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockIIGene
 		return true;
 	}
 
-	@Nullable
-	@Override
-	public TileEntity getGuiMaster()
-	{
-		return master();
-	}
-
 	@Override
 	public IIGUI getGUI()
 	{
@@ -215,5 +213,43 @@ public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockIIGene
 				world.playSound(null, getPos(), state?IISounds.drawerOpen: IISounds.drawerClose, SoundCategory.BLOCKS, 0.25F, 1f);
 			IIPacketHandler.sendToClient(this, new MessageBooleanAnimatedPartsSync(result, this));
 		}
+	}
+
+	//--- IUpgradeStorageMachine ---//
+
+	@Nonnull
+	@Override
+	public UpgradeManager<TileEntityArithmeticLogicMachine> getUpgradeManager()
+	{
+		return upgradeManager;
+	}
+
+	@Override
+	public MachineStyle getUpgradableMachineStyle()
+	{
+		return MachineStyle.STEEL;
+	}
+
+	@Override
+	public boolean removeUpgrade(Upgrade upgrade)
+	{
+		if(IManagedUpgradableDevice.super.removeUpgrade(upgrade))
+		{
+			if(upgrade==IIContent.UPGRADE_CIRCUIT_RACKS)
+			{
+				for(int i = MultiblockArithmeticLogicMachine.CIRCUITS_BASE; i < MultiblockArithmeticLogicMachine.CIRCUITS_UPGRADED; i++)
+					if(!inventory.get(i).isEmpty())
+					{
+						ItemStack stack = inventory.get(i);
+						Utils.dropStackAtPos(world, getPos().offset(facing), stack, facing.getOpposite());
+						inventory.set(i, ItemStack.EMPTY);
+					}
+			}
+			else if(upgrade==IIContent.UPGRADE_MEMORY)
+				memory = new DataPacket();
+			updateTileForEvent(SyncEvents.TILE_UPGRADES_MODIFIED);
+			return true;
+		}
+		return false;
 	}
 }

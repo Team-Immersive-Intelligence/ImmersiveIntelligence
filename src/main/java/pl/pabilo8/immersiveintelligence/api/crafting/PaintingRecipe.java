@@ -2,18 +2,21 @@ package pl.pabilo8.immersiveintelligence.api.crafting;
 
 import blusunrize.immersiveengineering.api.ApiUtils;
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
-import blusunrize.immersiveengineering.api.crafting.MultiblockRecipe;
 import com.google.common.collect.Lists;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.NonNullList;
-import net.minecraftforge.fluids.FluidStack;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityChemicalPainter;
+import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIMultiblockRecipe;
+import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIRecipeLayout;
+import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIRecipeLayoutBuilder;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.sound.IISoundAnimation;
 
-import java.util.*;
+import javax.annotation.Nullable;
+import java.util.Arrays;
+import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
@@ -21,61 +24,31 @@ import java.util.stream.Collectors;
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 08.08.2019
  */
-public class PaintingRecipe extends MultiblockRecipe
+public class PaintingRecipe extends IIMultiblockRecipe
 {
-	public static LinkedList<PaintingRecipe> recipeList = new LinkedList<>();
 	public final BiFunction<IIColor, ItemStack, ItemStack> process;
 	public final IngredientStack itemInput;
+	public IISoundAnimation productionAnimation;
 	int paintAmount;
-	int totalProcessTime;
-	int totalProcessEnergy;
 
 	public PaintingRecipe(BiFunction<IIColor, ItemStack, ItemStack> process, Object itemInput, int energy, int time, int paintAmount)
 	{
+		super(ApiUtils.createIngredientStack(itemInput));
+
 		this.process = process;
 		this.itemInput = ApiUtils.createIngredientStack(itemInput);
-		this.totalProcessEnergy = (int)Math.floor((float)energy);
-		this.totalProcessTime = (int)Math.floor((float)time);
 		this.paintAmount = (int)Math.floor((float)paintAmount);
 
 		this.inputList = Lists.newArrayList(this.itemInput);
 		this.outputList = getExampleColoredItems();
+
+		this.setTimeAndEnergy(time, energy);
 	}
 
+	@Deprecated
 	public static PaintingRecipe addRecipe(BiFunction<IIColor, ItemStack, ItemStack> process, IngredientStack itemInput, int energy, int time, int paintAmount)
 	{
-		PaintingRecipe r = new PaintingRecipe(process, itemInput, energy, time, paintAmount);
-		recipeList.add(r);
-		return r;
-	}
-
-	public static List<PaintingRecipe> removeRecipesForInput(ItemStack stack)
-	{
-		List<PaintingRecipe> list = new ArrayList<>();
-		Iterator<PaintingRecipe> it = recipeList.iterator();
-		while(it.hasNext())
-		{
-			PaintingRecipe ir = it.next();
-			if(ir.itemInput.matchesItemStack(stack))
-			{
-				list.add(ir);
-				it.remove();
-			}
-		}
-		return list;
-	}
-
-	public static PaintingRecipe findRecipe(ItemStack input)
-	{
-		return recipeList.stream().filter(recipe -> recipe.itemInput.matchesItemStack(input)).findFirst().orElse(null);
-	}
-
-	public static PaintingRecipe loadFromNBT(NBTTagCompound nbt)
-	{
-		IngredientStack item_input = IngredientStack.readFromNBT(nbt.getCompoundTag("item_input"));
-		FluidStack fluid_input = FluidStack.loadFluidStackFromNBT(nbt.getCompoundTag("fluid_input"));
-
-		return findRecipe(item_input.stack);
+		return new PaintingRecipe(process, itemInput, energy, time, paintAmount);
 	}
 
 	private NonNullList<ItemStack> getExampleColoredItems()
@@ -90,38 +63,49 @@ public class PaintingRecipe extends MultiblockRecipe
 	}
 
 	@Override
-	public NonNullList<ItemStack> getActualItemOutputs(TileEntity te)
-	{
-		if(te instanceof TileEntityChemicalPainter)
-			return NonNullList.from(ItemStack.EMPTY, process.apply(((TileEntityChemicalPainter)te).color, ((TileEntityChemicalPainter)te).inventory.get(0).copy()));
-		return NonNullList.from(ItemStack.EMPTY);
-	}
-
-	@Override
-	public int getMultipleProcessTicks()
-	{
-		return 0;
-	}
-
-	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
 	{
 		nbt.setTag("item_input", itemInput.writeToNBT(new NBTTagCompound()));
 		return nbt;
 	}
 
-	public int getTotalProcessTime()
+	@Override
+	protected void loadClientSideContent()
 	{
-		return this.totalProcessTime;
+		this.productionAnimation = new IISoundAnimation(IIReference.RES_II.with("chemical_painter/production_sounds"))
+				.compile(this.getTotalProcessTime());
 	}
 
-	public int getTotalProcessEnergy()
+	@Nullable
+	@Override
+	protected IIRecipeLayout initRecipeLayout()
 	{
-		return this.totalProcessEnergy;
+		return new IIRecipeLayoutBuilder(144, 68)
+				.withInputSlot(2, 26, itemInput)
+				.withOutputSlot(144-20, 26, new IngredientStack(getExampleColoredItems()))
+				.withMultiblockModel(32+8-4, -10)
+				.withTimeInfo()
+				.withPowerInfo()
+				.build();
 	}
 
-	public int getPaintAmount()
+	public int getCyanAmount(IIColor color)
 	{
-		return paintAmount;
+		return (int)(paintAmount*color.getCMYK()[0]);
+	}
+
+	public int getMagentaAmount(IIColor color)
+	{
+		return (int)(paintAmount*color.getCMYK()[1]);
+	}
+
+	public int getYellowAmount(IIColor color)
+	{
+		return (int)(paintAmount*color.getCMYK()[2]);
+	}
+
+	public int getBlackAmount(IIColor color)
+	{
+		return (int)(paintAmount*color.getCMYK()[3]);
 	}
 }

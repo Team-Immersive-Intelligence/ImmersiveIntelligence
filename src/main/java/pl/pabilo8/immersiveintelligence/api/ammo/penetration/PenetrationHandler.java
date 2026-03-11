@@ -3,7 +3,7 @@ package pl.pabilo8.immersiveintelligence.api.ammo.penetration;
 import net.minecraft.util.SoundEvent;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.HitEffect;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.PenetrationHardness;
-import pl.pabilo8.immersiveintelligence.common.util.AdvancedSounds.HitSound;
+import pl.pabilo8.immersiveintelligence.common.util.sound.AdvancedSounds.HitSound;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

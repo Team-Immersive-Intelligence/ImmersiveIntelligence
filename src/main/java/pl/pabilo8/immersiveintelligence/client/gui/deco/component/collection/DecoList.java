@@ -2,12 +2,15 @@ package pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.util.Tuple;
+import net.minecraft.util.math.MathHelper;
 import org.apache.commons.lang3.tuple.Pair;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoEntryPanel;
+import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -17,6 +20,9 @@ import java.util.stream.Stream;
  **/
 public class DecoList<T> extends DecoScrolledCollection<DecoList<T>, T>
 {
+	protected Consumer<T> onEntryClicked = null;
+	private T lastHoveredEntry = null;
+
 	public DecoList(int x, int y)
 	{
 		super(x, y);
@@ -24,8 +30,34 @@ public class DecoList<T> extends DecoScrolledCollection<DecoList<T>, T>
 		//Mouse
 		withOnPressed((gui, mouseButton, mouseX, mouseY) ->
 				getHoveredPanel(mouseX, mouseY).map(pair ->
-						pair.getKey().decoMousePressed(ClientUtils.mc(), mouseY-pair.getValue(), mouseX-gui.x, mouseButton)
-				).orElse(false));
+						{
+							if(pair.getKey().decoMousePressed(ClientUtils.mc(), mouseX-gui.x, mouseY-pair.getValue(), mouseButton))
+								return true;
+							if(this.onEntryClicked!=null)
+							{
+								this.onEntryClicked.accept(lastHoveredEntry);
+								return true;
+							}
+							return false;
+						}
+				).orElseGet(() -> {
+					//Click on scrollbar
+					if(maxScroll > 0&&IIMath.isPointInRectangle(gui.x+gui.width-8, gui.y, gui.x+gui.width, gui.y+gui.height, mouseX, mouseY))
+						return true;
+
+					if(this.onEntryClicked!=null)
+						this.onEntryClicked.accept(lastHoveredEntry = null);
+					return false;
+				}));
+		withOnDragged((gui, button, mouseX, mouseY) -> {
+			//Click on scrollbar
+			if(maxScroll > 0&&IIMath.isPointInRectangle(gui.x+gui.width-8, gui.y, gui.x+gui.width, gui.y+gui.height, mouseX, mouseY))
+			{
+				this.scroll = (int)MathHelper.clamp((float)(mouseY-gui.y-7)/(float)(gui.height-14)*(float)maxScroll, 0, maxScroll);
+				return true;
+			}
+			return false;
+		});
 		withOnReleased((gui, mouseButton, mouseX, mouseY) ->
 				getHoveredPanel(mouseX, mouseY).map(pair ->
 						{
@@ -33,6 +65,13 @@ public class DecoList<T> extends DecoScrolledCollection<DecoList<T>, T>
 							return true;
 						}
 				).orElse(false));
+	}
+
+
+	public DecoList<T> withOnEntryClicked(Consumer<T> onClicked)
+	{
+		this.onEntryClicked = onClicked;
+		return this;
 	}
 
 	@Override
@@ -133,7 +172,7 @@ public class DecoList<T> extends DecoScrolledCollection<DecoList<T>, T>
 			Integer index = clicked.getFirst();
 			Integer heightOffset = clicked.getSecond();
 			//Apply the list element representation to the panel, so actions can affect it
-			panel.applyElement(entries.get(index));
+			panel.applyElement(this.lastHoveredEntry = entries.get(index));
 			return Optional.of(Pair.of(panel, heightOffset));
 		}
 		return Optional.empty();

@@ -48,7 +48,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.VehicleFuelHandler;
-import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationUtils;
+import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.util.block.ItemBlockIISlabs;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
@@ -135,7 +135,7 @@ public class ImmersivePetroleumHelper extends IICompatModule
 				GlStateManager.scale(0.5f, 0.5f, 0.5f);
 				GlStateManager.translate(-0.5f, -0.5f, 0.5f);
 				GlStateManager.enableBlend();
-				IIAnimationUtils.getBRD().renderBlockBrightness(block.getStateFromMeta(stack.getMetadata()), 1f);
+				AMTUtils.getBRD().renderBlockBrightness(block.getStateFromMeta(stack.getMetadata()), 1f);
 				GlStateManager.popMatrix();
 				event.setCanceled(true);
 			}

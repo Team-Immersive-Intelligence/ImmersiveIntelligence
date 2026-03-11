@@ -8,8 +8,9 @@ import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoCore;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoType;
-import pl.pabilo8.immersiveintelligence.client.util.amt.AMT;
-import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationUtils;
+import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
+import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTModel;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMT;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.EntityAmmoMissile;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
@@ -76,17 +77,17 @@ public class ModelAmmoMissile<T extends IAmmoType<T, E>, E extends EntityAmmoMis
 
 		//max horizontal and vertical progress times differ to look more natural
 
-		double progressHorizontal = Math.sin((IIAnimationUtils.getAnimationProgress(entity.ticksExisted%7, 7, false, partialTicks)-0.5)*2*Math.PI);
-		double progressVertical = Math.cos((IIAnimationUtils.getAnimationProgress(entity.ticksExisted%7, 7, false, partialTicks)-0.5)*2*Math.PI);
+		double progressHorizontal = Math.sin((AMTUtils.getAnimationProgress(entity.ticksExisted%7, 7, false, partialTicks)-0.5)*2*Math.PI);
+		double progressVertical = Math.cos((AMTUtils.getAnimationProgress(entity.ticksExisted%7, 7, false, partialTicks)-0.5)*2*Math.PI);
 		GlStateManager.translate(progressHorizontal*maxDrag, 0f, progressVertical*maxDrag);
 
 		super.renderAmmoComplete(entity, partialTicks);
 	}
 
 	@Override
-	protected void loadModels(AMT[] amt)
+	protected void loadModels(AMTModel amt)
 	{
 		super.loadModels(amt);
-		modelJet = IIAnimationUtils.getPart(amt, "jet_flame");
+		modelJet = amt.getPart("jet_flame");
 	}
 }

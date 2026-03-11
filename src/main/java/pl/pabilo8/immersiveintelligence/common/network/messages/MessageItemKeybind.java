@@ -14,6 +14,7 @@ import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine;
 import pl.pabilo8.immersiveintelligence.common.item.armor.ItemIILightEngineerHelmet;
 import pl.pabilo8.immersiveintelligence.common.item.armor.ItemIILightEngineerLeggings;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIGunBase;
@@ -54,8 +55,11 @@ public class MessageItemKeybind extends IIMessage
 		{
 			case KEYBIND_GUN_RELOAD:
 			{
-				if((equipped = player.getHeldItem(EnumHand.MAIN_HAND)).getItem() instanceof ItemIIGunBase)
-					ItemNBTHelper.setBoolean(equipped, "shouldReload", true);
+				equipped = player.getHeldItem(EnumHand.MAIN_HAND);
+				if(equipped.getItem() instanceof ItemIIGunBase)
+					ItemNBTHelper.setBoolean(equipped, ItemIIGunBase.SHOULD_RELOAD, true);
+				else if(equipped.getItem() instanceof ItemIIBulletMagazine)
+					ItemNBTHelper.setBoolean(equipped, ItemIIBulletMagazine.SHOULD_RELOAD, true);
 			}
 			break;
 			case KEYBIND_HEADGEAR:

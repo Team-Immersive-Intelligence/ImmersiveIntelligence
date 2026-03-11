@@ -1,82 +1,76 @@
 package pl.pabilo8.immersiveintelligence.client.gui.block;
 
-import blusunrize.immersiveengineering.client.ClientUtils;
-import blusunrize.immersiveengineering.client.gui.GuiIEContainerBase;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.player.EntityPlayer;
-import org.lwjgl.opengl.GL11;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.crafting.DustUtils;
-import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.Optional.Method;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoBar;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoDustTank;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoImage;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundBuilder.SlotStyle;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.*;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Filler;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityFiller;
+import pl.pabilo8.immersiveintelligence.common.compat.jei.JEIHelper;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerFiller;
-
-import java.util.ArrayList;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 18.08.2025
+ * @ii-approved 0.3.1
  * @since 10.07.2019
  */
-public class GuiFiller extends GuiIEContainerBase
+@DecoTemplate(name = "filler", category = DecoGuiCategory.PRODUCTION_TILE)
+public class GuiFiller extends DecoGui<TileEntityFiller, ContainerFiller>
 {
-	public static final String TEXTURE = ImmersiveIntelligence.MODID+":textures/gui/filler.png";
-	TileEntityFiller tile;
+	@DecoResource
+	public static final ResourceLocation TEXTURE = IIReference.RES_II.with("gui/filler");
+	private DecoImage imageProgress;
 
 	public GuiFiller(EntityPlayer player, TileEntityFiller tile)
 	{
-		super(new ContainerFiller(player, tile));
-		this.ySize = 168;
-		this.tile = tile;
-	}
-
-	/**
-	 * Draws the background layer of this container (behind the items).
-	 */
-	@Override
-	protected void drawGuiContainerBackgroundLayer(float f, int mx, int my)
-	{
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		ClientUtils.bindTexture(TEXTURE);
-		this.drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
-
-		if(!tile.dustStorage.isEmpty())
-		{
-			int stored = (int)(60*(tile.dustStorage.amount/(float)Filler.dustCapacity));
-			float[] rgb = DustUtils.getColor(tile.dustStorage).getFloatRGB();
-
-			GlStateManager.color(rgb[0], rgb[1], rgb[2]);
-			this.drawTexturedModalRect(guiLeft+56, guiTop+2+(60-stored), 176, 60-stored, 64, stored);
-			GlStateManager.color(1f, 1f, 1f);
-		}
-
-		IIClientUtils.drawPowerBar(guiLeft+161-4, guiTop+24, 7, 47, tile.getEnergyStored(null)/(float)tile.getMaxEnergyStored(null));
+		super(player, tile, IIGUI.FILLER);
 	}
 
 	@Override
-	public void drawScreen(int mx, int my, float partial)
+	public void onInit()
 	{
-		super.drawScreen(mx, my, partial);
-		this.renderHoveredToolTip(mx, my);
+		startBackground()
+				.withBox(null, 0, 0, 176, 76)
+				.withBox(DecoTextures.BG_STEEL, 152, 0, 24, 76)
+				//.withTitleBar(tile)
+				.withBox(DecoTextures.BG_WOODEN, DecoTextures.TEMPLATE_ROUND_WOODEN, 0, 76, 176, 92)
+				.withInventorySlots(SlotStyle.VANILLA, container.playerInventory)
+				.withInventorySlots(SlotStyle.IE_INPUT, container.inputSlot)
+				.withInventoryTitleBar()
+				.build();
 
-		ArrayList<String> tooltip = new ArrayList<>();
+		addComponents(
+				this.imageProgress = new DecoImage(54, 64-4)
+						.withSize(64, 15)
+						.withImageLocation(TEXTURE, true)
+						.withUV(64, 0, 0, 64, 15),
 
-		if(mx > guiLeft+161-4&&mx < guiLeft+168-4&&my > guiTop+24&&my < guiTop+71)
-			tooltip.add(IIUtils.getPowerLevelString(tile.energyStorage));
+				new DecoDustTank(54, -4)
+						.withSize(64, 64)
+						.withDustTank(tile.dustStorage, Filler.dustCapacity),
+				new DecoImage(120-4, 5+18-4)
+						.withSize(22, 22)
+						.withImageLocation(TEXTURE, true)
+						.withUV(64, 0, 15, 22, 37),
 
-		int stored = (int)(60*(tile.dustStorage.amount/(float)Filler.dustCapacity));
-		if(mx > guiLeft+56&&mx < guiLeft+56+60&&my > guiTop+2+(60-stored)&&my < guiTop+2+(60-stored)+stored)
-		{
-			tooltip.add(DustUtils.getDustName(tile.dustStorage));
-			tooltip.add(tile.dustStorage.amount+" mB");
-		}
+				new DecoBar(161-4, -4)
+						.withTemplate(DecoTemplates.BAR_ELECTRIC_ENERGY.apply(tile.energyStorage))
 
-		if(!tooltip.isEmpty())
-		{
-			ClientUtils.drawHoveringText(tooltip, mx, my, fontRenderer, guiLeft+xSize, -1);
-			RenderHelper.enableGUIStandardItemLighting();
-		}
+		);
+	}
+
+	@Override
+	@Method(modid = "jei")
+	public void onInitJEICompat()
+	{
+		JEIHelper.addRecipesDecoGuiLink(this.imageProgress, "ii.filler");
 	}
 }

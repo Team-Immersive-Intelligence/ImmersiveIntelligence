@@ -30,6 +30,7 @@ public abstract class DecoDataEditor<T extends DataType> extends DecoPanel
 		registerEditor(DataTypeNull.class, DecoDataEditorNull::new);
 		registerEditor(DataTypeItemStack.class, DecoDataEditorItemStack::new);
 		registerEditor(DataTypeFluidStack.class, DecoDataEditorFluidStack::new);
+		registerEditor(DataTypeLogisticTag.class, DecoDataEditorLogisticTag::new);
 		//registerEditor(DataPacketTypeAccessor.class, GuiDataEditorAccessor::new);
 	}
 

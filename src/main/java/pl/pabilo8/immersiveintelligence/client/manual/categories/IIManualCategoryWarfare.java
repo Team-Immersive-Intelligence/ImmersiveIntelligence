@@ -104,7 +104,7 @@ public class IIManualCategoryWarfare extends IIManualCategory
 				))
 				.addSource("magazine_blueprint", getSourceForItem(BlueprintCraftingRecipe.getTypedBlueprint("bullet_magazines")));
 		addEntry("weaponry/machinegun")
-				.addSource("machinegun", getSourceForItem(new ItemStack(IIContent.itemMachinegun)));
+				.addSource("machinegun", getSourceForItems(new ItemStack(IIContent.itemMachinegun)));
 		addEntry("weaponry/rifle")
 				.addSource("rifle", getSourceForItem(new ItemStack(IIContent.itemRifle)));
 		addEntry("weaponry/assault_rifle")
@@ -137,9 +137,9 @@ public class IIManualCategoryWarfare extends IIManualCategory
 		addEntry("weaponry/mortar")
 				.addSource("mortar", getSourceForItem(new ItemStack(IIContent.itemMortar)));
 		addEntry("weaponry/ammocrate")
-				.addSource("crafting", getSourceForItems(IIContent.blockMetalDevice.getStack(IIBlockTypes_MetalDevice.AMMUNITION_CRATE)));
+				.addSource("ammo_crate", getSourceForItems(IIContent.blockMetalDevice.getStack(IIBlockTypes_MetalDevice.AMMUNITION_CRATE)));
 		addEntry("weaponry/casing_pouch")
-				.addSource("crafting", getSourceForItems(IIContent.itemCasingPouch.getStack(1)));
+				.addSource("casingpouch", getSourceForItems(IIContent.itemCasingPouch.getStack(1)));
 
 		//Items in Armor and Tools folder
 		addEntry("armortools/light_engineer_armor")

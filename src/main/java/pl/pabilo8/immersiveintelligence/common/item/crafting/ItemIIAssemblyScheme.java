@@ -15,26 +15,33 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
 import pl.pabilo8.immersiveintelligence.api.crafting.PrecisionAssemblerRecipe;
+import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIMultiblockRecipe;
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler;
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler.IAdvancedTooltipItem;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIBase;
+import pl.pabilo8.modworks.annotations.item.GeneratedItemModels;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 25.06.2019
  */
-@IIItemProperties(category = IICategory.RESOURCES)
+@IIItemProperties(category = IICategory.TOOLS)
+@GeneratedItemModels(itemName = "assembly_scheme")
 public class ItemIIAssemblyScheme extends ItemIIBase implements IAdvancedTooltipItem
 {
 	private static final String descriptionKey = IIReference.DESCRIPTION_KEY+"assembly_scheme.";
+	private static final String NBT_RECIPE_RESULT = "recipeItem";
+	private static final String NBT_USE_COUNT = "createdItems";
 
 	public ItemIIAssemblyScheme()
 	{
@@ -49,14 +56,14 @@ public class ItemIIAssemblyScheme extends ItemIIBase implements IAdvancedTooltip
 	@ParametersAreNonnullByDefault
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag flag)
 	{
-		ItemStack s = ItemNBTHelper.getItemStack(stack, "recipeItem");
+		ItemStack s = ItemNBTHelper.getItemStack(stack, NBT_RECIPE_RESULT);
 		tooltip.add(I18n.format(descriptionKey+"used_to_create",
 				TextFormatting.GOLD+s.getDisplayName()
 						+(s.getCount() > 1?TextFormatting.GRAY+" x "+TextFormatting.GOLD+s.getCount(): "")));
 		tooltip.add(I18n.format(descriptionKey+"items_created",
-				TextFormatting.GOLD+String.valueOf(ItemNBTHelper.getInt(stack, "createdItems"))));
+				TextFormatting.GOLD+String.valueOf(ItemNBTHelper.getInt(stack, NBT_USE_COUNT))));
 
-		PrecisionAssemblerRecipe recipe = getRecipeForStack(stack);
+		PrecisionAssemblerRecipe recipe = getSchemeRecipe(stack);
 		if(ItemTooltipHandler.addExpandableTooltip(Keyboard.KEY_LSHIFT,
 				descriptionKey+"info_hold1", tooltip))
 		{
@@ -80,7 +87,7 @@ public class ItemIIAssemblyScheme extends ItemIIBase implements IAdvancedTooltip
 	@Override
 	public void addAdvancedInformation(ItemStack stack, int offsetX, List<Integer> offsetsY)
 	{
-		PrecisionAssemblerRecipe recipe = getRecipeForStack(stack);
+		PrecisionAssemblerRecipe recipe = getSchemeRecipe(stack);
 		if(recipe==null)
 			return;
 
@@ -98,45 +105,43 @@ public class ItemIIAssemblyScheme extends ItemIIBase implements IAdvancedTooltip
 
 
 	@Override
-	public void onCreated(ItemStack stack, World worldIn, EntityPlayer playerIn)
+	public void onCreated(@Nonnull ItemStack stack, @Nonnull World worldIn, @Nonnull EntityPlayer playerIn)
 	{
 		super.onCreated(stack, worldIn, playerIn);
-		if(!ItemNBTHelper.hasKey(stack, "createdItems"))
-			ItemNBTHelper.setInt(stack, "createdItems", 0);
+		if(!ItemNBTHelper.hasKey(stack, NBT_USE_COUNT))
+			ItemNBTHelper.setInt(stack, NBT_USE_COUNT, 0);
 	}
 
-	public ItemStack getStackForRecipe(PrecisionAssemblerRecipe recipe)
+	public ItemStack getSchemeStackForRecipe(PrecisionAssemblerRecipe recipe)
 	{
 		ItemStack stack = new ItemStack(this);
 		NBTTagCompound tag = new NBTTagCompound();
-		tag.setTag("recipeItem", recipe.output.serializeNBT());
+		tag.setTag(NBT_RECIPE_RESULT, recipe.output.serializeNBT());
 		stack.setTagCompound(tag);
 		return stack;
 	}
 
-	public ItemStack getProducedStack(ItemStack scheme)
+	public ItemStack getSchemeOutput(ItemStack scheme)
 	{
-		if(ItemNBTHelper.hasKey(scheme, "recipeItem"))
-			return new ItemStack(ItemNBTHelper.getTagCompound(scheme, "recipeItem"));
+		if(ItemNBTHelper.hasKey(scheme, NBT_RECIPE_RESULT))
+			return new ItemStack(ItemNBTHelper.getTagCompound(scheme, NBT_RECIPE_RESULT));
 		return ItemStack.EMPTY;
 	}
 
 	@Nullable
-	public PrecisionAssemblerRecipe getRecipeForStack(ItemStack stack)
+	public PrecisionAssemblerRecipe getSchemeRecipe(ItemStack stack)
 	{
-		NBTTagCompound tag = ItemNBTHelper.getTagCompound(stack, "recipeItem");
-		ItemStack recipe_stack = new ItemStack(tag);
+		NBTTagCompound tag = ItemNBTHelper.getTagCompound(stack, NBT_RECIPE_RESULT);
+		ItemStack recipeResult = new ItemStack(tag);
 
-		for(PrecisionAssemblerRecipe recipe : PrecisionAssemblerRecipe.recipeList)
-			if(recipe.output.isItemEqual(recipe_stack))
-				return recipe;
-
-		return null;
+		return IIMultiblockRecipe.streamRecipes(PrecisionAssemblerRecipe.class)
+				.filter(recipe -> recipe.output.isItemEqual(recipeResult))
+				.findFirst().orElse(null);
 	}
 
 	public void increaseCreatedItems(ItemStack stack, int amount)
 	{
-		ItemNBTHelper.setInt(stack, "createdItems", ItemNBTHelper.getInt(stack, "createdItems")+amount);
+		ItemNBTHelper.setInt(stack, NBT_USE_COUNT, ItemNBTHelper.getInt(stack, NBT_USE_COUNT)+amount);
 	}
 
 	/**
@@ -144,14 +149,11 @@ public class ItemIIAssemblyScheme extends ItemIIBase implements IAdvancedTooltip
 	 */
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> list)
+	public void getSubItems(@Nonnull CreativeTabs tab, @Nonnull NonNullList<ItemStack> list)
 	{
 		if(this.isInCreativeTab(tab))
-			for(PrecisionAssemblerRecipe recipe : PrecisionAssemblerRecipe.recipeList)
-			{
-				ItemStack stack = new ItemStack(this);
-				ItemNBTHelper.setTagCompound(stack, "recipeItem", recipe.output.serializeNBT());
-				list.add(stack);
-			}
+			list.addAll(IIMultiblockRecipe.streamRecipes(PrecisionAssemblerRecipe.class)
+					.map(this::getSchemeStackForRecipe)
+					.collect(Collectors.toList()));
 	}
 }

@@ -2,8 +2,7 @@ package pl.pabilo8.immersiveintelligence.client.gui.deco.component.data_editor;
 
 import net.minecraftforge.fluids.FluidStack;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeFluidStack;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.text.DecoTextField;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.text.DecoTextField.TextFilter;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoIngredientStackPickerPanel;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 /**
@@ -12,30 +11,22 @@ import pl.pabilo8.immersiveintelligence.common.util.IIReference;
  */
 public class DecoDataEditorFluidStack extends DecoDataEditor<DataTypeFluidStack>
 {
-	private DecoTextField countEdit;
 	private FluidStack fluidStack;
 
 	public DecoDataEditorFluidStack(int x, int y, DataTypeFluidStack dataType)
 	{
 		super(x, y, dataType);
-		this.fluidStack = dataType.value;
+		this.fluidStack = dataType.value==null?null: dataType.value.copy();
 	}
 
 	@Override
 	protected boolean initialize()
 	{
-		//TODO: 10.07.2025 translations!
 		addLabel(IIReference.DESCRIPTION_KEY+"variable_value", 2, 2);
-		addLabel("Item:", 2, 12);
-		addLabel("Count:", 2, 2+20+12);
-
-		addComponents(
-				countEdit = new DecoTextField(40, 2+20+12-4)
-						.withSize(width-42, 16)
-						.withFilter(TextFilter.DECIMAL)
-						.withText(dataType.value==null?0: dataType.value.amount)
-				/*new DecoItemStackDisplay((width/2)-8, 8)
-						.withStack(scanned)*/
+		addComponent(new DecoIngredientStackPickerPanel(0, 2+12)
+				.withFluidMode(true)
+				.withOnStackChanged(ingredientStack -> fluidStack = ingredientStack.fluid)
+				.withSize(width, height)
 		);
 		return super.initialize();
 	}
@@ -43,8 +34,7 @@ public class DecoDataEditorFluidStack extends DecoDataEditor<DataTypeFluidStack>
 	@Override
 	public DataTypeFluidStack outputType()
 	{
-		//dataType.value = scanned.copy();
-		//dataType.value.setCount(Integer.parseInt(countEdit.getText()));
+		dataType.value = fluidStack;
 		return dataType;
 	}
 }

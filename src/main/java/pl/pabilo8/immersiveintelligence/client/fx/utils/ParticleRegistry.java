@@ -343,7 +343,8 @@ public class ParticleRegistry
 
 			if(detailed)
 				scheduleSpawnParticle("smoke/dust_cloud", new Vec3d(destroyed).addVector(0.5, 0, 0.5),
-						Vec3d.ZERO, new Vector2f(0, 0), 10);
+						Vec3d.ZERO, new Vector2f(0, 0), 10)
+						.withProperty(ParticleProperties.SIZE, 1.25f);
 			spawnParticle("explosion/glow_individual", new Vec3d(destroyed).addVector(0.5, 0, 0.5),
 					Vec3d.ZERO, new Vector2f(0, 0));
 
@@ -371,6 +372,14 @@ public class ParticleRegistry
 						.withProperty(ParticleProperties.SIZE, logSize*0.4f)
 						.withProperty(ParticleProperties.MAX_LIFETIME, (int)(4*(logSize))+1);
 
+				//Spawn a smoke trace
+				scheduleSpawnParticle("smoke/smoke_trace", new Vec3d(destroyed).addVector(0.5, 0, 0.5),
+						Vec3d.ZERO, IIParticleUtils.toVector2f(debrisMotion), 1)
+						.withProperty(ParticleProperties.COLOR, IIColor.fromPackedRGB(0x3f3f3f))
+						.withProperty(ParticleProperties.SIZE, logSize*0.4f)
+						.withProperty(ParticleProperties.MAX_LIFETIME, (int)(4*(logSize))+20);
+
+				//Spawn additional debris particles for large explosions
 				if(detailed)
 					for(int i = 0; i < 2; i++)
 					{
@@ -389,15 +398,6 @@ public class ParticleRegistry
 
 	}
 
-	public static void spawnTracerFX(Vec3d pos, Vec3d motion, float size, IIColor color)
-	{
-		ParticleRegistry.spawnParticle("ammo/tracer", pos, motion, new Vector2f(0, 0))
-				.withProperty(ParticleProperties.COLOR, color)
-				.withProperty(ParticleProperties.SIZE, size)
-				.withProperty(ParticleProperties.MAX_LIFETIME, 20);
-	}
-
-	//TODO: 04.05.2024 replace with AMT models
 	public static void spawnGunfireFX(Vec3d pos, Vec3d direction, float size)
 	{
 		ParticleRegistry.spawnParticle("ammo/gunfire", pos, Vec3d.ZERO, IIParticleUtils.toVector2f(direction))

@@ -23,11 +23,13 @@ public class MessageGuiNBT extends IIMessage
 	//Used in changing tabs in guis (its being sent to server only)
 	private IIGUI id;
 	private BlockPos pos;
+	private boolean closeMessage;
 
 	public MessageGuiNBT(IIGUI id, TileEntity te)
 	{
 		this.id = id;
 		this.pos = te.getPos();
+		this.closeMessage = false;
 	}
 
 	public MessageGuiNBT()
@@ -35,9 +37,22 @@ public class MessageGuiNBT extends IIMessage
 
 	}
 
+	public static MessageGuiNBT closeGuiMessage()
+	{
+		MessageGuiNBT message = new MessageGuiNBT();
+		message.closeMessage = true;
+		return message;
+	}
+
 	@Override
 	protected void onServerReceive(WorldServer world, NetHandlerPlayServer handler)
 	{
+		if(closeMessage)
+		{
+			handler.player.closeContainer();
+			return;
+		}
+
 		TileEntity te;
 		if(handler.player!=null&&world.isBlockLoaded(pos)&&(te = world.getTileEntity(pos)) instanceof IGuiTile)
 			ImmersiveIntelligence.proxy.onServerGuiChangeRequest(te, id.ordinal(), handler.player);
@@ -53,14 +68,22 @@ public class MessageGuiNBT extends IIMessage
 	@Override
 	public void toBytes(ByteBuf buf)
 	{
-		writeEnum(buf, id);
-		writePos(buf, pos);
+		buf.writeBoolean(id==null);
+		if(id!=null)
+		{
+			writeEnum(buf, id);
+			writePos(buf, pos);
+		}
 	}
 
 	@Override
 	public void fromBytes(ByteBuf buf)
 	{
-		this.id = readEnum(buf, IIGUI.class);
-		this.pos = readPos(buf);
+		this.closeMessage = buf.readBoolean();
+		if(!closeMessage)
+		{
+			this.id = readEnum(buf, IIGUI.class);
+			this.pos = readPos(buf);
+		}
 	}
 }

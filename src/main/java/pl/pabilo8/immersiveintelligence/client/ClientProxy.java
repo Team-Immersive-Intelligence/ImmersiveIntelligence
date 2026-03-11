@@ -9,6 +9,7 @@ import blusunrize.immersiveengineering.client.models.obj.IEOBJLoader;
 import blusunrize.immersiveengineering.client.render.EntityRenderNone;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IColouredBlock;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IGuiTile;
+import blusunrize.immersiveengineering.common.blocks.TileEntityIEBase;
 import blusunrize.immersiveengineering.common.items.IEItemInterfaces.IColouredItem;
 import blusunrize.immersiveengineering.common.items.IEItemInterfaces.IGuiItem;
 import blusunrize.immersiveengineering.common.items.ItemIEBase;
@@ -35,18 +36,17 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.event.ModelRegistryEvent;
-import net.minecraftforge.client.event.TextureStitchEvent;
+import net.minecraftforge.client.event.TextureStitchEvent.Pre;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.client.model.obj.OBJLoader;
-import net.minecraftforge.client.settings.IKeyConflictContext;
 import net.minecraftforge.client.settings.KeyConflictContext;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
-import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import org.lwjgl.input.Keyboard;
@@ -55,24 +55,38 @@ import pl.pabilo8.immersiveintelligence.api.ShrapnelHandler;
 import pl.pabilo8.immersiveintelligence.api.ShrapnelHandler.Shrapnel;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
+import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIMultiblockRecipe;
 import pl.pabilo8.immersiveintelligence.api.data.IIDataTypeUtils;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType.TypeMetaInfo;
-import pl.pabilo8.immersiveintelligence.api.utils.IUpgradableMachine;
+import pl.pabilo8.immersiveintelligence.api.upgrade.IUpgradableDevice;
+import pl.pabilo8.immersiveintelligence.api.upgrade.Upgrade;
 import pl.pabilo8.immersiveintelligence.client.fx.IIParticles;
 import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleRegistry;
+import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleSystem;
 import pl.pabilo8.immersiveintelligence.client.gui.block.GuiUpgrade;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualCategory;
 import pl.pabilo8.immersiveintelligence.client.manual.categories.*;
 import pl.pabilo8.immersiveintelligence.client.model.IIModelRegistry;
+import pl.pabilo8.immersiveintelligence.client.model.TextureRecoloringRegistry;
 import pl.pabilo8.immersiveintelligence.client.model.builtin.FluidStateMapper;
 import pl.pabilo8.immersiveintelligence.client.model.item.ModelMeasuringCup;
 import pl.pabilo8.immersiveintelligence.client.model.item.ModelMeasuringCup.MeasuringCupModelLoader;
-import pl.pabilo8.immersiveintelligence.client.render.*;
-import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer.RegisteredTileRenderer;
+import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.client.render.ammunition.*;
 import pl.pabilo8.immersiveintelligence.client.render.ammunition.NavalMineRenderer.NavalMineItemstackRenderer;
-import pl.pabilo8.immersiveintelligence.client.render.hans.HansRenderer;
+import pl.pabilo8.immersiveintelligence.client.render.entity.*;
+import pl.pabilo8.immersiveintelligence.client.render.entity.hans.HansRenderer;
+import pl.pabilo8.immersiveintelligence.client.render.entity.vehicle.FieldGunRenderer;
+import pl.pabilo8.immersiveintelligence.client.render.entity.vehicle.FieldHowitzerRenderer;
+import pl.pabilo8.immersiveintelligence.client.render.entity.vehicle.MotorbikeRenderer;
+import pl.pabilo8.immersiveintelligence.client.render.entity.vehicle.TrackedMotorbikeRenderer;
+import pl.pabilo8.immersiveintelligence.client.render.entity.weapon.MachinegunRenderer;
+import pl.pabilo8.immersiveintelligence.client.render.entity.weapon.MortarRenderer;
+import pl.pabilo8.immersiveintelligence.client.render.entity.weapon.TripodPeriscopeRenderer;
+import pl.pabilo8.immersiveintelligence.client.render.inserter.AdvancedFluidInserterRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.inserter.AdvancedInserterRenderer;
+import pl.pabilo8.immersiveintelligence.client.render.inserter.FluidInserterRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.inserter.InserterRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.item.*;
 import pl.pabilo8.immersiveintelligence.client.render.mechanical_device.BeltModelStorage;
@@ -80,25 +94,24 @@ import pl.pabilo8.immersiveintelligence.client.render.mechanical_device.Mechanic
 import pl.pabilo8.immersiveintelligence.client.render.mechanical_device.WheelRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.metal_device.*;
 import pl.pabilo8.immersiveintelligence.client.render.multiblock.metal.*;
+import pl.pabilo8.immersiveintelligence.client.render.multiblock.metal.emplacementweapon.*;
 import pl.pabilo8.immersiveintelligence.client.render.multiblock.wooden.*;
-import pl.pabilo8.immersiveintelligence.client.render.vehicle.DroneRenderer;
-import pl.pabilo8.immersiveintelligence.client.render.vehicle.FieldHowitzerRenderer;
-import pl.pabilo8.immersiveintelligence.client.render.vehicle.MortarRenderer;
-import pl.pabilo8.immersiveintelligence.client.render.vehicle.MotorbikeRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.IICustomStateMapper;
+import pl.pabilo8.immersiveintelligence.client.util.IIKeybind;
 import pl.pabilo8.immersiveintelligence.client.util.ShaderUtil;
-import pl.pabilo8.immersiveintelligence.client.util.amt.IIItemRendererAMT;
-import pl.pabilo8.immersiveintelligence.client.util.amt.IIItemRendererAMT.RegisteredItemRenderer;
+import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IIItemRendererAMT;
+import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IIItemRendererAMT.RegisteredItemRenderer;
+import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IITileRenderer.RegisteredTileRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.font.IIFontRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.font.IIFontRendererCustomGlyphs;
 import pl.pabilo8.immersiveintelligence.common.*;
-import pl.pabilo8.immersiveintelligence.common.block.data_device.BlockIIDataDevice;
+import pl.pabilo8.immersiveintelligence.common.block.data_device.BlockIIDataDevice.IIBlockTypes_Connector;
 import pl.pabilo8.immersiveintelligence.common.block.data_device.tileentity.TileEntityDataMerger;
 import pl.pabilo8.immersiveintelligence.common.block.data_device.tileentity.TileEntityRedstoneBuffer;
 import pl.pabilo8.immersiveintelligence.common.block.data_device.tileentity.TileEntitySmallDataBuffer;
 import pl.pabilo8.immersiveintelligence.common.block.data_device.tileentity.TileEntityTimedBuffer;
 import pl.pabilo8.immersiveintelligence.common.block.fortification.tileentity.TileEntityMineSign;
-import pl.pabilo8.immersiveintelligence.common.block.metal_device.BlockIIMetalDevice;
+import pl.pabilo8.immersiveintelligence.common.block.metal_device.BlockIIMetalDevice.IIBlockTypes_MetalDevice;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.TileEntityFluidInserter;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.TileEntityLatexCollector;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.conveyors.*;
@@ -109,7 +122,6 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.gate_multiblock.
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.gate_multiblock.multiblock.MultiblockWoodenChainFenceGate.TileEntityWoodenChainFenceGate;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.gate_multiblock.multiblock.MultiblockWoodenFenceGate.TileEntityWoodenFenceGate;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.BlockIIMetalMultiblock0.MetalMultiblocks0;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityBallisticComputer;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityChemicalBath;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityPrecisionAssembler;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityRadioStation;
@@ -129,15 +141,18 @@ import pl.pabilo8.immersiveintelligence.common.entity.ammo.types.naval_mine.Enti
 import pl.pabilo8.immersiveintelligence.common.entity.tactile.EntityAMTTactile;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityDrone;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityMotorbike;
-import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityVehicleSeat;
+import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityTrackedMotorbike;
+import pl.pabilo8.immersiveintelligence.common.entity.vehicle.towable.gun.EntityFieldGun;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.towable.gun.EntityFieldHowitzer;
+import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehicleSeat;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoBase;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIINavalMine;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.gun.ItemIIAmmoRevolver;
+import pl.pabilo8.immersiveintelligence.common.item.ammo.gun.ItemIIAmmoRevolver.RevolverAmmoPart;
+import pl.pabilo8.immersiveintelligence.common.item.data.ItemIIFunctionalCircuit.CircuitTypes;
 import pl.pabilo8.immersiveintelligence.common.item.tools.ItemIIDrillHead.DrillHeads;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIWeaponUpgrade;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
-import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.util.block.BlockIIFluid;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIIStateMappings;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIIStateMappings.DummyEnum;
@@ -157,10 +172,12 @@ import java.util.Map.Entry;
  * @since 07.05.2019
  */
 @SuppressWarnings("deprecation")
-@Mod.EventBusSubscriber(value = Side.CLIENT, modid = ImmersiveIntelligence.MODID)
+@EventBusSubscriber(value = Side.CLIENT, modid = ImmersiveIntelligence.MODID)
 public class ClientProxy extends CommonProxy
 {
-	public static KeyBinding keybind_manualReload, keybind_armorHelmet, keybind_armorExosuit, keybind_zoom, keybind_motorbikeEngine, keybind_motorbikeTowing;
+	public static KeyBinding keybindManualReload, keybindArmorHelmet, keybindArmorExosuit, keybindZoom;
+	public static KeyBinding keybindVehicleEngine, keybindVehicleClutch, keybindVehicleTowing;
+	public static KeyBinding keybindVehicleGearUp, keybindVehicleGearDown, keybindVehicleReductionSwitch;
 	private EasyNBT storedGuiData = EasyNBT.newNBT();
 
 	private HashMap<Class<? extends TileEntityItemStackRenderer>, Block> TEISRRegistryQueue = new HashMap<>();
@@ -314,11 +331,12 @@ public class ClientProxy extends CommonProxy
 		TileEntity te = world.getTileEntity(new BlockPos(x, y, z));
 		ItemStack stack = player.getHeldItem(hand = (player.getHeldItem(EnumHand.MAIN_HAND).getItem() instanceof IGuiItem?EnumHand.MAIN_HAND: EnumHand.OFF_HAND));
 
-		if(ID==IIGUI.UPGRADE.ordinal()&&te instanceof IUpgradableMachine)
+		if(ID==IIGUI.UPGRADE.ordinal()&&te instanceof IUpgradableDevice)
 		{
-			TileEntity upgradeMaster = ((IUpgradableMachine)te).getUpgradeMaster();
+			IUpgradableDevice upgradeMaster = ((IUpgradableDevice)te).master();
 			if(upgradeMaster!=null)
-				return new GuiUpgrade(player, (TileEntity & IUpgradableMachine)upgradeMaster);
+				//noinspection rawtypes,unchecked
+				return new GuiUpgrade(player, ((TileEntityIEBase)upgradeMaster));
 		}
 
 		GuiScreen gui = null;
@@ -363,15 +381,17 @@ public class ClientProxy extends CommonProxy
 		registerEntityRenderer(EntityWhitePhosphorus.class, EntityRenderNone::new);
 		registerEntityRenderer(EntityMachinegun.class, MachinegunRenderer::new);
 		registerEntityRenderer(EntityMotorbike.class, MotorbikeRenderer::new);
+		registerEntityRenderer(EntityTrackedMotorbike.class, TrackedMotorbikeRenderer::new);
 		registerEntityRenderer(EntityDrone.class, DroneRenderer::new);
+		//Towables
 		registerEntityRenderer(EntityFieldHowitzer.class, FieldHowitzerRenderer::new);
+		registerEntityRenderer(EntityFieldGun.class, FieldGunRenderer::new);
+
 		registerEntityRenderer(EntityTripodPeriscope.class, TripodPeriscopeRenderer::new);
 		registerEntityRenderer(EntityMortar.class, MortarRenderer::new);
-		//Thanks Blu!
 		registerEntityRenderer(EntityCamera.class, EntityRenderNone::new);
 		registerEntityRenderer(EntitySkycrateInternal.class, EntityRenderNone::new);
 		registerEntityRenderer(EntityVehicleSeat.class, EntityRenderNone::new);
-
 
 		registerEntityRenderer(EntityAtomicBoom.class, AtomicBoomRenderer::new);
 		registerEntityRenderer(EntityGasCloud.class, EntityRenderNone::new);
@@ -379,7 +399,6 @@ public class ClientProxy extends CommonProxy
 
 		registerEntityRenderer(EntityHans.class, HansRenderer::new);
 		registerEntityRenderer(EntityParachute.class, ParachuteRenderer::new);
-		registerEntityRenderer(EntityEmplacementWeapon.class, EntityRenderNone::new);
 		registerEntityRenderer(EntityAMTTactile.class, EntityRenderNone::new);
 
 		//Hand Weapons
@@ -402,7 +421,8 @@ public class ClientProxy extends CommonProxy
 			if(bullet instanceof ItemIIAmmoBase)
 				IIModelRegistry.INSTANCE.registerCustomItemModel(((ItemIIAmmoBase)bullet));
 			else if(bullet instanceof ItemIIAmmoRevolver)
-				IIModelRegistry.INSTANCE.registerCustomItemModel((ItemIIAmmoRevolver)bullet, ImmersiveIntelligence.MODID, ItemIIAmmoRevolver.BULLET, ItemIIAmmoRevolver.CORE);
+				IIModelRegistry.INSTANCE.registerCustomItemModel((ItemIIAmmoRevolver)bullet, ImmersiveIntelligence.MODID,
+						RevolverAmmoPart.BULLET.ordinal(), RevolverAmmoPart.CORE.ordinal());
 		}
 
 		//Old items
@@ -433,8 +453,8 @@ public class ClientProxy extends CommonProxy
 
 		registerTileRenderer(InserterRenderer.class);
 		registerTileRenderer(AdvancedInserterRenderer.class);
-		//TODO: 29.12.2023 fluid inserter
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityFluidInserter.class, new FluidInserterRenderer().subscribeToList("device/inserter/fluid_inserter"));
+		registerTileRenderer(FluidInserterRenderer.class);
+		registerTileRenderer(AdvancedFluidInserterRenderer.class);
 
 		//TODO: 29.12.2023 data devices (0.4.0)
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityTimedBuffer.class, new TimedBufferRenderer());
@@ -467,13 +487,12 @@ public class ClientProxy extends CommonProxy
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySkyCratePost.class, new SkyCratePostRenderer().subscribeToList("multiblock/skycrate_post"));
 
 		//Data multiblocks renderers
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRadioStation.class, new RadioStationRenderer().subscribeToList("multiblock/radio_station"));
+		registerTileRenderer(RadioStationRenderer.class);
 
 		registerTileRenderer(DataInputMachineRenderer.class);
 		registerTileRenderer(ArithmeticLogicMachineRenderer.class);
 		registerTileRenderer(PrintingPressRenderer.class);
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBallisticComputer.class, new BallisticComputerRenderer().subscribeToList("multiblock/ballistic_computer"));
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRedstoneInterface.class, new RedstoneInterfaceRenderer().subscribeToList("multiblock/redstone_data_interface"));
+		registerTileRenderer(BallisticComputerRenderer.class);
 
 		//Logistics multiblocks renderers
 		registerTileRenderer(PackerRenderer.class);
@@ -481,10 +500,9 @@ public class ClientProxy extends CommonProxy
 
 		//Production multiblocks renderers
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityChemicalBath.class, new ChemicalBathRenderer().subscribeToList("multiblock/chemical_bath"));
-
 		registerTileRenderer(ElectrolyzerRenderer.class);
+		registerTileRenderer(ChemicalPainterRenderer.class);
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPrecisionAssembler.class, new PrecisionAssemblerRenderer().subscribeToList("multiblock/precision_assembler"));
-
 		registerTileRenderer(FillerRenderer.class);
 
 		//Ammunition production multiblocks renderers
@@ -492,28 +510,36 @@ public class ClientProxy extends CommonProxy
 		registerTileRenderer(AmmunitionAssemblerRenderer.class);
 		registerTileRenderer(ProjectileWorkshopRenderer.class);
 
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityChemicalPainter.class, new ChemicalPainterRenderer().subscribeToList("multiblock/chemical_painter"));
-
 
 		//Warfare multiblocks renderers
 		registerTileRenderer(ArtilleryHowitzerRenderer.class);
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityEmplacement.class, new EmplacementRenderer().subscribeToList("multiblock/emplacement"));
+		registerTileRenderer(EmplacementRenderer.class);
+		registerTileRenderer(FlagpoleRenderer.class);
+		registerTileRenderer(RadarRenderer.class);
 
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityFlagpole.class, new FlagpoleRenderer().subscribeToList("multiblock/flagpole"));
-
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRadar.class, new RadarRenderer().subscribeToList("multiblock/radar"));
-
+		//Emplacement weapon renderers
+		new EWRMachinegun();
+		new EWRHeavyChemthrower();
+		new EWRCPDS();
+		new EWRGuidedMissileLauncher();
+		new EWRAutocannon();
+		new EWRHeavyRailgun();
+		new EWRInfraredObserver();
+		new EWRTeslaCoil();
+		new EWRLightHowitzer();
+		new EWRMortar();
+		new EWRSearchlight();
+		new EWRSpotlightTower();
+		new EWRRocketLauncher();
 
 		//Vehicle multiblocks renderers
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityFuelStation.class, new FuelStationRenderer().subscribeToList("multiblock/fuel_station"));
-
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityVehicleWorkshop.class, new VehicleWorkshopRenderer().subscribeToList("multiblock/vehicle_workshop"));
 
 
 		//Rubber processing machines renderers
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityVulcanizer.class, new VulcanizerRenderer().subscribeToList("multiblock/vulcanizer"));
-
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCoagulator.class, new CoagulatorRenderer().subscribeToList("multiblock/coagulator"));
+		registerTileRenderer(CoagulatorRenderer.class);
 
 
 		//Gate renderers
@@ -543,12 +569,13 @@ public class ClientProxy extends CommonProxy
 	{
 		RenderingRegistry.registerEntityRenderingHandler(entityClass, renderFactory);
 		Render<? super T> temp = renderFactory.createRenderFor(null);
+		//Add a temporary registration for loading textures
 		if(temp instanceof IReloadableModelContainer)
 			IIModelRegistry.INSTANCE.addTemporaryModel(((IReloadableModelContainer<?>)temp));
 	}
 
 	@SubscribeEvent
-	public void textureStichPre(TextureStitchEvent.Pre event)
+	public void textureStichPre(Pre event)
 	{
 		//Bullets
 		for(Item item : IIContent.ITEMS)
@@ -589,6 +616,10 @@ public class ClientProxy extends CommonProxy
 		ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":blocks/metal_device/inserter/tool_dim");
 		ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":blocks/metal_device/inserter/tool_gray");
 
+		//Universal Circuit Textures
+		for(CircuitTypes value : CircuitTypes.values())
+			ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":blocks/multiblock/circuits/circuit_"+value.getName());
+
 		//Data Types
 		IIDataTypeUtils.metaTypesByClass.values().stream()
 				.map(TypeMetaInfo::getTextureLocation)
@@ -598,65 +629,15 @@ public class ClientProxy extends CommonProxy
 		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_CONTEXT_DATA_CALLBACK);
 		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_CONTEXT_DATA_EVENT);
 
+		//Upgrade icons
+		for(Upgrade upgrade : Upgrade.getAllUpgrades())
+			ApiUtils.getRegisterSprite(event.getMap(), upgrade.getIcon());
+
 		//GUIs
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_TEMPLATE_ROUND);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_TEMPLATE_SQUARE);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_TEMPLATE_TICKET);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_TEMPLATE_PAPER);
+		DecoTextures.registerAllTextures(event.getMap());
 
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_INVENTORY_SLOT);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_IE_SLOT);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_IE_SLOT_MARKER);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_IE_BRASS_SLOT);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_IE_BRASS_SLOT_MARKER);
-
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.GUI_BG_WOODEN);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.GUI_BG_SHEETMETAL);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.GUI_BG_SHEETMETAL_STEEL);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.GUI_BG_PAPER);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.GUI_BG_BLUEPRINT);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.GUI_BG_STEEL);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.GUI_BG_STEEL_ROUGH);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.GUI_BG_DARK);
-
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.GUI_FRAME_WOODEN_THIN);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.GUI_FRAME_STEEL_THIN);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.GUI_FRAME_CORNERS_BRASS);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.GUI_FRAME_CORNERS_SILVER);
-
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.GUI_LABEL_WOODEN);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.GUI_LABEL_STEEL);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.GUI_LABEL_STEEL_ROUGH);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.GUI_LABEL_HAZARD);
-
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_COMPONENT_BUTTON);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_COMPONENT_TEXT_FIELD);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_COMPONENT_TAB);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_COMPONENT_TAB_WIDGET);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_COMPONENT_CHECKBOX);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_COMPONENT_SWITCH);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_COMPONENT_SWITCH_MOVING);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_COMPONENT_DROPDOWN_SYMBOL);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_COMPONENT_DROPDOWN_DATA_LETTER);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_COMPONENT_SLIDER);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_COMPONENT_ARROWS);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_BAR_ICON_BACKGROUND);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_COMPONENT_FRAME);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_COMPONENT_TANK);
-
-		for(ResLoc icon : IIReference.RES_ACTION_ICONS)
-			ApiUtils.getRegisterSprite(event.getMap(), icon);
-		for(ResLoc icon : IIReference.RES_ICONS)
-			ApiUtils.getRegisterSprite(event.getMap(), icon);
-
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_BUTTON_PAPER);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_BUTTON_PAPER_HIGHLIGHT);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_BUTTON_HANGING);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_COMPONENT_ARROWS_PAPER);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_COMPONENT_BUTTON_ROUND);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_COMPONENT_SLIDER_PAPER);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_COMPONENT_DROPDOWN_DATA_LETTER_PAPER);
-		ApiUtils.getRegisterSprite(event.getMap(), IIReference.RES_TEXTURES_DECO_COMPONENT_DROPDOWN_SYMBOL_PAPER);
+		//Recolored textures
+		TextureRecoloringRegistry.onTextureStitch(event);
 
 	}
 
@@ -677,41 +658,31 @@ public class ClientProxy extends CommonProxy
 		IIClientUtils.fontTinkerer = new IIFontRendererCustomGlyphs(new ResourceLocation(ImmersiveIntelligence.MODID, "textures/font/tinkerer.png"));
 
 		//Register Keybindings
-		IKeyConflictContext passenger_action = new IKeyConflictContext()
-		{
-			@Override
-			public boolean isActive()
-			{
-				return KeyConflictContext.IN_GAME.isActive();
-			}
+		keybindManualReload = new IIKeybind("manualReload", Keyboard.KEY_R, IIKeybind.CATEGORY_GAMEPLAY)
+				.withContext(KeyConflictContext.IN_GAME).register();
 
-			@Override
-			public boolean conflicts(IKeyConflictContext other)
-			{
-				return other==KeyConflictContext.IN_GAME&&other!=this;
-			}
-		};
+		keybindArmorHelmet = new IIKeybind("armorHelmet", Keyboard.KEY_V, IIKeybind.CATEGORY_GAMEPLAY)
+				.withContext(KeyConflictContext.IN_GAME).register();
+		keybindArmorExosuit = new IIKeybind("armorExosuit", Keyboard.KEY_G, IIKeybind.CATEGORY_GAMEPLAY)
+				.withContext(KeyConflictContext.IN_GAME).register();
+		keybindZoom = new IIKeybind("mgScope", Keyboard.KEY_Z, IIKeybind.CATEGORY_GAMEPLAY)
+				.withContext(KeyConflictContext.IN_GAME).register();
 
-		keybind_manualReload = new KeyBinding("key."+ImmersiveIntelligence.MODID+".manualReload", Keyboard.KEY_R, "key.categories.gameplay");
-		keybind_manualReload.setKeyConflictContext(passenger_action);
+		//Vehicle Keybinds
+		keybindVehicleEngine = new IIKeybind("vehicle.engine.toggle", Keyboard.KEY_R, IIKeybind.CATEGORY_VEHICLES)
+				.withContext(IIKeybind.VEHICLE_KEY_CONTEXT).register();
+		keybindVehicleTowing = new IIKeybind("vehicle.tow.toggle", Keyboard.KEY_Z, IIKeybind.CATEGORY_VEHICLES)
+				.withContext(IIKeybind.VEHICLE_KEY_CONTEXT).register();
 
-		keybind_armorHelmet = new KeyBinding("key."+ImmersiveIntelligence.MODID+".armorHelmet", Keyboard.KEY_V, "key.categories.gameplay");
-		keybind_armorExosuit = new KeyBinding("key."+ImmersiveIntelligence.MODID+".armorExosuit", Keyboard.KEY_G, "key.categories.gameplay");
-		keybind_zoom = new KeyBinding("key."+ImmersiveIntelligence.MODID+".mgScope", Keyboard.KEY_Z, "key.categories.gameplay");
-		keybind_zoom.setKeyConflictContext(passenger_action);
-
-		keybind_motorbikeEngine = new KeyBinding("key."+ImmersiveIntelligence.MODID+".motorbikeEngine", Keyboard.KEY_R, "key.categories.gameplay");
-		keybind_motorbikeEngine.setKeyConflictContext(passenger_action);
-		keybind_motorbikeTowing = new KeyBinding("key."+ImmersiveIntelligence.MODID+".motorbikeTowing", Keyboard.KEY_Z, "key.categories.gameplay");
-		keybind_motorbikeTowing.setKeyConflictContext(passenger_action);
-
-		ClientRegistry.registerKeyBinding(keybind_manualReload);
-		ClientRegistry.registerKeyBinding(keybind_zoom);
-		ClientRegistry.registerKeyBinding(keybind_motorbikeEngine);
-		ClientRegistry.registerKeyBinding(keybind_motorbikeTowing);
-
-		ClientRegistry.registerKeyBinding(keybind_armorHelmet);
-		ClientRegistry.registerKeyBinding(keybind_armorExosuit);
+		//Vehicle Gearbox Keybinds
+		keybindVehicleClutch = new IIKeybind("vehicle.clutch", Keyboard.KEY_C, IIKeybind.CATEGORY_VEHICLES)
+				.withContext(IIKeybind.VEHICLE_KEY_CONTEXT).register();
+		keybindVehicleGearUp = new IIKeybind("vehicle.gear.up", Keyboard.KEY_Y, IIKeybind.CATEGORY_VEHICLES)
+				.withContext(IIKeybind.VEHICLE_KEY_CONTEXT).register();
+		keybindVehicleGearDown = new IIKeybind("vehicle.gear.down", Keyboard.KEY_H, IIKeybind.CATEGORY_VEHICLES)
+				.withContext(IIKeybind.VEHICLE_KEY_CONTEXT).register();
+		keybindVehicleReductionSwitch = new IIKeybind("vehicle.gear2.toggle", Keyboard.KEY_G, IIKeybind.CATEGORY_VEHICLES)
+				.withContext(IIKeybind.VEHICLE_KEY_CONTEXT).register();
 
 		//Register shaders
 		ShaderUtil.init();
@@ -736,9 +707,9 @@ public class ClientProxy extends CommonProxy
 		//Render Layers
 		Map<String, RenderPlayer> skinMap = Minecraft.getMinecraft().getRenderManager().getSkinMap();
 		RenderPlayer render = skinMap.get("default");
-		render.addLayer(new IIBipedLayerRenderer());
+		render.addLayer(new IIBipedWearableLayerRenderer());
 		render = skinMap.get("slim");
-		render.addLayer(new IIBipedLayerRenderer());
+		render.addLayer(new IIBipedWearableLayerRenderer());
 
 		//Load Manual Pages
 		IILogger.info("Registering II Manual Pages.");
@@ -749,7 +720,6 @@ public class ClientProxy extends CommonProxy
 		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalMultiblock0), MetalMultiblocks0.RADIO_STATION.getMeta(), TileEntityRadioStation.class);
 		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalMultiblock0), MetalMultiblocks0.CHEMICAL_BATH.getMeta(), TileEntityChemicalBath.class);
 		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalMultiblock0), MetalMultiblocks0.PRECISION_ASSEMBLER.getMeta(), TileEntityPrecisionAssembler.class);
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalMultiblock1), MetalMultiblocks1.CHEMICAL_PAINTER.getMeta(), TileEntityChemicalPainter.class);
 		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalMultiblock1), MetalMultiblocks1.EMPLACEMENT.getMeta(), TileEntityEmplacement.class);
 		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalMultiblock1), MetalMultiblocks1.FLAGPOLE.getMeta(), TileEntityFlagpole.class);
 		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalMultiblock1), MetalMultiblocks1.RADAR.getMeta(), TileEntityRadar.class);
@@ -758,14 +728,15 @@ public class ClientProxy extends CommonProxy
 		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalMultiblock1), MetalMultiblocks1.VULCANIZER.getMeta(), TileEntityVulcanizer.class);
 		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalMultiblock1), MetalMultiblocks1.COAGULATOR.getMeta(), TileEntityCoagulator.class);
 
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockDataConnector), BlockIIDataDevice.IIBlockTypes_Connector.FLUID_INSERTER.getMeta(), TileEntityFluidInserter.class);
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalDevice), BlockIIMetalDevice.IIBlockTypes_MetalDevice.TIMED_BUFFER.getMeta(), TileEntityTimedBuffer.class);
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalDevice), BlockIIMetalDevice.IIBlockTypes_MetalDevice.REDSTONE_BUFFER.getMeta(), TileEntityRedstoneBuffer.class);
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalDevice), BlockIIMetalDevice.IIBlockTypes_MetalDevice.SMALL_DATA_BUFFER.getMeta(), TileEntitySmallDataBuffer.class);
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalDevice), BlockIIMetalDevice.IIBlockTypes_MetalDevice.DATA_MERGER.getMeta(), TileEntityDataMerger.class);
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockDataConnector), IIBlockTypes_Connector.FLUID_INSERTER.getMeta(), TileEntityFluidInserter.class);
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalDevice), IIBlockTypes_MetalDevice.TIMED_BUFFER.getMeta(), TileEntityTimedBuffer.class);
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalDevice), IIBlockTypes_MetalDevice.REDSTONE_BUFFER.getMeta(), TileEntityRedstoneBuffer.class);
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalDevice), IIBlockTypes_MetalDevice.SMALL_DATA_BUFFER.getMeta(), TileEntitySmallDataBuffer.class);
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalDevice), IIBlockTypes_MetalDevice.DATA_MERGER.getMeta(), TileEntityDataMerger.class);
 
 		//Load Models
 		reloadModels();
+		IIMultiblockRecipe.loadAllClientSideContent();
 		IICompatModule.doModulesClientPostInit();
 	}
 
@@ -838,6 +809,13 @@ public class ClientProxy extends CommonProxy
 	public void onMechanicalConnectorRemoved(Connection connection)
 	{
 		IIModelRegistry.INSTANCE.removeMotorBeltConnectionModel(connection);
+	}
+
+	@Override
+	public void reloadParticles()
+	{
+		super.reloadParticles();
+		ParticleSystem.reload();
 	}
 
 	//--- Stored GUI Data ---//

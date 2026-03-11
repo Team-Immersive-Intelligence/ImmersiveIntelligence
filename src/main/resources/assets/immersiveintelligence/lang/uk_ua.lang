@@ -1,0 +1,2469 @@
+#переклав Tifus
+
+#Items
+itemGroup.immersiveintelligence=Immersive Intelligence
+itemGroup.ii.resources=Ресурси
+itemGroup.ii.tools=Інструменти та виробництво
+itemGroup.ii.electronics=Дані та електроніка
+itemGroup.ii.logistics=Логістика
+itemGroup.ii.warfare=Війна
+itemGroup.ii.intelligence=Інтелект
+itemGroup.ii.rotary=Потужність обертання
+
+item.immersiveintelligence.material.basic_circuit_board_raw.name=Необроблена базова плата
+item.immersiveintelligence.material.basic_circuit_board_etched.name=Вигравірована базова плата
+item.immersiveintelligence.material.basic_electronic_element.name=Базовий електронний компонент
+item.immersiveintelligence.material.circuit_template.name=Шаблон схеми
+
+item.immersiveintelligence.material.advanced_circuit_board_raw.name=Необроблена вдосконалена друкована плата
+item.immersiveintelligence.material.advanced_circuit_board_etched.name=Вигравірована вдосконалена друкована плата
+item.immersiveintelligence.material.advanced_circuit_board.name=Розширена друкована плата
+item.immersiveintelligence.material.advanced_electronic_element.name=Розширений електронний компонент
+
+item.immersiveintelligence.material.cryptographic_circuit_board.name=Криптографічна плата
+
+item.immersiveintelligence.material.processor_circuit_board_raw.name=Необроблена друкована плата процесора
+item.immersiveintelligence.material.processor_circuit_board_etched.name=Вигравірована плата процесора
+item.immersiveintelligence.material.processor_circuit_board.name=Плата процесора
+item.immersiveintelligence.material.processor_electronic_element.name=Процесор
+item.immersiveintelligence.material.transistor.name=Транзистор
+
+item.immersiveintelligence.material.compact_electric_engine.name=Компактний електричний двигун
+item.immersiveintelligence.material.compact_electric_engine_advanced.name=Удосконалений компактний електричний двигун
+item.immersiveintelligence.material.carbon_brush.name=Вугільна щітка
+item.immersiveintelligence.material.glass_fibre_cable.name=Скловолоконний кабель
+item.immersiveintelligence.material.sandbag.name=Мішок з піском
+
+item.immersiveengineering.material.gunpart_barrel.name=Сталевий ствол
+item.immersiveintelligence.material.iron_gun_barrel.name=Залізний ствол
+item.immersiveintelligence.material.tungsten_gun_barrel.name=Стовбур високоточної гармати
+item.immersiveintelligence.material.gun_stock.name=Дерев'яна ложа
+item.immersiveintelligence.material.gun_casing.name=Дерев'яна гільза
+
+item.immersiveengineering.material.gunpart_hammer.name=Револьверний молот
+item.immersiveengineering.material.gunpart_drum.name=Барабан револьвера
+item.immersiveintelligence.material.firing_mechanism.name=Затворний механізм
+item.immersiveintelligence.material.advanced_firing_mechanism.name=Механізм автоматичного стрільби
+
+item.immersiveintelligence.material.advanced_electron_tube.name=Вдосконалена вакуумна трубка
+
+item.immersiveintelligence.material.antenna.name=Антена
+item.immersiveintelligence.material.high_frequency_antenna.name=Високочастотна антена
+item.immersiveintelligence.material.camera.name=Камера
+item.immersiveintelligence.material.improved_camera.name=Покращена камера
+item.immersiveintelligence.material.targeting_device.name=Цільовий пристрій
+item.immersiveintelligence.material.high_precision_targeting_device.name=Пристрій націлювання високої точності
+item.immersiveintelligence.material.lens.name=Лінза
+item.immersiveintelligence.material.infrared_lens.name=Інфрачервона лінза
+
+item.immersiveintelligence.material.punchtape_empty.name=Порожня перфолента
+item.immersiveintelligence.punchtape.name=Перфострічка
+
+item.immersiveintelligence.binoculars.binoculars.name=Бінокль
+item.immersiveintelligence.binoculars.infrared_binoculars.name=Інфрачервоний бінокль
+
+item.immersiveintelligence.assembly_scheme.name=Схема складання
+
+item.immersiveintelligence.press_mold.howitzer.name=Металева прес-форма: гільза важкої артилерії
+item.immersiveintelligence.press_mold.medium_howitzer.name=Металева прес-форма: середня артилерійська гільза
+item.immersiveintelligence.press_mold.light_howitzer.name=Металева прес-форма: гільза легкої артилерії
+item.immersiveintelligence.press_mold.mortar.name=Металева прес-форма: гільза для міномета
+item.immersiveintelligence.press_mold.light_gun.name=Металева прес-форма: гільза легкої гармати
+item.immersiveintelligence.press_mold.autocannon.name=Металева прес-форма: гільза Autocannon
+item.immersiveintelligence.press_mold.shotgun.name=Металева прес-форма: гільза для дробовика
+item.immersiveintelligence.press_mold.machinegun.name=Металева прес-форма: довга гільза
+item.immersiveintelligence.press_mold.assault_rifle.name=Металева прес-форма: проміжна гільза
+item.immersiveintelligence.press_mold.submachinegun.name=Металева прес-форма: коротка гільза
+item.immersiveintelligence.press_mold.naval_mine.name=Металева прес-форма: Корпус морської міни
+item.immersiveintelligence.press_mold.tripmine.name=Металева прес-форма: Корпус пригаючої міни
+item.immersiveintelligence.press_mold.tellermine.name=Металева прес-форма: корпус міни
+
+item.immersiveintelligence.vulcanizer_mold.belt.name=Форма вулканізатора: пояс
+item.immersiveintelligence.vulcanizer_mold.tire.name=Форма вулканізатора: Шина
+
+item.immersiveintelligence.material_ingot.platinum.name=Платиновий зливок
+item.immersiveintelligence.material_ingot.zinc.name=Зливок цинку
+item.immersiveintelligence.material_ingot.tungsten.name=Злиток вольфраму
+item.immersiveintelligence.material_ingot.brass.name=Латунний злиток
+item.immersiveintelligence.material_ingot.advanced_electronic_alloy.name=Зливок просунотого електронного сплаву
+item.immersiveintelligence.material_ingot.silicon.name=Зливок кремнію
+item.immersiveintelligence.material_ingot.magnet.name=Магніт
+item.immersiveintelligence.material_ingot.duraluminium.name=Зливок дюралюмінію
+
+item.immersiveintelligence.material_rod.brass.name=Латунний стрижень
+item.immersiveintelligence.material_rod.tungsten.name=Вольфрамовий стрижень
+item.immersiveintelligence.material_rod.zinc.name=Цинковий стрижень
+item.immersiveintelligence.material_rod.platinum.name=Платиновий стрижень
+item.immersiveintelligence.material_rod.duraluminium.name=Дюралюмінієвий стрижень
+
+item.immersiveintelligence.material_dust.platinum.name=Платиновий пил
+item.immersiveintelligence.material_dust.zinc.name=Цинковий пил
+item.immersiveintelligence.material_dust.tungsten.name=Вольфрамовий пил
+item.immersiveintelligence.material_dust.brass.name=Латунний пил
+item.immersiveintelligence.material_dust.advanced_electronic_alloy.name=Пил просунутого електронного сплаву
+item.immersiveintelligence.material_dust.silicon.name=Кремнієвий пил
+item.immersiveintelligence.material_dust.fluorite.name=Флюоритовий пил
+item.immersiveintelligence.material_dust.quartz.name=Кварцовий пил
+item.immersiveintelligence.material_dust.quartz_dirty.name=Брудний кварцовий пил
+item.immersiveintelligence.material_dust.phosphorus.name=Фосфорний пил
+item.immersiveintelligence.material_dust.duraluminium.name=Дюралюмінієвий пил
+
+item.immersiveintelligence.material_plate.platinum.name=Платинова пластина
+item.immersiveintelligence.material_plate.zinc.name=Цинкова пластина
+item.immersiveintelligence.material_plate.tungsten.name=Вольфрамова пластина
+item.immersiveintelligence.material_plate.brass.name=Латунна пластина
+item.immersiveintelligence.material_plate.advanced_electronic_alloy.name=Пластина просунотого електронного сплаву
+item.immersiveintelligence.material_plate.silicon.name=Кремнієва пластина
+item.immersiveintelligence.material_plate.rubber_raw.name=Простирадло з натурального каучуку
+item.immersiveintelligence.material_plate.duraluminium.name=Дюралюмінієва пластина
+
+item.immersiveintelligence.material_nugget.platinum.name=Платиновий самородок
+item.immersiveintelligence.material_nugget.zinc.name=Цинковий самородок
+item.immersiveintelligence.material_nugget.tungsten.name=Вольфрамовий самородок
+item.immersiveintelligence.material_nugget.brass.name=Латунний самородок
+item.immersiveintelligence.material_nugget.advanced_electronic_alloy.name=Самородок з просунотого електронного сплаву
+item.immersiveintelligence.material_nugget.silicon.name=Силіконова частина
+item.immersiveintelligence.material_nugget.duraluminium.name=Дюралюмінієвий самородок
+
+item.immersiveintelligence.material_wire.tungsten.name=Вольфрамовий дріт
+item.immersiveintelligence.material_wire.brass.name=Латунний дріт
+
+item.immersiveintelligence.material_gem.fluorite.name=Незерський флюорит
+#На основі реального мінералу глауконіту, хоча слово фосфор легше запам’ятати
+item.immersiveintelligence.material_gem.phosphorus.name=Фосфор Пустоти
+
+item.immersiveintelligence.material_boule.silicon.name=Силіконовий шар
+
+item.immersiveintelligence.material_spring.brass.name=Латунна пружина
+item.immersiveintelligence.material_spring.iron.name=Залізна пружина
+item.immersiveintelligence.material_spring.steel.name=Сталева пружина
+
+item.immersiveintelligence.material.dust_rdx.name=Пил RDX
+item.immersiveintelligence.material.dust_hmx.name=Пил HMX
+item.immersiveintelligence.material.white_phosphorus.name=Білий фосфор
+
+item.immersiveintelligence.material.bullet_core_steel.name=Сталевий сердечник кулі
+item.immersiveintelligence.material.bullet_core_brass.name=Латунний сердечник кулі
+item.immersiveintelligence.material.bullet_core_uranium.name=Урановий сердечник кулі
+item.immersiveintelligence.material.bullet_core_lead.name=Сердечник свинцевої кулі
+item.immersiveintelligence.material.bullet_core_tungsten.name=Вольфрамовий сердечник кулі
+
+item.immersiveintelligence.material.dust_salt.name=Соляний пил
+item.immersiveintelligence.material.dust_wood.name=Тирса
+item.immersiveintelligence.material.pulp_wood.name=Деревна маса
+item.immersiveintelligence.material.pulp_wood_treated.name=Оброблена деревна целюлоза
+item.immersiveintelligence.material.dust_hexamine.name=Гексаміновий пил
+item.immersiveintelligence.material.dust_formaldehyde.name=Пил формальдегіду
+item.immersiveintelligence.material.rubber_compound.name=Компаунд для вулканізації
+
+item.immersiveintelligence.material.artificial_leather.name=Штучна шкіра
+item.immersiveintelligence.material.natural_rubber.name=Натуральний каучук
+item.immersiveintelligence.material.rubber_belt.name=Гумовий ремінь
+item.immersiveintelligence.material.rubber_tire.name=Гумова шина
+
+item.immersiveintelligence.circuit_functional.arithmetic.name=Арифметична схема
+item.immersiveintelligence.circuit_functional.advanced_arithmetic.name=Розширена арифметична схема
+item.immersiveintelligence.circuit_functional.logic.name=Логічна схема
+item.immersiveintelligence.circuit_functional.comparator.name=Схема порівняння
+item.immersiveintelligence.circuit_functional.advanced_logic.name=Розширена логічна схема
+item.immersiveintelligence.circuit_functional.text.name=Схема текстового процесора
+item.immersiveintelligence.circuit_functional.itemstack.name=Схема операцій ItemStack
+item.immersiveintelligence.circuit_functional.array.name=Схема операцій масиву
+item.immersiveintelligence.circuit_functional.entity.name=Операційний контур сутності
+item.immersiveintelligence.circuit_functional.document.name=Схема документа
+item.immersiveintelligence.circuit_functional.type_conversion.name=Схема перетворення типу
+item.immersiveintelligence.circuit_functional.fluidstack.name=Схема операцій Fluidstack
+item.immersiveintelligence.circuit_functional.map.name=Схема операцій з картою
+item.immersiveintelligence.circuit_functional.vector_arithmetic.name=Векторна арифметична схема
+item.immersiveintelligence.circuit_functional.cryptographer.name=Криптографічна схема
+
+
+item.immersiveintelligence.minecart.wooden_crate.name=Візок з дерев'яним ящиком
+item.immersiveintelligence.minecart.reinforced_crate.name=Візок з підсиленим ящиком
+item.immersiveintelligence.minecart.steel_crate.name=Візок із сталевим ящиком
+item.immersiveintelligence.minecart.wooden_barrel.name=Візок з дерев'яною бочкою
+item.immersiveintelligence.minecart.metal_barrel.name=Візок з металевою бочкою
+item.immersiveintelligence.minecart.capacitor_lv.name=Візок з низьковольтним конденсатором
+item.immersiveintelligence.minecart.capacitor_mv.name=Візок з середневольтним конденсатором
+item.immersiveintelligence.minecart.capacitor_hv.name=Візок з високовольтним конденсатором
+item.immersiveintelligence.minecart.capacitor_creative.name=Візок з творчим конденсатором
+#Immersive Technology Compat
+item.immersiveintelligence.minecart.crate_creative.name=Візок із творчим ящиком для зберігання
+item.immersiveintelligence.minecart.barrel_creative.name=Візок з креативною бочкою
+item.immersiveintelligence.minecart.steel_barrel.name=Візок із сталевою бочкою
+item.immersiveintelligence.minecart.open_barrel.name=Візок з відкритою металевою бочкою
+
+item.immersiveintelligence.light_engineer_armor_helmet.name=Легкий шолом інженера
+item.immersiveintelligence.light_engineer_armor_chestplate.name=Легка кираса інженера
+item.immersiveintelligence.light_engineer_armor_leggings.name=Легкі поножі інженера
+item.immersiveintelligence.light_engineer_armor_boots.name=Легкі черевики інженера
+item.immersiveintelligence.advanced_powerpack.name=Рюкзак із покращеним конденсатором
+
+item.immersiveintelligence.lighter.name=Інженерна запальничка
+item.immersiveintelligence.measuring_cup.name=Мірна чашка інженера
+item.immersiveintelligence.electric_hammer.name=Електричний молоток інженера
+item.immersiveintelligence.electric_wirecutter.name=Інженерний електричний різак дроту
+item.immersiveintelligence.electric_multitool.name=Електричний багатофункціональний інструмент інженера
+item.immersiveintelligence.radio_configurator.basic.name=Базовий радіотюнер
+item.immersiveintelligence.radio_configurator.advanced.name=Розширений радіотюнер
+item.immersiveintelligence.trench_shovel.name=Траншейна лопата
+item.immersiveintelligence.tripod_periscope.name=Перископ штатив
+item.immersiveintelligence.mine_detector.name=Детектор міни
+item.immersiveintelligence.mortar.name=Міномет
+item.immersiveintelligence.machinegun.name=Кулемет
+item.immersiveintelligence.assault_rifle.name=Штурмова гвинтівка
+item.immersiveintelligence.submachinegun.name=Пістолет-кулемет
+item.immersiveintelligence.autorevolver.name=Авторевольвер
+item.immersiveintelligence.rifle.name=Гвинтівка
+item.immersiveintelligence.rifle_handmade.name=Гвинтівка ручної роботи
+
+#Drillheads
+item.immersiveintelligence.drillhead.tungsten.name=Вольфрамова свердлильна головка
+item.immersiveintelligence.drillhead.iron_diamond_tip.name=Залізна свердлильна головка з алмазним наконечником
+item.immersiveintelligence.drillhead.steel_diamond_tip.name=Сталева свердлильна головка з алмазним наконечником
+item.immersiveintelligence.drillhead.tungsten_diamond_tip.name=Вольфрамова свердлильна головка з алмазним наконечником
+
+item.immersiveintelligence.weapon_upgrade.water_cooling.name=Стовбур з водяним охолодженням
+item.immersiveintelligence.weapon_upgrade.heavy_barrel.name=Важкий ствол
+item.immersiveintelligence.weapon_upgrade.second_magazine.name=Другий журнал
+item.immersiveintelligence.weapon_upgrade.belt_fed_loader.name=Завантажувач боєприпасів із стрічковою подачею
+item.immersiveintelligence.weapon_upgrade.precise_bipod.name=Точна сошка
+item.immersiveintelligence.weapon_upgrade.hasty_bipod.name=Польова сошка
+item.immersiveintelligence.weapon_upgrade.scope.name=Сфера дії
+item.immersiveintelligence.weapon_upgrade.infrared_scope.name=Інфрачервоний приціл
+item.immersiveintelligence.weapon_upgrade.shield.name=Щити, що приєднуються
+item.immersiveintelligence.weapon_upgrade.tripod.name=Штатив
+
+item.immersiveintelligence.weapon_upgrade.sturdy_barrel.name=Міцний ствол
+item.immersiveintelligence.weapon_upgrade.suppressor.name=Придушувач
+item.immersiveintelligence.weapon_upgrade.bottom_loading.name=Нижній завантажувач
+item.immersiveintelligence.weapon_upgrade.folding_stock.name=Складаний приклад
+
+item.immersiveintelligence.weapon_upgrade.heavy_springbox.name=Важка пружинна коробка
+
+item.immersiveintelligence.weapon_upgrade.radio_marker.name=Радіомаркер
+item.immersiveintelligence.weapon_upgrade.rifle_grenade_launcher.name=Гвинтівковий гранатомет
+item.immersiveintelligence.weapon_upgrade.stereoscopic_rangefinder.name=Стереоскопічний далекомір
+item.immersiveintelligence.weapon_upgrade.gyroscopic_stabilizer.name=Гіроскопічний стабілізатор
+item.immersiveintelligence.weapon_upgrade.electric_firing_motor.name=Електричний двигун
+item.immersiveintelligence.weapon_upgrade.railgun_assisted_chamber.name=Камера з рельсотроновою гарматою
+
+item.immersiveintelligence.weapon_upgrade.semi_automatic.name=Напівавтоматичний механізм стрільби
+item.immersiveintelligence.weapon_upgrade.extended_barrel.name=Розширений ствол
+
+item.immersiveintelligence.armor_upgrade.gasmask.name=Протигаз
+item.immersiveintelligence.armor_upgrade.infiltrator_gear.name=Головний убір зловмисника
+item.immersiveintelligence.armor_upgrade.technician_gear.name=Головний убір техніка
+item.immersiveintelligence.armor_upgrade.engineer_gear.name=Головний убір інженера
+item.immersiveintelligence.armor_upgrade.steel_armor_plates.name=Плити сталевої броні
+item.immersiveintelligence.armor_upgrade.composite_armor_plates.name=Плати композитної броні
+item.immersiveintelligence.armor_upgrade.hazmat_coating.name=Небезпечне покриття
+item.immersiveintelligence.armor_upgrade.heat_resistant_coating.name=Жаростійке покриття
+item.immersiveintelligence.armor_upgrade.anti_static_mesh.name=Антистатична сітка
+item.immersiveintelligence.armor_upgrade.camouflage_mesh.name=Камуфляжна сітка
+item.immersiveintelligence.armor_upgrade.infrared_absorbing_mesh.name=Інфрачервона сітка
+item.immersiveintelligence.armor_upgrade.scuba_tank.name=Танк для підводного плавання
+item.immersiveintelligence.armor_upgrade.helipack.name=Вертолітний ранець
+item.immersiveintelligence.armor_upgrade.exoskeleton.name=Екзоскелет
+item.immersiveintelligence.armor_upgrade.boot_reinforcement.name=Посилення черевиків
+item.immersiveintelligence.armor_upgrade.snow_rackets.name=Снігові ракетки
+item.immersiveintelligence.armor_upgrade.flippers.name=Ласти
+item.immersiveintelligence.armor_upgrade.internal_springs.name=Внутрішні пружини
+
+item.immersiveintelligence.tracer_powder.tracer_powder.name=Індикаторний порошок
+item.immersiveintelligence.tracer_powder.flare_powder.name=Факельний порох
+
+item.immersiveintelligence.skycrate_mount.mechanical.name=Кріплення Skycrate
+item.immersiveintelligence.skycrate_mount.electric.name=Електричне кріплення Skycrate
+
+desc.immersiveintelligence.electric_hammer=Обертає блоки, перемикає порти машини, формує мультиблоки.
+desc.immersiveintelligence.electric_wirecutter=Ріже дроти та ремені, працює як ножиці.
+desc.immersiveintelligence.trench_shovel=Швидше закопує триміни, зміцнює блоки.
+desc.immersiveintelligence.wrench=Встановлює оновлення на сумісних машинах.
+desc.immersiveintelligence.tachometer=Вимірює швидкість і крутний момент обертових пристроїв.
+desc.immersiveintelligence.binoculars=Дозволяє бачити віддалені речі.
+desc.immersiveintelligence.casing_pouch=Зберігає використані гільзи та порожні магазини.
+
+desc.immersiveintelligence.toolupgrade.item.revolver=Револьвер
+desc.immersiveintelligence.toolupgrade.item.railgun=Рейлган
+desc.immersiveintelligence.toolupgrade.item.machinegun=Кулемет
+desc.immersiveintelligence.toolupgrade.item.submachinegun=Пістолет-кулемет
+desc.immersiveintelligence.toolupgrade.item.mortar=Міномет
+desc.immersiveintelligence.toolupgrade.item.assault_rifle=Штурмова гвинтівка
+desc.immersiveintelligence.toolupgrade.item.autorevolver=Авторевольвер
+desc.immersiveintelligence.toolupgrade.item.rifle=Гвинтівка
+
+desc.immersiveintelligence.filled_casing=Наповнений порохом
+desc.immersiveintelligence.explosives_programmed=Запрограмовано з пакетом даних
+
+desc.immersiveintelligence.toolupgrade.item.light_engineer_helmet=Легкий шолом інженера
+desc.immersiveintelligence.toolupgrade.item.light_engineer_chestplate=Легкий нагрудник інженера
+desc.immersiveintelligence.toolupgrade.item.light_engineer_leggings=Легкі поножі інженера
+desc.immersiveintelligence.toolupgrade.item.light_engineer_boots=Легкі черевики інженера
+
+desc.immersiveintelligence.toolupgrade.water_cooling=Використовує воду для охолодження MG. Збільшує максимальну кількість тепла, яку може прийняти MG.
+desc.immersiveintelligence.toolupgrade.heavy_barrel=Значно збільшує скорострільність, має більшу віддачу та швидше перегрівається.
+desc.immersiveintelligence.toolupgrade.second_magazine=Дозволяє використовувати боєприпаси з двох магазинів, які потрібно перезаряджати окремо.
+desc.immersiveintelligence.toolupgrade.belt_fed_loader=Дозволяє брати боєприпаси з ящика з боєприпасами під гравцем. Збільшує час налаштування.
+desc.immersiveintelligence.toolupgrade.precise_bipod=Збільшує час налаштування, зменшує віддачу
+desc.immersiveintelligence.toolupgrade.hasty_bipod=Зменшує час налаштування, збільшує віддачу
+desc.immersiveintelligence.toolupgrade.scope=Дозволяє прицілюватися у віддалені предмети
+desc.immersiveintelligence.toolupgrade.infrared_scope=Дозволяє нічне бачення, потрібне джерело живлення, таке як конденсаторний рюкзак.
+desc.immersiveintelligence.toolupgrade.shield=Відбиває снаряди та захищає навідника від пошкоджень у ближньому бою. Збільшує час налаштування.
+desc.immersiveintelligence.toolupgrade.tripod=Майже усуває віддачу, збільшує максимальний кут і час налаштування.
+
+desc.immersiveintelligence.toolupgrade.sturdy_barrel=Збільшує швидкість кулі та пробиття в ціні швидкості вогню.
+desc.immersiveintelligence.toolupgrade.suppressor=Вимикає звук зброї, дозволяє швидко та непомітно діяти.
+desc.immersiveintelligence.toolupgrade.bottom_loading=Замінює ручку, щоб пістолет заряджався знизу. Дозволяє заряджати барабанні магазини.
+desc.immersiveintelligence.toolupgrade.folding_stock=Зменшує час перезавантаження та прицілювання. Менша точність на ходу.
+
+desc.immersiveintelligence.toolupgrade.heavy_springbox=Збільшує швидкість кулі, надаючи їй вищу проникаючу силу. Збільшує час між кожним пострілом.
+
+desc.immersiveintelligence.toolupgrade.rifle_grenade_launcher=Дозволяє стріляти рельсовими гранатами. Значно нижча дальність, ніж стандартний рельсотрон.
+desc.immersiveintelligence.toolupgrade.stereoscopic_rangefinder=Показує діапазон до поточної цілі. У поєднанні з радіомаркером дозволяє передавати дані про позиції противника.
+desc.immersiveintelligence.toolupgrade.gyroscopic_stabilizer=Автоматично стабілізує рушницю після пострілу, зменшує віддачу в усіх режимах стрільби. Вимагає енергії.
+desc.immersiveintelligence.toolupgrade.electric_firing_motor=Збільшує скорострільність гармати в автоматичному режимі. Вимагає енергії.
+desc.immersiveintelligence.toolupgrade.railgun_assisted_chamber=Збільшує швидкість куль, випущених у режимі ручного вогню. Вимагає енергії.
+
+desc.immersiveintelligence.toolupgrade.semi_automatic=Дозволяє заряджати боєприпаси з магазинів, збільшуючи швидкість вогню.
+desc.immersiveintelligence.toolupgrade.extended_barrel=Збільшує швидкість куль, випущених у режимі ручного вогню. Зменшує швидкість вогню.
+
+desc.immersiveintelligence.toolupgrade.gasmask=Захищає користувача від шкідливих газів.
+
+desc.immersiveintelligence.toolupgrade.infiltrator_gear=Дозволяє нічне бачення та збільшення, для роботи потрібна енергія.
+desc.immersiveintelligence.toolupgrade.technician_gear=Відображає підказки, для роботи яких зазвичай потрібно тримати молоток, вольтметр або гайковий ключ.
+desc.immersiveintelligence.toolupgrade.engineer_gear=Поєднує ефекти головних уборів Інфільтратора та Техніка в одному пристрої. Підвищене споживання енергії.
+desc.immersiveintelligence.toolupgrade.steel_armor_plates=Трохи збільшити товщину броні. Може відбивати стріли та інші легкі снаряди. На одну броню можна встановити до 3.
+desc.immersiveintelligence.toolupgrade.composite_armor_plates=Значно збільшити товщину броні. Відбиває снаряди та пошкоджує зброю ближнього бою противника, якщо вона не здатна завдати достатньої шкоди тому, хто носить обладунок. На одну броню можна встановити до 3.
+desc.immersiveintelligence.toolupgrade.hazmat_coating=Робить броню стійкою до радіації та корозії.
+desc.immersiveintelligence.toolupgrade.heat_resistant_coating=У поєднанні з посиленими черевиками дозволяє плавати в гарячих рідинах.
+desc.immersiveintelligence.toolupgrade.anti_static_mesh=Робить користувача несприйнятливим до ураження електричним струмом і робить безконтактні запобіжники нездатними націлити його. Дуже чутливий до електричних пошкоджень під водою.
+desc.immersiveintelligence.toolupgrade.camouflage_mesh=Робить власника невидимим, коли він крадеться крізь листя. Чутливий до вогню.
+desc.immersiveintelligence.toolupgrade.infrared_absorbing_mesh=Робить користувача невидимим для пристроїв на основі інфрачервоного випромінювання. Чутливий до ЕМП.
+desc.immersiveintelligence.toolupgrade.scuba_tank=Може бути наповнений киснем для дихання під водою. Для роботи потрібен протигаз.
+desc.immersiveintelligence.toolupgrade.helipack=Дозволяє повільний, хоча стабільний політ. Потрібен бензин.
+desc.immersiveintelligence.toolupgrade.exoskeleton=Дозволяє швидше працювати. Для роботи потрібна енергія.
+desc.immersiveintelligence.toolupgrade.boot_reinforcement=Робить власника імунітетом до вогню. У поєднанні з термостійким покриттям дозволяє користувачеві плавати в гарячих рідинах.
+desc.immersiveintelligence.toolupgrade.snow_rackets=Збільшує швидкість ходьби на снігу та стабільність на льоду.
+desc.immersiveintelligence.toolupgrade.flippers=Дозволяє швидше рухатися у воді.
+desc.immersiveintelligence.toolupgrade.internal_springs=Захищає користувача від пошкодження при падінні. Заглушує кроки власника.
+
+item.immersiveintelligence.data_wire.name=Котушка кабелю даних
+
+item.immersiveintelligence.trip_wire.name=Котушка дроту
+
+item.immersiveintelligence.small_wirecoil.data.name=Котушка малого кабелю даних
+item.immersiveintelligence.small_wirecoil.redstone.name=Маленька котушка кабелю Redstone
+desc.immersiveintelligence.small_wirecoil=Використовується для зв'язування точної електроніки, такої як змонтовані схеми.
+
+item.immersiveintelligence.printed_page.blank.name=Порожня сторінка
+item.immersiveintelligence.printed_page.text.name=Друкований текст
+item.immersiveintelligence.printed_page.code.name=Надрукований код
+item.immersiveintelligence.printed_page.blueprint.name=Друкована схема будівництва
+item.immersiveintelligence.printed_page.bound_pages.name=Зшиті сторінки
+item.immersiveintelligence.printed_page.newspaper.name=Газета
+item.immersiveintelligence.printed_page.book.name=Книга
+item.immersiveintelligence.printed_page.letter.name=Лист
+
+item.immersiveintelligence.precission_tool.buzzsaw.name=Точна жуйка
+item.immersiveintelligence.precission_tool.drill.name=Прецизійне свердло
+item.immersiveintelligence.precission_tool.inserter.name=Точний вставник
+item.immersiveintelligence.precission_tool.solderer.name=Точний паяльник
+item.immersiveintelligence.precission_tool.welder.name=Апарат точного зварювання
+item.immersiveintelligence.precission_tool.hammer.name=Точний молоток
+
+item.immersiveintelligence.sawblade.iron.name=Полотно залізної пилки
+item.immersiveintelligence.sawblade.steel.name=Сталеве пилкове полотно
+item.immersiveintelligence.sawblade.tungsten.name=Вольфрамова пилка
+
+#bCal - Block-Caliber (1/16 Block = 1 bCal)
+#Casings
+item.immersiveintelligence.ammo_casing.artillery_8bcal.name=Оболонка важкої артилерії
+item.immersiveintelligence.artillery_8bcal.core.name=Ядро снаряда важкої артилерії
+item.immersiveintelligence.artillery_8bcal.bullet.name=Важкий артилерійський снаряд
+
+item.immersiveintelligence.ammo_casing.medium_artillery_6bcal.name=Середня артилерійська Оболонка
+item.immersiveintelligence.artillery_6bcal_long.core.name=Ядро середнього артилерійського снаряда
+item.immersiveintelligence.artillery_6bcal_long.bullet.name=Середній артилерійський снаряд
+
+item.immersiveintelligence.ammo_casing.light_artillery_6bcal.name=Оболонка легкої артилерії
+item.immersiveintelligence.artillery_6bcal.core.name=Ядро снаряда легкої артилерії
+item.immersiveintelligence.artillery_6bcal.bullet.name=Легкий артилерійський снаряд
+
+item.immersiveintelligence.ammo_casing.light_gun_4bcal.name=Оболонка легкої гармати
+item.immersiveintelligence.gun_4bcal.core.name=Ядро снаряда легкої гармати
+item.immersiveintelligence.gun_4bcal.bullet.name=Снаряд легкої гармати
+
+item.immersiveintelligence.ammo_casing.rocket_6bcal.name=Оболонка ракети
+item.immersiveintelligence.rocket_6bcal.core.name=Ядро ракети
+item.immersiveintelligence.rocket_6bcal.bullet.name=Ракета
+
+item.immersiveintelligence.ammo_casing.heavy_rocket_10bcal.name=Оболонка важкої ракети
+item.immersiveintelligence.rocket_10bcal.core.name=Ядро важкої ракети
+item.immersiveintelligence.rocket_10bcal.bullet.name=Важка ракета
+
+item.immersiveintelligence.ammo_casing.guided_missile_6bcal.name=Корпус дротяної ракети
+item.immersiveintelligence.missile_guided_6bcal.core.name=Ядро керованої ракети
+item.immersiveintelligence.missile_guided_6bcal.bullet.name=Ракета з дротовим наведенням
+
+item.immersiveintelligence.ammo_casing.mortar_6bcal.name=Оболонка від міномета
+item.immersiveintelligence.mortar_6bcal.core.name=Ядро снаряда міномета
+item.immersiveintelligence.mortar_6bcal.bullet.name=Мінометний снаряд
+
+item.immersiveintelligence.ammo_casing.mg_2bcal.name=Довга гільза
+item.immersiveintelligence.mg_2bcal.core.name=Довге кульове ядро
+item.immersiveintelligence.mg_2bcal.bullet.name=Довгий маркер
+
+item.immersiveintelligence.ammo_casing.stg_1bcal.name=Проміжна гільза
+item.immersiveintelligence.stg_1bcal.core.name=Проміжне ядро ​​пулі
+item.immersiveintelligence.stg_1bcal.bullet.name=Проміжний маркер
+
+item.immersiveintelligence.ammo_casing.smg_1bcal.name=Коротка гільза
+item.immersiveintelligence.smg_1bcal.core.name=Коротка кульова ядро
+item.immersiveintelligence.smg_1bcal.bullet.name=Коротка маркера
+
+item.immersiveintelligence.revolver_1bcal.core.name=Ядро револьверної кулі
+item.immersiveintelligence.revolver_1bcal.bullet.name=Револьверна куля
+
+item.immersiveintelligence.ammo_casing.autocannon_3bcal.name=Оболонка автогармати
+item.immersiveintelligence.autocannon_3bcal.core.name=Ядро оболонки автогармати
+item.immersiveintelligence.autocannon_3bcal.bullet.name=Снаряд автогармати
+
+item.immersiveintelligence.grenade_5bcal.core.name=Ядро ручної гранати
+item.immersiveintelligence.grenade_5bcal.bullet.name=Ручна граната
+
+item.immersiveengineering.bullet.empty_casing.name=Гільза револьвера
+item.immersiveengineering.mold.bullet_casing.name=Металева прес-форма: гільза револьвера
+item.immersiveintelligence.railgun_grenade_4bcal.core.name=Ядро гранати рельсової гармати
+item.immersiveintelligence.railgun_grenade_4bcal.bullet.name=Граната рельсової гармати
+
+#Компоненти
+
+item.immersiveintelligence.bullet.component.tnt.name=TNT
+item.immersiveintelligence.bullet.component.rdx.name=RDX
+item.immersiveintelligence.bullet.component.hmx.name=HMX
+item.immersiveintelligence.bullet.component.white_phosphorus.name=Білий фосфор
+item.immersiveintelligence.bullet.component.firework.name=Феєрверк
+item.immersiveintelligence.bullet.component.tesla.name=Випромінювачі електростатичного заряду
+item.immersiveintelligence.bullet.component.tracer_powder.name=Трасуючий порох
+item.immersiveintelligence.bullet.component.flare_powder.name=Факельний порох
+item.immersiveintelligence.bullet.component.propaganda.name=Пропаганда
+#shh! it's a secret!
+item.immersiveintelligence.bullet.component.fish.name=риба
+item.immersiveintelligence.bullet.component.nuke.name=Ядерна боєголовка
+
+#Cores
+
+item.immersiveintelligence.bullet.component.core_steel.name=Сталевий сердечник
+item.immersiveintelligence.bullet.component.core_brass.name=Латунний сердечник
+item.immersiveintelligence.bullet.component.core_copper.name=Мідний сердечник
+item.immersiveintelligence.bullet.component.core_iron.name=Залізний сердченик
+item.immersiveintelligence.bullet.component.core_tungsten.name=Вольфрамовий сердечник
+item.immersiveintelligence.bullet.component.core_lead.name=Свинцевий сердечник
+item.immersiveintelligence.bullet.component.core_uranium.name=Урановий сердечник
+item.immersiveintelligence.bullet.component.core_pabilium.name=Пабілієвий сердченик
+
+item.immersiveintelligence.bullet_magazine.machinegun.name=Магазин Кулемета
+item.immersiveintelligence.bullet_magazine.submachinegun.name=Магазин ПК
+item.immersiveintelligence.bullet_magazine.submachinegun_drum.name=Барабанний Магазин ПК
+item.immersiveintelligence.bullet_magazine.automatic_revolver.name=Автоматичний револьверний Магазин
+item.immersiveintelligence.bullet_magazine.assault_rifle.name=Магазин про штурмову гвинтівку
+item.immersiveintelligence.bullet_magazine.autocannon.name=Магазин Автогармати
+item.immersiveintelligence.bullet_magazine.cpds_drum.name=Магазин барабанів CPDS
+item.immersiveintelligence.bullet_magazine.rifle.name=Гвинтівковий Магазин
+
+item.immersiveintelligence.casing_pouch.name=Підсумок для відпрацьованих гільз
+
+item.immersiveintelligence.motor_gear.copper.name=Мідна шестерня
+item.immersiveintelligence.motor_gear.brass.name=Латунна шестерня
+item.immersiveintelligence.motor_gear.iron.name=Залізний шестерня
+item.immersiveintelligence.motor_gear.steel.name=Сталевий шестерня
+item.immersiveintelligence.motor_gear.tungsten.name=Вольфрамова шестерня
+
+item.immersiveintelligence.motor_belt.cloth.name=Тканинний ремінь
+item.immersiveintelligence.motor_belt.steel.name=Сталевий ремінь
+item.immersiveintelligence.motor_belt.rubber.name=Гумовий ремінь
+
+item.immersiveintelligence.wrench.name=Гайковий ключ інженера
+item.immersiveintelligence.electric_wrench.name=Електричний гайковий ключ інженера
+
+item.immersiveintelligence.tachometer.name=Тахометр інженера
+item.immersiveintelligence.torque_meter.name=Вимірювач крутного моменту інженера
+
+#Блоки
+
+tile.immersiveintelligence.ore.platinum.name=Платинова руда
+tile.immersiveintelligence.sheetmetal.platinum.name=Платиновий листовий метал
+tile.immersiveintelligence.storage.platinum.name=Платиновий блок
+tile.immersiveintelligence.sheetmetal_slab.platinum.name=Платина з листового металу
+tile.immersiveintelligence.storage_slab.platinum.name=Платинова плита
+
+tile.immersiveintelligence.ore.zinc.name=Цинкова руда
+tile.immersiveintelligence.sheetmetal.zinc.name=Цинковий листовий метал
+tile.immersiveintelligence.storage.zinc.name=Блок цинку
+tile.immersiveintelligence.sheetmetal_slab.zinc.name=Плита з листового цинку
+tile.immersiveintelligence.storage_slab.zinc.name=Цинкова плита
+
+tile.immersiveintelligence.ore.tungsten.name=Вольфрамова руда
+tile.immersiveintelligence.sheetmetal.tungsten.name=Вольфрамовий листовий метал
+tile.immersiveintelligence.storage.tungsten.name=Вольфрамовий блок
+tile.immersiveintelligence.sheetmetal_slab.tungsten.name=Вольфрамова листова металева плита
+tile.immersiveintelligence.storage_slab.tungsten.name=Вольфрамова плита
+
+tile.immersiveintelligence.ore.salt.name=Соляна руда
+
+tile.immersiveintelligence.ore.fluorite.name=Флюоритова руда Пустоти
+tile.immersiveintelligence.ore.phosphorus.name=Фосфорна руда Пустоти
+
+tile.immersiveintelligence.sheetmetal.brass.name=Латунь
+tile.immersiveintelligence.storage.brass.name=Блок латуні
+tile.immersiveintelligence.sheetmetal_slab.brass.name=Плита латунного листового металу
+tile.immersiveintelligence.storage_slab.brass.name=Латунна плита
+
+tile.immersiveintelligence.sheetmetal.duraluminium.name=Дюралюмінієвий листовий метал
+tile.immersiveintelligence.storage.duraluminium.name=Дюралюмінієвий блок
+tile.immersiveintelligence.sheetmetal_slab.duraluminium.name=Плита з дюралюмінію
+tile.immersiveintelligence.storage_slab.duraluminium.name=Дюралюмінієва плита
+
+tile.immersiveintelligence.fence_brass.name=Латунний паркан
+tile.immersiveintelligence.fence_tungsten.name=Вольфрамова огорожа
+tile.immersiveintelligence.fence_zinc.name=Цинкова огорожа
+tile.immersiveintelligence.fence_platinum.name=Платиновий паркан
+tile.immersiveintelligence.fence_duraluminium.name=Дюралюмінієвий паркан
+
+tile.immersiveintelligence.rubber_log.raw.name=Деревина каучукового дерева
+tile.immersiveintelligence.rubber_log.rebbur.name=Отвір для вилучення латексу
+tile.immersiveintelligence.rubber_log.stripped.name=Точка вилучення знятого латексу
+tile.immersiveintelligence.rubber_leaves.rubber.name=Листя каучукового дерева
+tile.immersiveintelligence.rubber_sapling.rubber.name=Саджанець каучукового дерева
+tile.immersiveintelligence.charred_log.main.name=Обвуглене поліно
+
+tile.immersiveintelligence.concrete_decoration.concrete_bricks.name=Бетонні цеглини
+tile.immersiveintelligence.concrete_decoration_slab.concrete_bricks.name=Плита з бетонної цегли
+tile.immersiveintelligence.concrete_decoration_stairs_concrete_bricks.name=Плита з бетонної цегли
+
+tile.immersiveintelligence.concrete_decoration.sturdy_concrete_bricks.name=Бетонна цегла Панзера
+tile.immersiveintelligence.concrete_decoration_slab.sturdy_concrete_bricks.name=Плита Панзерні кірпичі
+tile.immersiveintelligence.concrete_decoration_stairs_sturdy_concrete_bricks.name=Сходи з бетонної цегли Панзер
+
+tile.immersiveintelligence.concrete_decoration.uberconcrete.name=Убербетонна цегла
+tile.immersiveintelligence.concrete_decoration_slab.uberconcrete.name=Бетонна цегляна плита
+tile.immersiveintelligence.concrete_decoration_stairs_uberconcrete.name=Бетонні цегляні сходи
+
+tile.immersiveintelligence.metal_decoration.electronic_engineering.name=Електронний інженерний блок
+tile.immersiveintelligence.metal_decoration.advanced_electronic_engineering.name=Розширений інженерний електронний блок
+tile.immersiveintelligence.metal_decoration.computer_engineering.name=Інженерний комп'ютерний блок
+tile.immersiveintelligence.metal_decoration.mechanical_engineering.name=Блок машинобудування
+tile.immersiveintelligence.metal_decoration.heavy_mechanical_engineering.name=Блок важкого машинобудування
+
+tile.immersiveintelligence.metal_decoration.coil_data.name=Котушка кабелю даних
+tile.immersiveintelligence.cloth_decoration.coil_rope.name=Котушка мотузки
+tile.immersiveintelligence.metal_decoration.coil_steel_motor_belt.name=Сталева гусенична котушка
+tile.immersiveintelligence.cloth_decoration.coil_cloth_motor_belt.name=Котушка тканинного ременя
+tile.immersiveintelligence.cloth_decoration.coil_rubber_motor_belt.name=Котушка гумового ременя
+
+tile.immersiveintelligence.mine_sign.mine_sign.name=Моя обережність знак
+tile.immersiveintelligence.mine_sign.mine_sign.desc=Шахти;Вперед!
+
+tile.immersiveengineering.conveyor.immersiveintelligence:rubber_conveyor.name=Гумова конвеєрна стрічка
+tile.immersiveengineering.conveyor.immersiveintelligence:rubber_uncontrolled.name=Гумова конвеєрна стрічка
+tile.immersiveengineering.conveyor.immersiveintelligence:rubber_uncontrolled.flavour=Ігнорує контроль редстоуна
+tile.immersiveengineering.conveyor.immersiveintelligence:rubber_dropper.name=Скидання гумової конвеєрної стрічки
+tile.immersiveengineering.conveyor.immersiveintelligence:rubber_droppercovered.name=Скидання накритої гумової конвеєрної стрічки
+tile.immersiveengineering.conveyor.immersiveintelligence:rubber_vertical.name=Вертикальний гумовий конвеєр
+tile.immersiveengineering.conveyor.immersiveintelligence:rubber_splitter.name=Гумова конвеєрна стрічка для розрізання
+tile.immersiveengineering.conveyor.immersiveintelligence:rubber_covered.name=Покрита гумова конвеєрна стрічка
+tile.immersiveengineering.conveyor.immersiveintelligence:rubber_verticalcovered.name=Вертикальна покрита гумова конвеєрна стрічка
+tile.immersiveengineering.conveyor.immersiveintelligence:rubber_extract.name=Вилучення гумової конвеєрної стрічки
+tile.immersiveengineering.conveyor.immersiveintelligence:rubber_extractcovered.name=Покритий гумовий конвеєр для вилучення
+
+#due to how IE's base classes are designed, I had to use a "main" as only value in IIBlockTypes_Mine
+#redundant? yes, works? yes
+tile.immersiveintelligence.tripmine.main.name=Стрибкова міна
+tile.immersiveintelligence.tripmine.core.name=Серцевина стрибової міни
+#Same as above (for the landmine and explosives), this is due to how the projectile workshop gets the translation
+item.immersiveintelligence.tripmine.core.name=Серцевина стрибкової міни
+item.immersiveintelligence.ammo_casing.tripmine.name=Корпус стрибкової міни
+tile.immersiveintelligence.tripwire_connector.main.name=З'єднувач стрибкової міни
+
+tile.immersiveintelligence.tellermine.main.name=протипіхотна міна
+tile.immersiveintelligence.tellermine.core.name=Ядро наземної міни
+item.immersiveintelligence.tellermine.core.name=Ядро наземної міни
+item.immersiveintelligence.ammo_casing.tellermine.name=Гільза міни
+
+tile.immersiveintelligence.radio_explosives.main.name=Радіо вибухівка
+tile.immersiveintelligence.radio_explosives.core.name=Ядро радіовибухових речовин
+item.immersiveintelligence.radio_explosives.core.name=Ядро радіовибухових речовин
+item.immersiveintelligence.ammo_casing.radio_explosives.name=Радіообладнаний ранець
+
+item.immersiveintelligence.naval_mine.bullet.name=Морська міна
+item.immersiveintelligence.naval_mine.core.name=Ядро морської міни
+item.immersiveintelligence.ammo_casing.naval_mine.name=Гільза морської міни
+
+tile.immersiveintelligence.stone_decoration.sandbags.name=Мішки з піском
+
+tile.immersiveintelligence.metal_device.metal_crate.name=Сталевий ящик
+tile.immersiveintelligence.metal_device.small_data_buffer.name=Невеликий буфер даних
+tile.immersiveintelligence.metal_device.item_buffer.name=Буфер предметів
+tile.immersiveintelligence.metal_device.timed_buffer.name=Часовий буфер
+tile.immersiveintelligence.metal_device.redstone_buffer.name=Буфер Redstone
+tile.immersiveintelligence.metal_device.punchtape_reader.name=Зчитувач перфострічки
+tile.immersiveintelligence.metal_device.data_router.name=Маршрутизатор даних
+tile.immersiveintelligence.metal_device.data_merger.name=Об'єднувач даних
+
+tile.immersiveintelligence.metal_device.ammunition_crate.name=Ящик для боєприпасів
+tile.immersiveintelligence.metal_device.medic_crate.name=Медичний ящик
+tile.immersiveintelligence.metal_device.repair_crate.name=Ремонт ящика
+
+tile.immersiveintelligence.metal_device.latex_collector.name=Збірник латексу
+
+tile.immersiveintelligence.metal_device1.co2_filter.name=Фільтр вуглекислого газу
+
+tile.immersiveintelligence.gearbox.wooden_gearbox.name=Дерев'яна коробка передач
+tile.immersiveintelligence.mechanical_device.wooden_transmission_box.name=Дерев'яна коробка передач
+tile.immersiveintelligence.mechanical_device.creative_transmission_box.name=Креативна коробка передач
+tile.immersiveintelligence.mechanical_device1.mechanical_pump.name=Механічний насос
+
+tile.immersiveintelligence.mechanical_connector.iron_wheel.name=Залізне колесо
+tile.immersiveintelligence.mechanical_connector.steel_wheel.name=Сталеве колесо
+
+tile.immersiveintelligence.small_crate.wooden_crate_box.name=Маленький дерев'яний ящик (коробка)
+tile.immersiveintelligence.small_crate.wooden_crate_cube.name=Маленький дерев'яний ящик (куб)
+tile.immersiveintelligence.small_crate.wooden_crate_wide.name=Маленький дерев'яний ящик (широкий)
+tile.immersiveintelligence.small_crate.metal_crate_box.name=Маленький металевий ящик (коробка)
+tile.immersiveintelligence.small_crate.metal_crate_cube.name=Маленький металевий ящик (куб)
+tile.immersiveintelligence.small_crate.metal_crate_wide.name=Малий металевий ящик (широкий)
+tile.immersiveintelligence.small_crate.reinforced_crate_box.name=Малий посилений ящик (коробка)
+tile.immersiveintelligence.small_crate.reinforced_crate_cube.name=Малий посилений ящик (куб)
+tile.immersiveintelligence.small_crate.reinforced_crate_wide.name=Малий посилений ящик (широкий)
+
+tile.immersiveintelligence.metal_fortification.steel_chain_fence.name=Сталева ланцюгова огорожа
+tile.immersiveintelligence.metal_fortification.brass_chain_fence.name=Огорожа з латунного ланцюга
+tile.immersiveintelligence.metal_fortification.aluminium_chain_fence.name=Алюмінієва ланцюгова огорожа
+
+tile.immersiveintelligence.wooden_fortification.wooden_steel_chain_fence.name=Дерев'яна сталева ланцюгова огорожа
+tile.immersiveintelligence.wooden_fortification.wooden_brass_chain_fence.name=Дерев'яна латунна ланцюгова огорожа
+
+tile.immersiveintelligence.metal_fortification1.tank_trap.name=Чеський їжак
+
+tile.immersiveintelligence.metal_multiblock.data_input_machine.storage=Машина введення даних - зберігання
+tile.immersiveintelligence.metal_multiblock.data_input_machine.programming=Машина введення даних - програмування
+tile.immersiveintelligence.metal_multiblock.data_input_machine.edit=Машина введення даних - редагування змінної
+tile.immersiveintelligence.metal_multiblock.data_input_machine.label_punchtapes=Зберігання Punchtape
+
+tile.immersiveintelligence.metal_multiblock.redstone_interface.data=Інтерфейс даних редстоуна - Дані
+tile.immersiveintelligence.metal_multiblock.redstone_interface.redstone=Інтерфейс даних редстоуна - Редстоун
+
+tile.immersiveintelligence.metal_multiblock.redstone_interface.modes.0=Нічого
+tile.immersiveintelligence.metal_multiblock.redstone_interface.modes.1=Логічний
+tile.immersiveintelligence.metal_multiblock.redstone_interface.modes.2=Int. (0-15)
+tile.immersiveintelligence.metal_multiblock.redstone_interface.modes.3=Int. (0-255)
+tile.immersiveintelligence.metal_multiblock.redstone_interface.modes.4=Int. (0-100)
+tile.immersiveintelligence.metal_multiblock.redstone_interface.modes.5=Рядок
+
+tile.immersiveintelligence.metal_multiblock.arithmetic_logic_machine.storage=Арифметико-логічна машина - Зберігання
+tile.immersiveintelligence.metal_multiblock.arithmetic_logic_machine.programming=Арифметико-логічна машина - програмування
+tile.immersiveintelligence.metal_multiblock.arithmetic_logic_machine.edit=Арифметико-логічна машина - редагування виразу
+
+tile.immersiveintelligence.data_connector.data_connector.name=З'єднувач даних
+tile.immersiveintelligence.data_connector.data_relay.name=Реле даних
+tile.immersiveintelligence.data_connector.data_duplex_connector.name=Дуплексний конектор даних
+tile.immersiveintelligence.data_connector.chemical_dispenser.name=Дозатор хімічних речовин
+
+tile.immersiveintelligence.data_connector.alarm_siren.name=Сирена тривоги
+tile.immersiveintelligence.data_connector.programmable_speaker.name=Програмований динамік
+
+tile.immersiveintelligence.data_connector.inserter.name=Інструмент вставки елементів
+tile.immersiveintelligence.data_connector.advanced_inserter.name=Розширений засіб вставки
+tile.immersiveintelligence.data_connector.fluid_inserter.name=Рідинний вставник
+tile.immersiveintelligence.data_connector.advanced_fluid_inserter.name=Розширений засіб вставки рідини
+
+tile.immersiveintelligence.data_connector.data_debugger.name=Налагоджувач даних
+
+tile.immersiveintelligence.circuit_socket.basic.name=Базовий ланцюг
+tile.immersiveintelligence.circuit_socket.advanced.name=Розширений ланцюг
+tile.immersiveintelligence.circuit_socket.processor.name=Гніздо схеми процесора
+
+#Multiblock names
+
+tile.immersiveintelligence.wooden_multiblock.skycrate_station.name=Станція Фунікульора
+tile.immersiveintelligence.wooden_multiblock.skycart_station.name=Станція Фунікульора
+tile.immersiveintelligence.wooden_multiblock.skycrate_post.name=Пост Фунікульора
+tile.immersiveintelligence.wooden_multiblock.sawmill.name=Лісопилка
+tile.immersiveintelligence.metal_multiblock.data_input_machine.name=Машина введення даних
+tile.immersiveintelligence.metal_multiblock.arithmetic_logic_machine.name=Арифметико-логічна машина
+tile.immersiveintelligence.metal_multiblock.radio_station.name=Радіостанція
+tile.immersiveintelligence.metal_multiblock.printing_press.name=Друкарський верстат
+tile.immersiveintelligence.metal_multiblock.chemical_bath.name=Хімічна ванна
+tile.immersiveintelligence.metal_multiblock.electrolyzer.name=Електролізер
+tile.immersiveintelligence.metal_multiblock.precision_assembler.name=Точний асемблер
+tile.immersiveintelligence.metal_multiblock.periscope.name=Перископ
+tile.immersiveintelligence.metal_multiblock.artillery_howitzer.name=Артилерійська гаубиця
+tile.immersiveintelligence.metal_multiblock.ballistic_computer.name=Балістичний комп'ютер
+tile.immersiveintelligence.metal_multiblock.missile_silo.name=Ракетний бункер
+tile.immersiveintelligence.metal_multiblock.scanning_conveyor.name=Скануючий конвеєр
+tile.immersiveintelligence.metal_multiblock.packer.name=Пакувальник
+tile.immersiveintelligence.metal_multiblock.minecart_packer.name=Залізничний пакувальник
+
+tile.immersiveintelligence.metal_multiblock1.redstone_data_interface.name=Інтерфейс даних редстоуна
+tile.immersiveintelligence.metal_multiblock1.vehicle_workshop.name=Майстерня транспортних засобів
+tile.immersiveintelligence.metal_multiblock1.vulcanizer.name=Вулканізатор
+tile.immersiveintelligence.metal_multiblock1.coagulator.name=Коагулятор
+
+tile.immersiveintelligence.metal_multiblock1.fuel_station.name=АЗС
+tile.immersiveintelligence.metal_multiblock1.emplacement.name=Укріплення
+tile.immersiveintelligence.metal_multiblock1.radar.name=Радар
+
+tile.immersiveintelligence.gate_multiblock.wooden.name=Дерев'яна огорожа Ворота
+tile.immersiveintelligence.gate_multiblock.steel.name=Ворота сталевої огорожі
+tile.immersiveintelligence.gate_multiblock.aluminium.name=Ворота з алюмінієвої огорожі
+tile.immersiveintelligence.gate_multiblock.wooden_chain.name=Ворота з огорожі з дерев'яного ланцюга
+tile.immersiveintelligence.gate_multiblock.steel_chain.name=Ворота огорожі зі сталевого ланцюга
+tile.immersiveintelligence.gate_multiblock.aluminium_chain.name=Ворота огорожі з алюмінієвого ланцюга
+
+desc.immersiveintelligence.metal_multiblock1.emplacement.storage=Розташування - Зберігання
+desc.immersiveintelligence.metal_multiblock1.emplacement.tasks=Встановлення - Завдання
+desc.immersiveintelligence.metal_multiblock1.emplacement.status=Розташування - Статус
+desc.immersiveintelligence.metal_multiblock1.emplacement.base_inventory=Базовий інвентар
+desc.immersiveintelligence.metal_multiblock1.emplacement.weapon=Змонтовано: %s
+desc.immersiveintelligence.metal_multiblock1.emplacement.weapon_none=Жодного
+desc.immersiveintelligence.metal_multiblock1.emplacement.upgrades=Встановлені оновлення
+desc.immersiveintelligence.metal_multiblock1.emplacement.settings=Налаштування
+desc.immersiveintelligence.metal_multiblock1.emplacement.redstone_control=Контроль Redstone
+desc.immersiveintelligence.metal_multiblock1.emplacement.data_control=Контроль даних
+desc.immersiveintelligence.metal_multiblock1.emplacement.send_attack_signal=Вихідні цілі через дані
+desc.immersiveintelligence.metal_multiblock1.emplacement.auto_repair_threshold=Ремонтувати, коли здоров'я нижче:
+desc.immersiveintelligence.metal_multiblock1.emplacement.selector_preset=Попереднє налаштування селектора
+desc.immersiveintelligence.metal_multiblock1.emplacement.filter=Фільтр
+desc.immersiveintelligence.metal_multiblock1.emplacement.task_enabled=Увімкнено
+desc.immersiveintelligence.metal_multiblock1.emplacement.task_negation=Заперечення
+desc.immersiveintelligence.metal_multiblock1.emplacement.add=Додати
+desc.immersiveintelligence.metal_multiblock1.emplacement.remove=Видалити
+desc.immersiveintelligence.metal_multiblock1.emplacement.duplicate=Дублікат
+desc.immersiveintelligence.metal_multiblock1.emplacement.clear=Очистити
+
+ii.gui.packer.task.item.out=Пакет
+ii.gui.packer.task.item.in=Розпакувати
+ii.gui.packer.task.fluid.out=Заряд
+ii.gui.packer.task.fluid.in=Розряд
+ii.gui.packer.task.energy.out=Заповнити
+ii.gui.packer.task.energy.in=Злив
+
+ii.gui.packer.mode.amount=Сума
+ii.gui.packer.mode.slot=Слот
+ii.gui.packer.mode.all_possible=Всі можливі
+ii.gui.packer.mode.at_most_container=Не більше в контейнері
+ii.gui.packer.mode.at_least_packer=Принаймні в пакувальнику
+
+ii.gui.packer.side_input=Елементи, які потрібно помістити в контейнер
+ii.gui.packer.side_output=Елементи, взяті з контейнера
+ii.gui.packer.switch_direction=Змінити напрямок завдання
+ii.gui.packer.mode_single=Одноразове пакування
+ii.gui.packer.mode_iteration=Повторне пакування
+
+desc.immersiveintelligence.metal_multiblock1.emplacement.target.mobs=Моби
+desc.immersiveintelligence.metal_multiblock1.emplacement.target.animals=Тварини
+desc.immersiveintelligence.metal_multiblock1.emplacement.target.players=Гравці
+desc.immersiveintelligence.metal_multiblock1.emplacement.target.npcs=NPC
+desc.immersiveintelligence.metal_multiblock1.emplacement.target.vehicles=Транспортні засоби
+desc.immersiveintelligence.metal_multiblock1.emplacement.target.shells=Оболонки
+desc.immersiveintelligence.metal_multiblock1.emplacement.target.team=Команда
+desc.immersiveintelligence.metal_multiblock1.emplacement.target.name=Ім'я
+
+tile.immersiveintelligence.metal_multiblock1.flagpole.name=Флагшток
+
+tile.immersiveintelligence.gate_multiblock.wooden_fence_gate.name=Дерев'яна огорожа Ворота
+tile.immersiveintelligence.gate_multiblock.wooden_chain_fence_gate.name=Ворота з огорожі з дерев'яного ланцюга
+tile.immersiveintelligence.gate_multiblock.steel_fence_gate.name=Ворота сталевої огорожі
+tile.immersiveintelligence.gate_multiblock.steel_chain_fence_gate.name=Ворота огорожі зі сталевого ланцюга
+tile.immersiveintelligence.gate_multiblock.aluminium_fence_gate.name=Ворота з алюмінієвої огорожі
+tile.immersiveintelligence.gate_multiblock.aluminium_chain_fence_gate.name=Ворота огорожі з алюмінієвого ланцюга
+
+tile.immersiveintelligence.metal_multiblock1.filler.name=Наповнювач
+tile.immersiveintelligence.metal_multiblock1.ammunition_assembler.name=Складач боєприпасів
+tile.immersiveintelligence.metal_multiblock1.heavy_ammunition_assembler.name=Складач важких боєприпасів
+tile.immersiveintelligence.metal_multiblock1.projectile_workshop.name=Майстерня снарядів
+
+tile.immersiveintelligence.metal_multiblock1.chemical_painter.name=Хімічний художник
+desc.immersiveintelligence.metal_multiblock1.chemical_painter.color.rgb=Дисплей у RGB
+desc.immersiveintelligence.metal_multiblock1.chemical_painter.color.rgb.r=Червоний
+desc.immersiveintelligence.metal_multiblock1.chemical_painter.color.rgb.g=Зелений
+desc.immersiveintelligence.metal_multiblock1.chemical_painter.color.rgb.b=Синій
+
+desc.immersiveintelligence.metal_multiblock1.chemical_painter.color.cmyk=Дисплей у CMYK
+desc.immersiveintelligence.metal_multiblock1.chemical_painter.color.cmyk.c=Блакитний
+desc.immersiveintelligence.metal_multiblock1.chemical_painter.color.cmyk.m=Маджента
+desc.immersiveintelligence.metal_multiblock1.chemical_painter.color.cmyk.y=Жовтий
+desc.immersiveintelligence.metal_multiblock1.chemical_painter.color.cmyk.k=Червоний
+
+desc.immersiveintelligence.metal_multiblock1.chemical_painter.color.hsv=Дисплей у HSV
+desc.immersiveintelligence.metal_multiblock1.chemical_painter.color.hsv.h=Відтінок
+desc.immersiveintelligence.metal_multiblock1.chemical_painter.color.hsv.s=Насиченість
+desc.immersiveintelligence.metal_multiblock1.chemical_painter.color.hsv.v=Значення
+desc.immersiveintelligence.metal_multiblock1.chemical_painter.color_copied=Колір скопійовано!
+
+desc.immersiveengineering.info.multiblock.II:SkyCrateStation=Станція Фунікульора
+desc.immersiveengineering.info.multiblock.II:SkyCartStation=Станція Фунікульора
+desc.immersiveengineering.info.multiblock.II:SkyCratePost=Пост Фунікульора
+desc.immersiveengineering.info.multiblock.II:Sawmill=Лісопильня
+desc.immersiveengineering.info.multiblock.II:DataInputMachine=Машина введення даних
+desc.immersiveengineering.info.multiblock.II:ArithmeticLogicMachine=Арифметико-логічна машина
+desc.immersiveengineering.info.multiblock.II:RadioStation=Радіостанція
+desc.immersiveengineering.info.multiblock.II:PrintingPress=Друкарський верстат
+desc.immersiveengineering.info.multiblock.II:ChemicalBath=Хімічна ванна
+desc.immersiveengineering.info.multiblock.II:Electrolyzer=Електролізер
+desc.immersiveengineering.info.multiblock.II:PrecisionAssembler=Точний асемблер
+desc.immersiveengineering.info.multiblock.II:Periscope=Перископ
+desc.immersiveengineering.info.multiblock.II:ArtilleryHowitzer=Артилерійська гаубиця
+desc.immersiveengineering.info.multiblock.II:BallisticComputer=Балістичний комп'ютер
+desc.immersiveengineering.info.multiblock.II:MissileSilo=Букет ракет
+desc.immersiveengineering.info.multiblock.II:ScanningConveyor=Скануючий конвеєр
+desc.immersiveengineering.info.multiblock.II:Packer=Пакувальник
+desc.immersiveengineering.info.multiblock.II:MinecartPacker=Залізничний пакувальник
+
+desc.immersiveengineering.info.multiblock.II:RedstoneDataInterface=Інтерфейс даних редстоуна
+
+desc.immersiveengineering.info.multiblock.II:VehicleWorkshop=Майстерня транспортних засобів
+desc.immersiveengineering.info.multiblock.II:FuelStation=АЗС
+desc.immersiveengineering.info.multiblock.II:Vulcanizer=Вулканізатор
+desc.immersiveengineering.info.multiblock.II:Coagulator=Коагулятор
+
+desc.immersiveengineering.info.multiblock.II:Emplacement=Розташування
+desc.immersiveengineering.info.multiblock.II:Radar=Радар
+desc.immersiveengineering.info.multiblock.II:Flagpole=Флагшток
+
+desc.immersiveengineering.info.multiblock.II:Filler=Наповнювач
+desc.immersiveengineering.info.multiblock.II:AmmunitionAssembler=Складач боєприпасів
+desc.immersiveengineering.info.multiblock.II:HeavyAmmunitionAssembler=Складач важких боєприпасів
+desc.immersiveengineering.info.multiblock.II:ProjectileWorkshop=Майстерня снарядів
+desc.immersiveengineering.info.multiblock.II:ChemicalPainter=Хімічний художник
+
+desc.immersiveengineering.info.multiblock.II:WoodenFenceGate=Ворота з дерев'яної огорожи
+desc.immersiveengineering.info.multiblock.II:WoodenChainFenceGate=Ворота з дерев'яної ланцюгової огорожі
+desc.immersiveengineering.info.multiblock.II:SteelFenceGate=Ворота сталевої огорожі
+desc.immersiveengineering.info.multiblock.II:SteelChainFenceGate=Ворота огорожі зі сталевого ланцюга
+desc.immersiveengineering.info.multiblock.II:AluminiumFenceGate=Ворота з алюмінієвої огорожі
+desc.immersiveengineering.info.multiblock.II:AluminiumChainFenceGate=Ворота огорожі з алюмінієвого ланцюга
+
+#Fluids
+fluid.ink=Чорнило
+fluid.ink_cyan=Блакитне чорнило
+fluid.ink_magenta=Маджентове чорнило
+fluid.ink_yellow=Жовте чорнило
+
+fluid.etching_acid=Травильна кислота
+fluid.hydrofluoric_acid=Фтористоводнева кислота
+fluid.sulfuric_acid=Сірчана кислота
+fluid.nitric_acid=Азотна кислота
+fluid.formic_acid=Мурашина кислота
+
+fluid.oxygen=Кисень
+fluid.hydrogen=Водень
+fluid.chlorine=Хлор
+fluid.carbon_dioxide=Вуглекислий газ
+fluid.carbon_monoxide=Окис вуглецю
+fluid.mustard_gas=Гірчичний газ
+
+fluid.brine=Розсіл
+
+fluid.ammonia=Аміак
+fluid.hexamine=Гексамін
+fluid.methanol=Метанол
+
+fluid.latex=Латекс
+
+#Dusts
+dust.gunpowder=Порох
+dust.sulfur=Сірка
+dust.sawdust=Тирса
+dust.sand=Пісок
+dust.gravel=Гравій
+
+#Sounds
+
+subtitle.immersiveintelligence.siren=Виття сирени
+subtitle.immersiveintelligence.punchtape_reader=Операція Punchtape
+subtitle.immersiveintelligence.paper_eject=Папірець
+
+subtitle.immersiveintelligence.radio_beep=Короткі радіосигнали
+subtitle.immersiveintelligence.radio_noise=Радіошум
+
+subtitle.immersiveintelligence.rolling=Механізм кочення в русі
+subtitle.immersiveintelligence.chain=Ланцюг піднімається
+subtitle.immersiveintelligence.lamp=Лампа дзижчить
+subtitle.immersiveintelligence.heating=Нагрівальний елемент працює
+subtitle.immersiveintelligence.saw=Полотно пилки обертається
+subtitle.immersiveintelligence.saw_idle=Різання пильного полотна
+
+subtitle.immersiveintelligence.electric_motor_forward=Електромотор гуде
+subtitle.immersiveintelligence.electric_motor_backward=Реверс електричного двигуна
+subtitle.immersiveintelligence.electric_motor_heavy_forward=Важкий електродвигун гуде
+subtitle.immersiveintelligence.electric_motor_heavy_backward=Важкий електромотор реверсивний
+subtitle.immersiveintelligence.turntable_forward=Поворотний стіл обертається праворуч
+subtitle.immersiveintelligence.turntable_backward=Поворотний столик обертається вліво
+subtitle.immersiveintelligence.turntable_heavy_forward=Важкий поворотний стіл обертається праворуч
+subtitle.immersiveintelligence.turntable_heavy_backward=Важкий поворотний стіл обертається вліво
+subtitle.immersiveintelligence.sliding_door_open=Відкриття розсувних дверей
+subtitle.immersiveintelligence.sliding_door_close=Закривання розсувних дверей
+
+subtitle.immersiveintelligence.gun_platform_rotating=Платформа гармати обертається
+
+subtitle.immersiveintelligence.distant_artillery=Далека артилерійська стрільба
+subtitle.immersiveintelligence.distant_artillery_impact=Дистанційний артилерійський удар
+subtitle.immersiveintelligence.distant_gunshot=Віддалені постріли
+subtitle.immersiveintelligence.dryfire=Пістолет не може стріляти
+
+subtitle.immersiveintelligence.casing_pickup=Оболонки потрапляють у мішок
+
+subtitle.immersiveintelligence.machinegun_shot=Стрільба з кулемета
+subtitle.immersiveintelligence.machinegun_shot_distant=Кулемет стріляє на відстані
+subtitle.immersiveintelligence.machinegun_reload=Перезарядка кулемета
+subtitle.immersiveintelligence.machinegun_unload=Магазин кулемета викинуто
+
+subtitle.immersiveintelligence.submachinegun_shot=Стрільба з автомата
+subtitle.immersiveintelligence.submachinegun_shot_distant=Пістолет-кулемет стріляє на відстані
+subtitle.immersiveintelligence.submachinegun_reload=Перезарядка пістолета-кулемета
+subtitle.immersiveintelligence.submachinegun_unload=Журнал для пістолета-кулемета викинуто
+
+subtitle.immersiveintelligence.assault_rifle_shot=Стрільба з автомата
+subtitle.immersiveintelligence.assault_rifle_shot_distant=Штурмова гвинтівка стріляє на відстані
+subtitle.immersiveintelligence.assault_rifle_reload=Перезаряджання штурмової гвинтівки
+subtitle.immersiveintelligence.assault_rifle_unload=Журнал для штурмової гвинтівки викинуто
+subtitle.immersiveintelligence.assault_rifle_mode_change=Перевертання селектора вогню
+
+subtitle.immersiveintelligence.rifle_shot=Стрільба з гвинтівки
+subtitle.immersiveintelligence.rifle_shot_distant=Стрільба з гвинтівки на відстані
+subtitle.immersiveintelligence.rifle_load=Перезарядка гвинтівки
+subtitle.immersiveintelligence.rifle_load_magazine=Перезарядка гвинтівкового магазину
+subtitle.immersiveintelligence.rifle_unload_magazine=Гвинтівковий магазин викинутий
+
+subtitle.immersiveintelligence.howitzer_shot=Стрільба з гаубиці
+subtitle.immersiveintelligence.howitzer_shot_distant=Гаубиця стріляє на відстані
+subtitle.immersiveintelligence.howitzer_shell_pick=Вибраний артилерійський снаряд
+subtitle.immersiveintelligence.howitzer_shell_put=Поставлено артилерійський снаряд
+
+subtitle.immersiveintelligence.inserter=Шуми вставки
+
+subtitle.immersiveintelligence.impact_metal=Снаряд пробиває метал
+subtitle.immersiveintelligence.ricochet_metal=Снаряд відскакує від металу
+
+subtitle.immersiveintelligence.grenade_throw=Киток гранати
+subtitle.immersiveintelligence.artillery_impact=Падає артилерійський снаряд
+subtitle.immersiveintelligence.bullet_flyby=Літ кулі
+subtitle.immersiveintelligence.bullet_impact=Удар снаряда
+subtitle.immersiveintelligence.bullet_ricochet=Снаряд рикошетить
+
+subtitle.immersiveintelligence.motorbike_start=Запуск мотоцикла
+subtitle.immersiveintelligence.motorbike_engine=Шум двигуна мотоцикла
+subtitle.immersiveintelligence.motorbike_horn=Сигнал мотоцикла
+
+subtitle.immersiveintelligence.fuel_station=Накачування палива
+subtitle.immersiveintelligence.welding=Зварювання
+subtitle.immersiveintelligence.sawmill=Лісопилка працює
+
+subtitle.immersiveintelligence.drawer_open=Ящик висувається
+subtitle.immersiveintelligence.drawer_close=Ящик засувається
+subtitle.immersiveintelligence.metal_locker_open=Дверцята шафки відкриваються
+subtitle.immersiveintelligence.metal_locker_close=Дверцята шафки закриваються
+subtitle.immersiveintelligence.metal_hatch_open=Металевий люк відкривається
+subtitle.immersiveintelligence.metal_hatch_close=Металевий люк закривається
+subtitle.immersiveintelligence.vise_open=Лещата затягують свої затискачі
+subtitle.immersiveintelligence.vise_close=Лещата послаблюють свої затискачі
+
+subtitle.immersiveintelligence.motor_belt_break=Відірваний приводний ремінь
+subtitle.immersiveintelligence.motor_belt=Поворот приводного ременя
+subtitle.immersiveintelligence.track_break=Металеві треки
+subtitle.immersiveintelligence.track=Поворот металу
+
+subtitle.immersiveintelligence.autocannon_shot=Стрільба з автоматичної гармати
+subtitle.immersiveintelligence.autocannon_shot_distant=Автогармата стріляє на відстані
+subtitle.immersiveintelligence.autocannon_reload=Перезавантаження автогармати
+
+subtitle.immersiveintelligence.explosion_flare=Розгортання Flare
+subtitle.immersiveintelligence.explosion_incendiary=Запалювальний вибух
+subtitle.immersiveintelligence.explosion_nuke=Ядерний вибух
+
+subtitle.immersiveintelligence.mortar_shot=Стрільба з мінометів
+subtitle.immersiveintelligence.mortar_load=Завантаження міномета
+
+subtitle.immersiveintelligence.mine_detector=Звуки міношукача
+subtitle.immersiveintelligence.construction=Будівництво за допомогою молотка
+
+#Entities
+
+entity.minecart_wooden_crate.name=Візок з дерев'яним ящиком
+entity.minecart_reinforced_crate.name=Візок з підсиленим ящиком
+entity.minecart_steel_crate.name=Візок зі сталевим ящиком
+entity.minecart_wooden_barrel.name=Візок з дерев'яною бочкою
+entity.minecart_metal_barrel.name=Візок з металевою бочкою
+entity.minecart_capacitor_lv.name=Візок з низьковольтним конденсатором
+entity.minecart_capacitor_mv.name=Візок з середневольтним конденсатором
+entity.minecart_capacitor_hv.name=Візок з високовольтним конденсатором
+entity.minecart_capacitor_creative.name=Візок з творчим конденсатором
+#Immersive Technology Compat
+entity.minecart_crate_creative.name=Візок з творчим ящиком для зберігання
+entity.minecart_barrel_creative.name=Візок з креативною бочкою
+entity.minecart_steel_barrel.name=Візок зі сталевою бочкою
+entity.minecart_open_barrel.name=Візок з відкритою металевою бочкою
+
+entity.skycrate.name=Фунікульор
+
+entity.bullet.name=Куля
+entity.shrapnel.name=Шрапнель
+entity.flare.name=Відблиск
+entity.gas_cloud.name=Газова хмара
+entity.white_phosphorus.name=Вибух білого фосфору
+entity.atomic_boom.name=Ядерний вибух
+
+entity.machinegun.name=Кулемет
+entity.mortar.name=Міномет
+entity.motorbike.name=Мотоцикл
+entity.wheel.name=Колесо
+entity.seat.name=Місце
+entity.field_howitzer.name=Польова гаубиця
+entity.tripod_periscope.name=Перископ штатив
+
+entity.hans.name=Ганс
+
+#Skins
+skin.immersiveintelligence.anno_1880.name=Рік 1880 року
+skin.immersiveintelligence.anno_1880.desc=Вишуканий, точний, декоративний
+skin.immersiveintelligence.anno_1880.text=Нагорода BluSunrize і Hazard за їх чудову роботу над Immersive Engineering.
+
+skin.immersiveintelligence.archangel.name=Архангел
+skin.immersiveintelligence.archangel.desc=Наші предки намагалися це приховати...
+skin.immersiveintelligence.archangel.text=Спочатку вони думали, що бог послав архангела як подарунок для людства. Є причина, чому предки їх боялися...
+
+skin.immersiveintelligence.royal.name=Королівський
+skin.immersiveintelligence.royal.desc=Реліквія старої імперії
+skin.immersiveintelligence.royal.text=Ретрофутуристична імперська шкура. Спочатку він мав бути скіном для Patreons, а тепер надається як винагорода за внесок.
+
+skin.immersiveintelligence.old_glory.name=Стара слава
+skin.immersiveintelligence.old_glory.desc=Героям слава
+skin.immersiveintelligence.old_glory.text=Скін на тему Польщі, наданий як нагорода за внесок.
+
+skin.immersiveintelligence.stormwind.name=Штормград
+skin.immersiveintelligence.stormwind.desc=Данина захисникам морської фортеці
+skin.immersiveintelligence.stormwind.text=Скін, натхненний старою дивовижною флеш грою "Штормові вітри"
+
+skin.immersiveintelligence.flakmeister.name=Флакмейстер
+skin.immersiveintelligence.flakmeister.desc=Для відомого артилериста
+skin.immersiveintelligence.flakmeister.text=Скін, наданий Карверу, який зробив великий внесок і трохи більше працював.
+
+skin.immersiveintelligence.blackdragon.name=Чорний дракон
+skin.immersiveintelligence.blackdragon.desc=За внесок, зусилля та зміст, нагорода
+skin.immersiveintelligence.blackdragon.text=Скін, наданий Blackdragon, який створив чудові навчальні відео II на YouTube.
+
+skin.immersiveintelligence.eisenheim.name=Айзенхайм
+skin.immersiveintelligence.eisenheim.desc=Військовий розпис героїв з гірської фортеці
+skin.immersiveintelligence.eisenheim.text=Скіна, присвячена фракції інженерів майбутнього пакета модів Engineered Adventures: Tales from the Front.
+
+skin.immersiveintelligence.vanguard.name=Авангард
+skin.immersiveintelligence.vanguard.desc=Для еліти прихильників інженерії
+skin.immersiveintelligence.vanguard.text=Скіна, яку ви отримуєте за пожертвування 1 або більше доларів на Patreon.
+
+skin.immersiveintelligence.magnate.name=Магнат
+skin.immersiveintelligence.magnate.desc=За благородну підтримку інженерного прогресу
+skin.immersiveintelligence.magnate.text=Скін, який отримується за пожертвування 5 або більше доларів на Patreon.
+
+skin.immersiveintelligence.investor.name=Інвестор
+skin.immersiveintelligence.investor.desc=Маленька винагорода за велику щедрість
+skin.immersiveintelligence.investor.text=Скін, отриманий за пожертвування 15 доларів на Patreon.
+
+#Machine Upgrades
+machineupgrade.immersiveintelligence.inserter=Інсертер
+machineupgrade.immersiveintelligence.inserter.desc=Додавання пристрою вставлення до ящика дозволяє йому працювати автоматично в радіусі 3 блоків за умови живлення.
+
+machineupgrade.immersiveintelligence.mg_loader=Стрічковий пристрій подачі
+machineupgrade.immersiveintelligence.mg_loader.desc=Розширення боєприпасів дозволяє подавати кулі безпосередньо в кулемет після деяких модифікацій. Ящик має бути відкритим для забезпечення боєприпасами.
+
+machineupgrade.immersiveintelligence.improved_gearbox=Покращена коробка передач
+machineupgrade.immersiveintelligence.improved_gearbox.desc=Заміна стандартної коробки передач на вдосконалену модель значно збільшує швидкість машини, збільшує кількість енергії, необхідної для роботи.
+
+machineupgrade.immersiveintelligence.saw_unregulator=Слідкуючий Анрегулятор
+machineupgrade.immersiveintelligence.saw_unregulator.desc=Нерегулювання пилки призводить до більшого виробництва тирси у вартості основної продукції.
+
+machineupgrade.immersiveintelligence.emplacement_grenades=Аварійні димовідводи
+machineupgrade.immersiveintelligence.emplacement_grenades.desc=Коли зброя установки сильно пошкоджена, дим буде випускатися для забезпечення прикриття.
+
+machineupgrade.immersiveintelligence.emplacement_bearings=Стійкі підшипники
+machineupgrade.immersiveintelligence.emplacement_bearings.desc=Вищеякісні підшипники збільшують максимальну швидкість обертання зброї, для роботи на повну потужність необхідне змащення
+
+machineupgrade.immersiveintelligence.infrared_observer=Інфрачервоний спостерігач
+machineupgrade.immersiveintelligence.infrared_observer.desc=Інфрачервоний спостерігач дозволяє стежити за віддаленими ворогами та надсилати їхні координати через кабелі даних.
+
+machineupgrade.immersiveintelligence.cpds=CPDS
+machineupgrade.immersiveintelligence.cpds.desc=Система протиракетної оборони є вдосконаленою протиповітряною зброєю, яка здатна знищувати наближаючі артилерійські снаряди в повітрі.
+
+machineupgrade.immersiveintelligence.autocannon=Автогармата
+machineupgrade.immersiveintelligence.autocannon.desc=Чотири автоматичні гармати 3bCal забезпечують велику вогневу міць, що робить цю зброю універсальним захистом від повітряних і наземних цілей.
+
+machineupgrade.immersiveintelligence.heavy_chemthrower=Важкий Хімікомет
+machineupgrade.immersiveintelligence.heavy_chemthrower.desc=Важча версія добре відомого хімікомета, вищий тиск дозволяє атакувати ворогів на дистанціях, у 4 рази більших, ніж портативна.
+
+machineupgrade.immersiveintelligence.heavy_railgun=Важка рельсова гармата
+machineupgrade.immersiveintelligence.heavy_railgun.desc=Важка рельсова гармата забезпечує пряму вогневу підтримку. Він може запускати металеві стрижні або гранати з високою швидкістю, дозволяючи пробивати ворогів і техніку.
+
+machineupgrade.immersiveintelligence.machinegun=Кулеметне гніздо
+machineupgrade.immersiveintelligence.machinegun.desc=Кулеметне гніздо може забезпечувати пригнічувальний автоматичний вогонь, дозволяючи контролювати натовп. Завдяки своїй конструкції він не здатний боротися з повітряним ворогом.
+
+machineupgrade.immersiveintelligence.mg_heavy_barrel=Важкий ствол
+machineupgrade.immersiveintelligence.mg_heavy_barrel.desc=Важкі стволи дозволяють вести стрільбу набагато швидше і трохи збільшують максимально допустимий перегрів.
+
+machineupgrade.immersiveintelligence.mg_watercooled=Бочка з водяним охолодженням
+machineupgrade.immersiveintelligence.mg_watercooled.desc=Заміна стандартних бочок. У встановленому стані стволи не перегріваються при подачі теплоносія.
+
+machineupgrade.immersiveintelligence.mg_bunker=Додаткові укріплення
+machineupgrade.immersiveintelligence.mg_bunker.desc=Розміщення додаткових мішків з піском навколо кулеметного гнізда дає йому додаткову броню та підвищує його міцність.
+
+machineupgrade.immersiveintelligence.mortar=Міномет
+machineupgrade.immersiveintelligence.mortar.desc=Міномет забезпечує підтримку вогнем непрямим наведенням на близькій відстані, вертикальний кут стрільби та великий калібр снарядів дозволяють йому пробивати дахи та знищувати ворогів зверху
+
+machineupgrade.immersiveintelligence.light_howitzer=Легка гаубиця
+machineupgrade.immersiveintelligence.light_howitzer.desc=Легка гаубиця забезпечує непряму вогневу підтримку на середніх дистанціях, її мобільність дозволяє швидко та точно обстрілювати позиції противника
+
+machineupgrade.immersiveintelligence.tesla=Вежа Тесла
+machineupgrade.immersiveintelligence.tesla.desc=Вежа Тесла використовує високу напругу для знищення ворогів у своєму радіусі, це особливо ефективно проти електроніки
+
+machineupgrade.immersiveintelligence.core_filler=Наповнювач снарядів
+machineupgrade.immersiveintelligence.core_filler.desc=Оснащення Майстерні снарядів установкою для вставки дозволяє точно наповнювати снаряди бажаними компонентами.
+
+machineupgrade.immersiveintelligence.packer_fluid=Завантажувач рідини
+machineupgrade.immersiveintelligence.packer_fluid.desc=Встановлення контейнера для рідини та деяких труб дозволяє наповнювати та зливати рідини з контейнерів. З міркувань безпеки пакувальник може обробляти предмети, рідини або енергію.
+
+machineupgrade.immersiveintelligence.packer_energy=Енергетичний навантажувач
+machineupgrade.immersiveintelligence.packer_energy.desc=Встановлення контейнера для рідини та деяких труб дозволяє наповнювати та зливати рідини з контейнерів. З міркувань безпеки пакувальник може обробляти предмети, рідини або енергію.
+
+machineupgrade.immersiveintelligence.packer_railway=Перетворення залізниці
+machineupgrade.immersiveintelligence.packer_railway.desc=Замінює конвеєрну стрічку пакувальника на залізничні колії, що дозволяє завантажувати та розвантажувати шахтні візки.
+
+machineupgrade.immersiveintelligence.packer_naming=Штамп імені
+machineupgrade.immersiveintelligence.packer_naming.desc=Дозволяє пакувальнику називати завантажені контейнери, може використовувати фільтри та дані.
+
+machineupgrade.immersiveintelligence.radio_locators=Радіолокатори
+machineupgrade.immersiveintelligence.radio_locators.desc=Дозволяє радару виявляти радіосигнали та обчислювати точки їх походження. Збільшує кількість енергії, необхідної для роботи.
+
+machineupgrade.immersiveintelligence.rs_activation=Активація Redstone
+machineupgrade.immersiveintelligence.rs_activation.desc=Приєднання дротяного з’єднувача з червоного каменю та пари приводів дозволяє відкривати ворота за допомогою сигналу з червоного каменю.
+
+machineupgrade.immersiveintelligence.razor_wire=Колючий Дріт
+machineupgrade.immersiveintelligence.razor_wire.desc=Прикріплює колючий дріт на вершині воріт, завдаючи шкоди будь-яким ворогам, які наважуються спробувати перелізти через них.
+
+#Descriptions
+desc.immersiveintelligence.radio_configurator_basic=Дозволяє змінювати частоту основних радіопристроїв.
+desc.immersiveintelligence.radio_configurator_advanced=Оновлений радіотюнер, що дозволяє встановлювати навіть вищі частоти.
+desc.immersiveintelligence.radio_configurator_frequency=Частота: %s
+desc.immersiveintelligence.radio_configurator_max_frequency=Максимальна частота: %s
+desc.immersiveintelligence.naval_mine_chain_length=Максимальна довжина ланцюга: %s
+desc.immersiveintelligence.measuring_cup_size=Ємність: %s / %s mB
+desc.immersiveintelligence.measuring_cup_cant_resize=Неможливо змінити розмір, якщо містить рідина.
+desc.immersiveintelligence.functional_circuit_shift=%s - Доступні операції
+desc.immersiveintelligence.functional_circuit_ctrl=%s - Збережені операції
+desc.immersiveintelligence.functional_circuit=Дозволяє машині виконувати такі операції, як:
+desc.immersiveintelligence.functional_circuit_data=Налаштуйте для виконання наступних операцій:
+desc.immersiveintelligence.data_storage_shift=%s - Збережені дані
+desc.immersiveintelligence.data_storage=Збережені дані:
+desc.immersiveintelligence.upgrade_toolbox=Можна використовувати для оновлення машин
+desc.immersiveintelligence.cost=Вартість матеріалу:
+
+desc.immersiveintelligence.printed_page.blank=Порожня сторінка, готова до друку.
+desc.immersiveintelligence.printed_page.text=Сторінка, що містить текст.
+desc.immersiveintelligence.printed_page.code=Сторінка, що містить код, написаний мовою програмування POL.
+desc.immersiveintelligence.printed_page.blueprint=Сторінка, що містить інформацію про те, як побудувати структуру.
+desc.immersiveintelligence.printed_page.bound_pages=Різні сторінки, пов'язані разом.
+desc.immersiveintelligence.printed_page.newspaper=Кілька сторінок переплетені в газету.
+desc.immersiveintelligence.printed_page.book=Кілька сторінок переплетені в одну книгу.
+desc.immersiveintelligence.printed_page.letter=Сторінка, запакована в конверт для відправлення комусь.
+
+desc.immersiveintelligence.punchtape.empty=Немає записаних змінних
+desc.immersiveintelligence.punchtape.written=Написаний
+
+desc.immersiveintelligence.infrared_enabled=§4Інфрачервоний§r Зір увімкнено!
+desc.immersiveintelligence.infrared_disabled=§cІнфрачервоний§r Зір вимкнено!
+
+desc.immersiveintelligence.assembly_scheme.used_to_create=Використовується для створення: %s
+desc.immersiveintelligence.assembly_scheme.items_created=Створено елементи: %s
+
+desc.immersiveintelligence.info.holdControl=Утримуйте [Ctrl]
+desc.immersiveintelligence.info.holdShift=Утримуйте [Shift]
+desc.immersiveintelligence.info.holdAlt=Утримувати [Alt]
+desc.immersiveintelligence.info.holdTab=Утримувати [Tab]
+
+desc.immersiveintelligence.assembly_scheme.info_hold1=%s - Використані матеріали
+desc.immersiveintelligence.assembly_scheme.info_hold2=%s - Використані інструменти
+desc.immersiveintelligence.assembly_scheme.materials=Використані матеріали:
+desc.immersiveintelligence.assembly_scheme.tools=Використані інструменти:
+
+desc.immersiveintelligence.weapon.magazine1=%s - Магазин №1
+desc.immersiveintelligence.weapon.magazine2=%s - Магазин №2
+
+
+desc.immersiveintelligence.storage_module=Зберігання
+desc.immersiveintelligence.variables_module=Змінні
+desc.immersiveintelligence.data_module=Дані
+desc.immersiveintelligence.redstone_module=Редстоун
+desc.immersiveintelligence.data_to_redstone_module=Дані для редстоуну
+desc.immersiveintelligence.redstone_to_data_module=Редстоун до даних
+desc.immersiveintelligence.tasks_module=Завдання
+desc.immersiveintelligence.status_module=Статус
+
+desc.immersiveintelligence.tooltip.armor=Броня %f%%
+
+desc.immersiveintelligence.upgrade_gui.title=Оновити машину
+desc.immersiveintelligence.upgrade_gui.info=Інформація
+desc.immersiveintelligence.upgrade_gui.install=Встановити
+desc.immersiveintelligence.upgrade_gui.remove=Видалити
+desc.immersiveintelligence.upgrade_gui.back=Назад
+
+desc.immersiveintelligence.variable_type=Тип:
+desc.immersiveintelligence.variable_add_desc=Додати нову змінну
+desc.immersiveintelligence.variable_set=Установити
+desc.immersiveintelligence.variable_set_desc=Змінити значення змінної
+desc.immersiveintelligence.variable_send_packet=Надіслати пакет
+desc.immersiveintelligence.variable_send_packet_desc=Надсилає поточний пакет до мережі передачі даних
+desc.immersiveintelligence.hide_manual_widget=Сховати бічний посібник
+desc.immersiveintelligence.show_manual_widget=Показати бічний посібник
+desc.immersiveintelligence.variable_remove=Видалити
+desc.immersiveintelligence.variable_remove_desc=Видалити змінну
+desc.immersiveintelligence.variable_properties=Властивості
+desc.immersiveintelligence.variable_apply=Застосувати
+desc.immersiveintelligence.variable_value=Значення:
+desc.immersiveintelligence.operation=Операція:
+desc.immersiveintelligence.conditional_variable=Умовна змінна:
+desc.immersiveintelligence.no_variable=Немає
+desc.immersiveintelligence.variable=Змінна:
+
+#Bullets
+
+desc.immersiveintelligence.bullet_type.general_purpose=загального призначення
+desc.immersiveintelligence.bullet_type.shrapnel=Шрапнель
+desc.immersiveintelligence.bullet_type.piercing=Броня
+desc.immersiveintelligence.bullet_type.shaped=Камповий заряд
+desc.immersiveintelligence.bullet_type.explosive=Вибуховий
+desc.immersiveintelligence.bullet_type.incendiary=Запалювальний
+desc.immersiveintelligence.bullet_type.tracer=Трейсер
+desc.immersiveintelligence.bullet_type.flare=Відблиск
+desc.immersiveintelligence.bullet_type.chemical=Хімічна речовина
+desc.immersiveintelligence.bullet_type.emp=EMP
+desc.immersiveintelligence.bullet_type.terrain_denial=Відмова місцевості
+desc.immersiveintelligence.bullet_type.special=Спеціальне призначення
+
+desc.immersiveintelligence.bullet_core_type.softpoint=М'яка точка
+desc.immersiveintelligence.bullet_core_type.shaped=Сформований
+desc.immersiveintelligence.bullet_core_type.shaped_sabot=Стабілізоване ребро у формі
+desc.immersiveintelligence.bullet_core_type.piercing=Бронебійний
+desc.immersiveintelligence.bullet_core_type.piercing_sabot=Сабот
+desc.immersiveintelligence.bullet_core_type.canister=Каністр
+desc.immersiveintelligence.bullet_core_type.cluster=Кластер
+
+desc.immersiveintelligence.bullet_fuse.contact=Контакт
+desc.immersiveintelligence.bullet_fuse.timed=Час
+desc.immersiveintelligence.bullet_fuse.tooltip.timed=Тимчасовий запобіжник, затримка встановлена ​​на %s тиків
+desc.immersiveintelligence.bullet_fuse.proximity=Близькість
+desc.immersiveintelligence.bullet_fuse.tooltip.proximity=Запобіжник наближення, відстань встановлена ​​на %s блоків
+
+desc.immersiveintelligence.bullets.composition=%s - Композиція
+desc.immersiveintelligence.bullets.details=Деталі:
+desc.immersiveintelligence.bullets.core=Оснащено %1$s %2$s Core
+desc.immersiveintelligence.bullets.fuse=Запобіжник %s
+desc.immersiveintelligence.bullets.mass=Маса: %s
+desc.immersiveintelligence.bullets.caliber=Калібр: %s bCal
+
+desc.immersiveintelligence.bullets.components=Компоненти:
+desc.immersiveintelligence.bullets.ballistics=%s - Балістика
+desc.immersiveintelligence.bullets.performance=Продуктивність:
+desc.immersiveintelligence.bullets.damage_dealt=Заподіяна шкода: %s
+desc.immersiveintelligence.bullets.standard_velocity=Стандартна швидкість: %s b/t
+desc.immersiveintelligence.bullets.max_artillery_range=Максимальна дальність артилерії: %s блоків
+desc.immersiveintelligence.bullets.max_artillery_height=Максимальна досягнута висота: %s блоків
+desc.immersiveintelligence.bullets.max_direct_range=Максимальна пряма дальність: %s блоків
+desc.immersiveintelligence.bullets.max_range=Максимальна дальність: %s блоків
+desc.immersiveintelligence.bullets.armor_penetration=Проникнення броні:
+
+desc.immersiveintelligence.bullet_magazine.remaining=Залишок маркерів: %s
+desc.immersiveintelligence.bullet_magazine.empty=Порожньо
+
+desc.immersiveintelligence.data_merger.0=Обидва
+desc.immersiveintelligence.data_merger.1=Ліворуч
+desc.immersiveintelligence.data_merger.2=Правильно
+
+desc.immersiveintelligence.medical_crate.heal=Лікувати поранених істот
+desc.immersiveintelligence.medical_crate.boost=Застосувати ефекти до об'єктів
+
+desc.immersiveintelligence.repair_crate.repair_armor=Відремонтувати зношену броню
+desc.immersiveintelligence.repair_crate.repair_vehicles=Ремонт транспортних засобів
+
+desc.immersiveintelligence.jei.washing_recipe=Хімічне промивання
+#Potion effects
+
+potion.immersiveintelligence.suppression=Придушений
+potion.immersiveintelligence.broken_armor=Пробита броня
+potion.immersiveintelligence.corrosion=Корозія
+potion.immersiveintelligence.infrared_vision=Інфрачервоне бачення
+potion.immersiveintelligence.iron_will=Залізна воля
+potion.immersiveintelligence.well_supplied=Добре забезпечено
+potion.immersiveintelligence.concealed=Прихований
+potion.immersiveintelligence.exposed=Викритий
+potion.immersiveintelligence.medical_treatment=Медичне лікування
+potion.immersiveintelligence.undergoing_repairs=Проходить ремонт
+potion.immersiveintelligence.radiation=Радіація
+potion.immersiveintelligence.nuclear_heat=Ядерне тепло
+potion.immersiveintelligence.movement_assist=Допоміжний рух
+
+#Chat info / debug
+info.immersiveintelligence.frequency_set=Радіочастоту встановлено на %s
+info.immersiveintelligence.frequency_invalid=Недійсна частота, основні пристрої можуть використовувати частоти до %s!
+info.immersiveintelligence.current_frequency=Поточна частота: %s
+
+info.immersiveintelligence.requires_advanced_hammer=Розширена інженерія потребує вдосконалених інструментів... вам потрібен електричний молоток, щоб створити цю машину!
+
+info.immersiveintelligence.tool_durability=Стійкість: %1$s / %2$s
+info.immersiveintelligence.gear_ratio=Співвідношення крутного моменту/швидкості: %1$s >> %2$s
+info.immersiveintelligence.charge_with_if=Заряджайте за допомогою IF
+
+info.immersiveintelligence.yaw=Рискання: %s
+info.immersiveintelligence.pitch=Крок: %s
+info.immersiveintelligence.distance=Відстань: %s
+info.immersiveintelligence.distance_unknown=Невідомо
+
+info.immersiveintelligence.debugger_mode=Режим відладчика: %s
+info.immersiveintelligence.debugger_mode.0=Приймач
+info.immersiveintelligence.debugger_mode.1=Передавач
+info.immersiveintelligence.debugger_mode.2=Приймач
+
+info.immersiveintelligence.punchtape_reader_mode=Режим читання Перфострічки: %s
+info.immersiveintelligence.punchtape_reader_mode.0=Редстоун байдужий
+info.immersiveintelligence.punchtape_reader_mode.1=Пакет на редстоун
+info.immersiveintelligence.punchtape_reader_mode.2=Редстоун на пакеті
+
+info.immersiveintelligence.redstone_buffer_mode=Буферний режим редстоуну: %s
+info.immersiveintelligence.redstone_buffer_mode.passtrough=Пастро
+info.immersiveintelligence.redstone_buffer_mode.signal=Сигнал увім.
+
+info.immersiveintelligence.tachometer_message.basic=Внутрішній: швидкість %s DPT / крутний момент %s TU.
+info.immersiveintelligence.tachometer_message.advanced=Внутрішня: швидкість %s DPT / крутний момент %s TU. Зовні: швидкість %s DPT / крутний момент %s TU.
+info.immersiveintelligence.tachometer.internal_torque=Внутрішній крутний момент: %s TU
+info.immersiveintelligence.tachometer.external_torque=Зовнішній крутний момент: %s TU
+info.immersiveintelligence.tachometer.internal_speed=Внутрішня швидкість: %s DPT
+info.immersiveintelligence.tachometer.external_speed=Зовнішня швидкість: %s DPT
+info.immersiveintelligence.tachometer.torque=Крутний момент: %s TU
+info.immersiveintelligence.tachometer.speed=Швидкість: %s D/t
+
+info.immersiveintelligence.machineupgrade.name=Встановлення: %s
+info.immersiveintelligence.machineupgrade.progress=Прогрес: %1$s / %2$s IF
+
+info.immersiveintelligence.exoskeleton.0=Екзоскелет: §4Off§r
+info.immersiveintelligence.exoskeleton.1=Екзоскелет: §aMotion Assist§r
+info.immersiveintelligence.exoskeleton.2=Екзоскелет: §2Overdrive§r
+
+info.immersiveintelligence.machineupgrade.mg_loader.gui_tooltip=MG
+
+info.immersiveintelligence.towing.no=Не вдається знайти транспортний засіб, що буксирується
+info.immersiveintelligence.towing.towed=Успішно відбуксировано!
+info.immersiveintelligence.towing.untowed=Успішно розбуксировано!
+#Do not translate, it's a Factorio reference ^^
+info.immersiveintelligence.towing.no_easter_egg=Nie można rozsprzęgać taboru nie będąc w pojeździe!
+
+#Rotational Energy
+
+rotary.immersiveintelligence.belt_system.wrongCable=Неможливо прикріпити ремені двигуна до дротяного роз’єму
+rotary.immersiveintelligence.belt_system.wrongCable1=Не можна просто прикріпити ремені до дротяної системи
+rotary.immersiveintelligence.belt_system.wrongCable2=Як я вже сказав, ви НЕ МОЖЕТЕ їх підключити, припиніть спроби
+rotary.immersiveintelligence.belt_system.wrongCable3=Послухайте мене, якщо ви спробуєте підключити їх ще раз...
+rotary.immersiveintelligence.belt_system.wrongCable4=ЯКА ЧАСТИНА ВИ НЕ МОЖЕТЕ ПРИКРИПИТИ РЕМЕНІ, ЩО ВИ НЕ РОЗУМІЄТЕ?!
+rotary.immersiveintelligence.belt_system.wrongCable5=Просто залиште мене в спокої... Dummkopf! Ось, просунуйся, а тепер до біса!
+rotary.immersiveintelligence.belt_system.itsBoringGetALife=Ти справді нудний, навіть у мене, MotorBeltUtils.java, є почуття, добре?!
+rotary.immersiveintelligence.belt_system.wrongBelt=Ви не можете прикріпити цей ремінь тут
+
+rotary.immersiveintelligence.belt_system.wrongDimension=Ви не в тому вимірі
+rotary.immersiveintelligence.belt_system.sameConnection=Ви не можете прикріпити ремінь до однієї точки
+rotary.immersiveintelligence.belt_system.tooFar=Ви занадто далеко від попереднього з'єднання
+rotary.immersiveintelligence.belt_system.cantSee=З'єднання перешкоджає
+rotary.immersiveintelligence.belt_system.connectionExists=Підключення вже існує
+rotary.immersiveintelligence.belt_system.invalidPoint=Одна з точок підключення недійсна
+rotary.immersiveintelligence.belt_system.differentAxis=Пояси не можна з'єднувати по діагоналі.
+
+#Data System Descriptions
+datasystem.immersiveintelligence.function.add=Доповнення
+datasystem.immersiveintelligence.function.subtract=Віднімання
+datasystem.immersiveintelligence.function.multiply=Множення
+datasystem.immersiveintelligence.function.divide=Поділ
+datasystem.immersiveintelligence.function.modulo=Мод
+datasystem.immersiveintelligence.function.abs=Абс
+
+datasystem.immersiveintelligence.function.power=Потужність
+datasystem.immersiveintelligence.function.root=Корінь
+datasystem.immersiveintelligence.function.max=Макс
+datasystem.immersiveintelligence.function.min=Мін
+datasystem.immersiveintelligence.function.sign=Підписати
+datasystem.immersiveintelligence.function.ceil=Стеля
+datasystem.immersiveintelligence.function.round=Круглий
+datasystem.immersiveintelligence.function.floor=Поверх
+datasystem.immersiveintelligence.function.sin=Гріх
+datasystem.immersiveintelligence.function.cos=Cos
+datasystem.immersiveintelligence.function.tan=Тан
+
+datasystem.immersiveintelligence.function.and=AND
+datasystem.immersiveintelligence.function.or=АБО
+datasystem.immersiveintelligence.function.not=НІ
+datasystem.immersiveintelligence.function.nand=NAND
+datasystem.immersiveintelligence.function.nor=НІ
+datasystem.immersiveintelligence.function.xor=XOR
+datasystem.immersiveintelligence.function.xnor=XNOR
+
+datasystem.immersiveintelligence.function.greater=Краще
+datasystem.immersiveintelligence.function.less=Менше
+datasystem.immersiveintelligence.function.greater_or_equal=Більше або рівно
+datasystem.immersiveintelligence.function.less_or_equal=Менше або рівно
+datasystem.immersiveintelligence.function.equal=Рівно
+
+datasystem.immersiveintelligence.function.string_join=Приєднатися
+datasystem.immersiveintelligence.function.string_split=Розділити
+datasystem.immersiveintelligence.function.string_length=Довжина
+datasystem.immersiveintelligence.function.string_char_at=Символ At
+datasystem.immersiveintelligence.function.string_substring=Підрядок
+datasystem.immersiveintelligence.function.string_trim=Обрізати
+
+datasystem.immersiveintelligence.function.string_hexcol=
+Відформатуйте за допомогою Hexcol
+datasystem.immersiveintelligence.function.string_format=Відформатувати за допомогою TextFormatting
+
+datasystem.immersiveintelligence.function.string_contains=Містить
+datasystem.immersiveintelligence.function.string_contains_count=Обсяг, що міститься
+datasystem.immersiveintelligence.function.string_replace_first=Спочатку замінити
+datasystem.immersiveintelligence.function.string_replace_all=Замінити все
+
+datasystem.immersiveintelligence.function.string_lowercase=У нижньому регістрі
+datasystem.immersiveintelligence.function.string_uppercase=У верхньому регістрі
+datasystem.immersiveintelligence.function.string_snake_case=До snake_case
+datasystem.immersiveintelligence.function.string_camel_case=До camelCase
+datasystem.immersiveintelligence.function.string_reverse=Зворотний
+
+datasystem.immersiveintelligence.function.get_quantity=Отримати кількість
+datasystem.immersiveintelligence.function.set_quantity=Установити кількість
+datasystem.immersiveintelligence.function.get_durability=Отримайте довговічність
+datasystem.immersiveintelligence.function.set_durability=Установити довговічність
+datasystem.immersiveintelligence.function.get_nbt=Отримати NBT
+datasystem.immersiveintelligence.function.set_nbt=Установити NBT
+datasystem.immersiveintelligence.function.get_itemstack=Створити з ID
+datasystem.immersiveintelligence.function.get_item_id=Отримати ID
+datasystem.immersiveintelligence.function.can_stack_with=Може стекувати з
+datasystem.immersiveintelligence.function.matches_oredict=Відповідає OreDictionary
+
+datasystem.immersiveintelligence.function.array_get=Отримати
+datasystem.immersiveintelligence.function.array_set=Установити
+datasystem.immersiveintelligence.function.array_push=Натиснути
+datasystem.immersiveintelligence.function.array_pop=Поп
+datasystem.immersiveintelligence.function.array_swap=Поміняти
+datasystem.immersiveintelligence.function.array_length=Отримати довжину
+
+datasystem.immersiveintelligence.function.entity_get_id=Отримати ID
+datasystem.immersiveintelligence.function.entity_get_type=Отримати тип
+datasystem.immersiveintelligence.function.entity_get_name=Отримати назву
+datasystem.immersiveintelligence.function.entity_get_dimension_id=Отримати розмір
+datasystem.immersiveintelligence.function.entity_get_x=Отримати X
+datasystem.immersiveintelligence.function.entity_get_y=Отримати Y
+datasystem.immersiveintelligence.function.entity_get_z=Отримати Z
+
+datasystem.immersiveintelligence.function.document_read_page=Прочитати сторінку
+datasystem.immersiveintelligence.function.document_read_all_pages_array=Читати всі сторінки (масив)
+datasystem.immersiveintelligence.function.document_read_all_pages_string=Читати всі сторінки (рядок)
+datasystem.immersiveintelligence.function.document_get_author=Отримати автора
+datasystem.immersiveintelligence.function.document_get_title=Отримати назву
+
+datasystem.immersiveintelligence.function.is_null=Нульовий
+datasystem.immersiveintelligence.function.is_same_type=Того самого типу
+datasystem.immersiveintelligence.function.to_integer=До цілого числа
+datasystem.immersiveintelligence.function.to_float=Плавати
+datasystem.immersiveintelligence.function.to_string=До рядка
+datasystem.immersiveintelligence.function.to_boolean=До логічного
+datasystem.immersiveintelligence.function.to_null=До нуля
+
+datasystem.immersiveintelligence.function.encrypt_text=Зашифрувати текст
+datasystem.immersiveintelligence.function.encrypt_number=Зашифрувати номер
+datasystem.immersiveintelligence.function.encrypt_array=Зашифрувати масив
+datasystem.immersiveintelligence.function.decrypt_text=Розшифрувати текст
+datasystem.immersiveintelligence.function.decrypt_number=Розшифрувати номер
+datasystem.immersiveintelligence.function.decrypt_array=Розшифрувати масив
+
+datasystem.immersiveintelligence.datatype.null=Нуль
+datasystem.immersiveintelligence.datatype.boolean=Логічний
+datasystem.immersiveintelligence.datatype.integer=Ціле число
+datasystem.immersiveintelligence.datatype.float=Float
+datasystem.immersiveintelligence.datatype.vector=Вектор
+datasystem.immersiveintelligence.datatype.string=Рядок
+datasystem.immersiveintelligence.datatype.expression=Вираз
+datasystem.immersiveintelligence.datatype.accessor=Засіб доступу
+datasystem.immersiveintelligence.datatype.itemstack=Стека предметів
+datasystem.immersiveintelligence.datatype.fluidstack=FluidStack
+datasystem.immersiveintelligence.datatype.array=Масив
+datasystem.immersiveintelligence.datatype.map=Карта
+datasystem.immersiveintelligence.datatype.entity=Сутність
+datasystem.immersiveintelligence.datatype.encrypted=Зашифровано
+
+datasystem.immersiveintelligence.datatype.boolean.true=True
+datasystem.immersiveintelligence.datatype.boolean.false=False
+
+#Blueprints
+
+desc.immersiveengineering.info.blueprint.basic_circuits=Основні схеми
+desc.immersiveengineering.info.blueprint.advanced_circuits=Розширені схеми
+desc.immersiveengineering.info.blueprint.processors=Процесори
+desc.immersiveengineering.info.blueprint.cryptography_circuits=Криптографічні схеми
+
+desc.immersiveengineering.info.blueprint.basic_functional_circuits=Основні функціональні схеми
+desc.immersiveengineering.info.blueprint.advanced_functional_circuits=Розширені функціональні схеми
+desc.immersiveengineering.info.blueprint.processor_functional_circuits=Програмовані процесори
+desc.immersiveengineering.info.blueprint.cryptographic_functional_circuits=Криптографічні процесори
+
+desc.immersiveengineering.info.blueprint.metal_springs=Пружини
+desc.immersiveengineering.info.blueprint.ammo_molds=Форми для боєприпасів
+desc.immersiveengineering.info.blueprint.vulcanizer_molds=Форми вулканізатора
+desc.immersiveengineering.info.blueprint.bullet_magazines=Магазин набоїв
+
+#Keybindings
+key.immersiveintelligence.manualReload=Перезавантаження вручну
+key.immersiveintelligence.armorHelmet=Вимкнути головний убір броні світлотехніка
+key.immersiveintelligence.armorExosuit=Увімкнути екзоскелет броні світлоінженера
+
+key.immersiveintelligence.mgScope=Масштаб / Приціл кулемета
+
+key.immersiveintelligence.engineWorking=Переключити механізм
+key.immersiveintelligence.motorbikeTowing=Буксирувати/Відтягувати
+
+#Advancements
+advancement.immersiveintelligence.root=Immersive Intelligence
+advancement.immersiveintelligence.root.desc=RTFM?
+
+advancement.immersiveintelligence.connect_belt=Потужне транспортування
+advancement.immersiveintelligence.connect_belt.desc=З'єднайте два механічних колеса з ременем
+
+advancement.immersiveintelligence.craft_gun_barrel_iron=Зброяр?
+advancement.immersiveintelligence.craft_gun_barrel_iron.desc=Створіть ствол залізної рушниці, який дозволить вам створювати базову вогнепальну зброю.
+
+advancement.immersiveintelligence.craft_gun_barrel_steel=Промислова зброя
+advancement.immersiveintelligence.craft_gun_barrel_steel.desc=Створіть сталевий ствол, зробивши свій перший крок в епоху промислової війни.
+
+advancement.immersiveintelligence.craft_gun_barrel_tungsten=Чому точність має значення
+advancement.immersiveintelligence.craft_gun_barrel_tungsten.desc=Створіть високоточний ствол, додавши нову найсучаснішу вогнепальну зброю у свій арсенал.
+
+advancement.immersiveintelligence.craft_diy=Зроби сам
+advancement.immersiveintelligence.craft_diy.desc=Створіть гвинтівку ручної роботи
+
+advancement.immersiveintelligence.craft_rifle=Народна рушниця
+advancement.immersiveintelligence.craft_rifle.desc=Створити гвинтівку масового виробництва
+
+advancement.immersiveintelligence.for_the_emperor=Для Імператора!
+advancement.immersiveintelligence.for_the_emperor.desc=Приєднайте багнет до рушниці
+
+advancement.immersiveintelligence.craft_stg=Ми всі повинні мати Sturmgewehr!
+advancement.immersiveintelligence.craft_stg.desc=Створіть штурмову гвинтівку
+
+advancement.immersiveintelligence.weapon_of_war=Це... це зброя війни
+advancement.immersiveintelligence.weapon_of_war.desc=Покращити штурмову гвинтівку оптичним прицілом і електричним двигуном стрільби
+
+advancement.immersiveintelligence.the_accelerator=Прискорювач
+advancement.immersiveintelligence.the_accelerator.desc=Покращте штурмову гвинтівку за допомогою гранатомета та ствола рейлгана
+
+advancement.immersiveintelligence.special_operations_initiative=Ініціатива спеціальних операцій
+advancement.immersiveintelligence.special_operations_initiative.desc=Покращити штурмову гвинтівку за допомогою далекоміра
+
+advancement.immersiveintelligence.craft_smg=Іграшка Томмі
+advancement.immersiveintelligence.craft_smg.desc=Створіть пістолет-кулемет
+
+advancement.immersiveintelligence.infinite_power=Нескінченна сила
+advancement.immersiveintelligence.infinite_power.desc=Покращте пістолет-кулемет за допомогою нижнього заряджання та міцного ствола
+
+advancement.immersiveintelligence.the_silent_unseen=Тихий Невидимий
+advancement.immersiveintelligence.the_silent_unseen.desc=Покращте пістолет-кулемет складаним прикладом і придушником
+
+advancement.immersiveintelligence.craft_cpds=Вартість стрільби протягом 12 секунд
+advancement.immersiveintelligence.craft_cpds.desc=Створіть журнал CPDS
+
+#Reference to Tiger 1 tank memes
+advancement.immersiveintelligence.craft_steel_belt=Ганс, ця Трансмісія Працює!
+advancement.immersiveintelligence.craft_steel_belt.desc=Створіть сталевий моторний ремінь
+
+advancement.immersiveintelligence.secret_connect_wire=Хто наважиться, той переможе
+advancement.immersiveintelligence.secret_connect_wire.desc=Вам було достатньо? Тепер дай мені відпочити.
+
+advancement.immersiveintelligence.advanced_circuit_board=Краще, складніше, швидше!
+advancement.immersiveintelligence.advanced_circuit_board.desc=Виготовити вдосконалену друковану плату
+
+advancement.immersiveintelligence.artillery_howitzer=Сестра Берти
+advancement.immersiveintelligence.artillery_howitzer.desc=Створити артилерійську гаубицю
+
+advancement.immersiveintelligence.chemical_bath=Бульбулятор
+advancement.immersiveintelligence.chemical_bath.desc=Створити хімічну ванну
+
+advancement.immersiveintelligence.circuit_board=Beep boop?
+advancement.immersiveintelligence.circuit_board.desc=Виготовити друковану плату
+
+#Ay you, yes you @CrimsonTwilight, we know you want the inserters in IG :D
+advancement.immersiveintelligence.craft_advanced_inserter=Багряний вставник
+advancement.immersiveintelligence.craft_advanced_inserter.desc=Створіть оновлену версію інсертеру.
+
+advancement.immersiveintelligence.craft_binoculars=Тактичне спостереження
+advancement.immersiveintelligence.craft_binoculars.desc=Створіть бінокль
+
+advancement.immersiveintelligence.craft_chemdispenser=Полум'я в чорній ночі
+advancement.immersiveintelligence.craft_chemdispenser.desc=Створіть дозатор хімікатів
+
+advancement.immersiveintelligence.craft_inserter=Жовтих немає, вибачте!
+advancement.immersiveintelligence.craft_inserter.desc=Створіть Інсертер
+
+#Long story short, in Company of Heroes 2 on Wikinger Mod, there is a special unit type - the infiltrators
+#Those guys often have superior firepower and accuracy, German units are using the Sturmgewehrs with infrared sights
+#That's why all the infiltration stuff in II is related to Infrared Vision
+advancement.immersiveintelligence.craft_ir_binoculars=Інфільтратор
+advancement.immersiveintelligence.craft_ir_binoculars.desc=Створіть інфрачервоний бінокль
+
+#Reference to Fullmetal Alchemist: Brotherhood (Lust death scene)
+advancement.immersiveintelligence.craft_lighter=Повернення Zippo Guy
+advancement.immersiveintelligence.craft_lighter.desc=Створіть запальничку
+
+advancement.immersiveintelligence.craft_mg=Власність Ганса
+advancement.immersiveintelligence.craft_mg.desc=Створіть сумно відомий кулемет
+
+advancement.immersiveintelligence.craft_mortar=Смерть згори
+advancement.immersiveintelligence.craft_mortar.desc=Створіть міномет
+
+#Reference to Industrialcraft2's alarm siren addon
+advancement.immersiveintelligence.craft_siren=Реактор в порядку?
+advancement.immersiveintelligence.craft_siren.desc=Створіть сирену тривоги
+
+#Reference to a sidenote on one of Choroman's concept drawings
+advancement.immersiveintelligence.craft_speaker=Веселий звук інженера
+advancement.immersiveintelligence.craft_speaker.desc=Створіть програмований динамік
+
+advancement.immersiveintelligence.electrolyzer=Шокова терапія рідиною
+advancement.immersiveintelligence.electrolyzer.desc=Створити електролізер
+
+advancement.immersiveintelligence.hans_9000=Ганс 9000
+advancement.immersiveintelligence.hans_9000.desc=Підготуйте MG до нерухомої оборони
+
+#A reference to the well known engineer and weapon maker Jörg Sprave
+advancement.immersiveintelligence.let_me_show_you_its_features=Дозвольте мені показати вам його особливості!
+advancement.immersiveintelligence.let_me_show_you_its_features.desc=Покращіть MG інфрачервоним прицілом, важким стволом і другим магазином
+
+#A JoJo reference
+advancement.immersiveintelligence.make_platinum=Краще за світ?
+advancement.immersiveintelligence.make_platinum.desc=Отримати платиновий злиток
+
+#A Dr. Stone reference
+advancement.immersiveintelligence.make_tungsten=Перемогти монстра за допомогою тепла
+advancement.immersiveintelligence.make_tungsten.desc=Здобути вольфрамовий злиток
+
+advancement.immersiveintelligence.make_tungsten_drillhead=Швидше за гномів
+advancement.immersiveintelligence.make_tungsten_drillhead.desc=Створіть вольфрамову свердлильну головку
+
+#Reference to a well known mod
+advancement.immersiveintelligence.make_tungsten_drillhead_diamond=Возитися з інструментами
+advancement.immersiveintelligence.make_tungsten_drillhead_diamond.desc=Створіть вольфрамову свердлильну головку з алмазним наконечником
+
+advancement.immersiveintelligence.prec_assembler=Якість: майстерність
+advancement.immersiveintelligence.prec_assembler.desc=Створіть прецизійний асемблер
+
+advancement.immersiveintelligence.printing_press=Мало чорнила
+advancement.immersiveintelligence.printing_press.desc=Створити друкарню
+
+#Ah, the good old Crysis 3
+advancement.immersiveintelligence.processor_circuit_board=Чи може він запускати Crysis?
+advancement.immersiveintelligence.processor_circuit_board.desc=Виготовити друковану плату процесора
+
+advancement.immersiveintelligence.radio_station=Дистанційне керування
+advancement.immersiveintelligence.radio_station.desc=Створити радіостанцію
+
+#Tripod Periscope
+advancement.immersiveintelligence.craft_tripod_periscope=Окуляри на паличках
+advancement.immersiveintelligence.craft_tripod_periscope.desc=Створіть перископ штатива
+
+#Reference to a chat with Carver
+advancement.immersiveintelligence.craft_mine_detector=НЕ пилосос
+advancement.immersiveintelligence.craft_mine_detector.desc=Створіть міношукач
+
+#Ground Zero is a centre of a nuclear explosion
+advancement.immersiveintelligence.secret_nuclear_tripmine=Посадка насіння на нульовий рівень
+advancement.immersiveintelligence.secret_nuclear_tripmine.desc=Розгорнути атомну стрибаючу міну
+
+#Reference to C&C
+advancement.immersiveintelligence.rad_cannon=Поширення загибелі та викорінення
+advancement.immersiveintelligence.rad_cannon.desc=Стань ходячим нападником стабільності навколишнього середовища
+
+#Reference to an old Polish meme, in which a certain cocoa brand is actually a story-rich book!
+#The cocoa was once put into a shop's shelf, mistaken as a book, that's where it started.
+advancement.immersiveintelligence.secret_cocoa=Історії Деко Моррено
+advancement.immersiveintelligence.secret_cocoa.desc=Висока якість досягнута
+
+#Reference to Carver and C&C, though I left the mind control feature optional, was kinda op
+advancement.immersiveintelligence.secret_carvers_revenge=Помста Карвера
+advancement.immersiveintelligence.secret_carvers_revenge.desc=Що ви маєте на увазі, ми не можемо мати керовані розумом ядерні шахти?
+
+#URA! Reference to a youtube video by HRejterzy, check it out ^^
+advancement.immersiveintelligence.create_motorbike=Za vas, za nas, za neft' i gaz!
+advancement.immersiveintelligence.create_motorbike.desc=Зберіть мотоцикл
+
+#Reference to a certain discord chat
+advancement.immersiveintelligence.secret_sorry_for_ceiling=Вибачте за вашу стелю!
+advancement.immersiveintelligence.secret_sorry_for_ceiling.desc=Відчуйте, як снаряд гаубиці ламає дах, щоб поширювати вашу пропаганду.
+
+#Reference to the russian II tutorial video by Ocelot
+advancement.immersiveintelligence.emplacement=Маленька башточка теж хороша...
+advancement.immersiveintelligence.emplacement.desc=Побудуйте Замок, оборонну споруду, яку можна оснастити важкою зброєю.
+
+advancement.immersiveintelligence.flagpole=Стойте за Гімн!
+advancement.immersiveintelligence.flagpole.desc=Побудуйте флагшток, декоративний орієнтир і завантажувач фрагментів.
+
+#Manual Categories
+
+ie.manual.category.ii_data.name=Дані та електроніка
+ie.manual.category.ii_warfare.name=Війна
+ie.manual.category.ii_logi.name=Логістика
+ie.manual.category.ii_intel.name=Інтелект
+ie.manual.category.ii_motorworks.name=Техніка
+
+ie.manual.folder.functions=Довідка про функції
+ie.manual.folder.folder=Папка
+ie.manual.folder.device=Пристрої
+ie.manual.folder.sekritdokuments=Секретні Документи
+
+ie.manual.entry.traits.level_beginner=Складність: доіндустріальний
+ie.manual.entry.traits.level_early_industrial=Складність: рання індустріалізація
+ie.manual.entry.traits.level_industrial=Складність: промислова
+ie.manual.entry.traits.level_advanced_industrial=Складність: пізня індустріалізація
+ie.manual.entry.traits.level_circuits=Складність: ера електроніки
+ie.manual.entry.traits.level_computer=Складність: Комп'ютерна ера
+ie.manual.entry.traits.hammer=Базовий мультиблок - форма з використанням молота інженера
+ie.manual.entry.traits.hammer_electric=Розширений мультиблок - форма за допомогою електричного молота
+ie.manual.entry.traits.upgradable=Можна оновити
+ie.manual.entry.traits.repairable=Можна відновити
+ie.manual.entry.traits.decorations=Можна прикрасити
+ie.manual.entry.traits.paintable=Можна фарбувати
+
+#manual multiblock forming block position text
+ie.manual.entry.multiblock_forming=
+%1$s можна сформувати за допомогою %2$s на %3$s %4$s
+ie.manual.entry.multiblock_forming_short=Його можна сформувати за допомогою %2$s на %3$s %4$s
+вісь #y
+ie.manual.entry.multiblock_forming.up=верх
+ie.manual.entry.multiblock_forming.middle=середина
+ie.manual.entry.multiblock_forming.down=низ
+вісь #z
+ie.manual.entry.multiblock_forming.left=зліва
+ie.manual.entry.multiblock_forming.center=центр
+ie.manual.entry.multiblock_forming.right=праворуч
+#x вісь
+ie.manual.entry.multiblock_forming.front=далі
+ie.manual.entry.multiblock_forming.back=назад
+
+ie.manual.entry.immersiveposts.posts_brass=Латунь<br><br><br><br><br><br>Орнамент
+ie.manual.entry.immersiveposts.posts_tungsten=Вольфрам<br><br><br><br><br><br>з Вольфраму
+ie.manual.entry.immersiveposts.posts_zinc=Цинк<br><br><br><br><br><br>Тендітний
+ie.manual.entry.immersiveposts.posts_platinum=Платиновий<br><br><br><br><br><br>[Світ]
+ie.manual.entry.immersiveposts.posts_duraluminium=Дюралюміній<br><br><br><br><br><br>з Десанту
+
+#Data and Electronics
+
+ie.manual.entry.def_value=Значення за замовчуванням
+ie.manual.entry.min_value=Мінімальне значення
+ie.manual.entry.max_value=Максимальне значення
+ie.manual.entry.min_index=Найнижчий індекс
+ie.manual.entry.max_index=Найвищий індекс
+ie.manual.entry.empty=Пусто
+ie.manual.entry.accepted_values=Прийнятні значення
+ie.manual.entry.max_length=Максимальна довжина
+ie.manual.entry.tf=Правда/Невірно
+ie.manual.entry.false=Невірно
+ie.manual.entry.true=Правда
+
+ie.manual.entry.variables_input=Вхідні змінні:
+ie.manual.entry.variables_output=Вихідні змінні:
+ie.manual.entry.variables_callback=Змінні зворотного виклику:
+
+ie.manual.entry.allowed_values=Дозволені значення:
+ie.manual.entry.allowed_value=Дозволене значення:
+ie.manual.entry.required_variables=Обов'язкові змінні:
+ie.manual.entry.callback_returns=Повернення:
+
+ie.manual.entry.filler.name=Наповнювач
+ie.manual.entry.filler.subtext=Збиваючи весь пил
+ie.manual.entry.filler0=Наповнювач — це пристрій, який використовується для наповнення контейнерів пилом. Найважливішим призначенням є наповнення стріляних гільз порохом. Для формування наповнювача використовуйте молоток на середньому конвеєрному блоці.
+ie.manual.entry.filler1=Для роботи наповнювача потрібна електрика, контейнер для заповнення та відповідна кількість пилу. Коли пил поміщається у вхідний отвір, він переміщується в основний резервуар, загальна кількість пилу, що зберігається там, відображається в мБ. Машина може одночасно зберігати лише один тип пилу. Єдиний спосіб видалити пил з машини, окрім наповнення контейнерів, це зламати машину.
+
+#Chemical Painter output variables
+ie.manual.entry.chemical_painter.vars_in.p.main=Режим виведення
+#Chemical Painter callback variables
+ie.manual.entry.chemical_painter.vars_callback.get_color=Повертає поточний використаний колір як ціле число RGB
+ie.manual.entry.chemical_painter.vars_callback.get_color_hex=Повертає поточний використовуваний колір як шістнадцятковий рядок
+ie.manual.entry.chemical_painter.vars_callback.get_ink=Повертає кількість чорного чорнила
+ie.manual.entry.chemical_painter.vars_callback.get_ink_cyan=Повертає кількість блакитного чорнила
+ie.manual.entry.chemical_painter.vars_callback.get_ink_yellow=Повертає кількість жовтого чорнила
+ie.manual.entry.chemical_painter.vars_callback.get_ink_magenta=Повертає кількість пурпурового чорнила
+ie.manual.entry.chemical_painter.vars_callback.get_energy=Повертає кількість накопиченої енергії
+
+#Printing Press output variables
+ie.manual.entry.printing_press.vars_in.m.main=Режим виведення
+ie.manual.entry.printing_press.vars_in.m.sub=Можливі значення: "text", "code", "blueprint"
+ie.manual.entry.printing_press.vars_in.a.main=Кількість копій
+ie.manual.entry.printing_press.vars_in.a.sub=
+ie.manual.entry.printing_press.vars_in.t.main=Текст для друку
+ie.manual.entry.printing_press.vars_in.t.sub=Доступно лише при використанні режиму "текст"
+#Printing Натисніть змінні зворотного виклику
+ie.manual.entry.printing_press.vars_callback.get_ink=Повертає кількість чорного чорнила
+ie.manual.entry.printing_press.vars_callback.get_ink_cyan=Повертає кількість блакитного чорнила
+ie.manual.entry.printing_press.vars_callback.get_ink_yellow=Повертає кількість жовтого чорнила
+ie.manual.entry.printing_press.vars_callback.get_ink_magenta=Повертає кількість пурпурового чорнила
+ie.manual.entry.printing_press.vars_callback.get_energy=Повертає кількість накопиченої енергії
+ie.manual.entry.printing_press.vars_callback.get_paper=Повертає кількість чистих сторінок паперу
+
+ie.manual.entry.inserters_basic.vars_in.c.main=Команда
+ie.manual.entry.inserters_basic.vars_in.c.sub=Можливі значення: "додати", "видалити", "очистити"
+ie.manual.entry.inserters_basic.vars_in.a.main=Дія (Використовується "додати", необов'язково для "видалити")
+ie.manual.entry.inserters_basic.vars_in.a.sub=Можливі значення: "item", "place_block", "from_minecart", "into_minecart"
+ie.manual.entry.inserters_basic.vars_in.s.main=Стек
+ie.manual.entry.inserters_basic.vars_in.s.sub=Необов'язково. ItemStack або OreDict String, яким мають відповідати елементи.
+ie.manual.entry.inserters_basic.vars_in.e.main=Термін дії закінчується після (Використовується "add")
+ie.manual.entry.inserters_basic.vars_in.e.sub=Необов'язково. Після якої кількості предметів завдання (запит) має закінчитися.
+ie.manual.entry.inserters_basic.vars_in.t.main=Сума взяття предмета (Використовується "add")
+ie.manual.entry.inserters_basic.vars_in.t.sub=Необов'язково. Максимальна кількість предметів, яку вставник візьме за хід.
+
+ie.manual.entry.inserters_basic.vars_in.i.main=Напрямок введення
+ie.manual.entry.inserters_basic.vars_in.i.sub=Необов'язково. Рядок ("північ", "схід", "південь", "захід") або ціле число 2-4.
+ie.manual.entry.inserters_basic.vars_in.o.main=Напрямок виведення
+ie.manual.entry.inserters_basic.vars_in.o.sub=Необов'язково. Рядок ("північ", "схід", "південь", "захід") або ціле число 2-4.
+ie.manual.entry.inserters_basic.vars_in.1.main=Вхідна відстань
+ie.manual.entry.inserters_basic.vars_in.1.sub=Необов'язково. Ціле число 1-2.
+ie.manual.entry.inserters_basic.vars_in.0.main=Вихідна відстань
+ie.manual.entry.inserters_basic.vars_in.0.sub=Необов'язково. Ціле число 1-2
+
+ie.manual.entry.inserter_obsolete.vars_in.m.main=Режим отримання предмета (застаріле)
+ie.manual.entry.inserter_obsolete.vars_in.m.sub=Можливі значення: "set", "add"
+ie.manual.entry.inserter_obsolete.vars_in.c.main=Кількість елементів (застаріле)
+ie.manual.entry.inserter_obsolete.vars_in.c.sub=
+
+ie.manual.entry.inserters_fluid.vars_in.m.main=Режим прийому рідини
+ie.manual.entry.inserters_fluid.vars_in.m.sub=Можливі значення: "set", "add"
+ie.manual.entry.inserters_fluid.vars_in.c.main=Кількість рідини для прийому
+ie.manual.entry.inserters_fluid.vars_in.c.sub=у мілібакетах (мБ)
+
+ie.manual.entry.programmable_speaker.vars_in.o.main=Відтворити один раз
+ie.manual.entry.programmable_speaker.vars_in.o.sub=Якщо істина, звук відтворюється один раз, незалежно від сигналу червоного каменю
+ie.manual.entry.programmable_speaker.vars_in.s.main=ID звуку для відтворення
+ie.manual.entry.programmable_speaker.vars_in.s.sub=Приклад "immersiveintelligence:siren"
+ie.manual.entry.programmable_speaker.vars_in.v.main=Гучність
+ie.manual.entry.programmable_speaker.vars_in.v.sub=Значення має бути від 0 до 100
+ie.manual.entry.programmable_speaker.vars_in.t.main=Тон/Висота
+ie.manual.entry.programmable_speaker.vars_in.t.sub=Значення має бути між -100 і 100
+
+#Intelligence
+
+#Reference to Dr. Stone
+ie.manual.entry.intel_main.name=Intelligence
+ie.manual.entry.intel_main.subtext=Найпотужніша зброя науки
+ie.manual.entry.intel_main0=Розвідка — це галузь техніки, яка зосереджена на шпигунстві, проникненні, диверсіях і розвідці.<br>Розвідка пропонує численні інструменти та машини для спостереження та прогнозування рухів ворога. До них належать прості, як-от бінокль, і складні, як-от інфрачервоний спостерігач або стіл стратегічного командування.
+
+#Посилання на доктора Стоуна
+ie.manual.entry.binoculars.name=Бінокль
+ie.manual.entry.binoculars.subtext=Очі науки
+ie.manual.entry.binoculars0=Бінокль - це інструмент, який дозволяє бачити далі. Вони засновані на тому ж принципі збільшення, що й приціл <link;railgun;§o§nRailgun§r;>.
+ie.manual.entry.binoculars1=Інфрачервоні біноклі є оновленою версією звичайних. При подачі енергії, тобто від <link;powerpack;§o§nCapacitor §o§nBackpack§r;>, це забезпечує нічне бачення, не використовуйте їх в освітлених місцях, це може серйозно вас засліпити.
+
+ie.manual.entry.tripod_periscope.name=Штативний перископ
+ie.manual.entry.tripod_periscope.subtext=Окуляри на паличках
+ie.manual.entry.tripod_periscope0=Перископ штатив — це прилад для спостереження, що складається з бінокля, збільшувальних труб, механізму обертання та штатива. Tripod Periscope дозволяє визирати з траншеї або стіни без ризику потрапити під постріл.
+ie.manual.entry.tripod_periscope1=Порівняно зі стандартним біноклем, Tripod Periscope має чудові можливості масштабування, що дозволяє досліджувати далі та бачити об’єкти на надзвичайно далеких відстанях.<br>Розгортання штатива подібне до використання кулемета, вимагає ви повинні покласти предмет на землю, а потім взаємодіяти з ним, маючи порожню руку. Щоб підняти його, підкрадьтеся та взаємодійте з ним.
+
+#Reference to the Battle of Britain in WW2
+ie.manual.entry.radar.name=радар
+ie.manual.entry.radar.subtext=Реліквія з Дувра
+ie.manual.entry.radar0=Радар — це великий пристрій виявлення, здатний виявляти об’єкти на прямій лінії на неймовірно великих відстанях, включаючи (і особливо) всі металеві предмети та артилерійські снаряди. Щоб сформувати його, використовуйте молоток на лівому дерев'яному риштуванні.
+ie.manual.entry.radar1=Радар має багаторазове використання. Він може бути пов’язаний зі зброєю розміщення, такою як CPDS, і використовуватися для перехоплення снарядів на великих відстанях. Його також можна пов’язати зі стратегічним командним столом [WIP].<br>Якщо його оновити §6Triangulators§r, радар також може виявляти радіосигнали в межах свого діапазону та визначати їхнє розташування, що дає змогу влаштовувати засідки на нічого не підозрюючих ворогів точними артилерійськими ударами. Для роботи радара потрібна постійна подача електроенергії.
+
+#Посилання на книгу Сунь Цзи
+ie.manual.entry.strategic_command_table.name=Таблиця стратегічних команд
+ie.manual.entry.strategic_command_table.subtext=Мистецтво війни
+ie.manual.entry.strategic_command_table0=
+
+#Warfare
+
+#Reference to an RTS game
+ie.manual.entry.warfare_main.name=Війна
+ie.manual.entry.warfare_main.subtext=Розробляй і перемагай
+ie.manual.entry.warfare_main0=Війна - це галузь інженерії, зосереджена на захисті та наступі на ворогів. Інженерні винаходи зробили революцію в сучасному способі бою, мечі та щити вийшли з ужитку, настала ера метальної зброї. Сучасна війна базується як на точних, так і на швидких атаках із дальністю, що перевищує будь-яку зброю минулого.
+
+
+ie.manual.entry.contributor_skins.name=Скіни учасників
+ie.manual.entry.contributor_skins.subtext=Для підтримки Engineered Cause!
+ie.manual.entry.contributor_skins=Користувачі Immersive Intelligence, чи то безпосередня допомога шляхом надання активів, коду, перекладів, запису навчальних відео, пожертвувань через Patreon або просто внесок у спільноту II, не можуть бути проігноровані та мають бути винагороджені.<br > Для цього в гру додано колекцію скінів, які можна застосовувати до різної зброї, починаючи від кулеметів і закінчуючи гаубицями. Величезне спасибі всім вам, без вас цей проект тривав би набагато довше, ніж зараз™.
+
+#Reference to the well known meme
+ie.manual.entry.machinegun.name=Кулемет
+ie.manual.entry.machinegun.subtext=Власність Ганса
+ie.manual.entry.machinegun0=Кулемет є передовим, складним новим винаходом, який забезпечує ефективний захист від усіх видів загроз. На відміну від більшості пілотованої зброї, з кулемета не можна стріляти на ходу. Щоб вести вогонь, його потрібно перемістити на блок з достатнім простором. MG використовує одноразові магазини, які можна заряджати кулями в <link;packer;§o§nPacker§r;>.
+ie.manual.entry.machinegun1=Під час стрільби кулями гільзи падають на землю, щоб їх було підібрано. МГ схильний до перегріву, який залежить від темпу стрільби. Пістолет, як і більшість сучасного обладнання, допускає різні конфігурації за допомогою модернізацій, таких як водяне охолодження, приціли, зміна сошок тощо.
+
+ie.manual.entry.machinegun_upgrade_heavy_barrel=§6rВажкий ствол§r є модифікацією, яка різко збільшує скорострільність гармати, але тим самим збільшує швидкість перегріву гармати. Стрільба з гармати короткими чергами є найкращою тактикою з використанням цього оновлення.
+ie.manual.entry.machinegun_upgrade_water_cooling=§6Стовбур з водяним охолодженням§r додає резервуар під ствол кулемета, який можна заповнити охолоджуючою рідиною (наприклад, водою), це майже виключає перегрів гармати. Ведення пригнічувального вогню за допомогою цього оновлення — гарна ідея, але ви повинні робити це з точністю через повільну швидкість стрільби.
+ie.manual.entry.machinegun_upgrade_belt_fed_loader=§6Завантажувач боєприпасів із стрічковою подачею§r дозволяє заряджати боєприпаси зі стрічки, що забезпечується ящиком для боєприпасів під вогневою позицією.
+ie.manual.entry.machinegun_upgrade_second_magazine=Покращення §6подвійний магазин§r дозволяє заряджати два магазини в рушницю, другий магазин можна зарядити з руки.
+ie.manual.entry.machinegun_upgrade_hasty_bipod=§6Польова сошка§r є нашвидкуруч виготовленою заміною стандартної, вона зменшує швидкість розгортання гармати, але збільшує віддачу.
+ie.manual.entry.machinegun_upgrade_precise_bipod=§6Точні сошки§r є заміною стандартних, зроблена з високою точністю, збільшує швидкість розгортання гармати, але зменшує віддачу.
+ie.manual.entry.machinegun_upgrade_scope=§6Приціл  кулемета§r є модифікованою версією прицілу з <link;railgun;§o§nRailgun§r;>, який дозволяє збільшувати віддалену ціль.
+ie.manual.entry.machinegun_upgrade_infrared_scope=§6Інфрачервоний приціл§r є оновленою версією свого попередника, який також може забезпечувати нічне бачення за допомогою інфрачервоного рефлектора та спеціального фільтра, для роботи йому потрібна енергія, що забезпечується конденсаторним рюкзаком.
+ie.manual.entry.machinegun_upgrade_shield=§6Щити§r — це простий і ефективний спосіб захисту передньої частини стрільця від снарядів і пошкоджень у ближньому бою. Вони можуть протистояти обмеженій кількості снарядів, після чого шкода не відхиляється. Стійкість щита з часом відновлюється, поки він не буде зламаний. Прикріплення оновлення також збільшує час налаштування рушниці.
+ie.manual.entry.machinegun_upgrade_tripod=§6Tripod§r є заміною стандартних кулеметних сошок. Він збільшує горизонтальний кут стрільби до 165 градусів і практично прибирає віддачу. Він важкий і повільний у встановленні, що робить його ідеальним вибором для статичної оборони.
+
+ie.manual.entry.submachinegun.name=Пістолет-кулемет
+ie.manual.entry.submachinegun.subtext=Іграшка Томмі
+
+ie.manual.entry.submachinegun0=Пістолет-кулемет, який часто називають §sSMG§r, є піхотною зброєю, розробленою для бойових дій на близьких і середніх дистанціях. Пістолет-кулемет відносно дешевий у виробництві та боєприпасах, що робить його ідеальним вибором для ближнього бою, який вимагає швидких маневрів і високої скорострільності.
+ie.manual.entry.submachinegun1=SMG можна модифікувати для прийому барабанних магазинів і до нього може бути прикріплений <link;revolver;§o§nbayonet§r;3>, що дозволяє вести рукопашну битву під час бою на близькій відстані. Для покращення швидкості прицілювання можна встановити <link;submachinegun;§o§nfolding §o§nstock§r;6>. Щоб усунути гучні звуки пострілів, які можуть привабити ворогів навколо, можна встановити оновлення <link;submachinegun;§o§nsuppressor§r;4>. Навпаки, ствол можна замінити на більш шумний, але більш швидкісний (і через це – кращий пробиття) <link;submachinegun;§o§nsturdy §o§nbarrel§r;3>.
+ie.manual.entry.submachinegun2=Майте на увазі, що пістолет-кулемет втрачає свою точність з відстанню до цілі. Замість цього рекомендується використовувати рельсотрони або артилерійську зброю на великі відстані.
+ie.manual.entry.submachinegun_upgrade_sturdy_barrel=§6Міцний ствол§r є модифікацією, яка підвищує точність рушниці та швидкість кулі за рахунок швидкості стрільби.
+ie.manual.entry.submachinegun_upgrade_suppressor=§6Глушник§r робить звуки пострілів майже безшумними, що ідеально підходить для засідок і проникнення. Це не впливає на швидкість стрільби та пробиття.
+ie.manual.entry.submachinegun_upgrade_bottom_loading=Оновлення §6нижнього навантажувача§r переміщує механізм заряджання магазину з правого боку вниз, замінюючи дерев'яну передню рукоятку. Це дає змогу завантажувати як палиці, так і барабани.
+ie.manual.entry.submachinegun_upgrade_folding_stock=§6складаний приклад§r робить пістолет-кулемет більш компактним і зменшує час прицілювання. Ідеально підходить для десантників і спецназу.
+
+ie.manual.entry.autorevolver_upgrade_heavy_springbox=§6важкий пружинний ящик§r є модернізацією авторевольвера. Він використовує механічну силу для стиснення повітря в кульовій камері, додаючи кулям велику швидкість. Недоліками є низька швидкість перезарядки та менша точність.
+
+ie.manual.entry.assault_rifle_upgrade_rifle_grenade_launcher=
+ie.manual.entry.assault_rifle_upgrade_stereoscopic_rangefinder=
+ie.manual.entry.assault_rifle_upgrade_gyroscopic_stabilizer=
+ie.manual.entry.assault_rifle_upgrade_electric_firing_motor=
+ie.manual.entry.assault_rifle_upgrade_railgun_assisted_chamber=
+
+ie.manual.entry.mortar.name=Міномет
+ie.manual.entry.mortar.subtext=Смерть згори
+ie.manual.entry.mortar0=Міномет — це легка, мобільна зброя непрямого наведення для вогневої підтримки з близької відстані. Міномет має найменшу дальність стрільби з усіх артилерійських озброєнь. Однак це компенсується простотою розгортання та винятковою мобільністю.
+ie.manual.entry.mortar1=Для того, щоб керувати мінометом, артилерист повинен поставити його на землю, обличчям до ворога, а потім застосувати зброю. Оператор міномета не може легко змінити горизонтальний напрямок, може змінити вертикальний кут, натиснувши Вперед або Назад. Міномет постачається з вбудованими артилерійськими прицілами малої дальності, які можна отримати, утримуючи «Z». Щоб вистрілити снарядом, оператор повинен використовувати мінометний снаряд, який тримає в руці, керуючи мінометом.
+
+ie.manual.entry.grenades.name=Гранати
+ie.manual.entry.grenades.subtext=Achtung, Granate!
+ie.manual.entry.grenades0=Ручна граната — це метальна зброя, яка містить вибухівку або інший матеріал, який спрацьовує при контакті. Щоб зібрати його, поєднайте оброблену палицю з відповідним сердечником гранати в <link;ammunition_assembler;§o§nAmmunition §o§nAssembler§r;>.
+ie.manual.entry.grenades1=Гранати рельсової гармати є боєприпасами для рельсової гармати та важкої рельсової гармати, які можна використовувати замість стандартних металевих стрижнів. Їх можна начинити вибухівкою або осколками, а потім використовувати як переносну артилерійську зброю. Щоб зібрати його, поєднайте сталевий стрижень із відповідним сердечником гранати в <link;ammunition_assembler;§o§nAmmunition§o §nAssembler§r;>.
+
+#Відсилання до Ріко, пінгвіна з фільму Мадагаскар
+ie.manual.entry.explosives_mines.name=Міни та вибухові речовини
+ie.manual.entry.explosives_mines.subtext=Ka-boom?
+ie.manual.entry.explosives_mines_satchel0=
+Коли ваші операції вимагають непомітного, точного підходу, радіопідривні ранцеві заряди є правильним вибором. Будь то мінування, руйнування будівель або диверсія на залізничних мостах, ранцеві заряди універсальні за своєю функцією і улюблені як саперами, так і диверсантами.
+ie.manual.entry.explosives_mines_satchel1=Основним способом підірвати вибухівку є використання <link;radio_station;§o§nradio§o§nsignal§r;>. Для цього вибухівку потрібно спочатку запрограмувати за допомогою пакета даних у <link;data_input_machine;§o§nData §o§nInput §o§nMachine§r;>. Вибухові речовини спрацьовують лише тоді, коли вони отримають по радіо пакет даних, ідентичний запрограмованому. Крім того, вибухові речовини можуть отримувати дані через кабель за тих самих умов і працювати як реле даних.
+ie.manual.entry.explosives_mines_satchel2=Вибухові речовини також можна підірвати за допомогою червоного каменю, подібно до інших з’єднувачів червоного каменю, вони можуть отримувати сигнал по одному з 16 каналів. Для зміни каналу скористайтеся молотком по покладеному ранцю.
+ie.manual.entry.explosives_mines_satchel3=На відміну від інших гільз для вибухівки, ранець для радіовибухівки потрібно створювати. Спочатку шкіряний ранець може здатися дорогим, але майте на увазі, що шкіру можна виготовити штучно за допомогою <link;пилорами;§o§nsawdust§r;> і <link;cokeoven;§o§ncreosote§r;>.
+
+ie.manual.entry.explosives_mines0=Міни зазвичай використовуються як статичний захисний засіб. Основні випадки їхнього використання — заборона ворогу доступу до певної території, уповільнення його просування або, якщо вони не дуже спритні, позначення місць, де будуть їхні могили.<br>Пам’ятайте, що наземні міни не розрізняють свої цілі, це дуже Важливо стежити за своїми мінними полями та використовувати плани, а не розміщувати їх випадковим чином.
+ie.manual.entry.explosives_mines_landmine=Класичний, надійний і дешевий у виробництві: цей тип наземних мін є найбільш широко використовуваним. Принцип роботи дуже простий: він вибухає після того, як ворог наступає на нього, завдаючи серйозної шкоди. Однак предмети, що впали, і легкі тварини, такі як кури, не спричинять детонацію.
+ie.manual.entry.explosives_mines_landmine1=Визначною особливістю міни є можливість вкопати її в будь-який м’який блок, такий як земля, гравій і глина, на які вона була встановлена. Щоб вкопати міну в землю, використовуйте по ній лопату. Хоча будь-якої лопати буде достатньо, траншейна лопата виконує цю роботу набагато швидше.<br>Крім того, ви можете покласти траву поверх міни, щоб повністю приховати її.
+ie.manual.entry.explosives_mines_tripmine=Трипміна, яку іноді називають §sстрибучою міною§r, є вибуховим пристроєм, який активується не тиском ваги, а шляхом потягування дроту за верхню частину. Після спрацювання міна вискочить з кожуха і вибухне. Для встановлення міна потребує з’єднання з іншою міною або з’єднувачем для розтяжки. Закопувальну міну можна вкопати в землю лопатою, як і звичайну фугасну міну.
+ie.manual.entry.explosives_mines_naval_mine=Військово-морські міни — це міни, встановлені у воді, які не дають човнам і водним істотам дістатися до зони, фактично вбиваючи їх при контакті. Військово-морські міни несуть у собі більшу кількість компонентів, тобто вибух сильніший, ніж наземна міна, і в більшості випадків смертельний.
+ie.manual.entry.explosives_mines_naval_mine1=Щоб розгорнути військово-морську міну, спочатку встановіть довжину ланцюга, підкрадаючись і прокручуючи, це визначить. Коли це буде зроблено, використовуйте міну на водному блоці, вона розгорне візок з якорем і міну, прикріплену до нього за допомогою ланцюга. Візок намагатиметься зануритися, але міна намагатиметься триматися на воді, доки не досягне максимальної довжини ланцюга або поверхні.<br>Зверніть увагу, що військово-морським мінам потрібно кілька секунд, щоб увімкнутися, тобто ви можете безпечно розгорнути їх без ризик підірвати себе.
+
+ie.manual.entry.explosives_mines_sign=Хоча це простий шматок дерева з текстом, написаним на ньому, цей знак, здається, вселяє почуття страху у ваших супротивників.<br>Його головне призначення — позначення дружніх і ворожих мінних полів, хоча деякі використовують це чомусь як прикраса спальні. Ну такі вони Інженери…
+
+ie.manual.entry.light_engineer_armor.name=Броня світлотехніка
+ie.manual.entry.light_engineer_armor.subtext=Готовий до маневрів
+ie.manual.entry.light_engineer_armor0=Light Engineer Armor — це легкий, стильний, але дуже захисний костюм. Незважаючи на те, що зроблений зі шкіри та сталі, завдяки точності, з якою він був виготовлений, він захищає від будь-яких ворогів, з якими ви можете зіткнутися, краще, ніж сталеві та алмазні обладунки. Він обов'язковий для кожного бойового сапера.
+ie.manual.entry.light_engineer_armor1=Броню Light Engineer, розроблену з урахуванням багатоцільового використання, можна адаптувати до середовища за допомогою Module System™. Броня є модульною та дозволяє додавати модернізації, починаючи від металевих пластин для її зміцнення, екзоскелета для збільшення швидкості бігу та інфрачервоного головного убору, що дозволяє нічне бачення, до ласт і ракеток для снігу, які забезпечують чудову мобільність.
+ie.manual.entry.light_engineer_armor_upgrade_gasmask=Протигаз — це вдосконалення, яке захищає користувача від небезпечних газів. У поєднанні з аквалангом маска дозволяє дихати під водою.
+ie.manual.entry.light_engineer_armor_upgrade_infiltrator_gear=Головний убір Інфільтратора — це вдосконалений інструмент, створений для шпигунства. Головний убір дозволяє збільшувати зображення та випромінює інфрачервоне світло, що забезпечує нічне бачення. Його можна комбінувати з головним убором техніка, щоб створити головний убір інженера.
+ie.manual.entry.light_engineer_armor_upgrade_technician_gear=Головний убір техніка є корисним інструментом для управління заводами. Він відображає таку інформацію, як енергія, що міститься в машинах, статистика обертової потужності, збережені рідини та дані. Його можна комбінувати з головним убором інфільтратора, щоб створити головний убір інженера.
+ie.manual.entry.light_engineer_armor_upgrade_engineer_gear=Головний убір Інженера поєднує в собі ефект головних уборів Інфільтратора та Техніка в одному пристрої. Як наслідок, споживання електроенергії збільшується, але також і кількість функцій.<br>Єдине, чого йому зараз не вистачає, це тримач для банки.
+ie.manual.entry.light_engineer_armor_upgrade_steel_armor_plates=Плити сталевої броні збільшують товщину та міцність броні та забезпечують здатність відбивати стріли та інші легкі снаряди. Настав час показати світові, що промисловий прогрес уже перевершив застарілі луки та стріли! Через їхню вагу на одну броню можна встановити лише 3 пластини.
+ie.manual.entry.light_engineer_armor_upgrade_composite_armor_plates=Композитні бронепластини набагато міцніші, ніж сталеві, і завдяки їхній легкій вазі можна досягти більшої товщини. Крім того, удар по броні холодною зброєю сильно її пошкодить. На одну броню можна встановити лише 3 пластини.
+ie.manual.entry.light_engineer_armor_upgrade_hazmat_coating=Захивсне покриття є додатковим внутрішнім шаром броні, який захищає від радіації та кислот. Час піти на прогулянку ядерними пустками.
+ie.manual.entry.light_engineer_armor_upgrade_heat_resistant_coating=Шар термостійкого покриття дозволяє плавати в гарячих рідинах, які інакше могли б спалити користувача. Працює лише при носінні з посиленими черевиками завдяки перекриванню захисних шарів і розподілу тепла.
+ie.manual.entry.light_engineer_armor_upgrade_anti_static_mesh=Антистатична сітка дає користувачеві імунітет від пошкоджень електричним струмом і перешкоджає націлюванню безпосередніх запобіжників, порушуючи їх. Однак через свою конструкцію він не працюватиме під водою, завдаючи більшої шкоди власнику під час нападу електричною чи електромагнітною зброєю.
+ie.manual.entry.light_engineer_armor_upgrade_camouflage_mesh=Камуфляжна сітка — це проста сітка з листям, прикріпленими до неї, що змушує користувача зливатися з листям під час підкрадання.  Через те, що він зроблений з листя, розпалювати вогонь не рекомендується. Особливо корисний у лісах, садах і на рівнинах.
+ie.manual.entry.light_engineer_armor_upgrade_infrared_absorbing_mesh=Інфрачервона сітка поглинає інфрачервоне світло, яке потрапляє на неї, служачи ідеальним способом сховатися від інфрачервоних датчиків. Однак через його конструкцію влучення електромагнітної зброї завдасть більше шкоди, ніж зазвичай.
+ie.manual.entry.light_engineer_armor_upgrade_scuba_tank=Танк для підводного плавання дає можливість довше залишатися під водою без необхідності спливати на поверхню для нових запасів повітря. Його можна наповнити киснем за допомогою <link;bottlingMachine;§o§nBottling §o§nMachine§r>.<br>Особливо зручно під час підводних будівельних робіт. Необхідно носити протигаз.
+ie.manual.entry.light_engineer_armor_upgrade_helipack=
+ie.manual.entry.light_engineer_armor_upgrade_exoskeleton=Оновлення екзоскелетом дозволяє користувачам працювати швидше завдяки складному набору двигунів і гідравліки. З міркувань безпеки він активується лише під час роботи. Для роботи екзоскелету потрібна енергія.
+ie.manual.entry.light_engineer_armor_upgrade_boot_reinforcement=Покращення чобіт складається з кількох сталевих пластин, скріплених разом шкіряними ремінцями. Він додає додаткову броню та захищає власника від вогню.
+ie.manual.entry.light_engineer_armor_upgrade_flippers=Ласти дозволяють швидко рухатися в рідинах. Вони дуже добре працюють з аквалангом і протигазом.
+ie.manual.entry.light_engineer_armor_upgrade_snow_rackets=Снігові ракетки покращують стійкість на снігу та льоду, дозволяючи власнику перетинати складну місцевість.
+ie.manual.entry.light_engineer_armor_upgrade_internal_springs=Внутрішні пружини пригнічують силу удару, захищаючи користувача від пошкодження при падінні. Це поєднується з гумовими накладками на підошві, які роблять кроки майже безшумними.
+
+#Stronghold Reference (Tuneller unit)
+ie.manual.entry.trench_shovel.name=Траншейна лопата
+ie.manual.entry.trench_shovel.subtext=У темряву!
+ie.manual.entry.trench_shovel0=Хоча більшість людей не звертає уваги на нього, коли справа доходить до вибору інструментів, траншейна лопата є одним із важливих елементів обладнання в арсеналі інженера. Порівняно зі звичайними лопатами, траншейний варіант є більш компактним і загостреним, і, як результат, має більший удар. Завдяки своїй конструкції він дозволяє закопувати <link;explosives_mines;§o§nlandmines§r;> у землю в 3 рази швидше, ніж звичайна лопата.
+
+#Перший міношукач винайшов поляк Я. Косацький, слово «полюс» польською означає буквально «поле», що робить поляків «польовими людьми»
+#Дивно підходить для підмітання поля ^^
+ie.manual.entry.mine_detector.name=Міношукач
+ie.manual.entry.mine_detector.subtext=Винайдено польовими людьми
+ie.manual.entry.mine_detector=Міношукач — це інструмент, призначений для виявлення наземних мін і прихованих вибухових пристроїв. Він походить від невдалої спроби створити рудний детектор, але виявився інструментом-рятівником для військових.
+ie.manual.entry.mine_detector_demining0=Щоб перевірити наявність міни, ви повинні тримати міношукач у руці та направити його на блок. На наявність міни вказує звуковий сигнал, частота якого зростає, чим ближче ви до міни.<br>Варто також зазначити, що виявлення міни відбувається не на вашій позиції, а на тій, на яку ви дивитеся. .
+ie.manual.entry.mine_detector_demining1=Щоб знешкодити <link;explosives_mines;§o§nmine §o§nor §o§nexplosive§r;> після успішного виявлення, використовуйте різаки для дроту або їхні електричні аналоги. Коли це буде зроблено, ви можете безпечно зламати блок.
+
+#First thing I thought was "The banners high", but I am aware of the consequences if I'd put that
+ie.manual.entry.flagpole.name=Флагшток
+ie.manual.entry.flagpole.subtext=Стійте під гімн!
+ie.manual.entry.flagpole0=Флагшток — це мультиблок, який дозволяє позначати прилеглу територію, тримати її завантаженою та під контролем, а також показувати стильний банер для впізнавання друзями та ворогами. Щоб сформувати його, використовуйте молоток на середньому дротяному блоці.
+ie.manual.entry.flagpole1=Флагшток зберігає 8 навколишніх блоків завантаженими разом із тим, у якому він розміщений, для цього не потрібні жодні ресурси. <br> Ще однією його функцією є відображення банерів у вигляді прапора. Щоб розмістити банер, використовуйте його на одному з блоків дерев’яного стовпа. Якщо ви вирішили захопити чужу власність або просто хочете оновити дизайн свого банера, ви можете видалити розміщений банер за допомогою кусачок для дроту.
+
+#Посилання на Contra
+ie.manual.entry.emplacement.name=Розташування
+ie.manual.entry.emplacement.subtext=Заблоковано та завантажено
+ie.manual.entry.emplacement0=Основа — це важка оборонна споруда, яка використовується для захисту периметра вашої фабрики. Для його формування використовуйте молоток на верхньому середньому блоці мішка з піском.
+ie.manual.entry.emplacement1=Порівняно з традиційною гарматною вежею, встановлення місця розташування вимагає набагато більшої підготовки. У місцях розташування за замовчуванням не встановлено <link;emplacement_weapons;§o§nweapon§r;>. Натомість зброя збирається на місці за допомогою гайкового ключа або його електричного еквівалента. Взаємодіючи з розміщенням за допомогою гайкового ключа, у вас є вибір модулів для встановлення, для створення кожного з яких потрібна своя частка ресурсів. Після того як ви виберете зброю на вибір, вам потрібно зібрати її, далі взаємодіючи з місцем розташування за допомогою гайкового ключа. Зверніть увагу, електричний ключ збирає зброю набагато швидше.
+ie.manual.entry.emplacement2=Для роботи установки потрібна електрика, боєприпаси та за замовчуванням сигнал червоного каменю. Якщо сигнал червоного каменю відключено, зброя сховається всередині вогнища.
+ie.manual.entry.emplacement3=Озброєння позиціонування можна пошкодити та автоматично відремонтувати. Ви можете встановити мінімальний поріг працездатності зброї-вставки, перш ніж вона перейде в стан ремонту.<br>Під час ремонту вона ховатиметься всередині зброї-вставки та не реагуватиме на команди. Зауважте, що осередки можна знищити, якщо гарматі завдано достатньої шкоди, що також означає, що ви втратите ресурси, використані для її створення.
+ie.manual.entry.emplacement4=Розташування дозволяють зберігати до 4 цільових завдань фільтрації. Кожне завдання має 3 основні групи, за якими воно фільтрує сутність. Перший — Тип: моб, тварина, транспортний засіб або снаряд, можна вказати додаткові параметри (id). Друге – ім’я, а третє – команда. Параметри всередині групи об’єднуються за допомогою АБО, а потім І з іншими групами. Наприклад: виберіть усіх мобів або тварин з команди «a» і «b» з назвою «c».
+ie.manual.entry.emplacement5=*Immersive Intelligence™ не несе відповідальності за будь-які пошкодження майна або смерть, спричинені неправильним введенням націлювання.*
+
+ie.manual.entry.emplacement_weapons.name=Зброя установки
+ie.manual.entry.emplacement_weapons.subtext=Демонстрація сили
+
+ie.manual.entry.emplacement_mg0=Кулеметне укріпленння є найпростішою та найдешевшою з усіх доступних точок. Це надійний вибір для боротьби з м'якими наземними цілями або легкою технікою при використанні бронебійних боєприпасів.
+ie.manual.entry.emplacement_mg1=Рідинне укріплення доступний у 3 варіантах: за замовчуванням, важкооснащена та з водяним охолодженням, які за функціями ідентичні тим, що присутні в піхотній версії кулемета.<br>Зверніть увагу, ця зброя робить не використовуйте магазини, кулі потрібно подавати через вхідний отвір установки. Через обмежену дальність кулеметного укріплення є поганим вибором для стрільби по повітряних цілях.
+
+ie.manual.entry.emplacement_heavy_chem0=Важкий хімікомет— це зброя, призначена для боротьби з великою кількістю ворогів. Як і звичайний хімікомет, важкий варіант можна наповнювати різними рідинами з рідинних баків.
+ie.manual.entry.emplacement_heavy_chem1=За замовчуванням він запалює рідину, але його можна перемикати за допомогою пакету даних. Укріплення важкого хімікомета має найнижчу дальність серед усіх укріплень і погано справляється з повітряними цілями.
+
+ie.manual.entry.emplacement_flak0=Автогармата є стандартним, універсальним варіантом для боротьби з легкими цілями, транспортними засобами та повітряними цілями. Залежно від боєприпасів, він може служити чудовим стандартним варіантом для базового захисту від усіх видів загроз.
+ie.manual.entry.emplacement_flak1=Завдяки своїй високій швидкості та різноманітним діапазонам кута та повороту автогармата особливо ефективна проти повітряних цілей.<br>Її недоліками є менша скорострільність порівняно з MG та відносно малий розмір магазину, змушуючи його дуже часто перезавантажуватись. Найкраще поєднувати його з іншими місцями розташування.
+
+ie.manual.entry.emplacement_heavy_railgun0=Укріплення важкої рельсової гармати використовується в боях на дальніх дистанціях, що залежать від точності. Його найкраще використовувати проти транспортних засобів і окремих цілей з високою міцністю. Пошкодження залежать від металу, з якого виготовлений стрижень, або складу рельсотронної гранати.
+ie.manual.entry.emplacement_heavy_railgun1=Через його дуже низьку скорострільність, швидкість черги та малу кількість магазинів, це поганий вибір для ураження накопичених цілей. Його необхідно поєднувати з іншими осередками для кращого захисту.<br>Важкий рейлган має високу бронебійну здатність, його найкраще використовувати для броньованих цілей, транспортних засобів і цілей за сталевими стінами. Жодна броня не буває надто міцною.
+
+ie.manual.entry.emplacement_cpds0=Вершина комп’ютерних технологій, механічних навичок і складного програмного забезпечення для цілевказівки, система захисту від снарядів є найлютішим ворогом усього, що може літати, і відділу логістики.
+ie.manual.entry.emplacement_cpds1=Завдяки вражаючій скорострільності, а також швидкому відстеженню та здатності реагування, повітряні цілі майже неможливі для ухилення.<br>Завдяки вдосконаленій системі націлювання це найкраща зброя для цілей протиракетного захисту, з можливістю збивати артилерійські снаряди в повітрі шквалом куль. Для цього його потрібно підключити до радара або спостерігачів, щоб максимізувати шанси на успішне перехоплення.
+ie.manual.entry.emplacement_cpds2=Єдиним недоліком, який він має, є його величезна вартість обслуговування через високу скорострільність. Якщо вам важко забезпечити його достатньою кількістю боєприпасів, подумайте про те, щоб використовувати його як спеціальну, останню зброю для протидії снарядам.
+
+ie.manual.entry.emplacement_tesla0=Встановлення котушки Тесла є більшим і досконалішим варіантом котушки Тесла. Зброя є хорошим вибором проти м'яких цілей, які випадково підійшли занадто близько. Завдяки вдосконаленим системам зброя може відрізнити свого від ворога та завдає більшої шкоди в розширеному діапазоні.
+ie.manual.entry.emplacement_tesla1=Завдяки тому, що він живиться енергією, йому не потрібні боєприпаси - лише постійна подача електроенергії. Його недоліки - мала дальність атаки і високе енергоспоживання.
+
+ie.manual.entry.emplacement_ir_observer0=Інфрачервоний спостерігач — це пристрій спостереження, який використовується для виявлення ворогів здалеку та обміну їхніми координатами з іншими осередками. Вважається однією з найважливіших, якщо не найважливішою, точковою зброєю.
+ie.manual.entry.emplacement_ir_observer1=Використовуючи інфрачервоні спостерігачі, можна значно розширити радіус дії інших точок, виявити та передавати координати ворожих позицій через дані на надзвичайно великих відстанях і координувати мережу з’єднаних точок для точного фокусування вогню на одному цілі здалеку, підвищуючи загальний потенціал системи захисту.
+ie.manual.entry.emplacement_ir_observer2=Варто зауважити, що інфрачервоний спостерігач також може виявляти спалахи та надсилати їхні координати, які можна використовувати для прямого наведення точного артилерійського обстрілу.<br>Спостерігачі мають обмежене поле зору 180 градусів, з немає можливості повертатися після встановлення, і можливий лише підйом і опускання. Це означає, що один спостерігач може охоплювати лише напрямок. Спостерігачі можуть повертатися, коли на нього надсилається відповідний пакет даних, зверніть увагу, що це вимагає розібрати та сховатися в місці розташування.
+
+#Reference to Jess from Advance Wars, for most kids (me included) playing the game the shell she held was a giant pencil
+#When we grew up we realised ^^
+ie.manual.entry.bullet_production.name=Виробництво куль
+ie.manual.entry.bullet_production.subtext=Це оболонка, а не олівець!
+ie.manual.entry.bullet_production0=Для виготовлення боєприпасів потрібні 2 частини: сердечник - контейнер для вибухівки, осколків та інших компонентів і корпус - в який вкладається сердечник. Виробництво цих деталей складається з декількох етапів і відрізняється в залежності від типу і складності ваших боєприпасів.
+ie.manual.entry.bullet_production1=Почнемо з корпусу. Більшість оболонок можна виготовити за допомогою відповідної форми в <link;metalPress;§o§nmetal §o§npress§r;>, але деякі, наприклад <link;explosives_mines;§o§nradio §o§nexplosives§r; 5>, потрібне крафтування.<br>Якщо ви виготовляєте кулі, наступним кроком буде використання <link;filler;§o§nFiller§r;> для наповнення гільзи порохом. Корпус готовий до складання.
+ie.manual.entry.bullet_production2=Ядро можна виготовити в <link;projectile_workshop;§o§nProjectile§o§nWorkshop§r;> за допомогою металевих самородків, не забувайте використовувати <link;bullet_cores;§o§nappropriate § o§nmetal §o§nfor §o§nthe §o§njob§r;>: уран має кращу проникну здатність, але менший компонентний ефект, ніж латунь. Іншим модифікатором, який ви можете вибрати, є <link;core_types;§o§ncore §o§ntype§r;>, який визначає, скільки компонентів може зберігати ядро.<br>Після того, як ваше ядро ​​створено, ви можете наповнити його компонентами використання іншої майстерні снарядів із встановленим оновленням наповнювача. Цей крок необов’язковий і може повторюватися кілька разів з тими самими або різними компонентами.
+ie.manual.entry.bullet_production3=Останній етап — збірка куль у <link;ammunition_workshop;§o§nAmmunition§o§nWorkshop§r;>. Тут ви можете вибрати <link;bullet_fuses;§o§nfuse§r;>. Майте на увазі, що не всі типи запалів підтримують певні боєприпаси, як-от гранати та вибухові речовини.<br>Є також наступний, необов’язковий етап – Хімічний художник. Боєприпаси можуть бути пофарбовані для легшої ідентифікації та більшої однорідності.
+
+ie.manual.entry.ammunition_workshop.name=Складач боєприпасів
+ie.manual.entry.ammunition_workshop.subtext=Серце бойової машини
+ie.manual.entry.ammunition_workshop0=Складач боєприпасів виконує останню частину <link;bullet_production;§o§nammunition §o§nproduction§r;> - складання. Для його формування використовуйте молоток на сталевому риштуванні між двома конвеєрами.
+ie.manual.entry.ammunition_workshop1=Складач боєприпасів збирає боєприпаси з сердечника, виготовленого в <link;projectile_workshop;§o§nProjectile §o§nWorkshop§r;> та гільзи. Він також встановлює запобіжник, визначаючи, за яких умов його компоненти вибухнуть. Запобіжники можна встановити через інтерфейс або пакет даних. Для роботи машини потрібна електрика.
+
+#Reference to its purpose-changing upgrade
+ie.manual.entry.projectile_workshop.name=Снарядна майстерня
+ie.manual.entry.projectile_workshop.subtext=Багатоцільовий, багатофункціональний інструмент
+ie.manual.entry.projectile_workshop0=Майстерня снарядів — це машина, яка використовується для виготовлення або наповнення сердечників — частин снаряда куль компонентами. Щоб сформувати його, використовуйте молоток на лівому металевому ящику.
+ie.manual.entry.projectile_workshop1=У конфігурації за замовчуванням майстерня снарядів виробляє <link;bullet_cores;§o§ncores §o§nfrom §o§nmetal §o§nnuggets§r;>. Для роботи машини потрібна електрика. Через його інтерфейс можна встановити вироблені боєприпаси та тип сердечника. Це також можливо зробити за допомогою системи даних.
+ie.manual.entry.projectile_workshop2=Майстерню снарядів можна покращити, щоб стати Наповнювачем снарядів. Це змінює роль наповнювальних ядер, виготовлених іншими майстернями снарядів за допомогою <link;bullet_components;§o§nComponents§r;>. Суму для заповнення можна вказати за допомогою інтерфейсу або через систему даних. Максимальна кількість визначається типом ядра.
+
+#Посилання на гармату Dicker Bertha
+ie.manual.entry.artillery_howitzer.name=Артилерійська гаубиця
+ie.manual.entry.artillery_howitzer.subtext=Сестра Берти
+ie.manual.entry.artillery_howitzer1=Пристрій точного бомбардування, широко відомий як §oАртилерійська гаубиця§r, є зброєю непрямого наведення, яка чудово атакує цілі на великих відстанях.
+ie.manual.entry.artillery_howitzer2=Вогнище гаубиці складається з бетонного бункера з гарматою, командних столів з боків угорі та сталевих дверей, які можна відкрити за допомогою сигналу червоного каменю. Боєприпаси необхідно подати на конвеєр, що спускається і зарядити за командою «заряджання», після пострілу розрядити порожню гільзу за командою «розрядити». Для роботи машини потрібна велика кількість енергії. Для його формування використовуйте молоток по виступаючому зверху бетонному блоку.
+ie.manual.entry.artillery_howitzer.vars_in.c.main=Режим дії
+ie.manual.entry.artillery_howitzer.vars_in.c.sub=Можливі значення: "завантажити", "розрядити", "стріляти", "прицілитися", "зупинити"
+ie.manual.entry.artillery_howitzer.vars_in.f.main=Час запалювання снаряда
+ie.manual.entry.artillery_howitzer.vars_in.f.sub=Час до вибуху снаряда (у тиках, 20 тактів=1 секунда), за замовчуванням -1 (вимкнено)
+ie.manual.entry.artillery_howitzer.vars_in.y.main=Поворот гармати
+ie.manual.entry.artillery_howitzer.vars_in.y.sub=Правильні значення від 0-360, але приймає будь-яке число та нормалізує його
+ie.manual.entry.artillery_howitzer2.vars_in.p.main=Кір гармати
+ie.manual.entry.artillery_howitzer2.vars_in.p.sub=Можливі значення: від 0 (гармата піднята) до -105 (гармата вниз)
+
+ie.manual.entry.artillery_howitzer1.vars_callback.get_energy=Повертає кількість енергії
+ie.manual.entry.artillery_howitzer1.vars_callback.get_state=Повертає поточний стан<br>§oМожливі значення: "idle", "loading", "unloading", "shooting"§r
+ie.manual.entry.artillery_howitzer1.vars_callback.get_state_num=Повертає поточний стан<br>§oМожливі значення: 0,1,2,3§r
+ie.manual.entry.artillery_howitzer1.vars_callback.get_state_progress=Повертає прогрес стану у відсотках
+
+ie.manual.entry.artillery_howitzer2.vars_callback.get_yaw=Повертає поточний поворот гармати
+ie.manual.entry.artillery_howitzer2.vars_callback.get_pitch=Повертає поточний крок гармати
+ie.manual.entry.artillery_howitzer2.vars_callback.get_planned_yaw=Повертає заплановане поворот гармати
+ie.manual.entry.artillery_howitzer2.vars_callback.get_planned_pitch=Повертає запланований крок гармати
+ie.manual.entry.artillery_howitzer2.vars_callback.get_platform_height=Повертає поточну висоту платформи
+
+ie.manual.entry.artillery_howitzer3.vars_callback.get_door_opened=Повертає, чи відкриті двері
+ie.manual.entry.artillery_howitzer3.vars_callback.get_door_closed=Повертає, чи закриті двері
+ie.manual.entry.artillery_howitzer3.vars_callback.get_door_opening=Повертає, чи відкриваються/закриваються двері
+
+ie.manual.entry.artillery_howitzer4.vars_callback.get_loaded_shell=Повертає поточну завантажену оболонку
+ie.manual.entry.artillery_howitzer4.vars_callback.get_stored_shell=Повертає оболонку, що очікує в черзі<br>§oПотрібно ціле число 'i' зі значенням 0-5§r
+
+ie.manual.entry.ballistic_computer.name=Балістичний комп'ютер
+ie.manual.entry.ballistic_computer.subtext=Обчислити це до цього
+ie.manual.entry.ballistic_computer0=Балістичний комп'ютер - це пристрій, який перетворює вектор позиції та масу кулі на поворот і кут, що використовується більшістю зброї, керованої даними.
+ie.manual.entry.ballistic_computer1=Введення змінних:<br>Цілі числа 'x','y','z' - позиція для стрільби по<br>Ціле число 'm' - маса кулі<br>Виведення змінних:< br>Ціле число 'p' - кут повороту гармати<br>Ціле число 'y' - кут повороту гармати
+ie.manual.entry.ballistic_computer.vars_in.x.main=Вогнева позиція
+ie.manual.entry.ballistic_computer.vars_in.x.sub=Відносно центру артилерії
+ie.manual.entry.ballistic_computer.vars_in.m.main=Маса кулі
+ie.manual.entry.ballistic_computer.vars_in.m.sub=Оскільки ви не можете ввести Float, вам потрібно округлити число
+
+ie.manual.entry.ballistic_computer.vars_out.y.main=Поворот рушниці
+ie.manual.entry.ballistic_computer.vars_out.y.sub=Правильні значення від 0-360, але приймає будь-яке число та нормалізує його
+ie.manual.entry.ballistic_computer.vars_out.p.main=Кір гармати
+ie.manual.entry.ballistic_computer.vars_out.p.sub=Можливі значення: від 0 (гармата піднята) до -105 (гармата вниз)
+
+#Посилання на загальну неприязнь BluSunrize до кулемета та ящика з боєприпасами
+ie.manual.entry.ammocrate.name=Ящик з боєприпасами
+ie.manual.entry.ammocrate.subtext=Зелений, а не синій
+ie.manual.entry.ammocrate0=Ящик для боєприпасів — це переносне сховище для всіх куль і порожніх гільз. Його можна використовувати для заряджання револьвера або швидкозарядного пристрою, створивши схему заряджання та поклавши всередину патрони. Щоб повернути револьвер із ящика, використовуйте його порожньою рукою.
+
+#Посилання на Blacknight, автора спрайтів для електричного молотка та запальнички, а також автора ідеї хімічного дозатора.
+ie.manual.entry.chemdispenser.name=Дозатор хімікатів
+ie.manual.entry.chemdispenser.subtext=Полум'я в Чорній ночі
+ie.manual.entry.chemdispenser0=Пристрій, винайдений тим же інженером, який розробив електричний молоток, спочатку для поливу сільськогосподарських культур і гасіння пожеж, його також можна використовувати для точного обприскування місця запальною рідиною.
+ie.manual.entry.chemdispenser1=Дозатор хімікатів потребує живлення через дріт до роз’єму пристрою, сигналу даних (або постійного сигналу червоного каменю) для прийняття рішення про його дії та рідини до входу на задній панелі.
+ie.manual.entry.chemdispenser.vars_in.a.main=Кількість рідини для розпилення
+ie.manual.entry.chemdispenser.vars_in.a.sub=in Milibuckets (мБ)
+ie.manual.entry.chemdispenser.vars_in.i.main=Чи слід підпалити рідину
+ie.manual.entry.chemdispenser.vars_in.i.sub=
+ie.manual.entry.chemdispenser.vars_in.y.main=Поворот сопла
+ie.manual.entry.chemdispenser.vars_in.y.sub=Можливі значення: від -45 до 45
+ie.manual.entry.chemdispenser.vars_in.p.main=Крок сопла
+ie.manual.entry.chemdispenser.vars_in.p.sub=Можливі значення: від -45 до 45
+
+#Gandalf!
+ie.manual.entry.fortifications.name=
+Польові оборони
+ie.manual.entry.fortifications.subtext=Вони не пройдуть
+ie.manual.entry.fortifications0=Мішки з піском є ​​дешевою захисною стіною, стійкою до куль малого калібру та невеликих вибухів. Вони дуже корисні при будівництві траншей і використовуються для створення <link;emplacement;§o§nemplacements§r;>.
+ie.manual.entry.fortifications1=Протитанкова пастка, яку також називають протитанковим їжаком, є пасивною протитранспортною зброєю. Його гострі краї здатні прорізати колії та шини транспортних засобів, а також серйозно пошкодити легкові автомобілі, які намагаються їх протаранити.
+
+#Ядра та компоненти куль
+ie.manual.entry.bullet_cores.name=Ядра кулі
+ie.manual.entry.bullet_cores.subtext=Цей відскочив!
+
+ie.manual.entry.bullet_core.core_brass=Латунна серцевина
+ie.manual.entry.bullet_core.core_brass.lore=Зробіть це стімпанком
+ie.manual.entry.bullet_core.core_brass.desc=Латунь є важким металом із поганою проникаючою здатністю, але вона значно посилює дію інших компонентів.
+
+ie.manual.entry.bullet_core.core_copper=Мідна серцевина
+ie.manual.entry.bullet_core.core_copper.lore=Кожен пенні має значення
+ie.manual.entry.bullet_core.core_copper.desc=Мідь є дешевим матеріалом для куль, її пробивна здатність гірша, ніж у латуні, але її компонентний ефект.
+
+ie.manual.entry.bullet_core.core_lead=Свинцева серцевина
+ie.manual.entry.bullet_core.core_lead.lore=Добрий, поганий і потворний
+ie.manual.entry.bullet_core.core_lead.desc=Свинець є хорошим матеріалом для дешевих куль із високим ураженням і посередньою проникаючою здатністю, однак через його високу щільність обмежує максимальну дальність виготовлення снарядів.
+
+ie.manual.entry.bullet_core.core_iron=Залізна серцевина
+ie.manual.entry.bullet_core.core_iron.lore=
+ie.manual.entry.bullet_core.core_iron.desc=Залізо є хорошим раннім матеріалом для куль, воно пропонує пробивну силу та дальність вище середнього, але має слабкий компонентний ефект і пошкодження.
+
+ie.manual.entry.bullet_core.core_steel=Сталева серуевина
+ie.manual.entry.bullet_core.core_steel.lore=Цількометалева оболонка
+ie.manual.entry.bullet_core.core_steel.desc=Використання сталі є недорогим способом збільшити пробиття снарядів, єдиним недоліком є ​​дещо зменшений ефект компонента.
+
+ie.manual.entry.bullet_core.core_tungsten=Вольфрамове серцевина
+ie.manual.entry.bullet_core.core_tungsten.lore=Завантажити APCR!
+ie.manual.entry.bullet_core.core_tungsten.desc=Вольфрам краще проникає в об'єкти, ніж сталь, але зменшує вплив інших компонентів
+
+ie.manual.entry.bullet_core.core_uranium=Уранова серцевина
+ie.manual.entry.bullet_core.core_uranium.lore=Що ви маєте на увазі, патрони закінчилися?
+ie.manual.entry.bullet_core.core_uranium.desc=Невелика вага та твердість роблять уран чудовим проникаючим засобом, не втрачаючи здатності нести вибухові матеріали. Чудовий, але дорогий вибір.
+
+ie.manual.entry.bullet_components.name=Компоненти маркера
+ie.manual.entry.bullet_components.subtext=Завантажити APCRHEFSPTSD B-Capped!
+ie.manual.entry.bullet_components.dmg_mod=Пошкодження: %sx
+ie.manual.entry.bullet_components.pen_mod=Проникнення: %s vBH
+ie.manual.entry.bullet_components.blast_mod=Радіус вибуху: %sx
+ie.manual.entry.bullet_components.density=Щільність: %s
+ie.manual.entry.bullet_components.type=Тип: %s
+
+#Цитата з World in Conflict
+ie.manual.entry.bullet_component.firework=Феєрверк
+ie.manual.entry.bullet_component.firework.lore=А тепер звільніть небо
+ie.manual.entry.bullet_component.firework.desc=Хоча феєрверк відомий своїм прекрасним виглядом, його можна використовувати для придушення та засліплення ворогів.
+
+#Quote from Company of Heroes/Market Garden campaign
+ie.manual.entry.bullet_component.tracer_powder=Індикаторний порошок
+ie.manual.entry.bullet_component.tracer_powder.lore=Наповніть небо трасувальниками!
+ie.manual.entry.bullet_component.tracer_powder.desc=Інструменти — це хороший спосіб побачити, куди летить ваша куля, це можна використовувати для суто декоративних цілей або для корекції кута пострілу.
+
+#Посилання на кодову назву Panzers: Cold War
+ie.manual.entry.bullet_component.flare_powder=Факельний порох
+ie.manual.entry.bullet_component.flare_powder.lore=Ніч стала днем
+ie.manual.entry.bullet_component.flare_powder.desc=Світлові ракети можна використовувати для освітлення або позначення позицій, це може бути корисно для керування артилерією
+
+#Посилання на книгу "Так говорив Заратустра"
+ie.manual.entry.bullet_component.propaganda=Пропаганда
+ie.manual.entry.bullet_component.propaganda.lore=Хто кориться, сам себе не слухає!
+ie.manual.entry.bullet_component.propaganda.desc=Пропаганду можна використовувати, щоб вселити страх у ваших ворогів, якщо вони вміють читати, очевидно.
+
+Посилання на #Fallout
+ie.manual.entry.bullet_component.nuke=Ядерна бомба
+ie.manual.entry.bullet_component.nuke.lore=Війна ніколи не змінюється
+ie.manual.entry.bullet_component.nuke.desc=Ядерна вибухівка є найпотужнішою та найруйнівнішою з відомих людині, лише товсті шари залізобетону можуть захистити від її сили. Крім того, викликане нею тепло розплавляє ворогів навколо, і навіть якщо вони виживуть це, то швидко загинуть від радіації.
+
+#Посилання на пісню
+ie.manual.entry.bullet_component.tnt=TNT
+ie.manual.entry.bullet_component.tnt.lore=Багато!
+ie.manual.entry.bullet_component.tnt.desc=ТНТ - це вибуховий матеріал із посередньою руйнівною силою. Завдяки тому, що його легко виготовити, він є хорошим вибором для кулеметних куль і гранат.
+
+#CoH2 Посилання
+ie.manual.entry.bullet_component.rdx=RDX
+ie.manual.entry.bullet_component.rdx.lore=Справа йде вгору, справа йде вниз!
+ie.manual.entry.bullet_component.rdx.desc=RDX, також відомий як §sгексоген§r, є потужним вибуховим матеріалом. Будучи удвічі потужнішим за тротил, він здатний знищити навіть найважчі вогні.
+
+#There are many variants of HMX's full name, one of them is Her Majesty's Explosive
+ie.manual.entry.bullet_component.hmx=HMX
+ie.manual.entry.bullet_component.hmx.lore=Her Majesty's Finest
+ie.manual.entry.bullet_component.hmx.desc=HMX – одна з найпотужніших звичайних вибухових речовин, вона в три рази потужніша за тротил і здатна пробити будь-які укріплення.
+
+#Посилання на пісню
+ie.manual.entry.bullet_component.white_phosphorus=Білий фосфор
+ie.manual.entry.bullet_component.white_phosphorus.lore=Грозові хмари, вогонь і сталь.
+ie.manual.entry.bullet_component.white_phosphorus.desc=Білий фосфор є основним інгредієнтом більшості запалювальних снарядів. Його висока температура робить оточуючих ворогів більш легкозаймистими, а палаючі гарячі осколки запалюють все навколо.
+
+#Посилання на боротьбу між Теслою та Едісоном
+#подібно до того, як фіни робили коктейль для Молотова (радянського міністра закордонних справ) під час Зимової війни, граната Тесла була б непоганою для Едісона
+ie.manual.entry.bullet_component.tesla=Розрядні випромінювачі
+ie.manual.entry.bullet_component.tesla.lore=Подарунок для Едісона
+ie.manual.entry.bullet_component.tesla.desc=Випромінювачі розряду створюють поле, яке порушує потік електрики. Вони корисні для виведення з ладу промислового обладнання, осередків і саботування виробництва енергії.
+
+
+ie.manual.entry.bullet_component.shrapnel_aluminium=Алюмінієва шрапнель
+ie.manual.entry.bullet_component.shrapnel_aluminium.lore=Алюміній, його не просто пофарбувати
+ie.manual.entry.bullet_component.shrapnel_aluminium.desc=Алюміній не найкращий матеріал для шрапнелі, але він досить дешевий, щоб масово використовувати його в боях.
+
+ie.manual.entry.bullet_component.shrapnel_zinc=Цинкова шрапнель
+ie.manual.entry.bullet_component.shrapnel_zinc.lore=
+ie.manual.entry.bullet_component.shrapnel_zinc.desc=Цинк не є хорошим матеріалом для шрапнелі, але коли є дефіцит, все підійде.
+
+#Посилання на монетний пістолет Terraria
+ie.manual.entry.bullet_component.shrapnel_copper=Мідна шрапнель
+ie.manual.entry.bullet_component.shrapnel_copper.lore=Зробіть монети своєю амуніцією
+ie.manual.entry.bullet_component.shrapnel_copper.desc=Хоча метання міді у ворогів не підкупить їх, але після кількох пострілів це може зробити їх мертвими.
+
+#Посилання на JoJo, так, навіть у II воно має бути
+ie.manual.entry.bullet_component.shrapnel_platinum=Платинова шрапнель
+ie.manual.entry.bullet_component.shrapnel_platinum.lore=Використовуєте Шрапнель, га?
+ie.manual.entry.bullet_component.shrapnel_platinum.desc=Вибираєте Платину? Так, однозначно, біднійте, ви цього хочете, а не я.
+#Murica' fuck yeah
+ie.manual.entry.bullet_component.shrapnel_gold=Золота шрапнель
+ie.manual.entry.bullet_component.shrapnel_gold.lore=А хто дбає про платників податків?
+ie.manual.entry.bullet_component.shrapnel_gold.desc=Ах так, старий добрий спосіб витрачати гроші - війна. Хоча кулі дещо дорогі, вони, здається, не мають особливого впливу на супротивника.
+
+ie.manual.entry.bullet_component.shrapnel_nickel=Нікелева шрапнель
+ie.manual.entry.bullet_component.shrapnel_nickel.lore=
+ie.manual.entry.bullet_component.shrapnel_nickel.desc=Нікель — поганий вибір для шрапнелі, він не завдає великої шкоди, але у важкі часи може врятувати ситуацію.
+
+#Посилання на серію «Відьмак» Netflix
+ie.manual.entry.bullet_component.shrapnel_silver=Срібна шрапнель
+ie.manual.entry.bullet_component.shrapnel_silver.lore=Киньте монету своєму стрільцю
+ie.manual.entry.bullet_component.shrapnel_silver.desc=Срібна шрапнель є хорошим варіантом для боротьби з ворогами-мертвими, шрапнель завдає їм більше шкоди та сповільнює їх.
+
+ie.manual.entry.bullet_component.shrapnel_electrum=Електрумна шрапнель
+ie.manual.entry.bullet_component.shrapnel_electrum.lore=Ударні війська прибули
+ie.manual.entry.bullet_component.shrapnel_electrum.desc=Електрум відмінно проводить електрику, тоді як шпанель не зашкодить, вороги, яких потрапить, отримають більше шкоди від енергетичної зброї, такої як котушки Тесла.
+
+#Посилання на плакат міждержавної допомоги Західній Європі після Другої світової війни
+ie.manual.entry.bullet_component.shrapnel_constantan=Константанова шрапнель
+ie.manual.entry.bullet_component.shrapnel_constantan.lore=<br>Незважаючи на погоду, ми вбиваємо ворогів разом.
+ie.manual.entry.bullet_component.shrapnel_constantan.desc=Константан добре відомий своїми теплопровідними властивостями, вороги, які потрапили під удар, деякий час будуть схильні до пошкоджень вогнем.
+
+#Посилання на слова Отто фон Бісмарка
+ie.manual.entry.bullet_component.shrapnel_iron=Залізна шрапнель
+ie.manual.entry.bullet_component.shrapnel_iron.lore=З кров'ю та залізом!
+ie.manual.entry.bullet_component.shrapnel_iron.desc=Залізо є хорошим вибором для шрапнелі, воно легко проникає у ворогів, які носять легку броню.
+
+ie.manual.entry.bullet_component.shrapnel_lead=Свинцева шрапнель
+ie.manual.entry.bullet_component.shrapnel_lead.lore=Нехай свинець дощить!
+ie.manual.entry.bullet_component.shrapnel_lead.desc=Свинець є хорошим матеріалом для шрапнелі, він важкий і завдає великої шкоди ворогам без броні.
+
+#Japanese "hagane" means steel, but the literal translation is "full metal", Hagane no Renkinjutsushi
+ie.manual.entry.bullet_component.shrapnel_steel=Сталева шрапнель
+ie.manual.entry.bullet_component.shrapnel_steel.lore=Сталевий метал у всій його красі
+ie.manual.entry.bullet_component.shrapnel_steel.desc=Сталь — це чудовий матеріал для шрапнелі, хороша шкода, розкид і швидкість роблять її ефективною проти всіх супротивників.
+
+ie.manual.entry.bullet_component.shrapnel_brass=Мідна шрапнель
+ie.manual.entry.bullet_component.shrapnel_brass.lore=Декоративний дизайн
+ie.manual.entry.bullet_component.shrapnel_brass.desc=Латунь є поганим вибором для виготовлення шрапнелі, хоча через її велику вагу вона завдає більше шкоди, ніж інші слабкі метали.
+
+#Посилання на Bear989sr. - граю в gregtech, мені просто подобається, коли він каже слово «сталь», а також кілька гарних уроків GT
+ie.manual.entry.bullet_component.shrapnel_tungsten=Вольфрамова шрапнель
+ie.manual.entry.bullet_component.shrapnel_tungsten.lore=А тепер ми робимо *ekhem* вольфрамову-сталь...
+ie.manual.entry.bullet_component.shrapnel_tungsten.desc=Вольфрам є дуже хорошим матеріалом для шрапнелі, його висока шкода дозволяє шматувати ворогів на частини.
+
+#Посилання на те, що Курума каже, що торієві стрижні рейлгана Ien є найсильнішими боєприпасами для рейлгана
+ie.manual.entry.bullet_component.shrapnel_thorium=Торієва шрапнель
+ie.manual.entry.bullet_component.shrapnel_thorium.lore=Створюйте гранати, а не прути!
+ie.manual.entry.bullet_component.shrapnel_thorium.desc=Торій є хорошим, але дорогим матеріалом для шрапнелі з високими показниками шкоди та пробиття.
+
+ie.manual.entry.bullet_component.shrapnel_HOPGraphite=HOP Графітова шрапнель
+ie.manual.entry.bullet_component.shrapnel_HOPGraphite.lore=
+ie.manual.entry.bullet_component.shrapnel_HOPGraphite.desc=Графіт є дуже хорошим матеріалом для шрапнелі, його мала вага та висока пробивна здатність роблять його корисним у бою.
+
+ie.manual.entry.bullet_component.shrapnel_uranium=Уранова шрапнель
+ie.manual.entry.bullet_component.shrapnel_uranium.lore=Ра-ді-о-активний
+ie.manual.entry.bullet_component.shrapnel_uranium.desc=Уран є одним із найкращих матеріалів для шрапнелі, осколки, що розлітаються, без проблем пробиють броню і можуть завдати великої шкоди будь-якій цілі.
+
+
+#Logistics
+
+#Reference to Foxhole - a MMO game with a big persitent war in which logistics play a key role
+ie.manual.entry.logistics.name=Логістика
+ie.manual.entry.logistics.subtext=Logi, bmats ASAP!
+ie.manual.entry.logistics0=Логістика - це унікальна галузь інженерії, яка зосереджена на зберіганні, доставці та управлінні транспортуванням товарів. Хороша логістична система складається зі складу для зберігання та розташованих поруч виробничих цехів і фабрик для швидкого виготовлення необхідних речей. З найновішою електронною та електричною технологією та деякими старими роторними машинами створити хорошу систему доставки легше, ніж будь-коли.
+
+#KISS — правило, яке використовується в програмуванні, логістиці та інженерії
+ie.manual.entry.task_system.name=Система завдань
+ie.manual.entry.task_system.subtext=Будь простим, дурню
+ie.manual.entry.task_system0=Система завдань — це концепція організації робочого графіка машини за допомогою окремих завдань, що повторюються. Завдання використовуються багатьма пристроями даних, такими як пристрої вставки, пакувальник і маршрутизатор даних.<br>Завдання поділяються на:<br>Завдання — завдання, які виконуватимуться нескінченно, якщо їх не буде видалено вручну<br>Запити — завдання, які є тимчасовими та будуть видалені після завершення (тобто після того, як вставник вибере певну кількість елементів)
+ie.manual.entry.task_system1=За умовчанням завдання виконуються від найстарішого до найновішого. Якщо завдання неможливо виконати, воно буде пропущено. Після завершення запиту (успішного чи ні) перевіряється, чи потрібно його видалити.
+
+#Посилання на лінь Чоромана, але також наполегливу роботу над моделлю Packer
+ie.manual.entry.packer.name=Пакувальник
+ie.manual.entry.packer.subtext=Ще більше труб і тунелів!
+ie.manual.entry.packer0=Пакувальний пристрій — це машина, яка використовується для пакетного завантаження предметів у контейнери, такі як ящики або кульові магазини. Для роботи потрібне живлення та єдиний сигнал даних, який визначає, скільки предметів слід поміщати кожного разу. Для його формування використовуйте молоток по трубі над конвеєрною стрічкою.
+ie.manual.entry.packer1=За замовчуванням пакувальник пропонує 54 слоти для зберігання предметів, їх можна ввести через один конвеєр на задній частині машини. Для його роботи необхідна електроенергія та підведення контейнера до конвеєра довжиною 3 блоки. Для пакування замовлень машина використовує систему завдань: завдання можна додавати, видаляти та налаштовувати через її інтерфейс або систему даних.
+ie.manual.entry.packer2=Завдання «Упакувати» використовується для завантаження елементів у контейнер. За замовчуванням пакувальник може прийняти будь-який товар (символ *) і максимально можливу його кількість. Це можна змінити: вибравши інший режим, ви можете вибрати кількість слотів або предметів. Цю суму можна вказати в інтерфейсі через поле введення нижче.
+ie.manual.entry.packer3=Перемикач «Використовує OreDict» визначає, чи будуть зіставлені елементи з однаковим ключем словника Ore. Це дозволяє, тобто брати різні види каменю або дерев'яні дошки. Перемикач «NBT Sensitive» визначає, чи повинен елемент мати той самий тег NBT, що й введений. За замовчуванням він вимкнений.
+ie.manual.entry.packer4=Завдання «Розпакувати», «Заповнити», «Видалити», «Зарядити» та «Розрядити» працюють так само, як і завдання «Упакувати». Для рідин «слоти» — це резервуари, а сума — це кількість рідини в мегабайтах. Для енергії береться до уваги лише кількість.
+
+ie.manual.entry.packer.vars_in.c.main=Команда
+ie.manual.entry.packer.vars_in.c.sub=Можливі значення: "додати", "видалити", "очистити"
+ie.manual.entry.packer.vars_in.a.main=Дія (Використовується "add")
+ie.manual.entry.packer.vars_in.a.sub=Можливі значення: "item", "fluid", "energy"
+ie.manual.entry.packer.vars_in.s.main=Стек
+ie.manual.entry.packer.vars_in.s.sub=Необов'язково. Рядок ItemStack або OreDict, якому мають відповідати елементи.
+ie.manual.entry.packer.vars_in.m.main=Режим (Використовується "add")
+ie.manual.entry.packer.vars_in.m.sub=Можливі значення: "amount", "slot", "all_possible". Необов'язковий, за замовчуванням "all_possible".
+ie.manual.entry.packer.vars_in.e.main=Термін дії закінчується після (Використовується "add")
+ie.manual.entry.packer.vars_in.e.sub=Необов'язково. Після якої суми має закінчитися завдання.
+
+#Star Wars reference
+ie.manual.entry.advanced_powerpack.name=Покращений конденсаторний рюкзак
+ie.manual.entry.advanced_powerpack.subtext=(Майже) нескінченна потужність
+ie.manual.entry.advanced_powerpack0=Покращений рюкзак Capacitor Backpack є прямим оновленням до <link;powerpack0;§o§nCapacitor §o§nBackpack§r;>, головна відмінність якого полягає в більшій ємності енергії та можливості заряджатися < link;teslaCoil;§o§nTesla §o§nCoils§r;>.
+ie.manual.entry.advanced_powerpack1=Його здатність до бездротової зарядки також робить власника захищеним від пошкодження електричним струмом і позбавляє від необхідності носити костюм Фарадея. Бічні мішки рюкзака можна пофарбувати так само, як і шкіряну броню.
+
+#Зіплайни
+ie.manual.entry.skycrates.name=Повітряні ящики
+ie.manual.entry.skycrates.subtext=Фактичні логістичні лінії!
+ie.manual.entry.skycrates0=Система фуникульорів — це інший підхід до доставки предметів. Його швидкість перевершує будь-який конвеєр, а лінії, виготовлені з мотузки, набагато дешевші та займають більше місця. У нього також є деякі недоліки: потрібні станції з обох боків, а ящики потрібно вставляти у вагонетку. Фуникульори є кращим варіантом, ніж конвеєри на більших відстанях, не рекомендується використовувати їх на коротких (0-30 м) відстанях.
+ie.manual.entry.skycrates1=Станція фуникульора є початковою та кінцевою точками лінії фуникульорів. Для його формування використовуйте молоток на риштуванні посередині. Щоб функціонувати, йому потрібна обертальна потужність, введена збоку. Кількість передач збільшує ефективність так само, як це працює з <link;rotary_power;§o§nGearboxes§r;4>.
+ie.manual.entry.skycrates2=Станція використовує кріплення для кріплення фуникульорів, кріплення беруться ззаду, позаду вставки. Ящики вставляють і виводять на конвеєр. Ящик можна змусити вивести зі станції, застосувавши сигнал червоного каменю.
+ie.manual.entry.skycrates3=Станція фуникульора є початковою та кінцевою точками лінії фуникульорів. Для його формування використовуйте молоток на риштуванні посередині. Щоб функціонувати, йому потрібна обертальна потужність, введена збоку. Кількість передач збільшує його ефективність так само, як це працює з <link;rotary_power;§o§nGearboxes§r;4>.
+ie.manual.entry.skycrates4=Станція використовує кріплення для кріплення фуникульорів, кріплення беруться ззаду, позаду вставки. Вагонетки можуть увійти на станцію лише тоді, коли залізничний бар’єр піднято, вагонетку можна вигнати зі станції, застосувавши сигнал червоного каменю. Станція автоматично викине вагонетки після завантаження/розвантаження.
+ie.manual.entry.skycrates5=Пост фуникульорів - це ретрансляція між двома точками в мережі фуникульорів. Можна приєднати лише два дроти. Для його формування використовуйте молоток по паркану.
+ie.manual.entry.skycrates6=Вагони для ящиків — безпечний спосіб транспортування предметів залізницею. Їх можна створити, помістивши ящик у вагонетку, предмети всередині не будуть втрачені. У розібраному стані візок розпадається на справжній візок і ящик.
+ie.manual.entry.skycrates7=Кріплення skycrate використовуються для транспортування ящиків через zipline, є дві моделі: базова та електрична, яка використовує енергію, яку надає на ходу <link;tesla_coil;§o§nTesla §o§nCoils§r;> поруч.
+
+#TF2 Reference
+ie.manual.entry.medicrate.name=Медичний ящик
+ie.manual.entry.medicrate.subtext=Так, Архімед?
+ie.manual.entry.medicrate0=Медичний ящик - це пристрій, який використовується для лікування поранених істот. Після розміщення його потрібно наповнити §lbasic§r Regeneration Potions, щоб він працював.
+ie.manual.entry.medicrate1=Потайки та клацання правою кнопкою миші відкриє або закриє ящик: коли він закритий – можна отримати доступ до його інвентарю, коли він відкритий – клацніть правою кнопкою миші, щоб отримати ефекти. Медичний ящик також може застосовувати ефект посилення «Залізної волі», підвищуючи рухливість і концентрацію під час стрільби зі зброї під час виклику. Щоб отримати його, другий слот має бути заповнений золотими яблуками.
+ie.manual.entry.medicrate2=Вставка може бути встановлена ​​на верхній частині ящика. Для цього використовуйте гайковий ключ на закритому ящику та виберіть відповідне оновлення. Після встановлення ящика потрібен кабель живлення середнього або низького напруги, підключений безпосередньо до нього. Встановлений шприц-вставник автоматично зцілює та посилює сутності навколо.
+
+#"Міністерство гайок і болтів" - це термін для державної установи, яка намагається регулювати обсяги виробництва товару, який користується високим попитом і не може (і не повинен) бути виміряний, як гайки і болти для будівництва
+ie.manual.entry.repair_crate.name=Ремонт ящика
+ie.manual.entry.repair_crate.subtext=Схвалено Міністерством гайок і болтів
+ie.manual.entry.repair_crate0=Ящик для ремонту — це пристрій, який використовується для ремонту споряджених предметів і, якщо він оновлений, транспортних засобів поблизу. Після розміщення він повинен бути оснащений сталевими пластинами для роботи.
+ie.manual.entry.repair_crate1=Підкрадаючись і клацаючи правою кнопкою миші, ви відкриєте або закриєте ящик: коли він закритий, можна отримати доступ до його інвентарю, коли він відкритий, клацніть правою кнопкою миші, щоб отримати ефекти. Ремонтний ящик відремонтує всі предмети, які тримає та носить користувач.
+ie.manual.entry.repair_crate2=Вставка може бути встановлена ​​на верхній частині ящика. Для цього використовуйте гайковий ключ на закритому ящику та виберіть відповідне оновлення. Після встановлення ящика потрібен кабель живлення середнього або низького напруги, підключений безпосередньо до нього. Встановлений зварювальний пристрій автоматично ремонтуватиме обладнання, транспортні засоби та блоки навколо.
+
+#Motorworks
+
+ie.manual.entry.motorworks.name=Мотозаводи
+ie.manual.entry.motorworks.subtext=Повний газ!
+ie.manual.entry.motorworks=Моторобудування - це галузь машинобудування, яка зосереджена на конструюванні транспортних засобів, покращуючи виконання інших завдань. Транспортні засоби збільшують швидкість перевезення персоналу та вантажів, а отже підвищують загальну ефективність вашого заводу. Транспортні засоби також можна використовувати для отримання переваги в бою.
+
+Посилання на #Боб Росс
+ie.manual.entry.rubber_production.name=Виробництво гуми
+ie.manual.entry.rubber_production.subtext=Щасливі маленькі дерева
+ie.manual.entry.rubber_production0=Першим кроком у виробництві каучуку є пошук і збір саджанців §6Каучукових дерев§r, які зустрічаються в біомі джунглів. Ці дерева є цінним джерелом латексу - білої рідини, яка є основним компонентом технічної гуми.
+ie.manual.entry.rubber_production1=Другий крок — створення каучукової плантації, коли деревні саджанці виростуть, вирубайте сокирою колоду для видобутку. Потім поставте латексний колектор біля дерева та використовуйте відро на колекторі, щоб змусити його зібрати латекс.
+ie.manual.entry.rubber_production2=Якщо поруч з деревом знаходиться більше ніж один збирач, латекс буде розподілено між усіма ними. Коли відро заповниться, взаємодійте з колектором, щоб відновити його.<br>Щоб почати коагуляцію латексу в сиру гуму, потрібні дві речі: §6мурашина кислота§r і <link;coagulator;§o§nthe §o§ncoagulator§r;>.Для виробництва мурашиної кислоти потрібен <link;refinery;§o§nrefinery§r;>. Змішайте окис вуглецю з метанолом, щоб отримати мурашину кислоту.
+ie.manual.entry.rubber_production3=Оксид вуглецю може бути отриманий шляхом електролізу вуглекислого газу, забруднювача та побічного продукту, який збирає §6Фільтр вуглекислого газу§r.
+ie.manual.entry.rubber_production4=Метанол можна отримати шляхом змішування нікелю або платини з воднем, утвореним електролізом води. Останнім кроком є ​​об’єднання обох за допомогою <link;refinery;§o§nrefinery§r;>.
+ie.manual.entry.rubber_production5=Коли отримано латекс і мурашину кислоту, настав час для коагуляції. Використовуйте машину для створення §6необроблених гумових§r кульок, а потім пресуйте їх у листи за допомогою пластинчатої форми в <link;metalPress;§o§nmetal §o§npress§r;>.
+ie.manual.entry.rubber_production6=Останній крок - це вулканізація сирих гумових листів. Використовуйте <link;vulcanizer;§o§nVulcanizer§r;> для виробництва гумових шин або ременів.
+
+ie.manual.entry.vehicle_workshop.name=Майстерня транспортних засобів
+ie.manual.entry.vehicle_workshop.subtext=Початок Joyride
+ie.manual.entry.vehicle_workshop0=Промисловий прогрес приносить нові засоби пересування, які замінюють традиційні, наприклад, коней. Майстерня транспортних засобів дозволяє створювати ці нові засоби, зокрема - <link;motorbike;§o§nThe §o§nMotorbike§r;>. Для його формування використовуйте молоток на лівій алюмінієвій риштуванні.
+ie.manual.entry.vehicle_workshop1=Для роботи машини потрібен <config;b;petroleumHere;§6Diesel§r або ;>§6біодизель§r разом із електрикою, яку можна отримати за допомогою відповідних портів збоку та вгорі машини. Щоб створити транспортний засіб, виберіть відповідний варіант через інтерфейс, надайте показані матеріали та переконайтеся, що на платформі немає транспортного засобу. Якщо всі умови виконані, натисніть смугасту кнопку в інтерфейсі, і майстерня почне складати ваш автомобіль.
+ie.manual.entry.vehicle_workshop2=Якщо транспортний засіб використовує паливо, він буде заправлений наполовину за допомогою внутрішнього баку майстерні. Палива не вистачить надовго, тому подумайте про створення <link;§o§nFuel §o§nStation§r;fuel_station;>.
+ie.manual.entry.vehicle_workshop3=Існуючі транспортні засоби також можна оновити. Щоб застосувати оновлення, заведіть свій автомобіль на платформу та виберіть дійсні оновлення через інтерфейс. Оновлення та видалення оновлень потребує електроенергії та дизельного палива.
+
+ie.manual.entry.fuel_station.name=АЗС
+ie.manual.entry.fuel_station.subtext=НЕ продає хот-доги
+ie.manual.entry.fuel_station0=Заправна станція — це пристрій, який використовується для автоматичної заправки транспортних засобів, що знаходяться поблизу. Для його формування використовуйте молоток на лівому світлотехнічному блоці.
+ie.manual.entry.fuel_station1=Заправна станція вимагає живлення для роботи. Необхідне паливо залежить від транспортного засобу, багато транспортних засобів, наприклад мотоцикли, використовують дизель<config;b;petroleumHere;, but motorboats use gasoline;>.
+
+ie.manual.entry.vulcanizer.name=Вулканізатор
+ie.manual.entry.vulcanizer.subtext=Перероблений димовий розпилювач
+ie.manual.entry.vulcanizer0=Вулканізатор є останньою машиною в процесі <link;rubber_production;§o§nrubber §o§nproduction§r;>. Щоб сформувати його, використовуйте молоток по сталевому бруску, найближчому до резервуара.
+ie.manual.entry.vulcanizer1=Використовуючи тепло, тиск, форми та набір додаткових сумішей вулканізатор перетворює необроблені гумові листи на звичну технічну гуму, яка використовується для створення багатьох нових машин, особливо швидших конвеєрів, ефективніших ременів двигуна та є життєво важливим для виробництва колісних транспортних засобів. Для обробки каучуку потрібні 3 інгредієнти: сирі гумові листи, що подаються до верхнього порту залізного контейнера, вулканізаційна суміш, що подається до порту знизу, і сірка, яка вводиться в сталевий резервуар.
+ie.manual.entry.vulcanizer2=Для роботи машини потрібна форма вулканізатора - визначення кінцевої продуктивності та електроенергії.
+ie.manual.entry.vulcanizer3=Форми вулканізатора можна створити в <link;workbench;§o§nEngineer's §o§nWorkbench§r;> за допомогою креслення вище.
+ie.manual.entry.vulcanizer4=Вулканізаційна суміш складається з добавок, які покращують властивості гуми. Його можна створити двома способами.
+
+ie.manual.entry.coagulator.name=Коагулятор
+ie.manual.entry.coagulator.subtext=Intensified Mixing Co.
+ie.manual.entry.coagulator0=Коагулятор — це машина, яка використовується для коагуляції латексу та формування сирих гумових кульок для подальшої обробки. Щоб сформувати його, використовуйте молоток на середньому блоці листового металу на задній частині машини.
+ie.manual.entry.coagulator1=Коагулятор потребує подачі електроенергії до свого важкого роз’єму та постійної подачі латексу (правий резервуар) і мурашиної кислоти (лівий резервуар), §зверніть увагу на те, що сторони змінюються, якщо машину перевертають§ r. Після того, як латекс змішується з кислотою і утворюється верхній шар «кварку», кран вибирає одне з відер, занурює його та повертає назад, поки автоматично встановлюється таймер. Через деякий час латекс затвердіє в сиру гуму, яка буде виведена механізмом, що утримує відро. Гуму опустять на землю поруч із відром.
+
+#Other
+
+#Reference to a certain picture i've seen on reddit few years ago
+ie.manual.entry.electric_tools.name=Електроінструменти
+ie.manual.entry.electric_tools.subtext=Працюйте розумніше, а не важче
+ie.manual.entry.electric_tools0=Інженерний електричний молот є прямим оновленням старого інженерного молота. Завдяки покращеній міцності та швидкості цей молоток може формувати та будувати розширені мультиблоки, такі як <link;radio_station;§o§nRadio §o§nStation§r;>.
+ie.manual.entry.electric_tools1=Електричний гайковий ключ інженера є вдосконаленою версією гайкового ключа інженера. Він створює модернізацію та установку зброї набагато швидше, ніж його ручний аналог.
+ie.manual.entry.electric_tools2=Інженерні електричні різаки дроту є вдосконаленою версією інженерних різаків дроту. Вони швидше розрізають блоки, наприклад колючий дріт.
+
+#Посилання на TF2 Pyro
+ie.manual.entry.lighter.name=Запальничка інженера
+ie.manual.entry.lighter.subtext=Немає Райдужного-Бачення
+ie.manual.entry.lighter0=Запальничка інженера - це пристрій, який використовується для підпалювання блоків. Він має нескінченну довговічність, але для роботи потрібне паливо.
+ie.manual.entry.lighter_fuels=Легше паливо
+ie.manual.entry.field_fuel=Рідина
+ie.manual.entry.field_amount=Сума
+
+#Посилання на певне зображення, яке я бачив на Reddit кілька років тому
+ie.manual.entry.sawmill.name=Лісопилка
+ie.manual.entry.sawmill.subtext=Кращий fidget spinner!
+ie.manual.entry.sawmill0=Лісопилка — це автоматична столярна машина, що працює від енергії обертання. Він складається зі столу, механічного вставного пристрою та кріплення пилки. Для формування мультиблока використовуйте молоток по середній дерев'яній підмості.
+ie.manual.entry.sawmill1=Можна встановити пилки з різних матеріалів. Хоча кожна пилка ефективна для різання деревини, пилки з твердих матеріалів, таких як сталь і вольфрам, можуть різати навіть метали.
+ie.manual.entry.sawmill2=Машина потребує постійної подачі обертової енергії на її сторону. Ресурси можна вставити в праву сторону столу, а оброблені предмети вивести в дерев’яний ящик для зберігання на землі
+
+ie.manual.entry.rotary_power.name=Ротаційна потужність
+ie.manual.entry.rotary_power.subtext=Справа починає повертатися!
+ie.manual.entry.rotary_power0=Обертова потужність є старомодною альтернативою електроенергії. Замість проводів і конекторів використовуються колеса і ремені двигуна. Система живлення використовує 2 фактори: крутний момент - в TU (одиниця крутного моменту) і швидкість в DPT (градуси на такт). Для ефективної роботи машини потребують різного крутного моменту та швидкості.
+ie.manual.entry.rotary_power1=Якщо будь-яке з цих значень перевищить ліміт, машина вибухне. Потужність можна об’єднувати та розділяти за допомогою <link;rotary_power;§o§nGearboxes§r;4>.
+ie.manual.entry.rotary_power2=Колесо використовується для передачі механічної (обертової) енергії між пристроями. Після розміщення його можна підключити до іншого колеса за допомогою ременя двигуна, так само, як роз’єми з’єднані проводами.
+ie.manual.entry.rotary_power3=Ремені двигуна є основним передавальним елементом кожної роторної електромережі. Вони відрізняються величиною крутного моменту та швидкістю, яку вони можуть передати. Якщо крутний момент занадто високий для ременя, він від’єднається від колеса та впаде на землю. Використовуйте різні матеріали для різних потреб - сталь може бути більш стійкою до крутного моменту, але втрати потужності вищі.
+ie.manual.entry.rotary_power4=Коробки передач використовуються для з’єднання кількох коліс разом, їхні сторони можуть бути змінені на вхід, вихід або нічого. Вхідний крутний момент від усіх входів підсумовується, а потім розподіляється порівну між усіма виходами. Ви можете використовувати коробку передач, щоб об’єднати крутний момент, щоб зробити його вищим, або розділити його між 2 або більше колесами. Для роботи на повній потужності коробці передач потрібні шестерні з певним опором крутному моменту та швидкості.
+ie.manual.entry.rotary_power5=Трансмісійні коробки використовуються для підключення механічних пристроїв, що використовують різні стандарти осей, вони можуть бути використані для підключення вітряка чи водяного колеса до мережі двигуна або для виведення механічної енергії на динамо.
+
+#Посилання на певного польського східного, ну... домашнього мешканця
+ie.manual.entry.chain_fences.name=Ланцюгові огорожі та ворота
+ie.manual.entry.chain_fences.subtext=Три метри і росте!
+ie.manual.entry.chain_fences0=Ланцюгові огорожі можуть служити стильним промисловим бар'єром між заводськими зонами. Вони пропонують низький рівень захисту від повномасштабного вторгнення, але достатньо, щоб відлякати небажаних гостей від вашої бази. Доступний у багатьох смаках.
+ie.manual.entry.chain_fences1=Ворота з дерев'яної огорожі створюють стильну, монументальну точку входу до вашого фабричного комплексу. Їх можна активувати за допомогою червоного каменю на внутрішній стороні. Як і паркани, доступно багато смаків.
+ie.manual.entry.chain_fences2=Ворота з дерев'яної ланцюгової огорожі створюють стильну, монументальну точку входу до вашого фабричного комплексу. Їх можна активувати за допомогою червоного каменю на внутрішній стороні. Як і паркани, доступно багато смаків.
+ie.manual.entry.chain_fences3=Ворота сталевої огорожі створюють стильну, монументальну точку входу до вашого фабричного комплексу. Їх можна активувати за допомогою червоного каменю на внутрішній стороні. Як і паркани, доступно багато смаків.
+ie.manual.entry.chain_fences4=Ворота зі сталевим ланцюгом створюють стильну, монументальну точку входу до вашого фабричного комплексу. Їх можна активувати за допомогою червоного каменю на внутрішній стороні. Як і паркани, доступно багато смаків.
+ie.manual.entry.chain_fences5=Ворота з алюмінієвої огорожі створюють стильну, монументальну точку входу до вашого заводського комплексу. Їх можна активувати за допомогою червоного каменю на внутрішній стороні. Як і паркани, доступно багато смаків.
+ie.manual.entry.chain_fences6=Ворота з алюмінієвої ланцюгової огорожі створюють стильну, монументальну точку входу до вашого заводського комплексу. Їх можна активувати за допомогою червоного каменю на внутрішній стороні. Як і паркани, доступно багато смаків.
+
+death.attack.iiBullet=%1$s був застрелений %2$s
+death.attack.iiBulletNoShooter=%1$s був застрелений
+death.attack.iiBulletHeadShot=%1$s отримали кулю %2$s в голову
+death.attack.iiBulletHeadShotNoShooter=%1$s отримали кулю в голову
+death.attack.iiShrapnel=%1$s був розірваний осколками %2$s
+death.attack.iiShrapnelNoShooter=%1$s був розірваний осколками
+death.attack.iiSawmill=%1$s був розрізаний лісопилкою
+death.attack.iiPrintingPress=%1$s було роздавлено обертовими роликами
+death.attack.iiRadiation=%1$s зазнав інтенсивного опромінення
+death.attack.iiNuclearHeat=%1$s був знищений ядерним вибухом
+death.attack.iiMotorbike=%1$s переїхав %2$s
+death.attack.iiMotorbikeNoRider=%1$s переїхав
+death.attack.iiMotorbikeExplicit=%2$s зробив дупою %1$s своє безкоштовне місце для паркування
+death.attack.iiMotorbikeSuicide=%1$s вирішив стрибнути з мотоцикла, що рухається
+death.attack.iiPanzer1=%1$s був розчавлений гусеницями Panzer
+death.attack.iiPanzer2=Гусениці незламного танка розтерли %1$s

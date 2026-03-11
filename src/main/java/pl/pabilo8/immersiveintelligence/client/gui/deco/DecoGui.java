@@ -5,6 +5,7 @@ import blusunrize.immersiveengineering.api.DimensionBlockPos;
 import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.common.blocks.TileEntityIEBase;
 import blusunrize.immersiveengineering.common.util.inventory.IIEInventory;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiLabel;
 import net.minecraft.client.gui.ScaledResolution;
@@ -15,10 +16,13 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.shader.Framebuffer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.event.ClickEvent;
+import net.minecraft.util.text.event.ClickEvent.Action;
 import net.minecraftforge.client.event.GuiScreenEvent.ActionPerformedEvent.Post;
 import net.minecraftforge.client.event.GuiScreenEvent.ActionPerformedEvent.Pre;
 import net.minecraftforge.common.MinecraftForge;
@@ -29,26 +33,33 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.api.style.IStyleCustomizable;
 import pl.pabilo8.immersiveintelligence.client.ClientProxy;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiComponentDecoBase;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiComponentDecoBase.DecoGuiEvent;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiComponentDecoBase.MouseButton;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoComponent;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoComponent.DecoGuiEvent;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoComponent.MouseButton;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoTab;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoLabel;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.widget.DecoComponentWidgetBase;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.widget.DecoManualWidget;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.widget.DecoOwnershipWidget;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.widget.DecoStyleWidget;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.*;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
-import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationUtils;
+import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageGuiNBT;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.IOwnableProperty;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.NBTSerialisation;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIBase;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockInteractablePart;
 
@@ -60,9 +71,10 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
 
 /**
@@ -75,7 +87,7 @@ import java.util.function.Supplier;
  *         <li>Optimized</li>
  *     </ul>
  *     Offering a variety of {@link pl.pabilo8.immersiveintelligence.client.gui.deco.component components},
- *     {@link pl.pabilo8.immersiveintelligence.client.gui.deco.widget widgets} and a tile-based
+ *     {@link pl.pabilo8.immersiveintelligence.client.gui.deco.component.widget widgets} and a tile-based
  *     {@link DecoBackgroundBuilder} to make GUI creation easier and more efficient
  * </p>
  * Class for advanced GUIs that store data in the client proxy NBT and use components for their display<br>
@@ -92,6 +104,7 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 	protected final String name;
 	protected final T tile;
 	protected final C container;
+	protected final DecoGuiCategory category;
 	protected final InventoryPlayer playerContainer;
 
 	//Components
@@ -99,15 +112,16 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 	protected final List<DecoTab> widgetTabList = new ArrayList<>();
 	private final List<DecoComponentWidgetBase<?>> widgetList = new ArrayList<>();
 	private final List<ValueListener<?>> valueListeners = new ArrayList<>();
+	private final IIGUI gui;
 	/**
 	 * if true, the GUI won't perform saving to NBT during {@link #onGuiClosed()}, used for transitions between GUIs
 	 */
-	protected boolean changeGUIFlag = false;
+	protected boolean changeGUIFlag = false, refreshGUIFlag = false;
 	//Background
 	private DecoBackgroundBuilder<T, C> backgroundBuilder;
 	private List<Rectangle> takenSpace;
-	private GuiComponentDecoBase<?> focusedElement;
-	private GuiComponentDecoBase<?> hoveredElement;
+	private DecoComponent<?> focusedElement;
+	private DecoComponent<?> hoveredElement;
 	//Widgets
 	private DecoComponentWidgetBase<?> previousWidget, currentWidget;
 	private int widgetTime = 0;
@@ -121,12 +135,14 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 		//The player can be null ONLY for the GUI's resource annotation loading
 		//In a normal scenario the player is never null
 		super(player==null?null: iigui.containerFromTile.apply(player, tile));
+		this.gui = iigui;
 		if(player==null)
 		{
 			this.name = null;
 			this.tile = null;
 			this.container = null;
 			this.playerContainer = null;
+			this.category = null;
 			return;
 		}
 
@@ -135,10 +151,18 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 		this.container = ((C)this.inventorySlots);
 		this.playerContainer = player.inventory;
 
-		AtomicReference<String> guiName = new AtomicReference<>("deco");
-		Optional.ofNullable(this.getClass().getAnnotation(DecoTemplate.class))
-				.ifPresent(template -> guiName.set(template.name()));
-		name = guiName.get();
+		//Get meta data from annotation
+		DecoTemplate annotation = this.getClass().getAnnotation(DecoTemplate.class);
+		if(annotation!=null)
+		{
+			name = annotation.name();
+			category = annotation.category();
+		}
+		else
+		{
+			name = "deco";
+			category = DecoGuiCategory.GENERIC_TILE;
+		}
 	}
 
 	@Override
@@ -146,8 +170,6 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 	{
 		//Sync GUI NBT
 		EasyNBT nbt = this.loadGuiData();
-		NBTSerialisation.synchroniseFor(this, (tag, gui) ->
-				tag.deserializeAll(gui, nbt.unwrap(), true));
 
 		//Clean GUI
 		this.buttonList.clear();
@@ -167,6 +189,8 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 
 		//Fire initialization event for the extending Deco GUI class
 		onInit();
+		if(category!=null)
+			onInitStandardAddons();
 
 		//Load the last widget
 		nbt.checkSetString("currentWidget", s -> {
@@ -204,16 +228,31 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 			guiLabel.y += guiTop;
 		}
 		for(GuiButton button : buttonList)
-			if(button instanceof GuiComponentDecoBase)
-				((GuiComponentDecoBase<?>)button).setParentGUI(this);
+			if(button instanceof DecoComponent)
+				((DecoComponent<?>)button).setParentGUI(this);
 		for(DecoComponentWidgetBase<?> widget : widgetList)
 			widget.setParentGUI(this);
+
+
 	}
 
 	/**
 	 * Called upon Deco GUI initialization.
 	 */
 	public abstract void onInit();
+
+	/**
+	 * Called after {@link #onInit()} for standard Deco GUI addons initialization.
+	 */
+	protected void onInitStandardAddons()
+	{
+		if(category==DecoGuiCategory.DATA_TILE||category==DecoGuiCategory.PRODUCTION_TILE||category==DecoGuiCategory.TERRITORY_CONTROL_TILE)
+			addWidget(new DecoManualWidget());
+		if(tile instanceof IOwnableProperty)
+			addWidget(new DecoOwnershipWidget(((IOwnableProperty)tile)));
+		if(tile instanceof IStyleCustomizable)
+			addWidget(new DecoStyleWidget(((IStyleCustomizable)tile)));
+	}
 
 	/**
 	 * Called after {@link #onInit()} for GUI JEI compatibility initialization.
@@ -227,7 +266,7 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 	//--- GUI Component Methods ---//
 
 	/**
-	 * @deprecated use {@link #addComponent(GuiComponentDecoBase)} instead
+	 * @deprecated use {@link #addComponent(DecoComponent)} instead
 	 */
 	@Override
 	@Deprecated
@@ -237,13 +276,13 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 	}
 
 	/**
-	 * Adds a {@link GuiComponentDecoBase} to the GUI and returns it
+	 * Adds a {@link DecoComponent} to the GUI and returns it
 	 *
 	 * @param component The component to add
 	 * @param <B>       The type of the component
 	 * @return The added component
 	 */
-	protected final <B extends GuiComponentDecoBase<B>> B addComponent(B component)
+	protected final <B extends DecoComponent<B>> B addComponent(B component)
 	{
 		buttonList.add(component);
 		component.id = buttonList.size();
@@ -261,6 +300,24 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 		return component;
 	}
 
+	protected final DecoTab addLinkTab(IIGUI gui, ResourceLocation tabIcon, String moduleName)
+	{
+		return (DecoTab)addComponent(new DecoTab()
+				.withLink(gui)
+				.withIcon(tabIcon)
+				.withTranslatedTooltip(IIReference.DESCRIPTION_KEY+moduleName)
+		);
+	}
+
+	protected final DecoTab addLinkTab(IIGUI gui, ItemStack tabIcon, String moduleName)
+	{
+		return (DecoTab)addComponent(new DecoTab()
+				.withLink(gui)
+				.withIcon(tabIcon)
+				.withTranslatedTooltip(IIReference.DESCRIPTION_KEY+moduleName)
+		);
+	}
+
 	/**
 	 * Adds a {@link DecoComponentWidgetBase} to the GUI and returns it
 	 *
@@ -272,7 +329,7 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 	{
 		//Add the widget tab
 		DecoTab tab = widget.provideTab();
-		buttonList.add(tab);
+		buttonList.add(0, tab);
 		tab.id = buttonList.size();
 		tab.withSize(32, 18);
 		tab.withOnPressed((gui, mouseButton, mouseX, mouseY) -> setCurrentWidget(widget));
@@ -301,9 +358,9 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 	 * @param components The components to add
 	 */
 	@SuppressWarnings({"unchecked", "rawtypes"})
-	protected final void addComponents(GuiComponentDecoBase... components)
+	protected final void addComponents(DecoComponent... components)
 	{
-		for(GuiComponentDecoBase component : components)
+		for(DecoComponent component : components)
 			addComponent(component);
 	}
 
@@ -401,6 +458,21 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks)
 	{
+		if(refreshGUIFlag)
+		{
+			if(backgroundBuilder!=null)
+				backgroundBuilder.cleanup();
+			//Cleanup components
+			for(GuiButton b : buttonList)
+				if(b instanceof DecoComponent)
+					((DecoComponent<?>)b).cleanup();
+			//Cleanup widgets
+			for(DecoComponentWidgetBase<?> widget : widgetList)
+				widget.cleanup();
+			initGui();
+			refreshGUIFlag = false;
+		}
+
 		//Draw the dark background
 		this.drawDefaultBackground();
 
@@ -416,8 +488,8 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 			if(currentWidget==null||!currentWidget.onComponentScroll(mouseX, mouseY, scroll))
 				if(focusedElement==null||!focusedElement.onComponentScroll(mouseX, mouseY, scroll))
 					for(GuiButton b : buttonList)
-						if(b instanceof GuiComponentDecoBase)
-							((GuiComponentDecoBase<?>)b).onComponentScroll(mouseX, mouseY, scroll);
+						if(b instanceof DecoComponent)
+							((DecoComponent<?>)b).onComponentScroll(mouseX, mouseY, scroll);
 		}
 
 		//Draw the upper layer of buttons
@@ -427,8 +499,8 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 		GlStateManager.disableLighting();
 		GlStateManager.disableDepth();
 		for(GuiButton b : buttonList)
-			if(b instanceof GuiComponentDecoBase)
-				((GuiComponentDecoBase<?>)b).drawButtonUpperLayer(mc, mouseX, mouseY, partialTicks);
+			if(b instanceof DecoComponent)
+				((DecoComponent<?>)b).drawButtonUpperLayer(mc, mouseX, mouseY, partialTicks);
 		GlStateManager.enableLighting();
 		GlStateManager.enableDepth();
 		RenderHelper.enableStandardItemLighting();
@@ -441,7 +513,7 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 	private void drawWidgets(int mouseX, int mouseY, float partialTicks)
 	{
 		//Calculate show/hide progress
-		float progress = IIAnimationUtils.getAnimationProgress(widgetTime--, MAX_WIDGET_TIME, true, partialTicks);
+		float progress = AMTUtils.getAnimationProgress(widgetTime--, MAX_WIDGET_TIME, true, partialTicks);
 
 		//Draw the previous (hiding) widget
 		if(previousWidget!=null)
@@ -458,6 +530,7 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 			GlStateManager.pushMatrix();
 			GlStateManager.translate(-(1f-progress)*currentWidget.getWidgetWidth(), 0, 0);
 			currentWidget.drawButton(mc, mouseX, mouseY, partialTicks);
+			currentWidget.drawButtonUpperLayer(mc, mouseX, mouseY, partialTicks);
 			GlStateManager.popMatrix();
 		}
 
@@ -506,24 +579,11 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 	{
 		if(Keyboard.isKeyDown(Keyboard.KEY_F5))
 		{
-			if(backgroundBuilder!=null)
-				backgroundBuilder.cleanup();
-
-			//Cleanup components
-			for(GuiButton b : buttonList)
-				if(b instanceof GuiComponentDecoBase)
-					((GuiComponentDecoBase<?>)b).cleanup();
-			//Cleanup widgets
-			for(DecoComponentWidgetBase<?> widget : widgetList)
-				widget.cleanup();
-
-			initGui();
+			refreshGUI();
 			return;
 		}
 		else if(Keyboard.isKeyDown(Keyboard.KEY_F6))
-		{
 			exportCurrentGui();
-		}
 
 		//Process key typed for the currently focused component
 		if(focusedElement!=null)
@@ -573,28 +633,32 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 
 		//Widgets are not a part of the button list, so we need to check them separately
 		boolean anyPressed = false;
-		if(currentWidget!=null&&currentWidget.decoMousePressed(this.mc, mouseY, mouseX, mouseButtonEnum))
-		{
-			anyPressed = true;
-			Pre event = new Pre(this, currentWidget, this.buttonList);
-			if(MinecraftForge.EVENT_BUS.post(event))
-				return;
-			this.selectedButton = currentWidget;
-			if(this.equals(this.mc.currentScreen))
-				MinecraftForge.EVENT_BUS.post(new Post(this, event.getButton(), this.buttonList));
-		}
 
 		if(focusedElement!=null)
-			anyPressed = focusedElement.decoMousePressed(this.mc, mouseY, mouseX, mouseButtonEnum)||anyPressed;
-
-		for(GuiButton guiButton : this.buttonList)
+			anyPressed = focusedElement.decoMousePressed(this.mc, mouseX, mouseY, mouseButtonEnum);
+		if(!anyPressed)
 		{
-			if(guiButton==focusedElement)
-				continue;
-			if(guiButton instanceof GuiComponentDecoBase)
-				anyPressed = ((GuiComponentDecoBase<?>)guiButton).decoMousePressed(this.mc, mouseY, mouseX, mouseButtonEnum)||anyPressed;
-			else if(mouseButtonEnum==MouseButton.LEFT)
-				anyPressed = guiButton.mousePressed(this.mc, mouseX, mouseY)||anyPressed;
+			if(currentWidget!=null&&currentWidget.decoMousePressed(this.mc, mouseX, mouseY, mouseButtonEnum))
+			{
+				anyPressed = true;
+				Pre event = new Pre(this, currentWidget, this.buttonList);
+				if(MinecraftForge.EVENT_BUS.post(event))
+					return;
+				this.selectedButton = currentWidget;
+				if(this.equals(this.mc.currentScreen))
+					MinecraftForge.EVENT_BUS.post(new Post(this, event.getButton(), this.buttonList));
+			}
+
+			if(!anyPressed)
+				for(GuiButton guiButton : this.buttonList)
+				{
+					if(guiButton==focusedElement)
+						continue;
+					if(guiButton instanceof DecoComponent)
+						anyPressed = ((DecoComponent<?>)guiButton).decoMousePressed(this.mc, mouseX, mouseY, mouseButtonEnum)||anyPressed;
+					else if(mouseButtonEnum==MouseButton.LEFT)
+						anyPressed = guiButton.mousePressed(this.mc, mouseX, mouseY)||anyPressed;
+				}
 		}
 
 		if(!anyPressed)
@@ -630,20 +694,22 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 		//Save GUI data
 		if(!changeGUIFlag)
 		{
-			saveGuiData();
-
 			//Send an NBT sync message to the tile entity
 			EasyNBT nbt = onSaveTileData();
 			if(!nbt.isEmpty())
 				IIPacketHandler.sendToServer(new MessageIITileSync(tile, nbt));
+			//Clean stored data
+			((ClientProxy)ImmersiveIntelligence.proxy).setStoredGuiData();
 		}
+		else
+			saveGuiData();
 
 		//Perform background and component cleanup
 		if(backgroundBuilder!=null)
 			backgroundBuilder.cleanup();
 		for(GuiButton b : buttonList)
-			if(b instanceof GuiComponentDecoBase)
-				((GuiComponentDecoBase<?>)b).cleanup();
+			if(b instanceof DecoComponent)
+				((DecoComponent<?>)b).cleanup();
 		//Labels shouldn't create VBOs, so no cleanup needed
 		for(DecoComponentWidgetBase<?> widget : widgetList)
 			widget.cleanup();
@@ -659,10 +725,10 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 			return currentWidget.getTooltip();
 		//Buttons
 		for(GuiButton guiButton : buttonList)
-			if(guiButton instanceof GuiComponentDecoBase&&guiButton.isMouseOver())
+			if(guiButton instanceof DecoComponent&&guiButton.isMouseOver())
 			{
-				this.hoveredElement = (GuiComponentDecoBase<?>)guiButton;
-				return ((GuiComponentDecoBase<?>)guiButton).getTooltip();
+				this.hoveredElement = (DecoComponent<?>)guiButton;
+				return ((DecoComponent<?>)guiButton).getTooltip();
 			}
 		//Labels
 		for(GuiLabel guiLabel : labelList)
@@ -672,7 +738,7 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 		return Collections.emptyList();
 	}
 
-	public void requestFocus(GuiComponentDecoBase<?> component)
+	public void requestFocus(DecoComponent<?> component)
 	{
 		if(this.focusedElement!=component)
 		{
@@ -702,6 +768,10 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 		//Return a valid compound or an empty one if location mismatch
 		if(!nbt.hasKey("pos")||!new DimensionBlockPos(tile).equals(nbt.getDimPos("pos")))
 			return proxy.setStoredGuiData();
+
+		//Deserialize all SyncNBT fields
+		NBTSerialisation.synchroniseFor(this, (tag, gui) ->
+				tag.deserializeAll(gui, nbt.unwrap(), true));
 		return nbt;
 	}
 
@@ -719,8 +789,8 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 
 		//Save component data
 		for(GuiButton button : buttonList)
-			if(button instanceof GuiComponentDecoBase)
-				((GuiComponentDecoBase<?>)button).onGuiSave();
+			if(button instanceof DecoComponent)
+				((DecoComponent<?>)button).onGuiSave();
 
 		//Save current widget data
 		if(currentWidget!=null)
@@ -739,7 +809,9 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 	 */
 	protected EasyNBT onSaveTileData()
 	{
-		return EasyNBT.newNBT();
+		EasyNBT nbt = EasyNBT.newNBT();
+		NBTSerialisation.synchroniseFor(this, (tag, gui) -> tag.serializeForEvent(gui, nbt.unwrap(), SyncEvents.TILE_CLIENT_MESSAGE));
+		return nbt;
 	}
 
 	@Nullable
@@ -759,7 +831,7 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 		if(takenSpace!=null)
 		{
 			//Get the widget show animation progress
-			float progress = IIAnimationUtils.getAnimationProgress(widgetTime--, MAX_WIDGET_TIME, true, 0);
+			float progress = AMTUtils.getAnimationProgress(widgetTime--, MAX_WIDGET_TIME, true, 0);
 
 			//Set the previous widget rectangle
 			Rectangle previousWidgetRectangle = takenSpace.get(takenSpace.size()-2);
@@ -817,15 +889,28 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 
 	public void syncAnimatedParts(MultiblockInteractablePart part, boolean state)
 	{
-		IIPacketHandler.sendToServer(new MessageBooleanAnimatedPartsSync(part.getID(), state, tile.getPos()));
+		IIPacketHandler.sendToServer(new MessageBooleanAnimatedPartsSync(part.getID(), state, tile));
+	}
+
+	public final boolean refreshGUI()
+	{
+		return changeGUI(this.gui);
+	}
+
+	/**
+	 * Closes the current GUI, ensuring data is saved and sent to the server.
+	 */
+	public final boolean closeGUI()
+	{
+		return changeGUI(null);
 	}
 
 	/**
 	 * Changes the GUI to the specified one, ensuring data is saved and sent to the server
 	 *
-	 * @param newGUI the new GUI to change to
+	 * @param newGUI the new GUI to change to, null will close the current GUI
 	 */
-	public final boolean changeGUI(@Nonnull IIGUI newGUI)
+	public final boolean changeGUI(@Nullable IIGUI newGUI)
 	{
 		return changeGUI(newGUI, null, null);
 	}
@@ -833,11 +918,11 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 	/**
 	 * Changes the GUI to the specified one, ensuring data is saved and sent to the server
 	 *
-	 * @param newGUI   the new GUI to change to
+	 * @param newGUI   the new GUI to change to, null will close the current GUI
 	 * @param guiData  additional data to save for the GUI
 	 * @param tileData additional data to save for the tile entity
 	 */
-	public final boolean changeGUI(@Nonnull IIGUI newGUI, @Nullable EasyNBT guiData, @Nullable EasyNBT tileData)
+	public final boolean changeGUI(@Nullable IIGUI newGUI, @Nullable EasyNBT guiData, @Nullable EasyNBT tileData)
 	{
 		//Switch the Change GUI flag to prevent double saving
 		this.changeGUIFlag = true;
@@ -851,7 +936,12 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 		saveGuiData().conditionally(guiData!=null, e -> e.mergeWith(guiData));
 
 		//Send change GUI message
-		IIPacketHandler.sendToServer(new MessageGuiNBT(newGUI, tile));
+		if(newGUI==null)
+			IIPacketHandler.sendToServer(MessageGuiNBT.closeGuiMessage());
+		else if(newGUI!=gui)
+			IIPacketHandler.sendToServer(new MessageGuiNBT(newGUI, tile));
+		else
+			refreshGUIFlag = true;
 		return true;
 	}
 
@@ -897,6 +987,15 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 	public void scissorEnd()
 	{
 		GL11.glDisable(GL11.GL_SCISSOR_TEST);
+	}
+
+	/**
+	 * @return the itemstack currently being held by the player's cursor
+	 */
+	@Nonnull
+	public ItemStack getMouseHeldItemStack()
+	{
+		return Minecraft.getMinecraft().player==null?ItemStack.EMPTY: Minecraft.getMinecraft().player.inventory.getItemStack();
 	}
 
 	private void exportCurrentGui()
@@ -967,8 +1066,8 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 
 			//Draw the upper layer of buttons
 			for(GuiButton b : buttonList)
-				if(b instanceof GuiComponentDecoBase)
-					((GuiComponentDecoBase<?>)b).drawButtonUpperLayer(mc, 0, 0, 0);
+				if(b instanceof DecoComponent)
+					((DecoComponent<?>)b).drawButtonUpperLayer(mc, 0, 0, 0);
 
 			GlStateManager.popMatrix();
 			//Read pixels from framebuffer
@@ -1001,7 +1100,7 @@ public abstract class DecoGui<T extends TileEntityIEBase & IIEInventory, C exten
 
 			//Notify user
 			ITextComponent itextcomponent = new TextComponentString(outputFile.getName());
-			itextcomponent.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, outputFile.getCanonicalFile().getAbsolutePath()));
+			itextcomponent.getStyle().setClickEvent(new ClickEvent(Action.OPEN_FILE, outputFile.getCanonicalFile().getAbsolutePath()));
 			itextcomponent.getStyle().setUnderlined(true);
 			mc.player.sendMessage(new TextComponentTranslation("screenshot.success", itextcomponent));
 

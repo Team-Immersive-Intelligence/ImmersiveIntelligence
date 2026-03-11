@@ -25,6 +25,7 @@ public enum ParticleProperties implements ISerializableEnum
 	ROTATION(Vector2f.class, Vector2f::new),
 	ROTATION_PITCH(float.class, true, () -> 0f),
 	ROTATION_YAW(float.class, true, () -> 0f),
+	STRETCH(Vector3f.class, () -> new Vector3f(1, 1, 1)),
 	SCALE(float.class, () -> 1f),
 	SIZE(float.class, () -> 1f),
 

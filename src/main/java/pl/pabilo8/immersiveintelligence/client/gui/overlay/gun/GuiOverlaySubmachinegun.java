@@ -16,6 +16,9 @@ import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIISubmachinegun;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 13.09.2022
@@ -23,13 +26,13 @@ import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 public class GuiOverlaySubmachinegun extends GuiOverlayGunBase
 {
 	@Override
-	public boolean shouldDraw(EntityPlayer player, RayTraceResult mouseOver)
+	public boolean shouldDraw(@Nonnull EntityPlayer player, @Nullable RayTraceResult mouseOver)
 	{
 		return player.getHeldItem(EnumHand.MAIN_HAND).getItem()==IIContent.itemSubmachinegun;
 	}
 
 	@Override
-	public void draw(EntityPlayer player, RayTraceResult mouseOver, int width, int height)
+	public void draw(@Nonnull EntityPlayer player, @Nullable RayTraceResult mouseOver, int width, int height)
 	{
 		ItemStack stack = player.getHeldItem(EnumHand.MAIN_HAND);
 		EasyNBT nbt = EasyNBT.wrapNBT(stack);

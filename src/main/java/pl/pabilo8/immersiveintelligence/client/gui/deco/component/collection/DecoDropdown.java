@@ -9,10 +9,10 @@ import net.minecraft.util.math.MathHelper;
 import org.lwjgl.input.Keyboard;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoAlignment;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoGuiUtils;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
-import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
@@ -30,22 +30,29 @@ public class DecoDropdown<T> extends DecoScrolledCollection<DecoDropdown<T>, T>
 {
 	public int selectedEntry = -1;
 	protected int blinkTime = 0;
-	protected int maxDropHeight = 32;
+	protected int maxDropHeight = 32, maxPossibleDropHeight = 32;
 	protected int dropdownWidth;
 	protected boolean dropped = false;
 	protected BiConsumer<T, T> onSelectedEntry;
-	private ResLoc dropdownSymbolLocation = IIReference.RES_TEXTURES_DECO_COMPONENT_DROPDOWN_SYMBOL;
+	private ResLoc dropdownSymbolLocation = DecoTextures.COMPONENT_DROPDOWN_SYMBOL;
 
 	public DecoDropdown(int x, int y)
 	{
 		super(x, y);
-		this.backgroundLocation = IIReference.RES_TEXTURES_DECO_COMPONENT_BUTTON;
+		this.backgroundLocation = DecoTextures.COMPONENT_BUTTON;
 		withSize(120, 12);
 		withOnPressed((gui, mouseButton, mouseX, mouseY) -> {
 			if(mouseButton==MouseButton.LEFT)
 			{
-				if(dropped)
+				if(dropped&&!IIMath.isPointInRectangle(x, y, x+width, y+height, mouseX, mouseY))
 				{
+					//Click on scrollbar
+					if((shouldAlwaysHaveScrollbar()||maxScroll > 0)&&IIMath.isPointInRectangle(x+width-8, y, 8, height, mouseX, mouseY))
+					{
+						this.scroll = (int)MathHelper.clamp((float)(mouseY-y-7)/(float)(height-14)*(float)maxScroll, 0, maxScroll);
+						return true;
+					}
+
 					Tuple<Integer, Integer> clicked = getClickedEntryIndex(gui.x+2, gui.y-scroll+height+2, mouseX, mouseY);
 					if(clicked!=null)
 					{
@@ -163,8 +170,7 @@ public class DecoDropdown<T> extends DecoScrolledCollection<DecoDropdown<T>, T>
 	 */
 	public DecoDropdown<T> withSelectedEntry(T selectedEntry)
 	{
-		this.selectedEntry = entries.indexOf(selectedEntry);
-		return this;
+		return withSelectedEntry(entries.indexOf(selectedEntry));
 	}
 
 	/**
@@ -213,7 +219,8 @@ public class DecoDropdown<T> extends DecoScrolledCollection<DecoDropdown<T>, T>
 		if(onCreate!=null)
 			alreadyDrawnHeight += getAddButtonHeight();
 
-		this.entryMaxWidth = ((shouldAlwaysHaveScrollbar()||alreadyDrawnHeight > height)?(dropdownWidth-12): dropdownWidth)/entriesInGrid;
+		this.entryMaxWidth = ((shouldAlwaysHaveScrollbar()||alreadyDrawnHeight > maxDropHeight)?(dropdownWidth-12): dropdownWidth)/entriesInGrid;
+		this.maxPossibleDropHeight = Math.min(alreadyDrawnHeight, maxDropHeight);
 		this.maxScroll = Math.max(0, alreadyDrawnHeight-getListHeight());
 		this.scrollStep = !filteredEntries.isEmpty()?Math.max(1, alreadyDrawnHeight/filteredEntries.size()/entriesInGrid): 1;
 		this.scroll = MathHelper.clamp(this.scroll, 0, maxScroll);
@@ -258,7 +265,7 @@ public class DecoDropdown<T> extends DecoScrolledCollection<DecoDropdown<T>, T>
 	{
 		bindAtlas();
 		IIDrawUtils draw = IIDrawUtils.startTexturedColored();
-		IIColor buttonColor = enabled?(pressed?BACKGROUND_PRESSED: (hovered?BACKGROUND_HOVERED: BACKGROUND)): BACKGROUND_DISABLED;
+		IIColor buttonColor = getBackgroundColor();
 
 		//Blinking search text cursor
 		blinkTime = (blinkTime+1)%40;
@@ -346,7 +353,7 @@ public class DecoDropdown<T> extends DecoScrolledCollection<DecoDropdown<T>, T>
 	@Override
 	protected int getListHeight()
 	{
-		return maxDropHeight;
+		return maxPossibleDropHeight;
 	}
 
 	@Override

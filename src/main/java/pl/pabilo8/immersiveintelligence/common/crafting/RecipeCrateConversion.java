@@ -9,6 +9,7 @@ import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.registries.IForgeRegistry;
+import net.minecraftforge.registries.IForgeRegistryEntry.Impl;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 
 import java.util.ArrayList;
@@ -18,7 +19,7 @@ import java.util.ArrayList;
  * @since 23.04.2020
  */
 @Optional.Interface(iface = "mezz.jei.api.recipe.IRecipeWrapper", modid = "jei")
-public class RecipeCrateConversion extends net.minecraftforge.registries.IForgeRegistryEntry.Impl<IRecipe> implements IRecipe, IRecipeWrapper
+public class RecipeCrateConversion extends Impl<IRecipe> implements IRecipe, IRecipeWrapper
 {
 	public static ArrayList<RecipeCrateConversion> listAllRecipes = new ArrayList<>();
 	private final ItemStack outputCrate;

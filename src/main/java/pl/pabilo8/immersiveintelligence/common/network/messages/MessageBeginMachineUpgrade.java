@@ -11,29 +11,33 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import pl.pabilo8.immersiveintelligence.api.utils.IUpgradableMachine;
-import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
+import pl.pabilo8.immersiveintelligence.api.upgrade.IUpgradableDevice;
+import pl.pabilo8.immersiveintelligence.api.upgrade.Upgrade;
+import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeUtils.UpgradeOperation;
 import pl.pabilo8.immersiveintelligence.common.network.IIMessage;
-import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
+import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 
-public class MessageBeginMachineUpgrade extends IIMessage
+public class MessageBeginMachineUpgrade extends IIMessage implements IPositionBoundMessage
 {
-	private int entityID;
+	private Upgrade upgrade;
+	private int installingUserID;
+	private World world;
 	private BlockPos pos;
 	private boolean install;
-	private String machineID;
 
-	public MessageBeginMachineUpgrade(TileEntity tile, String machineID, Entity user, boolean install)
+	public MessageBeginMachineUpgrade(TileEntity tile, Upgrade upgrade, Entity user, boolean install)
 	{
-		this.entityID = user.getEntityId();
+		this.installingUserID = user.getEntityId();
 		this.pos = tile.getPos();
 		this.install = install;
-		this.machineID = machineID;
+		this.upgrade = upgrade;
 	}
 
 	public MessageBeginMachineUpgrade()
@@ -44,52 +48,43 @@ public class MessageBeginMachineUpgrade extends IIMessage
 	@Override
 	protected void onServerReceive(WorldServer world, NetHandlerPlayServer handler)
 	{
-		Entity entity = world.getEntityByID(this.entityID);
-
+		Entity entity = world.getEntityByID(this.installingUserID);
 		if(!(entity instanceof EntityLivingBase)||!world.isBlockLoaded(this.pos))
 			return;
 
 		TileEntity tile = world.getTileEntity(this.pos);
-		MachineUpgrade upgrade = MachineUpgrade.getUpgradeByID(this.machineID);
-		if(tile instanceof IUpgradableMachine)
+		if(!(tile instanceof IUpgradableDevice))
+			return;
+
+		IUpgradableDevice machine = (IUpgradableDevice)tile;
+		if(!this.install)
+			machine.removeUpgrade(upgrade);
+		else if(machine.addUpgrade(upgrade, UpgradeOperation.PROBE))
 		{
-			IUpgradableMachine machine = (IUpgradableMachine)tile;
-			if((machine.getInstallProgress()==0&&upgrade!=null&&machine.upgradeMatches(upgrade)))
-			{
-				if(this.install)
+			IItemHandler capability = entity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+			if(capability==null)
+				return;
+
+			//check if ingredients are sufficient
+			if(!(entity instanceof EntityPlayer&&((EntityPlayer)entity).isCreative()))
+				for(IngredientStack requiredStack : upgrade.getRequiredStacks())
 				{
-					IItemHandler capability = entity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
-
-					if(capability==null)
-						return;
-
-					if(!(entity instanceof EntityPlayer&&((EntityPlayer)entity).isCreative()))
+					int reqSize = requiredStack.inputSize;
+					for(int slot = 0; slot < capability.getSlots(); slot++)
 					{
-						//check if ingredients are sufficient
-						for(IngredientStack requiredStack : upgrade.getRequiredStacks())
+						ItemStack inSlot = capability.getStackInSlot(slot);
+						if(!inSlot.isEmpty()&&requiredStack.matchesItemStackIgnoringSize(inSlot))
 						{
-							int reqSize = requiredStack.inputSize;
-							for(int slot = 0; slot < capability.getSlots(); slot++)
-							{
-								ItemStack inSlot = capability.getStackInSlot(slot);
-								if(!inSlot.isEmpty()&&requiredStack.matchesItemStackIgnoringSize(inSlot))
-								{
-									int ii = Math.min(inSlot.getCount(), reqSize);
-									capability.extractItem(slot, ii, false);
-									if((reqSize -= ii) <= 0)
-										break;
-								}
-							}
-							if(reqSize > 0)
-								return;
+							int ii = Math.min(inSlot.getCount(), reqSize);
+							capability.extractItem(slot, ii, false);
+							if((reqSize -= ii) <= 0)
+								break;
 						}
 					}
-					machine.startUpgrade(upgrade);
+					if(reqSize > 0)
+						return;
 				}
-				else
-					machine.removeUpgrade(upgrade);
-				IIPacketHandler.INSTANCE.sendToAllTracking(this, IIPacketHandler.targetPointFromTile(tile, 32));
-			}
+			machine.addUpgrade(upgrade, UpgradeOperation.INSTALL);
 		}
 	}
 
@@ -100,37 +95,44 @@ public class MessageBeginMachineUpgrade extends IIMessage
 		if(world!=null) // This can happen if the task is scheduled right before leaving the world
 		{
 			TileEntity tile = world.getTileEntity(this.pos);
-			MachineUpgrade upgrade = MachineUpgrade.getUpgradeByID(this.machineID);
-
-			if(!(tile instanceof IUpgradableMachine))
+			if(!(tile instanceof IUpgradableDevice))
 				return;
-			IUpgradableMachine machine = (IUpgradableMachine)tile;
+			IUpgradableDevice machine = (IUpgradableDevice)tile;
 
-			if(this.install)
-			{
-				if(machine.getInstallProgress()==0&&upgrade!=null&&machine.upgradeMatches(upgrade))
-					machine.startUpgrade(upgrade);
-			}
-			else
+			if(!install)
 				machine.removeUpgrade(upgrade);
+			else
+				machine.addUpgrade(upgrade, UpgradeOperation.INSTALL);
 		}
 	}
 
 	@Override
 	public void fromBytes(ByteBuf buf)
 	{
-		this.entityID = buf.readInt();
+		this.installingUserID = buf.readInt();
 		this.pos = readPos(buf);
 		this.install = buf.readBoolean();
-		this.machineID = readString(buf);
+		this.upgrade = Upgrade.getUpgradeByID(ResLoc.of(readString(buf)));
 	}
 
 	@Override
 	public void toBytes(ByteBuf buf)
 	{
-		buf.writeInt(entityID);
+		buf.writeInt(installingUserID);
 		writePos(buf, pos);
 		buf.writeBoolean(install);
-		writeString(buf, machineID);
+		writeString(buf, upgrade.getId().toString());
+	}
+
+	@Override
+	public World getWorld()
+	{
+		return world;
+	}
+
+	@Override
+	public Vec3d getPosition()
+	{
+		return new Vec3d(pos);
 	}
 }

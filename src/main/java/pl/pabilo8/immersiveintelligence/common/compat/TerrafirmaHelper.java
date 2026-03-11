@@ -3,11 +3,17 @@ package pl.pabilo8.immersiveintelligence.common.compat;
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import blusunrize.immersiveengineering.common.util.Utils;
 import net.dries007.tfc.TerraFirmaCraft;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
+import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
+import pl.pabilo8.immersiveintelligence.api.crafting.BathingRecipe;
 import pl.pabilo8.immersiveintelligence.api.crafting.ElectrolyzerRecipe;
 import pl.pabilo8.immersiveintelligence.api.crafting.SawmillRecipe;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Sawmill;
@@ -86,6 +92,30 @@ public class TerrafirmaHelper extends IICompatModule
 
 		IILogger.info("Registering TFC sawmill recipes");
 		CraftingManager.REGISTRY.forEach(TerrafirmaHelper::woodRecipe);
+
+		IILogger.info("Registering TFC chemical bath recipes");
+		for(EnumDyeColor value : EnumDyeColor.values())
+		{
+			//That would be washing
+			if(value==EnumDyeColor.WHITE)
+				continue;
+			String fluidName = value==EnumDyeColor.SILVER?"light_gray": value.getName();
+			Fluid fluid = FluidRegistry.getFluid(fluidName+"_dye");
+
+			int outputColor = value.ordinal();
+			new BathingRecipe(new ItemStack(Blocks.WOOL, 1, outputColor),
+					new ItemStack(Blocks.WOOL, 1, 0), new FluidStack(fluid, 125), 1024, 160, false);
+			new BathingRecipe(new ItemStack(Blocks.CARPET, 1, outputColor),
+					new ItemStack(Blocks.CARPET, 1, 0), new FluidStack(fluid, 25), 1024, 160, false);
+			new BathingRecipe(new ItemStack(Blocks.STAINED_GLASS, 1, outputColor),
+					new ItemStack(Blocks.STAINED_GLASS, 1, 0), new FluidStack(fluid, 125), 1024, 160, false);
+			new BathingRecipe(new ItemStack(Blocks.STAINED_GLASS_PANE, 1, outputColor),
+					new ItemStack(Blocks.STAINED_GLASS_PANE, 1, 0), new FluidStack(fluid, 125), 1024, 160, false);
+			new BathingRecipe(new ItemStack(Blocks.STAINED_HARDENED_CLAY, 1, outputColor),
+					new ItemStack(Blocks.STAINED_HARDENED_CLAY, 1, 0), new FluidStack(fluid, 125), 1024, 160, false);
+			new BathingRecipe(new ItemStack(Items.BED, 1, outputColor),
+					new ItemStack(Items.BED, 1, 0), new FluidStack(fluid, 125), 1024, 160, false);
+		}
 	}
 
 	@Override

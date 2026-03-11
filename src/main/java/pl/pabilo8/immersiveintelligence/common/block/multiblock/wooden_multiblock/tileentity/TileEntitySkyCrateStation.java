@@ -56,11 +56,14 @@ import static blusunrize.immersiveengineering.api.energy.wires.WireType.STRUCTUR
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @author Avalon
  * @since 28.06.2019
+ * @since 27.08.2025
  */
 public class TileEntitySkyCrateStation extends TileEntityMultiblockConnectable<TileEntitySkyCrateStation, IMultiblockRecipe> implements IAdvancedCollisionBounds, IAdvancedSelectionBounds, ISkyCrateConnector, IPlayerInteraction, IGuiTile, IRotationalEnergyBlock
 {
 	//none, crate, crate in, crate out, crate load, crate unload
+	public static final int GEAR_SLOTS = 3;
 	public int animation = 0;
 	public float progress = 0;
 	public RotaryStorage rotation = new RotaryStorage(0, 0)
@@ -164,13 +167,11 @@ public class TileEntitySkyCrateStation extends TileEntityMultiblockConnectable<T
 					{
 						IItemHandler cap = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite());
 						for(int i = 0; i < cap.getSlots(); i += 1)
-						{
 							if(cap.getStackInSlot(i).getItem() instanceof ISkycrateMount)
 							{
 								getInventory().set(4, cap.extractItem(i, 1, false));
 								break;
 							}
-						}
 					}
 				}
 				if(world.getRedstonePower(getBlockPosForPos(8).offset(mirrored?this.facing.rotateYCCW(): this.facing.rotateY()), (mirrored?this.facing.rotateY(): this.facing.rotateYCCW())) > 0)
@@ -191,15 +192,12 @@ public class TileEntitySkyCrateStation extends TileEntityMultiblockConnectable<T
 		}
 
 		if(!isDummy())
-		{
 			if(animation > 1)
-			{
 				if(progress < getAnimationLength())
 					progress += getEffectiveEnergy()*IIRotaryUtils.getGearEfficiency(
 							IIItemUtils.trimInventory(inventory, 0, 3)
 					);
 				else
-				{
 					switch(animation)
 					{
 						case 2:
@@ -269,19 +267,13 @@ public class TileEntitySkyCrateStation extends TileEntityMultiblockConnectable<T
 						}
 						break;
 					}
-
-				}
-			}
-		}
 	}
 
 	private void handleRotation()
 	{
 		boolean b = false;
 		if(rotation.getRotationSpeed() > SkyCrateStation.rpmBreakingMax||rotation.getTorque() > SkyCrateStation.torqueBreakingMax)
-		{
 			selfDestruct();
-		}
 
 		if(world.getTileEntity(getBlockPosForPos(6).offset((mirrored?this.facing.rotateY(): this.facing.rotateYCCW())))!=null)
 		{
@@ -290,9 +282,7 @@ public class TileEntitySkyCrateStation extends TileEntityMultiblockConnectable<T
 			{
 				IRotaryEnergy cap = te.getCapability(CapabilityRotaryEnergy.ROTARY_ENERGY, mirrored?this.facing.rotateYCCW(): this.facing.rotateY());
 				if(rotation.handleRotation(cap, mirrored?this.facing.rotateYCCW(): this.facing.rotateY()))
-				{
-					IIPacketHandler.INSTANCE.sendToAllAround(new MessageRotaryPowerSync(rotation, 0, master().getPos()), IIPacketHandler.targetPointFromTile(master(), 24));
-				}
+					IIPacketHandler.sendToClient(new MessageRotaryPowerSync(world, master().getPos(), 0, rotation));
 			}
 			else
 				b = true;
@@ -305,10 +295,8 @@ public class TileEntitySkyCrateStation extends TileEntityMultiblockConnectable<T
 		if((rotation.getTorque() > 0||rotation.getRotationSpeed() > 0))
 		{
 			if(b)
-			{
 				rotation.grow(0, 0, 0.98f);
-			}
-			IIPacketHandler.INSTANCE.sendToAllAround(new MessageRotaryPowerSync(rotation, 0, master().getPos()), IIPacketHandler.targetPointFromTile(master(), 24));
+			IIPacketHandler.sendToClient(new MessageRotaryPowerSync(world, master().getPos(), 0, rotation));
 		}
 	}
 
@@ -409,9 +397,7 @@ public class TileEntitySkyCrateStation extends TileEntityMultiblockConnectable<T
 		if(slot < 3)
 			return stack.getItem() instanceof IMotorGear;
 		if(slot==3)
-		{
 			return MinecartBlockHelper.blocks.keySet().stream().anyMatch(itemStackPredicate -> itemStackPredicate.test(stack));
-		}
 		return false;
 	}
 
@@ -580,7 +566,6 @@ public class TileEntitySkyCrateStation extends TileEntityMultiblockConnectable<T
 	{
 		super.connectCable(cableType, target, other);
 		if(!world.isRemote)
-		{
 			if(!(other instanceof ISkyCrateConnector))
 			{
 				Set<Connection> conns = ImmersiveNetHandler.INSTANCE.getConnections(world, getPos());
@@ -588,7 +573,6 @@ public class TileEntitySkyCrateStation extends TileEntityMultiblockConnectable<T
 					for(Connection conn : conns)
 						ImmersiveNetHandler.INSTANCE.removeConnectionAndDrop(conn, world, getBlockPosForPos(10));
 			}
-		}
 	}
 
 	@Override
@@ -596,7 +580,6 @@ public class TileEntitySkyCrateStation extends TileEntityMultiblockConnectable<T
 	{
 		TileEntitySkyCrateStation master = master();
 		if(pos==20&&master!=null&&!world.isRemote)
-		{
 			if(master.getInventory().get(5).isEmpty()&&heldItem.getItem()==Items.BANNER)
 			{
 				master.getInventory().set(5, heldItem.copy());
@@ -612,7 +595,6 @@ public class TileEntitySkyCrateStation extends TileEntityMultiblockConnectable<T
 				master.sendUpdate(0);
 				return true;
 			}
-		}
 
 		return false;
 	}
@@ -674,16 +656,14 @@ public class TileEntitySkyCrateStation extends TileEntityMultiblockConnectable<T
 	}
 
 	@Override
-	public void updateRotationStorage(float rpm, float torque, int part)
+	public void updateRotationStorage(float speed, float torque, int partID)
 	{
 		if(world.isRemote)
-		{
-			if(part==0)
+			if(partID==0)
 			{
-				rotation.setRotationSpeed(rpm);
+				rotation.setRotationSpeed(speed);
 				rotation.setTorque(torque);
 			}
-		}
 	}
 
 	@Override

@@ -10,8 +10,8 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.text.TextFormatting;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoColors;
 import pl.pabilo8.immersiveintelligence.client.util.font.IIFontRenderer;
-import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 import java.util.Arrays;
 import java.util.function.BiConsumer;
@@ -76,23 +76,6 @@ public class GuiPrintedPage extends GuiScreen
 		super.drawScreen(mouseX, mouseY, partialTicks);
 		drawDefaultBackground();
 		drawPage();
-
-		/*GlStateManager.pushMatrix();
-		GlStateManager.translate(i+8, j+24, 0);
-		GlStateManager.scale(2f, 2f, 1f);
-		IIClientUtils.fontKaiser.drawSplitString(TextFormatting.UNDERLINE+"Minecraft at War!", 0, 0, pageImageWidth-8, IILib.COLOR_H1);
-		GlStateManager.popMatrix();
-
-		GlStateManager.pushMatrix();
-		GlStateManager.translate(i+8, j+44, 0);
-		GlStateManager.scale(1.25f, 1.25f, 1f);
-		IIClientUtils.fontNormung.drawSplitString("Engineers' Ministry of War announces: \nTHERE IS NO STEP BACK.", 0, 0, pageImageWidth-18, IILib.COLOR_H1);
-		GlStateManager.popMatrix();
-
-		GlStateManager.pushMatrix();
-		GlStateManager.translate(i+8, j+76, 0);
-		IIClientUtils.fontEngineerTimes.drawSplitString("Hanses unwarned attack at the "+TextFormatting.ITALIC+"Vanilla Compound"+TextFormatting.RESET+". Unknown armored vehicles broke through the main defence line. Vanilla High Command flees to allied Bedrock Republic.", 0, 0, pageImageWidth-18, IILib.COLOR_H1);
-		GlStateManager.popMatrix();*/
 	}
 
 	public void drawPage()
@@ -107,7 +90,7 @@ public class GuiPrintedPage extends GuiScreen
 			GlStateManager.pushMatrix();
 			GlStateManager.translate(guiLeft+8, guiTop+y, 0);
 			GlStateManager.scale(line.size, line.size, line.size);
-			line.font.drawSplitString(line.text, 0, 0, (int)(141/line.size), IIReference.COLOR_H1.getPackedRGB());
+			line.font.drawSplitString(line.text, 0, 0, (int)(141/line.size), DecoColors.H1.getPackedRGB());
 			y += (line.font.getWordWrappedHeight(line.text, (int)(141/line.size)))*line.size;
 			GlStateManager.popMatrix();
 		}

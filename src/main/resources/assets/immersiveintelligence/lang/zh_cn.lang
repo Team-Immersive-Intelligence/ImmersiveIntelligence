@@ -696,22 +696,22 @@ desc.immersiveintelligence.metal_multiblock1.emplacement.remove=移除
 desc.immersiveintelligence.metal_multiblock1.emplacement.duplicate=复制
 desc.immersiveintelligence.metal_multiblock1.emplacement.clear=清除
 
-desc.immersiveintelligence.metal_multiblock1.packer.task.pack=打包
-desc.immersiveintelligence.metal_multiblock1.packer.task.unpack=拆包
-desc.immersiveintelligence.metal_multiblock1.packer.task.charge=充电
-desc.immersiveintelligence.metal_multiblock1.packer.task.discharge=放电
-desc.immersiveintelligence.metal_multiblock1.packer.task.fill=填入
-desc.immersiveintelligence.metal_multiblock1.packer.task.drain=取出
+ii.gui.packer.task.item.out=打包
+ii.gui.packer.task.item.in=拆包
+ii.gui.packer.task.fluid.out=充电
+ii.gui.packer.task.fluid.in=放电
+ii.gui.packer.task.energy.out=填入
+ii.gui.packer.task.energy.in=取出
 
-desc.immersiveintelligence.metal_multiblock1.packer.mode.amount=数量
-desc.immersiveintelligence.metal_multiblock1.packer.mode.slot=槽位
-desc.immersiveintelligence.metal_multiblock1.packer.mode.all_possible=所有可能的
-desc.immersiveintelligence.metal_multiblock1.packer.mode.at_most_container=容器中最多的
-desc.immersiveintelligence.metal_multiblock1.packer.mode.at_least_packer=包装机中最少的
+ii.gui.packer.mode.amount=数量
+ii.gui.packer.mode.slot=槽位
+ii.gui.packer.mode.all_possible=所有可能的
+ii.gui.packer.mode.at_most_container=容器中最多的
+ii.gui.packer.mode.at_least_packer=包装机中最少的
 
-desc.immersiveintelligence.metal_multiblock1.packer.side_input=要放入容器中的物品
-desc.immersiveintelligence.metal_multiblock1.packer.side_output=从容器中取出的物品
-desc.immersiveintelligence.metal_multiblock1.packer.switch_direction=切换任务指向
+ii.gui.packer.side_input=要放入容器中的物品
+ii.gui.packer.side_output=从容器中取出的物品
+ii.gui.packer.switch_direction=切换任务指向
 
 desc.immersiveintelligence.metal_multiblock1.emplacement.target.mobs=敌对生物
 desc.immersiveintelligence.metal_multiblock1.emplacement.target.animals=动物

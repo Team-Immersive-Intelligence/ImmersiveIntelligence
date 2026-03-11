@@ -8,6 +8,7 @@ import pl.pabilo8.immersiveintelligence.client.fx.utils.IIParticleUtils.Position
 
 import javax.vecmath.Vector2f;
 import javax.vecmath.Vector3f;
+import java.util.List;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -21,23 +22,25 @@ public class ParticleOffspring<T extends AbstractParticle>
 	private final float size;
 	private final int minAmount;
 	private final int randAmount;
+	private final List<ParticleProperties> inheritedProperties;
 	private boolean initialized = false;
 	private ParticleFactory<T> particleFactory;
 
 	public ParticleOffspring(String factoryName, PositionGenerator positionGenerator,
-							 float size, int minAmount, int maxAmount)
+							 float size, int minAmount, int maxAmount, List<ParticleProperties> inheritedProperties)
 	{
 		this.factoryName = factoryName;
 		this.positionGenerator = positionGenerator;
 		this.size = size;
 		this.minAmount = Math.min(minAmount, maxAmount);
 		this.randAmount = Math.max(minAmount, maxAmount)-minAmount;
+		this.inheritedProperties = inheritedProperties;
 	}
 
 	public ParticleOffspring(String factoryName, PositionGenerator positionGenerator,
-							 float size, int amount)
+							 float size, int amount, List<ParticleProperties> inheritedProperties)
 	{
-		this(factoryName, positionGenerator, size, amount, amount);
+		this(factoryName, positionGenerator, size, amount, amount, inheritedProperties);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -62,7 +65,10 @@ public class ParticleOffspring<T extends AbstractParticle>
 			Vec3d motion = positionGenerator.generateMotion(originPos, i, size, amount);
 			Vector2f rotation = positionGenerator.generateRotation(originPos, i, size, amount);
 
-			particleFactory.spawn(pos, motion, rotation);
+			T spawn = particleFactory.spawn(pos, motion, rotation);
+			for(ParticleProperties inheritedProperty : inheritedProperties)
+				spawn.setProperty(inheritedProperty, originParticle.getProperty(inheritedProperty));
+
 		}
 	}
 }

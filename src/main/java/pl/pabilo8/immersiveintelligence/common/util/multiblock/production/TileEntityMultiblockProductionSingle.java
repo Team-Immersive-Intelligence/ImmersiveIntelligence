@@ -1,7 +1,8 @@
 package pl.pabilo8.immersiveintelligence.common.util.multiblock.production;
 
-import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IGuiTile;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
+import net.minecraft.nbt.NBTTagCompound;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNullableSyncMechanism;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
@@ -20,18 +21,29 @@ import javax.annotation.Nullable;
 
 public abstract class TileEntityMultiblockProductionSingle<T extends TileEntityMultiblockProductionSingle<T, R>, R extends IIIMultiblockRecipe>
 		extends TileEntityMultiblockProductionBase<T, R>
-		implements IGuiTile
 {
 	/**
 	 * The current process
 	 */
 	@Nullable
-	@SyncNBT(events = {SyncEvents.TILE_RECIPE_CHANGED, SyncEvents.TILE_GUI_OPENED}, nullable = true)
 	public IIMultiblockProcess<R> currentProcess;
+	@SyncNBT(name = "current_process", events = {SyncEvents.TILE_RECIPE_CHANGED, SyncEvents.TILE_GUI_OPENED})
+	public EasyNullableSyncMechanism<IIMultiblockProcess<R>, NBTTagCompound> currentProcessSync = new EasyNullableSyncMechanism<>(
+			() -> currentProcess, p -> this.currentProcess = p, nbt ->
+			getProcessByName(nbt.getString("recipe")).withNBT(easyNBT -> easyNBT.mergeWith(nbt))
+	);
 
 	public TileEntityMultiblockProductionSingle(MultiblockStuctureBase<T> multiblock)
 	{
 		super(multiblock);
+	}
+
+	@Override
+	protected void dummyCleanup()
+	{
+		super.dummyCleanup();
+		this.currentProcess = null;
+		this.currentProcessSync = null;
 	}
 
 	//--- Update Method ---//
@@ -63,6 +75,8 @@ public abstract class TileEntityMultiblockProductionSingle<T extends TileEntityM
 			}
 		}
 
+		if(world.isRemote)
+			return;
 		//Add new process to the queue (no matter whether it's null)
 		this.currentProcess = findNewProductionProcess();
 

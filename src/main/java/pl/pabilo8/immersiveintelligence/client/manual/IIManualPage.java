@@ -72,8 +72,7 @@ public class IIManualPage extends ManualPages
 		registeredObjects.put("multiblock", IIManualMultiblock::new);
 		registeredObjects.put("crafting", IIManualCraftingRecipe::new);
 		registeredObjects.put("blueprint", IIManualBlueprint::new);
-		//TODO: 07.08.2023 Machine recipes
-		//registeredObjects.put("machine_recipe", IIManualMachineRecipe::new);
+		registeredObjects.put("machine_recipe", IIManualMachineRecipe::new);
 
 		registeredObjects.put("item_display", IIManualItemDisplay::new);
 		registeredObjects.put("upgrade_display", IIManualUpgradeDisplay::new);
@@ -84,6 +83,7 @@ public class IIManualPage extends ManualPages
 		registeredObjects.put("data_circuit", IIManualCircuit::new);
 		registeredObjects.put("data_variable", IIManualDataVariable::new);
 		registeredObjects.put("data_callback", IIManualDataCallback::new);
+		registeredObjects.put("wip_notice", IIManualWIPNotice::new);
 	}
 
 	private final ArrayList<IIManualObject> manualObjects = new ArrayList<>();

@@ -1,56 +1,59 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity;
 
 import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorageAdvanced;
+import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IPlayerInteraction;
 import blusunrize.immersiveengineering.common.util.Utils;
-import blusunrize.immersiveengineering.common.util.inventory.IEInventoryHandler;
 import blusunrize.immersiveengineering.common.util.inventory.MultiFluidTank;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import pl.pabilo8.immersiveintelligence.api.crafting.PrintingRecipe;
+import pl.pabilo8.immersiveintelligence.api.crafting.PrintingRecipe.PrintFunction;
+import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIMultiblockRecipe;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IIDataHandlingUtils;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
+import pl.pabilo8.immersiveintelligence.api.utils.tools.IAdvancedTextOverlay;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.PrintingPress;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.MultiblockPrintingPress;
 import pl.pabilo8.immersiveintelligence.common.entity.tactile.EntityAMTTactile;
-import pl.pabilo8.immersiveintelligence.common.entity.tactile.TactileHandler;
-import pl.pabilo8.immersiveintelligence.common.entity.tactile.TactileHandler.ITactileListener;
+import pl.pabilo8.immersiveintelligence.common.entity.tactile.TactileManager;
+import pl.pabilo8.immersiveintelligence.common.entity.tactile.TactileManager.ITactileListener;
 import pl.pabilo8.immersiveintelligence.common.util.IIDamageSources;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyCollection;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
-import pl.pabilo8.immersiveintelligence.common.util.lambda.NBTTagCollector;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionBase;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionMulti;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayDeque;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
  * @updated 13.12.2023
  * @since 28.06.2019
  */
-public class TileEntityPrintingPress extends TileEntityMultiblockProductionMulti<TileEntityPrintingPress, PrintingRecipe> implements ITactileListener
+public class TileEntityPrintingPress extends TileEntityMultiblockProductionMulti<TileEntityPrintingPress, PrintingRecipe> implements ITactileListener, IPlayerInteraction, IAdvancedTextOverlay
 {
 	/**
 	 * Inventory slots IDs
@@ -60,11 +63,11 @@ public class TileEntityPrintingPress extends TileEntityMultiblockProductionMulti
 	@SyncNBT(time = 40, events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_RECIPE_CHANGED})
 	public MultiFluidTank tank;
 
-	private IItemHandler inputHandler = new IEInventoryHandler(1, this, SLOT_PAPER, true, true);
-	private IItemHandler outputHandler = new IEInventoryHandler(1, this, SLOT_OUTPUT, true, true);
-	private TactileHandler tactileHandler = null;
+	private IItemHandler inputHandler = getSingleInventoryHandler(SLOT_PAPER, true, true);
+	private IItemHandler outputHandler = getSingleInventoryHandler(SLOT_OUTPUT, true, true);
+	private TactileManager tactileManager = null;
 
-	private ArrayDeque<PrintingRequest> printRequestsQueue;
+	private EasyCollection<PrintingRequest, NBTTagCompound> printRequestsQueue;
 
 	public TileEntityPrintingPress()
 	{
@@ -72,7 +75,15 @@ public class TileEntityPrintingPress extends TileEntityMultiblockProductionMulti
 		this.tank = new MultiFluidTank(8000);
 		this.energyStorage = new FluxStorageAdvanced(PrintingPress.energyCapacity);
 		this.inventory = NonNullList.withSize(4, ItemStack.EMPTY);
-		this.printRequestsQueue = new ArrayDeque<>();
+		this.printRequestsQueue = new EasyCollection<>(PrintingRequest::new);
+	}
+
+	@Override
+	public void onBeforeFirstTick()
+	{
+		super.onBeforeFirstTick();
+		if(!world.isRemote)
+			tactileManager = new TactileManager(multiblock, this);
 	}
 
 	@Override
@@ -82,7 +93,7 @@ public class TileEntityPrintingPress extends TileEntityMultiblockProductionMulti
 		this.tank = null;
 		this.inputHandler = null;
 		this.outputHandler = null;
-		this.tactileHandler = null;
+		this.tactileManager = null;
 	}
 
 	@Override
@@ -90,9 +101,8 @@ public class TileEntityPrintingPress extends TileEntityMultiblockProductionMulti
 	{
 		super.onUpdate();
 
-		if(tactileHandler==null)
-			tactileHandler = new TactileHandler(multiblock, this);
-		tactileHandler.defaultize();
+		if(!world.isRemote)
+			tactileManager.defaultize();
 
 		if(IIUtils.handleBucketTankInteraction(tank, inventory, SLOT_BUCKET_IN, SLOT_BUCKET_OUT, true,
 				fs -> IIContent.fluidInkBlack.equals(fs.getFluid())||
@@ -100,37 +110,6 @@ public class TileEntityPrintingPress extends TileEntityMultiblockProductionMulti
 						IIContent.fluidInkMagenta.equals(fs.getFluid())||
 						IIContent.fluidInkYellow.equals(fs.getFluid())))
 			forceTileUpdate();
-	}
-
-	//--- NBT Handling ---//
-
-	@Override
-	public void readCustomNBT(NBTTagCompound nbt, boolean descPacket)
-	{
-		super.readCustomNBT(nbt, descPacket);
-		if(isDummy())
-			return;
-
-		if(nbt.hasKey("print_queue"))
-		{
-			printRequestsQueue.clear();
-			for(NBTBase entry : nbt.getTagList("print_queue", EasyNBT.TAG_COMPOUND))
-				printRequestsQueue.add(new PrintingRequest((NBTTagCompound)entry));
-			printRequestsQueue.removeIf(printingRequest -> printingRequest.recipe==null);
-		}
-	}
-
-	@Override
-	public void writeCustomNBT(NBTTagCompound nbt, boolean descPacket)
-	{
-		super.writeCustomNBT(nbt, descPacket);
-		if(isDummy())
-			return;
-		EasyNBT.wrapNBT(nbt).withTag("print_queue",
-				printRequestsQueue.stream()
-						.map(PrintingRequest::serializeNBT)
-						.collect(new NBTTagCollector())
-		);
 	}
 
 
@@ -158,7 +137,7 @@ public class TileEntityPrintingPress extends TileEntityMultiblockProductionMulti
 	@Override
 	public void receiveData(DataPacket packet, int pos)
 	{
-		if(packet.get('c').toString().equals("callback"))
+		if(IIDataHandlingUtils.isCallbackPacket(packet))
 		{
 			DataPacket response = IIDataHandlingUtils.handleCallback(packet,
 					var -> {
@@ -186,7 +165,7 @@ public class TileEntityPrintingPress extends TileEntityMultiblockProductionMulti
 		}
 		else
 		{
-			int amount = IIDataHandlingUtils.asInt('a', packet);
+			int amount = IIDataHandlingUtils.optionalInt('a', packet).orElse(1);
 			if(amount <= 0)
 				return;
 
@@ -245,22 +224,23 @@ public class TileEntityPrintingPress extends TileEntityMultiblockProductionMulti
 		// Check for queued orders
 		if(printRequestsQueue.isEmpty())
 			return null;
-		PrintingRequest found = printRequestsQueue.getFirst();
-		if(found.amount-- <= 1)
-			printRequestsQueue.remove();
+		PrintingRequest found = printRequestsQueue.get(0);
 
-		if(!found.recipe.getInput().matchesItemStack(inputHandler.extractItem(SLOT_PAPER, 1, true)))
+		ItemStack input = inputHandler.extractItem(SLOT_PAPER, 1, true);
+		if(!found.recipe.getInput().matchesItemStack(input))
 			return null;
 
 		//Check if there's enough paper
-		PrintingProcess process = new PrintingProcess(found.recipe, found.data, inventory.get(SLOT_PAPER));
+		PrintFunction function = found.recipe.getFunction();
+		ItemStack result = function.apply(input, found.data);
+		int[] inkCost = function.getInkTypesRequired(found.data);
 
 		//Check if there's enough ink
 		FluidStack[] fs = {
-				new FluidStack(IIContent.fluidInkBlack, process.blackCost),
-				new FluidStack(IIContent.fluidInkCyan, process.cyanCost),
-				new FluidStack(IIContent.fluidInkMagenta, process.magentaCost),
-				new FluidStack(IIContent.fluidInkYellow, process.yellowCost)
+				new FluidStack(IIContent.fluidInkCyan, inkCost[0]),
+				new FluidStack(IIContent.fluidInkMagenta, inkCost[1]),
+				new FluidStack(IIContent.fluidInkYellow, inkCost[2]),
+				new FluidStack(IIContent.fluidInkBlack, inkCost[3])
 		};
 		for(FluidStack f : fs)
 			if(f.amount!=0&&!f.isFluidEqual(tank.drain(f, false)))
@@ -271,14 +251,23 @@ public class TileEntityPrintingPress extends TileEntityMultiblockProductionMulti
 		for(FluidStack f : fs)
 			tank.drain(f, true);
 
-		//Return process
-		return process;
+		//Decrease to-be-printed page amount, remove the task if all pages were printed
+		if(found.amount-- <= 1)
+			printRequestsQueue.remove(0);
+		//Return the process
+		return new IIMultiblockProcess<>(found.recipe)
+				.withNBT(nbt -> nbt.withItemStack("result", result)
+						.withInt("cyan", inkCost[0])
+						.withInt("magenta", inkCost[1])
+						.withInt("yellow", inkCost[2])
+						.withInt("black", inkCost[3]));
 	}
 
 	@Override
 	protected IIMultiblockProcess<PrintingRecipe> getProcessByName(String name)
 	{
-		return TileEntityMultiblockProductionBase.findRecipeFromList(PrintingRecipe.class, PrintingProcess::new, name);
+		PrintingRecipe recipe = IIMultiblockRecipe.getRecipe(PrintingRecipe.class, name);
+		return recipe==null?null: new IIMultiblockProcess<>(recipe);
 	}
 
 	@Override
@@ -294,10 +283,8 @@ public class TileEntityPrintingPress extends TileEntityMultiblockProductionMulti
 	@Override
 	protected boolean attemptProductionOutput(IIMultiblockProcess<PrintingRecipe> process)
 	{
-		assert process instanceof PrintingProcess;
-		PrintingProcess printingProcess = (PrintingProcess)process;
-
-		outputOrDrop(printingProcess.result.copy(), outputHandler, facing, getPOI("output"));
+		ItemStack result = process.processData.getItemStack("result");
+		outputOrDrop(result, outputHandler, facing, getPOI("output"));
 		return true;
 	}
 
@@ -365,37 +352,9 @@ public class TileEntityPrintingPress extends TileEntityMultiblockProductionMulti
 
 	@Override
 	@Nullable
-	public TactileHandler getTactileHandler()
+	public TactileManager getTactileHandler()
 	{
-		return tactileHandler;
-	}
-
-
-	@Nonnull
-	@Override
-	public World getTactileWorld()
-	{
-		return world;
-	}
-
-	@Nonnull
-	@Override
-	public BlockPos getTactilePos()
-	{
-		return this.getPos();
-	}
-
-	@Nonnull
-	@Override
-	public EnumFacing getTactileFacing()
-	{
-		return facing;
-	}
-
-	@Override
-	public boolean getIsTactileMirrored()
-	{
-		return mirrored;
+		return tactileManager;
 	}
 
 	@Override
@@ -403,6 +362,34 @@ public class TileEntityPrintingPress extends TileEntityMultiblockProductionMulti
 	{
 		entity.attackEntityFrom(IIDamageSources.PRINTING_PRESS_DAMAGE, 1.5f);
 		return false;
+	}
+
+	//--- IPlayerInteraction ---//
+
+	@Override
+	public boolean interact(EnumFacing side, EntityPlayer player, EnumHand hand, ItemStack heldItem, float hitX, float hitY, float hitZ)
+	{
+		if(isPOI("fluid_tank"))
+		{
+			TileEntityPrintingPress master = master();
+			return master!=null&&FluidUtil.interactWithFluidHandler(player, hand, master.tank);
+		}
+		return false;
+	}
+
+	//--- IAdvancedTextOverlay ---//
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public String[] getOverlayText(EntityPlayer player, RayTraceResult mop)
+	{
+		if(!Utils.isFluidRelatedItemStack(player.getHeldItem(EnumHand.MAIN_HAND)))
+			return new String[0];
+
+		TileEntityPrintingPress master = master();
+		if(master!=null&&isPOI("fluid_tank"))
+			return new String[]{IIUtils.getFluidNameOverlayText(master.tank.getFluid())};
+		return new String[0];
 	}
 
 	//--- Utilities ---//
@@ -420,9 +407,9 @@ public class TileEntityPrintingPress extends TileEntityMultiblockProductionMulti
 			this.amount = amount;
 		}
 
-		public PrintingRequest(NBTTagCompound tag)
+		public PrintingRequest()
 		{
-			this.deserializeNBT(tag);
+
 		}
 
 		@Override
@@ -445,55 +432,6 @@ public class TileEntityPrintingPress extends TileEntityMultiblockProductionMulti
 		}
 	}
 
-	/**
-	 * An order for a page to be printed that's placed in the Printing Press' queue.
-	 */
-	public static class PrintingProcess extends IIMultiblockProcess<PrintingRecipe>
-	{
-		int blackCost, cyanCost, magentaCost, yellowCost;
-		ItemStack result;
-
-		public PrintingProcess(PrintingRecipe recipe)
-		{
-			super(recipe);
-		}
-
-		public PrintingProcess(PrintingRecipe recipe, DataPacket packet, ItemStack input)
-		{
-			super(recipe);
-			this.result = recipe.getFunction().apply(input, packet);
-
-			int[] inks = recipe.getFunction().getInkTypesRequired(packet);
-			this.cyanCost = inks[0];
-			this.magentaCost = inks[1];
-			this.yellowCost = inks[2];
-			this.blackCost = inks[3];
-		}
-
-		@Override
-		public NBTTagCompound serializeNBT()
-		{
-			return EasyNBT.wrapNBT(super.serializeNBT())
-					.withItemStack("result", result)
-					.withInt("black", blackCost)
-					.withInt("cyan", cyanCost)
-					.withInt("magenta", magentaCost)
-					.withInt("yellow", yellowCost)
-					.unwrap();
-		}
-
-		@Override
-		public void deserializeNBT(NBTTagCompound nbt)
-		{
-			super.deserializeNBT(nbt);
-			EasyNBT enbt = EasyNBT.wrapNBT(nbt);
-
-			result = enbt.getItemStack("result");
-			blackCost = enbt.getInt("black");
-			cyanCost = enbt.getInt("cyan");
-			magentaCost = enbt.getInt("magenta");
-			yellowCost = enbt.getInt("yellow");
-		}
-	}
+	//this.result = recipe.getFunction().apply(input, packet);
 
 }

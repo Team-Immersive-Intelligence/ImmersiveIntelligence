@@ -1,6 +1,7 @@
 package pl.pabilo8.immersiveintelligence.client.gui.deco.util;
 
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -50,7 +51,7 @@ public class ValueListener<T>
 	public boolean update()
 	{
 		T newValue = supplier.get();
-		if(!newValue.equals(cachedValue))
+		if(!Objects.equals(newValue, cachedValue))
 		{
 			cachedValue = newValue;
 			dirty = true;

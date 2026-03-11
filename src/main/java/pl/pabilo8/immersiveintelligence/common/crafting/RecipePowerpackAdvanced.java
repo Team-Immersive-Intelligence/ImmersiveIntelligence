@@ -11,13 +11,14 @@ import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
+import net.minecraftforge.registries.IForgeRegistryEntry.Impl;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 15.04.2021
  */
-public class RecipePowerpackAdvanced extends net.minecraftforge.registries.IForgeRegistryEntry.Impl<IRecipe> implements IRecipe
+public class RecipePowerpackAdvanced extends Impl<IRecipe> implements IRecipe
 {
 	/**
 	 * Used to check if a recipe matches current crafting inventory

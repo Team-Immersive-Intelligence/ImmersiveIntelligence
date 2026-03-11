@@ -5,6 +5,7 @@ import blusunrize.immersiveengineering.client.manual.IEManualInstance;
 import blusunrize.lib.manual.ManualInstance.ManualEntry;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
+import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIMultiblockRecipe;
 import pl.pabilo8.immersiveintelligence.client.manual.pages.IIManualPageFolder;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
@@ -97,6 +98,18 @@ public abstract class IIManualCategory
 	protected final EasyNBT getSourceForItems(ItemStack... stacks)
 	{
 		return EasyNBT.newNBT().withList("items", stacks);
+	}
+
+	protected final EasyNBT getSourceForRecipe(Class<? extends IIMultiblockRecipe> klass, Object mainHashObject, Object... hashObjects)
+	{
+		String recipeName = IIMultiblockRecipe.generateRecipeName(mainHashObject, hashObjects);
+		return getSourceForRecipe(klass, recipeName);
+	}
+
+	protected final EasyNBT getSourceForRecipe(Class<? extends IIMultiblockRecipe> klass, String recipeName)
+	{
+		String recipeClassName = IIMultiblockRecipe.getRecipeClassName(klass);
+		return EasyNBT.newNBT().withString("type", recipeClassName).withString("recipe", recipeName);
 	}
 
 	protected final EasyNBT getSourceForBlueprint(String name)

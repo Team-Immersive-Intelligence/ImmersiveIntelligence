@@ -1,7 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common.gui;
 
 import blusunrize.immersiveengineering.api.tool.BulletHandler;
-import blusunrize.immersiveengineering.common.gui.ContainerIEBase;
 import blusunrize.immersiveengineering.common.gui.IESlot;
 import blusunrize.immersiveengineering.common.items.ItemBullet;
 import net.minecraft.entity.player.EntityPlayer;
@@ -12,35 +11,42 @@ import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.effect_crate.TileEntityAmmunitionCrate;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.gun.ItemIIAmmoMachinegun;
+import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIBase;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @author Avalon (avalon@iiteam.net)
  * @since 17.05.2019
+ * @since 08.18.2025
  */
-public class ContainerAmmunitionCrate extends ContainerIEBase<TileEntityAmmunitionCrate>
+public class ContainerAmmunitionCrate extends ContainerIIBase<TileEntityAmmunitionCrate>
 {
+	public Slot[] slotsInputbullet, slotsInputshell, slotsInputrevolver, slotsInputmg;
+
 	public ContainerAmmunitionCrate(EntityPlayer player, TileEntityAmmunitionCrate tile)
 	{
-		//Normal bullet slots
+		super(player, tile);
 
-		super(player.inventory, tile);
+		this.slotsInputbullet = new Slot[20];
+		this.slotsInputshell = new Slot[9];
+		this.slotsInputrevolver = new Slot[8];
+		this.slotsInputmg = new Slot[12];
+
+		// Normal bullet slots (20 slots, 4x5 grid)
 		for(int i = 0; i < 20; i++)
-			this.addSlotToContainer(new Slot(this.inv, i, 8+(i%5)*18, 18+(i/5)*18)
+			this.slotsInputbullet[i] = addSlotToContainer(new Slot(this.inv, i, 8 + (i % 5) * 18, 18 + (i / 5) * 18 - 45)
 			{
-				/**
-				 * Check if the stack is allowed to be placed in this slot, used for armor slots as well as furnace fuel.
-				 */
 				@Override
 				public boolean isItemValid(ItemStack stack)
 				{
-					return stack.getItem() instanceof ItemBullet&&!(stack.isItemEqual(BulletHandler.emptyCasing)||stack.isItemEqual(BulletHandler.emptyShell));
+					return stack.getItem() instanceof ItemBullet &&
+							!(stack.isItemEqual(BulletHandler.emptyCasing) || stack.isItemEqual(BulletHandler.emptyShell));
 				}
 			});
 
-		//Empty shell slots
-
+		// Empty shell slots (9 slots in a row)
 		for(int i = 0; i < 9; i++)
-			this.addSlotToContainer(new Slot(this.inv, 20+i, 8+(i*18), 108)
+			this.slotsInputshell[i] = addSlotToContainer(new Slot(this.inv, 20 + i, 8 + (i * 18), 108 - 45)
 			{
 				@Override
 				public boolean isItemValid(ItemStack stack)
@@ -49,26 +55,22 @@ public class ContainerAmmunitionCrate extends ContainerIEBase<TileEntityAmmuniti
 				}
 			});
 
-		//Revolver Layout Slots
+		// Revolver layout slots (8 slots, circular layout)
+		this.slotsInputrevolver[0] = addSlotToContainer(new GhostFilteredBullet(this, this.inv, 29, 125, 18 - 45));
+		this.slotsInputrevolver[1] = addSlotToContainer(new GhostFilteredBullet(this, this.inv, 30, 144, 26 - 45));
+		this.slotsInputrevolver[2] = addSlotToContainer(new GhostFilteredBullet(this, this.inv, 31, 152, 45 - 45));
+		this.slotsInputrevolver[3] = addSlotToContainer(new GhostFilteredBullet(this, this.inv, 32, 144, 64 - 45));
+		this.slotsInputrevolver[4] = addSlotToContainer(new GhostFilteredBullet(this, this.inv, 33, 125, 72 - 45));
+		this.slotsInputrevolver[5] = addSlotToContainer(new GhostFilteredBullet(this, this.inv, 34, 106, 64 - 45));
+		this.slotsInputrevolver[6] = addSlotToContainer(new GhostFilteredBullet(this, this.inv, 35, 98, 45 - 45));
+		this.slotsInputrevolver[7] = addSlotToContainer(new GhostFilteredBullet(this, this.inv, 36, 106, 26 - 45));
 
-		this.addSlotToContainer(new GhostFilteredBullet(this, this.inv, 29, 125, 18));
-		this.addSlotToContainer(new GhostFilteredBullet(this, this.inv, 30, 144, 26));
-		this.addSlotToContainer(new GhostFilteredBullet(this, this.inv, 31, 152, 45));
-		this.addSlotToContainer(new GhostFilteredBullet(this, this.inv, 32, 144, 64));
-		this.addSlotToContainer(new GhostFilteredBullet(this, this.inv, 33, 125, 72));
-		this.addSlotToContainer(new GhostFilteredBullet(this, this.inv, 34, 106, 64));
-		this.addSlotToContainer(new GhostFilteredBullet(this, this.inv, 35, 98, 45));
-		this.addSlotToContainer(new GhostFilteredBullet(this, this.inv, 36, 106, 26));
-
-		boolean mg = tile.hasUpgrade(IIContent.UPGRADE_MG_LOADER);
-		if(mg)
+		// MG loader slots (if upgrade installed)
+		if(tile.isUpgradeInstalled(IIContent.UPGRADE_MG_LOADER))
 		{
 			for(int i = 0; i < 12; i++)
-				this.addSlotToContainer(new Slot(this.inv, 38+i, 184+(i%2)*18, 18+(i/2)*18)
+				this.slotsInputmg[i] = addSlotToContainer(new Slot(this.inv, i + 30, 184 + (i % 2) * 18, 18 + (i / 2) * 18 - 45)
 				{
-					/**
-					 * Check if the stack is allowed to be placed in this slot, used for armor slots as well as furnace fuel.
-					 */
 					@Override
 					public boolean isItemValid(ItemStack stack)
 					{
@@ -77,14 +79,8 @@ public class ContainerAmmunitionCrate extends ContainerIEBase<TileEntityAmmuniti
 				});
 		}
 
-		this.slotCount = mg?50: 38;
-		this.tile = tile;
-
-		for(int i = 0; i < 3; i++)
-			for(int j = 0; j < 9; j++)
-				addSlotToContainer(new Slot(player.inventory, j+i*9+9, 8+j*18, 141+i*18));
-		for(int i = 0; i < 9; i++)
-			addSlotToContainer(new Slot(player.inventory, i, 8+i*18, 199));
+		// Player inventory
+		addPlayerInventory(player.inventory, 8, 98);
 	}
 
 	public static class GhostFilteredBullet extends IESlot.Ghost
@@ -94,9 +90,6 @@ public class ContainerAmmunitionCrate extends ContainerIEBase<TileEntityAmmuniti
 			super(container, inv, id, x, y);
 		}
 
-		/**
-		 * Helper method to put a stack in the slot.
-		 */
 		@Override
 		public void putStack(ItemStack itemStack)
 		{
@@ -106,7 +99,8 @@ public class ContainerAmmunitionCrate extends ContainerIEBase<TileEntityAmmuniti
 		@Override
 		public boolean isItemValid(ItemStack stack)
 		{
-			return stack.getItem() instanceof ItemBullet&&!(stack.isItemEqual(BulletHandler.emptyCasing)||stack.isItemEqual(BulletHandler.emptyShell));
+			return stack.getItem() instanceof ItemBullet &&
+					!(stack.isItemEqual(BulletHandler.emptyCasing) || stack.isItemEqual(BulletHandler.emptyShell));
 		}
 	}
 }

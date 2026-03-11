@@ -24,9 +24,9 @@ public class IILogger
 		log(Level.ERROR, object);
 	}
 
-	public static void info(Object object)
+	public static void error(String message, Object... params)
 	{
-		log(Level.INFO, object);
+		logger.log(Level.ERROR, message, params);
 	}
 
 	public static void warn(Object object)
@@ -34,9 +34,14 @@ public class IILogger
 		log(Level.WARN, object);
 	}
 
-	public static void error(String message, Object... params)
+	public static void warn(String message, Object... params)
 	{
-		logger.log(Level.ERROR, message, params);
+		logger.log(Level.WARN, message, params);
+	}
+
+	public static void info(Object object)
+	{
+		log(Level.INFO, object);
 	}
 
 	public static void info(String message, Object... params)
@@ -44,8 +49,13 @@ public class IILogger
 		logger.log(Level.INFO, message, params);
 	}
 
-	public static void warn(String message, Object... params)
+	public static void debug(Object object)
 	{
-		logger.log(Level.WARN, message, params);
+		log(Level.DEBUG, object);
+	}
+
+	public static void debug(String message, Object... params)
+	{
+		logger.log(Level.DEBUG, message, params);
 	}
 }

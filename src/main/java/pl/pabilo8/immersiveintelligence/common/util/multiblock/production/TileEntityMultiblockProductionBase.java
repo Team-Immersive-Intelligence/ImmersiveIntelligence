@@ -24,7 +24,6 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 
 /**
@@ -47,22 +46,6 @@ public abstract class TileEntityMultiblockProductionBase<T extends TileEntityMul
 
 	//--- Production-related Utilities ---//
 
-	protected static <RECIPE extends IIMultiblockRecipe> IIMultiblockProcess<RECIPE> findRecipeFromList(Class<RECIPE> klass, String name)
-	{
-		return findRecipeFromList(klass, IIMultiblockProcess::new, name);
-	}
-
-	//--- Production Abstracts ---//
-
-	protected static <RECIPE extends IIMultiblockRecipe, PROCESS extends IIMultiblockProcess<RECIPE>> PROCESS
-	findRecipeFromList(Class<RECIPE> klass, Function<RECIPE, PROCESS> constructor, String name)
-	{
-		RECIPE recipe = IIMultiblockRecipe.getRecipe(klass, name);
-		if(recipe!=null)
-			return constructor.apply(recipe);
-		return null;
-	}
-
 	public void outputOrDrop(ItemStack output, @Nullable IItemHandler itemHandler, EnumFacing facing, int... outputPos)
 	{
 		for(int p : outputPos)
@@ -81,6 +64,26 @@ public abstract class TileEntityMultiblockProductionBase<T extends TileEntityMul
 		if(outputPos.length > 0&&!world.isRemote)
 			Utils.dropStackAtPos(world, getBlockPosForPos(outputPos[0]).offset(facing.getOpposite()), output, facing.getOpposite());
 
+	}
+
+	public void attemptStackOutput(IItemHandler itemHandler, EnumFacing facing, int... outputPos)
+	{
+		if(facing==null)
+			facing = this.facing;
+		for(int p : outputPos)
+		{
+			BlockPos pos = getBlockPosForPos(p).offset(facing.getOpposite());
+			TileEntity inventoryTile = this.world.getTileEntity(pos);
+			if(inventoryTile!=null)
+			{
+				for(int i = 0; i < itemHandler.getSlots(); i++)
+				{
+					ItemStack stack = itemHandler.extractItem(i, Integer.MAX_VALUE, false);
+					stack = Utils.insertStackIntoInventory(inventoryTile, stack, facing, world.isRemote);
+					itemHandler.insertItem(i, stack, false);
+				}
+			}
+		}
 	}
 
 	/**
@@ -127,12 +130,6 @@ public abstract class TileEntityMultiblockProductionBase<T extends TileEntityMul
 	 * @param process the production process
 	 */
 	protected abstract void onProductionFinish(IIMultiblockProcess<R> process);
-
-	@Override
-	public final T getGuiMaster()
-	{
-		return master();
-	}
 
 	/**
 	 * Not sure why overload a one parameter method...

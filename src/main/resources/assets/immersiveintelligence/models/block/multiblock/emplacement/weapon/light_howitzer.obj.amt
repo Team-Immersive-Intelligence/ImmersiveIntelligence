@@ -1,0 +1,25 @@
+{
+  "origins": {
+    "turret": [-6, 36, 22],
+    "cartridge_piston": [-6, 42, 22],
+    "barrel": [2.5, 49, 17],
+    "gun_block": [-4.5625, 51.6875, 19.75],
+    "casing": [-5, 49, 18.2],
+    "6bCal": [-5, 50, 19],
+    "barrel_end": [3, 41, -2],
+    "propeller1": [9.5, 31.5, 36.5],
+    "propeller2": [9.5, 31.5, 33],
+    "base": [-5.89474, 28.40789, 22.81579]
+  },
+  "hierarchy": {
+    "turret": "base",
+    "cartridge_piston": "turret",
+    "barrel": "turret",
+    "gun_block": "barrel",
+    "casing": "gun_block",
+    "6bCal": "gun_block",
+    "barrel_end": "barrel",
+    "propeller1": "base",
+    "propeller2": "base"
+  }
+}

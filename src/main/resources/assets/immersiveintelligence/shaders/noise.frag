@@ -1,5 +1,6 @@
 #version 130
 
+//Author: Pabilo8 (pabilo@iiteam.net)
 uniform float time;
 uniform sampler2D bgl_RenderedTexture;
 

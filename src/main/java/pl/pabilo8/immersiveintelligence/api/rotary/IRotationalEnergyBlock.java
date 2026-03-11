@@ -6,5 +6,5 @@ package pl.pabilo8.immersiveintelligence.api.rotary;
  */
 public interface IRotationalEnergyBlock
 {
-	void updateRotationStorage(float rpm, float torque, int part);
+	void updateRotationStorage(float speed, float torque, int partID);
 }

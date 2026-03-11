@@ -32,7 +32,7 @@ public class MTLTextureRemapper implements Function<ResourceLocation, ResourceLo
 
 	public MTLTextureRemapper(OBJModel source, ResourceLocation destination)
 	{
-		this(getSourceMap(source), IIAnimationLoader.loadMTL(destination));
+		this(getSourceMap(source), AMTLoader.loadMTL(destination));
 	}
 
 	public MTLTextureRemapper(OBJBakedModel source, ResourceLocation destination)

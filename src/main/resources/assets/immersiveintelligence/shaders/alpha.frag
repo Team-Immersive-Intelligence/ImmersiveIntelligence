@@ -1,6 +1,6 @@
 #version 130
 
-//Author: Pabilo8
+//Author: Pabilo8 (pabilo@iiteam.net)
 //Alpha fragment shader
 uniform float alpha;// Passed in by callback
 

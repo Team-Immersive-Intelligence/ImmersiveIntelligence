@@ -1,0 +1,16 @@
+# Made by Pabilo8 with Blockbench
+
+newmtl weapon_heavy_railgun
+map_Kd immersiveintelligence:blocks/multiblock/fortification/weapon_heavy_railgun
+newmtl common_bottom
+map_Kd immersiveintelligence:blocks/common/common_bottom
+newmtl common_copper_cable
+map_Kd immersiveintelligence:blocks/common/common_copper_cable
+newmtl common_rough_steel
+map_Kd immersiveintelligence:blocks/common/common_rough_steel
+newmtl common_steel
+map_Kd immersiveintelligence:blocks/common/common_steel
+newmtl common_steel_norivets
+map_Kd immersiveintelligence:blocks/common/common_steel_norivets
+newmtl crane_gray
+map_Kd immersiveintelligence:blocks/metal_device/crane/crane_gray

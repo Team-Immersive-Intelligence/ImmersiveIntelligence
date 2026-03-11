@@ -4,13 +4,17 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Tuple;
-import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
-import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer;
-import pl.pabilo8.immersiveintelligence.client.util.amt.*;
-import pl.pabilo8.immersiveintelligence.client.util.amt.IIMachineUpgradeModel.UpgradeStage;
+import net.minecraft.util.math.Vec3d;
+import net.minecraftforge.client.model.obj.OBJModel;
+import pl.pabilo8.immersiveintelligence.api.upgrade.Upgrade;
+import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
+import pl.pabilo8.immersiveintelligence.client.util.amt.animation.IIAnimationCompiledMap;
+import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTModel;
+import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTUpgradeModel;
+import pl.pabilo8.immersiveintelligence.client.util.amt.models.AMTUpgradeModel.UpgradeStage;
+import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMT;
+import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IITileRenderer;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.effect_crate.TileEntityEffectCrate;
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
@@ -22,12 +26,12 @@ import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 public abstract class EffectCrateRenderer<T extends TileEntityEffectCrate> extends IITileRenderer<T>
 {
 	private IIAnimationCompiledMap animationOpen = null;
-	private AMT[] model = null;
+	private AMTModel model = null;
 
-	private IIMachineUpgradeModel modelUpgrade = null;
+	private AMTUpgradeModel modelUpgrade = null;
 	private AMT partInserter, partLower, partUpper;
 
-	public static void renderWithUpgrade(MachineUpgrade... upgrades)
+	public static void renderWithUpgrade(Upgrade... upgrades)
 	{
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(-0.5, 0, 0.5);
@@ -35,7 +39,7 @@ public abstract class EffectCrateRenderer<T extends TileEntityEffectCrate> exten
 
 		//model.getBlockRotation(EnumFacing.NORTH, false);
 
-		for(MachineUpgrade upgrade : upgrades)
+		for(Upgrade upgrade : upgrades)
 		{
 			if(upgrade==IIContent.UPGRADE_INSERTER)
 			{
@@ -60,37 +64,31 @@ public abstract class EffectCrateRenderer<T extends TileEntityEffectCrate> exten
 		applyStandardRotation(te.getFacing());
 
 		//render
-		for(AMT mod : model)
-			mod.render(tes, buf);
+		model.render(tes, buf);
 		GlStateManager.popMatrix();
 
 		//render upgrade
-		if(modelUpgrade.renderConstruction(te, tes, buf, partialTicks)==UpgradeStage.INSTALLED)
+		if(modelUpgrade.renderProgress(te, tes, buf, partialTicks)==UpgradeStage.INSTALLED)
 		{
 			modelUpgrade.defaultize();
-			IIAnimationUtils.setModelRotation(partInserter, 0, -te.calculateInserterAngle(partialTicks), 0);
+			partInserter.setRotation(new Vec3d(0, -te.calculateInserterAngle(partialTicks), 0));
 			float ins = te.calculateInserterAnimation(partialTicks);
 			float h = te.calculateInserterHeight(partialTicks);
 
-			IIAnimationUtils.setModelRotation(partLower, -ins*45-15, 0, 0);
-			IIAnimationUtils.setModelRotation(partUpper, -145+ins*75, 0, 0);
-
-			IIAnimationUtils.addModelRotation(partLower, IIMath.clampedLerp3Par(35, 0, -45, h)*ins, 0, 0);
-			IIAnimationUtils.addModelRotation(partUpper, IIMath.clampedLerp3Par(75, -10, 50, h)*ins, 0, 0);
-
-
+			partLower.setRotation(new Vec3d(-ins*45-15+(IIMath.clampedLerp3Par(35, 0, -45, h)*ins), 0, 0));
+			partUpper.setRotation(new Vec3d(-145+ins*75+(IIMath.clampedLerp3Par(75, -10, 50, h)*ins), 0, 0));
 			modelUpgrade.render(tes, buf);
 		}
 
 	}
 
 	@Override
-	public void compileModels(Tuple<IBlockState, IBakedModel> sModel)
+	public void compileModels(IBlockState state, OBJModel model)
 	{
-		model = IIAnimationUtils.getAMT(sModel, IIAnimationLoader.loadHeader(sModel.getSecond()));
-		animationOpen = IIAnimationCompiledMap.create(model, getOpenAnimationPath());
+		this.model = new AMTModel(state, model);
+		animationOpen = IIAnimationCompiledMap.create(this.model, getOpenAnimationPath());
 
-		modelUpgrade = new IIMachineUpgradeModel(
+		modelUpgrade = new AMTUpgradeModel(
 				IIContent.UPGRADE_INSERTER, getInserterUpgradePath(), getInserterUpgradeAnimationPath()
 		);
 
@@ -102,8 +100,8 @@ public abstract class EffectCrateRenderer<T extends TileEntityEffectCrate> exten
 	@Override
 	protected void nullifyModels()
 	{
-		model = IIAnimationUtils.disposeOf(model);
-		modelUpgrade = modelUpgrade==null?null: modelUpgrade.disposeOf();
+		model = AMTUtils.disposeOf(model);
+		modelUpgrade = AMTUtils.disposeOf(modelUpgrade);
 
 		animationOpen = null;
 	}

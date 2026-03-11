@@ -15,7 +15,7 @@ public class AmmoCoreTungsten extends AmmoCore
 {
 	public AmmoCoreTungsten()
 	{
-		super("core_tungsten", 0.35f, PenetrationHardness.TUNGSTEN, 0.25f, 1.45f, IIColor.fromPackedRGB(0x2e3035));
+		super("core_tungsten", 0.35f, PenetrationHardness.TUNGSTEN, 0.25f, 1.625f, IIColor.fromPackedRGB(0x2e3035));
 	}
 
 	@Override

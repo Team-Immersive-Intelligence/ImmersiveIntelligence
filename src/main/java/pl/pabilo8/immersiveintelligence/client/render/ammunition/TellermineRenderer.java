@@ -8,10 +8,11 @@ import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Tuple;
+import net.minecraftforge.client.model.obj.OBJModel;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.client.model.builtin.IAmmoModel;
-import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer;
-import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer.RegisteredTileRenderer;
+import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IITileRenderer;
+import pl.pabilo8.immersiveintelligence.client.util.amt.renderer.IITileRenderer.RegisteredTileRenderer;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.mines.BlockIIMine.ItemBlockMineBase;
 import pl.pabilo8.immersiveintelligence.common.block.mines.tileentity.TileEntityTellermine;
@@ -38,9 +39,9 @@ public class TellermineRenderer extends IITileRenderer<TileEntityTellermine>
 	}
 
 	@Override
-	public void compileModels(Tuple<IBlockState, IBakedModel> sModel)
+	public void compileModels(IBlockState state, OBJModel model)
 	{
-		model = AmmoRegistry.getModel((ItemBlockMineBase)IIContent.blockTellermine.itemBlock);
+		this.model = AmmoRegistry.getModel((ItemBlockMineBase)IIContent.blockTellermine.itemBlock);
 	}
 
 	@Override

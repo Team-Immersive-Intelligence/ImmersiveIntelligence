@@ -16,6 +16,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
+import net.minecraftforge.fml.common.Optional.Interface;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.relauncher.Side;
@@ -31,7 +32,7 @@ import static pl.pabilo8.immersiveintelligence.common.util.IIDamageSources.cause
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 26.10.2019
  */
-@net.minecraftforge.fml.common.Optional.Interface(iface = "com.elytradev.mirage.lighting.IEntityLightEventConsumer", modid = "mirage")
+@Interface(iface = "com.elytradev.mirage.lighting.IEntityLightEventConsumer", modid = "mirage")
 public class EntityShrapnel extends EntityIEProjectile implements IEntityLightEventConsumer, IEntityAdditionalSpawnData
 {
 	@Nullable

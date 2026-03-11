@@ -4,8 +4,11 @@ Intensified Mixing Co.
 # intro
 |[multiblock]{mb:"II:Coagulator"}|
 The coagulator is a machine used to coagulate [latex] and form raw [rubber balls] for [further processing](vulcanizer.md). To form it, use a [Hammer](introduction#introductionHammer) on the middle sheetmetal block on machine's rear.
-# coagulator usage
+# usage
 The [coagulator] requires a supply of electricity to its heavy connector port and a steady supply of [latex] (right tank) and [formic acid] (left tank). Take note that the sides swap if the machine is flipped.
-# coagulator usage 2
-After [latex] is mixed with the acid and the upper "quark" layer forms, the crane will pick one of the buckets, submerge it and put it back while a timer is automatically set. After some time, the [latex] will solidify into [raw rubber], which will be outputted by a mechanism holding the bucket. The rubber will be dropped onto the ground.
-It is recommended to place [conveyor belts](conveyor) to collect the latext.
+|[machine_recipe]{type:"coagulator", recipe:"rubber"}|
+# usage2
+After [latex] is mixed with the acid and the upper "quark" layer forms, the crane will pick one of the buckets, submerge it, and put it back while a timer is automatically set. After some time, the [latex] will solidify into [raw rubber], which will be outputted by a mechanism holding the bucket. The rubber will be dropped onto the ground.
+It is recommended to place [conveyor belts](conveyor) to collect the latex.
+# usage3
+For a detailed description of rubber fabrication, refer to [Rubber Production](rubber_production.md).

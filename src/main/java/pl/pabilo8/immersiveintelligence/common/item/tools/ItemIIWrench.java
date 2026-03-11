@@ -19,21 +19,22 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Enchantments;
 import net.minecraft.item.ItemStack;
 import net.minecraft.stats.StatList;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import pl.pabilo8.immersiveintelligence.api.utils.IUpgradableMachine;
+import pl.pabilo8.immersiveintelligence.api.upgrade.IUpgradableDevice;
+import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeUtils;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.IWrench;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools;
+import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
 import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIBase;
+import pl.pabilo8.modworks.annotations.item.GeneratedItemModels;
+import pl.pabilo8.modworks.annotations.item.ItemModelType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -46,6 +47,7 @@ import java.util.Set;
  * @since 30.05.2019
  */
 @IIItemProperties(category = IICategory.TOOLS)
+@GeneratedItemModels(itemName = "wrench", type = ItemModelType.ITEM_SIMPLE_TOOL, texturePath = "tools/wrench")
 public class ItemIIWrench extends ItemIIBase implements ITool, IItemDamageableIE, IWrench
 {
 	public ItemIIWrench()
@@ -173,22 +175,16 @@ public class ItemIIWrench extends ItemIIBase implements ITool, IItemDamageableIE
 	@Override
 	public EnumActionResult onItemUseFirst(EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand)
 	{
-		if(world.getTileEntity(pos) instanceof IUpgradableMachine)
+		IUpgradableDevice te = UpgradeUtils.getUpgradeMaster(world, pos);
+		if(te==null||te.getCurrentUpgrade()==null)
+			return EnumActionResult.PASS;
+
+		if(te.addUpgradeInstallProgress(player.isCreative()?999999: Tools.electricWrenchUpgradeProgress))
 		{
-			IUpgradableMachine te = ((IUpgradableMachine)world.getTileEntity(pos)).getUpgradeMaster();
-			if(te!=null&&te.getCurrentlyInstalled()!=null)
-			{
-				te.addUpgradeInstallProgress(player.isCreative()?999999: Tools.wrenchUpgradeProgress);
-				if(te.getInstallProgress() >= te.getCurrentlyInstalled().getProgressRequired())
-				{
-					if(te.addUpgrade(te.getCurrentlyInstalled(), false))
-						te.resetInstallProgress();
-				}
-				damageWrench(player.getHeldItem(hand), player);
-				return EnumActionResult.SUCCESS;
-			}
+			world.playSound(null, pos, IISounds.constructionElectricWrench, SoundCategory.PLAYERS, 0.5f, 1);
+			damageWrench(player.getHeldItem(hand), player);
 		}
-		return EnumActionResult.PASS;
+		return EnumActionResult.SUCCESS;
 	}
 
 	/**

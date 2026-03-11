@@ -5,12 +5,15 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.Tuple;
 import net.minecraft.util.math.MathHelper;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiComponentDecoTextBase;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoTextBasedComponent;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoElementDisplays.DecoElementDisplay;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.DecoElementDisplays.DecoElementSorter;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
-import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyCollection;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -22,11 +25,11 @@ import java.util.function.Supplier;
  * @ii-approved 0.3.1
  * @since 31.01.2025
  **/
-public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? super E, T>, T> extends GuiComponentDecoTextBase<E>
+public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? super E, T>, T> extends DecoTextBasedComponent<E>
 {
 	protected static final int ON_CREATE_OPTION = -10;
-	protected ResLoc listBackgroundLocation = IIReference.GUI_BG_DARK;
-	protected ResLoc scrollBarLocation = IIReference.RES_TEXTURES_DECO_COMPONENT_SLIDER;
+	protected ResLoc listBackgroundLocation = DecoTextures.BG_DARK;
+	protected ResLoc scrollBarLocation = DecoTextures.COMPONENT_SLIDER;
 
 	protected Queue<T> toBeAdded = new ArrayDeque<>();
 	protected Queue<T> toBeRemoved = new ArrayDeque<>();
@@ -36,8 +39,8 @@ public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? 
 	protected int scroll = 0, maxScroll = 0, scrollStep = fontRenderer.FONT_HEIGHT;
 	protected int entriesInGrid = 1;
 	protected int entryMaxWidth;
-	protected DecoElementDisplays.DecoElementDisplay<T> display = DecoElementDisplays.getDefaultDisplay();
-	protected DecoElementDisplays.DecoElementSorter<T> sorter = DecoElementDisplays.getDefaultSorter();
+	protected DecoElementDisplay<T> display = DecoElementDisplays.getDefaultDisplay();
+	protected DecoElementSorter<T> sorter = DecoElementDisplays.getDefaultSorter();
 
 	public DecoScrolledCollection(int x, int y)
 	{
@@ -61,6 +64,7 @@ public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? 
 	public E withListBackground(ResLoc listBackgroundLocation)
 	{
 		this.listBackgroundLocation = listBackgroundLocation;
+		//noinspection unchecked
 		return (E)this;
 	}
 
@@ -73,6 +77,7 @@ public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? 
 	public E withScrollBarBackground(ResLoc scrollBarLocation)
 	{
 		this.scrollBarLocation = scrollBarLocation;
+		//noinspection unchecked
 		return (E)this;
 	}
 
@@ -82,10 +87,11 @@ public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? 
 	 * @param display The display function
 	 * @return this
 	 */
-	public E withDisplayFunction(DecoElementDisplays.DecoElementDisplay<T> display)
+	public E withDisplayFunction(DecoElementDisplay<T> display)
 	{
 		this.display = display;
 		display.bindCollection(this);
+		//noinspection unchecked
 		return (E)this;
 	}
 
@@ -95,9 +101,10 @@ public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? 
 	 * @param sorter The sort function
 	 * @return this
 	 */
-	public E withSortFunction(DecoElementDisplays.DecoElementSorter<T> sorter)
+	public E withSortFunction(DecoElementSorter<T> sorter)
 	{
 		this.sorter = sorter;
+		//noinspection unchecked
 		return (E)this;
 	}
 
@@ -109,9 +116,13 @@ public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? 
 	 */
 	public E withEntries(Collection<T> entries)
 	{
-		this.entries = new ArrayList<>(entries);
+		if(entries instanceof EasyCollection)
+			this.entries = (List<T>)entries;
+		else
+			this.entries = new ArrayList<>(entries);
 		this.entries = sorter.sort(this.entries);
 		calculateSlideLength();
+		//noinspection unchecked
 		return (E)this;
 	}
 
@@ -138,6 +149,7 @@ public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? 
 	{
 		this.entriesInGrid = entriesInGrid;
 		calculateSlideLength();
+		//noinspection unchecked
 		return (E)this;
 	}
 
@@ -150,6 +162,7 @@ public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? 
 	public E withCreateAction(Supplier<T> onCreate)
 	{
 		this.onCreate = () -> addEntry(onCreate.get());
+		//noinspection unchecked
 		return (E)this;
 	}
 
@@ -163,6 +176,7 @@ public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? 
 	public E withCreateLaterAction(Runnable onCreate)
 	{
 		this.onCreate = onCreate;
+		//noinspection unchecked
 		return (E)this;
 	}
 
@@ -197,6 +211,7 @@ public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? 
 	public E withScroll(int scroll)
 	{
 		this.scroll = scroll;
+		//noinspection unchecked
 		return (E)this;
 	}
 
@@ -271,13 +286,13 @@ public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? 
 
 		//Background
 		int listHeight = getListHeight();
-		draw.drawConnectedColorRect(x, y, listWidth, listHeight, IIColor.WHITE, listBackgroundLocation, 64, 64, 8, 8);
+		draw.drawConnectedTexColorRect(x, y, listWidth, listHeight, IIColor.WHITE, listBackgroundLocation, 64, 64, 8, 8);
 		//Scrollbar
 		if(shouldAlwaysHaveScrollbar()||maxScroll > 0)
 		{
 			TextureAtlasSprite scrollbarSprite = ClientUtils.getSprite(scrollBarLocation);
 			//Scrollbar background
-			draw.drawConnectedColorRect(x+listWidth-11, y,
+			draw.drawConnectedTexColorRect(x+listWidth-11, y,
 					10, listHeight,
 					IIColor.WHITE, 10, 32, 0, 4,
 					scrollbarSprite.getMinU(), scrollbarSprite.getInterpolatedU(5),
@@ -288,7 +303,7 @@ public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? 
 			{
 				int scrollBarHeight = Math.max(10, (int)((listHeight/(float)(maxScroll+listHeight))*listHeight));
 				int scrollbarOffset = (int)((scroll/(float)maxScroll)*(listHeight-scrollBarHeight));
-				draw.drawConnectedColorRect(
+				draw.drawConnectedTexColorRect(
 						x+listWidth-11, y+1+scrollbarOffset, 10, scrollBarHeight,
 						IIColor.WHITE, 10, 32, 2, 8,
 						scrollbarSprite.getInterpolatedU(5), scrollbarSprite.getInterpolatedU(10),
@@ -300,8 +315,8 @@ public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? 
 
 		//Draw only a cutout of the elements
 		GlStateManager.pushMatrix();
-		assert parentGui!=null;
-		parentGui.scissorStart(x, y, listWidth, listHeight);
+		if(parentGui!=null)
+			parentGui.scissorStart(x, y, listWidth, listHeight);
 		GlStateManager.translate(0, -scroll, 0);
 
 		//Filter entries based on search input
@@ -331,8 +346,8 @@ public abstract class DecoScrolledCollection<E extends DecoScrolledCollection<? 
 			display.drawCreateOption(entryMaxWidth, getAddButtonHeight(), fontRenderer, mouseX-x, mouseY+scroll-y-alreadyDrawnHeight);
 			GlStateManager.popMatrix();
 		}
-
-		parentGui.scissorEnd();
+		if(parentGui!=null)
+			parentGui.scissorEnd();
 		GlStateManager.popMatrix();
 	}
 

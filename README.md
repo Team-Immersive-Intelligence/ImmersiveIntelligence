@@ -3,34 +3,32 @@
 ![CurseForge Downloads](https://img.shields.io/curseforge/dt/344344?logo=curseforge&label=Curseforge&color=orange)
 ![Modrinth Downloads](https://img.shields.io/modrinth/dt/immersive-intelligence?logo=modrinth&label=Modrinth&link=https%3A%2F%2Fmodrinth.com%2Fmod%2Fimmersive-intelligence)
 [![Join Here!](https://img.shields.io/discord/610912351142674434?logo=discord&logoColor=237289da&color=%237289da&label=Discord)](https://discord.gg/teMfm3R)
+[![Commit Activity!](https://img.shields.io/github/commit-activity/m/Team-Immersive-Intelligence/ImmersiveIntelligence)](https://github.com/Team-Immersive-Intelligence/ImmersiveIntelligence/pulse)
+
 [![Jitpack](https://jitpack.io/v/Pabilo8/ImmersiveIntelligence.svg)](https://jitpack.io/#Pabilo8/ImmersiveIntelligence)
 ![Test Status](https://github.com/Team-Immersive-Intelligence/ImmersiveIntelligence/actions/workflows/push.yml/badge.svg)
 [![Become a Patron!](https://img.shields.io/badge/Become%20a%20Patron-Pabilo8-red?style=flat-square&logo=patreon)](https://www.patreon.com/bePatron?u=34304036)
 
 ### Description
 
-**Immersive Intelligence
-** is a Minecraft mod, an addon for Immersive Engineering for 1.12.2. There are four main categories of the mod's content:
+**Immersive Intelligence** is a Minecraft mod, an addon for Immersive Engineering for 1.12.2. There are four main categories of the mod's content:
 
-- **Data and Electronics
-  ** – alows the player to transmit signals on the data network via packets of variables, there are many multiblock machines which allow reading, writing, transmitting and receiving data, allowing it to be an upgraded version of redstone
+- **Data and Electronics** – alows the player to transmit signals on the data network via packets of variables,
+  there are many multiblock machines which allow reading, writing, transmitting and receiving data, allowing it to be an upgraded version of redstone
 
-- **Logistics
-  ** – great storage and crafting system based on multiblocks, data transmission, and drones, it will be customizable while staying as immersive as possible. Includes skycrates!
+- **Logistics** – great storage and crafting system based on multiblocks, data transmission,
+  and drones, it will be customizable while staying as immersive as possible. Includes skycrates!
 
-- **Warfare
-  ** – weapons of all sorts – machine guns, submachine guns, autocannons, railguns, chemthrowers, combat drones, howitzers, mines, missiles, and much more
+- **Warfare** – weapons of all sorts – machine guns, submachine guns, autocannons, railguns, chemthrowers, combat drones, howitzers, mines, missiles, and much more, often controlled by data-based devices
 
-- **Intelligence
-  ** – espionage – infiltration – sabotage – this category contains surveillance devices, such as the Infrared Observer and Tripod Periscope, which allow you to spy on other players and monitor the world
+- **Intelligence** – espionage – infiltration – sabotage – this category contains surveillance devices,
+  such as the Infrared Observer and Tripod Periscope, which allow you to spy on other players and monitor the world
 
 Additionally, the mod adds:
 
-- **Rotary Power
-  ** – early game mechanical power using wheels and motor belts, which can power machines like the sawmill and skycrate station
+- **Rotary Power** – early game mechanical power using wheels and motor belts, which can power machines like the sawmill and skycrate station
 
-- **Motorworks
-  ** – production of various vehicles and their components, including a whole new production chain for rubber processing
+- **Motorworks** – production of various vehicles and their components, including a whole new production chain for rubber processing
 
 The mod also features a new early game rotary power system.
 
@@ -69,6 +67,7 @@ Check [contributing.md](./contributing.md) for detailed setup instructions.
 - [@Kingcavespider1](https://github.com/kingcavespider1) - first community contribution to mod's GitHub
 - [@H-QueerCoded](https://github.com/H-QueerCoded) - for helpful pull requests and releasing the 0.2.1H build
 - [@BananaFructa](https://github.com/Flaxbeard) - for making the first mod with II compatibility
+- [@Max](#) - for reporting plenty bugs and fixing many of them on his own
 
 
 - [@Choroman](https://github.com/Choroman) - Retired Concept Artist, multiblock sketch and blueprint creator, modeler

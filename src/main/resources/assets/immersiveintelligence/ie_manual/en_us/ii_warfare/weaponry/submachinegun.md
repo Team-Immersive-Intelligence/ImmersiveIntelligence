@@ -2,7 +2,7 @@
 Submachinegun
 Sure, I believe ya!
 # intro
-|[crafting]{source:""}|
+|[crafting]{source:"submachinegun"}|
 The Submachine gun, often referred to as the SMG, is an infantry weapon designed for close-to-medium range engagements. The SMG can be [modified](#2) to improve certain aspects of the gun.
 # intro2
 The SMG is relatively cheap to manufacture and produce [short bullets] for, making it an ideal choice for [close combat], which requires [fast-paced maneuvers] and a [high rate of fire].<br>

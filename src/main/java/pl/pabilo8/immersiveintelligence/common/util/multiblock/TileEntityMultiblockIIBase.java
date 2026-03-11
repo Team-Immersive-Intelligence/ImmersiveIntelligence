@@ -1,8 +1,8 @@
 package pl.pabilo8.immersiveintelligence.common.util.multiblock;
 
-import blusunrize.immersiveengineering.api.ApiUtils;
 import blusunrize.immersiveengineering.api.IEProperties;
 import blusunrize.immersiveengineering.api.IEProperties.PropertyBoolInverted;
+import blusunrize.immersiveengineering.common.EventHandler;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IMirrorAble;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IUsesBooleanProperty;
 import blusunrize.immersiveengineering.common.blocks.TileEntityMultiblockPart;
@@ -16,15 +16,24 @@ import net.minecraft.util.Rotation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
+import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
+import pl.pabilo8.immersiveintelligence.api.data.IIDataHandlingUtils;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
-import pl.pabilo8.immersiveintelligence.common.entity.tactile.TactileHandler;
-import pl.pabilo8.immersiveintelligence.common.entity.tactile.TactileHandler.ITactileListener;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.common.entity.tactile.TactileManager;
+import pl.pabilo8.immersiveintelligence.common.entity.tactile.TactileManager.ITactileListener;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
+import pl.pabilo8.immersiveintelligence.common.util.IWorldPosProvider;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyUtils;
+import pl.pabilo8.immersiveintelligence.common.util.diplomacy.IOwnableProperty;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.NBTSerialisation;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IAdvancedBounds;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
@@ -33,6 +42,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 import java.util.function.Consumer;
 
 /**
@@ -42,18 +52,24 @@ import java.util.function.Consumer;
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 04.08.2022
  */
-public abstract class TileEntityMultiblockIIBase<T extends TileEntityMultiblockIIBase<T>> extends TileEntityMultiblockPart<T> implements IMirrorAble, IIEInventory, IAdvancedBounds
+public abstract class TileEntityMultiblockIIBase<T extends TileEntityMultiblockIIBase<T>> extends TileEntityMultiblockPart<T>
+		implements IMirrorAble, IIEInventory, IAdvancedBounds, IWorldPosProvider
 {
 	public static final String KEY_SYNC_AABB = "_sync_aabb";
 	public static final String KEY_SYNC_ALL_VALUES = "_sync_all_values";
 	//The multiblock INSTANCE, for easy access
 	protected final MultiblockStuctureBase<T> multiblock;
 
-
 	//--- Reference Variables ---//
 	protected List<AxisAlignedBB> aabb = null;
 	//Master multiblock cached for faster access
 	private T master = null;
+	//Contrary to what forge's javadoc says, this has to be done; during onLoad, the NBT data is not properly loaded yet
+	private boolean firstTick = true;
+	@SyncNBT
+	protected long timestamp = 0;
+	@SyncNBT(nullable = true)
+	public UUID uuid = null;
 
 	protected TileEntityMultiblockIIBase(MultiblockStuctureBase<T> multiblock)
 	{
@@ -67,15 +83,33 @@ public abstract class TileEntityMultiblockIIBase<T extends TileEntityMultiblockI
 	public final void update()
 	{
 		//Optimize
-		ApiUtils.checkForNeedlessTicking(this);
-		if(isDummy())
+		if(!getWorld().isRemote&&isDummy())
 		{
+			EventHandler.REMOVE_FROM_TICKING.add(this);
+			uuid = null;
 			dummyCleanup();
 			return;
 		}
 
+		//First Tick
+		if(firstTick)
+		{
+			timestamp = world.getTotalWorldTime();
+			getUUID();
+			onBeforeFirstTick();
+			firstTick = false;
+		}
 		//Tick
 		onUpdate();
+	}
+
+	/**
+	 * Called before the master tile's first update tick
+	 */
+	public void onBeforeFirstTick()
+	{
+		if(!world.isRemote&&this instanceof IOwnableProperty)
+			DiplomacyUtils.validateProperty(((IOwnableProperty)this));
 	}
 
 	/**
@@ -87,6 +121,8 @@ public abstract class TileEntityMultiblockIIBase<T extends TileEntityMultiblockI
 	public void invalidate()
 	{
 		super.invalidate();
+		if(!world.isRemote&&this instanceof IOwnableProperty&&!isDummy())
+			DiplomacyUtils.invalidateProperty(((IOwnableProperty)this));
 		forceReCacheAABB();
 	}
 
@@ -113,14 +149,63 @@ public abstract class TileEntityMultiblockIIBase<T extends TileEntityMultiblockI
 
 	//--- NBT ---//
 
+	public final void updateTileForTime()
+	{
+		NBTTagCompound nbt = new NBTTagCompound();
+		NBTSerialisation.synchroniseFor(this, (tag, tile) -> tag.serializeForTime(tile, nbt, (int)(world.getTotalWorldTime()%1000)));
+		sendNBTMessageClient(nbt);
+	}
+
+	public final void updateTileForEvent(SyncNBT.SyncEvents event)
+	{
+		NBTTagCompound nbt = new NBTTagCompound();
+		NBTSerialisation.synchroniseFor(this, (tag, tile) -> tag.serializeForEvent(tile, nbt, event));
+		sendNBTMessageClient(nbt);
+	}
+
+
+	@Override
+	public void readCustomNBT(@Nonnull NBTTagCompound nbt, boolean descPacket)
+	{
+		super.readCustomNBT(nbt, descPacket);
+		if(isDummy())
+			return;
+
+		NBTSerialisation.synchroniseFor(this, (tag, tile) -> tag.deserializeAll(tile, nbt, false));
+	}
+
+	@Override
+	public void writeCustomNBT(@Nonnull NBTTagCompound nbt, boolean descPacket)
+	{
+		super.writeCustomNBT(nbt, descPacket);
+		if(isDummy())
+			return;
+
+		NBTSerialisation.synchroniseFor(this, (tag, tile) -> tag.serializeAll(tile, nbt));
+	}
+
+	@Override
+	public void receiveMessageFromClient(NBTTagCompound message)
+	{
+		super.receiveMessageFromClient(message);
+		if(isDummy())
+			return;
+		NBTSerialisation.synchroniseFor(this, (tag, tile) -> tag.deserializeAll(tile, message, true));
+	}
+
 	@Override
 	public void receiveMessageFromServer(@Nonnull NBTTagCompound message)
 	{
+		super.receiveMessageFromServer(message);
+
+		if(isDummy())
+			return;
 		if(isFullSyncMessage(message))
 			readCustomNBT(message, false);
-
-		if(message.hasKey(KEY_SYNC_AABB))
+		else if(message.hasKey(KEY_SYNC_AABB))
 			forMultiblockBlocks(TileEntityMultiblockIIBase::forceReCacheAABB);
+
+		NBTSerialisation.synchroniseFor(this, (tag, tile) -> tag.deserializeAll(tile, message, true));
 	}
 
 	/**
@@ -333,7 +418,7 @@ public abstract class TileEntityMultiblockIIBase<T extends TileEntityMultiblockI
 		this.aabb = null;
 		if(this instanceof ITactileListener)
 		{
-			TactileHandler handler = ((ITactileListener)this).getTactileHandler();
+			TactileManager handler = ((ITactileListener)this).getTactileHandler();
 			if(handler!=null)
 				handler.forceReload();
 		}
@@ -411,5 +496,64 @@ public abstract class TileEntityMultiblockIIBase<T extends TileEntityMultiblockI
 		if(rot==Rotation.COUNTERCLOCKWISE_90)
 			return Rotation.CLOCKWISE_90;
 		return rot;
+	}
+
+	public UUID getUUID()
+	{
+		if(isDummy())
+		{
+			T master = master();
+			return master==null?IIUtils.getBlockPosUUID(getPos()): master.getUUID();
+		}
+		return this.uuid==null?this.uuid = IIUtils.getBlockPosUUID(getPos()): this.uuid;
+	}
+
+	public long getTicksExisted()
+	{
+		return world.getTotalWorldTime()-timestamp;
+	}
+
+	//--- IWorldPosProvider ---//
+
+	@Override
+	public World getIIWorld()
+	{
+		return getWorld();
+	}
+
+	@Override
+	public BlockPos getIIPos()
+	{
+		return getPos();
+	}
+
+
+	//--- Data ---//
+
+	public final void onReceive(DataPacket packet, @Nullable EnumFacing side)
+	{
+		T master = master();
+		if(master!=null&&isPOI(MultiblockPOI.DATA_INPUT))
+			master.receiveData(packet, pos);
+	}
+
+	/**
+	 * Called on master when the TE receives data.
+	 *
+	 * @param packet data received
+	 */
+	public void receiveData(DataPacket packet, int pos)
+	{
+
+	}
+
+	/**
+	 * Used to send data easily.
+	 *
+	 * @param packet data received
+	 */
+	public void sendData(DataPacket packet, EnumFacing facing, int pos)
+	{
+		IIDataHandlingUtils.sendPacketAdjacently(packet, world, getBlockPosForPos(pos), facing);
 	}
 }

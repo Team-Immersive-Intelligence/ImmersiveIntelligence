@@ -48,7 +48,7 @@ public class DecoTitleLabel extends DecoLabel
 						sprite.getMinU(), sprite.getInterpolatedU(8),
 						sprite.getMinV(), sprite.getInterpolatedV(8)
 				)
-				.drawConnectedColorRect(x+8, y-4, width-16, 16, IIColor.WHITE,
+				.drawConnectedTexColorRect(x+8, y-4, width-16, 16, IIColor.WHITE,
 						16, 16,
 						sprite.getInterpolatedU(4), sprite.getInterpolatedU(12),
 						sprite.getMinV(), sprite.getInterpolatedV(8)

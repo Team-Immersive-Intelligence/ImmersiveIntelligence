@@ -21,9 +21,9 @@ import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock
 import javax.annotation.Nonnull;
 
 /**
- * @author Jan Kowalski (kowalski@iiteam.net)
- * @ii-approved 28.10.2023
+ * @author Pabilo8 (pabilo@iiteam.net)
  * @updated 8.04.2020
+ * @ii-approved 0.3.1
  * @since 1.05.2019
  */
 public class BlockIIMetalMultiblock0 extends BlockIIMultiblock<MetalMultiblocks0>
@@ -42,10 +42,7 @@ public class BlockIIMetalMultiblock0 extends BlockIIMultiblock<MetalMultiblocks0
 		setBlockLayer(BlockRenderLayer.CUTOUT);
 		setToolTypes(IIReference.TOOL_HAMMER);
 
-		addToTESRMap(
-				MetalMultiblocks0.RADIO_STATION,
-				MetalMultiblocks0.CHEMICAL_BATH, MetalMultiblocks0.PRECISION_ASSEMBLER
-		);
+		addToTESRMap(MetalMultiblocks0.CHEMICAL_BATH, MetalMultiblocks0.PRECISION_ASSEMBLER);
 	}
 
 	@Nonnull
@@ -54,23 +51,18 @@ public class BlockIIMetalMultiblock0 extends BlockIIMultiblock<MetalMultiblocks0
 	{
 		switch(state.getValue(property))
 		{
-			case DATA_INPUT_MACHINE:
-			case ARITHMETIC_LOGIC_MACHINE:
-			case PRINTING_PRESS:
-			case BALLISTIC_COMPUTER:
-			case ARTILLERY_HOWITZER:
-			case MISSILE_SILO:
-			case PACKER:
-			case ELECTROLYZER:
-			case SCANNING_CONVEYOR:
-				return EnumBlockRenderType.MODEL;
-			default:
+			case CHEMICAL_BATH:
+			case PRECISION_ASSEMBLER:
+			case PERISCOPE:
 				return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
+			default:
+				return EnumBlockRenderType.MODEL;
 		}
 	}
 
 	public enum MetalMultiblocks0 implements IITileMultiblockEnum
 	{
+		@IIBlockProperties(needsCustomState = true)
 		@EnumMultiblockProvider(tile = TileEntityRadioStation.class, multiblock = MultiblockRadioStation.class)
 		RADIO_STATION,
 		@EnumMultiblockProvider(tile = TileEntityPrintingPress.class, multiblock = MultiblockPrintingPress.class)

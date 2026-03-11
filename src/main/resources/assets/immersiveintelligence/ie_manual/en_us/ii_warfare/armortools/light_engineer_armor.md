@@ -24,8 +24,7 @@ It can be toggled by pressing "V".
 # 5
 |[crafting]{source:"engineer_headgear"}|
 The [Engineer's Headgear] combines the effects of [Infiltrator's] and [Technician's] headgear into one device.
-As a result, the power consumption is increased, but so is the amount of features. *Only thing it lacks now is a mug
-holder.*
+As a result, the power consumption is increased, but so is the amount of features. *Only thing it lacks now is a mug holder.*
 It can be toggled by pressing "V". **Warning:** [temporary blindness] may occur if used in [bright areas].
 # 6
 |[crafting]{source:"steel_armor_plates"}|
@@ -34,24 +33,23 @@ Only [3] plates can be installed per [one armor piece].
 # 7
 |[crafting]{source:"composite_armor_plates"}|
 With its low density durability, [composite material] easily outmatches steel in armouring.
-However, the hardness of the material means that [hitting the armor with a melee weapon will damage it severely]. Only [3] plates can be installed per [one armor piece].
+However, the hardness of the material means that [hitting the armor with a melee weapon will damage it severely].
+Only [3] plates can be installed per [one armor piece].
 # 8
 |[crafting]{source:"hazmat_coating"}|
-[Hazmat Coating] is an additional internal armor layer protecting from [radiation] and [acids]. *Time for a walk through
-the nuclear wastelands!*
+[Hazmat Coating] is an additional internal armor layer protecting from [radiation] and [acids]. *Time for a walk through the nuclear wastelands!*
 # 9
 |[crafting]{source:"heat_resistant_coating"}|
-The [Heat Resistance Coating] layer allows swimming in hot liquids which would otherwise incinerate the wearer.
-**It only works when worn with reinforced boots**, otherwise, it will only provide [fire damage resistance].
+The [Heat Resistance Coating] layer provides [fire damage resistance] from common sources of flame.
+When worn alongside [reinforced boots](#15), the combined suit of armor allows swimming in hot liquids which would otherwise incinerate the wearer.
 # 10
 |[crafting]{source:"anti_static_mesh"}|
 The [Anti-Static Mesh] gives the user [immunity against electrical damage] and [interferes with proximity fuse targeting].
 However, due to its construction, it will not work underwater, [severely increasing damage taken] by electric or electromagnetic weapons.
 # 11
 |[crafting]{source:"camo_mesh"}|
-The [Camouflage Mesh] is a simple net with leaves attached to it, making the wearer blend in with foliage when [sneaking].
-Unfortunately, the leaves pose a [fire hazard] - **being lit on fire is not recommended.
-** Especially useful in forests, gardens and plains.
+The [Camouflage Mesh] is a simple net with leaves attached to it, making the wearer blend in with foliage when [sneaking]. It is especially useful in forests, gardens and plains.
+Unfortunately, the leaves pose a [fire hazard] - **being lit on fire is not recommended.**
 # 12
 |[crafting]{source:"ir_absorbing_mesh"}|
 The [Infrared-Absorbing Mesh] absorbs infrared light cast into it, serving as a perfect way to hide from [infrared sensors](emplacement_weapons.md#ir_observer0).
@@ -66,7 +64,7 @@ The [Exoskeleton upgrade] grants the user the ability to [run faster] via the co
 The exoskeleton [requires energy] to operate and [is only activated when running]. It is not advised to be used while swimming. It has [Off], [Motion Assist], and [Overdrive] modes, toggled by pressing "G".
 # 15
 |[crafting]{source:"boot_reinforcement"}|
-The [Boots Reinforcement] upgrade consists of several steel plates, held together by leather straps. It [adds additional armor] and [protects the wearer from fire].
+The [Boots Reinforcement] upgrade consists of several steel plates, held together by leather straps. It [adds additional armor] and [protects the wearer from fire] when combined with the [Heat Resistant Coating](#9).
 # 16
 |[crafting]{source:"flippers"}|
 [Flippers] allow swift movement in fluids. They work very well with the [Scuba Tank](#13) and [Gas Mask](#2).

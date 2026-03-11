@@ -18,6 +18,9 @@ import pl.pabilo8.immersiveintelligence.common.network.messages.MessageRotaryPow
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Map.Entry;
+import java.util.function.BiConsumer;
+import java.util.function.Predicate;
 
 import static pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.MechanicalDevices.rofConversionRatio;
 
@@ -39,16 +42,14 @@ public class TileEntityTransmissionBox extends TileEntityIEBase implements ITick
 	};
 
 	@Override
-	public void updateRotationStorage(float rpm, float torque, int part)
+	public void updateRotationStorage(float speed, float torque, int partID)
 	{
 		if(world.isRemote)
-		{
-			if(part==0)
+			if(partID==0)
 			{
-				energy.setRotationSpeed(rpm);
+				energy.setRotationSpeed(speed);
 				energy.setTorque(torque);
 			}
-		}
 	}
 
 	@Override
@@ -63,10 +64,8 @@ public class TileEntityTransmissionBox extends TileEntityIEBase implements ITick
 	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing)
 	{
 		if(capability==CapabilityRotaryEnergy.ROTARY_ENERGY)
-		{
 			if(facing==null||facing==getFacing().getOpposite())
 				return (T)energy;
-		}
 		return super.getCapability(capability, facing);
 	}
 
@@ -93,7 +92,6 @@ public class TileEntityTransmissionBox extends TileEntityIEBase implements ITick
 	{
 		if(hasWorld()&&!world.isRemote)
 		{
-			//energy.grow(60,10,0.98f);
 			TileEntity tile = world.getTileEntity(pos.offset(facing));
 			if(tile!=null&&tile.hasCapability(CapabilityRotaryEnergy.ROTARY_ENERGY, facing.getOpposite()))
 			{
@@ -103,7 +101,15 @@ public class TileEntityTransmissionBox extends TileEntityIEBase implements ITick
 			}
 			else
 			{
-				tick -= 1;
+				for(Entry<Predicate<TileEntity>, BiConsumer<TileEntityTransmissionBox, TileEntity>> entry : IIRotaryUtils.TORQUE_TILES.entrySet())
+					if(entry.getKey().test(tile))
+					{
+						BiConsumer<TileEntityTransmissionBox, TileEntity> applied = entry.getValue();
+						applied.accept(this, tile);
+						break;
+					}
+
+				tick = Math.max(tick-1, 0);
 				if(tick < 1)
 					energy.grow(0, 0, 0.98f);
 			}
@@ -129,9 +135,7 @@ public class TileEntityTransmissionBox extends TileEntityIEBase implements ITick
 
 			energy.grow(Math.round(speed), Math.round(torque), 0.98f);
 			if(world.getTotalWorldTime()%20==0)
-			{
-				IIPacketHandler.INSTANCE.sendToAllAround(new MessageRotaryPowerSync(energy, 0, pos), IIPacketHandler.targetPointFromTile(this, 24));
-			}
+				IIPacketHandler.sendToClient(new MessageRotaryPowerSync(world, pos, 0, energy));
 
 		}
 	}

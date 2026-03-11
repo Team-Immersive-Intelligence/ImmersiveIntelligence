@@ -10,15 +10,20 @@ import blusunrize.immersiveengineering.common.util.chickenbones.Matrix4;
 import com.google.common.collect.ImmutableSet;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.Railgun;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
+import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIEFluidConcreteOverride;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIRailgunOverride;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @updated 11.01.2026
+ * @ii-approved 0.3.1
  * @since 17.08.2023
  */
 public class ImmersiveEngineeringHelper extends IICompatModule
@@ -27,10 +32,18 @@ public class ImmersiveEngineeringHelper extends IICompatModule
 	public void preInit()
 	{
 		if(Railgun.enableRailgunOverride)
+		{
 			IEContent.itemRailgun = new ItemIIRailgunOverride();
+			IILogger.info("Immersive Engineering Railgun was overridden by Immersive Intelligence");
+		}
+		if(IIConfig.concreteOverride)
+		{
+			IEContent.blockFluidConcrete = new BlockIEFluidConcreteOverride();
+			ReflectionHelper.setPrivateValue(Fluid.class, IEContent.fluidConcrete, IEContent.blockFluidConcrete, "block");
+			IILogger.info("Immersive Engineering Fluid Concrete was overridden by Immersive Intelligence");
+		}
 
 		ReflectionHelper.setPrivateValue(ToolUpgrades.class, ToolUpgrades.REVOLVER_BAYONET, ImmutableSet.of("REVOLVER", "SUBMACHINEGUN", "RIFLE"), "toolset");
-
 	}
 
 	@Override
@@ -89,4 +102,5 @@ public class ImmersiveEngineeringHelper extends IICompatModule
 	{
 
 	}
+
 }

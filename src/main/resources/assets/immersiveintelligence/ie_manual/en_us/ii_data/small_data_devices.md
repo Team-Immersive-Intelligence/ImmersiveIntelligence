@@ -6,7 +6,7 @@ The Gray Future Cubes
 The [Data Combiner] is a machine which can combine two data inputs from the sides into an output to the front.
 The machine has a toggle for the preferred side to take variable from.
 # combiner2
-Each variable also has a side override mode, green is the left and red is the right, darker colors remove the variable if the latest packet from that side doesn't contain the variable.
+Each variable also has a side override mode. Green prefers the left and red prefers the right. Darker colors remove the variable if the latest packet from that side doesn't contain the variable.
 # router
 |[crafting]{source:"data_router"}|  
 The [Data Router] allows a packet to be directed to a specific side, defined by the integer variable '0'.
@@ -17,7 +17,7 @@ North - 2, South - 3
 West - 4, East - 5
 # redstone_buffer
 |[crafting]{source:"redstone_buffer"}|  
-The [Redstone Buffer] is a device which can hold an incoming data packet, until it doesn't receive a redstone signal.
+The [Redstone Buffer] is a device which can hold an incoming data packet when provided with a redstone signal. Turn off the redstone to release the packet.
 **Caution:** a held data packet will be overwritten by the arrival of a new one.
 # timed_buffer
 |[crafting]{source:"timed_buffer"}|  

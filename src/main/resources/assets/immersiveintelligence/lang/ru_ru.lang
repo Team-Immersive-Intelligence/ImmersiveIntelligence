@@ -1340,7 +1340,7 @@ info.immersiveintelligence.frequency_set=Радиочастота была ус�
 info.immersiveintelligence.frequency_invalid=Неверная частота, базовые устройства могут использовать частоты до %s!
 info.immersiveintelligence.current_frequency=Текущая частота: %s
 
-info.immersiveintelligence.requires_advanced_hammer=Для продвинутой инженерии требуются продвинутые инструменты... чтобы построить эту машину, вам понадобится электрический молоток!
+info.immersiveintelligence.requires_advanced_hammer=Для продвинутой инженерии требуются продвинутые инструменты ... чтобы построить эту машину, вам понадобится %s!
 
 info.immersiveintelligence.tool_durability=Прочность: %1$s / %2$s
 info.immersiveintelligence.gear_ratio=Крутящий момент/скорость: %1$s >> %2$s

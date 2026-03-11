@@ -96,9 +96,9 @@ public class EasyNBT extends Constants.NBT
 	/**
 	 * Thus spoke EasyNBT - a parser for all and none
 	 *
-	 * @param elements valid objects such as {@link net.minecraft.nbt.NBTBase}, int, float, double, boolean,
-	 *                 {@link EasyNBT}, {@link BlockPos}, {@link net.minecraft.util.math.Vec3d}, {@link net.minecraft.item.ItemStack},
-	 *                 {@link net.minecraftforge.fluids.FluidStack} and {@link java.util.Collection} or array of the above
+	 * @param elements valid objects such as {@link NBTBase}, int, float, double, boolean,
+	 *                 {@link EasyNBT}, {@link BlockPos}, {@link Vec3d}, {@link ItemStack},
+	 *                 {@link FluidStack} and {@link Collection} or array of the above
 	 * @implNote Accepts only a single type of object, will not work if multiple types are passed
 	 */
 	public static NBTTagList listOf(Object... elements)
@@ -126,6 +126,8 @@ public class EasyNBT extends Constants.NBT
 				list.appendTag(new NBTTagDouble(((Double)element)));
 			else if(element instanceof Boolean)
 				list.appendTag(new NBTTagByte((byte)(((Boolean)element)?1: 0)));
+			else if(element instanceof String)
+				list.appendTag(new NBTTagString(((String)element)));
 
 			else if(element instanceof EasyNBT)
 				list.appendTag(((EasyNBT)element).wrapped);
@@ -156,7 +158,7 @@ public class EasyNBT extends Constants.NBT
 			else if(element instanceof Object[])
 				list.appendTag(listOf(element));
 			else if(element instanceof Collection)
-				list.appendTag(listOf(((Collection<?>)element).toArray(new Object[0])));
+				list.appendTag(listOf(((Collection<?>)element).toArray()));
 
 		}
 
@@ -190,6 +192,17 @@ public class EasyNBT extends Constants.NBT
 	public EasyNBT withInt(String key, int value)
 	{
 		wrapped.setInteger(key, value);
+		return this;
+	}
+
+	/**
+	 * Appends a long integer
+	 *
+	 * @param key name of this tag
+	 */
+	public EasyNBT withLong(String key, long value)
+	{
+		wrapped.setLong(key, value);
 		return this;
 	}
 
@@ -693,6 +706,16 @@ public class EasyNBT extends Constants.NBT
 	}
 
 	/**
+	 * Gets a long integer
+	 *
+	 * @param key name of this tag
+	 */
+	public long getLong(String key)
+	{
+		return wrapped.getLong(key);
+	}
+
+	/**
 	 * Gets a byte
 	 *
 	 * @param key name of this tag
@@ -947,7 +970,8 @@ public class EasyNBT extends Constants.NBT
 	 */
 	public IngredientStack getIngredientStack(String key)
 	{
-		return IngredientStack.readFromNBT(getCompound(key));
+		IngredientStack stack = IngredientStack.readFromNBT(getCompound(key));
+		return stack==null?new IngredientStack("*"): stack;
 	}
 
 	/**
@@ -1012,6 +1036,22 @@ public class EasyNBT extends Constants.NBT
 	{
 		if(wrapped.hasKey(key))
 			ifPresent.accept(wrapped.getInteger(key));
+		return this;
+	}
+
+	public EasyNBT checkSetLong(String key, Consumer<Long> ifPresent, long ifNot)
+	{
+		if(wrapped.hasKey(key))
+			ifPresent.accept(wrapped.getLong(key));
+		else
+			ifPresent.accept(ifNot);
+		return this;
+	}
+
+	public EasyNBT checkSetLong(String key, Consumer<Long> ifPresent)
+	{
+		if(wrapped.hasKey(key))
+			ifPresent.accept(wrapped.getLong(key));
 		return this;
 	}
 
@@ -1108,6 +1148,23 @@ public class EasyNBT extends Constants.NBT
 	{
 		if(wrapped.hasKey(key))
 			ifPresent.accept(wrapped.getCompoundTag(key));
+		return this;
+	}
+
+
+	public EasyNBT checkSetItemStack(String key, Consumer<ItemStack> ifPresent, ItemStack ifNot)
+	{
+		if(wrapped.hasKey(key))
+			ifPresent.accept(new ItemStack(wrapped.getCompoundTag(key)));
+		else
+			ifPresent.accept(ifNot);
+		return this;
+	}
+
+	public EasyNBT checkSetItemStack(String key, Consumer<ItemStack> ifPresent)
+	{
+		if(wrapped.hasKey(key))
+			ifPresent.accept(new ItemStack(wrapped.getCompoundTag(key)));
 		return this;
 	}
 

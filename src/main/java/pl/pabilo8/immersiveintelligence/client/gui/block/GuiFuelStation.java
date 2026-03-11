@@ -1,114 +1,61 @@
 package pl.pabilo8.immersiveintelligence.client.gui.block;
 
-import blusunrize.immersiveengineering.client.ClientUtils;
-import blusunrize.immersiveengineering.client.gui.GuiIEContainerBase;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.fluids.FluidStack;
-import org.lwjgl.opengl.GL11;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.FuelStation;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import net.minecraft.util.ResourceLocation;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.DecoGui;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoBar;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoFluidTank;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoImage;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundBuilder.SlotStyle;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.*;
+import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityFuelStation;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerFuelStation;
-
-import java.util.ArrayList;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
  * @since 10.07.2019
  */
-public class GuiFuelStation extends GuiIEContainerBase
+@DecoTemplate(name = "fuel_station", category = DecoGuiCategory.PRODUCTION_TILE)
+public class GuiFuelStation extends DecoGui<TileEntityFuelStation, ContainerFuelStation>
 {
-	public static final String TEXTURE = ImmersiveIntelligence.MODID+":textures/gui/fuel_station.png";
-	TileEntityFuelStation tile;
+	@DecoResource
+	public static final ResourceLocation TEXTURE = IIReference.RES_II.with("gui/fuel_station");
 
 	public GuiFuelStation(EntityPlayer player, TileEntityFuelStation tile)
 	{
-		super(new ContainerFuelStation(player, tile));
-		this.ySize = 168;
-		this.tile = tile;
-	}
-
-	/**
-	 * Draw the foreground layer for the GuiContainer (everything in front of the items)
-	 */
-	@Override
-	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
-	{
-
-	}
-
-	/**
-	 * Draws the background layer of this container (behind the items).
-	 */
-	@Override
-	protected void drawGuiContainerBackgroundLayer(float f, int mx, int my)
-	{
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		ClientUtils.bindTexture(TEXTURE);
-		this.drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
-
-		//Thanks, Flaxbeard!
-		int yy = guiTop+63;
-		for(int i = this.tile.tanks[0].getFluidTypes()-1; i >= 0; --i)
-		{
-			FluidStack fs = this.tile.tanks[0].fluids.get(i);
-			if(fs!=null&&fs.getFluid()!=null)
-			{
-				int fluidHeight = (int)(60f*((float)fs.amount/FuelStation.fluidCapacity));
-				yy -= fluidHeight;
-				ClientUtils.drawRepeatedFluidSprite(fs, (float)(guiLeft+63), (float)yy, 52f, (float)fluidHeight);
-			}
-		}
-
-		IIClientUtils.drawPowerBar(guiLeft+137, guiTop+22, 7, 46, tile.getEnergyStored(null)/(float)tile.getMaxEnergyStored(null));
+		super(player, tile, IIGUI.FUEL_STATION);
 	}
 
 	@Override
-	public void drawScreen(int mx, int my, float partial)
+	public void onInit()
 	{
-		super.drawScreen(mx, my, partial);
-		this.renderHoveredToolTip(mx, my);
-		ArrayList<String> tooltip = new ArrayList<>();
+		startBackground()
+				.withBox(null, 0, 0, 176, 76)
+				.withBox(DecoTextures.BG_STEEL, 152, 0, 24, 76)
+				//.withTitleBar(tile)
+				.withBox(DecoTextures.BG_WOODEN, DecoTextures.TEMPLATE_ROUND_WOODEN, 0, 76, 176, 92)
+				.withInventorySlots(SlotStyle.VANILLA, container.playerInventory)
+				.withInventorySlots(SlotStyle.IE_INPUT, container.inputFluidSlot)
+				.withInventorySlots(SlotStyle.IE_OUTPUT, container.outputFluidSlot)
+				.withInventoryTitleBar()
+				.build();
 
-		if(mx >= guiLeft+63&&mx <= guiLeft+63+52&&my >= guiTop+3&&my <= guiTop+63)
-		{
-			float capacity = tile.tanks[0].getCapacity();
-			if(tile.tanks[0].getFluidTypes()==0)
-				tooltip.add(I18n.format("gui.immersiveengineering.empty"));
-			else
-			{
-				int fluidUpToNow = 0;
-				int lastY = 0;
-				int myRelative = guiTop+63-my;
-				for(int i = tile.tanks[0].getFluidTypes()-1; i >= 0; i--)
-				{
-					FluidStack fs = tile.tanks[0].fluids.get(i);
-					if(fs!=null&&fs.getFluid()!=null)
-					{
-						fluidUpToNow += fs.amount;
-						int newY = (int)(60*(fluidUpToNow/capacity));
-						if(myRelative >= lastY&&myRelative < newY)
-						{
-							ClientUtils.addFluidTooltip(fs, tooltip, (int)capacity);
-							break;
-						}
-						lastY = newY;
-					}
-				}
-			}
-		}
-
-		if(mx > guiLeft+137&&mx < guiLeft+144&&my > guiTop+22&&my < guiTop+68)
-			tooltip.add(IIUtils.getPowerLevelString(tile));
-
-		if(!tooltip.isEmpty())
-		{
-			ClientUtils.drawHoveringText(tooltip, mx, my, fontRenderer, guiLeft+xSize, -1);
-			RenderHelper.enableGUIStandardItemLighting();
-		}
+		addComponents(
+				new DecoImage(57, 64)
+						.withSize(32, 9)
+						.withImageLocation(TEXTURE, true)
+						.withUV(32, 0, 0, 32, 10),
+				new DecoImage(57+32, 64)
+						.withSize(32, 9)
+						.withImageLocation(TEXTURE, true)
+						.withUV(32, 0, 10, 32, 20),
+				new DecoFluidTank(57, 0)
+						.withSize(64, 64)
+						.withFluidTank(tile.tank),
+				new DecoBar(161-4, -4)
+						.withTemplate(DecoTemplates.BAR_ELECTRIC_ENERGY.apply(tile.energyStorage))
+		);
 	}
 }

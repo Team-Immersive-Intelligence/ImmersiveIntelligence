@@ -31,13 +31,13 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.api.ammo.penetration.DamageBlockPos;
-import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
+import pl.pabilo8.immersiveintelligence.api.upgrade.Upgrade;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoColors;
 import pl.pabilo8.immersiveintelligence.client.model.ModelIIBase;
 import pl.pabilo8.immersiveintelligence.client.util.font.IIFontRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.font.IIFontRendererCustomGlyphs;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
-import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock;
 
 import javax.annotation.Nonnull;
@@ -174,13 +174,13 @@ public class IIClientUtils
 	@Deprecated
 	public static void drawArmorBar(int x, int y, int w, int h, float progress)
 	{
-		drawGradientBar(x, y, w, h, IIReference.COLOR_ARMORBAR1, IIReference.COLOR_ARMORBAR2, progress);
+		drawGradientBar(x, y, w, h, DecoColors.ARMOR_INTEGRITY_1, DecoColors.ARMOR_INTEGRITY_2, progress);
 	}
 
 	@Deprecated
 	public static void drawPowerBar(int x, int y, int w, int h, float progress)
 	{
-		drawGradientBar(x, y, w, h, IIReference.COLOR_POWERBAR1, IIReference.COLOR_POWERBAR2, progress);
+		drawGradientBar(x, y, w, h, DecoColors.POWER1, DecoColors.POWER2, progress);
 	}
 
 	@Deprecated
@@ -310,11 +310,11 @@ public class IIClientUtils
 	}
 
 	@SideOnly(Side.CLIENT)
-	public static ModelRendererTurbo[] createConstructionModel(@Nullable MachineUpgrade upgrade, ModelIIBase model)
+	public static ModelRendererTurbo[] createConstructionModel(@Nullable Upgrade upgrade, ModelIIBase model)
 	{
 		int partCount = model.parts.values().stream().mapToInt(modelRendererTurbos -> modelRendererTurbos.length).sum();
 		if(upgrade!=null)
-			upgrade.setRequiredSteps(partCount);
+			upgrade.withProgressStages(partCount);
 		ModelRendererTurbo[] output = new ModelRendererTurbo[partCount];
 		int i = 0;
 		for(ModelRendererTurbo[] value : model.parts.values())
@@ -348,4 +348,5 @@ public class IIClientUtils
 	{
 		addTooltip(tooltip, ' ', line, arguments);
 	}
+
 }

@@ -11,6 +11,7 @@ import crafttweaker.api.minecraft.CraftTweakerMC;
 import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.crafting.PaintingRecipe;
+import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIMultiblockRecipe;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
@@ -69,7 +70,7 @@ public class ChemicalPainterTweaker
 		@Override
 		public void apply()
 		{
-			PaintingRecipe.recipeList.add(recipe);
+
 		}
 
 		@Override
@@ -92,7 +93,8 @@ public class ChemicalPainterTweaker
 		@Override
 		public void apply()
 		{
-			removedRecipes = PaintingRecipe.removeRecipesForInput(input);
+			removedRecipes = IIMultiblockRecipe.removeRecipesByFilter(PaintingRecipe.class,
+					paintingRecipe -> paintingRecipe.itemInput.matches(input));
 		}
 
 		@Override

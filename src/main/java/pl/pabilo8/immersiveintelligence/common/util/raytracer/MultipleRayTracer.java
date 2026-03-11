@@ -69,34 +69,42 @@ public class MultipleRayTracer implements Iterable<RayTraceResult>
 			//Collide with entities
 			if(allowEntities)
 				traceEntities(rayTracer, aabb, allEntities);
-			BlockPos pos = new BlockPos(p.x, p.y, p.z);
 
-			if(pos.equals(rayTracer.lastBLockHit))
-				continue;
-			rayTracer.lastBLockHit = pos;
+			for(int x = (int)Math.floor(p.x); x <= Math.ceil(p.x); x++)
+				for(int y = (int)Math.floor(p.y); y <= Math.ceil(p.y); y++)
+					for(int z = (int)Math.floor(p.z); z <= Math.ceil(p.z); z++)
+					{
+						BlockPos pos = new BlockPos(x, y, z);
 
-			//Ignore empty bounding boxes
-			IBlockState state = world.getBlockState(pos);
-			if(state.getCollisionBoundingBox(world, pos)==Block.NULL_AABB)
-				continue;
+						if(pos.equals(rayTracer.lastBLockHit))
+							continue;
+						rayTracer.lastBLockHit = pos;
 
-			//Stop on this block
-			if(stopOn!=null&&stopOn.test(world.getBlockState(pos)))
-				break;
+						//Ignore empty bounding boxes
+						IBlockState state = world.getBlockState(pos);
+						if(state.getCollisionBoundingBox(world, pos)==Block.NULL_AABB)
+							continue;
 
-			//Skip excluded blocks
-			if(traceExcludedBlocks(pos, blockFilter))
-				continue;
+						//Stop on this block
+						if(stopOn!=null&&stopOn.test(world.getBlockState(pos)))
+							break;
 
-			//Perform a precise raytrace on the block
-			RayTraceResult traceResult = state.collisionRayTrace(world, pos,
-					new Vec3d(aabb.minX, aabb.minY, aabb.minZ),
-					new Vec3d(aabb.maxX, aabb.maxY, aabb.maxZ)
-			);
+						//Skip excluded blocks
+						if(traceExcludedBlocks(pos, blockFilter))
+							continue;
 
-			//Doesn't accept null result / miss
-			if(traceResult!=null&&traceResult.typeOfHit!=Type.MISS)
-				rayTracer.addResultToList(traceResult);
+						//Perform a precise raytrace on the block
+						RayTraceResult traceResult = state.collisionRayTrace(world, pos,
+								new Vec3d(aabb.minX, aabb.minY, aabb.minZ),
+								new Vec3d(aabb.maxX, aabb.maxY, aabb.maxZ)
+						);
+
+						//Doesn't accept null result / miss
+						if(traceResult!=null&&traceResult.typeOfHit!=Type.MISS)
+							rayTracer.addResultToList(traceResult);
+					}
+
+
 		}
 
 		return rayTracer;
@@ -115,7 +123,19 @@ public class MultipleRayTracer implements Iterable<RayTraceResult>
 		while(it.hasNext())
 		{
 			Entity next = it.next();
-			if(next.getEntityBoundingBox().intersects(aabb))
+			Entity[] parts = next.getParts();
+
+			//Handle child colision boxes
+			if(parts!=null)
+			{
+				for(Entity part : parts)
+				{
+					if(part.getEntityBoundingBox().intersects(aabb))
+						t.addResultToList(new RayTraceResult(part));
+				}
+				it.remove();
+			}
+			else if(next.getEntityBoundingBox().intersects(aabb))
 			{
 				t.addResultToList(new RayTraceResult(next));
 				it.remove();

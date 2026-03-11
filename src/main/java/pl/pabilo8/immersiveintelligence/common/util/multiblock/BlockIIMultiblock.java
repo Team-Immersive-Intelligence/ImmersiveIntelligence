@@ -8,7 +8,6 @@ import blusunrize.immersiveengineering.common.util.inventory.IIEInventory;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -18,7 +17,6 @@ import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
@@ -26,7 +24,6 @@ import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.block.BlockIITileProvider;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IITileMultiblockEnum;
 import pl.pabilo8.immersiveintelligence.common.util.block.ItemBlockIIBase;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IExplosionResistantMultiblock;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.ILadderMultiblock;
 
 import javax.annotation.Nonnull;
@@ -60,6 +57,7 @@ public abstract class BlockIIMultiblock<E extends Enum<E> & IITileMultiblockEnum
 		setFullCube(false);
 		setBlockLayer(BlockRenderLayer.CUTOUT_MIPPED, BlockRenderLayer.SOLID);
 		setToolTypes(IIReference.TOOL_HAMMER);
+		Arrays.fill(description, IIReference.DESCRIPTION_KEY+"multiblock_item");
 	}
 
 	//--- Other Methods ---//
@@ -116,18 +114,5 @@ public abstract class BlockIIMultiblock<E extends Enum<E> & IITileMultiblockEnum
 	{
 		TileEntity te = world.getTileEntity(pos);
 		return te instanceof ILadderMultiblock&&((ILadderMultiblock)te).isLadder();
-	}
-
-	@Override
-	public float getExplosionResistance(World world, @Nonnull BlockPos pos, Entity exploder, @Nonnull Explosion explosion)
-	{
-		TileEntity te = world.getTileEntity(pos);
-		if(te instanceof IExplosionResistantMultiblock)
-		{
-			float v = ((IExplosionResistantMultiblock)te).getExplosionResistance();
-			if(v!=-1)
-				return v/5f;
-		}
-		return super.getExplosionResistance(world, pos, exploder, explosion);
 	}
 }

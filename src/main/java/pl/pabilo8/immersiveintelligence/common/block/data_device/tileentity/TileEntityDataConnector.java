@@ -286,6 +286,7 @@ public class TileEntityDataConnector extends TileEntityImmersiveConnectable impl
 		return String.valueOf(this.color);
 	}
 
+	@SideOnly(Side.CLIENT)
 	@Override
 	public String[] getOverlayText(EntityPlayer player, RayTraceResult mop)
 	{

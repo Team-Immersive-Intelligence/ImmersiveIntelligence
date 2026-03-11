@@ -4,13 +4,11 @@ Bertha's Sister
 # intro
 @level_circuits,hammer_electric,upgradable
 |[multiblock]{mb:"II:ArtilleryHowitzer"}|
-The *Precision Bombardment Device*, commonly known as the **Artillery Howitzer
-** is an indirect weapon, excellent for attacking targets over long distances.
+The *Precision Bombardment Device*, commonly known as the **Artillery Howitzer** is an indirect weapon, excellent for attacking targets over long distances.
 # forming_block
 It can be formed by using the [hammer](introduction#introductionHammer) on the concrete opposite the redstone engineering block.
 # details
-The **Howitzer
-** emplacement consists of a concrete bunker with the [gun platform], a [loading mechanism], command tables and [steel door], which can be opened by providing a [redstone signal].<br>
+The **Howitzer** emplacement consists of a concrete bunker with the [gun platform], a [loading mechanism], command tables, and a [steel door], which can be opened by providing a [redstone signal].<br>
 [Ammunition](bullet_production.md#bullet) has to be provided to the [downward] conveyor and a storage for spent casings to the [upward] conveyor.
 The machine requires **large amounts of power** to operate.
 # operation

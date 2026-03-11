@@ -1,145 +1,38 @@
 package pl.pabilo8.immersiveintelligence.client.gui.deco.util;
 
-import blusunrize.immersiveengineering.api.energy.immersiveflux.IFluxStorage;
 import blusunrize.immersiveengineering.client.ClientUtils;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.api.rotary.IRotaryEnergy;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.GuiComponentDecoBase.DecoComponentTemplate;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.button.DecoButton;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoBar;
-import pl.pabilo8.immersiveintelligence.client.gui.deco.component.storage.DecoBar.BarTooltipFormat;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
-import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionBase.IIIMultiblockRecipe;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionMulti;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionSingle;
 
+import java.awt.*;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.StringSelection;
+import java.awt.datatransfer.Transferable;
 import java.util.Collection;
 import java.util.function.Function;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @ii-approved 0.3.1
  * @since 03.03.2022
  */
 @SideOnly(Side.CLIENT)
 public class DecoGuiUtils
 {
-	public static final DecoComponentTemplate<DecoButton> LIST_BUTTON_TEMPLATE = component -> component
-			.withBackground(IIReference.RES_TEXTURES_DECO_BUTTON_PAPER_HIGHLIGHT)
-			.withPadding(0, 0, 0, 0)
-			.withSize(14, 14);
-	public static final DecoComponentTemplate<DecoButton> LIST_BUTTON_EDIT_TEMPLATE = LIST_BUTTON_TEMPLATE.and(
-			component -> component
-					.withBackgroundColor(IIColor.fromPackedRGB(0x8a7d67))
-					.withIcon(IIReference.RES_TEXTURES_DECO_ICON_ACTION_EDIT)
-					.withTranslatedTooltip(IIReference.GUI_TOOLTIP_KEY+"button.edit")
-	);
-	public static final DecoComponentTemplate<DecoButton> LIST_BUTTON_REMOVE_TEMPLATE = LIST_BUTTON_TEMPLATE.and(
-			component -> component
-					.withBackgroundColor(IIColor.fromPackedRGB(0x8a6865))
-					.withIcon(IIReference.RES_TEXTURES_DECO_ICON_ACTION_REMOVE)
-					.withTranslatedTooltip(IIReference.GUI_TOOLTIP_KEY+"button.remove")
-	);
-	public static final DecoComponentTemplate<DecoButton> LIST_BUTTON_ADD_TEMPLATE = LIST_BUTTON_TEMPLATE.and(
-			component -> component
-					.withBackgroundColor(IIColor.fromPackedRGB(0x778a78))
-					.withIcon(IIReference.RES_TEXTURES_DECO_ICON_ACTION_ADD)
-					.withTranslatedTooltip(IIReference.GUI_TOOLTIP_KEY+"button.add")
-	);
-	public static final DecoComponentTemplate<DecoButton> LIST_BUTTON_DUPLICATE_TEMPLATE = LIST_BUTTON_TEMPLATE.and(
-			component -> component
-					.withBackgroundColor(IIColor.fromPackedRGB(0x7c8a6d))
-					.withIcon(IIReference.RES_TEXTURES_DECO_ICON_ACTION_DUPLICATE)
-					.withTranslatedTooltip(IIReference.GUI_TOOLTIP_KEY+"button.duplicate")
-	);
-
-	public static final DecoComponentTemplate<DecoButton> LIST_BUTTON_CLEAR_TEMPLATE = LIST_BUTTON_TEMPLATE.and(
-			component -> component
-					.withBackgroundColor(IIColor.fromPackedRGB(0x8a7568))
-					.withIcon(IIReference.RES_TEXTURES_DECO_ICON_ACTION_CLEAR)
-					.withTranslatedTooltip(IIReference.GUI_TOOLTIP_KEY+"button.clear")
-	);
-	//--- Mechanical Torque Bar ---//
-	public static final Function<IRotaryEnergy, DecoComponentTemplate<DecoBar>> BAR_MECH_TORQUE =
-			rotaryEnergy -> component -> component
-					.withColors(IIColor.fromPackedRGB(0x4e5e36), IIColor.fromPackedRGB(0x314a1d))
-					.withIconLocation(IIReference.RES_ICON_MECH_TORQUE)
-					.withValueTooltip("mech_torque.stored", BarTooltipFormat.VALUE_TO_MAX, TextFormatting.GOLD)
-					.withLimits(0, 100, () -> (int)rotaryEnergy.getTorque())
-					.withSmoothAnimation();
-	public static final Function<IRotaryEnergy, DecoComponentTemplate<DecoBar>> BAR_MECH_TORQUE_INPUT =
-			rotaryEnergy -> component -> component
-					.withTemplate(BAR_MECH_TORQUE.apply(rotaryEnergy))
-					.withIconLocation(IIReference.RES_ICON_MECH_TORQUE_INPUT)
-					.withValueTooltip("mech_torque.input", BarTooltipFormat.VALUE, TextFormatting.GOLD);
-	public static final Function<IRotaryEnergy, DecoComponentTemplate<DecoBar>> BAR_MECH_TORQUE_OUTPUT =
-			rotaryEnergy -> component -> component
-					.withTemplate(BAR_MECH_TORQUE.apply(rotaryEnergy))
-					.withIconLocation(IIReference.RES_ICON_MECH_TORQUE_OUTPUT)
-					.withValueTooltip("mech_torque.output", BarTooltipFormat.VALUE, TextFormatting.GOLD)
-					.withLimits(0, 100, () -> (int)rotaryEnergy.getOutputTorque());
-	//--- Mechanical Speed Bar ---//
-	public static final Function<IRotaryEnergy, DecoComponentTemplate<DecoBar>> BAR_MECH_SPEED =
-			rotaryEnergy -> component -> component
-					.withColors(IIColor.fromPackedRGB(0x5e443d), IIColor.fromPackedRGB(0x49211d))
-					.withIconLocation(IIReference.RES_ICON_MECH_SPEED)
-					.withValueTooltip("mech_speed.stored", BarTooltipFormat.VALUE_TO_MAX, TextFormatting.GOLD)
-					.withLimits(0, 720, () -> (int)rotaryEnergy.getRotationSpeed())
-					.withSmoothAnimation();
-	public static final Function<IRotaryEnergy, DecoComponentTemplate<DecoBar>> BAR_MECH_SPEED_INPUT =
-			rotaryEnergy -> component -> component
-					.withTemplate(BAR_MECH_SPEED.apply(rotaryEnergy))
-					.withIconLocation(IIReference.RES_ICON_MECH_SPEED_INPUT)
-					.withValueTooltip("mech_speed.input", BarTooltipFormat.VALUE, TextFormatting.GOLD);
-	public static final Function<IRotaryEnergy, DecoComponentTemplate<DecoBar>> BAR_MECH_SPEED_OUTPUT =
-			rotaryEnergy -> component -> component
-					.withTemplate(BAR_MECH_SPEED.apply(rotaryEnergy))
-					.withIconLocation(IIReference.RES_ICON_MECH_SPEED_OUTPUT)
-					.withValueTooltip("mech_speed.output", BarTooltipFormat.VALUE, TextFormatting.GOLD)
-					.withLimits(0, 720, () -> (int)rotaryEnergy.getOutputRotationSpeed());
-	//--- Armor ---//
-	public static final DecoComponentTemplate<DecoBar> BAR_ARMOR_INTEGRITY = component -> component
-			.withColors(IIColor.fromPackedRGB(0x6b6b6b), IIColor.fromPackedRGB(0x3c3c3c))
-			.withIconLocation(IIReference.RES_ICON_ARMOR_INTEGRITY)
-			.withValueTooltip("armor_integrity", BarTooltipFormat.VALUE_TO_MAX, TextFormatting.GOLD)
-			.withSmoothAnimation();
-	public static final DecoComponentTemplate<DecoBar> BAR_REACTIVE_ARMOR_INTEGRITY = component -> component
-			.withColors(IIColor.fromPackedRGB(0x536369), IIColor.fromPackedRGB(0x30383b))
-			.withIconLocation(IIReference.RES_ICON_ARMOR_INTEGRITY)
-			.withValueTooltip("reactive_armor_integrity", BarTooltipFormat.VALUE_TO_MAX, TextFormatting.GOLD)
-			.withSmoothAnimation();
-	public static final DecoComponentTemplate<DecoBar> BAR_STRUCTURAL_INTEGRITY = component -> component
-			.withColors(IIColor.fromPackedRGB(0x79675a), IIColor.fromPackedRGB(0x4a3035))
-			.withIconLocation(IIReference.RES_ICON_STRUCTURAL_INTEGRITY)
-			.withValueTooltip("structural_integrity", BarTooltipFormat.VALUE_TO_MAX, TextFormatting.GOLD)
-			.withSmoothAnimation();
-	//--- Energy Bar ---//
-	private static final DecoComponentTemplate<DecoBar> BAR_ELECTRIC_ENERGY_BASE = component -> component
-			.withColors(IIColor.fromPackedRGB(0xb37e28), IIColor.fromPackedRGB(0x663f26))
-			.withIconLocation(IIReference.RES_ICON_ENERGY);
-	public static final Function<IFluxStorage, DecoComponentTemplate<DecoBar>> BAR_ELECTRIC_ENERGY =
-			energyStorage -> component -> component
-					.withTemplate(BAR_ELECTRIC_ENERGY_BASE)
-					.withValueTooltip("energy.stored", BarTooltipFormat.VALUE_TO_MAX, TextFormatting.GOLD)
-					.withLimits(0, energyStorage.getMaxEnergyStored(), energyStorage::getEnergyStored);
-	public static final DecoComponentTemplate<DecoBar> BAR_ELECTRIC_ENERGY_INPUT = component -> component
-			.withTemplate(BAR_ELECTRIC_ENERGY_BASE)
-			.withIconLocation(IIReference.RES_ICON_ENERGY_INPUT)
-			.withValueTooltip("energy.input", BarTooltipFormat.VALUE, TextFormatting.GOLD);
-	public static final DecoComponentTemplate<DecoBar> BAR_ELECTRIC_ENERGY_OUTPUT = component -> component
-			.withTemplate(BAR_ELECTRIC_ENERGY_BASE)
-			.withIconLocation(IIReference.RES_ICON_ENERGY_OUTPUT)
-			.withValueTooltip("energy.output", BarTooltipFormat.VALUE, TextFormatting.GOLD);
-
 	public static IIDrawUtils drawBackgroundMask(Collection<DecoBackgroundTile> rects, int minXOffset, int minYOffset)
 	{
 		IIDrawUtils draw = IIDrawUtils.startTextured();
@@ -279,18 +172,55 @@ public class DecoGuiUtils
 
 	public static void drawFrame(IIDrawUtils draw, int x, int y, int width, int height, ResLoc style, boolean[] sides, int frameThickness)
 	{
-		IIColor color = IIColor.WHITE;
-		x -= frameThickness/2;
-		y -= frameThickness/2;
-		width += frameThickness;
-		height += frameThickness;
+		TextureAtlasSprite sprite = ClientUtils.getSprite(style);
+		//x -= frameThickness/2;
+		//y -= frameThickness/2;
+//		width += frameThickness;
+//		height += frameThickness;
 
-		//Top side
+		//Top-Left mappings
+		float minU = sprite.getMinU();
+		float minUU = sprite.getInterpolatedU(frameThickness/2f);
+		float minV = sprite.getMinV();
+		float minVV = sprite.getInterpolatedV(frameThickness/2f);
+		//Bottom-Right mappings
+		float maxU = sprite.getInterpolatedU(16-frameThickness/2f);
+		float maxUU = sprite.getInterpolatedU(16);
+		float maxV = sprite.getInterpolatedV(16-frameThickness/2f);
+		float maxVV = sprite.getInterpolatedV(16);
+
+		//Draw main frame
+
+		//Top
 		if(sides[0])
-			draw.drawRepeatedColorRect(x, y, width, frameThickness, color, style, 20, frameThickness, 3/16f, 13/16f, 0, frameThickness/32f);
+			draw.drawRepeatedTexColorRect(x+frameThickness, y, width-frameThickness*2, frameThickness, IIColor.WHITE,
+					32-2*frameThickness, frameThickness, minUU, maxU, minV, minVV);
+		//Bottom
+		if(sides[1])
+			draw.drawRepeatedTexColorRect(x+frameThickness, y+height-frameThickness, width-frameThickness*2, frameThickness, IIColor.WHITE,
+					32-2*frameThickness, frameThickness, minUU, maxU, maxV, maxVV);
+		//Left
+		if(sides[2])
+			draw.drawRepeatedTexColorRect(x, y+frameThickness, frameThickness, height-frameThickness*2, IIColor.WHITE,
+					frameThickness, 32-2*frameThickness, minU, minUU, minVV, maxV);
+		//Right
+		if(sides[3])
+			draw.drawRepeatedTexColorRect(x+width-frameThickness, y+frameThickness, frameThickness, height-frameThickness*2, IIColor.WHITE,
+					frameThickness, 32-2*frameThickness, maxU, maxUU, minVV, maxV);
 
-		//Draw corners on top of the frame
-		drawFrameCorners(draw, x, y, width, height, style, sides);
+		//Draw squares on frame edges
+		if(sides[0]||sides[3])
+			draw.drawTexColorRect(x, y, frameThickness, frameThickness, IIColor.WHITE,
+					minU, minUU, minV, minVV);
+		if(sides[0]||sides[1])
+			draw.drawTexColorRect(x+width-frameThickness, y, frameThickness, frameThickness, IIColor.WHITE,
+					maxU, maxUU, minV, minVV);
+		if(sides[2]||sides[3])
+			draw.drawTexColorRect(x, y+height-frameThickness, frameThickness, frameThickness, IIColor.WHITE,
+					minU, minUU, maxV, maxVV);
+		if(sides[2]||sides[1])
+			draw.drawTexColorRect(x+width-frameThickness, y+height-frameThickness, frameThickness, frameThickness, IIColor.WHITE,
+					maxU, maxUU, maxV, maxVV);
 	}
 
 
@@ -310,18 +240,18 @@ public class DecoGuiUtils
 		TextureAtlasSprite sprite = ClientUtils.getSprite(spriteLocation);
 		for(int yy = 0; yy < height; yy += iSize)
 		{
+			int drawHeight = Math.min(iSize, height-yy);
+			boolean isTop = yy==0;
+			boolean isBottom = yy+drawHeight >= height;
+
 			for(int xx = 0; xx < width; xx += iSize)
 			{
-				boolean isLeft = xx==0;
-				boolean isRight = xx+iSize >= width;
-				boolean isTop = yy==0;
-				boolean isBottom = yy+iSize >= height;
-
-				float texX = isLeft?0: (isRight?16-tSize: tStart);
-				float texY = isTop?0: (isBottom?16-tSize: tStart);
-
 				int drawWidth = Math.min(iSize, width-xx);
-				int drawHeight = Math.min(iSize, height-yy);
+				boolean isLeft = xx==0;
+				boolean isRight = xx+drawWidth >= width;
+
+				float texX = isLeft?0: (isRight?16-((drawWidth/(float)texSize)*16): tStart);
+				float texY = isTop?0: (isBottom?16-((drawHeight/(float)texSize)*16): tStart);
 
 				draw.drawTexColorRect(
 						x+xx, y+yy, drawWidth, drawHeight, color,
@@ -329,6 +259,92 @@ public class DecoGuiUtils
 						sprite.getInterpolatedV(texY), sprite.getInterpolatedV(texY+(drawHeight/(float)texSize)*16)
 				);
 			}
+		}
+	}
+
+	/**
+	 * Sets the system clipboard string, with a fallback to Minecraft's clipboard handling
+	 *
+	 * @param string String to set
+	 */
+	public static void setClipboardString(String string)
+	{
+		try
+		{
+			Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(string), null);
+		} catch(Exception ignored)
+		{
+			GuiScreen.setClipboardString(string);
+		}
+	}
+
+	/**
+	 * Sets NBT to the system clipboard, with a fallback to Minecraft's clipboard handling
+	 *
+	 * @param compound NBT to set
+	 */
+	public static void setClipboardNBT(NBTTagCompound compound)
+	{
+		setClipboardString(compound.toString());
+	}
+
+	/**
+	 * Sets EasyNBT to the system clipboard, with a fallback to Minecraft's clipboard handling
+	 *
+	 * @param nbt EasyNBT to set
+	 */
+	public static void setClipboardEasyNBT(EasyNBT nbt)
+	{
+		setClipboardNBT(nbt.unwrap());
+	}
+
+	/**
+	 * Reads a string from the system clipboard, with a fallback to Minecraft's clipboard handling
+	 *
+	 * @return Clipboard string
+	 */
+	public static String getClipboardString()
+	{
+		try
+		{
+			Transferable t = Toolkit.getDefaultToolkit().getSystemClipboard().getContents(null);
+			if(t!=null&&t.isDataFlavorSupported(DataFlavor.stringFlavor))
+				return (String)t.getTransferData(DataFlavor.stringFlavor);
+		} catch(Exception ignored) {}
+		return GuiScreen.getClipboardString();
+	}
+
+	/**
+	 * Reads NBT from the system clipboard, with a fallback to Minecraft's clipboard handling
+	 *
+	 * @return Clipboard NBT
+	 */
+	public static NBTTagCompound getClipboardNBT()
+	{
+		String clipboardString = getClipboardString();
+		try
+		{
+			return EasyNBT.parseNBT(clipboardString);
+		} catch(Exception e)
+		{
+			return new NBTTagCompound();
+		}
+	}
+
+	/**
+	 * Reads EasyNBT from the system clipboard, with a fallback to Minecraft's clipboard handling
+	 *
+	 * @return Clipboard EasyNBT
+	 */
+	public static EasyNBT getClipboardEasyNBT()
+	{
+		String clipboardString = getClipboardString();
+		try
+		{
+			return EasyNBT.parseEasyNBT(clipboardString);
+		} catch(Exception e)
+		{
+			return EasyNBT.newNBT();
 		}
 	}
 
@@ -342,6 +358,18 @@ public class DecoGuiUtils
 		};
 	}
 
+	public static <T extends TileEntityMultiblockProductionMulti<T, R>, R extends IIIMultiblockRecipe> Function<Float, Float>
+	getMultiblockMultiProgress(TileEntityMultiblockProductionMulti<T, R> tile, float startFraction, float endFraction)
+	{
+		final float duration = endFraction-startFraction;
+		return partialTicks -> {
+			if(tile.processQueue.isEmpty())
+				return 0f;
+			float progress = tile.getProductionProgress(tile.processQueue.get(0), partialTicks);
+			return MathHelper.clamp((progress-startFraction)/duration, 0, 1);
+		};
+	}
+
 	public static <T extends TileEntityMultiblockProductionSingle<T, R>, R extends IIIMultiblockRecipe> Function<Float, Float>
 	getMultiblockProductionSingleProgress(TileEntityMultiblockProductionSingle<T, R> tile)
 	{
@@ -349,6 +377,18 @@ public class DecoGuiUtils
 			if(tile.currentProcess==null)
 				return 0f;
 			return tile.getProductionProgress(tile.currentProcess, partialTicks);
+		};
+	}
+
+	public static <T extends TileEntityMultiblockProductionSingle<T, R>, R extends IIIMultiblockRecipe> Function<Float, Float>
+	getMultiblockProductionSingleProgress(TileEntityMultiblockProductionSingle<T, R> tile, float startFraction, float endFraction)
+	{
+		final float duration = endFraction-startFraction;
+		return partialTicks -> {
+			if(tile.currentProcess==null)
+				return 0f;
+			float progress = tile.getProductionProgress(tile.currentProcess, partialTicks);
+			return MathHelper.clamp((progress-startFraction)/duration, 0, 1);
 		};
 	}
 }

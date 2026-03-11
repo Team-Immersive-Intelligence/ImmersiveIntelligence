@@ -44,7 +44,7 @@ public class AmmoComponentWhitePhosphorus extends AmmoComponent
 	}
 
 	@Override
-	public void onEffect(World world, Vec3d pos, Vec3d dir, ComponentEffectShape shape, NBTTagCompound tag, float componentAmount, float multiplier, @Nullable Entity owner)
+	public void onEffect(World world, Vec3d pos, Vec3d dir, ComponentEffectShape shape, NBTTagCompound tag, float size, float multiplier, @Nullable Entity owner)
 	{
 		// CLOUD shape: similar to what you implemented earlier
 		if(shape==ComponentEffectShape.ORB)

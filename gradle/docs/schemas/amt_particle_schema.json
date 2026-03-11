@@ -92,6 +92,32 @@
           "max_amount": {
             "type": "integer",
             "minimum": 0
+          },
+          "inherited_properties": {
+            "type": "array",
+            "enum": [
+              "previous_position",
+              "position",
+              "motion",
+              "rotation",
+              "rotation_pitch",
+              "rotation_yaw",
+              "scale",
+              "size",
+              "lifetime",
+              "max_lifetime",
+              "progress",
+              "is_alive",
+              "on_ground",
+              "color",
+              "red",
+              "green",
+              "blue",
+              "alpha",
+              "textures",
+              "textures_count",
+              "texture_shift"
+            ]
           }
         },
         "required": ["time", "generator", "distance", "type"],
