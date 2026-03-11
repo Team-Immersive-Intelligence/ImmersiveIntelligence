@@ -39,7 +39,8 @@ public class OwnerIdentity
 		DEFAULT_LEVELS.put(PermissionCategory.TRADE, PermissionLevel.OTHERS_ALLOW);
 		DEFAULT_LEVELS.put(PermissionCategory.RESEARCH, PermissionLevel.MEMBER_ALLOW);
 		DEFAULT_LEVELS.put(PermissionCategory.LOGISTICS, PermissionLevel.MEMBER_ALLOW);
-		DEFAULT_LEVELS.put(PermissionCategory.CONTAINER_ACCESS, PermissionLevel.OTHERS_ALLOW);
+		DEFAULT_LEVELS.put(PermissionCategory.CONTAINER_ACCESS, PermissionLevel.MEMBER_ALLOW);
+		DEFAULT_LEVELS.put(PermissionCategory.BREAKING_STRUCTURES, PermissionLevel.MEMBER_ALLOW);
 	}
 
 	//Publicly displayed name
@@ -128,6 +129,21 @@ public class OwnerIdentity
 	public String getDisplayName()
 	{
 		return displayName;
+	}
+
+	public List<String> getOwners()
+	{
+		return Collections.unmodifiableList(owners);
+	}
+
+	public List<String> getPlayers()
+	{
+		return Collections.unmodifiableList(players);
+	}
+
+	public ItemStack getBanner()
+	{
+		return banner;
 	}
 
 	/**
