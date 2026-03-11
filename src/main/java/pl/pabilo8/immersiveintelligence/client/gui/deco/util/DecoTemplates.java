@@ -71,40 +71,40 @@ public class DecoTemplates
 			rotaryEnergy -> component -> component
 					.withColors(DecoColors.TORQUE1, DecoColors.TORQUE2)
 					.withIconLocation(DecoTextures.ICON_MECH_TORQUE)
-					.withValueTooltip(IIReference.INFO_KEY_TORQUE_BOTH, BarTooltipFormat.VALUE_TO_MAX, TextFormatting.GOLD)
+					.withValueTooltip("mech_torque.stored", BarTooltipFormat.VALUE_TO_MAX, TextFormatting.GOLD)
 					.withLimits(0, 100, () -> (int)rotaryEnergy.getTorque())
 					.withSmoothAnimation();
 	public static final Function<IRotaryEnergy, DecoComponentTemplate<DecoBar>> BAR_MECH_TORQUE_OUTPUT =
 			rotaryEnergy -> component -> component
 					.withTemplate(BAR_MECH_TORQUE.apply(rotaryEnergy))
 					.withIconLocation(DecoTextures.ICON_MECH_TORQUE_OUTPUT)
-					.withValueTooltip(IIReference.INFO_KEY_TORQUE_OUT, BarTooltipFormat.VALUE, TextFormatting.GOLD)
+					.withValueTooltip("mech_torque.output", BarTooltipFormat.VALUE, TextFormatting.GOLD)
 					.withLimits(0, 100, () -> (int)rotaryEnergy.getOutputTorque());
 	public static final Function<IRotaryEnergy, DecoComponentTemplate<DecoBar>> BAR_MECH_TORQUE_INPUT =
 			rotaryEnergy -> component -> component
 					.withTemplate(BAR_MECH_TORQUE.apply(rotaryEnergy))
 					.withIconLocation(DecoTextures.ICON_MECH_TORQUE_INPUT)
-					.withValueTooltip(IIReference.INFO_KEY_TORQUE_IN, BarTooltipFormat.VALUE, TextFormatting.GOLD);
+					.withValueTooltip("mech_torque.input", BarTooltipFormat.VALUE, TextFormatting.GOLD);
 
 	//--- Mechanical Speed Bar ---//
 	public static final Function<IRotaryEnergy, DecoComponentTemplate<DecoBar>> BAR_MECH_SPEED =
 			rotaryEnergy -> component -> component
 					.withColors(DecoColors.SPEED1, DecoColors.SPEED2)
 					.withIconLocation(DecoTextures.ICON_MECH_SPEED)
-					.withValueTooltip(IIReference.INFO_KEY_SPEED_BOTH, BarTooltipFormat.VALUE_TO_MAX, TextFormatting.GOLD)
+					.withValueTooltip("mech_speed.stored", BarTooltipFormat.VALUE_TO_MAX, TextFormatting.GOLD)
 					.withLimits(0, 720, () -> (int)rotaryEnergy.getRotationSpeed())
 					.withSmoothAnimation();
 	public static final Function<IRotaryEnergy, DecoComponentTemplate<DecoBar>> BAR_MECH_SPEED_OUTPUT =
 			rotaryEnergy -> component -> component
 					.withTemplate(BAR_MECH_SPEED.apply(rotaryEnergy))
 					.withIconLocation(DecoTextures.ICON_MECH_SPEED_OUTPUT)
-					.withValueTooltip(IIReference.INFO_KEY_SPEED_OUT, BarTooltipFormat.VALUE, TextFormatting.GOLD)
+					.withValueTooltip("mech_speed.output", BarTooltipFormat.VALUE, TextFormatting.GOLD)
 					.withLimits(0, 720, () -> (int)rotaryEnergy.getOutputRotationSpeed());
 	public static final Function<IRotaryEnergy, DecoComponentTemplate<DecoBar>> BAR_MECH_SPEED_INPUT =
 			rotaryEnergy -> component -> component
 					.withTemplate(BAR_MECH_SPEED.apply(rotaryEnergy))
 					.withIconLocation(DecoTextures.ICON_MECH_SPEED_INPUT)
-					.withValueTooltip(IIReference.INFO_KEY_SPEED_IN, BarTooltipFormat.VALUE, TextFormatting.GOLD);
+					.withValueTooltip("mech_speed.input", BarTooltipFormat.VALUE, TextFormatting.GOLD);
 
 	//--- Armor ---//
 	public static final DecoComponentTemplate<DecoBar> BAR_ARMOR_INTEGRITY = component -> component
