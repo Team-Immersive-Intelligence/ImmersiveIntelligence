@@ -6,6 +6,7 @@ import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -13,7 +14,10 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+
+import java.util.Random;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.ComponentEffectShape;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
@@ -28,6 +32,8 @@ import javax.annotation.Nullable;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
+ * @author Avalon (avalon@iiteam.net)
+ * @updated 03.11.2026
  * @since 08.12.2021
  */
 public class BlockIIAdvancedExplosives extends BlockIIBase<HMX_Explosives>
@@ -38,6 +44,7 @@ public class BlockIIAdvancedExplosives extends BlockIIBase<HMX_Explosives>
 		this.setHardness(3.0F);
 		this.setResistance(25F);
 		setCategory(IICategory.WARFARE);
+		this.setTickRandomly(true);
 	}
 
 	@Override
@@ -51,6 +58,7 @@ public class BlockIIAdvancedExplosives extends BlockIIBase<HMX_Explosives>
 			{
 				world.setBlockToAir(pos); //Remove the block
 				explode(world, pos, player); //Trigger the explosion
+				explode(world, pos, state, player); //Trigger the explosion
 				return true;
 			}
 		}
@@ -60,19 +68,76 @@ public class BlockIIAdvancedExplosives extends BlockIIBase<HMX_Explosives>
 	@Override
 	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos)
 	{
-		//If powered by redstone, ignite the dynamite
-		if(world.isBlockPowered(pos))
+		if(!world.isRemote)
 		{
-			explode(world, pos, null);
+			//If powered by redstone, detonate
+			if(world.isBlockPowered(pos))
+			{
+				explode(world, pos, state, null);
+				world.setBlockToAir(pos);
+				return;
+			}
+			//If fire is used, detonate
+			if(isAdjacentToFire(world, pos))
+			{
+				explode(world, pos, state, null);
+				world.setBlockToAir(pos);
+			}
+		}
+	}
+
+	@Override
+	public void randomTick(World world, BlockPos pos, IBlockState state, Random random)
+	{
+		if(!world.isRemote&&isAdjacentToFire(world, pos))
+		{
+			explode(world, pos, state, null);
 			world.setBlockToAir(pos);
 		}
 	}
+
+
+	//checks if fire is adject to the block
+	private boolean isAdjacentToFire(World world, BlockPos pos)
+	{
+		for(EnumFacing facing : EnumFacing.VALUES)
+		{
+			IBlockState neighbor = world.getBlockState(pos.offset(facing));
+			if(neighbor.getBlock()==Blocks.FIRE||neighbor.getMaterial()==Material.FIRE)
+				return true;
+		}
+		return false;
+	}
+
+	//Can catch on fire/ firespread
+
+	@Override
+	public boolean isFlammable(IBlockAccess world, BlockPos pos, EnumFacing face)
+	{
+		return true;
+	}
+
+	@Override
+	public int getFlammability(IBlockAccess world, BlockPos pos, EnumFacing face)
+	{
+		return 100;
+	}
+
 
 	public void explode(World world, BlockPos pos, @Nullable EntityLivingBase igniter)
 	{
 		if(!world.isRemote)
 		{
 			IBlockState state = world.getBlockState(pos);
+			if(state.getBlock()==this)
+				explode(world, pos, state, igniter);
+		}
+	}
+
+	public void explode(World world, BlockPos pos, IBlockState state, @Nullable EntityLivingBase igniter)
+	{
+		if(!world.isRemote)
+		{
 			HMX_Explosives type = state.getValue(this.property);
 			AmmoComponent component;
 			switch(type)
