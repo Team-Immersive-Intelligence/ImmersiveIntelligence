@@ -365,7 +365,7 @@ item.immersiveintelligence.printed_page.newspaper.name=Газета
 item.immersiveintelligence.printed_page.book.name=Печатная книга
 item.immersiveintelligence.printed_page.letter.name=Письмо
 
-item.immersiveintelligence.logistic_tag.name=Logistic Manifest
+item.immersiveintelligence.logistic_tag.name=Логистический манифест
 
 item.immersiveintelligence.precission_tool.buzzsaw.name=Точная циркулярная пила
 item.immersiveintelligence.precission_tool.drill.name=Точная дрель
@@ -777,7 +777,7 @@ desc.immersiveengineering.info.multiblock.II:ScanningConveyor=Конвейрны
 desc.immersiveengineering.info.multiblock.II:Packer=Упаковщик
 desc.immersiveengineering.info.multiblock.II:MinecartPacker=Рельсовый упаковщик
 
-desc.immersiveengineering.info.multiblock.II:RedstoneDataInterface=Redstone-Data Interfaceрррррррррррррррррррррррррррррррррррррррррррррррррррррр
+desc.immersiveengineering.info.multiblock.II:RedstoneDataInterface=Редстоун-Данные интерфейс
 
 desc.immersiveengineering.info.multiblock.II:VehicleWorkshop=Автомастерская
 desc.immersiveengineering.info.multiblock.II:FuelStation=Заправочная станция
@@ -887,7 +887,7 @@ subtitle.immersiveintelligence.assault_rifle_shot_distant=Автомат стр�
 subtitle.immersiveintelligence.assault_rifle_reload=Автомат перезаряжается
 subtitle.immersiveintelligence.assault_rifle_unload=Автомат разряжается
 subtitle.immersiveintelligence.assault_rifle_mode_change=Переключение режима огня
-subtitle.immersiveintelligence.assault_rifle_load_grenade=Rifle Grenade Loading
+subtitle.immersiveintelligence.assault_rifle_load_grenade=Подствольная граната перезаряжается
 
 subtitle.immersiveintelligence.rifle_shot=Винтовка стреляет
 subtitle.immersiveintelligence.rifle_shot_distant=Винтовка стреляет вдалеке
@@ -895,7 +895,7 @@ subtitle.immersiveintelligence.rifle_load=Винтовка перезаряжа�
 subtitle.immersiveintelligence.rifle_load_magazine=Винтовка перезаряжается
 subtitle.immersiveintelligence.rifle_unload_magazine=Винтовка разряжается
 
-subtitle.immersiveintelligence.magazine_load=Ammo Magazine Reloading
+subtitle.immersiveintelligence.magazine_load=Магазин снаряжается
 
 subtitle.immersiveintelligence.howitzer_shot=Артиллерийское орудие стреляет
 subtitle.immersiveintelligence.howitzer_shot_distant=Артиллерийское орудие стреляет вдалеке
@@ -1083,8 +1083,8 @@ machineupgrade.immersiveintelligence.emplacement.targetting.desc=Improved fire c
 
 #Emplacement Weapons
 
-machineupgrade.immersiveintelligence.emplacement.infrared_observer=Infrared Observer
-machineupgrade.immersiveintelligence.emplacement.infrared_observer.desc=The Infrared Observer allows surveillance of distant enemies and sending their coordinates via data cables.
+machineupgrade.immersiveintelligence.emplacement.infrared_observer=Инфракрасный наблюдатель
+machineupgrade.immersiveintelligence.emplacement.infrared_observer.desc=Инфракрасный наблюдатель позволяет вести наблюдение за удаленными врагами и передавать их координаты по кабелям передачи данных.
 
 machineupgrade.immersiveintelligence.emplacement.spotlight_tower=Spotlight Tower
 machineupgrade.immersiveintelligence.emplacement.spotlight_tower.desc=The Spotlight Tower allows illumination of hostile units, disorienting them and increasing accuracy of allied units.
@@ -1092,35 +1092,35 @@ machineupgrade.immersiveintelligence.emplacement.spotlight_tower.desc=The Spotli
 machineupgrade.immersiveintelligence.emplacement.searchlight=Searchlight
 machineupgrade.immersiveintelligence.emplacement.searchlight.desc=Searchlights work in coordination with Radars, Infrared Observers or Spotlight Towers, disorienting hostile units and increasing accuracy of allied fire.
 
-machineupgrade.immersiveintelligence.emplacement.cpds=CPDS
-machineupgrade.immersiveintelligence.emplacement.cpds.desc=The Counter-Projectile Defense System is an advanced anti-air weapon, capable of destroying incoming artillery shells in mid-air.
+machineupgrade.immersiveintelligence.emplacement.cpds=СПСО
+machineupgrade.immersiveintelligence.emplacement.cpds.desc=Система ПротивоСнарядной Обороны (СПСО) - это современное противовоздушное оружие, способное уничтожать летящие артиллерийские снаряды в воздухе.
 
-machineupgrade.immersiveintelligence.emplacement.autocannon=Autocannon
-machineupgrade.immersiveintelligence.emplacement.autocannon.desc=Four 3bCal Automatic Cannons provide lots of firepower making the weapon a universal defense against air and ground targets.
+machineupgrade.immersiveintelligence.emplacement.autocannon=Автоматическая пушка
+machineupgrade.immersiveintelligence.emplacement.autocannon.desc=Четыре автоматические пушки 3 bCal обеспечивают большую огневую мощь, что делает это оружие универсальным средством защиты от воздушных и наземных целей.
 
-machineupgrade.immersiveintelligence.emplacement.heavy_chemthrower=Heavy Chemthrower
-machineupgrade.immersiveintelligence.emplacement.heavy_chemthrower.desc=A heavier version of the well known Chemthrower, higher pressure allows for attacking enemies at ranges 4 times longer than the portable one.
+machineupgrade.immersiveintelligence.emplacement.heavy_chemthrower=Тяжёлый жидкомёт
+machineupgrade.immersiveintelligence.emplacement.heavy_chemthrower.desc=Более тяжелая версия хорошо известного химического жидкомёта с более высоким давлением позволяет атаковать врагов на расстоянии в 4 раза большем, чем у портативного.
 
-machineupgrade.immersiveintelligence.emplacement.heavy_railgun=Heavy Railgun
-machineupgrade.immersiveintelligence.emplacement.heavy_railgun.desc=Heavy Railgun provides direct fire support. It can launch metal rods or grenades with high velocity, allowing piercing of enemies and materiel.
+machineupgrade.immersiveintelligence.emplacement.heavy_railgun=Тяжёлый Рельсотрон
+machineupgrade.immersiveintelligence.emplacement.heavy_railgun.desc=Тяжелый рельсотрон обеспечивает прямую огневую поддержку. Он может запускать металлические стержни или гранаты с высокой скоростью, что позволяет пробивать врагов и боевую технику.
 
-machineupgrade.immersiveintelligence.emplacement.machinegun=Machinegun Nest
-machineupgrade.immersiveintelligence.emplacement.machinegun.desc=The Machinegun Nest can provide suppressive automatic fire, allowing crowd control. Due to its construction, it is unable to fight airborne enemies.
+machineupgrade.immersiveintelligence.emplacement.machinegun=Пулемётное гнездо
+machineupgrade.immersiveintelligence.emplacement.machinegun.desc=Пулеметное гнездо может вести подавляющий автоматический огонь, что позволяет сдерживать толпу. Из-за своей конструкции оно не может сражаться с воздушными врагами.
 
-machineupgrade.immersiveintelligence.emplacement.machinegun.heavy_barrel=Heavy Barrel
-machineupgrade.immersiveintelligence.emplacement.machinegun.heavy_barrel.desc=Heavy barrels allow for much faster firing rate and slightly increase the maximum permitted overheat.
+machineupgrade.immersiveintelligence.emplacement.machinegun.heavy_barrel=Тяжелый ствол
+machineupgrade.immersiveintelligence.emplacement.machinegun.heavy_barrel.desc=Тяжелый ствол обеспечивает гораздо более высокую скорострельность и немного увеличивают максимально допустимый перегрев.
 
-machineupgrade.immersiveintelligence.emplacement.machinegun.watercooled=Water Cooled Barrel
-machineupgrade.immersiveintelligence.emplacement.machinegun.watercooled.desc=A replacement for the stock barrels. When mounted, barrels do not overheat when a coolant is provided.
+machineupgrade.immersiveintelligence.emplacement.machinegun.watercooled=Ствол с водяным охлаждением
+machineupgrade.immersiveintelligence.emplacement.machinegun.watercooled.desc=Замена стандартного ствола. Когда установлено, стволы не перегреваются при подаче охлаждающей жидкости.
 
-machineupgrade.immersiveintelligence.emplacement.machinegun.bunker=Additional Fortifications
-machineupgrade.immersiveintelligence.emplacement.machinegun.bunker.desc=Placing additional sandbags around the machinegun nest gives it additional armor and increases its durability.
+machineupgrade.immersiveintelligence.emplacement.machinegun.bunker=Дополнительные укрепления
+machineupgrade.immersiveintelligence.emplacement.machinegun.bunker.desc=Размещение дополнительных мешков с песком вокруг пулеметного гнезда придает ему дополнительную броню и увеличивает его прочность.
 
-machineupgrade.immersiveintelligence.emplacement.mortar=Mortar
-machineupgrade.immersiveintelligence.emplacement.mortar.desc=Mortar provides indirect fire support on close range, bombarding enemies at an almost vertical angle.
+machineupgrade.immersiveintelligence.emplacement.mortar=Миномёт
+machineupgrade.immersiveintelligence.emplacement.mortar.desc=Миномет обеспечивает непрямую огневую поддержку с близкого расстояния, вертикальный угол обстрела и большой калибр снаряда позволяют ему пробивать крыши домов и уничтожать врагов сверху.
 
-machineupgrade.immersiveintelligence.emplacement.light_howitzer=Light Howitzer
-machineupgrade.immersiveintelligence.emplacement.light_howitzer.desc=Light Howitzer provides indirect fire support on medium range through quick and precise barrage of enemy positions.
+machineupgrade.immersiveintelligence.emplacement.light_howitzer=Легкая гаубица
+machineupgrade.immersiveintelligence.emplacement.light_howitzer.desc=Легкая гаубица обеспечивает непрямую огневую поддержку на средней дистанции, ее мобильность позволяет быстро и точно обстреливать позиции противника.
 
 machineupgrade.immersiveintelligence.emplacement.rocket_launcher=Rocket Projector
 machineupgrade.immersiveintelligence.emplacement.rocket_launcher.desc=The Rocket Projector provides devastating area bombardment using up to 6 unguided rockets, excellent for attacking fortified positions.
@@ -1128,8 +1128,8 @@ machineupgrade.immersiveintelligence.emplacement.rocket_launcher.desc=The Rocket
 machineupgrade.immersiveintelligence.emplacement.guided_missile_launcher=Wire-Guided Missile Launcher
 machineupgrade.immersiveintelligence.emplacement.guided_missile_launcher.desc=The Wire-Guided Missile Launcher provides long-range precision strikes, especially effective against moving targets.
 
-machineupgrade.immersiveintelligence.emplacement.tesla=Tesla Tower
-machineupgrade.immersiveintelligence.emplacement.tesla.desc=The Tesla Tower uses high voltage to decimate enemies in its radius, it's especially effective against electronics
+machineupgrade.immersiveintelligence.emplacement.tesla=Башня Теслы
+machineupgrade.immersiveintelligence.emplacement.tesla.desc=Башня Тесла использует высокое напряжение для уничтожения врагов в радиусе своего действия, она особенно эффективна против электроники.
 
 #Other upgrades
 machineupgrade.immersiveintelligence.core_filler=Наполнитель снарядов
@@ -1156,15 +1156,15 @@ machineupgrade.immersiveintelligence.rs_activation.desc=Подключение �
 machineupgrade.immersiveintelligence.razor_wire=Колючая проволока
 machineupgrade.immersiveintelligence.razor_wire.desc=Прикрепляет колючую проволоку поверх ворот, нанося урон любому врагу, который осмелится попытаться перелезть через них.
 
-machineupgrade.immersiveintelligence.printing_press.punchtapes=Punchtape Processor
-machineupgrade.immersiveintelligence.printing_press.punchtapes.desc=Modifies the the Printing Press input feeder to allow processing punchtapes.
-machineupgrade.immersiveintelligence.printing_press.batching=Batching Mechanism
-machineupgrade.immersiveintelligence.printing_press.batching.desc=Adds a hot-air stapler to the Printing Press, allowing it to bind pages and print books and newspapers.
-machineupgrade.immersiveintelligence.printing_press.enveloper=Enveloper
-machineupgrade.immersiveintelligence.printing_press.enveloper.desc=Modifies the internals of the Printing Press, allowing it to fold and envelope single pages into letters.
+machineupgrade.immersiveintelligence.printing_press.punchtapes=Обработчик перфоленты
+machineupgrade.immersiveintelligence.printing_press.punchtapes.desc=Изменяет устройство подачи материала в печатной машине, позволяя обрабатывать перфоленты.
+machineupgrade.immersiveintelligence.printing_press.batching=Механизм дозирования
+machineupgrade.immersiveintelligence.printing_press.batching.desc=Печатный станок оснащен воздушным степлером, который позволяет скреплять страницы и печатать книги и газеты.
+machineupgrade.immersiveintelligence.printing_press.enveloper=Сворачиватель
+machineupgrade.immersiveintelligence.printing_press.enveloper.desc=Изменяет внутреннее устройство печатной машины, позволяя ей складывать отдельные страницы и сворачивать их в письма.
 
 #Descriptions
-desc.immersiveintelligence.multiblock_item=Check Engineer's Manual on how to build.
+desc.immersiveintelligence.multiblock_item=Смотри Руководство инженера для сборки.
 desc.immersiveintelligence.radio_configurator_basic=Позволяет установить частоту для основных радиоустройств.
 desc.immersiveintelligence.radio_configurator_advanced=Модернизированная модель для установки более высоких частот.
 desc.immersiveintelligence.radio_configurator_frequency=Частота: %s
@@ -1190,19 +1190,19 @@ desc.immersiveintelligence.printed_page.newspaper=Несколько стран�
 desc.immersiveintelligence.printed_page.book=Несколько страниц, переплетенных в печатную книгу.
 desc.immersiveintelligence.printed_page.letter=Страница, упакованная в конверт для отправки кому-либо.
 
-desc.immersiveintelligence.logistic_tag.none=No logistic data written
-desc.immersiveintelligence.logistic_tag.info.hold=%s - Logistic Manifest
-desc.immersiveintelligence.logistic_tag.info.main=Logistic Manifest:
-desc.immersiveintelligence.logistic_tag.info.name=Name: %s
-desc.immersiveintelligence.logistic_tag.info.name.none=Name: <None>
-desc.immersiveintelligence.logistic_tag.info.description=Description: %s
-desc.immersiveintelligence.logistic_tag.info.description.none=Description: <None>
-desc.immersiveintelligence.logistic_tag.info.batch_number=Batch Number: %s
-desc.immersiveintelligence.logistic_tag.info.owner=Owner: %s
-desc.immersiveintelligence.logistic_tag.info.origin=Origin: %s
-desc.immersiveintelligence.logistic_tag.info.destination=Destination: %s
-desc.immersiveintelligence.logistic_tag.info.color=Color: %s
-desc.immersiveintelligence.logistic_tag.info.color.none=No color specified
+desc.immersiveintelligence.logistic_tag.none=Логистические данные отсутвуют
+desc.immersiveintelligence.logistic_tag.info.hold=%s - Логистический манифест
+desc.immersiveintelligence.logistic_tag.info.main=Логистический манифест:
+desc.immersiveintelligence.logistic_tag.info.name=Имя: %s
+desc.immersiveintelligence.logistic_tag.info.name.none=Имя: <Пусто>
+desc.immersiveintelligence.logistic_tag.info.description=Описание: %s
+desc.immersiveintelligence.logistic_tag.info.description.none=Описание: <Пусто>
+desc.immersiveintelligence.logistic_tag.info.batch_number=Серийный номер: %s
+desc.immersiveintelligence.logistic_tag.info.owner=Владелец: %s
+desc.immersiveintelligence.logistic_tag.info.origin=Исходный пункт: %s
+desc.immersiveintelligence.logistic_tag.info.destination=Пункт назначения: %s
+desc.immersiveintelligence.logistic_tag.info.color=Цвет: %s
+desc.immersiveintelligence.logistic_tag.info.color.none=Цвет не указан
 
 desc.immersiveintelligence.punchtape.empty=Переменные не записаны
 desc.immersiveintelligence.punchtape.written=Записаны
@@ -1229,28 +1229,28 @@ desc.immersiveintelligence.weapon.magazine2=%s - Магазин #2
 
 desc.immersiveintelligence.storage_module=Хранилище
 desc.immersiveintelligence.variables_module=Переменные
-desc.immersiveintelligence.memory_in_module=Input Memory
-desc.immersiveintelligence.memory_out_module=Output Memory
+desc.immersiveintelligence.memory_in_module=Входная память
+desc.immersiveintelligence.memory_out_module=Выходная память
 desc.immersiveintelligence.data_module=Данные
 desc.immersiveintelligence.redstone_module=Редстоун
 desc.immersiveintelligence.data_to_redstone_module=Данные в редстоун
 desc.immersiveintelligence.redstone_to_data_module=Редстоун в данные
 desc.immersiveintelligence.tasks_module=Задачи
 desc.immersiveintelligence.status_module=Статус
-desc.immersiveintelligence.labeler_module=Labels
+desc.immersiveintelligence.labeler_module=Метки
 
-desc.immersiveintelligence.map_module=Map
-desc.immersiveintelligence.radar_module=Radar
-desc.immersiveintelligence.faction_module=Faction Management
+desc.immersiveintelligence.map_module=Карта
+desc.immersiveintelligence.radar_module=Радар
+desc.immersiveintelligence.faction_module=Управление фракциями
 
-desc.immersiveintelligence.configuration_module=Configuration
-desc.immersiveintelligence.targets_module=Targets
-desc.immersiveintelligence.fire_missions_module=Fire Missions
+desc.immersiveintelligence.configuration_module=Конфигурация
+desc.immersiveintelligence.targets_module=Цели
+desc.immersiveintelligence.fire_missions_module=Боевые задачи
 
 desc.immersiveintelligence.tooltip.armor=Броня %f%%
 
 desc.immersiveintelligence.upgrade_gui.title=Улучшить машину
-desc.immersiveintelligence.upgrade_gui.tech_tree=Tech Tree
+desc.immersiveintelligence.upgrade_gui.tech_tree=Технологическое дерево
 desc.immersiveintelligence.upgrade_gui.info=Инфо
 desc.immersiveintelligence.upgrade_gui.install=Установить
 desc.immersiveintelligence.upgrade_gui.remove=Удалить
@@ -1270,7 +1270,7 @@ desc.immersiveintelligence.no_variable=Пусто
 desc.immersiveintelligence.variable=Переменная:
 desc.immersiveintelligence.variable_apply=Применить
 desc.immersiveintelligence.variable_remove=Удалить
-
+#11.03.2026 это пока не переводим, этого в моде нет
 desc.immersiveintelligence.diplomacy.ownedby=Property of %s
 desc.immersiveintelligence.diplomacy.noowner=Abandoned Property
 desc.immersiveintelligence.diplomacy.noowner_long=This property has no owner. It lies open to claim.
@@ -1281,21 +1281,21 @@ desc.immersiveintelligence.diplomacy.noowner_long.commisariat=This property is l
 desc.immersiveintelligence.diplomacy.noowner_long.free_city=No charter protects this property. Its markets and streets lie empty of law.
 desc.immersiveintelligence.diplomacy.noowner_long.dynasty=No ruler has claimed this property. It awaits for our banner to rise over it.
 
-desc.immersiveintelligence.diplomacy.status.member=Member
-desc.immersiveintelligence.diplomacy.status.member_long=You belong to this faction.
-desc.immersiveintelligence.diplomacy.status.ally=Ally
-desc.immersiveintelligence.diplomacy.status.ally_long=Bound by trust and cooperation, this faction stands beside you.
-desc.immersiveintelligence.diplomacy.status.neutral=Neutral
+desc.immersiveintelligence.diplomacy.status.member=Участник
+desc.immersiveintelligence.diplomacy.status.member_long=Вы принадлежите к этой фракции.
+desc.immersiveintelligence.diplomacy.status.ally=Союзная
+desc.immersiveintelligence.diplomacy.status.ally_long=Связанная доверием и сотрудничеством, эта фракция стоит плечом к плечу.
+desc.immersiveintelligence.diplomacy.status.neutral=Нейтральная
 desc.immersiveintelligence.diplomacy.status.neutral_long=No strong ties bind you to this faction. Relations are balanced and uncertain.
-desc.immersiveintelligence.diplomacy.status.hostile=Hostile
-desc.immersiveintelligence.diplomacy.status.hostile_long=This faction regards you as an enemy. Conflict is to be expected.
+desc.immersiveintelligence.diplomacy.status.hostile=Враждебная
+desc.immersiveintelligence.diplomacy.status.hostile_long=Эта фракция считает вас врагом. Конфликт неизбежен.
 
 desc.immersiveintelligence.diplomacy.ownership.claim=Claim Property
 desc.immersiveintelligence.diplomacy.ownership.start_capture=Seize Property
-desc.immersiveintelligence.diplomacy.ownership.owned_chunks=Chunks Controlled: %s
-desc.immersiveintelligence.diplomacy.ownership.flagpoles=Flagpoles Placed: %s
-desc.immersiveintelligence.diplomacy.ownership.law_form=Law Form: %s
-desc.immersiveintelligence.diplomacy.ownership.members=Members: %s
+desc.immersiveintelligence.diplomacy.ownership.owned_chunks=Чанков контролирует: %s
+desc.immersiveintelligence.diplomacy.ownership.flagpoles=Флагштоков установлено: %s
+desc.immersiveintelligence.diplomacy.ownership.law_form=Правовая форма: %s
+desc.immersiveintelligence.diplomacy.ownership.members=Участники: %s
 
 desc.immersiveintelligence.diplomacy.ownership.comparison.far_stronger=This faction dwarfs your strength and influence.
 desc.immersiveintelligence.diplomacy.ownership.comparison.stronger=This faction holds advantage over yours.
@@ -1303,10 +1303,10 @@ desc.immersiveintelligence.diplomacy.ownership.comparison.equal=This faction mat
 desc.immersiveintelligence.diplomacy.ownership.comparison.weaker=This faction falls short of your strength.
 desc.immersiveintelligence.diplomacy.ownership.comparison.far_weaker=This faction is vastly outclassed by yours.
 
-info.immersiveintelligence.diplomacy.ownership.container_cannot_open=You cannot access a structure on foreign territory.
+info.immersiveintelligence.diplomacy.ownership.container_cannot_open=Вы не можете получить доступ к структуре на чужой территории.
 
-# Company
-desc.immersiveintelligence.diplomacy.law_form.company=Company
+# Company Импереалисты
+desc.immersiveintelligence.diplomacy.law_form.company=Компания
 desc.immersiveintelligence.diplomacy.law_form.company.tier1=Venture
 desc.immersiveintelligence.diplomacy.law_form.company.tier1_long=A fledgling venture with modest assets and limited reach.
 desc.immersiveintelligence.diplomacy.law_form.company.tier2=Firm
@@ -1317,8 +1317,8 @@ desc.immersiveintelligence.diplomacy.law_form.company.tier4=Conglomerate
 desc.immersiveintelligence.diplomacy.law_form.company.tier4_long=A sprawling empire of industries, armed forces, and strategic resources.
 desc.immersiveintelligence.diplomacy.law_form.company.tier5=Trust
 desc.immersiveintelligence.diplomacy.law_form.company.tier5_long=A monopolistic titan controlling entire sectors of production.
-#Republic
-desc.immersiveintelligence.diplomacy.law_form.republic=Republic
+#Republic Дерьмократы
+desc.immersiveintelligence.diplomacy.law_form.republic=Республика
 desc.immersiveintelligence.diplomacy.law_form.republic.tier1=Town Council
 desc.immersiveintelligence.diplomacy.law_form.republic.tier1_long=A small assembly of elected voices governing a handful of citizens.
 desc.immersiveintelligence.diplomacy.law_form.republic.tier2=Republic
@@ -1329,7 +1329,7 @@ desc.immersiveintelligence.diplomacy.law_form.republic.tier4=Commonwealth
 desc.immersiveintelligence.diplomacy.law_form.republic.tier4_long=A vast and influential republic commanding armies and infrastructure.
 desc.immersiveintelligence.diplomacy.law_form.republic.tier5=Great Commonwealth
 desc.immersiveintelligence.diplomacy.law_form.republic.tier5_long=A grand alliance of states, joined in common governance and defense.
-#Commune
+#Commune Коммуняки
 desc.immersiveintelligence.diplomacy.law_form.commune=Commune
 desc.immersiveintelligence.diplomacy.law_form.commune.tier1=Collective
 desc.immersiveintelligence.diplomacy.law_form.commune.tier1_long=A handful of people working together with shared property.
@@ -1341,7 +1341,7 @@ desc.immersiveintelligence.diplomacy.law_form.commune.tier4=Regional Commune
 desc.immersiveintelligence.diplomacy.law_form.commune.tier4_long=A wide communal network operating diverse industries together.
 desc.immersiveintelligence.diplomacy.law_form.commune.tier5=Union of People’s Communes
 desc.immersiveintelligence.diplomacy.law_form.commune.tier5_long=A sprawling society bound entirely by collective ownership and decision.
-#Commissariat
+#Commissariat Фашисты
 desc.immersiveintelligence.diplomacy.law_form.commisariat=Commissariat
 desc.immersiveintelligence.diplomacy.law_form.commisariat.tier1=Cell
 desc.immersiveintelligence.diplomacy.law_form.commisariat.tier1_long=A small cadre loyal to a commissar, enforcing order through ideology.
@@ -1353,7 +1353,7 @@ desc.immersiveintelligence.diplomacy.law_form.commisariat.tier4=High Commissaria
 desc.immersiveintelligence.diplomacy.law_form.commisariat.tier4_long=A commanding power with centralized control of production and war.
 desc.immersiveintelligence.diplomacy.law_form.commisariat.tier5=Supreme Commissariat
 desc.immersiveintelligence.diplomacy.law_form.commisariat.tier5_long=A totalitarian regime, enforcing absolute order and unquestioned loyalty.
-#Free City
+#Free City Жиды-Одеситы?
 desc.immersiveintelligence.diplomacy.law_form.free_city=Free City
 desc.immersiveintelligence.diplomacy.law_form.free_city.tier1=Hamlet
 desc.immersiveintelligence.diplomacy.law_form.free_city.tier1_long=A small autonomous village with its own local governance.
@@ -1365,7 +1365,7 @@ desc.immersiveintelligence.diplomacy.law_form.free_city.tier4=City
 desc.immersiveintelligence.diplomacy.law_form.free_city.tier4_long=A hub of commerce and diplomacy, commanding regional markets.
 desc.immersiveintelligence.diplomacy.law_form.free_city.tier5=Metropolis
 desc.immersiveintelligence.diplomacy.law_form.free_city.tier5_long=A dominant city-state whose wealth and trade shape entire regions.
-#Dynasty
+#Dynasty Чёрносотенцы
 desc.immersiveintelligence.diplomacy.law_form.dynasty=Dynasty
 desc.immersiveintelligence.diplomacy.law_form.dynasty.tier1=House
 desc.immersiveintelligence.diplomacy.law_form.dynasty.tier1_long=A family line holding a modest estate and its crest.
@@ -1426,26 +1426,26 @@ desc.immersiveintelligence.bullet_core_type.piercing_sabot=Кассетный
 desc.immersiveintelligence.bullet_core_type.canister=Шрапнельный
 desc.immersiveintelligence.bullet_core_type.cluster=Кластерный
 #Последние можно перевести на кассетный, но у наc Женевская конвенция
-desc.immersiveintelligence.effect_shape.star=Star
-desc.immersiveintelligence.effect_shape.orb=Orb
-desc.immersiveintelligence.effect_shape.line=Line
-desc.immersiveintelligence.effect_shape.cone=Cone
+desc.immersiveintelligence.effect_shape.star=Звезда
+desc.immersiveintelligence.effect_shape.orb=Шар
+desc.immersiveintelligence.effect_shape.line=Линия
+desc.immersiveintelligence.effect_shape.cone=Конус
 
-desc.immersiveintelligence.penetration_hardness.foliage=Foliage
-desc.immersiveintelligence.penetration_hardness.fragile=Fragiles
-desc.immersiveintelligence.penetration_hardness.ground=Ground
-desc.immersiveintelligence.penetration_hardness.wood=Wood
-desc.immersiveintelligence.penetration_hardness.weak_metal=Brittle Metals
-desc.immersiveintelligence.penetration_hardness.rock=Rock
-desc.immersiveintelligence.penetration_hardness.bricks=Bricks
-desc.immersiveintelligence.penetration_hardness.iron=Iron
-desc.immersiveintelligence.penetration_hardness.concrete=Concrete
-desc.immersiveintelligence.penetration_hardness.steel=Steel
-desc.immersiveintelligence.penetration_hardness.panzerconcrete=Panzerconcrete
-desc.immersiveintelligence.penetration_hardness.tungsten=Tungsten
-desc.immersiveintelligence.penetration_hardness.uberconcrete=Überconcrete
-desc.immersiveintelligence.penetration_hardness.pabilium=Pabilium
-desc.immersiveintelligence.penetration_hardness.bedrock=Bedrock
+desc.immersiveintelligence.penetration_hardness.foliage=Листва
+desc.immersiveintelligence.penetration_hardness.fragile=Хрупкое
+desc.immersiveintelligence.penetration_hardness.ground=Земля
+desc.immersiveintelligence.penetration_hardness.wood=Дерево
+desc.immersiveintelligence.penetration_hardness.weak_metal=Цветные металлы
+desc.immersiveintelligence.penetration_hardness.rock=Камень
+desc.immersiveintelligence.penetration_hardness.bricks=Кирпичи
+desc.immersiveintelligence.penetration_hardness.iron=Железо
+desc.immersiveintelligence.penetration_hardness.concrete=Бетон
+desc.immersiveintelligence.penetration_hardness.steel=Сталь
+desc.immersiveintelligence.penetration_hardness.panzerconcrete=Панзербетон
+desc.immersiveintelligence.penetration_hardness.tungsten=Вольфрам
+desc.immersiveintelligence.penetration_hardness.uberconcrete=Убербетон
+desc.immersiveintelligence.penetration_hardness.pabilium=Пабилиум
+desc.immersiveintelligence.penetration_hardness.bedrock=Бедрок
 
 desc.immersiveintelligence.bullet_fuse.contact=Контактный
 desc.immersiveintelligence.bullet_fuse.timed=Переменного времени
@@ -1500,12 +1500,12 @@ potion.immersiveintelligence.undergoing_repairs=Ремонт
 potion.immersiveintelligence.radiation=Радиация
 potion.immersiveintelligence.nuclear_heat=Ядерное тепло
 potion.immersiveintelligence.movement_assist=Помощь в движении
-potion.immersiveintelligence.foreign_shores=Foreign Shores
-potion.immersiveintelligence.enemy_soil=Enemy Soil
-potion.immersiveintelligence.enemys_nest=Enemy's Nest
-potion.immersiveintelligence.home_shores=Home Shores
-potion.immersiveintelligence.homeland=Homeland
-potion.immersiveintelligence.heartland=Heartland
+potion.immersiveintelligence.foreign_shores=Чужие берега
+potion.immersiveintelligence.enemy_soil=Вражеская земля
+potion.immersiveintelligence.enemys_nest=Логово врага
+potion.immersiveintelligence.home_shores=Родные берега
+potion.immersiveintelligence.homeland=Наша земля
+potion.immersiveintelligence.heartland=Родина
 
 #Chat info / debug
 info.immersiveintelligence.frequency_set=Радиочастота была установлена на %s
@@ -1519,8 +1519,8 @@ info.immersiveintelligence.gear_ratio=Крутящий момент/скорос
 info.immersiveintelligence.gear_ratio_short=%1$s >> %2$s
 info.immersiveintelligence.charge_with_if=Зарядка с помощью IF
 
-info.immersiveintelligence.magazine.loading=Loading... %s/%s
-info.immersiveintelligence.magazine.loaded=Loaded
+info.immersiveintelligence.magazine.loading=Загрузка... %s/%s
+info.immersiveintelligence.magazine.loaded=Загружено
 
 info.immersiveintelligence.yaw=Рыскание: %s
 info.immersiveintelligence.pitch=Тангаж: %s
@@ -1545,9 +1545,9 @@ info.immersiveintelligence.machineupgrade.name=Установка: %s
 info.immersiveintelligence.machineupgrade.progress=Прогресс: %1$s / %2$s IF
 
 desc.immersiveintelligence.upgrade.dependencies_hold=%s - Required Dependencies
-desc.immersiveintelligence.upgrade.incompatible_hold=%s - Incompatible Upgrades
+desc.immersiveintelligence.upgrade.incompatible_hold=%s - Несовместимые улучшения
 desc.immersiveintelligence.upgrade.dependencies=Required Dependencies:
-desc.immersiveintelligence.upgrade.incompatible=Incompatible Upgrades:
+desc.immersiveintelligence.upgrade.incompatible=Несовместимые улучшения:
 
 info.immersiveintelligence.machineupgrade.purpose.efficiency=Efficiency Upgrade
 info.immersiveintelligence.machineupgrade.purpose.speed=Speed Upgrade
@@ -1561,11 +1561,11 @@ info.immersiveintelligence.machineupgrade.purpose.armor=Armor Upgrade
 info.immersiveintelligence.machineupgrade.purpose.defense_system=Defense Upgrade
 info.immersiveintelligence.machineupgrade.purpose.special=Special Upgrade
 
-info.immersiveintelligence.machineupgrade.tier.core=Core Functionality
-info.immersiveintelligence.machineupgrade.tier.tier_1=Basic Upgrade
-info.immersiveintelligence.machineupgrade.tier.tier_2=Refined Upgrade
-info.immersiveintelligence.machineupgrade.tier.tier_3=Advanced Upgrade
-info.immersiveintelligence.machineupgrade.tier.tier_4=Masterwork Upgrade
+info.immersiveintelligence.machineupgrade.tier.core=Базовая функциональность
+info.immersiveintelligence.machineupgrade.tier.tier_1=Базовое улучшение
+info.immersiveintelligence.machineupgrade.tier.tier_2=Стандартное улучшение
+info.immersiveintelligence.machineupgrade.tier.tier_3=Продвинутое улучшение
+info.immersiveintelligence.machineupgrade.tier.tier_4=Специальное улучшение
 
 info.immersiveintelligence.exoskeleton.0=Экзоскелет: §4Выкл§r
 info.immersiveintelligence.exoskeleton.1=Экзоскелет: §aВкл§r
@@ -2666,10 +2666,10 @@ key.immersiveintelligence.armorExosuit=Переключение экзоскел
 key.immersiveintelligence.mgScope=Увеличение/прицел для пулемёта
 
 key.categories.iivehicle=Vehicles (Immersive Intelligence)
-key.immersiveintelligence.vehicle.engine.toggle=Toggle Engine
-key.immersiveintelligence.vehicle.engine.start=Start Engine
-key.immersiveintelligence.vehicle.engine.stop=Stop Engine
-key.immersiveintelligence.vehicle.clutch=Engage Clutch
+key.immersiveintelligence.vehicle.engine.toggle=Переключить двигатель
+key.immersiveintelligence.vehicle.engine.start=Запустить двигатель
+key.immersiveintelligence.vehicle.engine.stop=Остановить двигатель
+key.immersiveintelligence.vehicle.clutch=Включить сцепление
 
 key.immersiveintelligence.vehicle.gear.up=Gear Up
 key.immersiveintelligence.vehicle.gear.down=Gear Down
@@ -2677,17 +2677,17 @@ key.immersiveintelligence.vehicle.gear2.toggle=Toggle Secondary Gear
 key.immersiveintelligence.vehicle.gear2.overdrive=Secondary Gearbox - Overdrive
 key.immersiveintelligence.vehicle.gear2.reduction=Secondary Gearbox - Reduction
 
-key.immersiveintelligence.vehicle.brake=Brake
+key.immersiveintelligence.vehicle.brake=Тормоз
 
-key.immersiveintelligence.vehicle.hatch.open=Open Hatch
-key.immersiveintelligence.vehicle.hatch.close=Close Hatch
-key.immersiveintelligence.vehicle.door.open=Open Door
-key.immersiveintelligence.vehicle.door.close=Close Door
+key.immersiveintelligence.vehicle.hatch.open=Открыть люк
+key.immersiveintelligence.vehicle.hatch.close=Закрыть люк
+key.immersiveintelligence.vehicle.door.open=Открыть дверь
+key.immersiveintelligence.vehicle.door.close=Закрыть дверь
 
 key.immersiveintelligence.vehicle.seat.inventory=Toggle to Inventory
 key.immersiveintelligence.vehicle.seat.vehicle=Toggle to Vehicle Control
 
-key.immersiveintelligence.vehicle.interact.inventory=Open Vehicle Storage
+key.immersiveintelligence.vehicle.interact.inventory=Открытое хранилище транспорта
 
 key.immersiveintelligence.vehicle.tow.toggle=Tow/Untow
 key.immersiveintelligence.vehicle.tow.start=Tow
@@ -2992,9 +2992,9 @@ ie.manual.entry.bullet_core.core_uranium=Урановый сердечник
 ie.manual.entry.bullet_core.core_uranium.lore=Что значит «боеприпасы истощены»?
 ie.manual.entry.bullet_core.core_uranium.desc=Малый вес и твёрдость делают уран отличным проникающим снарядом, не теряя при этом способности нести взрывчатые вещества. Отличный, но дорогой выбор.
 
-ie.manual.entry.bullet_core.core_rubber=Rubber Core
-ie.manual.entry.bullet_core.core_rubber.lore=Absolutely stunning!
-ie.manual.entry.bullet_core.core_rubber.desc=Rubber cores are less lethal than their metal alternatives, but pack increased knockback and can stun targets.
+ie.manual.entry.bullet_core.core_rubber=Резиновый сердечник
+ie.manual.entry.bullet_core.core_rubber.lore=Совершенно сногсшибательно!
+ie.manual.entry.bullet_core.core_rubber.desc=Резиновые сердечники менее смертоносны, чем их металлические аналоги, но обладают повышенной отдачей и могут оглушать цели.
 
 ie.manual.entry.bullet_components.name=Компоненты пули
 ie.manual.entry.bullet_components.subtext=Загрузка APCRHEFSPTSD ограничена!
@@ -3143,9 +3143,9 @@ death.attack.iiSawmill=%1$s был разрезан циркулярной пи�
 death.attack.iiPrintingPress=%1$s был раздавлен вращающимися роликами
 death.attack.iiRadiation=%1$s подвергся интенсивному воздействию радиации
 death.attack.iiNuclearHeat=%1$s был уничтожен ядерным взрывом
-death.attack.iiVehicle=%1$s was driven over by %2$s
-death.attack.iiVehiclenoRider=%1$s was driven over
-death.attack.iiVehicleSuicide=%1$s decided to jump off a moving vehicle
+death.attack.iiVehicle=%1$s переехал %2$s
+death.attack.iiVehiclenoRider=%1$s был сбит
+death.attack.iiVehicleSuicide=%1$s решил спрыгнуть с движущейся техники
 
 #Additional stuff for the Config Panel
 ii.config.Graphics=Графика
@@ -3168,23 +3168,23 @@ ii.config.Light_Engineer_Armor=Лёгкая броня инженера
 #GUI Labels
 ii.gui.editor.editor_style=Visual/POL Editor
 
-ii.gui.task_editor.tasks=Tasks
-ii.gui.task_editor.tasks.tooltip=Tasks are assignments, that are repeated indefinitely.
-ii.gui.task_editor.jobs=Jobs
-ii.gui.task_editor.jobs.tooltip=Jobs are assignments, that are discarded from memory, after a set amount of resource is transfered.
+ii.gui.task_editor.tasks=Задачи
+ii.gui.task_editor.tasks.tooltip=Задачи - это задания, которые повторяются бесконечно.
+ii.gui.task_editor.jobs=Задания
+ii.gui.task_editor.jobs.tooltip=Задания - это назначения, которые удаляются из памяти после передачи заданного объема ресурсов.
 
-ii.gui.inserter.task_editor=Task Editor
-ii.gui.inserter.type=Type:
-ii.gui.inserter.input=Input:
+ii.gui.inserter.task_editor=Редактор задач
+ii.gui.inserter.type=Тип:
+ii.gui.inserter.input=Вход:
 ii.gui.inserter.input.facing.tooltip=In which direction should the inserter reach.
 ii.gui.inserter.input.distance.tooltip=How far should the inserter reach (blocks).
-ii.gui.inserter.output=Output:
+ii.gui.inserter.output=Выход:
 ii.gui.inserter.output.facing.tooltip=In which direction should the inserter reach.
 ii.gui.inserter.output.distance.tooltip=How far should the inserter reach (blocks).
 ii.gui.inserter.items_per_step=Amount/Turn:
 ii.gui.inserter.items_per_step.tooltip=Amount taken and inserted with each turn of the inserter.
 
-ii.gui.inserter.tasks.item=Items
+ii.gui.inserter.tasks.item=Предметы
 ii.gui.inserter.tasks.place_block=Place Block
 ii.gui.inserter.tasks.from_minecart=From Minecart
 ii.gui.inserter.tasks.into_minecart=Into Minecart
@@ -3193,13 +3193,13 @@ ii.gui.inserter.tasks.fluid_milk_cow=Milk Cow
 ii.gui.inserter.tasks.fluid_latex_collector=Collect Latex
 
 ii.gui.packer.task=Transfer:
-ii.gui.packer.task.item=Items
+ii.gui.packer.task.item=Предметы
 ii.gui.packer.task.item.out=Pack
 ii.gui.packer.task.item.in=Unpack
-ii.gui.packer.task.fluid=Fluid
+ii.gui.packer.task.fluid=Жидкость
 ii.gui.packer.task.fluid.out=Fill
 ii.gui.packer.task.fluid.in=Drain
-ii.gui.packer.task.energy=Energy
+ii.gui.packer.task.energy=Энергия
 ii.gui.packer.task.energy.out=Charge
 ii.gui.packer.task.energy.in=Discharge
 
@@ -3207,7 +3207,7 @@ ii.gui.packer.direction=from
 ii.gui.packer.direction.pack=Packer to Container
 ii.gui.packer.direction.unpack=Container to Packer
 
-ii.gui.packer.item.input=Input
+ii.gui.packer.item.input=Вход
 ii.gui.packer.item.input.tooltip=Items to be inserted into containers by the Packer
 ii.gui.packer.item.output=Output
 ii.gui.packer.item.output.tooltip=Items taken from the containers to be output from the Packer
@@ -3244,7 +3244,7 @@ ii.gui.itemstack_editor.oredict.tooltip=When active, the item is matched by its 
 ii.gui.itemstack_editor.energy=Immersive Flux
 ii.gui.itemstack_editor.energy.tooltip=Energy in Immersive Flux (IF)
 
-ii.gui.data_editor.logistics_tag.name=Name
+ii.gui.data_editor.logistics_tag.name=Имя
 ii.gui.data_editor.logistics_tag.name.tooltip=Sets the tag's name.
 ii.gui.data_editor.logistics_tag.description=Description
 ii.gui.data_editor.logistics_tag.description.tooltip=Sets the tag's description.
@@ -3254,7 +3254,7 @@ ii.gui.data_editor.logistics_tag.origin=Origin
 ii.gui.data_editor.logistics_tag.origin.tooltip=Sets the tag's origin.
 ii.gui.data_editor.logistics_tag.destination=Destination
 ii.gui.data_editor.logistics_tag.destination.tooltip=Sets the tag's destination.
-ii.gui.data_editor.logistics_tag.color=Color
+ii.gui.data_editor.logistics_tag.color=Цвет
 
 ii.gui.data_input_machine.storage=Накопитель перфоленты
 ii.gui.data_input_machine.memory=Встроенная память
@@ -3263,59 +3263,59 @@ ii.gui.data_input_machine.memory.switch.tooltip=Переключение тек�
 
 ii.gui.arithmetic_logic_machine.storage=Circuit Storage
 
-ii.gui.packer.tasks=Tasks
-ii.gui.packer.labeling=Label Rules
+ii.gui.packer.tasks=Задачи
+ii.gui.packer.labeling=Правила меток
 
-ii.gui.flagpole.map=Map
+ii.gui.flagpole.map=Карта
 ii.gui.flagpole.faction=Faction Management
 
-ii.gui.radar.map=Radar Display
-ii.gui.radar.configuration=Configuration
-ii.gui.radar.targets=Targets
+ii.gui.radar.map=Дисплей радара
+ii.gui.radar.configuration=Конфигурация
+ii.gui.radar.targets=Цели
 
 ii.gui.emplacement.platform_inventory=Platform Inventory
 ii.gui.emplacement.base_inventory=Base Inventory
 
 ii.gui.emplacement.weapon=Mounted: %s
-ii.gui.emplacement.weapon_none=None
+ii.gui.emplacement.weapon_none=Пусто
 ii.gui.emplacement.upgrades=Installed Upgrades
-ii.gui.emplacement.settings=Settings
+ii.gui.emplacement.settings=Настройки
 ii.gui.emplacement.redstone_control=Redstone Controlled
 ii.gui.emplacement.data_control=Data Controlled
 ii.gui.emplacement.send_attack_signal=Output target(s) trough data
 ii.gui.emplacement.auto_repair_threshold=Repair when health is below:
 ii.gui.emplacement.selector_preset=Selector Preset
-ii.gui.emplacement.filter=Filter
+ii.gui.emplacement.filter=Фильтр
 ii.gui.emplacement.task_enabled=Enabled
 ii.gui.emplacement.task_negation=Negation
-ii.gui.emplacement.add=Add Task
-ii.gui.emplacement.remove=Remove Task
-ii.gui.emplacement.duplicate=Duplicate Task
-ii.gui.emplacement.clear=Clear ALL Tasks (Caution!)
+ii.gui.emplacement.add=Добавить задачу
+ii.gui.emplacement.remove=Отменить задачу
+ii.gui.emplacement.duplicate=Дублировать задачу
+ii.gui.emplacement.clear=ОЧИСТИТЬ ВСЕ ЗАДАЧИ (ОСТОРОЖНО!)
 
-ii.gui.emplacement.target.mobs=Mobs
-ii.gui.emplacement.target.animals=Animals
-ii.gui.emplacement.target.players=Players
-ii.gui.emplacement.target.npcs=NPCs
-ii.gui.emplacement.target.vehicles=Vehicles
+ii.gui.emplacement.target.mobs=Мобы
+ii.gui.emplacement.target.animals=Животные
+ii.gui.emplacement.target.players=Игроки
+ii.gui.emplacement.target.npcs=НИПы
+ii.gui.emplacement.target.vehicles=Техника
 ii.gui.emplacement.target.shells=Shells
-ii.gui.emplacement.target.team=Team
-ii.gui.emplacement.target.name=Name
+ii.gui.emplacement.target.team=Фракция
+ii.gui.emplacement.target.name=Имя
 
-ii.gui.map_display.color_mapper.terrain=Terrain
+ii.gui.map_display.color_mapper.terrain=Местность
 ii.gui.map_display.color_mapper.grayscale=Grayscale
-ii.gui.map_display.color_mapper.topographic=Topographic
-ii.gui.map_display.color_mapper.light=Light
-ii.gui.map_display.color_mapper.factions=Factions
-ii.gui.map_display.color_mapper.alliances=Alliances
+ii.gui.map_display.color_mapper.topographic=Топографический
+ii.gui.map_display.color_mapper.light=Свет
+ii.gui.map_display.color_mapper.factions=Фракции
+ii.gui.map_display.color_mapper.alliances=Союзы
 
-ii.gui.map_display.marker.flagpoles=Flagpoles
-ii.gui.map_display.marker.weapons=Weapons
-ii.gui.map_display.marker.logistics=Logistics
-ii.gui.map_display.marker.intelligence=Intelligence
-ii.gui.map_display.marker.wire_networks=Wire Networks
+ii.gui.map_display.marker.flagpoles=Флагштоки
+ii.gui.map_display.marker.weapons=Вооружение
+ii.gui.map_display.marker.logistics=Логистика
+ii.gui.map_display.marker.intelligence=Разведка
+ii.gui.map_display.marker.wire_networks=Проводные сети
 
-ii.gui.map_display.marker.items=Items
+ii.gui.map_display.marker.items=Предмета
 ii.gui.map_display.marker.players=Players
 ii.gui.map_display.marker.mobs=Mobs
 ii.gui.map_display.marker.animals=Animals
