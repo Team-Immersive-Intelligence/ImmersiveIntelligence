@@ -1,6 +1,6 @@
 # meta
-Entity Functions
-Store them pesky Creepers
+Функции над сущностями
+Уберите надоедливых криперов подальше
 # entity_get_id
 |[data_operation]{id:"entity_get_id"}|
 # entity_get_type

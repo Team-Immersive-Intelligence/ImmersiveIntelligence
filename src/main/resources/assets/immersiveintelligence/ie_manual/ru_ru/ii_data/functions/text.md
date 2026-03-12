@@ -1,6 +1,6 @@
 # meta
-Text Functions
-Short-Circuit Propaganda Machine
+Текстовые функции
+Короткое замыкание машины пропаганды
 # string_join
 |[data_operation]{id:"string_join"}|
 # equal

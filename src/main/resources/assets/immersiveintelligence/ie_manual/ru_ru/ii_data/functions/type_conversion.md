@@ -1,6 +1,6 @@
 # meta
-Type Conversion Functions
-Trade this for That
+Функции преобразования типов
+Обменяй это на то
 # is_null
 |[data_operation]{id:"is_null"}|
 # to_integer

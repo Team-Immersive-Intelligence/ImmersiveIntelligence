@@ -1,28 +1,28 @@
 # meta
-Small Data Devices
-The Gray Future Cubes
+Малые устройства обработки данных
+Серые кубы будущего
 # combiner
 |[crafting]{source:"data_combiner"}|  
-The [Data Combiner] is a machine which can combine two data inputs from the sides into an output to the front.
-The machine has a toggle for the preferred side to take variable from.
+[Объединитель данных] — это устройство, которое может объединять два входных сигнала с разных сторон в выходной сигнал на передней панели.
+У устройства есть переключатель для выбора предпочтительной стороны, с которой будет браться переменная.
 # combiner2
-Each variable also has a side override mode, green is the left and red is the right, darker colors remove the variable if the latest packet from that side doesn't contain the variable.
+Каждая переменная также имеет режим переопределения для определенной стороны. Зеленый цвет обозначает левую сторону, а красный — правую. Более темные цвета удаляют переменную, если последний пакет с этой стороны не содержит эту переменную.
 # router
 |[crafting]{source:"data_router"}|  
-The [Data Router] allows a packet to be directed to a specific side, defined by the integer variable '0'.
-Variable 0 accepts the following integers:
+[Маршрутизатор данных] позволяет направлять пакет на определенную сторону, заданную целочисленной переменной «0».
+Переменная 0 принимает следующие целые числа:
 
-Bottom - 0, Top - 1
-North - 2, South - 3
-West - 4, East - 5
+Низ - 0, Верх - 1
+Север - 2, Юг - 3
+Запад - 4, Восток - 5
 # redstone_buffer
 |[crafting]{source:"redstone_buffer"}|  
-The [Redstone Buffer] is a device which can hold an incoming data packet, until it doesn't receive a redstone signal.
-**Caution:** a held data packet will be overwritten by the arrival of a new one.
+[Редстоун буфер] — это устройство, которое может удерживать входящий пакет данных при подаче на него сигнала красного камня. Выключите красный камень, чтобы освободить пакет.
+**Внимание:** удерживаемый пакет данных будет перезаписан при поступлении нового.
 # timed_buffer
 |[crafting]{source:"timed_buffer"}|  
-The [Timed Buffer] is a device which can hold an incoming data packet for a given amount of time. The duration is set by the integer variable '0': the number of ticks to wait.
-**Note:** If the buffer recieves a new variable 0 while counting down, the buffer timer will reset.
+[Временной буфер] — это устройство, способное удерживать входящий пакет данных в течение заданного промежутка времени. Длительность задается целочисленной переменной «0»: количеством тактов ожидания.
+**Примечание:** Если во время обратного отсчета буфер получает новое значение переменной 0, таймер буфера сбрасывается.
 # small_buffer
 |[crafting]{source:"small_data_buffer"}|
-The [Small Data Buffer] is a device which can hold up to 4 packets and can release them using the First-In-First-Out method when given a redstone signal.
+[Маленький буфер данных] — это устройство, которое может вмещать до 4 пакетов и освобождать их по принципу «первым вошел — первым вышел» при подаче сигнала красного камня.

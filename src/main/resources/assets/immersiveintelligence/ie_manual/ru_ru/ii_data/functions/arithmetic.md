@@ -1,6 +1,6 @@
 # meta
-Arithmetic Functions
-Doubleplusgood!
+Арифметические функции
+Дваджыплюсблаг!
 # add
 |[data_operation]{id:"add"}|
 # subtract

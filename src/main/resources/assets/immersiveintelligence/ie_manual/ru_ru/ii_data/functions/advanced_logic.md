@@ -1,5 +1,5 @@
 # meta
-Advanced Logic Functions
+Продвинутые логические функции
 if-this-then-that, mk.2
 # nand
 |[data_operation]{id:"nand"}|

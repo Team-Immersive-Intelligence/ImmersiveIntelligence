@@ -1,6 +1,6 @@
 # meta
-Comparator Functions
-Gratitude and Punishment
+Функции сравнения
+Метод кнута и пряника
 # equal
 |[data_operation]{id:"equal"}|
 # greater

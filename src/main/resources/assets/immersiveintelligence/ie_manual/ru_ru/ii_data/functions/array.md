@@ -1,6 +1,6 @@
 # meta
-Array Functions
-Catch them all
+Функции массивов
+Поймай их всех!
 # array_create
 |[data_operation]{id:"array_create"}|
 # array_get

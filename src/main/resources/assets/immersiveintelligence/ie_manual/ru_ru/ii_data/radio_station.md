@@ -1,25 +1,22 @@
 # meta
-Radio Station
-The Wireless Wire(TM)
+Радиостанция
+Беспроводной провод(TM)
 # intro
 @hammer_electric;level_circuits
 |[multiblock]{mb:"II:RadioStation"}|
-The **Radio Station
-** is a device for sending, receiving and relaying [Data Packets](data_main.md#packetsbasics) wirelessly. Since it is an advanced structure, it requires the [Electric Hammer](electric_tools.md) to be used on the [Advanced Electronic Engineering Block].
+**Радиостанция** — это устройство для беспроводной передачи, приема и ретрансляции [пакетов данных](data_main.md#packetsbasics). Поскольку это сложная конструкция, требующая использования [электрический молоток](electric_tools.md) на [продвинутом электронном инженерном блоке].
 # details
-A **Radio Station
-** can send [Packets](data_main.md#packetsbasics) to compatible radio devices up to [<config;i;radio_station_range>] blocks distance.
-Poor weather conditions such as [rain] or [snow] will [decrease this range], so while planning construction of a radio network, an engineer should use ranges negating this effect.
-|[scenario]{}|
+**Радиостанция** может отправлять [пакеты](data_main.md#packetsbasics) на совместимые радиоустройства на расстояние до [<config;i;radio_station_range>] блоков.
+Плохие погодные условия, такие как [дождь] или [снег], [уменьшат это расстояние], поэтому при планировании строительства радиосети инженер должен использовать диапазоны, нивелирующие этот эффект.
+|[scenario]{source:"wireless_connection"}|
 # tuner
-The **Radio Station**'s frequency can be set by using a **Radio Tuner**.
-There are 2 versions of the **Radio Tuner
-** with different [frequency ranges] avaliable. The aspiring engineer will typically begin with the basic radio tuner:
+Частоту **радиостанции** можно установить с помощью **радиотюнера**.
+Существует 2 версии **радиотюнера** с различными [диапазонами частот]. Начинающий инженер обычно начинает с базового радиотюнера:
 |[crafting]{source:"basic_radio_tuner"}|
 # advtuner
-For sufficiently advanced engineers, the **Advanced Radio Tuner** may be used to access a wider range of frequencies.
+Для достаточно опытных инженеров **продвинутый радиотюнер** может использоваться для доступа к более широкому диапазону частот.
 |[crafting]{source:"advanced_radio_tuner"}|
 # usage
-To [change] the current frequency of the tuner, *sneak and scroll up or down*.
-To [check] the frequency a device is set, *sneak-right click* it with the Tuner.<br>
-Keep in mind that [some Data Devices](explosives_mines#radio_satchel0) use the limited [Basic Frequency Range], which makes them unable to be configured with frequencies above <config;i;radio_station_range>.
+Чтобы [изменить] текущую частоту тюнера, *нажмите Shift и прокрутите вверх или вниз*.
+Чтобы [проверить], какая частота установлена на устройстве, *нажмите Shift+ПКМ* на нем с помощью тюнера.<br>
+Имейте в виду, что [некоторые устройства передачи данных](explosives_mines#radio_satchel0) используют ограниченный [базовый диапазон частот], из-за чего их нельзя настроить на частоты выше <config;i;radio_station_range>.

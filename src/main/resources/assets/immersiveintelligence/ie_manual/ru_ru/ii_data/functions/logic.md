@@ -1,6 +1,6 @@
 # meta
-Logic Functions
-To be, or not to be
+Логические функции
+Быть или не быть
 # and
 |[data_operation]{id:"and"}|
 # or

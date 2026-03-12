@@ -1,6 +1,6 @@
 # meta
-Document Functions
-For all your reading needs
+Функции над документами
+Для всех ваших потребностей в чтении
 # document_read_page
 |[data_operation]{id:"document_read_page"}|
 # document_read_all_pages_array

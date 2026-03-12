@@ -1,22 +1,20 @@
 # meta
-Precision Assembler
-The Godly Artisan
+Точный сборщик
+Божественный ремесленник
 # intro
 @hammer;level_advanced_industrial
 |[multiblock]{mb:"II:PrecisionAssembler"}|
-The **Precision Assembler** is a high-precision manufacturing device that follows instructions from an Assembly Scheme.
+**Точный сборщик** — это высокоточное производственное устройство, которое выполняет инструкции из сборочной схемы.
 |[text]{mb:"II:PrecisionAssembler"}|
 # details
-In order to work, the **Precision Assembler
-** requires an [Assembly Scheme], [Precision Tools], [crafting ingredients] and, of course, [electricity].<br>
-The machine has a single item port on both of its sides.  
-The [input port] *will only accept ingredients marked by the currently installed scheme*.  
-The [output port] will automatically output to an adjacent container.
+Для работы **Точного сборщика** требуется [Сборочная схема], [Точные инструменты], [Ингредиенты для крафта] и, конечно же, [электричество].<br>
+Машина имеет по одному порту для предметов с каждой стороны.
+[Входной порт] *принимает только ингредиенты, отмеченные текущей установленной схемой*.
+[Выходной порт] автоматически выводит содержимое в соседний контейнер.
 # schemes
-Just like an [engineer follows a blueprint during work](blueprints), the **Precision Assembler
-** is guided by an Assembly Scheme.<br>
+Подобно тому, как [инженер работает по чертежам](blueprints), **точный сборщик** руководствуется сборочной схемой.<br>
 |[crafting]{source:"assembly_scheme"}| <br>
-The [scheme] can be installed through the user interface by placing it in the middle slot.
+[Схему] можно установить через пользовательский интерфейс, поместив её в средний слот.
 # tools
-Depending on the scheme the manufacturing process requires different tools, these tools ware down over time and will need replacement.
+В зависимости от схемы, в процессе производства требуются различные инструменты, которые со временем изнашиваются и нуждаются в замене.
 |[crafting]{source:"precision_tools"}|

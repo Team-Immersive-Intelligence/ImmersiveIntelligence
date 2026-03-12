@@ -1,6 +1,6 @@
 # meta
-Map Functions
-Type Storage Associate
+Функции над словарями
+Стратегическое командование!
 # map_create
 |[data_operation]{id:"map_create"}|
 # map_set

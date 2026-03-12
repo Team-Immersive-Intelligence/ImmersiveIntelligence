@@ -1,17 +1,15 @@
 # meta
-Redstone Interface
-The Equivalent Exchange
+Редстоун интерфейс
+Равноценный обмен
 # intro
 @hammer;level_circuits
 |[multiblock]{mb:"II:RedstoneDataInterface"}|
-The **Redstone Interface
-** is a device bridging the old but still used [redstone](redstoneWires) with the [data system](data_main.md).
+**Редстоун интерфейс** — это устройство, соединяющее старый, но всё ещё используемый [редстоун](redstoneWires) с [системой данных](data_main.md).
 |[text]{mb:"II:RedstoneDataInterface"}|
 # details
-The machine consists of several parts, but key parts are the [data input port], on which a [data connector](data_wiring.md#connector) has to be placed
-and a [redstone output connector](redstoneWires#1) to which you can attach a [wire](wiring#redstoneWires).
+Машина состоит из нескольких частей, но ключевыми являются [порт ввода данных], с [коннектором данных](data_wiring.md#connector) на нём и [разъем выхода редстоуна](redstoneWires#1), к которому можно подключить [провод](wiring#redstoneWires).
 # interface
-In the user interface there are two sections: data to redstone and the opposite.
-After you add an entry, you have to specify the variable letter and the corresponding redstone color.
-You may also change how the redstone conversion is interpreted by clicking the text on the right.
-To delete a variable, hold shift and click on it.
+В пользовательском интерфейсе есть два раздела: преобразование данных в редстоун и обратное преобразование.
+После добавления записи необходимо указать букву переменной и соответствующий цвет редстоуна.
+Вы также можете изменить способ интерпретации преобразования редстоуна, [щелкнув по тексту справа].
+Чтобы удалить переменную, [удерживайте клавишу Shift и щелкните по ней].

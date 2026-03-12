@@ -1,28 +1,27 @@
 # meta
-Data Callback
-'Tis to thee
+Обратный вызов данных
+"...это о тебе"
 # main
-**Data Callback** is a universal method for getting information about current states of machines through
-the [Data System](data_main.md).
-To get a reply from a device supporting callback, the packet has to be structured like this:
+**Обратный вызов данных** — это универсальный метод получения информации о текущем состоянии машин через
+[cистему данных](data_main.md).
+Для получения ответа от устройства, поддерживающего обратный вызов, пакет должен иметь следующую структуру:
 |[data_packet]{h:32,data:{c:{Type:"string",Value:"callback"},a:{Type:"string",Value:"get_something"},d:{Type:"string",Value:"get_something_else"}}}|
 # main1
-It's required to set variable [c] to ["callback"], to indicate that the packet is a [callback query].
+Необходимо установить переменную [c] в значение ["callback"], чтобы указать, что пакет является [запросом обратного вызова].
+
 |[data_packet]{h:32,data:{c:{Type:"string",Value:"callback"}}}|
-<br>
-All other variables will be returned with the [queried values](data_types.md) in the reply packet, or will [not be included](data_types.md#null) if no such property can be returned by the callback recipient.
+Все остальные переменные будут возвращены вместе с [запрошенными значениями](data_types.md) в ответном пакете или будут [не включены](data_types.md#null), если получатель обратного вызова не сможет вернуть такое свойство.
 # scenario0
-To better illustrate this concept, let's take a look at the scenario below.
-|[scenario]{}|
+Для лучшего понимания этой концепции рассмотрим приведенный ниже сценарий.
+|[scenario]{source:"data_callback_scenario"}|
 # scenario1
-First, the [Data Input Machine](data_input_machine.md) sends a following packet to the machine through a [Duplex Connector](data_wiring.md#duplexconnector). We will be using a printing press with one bucket of Black ink and two buckets of Cyan for this example.
+Сначала [машина ввода данных](data_input_machine.md) отправляет следующий пакет на машину через [дуплексный коннектор данных](data_wiring.md#duplexconnector). В этом примере мы будем использовать печатный станок с одним ведром черных чернил и двумя вёдрами голубых.
 |[data_packet]{h:32,data:{j:{Type:"string",Value:"get_ink"},k:{Type:"string",Value:"get_onk_cyan"},i:{Type:"string",Value:"get_ink_cyan"}}}|
-The duplex connector is used to separate the input and output onto different color channels, to protect the network from clutter and/or potentially breaking the setup.
+Дуплексный коннектор данных используется для разделения входного и выходного сигналов на разные цветовые каналы, чтобы защитить сеть от помех и/или потенциального сбоя в работе системы.
 # scenario2
-Finally, to receive the [reply] from the machine, a [Debugger](data_wiring.md#debugger) was connected.
-The output Packet looks as follows:
+Наконец, для получения [ответа] от машины был подключен [отладчик](data_wiring.md#debugger).
+Выходной пакет выглядит следующим образом:
 |[data_packet]{h:22,data:{j:{Type:"integer",Value:1000},i:{Type:"integer",Value:2000}}}|
-The variables that contained [queries] were replaced with [answers] to them. One of the queries was invalid (there was a typo), therefore [nothing](data_types.md#null) was returned.
+Переменные, содержащие [запросы], были заменены на [ответы] на них. Один из запросов оказался недействительным (была опечатка), поэтому [nothing](data_types.md#null) не было возвращено.
 # scenario3
-Now it's up to the Engineer *(that's you!)* to decide what to do with these received outputs. *Perhaps it's a starting
-point of an automated supply system?*
+Теперь инженеру *(то есть вам!)* предстоит решить, что делать с полученными данными. *Возможно, это отправная точка для автоматизированной системы снабжения?*

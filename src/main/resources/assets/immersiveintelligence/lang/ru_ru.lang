@@ -628,7 +628,7 @@ tile.immersiveintelligence.metal_device.timed_buffer.name=Временной б�
 tile.immersiveintelligence.metal_device.redstone_buffer.name=Редстоун буфер
 tile.immersiveintelligence.metal_device.punchtape_reader.name=Считыватель перфоленты
 tile.immersiveintelligence.metal_device.data_router.name=Маршрутизатор данных
-tile.immersiveintelligence.metal_device.data_merger.name=Объеденитель данных
+tile.immersiveintelligence.metal_device.data_merger.name=Объединитель данных
 
 tile.immersiveintelligence.metal_device.ammunition_crate.name=Ящик для боеприпасов
 tile.immersiveintelligence.metal_device.medic_crate.name=Ящик для медикаментов

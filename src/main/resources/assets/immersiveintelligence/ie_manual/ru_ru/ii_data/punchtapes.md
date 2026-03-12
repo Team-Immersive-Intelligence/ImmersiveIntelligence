@@ -1,20 +1,19 @@
 # meta
-Punchtapes
-Rewind, Stop, Fast-Forward!
+Перфоленты
+Давишь, держишь, назад, повтор!
+
 # main
-Punchtapes are [portable data storage media] that can be read and written with a variety of compatible devices, such as the [Punchtape Reader](#punchtape_reader), [Punchtape Writer](data_input_machine.md#punchtapes), [Data Input Machine](data_input_machine) and [Printing Press](printing_press.md).<br>
+Перфоленты — это [портативные носители данных], которые можно считывать и записывать с помощью различных совместимых устройств, таких как [считыватель перфоленты](#punchtape_reader), [устройство для записи перфолент](data_input_machine.md#punchtapes), [машина ввода данных](data_input_machine) и [печатный пресс](printing_press.md).<br>
 |[crafting]{source:"punchtape"}|
-They allow easy [exchange of information] and [backups] of data device configuration.
+Они обеспечивают простой [обмен информацией] и [резервное копирование] конфигурации устройств передачи данных.
 # punchtape_reader
-The **Punchtape Reader
-** is a device used to read [punchtapes] based on a received [data packet](data_main.md#packetsbasics).
-<br>
+**Устройство для чтения перфолент** — читает [перфоленту] на основе полученного [пакета данных](data_main.md#packetsbasics).<br>
 |[crafting]{source:"reader"}|
 # punchtape_reader2
-The **Punchtape Reader** has 3 modes of reaction to redstone:
-[No Redstone] - the machine won't react to redstone signals
-[Send on Redstone] - the machine will repeat sending last read punchtape on receiving a redstone signal
-[Redstone on Send] - the machine will emit a redstone signal when it receives a packet
+**Устройство для чтения перфолент** имеет 3 режима управления редстоуном:
+[Без редстоуна] — устройство не реагирует редстоун
+[Отправка по редстоуну] — устройство будет повторять отправку последней прочитанной перфокарты при получении сигнала редстоуна
+[Редстоун при отправке] — устройство будет испускать сигнал редстоуна при получении пакета
 # example_password_door
-A very common example for using a punchtape is building a "password door", a kind of security system combining a [Punchtape Reader] and a door connected through a [Redstone-Data Interface].
-|[scenario]{}|
+Очень распространенный пример использования перфоленты — это создание «двери с паролем», своего рода системы безопасности, объединяющей [устройство для чтения перфолент] и дверь, соединенные через [интерфейс данных на редстоуне].
+|[scenario]{source:"punchtape_scenario"}|

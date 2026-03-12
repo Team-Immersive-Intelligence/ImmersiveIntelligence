@@ -1,98 +1,90 @@
 # meta
-Data Types
-Results May Vary
+Типы данных
+Результаты могут отличаться
 # strong_typing
-A [Data Packet](data_main.md) can contain multiple **Types** of variables.  
-Each **Type** excels in [storing] and [representing] a different kind of information: f.e. a **Number Type
-**, like [Integer](#integer) specializes in storing numbers, and thus mathematical expressions can be performed on it much more straight-forward than, i.e. on a [String](#string) - a
-**Text Type**.
+[Пакет данных](data_main.md) может содержать несколько **типов** переменных.
+Каждый **тип** превосходно справляется с [хранением] и [представлением] информации различного рода. Например, **числовой тип**, такой как [Integer](#integer), специализируется на хранении чисел, и поэтому математические выражения можно выполнять с ним гораздо проще, чем, например, со [String](#string) (**текстовым типом**).
 
-This way of storing information is called **Strong Typing** and gives each **Type** a unique purpose.
+Такой способ хранения информации называется **строгой типизацией** и наделяет каждый **тип** уникальным назначением.
 # default_value
-Each **Type** has its [default value], which is assigned to it on initialization.
-If a [non-existing] or [incompatible type] variable is referenced and [casted] to a **Type
-**, it returns a [defaultized] variable of that **Type** instead.
-For example, if in a packet:  
+Каждый **Тип** имеет свое [значение по умолчанию], которое присваивается ему при инициализации.
+Если к [несуществующей] или [несовместимой] переменной обращаются и [приводят] её к **типу**, то вместо этого возвращается [стандартная] переменная этого **типа**.
+Например, если в пакете:
 |[data_packet]{data:{a:{Type:"string",Value:"Hello, World!"}}}|  
-'a' - a [String](#string) is requested as [Integer](#integer), a new [defaultized] (with the type's default value: 0) [Integer](#integer) will be returned instead.
+'a' - [String](#string) запрашивается как [Integer](#integer), будет возвращен новый объект типа [Integer](#integer) со [стандартным] значением (для этого типа: 0).
 # default_value2
-The same would happen in a packet with numbers stored as a string:  
+То же самое произойдет и с пакетом, содержащим числа, хранящиеся в виде строки:
 |[data_packet]{data:{a:{Type:"string",Value:"123"}}}|
-Despite that for a human the *text* "123" seems identical to the
-*number* 123, a data machine sees it very different. A text type [can't be converted] to a number type, thus it too returns a [defaultized Integer], or simply put: 0.
+Несмотря на то, что для человека *текст* «123» выглядит идентично *числу* 123, машина обработки данных видит его совершенно иначе. Текстовый тип [не может быть преобразован] в числовой тип, поэтому он также возвращает [целое число по умолчанию], или, проще говоря: 0.
 # default_value3
-The only case where such conversion would occur properly, is between two **Compatible Types
-** - two types storing a similar kind of information: f.e. when converting [Float](#float) to [Integer](#integer)  
+Преобразование будет выполнено корректно в случае, если это преобразование между **совместимыми типами** — двумя типами, хранящими информацию схожего типа, например, при преобразовании [Float](#float) в [Integer](#integer).
 |[data_packet]{data:{a:{Type:"float",Value:123}}}|  
-This mechanism is also one of the core concepts of **Strong Typing**
+Этот механизм также является одной из основных концепций **строгой типизации**.
 # data_overflow
-Each **Type** is limited by a size or length number.  
-This feature is necessary to ensure that there is no [Data Overflow] - a situation when a type would take too much space and corrupt the entire packet.  
-This however doesn't fully prevent [Data Overflows] - they can still happen when too many [Compound Types](#types) are nested in each other.
-How would a data machine react in such situation? It simply wouldn't pass the broken packet further.
+Каждый **тип** ограничен размером или длиной.
+Эта функция необходима для предотвращения [переполнения данных] — ситуации, когда тип занимает слишком много места и повреждает весь пакет.
+Однако это не полностью предотвращает [переполнение данных] — оно всё ещё может произойти, когда слишком много [составных типов](#types) вложены друг в друга.
+Как отреагирует машина обработки данных в такой ситуации? Она просто не будет передавать повреждённый пакет дальше.
 # types
-Types are separated into two groups:
-**Basic Types
-** - used to store and represent a [simple], [basic], [singular form of information], such as a number or text  
-These are: [Null](#null), [Integer](#integer), [Float](#float), [Boolean](#boolean) and [String](#string).
+Типы данных делятся на две группы:
+**Базовые типы** - используются для хранения и представления [простой], [базовой], [единственной формы информации], такой как число или текст.
+К ним относятся: [Null](#null), [Integer](#integer), [Float](#float), [Boolean](#boolean) и [String](#string).
 
-**Compound Types** - consisting of [multiple] **Basic Types
-** and [joining them into one object], for representing a more sophisticated information.
-These include [ItemStack](#itemstack), [Array](#array), [FluidStack](#fluidstack), [Vector](#vector), [Entity](#entity) and [Map](#map).
+**Составные типы** — состоят из [нескольких] **базовых типов** и [объединяют их в один объект] для представления более сложной информации.
+К ним относятся [ItemStack](#itemstack), [Array](#array), [FluidStack](#fluidstack), [Vector](#vector), [Entity](#entity) и [Map](#map).
 # null
 |[datatype]{type:"%SECTION%",x:52}|
-[Null] is a [special] data type, which has [no value].
-It is the default type of an [undefined] variable.
+[Null] — это [специальный] тип данных, который не имеет [значения].
+Это тип по умолчанию для [неопределенной] переменной.
 # integer
 |[datatype]{type:"%SECTION%",x:52}|
-[Integer] is a [number] data type. It can store a [number] without its fractional component.
-It is mainly used in calculations and number comparisons.
+[Integer] — это тип данных [целое число]. Он может хранить [число] без дробной части.
+В основном используется в вычислениях и сравнении чисел.
 # float
 |[datatype]{type:"%SECTION%",x:52}|
-[Float] is a [number] data type. It can store a [number] along with its [fractional component].
-It is used in high-precision calculations, i.e. computing angles of a long-distance ballistic trajectory.
+[Float] — это тип данных [число]. Он может хранить [число] вместе с его [дробной составляющей].
+Он используется в высокоточных вычислениях, например, при вычислении углов баллистической траектории на большом расстоянии.
 # string
 |[datatype]{type:"%SECTION%",x:52}|
-[String] is a [text] data type, which can hold multiple characters.
-It is used by many devices for commands, queries and input/output messages.
+[String] — это тип данных [текст], который может содержать несколько символов.
+Он используется многими устройствами для команд, запросов и сообщений ввода/вывода.
 # boolean
 |[datatype]{type:"%SECTION%",x:52}|
-[Boolean] is a [logic] data type, it can hold one of two values - [True] or [False].
-Its primary use is in logic functions using [Boolean Algebra].
+[Boolean] — это [логический] тип данных, он может содержать одно из двух значений — [Истина] или [Ложь].
+Его основное применение — в логических функциях с использованием [булевой алгебры].
 # itemstack
 |[datatype]{type:"%SECTION%",x:52}|
-[ItemStack] is a [compound] data type which holds information about a specific [stack] of items: its [ID], [amount], [metadata] (damage) and [NBT component].
-It is mainly used to set an item filter or mark a specific item for a machine task.
+[ItemStack] — это [составной] тип данных, содержащий информацию о конкретном [стеке] предметов: его [ID], [количество], [метаданные] (урон) и [NBT тег].
+В основном он используется для установки фильтра предметов или пометки конкретного предмета для выполнения задачи в машине.
 # fluidstack
 |[datatype]{type:"%SECTION%",x:52}|
-[FluidStack] is a [compound] data type which holds information about a specific [fluid] of fluid: its [name], [amount] and [NBT component].
-It is mainly used to set an fluid filter or mark a specific fluid for a machine task.
+[FluidStack] — это [составной] тип данных, содержащий информацию о конкретной жидкости: её [название], [количество] и [NBT тег].
+В основном он используется для установки фильтра жидкости или для маркировки конкретной жидкости для выполнения задачи в машине.
 # vector
 |[datatype]{type:"%SECTION%",x:52}|
-[Vector] is a [compound] data type storing 3 number values. It can store [integers](#integer), [floats](#float) or [a mix of them].
-It is used to represent values in 3-dimensional space, such as position or motion of objects.
+[Vector] — это [составной] тип данных, хранящий 3 числовых значения. Он может хранить [Integer](#integer), [Float](#float) или [их комбинацию].
+Он используется для представления значений в трехмерном пространстве, таких как положение или движение объектов.
 # entity
 |[datatype]{type:"%SECTION%",x:52}|
-[Entity] is a [compound] data type which holds information about a specific in-world [entity]: its [name], [ID], [position], [motion] and [NBT data].
-It is mostly used by weaponry to store and receive information of its targets.
+[Entity] — это [составной] тип данных, который хранит информацию о конкретной внутриигровой [сущности]: её [имя], [ID], [позиция], [движение] и [данные NBT].
+В основном используется оружием для хранения и получения информации о целях.
 # array
 |[datatype]{type:"%SECTION%",x:52}|
-[Array] is a [collection] of data types, ordered by their [index] number starting from 0, it can hold any data type.
-It is often used when a larger amount of arguments is required, but it has to be passed as a single variable.
+[Array] — это [коллекция] типов данных, упорядоченных по их [индексу], начиная с 0, он может содержать любой тип данных.
+Часто используется, когда требуется большое количество аргументов, но их необходимо передать в виде одной переменной.
 # map
 |[datatype]{type:"%SECTION%",x:52}|
-[Map] is a [collection] of pairs of 2 data types called [entries].
-The first element of an entry is called a [key] and second is called a [value].
-The first can be used to get the second and in reverse.
-An entry can hold any data type both in key and value field.
-It is often used to represent a structure with named fields, using [Strings](#string) as [keys] and other types as [values].
+[Map] — это [коллекция] пар из 2 типов данных, называемых [записями].
+Первый элемент записи называется [ключом], а второй — [значением].
+Первый может использоваться для получения второго и наоборот.
+Запись может содержать любой тип данных как в поле ключа, так и в поле значения.
+Часто используется для представления структуры с именованными полями, используя [String](#string) в качестве [ключей] и другие типы в качестве [значений].
 # expression
 |[datatype]{type:"%SECTION%",x:52}|
-[Expression] is an [executable] data type used by the circuits of [Arithmetic-Logic Machine](arithmetic_logic_machine).
-It performs a pre-programmed function on [input parameters] in form of values or their [Accessors](#accessor) and returns a value.
+[Выражение] — это [исполняемый] тип данных, используемый схемами [арифметико-логической машины](arithmetic_logic_machine).
+Он выполняет предварительно запрограммированную функцию над [входными параметрами] в виде значений или их [accessor](#accessor) и возвращает значение.
 # accessor
 |[datatype]{type:"%SECTION%",x:52}|
-[Accessor] is a [reference] data type used to get the value of **another
-** variable in a packet by referencing its [letter].
-Accessors are mostly used inside [Expressions](#expression) to get a value dynamically from a **Packet**.
-They, too, are an integral part of the [Arithmetic-Logic Machine](arithmetic_logic_machine).
+[Accessor] — это [ссылочный] тип данных, используемый для получения значения **другой** переменной в пакете путем обращения к ее [идентификатору переменной].
+Accessor в основном используются внутри [выражений](#expression) для динамического получения значения из **пакета**.
+Они также являются неотъемлемой частью [арифметико-логической машины](arithmetic_logic_machine).

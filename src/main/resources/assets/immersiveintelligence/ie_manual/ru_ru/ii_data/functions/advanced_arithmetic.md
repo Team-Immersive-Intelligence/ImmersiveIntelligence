@@ -1,6 +1,6 @@
 # meta
-Advanced Arithmetic Functions
-Not-Quite Spreadsheets (Yet)
+Продвинутые арифметические функции
+Не совсем электронные таблицы (пока что)
 # power
 |[data_operation]{id:"power"}|
 # root

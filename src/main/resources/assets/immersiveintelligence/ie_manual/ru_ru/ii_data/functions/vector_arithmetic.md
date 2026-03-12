@@ -1,6 +1,6 @@
 # meta
-Vector Arithmetic Functions
-Batch Processing
+Векторные арифметические функции
+Пакетная обработка
 # vector_create
 |[data_operation]{id:"vector_create"}|
 # vector_create_angle

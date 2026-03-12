@@ -1,78 +1,60 @@
 # meta
-Electronic Components
-Assembly complete?
+Электронные компоненты
+Сборка завершена?
 # intro
 |[item_display]{source:"all_circuits"}|
-**Circuits** are one of the most important and commonly used electronic parts.
-There are four kinds of **Circuits**, described on the following page.
+**Электронные платы** — одни из самых важных и широко используемых электронных компонентов.
+Существует четыре типа **электрических плат**, описанных на следующей странице.
 
-#circuit_types
-[Basic Circuits](#basic_general) - a primitive circuit, made using vacuum tubes and redstone.
-[Advanced Circuits](#advanced_general) - an enhanced circuit, which uses [Advanced Electronic Alloy(TM)] and improved vacuum tubes.
-[Cryptographic Circuits](#cryptographic_board) - an enhanced circuit, designed to encrypt messages and hide them from prying eyes.
-[Processor Circuits](#processor_general) - the most sophisticated circuit, made mainly of silicon in a [complicated assembly process](precision_assembler).
+# circuit_types
+[Базовые платы](#basic_general) - примитивная схема, собранная с использованием вакуумных ламп и красного камня.
+[Продвинутые платы](#advanced_general) - усовершенствованная схема, в которой используются [Продвинутый электронный сплав(TM)] и улучшенные вакуумные лампы.
+[Криптографические платы](#cryptographic_board) - Усовершенствованная схема, предназначенная для шифрования сообщений и сокрытия их от посторонних глаз.
+[Процессорные платы](#processor_general) - самая сложная схема, создаваемая преимущественно из кремния в [точных сборщиках](precision_assembler).
 # blueprints
-All types of circuit boards require a specialized blueprint to create them.
-
+Для изготовления всех типов печатных плат требуется специальный чертеж.
 |[crafting]{source:"circuit_blueprints"}|
-
-*The blueprint should be designed to* [*match*] *the electronic components that are going to be used in them.*
+*Чертеж разработан таким образом, чтобы* [*соответствовать*] *электронным компонентам, которые будут в них использоваться.*
 # basic_general
 |[item_display]{source:"basic_general"}|
-**Basic Circuits** are the common, primary, and cheap circuits.
-Their universal design allows them to be easily [refitted](_functional_circuits.md) to perform simple data operations,
-but their main use is construction of various **Data Devices**, such as
-the [Printing Press](printing_press), the [Arithmetic Logic Machine](arithmetic_logic_machine) and the [Data Input Machine](data_input_machine.md).
+**Базовые схемы** — это распространенные и недорогие схемы.
+Их универсальная конструкция позволяет легко [перенастраивать](_functional_circuits.md) для выполнения простых операций с данными, но их основное применение — создание различных **устройств обработки данных**, таких как [печатный пресс](printing_press), [арифметико-логическая машина](arithmetic_logic_machine) и [машина ввода данных](data_input_machine.md).
 # basic_components
 |[item_display]{source:"basic_electronic_element"}|
-**Basic Electronic Components
-** are created using a [Nickel Plate](metalPress), four [Redstone] and a [Vacuum Tube](components#2.md) in the
-[Precision Assembler](precision_assembler.md).
+**Базовые электронные компоненты** создаются из [никелированной пластины](metalPress), 4 [редстоуна] и [вакуумной лампы](components#2.md) в [точном сборщике](precision_assembler.md).
 # basic_board
 |[blueprint]{source:"basic_circuit_blueprints"}|
-To create the Raw basic board, [insulate glass] and copper plates. To define the wanted connection in the board, it requires etching.
-This is done in a [Chemical Bath](chemical_bath.md) using [etching acid].
+Для создания сырой базовой платы необходимы [изолированное стекло] и медные пластины. После этого плату необходимо протравить в [химической ванне](chemical_bath.md) с использованием [кислоты для травки].
+Это создаст соединения, необходимые для правильной работы платы.
 # advanced_electronic_alloy
 |[item_display]{source:"advanced_electronic_alloy"}|
-
-Safeguarded by the Engineering Department, the **Advanced Electronic Alloy(TM)** is a *conductive and
-durable* compound material used in the creation of [Advanced Circuits](#advanced_board).
+Материал **Продвинутый электронный сплав(TM)**, находящийся под охраной The Engineering Department, представляет собой *проводящий и долговечный* композитный материал, используемый при создании [продвинутых плат](#advanced_board).
 # advanced_electronic_alloy_craft
 |[crafting]{source:"advanced_electronic_alloy"}|
-The blend is made by combining Constantan, Electrum, and Platinum in a 3:2:1 mixture to yield three units.
-Due to the advanced metallurgical needs, an [arc furnace](arcfurnace) is required to process the **Advanced Electronic
-Alloy(TM)** into other forms.
+Смесь получают путем соединения константана, электрума и платины в соотношении 3:2:1, в результате получаются три единицы.
+В связи с высокими металлургическими требованиями для переработки **Продвинутого электронного сплава(TM)** в другие формы требуется [дуговая печь](arcfurnace).
 # advanced_general
 |[item_display]{source:"%SECTION%"}|
-**Advanced Circuits** are a more refined version of their predecessor, created using a double-layered circuit board, *
-*Advanced Electronic Alloy(TM)** and improved vacuum tubes.  
-They have a broad use in [Wireless Data Transfer](radio_station) and **Advanced Data Devices
-**, such as [Advanced Inserters](../ii_logistics/inserters.md) and [Improved Automated Weaponry](../ii_warfare/emplacement).
+**Продвинутые платы** — это более усовершенствованная версия своих предшественников, созданная с использованием двухслойной печатной платы, **Продвинутого электронного сплава(TM)** и улучшенных вакуумных ламп.
+Они широко применяются в [беспроводной передаче данных](radio_station) и **усовершенствованных устройствах передачи данных**, таких как [усовершенствованные манипуляторы](inserters.md) и [улучшенное автоматизированное оружие](emplacement.md).
 # advanced_components
 |[item_display]{source:"advanced_electronic_element"}|
-**Advanced Electric Components** are manufactured with the help of a
-[Precision Assembler](precision_assembler.md), give it the right scheme and provide a [Basic Electronic Component](#basic_components) together with an advanced vacuum tube.
+**Усовершенствованные электронные компоненты** изготавливаются с помощью [точного сборщика](precision_assembler.md), который задает правильную схему и предоставляет [базовый электронный компонент](#basic_components) вместе с усовершенствованной вакуумной лампой.
 # advanced_board
 |[blueprint]{source:"advanced_circuit_blueprints"}|
-The **Advanced Circuit Board
-** is a more sophisticated version of the basic circuit board. It has room for more connections and requires more advanced parts.
-To make an **Advanced Board**, two **Basic Boards
-** are combined with a plate of [Advanced Electronic Alloy](#advanced_electronic_alloy).
+**Продвинутая печатная плата** — это более сложная версия базовой печатной платы. Она имеет больше места для соединений и требует более совершенных компонентов.
+Для изготовления **продвинутой платы** две **базовые платы** соединяются с пластиной из [продвинутого электронного сплава](#advanced_electronic_alloy). Это также удваивает количество необходимой кислоты для травки.
 # cryptographic_board
 |[item_display]{source:"cryptographic_circuit_board"}|
-The **Cryptographic Circuit Board
-** is a specially tailored version of the [Advanced Circuit Board](#advanced_board). It is used in the creation of the [Cryptographer Circuit](_functional_circuits.md#cryptographer).
+**Криптографическая печатная плата** — это специально разработанная версия [продвинутой печатной платы](#advanced_board). Она используется при создании [криптографической платы](_functional_circuits.md#cryptographer).
 # processor_general
 |[item_display]{source:"%SECTION%"}|
-**Processor Circuits** are the most sophisticated and capable circuits.
-Created from silicon, advanced electronic alloy, and various other materials in a complicated assembly process, they work as the electronic brains of [Mainframe Computers], [Drones] and many [Advanced Weapon Systems].
+**Процессорные платы** — это самые сложные и функциональные схемы.
+Созданные из кремния, современных электронных сплавов и различных материалов в сложном процессе сборки, они работают как электронный мозг [мейнфреймов], [дронов] и многих [передовых систем вооружения].
 # processor_components
 |[item_display]{source:"processor_electronic_element"}|
-Being the state-of-the-art electronic component of our times, the **Processor
-** is able to perform [programmed operations on data](data_pol.md).
-The manufacturing process is sophisticated and requires 32 **transistors** and two **advanced vacuum tubes
-** to be combined according to a scheme in a [Precision Assembler](precision_assembler.md).
+Являясь передовым электронным компонентом нашего времени, **процессор** способен выполнять [программные операции над данными](data_pol.md).
+Технологический процесс является сложным и требует объединения 32 **транзисторов** и двух **современных вакуумных ламп** в соответствии со схемой в [точном сборщике](precision_assembler.md).
 # processor_board
 |[blueprint]{source:"processors_blueprints"}|
-The **Raw Processor Board** is a compact high-performance circuit base, consisting of an **Advanced Electronic Alloy(TM)
-plate** layered between two **Raw Advanced Circuit boards**.
+**Сырая процессорная печатная плата** представляет собой компактную высокопроизводительную схемную основу, состоящую из **пластины Продвинутого электронного сплава(TM)**, расположенной между двумя **сырыми продвинутыми печатными платами**.

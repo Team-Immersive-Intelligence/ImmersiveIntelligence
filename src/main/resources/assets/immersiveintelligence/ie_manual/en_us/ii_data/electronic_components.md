@@ -6,7 +6,7 @@ Assembly complete?
 **Circuits** are one of the most important and commonly used electronic parts.
 There are four kinds of **Circuits**, described on the following page.
 
-#circuit_types
+# circuit_types
 [Basic Circuits](#basic_general) - a primitive circuit, made using vacuum tubes and redstone.
 [Advanced Circuits](#advanced_general) - an enhanced circuit, which uses [Advanced Electronic Alloy(TM)] and improved vacuum tubes.
 [Cryptographic Circuits](#cryptographic_board) - an enhanced circuit, designed to encrypt messages and hide them from prying eyes.

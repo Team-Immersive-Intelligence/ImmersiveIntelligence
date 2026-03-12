@@ -1,6 +1,6 @@
 # meta
-Cryptographic Functions
-Keep your secrets safe
+Криптографические функции
+Ладно уж, храни свои секреты
 # encrypt_text
 |[data_operation]{id:"encrypt_text"}|
 # encrypt_number

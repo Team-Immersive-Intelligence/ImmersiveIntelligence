@@ -1,9 +1,10 @@
 # meta
-Programmable Speaker
-Happy Engineer Noises
+Программируемая сирена
+Звуки счастливого инженера
 # intro
 |[crafting]{source:"programmable_spkr"}|
-The Programmable Speaker is a device, which emits a sound when provided a redstone signal. Redstone and data wire can be attached from any side. Data can be used to set the sound and its pitch, while redstone sets the volume.
+Программируемая сирена — это устройство, издающее звук при подаче сигнала красного камня. Красный камень и провод данных можно подключать с любой стороны.
+Сигнал данных можно использовать для установки звука, высоты тона, громкости и режима повтора. В качестве альтернативы, сигнал красного камня также позволяет устанавливать громкость.
 # data
 **Data inputs:**<br>
 |[data_variable]{type:"boolean", direction:"out", letter:"o", name:"Play Once", description:"If true, sound is played once, regardless of redstone signal"}|
