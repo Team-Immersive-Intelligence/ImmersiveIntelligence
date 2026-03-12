@@ -66,8 +66,10 @@ public class DroneRenderer extends IIEntityRenderer<EntityDrone>
 
 	public void faceCamera(EntityDrone entity, float rotYaw, float partialTicks)
 	{
-		IRMount.setRotation(new Vec3d(0, -MathHelper.clampedLerp(entity.prevRotationYawHead, entity.rotationYawHead, partialTicks)+rotYaw, 0));
-		IRBall.setRotation(new Vec3d(MathHelper.clampedLerp(entity.prevRotationPitch, entity.rotationPitch, partialTicks), 0, 0));
+		if(IRMount!=null)
+			IRMount.setRotation(new Vec3d(0, -MathHelper.clampedLerp(entity.prevRotationYawHead, entity.rotationYawHead, partialTicks)+rotYaw, 0));
+		if(IRBall!=null)
+			IRBall.setRotation(new Vec3d(MathHelper.clampedLerp(entity.prevRotationPitch, entity.rotationPitch, partialTicks), 0, 0));
 	}
 
 	@Override
