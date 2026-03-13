@@ -1533,9 +1533,9 @@ info.immersiveintelligence.debugger_mode.transmitter=Передатчик
 info.immersiveintelligence.debugger_mode.receiver=Приёмник
 
 info.immersiveintelligence.punchtape_reader_mode=Режим считывания перфоленты: %s
-info.immersiveintelligence.punchtape_reader_mode.0=Не зависит от редстоуна
-info.immersiveintelligence.punchtape_reader_mode.1=Отправка при редстоун сигнале
-info.immersiveintelligence.punchtape_reader_mode.2=При считывании выдаёт редстоун сигнал
+info.immersiveintelligence.punchtape_reader_mode.0=Без редстоун управления
+info.immersiveintelligence.punchtape_reader_mode.1=Отправка по редстоун-сигналу
+info.immersiveintelligence.punchtape_reader_mode.2=Редстоун-сигнал при получении
 
 info.immersiveintelligence.redstone_buffer_mode=Редстоуновый буферный режим: %s
 info.immersiveintelligence.redstone_buffer_mode.passtrough=Постоянный
@@ -3225,12 +3225,12 @@ ii.gui.packer.labeler.header=Добавить метку на контейнер
 ii.gui.packer.labeler.serial_start=batched, start from
 ii.gui.packer.labeler.serial_start.tooltip=If checked, the containers Logistic Tag (and name) will include an incrementing batch number, starting from the specified one
 
-ii.gui.packer.picker.container=Container
+ii.gui.packer.picker.container=Контейнер
 ii.gui.packer.picker.container.tooltip=Filter for what type of container is allowed for this task
-ii.gui.packer.picker.stack=Resource
-ii.gui.packer.picker.stack.tooltip=Filter for the resource operated on.
-ii.gui.packer.picker.logitag=Logistic Tag
-ii.gui.packer.picker.logitag.tooltip=Logistic tag to be applied to the container.
+ii.gui.packer.picker.stack=Ресурсы
+ii.gui.packer.picker.stack.tooltip=Фильтр для используемого ресурса.
+ii.gui.packer.picker.logitag=Логистическая метка
+ii.gui.packer.picker.logitag.tooltip=Логистическая метка, которая будет прикреплена к контейнеру.
 
 ii.gui.itemstack_editor.count=Количество:
 ii.gui.itemstack_editor.count.tooltip=Количество предметов в слоте
@@ -3250,9 +3250,9 @@ ii.gui.data_editor.logistics_tag.description=Description
 ii.gui.data_editor.logistics_tag.description.tooltip=Sets the tag's description.
 ii.gui.data_editor.logistics_tag.owner=Владелец
 ii.gui.data_editor.logistics_tag.owner.tooltip=Sets the tag's owner.
-ii.gui.data_editor.logistics_tag.origin=Origin
+ii.gui.data_editor.logistics_tag.origin=Исходный пункт
 ii.gui.data_editor.logistics_tag.origin.tooltip=Sets the tag's origin.
-ii.gui.data_editor.logistics_tag.destination=Destination
+ii.gui.data_editor.logistics_tag.destination=Пункт назначения
 ii.gui.data_editor.logistics_tag.destination.tooltip=Sets the tag's destination.
 ii.gui.data_editor.logistics_tag.color=Цвет
 
@@ -3273,15 +3273,15 @@ ii.gui.radar.map=Дисплей радара
 ii.gui.radar.configuration=Конфигурация
 ii.gui.radar.targets=Цели
 
-ii.gui.emplacement.platform_inventory=Platform Inventory
-ii.gui.emplacement.base_inventory=Base Inventory
+ii.gui.emplacement.platform_inventory=Хранилеще платформы
+ii.gui.emplacement.base_inventory=Основное хранилище
 
 ii.gui.emplacement.weapon=Mounted: %s
 ii.gui.emplacement.weapon_none=Пусто
-ii.gui.emplacement.upgrades=Installed Upgrades
+ii.gui.emplacement.upgrades=Установленные улучшения
 ii.gui.emplacement.settings=Настройки
-ii.gui.emplacement.redstone_control=Redstone Controlled
-ii.gui.emplacement.data_control=Data Controlled
+ii.gui.emplacement.redstone_control=Редстоун-контроль
+ii.gui.emplacement.data_control=Данные-контроль
 ii.gui.emplacement.send_attack_signal=Output target(s) trough data
 ii.gui.emplacement.auto_repair_threshold=Repair when health is below:
 ii.gui.emplacement.selector_preset=Selector Preset

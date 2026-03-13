@@ -1,6 +1,6 @@
 # meta
 IФункции над temStack
-Applied En... эээ, Engineering?
+Прикладная Инж... эээ, Инженерия?
 # itemstack_create
 |[data_operation]{id:"itemstack_create"}|
 # item_get_count
