@@ -472,7 +472,7 @@ item.immersiveintelligence.bullet_magazine.submachinegun_drum.name=Бараба�
 item.immersiveintelligence.bullet_magazine.automatic_revolver.name=Магазин автоматического револьвера
 item.immersiveintelligence.bullet_magazine.assault_rifle.name=Автоматный магазин
 item.immersiveintelligence.bullet_magazine.autocannon.name=Магазин автопушки
-item.immersiveintelligence.bullet_magazine.cpds_drum.name=Барабанный магазин СПРО
+item.immersiveintelligence.bullet_magazine.cpds_drum.name=Барабанный магазин СПСО
 item.immersiveintelligence.bullet_magazine.rifle.name=Винтовочный магазин
 
 item.immersiveintelligence.casing_pouch.name=Подсумок для гильз
@@ -2737,10 +2737,10 @@ advancement.immersiveintelligence.infinite_power=Бесконечная мощь
 advancement.immersiveintelligence.infinite_power.desc=Улучшите пистолет-пулемёт барабанным разьёмом и прочным стволом
 
 advancement.immersiveintelligence.the_silent_unseen=Тихий невидимка
-advancement.immersiveintelligence.the_silent_unseen.desc=Улучшите пистолет-пулемёт складным прикладом и слушителем
+advancement.immersiveintelligence.the_silent_unseen.desc=Улучшите пистолет-пулемёт складным прикладом и глушителем
 
 advancement.immersiveintelligence.craft_cpds=Стоимость 12 секунд стрельбы
-advancement.immersiveintelligence.craft_cpds.desc=Создайте магазин СПРО
+advancement.immersiveintelligence.craft_cpds.desc=Создайте магазин СПСО
 
 #Reference to Tiger 1 tank memes
 advancement.immersiveintelligence.craft_steel_belt=Ганс, трансмиссия работает!
