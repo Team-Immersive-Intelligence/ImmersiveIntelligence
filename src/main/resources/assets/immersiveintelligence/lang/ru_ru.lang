@@ -223,7 +223,7 @@ item.immersiveintelligence.drillhead.iron_diamond_tip.name=Покрытое ал
 item.immersiveintelligence.drillhead.steel_diamond_tip.name=Покрытое алмазом стальное долото
 item.immersiveintelligence.drillhead.tungsten_diamond_tip.name=Покрытое алмазом вольфрамовое долото
 
-item.immersiveintelligence.weapon_upgrade.water_cooling.name=Охлаждаемый водой ствол
+item.immersiveintelligence.weapon_upgrade.water_cooling.name=Ствол с водяным охлаждением
 item.immersiveintelligence.weapon_upgrade.heavy_barrel.name=Тяжёлый ствол
 item.immersiveintelligence.weapon_upgrade.second_magazine.name=Второй магазин
 item.immersiveintelligence.weapon_upgrade.belt_fed_loader.name=Ленточный магазин
@@ -436,8 +436,8 @@ item.immersiveintelligence.grenade_5bcal.bullet.name=Ручная граната
 
 item.immersiveengineering.bullet.empty_casing.name=Гильза револьвера
 item.immersiveengineering.mold.bullet_casing.name=Пресс-форма "Револьверная гильза"
-item.immersiveintelligence.railgun_grenade_4bcal.core.name=Сердечник подствольной рельсотронной гранаты
-item.immersiveintelligence.railgun_grenade_4bcal.bullet.name=Подствольная рельсотронная граната
+item.immersiveintelligence.railgun_grenade_4bcal.core.name=Сердечник рельсотронной гранаты
+item.immersiveintelligence.railgun_grenade_4bcal.bullet.name=Рельсотронная граната
 
 #Components
 
@@ -541,9 +541,9 @@ tile.immersiveintelligence.rubber_leaves.rubber.name=Листья гевеи
 tile.immersiveintelligence.rubber_sapling.rubber.name=Саженец гевеи
 tile.immersiveintelligence.charred_log.main.name=Обугленное бревно
 
-tile.immersiveintelligence.advanced_explosives.rdx.name=Взрывчатые вещества из RDX
-tile.immersiveintelligence.advanced_explosives.hmx.name=Взрывчатые вещества из HMX
-tile.immersiveintelligence.advanced_explosives.white_phosphorus.name=Взрывчатые вещества из белого фосфора
+tile.immersiveintelligence.advanced_explosives.rdx.name=Взрывчатка из RDX
+tile.immersiveintelligence.advanced_explosives.hmx.name=Взрывчатка из HMX
+tile.immersiveintelligence.advanced_explosives.white_phosphorus.name=Взрывчатка из белого фосфора
 
 tile.immersiveintelligence.concrete_decoration.concrete_bricks.name=Бетонные кирпичи
 tile.immersiveintelligence.concrete_decoration_slab.concrete_bricks.name=Плита из бетонных кирпичей
@@ -887,7 +887,7 @@ subtitle.immersiveintelligence.assault_rifle_shot_distant=Автомат стр�
 subtitle.immersiveintelligence.assault_rifle_reload=Автомат перезаряжается
 subtitle.immersiveintelligence.assault_rifle_unload=Автомат разряжается
 subtitle.immersiveintelligence.assault_rifle_mode_change=Переключение режима огня
-subtitle.immersiveintelligence.assault_rifle_load_grenade=Подствольная граната перезаряжается
+subtitle.immersiveintelligence.assault_rifle_load_grenade=Рельсотронная граната перезаряжается
 
 subtitle.immersiveintelligence.rifle_shot=Винтовка стреляет
 subtitle.immersiveintelligence.rifle_shot_distant=Винтовка стреляет вдалеке

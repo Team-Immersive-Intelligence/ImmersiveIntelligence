@@ -1,6 +1,6 @@
 # meta
-Bullet Production
-It's a shell, not a pencil!
+Производство снарядов
+Это гильза, а не пэнсил!
 # bullet
 Projectile weaponry is as ancient as the sword. In modern warfare, significant amounts of ammunition may be required to overwhelm the enemy.
 Despite their mass-produced nature, the assembly of [bullets] is still a rather intricate process that requires lots of steps.

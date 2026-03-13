@@ -1,6 +1,6 @@
 # meta
-Mortar
-Death from above
+Мортира
+Смерть свыше
 # 1
 |[crafting]{source:"mortar"}|
 The Mortar is a [light, mobile, indirect weapon] for [close range fire support]. The Mortar has the lowest range of all the artillery weapons.

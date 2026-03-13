@@ -1,12 +1,12 @@
 # meta
-Casing Pouch
-Reduce, Reuse, Recycle!
+Подсумок для гильз
+Кит экологичной жизни
 # main
 |[crafting]{source:"crafting"}|
-The [Casing Pouch] is a portable storage for spent bullet casings and empty magazines.
-These items, whether coming directly from a shooting gun or picked from the ground will be transferred to it, as long as there's free space inside.
+[Подсумок для гильз] - это портативное хранилище для гильз и пустых магазинов.
+Гильзы и магазины, независимо от того, взяты ли они непосредственно из стреляющего оружия или подобраны с земли, будут перенесены в него, если внутри будет свободное место.
 # info0
-To work, it has to be held in the hotbar or equipped in the [Baubles] inventory.
-To access the [Pouch's] contents, right-click when holding the item in hand.
-Contents of the pouch can be moved to a [crate or another inventory](crate) by [sneaking] and right-clicking the item.
-Multiple [Pouches] can be used at the same time.
+Чтобы он сработал, его нужно держать на панели инструментов или в инвентаре [Baubles].
+Чтобы получить доступ к содержимому [подсумка], щелкните правой кнопкой мыши, держа её в руке.
+Содержимое сумки можно переместить в [ящик или другой инвентарь] (crate), щелкнув по shift + ПКМ.
+Одновременно можно использовать несколько [подсумков].

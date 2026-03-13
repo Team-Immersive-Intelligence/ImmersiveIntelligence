@@ -1,13 +1,13 @@
 # meta
-Grenades
-Achtung, Granate!
+Гранаты
+Ахтунг, граната!
 # 0
-For a long time, explosives have been used in many applications, from entertainment, to mining, to warfare.
-The blast from black gunpowder has proven useful even into the new era of war and conflict.
+В течение долгого времени взрывчатые вещества использовались во многих областях - от развлечений до добычи полезных ископаемых и ведения военных действий.
+Взрывчатка из черного пороха доказала свою полезность даже в новую эру войн и конфликтов.
 
-The [stick-hand-grenade] is a thrown weapon that contains explosives or other material that triggers on contact.
-To assemble it, combine a [treated stick] with the [appropriate grenade core] in the [Ammunition Workshop](bullet_production#ammunition_assembler)
+[Ручная граната-палка] - это метательное оружие, содержащее взрывчатку или другой материал, который срабатывает при контакте.
+Чтобы собрать его, соедините [обработанную палку] с [подходящим сердечником гранаты] в [Мастерской боеприпасов] (bullet_production#ammunition_assembler_).
 # 1
-[Railgun grenades] are ammunition for the [Railgun](railgun) and [Heavy Railgun](emplacement_weapons.md#railgun0), which can be used instead of the standard metal rods.
-They can be filled with explosives or shrapnel and then be used as a portable artillery weapon.
-To assemble it, combine a [steel rod] with the [appropriate grenade core] in the [Ammunition Workshop](bullet_production#ammunition_assembler).
+[Рельсотронные гранаты] - это боеприпасы для [рельсотрона] (railgun) и [Тяжелого рельсотрона] (emplacement_weapons.md#railgun0), которые можно использовать вместо стандартных металлических стержней.
+Они могут быть начинены взрывчаткой или шрапнелью и затем использоваться в качестве переносного артиллерийского орудия.
+Чтобы собрать их, соедините [стальной стержень] с [подходящим сердечником гранаты] в [Мастерской боеприпасов] (bullet_production#ammunition_assembler_).
