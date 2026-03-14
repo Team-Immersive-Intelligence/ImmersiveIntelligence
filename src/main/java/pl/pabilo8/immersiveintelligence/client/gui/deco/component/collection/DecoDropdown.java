@@ -30,7 +30,7 @@ public class DecoDropdown<T> extends DecoScrolledCollection<DecoDropdown<T>, T>
 {
 	public int selectedEntry = -1;
 	protected int blinkTime = 0;
-	protected int maxDropHeight = 32, maxPossibleDropHeight = 32;
+	protected int maxDisplayedEntries = 4, maxPossibleDropHeight = 32;
 	protected int dropdownWidth;
 	protected boolean dropped = false;
 	protected BiConsumer<T, T> onSelectedEntry;
@@ -98,16 +98,6 @@ public class DecoDropdown<T> extends DecoScrolledCollection<DecoDropdown<T>, T>
 		});
 	}
 
-	@SafeVarargs
-	@Deprecated
-	public DecoDropdown(int buttonId, int x, int y, int w, int h, int perPage, T... entries)
-	{
-		this(x, y);
-		withSize(w, h);
-		withEntries(entries);
-
-	}
-
 	@Override
 	public void setFocused(boolean focused)
 	{
@@ -120,11 +110,11 @@ public class DecoDropdown<T> extends DecoScrolledCollection<DecoDropdown<T>, T>
 	}
 
 	@Override
-	public DecoDropdown<T> withSize(int width, int height)
+	public DecoDropdown<T> withWidth(int width)
 	{
 		//Change only if width is the same as dropdown width
-		dropdownWidth = this.width==width?dropdownWidth: width-12;
-		return super.withSize(width, height);
+		dropdownWidth = width;//==width?dropdownWidth: width-12;
+		return super.withWidth(width);
 	}
 
 	@Override
@@ -185,14 +175,14 @@ public class DecoDropdown<T> extends DecoScrolledCollection<DecoDropdown<T>, T>
 	}
 
 	/**
-	 * Sets the maximum height of the dropdown list.
-	 * If the list exceeds this height, a scrollbar will be shown.
+	 * Sets the maximum number of entries displayed in the dropdown list.
+	 * If the list exceeds this amount, a scrollbar will be shown.
 	 *
-	 * @param maxDropHeight the maximum height of the dropdown list
+	 * @param maxDisplayedEntries the maximum number of displayed entries
 	 */
-	public DecoDropdown<T> withMaxDropHeight(int maxDropHeight)
+	public DecoDropdown<T> withMaxDisplayedEntries(int maxDisplayedEntries)
 	{
-		this.maxDropHeight = maxDropHeight;
+		this.maxDisplayedEntries = Math.max(1, maxDisplayedEntries);
 		return this;
 	}
 
@@ -219,8 +209,15 @@ public class DecoDropdown<T> extends DecoScrolledCollection<DecoDropdown<T>, T>
 		if(onCreate!=null)
 			alreadyDrawnHeight += getAddButtonHeight();
 
-		this.entryMaxWidth = ((shouldAlwaysHaveScrollbar()||alreadyDrawnHeight > maxDropHeight)?(dropdownWidth-12): dropdownWidth)/entriesInGrid;
-		this.maxPossibleDropHeight = Math.min(alreadyDrawnHeight, maxDropHeight);
+		int clampedDisplayedEntries = Math.min(maxDisplayedEntries, filteredEntries.size());
+		int visibleEntriesHeight = 0;
+		for(int i = 0; i < clampedDisplayedEntries; i += entriesInGrid)
+			visibleEntriesHeight += display.displayElement(filteredEntries.get(i), dropdownWidth-12, fontRenderer, true);
+		if(onCreate!=null)
+			visibleEntriesHeight += getAddButtonHeight();
+
+		this.entryMaxWidth = ((shouldAlwaysHaveScrollbar()||alreadyDrawnHeight > visibleEntriesHeight)?(dropdownWidth-12): dropdownWidth)/entriesInGrid;
+		this.maxPossibleDropHeight = Math.min(alreadyDrawnHeight, visibleEntriesHeight);
 		this.maxScroll = Math.max(0, alreadyDrawnHeight-getListHeight());
 		this.scrollStep = !filteredEntries.isEmpty()?Math.max(1, alreadyDrawnHeight/filteredEntries.size()/entriesInGrid): 1;
 		this.scroll = MathHelper.clamp(this.scroll, 0, maxScroll);
@@ -353,12 +350,16 @@ public class DecoDropdown<T> extends DecoScrolledCollection<DecoDropdown<T>, T>
 	@Override
 	protected int getListHeight()
 	{
-		return maxPossibleDropHeight;
+		return maxPossibleDropHeight+2;
 	}
 
 	@Override
 	protected boolean canBeClicked(int mouseX, int mouseY)
 	{
-		return IIMath.isPointInRectangle(x, y, x+width, y+height+(dropped?maxDropHeight: 0), mouseX, mouseY);
+		if(IIMath.isPointInRectangle(x, y, x+width, y+height, mouseX, mouseY))
+			return true;
+		if(dropped)
+			return IIMath.isPointInRectangle(x, y+height, x+dropdownWidth, y+height+maxPossibleDropHeight, mouseX, mouseY);
+		return false;
 	}
 }

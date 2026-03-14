@@ -133,7 +133,7 @@ public class GuiArithmeticLogicMachineEdit extends DecoGui<TileEntityArithmeticL
 						.withDropdownSymbol(DecoTextures.COMPONENT_DROPDOWN_SYMBOL_PAPER)
 						.withSize(116+24-8, 18)
 						.withDropdownWidth(116+24)
-						.withMaxDropHeight(128)
+						.withMaxDisplayedEntries(5)
 						.withEntries(circuitOperations)
 						.withSelectedEntry(edited.getOperation().getMeta())
 						.withDisplayFunction(getOperationDropdownDisplayFunction())
