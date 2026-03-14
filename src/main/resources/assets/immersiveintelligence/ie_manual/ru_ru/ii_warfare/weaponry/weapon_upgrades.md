@@ -1,36 +1,36 @@
 # meta
-Weapon Upgrades
-Not broken? Not enough features
+Улучшения оружия
+Не сломано? Недостаточно функций!
 # 0
-[Versatility] and [adaptability] is most crucial in an ever-changing conflict. With this information kept in mind, the clever engineers who have designed and perfected the modern arsenal have left room for modifying and personalizing weapons. It is important to note that some modifications are
-**mutually exclusive**.
+[Универсальность] и [адаптируемость] наиболее важны в условиях постоянно меняющегося конфликта. Учитывая эту информацию, умные инженеры, которые разрабатывали и совершенствовали современный арсенал, оставили место для модификации и персонализации оружия. Важно отметить, что некоторые модификации являются
+**взаимоисключающими**.
 # 1
 |[crafting]{source:"heavy_barrel"}|
-The [heavy barrel] allows the [weapon](machinegun.md) to shoot at a [faster fire rate] at the cost of [lower accuracy].
+[Тяжелый ствол] позволяет [оружию] (machinegun.md) стрелять с [большей скорострельностью] за счет [меньшей точности].
 # 2
 |[crafting]{source:"water_cooling"}|
-The fast firing of the [machine gun](machinegun.md) causes friction in the barrel. The heat can cause damage to the weapon material.
-To tackle this problem, a [water cooling system] can be installed. Inside the water jacket runs a tube where water cools the barrel. A [Bottling Machine](bottlingMachine) can refill the water.
+Быстрая стрельба из [пулемёта](machinegun.md) вызывает трение в стволе. Высокая температура может привести к повреждению материала ствола.
+Для решения этой проблемы может быть установлена [система водяного охлаждения]. Внутри водяной рубашки проходит труба, по которой вода охлаждает ствол. [Разливочная машина](bottlingMachine) может повторно наполнять систему водой.
 # 3
 |[crafting]{source:"belt_fed_loader"}|
-The [Belt fed loader] is a way to minimize the proportional weight of the ammunition apparatus to the entire [weapon](machinegun.md) system and allow high rates of continuous fire without needing frequent magazine changes.
+[Ленточный магазин] обеспечивает высокую скорость ведения непрерывного огня без необходимости частой замены магазина.
 
-The ammunition needs to be provided by an [ammunition crate](ammocrate.md#main).
+Патроны должны быть в [ящике с боеприпасами](ammocrate.md#main).
 # 4
 |[crafting]{source:"second_magazine"}|
-The [Second magazine] installment allows the [machine gun](machinegun.md) to load a second magazine for the double capacity of rounds while still mobile.
+Установка [второго магазина] позволяет [пулемету] (machinegun.md) заряжать второй магазин для удвоения количества патронов, оставаясь при этом мобильным.
 
-To load the second magazine equip, it to your [off-hand].
+Чтобы зарядить второй магазин, возьмите его [во вторую руку].
 # 5
 |[crafting]{source:"hasty_bipod"}|
-The [field bipod] is a lightweight and (quite honestly) a hasty contraption. However, due to its simple design, it's easy to set up.
-The drawback with the (almost weightless) bipod is the [increased recoil].
+[Полевые сошки] - легкое и, честно говоря, сделанное на скорую руку приспособление. Однако, благодаря своей простой конструкции, их легко установить.
+Недостатком (почти невесомой) сошки является [повышенная отдача].
 # 6
 |[crafting]{source:"precise_bipod"}|
-The [precision bipod] is an improvement over the field bipod. Crafted from a sturdier metal, it allows for a [reduced recoil], but the increase in weight and complexity [extends the deployment time].
+[Точные сошки] является усовершенствованием по сравнению с полевыми сошками. Изготовленная из более прочного металла, она обеспечивает [меньшую отдачу], но увеличение веса и сложности [увеличивает время использования].
 # 7
 |[crafting]{source:"scope"}|
-A [scope] is an easy way to increase accuracy and take better shots at a target far away. Can be added to several weapons.
+[Прицел] - это простой способ повысить точность выстрелов по дальнюю дистанцию. Может быть установлен почти на все виды оружия.
 # 8
 |[crafting]{source:"ir_scope"}|
 The [Infrared scope] is an upgraded version of the standard scope, which can also provide [night vision] using the infrared reflector and a special filter. To work, it requires energy provided by a [capacitor backpack](powerpack).

@@ -1,17 +1,17 @@
 # meta
-Submachinegun
-Sure, I believe ya!
+Пистолет-пулемет
+Конечно, я тебе верю!
 # intro
 |[crafting]{source:""}|
-The Submachine gun, often referred to as the SMG, is an infantry weapon designed for close-to-medium range engagements. The SMG can be [modified](#2) to improve certain aspects of the gun.
+Пистолет-пулемёт, является оружием пехоты, предназначенным для ведения боя на ближней и средней дистанции. Пистолет-пулемёт может быть [модифицирован] (#2) для улучшения некоторых характеристик оружия.
 # intro2
-The SMG is relatively cheap to manufacture and produce [short bullets] for, making it an ideal choice for [close combat], which requires [fast-paced maneuvers] and a [high rate of fire].<br>
-Keep in mind that the SMG [loses its accuracy with greater distance to the target]. It is advised to use [Railguns](railgun), [rifles](rifle.md), or [Artillery Weapons](artillery_howitzer.md) for long range engagements instead.
+Пистолет-пулемёт относительно дешев в производстве и использует [пистолетные патроны], что делает его идеальным выбором для [ближнего боя], который требует [быстрых маневров] и [высокой скорострельности].<br>
+Имейте в виду, что пистолет-пулемёт [теряет свою точность при увеличении расстояния до цели]. Вместо этого рекомендуется использовать [рельсотроны] (railgun), [винтовки](rifle.md) или [артиллерию] (artillery_howitzer.md) для ведения боя на дальних дистанциях.
 # 2
-Available Modifications:<br>
+Возможные модификации:
 
-[Bayonet](revolver#revolver1)
-[Bottom Loader](weapon_upgrades.md#13)
-[Folding Stock](weapon_upgrades.md#14)
-[Sturdy Barrel](weapon_upgrades.md#11)
-[Suppressor](weapon_upgrades.md#12)
+[Штык] (револьвер#revolver1)
+[Разъём для барабана](weapon_upgrades.md#13)
+[Складной приклад](weapon_upgrades.md#14)
+[Усиленный ствол](weapon_upgrades.md#11)
+[Глушитель](weapon_upgrades.md#12)

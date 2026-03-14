@@ -1,10 +1,10 @@
 # meta
-Ammunition Crate
-Colored green, not Blu
+Ящик с боеприпасами
+Окрашен в зеленый, не синий
 # main
 @upgradable
 |[crafting]{source:"crafting"}|
-The [Ammunition Crate] is a portable storage for all the bullets. It can be used to load a [revolver](revolver), by creating a load pattern and putting the [cartridges] inside.
-To open the crate, shift right-click with an empty hand, from there reload both the [revolver] or the [speedloader] with one right-click.
+[Ящик для боеприпасов] представляет собой переносное хранилище для всех патронов. Его можно использовать для заряжания [револьвера] (revolver), создав схему заряжания и поместив [патроны] внутрь.
+Чтобы открыть ящик, щелкните правой кнопкой мыши пустой рукой, а затем перезарядите [револьвер] или [speedloader] одним щелчком правой кнопки мыши.
 # info0
-With a [wrench], you can modify the crate to fit a [belt-feed machingun](weapon_upgrades.md#3) or install an inserter for a way to load turrets by [data](data_main.md). 
+С помощью [гаечного ключа] вы можете модифицировать ящик так, чтобы он подходил для [пулемёта с ленточным магазином] (weapon_upgrades.md#3), или установить загрузчик для загрузки турелей с помощью [данных](data_main.md).

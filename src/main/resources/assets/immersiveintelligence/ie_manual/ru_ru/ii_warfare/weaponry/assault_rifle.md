@@ -1,19 +1,19 @@
 # meta
-Assault Rifle
-On the move!
+Автомат
+В движение!
 # 0
 |[crafting]{source:""}|
-The assault rifle is a lighter version of the trusty [machinegun](machinegun.md) with the ability to be used on foot. Suitable for long- to medium-range engagements.
+Автомат представляет собой облегченную версию надежного [пулемета] (machinegun.md), которую можно использовать в пешем строю. Подходит для ведения боя на дальних и средних дистанциях.
 # 1
-A powerful, fully automatic weapon, [assault rifles] utilize the [intermediate bullet] and are fed with a [magazine](magazines.md), filled by the [Packer](packer.md). The Engineering Department has designed signficant [modularity](#2) into the assault rifle, to ensure it can be adapted to almost any situation. The assault rifle supports automatic or semi-automatic modes.
-Sneak and scroll the mouse wheel to change modes.
+Мощное, полностью автоматическое оружие, [автоматы] используют [промежуточный патрон] из [магазина] (magazines.md), который заполняемого [упаковщиком] (packer.md). Инженерный департамент внедрил в автомат существенную [модульность](#2), чтобы ее можно было адаптировать практически к любой ситуации. Автомат поддерживает автоматический или полуавтоматический режимы.
+Ctrl + колёсико мыши для переключения режимов стрельбы.
 # 2
-Available Modifications:<br>
+Возможные модификации:<br>
 
-[Scope](weapon_upgrades.md#7)
-[Infrared Scope](weapon_upgrades.md#8)
-[Rifle Grenade Launcher](weapon_upgrades.md#15)
-[Rangefinder](weapon_upgrades.md#16)
-[Gyroscopic Stabilizer](weapon_upgrades.md#17)
-[Electric Firing Motor](weapon_upgrades.md#18)
-[Railgun-Assisted Chamber](weapon_upgrades.md#19)
+[Прицел](weapon_upgrades.md#7)
+[Инфракрасный прицел](weapon_upgrades.md#8)
+[Винтовочный гранатомёт](weapon_upgrades.md#15)
+[Стереоскопический дальномер](weapon_upgrades.md#16)
+[Гироскопический стабилизатор](weapon_upgrades.md#17)
+[Электрический привод] (weapon_upgrades.md#18)
+[Рельсотронный ускоритель](weapon_upgrades.md#19)

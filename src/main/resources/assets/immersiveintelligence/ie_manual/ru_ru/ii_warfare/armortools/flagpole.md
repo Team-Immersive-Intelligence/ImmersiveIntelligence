@@ -1,10 +1,10 @@
 # meta
-Flagpole
-Stand for anthem!
+Флагшток
+Встаньте, гимн!
 # 0
 |[multiblock]{mb:"II:Flagpole"}|
-The [flagpole] is a multiblock that allows marking of nearby territory, keeping it loaded and under control, while also
-displaying a [stylish banner] for friends and foes to recognise. To form it, use a [hammer](introduction#introductionHammer) on the middle razor wire block.
+[Флагшток] - это мультиблок, который позволяет занять близлежащую территорию, держать ее под контролем, а также
+вывешивать [свой флаг], чтобы его могли узнать друзья и враги. Чтобы собрать флагшток, используйте [молоток] (введение#introductionHammer) по средним виткам колючей проволоки.
 # 1
-The flagpole keeps [8 surrounding chunks loaded along with the one it's placed in] and it does not require any resources to do so.
-Another function is a display for [banners] in form of a [flag]. To place a banner, use it on one of the wooden pole blocks. If you have decided to invade someone else's property or just want to update your banner design, you can remove the placed banner by using [wire cutters](wiring#wiringCutters).
+Флагшток сохраняет [8 окружающих чанков, загруженных вместе с тем, в который он помещен], и для этого не требуется никаких ресурсов.
+Еще одна функция - отображение [флага]. Чтобы разместить флаг, используйте его на одном из деревянных столбов. Если вы решили сбросить чужой флаг или просто хотите обновить дизайн своего флага, вы можете снять размещенный флаг с помощью [кусачек для проволоки] (wiring#wiringCutters).
