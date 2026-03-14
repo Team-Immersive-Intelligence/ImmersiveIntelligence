@@ -193,7 +193,13 @@ public class DecoMapDisplay extends DecoComponent<DecoMapDisplay>
 		int[] textureData = mapTexture.getTextureData();
 
 		//Fill texture with map colors
-		System.arraycopy(customMapData.rgbColors, 0, textureData, 0, textureData.length);
+		if(customMapData.rgbColors.length==textureData.length)
+			System.arraycopy(customMapData.rgbColors, 0, textureData, 0, textureData.length);
+		else //Patch for OptiFine
+		{
+			for(int i = 0; i < textureData.length; i++)
+				textureData[i] = (i < customMapData.rgbColors.length)?customMapData.rgbColors[i]: 0x00000000;
+		}
 
 		mapTexture.updateDynamicTexture();
 	}
