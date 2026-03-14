@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.common.entity.tactile;
 
-import blusunrize.immersiveengineering.common.util.chickenbones.Matrix4;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -10,7 +9,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
@@ -75,6 +73,7 @@ public class EntityAMTTactile extends Entity implements IEntityAdditionalSpawnDa
 		this.aabb = aabb;
 		this.height = (float)(aabb.maxY-aabb.minY);
 		this.width = (float)Math.max(aabb.maxX-aabb.minX, aabb.maxZ-aabb.minZ);
+		this.setEntityBoundingBox(aabb);
 	}
 
 	public EntityAMTTactile(TactileManager manager, String name, Vec3d offset, double radius, double height)
@@ -90,6 +89,22 @@ public class EntityAMTTactile extends Entity implements IEntityAdditionalSpawnDa
 	public void setParent(@Nullable EntityAMTTactile parent)
 	{
 		this.parent = parent;
+	}
+
+	@Nullable
+	EntityAMTTactile getParent()
+	{
+		return parent;
+	}
+
+	float getRotationRoll()
+	{
+		return rotationRoll;
+	}
+
+	void setRotationRoll(float rotationRoll)
+	{
+		this.rotationRoll = rotationRoll;
 	}
 
 	@Override
@@ -109,47 +124,6 @@ public class EntityAMTTactile extends Entity implements IEntityAdditionalSpawnDa
 				return;
 			}
 
-			//To calculate motion from previous position
-			this.prevPosX = posX;
-			this.prevPosY = posY;
-			this.prevPosZ = posZ;
-
-			//Is one of root elements
-			if(parent==null)
-			{
-				BlockPos handlerPos = manager.getPos();
-				this.posX = handlerPos.getX()+offset.x+translation.x;
-				this.posY = handlerPos.getY()+offset.y+translation.y;
-				this.posZ = handlerPos.getZ()-0.5+offset.z+translation.z;
-//			setRotation((float)rotation.y, (float)rotation.x);
-				rotationPitch = (float)rotation.x;
-				rotationYaw = (float)rotation.y;
-				rotationRoll = (float)rotation.z;
-			}
-			//Belongs to another element
-			else
-			{
-				//TODO: 20.12.2023 previous position caching
-				Vec3d relativeOffset = offset.subtract(parent.offset);
-				this.rotationYaw = (float)(parent.rotationYaw+rotation.y);
-				this.rotationPitch = (float)(parent.rotationPitch+rotation.x);
-				this.rotationRoll = (float)(parent.rotationRoll+rotation.z);
-
-				Vec3d angle = new Matrix4().setIdentity()
-						.rotate(Math.toRadians(-rotationYaw), 0, 1, 0)
-						.rotate(Math.toRadians(rotationRoll), 0, 0, 1)
-						.rotate(Math.toRadians(rotationPitch), 1, 0, 0)
-						.apply(relativeOffset.add(translation));
-
-				this.posX = parent.posX+angle.x;
-				this.posY = parent.posY+angle.y;
-				this.posZ = parent.posZ+angle.z;
-			}
-
-			this.motionX = posX-prevPosX;
-			this.motionY = posY-prevPosY;
-			this.motionZ = posZ-prevPosZ;
-
 			if(!visibility)
 			{
 				setEntityBoundingBox(EMPTY);
@@ -158,18 +132,15 @@ public class EntityAMTTactile extends Entity implements IEntityAdditionalSpawnDa
 			world.updateEntityWithOptionalForce(this, false);
 		}
 
-		AxisAlignedBB newAABB = aabb.offset(posX, posY, posZ);
-		if(scale!=Vec3d.ZERO)
-		{
-			double xLength = newAABB.minX+newAABB.maxX;
-			double yLength = newAABB.minY+newAABB.maxY;
-			double xzScale = (this.scale.x+this.scale.z-2)/2;
-			newAABB.grow(xLength*xzScale, yLength*xzScale, xLength*xzScale);
-		}
-		setEntityBoundingBox(newAABB);
-
+		AxisAlignedBB newAABB = getEntityBoundingBox();
 		if(!world.isRemote)
 			world.getEntitiesWithinAABB(EntityLivingBase.class, newAABB).forEach(this::applyEntityCollision);
+
+	}
+
+	@Override
+	public void setEntityBoundingBox(AxisAlignedBB bb)
+	{
 
 	}
 
@@ -221,6 +192,12 @@ public class EntityAMTTactile extends Entity implements IEntityAdditionalSpawnDa
 	public void writeEntityToNBT(NBTTagCompound compound)
 	{
 
+	}
+
+	@Override
+	public AxisAlignedBB getEntityBoundingBox()
+	{
+		return aabb.offset(posX, posY, posZ);
 	}
 
 	@Override
