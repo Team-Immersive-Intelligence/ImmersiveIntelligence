@@ -2,6 +2,7 @@ package pl.pabilo8.immersiveintelligence.common.gui;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockFiller;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityFiller;
 import pl.pabilo8.immersiveintelligence.common.util.gui.ContainerIIBase;
 
@@ -19,7 +20,7 @@ public class ContainerFiller extends ContainerIIBase<TileEntityFiller>
 	{
 		super(player, tile);
 		//Dust Input slot
-		inputSlot = addSlot(120, 5-4, TileEntityFiller.SLOT_DUST);
+		inputSlot = addSlot(120, 5-4, MultiblockFiller.SLOT_DUST);
 		//player inventory
 		addPlayerInventory(player.inventory, 8, 87);
 

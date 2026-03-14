@@ -2,23 +2,16 @@ package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multibloc
 
 import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorageAdvanced;
 import blusunrize.immersiveengineering.api.tool.ConveyorHandler.IConveyorAttachable;
-import blusunrize.immersiveengineering.client.ClientUtils;
-import net.minecraft.client.particle.ParticleRedstone;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
-import net.minecraftforge.oredict.OreDictionary;
 import pl.pabilo8.immersiveintelligence.api.DustTank;
 import pl.pabilo8.immersiveintelligence.api.crafting.DustStack;
 import pl.pabilo8.immersiveintelligence.api.crafting.DustUtils;
@@ -38,8 +31,6 @@ import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPO
  */
 public class TileEntityFiller extends TileEntityMultiblockProductionMulti<TileEntityFiller, FillerRecipe> implements IConveyorAttachable
 {
-	public static int SLOT_DUST = 0, SLOT_INPUT = 1;
-
 	@SyncNBT(events = {SyncEvents.TILE_GUI_OPENED, SyncEvents.TILE_RECIPE_CHANGED, SyncEvents.ENTITY_CUSTOM1})
 	public DustTank dustStorage;
 	private IItemHandler insertionHandlerDust, insertionHandlerStack;
@@ -50,8 +41,8 @@ public class TileEntityFiller extends TileEntityMultiblockProductionMulti<TileEn
 		this.energyStorage = new FluxStorageAdvanced(Filler.energyCapacity);
 		this.inventory = NonNullList.withSize(2, ItemStack.EMPTY);
 		this.dustStorage = new DustTank(Filler.dustCapacity);
-		this.insertionHandlerDust = getSingleInventoryHandler(SLOT_DUST, true, false);
-		this.insertionHandlerStack = getSingleInventoryHandler(SLOT_INPUT, true, false);
+		this.insertionHandlerDust = getSingleInventoryHandler(MultiblockFiller.SLOT_DUST, true, false);
+		this.insertionHandlerStack = getSingleInventoryHandler(MultiblockFiller.SLOT_INPUT, true, false);
 	}
 
 	@Override
@@ -68,12 +59,12 @@ public class TileEntityFiller extends TileEntityMultiblockProductionMulti<TileEn
 		super.onUpdate();
 
 		//Insert dust into the tank
-		if(world.getTotalWorldTime()%4==0&&!inventory.get(SLOT_DUST).isEmpty())
+		if(world.getTotalWorldTime()%4==0&&!inventory.get(MultiblockFiller.SLOT_DUST).isEmpty())
 		{
-			DustStack dustStack = DustUtils.fromItemStack(ItemHandlerHelper.copyStackWithSize(inventory.get(SLOT_DUST), 1));
+			DustStack dustStack = DustUtils.fromItemStack(ItemHandlerHelper.copyStackWithSize(inventory.get(MultiblockFiller.SLOT_DUST), 1));
 			if(!dustStack.isEmpty()&&dustStorage.fill(dustStack, true) > 0)
 			{
-				inventory.get(SLOT_DUST).shrink(1);
+				inventory.get(MultiblockFiller.SLOT_DUST).shrink(1);
 				updateTileForEvent(SyncEvents.ENTITY_CUSTOM1);
 			}
 		}
@@ -107,7 +98,8 @@ public class TileEntityFiller extends TileEntityMultiblockProductionMulti<TileEn
 		if(!world.isRemote&&entity instanceof EntityItem)
 		{
 			ItemStack stack = ((EntityItem)entity).getItem();
-			if(stack.isEmpty()) return;
+			if(stack.isEmpty())
+				return;
 
 			if(isPOI("dust_input"))
 				((EntityItem)entity).setItem(master().insertionHandlerDust.insertItem(0, stack, false));
@@ -140,62 +132,29 @@ public class TileEntityFiller extends TileEntityMultiblockProductionMulti<TileEn
 	@Override
 	public <T> T getCapability(Capability<T> capability, EnumFacing facing)
 	{
-		if(capability!=CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) return super.getCapability(capability, facing);
+		if(capability!=CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+			return super.getCapability(capability, facing);
 
-		if(isPOI("dust_input")&&facing==EnumFacing.UP) return (T)master().insertionHandlerDust;
-		if(isPOI("conveyor_in")&&facing==getOutFacing().getOpposite()) return (T)master().insertionHandlerStack;
+		if(isPOI("dust_input")&&facing==EnumFacing.UP)
+			return (T)master().insertionHandlerDust;
+		if(isPOI("conveyor_in")&&facing==getOutFacing().getOpposite())
+			return (T)master().insertionHandlerStack;
 		return null;
-	}
-
-	@SideOnly(Side.CLIENT)
-	private void spawnDustParticle(IIMultiblockProcess<FillerRecipe> process)
-	{
-		Vec3d pos = new Vec3d(getBlockPosForPos(10)).addVector(0.5, 0, 0.5);
-
-		float mod = (float)(Math.random()*2f);
-
-		ParticleRedstone particle = (ParticleRedstone)ClientUtils.mc().effectRenderer.spawnEffectParticle(EnumParticleTypes.REDSTONE.getParticleID(), pos.x, pos.y+0.85, pos.z, 0, -4, 0);
-		ParticleRedstone particle2 = (ParticleRedstone)ClientUtils.mc().effectRenderer.spawnEffectParticle(EnumParticleTypes.REDSTONE.getParticleID(), pos.x, pos.y+0.65, pos.z, 0, -4, 0);
-		ParticleRedstone particle3 = (ParticleRedstone)ClientUtils.mc().effectRenderer.spawnEffectParticle(EnumParticleTypes.REDSTONE.getParticleID(), pos.x, pos.y, pos.z, 0, -4, 0);
-
-		float[] rgb = getCurrentProcessColor(process.recipe);
-		final float dmod = 1.3043479f;
-
-		if(particle!=null)
-		{
-			particle.reddustParticleScale = 2;
-			particle.setRBGColorF(rgb[0]*mod, rgb[1]*mod, rgb[2]*mod);
-		}
-		if(particle2!=null)
-		{
-			particle2.reddustParticleScale = 2;
-			particle2.setRBGColorF(rgb[0]*dmod*mod, rgb[1]*dmod*mod, rgb[2]*dmod*mod);
-		}
-		if(particle3!=null)
-		{
-			particle3.reddustParticleScale = 2;
-			particle3.setRBGColorF(rgb[0]*mod, rgb[1]*mod, rgb[2]*mod);
-		}
-	}
-
-	private float[] getCurrentProcessColor(FillerRecipe recipe)
-	{
-		return DustUtils.getColor(recipe.getDust()).getFloatRGB();
 	}
 
 	@Override
 	public int getSlotLimit(int slot)
 	{
-		return slot==SLOT_INPUT?1: super.getSlotLimit(slot);
+		return slot==MultiblockFiller.SLOT_INPUT?1: super.getSlotLimit(slot);
 	}
 
 	@Override
 	public boolean isStackValid(int i, ItemStack stack)
 	{
-		if(i==SLOT_INPUT)
+		if(i==MultiblockFiller.SLOT_INPUT)
 			return FillerRecipe.streamRecipes(FillerRecipe.class)
-					.anyMatch(recipe -> OreDictionary.itemMatches(recipe.itemOutput, stack, true)&&dustStorage.fill(recipe.dust, false) > 0);
-		return DustUtils.isDustStack(stack);
+					.anyMatch(recipe -> recipe.itemInput.matchesItemStackIgnoringSize(stack));
+		return i!=MultiblockFiller.SLOT_DUST||DustUtils.isDustStack(stack);
 	}
 
 	@Override
@@ -223,11 +182,11 @@ public class TileEntityFiller extends TileEntityMultiblockProductionMulti<TileEn
 	protected IIMultiblockProcess<FillerRecipe> findNewProductionProcess()
 	{
 		return FillerRecipe.streamRecipes(FillerRecipe.class)
-				.filter(recipe -> OreDictionary.itemMatches(recipe.itemOutput, inventory.get(1), true)&&
+				.filter(recipe -> recipe.itemInput.matchesItemStack(inventory.get(MultiblockFiller.SLOT_INPUT))&&
 						!dustStorage.drain(recipe.dust, false).isEmpty())
 				.findFirst().map(recipe -> {
 					//Consume item and dust
-					inventory.get(1).shrink(recipe.itemInput.inputSize);
+					inventory.get(MultiblockFiller.SLOT_INPUT).shrink(recipe.itemInput.inputSize);
 					dustStorage.drain(recipe.dust, true);
 
 					//Sync with clients
@@ -247,7 +206,6 @@ public class TileEntityFiller extends TileEntityMultiblockProductionMulti<TileEn
 	public float getProductionStep(IIMultiblockProcess<FillerRecipe> process, boolean simulate)
 	{
 		int perTick = process.recipe.getTotalProcessEnergy()/process.maxTicks;
-
 		return energyStorage.extractEnergy(perTick, simulate)==perTick?1: 0;
 	}
 

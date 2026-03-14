@@ -3,6 +3,7 @@ package pl.pabilo8.immersiveintelligence.common.compat;
 import betterwithmods.api.BWMAPI;
 import betterwithmods.api.capabilities.CapabilityMechanicalPower;
 import betterwithmods.api.tile.IMechanicalPower;
+import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -15,6 +16,7 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.api.crafting.DustUtils;
 import pl.pabilo8.immersiveintelligence.api.rotary.IIRotaryUtils;
 import pl.pabilo8.immersiveintelligence.api.rotary.IRotaryEnergy.RotationSide;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.MechanicalDevices;
@@ -36,6 +38,8 @@ public class BetterWithModsHelper extends IICompatModule
 	@Override
 	public void preInit()
 	{
+		DustUtils.registerDust(new IngredientStack("pileSand", 25), "sand");
+		DustUtils.registerDust(new IngredientStack("pileGravel", 25), "gravel");
 	}
 
 	@Override

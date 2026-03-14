@@ -126,4 +126,9 @@ public class DustUtils
 	{
 		return dustStorage.isEmpty()?"": I18n.format("dust."+dustStorage.name);
 	}
+
+	public static Set<String> getRegisteredDustNames()
+	{
+		return Collections.unmodifiableSet(dustIngredients.keySet());
+	}
 }
