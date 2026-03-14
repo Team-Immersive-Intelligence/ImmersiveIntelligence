@@ -1,6 +1,6 @@
 # meta
-Chemical Bath
-The Bulbulator
+Химическая ванна
+Бульбулятор
 # intro
 @hammer;level_advanced_industrial
 |[multiblock]{mb:"II:ChemicalBath"}|

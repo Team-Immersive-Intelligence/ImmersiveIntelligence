@@ -1,27 +1,27 @@
 # meta
-Chemical Painter
-Worth a thousand brushes
+Химический маляр
+Стоит тысячи кистей
 # intro
 @hammer;level_advanced_industrial
 |[multiblock]{mb:"II:ChemicalPainter"}|
-The **Chemical Painter** is a machine used to paint items in a precisely set color using ink.
+**Химический маляр** - машина, используемая для окрашивания предметов в точно заданный цвет с помощью чернил.
 |[text]{mb:"II:ChemicalPainter"}|
 # details
-Painting items manually is tedious and not very precise, a lot of dye can be wasted on just trying to get the color of choice.
-The [Chemical Painter] eliminates this problem.
+Раскрашивать предметы вручную утомительно и не очень аккуратно, можно потратить много краски впустую, просто пытаясь добиться нужного цвета.
+[Химический маляр] устраняет эту проблему.
 
-Cyan, Magenta, Yellow and Black Ink have to be provided to four fluid input slots on the back of the device.
-Electricity has to be provided to the top input port. Items can be inserted manually or through the inward facing conveyor.
+Бирюзовые, пурпурные, желтые и черные чернила подаются отверстие для подачи жидкости в задней части маляра.
+К верхнему коннектору должно быть подведено электричество. Предметы покраски можно вставлять вручную или по конвееру.
 # uses
-In addition to coloring items like wool or carpet, the chemical painter can be used to paint markings on bullets to make them easier to identify visually.
-Most painted items can be later cleaned using the [Chemical Bath](chemical_bath) to regain their original color.
+Помимо окрашивания таких предметов, как шерсть или ковер, с помощью химического маляра можно наносить маркировку на снаряды, чтобы их было легче идентифицировать визуально.
+Большинство окрашенных предметов впоследствии можно обесцветить с помощью [химической ванны](chemical_bath), чтобы вернуть им первоначальный цвет.
 # interface
-Color is set through the interface or with the data system. In the interface there are 3 buttons to switch the color model:  
+Цвет задается через интерфейс или с помощью системы обработки данных. В интерфейсе есть 3 кнопки для переключения цветовой модели:
 [R] - [RGB]  
 [C] - [CMYK]  
 [H] - [HSV]
 
-If data control is desired, the following page contains descriptions of required variables.
+Если требуется управление данными, следующая страница содержит описания необходимых переменных.
 # data_output
 **Data input:**<br>
 |[data_variable]{type:"integer", direction:"in", letter:"p", name:"Paint Color", description:"A number representing the RGB paint color. In its hexadecimal form its digits should be in RRGGBB form, where R is red, G is green and B is blue"}|

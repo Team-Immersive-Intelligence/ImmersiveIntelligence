@@ -1,11 +1,11 @@
 # meta
-Sawmill
-The better fidget spinner!
+Лесопилка
+Cпиннер который мы заслужили
 # intro
 |[multiblock]{mb:"II:Sawmill"}|
-The Sawmill is an automatic carpentry machine powered by [rotary](rotary_power.md) energy. It consists of a table, a mechanical inserter and saw mount. To form the multiblock, use a [hammer](introduction#introductionHammer) on the middle wooden scaffolding.
+Лесопилка представляет собой автоматический столярный станок, работающий на энергии  [вращенния](rotary_power.md). Она состоит из стола, механического манипулятора и крепления для пилы. Для сборки лесопилки используйте [молоток](введение#introductionHammer) на среднех деревянных лесах. Sawmill is an automatic carpentry machine powered by [rotary](rotary_power.md) energy. It consists of a table, a mechanical inserter and saw mount. To form the multiblock, use a [hammer](introduction#introductionHammer) on the middle wooden scaffolding.
 # saw_blades
 |[crafting]{source:"blades"}|
-Saws made of different materials can be mounted. While every saw is effective at cutting wood, saws made of hard materials like [steel] and [tungsten] can even cut through metals.
+Можно использовать диски, изготовленные из различных материалов. В тоже время диск из любого материала равноэффективен при распиловке древесины, диски, изготовленные из твердых материалов, таких как [сталь] и [вольфрам], будут служит дольше.
 # slots
-The machine requires a constant supply of rotary power to it's side. Resources can be inserted to table's right side and processed items are outputted to the wooden storage box on the ground.
+Для работы машины требуется постоянная подача энергии вращение. С правой стороны стола подаётся брёвна, слева стола выходят доски, опилки сбрасываются под стол.

@@ -1,12 +1,11 @@
 # meta
-Electrolyzer
-The fluid shock therapy
+Электролизер
+Жидкостная шоковая терапия
 # intro
 @hammer;level_advanced_industrial
 |[multiblock]{mb:"II:Electrolyzer"}|
-The **Electrolyzer
-** is a machine which uses a chemical process called electrolysis to split a single fluid into two different ones.
+**Электролизер** - это машина, которая использует химический процесс, называемый электролизом, для разделения одной жидкости на две разные.
 |[text]{mb:"II:Electrolyzer"}|
 # details
-The fluid has to be provided to the side of the machine, after the process is finished the two separated fluids will be transferred to the tanks in front of the machine.
-These internal tanks allow storing only small amount of the liquid, so consider construction of a [tank](tank) for industrial-scale operations.
+Жидкость должна подаваться сбоку от машины, после завершения процесса две разделенные жидкости будут перелиты в резервуары спереди машиной.
+Эти внутренние резервуары позволяют хранить лишь небольшое количество жидкости, поэтому рекомендуется создать [резервуар](tank) для промышленных операций.
