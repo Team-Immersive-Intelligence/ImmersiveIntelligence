@@ -45,6 +45,9 @@ public abstract class BlockIIMine extends BlockIITileProvider<IIBlockTypes_Mine>
 		setResistance(1.0F);
 		setLightOpacity(0);
 		IIContent.TILE_ENTITIES.add(tileClass);
+		//Register both MAIN and CORE for TEISR item rendering (Mines)
+		tesrList.add(IIBlockTypes_Mine.MAIN);
+		tesrList.add(IIBlockTypes_Mine.CORE);
 	}
 
 	@Override

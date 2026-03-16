@@ -852,7 +852,7 @@ public class IIRecipes
 				600);
 
 		//Charred log to coke dust and sawdust
-		CrusherRecipe.addRecipe(new ItemStack(IIContent.itemMaterial, 1, 17), new IngredientStack(new ItemStack(IIContent.blockCharredLog)), 2024)
+		CrusherRecipe.addRecipe(OreDictionary.getOres("dustCoke").get(0).copy(), new IngredientStack(new ItemStack(IIContent.blockCharredLog)), 2024)
 				.addToSecondaryOutput(IIContent.itemMaterial.getStack(Materials.DUST_WOOD), 1f);
 
 	}

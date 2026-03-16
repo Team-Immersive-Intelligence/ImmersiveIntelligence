@@ -218,12 +218,17 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 		ISawblade saw = (ISawblade)stackSawblade.getItem();
 
 		final int sawHardness = saw.getHardness(stackSawblade);
-		return SawmillRecipe.streamRecipes(SawmillRecipe.class)
+		SawmillRecipe found = SawmillRecipe.streamRecipes(SawmillRecipe.class)
 				.filter(recipe -> recipe.itemInput.matchesItemStackIgnoringSize(inventory.get(SLOT_INPUT)))
 				.filter(recipe -> recipe.getHardness() <= sawHardness)
 				.findFirst()
-				.map(IIMultiblockProcess::new).orElse(null);
+				.orElse(null);
+		if(found==null)
+			return null;
 
+		//Consume input
+		inventory.get(SLOT_INPUT).shrink(found.itemInput.inputSize);
+		return new IIMultiblockProcess<>(found);
 	}
 
 	@Override

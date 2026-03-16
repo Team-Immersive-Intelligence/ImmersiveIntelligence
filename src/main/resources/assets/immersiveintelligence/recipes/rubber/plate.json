@@ -1,7 +1,7 @@
 {
   "type": "forge:ore_shaped",
   "result": {
-    "item": "immersiveintelligence:material_ingot",
+    "item": "immersiveintelligence:material",
     "data": 29
   },
   "pattern": [

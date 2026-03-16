@@ -343,7 +343,7 @@ public class IIManualMachineRecipe extends IIManualObject
 
 		//Draw time text
 		String timeStr = recipe.getTotalProcessTime()+" t";
-		mc.fontRenderer.drawString(timeStr, x+14, y+3, DecoColors.H1.getPackedRGB());
+		drawTextAtFullSize(mc.fontRenderer, timeStr, x+14, y+3, DecoColors.H1.getPackedRGB());
 	}
 
 	private void drawPowerInfo(Minecraft mc, int x, int y)
@@ -356,7 +356,7 @@ public class IIManualMachineRecipe extends IIManualObject
 
 		//Draw power text
 		String powerStr = recipe.getTotalProcessEnergy()+" IF";
-		mc.fontRenderer.drawString(powerStr, x+14, y+3, DecoColors.H1.getPackedRGB());
+		drawTextAtFullSize(mc.fontRenderer, powerStr, x+14, y+3, DecoColors.H1.getPackedRGB());
 	}
 
 	private void drawMechanicalPowerInfo(Minecraft mc, int x, int y, RotaryMachineRecipe recipe)
@@ -367,9 +367,25 @@ public class IIManualMachineRecipe extends IIManualObject
 				.drawTexSprite(x-2+54, y-1, 16, 16, DecoTextures.ICON_MECH_SPEED_INPUT)
 				.finish();
 
-		IIClientUtils.fontRegular.drawString(recipe.getTorque()+" IT", x+16, y+3, DecoColors.H1.getPackedRGB());
-		IIClientUtils.fontRegular.drawString(recipe.getMinSpeed()+" D/t", x+16+54, y+3,
+		drawTextAtFullSize(IIClientUtils.fontRegular, recipe.getTorque()+" IT", x+16, y+3, DecoColors.H1.getPackedRGB());
+		drawTextAtFullSize(IIClientUtils.fontRegular, recipe.getMinSpeed()+" D/t", x+16+54, y+3,
 				DecoColors.H1.getPackedRGB());
+	}
+
+	//Draws text at full size by undoing the current layout scale.
+	private void drawTextAtFullSize(net.minecraft.client.gui.FontRenderer font, String text, int x, int y, int color)
+	{
+		if(scale > 0f&&scale!=1f)
+		{
+			float inv = 1f/scale;
+			GlStateManager.pushMatrix();
+			GlStateManager.translate(x, y, 0);
+			GlStateManager.scale(inv, inv, 1f);
+			font.drawString(text, 0, 0, color);
+			GlStateManager.popMatrix();
+		}
+		else
+			font.drawString(text, x, y, color);
 	}
 
 	private void drawDustTank(Minecraft mc, int x, int y, LayoutComponent component)
