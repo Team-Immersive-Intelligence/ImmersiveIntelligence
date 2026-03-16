@@ -116,7 +116,7 @@ public class ImmersivePetroleumHelper extends IICompatModule
 		if(event.getObject() instanceof EntitySpeedboat)
 		{
 			if(!event.getCapabilities().containsKey(CAPABILITY_RES))
-				event.addCapability(CAPABILITY_RES, new SidedFluidHandler((EntitySpeedboat)event.getObject()));
+				event.addCapability(CAPABILITY_RES, new SpeedboatFluidCapability((EntitySpeedboat)event.getObject()));
 		}
 	}
 
@@ -217,13 +217,11 @@ public class ImmersivePetroleumHelper extends IICompatModule
 
 	}
 
-	//Yes, naybe it's hacky
-	//But that's how capabilities work :)
-	static class SidedFluidHandler implements IFluidHandler, ICapabilityProvider
+	static class SpeedboatFluidCapability implements IFluidHandler, ICapabilityProvider
 	{
 		EntitySpeedboat boat;
 
-		SidedFluidHandler(EntitySpeedboat boat)
+		SpeedboatFluidCapability(EntitySpeedboat boat)
 		{
 			this.boat = boat;
 		}

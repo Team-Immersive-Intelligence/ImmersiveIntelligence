@@ -533,7 +533,7 @@ public class ClientProxy extends CommonProxy
 		new EWRRocketLauncher();
 
 		//Vehicle multiblocks renderers
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityFuelStation.class, new FuelStationRenderer().subscribeToList("multiblock/fuel_station"));
+		registerTileRenderer(FuelStationRenderer.class);
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityVehicleWorkshop.class, new VehicleWorkshopRenderer().subscribeToList("multiblock/vehicle_workshop"));
 
 

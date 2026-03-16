@@ -9,6 +9,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nullable;
+import java.util.function.Supplier;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -24,10 +25,10 @@ public class TargetCoordinateReference implements INBTSerializable<NBTTagCompoun
 	private boolean shotsAreFinite = false;
 	private int shotsRemaining = 0;
 
-	public TargetCoordinateReference(World world)
+	public TargetCoordinateReference(Supplier<World> worldSupplier)
 	{
 		this.position = null;
-		this.entityReference = new EntityReference<>(world);
+		this.entityReference = new EntityReference<>(worldSupplier);
 	}
 
 	public TargetCoordinateReference withEntity(Entity entity)
