@@ -33,7 +33,7 @@ public class DecoElementDisplays
 				String displayed = t instanceof ILocalizedEnum?((ILocalizedEnum)t).getLocalizedName(): t.toString();
 				font.drawString(displayed, 2, 2, IIColor.fromHex("afafaf").getPackedRGB());
 			}
-			return font.FONT_HEIGHT;
+			return font.FONT_HEIGHT+1;
 		};
 	}
 
@@ -51,7 +51,7 @@ public class DecoElementDisplays
 			{
 				font.drawString(text.apply(t), 2, 2, IIColor.fromHex("afafaf").getPackedRGB());
 			}
-			return font.FONT_HEIGHT;
+			return font.FONT_HEIGHT+1;
 		};
 	}
 

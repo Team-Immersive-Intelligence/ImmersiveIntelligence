@@ -9,10 +9,12 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.Tuple;
 import net.minecraft.util.math.Vec3d;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
 import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMTQuads;
+import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultiblockIIBase;
 
@@ -71,6 +73,21 @@ public abstract class IIMultiblockRenderer<T extends TileEntityMultiblockIIBase<
 		}
 		else if(te.getIsMirrored())
 			unMirrorRender();
+	}
+
+	/**
+	 * @param yawAngle the angle to transform
+	 * @param te       the multiblock tile entity
+	 * @return a global yaw angle transformed for the render-space based on the tile entity's facing and mirroring, 0-360
+	 */
+	protected float getTransformedYaw(T te, float yawAngle)
+	{
+		float teAngle = te.facing.getHorizontalAngle();
+		float angle = te.getIsMirrored()?(teAngle+yawAngle): (teAngle-yawAngle);
+		if(te.facing.getAxis()==Axis.X&&te.getIsMirrored())
+			angle = angle+180;
+
+		return IIMath.positiveModulo(angle, 360);
 	}
 
 	@Override

@@ -32,8 +32,7 @@ public class DecoDropdownDataLetters extends DecoDropdown<Character> implements 
 				.mapToObj(i -> (Character)(char)i)
 				.toArray(Character[]::new)
 		);
-		withMaxDropHeight((int)(ENTRY_SIZE*Math.ceil(entries.size()/6f)));
-
+		withMaxDisplayedEntries((int)Math.ceil(entries.size()/6f));
 		withDisplayFunction(this);
 		withOnKeyTyped((gui, typedChar, keyCode) -> {
 			if(isDropped()&&isSelectable(typedChar))
@@ -46,14 +45,14 @@ public class DecoDropdownDataLetters extends DecoDropdown<Character> implements 
 	@Override
 	protected int calculateSlideLength()
 	{
-		this.maxDropHeight = 6*ENTRY_SIZE;
+		this.maxPossibleDropHeight = 6*ENTRY_SIZE;
 		this.dropdownWidth = 6*ENTRY_SIZE;
 		this.entryMaxWidth = ENTRY_SIZE;
 		this.maxScroll = 0;
 		this.scrollStep = 1;
 		this.scroll = 0;
 
-		return maxDropHeight;
+		return this.maxPossibleDropHeight;
 	}
 
 	/**

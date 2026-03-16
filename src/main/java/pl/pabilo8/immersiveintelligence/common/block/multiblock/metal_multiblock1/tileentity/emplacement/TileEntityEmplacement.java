@@ -98,7 +98,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockIIGeneric<TileEnt
 		this.style = new StyleCustomization(MultiblockFlagpole.STYLE_CONSTRAINTS);
 		this.baseHealth = new MultiblockHealth(this, Emplacement.baseHealth);
 		this.ownerIdentity = DiplomacyUtils.NEUTRAL;
-		this.currentTarget = new TargetCoordinateReference(this.world);
+		this.currentTarget = new TargetCoordinateReference(this::getWorld);
 		this.currentWeapon = null;
 	}
 
