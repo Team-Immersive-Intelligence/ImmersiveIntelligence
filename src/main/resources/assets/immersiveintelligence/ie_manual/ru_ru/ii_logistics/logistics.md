@@ -1,6 +1,6 @@
 # meta
-Logistics
-Logi, bmats ASAP!
+Логистика
+Логи, биматы
 # intro
-Logistics is a unique branch of engineering focused on [storing, delivering and managing] the [transfer of goods.] A good logistic system consists of a warehouse for storage and nearby production for quick manufacturing.
-With the newest electronic technology, and some old [rotary](rotary_power.md) [powered machines](skycrate_system.md), creating a good delivery system has never been easier.
+Логистика - это уникальная отрасль машиностроения, ориентированная на [хранение, доставку и управление перемещением благ.] Хорошая логистическая система состоит из склада для временного хранения и производства для быстрого изготовления.
+С новыми электронными технологиями, и также старым [вращением](rotary_power.md) и [сфуникулёрами](skycrate_system.md), создать хорошую транспортную систему было никогда как просто.

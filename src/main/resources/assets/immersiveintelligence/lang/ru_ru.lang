@@ -2909,7 +2909,7 @@ ie.manual.entry.traits.paintable=Можно красить
 
 ie.manual.entry.wip_warning0=Внимание! Работа в прогресе.
 ie.manual.entry.wip_warning1=Инженерный департамент работает над тем чтобы починить это!
-
+# если прокатить всё будет заебись. ждём ответа Пабило
 ie.manual.entry.data_operation.inputs=Входы
 ie.manual.entry.data_operation.output=Выходы
 ie.manual.entry.data_operation.pol=Пример кода POL
@@ -3171,7 +3171,7 @@ ii.gui.editor.editor_style=Визуальный/POL редактор
 ii.gui.task_editor.tasks=Задачи
 ii.gui.task_editor.tasks.tooltip=Задачи - это задания, которые повторяются бесконечно.
 ii.gui.task_editor.jobs=Задания
-ii.gui.task_editor.jobs.tooltip=Задания - это назначения, которые удаляются из памяти после передачи заданного объема ресурсов.
+ii.gui.task_editor.jobs.tooltip=Задания - это задания, которые удаляются из памяти после передачи заданного объема ресурсов.
 
 ii.gui.inserter.task_editor=Редактор задач
 ii.gui.inserter.type=Тип:

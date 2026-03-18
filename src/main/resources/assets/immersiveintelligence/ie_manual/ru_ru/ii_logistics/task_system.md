@@ -1,11 +1,10 @@
 # meta
-Task System
-Keep it Simple, Stupid
+Система задач
+Будь проще, глупец
 # intro
-The task system is a concept of organising a machine's work schedule through a single iterable task. Tasks are used by many data devices, such as the [inserters](inserters.md), [packers](packer.md) and the [data routers](small_data_devices.md#router). Tasks are divided into two groups:
-**Jobs** - tasks which will execute infinitely, unless manually removed.
-**Requests
-** - tasks which are temporary, and will remove themselves after they are finished (i.e. after an inserter picks up a certain amount of items)
+Система задач - это возможность организации работы по расписанию с помощью одной повторяющейся задачи. Задачи используются многими устройствами передачи данных, такими как [установщики](inserters.md), [упаковщики](packer.md) и [маршрутизаторы данных](small_data_devices.md#router). Задачи делятся на две группы:
+**Задачи** - задания, которые будут выполняться бесконечно, если их не удалить вручную.
+**Задания** - задания, которые являются временными и удаляются сами по себе после завершения (т.е. после того, как пользователь получит определенное количество элементов).
 # details
-By default, tasks are executed from the oldest to the newest. If a task cannot be executed, it will be skipped. After finishing a [Request]
-__(successfully or **not**)__, it is checked whether it should be removed.
+По умолчанию задания выполняются от самой старой к самой новой. Если задание не может быть выполнена, она будет пропущена. После завершения [задания]
+(успешно или нет) проверяется, следует ли ее удалять.

@@ -1,8 +1,8 @@
 # meta
-Mechanical Pump
-Archimedes Screw
+Механический насос
+Винт Архимеда
 # overview
 |[crafting]{source:"pump"}|
-The Mechanical Pump operates on the simple principle of pressure differentials driven by rotary power to move fluids. Due to the materials used to construct the Mechanical pump, it can only extract water.
+Механический насос работает по простому принципу: перепады давления, приводимые в движение вращательной силой, перемещают жидкости. Благодаря материалам, из которых изготовлен механический насос, он может извлекать только воду.
 # operation
-To operate the pump, a wheel must be connected to the rotary input on the top of the pump, and supplied with [rotary power](rotary_power.md). Like [electrical pumps](fluidPipes#fluidPipes2), a redstone signal must be applied to the base of the pump to output fluid.
+Для работы насоса с боку в верхней части насоса должно быть подключено колесо, на которое подается [энергия вращения](rotary_power.md). Как и в случае с [электрическими насосами](fluidPipes#fluidPipes2), для подачи жидкости на основание насоса необходимо подать сигнал redstone.
