@@ -99,8 +99,11 @@ public class SawmillRenderer extends IIMultiblockRenderer<TileEntitySawmill>
 			}
 
 			//Currently held item
-			partItemInserter.get().setStack(recipe.itemInput.getExampleStack());
-			partItemOutput.get().setStack(recipe.itemOutput);
+			ItemStack displayInput = te.currentProcess.processData.getItemStack("displayInput");
+			partItemInserter.get().setStack(displayInput.isEmpty()?recipe.itemInput.getExampleStack(): displayInput);
+			//Used to match output texture to input woodtype
+			ItemStack displayOutput = te.currentProcess.processData.getItemStack("correctOutput");
+			partItemOutput.get().setStack(displayOutput.isEmpty()?recipe.itemOutput: displayOutput);
 		}
 		else
 			animationProductionReach.apply(0f);
