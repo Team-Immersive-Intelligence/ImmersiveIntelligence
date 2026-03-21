@@ -1,0 +1,23 @@
+{
+  "origins": {
+    "crane1": [-24, 13.33333, 10.5],
+    "crane2": [-24, 8.5, 10.5],
+    "rope": [-24, 9.5, 10.5],
+    "finger1": [-26, 8, 8.5],
+    "finger2": [-26, 4, 8.5],
+    "finger3": [-22, 8, 12.5],
+    "finger4": [-22, 4, 12.5],
+    "door1": [40, -0.5, 0.5],
+    "door2": [-23.5, -0.5, 0.5],
+    "fluid": [-15, -10, -15],
+    "item": [40, -5, -6.5]
+  },
+  "hierarchy": {
+    "crane2": "crane1",
+    "rope": "crane2",
+    "finger1": "crane2",
+    "finger2": "finger1",
+    "finger3": "crane2",
+    "finger4": "finger3"
+  }
+}

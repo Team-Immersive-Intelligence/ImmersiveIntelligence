@@ -10,14 +10,14 @@
     }
   },
   "variants": {
-    "inventory,type=fuel_station": [
+    "inventory,type=chemical_bath": [
       {
-        "model": "immersiveintelligence:multiblock/fuel_station/fuel_station_inv.obj",
+        "model": "immersiveintelligence:multiblock/chemical_bath/chemical_bath_inv.obj",
         "transform": {
-          "scale": 0.25,
+          "scale": 0.2,
           "translation": [
             0,
-            -0.25,
+            0,
             0
           ],
           "rotation": [
@@ -32,7 +32,7 @@
       }
     ],
     "type": {
-      "fuel_station": {}
+      "chemical_bath": {}
     },
     "facing": {
       "north": {
@@ -66,10 +66,10 @@
     },
     "boolean0": {
       "false": {
-        "model": "immersiveintelligence:multiblock/fuel_station/fuel_station_base.obj"
+        "model": "immersiveintelligence:multiblock/chemical_bath/chemical_bath_base.obj"
       },
       "true": {
-        "model": "immersiveintelligence:multiblock/fuel_station/fuel_station_flipped.obj"
+        "model": "immersiveintelligence:multiblock/chemical_bath/chemical_bath_flipped.obj"
       }
     },
     "boolean1": {
@@ -85,7 +85,7 @@
     "_1dynamicrender": {
       "false": {},
       "true": {
-        "model": "immersiveintelligence:multiblock/fuel_station/fuel_station.obj.ie"
+        "model": "immersiveintelligence:multiblock/chemical_bath/chemical_bath.obj.ie"
       }
     }
   }

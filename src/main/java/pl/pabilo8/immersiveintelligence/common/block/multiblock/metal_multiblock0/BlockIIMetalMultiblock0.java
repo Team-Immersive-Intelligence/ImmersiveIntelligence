@@ -42,7 +42,7 @@ public class BlockIIMetalMultiblock0 extends BlockIIMultiblock<MetalMultiblocks0
 		setBlockLayer(BlockRenderLayer.CUTOUT);
 		setToolTypes(IIReference.TOOL_HAMMER);
 
-		addToTESRMap(MetalMultiblocks0.CHEMICAL_BATH, MetalMultiblocks0.PRECISION_ASSEMBLER);
+		addToTESRMap(MetalMultiblocks0.PRECISION_ASSEMBLER);
 	}
 
 	@Nonnull
@@ -51,7 +51,6 @@ public class BlockIIMetalMultiblock0 extends BlockIIMultiblock<MetalMultiblocks0
 	{
 		switch(state.getValue(property))
 		{
-			case CHEMICAL_BATH:
 			case PRECISION_ASSEMBLER:
 			case PERISCOPE:
 				return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;

@@ -150,12 +150,10 @@ public abstract class AMT implements AMTRenderable
 			GlStateManager.rotate((float)rot.z, 0, 0, 1);
 			GlStateManager.rotate((float)-rot.x, 1, 0, 0);
 		}
-
-		GlStateManager.translate(-originPos.x, -originPos.y, -originPos.z);
-
 		if(scale!=null)
 			GlStateManager.scale(scale.x, scale.y, scale.z);
 
+		GlStateManager.translate(-originPos.x, -originPos.y, -originPos.z);
 	}
 
 	protected abstract void draw(Tessellator tes, BufferBuilder buf);

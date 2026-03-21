@@ -1,0 +1,14 @@
+# Made by Pabilo8 with Blockbench
+
+newmtl common_concrete
+map_Kd immersiveintelligence:blocks/common/common_concrete
+newmtl common_steel
+map_Kd immersiveintelligence:blocks/common/common_steel
+newmtl common_steel_norivets
+map_Kd immersiveintelligence:blocks/common/common_steel_norivets
+newmtl common_table_steel
+map_Kd immersiveintelligence:blocks/common/common_table_steel
+newmtl common_thingies
+map_Kd immersiveintelligence:blocks/common/common_thingies
+newmtl chemical_bath
+map_Kd immersiveintelligence:blocks/multiblock/chemical_bath

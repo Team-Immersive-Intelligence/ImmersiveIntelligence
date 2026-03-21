@@ -103,7 +103,7 @@ public class AMTLoader
 	{
 		ResourceLocation res = ObfuscationReflectionHelper.getPrivateValue(OBJModel.class, model, "modelLocation");
 		ResourceLocation fullRes = new ResourceLocation(res.getResourceDomain(),
-				res.getResourcePath().replace(".obj.ie", ".obj.amt"));
+				res.getResourcePath().replace(".obj.ie", ".obj").replace(".obj", ".obj.amt"));
 
 		return loadHeader(fullRes);
 	}
