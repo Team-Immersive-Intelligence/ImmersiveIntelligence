@@ -8,6 +8,7 @@
 [![Jitpack](https://jitpack.io/v/Pabilo8/ImmersiveIntelligence.svg)](https://jitpack.io/#Pabilo8/ImmersiveIntelligence)
 ![Test Status](https://github.com/Team-Immersive-Intelligence/ImmersiveIntelligence/actions/workflows/push.yml/badge.svg)
 [![Become a Patron!](https://img.shields.io/badge/Become%20a%20Patron-Pabilo8-red?style=flat-square&logo=patreon)](https://www.patreon.com/bePatron?u=34304036)
+[![Translation status](https://translations.iiteam.net/widget/immersive-intelligence/status-badge.png)](http://translations.iiteam.net/engage/immersive-intelligence/)
 
 ### Description
 
@@ -112,6 +113,10 @@ Java models use a fork of **Turbo Model Thingy** (**TMT**):
 - The original author: [@GaryCXJk](https://github.com/GaryCXJk)
 - Licensed from: [Flan's Mod Team](https://github.com/FlansMods/FlansMod)
 
-#### Please report any bugs you find in the ['Issues' tab](https://github.com/Team-Immersive-Intelligence/ImmersiveIntelligence/issues). Please don't do that on Curseforge / DM ^^.
+#### Please report any bugs you find in the ['Issues' tab](https://github.com/Team-Immersive-Intelligence/ImmersiveIntelligence/issues). Please don't do that on Curseforge / Modrinth / DM ^^.
+
+#### We want the mod to reach all of the Engineers. Please help us with translating the mod to other languages.
+
+[![Translation status](https://translations.iiteam.net/widget/immersive-intelligence/multi-auto.svg)](http://translations.iiteam.net/engage/immersive-intelligence/)
 
 #### Feel free to join the mod's [Discord Server](https://discord.gg/teMfm3R) to have a chat with the devs and community.
