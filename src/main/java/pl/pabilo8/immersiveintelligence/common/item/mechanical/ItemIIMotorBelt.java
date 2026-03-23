@@ -79,7 +79,7 @@ public class ItemIIMotorBelt extends ItemIISubItemsBase<MotorBelt> implements IW
 				MechanicalDevices.beltMaxTorque[0], MechanicalDevices.beltTorqueLoss[0]),
 		STEEL(IIRotaryUtils.TRACK_CATEGORY, new IngredientStack("plateSteel"), MechanicalDevices.beltLength[1], 8,
 				MechanicalDevices.beltMaxTorque[1], MechanicalDevices.beltTorqueLoss[1]),
-		RUBBER(IIRotaryUtils.BELT_CATEGORY, new IngredientStack("beltRubber"), MechanicalDevices.beltLength[2], 8,
+		RUBBER(IIRotaryUtils.BELT_CATEGORY, new IngredientStack("itemRubber"), MechanicalDevices.beltLength[2], 8,
 				MechanicalDevices.beltMaxTorque[2], MechanicalDevices.beltTorqueLoss[2]);
 
 		/**
