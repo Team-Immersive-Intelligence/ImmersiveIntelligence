@@ -100,15 +100,23 @@ import java.util.stream.Collectors;
  */
 public class IIRecipes
 {
-	public static ItemStack BASIC_CIRCUIT, TOOL_HAMMER, TOOL_CUTTERS;
+	public static ItemStack BASIC_CIRCUIT;
+	public static IngredientStack TOOL_HAMMER, TOOL_CUTTERS;
 	public static IngredientStack AMMO_CASINGS;
 
 	public static void doRecipes(IForgeRegistryModifiable<IRecipe> recipeRegistry)
 	{
 		//--- Setup Items ---//
 		BASIC_CIRCUIT = new ItemStack(IEContent.itemMaterial, 1, 27);
-		TOOL_HAMMER = new ItemStack(IEContent.itemTool, 1, 0);
-		TOOL_CUTTERS = new ItemStack(IEContent.itemTool, 1, 1);
+		//Tools - include both IE and II variants for workbench recipes
+		TOOL_HAMMER = new IngredientStack(Arrays.asList(
+				new ItemStack(IEContent.itemTool, 1, 0),
+				new ItemStack(IIContent.itemHammer)
+		));
+		TOOL_CUTTERS = new IngredientStack(Arrays.asList(
+				new ItemStack(IEContent.itemTool, 1, 1),
+				new ItemStack(IIContent.itemWirecutter)
+		));
 
 		//Used by ammo pouch
 		AMMO_CASINGS = new IngredientStack(AmmoRegistry.getAllAmmoItems()
