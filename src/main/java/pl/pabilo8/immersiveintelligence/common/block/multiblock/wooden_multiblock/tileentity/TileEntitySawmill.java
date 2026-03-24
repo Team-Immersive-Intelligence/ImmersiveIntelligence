@@ -1,8 +1,12 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.tileentity;
 
 import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorageAdvanced;
+import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.CraftingManager;
+import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
@@ -226,9 +230,19 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 		if(found==null)
 			return null;
 
+		//Store actual input item for display before consuming
+		ItemStack displayInput = inventory.get(SLOT_INPUT).copy();
+		displayInput.setCount(found.itemInput.inputSize);
+
+		//Look up the correct plank output for this specific log type
+		ItemStack correctOutput = lookupPlankOutput(displayInput, found.itemOutput);
+
 		//Consume input
 		inventory.get(SLOT_INPUT).shrink(found.itemInput.inputSize);
-		return new IIMultiblockProcess<>(found);
+		return new IIMultiblockProcess<>(found).withNBT(nbt -> {
+			nbt.withItemStack("displayInput", displayInput);
+			nbt.withItemStack("correctOutput", correctOutput);
+		});
 	}
 
 	@Override
@@ -250,7 +264,10 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 	@Override
 	protected boolean attemptProductionOutput(IIMultiblockProcess<SawmillRecipe> process)
 	{
-		ItemStack output = process.recipe.itemOutput.copy();
+		//Use correct output based on actual input wood type
+		ItemStack output = process.processData.getItemStack("correctOutput");
+		if(output.isEmpty())
+			output = process.recipe.itemOutput.copy();
 		ItemStack sawdust = process.recipe.itemSecondaryOutput.copy();
 
 		outputOrDrop(output, outputHandler, facing, getPOI("item_output"));
@@ -269,6 +286,46 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 	private void selfDestruct()
 	{
 		world.createExplosion(null, getPos().getX(), getPos().getY(), getPos().getZ(), 4, true);
+	}
+
+	/**
+	 * Looks up the correct plank output for a given log input by checking crafting recipes.
+	 * Prefers the most specific recipe (fewest matching ingredients) to ensure the output
+	 * plank type matches the input log type.
+	 *
+	 * @param logInput the actual log item being processed
+	 * @param fallback the recipe's default output to use if no crafting recipe match is found
+	 * @return the correct plank output
+	 */
+	private static ItemStack lookupPlankOutput(ItemStack logInput, ItemStack fallback)
+	{
+		ItemStack testStack = logInput.copy();
+		testStack.setCount(1);
+		ItemStack bestResult = ItemStack.EMPTY;
+		int bestSpecificity = Integer.MAX_VALUE;
+
+		for(IRecipe recipe : CraftingManager.REGISTRY)
+		{
+			if(Utils.compareToOreName(recipe.getRecipeOutput(), "plankWood"))
+			{
+				for(Ingredient ingredient : recipe.getIngredients())
+				{
+					if(ingredient.apply(testStack))
+					{
+						//Prefer recipes with fewer matching stacks (more specific to this log type)
+						int specificity = ingredient.getMatchingStacks().length;
+						if(specificity < bestSpecificity)
+						{
+							bestSpecificity = specificity;
+							bestResult = recipe.getRecipeOutput().copy();
+							bestResult.setCount(Math.round(bestResult.getCount()*1.5f));
+						}
+						break;
+					}
+				}
+			}
+		}
+		return bestResult.isEmpty()?fallback.copy(): bestResult;
 	}
 
 	//--- IRotationalEnergyBlock ---//

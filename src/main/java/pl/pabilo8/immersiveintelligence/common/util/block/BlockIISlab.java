@@ -15,6 +15,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IIBlockEnum;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class BlockIISlab<E extends Enum<E> & IIBlockEnum> extends BlockIIBase<E>
@@ -98,6 +99,41 @@ public class BlockIISlab<E extends Enum<E> & IIBlockEnum> extends BlockIIBase<E>
 				return side==EnumFacing.UP;
 		}
 		return true;
+	}
+
+	@Override
+	@SuppressWarnings("deprecation")
+	public boolean isFullBlock(@Nonnull IBlockState state)
+	{
+		return false;
+	}
+
+	@Override
+	@SuppressWarnings("deprecation")
+	public boolean isFullCube(@Nonnull IBlockState state)
+	{
+		return false;
+	}
+
+	@Override
+	@SuppressWarnings("deprecation")
+	public boolean isOpaqueCube(@Nonnull IBlockState state)
+	{
+		return false;
+	}
+
+	@Override
+	public int getLightOpacity(IBlockState state, IBlockAccess world, BlockPos pos)
+	{
+		TileEntity te = world.getTileEntity(pos);
+		if(te instanceof TileEntityIESlab)
+		{
+			//only double slabs should block light
+			if(((TileEntityIESlab)te).slabType==2)
+				return super.getLightOpacity(state, world, pos);
+			return 0;
+		}
+		return 0;
 	}
 
 	/**

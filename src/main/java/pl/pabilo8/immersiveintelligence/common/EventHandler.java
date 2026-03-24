@@ -117,7 +117,9 @@ public class EventHandler
 		//plates
 		if(event.getSource()==DamageSource.CACTUS||(event.getSource() instanceof EntityDamageSourceIndirect&&event.getSource().getImmediateSource() instanceof EntityArrow))
 		{
-			if(ItemIIUpgradeableArmor.isArmorWithUpgrade(boots, "toughness_increase"))
+			if(ItemIIUpgradeableArmor.isArmorWithUpgrade(head, "toughness_increase")
+					||ItemIIUpgradeableArmor.isArmorWithUpgrade(chest, "toughness_increase")
+					||ItemIIUpgradeableArmor.isArmorWithUpgrade(legs, "toughness_increase"))
 				event.setCanceled(true);
 		}
 		//heat resist
@@ -419,10 +421,32 @@ public class EventHandler
 		legs = entity.getItemStackFromSlot(EntityEquipmentSlot.LEGS);
 		boots = entity.getItemStackFromSlot(EntityEquipmentSlot.FEET);
 
-		//plates
-		if(event.getSource()==DamageSource.CACTUS||(event.getSource() instanceof EntityDamageSourceIndirect&&event.getSource().getImmediateSource() instanceof EntityArrow))
+		//plates - deflect arrows like a shield
+		if(event.getSource() instanceof EntityDamageSourceIndirect&&event.getSource().getImmediateSource() instanceof EntityArrow)
 		{
-			if(ItemIIUpgradeableArmor.isArmorWithUpgrade(boots, "toughness_increase"))
+			if(ItemIIUpgradeableArmor.isArmorWithUpgrade(head, "toughness_increase")
+					||ItemIIUpgradeableArmor.isArmorWithUpgrade(chest, "toughness_increase")
+					||ItemIIUpgradeableArmor.isArmorWithUpgrade(legs, "toughness_increase"))
+			{
+				EntityArrow arrow = (EntityArrow)event.getSource().getImmediateSource();
+				//Reflect the arrow away from the wearer
+				arrow.motionX *= -0.5;
+				arrow.motionY = Math.abs(arrow.motionY)*0.25+0.15;
+				arrow.motionZ *= -0.5;
+				arrow.velocityChanged = true;
+				arrow.shootingEntity = null;
+				//Play metallic ricochet sound
+				entity.world.playSound(null, entity.posX, entity.posY, entity.posZ,
+						IISounds.hitMetal.getRicochetSound(), SoundCategory.PLAYERS, 1.0f, 0.9f+(entity.world.rand.nextFloat()*0.2f));
+				event.setCanceled(true);
+			}
+		}
+		//plates - cactus protection
+		else if(event.getSource()==DamageSource.CACTUS)
+		{
+			if(ItemIIUpgradeableArmor.isArmorWithUpgrade(head, "toughness_increase")
+					||ItemIIUpgradeableArmor.isArmorWithUpgrade(chest, "toughness_increase")
+					||ItemIIUpgradeableArmor.isArmorWithUpgrade(legs, "toughness_increase"))
 				event.setCanceled(true);
 		}
 		//heat resist

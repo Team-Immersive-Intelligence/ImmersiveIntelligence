@@ -42,8 +42,8 @@ public class WheelRenderer extends IITileRenderer<TileEntityWheelBase>
 		boolean clockwise = IIRotaryUtils.shouldRotateClockwise(te.facing);
 
 		//Apply rotation
-		(clockwise?rotationClockwise: rotationCounterCw).apply(
-				IIRotaryUtils.getDisplayRotation(te, te.getNetwork().getEnergyStorage(), partialTicks));
+		float progress = IIRotaryUtils.getDisplayRotation(te, te.getNetwork().getEnergyStorage(), partialTicks);
+		(clockwise?rotationClockwise: rotationCounterCw).apply(progress);
 
 		model.render(tes, buf);
 
@@ -56,15 +56,11 @@ public class WheelRenderer extends IITileRenderer<TileEntityWheelBase>
 			if(!shouldRenderConnection(te, connection))
 				continue;
 			AMTChain chain = IIModelRegistry.INSTANCE.getMotorBeltConnectionModel(te, connection);
-			//Apply rotation
-			float rpm = (float)te.getOutputSpeed();
-			if(rpm < 1)
+			//Apply rotation - use same formula as the wheel so belt and wheel stay in sync
+			if(te.getNetwork().getNetworkSpeed() < 1)
 				chain.setProgress(0);
 			else
-			{
-				float progress = AMTUtils.getDebugProgress(rpm, partialTicks);
 				chain.setProgress(clockwise?(1f-progress): progress);
-			}
 			chain.render(tes, buf);
 		}
 	}
