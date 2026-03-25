@@ -2213,6 +2213,9 @@ ie.manual.entry.bullet_component.shrapnel_uranium=铀质弹片
 ie.manual.entry.bullet_component.shrapnel_uranium.lore=放-射-性
 ie.manual.entry.bullet_component.shrapnel_uranium.desc=铀是制造弹片的最佳材料之一,散射的碎片穿透装甲层轻而易举,可以对任何目标造成高伤害.
 
+ie.manual.entry.bullet_component.shrapnel_wood=锯末
+ie.manual.entry.bullet_component.shrapnel_wood.lore=环保！
+ie.manual.entry.bullet_component.shrapnel_wood.desc=可能不会造成太大伤害，但会留下清新的松木香味！
 
 #Logistics
 

@@ -2824,7 +2824,7 @@ ie.manual.entry.bullet_component.tesla=Разрядные излучатели
 ie.manual.entry.bullet_component.tesla.lore=Подарок Эдисону
 ie.manual.entry.bullet_component.tesla.desc=Разрядные излучатели создают поле, нарушающее поток электричества. Они полезны для вывода из строя промышленного оборудования, огневых точек и нарушают производство энергии.
 
-
+## Shrapnels
 ie.manual.entry.bullet_component.shrapnel_aluminum=Алюминиевая шрапнель
 ie.manual.entry.bullet_component.shrapnel_aluminum.lore=Амелиний, его просто так не покрасишь
 ie.manual.entry.bullet_component.shrapnel_aluminum.desc=Алюминий — не лучший материал для шрапнели, но он достаточно дешёвый, чтобы его можно было массово использовать в бою.
@@ -2901,6 +2901,11 @@ ie.manual.entry.bullet_component.shrapnel_HOPGraphite.desc=Графит — оч
 ie.manual.entry.bullet_component.shrapnel_uranium=Урановая шрапнель
 ie.manual.entry.bullet_component.shrapnel_uranium.lore=Ра-ди-о-активный
 ie.manual.entry.bullet_component.shrapnel_uranium.desc=Уран — один из лучших материалов для шрапнели. Разлетающиеся осколки без проблем пробивают броню и могут нанести большой урон любой цели.
+
+ie.manual.entry.bullet_component.shrapnel_wood=Опилки
+ie.manual.entry.bullet_component.shrapnel_wood.lore=Экологически чистый продукт!
+ie.manual.entry.bullet_component.shrapnel_wood.desc=Наверное, это не сильно повредит, но после процедуры останется свежий сосновый аромат!
+
 #Death Messages # Газовых труб не будет увы
 death.attack.iiBullet=%1$s был застрелен %2$s
 death.attack.iiBulletNoShooter=%1$s был застрелен
