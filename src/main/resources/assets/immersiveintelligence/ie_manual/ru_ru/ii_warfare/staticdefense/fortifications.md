@@ -1,11 +1,11 @@
 # meta
-Fortifications
-They shall not pass!
+Укрепления
+Они не пройдут!
 # 0
 |[crafting]{source:"sandbags"}|
-[Sandbags] are a cheap protective wall, resistant to small caliber bullets and small explosions.
-They are very useful in building trenches and are used to create [Emplacements](emplacement.md).
+[Мешки с песком] - это недорогая защитная стена, устойчивая к пулям малого калибра и небольшим взрывам.
+Они очень полезны при строительстве траншей и используются для создания [огневых точек](emplacement.md).
 # 1
 |[crafting]{source:"anti_tank_trap"}|
-The [Anti-Tank Trap], also called an *Anti-Tank
-Hedgehog* is a passive anti-vehicle weapon. Its sharp edges are capable of cutting through tracks and tires of vehicles and severely damaging light vehicles attempting to ram them.
+[Противотанковый ёж], также называемый чешским.
+"Ёж" - это пассивное противотранспортное укрепление. Его острые края способны прокалывать гусеницы и шины транспортных средств и серьезно повреждать легкие транспортные средства, пытающиеся их протаранить.

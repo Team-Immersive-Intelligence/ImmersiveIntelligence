@@ -1,6 +1,6 @@
 # meta
-Explosives and Mines
-Ka-boom?
+Взрывчатка и мины
+Ка-бум?
 # radio_satchel0
 When your operations require a stealthy, precise approach, [radio](radio_station.md)[-detonated satchel] charges are the right choice. Be it
 mining operations, demolition of buildings, or sabotage of train bridges, satchel charges are universal in their role and are beloved by both combat engineers and saboteurs.

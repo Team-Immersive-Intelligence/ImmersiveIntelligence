@@ -1,8 +1,8 @@
 # meta
-Explosive Mine Sign
-KaBOOOM!!!
+Знак "Осторожно, мины"
+Бабах!!!
 # main
 |[crafting]{source:"mine_sign"}|
-While having the appearance of a simple piece of wood with text written on it, this sign seems to instill some sense of dread in your adversaries.
-Its main purpose is designating friendly and hostile minefields, although some use it as a bedroom decoration for some reason.
-*Well, such are Engineers...*
+Несмотря на то, что этот знак выглядит как простой кусок дерева с написанным на нем текстом, он, по-видимому, внушает вашим противникам некоторое чувство страха.
+Его основное назначение - обозначать дружественные и враждебные минные поля, хотя некоторые почему-то используют его в качестве украшения спальни.
+** Что ж, таковы инженеры...**

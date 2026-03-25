@@ -1270,16 +1270,16 @@ desc.immersiveintelligence.no_variable=Пусто
 desc.immersiveintelligence.variable=Переменная:
 desc.immersiveintelligence.variable_apply=Применить
 desc.immersiveintelligence.variable_remove=Удалить
-#11.03.2026 это пока не переводим, этого в моде нет
+
 desc.immersiveintelligence.diplomacy.ownedby=Собственность %s
 desc.immersiveintelligence.diplomacy.noowner=Заброшенная собственность
 desc.immersiveintelligence.diplomacy.noowner_long=У этого объекта недвижимости нет владельца. На него можно претендовать.
 desc.immersiveintelligence.diplomacy.noowner_long.company=У этого объекта собственности нет владельца. Его активы ожидают приобретения.
 desc.immersiveintelligence.diplomacy.noowner_long.republic=Этот объект собственности не представлен. Он ожидает нового представителя власти.
-desc.immersiveintelligence.diplomacy.noowner_long.commune=Эта собственность оставлено, ожидая передачи в руки рабочих и крестьян.
-desc.immersiveintelligence.diplomacy.noowner_long.commisariat=Эта собственность оставлено без присмотра. Оно жаждет нашего нового порядка.
-desc.immersiveintelligence.diplomacy.noowner_long.free_city=Никакая хартия не защищает эту собственность. На рынках и улицах нет закона.
-desc.immersiveintelligence.diplomacy.noowner_long.dynasty=Ни один правитель не претендовал на эту собственность. Оно ждет, когда над ним поднимется наше знамя.
+desc.immersiveintelligence.diplomacy.noowner_long.commune=Эта собственность оставлена, ожидая передачи в руки рабочих и крестьян.
+desc.immersiveintelligence.diplomacy.noowner_long.commisariat=Эта собственность оставлена без присмотра. Она жаждет нашего нового порядка.
+desc.immersiveintelligence.diplomacy.noowner_long.free_city=Никакая хартия не защищает эту собственность. На её рынках и улицах нет закона.
+desc.immersiveintelligence.diplomacy.noowner_long.dynasty=Ни один правитель не претендует на эту собственность. Она ждет, когда над её поднимется наше знамя.
 
 desc.immersiveintelligence.diplomacy.status.member=Участник
 desc.immersiveintelligence.diplomacy.status.member_long=Вы принадлежите к этой фракции.
@@ -1290,18 +1290,18 @@ desc.immersiveintelligence.diplomacy.status.neutral_long=Вас не связы�
 desc.immersiveintelligence.diplomacy.status.hostile=Враждебная
 desc.immersiveintelligence.diplomacy.status.hostile_long=Эта фракция считает вас врагом. Конфликт неизбежен.
 
-desc.immersiveintelligence.diplomacy.ownership.claim=Claim Property
-desc.immersiveintelligence.diplomacy.ownership.start_capture=Seize Property
+desc.immersiveintelligence.diplomacy.ownership.claim=Претензии
+desc.immersiveintelligence.diplomacy.ownership.start_capture=Окупации
 desc.immersiveintelligence.diplomacy.ownership.owned_chunks=Чанков контролирует: %s
 desc.immersiveintelligence.diplomacy.ownership.flagpoles=Флагштоков установлено: %s
 desc.immersiveintelligence.diplomacy.ownership.law_form=Правовая форма: %s
 desc.immersiveintelligence.diplomacy.ownership.members=Участники: %s
 
-desc.immersiveintelligence.diplomacy.ownership.comparison.far_stronger=This faction dwarfs your strength and influence.
-desc.immersiveintelligence.diplomacy.ownership.comparison.stronger=This faction holds advantage over yours.
-desc.immersiveintelligence.diplomacy.ownership.comparison.equal=This faction matches your strength.
-desc.immersiveintelligence.diplomacy.ownership.comparison.weaker=This faction falls short of your strength.
-desc.immersiveintelligence.diplomacy.ownership.comparison.far_weaker=This faction is vastly outclassed by yours.
+desc.immersiveintelligence.diplomacy.ownership.comparison.far_stronger=Эта держава затмевает нас, нашу силу и влияние.
+desc.immersiveintelligence.diplomacy.ownership.comparison.stronger=Они немного сильнее нас.
+desc.immersiveintelligence.diplomacy.ownership.comparison.equal=Наши фракции имеют равные силы.
+desc.immersiveintelligence.diplomacy.ownership.comparison.weaker=Они немного слабее нас.
+desc.immersiveintelligence.diplomacy.ownership.comparison.far_weaker=Они склоняются перед нашей силой и близки к капитуляции.
 
 info.immersiveintelligence.diplomacy.ownership.container_cannot_open=Вы не можете получить доступ к структуре на чужой территории.
 
@@ -1344,7 +1344,7 @@ desc.immersiveintelligence.diplomacy.law_form.commune.tier5_long=Растуще�
 #Commissariat Фашисты
 desc.immersiveintelligence.diplomacy.law_form.commisariat=Комиссариат
 desc.immersiveintelligence.diplomacy.law_form.commisariat.tier1=Ячейка
-desc.immersiveintelligence.diplomacy.law_form.commisariat.tier1_long=Небольшой отряд, лояльный комиссару, поддерживающий порядок с помощью идеологии.
+desc.immersiveintelligence.diplomacy.law_form.commisariat.tier1_long=Небольшой отряд, лояльный комиссару, поддерживающий новый порядок с помощью идеологии.
 desc.immersiveintelligence.diplomacy.law_form.commisariat.tier2=Бюро
 desc.immersiveintelligence.diplomacy.law_form.commisariat.tier2_long=Административное учреждение, руководящее политикой и пропагандой.
 desc.immersiveintelligence.diplomacy.law_form.commisariat.tier3=Комиссариат
@@ -1352,14 +1352,14 @@ desc.immersiveintelligence.diplomacy.law_form.commisariat.tier3_long=Сильн�
 desc.immersiveintelligence.diplomacy.law_form.commisariat.tier4=Гросскоомиссариат
 desc.immersiveintelligence.diplomacy.law_form.commisariat.tier4_long=Господствующая держава с централизованным контролем над производством и войной.
 desc.immersiveintelligence.diplomacy.law_form.commisariat.tier5=Верховный комиссариат
-desc.immersiveintelligence.diplomacy.law_form.commisariat.tier5_long=Тоталитарный режим, насаждающий абсолютный порядок и беспрекословную лояльность.
+desc.immersiveintelligence.diplomacy.law_form.commisariat.tier5_long=Тоталитарный режим, насаждающий абсолютный новый порядок и беспрекословную лояльность.
 #Free City Жиды-Одеситы?
 desc.immersiveintelligence.diplomacy.law_form.free_city=Вольный город
 desc.immersiveintelligence.diplomacy.law_form.free_city.tier1=Деревня
 desc.immersiveintelligence.diplomacy.law_form.free_city.tier1_long=Небольшая автономная деревня со своим собственным местным управлением.
 desc.immersiveintelligence.diplomacy.law_form.free_city.tier2=Село
 desc.immersiveintelligence.diplomacy.law_form.free_city.tier2_long=Сообщество, организованное вокруг торговли и обмена.
-desc.immersiveintelligence.diplomacy.law_form.free_city.tier3=ПТГ
+desc.immersiveintelligence.diplomacy.law_form.free_city.tier3=ПГТ
 desc.immersiveintelligence.diplomacy.law_form.free_city.tier3_long=Процветающий город, обогащенный коммерцией и внешней торговлей.
 desc.immersiveintelligence.diplomacy.law_form.free_city.tier4=Город
 desc.immersiveintelligence.diplomacy.law_form.free_city.tier4_long=Центр торговли и дипломатии, господствующий на региональных рынках.
@@ -1370,14 +1370,14 @@ desc.immersiveintelligence.diplomacy.law_form.dynasty=Династия
 desc.immersiveintelligence.diplomacy.law_form.dynasty.tier1=Дом
 desc.immersiveintelligence.diplomacy.law_form.dynasty.tier1_long= Семейная линия, владеющая скромным поместьем и своим гербом.
 desc.immersiveintelligence.diplomacy.law_form.dynasty.tier2=Клан
-desc.immersiveintelligence.diplomacy.law_form.dynasty.tier2_long=Более широкое родство, объединяющее вассалов и заклятых союзников под своим знаменем.
+desc.immersiveintelligence.diplomacy.law_form.dynasty.tier2_long=Более широкое родство, объединяющее вассалов и верных союзников под своим знаменем.
 desc.immersiveintelligence.diplomacy.law_form.dynasty.tier3=Благородный дом
 desc.immersiveintelligence.diplomacy.law_form.dynasty.tier3_long=Укрепленный дворянский род, владеющий армиями и твердынями.
 desc.immersiveintelligence.diplomacy.law_form.dynasty.tier4=Королевская династия
-desc.immersiveintelligence.diplomacy.law_form.dynasty.tier4_long=Правящая родословная, владеющая обширными землями и имеющая многочисленных наследников.
+desc.immersiveintelligence.diplomacy.law_form.dynasty.tier4_long=Правящая династия, владеющая обширными землями и имеющая многочисленных наследников.
 desc.immersiveintelligence.diplomacy.law_form.dynasty.tier5=Императорская династия
 desc.immersiveintelligence.diplomacy.law_form.dynasty.tier5_long=Династия императоров, обладающих непревзойденным могуществом и наследием.
-
+# осталось дождаться анархистов и военной диктатуры и ------- (ждать ещё лет 10)
 desc.immersiveintelligence.diplomacy.action.disband=Disband
 desc.immersiveintelligence.diplomacy.action.merge=Merge
 desc.immersiveintelligence.diplomacy.action.add_members=Добавить участников
@@ -1432,7 +1432,7 @@ desc.immersiveintelligence.effect_shape.line=Линия
 desc.immersiveintelligence.effect_shape.cone=Конус
 
 desc.immersiveintelligence.penetration_hardness.foliage=Листва
-desc.immersiveintelligence.penetration_hardness.fragile=Хрупкое
+desc.immersiveintelligence.penetration_hardness.fragile=Стекло
 desc.immersiveintelligence.penetration_hardness.ground=Земля
 desc.immersiveintelligence.penetration_hardness.wood=Дерево
 desc.immersiveintelligence.penetration_hardness.weak_metal=Цветные металлы
@@ -2768,7 +2768,7 @@ advancement.immersiveintelligence.craft_advanced_inserter.desc=Создайте 
 advancement.immersiveintelligence.craft_binoculars=Тактическое наблюдение
 advancement.immersiveintelligence.craft_binoculars.desc=Создайте Бинокль
 
-advancement.immersiveintelligence.craft_chemdispenser=Пламя в чёрной ночи
+advancement.immersiveintelligence.craft_chemdispenser=Тёмная ночь, только...
 advancement.immersiveintelligence.craft_chemdispenser.desc=Изготовьте химический раздатчик
 
 advancement.immersiveintelligence.craft_inserter=Никаких жёлтых, извините!
@@ -2910,14 +2910,14 @@ ie.manual.entry.traits.paintable=Можно красить
 ie.manual.entry.wip_warning0=Внимание! Работа в прогресе.
 ie.manual.entry.wip_warning1=Инженерный департамент работает над тем чтобы починить это!
 # если прокатить всё будет заебись. ждём ответа Пабило
-ie.manual.entry.data_operation.inputs=Входы
-ie.manual.entry.data_operation.output=Выходы
-ie.manual.entry.data_operation.pol=Пример кода POL
-ie.manual.entry.data_operation.tooltip_data=Перейти к представлению данных
-ie.manual.entry.data_operation.tooltip_pol=Перейти к реализации POL
-ie.manual.entry.data_operation.comment.import=операция импорта данных
-ie.manual.entry.data_operation.comment.import_more=альтернативно
-ie.manual.entry.data_operation.comment.example=пример использования
+ie.manual.entry.data_operation.inputs=Входные значения
+ie.manual.entry.data_operation.output=Выходные значения
+ie.manual.entry.data_operation.pol=Пример кода на POL
+ie.manual.entry.data_operation.tooltip_data=Перейти к списку переменных
+ie.manual.entry.data_operation.tooltip_pol=Перейти к примеру на POL
+ie.manual.entry.data_operation.comment.import=Операция импорта данных
+ie.manual.entry.data_operation.comment.import_more=Альтернативно
+ie.manual.entry.data_operation.comment.example=Пример использования
 
 ie.manual.entry.data_variable.allowed_value=Допустимое значение:
 ie.manual.entry.data_variable.allowed_values=Допустимые значения:
@@ -2973,7 +2973,7 @@ ie.manual.entry.bullet_core.core_copper.lore=Каждая копейка на с
 ie.manual.entry.bullet_core.core_copper.desc=Медь — дешёвый материал для пуль, её пробивная способность хуже, чем у латуни, но усиливает эффект компонентов.
 
 ie.manual.entry.bullet_core.core_lead=Свинцовый сердечник
-ie.manual.entry.bullet_core.core_lead.lore=Хороший, плохой, злой
+ie.manual.entry.bullet_core.core_lead.lore=<br>Хороший, плохой, злой
 ie.manual.entry.bullet_core.core_lead.desc=Свинец — хороший материал для дешёвых пуль с высоким уроном и посредственной пробивной силой, однако из-за высокой плотности максимальная дальность полёта ограничена.
 
 ie.manual.entry.bullet_core.core_iron=Железный сердечник
@@ -2985,7 +2985,7 @@ ie.manual.entry.bullet_core.core_steel.lore=Цельнометаллическа
 ie.manual.entry.bullet_core.core_steel.desc=Использование стали — недорогой способ увеличить пробивную способность снарядов, единственный недостаток — слегка уменьшенный эффект компонентов.
 
 ie.manual.entry.bullet_core.core_tungsten=Вольфрамовый сердечник
-ie.manual.entry.bullet_core.core_tungsten.lore=Заряжай подкалиберный снаряд!
+ie.manual.entry.bullet_core.core_tungsten.lore=<br>Заряжай подкалиберный снаряд!
 ie.manual.entry.bullet_core.core_tungsten.desc=Вольфрам лучше проникает сквозь объекты, чем сталь, но уменьшает эффект других компонентов.
 
 ie.manual.entry.bullet_core.core_uranium=Урановый сердечник
@@ -3037,7 +3037,7 @@ ie.manual.entry.bullet_component.tnt.desc=ТНТ — взрывчатое вещ
 #CoH2 Reference
 ie.manual.entry.bullet_component.rdx=RDX
 ie.manual.entry.bullet_component.rdx.lore=Всё идёт вверх, всё идёт вниз!
-ie.manual.entry.bullet_component.rdx.desc=RDX, также известный как §гексоген§r, — мощное взрывчатое вещество. Будучи вдвое мощнее ТНТ, он способен уничтожить даже самые мощные огневые точки.
+ie.manual.entry.bullet_component.rdx.desc=RDX, также известный как §ггексоген§r, — мощное взрывчатое вещество. Будучи вдвое мощнее ТНТ, он способен уничтожить даже самые мощные огневые точки.
 
 #There are many variants of HMX's full name, one of them is Her Majesty's Explosive
 ie.manual.entry.bullet_component.hmx=HMX
@@ -3052,12 +3052,12 @@ ie.manual.entry.bullet_component.white_phosphorus.desc=Белый фосфор �
 #A reference to struggle between Tesla and Edison
 #similar to how the Finns made a cocktail for Molotov (soviet foreign affairs minister) during the Winter War, a tesla grenade would be a nice one for Edison
 ie.manual.entry.bullet_component.tesla=Разрядные излучатели
-ie.manual.entry.bullet_component.tesla.lore=Подарок Эдисону
+ie.manual.entry.bullet_component.tesla.lore=<br>Подарок Эдисону
 ie.manual.entry.bullet_component.tesla.desc=Разрядные излучатели создают поле, нарушающее поток электричества. Они полезны для вывода из строя промышленного оборудования, огневых точек и нарушают производство энергии.
 
 
 ie.manual.entry.bullet_component.shrapnel_aluminum=Алюминиевая шрапнель
-ie.manual.entry.bullet_component.shrapnel_aluminum.lore=Амелиний, его просто так не покрасишь
+ie.manual.entry.bullet_component.shrapnel_aluminum.lore=<br>Амелиний, его просто так не покрасишь
 ie.manual.entry.bullet_component.shrapnel_aluminum.desc=Алюминий — не лучший материал для шрапнели, но он достаточно дешёвый, чтобы его можно было массово использовать в бою.
 
 ie.manual.entry.bullet_component.shrapnel_zinc=Цинковая шрапнель
@@ -3071,7 +3071,7 @@ ie.manual.entry.bullet_component.shrapnel_copper.desc=Бросание меди 
 
 #Reference to JoJo, yes even in the II there has to be one
 ie.manual.entry.bullet_component.shrapnel_platinum=Платиновая шрапнель
-ie.manual.entry.bullet_component.shrapnel_platinum.lore=Шрапнельщик, да?
+ie.manual.entry.bullet_component.shrapnel_platinum.lore=<br>Шрапнельщик, да?
 ie.manual.entry.bullet_component.shrapnel_platinum.desc=Выбираешь платину? Да, конечно, обедняй себя, тебе это нужно, а не мне.
 
 #Murica' fuck yeah
@@ -3085,11 +3085,11 @@ ie.manual.entry.bullet_component.shrapnel_nickel.desc=Никель — плох�
 
 #Reference to the Netflix's Witcher series
 ie.manual.entry.bullet_component.shrapnel_silver=Серебряная шрапнель
-ie.manual.entry.bullet_component.shrapnel_silver.lore=Стрелку заплатите чеканной монетой
+ie.manual.entry.bullet_component.shrapnel_silver.lore=<br>Стрелку заплатите чеканной монетой
 ie.manual.entry.bullet_component.shrapnel_silver.desc=Серебряная шрапнель — хороший вариант для борьбы с нежитью. Она наносит им больше урона и замедляет их.
 
 ie.manual.entry.bullet_component.shrapnel_electrum=Электрумовая шрапнель
-ie.manual.entry.bullet_component.shrapnel_electrum.lore=Шок-войска прибыли
+ie.manual.entry.bullet_component.shrapnel_electrum.lore=<br>Шок-войска прибыли
 ie.manual.entry.bullet_component.shrapnel_electrum.desc=Электрум отлично проводит электричество, и хотя шрапнель не нанесёт большого урона, пораженные враги получат больше урона от энергетического оружия, например, катушек Теслы.
 
 #Reference to a post-ww2 poster for inter-country help in Western Europe
@@ -3117,7 +3117,7 @@ ie.manual.entry.bullet_component.shrapnel_brass.desc=Латунь — плохо
 
 #A reference to Bear989sr. - a gregtech player, I just love when he says the word "steel", also some nice GT tutorials
 ie.manual.entry.bullet_component.shrapnel_tungsten=Вольфрамовая шрапнель
-ie.manual.entry.bullet_component.shrapnel_tungsten.lore=А теперь мы делаем *кхем* ВОЛЬФРАМОВУЮ СТАЛЬ...
+ie.manual.entry.bullet_component.shrapnel_tungsten.lore=<br>А теперь мы делаем *кхем* ВОЛЬФРАМОВУЮ СТАЛЬ...
 ie.manual.entry.bullet_component.shrapnel_tungsten.desc=Вольфрам — очень хороший материал для шрапнели, его высокий урон позволяет разрывать врагов на куски.
 
 #Reference to Kuruma saying IEn's thorium railgun rods are the strongest railgun ammo
@@ -3126,12 +3126,17 @@ ie.manual.entry.bullet_component.shrapnel_thorium.lore=Делайте грана
 ie.manual.entry.bullet_component.shrapnel_thorium.desc=Торий — хороший, но дорогой материал для шрапнели с высоким уроном и пробивной способностью.
 
 ie.manual.entry.bullet_component.shrapnel_HOPGraphite=Графитовая шрапнель
-ie.manual.entry.bullet_component.shrapnel_HOPGraphite.lore=Убойный карандаш!
+ie.manual.entry.bullet_component.shrapnel_HOPGraphite.lore=<br>Убойный карандаш!
 ie.manual.entry.bullet_component.shrapnel_HOPGraphite.desc=Графит — очень хороший материал для шрапнели. Его малый вес и высокая пробивная способность делают его полезным в бою.
 
 ie.manual.entry.bullet_component.shrapnel_uranium=Урановая шрапнель
-ie.manual.entry.bullet_component.shrapnel_uranium.lore=Ра-ди-о-активный
+ie.manual.entry.bullet_component.shrapnel_uranium.lore=§гРа-ди-о-активный§r
 ie.manual.entry.bullet_component.shrapnel_uranium.desc=Уран — один из лучших материалов для шрапнели. Разлетающиеся осколки без проблем пробивают броню и могут нанести большой урон любой цели.
+
+ie.manual.entry.bullet_component.shrapnel_wood=Опилки
+ie.manual.entry.bullet_component.shrapnel_wood.lore=Экологически чистые
+ie.manual.entry.bullet_component.shrapnel_wood.desc=Не наносит серъёзных повреждений, но оставляет свежий таёжный аромат.
+
 #Death Messages # Газовых труб не будет увы
 death.attack.iiBullet=%1$s был застрелен %2$s
 death.attack.iiBulletNoShooter=%1$s был застрелен
@@ -3150,8 +3155,8 @@ death.attack.iiVehicleSuicide=%1$s решил спрыгнуть с движущ
 #Additional stuff for the Config Panel
 ii.config.Graphics=Графика
 ii.config.Ores=Руды
-ii.config.Machines=Машины
-ii.config.MechanicalDevices=Механические устройства
+ii.config.Machines=Техника
+ii.config.MechanicalDevices=Механические приборы
 ii.config.Weapons=Оружие
 ii.config.Wires=Провода
 ii.config.Tools=Инструменты
@@ -3160,7 +3165,7 @@ ii.config.EffectCrates=Ящики с эффектами
 
 #Weapon Configs
 ii.config.Ammunition=Боеприпасы
-ii.config.Emplacement_Weapons=Оружие для огневых точек
+ii.config.Emplacement_Weapons=Оружие огневых точек
 ii.config.Grenade=Гранаты
 ii.config.Mines=Мины
 ii.config.Light_Engineer_Armor=Лёгкая броня инженера

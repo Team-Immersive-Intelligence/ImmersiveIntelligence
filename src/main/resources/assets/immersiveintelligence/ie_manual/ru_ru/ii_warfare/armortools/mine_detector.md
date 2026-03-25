@@ -1,14 +1,14 @@
 # meta
-Mine Detector
-Invented by Field People
+Металлодетектор
+Изобретен геологами
 # 1
 |[crafting]{source:"mine_detector"}|
-The mine detector is a tool designed for detecting landmines and concealed explosive devices.
-It originates from an unsuccessful attempt to create an ore detector, but turned out to be a savior tool for the military.
+Металлодетектор - это инструмент, предназначенный для обнаружения наземных мин и скрытых взрывных устройств.
+Он возник в результате неудачной попытки создать детектор руды, но оказался незаменимым инструментом для военных.
 # 2
-In order to check for a landmine, you have to hold the Mine Detector in your [main hand], and [point it at a block]. The presence of the landmine is indicated by a beep noise, growing in frequency the closer you are to the landmine.<br>
-It is also worth noting that the mine detection happens not at your position, but at the one you're looking at.
+Чтобы проверить наличие наземной мины, вы должны взять металлодетектор в [основную руку] и [направить его на блок]. О наличии наземной мины сигнализирует звуковой сигнал, частота которого увеличивается по мере приближения к мине.<br>
+Также стоит отметить, что обнаружение мины происходит не на вашей позиции, а на той, на которую вы смотрите.
 # 3
 |[item_display]{source:"mine_detector"}|
-To disarm the [mine or explosive](explosives_mines.md) after a successful detection, use the [wire cutters](wiring#wiringCutters) or their [electric counterpart](electric_tools.md#cutter).
-When that's done, you can safely break the block.
+Для обезвреживания [мины](explosives_mines.md) после успешного обнаружения используйте [кусачки](wiringCutters) или их [электрический аналог](electric_tools.md#cutter).
+Когда это будет сделано, вы сможете безопасно снять блок.

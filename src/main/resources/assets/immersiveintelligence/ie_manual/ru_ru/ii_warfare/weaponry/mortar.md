@@ -1,12 +1,12 @@
 # meta
-Мортира
+Миномёт
 Смерть свыше
 # 1
 |[crafting]{source:"mortar"}|
-The Mortar is a [light, mobile, indirect weapon] for [close range fire support]. The Mortar has the lowest range of all the artillery weapons.
-However, it is compensated by its [ease of deployment] and [exceptional mobility].
+Миномёт является [легким, мобильным, неприцельным оружием] для [огневой поддержки на близкой дистанции]. Миномёт обладает наименьшей дальнобойностью из всех видов артиллерийского вооружения.
+Однако это компенсируется [простотой применения] и [исключительной мобильностью].
 # 2
-In order to operate a Mortar, the artilleryman has to [place it on the ground, facing the direction of the enemy, and then use the weapon].
-Mortar operator [cannot change] the [horizontal direction easily], but can change the [vertical angle] by pressing [Forward or Backward].
+Чтобы управлять миномётом, артиллерист должен [поставить его на землю лицом в направлении противника].
+Оператор миномёта [не может легко изменить] [рыскание миномёта], но может изменить [угол наклона], нажимая [W или S].
 
-The mortar comes with short-range artillery sights built in, [available by holding 'Z'].
+Миномёт оснащен встроенным артиллерийским прицелом малой дальности, [который можно использовать, удерживая клавишу "Z"].

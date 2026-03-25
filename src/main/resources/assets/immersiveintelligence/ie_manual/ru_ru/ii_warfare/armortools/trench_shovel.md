@@ -1,8 +1,8 @@
 # meta
-Trench Shovel
-Into the blackness!
+Сапёрная лопата
+В темноту!
 # intro
 |[crafting]{source:"trench_shovel"}|
-While commonly overlooked by most when it comes to tools, Trench Shovel an important piece of equipment in an Engineer's arsenal.
-Compared to regular shovels, the trench variant is more compact and sharpened. This design allows burying the [landmines](explosives_mines.md) into the ground
-three times faster than a shovel.
+Сапёрная лопата, о которой многие обычно забывают, когда речь заходит об инструментах, является важной частью арсенала военного инженера.
+По сравнению с обычными лопатами, сапёрная лопатка более компактна и остро заточена. Такая конструкция позволяет закапывать [мины](explosives_mines.md) в землю
+в три раза быстрее, чем при помощи обычной лопаты.
