@@ -299,7 +299,7 @@ public class IIManualDataOperation extends IIManualObject
 	public List<String> getTooltip(Minecraft mc, int mx, int my)
 	{
 		return codeSwitch.isMouseOver()?
-				Collections.singletonList(I18n.format(codeSwitch.state?"ie.manual.entry.data_operation.tooltip_pol":
-						"ie.manual.entry.data_operation.tooltip_data")): null;
+				Collections.singletonList(I18n.format(codeSwitch.state?"ie.manual.entry.data_operation.tooltip_data":
+						"ie.manual.entry.data_operation.tooltip_pol")): null;
 	}
 }
