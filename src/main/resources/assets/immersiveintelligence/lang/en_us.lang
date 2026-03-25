@@ -3055,7 +3055,7 @@ ie.manual.entry.bullet_component.tesla=Discharge Emitters
 ie.manual.entry.bullet_component.tesla.lore=A gift for Edison
 ie.manual.entry.bullet_component.tesla.desc=Discharge emitters create a field which disrupts the flow of electricity. They are useful in disabling industrial equipment, emplacements and sabotaging energy production.
 
-
+## Shrapnels
 ie.manual.entry.bullet_component.shrapnel_aluminum=Aluminum Shrapnel
 ie.manual.entry.bullet_component.shrapnel_aluminum.lore=Amelinium, one does not simply paint it
 ie.manual.entry.bullet_component.shrapnel_aluminum.desc=Aluminum is not the best material for shrapnel, but it's cheap enough to be mass used in combat.
@@ -3125,13 +3125,18 @@ ie.manual.entry.bullet_component.shrapnel_thorium=Thorium Shrapnel
 ie.manual.entry.bullet_component.shrapnel_thorium.lore=Make grenades, not rods!
 ie.manual.entry.bullet_component.shrapnel_thorium.desc=Thorium is a good, but costly shrapnel material with high damage and penetration values.
 
-ie.manual.entry.bullet_component.shrapnel_HOPGraphite=HOP Graphite Shrapnel
+ie.manual.entry.bullet_component.shrapnel_HOPGraphite=HOP Shrapnel
 ie.manual.entry.bullet_component.shrapnel_HOPGraphite.lore=HOP to it!
 ie.manual.entry.bullet_component.shrapnel_HOPGraphite.desc=Graphite is a very good shrapnel material, its low weight and high piercing capabilities make it useful in combat.
 
 ie.manual.entry.bullet_component.shrapnel_uranium=Uranium Shrapnel
 ie.manual.entry.bullet_component.shrapnel_uranium.lore=Ra-di-o-active
 ie.manual.entry.bullet_component.shrapnel_uranium.desc=Uranium is one of the best materials for shrapnel, the scattering fragments have no problem piercing trough armor and can deal high damage to any target.
+
+ie.manual.entry.bullet_component.shrapnel_wood=Sawdust
+ie.manual.entry.bullet_component.shrapnel_wood.lore=Eco-Friendly!
+ie.manual.entry.bullet_component.shrapnel_wood.desc=Probably won't hurt much, but it leaves behind a fresh pine scent!
+
 #Death Messages
 death.attack.iiBullet=%1$s was shot by %2$s
 death.attack.iiBulletNoShooter=%1$s was shot
