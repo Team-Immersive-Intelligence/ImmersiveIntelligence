@@ -2993,7 +2993,7 @@ ie.manual.entry.bullet_core.core_uranium.lore=Что значит «боепри
 ie.manual.entry.bullet_core.core_uranium.desc=Малый вес и твёрдость делают уран отличным проникающим снарядом, не теряя при этом способности нести взрывчатые вещества. Отличный, но дорогой выбор.
 
 ie.manual.entry.bullet_core.core_rubber=Резиновый сердечник
-ie.manual.entry.bullet_core.core_rubber.lore=Совершенно сногсшибательно!
+ie.manual.entry.bullet_core.core_rubber.lore=<br>Совершенно сногсшибательно!
 ie.manual.entry.bullet_core.core_rubber.desc=Резиновые сердечники менее смертоносны, чем их металлические аналоги, но обладают повышенной отдачей и могут оглушать цели.
 
 ie.manual.entry.bullet_components.name=Компоненты пули
