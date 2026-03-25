@@ -46,7 +46,7 @@ public class TextOverlayConstruction extends TextOverlayBase
 		if(constructionTile!=null&&!constructionTile.isConstructionFinished())
 			return new String[]{
 					I18n.format(IIReference.INFO_KEY+"machineupgrade.progress",
-							constructionTile.getCurrentConstruction(false),
+							constructionTile.getCurrentConstruction(0),
 							constructionTile.getConstructionCost())
 			};
 		return null;

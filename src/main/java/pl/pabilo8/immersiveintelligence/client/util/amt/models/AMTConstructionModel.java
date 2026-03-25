@@ -33,26 +33,28 @@ public class AMTConstructionModel extends AMTProgressModel<IConstructionRequirin
 	public ConstructionStage renderProgress(IConstructionRequiringDevice device, Tessellator tes, BufferBuilder buf, float partialTicks)
 	{
 		final int maxProgress = device.getConstructionCost();
-		int currentProgress = device.getCurrentConstruction(true);
+		int currentProgress = device.getCurrentConstruction(partialTicks);
 		float progress = MathHelper.clamp((float)currentProgress/(float)maxProgress, 0, 1);
-
-		//draw blueprint
-		ShaderUtil.useBlueprint(0.35f, ClientUtils.mc().player.ticksExisted+partialTicks);
-		this.assembledModel.render(tes, buf);
-		ShaderUtil.releaseShader();
-
-		model.defaultize();
-
-		//draw construction animation
-		animation.apply(progress);
-		model.render(tes, buf);
 
 		if(progress >= 1f)
 			return ConstructionStage.FINISHED;
-		else if(progress > 0f)
-			return ConstructionStage.IN_PROGRESS;
 		else
-			return ConstructionStage.NOT_STARTED;
+		{
+			//draw blueprint
+			ShaderUtil.useBlueprint(0.35f, ClientUtils.mc().player.ticksExisted+partialTicks);
+			this.assembledModel.render(tes, buf);
+			ShaderUtil.releaseShader();
+
+			//draw construction animation
+			model.defaultize();
+			animation.apply(progress);
+			model.render(tes, buf);
+
+			if(progress > 0f)
+				return ConstructionStage.IN_PROGRESS;
+			else
+				return ConstructionStage.NOT_STARTED;
+		}
 	}
 
 	public enum ConstructionStage

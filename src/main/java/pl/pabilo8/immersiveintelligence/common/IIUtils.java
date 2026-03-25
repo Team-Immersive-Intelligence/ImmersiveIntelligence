@@ -6,7 +6,6 @@ import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorage;
 import blusunrize.immersiveengineering.api.energy.wires.IImmersiveConnectable;
 import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler;
 import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler.Connection;
-import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
 import blusunrize.immersiveengineering.common.util.Utils;
 import com.google.common.collect.ImmutableSet;
@@ -18,7 +17,6 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -449,21 +447,6 @@ public class IIUtils
 		return Enum.valueOf(en, name.toUpperCase());
 	}
 
-	public static void fixupItem(Item item, String itemName)
-	{
-		// First, get the item out of IE's registries.
-		Item rItem = IEContent.registeredIEItems.remove(IEContent.registeredIEItems.size()-1);
-		if(rItem!=item)
-			throw new IllegalStateException("fixupItem was not called at the appropriate time");
-
-		// Now, reconfigure the block to match our mod.
-		item.setUnlocalizedName(ImmersiveIntelligence.MODID+"."+itemName);
-		item.setCreativeTab(IIContent.II_CREATIVE_TAB);
-
-		// And add it to our registries.
-		IIContent.ITEMS.add(item);
-	}
-
 	public static void sendToolbarMessage(EntityPlayer player, String messageFormat, Object... args)
 	{
 		player.sendStatusMessage(new TextComponentTranslation(messageFormat, args), true);
@@ -487,4 +470,5 @@ public class IIUtils
 			return null;
 		return te.getCapability(capability, facing);
 	}
+
 }

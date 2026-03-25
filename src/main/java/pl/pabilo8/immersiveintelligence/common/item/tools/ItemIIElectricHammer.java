@@ -47,6 +47,7 @@ import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
 import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemUtils;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIBase;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IConstructionRequiringDevice;
 import pl.pabilo8.modworks.annotations.item.GeneratedItemModels;
@@ -211,11 +212,11 @@ public class ItemIIElectricHammer extends ItemIIBase implements ITool, IIEEnergy
 		if(!(te instanceof IConstructionRequiringDevice))
 			return EnumActionResult.PASS;
 		IConstructionRequiringDevice mb = ((IConstructionRequiringDevice)te).master();
-		int energy = player.isCreative()?999999: cap.extractEnergy(Tools.electricHammerEnergyPerUseConstruction, false);
+		int energy = IIItemUtils.canConstructFreeOfCharge(player)?999999: cap.extractEnergy(Tools.electricHammerEnergyPerUseConstruction, false);
 
 		if(mb!=null&&!mb.isConstructionFinished()&&energy > 0)
 		{
-			if(!player.isCreative())
+			if(!IIItemUtils.canConstructFreeOfCharge(player))
 				cap.extractEnergy(Tools.electricHammerEnergyPerUseConstruction, false);
 			mb.progressConstruction(energy);
 			world.playSound(null, pos, IISounds.constructionHammer, SoundCategory.PLAYERS, 0.5f, 1);

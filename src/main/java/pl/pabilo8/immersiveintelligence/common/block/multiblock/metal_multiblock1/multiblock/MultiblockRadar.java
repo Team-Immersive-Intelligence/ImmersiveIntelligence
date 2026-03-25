@@ -3,6 +3,8 @@ package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multibloc
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3i;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeTechTree;
+import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeUtils.UpgradeTier;
 import pl.pabilo8.immersiveintelligence.api.utils.IAdvancedMultiblock;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.BlockIIMetalMultiblock1.MetalMultiblocks1;
@@ -25,6 +27,8 @@ public class MultiblockRadar extends MultiblockStuctureBase<TileEntityRadar>
 		INSTANCE = this;
 
 		animationDish = ResLoc.of(IIReference.RES_II, "radar/dish");
+		UpgradeTechTree.getTreeFor(TileEntityRadar.class)
+				.withUpgrade(IIContent.UPGRADE_RADIO_LOCATORS, UpgradeTier.TIER_1);
 	}
 
 	@Override

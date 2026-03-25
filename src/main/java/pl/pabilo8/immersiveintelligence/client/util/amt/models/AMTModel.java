@@ -271,6 +271,20 @@ public class AMTModel implements Iterable<AMT>, AMTRenderable
 
 	//--- Transformations ---//
 
+
+	/**
+	 * @param shrinkAmount the amount to shrink the model by, in blocks
+	 * @return a copy of this model with all AMTQuads's vertices positions shrunk by face normals
+	 * @implNote 0.01 is usually a good value for most models
+	 */
+	public AMTModel shrinkByNormals(double shrinkAmount)
+	{
+		AMT[] shrunkModel = stream()
+				.map(amt -> amt instanceof AMTQuads?((AMTQuads)amt).shrinkByNormals(shrinkAmount): amt)
+				.toArray(AMT[]::new);
+		return new AMTModel(shrunkModel);
+	}
+
 	/**
 	 * Creates a single AMT out of all AMTQuads inside this AMTModel for more performant rendering
 	 *

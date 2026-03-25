@@ -1,0 +1,71 @@
+{
+  "comment": "Made by Pabilo8 with Blockbench",
+  "groups": {
+    "upgrade_triangulators1": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [0, 0, -15]
+        },
+        {
+          "time": 0.33333,
+          "transform": [0, 0, 0]
+        }
+      ],
+      "position": [
+        {
+          "time": 0,
+          "transform": [-8, 0, 0]
+        },
+        {
+          "time": 0.33333,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "upgrade_triangulators2": {
+      "rotation": [
+        {
+          "time": 0.33333,
+          "transform": [7.5, 0, 0]
+        },
+        {
+          "time": 0.66667,
+          "transform": [0, 0, 0]
+        }
+      ],
+      "position": [
+        {
+          "time": 0.33333,
+          "transform": [0, 0, 8]
+        },
+        {
+          "time": 0.66667,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "upgrade_triangulators3": {
+      "rotation": [
+        {
+          "time": 0.66667,
+          "transform": [0, 0, -15]
+        },
+        {
+          "time": 1,
+          "transform": [0, 0, 0]
+        }
+      ],
+      "position": [
+        {
+          "time": 0.66667,
+          "transform": [4, 7, 0]
+        },
+        {
+          "time": 1,
+          "transform": [0, 0, 0]
+        }
+      ]
+    }
+  }
+}

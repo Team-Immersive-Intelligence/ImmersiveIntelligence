@@ -245,7 +245,7 @@
   "rotations": {
     "data": "counterclockwise_90"
   },
-  "tactile_offset": [0, 0, 0],
+  "tactile_offset": [0.5, 0, 0.5],
   "tactile": {
     "_schema": "immersiveintelligence:models/block/multiblock/radar/radar.obj.amt",
     "rotato": [

@@ -59,6 +59,7 @@ import pl.pabilo8.immersiveintelligence.common.IIGUI;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IITileProviderEnum;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemUtils;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IConstructionRequiringDevice;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IDamageResistantMultiblock;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IExplosionResistantMultiblock;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.ILadderMultiblock;
@@ -208,7 +209,6 @@ public abstract class BlockIITileProvider<E extends Enum<E> & IITileProviderEnum
 		if(tile==null&&tempTile.containsKey(dpos))
 			tile = tempTile.get(dpos);
 		if(tile!=null&&(!(tile instanceof ITileDrop)||!((ITileDrop)tile).preventInventoryDrop()))
-		{
 			if(tile instanceof IIEInventory&&((IIEInventory)tile).getDroppedItems()!=null)
 			{
 				for(ItemStack s : ((IIEInventory)tile).getDroppedItems())
@@ -226,7 +226,6 @@ public abstract class BlockIITileProvider<E extends Enum<E> & IITileProviderEnum
 							((IEInventoryHandler)h).setStackInSlot(i, ItemStack.EMPTY);
 						}
 			}
-		}
 		if(tile instanceof ITileDrop)
 		{
 			NonNullList<ItemStack> s = ((ITileDrop)tile).getTileDrops(harvesters.get(), state);
@@ -350,10 +349,8 @@ public abstract class BlockIITileProvider<E extends Enum<E> & IITileProviderEnum
 		TileEntity tile = world.getTileEntity(pos);
 
 		if(tile instanceof IAttachedIntegerProperies)
-		{
 			for(String s : ((IAttachedIntegerProperies)tile).getIntPropertyNames())
 				state = applyProperty(state, ((IAttachedIntegerProperies)tile).getIntProperty(s), ((IAttachedIntegerProperies)tile).getIntPropertyValue(s));
-		}
 
 		if(tile instanceof IDirectionalTile&&(state.getPropertyKeys().contains(IEProperties.FACING_ALL)||state.getPropertyKeys().contains(IEProperties.FACING_HORIZONTAL)))
 		{
@@ -472,17 +469,11 @@ public abstract class BlockIITileProvider<E extends Enum<E> & IITileProviderEnum
 				((IAdvancedDirectionalTile)tile).onDirectionalPlacement(side, hitX, hitY, hitZ, placer);
 		}
 		if(tile instanceof ITileDrop)
-		{
 			((ITileDrop)tile).readOnPlacement(placer, stack);
-		}
 		if(tile instanceof IHasDummyBlocks)
-		{
 			((IHasDummyBlocks)tile).placeDummies(pos, state, side, hitX, hitY, hitZ);
-		}
 		if(tile instanceof IPlacementInteraction)
-		{
 			((IPlacementInteraction)tile).onTilePlaced(world, pos, state, side, hitX, hitY, hitZ, placer, stack);
-		}
 	}
 
 	/**
@@ -520,16 +511,18 @@ public abstract class BlockIITileProvider<E extends Enum<E> & IITileProviderEnum
 		}
 		if(tile instanceof IHammerInteraction&&Utils.isHammer(heldItem)&&!world.isRemote)
 		{
-			boolean b = ((IHammerInteraction)tile).hammerUseSide(side, player, hitX, hitY, hitZ);
-			if(b)
-				return b;
+			if((tile instanceof IConstructionRequiringDevice))
+			{
+				IConstructionRequiringDevice master = ((IConstructionRequiringDevice)tile).master();
+				if(master!=null&&!master.isConstructionFinished())
+					return false;
+			}
+			if(((IHammerInteraction)tile).hammerUseSide(side, player, hitX, hitY, hitZ))
+				return true;
 		}
 		if(tile instanceof IPlayerInteraction)
-		{
-			boolean b = ((IPlayerInteraction)tile).interact(side, player, hand, heldItem, hitX, hitY, hitZ);
-			if(b)
-				return b;
-		}
+			if(((IPlayerInteraction)tile).interact(side, player, hand, heldItem, hitX, hitY, hitZ))
+				return true;
 		if(tile instanceof IUpgradableDevice&&IIItemUtils.isWrench(heldItem))
 		{
 			IUpgradableDevice u = ((IUpgradableDevice)tile).master();
@@ -629,23 +622,19 @@ public abstract class BlockIITileProvider<E extends Enum<E> & IITileProviderEnum
 				if(wMin==0&&hMin==0&&wMax==1&&hMax==1)
 					return BlockFaceShape.SOLID;
 				else if(hMin==0&&hMax==1&&wMin==(1-wMax))
-				{
 					if(wMin > .375)
 						return BlockFaceShape.MIDDLE_POLE_THIN;
 					else if(wMin > .3125)
 						return BlockFaceShape.MIDDLE_POLE;
 					else
 						return BlockFaceShape.MIDDLE_POLE_THICK;
-				}
 				else if(hMin==wMin&&hMax==wMax)
-				{
 					if(wMin > .375)
 						return BlockFaceShape.CENTER_SMALL;
 					else if(wMin > .3125)
 						return BlockFaceShape.CENTER;
 					else
 						return BlockFaceShape.CENTER_BIG;
-				}
 				return BlockFaceShape.UNDEFINED;
 			}
 		}

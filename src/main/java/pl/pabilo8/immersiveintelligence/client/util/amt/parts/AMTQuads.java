@@ -1,5 +1,6 @@
 package pl.pabilo8.immersiveintelligence.client.util.amt.parts;
 
+import blusunrize.immersiveengineering.client.models.IESmartObjModel;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.GlStateManager;
@@ -28,7 +29,7 @@ public class AMTQuads extends AMT
 	 */
 	protected static final Vec3i NO_LIGHTING_NORMAL = new Vec3i(1, 1, 1);
 	/**
-	 * Quads acquired from a {@link blusunrize.immersiveengineering.client.models.IESmartObjModel}
+	 * Quads acquired from a {@link IESmartObjModel}
 	 */
 	protected final BakedQuad[] quads;
 	/**
@@ -149,6 +150,45 @@ public class AMTQuads extends AMT
 		AMT[] children = getChildren();
 		if(children!=null)
 			copy.setChildren(Arrays.stream(children).map(child -> recolorChild(child, color)).toArray(AMT[]::new));
+		return copy;
+	}
+
+	/**
+	 * Shrink the quads by the given amount using their normals. This is useful for preventing z-fighting when two quads are in the same position, such as a block and its overlay.<br>
+	 *
+	 * @param shrinkAmount the amount to shrink the quads by
+	 * @return a copy of this AMTQuads with shrunk quads
+	 */
+	public AMT shrinkByNormals(double shrinkAmount)
+	{
+		AMTQuads copy = new AMTQuads(this.name, this.originPos,
+				Arrays.stream(quads)
+						.map(q -> {
+							Vec3i normal = q.getFace().getDirectionVec();
+							int[] vertexData = Arrays.copyOf(q.getVertexData(), q.getVertexData().length);
+							for(int i = 0; i < 4; i++)
+							{
+								//Extract vertex position from quad data
+								int vertexIndex = i*DefaultVertexFormats.BLOCK.getIntegerSize();
+
+								vertexData[vertexIndex+i] = Float.floatToIntBits((float)(Float.intBitsToFloat(vertexData[vertexIndex+i])-(normal.getX()*shrinkAmount)));
+								vertexData[vertexIndex+i+1] = Float.floatToIntBits((float)(Float.intBitsToFloat(vertexData[vertexIndex+i+1])-normal.getY()*shrinkAmount));
+								vertexData[vertexIndex+i+2] = Float.floatToIntBits((float)(Float.intBitsToFloat(vertexData[vertexIndex+i+2])-normal.getZ()*shrinkAmount));
+							}
+							return new BakedQuad(vertexData, q.getTintIndex(), q.getFace(), q.getSprite(), q.shouldApplyDiffuseLighting(), q.getFormat());
+						})
+						.toArray(BakedQuad[]::new)
+		);
+		copy.bakedColor = bakedColor;
+
+		//Copy children as well
+		AMT[] children = getChildren();
+		if(children!=null)
+			copy.setChildren(Arrays.stream(children).map(child -> {
+				if(child instanceof AMTQuads)
+					return ((AMTQuads)child).shrinkByNormals(shrinkAmount);
+				return child;
+			}).toArray(AMT[]::new));
 		return copy;
 	}
 

@@ -487,6 +487,11 @@ public class IIConfigHandler
 			@RequiresMcRestart
 			public static int advancedPowerpackCapacity = 1000000;
 
+			@Comment({"Whether advanced multiblock construction should be free and instantenous in creative mode."})
+			public static boolean instantCreativeConstruction = true;
+			@Comment({"Whether machine upgrading should be free and instantenous in creative mode."})
+			public static boolean instantCreativeUpgrading = true;
+
 			public static class SkycrateMounts
 			{
 				@Comment({"The speed of the Mechanical Skycrate Mount."})
