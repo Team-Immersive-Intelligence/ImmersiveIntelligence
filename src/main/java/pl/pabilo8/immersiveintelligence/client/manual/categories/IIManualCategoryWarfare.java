@@ -6,6 +6,7 @@ import blusunrize.lib.manual.ManualPages;
 import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
+import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseType;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoCore;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualCategory;
@@ -17,6 +18,7 @@ import pl.pabilo8.immersiveintelligence.common.block.fortification.BlockIIMetalF
 import pl.pabilo8.immersiveintelligence.common.block.fortification.BlockIISandbags.IIBlockTypes_Sandbags;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.BlockIIMetalDevice.IIBlockTypes_MetalDevice;
 import pl.pabilo8.immersiveintelligence.common.block.mines.BlockIIMine;
+import pl.pabilo8.immersiveintelligence.common.block.mines.BlockIIMine.ItemBlockMineBase;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoBase;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoCasing.Casing;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine.Magazines;
@@ -180,9 +182,9 @@ public class IIManualCategoryWarfare extends IIManualCategory
 				.addSource("anti_tank_trap", getSourceForItem(IIContent.blockMetalFortification1.getStack(IIBlockTypes_MetalFortification1.TANK_TRAP)));
 		addEntry("staticdefense/explosives_mines")
 				.addSource("crafting_radio_equipped_satchel", getSourceForItems(IIContent.itemAmmoCasing.getStack(Casing.RADIO_EXPLOSIVES)))
-				.addSource("landmines", getSourceForItem((IIContent.blockTellermine.getStack(BlockIIMine.IIBlockTypes_Mine.MAIN))))
-				.addSource("tripmine", getSourceForItem((IIContent.blockTripmine.getStack(BlockIIMine.IIBlockTypes_Mine.MAIN))))
-				.addSource("navalmine", getSourceForItem((IIContent.itemNavalMine.getStack(ItemIIAmmoBase.AmmoParts.BULLET))));
+				.addSource("landmines", getSourceForItem(((ItemBlockMineBase)IIContent.blockTellermine.itemBlock).getAmmoStack(IIContent.ammoCoreLead, CoreType.CANISTER, FuseType.CONTACT)))
+				.addSource("tripmine", getSourceForItem(((ItemBlockMineBase)IIContent.blockTripmine.itemBlock).getAmmoStack(IIContent.ammoCoreLead, CoreType.CANISTER, FuseType.CONTACT)))
+				.addSource("navalmine", getSourceForItem(IIContent.itemNavalMine.getAmmoStack(IIContent.ammoCoreLead, CoreType.CANISTER, FuseType.CONTACT)));
 		addEntry("staticdefense/explosive_mine_sign")
 				.addSource("mine_sign", getSourceForItem(new ItemStack(IIContent.blockMineSign)));
 	}
