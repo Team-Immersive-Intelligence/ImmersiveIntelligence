@@ -1,12 +1,12 @@
 # meta
-Electric Tools
-Work smarter, not harder
+Электроинструменты
+Работай головой, а не руками
 # intro
 |[crafting]{source:"e_hammer"}|
-The Engineer's Electric Hammer is a direct upgrade to the old [Engineer's Hammer](introduction#introductionHammer). Due to it's improved strength and speed, this hammer can form and construct [Advanced Multiblocks], such as the [Radio Station](radio_station.md).
+Электрический молоток инженера — это прямая модернизация старого [молотка инженера](introduction#introductionHammer). Благодаря улучшенной силе и скорости этот молоток может создавать и строить [Продвинутые мультиблоки], такие как [радиостанция](radio_station.md).
 # wrench
 |[crafting]{source:"e_wrench"}|
-The Engineer's Electric Wrench is an enhanced version of the Engineer's Wrench. It constructs upgrades and emplacement weapons much faster than its manual counterpart. [Some machines cannot be upgraded] without the [electric wrench].
+Электрический гаечный ключ — это улучшенная версия обычного гаечного ключа. Он позволяет создавать улучшения и стационарное оружие гораздо быстрее, чем его ручной аналог. [Некоторые машины нельзя модернизировать] без [электрического гаечного ключа].
 # cutter
 |[crafting]{source:"e_cutter"}|
-The Engineer's Electric Wire Cutters are an improved version of the [Engineer's Wire Cutters](wiring#wiringCutters). They can cut through blocks (such as [razor wire](razorwire)) faster.
+Электрические кусачки — это улучшенная версия [кусачек](wiring#wiringCutters) Они позволяют быстрее перерезать блоки (например, [колючую проволоку](razorwire)).

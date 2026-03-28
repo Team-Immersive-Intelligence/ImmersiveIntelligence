@@ -1,8 +1,8 @@
 # meta
-Engineer's Lighter
-No Rainbow-Vision
+Зажигалка инженера
+Не радужное зрение
 # intro
 |[crafting]{source:"lighter"}|
-The Engineer's Lighter is a device used to set blocks on fire. It has infinite durability, but requires fuel (such as [diesel] or [biodiesel]) to operate.
+Зажигалка инженера — это инструмент, используемый для поджога блоков. Она обладает бесконечной прочностью, но для работы требует топлива (например, [дизеля] или [биодизеля]).
 
 
