@@ -1,9 +1,9 @@
 # meta
-Intelligence
-Knowledge is Power
+"Intelligence"
+Знание — сила
 # intro
-Information is beautiful.<br>
-The collection of information of military or political value has always been a focus of the technological advancements.
-However, intelligence is not only the gather of information, but also the way to use it.
-Surveillance, reconnaissance, espionage, and sabotage are all under the intelligence umbrella.
-<br>Intelligence is the lifeblood of new warfare tactics and strategy.
+Информация прекрасна.<br>
+Сбор информации, имеющей военное или политическое значение, всегда был в центре внимания технологического прогресса.
+Однако "intelligence" — это не только сбор информации (разведка), но и способы её использования (интеллект).
+Наблюдение, разведка, шпионаж и саботаж — всё это относится к сфере "intelligence".
+<br>"Intelligence" — это жизненная сила новых тактик и стратегий ведения войны.

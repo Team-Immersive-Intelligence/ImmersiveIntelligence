@@ -1,11 +1,13 @@
 # meta
-Radar
-A relic of Dover
+Радар
+Реликвия Дувра
 # multiblock and description
 @level_circuits,hammer_electric,upgradable
 |[multiblock]{mb:"II:Radar"}|
-The [Radar] is a large detection device, capable of detecting entities in a direct line over incredibly long distances.
-To form it, use a [Electric Hammer](electric_tools.md) on the left wooden scaffolding block.
+[Радар] — это крупное устройство обнаружения, способное обнаруживать объекты по прямой линии на невероятно больших расстояниях.
+Для его создания используйте [электрический молоток](electric_tools.md) на левом деревянном строительном блоке.
 # radar 2
-Radar has multiple uses. It can be linked to emplacement weapons, such as the [CPDS](emplacement_weapons.md#cpds0), and used to intercept projectiles at long ranges. It can also be linked with the [Strategic Command Table](strategic_command_table.md) [(WIP)].
-If upgraded with [Triangulators], the radar can also detect [radio signals](radio_station.md) within its range and determine their location. This allows ambushing unsuspecting enemies with precise artillery strikes. In order to operate, the Radar requires a constant supply of electricity.
+Радар имеет множество применений. Его можно связать со стационарными орудиями, такими как [СПСО](emplacement_weapons.md#cpds0), и использовать для перехвата снарядов на больших дистанциях. Его также можно связать со [стратегической командной таблицей](strategic_command_table.md) [(WIP)]. Для работы радару требуется постоянное электроснабжение.
+# upgrade
+|[upgrade_display]{upgrade:"immersiveintelligence:radio_locators"}|
+При модернизации с помощью [триангуляторов] радар также может обнаруживать [радиосигналы](radio_station.md) в пределах своей зоны действия и определять их местоположение. Это позволяет устраивать засады на ничего не подозревающих врагов точными артиллерийскими ударами. 

@@ -1,11 +1,11 @@
 # meta
-Tripod Periscope
-Spectacles on Sticks
+Перископ
+Очки на палочках
 # craft and intro
 |[crafting]{source:"tripod_periscope"}|
-Tripod periscope is an observation device consisting of a pair of binoculars, magnifying tubes, a rotation mechanism, and a tripod.
-The Tripod Periscope allows peeking out of a trench, or a wall without the risk of getting shot.
+Перископ — это наблюдательное устройство, состоящее из бинокля, увеличительных трубок, механизма вращения и штатива.
+Штативный перископ позволяет выглядывать из траншеи или стены, не рискуя быть подстреленным.
 # tripod periscope 2
-Compared to the standard [Binoculars](binoculars.md), the Tripod Periscope has superior zoom capabilities, allowing one to scout further and see objects at extremely far distances.
-<br>Deployment of the Tripod is similar to that of a [Machinegun](machinegun.md), requiring you to [place the item down on the ground] and then [interact with it while having an empty hand.]
-<br>To pick it up, [sneak] and interact with it.
+По сравнению со стандартным [биноклем](binoculars.md), штатив-перископ обладает превосходными возможностями приближения, позволяя вести наблюдение на больших расстояниях и видеть объекты на очень дальних дистанциях.
+<br>Установка штатива аналогична установке [пулемета](machinegun.md): необходимо [положить предмет на землю], а затем [ПКМ по нему пустой рукой].
+<br>Чтобы поднять его, [Shift+ПКМ].

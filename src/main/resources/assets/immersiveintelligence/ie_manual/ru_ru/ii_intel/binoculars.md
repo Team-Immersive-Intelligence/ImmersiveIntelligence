@@ -1,29 +1,21 @@
 # meta
-Binoculars
-The Ballerina Onlooker
+Бинокль
+Балерина-зрительница
 # intro
-Information is best gathered when the observed target is unaware of your presence. The target will act natural, and allow you an insight into their patterns and tendencies.
-This can be done in a variety of ways, through infiltration and espionage... but the safest option of them all is observation from afar.
+Наилучший способ сбора информации — это когда наблюдаемый объект не подозревает о вашем присутствии. Объект будет вести себя естественно, что позволит вам понять его поведение и склонности.
+Это можно сделать различными способами, посредством проникновения и шпионажа... но самым безопасным вариантом из всех является наблюдение издалека.
 # crafting
 |[crafting]{source:"binoculars"}|
-Utilizing the optical phenomenon of refraction and lenses, observation from a far can be done by ease.
-By carefully crafting glass into prisms and lenses and inserting them into a metal frame, a pair of **Binoculars
-** can be constructed.
+Используя оптическое явление преломления и линзы, можно легко проводить наблюдения на расстоянии.
+Тщательно изготовив из стекла призмы и линзы и вставив их в металлическую раму, можно сконструировать **бинокль**.
 # usage
-The **Binoculars
-** are used by holding the item in your hand and [sneaking]. With the new research in optical mechanics and multiple
-lenses the ability to zoom on command makes for a great recon device.
-A small gyroscope has been installed to indicate your yaw in degrees, for your peripheral vision is blocked by the *
-*Binoculars**.
+**Бинокль** будет использован, если держать его в руке и [красться]. Благодаря новым исследованиям в области оптической механики и множеству линз, возможность приближения по команде делает его отличным разведывательным устройством.
+В него установлен небольшой гироскоп, показывающий угол рыскания в градусах, поскольку периферийное зрение блокируется **биноклем**.
 # infra
 |[crafting]{source:"infbinoculars"}|
-The **Infrared Binoculars** are a more advanced version of the tried and true **Binoculars
-**. They have cutting edge optical technology and electronics to make it possible to see with minimal reflections of light.<br>
+**Инфракрасный бинокль** — это более совершенная версия проверенных временем **бинокля**. В нём используются передовые оптические технологии и электроника, позволяющие наблюдать за объектом с минимальным влиянием света.<br>
 # infra1
-With the **Infrared Binoculars
-**, the stealthy Engineer will excel at intelligence gathering in the dark veil of the night.
-<br>However, with new technology comes new responsibility. Due to the low-light design allowing in large quantities of light, the
-**Infrared Binoculars** should [not be used] in [bright areas]. Doing so may lead to **temporary blindness.**
+С помощью **инфракрасного бинокля** скрытый инженер преуспеет в сборе разведывательной информации в кромешной темноте ночи.
+<br>Однако с новыми технологиями приходит и новая ответственность. Из-за конструкции, пропускающей большое количество света, **инфракрасный бинокль** не следует [использовать] в [ярких местах]. Это может привести к **временной слепоте.**
 # infra2
-The **Infrared Binoculars
-** require energy to operate. If no power is supplied, the infrared vision cannot be toggled on. If the user wears a [capacitor backpack](powerpack), the device can be charged on the move.
+**Инфракрасный бинокль** требует энергии для работы. Если питание не подается, инфракрасное зрение включить невозможно. Если пользователь носит [конденсаторный рюкзак](powerpack), устройство можно заряжать в движении.

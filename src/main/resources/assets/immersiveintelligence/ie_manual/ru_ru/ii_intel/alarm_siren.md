@@ -1,7 +1,7 @@
 # meta
-Alarm Siren
-The reactor is OK, was, at least.
+Сирена
+Реактор в порядке... был, по крайней мере.
 # alarm siren 1
 |[crafting]{source:"alarm_siren"}|
-The alarm siren is a device which emits a loud noise when provided a redstone signal. Volume depends on signal strength.
-[Redstone wire](redstoneWire) can be attached to the siren. Like every redstone connector, it can be reconfigured to use a different redstone channel.
+Сирена — это устройство, издающее громкий звук при подаче сигнала красного камня. Громкость зависит от силы сигнала.
+К сирене можно подключить [редстоун провод](redstoneWire). Как и любой редстоун коннектор, его можно перенастроить для использования другого редстоун канала.
