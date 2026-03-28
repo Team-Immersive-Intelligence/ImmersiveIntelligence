@@ -1,14 +1,13 @@
 # meta
-Vehicle Workshop
-Beginning of the Joyride
+Автомастерская
+Начало увлекательной поездки
 # intro
-|[multiblock]{mb:"II:VehicleWorkshop"}|
-Industrial progress brings new means of transportation. The Vehicle Workshop enables you to create these new means, most notably the [Motor Bike](motor_bike.md). To form it, use a [Hammer](introduction#introductionHammer) on the left aluminium scaffolding.
+|[wip_notice]|
+Промышленный прогресс приносит новые средства передвижения. В автомастерской вы можете создавать эти новые средства, в первую очередь [мотоцикл](motor_bike.md). Для его создания используйте [молот](introduction#introductionHammer) на левой алюминиевой конструкции.
 # making_vehicles
-The machine requires **Petroleum**, **Diesel** or **Biodiesel
-** along with electricity to run. These can be provided using the appropriate ports on machine's side and top. To create a vehicle, select an appropriate option through the interface, provide shown materials and make sure no vehicle is parked on the platform. If all the conditions are met, press the striped button in the interface and the workshop will start assembling your vehicle.
+Машина требует **нефть**, **дизельное топливо** или **биодизельное топливо**, а также электричество. Электроэнергию можно подать через соответствующие порты сбоку и сверху станка. Для создания транспортного средства выберите подходящий вариант в интерфейсе, укажите необходимые материалы и убедитесь, что на платформе нет припаркованных транспортных средств. Если все условия выполнены, нажмите полосатую кнопку в интерфейсе, и мастерская начнет сборку.
 # fuel
-If the vehicle uses fuel, it will be refueled half-way using the workshop's internal tank. The fuel will not last for long, so consider building a [Fuel Station](fuel_station.md).
+Если транспортное средство расходует топливо, его заправят наполовину, используя внутренний бак мастерской. Топлива хватит ненадолго, поэтому стоит подумать о строительстве [заправочной станции](fuel_station.md).
 # upgrades
-Vehicles can also be upgraded. To apply an upgrade, drive your vehicle onto the platform and select valid upgrades through the interface. Upgrading and removing upgrades requires a supply of power and diesel.
+Транспортные средства также можно улучшать. Чтобы установить улучшение, подъедьте на транспортном средстве к платформе и выберите подходящие улучшения через интерфейс. Для добавления и удаления улучшений требуется электропитание и дизель.
 

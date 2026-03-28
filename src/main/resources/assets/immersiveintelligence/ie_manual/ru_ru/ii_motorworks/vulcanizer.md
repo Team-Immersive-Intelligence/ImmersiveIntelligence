@@ -1,18 +1,20 @@
 # meta
-Vulcanizer
-The Overengineered Smoke Dispenser
+Вулканизатор
+Излишне сложный дымогенератор
 # intro
 |[multiblock]{mb:"II:Vulcanizer"}|
-The Vulcanizer is the final machine in the [Rubber Production](rubber_production.md) process. To form it use a [Hammer](introduction#introductionHammer) on the steel block nearest to the tank.
+Вулканизатор — это заключительный этап процесса [производства резины](rubber_production.md). Для сборки используйте [молоток](introduction#introductionHammer) на стальном блоке, ближайшем к резервуару.
 # production
-Using heat, pressure, [molds], and set of additional compounds, the [Vulcanizer] transforms raw rubber sheets into a familiar industrial rubber, which is used to construct many new machines. Most notably, rubber is used to fabricate faster conveyors and more efficient motor belts, and is vital to wheeled vehicle production.
-
-#production2
-To process rubber, 3 ingredients are required: [raw rubber sheets], provided to the upper port on the iron container, [vulcanization compound](#vulcanizer_compounds), provided to the port below, and [sulfur], inputted into the steel tank.
+Используя нагрев, давление, [формы](#molds) и набор дополнительных компонентов, [вулканизатор] превращает сырые резиновые листы в привычную промышленную резину.
+Резиновые ленты используются для создания [более быстрых конвейеров](rubber_conveyor_belts) и более эффективных [моторных ремней](#belts).
+|[machine_recipe]{source:"recipe_belts"}|
+# production2
+Резину также можно вулканизировать и формовать в шины, обеспечивающие необходимую амортизацию для многих транспортных средств.
+|[machine_recipe]{source:"recipe_wheels"}|
 # molds
-To operate the machine, the vulcanizer requires a mold, which determines the final output and electricity usage.
+Для работы вулканизатора необходима пресс-форма, от которой зависит конечный результат и потребление электроэнергии.
 |[crafting]{source:"vulcanizer_blueprint"}|
-Vulcanizer molds can be created in the [Engineers Workbench](workbench) using the blueprint above.
+Формы для вулканизации можно создавать в [верстаке инженера](workbench), используя приведенный выше чертеж.
 # vulcanizer_compounds
 |[crafting]{source:"compound"}|
-The Vulcanization compound consists of additives which improve rubber's properties. It can be crafted in 2 ways: with two [coke dust] and one [silicon dust], or two [coke dust] with a [zinc grit] and a [steel grit].
+Вулканизирующий состав состоит из добавок, улучшающих свойства резины. Его можно изготовить двумя способами: к двум порциям [коксовой пыли] добавляется или одна порция [силиконовой пыли], или [цинковая] и [стальная крошка].

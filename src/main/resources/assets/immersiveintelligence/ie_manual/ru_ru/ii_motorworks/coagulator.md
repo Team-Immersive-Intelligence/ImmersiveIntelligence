@@ -1,11 +1,14 @@
 # meta
-Coagulator
-Intensified Mixing Co.
+Коагулятор
+ОАО "Интенсивное смешивание"
 # intro
 |[multiblock]{mb:"II:Coagulator"}|
-The coagulator is a machine used to coagulate [latex] and form raw [rubber balls] for [further processing](vulcanizer.md). To form it, use a [Hammer](introduction#introductionHammer) on the middle sheetmetal block on machine's rear.
-# coagulator usage
-The [coagulator] requires a supply of electricity to its heavy connector port and a steady supply of [latex] (right tank) and [formic acid] (left tank). Take note that the sides swap if the machine is flipped.
-# coagulator usage 2
-After [latex] is mixed with the acid and the upper "quark" layer forms, the crane will pick one of the buckets, submerge it and put it back while a timer is automatically set. After some time, the [latex] will solidify into [raw rubber], which will be outputted by a mechanism holding the bucket. The rubber will be dropped onto the ground.
-It is recommended to place [conveyor belts](conveyor) to collect the latext.
+Коагулятор — это машина, используемая для и обработки [латекса] и создания сырых [резиновых шариков] для [дальнейшей обработки](vulcanizer.md). Чтобы собрать, используйте [молоток](introduction#introductionHammer) на среднем листовом металлическом блоке в задней части машины.
+# usage
+[Коагулятор] требует электроэнергию (к массивному коннектору), а также постоянную подачу [латекса] (правый резервуар) и [муравьиной кислоты] (левый резервуар). Стороны меняются местами при переворачивании машины.
+|[machine_recipe]{type:"coagulator", recipe:"rubber"}|
+# usage2
+После смешивания [латекса] с кислотой и образования «кваркового» слоя кран поднимет один из ковшей, погрузит его в жидкость и вернет на место, при этом автоматически будет установлен таймер. Через некоторое время [латекс] затвердеет в [сырую резину], которая будет выведена механизмом, удерживающим ковш. Резина будет выведена.
+Рекомендуется использовать [конвейерные ленты](conveyor) для сбора.
+# usage3
+Подробное описание процесса изготовления резины см. в файле [производство резины](rubber_production.md).

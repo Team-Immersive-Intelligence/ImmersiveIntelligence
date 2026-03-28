@@ -1,20 +1,18 @@
 # meta
-Rubber Production
-Happy Little Trees
+Производство резины
+Счастливые маленькие деревья
 # rubber_trees
-The first step in rubber production is finding and gathering saplings of the **Rubber Trees
-** found in the jungle biome. These trees are a valuable source of [latex] - a white fluid which is the main component of industrial rubber.
-The second step is creating a rubber plantation, when the [tree saplings] are grown, carve the [extraction hole log] using an [axe].
+Первый этап производства каучука — поиск и сбор саженцев **каучуковых деревьев**, произрастающих в биоме джунглей. Эти деревья являются ценным источником [латекса] — белой жидкости, которая является основным компонентом промышленного каучука.
+Второй этап — создание каучуковой плантации. Когда [саженцы деревьев] вырастут, вырежьте (ПКМ) [отверстие для извлечения каучука] с помощью [топора].
 # rubber_trees_2
-Then, place a [latex collector] next to the tree and use a bucket on a collector to make it gather latex.
-If more than one collector is next to the tree, the latex will be split between all of them. When the bucket is full, interact with the collector to pick it up.
+Затем поместите [сборщик каучука] рядом с деревом и поместите ведро на сборщик, чтобы он собрал латекс.
+Если рядом с деревом находится более одного сборщика, латекс будет распределен между всеми ними. Когда ведро наполнится, взаимодействуйте со сборщиком, чтобы забрать его.
 # chemical_steps
-To start coagulating latex into raw rubber, two things are needed: **formic acid** and a [Coagulator](coagulator.md).
-To produce formic acid, a [Refinery](refinery.md) is required. Combine [carbon monoxide] with [methanol] to create Formic Acid.
+Для начала процесса коагуляции латекса в сырой каучук необходимы две вещи: **муравьиная кислота** и [коагулятор](coagulator.md).
+Для производства муравьиной кислоты необходим [нефтеперерабатывающий завод](refinery). Соедините [оксид углерода] с [метанолом] для получения муравьиной кислоты.
 # chemical_steps1
-Carbon monoxide can be produced through [electrolysis](electrolyzer.md) of carbon dioxide, a pollutant and byproduct collected by the [Carbon Dioxide Filter](carbon_filter.md).
-Methanol can be produced by mixing nickel or platinum with hydrogen, created through [electrolysis](electrolyzer.md) of water. The last step is to combine both using the [Refinery](refinery.md).
+Оксид углерода можно получить путем [электролиза](electrolyzer.md) диоксида углерода, загрязняющего вещества и побочного продукта, собираемого [фильтром углекислого газа](carbon_filter.md).
+Метанол можно получить путем смешивания никеля или платины с водородом, полученным путем [электролиза](electrolyzer.md) воды. Последний шаг — это объединение обоих веществ с помощью [нефтеперерабатывающего завода](refinery).
 # processing
-When latex and formic acid are acquired, it's time for some coagulation. Use the [Coagulator](coagulator.md) to create *
-*raw rubber balls
-** and then press them into sheets using a plate mold in the [Metal Press](metalPress). The last step is vulcanization of raw rubber sheets. Use the [Vulcanizer](vulcanizer.md) to produce rubber tires or belts.
+После получения латекса и муравьиной кислоты наступает этап коагуляции. Используйте [коагулятор](coagulator.md) для создания [сырых резиновых шариков],
+а затем спрессуйте их в листы с помощью формы в [металлическом прессе](metalPress). Последний этап — вулканизация сырых резиновых листов. Используйте [вулканизатор](vulcanizer.md) для производства резиновых шин или ремней.
