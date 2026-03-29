@@ -125,6 +125,18 @@ public class IIMath extends MathHelper
 		return (float)MathHelper.clampedLerp(MathHelper.clampedLerp(e1, e2, percent*2), e3, Math.max(percent-0.5f, 0)*2);
 	}
 
+	public static float progressValue(float initialValue, float goalValue, float maxProgress, float partialTicks)
+	{
+		if(partialTicks==0)
+			partialTicks = 1;
+
+		if(initialValue==goalValue)
+			return initialValue;
+		if(initialValue > goalValue)
+			return Math.max(initialValue-(maxProgress*partialTicks), goalValue);
+		return Math.min(initialValue+(maxProgress*partialTicks), goalValue);
+	}
+
 	public static boolean isAABBContained(@Nonnull AxisAlignedBB compared, @Nonnull AxisAlignedBB comparedTo)
 	{
 		Vec3d c0, c1, c2, c3, c4, c5, c6, c7;

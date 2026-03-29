@@ -119,7 +119,7 @@ public class GuiDataInputMachineEdit extends DecoGui<TileEntityDataInputMachine,
 						.withListBackground(DecoTextures.COMPONENT_TEXT_FIELD)
 						.withSize(116, 18)
 						.withDropdownWidth(116)
-						.withMaxDropHeight(128)
+						.withMaxDisplayedEntries(5)
 						.withEntries(DecoDataEditor.getEditorTypes(false))
 						.withSelectedEntry(variableToEdit.getValue().getTypeMeta())
 						.withDisplayFunction(new DecoEntryPanelBuilder<TypeMetaInfo<?>>()

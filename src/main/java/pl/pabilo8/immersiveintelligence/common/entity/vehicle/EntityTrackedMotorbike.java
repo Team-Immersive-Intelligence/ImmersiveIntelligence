@@ -7,7 +7,6 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.AxisDirection;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -15,19 +14,14 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import pl.pabilo8.immersiveintelligence.api.upgrade.UpgradeTechTree;
 import pl.pabilo8.immersiveintelligence.client.ClientProxy;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Vehicles.Motorbike;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.*;
-import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehiclePart;
-import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehicleSeat;
+import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.*;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehicleSeat.SeatInfo;
-import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehicleWheel;
-import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.WheelType;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.propulsion.VehicleEngineFuelBased;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.propulsion.VehicleTransmission;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
@@ -35,8 +29,6 @@ import pl.pabilo8.immersiveintelligence.common.util.IIDamageSources;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.entity.IIEntityUtils;
-
-import javax.annotation.Nullable;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
@@ -171,7 +163,7 @@ public class EntityTrackedMotorbike extends EntityVehicleBase<EntityTrackedMotor
 				.withCurrentGear(0);
 		this.transmission2 = new VehicleTransmission<EntityTrackedMotorbike>(this.transmission1)
 				.withDurability(engineDurability)
-				.withRatios(20, -0.25, 0.5, 1, 1.25)
+				.withRatios(20, -0.75, 0.5, 1, 1.25)
 				.withCurrentGear(1);
 		this.transmission1.withReceivers(this.transmission2);
 		this.transmission2.withReceivers(
@@ -183,6 +175,10 @@ public class EntityTrackedMotorbike extends EntityVehicleBase<EntityTrackedMotor
 		AxisAlignedBB SIDEBOX_AABB = new AxisAlignedBB(-0.3225, -0.25, -0.3225, 0.3225, 0.25, 0.3225);
 
 		this.style.withColor(IIColor.fromHSV(19/64f, 0.35f, 0.85f));
+
+		this.components = new IVehicleComponent[]{
+				this.fuelTank, this.engine, this.transmission1, this.transmission2
+		};
 
 		//Parts
 		return new EntityVehiclePart[]{
@@ -282,23 +278,6 @@ public class EntityTrackedMotorbike extends EntityVehicleBase<EntityTrackedMotor
 	public void onSeatDismount(String seatID, Entity passenger)
 	{
 		passenger.attackEntityFrom(IIDamageSources.causeVehicleDamageGetOut(this), (float)(4.5f*IIEntityUtils.getEntityMotion(this).lengthSquared()));
-	}
-
-	@Override
-	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing)
-	{
-		if(capability==CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
-			return true;
-		return super.hasCapability(capability, facing);
-	}
-
-	@Nullable
-	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing)
-	{
-		if(capability==CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
-			return (T)fuelTank;
-		return super.getCapability(capability, facing);
 	}
 
 	@Override

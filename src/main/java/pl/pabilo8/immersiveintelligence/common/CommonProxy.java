@@ -144,6 +144,7 @@ import static blusunrize.immersiveengineering.api.energy.wires.WireApi.registerF
  * why? i don't know why it was here in the first place
  * for how long? ask github
  * how did you not notice that? ... that was really unexpected, didn't even consider such a thing being there
+ *
  * @edited Avalon (avalon@iiteam.net)
  * @since 03.03.2026
  * added compat for cfb
@@ -345,10 +346,8 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 			Tools.powerpack_blacklist = collect.toArray(new String[0]);
 		}
 
-		VehicleFuelHandler.addVehicle(EntityMotorbike.class,
-				FluidRegistry.getFluid("diesel"),
-				FluidRegistry.getFluid("biodiesel")
-		);
+		VehicleFuelHandler.addVehicle(EntityMotorbike.class, FluidRegistry.getFluid("diesel"), FluidRegistry.getFluid("biodiesel"));
+		VehicleFuelHandler.addVehicle(EntityTrackedMotorbike.class, FluidRegistry.getFluid("diesel"), FluidRegistry.getFluid("biodiesel"));
 
 		IIContent.itemLighter.registerBlockAction((world, pos, igniter, state, tileEntity) ->
 		{

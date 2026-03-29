@@ -60,7 +60,7 @@ public class RadarRenderer extends IIMultiblockRenderer<TileEntityRadar>
 		this.model = new AMTModel(state, model);
 		ResLoc modelDir = IIReference.RES_BLOCK_MODEL.with("multiblock/radar/");
 		this.constructionModel = new AMTConstructionModel(
-				modelDir.with("radar_construction.obj.ie"),
+				modelDir.with("radar_construction.obj"),
 				new ResourceLocation(ImmersiveIntelligence.MODID, "radar/construction")
 		);
 

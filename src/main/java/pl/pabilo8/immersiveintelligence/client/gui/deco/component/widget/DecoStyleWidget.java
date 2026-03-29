@@ -50,7 +50,7 @@ public class DecoStyleWidget extends DecoComponentWidgetBase<DecoStyleWidget>
 			addComponent(new DecoDropdown<String>(32, 10+headInfo.getTotalHeight())
 					.withWidth(width-32-4)
 					.withDropdownWidth(width-32-4)
-					.withMaxDropHeight(128)
+					.withMaxDisplayedEntries(5)
 					.withEntries(style.getConstraints().getStyles())
 					.withSelectedEntry(style.getStyle())
 					.withScrollBarBackground(DecoTextures.COMPONENT_SLIDER_PAPER)

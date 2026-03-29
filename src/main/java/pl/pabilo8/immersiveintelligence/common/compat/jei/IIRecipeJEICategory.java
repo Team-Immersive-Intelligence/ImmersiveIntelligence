@@ -17,6 +17,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.api.crafting.DustStack;
 import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIMultiblockRecipe;
 import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIRecipeLayout;
 import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIRecipeLayout.IOType;
@@ -24,6 +25,7 @@ import pl.pabilo8.immersiveintelligence.api.crafting.recipe.LayoutComponent;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoTextures;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
+import pl.pabilo8.immersiveintelligence.common.compat.jei.ingredients.JEIDustStackRenderer;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 
@@ -137,6 +139,7 @@ public class IIRecipeJEICategory<T extends IIMultiblockRecipe> implements IRecip
 			//Track indices for automatic assignment
 			int itemInputIndex = 0, itemOutputIndex = 0;
 			int fluidInputIndex = 0, fluidOutputIndex = 0;
+			int dustInputIndex = 0, dustOutputIndex = 0;
 
 			List<LayoutComponent> components = layout.getComponents();
 
@@ -162,7 +165,11 @@ public class IIRecipeJEICategory<T extends IIMultiblockRecipe> implements IRecip
 							fluidOutputIndex++;
 						break;
 					case DUST_TANK:
-						//Dust tanks are handled as custom components in drawInfo
+						setupDustTank(component, recipeLayout, ingredients, x, y, dustInputIndex, dustOutputIndex);
+						if(component.getIoType()==IOType.INPUT)
+							dustInputIndex++;
+						else if(component.getIoType()==IOType.OUTPUT)
+							dustOutputIndex++;
 						break;
 					default:
 						break;
@@ -234,6 +241,41 @@ public class IIRecipeJEICategory<T extends IIMultiblockRecipe> implements IRecip
 				}
 	}
 
+	private void setupDustTank(LayoutComponent component, IRecipeLayout recipeLayout,
+							   IIngredients ingredients, int x, int y,
+							   int dustInputIndex, int dustOutputIndex)
+	{
+		IOType ioType = component.getIoType();
+		boolean isInput = ioType==IOType.INPUT;
+		int width = component.getWidth();
+		int height = component.getHeight();
+
+		IGuiIngredientGroup<DustStack> dustStacks = recipeLayout.getIngredientsGroup(JEIHelper.DUSTSTACK);
+
+		if(isInput)
+		{
+			List<List<DustStack>> inputs = ingredients.getInputs(JEIHelper.DUSTSTACK);
+			if(dustInputIndex < inputs.size())
+			{
+				int idx = getDustTankIndex(true, dustInputIndex, ingredients);
+				dustStacks.init(idx, true, new JEIDustStackRenderer(width-2, height-1),
+						x, y, width, height, 1, 1);
+				dustStacks.set(idx, inputs.get(dustInputIndex));
+			}
+		}
+		else if(ioType==IOType.OUTPUT)
+		{
+			List<List<DustStack>> outputs = ingredients.getOutputs(JEIHelper.DUSTSTACK);
+			if(dustOutputIndex < outputs.size())
+			{
+				int idx = getDustTankIndex(false, dustOutputIndex, ingredients);
+				dustStacks.init(idx, false, new JEIDustStackRenderer(width, height),
+						x, y, width, height, 1, 1);
+				dustStacks.set(idx, outputs.get(dustOutputIndex));
+			}
+		}
+	}
+
 	private int getSlotIndex(boolean isInput, int index, IIngredients ingredients)
 	{
 		//Output slots start after all input slots
@@ -244,6 +286,11 @@ public class IIRecipeJEICategory<T extends IIMultiblockRecipe> implements IRecip
 	{
 		//Output tanks start after all input tanks
 		return isInput?index: ingredients.getInputs(VanillaTypes.FLUID).size()+index;
+	}
+
+	private int getDustTankIndex(boolean isInput, int index, IIngredients ingredients)
+	{
+		return isInput?index: ingredients.getInputs(JEIHelper.DUSTSTACK).size()+index;
 	}
 
 	//--- Recipe Wrapper ---//

@@ -34,32 +34,16 @@ public class BlockIIMetalMultiblock1 extends BlockIIMultiblock<MetalMultiblocks1
 		setHardness(3.0F);
 		setResistance(15.0F);
 
-		addToTESRMap(MetalMultiblocks1.FUEL_STATION, MetalMultiblocks1.VEHICLE_WORKSHOP, MetalMultiblocks1.VULCANIZER);
-
-		setSubBlockLayer(MetalMultiblocks1.COAGULATOR, BlockRenderLayer.CUTOUT);
-		setSubBlockLayer(MetalMultiblocks1.FILLER, BlockRenderLayer.CUTOUT);
-		setSubBlockLayer(MetalMultiblocks1.RADAR, BlockRenderLayer.CUTOUT);
-		setSubBlockLayer(MetalMultiblocks1.FLAGPOLE, BlockRenderLayer.CUTOUT);
-		setSubBlockLayer(MetalMultiblocks1.EMPLACEMENT, BlockRenderLayer.CUTOUT);
-		setSubBlockLayer(MetalMultiblocks1.CHEMICAL_PAINTER, BlockRenderLayer.CUTOUT);
-		setSubBlockLayer(MetalMultiblocks1.PROJECTILE_WORKSHOP, BlockRenderLayer.CUTOUT);
-		setSubBlockLayer(MetalMultiblocks1.AMMUNITION_ASSEMBLER, BlockRenderLayer.CUTOUT);
-		setSubBlockLayer(MetalMultiblocks1.HEAVY_AMMUNITION_ASSEMBLER, BlockRenderLayer.CUTOUT);
+		addToTESRMap(MetalMultiblocks1.VULCANIZER);
+		setBlockLayer(BlockRenderLayer.CUTOUT);
 	}
 
 	@Deprecated
 	public EnumBlockRenderType getRenderType(IBlockState state)
 	{
-		switch(state.getValue(property))
-		{
-			case FUEL_STATION:
-			case VEHICLE_WORKSHOP:
-			case STRATEGIC_COMMAND_TABLE:
-			case VULCANIZER:
-				return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
-			default:
-				return EnumBlockRenderType.MODEL;
-		}
+		if(state.getValue(property)==MetalMultiblocks1.VULCANIZER)
+			return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
+		return EnumBlockRenderType.MODEL;
 	}
 
 	public enum MetalMultiblocks1 implements IITileMultiblockEnum
@@ -89,7 +73,7 @@ public class BlockIIMetalMultiblock1 extends BlockIIMultiblock<MetalMultiblocks1
 
 		@IIBlockProperties(hidden = TernaryValue.TRUE)
 		@EnumMultiblockProvider(multiblock = MultiblockVehicleWorkshop.class, tile = TileEntityVehicleWorkshop.class)
-		VEHICLE_WORKSHOP,
+		VEHICLE_WORKSHOP, //not implemented
 		@IIBlockProperties(needsCustomState = true)
 		@EnumMultiblockProvider(multiblock = MultiblockFlagpole.class, tile = TileEntityFlagpole.class)
 		FLAGPOLE,

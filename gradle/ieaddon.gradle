@@ -41,7 +41,7 @@ dependencies {
 repositories {
 	maven {
 		name = "iiMavenReleases"
-		url = uri("https://maven.iiteam.net/releases")
+		url = uri("https://maven.iiteam.net")
 		if (ii_authToIIMaven.asBoolean())
 		{
 			credentials {

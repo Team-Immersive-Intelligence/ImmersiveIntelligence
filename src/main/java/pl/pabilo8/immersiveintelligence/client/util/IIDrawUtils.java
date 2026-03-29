@@ -274,8 +274,8 @@ public class IIDrawUtils
 						MathHelper.clamp(width-xx, 0, tileSize),
 						MathHelper.clamp(height-yy, 0, tileSize),
 						color,
-						sprite.getMinU(), sprite.getInterpolatedU(Math.min(width-xx, tileSize)/2f),
-						sprite.getMinV(), sprite.getInterpolatedV(Math.min(height-yy, tileSize)/2f)
+						sprite.getMinU(), sprite.getInterpolatedU(Math.min(width-xx, tileSize)),
+						sprite.getMinV(), sprite.getInterpolatedV(Math.min(height-yy, tileSize))
 				);
 			}
 		return this;

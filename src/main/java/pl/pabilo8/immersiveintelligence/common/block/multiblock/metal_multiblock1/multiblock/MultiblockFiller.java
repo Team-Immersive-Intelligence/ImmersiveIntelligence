@@ -12,6 +12,8 @@ import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctur
 public class MultiblockFiller extends MultiblockStuctureBase<TileEntityFiller>
 {
 	public static MultiblockFiller INSTANCE;
+	public static int SLOT_DUST = 0;
+	public static int SLOT_INPUT = 1;
 
 	public MultiblockFiller()
 	{

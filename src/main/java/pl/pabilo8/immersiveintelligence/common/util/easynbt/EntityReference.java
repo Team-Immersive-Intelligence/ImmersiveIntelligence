@@ -5,7 +5,9 @@ import net.minecraft.nbt.NBTTagInt;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.INBTSerializable;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.function.Supplier;
 
 /**
  * References an entity in a world by its ID, allowing it to be serialized to NBT.
@@ -17,18 +19,18 @@ import javax.annotation.Nullable;
  */
 public class EntityReference<TYPE extends Entity> implements INBTSerializable<NBTTagInt>
 {
-	private final World world;
+	private final Supplier<World> worldSupplier;
 	@Nullable
 	private TYPE entity;
 
-	public EntityReference(World world)
+	public EntityReference(Supplier<World> worldSupplier)
 	{
-		this(world, null);
+		this(worldSupplier, null);
 	}
 
-	public EntityReference(World world, @Nullable TYPE entity)
+	public EntityReference(@Nonnull Supplier<World> worldSupplier, @Nullable TYPE entity)
 	{
-		this.world = world;
+		this.worldSupplier = worldSupplier;
 		this.entity = entity;
 	}
 
@@ -46,14 +48,17 @@ public class EntityReference<TYPE extends Entity> implements INBTSerializable<NB
 	@Override
 	public NBTTagInt serializeNBT()
 	{
-		return new NBTTagInt(entity==null?-1: entity.getEntityId());
+		return new NBTTagInt(entity==null?0: entity.getEntityId());
 	}
 
 	@Override
 	public void deserializeNBT(NBTTagInt nbt)
 	{
+		World world = worldSupplier.get();
+		if(world==null)
+			return;
 		int id = nbt.getInt();
-		if(id!=1)
+		if(id!=0)
 			try
 			{
 				//noinspection unchecked

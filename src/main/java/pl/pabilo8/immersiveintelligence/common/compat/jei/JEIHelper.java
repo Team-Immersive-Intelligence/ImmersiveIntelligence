@@ -8,6 +8,7 @@ import mezz.jei.api.*;
 import mezz.jei.api.ISubtypeRegistry.ISubtypeInterpreter;
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.ingredients.IModIngredientRegistration;
+import mezz.jei.api.recipe.IIngredientType;
 import mezz.jei.api.recipe.IRecipeCategory;
 import mezz.jei.api.recipe.IRecipeCategoryRegistration;
 import net.minecraft.block.Block;
@@ -22,7 +23,6 @@ import pl.pabilo8.immersiveintelligence.api.ammo.enums.CoreType;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.FuseType;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.IAmmoTypeItem;
 import pl.pabilo8.immersiveintelligence.api.crafting.*;
-import pl.pabilo8.immersiveintelligence.client.gui.block.GuiChemicalBath;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoComponent;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.DecoComponent.MouseButton;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
@@ -32,6 +32,8 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.BlockIIMetalMultiblock1.MetalMultiblocks1;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.BlockIIWoodenMultiblock.WoodenMultiblocks;
 import pl.pabilo8.immersiveintelligence.common.compat.jei.gui_handlers.VulcanizerGuiJEIHandler;
+import pl.pabilo8.immersiveintelligence.common.compat.jei.ingredients.JEIDustStackHelper;
+import pl.pabilo8.immersiveintelligence.common.compat.jei.ingredients.JEIDustStackRenderer;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.gun.ItemIIAmmoRevolver.RevolverAmmoPart;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock;
 
@@ -42,6 +44,7 @@ import java.util.Collections;
 @SuppressWarnings("unused")
 public class JEIHelper implements IModPlugin
 {
+	public static final IIngredientType<DustStack> DUSTSTACK = () -> DustStack.class;
 	public static IJeiHelpers jeiHelpers;
 	public static IModRegistry modRegistry;
 	public static IJeiRuntime jeiRuntime;
@@ -88,7 +91,7 @@ public class JEIHelper implements IModPlugin
 	@Override
 	public void registerIngredients(@Nonnull IModIngredientRegistration registry)
 	{
-
+		registry.register(DUSTSTACK, Collections.emptyList(), new JEIDustStackHelper(), new JEIDustStackRenderer());
 	}
 
 	@Override
@@ -126,7 +129,6 @@ public class JEIHelper implements IModPlugin
 	{
 		modRegistry = registryIn;
 		//Blacklist
-
 		jeiHelpers.getIngredientBlacklist().addIngredientToBlacklist(new ItemStack(IIContent.itemPunchtape, 1, 0));
 
 		jeiHelpers.getIngredientBlacklist().addIngredientToBlacklist(new ItemStack(IIContent.itemPrintedPage, 1, 1));
@@ -136,7 +138,6 @@ public class JEIHelper implements IModPlugin
 
 		jeiHelpers.getIngredientBlacklist().addIngredientToBlacklist(new ItemStack(IIContent.itemAmmoRevolver,
 				1, RevolverAmmoPart.UNUSED.ordinal()));
-
 
 		for(IAmmoTypeItem<?, ?> bullet : AmmoRegistry.getAllAmmoItems())
 		{
@@ -151,10 +152,6 @@ public class JEIHelper implements IModPlugin
 
 		IILogger.info("JEI has just requested our recipes, it seems that we even have a class for registering them!");
 		categories.values().forEach(cat -> cat.register(registryIn));
-
-		//TODO: 06.12.2025 replace with Deco
-		modRegistry.addRecipeClickArea(GuiChemicalBath.class, 16, 58, 19, 12, "ii.bathing", "ii.washing");
-		modRegistry.addRecipeClickArea(GuiChemicalBath.class, 131, 57, 19, 13, "ii.bathing", "ii.washing");
 		modRegistry.addAdvancedGuiHandlers(new VulcanizerGuiJEIHandler());
 
 		if(FMLCommonHandler.instance().getSide()==Side.CLIENT)

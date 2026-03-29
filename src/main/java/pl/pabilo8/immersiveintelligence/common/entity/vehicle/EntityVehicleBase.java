@@ -5,11 +5,15 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.IEntityMultiPart;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.style.IStyleCustomizable;
@@ -22,11 +26,8 @@ import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IVehicleMultiPart;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.VehicleBlueprint;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.VehicleDurability;
-import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehiclePart;
-import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehicleSeat;
+import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.*;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehicleSeat.SeatInfo;
-import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.EntityVehicleWheel;
-import pl.pabilo8.immersiveintelligence.common.entity.vehicle.utils.part.WheelForces;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.MissingAnnotationException;
@@ -58,6 +59,7 @@ public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends 
 	//--- Parts ---//
 	private AxisAlignedBB AABB;
 	protected VehicleBlueprint blueprint;
+	protected IVehicleComponent[] components;
 	protected EntityVehiclePart<T>[] partArray;
 	protected EntityVehicleWheel<T>[] wheels;
 	protected SeatInfo<?>[] seats;
@@ -115,6 +117,7 @@ public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends 
 		double maxX = Integer.MIN_VALUE, maxY = Integer.MIN_VALUE, maxZ = Integer.MIN_VALUE;
 
 		//Initialize vehicle-specific parts
+		this.components = new IVehicleComponent[0];
 		this.partArray = this.vehicleInit();
 
 		for(EntityVehiclePart<T> part : partArray)
@@ -1120,5 +1123,28 @@ public abstract class EntityVehicleBase<T extends EntityVehicleBase<T>> extends 
 	protected StyleConstraints getVehicleStyleConstraints()
 	{
 		return DEFAULT_STYLE_CONSTRAINTS;
+	}
+
+	//--- Capabilities ---//
+
+	@Override
+	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing)
+	{
+		if(capability==CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
+			for(IVehicleComponent component : components)
+				if(component instanceof IFluidHandler)
+					return true;
+		return super.hasCapability(capability, facing);
+	}
+
+	@Nullable
+	@Override
+	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing)
+	{
+		if(capability==CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
+			for(IVehicleComponent component : components)
+				if(component instanceof IFluidHandler)
+					return (T)component;
+		return super.getCapability(capability, facing);
 	}
 }
