@@ -15,6 +15,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.deco.component.collection.Dec
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.label.DecoLabel;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.panel.DecoEntryPanelBuilder;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoImage;
+import pl.pabilo8.immersiveintelligence.client.gui.deco.component.visual.DecoImage.ImageAnimationDirection;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.*;
 import pl.pabilo8.immersiveintelligence.client.gui.deco.util.DecoBackgroundBuilder.SlotStyle;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
@@ -36,8 +37,8 @@ import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
  * @updated 02.02.2024
  * @since 09.02.2020
  */
-@DecoTemplate(name = "data_redstone_interface_data", category = DecoGuiCategory.DATA_TILE)
-public class GuiDataRedstoneInterfaceData extends DecoGui<TileEntityRedstoneDataInterface, ContainerRedstoneDataInterface>
+@DecoTemplate(name = "data_redstone_interface", category = DecoGuiCategory.DATA_TILE)
+public class GuiDataRedstoneInterface extends DecoGui<TileEntityRedstoneDataInterface, ContainerRedstoneDataInterface>
 {
 	@DecoResource
 	public static ResourceLocation PROGRESS_IMAGE = ResLoc.of(IIReference.RES_II, "gui/data_input_machine");
@@ -46,21 +47,40 @@ public class GuiDataRedstoneInterfaceData extends DecoGui<TileEntityRedstoneData
 	public int scroll = 0;
 	@SyncNBT(events = SyncEvents.TILE_CLIENT_MESSAGE)
 	public EasyCollection<ConversionSetting, NBTTagCompound> dataSettings;
+	@SyncNBT(events = SyncEvents.TILE_CLIENT_MESSAGE)
+	public EasyCollection<ConversionSetting, NBTTagCompound> redstoneSettings;
+	private final boolean redstoneToData;
 
-	public GuiDataRedstoneInterfaceData(EntityPlayer player, TileEntityRedstoneDataInterface tile)
+	private GuiDataRedstoneInterface(EntityPlayer player, TileEntityRedstoneDataInterface tile, boolean redstoneToData)
 	{
-		super(player, tile, IIGUI.DATA_REDSTONE_INTERFACE_DATA);
+		super(player, tile, redstoneToData?IIGUI.DATA_REDSTONE_INTERFACE_REDSTONE: IIGUI.DATA_REDSTONE_INTERFACE_DATA);
+		this.redstoneToData = redstoneToData;
+	}
+
+	public static GuiDataRedstoneInterface getRedstoneGUI(EntityPlayer player, TileEntityRedstoneDataInterface tile)
+	{
+		return new GuiDataRedstoneInterface(player, tile, true);
+	}
+
+	public static GuiDataRedstoneInterface getDataGUI(EntityPlayer player, TileEntityRedstoneDataInterface tile)
+	{
+		return new GuiDataRedstoneInterface(player, tile, false);
 	}
 
 	@Override
 	public void onInit()
 	{
+		//Sync data
 		this.dataSettings = tile.dataSettings;
+		this.redstoneSettings = tile.redstoneSettings;
+
 		//Create background
 		startBackground()
-				.withBox(DecoTextures.BG_STEEL, 0, 0, 176, 128+8)
-				.withTitleBar("desc.immersiveintelligence.data_to_redstone_module")
-				.withBox(DecoTextures.BG_WOODEN, DecoTextures.TEMPLATE_ROUND_WOODEN, 0, 128+8, 176, 92)
+				.withBox(DecoTextures.BG_STEEL, 0, 0, 176+32, 128+8)
+				.withTitleBar(IIReference.DESCRIPTION_KEY+(redstoneToData?"redstone_to_data_module": "data_to_redstone_module"))
+				.withNextLayer()
+				.withBox(DecoTextures.BG_WOODEN, DecoTextures.TEMPLATE_ROUND_WOODEN, 16, 128+8, 176, 92)
+				.withFrame(DecoTextures.FRAME_WOODEN_THIN, 4, false, new boolean[]{true, false, false, false})
 				.withInventoryTitleBar()
 
 				.withNextLayer()
@@ -71,8 +91,11 @@ public class GuiDataRedstoneInterfaceData extends DecoGui<TileEntityRedstoneData
 				.withInventorySlots(SlotStyle.IE_OUTPUT, container.punchtapeOutput)
 				.build();
 
-		addLinkTab(IIGUI.DATA_REDSTONE_INTERFACE_REDSTONE, new ItemStack(IEContent.itemWireCoil, 1, 5), "redstone_to_data_module");
-		addLinkTab(IIGUI.DATA_REDSTONE_INTERFACE_DATA, IIContent.itemDataWireCoil.getStack(1), "data_to_redstone_module");
+		addLinkTab(IIGUI.DATA_REDSTONE_INTERFACE_REDSTONE, new ItemStack(IEContent.itemWireCoil, 1, 5), "data_to_redstone_module");
+		addLinkTab(IIGUI.DATA_REDSTONE_INTERFACE_DATA, IIContent.itemDataWireCoil.getStack(1), "redstone_to_data_module");
+
+		int colorY = redstoneToData?4: 17;
+		int variableY = redstoneToData?17: 4;
 
 		//Add components
 		addComponents(
@@ -83,64 +106,75 @@ public class GuiDataRedstoneInterfaceData extends DecoGui<TileEntityRedstoneData
 				new DecoImage(4+2, 12+24+8-2-1)
 						.withSize(20, 52)
 						.withImageLocation(PROGRESS_IMAGE, true)
-						.withUV(64, 20, 0, 40, 52),
+						.withUV(64, 20, 0, 40, 52)
+						.withAnimation(ImageAnimationDirection.TOP_TO_BOTTOM, partialTicks ->
+								tile.punchtapeReadProgress/100f+(partialTicks*Math.signum(tile.punchtapeReadProgress))/100f
+						),
 
 				new DecoList<ConversionSetting>(32, 8)
-						.withSize(136, 120)
-						.withEntries(dataSettings)
+						.withSize(136+24+8+2, 120)
+						.withEntries(redstoneToData?redstoneSettings: dataSettings)
 						.withCreateAction(ConversionSetting::new)
 						.withScroll(scroll)
 						.withGuiSaveAction(gui -> this.scroll = gui.getScroll())
 						.withDisplayFunction(new DecoEntryPanelBuilder<ConversionSetting>()
-								.withHeight(32)
+								.withHeight(32+16-6+2)
 								.withLabel("from", new DecoLabel(this.fontRenderer, 4, 4)
-										.withText(IIReference.GUI_LABEL_KEY+"redstone_data_interface.from"))
-								.withLabel("to", new DecoLabel(this.fontRenderer, 4, 16+1)
-										.withText(IIReference.GUI_LABEL_KEY+"redstone_data_interface.to"))
+										.withText(IIReference.GUI_LABEL_KEY+"redstone_data_interface.from."+(redstoneToData?"redstone": "data"))
+										.withTranslatedTooltip(IIReference.GUI_LABEL_KEY+"redstone_data_interface.from."+(redstoneToData?"redstone": "data")+".tooltip")
+								)
+								.withLabel("to", new DecoLabel(this.fontRenderer, 4, 16+2)
+										.withText(IIReference.GUI_LABEL_KEY+"redstone_data_interface.to."+(redstoneToData?"data": "redstone"))
+										.withTranslatedTooltip(IIReference.GUI_LABEL_KEY+"redstone_data_interface.to."+(redstoneToData?"data": "redstone")+".tooltip")
+								)
+								.withLabel("mode", new DecoLabel(this.fontRenderer, 4, 16+14+2-1)
+										.withText(IIReference.GUI_LABEL_KEY+"redstone_data_interface.mode")
+										.withTranslatedTooltip(IIReference.GUI_LABEL_KEY+"redstone_data_interface.mode.tooltip")
+								)
 
 								//Color
-								.withComponent("color_icon", new DecoImage(32, 4)
+								.withComponent("color_icon", new DecoImage(32+8+2+48-4+2+24+8, colorY)
 										.withSize(8, 8)
 										.withImageLocation(DecoTextures.COMPONENT_COLOR, true)
 										.withUV(16, 4, 4, 12, 12)
 								)
 								.withLabel("color_label",
-										new DecoLabel(IIClientUtils.fontRegular, 32+8+2, 4)
-												.withSize(48, 12)
-												.withAlign(DecoAlignment.LEFT)
+										new DecoLabel(IIClientUtils.fontRegular, 4, colorY-1)
+												.withSize(136-48-8+2+24+8, 12)
+												.withAlign(DecoAlignment.RIGHT)
 												.withText("Dye")
 								)
-								.withComponent("color_arrows", builder -> new DecoArrows(32+48+16, 2)
+								.withComponent("color_arrows", builder -> new DecoArrows(32+48+16+2+24+8, colorY-2)
 										.withSize(12, 12)
 										.withOnArrow(arrow -> builder.getCurrentElement()
 												.setColor(IIUtils.cycleEnum(arrow, EnumDyeColor.class, builder.getCurrentElement().getColor())))
 								)
-								//Mode
-								.withLabel("mode_label",
-										new DecoLabel(IIClientUtils.fontRegular, 32, 16)
-												.withSize(48, 12)
-												.withAlign(DecoAlignment.LEFT)
-												.withText("Mode")
-								)
-								.withComponent("mode_arrows", builder -> new DecoArrows(32+32+16+8-12, 16)
-										.withSize(12, 12)
-										.withOnArrow(arrow -> builder.getCurrentElement()
-												.setMode(IIUtils.cycleEnum(arrow, ConversionMode.class, builder.getCurrentElement().getMode())))
-								)
 								//Variable
 								.withLabel("variable_label",
-										new DecoLabel(IIClientUtils.fontRegular, 32+32+16+8, 16)
-												.withSize(12, 12)
-												.withAlign(DecoAlignment.LEFT)
+										new DecoLabel(IIClientUtils.fontRegular, 4, variableY)
+												.withSize(136-48+4+1+24+8, 12)
+												.withAlign(DecoAlignment.RIGHT)
 												.withText("a")
 								)
-								.withComponent("variable_arrows", builder -> new DecoArrows(32+32+16+24-8, 16)
+								.withComponent("variable_arrows", builder -> new DecoArrows(32+32+16+24-8+2+24+8, variableY-2)
 										.withSize(12, 12)
 										.withOnArrow(arrow -> builder.getCurrentElement()
 												.setVariable(IIUtils.cycleDataPacketChars(builder.getCurrentElement().getVariable(), arrow, false)))
 								)
+								//Mode
+								.withLabel("mode_label",
+										new DecoLabel(IIClientUtils.fontRegular, 4, 16+14+1-1)
+												.withSize(136-48+4+1+24+8, 12)
+												.withAlign(DecoAlignment.RIGHT)
+												.withText("Mode")
+								)
+								.withComponent("mode_arrows", builder -> new DecoArrows(32+32+16+24-8+2+24+8, 16+12+2-1)
+										.withSize(12, 12)
+										.withOnArrow(arrow -> builder.getCurrentElement()
+												.setMode(IIUtils.cycleEnum(arrow, ConversionMode.class, builder.getCurrentElement().getMode())))
+								)
 								//Edit / Remove Buttons
-								.withComponent(p -> new DecoButton(p.width-17+1, 8)
+								.withComponent(p -> new DecoButton(p.width-17, 8+6)
 										.withTemplate(DecoTemplates.ACTION_BUTTON_REMOVE)
 										.withOnPressed((gui, mouseButton, mouseX, mouseY) -> {
 											if(mouseButton==MouseButton.LEFT)
