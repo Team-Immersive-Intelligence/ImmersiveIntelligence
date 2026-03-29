@@ -47,3 +47,4 @@ run_tests/
 custom.gradle.template
 
 # Misc
+cert/
