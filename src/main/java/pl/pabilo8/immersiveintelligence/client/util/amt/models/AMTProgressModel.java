@@ -4,6 +4,7 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.Vec3d;
 import pl.pabilo8.immersiveintelligence.client.util.ShaderUtil.Shaders;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMTLoader;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMTUtils;
@@ -43,11 +44,21 @@ public abstract class AMTProgressModel<DEVICE, STAGE> implements AMTRenderable
 		IIAnimation loaded = AMTLoader.loadAnimation(animation);
 		this.animation = IIAnimationCompiledMap.create(model, new IIAnimation(animation,
 				Arrays.stream(loaded.groups)
-						.map(g -> new IIAnimationGroup(g.groupName, g.position, g.scale, g.rotation, null, vecToAlpha(g.position), null))
+						.map(g -> new IIAnimationGroup(g.groupName, g.position, expandScale(g.scale), g.rotation, null, vecToAlpha(g.position), null))
 						.toArray(IIAnimationGroup[]::new)));
 		this.steps = this.animation.size();
 		this.model = new AMTModel(model.stream().filter(this.animation::containsKey).toArray(AMT[]::new));
 		this.assembledModel = this.model.batch("batched");
+	}
+
+	private IIVectorLine expandScale(@Nullable IIVectorLine scale)
+	{
+		if(scale==null)
+		{
+			final Vec3d expanded = new Vec3d(1.005f, 1.005f, 1.005f);
+			return new IIVectorLine(new float[]{0f, 1f}, new Vec3d[]{expanded, expanded});
+		}
+		return new IIVectorLine(scale.timeframes, scale.values, 1.005f);
 	}
 
 	@Nullable

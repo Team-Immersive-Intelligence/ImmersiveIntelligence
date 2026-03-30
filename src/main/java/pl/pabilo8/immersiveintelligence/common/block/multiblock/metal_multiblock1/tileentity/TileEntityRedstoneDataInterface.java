@@ -1,5 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity;
 
+import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler.Connection;
 import blusunrize.immersiveengineering.api.energy.wires.WireType;
 import blusunrize.immersiveengineering.api.energy.wires.redstone.IRedstoneConnector;
@@ -13,12 +14,15 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.INBTSerializable;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
+import pl.pabilo8.immersiveintelligence.api.data.DataVariable;
 import pl.pabilo8.immersiveintelligence.api.data.IIDataHandlingUtils;
 import pl.pabilo8.immersiveintelligence.api.data.device.IDataDevice;
+import pl.pabilo8.immersiveintelligence.api.data.device.IDataStorageItem;
 import pl.pabilo8.immersiveintelligence.api.data.types.*;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockRedstoneInterface;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ILocalizedEnum;
@@ -32,6 +36,7 @@ import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPO
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockRedstoneNetwork;
 
 import javax.annotation.Nonnull;
+import java.util.Collection;
 import java.util.Objects;
 
 /**
@@ -77,31 +82,61 @@ public class TileEntityRedstoneDataInterface extends TileEntityMultiblockIIConne
 	protected void onUpdate()
 	{
 		//Progress punchtape reading
-		if(!inventory.get(MultiblockRedstoneInterface.SLOT_PUNCHTAPE_REDSTONE).isEmpty()||
-				!inventory.get(MultiblockRedstoneInterface.SLOT_PUNCHTAPE_DATA).isEmpty())
+		ItemStack punchtapeRedstone = inventory.get(MultiblockRedstoneInterface.SLOT_PUNCHTAPE_REDSTONE);
+		ItemStack punchtapeData = inventory.get(MultiblockRedstoneInterface.SLOT_PUNCHTAPE_DATA);
+
+		if(!punchtapeRedstone.isEmpty()||!punchtapeData.isEmpty())
 			this.punchtapeReadProgress = Math.min(this.punchtapeReadProgress+1, 100);
+		else
+			this.punchtapeReadProgress = 0;
 
 		//Check for possibility to output
 		if(punchtapeReadProgress >= 100&&inventory.get(MultiblockRedstoneInterface.SLOT_PUNCHTAPE_OUTPUT).isEmpty())
 		{
 			punchtapeReadProgress = 0;
 			//Read and transfer punchtape to output slot
-			if(!inventory.get(MultiblockRedstoneInterface.SLOT_PUNCHTAPE_REDSTONE).isEmpty())
+			if(!punchtapeRedstone.isEmpty())
 			{
-				//IIDataHandlingUtils.readFromPunchTape(inventory.get(MultiblockRedstoneInterface.SLOT_PUNCHTAPE_REDSTONE), storedRedstone);
-				inventory.set(MultiblockRedstoneInterface.SLOT_PUNCHTAPE_OUTPUT, inventory.get(MultiblockRedstoneInterface.SLOT_PUNCHTAPE_REDSTONE).copy());
+				inventory.set(MultiblockRedstoneInterface.SLOT_PUNCHTAPE_OUTPUT, processPunchtape(punchtapeRedstone, redstoneSettings));
 				inventory.set(MultiblockRedstoneInterface.SLOT_PUNCHTAPE_REDSTONE, ItemStack.EMPTY);
 				reactToRedstoneChange();
 			}
-			if(!inventory.get(MultiblockRedstoneInterface.SLOT_PUNCHTAPE_DATA).isEmpty())
+			else if(!punchtapeData.isEmpty())
 			{
-				//IIDataHandlingUtils.readFromPunchTape(inventory.get(MultiblockRedstoneInterface.SLOT_PUNCHTAPE_DATA), storedData);
-				inventory.set(MultiblockRedstoneInterface.SLOT_PUNCHTAPE_OUTPUT, inventory.get(MultiblockRedstoneInterface.SLOT_PUNCHTAPE_DATA).copy());
+				inventory.set(MultiblockRedstoneInterface.SLOT_PUNCHTAPE_OUTPUT, processPunchtape(punchtapeData, dataSettings));
 				inventory.set(MultiblockRedstoneInterface.SLOT_PUNCHTAPE_DATA, ItemStack.EMPTY);
 			}
 			updateTileForEvent(SyncEvents.TILE_RECIPE_CHANGED);
 		}
 
+	}
+
+	private ItemStack processPunchtape(ItemStack punchtape, Collection<ConversionSetting> settings)
+	{
+		//Write
+		if(new IngredientStack("punchtapeEmpty").matchesItemStack(punchtape))
+		{
+			punchtape = IIContent.itemPunchtape.getStack(1);
+			DataPacket packet = new DataPacket();
+			//Add the settings as new variables
+			char c = DataPacket.VARIABLE_NAMES[DataPacket.VARIABLE_NAMES.length-1];
+			for(ConversionSetting setting : settings)
+				packet.set(c = IIUtils.cycleDataPacketChars(c, true, false), setting.toDataVariable());
+			IIContent.itemPunchtape.writeDataToItem(punchtape, packet);
+			return punchtape;
+		}
+		//Read
+		assert punchtape.getItem() instanceof IDataStorageItem;
+		IDataStorageItem storage = (IDataStorageItem)punchtape.getItem();
+		settings.clear();
+		//Add the settings
+		storage.getStoredData(punchtape).stream()
+				.map(DataVariable::getValue)
+				.filter(dataType -> dataType instanceof DataTypeMap)
+				.map(dataType -> (DataTypeMap)dataType)
+				.map(ConversionSetting::new)
+				.forEach(settings::add);
+		return punchtape;
 	}
 
 	@Override
@@ -181,10 +216,8 @@ public class TileEntityRedstoneDataInterface extends TileEntityMultiblockIIConne
 		TileEntityRedstoneDataInterface m = master();
 		if(m!=null)
 			for(int i = 0; i < 16; i += 1)
-			{
 				if(signals[i] < m.redstoneOutput[i])
 					signals[i] = m.redstoneOutput[i];
-			}
 
 	}
 
@@ -250,6 +283,35 @@ public class TileEntityRedstoneDataInterface extends TileEntityMultiblockIIConne
 		public ConversionSetting()
 		{
 
+		}
+
+		public ConversionSetting(DataTypeMap settings)
+		{
+			if(settings.size() < 3)
+				return;
+			DataType mode = settings.get("mode");
+			DataType color = settings.get("color");
+			DataType variable = settings.get("variable");
+
+			if(mode instanceof DataTypeString)
+				this.mode = IIUtils.enumValue(ConversionMode.class, ((DataTypeString)mode).value);
+			if(color instanceof DataTypeInteger)
+				this.color = EnumDyeColor.byMetadata(((DataTypeInteger)color).value);
+			if(variable instanceof DataTypeString&&!variable.toString().isEmpty())
+			{
+				char variableName = variable.toString().charAt(0);
+				if(DataPacket.isValidVariable(variableName))
+					this.variable = variableName;
+			}
+		}
+
+		public DataTypeMap toDataVariable()
+		{
+			DataTypeMap map = new DataTypeMap();
+			map.put("variable", new DataTypeString(String.valueOf(this.variable)));
+			map.put("color", new DataTypeInteger(this.color.ordinal()));
+			map.put("mode", new DataTypeString(String.valueOf(this.mode)));
+			return map;
 		}
 
 		//--- Setters ---//

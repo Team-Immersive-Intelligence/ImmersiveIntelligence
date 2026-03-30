@@ -42,6 +42,7 @@ import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageItemKeybind;
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemUtils;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIUpgradableTool;
 import pl.pabilo8.immersiveintelligence.common.util.sound.AdvancedSounds.RangedSound;
 
@@ -71,7 +72,7 @@ public abstract class ItemIIGunBase extends ItemIIUpgradableTool implements ISki
 	{
 		super(name, 1, name.toUpperCase());
 		//Use interfaces pls Blu
-		IIUtils.fixupItem(this, name);
+		IIItemUtils.fixupItem(this, name);
 		WEAPONS.add(this);
 	}
 

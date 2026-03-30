@@ -1,10 +1,15 @@
 package pl.pabilo8.immersiveintelligence.common.util.item;
 
 import blusunrize.immersiveengineering.common.IEContent;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.oredict.OreDictionary;
+import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.IWrench;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 public class IIItemUtils
@@ -58,5 +63,30 @@ public class IIItemUtils
 				trimmed.add(ItemStack.EMPTY);
 		}
 		return trimmed;
+	}
+
+	public static void fixupItem(Item item, String itemName)
+	{
+		// First, get the item out of IE's registries.
+		Item rItem = IEContent.registeredIEItems.remove(IEContent.registeredIEItems.size()-1);
+		if(rItem!=item)
+			throw new IllegalStateException("fixupItem was not called at the appropriate time");
+
+		// Now, reconfigure the block to match our mod.
+		item.setUnlocalizedName(ImmersiveIntelligence.MODID+"."+itemName);
+		item.setCreativeTab(IIContent.II_CREATIVE_TAB);
+
+		// And add it to our registries.
+		IIContent.ITEMS.add(item);
+	}
+
+	public static boolean canUpgradeFreeOfCharge(EntityPlayer player)
+	{
+		return player.isCreative()&&Tools.instantCreativeUpgrading;
+	}
+
+	public static boolean canConstructFreeOfCharge(EntityPlayer player)
+	{
+		return player.isCreative()&&Tools.instantCreativeConstruction;
 	}
 }

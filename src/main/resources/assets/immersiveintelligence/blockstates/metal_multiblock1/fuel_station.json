@@ -85,7 +85,7 @@
     "_1dynamicrender": {
       "false": {},
       "true": {
-        "model": "immersiveintelligence:multiblock/fuel_station/fuel_station.obj"
+        "model": "immersiveintelligence:multiblock/fuel_station/fuel_station.obj.ie"
       }
     }
   }

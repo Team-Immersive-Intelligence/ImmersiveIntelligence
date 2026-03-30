@@ -108,7 +108,7 @@ public class TileEntityRadar extends TileEntityMultiblockIIGeneric<TileEntityRad
 								hostiles.stream().map(entity -> new DataTypeEntity(entity, center)).toArray(DataTypeEntity[]::new)));
 				sendData(packet, getDirection("data"), getPOI(MultiblockPOI.DATA_OUTPUT)[0]);
 			}
-			this.tactileManager.update(MultiblockRadar.INSTANCE.animationDish, dishRotation/360f);
+			this.tactileManager.update(MultiblockRadar.INSTANCE.animationDish, ((dishRotation)%360)/360f);
 		}
 
 	}

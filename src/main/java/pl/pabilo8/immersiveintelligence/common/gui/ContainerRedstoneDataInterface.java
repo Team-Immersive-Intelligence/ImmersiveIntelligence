@@ -19,11 +19,11 @@ public class ContainerRedstoneDataInterface extends ContainerIIBase<TileEntityRe
 	{
 		super(player, tile);
 
-		punchtapeInput = addSlot(8, 12+4, MultiblockRedstoneInterface.SLOT_PUNCHTAPE_OUTPUT, FilteredDataInput::new);
-		punchtapeOutput = addSlot(8, 72+32,
-				dataSection?MultiblockRedstoneInterface.SLOT_PUNCHTAPE_DATA: MultiblockRedstoneInterface.SLOT_PUNCHTAPE_REDSTONE, Output::new);
+		punchtapeInput = addSlot(8, 12+4, dataSection?MultiblockRedstoneInterface.SLOT_PUNCHTAPE_DATA: MultiblockRedstoneInterface.SLOT_PUNCHTAPE_REDSTONE,
+				FilteredDataInput::new);
+		punchtapeOutput = addSlot(8, 72+32, MultiblockRedstoneInterface.SLOT_PUNCHTAPE_OUTPUT, Output::new);
 
-		addPlayerInventory(player.inventory, 8, 141+8);
+		addPlayerInventory(player.inventory, 8+16, 141+8);
 	}
 
 	public static ContainerRedstoneDataInterface getDataGUI(EntityPlayer player, TileEntityRedstoneDataInterface tile)

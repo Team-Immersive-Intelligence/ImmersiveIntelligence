@@ -37,6 +37,7 @@ import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
 import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemUtils;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIBase;
 import pl.pabilo8.modworks.annotations.item.GeneratedItemModels;
 import pl.pabilo8.modworks.annotations.item.ItemModelType;
@@ -106,7 +107,7 @@ public class ItemIIElectricWrench extends ItemIIBase implements ITool, IIEEnergy
 		if(te==null||te.getCurrentUpgrade()==null)
 			return EnumActionResult.PASS;
 
-		if(te.addUpgradeInstallProgress(player.isCreative()?999999: Tools.electricWrenchUpgradeProgress))
+		if(te.addUpgradeInstallProgress(IIItemUtils.canUpgradeFreeOfCharge(player)?999999: Tools.electricWrenchUpgradeProgress))
 		{
 			world.playSound(null, pos, IISounds.constructionElectricWrench, SoundCategory.PLAYERS, 0.5f, 1);
 			damageWrench(player.getHeldItem(hand), player);

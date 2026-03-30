@@ -39,7 +39,7 @@ import javax.annotation.Nullable;
  */
 public class TileEntityChemicalBath extends TileEntityMultiblockProductionSingle<TileEntityChemicalBath, BathingRecipe> implements IPlayerInteraction
 {
-	@SyncNBT(events = SyncEvents.TILE_CUSTOM1)
+	@SyncNBT(events = {SyncEvents.TILE_CUSTOM1, SyncEvents.TILE_RECIPE_CHANGED})
 	public FluidTank tank;
 	private IItemHandler inputHandler = getSingleInventoryHandler(MultiblockChemicalBath.ITEM_IN, true, true);
 	private IItemHandler outputHandler = getSingleInventoryHandler(MultiblockChemicalBath.ITEM_OUT, true, true);
