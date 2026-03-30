@@ -2299,6 +2299,9 @@ ie.manual.entry.bullet_component.shrapnel_uranium=Уранова шрапнел�
 ie.manual.entry.bullet_component.shrapnel_uranium.lore=Ра-ді-о-активний
 ie.manual.entry.bullet_component.shrapnel_uranium.desc=Уран є одним із найкращих матеріалів для шрапнелі, осколки, що розлітаються, без проблем пробиють броню і можуть завдати великої шкоди будь-якій цілі.
 
+ie.manual.entry.bullet_component.shrapnel_wood=Тирса
+ie.manual.entry.bullet_component.shrapnel_wood.lore=Екологічно чистий!
+ie.manual.entry.bullet_component.shrapnel_wood.desc=Можливо, не буде сильно шкодити, але залишить після себе свіжий сосновий аромат!
 
 #Logistics
 

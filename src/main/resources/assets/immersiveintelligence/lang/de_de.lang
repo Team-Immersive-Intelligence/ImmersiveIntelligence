@@ -2825,7 +2825,7 @@ ie.manual.entry.bullet_component.tesla=Entladungs Emitter
 ie.manual.entry.bullet_component.tesla.lore=Ein Geschenk für Edison
 ie.manual.entry.bullet_component.tesla.desc=Entladungs Emitter erschaffen ein Feld welcehs den elektischen Fluss stört. Sie sind nützlich um Industrielle Ausrüstung, Befestigungen und feindliche Energieerzeugung zu sabotieren.
 
-
+## Shrapnels
 ie.manual.entry.bullet_component.shrapnel_aluminum=Aluminium Schrapnell
 ie.manual.entry.bullet_component.shrapnel_aluminum.lore=Aluminium, es lässt sich nicht einfach bemalen
 ie.manual.entry.bullet_component.shrapnel_aluminum.desc=Aluminium ist nicht das beste Material für Schrapnell, aber ist günstig genug für den Masseneinsatz im Kampf.
@@ -2902,6 +2902,11 @@ ie.manual.entry.bullet_component.shrapnel_HOPGraphite.desc=Graphit ist ein sehr 
 ie.manual.entry.bullet_component.shrapnel_uranium=Uran Schrapnell
 ie.manual.entry.bullet_component.shrapnel_uranium.lore=Ra-di-o-active
 ie.manual.entry.bullet_component.shrapnel_uranium.desc=Uran ist eines der besten Materialien für Schrapnell, die einzelnen Fragmente haben kein Problem Panzerung zu durchschlagen und fügen hohen Schaden zu.
+
+ie.manual.entry.bullet_component.shrapnel_wood=Sägemehl
+ie.manual.entry.bullet_component.shrapnel_wood.lore=Umweltfreundlich!
+ie.manual.entry.bullet_component.shrapnel_wood.desc=Es wird wahrscheinlich nicht sehr schaden, aber es hinterlässt einen frischen Kiefernduft!
+
 #Death Messages
 death.attack.iiBullet=%1$s wurde von %2$s erschossen
 death.attack.iiBulletNoShooter=%1$s wurde erschossen

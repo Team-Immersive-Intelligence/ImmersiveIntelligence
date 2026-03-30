@@ -217,11 +217,20 @@ public class TileEntityCoagulator extends TileEntityMultiblockProductionSingle<T
 		if(inventory.get(MultiblockCoagulator.SLOT_OUTPUT).getCount() >= 64)
 			return null;
 
-		return IIMultiblockRecipe.streamRecipes(CoagulatorRecipe.class)
+		//Find recipe
+		CoagulatorRecipe found = IIMultiblockRecipe.streamRecipes(CoagulatorRecipe.class)
 				.filter(recipe -> recipe.fluidInput.isFluidStackIdentical(tankInput.drain(recipe.fluidInput, false)))
 				.filter(recipe -> recipe.coagulantInput.isFluidStackIdentical(tankCoagulant.drain(recipe.coagulantInput, false)))
 				.findFirst()
-				.map(IIMultiblockProcess::new).orElse(null);
+				.orElse(null);
+		if(found==null)
+			return null;
+
+		//Drain inputs
+		tankInput.drain(found.fluidInput, true);
+		tankCoagulant.drain(found.coagulantInput, true);
+
+		return new IIMultiblockProcess<>(found);
 	}
 
 	@Override
