@@ -37,6 +37,7 @@ import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPO
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockRedstoneNetwork;
 
 import javax.annotation.Nonnull;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -60,6 +61,7 @@ public class TileEntityRedstoneDataInterface extends TileEntityMultiblockIIConne
 	protected MultiblockRedstoneNetwork<TileEntityRedstoneDataInterface> redstoneNetwork;
 
 	byte[] redstoneOutput = new byte[16];
+	byte[] recentSignals = new byte[16]; // For duplicate detection
 
 	public TileEntityRedstoneDataInterface()
 	{
@@ -73,10 +75,12 @@ public class TileEntityRedstoneDataInterface extends TileEntityMultiblockIIConne
 	@Override
 	protected void dummyCleanup()
 	{
+
 		this.dataSettings = this.redstoneSettings = null;
 		this.inventory = null;
 		this.redstoneNetwork = null;
 		this.redstoneOutput = null;
+		this.recentSignals = null;
 	}
 
 	@Override
@@ -184,10 +188,21 @@ public class TileEntityRedstoneDataInterface extends TileEntityMultiblockIIConne
 		TileEntityRedstoneDataInterface master = master();
 		if(master!=null)
 			master.redstoneNetwork.setNetwork(net);
+		else redstoneNetwork.setNetwork(net);
 	}
 
 	private void reactToRedstoneChange(byte[] signals)
 	{
+
+		// Filter duplicate signals from the Restone Network, in particular when the restone network is updating
+		if (signals != null) {
+			if (!Arrays.equals(signals, this.recentSignals)) {
+				this.recentSignals = signals;
+			} else {
+				return;
+			}
+		}
+
 		DataPacket packet = new DataPacket();
 		//Go through all the redstone->data conversion rules
 		for(ConversionSetting setting : dataSettings)
