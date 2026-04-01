@@ -8,6 +8,7 @@ import blusunrize.immersiveengineering.api.energy.wires.redstone.RedstoneWireNet
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -41,7 +42,7 @@ import java.util.Objects;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 09.03.2026
+ * @updated 01.04.2026
  * @ii-approved 0.3.1
  * @since 28.06.2019
  */
@@ -79,6 +80,9 @@ public class TileEntityRedstoneDataInterface extends TileEntityMultiblockIIConne
 	}
 
 	@Override
+	public void onChange() {}
+
+	@Override
 	protected void onUpdate()
 	{
 		//Progress punchtape reading
@@ -99,7 +103,7 @@ public class TileEntityRedstoneDataInterface extends TileEntityMultiblockIIConne
 			{
 				inventory.set(MultiblockRedstoneInterface.SLOT_PUNCHTAPE_OUTPUT, processPunchtape(punchtapeRedstone, redstoneSettings));
 				inventory.set(MultiblockRedstoneInterface.SLOT_PUNCHTAPE_REDSTONE, ItemStack.EMPTY);
-				reactToRedstoneChange();
+				reactToRedstoneChange(null);
 			}
 			else if(!punchtapeData.isEmpty())
 			{
@@ -146,7 +150,7 @@ public class TileEntityRedstoneDataInterface extends TileEntityMultiblockIIConne
 		{
 			case REDSTONE_CABLE_MOUNT:
 				return getPOI("redstone");
-			case DATA:
+			case DATA_INPUT:
 				return getPOI("data");
 			default:
 				return new int[0];
@@ -182,26 +186,26 @@ public class TileEntityRedstoneDataInterface extends TileEntityMultiblockIIConne
 			master.redstoneNetwork.setNetwork(net);
 	}
 
-	@Override
-	public void onChange()
-	{
-		TileEntityRedstoneDataInterface master = master();
-		if(master!=null)
-			master.reactToRedstoneChange();
-	}
-
-	private void reactToRedstoneChange()
+	private void reactToRedstoneChange(byte[] signals)
 	{
 		DataPacket packet = new DataPacket();
 		//Go through all the redstone->data conversion rules
 		for(ConversionSetting setting : dataSettings)
 		{
-			byte value = redstoneOutput[setting.getColor().getMetadata()];
+			byte value;
+			if (signals == null) {
+				value = redstoneOutput[setting.getColor().getMetadata()];
+			} else {
+				value = signals[setting.getColor().getMetadata()];
+			}
 			packet.set(setting.getVariable(), setting.getDataFromRedstone(value));
+
 		}
 		//Send the packet
-		if(!packet.isEmpty())
-			sendData(packet, getDirection("data"), multiblock.getPointOfInterest("data"));
+		if(!packet.isEmpty()){
+			sendData(packet, getDirection("data").getOpposite(), multiblock.getPointOfInterest("data"));
+		}
+
 	}
 
 	@Override
@@ -213,12 +217,13 @@ public class TileEntityRedstoneDataInterface extends TileEntityMultiblockIIConne
 	@Override
 	public void updateInput(byte[] signals)
 	{
-		TileEntityRedstoneDataInterface m = master();
-		if(m!=null)
+		TileEntityRedstoneDataInterface master = master();
+		if(master!=null) {
 			for(int i = 0; i < 16; i += 1)
-				if(signals[i] < m.redstoneOutput[i])
-					signals[i] = m.redstoneOutput[i];
-
+				if(signals[i] < master.redstoneOutput[i])
+					signals[i] = master.redstoneOutput[i];
+			master.reactToRedstoneChange(signals);
+		}
 	}
 
 	@Override
@@ -230,7 +235,22 @@ public class TileEntityRedstoneDataInterface extends TileEntityMultiblockIIConne
 	@Override
 	public Vec3d getConnectionOffset(Connection con)
 	{
-		return new Vec3d(0.5f, 0.5f, 0.5f);
+		EnumFacing direction = getDirection("data");
+		double x = 0.5;
+		double z = 0.5;
+
+		if (direction != null)
+		{
+			// We just make the assumption, that the data connector is always on the opposite side.
+			switch(direction)
+			{
+				case NORTH: x += mirrored ? 0.125 : -0.125; break;
+				case SOUTH: x += mirrored ? -0.125 : 0.125;break;
+				case EAST: z += mirrored ? 0.125 : -0.125;break;
+				case WEST: z += mirrored ? -0.125 : 0.125;break;
+			}
+		}
+		return new Vec3d(x, 0.75f, z);
 	}
 
 	@Override
