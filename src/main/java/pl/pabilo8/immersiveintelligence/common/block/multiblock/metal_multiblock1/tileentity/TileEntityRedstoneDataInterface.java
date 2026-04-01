@@ -75,7 +75,6 @@ public class TileEntityRedstoneDataInterface extends TileEntityMultiblockIIConne
 	@Override
 	protected void dummyCleanup()
 	{
-
 		this.dataSettings = this.redstoneSettings = null;
 		this.inventory = null;
 		this.redstoneNetwork = null;
@@ -84,7 +83,10 @@ public class TileEntityRedstoneDataInterface extends TileEntityMultiblockIIConne
 	}
 
 	@Override
-	public void onChange() {}
+	public void onChange() 
+	{
+		
+	}
 
 	@Override
 	protected void onUpdate()
@@ -195,10 +197,14 @@ public class TileEntityRedstoneDataInterface extends TileEntityMultiblockIIConne
 	{
 
 		// Filter duplicate signals from the Restone Network, in particular when the restone network is updating
-		if (signals != null) {
-			if (!Arrays.equals(signals, this.recentSignals)) {
+		if (signals != null)
+		{
+			if (!Arrays.equals(signals, this.recentSignals))
+			{
 				this.recentSignals = signals;
-			} else {
+			} 
+			else
+			{
 				return;
 			}
 		}
@@ -208,9 +214,12 @@ public class TileEntityRedstoneDataInterface extends TileEntityMultiblockIIConne
 		for(ConversionSetting setting : dataSettings)
 		{
 			byte value;
-			if (signals == null) {
+			if (signals == null)
+			{
 				value = redstoneOutput[setting.getColor().getMetadata()];
-			} else {
+			} 
+			else
+			{
 				value = signals[setting.getColor().getMetadata()];
 			}
 			packet.set(setting.getVariable(), setting.getDataFromRedstone(value));
