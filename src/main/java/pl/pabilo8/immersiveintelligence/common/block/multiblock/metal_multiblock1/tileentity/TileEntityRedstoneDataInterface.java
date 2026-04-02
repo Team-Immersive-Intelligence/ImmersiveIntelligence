@@ -23,6 +23,7 @@ import pl.pabilo8.immersiveintelligence.api.data.types.*;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
+import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockRedstoneInterface;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
@@ -86,6 +87,38 @@ public class TileEntityRedstoneDataInterface extends TileEntityMultiblockIIConne
 	public void onChange() 
 	{
 		
+	}
+
+	@Override
+	public void readCustomNBT(@Nonnull NBTTagCompound nbt, boolean descPacket)
+	{
+		super.readCustomNBT(nbt, descPacket);
+		try
+		{
+			if(nbt.hasKey("redstoneOutput"))
+				redstoneOutput = nbt.getByteArray("redstoneOutput");
+			else
+				redstoneOutput = new byte[16];
+		} catch(Exception e)
+		{
+			IILogger.error("TileEntityRedstoneDataInterface encountered an error reading connection NBT.");
+			IILogger.error(e);
+		}
+	}
+
+	@Override
+	public void writeCustomNBT(@Nonnull NBTTagCompound nbt, boolean descPacket)
+	{
+		super.writeCustomNBT(nbt, descPacket);
+		try
+		{
+			if(redstoneOutput != null)
+				nbt.setByteArray("redstoneOutput", redstoneOutput);
+		} catch(Exception e)
+		{
+			IILogger.error("TileEntityRedstoneDataInterface encountered an error writing NBT");
+			IILogger.error(e);
+		}
 	}
 
 	@Override
@@ -226,7 +259,8 @@ public class TileEntityRedstoneDataInterface extends TileEntityMultiblockIIConne
 
 		}
 		//Send the packet
-		if(!packet.isEmpty()){
+		if(!packet.isEmpty())
+		{
 			sendData(packet, getDirection("data").getOpposite(), multiblock.getPointOfInterest("data"));
 		}
 
