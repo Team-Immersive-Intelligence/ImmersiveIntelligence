@@ -91,8 +91,8 @@ public class GuiDataRedstoneInterface extends DecoGui<TileEntityRedstoneDataInte
 				.withInventorySlots(SlotStyle.IE_OUTPUT, container.punchtapeOutput)
 				.build();
 
-		addLinkTab(IIGUI.DATA_REDSTONE_INTERFACE_REDSTONE, new ItemStack(IEContent.itemWireCoil, 1, 5), "data_to_redstone_module");
-		addLinkTab(IIGUI.DATA_REDSTONE_INTERFACE_DATA, IIContent.itemDataWireCoil.getStack(1), "redstone_to_data_module");
+		addLinkTab(IIGUI.DATA_REDSTONE_INTERFACE_REDSTONE, new ItemStack(IEContent.itemWireCoil, 1, 5), "redstone_to_data_module");
+		addLinkTab(IIGUI.DATA_REDSTONE_INTERFACE_DATA, IIContent.itemDataWireCoil.getStack(1), "data_to_redstone_module");
 
 		int colorY = redstoneToData?4: 17;
 		int variableY = redstoneToData?17: 4;
@@ -113,7 +113,7 @@ public class GuiDataRedstoneInterface extends DecoGui<TileEntityRedstoneDataInte
 
 				new DecoList<ConversionSetting>(32, 8)
 						.withSize(136+24+8+2, 120)
-						.withEntries(redstoneToData?redstoneSettings: dataSettings)
+						.withEntries(redstoneToData ? dataSettings : redstoneSettings)
 						.withCreateAction(ConversionSetting::new)
 						.withScroll(scroll)
 						.withGuiSaveAction(gui -> this.scroll = gui.getScroll())
