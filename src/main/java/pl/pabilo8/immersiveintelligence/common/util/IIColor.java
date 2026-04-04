@@ -252,7 +252,7 @@ public class IIColor implements Comparable<IIColor>, ToIntFunction<IIColor>
 			b = x;
 		}
 
-		return new IIColor(255, (int)((r+m)*255)+1, (int)((g+m)*255)+1, (int)((b+m)*255)+1);
+		return new IIColor(255, Math.round((r+m)*255), Math.round((g+m)*255), Math.round((b+m)*255));
 	}
 
 	/**
@@ -333,7 +333,7 @@ public class IIColor implements Comparable<IIColor>, ToIntFunction<IIColor>
 	 */
 	public float[] getFloatARGB()
 	{
-		return new float[]{alpha*0.003921f, red*0.003921f, green*0.003921f};
+		return new float[]{alpha*0.003921f, red*0.003921f, green*0.003921f, blue*0.003921f};
 	}
 
 	/**
@@ -564,14 +564,13 @@ public class IIColor implements Comparable<IIColor>, ToIntFunction<IIColor>
 	@Override
 	public int compareTo(IIColor o)
 	{
-		float[] hsv1 = getHSV();
-		float[] hsv2 = o.getHSV();
+		//Use RGB becuase HSV is cringe :(
+		int dR = red-o.red;
+		int dG = green-o.green;
+		int dB = blue-o.blue;
+		int dA = alpha-o.alpha;
 
-		float deltaA = (alpha-o.alpha)*100;
-		float deltaH = (hsv1[0]-hsv2[0])*100;
-		float deltaL = (hsv1[1]-hsv2[1]+hsv1[2]-hsv2[2])*25;
-
-		return (int)Math.abs((deltaA*deltaA+deltaH*deltaH+deltaL*deltaL));
+		return dR*dR+dG*dG+dB*dB+dA*dA;
 	}
 
 	@Override
