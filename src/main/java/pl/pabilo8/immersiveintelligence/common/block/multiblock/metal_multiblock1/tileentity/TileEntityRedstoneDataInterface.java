@@ -23,6 +23,7 @@ import pl.pabilo8.immersiveintelligence.api.data.types.*;
 import pl.pabilo8.immersiveintelligence.api.data.types.generic.DataType;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
+import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockRedstoneInterface;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
@@ -43,7 +44,7 @@ import java.util.Objects;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 01.04.2026
+ * @updated 03.04.2026
  * @ii-approved 0.3.1
  * @since 28.06.2019
  */
@@ -62,6 +63,9 @@ public class TileEntityRedstoneDataInterface extends TileEntityMultiblockIIConne
 
 	byte[] redstoneOutput = new byte[16];
 	byte[] recentSignals = new byte[16]; // For duplicate detection
+
+	@SyncNBT(events = {SyncEvents.TILE_CLIENT_MESSAGE})
+	public boolean deactivateUnusedSignals = true; // Always do it initially once
 
 	public TileEntityRedstoneDataInterface()
 	{
@@ -89,8 +93,60 @@ public class TileEntityRedstoneDataInterface extends TileEntityMultiblockIIConne
 	}
 
 	@Override
+	public void readCustomNBT(@Nonnull NBTTagCompound nbt, boolean descPacket)
+	{
+		super.readCustomNBT(nbt, descPacket);
+		try
+		{
+			if(nbt.hasKey("redstoneOutput"))
+				redstoneOutput = nbt.getByteArray("redstoneOutput");
+			else
+				redstoneOutput = new byte[16];
+		} catch(Exception e)
+		{
+			IILogger.error("TileEntityRedstoneDataInterface encountered an error reading connection NBT.");
+			IILogger.error(e);
+		}
+	}
+
+	@Override
+	public void writeCustomNBT(@Nonnull NBTTagCompound nbt, boolean descPacket)
+	{
+		super.writeCustomNBT(nbt, descPacket);
+		try
+		{
+			if(redstoneOutput != null)
+				nbt.setByteArray("redstoneOutput", redstoneOutput);
+		} catch(Exception e)
+		{
+			IILogger.error("TileEntityRedstoneDataInterface encountered an error writing NBT");
+			IILogger.error(e);
+		}
+	}
+
+	@Override
 	protected void onUpdate()
 	{
+
+		//Go through all redstone Settings and check if there are any Inputs that need to be reset
+		if (deactivateUnusedSignals)
+		{
+			boolean[] skipReset = new boolean[16];
+
+			for(ConversionSetting setting : redstoneSettings)
+			{
+				skipReset[setting.getColor().getMetadata()] = true;
+			}
+			for(int index = 0; index < skipReset.length; index++)
+			{
+				if (!skipReset[index])
+					redstoneOutput[index] = 0;
+			}
+
+			redstoneNetwork.getNetwork().updateValues();
+			deactivateUnusedSignals = false;
+		}
+
 		//Progress punchtape reading
 		ItemStack punchtapeRedstone = inventory.get(MultiblockRedstoneInterface.SLOT_PUNCHTAPE_REDSTONE);
 		ItemStack punchtapeData = inventory.get(MultiblockRedstoneInterface.SLOT_PUNCHTAPE_DATA);
@@ -226,7 +282,8 @@ public class TileEntityRedstoneDataInterface extends TileEntityMultiblockIIConne
 
 		}
 		//Send the packet
-		if(!packet.isEmpty()){
+		if(!packet.isEmpty())
+		{
 			sendData(packet, getDirection("data").getOpposite(), multiblock.getPointOfInterest("data"));
 		}
 

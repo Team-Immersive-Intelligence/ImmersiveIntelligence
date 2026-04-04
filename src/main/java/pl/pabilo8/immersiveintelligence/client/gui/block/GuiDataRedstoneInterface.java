@@ -34,7 +34,7 @@ import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 02.02.2024
+ * @updated 03.04.2026
  * @since 09.02.2020
  */
 @DecoTemplate(name = "data_redstone_interface", category = DecoGuiCategory.DATA_TILE)
@@ -49,6 +49,8 @@ public class GuiDataRedstoneInterface extends DecoGui<TileEntityRedstoneDataInte
 	public EasyCollection<ConversionSetting, NBTTagCompound> dataSettings;
 	@SyncNBT(events = SyncEvents.TILE_CLIENT_MESSAGE)
 	public EasyCollection<ConversionSetting, NBTTagCompound> redstoneSettings;
+	@SyncNBT(events = SyncEvents.TILE_CLIENT_MESSAGE)
+	public boolean deactivateUnusedSignals;
 	private final boolean redstoneToData;
 
 	private GuiDataRedstoneInterface(EntityPlayer player, TileEntityRedstoneDataInterface tile, boolean redstoneToData)
@@ -73,6 +75,7 @@ public class GuiDataRedstoneInterface extends DecoGui<TileEntityRedstoneDataInte
 		//Sync data
 		this.dataSettings = tile.dataSettings;
 		this.redstoneSettings = tile.redstoneSettings;
+		this.deactivateUnusedSignals = tile.deactivateUnusedSignals;
 
 		//Create background
 		startBackground()
@@ -91,8 +94,8 @@ public class GuiDataRedstoneInterface extends DecoGui<TileEntityRedstoneDataInte
 				.withInventorySlots(SlotStyle.IE_OUTPUT, container.punchtapeOutput)
 				.build();
 
-		addLinkTab(IIGUI.DATA_REDSTONE_INTERFACE_REDSTONE, new ItemStack(IEContent.itemWireCoil, 1, 5), "data_to_redstone_module");
-		addLinkTab(IIGUI.DATA_REDSTONE_INTERFACE_DATA, IIContent.itemDataWireCoil.getStack(1), "redstone_to_data_module");
+		addLinkTab(IIGUI.DATA_REDSTONE_INTERFACE_REDSTONE, new ItemStack(IEContent.itemWireCoil, 1, 5), "redstone_to_data_module");
+		addLinkTab(IIGUI.DATA_REDSTONE_INTERFACE_DATA, IIContent.itemDataWireCoil.getStack(1), "data_to_redstone_module");
 
 		int colorY = redstoneToData?4: 17;
 		int variableY = redstoneToData?17: 4;
@@ -113,7 +116,7 @@ public class GuiDataRedstoneInterface extends DecoGui<TileEntityRedstoneDataInte
 
 				new DecoList<ConversionSetting>(32, 8)
 						.withSize(136+24+8+2, 120)
-						.withEntries(redstoneToData?redstoneSettings: dataSettings)
+						.withEntries(redstoneToData ? dataSettings : redstoneSettings)
 						.withCreateAction(ConversionSetting::new)
 						.withScroll(scroll)
 						.withGuiSaveAction(gui -> this.scroll = gui.getScroll())
@@ -146,8 +149,11 @@ public class GuiDataRedstoneInterface extends DecoGui<TileEntityRedstoneDataInte
 								)
 								.withComponent("color_arrows", builder -> new DecoArrows(32+48+16+2+24+8, colorY-2)
 										.withSize(12, 12)
-										.withOnArrow(arrow -> builder.getCurrentElement()
-												.setColor(IIUtils.cycleEnum(arrow, EnumDyeColor.class, builder.getCurrentElement().getColor())))
+										.withOnArrow(arrow -> {
+											builder.getCurrentElement()
+													.setColor(IIUtils.cycleEnum(arrow, EnumDyeColor.class, builder.getCurrentElement().getColor()));
+											if(!redstoneToData) deactivateUnusedSignals = true;
+										})
 								)
 								//Variable
 								.withLabel("variable_label",
@@ -180,6 +186,7 @@ public class GuiDataRedstoneInterface extends DecoGui<TileEntityRedstoneDataInte
 											if(mouseButton==MouseButton.LEFT)
 											{
 												p.getCurrentList().removeEntry(p.getCurrentElement());
+												if(!redstoneToData) deactivateUnusedSignals = true;
 												return true;
 											}
 											return false;
