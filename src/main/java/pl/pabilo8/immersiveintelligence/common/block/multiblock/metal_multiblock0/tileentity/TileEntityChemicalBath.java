@@ -14,6 +14,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidUtil;
+import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -152,7 +153,7 @@ public class TileEntityChemicalBath extends TileEntityMultiblockProductionSingle
 			case ITEM_INPUT:
 				return getPOI("item_in");
 			case FLUID_INPUT:
-				return getPOI("fluid_in");
+				return getPOI("fluid");
 			case ITEM_OUTPUT:
 				return getPOI("item_out");
 
@@ -168,6 +169,12 @@ public class TileEntityChemicalBath extends TileEntityMultiblockProductionSingle
 			//noinspection unchecked,DataFlowIssue
 			return (T)master().inputHandler;
 		return super.getCapability(capability, facing);
+	}
+
+	@Override
+	protected IFluidTank[] getFluidTanks(int pos, EnumFacing side)
+	{
+		return new IFluidTank[]{tank};
 	}
 
 	@Nullable
