@@ -45,6 +45,8 @@ public abstract class IICompatModule
 		moduleClasses.put("mysticalmechanics", MysticalMechanicsAPIHelper.class);
 		moduleClasses.put("tfc", TerrafirmaHelper.class);
 		moduleClasses.put("betterwithmods", BetterWithModsHelper.class);
+		moduleClasses.put("deeperdepths", DeeperDepthsHelper.class);
+		moduleClasses.put("nb", NetherBackportHelper.class);
 	}
 
 	public static void doModulesPreInit()
