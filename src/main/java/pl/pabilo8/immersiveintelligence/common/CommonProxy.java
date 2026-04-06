@@ -339,24 +339,6 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		ExcavatorHandler.addMineral("Emerald Geode", 15, .15f, new String[]{"hardened_clay", "sand", "emerald"}, new float[]{.4f, .4f, .2f});
 		ExcavatorHandler.addMineral("Uranite", 15, .15f, new String[]{"oreUranium", "oreLead"}, new float[]{.4f, .6f});
 
-		//compat section
-
-		//deeper depths (deeperdepths:) (deeperdepths:stone refers to tuff) 
-
-	//	ExcavatorHandler.addMineral("Amethyst Crevasse", 15, .15f, new String[]{"amethyst_block", "calcite", "tuff"}, new float[]{.4f, .3f, .3f});
-	//	ExcavatorHandler.addMineral("Ancient Seabed", 15, .15f, new String[]{"calcite", "cobblestone", "bone_block"}, new float[]{.65f, .3f, .05f});
-		
-		
-		//Unseen's Nether Backport (nb:) (nb:netherite_ore = ancient debris = oreNetherite) ( nb:nether_gold_ore = oreNethergold) (minecraft:magma = magma block)
-
-	//	MineralMix mineralDigsite = ExcavatorHandler.addMineral("Archaic digsite", 30, .45f, new String[]{"black_stone_bricks", "polished_black_stone", "oreNetherite", "gilded_blackstone"}, new float[]{.4f, .3f, .2f, .1f});
-	//	MineralMix mineralLavatube = ExcavatorHandler.addMineral("Cooled lava tube", 30, .45f, new String[]{"magma", "smooth_basalt", "obsidian"}, new float[]{.5f, .3f, .2f});
-	//	MineralMix mineralMephitic = ExcavatorHandler.addMineral("Mephitic quazite", 30, .45f, new String[]{"oreQuartz", "oreNethergold", "dustSulfur"}, new float[]{.6f, .2f, .2f});
-	//	mineralDigsite.dimensionWhitelist = new int[]{-1};
-	//	mineralLavatube.dimensionWhitelist = new int[]{-1};
-	//	mineralMephitic.dimensionWhitelist = new int[]{-1};
-
-
 		LighterFuelHandler.addFuel(FluidRegistry.getFluid("creosote"), 100);
 		LighterFuelHandler.addFuel(FluidRegistry.getFluid("ethanol"), 20);
 
