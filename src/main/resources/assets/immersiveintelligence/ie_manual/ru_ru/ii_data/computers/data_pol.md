@@ -7,15 +7,25 @@ POL is a programming language used by [Mainframe]
 [Computers] to create sets of executable instructions called **Programs**.
 |[wip_notice]|
 # code_compilation0
-code compilation pt. 1
+A **POL** program is a sequence of statements, each occupying a single line. Before using any data operations, you must import the required [Circuit](_functional_circuits.md) library with the **USE** statement.
+Variables are declared using their type name, followed by the variable letter prefixed with **@**, and an optional initial value.
+# code_compilation0_example
+|[pol_code]{code:"use BASIC\\n\\ninteger @a = 5\\nfloat @b = 3.14\\nstring @c = \"hello\"\\nboolean @d = 1"}|
 # code_compilation1
-code compilation pt. 2
+A **POL** program is a sequence of statements, each occupying a single line. Before using any data operations, you must import the required [Circuit](_functional_circuits.md) library with the **USE** statement.
+Variables are declared using their type name, followed by the variable letter prefixed with **@**, and an optional initial value.
+# code_compilation0_example
+|[pol_code]{code:"use BASIC\\n\\ninteger @a = 5\\nfloat @b = 3.14\\nstring @c = \"hello\"\\nboolean @d = 1"}|
 # code_execution0
-code execution pt. 1
+Programs are executed **one statement per tick** by default. The **WAIT** statement pauses execution for a given number of ticks.
+The **IF** statement checks a condition and executes the next statement or code block only when it is met. **ELSE** handles the opposite case.
+# code_execution0_example
+|[pol_code]{code:"integer @a = 10\\n\\nif > @a 5\\n  type \"a is big\"\\nelse\\n  type \"a is small\"\\n\\nwait 20"}|
 # code_execution1
-code execution pt. 2
-# expression_order
-proudly uses polish notation ^^
+**MARK** and **GOTO** allow creating labeled jump points and loops. **EXEC** jumps to a label and returns afterwards, acting like a function call.
+Code blocks created with indentation (compiled as **BEGIN**/**END**) group multiple statements into one.
+# code_execution1_example
+|[pol_code]{code:"mark loop:\\n  integer @a = + @a 1\\n  type @a\\n  if < @a 10\\n    goto loop:\\n\\nmark greet:\\n  type \"hello!\"\\nend\\n\\nexec greet:"}|
 # statements
 **Statements** are the building blocks of a **POL** program. Each **Statement** has a distinct name it's called by and performs a different action.
 Examples of an action are setting a value of a variable, stopping the program, or running an internal function.

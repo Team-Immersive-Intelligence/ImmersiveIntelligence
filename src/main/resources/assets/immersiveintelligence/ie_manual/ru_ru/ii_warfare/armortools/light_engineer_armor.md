@@ -1,12 +1,12 @@
 # meta
-Light Engineer Armor
+Лёгкая инженерная броня
 Almost Power Armor!
 # 0
 |[crafting]{source:"lea"}|
-The Light Engineer Armor is a lightweight, stylish, customizable and yet [very protective] suit.
-Made of leather, steel, and strict precision, it protects against any adversaries you might encounter [better than most armors].
+Легкая инженерная броня - это легкий, стильный, модернизируемая и в то же время [очень защищающая] спецодежду.
+Изготовленный из кожи, стали и выполненный с высокой точностью, он защищает от любых противников, с которыми вы можете столкнуться [лучше, чем большинство доспехов].
 # 1
-Designed with adaptability in mind, the [Light Engineer Armor] can be adapted to the environment using the Module System(TM).
+Разработанный из принципа универсальности, [Легкий инженерный броня] может быть адаптирована к окружающей среде с помощью модульной системы (TM).
 The armor is modular and allows addition of [upgrades]. Upgrades can grant [increased armor], [increased speed], [night vision], or [flippers] and [snow rackets] which grant [superior mobility].
 # 2
 |[crafting]{source:"gas_mask"}|
@@ -37,8 +37,8 @@ With its low density durability, [composite material] easily outmatches steel in
 However, the hardness of the material means that [hitting the armor with a melee weapon will damage it severely]. Only [3] plates can be installed per [one armor piece].
 # 8
 |[crafting]{source:"hazmat_coating"}|
-[Hazmat Coating] is an additional internal armor layer protecting from [radiation] and [acids]. *Time for a walk through
-the nuclear wastelands!*
+[Hazmat Coating] is an additional internal armor layer protecting from [radiation] and [acids]. 
+*Time for a walk throughthe nuclear wastelands!*
 # 9
 |[crafting]{source:"heat_resistant_coating"}|
 The [Heat Resistance Coating] layer allows swimming in hot liquids which would otherwise incinerate the wearer.
@@ -50,8 +50,7 @@ However, due to its construction, it will not work underwater, [severely increas
 # 11
 |[crafting]{source:"camo_mesh"}|
 The [Camouflage Mesh] is a simple net with leaves attached to it, making the wearer blend in with foliage when [sneaking].
-Unfortunately, the leaves pose a [fire hazard] - **being lit on fire is not recommended.
-** Especially useful in forests, gardens and plains.
+Unfortunately, the leaves pose a [fire hazard] - **being lit on fire is not recommended.** Especially useful in forests, gardens and plains.
 # 12
 |[crafting]{source:"ir_absorbing_mesh"}|
 The [Infrared-Absorbing Mesh] absorbs infrared light cast into it, serving as a perfect way to hide from [infrared sensors](emplacement_weapons.md#ir_observer0).
