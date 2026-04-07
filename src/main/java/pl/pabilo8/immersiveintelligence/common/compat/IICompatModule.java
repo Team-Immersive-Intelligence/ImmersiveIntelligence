@@ -25,7 +25,7 @@ public abstract class IICompatModule
 	public static HashMap<String, String> moduleMinModVersions = new HashMap<>();
 	public static Set<IICompatModule> modules = new HashSet<>();
 
-	public static boolean serene = false, baubles = false, petroleum = false;
+	public static boolean serene = false, baubles = false, petroleum = false, cfb = false;
 	//We don't want this to happen multiple times after all >_>
 	public static boolean serverStartingDone = false;
 
@@ -45,6 +45,7 @@ public abstract class IICompatModule
 		moduleClasses.put("mysticalmechanics", MysticalMechanicsAPIHelper.class);
 		moduleClasses.put("tfc", TerrafirmaHelper.class);
 		moduleClasses.put("betterwithmods", BetterWithModsHelper.class);
+		moduleClasses.put("cfb", CratesFeltBlueHelper.class);
 	}
 
 	public static void doModulesPreInit()
