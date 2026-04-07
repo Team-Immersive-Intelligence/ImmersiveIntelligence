@@ -72,7 +72,7 @@ public class AMTUpgradeCachedModel<T extends TileEntity & IUpgradableDevice> imp
 		IIAnimationGroup[] groups = new AMTModel(DefaultVertexFormats.BLOCK, builder.finishedModel)
 				.stream()
 				.map(amt ->
-						new IIAnimationGroup(amt.name, null, null, null,
+						new IIAnimationGroup(amt.getName(), null, null, null,
 								new IIBooleanLine(new float[]{0, 1}, new Boolean[]{false, true}),
 								null, null)
 				)

@@ -2,6 +2,7 @@ package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multibloc
 
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorageAdvanced;
+import blusunrize.immersiveengineering.common.util.Utils;
 import blusunrize.immersiveengineering.common.util.inventory.IEInventoryHandler;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
@@ -21,6 +22,7 @@ import pl.pabilo8.immersiveintelligence.common.item.crafting.ItemIIAssemblySchem
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.SyncNBT.SyncEvents;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionSingle;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockInteractablePart;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
@@ -47,8 +49,8 @@ public class TileEntityPrecisionAssembler extends TileEntityMultiblockProduction
 		super(MultiblockPrecisionAssembler.INSTANCE);
 		this.inventory = NonNullList.withSize(10, ItemStack.EMPTY);
 		this.energyStorage = new FluxStorageAdvanced(PrecisionAssembler.energyCapacity);
-		this.drawer1 = new MultiblockInteractablePart(5, 0.4f, 0.5f);
-		this.drawer2 = new MultiblockInteractablePart(5, 0.4f, 0.5f);
+		this.drawer1 = new MultiblockInteractablePart(0, 8, 0.75f);
+		this.drawer2 = new MultiblockInteractablePart(1, 8, 0.75f);
 
 		this.outputMainHandler = getSingleInventoryHandler(MultiblockPrecisionAssembler.SLOT_OUTPUT, true, true);
 		this.outputSecondaryHandler = getSingleInventoryHandler(MultiblockPrecisionAssembler.SLOT_OUTPUT_TRASH, true, true);
@@ -72,6 +74,20 @@ public class TileEntityPrecisionAssembler extends TileEntityMultiblockProduction
 	protected void onUpdate()
 	{
 		super.onUpdate();
+
+		//Fix for scheme disappearing when process finishes and output is blocked
+		if(currentProcess!=null&&inventory.get(MultiblockPrecisionAssembler.SLOT_SCHEME).isEmpty())
+		{
+			//Give back ingredients
+			if(!world.isRemote)
+				for(int i = 0; i < currentProcess.recipe.inputs.length; i++)
+					Utils.dropStackAtPos(world, getPOIPos("item_in"), inputHandler.insertItem(i, currentProcess.recipe.inputs[i].getExampleStack(), false),
+							getDirection("item_input")
+					);
+			currentProcess = null;
+			if(!world.isRemote)
+				updateTileForEvent(SyncEvents.TILE_RECIPE_CHANGED);
+		}
 
 		//Handle drawer animations
 		this.drawer1.update();
@@ -267,10 +283,10 @@ public class TileEntityPrecisionAssembler extends TileEntityMultiblockProduction
 	public void onAnimationChangeServer(boolean state, int part)
 	{
 		MultiblockInteractablePart changed = MultiblockInteractablePart.setStates(state, part, drawer1, drawer2);
-		if(changed==null)
-			return;
-
-		world.playSound(null, getPos(), state?IISounds.drawerOpen: IISounds.drawerClose, SoundCategory.BLOCKS, 0.25F, 1f);
-		IIPacketHandler.sendToClient(this, new MessageBooleanAnimatedPartsSync(changed, this));
+		if(changed!=null)
+		{
+			world.playSound(null, getPos(), state?IISounds.drawerOpen: IISounds.drawerClose, SoundCategory.BLOCKS, 0.25F, 1f);
+			IIPacketHandler.sendToClient(this, new MessageBooleanAnimatedPartsSync(changed, this));
+		}
 	}
 }

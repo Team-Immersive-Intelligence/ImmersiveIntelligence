@@ -22,6 +22,9 @@ public class IIReference
 	public static final String TOOL_CROWBAR = "II_CROWBAR";
 	public static final String TOOL_TACHOMETER = "TOOL_TACHOMETER";
 
+	//--- NBT Keys ---//
+	public static final String NBT_DAMAGE = Lib.NBT_DAMAGE.toLowerCase();
+
 	//--- Language Keys ---//
 	public static final String DESCRIPTION_KEY = "desc.immersiveintelligence.";
 	public static final String INFO_KEY = "info.immersiveintelligence.";

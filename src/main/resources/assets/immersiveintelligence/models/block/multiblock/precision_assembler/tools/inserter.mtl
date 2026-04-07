@@ -1,0 +1,12 @@
+# Made by Pabilo8 with Blockbench
+
+newmtl inserter
+map_Kd immersiveintelligence:blocks/metal_device/inserter/advanced_inserter
+newmtl connector_connector_lv
+map_Kd immersiveintelligence:block/connector_connector_lv
+newmtl data_connector
+map_Kd immersiveintelligence:blocks/data_connector
+newmtl inserter_base1
+map_Kd immersiveintelligence:blocks/metal_device/inserter/inserter_base1
+newmtl inserter_base2
+map_Kd immersiveintelligence:blocks/metal_device/inserter/inserter_base2

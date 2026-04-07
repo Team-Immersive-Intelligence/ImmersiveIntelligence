@@ -17,6 +17,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.Tuple;
 import net.minecraftforge.client.model.obj.OBJModel;
 import net.minecraftforge.client.model.obj.OBJModel.OBJBakedModel;
+import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.client.util.amt.animation.IIAnimationCompiledMap;
 import pl.pabilo8.immersiveintelligence.client.util.amt.parts.AMT;
@@ -60,11 +61,11 @@ public abstract class IITileRenderer<T extends TileEntity> extends TileEntitySpe
 		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 
 		GlStateManager.enableBlend();
-		GlStateManager.blendFunc(770, 771);
+		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		if(Minecraft.isAmbientOcclusionEnabled())
-			GlStateManager.shadeModel(7425);
+			GlStateManager.shadeModel(GL11.GL_SMOOTH);
 		else
-			GlStateManager.shadeModel(7424);
+			GlStateManager.shadeModel(GL11.GL_FLAT);
 
 		ClientUtils.bindAtlas();
 		draw(te, Tessellator.getInstance().getBuffer(), partialTicks, Tessellator.getInstance());

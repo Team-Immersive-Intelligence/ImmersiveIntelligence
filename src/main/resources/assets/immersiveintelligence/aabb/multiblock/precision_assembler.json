@@ -85,7 +85,7 @@
     "tool3": 13
   },
   "rotations": {
-    "item_input": "none",
+    "item_input": "counterclockwise_90",
     "fluid_input": "none",
     "item_output": "clockwise_90"
   }

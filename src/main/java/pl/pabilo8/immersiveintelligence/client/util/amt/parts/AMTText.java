@@ -83,6 +83,16 @@ public class AMTText extends AMT
 		nbt.checkSetFloat("fontSize", fontSize -> this.fontSize = fontSize);
 	}
 
+	@Override
+	protected AMT renamedCopy(String newName)
+	{
+		AMTText text = new AMTText(newName, originPos);
+		text.setText(this.text);
+		text.setColor(this.color);
+		text.setFontSize(this.fontSize);
+		return text;
+	}
+
 	public AMTText setText(@Nullable String text)
 	{
 		this.text = text;

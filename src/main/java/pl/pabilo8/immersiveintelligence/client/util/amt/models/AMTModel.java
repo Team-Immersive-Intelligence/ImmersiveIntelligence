@@ -285,6 +285,14 @@ public class AMTModel implements Iterable<AMT>, AMTRenderable
 		return new AMTModel(shrunkModel);
 	}
 
+	public AMTModel renamePart(String oldName, String newName)
+	{
+		AMT partRecursive = getPartRecursive(oldName);
+		if(partRecursive!=null)
+			partRecursive.rename(newName);
+		return this;
+	}
+
 	/**
 	 * Creates a single AMT out of all AMTQuads inside this AMTModel for more performant rendering
 	 *
@@ -317,7 +325,7 @@ public class AMTModel implements Iterable<AMT>, AMTRenderable
 	public AMT getPart(String name)
 	{
 		return stream()
-				.filter(amt -> amt.name.equals(name))
+				.filter(amt -> amt.getName().equals(name))
 				.findFirst().orElse(null);
 	}
 
@@ -327,7 +335,7 @@ public class AMTModel implements Iterable<AMT>, AMTRenderable
 		return stream()
 				.map(AMT::getChildrenRecursive)
 				.flatMap(Collection::stream)
-				.filter(amt -> amt.name.equals(name))
+				.filter(amt -> amt.getName().equals(name))
 				.findFirst().orElse(null);
 	}
 

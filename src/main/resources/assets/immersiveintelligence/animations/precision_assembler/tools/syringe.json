@@ -1,0 +1,21 @@
+{
+  "comment": "Made by Pabilo8 with Blockbench",
+  "groups": {
+    "syringe": {
+      "position": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.8,
+          "transform": [0, 1, 0]
+        },
+        {
+          "time": 1,
+          "transform": [0, 0, 0]
+        }
+      ]
+    }
+  }
+}

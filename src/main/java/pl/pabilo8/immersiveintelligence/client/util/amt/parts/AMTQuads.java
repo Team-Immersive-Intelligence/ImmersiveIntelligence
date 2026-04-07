@@ -127,6 +127,17 @@ public class AMTQuads extends AMT
 		nbt.checkSetBoolean("lighting", this::setLighting);
 	}
 
+	@Override
+	protected AMT renamedCopy(String newName)
+	{
+		return new AMTQuads(newName, this.originPos,
+				Arrays.stream(quads)
+						.map(q -> new BakedQuad(Arrays.copyOf(q.getVertexData(), q.getVertexData().length), 1, q.getFace(), q.getSprite(),
+								q.shouldApplyDiffuseLighting(), q.getFormat()))
+						.toArray(BakedQuad[]::new)
+		);
+	}
+
 	public final BakedQuad[] getQuads()
 	{
 		return quads;
@@ -139,11 +150,7 @@ public class AMTQuads extends AMT
 	public AMTQuads recolor(IIColor color)
 	{
 		//Copy and recolor this quad
-		AMTQuads copy = new AMTQuads(this.name, this.originPos,
-				Arrays.stream(quads)
-						.map(q -> new BakedQuad(Arrays.copyOf(q.getVertexData(), q.getVertexData().length), 1, q.getFace(), q.getSprite(), q.shouldApplyDiffuseLighting(), q.getFormat()))
-						.toArray(BakedQuad[]::new)
-		);
+		AMTQuads copy = (AMTQuads)clone();
 		copy.bakedColor = color;
 
 		//Copy and recolor children as well

@@ -1,0 +1,13 @@
+{
+  "origins": {
+    "inserter": [8, 4, 8],
+    "lower": [8, 8, 8],
+    "upper": [8, 21.5, 8],
+    "hammer": [8, 21.5, 8]
+  },
+  "hierarchy": {
+    "lower": "inserter",
+    "upper": "lower",
+    "hammer": "upper"
+  }
+}

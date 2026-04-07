@@ -267,6 +267,18 @@ public class AMTFluid extends AMT
 		nbt.checkSetBoolean("flowing", this::withFlowing);
 	}
 
+
+	@Override
+	protected AMT renamedCopy(String newName)
+	{
+		AMTFluid clone = new AMTFluid(newName, originPos);
+		clone.layers.addAll(this.layers);
+		clone.flowing = this.flowing;
+		clone.level = this.level;
+		clone.stack = this.stack==null?null: this.stack.copy();
+		return clone;
+	}
+
 	private static class FluidLayer
 	{
 		final double yLevel;

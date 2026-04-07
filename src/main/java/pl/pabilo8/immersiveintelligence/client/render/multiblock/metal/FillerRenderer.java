@@ -219,6 +219,12 @@ public class FillerRenderer extends IIMultiblockRenderer<TileEntityFiller>
 		}
 
 		@Override
+		protected AMT renamedCopy(String newName)
+		{
+			return this;
+		}
+
+		@Override
 		public void disposeOf()
 		{
 			AMTUtils.disposeOf(bullet);

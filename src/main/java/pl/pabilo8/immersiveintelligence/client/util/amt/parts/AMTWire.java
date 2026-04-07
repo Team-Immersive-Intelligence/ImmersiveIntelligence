@@ -101,4 +101,10 @@ public class AMTWire extends AMT
 		if(start!=null&&end!=null)
 			setConnection(start, end, color);
 	}
+
+	@Override
+	protected AMT renamedCopy(String newName)
+	{
+		return new AMTWire(newName, originPos, points[0], points[points.length-1], color, diameter);
+	}
 }
