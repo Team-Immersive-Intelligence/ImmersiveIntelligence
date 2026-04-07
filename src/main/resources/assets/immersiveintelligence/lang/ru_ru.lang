@@ -1158,7 +1158,7 @@ machineupgrade.immersiveintelligence.packer_fluid=Жидкостный напо�
 machineupgrade.immersiveintelligence.packer_fluid.desc=Установка контейнера для жидкости и некоторых трубопроводов позволяет заполнять и сливать жидкости из контейнеров. Из соображений безопасности упаковщик может работать как с предметами, так и с жидкостями или энергией.
 
 machineupgrade.immersiveintelligence.packer_energy=Зарядное устройство
-machineupgrade.immersiveintelligence.packer_energy.desc=Установка контейнера для жидкости и некоторых трубопроводов позволяет заполнять и сливать жидкости из контейнеров. Из соображений безопасности упаковщик может работать как с предметами, так и с жидкостями или энергией.
+machineupgrade.immersiveintelligence.packer_energy.desc=Установка пары конденсаторов и катушки Тесла позволяет быстро заряжать энергетические устройства. Из соображений безопасности упаковщик может работать как с предметами, так и с жидкостями или энергией.
 
 machineupgrade.immersiveintelligence.packer_railway=ЖД конверсия
 machineupgrade.immersiveintelligence.packer_railway.desc=Заменяет конвейерную ленту упаковщика железнодорожными путями, что позволяет загружать и разгружать вагонетки.
