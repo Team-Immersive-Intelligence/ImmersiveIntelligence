@@ -80,7 +80,6 @@ import pl.pabilo8.immersiveintelligence.common.block.data_device.BlockIIDataDevi
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.conveyors.*;
 import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIIOre.Ores;
 import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIISmallCrate;
-import pl.pabilo8.immersiveintelligence.common.compat.CratesFeltBlueHelper;
 import pl.pabilo8.immersiveintelligence.common.compat.IICompatModule;
 import pl.pabilo8.immersiveintelligence.common.crafting.IIRecipes;
 import pl.pabilo8.immersiveintelligence.common.crafting.RecipePowerpackAdvanced;
@@ -601,7 +600,6 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		ConveyorHandler.registerConveyorHandler(new ResourceLocation(ImmersiveIntelligence.MODID, "rubber_extractcovered"), ConveyorRubberCoveredExtract.class, (tileEntity) -> new ConveyorRubberCoveredExtract(tileEntity instanceof IConveyorTile?((IConveyorTile)tileEntity).getFacing(): EnumFacing.NORTH));
 
 		IICompatModule.doModulesPreInit();
-		CratesFeltBlueHelper.init();
 	}
 
 	public void init()

@@ -35,6 +35,7 @@ dependencies {
 		testImplementation "blusunrize:ImmersiveEngineering:0.12-92-+"
 		testImplementation "org.squiddev:cc-tweaked-1.12.2:1.89.2"
 		testImplementation "li.cil.oc:OpenComputers:MC1.12.2-1.7.5.221"
+		testRuntimeOnly "com.elytradev:mirage:2.0.3-rc3-SNAPSHOT"
 	}
 }
 
