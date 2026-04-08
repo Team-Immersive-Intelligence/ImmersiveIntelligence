@@ -55,6 +55,9 @@ import net.minecraftforge.event.RegistryEvent.Register;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
@@ -448,7 +451,7 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 
 	//--- Utils ---//
 
-	public void preInit()
+	public void preInit(FMLPreInitializationEvent event)
 	{
 		IIDataWireType.init();
 		IIPacketHandler.preInit();
@@ -599,10 +602,10 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		ConveyorHandler.registerConveyorHandler(new ResourceLocation(ImmersiveIntelligence.MODID, "rubber_extract"), ConveyorRubberExtract.class, (tileEntity) -> new ConveyorRubberExtract(tileEntity instanceof IConveyorTile?((IConveyorTile)tileEntity).getFacing(): EnumFacing.NORTH));
 		ConveyorHandler.registerConveyorHandler(new ResourceLocation(ImmersiveIntelligence.MODID, "rubber_extractcovered"), ConveyorRubberCoveredExtract.class, (tileEntity) -> new ConveyorRubberCoveredExtract(tileEntity instanceof IConveyorTile?((IConveyorTile)tileEntity).getFacing(): EnumFacing.NORTH));
 
-		IICompatModule.doModulesPreInit();
+		IICompatModule.doModulesPreInit(event);
 	}
 
-	public void init()
+	public void init(FMLInitializationEvent event)
 	{
 		PenetrationRegistry.init();
 		IICompatModule.doModulesInit();
@@ -728,7 +731,7 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		IISounds.init();
 	}
 
-	public void postInit()
+	public void postInit(FMLPostInitializationEvent event)
 	{
 		IICompatModule.doModulesPostInit();
 		IIConfigHandler.onConfigUpdate();

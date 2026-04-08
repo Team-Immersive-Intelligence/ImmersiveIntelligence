@@ -1,0 +1,89 @@
+// DO NOT EDIT!
+[
+  {
+    "blockId": [
+      "immersiveintelligence:sheetmetal_slab",
+      "immersiveintelligence:concrete_decoration_slab",
+      "immersiveintelligence:storage_slab"
+    ],
+    "states": {
+      "slabtype": [0, 1]
+    }
+  },
+  {
+    "blockId": "immersiveintelligence:data_connector",
+    "states": {
+      "type": [
+        "data_connector", "data_relay", "data_duplex_connector", "alarm_siren", "programmable_speaker", "data_debugger"
+      ]
+    },
+    "canFluidFlow": true
+  },
+  {
+    "blockId": "immersiveintelligence:data_connector",
+    "boxes": {
+      "min": 5,
+      "max": 16
+    },
+    "states": {
+      "type": "chemical_dispenser"
+    }
+  },
+  {
+    "blockId": "immersiveintelligence:metal_device",
+    "boxes": {
+      "min": 3,
+      "max": 16
+    },
+    "states": {
+      "type": ["small_data_buffer", "timed_buffer", "redstone_buffer", "data_merger"]
+    }
+  },
+  {
+    "blockId": "immersiveintelligence:data_connector",
+    "boxes": {
+      "min": 3,
+      "max": 16
+    },
+    "states": {
+      "type": ["inserter", "fluid_inserter", "advanced_inserter", "advanced_fluid_inserter"]
+    }
+  },
+  {
+    "blockId": "immersiveintelligence:small_crate",
+    "canFluidFlow": true
+  },
+  {
+    "blockId": ["immersiveintelligence:mechanical_connector"],
+    "canFluidFlow": true
+  },
+  {
+    "blockId": "immersiveintelligence:rubber_leaves",
+    "canFluidFlow": true
+  },
+  {
+    "blockId": "immersiveintelligence:metal_fortification",
+    "canFluidFlow": true
+  },
+  {
+    "blockId": "immersiveintelligence:metal_device",
+    "states": {
+      "type": "latex_collector"
+    },
+    "canFluidFlow": true
+  },
+  {
+    "blockId": "immersiveintelligence:mechanical_device1",
+    "states": {
+      "type": "mechanical_pump",
+      "_0multiblockslave": true
+    },
+    "canFluidFlow": true
+  },
+  {
+    "blockId": "immersiveintelligence:stone_decoration",
+    "states": {
+      "type": ["sandbags"]
+    }
+  }
+]
