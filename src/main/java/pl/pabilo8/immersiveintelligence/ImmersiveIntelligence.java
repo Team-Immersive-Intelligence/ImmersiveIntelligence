@@ -26,24 +26,28 @@ import pl.pabilo8.immersiveintelligence.common.util.IIReflectionUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler;
 import pl.pabilo8.immersiveintelligence.common.util.diplomacy.DiplomacyUtils;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
 import static pl.pabilo8.immersiveintelligence.ImmersiveIntelligence.MODID;
 import static pl.pabilo8.immersiveintelligence.ImmersiveIntelligence.VERSION;
 
 @Mod(modid = MODID, version = VERSION,
 		//xaxaxa, trick! yuo can't steal mod if mod is steal-proof
-		certificateFingerprint = "770570c49a2652e64a9b29b9b9d9919ca68b7065",
+		certificateFingerprint = "84c19709be61a4630ee3812136f5c80086a978db",
 		dependencies = "required-after:forge@[14.23.5.2820,);required-after:immersiveengineering@[0.12,);after:immersiveengineering@[0.12,);after:immersiveposts@[0.2,)")
 public class ImmersiveIntelligence
 {
 	public static final String MODID = "immersiveintelligence";
 	public static final String VERSION = "@VERSION@";
 	//If anyone wants to acquire a righteously certified loicense:tm:, ask @Pabilo8, it is probable he can grant you one
-	private static final String[] alternativeCerts = {
-			"011e706a5b5f954d1a99bcded5c51c3cc104d915", //Gabriel
-			"068e23a5c5552d79ac66ece9dcaed54cfb74a992", //Automated Carver Device(tm)
-			"312cffade27b8eeb91fca5f5ae219495ebc86ab1", //Avalon
-			"6644e1691cd979e50755e3f86aa72a702ecd69d1", //Prism
-	};
+	private static final HashMap<String, String> alternativeCerts = new HashMap<String,String>(){{
+		put("gabriel@iiteam.net", "73cf50303bda0cde99468a637a9d2681a4d7a125");
+		put("pabilo@iiteam.net", "48791e3791eac0c69a01301060895dc0f4f15f68");
+		put("avalon@iiteam.net", "172df79c3bca2e9546b739451f4e32acf4872aae");
+		put("max@iiteam.net", "c247dec150dbefd0728b0966e6a6cda3f2e28102");
+	}};
 	@SidedProxy(clientSide = "pl.pabilo8.immersiveintelligence.client.ClientProxy", serverSide = "pl.pabilo8.immersiveintelligence.common.CommonProxy")
 	public static CommonProxy proxy;
 	@Instance(MODID)
@@ -140,10 +144,10 @@ public class ImmersiveIntelligence
 	public void wrongSignature(FMLFingerprintViolationEvent event)
 	{
 		boolean loicense = false;
-		for(String altCert : alternativeCerts)
-			if(event.getFingerprints().contains(altCert))
+		for(Map.Entry<String,String> altCert : alternativeCerts.entrySet())
+			if(event.getFingerprints().contains(altCert.getValue()))
 			{
-				System.out.println("[Immersive Intelligence/Error] "+altCert+" is considered a righteously loicensed certificate. "+
+				System.out.println("[Immersive Intelligence/Error] "+altCert.getKey()+" ("+altCert.getValue()+") is considered a righteously loicensed certificate. "+
 						"The build may not be stable, thou shall be ware of the bugs lurking from the shadows.");
 				loicense = true;
 				break;
