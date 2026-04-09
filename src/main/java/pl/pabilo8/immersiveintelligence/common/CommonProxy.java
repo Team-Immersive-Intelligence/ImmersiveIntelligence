@@ -55,6 +55,9 @@ import net.minecraftforge.event.RegistryEvent.Register;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
@@ -80,7 +83,6 @@ import pl.pabilo8.immersiveintelligence.common.block.data_device.BlockIIDataDevi
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.conveyors.*;
 import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIIOre.Ores;
 import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIISmallCrate;
-import pl.pabilo8.immersiveintelligence.common.compat.CratesFeltBlueHelper;
 import pl.pabilo8.immersiveintelligence.common.compat.IICompatModule;
 import pl.pabilo8.immersiveintelligence.common.crafting.IIRecipes;
 import pl.pabilo8.immersiveintelligence.common.crafting.RecipePowerpackAdvanced;
@@ -449,7 +451,7 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 
 	//--- Utils ---//
 
-	public void preInit()
+	public void preInit(FMLPreInitializationEvent event)
 	{
 		IIDataWireType.init();
 		IIPacketHandler.preInit();
@@ -600,11 +602,10 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		ConveyorHandler.registerConveyorHandler(new ResourceLocation(ImmersiveIntelligence.MODID, "rubber_extract"), ConveyorRubberExtract.class, (tileEntity) -> new ConveyorRubberExtract(tileEntity instanceof IConveyorTile?((IConveyorTile)tileEntity).getFacing(): EnumFacing.NORTH));
 		ConveyorHandler.registerConveyorHandler(new ResourceLocation(ImmersiveIntelligence.MODID, "rubber_extractcovered"), ConveyorRubberCoveredExtract.class, (tileEntity) -> new ConveyorRubberCoveredExtract(tileEntity instanceof IConveyorTile?((IConveyorTile)tileEntity).getFacing(): EnumFacing.NORTH));
 
-		IICompatModule.doModulesPreInit();
-		CratesFeltBlueHelper.init();
+		IICompatModule.doModulesPreInit(event);
 	}
 
-	public void init()
+	public void init(FMLInitializationEvent event)
 	{
 		PenetrationRegistry.init();
 		IICompatModule.doModulesInit();
@@ -730,7 +731,7 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		IISounds.init();
 	}
 
-	public void postInit()
+	public void postInit(FMLPostInitializationEvent event)
 	{
 		IICompatModule.doModulesPostInit();
 		IIConfigHandler.onConfigUpdate();

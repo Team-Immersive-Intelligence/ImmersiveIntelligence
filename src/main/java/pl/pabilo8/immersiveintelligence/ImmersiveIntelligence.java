@@ -74,7 +74,7 @@ public class ImmersiveIntelligence
 		//Setup config
 		IIConfigHandler.putConfigValues();
 		//Pre-Init
-		proxy.preInit();
+		proxy.preInit(event);
 		ForgeChunkManager.setForcedChunkLoadingCallback(this, proxy);
 		//Start contributor skins json download thread
 		new IISkinHandler.ThreadContributorSpecialsDownloader();
@@ -85,13 +85,13 @@ public class ImmersiveIntelligence
 	{
 		NetworkRegistry.INSTANCE.registerGuiHandler(INSTANCE, proxy);
 		new LightEngineerEventHandler().registerEventHandler();
-		proxy.init();
+		proxy.init(event);
 	}
 
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event)
 	{
-		proxy.postInit();
+		proxy.postInit(event);
 
 		//Redirecting IE event to our own
 		IIReflectionUtils.getForgeEventListeners();

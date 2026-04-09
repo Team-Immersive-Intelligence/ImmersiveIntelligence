@@ -12,7 +12,7 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.common.IIGUI;
-import pl.pabilo8.immersiveintelligence.common.compat.CratesFeltBlueHelper;
+import pl.pabilo8.immersiveintelligence.common.compat.IICompatModule;
 
 import javax.annotation.Nullable;
 
@@ -53,7 +53,7 @@ public class TileEntityMetalCrate extends TileEntityWoodenCrate implements IGuiT
 	@Override
 	public NonNullList<ItemStack> getTileDrops(EntityPlayer player, IBlockState state)
 	{
-		if(CratesFeltBlueHelper.loaded)
+		if(IICompatModule.cfb)
 		{
 			NonNullList<ItemStack> drops = NonNullList.create();
 			ItemStack stack = new ItemStack(state.getBlock(), 1, state.getBlock().getMetaFromState(state));

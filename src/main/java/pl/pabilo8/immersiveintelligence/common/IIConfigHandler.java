@@ -147,6 +147,9 @@ public class IIConfigHandler
 		@RequiresMcRestart
 		public static boolean concreteOverride = true;
 
+		@Comment({"If disabled, II will not make any changes to IE villager trades."})
+		public static boolean enableTradeOverride = true;
+
 		@Comment({"A list of all entities for which a fakeplayer should be used when shooter is not a player"})
 		public static String[] bulletFakeplayerWhitelist = new String[]{
 				"minecraft:ender_dragon"
