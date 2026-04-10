@@ -29,7 +29,7 @@ import java.util.Optional;
 
 /**
  * @author Pabilo8 (pabilo@iiteam.net)
- * @updated 08.01.2024
+ * @updated 11.04.2026
  * @ii-approved 0.3.1
  * @since 28.06.2019
  */
@@ -45,8 +45,13 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockProductionSi
 	/**
 	 * Will send stored packet if true, then switch back to false
 	 */
-	@SyncNBT(events = {SyncEvents.TILE_CLIENT_MESSAGE})
+	@SyncNBT(name = "send_packet", events = {SyncEvents.TILE_CLIENT_MESSAGE})
 	public boolean sendPacket = false;
+
+	/**
+	 * A temporary value for calculating the falling & rising edge.
+	 */
+	boolean prevSignal = false;
 	/**
 	 * Stored data packet
 	 */
@@ -98,14 +103,18 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockProductionSi
 		if(world.isRemote)
 			return;
 
-		//Send packet on redstone
-		if(sendPacket^getRedstoneAtPos(0))
+		boolean currentSignal = getRedstoneAtPos(0);
+
+		//Send packet on rising edge redstone signal or ui button press
+		if(sendPacket || ((prevSignal ^ currentSignal) & currentSignal))
 		{
-			sendPacket = !sendPacket;
-			//Finally!
-			if(sendPacket)
-				this.sendData(storedData, getDirection("data"), getPOI(MultiblockPOI.DATA_OUTPUT)[0]);
+			System.out.println("TE: Sending Packet");
+			this.sendData(storedData, getDirection("data"), getPOI(MultiblockPOI.DATA_OUTPUT)[0]);
+			sendPacket = false;
 		}
+
+		prevSignal = currentSignal;
+
 		//Check for item being taken out
 		if(currentProcess!=null&&!currentProcess.recipe.input.matchesItemStack(inventory.get(MultiblockDataInputMachine.SLOT_INPUT)))
 			this.currentProcess.ticks = this.currentProcess.maxTicks;
