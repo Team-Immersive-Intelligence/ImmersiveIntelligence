@@ -65,7 +65,6 @@ public class DeeperDepthsHelper extends IICompatModule
 	//07.04.2026 Carver, recipe reformat
 	//For item material look in IEContent.
 	//For outputs: first is output, then item that is put in, then cost in time and energy
-
 	{
 		String[] waxed = new String[]{"", "waxed_"};
 		for(String varient2 : waxed)
