@@ -31,7 +31,7 @@ public class DeeperDepthsHelper extends IICompatModule
 
 {
 
-	private static AmmoComponent ammoComponentWindCharge;
+	private static AmmoComponent AmmoComponentWindCharge;
 
 	@Override
 	public String getName()
@@ -51,8 +51,9 @@ public class DeeperDepthsHelper extends IICompatModule
 
 		//wind charge ammo component registry
 
-		AmmoRegistry.registerComponent(DeeperDepthsHelper.ammoComponentWindCharge);
-		AmmoComponent ammoComponentWindCharge = new ammoComponentWindCharge();
+		AmmoComponent AmmoComponentWindCharge = new AmmoComponentWindCharge();
+
+		AmmoRegistry.registerComponent(DeeperDepthsHelper.AmmoComponentWindCharge);
 
 		//For recipes
 		Item amethystblock1 = Item.REGISTRY.getObject(new ResourceLocation("deeperdepths", "amethyst_block"));

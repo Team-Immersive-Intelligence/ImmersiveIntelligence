@@ -27,15 +27,14 @@ import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 
 /**
  * @author Carver (carver@iiteam.net)
- * @updated 08.04.2026
+ * @updated 11.04.2026
  * @since 08.04.2026
- * Heavily WIP
  */
 
-public class ammoComponentWindCharge extends AmmoComponent
+public class AmmoComponentWindCharge extends AmmoComponent
 
 {
-	public ammoComponentWindCharge()
+	public AmmoComponentWindCharge()
 	{
 		super("windcharge", 1f, ComponentRole.SPECIAL, IIColor.fromPackedARGB(0xc8dbfa));
 	}
@@ -53,7 +52,6 @@ public class ammoComponentWindCharge extends AmmoComponent
 
 	public void onEffect(World world, Vec3d pos, Vec3d dir, ComponentEffectShape shape, NBTTagCompound tag, float size, float multiplier, Entity owner)
 	{
-		IIPacketHandler.INSTANCE.sendToAllAround(new MessageFireworks(tag, pos), IIPacketHandler.targetPointFromPos(pos, world, 96));
 		IIAmmoUtils.suppress(world, pos.x, pos.y, pos.z, 10f*multiplier, (int)(255*multiplier));
 
 		BlockPos ppos = new BlockPos(pos);
