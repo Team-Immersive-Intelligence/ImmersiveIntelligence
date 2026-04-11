@@ -22,12 +22,13 @@ public class ThaumcraftHelper extends IICompatModule
  */
 
 {
-	private static AmmoComponent AmmoCoreThaumium;
-	private static AmmoComponent AmmoCoreVoidmetal;
+	private static AmmoCore AmmoCoreThaumium;
+	private static AmmoCore AmmoCoreVoidmetal;
 	private static AmmoComponent AmmoComponentPrimordialPearl;
 	private static AmmoComponent AmmoComponentBottledTaint;
 	private static AmmoComponent AmmoComponentAlumentum;
-	private static AmmoComponent AmmoPropellantAlumentum;
+
+	private static AmmoPropellant AmmoPropellantAlumentum;
 
 	@Override
 	public String getName()

@@ -76,7 +76,7 @@ public class AmmoRegistry
 	 * @param core The ammo core to register
 	 * @return true if the registration was successful
 	 */
-	public static boolean registerCore(@org.jetbrains.annotations.UnknownNullability AmmoComponent core)
+	public static boolean registerCore(AmmoCore core)
 	{
 		String name = core.getName();
 		if(!REGISTERED_CORES.containsKey(name))
@@ -103,7 +103,7 @@ public class AmmoRegistry
 	 * @param propellant The ammo propellant to register
 	 * @return true if the registration was successful
 	 */
-	public static boolean registerPropellant(@org.jetbrains.annotations.UnknownNullability AmmoComponent propellant)
+	public static boolean registerPropellant(AmmoPropellant propellant)
 	{
 		String name = propellant.getName();
 		if(!REGISTERED_PROPELLANTS.containsKey(name))
