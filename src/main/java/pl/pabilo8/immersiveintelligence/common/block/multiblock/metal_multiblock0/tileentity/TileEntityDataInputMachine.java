@@ -108,7 +108,6 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockProductionSi
 		//Send packet on rising edge redstone signal or ui button press
 		if(sendPacket || ((prevSignal ^ currentSignal) & currentSignal))
 		{
-			System.out.println("TE: Sending Packet");
 			this.sendData(storedData, getDirection("data"), getPOI(MultiblockPOI.DATA_OUTPUT)[0]);
 			sendPacket = false;
 		}
