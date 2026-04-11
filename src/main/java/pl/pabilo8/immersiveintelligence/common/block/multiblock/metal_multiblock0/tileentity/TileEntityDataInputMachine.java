@@ -103,9 +103,8 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockProductionSi
 		if(world.isRemote)
 			return;
 
-		boolean currentSignal = getRedstoneAtPos(0);
-
 		//Send packet on rising edge redstone signal or ui button press
+		boolean currentSignal = getRedstoneAtPos(0);
 		if(sendPacket || ((prevSignal ^ currentSignal) & currentSignal))
 		{
 			this.sendData(storedData, getDirection("data"), getPOI(MultiblockPOI.DATA_OUTPUT)[0]);
