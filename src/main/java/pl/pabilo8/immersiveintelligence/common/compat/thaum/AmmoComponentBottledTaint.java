@@ -20,6 +20,8 @@ import pl.pabilo8.immersiveintelligence.common.entity.ammo.component.EntityGasCl
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 
+//import thaumcraft.api.aura.AuraHelper;
+
 public class AmmoComponentBottledTaint extends AmmoComponent
 
 {
@@ -34,21 +36,26 @@ public class AmmoComponentBottledTaint extends AmmoComponent
 	{
 		Item bottledtaint = Item.REGISTRY.getObject(new ResourceLocation("thaumcraft", "bottle_taint"));
 		return new IngredientStack(new ItemStack(bottledtaint, 1));
-		//
+		//ItemBottleTaint?
 	}
 
 	@Override
-	//11.04.2026 Carver: Should spawn 3 bottles, and a gas cloud of flux goo.
+
+	//12.04.2026 Carver: took some inspirations Thaumic Wonders Hexamite and used TC's Aurahelper to actually affect aura and flux directly.
+	// Makes explosion more refined and actually shreds aura.
 
 	public void onEffect(World world, Vec3d pos, Vec3d dir, ComponentEffectShape shape, NBTTagCompound tag, float size, float multiplier, Entity owner)
 	{
 		BlockPos ppos = new BlockPos(pos);
 
+		//11.04.2026 Carver: Should spawn 1 bottle, and a gas cloud of flux goo.
+
 		Entity e = EntityList.createEntityByIDFromName(ResLoc.of("thaumcraft:EntityBottleTaint"), world);
 		e.setPosition(pos.z, pos.y, pos.z);
 		world.spawnEntity(e);
-		world.spawnEntity(e);
-		world.spawnEntity(e);
+
+		//AuraHelper.polluteAura(world, pos, 100.0F, true);
+		//AuraHelper.drainVis(world, pos, 1000.0F, false);
 
 		Fluid fluid = FluidRegistry.getFluidStack("flux_goo", 10000).getFluid();
 
@@ -62,4 +69,3 @@ public class AmmoComponentBottledTaint extends AmmoComponent
 		}
 	}
 }
-//ItemBottleTaint

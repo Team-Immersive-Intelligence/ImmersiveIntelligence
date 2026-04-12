@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.common.compat.thaum;
+package pl.pabilo8.immersiveintelligence.common.compat.thaumaugment;
 
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import blusunrize.immersiveengineering.api.tool.ITeslaEntity;
@@ -9,58 +9,50 @@ import blusunrize.immersiveengineering.common.util.IEDamageSources;
 import blusunrize.immersiveengineering.common.util.IEDamageSources.ElectricDamageSource;
 import blusunrize.immersiveengineering.common.util.IEPotions;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
-import blusunrize.immersiveengineering.common.util.Utils;
-import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.ComponentEffectShape;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.ComponentRole;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
-import pl.pabilo8.immersiveintelligence.common.entity.ammo.component.EntityIIChemthrowerShot;
+import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleProperties;
+import pl.pabilo8.immersiveintelligence.client.fx.utils.ParticleRegistry;
+import pl.pabilo8.immersiveintelligence.common.IIPotions;
+import pl.pabilo8.immersiveintelligence.common.entity.ammo.EntityAmmoBase;
+import pl.pabilo8.immersiveintelligence.common.item.ItemIITracerPowder;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
+import pl.pabilo8.immersiveintelligence.common.util.IIDamageSources;
 import pl.pabilo8.immersiveintelligence.common.util.IIExplosion;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
+import pl.pabilo8.immersiveintelligence.common.util.entity.IIEntityUtils;
 
+import javax.vecmath.Vector2f;
 //import thaumcraft.api.aura.AuraHelper;
 
 /**
  * @author Carver (carver@iiteam.net)
- * @updated 11.04.2026
- * @since 08.04.2026
+ * @since 12.04.2026
  */
 
-public class AmmoComponentPrimordialPearl extends AmmoComponent
-
+public class AmmoComponentImpetus extends AmmoComponent
 {
-	public AmmoComponentPrimordialPearl()
+	public AmmoComponentImpetus()
 	{
-		super("primordial pearl", 1f, ComponentRole.SPECIAL, IIColor.fromPackedARGB(0xff3dae));
-	}
-
-	@Override
-
-	public IngredientStack getMaterial()
-	{
-		Item primordialpearl = Item.REGISTRY.getObject(new ResourceLocation("thaumcraft", "primordial_pearl"));
-		return new IngredientStack(new ItemStack(primordialpearl, 1));
+		super("impetus", 0.25f, ComponentRole.SPECIAL, IIColor.fromPackedRGB(0x000b10));
 	}
 
 	@Override
@@ -70,10 +62,15 @@ public class AmmoComponentPrimordialPearl extends AmmoComponent
 	}
 
 	@Override
+	public IngredientStack getMaterial()
+	{
+		return new IngredientStack("impetus");
+	}
 
+	@Override
 	public void onEffect(World world, Vec3d pos, Vec3d dir, ComponentEffectShape shape, NBTTagCompound tag, float componentSize, float multiplier, Entity owner)
 	{
-		float radius = multiplier*10;
+		float radius = multiplier*8;
 		int extracted = (int)(2000000*multiplier);
 
 		for(int x = (int)(-radius/2); x < radius/2; x++)
@@ -145,73 +142,49 @@ public class AmmoComponentPrimordialPearl extends AmmoComponent
 					}
 				}
 			}
-		BlockPos ppos = new BlockPos(pos);
-		new IIExplosion(world, owner, pos, dir, 30*componentSize, 50*multiplier, shape, false, componentSize > 0.125f, false)
+
+		new IIExplosion(world, owner, pos, dir,
+				4*componentSize, 100*multiplier, ComponentEffectShape.ORB, false, true, false)
 				.doExplosion();
 
-		EntityLivingBase[] entities = world.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(ppos).grow(50*multiplier)).toArray(new EntityLivingBase[0]);
+		//AuraHelper.polluteAura(world, pos, 100.0F, true);
+		//AuraHelper.drainVis(world, pos, 200.0F, false);
+
+		SoundEvent sound = ForgeRegistries.SOUND_EVENTS.getValue(ResLoc.of("thaumicaugmentation:impulse_cannon_railgun"));
+		world.playSound(null, pos.x,pos.y,pos.z,sound,  SoundCategory.NEUTRAL, 2.0F, 0.5F);
+
+		Entity rift = EntityList.createEntityByIDFromName(ResLoc.of("thaumcraft:flux_rift"), world);
+		rift.setPosition(pos.z, pos.y, pos.z);
+		world.spawnEntity(rift);
+
+		BlockPos ppos = new BlockPos(pos);
+
+		EntityLivingBase[] entities = world.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(ppos).grow(5*multiplier)).toArray(new EntityLivingBase[0]);
 		for(EntityLivingBase e : entities)
 		{
-			Potion fluxtaint = Potion.REGISTRY.getObject(ResLoc.of("thaumcraft:flux_taint"));
-			Potion fluxexhaust = Potion.REGISTRY.getObject(ResLoc.of("thaumcraft:vis_exhaust"));
-			Potion fluxexhaustinfect = Potion.REGISTRY.getObject(ResLoc.of("thaumcraft:infvisexhaust"));
-			Potion unhunger = Potion.REGISTRY.getObject(ResLoc.of("thaumcraft:unhunger"));
-			Potion thaummarhia = Potion.REGISTRY.getObject(ResLoc.of("thaumcraft:thaumarhia"));
-
-			e.addPotionEffect(new PotionEffect(fluxtaint, 460, 4));
-			e.addPotionEffect(new PotionEffect(fluxexhaust, 4000, 10));
-			e.addPotionEffect(new PotionEffect(fluxexhaustinfect, 4000, 10));
-			e.addPotionEffect(new PotionEffect(unhunger, 460, 0));
-			e.addPotionEffect(new PotionEffect(thaummarhia, 120, 8));
-
+			e.addPotionEffect(new PotionEffect(IEPotions.flashed, 80, 5));
 			e.hurtResistantTime = 0;
+			e.attackEntityFrom(IIDamageSources.RADIATION_DAMAGE, 100);
+			e.addPotionEffect(new PotionEffect(IIPotions.radiation, 100, 4));
 		}
+	}
 
-		Entity e = EntityList.createEntityByIDFromName(ResLoc.of("thaumcraft:flux_rift"), world);
-		e.setPosition(pos.z, pos.y, pos.z);
-		world.spawnEntity(e);
-		world.spawnEntity(e);
-		world.spawnEntity(e);
-		world.spawnEntity(e);
-		world.spawnEntity(e);
+	@Override
+	public boolean spawnParticleTrail(EntityAmmoBase<?> ammo, NBTTagCompound nbt)
+	{
+		IIColor color = nbt.hasKey(ItemIITracerPowder.NBT_TRACER_COLOUR)?IIColor.fromPackedRGB(nbt.getInteger(ItemIITracerPowder.NBT_TRACER_COLOUR)): IIColor.BLACK;
+		ParticleRegistry.spawnParticle("ammo/tracer", ammo.getPositionVector(), IIEntityUtils.getEntityMotion(ammo),
+						new Vector2f((float)Math.toRadians(ammo.rotationYaw), (float)Math.toRadians(ammo.rotationPitch+90)))
+				.withProperty(ParticleProperties.COLOR, color)
+				.withProperty(ParticleProperties.SIZE, ammo.getAmmoType().getCaliber()/8f)
+				.withProperty(ParticleProperties.MAX_LIFETIME, 2000);
+		return true;
+	}
 
-		Fluid fluid = FluidRegistry.getFluidStack("flux_goo", 10000).getFluid();
-		Block fluidBlock = fluid.getBlock();
-
-		if(world.isRemote)
-			return;
-
-		Vec3d v = new Vec3d(0, -1, 0);
-		BlockPos p = new BlockPos(pos);
-		Vec3d throwerPos = new Vec3d(p.offset(EnumFacing.UP, 3));
-
-		if(multiplier >= 0.5&&fluid.canBePlacedInWorld())
-			for(int i = 0; i < 5; i++)
-				if(world.isAirBlock(p.up(i)))
-					world.setBlockState(p.up(i), fluid.getBlock().getDefaultState());
-		for(int i = 0; i < 100*multiplier; i++)
-		{
-			Vec3d vecDir = v.addVector(Utils.RAND.nextGaussian()*.25f, Utils.RAND.nextGaussian()*.25f, Utils.RAND.nextGaussian()*.25f);
-
-			world.spawnEntity(
-					new EntityIIChemthrowerShot(world, throwerPos.x+v.x*2, throwerPos.y+v.y*2,
-							throwerPos.z+v.z*2, 0, 0, 0, new FluidStack(fluid, (int)(multiplier*1000)))
-							.withMotion(vecDir.x*2, vecDir.y*0.05f, vecDir.z*2)
-			);
-			EntityIIChemthrowerShot shot = new EntityIIChemthrowerShot(world, throwerPos.x+v.x*2, throwerPos.y+v.y*2,
-					throwerPos.z+v.z*2, 0, 0, 0, new FluidStack(fluid, (int)(multiplier*1000)));
-			shot.motionX = vecDir.x*2;
-			shot.motionY = vecDir.y*0.05f;
-			shot.motionZ = vecDir.z*2;
-			world.spawnEntity(shot);
-
-			//12.04.2026 Carver: made use of TC's own Aurahelper to affect aura.
-
-		//	AuraHelper.polluteAura(world, pos, 500.0F, true);
-		//	AuraHelper.drainVis(world, pos, 10000.0F, false);
-		}
+	@Override
+	public IIColor getColor(NBTTagCompound nbt)
+	{
+		return nbt!=null&&nbt.hasKey(ItemIITracerPowder.NBT_TRACER_COLOUR)?IIColor.fromPackedRGB(nbt.getInteger(ItemIITracerPowder.NBT_TRACER_COLOUR)): IIColor.BLACK;
 	}
 }
 
-//primordial_pearl_0
-//itemeldritchobject:3

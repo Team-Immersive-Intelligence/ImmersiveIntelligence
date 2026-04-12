@@ -9,6 +9,9 @@ import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.compat.dd.DeeperDepthsHelper;
 import pl.pabilo8.immersiveintelligence.common.compat.it.ImmersiveTechnologyHelper;
+import pl.pabilo8.immersiveintelligence.common.compat.nb.NetherBackportHelper;
+import pl.pabilo8.immersiveintelligence.common.compat.thaum.ThaumcraftHelper;
+import pl.pabilo8.immersiveintelligence.common.compat.thaumaugment.ThaumicAugmentationHelper;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -48,6 +51,8 @@ public abstract class IICompatModule
 		moduleClasses.put("betterwithmods", BetterWithModsHelper.class);
 		moduleClasses.put("deeperdepths", DeeperDepthsHelper.class);
 		moduleClasses.put("nb", NetherBackportHelper.class);
+		moduleClasses.put("thaumcraft", ThaumcraftHelper.class);
+		moduleClasses.put("thaumicaugmentation", ThaumicAugmentationHelper.class);
 	}
 
 	public static void doModulesPreInit()
