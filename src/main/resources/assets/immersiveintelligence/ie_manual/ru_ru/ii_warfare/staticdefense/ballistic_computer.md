@@ -1,16 +1,16 @@
 # meta
-Ballistic Computer
-Electronically Integrated Numbers
+Баллистический компьютер
+Числа интегрированные электронами
 # intro
 |[multiblock]{mb:"II:BallisticComputer"}|
-The Ballistic Computer is a complex calculation device that translates a position vector and bullet mass to yaw and pitch used by most [data-driven](data_main.md) [weapons](artillery_howitzer.md).
+Балистический компьютер - сложный калькулятор преобразующий относительные координаты цели в направление выстрела в виде [данных](data_main.md) для [орудий](artillery_howitzer.md).
 # data1
-|[data_variable]{type:"integer", direction:"in", letter:"x", name:"X-coordinate", description:"The relative x-coordinate"}|
-|[data_variable]{type:"integer", direction:"in", letter:"y", name:"Y-coordinate", description:"The relative y-coordinate"}|
-|[data_variable]{type:"integer", direction:"in", letter:"z", name:"Z-coordinate", description:"The relative z-coordinate"}|
-|[data_variable]{type:"float", direction:"in", letter:"m", name:"Shell mass", description:"The ballistic mass"}|
+|[data_variable]{type:"integer", direction:"вход", letter:"x", name:"X-координата", description:"Относительная X-координата"}|
+|[data_variable]{type:"integer", direction:"вход", letter:"y", name:"Y-координата", description:"Относительная Y-координата"}|
+|[data_variable]{type:"integer", direction:"вход", letter:"z", name:"Z-координата", description:"Относительная Z-координата"}|
+|[data_variable]{type:"float", direction:"вход", letter:"m", name:"Масса снаряда", description:"Баллистическая масса"}|
 
-Inputting these values to the Ballistic Computer will output a ["p" (pitch)] and ["y" (yaw)] value.
+Ввод этих данных в балистический компьютер выдаст ["p" (тангаж)] и ["y" (рыскание)].
 # data2
-|[data_variable]{type:"float", direction:"out", letter:"p", name:"Pitch value", description:"Pitch value to hit your location. From 0 to -105"}|
-|[data_variable]{type:"float", direction:"out", letter:"y", name:"Yaw value", description:"Yaw value to hit your location. From 0 to 360"}|
+|[data_variable]{type:"float", direction:"выход", letter:"p", name:"Тангаж", description:"Тангаж цели, от 0 до -105"}|
+|[data_variable]{type:"float", direction:"выход", letter:"y", name:"Рыскание", description:"Рыскание цели, от 0 до 360"}|

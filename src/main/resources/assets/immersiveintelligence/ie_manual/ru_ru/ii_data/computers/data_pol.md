@@ -1,10 +1,10 @@
 # meta
 POL
-Computer Revolution
+Компьютерная революция
 # intro
 @level_computer
-POL is a programming language used by [Mainframe]
-[Computers] to create sets of executable instructions called **Programs**.
+POL это язык программирования, используемый [компьютерами]
+Для [компьютеров] создают наборы исполняемых инструкций, называемых **Программами**.
 |[wip_notice]|
 # code_compilation0
 A **POL** program is a sequence of statements, each occupying a single line. Before using any data operations, you must import the required [Circuit](_functional_circuits.md) library with the **USE** statement.

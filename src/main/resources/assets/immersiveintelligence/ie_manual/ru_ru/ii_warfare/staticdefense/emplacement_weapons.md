@@ -1,6 +1,6 @@
 # meta
-Emplacement Weapons
-A Show of Force
+Вооружение огневых точек
+Демонстрация силы
 # intro
 An [emplacement], like most weapons developed by the Engineering Department, can be augmented to fill different niches.
 Several weapons with numerous strengths and weaknesses can be installed to create an incredibly versatile defense system.
