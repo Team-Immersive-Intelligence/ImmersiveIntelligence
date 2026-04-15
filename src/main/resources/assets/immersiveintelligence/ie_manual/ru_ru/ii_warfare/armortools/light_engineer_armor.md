@@ -1,77 +1,76 @@
 # meta
-Лёгкая инженерная броня
+Лёгкая броня инженера
 Almost Power Armor!
 # 0
 |[crafting]{source:"lea"}|
-Легкая инженерная броня - это легкий, стильный, модернизируемая и в то же время [очень защищающая] спецодежду.
-Изготовленный из кожи, стали и выполненный с высокой точностью, он защищает от любых противников, с которыми вы можете столкнуться [лучше, чем большинство доспехов].
+Лёгкая броня инженера - это легкий, стильный, модернизируемая и в то же время [очень защищающая] спецодежду.
+Изготовленная из кожи, стали и выполненная с высокой точностью, она защищает от любых противников, с которыми вы можете столкнуться [лучше, чем большинство доспехов].
 # 1
-Разработанный из принципа универсальности, [Легкий инженерный броня] может быть адаптирована к окружающей среде с помощью модульной системы (TM).
-The armor is modular and allows addition of [upgrades]. Upgrades can grant [increased armor], [increased speed], [night vision], or [flippers] and [snow rackets] which grant [superior mobility].
+Разработанная из принципа универсальности, [лёгкая броня инженера] может быть адаптирована к окружающей среде с помощью модульной системы (TM).
+Броня модульная и позволяет добавлять [улучшения]. Улучшения могут давать [увеличение брони], [увеличение скорости], [ночное видение] или [ласты] и [снегоступы], которые обеспечивают [превосходную мобильность].
 # 2
 |[crafting]{source:"gas_mask"}|
-The [Gas Mask] is an upgrade which protects the user from hazardous gasses. When combined with [scuba tank](#13), the mask allows [breathing underwater].
+[Противогаз] — это усовершенствованная маска, защищающая пользователя от опасных газов. В сочетании с [баллоном для подводного плавания](#13) маска позволяет [дышать под водой].
 # 3
 |[crafting]{source:"ir_headgear"}|
-The [Infiltrator's Headgear] is an advanced tool made for espionage.
-The headgear allows magnifying the image and emits infrared light, granting [night vision] to the user.
-It can be toggled by pressing "V". **Warning:** [temporary blindness] may occur if used in [bright areas].
+[Инфракрасные очки] — это усовершенствованный инструмент, созданный для шпионажа.
+Шлем позволяет увеличивать изображение и излучает инфракрасный свет, обеспечивая пользователю [ночное видение].
+Переключить его можно нажатием клавиши «V». **Предупреждение:** при использовании в [ярких местах] может возникнуть [временная слепота].
 # 4
 |[crafting]{source:"tech_headgear"}|
-The [Technician's Headgear] is a useful tool for managing factories.
-It displays information such as energy contained in machines, rotary power statistics, stored fluids, and data.
-It can be toggled by pressing "V".
+[Технические очки] — полезный инструмент для управления заводами.
+Он отображает такую информацию, как количество энергии, содержащейся в машинах, статистику вращательной мощности, запасы жидкостей и данные.
+Его можно включить/выключить нажатием клавиши «V».
 # 5
 |[crafting]{source:"engineer_headgear"}|
-The [Engineer's Headgear] combines the effects of [Infiltrator's] and [Technician's] headgear into one device.
-As a result, the power consumption is increased, but so is the amount of features. *Only thing it lacks now is a mug
-holder.*
-It can be toggled by pressing "V". **Warning:** [temporary blindness] may occur if used in [bright areas].
+[Инженерные очки] объединяет эффекты [инфракрасных] и [технических] очков в одном устройстве.
+В результате увеличивается энергопотребление, но и количество функций тоже. *Единственное, чего ему теперь не хватает, это подставки для кружек.*
+Его можно переключить, нажав клавишу «V». **Предупреждение:** при использовании в [ярких местах] может возникнуть [временная слепота].
 # 6
 |[crafting]{source:"steel_armor_plates"}|
-The [Steel Armor Plates] increase the armor thickness, durability, and provide an ability to deflect arrows and other light projectiles.
-Only [3] plates can be installed per [one armor piece].
+[Стальные бронепластины] увеличивают толщину брони, прочность и обеспечивают возможность отражения стрел и других легких снарядов.
+На одну [броневую деталь] можно установить только [3] пластины.
 # 7
 |[crafting]{source:"composite_armor_plates"}|
-With its low density durability, [composite material] easily outmatches steel in armouring.
-However, the hardness of the material means that [hitting the armor with a melee weapon will damage it severely]. Only [3] plates can be installed per [one armor piece].
+Благодаря своей низкой плотности и прочности, [композитный материал] легко превосходит сталь в бронезащите.
+Однако твердость материала означает, что [удар по броне холодным оружием нанесет ей серьезный ущерб]. На [одну бронепластину] можно установить только [3] пластины.
 # 8
 |[crafting]{source:"hazmat_coating"}|
-[Hazmat Coating] is an additional internal armor layer protecting from [radiation] and [acids]. 
-*Time for a walk throughthe nuclear wastelands!*
+[Защитное покрытие от опасных веществ] — это дополнительный внутренний броневой слой, защищающий от [радиации] и [кислот].
+*Пора прогуляться по ядерным пустошам!*
 # 9
 |[crafting]{source:"heat_resistant_coating"}|
-The [Heat Resistance Coating] layer allows swimming in hot liquids which would otherwise incinerate the wearer.
-**It only works when worn with reinforced boots**, otherwise, it will only provide [fire damage resistance].
+Слой [огнестойкого покрытия] позволяет плавать в горячих жидкостях, которые в противном случае испепелили бы владельца.
+**Эффективно только при ношении с усиленными ботинками**, в противном случае обеспечивает только [защиту от огня].
 # 10
 |[crafting]{source:"anti_static_mesh"}|
-The [Anti-Static Mesh] gives the user [immunity against electrical damage] and [interferes with proximity fuse targeting].
-However, due to its construction, it will not work underwater, [severely increasing damage taken] by electric or electromagnetic weapons.
+[Антистатическая сетка] обеспечивает пользователю [иммунитет к электрическому урону] и [мешает наведению бесконтактного взрывателя].
+Однако из-за своей конструкции она не будет работать под водой, [значительно увеличивая получаемый урон] от электрического или электромагнитного оружия.
 # 11
 |[crafting]{source:"camo_mesh"}|
-The [Camouflage Mesh] is a simple net with leaves attached to it, making the wearer blend in with foliage when [sneaking].
-Unfortunately, the leaves pose a [fire hazard] - **being lit on fire is not recommended.** Especially useful in forests, gardens and plains.
+[Камуфляжная сетка] — это простая сетка с прикрепленными к ней листьями, позволяющая пользователю сливаться с листвой при [скрытном передвижении].
+К сожалению, листья представляют [опасность возгорания] — **поджигать их не рекомендуется.** Особенно полезна в лесах, садах и на равнинах.
 # 12
 |[crafting]{source:"ir_absorbing_mesh"}|
-The [Infrared-Absorbing Mesh] absorbs infrared light cast into it, serving as a perfect way to hide from [infrared sensors](emplacement_weapons.md#ir_observer0).
-However, due to its construction, getting hit by [electromagnetic weapons] will cause [more harm than usual].
+[Инфракрасная поглощающая сетка] поглощает излучаемый инфракрасный свет, служа идеальным способом скрыться от [инфракрасных датчиков](emplacement_weapons.md#ir_observer0).
+Однако из-за своей конструкции попадание под действие [электромагнитного оружия] причинит [больше вреда, чем обычно].
 # 13
 |[crafting]{source:"scuba_tank"}|
-The [Scuba Tank] gives the ability to remain longer underwater with [no need to resurface for new air reserves].
-It can be filled with oxygen using the [Bottling Machine](bottlingMachine) and comes especially handy during underwater construction works. Requires a [Gas Mask](#2) to work.
+[Баллон для дайвинга] позволяет дольше оставаться под водой [без необходимости всплывать на поверхность для пополнения запаса воздуха].
+Его можно заправить кислородом с помощью [разливочного аппарата](bottlingMachine), что особенно удобно при подводных строительных работах. Для работы требуется [противогаз](#2).
 # 14
 |[crafting]{source:"exoskeleton"}|
-The [Exoskeleton upgrade] grants the user the ability to [run faster] via the complex set of motors and hydraulics.
-The exoskeleton [requires energy] to operate and [is only activated when running]. It is not advised to be used while swimming. It has [Off], [Motion Assist], and [Overdrive] modes, toggled by pressing "G".
+[Модернизация экзоскелета] позволяет пользователю [бегать быстрее] благодаря сложной системе двигателей и гидравлики.
+Для работы экзоскелета [требуется энергия] и [активируется только во время бега]. Использовать его во время плавания не рекомендуется. Он имеет режимы [Выкл.], [Помощь в движении] и [Перегрузка], переключаемые нажатием клавиши «G».
 # 15
 |[crafting]{source:"boot_reinforcement"}|
-The [Boots Reinforcement] upgrade consists of several steel plates, held together by leather straps. It [adds additional armor] and [protects the wearer from fire].
+Улучшение [усиление ботинок] состоит из нескольких стальных пластин, скрепленных кожаными ремнями. Оно [добавляет дополнительную броню] и [защищает владельца от огня].
 # 16
 |[crafting]{source:"flippers"}|
-[Flippers] allow swift movement in fluids. They work very well with the [Scuba Tank](#13) and [Gas Mask](#2).
+[Ласты] позволяют быстро передвигаться в жидкостях. Они отлично работают с [баллоном для дайвинга](#13) и [противогазом](#2).
 # 17
 |[crafting]{source:"snow_rackets"}|
-[Snow Rackets] improve stability on snow and ice, enabling the wearer to cross through frigid, difficult terrain with ease.
+[Снегоступы] повышают устойчивость на снегу и льду, позволяя пользователю с легкостью преодолевать труднопроходимую местность.
 # 18
 |[crafting]{source:"internal_springs"}|
-[Internal Springs] suppress the impact force of a landing, [protecting the wearer from fall damage]. This is combined with rubber sole pads, which make the steps [almost silent].
+[Внутренние пружины] смягчают ударную силу при приземлении, [защищая пользователя от травм при падении]. В сочетании с резиновыми накладками на подошве это делает шаги [практически бесшумными].

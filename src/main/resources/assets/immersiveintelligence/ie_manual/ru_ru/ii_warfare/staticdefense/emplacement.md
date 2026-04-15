@@ -1,24 +1,24 @@
 # meta
-Emplacement
+Огневая точка
 Заперт и заряжен!
 # 0
 |[multiblock]{mb:"II:Emplacement"}|
-**The Emplacement** is a heavy defensive structure used for protecting the perimeter of your factory. To form it, use a [hammer](introduction#introductionHammer) on the upper middle sandbag block.
+**Огневая точка** — это мощное оборонительное сооружение, используемое для защиты периметра вашей фабрики. Для её создания используйте [молоток](introduction#introductionHammer) на верхнем среднем блоке из мешка с песком.
 # 1
-An **Emplacement** can defend a vast amount of area depending on what [module](emplacement_weapons) that is installed.
-Emplacements do not have a weapon installed by default. Instead, the weapon is assembled on the emplacement using the [Wrench].
+В зависимости от установленного [модуля](emplacement_weapons) **огневая точка** может защищать обширную территорию.
+По умолчанию на неё не установлено оружие. Оно устанавливается на огневую точку с помощью [гаечного ключа].
 # 1_1
-When interacting with a wrench, you have a selection of modules to install, each requiring their own resources to be built. Upon selecting the weapon, you need to assemble it by interacting with the emplacement using the [Electric Wrench](electric_tools.md#wrench) and have all the items.
+При взаимодействии с гаечным ключом вы можете выбрать модули для установки, для создания каждого из которых требуются свои ресурсы. После выбора оружия вам необходимо собрать его, взаимодействуя с установкой с помощью [электрического гаечного ключа](electric_tools.md#wrench) и имея все необходимые предметы.
 # 2
-The **Emplacement** requires [electricity], [ammunition] and by default, a [redstone signal] in order to operate. If the redstone signal is cut off, the weapon will retract back into the emplacement.
-The different weapons requires different types of [ammunition](bullet_production), for example, the [Autocannon](emplacement_weapons.md#flak0) requires a heavier caliber than the [Machinegun Nest](emplacement_weapons.md#mg0)
+Для работы **огневой точки** требуется [электричество], [боеприпасы] и по умолчанию [сигнал красного камня]. Если сигнал красного камня прервётся, оружие втянется обратно в опорную точку.
+Разные виды оружия требуют разных типов [боеприпасов](bullet_production), например, [автопушка](emplacement_weapons.md#flak0) требует более тяжёлого калибра, чем [пулемёт](emplacement_weapons.md#mg0).
 # 3
-**Emplacement** weapons can be damaged and automatically repaired. You can set up the minimal threshold of the emplacement weapon's health before it goes into repair state.
-During repair, it will hide inside the Emplacement and will not react to commands. Note that Emplacements **can be destroyed** if enough damage is inflicted to the gun itself, which also means that you will lose resources used to construct it.
+Орудия **огневой точки** могут быть повреждены и автоматически отремонтированы. Вы можете установить минимальный порог здоровья орудия, после которого оно перейдет в режим ремонта.
+Во время ремонта оно будет находиться внутри укрепления и не будет реагировать на команды. Обратите внимание, что укрепления **могут быть уничтожены**, если им будет нанесено достаточно повреждений, что также означает потерю ресурсов, использованных для их постройки.
 # 4
-Emplacements allow storing up to [4 target filtering tasks]. Each task has [3 basic groups] on which it filters the entity. The first one is the [Type:] a mob, animal, vehicle or shell, additional parameters (id) can be specified. The second is a [name] and the third is a [team]. The parameters within a group are joined using OR and then AND with other groups. For example: select all mobs or animals from team "a" and "b" with name "c".
+Огневые точки позволяют хранить до [4 задач фильтрации целей]. Каждая задача имеет [3 основные группы], по которым она фильтрует объект. Первая — это [Тип:] моб, животное, транспортное средство или оболочка, можно указать дополнительные параметры (id). Вторая — это [имя], а третья — [команда]. Параметры внутри группы объединяются с помощью оператора ИЛИ, а затем И с другими группами. Например: выбрать всех мобов или животных из команд «а» и «б» с именем «с».
 # 5
-**Attention!** The Engineering Department(TM) is not liable for any property damage or death inflicted by incorrect targeting inputs.
-*Sign below to confirm you have read and understood this warning.*<br>
+**Внимание!** Инженерный департамент(TM) не несет ответственности за любой материальный ущерб или смерть, причиненные в результате неправильных наводок.
+*Подпишите ниже, чтобы подтвердить, что вы прочитали и поняли это предупреждение.*<br>
 X
 ------------------------------

@@ -33,45 +33,45 @@
 [Прицел] - это простой способ повысить точность выстрелов по дальнюю дистанцию. Может быть установлен почти на все виды оружия.
 # 8
 |[crafting]{source:"ir_scope"}|
-[Инфракрасный прицел] is an upgraded version of the standard scope, which can also provide [night vision] using the infrared reflector and a special filter. To work, it requires energy provided by a [capacitor backpack](powerpack).
+[Инфракрасный прицел] - это модернизированная версия стандартного прицела, которая также может обеспечивать [ночное видение] с помощью инфракрасного отражателя и специального фильтра. Для работы ему требуется энергия, обеспечиваемая [аккумуляторным ранцем](powerpack).
 # 9
 |[crafting]{source:"shield"}|
-[Прикрепляемые щиты] are a simple yet effective method to give [extra protection] to the gunner.
-The shield will add deploy time to the machine gun. They can resist a limited amount of projectiles, and [will be broken if too much damage is taken]. The shield's resistance is regenerated over time, if no damage is taken.
+[Прикрепляемые щиты] — это простой, но эффективный способ обеспечить [дополнительную защиту] стрелку.
+Щит увеличит время развертывания пулемета. Он может выдержать ограниченное количество снарядов и [будет сломан, если получит слишком много урона]. Сопротивление щита восстанавливается со временем, если не получен урон.
 # 10
 |[crafting]{source:"tripod"}|
-[Тренога] is a replacement for the stock [machinegun](machinegun.md) bipod. It increases the horizontal firing angle to [165 degrees] and [almost removes the recoil].
-It is heavy and slow to set up; this makes it an ideal choice for static defense.
+[Тренога] — это замена штатной сошки [пулемета](machinegun.md). Она увеличивает горизонтальный угол стрельбы до [165 градусов] и [почти полностью устраняет отдачу].
+Она тяжелая и медленная в установке; это делает ее идеальным выбором для стационарной обороны.
 # 11
 |[crafting]{source:"sturdy_barrel"}|
-[Усиленный ствол] is a modification which increases the [SMG's](submachinegun.md) [accuracy] and [bullet velocity] in cost of [firing rate].
+[Усиленный ствол] — это модификация, которая увеличивает [точность] и [скорость пули] [пистолета-пулемета](submachinegun.md) за счет [скорострельности].
 # 12
 |[crafting]{source:"suppressor"}|
-[Глушитель] делает [ПП](submachinegun.md) [almost silent], perfect for ambushes and infiltration. It doesn't influence firing speed nor penetration.
+[Глушитель] делает [ПП](submachinegun.md) [почти бесшумным], идеально подходящим для засад и проникновения. Не влияет на скорость стрельбы и пробивную способность.
 # 13
 |[crafting]{source:"bottom_loader"}|
-[Разъём для барабана] upgrade moves the magazine loading mechanism from the right side to the bottom, replacing the wooden fore-grip. This enables both stick and drum magazines to be loaded in the [SMG](submachinegun.md).
+[Разъём для барабана] В результате модернизации механизм зарядки магазина перемещается с правой стороны вниз, заменяя деревянную переднюю рукоятку. Это позволяет заряжать в [ПП](submachinegun.md) как барабанные, так и ручные магазины.
 # 14
 |[crafting]{source:"folding_stock"}|
-[Складной приклад] makes the [submachinegun](submachinegun.md) [more compact] and [decreases the time taken to aim down sights]. Perfect for paratroopers and special forces.
+[Складное приложение] делает [пистолет-пулемет](submachinegun.md) [более компактным] и [сокращает время прицеливания]. Идеально подходит для десантников и спецназа.
 # 15
 |[crafting]{source:"rifle_grenade_launcher"}|
-[Винтовочный гранатомёт] allows your [assault rifle](assault_rifle.md) to shoot [Railgun Grenades](grenades#1), albeit at a significantly lower range compared to the [Railgun](railgun).
+[Винтовочный гранатомёт] позволяет вашему [автомату](assault_rifle.md) стрелять [рельсотронными гранатами](grenades#1), хотя и на значительно меньшей дальности по сравнению с [рельсотроном](railgun).
 # 16
 |[crafting]{source:"stereoscopic_rangefinder"}|
-[Стереоскопический дальномер] uses advanced electronic circuitry to calculate the distance of the aimed-at block, to a maximum distance of [60 meters]. It can also be used with [Radio Markers] to send positions through [data](data_main.md). The rangefinder requires energy to operate.
+[Стереоскопический дальномер] использует усовершенствованную электронную схему для расчета расстояния до цели, с максимальной точностью до [60 метров]. Он также может использоваться с [радиомаркерами] для передачи координат через [данные](data_main.md). Для работы дальномера требуется энергия.
 # 17
 |[crafting]{source:"gyroscopic_stabilizer"}|
-[Гироскопический стабилизатор] uses advanced circuitry and *Physics(TM)* to greatly reduce the recoil of the [assault rifle](assault_rifle.md). The [Stabilizer] requires energy to operate, using about [20 Flux] per fired bullet.
+[Гироскопический стабилизатор] использует передовые схемы и *физику(TM)* для значительного снижения отдачи [автомата](assault_rifle.md). Для работы [стабилизатора] требуется энергия, расходующая примерно [20 Flux] на один выстрел.
 # 18
 |[crafting]{source:"electric_firing_motor"}|
-[Электрический привод] increases the firerate of your [assault rifle](assault_rifle.md) in [automatic] mode. The [Motor] requires energy to operate, using about [10 Flux] per fired bullet.
+[Электрический привод] увеличивает скорострельность вашей [автомата](assault_rifle.md) в [автоматическом] режиме. [Мотор] потребляет энергию для работы, расходуя около [10 Flux] на один выпущенный патрон.
 # 19
 |[crafting]{source:"railgun_assisted_chamber"}|
-[Рельсотронный ускоритель] increases the velocity of ammunition fired in the [assault rifle's](assault_rifle.md) [manual] mode. The [Chamber] requires energy to operate, using about [40 Flux] per fired bullet.
+[Рельсотронный ускоритель] увеличивает скорость боеприпасов, выпущенных в [ручном] режиме [автомата]. [Патронник] требует энергии для работы, расходуя около [40 Поток] на один выпущенный патрон.
 # 20
 |[crafting]{source:"sami_automatic"}|
-[Полуавтоматический ударно-спусковой механизм] lets you forget about cumbersome hand-loading and allows you to use [rifle magazines] with your [rifle](rifle.md). This [improves the firerate] of the weapon.
+[Полуавтоматический ударно-спусковой механизм] позволяет забыть о громоздкой ручной перезарядке и использовать [винтовочные магазины] с вашей [винтовкой](rifle.md). Это [улучшает скорострельность] оружия.
 # 21
 |[crafting]{source:"long_barrel"}|
-[Удлинённый ствол] increases the [velocity] of ammunition fired by the [rifle](rifle.md). However, it will [decrease the firerate] of the weapon.
+[Удлинённый ствол] увеличивает [скорость] выстреливаемых из [винтовки](rifle.md) боеприпасов. Однако это [уменьшит скорострельность] оружия.
