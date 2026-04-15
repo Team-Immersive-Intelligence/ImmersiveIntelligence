@@ -1,4 +1,4 @@
-#Над переводом работали: Королевский кот (Передаю привет вискасу и тапкам. МЯУ!), Magistr Djo (0.3.1, почти), Skeltx, MonsieurFeb
+#Над переводом работали: Королевский кот (Передаю привет вискасу и тапкам. МЯУ!), Magistr Djo, MonsieurFeb
 #Items
 itemGroup.immersiveintelligence=Immersive Intelligence
 itemGroup.ii.resources=Ресурсы
@@ -1544,9 +1544,9 @@ info.immersiveintelligence.redstone_buffer_mode.signal=Импульс
 info.immersiveintelligence.machineupgrade.name=Установка: %s
 info.immersiveintelligence.machineupgrade.progress=Прогресс: %1$s / %2$s IF
 
-desc.immersiveintelligence.upgrade.dependencies_hold=%s - Required Dependencies
+desc.immersiveintelligence.upgrade.dependencies_hold=%s - Необходимые улучшения
 desc.immersiveintelligence.upgrade.incompatible_hold=%s - Несовместимые улучшения
-desc.immersiveintelligence.upgrade.dependencies=Required Dependencies:
+desc.immersiveintelligence.upgrade.dependencies=Необходимые улучшения:
 desc.immersiveintelligence.upgrade.incompatible=Несовместимые улучшения:
 
 info.immersiveintelligence.machineupgrade.purpose.efficiency=Улучшение эффективности
@@ -3223,15 +3223,15 @@ ii.gui.packer.mode.slot=Слотов
 ii.gui.packer.mode.all_possible=Всё возможное
 ii.gui.packer.mode.at_most_container=At most in container
 ii.gui.packer.mode.at_least_packer=At least in packer
-ii.gui.packer.repeat=repeated until impossible
-ii.gui.packer.expires=and expire after
+ii.gui.packer.repeat=повторяется до невозможности
+ii.gui.packer.expires=и истекает после
 
 ii.gui.packer.labeler.header=Добавить метку на контейнер
 ii.gui.packer.labeler.serial_start=batched, start from
 ii.gui.packer.labeler.serial_start.tooltip=If checked, the containers Logistic Tag (and name) will include an incrementing batch number, starting from the specified one
 
 ii.gui.packer.picker.container=Контейнер
-ii.gui.packer.picker.container.tooltip=Filter for what type of container is allowed for this task
+ii.gui.packer.picker.container.tooltip=Отфильтруйте, какой тип контейнера разрешен для этой задачи
 ii.gui.packer.picker.stack=Ресурсы
 ii.gui.packer.picker.stack.tooltip=Фильтр для используемого ресурса.
 ii.gui.packer.picker.logitag=Логистическая метка
@@ -3245,20 +3245,20 @@ ii.gui.itemstack_editor.nbt=NBT
 ii.gui.itemstack_editor.nbt.item.tooltip=When active, the item is matched by its NBT data
 ii.gui.itemstack_editor.nbt.fluid.tooltip=When active, the fluid is matched by its NBT data
 ii.gui.itemstack_editor.oredict=OreDict
-ii.gui.itemstack_editor.oredict.tooltip=When active, the item is matched by its OreDictionary name
+ii.gui.itemstack_editor.oredict.tooltip=Когда вкл, the item is matched by its OreDictionary name
 ii.gui.itemstack_editor.energy=IF
 ii.gui.itemstack_editor.energy.tooltip=Энергия в Immersive Flux (IF)
 
 ii.gui.data_editor.logistics_tag.name=Имя
 ii.gui.data_editor.logistics_tag.name.tooltip=Задает имя тега.
-ii.gui.data_editor.logistics_tag.description=Description
-ii.gui.data_editor.logistics_tag.description.tooltip=Sets the tag's description.
+ii.gui.data_editor.logistics_tag.description=Описание
+ii.gui.data_editor.logistics_tag.description.tooltip=Установить метку описания
 ii.gui.data_editor.logistics_tag.owner=Владелец
-ii.gui.data_editor.logistics_tag.owner.tooltip=Sets the tag's owner.
+ii.gui.data_editor.logistics_tag.owner.tooltip=Установить метку владельца
 ii.gui.data_editor.logistics_tag.origin=Исходный пункт
-ii.gui.data_editor.logistics_tag.origin.tooltip=Sets the tag's origin.
+ii.gui.data_editor.logistics_tag.origin.tooltip=Установить метку исходного пункта
 ii.gui.data_editor.logistics_tag.destination=Пункт назначения
-ii.gui.data_editor.logistics_tag.destination.tooltip=Sets the tag's destination.
+ii.gui.data_editor.logistics_tag.destination.tooltip=Установить метку пункта назначения
 ii.gui.data_editor.logistics_tag.color=Цвет
 
 ii.gui.data_input_machine.storage=Накопитель перфоленты
@@ -3296,19 +3296,19 @@ ii.gui.emplacement.task_negation=Negation
 ii.gui.emplacement.add=Добавить задачу
 ii.gui.emplacement.remove=Отменить задачу
 ii.gui.emplacement.duplicate=Дублировать задачу
-ii.gui.emplacement.clear=ОЧИСТИТЬ ВСЕ ЗАДАЧИ (ОСТОРОЖНО!)
+ii.gui.emplacement.clear=(ВНИМАНИЕ!) ОЧИСТИТЬ ВСЕ ЗАДАЧИ
 
 ii.gui.emplacement.target.mobs=Мобы
 ii.gui.emplacement.target.animals=Животные
 ii.gui.emplacement.target.players=Игроки
 ii.gui.emplacement.target.npcs=НПСи
 ii.gui.emplacement.target.vehicles=Техника
-ii.gui.emplacement.target.shells=Shells
+ii.gui.emplacement.target.shells=Снаряды
 ii.gui.emplacement.target.team=Фракция
 ii.gui.emplacement.target.name=Имя
 
 ii.gui.map_display.color_mapper.terrain=Местность
-ii.gui.map_display.color_mapper.grayscale=Grayscale
+ii.gui.map_display.color_mapper.grayscale=ЧБ
 ii.gui.map_display.color_mapper.topographic=Топографический
 ii.gui.map_display.color_mapper.light=Свет
 ii.gui.map_display.color_mapper.factions=Фракции
