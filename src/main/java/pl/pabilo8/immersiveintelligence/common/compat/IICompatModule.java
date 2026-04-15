@@ -8,6 +8,8 @@ import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.compat.it.ImmersiveTechnologyHelper;
+import pl.pabilo8.immersiveintelligence.common.compat.tbl.TheBetweenlandsHelper;
+import pl.pabilo8.immersiveintelligence.common.compat.won.WyrmsOfNyrusHelper;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -45,6 +47,10 @@ public abstract class IICompatModule
 		moduleClasses.put("mysticalmechanics", MysticalMechanicsAPIHelper.class);
 		moduleClasses.put("tfc", TerrafirmaHelper.class);
 		moduleClasses.put("betterwithmods", BetterWithModsHelper.class);
+
+
+		moduleClasses.put("wyrmsofnyrus", WyrmsOfNyrusHelper.class);
+		moduleClasses.put("thebetweenlands", TheBetweenlandsHelper.class);
 	}
 
 	public static void doModulesPreInit()

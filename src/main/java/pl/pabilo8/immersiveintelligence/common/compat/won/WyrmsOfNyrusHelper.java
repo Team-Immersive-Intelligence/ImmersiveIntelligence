@@ -8,7 +8,6 @@ import pl.pabilo8.immersiveintelligence.api.ShrapnelHandler;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoCore;
-import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoPropellant;
 import pl.pabilo8.immersiveintelligence.common.compat.IICompatModule;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
@@ -21,8 +20,7 @@ import static pl.pabilo8.immersiveintelligence.api.ShrapnelHandler.addShrapnel;
  */
 
 public class WyrmsOfNyrusHelper extends IICompatModule
-
-
+	
 {
 	@Override
 	public String getName()
@@ -87,8 +85,6 @@ public class WyrmsOfNyrusHelper extends IICompatModule
 		Item borgiplate = Item.REGISTRY.getObject(new ResourceLocation("wyrmsofnyrus", "borgiplate"));
 		OreDictionary.registerOre("borgiplate", new ItemStack(borgiplate));
 
-
-
 		AmmoComponent AmmoComponentCreepshard = new AmmoComponentCreepshard();
 		AmmoComponent AmmoComponentWyrmArmorFrag = new AmmoComponentWyrmArmorFrag();
 		AmmoComponent AmmoComponentCreepBulb = new AmmoComponentCreepBulb();
@@ -110,8 +106,11 @@ public class WyrmsOfNyrusHelper extends IICompatModule
 		AmmoRegistry.registerCore(WyrmsOfNyrusHelper.AmmoCoreHivesteel);
 		AmmoRegistry.registerCore(WyrmsOfNyrusHelper.AmmoCoreBorgiplate);
 
-
-
+// TODO 13.04.26: More in-depth compat. Advanced features that would require using wyrms' code.
+		//utilize synlib as dependency API (after we update the build script). And then implement the following:
+		// Wyrms have aura of IIradiation effect and be completely immune to radiation (may need a preInit meddling);
+		//After certain size, wyrms that explode when dying with onFire state, should explode using II nuke explosive, adjusteable to the size in biome and effects. Like Grunts for example.
+		//Possible armor plating for Light Engineer Armor.
 	}
 
 	@Override
