@@ -19,6 +19,7 @@ public class ThaumicAugmentationHelper extends IICompatModule
 
 /**
  * @author Carver (carver@iiteam.net)
+ * @updated 16.04.2026
  * @since 12.04.2026
  */
 
@@ -45,9 +46,9 @@ public class ThaumicAugmentationHelper extends IICompatModule
 		AmmoRegistry.registerPropellant(pl.pabilo8.immersiveintelligence.common.compat.thaumaugment.ThaumicAugmentationHelper.AmmoPropellantImpetus);
 		AmmoRegistry.registerComponent(ThaumicAugmentationHelper.AmmoComponentImpetus);
 
-		Item impetus = Item.REGISTRY.getObject(new ResourceLocation("thaumicaugmentation", "material_impetus_cell"));
-
-		OreDictionary.registerOre("impetus", new ItemStack(impetus));
+		Item impetus = Item.REGISTRY.getObject(new ResourceLocation("thaumicaugmentation", "material"));
+		//material_impetus_cell
+		OreDictionary.registerOre("impetus", new ItemStack(impetus,1,3));
 	}
 
 	@Override
