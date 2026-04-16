@@ -18,6 +18,7 @@ public class ThaumcraftHelper extends IICompatModule
 
 /**
  * @author Carver (carver@iiteam.net)
+ * @updated 16.04.2026
  * @since 11.04.2026
  */
 
@@ -71,12 +72,11 @@ public class ThaumcraftHelper extends IICompatModule
 
 		AmmoRegistry.registerPropellant(ThaumcraftHelper.AmmoPropellantAlumentum);
 
-		Item nuggetThaumium = Item.REGISTRY.getObject(new ResourceLocation("thaumcraft", "nugget_thaumium"));
-		Item nuggetVoid = Item.REGISTRY.getObject(new ResourceLocation("thaumcraft", "nugget_void"));
+		Item nugget = Item.REGISTRY.getObject(new ResourceLocation("thaumcraft", "nugget"));
 		Item alumentum = Item.REGISTRY.getObject(new ResourceLocation("thaumcraft", "alumentum"));
 
-		OreDictionary.registerOre("nuggetThaumium", new ItemStack(nuggetThaumium));
-		OreDictionary.registerOre("nuggetVoid", new ItemStack(nuggetVoid));
+		OreDictionary.registerOre("nuggetThaumium", new ItemStack(nugget,1,6));
+		OreDictionary.registerOre("nuggetVoid", new ItemStack(nugget,1,7));
 		OreDictionary.registerOre("alumentum", new ItemStack(alumentum));
 	}
 

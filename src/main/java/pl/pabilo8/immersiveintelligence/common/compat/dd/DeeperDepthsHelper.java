@@ -24,6 +24,7 @@ import static pl.pabilo8.immersiveintelligence.api.ShrapnelHandler.addShrapnel;
 
 /**
  * @author Carver (carver@iiteam.net)
+ * @updated 16.04.2026
  * @since 05.04.2026
  */
 
@@ -101,6 +102,16 @@ public class DeeperDepthsHelper extends IICompatModule
 				ArcFurnaceRecipe.addRecipe(new ItemStack(IEContent.itemMaterial, 7, 0),
 						new ItemStack(bulb1), ItemStack.EMPTY, 200, 1000);
 
+				Item chain = Item.REGISTRY.getObject(new ResourceLocation("deeperdepths", varient2+variant1+"copper_chain"));
+				ArcFurnaceRecipe.addRecipe(new ItemStack(IEContent.itemMaterial, 1, 0),
+						new ItemStack(chain), ItemStack.EMPTY, 200, 1000);
+				Item bars = Item.REGISTRY.getObject(new ResourceLocation("deeperdepths", varient2+variant1+"copper_bars"));
+				ArcFurnaceRecipe.addRecipe(new ItemStack(IEContent.itemMaterial, 2, 0),
+						new ItemStack(bars), ItemStack.EMPTY, 200, 1000);
+				Item chest = Item.REGISTRY.getObject(new ResourceLocation("deeperdepths", varient2+variant1+"copper_chest"));
+				ArcFurnaceRecipe.addRecipe(new ItemStack(IEContent.itemMaterial, 8, 0),
+						new ItemStack(chest), ItemStack.EMPTY, 200, 1000);
+
 				//07.04.2026 Carver TODO: check if bath stripping oxidation layers and adding waxing works
 
 				Item ddcopper1 = Item.REGISTRY.getObject(new ResourceLocation("deeperdepths", varient2+variant1+"copper"));
@@ -135,6 +146,13 @@ public class DeeperDepthsHelper extends IICompatModule
 						new ItemStack(bulb1, 1), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 512, 140, false);
 
 
+				new BathingRecipe(new ItemStack(chain, 1, 0),
+						new ItemStack(chain, 1), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 512, 140, false);
+				new BathingRecipe(new ItemStack(bars, 1, 0),
+						new ItemStack(bars, 1), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 512, 140, false);
+				new BathingRecipe(new ItemStack(chest, 1, 0),
+						new ItemStack(chest, 1), new FluidStack(IIContent.fluidHydrofluoricAcid, 100), 512, 140, false);
+
 				//Adding coating with sulfuric acid, metadata sensitive
 
 				//normal
@@ -166,6 +184,13 @@ public class DeeperDepthsHelper extends IICompatModule
 				new BathingRecipe(new ItemStack(door1, 1, 4),
 						new ItemStack(door1, 1,0), new FluidStack(IIContent.fluidSulfuricAcid, 100), 256, 100, false);
 
+				new BathingRecipe(new ItemStack(chain, 1, 4),
+						new ItemStack(chain, 1,0), new FluidStack(IIContent.fluidSulfuricAcid, 100), 256, 100, false);
+				new BathingRecipe(new ItemStack(bars, 1, 4),
+						new ItemStack(bars, 1,0), new FluidStack(IIContent.fluidSulfuricAcid, 100), 256, 100, false);
+				new BathingRecipe(new ItemStack(chain, 1, 4),
+						new ItemStack(chest, 1,0), new FluidStack(IIContent.fluidSulfuricAcid, 100), 256, 100, false);
+
 				//exposed
 
 				new BathingRecipe(new ItemStack(bulb1, 1, 5),
@@ -194,6 +219,16 @@ public class DeeperDepthsHelper extends IICompatModule
 
 				new BathingRecipe(new ItemStack(door1, 1, 5),
 						new ItemStack(door1, 1,1), new FluidStack(IIContent.fluidSulfuricAcid, 100), 256, 120, false);
+
+				new BathingRecipe(new ItemStack(chain, 1, 5),
+						new ItemStack(chain, 1,1), new FluidStack(IIContent.fluidSulfuricAcid, 100), 256, 120, false);
+
+				new BathingRecipe(new ItemStack(bars, 1, 5),
+						new ItemStack(bars, 1,1), new FluidStack(IIContent.fluidSulfuricAcid, 100), 256, 120, false);
+
+				new BathingRecipe(new ItemStack(chest, 1, 5),
+						new ItemStack(chest, 1,1), new FluidStack(IIContent.fluidSulfuricAcid, 100), 256, 120, false);
+
 
 				//wethered
 
@@ -224,6 +259,16 @@ public class DeeperDepthsHelper extends IICompatModule
 				new BathingRecipe(new ItemStack(door1, 1, 6),
 						new ItemStack(door1, 1,2), new FluidStack(IIContent.fluidSulfuricAcid, 100), 256, 140, false);
 
+				new BathingRecipe(new ItemStack(chain, 1, 6),
+						new ItemStack(chain, 1,2), new FluidStack(IIContent.fluidSulfuricAcid, 100), 256, 140, false);
+
+				new BathingRecipe(new ItemStack(bars, 1, 6),
+						new ItemStack(bars, 1,2), new FluidStack(IIContent.fluidSulfuricAcid, 100), 256, 140, false);
+
+				new BathingRecipe(new ItemStack(chest, 1, 6),
+						new ItemStack(chest, 1,2), new FluidStack(IIContent.fluidSulfuricAcid, 100), 256, 140, false);
+
+
 				//oxidized
 
 				new BathingRecipe(new ItemStack(bulb1, 1, 7),
@@ -252,6 +297,15 @@ public class DeeperDepthsHelper extends IICompatModule
 
 				new BathingRecipe(new ItemStack(door1, 1, 7),
 						new ItemStack(door1, 1,3), new FluidStack(IIContent.fluidSulfuricAcid, 100), 256, 160, false);
+
+				new BathingRecipe(new ItemStack(chain, 1, 7),
+						new ItemStack(chain, 1,3), new FluidStack(IIContent.fluidSulfuricAcid, 100), 256, 160, false);
+
+				new BathingRecipe(new ItemStack(bars, 1, 7),
+						new ItemStack(bars, 1,3), new FluidStack(IIContent.fluidSulfuricAcid, 100), 256, 160, false);
+
+				new BathingRecipe(new ItemStack(chest, 1, 7),
+						new ItemStack(chest, 1,3), new FluidStack(IIContent.fluidSulfuricAcid, 100), 256, 160, false);
 
 				//08.04.2026 Carver:
 				//Precision assembler recipe for converting amethyst into silicon + recipe for crusher converting amethyst to sand

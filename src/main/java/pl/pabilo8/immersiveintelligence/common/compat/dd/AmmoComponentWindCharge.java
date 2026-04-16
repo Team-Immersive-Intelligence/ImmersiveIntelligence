@@ -27,7 +27,7 @@ import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 
 /**
  * @author Carver (carver@iiteam.net)
- * @updated 11.04.2026
+ * @updated 16.04.2026
  * @since 08.04.2026
  */
 
@@ -52,13 +52,13 @@ public class AmmoComponentWindCharge extends AmmoComponent
 
 	public void onEffect(World world, Vec3d pos, Vec3d dir, ComponentEffectShape shape, NBTTagCompound tag, float size, float multiplier, Entity owner)
 	{
-		IIAmmoUtils.suppress(world, pos.x, pos.y, pos.z, 10f*multiplier, (int)(255*multiplier));
+		IIAmmoUtils.suppress(world, pos.x, pos.y, pos.z, 6f, (int)(255*multiplier));
 
 		BlockPos ppos = new BlockPos(pos);
-		new IIExplosion(world, owner, pos, null, 2*multiplier, 0, ComponentEffectShape.ORB, false, false, true)
+		new IIExplosion(world, owner, pos, null, 4, 0, ComponentEffectShape.ORB, false, false, true)
 				.doExplosion();
 
-		EntityLivingBase[] entities = world.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(ppos).grow(20*multiplier)).toArray(new EntityLivingBase[0]);
+		EntityLivingBase[] entities = world.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(ppos).grow(5*multiplier)).toArray(new EntityLivingBase[0]);
 		for(EntityLivingBase e : entities)
 		{
 			e.addPotionEffect(new PotionEffect(IEPotions.stunned, 60, 2));

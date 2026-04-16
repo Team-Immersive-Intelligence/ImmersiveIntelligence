@@ -28,6 +28,8 @@ public class NetherBackportHelper extends IICompatModule
 {
 
 	private static AmmoCore AmmoCoreNetherite;
+	private static AmmoComponent AmmoComponentNetherFire;
+
 	private static final ResLoc RES_NB = ResLoc.of(ResLoc.root("nb"));
 
 	@Override
@@ -42,12 +44,20 @@ public class NetherBackportHelper extends IICompatModule
 	{
 		//12.04.26 Carver: added netherite ammo core and shrapnel
 
+
+		AmmoComponent AmmoComponentNetherFire = new AmmoComponentNetherFire();
+
 		AmmoCore AmmoCoreNetherite = new AmmoCoreNetherite();
 		AmmoRegistry.registerCore(NetherBackportHelper.AmmoCoreNetherite);
 
+		AmmoRegistry.registerComponent(NetherBackportHelper.AmmoComponentNetherFire);
+
 		Item netherite = Item.REGISTRY.getObject(new ResourceLocation("nb", "netherite_ingot"));
+		Item soul_lantern = Item.REGISTRY.getObject(new ResourceLocation("nb", "soul_lantern"));
 
 		OreDictionary.registerOre("ingotNetherite", new ItemStack(netherite));
+		OreDictionary.registerOre("soul_lantern", new ItemStack(soul_lantern));
+
 
 		addShrapnel("netherite", IIColor.fromPackedRGB(0x31292a),
 				RES_NB.with("netherite_block"), 8, 0.50f, 0f);

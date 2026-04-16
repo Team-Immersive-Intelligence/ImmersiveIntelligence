@@ -59,8 +59,10 @@ public class AmmoComponentPrimordialPearl extends AmmoComponent
 
 	public IngredientStack getMaterial()
 	{
-		Item primordialpearl = Item.REGISTRY.getObject(new ResourceLocation("thaumcraft", "primordial_pearl"));
-		return new IngredientStack(new ItemStack(primordialpearl, 1));
+		Item primordialpearl = Item.REGISTRY.getObject(new ResourceLocation("thaumcraft", "itemeldritchobject"));
+		return new IngredientStack(new ItemStack(primordialpearl, 1, 3));
+
+		//itemeldritchobject:3 is the true name, other sources have it as primordial_pearl
 	}
 
 	@Override
@@ -212,6 +214,3 @@ public class AmmoComponentPrimordialPearl extends AmmoComponent
 		}
 	}
 }
-
-//primordial_pearl_0
-//itemeldritchobject:3
