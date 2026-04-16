@@ -374,6 +374,9 @@ public class IIColor implements Comparable<IIColor>, ToIntFunction<IIColor>
 		float b = blue*0.003921f;
 
 		float k = 1-Math.max(r, Math.max(g, b));
+		if(k >= 1)
+			return new float[]{0, 0, 0, 1};
+
 		float c = (1-r-k)/(1-k);
 		float m = (1-g-k)/(1-k);
 		float y = (1-b-k)/(1-k);
@@ -568,10 +571,14 @@ public class IIColor implements Comparable<IIColor>, ToIntFunction<IIColor>
 		float[] hsv2 = o.getHSV();
 
 		float deltaA = (alpha-o.alpha)*100;
-		float deltaH = (hsv1[0]-hsv2[0])*100;
-		float deltaL = (hsv1[1]-hsv2[1]+hsv1[2]-hsv2[2])*25;
 
-		return (int)Math.abs((deltaA*deltaA+deltaH*deltaH+deltaL*deltaL));
+		float dH = Math.abs(hsv1[0]-hsv2[0]);
+		float deltaH = Math.min(dH, 1-dH)*200;
+
+		float deltaS = (hsv1[1]-hsv2[1])*25;
+		float deltaV = (hsv1[2]-hsv2[2])*25;
+
+		return (int)(deltaA*deltaA+deltaH*deltaH+deltaS*deltaS+deltaV*deltaV);
 	}
 
 	@Override

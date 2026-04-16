@@ -10,7 +10,7 @@ Rubber belts are used for creating [faster conveyors](rubber_conveyor_belts) and
 |[machine_recipe]{source:"recipe_belts"}|
 # production2
 Rubber can also be vulcanized and formed into tires, providing the needed suspension for many vehicles.
-|[machine_recipe]{source:"recipe_wheels"}|
+|[machine_recipe]{source:"recipe_tires"}|
 # molds
 To operate the machine, the vulcanizer requires a mold, which determines the final output and electricity usage.
 |[crafting]{source:"vulcanizer_blueprint"}|

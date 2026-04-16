@@ -1139,7 +1139,7 @@ machineupgrade.immersiveintelligence.packer_fluid=Fluid Loader
 machineupgrade.immersiveintelligence.packer_fluid.desc=Installing a fluid container and some pipes allows to fill and drain fluids from containers. Due to safety reasons the packer can handle either items, fluids or energy.
 
 machineupgrade.immersiveintelligence.packer_energy=Energy Loader
-machineupgrade.immersiveintelligence.packer_energy.desc=Installing a fluid container and some pipes allows to fill and drain fluids from containers. Due to safety reasons the packer can handle either items, fluids or energy.
+machineupgrade.immersiveintelligence.packer_energy.desc=Installing a pair of capacitors and a Tesla coil allows rapid charging of energy devices. Due to safety reasons the packer can handle either items, fluids or energy.
 
 machineupgrade.immersiveintelligence.packer_railway=Railway Conversion
 machineupgrade.immersiveintelligence.packer_railway.desc=Replaces the Packer's conveyor belt with railway tracks, which allows loading and unloading minecarts.
