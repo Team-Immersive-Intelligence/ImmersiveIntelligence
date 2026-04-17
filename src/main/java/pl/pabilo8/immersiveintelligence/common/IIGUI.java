@@ -105,6 +105,8 @@ public enum IIGUI implements ISerializableEnum
 	PRINTED_PAGE_TEXT(),
 	PRINTED_PAGE_CODE(),
 	PRINTED_PAGE_BLUEPRINT(),
+	PRINTED_PAGE_NEWSPAPER(),
+	PRINTED_PAGE_BOUND(),
 	PRINTED_PAGE_LOGISTIC_TAG(),
 
 	CASING_POUCH(ContainerCasingPouch::new),
@@ -233,11 +235,14 @@ public enum IIGUI implements ISerializableEnum
 		IIGUI.ARITHMETIC_LOGIC_MACHINE_STORAGE.setClientDecoGui(GuiArithmeticLogicMachine::getStorageGui);
 		IIGUI.ARITHMETIC_LOGIC_MACHINE_VARIABLES.setClientDecoGui(GuiArithmeticLogicMachine::getVariablesGui);
 		IIGUI.ARITHMETIC_LOGIC_MACHINE_EDIT.setClientDecoGui(GuiArithmeticLogicMachineEdit::new);
+
 		//Printed Page
 		IIGUI.PRINTED_PAGE_BLANK.setClientStackGui(GuiPrintedPage::new);
 		IIGUI.PRINTED_PAGE_TEXT.setClientStackGui(GuiPrintedPage::new);
 		IIGUI.PRINTED_PAGE_CODE.setClientStackGui(GuiPrintedPage::new);
 		IIGUI.PRINTED_PAGE_BLUEPRINT.setClientStackGui(GuiPrintedPage::new);
+		IIGUI.PRINTED_PAGE_NEWSPAPER.setClientStackGui(GuiPrintedPage::new);
+		IIGUI.PRINTED_PAGE_BOUND.setClientStackGui(GuiPrintedPage::new);
 
 		IIGUI.CASING_POUCH.setClientStackGui(GuiCasingPouch::new);
 
