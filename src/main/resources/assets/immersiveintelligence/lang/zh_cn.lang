@@ -1076,7 +1076,7 @@ machineupgrade.immersiveintelligence.packer_fluid=流体装载器
 machineupgrade.immersiveintelligence.packer_fluid.desc=安装流体容器和一些管道可以填充和排出容器中的流体.出于安全考虑,包装机可以处理物品,流体或能量.
 
 machineupgrade.immersiveintelligence.packer_energy=能量装载器
-machineupgrade.immersiveintelligence.packer_energy.desc=安装流体容器和一些管道可以填充和排出容器中的流体.出于安全考虑,包装机可以处理物品,流体或能量.
+machineupgrade.immersiveintelligence.packer_energy.desc=安装一对电容器和一个特斯拉线圈可以快速为能源设备充电。.出于安全考虑,包装机可以处理物品,流体或能量.
 
 machineupgrade.immersiveintelligence.packer_railway=铁路改造
 machineupgrade.immersiveintelligence.packer_railway.desc=用铁轨取代包装机的传送带，从而可以装载和卸载矿车.
