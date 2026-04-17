@@ -1132,7 +1132,7 @@ machineupgrade.immersiveintelligence.packer_fluid=Завантажувач рі�
 machineupgrade.immersiveintelligence.packer_fluid.desc=Встановлення контейнера для рідини та деяких труб дозволяє наповнювати та зливати рідини з контейнерів. З міркувань безпеки пакувальник може обробляти предмети, рідини або енергію.
 
 machineupgrade.immersiveintelligence.packer_energy=Енергетичний навантажувач
-machineupgrade.immersiveintelligence.packer_energy.desc=Встановлення контейнера для рідини та деяких труб дозволяє наповнювати та зливати рідини з контейнерів. З міркувань безпеки пакувальник може обробляти предмети, рідини або енергію.
+machineupgrade.immersiveintelligence.packer_energy.desc=Встановлення пари конденсаторів та котушки Тесли може швидко заряджати енергетичні пристрої. З міркувань безпеки пакувальник може обробляти предмети, рідини або енергію.
 
 machineupgrade.immersiveintelligence.packer_railway=Перетворення залізниці
 machineupgrade.immersiveintelligence.packer_railway.desc=Замінює конвеєрну стрічку пакувальника на залізничні колії, що дозволяє завантажувати та розвантажувати шахтні візки.
