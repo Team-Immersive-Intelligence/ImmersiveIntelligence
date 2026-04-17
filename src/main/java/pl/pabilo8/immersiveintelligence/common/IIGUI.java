@@ -106,6 +106,7 @@ public enum IIGUI implements ISerializableEnum
 	PRINTED_PAGE_CODE(),
 	PRINTED_PAGE_BLUEPRINT(),
 	PRINTED_PAGE_NEWSPAPER(),
+	PRINTED_PAGE_BOOK(),
 	PRINTED_PAGE_BOUND(),
 	PRINTED_PAGE_LOGISTIC_TAG(),
 
@@ -243,6 +244,7 @@ public enum IIGUI implements ISerializableEnum
 		IIGUI.PRINTED_PAGE_BLUEPRINT.setClientStackGui(GuiPrintedPage::new);
 		IIGUI.PRINTED_PAGE_NEWSPAPER.setClientStackGui(GuiPrintedPage::new);
 		IIGUI.PRINTED_PAGE_BOUND.setClientStackGui(GuiPrintedPage::new);
+		IIGUI.PRINTED_PAGE_BOOK.setClientStackGui(GuiPrintedPage::new);
 
 		IIGUI.CASING_POUCH.setClientStackGui(GuiCasingPouch::new);
 

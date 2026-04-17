@@ -131,7 +131,7 @@ public class ItemIIPrintedPage extends ItemIISubItemsBase<PageType> implements I
 		@IIItemProperties(oreDict = "pageNewspaper")
 		NEWSPAPER(IIGUI.PRINTED_PAGE_NEWSPAPER),
 		@IIItemProperties(oreDict = {"pageBook", "book", "bookPrinted"})
-		BOOK(IIGUI.PRINTED_PAGE_BLANK),
+		BOOK(IIGUI.PRINTED_PAGE_BOOK),
 
 		// All page containers
 		@IIItemProperties(oreDict = {"pageLetter", "letter"})
