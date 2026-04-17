@@ -87,11 +87,24 @@ public class GuiPrintedPage extends GuiScreen
 			case TEXT:
 			case CODE:
 			case BLUEPRINT:
-			case LETTER_OPENED:
 			{
 				pages = new FormattedTextLine[1][];
 				pages[0] = prepareLines(ItemNBTHelper.getString(heldStack, "text"));
 				pageTypes = new PageType[]{generalPageType};
+				break;
+			}
+			case LETTER_OPENED:
+			{
+				pages = new FormattedTextLine[1][];
+				pages[0] = prepareLines(ItemNBTHelper.getString(heldStack, "text"));
+
+				pageTypes = new PageType[]{
+						PageType.valueOf(
+								ItemNBTHelper.hasTag(heldStack) ?
+										ItemNBTHelper.getTag(heldStack).getString("type") :
+										PageType.TEXT.toString()
+						)
+				};
 				break;
 			}
 
