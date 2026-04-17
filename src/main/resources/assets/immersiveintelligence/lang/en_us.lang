@@ -364,6 +364,7 @@ item.immersiveintelligence.printed_page.bound_pages.name=Bound Pages
 item.immersiveintelligence.printed_page.newspaper.name=Newspaper
 item.immersiveintelligence.printed_page.book.name=Book
 item.immersiveintelligence.printed_page.letter.name=Letter
+item.immersiveintelligence.printed_page.letter_opened.name=Opened Letter
 
 item.immersiveintelligence.logistic_tag.name=Logistic Manifest
 

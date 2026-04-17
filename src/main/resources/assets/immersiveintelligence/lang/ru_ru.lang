@@ -364,6 +364,7 @@ item.immersiveintelligence.printed_page.bound_pages.name=Связанные ст
 item.immersiveintelligence.printed_page.newspaper.name=Газета
 item.immersiveintelligence.printed_page.book.name=Печатная книга
 item.immersiveintelligence.printed_page.letter.name=Письмо
+item.immersiveintelligence.printed_page.letter_opened.name=Открытое письмо
 
 item.immersiveintelligence.precission_tool.buzzsaw.name=Точная циркулярная пила
 item.immersiveintelligence.precission_tool.drill.name=Точная дрель

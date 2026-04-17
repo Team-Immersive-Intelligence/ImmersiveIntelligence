@@ -343,6 +343,7 @@ item.immersiveintelligence.printed_page.bound_pages.name=装订页
 item.immersiveintelligence.printed_page.newspaper.name=报纸
 item.immersiveintelligence.printed_page.book.name=书册
 item.immersiveintelligence.printed_page.letter.name=信
+item.immersiveintelligence.printed_page.letter_opened.name=公开信
 
 item.immersiveintelligence.precission_tool.buzzsaw.name=精密圆锯
 item.immersiveintelligence.precission_tool.drill.name=精密钻头

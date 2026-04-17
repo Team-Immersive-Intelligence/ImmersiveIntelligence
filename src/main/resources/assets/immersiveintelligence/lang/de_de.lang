@@ -364,6 +364,7 @@ item.immersiveintelligence.printed_page.bound_pages.name=Gebundene Seiten
 item.immersiveintelligence.printed_page.newspaper.name=Zeitung
 item.immersiveintelligence.printed_page.book.name=Buch
 item.immersiveintelligence.printed_page.letter.name=Brief
+item.immersiveintelligence.printed_page.letter_opened.name=Geöffneter Brief
 
 item.immersiveintelligence.precission_tool.buzzsaw.name=Präzisionskreissäge
 item.immersiveintelligence.precission_tool.drill.name=Präzisionsbohrer
