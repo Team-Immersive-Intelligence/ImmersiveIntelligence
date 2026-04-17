@@ -1175,6 +1175,7 @@ desc.immersiveintelligence.printed_page.bound_pages=Різні сторінки,
 desc.immersiveintelligence.printed_page.newspaper=Кілька сторінок переплетені в газету.
 desc.immersiveintelligence.printed_page.book=Кілька сторінок переплетені в одну книгу.
 desc.immersiveintelligence.printed_page.letter=Сторінка, запакована в конверт для відправлення комусь.
+desc.immersiveintelligence.printed_page.letter_opened.name=Розкритий конверт, що містить одну сторінку.
 
 desc.immersiveintelligence.punchtape.empty=Немає записаних змінних
 desc.immersiveintelligence.punchtape.written=Написаний
