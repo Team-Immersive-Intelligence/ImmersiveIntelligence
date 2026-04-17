@@ -71,9 +71,6 @@ public class ChemicalBathRenderer extends IIMultiblockRenderer<TileEntityChemica
 		this.model = new AMTModel(state, model, header -> new AMT[]{
 				this.item = new AMTItem("item", header),
 				this.fluid = new AMTFluid("fluid", header)
-						.withFluidLayer(0, 0, 5, 46, 36)
-						.withFluidLayer(7, 0, 0, 46, 46)
-						.withFluidLayer(12, 0, 0, 46, 46)
 						.withFluid(new FluidStack(IIContent.fluidSulfuricAcid, 1000))
 						.withLevel(1f)
 		});

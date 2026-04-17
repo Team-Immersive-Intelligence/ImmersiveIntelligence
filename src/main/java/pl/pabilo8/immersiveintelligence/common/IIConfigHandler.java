@@ -1178,7 +1178,7 @@ public class IIConfigHandler
 				public static int craneMoveTime = 20;
 
 				@Comment({"Duration of crane bucket actions (in ticks)."})
-				public static int craneGrabTime = 20;
+				public static int craneBucketActionTime = 100;
 			}
 
 			public static class AmmunitionAssembler

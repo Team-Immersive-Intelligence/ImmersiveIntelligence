@@ -1,17 +1,20 @@
 package pl.pabilo8.immersiveintelligence.client.util.amt.parts;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
+import blusunrize.immersiveengineering.common.IEContent;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import org.lwjgl.opengl.GL11;
+import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIMath;
 import pl.pabilo8.immersiveintelligence.common.util.amt.AMTModelHeader;
@@ -32,11 +35,8 @@ import java.util.List;
 public class AMTFluid extends AMT
 {
 	@Nullable
-	private FluidStack stack = null;
-	/**
-	 * Fill level in range [0..1].
-	 */
-	private float level = 1f;
+	private TextureAtlasSprite fluidSprite = null;
+	private IIColor fluidColor = IIColor.WHITE;
 	/**
 	 * Maximum Y level among all layers.
 	 */
@@ -73,22 +73,39 @@ public class AMTFluid extends AMT
 
 	public AMTFluid withLevel(float level)
 	{
-		// callers typically pass tankAmount/capacity
-		this.level = IIMath.clamp(level, 0f, 1f);
+		this.property = IIMath.clamp(level, 0f, 1f);
+		return this;
+	}
+
+	public AMTFluid withFluid(@Nullable TextureAtlasSprite fluidSprite, IIColor fluidColor)
+	{
+		this.fluidSprite = fluidSprite;
+		this.fluidColor = fluidColor;
 		return this;
 	}
 
 	public AMTFluid withFluid(@Nullable FluidStack stack)
 	{
-		this.stack = stack;
+		if(stack!=null)
+		{
+			Fluid fluid = stack.getFluid();
+			return withFluid(ClientUtils.getSprite(flowing?fluid.getFlowing(stack): fluid.getStill(stack)), IIColor.fromPackedARGB(fluid.getColor()));
+		}
+		return this;
+	}
+
+	public AMTFluid withFluidMix(@Nonnull FluidStack first, @Nonnull FluidStack second, float proportion)
+	{
+		this.fluidSprite = ClientUtils.getSprite((flowing?IEContent.fluidPotion.getFlowing(first): IEContent.fluidPotion.getStill(first)));
+		this.fluidColor = IIClientUtils.getFluidTextureColor(first.getFluid()).mixedWith(IIClientUtils.getFluidTextureColor(second.getFluid()), proportion);
 		return this;
 	}
 
 	public AMTFluid withFluidTank(@Nonnull FluidTank tank)
 	{
-		this.stack = tank.getFluid();
-		this.level = this.stack==null?0f: IIMath.clamp(this.stack.amount/(float)tank.getCapacity(), 0f, 1f);
-		return this;
+		FluidStack stack = tank.getFluid();
+		this.property = stack==null?0f: IIMath.clamp(stack.amount/(float)tank.getCapacity(), 0f, 1f);
+		return withFluid(stack);
 	}
 
 	public AMTFluid withFlowing(boolean flowing)
@@ -108,23 +125,20 @@ public class AMTFluid extends AMT
 	@Override
 	protected void draw(Tessellator tes, BufferBuilder buf)
 	{
-		if(stack==null||layers.size() < 2)
+		if(fluidSprite==null||layers.size() < 2)
 			return;
 
-		final float clampedLevel = IIMath.clamp(this.level, 0f, 1f);
+		final float clampedLevel = IIMath.clamp(this.property, 0f, 1f);
 		if(clampedLevel <= 0f||totalHeight <= 0f)
 			return;
 
-		Fluid fluid = stack.getFluid();
-		final TextureAtlasSprite sprite = ClientUtils.getSprite(flowing?fluid.getFlowing(stack): fluid.getStill(stack));
 		final double localHeight = this.totalHeight*clampedLevel;
 		if(localHeight <= 0)
 			return;
 
 		//UV + color
-		final IIColor color = IIColor.fromPackedRGB(fluid.getColor(stack));
-		final double u0 = sprite.getMinU(), u1 = sprite.getMaxU();
-		final double v0 = sprite.getMinV(), v1 = sprite.getMaxV();
+		final double u0 = fluidSprite.getMinU(), u1 = fluidSprite.getMaxU();
+		final double v0 = fluidSprite.getMinV(), v1 = fluidSprite.getMaxV();
 
 		//Positions
 		double topX0 = 0, topZ0 = 0, topX1 = 0, topZ1 = 0, topY = 0;
@@ -159,28 +173,28 @@ public class AMTFluid extends AMT
 			topY = first.yLevel+layerHeight;
 
 			//4 walls: north(-z), south(+z), west(-x), east(+x)
-			putQuad(buf, color,
+			putQuad(buf, fluidColor,
 					x0, y0, z0, u0, v1,
 					topX0, topY, topZ0, u0, v0,
 					topX1, topY, topZ0, u1, v0,
 					x1b, y0, z0, u1, v1,
 					0, 0, -1);
 
-			putQuad(buf, color,
+			putQuad(buf, fluidColor,
 					x1b, y0, z1b, u0, v1,
 					topX1, topY, topZ1, u0, v0,
 					topX0, topY, topZ1, u1, v0,
 					x0, y0, z1b, u1, v1,
 					0, 0, 1);
 
-			putQuad(buf, color,
+			putQuad(buf, fluidColor,
 					x0, y0, z1b, u0, v1,
 					topX0, topY, topZ1, u0, v0,
 					topX0, topY, topZ0, u1, v0,
 					x0, y0, z0, u1, v1,
 					-1, 0, 0);
 
-			putQuad(buf, color,
+			putQuad(buf, fluidColor,
 					x1b, y0, z0, u0, v1,
 					topX1, topY, topZ0, u0, v0,
 					topX1, topY, topZ1, u1, v0,
@@ -190,10 +204,16 @@ public class AMTFluid extends AMT
 			heightDrawn += layerHeight;
 		}
 
-		renderTopFace(buf, sprite, color, u0, v0, topX0, topZ0, topX1, topZ1, topY);
+		renderTopFace(buf, fluidSprite, fluidColor, u0, v0, topX0, topZ0, topX1, topZ1, topY);
 
 		GlStateManager.color(1, 1, 1, 1);
 		GlStateManager.translate(originPos.x, originPos.y, originPos.z);
+		if(this.rot!=null)
+		{
+			GlStateManager.rotate((float)rot.y, 0, 1, 0);
+			GlStateManager.rotate((float)rot.z, 0, 0, 1);
+			GlStateManager.rotate((float)-rot.x, 1, 0, 0);
+		}
 		GlStateManager.scale(0.0625, 0.0625, 0.0625);
 
 		ClientUtils.bindAtlas();
@@ -265,6 +285,13 @@ public class AMTFluid extends AMT
 		nbt.checkSetString("fluid", f -> withFluid(new FluidStack(FluidRegistry.getFluid(f), 1000)));
 		nbt.checkSetFloat("level", this::withLevel);
 		nbt.checkSetBoolean("flowing", this::withFlowing);
+		if(nbt.hasKey("layers"))
+		{
+			layers.clear();
+			nbt.streamList(NBTTagList.class, "layers").forEach(layer ->
+					withFluidLayer(layer.getDoubleAt(0), layer.getDoubleAt(1), layer.getDoubleAt(2),
+							layer.getDoubleAt(3), layer.getDoubleAt(4)));
+		}
 	}
 
 
@@ -274,8 +301,9 @@ public class AMTFluid extends AMT
 		AMTFluid clone = new AMTFluid(newName, originPos);
 		clone.layers.addAll(this.layers);
 		clone.flowing = this.flowing;
-		clone.level = this.level;
-		clone.stack = this.stack==null?null: this.stack.copy();
+		clone.property = this.property;
+		clone.fluidSprite = this.fluidSprite;
+		clone.fluidColor = this.fluidColor;
 		return clone;
 	}
 

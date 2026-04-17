@@ -3,6 +3,7 @@ package pl.pabilo8.immersiveintelligence.common.util.amt;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 import pl.pabilo8.immersiveintelligence.client.util.ShaderUtil.Shaders;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.amt.IIAnimation.*;
 
 import javax.annotation.Nullable;
@@ -42,6 +43,21 @@ public class IIAnimationBuilder
 			return this;
 
 		AnimationFragment frag = new AnimationFragment(animation, timestamp, duration, layer);
+		animationFragments.add(frag);
+		this.totalTime = Math.max(this.totalTime, timestamp+duration);
+		frag.ownerTotalTime = this.totalTime;
+		return this;
+	}
+
+	public IIAnimationBuilder addAnimation(float timestamp, float duration, IIAnimationGroup animationGroup, int layer)
+	{
+		if(animationGroup==null||duration <= 0)
+			return this;
+
+		AnimationFragment frag = new AnimationFragment(
+				new IIAnimation(IIReference.RES_II.with(animationGroup.groupName),
+						new IIAnimationGroup[]{animationGroup}), timestamp, duration, layer
+		);
 		animationFragments.add(frag);
 		this.totalTime = Math.max(this.totalTime, timestamp+duration);
 		frag.ownerTotalTime = this.totalTime;
@@ -183,6 +199,46 @@ public class IIAnimationBuilder
 			}
 		}
 		return deduped;
+	}
+
+	/**
+	 * @param groupName the name of the animation group
+	 * @return the latest global time at which a keyframe for the given group appears (or 0 if none)
+	 */
+	public float getLastKeyframeTimeFor(String groupName)
+	{
+		float lastTime = 0f;
+		for(AnimationFragment fragment : animationFragments)
+		{
+			IIAnimationGroup group = findGroup(fragment.animation, groupName);
+			if(group!=null)
+			{
+				float groupEnd = fragment.timestamp+fragment.duration;
+				if(groupEnd > lastTime)
+					lastTime = groupEnd;
+			}
+		}
+		return lastTime;
+	}
+
+	/**
+	 * @param groupName the name of the animation group
+	 * @return the earliest global time at which a keyframe for the given group appears (or 0 if none)
+	 */
+	public float getFirstKeyframeTimeFor(String groupName)
+	{
+		float firstTime = totalTime;
+		for(AnimationFragment fragment : animationFragments)
+		{
+			IIAnimationGroup group = findGroup(fragment.animation, groupName);
+			if(group!=null)
+			{
+				float groupStart = fragment.timestamp;
+				if(groupStart < firstTime)
+					firstTime = groupStart;
+			}
+		}
+		return firstTime;
 	}
 
 	//--- Line Builders ---//
