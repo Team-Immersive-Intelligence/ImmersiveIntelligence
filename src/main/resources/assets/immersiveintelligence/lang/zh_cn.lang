@@ -1119,7 +1119,7 @@ desc.immersiveintelligence.printed_page.bound_pages=各种页面装订在一起.
 desc.immersiveintelligence.printed_page.newspaper=多页装订成一份报纸.
 desc.immersiveintelligence.printed_page.book=多页装订成一本书.
 desc.immersiveintelligence.printed_page.letter=装在信封里寄给某人的一页.
-desc.immersiveintelligence.printed_page.letter_opened.name=一个已拆封的信封，内含一页纸.
+desc.immersiveintelligence.printed_page.letter_opened=一个已拆封的信封，内含一页纸.
 
 desc.immersiveintelligence.punchtape.empty=未写入变量
 desc.immersiveintelligence.punchtape.written=被写入过的

@@ -1201,7 +1201,7 @@ desc.immersiveintelligence.printed_page.bound_pages=Verschiedene zusammengebunde
 desc.immersiveintelligence.printed_page.newspaper=Mehrere Seiten zu einer Zeitschrift gebunden.
 desc.immersiveintelligence.printed_page.book=Mehrere Seiten zu einem Buch gebunden.
 desc.immersiveintelligence.printed_page.letter=Eine Seite in einem Umschlag um verschickt zu werden.
-desc.immersiveintelligence.printed_page.letter_opened.name=Ein geöffner Umschlag mit einer Seite.
+desc.immersiveintelligence.printed_page.letter_opened=Ein geöffner Umschlag mit einer Seite.
 
 desc.immersiveintelligence.punchtape.empty=Keine Variablen geschrieben
 desc.immersiveintelligence.punchtape.written=Geschrieben

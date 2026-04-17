@@ -428,7 +428,7 @@ desc.immersiveintelligence.printed_page.text=Strona zawierająca tekst.
 desc.immersiveintelligence.printed_page.code=Strona zawierająca kod w języku programowania.
 desc.immersiveintelligence.printed_page.blueprint=Strona zawierające informacje o budowie jakiejś struktury.
 desc.immersiveintelligence.printed_page.letter=Jedna strona w kopercie, gotowa do wysłania.
-desc.immersiveintelligence.printed_page.letter_opened.name=Otwarty kopert z jednym bokiem.
+desc.immersiveintelligence.printed_page.letter_opened=Otwarty kopert z jednym bokiem.
 
 desc.immersiveintelligence.infrared_enabled=Wizja §4Podczerwona§r aktywna!
 desc.immersiveintelligence.infrared_disabled=Wizja §cPodczerwona§r wyłączona!
