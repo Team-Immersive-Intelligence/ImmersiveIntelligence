@@ -4,13 +4,13 @@
     "inserter1": {
       "position": [
         {
-          "time": 0,
+          "time": 1,
           "transform": [-11, 14, 32]
         }
       ],
       "rotation": [
         {
-          "time": 0,
+          "time": 1,
           "transform": [0, 180, 0]
         }
       ]
@@ -18,7 +18,7 @@
     "lower1": {
       "rotation": [
         {
-          "time": 0,
+          "time": 1,
           "transform": [-10, 0, 0]
         }
       ]
@@ -26,7 +26,7 @@
     "upper1": {
       "rotation": [
         {
-          "time": 0,
+          "time": 1,
           "transform": [-162.5, 0, 0]
         }
       ]
@@ -34,13 +34,13 @@
     "inserter2": {
       "position": [
         {
-          "time": 0,
+          "time": 1,
           "transform": [0, 14, 32]
         }
       ],
       "rotation": [
         {
-          "time": 0,
+          "time": 1,
           "transform": [0, 180, 0]
         }
       ]
@@ -48,7 +48,7 @@
     "lower2": {
       "rotation": [
         {
-          "time": 0,
+          "time": 1,
           "transform": [-10, 0, 0]
         }
       ]
@@ -56,7 +56,7 @@
     "upper2": {
       "rotation": [
         {
-          "time": 0,
+          "time": 1,
           "transform": [-162.5, 0, 0]
         }
       ]
@@ -64,13 +64,13 @@
     "inserter3": {
       "position": [
         {
-          "time": 0,
+          "time": 1,
           "transform": [11, 14, 32]
         }
       ],
       "rotation": [
         {
-          "time": 0,
+          "time": 1,
           "transform": [0, 180, 0]
         }
       ]
@@ -78,7 +78,7 @@
     "lower3": {
       "rotation": [
         {
-          "time": 0,
+          "time": 1,
           "transform": [-10, 0, 0]
         }
       ]
@@ -86,7 +86,7 @@
     "upper3": {
       "rotation": [
         {
-          "time": 0,
+          "time": 1,
           "transform": [-162.5, 0, 0]
         }
       ]

@@ -5,11 +5,11 @@
       "rotation": [
         {
           "time": 0,
-          "transform": [0, 0, 0]
+          "transform": [0, 180, 0]
         },
         {
           "time": 1,
-          "transform": [0, 54, 0]
+          "transform": [0, 126, 0]
         }
       ]
     },

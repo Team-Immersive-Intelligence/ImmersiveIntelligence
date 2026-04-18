@@ -10,7 +10,7 @@
     "pickerLeft2": [10, 35, 8],
     "pickerRight": [6, 32, 8],
     "pickerRight2": [6, 35, 8],
-    "held": [8, 34, 8]
+    "held": [8, 38, 8]
   },
   "hierarchy": {
     "lower": "inserter",
@@ -20,5 +20,10 @@
     "pickerRight": "upper",
     "pickerRight2": "pickerRight",
     "held": "upper"
+  },
+  "properties": {
+    "held": {
+      "scale": [0.5, 0.5, 0.5]
+    }
   }
 }

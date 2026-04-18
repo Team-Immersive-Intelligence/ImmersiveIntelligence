@@ -72,6 +72,14 @@ public class IIAnimation
 		return groups.length > 0?groups[0]: new IIAnimationGroup("missingno", new JsonObject());
 	}
 
+	public IIAnimation renameAnimationGroup(String oldName, String newName)
+	{
+		IIAnimationGroup[] renamedGroups = Arrays.stream(groups)
+				.map(group -> group.groupName.equals(oldName)?group.renamedCopy(newName): group)
+				.toArray(IIAnimationGroup[]::new);
+		return new IIAnimation(res, renamedGroups);
+	}
+
 	public static class IIAnimationGroup
 	{
 		public final String groupName;
@@ -125,6 +133,11 @@ public class IIAnimation
 
 			visibility = json.has("visibility")?loadBooleanLine(json, "visibility"): null;
 			property = json.has("property")?loadFloatLine(json, "property"): null;
+		}
+
+		public IIAnimationGroup renamedCopy(String newName)
+		{
+			return new IIAnimationGroup(newName, position, scale, rotation, visibility, shader, property);
 		}
 
 		//TODO: 05.04.2022 attempt to streamline the code more

@@ -163,15 +163,15 @@ public class AMTModelHeader
 
 		Vec3d offset = offsets.remove(oldName);
 		if(offset!=null)
-			hierarchy.remove(newName);
+			offsets.put(newName, offset);
 
 		EasyNBT property = properties.remove(oldName);
-		if(property==null)
-			hierarchy.remove(newName);
+		if(property!=null)
+			properties.put(newName, property);
 
 		Matrix4 transform = transforms.remove(oldName);
-		if(transform==null)
-			hierarchy.remove(newName);
+		if(transform!=null)
+			transforms.put(newName, transform);
 	}
 
 	/**
