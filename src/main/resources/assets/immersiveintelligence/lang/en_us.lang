@@ -364,6 +364,7 @@ item.immersiveintelligence.printed_page.bound_pages.name=Bound Pages
 item.immersiveintelligence.printed_page.newspaper.name=Newspaper
 item.immersiveintelligence.printed_page.book.name=Book
 item.immersiveintelligence.printed_page.letter.name=Letter
+item.immersiveintelligence.printed_page.letter_opened.name=Opened Letter
 
 item.immersiveintelligence.logistic_tag.name=Logistic Manifest
 
@@ -1189,6 +1190,7 @@ desc.immersiveintelligence.printed_page.bound_pages=Various pages bound together
 desc.immersiveintelligence.printed_page.newspaper=Multiple pages bound into a newspaper.
 desc.immersiveintelligence.printed_page.book=Multiple pages bound into a book.
 desc.immersiveintelligence.printed_page.letter=A page packed into an envelope to be sent to someone.
+desc.immersiveintelligence.printed_page.letter_opened=An opened envelope containing a page.
 
 desc.immersiveintelligence.logistic_tag.none=No logistic data written
 desc.immersiveintelligence.logistic_tag.info.hold=%s - Logistic Manifest
