@@ -108,6 +108,16 @@ public class AMTBanner extends AMT
 		nbt.checkSetItemStack("banner", this::setBanner);
 	}
 
+
+	@Override
+	protected AMT renamedCopy(String newName)
+	{
+		AMTBanner banner = new AMTBanner(newName, originPos);
+		banner.isFlag = this.isFlag;
+		banner.setBanner(this.banner);
+		return banner;
+	}
+
 	@Override
 	public void disposeOf()
 	{

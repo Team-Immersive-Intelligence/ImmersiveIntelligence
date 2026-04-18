@@ -30,6 +30,12 @@ public class AMTLocator extends AMT
 	}
 
 	@Override
+	protected AMT renamedCopy(String newName)
+	{
+		return new AMTLocator(newName, originPos);
+	}
+
+	@Override
 	public void disposeOf()
 	{
 

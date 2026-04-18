@@ -1,6 +1,8 @@
 package pl.pabilo8.immersiveintelligence.client.util.amt.parts;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
+import blusunrize.immersiveengineering.client.render.TileRenderAutoWorkbench;
+import blusunrize.immersiveengineering.client.render.TileRenderAutoWorkbench.BlueprintLines;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.GlStateManager.CullFace;
@@ -8,6 +10,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.common.util.amt.AMTModelHeader;
@@ -23,6 +26,7 @@ public class AMTItem extends AMT
 {
 	private ItemStack stack, stackInto;
 	private boolean drawStacked = false;
+	private boolean drawSchematic = false;
 
 	public AMTItem(String name, Vec3d originPos)
 	{
@@ -72,9 +76,9 @@ public class AMTItem extends AMT
 		if(stackInto!=null)
 		{
 			if(property==0)
-				ClientUtils.mc().getRenderItem().renderItem(stack, TransformType.NONE);
+				ClientUtils.mc().getRenderItem().renderItem(stack, TransformType.FIXED);
 			else if(property==1)
-				ClientUtils.mc().getRenderItem().renderItem(stackInto, TransformType.NONE);
+				ClientUtils.mc().getRenderItem().renderItem(stackInto, TransformType.FIXED);
 			else
 			{
 				//Use stencil buffer to interpolate between stack and stackInto based on special property
@@ -104,11 +108,11 @@ public class AMTItem extends AMT
 				//Draw stack where stencil == 1
 				GL11.glStencilFunc(GL11.GL_EQUAL, 1, 0xFF);
 				GL11.glStencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_KEEP);
-				ClientUtils.mc().getRenderItem().renderItem(stack, TransformType.NONE);
+				ClientUtils.mc().getRenderItem().renderItem(stack, TransformType.FIXED);
 
 				//Draw stackInto where stencil == 0
 				GL11.glStencilFunc(GL11.GL_EQUAL, 0, 0xFF);
-				ClientUtils.mc().getRenderItem().renderItem(stackInto, TransformType.NONE);
+				ClientUtils.mc().getRenderItem().renderItem(stackInto, TransformType.FIXED);
 
 				GL11.glDisable(GL11.GL_STENCIL_TEST);
 			}
@@ -119,11 +123,26 @@ public class AMTItem extends AMT
 			if(drawStacked)
 				for(int i = 0; i < stack.getCount(); i++)
 				{
-					ClientUtils.mc().getRenderItem().renderItem(stack, TransformType.NONE);
+					ClientUtils.mc().getRenderItem().renderItem(stack, TransformType.FIXED);
 					GlStateManager.translate(0, 0.0625f, 0.0625f);
 				}
+			else if(drawSchematic)
+			{
+				BlueprintLines blueprint = TileRenderAutoWorkbench.getBlueprintDrawable(stack, ClientUtils.mc().world);
+				GlStateManager.disableCull();
+				GlStateManager.disableTexture2D();
+				GlStateManager.enableBlend();
+				float texScale = 32f;
+				GlStateManager.scale(1/texScale, 1/texScale, 1/texScale);
+				GlStateManager.color(1, 1, 1, 0.25f*MathHelper.clamp(1f, 0, 1));
+				blueprint.draw(2*2f);
+				GlStateManager.scale(texScale, texScale, texScale);
+				GlStateManager.enableAlpha();
+				GlStateManager.enableTexture2D();
+				GlStateManager.enableCull();
+			}
 			else
-				ClientUtils.mc().getRenderItem().renderItem(stack, TransformType.NONE);
+				ClientUtils.mc().getRenderItem().renderItem(stack, TransformType.FIXED);
 
 		}
 		GlStateManager.cullFace(cf);
@@ -143,6 +162,19 @@ public class AMTItem extends AMT
 		nbt.checkSetItemStack("stack", stack -> this.stack = stack);
 		nbt.checkSetItemStack("stackInto", stackInto -> this.stackInto = stackInto);
 		nbt.checkSetBoolean("drawStacked", drawStacked -> this.drawStacked = drawStacked);
+		nbt.checkSetBoolean("schematic", drawSchematic -> this.drawSchematic = drawSchematic);
+	}
+
+
+	@Override
+	protected AMT renamedCopy(String newName)
+	{
+		AMTItem clone = new AMTItem(newName, originPos);
+		clone.stack = stack;
+		clone.stackInto = stackInto;
+		clone.drawSchematic = drawSchematic;
+		clone.drawStacked = drawStacked;
+		return clone;
 	}
 
 	public void setStack(ItemStack stack)

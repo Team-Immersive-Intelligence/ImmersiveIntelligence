@@ -37,7 +37,7 @@ public class IIAnimationCompiledMap extends HashMap<AMT, IIAnimationGroup>
 		//iterate through all animation groups, if name matches, put the part into the animation map
 		for(IIAnimationGroup group : animation.groups)
 			for(AMT amt : parts)
-				if(group.groupName.equals(amt.name))
+				if(group.groupName.equals(amt.getName()))
 				{
 					map.put(amt, group);
 					break;

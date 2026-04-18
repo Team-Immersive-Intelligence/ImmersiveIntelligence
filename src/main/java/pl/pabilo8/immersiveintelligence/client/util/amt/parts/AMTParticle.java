@@ -130,4 +130,13 @@ public class AMTParticle extends AMT
 		super.applyProperties(nbt);
 		nbt.checkSetString("particle", this::setParticle);
 	}
+
+
+	@Override
+	protected AMT renamedCopy(String newName)
+	{
+		AMTParticle particle = new AMTParticle(newName, originPos);
+		particle.particle = this.particle;
+		return particle;
+	}
 }

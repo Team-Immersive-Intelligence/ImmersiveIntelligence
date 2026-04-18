@@ -1,5 +1,6 @@
 package pl.pabilo8.immersiveintelligence.client.util.amt.parts;
 
+import blusunrize.immersiveengineering.api.ApiUtils;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -134,6 +135,87 @@ public class AMTQuadsBuilder
 						texW, texH);
 	}
 
+	//--- New wire building helpers ---
+
+	/**
+	 * Adds a double‑sided cylindrical‑like wire segment between two points.
+	 * Two perpendicular ribbons are created, each with two faces (front and back)
+	 * to mimic a round wire without culling issues.
+	 *
+	 * @param start    start point (local coordinates)
+	 * @param end      end point (local coordinates)
+	 * @param diameter wire diameter
+	 * @return this builder for chaining
+	 */
+	public AMTQuadsBuilder withWireSegment(Vec3d start, Vec3d end, float diameter, float slack)
+	{
+		if(diameter <= 0||start.equals(end))
+			return this;
+
+		//Choose a reference vector that is not parallel to dir
+		Vec3d dir = end.subtract(start).normalize();
+		Vec3d ref = Math.abs(dir.y) < 0.999?new Vec3d(0, 1, 0): new Vec3d(1, 0, 0);
+		Vec3d side1 = dir.crossProduct(ref).normalize();
+		Vec3d side2 = side1.crossProduct(dir).normalize();
+
+		//Iterate through wire points
+		Vec3d[] points = ApiUtils.getConnectionCatenary(start, end, slack);
+		for(int i = 0; i < points.length-1; i++)
+		{
+			//Build connection from this to next point
+			double x = points[i].x, y = points[i].y, z = points[i].z;
+			double xx = points[i+1].x, yy = points[i+1].y, zz = points[i+1].z;
+
+			quads.add(makeFace(side1,
+					new Vec3d(x+diameter, y, z),
+					new Vec3d(xx+diameter, yy, zz),
+					new Vec3d(xx-diameter, yy, zz),
+					new Vec3d(x-diameter, y, z),
+					new Vec2f(0f, 0f),
+					new Vec2f(0f, 1f),
+					new Vec2f(0.125f, 1f),
+					new Vec2f(0.125f, 0f),
+					1, 1
+			));
+			quads.add(makeFace(side2,
+					new Vec3d(x, y+diameter, z),
+					new Vec3d(xx, yy+diameter, zz),
+					new Vec3d(xx, yy-diameter, zz),
+					new Vec3d(x, y-diameter, z),
+					new Vec2f(0f, 0f),
+					new Vec2f(0f, 1f),
+					new Vec2f(0.125f, 1f),
+					new Vec2f(0.125f, 0f),
+					1, 1
+			));
+
+			quads.add(makeFace(side2,
+					new Vec3d(x, y, z-diameter),
+					new Vec3d(xx, yy, zz-diameter),
+					new Vec3d(xx, yy, zz+diameter),
+					new Vec3d(x, y, z+diameter),
+					new Vec2f(0f, 0f),
+					new Vec2f(0f, 1f),
+					new Vec2f(0.125f, 1f),
+					new Vec2f(0.125f, 0f),
+					1, 1
+			));
+			quads.add(makeFace(side1,
+					new Vec3d(x, y-diameter, z),
+					new Vec3d(xx, yy-diameter, zz),
+					new Vec3d(xx, yy+diameter, zz),
+					new Vec3d(x, y+diameter, z),
+					new Vec2f(0f, 0f),
+					new Vec2f(0f, 1f),
+					new Vec2f(0.125f, 1f),
+					new Vec2f(0.125f, 0f),
+					1, 1
+			));
+
+		}
+		return this;
+	}
+
 	public AMTQuads build(String name, Vec3d originPos)
 	{
 		return new AMTQuads(name, originPos, quads.toArray(new BakedQuad[0]));
@@ -206,7 +288,58 @@ public class AMTQuadsBuilder
 				break;
 		}
 
-		//noinspection DataFlowIssue
+		return new BakedQuad(data, -1, face, sprite, diffuseLighting, FORMAT);
+	}
+
+	private BakedQuad makeFace(Vec3d normal, Vec3d a, Vec3d b, Vec3d c, Vec3d d,
+							   Vec2f uvA, Vec2f uvB, Vec2f uvC, Vec2f uvD, float texW, float texH)
+	{
+		// Determine an approximate EnumFacing for the quad (used for culling, but not essential)
+		EnumFacing face = EnumFacing.getFacingFromVector((float)normal.x, (float)normal.y, (float)normal.z);
+
+		Vec3d[] verts = new Vec3d[]{a, b, c, d};
+		Vec2f[] uvs = new Vec2f[]{uvA, uvB, uvC, uvD};
+
+		//Normalise and pack the normal into a 3‑byte integer (same as makeFace)
+		Vec3d norm = new Vec3d(face.getDirectionVec());
+		int nx = (int)(norm.x*127)&0xFF;
+		int ny = (int)(norm.y*127)&0xFF;
+		int nz = (int)(norm.z*127)&0xFF;
+		int packedNormal = nx|(ny<<8)|(nz<<16);
+
+		int vertexSize = FORMAT.getIntegerSize();
+		int[] data = new int[4*vertexSize];
+
+		for(int i = 0; i < 4; i++)
+		{
+			int idx = i*vertexSize;
+			//Position (3 floats)
+			data[idx] = Float.floatToRawIntBits((float)verts[i].x);
+			data[idx+1] = Float.floatToRawIntBits((float)verts[i].y);
+			data[idx+2] = Float.floatToRawIntBits((float)verts[i].z);
+			//Color (white, will be multiplied by bakedColor later)
+			data[idx+3] = 0xFFFFFFFF;
+			//UV (convert from pixel to sprite coordinates if a sprite is set)
+			float u = uvs[i].x;
+			float v = uvs[i].y;
+			if(sprite!=null)
+			{
+				//Sprite expects 0..16 range for a 16x16 icon
+				u = sprite.getInterpolatedU(u/texW*16f);
+				v = sprite.getInterpolatedV(v/texH*16f);
+			}
+			else
+			{
+				//Raw UVs in 0..1 range
+				u = u/texW;
+				v = v/texH;
+			}
+			data[idx+4] = Float.floatToRawIntBits(u);
+			data[idx+5] = Float.floatToRawIntBits(v);
+			//Packed normal
+			data[idx+6] = packedNormal;
+		}
+
 		return new BakedQuad(data, -1, face, sprite, diffuseLighting, FORMAT);
 	}
 

@@ -241,6 +241,15 @@ public class AMTChain extends AMT
 	}
 
 	@Override
+	protected AMT renamedCopy(String newName)
+	{
+		AMTChain clone = new AMTChain(newName, originPos);
+		clone.nodes.addAll(nodes);
+		clone.segment = segment;
+		return clone;
+	}
+
+	@Override
 	public void disposeOf()
 	{
 		AMTUtils.disposeOf(segment);

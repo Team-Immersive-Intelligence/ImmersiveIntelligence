@@ -165,9 +165,18 @@ public class AMTBipedAdapter extends AMT
 		}
 	}
 
+
+	@Override
+	protected AMT renamedCopy(String newName)
+	{
+		AMTBipedAdapter copy = new AMTBipedAdapter(newName, originPos);
+		copy.shouldDraw = shouldDraw;
+		return copy;
+	}
+
 	@Override
 	public void disposeOf()
 	{
-		// Clean up resources if needed
+
 	}
 }

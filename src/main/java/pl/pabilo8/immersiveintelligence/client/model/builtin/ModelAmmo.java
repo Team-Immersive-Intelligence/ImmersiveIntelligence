@@ -187,7 +187,7 @@ public class ModelAmmo<T extends IAmmoType<T, E>, E extends EntityAmmoBase<? sup
 					quads = ((AMTQuads)coreModel).recolor(core.getColor());
 				else
 				{
-					quads = new AMTLocator(coreModel.name, Vec3d.ZERO);
+					quads = new AMTLocator(coreModel.getName(), Vec3d.ZERO);
 					quads.setChildren(
 							coreModel.getChildrenRecursive().stream()
 									.filter(amt1 -> amt1 instanceof AMTQuads)

@@ -21,7 +21,7 @@ public class ItemIIMaterialBoule extends ItemIISubItemsBase<MaterialsBoule>
 		super("material_boule", 64, MaterialsBoule.values());
 	}
 
-	@GeneratedItemModels(itemName = "material_boule", texturePath = "material/dust")
+	@GeneratedItemModels(itemName = "material_boule", texturePath = "material/boule")
 	public enum MaterialsBoule implements IIItemEnum
 	{
 		SILICON

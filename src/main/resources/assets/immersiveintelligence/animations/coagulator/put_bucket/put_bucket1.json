@@ -1,0 +1,267 @@
+{
+  "comment": "Made by Pabilo8 with Blockbench",
+  "groups": {
+    "crane_top": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [0, -270, 0]
+        },
+        {
+          "time": 0.29583,
+          "transform": [0, -180, 0]
+        },
+        {
+          "time": 0.875,
+          "transform": [0, -180, 0]
+        },
+        {
+          "time": 0.9,
+          "transform": [0, -180, 0]
+        },
+        {
+          "time": 0.99167,
+          "transform": [0, -271.5, 0]
+        },
+        {
+          "time": 1,
+          "transform": [0, -270, 0]
+        }
+      ]
+    },
+    "extender": {
+      "position": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.29583,
+          "transform": [0, 0, 9.86]
+        },
+        {
+          "time": 0.45,
+          "transform": [0, 0, 8.86]
+        },
+        {
+          "time": 0.475,
+          "transform": [0, 0, 8.86]
+        },
+        {
+          "time": 0.7,
+          "transform": [0, 0, 9.86]
+        },
+        {
+          "time": 0.875,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "grabber": {
+      "position": [
+        {
+          "time": 0.29583,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.45,
+          "transform": [0, -21, 0]
+        },
+        {
+          "time": 0.475,
+          "transform": [0, -21, 0]
+        },
+        {
+          "time": 0.7,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "rope": {
+      "position": [
+        {
+          "time": 0.29583,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.45,
+          "transform": [0, 12, 0]
+        },
+        {
+          "time": 0.475,
+          "transform": [0, 12, 0]
+        },
+        {
+          "time": 0.7,
+          "transform": [0, 0, 0]
+        }
+      ],
+      "scale": [
+        {
+          "time": 0.29583,
+          "transform": [1, 1, 1]
+        },
+        {
+          "time": 0.45,
+          "transform": [1, 5, 1]
+        },
+        {
+          "time": 0.475,
+          "transform": [1, 5, 1]
+        },
+        {
+          "time": 0.7,
+          "transform": [1, 1, 1]
+        }
+      ]
+    },
+    "bucket": {
+      "visibility": [
+        {
+          "time": 0,
+          "visibility": true
+        },
+        {
+          "time": 0.55,
+          "visibility": false
+        },
+        {
+          "time": 1,
+          "visibility": false
+        }
+      ],
+      "rotation": [
+        {
+          "time": 0.29583,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.45,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 1,
+          "transform": [0, 0, 0]
+        }
+      ],
+      "position": [
+        {
+          "time": 0,
+          "transform": [0, 22, 9]
+        },
+        {
+          "time": 0.29583,
+          "transform": [0, 22, -1]
+        },
+        {
+          "time": 0.45,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 1,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "stick": {
+      "rotation": [
+        {
+          "time": 0.4,
+          "transform": [112.5, 0, 0]
+        },
+        {
+          "time": 0.475,
+          "transform": [112.5, 0, 0]
+        },
+        {
+          "time": 0.51667,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.53333,
+          "transform": [7.5, 0, 0]
+        },
+        {
+          "time": 0.55,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "handle": {
+      "rotation": [
+        {
+          "time": 0.4,
+          "transform": [-112.5, 0, 0]
+        },
+        {
+          "time": 0.475,
+          "transform": [-112.5, 0, 0]
+        },
+        {
+          "time": 0.51667,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.53333,
+          "transform": [-17.5, 0, 0]
+        },
+        {
+          "time": 0.55,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "rotate": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [0, -90, 0]
+        },
+        {
+          "time": 0.29583,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "bucket1": {
+      "visibility": [
+        {
+          "time": 0,
+          "visibility": false
+        },
+        {
+          "time": 0.55,
+          "visibility": true
+        },
+        {
+          "time": 1.0,
+          "visibility": true
+        }
+      ]
+    },
+    "fluid_bucket": {
+      "property": [
+        {
+          "time": 0,
+          "property": 1.0
+        },
+        {
+          "time": 0.295,
+          "property": 1.0
+        },
+        {
+          "time": 0.325,
+          "property": 0.85
+        },
+        {
+          "time": 0.3541,
+          "property": 1.0
+        },
+        {
+          "time": 1.0,
+          "property": 1.0
+        }
+      ]
+    }
+  }
+}

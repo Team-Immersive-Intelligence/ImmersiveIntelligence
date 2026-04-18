@@ -1,0 +1,8 @@
+# Made by Pabilo8 with Blockbench
+
+newmtl advanced_inserter
+map_Kd immersiveintelligence:blocks/metal_device/inserter/advanced_inserter
+newmtl tool_red
+map_Kd immersiveintelligence:blocks/metal_device/inserter/tool_red
+newmtl inserter_base2
+map_Kd immersiveintelligence:blocks/metal_device/inserter/inserter_base2

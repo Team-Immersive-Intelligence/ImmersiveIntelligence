@@ -3,16 +3,15 @@ package pl.pabilo8.immersiveintelligence.common.item.crafting;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.api.crafting.PrecisionAssemblerRecipe;
+import pl.pabilo8.immersiveintelligence.api.crafting.PrecisionAssemblerRecipe.PrecisionToolInfo;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.IPrecisionTool;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.ItemIIPrecisionTool.PrecisionTools;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
-import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.util.item.IICategory;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
@@ -35,40 +34,16 @@ public class ItemIIPrecisionTool extends ItemIISubItemsBase<PrecisionTools> impl
 	{
 		super("precission_tool", 1, PrecisionTools.values());
 
-		for(PrecisionTools e : getSubItems())
-			PrecisionAssemblerRecipe.registerToolType(e.getName(), this);
-	}
-
-	@Override
-	@ParametersAreNonnullByDefault
-	public void onCreated(ItemStack stack, World worldIn, EntityPlayer playerIn)
-	{
-		super.onCreated(stack, worldIn, playerIn);
-		ItemNBTHelper.setInt(stack, "damage", getToolMaxDamage(stack));
+		for(PrecisionTools toolType : getSubItems())
+			PrecisionAssemblerRecipe.registerToolType(this, new PrecisionToolInfo(
+					toolType.getName(), getStack(toolType), toolType.usageTime
+			));
 	}
 
 	@Override
 	public String getToolID(ItemStack stack)
 	{
 		return getSubNames()[stackToSub(stack).ordinal()];
-	}
-
-	@Override
-	public void damageTool(ItemStack stack, int amount)
-	{
-		if(!ItemNBTHelper.hasKey(stack, "damage"))
-			ItemNBTHelper.setInt(stack, "damage", getToolMaxDamage(stack));
-
-		ItemNBTHelper.setInt(stack, "damage", getToolDamage(stack)-amount);
-
-		if(getToolDamage(stack) < 0)
-			stack.setCount(0);
-	}
-
-	@Override
-	public int getToolDamage(ItemStack stack)
-	{
-		return ItemNBTHelper.hasKey(stack, "damage")?ItemNBTHelper.getInt(stack, "damage"): getToolMaxDamage(stack);
 	}
 
 	@Override
@@ -98,23 +73,11 @@ public class ItemIIPrecisionTool extends ItemIISubItemsBase<PrecisionTools> impl
 	}
 
 	@Override
-	public int getWorkTime(String toolName)
+	public PrecisionToolInfo getInfo(ItemStack toolStack)
 	{
-		return nameToSub(toolName).usageTime;
-	}
-
-	@Override
-	@Nonnull
-	public ItemStack getToolPresentationStack(@Nonnull String toolName)
-	{
-		return getStack(nameToSub(toolName), 1);
-	}
-
-	@Nonnull
-	@Override
-	public ResLoc getToolModelRes(String toolName)
-	{
-		return IIReference.RES_BLOCK_MODEL.with("multiblock/precision_assembler/tools/", toolName, ResLoc.EXT_OBJ);
+		if(toolStack.getItem()==this)
+			return PrecisionAssemblerRecipe.getToolByName(stackToSub(toolStack).getName());
+		return null;
 	}
 
 	@GeneratedItemModels(itemName = "precission_tool", texturePath = "precision_tool")

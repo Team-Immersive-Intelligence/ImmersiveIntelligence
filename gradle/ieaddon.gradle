@@ -111,4 +111,9 @@ repositories {
 		name "CurseForge"
 		url "https://minecraft.curseforge.com/api/maven/"
 	}
+
+	maven {
+		name "Modrinth"
+		url = "https://api.modrinth.com/maven"
+	}
 }

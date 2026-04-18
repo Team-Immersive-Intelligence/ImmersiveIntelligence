@@ -62,9 +62,9 @@ public class IIAnimationCachedMap
 		assert model.getBase()!=null;
 		IIAnimationGroup[] groups = Arrays.stream(model.getBase().getChildrenRecursive())
 				.filter(amt -> amt instanceof AMTQuads)
-				.filter(amt -> !present.contains(amt.name))
+				.filter(amt -> !present.contains(amt.getName()))
 				.map(amt ->
-						new IIAnimationGroup(amt.name, null, null, null,
+						new IIAnimationGroup(amt.getName(), null, null, null,
 								new IIBooleanLine(new float[]{0}, new Boolean[]{false}),
 								null, null)
 				)

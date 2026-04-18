@@ -252,6 +252,7 @@ public class EntityAtomicBoom extends Entity implements IEntityAdditionalSpawnDa
 	{
 		size = buffer.readFloat();
 		progress = buffer.readInt();
+
 	}
 
 	@Override

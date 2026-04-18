@@ -2,8 +2,8 @@
 
 newmtl coagulator
 map_Kd immersiveintelligence:blocks/multiblock/coagulator
-newmtl coagulator2
-map_Kd immersiveintelligence:blocks/multiblock/coagulator2
+newmtl common_concrete
+map_Kd immersiveintelligence:blocks/common/common_concrete
 newmtl common_thingies
 map_Kd immersiveintelligence:blocks/common/common_thingies
 newmtl common_bottom
