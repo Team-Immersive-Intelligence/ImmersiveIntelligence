@@ -69,7 +69,8 @@ public class CoagulatorRecipe extends IIMultiblockRecipe
 			if(information.outputPredicate.matchesItemStackIgnoringSize(outputStack))
 				return information;
 
-		IILogger.error("Could not find drying information for stack "+outputStack);
+		if(!outputStack.isEmpty())
+			IILogger.error("Could not find drying information for stack "+outputStack);
 		return new DryingInformation(new IngredientStack(ItemStack.EMPTY),
 				new FluidStack(FluidRegistry.WATER, 1000), Coagulator.bucketTime);
 	}
