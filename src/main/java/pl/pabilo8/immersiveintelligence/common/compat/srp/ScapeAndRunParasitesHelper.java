@@ -1,0 +1,128 @@
+package pl.pabilo8.immersiveintelligence.common.compat.srp;
+
+import blusunrize.immersiveengineering.api.crafting.ArcFurnaceRecipe;
+import blusunrize.immersiveengineering.common.IEContent;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.oredict.OreDictionary;
+import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
+import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoCore;
+import pl.pabilo8.immersiveintelligence.common.compat.IICompatModule;
+import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
+
+/**
+ * * @author Carver (carver@iiteam.net)
+ * @since 16.04.2026
+ * @updated 17.04.2026
+ */
+
+
+public class ScapeAndRunParasitesHelper extends IICompatModule
+
+{
+	@Override
+	public String getName()
+	{
+		return "srparasites";
+	}
+	private static AmmoCore AmmoCoreVileShell;
+	private static AmmoCore AmmoCoreLongarmShellFrag;
+
+	private static AmmoCore AmmoCoreBeckonShell;
+	private static AmmoCore AmmoCoreBolsterShell;
+	private static AmmoCore AmmoCoreDispatcherShell;
+	private static AmmoCore AmmoCoreHivescrap;
+
+	private static AmmoComponent AmmoComponentManducaterCore;
+	private static AmmoComponent AmmoComponentSummonerCore;
+
+	private static AmmoComponent AmmoComponentInfester;
+
+	private static AmmoComponent AmmoComponentSerratedPayload;
+
+	public static final ResLoc RES_SRP = ResLoc.of(ResLoc.root("srparasites"));
+
+	@Override
+
+	public void preInit()
+	{
+		Item vileshell = Item.REGISTRY.getObject(new ResourceLocation("srparasites", "vile_shell")); //described as extremely resistant shell
+		Item longarmshell = Item.REGISTRY.getObject(new ResourceLocation("srparasites", "ada_longarms_drop")); //two are used for the vile shell above.
+		Item bolstershell = Item.REGISTRY.getObject(new ResourceLocation("srparasites", "ada_bolster_drop"));
+		Item beckonshell = Item.REGISTRY.getObject(new ResourceLocation("srparasites", "beckon_drop"));
+		Item dispatchershell = Item.REGISTRY.getObject(new ResourceLocation("srparasites", "dispatcher_drop"));
+
+		Item hive_scrap = Item.REGISTRY.getObject(new ResourceLocation("srparasites", "hive_scrap"));
+		//lategame resource. Obtained from meteors or Preeminent parasites or from biome. Notably hard and dangerous to obtain as it is either random RNG or having to fight Preeminents.
+
+		OreDictionary.registerOre("vileshell", new ItemStack(vileshell));
+		OreDictionary.registerOre("longarmshell", new ItemStack(longarmshell));
+		OreDictionary.registerOre("bolstershell", new ItemStack(bolstershell));
+		OreDictionary.registerOre("beckonshell", new ItemStack(beckonshell));
+		OreDictionary.registerOre("dispatchershell", new ItemStack(dispatchershell));
+		OreDictionary.registerOre("hivescrap", new ItemStack(hive_scrap));
+
+		AmmoCore AmmoCoreVileShell = new AmmoCoreVileShell();
+		AmmoCore AmmoCoreLongarmShellFrag = new AmmoCoreLongarmShellFrag();
+		AmmoCore AmmoCoreBeckonShell = new AmmoCoreBeckonShell();
+		AmmoCore AmmoCoreBolsterShell = new AmmoCoreBolsterShell();
+		AmmoCore AmmoCoreDispatcherShell = new AmmoCoreDispatcherShell();
+
+		AmmoCore AmmoCoreHivescrap = new AmmoCoreHivescrap();
+
+		AmmoComponent AmmoComponentInfester = new AmmoComponentInfester();
+		AmmoComponent AmmoComponentSerratedPayload = new AmmoComponentSerratedPayload();
+
+		AmmoComponent AmmoComponentManducaterCore = new AmmoComponentManducaterCore();
+		AmmoComponent AmmoComponentSummonerCore = new AmmoComponentSummonerCore();
+
+		AmmoRegistry.registerCore(ScapeAndRunParasitesHelper.AmmoCoreVileShell);
+		AmmoRegistry.registerCore(ScapeAndRunParasitesHelper.AmmoCoreLongarmShellFrag);
+		AmmoRegistry.registerCore(ScapeAndRunParasitesHelper.AmmoCoreBeckonShell);
+		AmmoRegistry.registerCore(ScapeAndRunParasitesHelper.AmmoCoreBolsterShell);
+		AmmoRegistry.registerCore(ScapeAndRunParasitesHelper.AmmoCoreDispatcherShell);
+
+		AmmoRegistry.registerCore(ScapeAndRunParasitesHelper.AmmoCoreHivescrap);
+
+		AmmoRegistry.registerComponent(ScapeAndRunParasitesHelper.AmmoComponentManducaterCore);
+		AmmoRegistry.registerComponent(ScapeAndRunParasitesHelper.AmmoComponentSummonerCore);
+		AmmoRegistry.registerComponent(ScapeAndRunParasitesHelper.AmmoComponentInfester);
+		AmmoRegistry.registerComponent(ScapeAndRunParasitesHelper.AmmoComponentSerratedPayload);
+
+//17.04.2026 TODO: hazmat protection, block placement template to make some shells spread infestation.
+// 	parasitecanister (meta 0, 2 - items for parasitic bombs, separate). 		//infestremain?
+//
+// 16.04.2026 TODO: make it cancel application effect event of COTH and other contaminants.
+// Scape and run potion id's SRPPotions: viral, coth, corrosive, conta. For "overheating" potion - make a clone of the end result code and replace radiation with protectsFromHeat
+// potential: BLEED_E (bleed), CORRO_E, CONTA_E, COTH_E
+
+
+
+	}
+
+	@Override
+	public void registerRecipes()
+	{
+		//turn hivesteel block into 1 steel ingot. Hivesteel is made when biome infests metal blocks, most commonly iron. Not OP as you waste 8 other ingots and already let biome progress.
+		Item hivesteel = Item.REGISTRY.getObject(new ResourceLocation("srparasites", "parasite_rubble"));
+		ArcFurnaceRecipe.addRecipe(new ItemStack(IEContent.itemMetal, 1, 8),
+				new ItemStack(hivesteel,1,6), ItemStack.EMPTY, 4000, 800);
+
+		//TODO: Recipes for processing components. Wait for chemical reactor for turning meat into biodiesel.
+
+	}
+
+	@Override
+	public void init()
+	{
+
+	}
+
+	@Override
+	public void postInit()
+	{
+
+	}
+}
