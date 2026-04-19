@@ -17,13 +17,13 @@ import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 
 import static pl.pabilo8.immersiveintelligence.api.ShrapnelHandler.addShrapnel;
 
-public class EndExpansionHelper extends IICompatModule
-
 /**
  * @author Carver (carver@iiteam.net)
  * @since 18.04.2026
  * @updated 18.04.2026
  * */
+
+public class EndExpansionHelper extends IICompatModule
 
 {
 	@Override
@@ -32,14 +32,14 @@ public class EndExpansionHelper extends IICompatModule
 		return "ee";
 	}
 
-	private static AmmoCore AmmoCoreCordium;
+	public static AmmoCore AmmoCoreCordium;
 
-	private static AmmoComponent AmmoComponentPureCrystal;
-	private static AmmoComponent AmmoComponentLustrianCrystal;
-	private static AmmoComponent AmmoComponentVacousCrystal;
-	private static AmmoComponent AmmoComponentInfusedCrystal;
+	public static AmmoComponent AmmoComponentPureCrystal;
+	public static AmmoComponent AmmoComponentLustrianCrystal;
+	public static AmmoComponent AmmoComponentVacousCrystal;
+	public static AmmoComponent AmmoComponentInfusedCrystal;
 
-	private static final ResLoc RES_EE = ResLoc.of(ResLoc.root("ee"));
+	public static final ResLoc RES_EE = ResLoc.of(ResLoc.root("ee"));
 
 	@Override
 	public void preInit()
@@ -60,19 +60,12 @@ public class EndExpansionHelper extends IICompatModule
 
 		OreDictionary.registerOre("ingotCordium", new ItemStack(cordium));
 
-		AmmoCore AmmoCoreCordium = new AmmoCoreCordium();
+		AmmoRegistry.registerCore(AmmoCoreCordium = new AmmoCoreCordium());
 
-		AmmoComponent AmmoComponentPureCrystal = new AmmoComponentPureCrystal();
-		AmmoComponent AmmoComponentLustrianCrystal = new AmmoComponentLustrianCrystal();
-		AmmoComponent AmmoComponentVacousCrystal = new AmmoComponentVacousCrystal();
-		AmmoComponent AmmoComponentInfusedCrystal = new AmmoComponentInfusedCrystal();
-
-		AmmoRegistry.registerCore(EndExpansionHelper.AmmoCoreCordium);
-
-		AmmoRegistry.registerComponent(EndExpansionHelper.AmmoComponentPureCrystal);
-		AmmoRegistry.registerComponent(EndExpansionHelper.AmmoComponentLustrianCrystal);
-		AmmoRegistry.registerComponent(EndExpansionHelper.AmmoComponentVacousCrystal);
-		AmmoRegistry.registerComponent(EndExpansionHelper.AmmoComponentInfusedCrystal);
+		AmmoRegistry.registerComponent(AmmoComponentPureCrystal = new AmmoComponentPureCrystal());
+		AmmoRegistry.registerComponent(AmmoComponentLustrianCrystal = new AmmoComponentLustrianCrystal());
+		AmmoRegistry.registerComponent(AmmoComponentVacousCrystal = new AmmoComponentVacousCrystal());
+		AmmoRegistry.registerComponent(AmmoComponentInfusedCrystal = new AmmoComponentInfusedCrystal());
 	}
 
 	@Override

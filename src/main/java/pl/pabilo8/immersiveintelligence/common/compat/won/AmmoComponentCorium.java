@@ -29,6 +29,7 @@ import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIPotions;
+import pl.pabilo8.immersiveintelligence.common.compat.srp.ScapeAndRunParasitesHelper;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 
@@ -37,13 +38,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
-
-public class AmmoComponentCorium extends AmmoComponent
 /**
  * @author Carver (carver@iiteam.net)
- * @updated 13.04.2026
+ * @since 12.04.2026
+ * @updated 19.04.2026
  */
 
+public class AmmoComponentCorium extends AmmoComponent
 
 {
 	public AmmoComponentCorium()
@@ -55,7 +56,7 @@ public class AmmoComponentCorium extends AmmoComponent
 
 	public IngredientStack getMaterial()
 	{
-		Item corium = Item.REGISTRY.getObject(new ResourceLocation("wyrmsofnyrus", "corium"));
+		Item corium = Item.REGISTRY.getObject(WyrmsOfNyrusHelper.RES_WON.with("inertcorium"));
 
 		return new IngredientStack(new ItemStack(corium, 1));
 

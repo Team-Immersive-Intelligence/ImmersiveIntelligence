@@ -5,14 +5,14 @@ import blusunrize.immersiveengineering.api.tool.ITeslaEntity;
 import blusunrize.immersiveengineering.common.Config.IEConfig;
 import blusunrize.immersiveengineering.common.blocks.TileEntityMultiblockPart;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
-import blusunrize.immersiveengineering.common.util.IEDamageSources;
+import blusunrize.immersiveengineering.common.util.*;
 import blusunrize.immersiveengineering.common.util.IEDamageSources.ElectricDamageSource;
-import blusunrize.immersiveengineering.common.util.IEPotions;
-import blusunrize.immersiveengineering.common.util.IESounds;
-import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
+import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -34,9 +34,18 @@ import pl.pabilo8.immersiveintelligence.api.ammo.enums.ComponentEffectShape;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.ComponentRole;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIExplosion;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
+
+import java.util.Set;
+
+/**
+ * * @author Carver (carver@iiteam.net)
+ * @since 16.04.2026
+ * @updated 19.04.2026
+ */
 
 public class AmmoComponentSummonerCore extends AmmoComponent
 {
@@ -74,6 +83,18 @@ public class AmmoComponentSummonerCore extends AmmoComponent
 		{
 			Potion viral = Potion.REGISTRY.getObject(ResLoc.of("srparasites:viral"));
 			e2.addPotionEffect(new PotionEffect(viral, 180, 0));
+		}
+
+		Block parasiteInfestedRemains = Block.REGISTRY.getObject(ScapeAndRunParasitesHelper.RES_SRP.with("infestremain"));
+
+		Set<BlockPos> blocks = IIUtils.getBlocksInOrb(world, new BlockPos(pos), 4*componentSize);
+		for(BlockPos firePos : blocks)
+		{
+			IBlockState placed = (parasiteInfestedRemains).getDefaultState();
+
+			if(world.isAirBlock(firePos)&&world.getBlockState(firePos.down()).isTopSolid())
+				world.setBlockState(firePos, placed);
+
 		}
 
 		float radius = multiplier*10;

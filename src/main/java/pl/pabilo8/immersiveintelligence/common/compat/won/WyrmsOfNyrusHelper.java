@@ -17,6 +17,7 @@ import static pl.pabilo8.immersiveintelligence.api.ShrapnelHandler.addShrapnel;
 /**
  * @author Carver (carver@iiteam.net)
  * @since 13.04.2026
+ * @updated 19.04.2026
  */
 
 public class WyrmsOfNyrusHelper extends IICompatModule
@@ -28,17 +29,18 @@ public class WyrmsOfNyrusHelper extends IICompatModule
 		return "wyrmsofnyrus";
 	}
 
-	private static AmmoComponent AmmoComponentCreepshard;
-	private static AmmoComponent AmmoComponentWyrmArmorFrag;
-	private static AmmoComponent AmmoComponentCreepBulb;
-	private static AmmoComponent AmmoComponentCorium;
-	private static AmmoComponent AmmoComponentHivelight;
-	private static AmmoCore AmmoCoreCreepedBone;
-	private static AmmoCore AmmoCoreWyrmArmorFrag;
-	private static AmmoCore AmmoCoreHivesteel;
-	private static AmmoCore AmmoCoreBorgiplate;
+	public static AmmoComponent AmmoComponentCreepshard;
+	public static AmmoComponent AmmoComponentWyrmArmorFrag;
+	public static AmmoComponent AmmoComponentCreepBulb;
+	public static AmmoComponent AmmoComponentCorium;
+	public static AmmoComponent AmmoComponentHivelight;
+	public static AmmoComponent AmmoComponentCreepInfestor;
+	public static AmmoCore AmmoCoreCreepedBone;
+	public static AmmoCore AmmoCoreWyrmArmorFrag;
+	public static AmmoCore AmmoCoreHivesteel;
+	public static AmmoCore AmmoCoreBorgiplate;
 
-	private static final ResLoc RES_WON = ResLoc.of(ResLoc.root("wyrmsofnyrus"));
+	public static final ResLoc RES_WON = ResLoc.of(ResLoc.root("wyrmsofnyrus"));
 
 	@Override
 	public void preInit()
@@ -73,38 +75,28 @@ public class WyrmsOfNyrusHelper extends IICompatModule
 						RES_WON.with("borgplating"), 2, 0.05f, 1f);
 		//borgplating - for borgiplate. Heat-resistant metal. However, not too terribly sure of the usefullness of it as ammo core, where armor would have done better.
 
-		Item creepedbone = Item.REGISTRY.getObject(new ResourceLocation("wyrmsofnyrus", "creepedbone"));
+		Item creepedbone = Item.REGISTRY.getObject(WyrmsOfNyrusHelper.RES_WON.with( "creepedbone"));
 		OreDictionary.registerOre("creepedbone", new ItemStack(creepedbone));
 
-		Item wyrmshell = Item.REGISTRY.getObject(new ResourceLocation("wyrmsofnyrus", "wyrmarmorfrag"));
+		Item wyrmshell = Item.REGISTRY.getObject(WyrmsOfNyrusHelper.RES_WON.with( "wyrmarmorfrag"));
 		OreDictionary.registerOre("wyrmarmorfrag", new ItemStack(wyrmshell));
 
-		Item hivesteel = Item.REGISTRY.getObject(new ResourceLocation("wyrmsofnyrus", "hivesteel"));
+		Item hivesteel = Item.REGISTRY.getObject(WyrmsOfNyrusHelper.RES_WON.with( "hivesteel"));
 		OreDictionary.registerOre("ingotHivesteel", new ItemStack(hivesteel));
 
-		Item borgiplate = Item.REGISTRY.getObject(new ResourceLocation("wyrmsofnyrus", "borgiplate"));
+		Item borgiplate = Item.REGISTRY.getObject(WyrmsOfNyrusHelper.RES_WON.with("borgiplate"));
 		OreDictionary.registerOre("borgiplate", new ItemStack(borgiplate));
 
-		AmmoComponent AmmoComponentCreepshard = new AmmoComponentCreepshard();
-		AmmoComponent AmmoComponentWyrmArmorFrag = new AmmoComponentWyrmArmorFrag();
-		AmmoComponent AmmoComponentCreepBulb = new AmmoComponentCreepBulb();
-		AmmoComponent AmmoComponentCorium = new AmmoComponentCorium();
-		AmmoComponent AmmoComponentHivelight = new AmmoComponentHivelight();
-
-		AmmoCore AmmoCoreCreepedBone = new AmmoCoreCreepedBone();
-		AmmoCore AmmoCoreWyrmArmorFrag = new AmmoCoreWyrmArmorFrag();
-		AmmoCore AmmoCoreHivesteel = new AmmoCoreHivesteel();
-		AmmoCore AmmoCoreBorgiplate = new AmmoCoreBorgiplate();
-
-		AmmoRegistry.registerComponent(WyrmsOfNyrusHelper.AmmoComponentCreepshard);
-		AmmoRegistry.registerComponent(WyrmsOfNyrusHelper.AmmoComponentWyrmArmorFrag);
-		AmmoRegistry.registerComponent(WyrmsOfNyrusHelper.AmmoComponentCreepBulb);
-		AmmoRegistry.registerComponent(WyrmsOfNyrusHelper.AmmoComponentCorium);
-		AmmoRegistry.registerComponent(WyrmsOfNyrusHelper.AmmoComponentHivelight);
-		AmmoRegistry.registerCore(WyrmsOfNyrusHelper.AmmoCoreWyrmArmorFrag);
-		AmmoRegistry.registerCore(WyrmsOfNyrusHelper.AmmoCoreCreepedBone);
-		AmmoRegistry.registerCore(WyrmsOfNyrusHelper.AmmoCoreHivesteel);
-		AmmoRegistry.registerCore(WyrmsOfNyrusHelper.AmmoCoreBorgiplate);
+		AmmoRegistry.registerComponent(AmmoComponentCreepInfestor = new AmmoComponentCreepInfestor());
+		AmmoRegistry.registerComponent(AmmoComponentCreepshard = new AmmoComponentCreepshard());
+		AmmoRegistry.registerComponent(AmmoComponentWyrmArmorFrag = new AmmoComponentWyrmArmorFrag());
+		AmmoRegistry.registerComponent(AmmoComponentCreepBulb = new AmmoComponentCreepBulb());
+		AmmoRegistry.registerComponent(AmmoComponentCorium = new AmmoComponentCorium());
+		AmmoRegistry.registerComponent(AmmoComponentHivelight = new AmmoComponentHivelight());
+		AmmoRegistry.registerCore(AmmoCoreWyrmArmorFrag = new AmmoCoreWyrmArmorFrag());
+		AmmoRegistry.registerCore(AmmoCoreCreepedBone = new AmmoCoreCreepedBone());
+		AmmoRegistry.registerCore(AmmoCoreHivesteel = new AmmoCoreHivesteel());
+		AmmoRegistry.registerCore(AmmoCoreBorgiplate = new AmmoCoreBorgiplate());
 
 // TODO 13.04.26: More in-depth compat. Advanced features that would require using wyrms' code.
 		//utilize synlib as dependency API (after we update the build script). And then implement the following:
