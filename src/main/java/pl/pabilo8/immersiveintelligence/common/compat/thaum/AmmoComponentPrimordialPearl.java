@@ -1,14 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common.compat.thaum;
 
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
-import blusunrize.immersiveengineering.api.tool.ITeslaEntity;
-import blusunrize.immersiveengineering.common.Config.IEConfig;
-import blusunrize.immersiveengineering.common.blocks.TileEntityMultiblockPart;
-import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
-import blusunrize.immersiveengineering.common.util.IEDamageSources;
-import blusunrize.immersiveengineering.common.util.IEDamageSources.ElectricDamageSource;
-import blusunrize.immersiveengineering.common.util.IEPotions;
-import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
@@ -19,21 +11,18 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraftforge.energy.CapabilityEnergy;
-import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.ComponentEffectShape;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.ComponentRole;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
+import pl.pabilo8.immersiveintelligence.api.ammo.utils.IIAmmoUtils;
 import pl.pabilo8.immersiveintelligence.common.entity.ammo.component.EntityIIChemthrowerShot;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIExplosion;
@@ -46,20 +35,18 @@ import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
  * @updated 11.04.2026
  * @since 08.04.2026
  */
-
 public class AmmoComponentPrimordialPearl extends AmmoComponent
-
 {
 	public AmmoComponentPrimordialPearl()
 	{
-		super("primordial pearl", 1f, ComponentRole.SPECIAL, IIColor.fromPackedARGB(0xff3dae));
+		super("primordial_pearl", 1f, ComponentRole.SPECIAL, IIColor.fromPackedARGB(0xff3dae));
 	}
 
 	@Override
 
 	public IngredientStack getMaterial()
 	{
-		Item primordialpearl = Item.REGISTRY.getObject(new ResourceLocation("thaumcraft", "itemeldritchobject"));
+		Item primordialpearl = Item.REGISTRY.getObject(ThaumcraftHelper.RES_TC.with("itemeldritchobject"));
 		return new IngredientStack(new ItemStack(primordialpearl, 1, 3));
 
 		//itemeldritchobject:3 is the true name, other sources have it as primordial_pearl
@@ -76,89 +63,20 @@ public class AmmoComponentPrimordialPearl extends AmmoComponent
 	public void onEffect(World world, Vec3d pos, Vec3d dir, ComponentEffectShape shape, NBTTagCompound tag, float componentSize, float multiplier, Entity owner)
 	{
 		float radius = multiplier*10;
-		int extracted = (int)(2000000*multiplier);
+		IIAmmoUtils.applyEMPEffect(world, new BlockPos(pos), radius, (int)(2000000*multiplier));
 
-		for(int x = (int)(-radius/2); x < radius/2; x++)
-			for(int y = (int)(-radius/2); y < radius/2; y++)
-				for(int z = (int)(-radius/2); z < radius/2; z++)
-				{
-					BlockPos pp = new BlockPos(pos).add(x, y, z);
-					TileEntity te = world.getTileEntity(pp);
-					if(te instanceof TileEntityMultiblockPart)
-						te = ((TileEntityMultiblockPart<?>)te).master();
-
-					if(te!=null)
-					{
-						if(te instanceof TileEntityMultiblockMetal)
-						{
-							((TileEntityMultiblockMetal<?, ?>)te).energyStorage.extractEnergy(extracted, false);
-						}
-						else
-						{
-							for(EnumFacing facing : EnumFacing.values())
-							{
-								if((te.hasCapability(CapabilityEnergy.ENERGY, facing)))
-								{
-									IEnergyStorage cap = te.getCapability(CapabilityEnergy.ENERGY, facing);
-									if(cap!=null)
-									{
-										cap.extractEnergy(extracted, false);
-										break;
-									}
-								}
-							}
-						}
-					}
-				}
-
-		for(EntityLivingBase e : world.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(pos.x, pos.y, pos.z, pos.x, pos.y, pos.z).grow(radius)))
-			if(!(e instanceof ITeslaEntity))
-			{
-				ElectricDamageSource dmgsrc = IEDamageSources.causeTeslaDamage(IEConfig.Machines.teslacoil_damage, false);
-
-				if(!world.isRemote)
-				{
-					if(dmgsrc.apply(e))
-					{
-						int prevFire = e.fire;
-						e.setFire(prevFire+1);
-						e.addPotionEffect(new PotionEffect(IEPotions.stunned, 128));
-					}
-				}
-
-				for(ItemStack stack : e.getArmorInventoryList())
-				{
-					if((stack.hasCapability(CapabilityEnergy.ENERGY, null)))
-					{
-						IEnergyStorage cap = stack.getCapability(CapabilityEnergy.ENERGY, null);
-						if(cap!=null)
-							if(cap.extractEnergy(extracted, false)==0)
-							{
-								if(ItemNBTHelper.hasKey(stack, "Energy"))
-									ItemNBTHelper.setInt(stack, "Energy", Math.max(0, ItemNBTHelper.getInt(stack, "Energy")-extracted));
-								else if(ItemNBTHelper.hasKey(stack, "energy"))
-									ItemNBTHelper.setInt(stack, "energy", Math.max(0, ItemNBTHelper.getInt(stack, "energy")-extracted));
-								else if(ItemNBTHelper.hasKey(stack, "Power"))
-									ItemNBTHelper.setInt(stack, "Power", Math.max(0, ItemNBTHelper.getInt(stack, "Power")-extracted));
-								else if(ItemNBTHelper.hasKey(stack, "power"))
-									ItemNBTHelper.setInt(stack, "power", Math.max(0, ItemNBTHelper.getInt(stack, "power")-extracted));
-
-							}
-					}
-				}
-			}
 		BlockPos ppos = new BlockPos(pos);
 		new IIExplosion(world, owner, pos, dir, 30*componentSize, 50*multiplier, shape, false, componentSize > 0.125f, false)
 				.doExplosion();
 
 		EntityLivingBase[] entities = world.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(ppos).grow(50*multiplier)).toArray(new EntityLivingBase[0]);
+		Potion fluxtaint = Potion.REGISTRY.getObject(ResLoc.of("thaumcraft:fluxtaint"));
+		Potion fluxexhaust = Potion.REGISTRY.getObject(ResLoc.of("thaumcraft:visexhaust"));
+		Potion fluxexhaustinfect = Potion.REGISTRY.getObject(ResLoc.of("thaumcraft:visexhaust"));
+		Potion unhunger = Potion.REGISTRY.getObject(ResLoc.of("thaumcraft:unnaturalhunger"));
+		Potion thaummarhia = Potion.REGISTRY.getObject(ResLoc.of("thaumcraft:thaumarhia"));
 		for(EntityLivingBase e : entities)
 		{
-			Potion fluxtaint = Potion.REGISTRY.getObject(ResLoc.of("thaumcraft:flux_taint"));
-			Potion fluxexhaust = Potion.REGISTRY.getObject(ResLoc.of("thaumcraft:vis_exhaust"));
-			Potion fluxexhaustinfect = Potion.REGISTRY.getObject(ResLoc.of("thaumcraft:infvisexhaust"));
-			Potion unhunger = Potion.REGISTRY.getObject(ResLoc.of("thaumcraft:unhunger"));
-			Potion thaummarhia = Potion.REGISTRY.getObject(ResLoc.of("thaumcraft:thaumarhia"));
 
 			e.addPotionEffect(new PotionEffect(fluxtaint, 460, 4));
 			e.addPotionEffect(new PotionEffect(fluxexhaust, 4000, 10));
@@ -169,7 +87,7 @@ public class AmmoComponentPrimordialPearl extends AmmoComponent
 			e.hurtResistantTime = 0;
 		}
 
-		Entity e = EntityList.createEntityByIDFromName(ResLoc.of("thaumcraft:flux_rift"), world);
+		Entity e = EntityList.createEntityByIDFromName(ResLoc.of("thaumcraft:fluxrift"), world);
 		e.setPosition(pos.z, pos.y, pos.z);
 		world.spawnEntity(e);
 		world.spawnEntity(e);
@@ -209,8 +127,8 @@ public class AmmoComponentPrimordialPearl extends AmmoComponent
 
 			//12.04.2026 Carver: made use of TC's own Aurahelper to affect aura.
 
-		//	AuraHelper.polluteAura(world, pos, 500.0F, true);
-		//	AuraHelper.drainVis(world, pos, 10000.0F, false);
+			//	AuraHelper.polluteAura(world, pos, 500.0F, true);
+			//	AuraHelper.drainVis(world, pos, 10000.0F, false);
 		}
 	}
 }

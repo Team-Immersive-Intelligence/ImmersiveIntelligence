@@ -14,22 +14,20 @@ import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
 
 import static pl.pabilo8.immersiveintelligence.api.ShrapnelHandler.addShrapnel;
 
-public class ThaumcraftHelper extends IICompatModule
-
 /**
  * @author Carver (carver@iiteam.net)
  * @updated 16.04.2026
  * @since 11.04.2026
  */
-
+public class ThaumcraftHelper extends IICompatModule
 {
-	private static AmmoCore AmmoCoreThaumium;
-	private static AmmoCore AmmoCoreVoidmetal;
-	private static AmmoComponent AmmoComponentPrimordialPearl;
-	private static AmmoComponent AmmoComponentBottledTaint;
-	private static AmmoComponent AmmoComponentAlumentum;
+	private static AmmoCore ammoCoreThaumium;
+	private static AmmoCore ammoCoreVoidmetal;
+	private static AmmoComponent ammoComponentPrimordialPearl;
+	private static AmmoComponent ammoComponentBottledTaint;
+	private static AmmoComponent ammoComponentAlumentum;
 
-	private static AmmoPropellant AmmoPropellantAlumentum;
+	private static AmmoPropellant ammoPropellantAlumentum;
 
 	@Override
 	public String getName()
@@ -37,12 +35,11 @@ public class ThaumcraftHelper extends IICompatModule
 		return "thaumcraft";
 	}
 
-	private static final ResLoc RES_TC = ResLoc.of(ResLoc.root("thaumcraft"));
+	public static final ResLoc RES_TC = ResLoc.of(ResLoc.root("thaumcraft"));
 
 	@Override
 	public void preInit()
 	{
-
 		addShrapnel("crystal", IIColor.fromPackedRGB(0x372645),
 				RES_TC.with("crystal_ordo"), 3, 0.05f, 0.5f);
 		//crystal_essence
@@ -53,30 +50,20 @@ public class ThaumcraftHelper extends IICompatModule
 		addShrapnel("voidmetal", IIColor.fromPackedRGB(0x10081a),
 				RES_TC.with("metal_void"), 7, 0.30f, 0.0f);
 
+		AmmoRegistry.registerCore(ammoCoreThaumium = new AmmoCoreThaumium());
+		AmmoRegistry.registerCore(ammoCoreVoidmetal = new AmmoCoreVoidmetal());
 
-		AmmoCore AmmoCoreThaumium = new AmmoCoreThaumium();
-		AmmoCore AmmoCoreVoidmetal = new AmmoCoreVoidmetal();
+		AmmoRegistry.registerComponent(ammoComponentPrimordialPearl = new AmmoComponentPrimordialPearl());
+		AmmoRegistry.registerComponent(ammoComponentBottledTaint = new AmmoComponentBottledTaint());
+		AmmoRegistry.registerComponent(ammoComponentAlumentum = new AmmoComponentAlumentum());
 
-		AmmoComponent AmmoComponentPrimordialPearl = new AmmoComponentPrimordialPearl();
-		AmmoComponent AmmoComponentBottledTaint = new AmmoComponentPrimordialPearl();
-		AmmoComponent AmmoComponentAlumentum = new AmmoComponentAlumentum();
-
-		AmmoPropellant AmmoPropellantAlumentum = new AmmoPropellantAlumentum();
-
-		AmmoRegistry.registerCore(ThaumcraftHelper.AmmoCoreThaumium);
-		AmmoRegistry.registerCore(ThaumcraftHelper.AmmoCoreVoidmetal);
-
-		AmmoRegistry.registerComponent(ThaumcraftHelper.AmmoComponentPrimordialPearl);
-		AmmoRegistry.registerComponent(ThaumcraftHelper.AmmoComponentBottledTaint);
-		AmmoRegistry.registerComponent(ThaumcraftHelper.AmmoComponentAlumentum);
-
-		AmmoRegistry.registerPropellant(ThaumcraftHelper.AmmoPropellantAlumentum);
+		AmmoRegistry.registerPropellant(ammoPropellantAlumentum = new AmmoPropellantAlumentum());
 
 		Item nugget = Item.REGISTRY.getObject(new ResourceLocation("thaumcraft", "nugget"));
 		Item alumentum = Item.REGISTRY.getObject(new ResourceLocation("thaumcraft", "alumentum"));
 
-		OreDictionary.registerOre("nuggetThaumium", new ItemStack(nugget,1,6));
-		OreDictionary.registerOre("nuggetVoid", new ItemStack(nugget,1,7));
+		OreDictionary.registerOre("nuggetThaumium", new ItemStack(nugget, 1, 6));
+		OreDictionary.registerOre("nuggetVoid", new ItemStack(nugget, 1, 7));
 		OreDictionary.registerOre("alumentum", new ItemStack(alumentum));
 	}
 

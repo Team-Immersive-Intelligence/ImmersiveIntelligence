@@ -1,9 +1,17 @@
 package pl.pabilo8.immersiveintelligence.api.ammo.utils;
 
+import blusunrize.immersiveengineering.api.tool.ITeslaEntity;
 import blusunrize.immersiveengineering.api.tool.RailgunHandler;
 import blusunrize.immersiveengineering.api.tool.RailgunHandler.RailgunProjectileProperties;
+import blusunrize.immersiveengineering.common.Config.IEConfig;
 import blusunrize.immersiveengineering.common.IEContent;
+import blusunrize.immersiveengineering.common.blocks.TileEntityMultiblockPart;
+import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
 import blusunrize.immersiveengineering.common.blocks.stone.BlockTypes_StoneDecoration;
+import blusunrize.immersiveengineering.common.util.IEDamageSources;
+import blusunrize.immersiveengineering.common.util.IEDamageSources.ElectricDamageSource;
+import blusunrize.immersiveengineering.common.util.IEPotions;
+import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.block.Block;
 import net.minecraft.client.resources.I18n;
@@ -12,11 +20,16 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
@@ -50,6 +63,7 @@ import pl.pabilo8.immersiveintelligence.common.util.IIStringUtil;
 import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Stream;
 
 /**
@@ -487,5 +501,62 @@ public class IIAmmoUtils
 		if(ammoHardness.compareTo(blockHardness) >= 0)
 			return (int)Math.floor(penetrationDepth/penHandler.getThickness());
 		return 0;
+	}
+
+
+	public static void applyEMPEffect(World world, BlockPos pos, float radius, int extractedEnergy)
+	{
+		Set<BlockPos> blocks = IIUtils.getBlocksInOrb(world, new BlockPos(pos), radius);
+		for(BlockPos pp : blocks)
+		{
+			TileEntity te = world.getTileEntity(pp);
+			if(te instanceof TileEntityMultiblockPart)
+				te = ((TileEntityMultiblockPart<?>)te).master();
+
+			if(te!=null)
+				if(te instanceof TileEntityMultiblockMetal)
+					((TileEntityMultiblockMetal<?, ?>)te).energyStorage.extractEnergy(extractedEnergy, false);
+				else
+					for(EnumFacing facing : EnumFacing.values())
+						if((te.hasCapability(CapabilityEnergy.ENERGY, facing)))
+						{
+							IEnergyStorage cap = te.getCapability(CapabilityEnergy.ENERGY, facing);
+							if(cap!=null)
+							{
+								cap.extractEnergy(extractedEnergy, false);
+								break;
+							}
+						}
+		}
+
+		for(EntityLivingBase e : world.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(pos.getX(), pos.getY(), pos.getZ(), pos.getX(), pos.getY(), pos.getZ()).grow(radius)))
+			if(!(e instanceof ITeslaEntity))
+			{
+				ElectricDamageSource dmgsrc = IEDamageSources.causeTeslaDamage(IEConfig.Machines.teslacoil_damage, false);
+
+				if(!world.isRemote)
+					if(dmgsrc.apply(e))
+					{
+						int prevFire = e.fire;
+						e.setFire(prevFire+1);
+						e.addPotionEffect(new PotionEffect(IEPotions.stunned, 128));
+					}
+
+				for(ItemStack stack : e.getArmorInventoryList())
+					if((stack.hasCapability(CapabilityEnergy.ENERGY, null)))
+					{
+						IEnergyStorage cap = stack.getCapability(CapabilityEnergy.ENERGY, null);
+						if(cap!=null)
+							if(cap.extractEnergy(extractedEnergy, false)==0)
+								if(ItemNBTHelper.hasKey(stack, "Energy"))
+									ItemNBTHelper.setInt(stack, "Energy", Math.max(0, ItemNBTHelper.getInt(stack, "Energy")-extractedEnergy));
+								else if(ItemNBTHelper.hasKey(stack, "energy"))
+									ItemNBTHelper.setInt(stack, "energy", Math.max(0, ItemNBTHelper.getInt(stack, "energy")-extractedEnergy));
+								else if(ItemNBTHelper.hasKey(stack, "Power"))
+									ItemNBTHelper.setInt(stack, "Power", Math.max(0, ItemNBTHelper.getInt(stack, "Power")-extractedEnergy));
+								else if(ItemNBTHelper.hasKey(stack, "power"))
+									ItemNBTHelper.setInt(stack, "power", Math.max(0, ItemNBTHelper.getInt(stack, "power")-extractedEnergy));
+					}
+			}
 	}
 }

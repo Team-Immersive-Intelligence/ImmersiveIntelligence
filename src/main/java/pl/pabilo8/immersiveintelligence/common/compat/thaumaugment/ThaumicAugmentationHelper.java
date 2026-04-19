@@ -2,31 +2,22 @@ package pl.pabilo8.immersiveintelligence.common.compat.thaumaugment;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.oredict.OreDictionary;
 import pl.pabilo8.immersiveintelligence.api.ammo.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
-import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoCore;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoPropellant;
 import pl.pabilo8.immersiveintelligence.common.compat.IICompatModule;
-import pl.pabilo8.immersiveintelligence.common.compat.thaum.*;
-import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
-
-import static pl.pabilo8.immersiveintelligence.api.ShrapnelHandler.addShrapnel;
-
-public class ThaumicAugmentationHelper extends IICompatModule
 
 /**
  * @author Carver (carver@iiteam.net)
  * @updated 16.04.2026
  * @since 12.04.2026
  */
-
+public class ThaumicAugmentationHelper extends IICompatModule
 {
-
-	private static AmmoPropellant AmmoPropellantImpetus;
-	private static AmmoComponent AmmoComponentImpetus;
+	private static AmmoPropellant ammoPropellantImpetus;
+	private static AmmoComponent ammoComponentImpetus;
 
 	@Override
 	public String getName()
@@ -39,16 +30,12 @@ public class ThaumicAugmentationHelper extends IICompatModule
 	@Override
 	public void preInit()
 	{
+		AmmoRegistry.registerPropellant(ammoPropellantImpetus = new AmmoPropellantImpetus());
+		AmmoRegistry.registerComponent(ammoComponentImpetus = new AmmoComponentImpetus());
 
-		AmmoPropellant AmmoPropellantImpetus = new AmmoPropellantImpetus();
-		AmmoComponent AmmoComponentImpetus = new AmmoComponentImpetus();
-
-		AmmoRegistry.registerPropellant(pl.pabilo8.immersiveintelligence.common.compat.thaumaugment.ThaumicAugmentationHelper.AmmoPropellantImpetus);
-		AmmoRegistry.registerComponent(ThaumicAugmentationHelper.AmmoComponentImpetus);
-
-		Item impetus = Item.REGISTRY.getObject(new ResourceLocation("thaumicaugmentation", "material"));
+		Item impetus = Item.REGISTRY.getObject(RES_TC.with("material"));
 		//material_impetus_cell
-		OreDictionary.registerOre("impetus", new ItemStack(impetus,1,3));
+		OreDictionary.registerOre("impetus", new ItemStack(impetus, 1, 3));
 	}
 
 	@Override
@@ -71,4 +58,3 @@ public class ThaumicAugmentationHelper extends IICompatModule
 	}
 
 }
-

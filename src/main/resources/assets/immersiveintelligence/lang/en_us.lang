@@ -3435,3 +3435,21 @@ ii.gui_tooltip.speed=Speed: %s
 ii.gui_tooltip.progress=Progress: %s %
 ii.gui_tooltip.fuel=Fuel: %s/%s mB
 ii.gui_tooltip.soil_fertility=Soil Fertility: %s %
+
+# Nether Backport Compat
+item.immersiveintelligence.bullet.component.core_netherite.name=Netherite
+ie.manual.entry.bullet_core.core_netherite=Netherite Core
+ie.manual.entry.bullet_core.core_netherite.lore=Nether-Forged
+ie.manual.entry.bullet_core.core_netherite.desc=Ancient debris is what remains of the mining activity of the piglins, who extracted all the original netherite ore. Currently they are a product of an industrialized fallen empire and in the past they were a united front.
+
+item.immersiveintelligence.bullet.component.nether_fire.name=Nether Fire
+ie.manual.entry.bullet_component.nether_fire=Nether Fire
+ie.manual.entry.bullet_component.nether_fire.lore=This "prison"... to contain ME?
+ie.manual.entry.bullet_component.nether_fire.desc=A fire of infernal origins,  it is a permanent, non-spreading fire that deals higher damage than normal fire and keeps on burning when it should not.
+
+# Deeper Depths Compat
+item.immersiveintelligence.bullet.component.windcharge.name=Wind Charge
+ie.manual.entry.bullet_component.windcharge=Wind Charge
+ie.manual.entry.bullet_component.windcharge.lore=How?
+ie.manual.entry.bullet_component.windcharge.desc=Condensed wind obtained from Breeze, wind charges knock targets back and apply slowness and suppression in small radius. Due to properties of the charge, it remains on the same level of potency regardless of the shell size.
+

@@ -13,13 +13,13 @@ import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 public class AmmoPropellantImpetus extends AmmoPropellant
 {
 	public AmmoPropellantImpetus()
-{
-	super("impetus propellant", 0.01f, IIColor.fromPackedRGB(0x000b10), PropellantType.SOLID, 3.0f, 0.05f, true, true);
-}
+	{
+		super("propellant_impetus", 0.01f, IIColor.fromPackedRGB(0x000b10), PropellantType.SOLID, 3.0f, 0.05f, true, true);
+	}
 
 	@Override
 	public IngredientStack getMaterial()
-{
-	return new IngredientStack("impetus");
-}
+	{
+		return new IngredientStack("impetus");
+	}
 }

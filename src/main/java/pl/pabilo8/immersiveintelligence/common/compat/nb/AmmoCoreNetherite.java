@@ -5,11 +5,11 @@ import pl.pabilo8.immersiveintelligence.api.ammo.enums.PenetrationHardness;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoCore;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
-public class AmmoCoreNetherite extends AmmoCore
 /**
  * @author Carver (carver@iiteam.net)
  * @since 11.04.2026
  */
+public class AmmoCoreNetherite extends AmmoCore
 {
 	public AmmoCoreNetherite()
 	{

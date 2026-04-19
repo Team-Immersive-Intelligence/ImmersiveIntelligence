@@ -19,8 +19,6 @@ import pl.pabilo8.immersiveintelligence.api.ammo.enums.ComponentEffectShape;
 import pl.pabilo8.immersiveintelligence.api.ammo.enums.ComponentRole;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoComponent;
 import pl.pabilo8.immersiveintelligence.api.ammo.utils.IIAmmoUtils;
-import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
-import pl.pabilo8.immersiveintelligence.common.network.messages.MessageFireworks;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 import pl.pabilo8.immersiveintelligence.common.util.IIExplosion;
 import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
@@ -30,9 +28,7 @@ import pl.pabilo8.immersiveintelligence.common.util.ResLoc;
  * @updated 16.04.2026
  * @since 08.04.2026
  */
-
 public class AmmoComponentWindCharge extends AmmoComponent
-
 {
 	public AmmoComponentWindCharge()
 	{

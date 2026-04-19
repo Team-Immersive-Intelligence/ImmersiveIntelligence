@@ -5,16 +5,15 @@ import pl.pabilo8.immersiveintelligence.api.ammo.enums.PenetrationHardness;
 import pl.pabilo8.immersiveintelligence.api.ammo.parts.AmmoCore;
 import pl.pabilo8.immersiveintelligence.common.util.IIColor;
 
-public class AmmoCoreThaumium extends AmmoCore
-
 /**
  * @author Carver (carver@iiteam.net)
  * @since 11.04.2026
  */
+public class AmmoCoreThaumium extends AmmoCore
 {
 	public AmmoCoreThaumium()
 	{
-		super("core_thaumium", 0.5f, PenetrationHardness.IRON, 0.70f, 1.10f, IIColor.fromPackedRGB(0x372645));
+		super("core_thaumium", 0.5f, PenetrationHardness.IRON, 0.70f, 1.10f, IIColor.fromPackedRGB(0x423250));
 	}
 
 	@Override
